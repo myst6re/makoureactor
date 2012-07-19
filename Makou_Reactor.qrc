@@ -1,0 +1,43 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/reactor.png</file>
+        <file>images/chiffres.png</file>
+        <file>images/plus.png</file>
+        <file>images/minus.png</file>
+        <file>images/copy.png</file>
+        <file>images/cut.png</file>
+        <file>images/paste.png</file>
+        <file>images/up.png</file>
+        <file>images/down.png</file>
+        <file>images/find.png</file>
+        <file>images/logo-shinra.png</file>
+        <file>images/redo.png</file>
+        <file>images/undo.png</file>
+        <file>images/ff7.png</file>
+        <file>images/icon-cloud.png</file>
+        <file>images/icon-aeris.png</file>
+        <file>images/icon-barret.png</file>
+        <file>images/icon-cait_sith.png</file>
+        <file>images/icon-cid.png</file>
+        <file>images/icon-red_xiii.png</file>
+        <file>images/icon-tifa.png</file>
+        <file>images/icon-vincent.png</file>
+        <file>images/icon-yuffie.png</file>
+        <file>images/icon-blue.png</file>
+        <file>images/icon-cyan.png</file>
+        <file>images/icon-green.png</file>
+        <file>images/icon-grey.png</file>
+        <file>images/icon-purple.png</file>
+        <file>images/icon-red.png</file>
+        <file>images/icon-white.png</file>
+        <file>images/icon-yellow.png</file>
+        <file>images/icon-blink.png</file>
+        <file>images/icon-multicolour.png</file>
+        <file>images/icon-member_1.png</file>
+        <file>images/icon-member_2.png</file>
+        <file>images/icon-member_3.png</file>
+        <file>images/font.png</file>
+        <file>images/keys.png</file>
+        <file>images/field-arrow.png</file>
+    </qresource>
+</RCC>
