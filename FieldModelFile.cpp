@@ -319,7 +319,7 @@ QPixmap FieldModelFile::open_tex(QFile *tex_file)
 			for(i=0 ; i<size ; i+=2)
 			{
 				memcpy(&color, &imageData[i], 2);
-				pixels[x + y*l] = qRgb((color & 31)*COEFF_COLOR, (color>>5 & 31)*COEFF_COLOR, (color>>10 & 31)*COEFF_COLOR);
+				pixels[x + y*l] = PsColor::fromPsColor(color);
 
 				if(++x==l)
 				{

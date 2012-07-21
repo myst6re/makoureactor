@@ -17,6 +17,16 @@
  ****************************************************************************/
 #include "Palette.h"
 
+quint16 PsColor::toPsColor(const QRgb &color)
+{
+	return (qRound(qRed(color)/COEFF_COLOR) & 31) | ((qRound(qGreen(color)/COEFF_COLOR) & 31) << 5) | ((qRound(qBlue(color)/COEFF_COLOR) & 31) << 10) | ((qAlpha(color)==255) << 15);
+}
+
+QRgb PsColor::fromPsColor(quint16 color, bool useAlpha)
+{
+	return qRgba(qRound((color & 31)*COEFF_COLOR), qRound((color>>5 & 31)*COEFF_COLOR), qRound((color>>10 & 31)*COEFF_COLOR), color == 0 && useAlpha ? 0 : 255);
+}
+
 Palette::Palette() {}
 
 Palette::Palette(const char *palette, quint8 transparency) // PC
@@ -24,7 +34,7 @@ Palette::Palette(const char *palette, quint8 transparency) // PC
 {
 	quint16 first, color;
 	memcpy(&first, palette, 2);
-	couleurs.append(qRgb( (first & 31)*COEFF_COLOR, (first>>5 & 31)*COEFF_COLOR, (first>>10 & 31)*COEFF_COLOR ));
+	couleurs.append(PsColor::fromPsColor(first));
 //	masks.append(first >> 15);
 //	isZero.append(first==0);
 
@@ -35,7 +45,7 @@ Palette::Palette(const char *palette, quint8 transparency) // PC
 		memcpy(&color, palette, 2);
 		if(color==0) color = first;
 
-		couleurs.append(qRgb( (color & 31)*COEFF_COLOR, (color>>5 & 31)*COEFF_COLOR, (color>>10 & 31)*COEFF_COLOR ));
+		couleurs.append(PsColor::fromPsColor(color));
 //		masks.append(color >> 15);
 //		isZero.append(color==0);
 
@@ -50,7 +60,7 @@ Palette::Palette(const char *palette) // PS
 		quint16 color;
 		memcpy(&color, palette, 2);
 
-		couleurs.append(qRgb( (color & 31)*COEFF_COLOR, (color>>5 & 31)*COEFF_COLOR, (color>>10 & 31)*COEFF_COLOR ));
+		couleurs.append(PsColor::fromPsColor(color));
 //		masks.append(color >> 15);
 		isZero.append(color==0);
 

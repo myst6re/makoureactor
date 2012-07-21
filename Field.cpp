@@ -677,7 +677,7 @@ QPixmap Field::ouvrirBackgroundPC(const QByteArray &contenu, const QHash<quint8,
 			{
 				memcpy(&deuxOctets, &constContenu[origin+j], 2);
 				if(deuxOctets!=0)
-					pixels[baseX + right + top] = qRgb( (deuxOctets>>11)*COEFF_COLOR, (deuxOctets>>6 & 31)*COEFF_COLOR, (deuxOctets & 31)*COEFF_COLOR );
+					pixels[baseX + right + top] = qRgb( (deuxOctets>>11)*COEFF_COLOR, (deuxOctets>>6 & 31)*COEFF_COLOR, (deuxOctets & 31)*COEFF_COLOR ); // special PC RGB16 color
 				
 				if(++right==tile.size)
 				{
@@ -1001,7 +1001,7 @@ QPixmap Field::ouvrirBackgroundPS(const QByteArray &mimDataDec, const QByteArray
 			{
 				memcpy(&deuxOctets, &constMimData[origin+j], 2);
 				if(deuxOctets!=0)
-					pixels[baseX + right + top] = qRgb( (deuxOctets & 31)*COEFF_COLOR, (deuxOctets>>5 & 31)*COEFF_COLOR, (deuxOctets>>10 & 31)*COEFF_COLOR );
+					pixels[baseX + right + top] = PsColor::fromPsColor(deuxOctets);
 
 				if(++right==tile.size)
 				{
