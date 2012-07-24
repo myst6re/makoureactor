@@ -78,8 +78,10 @@ bool WalkmeshFile::open(const QByteArray &contenu, bool openCa)
 		debutSectionId += 4;
 
 		// warning : some padding data in ca section
-		if((quint32)contenu.size() <= debutSection6 || debutSection3-debutSectionCa < 38)
+		if((quint32)contenu.size() <= debutSection6 || debutSection3-debutSectionCa < 38) {
+			qWarning() << "invalid ca size" << (debutSection3-debutSectionCa);
 			return false;
+		}
 	} else {
 		memcpy(&debutSection1, constData, 4);
 		memcpy(&debutSectionId, &constData[4], 4);// section 2
@@ -90,15 +92,19 @@ bool WalkmeshFile::open(const QByteArray &contenu, bool openCa)
 		debutSection5 = debutSection5 - debutSection1 + 28;
 
 		// warning : some padding data in ca section
-		if((quint32)contenu.size() <= debutSection5 || debutSection5-debutSectionCa < 38)
+		if((quint32)contenu.size() <= debutSection5 || debutSection5-debutSectionCa < 38) {
+			qWarning() << "invalid ca size" << (debutSection5-debutSectionCa);
 			return false;
+		}
 	}
+
+	//TODO: multiple camera
 
 	if(!_isOpenCa && openCa) {
 		memcpy(&camera_axis, &constData[debutSectionCa], 18);
-		memcpy(&camera_unknown1, &constData[debutSectionCa+18], 2);
+		memcpy(&camera_axis2z, &constData[debutSectionCa+18], 2);
 		memcpy(&camera_position, &constData[debutSectionCa+20], 12);
-		memcpy(&camera_unknown2, &constData[debutSectionCa+32], 4);
+		memcpy(&camera_blank, &constData[debutSectionCa+32], 4);
 		memcpy(&camera_zoom, &constData[debutSectionCa+36], 2);
 
 		/*qDebug() << camera_axis[0].x << camera_axis[0].y << camera_axis[0].z
@@ -141,9 +147,9 @@ QByteArray WalkmeshFile::saveCa() const
 	QByteArray ca;
 
 	ca.append((char *)&camera_axis, 18);
-	ca.append((char *)&camera_unknown1, 2);
+	ca.append((char *)&camera_axis2z, 2);
 	ca.append((char *)&camera_position, 12);
-	ca.append((char *)&camera_unknown2, 4);
+	ca.append((char *)&camera_blank, 4);
 	ca.append((char *)&camera_zoom, 2);
 
 	if(ca.size() != 38) {
@@ -171,4 +177,19 @@ QByteArray WalkmeshFile::saveId() const
 	}
 
 	return id;
+}
+
+bool WalkmeshFile::test() const
+{
+	if(camera_axis[2].z != camera_axis2z) {
+		qDebug() << "camera unknown1" << camera_axis[2].z << camera_axis2z;
+		return false;
+	}
+
+	if(0 != camera_blank) {
+		qDebug() << "camera unknown2" << camera_position[2] << camera_blank;
+		return false;
+	}
+
+	return true;
 }

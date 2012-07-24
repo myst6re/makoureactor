@@ -52,13 +52,15 @@ public:
 	QByteArray saveCa() const;
 	QByteArray saveId() const;
 
-	quint16 camera_unknown1;
-	quint32 camera_unknown2;
+	qint16 camera_axis2z;
+	qint32 camera_blank;
 	quint16 camera_zoom;
 	Vertex_s camera_axis[3];
 	qint32 camera_position[3];
 	QList<Triangle> triangles;
 	QList<Access> access;
+
+	bool test() const;
 private:
 	bool _isOpenCa, _isOpenId, _isModifiedCa, _isModifiedId;
 };

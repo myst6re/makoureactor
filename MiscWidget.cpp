@@ -157,15 +157,15 @@ void MiscWidget::changeGate(QListWidgetItem *, QListWidgetItem *previous)
 
 	setEnabledGate(gate.fieldID != 0x7FFF);
 
-	triggerPoint1->setValues(gate.trigger_line[0]);
-	triggerPoint2->setValues(gate.trigger_line[1]);
+	triggerPoint1->setValues(gate.exit_line[0]);
+	triggerPoint2->setValues(gate.exit_line[1]);
 	destination->setValues(gate.destination);
 	unknown0->setText(QByteArray((char *)&gate.u1, 4).toHex());
-	unknown1->setText(QByteArray((char *)&dataCpy.unknownData1(id), 16).toHex());
+	unknown1->setText(QByteArray((char *)&dataCpy.trigger(id), 16).toHex());
 
 	if(!dataCpy.isJap()) {
 		arrowDisplay->setChecked(dataCpy.arrowIsDisplayed(id));
-		unknown2->setText(QByteArray((char *)&dataCpy.unknownData2(id), 16).toHex());
+		unknown2->setText(QByteArray((char *)&dataCpy.arrow(id), 16).toHex());
 	}
 }
 
@@ -173,8 +173,8 @@ void MiscWidget::saveExit(int row)
 {
 	Exit gate;
 
-	gate.trigger_line[0] = triggerPoint1->values();
-	gate.trigger_line[1] = triggerPoint2->values();
+	gate.exit_line[0] = triggerPoint1->values();
+	gate.exit_line[1] = triggerPoint2->values();
 	gate.destination = destination->values();
 	memcpy(&gate.u1, QByteArray::fromHex(unknown0->text().toLatin1()).leftJustified(4, 0, true).constData(), 4);
 
@@ -189,16 +189,16 @@ void MiscWidget::saveExit(int row)
 		gate.fieldID = fieldID->currentIndex()-1;
 	}
 
-	U1 u1;
-	memcpy(&u1, QByteArray::fromHex(unknown1->text().toLatin1()).leftJustified(16, 0, true).constData(), 16);
-	dataCpy.setUnknownData1(row, u1);
+	Trigger trigger;
+	memcpy(&trigger, QByteArray::fromHex(unknown1->text().toLatin1()).leftJustified(16, 0, true).constData(), 16);
+	dataCpy.setTrigger(row, trigger);
 
 	dataCpy.setExitLine(row, gate);
 	if(!dataCpy.isJap()) {
 		dataCpy.setArrowDiplay(row, arrowDisplay->isChecked());
-		U2 u2;
-		memcpy(&u2, QByteArray::fromHex(unknown2->text().toLatin1()).leftJustified(16, 0, true).constData(), 16);
-		dataCpy.setUnknownData2(row, u2);
+		Arrow arrow;
+		memcpy(&arrow, QByteArray::fromHex(unknown2->text().toLatin1()).leftJustified(16, 0, true).constData(), 16);
+		dataCpy.setArrow(row, arrow);
 	}
 }
 
@@ -211,10 +211,10 @@ void MiscWidget::accept()
 	bool isJap = dataCpy.isJap();
 	for(int i=0 ; i<12 ; ++i) {
 		data->setExitLine(i, dataCpy.exitLine(i));
-		data->setUnknownData1(i, dataCpy.unknownData1(i));
+		data->setTrigger(i, dataCpy.trigger(i));
 		if(!isJap) {
 			data->setArrowDiplay(i, dataCpy.arrowIsDisplayed(i));
-			data->setUnknownData2(i, dataCpy.unknownData2(i));
+			data->setArrow(i, dataCpy.arrow(i));
 		}
 	}
 

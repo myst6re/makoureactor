@@ -131,14 +131,14 @@ void InfFile::setExitLine(quint8 id, const Exit &line)
 	_isModified = true;
 }
 
-const U1 &InfFile::unknownData1(quint8 id) const
+const Trigger &InfFile::trigger(quint8 id) const
 {
-	return data.u2[id];
+	return data.triggers[id];
 }
 
-void InfFile::setUnknownData1(quint8 id, const U1 &unknown)
+void InfFile::setTrigger(quint8 id, const Trigger &trigger)
 {
-	data.u2[id] = unknown;
+	data.triggers[id] = trigger;
 }
 
 bool InfFile::arrowIsDisplayed(quint8 id)
@@ -152,18 +152,25 @@ void InfFile::setArrowDiplay(quint8 id, bool display)
 	_isModified = true;
 }
 
-const U2 &InfFile::unknownData2(quint8 id) const
+const Arrow &InfFile::arrow(quint8 id) const
 {
-	return data.u3[id];
+	return data.arrows[id];
 }
 
-void InfFile::setUnknownData2(quint8 id, const U2 &unknown)
+void InfFile::setArrow(quint8 id, const Arrow &arrow)
 {
-	data.u3[id] = unknown;
+	data.arrows[id] = arrow;
 }
 
 void InfFile::test()
 {
+	for(int i=0 ; i<12 ; ++i) {
+		if(data.arrows[i].type == 0) {
+			qDebug() << "arrow unknown" << QByteArray((char *)&data.arrows[i].type, 4).toHex();
+		}
+	}
+	return;
+
 	if(data._blank1 != 0) {
 		qDebug() << "blank1" << QByteArray((char *)&data._blank1, 4).toHex();
 	}

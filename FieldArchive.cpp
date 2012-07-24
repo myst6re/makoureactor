@@ -323,11 +323,20 @@ void FieldArchive::searchAll()
 	for(int i=0 ; i<size ; ++i) {
 		Field *field = this->field(i);
 		if(field != NULL) {
+//			qDebug() << field->getName();
+//			InfFile *inf = field->getInf();
+//			if(!inf->isOpen()) {
+//				if(inf->open(getFieldData(field))) {
+//					inf->test();
+//				}
+//			}
 			qDebug() << field->getName();
-			InfFile *inf = field->getInf();
-			if(!inf->isOpen()) {
-				if(inf->open(getFieldData(field))) {
-					inf->test();
+			WalkmeshFile *walkmesh = field->getWalkmesh();
+			if(!walkmesh->isOpen()) {
+				if(walkmesh->open(getFieldData(field))) {
+//					if(walkmesh->test()) {
+//						qDebug() << field->getName();
+//					}
 				}
 			}
 			if(!field->isModified()) {
