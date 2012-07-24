@@ -25,8 +25,8 @@ WalkmeshWidget::WalkmeshWidget(WalkmeshFile *walkmesh, QWidget *parent)
 
 void WalkmeshWidget::initializeGL()
 {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+//	glMatrixMode(GL_PROJECTION);
+//	glLoadIdentity();
 
 	glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_COLOR_MATERIAL);
@@ -44,14 +44,15 @@ void WalkmeshWidget::resizeGL(int width, int height)
 //	int side = qMin(width, height);
 //	glViewport((width - side) / 2, (height - side) / 2, side, side);
 	glViewport(0, 0, width, height);
-//	glMatrixMode(GL_PROJECTION);
-//	glLoadIdentity();
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(70.0, (double)width/(double)height, 0.001, 1000.0);
 //#ifdef QT_OPENGL_ES_1
 //	glOrthof(-0.5, +0.5, -0.5, +0.5, 4.0, 15.0);
 //#else
 //	glOrtho(-0.5, +0.5, -0.5, +0.5, 4.0, 15.0);
 //#endif
-//	glMatrixMode(GL_MODELVIEW);
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void WalkmeshWidget::paintGL()
@@ -64,29 +65,31 @@ void WalkmeshWidget::paintGL()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-//	double camAxisXx = -camera_axis[0].x/4096.0;
-//	double camAxisXy = -camera_axis[0].y/4096.0;
-//	double camAxisXz = -camera_axis[0].z/4096.0;
+	if(!walkmesh->isOpen())	return;
 
-//	double camAxisYx = -camera_axis[1].x/4096.0;
-//	double camAxisYy = -camera_axis[1].y/4096.0;
-//	double camAxisYz = -camera_axis[1].z/4096.0;
+	double camAxisXx = walkmesh->camera_axis[0].x/4096.0;
+	double camAxisXy = walkmesh->camera_axis[0].y/4096.0;
+	double camAxisXz = walkmesh->camera_axis[0].z/4096.0;
 
-//	double camAxisZx = -camera_axis[2].x/4096.0;
-//	double camAxisZy = -camera_axis[2].y/4096.0;
-//	double camAxisZz = -camera_axis[2].z/4096.0;
+	double camAxisYx = -walkmesh->camera_axis[1].x/4096.0;
+	double camAxisYy = -walkmesh->camera_axis[1].y/4096.0;
+	double camAxisYz = -walkmesh->camera_axis[1].z/4096.0;
 
-//	qint32 camPosX = camera_position[0];
-//	qint32 camPosY = -camera_position[1];
-//	qint32 camPosZ = camera_position[2];
+	double camAxisZx = walkmesh->camera_axis[2].x/4096.0;
+	double camAxisZy = walkmesh->camera_axis[2].y/4096.0;
+	double camAxisZz = walkmesh->camera_axis[2].z/4096.0;
 
-//	double posCamX = -(camPosX*camAxisXx + camPosY*camAxisYx + camPosZ*camAxisZx);
-//	double posCamY = -(camPosX*camAxisXy + camPosY*camAxisYy + camPosZ*camAxisZy);
-//	double posCamZ = -(camPosX*camAxisXz + camPosY*camAxisYz + camPosZ*camAxisZz);
+	double camPosX = walkmesh->camera_position[0]/4096.0;
+	double camPosY = -walkmesh->camera_position[1]/4096.0;
+	double camPosZ = walkmesh->camera_position[2]/4096.0;
+
+	double tx = -(camPosX*camAxisXx + camPosY*camAxisYx + camPosZ*camAxisZx);
+	double ty = -(camPosX*camAxisXy + camPosY*camAxisYy + camPosZ*camAxisZy);
+	double tz = -(camPosX*camAxisXz + camPosY*camAxisYz + camPosZ*camAxisZz);
 
 //	qDebug() << posCamX << posCamY << posCamZ;
 //	gluLookAt(distance,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
-//	gluLookAt(posCamX, posCamY, posCamZ, camAxisZx, camAxisZy, camAxisZz, 0.0, 1.0, 0.0);
+	gluLookAt(tx, ty, tz, tx + camAxisZx, ty + camAxisZy, tz + camAxisZz, camAxisYx, camAxisYy, camAxisYz);
 
 	glRotatef(xRot, 1.0, 0.0, 0.0);
 	glRotatef(yRot, 0.0, 1.0, 0.0);
@@ -114,8 +117,6 @@ void WalkmeshWidget::paintGL()
 	glVertex3f(0.0, 0.0, 0.0);
 	glVertex3f(0.0, 0.0, -1.0);
 	glEnd();
-
-	if(!walkmesh->isOpen())	return;
 
 	glBegin(GL_TRIANGLES);
 
