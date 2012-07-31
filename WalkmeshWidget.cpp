@@ -41,17 +41,18 @@ void WalkmeshWidget::initializeGL()
 
 void WalkmeshWidget::resizeGL(int width, int height)
 {
-//	int side = qMin(width, height);
-//	glViewport((width - side) / 2, (height - side) / 2, side, side);
 	glViewport(0, 0, width, height);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(70.0, (double)width/(double)height, 0.001, 1000.0);
-//#ifdef QT_OPENGL_ES_1
-//	glOrthof(-0.5, +0.5, -0.5, +0.5, 4.0, 15.0);
-//#else
-//	glOrtho(-0.5, +0.5, -0.5, +0.5, 4.0, 15.0);
-//#endif
+
+	if(walkmesh->isOpen()) {
+		double fovy = (2 * atan(240.0/(2.0 * walkmesh->camera_zoom))) * 57.29577951;
+		gluPerspective(fovy, (double)width/(double)height, 0.001, 1000.0);
+	} else {
+		gluPerspective(70.0, (double)width/(double)height, 0.001, 1000.0);
+	}
+
 	glMatrixMode(GL_MODELVIEW);
 }
 

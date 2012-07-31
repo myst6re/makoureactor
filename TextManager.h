@@ -29,7 +29,6 @@ class TextManager : public QWidget
 
 public:
 	explicit TextManager(Field *field, QWidget *parent=0);
-	void setFocus2();
 	void setField(Field *field);
 	void updateText();
 signals:
@@ -67,6 +66,8 @@ private:
 
 	Field* field;
 	QSet<quint8> usedTexts;
+protected:
+	virtual void focusInEvent(QFocusEvent *e);
 };
 
 #endif

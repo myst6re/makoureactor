@@ -1914,7 +1914,7 @@ QString Commande::traduction() const
 
 		case 0xF5:
 			return QObject::tr("%1 musique")
-					.arg((quint8)params.at(0) == 0 ? QObject::tr("Déverrouiller") : QObject::tr("Verrouiller"));
+					.arg((quint8)params.at(0) == 0 ? QObject::tr("Déverrouiller") : QObject::tr("Verrouiller", "test"));
 
 		case 0xF6:
 			return QObject::tr("Choisir musique n°%1 comme musique de combat")

@@ -248,9 +248,9 @@ TextManager::TextManager(Field *field, QWidget *parent)
 	setField(field);
 }
 
-void TextManager::setFocus2()
+void TextManager::focusInEvent(QFocusEvent *e)
 {
-	textEdit->setFocus();
+	liste1->setFocus();
 }
 
 void TextManager::setField(Field *field)

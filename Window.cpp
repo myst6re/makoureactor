@@ -992,7 +992,7 @@ void Window::textManager()
 		textDialog->show();
 		textDialog->raise();
 		textDialog->activateWindow();
-		textDialog->setFocus2();
+		textDialog->setFocus();
 	}
 }
 
