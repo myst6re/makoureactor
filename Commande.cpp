@@ -2587,6 +2587,11 @@ OpcodeSPECIAL::OpcodeSPECIAL(const QByteArray &params) :
 	}
 }
 
+OpcodeSPECIAL::~OpcodeSPECIAL()
+{
+	delete opcode;
+}
+
 quint8 OpcodeSPECIAL::id() const
 {
 	return 0x0F;
@@ -2604,3 +2609,203 @@ QByteArray OpcodeSPECIAL::params() const
 			.append(opcode->params());
 }
 
+OpcodeJump::OpcodeJump() :
+	Commande(), _label(0), _jump(0)
+{
+}
+
+void OpcodeJump::setLabel(quint32 label)
+{
+	_label = label;
+}
+
+quint16 OpcodeJump::jump() const
+{
+	return _jump;
+}
+
+void OpcodeJump::setJump(quint16 jump)
+{
+	_jump = jump;
+}
+
+OpcodeJMPF::OpcodeJMPF(const QByteArray &params) :
+	OpcodeJump()
+{
+	_jump = (quint8)params.at(0) + 1;
+}
+
+quint8 OpcodeJMPF::OpcodeJMPF::id() const
+{
+	return 0x10;
+}
+
+QString OpcodeJMPF::toString() const
+{
+	return QObject::tr("Aller à l'octet %1 du script")
+			.arg(_label+_jump);
+}
+
+QByteArray OpcodeJMPF::params() const
+{
+	return QByteArray().append(char(_jump - 1));
+}
+
+OpcodeJMPFL::OpcodeJMPFL(const QByteArray &params) :
+	OpcodeJump()
+{
+	quint16 jump;
+	memcpy(&jump, params.constData(), 2);
+
+	_jump = jump + 1;
+}
+
+quint8 OpcodeJMPFL::OpcodeJMPFL::id() const
+{
+	return 0x11;
+}
+
+QString OpcodeJMPFL::toString() const
+{
+	return QObject::tr("Aller à l'octet %1 du script")
+			.arg(_label+_jump);
+}
+
+QByteArray OpcodeJMPFL::params() const
+{
+	quint16 jump = _jump - 1;
+	return QByteArray().append((char *)&jump, 2);
+}
+
+OpcodeJMPB::OpcodeJMPB(const QByteArray &params) :
+	OpcodeJump()
+{
+	_jump = -(quint8)params.at(0);
+}
+
+quint8 OpcodeJMPB::id() const
+{
+	return 0x12;
+}
+
+QString OpcodeJMPB::toString() const
+{
+	return QObject::tr("Aller à l'octet %1 du script")
+			.arg(int(_label+_jump));
+}
+
+QByteArray OpcodeJMPB::params() const
+{
+	return QByteArray().append(char(-_jump));
+}
+
+OpcodeJMPBL::OpcodeJMPBL(const QByteArray &params) :
+	OpcodeJump()
+{
+	quint16 jump;
+	memcpy(&jump, params.constData(), 2);
+
+	_jump = -jump;
+}
+
+quint8 OpcodeJMPBL::id() const
+{
+	return 0x13;
+}
+
+QString OpcodeJMPBL::toString() const
+{
+	return QObject::tr("Aller à l'octet %1 du script")
+			.arg(_label+_jump);
+}
+
+QByteArray OpcodeJMPBL::params() const
+{
+	quint16 jump = -_jump;
+	return QByteArray().append((char *)&jump, 2);
+}
+
+class OpcodeIf : public OpcodeJump
+{
+public:
+	explicit OpcodeIf();
+protected:
+	quint8 banks;
+	qint32 value1, value2;
+	quint8 oper;
+};
+
+OpcodeIFUB::OpcodeIFUB(const QByteArray &params) :
+	OpcodeIf()
+{
+	banks = params.at(0);
+	value1 = params.at(1); // bank 1
+	value2 = params.at(2); // bank 2
+	oper = params.at(3);
+	_jump = params.at(4) + 5;
+}
+
+quint8 OpcodeIFUB::id() const
+{
+	return 0x14;
+}
+
+QString OpcodeIFUB::toString() const
+{
+	return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
+					.arg(_var(value1, B1(banks)))
+					.arg(_var(value2, B2(banks)))
+					.arg(_operateur(oper))
+					.arg(_label + _jump)
+					.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
+}
+
+QByteArray OpcodeIFUB::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)value1)
+			.append((char)value2)
+			.append((char)oper)
+			.append(char(_jump - 5));
+}
+
+OpcodeIFUBL::OpcodeIFUBL(const QByteArray &params)
+{
+
+}
+
+quint8 OpcodeIFUBL::id() const
+{
+
+}
+
+QString OpcodeIFUBL::toString() const
+{
+
+}
+
+QByteArray OpcodeIFUBL::params() const
+{
+
+}
+
+OpcodeIFSW::OpcodeIFSW(const QByteArray &params);
+quint8 OpcodeIFSW::id() const;
+QString OpcodeIFSW::toString() const;
+QByteArray OpcodeIFSW::params() const;
+
+OpcodeIFSWL::OpcodeIFSWL(const QByteArray &params);
+quint8 OpcodeIFSWL::id() const;
+QString OpcodeIFSWL::toString() const;
+QByteArray OpcodeIFSWL::params() const;
+
+OpcodeIFUW::OpcodeIFUW(const QByteArray &params);
+quint8 OpcodeIFUW::id() const;
+QString OpcodeIFUW::toString() const;
+QByteArray OpcodeIFUW::params() const;
+
+OpcodeIFUWL::OpcodeIFUWL(const QByteArray &params);
+quint8 OpcodeIFUWL::id() const;
+QString OpcodeIFUWL::toString() const;
+QByteArray OpcodeIFUWL::params() const;

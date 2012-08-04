@@ -115,7 +115,6 @@ class OpcodeEmpty : public Commande
 {
 public:
 	explicit OpcodeEmpty(quint8 id);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 private:
@@ -126,7 +125,6 @@ class OpcodeRET : public Commande
 {
 public:
 	explicit OpcodeRET();
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -135,9 +133,6 @@ class OpcodeExec : public Commande
 {
 public:
 	explicit OpcodeExec(const QByteArray &params);
-
-	virtual quint8 id() const=0;
-	virtual QString toString() const=0;
 	QByteArray params() const;
 protected:
 	quint8 groupID;
@@ -149,7 +144,6 @@ class OpcodeREQ : public OpcodeExec
 {
 public:
 	explicit OpcodeREQ(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -158,7 +152,6 @@ class OpcodeREQSW : public OpcodeExec
 {
 public:
 	explicit OpcodeREQSW(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -167,7 +160,6 @@ class OpcodeREQEW : public OpcodeExec
 {
 public:
 	explicit OpcodeREQEW(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -176,9 +168,6 @@ class OpcodeExecChar : public Commande
 {
 public:
 	explicit OpcodeExecChar(const QByteArray &params);
-
-	virtual quint8 id() const=0;
-	virtual QString toString() const=0;
 	QByteArray params() const;
 protected:
 	quint8 charID;
@@ -190,7 +179,6 @@ class OpcodePREQ : public OpcodeExecChar
 {
 public:
 	explicit OpcodePREQ(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -199,7 +187,6 @@ class OpcodePRQSW : public OpcodeExecChar
 {
 public:
 	explicit OpcodePRQSW(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -208,7 +195,6 @@ class OpcodePRQEW : public OpcodeExecChar
 {
 public:
 	explicit OpcodePRQEW(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -217,7 +203,6 @@ class OpcodeRETTO : public Commande
 {
 public:
 	explicit OpcodeRETTO(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -230,7 +215,6 @@ class OpcodeJOIN : public Commande
 {
 public:
 	explicit OpcodeJOIN(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -242,7 +226,6 @@ class OpcodeSPLIT : public Commande
 {
 public:
 	explicit OpcodeSPLIT(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -257,9 +240,6 @@ class OpcodePartyE : public Commande
 {
 public:
 	explicit OpcodePartyE(const QByteArray &params);
-
-	virtual quint8 id() const=0;
-	virtual QString toString() const=0;
 	QByteArray params() const;
 protected:
 	quint8 banks[2];
@@ -270,7 +250,6 @@ class OpcodeSPTYE : public OpcodePartyE
 {
 public:
 	explicit OpcodeSPTYE(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -279,7 +258,6 @@ class OpcodeGTPYE : public OpcodePartyE
 {
 public:
 	explicit OpcodeGTPYE(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -288,7 +266,6 @@ class OpcodeDSKCG : public Commande
 {
 public:
 	explicit OpcodeDSKCG(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -300,7 +277,6 @@ class OpcodeSPECIALARROW : public Commande
 {
 public:
 	explicit OpcodeSPECIALARROW(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -312,7 +288,6 @@ class OpcodeSPECIALPNAME : public Commande
 {
 public:
 	explicit OpcodeSPECIALPNAME(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -324,7 +299,6 @@ class OpcodeSPECIALGMSPD : public Commande
 {
 public:
 	explicit OpcodeSPECIALGMSPD(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -336,7 +310,6 @@ class OpcodeSPECIALSMSPD : public Commande
 {
 public:
 	explicit OpcodeSPECIALSMSPD(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -348,7 +321,6 @@ class OpcodeSPECIALFLMAT : public Commande
 {
 public:
 	explicit OpcodeSPECIALFLMAT();
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -357,7 +329,6 @@ class OpcodeSPECIALFLITM : public Commande
 {
 public:
 	explicit OpcodeSPECIALFLITM();
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -366,7 +337,6 @@ class OpcodeSPECIALBTLCK : public Commande
 {
 public:
 	explicit OpcodeSPECIALBTLCK(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -378,7 +348,6 @@ class OpcodeSPECIALMVLCK : public Commande
 {
 public:
 	explicit OpcodeSPECIALMVLCK(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -390,7 +359,6 @@ class OpcodeSPECIALSPCNM : public Commande
 {
 public:
 	explicit OpcodeSPECIALSPCNM(const QByteArray &params);
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -403,7 +371,6 @@ class OpcodeSPECIALRSGLB : public Commande
 {
 public:
 	explicit OpcodeSPECIALRSGLB();
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -412,7 +379,6 @@ class OpcodeSPECIALCLITM : public Commande
 {
 public:
 	explicit OpcodeSPECIALCLITM();
-
 	virtual quint8 id() const;
 	virtual QString toString() const;
 };
@@ -421,7 +387,7 @@ class OpcodeSPECIAL : public Commande
 {
 public:
 	explicit OpcodeSPECIAL(const QByteArray &params);
-
+	virtual ~OpcodeSPECIAL();
 	virtual quint8 id() const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -429,6 +395,116 @@ private:
 	Commande *opcode;
 };
 
+class OpcodeJump : public Commande
+{
+public:
+	explicit OpcodeJump();
+	void setLabel(quint32 label);
+	quint16 jump() const;
+	void setJump(quint16 jump);
+protected:
+	quint32 _label;
+	qint32 _jump;
+};
 
+class OpcodeJMPF : public OpcodeJump
+{
+public:
+	explicit OpcodeJMPF(const QByteArray &params);
+	virtual quint8 id() const;
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+};
+
+class OpcodeJMPFL : public OpcodeJump
+{
+public:
+	explicit OpcodeJMPFL(const QByteArray &params);
+	virtual quint8 id() const;
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+};
+
+class OpcodeJMPB : public OpcodeJump
+{
+public:
+	explicit OpcodeJMPB(const QByteArray &params);
+	virtual quint8 id() const;
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+};
+
+class OpcodeJMPBL : public OpcodeJump
+{
+public:
+	explicit OpcodeJMPBL(const QByteArray &params);
+	virtual quint8 id() const;
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+};
+
+class OpcodeIf : public OpcodeJump
+{
+public:
+	explicit OpcodeIf();
+protected:
+	quint8 banks;
+	qint32 valeur1, valeur2;
+	quint8 operateur;
+};
+
+class OpcodeIFUB : public OpcodeIf
+{
+public:
+	explicit OpcodeIFUB(const QByteArray &params);
+	virtual quint8 id() const;
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+};
+
+class OpcodeIFUBL : public OpcodeIf
+{
+public:
+	explicit OpcodeIFUBL(const QByteArray &params);
+	virtual quint8 id() const;
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+};
+
+class OpcodeIFSW : public OpcodeIf
+{
+public:
+	explicit OpcodeIFSW(const QByteArray &params);
+	virtual quint8 id() const;
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+};
+
+class OpcodeIFSWL : public OpcodeIf
+{
+public:
+	explicit OpcodeIFSWL(const QByteArray &params);
+	virtual quint8 id() const;
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+};
+
+class OpcodeIFUW : public OpcodeIf
+{
+public:
+	explicit OpcodeIFUW(const QByteArray &params);
+	virtual quint8 id() const;
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+};
+
+class OpcodeIFUWL : public OpcodeIf
+{
+public:
+	explicit OpcodeIFUWL(const QByteArray &params);
+	virtual quint8 id() const;
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+};
 
 #endif
