@@ -1,0 +1,15 @@
+Source: makoureactor
+Section: games
+Priority: extra
+Maintainer: Chris Rizzitello <sithlord48@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~),libgl1-mesa-dev, libglu1-mesa-dev, libqt4-dev,libqt4-opengl-dev,freeglut3-dev,qt4-qmake,cdbs
+Standards-Version: 3.9.2
+Homepage: http://forums.qhimm.com/index.php?topic=9658.0
+#Vcs-Git: git://git.debian.org/collab-maint/makoureactor.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/makoureactor.git;a=summary
+
+Package: makoureactor
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: FF7 Field Editor
+ Edit final fantasy VII Field Scripts 

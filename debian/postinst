@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ -f /usr/bin/makoureactor ];then
+  exit 0
+  else ln -s /opt/makoureactor/Makou_Reactor /usr/bin/makoureactor
+fi
+#make it so everyone can read/write to vars.cfg
+chmod 666 /opt/makoureactor/vars.cfg
+#DEBHELPER#

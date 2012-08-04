@@ -1,0 +1,17 @@
+makoureactor (1.4.1-package1) natty; urgency=low
+
+  * Synced to version 1.4.1
+
+ -- Chris Rizzitello <sithlord48@gmail.com>  Fri, 3 Feb 2012 19:11:22 -0400
+
+makoureactor (1.4.0-fixed) natty; urgency=low
+
+  * Synced to version 1.4
+
+ -- Chris Rizzitello <sithlord48@gmail.com>  Mon, 26 Dec 2011 11:39:26 -0400
+
+makoureactor (1.3.0package2) natty; urgency=low
+
+  * Initial Package for makoureactor
+
+ -- Chris Rizzitello <sithlord48@gmail.com>  Fri, 03 Jun 2011 20:12:22 -0400

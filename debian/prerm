@@ -1,0 +1,5 @@
+#!/bin/sh
+if [ -f /usr/bin/makoureactor ];then
+  rm /usr/bin/makoureactor
+else exit 0
+fi
