@@ -29,6 +29,7 @@ public:
 	explicit Script(const QByteArray &script);
 	virtual ~Script();
 
+	void openScript(const QByteArray &script);
 	int size() const;
 	bool isEmpty() const;
 	Commande *getCommande(quint16 commandeID);

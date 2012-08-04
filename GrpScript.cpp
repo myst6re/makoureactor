@@ -115,10 +115,10 @@ void GrpScript::getBgParams(QHash<quint8, quint8> &paramActifs) const
 		}
 			//break;
 		/*case 0xE1://effacer paramètre
-			if((quint8)firstScript->getCommande(i)->getParams().at(0)==0)
+			if((quint8)firstScript->getCommande(i)->params().at(0)==0)
 			{
-				quint8 param = (quint8)firstScript->getCommande(i)->getParams().at(1);
-				quint8 state = 1 << (quint8)firstScript->getCommande(i)->getParams().at(2);
+				quint8 param = (quint8)firstScript->getCommande(i)->params().at(1);
+				quint8 state = 1 << (quint8)firstScript->getCommande(i)->params().at(2);
 				if(paramActifs.contains(param))
 					state = (state & paramActifs.value(param)) ^ paramActifs.value(param);
 				paramActifs.insert(param, state);

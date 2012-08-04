@@ -23,37 +23,115 @@ Script::Script()
 
 Script::Script(const QByteArray &script)
 {
-	quint16 pos = 0, scriptSize = script.size(), longueur;
-	quint8 opcode;
-	while(pos < scriptSize)
-	{
-		longueur = 0;
-		switch(opcode = (quint8)script.at(pos))
-		{
-		case 0x0F://SPECIAL
-			switch((quint8)script.at(pos+1))
-			{
-			case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
-						longueur = 1;
-				break;
-			case 0xF8:case 0xFD:
-						longueur = 2;
-				break;
-			}
-			break;
-		case 0x28://KAWAI
-			longueur = (quint8)script.at(pos+1);
-			break;
-		}
-		longueur += Opcode::length[opcode];
-		commandes.append(new Commande(script.mid(pos, longueur), pos));
-		pos += longueur;
-	}
+	openScript(script);
+//	quint16 pos = 0, scriptSize = script.size(), longueur;
+//	quint8 opcode;
+//	while(pos < scriptSize)
+//	{
+//		longueur = 0;
+//		switch(opcode = (quint8)script.at(pos))
+//		{
+//		case 0x0F://SPECIAL
+//			switch((quint8)script.at(pos+1))
+//			{
+//			case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
+//				longueur = 1;
+//				break;
+//			case 0xF8:case 0xFD:
+//				longueur = 2;
+//				break;
+//			}
+//			break;
+//		case 0x28://KAWAI
+//			longueur = (quint8)script.at(pos+1);
+//			break;
+//		}
+//		longueur += Opcode::length[opcode];
+//		commandes.append(new Commande(script.mid(pos, longueur), pos));
+//		pos += longueur;
+//	}
 }
 
 Script::~Script()
 {
 	foreach(Commande *commande, commandes)	delete commande;
+}
+
+void Script::openScript(const QByteArray &script)
+{
+	quint16 pos = 0, scriptSize = script.size(), longueur;
+	quint8 opcode;
+	Commande *op;
+
+	while(pos < scriptSize)
+	{
+		opcode = (quint8)script.at(pos);
+		longueur = Opcode::length[opcode];
+		switch(opcode)
+		{
+		case 0x00:
+			op = new OpcodeRET();
+			break;
+		case 0x01:
+			op = new OpcodeREQ(script.mid(pos+1, longueur));
+			break;
+		case 0x02:
+			op = new OpcodeREQSW(script.mid(pos+1, longueur));
+			break;
+		case 0x03:
+			op = new OpcodeREQEW(script.mid(pos+1, longueur));
+			break;
+		case 0x04:
+			op = new OpcodePREQ(script.mid(pos+1, longueur));
+			break;
+		case 0x05:
+			op = new OpcodePRQSW(script.mid(pos+1, longueur));
+			break;
+		case 0x06:
+			op = new OpcodePRQEW(script.mid(pos+1, longueur));
+			break;
+		case 0x07:
+			op = new OpcodeRETTO(script.mid(pos+1, longueur));
+			break;
+		case 0x08:
+			op = new OpcodeJOIN(script.mid(pos+1, longueur));
+			break;
+		case 0x09:
+			op = new OpcodeSPLIT(script.mid(pos+1, longueur));
+			break;
+		case 0x0A:
+			op = new OpcodeSPTYE(script.mid(pos+1, longueur));
+			break;
+		case 0x0B:
+			op = new OpcodeGTPYE(script.mid(pos+1, longueur));
+			break;
+		case 0x0E:
+			op = new OpcodeDSKCG(script.mid(pos+1, longueur));
+			break;
+		case 0x0F://SPECIAL
+			switch((quint8)script.at(pos+1))
+			{
+			case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
+				longueur += 1;
+				break;
+			case 0xF8:case 0xFD:
+				longueur += 2;
+				break;
+			}
+			op = new OpcodeSPECIAL(script.mid(pos+1, longueur));
+			break;
+		case 0x28://KAWAI
+			longueur += (quint8)script.at(pos+1);
+			op = new Commande(script.mid(pos, longueur), pos);
+			break;
+		default:
+			op = new Commande(script.mid(pos, longueur), pos);
+			break;
+		}
+
+		commandes.append(op);
+		pos += longueur;
+	}
 }
 
 int Script::posReturn(const QByteArray &script)

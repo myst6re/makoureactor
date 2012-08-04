@@ -27,31 +27,46 @@ Commande::Commande() : opcode(0)
 {
 }
 
-quint8 Commande::size() const { return params.size() + 1; }
+quint8 Commande::id() const
+{
+	return opcode;
+}
+
+QString Commande::toString() const
+{
+	return traduction();
+}
+
+QByteArray Commande::params() const
+{
+	return _params;
+}
+
+quint8 Commande::size() const { return params().size() + 1; }
 
 const quint8 &Commande::getOpcode() const { return opcode; }
 
-QByteArray &Commande::getParams() { return params; }
+QByteArray &Commande::getParams() { return _params; }
 
-const QByteArray &Commande::getConstParams() const { return params; }
+const QByteArray &Commande::getConstParams() const { return _params; }
 
-QByteArray Commande::toByteArray() const { return QByteArray((char)opcode + params); }
+QByteArray Commande::toByteArray() const { return QByteArray((char)id() + params()); }
 
 quint16 Commande::getIndent() const
 {
 	switch(opcode)
 	{
-	case 0x14:	return pos+5+(quint8)params.at(4);
-	case 0x15:	return pos+5+_toInt(params.mid(4,2));
+	case 0x14:	return pos+5+(quint8)params().at(4);
+	case 0x15:	return pos+5+_toInt(params().mid(4,2));
 	case 0x16:
-	case 0x18:	return pos+7+(quint8)params.at(6);
+	case 0x18:	return pos+7+(quint8)params().at(6);
 	case 0x17:
-	case 0x19:	return pos+7+_toInt(params.mid(6,2));
+	case 0x19:	return pos+7+_toInt(params().mid(6,2));
 	case 0x30:
 	case 0x31:
-	case 0x32:	return pos+3+(quint8)params.at(2);
+	case 0x32:	return pos+3+(quint8)params().at(2);
 	case 0xcb:
-	case 0xcc:	return pos+2+(quint8)params.at(1);
+	case 0xcc:	return pos+2+(quint8)params().at(1);
 	}
 	return 0;
 }
@@ -61,7 +76,7 @@ quint16 Commande::getPos() const { return pos; }
 void Commande::setCommande(const QByteArray &commande)
 {
 	this->opcode = commande.size()<1 ? 0 : (quint8)commande.at(0);
-	this->params = commande.mid(1);
+	this->_params = commande.mid(1);
 }
 
 void Commande::setPos(quint16 pos) { this->pos = pos; }
@@ -80,7 +95,7 @@ int Commande::subParam(int cur, int paramSize) const
 	else
 		tailleBA = paramSize/8;
 	
-	memcpy(&value, params.mid(cur/8, tailleBA), tailleBA);
+	memcpy(&value, params().mid(cur/8, tailleBA), tailleBA);
 	return (value >> ((tailleBA*8-cur%8)-paramSize)) & ((int)pow(2, paramSize)-1);
 }
 
@@ -88,14 +103,14 @@ bool Commande::rechercherVar(quint8 bank, quint8 adress, int value) const
 {
 	if(value!=65536) {
 		if(this->opcode==0x80
-			&& B1(params.at(0)) == bank && (quint8)params.at(1) == adress
-			&& B2(params.at(0)) == 0 && (quint8)params.at(2) == value)
+			&& B1(_params.at(0)) == bank && (quint8)_params.at(1) == adress
+			&& B2(_params.at(0)) == 0 && (quint8)_params.at(2) == value)
 		{
 			return true;
 		}
 		if(this->opcode==0x81
-			&& B1(params.at(0)) == bank && (quint8)params.at(1) == adress
-			&& B2(params.at(0)) == 0 && _toInt(params.mid(2,2)) == (quint16)value)
+			&& B1(_params.at(0)) == bank && (quint8)_params.at(1) == adress
+			&& B2(_params.at(0)) == 0 && _toInt(_params.mid(2,2)) == (quint16)value)
 		{
 			return true;
 		}
@@ -105,54 +120,54 @@ bool Commande::rechercherVar(quint8 bank, quint8 adress, int value) const
 	switch(this->opcode)
 	{
 	case 0x09:
-		if((B1(params.at(0)) == bank && (quint8)params.at(3) == adress)
-		   || (B2(params.at(0)) == bank && (quint8)params.at(5) == adress)
-		   || (B1(params.at(1)) == bank && (quint8)params.at(7) == adress)
-		   || (B2(params.at(1)) == bank && (quint8)params.at(8) == adress)
-		   || (B1(params.at(2)) == bank && (quint8)params.at(10) == adress)
-		   || (B2(params.at(2)) == bank && (quint8)params.at(12) == adress))
+		if((B1(_params.at(0)) == bank && (quint8)_params.at(3) == adress)
+		   || (B2(_params.at(0)) == bank && (quint8)_params.at(5) == adress)
+		   || (B1(_params.at(1)) == bank && (quint8)_params.at(7) == adress)
+		   || (B2(_params.at(1)) == bank && (quint8)_params.at(8) == adress)
+		   || (B1(_params.at(2)) == bank && (quint8)_params.at(10) == adress)
+		   || (B2(_params.at(2)) == bank && (quint8)_params.at(12) == adress))
 			return true;
 		break;
 	case 0xD3:
-		if((B1(params.at(0)) == bank && (quint8)params.at(3) == adress)
-		   || (B2(params.at(0)) == bank && (quint8)params.at(5) == adress)
-		   || (B1(params.at(1)) == bank && (quint8)params.at(7) == adress)
-		   || (B2(params.at(1)) == bank && (quint8)params.at(9) == adress)
-		   || (B1(params.at(2)) == bank && (quint8)params.at(11) == adress)
-		   || (B2(params.at(2)) == bank && (quint8)params.at(13) == adress))
+		if((B1(_params.at(0)) == bank && (quint8)_params.at(3) == adress)
+		   || (B2(_params.at(0)) == bank && (quint8)_params.at(5) == adress)
+		   || (B1(_params.at(1)) == bank && (quint8)_params.at(7) == adress)
+		   || (B2(_params.at(1)) == bank && (quint8)_params.at(9) == adress)
+		   || (B1(_params.at(2)) == bank && (quint8)_params.at(11) == adress)
+		   || (B2(_params.at(2)) == bank && (quint8)_params.at(13) == adress))
 			return true;
 		break;
 	case 0x56:case 0x57:
-				if((B1(params.at(0)) == bank && (quint8)params.at(2) == adress)
-				   || (B2(params.at(0)) == bank && (quint8)params.at(3) == adress)
-				   || (B1(params.at(1)) == bank && (quint8)params.at(4) == adress)
-				   || (B2(params.at(1)) == bank && (quint8)params.at(5) == adress))
+				if((B1(_params.at(0)) == bank && (quint8)_params.at(2) == adress)
+				   || (B2(_params.at(0)) == bank && (quint8)_params.at(3) == adress)
+				   || (B1(_params.at(1)) == bank && (quint8)_params.at(4) == adress)
+				   || (B2(_params.at(1)) == bank && (quint8)_params.at(5) == adress))
 					return true;
 		break;
 	case 0x75:case 0xC1:
-				if((B1(params.at(0)) == bank && (quint8)params.at(3) == adress)
-				   || (B2(params.at(0)) == bank && (quint8)params.at(4) == adress)
-				   || (B1(params.at(1)) == bank && (quint8)params.at(5) == adress)
-				   || (B2(params.at(1)) == bank && (quint8)params.at(6) == adress))
+				if((B1(_params.at(0)) == bank && (quint8)_params.at(3) == adress)
+				   || (B2(_params.at(0)) == bank && (quint8)_params.at(4) == adress)
+				   || (B1(_params.at(1)) == bank && (quint8)_params.at(5) == adress)
+				   || (B2(_params.at(1)) == bank && (quint8)_params.at(6) == adress))
 					return true;
 		break;
 	case 0xA5:case 0xD4:case 0xD5:
-				if((B1(params.at(0)) == bank && (quint8)params.at(2) == adress)
-				   || (B2(params.at(0)) == bank && (quint8)params.at(4) == adress)
-				   || (B1(params.at(1)) == bank && (quint8)params.at(6) == adress)
-				   || (B2(params.at(1)) == bank && (quint8)params.at(8) == adress))
+				if((B1(_params.at(0)) == bank && (quint8)_params.at(2) == adress)
+				   || (B2(_params.at(0)) == bank && (quint8)_params.at(4) == adress)
+				   || (B1(_params.at(1)) == bank && (quint8)_params.at(6) == adress)
+				   || (B2(_params.at(1)) == bank && (quint8)_params.at(8) == adress))
 					return true;
 		break;
 	case 0x0A:case 0x0B:
-				if((B1(params.at(0)) == bank && (quint8)params.at(2) == adress)
-				   || (B2(params.at(0)) == bank && (quint8)params.at(3) == adress)
-				   || (B1(params.at(1)) == bank && (quint8)params.at(4) == adress))
+				if((B1(_params.at(0)) == bank && (quint8)_params.at(2) == adress)
+				   || (B2(_params.at(0)) == bank && (quint8)_params.at(3) == adress)
+				   || (B1(_params.at(1)) == bank && (quint8)_params.at(4) == adress))
 					return true;
 		break;
 	case 0xA6:case 0xA7:case 0xC0:
-				if((B1(params.at(0)) == bank && (quint8)params.at(2) == adress)
-				   || (B2(params.at(0)) == bank && (quint8)params.at(4) == adress)
-				   || (B1(params.at(1)) == bank && (quint8)params.at(6) == adress))
+				if((B1(_params.at(0)) == bank && (quint8)_params.at(2) == adress)
+				   || (B2(_params.at(0)) == bank && (quint8)_params.at(4) == adress)
+				   || (B1(_params.at(1)) == bank && (quint8)_params.at(6) == adress))
 					return true;
 		break;
 	case 0x14:case 0x15:case 0x3B:case 0x76:case 0x77:
@@ -162,29 +177,29 @@ bool Commande::rechercherVar(quint8 bank, quint8 adress, int value) const
 	case 0x8d:case 0x8e:case 0x8f:case 0x90:case 0x91:
 	case 0x92:case 0x93:case 0x94:case 0x9a:case 0x9b:
 	case 0xE0:case 0xE1:
-		if((B1(params.at(0)) == bank && (quint8)params.at(1) == adress)
-		   || (B2(params.at(0)) == bank && (quint8)params.at(2) == adress))
+		if((B1(_params.at(0)) == bank && (quint8)_params.at(1) == adress)
+		   || (B2(_params.at(0)) == bank && (quint8)_params.at(2) == adress))
 			return true;
 		break;
 	case 0x16:case 0x17:case 0x18:case 0x58:case 0x59:
 	case 0x5A:case 0x64:case 0x6A:case 0xA8:case 0xA9:
 	case 0xAD:case 0xF1:
-		if((B1(params.at(0)) == bank && (quint8)params.at(1) == adress)
-		   || (B2(params.at(0)) == bank && (quint8)params.at(3) == adress))
+		if((B1(_params.at(0)) == bank && (quint8)_params.at(1) == adress)
+		   || (B2(_params.at(0)) == bank && (quint8)_params.at(3) == adress))
 			return true;
 		break;
 	case 0x2D:
-		if((B1(params.at(0)) == bank && (quint8)params.at(2) == adress)
-		   || (B2(params.at(0)) == bank && (quint8)params.at(4) == adress))
+		if((B1(_params.at(0)) == bank && (quint8)_params.at(2) == adress)
+		   || (B2(_params.at(0)) == bank && (quint8)_params.at(4) == adress))
 			return true;
 		break;
 	case 0xB8:case 0x9C:
-				if((B1(params.at(0)) == bank && (quint8)params.at(2) == adress)
-				   || (B2(params.at(0)) == bank && (quint8)params.at(3) == adress))
+				if((B1(_params.at(0)) == bank && (quint8)_params.at(2) == adress)
+				   || (B2(_params.at(0)) == bank && (quint8)_params.at(3) == adress))
 					return true;
 		break;
 	case 0x2C:case 0x37:case 0x39:case 0x3A:
-				if(B1(params.at(0)) == bank && (quint8)params.at(2) == adress)
+				if(B1(_params.at(0)) == bank && (quint8)_params.at(2) == adress)
 					return true;
 		break;
 	case 0x23:case 0x63:case 0x6E:case 0x6F:case 0x70:
@@ -193,19 +208,19 @@ bool Commande::rechercherVar(quint8 bank, quint8 adress, int value) const
 	case 0xB2:case 0xB3:case 0xB4:case 0xB5:case 0xBD:
 	case 0xC5:case 0xC6:case 0xD6:case 0xD7:case 0xE2:
 	case 0xE3:case 0xE4:case 0xFA:case 0xFE:
-		if(B2(params.at(0)) == bank && (quint8)params.at(1) == adress)
+		if(B2(_params.at(0)) == bank && (quint8)_params.at(1) == adress)
 			return true;
 		break;
 	case 0x49:case 0x73:case 0x74:case 0xB7:case 0xB9:
-				if(B2(params.at(0)) == bank && (quint8)params.at(2) == adress)
+				if(B2(_params.at(0)) == bank && (quint8)_params.at(2) == adress)
 					return true;
 		break;
 	case 0x41:case 0x42:
-				if(B2(params.at(0)) == bank && (quint8)params.at(3) == adress)
+				if(B2(_params.at(0)) == bank && (quint8)_params.at(3) == adress)
 					return true;
 		break;
 	case 0x48:
-		if(B2(params.at(0)) == bank && (quint8)params.at(5) == adress)
+		if(B2(_params.at(0)) == bank && (quint8)_params.at(5) == adress)
 			return true;
 		break;
 	}
@@ -219,48 +234,48 @@ QList<int> Commande::searchAllVars()
 	switch(this->opcode)
 	{
 	case 0x09:
-		vars.append(B1(params.at(0)) | (params.at(3) << 4));
-		vars.append(B2(params.at(0)) | (params.at(5) << 4));
-		vars.append(B1(params.at(1)) | (params.at(7) << 4));
-		vars.append(B2(params.at(1)) | (params.at(8) << 4));
-		vars.append(B1(params.at(2)) | (params.at(10) << 4));
-		vars.append(B2(params.at(2)) | (params.at(12) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(3) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(5) << 4));
+		vars.append(B1(_params.at(1)) | (_params.at(7) << 4));
+		vars.append(B2(_params.at(1)) | (_params.at(8) << 4));
+		vars.append(B1(_params.at(2)) | (_params.at(10) << 4));
+		vars.append(B2(_params.at(2)) | (_params.at(12) << 4));
 		return vars;
 	case 0xD3:
-		vars.append(B1(params.at(0)) | (params.at(3) << 4));
-		vars.append(B2(params.at(0)) | (params.at(5) << 4));
-		vars.append(B1(params.at(1)) | (params.at(7) << 4));
-		vars.append(B2(params.at(1)) | (params.at(9) << 4));
-		vars.append(B1(params.at(2)) | (params.at(11) << 4));
-		vars.append(B2(params.at(2)) | (params.at(13) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(3) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(5) << 4));
+		vars.append(B1(_params.at(1)) | (_params.at(7) << 4));
+		vars.append(B2(_params.at(1)) | (_params.at(9) << 4));
+		vars.append(B1(_params.at(2)) | (_params.at(11) << 4));
+		vars.append(B2(_params.at(2)) | (_params.at(13) << 4));
 		return vars;
 	case 0x56:case 0x57:
-		vars.append(B1(params.at(0)) | (params.at(2) << 4));
-		vars.append(B2(params.at(0)) | (params.at(3) << 4));
-		vars.append(B1(params.at(1)) | (params.at(4) << 4));
-		vars.append(B2(params.at(1)) | (params.at(5) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(2) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(3) << 4));
+		vars.append(B1(_params.at(1)) | (_params.at(4) << 4));
+		vars.append(B2(_params.at(1)) | (_params.at(5) << 4));
 		return vars;
 	case 0x75:case 0xC1:
-		vars.append(B1(params.at(0)) | (params.at(3) << 4));
-		vars.append(B2(params.at(0)) | (params.at(4) << 4));
-		vars.append(B1(params.at(1)) | (params.at(5) << 4));
-		vars.append(B2(params.at(1)) | (params.at(6) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(3) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(4) << 4));
+		vars.append(B1(_params.at(1)) | (_params.at(5) << 4));
+		vars.append(B2(_params.at(1)) | (_params.at(6) << 4));
 		return vars;
 	case 0xA5:case 0xD4:case 0xD5:
-		vars.append(B1(params.at(0)) | (params.at(2) << 4));
-		vars.append(B2(params.at(0)) | (params.at(4) << 4));
-		vars.append(B1(params.at(1)) | (params.at(6) << 4));
-		vars.append(B2(params.at(1)) | (params.at(8) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(2) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(4) << 4));
+		vars.append(B1(_params.at(1)) | (_params.at(6) << 4));
+		vars.append(B2(_params.at(1)) | (_params.at(8) << 4));
 		return vars;
 	case 0x0A:case 0x0B:
-		vars.append(B1(params.at(0)) | (params.at(2) << 4));
-		vars.append(B2(params.at(0)) | (params.at(3) << 4));
-		vars.append(B1(params.at(1)) | (params.at(4) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(2) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(3) << 4));
+		vars.append(B1(_params.at(1)) | (_params.at(4) << 4));
 		return vars;
 	case 0xA6:case 0xA7:case 0xC0:
-		vars.append(B1(params.at(0)) | (params.at(2) << 4));
-		vars.append(B2(params.at(0)) | (params.at(4) << 4));
-		vars.append(B1(params.at(1)) | (params.at(6) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(2) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(4) << 4));
+		vars.append(B1(_params.at(1)) | (_params.at(6) << 4));
 		return vars;
 	case 0x14:case 0x15:case 0x3B:case 0x76:case 0x77:
 	case 0x78:case 0x79:case 0x80:case 0x81:case 0x82:
@@ -269,25 +284,25 @@ QList<int> Commande::searchAllVars()
 	case 0x8d:case 0x8e:case 0x8f:case 0x90:case 0x91:
 	case 0x92:case 0x93:case 0x94:case 0x9a:case 0x9b:
 	case 0xE0:case 0xE1:
-		vars.append(B1(params.at(0)) | (params.at(1) << 4));
-		vars.append(B2(params.at(0)) | (params.at(2) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(1) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(2) << 4));
 		return vars;
 	case 0x16:case 0x17:case 0x18:case 0x58:case 0x59:
 	case 0x5A:case 0x64:case 0x6A:case 0xA8:case 0xA9:
 	case 0xAD:case 0xF1:
-		vars.append(B1(params.at(0)) | (params.at(1) << 4));
-		vars.append(B2(params.at(0)) | (params.at(3) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(1) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(3) << 4));
 		return vars;
 	case 0x2D:
-		vars.append(B1(params.at(0)) | (params.at(2) << 4));
-		vars.append(B2(params.at(0)) | (params.at(4) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(2) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(4) << 4));
 		return vars;
 	case 0xB8:case 0x9C:
-		vars.append(B1(params.at(0)) | (params.at(2) << 4));
-		vars.append(B2(params.at(0)) | (params.at(3) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(2) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(3) << 4));
 		return vars;
 	case 0x2C:case 0x37:case 0x39:case 0x3A:
-		vars.append(B1(params.at(0)) | (params.at(2) << 4));
+		vars.append(B1(_params.at(0)) | (_params.at(2) << 4));
 		return vars;
 	case 0x23:case 0x63:case 0x6E:case 0x6F:case 0x70:
 	case 0x7A:case 0x7B:case 0x7C:case 0x7D:case 0x7F:
@@ -295,16 +310,16 @@ QList<int> Commande::searchAllVars()
 	case 0xB2:case 0xB3:case 0xB4:case 0xB5:case 0xBD:
 	case 0xC5:case 0xC6:case 0xD6:case 0xD7:case 0xE2:
 	case 0xE3:case 0xE4:case 0xFA:case 0xFE:
-		vars.append(B2(params.at(0)) | (params.at(1) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(1) << 4));
 		return vars;
 	case 0x49:case 0x73:case 0x74:case 0xB7:case 0xB9:
-		vars.append(B2(params.at(0)) | (params.at(2) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(2) << 4));
 		return vars;
 	case 0x41:case 0x42:
-		vars.append(B2(params.at(0)) | (params.at(3) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(3) << 4));
 		return vars;
 	case 0x48:
-		vars.append(B2(params.at(0)) | (params.at(5) << 4));
+		vars.append(B2(_params.at(0)) | (_params.at(5) << 4));
 		return vars;
 	default:
 		return vars;
@@ -314,7 +329,7 @@ QList<int> Commande::searchAllVars()
 bool Commande::rechercherExec(quint8 group, quint8 script) const
 {
 	return (opcode==0x01 || opcode==0x02 || opcode==0x03)
-			&& (quint8)params.at(0) == group && (quint8)(params.at(1) & 0x1F) == script;
+			&& (quint8)_params.at(0) == group && (quint8)(_params.at(1) & 0x1F) == script;
 }
 
 bool Commande::rechercherTexte(const QRegExp &texte) const
@@ -322,10 +337,10 @@ bool Commande::rechercherTexte(const QRegExp &texte) const
 	qint16 textID = -1;
 	switch(this->opcode)
 	{
-	case 0x0F:	if((quint8)params.at(0)==0xFD)	textID = (quint8)params.at(2);	break;
-	case 0x40:	textID = (quint8)params.at(1);	break;
-	case 0x43:	textID = (quint8)params.at(0);	break;
-	case 0x48:	textID = (quint8)params.at(2);	break;
+	case 0x0F:	if((quint8)_params.at(0)==0xFD)	textID = (quint8)_params.at(2);	break;
+	case 0x40:	textID = (quint8)_params.at(1);	break;
+	case 0x43:	textID = (quint8)_params.at(0);	break;
+	case 0x48:	textID = (quint8)_params.at(2);	break;
 	}
 	return textID != -1 && textID < Data::currentTextes->size() && Data::currentTextes->at(textID)->search(texte);
 }
@@ -335,17 +350,17 @@ void Commande::listUsedTexts(QSet<quint8> &usedTexts) const
 	switch(opcode)
 	{
 	case 0x0F://SPECIAL
-		if((quint8)params.at(0)==0xFD)
-			usedTexts.insert(params.at(2));
+		if((quint8)_params.at(0)==0xFD)
+			usedTexts.insert(_params.at(2));
 		break;
 	case 0x40://MESSAGE
-		usedTexts.insert(params.at(1));
+		usedTexts.insert(_params.at(1));
 		break;
 	case 0x43://MAP NAME
-		usedTexts.insert(params.at(0));
+		usedTexts.insert(_params.at(0));
 		break;
 	case 0x48://ASK
-		usedTexts.insert(params.at(2));
+		usedTexts.insert(_params.at(2));
 		break;
 	}
 }
@@ -355,7 +370,7 @@ void Commande::listUsedTuts(QSet<quint8> &usedTuts) const
 	switch(opcode)
 	{
 	case 0x21://TUTOR
-		usedTuts.insert(params.at(0));
+		usedTuts.insert(_params.at(0));
 		break;
 	}
 }
@@ -365,23 +380,23 @@ void Commande::shiftTextIds(int textId, int steps)
 	switch(opcode)
 	{
 	case 0x0F://SPECIAL
-		if((quint8)params.at(0)==0xFD && (quint8)params.at(2)>textId) {
-			params[2] = (quint8)params.at(2) + steps;
+		if((quint8)_params.at(0)==0xFD && (quint8)_params.at(2)>textId) {
+			_params[2] = (quint8)_params.at(2) + steps;
 		}
 		break;
 	case 0x40://MESSAGE
-		if((quint8)params.at(1)>textId) {
-			params[1] = (quint8)params.at(1) + steps;
+		if((quint8)_params.at(1)>textId) {
+			_params[1] = (quint8)_params.at(1) + steps;
 		}
 		break;
 	case 0x43://MAP NAME
-		if((quint8)params.at(0)>textId) {
-			params[0] = (quint8)params.at(0) + steps;
+		if((quint8)_params.at(0)>textId) {
+			_params[0] = (quint8)_params.at(0) + steps;
 		}
 		break;
 	case 0x48://ASK
-		if((quint8)params.at(2)>textId) {
-			params[2] = (quint8)params.at(2) + steps;
+		if((quint8)_params.at(2)>textId) {
+			_params[2] = (quint8)_params.at(2) + steps;
 		}
 		break;
 	}
@@ -392,8 +407,8 @@ void Commande::shiftTutIds(int tutId, int steps)
 	switch(opcode)
 	{
 	case 0x21://TUTOR
-		if((quint8)params.at(0)>tutId) {
-			params[0] = (quint8)params.at(0) + steps;
+		if((quint8)_params.at(0)>tutId) {
+			_params[0] = (quint8)_params.at(0) + steps;
 		}
 		break;
 	}
@@ -402,7 +417,7 @@ void Commande::shiftTutIds(int tutId, int steps)
 void Commande::listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8, quint8> &text2win) const
 {
 	FF7Window win;
-	const char *params = this->params.constData();
+	const char *_params = this->_params.constData();
 
 	memset(&win, 0, sizeof(FF7Window));
 	win.type = opcode;
@@ -411,32 +426,32 @@ void Commande::listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quin
 	{
 	case 0x2F: // WSIZW
 	case 0x50: // WINDOW
-		memcpy(&win.x, &params[1], 2);
-		memcpy(&win.y, &params[3], 2);
-		memcpy(&win.w, &params[5], 2);
-		memcpy(&win.h, &params[7], 2);
+		memcpy(&win.x, &_params[1], 2);
+		memcpy(&win.y, &_params[3], 2);
+		memcpy(&win.w, &_params[5], 2);
+		memcpy(&win.h, &_params[7], 2);
 
-		windows.insert(params[0], win);// winID
+		windows.insert(_params[0], win);// winID
 		break;
 	case 0x51: // WMOVE
-		memcpy(&win.w, &params[1], 2);
-		memcpy(&win.h, &params[3], 2);
+		memcpy(&win.w, &_params[1], 2);
+		memcpy(&win.h, &_params[3], 2);
 
-		windows.insert(params[0], win);// winID
+		windows.insert(_params[0], win);// winID
 		break;
 	case 0x40: // MESSAGE
-		text2win.insert(params[1], params[0]);// textID, winID
+		text2win.insert(_params[1], _params[0]);// textID, winID
 		break;
 	}
 }
 
-QString Commande::toString() const
+QString Commande::toString2() const
 {
 	QString ret;
 	quint8 depart = opcode == 0x28;
-	for(quint8 i=depart ; i<params.size()-1 ; ++i)
-		ret += QString("%1,").arg((quint8)params.at(i));
-	if(params.size()-depart>0) ret += QString("%1").arg((quint8)params.at(params.size()-1));
+	for(quint8 i=depart ; i<_params.size()-1 ; ++i)
+		ret += QString("%1,").arg((quint8)_params.at(i));
+	if(_params.size()-depart>0) ret += QString("%1").arg((quint8)_params.at(_params.size()-1));
 	return ret;
 }
 
@@ -525,6 +540,12 @@ QString Commande::_svar(const QByteArray &param, quint8 bank)
 {
 	if(bank > 0)	return _bank(param.at(0), bank);
 	return QString("%1").arg(_toSInt(param));
+}
+
+QString Commande::_var(int value, quint8 bank)
+{
+	if(bank > 0)	return _bank(value, bank);
+	return QString::number(value);
 }
 
 quint32 Commande::_toInt(const QByteArray &param)
@@ -686,49 +707,49 @@ QString Commande::_battleMode(quint32 param)
 
 QString Commande::_special() const
 {
-	switch((quint8)params.at(0))
+	switch((quint8)_params.at(0))
 	{
 	case 0xF5:
-		return QObject::tr("%1 le curseur main").arg((quint8)params.at(1) == 0 ? QObject::tr("Afficher") : QObject::tr("Ne pas afficher"));//Booleen
+		return QObject::tr("%1 le curseur main").arg((quint8)_params.at(1) == 0 ? QObject::tr("Afficher") : QObject::tr("Ne pas afficher"));//Booleen
 	case 0xF6:
-		return QObject::tr("PNAME - Désactiver le menu de droite (%1)").arg((quint8)params.at(1));//DEBUG
+		return QObject::tr("PNAME - Désactiver le menu de droite (%1)").arg((quint8)_params.at(1));//DEBUG
 	case 0xF7:
-		return QObject::tr("GMSPD | %1 |").arg((quint8)params.at(1));//DEBUG
+		return QObject::tr("GMSPD | %1 |").arg((quint8)_params.at(1));//DEBUG
 	case 0xF8:
 		return QObject::tr("Modifier la vitesse des messages (%2) | %1 |")
-				.arg((quint8)params.at(1))//DEBUG
-				.arg((quint8)params.at(2));//Vitesse
+				.arg((quint8)_params.at(1))//DEBUG
+				.arg((quint8)_params.at(2));//Vitesse
 	case 0xF9:
 		return QObject::tr("Remplir le menu matéria de toutes les matérias en quantité maximum");
 	case 0xFA:
 		return QObject::tr("Remplir l'inventaire par tous les objets en quantité maximum");
 	case 0xFB:
-		return QObject::tr("%1 les combats").arg((quint8)params.at(1) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booleen
+		return QObject::tr("%1 les combats").arg((quint8)_params.at(1) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booleen
 	case 0xFC:
-		return QObject::tr("%1 les cinématiques").arg((quint8)params.at(1) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booleen
+		return QObject::tr("%1 les cinématiques").arg((quint8)_params.at(1) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booleen
 	case 0xFD:
 		return QObject::tr("Changer le nom de %1 par le texte %2")
-				.arg(_personnage(params.at(1)))//Personnage ID
-				.arg(_text(params.at(2)));//Texte ID
+				.arg(_personnage(_params.at(1)))//Personnage ID
+				.arg(_text(_params.at(2)));//Texte ID
 	case 0xFE:
 		return QObject::tr("Met le temps à 0, débloque le menu \"PHS\" et \"Sauvegarder\". Nouvelle équipe : Clad | (Vide) | (Vide)");
 	case 0xFF:
 		return QObject::tr("Supprimer tous les objets de l'inventaire");
 	default:
-		return QString("%1?").arg((quint8)params.at(0),0,16);
+		return QString("%1?").arg((quint8)_params.at(0),0,16);
 	}
 }
 
 QString Commande::_kawai() const
 {
-	if(params.size()>1)
+	if(_params.size()>1)
 	{
-		switch((quint8)params.at(1))
+		switch((quint8)_params.at(1))
 		{
 		case 0x00:
 			return "EYETX";
 		case 0x01:
-			return QObject::tr("%1 transparence").arg(params.size() > 2 && (quint8)params.at(2) == 0 ? QObject::tr("Désactiver") : QObject::tr("Activer"));
+			return QObject::tr("%1 transparence").arg(_params.size() > 2 && (quint8)_params.at(2) == 0 ? QObject::tr("Désactiver") : QObject::tr("Activer"));
 		case 0x02:
 			return "AMBNT";
 			//0x04
@@ -746,7 +767,7 @@ QString Commande::_kawai() const
 		case 0xFF:
 			return "RESET";
 		default:
-			return QString("%1?").arg((quint8)params.at(1),0,16);
+			return QString("%1?").arg((quint8)_params.at(1),0,16);
 		}
 	}
 	return QObject::tr("Err.");
@@ -761,182 +782,182 @@ QString Commande::traduction() const
 		
 	case 0x01:
 		return QObject::tr("Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
-				.arg(_script((quint8)params.at(0)))//GroupID
-				.arg(((quint8)params.at(1) >> 5) & 7)//Priorité sur 3 bits
-				.arg((quint8)params.at(1) & 0x1F);//ScriptID sur 5 bits
+				.arg(_script((quint8)_params.at(0)))//GroupID
+				.arg(((quint8)_params.at(1) >> 5) & 7)//Priorité sur 3 bits
+				.arg((quint8)_params.at(1) & 0x1F);//ScriptID sur 5 bits
 
 	case 0x02:
 		return QObject::tr("Exécuter le script n°%3 du groupe %1 (priorité %2/6)")
-				.arg(_script((quint8)params.at(0)))//GroupID
-				.arg(((quint8)params.at(1) >> 5) & 7)//Priorité sur 3 bits
-				.arg((quint8)params.at(1) & 0x1F);//ScriptID sur 5 bits
+				.arg(_script((quint8)_params.at(0)))//GroupID
+				.arg(((quint8)_params.at(1) >> 5) & 7)//Priorité sur 3 bits
+				.arg((quint8)_params.at(1) & 0x1F);//ScriptID sur 5 bits
 
 	case 0x03:
 		return QObject::tr("Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Attend la fin de l'exécution pour continuer")
-				.arg(_script((quint8)params.at(0)))//GroupID
-				.arg(((quint8)params.at(1) >> 5) & 7)//Priorité sur 3 bits
-				.arg((quint8)params.at(1) & 0x1F);//ScriptID sur 5 bits
+				.arg(_script((quint8)_params.at(0)))//GroupID
+				.arg(((quint8)_params.at(1) >> 5) & 7)//Priorité sur 3 bits
+				.arg((quint8)_params.at(1) & 0x1F);//ScriptID sur 5 bits
 		
 	case 0x04:
 		return QObject::tr("Exécuter le script n°%3 du groupe lié au personnage n°%1 de l'équipe (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
-				.arg((quint8)params.at(0))//ID personnage d'équipe sur 8 bits
-				.arg(((quint8)params.at(1) >> 5) & 7)//Priorité sur 3 bits
-				.arg((quint8)params.at(1) & 0x1F);//ScriptID sur 5 bits
+				.arg((quint8)_params.at(0))//ID personnage d'équipe sur 8 bits
+				.arg(((quint8)_params.at(1) >> 5) & 7)//Priorité sur 3 bits
+				.arg((quint8)_params.at(1) & 0x1F);//ScriptID sur 5 bits
 		
 	case 0x05:
 		return QObject::tr("Exécuter le script n°%3 du groupe lié au personnage n°%1 de l'équipe (priorité %2/6)")
-				.arg((quint8)params.at(0))//ID personnage d'équipe sur 8 bits
-				.arg(((quint8)params.at(1) >> 5) & 7)//Priorité sur 3 bits
-				.arg((quint8)params.at(1) & 0x1F);//ScriptID sur 5 bits
+				.arg((quint8)_params.at(0))//ID personnage d'équipe sur 8 bits
+				.arg(((quint8)_params.at(1) >> 5) & 7)//Priorité sur 3 bits
+				.arg((quint8)_params.at(1) & 0x1F);//ScriptID sur 5 bits
 		
 	case 0x06:
 		return QObject::tr("Exécuter le script n°%3 du groupe lié au personnage n°%1 de l'équipe (priorité %2/6) - Attend la fin de l'exécution pour continuer")
-				.arg((quint8)params.at(0))//ID personnage d'équipe sur 8 bits
-				.arg(((quint8)params.at(1) >> 5) & 7)//Priorité sur 3 bits
-				.arg((quint8)params.at(1) & 0x1F);//ScriptID sur 5 bits
+				.arg((quint8)_params.at(0))//ID personnage d'équipe sur 8 bits
+				.arg(((quint8)_params.at(1) >> 5) & 7)//Priorité sur 3 bits
+				.arg((quint8)_params.at(1) & 0x1F);//ScriptID sur 5 bits
 		
 	case 0x07:
 		return QObject::tr("Return et exécuter le script n°%2 du groupe appelant (priorité %1/6)")
-				.arg(((quint8)params.at(0) >> 5) & 7)//Priorité sur 3 bits
-				.arg((quint8)params.at(0) & 0x1F);//ScriptID sur 5 bits
+				.arg(((quint8)_params.at(0) >> 5) & 7)//Priorité sur 3 bits
+				.arg((quint8)_params.at(0) & 0x1F);//ScriptID sur 5 bits
 		
 	case 0x08:
 		return QObject::tr("Rassembler les membres de l'équipe dans le personnage jouable (vitesse=%1)")
-				.arg((quint8)params.at(0));//Vitesse
+				.arg((quint8)_params.at(0));//Vitesse
 		
 	case 0x09:
 		return QObject::tr("Faire sortir les membres de l'équipe à partir du personnage jouable (perso 1 : X=%1, Y=%2, dir=%3 ; perso 2 : X=%4, Y=%5, dir=%6) (vitesse %7)")
-				.arg(_svar(params.mid(3,2), B1(params.at(0))))//Cible X1 (bank 1)
-				.arg(_svar(params.mid(5,2), B2(params.at(0))))//Cible Y1 (bank 2)
-				.arg(_var(params.mid(7,1), B1(params.at(1))))//Direction 1 (bank 3)
-				.arg(_svar(params.mid(8,2), B2(params.at(1))))//Cible X2 (bank 4)
-				.arg(_svar(params.mid(10,2), B1(params.at(2))))//Cible Y2 (bank 5)
-				.arg(_var(params.mid(12,1), B2(params.at(2))))//Direction 2 (bank 6)
-				.arg((quint8)params.at(13));//Vitesse
+				.arg(_svar(_params.mid(3,2), B1(_params.at(0))))//Cible X1 (bank 1)
+				.arg(_svar(_params.mid(5,2), B2(_params.at(0))))//Cible Y1 (bank 2)
+				.arg(_var(_params.mid(7,1), B1(_params.at(1))))//Direction 1 (bank 3)
+				.arg(_svar(_params.mid(8,2), B2(_params.at(1))))//Cible X2 (bank 4)
+				.arg(_svar(_params.mid(10,2), B1(_params.at(2))))//Cible Y2 (bank 5)
+				.arg(_var(_params.mid(12,1), B2(_params.at(2))))//Direction 2 (bank 6)
+				.arg((quint8)_params.at(13));//Vitesse
 		
 	case 0x0A:
 		return QObject::tr("Sauvegarder les membres de l'équipe : %1 | %2 | %3")
-				.arg(_var(params.mid(2,1), B1(params.at(0))))//party 1 (bank 1)
-				.arg(_var(params.mid(3,1), B2(params.at(0))))//party 2 (bank 2)
-				.arg(_var(params.mid(4,1), B1(params.at(1))));//party 3 (bank 3) -vérifié-
+				.arg(_var(_params.mid(2,1), B1(_params.at(0))))//party 1 (bank 1)
+				.arg(_var(_params.mid(3,1), B2(_params.at(0))))//party 2 (bank 2)
+				.arg(_var(_params.mid(4,1), B1(_params.at(1))));//party 3 (bank 3) -vérifié-
 		
 	case 0x0B:
 		return QObject::tr("Récupérer les membres de l'équipe : %1 | %2 | %3")
-				.arg(_var(params.mid(2,1), B1(params.at(0))))//party 1 (bank 1)
-				.arg(_var(params.mid(3,1), B2(params.at(0))))//party 2 (bank 2)
-				.arg(_var(params.mid(4,1), B1(params.at(1))));//party 3 (bank 3) -vérifié-
+				.arg(_var(_params.mid(2,1), B1(_params.at(0))))//party 1 (bank 1)
+				.arg(_var(_params.mid(3,1), B2(_params.at(0))))//party 2 (bank 2)
+				.arg(_var(_params.mid(4,1), B1(_params.at(1))));//party 3 (bank 3) -vérifié-
 		
 	case 0x0E:
 		return QObject::tr("Demander le CD %1")
-				.arg((quint8)params.at(0));//num CD
+				.arg((quint8)_params.at(0));//num CD
 		
 	case 0x0F:
 		return QObject::tr("SPECIAL - ") + _special();
 		
 	case 0x10:
 		return QObject::tr("Aller à l'octet %1 du script")
-				.arg(pos+1+(quint8)params.at(0));//Saut court
+				.arg(pos+1+(quint8)_params.at(0));//Saut court
 		
 	case 0x11:
 		return QObject::tr("Aller à l'octet %1 du script")
-				.arg(pos+1+_toSInt(params.mid(0,2)));//Saut long
+				.arg(pos+1+_toSInt(_params.mid(0,2)));//Saut long
 		
 	case 0x12:
 		return QObject::tr("Aller à l'octet %1 du script")
-				.arg((int)(pos-(quint8)params.at(0)));//Saut court en arrière
+				.arg((int)(pos-(quint8)_params.at(0)));//Saut court en arrière
 		
 	case 0x13:
 		return QObject::tr("Aller à l'octet %1 du script")
-				.arg((int)(pos-_toInt(params.mid(0,2))));//Saut long en arrière
+				.arg((int)(pos-_toInt(_params.mid(0,2))));//Saut long en arrière
 		
 	case 0x14://Indenter
 		return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
-				.arg(_var(params.mid(1,1), B1(params.at(0))))//Valeur courte (bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))))//Valeur courte (bank 2)
-				.arg(_operateur(params.at(3)))//Opérateur
-				.arg(pos+5+(quint8)params.at(4))//Saut court
-				.arg((quint8)params.at(3)==9 || (quint8)params.at(3)==10 ? ")" : "");//mini hack ")"
+				.arg(_var(_params.mid(1,1), B1(_params.at(0))))//Valeur courte (bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))))//Valeur courte (bank 2)
+				.arg(_operateur(_params.at(3)))//Opérateur
+				.arg(pos+5+(quint8)_params.at(4))//Saut court
+				.arg((quint8)_params.at(3)==9 || (quint8)_params.at(3)==10 ? ")" : "");//mini hack ")"
 		
 	case 0x15://Indenter
 		return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
-				.arg(_var(params.mid(1,1), B1(params.at(0))))//Valeur courte (bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))))//Valeur courte (bank 2)
-				.arg(_operateur(params.at(3)))//Opérateur
-				.arg(pos+5+_toInt(params.mid(4,2)))//Saut long
-				.arg((quint8)params.at(3)==9 || (quint8)params.at(3)==10 ? ")" : "");//mini hack ")"
+				.arg(_var(_params.mid(1,1), B1(_params.at(0))))//Valeur courte (bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))))//Valeur courte (bank 2)
+				.arg(_operateur(_params.at(3)))//Opérateur
+				.arg(pos+5+_toInt(_params.mid(4,2)))//Saut long
+				.arg((quint8)_params.at(3)==9 || (quint8)_params.at(3)==10 ? ")" : "");//mini hack ")"
 		
 	case 0x16://Indenter
 		return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
-				.arg(_svar(params.mid(1,2), B1(params.at(0))))//Valeur signée (bank 1)
-				.arg(_svar(params.mid(3,2), B2(params.at(0))))//Valeur signée (bank 2)
-				.arg(_operateur(params.at(5)))//Opérateur
-				.arg(pos+7+(quint8)params.at(6))//Saut court
-				.arg((quint8)params.at(5)==9 || (quint8)params.at(5)==10 ? ")" : "");//mini hack ")"
+				.arg(_svar(_params.mid(1,2), B1(_params.at(0))))//Valeur signée (bank 1)
+				.arg(_svar(_params.mid(3,2), B2(_params.at(0))))//Valeur signée (bank 2)
+				.arg(_operateur(_params.at(5)))//Opérateur
+				.arg(pos+7+(quint8)_params.at(6))//Saut court
+				.arg((quint8)_params.at(5)==9 || (quint8)_params.at(5)==10 ? ")" : "");//mini hack ")"
 		
 	case 0x17://Indenter
 		return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
-				.arg(_svar(params.mid(1,2), B1(params.at(0))))//Valeur signée (bank 1)
-				.arg(_svar(params.mid(3,2), B2(params.at(0))))//Valeur signée (bank 2)
-				.arg(_operateur(params.at(5)))//Opérateur
-				.arg(pos+7+_toInt(params.mid(6,2)))//Saut long
-				.arg((quint8)params.at(5)==9 || (quint8)params.at(5)==10 ? ")" : "");//mini hack ")"
+				.arg(_svar(_params.mid(1,2), B1(_params.at(0))))//Valeur signée (bank 1)
+				.arg(_svar(_params.mid(3,2), B2(_params.at(0))))//Valeur signée (bank 2)
+				.arg(_operateur(_params.at(5)))//Opérateur
+				.arg(pos+7+_toInt(_params.mid(6,2)))//Saut long
+				.arg((quint8)_params.at(5)==9 || (quint8)_params.at(5)==10 ? ")" : "");//mini hack ")"
 		
 	case 0x18://Indenter
 		return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
-				.arg(_var(params.mid(1,2), B1(params.at(0))))//Valeur (bank 1)
-				.arg(_var(params.mid(3,2), B2(params.at(0))))//Valeur (bank 2)
-				.arg(_operateur(params.at(5)))//Opérateur
-				.arg(pos+7+(quint8)params.at(6))//Saut court
-				.arg((quint8)params.at(5)==9 || (quint8)params.at(5)==10 ? ")" : "");//mini hack ")"
+				.arg(_var(_params.mid(1,2), B1(_params.at(0))))//Valeur (bank 1)
+				.arg(_var(_params.mid(3,2), B2(_params.at(0))))//Valeur (bank 2)
+				.arg(_operateur(_params.at(5)))//Opérateur
+				.arg(pos+7+(quint8)_params.at(6))//Saut court
+				.arg((quint8)_params.at(5)==9 || (quint8)_params.at(5)==10 ? ")" : "");//mini hack ")"
 		
 	case 0x19://Indenter
 		return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
-				.arg(_var(params.mid(1,2), B1(params.at(0))))//Valeur (bank 1)
-				.arg(_var(params.mid(3,2), B2(params.at(0))))//Valeur (bank 2)
-				.arg(_operateur(params.at(5)))//Opérateur
-				.arg(pos+7+_toInt(params.mid(6,2)))//Saut long
-				.arg((quint8)params.at(5)==9 || (quint8)params.at(5)==10 ? ")" : "");//mini hack ")"
+				.arg(_var(_params.mid(1,2), B1(_params.at(0))))//Valeur (bank 1)
+				.arg(_var(_params.mid(3,2), B2(_params.at(0))))//Valeur (bank 2)
+				.arg(_operateur(_params.at(5)))//Opérateur
+				.arg(pos+7+_toInt(_params.mid(6,2)))//Saut long
+				.arg((quint8)_params.at(5)==9 || (quint8)_params.at(5)==10 ? ")" : "");//mini hack ")"
 		
 	case 0x20:
 		return QObject::tr("Lancer un mini-jeu : %5 (Après le jeu aller à l'écran %1 (X=%2, Y=%3, polygone id=%4))")
-				.arg(_field(params.mid(0,2)))//id décor
-				.arg(_toSInt(params.mid(2,2)))//cible X
-				.arg(_toSInt(params.mid(4,2)))//cible Y
-				.arg(_toInt(params.mid(6,2)))//polygone id
-				.arg(_miniGame(params.at(9), params.at(8)));//Mini-jeu
+				.arg(_field(_params.mid(0,2)))//id décor
+				.arg(_toSInt(_params.mid(2,2)))//cible X
+				.arg(_toSInt(_params.mid(4,2)))//cible Y
+				.arg(_toInt(_params.mid(6,2)))//polygone id
+				.arg(_miniGame(_params.at(9), _params.at(8)));//Mini-jeu
 		
 	case 0x21:
 		return QObject::tr("Lancer le tutoriel n°%1")
-				.arg((quint8)params.at(0));//id tutoriel
+				.arg((quint8)_params.at(0));//id tutoriel
 		
 	case 0x22:
 		return QObject::tr("Mode de combat : %1")
-				.arg(_battleMode(_toInt(params.mid(0,4))));//battleMode
+				.arg(_battleMode(_toInt(_params.mid(0,4))));//battleMode
 		
 	case 0x23:
 		return QObject::tr("Stocker le résultat du dernier combat dans %1")
-				.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+				.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 		
 	case 0x24:
 		return QObject::tr("Attendre %1 img")
-				.arg(_toInt(params.mid(0,2)));//Valeur
+				.arg(_toInt(_params.mid(0,2)));//Valeur
 		
 	case 0x25:
 		return QObject::tr("Voiler l'écran avec la couleur RVB(%1, %2, %3)")
-				.arg(_var(params.mid(3,1), B1(params.at(0))))//Rouge (bank 1 ???)
-				.arg(_var(params.mid(4,1), B2(params.at(0))))//Vert (bank 2 ???)
-				.arg(_var(params.mid(5,1), B1(params.at(1))));//Bleu (bank 3 ???)
-		// .arg((quint8)params.at(6));//Vitesse
+				.arg(_var(_params.mid(3,1), B1(_params.at(0))))//Rouge (bank 1 ???)
+				.arg(_var(_params.mid(4,1), B2(_params.at(0))))//Vert (bank 2 ???)
+				.arg(_var(_params.mid(5,1), B1(_params.at(1))));//Bleu (bank 3 ???)
+		// .arg((quint8)_params.at(6));//Vitesse
 		//Type
 		//Adjust
 		
 	case 0x26:
 		return QObject::tr("L'objet 3D cligne des yeux : %1")
-				.arg((quint8)params.at(0) == 0 ? QObject::tr("ON") : QObject::tr("OFF"));//booleen
+				.arg((quint8)_params.at(0) == 0 ? QObject::tr("ON") : QObject::tr("OFF"));//booleen
 		
 	case 0x27:
 		return QObject::tr("BGMOVIE : %1")
-				.arg((quint8)params.at(0) == 0 ? QObject::tr("ON") : QObject::tr("OFF"));//booleen
+				.arg((quint8)_params.at(0) == 0 ? QObject::tr("ON") : QObject::tr("OFF"));//booleen
 		
 	case 0x28:
 		return QObject::tr("Filtre graphique sur l'objet 3D - ") + _kawai();//KAWAI
@@ -946,95 +967,95 @@ QString Commande::traduction() const
 		
 	case 0x2A:
 		return QObject::tr("Déplacer l'objet 3D vers le membre n°%1 de l'équipe")
-				.arg((quint8)params.at(0));//Membre d'équipe
+				.arg((quint8)_params.at(0));//Membre d'équipe
 		
 	case 0x2B:
 		return QObject::tr("SLIP : %1")
-				.arg((quint8)params.at(0) == 0 ? QObject::tr("ON") : QObject::tr("OFF"));
+				.arg((quint8)_params.at(0) == 0 ? QObject::tr("ON") : QObject::tr("OFF"));
 		
 	case 0x2C:
 		return QObject::tr("Déplacer la couche %1 du décor (Z=%2)")
-				.arg((quint8)params.at(1))//Couche ID
-				.arg(_svar(params.mid(2,2), B2((quint8)params.at(0))));//Cible Z (bank 2 ???)
+				.arg((quint8)_params.at(1))//Couche ID
+				.arg(_svar(_params.mid(2,2), B2((quint8)_params.at(0))));//Cible Z (bank 2 ???)
 		
 	case 0x2D:
 		return QObject::tr("Animer la couche %1 du décor (horizontalement=%2, verticalement=%3)")
-				.arg((quint8)params.at(1))//Couche ID
-				.arg(_svar(params.mid(2,2), B1(params.at(0))))//Cible X (bank 1)
-				.arg(_svar(params.mid(4,2), B2(params.at(0))));//Cible Y (bank 2)
+				.arg((quint8)_params.at(1))//Couche ID
+				.arg(_svar(_params.mid(2,2), B1(_params.at(0))))//Cible X (bank 1)
+				.arg(_svar(_params.mid(4,2), B2(_params.at(0))));//Cible Y (bank 2)
 		
 	case 0x2E:
 		return QObject::tr("WCLS (fenêtre n°%1)")
-				.arg((quint8)params.at(0));//Fenêtre ID
+				.arg((quint8)_params.at(0));//Fenêtre ID
 		
 	case 0x2F:
 		return QObject::tr("Redimensionner fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)")
-				.arg((quint8)params.at(0))//Fenêtre ID
-				.arg(_toInt(params.mid(1,2)))//Cible X
-				.arg(_toInt(params.mid(3,2)))//Cible Y
-				.arg(_toInt(params.mid(5,2)))//Largeur
-				.arg(_toInt(params.mid(7,2)));//Hauteur
+				.arg((quint8)_params.at(0))//Fenêtre ID
+				.arg(_toInt(_params.mid(1,2)))//Cible X
+				.arg(_toInt(_params.mid(3,2)))//Cible Y
+				.arg(_toInt(_params.mid(5,2)))//Largeur
+				.arg(_toInt(_params.mid(7,2)));//Hauteur
 		
 	case 0x30://Indenter
 		return QObject::tr("Si appuie sur la touche %1 (aller à l'octet %2 du script sinon)")
-				.arg(_key(_toInt(params.mid(0,2))))//touches
-				.arg(pos+3+(quint8)params.at(2));//Saut court
+				.arg(_key(_toInt(_params.mid(0,2))))//touches
+				.arg(pos+3+(quint8)_params.at(2));//Saut court
 		
 	case 0x31://Indenter
 		return QObject::tr("Si appuie sur la touche %1 une fois (aller à l'octet %2 du script sinon)")
-				.arg(_key(_toInt(params.mid(0,2))))//touches
-				.arg(pos+3+(quint8)params.at(2));//Saut court
+				.arg(_key(_toInt(_params.mid(0,2))))//touches
+				.arg(pos+3+(quint8)_params.at(2));//Saut court
 		
 	case 0x32://Indenter
 		return QObject::tr("Si relache la touche %1 pour la première fois (aller à l'octet %2 du script sinon)")
-				.arg(_key(_toInt(params.mid(0,2))))//touches
-				.arg(pos+3+(quint8)params.at(2));//Saut court
+				.arg(_key(_toInt(_params.mid(0,2))))//touches
+				.arg(pos+3+(quint8)_params.at(2));//Saut court
 		
 	case 0x33:
 		return QObject::tr("%1 les déplacements du personnage jouable")
-				.arg((quint8)params.at(0) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booleen
+				.arg((quint8)_params.at(0) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booleen
 		
 	case 0x34:
 		return QObject::tr("Tourner instantanément l'objet 3D vers le membre de l'équipe n°%1")
-				.arg((quint8)params.at(0));//Party ID
+				.arg((quint8)_params.at(0));//Party ID
 		
 	case 0x35:
 		return QObject::tr("Tourner l'objet 3D vers le membre de l'équipe n°%1 (Vitesse=%2, SensRotation=%3)")
-				.arg((quint8)params.at(0))//Party ID
-				.arg((quint8)params.at(1))//Vitesse
-				.arg(_sensRotation((quint8)params.at(2)));//Sens de rotation
+				.arg((quint8)_params.at(0))//Party ID
+				.arg((quint8)_params.at(1))//Vitesse
+				.arg(_sensRotation((quint8)_params.at(2)));//Sens de rotation
 		
 	case 0x36:
 		return QObject::tr("%2 dans fenêtre n°%1 (gauche=%3, haut=%4)")
-				.arg((quint8)params.at(0))//Fenêtre ID
-				.arg(_windowNum((quint8)params.at(1)))//Affichage numérique
-				.arg((quint8)params.at(2))//Margin-left
-				.arg((quint8)params.at(3));//Margin-top
+				.arg((quint8)_params.at(0))//Fenêtre ID
+				.arg(_windowNum((quint8)_params.at(1)))//Affichage numérique
+				.arg((quint8)_params.at(2))//Margin-left
+				.arg((quint8)_params.at(3));//Margin-top
 		
 	case 0x37:
 		return QObject::tr("Affecter %2 dans la fenêtre n°%1 et afficher %3 chiffres")
-				.arg((quint8)params.at(1))//Fenêtre ID
-				.arg(_lvar(params.mid(2,4), B1(params.at(0)), B2(params.at(0))))//Valeur (bank 1 et 2)
-				.arg((quint8)params.at(6));//nombre de chiffres à afficher
+				.arg((quint8)_params.at(1))//Fenêtre ID
+				.arg(_lvar(_params.mid(2,4), B1(_params.at(0)), B2(_params.at(0))))//Valeur (bank 1 et 2)
+				.arg((quint8)_params.at(6));//nombre de chiffres à afficher
 		
 	case 0x38:
 		return QObject::tr("Affecter une valeur au compte à rebours (H=%1, M=%2, S=%3)")
-				.arg(_var(params.mid(2,1), B1(params.at(0))))//Valeur (bank 1 ???)
-				.arg(_var(params.mid(3,1), B2(params.at(0))))//Valeur (bank 2 ???)
-				.arg(_var(params.mid(4,1), B1(params.at(1))));//Valeur (bank 3 ???)
+				.arg(_var(_params.mid(2,1), B1(_params.at(0))))//Valeur (bank 1 ???)
+				.arg(_var(_params.mid(3,1), B2(_params.at(0))))//Valeur (bank 2 ???)
+				.arg(_var(_params.mid(4,1), B1(_params.at(1))));//Valeur (bank 3 ???)
 		
 	case 0x39:
 		return QObject::tr("Ajouter %1 gils à l'équipe")
-				.arg(_lvar(params.mid(1,4), B1(params.at(0)), B2(params.at(0))));//Valeur (bank 1 et 2)
+				.arg(_lvar(_params.mid(1,4), B1(_params.at(0)), B2(_params.at(0))));//Valeur (bank 1 et 2)
 		
 	case 0x3A:
 		return QObject::tr("Retirer %1 gils à l'équipe")
-				.arg(_lvar(params.mid(1,4), B1(params.at(0)), B2(params.at(0))));//Valeur (bank 1 et 2)
+				.arg(_lvar(_params.mid(1,4), B1(_params.at(0)), B2(_params.at(0))));//Valeur (bank 1 et 2)
 		
 	case 0x3B:
 		return QObject::tr("Copier le nombre de Gils dans %1 et %2")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_bank(params.at(2), B2(params.at(0))));//(bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_bank(_params.at(2), B2(_params.at(0))));//(bank 2)
 		
 	case 0x3C:case 0x3D:case 0x3F:
 		return QObject::tr("Redonne les HP/MP aux membres de l'équipe");
@@ -1044,161 +1065,161 @@ QString Commande::traduction() const
 		
 	case 0x40:
 		return QObject::tr("Afficher message %2 dans la fenêtre n°%1")
-				.arg((quint8)params.at(0))//Fenêtre ID
-				.arg(_text(params.at(1)));//Texte
+				.arg((quint8)_params.at(0))//Fenêtre ID
+				.arg(_text(_params.at(1)));//Texte
 		
 	case 0x41:
 		return QObject::tr("Affecter %3 à la variable n°%2 dans la fenêtre n°%1")
-				.arg((quint8)params.at(1))//Fenêtre ID
-				.arg((quint8)params.at(2))//Win variable ID
-				.arg(_var(params.mid(3,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg((quint8)_params.at(1))//Fenêtre ID
+				.arg((quint8)_params.at(2))//Win variable ID
+				.arg(_var(_params.mid(3,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 	case 0x42:
 		return QObject::tr("Affecter %3 à la variable n°%2 dans la fenêtre n°%1")
-				.arg((quint8)params.at(1))//Fenêtre ID
-				.arg((quint8)params.at(2))//Win variable ID
-				.arg(_var(params.mid(3,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg((quint8)_params.at(1))//Fenêtre ID
+				.arg((quint8)_params.at(2))//Win variable ID
+				.arg(_var(_params.mid(3,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 	case 0x43:
 		return QObject::tr("Afficher %1 dans le menu")
-				.arg(_text(params.at(0)));//Texte
+				.arg(_text(_params.at(0)));//Texte
 		
 	case 0x45:
 		return QObject::tr("Augmenter de %2 MPs le membre n°%1 de l'équipe")
-				.arg((quint8)params.at(1))//Party ID
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2 ???)
+				.arg((quint8)_params.at(1))//Party ID
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2 ???)
 		
 	case 0x47:
 		return QObject::tr("Diminuer de %2 MPs le membre n°%1 de l'équipe")
-				.arg((quint8)params.at(1))//Party ID
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2 ???)
+				.arg((quint8)_params.at(1))//Party ID
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2 ???)
 		
 	case 0x48:
 		return QObject::tr("Poser question %2 dans la fenêtre n°%1 (et mettre la réponse sélectionnée dans %5) première ligne=%3, dernière ligne=%4")
-				.arg((quint8)params.at(1))//Fenêtre ID
-				.arg(_text(params.at(2)))//Texte
-				.arg((quint8)params.at(3))//première ligne
-				.arg((quint8)params.at(4))//dernière ligne
-				.arg(_bank(params.at(5), B2(params.at(0))));//(bank 2)
+				.arg((quint8)_params.at(1))//Fenêtre ID
+				.arg(_text(_params.at(2)))//Texte
+				.arg((quint8)_params.at(3))//première ligne
+				.arg((quint8)_params.at(4))//dernière ligne
+				.arg(_bank(_params.at(5), B2(_params.at(0))));//(bank 2)
 		
 	case 0x49:
 		return QObject::tr("Afficher menu %1")
-				.arg(_menu(params.at(1), _var(params.mid(2,1), B2(params.at(0)))));//Menu ID, Valeur (bank 2)
+				.arg(_menu(_params.at(1), _var(_params.mid(2,1), B2(_params.at(0)))));//Menu ID, Valeur (bank 2)
 		
 	case 0x4A:
 		return QObject::tr("%1 l'accès aux menus")
-				.arg((quint8)params.at(0) == 0 ? QObject::tr("Permettre") : QObject::tr("Interdire"));//booleen
+				.arg((quint8)_params.at(0) == 0 ? QObject::tr("Permettre") : QObject::tr("Interdire"));//booleen
 		
 	case 0x4B:
 		return QObject::tr("Choisir la battle table : %1")
-				.arg((quint8)params.at(0));//battle table ID
+				.arg((quint8)_params.at(0));//battle table ID
 		
 	case 0x4D:
 		return QObject::tr("Augmenter de %2 HPs le membre n°%1 de l'équipe")
-				.arg((quint8)params.at(1))//Party ID
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2 ???)
+				.arg((quint8)_params.at(1))//Party ID
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2 ???)
 		
 	case 0x4F:
 		return QObject::tr("Diminuer de %2 HPs le membre n°%1 de l'équipe")
-				.arg((quint8)params.at(1))//Party ID
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2 ???)
+				.arg((quint8)_params.at(1))//Party ID
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2 ???)
 		
 	case 0x50:
 		return QObject::tr("Créer la fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)")
-				.arg((quint8)params.at(0))//Fenêtre ID
-				.arg(_toInt(params.mid(1,2)))//Cible X
-				.arg(_toInt(params.mid(3,2)))//Cible Y
-				.arg(_toInt(params.mid(5,2)))//Largeur
-				.arg(_toInt(params.mid(7,2)));//Hauteur
+				.arg((quint8)_params.at(0))//Fenêtre ID
+				.arg(_toInt(_params.mid(1,2)))//Cible X
+				.arg(_toInt(_params.mid(3,2)))//Cible Y
+				.arg(_toInt(_params.mid(5,2)))//Largeur
+				.arg(_toInt(_params.mid(7,2)));//Hauteur
 		
 	case 0x51:
 		return QObject::tr("Déplacer la fenêtre n°%1 (X=%2, Y=%3)")
-				.arg((quint8)params.at(0))//Fenêtre ID
-				.arg(_toInt(params.mid(1,2)))//Cible X
-				.arg(_toInt(params.mid(3,2)));//Cible Y
+				.arg((quint8)_params.at(0))//Fenêtre ID
+				.arg(_toInt(_params.mid(1,2)))//Cible X
+				.arg(_toInt(_params.mid(3,2)));//Cible Y
 		
 	case 0x52:
 		return QObject::tr("Décoration de la fenêtre n°%1 : %2 (%3 la fermeture de la fenêtre par le joueur)")
-				.arg((quint8)params.at(0))//Fenêtre ID
-				.arg(_windowType((quint8)params.at(1)))//Mode
-				.arg((quint8)params.at(2) == 0 ? QObject::tr("autoriser") : QObject::tr("empêcher"));//booleen
+				.arg((quint8)_params.at(0))//Fenêtre ID
+				.arg(_windowType((quint8)_params.at(1)))//Mode
+				.arg((quint8)_params.at(2) == 0 ? QObject::tr("autoriser") : QObject::tr("empêcher"));//booleen
 		
 	case 0x53:
 		return QObject::tr("Remettre la fenêtre n°%1 à zéro")
-				.arg((quint8)params.at(0));//Fenêtre ID
+				.arg((quint8)_params.at(0));//Fenêtre ID
 		
 	case 0x54:
 		return QObject::tr("Fermer la fenêtre n°%1")
-				.arg((quint8)params.at(0));//Fenêtre ID
+				.arg((quint8)_params.at(0));//Fenêtre ID
 		
 	case 0x55:
 		return QObject::tr("Configurer le nombre de lignes de texte à %2 dans la fenêtre n°%1")
-				.arg((quint8)params.at(0))//Fenêtre ID
-				.arg((quint8)params.at(1));//Ligne
+				.arg((quint8)_params.at(0))//Fenêtre ID
+				.arg((quint8)_params.at(1));//Ligne
 		
 	case 0x56:
 		return QObject::tr("Obtenir la couleur du côté %1 des fenêtres et en stocker les composantes dans %2 (R), %3 (V) et %4 (B)")
-				.arg(_windowCorner(params.at(2), B1(params.at(0))))//Côté (bank 1)
-				.arg(_var(params.mid(3,1), B2(params.at(0))))//Rouge (bank 2)
-				.arg(_var(params.mid(4,1), B1(params.at(1))))//Vert (bank 3)
-				.arg(_var(params.mid(5,1), B2(params.at(1))));//Bleu (bank 4)
+				.arg(_windowCorner(_params.at(2), B1(_params.at(0))))//Côté (bank 1)
+				.arg(_var(_params.mid(3,1), B2(_params.at(0))))//Rouge (bank 2)
+				.arg(_var(_params.mid(4,1), B1(_params.at(1))))//Vert (bank 3)
+				.arg(_var(_params.mid(5,1), B2(_params.at(1))));//Bleu (bank 4)
 		
 	case 0x57:
 		return QObject::tr("Changer la couleur du côté %1 des fenêtres : RVB(%2, %3, %4)")
-				.arg(_windowCorner(params.at(2), B1(params.at(0))))//Côté (bank 1)
-				.arg(_var(params.mid(3,1), B2(params.at(0))))//Rouge (bank 2)
-				.arg(_var(params.mid(4,1), B1(params.at(1))))//Vert (bank 3)
-				.arg(_var(params.mid(5,1), B2(params.at(1))));//Bleu (bank 4)
+				.arg(_windowCorner(_params.at(2), B1(_params.at(0))))//Côté (bank 1)
+				.arg(_var(_params.mid(3,1), B2(_params.at(0))))//Rouge (bank 2)
+				.arg(_var(_params.mid(4,1), B1(_params.at(1))))//Vert (bank 3)
+				.arg(_var(_params.mid(5,1), B2(_params.at(1))));//Bleu (bank 4)
 		
 	case 0x58:
 		return QObject::tr("Ajouter %2 objet(s) %1 dans l'inventaire")
-				.arg(_item(params.mid(1,2), B1(params.at(0))))//Item ID (bank 1)
-				.arg(_var(params.mid(3,1), B2(params.at(0))));//Quantité (bank 2)
+				.arg(_item(_params.mid(1,2), B1(_params.at(0))))//Item ID (bank 1)
+				.arg(_var(_params.mid(3,1), B2(_params.at(0))));//Quantité (bank 2)
 		
 	case 0x59:
 		return QObject::tr("Supprimer %2 objet(s) %1 dans l'inventaire")
-				.arg(_item(params.mid(1,2), B1(params.at(0))))//Item ID (bank 1)
-				.arg(_var(params.mid(3,1), B2(params.at(0))));//Quantité (bank 2)
+				.arg(_item(_params.mid(1,2), B1(_params.at(0))))//Item ID (bank 1)
+				.arg(_var(_params.mid(3,1), B2(_params.at(0))));//Quantité (bank 2)
 		
 	case 0x5A:
 		return QObject::tr("%2 = quantité d'objets %1 dans l'inventaire")
-				.arg(_item(params.mid(1,2), B1(params.at(0))))//Item ID (bank 1)
-				.arg(_bank(params.at(3), B2(params.at(0))));//(bank 2)
+				.arg(_item(_params.mid(1,2), B1(_params.at(0))))//Item ID (bank 1)
+				.arg(_bank(_params.at(3), B2(_params.at(0))));//(bank 2)
 		
 		case 0x5B:
 		return QObject::tr("Ajouter la matéria %1 dans l'inventaire (AP=%2)")
-				.arg(_materia(params.mid(2,1), B1(params.at(0))))//Materia ID (bank 1)
-				.arg(_lvar(params.mid(3,3), B2(params.at(0)), B1(params.at(1)), B2(params.at(1))));//Materia AP (bank 2, 3 et 4 ???)
+				.arg(_materia(_params.mid(2,1), B1(_params.at(0))))//Materia ID (bank 1)
+				.arg(_lvar(_params.mid(3,3), B2(_params.at(0)), B1(_params.at(1)), B2(_params.at(1))));//Materia AP (bank 2, 3 et 4 ???)
 		
 		case 0x5C:
 		return QObject::tr("Supprimer %3 matéria(s) %1 dans l'inventaire (AP=%2)")
-				.arg(_materia(params.mid(2,1), B1(params.at(0))))//Materia ID (bank 1)
-				.arg(_lvar(params.mid(3,3), B2(params.at(0)), B1(params.at(1)), B2(params.at(1))))//Materia AP (bank 2, 3 et 4 ???)
-				.arg((quint8)params.at(6));//Quantité
+				.arg(_materia(_params.mid(2,1), B1(_params.at(0))))//Materia ID (bank 1)
+				.arg(_lvar(_params.mid(3,3), B2(_params.at(0)), B1(_params.at(1)), B2(_params.at(1))))//Materia AP (bank 2, 3 et 4 ???)
+				.arg((quint8)_params.at(6));//Quantité
 		
 		case 0x5D:
 		return QObject::tr("%4 = quantité de matéria %1 dans l'inventaire (AP=%2, ???=%3)")
-				.arg(_materia(params.mid(3,1), B1(params.at(0))))//Materia ID (bank 1)
-				.arg(_lvar(params.mid(4,3), B2(params.at(0)), B1(params.at(1)), B2(params.at(1))))//Materia AP (bank 2, 3 et 4 ???)
-				.arg((quint8)params.at(7))//TODO ??
-				.arg(_bank(params.at(8), B2(params.at(2))));//(bank 5)
+				.arg(_materia(_params.mid(3,1), B1(_params.at(0))))//Materia ID (bank 1)
+				.arg(_lvar(_params.mid(4,3), B2(_params.at(0)), B1(_params.at(1)), B2(_params.at(1))))//Materia AP (bank 2, 3 et 4 ???)
+				.arg((quint8)_params.at(7))//TODO ??
+				.arg(_bank(_params.at(8), B2(_params.at(2))));//(bank 5)
 		
 		case 0x5E:
 		return QObject::tr("Secouer l'écran (nbOscillations=%1, Amplitude=%2, vitesse=%3)")
-				.arg((quint8)params.at(2))//nbOscillations???
-				.arg((quint8)params.at(5))//Amplitude
-				.arg((quint8)params.at(6));//Vitesse
+				.arg((quint8)_params.at(2))//nbOscillations???
+				.arg((quint8)_params.at(5))//Amplitude
+				.arg((quint8)_params.at(6));//Vitesse
 		
 		case 0x5F:
 		return QObject::tr("Ne rien faire...");
 		
 		case 0x60:
 		return QObject::tr("Aller à l'écran %1 (X=%2, Y=%3, polygone id=%4, direction=%5)")
-				.arg(_field(params.mid(0,2)))//id décor
-				.arg(_toSInt(params.mid(2,2)))//cible X
-				.arg(_toSInt(params.mid(4,2)))//cible Y
-				.arg(_toInt(params.mid(6,2)))//polygone id
-				.arg((quint8)params.at(8));//direction
+				.arg(_field(_params.mid(0,2)))//id décor
+				.arg(_toSInt(_params.mid(2,2)))//cible X
+				.arg(_toSInt(_params.mid(4,2)))//cible Y
+				.arg(_toInt(_params.mid(6,2)))//polygone id
+				.arg((quint8)_params.at(8));//direction
 
 		case 0x61:
 		return QObject::tr("SCRLO");
@@ -1208,283 +1229,283 @@ QString Commande::traduction() const
 		
 		case 0x63:
 		return QObject::tr("Centrer sur le groupe %2 (vitesse=%1, type=%3)")
-				.arg(_var(params.mid(1,2), B2(params.at(0))))//Vitesse (bank 2)
-				.arg(_script((quint8)params.at(3)))//GroupID
-				.arg((quint8)params.at(4));//ScrollType
+				.arg(_var(_params.mid(1,2), B2(_params.at(0))))//Vitesse (bank 2)
+				.arg(_script((quint8)_params.at(3)))//GroupID
+				.arg((quint8)_params.at(4));//ScrollType
 		
 		case 0x64:
 		return QObject::tr("Centrer sur zone (X=%1, Y=%2)")
-				.arg(_svar(params.mid(1,2), B1(params.at(0))))//Cible X (bank 1)
-				.arg(_svar(params.mid(3,2), B2(params.at(0))));//Cible Y (bank 2)
+				.arg(_svar(_params.mid(1,2), B1(_params.at(0))))//Cible X (bank 1)
+				.arg(_svar(_params.mid(3,2), B2(_params.at(0))));//Cible Y (bank 2)
 		
 		case 0x65:
 		return QObject::tr("Centrer sur le personnage jouable");
 		
 		case 0x66:
 		return QObject::tr("Centrer sur zone (X=%1, Y=%2, vitesse=%3)")
-				.arg(_svar(params.mid(2,2), B1(params.at(0))))//Cible X (bank 1 ???)
-				.arg(_svar(params.mid(4,2), B2(params.at(0))))//Cible Y (bank 2 ???)
-				.arg(_var(params.mid(6,2), B2(params.at(1))));//Vitesse (bank 4 ???)
+				.arg(_svar(_params.mid(2,2), B1(_params.at(0))))//Cible X (bank 1 ???)
+				.arg(_svar(_params.mid(4,2), B2(_params.at(0))))//Cible Y (bank 2 ???)
+				.arg(_var(_params.mid(6,2), B2(_params.at(1))));//Vitesse (bank 4 ???)
 		
 		case 0x67:
 		return QObject::tr("Attendre la fin du dernier centrage pour continuer");
 		
 		case 0x68:
 		return QObject::tr("Centrer sur zone (X=%1, Y=%2, vitesse=%3)")
-				.arg(_svar(params.mid(2,2), B1(params.at(0))))//Cible X (bank 1 ???)
-				.arg(_svar(params.mid(4,2), B2(params.at(0))))//Cible Y (bank 2 ???)
-				.arg(_var(params.mid(6,2), B2(params.at(1))));//Vitesse (bank 4 ???)
+				.arg(_svar(_params.mid(2,2), B1(_params.at(0))))//Cible X (bank 1 ???)
+				.arg(_svar(_params.mid(4,2), B2(_params.at(0))))//Cible Y (bank 2 ???)
+				.arg(_var(_params.mid(6,2), B2(_params.at(1))));//Vitesse (bank 4 ???)
 		
 		case 0x69:
 		return QObject::tr("MPDSP : %1")
-				.arg((quint8)params.at(0));//booléen ?
+				.arg((quint8)_params.at(0));//booléen ?
 		
 		case 0x6A:
 		return QObject::tr("Centrer sur Zone (?=%1, ?=%2, ?=%3)")
-				.arg(_svar(params.mid(1,2), B1(params.at(0))))//??? (bank 1)
-				.arg(_svar(params.mid(3,2), B2(params.at(0))))//??? (bank 2)
-				.arg((quint8)params.at(5));//???
+				.arg(_svar(_params.mid(1,2), B1(_params.at(0))))//??? (bank 1)
+				.arg(_svar(_params.mid(3,2), B2(_params.at(0))))//??? (bank 2)
+				.arg((quint8)_params.at(5));//???
 		
 		case 0x6B:
 		return QObject::tr("Voiler l'écran avec la couleur RVB(%1, %2, %3) (vitesse=%4, type=%5, adjust=%6)")
-				.arg(_var(params.mid(2,1), B1(params.at(0))))//Rouge (bank 1 ???)
-				.arg(_var(params.mid(3,1), B2(params.at(0))))//Vert (bank 2 ???)
-				.arg(_var(params.mid(4,1), B2(params.at(1))))//Bleu (bank 4 ???)
-				.arg((quint8)params.at(5))//Vitesse
-				.arg((quint8)params.at(6))//Type
-				.arg((quint8)params.at(7));//Adjust
+				.arg(_var(_params.mid(2,1), B1(_params.at(0))))//Rouge (bank 1 ???)
+				.arg(_var(_params.mid(3,1), B2(_params.at(0))))//Vert (bank 2 ???)
+				.arg(_var(_params.mid(4,1), B2(_params.at(1))))//Bleu (bank 4 ???)
+				.arg((quint8)_params.at(5))//Vitesse
+				.arg((quint8)_params.at(6))//Type
+				.arg((quint8)_params.at(7));//Adjust
 		
 		case 0x6C:
 		return QObject::tr("Attendre la fin du voilage de l'écran pour continuer");
 		
 		case 0x6D:
 		return QObject::tr("%1 le polygone n°%2")
-				.arg((quint8)params.at(2) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"))//booléen
-				.arg(_toInt(params.mid(0,2)));//Polygone ID
+				.arg((quint8)_params.at(2) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"))//booléen
+				.arg(_toInt(_params.mid(0,2)));//Polygone ID
 		
 		case 0x6E:
 		return QObject::tr("Stocker l'id du décor précédent dans %1")
-				.arg(_bank(params.at(1), B2(params.at(0))));//Décor ID (bank 2)
+				.arg(_bank(_params.at(1), B2(_params.at(0))));//Décor ID (bank 2)
 		
 		case 0x6F:
 		return QObject::tr("Centrer sur le personnage n°%2 de l'équipe actuelle (vitesse=%1 img, type=%3)")
-				.arg(_var(params.mid(1,2), B2(params.at(0))))//Vitesse (bank 2) ???
-				.arg((quint8)params.at(3))//party ID
-				.arg((quint8)params.at(4));//Type de Scroll
+				.arg(_var(_params.mid(1,2), B2(_params.at(0))))//Vitesse (bank 2) ???
+				.arg((quint8)_params.at(3))//party ID
+				.arg((quint8)_params.at(4));//Type de Scroll
 		
 		case 0x70:
 		return QObject::tr("Commencer le combat n°%1")
-				.arg(_var(params.mid(1,2), B2(params.at(0))));//battle ID (bank 2) ???
+				.arg(_var(_params.mid(1,2), B2(_params.at(0))));//battle ID (bank 2) ???
 		
 		case 0x71:
 		return QObject::tr("%1 les combats aléatoires")
-				.arg((quint8)params.at(0) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//booléen
+				.arg((quint8)_params.at(0) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//booléen
 		
 		case 0x72:
 		return QObject::tr("BTLMD");
 		
 		case 0x73:
 		return QObject::tr("Obtenir la direction du personnage n°%1 de l'équipe actuelle et la stocker dans %2")
-				.arg((quint8)params.at(1))//Party ID
-				.arg(_bank(params.at(2), B2(params.at(0))));//(bank 2)
+				.arg((quint8)_params.at(1))//Party ID
+				.arg(_bank(_params.at(2), B2(_params.at(0))));//(bank 2)
 		
 		case 0x74:
 		return QObject::tr("Obtenir l'id du personnage n°%1 de l'équipe actuelle et le stocker dans %2")
-				.arg((quint8)params.at(1))//Party ID
-				.arg(_bank(params.at(2), B2(params.at(0))));//(bank 2)
+				.arg((quint8)_params.at(1))//Party ID
+				.arg(_bank(_params.at(2), B2(_params.at(0))));//(bank 2)
 		
 		case 0x75:
 		return QObject::tr("Obtenir les coordonnées du personnage n°%1 de l'équipe actuelle (stocker : X dans %2, Y dans %3, Z dans %4 et l'id dans %5)")
-				.arg((quint8)params.at(2))//Party ID
-				.arg(_bank(params.at(3), B1(params.at(0))))//(bank 1)
-				.arg(_bank(params.at(4), B2(params.at(0))))//(bank 2)
-				.arg(_bank(params.at(5), B1(params.at(1))))//(bank 3)
-				.arg(_bank(params.at(6), B2(params.at(1))));//(bank 4)
+				.arg((quint8)_params.at(2))//Party ID
+				.arg(_bank(_params.at(3), B1(_params.at(0))))//(bank 1)
+				.arg(_bank(_params.at(4), B2(_params.at(0))))//(bank 2)
+				.arg(_bank(_params.at(5), B1(_params.at(1))))//(bank 3)
+				.arg(_bank(_params.at(6), B2(_params.at(1))));//(bank 4)
 		
 		case 0x76:
 		return QObject::tr("%1 = %1 + %2 (8 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x77:
 		return QObject::tr("%1 = %1 + %2 (16 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x78:
 		return QObject::tr("%1 = %1 - %2 (8 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x79:
 		return QObject::tr("%1 = %1 - %2 (16 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x7A:
 		return QObject::tr("%1 = %1 + 1 (8 bits)")
-				.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+				.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 		
 		case 0x7B:
 		return QObject::tr("%1 = %1 + 1 (16 bits)")
-				.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+				.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 		
 		case 0x7C:
 		return QObject::tr("%1 = %1 - 1 (8 bits)")
-				.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+				.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 		
 		case 0x7D:
 		return QObject::tr("%1 = %1 - 1 (16 bits)")
-				.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+				.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 		
 		case 0x7E:
 		return QObject::tr("%1 la possibilité de parler à l'objet 3D")
-				.arg((quint8)params.at(0) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booléen
+				.arg((quint8)_params.at(0) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booléen
 		
 		case 0x7F:
 		return QObject::tr("Seed Random Generator : %1")
-				.arg(_var(params.mid(1,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_var(_params.mid(1,1), B2(_params.at(0))));//Valeur (bank 2)
 
 		case 0x80:
 		return QObject::tr("%1 = %2 (8 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x81:
 		return QObject::tr("%1 = %2 (16 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x82:
 		return QObject::tr("Mettre le bit %2 à 1 dans %1")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Position (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Position (bank 2)
 		
 		case 0x83:
 		return QObject::tr("Mettre le bit %2 à 0 dans %1")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Position (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Position (bank 2)
 		
 		case 0x84:
 		return QObject::tr("Inverser la valeur du bit %2 dans %1")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Position (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Position (bank 2)
 		
 		case 0x85:
 		return QObject::tr("%1 = %1 + %2 (8 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x86:
 		return QObject::tr("%1 = %1 + %2 (16 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x87:
 		return QObject::tr("%1 = %1 - %2 (8 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x88:
 		return QObject::tr("%1 = %1 - %2 (16 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x89:
 		return QObject::tr("%1 = %1 * %2 (8 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x8A:
 		return QObject::tr("%1 = %1 * %2 (16 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x8B:
 		return QObject::tr("%1 = %1 / %2 (8 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x8C:
 		return QObject::tr("%1 = %1 / %2 (16 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x8D:
 		return QObject::tr("%1 = %1 mod %2 (8 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x8E:
 		return QObject::tr("%1 = %1 mod %2 (16 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x8F:
 		return QObject::tr("%1 = %1 & %2 (8 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x90:
 		return QObject::tr("%1 = %1 & %2 (16 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x91:
 		return QObject::tr("%1 = %1 | %2 (8 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x92:
 		return QObject::tr("%1 = %1 | %2 (16 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x93:
 		return QObject::tr("%1 = %1 ^ %2 (8 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x94:
 		return QObject::tr("%1 = %1 ^ %2 (16 bits)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x95:
 		return QObject::tr("%1 = %1 + 1 (8 bits)")
-				.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+				.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 		
 		case 0x96:
 		return QObject::tr("%1 = %1 + 1 (16 bits)")
-				.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+				.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 		
 		case 0x97:
 		return QObject::tr("%1 = %1 - 1 (8 bits)")
-				.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+				.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 		
 		case 0x98:
 		return QObject::tr("%1 = %1 - 1 (16 bits)")
-				.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+				.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 		
 		case 0x99:
 		return QObject::tr("Affecter une valeur aléatoire à %1 (8 bits)")
-				.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+				.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 		
 		case 0x9A:
 		return QObject::tr("%1 = %2 & 0xFF (low byte)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,1), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,1), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x9B:
 		return QObject::tr("%1 = (%2 >> 8) & 0xFF (high byte)")
-				.arg(_bank(params.at(1), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(2,2), B2(params.at(0))));//Valeur (bank 2)
+				.arg(_bank(_params.at(1), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(2,2), B2(_params.at(0))));//Valeur (bank 2)
 		
 		case 0x9C:
 		return QObject::tr("%1 = (%2 & 0xFF) | ((%3 & 0xFF) << 8)")
-				.arg(_bank(params.at(2), B1(params.at(0))))//(bank 1)
-				.arg(_var(params.mid(3,1), B2(params.at(0))))//Valeur (bank 2)
-				.arg(_var(params.mid(4,1), B2(params.at(1))));//Valeur (bank 4 ???)
+				.arg(_bank(_params.at(2), B1(_params.at(0))))//(bank 1)
+				.arg(_var(_params.mid(3,1), B2(_params.at(0))))//Valeur (bank 2)
+				.arg(_var(_params.mid(4,1), B2(_params.at(1))));//Valeur (bank 4 ???)
 		
 		case 0x9D:
 		return QObject::tr("SETX");
@@ -1497,303 +1518,303 @@ QString Commande::traduction() const
 		
 		case 0xA0:
 		return QObject::tr("L'objet 3D est jouable et c'est %1")
-				.arg(_personnage(params.at(0)));//Personnage ID
+				.arg(_personnage(_params.at(0)));//Personnage ID
 		
 		case 0xA1:
 		return QObject::tr("Ce groupe est un objet 3D (id=%1)")
-				.arg((quint8)params.at(0));//objet 3D ID
+				.arg((quint8)_params.at(0));//objet 3D ID
 		
 		case 0xA2:
 		return QObject::tr("Joue l'animation %1 de l'objet 3D (vitesse=%2)")
-				.arg((quint8)params.at(0))//animation ID
-				.arg((quint8)params.at(1));//vitesse
+				.arg((quint8)_params.at(0))//animation ID
+				.arg((quint8)_params.at(1));//vitesse
 		
 		case 0xA3:
 		return QObject::tr("Joue l'animation %1 de l'objet 3D et retourne à l'état précédent (vitesse=%2)")
-				.arg((quint8)params.at(0))//animation ID
-				.arg((quint8)params.at(1));//vitesse
+				.arg((quint8)_params.at(0))//animation ID
+				.arg((quint8)_params.at(1));//vitesse
 		
 		case 0xA4:
 		return QObject::tr("%1 l'objet 3D")
-				.arg((quint8)params.at(0) == 0 ? QObject::tr("Cacher") : QObject::tr("Afficher"));//animation ID
+				.arg((quint8)_params.at(0) == 0 ? QObject::tr("Cacher") : QObject::tr("Afficher"));//animation ID
 		
 		case 0xA5:
 		return QObject::tr("Place l'objet 3D (X=%1, Y=%2, Z=%3, polygone id=%4)")
-				.arg(_svar(params.mid(2,2), B1(params.at(0))))//Cible X (bank 1)
-				.arg(_svar(params.mid(4,2), B2(params.at(0))))//Cible Y (bank 2)
-				.arg(_svar(params.mid(6,2), B1(params.at(1))))//Cible Z (bank 3)
-				.arg(_var(params.mid(8,2), B2(params.at(1))));//Polygone ID (bank 4)
+				.arg(_svar(_params.mid(2,2), B1(_params.at(0))))//Cible X (bank 1)
+				.arg(_svar(_params.mid(4,2), B2(_params.at(0))))//Cible Y (bank 2)
+				.arg(_svar(_params.mid(6,2), B1(_params.at(1))))//Cible Z (bank 3)
+				.arg(_var(_params.mid(8,2), B2(_params.at(1))));//Polygone ID (bank 4)
 		
 		case 0xA6:
 		return QObject::tr("Place l'objet 3D (X=%1, Y=%2, polygone id=%4)")
-				.arg(_svar(params.mid(2,2), B1(params.at(0))))//Cible X (bank 1)
-				.arg(_svar(params.mid(4,2), B2(params.at(0))))//Cible Y (bank 2)
-				.arg(_var(params.mid(6,2), B1(params.at(1))));//Polygone ID (bank 3)
+				.arg(_svar(_params.mid(2,2), B1(_params.at(0))))//Cible X (bank 1)
+				.arg(_svar(_params.mid(4,2), B2(_params.at(0))))//Cible Y (bank 2)
+				.arg(_var(_params.mid(6,2), B1(_params.at(1))));//Polygone ID (bank 3)
 		
 		case 0xA7:
 		return QObject::tr("Place l'objet 3D (X=%1, Y=%2, Z=%3)")
-				.arg(_svar(params.mid(2,2), B1(params.at(0))))//Cible X (bank 1)
-				.arg(_svar(params.mid(4,2), B2(params.at(0))))//Cible Y (bank 2)
-				.arg(_svar(params.mid(6,2), B1(params.at(1))));//Cible Z (bank 3)
+				.arg(_svar(_params.mid(2,2), B1(_params.at(0))))//Cible X (bank 1)
+				.arg(_svar(_params.mid(4,2), B2(_params.at(0))))//Cible Y (bank 2)
+				.arg(_svar(_params.mid(6,2), B1(_params.at(1))));//Cible Z (bank 3)
 		
 		case 0xA8:
 		return QObject::tr("Déplace l'objet 3D (X=%1, Y=%2)")
-				.arg(_svar(params.mid(1,2), B1(params.at(0))))//Cible X (bank 1)
-				.arg(_svar(params.mid(3,2), B2(params.at(0))));//Cible Y (bank 2)
+				.arg(_svar(_params.mid(1,2), B1(_params.at(0))))//Cible X (bank 1)
+				.arg(_svar(_params.mid(3,2), B2(_params.at(0))));//Cible Y (bank 2)
 		
 		case 0xA9:
 		return QObject::tr("Déplace l'objet 3D sans animation (X=%1, Y=%2)")
-				.arg(_svar(params.mid(1,2), B1(params.at(0))))//Cible X (bank 1)
-				.arg(_svar(params.mid(3,2), B2(params.at(0))));//Cible Y (bank 2)
+				.arg(_svar(_params.mid(1,2), B1(_params.at(0))))//Cible X (bank 1)
+				.arg(_svar(_params.mid(3,2), B2(_params.at(0))));//Cible Y (bank 2)
 		
 		case 0xAA:
 		return QObject::tr("Déplace l'objet 3D vers le groupe %1")
-				.arg(_script((quint8)params.at(0)));//GroupID
+				.arg(_script((quint8)_params.at(0)));//GroupID
 		
 		case 0xAB:
 		return QObject::tr("Rotation de l'objet 3D vers le groupe %1 (vitesse=%2, SensRotation=%3)")
-				.arg(_script((quint8)params.at(0)))//GroupID
-				.arg(_sensRotation((quint8)params.at(1)))//Sens de rotation
-				.arg((quint8)params.at(2));//Vitesse
+				.arg(_script((quint8)_params.at(0)))//GroupID
+				.arg(_sensRotation((quint8)_params.at(1)))//Sens de rotation
+				.arg((quint8)_params.at(2));//Vitesse
 		
 		case 0xAC:
 		return QObject::tr("Attendre que l'animation soit terminée pour continuer");
 		
 		case 0xAD:
 		return QObject::tr("Déplace l'objet 3D sans animation (X=%1, Y=%2)")
-				.arg(_svar(params.mid(1,2), B1(params.at(0))))//Cible X (bank 1)
-				.arg(_svar(params.mid(3,2), B2(params.at(0))));//Cible Y (bank 2)
+				.arg(_svar(_params.mid(1,2), B1(_params.at(0))))//Cible X (bank 1)
+				.arg(_svar(_params.mid(3,2), B2(_params.at(0))));//Cible Y (bank 2)
 		
 		case 0xAE:
 		return QObject::tr("Joue l'animation %1 de l'objet 3D et retourne à l'état précédent (vitesse=%2)")
-				.arg((quint8)params.at(0))//animation ID
-				.arg((quint8)params.at(1));//vitesse
+				.arg((quint8)_params.at(0))//animation ID
+				.arg((quint8)_params.at(1));//vitesse
 		
 		case 0xAF:
 		return QObject::tr("Joue l'animation %1 de l'objet 3D (vitesse=%2)")
-				.arg((quint8)params.at(0))//animation ID
-				.arg((quint8)params.at(1));//vitesse
+				.arg((quint8)_params.at(0))//animation ID
+				.arg((quint8)_params.at(1));//vitesse
 		
 		case 0xB0:
 		return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D et retourne à l'état précédent (première img=%2, dernière img=%3, vitesse=%4)")
-				.arg((quint8)params.at(0))//animation ID
-				.arg((quint8)params.at(1))//Première img
-				.arg((quint8)params.at(2))//Dernière img
-				.arg((quint8)params.at(3));//vitesse
+				.arg((quint8)_params.at(0))//animation ID
+				.arg((quint8)_params.at(1))//Première img
+				.arg((quint8)_params.at(2))//Dernière img
+				.arg((quint8)_params.at(3));//vitesse
 		
 		case 0xB1:
 		return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D (première img=%2, dernière img=%3, vitesse=%4)")
-				.arg((quint8)params.at(0))//animation ID
-				.arg((quint8)params.at(1))//Première img
-				.arg((quint8)params.at(2))//Dernière img
-				.arg((quint8)params.at(3));//vitesse
+				.arg((quint8)_params.at(0))//animation ID
+				.arg((quint8)_params.at(1))//Première img
+				.arg((quint8)_params.at(2))//Dernière img
+				.arg((quint8)_params.at(3));//vitesse
 		
 		case 0xB2:
 		return QObject::tr("Configurer la vitesse des déplacements de l'objet 3D : %1")
-				.arg(_var(params.mid(1,2), B2(params.at(0))));//Vitesse (bank 2)
+				.arg(_var(_params.mid(1,2), B2(_params.at(0))));//Vitesse (bank 2)
 		
 		case 0xB3:
 		return QObject::tr("Mettre l'objet 3D dans la direction : %1")
-				.arg(_var(params.mid(1,1), B2(params.at(0))));//Direction (bank 2)
+				.arg(_var(_params.mid(1,1), B2(_params.at(0))));//Direction (bank 2)
 		
 		case 0xB4:
 		return QObject::tr("Rotation (direction=%1, nbTours=%2, vitesse=%3, ?=%4)")
-				.arg(_var(params.mid(1,1), B2(params.at(0))))//Final Rotation (bank 2)
-				.arg((quint8)params.at(2))//nbTours
-				.arg((quint8)params.at(3))//Vitesse
-				.arg((quint8)params.at(4));//?
+				.arg(_var(_params.mid(1,1), B2(_params.at(0))))//Final Rotation (bank 2)
+				.arg((quint8)_params.at(2))//nbTours
+				.arg((quint8)_params.at(3))//Vitesse
+				.arg((quint8)_params.at(4));//?
 		
 		case 0xB5:
 		return QObject::tr("Rotation inversée (direction=%1, nbTours=%2, vitesse=%3, ?=%4)")
-				.arg(_var(params.mid(1,1), B2(params.at(0))))//Final Rotation (bank 2)
-				.arg((quint8)params.at(2))//nbTours
-				.arg((quint8)params.at(3))//Vitesse
-				.arg((quint8)params.at(4));//?
+				.arg(_var(_params.mid(1,1), B2(_params.at(0))))//Final Rotation (bank 2)
+				.arg((quint8)_params.at(2))//nbTours
+				.arg((quint8)_params.at(3))//Vitesse
+				.arg((quint8)_params.at(4));//?
 		
 		case 0xB6:
 		return QObject::tr("Mettre l'objet 3D en direction du groupe %1")
-				.arg(_script((quint8)params.at(0)));//GroupID
+				.arg(_script((quint8)_params.at(0)));//GroupID
 		
 		case 0xB7:
 		return QObject::tr("Stocker dans %2 la direction du groupe %1")
-				.arg(_script((quint8)params.at(1)))//GroupID
-				.arg(_bank(params.at(2), B2(params.at(0))));//(Bank 2)
+				.arg(_script((quint8)_params.at(1)))//GroupID
+				.arg(_bank(_params.at(2), B2(_params.at(0))));//(Bank 2)
 		
 		case 0xB8:
 		return QObject::tr("Stocker dans %2 et %3 la position X et Y du groupe %1")
-				.arg(_script((quint8)params.at(1)))//GroupID
-				.arg(_bank(params.at(2), B1(params.at(0))))//(Bank 1)
-				.arg(_bank(params.at(3), B2(params.at(0))));//(Bank 2)
+				.arg(_script((quint8)_params.at(1)))//GroupID
+				.arg(_bank(_params.at(2), B1(_params.at(0))))//(Bank 1)
+				.arg(_bank(_params.at(3), B2(_params.at(0))));//(Bank 2)
 		
 		case 0xB9:
 		return QObject::tr("Stocker dans %2 le polygone id du groupe %1")
-				.arg(_script((quint8)params.at(1)))//GroupID
-				.arg(_bank(params.at(2), B2(params.at(0))));//(Bank 2)
+				.arg(_script((quint8)_params.at(1)))//GroupID
+				.arg(_bank(_params.at(2), B2(_params.at(0))));//(Bank 2)
 		
 		case 0xBA:
 		return QObject::tr("Joue l'animation %1 de l'objet 3D (vitesse=%2)")
-				.arg((quint8)params.at(0))//animation ID
-				.arg((quint8)params.at(1));//vitesse
+				.arg((quint8)_params.at(0))//animation ID
+				.arg((quint8)_params.at(1));//vitesse
 		
 		case 0xBB:
 		return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D et retourne à l'état précédent (première img=%2, dernière img=%3, vitesse=%4)")
-				.arg((quint8)params.at(0))//animation ID
-				.arg((quint8)params.at(1))//Première img
-				.arg((quint8)params.at(2))//Dernière img
-				.arg((quint8)params.at(3));//vitesse
+				.arg((quint8)_params.at(0))//animation ID
+				.arg((quint8)_params.at(1))//Première img
+				.arg((quint8)_params.at(2))//Dernière img
+				.arg((quint8)_params.at(3));//vitesse
 		
 		case 0xBC:
 		return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D (première img=%2, dernière img=%3, vitesse=%4)")
-				.arg((quint8)params.at(0))//animation ID
-				.arg((quint8)params.at(1))//Première img
-				.arg((quint8)params.at(2))//Dernière img
-				.arg((quint8)params.at(3));//vitesse
+				.arg((quint8)_params.at(0))//animation ID
+				.arg((quint8)_params.at(1))//Première img
+				.arg((quint8)_params.at(2))//Dernière img
+				.arg((quint8)_params.at(3));//vitesse
 		
 		case 0xBD:
 		return QObject::tr("Configurer la vitesse des animations de l'objet 3D : %1")
-				.arg(_var(params.mid(1,2), B2(params.at(0))));//Vitesse (bank 2)
+				.arg(_var(_params.mid(1,2), B2(_params.at(0))));//Vitesse (bank 2)
 		
 		case 0xBF:
 		return QObject::tr("Prendre le contrôle du groupe %1")
-				.arg(_script((quint8)params.at(0)));//GroupID
+				.arg(_script((quint8)_params.at(0)));//GroupID
 		
 		case 0xC0:
 		return QObject::tr("Faire sauter un personnage (X=%1, Y=%2, polygone id=%3, hauteur=%4)")
-				.arg(_svar(params.mid(2,2), B1(params.at(0))))//Cible X (bank 1)
-				.arg(_svar(params.mid(4,2), B2(params.at(0))))//Cible Y (bank 2)
-				.arg(_var(params.mid(6,2), B1(params.at(1))))//Polygone id (bank 3)
-				.arg(_svar(params.mid(8,2), B2(params.at(1))));//Height (bank 4)
+				.arg(_svar(_params.mid(2,2), B1(_params.at(0))))//Cible X (bank 1)
+				.arg(_svar(_params.mid(4,2), B2(_params.at(0))))//Cible Y (bank 2)
+				.arg(_var(_params.mid(6,2), B1(_params.at(1))))//Polygone id (bank 3)
+				.arg(_svar(_params.mid(8,2), B2(_params.at(1))));//Height (bank 4)
 		
 		case 0xC1:
 		return QObject::tr("Stocker la position du groupe %1 dans des variables (%2=X, %3=Y, %4=Z, %5=polygone id)")
-				.arg(_script((quint8)params.at(2)))//GroupID
-				.arg(_bank(params.at(3), B1(params.at(0))))//(bank 1)
-				.arg(_bank(params.at(4), B2(params.at(0))))//(bank 2)
-				.arg(_bank(params.at(5), B1(params.at(1))))//(bank 3)
-				.arg(_bank(params.at(6), B2(params.at(1))));//(bank 4)
+				.arg(_script((quint8)_params.at(2)))//GroupID
+				.arg(_bank(_params.at(3), B1(_params.at(0))))//(bank 1)
+				.arg(_bank(_params.at(4), B2(_params.at(0))))//(bank 2)
+				.arg(_bank(_params.at(5), B1(_params.at(1))))//(bank 3)
+				.arg(_bank(_params.at(6), B2(_params.at(1))));//(bank 4)
 		
 		case 0xC2:
 		return QObject::tr("Monter une échelle avec l'animation %6 (X=%1, Y=%2, Z=%3, polygone id=%4, sens=%5, direction=%7, vitesse=%8)")
-				.arg(_svar(params.mid(2,2), B1(params.at(0))))//Cible X (bank 1)
-				.arg(_svar(params.mid(4,2), B2(params.at(0))))//Cible Y (bank 2)
-				.arg(_svar(params.mid(6,2), B1(params.at(1))))//Cible Z (bank 3)
-				.arg(_var(params.mid(8,2), B2(params.at(1))))//Polygone id (bank 4)
-				.arg((quint8)params.at(10))//Sens montee/descente
-				.arg((quint8)params.at(11))//Animation id
-				.arg((quint8)params.at(12))//Direction
-				.arg((quint8)params.at(13));//Vitesse
+				.arg(_svar(_params.mid(2,2), B1(_params.at(0))))//Cible X (bank 1)
+				.arg(_svar(_params.mid(4,2), B2(_params.at(0))))//Cible Y (bank 2)
+				.arg(_svar(_params.mid(6,2), B1(_params.at(1))))//Cible Z (bank 3)
+				.arg(_var(_params.mid(8,2), B2(_params.at(1))))//Polygone id (bank 4)
+				.arg((quint8)_params.at(10))//Sens montee/descente
+				.arg((quint8)_params.at(11))//Animation id
+				.arg((quint8)_params.at(12))//Direction
+				.arg((quint8)_params.at(13));//Vitesse
 		
 		case 0xC3:
 		return QObject::tr("Offset Object (mouvement=%1, X=%2, Y=%3, Z=%4, vitesse=%5)")
-				.arg((quint8)params.at(2))//Mouvement type
-				.arg(_svar(params.mid(3,2), B1(params.at(0))))//Cible X (bank 1)
-				.arg(_svar(params.mid(5,2), B2(params.at(0))))//Cible Y (bank 2)
-				.arg(_svar(params.mid(7,2), B1(params.at(1))))//Cible Z (bank 3)
-				.arg(_var(params.mid(9,2), B2(params.at(1))));//Vitesse (bank 4)
+				.arg((quint8)_params.at(2))//Mouvement type
+				.arg(_svar(_params.mid(3,2), B1(_params.at(0))))//Cible X (bank 1)
+				.arg(_svar(_params.mid(5,2), B2(_params.at(0))))//Cible Y (bank 2)
+				.arg(_svar(_params.mid(7,2), B1(_params.at(1))))//Cible Z (bank 3)
+				.arg(_var(_params.mid(9,2), B2(_params.at(1))));//Vitesse (bank 4)
 		
 		case 0xC4:
 		return QObject::tr("Attendre la fin de l'exécution de l'Offset Object pour continuer");
 		
 		case 0xC5:
 		return QObject::tr("Modifier la distance nécessaire pour parler avec l'objet 3D : %1")
-				.arg(_var(params.mid(1,1), B2(params.at(0))));//Distance (bank 2)
+				.arg(_var(_params.mid(1,1), B2(_params.at(0))));//Distance (bank 2)
 		
 		case 0xC6:
 		return QObject::tr("Modifier la distance nécessaire pour toucher l'objet 3D : %1")
-				.arg(_var(params.mid(1,1), B2(params.at(0))));//Distance (bank 2)
+				.arg(_var(_params.mid(1,1), B2(_params.at(0))));//Distance (bank 2)
 		
 		case 0xC7:
 		return QObject::tr("%1 la possibilité de toucher l'objet 3D")
-				.arg((quint8)params.at(0) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booléen
+				.arg((quint8)_params.at(0) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booléen
 		
 		case 0xC8:
 		return QObject::tr("Ajouter %1 à l'équipe actuelle")
-				.arg(_personnage(params.at(0)));//Personnage ID
+				.arg(_personnage(_params.at(0)));//Personnage ID
 		
 		case 0xC9:
 		return QObject::tr("Retirer %1 de l'équipe actuelle")
-				.arg(_personnage(params.at(0)));//Personnage ID
+				.arg(_personnage(_params.at(0)));//Personnage ID
 		
 		case 0xCA:
 		return QObject::tr("Nouvelle équipe : %1 | %2 | %3")
-				.arg(_personnage(params.at(0)))//Personnage ID
-				.arg(_personnage(params.at(1)))//Personnage ID
-				.arg(_personnage(params.at(2)));//Personnage ID
+				.arg(_personnage(_params.at(0)))//Personnage ID
+				.arg(_personnage(_params.at(1)))//Personnage ID
+				.arg(_personnage(_params.at(2)));//Personnage ID
 		
 		case 0xCB://Indenter
 			return QObject::tr("Si %1 est dans l'équipe actuelle (aller à l'octet %2 sinon)")
-					.arg(_personnage(params.at(0)))//Personnage ID
-					.arg(pos+2+(quint8)params.at(1));//Saut court
+					.arg(_personnage(_params.at(0)))//Personnage ID
+					.arg(pos+2+(quint8)_params.at(1));//Saut court
 
 		case 0xCC://Indenter
 			return QObject::tr("Si %1 existe (aller à l'octet %2 sinon)")
-					.arg(_personnage(params.at(0)))//Personnage ID
-					.arg(pos+2+(quint8)params.at(1));//Saut court
+					.arg(_personnage(_params.at(0)))//Personnage ID
+					.arg(pos+2+(quint8)_params.at(1));//Saut court
 
 		case 0xCD:
 			return QObject::tr("%2 %1")
-					.arg((quint8)params.at(0) == 0 ? QObject::tr("n'existe plus") : QObject::tr("existe"))//Booléen
-					.arg(_personnage(params.at(1)));//Personnage ID
+					.arg((quint8)_params.at(0) == 0 ? QObject::tr("n'existe plus") : QObject::tr("existe"))//Booléen
+					.arg(_personnage(_params.at(1)));//Personnage ID
 
 		case 0xCE:
 			return QObject::tr("Bloque %1 dans le menu PHS")
-					.arg(_personnage(params.at(0)));//Personnage ID
+					.arg(_personnage(_params.at(0)));//Personnage ID
 
 		case 0xCF:
 			return QObject::tr("Débloque %1 dans le menu PHS")
-					.arg(_personnage(params.at(0)));//Personnage ID
+					.arg(_personnage(_params.at(0)));//Personnage ID
 
 		case 0xD0:
 			return QObject::tr("Définit la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
-					.arg(_toSInt(params.mid(0,2)))//Cible X1
-					.arg(_toSInt(params.mid(2,2)))//Cible Y1
-					.arg(_toSInt(params.mid(4,2)))//Cible Z1
-					.arg(_toSInt(params.mid(6,2)))//Cible X2
-					.arg(_toSInt(params.mid(8,2)))//Cible Y2
-					.arg(_toSInt(params.mid(10,2)));//Cible Z2
+					.arg(_toSInt(_params.mid(0,2)))//Cible X1
+					.arg(_toSInt(_params.mid(2,2)))//Cible Y1
+					.arg(_toSInt(_params.mid(4,2)))//Cible Z1
+					.arg(_toSInt(_params.mid(6,2)))//Cible X2
+					.arg(_toSInt(_params.mid(8,2)))//Cible Y2
+					.arg(_toSInt(_params.mid(10,2)));//Cible Z2
 
 		case 0xD1:
 			return QObject::tr("%1 la zone")
-					.arg((quint8)params.at(0) == 0 ? QObject::tr("Effacer") : QObject::tr("Tracer"));//Booléen
+					.arg((quint8)_params.at(0) == 0 ? QObject::tr("Effacer") : QObject::tr("Tracer"));//Booléen
 
 		case 0xD2:
 			return QObject::tr("%1 les changements de décor par le joueur")
-					.arg((quint8)params.at(0) == 0 ? QObject::tr("Autoriser") : QObject::tr("Empêcher"));//Booléen
+					.arg((quint8)_params.at(0) == 0 ? QObject::tr("Autoriser") : QObject::tr("Empêcher"));//Booléen
 
 		case 0xD3:
 			return QObject::tr("Redimensionner la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
-					.arg(_svar(params.mid(3,2), B1(params.at(0))))//Cible X1 (Bank 1)
-					.arg(_svar(params.mid(5,2), B2(params.at(0))))//Cible Y1 (Bank 2)
-					.arg(_svar(params.mid(7,2), B1(params.at(1))))//Cible Z1 (Bank 3)
-					.arg(_svar(params.mid(9,2), B2(params.at(1))))//Cible X2 (Bank 4)
-					.arg(_svar(params.mid(11,2), B1(params.at(2))))//Cible Y2 (Bank 5)
-					.arg(_svar(params.mid(13,2), B2(params.at(2))));//Cible Z2 (Bank 6)
+					.arg(_svar(_params.mid(3,2), B1(_params.at(0))))//Cible X1 (Bank 1)
+					.arg(_svar(_params.mid(5,2), B2(_params.at(0))))//Cible Y1 (Bank 2)
+					.arg(_svar(_params.mid(7,2), B1(_params.at(1))))//Cible Z1 (Bank 3)
+					.arg(_svar(_params.mid(9,2), B2(_params.at(1))))//Cible X2 (Bank 4)
+					.arg(_svar(_params.mid(11,2), B1(_params.at(2))))//Cible Y2 (Bank 5)
+					.arg(_svar(_params.mid(13,2), B2(_params.at(2))));//Cible Z2 (Bank 6)
 
 		case 0xD4:
 			return QObject::tr("%4 = Sinus(%1) %2 %3")
-					.arg(_var(params.mid(2,2), B1(params.at(0))))//Variable (bank 1)
-					.arg(_var(params.mid(4,2), B2(params.at(0))))//Variable (bank 2)
-					.arg(_var(params.mid(6,2), B1(params.at(1))))//Variable (bank 3)
-					.arg(_bank(params.at(8), B2(params.at(1))));//Variable (bank 4)
+					.arg(_var(_params.mid(2,2), B1(_params.at(0))))//Variable (bank 1)
+					.arg(_var(_params.mid(4,2), B2(_params.at(0))))//Variable (bank 2)
+					.arg(_var(_params.mid(6,2), B1(_params.at(1))))//Variable (bank 3)
+					.arg(_bank(_params.at(8), B2(_params.at(1))));//Variable (bank 4)
 
 		case 0xD5:
 			return QObject::tr("%4 = Cosinus(%1) %2 %3")
-					.arg(_var(params.mid(2,2), B1(params.at(0))))//Variable (bank 1)
-					.arg(_var(params.mid(4,2), B2(params.at(0))))//Variable (bank 2)
-					.arg(_var(params.mid(6,2), B1(params.at(1))))//Variable (bank 3)
-					.arg(_bank(params.at(8), B2(params.at(1))));//Variable (bank 4)
+					.arg(_var(_params.mid(2,2), B1(_params.at(0))))//Variable (bank 1)
+					.arg(_var(_params.mid(4,2), B2(_params.at(0))))//Variable (bank 2)
+					.arg(_var(_params.mid(6,2), B1(_params.at(1))))//Variable (bank 3)
+					.arg(_bank(_params.at(8), B2(_params.at(1))));//Variable (bank 4)
 
 		case 0xD6:
 			return QObject::tr("Modifier la distance nécessaire pour parler avec l'objet 3D : %1")
-					.arg(_var(params.mid(1,2), B2(params.at(0))));//Distance (bank 2)
+					.arg(_var(_params.mid(1,2), B2(_params.at(0))));//Distance (bank 2)
 
 		case 0xD7:
 			return QObject::tr("Modifier la distance nécessaire pour toucher l'objet 3D : %1")
-					.arg(_var(params.mid(1,2), B2(params.at(0))));//Distance (bank 2)
+					.arg(_var(_params.mid(1,2), B2(_params.at(0))));//Distance (bank 2)
 
 		case 0xD8:
 			return QObject::tr("Commencer à charger l'écran %1")
-					.arg(_field(params.mid(0,2)));//id décor
+					.arg(_field(_params.mid(0,2)));//id décor
 
 		case 0xD9:
 			return QObject::tr("PMJMP2");//TODO renommer
@@ -1804,13 +1825,13 @@ QString Commande::traduction() const
 
 		case 0xDB:
 			return QObject::tr("%1 rotation")
-					.arg((quint8)params.at(0) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booléen
+					.arg((quint8)_params.at(0) == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));//Booléen
 
 		case 0xDC:
 			return QObject::tr("Jouer animation n°%1 pour '%3' (vitesse=%2)")
-					.arg((quint8)params.at(0))//animation ID
-					.arg((quint8)params.at(1))//vitesse
-					.arg((quint8)params.at(2)==0 ? QObject::tr("rester immobile") : ((quint8)params.at(2)==1 ? QObject::tr("marcher") : QObject::tr("courir")));//Stand Walk Run
+					.arg((quint8)_params.at(0))//animation ID
+					.arg((quint8)_params.at(1))//vitesse
+					.arg((quint8)_params.at(2)==0 ? QObject::tr("rester immobile") : ((quint8)_params.at(2)==1 ? QObject::tr("marcher") : QObject::tr("courir")));//Stand Walk Run
 
 		case 0xDD:
 			return QObject::tr("Stoppe l'animation de l'objet 3D");
@@ -1824,25 +1845,25 @@ QString Commande::traduction() const
 
 		case 0xE0:
 			return QObject::tr("Afficher l'état n°%2 du paramètre n°%1")
-					.arg(_var(params.mid(1,1), B1(params.at(0))))//Paramètre (bank 1)
-					.arg(_var(params.mid(2,1), B2(params.at(0))));//État (bank 2)
+					.arg(_var(_params.mid(1,1), B1(_params.at(0))))//Paramètre (bank 1)
+					.arg(_var(_params.mid(2,1), B2(_params.at(0))));//État (bank 2)
 
 		case 0xE1:
 			return QObject::tr("Cacher l'état n°%2 du paramètre n°%1")
-					.arg(_var(params.mid(1,1), B1(params.at(0))))//Paramètre (bank 1)
-					.arg(_var(params.mid(2,1), B2(params.at(0))));//État (bank 2)
+					.arg(_var(_params.mid(1,1), B1(_params.at(0))))//Paramètre (bank 1)
+					.arg(_var(_params.mid(2,1), B2(_params.at(0))));//État (bank 2)
 
 		case 0xE2:
 			return QObject::tr("Afficher l'état suivant du paramètre n°%1")
-					.arg(_var(params.mid(1,1), B2(params.at(0))));//Paramètre (bank 2)
+					.arg(_var(_params.mid(1,1), B2(_params.at(0))));//Paramètre (bank 2)
 
 		case 0xE3:
 			return QObject::tr("Afficher l'état précédent du paramètre n°%1")
-					.arg(_var(params.mid(1,1), B2(params.at(0))));//Paramètre (bank 2)
+					.arg(_var(_params.mid(1,1), B2(_params.at(0))));//Paramètre (bank 2)
 
 		case 0xE4:
 			return QObject::tr("Cacher paramètre n°%1")
-					.arg(_var(params.mid(1,1), B2(params.at(0))));//Paramètre (bank 2)
+					.arg(_var(_params.mid(1,1), B2(_params.at(0))));//Paramètre (bank 2)
 
 		case 0xE5:
 			return QObject::tr("STPAL");
@@ -1866,9 +1887,9 @@ QString Commande::traduction() const
 
 		case 0xEA:
 			return QObject::tr("MPPAL2 (R=%1, V=%2, B=%3)")
-					.arg(_var(params.mid(5,1), B1(params.at(1))))
-					.arg(_var(params.mid(6,1), B2(params.at(1))))
-					.arg(_var(params.mid(7,1), B1(params.at(2))));
+					.arg(_var(_params.mid(5,1), B1(_params.at(1))))
+					.arg(_var(_params.mid(6,1), B2(_params.at(1))))
+					.arg(_var(_params.mid(7,1), B1(_params.at(2))));
 			//TODO parametres
 
 		case 0xEB:
@@ -1893,12 +1914,12 @@ QString Commande::traduction() const
 
 		case 0xF0:
 			return QObject::tr("Jouer musique n°%1")
-					.arg((quint8)params.at(0));//Musique ID
+					.arg((quint8)_params.at(0));//Musique ID
 
 		case 0xF1:
 			return QObject::tr("Jouer son n°%1 (position=%2/127)")
-					.arg(_var(params.mid(1,2), B1(params.at(0))))//Sound ID (bank 1)
-					.arg(_var(params.mid(3,1), B2(params.at(0))));//Position (bank 2)
+					.arg(_var(_params.mid(1,2), B1(_params.at(0))))//Sound ID (bank 1)
+					.arg(_var(_params.mid(3,1), B2(_params.at(0))));//Position (bank 2)
 
 		case 0xF2:
 			return QObject::tr("AKAO");
@@ -1906,19 +1927,19 @@ QString Commande::traduction() const
 
 		case 0xF3:
 			return QObject::tr("MUSVT (musique n°%1)")
-					.arg((quint8)params.at(0));//Musique ID
+					.arg((quint8)_params.at(0));//Musique ID
 
 		case 0xF4:
 			return QObject::tr("MUSVM (musique n°%1)")
-					.arg((quint8)params.at(0));//Musique ID
+					.arg((quint8)_params.at(0));//Musique ID
 
 		case 0xF5:
 			return QObject::tr("%1 musique")
-					.arg((quint8)params.at(0) == 0 ? QObject::tr("Déverrouiller") : QObject::tr("Verrouiller", "test"));
+					.arg((quint8)_params.at(0) == 0 ? QObject::tr("Déverrouiller") : QObject::tr("Verrouiller", "test"));
 
 		case 0xF6:
 			return QObject::tr("Choisir musique n°%1 comme musique de combat")
-					.arg((quint8)params.at(0));//Musique ID
+					.arg((quint8)_params.at(0));//Musique ID
 
 		case 0xF7:
 			return QObject::tr("CHMPH");
@@ -1926,18 +1947,18 @@ QString Commande::traduction() const
 
 		case 0xF8:
 			return QObject::tr("Choisir prochaine cinématique : %1")
-					.arg(_movie(params.at(0)));
+					.arg(_movie(_params.at(0)));
 
 		case 0xF9:
 			return QObject::tr("Jouer la cinématique choisie");
 
 		case 0xFA:
 			return QObject::tr("Stocker Movie frame dans %1")
-					.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+					.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 
 		case 0xFB:
 			return QObject::tr("Camera Movie : %1")
-					.arg((quint8)params.at(0) == 0 ? QObject::tr("ON") : QObject::tr("OFF"));//booléen
+					.arg((quint8)_params.at(0) == 0 ? QObject::tr("ON") : QObject::tr("OFF"));//booléen
 
 		case 0xFC:
 			return QObject::tr("FMUSC");
@@ -1949,7 +1970,7 @@ QString Commande::traduction() const
 
 		case 0xFE:
 			return QObject::tr("Si la musique est jouée mettre %1 à 1")
-					.arg(_bank(params.at(1), B2(params.at(0))));//(bank 2)
+					.arg(_bank(_params.at(1), B2(_params.at(0))));//(bank 2)
 
 		case 0xFF:
 			return QObject::tr("Game Over");
@@ -1958,3 +1979,628 @@ QString Commande::traduction() const
 			return "?";
 		}
 }
+
+OpcodeEmpty::OpcodeEmpty(quint8 id) :
+	Commande()
+{
+	_id = id;
+}
+
+quint8 OpcodeEmpty::id() const
+{
+	return _id;
+}
+
+QString OpcodeEmpty::toString() const
+{
+	return QObject::tr("? (id=%1)")
+			.arg(_id);
+}
+
+OpcodeRET::OpcodeRET() :
+	Commande()
+{
+}
+
+quint8 OpcodeRET::id() const
+{
+	return 0;
+}
+
+QString OpcodeRET::toString() const
+{
+	return QObject::tr("Retourner");
+}
+
+OpcodeExec::OpcodeExec(const QByteArray &params)
+{
+	groupID = params.at(0);//GroupID sur 1 octet
+	scriptID = params.at(1) & 0x1F;//ScriptID sur 5 bits
+	priority = (params.at(1) >> 5) & 7;//Priorité sur 3 bits
+}
+
+QByteArray OpcodeExec::params() const
+{
+	return QByteArray()
+			.append((char)groupID)
+			.append(char((scriptID & 0x1F) | ((priority & 7) << 5)));
+}
+
+OpcodeREQ::OpcodeREQ(const QByteArray &params) :
+	OpcodeExec(params)
+{
+}
+
+quint8 OpcodeREQ::id() const
+{
+	return 0x01;
+}
+
+QString OpcodeREQ::toString() const
+{
+	return QObject::tr("Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
+			.arg(_script(groupID))
+			.arg(priority)
+			.arg(scriptID);
+}
+
+OpcodeREQSW::OpcodeREQSW(const QByteArray &params) :
+	OpcodeExec(params)
+{
+}
+
+quint8 OpcodeREQSW::id() const
+{
+	return 0x02;
+}
+
+QString OpcodeREQSW::toString() const
+{
+	return QObject::tr("Exécuter le script n°%3 du groupe %1 (priorité %2/6)")
+			.arg(_script(groupID))
+			.arg(priority)
+			.arg(scriptID);
+}
+
+OpcodeREQEW::OpcodeREQEW(const QByteArray &params) :
+	OpcodeExec(params)
+{
+}
+
+quint8 OpcodeREQEW::id() const
+{
+	return 0x03;
+}
+
+QString OpcodeREQEW::toString() const
+{
+	return QObject::tr("Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Attend la fin de l'exécution pour continuer")
+			.arg(_script(groupID))
+			.arg(priority)
+			.arg(scriptID);
+}
+
+OpcodeExecChar::OpcodeExecChar(const QByteArray &params) :
+	Commande()
+{
+	charID = params.at(0);//charID sur 1 octet
+	scriptID = params.at(1) & 0x1F;//ScriptID sur 5 bits
+	priority = (params.at(1) >> 5) & 7;//Priorité sur 3 bits
+}
+
+QByteArray OpcodeExecChar::params() const
+{
+	return QByteArray()
+			.append((char)charID)
+			.append(char((scriptID & 0x1F) | ((priority & 7) << 5)));
+}
+
+OpcodePREQ::OpcodePREQ(const QByteArray &params) :
+	OpcodeExecChar(params)
+{
+}
+
+quint8 OpcodePREQ::id() const
+{
+	return 0x04;
+}
+
+QString OpcodePREQ::toString() const
+{
+	return QObject::tr("Exécuter le script n°%3 du groupe lié au personnage n°%1 de l'équipe (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
+			.arg(charID)
+			.arg(priority)
+			.arg(scriptID);
+}
+
+OpcodePRQSW::OpcodePRQSW(const QByteArray &params) :
+	OpcodeExecChar(params)
+{
+}
+
+quint8 OpcodePRQSW::id() const
+{
+	return 0x05;
+}
+
+QString OpcodePRQSW::toString() const
+{
+	return QObject::tr("Exécuter le script n°%3 du groupe lié au personnage n°%1 de l'équipe (priorité %2/6)")
+			.arg(charID)
+			.arg(priority)
+			.arg(scriptID);
+}
+
+OpcodePRQEW::OpcodePRQEW(const QByteArray &params) :
+	OpcodeExecChar(params)
+{
+}
+
+quint8 OpcodePRQEW::id() const
+{
+	return 0x06;
+}
+
+QString OpcodePRQEW::toString() const
+{
+	return QObject::tr("Exécuter le script n°%3 du groupe lié au personnage n°%1 de l'équipe (priorité %2/6) - Attend la fin de l'exécution pour continuer")
+			.arg(charID)
+			.arg(priority)
+			.arg(scriptID);
+}
+
+OpcodeRETTO::OpcodeRETTO(const QByteArray &params) :
+	Commande()
+{
+	scriptID = params.at(0) & 0x1F;//ScriptID sur 5 bits
+	priority = (params.at(0) >> 5) & 7;//Priorité sur 3 bits
+}
+
+quint8 OpcodeRETTO::id() const
+{
+	return 0x07;
+}
+
+QString OpcodeRETTO::toString() const
+{
+	return QObject::tr("Retourner et exécuter le script n°%2 du groupe appelant (priorité %1/6)")
+			.arg(priority)
+			.arg(scriptID);
+}
+
+QByteArray OpcodeRETTO::params() const
+{
+	return QByteArray()
+			.append(char((scriptID & 0x1F) | ((priority & 7) << 5)));
+}
+
+OpcodeJOIN::OpcodeJOIN(const QByteArray &params) :
+	Commande()
+{
+	speed = params.at(0);
+}
+
+quint8 OpcodeJOIN::id() const
+{
+	return 0x08;
+}
+
+QString OpcodeJOIN::toString() const
+{
+	return QObject::tr("Rassembler les membres de l'équipe dans le personnage jouable (vitesse=%1)")
+			.arg(speed);
+}
+
+QByteArray OpcodeJOIN::params() const
+{
+	return QByteArray()
+			.append(speed);
+}
+
+OpcodeSPLIT::OpcodeSPLIT(const QByteArray &params) :
+	Commande()
+{
+	const char *constParams = params.constData();
+	memcpy(banks, constParams, 3);
+
+	memcpy(&targetX1, &constParams[3], 2); // bank 1
+	memcpy(&targetY1, &constParams[5], 2); // bank 2
+	direction1 = params.at(7); // bank 3
+	memcpy(&targetX2, &constParams[8], 2); // bank 4
+	memcpy(&targetY2, &constParams[10], 2); // bank 5
+	direction2 = params.at(12); // bank 6
+	speed = params.at(13);
+}
+
+quint8 OpcodeSPLIT::id() const
+{
+	return 0x09;
+}
+
+QString OpcodeSPLIT::toString() const
+{
+	return QObject::tr("Faire sortir les membres de l'équipe à partir du personnage jouable (perso 1 : X=%1, Y=%2, dir=%3 ; perso 2 : X=%4, Y=%5, dir=%6) (vitesse %7)")
+			.arg(_var(targetX1, B1(banks[0])))
+			.arg(_var(targetY1, B2(banks[0])))
+			.arg(_var(direction1, B1(banks[1])))
+			.arg(_var(targetX2, B2(banks[1])))
+			.arg(_var(targetY2, B1(banks[2])))
+			.arg(_var(direction2, B2(banks[2])))
+			.arg(speed);
+}
+
+QByteArray OpcodeSPLIT::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 3)
+			.append((char *)&targetX1, 2)
+			.append((char *)&targetY1, 2)
+			.append((char)direction1)
+			.append((char *)&targetX2, 2)
+			.append((char *)&targetY2, 2)
+			.append((char)direction2)
+			.append((char)speed);
+}
+
+OpcodePartyE::OpcodePartyE(const QByteArray &params) :
+	Commande()
+{
+	const char *constParams = params.constData();
+	memcpy(banks, constParams, 2);
+
+	party1 = params.at(2); // bank 1
+	party2 = params.at(3); // bank 2
+	party3 = params.at(4); // bank 3 -checked-
+}
+
+QByteArray OpcodePartyE::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append((char)party1)
+			.append((char)party2)
+			.append((char)party3);
+}
+
+OpcodeSPTYE::OpcodeSPTYE(const QByteArray &params) :
+	OpcodePartyE(params)
+{
+}
+
+quint8 OpcodeSPTYE::id() const
+{
+	return 0x0a;
+}
+
+QString OpcodeSPTYE::toString() const
+{
+	return QObject::tr("Sauvegarder les membres de l'équipe : %1 | %2 | %3")
+			.arg(_var(party1, B1(banks[0])))
+			.arg(_var(party2, B2(banks[0])))
+			.arg(_var(party3, B1(banks[1])));
+}
+
+OpcodeGTPYE::OpcodeGTPYE(const QByteArray &params) :
+	OpcodePartyE(params)
+{
+}
+
+quint8 OpcodeGTPYE::id() const
+{
+	return 0x0b;
+}
+
+QString OpcodeGTPYE::toString() const
+{
+	return QObject::tr("Récupérer les membres de l'équipe : %1 | %2 | %3")
+			.arg(_var(party1, B1(banks[0])))
+			.arg(_var(party2, B2(banks[0])))
+			.arg(_var(party3, B1(banks[1])));
+}
+
+OpcodeDSKCG::OpcodeDSKCG(const QByteArray &params) :
+	Commande()
+{
+	diskID = params.at(0);
+}
+
+quint8 OpcodeDSKCG::id() const
+{
+	return 0x0e;
+}
+
+QString OpcodeDSKCG::toString() const
+{
+	return QObject::tr("Demander le CD %1")
+			.arg(diskID);
+}
+
+QByteArray OpcodeDSKCG::params() const
+{
+	return QByteArray().append((char)diskID);
+}
+
+OpcodeSPECIALARROW::OpcodeSPECIALARROW(const QByteArray &params) :
+	Commande()
+{
+	hide = params.at(0);// Boolean
+}
+
+quint8 OpcodeSPECIALARROW::id() const
+{
+	return 0xF5;
+}
+
+QString OpcodeSPECIALARROW::toString() const
+{
+	return QObject::tr("%1 le curseur main")
+			.arg(hide == 0 ? QObject::tr("Afficher") : QObject::tr("Ne pas afficher"));
+}
+
+QByteArray OpcodeSPECIALARROW::params() const
+{
+	return QByteArray().append((char)hide);
+}
+
+OpcodeSPECIALPNAME::OpcodeSPECIALPNAME(const QByteArray &params) :
+	Commande()
+{
+	unknown = params.at(0);
+}
+
+quint8 OpcodeSPECIALPNAME::id() const
+{
+	return 0xF6;
+}
+
+QString OpcodeSPECIALPNAME::toString() const
+{
+	return QObject::tr("PNAME - Désactiver le menu de droite (%1)")
+			.arg(unknown);
+}
+
+QByteArray OpcodeSPECIALPNAME::params() const
+{
+	return QByteArray().append((char)unknown);
+}
+
+OpcodeSPECIALGMSPD::OpcodeSPECIALGMSPD(const QByteArray &params) :
+	Commande()
+{
+	speed = params.at(0);
+}
+
+quint8 OpcodeSPECIALGMSPD::id() const
+{
+	return 0xF7;
+}
+
+QString OpcodeSPECIALGMSPD::toString() const
+{
+	return QObject::tr("Modifier la vitesse de jeu (%1)")
+			.arg(speed);
+}
+
+QByteArray OpcodeSPECIALGMSPD::params() const
+{
+	return QByteArray().append((char)speed);
+}
+
+OpcodeSPECIALSMSPD::OpcodeSPECIALSMSPD(const QByteArray &params) :
+	Commande()
+{
+	unknown = params.at(0);
+	speed = params.at(1);
+}
+
+quint8 OpcodeSPECIALSMSPD::id() const
+{
+	return 0xF8;
+}
+
+QString OpcodeSPECIALSMSPD::toString() const
+{
+	return QObject::tr("Modifier la vitesse des messages (%2) | %1 |")
+			.arg(unknown)
+			.arg(speed);
+}
+
+QByteArray OpcodeSPECIALSMSPD::params() const
+{
+	return QByteArray()
+			.append((char)unknown)
+			.append((char)speed);
+}
+
+OpcodeSPECIALFLMAT::OpcodeSPECIALFLMAT() :
+	Commande()
+{
+}
+
+quint8 OpcodeSPECIALFLMAT::id() const
+{
+	return 0xF9;
+}
+
+QString OpcodeSPECIALFLMAT::toString() const
+{
+	return QObject::tr("Remplir le menu matéria de toutes les matérias en quantité maximum");
+}
+
+OpcodeSPECIALFLITM::OpcodeSPECIALFLITM() :
+	Commande()
+{
+}
+
+quint8 OpcodeSPECIALFLITM::id() const
+{
+	return 0xFA;
+}
+
+QString OpcodeSPECIALFLITM::toString() const
+{
+	return QObject::tr("Remplir l'inventaire par tous les objets en quantité maximum");
+}
+
+
+OpcodeSPECIALBTLCK::OpcodeSPECIALBTLCK(const QByteArray &params) :
+	Commande()
+{
+	lock = params.at(0); // Boolean
+}
+
+quint8 OpcodeSPECIALBTLCK::id() const
+{
+	return 0xFB;
+}
+
+QString OpcodeSPECIALBTLCK::toString() const
+{
+	return QObject::tr("%1 les combats")
+			.arg(lock == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+}
+
+QByteArray OpcodeSPECIALBTLCK::params() const
+{
+	return QByteArray().append((char)lock);
+}
+
+OpcodeSPECIALMVLCK::OpcodeSPECIALMVLCK(const QByteArray &params) :
+	Commande()
+{
+	lock = params.at(0); // Boolean
+}
+
+quint8 OpcodeSPECIALMVLCK::id() const
+{
+	return 0xFC;
+}
+
+QString OpcodeSPECIALMVLCK::toString() const
+{
+	return QObject::tr("%1 les cinématiques")
+			.arg(lock == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+}
+
+QByteArray OpcodeSPECIALMVLCK::params() const
+{
+	return QByteArray().append((char)lock);
+}
+
+OpcodeSPECIALSPCNM::OpcodeSPECIALSPCNM(const QByteArray &params) :
+	Commande()
+{
+	charID = params.at(0);
+	textID = params.at(1);
+}
+
+quint8 OpcodeSPECIALSPCNM::id() const
+{
+	return 0xFD;
+}
+
+QString OpcodeSPECIALSPCNM::toString() const
+{
+	return QObject::tr("Changer le nom de %1 par le texte %2")
+			.arg(_personnage(charID))
+			.arg(_text(textID));
+}
+
+QByteArray OpcodeSPECIALSPCNM::params() const
+{
+	return QByteArray()
+			.append((char)charID)
+			.append((char)textID);
+}
+
+OpcodeSPECIALRSGLB::OpcodeSPECIALRSGLB() :
+	Commande()
+{
+}
+
+quint8 OpcodeSPECIALRSGLB::id() const
+{
+	return 0xFE;
+}
+
+QString OpcodeSPECIALRSGLB::toString() const
+{
+	return QObject::tr("Met le temps à 0, débloque le menu \"PHS\" et \"Sauvegarder\". Nouvelle équipe : Clad | (Vide) | (Vide)");
+}
+
+OpcodeSPECIALCLITM::OpcodeSPECIALCLITM() :
+	Commande()
+{
+}
+
+quint8 OpcodeSPECIALCLITM::id() const
+{
+	return 0xFF;
+}
+
+QString OpcodeSPECIALCLITM::toString() const
+{
+	return QObject::tr("Supprimer tous les objets de l'inventaire");
+}
+
+OpcodeSPECIAL::OpcodeSPECIAL(const QByteArray &params) :
+	Commande()
+{
+	switch((quint8)params.at(0))
+	{
+	case 0xF5:
+		opcode = new OpcodeSPECIALARROW(params.mid(1));
+		break;
+	case 0xF6:
+		opcode = new OpcodeSPECIALPNAME(params.mid(1));
+		break;
+	case 0xF7:
+		opcode = new OpcodeSPECIALGMSPD(params.mid(1));
+		break;
+	case 0xF8:
+		opcode = new OpcodeSPECIALSMSPD(params.mid(1));
+		break;
+	case 0xF9:
+		opcode = new OpcodeSPECIALFLMAT();
+		break;
+	case 0xFA:
+		opcode = new OpcodeSPECIALFLITM();
+		break;
+	case 0xFB:
+		opcode = new OpcodeSPECIALBTLCK(params.mid(1));
+		break;
+	case 0xFC:
+		opcode = new OpcodeSPECIALMVLCK(params.mid(1));
+		break;
+	case 0xFD:
+		opcode = new OpcodeSPECIALSPCNM(params.mid(1));
+		break;
+	case 0xFE:
+		opcode = new OpcodeSPECIALRSGLB();
+		break;
+	case 0xFF:
+		opcode = new OpcodeSPECIALCLITM();
+		break;
+	default:
+		opcode = new OpcodeEmpty(params.at(0));
+		break;
+	}
+}
+
+quint8 OpcodeSPECIAL::id() const
+{
+	return 0x0F;
+}
+
+QString OpcodeSPECIAL::toString() const
+{
+	return QObject::tr("SPECIAL - ") + opcode->toString();
+}
+
+QByteArray OpcodeSPECIAL::params() const
+{
+	return QByteArray()
+			.append((char)opcode->id())
+			.append(opcode->params());
+}
+

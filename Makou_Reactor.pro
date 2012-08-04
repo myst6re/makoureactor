@@ -58,7 +58,8 @@ HEADERS += ApercuBG.h \
     VertexWidget.h \
     NeoMidgar.h \
     GZIP.h \
-    Data.h
+    Data.h \
+    OrientationWidget.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     Commande.cpp \
@@ -110,7 +111,8 @@ SOURCES += ApercuBG.cpp \
     VertexWidget.cpp \
     NeoMidgar.cpp \
     GZIP.cpp \
-    Data.cpp
+    Data.cpp \
+    OrientationWidget.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts
