@@ -116,7 +116,7 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
 		for(i=0 ; i<comboBox0->count() ; ++i)
 		{
 			buildList(i);
-			index = commande->getOpcode();
+			index = commande->id();
 			if(index == 0x0F)
 				index = ((quint8)commande->getParams().at(0) << 8) | index;
 			else if(index == 0x28)
@@ -134,7 +134,7 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
 			return;
 		}
 		textEdit->setPlainText(commande->traduction());
-		fillModel(commande->getOpcode());
+		fillModel(commande->id());
 		
 		connect(ok, SIGNAL(released()), SLOT(modify()));
 	}

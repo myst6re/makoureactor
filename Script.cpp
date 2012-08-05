@@ -120,6 +120,36 @@ void Script::openScript(const QByteArray &script)
 			}
 			op = new OpcodeSPECIAL(script.mid(pos+1, longueur));
 			break;
+		case 0x10:
+			op = new OpcodeJMPF(script.mid(pos+1, longueur));
+			break;
+		case 0x11:
+			op = new OpcodeJMPFL(script.mid(pos+1, longueur));
+			break;
+		case 0x12:
+			op = new OpcodeJMPB(script.mid(pos+1, longueur));
+			break;
+		case 0x13:
+			op = new OpcodeJMPBL(script.mid(pos+1, longueur));
+			break;
+		case 0x14:
+			op = new OpcodeIFUB(script.mid(pos+1, longueur));
+			break;
+		case 0x15:
+			op = new OpcodeIFUBL(script.mid(pos+1, longueur));
+			break;
+		case 0x16:
+			op = new OpcodeIFSW(script.mid(pos+1, longueur));
+			break;
+		case 0x17:
+			op = new OpcodeIFSWL(script.mid(pos+1, longueur));
+			break;
+		case 0x18:
+			op = new OpcodeIFUW(script.mid(pos+1, longueur));
+			break;
+		case 0x19:
+			op = new OpcodeIFUWL(script.mid(pos+1, longueur));
+			break;
 		case 0x28://KAWAI
 			longueur += (quint8)script.at(pos+1);
 			op = new Commande(script.mid(pos, longueur), pos);
@@ -285,7 +315,7 @@ bool Script::rechercherOpCode(quint8 opCode, int &commandeID) const
 	int nbCommandes = commandes.size();
 	while(commandeID < nbCommandes)
 	{
-		if(opCode == commandes.at(commandeID)->getOpcode())	return true;
+		if(opCode == commandes.at(commandeID)->id())	return true;
 		++commandeID;
 		// qDebug() << "SCRIPT_commandeID " << commandeID;
 	}
@@ -348,7 +378,7 @@ bool Script::rechercherOpCodeP(quint8 opCode, int &commandeID) const
 	
 	while(commandeID >= 0)
 	{
-		if(opCode == commandes.at(commandeID)->getOpcode())	return true;
+		if(opCode == commandes.at(commandeID)->id())	return true;
 		--commandeID;
 	}
 
@@ -451,7 +481,7 @@ void Script::shiftJumps(int commandID, int shift)
 	{
 		if(currentCommandID < commandID)
 		{
-			switch(commande->getOpcode())
+			switch(commande->id())
 			{
 			case 0x10:// JMPF (Jump)
 				jump = commande->getConstParams().at(0);
@@ -511,11 +541,11 @@ void Script::shiftJumps(int commandID, int shift)
 					jump += shift;
 					if(jump >= 0 && jump < 256) {
 						commande->getParams()[6] = jump;
-//						qDebug() << (commande->getOpcode()==0x16 ? "IFSW" : "IFUW") << (jump-shift) << jump;
+//						qDebug() << (commande->id()==0x16 ? "IFSW" : "IFUW") << (jump-shift) << jump;
 					} else if(jump >= 0 && jump < 65536)// -> IFSWL/IFUWL
 					{
-						commande->setCommande(QByteArray().append(commande->getOpcode()==0x16 ? '\x17' : '\x19').append(commande->getConstParams().left(6)).append((char *)&jump, 2));
-//						qDebug() << (commande->getOpcode()==0x16 ? "IFSW -> IFSWL" : "IFUW -> IFUWL") << (jump-shift) << jump;
+						commande->setCommande(QByteArray().append(commande->id()==0x16 ? '\x17' : '\x19').append(commande->getConstParams().left(6)).append((char *)&jump, 2));
+//						qDebug() << (commande->id()==0x16 ? "IFSW -> IFSWL" : "IFUW -> IFUWL") << (jump-shift) << jump;
 					}
 				}
 				break;
@@ -527,7 +557,7 @@ void Script::shiftJumps(int commandID, int shift)
 					jump += shift;
 					if(jump >= 0 && jump < 65536) {
 						memcpy(commande->getParams().data() + 6, &jump, 2);
-//						qDebug() << (commande->getOpcode()==0x17 ? "IFSWL" : "IFUWL") << (jump-shift) << jump;
+//						qDebug() << (commande->id()==0x17 ? "IFSWL" : "IFUWL") << (jump-shift) << jump;
 					}
 				}
 				break;
@@ -539,7 +569,7 @@ void Script::shiftJumps(int commandID, int shift)
 					jump += shift;
 					if(jump >= 0 && jump < 256) {
 						commande->getParams()[2] = jump;
-//						qDebug() << (commande->getOpcode()==0x30 ? "IFKEY" : (commande->getOpcode()==0x31 ? "IFKEYON" : "IFKEYOFF")) << (jump-shift) << jump;
+//						qDebug() << (commande->id()==0x30 ? "IFKEY" : (commande->id()==0x31 ? "IFKEYON" : "IFKEYOFF")) << (jump-shift) << jump;
 					}
 				}
 				break;
@@ -550,7 +580,7 @@ void Script::shiftJumps(int commandID, int shift)
 					jump += shift;
 					if(jump >= 0 && jump < 256) {
 						commande->getParams()[1] = jump;
-//						qDebug() << (commande->getOpcode()==0xCB ? "IFPRTYQ" : "IFMEMBQ") << (jump-shift) << jump;
+//						qDebug() << (commande->id()==0xCB ? "IFPRTYQ" : "IFMEMBQ") << (jump-shift) << jump;
 					}
 				}
 				break;
@@ -558,7 +588,7 @@ void Script::shiftJumps(int commandID, int shift)
 		}
 		else
 		{
-			switch(commande->getOpcode())
+			switch(commande->id())
 			{
 			case 0x12:// JMPB (Jump Forward)
 				jump = commande->getConstParams().at(0);
@@ -599,7 +629,7 @@ void Script::shiftJumpsSwap(Commande *commande, int shift)
 
 	int jump;
 
-	switch(commande->getOpcode())
+	switch(commande->id())
 	{
 	case 0x10:// JMPF (Jump)
 		jump = commande->getConstParams().at(0) + shift;
@@ -668,11 +698,11 @@ void Script::shiftJumpsSwap(Commande *commande, int shift)
 		jump = commande->getConstParams().at(6) + shift;
 		if(jump >= 0 && jump < 256) {
 			commande->getParams()[6] = jump;
-//			qDebug() << (commande->getOpcode()==0x16 ? "IFSW" : "IFUW") << (jump-shift) << jump;
+//			qDebug() << (commande->id()==0x16 ? "IFSW" : "IFUW") << (jump-shift) << jump;
 		} else if(jump >= 0 && jump < 65536)// -> IFSWL/IFUWL
 		{
-			commande->setCommande(QByteArray().append(commande->getOpcode()==0x16 ? '\x17' : '\x19').append(commande->getConstParams().left(6)).append((char *)&jump, 2));
-//			qDebug() << (commande->getOpcode()==0x16 ? "IFSW -> IFSWL" : "IFUW -> IFUWL") << (jump-shift) << jump;
+			commande->setCommande(QByteArray().append(commande->id()==0x16 ? '\x17' : '\x19').append(commande->getConstParams().left(6)).append((char *)&jump, 2));
+//			qDebug() << (commande->id()==0x16 ? "IFSW -> IFSWL" : "IFUW -> IFUWL") << (jump-shift) << jump;
 		}
 		break;
 	case 0x17:// IFSWL (Long Jump)
@@ -682,7 +712,7 @@ void Script::shiftJumpsSwap(Commande *commande, int shift)
 		jump += shift;
 		if(jump >= 0 && jump < 65536) {
 			memcpy(commande->getParams().data() + 6, &jump, 2);
-//			qDebug() << (commande->getOpcode()==0x17 ? "IFSWL" : "IFUWL") << (jump-shift) << jump;
+//			qDebug() << (commande->id()==0x17 ? "IFSWL" : "IFUWL") << (jump-shift) << jump;
 		}
 		break;
 	case 0x30:// IFKEY (Jump)
@@ -691,7 +721,7 @@ void Script::shiftJumpsSwap(Commande *commande, int shift)
 		jump = commande->getConstParams().at(2) + shift;
 		if(jump >= 0 && jump < 256) {
 			commande->getParams()[2] = jump;
-//			qDebug() << (commande->getOpcode()==0x30 ? "IFKEY" : (commande->getOpcode()==0x31 ? "IFKEYON" : "IFKEYOFF")) << (jump-shift) << jump;
+//			qDebug() << (commande->id()==0x30 ? "IFKEY" : (commande->id()==0x31 ? "IFKEYON" : "IFKEYOFF")) << (jump-shift) << jump;
 		}
 		break;
 	case 0xCB:// IFPRTYQ (Jump)
@@ -699,7 +729,7 @@ void Script::shiftJumpsSwap(Commande *commande, int shift)
 		jump = commande->getConstParams().at(1) + shift;
 		if(jump >= 0 && jump < 256) {
 			commande->getParams()[1] = jump;
-//			qDebug() << (commande->getOpcode()==0xCB ? "IFPRTYQ" : "IFMEMBQ") << (jump-shift) << jump;
+//			qDebug() << (commande->id()==0xCB ? "IFPRTYQ" : "IFMEMBQ") << (jump-shift) << jump;
 		}
 		break;
 	}
@@ -730,7 +760,7 @@ void Script::lecture(QTreeWidget *zoneScript)
 		}
 		
 		description = curCommande->traduction();
-		clef = curCommande->getOpcode();
+		clef = curCommande->id();
 		
 		/* description += QString(" | %1 || ").arg(clef,0,16);
 		for(quint8 cur=0 ; cur<curCommande->getConstParams().size() ; ++cur)

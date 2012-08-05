@@ -462,5 +462,5 @@ QList<int> CommandeList::selectedIDs()
 int CommandeList::selectedOpcode()
 {
 	int commandeID = selectedID();
-	return commandeID==-1 ? 0 : script->getCommande(commandeID)->getOpcode();
+	return commandeID==-1 ? 0 : script->getCommande(commandeID)->id();
 }

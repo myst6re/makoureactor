@@ -69,7 +69,7 @@ void GrpScript::setType()
 	
 	for(quint16 i=0 ; i<nbCommandes ; ++i)
 	{
-		switch(firstScript->getCommande(i)->getOpcode())
+		switch(firstScript->getCommande(i)->id())
 		{
 		case 0xA0://Definition du personnage
 			character = (quint8)firstScript->getCommande(i)->getConstParams().at(0);
@@ -101,11 +101,11 @@ void GrpScript::getBgParams(QHash<quint8, quint8> &paramActifs) const
 	
 	for(quint16 i=0 ; i<nbCommandes ; ++i)
 	{
-		/* switch(firstScript->getCommande(i)->getOpcode())
+		/* switch(firstScript->getCommande(i)->id())
 		{
 		case 0xE0://afficher paramètre*/
 		const QByteArray params = firstScript->getCommande(i)->getConstParams();
-		if(firstScript->getCommande(i)->getOpcode()==0xE0 && (quint8)params.at(0)==0)
+		if(firstScript->getCommande(i)->id()==0xE0 && (quint8)params.at(0)==0)
 		{
 			param = (quint8)params.at(1);
 			state = 1 << (quint8)params.at(2);
@@ -142,7 +142,7 @@ void GrpScript::getBgMove(qint16 z[2], qint16 *x, qint16 *y) const
 		for(i=0 ; i<nbCommandes ; ++i)
 		{
 			params = script->getCommande(i)->getConstParams().constData();
-			if(script->getCommande(i)->getOpcode()==0x2C)//Déplacer Background Z
+			if(script->getCommande(i)->id()==0x2C)//Déplacer Background Z
 			{
 				coucheID = (quint8)params[1];
 				if((quint8)params[0]==0 && coucheID>1 && coucheID<4)//Pas de variables, bon coucheID
@@ -150,7 +150,7 @@ void GrpScript::getBgMove(qint16 z[2], qint16 *x, qint16 *y) const
 					memcpy(&z[coucheID-2], &params[2], 2);
 				}
 			}
-			else if(x && y && script->getCommande(i)->getOpcode()==0x2D)// Animer Background X Y
+			else if(x && y && script->getCommande(i)->id()==0x2D)// Animer Background X Y
 			{
 				coucheID = (quint8)params[1];
 				if((quint8)params[0]==0 && coucheID>1 && coucheID<4)//Pas de variables, bon coucheID
