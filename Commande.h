@@ -82,7 +82,9 @@ protected:
 	static QString _script(quint8 param);
 	static QString _text(quint8 textID);
 	static QString _item(const QByteArray &param, quint8 bank);
+	static QString _item(quint16 itemID, quint8 bank);
 	static QString _materia(const QByteArray &param, quint8 bank);
+	static QString _materia(quint8 materiaID, quint8 bank);
 	static QString _field(const QByteArray &param);
 	static QString _field(quint16 fieldID);
 	static QString _movie(quint8 movieID);
@@ -94,6 +96,8 @@ protected:
 	static QString _lvar(const QByteArray &param, quint8 bank1, quint8 bank2, quint8 bank3);
 	static QString _svar(const QByteArray &param, quint8 bank);
 	static QString _var(int value, quint8 bank);
+	static QString _var(int value, quint8 bank1, quint8 bank2);
+	static QString _var(int value, quint8 bank1, quint8 bank2, quint8 bank3);
 	static quint32 _toInt(const QByteArray &param);
 	static qint16 _toSInt(const QByteArray &param);
 
@@ -669,6 +673,7 @@ class OpcodeIfKey : public OpcodeJump {
 public:
 	explicit OpcodeIfKey(const QByteArray &params);
 	virtual QByteArray params() const;
+	QString keyString() const;
 	quint16 keys;
 };
 
@@ -880,13 +885,14 @@ public:
 	quint8 id() const { return 0x48; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
-	quint8 banks, windowID, textID, firstLine, lastLine, var;
+	quint8 banks, windowID, textID, firstLine, lastLine, varAnswer;
 };
 
 class OpcodeMENU : public Commande {
 public:
 	explicit OpcodeMENU(const QByteArray &params);
 	quint8 id() const { return 0x49; }
+	QString menu(const QString &param);
 	virtual QString toString() const;
 	virtual QByteArray params() const;
 	quint8 banks, menuID, param;
@@ -996,7 +1002,7 @@ public:
 	quint8 id() const { return 0x56; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
-	quint8 banks[2], corner, var1, var2, var3;
+	quint8 banks[2], corner, varR, varG, varB;
 };
 // note: same struct as GWCOL
 class OpcodeSWCOL : public Commande {
@@ -1038,7 +1044,7 @@ public:
 	virtual QByteArray params() const;
 	quint8 banks;
 	quint16 itemID;
-	quint8 var;
+	quint8 varQuantity;
 };
 
 class OpcodeSMTRA : public Commande {
@@ -1073,7 +1079,7 @@ public:
 	quint8 banks[3];
 	quint8 materiaID;
 	quint32 APCount;
-	quint8 unknown, quantity;
+	quint8 unknown, varQuantity;
 };
 
 class OpcodeSHAKE : public Commande {
@@ -1302,78 +1308,82 @@ public:
 	quint8 banks[2], partyID, varX, varY, varZ, varI;
 };
 
-class OpcodePLUSX : public Commande {
+class OpcodeOperation : public Commande {
+public:
+	explicit OpcodeOperation(const QByteArray &params);
+	virtual QByteArray params() const;
+	quint8 banks, var, value;
+};
+
+class OpcodeOperation2 : public Commande {
+public:
+	explicit OpcodeOperation2(const QByteArray &params);
+	virtual QByteArray params() const;
+	quint8 banks, var;
+	quint16 value;
+};
+
+class OpcodeUnaryOperation : public Commande {
+public:
+	explicit OpcodeUnaryOperation(const QByteArray &params);
+	virtual QByteArray params() const;
+	quint8 banks, var;
+};
+
+class OpcodePLUSX : public OpcodeOperation {
 public:
 	explicit OpcodePLUSX(const QByteArray &params);
 	quint8 id() const { return 0x76; }
 	virtual QString toString() const;
-	virtual QByteArray params() const;
-	quint8 banks, var, value;
 };
 
-class OpcodePLUS2X : public Commande {
+class OpcodePLUS2X : public OpcodeOperation2 {
 public:
 	explicit OpcodePLUS2X(const QByteArray &params);
 	quint8 id() const { return 0x77; }
 	virtual QString toString() const;
-	virtual QByteArray params() const;
-	quint8 banks, var;
-	quint16 value;
 };
-// note: same struct as PLUSX
-class OpcodeMINUSX : public Commande {
+
+class OpcodeMINUSX : public OpcodeOperation {
 public:
 	explicit OpcodeMINUSX(const QByteArray &params);
 	quint8 id() const { return 0x78; }
 	virtual QString toString() const;
-	virtual QByteArray params() const;
-	quint8 banks, var, value;
 };
-// note: same struct as PLUS2X
-class OpcodeMINUS2X : public Commande {
+
+class OpcodeMINUS2X : public OpcodeOperation2 {
 public:
 	explicit OpcodeMINUS2X(const QByteArray &params);
 	quint8 id() const { return 0x79; }
 	virtual QString toString() const;
-	virtual QByteArray params() const;
-	quint8 banks, var;
-	quint16 value;
 };
 
-class OpcodeINCX : public Commande {
+class OpcodeINCX : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeINCX(const QByteArray &params);
 	quint8 id() const { return 0x7A; }
 	virtual QString toString() const;
-	virtual QByteArray params() const;
-	quint8 banks, var;
 };
-// note: same struct as INCX
-class OpcodeINC2X : public Commande {
+
+class OpcodeINC2X : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeINC2X(const QByteArray &params);
 	quint8 id() const { return 0x7B; }
 	virtual QString toString() const;
-	virtual QByteArray params() const;
-	quint8 banks, var;
 };
-// note: same struct as INCX
-class OpcodeDECX : public Commande {
+
+class OpcodeDECX : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeDECX(const QByteArray &params);
 	quint8 id() const { return 0x7C; }
 	virtual QString toString() const;
-	virtual QByteArray params() const;
-	quint8 banks, var;
 };
-// note: same struct as INCX
-class OpcodeDEC2X : public Commande {
+
+class OpcodeDEC2X : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeDECX(const QByteArray &params);
 	quint8 id() const { return 0x7D; }
 	virtual QString toString() const;
-	virtual QByteArray params() const;
-	quint8 banks, var;
 };
 
 class OpcodeTLKON : public Commande {
@@ -1385,13 +1395,1120 @@ public:
 	quint8 disabled;
 };
 
-class OpcodeRDMSD : public Commande {
+class OpcodeRDMSD : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeRDMSD(const QByteArray &params);
 	quint8 id() const { return 0x7F; }
 	virtual QString toString() const;
+};
+
+class OpcodeSETBYTE : public OpcodeOperation {
+public:
+	explicit OpcodeSETBYTE(const QByteArray &params);
+	quint8 id() const { return 0x80; }
+	virtual QString toString() const;
+};
+
+class OpcodeSETWORD : public OpcodeOperation2 {
+public:
+	explicit OpcodeSETWORD(const QByteArray &params);
+	quint8 id() const { return 0x81; }
+	virtual QString toString() const;
+};
+
+class OpcodeBitOperation : public Commande {
+public:
+	explicit OpcodeBitOperation(const QByteArray &params);
 	virtual QByteArray params() const;
-	quint8 banks, var;
+	quint8 banks, var, position;
+};
+
+class OpcodeBITON : public OpcodeBitOperation {
+public:
+	explicit OpcodeBITON(const QByteArray &params);
+	quint8 id() const { return 0x82; }
+	virtual QString toString() const;
+};
+
+class OpcodeBITOFF : public OpcodeBitOperation {
+public:
+	explicit OpcodeBITOFF(const QByteArray &params);
+	quint8 id() const { return 0x83; }
+	virtual QString toString() const;
+};
+
+class OpcodeBITXOR : public OpcodeBitOperation {
+public:
+	explicit OpcodeBITXOR(const QByteArray &params);
+	quint8 id() const { return 0x84; }
+	virtual QString toString() const;
+};
+
+class OpcodePLUS : public OpcodeOperation {
+public:
+	explicit OpcodePLUS(const QByteArray &params);
+	quint8 id() const { return 0x85; }
+	virtual QString toString() const;
+};
+
+class OpcodePLUS2 : public OpcodeOperation2 {
+public:
+	explicit OpcodePLUS2(const QByteArray &params);
+	quint8 id() const { return 0x86; }
+	virtual QString toString() const;
+};
+
+class OpcodeMINUS : public OpcodeOperation {
+public:
+	explicit OpcodeMINUS(const QByteArray &params);
+	quint8 id() const { return 0x87; }
+	virtual QString toString() const;
+};
+
+class OpcodeMINUS2 : public OpcodeOperation2 {
+public:
+	explicit OpcodeMINUS2(const QByteArray &params);
+	quint8 id() const { return 0x88; }
+	virtual QString toString() const;
+};
+
+class OpcodeMUL : public OpcodeOperation {
+public:
+	explicit OpcodeMUL(const QByteArray &params);
+	quint8 id() const { return 0x89; }
+	virtual QString toString() const;
+};
+
+class OpcodeMUL2 : public OpcodeOperation2 {
+public:
+	explicit OpcodeMUL2(const QByteArray &params);
+	quint8 id() const { return 0x8A; }
+	virtual QString toString() const;
+};
+
+class OpcodeDIV : public OpcodeOperation {
+public:
+	explicit OpcodeDIV(const QByteArray &params);
+	quint8 id() const { return 0x8B; }
+	virtual QString toString() const;
+};
+
+class OpcodeDIV2 : public OpcodeOperation2 {
+public:
+	explicit OpcodeDIV2(const QByteArray &params);
+	quint8 id() const { return 0x8C; }
+	virtual QString toString() const;
+};
+
+class OpcodeMOD : public OpcodeOperation {
+public:
+	explicit OpcodeMOD(const QByteArray &params);
+	quint8 id() const { return 0x8D; }
+	virtual QString toString() const;
+};
+
+class OpcodeMOD2 : public OpcodeOperation2 {
+public:
+	explicit OpcodeMOD2(const QByteArray &params);
+	quint8 id() const { return 0x8E; }
+	virtual QString toString() const;
+};
+
+class OpcodeAND : public OpcodeOperation {
+public:
+	explicit OpcodeAND(const QByteArray &params);
+	quint8 id() const { return 0x8F; }
+	virtual QString toString() const;
+};
+
+class OpcodeAND2 : public OpcodeOperation2 {
+public:
+	explicit OpcodeAND2(const QByteArray &params);
+	quint8 id() const { return 0x90; }
+	virtual QString toString() const;
+};
+
+class OpcodeOR : public OpcodeOperation {
+public:
+	explicit OpcodeOR(const QByteArray &params);
+	quint8 id() const { return 0x91; }
+	virtual QString toString() const;
+};
+
+class OpcodeOR2 : public OpcodeOperation2 {
+public:
+	explicit OpcodeOR2(const QByteArray &params);
+	quint8 id() const { return 0x92; }
+	virtual QString toString() const;
+};
+
+class OpcodeXOR : public OpcodeOperation {
+public:
+	explicit OpcodeXOR(const QByteArray &params);
+	quint8 id() const { return 0x93; }
+	virtual QString toString() const;
+};
+
+class OpcodeXOR2 : public OpcodeOperation2 {
+public:
+	explicit OpcodeXOR2(const QByteArray &params);
+	quint8 id() const { return 0x94; }
+	virtual QString toString() const;
+};
+
+class OpcodeINC : public OpcodeUnaryOperation {
+public:
+	explicit OpcodeINC(const QByteArray &params);
+	quint8 id() const { return 0x95; }
+	virtual QString toString() const;
+};
+
+class OpcodeINC2 : public OpcodeUnaryOperation {
+public:
+	explicit OpcodeINC2(const QByteArray &params);
+	quint8 id() const { return 0x96; }
+	virtual QString toString() const;
+};
+
+class OpcodeDEC : public OpcodeUnaryOperation {
+public:
+	explicit OpcodeDEC(const QByteArray &params);
+	quint8 id() const { return 0x97; }
+	virtual QString toString() const;
+};
+
+class OpcodeDEC2 : public OpcodeUnaryOperation {
+public:
+	explicit OpcodeDEC2(const QByteArray &params);
+	quint8 id() const { return 0x98; }
+	virtual QString toString() const;
+};
+
+class OpcodeRANDOM : public OpcodeUnaryOperation {
+public:
+	explicit OpcodeRANDOM(const QByteArray &params);
+	quint8 id() const { return 0x99; }
+	virtual QString toString() const;
+};
+
+class OpcodeLBYTE : public OpcodeOperation {
+public:
+	explicit OpcodeLBYTE(const QByteArray &params);
+	quint8 id() const { return 0x9A; }
+	virtual QString toString() const;
+};
+
+class OpcodeHBYTE : public OpcodeOperation2 {
+public:
+	explicit OpcodeHBYTE(const QByteArray &params);
+	quint8 id() const { return 0x9B; }
+	virtual QString toString() const;
+};
+
+class Opcode2BYTE : public Commande {
+public:
+	explicit Opcode2BYTE(const QByteArray &params);
+	quint8 id() const { return 0x9C; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2], var, value1, value2;
+};
+
+class OpcodeSETX : public Commande {
+public:
+	explicit OpcodeSETX(const QByteArray &params);
+	quint8 id() const { return 0x9D; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[6];
+};
+
+class OpcodeGETX : public Commande {
+public:
+	explicit OpcodeGETX(const QByteArray &params);
+	quint8 id() const { return 0x9E; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[6];
+};
+
+class OpcodeSEARCHX : public Commande {
+public:
+	explicit OpcodeSEARCHX(const QByteArray &params);
+	quint8 id() const { return 0x9F; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[10];
+};
+
+class OpcodePC : public Commande {
+public:
+	explicit OpcodePC(const QByteArray &params);
+	quint8 id() const { return 0xA0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+
+class OpcodeCHAR : public Commande {
+public:
+	explicit OpcodeCHAR(const QByteArray &params);
+	quint8 id() const { return 0xA1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 objectID;
+};
+
+class OpcodeDFANM : public Commande {
+public:
+	explicit OpcodeDFANM(const QByteArray &params);
+	quint8 id() const { return 0xA2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed;
+};
+// note: same struct as DFANM
+class OpcodeANIME1 : public Commande {
+public:
+	explicit OpcodeANIME1(const QByteArray &params);
+	quint8 id() const { return 0xA3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed;
+};
+
+class OpcodeVISI : public Commande {
+public:
+	explicit OpcodeVISI(const QByteArray &params);
+	quint8 id() const { return 0xA4; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 show;
+};
+
+class OpcodeXYZI : public Commande {
+public:
+	explicit OpcodeXYZI(const QByteArray &params);
+	quint8 id() const { return 0xA5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	qint16 targetX, targetY, targetZ;
+	quint16 targetI;
+};
+
+class OpcodeXYI : public Commande {
+public:
+	explicit OpcodeXYI(const QByteArray &params);
+	quint8 id() const { return 0xA6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	qint16 targetX, targetY;
+	quint16 targetI;
+};
+
+class OpcodeXYZ : public Commande {
+public:
+	explicit OpcodeXYZ(const QByteArray &params);
+	quint8 id() const { return 0xA7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	qint16 targetX, targetY, targetZ;
+};
+
+class OpcodeMOVE : public Commande {
+public:
+	explicit OpcodeMOVE(const QByteArray &params);
+	quint8 id() const { return 0xA8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	qint16 targetX, targetY;
+};
+// note: same struct as MOVE
+class OpcodeCMOVE : public Commande {
+public:
+	explicit OpcodeCMOVE(const QByteArray &params);
+	quint8 id() const { return 0xA9; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	qint16 targetX, targetY;
+};
+
+class OpcodeMOVA : public Commande {
+public:
+	explicit OpcodeMOVA(const QByteArray &params);
+	quint8 id() const { return 0xAA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 groupID;
+};
+
+class OpcodeTURA : public Commande {
+public:
+	explicit OpcodeTURA(const QByteArray &params);
+	quint8 id() const { return 0xAB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 groupID, directionRotation, speed;
+};
+
+class OpcodeANIMW : public Commande {
+public:
+	explicit OpcodeANIMW();
+	quint8 id() const { return 0xAC; }
+	virtual QString toString() const;
+};
+
+class OpcodeFMOVE : public Commande {
+public:
+	explicit OpcodeFMOVE(const QByteArray &params);
+	quint8 id() const { return 0xAD; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	qint16 targetX, targetY;
+};
+
+class OpcodeANIME2 : public Commande {
+public:
+	explicit OpcodeANIME2(const QByteArray &params);
+	quint8 id() const { return 0xAE; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed;
+};
+// note: same struct as ANIME2
+class OpcodeANIMX1 : public Commande {
+public:
+	explicit OpcodeANIMX1(const QByteArray &params);
+	quint8 id() const { return 0xAF; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed;
+};
+
+class OpcodeCANIM1 : public Commande {
+public:
+	explicit OpcodeCANIM1(const QByteArray &params);
+	quint8 id() const { return 0xB0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, firstFrame, lastFrame, speed;
+};
+// note: same struct as CANIM1
+class OpcodeCANMX1 : public Commande {
+public:
+	explicit OpcodeCANMX1(const QByteArray &params);
+	quint8 id() const { return 0xB1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, firstFrame, lastFrame, speed;
+};
+
+class OpcodeMSPED : public Commande {
+public:
+	explicit OpcodeMSPED(const QByteArray &params);
+	quint8 id() const { return 0xB2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	quint16 speed;
+};
+
+class OpcodeDIR : public Commande {
+public:
+	explicit OpcodeDIR(const QByteArray &params);
+	quint8 id() const { return 0xB3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, direction;
+};
+
+class OpcodeTURNGEN : public Commande {
+public:
+	explicit OpcodeTURNGEN(const QByteArray &params);
+	quint8 id() const { return 0xB4; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, direction, turnCount, speed, unknown;
+};
+// note: same struct as TURNGEN
+class OpcodeTURN : public Commande {
+public:
+	explicit OpcodeTURN(const QByteArray &params);
+	quint8 id() const { return 0xB5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, direction, turnCount, speed, unknown;
+};
+// note: same struct as MOVA
+class OpcodeDIRA : public Commande {
+public:
+	explicit OpcodeDIRA(const QByteArray &params);
+	quint8 id() const { return 0xB6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 groupID;
+};
+
+class OpcodeGETDIR : public Commande {
+public:
+	explicit OpcodeGETDIR(const QByteArray &params);
+	quint8 id() const { return 0xB7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, groupID, varDir;
+};
+
+class OpcodeGETAXY : public Commande {
+public:
+	explicit OpcodeGETAXY(const QByteArray &params);
+	quint8 id() const { return 0xB8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, groupID, varX, varY;
+};
+
+class OpcodeGETAI : public Commande {
+public:
+	explicit OpcodeGETAI(const QByteArray &params);
+	quint8 id() const { return 0xB9; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, groupID, varI;
+};
+// note: same struct as ANIME2
+class OpcodeANIMX2 : public Commande {
+public:
+	explicit OpcodeANIMX2(const QByteArray &params);
+	quint8 id() const { return 0xBA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed;
+};
+// note: same struct as CANIM1
+class OpcodeCANIM2 : public Commande {
+public:
+	explicit OpcodeCANIM2(const QByteArray &params);
+	quint8 id() const { return 0xBB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, firstFrame, lastFrame, speed;
+};
+// note: same struct as CANIM1
+class OpcodeCANMX2 : public Commande {
+public:
+	explicit OpcodeCANMX2(const QByteArray &params);
+	quint8 id() const { return 0xBC; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, firstFrame, lastFrame, speed;
+};
+
+class OpcodeASPED : public Commande {
+public:
+	explicit OpcodeASPED(const QByteArray &params);
+	quint8 id() const { return 0xBD; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	quint16 speed;
+};
+// note: same struct as MOVA
+class OpcodeCC : public Commande {
+public:
+	explicit OpcodeCC(const QByteArray &params);
+	quint8 id() const { return 0xBF; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 groupID;
+};
+
+class OpcodeJUMP : public Commande {
+public:
+	explicit OpcodeJUMP(const QByteArray &params);
+	quint8 id() const { return 0xC0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	qint16 targetX, targetY;
+	quint16 targetI;
+	qint16 height;
+};
+
+class OpcodeAXYZI : public Commande {
+public:
+	explicit OpcodeAXYZI(const QByteArray &params);
+	quint8 id() const { return 0xC1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2], groupID, varX, varY, varZ, varI;
+};
+
+class OpcodeLADER : public Commande {
+public:
+	explicit OpcodeLADER(const QByteArray &params);
+	quint8 id() const { return 0xC2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	qint16 targetX, targetY, targetZ;
+	quint16 targetI;
+	quint8 way, animID, direction, speed;
+};
+
+class OpcodeOFST : public Commande {
+public:
+	explicit OpcodeOFST(const QByteArray &params);
+	quint8 id() const { return 0xC3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2], moveType;
+	qint16 targetX, targetY, targetZ;
+	quint16 speed;
+};
+
+class OpcodeOFSTW : public Commande {
+public:
+	explicit OpcodeOFSTW();
+	quint8 id() const { return 0xC4; }
+	virtual QString toString() const;
+};
+
+class OpcodeTALKR : public Commande {
+public:
+	explicit OpcodeTALKR(const QByteArray &params);
+	quint8 id() const { return 0xC5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, distance;
+};
+// note: same struct as TALKR
+class OpcodeSLIDR : public Commande {
+public:
+	explicit OpcodeSLIDR(const QByteArray &params);
+	quint8 id() const { return 0xC6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, distance;
+};
+
+class OpcodeSOLID : public Commande {
+public:
+	explicit OpcodeSOLID(const QByteArray &params);
+	quint8 id() const { return 0xC7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 disabled;
+};
+// note: same struct as PC
+class OpcodePRTYP : public Commande {
+public:
+	explicit OpcodePRTYP(const QByteArray &params);
+	quint8 id() const { return 0xC8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+// note: same struct as PC
+class OpcodePRTYM : public Commande {
+public:
+	explicit OpcodePRTYM(const QByteArray &params);
+	quint8 id() const { return 0xC9; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+
+class OpcodePRTYE : public Commande {
+public:
+	explicit OpcodePRTYE(const QByteArray &params);
+	quint8 id() const { return 0xCA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID[3];
+};
+
+class OpcodeIFPRTYQ : public OpcodeJump {
+public:
+	explicit OpcodeIFPRTYQ(const QByteArray &params);
+	quint8 id() const { return 0xCB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+// note: same struct as IFPRTYQ
+class OpcodeIFMEMBQ : public OpcodeJump {
+public:
+	explicit OpcodeIFMEMBQ(const QByteArray &params);
+	quint8 id() const { return 0xCC; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+
+class OpcodeMMBUD : public Commande {
+public:
+	explicit OpcodeMMBUD(const QByteArray &params);
+	quint8 id() const { return 0xCD; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 exists, charID;
+};
+// note: same struct as PC
+class OpcodeMMBLK : public Commande {
+public:
+	explicit OpcodeMMBLK(const QByteArray &params);
+	quint8 id() const { return 0xCE; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+// note: same struct as PC
+class OpcodeMMBUK : public Commande {
+public:
+	explicit OpcodeMMBUK(const QByteArray &params);
+	quint8 id() const { return 0xCF; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+
+class OpcodeLINE : public Commande {
+public:
+	explicit OpcodeLINE(const QByteArray &params);
+	quint8 id() const { return 0xD0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	qint16 targetX1, targetY1, targetZ1;
+	qint16 targetX2, targetY2, targetZ2;
+};
+
+class OpcodeLINON : public Commande {
+public:
+	explicit OpcodeLINON(const QByteArray &params);
+	quint8 id() const { return 0xD1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 enabled;
+};
+
+class OpcodeMPJPO : public Commande {
+public:
+	explicit OpcodeMPJPO(const QByteArray &params);
+	quint8 id() const { return 0xD2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 disabled;
+};
+
+class OpcodeSLINE : public Commande {
+public:
+	explicit OpcodeSLINE(const QByteArray &params);
+	quint8 id() const { return 0xD3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[3];
+	qint16 targetX1, targetY1, targetZ1;
+	qint16 targetX2, targetY2, targetZ2;
+};
+
+class OpcodeSIN : public Commande {
+public:
+	explicit OpcodeSIN(const QByteArray &params);
+	quint8 id() const { return 0xD4; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	quint16 value1, value2, value3;
+	quint8 var;
+};
+
+class OpcodeCOS : public Commande {
+public:
+	explicit OpcodeCOS(const QByteArray &params);
+	quint8 id() const { return 0xD5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	quint16 value1, value2, value3;
+	quint8 var;
+};
+
+class OpcodeTLKR2 : public Commande {
+public:
+	explicit OpcodeTLKR2(const QByteArray &params);
+	quint8 id() const { return 0xD6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	quint16 distance;
+};
+// note: same struct as TLKR2
+class OpcodeSLDR2 : public Commande {
+public:
+	explicit OpcodeSLDR2(const QByteArray &params);
+	quint8 id() const { return 0xD7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	quint16 distance;
+};
+
+class OpcodePMJMP : public Commande {
+public:
+	explicit OpcodePMJMP(const QByteArray &params);
+	quint8 id() const { return 0xD8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint16 fieldID;
+};
+
+class OpcodePMJMP2 : public Commande {
+public:
+	explicit OpcodePMJMP2();
+	quint8 id() const { return 0xD9; }
+	virtual QString toString() const;
+};
+
+class OpcodeAKAO2 : public Commande {
+public:
+	explicit OpcodeAKAO2(const QByteArray &params);
+	quint8 id() const { return 0xDA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[14];
+};
+
+class OpcodeFCFIX : public Commande {
+public:
+	explicit OpcodeFCFIX(const QByteArray &params);
+	quint8 id() const { return 0xDB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 disabled;
+};
+
+class OpcodeCCANM : public Commande {
+public:
+	explicit OpcodeCCANM(const QByteArray &params);
+	quint8 id() const { return 0xDC; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed, standWalkRun;
+};
+
+class OpcodeANIMB : public Commande {
+public:
+	explicit OpcodeANIMB();
+	quint8 id() const { return 0xDD; }
+	virtual QString toString() const;
+};
+
+class OpcodeTURNW : public Commande {
+public:
+	explicit OpcodeTURNW();
+	quint8 id() const { return 0xDE; }
+	virtual QString toString() const;
+};
+
+class OpcodeMPPAL : public Commande {
+public:
+	explicit OpcodeMPPAL(const QByteArray &params);
+	quint8 id() const { return 0xDF; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[10];
+};
+
+class OpcodeBGON : public Commande {
+public:
+	explicit OpcodeBGON(const QByteArray &params);
+	quint8 id() const { return 0xE0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, paramID, stateID;
+};
+// note: same struct as BGON
+class OpcodeBGOFF : public Commande {
+public:
+	explicit OpcodeBGOFF(const QByteArray &params);
+	quint8 id() const { return 0xE1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, paramID, stateID;
+};
+
+class OpcodeBGROL : public Commande {
+public:
+	explicit OpcodeBGROL(const QByteArray &params);
+	quint8 id() const { return 0xE2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, paramID;
+};
+// note: same struct as BGROL
+class OpcodeBGROL2 : public Commande {
+public:
+	explicit OpcodeBGROL2(const QByteArray &params);
+	quint8 id() const { return 0xE3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, paramID;
+};
+// note: same struct as BGROL
+class OpcodeBGCLR : public Commande {
+public:
+	explicit OpcodeBGCLR(const QByteArray &params);
+	quint8 id() const { return 0xE4; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, paramID;
+};
+
+class OpcodeSTPAL : public Commande {
+public:
+	explicit OpcodeSTPAL(const QByteArray &params);
+	quint8 id() const { return 0xE5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[4];
+};
+
+class OpcodeLDPAL : public Commande {
+public:
+	explicit OpcodeLDPAL(const QByteArray &params);
+	quint8 id() const { return 0xE6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[4];
+};
+
+class OpcodeCPPAL : public Commande {
+public:
+	explicit OpcodeCPPAL(const QByteArray &params);
+	quint8 id() const { return 0xE7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[4];
+};
+
+class OpcodeRTPAL : public Commande {
+public:
+	explicit OpcodeRTPAL(const QByteArray &params);
+	quint8 id() const { return 0xE8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[6];
+};
+
+class OpcodeADPAL : public Commande {
+public:
+	explicit OpcodeADPAL(const QByteArray &params);
+	quint8 id() const { return 0xE9; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[9];
+};
+
+class OpcodeMPPAL2 : public Commande {
+public:
+	explicit OpcodeMPPAL2(const QByteArray &params);
+	quint8 id() const { return 0xEA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[9];
+};
+
+class OpcodeSTPLS : public Commande {
+public:
+	explicit OpcodeSTPLS(const QByteArray &params);
+	quint8 id() const { return 0xEB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[4];
+};
+
+class OpcodeLDPLS : public Commande {
+public:
+	explicit OpcodeLDPLS(const QByteArray &params);
+	quint8 id() const { return 0xEC; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[4];
+};
+
+class OpcodeCPPAL2 : public Commande {
+public:
+	explicit OpcodeCPPAL2(const QByteArray &params);
+	quint8 id() const { return 0xED; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[7];
+};
+
+class OpcodeRTPAL2 : public Commande {
+public:
+	explicit OpcodeRTPAL2(const QByteArray &params);
+	quint8 id() const { return 0xEE; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[7];
+};
+
+class OpcodeADPAL2 : public Commande {
+public:
+	explicit OpcodeADPAL2(const QByteArray &params);
+	quint8 id() const { return 0xEF; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[10];
+};
+
+class OpcodeMUSIC : public Commande {
+public:
+	explicit OpcodeMUSIC(const QByteArray &params);
+	quint8 id() const { return 0xF0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 musicID;
+};
+
+class OpcodeSOUND : public Commande {
+public:
+	explicit OpcodeSOUND(const QByteArray &params);
+	quint8 id() const { return 0xF1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	quint16 soundID;
+	quint8 position;
+};
+
+class OpcodeAKAO : public Commande {
+public:
+	explicit OpcodeAKAO(const QByteArray &params);
+	quint8 id() const { return 0xF2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[13];
+};
+// note: same struct as MUSIC
+class OpcodeMUSVT : public Commande {
+public:
+	explicit OpcodeMUSVT(const QByteArray &params);
+	quint8 id() const { return 0xF3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 musicID;
+};
+// note: same struct as MUSIC
+class OpcodeMUSVM : public Commande {
+public:
+	explicit OpcodeMUSVM(const QByteArray &params);
+	quint8 id() const { return 0xF4; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 musicID;
+};
+
+class OpcodeMULCK : public Commande {
+public:
+	explicit OpcodeMULCK(const QByteArray &params);
+	quint8 id() const { return 0xF5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 locked;
+};
+// note: same struct as MUSIC
+class OpcodeBMUSC : public Commande {
+public:
+	explicit OpcodeBMUSC(const QByteArray &params);
+	quint8 id() const { return 0xF6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 musicID;
+};
+
+class OpcodeCHMPH : public Commande {
+public:
+	explicit OpcodeCHMPH(const QByteArray &params);
+	quint8 id() const { return 0xF7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[3];
+};
+
+class OpcodePMVIE : public Commande {
+public:
+	explicit OpcodePMVIE(const QByteArray &params);
+	quint8 id() const { return 0xF8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 movieID;
+};
+
+class OpcodeMOVIE : public Commande {
+public:
+	explicit OpcodeMOVIE();
+	quint8 id() const { return 0xF9; }
+	virtual QString toString() const;
+};
+
+class OpcodeMVIEF : public Commande {
+public:
+	explicit OpcodeMVIEF(const QByteArray &params);
+	quint8 id() const { return 0xFA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, varCurMovieFrame;
+};
+
+class OpcodeMVCAM : public Commande {
+public:
+	explicit OpcodeMVCAM(const QByteArray &params);
+	quint8 id() const { return 0xFB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 movieCamID;
+};
+
+class OpcodeFMUSC : public Commande {
+public:
+	explicit OpcodeFMUSC(const QByteArray &params);
+	quint8 id() const { return 0xFC; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown;
+};
+
+class OpcodeCMUSC : public Commande {
+public:
+	explicit OpcodeCMUSC(const QByteArray &params);
+	quint8 id() const { return 0xFD; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[5];
+};
+
+class OpcodeCHMST : public Commande {
+public:
+	explicit OpcodeCHMST(const QByteArray &params);
+	quint8 id() const { return 0xFE; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[2];
+};
+
+class OpcodeGAMEOVER : public Commande {
+public:
+	explicit OpcodeGAMEOVER();
+	quint8 id() const { return 0xFF; }
+	virtual QString toString() const;
 };
 
 #endif

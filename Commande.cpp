@@ -474,8 +474,13 @@ QString Commande::_text(quint8 textID)
 
 QString Commande::_item(const QByteArray &param, quint8 bank)
 {
-	if(bank > 0)	return QObject::tr("n°%1").arg(_bank(param.at(0), bank));
-	int itemID = _toInt(param);
+	return _item(_toInt(param), bank);
+}
+
+QString Commande::_item(quint16 itemID, quint8 bank)
+{
+	if(bank > 0)	return QObject::tr("n°%1").arg(_bank(itemID & 0xFF, bank));
+
 	if(itemID < 128){
 		if(!Data::item_names.isEmpty() && itemID < Data::item_names.size())	return Data::item_names.at(itemID);
 	}else if(itemID < 256){
@@ -489,8 +494,13 @@ QString Commande::_item(const QByteArray &param, quint8 bank)
 
 QString Commande::_materia(const QByteArray &param, quint8 bank)
 {
-	if(bank > 0)	return QObject::tr("n°%1").arg(_bank(param.at(0), bank));
-	int materiaID = _toInt(param);
+	return _materia(_toInt(param), bank);
+}
+
+QString Commande::_materia(quint8 materiaID, quint8 bank)
+{
+	if(bank > 0)	return QObject::tr("n°%1").arg(_bank(materiaID, bank));
+
 	if(materiaID < Data::materia_names.size())	return Data::materia_names.at(materiaID);
 	return QObject::tr("n°%1").arg(materiaID);
 }
@@ -555,6 +565,20 @@ QString Commande::_var(int value, quint8 bank)
 	return QString::number(value);
 }
 
+QString Commande::_var(int value, quint8 bank1, quint8 bank2)
+{
+	if(bank > 0 || bank2 > 0)
+		return _var(value & 0xFFFF, bank1) + QString(" + ") + _var((value >> 16) & 0xFFFF, bank2) + QString(" * 65536 ");
+	return QString::number(value);
+}
+
+QString Commande::_var(int value, quint8 bank1, quint8 bank2, quint8 bank3)
+{
+	if(bank > 0 || bank2 > 0 || bank3 > 0)
+		return _bank(value & 0xFF, bank1) + QObject::tr(" et ") + _bank((value >> 8) & 0xFF, bank2) + QObject::tr(" et ") + _bank((value >> 16) & 0xFF, bank3);
+	return QString::number(value);
+}
+
 quint32 Commande::_toInt(const QByteArray &param)
 {	
 	quint32 valeur=0;
@@ -592,44 +616,6 @@ QString Commande::_miniGame(quint8 ID, quint8 param)
 	}
 }
 
-QString Commande::_menu(quint8 ID, const QString &param)
-{
-	switch(ID)
-	{
-	case 1:		return QObject::tr("Fermer le programme (paramètre %1)").arg(param);
-	case 2:		return QObject::tr("Encount Error (paramètre %1)").arg(param);
-	case 5:		return QObject::tr("Crédits de ff7 (paramètre %1)").arg(param);
-	case 6:		return QObject::tr("Changer nom de %1").arg(_personnage(param.toInt()));//Paramètre : personnage id
-	case 7:		return QObject::tr("Changer l'équipe (paramètre %1)").arg(param);
-	case 8:		return QObject::tr("magasin n°%1").arg(param);//Paramètre : magasin id
-	case 9:		return QObject::tr("principal (paramètre %1)").arg(param);
-	case 12:	return QObject::tr("course de moto (paramètre %1)").arg(param);
-	case 14:	return QObject::tr("Sauvegarde (paramètre %1)").arg(param);
-	case 15:	return QObject::tr("Effacer toutes les matérias (paramètre %1)").arg(param);
-	case 16:	return QObject::tr("Rétablir toutes les matérias (paramètre %1)").arg(param);
-	case 17:	return QObject::tr("Effacer la Matéria de %1").arg(_personnage(param.toInt()));
-	case 18:	return QObject::tr("Effacer les matérias de Clad (paramètre %1)").arg(param);
-	case 19:	return QObject::tr("Rétablir les matérias de Clad (paramètre %1)").arg(param);
-	case 20:	return QObject::tr("? (paramètre %1)").arg(param);
-	case 21:	return QObject::tr("HPs à 1 (paramètre %1)").arg(param);
-	case 22:	return QObject::tr("? (paramètre %1)").arg(param);
-	case 23:	return QObject::tr("maitre ? (paramètre %1)").arg(param);
-	case 24:	return QObject::tr("? (paramètre %1)").arg(param);
-	case 25:	return QObject::tr("? (paramètre %1)").arg(param);
-	default:	return QObject::tr("%1? (paramètre %2)").arg(ID).arg(param);
-	}
-}
-
-QString Commande::_windowType(quint8 param)
-{
-	switch(param)
-	{
-	case 0x00:		return QObject::tr("Normale");
-	case 0x01:		return QObject::tr("Pas de fond, ni de bordure");
-	case 0x02:		return QObject::tr("Fond semi-transparent");
-	default:		return QString("%1?").arg(param);
-	}
-}
 
 QString Commande::_windowNum(quint8 param)
 {
@@ -671,20 +657,6 @@ QString Commande::_operateur(quint8 param)
 	if(param < Data::operateur_names.size())
 		return Data::operateur_names.at(param);
 	return QString("%1?").arg(param);
-}
-
-QString Commande::_key(quint16 param)
-{
-	QString ret = "";
-	for(quint8 i=0 ; i<16 ; ++i)
-	{
-		if((param >> i) & 1)
-		{
-			if(!ret.isEmpty())	ret.append(QObject::tr(" ou "));
-			ret.append(Data::key_names.at(i));
-		}
-	}
-	return ret;
 }
 
 QString Commande::_battleMode(quint32 param)
@@ -2846,14 +2818,14 @@ QString OpcodeBTMD2::toString() const
 			switch(i)
 			{
 			case 1:		modes.append(QObject::tr("Compte à rebours"));											break;
-			case 2:		modes.append(QObject::tr("Attaque préventive"));											break;
-			case 3:		modes.append(QObject::tr("Impossible de fuir"));											break;
+			case 2:		modes.append(QObject::tr("Attaque préventive"));										break;
+			case 3:		modes.append(QObject::tr("Impossible de fuir"));										break;
 			case 5:		modes.append(QObject::tr("Ne pas jouer Fanfare"));										break;
-			case 6:		modes.append(QObject::tr("Active la battle arena"));										break;
+			case 6:		modes.append(QObject::tr("Active la battle arena"));									break;
 			case 7:		modes.append(QObject::tr("Ne pas afficher d'écran de récompense"));						break;
-			case 8:		modes.append(QObject::tr("Les personnages ne font pas leur animation de victoire"));		break;
+			case 8:		modes.append(QObject::tr("Les personnages ne font pas leur animation de victoire"));	break;
 			case 23:	modes.append(QObject::tr("Désactiver Game Over"));										break;
-			default:	modes.append(QString("%1?").arg(i));														break;
+			default:	modes.append(QString("%1?").arg(i));													break;
 			}
 		}
 	}
@@ -3233,3 +3205,2850 @@ QByteArray OpcodeWSIZW::params() const
 			.append((char *)&width, 2)
 			.append((char *)&height, 2);
 }
+
+OpcodeIfKey::OpcodeIfKey(const QByteArray &params)
+{
+	memcpy(&keys, params.constData(), 2);
+	_jump = params.at(2) + 3;
+}
+
+QByteArray OpcodeIfKey::params() const
+{
+	return QByteArray()
+			.append((char *)&keys, 2)
+			.append(char(_jump - 3));
+}
+
+QString OpcodeIfKey::keyString() const
+{
+	QStringList ret;
+	for(quint8 i=0 ; i<16 ; ++i) {
+		if((keys >> i) & 1) {
+			ret.append(Data::key_names.at(i));
+		}
+	}
+	return ret.join(QObject::tr(" ou "));
+}
+
+OpcodeIFKEY::OpcodeIFKEY(const QByteArray &params) :
+	OpcodeIfKey(params)
+{
+}
+
+QString OpcodeIFKEY::toString() const
+{
+	return QObject::tr("Si appuie sur la touche %1 (aller à l'octet %2 du script sinon)")
+			.arg(keyString())
+			.arg(_label + _jump);
+}
+
+OpcodeIFKEYON::OpcodeIFKEYON(const QByteArray &params) :
+	OpcodeIfKey(params)
+{
+}
+
+QString OpcodeIFKEYON::toString() const
+{
+	return QObject::tr("Si appuie sur la touche %1 une fois (aller à l'octet %2 du script sinon)")
+			.arg(keyString())
+			.arg(_label + _jump);
+}
+
+OpcodeIFKEYOFF::OpcodeIFKEYOFF(const QByteArray &params) :
+	OpcodeIfKey(params)
+{
+}
+
+QString OpcodeIFKEYOFF::toString() const
+{
+	return QObject::tr("Si relache la touche %1 pour la première fois (aller à l'octet %2 du script sinon)")
+			.arg(keyString())
+			.arg(_label + _jump);
+}
+
+OpcodeUC::OpcodeUC(const QByteArray &params)
+{
+	disabled = params.at(0);
+}
+
+QString OpcodeUC::toString() const
+{
+	return QObject::tr("%1 les déplacements du personnage jouable")
+			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+}
+
+QByteArray OpcodeUC::params() const
+{
+	return QByteArray().append((char)disabled);
+}
+
+OpcodePDIRA::OpcodePDIRA(const QByteArray &params)
+{
+	partyID = params.at(0);
+}
+
+QString OpcodePDIRA::toString() const
+{
+	return QObject::tr("Tourner instantanément l'objet 3D vers le membre de l'équipe n°%1")
+			.arg(partyID);
+}
+
+QByteArray OpcodePDIRA::params() const
+{
+	return QByteArray().append((char)partyID);
+}
+
+OpcodePTURA::OpcodePTURA(const QByteArray &params)
+{
+	partyID = params.at(0);
+	speed = params.at(1);
+	directionRotation = params.at(2);
+}
+
+QString OpcodePTURA::toString() const
+{
+	return QObject::tr("Tourner l'objet 3D vers le membre de l'équipe n°%1 (Vitesse=%2, SensRotation=%3)")
+			.arg(partyID)
+			.arg(speed)
+			.arg(_sensRotation(directionRotation));
+}
+
+QByteArray OpcodePTURA::params() const
+{
+	return QByteArray()
+			.append((char)partyID)
+			.append((char)speed)
+			.append((char)directionRotation);
+}
+
+OpcodeWSPCL::OpcodeWSPCL(const QByteArray &params)
+{
+	windowID = params.at(0);
+	displayType = params.at(1);
+	marginLeft = params.at(2);
+	marginTop = params.at(3);
+}
+
+QString OpcodeWSPCL::toString() const
+{
+	return QObject::tr("%2 dans fenêtre n°%1 (gauche=%3, haut=%4)")
+			.arg(windowID)
+			.arg(_windowNum(displayType))
+			.arg(marginLeft)
+			.arg(marginTop);
+}
+
+QByteArray OpcodeWSPCL::params() const
+{
+	return QByteArray()
+			.append((char)windowID)
+			.append((char)displayType)
+			.append((char)marginLeft)
+			.append((char)marginTop);
+}
+
+OpcodeWNUMB::OpcodeWNUMB(const QByteArray &params)
+{
+	banks = params.at(0);
+	windowID = params.at(1);
+	memcpy(&value, &(params.constData()[2]), 4);// bank 1 and 2
+	digitCount = params.at(6);
+}
+
+QString OpcodeWNUMB::toString() const
+{
+	return QObject::tr("Affecter %2 dans la fenêtre n°%1 et afficher %3 chiffres")
+			.arg(windowID)
+			.arg(_var(value, B1(banks), B2(banks)))
+			.arg(digitCount);
+}
+
+QByteArray OpcodeWNUMB::params() const
+{
+	return QByteArray()
+			.append((char)windowID)
+			.append((char)windowID)
+			.append((char *)&value, 4)
+			.append((char)digitCount);
+}
+
+OpcodeSTTIM::OpcodeSTTIM(const QByteArray &params)
+{
+	banks[0] = params.at(0);
+	banks[1] = params.at(1);
+	h = params.at(2);// bank 1??
+	m = params.at(3);// bank 2??
+	s = params.at(4);// bank 3??
+}
+
+QString OpcodeSTTIM::toString() const
+{
+	return QObject::tr("Affecter une valeur au compte à rebours (H=%1, M=%2, S=%3)")
+			.arg(_var(h, B1(banks[0])))
+			.arg(_var(m, B2(banks[0])))
+			.arg(_var(s, B1(banks[1])));
+}
+
+QByteArray OpcodeSTTIM::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append((char)h)
+			.append((char)m)
+			.append((char)s);
+}
+
+OpcodeGOLD::OpcodeGOLD(const QByteArray &params)
+{
+	banks = params.at(0);
+	memcpy(&value, &(params.constData()[1]), 4);// bank 1 and 2
+}
+
+QByteArray OpcodeGOLD::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char *)&value, 4);
+}
+
+OpcodeGOLDu::OpcodeGOLDu(const QByteArray &params) :
+	OpcodeGOLD(params)
+{
+}
+
+QString OpcodeGOLDu::toString() const
+{
+	return QObject::tr("Ajouter %1 gils à l'équipe")
+			.arg(_lvar(value, B1(banks), B2(banks)));
+}
+
+OpcodeGOLDd::OpcodeGOLDd(const QByteArray &params) :
+	OpcodeGOLD(params)
+{
+}
+
+QString OpcodeGOLDd::toString() const
+{
+	return QObject::tr("Retirer %1 gils à l'équipe")
+			.arg(_lvar(value, B1(banks), B2(banks)));
+}
+
+OpcodeCHGLD::OpcodeCHGLD(const QByteArray &params)
+{
+	banks = params.at(0);
+	var1 = params.at(1); // bank 1
+	var2 = params.at(2); // bank 2
+}
+
+QString OpcodeCHGLD::toString() const
+{
+	return QObject::tr("Copier le nombre de Gils dans %1 et %2")
+			.arg(_bank(var1, B1(banks)))
+			.arg(_bank(var2, B2(banks)));
+}
+
+QByteArray OpcodeCHGLD::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)var1)
+			.append((char)var2);
+}
+
+OpcodeHMPMAX1::OpcodeHMPMAX1()
+{
+}
+
+QString OpcodeHMPMAX1::toString() const
+{
+	return QObject::tr("Redonne les HP/MP aux membres de l'équipe");
+}
+
+OpcodeHMPMAX2::OpcodeHMPMAX2()
+{
+}
+
+QString OpcodeHMPMAX2::toString() const
+{
+	return QObject::tr("Redonne les HP/MP aux membres de l'équipe");
+}
+
+OpcodeMHMMX::OpcodeMHMMX()
+{
+}
+
+QString OpcodeMHMMX::toString() const
+{
+	return QObject::tr("Redonne les HP/MP à tous et soigne les troubles de statut");
+}
+
+OpcodeHMPMAX3::OpcodeHMPMAX3()
+{
+}
+
+QString OpcodeHMPMAX3::toString() const
+{
+	return QObject::tr("Redonne les HP/MP aux membres de l'équipe");
+}
+
+OpcodeMESSAGE::OpcodeMESSAGE(const QByteArray &params)
+{
+	windowID = params.at(0);
+	textID = params.at(1);
+}
+
+QString OpcodeMESSAGE::toString() const
+{
+	return QObject::tr("Afficher message %2 dans la fenêtre n°%1")
+			.arg(windowID)
+			.arg(_text(textID));
+}
+
+QByteArray OpcodeMESSAGE::params() const
+{
+	return QByteArray()
+			.append((char)windowID)
+			.append((char)textID);
+}
+
+OpcodeMPARA::OpcodeMPARA(const QByteArray &params)
+{
+	banks = params.at(0);
+	windowID = params.at(1);
+	windowVarID = params.at(2);
+	value = params.at(3); // bank 2
+}
+
+QString OpcodeMPARA::toString() const
+{
+	return QObject::tr("Affecter %3 à la variable n°%2 dans la fenêtre n°%1")
+			.arg(windowID)
+			.arg(windowVarID)
+			.arg(_var(value, B2(banks)));
+}
+
+QByteArray OpcodeMPARA::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)windowID)
+			.append((char)windowVarID)
+			.append((char)value);
+}
+
+OpcodeMPRA2::OpcodeMPRA2(const QByteArray &params)
+{
+	banks = params.at(0);
+	windowID = params.at(1);
+	windowVarID = params.at(2);
+	memcpy(&value, &(params.constData()[3]), 2); // bank 2
+}
+
+QString OpcodeMPRA2::toString() const
+{
+	return QObject::tr("Affecter %3 à la variable n°%2 dans la fenêtre n°%1")
+			.arg(windowID)
+			.arg(windowVarID)
+			.arg(_var(value, B2(banks)));
+}
+
+QByteArray OpcodeMPRA2::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)windowID)
+			.append((char)windowVarID)
+			.append((char *)&value, 2);
+}
+
+OpcodeMPNAM::OpcodeMPNAM(const QByteArray &params)
+{
+	textID = params.at(0);
+}
+
+QString OpcodeMPNAM::toString() const
+{
+	return QObject::tr("Afficher %1 dans le menu")
+			.arg(_text(textID));
+}
+
+QByteArray OpcodeMPNAM::params() const
+{
+	return QByteArray()
+			.append((char)textID);
+}
+
+OpcodeMP::OpcodeMP(const QByteArray &params)
+{
+	banks = params.at(0);
+	partyID = params.at(1);
+	memcpy(&value, &(params.constData()[2]), 2); // bank 2??
+}
+
+QByteArray OpcodeMP::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)partyID)
+			.append((char *)&value, 2);
+}
+
+OpcodeMPu::OpcodeMPu(const QByteArray &params) :
+	OpcodeMP(params)
+{
+}
+
+QString OpcodeMPu::toString() const
+{
+	return QObject::tr("Augmenter de %2 MPs le membre n°%1 de l'équipe")
+			.arg(partyID)
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeMPd::OpcodeMPd(const QByteArray &params) :
+	OpcodeMP(params)
+{
+}
+
+QString OpcodeMPd::toString() const
+{
+	return QObject::tr("Diminuer de %2 MPs le membre n°%1 de l'équipe")
+			.arg(partyID)
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeASK::OpcodeASK(const QByteArray &params)
+{
+	banks = params.at(0);
+	windowID = params.at(1);
+	textID = params.at(2);
+	firstLine = params.at(3);
+	lastLine = params.at(4);
+	varAnswer = params.at(5); // bank 2
+}
+
+QString OpcodeASK::toString() const
+{
+	return QObject::tr("Poser question %2 dans la fenêtre n°%1 (et mettre la réponse sélectionnée dans %5) première ligne=%3, dernière ligne=%4")
+			.arg(windowID)
+			.arg(_text(textID))
+			.arg(firstLine)
+			.arg(lastLine)
+			.arg(_bank(varAnswer, B2(banks)));
+}
+
+QByteArray OpcodeASK::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)windowID)
+			.append((char)textID)
+			.append((char)firstLine)
+			.append((char)lastLine)
+			.append((char)varAnswer);
+}
+
+OpcodeMENU::OpcodeMENU(const QByteArray &params)
+{
+	banks = params.at(0);
+	menuID = params.at(1);
+	param = params.at(2); // bank 2
+}
+
+QString OpcodeMENU::menu(const QString &param)
+{
+	switch(menuID)
+	{
+	case 1:		return QObject::tr("Fermer le programme (paramètre %1)").arg(param);
+	case 2:		return QObject::tr("Encount Error (paramètre %1)").arg(param);
+	case 5:		return QObject::tr("Crédits de ff7 (paramètre %1)").arg(param);
+	case 6:		return QObject::tr("Changer nom de %1").arg(_personnage(this->param));//Paramètre : personnage id
+	case 7:		return QObject::tr("Changer l'équipe (paramètre %1)").arg(param);
+	case 8:		return QObject::tr("magasin n°%1").arg(param);//Paramètre : magasin id
+	case 9:		return QObject::tr("principal (paramètre %1)").arg(param);
+	case 12:	return QObject::tr("course de moto (paramètre %1)").arg(param);
+	case 14:	return QObject::tr("Sauvegarde (paramètre %1)").arg(param);
+	case 15:	return QObject::tr("Effacer toutes les matérias (paramètre %1)").arg(param);
+	case 16:	return QObject::tr("Rétablir toutes les matérias (paramètre %1)").arg(param);
+	case 17:	return QObject::tr("Effacer la Matéria de %1").arg(_personnage(this->param));
+	case 18:	return QObject::tr("Effacer les matérias de Clad (paramètre %1)").arg(param);
+	case 19:	return QObject::tr("Rétablir les matérias de Clad (paramètre %1)").arg(param);
+	case 20:	return QObject::tr("? (paramètre %1)").arg(param);
+	case 21:	return QObject::tr("HPs à 1 (paramètre %1)").arg(param);
+	case 22:	return QObject::tr("? (paramètre %1)").arg(param);
+	case 23:	return QObject::tr("maitre ? (paramètre %1)").arg(param);
+	case 24:	return QObject::tr("? (paramètre %1)").arg(param);
+	case 25:	return QObject::tr("? (paramètre %1)").arg(param);
+	default:	return QObject::tr("%1? (paramètre %2)").arg(menuID).arg(param);
+	}
+}
+
+QString OpcodeMENU::toString() const
+{
+	return QObject::tr("Afficher menu %1")
+			.arg(menu(_var(param, B2(banks))));
+}
+
+QByteArray OpcodeMENU::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)menuID)
+			.append((char)param);
+}
+
+OpcodeMENU2::OpcodeMENU2(const QByteArray &params)
+{
+	disabled = params.at(0);
+}
+
+QString OpcodeMENU2::toString() const
+{
+	return QObject::tr("%1 l'accès aux menus")
+			.arg(disabled == 0 ? QObject::tr("Permettre") : QObject::tr("Interdire"));
+}
+
+QByteArray OpcodeMENU2::params() const
+{
+	return QByteArray().append((char)disabled);
+}
+
+OpcodeBTLTB::OpcodeBTLTB(const QByteArray &params)
+{
+	battleTableID = params.at(0);
+}
+
+QString OpcodeBTLTB::toString() const
+{
+	return QObject::tr("Choisir la battle table : %1")
+			.arg(battleTableID);
+}
+
+QByteArray OpcodeBTLTB::params() const
+{
+	return QByteArray().append((char)battleTableID);
+}
+
+OpcodeHP::OpcodeHP(const QByteArray &params)
+{
+	banks = params.at(0);
+	partyID = params.at(1);
+	memcpy(&value, &(params.constData()[2]), 2); // bank 2??
+}
+
+QByteArray OpcodeHP::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)partyID)
+			.append((char *)&value);
+}
+
+OpcodeHPu::OpcodeHPu(const QByteArray &params) :
+	OpcodeHP(params)
+{
+}
+
+QString OpcodeHPu::toString() const
+{
+	return QObject::tr("Augmenter de %2 HPs le membre n°%1 de l'équipe")
+			.arg(partyID)
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeHPd::OpcodeHPd(const QByteArray &params) :
+	OpcodeHP(params)
+{
+}
+
+QString OpcodeHPd::toString() const
+{
+	return QObject::tr("Diminuer de %2 HPs le membre n°%1 de l'équipe")
+			.arg(partyID)
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeWINDOW::OpcodeWINDOW(const QByteArray &params)
+{
+	windowID = params.at(0);
+	memcpy(&targetX, &(params.constData()[1]), 2);
+	memcpy(&targetY, &(params.constData()[3]), 2);
+	memcpy(&width, &(params.constData()[5]), 2);
+	memcpy(&height, &(params.constData()[7]), 2);
+}
+
+QString OpcodeWINDOW::toString() const
+{
+	return QObject::tr("Créer la fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)")
+			.arg(windowID)
+			.arg(targetX)
+			.arg(targetY)
+			.arg(width)
+			.arg(height);
+}
+
+QByteArray OpcodeWINDOW::params() const
+{
+	return QByteArray()
+			.append((char)windowID)
+			.append((char *)&targetX, 2)
+			.append((char *)&targetY, 2)
+			.append((char *)&width, 2)
+			.append((char *)&height, 2);
+}
+
+OpcodeWMOVE::OpcodeWMOVE(const QByteArray &params)
+{
+	windowID = params.at(0);
+	memcpy(&targetX, &(params.constData()[1]), 2);
+	memcpy(&targetY, &(params.constData()[3]), 2);
+}
+
+QString OpcodeWMOVE::toString() const
+{
+	return QObject::tr("Déplacer la fenêtre n°%1 (X=%2, Y=%3)")
+			.arg(windowID)
+			.arg(targetX)
+			.arg(targetY);
+}
+
+QByteArray OpcodeWMOVE::params() const
+{
+	return QByteArray()
+			.append((char)windowID)
+			.append((char *)&targetX, 2)
+			.append((char *)&targetY, 2);
+}
+
+OpcodeWMODE::OpcodeWMODE(const QByteArray &params)
+{
+	windowID = params.at(0);
+	mode = params.at(1);
+	preventClose = params.at(2); // boolean
+}
+
+QString OpcodeWMODE::toString() const
+{
+	QString typeStr;
+	switch(mode)
+	{
+	case 0x00:		typeStr = QObject::tr("Normale");						break;
+	case 0x01:		typeStr = QObject::tr("Pas de fond, ni de bordure");	break;
+	case 0x02:		typeStr = QObject::tr("Fond semi-transparent");			break;
+	default:		typeStr = QString("%1?").arg(mode);
+	}
+
+	return QObject::tr("Déplacer la fenêtre n°%1 (X=%2, Y=%3)")
+			.arg(windowID)
+			.arg(typeStr)
+			.arg(preventClose == 0 ? QObject::tr("autoriser") : QObject::tr("empêcher"));
+}
+
+QByteArray OpcodeWMODE::params() const
+{
+	return QByteArray()
+			.append((char)windowID)
+			.append((char)mode)
+			.append((char)preventClose);
+}
+
+OpcodeWREST::OpcodeWREST(const QByteArray &params)
+{
+	windowID = params.at(0);
+}
+
+QString OpcodeWREST::toString() const
+{
+	return QObject::tr("Remettre la fenêtre n°%1 à zéro")
+			.arg(windowID);
+}
+
+QByteArray OpcodeWREST::params() const
+{
+	return QByteArray().append((char)windowID);
+}
+
+OpcodeWCLSE::OpcodeWCLSE(const QByteArray &params)
+{
+	windowID = params.at(0);
+}
+
+QString OpcodeWCLSE::toString() const
+{
+	return QObject::tr("Fermer la fenêtre n°%1")
+			.arg(windowID);
+}
+
+QByteArray OpcodeWCLSE::params() const
+{
+	return QByteArray().append((char)windowID);
+}
+
+OpcodeWROW::OpcodeWROW(const QByteArray &params)
+{
+	windowID = params.at(0);
+	rowCount = params.at(1);
+}
+
+QString OpcodeWROW::toString() const
+{
+	return QObject::tr("Configurer le nombre de lignes de texte à %2 dans la fenêtre n°%1")
+			.arg(windowID)
+			.arg(rowCount);
+}
+
+QByteArray OpcodeWROW::params() const
+{
+	return QByteArray()
+			.append((char)windowID)
+			.append((char)rowCount);
+}
+
+OpcodeGWCOL::OpcodeGWCOL(const QByteArray &params)
+{
+	banks[0] = params.at(0);
+	banks[1] = params.at(1);
+	corner = params.at(2); // bank 1
+	varR = params.at(3); // bank 2
+	varG = params.at(4); // bank 3
+	varB = params.at(5); // bank 4
+}
+
+QString OpcodeGWCOL::toString() const
+{
+	return QObject::tr("Obtenir la couleur du côté %1 des fenêtres et en stocker les composantes dans %2 (R), %3 (V) et %4 (B)")
+			.arg(_windowCorner(corner, B1(banks[0])))
+			.arg(_var(varR, B2(banks[0])))
+			.arg(_var(varG, B1(banks[1])))
+			.arg(_var(varB, B2(banks[1])));
+}
+
+QByteArray OpcodeGWCOL::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append((char)corner)
+			.append((char)varR)
+			.append((char)varG)
+			.append((char)varB);
+}
+
+OpcodeSWCOL::OpcodeSWCOL(const QByteArray &params)
+{
+	banks[0] = params.at(0);
+	banks[1] = params.at(1);
+	corner = params.at(2); // bank 1
+	r = params.at(3); // bank 2
+	g = params.at(4); // bank 3
+	b = params.at(5); // bank 4
+}
+
+QString OpcodeSWCOL::toString() const
+{
+	return QObject::tr("Changer la couleur du côté %1 des fenêtres : RVB(%2, %3, %4)")
+			.arg(_windowCorner(corner, B1(banks[0])))
+			.arg(_var(r, B2(banks[0])))
+			.arg(_var(g, B1(banks[1])))
+			.arg(_var(b, B2(banks[1])));
+}
+
+QByteArray OpcodeSWCOL::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append((char)corner)
+			.append((char)r)
+			.append((char)g)
+			.append((char)b);
+}
+
+OpcodeSTITM::OpcodeSTITM(const QByteArray &params)
+{
+	banks = params.at(0);
+	memcpy(&itemID, &(params.constData()[1]), 2); // bank 1
+	quantity = params.at(3); // bank 2
+}
+
+QString OpcodeSTITM::toString() const
+{
+	return QObject::tr("Ajouter %2 objet(s) %1 dans l'inventaire")
+			.arg(_item(itemID, B1(banks)))
+			.arg(_var(quantity, B2(banks)));
+}
+
+QByteArray OpcodeSTITM::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char *)&itemID, 2)
+			.append((char)quantity);
+}
+
+OpcodeDLITM::OpcodeDLITM(const QByteArray &params)
+{
+	banks = params.at(0);
+	memcpy(&itemID, &(params.constData()[1]), 2); // bank 1
+	quantity = params.at(3); // bank 2
+}
+
+QString OpcodeDLITM::toString() const
+{
+	return QObject::tr("Supprimer %2 objet(s) %1 dans l'inventaire")
+			.arg(_item(itemID, B1(banks)))
+			.arg(_var(quantity, B2(banks)));
+}
+
+QByteArray OpcodeDLITM::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char *)&itemID, 2)
+			.append((char)quantity);
+}
+
+OpcodeCKITM::OpcodeCKITM(const QByteArray &params)
+{
+	banks = params.at(0);
+	memcpy(&itemID, &(params.constData()[1]), 2); // bank 1
+	varQuantity = params.at(3); // bank 2
+}
+
+QString OpcodeCKITM::toString() const
+{
+	return QObject::tr("%2 = quantité d'objets %1 dans l'inventaire")
+			.arg(_item(itemID, B1(banks)))
+			.arg(_var(varQuantity, B2(banks)));
+}
+
+QByteArray OpcodeCKITM::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char *)&itemID, 2)
+			.append((char)varQuantity);
+}
+
+OpcodeSMTRA::OpcodeSMTRA(const QByteArray &params)
+{
+	banks[0] = params.at(0);
+	banks[1] = params.at(1);
+	materiaID = params.at(2); // bank 1
+	APCount = 0;
+	memcpy(&APCount, &(params.constData()[3]), 3); // bank 2, bank 3, bank 4
+}
+
+QString OpcodeSMTRA::toString() const
+{
+	return QObject::tr("Ajouter la matéria %1 dans l'inventaire (AP=%2)")
+			.arg(_materia(materiaID, B1(banks[0])))
+			.arg(_var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])));
+}
+
+QByteArray OpcodeSMTRA::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append((char)materiaID)
+			.append((char *)&APCount, 3);
+}
+
+OpcodeDMTRA::OpcodeDMTRA(const QByteArray &params)
+{
+	banks[0] = params.at(0);
+	banks[1] = params.at(1);
+	materiaID = params.at(2); // bank 1
+	APCount = 0;
+	memcpy(&APCount, &(params.constData()[3]), 3); // bank 2, bank 3, bank 4
+	quantity = params.at(6);
+}
+
+QString OpcodeDMTRA::toString() const
+{
+	return QObject::tr("Supprimer %3 matéria(s) %1 dans l'inventaire (AP=%2)")
+			.arg(_materia(materiaID, B1(banks[0])))
+			.arg(_var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])))
+			.arg(quantity);
+}
+
+QByteArray OpcodeDMTRA::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append((char)materiaID)
+			.append((char *)&APCount, 3)
+			.append((char)quantity);
+}
+
+OpcodeCMTRA::OpcodeCMTRA(const QByteArray &params)
+{
+	banks[0] = params.at(0);
+	banks[1] = params.at(1);
+	banks[2] = params.at(2);
+	materiaID = params.at(3); // bank 1
+	APCount = 0;
+	memcpy(&APCount, &(params.constData()[4]), 3); // bank 2, bank 3, bank 4
+	unknown = params.at(7);
+	varQuantity = params.at(8); // bank 5
+}
+
+QString OpcodeCMTRA::toString() const
+{
+	return QObject::tr("%4 = quantité de matéria %1 dans l'inventaire (AP=%2, ???=%3)")
+			.arg(_materia(materiaID, B1(banks[0])))
+			.arg(_var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])))
+			.arg(unknown)
+			.arg(_bank(varQuantity, B2(banks[2])));
+}
+
+QByteArray OpcodeCMTRA::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 3)
+			.append((char)materiaID)
+			.append((char *)&APCount, 3)
+			.append((char)unknown)
+			.append((char)varQuantity);
+}
+
+OpcodeSHAKE::OpcodeSHAKE(const QByteArray &params)
+{
+	unknown1 = params.at(0);
+	unknown2 = params.at(1);
+	shakeCount = params.at(2);
+	unknown3 = params.at(3);
+	unknown4 = params.at(4);
+	amplitude = params.at(5);
+	speed = params.at(6);
+}
+
+QString OpcodeSHAKE::toString() const
+{
+	return QObject::tr("Secouer l'écran (nbOscillations=%1, Amplitude=%2, vitesse=%3)")
+			.arg(shakeCount)
+			.arg(amplitude)
+			.arg(speed);
+}
+
+QByteArray OpcodeSHAKE::params() const
+{
+	return QByteArray()
+			.append((char)unknown1)
+			.append((char)unknown2)
+			.append((char)shakeCount)
+			.append((char)unknown3)
+			.append((char)unknown4)
+			.append((char)amplitude)
+			.append((char)speed);
+}
+
+OpcodeNOP::OpcodeNOP()
+{
+}
+
+QString OpcodeNOP::toString() const
+{
+	return QObject::tr("Ne rien faire...");
+}
+
+OpcodeMAPJUMP::OpcodeMAPJUMP(const QByteArray &params)
+{
+	memcpy(&fieldID, params.constData(), 2);
+	memcpy(&targetX, &(params.constData()[2]), 2);
+	memcpy(&targetY, &(params.constData()[4]), 2);
+	memcpy(&targetI, &(params.constData()[6]), 2);
+	direction = params.at(8);
+}
+
+QString OpcodeMAPJUMP::toString() const
+{
+	return QObject::tr("Aller à l'écran %1 (X=%2, Y=%3, polygone id=%4, direction=%5)")
+			.arg(fieldID)
+			.arg(targetX)
+			.arg(targetY)
+			.arg(targetI)
+			.arg(direction);
+}
+
+QByteArray OpcodeMAPJUMP::params() const
+{
+	return QByteArray()
+			.append((char *)&fieldID, 2)
+			.append((char *)&targetX, 2)
+			.append((char *)&targetY, 2)
+			.append((char *)&targetI, 2)
+			.append((char)direction);
+}
+
+OpcodeSCRLO::OpcodeSCRLO(const QByteArray &params)
+{
+	unknown = params.at(0);
+}
+
+QString OpcodeSCRLO::toString() const
+{
+	return QObject::tr("SCRLO (?=%1)")
+			.arg(unknown);
+}
+
+QByteArray OpcodeSCRLO::params() const
+{
+	return QByteArray().append((char)unknown);
+}
+
+OpcodeSCRLC::OpcodeSCRLC(const QByteArray &params)
+{
+	memcpy(&unknown, params.constData(), 4);
+}
+
+QString OpcodeSCRLC::toString() const
+{
+	return QObject::tr("SCRLC (?=%1)")
+			.arg(unknown);
+}
+
+QByteArray OpcodeSCRLC::params() const
+{
+	return QByteArray().append((char *)&unknown, 4);
+}
+
+OpcodeSCRLA::OpcodeSCRLA(const QByteArray &params)
+{
+	banks = params.at(0);
+	memcpy(&speed, &(params.constData()[1]), 2); // bank 2
+	groupID = params.at(3);
+	scrollType = params.at(4);
+}
+
+QString OpcodeSCRLA::toString() const
+{
+	return QObject::tr("Centrer sur le groupe %2 (vitesse=%1, type=%3)")
+			.arg(_var(speed, B2(banks)))
+			.arg(_script(groupID))
+			.arg(scrollType);
+}
+
+QByteArray OpcodeSCRLA::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char *)&speed, 2)
+			.append((char)groupID)
+			.append((char)scrollType);
+}
+
+OpcodeSCR2D::OpcodeSCR2D(const QByteArray &params)
+{
+	banks = params.at(0);
+	memcpy(&targetX, &(params.constData()[1]), 2); // bank 1
+	memcpy(&targetY, &(params.constData()[3]), 2); // bank 2
+}
+
+QString OpcodeSCR2D::toString() const
+{
+	return QObject::tr("Centrer sur zone (X=%1, Y=%2)")
+			.arg(_var(targetX, B1(banks)))
+			.arg(_var(targetY, B2(banks)));
+}
+
+QByteArray OpcodeSCR2D::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char *)&targetX, 2)
+			.append((char *)&targetY, 2);
+}
+
+OpcodeSCRCC::OpcodeSCRCC()
+{
+}
+
+QString OpcodeSCRCC::toString() const
+{
+	return QObject::tr("Centrer sur le personnage jouable");
+}
+
+OpcodeSCR2DC::OpcodeSCR2DC(const QByteArray &params)
+{
+	banks[0] = params.at(0);
+	banks[1] = params.at(1);
+	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
+	memcpy(&targetY, &(params.constData()[4]), 2); // bank 2
+	memcpy(&speed, &(params.constData()[6]), 2); // bank 4
+}
+
+QString OpcodeSCR2DC::toString() const
+{
+	return QObject::tr("Centrer sur zone (X=%1, Y=%2, vitesse=%3)")
+			.arg(_var(targetX, B1(banks[0])))
+			.arg(_var(targetY, B2(banks[0])))
+			.arg(_var(speed, B2(banks[1])));
+}
+
+QByteArray OpcodeSCR2DC::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append((char *)&targetX, 2)
+			.append((char *)&targetY, 2)
+			.append((char *)&speed, 2);
+}
+
+OpcodeSCRLW::OpcodeSCRLW()
+{
+}
+
+QString OpcodeSCRLW::toString() const
+{
+	return QObject::tr("Attendre la fin du dernier centrage pour continuer");
+}
+
+OpcodeSCR2DL::OpcodeSCR2DL(const QByteArray &params)
+{
+	banks[0] = params.at(0);
+	banks[1] = params.at(1);
+	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
+	memcpy(&targetY, &(params.constData()[4]), 2); // bank 2
+	memcpy(&speed, &(params.constData()[6]), 2); // bank 4
+}
+
+QString OpcodeSCR2DL::toString() const
+{
+	return QObject::tr("Centrer sur zone (X=%1, Y=%2, vitesse=%3)")
+			.arg(_var(targetX, B1(banks[0])))
+			.arg(_var(targetY, B2(banks[0])))
+			.arg(_var(speed, B2(banks[1])));
+}
+
+QByteArray OpcodeSCR2DL::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append((char *)&targetX, 2)
+			.append((char *)&targetY, 2)
+			.append((char *)&speed, 2);
+}
+
+OpcodeMPDSP::OpcodeMPDSP(const QByteArray &params)
+{
+	unknown = params.at(0);
+}
+
+QString OpcodeMPDSP::toString() const
+{
+	return QObject::tr("MPDSP : %1")
+			.arg(unknown);
+}
+
+QByteArray OpcodeMPDSP::params() const
+{
+	return QByteArray().append((char)unknown);
+}
+
+OpcodeVWOFT::OpcodeVWOFT(const QByteArray &params)
+{
+	banks = params.at(0);
+	memcpy(&unknown1, &(params.constData()[1]), 2); // bank 1
+	memcpy(&unknown2, &(params.constData()[3]), 2); // bank 2
+	unknown3 = params.at(5);
+}
+
+QString OpcodeVWOFT::toString() const
+{
+	return QObject::tr("Centrer sur Zone (?=%1, ?=%2, ?=%3)")
+			.arg(_var(unknown1, B1(banks)))
+			.arg(_var(unknown2, B2(banks)))
+			.arg(unknown3);
+}
+
+QByteArray OpcodeVWOFT::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char *)&unknown1, 2)
+			.append((char *)&unknown2, 2)
+			.append((char)unknown3);
+}
+
+OpcodeFADE::OpcodeFADE(const QByteArray &params)
+{
+	banks[0] = params.at(0);
+	banks[1] = params.at(1);
+	r = params.at(2); // bank 1
+	g = params.at(3); // bank 2
+	b = params.at(4); // bank 4
+	speed = params.at(5);
+	fadeType = params.at(6);
+	adjust = params.at(7);
+}
+
+QString OpcodeFADE::toString() const
+{
+	return QObject::tr("Voiler l'écran avec la couleur RVB(%1, %2, %3) (vitesse=%4, type=%5, adjust=%6)")
+			.arg(_var(r, B1(banks[0])))
+			.arg(_var(g, B2(banks[0])))
+			.arg(_var(b, B2(banks[1])))
+			.arg(speed)
+			.arg(fadeType)
+			.arg(adjust);
+}
+
+QByteArray OpcodeFADE::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append((char)r)
+			.append((char)g)
+			.append((char)b)
+			.append((char)speed)
+			.append((char)fadeType)
+			.append((char)adjust);
+}
+
+OpcodeFADEW::OpcodeFADEW()
+{
+}
+
+QString OpcodeFADEW::toString() const
+{
+	return QObject::tr("Attendre la fin du voilage de l'écran pour continuer");
+}
+
+OpcodeIDLCK::OpcodeIDLCK(const QByteArray &params)
+{
+	memcpy(&triangleID, params.constData(), 2);
+	locked = params.at(2); // boolean
+}
+
+QString OpcodeIDLCK::toString() const
+{
+	return QObject::tr("%1 le polygone n°%2")
+			.arg(triangleID)
+			.arg(locked == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+}
+
+QByteArray OpcodeIDLCK::params() const
+{
+	return QByteArray()
+			.append((char *)&triangleID, 2)
+			.append((char)locked);
+}
+
+OpcodeLSTMP::OpcodeLSTMP(const QByteArray &params)
+{
+	banks = params.at(0);
+	var = params.at(1);
+}
+
+QString OpcodeLSTMP::toString() const
+{
+	return QObject::tr("Stocker l'id de l'écran précédent dans %1")
+			.arg(_bank(var, B2(banks)));
+}
+
+QByteArray OpcodeLSTMP::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)var);
+}
+
+OpcodeSCRLP::OpcodeSCRLP(const QByteArray &params)
+{
+	banks = params.at(0);
+	memcpy(&speed, &(params.constData()[1]), 2); // bank 2
+	partyID = params.at(3);
+	scrollType = params.at(4);
+}
+
+QString OpcodeSCRLP::toString() const
+{
+	return QObject::tr("Centrer sur le personnage n°%2 de l'équipe actuelle (vitesse=%1 img, type=%3)")
+			.arg(_var(speed, B2(banks)))
+			.arg(partyID)
+			.arg(scrollType);
+}
+
+QByteArray OpcodeSCRLP::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char *)&speed, 2)
+			.append((char)partyID)
+			.append((char)scrollType);
+}
+
+OpcodeBATTLE::OpcodeBATTLE(const QByteArray &params)
+{
+	banks = params.at(0);
+	memcpy(&battleID, &(params.constData()[1]), 2); // bank 2
+}
+
+QString OpcodeBATTLE::toString() const
+{
+	return QObject::tr("Commencer le combat n°%1")
+			.arg(_var(battleID, B2(banks)));
+}
+
+QByteArray OpcodeBATTLE::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char *)&battleID, 2);
+}
+
+OpcodeBTLON::OpcodeBTLON(const QByteArray &params)
+{
+	disabled = params.at(0);
+}
+
+QString OpcodeBTLON::toString() const
+{
+	return QObject::tr("%1 les combats aléatoires")
+			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+}
+
+QByteArray OpcodeBTLON::params() const
+{
+	return QByteArray().append((char)disabled);
+}
+
+OpcodeBTLMD::OpcodeBTLMD(const QByteArray &params)
+{
+	memcpy(&unknown, params.constData(), 2);
+}
+
+QString OpcodeBTLMD::toString() const
+{
+	return QObject::tr("BTLMD (?=%1)")
+			.arg(unknown);
+}
+
+QByteArray OpcodeBTLMD::params() const
+{
+	return QByteArray().append((char *)&unknown, 2);
+}
+
+OpcodePGTDR::OpcodePGTDR(const QByteArray &params)
+{
+	banks = params.at(0);
+	partyID = params.at(1);
+	varDir = params.at(2); // bank 2
+}
+
+QString OpcodePGTDR::toString() const
+{
+	return QObject::tr("Obtenir la direction du personnage n°%1 de l'équipe actuelle et la stocker dans %2")
+			.arg(partyID)
+			.arg(_bank(varDir, B2(banks)));
+}
+
+QByteArray OpcodePGTDR::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)partyID)
+			.append((char)varDir);
+}
+
+OpcodeGETPC::OpcodeGETPC(const QByteArray &params)
+{
+	banks = params.at(0);
+	partyID = params.at(1);
+	varPC = params.at(2); // bank 2
+}
+
+QString OpcodeGETPC::toString() const
+{
+	return QObject::tr("Obtenir l'id du personnage n°%1 de l'équipe actuelle et le stocker dans %2")
+			.arg(partyID)
+			.arg(_bank(varPC, B2(banks)));
+}
+
+QByteArray OpcodeGETPC::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)partyID)
+			.append((char)varPC);
+}
+
+OpcodePXYZI::OpcodePXYZI(const QByteArray &params)
+{
+	banks[0] = params.at(0);
+	banks[1] = params.at(1);
+	partyID = params.at(2);
+	varX = params.at(3); // bank 1
+	varY = params.at(4); // bank 2
+	varZ = params.at(5); // bank 3
+	varI = params.at(6); // bank 4
+}
+
+QString OpcodePXYZI::toString() const
+{
+	return QObject::tr("Obtenir les coordonnées du personnage n°%1 de l'équipe actuelle (stocker : X dans %2, Y dans %3, Z dans %4 et l'id dans %5)")
+			.arg(partyID)
+			.arg(_bank(varX, B1(banks[0])))
+			.arg(_bank(varY, B2(banks[0])))
+			.arg(_bank(varZ, B1(banks[1])))
+			.arg(_bank(varI, B2(banks[1])));
+}
+
+QByteArray OpcodePXYZI::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append((char)partyID)
+			.append((char)varX)
+			.append((char)varY)
+			.append((char)varZ)
+			.append((char)varI);
+}
+
+OpcodeOperation::OpcodeOperation(const QByteArray &params)
+{
+	banks = params.at(0);
+	var = params.at(1); // bank 1
+	value = params.at(2); // bank 2
+}
+
+QByteArray OpcodeOperation::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)var)
+			.append((char)value);
+}
+
+OpcodeOperation2::OpcodeOperation2(const QByteArray &params)
+{
+	banks = params.at(0);
+	var = params.at(1);
+	memcpy(&value, &(params.constData()[2]), 2);
+}
+
+QByteArray OpcodeOperation2::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)var)
+			.append((char *)&value, 2);
+}
+
+OpcodeUnaryOperation::OpcodeUnaryOperation(const QByteArray &params)
+{
+	banks = params.at(0);
+	var = params.at(1); // bank 2
+}
+
+QByteArray OpcodeUnaryOperation::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)var);
+}
+
+OpcodePLUSX::OpcodePLUSX(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodePLUSX::toString() const
+{
+	return QObject::tr("%1 = %1 + %2 (8 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodePLUS2X::OpcodePLUS2X(const QByteArray &params) :
+	OpcodeOperation2(params)
+{
+}
+
+QString OpcodePLUS2X::toString() const
+{
+	return QObject::tr("%1 = %1 + %2 (16 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeMINUSX::OpcodeMINUSX(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeMINUSX::toString() const
+{
+	return QObject::tr("%1 = %1 - %2 (8 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeMINUS2X::OpcodeMINUS2X(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeMINUS2X::toString() const
+{
+	return QObject::tr("%1 = %1 - %2 (16 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeINCX::OpcodeINCX(const QByteArray &params) :
+	OpcodeUnaryOperation(params)
+{
+}
+
+QString OpcodeINCX::toString() const
+{
+	return QObject::tr("%1 = %1 + 1 (8 bits)")
+			.arg(_bank(var, B2(banks)));
+}
+
+OpcodeINC2X::OpcodeINC2X(const QByteArray &params) :
+	OpcodeUnaryOperation(params)
+{
+}
+
+QString OpcodeINC2X::toString() const
+{
+	return QObject::tr("%1 = %1 + 1 (16 bits)")
+			.arg(_bank(var, B2(banks)));
+}
+
+OpcodeDECX::OpcodeDECX(const QByteArray &params) :
+	OpcodeUnaryOperation(params)
+{
+}
+
+QString OpcodeDECX::toString() const
+{
+	return QObject::tr("%1 = %1 - 1 (8 bits)")
+			.arg(_bank(var, B2(banks)));
+}
+
+OpcodeDEC2X::OpcodeDEC2X(const QByteArray &params) :
+	OpcodeUnaryOperation(params)
+{
+}
+
+QString OpcodeDEC2X::toString() const
+{
+	return QObject::tr("%1 = %1 - 1 (16 bits)")
+			.arg(_bank(var, B2(banks)));
+}
+
+OpcodeTLKON::OpcodeTLKON(const QByteArray &params)
+{
+	disabled = params.at(0); // boolean
+}
+
+QString OpcodeTLKON::toString() const
+{
+	return QObject::tr("%1 la possibilité de parler à l'objet 3D")
+			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+}
+
+QByteArray OpcodeTLKON::params() const
+{
+	return QByteArray().append((char)disabled);
+}
+
+OpcodeRDMSD::OpcodeRDMSD(const QByteArray &params) :
+	OpcodeUnaryOperation(params)
+{
+}
+
+QString OpcodeRDMSD::toString() const
+{
+	return QObject::tr("Seed Random Generator : %1")
+			.arg(_var(var, B2(banks)));
+}
+
+OpcodeSETBYTE::OpcodeSETBYTE(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeSETBYTE::toString() const
+{
+	return QObject::tr("%1 = %2 (8 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeSETWORD::OpcodeSETWORD(const QByteArray &params) :
+	OpcodeOperation2(params)
+{
+}
+
+QString OpcodeSETWORD::toString() const
+{
+	return QObject::tr("%1 = %2 (16 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeBitOperation::OpcodeBitOperation(const QByteArray &params)
+{
+	banks = params.at(0);
+	var = params.at(1); // bank 1
+	position = params.at(2); // bank 2
+}
+
+QByteArray OpcodeBitOperation::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)var)
+			.append((char)position);
+}
+
+OpcodeBITON::OpcodeBITON(const QByteArray &params) :
+	OpcodeBitOperation(params)
+{
+}
+
+QString OpcodeBITON::toString() const
+{
+	return QObject::tr("Mettre le bit %2 à 1 dans %1")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(position, B2(banks)));
+}
+
+OpcodeBITOFF::OpcodeBITOFF(const QByteArray &params) :
+	OpcodeBitOperation(params)
+{
+}
+
+QString OpcodeBITOFF::toString() const
+{
+	return QObject::tr("Mettre le bit %2 à 0 dans %1")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(position, B2(banks)));
+}
+
+OpcodeBITXOR::OpcodeBITXOR(const QByteArray &params) :
+	OpcodeBitOperation(params)
+{
+}
+
+QString OpcodeBITXOR::toString() const
+{
+	return QObject::tr("Inverser la valeur du bit %2 dans %1")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(position, B2(banks)));
+}
+
+OpcodePLUS::OpcodePLUS(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodePLUS::toString() const
+{
+	return QObject::tr("%1 = %1 + %2 (8 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodePLUS2::OpcodePLUS2(const QByteArray &params) :
+	OpcodeOperation2(params)
+{
+}
+
+QString OpcodePLUS2::toString() const
+{
+	return QObject::tr("%1 = %1 + %2 (16 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeMINUS::OpcodeMINUS(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeMINUS::toString() const
+{
+	return QObject::tr("%1 = %1 - %2 (8 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeMINUS2::OpcodeMINUS2(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeMINUS2::toString() const
+{
+	return QObject::tr("%1 = %1 - %2 (16 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeMUL::OpcodeMUL(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeMUL::toString() const
+{
+	return QObject::tr("%1 = %1 * %2 (8 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeMUL2::OpcodeMUL2(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeMUL2::toString() const
+{
+	return QObject::tr("%1 = %1 * %2 (16 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeDIV::OpcodeDIV(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeDIV::toString() const
+{
+	return QObject::tr("%1 = %1 / %2 (8 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeDIV2::OpcodeDIV2(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeDIV2::toString() const
+{
+	return QObject::tr("%1 = %1 / %2 (16 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeMOD::OpcodeMOD(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeMOD::toString() const
+{
+	return QObject::tr("%1 = %1 mod %2 (8 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeMOD2::OpcodeMOD2(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeMOD2::toString() const
+{
+	return QObject::tr("%1 = %1 mod %2 (16 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeAND::OpcodeAND(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeAND::toString() const
+{
+	return QObject::tr("%1 = %1 & %2 (8 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeAND2::OpcodeAND2(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeAND2::toString() const
+{
+	return QObject::tr("%1 = %1 & %2 (16 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeOR::OpcodeOR(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeOR::toString() const
+{
+	return QObject::tr("%1 = %1 | %2 (8 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeOR2::OpcodeOR2(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeOR2::toString() const
+{
+	return QObject::tr("%1 = %1 | %2 (16 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeXOR::OpcodeXOR(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeXOR::toString() const
+{
+	return QObject::tr("%1 = %1 ^ %2 (8 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeXOR2::OpcodeXOR2(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeXOR2::toString() const
+{
+	return QObject::tr("%1 = %1 ^ %2 (16 bits)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeINC::OpcodeINC(const QByteArray &params) :
+	OpcodeUnaryOperation(params)
+{
+}
+
+QString OpcodeINC::toString() const
+{
+	return QObject::tr("%1 = %1 + 1 (8 bits)")
+			.arg(_bank(var, B2(banks)));
+}
+
+OpcodeINC2::OpcodeINC2(const QByteArray &params) :
+	OpcodeUnaryOperation(params)
+{
+}
+
+QString OpcodeINC2::toString() const
+{
+	return QObject::tr("%1 = %1 + 1 (16 bits)")
+			.arg(_bank(var, B2(banks)));
+}
+
+OpcodeDEC::OpcodeDEC(const QByteArray &params) :
+	OpcodeUnaryOperation(params)
+{
+}
+
+QString OpcodeDEC::toString() const
+{
+	return QObject::tr("%1 = %1 - 1 (8 bits)")
+			.arg(_bank(var, B2(banks)));
+}
+
+OpcodeDEC2::OpcodeDEC2(const QByteArray &params) :
+	OpcodeUnaryOperation(params)
+{
+}
+
+QString OpcodeDEC2::toString() const
+{
+	return QObject::tr("%1 = %1 - 1 (16 bits)")
+			.arg(_bank(var, B2(banks)));
+}
+
+OpcodeRANDOM::OpcodeRANDOM(const QByteArray &params) :
+	OpcodeUnaryOperation(params)
+{
+}
+
+QString OpcodeRANDOM::toString() const
+{
+	return QObject::tr("Affecter une valeur aléatoire à %1 (8 bits)")
+			.arg(_bank(var, B2(banks)));
+}
+
+OpcodeLBYTE::OpcodeLBYTE(const QByteArray &params) :
+	OpcodeOperation(params)
+{
+}
+
+QString OpcodeLBYTE::toString() const
+{
+	return QObject::tr("%1 = %2 & 0xFF (low byte)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+OpcodeHBYTE::OpcodeHBYTE(const QByteArray &params) :
+	OpcodeOperation2(params)
+{
+}
+
+QString OpcodeHBYTE::toString() const
+{
+	return QObject::tr("%1 = (%2 >> 8) & 0xFF (high byte)")
+			.arg(_bank(var, B1(banks)))
+			.arg(_var(value, B2(banks)));
+}
+
+Opcode2BYTE::Opcode2BYTE(const QByteArray &params)
+{
+	banks[0] = params.at(0);
+	banks[1] = params.at(1);
+	var = params.at(2); // bank 1
+	value1 = params.at(3); // bank 2
+	value2 = params.at(4); // bank 4
+}
+
+QString Opcode2BYTE::toString() const
+{
+	return QObject::tr("%1 = (%2 & 0xFF) | ((%3 & 0xFF) << 8)")
+			.arg(_bank(var, B1(banks[0])))
+			.arg(_var(value1, B2(banks[0])))
+			.arg(_var(value2, B2(banks[1])));
+}
+
+QByteArray Opcode2BYTE::params() const
+{
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append((char)var)
+			.append((char)value1)
+			.append((char)value2);
+}
+
+OpcodeSETX::OpcodeSETX(const QByteArray &params)
+{
+	memcpy(&unknown, params.constData(), 6);
+}
+
+QString OpcodeSETX::toString() const
+{
+	return QObject::tr("SETX");
+}
+
+QByteArray OpcodeSETX::params() const
+{
+	return QByteArray().append((char *)&unknown, 6);
+}
+
+OpcodeGETX::OpcodeGETX(const QByteArray &params)
+{
+	memcpy(&unknown, params.constData(), 6);
+}
+
+QString OpcodeGETX::toString() const
+{
+	return QObject::tr("GETX");
+}
+
+QByteArray OpcodeGETX::params() const
+{
+	return QByteArray().append((char *)&unknown, 6);
+}
+
+OpcodeSEARCHX::OpcodeSEARCHX(const QByteArray &params)
+{
+	memcpy(&unknown, params.constData(), 10);
+}
+
+QString OpcodeSEARCHX::toString() const
+{
+	return QObject::tr("SEARCHX");
+}
+
+QByteArray OpcodeSEARCHX::params() const
+{
+	return QByteArray().append((char *)&unknown, 10);
+}
+
+class OpcodePC : public Commande {
+public:
+	explicit OpcodePC(const QByteArray &params);
+	quint8 id() const { return 0xA0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+
+class OpcodeCHAR : public Commande {
+public:
+	explicit OpcodeCHAR(const QByteArray &params);
+	quint8 id() const { return 0xA1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 objectID;
+};
+
+class OpcodeDFANM : public Commande {
+public:
+	explicit OpcodeDFANM(const QByteArray &params);
+	quint8 id() const { return 0xA2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed;
+};
+// note: same struct as DFANM
+class OpcodeANIME1 : public Commande {
+public:
+	explicit OpcodeANIME1(const QByteArray &params);
+	quint8 id() const { return 0xA3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed;
+};
+
+class OpcodeVISI : public Commande {
+public:
+	explicit OpcodeVISI(const QByteArray &params);
+	quint8 id() const { return 0xA4; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 show;
+};
+
+class OpcodeXYZI : public Commande {
+public:
+	explicit OpcodeXYZI(const QByteArray &params);
+	quint8 id() const { return 0xA5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	qint16 targetX, targetY, targetZ;
+	quint16 targetI;
+};
+
+class OpcodeXYI : public Commande {
+public:
+	explicit OpcodeXYI(const QByteArray &params);
+	quint8 id() const { return 0xA6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	qint16 targetX, targetY;
+	quint16 targetI;
+};
+
+class OpcodeXYZ : public Commande {
+public:
+	explicit OpcodeXYZ(const QByteArray &params);
+	quint8 id() const { return 0xA7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	qint16 targetX, targetY, targetZ;
+};
+
+class OpcodeMOVE : public Commande {
+public:
+	explicit OpcodeMOVE(const QByteArray &params);
+	quint8 id() const { return 0xA8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	qint16 targetX, targetY;
+};
+// note: same struct as MOVE
+class OpcodeCMOVE : public Commande {
+public:
+	explicit OpcodeCMOVE(const QByteArray &params);
+	quint8 id() const { return 0xA9; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	qint16 targetX, targetY;
+};
+
+class OpcodeMOVA : public Commande {
+public:
+	explicit OpcodeMOVA(const QByteArray &params);
+	quint8 id() const { return 0xAA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 groupID;
+};
+
+class OpcodeTURA : public Commande {
+public:
+	explicit OpcodeTURA(const QByteArray &params);
+	quint8 id() const { return 0xAB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 groupID, directionRotation, speed;
+};
+
+class OpcodeANIMW : public Commande {
+public:
+	explicit OpcodeANIMW();
+	quint8 id() const { return 0xAC; }
+	virtual QString toString() const;
+};
+
+class OpcodeFMOVE : public Commande {
+public:
+	explicit OpcodeFMOVE(const QByteArray &params);
+	quint8 id() const { return 0xAD; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	qint16 targetX, targetY;
+};
+
+class OpcodeANIME2 : public Commande {
+public:
+	explicit OpcodeANIME2(const QByteArray &params);
+	quint8 id() const { return 0xAE; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed;
+};
+// note: same struct as ANIME2
+class OpcodeANIMX1 : public Commande {
+public:
+	explicit OpcodeANIMX1(const QByteArray &params);
+	quint8 id() const { return 0xAF; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed;
+};
+
+class OpcodeCANIM1 : public Commande {
+public:
+	explicit OpcodeCANIM1(const QByteArray &params);
+	quint8 id() const { return 0xB0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, firstFrame, lastFrame, speed;
+};
+// note: same struct as CANIM1
+class OpcodeCANMX1 : public Commande {
+public:
+	explicit OpcodeCANMX1(const QByteArray &params);
+	quint8 id() const { return 0xB1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, firstFrame, lastFrame, speed;
+};
+
+class OpcodeMSPED : public Commande {
+public:
+	explicit OpcodeMSPED(const QByteArray &params);
+	quint8 id() const { return 0xB2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	quint16 speed;
+};
+
+class OpcodeDIR : public Commande {
+public:
+	explicit OpcodeDIR(const QByteArray &params);
+	quint8 id() const { return 0xB3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, direction;
+};
+
+class OpcodeTURNGEN : public Commande {
+public:
+	explicit OpcodeTURNGEN(const QByteArray &params);
+	quint8 id() const { return 0xB4; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, direction, turnCount, speed, unknown;
+};
+// note: same struct as TURNGEN
+class OpcodeTURN : public Commande {
+public:
+	explicit OpcodeTURN(const QByteArray &params);
+	quint8 id() const { return 0xB5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, direction, turnCount, speed, unknown;
+};
+// note: same struct as MOVA
+class OpcodeDIRA : public Commande {
+public:
+	explicit OpcodeDIRA(const QByteArray &params);
+	quint8 id() const { return 0xB6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 groupID;
+};
+
+class OpcodeGETDIR : public Commande {
+public:
+	explicit OpcodeGETDIR(const QByteArray &params);
+	quint8 id() const { return 0xB7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, groupID, varDir;
+};
+
+class OpcodeGETAXY : public Commande {
+public:
+	explicit OpcodeGETAXY(const QByteArray &params);
+	quint8 id() const { return 0xB8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, groupID, varX, varY;
+};
+
+class OpcodeGETAI : public Commande {
+public:
+	explicit OpcodeGETAI(const QByteArray &params);
+	quint8 id() const { return 0xB9; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, groupID, varI;
+};
+// note: same struct as ANIME2
+class OpcodeANIMX2 : public Commande {
+public:
+	explicit OpcodeANIMX2(const QByteArray &params);
+	quint8 id() const { return 0xBA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed;
+};
+// note: same struct as CANIM1
+class OpcodeCANIM2 : public Commande {
+public:
+	explicit OpcodeCANIM2(const QByteArray &params);
+	quint8 id() const { return 0xBB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, firstFrame, lastFrame, speed;
+};
+// note: same struct as CANIM1
+class OpcodeCANMX2 : public Commande {
+public:
+	explicit OpcodeCANMX2(const QByteArray &params);
+	quint8 id() const { return 0xBC; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, firstFrame, lastFrame, speed;
+};
+
+class OpcodeASPED : public Commande {
+public:
+	explicit OpcodeASPED(const QByteArray &params);
+	quint8 id() const { return 0xBD; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	quint16 speed;
+};
+// note: same struct as MOVA
+class OpcodeCC : public Commande {
+public:
+	explicit OpcodeCC(const QByteArray &params);
+	quint8 id() const { return 0xBF; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 groupID;
+};
+
+class OpcodeJUMP : public Commande {
+public:
+	explicit OpcodeJUMP(const QByteArray &params);
+	quint8 id() const { return 0xC0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	qint16 targetX, targetY;
+	quint16 targetI;
+	qint16 height;
+};
+
+class OpcodeAXYZI : public Commande {
+public:
+	explicit OpcodeAXYZI(const QByteArray &params);
+	quint8 id() const { return 0xC1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2], groupID, varX, varY, varZ, varI;
+};
+
+class OpcodeLADER : public Commande {
+public:
+	explicit OpcodeLADER(const QByteArray &params);
+	quint8 id() const { return 0xC2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	qint16 targetX, targetY, targetZ;
+	quint16 targetI;
+	quint8 way, animID, direction, speed;
+};
+
+class OpcodeOFST : public Commande {
+public:
+	explicit OpcodeOFST(const QByteArray &params);
+	quint8 id() const { return 0xC3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2], moveType;
+	qint16 targetX, targetY, targetZ;
+	quint16 speed;
+};
+
+class OpcodeOFSTW : public Commande {
+public:
+	explicit OpcodeOFSTW();
+	quint8 id() const { return 0xC4; }
+	virtual QString toString() const;
+};
+
+class OpcodeTALKR : public Commande {
+public:
+	explicit OpcodeTALKR(const QByteArray &params);
+	quint8 id() const { return 0xC5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, distance;
+};
+// note: same struct as TALKR
+class OpcodeSLIDR : public Commande {
+public:
+	explicit OpcodeSLIDR(const QByteArray &params);
+	quint8 id() const { return 0xC6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, distance;
+};
+
+class OpcodeSOLID : public Commande {
+public:
+	explicit OpcodeSOLID(const QByteArray &params);
+	quint8 id() const { return 0xC7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 disabled;
+};
+// note: same struct as PC
+class OpcodePRTYP : public Commande {
+public:
+	explicit OpcodePRTYP(const QByteArray &params);
+	quint8 id() const { return 0xC8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+// note: same struct as PC
+class OpcodePRTYM : public Commande {
+public:
+	explicit OpcodePRTYM(const QByteArray &params);
+	quint8 id() const { return 0xC9; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+
+class OpcodePRTYE : public Commande {
+public:
+	explicit OpcodePRTYE(const QByteArray &params);
+	quint8 id() const { return 0xCA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID[3];
+};
+
+class OpcodeIFPRTYQ : public OpcodeJump {
+public:
+	explicit OpcodeIFPRTYQ(const QByteArray &params);
+	quint8 id() const { return 0xCB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+// note: same struct as IFPRTYQ
+class OpcodeIFMEMBQ : public OpcodeJump {
+public:
+	explicit OpcodeIFMEMBQ(const QByteArray &params);
+	quint8 id() const { return 0xCC; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+
+class OpcodeMMBUD : public Commande {
+public:
+	explicit OpcodeMMBUD(const QByteArray &params);
+	quint8 id() const { return 0xCD; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 exists, charID;
+};
+// note: same struct as PC
+class OpcodeMMBLK : public Commande {
+public:
+	explicit OpcodeMMBLK(const QByteArray &params);
+	quint8 id() const { return 0xCE; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+// note: same struct as PC
+class OpcodeMMBUK : public Commande {
+public:
+	explicit OpcodeMMBUK(const QByteArray &params);
+	quint8 id() const { return 0xCF; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 charID;
+};
+
+class OpcodeLINE : public Commande {
+public:
+	explicit OpcodeLINE(const QByteArray &params);
+	quint8 id() const { return 0xD0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	qint16 targetX1, targetY1, targetZ1;
+	qint16 targetX2, targetY2, targetZ2;
+};
+
+class OpcodeLINON : public Commande {
+public:
+	explicit OpcodeLINON(const QByteArray &params);
+	quint8 id() const { return 0xD1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 enabled;
+};
+
+class OpcodeMPJPO : public Commande {
+public:
+	explicit OpcodeMPJPO(const QByteArray &params);
+	quint8 id() const { return 0xD2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 disabled;
+};
+
+class OpcodeSLINE : public Commande {
+public:
+	explicit OpcodeSLINE(const QByteArray &params);
+	quint8 id() const { return 0xD3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[3];
+	qint16 targetX1, targetY1, targetZ1;
+	qint16 targetX2, targetY2, targetZ2;
+};
+
+class OpcodeSIN : public Commande {
+public:
+	explicit OpcodeSIN(const QByteArray &params);
+	quint8 id() const { return 0xD4; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	quint16 value1, value2, value3;
+	quint8 var;
+};
+
+class OpcodeCOS : public Commande {
+public:
+	explicit OpcodeCOS(const QByteArray &params);
+	quint8 id() const { return 0xD5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks[2];
+	quint16 value1, value2, value3;
+	quint8 var;
+};
+
+class OpcodeTLKR2 : public Commande {
+public:
+	explicit OpcodeTLKR2(const QByteArray &params);
+	quint8 id() const { return 0xD6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	quint16 distance;
+};
+// note: same struct as TLKR2
+class OpcodeSLDR2 : public Commande {
+public:
+	explicit OpcodeSLDR2(const QByteArray &params);
+	quint8 id() const { return 0xD7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	quint16 distance;
+};
+
+class OpcodePMJMP : public Commande {
+public:
+	explicit OpcodePMJMP(const QByteArray &params);
+	quint8 id() const { return 0xD8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint16 fieldID;
+};
+
+class OpcodePMJMP2 : public Commande {
+public:
+	explicit OpcodePMJMP2();
+	quint8 id() const { return 0xD9; }
+	virtual QString toString() const;
+};
+
+class OpcodeAKAO2 : public Commande {
+public:
+	explicit OpcodeAKAO2(const QByteArray &params);
+	quint8 id() const { return 0xDA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[14];
+};
+
+class OpcodeFCFIX : public Commande {
+public:
+	explicit OpcodeFCFIX(const QByteArray &params);
+	quint8 id() const { return 0xDB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 disabled;
+};
+
+class OpcodeCCANM : public Commande {
+public:
+	explicit OpcodeCCANM(const QByteArray &params);
+	quint8 id() const { return 0xDC; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 animID, speed, standWalkRun;
+};
+
+class OpcodeANIMB : public Commande {
+public:
+	explicit OpcodeANIMB();
+	quint8 id() const { return 0xDD; }
+	virtual QString toString() const;
+};
+
+class OpcodeTURNW : public Commande {
+public:
+	explicit OpcodeTURNW();
+	quint8 id() const { return 0xDE; }
+	virtual QString toString() const;
+};
+
+class OpcodeMPPAL : public Commande {
+public:
+	explicit OpcodeMPPAL(const QByteArray &params);
+	quint8 id() const { return 0xDF; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[10];
+};
+
+class OpcodeBGON : public Commande {
+public:
+	explicit OpcodeBGON(const QByteArray &params);
+	quint8 id() const { return 0xE0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, paramID, stateID;
+};
+// note: same struct as BGON
+class OpcodeBGOFF : public Commande {
+public:
+	explicit OpcodeBGOFF(const QByteArray &params);
+	quint8 id() const { return 0xE1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, paramID, stateID;
+};
+
+class OpcodeBGROL : public Commande {
+public:
+	explicit OpcodeBGROL(const QByteArray &params);
+	quint8 id() const { return 0xE2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, paramID;
+};
+// note: same struct as BGROL
+class OpcodeBGROL2 : public Commande {
+public:
+	explicit OpcodeBGROL2(const QByteArray &params);
+	quint8 id() const { return 0xE3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, paramID;
+};
+// note: same struct as BGROL
+class OpcodeBGCLR : public Commande {
+public:
+	explicit OpcodeBGCLR(const QByteArray &params);
+	quint8 id() const { return 0xE4; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, paramID;
+};
+
+class OpcodeSTPAL : public Commande {
+public:
+	explicit OpcodeSTPAL(const QByteArray &params);
+	quint8 id() const { return 0xE5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[4];
+};
+
+class OpcodeLDPAL : public Commande {
+public:
+	explicit OpcodeLDPAL(const QByteArray &params);
+	quint8 id() const { return 0xE6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[4];
+};
+
+class OpcodeCPPAL : public Commande {
+public:
+	explicit OpcodeCPPAL(const QByteArray &params);
+	quint8 id() const { return 0xE7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[4];
+};
+
+class OpcodeRTPAL : public Commande {
+public:
+	explicit OpcodeRTPAL(const QByteArray &params);
+	quint8 id() const { return 0xE8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[6];
+};
+
+class OpcodeADPAL : public Commande {
+public:
+	explicit OpcodeADPAL(const QByteArray &params);
+	quint8 id() const { return 0xE9; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[9];
+};
+
+class OpcodeMPPAL2 : public Commande {
+public:
+	explicit OpcodeMPPAL2(const QByteArray &params);
+	quint8 id() const { return 0xEA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[9];
+};
+
+class OpcodeSTPLS : public Commande {
+public:
+	explicit OpcodeSTPLS(const QByteArray &params);
+	quint8 id() const { return 0xEB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[4];
+};
+
+class OpcodeLDPLS : public Commande {
+public:
+	explicit OpcodeLDPLS(const QByteArray &params);
+	quint8 id() const { return 0xEC; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[4];
+};
+
+class OpcodeCPPAL2 : public Commande {
+public:
+	explicit OpcodeCPPAL2(const QByteArray &params);
+	quint8 id() const { return 0xED; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[7];
+};
+
+class OpcodeRTPAL2 : public Commande {
+public:
+	explicit OpcodeRTPAL2(const QByteArray &params);
+	quint8 id() const { return 0xEE; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[7];
+};
+
+class OpcodeADPAL2 : public Commande {
+public:
+	explicit OpcodeADPAL2(const QByteArray &params);
+	quint8 id() const { return 0xEF; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[10];
+};
+
+class OpcodeMUSIC : public Commande {
+public:
+	explicit OpcodeMUSIC(const QByteArray &params);
+	quint8 id() const { return 0xF0; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 musicID;
+};
+
+class OpcodeSOUND : public Commande {
+public:
+	explicit OpcodeSOUND(const QByteArray &params);
+	quint8 id() const { return 0xF1; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks;
+	quint16 soundID;
+	quint8 position;
+};
+
+class OpcodeAKAO : public Commande {
+public:
+	explicit OpcodeAKAO(const QByteArray &params);
+	quint8 id() const { return 0xF2; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[13];
+};
+// note: same struct as MUSIC
+class OpcodeMUSVT : public Commande {
+public:
+	explicit OpcodeMUSVT(const QByteArray &params);
+	quint8 id() const { return 0xF3; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 musicID;
+};
+// note: same struct as MUSIC
+class OpcodeMUSVM : public Commande {
+public:
+	explicit OpcodeMUSVM(const QByteArray &params);
+	quint8 id() const { return 0xF4; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 musicID;
+};
+
+class OpcodeMULCK : public Commande {
+public:
+	explicit OpcodeMULCK(const QByteArray &params);
+	quint8 id() const { return 0xF5; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 locked;
+};
+// note: same struct as MUSIC
+class OpcodeBMUSC : public Commande {
+public:
+	explicit OpcodeBMUSC(const QByteArray &params);
+	quint8 id() const { return 0xF6; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 musicID;
+};
+
+class OpcodeCHMPH : public Commande {
+public:
+	explicit OpcodeCHMPH(const QByteArray &params);
+	quint8 id() const { return 0xF7; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[3];
+};
+
+class OpcodePMVIE : public Commande {
+public:
+	explicit OpcodePMVIE(const QByteArray &params);
+	quint8 id() const { return 0xF8; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 movieID;
+};
+
+class OpcodeMOVIE : public Commande {
+public:
+	explicit OpcodeMOVIE();
+	quint8 id() const { return 0xF9; }
+	virtual QString toString() const;
+};
+
+class OpcodeMVIEF : public Commande {
+public:
+	explicit OpcodeMVIEF(const QByteArray &params);
+	quint8 id() const { return 0xFA; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 banks, varCurMovieFrame;
+};
+
+class OpcodeMVCAM : public Commande {
+public:
+	explicit OpcodeMVCAM(const QByteArray &params);
+	quint8 id() const { return 0xFB; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 movieCamID;
+};
+
+class OpcodeFMUSC : public Commande {
+public:
+	explicit OpcodeFMUSC(const QByteArray &params);
+	quint8 id() const { return 0xFC; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown;
+};
+
+class OpcodeCMUSC : public Commande {
+public:
+	explicit OpcodeCMUSC(const QByteArray &params);
+	quint8 id() const { return 0xFD; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[5];
+};
+
+class OpcodeCHMST : public Commande {
+public:
+	explicit OpcodeCHMST(const QByteArray &params);
+	quint8 id() const { return 0xFE; }
+	virtual QString toString() const;
+	virtual QByteArray params() const;
+	quint8 unknown[2];
+};
+
+class OpcodeGAMEOVER : public Commande {
+public:
+	explicit OpcodeGAMEOVER();
+	quint8 id() const { return 0xFF; }
+	virtual QString toString() const;
+};
