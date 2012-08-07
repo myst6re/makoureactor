@@ -2103,7 +2103,7 @@ public:
 	quint8 id() const { return 0xD2; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
-	quint8 disabled;
+	quint8 prevent;
 };
 
 class OpcodeSLINE : public Commande {
@@ -2127,7 +2127,7 @@ public:
 	quint16 value1, value2, value3;
 	quint8 var;
 };
-
+// note: same struct as SIN
 class OpcodeCOS : public Commande {
 public:
 	explicit OpcodeCOS(const QByteArray &params);
@@ -2321,7 +2321,7 @@ public:
 	quint8 id() const { return 0xEA; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
-	quint8 unknown[9];
+	quint8 banks[3], unknown1[2], r, g, b, unknown2;
 };
 
 class OpcodeSTPLS : public Commande {
@@ -2501,7 +2501,7 @@ public:
 	quint8 id() const { return 0xFE; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
-	quint8 unknown[2];
+	quint8 banks, var;
 };
 
 class OpcodeGAMEOVER : public Commande {
