@@ -72,7 +72,7 @@ void GrpScript::setType()
 		switch(firstScript->getCommande(i)->id())
 		{
 		case 0xA0://Definition du personnage
-			character = (quint8)firstScript->getCommande(i)->getConstParams().at(0);
+			character = ((OpcodePC *)firstScript->getCommande(i))->charID;
 			return;
 		case 0xA1://Definition du modèle 3D
 			character = 0xFF;
@@ -93,73 +93,16 @@ void GrpScript::setType()
 void GrpScript::getBgParams(QHash<quint8, quint8> &paramActifs) const
 {
 	if(scripts.size()<1)	return;
-	
-	Script *firstScript = scripts.first();
-	
-	quint16 nbCommandes = firstScript->size();
-	quint8 param, state;
-	
-	for(quint16 i=0 ; i<nbCommandes ; ++i)
-	{
-		/* switch(firstScript->getCommande(i)->id())
-		{
-		case 0xE0://afficher paramètre*/
-		const QByteArray params = firstScript->getCommande(i)->getConstParams();
-		if(firstScript->getCommande(i)->id()==0xE0 && (quint8)params.at(0)==0)
-		{
-			param = (quint8)params.at(1);
-			state = 1 << (quint8)params.at(2);
-			if(paramActifs.contains(param))
-				state |= paramActifs.value(param);
-			paramActifs.insert(param, state);
-		}
-			//break;
-		/*case 0xE1://effacer paramètre
-			if((quint8)firstScript->getCommande(i)->params().at(0)==0)
-			{
-				quint8 param = (quint8)firstScript->getCommande(i)->params().at(1);
-				quint8 state = 1 << (quint8)firstScript->getCommande(i)->params().at(2);
-				if(paramActifs.contains(param))
-					state = (state & paramActifs.value(param)) ^ paramActifs.value(param);
-				paramActifs.insert(param, state);
-			}
-			break;*/
-		//}
-	}
+
+	scripts.first()->getBgParams(paramActifs);
 }
 
 void GrpScript::getBgMove(qint16 z[2], qint16 *x, qint16 *y) const
 {
 	if(scripts.size()<2)	return;
-	quint16 nbCommandes, i;
-	quint8 coucheID;
-	const char *params;
 
-	foreach(Script *script, scripts)
-	{
-		nbCommandes = script->size();
-
-		for(i=0 ; i<nbCommandes ; ++i)
-		{
-			params = script->getCommande(i)->getConstParams().constData();
-			if(script->getCommande(i)->id()==0x2C)//Déplacer Background Z
-			{
-				coucheID = (quint8)params[1];
-				if((quint8)params[0]==0 && coucheID>1 && coucheID<4)//Pas de variables, bon coucheID
-				{
-					memcpy(&z[coucheID-2], &params[2], 2);
-				}
-			}
-			else if(x && y && script->getCommande(i)->id()==0x2D)// Animer Background X Y
-			{
-				coucheID = (quint8)params[1];
-				if((quint8)params[0]==0 && coucheID>1 && coucheID<4)//Pas de variables, bon coucheID
-				{
-					memcpy(&x[coucheID-2], &params[2], 2);
-					memcpy(&y[coucheID-2], &params[4], 2);
-				}
-			}
-		}
+	foreach(Script *script, scripts) {
+		script->getBgMove(z, x, y);
 	}
 }
 
@@ -298,9 +241,9 @@ bool GrpScript::rechercherVar(quint8 bank, quint8 adress, int value, int &script
 	return false;
 }
 
-QList<int> GrpScript::searchAllVars() const
+QList<FF7Var> GrpScript::searchAllVars() const
 {
-	QList<int> vars;
+	QList<FF7Var> vars;
 
 	foreach(Script *script, scripts) {
 		vars.append(script->searchAllVars());

@@ -111,16 +111,16 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
 	if(modify)
 	{
 		this->commandeID = commandeID;
-		this->commande = new Commande(script->getCommande(commandeID)->toByteArray(), script->getCommande(commandeID)->getPos());
+		this->commande = Script::createOpcode(script->getCommande(commandeID)->toByteArray());
 		int index, i;
 		for(i=0 ; i<comboBox0->count() ; ++i)
 		{
 			buildList(i);
 			index = commande->id();
 			if(index == 0x0F)
-				index = ((quint8)commande->getParams().at(0) << 8) | index;
+				index = (((OpcodeSPECIAL *)commande)->opcode->id() << 8) | index;
 			else if(index == 0x28)
-				index = ((quint8)commande->getParams().at(1) << 8) | index;
+				index = (((OpcodeKAWAI *)commande)->opcode->id() << 8) | index;
 			if((index = comboBox->findData(index)) != -1)
 			{
 				comboBox0->setCurrentIndex(i);
@@ -133,7 +133,7 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
 			setEnabled(false);
 			return;
 		}
-		textEdit->setPlainText(commande->traduction());
+		textEdit->setPlainText(commande->toString());
 		fillModel(commande->id());
 		
 		connect(ok, SIGNAL(released()), SLOT(modify()));
@@ -141,7 +141,7 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
 	else
 	{
 		this->commandeID = commandeID < 0 ? script->size() : commandeID + 1;
-		this->commande = new Commande(QByteArray("\x00",1));
+		this->commande = new OpcodeRET();
 		comboBox->setCurrentIndex(0);
 		changeCurrentOpcode(0);
 		fillModel(0);
@@ -363,7 +363,7 @@ void ScriptEditor::modify()
 	} */
 	QByteArray nouvelleCommande = parseModel();
 	if(nouvelleCommande.isEmpty())	return;
-	script->setCommande(this->commandeID, nouvelleCommande);
+	script->setCommande(this->commandeID, Script::createOpcode(nouvelleCommande));
 	accept();
 }
 
@@ -375,7 +375,7 @@ void ScriptEditor::add()
 	} */
 	QByteArray nouvelleCommande = parseModel();
 	if(nouvelleCommande.isEmpty())	return;
-	script->insertCommande(this->commandeID, nouvelleCommande);
+	script->insertCommande(this->commandeID, Script::createOpcode(nouvelleCommande));
 	accept();
 }
 
@@ -383,8 +383,8 @@ void ScriptEditor::refreshTextEdit()
 {
 	this->change = true;
 	
-	commande->setCommande(parseModel());
-	textEdit->setPlainText(commande->traduction());
+//	commande->setCommande(parseModel());//TODO
+	textEdit->setPlainText(commande->toString());
 }
 
 void ScriptEditor::addParam()
@@ -503,7 +503,7 @@ void ScriptEditor::fillModel(int opcode)
 	tableView->show();
 	nouvelEditeur->hide();*/
 	
-	int paramSize, paramType, cur = 0, maxValue, minValue, value;
+	int paramSize, paramType, cur = 0, maxValue, minValue, value=0;
 	QList<int> paramTypes = this->paramTypes(opcode);
 	
 	if(paramTypes.isEmpty())
@@ -517,7 +517,7 @@ void ScriptEditor::fillModel(int opcode)
 			addButton->show();
 			delButton->show();
 		}
-		const QByteArray params = commande->getParams();
+		const QByteArray params = commande->params();
 		for(int i=start ; i<params.size() ; ++i)
 			addRow((quint8)params.at(i), 0, 255, inconnu);
 	}
@@ -527,7 +527,7 @@ void ScriptEditor::fillModel(int opcode)
 		{
 			paramType = paramTypes.at(i);
 			paramSize = this->paramSize(paramType);
-			value = commande->subParam(cur, paramSize);
+//			value = commande->subParam(cur, paramSize);//TODO
 			// qDebug() << value;
 			if(paramIsSigned(paramType)) {
 				maxValue = (int)pow(2, paramSize-1)-1;
@@ -579,11 +579,11 @@ void ScriptEditor::changeCurrentOpcode(int index)
 		for(quint8 pos=1 ; pos<Opcode::length[opcode] ; ++pos)
 			nouvelleCommande.append('\x00');
 	}
-	commande->setCommande(nouvelleCommande);
+//	commande->setCommande(nouvelleCommande);//TODO
 	
 	fillModel(opcode);
 	
-	textEdit->setPlainText(commande->traduction());
+	textEdit->setPlainText(commande->toString());
 	if(isInit && crashIfInit.contains(opcode))
 	{
 		textEdit->setDisabled(true);

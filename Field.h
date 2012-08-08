@@ -132,7 +132,7 @@ public:
 	void deleteGrpScript(int row);
 	void removeGrpScript(int row);
 	bool moveGrpScript(int row, bool direction);
-	QList<int> searchAllVars() const;
+	QList<FF7Var> searchAllVars() const;
 	bool rechercherOpCode(quint8 opCode, int &groupID, int &scriptID, int &commandeID) const;
 	bool rechercherVar(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &commandeID) const;
 	bool rechercherExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &commandeID) const;

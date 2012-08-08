@@ -49,7 +49,7 @@ public:
 
 	bool rechercherOpCode(quint8 opCode, int &scriptID, int &commandeID) const;
 	bool rechercherVar(quint8 bank, quint8 adress, int value, int &scriptID, int &commandeID) const;
-	QList<int> searchAllVars() const;
+	QList<FF7Var> searchAllVars() const;
 	bool rechercherExec(quint8 group, quint8 script, int &scriptID, int &commandeID) const;
 	bool rechercherTexte(const QRegExp &texte, int &scriptID, int &commandeID) const;
 	bool rechercherOpCodeP(quint8 opCode, int &scriptID, int &commandeID) const;

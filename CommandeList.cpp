@@ -388,7 +388,7 @@ void CommandeList::paste()
 	int commandeID = selectedID()+1, scrollID = commandeID;
 	foreach(Commande *Ccopied, commandeCopied) {
 		IDs.append(commandeID);
-		script->insertCommande(commandeID++, Ccopied->toByteArray());
+		script->insertCommande(commandeID++, Script::createOpcode(Ccopied->toByteArray()));
 	}
 
 	fill();

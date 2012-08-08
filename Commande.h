@@ -36,31 +36,45 @@ typedef struct {
 	quint16 groupID, scriptID, commandeID;
 } FF7Window;
 
+typedef struct _ff7Var {
+	_ff7Var(quint8 b, quint8 a) {
+		bank = b;
+		adress = a;
+	}
+	quint8 bank;
+	quint8 adress;
+} FF7Var;
+
+inline bool operator==(FF7Var v1, FF7Var v2) { return v1.bank == v2.bank && v1.adress == v2.adress; }
+
 class Commande
 {	
 public:
-	explicit Commande(const QByteArray &commande, int pos=0);
 	Commande();
 
-	virtual quint8 id() const;
-	virtual QString toString() const;
+	virtual quint8 id() const=0;
+	virtual QString toString() const=0;
 	virtual QByteArray params() const;
 
 	quint8 size() const;
-	QByteArray &getParams();
-	const QByteArray &getConstParams() const;
 	QByteArray toByteArray() const;
 	quint16 getIndent() const;
 	quint16 getPos() const;
-	int subParam(int cur, int paramSize) const;
-
-	void setCommande(const QByteArray &commande);
 	void setPos(quint16 pos);
 
 	bool isVoid() const;
 
 	bool rechercherVar(quint8 bank, quint8 adress, int value=65536) const;
-	QList<int> searchAllVars();
+
+	virtual int getTextID() const;
+	virtual void setTextID(quint8 textID);
+	virtual int getTutoID() const;
+	virtual void setTutoID(quint8 tutoID);
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
+	virtual bool getWindow(FF7Window &window) const;
+	virtual void setWindow(const FF7Window &window);
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	bool rechercherExec(quint8 group, quint8 script) const;
 	bool rechercherTexte(const QRegExp &texte) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
@@ -68,59 +82,40 @@ public:
 	void shiftTextIds(int textId, int steps);
 	void shiftTutIds(int tutId, int steps);
 	void listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8, quint8> &text2win) const;
-
-	QString toString2() const;
-	QString traduction() const;
+	void getBgParams(QHash<quint8, quint8> &enabledParams) const;
+	void getBgMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
 	static QString _personnage(quint8 persoID);
 
 protected:
-	quint8 opcode;
 	quint16 pos;
-	QByteArray _params;
 
 	static QString _script(quint8 param);
 	static QString _text(quint8 textID);
-	static QString _item(const QByteArray &param, quint8 bank);
 	static QString _item(quint16 itemID, quint8 bank);
-	static QString _materia(const QByteArray &param, quint8 bank);
 	static QString _materia(quint8 materiaID, quint8 bank);
-	static QString _field(const QByteArray &param);
 	static QString _field(quint16 fieldID);
 	static QString _movie(quint8 movieID);
 	// static QString _objet3D(quint8 objet3D_ID);
 
 	static QString _bank(quint8 adress, quint8 bank);
-	static QString _var(const QByteArray &param, quint8 bank);
-	static QString _lvar(const QByteArray &param, quint8 bank1, quint8 bank2);
-	static QString _lvar(const QByteArray &param, quint8 bank1, quint8 bank2, quint8 bank3);
-	static QString _svar(const QByteArray &param, quint8 bank);
 	static QString _var(int value, quint8 bank);
 	static QString _var(int value, quint8 bank1, quint8 bank2);
 	static QString _var(int value, quint8 bank1, quint8 bank2, quint8 bank3);
-	static quint32 _toInt(const QByteArray &param);
-	static qint16 _toSInt(const QByteArray &param);
 
 	static QString _operateur(quint8 param);
-	static QString _miniGame(quint8 ID, quint8 param);
-	static QString _menu(quint8 ID, const QString &param);
-	static QString _windowType(quint8 param);
-	static QString _windowNum(quint8 param);
 	static QString _windowCorner(quint8 param, quint8 bank);
 	static QString _sensRotation(quint8 param);
-	static QString _key(quint16 param);
-	static QString _battleMode(quint32 param);
-	QString _special() const;
-	QString _kawai() const;
-	
 };
 
-class OpcodeEmpty : public Commande {
+class OpcodeUnknown : public Commande {
 public:
-	explicit OpcodeEmpty(quint8 id);
+	explicit OpcodeUnknown(quint8 id, const QByteArray &params=QByteArray());
 	virtual quint8 id() const;
 	virtual QString toString() const;
+	virtual QByteArray params() const;
 	quint8 _id;
+	QByteArray unknown;
 };
 
 class OpcodeRET : public Commande {
@@ -164,7 +159,7 @@ class OpcodeExecChar : public Commande {
 public:
 	explicit OpcodeExecChar(const QByteArray &params);
 	QByteArray params() const;
-	quint8 charID;
+	quint8 partyID;
 	quint8 scriptID;
 	quint8 priority;
 };
@@ -215,6 +210,7 @@ public:
 	quint8 id() const { return 0x09; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[3];
 	qint16 targetX1, targetY1, targetX2, targetY2;
 	quint8 direction1, direction2;
@@ -225,6 +221,7 @@ class OpcodePartyE : public Commande {
 public:
 	explicit OpcodePartyE(const QByteArray &params);
 	QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	quint8 party1, party2, party3;
 };
@@ -326,8 +323,9 @@ public:
 	quint8 id() const { return 0xFD; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
-	quint8 charID;
-	quint8 textID;
+	virtual int getTextID() const;
+	virtual void setTextID(quint8 textID);
+	quint8 charID, textID;
 };
 
 class OpcodeSPECIALRSGLB : public Commande {
@@ -351,6 +349,8 @@ public:
 	quint8 id() const { return 0x0F; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getTextID() const;
+	virtual void setTextID(quint8 textID);
 	Commande *opcode;
 };
 
@@ -399,6 +399,7 @@ public:
 class OpcodeIf : public OpcodeJump {
 public:
 	explicit OpcodeIf();
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	qint32 value1, value2;
 	quint8 oper;
@@ -472,6 +473,8 @@ public:
 	quint8 id() const { return 0x21; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getTutoID() const;
+	virtual void setTutoID(quint8 tutoID);
 	quint8 tutoID;
 };
 
@@ -490,6 +493,7 @@ public:
 	quint8 id() const { return 0x23; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint8 var;
 };
@@ -509,6 +513,7 @@ public:
 	quint8 id() const { return 0x25; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	quint8 r, g, b;
 	quint8 unknown1, unknown2, unknown3;
@@ -532,15 +537,7 @@ public:
 	quint8 disabled;
 };
 
-class OpcodeKAWAIUnknown : public Commande {
-public:
-	explicit OpcodeKAWAIUnknown(const QByteArray &params);
-	virtual QString toString() const;
-	virtual QByteArray params() const;
-	QByteArray data;
-};
-
-class OpcodeKAWAIEYETX : public OpcodeKAWAIUnknown {
+class OpcodeKAWAIEYETX : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAIEYETX(const QByteArray &params);
 	quint8 id() const { return 0x00; }
@@ -557,35 +554,35 @@ public:
 	QByteArray data;
 };
 
-class OpcodeKAWAIAMBNT : public OpcodeKAWAIUnknown {
+class OpcodeKAWAIAMBNT : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAIAMBNT(const QByteArray &params);
 	quint8 id() const { return 0x02; }
 	virtual QString toString() const;
 };
 
-class OpcodeKAWAILIGHT : public OpcodeKAWAIUnknown {
+class OpcodeKAWAILIGHT : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAILIGHT(const QByteArray &params);
 	quint8 id() const { return 0x06; }
 	virtual QString toString() const;
 };
 
-class OpcodeKAWAISBOBJ : public OpcodeKAWAIUnknown {
+class OpcodeKAWAISBOBJ : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAISBOBJ(const QByteArray &params);
 	quint8 id() const { return 0x0A; }
 	virtual QString toString() const;
 };
 
-class OpcodeKAWAISHINE : public OpcodeKAWAIUnknown {
+class OpcodeKAWAISHINE : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAISHINE(const QByteArray &params);
 	quint8 id() const { return 0x0D; }
 	virtual QString toString() const;
 };
 
-class OpcodeKAWAIRESET : public OpcodeKAWAIUnknown {
+class OpcodeKAWAIRESET : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAIRESET(const QByteArray &params);
 	quint8 id() const { return 0xFF; }
@@ -633,6 +630,7 @@ public:
 	quint8 id() const { return 0x2C; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint8 layerID;
 	qint16 targetZ;
@@ -644,6 +642,7 @@ public:
 	quint8 id() const { return 0x2D; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint8 layerID;
 	qint16 targetX, targetY;
@@ -655,6 +654,8 @@ public:
 	quint8 id() const { return 0x2E; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
 	quint8 windowID;
 };
 
@@ -664,6 +665,10 @@ public:
 	quint8 id() const { return 0x2F; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
+	virtual bool getWindow(FF7Window &window) const;
+	virtual void setWindow(const FF7Window &window);
 	quint8 windowID;
 	quint16 targetX, targetY;
 	quint16 width, height;
@@ -718,7 +723,7 @@ public:
 
 class OpcodePTURA : public Commande {
 public:
-	explicit OpcodePDIRA(const QByteArray &params);
+	explicit OpcodePTURA(const QByteArray &params);
 	quint8 id() const { return 0x35; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
@@ -733,6 +738,8 @@ public:
 	quint8 id() const { return 0x36; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
 	quint8 windowID;
 	quint8 displayType;
 	quint8 marginLeft, marginTop;
@@ -744,6 +751,9 @@ public:
 	quint8 id() const { return 0x37; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint8 windowID;
 	qint32 value;
@@ -756,6 +766,7 @@ public:
 	quint8 id() const { return 0x38; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	quint8 h, m, s;
 };
@@ -764,6 +775,7 @@ class OpcodeGOLD : public Commande {
 public:
 	explicit OpcodeGOLD(const QByteArray &params);
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	qint32 value;
 };
@@ -788,6 +800,7 @@ public:
 	quint8 id() const { return 0x3B; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint8 var1, var2;
 };
@@ -826,6 +839,10 @@ public:
 	quint8 id() const { return 0x40; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getTextID() const;
+	virtual void setTextID(quint8 textID);
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
 	quint8 windowID, textID;
 };
 
@@ -835,6 +852,9 @@ public:
 	quint8 id() const { return 0x41; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, windowID, windowVarID, value;
 };
 
@@ -844,6 +864,9 @@ public:
 	quint8 id() const { return 0x42; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, windowID, windowVarID;
 	quint16 value;
 };
@@ -854,6 +877,8 @@ public:
 	quint8 id() const { return 0x43; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getTextID() const;
+	virtual void setTextID(quint8 textID);
 	quint8 textID;
 };
 
@@ -861,20 +886,21 @@ class OpcodeMP : public Commande {
 public:
 	explicit OpcodeMP(const QByteArray &params);
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, partyID;
 	quint16 value;
 };
 
 class OpcodeMPu : public OpcodeMP {
 public:
-	explicit OpcodeMPu();
+	explicit OpcodeMPu(const QByteArray &params);
 	quint8 id() const { return 0x45; }
 	virtual QString toString() const;
 };
 
 class OpcodeMPd : public OpcodeMP {
 public:
-	explicit OpcodeMPd();
+	explicit OpcodeMPd(const QByteArray &params);
 	quint8 id() const { return 0x47; }
 	virtual QString toString() const;
 };
@@ -885,6 +911,11 @@ public:
 	quint8 id() const { return 0x48; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getTextID() const;
+	virtual void setTextID(quint8 textID);
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, windowID, textID, firstLine, lastLine, varAnswer;
 };
 
@@ -892,9 +923,10 @@ class OpcodeMENU : public Commande {
 public:
 	explicit OpcodeMENU(const QByteArray &params);
 	quint8 id() const { return 0x49; }
-	QString menu(const QString &param);
+	QString menu(const QString &param) const;
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, menuID, param;
 };
 
@@ -920,6 +952,7 @@ class OpcodeHP : public Commande {
 public:
 	explicit OpcodeHP(const QByteArray &params);
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, partyID;
 	quint16 value;
 };
@@ -944,6 +977,10 @@ public:
 	quint8 id() const { return 0x50; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
+	virtual bool getWindow(FF7Window &window) const;
+	virtual void setWindow(const FF7Window &window);
 	quint8 windowID;
 	quint16 targetX, targetY;
 	quint16 width, height;
@@ -955,6 +992,10 @@ public:
 	quint8 id() const { return 0x51; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
+	virtual bool getWindow(FF7Window &window) const;
+	virtual void setWindow(const FF7Window &window);
 	quint8 windowID;
 	quint16 targetX, targetY;
 };
@@ -965,6 +1006,8 @@ public:
 	quint8 id() const { return 0x52; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
 	quint8 windowID, mode;
 	quint8 preventClose;
 };
@@ -975,6 +1018,8 @@ public:
 	quint8 id() const { return 0x53; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
 	quint8 windowID;
 };
 // note: same struct as WREST
@@ -984,6 +1029,8 @@ public:
 	quint8 id() const { return 0x54; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
 	quint8 windowID;
 };
 
@@ -993,6 +1040,8 @@ public:
 	quint8 id() const { return 0x55; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
 	quint8 windowID, rowCount;
 };
 
@@ -1002,6 +1051,7 @@ public:
 	quint8 id() const { return 0x56; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], corner, varR, varG, varB;
 };
 // note: same struct as GWCOL
@@ -1011,6 +1061,7 @@ public:
 	quint8 id() const { return 0x57; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], corner, r, g, b;
 };
 
@@ -1020,6 +1071,7 @@ public:
 	quint8 id() const { return 0x58; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint16 itemID;
 	quint8 quantity;
@@ -1031,6 +1083,7 @@ public:
 	quint8 id() const { return 0x59; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint16 itemID;
 	quint8 quantity;
@@ -1042,6 +1095,7 @@ public:
 	quint8 id() const { return 0x5A; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint16 itemID;
 	quint8 varQuantity;
@@ -1053,6 +1107,7 @@ public:
 	quint8 id() const { return 0x5B; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	quint8 materiaID;
 	quint32 APCount;
@@ -1064,6 +1119,7 @@ public:
 	quint8 id() const { return 0x5C; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	quint8 materiaID;
 	quint32 APCount;
@@ -1076,6 +1132,7 @@ public:
 	quint8 id() const { return 0x5D; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[3];
 	quint8 materiaID;
 	quint32 APCount;
@@ -1135,6 +1192,7 @@ public:
 	quint8 id() const { return 0x63; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint16 speed;
 	quint8 groupID, scrollType;
@@ -1146,6 +1204,7 @@ public:
 	quint8 id() const { return 0x64; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	qint16 targetX, targetY;
 };
@@ -1163,6 +1222,7 @@ public:
 	quint8 id() const { return 0x66; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	qint16 targetX, targetY;
 	quint16 speed;
@@ -1181,6 +1241,7 @@ public:
 	quint8 id() const { return 0x68; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	qint16 targetX, targetY;
 	quint16 speed;
@@ -1201,6 +1262,7 @@ public:
 	quint8 id() const { return 0x6A; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	qint16 unknown1, unknown2;
 	quint8 unknown3;
@@ -1212,6 +1274,7 @@ public:
 	quint8 id() const { return 0x6B; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	quint8 r, g, b, speed, fadeType, adjust;
 };
@@ -1239,6 +1302,7 @@ public:
 	quint8 id() const { return 0x6E; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var;
 };
 
@@ -1248,6 +1312,7 @@ public:
 	quint8 id() const { return 0x6F; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint16 speed;
 	quint8 partyID, scrollType;
@@ -1259,6 +1324,7 @@ public:
 	quint8 id() const { return 0x70; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint16 battleID;
 };
@@ -1287,6 +1353,7 @@ public:
 	quint8 id() const { return 0x73; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, partyID, varDir;
 };
 // note: same struct as PGTDR
@@ -1296,6 +1363,7 @@ public:
 	quint8 id() const { return 0x74; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, partyID, varPC;
 };
 
@@ -1305,6 +1373,7 @@ public:
 	quint8 id() const { return 0x75; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], partyID, varX, varY, varZ, varI;
 };
 
@@ -1312,6 +1381,7 @@ class OpcodeOperation : public Commande {
 public:
 	explicit OpcodeOperation(const QByteArray &params);
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var, value;
 };
 
@@ -1319,6 +1389,7 @@ class OpcodeOperation2 : public Commande {
 public:
 	explicit OpcodeOperation2(const QByteArray &params);
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var;
 	quint16 value;
 };
@@ -1327,6 +1398,7 @@ class OpcodeUnaryOperation : public Commande {
 public:
 	explicit OpcodeUnaryOperation(const QByteArray &params);
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var;
 };
 
@@ -1381,7 +1453,7 @@ public:
 
 class OpcodeDEC2X : public OpcodeUnaryOperation {
 public:
-	explicit OpcodeDECX(const QByteArray &params);
+	explicit OpcodeDEC2X(const QByteArray &params);
 	quint8 id() const { return 0x7D; }
 	virtual QString toString() const;
 };
@@ -1420,6 +1492,7 @@ class OpcodeBitOperation : public Commande {
 public:
 	explicit OpcodeBitOperation(const QByteArray &params);
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var, position;
 };
 
@@ -1611,6 +1684,7 @@ public:
 	quint8 id() const { return 0x9C; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], var, value1, value2;
 };
 
@@ -1692,6 +1766,7 @@ public:
 	quint8 id() const { return 0xA5; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	qint16 targetX, targetY, targetZ;
 	quint16 targetI;
@@ -1703,6 +1778,7 @@ public:
 	quint8 id() const { return 0xA6; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	qint16 targetX, targetY;
 	quint16 targetI;
@@ -1714,6 +1790,7 @@ public:
 	quint8 id() const { return 0xA7; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	qint16 targetX, targetY, targetZ;
 };
@@ -1724,6 +1801,7 @@ public:
 	quint8 id() const { return 0xA8; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	qint16 targetX, targetY;
 };
@@ -1734,6 +1812,7 @@ public:
 	quint8 id() const { return 0xA9; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	qint16 targetX, targetY;
 };
@@ -1769,6 +1848,7 @@ public:
 	quint8 id() const { return 0xAD; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	qint16 targetX, targetY;
 };
@@ -1815,6 +1895,7 @@ public:
 	quint8 id() const { return 0xB2; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint16 speed;
 };
@@ -1825,6 +1906,7 @@ public:
 	quint8 id() const { return 0xB3; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, direction;
 };
 
@@ -1834,6 +1916,7 @@ public:
 	quint8 id() const { return 0xB4; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, direction, turnCount, speed, unknown;
 };
 // note: same struct as TURNGEN
@@ -1843,6 +1926,7 @@ public:
 	quint8 id() const { return 0xB5; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, direction, turnCount, speed, unknown;
 };
 // note: same struct as MOVA
@@ -1861,6 +1945,7 @@ public:
 	quint8 id() const { return 0xB7; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, groupID, varDir;
 };
 
@@ -1870,6 +1955,7 @@ public:
 	quint8 id() const { return 0xB8; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, groupID, varX, varY;
 };
 
@@ -1879,6 +1965,7 @@ public:
 	quint8 id() const { return 0xB9; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, groupID, varI;
 };
 // note: same struct as ANIME2
@@ -1915,6 +2002,7 @@ public:
 	quint8 id() const { return 0xBD; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint16 speed;
 };
@@ -1934,6 +2022,7 @@ public:
 	quint8 id() const { return 0xC0; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	qint16 targetX, targetY;
 	quint16 targetI;
@@ -1946,6 +2035,7 @@ public:
 	quint8 id() const { return 0xC1; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], groupID, varX, varY, varZ, varI;
 };
 
@@ -1955,6 +2045,7 @@ public:
 	quint8 id() const { return 0xC2; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	qint16 targetX, targetY, targetZ;
 	quint16 targetI;
@@ -1967,6 +2058,7 @@ public:
 	quint8 id() const { return 0xC3; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], moveType;
 	qint16 targetX, targetY, targetZ;
 	quint16 speed;
@@ -1985,6 +2077,7 @@ public:
 	quint8 id() const { return 0xC5; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, distance;
 };
 // note: same struct as TALKR
@@ -1994,6 +2087,7 @@ public:
 	quint8 id() const { return 0xC6; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, distance;
 };
 
@@ -2112,6 +2206,7 @@ public:
 	quint8 id() const { return 0xD3; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[3];
 	qint16 targetX1, targetY1, targetZ1;
 	qint16 targetX2, targetY2, targetZ2;
@@ -2123,6 +2218,7 @@ public:
 	quint8 id() const { return 0xD4; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	quint16 value1, value2, value3;
 	quint8 var;
@@ -2134,6 +2230,7 @@ public:
 	quint8 id() const { return 0xD5; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	quint16 value1, value2, value3;
 	quint8 var;
@@ -2145,6 +2242,7 @@ public:
 	quint8 id() const { return 0xD6; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint16 distance;
 };
@@ -2155,6 +2253,7 @@ public:
 	quint8 id() const { return 0xD7; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint16 distance;
 };
@@ -2231,6 +2330,7 @@ public:
 	quint8 id() const { return 0xE0; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, paramID, stateID;
 };
 // note: same struct as BGON
@@ -2240,6 +2340,7 @@ public:
 	quint8 id() const { return 0xE1; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, paramID, stateID;
 };
 
@@ -2249,6 +2350,7 @@ public:
 	quint8 id() const { return 0xE2; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, paramID;
 };
 // note: same struct as BGROL
@@ -2258,6 +2360,7 @@ public:
 	quint8 id() const { return 0xE3; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, paramID;
 };
 // note: same struct as BGROL
@@ -2267,6 +2370,7 @@ public:
 	quint8 id() const { return 0xE4; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, paramID;
 };
 
@@ -2321,6 +2425,7 @@ public:
 	quint8 id() const { return 0xEA; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[3], unknown1[2], r, g, b, unknown2;
 };
 
@@ -2384,6 +2489,7 @@ public:
 	quint8 id() const { return 0xF1; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	quint16 soundID;
 	quint8 position;
@@ -2465,6 +2571,7 @@ public:
 	quint8 id() const { return 0xFA; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, varCurMovieFrame;
 };
 
@@ -2501,6 +2608,7 @@ public:
 	quint8 id() const { return 0xFE; }
 	virtual QString toString() const;
 	virtual QByteArray params() const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var;
 };
 

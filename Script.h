@@ -35,10 +35,9 @@ public:
 	Commande *getCommande(quint16 commandeID);
 	bool isVoid() const;
 	QByteArray toByteArray() const;
-	void setCommande(quint16 commandeID, const QByteArray &commande);
+	void setCommande(quint16 commandeID, Commande *commande);
 	void delCommande(quint16 commandeID);
 	Commande *removeCommande(quint16 commandeID);
-	void insertCommande(quint16 commandeID, const QByteArray &commande);
 	void insertCommande(quint16 commandeID, Commande *commande);
 	bool moveCommande(quint16 commandeID, bool direction);
 	void shiftTextIds(int textId, int steps=1);
@@ -46,7 +45,7 @@ public:
 
 	bool rechercherOpCode(quint8 opCode, int &commandeID) const;
 	bool rechercherVar(quint8 bank, quint8 adress, int value, int &commandeID) const;
-	QList<int> searchAllVars() const;
+	QList<FF7Var> searchAllVars() const;
 	bool rechercherExec(quint8 group, quint8 script, int &commandeID) const;
 	bool rechercherTexte(const QRegExp &texte, int &commandeID) const;
 	bool rechercherOpCodeP(quint8 opCode, int &commandeID) const;
@@ -56,16 +55,19 @@ public:
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8, quint8> &text2win) const;
+	void getBgParams(QHash<quint8, quint8> &paramActifs) const;
+	void getBgMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
 	void lecture(QTreeWidget *zoneScript);
 	void setExpandedItems(const QList<Commande *> &expandedItems);
 
 	static int posReturn(const QByteArray &script);
+	static Commande *createOpcode(const QByteArray &script, int pos=0);
 private:
 	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);
-	void shiftJumps(int commandID, int shift);
-	void shiftJumpsSwap(Commande *commande, int shift);
-	int posOfCommand(int commandID) const;
+//	void shiftJumps(int commandID, int shift);
+//	void shiftJumpsSwap(Commande *commande, int shift);
+//	int posOfCommand(int commandID) const;
 
 	QList<Commande *> commandes;
 	QList<quint16> indent;

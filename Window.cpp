@@ -671,12 +671,12 @@ void Window::undo()
 		break;
 	case HIST_REM:
 		for(int i=0 ; i<hist.commandeIDs.size() ; ++i)
-			script->insertCommande(hist.commandeIDs.at(i), hist.data.at(i));
+			script->insertCommande(hist.commandeIDs.at(i), Script::createOpcode(hist.data.at(i)));
 		hist.data.clear();
 		break;
 	case HIST_MOD:
 		sav = script->getCommande(firstCommande)->toByteArray();
-		script->setCommande(firstCommande, hist.data.first());
+		script->setCommande(firstCommande, Script::createOpcode(hist.data.first()));
 		hist.data.replace(0, sav);
 		break;
 	case HIST_UPW:
@@ -707,7 +707,7 @@ void Window::redo()
 	switch(hist.type) {
 	case HIST_ADD:
 		for(int i=0 ; i<hist.commandeIDs.size() ; ++i)
-			script->insertCommande(hist.commandeIDs.at(i), hist.data.at(i));
+			script->insertCommande(hist.commandeIDs.at(i), Script::createOpcode(hist.data.at(i)));
 		hist.data.clear();
 		break;
 	case HIST_REM:
@@ -718,7 +718,7 @@ void Window::redo()
 		break;
 	case HIST_MOD:
 		sav = script->getCommande(firstCommande)->toByteArray();
-		script->setCommande(firstCommande, hist.data.first());
+		script->setCommande(firstCommande, Script::createOpcode(hist.data.first()));
 		hist.data.replace(0, sav);
 		break;
 	case HIST_UPW:

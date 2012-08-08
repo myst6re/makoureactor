@@ -754,6 +754,7 @@ QPixmap Field::ouvrirBackgroundPS(const QByteArray &mimDataDec, const QByteArray
 	{
 		headerEffect.size = 4;
 		headerEffect.w = 0;
+		headerEffect.x = 0;
 	}
 	
 	/*--- OUVERTURE DU DAT ---*/
@@ -1129,9 +1130,9 @@ bool Field::moveGrpScript(int row, bool direction)
 	return true;
 }
 
-QList<int> Field::searchAllVars() const
+QList<FF7Var> Field::searchAllVars() const
 {
-	QList<int> vars;
+	QList<FF7Var> vars;
 
 	foreach(GrpScript *group, grpScripts)
 		vars.append(group->searchAllVars());

@@ -300,9 +300,9 @@ bool FieldArchive::isAllOpened()
 	return true;
 }
 
-QList<int> FieldArchive::searchAllVars()
+QList<FF7Var> FieldArchive::searchAllVars()
 {
-	QList<int> vars;
+	QList<FF7Var> vars;
 	int size = fileList.size();
 
 	for(int i=0 ; i<size ; ++i) {

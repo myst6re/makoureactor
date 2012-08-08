@@ -55,7 +55,7 @@ private:
 	QTreeWidget *liste2;
 
 	FieldArchive *fieldArchive;
-	QList<int> allVars;
+	QList<FF7Var> allVars;
 };
 
 #endif

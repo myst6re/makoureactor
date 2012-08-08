@@ -46,7 +46,7 @@ public:
 	TutFile *getTut(const QString &name);
 
 	bool isAllOpened();
-	QList<int> searchAllVars();
+	QList<FF7Var> searchAllVars();
 	void searchAll();// research & debug function
 	bool rechercherOpCode(quint8 opCode, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting);
 	bool rechercherVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting);
