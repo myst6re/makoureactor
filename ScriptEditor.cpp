@@ -256,7 +256,7 @@ QByteArray ScriptEditor::parseModel()
 	length = 0;
 	start = 1;
 	
-	if(byte == 0xF)
+	if(byte == 0x0F)//SPECIAL
 	{
 		quint8 byte2 = (itemData >> 8) & 0xFF;
 		nouvelleCommande.append((char)byte2);
@@ -382,8 +382,14 @@ void ScriptEditor::add()
 void ScriptEditor::refreshTextEdit()
 {
 	this->change = true;
-	
-//	commande->setCommande(parseModel());//TODO
+
+	QByteArray nouvelleCommande = parseModel();
+	if(commande->id() == (int)nouvelleCommande.at(0)) {
+		commande->setParams(nouvelleCommande.mid(1));
+	} else {
+		delete commande;
+		commande = Script::createOpcode(nouvelleCommande); // change all
+	}
 	textEdit->setPlainText(commande->toString());
 }
 
@@ -527,7 +533,7 @@ void ScriptEditor::fillModel(int opcode)
 		{
 			paramType = paramTypes.at(i);
 			paramSize = this->paramSize(paramType);
-//			value = commande->subParam(cur, paramSize);//TODO
+			value = commande->subParam(cur, paramSize);
 			// qDebug() << value;
 			if(paramIsSigned(paramType)) {
 				maxValue = (int)pow(2, paramSize-1)-1;
@@ -579,7 +585,12 @@ void ScriptEditor::changeCurrentOpcode(int index)
 		for(quint8 pos=1 ; pos<Opcode::length[opcode] ; ++pos)
 			nouvelleCommande.append('\x00');
 	}
-//	commande->setCommande(nouvelleCommande);//TODO
+	if(opcode == commande->id()) {
+		commande->setParams(nouvelleCommande.mid(1)); // same opcode, just change params
+	} else {
+		delete commande;
+		commande = Script::createOpcode(nouvelleCommande); // change all
+	}
 	
 	fillModel(opcode);
 	

@@ -17,8 +17,7 @@
  ****************************************************************************/
 #include "Commande.h"
 
-Commande::Commande() :
-	pos(0)
+Commande::Commande()
 {
 }
 
@@ -32,6 +31,10 @@ quint8 Commande::size() const
 	return params().size() + 1;
 }
 
+void Commande::setParams(const QByteArray &)
+{
+}
+
 QByteArray Commande::toByteArray() const
 {
 	return QByteArray()
@@ -41,32 +44,25 @@ QByteArray Commande::toByteArray() const
 
 quint16 Commande::getIndent() const
 {
-	//TODO
-//	switch(id())
-//	{
-//	case 0x14:	return pos+5+(quint8)params().at(4);
-//	case 0x15:	return pos+5+_toInt(params().mid(4,2));
-//	case 0x16:
-//	case 0x18:	return pos+7+(quint8)params().at(6);
-//	case 0x17:
-//	case 0x19:	return pos+7+_toInt(params().mid(6,2));
-//	case 0x30:
-//	case 0x31:
-//	case 0x32:	return pos+3+(quint8)params().at(2);
-//	case 0xcb:
-//	case 0xcc:	return pos+2+(quint8)params().at(1);
-//	}
 	return 0;
 }
 
-quint16 Commande::getPos() const
+int Commande::subParam(int cur, int paramSize) const
 {
-	return pos;
+	QByteArray p = params();
+	int value, sizeBA;
+
+	if(paramSize%8 !=0)
+		sizeBA = paramSize/8+1;
+	else
+		sizeBA = paramSize/8;
+
+	memcpy(&value, p.mid(cur/8, sizeBA), sizeBA);
+	return (value >> ((sizeBA*8-cur%8)-paramSize)) & ((int)pow(2, paramSize)-1);
 }
 
-void Commande::setPos(quint16 pos)
+void Commande::setPos(quint16)
 {
-	this->pos = pos;
 }
 
 bool Commande::isVoid() const
@@ -380,8 +376,7 @@ QString Commande::_operateur(quint8 param)
 	return QString("%1?").arg(param);
 }
 
-OpcodeUnknown::OpcodeUnknown(quint8 id, const QByteArray &params) :
-	Commande()
+OpcodeUnknown::OpcodeUnknown(quint8 id, const QByteArray &params)
 {
 	_id = id;
 	unknown = params;
@@ -398,13 +393,17 @@ QString OpcodeUnknown::toString() const
 			.arg(_id);
 }
 
+void OpcodeUnknown::setParams(const QByteArray &params)
+{
+	unknown = params;
+}
+
 QByteArray OpcodeUnknown::params() const
 {
 	return unknown;
 }
 
-OpcodeRET::OpcodeRET() :
-	Commande()
+OpcodeRET::OpcodeRET()
 {
 }
 
@@ -414,6 +413,11 @@ QString OpcodeRET::toString() const
 }
 
 OpcodeExec::OpcodeExec(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeExec::setParams(const QByteArray &params)
 {
 	groupID = params.at(0);
 	scriptID = params.at(1) & 0x1F;
@@ -466,8 +470,12 @@ QString OpcodeREQEW::toString() const
 			.arg(scriptID);
 }
 
-OpcodeExecChar::OpcodeExecChar(const QByteArray &params) :
-	Commande()
+OpcodeExecChar::OpcodeExecChar(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeExecChar::setParams(const QByteArray &params)
 {
 	partyID = params.at(0);
 	scriptID = params.at(1) & 0x1F;
@@ -520,8 +528,12 @@ QString OpcodePRQEW::toString() const
 			.arg(scriptID);
 }
 
-OpcodeRETTO::OpcodeRETTO(const QByteArray &params) :
-	Commande()
+OpcodeRETTO::OpcodeRETTO(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeRETTO::setParams(const QByteArray &params)
 {
 	scriptID = params.at(0) & 0x1F;//ScriptID sur 5 bits
 	priority = (params.at(0) >> 5) & 7;//Priorité sur 3 bits
@@ -540,8 +552,12 @@ QByteArray OpcodeRETTO::params() const
 			.append(char((scriptID & 0x1F) | ((priority & 7) << 5)));
 }
 
-OpcodeJOIN::OpcodeJOIN(const QByteArray &params) :
-	Commande()
+OpcodeJOIN::OpcodeJOIN(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeJOIN::setParams(const QByteArray &params)
 {
 	speed = params.at(0);
 }
@@ -558,8 +574,12 @@ QByteArray OpcodeJOIN::params() const
 			.append(speed);
 }
 
-OpcodeSPLIT::OpcodeSPLIT(const QByteArray &params) :
-	Commande()
+OpcodeSPLIT::OpcodeSPLIT(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSPLIT::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
 	memcpy(banks, constParams, 3);
@@ -614,8 +634,12 @@ void OpcodeSPLIT::getVariables(QList<FF7Var> &vars) const
 		vars.append(FF7Var(B2(banks[2]), direction2 & 0xFF));
 }
 
-OpcodePartyE::OpcodePartyE(const QByteArray &params) :
-	Commande()
+OpcodePartyE::OpcodePartyE(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodePartyE::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
 	memcpy(banks, constParams, 2);
@@ -670,8 +694,12 @@ QString OpcodeGTPYE::toString() const
 			.arg(_var(party3, B1(banks[1])));
 }
 
-OpcodeDSKCG::OpcodeDSKCG(const QByteArray &params) :
-	Commande()
+OpcodeDSKCG::OpcodeDSKCG(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeDSKCG::setParams(const QByteArray &params)
 {
 	diskID = params.at(0);
 }
@@ -687,8 +715,12 @@ QByteArray OpcodeDSKCG::params() const
 	return QByteArray().append((char)diskID);
 }
 
-OpcodeSPECIALARROW::OpcodeSPECIALARROW(const QByteArray &params) :
-	Commande()
+OpcodeSPECIALARROW::OpcodeSPECIALARROW(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSPECIALARROW::setParams(const QByteArray &params)
 {
 	hide = params.at(0);// Boolean
 }
@@ -704,8 +736,12 @@ QByteArray OpcodeSPECIALARROW::params() const
 	return QByteArray().append((char)hide);
 }
 
-OpcodeSPECIALPNAME::OpcodeSPECIALPNAME(const QByteArray &params) :
-	Commande()
+OpcodeSPECIALPNAME::OpcodeSPECIALPNAME(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSPECIALPNAME::setParams(const QByteArray &params)
 {
 	unknown = params.at(0);
 }
@@ -721,8 +757,12 @@ QByteArray OpcodeSPECIALPNAME::params() const
 	return QByteArray().append((char)unknown);
 }
 
-OpcodeSPECIALGMSPD::OpcodeSPECIALGMSPD(const QByteArray &params) :
-	Commande()
+OpcodeSPECIALGMSPD::OpcodeSPECIALGMSPD(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSPECIALGMSPD::setParams(const QByteArray &params)
 {
 	speed = params.at(0);
 }
@@ -738,8 +778,12 @@ QByteArray OpcodeSPECIALGMSPD::params() const
 	return QByteArray().append((char)speed);
 }
 
-OpcodeSPECIALSMSPD::OpcodeSPECIALSMSPD(const QByteArray &params) :
-	Commande()
+OpcodeSPECIALSMSPD::OpcodeSPECIALSMSPD(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSPECIALSMSPD::setParams(const QByteArray &params)
 {
 	unknown = params.at(0);
 	speed = params.at(1);
@@ -759,8 +803,7 @@ QByteArray OpcodeSPECIALSMSPD::params() const
 			.append((char)speed);
 }
 
-OpcodeSPECIALFLMAT::OpcodeSPECIALFLMAT() :
-	Commande()
+OpcodeSPECIALFLMAT::OpcodeSPECIALFLMAT()
 {
 }
 
@@ -769,8 +812,7 @@ QString OpcodeSPECIALFLMAT::toString() const
 	return QObject::tr("Remplir le menu matéria de toutes les matérias en quantité maximum");
 }
 
-OpcodeSPECIALFLITM::OpcodeSPECIALFLITM() :
-	Commande()
+OpcodeSPECIALFLITM::OpcodeSPECIALFLITM()
 {
 }
 
@@ -780,8 +822,12 @@ QString OpcodeSPECIALFLITM::toString() const
 }
 
 
-OpcodeSPECIALBTLCK::OpcodeSPECIALBTLCK(const QByteArray &params) :
-	Commande()
+OpcodeSPECIALBTLCK::OpcodeSPECIALBTLCK(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSPECIALBTLCK::setParams(const QByteArray &params)
 {
 	lock = params.at(0); // Boolean
 }
@@ -797,8 +843,12 @@ QByteArray OpcodeSPECIALBTLCK::params() const
 	return QByteArray().append((char)lock);
 }
 
-OpcodeSPECIALMVLCK::OpcodeSPECIALMVLCK(const QByteArray &params) :
-	Commande()
+OpcodeSPECIALMVLCK::OpcodeSPECIALMVLCK(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSPECIALMVLCK::setParams(const QByteArray &params)
 {
 	lock = params.at(0); // Boolean
 }
@@ -814,8 +864,12 @@ QByteArray OpcodeSPECIALMVLCK::params() const
 	return QByteArray().append((char)lock);
 }
 
-OpcodeSPECIALSPCNM::OpcodeSPECIALSPCNM(const QByteArray &params) :
-	Commande()
+OpcodeSPECIALSPCNM::OpcodeSPECIALSPCNM(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSPECIALSPCNM::setParams(const QByteArray &params)
 {
 	charID = params.at(0);
 	textID = params.at(1);
@@ -845,8 +899,7 @@ void OpcodeSPECIALSPCNM::setTextID(quint8 textID)
 	this->textID = textID;
 }
 
-OpcodeSPECIALRSGLB::OpcodeSPECIALRSGLB() :
-	Commande()
+OpcodeSPECIALRSGLB::OpcodeSPECIALRSGLB()
 {
 }
 
@@ -855,8 +908,7 @@ QString OpcodeSPECIALRSGLB::toString() const
 	return QObject::tr("Met le temps à 0, débloque le menu \"PHS\" et \"Sauvegarder\". Nouvelle équipe : Clad | (Vide) | (Vide)");
 }
 
-OpcodeSPECIALCLITM::OpcodeSPECIALCLITM() :
-	Commande()
+OpcodeSPECIALCLITM::OpcodeSPECIALCLITM()
 {
 }
 
@@ -866,8 +918,25 @@ QString OpcodeSPECIALCLITM::toString() const
 }
 
 OpcodeSPECIAL::OpcodeSPECIAL(const QByteArray &params) :
-	Commande()
+	opcode(0)
 {
+	setParams(params);
+}
+
+OpcodeSPECIAL::~OpcodeSPECIAL()
+{
+	delete opcode;
+}
+
+QString OpcodeSPECIAL::toString() const
+{
+	return QObject::tr("SPECIAL - ") + opcode->toString();
+}
+
+void OpcodeSPECIAL::setParams(const QByteArray &params)
+{
+	if(opcode)		delete opcode;
+
 	switch((quint8)params.at(0))
 	{
 	case 0xF5:	opcode = new OpcodeSPECIALARROW(params.mid(1));
@@ -897,16 +966,6 @@ OpcodeSPECIAL::OpcodeSPECIAL(const QByteArray &params) :
 	}
 }
 
-OpcodeSPECIAL::~OpcodeSPECIAL()
-{
-	delete opcode;
-}
-
-QString OpcodeSPECIAL::toString() const
-{
-	return QObject::tr("SPECIAL - ") + opcode->toString();
-}
-
 QByteArray OpcodeSPECIAL::params() const
 {
 	return opcode->toByteArray();
@@ -923,13 +982,18 @@ void OpcodeSPECIAL::setTextID(quint8 textID)
 }
 
 OpcodeJump::OpcodeJump() :
-	Commande(), _label(0), _jump(0)
+	_pos(0), _jump(0)
 {
 }
 
-void OpcodeJump::setLabel(quint32 label)
+quint16 OpcodeJump::pos() const
 {
-	_label = label;
+	return _pos;
+}
+
+void OpcodeJump::setPos(quint16 pos)
+{
+	_pos = pos;
 }
 
 quint16 OpcodeJump::jump() const
@@ -942,8 +1006,18 @@ void OpcodeJump::setJump(quint16 jump)
 	_jump = jump;
 }
 
+quint16 OpcodeJump::getIndent() const
+{
+	return pos() + jump();
+}
+
 OpcodeJMPF::OpcodeJMPF(const QByteArray &params) :
 	OpcodeJump()
+{
+	setParams(params);
+}
+
+void OpcodeJMPF::setParams(const QByteArray &params)
 {
 	_jump = (quint8)params.at(0) + 1;
 }
@@ -951,7 +1025,7 @@ OpcodeJMPF::OpcodeJMPF(const QByteArray &params) :
 QString OpcodeJMPF::toString() const
 {
 	return QObject::tr("Aller à l'octet %1 du script")
-			.arg(_label+_jump);
+			.arg(_pos+_jump);
 }
 
 QByteArray OpcodeJMPF::params() const
@@ -962,6 +1036,11 @@ QByteArray OpcodeJMPF::params() const
 OpcodeJMPFL::OpcodeJMPFL(const QByteArray &params) :
 	OpcodeJump()
 {
+	setParams(params);
+}
+
+void OpcodeJMPFL::setParams(const QByteArray &params)
+{
 	quint16 jump;
 	memcpy(&jump, params.constData(), 2);
 
@@ -971,7 +1050,7 @@ OpcodeJMPFL::OpcodeJMPFL(const QByteArray &params) :
 QString OpcodeJMPFL::toString() const
 {
 	return QObject::tr("Aller à l'octet %1 du script")
-			.arg(_label+_jump);
+			.arg(_pos+_jump);
 }
 
 QByteArray OpcodeJMPFL::params() const
@@ -983,13 +1062,18 @@ QByteArray OpcodeJMPFL::params() const
 OpcodeJMPB::OpcodeJMPB(const QByteArray &params) :
 	OpcodeJump()
 {
+	setParams(params);
+}
+
+void OpcodeJMPB::setParams(const QByteArray &params)
+{
 	_jump = -(quint8)params.at(0);
 }
 
 QString OpcodeJMPB::toString() const
 {
 	return QObject::tr("Aller à l'octet %1 du script")
-			.arg(int(_label+_jump));
+			.arg(int(_pos+_jump));
 }
 
 QByteArray OpcodeJMPB::params() const
@@ -1000,6 +1084,11 @@ QByteArray OpcodeJMPB::params() const
 OpcodeJMPBL::OpcodeJMPBL(const QByteArray &params) :
 	OpcodeJump()
 {
+	setParams(params);
+}
+
+void OpcodeJMPBL::setParams(const QByteArray &params)
+{
 	quint16 jump;
 	memcpy(&jump, params.constData(), 2);
 
@@ -1009,7 +1098,7 @@ OpcodeJMPBL::OpcodeJMPBL(const QByteArray &params) :
 QString OpcodeJMPBL::toString() const
 {
 	return QObject::tr("Aller à l'octet %1 du script")
-			.arg(_label+_jump);
+			.arg(_pos+_jump);
 }
 
 QByteArray OpcodeJMPBL::params() const
@@ -1034,6 +1123,11 @@ void OpcodeIf::getVariables(QList<FF7Var> &vars) const
 OpcodeIFUB::OpcodeIFUB(const QByteArray &params) :
 	OpcodeIf()
 {
+	setParams(params);
+}
+
+void OpcodeIFUB::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	value1 = params.at(1); // bank 1
 	value2 = params.at(2); // bank 2
@@ -1047,7 +1141,7 @@ QString OpcodeIFUB::toString() const
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label + _jump)
+			.arg(_pos + _jump)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1062,6 +1156,11 @@ QByteArray OpcodeIFUB::params() const
 }
 
 OpcodeIFUBL::OpcodeIFUBL(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeIFUBL::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
 	banks = params.at(0);
@@ -1079,7 +1178,7 @@ QString OpcodeIFUBL::toString() const
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label + _jump)
+			.arg(_pos + _jump)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1095,6 +1194,11 @@ QByteArray OpcodeIFUBL::params() const
 }
 
 OpcodeIFSW::OpcodeIFSW(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeIFSW::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
 	banks = params.at(0);
@@ -1113,7 +1217,7 @@ QString OpcodeIFSW::toString() const
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label + _jump)
+			.arg(_pos + _jump)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1129,6 +1233,11 @@ QByteArray OpcodeIFSW::params() const
 }
 
 OpcodeIFSWL::OpcodeIFSWL(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeIFSWL::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
 	banks = params.at(0);
@@ -1149,7 +1258,7 @@ QString OpcodeIFSWL::toString() const
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label + _jump)
+			.arg(_pos + _jump)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1166,6 +1275,11 @@ QByteArray OpcodeIFSWL::params() const
 }
 
 OpcodeIFUW::OpcodeIFUW(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeIFUW::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
 	banks = params.at(0);
@@ -1184,7 +1298,7 @@ QString OpcodeIFUW::toString() const
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label + _jump)
+			.arg(_pos + _jump)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1200,6 +1314,11 @@ QByteArray OpcodeIFUW::params() const
 }
 
 OpcodeIFUWL::OpcodeIFUWL(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeIFUWL::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
 	banks = params.at(0);
@@ -1220,7 +1339,7 @@ QString OpcodeIFUWL::toString() const
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label + _jump)
+			.arg(_pos + _jump)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1237,6 +1356,11 @@ QByteArray OpcodeIFUWL::params() const
 }
 
 OpcodeMINIGAME::OpcodeMINIGAME(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeMINIGAME::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
 	memcpy(&fieldID, constParams, 2);
@@ -1283,6 +1407,11 @@ QByteArray OpcodeMINIGAME::params() const
 
 OpcodeTUTOR::OpcodeTUTOR(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeTUTOR::setParams(const QByteArray &params)
+{
 	tutoID = params.at(0);
 }
 
@@ -1309,7 +1438,12 @@ void OpcodeTUTOR::setTutoID(quint8 tutoID)
 
 OpcodeBTMD2::OpcodeBTMD2(const QByteArray &params)
 {
-	memcpy(&battleMode, params.constData(), 2);
+	setParams(params);
+}
+
+void OpcodeBTMD2::setParams(const QByteArray &params)
+{
+	memcpy(&battleMode, params.constData(), 4);
 }
 
 QString OpcodeBTMD2::toString() const
@@ -1344,6 +1478,11 @@ QByteArray OpcodeBTMD2::params() const
 
 OpcodeBTRLD::OpcodeBTRLD(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeBTRLD::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	var = params.at(1); // bank 2
 }
@@ -1369,6 +1508,11 @@ void OpcodeBTRLD::getVariables(QList<FF7Var> &vars) const
 
 OpcodeWAIT::OpcodeWAIT(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeWAIT::setParams(const QByteArray &params)
+{
 	memcpy(&frameCount, params.constData(), 2);
 }
 
@@ -1384,6 +1528,11 @@ QByteArray OpcodeWAIT::params() const
 }
 
 OpcodeNFADE::OpcodeNFADE(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeNFADE::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
 	unknown1 = params.at(2);
@@ -1426,6 +1575,11 @@ void OpcodeNFADE::getVariables(QList<FF7Var> &vars) const
 
 OpcodeBLINK::OpcodeBLINK(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeBLINK::setParams(const QByteArray &params)
+{
 	closed = params.at(0); // boolean
 }
 
@@ -1441,6 +1595,11 @@ QByteArray OpcodeBLINK::params() const
 }
 
 OpcodeBGMOVIE::OpcodeBGMOVIE(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeBGMOVIE::setParams(const QByteArray &params)
 {
 	disabled = params.at(0); // boolean
 }
@@ -1467,6 +1626,11 @@ QString OpcodeKAWAIEYETX::toString() const
 }
 
 OpcodeKAWAITRNSP::OpcodeKAWAITRNSP(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeKAWAITRNSP::setParams(const QByteArray &params)
 {
 	enableTransparency = params.at(0);
 	data = params.mid(1);
@@ -1535,8 +1699,27 @@ QString OpcodeKAWAIRESET::toString() const
 	return QObject::tr("RESET");
 }
 
-OpcodeKAWAI::OpcodeKAWAI(const QByteArray &params)
+OpcodeKAWAI::OpcodeKAWAI(const QByteArray &params) :
+	opcode(0)
 {
+	setParams(params);
+}
+
+OpcodeKAWAI::~OpcodeKAWAI()
+{
+	delete opcode;
+}
+
+QString OpcodeKAWAI::toString() const
+{
+	return QObject::tr("Filtre graphique sur l'objet 3D - %1")
+			.arg(opcode->toString());
+}
+
+void OpcodeKAWAI::setParams(const QByteArray &params)
+{
+	if(opcode)		delete opcode;
+
 //	size = params.at(0);
 	switch((quint8)params.at(1))
 	{
@@ -1559,17 +1742,6 @@ OpcodeKAWAI::OpcodeKAWAI(const QByteArray &params)
 	}
 }
 
-OpcodeKAWAI::~OpcodeKAWAI()
-{
-	delete opcode;
-}
-
-QString OpcodeKAWAI::toString() const
-{
-	return QObject::tr("Filtre graphique sur l'objet 3D - %1")
-			.arg(opcode->toString());
-}
-
 QByteArray OpcodeKAWAI::params() const
 {
 	quint8 size = 2 + opcode->size();
@@ -1589,6 +1761,11 @@ QString OpcodeKAWIW::toString() const
 
 OpcodePMOVA::OpcodePMOVA(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodePMOVA::setParams(const QByteArray &params)
+{
 	partyID = params.at(0);
 }
 
@@ -1605,6 +1782,11 @@ QByteArray OpcodePMOVA::params() const
 
 OpcodeSLIP::OpcodeSLIP(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSLIP::setParams(const QByteArray &params)
+{
 	off = params.at(0); // Boolean
 }
 
@@ -1620,6 +1802,11 @@ QByteArray OpcodeSLIP::params() const
 }
 
 OpcodeBGPDH::OpcodeBGPDH(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeBGPDH::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	layerID = params.at(1);
@@ -1648,6 +1835,11 @@ void OpcodeBGPDH::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeBGSCR::OpcodeBGSCR(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeBGSCR::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	layerID = params.at(1);
@@ -1682,6 +1874,11 @@ void OpcodeBGSCR::getVariables(QList<FF7Var> &vars) const
 
 OpcodeWCLS::OpcodeWCLS(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeWCLS::setParams(const QByteArray &params)
+{
 	windowID = params.at(0);
 }
 
@@ -1707,6 +1904,11 @@ void OpcodeWCLS::setWindowID(quint8 windowID)
 }
 
 OpcodeWSIZW::OpcodeWSIZW(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeWSIZW::setParams(const QByteArray &params)
 {
 	windowID = params.at(0);
 	memcpy(&targetX, &(params.constData()[1]), 2);
@@ -1765,6 +1967,11 @@ void OpcodeWSIZW::setWindow(const FF7Window &window)
 
 OpcodeIfKey::OpcodeIfKey(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeIfKey::setParams(const QByteArray &params)
+{
 	memcpy(&keys, params.constData(), 2);
 	_jump = params.at(2) + 3;
 }
@@ -1796,7 +2003,7 @@ QString OpcodeIFKEY::toString() const
 {
 	return QObject::tr("Si appuie sur la touche %1 (aller à l'octet %2 du script sinon)")
 			.arg(keyString())
-			.arg(_label + _jump);
+			.arg(_pos + _jump);
 }
 
 OpcodeIFKEYON::OpcodeIFKEYON(const QByteArray &params) :
@@ -1808,7 +2015,7 @@ QString OpcodeIFKEYON::toString() const
 {
 	return QObject::tr("Si appuie sur la touche %1 une fois (aller à l'octet %2 du script sinon)")
 			.arg(keyString())
-			.arg(_label + _jump);
+			.arg(_pos + _jump);
 }
 
 OpcodeIFKEYOFF::OpcodeIFKEYOFF(const QByteArray &params) :
@@ -1820,10 +2027,15 @@ QString OpcodeIFKEYOFF::toString() const
 {
 	return QObject::tr("Si relache la touche %1 pour la première fois (aller à l'octet %2 du script sinon)")
 			.arg(keyString())
-			.arg(_label + _jump);
+			.arg(_pos + _jump);
 }
 
 OpcodeUC::OpcodeUC(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeUC::setParams(const QByteArray &params)
 {
 	disabled = params.at(0);
 }
@@ -1841,6 +2053,11 @@ QByteArray OpcodeUC::params() const
 
 OpcodePDIRA::OpcodePDIRA(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodePDIRA::setParams(const QByteArray &params)
+{
 	partyID = params.at(0);
 }
 
@@ -1856,6 +2073,11 @@ QByteArray OpcodePDIRA::params() const
 }
 
 OpcodePTURA::OpcodePTURA(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodePTURA::setParams(const QByteArray &params)
 {
 	partyID = params.at(0);
 	speed = params.at(1);
@@ -1879,6 +2101,11 @@ QByteArray OpcodePTURA::params() const
 }
 
 OpcodeWSPCL::OpcodeWSPCL(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeWSPCL::setParams(const QByteArray &params)
 {
 	windowID = params.at(0);
 	displayType = params.at(1);
@@ -1925,6 +2152,11 @@ void OpcodeWSPCL::setWindowID(quint8 windowID)
 
 OpcodeWNUMB::OpcodeWNUMB(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeWNUMB::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	windowID = params.at(1);
 	memcpy(&value, &(params.constData()[2]), 4);// bank 1 and 2
@@ -1968,6 +2200,11 @@ void OpcodeWNUMB::getVariables(QList<FF7Var> &vars) const
 
 OpcodeSTTIM::OpcodeSTTIM(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSTTIM::setParams(const QByteArray &params)
+{
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
 	h = params.at(2);// bank 1??
@@ -2003,6 +2240,11 @@ void OpcodeSTTIM::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeGOLD::OpcodeGOLD(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeGOLD::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	memcpy(&value, &(params.constData()[1]), 4);// bank 1 and 2
@@ -2046,6 +2288,11 @@ QString OpcodeGOLDd::toString() const
 }
 
 OpcodeCHGLD::OpcodeCHGLD(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeCHGLD::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	var1 = params.at(1); // bank 1
@@ -2113,6 +2360,11 @@ QString OpcodeHMPMAX3::toString() const
 
 OpcodeMESSAGE::OpcodeMESSAGE(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMESSAGE::setParams(const QByteArray &params)
+{
 	windowID = params.at(0);
 	textID = params.at(1);
 }
@@ -2152,6 +2404,11 @@ void OpcodeMESSAGE::setTextID(quint8 textID)
 }
 
 OpcodeMPARA::OpcodeMPARA(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeMPARA::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	windowID = params.at(1);
@@ -2194,6 +2451,11 @@ void OpcodeMPARA::getVariables(QList<FF7Var> &vars) const
 
 OpcodeMPRA2::OpcodeMPRA2(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMPRA2::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	windowID = params.at(1);
 	windowVarID = params.at(2);
@@ -2235,6 +2497,11 @@ void OpcodeMPRA2::getVariables(QList<FF7Var> &vars) const
 
 OpcodeMPNAM::OpcodeMPNAM(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMPNAM::setParams(const QByteArray &params)
+{
 	textID = params.at(0);
 }
 
@@ -2261,6 +2528,11 @@ void OpcodeMPNAM::setTextID(quint8 textID)
 }
 
 OpcodeMP::OpcodeMP(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeMP::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	partyID = params.at(1);
@@ -2306,6 +2578,11 @@ QString OpcodeMPd::toString() const
 }
 
 OpcodeASK::OpcodeASK(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeASK::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	windowID = params.at(1);
@@ -2364,6 +2641,11 @@ void OpcodeASK::getVariables(QList<FF7Var> &vars) const
 
 OpcodeMENU::OpcodeMENU(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMENU::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	menuID = params.at(1);
 	param = params.at(2); // bank 2
@@ -2419,6 +2701,11 @@ void OpcodeMENU::getVariables(QList<FF7Var> &vars) const
 
 OpcodeMENU2::OpcodeMENU2(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMENU2::setParams(const QByteArray &params)
+{
 	disabled = params.at(0);
 }
 
@@ -2435,6 +2722,11 @@ QByteArray OpcodeMENU2::params() const
 
 OpcodeBTLTB::OpcodeBTLTB(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeBTLTB::setParams(const QByteArray &params)
+{
 	battleTableID = params.at(0);
 }
 
@@ -2450,6 +2742,11 @@ QByteArray OpcodeBTLTB::params() const
 }
 
 OpcodeHP::OpcodeHP(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeHP::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	partyID = params.at(1);
@@ -2495,6 +2792,11 @@ QString OpcodeHPd::toString() const
 }
 
 OpcodeWINDOW::OpcodeWINDOW(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeWINDOW::setParams(const QByteArray &params)
 {
 	windowID = params.at(0);
 	memcpy(&targetX, &(params.constData()[1]), 2);
@@ -2552,6 +2854,11 @@ void OpcodeWINDOW::setWindow(const FF7Window &window)
 
 OpcodeWMOVE::OpcodeWMOVE(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeWMOVE::setParams(const QByteArray &params)
+{
 	windowID = params.at(0);
 	memcpy(&targetX, &(params.constData()[1]), 2);
 	memcpy(&targetY, &(params.constData()[3]), 2);
@@ -2598,6 +2905,11 @@ void OpcodeWMOVE::setWindow(const FF7Window &window)
 
 OpcodeWMODE::OpcodeWMODE(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeWMODE::setParams(const QByteArray &params)
+{
 	windowID = params.at(0);
 	mode = params.at(1);
 	preventClose = params.at(2); // boolean
@@ -2640,6 +2952,11 @@ void OpcodeWMODE::setWindowID(quint8 windowID)
 
 OpcodeWREST::OpcodeWREST(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeWREST::setParams(const QByteArray &params)
+{
 	windowID = params.at(0);
 }
 
@@ -2666,6 +2983,11 @@ void OpcodeWREST::setWindowID(quint8 windowID)
 
 OpcodeWCLSE::OpcodeWCLSE(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeWCLSE::setParams(const QByteArray &params)
+{
 	windowID = params.at(0);
 }
 
@@ -2691,6 +3013,11 @@ void OpcodeWCLSE::setWindowID(quint8 windowID)
 }
 
 OpcodeWROW::OpcodeWROW(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeWROW::setParams(const QByteArray &params)
 {
 	windowID = params.at(0);
 	rowCount = params.at(1);
@@ -2721,6 +3048,11 @@ void OpcodeWROW::setWindowID(quint8 windowID)
 }
 
 OpcodeGWCOL::OpcodeGWCOL(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeGWCOL::setParams(const QByteArray &params)
 {
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
@@ -2763,6 +3095,11 @@ void OpcodeGWCOL::getVariables(QList<FF7Var> &vars) const
 
 OpcodeSWCOL::OpcodeSWCOL(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSWCOL::setParams(const QByteArray &params)
+{
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
 	corner = params.at(2); // bank 1
@@ -2804,6 +3141,11 @@ void OpcodeSWCOL::getVariables(QList<FF7Var> &vars) const
 
 OpcodeSTITM::OpcodeSTITM(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSTITM::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	memcpy(&itemID, &(params.constData()[1]), 2); // bank 1
 	quantity = params.at(3); // bank 2
@@ -2833,6 +3175,11 @@ void OpcodeSTITM::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeDLITM::OpcodeDLITM(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeDLITM::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	memcpy(&itemID, &(params.constData()[1]), 2); // bank 1
@@ -2864,6 +3211,11 @@ void OpcodeDLITM::getVariables(QList<FF7Var> &vars) const
 
 OpcodeCKITM::OpcodeCKITM(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeCKITM::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	memcpy(&itemID, &(params.constData()[1]), 2); // bank 1
 	varQuantity = params.at(3); // bank 2
@@ -2893,6 +3245,11 @@ void OpcodeCKITM::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeSMTRA::OpcodeSMTRA(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSMTRA::setParams(const QByteArray &params)
 {
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
@@ -2929,6 +3286,11 @@ void OpcodeSMTRA::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeDMTRA::OpcodeDMTRA(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeDMTRA::setParams(const QByteArray &params)
 {
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
@@ -2968,6 +3330,11 @@ void OpcodeDMTRA::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeCMTRA::OpcodeCMTRA(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeCMTRA::setParams(const QByteArray &params)
 {
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
@@ -3014,6 +3381,11 @@ void OpcodeCMTRA::getVariables(QList<FF7Var> &vars) const
 
 OpcodeSHAKE::OpcodeSHAKE(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSHAKE::setParams(const QByteArray &params)
+{
 	unknown1 = params.at(0);
 	unknown2 = params.at(1);
 	shakeCount = params.at(2);
@@ -3054,6 +3426,11 @@ QString OpcodeNOP::toString() const
 
 OpcodeMAPJUMP::OpcodeMAPJUMP(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMAPJUMP::setParams(const QByteArray &params)
+{
 	memcpy(&fieldID, params.constData(), 2);
 	memcpy(&targetX, &(params.constData()[2]), 2);
 	memcpy(&targetY, &(params.constData()[4]), 2);
@@ -3083,6 +3460,11 @@ QByteArray OpcodeMAPJUMP::params() const
 
 OpcodeSCRLO::OpcodeSCRLO(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSCRLO::setParams(const QByteArray &params)
+{
 	unknown = params.at(0);
 }
 
@@ -3099,6 +3481,11 @@ QByteArray OpcodeSCRLO::params() const
 
 OpcodeSCRLC::OpcodeSCRLC(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSCRLC::setParams(const QByteArray &params)
+{
 	memcpy(&unknown, params.constData(), 4);
 }
 
@@ -3114,6 +3501,11 @@ QByteArray OpcodeSCRLC::params() const
 }
 
 OpcodeSCRLA::OpcodeSCRLA(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSCRLA::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	memcpy(&speed, &(params.constData()[1]), 2); // bank 2
@@ -3145,6 +3537,11 @@ void OpcodeSCRLA::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeSCR2D::OpcodeSCR2D(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSCR2D::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	memcpy(&targetX, &(params.constData()[1]), 2); // bank 1
@@ -3184,6 +3581,11 @@ QString OpcodeSCRCC::toString() const
 }
 
 OpcodeSCR2DC::OpcodeSCR2DC(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSCR2DC::setParams(const QByteArray &params)
 {
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
@@ -3230,6 +3632,11 @@ QString OpcodeSCRLW::toString() const
 
 OpcodeSCR2DL::OpcodeSCR2DL(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSCR2DL::setParams(const QByteArray &params)
+{
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
 	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
@@ -3266,6 +3673,11 @@ void OpcodeSCR2DL::getVariables(QList<FF7Var> &vars) const
 
 OpcodeMPDSP::OpcodeMPDSP(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMPDSP::setParams(const QByteArray &params)
+{
 	unknown = params.at(0);
 }
 
@@ -3281,6 +3693,11 @@ QByteArray OpcodeMPDSP::params() const
 }
 
 OpcodeVWOFT::OpcodeVWOFT(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeVWOFT::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	memcpy(&unknown1, &(params.constData()[1]), 2); // bank 1
@@ -3314,6 +3731,11 @@ void OpcodeVWOFT::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeFADE::OpcodeFADE(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeFADE::setParams(const QByteArray &params)
 {
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
@@ -3369,6 +3791,11 @@ QString OpcodeFADEW::toString() const
 
 OpcodeIDLCK::OpcodeIDLCK(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeIDLCK::setParams(const QByteArray &params)
+{
 	memcpy(&triangleID, params.constData(), 2);
 	locked = params.at(2); // boolean
 }
@@ -3388,6 +3815,11 @@ QByteArray OpcodeIDLCK::params() const
 }
 
 OpcodeLSTMP::OpcodeLSTMP(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeLSTMP::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	var = params.at(1);
@@ -3413,6 +3845,11 @@ void OpcodeLSTMP::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeSCRLP::OpcodeSCRLP(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSCRLP::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	memcpy(&speed, &(params.constData()[1]), 2); // bank 2
@@ -3445,6 +3882,11 @@ void OpcodeSCRLP::getVariables(QList<FF7Var> &vars) const
 
 OpcodeBATTLE::OpcodeBATTLE(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeBATTLE::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	memcpy(&battleID, &(params.constData()[1]), 2); // bank 2
 }
@@ -3470,6 +3912,11 @@ void OpcodeBATTLE::getVariables(QList<FF7Var> &vars) const
 
 OpcodeBTLON::OpcodeBTLON(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeBTLON::setParams(const QByteArray &params)
+{
 	disabled = params.at(0);
 }
 
@@ -3486,6 +3933,11 @@ QByteArray OpcodeBTLON::params() const
 
 OpcodeBTLMD::OpcodeBTLMD(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeBTLMD::setParams(const QByteArray &params)
+{
 	memcpy(&unknown, params.constData(), 2);
 }
 
@@ -3501,6 +3953,11 @@ QByteArray OpcodeBTLMD::params() const
 }
 
 OpcodePGTDR::OpcodePGTDR(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodePGTDR::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	partyID = params.at(1);
@@ -3530,6 +3987,11 @@ void OpcodePGTDR::getVariables(QList<FF7Var> &vars) const
 
 OpcodeGETPC::OpcodeGETPC(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeGETPC::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	partyID = params.at(1);
 	varPC = params.at(2); // bank 2
@@ -3557,6 +4019,11 @@ void OpcodeGETPC::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodePXYZI::OpcodePXYZI(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodePXYZI::setParams(const QByteArray &params)
 {
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
@@ -3602,6 +4069,11 @@ void OpcodePXYZI::getVariables(QList<FF7Var> &vars) const
 
 OpcodeOperation::OpcodeOperation(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeOperation::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	var = params.at(1); // bank 1
 	value = params.at(2); // bank 2
@@ -3625,6 +4097,11 @@ void OpcodeOperation::getVariables(QList<FF7Var> &vars) const
 
 OpcodeOperation2::OpcodeOperation2(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeOperation2::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	var = params.at(1);
 	memcpy(&value, &(params.constData()[2]), 2);
@@ -3647,6 +4124,11 @@ void OpcodeOperation2::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeUnaryOperation::OpcodeUnaryOperation(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeUnaryOperation::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	var = params.at(1); // bank 2
@@ -3759,6 +4241,11 @@ QString OpcodeDEC2X::toString() const
 
 OpcodeTLKON::OpcodeTLKON(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeTLKON::setParams(const QByteArray &params)
+{
 	disabled = params.at(0); // boolean
 }
 
@@ -3809,6 +4296,11 @@ QString OpcodeSETWORD::toString() const
 }
 
 OpcodeBitOperation::OpcodeBitOperation(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeBitOperation::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	var = params.at(1); // bank 1
@@ -4140,6 +4632,11 @@ QString OpcodeHBYTE::toString() const
 
 Opcode2BYTE::Opcode2BYTE(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void Opcode2BYTE::setParams(const QByteArray &params)
+{
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
 	var = params.at(2); // bank 1
@@ -4176,6 +4673,11 @@ void Opcode2BYTE::getVariables(QList<FF7Var> &vars) const
 
 OpcodeSETX::OpcodeSETX(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSETX::setParams(const QByteArray &params)
+{
 	memcpy(&unknown, params.constData(), 6);
 }
 
@@ -4190,6 +4692,11 @@ QByteArray OpcodeSETX::params() const
 }
 
 OpcodeGETX::OpcodeGETX(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeGETX::setParams(const QByteArray &params)
 {
 	memcpy(&unknown, params.constData(), 6);
 }
@@ -4206,6 +4713,11 @@ QByteArray OpcodeGETX::params() const
 
 OpcodeSEARCHX::OpcodeSEARCHX(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSEARCHX::setParams(const QByteArray &params)
+{
 	memcpy(&unknown, params.constData(), 10);
 }
 
@@ -4220,6 +4732,11 @@ QByteArray OpcodeSEARCHX::params() const
 }
 
 OpcodePC::OpcodePC(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodePC::setParams(const QByteArray &params)
 {
 	charID = params.at(0);
 }
@@ -4237,6 +4754,11 @@ QByteArray OpcodePC::params() const
 
 OpcodeCHAR::OpcodeCHAR(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeCHAR::setParams(const QByteArray &params)
+{
 	objectID = params.at(0);
 }
 
@@ -4253,6 +4775,11 @@ QByteArray OpcodeCHAR::params() const
 }
 
 OpcodeDFANM::OpcodeDFANM(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeDFANM::setParams(const QByteArray &params)
 {
 	animID = params.at(0);
 	speed = params.at(1);
@@ -4274,6 +4801,11 @@ QByteArray OpcodeDFANM::params() const
 
 OpcodeANIME1::OpcodeANIME1(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeANIME1::setParams(const QByteArray &params)
+{
 	animID = params.at(0);
 	speed = params.at(1);
 }
@@ -4294,6 +4826,11 @@ QByteArray OpcodeANIME1::params() const
 
 OpcodeVISI::OpcodeVISI(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeVISI::setParams(const QByteArray &params)
+{
 	show = params.at(0);
 }
 
@@ -4310,6 +4847,11 @@ QByteArray OpcodeVISI::params() const
 }
 
 OpcodeXYZI::OpcodeXYZI(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeXYZI::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
 	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
@@ -4351,6 +4893,11 @@ void OpcodeXYZI::getVariables(QList<FF7Var> &vars) const
 
 OpcodeXYI::OpcodeXYI(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeXYI::setParams(const QByteArray &params)
+{
 	memcpy(banks, params.constData(), 2);
 	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
 	memcpy(&targetY, &(params.constData()[4]), 2); // bank 2
@@ -4385,6 +4932,11 @@ void OpcodeXYI::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeXYZ::OpcodeXYZ(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeXYZ::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
 	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
@@ -4421,6 +4973,11 @@ void OpcodeXYZ::getVariables(QList<FF7Var> &vars) const
 
 OpcodeMOVE::OpcodeMOVE(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMOVE::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	memcpy(&targetX, &(params.constData()[1]), 2); // bank 1
 	memcpy(&targetY, &(params.constData()[3]), 2); // bank 2
@@ -4450,6 +5007,11 @@ void OpcodeMOVE::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeCMOVE::OpcodeCMOVE(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeCMOVE::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	memcpy(&targetX, &(params.constData()[1]), 2); // bank 1
@@ -4481,6 +5043,11 @@ void OpcodeCMOVE::getVariables(QList<FF7Var> &vars) const
 
 OpcodeMOVA::OpcodeMOVA(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMOVA::setParams(const QByteArray &params)
+{
 	groupID = params.at(0);
 }
 
@@ -4497,6 +5064,11 @@ QByteArray OpcodeMOVA::params() const
 }
 
 OpcodeTURA::OpcodeTURA(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeTURA::setParams(const QByteArray &params)
 {
 	groupID = params.at(0);
 	directionRotation = params.at(1);
@@ -4530,6 +5102,11 @@ QString OpcodeANIMW::toString() const
 
 OpcodeFMOVE::OpcodeFMOVE(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeFMOVE::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	memcpy(&targetX, &(params.constData()[1]), 2);
 	memcpy(&targetY, &(params.constData()[3]), 2);
@@ -4560,6 +5137,11 @@ void OpcodeFMOVE::getVariables(QList<FF7Var> &vars) const
 
 OpcodeANIME2::OpcodeANIME2(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeANIME2::setParams(const QByteArray &params)
+{
 	animID = params.at(0);
 	speed = params.at(1);
 }
@@ -4580,6 +5162,11 @@ QByteArray OpcodeANIME2::params() const
 
 OpcodeANIMX1::OpcodeANIMX1(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeANIMX1::setParams(const QByteArray &params)
+{
 	animID = params.at(0);
 	speed = params.at(1);
 }
@@ -4599,6 +5186,11 @@ QByteArray OpcodeANIMX1::params() const
 }
 
 OpcodeCANIM1::OpcodeCANIM1(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeCANIM1::setParams(const QByteArray &params)
 {
 	animID = params.at(0);
 	firstFrame = params.at(1);
@@ -4626,6 +5218,11 @@ QByteArray OpcodeCANIM1::params() const
 
 OpcodeCANMX1::OpcodeCANMX1(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeCANMX1::setParams(const QByteArray &params)
+{
 	animID = params.at(0);
 	firstFrame = params.at(1);
 	lastFrame = params.at(2);
@@ -4652,6 +5249,11 @@ QByteArray OpcodeCANMX1::params() const
 
 OpcodeMSPED::OpcodeMSPED(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMSPED::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	memcpy(&speed, &(params.constData()[1]), 2); // bank 2
 }
@@ -4677,6 +5279,11 @@ void OpcodeMSPED::getVariables(QList<FF7Var> &vars) const
 
 OpcodeDIR::OpcodeDIR(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeDIR::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	direction = params.at(1); // bank 2
 }
@@ -4701,6 +5308,11 @@ void OpcodeDIR::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeTURNGEN::OpcodeTURNGEN(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeTURNGEN::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	direction = params.at(1); // bank 2
@@ -4736,6 +5348,11 @@ void OpcodeTURNGEN::getVariables(QList<FF7Var> &vars) const
 
 OpcodeTURN::OpcodeTURN(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeTURN::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	direction = params.at(1); // bank 2
 	turnCount = params.at(2);
@@ -4770,6 +5387,11 @@ void OpcodeTURN::getVariables(QList<FF7Var> &vars) const
 
 OpcodeDIRA::OpcodeDIRA(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeDIRA::setParams(const QByteArray &params)
+{
 	groupID = params.at(0);
 }
 
@@ -4786,6 +5408,11 @@ QByteArray OpcodeDIRA::params() const
 }
 
 OpcodeGETDIR::OpcodeGETDIR(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeGETDIR::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	groupID = params.at(1);
@@ -4814,6 +5441,11 @@ void OpcodeGETDIR::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeGETAXY::OpcodeGETAXY(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeGETAXY::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	groupID = params.at(1);
@@ -4848,6 +5480,11 @@ void OpcodeGETAXY::getVariables(QList<FF7Var> &vars) const
 
 OpcodeGETAI::OpcodeGETAI(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeGETAI::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	groupID = params.at(1);
 	varI = params.at(2); // bank 2
@@ -4876,6 +5513,11 @@ void OpcodeGETAI::getVariables(QList<FF7Var> &vars) const
 
 OpcodeANIMX2::OpcodeANIMX2(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeANIMX2::setParams(const QByteArray &params)
+{
 	animID = params.at(0);
 	speed = params.at(1);
 }
@@ -4895,6 +5537,11 @@ QByteArray OpcodeANIMX2::params() const
 }
 
 OpcodeCANIM2::OpcodeCANIM2(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeCANIM2::setParams(const QByteArray &params)
 {
 	animID = params.at(0);
 	firstFrame = params.at(1);
@@ -4922,6 +5569,11 @@ QByteArray OpcodeCANIM2::params() const
 
 OpcodeCANMX2::OpcodeCANMX2(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeCANMX2::setParams(const QByteArray &params)
+{
 	animID = params.at(0);
 	firstFrame = params.at(1);
 	lastFrame = params.at(2);
@@ -4948,6 +5600,11 @@ QByteArray OpcodeCANMX2::params() const
 
 OpcodeASPED::OpcodeASPED(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeASPED::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	memcpy(&speed, &(params.constData()[1]), 2); // bank 2
 }
@@ -4973,6 +5630,11 @@ void OpcodeASPED::getVariables(QList<FF7Var> &vars) const
 
 OpcodeCC::OpcodeCC(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeCC::setParams(const QByteArray &params)
+{
 	groupID = params.at(0);
 }
 
@@ -4989,6 +5651,11 @@ QByteArray OpcodeCC::params() const
 }
 
 OpcodeJUMP::OpcodeJUMP(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeJUMP::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
 	memcpy(&targetX, &(params.constData()[2]), 2);
@@ -5029,6 +5696,11 @@ void OpcodeJUMP::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeAXYZI::OpcodeAXYZI(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeAXYZI::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
 	groupID = params.at(2);
@@ -5072,6 +5744,11 @@ void OpcodeAXYZI::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeLADER::OpcodeLADER(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeLADER::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
 	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
@@ -5125,6 +5802,11 @@ void OpcodeLADER::getVariables(QList<FF7Var> &vars) const
 
 OpcodeOFST::OpcodeOFST(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeOFST::setParams(const QByteArray &params)
+{
 	memcpy(banks, params.constData(), 2);
 	moveType = params.at(2);
 	memcpy(&targetX, &(params.constData()[3]), 2); // bank 1
@@ -5177,6 +5859,11 @@ QString OpcodeOFSTW::toString() const
 
 OpcodeTALKR::OpcodeTALKR(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeTALKR::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	distance = params.at(1); // bank 2
 }
@@ -5201,6 +5888,11 @@ void OpcodeTALKR::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeSLIDR::OpcodeSLIDR(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSLIDR::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	distance = params.at(1); // bank 2
@@ -5227,6 +5919,11 @@ void OpcodeSLIDR::getVariables(QList<FF7Var> &vars) const
 
 OpcodeSOLID::OpcodeSOLID(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSOLID::setParams(const QByteArray &params)
+{
 	disabled = params.at(0);
 }
 
@@ -5242,6 +5939,11 @@ QByteArray OpcodeSOLID::params() const
 }
 
 OpcodePRTYP::OpcodePRTYP(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodePRTYP::setParams(const QByteArray &params)
 {
 	charID = params.at(0);
 }
@@ -5259,6 +5961,11 @@ QByteArray OpcodePRTYP::params() const
 
 OpcodePRTYM::OpcodePRTYM(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodePRTYM::setParams(const QByteArray &params)
+{
 	charID = params.at(0);
 }
 
@@ -5274,6 +5981,11 @@ QByteArray OpcodePRTYM::params() const
 }
 
 OpcodePRTYE::OpcodePRTYE(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodePRTYE::setParams(const QByteArray &params)
 {
 	memcpy(charID, params.constData(), 3);
 }
@@ -5294,6 +6006,11 @@ QByteArray OpcodePRTYE::params() const
 OpcodeIFPRTYQ::OpcodeIFPRTYQ(const QByteArray &params) :
 	OpcodeJump()
 {
+	setParams(params);
+}
+
+void OpcodeIFPRTYQ::setParams(const QByteArray &params)
+{
 	charID = params.at(0);
 	_jump = params.at(1) + 2;
 }
@@ -5302,7 +6019,7 @@ QString OpcodeIFPRTYQ::toString() const
 {
 	return QObject::tr("Si %1 est dans l'équipe actuelle (aller à l'octet %2 sinon)")
 			.arg(_personnage(charID))
-			.arg(_label + _jump);
+			.arg(_pos + _jump);
 }
 
 QByteArray OpcodeIFPRTYQ::params() const
@@ -5315,6 +6032,11 @@ QByteArray OpcodeIFPRTYQ::params() const
 OpcodeIFMEMBQ::OpcodeIFMEMBQ(const QByteArray &params) :
 	OpcodeJump()
 {
+	setParams(params);
+}
+
+void OpcodeIFMEMBQ::setParams(const QByteArray &params)
+{
 	charID = params.at(0);
 	_jump = params.at(1) + 2;
 }
@@ -5323,7 +6045,7 @@ QString OpcodeIFMEMBQ::toString() const
 {
 	return QObject::tr("Si %1 existe (aller à l'octet %2 sinon)")
 			.arg(_personnage(charID))
-			.arg(_label + _jump);
+			.arg(_pos + _jump);
 }
 
 QByteArray OpcodeIFMEMBQ::params() const
@@ -5334,6 +6056,11 @@ QByteArray OpcodeIFMEMBQ::params() const
 }
 
 OpcodeMMBUD::OpcodeMMBUD(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeMMBUD::setParams(const QByteArray &params)
 {
 	exists = params.at(0); // boolean
 	charID = params.at(1);
@@ -5355,6 +6082,11 @@ QByteArray OpcodeMMBUD::params() const
 
 OpcodeMMBLK::OpcodeMMBLK(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMMBLK::setParams(const QByteArray &params)
+{
 	charID = params.at(0);
 }
 
@@ -5371,6 +6103,11 @@ QByteArray OpcodeMMBLK::params() const
 
 OpcodeMMBUK::OpcodeMMBUK(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMMBUK::setParams(const QByteArray &params)
+{
 	charID = params.at(0);
 }
 
@@ -5386,6 +6123,11 @@ QByteArray OpcodeMMBUK::params() const
 }
 
 OpcodeLINE::OpcodeLINE(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeLINE::setParams(const QByteArray &params)
 {
 	memcpy(&targetX1, params.constData(), 2);
 	memcpy(&targetY1, &(params.constData()[2]), 2);
@@ -5419,6 +6161,11 @@ QByteArray OpcodeLINE::params() const
 
 OpcodeLINON::OpcodeLINON(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeLINON::setParams(const QByteArray &params)
+{
 	enabled = params.at(0);
 }
 
@@ -5435,6 +6182,11 @@ QByteArray OpcodeLINON::params() const
 
 OpcodeMPJPO::OpcodeMPJPO(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMPJPO::setParams(const QByteArray &params)
+{
 	prevent = params.at(0);
 }
 
@@ -5450,6 +6202,11 @@ QByteArray OpcodeMPJPO::params() const
 }
 
 OpcodeSLINE::OpcodeSLINE(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSLINE::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 3);
 	memcpy(&targetX1, &(params.constData()[3]), 2); // bank 1
@@ -5501,6 +6258,11 @@ void OpcodeSLINE::getVariables(QList<FF7Var> &vars) const
 
 OpcodeSIN::OpcodeSIN(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSIN::setParams(const QByteArray &params)
+{
 	memcpy(banks, params.constData(), 2);
 	memcpy(&value1, &(params.constData()[2]), 2); // bank 1
 	memcpy(&value2, &(params.constData()[4]), 2); // bank 2
@@ -5540,6 +6302,11 @@ void OpcodeSIN::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeCOS::OpcodeCOS(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeCOS::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
 	memcpy(&value1, &(params.constData()[2]), 2); // bank 1
@@ -5581,6 +6348,11 @@ void OpcodeCOS::getVariables(QList<FF7Var> &vars) const
 
 OpcodeTLKR2::OpcodeTLKR2(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeTLKR2::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	memcpy(&distance, &(params.constData()[1]), 2); // bank 2
 }
@@ -5605,6 +6377,11 @@ void OpcodeTLKR2::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeSLDR2::OpcodeSLDR2(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSLDR2::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	memcpy(&distance, &(params.constData()[1]), 2); // bank 2
@@ -5631,6 +6408,11 @@ void OpcodeSLDR2::getVariables(QList<FF7Var> &vars) const
 
 OpcodePMJMP::OpcodePMJMP(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodePMJMP::setParams(const QByteArray &params)
+{
 	memcpy(&fieldID, params.constData(), 2);
 }
 
@@ -5656,6 +6438,11 @@ QString OpcodePMJMP2::toString() const
 
 OpcodeAKAO2::OpcodeAKAO2(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeAKAO2::setParams(const QByteArray &params)
+{
 	memcpy(unknown, params.constData(), 14);
 }
 
@@ -5670,6 +6457,11 @@ QByteArray OpcodeAKAO2::params() const
 }
 
 OpcodeFCFIX::OpcodeFCFIX(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeFCFIX::setParams(const QByteArray &params)
 {
 	disabled = params.at(0);
 }
@@ -5686,6 +6478,11 @@ QByteArray OpcodeFCFIX::params() const
 }
 
 OpcodeCCANM::OpcodeCCANM(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeCCANM::setParams(const QByteArray &params)
 {
 	animID = params.at(0);
 	speed = params.at(1);
@@ -5730,6 +6527,11 @@ QString OpcodeTURNW::toString() const
 
 OpcodeMPPAL::OpcodeMPPAL(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMPPAL::setParams(const QByteArray &params)
+{
 	memcpy(unknown, params.constData(), 10);
 }
 
@@ -5744,6 +6546,11 @@ QByteArray OpcodeMPPAL::params() const
 }
 
 OpcodeBGON::OpcodeBGON(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeBGON::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	paramID = params.at(1); // bank 1
@@ -5775,6 +6582,11 @@ void OpcodeBGON::getVariables(QList<FF7Var> &vars) const
 
 OpcodeBGOFF::OpcodeBGOFF(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeBGOFF::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	paramID = params.at(1); // bank 1
 	stateID = params.at(2); // bank 2
@@ -5805,6 +6617,11 @@ void OpcodeBGOFF::getVariables(QList<FF7Var> &vars) const
 
 OpcodeBGROL::OpcodeBGROL(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeBGROL::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	paramID = params.at(1); // bank 2
 }
@@ -5829,6 +6646,11 @@ void OpcodeBGROL::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeBGROL2::OpcodeBGROL2(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeBGROL2::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	paramID = params.at(1); // bank 2
@@ -5855,6 +6677,11 @@ void OpcodeBGROL2::getVariables(QList<FF7Var> &vars) const
 
 OpcodeBGCLR::OpcodeBGCLR(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeBGCLR::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	paramID = params.at(1); // bank 2
 }
@@ -5880,6 +6707,11 @@ void OpcodeBGCLR::getVariables(QList<FF7Var> &vars) const
 
 OpcodeSTPAL::OpcodeSTPAL(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSTPAL::setParams(const QByteArray &params)
+{
 	memcpy(unknown, params.constData(), 4);
 }
 
@@ -5894,6 +6726,11 @@ QByteArray OpcodeSTPAL::params() const
 }
 
 OpcodeLDPAL::OpcodeLDPAL(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeLDPAL::setParams(const QByteArray &params)
 {
 	memcpy(unknown, params.constData(), 4);
 }
@@ -5910,6 +6747,11 @@ QByteArray OpcodeLDPAL::params() const
 
 OpcodeCPPAL::OpcodeCPPAL(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeCPPAL::setParams(const QByteArray &params)
+{
 	memcpy(unknown, params.constData(), 4);
 }
 
@@ -5924,6 +6766,11 @@ QByteArray OpcodeCPPAL::params() const
 }
 
 OpcodeRTPAL::OpcodeRTPAL(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeRTPAL::setParams(const QByteArray &params)
 {
 	memcpy(unknown, params.constData(), 6);
 }
@@ -5940,6 +6787,11 @@ QByteArray OpcodeRTPAL::params() const
 
 OpcodeADPAL::OpcodeADPAL(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeADPAL::setParams(const QByteArray &params)
+{
 	memcpy(unknown, params.constData(), 9);
 }
 
@@ -5954,6 +6806,11 @@ QByteArray OpcodeADPAL::params() const
 }
 
 OpcodeMPPAL2::OpcodeMPPAL2(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeMPPAL2::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 3);
 	memcpy(unknown1, &(params.constData()[3]), 2);
@@ -5994,6 +6851,11 @@ void OpcodeMPPAL2::getVariables(QList<FF7Var> &vars) const
 
 OpcodeSTPLS::OpcodeSTPLS(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeSTPLS::setParams(const QByteArray &params)
+{
 	memcpy(unknown, params.constData(), 4);
 }
 
@@ -6008,6 +6870,11 @@ QByteArray OpcodeSTPLS::params() const
 }
 
 OpcodeLDPLS::OpcodeLDPLS(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeLDPLS::setParams(const QByteArray &params)
 {
 	memcpy(unknown, params.constData(), 4);
 }
@@ -6024,6 +6891,11 @@ QByteArray OpcodeLDPLS::params() const
 
 OpcodeCPPAL2::OpcodeCPPAL2(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeCPPAL2::setParams(const QByteArray &params)
+{
 	memcpy(unknown, params.constData(), 7);
 }
 
@@ -6038,6 +6910,11 @@ QByteArray OpcodeCPPAL2::params() const
 }
 
 OpcodeRTPAL2::OpcodeRTPAL2(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeRTPAL2::setParams(const QByteArray &params)
 {
 	memcpy(unknown, params.constData(), 7);
 }
@@ -6054,6 +6931,11 @@ QByteArray OpcodeRTPAL2::params() const
 
 OpcodeADPAL2::OpcodeADPAL2(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeADPAL2::setParams(const QByteArray &params)
+{
 	memcpy(unknown, params.constData(), 10);
 }
 
@@ -6068,6 +6950,11 @@ QByteArray OpcodeADPAL2::params() const
 }
 
 OpcodeMUSIC::OpcodeMUSIC(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeMUSIC::setParams(const QByteArray &params)
 {
 	musicID = params.at(0);
 }
@@ -6084,6 +6971,11 @@ QByteArray OpcodeMUSIC::params() const
 }
 
 OpcodeSOUND::OpcodeSOUND(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeSOUND::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	memcpy(&soundID, &(params.constData()[1]), 2); // bank 1
@@ -6115,6 +7007,11 @@ void OpcodeSOUND::getVariables(QList<FF7Var> &vars) const
 
 OpcodeAKAO::OpcodeAKAO(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeAKAO::setParams(const QByteArray &params)
+{
 	memcpy(unknown, params.constData(), 13);
 }
 
@@ -6129,6 +7026,11 @@ QByteArray OpcodeAKAO::params() const
 }
 
 OpcodeMUSVT::OpcodeMUSVT(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeMUSVT::setParams(const QByteArray &params)
 {
 	musicID = params.at(0);
 }
@@ -6146,6 +7048,11 @@ QByteArray OpcodeMUSVT::params() const
 
 OpcodeMUSVM::OpcodeMUSVM(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMUSVM::setParams(const QByteArray &params)
+{
 	musicID = params.at(0);
 }
 
@@ -6161,6 +7068,11 @@ QByteArray OpcodeMUSVM::params() const
 }
 
 OpcodeMULCK::OpcodeMULCK(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeMULCK::setParams(const QByteArray &params)
 {
 	locked = params.at(0);
 }
@@ -6178,6 +7090,11 @@ QByteArray OpcodeMULCK::params() const
 
 OpcodeBMUSC::OpcodeBMUSC(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeBMUSC::setParams(const QByteArray &params)
+{
 	musicID = params.at(0);
 }
 
@@ -6194,6 +7111,11 @@ QByteArray OpcodeBMUSC::params() const
 
 OpcodeCHMPH::OpcodeCHMPH(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeCHMPH::setParams(const QByteArray &params)
+{
 	memcpy(unknown, params.constData(), 3);
 }
 
@@ -6208,6 +7130,11 @@ QByteArray OpcodeCHMPH::params() const
 }
 
 OpcodePMVIE::OpcodePMVIE(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodePMVIE::setParams(const QByteArray &params)
 {
 	movieID = params.at(0);
 }
@@ -6234,6 +7161,11 @@ QString OpcodeMOVIE::toString() const
 
 OpcodeMVIEF::OpcodeMVIEF(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMVIEF::setParams(const QByteArray &params)
+{
 	banks = params.at(0);
 	varCurMovieFrame = params.at(1);
 }
@@ -6259,6 +7191,11 @@ void OpcodeMVIEF::getVariables(QList<FF7Var> &vars) const
 
 OpcodeMVCAM::OpcodeMVCAM(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeMVCAM::setParams(const QByteArray &params)
+{
 	movieCamID = params.at(0);
 }
 
@@ -6274,6 +7211,11 @@ QByteArray OpcodeMVCAM::params() const
 }
 
 OpcodeFMUSC::OpcodeFMUSC(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeFMUSC::setParams(const QByteArray &params)
 {
 	unknown = params.at(0);
 }
@@ -6291,6 +7233,11 @@ QByteArray OpcodeFMUSC::params() const
 
 OpcodeCMUSC::OpcodeCMUSC(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeCMUSC::setParams(const QByteArray &params)
+{
 	memcpy(unknown, params.constData(), 5);
 }
 
@@ -6305,6 +7252,11 @@ QByteArray OpcodeCMUSC::params() const
 }
 
 OpcodeCHMST::OpcodeCHMST(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeCHMST::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	var = params.at(1); // bank 2

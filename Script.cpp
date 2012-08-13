@@ -972,6 +972,7 @@ void Script::lecture(QTreeWidget *zoneScript)
 		} */
 		QPixmap wordPixmap(26,11);
 		item->setIcon(0, QIcon(posNumber(pos, fontPixmap, wordPixmap)));
+		item->setToolTip(0, Opcode::name[curCommande->id()]);
 		if((clef>=0x14 && clef<=0x19) || (clef>=0x30 && clef<=0x32) || clef==0xcb || clef==0xcc)
 		{
 			item->setForeground(0, QColor(0x00,0x66,0xcc));

@@ -54,13 +54,14 @@ public:
 
 	virtual quint8 id() const=0;
 	virtual QString toString() const=0;
+	virtual void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 
 	quint8 size() const;
 	QByteArray toByteArray() const;
-	quint16 getIndent() const;
-	quint16 getPos() const;
-	void setPos(quint16 pos);
+	virtual quint16 getIndent() const;
+	int subParam(int cur, int paramSize) const;
+	virtual void setPos(quint16 pos);
 
 	bool isVoid() const;
 
@@ -88,8 +89,6 @@ public:
 	static QString _personnage(quint8 persoID);
 
 protected:
-	quint16 pos;
-
 	static QString _script(quint8 param);
 	static QString _text(quint8 textID);
 	static QString _item(quint16 itemID, quint8 bank);
@@ -113,6 +112,7 @@ public:
 	explicit OpcodeUnknown(quint8 id, const QByteArray &params=QByteArray());
 	virtual quint8 id() const;
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 _id;
 	QByteArray unknown;
@@ -128,6 +128,7 @@ public:
 class OpcodeExec : public Commande {
 public:
 	explicit OpcodeExec(const QByteArray &params);
+	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 groupID;
 	quint8 scriptID;
@@ -158,6 +159,7 @@ public:
 class OpcodeExecChar : public Commande {
 public:
 	explicit OpcodeExecChar(const QByteArray &params);
+	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 partyID;
 	quint8 scriptID;
@@ -190,6 +192,7 @@ public:
 	explicit OpcodeRETTO(const QByteArray &params);
 	quint8 id() const { return 0x07; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 scriptID;
 	quint8 priority;
@@ -200,6 +203,7 @@ public:
 	explicit OpcodeJOIN(const QByteArray &params);
 	quint8 id() const { return 0x08; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 speed;
 };
@@ -209,6 +213,7 @@ public:
 	explicit OpcodeSPLIT(const QByteArray &params);
 	quint8 id() const { return 0x09; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[3];
@@ -220,6 +225,7 @@ public:
 class OpcodePartyE : public Commande {
 public:
 	explicit OpcodePartyE(const QByteArray &params);
+	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -245,6 +251,7 @@ public:
 	explicit OpcodeDSKCG(const QByteArray &params);
 	quint8 id() const { return 0x0E; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 diskID;
 };
@@ -254,6 +261,7 @@ public:
 	explicit OpcodeSPECIALARROW(const QByteArray &params);
 	quint8 id() const { return 0xF5; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 hide;
 };
@@ -263,6 +271,7 @@ public:
 	explicit OpcodeSPECIALPNAME(const QByteArray &params);
 	quint8 id() const { return 0xF6; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown;
 };
@@ -272,6 +281,7 @@ public:
 	explicit OpcodeSPECIALGMSPD(const QByteArray &params);
 	quint8 id() const { return 0xF7; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 speed;
 };
@@ -281,6 +291,7 @@ public:
 	explicit OpcodeSPECIALSMSPD(const QByteArray &params);
 	quint8 id() const { return 0xF8; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown, speed;
 };
@@ -304,6 +315,7 @@ public:
 	explicit OpcodeSPECIALBTLCK(const QByteArray &params);
 	quint8 id() const { return 0xFB; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 lock;
 };
@@ -313,6 +325,7 @@ public:
 	explicit OpcodeSPECIALMVLCK(const QByteArray &params);
 	quint8 id() const { return 0xFC; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 lock;
 };
@@ -322,6 +335,7 @@ public:
 	explicit OpcodeSPECIALSPCNM(const QByteArray &params);
 	quint8 id() const { return 0xFD; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getTextID() const;
 	virtual void setTextID(quint8 textID);
@@ -348,6 +362,7 @@ public:
 	virtual ~OpcodeSPECIAL();
 	quint8 id() const { return 0x0F; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getTextID() const;
 	virtual void setTextID(quint8 textID);
@@ -357,10 +372,12 @@ public:
 class OpcodeJump : public Commande {
 public:
 	explicit OpcodeJump();
-	void setLabel(quint32 label);
+	quint16 pos() const;
+	void setPos(quint16 pos);
 	quint16 jump() const;
 	void setJump(quint16 jump);
-	quint32 _label;
+	quint16 getIndent() const;
+	quint32 _pos;
 	qint32 _jump;
 };
 
@@ -369,6 +386,7 @@ public:
 	explicit OpcodeJMPF(const QByteArray &params);
 	quint8 id() const { return 0x10; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 };
 
@@ -377,6 +395,7 @@ public:
 	explicit OpcodeJMPFL(const QByteArray &params);
 	quint8 id() const { return 0x11; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 };
 
@@ -385,6 +404,7 @@ public:
 	explicit OpcodeJMPB(const QByteArray &params);
 	quint8 id() const { return 0x12; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 };
 
@@ -393,6 +413,7 @@ public:
 	explicit OpcodeJMPBL(const QByteArray &params);
 	quint8 id() const { return 0x13; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 };
 
@@ -410,6 +431,7 @@ public:
 	explicit OpcodeIFUB(const QByteArray &params);
 	quint8 id() const { return 0x14; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 };
 
@@ -418,6 +440,7 @@ public:
 	explicit OpcodeIFUBL(const QByteArray &params);
 	quint8 id() const { return 0x15; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 };
 
@@ -426,6 +449,7 @@ public:
 	explicit OpcodeIFSW(const QByteArray &params);
 	quint8 id() const { return 0x16; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 };
 
@@ -434,6 +458,7 @@ public:
 	explicit OpcodeIFSWL(const QByteArray &params);
 	quint8 id() const { return 0x17; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 };
 
@@ -442,6 +467,7 @@ public:
 	explicit OpcodeIFUW(const QByteArray &params);
 	quint8 id() const { return 0x18; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 };
 
@@ -450,6 +476,7 @@ public:
 	explicit OpcodeIFUWL(const QByteArray &params);
 	quint8 id() const { return 0x19; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 };
 
@@ -458,6 +485,7 @@ public:
 	explicit OpcodeMINIGAME(const QByteArray &params);
 	quint8 id() const { return 0x20; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint16 fieldID;
 	qint16 targetX;
@@ -472,6 +500,7 @@ public:
 	explicit OpcodeTUTOR(const QByteArray &params);
 	quint8 id() const { return 0x21; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getTutoID() const;
 	virtual void setTutoID(quint8 tutoID);
@@ -483,6 +512,7 @@ public:
 	explicit OpcodeBTMD2(const QByteArray &params);
 	quint8 id() const { return 0x22; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint32 battleMode;
 };
@@ -492,6 +522,7 @@ public:
 	explicit OpcodeBTRLD(const QByteArray &params);
 	quint8 id() const { return 0x23; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -503,6 +534,7 @@ public:
 	explicit OpcodeWAIT(const QByteArray &params);
 	quint8 id() const { return 0x24; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint16 frameCount;
 };
@@ -512,6 +544,7 @@ public:
 	explicit OpcodeNFADE(const QByteArray &params);
 	quint8 id() const { return 0x25; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -524,6 +557,7 @@ public:
 	explicit OpcodeBLINK(const QByteArray &params);
 	quint8 id() const { return 0x26; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 closed;
 };
@@ -533,6 +567,7 @@ public:
 	explicit OpcodeBGMOVIE(const QByteArray &params);
 	quint8 id() const { return 0x27; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 disabled;
 };
@@ -549,6 +584,7 @@ public:
 	explicit OpcodeKAWAITRNSP(const QByteArray &params);
 	quint8 id() const { return 0x01; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 enableTransparency;
 	QByteArray data;
@@ -595,6 +631,7 @@ public:
 	virtual ~OpcodeKAWAI();
 	quint8 id() const { return 0x28; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	Commande *opcode;
 };
@@ -611,6 +648,7 @@ public:
 	explicit OpcodePMOVA(const QByteArray &params);
 	quint8 id() const { return 0x2A; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 partyID;
 };
@@ -620,6 +658,7 @@ public:
 	explicit OpcodeSLIP(const QByteArray &params);
 	quint8 id() const { return 0x2B; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 off;
 };
@@ -629,6 +668,7 @@ public:
 	explicit OpcodeBGPDH(const QByteArray &params);
 	quint8 id() const { return 0x2C; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -641,6 +681,7 @@ public:
 	explicit OpcodeBGSCR(const QByteArray &params);
 	quint8 id() const { return 0x2D; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -653,6 +694,7 @@ public:
 	explicit OpcodeWCLS(const QByteArray &params);
 	quint8 id() const { return 0x2E; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -664,6 +706,7 @@ public:
 	explicit OpcodeWSIZW(const QByteArray &params);
 	quint8 id() const { return 0x2F; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -677,6 +720,7 @@ public:
 class OpcodeIfKey : public OpcodeJump {
 public:
 	explicit OpcodeIfKey(const QByteArray &params);
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	QString keyString() const;
 	quint16 keys;
@@ -708,6 +752,7 @@ public:
 	explicit OpcodeUC(const QByteArray &params);
 	quint8 id() const { return 0x33; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 disabled;
 };
@@ -717,6 +762,7 @@ public:
 	explicit OpcodePDIRA(const QByteArray &params);
 	quint8 id() const { return 0x34; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 partyID;
 };
@@ -726,6 +772,7 @@ public:
 	explicit OpcodePTURA(const QByteArray &params);
 	quint8 id() const { return 0x35; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 partyID;
 	quint8 speed;
@@ -737,6 +784,7 @@ public:
 	explicit OpcodeWSPCL(const QByteArray &params);
 	quint8 id() const { return 0x36; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -750,6 +798,7 @@ public:
 	explicit OpcodeWNUMB(const QByteArray &params);
 	quint8 id() const { return 0x37; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -765,6 +814,7 @@ public:
 	explicit OpcodeSTTIM(const QByteArray &params);
 	quint8 id() const { return 0x38; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -774,6 +824,7 @@ public:
 class OpcodeGOLD : public Commande {
 public:
 	explicit OpcodeGOLD(const QByteArray &params);
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -799,6 +850,7 @@ public:
 	explicit OpcodeCHGLD(const QByteArray &params);
 	quint8 id() const { return 0x3B; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -838,6 +890,7 @@ public:
 	explicit OpcodeMESSAGE(const QByteArray &params);
 	quint8 id() const { return 0x40; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getTextID() const;
 	virtual void setTextID(quint8 textID);
@@ -851,6 +904,7 @@ public:
 	explicit OpcodeMPARA(const QByteArray &params);
 	quint8 id() const { return 0x41; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -863,6 +917,7 @@ public:
 	explicit OpcodeMPRA2(const QByteArray &params);
 	quint8 id() const { return 0x42; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -876,6 +931,7 @@ public:
 	explicit OpcodeMPNAM(const QByteArray &params);
 	quint8 id() const { return 0x43; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getTextID() const;
 	virtual void setTextID(quint8 textID);
@@ -885,6 +941,7 @@ public:
 class OpcodeMP : public Commande {
 public:
 	explicit OpcodeMP(const QByteArray &params);
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, partyID;
@@ -910,6 +967,7 @@ public:
 	explicit OpcodeASK(const QByteArray &params);
 	quint8 id() const { return 0x48; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getTextID() const;
 	virtual void setTextID(quint8 textID);
@@ -925,6 +983,7 @@ public:
 	quint8 id() const { return 0x49; }
 	QString menu(const QString &param) const;
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, menuID, param;
@@ -935,6 +994,7 @@ public:
 	explicit OpcodeMENU2(const QByteArray &params);
 	quint8 id() const { return 0x4A; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 disabled;
 };
@@ -944,6 +1004,7 @@ public:
 	explicit OpcodeBTLTB(const QByteArray &params);
 	quint8 id() const { return 0x4B; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 battleTableID;
 };
@@ -951,6 +1012,7 @@ public:
 class OpcodeHP : public Commande {
 public:
 	explicit OpcodeHP(const QByteArray &params);
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, partyID;
@@ -976,6 +1038,7 @@ public:
 	explicit OpcodeWINDOW(const QByteArray &params);
 	quint8 id() const { return 0x50; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -991,6 +1054,7 @@ public:
 	explicit OpcodeWMOVE(const QByteArray &params);
 	quint8 id() const { return 0x51; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -1005,6 +1069,7 @@ public:
 	explicit OpcodeWMODE(const QByteArray &params);
 	quint8 id() const { return 0x52; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -1017,6 +1082,7 @@ public:
 	explicit OpcodeWREST(const QByteArray &params);
 	quint8 id() const { return 0x53; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -1028,6 +1094,7 @@ public:
 	explicit OpcodeWCLSE(const QByteArray &params);
 	quint8 id() const { return 0x54; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -1039,6 +1106,7 @@ public:
 	explicit OpcodeWROW(const QByteArray &params);
 	quint8 id() const { return 0x55; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual int getWindowID() const;
 	virtual void setWindowID(quint8 windowID);
@@ -1050,6 +1118,7 @@ public:
 	explicit OpcodeGWCOL(const QByteArray &params);
 	quint8 id() const { return 0x56; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], corner, varR, varG, varB;
@@ -1060,6 +1129,7 @@ public:
 	explicit OpcodeSWCOL(const QByteArray &params);
 	quint8 id() const { return 0x57; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], corner, r, g, b;
@@ -1070,6 +1140,7 @@ public:
 	explicit OpcodeSTITM(const QByteArray &params);
 	quint8 id() const { return 0x58; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1082,6 +1153,7 @@ public:
 	explicit OpcodeDLITM(const QByteArray &params);
 	quint8 id() const { return 0x59; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1094,6 +1166,7 @@ public:
 	explicit OpcodeCKITM(const QByteArray &params);
 	quint8 id() const { return 0x5A; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1106,6 +1179,7 @@ public:
 	explicit OpcodeSMTRA(const QByteArray &params);
 	quint8 id() const { return 0x5B; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -1118,6 +1192,7 @@ public:
 	explicit OpcodeDMTRA(const QByteArray &params);
 	quint8 id() const { return 0x5C; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -1131,6 +1206,7 @@ public:
 	explicit OpcodeCMTRA(const QByteArray &params);
 	quint8 id() const { return 0x5D; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[3];
@@ -1144,6 +1220,7 @@ public:
 	explicit OpcodeSHAKE(const QByteArray &params);
 	quint8 id() const { return 0x5E; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown1, unknown2, shakeCount, unknown3, unknown4;
 	quint8 amplitude, speed;
@@ -1161,6 +1238,7 @@ public:
 	explicit OpcodeMAPJUMP(const QByteArray &params);
 	quint8 id() const { return 0x60; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint16 fieldID;
 	qint16 targetX, targetY;
@@ -1173,6 +1251,7 @@ public:
 	explicit OpcodeSCRLO(const QByteArray &params);
 	quint8 id() const { return 0x61; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown;
 };
@@ -1182,6 +1261,7 @@ public:
 	explicit OpcodeSCRLC(const QByteArray &params);
 	quint8 id() const { return 0x62; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint32 unknown;
 };
@@ -1191,6 +1271,7 @@ public:
 	explicit OpcodeSCRLA(const QByteArray &params);
 	quint8 id() const { return 0x63; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1203,6 +1284,7 @@ public:
 	explicit OpcodeSCR2D(const QByteArray &params);
 	quint8 id() const { return 0x64; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1221,6 +1303,7 @@ public:
 	explicit OpcodeSCR2DC(const QByteArray &params);
 	quint8 id() const { return 0x66; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -1240,6 +1323,7 @@ public:
 	explicit OpcodeSCR2DL(const QByteArray &params);
 	quint8 id() const { return 0x68; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -1252,6 +1336,7 @@ public:
 	explicit OpcodeMPDSP(const QByteArray &params);
 	quint8 id() const { return 0x69; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown;
 };
@@ -1261,6 +1346,7 @@ public:
 	explicit OpcodeVWOFT(const QByteArray &params);
 	quint8 id() const { return 0x6A; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1273,6 +1359,7 @@ public:
 	explicit OpcodeFADE(const QByteArray &params);
 	quint8 id() const { return 0x6B; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -1291,6 +1378,7 @@ public:
 	explicit OpcodeIDLCK(const QByteArray &params);
 	quint8 id() const { return 0x6D; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint16 triangleID;
 	quint8 locked;
@@ -1301,6 +1389,7 @@ public:
 	explicit OpcodeLSTMP(const QByteArray &params);
 	quint8 id() const { return 0x6E; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var;
@@ -1311,6 +1400,7 @@ public:
 	explicit OpcodeSCRLP(const QByteArray &params);
 	quint8 id() const { return 0x6F; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1323,6 +1413,7 @@ public:
 	explicit OpcodeBATTLE(const QByteArray &params);
 	quint8 id() const { return 0x70; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1334,6 +1425,7 @@ public:
 	explicit OpcodeBTLON(const QByteArray &params);
 	quint8 id() const { return 0x71; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 disabled;
 };
@@ -1343,6 +1435,7 @@ public:
 	explicit OpcodeBTLMD(const QByteArray &params);
 	quint8 id() const { return 0x72; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint16 unknown;
 };
@@ -1352,6 +1445,7 @@ public:
 	explicit OpcodePGTDR(const QByteArray &params);
 	quint8 id() const { return 0x73; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, partyID, varDir;
@@ -1362,6 +1456,7 @@ public:
 	explicit OpcodeGETPC(const QByteArray &params);
 	quint8 id() const { return 0x74; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, partyID, varPC;
@@ -1372,6 +1467,7 @@ public:
 	explicit OpcodePXYZI(const QByteArray &params);
 	quint8 id() const { return 0x75; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], partyID, varX, varY, varZ, varI;
@@ -1380,6 +1476,7 @@ public:
 class OpcodeOperation : public Commande {
 public:
 	explicit OpcodeOperation(const QByteArray &params);
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var, value;
@@ -1388,6 +1485,7 @@ public:
 class OpcodeOperation2 : public Commande {
 public:
 	explicit OpcodeOperation2(const QByteArray &params);
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var;
@@ -1397,6 +1495,7 @@ public:
 class OpcodeUnaryOperation : public Commande {
 public:
 	explicit OpcodeUnaryOperation(const QByteArray &params);
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var;
@@ -1463,6 +1562,7 @@ public:
 	explicit OpcodeTLKON(const QByteArray &params);
 	quint8 id() const { return 0x7E; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 disabled;
 };
@@ -1491,6 +1591,7 @@ public:
 class OpcodeBitOperation : public Commande {
 public:
 	explicit OpcodeBitOperation(const QByteArray &params);
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var, position;
@@ -1683,6 +1784,7 @@ public:
 	explicit Opcode2BYTE(const QByteArray &params);
 	quint8 id() const { return 0x9C; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], var, value1, value2;
@@ -1693,6 +1795,7 @@ public:
 	explicit OpcodeSETX(const QByteArray &params);
 	quint8 id() const { return 0x9D; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[6];
 };
@@ -1702,6 +1805,7 @@ public:
 	explicit OpcodeGETX(const QByteArray &params);
 	quint8 id() const { return 0x9E; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[6];
 };
@@ -1711,6 +1815,7 @@ public:
 	explicit OpcodeSEARCHX(const QByteArray &params);
 	quint8 id() const { return 0x9F; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[10];
 };
@@ -1720,6 +1825,7 @@ public:
 	explicit OpcodePC(const QByteArray &params);
 	quint8 id() const { return 0xA0; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 charID;
 };
@@ -1729,6 +1835,7 @@ public:
 	explicit OpcodeCHAR(const QByteArray &params);
 	quint8 id() const { return 0xA1; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 objectID;
 };
@@ -1738,6 +1845,7 @@ public:
 	explicit OpcodeDFANM(const QByteArray &params);
 	quint8 id() const { return 0xA2; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 animID, speed;
 };
@@ -1747,6 +1855,7 @@ public:
 	explicit OpcodeANIME1(const QByteArray &params);
 	quint8 id() const { return 0xA3; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 animID, speed;
 };
@@ -1756,6 +1865,7 @@ public:
 	explicit OpcodeVISI(const QByteArray &params);
 	quint8 id() const { return 0xA4; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 show;
 };
@@ -1765,6 +1875,7 @@ public:
 	explicit OpcodeXYZI(const QByteArray &params);
 	quint8 id() const { return 0xA5; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -1777,6 +1888,7 @@ public:
 	explicit OpcodeXYI(const QByteArray &params);
 	quint8 id() const { return 0xA6; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -1789,6 +1901,7 @@ public:
 	explicit OpcodeXYZ(const QByteArray &params);
 	quint8 id() const { return 0xA7; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -1800,6 +1913,7 @@ public:
 	explicit OpcodeMOVE(const QByteArray &params);
 	quint8 id() const { return 0xA8; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1811,6 +1925,7 @@ public:
 	explicit OpcodeCMOVE(const QByteArray &params);
 	quint8 id() const { return 0xA9; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1822,6 +1937,7 @@ public:
 	explicit OpcodeMOVA(const QByteArray &params);
 	quint8 id() const { return 0xAA; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 groupID;
 };
@@ -1831,6 +1947,7 @@ public:
 	explicit OpcodeTURA(const QByteArray &params);
 	quint8 id() const { return 0xAB; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 groupID, directionRotation, speed;
 };
@@ -1847,6 +1964,7 @@ public:
 	explicit OpcodeFMOVE(const QByteArray &params);
 	quint8 id() const { return 0xAD; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1858,6 +1976,7 @@ public:
 	explicit OpcodeANIME2(const QByteArray &params);
 	quint8 id() const { return 0xAE; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 animID, speed;
 };
@@ -1867,6 +1986,7 @@ public:
 	explicit OpcodeANIMX1(const QByteArray &params);
 	quint8 id() const { return 0xAF; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 animID, speed;
 };
@@ -1876,6 +1996,7 @@ public:
 	explicit OpcodeCANIM1(const QByteArray &params);
 	quint8 id() const { return 0xB0; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 animID, firstFrame, lastFrame, speed;
 };
@@ -1885,6 +2006,7 @@ public:
 	explicit OpcodeCANMX1(const QByteArray &params);
 	quint8 id() const { return 0xB1; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 animID, firstFrame, lastFrame, speed;
 };
@@ -1894,6 +2016,7 @@ public:
 	explicit OpcodeMSPED(const QByteArray &params);
 	quint8 id() const { return 0xB2; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -1905,6 +2028,7 @@ public:
 	explicit OpcodeDIR(const QByteArray &params);
 	quint8 id() const { return 0xB3; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, direction;
@@ -1915,6 +2039,7 @@ public:
 	explicit OpcodeTURNGEN(const QByteArray &params);
 	quint8 id() const { return 0xB4; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, direction, turnCount, speed, unknown;
@@ -1925,6 +2050,7 @@ public:
 	explicit OpcodeTURN(const QByteArray &params);
 	quint8 id() const { return 0xB5; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, direction, turnCount, speed, unknown;
@@ -1935,6 +2061,7 @@ public:
 	explicit OpcodeDIRA(const QByteArray &params);
 	quint8 id() const { return 0xB6; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 groupID;
 };
@@ -1944,6 +2071,7 @@ public:
 	explicit OpcodeGETDIR(const QByteArray &params);
 	quint8 id() const { return 0xB7; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, groupID, varDir;
@@ -1954,6 +2082,7 @@ public:
 	explicit OpcodeGETAXY(const QByteArray &params);
 	quint8 id() const { return 0xB8; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, groupID, varX, varY;
@@ -1964,6 +2093,7 @@ public:
 	explicit OpcodeGETAI(const QByteArray &params);
 	quint8 id() const { return 0xB9; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, groupID, varI;
@@ -1974,6 +2104,7 @@ public:
 	explicit OpcodeANIMX2(const QByteArray &params);
 	quint8 id() const { return 0xBA; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 animID, speed;
 };
@@ -1983,6 +2114,7 @@ public:
 	explicit OpcodeCANIM2(const QByteArray &params);
 	quint8 id() const { return 0xBB; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 animID, firstFrame, lastFrame, speed;
 };
@@ -1992,6 +2124,7 @@ public:
 	explicit OpcodeCANMX2(const QByteArray &params);
 	quint8 id() const { return 0xBC; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 animID, firstFrame, lastFrame, speed;
 };
@@ -2001,6 +2134,7 @@ public:
 	explicit OpcodeASPED(const QByteArray &params);
 	quint8 id() const { return 0xBD; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -2012,6 +2146,7 @@ public:
 	explicit OpcodeCC(const QByteArray &params);
 	quint8 id() const { return 0xBF; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 groupID;
 };
@@ -2021,6 +2156,7 @@ public:
 	explicit OpcodeJUMP(const QByteArray &params);
 	quint8 id() const { return 0xC0; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -2034,6 +2170,7 @@ public:
 	explicit OpcodeAXYZI(const QByteArray &params);
 	quint8 id() const { return 0xC1; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], groupID, varX, varY, varZ, varI;
@@ -2044,6 +2181,7 @@ public:
 	explicit OpcodeLADER(const QByteArray &params);
 	quint8 id() const { return 0xC2; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -2057,6 +2195,7 @@ public:
 	explicit OpcodeOFST(const QByteArray &params);
 	quint8 id() const { return 0xC3; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], moveType;
@@ -2076,6 +2215,7 @@ public:
 	explicit OpcodeTALKR(const QByteArray &params);
 	quint8 id() const { return 0xC5; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, distance;
@@ -2086,6 +2226,7 @@ public:
 	explicit OpcodeSLIDR(const QByteArray &params);
 	quint8 id() const { return 0xC6; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, distance;
@@ -2096,6 +2237,7 @@ public:
 	explicit OpcodeSOLID(const QByteArray &params);
 	quint8 id() const { return 0xC7; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 disabled;
 };
@@ -2105,6 +2247,7 @@ public:
 	explicit OpcodePRTYP(const QByteArray &params);
 	quint8 id() const { return 0xC8; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 charID;
 };
@@ -2114,6 +2257,7 @@ public:
 	explicit OpcodePRTYM(const QByteArray &params);
 	quint8 id() const { return 0xC9; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 charID;
 };
@@ -2123,6 +2267,7 @@ public:
 	explicit OpcodePRTYE(const QByteArray &params);
 	quint8 id() const { return 0xCA; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 charID[3];
 };
@@ -2132,6 +2277,7 @@ public:
 	explicit OpcodeIFPRTYQ(const QByteArray &params);
 	quint8 id() const { return 0xCB; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 charID;
 };
@@ -2141,6 +2287,7 @@ public:
 	explicit OpcodeIFMEMBQ(const QByteArray &params);
 	quint8 id() const { return 0xCC; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 charID;
 };
@@ -2150,6 +2297,7 @@ public:
 	explicit OpcodeMMBUD(const QByteArray &params);
 	quint8 id() const { return 0xCD; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 exists, charID;
 };
@@ -2159,6 +2307,7 @@ public:
 	explicit OpcodeMMBLK(const QByteArray &params);
 	quint8 id() const { return 0xCE; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 charID;
 };
@@ -2168,6 +2317,7 @@ public:
 	explicit OpcodeMMBUK(const QByteArray &params);
 	quint8 id() const { return 0xCF; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 charID;
 };
@@ -2177,6 +2327,7 @@ public:
 	explicit OpcodeLINE(const QByteArray &params);
 	quint8 id() const { return 0xD0; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	qint16 targetX1, targetY1, targetZ1;
 	qint16 targetX2, targetY2, targetZ2;
@@ -2187,6 +2338,7 @@ public:
 	explicit OpcodeLINON(const QByteArray &params);
 	quint8 id() const { return 0xD1; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 enabled;
 };
@@ -2196,6 +2348,7 @@ public:
 	explicit OpcodeMPJPO(const QByteArray &params);
 	quint8 id() const { return 0xD2; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 prevent;
 };
@@ -2205,6 +2358,7 @@ public:
 	explicit OpcodeSLINE(const QByteArray &params);
 	quint8 id() const { return 0xD3; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[3];
@@ -2217,6 +2371,7 @@ public:
 	explicit OpcodeSIN(const QByteArray &params);
 	quint8 id() const { return 0xD4; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -2229,6 +2384,7 @@ public:
 	explicit OpcodeCOS(const QByteArray &params);
 	quint8 id() const { return 0xD5; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
@@ -2241,6 +2397,7 @@ public:
 	explicit OpcodeTLKR2(const QByteArray &params);
 	quint8 id() const { return 0xD6; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -2252,6 +2409,7 @@ public:
 	explicit OpcodeSLDR2(const QByteArray &params);
 	quint8 id() const { return 0xD7; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -2263,6 +2421,7 @@ public:
 	explicit OpcodePMJMP(const QByteArray &params);
 	quint8 id() const { return 0xD8; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint16 fieldID;
 };
@@ -2279,6 +2438,7 @@ public:
 	explicit OpcodeAKAO2(const QByteArray &params);
 	quint8 id() const { return 0xDA; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[14];
 };
@@ -2288,6 +2448,7 @@ public:
 	explicit OpcodeFCFIX(const QByteArray &params);
 	quint8 id() const { return 0xDB; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 disabled;
 };
@@ -2297,6 +2458,7 @@ public:
 	explicit OpcodeCCANM(const QByteArray &params);
 	quint8 id() const { return 0xDC; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 animID, speed, standWalkRun;
 };
@@ -2320,6 +2482,7 @@ public:
 	explicit OpcodeMPPAL(const QByteArray &params);
 	quint8 id() const { return 0xDF; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[10];
 };
@@ -2329,6 +2492,7 @@ public:
 	explicit OpcodeBGON(const QByteArray &params);
 	quint8 id() const { return 0xE0; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, paramID, stateID;
@@ -2339,6 +2503,7 @@ public:
 	explicit OpcodeBGOFF(const QByteArray &params);
 	quint8 id() const { return 0xE1; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, paramID, stateID;
@@ -2349,6 +2514,7 @@ public:
 	explicit OpcodeBGROL(const QByteArray &params);
 	quint8 id() const { return 0xE2; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, paramID;
@@ -2359,6 +2525,7 @@ public:
 	explicit OpcodeBGROL2(const QByteArray &params);
 	quint8 id() const { return 0xE3; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, paramID;
@@ -2369,6 +2536,7 @@ public:
 	explicit OpcodeBGCLR(const QByteArray &params);
 	quint8 id() const { return 0xE4; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, paramID;
@@ -2379,6 +2547,7 @@ public:
 	explicit OpcodeSTPAL(const QByteArray &params);
 	quint8 id() const { return 0xE5; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[4];
 };
@@ -2388,6 +2557,7 @@ public:
 	explicit OpcodeLDPAL(const QByteArray &params);
 	quint8 id() const { return 0xE6; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[4];
 };
@@ -2397,6 +2567,7 @@ public:
 	explicit OpcodeCPPAL(const QByteArray &params);
 	quint8 id() const { return 0xE7; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[4];
 };
@@ -2406,6 +2577,7 @@ public:
 	explicit OpcodeRTPAL(const QByteArray &params);
 	quint8 id() const { return 0xE8; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[6];
 };
@@ -2415,6 +2587,7 @@ public:
 	explicit OpcodeADPAL(const QByteArray &params);
 	quint8 id() const { return 0xE9; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[9];
 };
@@ -2424,6 +2597,7 @@ public:
 	explicit OpcodeMPPAL2(const QByteArray &params);
 	quint8 id() const { return 0xEA; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[3], unknown1[2], r, g, b, unknown2;
@@ -2434,6 +2608,7 @@ public:
 	explicit OpcodeSTPLS(const QByteArray &params);
 	quint8 id() const { return 0xEB; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[4];
 };
@@ -2443,6 +2618,7 @@ public:
 	explicit OpcodeLDPLS(const QByteArray &params);
 	quint8 id() const { return 0xEC; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[4];
 };
@@ -2452,6 +2628,7 @@ public:
 	explicit OpcodeCPPAL2(const QByteArray &params);
 	quint8 id() const { return 0xED; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[7];
 };
@@ -2461,6 +2638,7 @@ public:
 	explicit OpcodeRTPAL2(const QByteArray &params);
 	quint8 id() const { return 0xEE; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[7];
 };
@@ -2470,6 +2648,7 @@ public:
 	explicit OpcodeADPAL2(const QByteArray &params);
 	quint8 id() const { return 0xEF; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[10];
 };
@@ -2479,6 +2658,7 @@ public:
 	explicit OpcodeMUSIC(const QByteArray &params);
 	quint8 id() const { return 0xF0; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 musicID;
 };
@@ -2488,6 +2668,7 @@ public:
 	explicit OpcodeSOUND(const QByteArray &params);
 	quint8 id() const { return 0xF1; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
@@ -2500,6 +2681,7 @@ public:
 	explicit OpcodeAKAO(const QByteArray &params);
 	quint8 id() const { return 0xF2; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[13];
 };
@@ -2509,6 +2691,7 @@ public:
 	explicit OpcodeMUSVT(const QByteArray &params);
 	quint8 id() const { return 0xF3; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 musicID;
 };
@@ -2518,6 +2701,7 @@ public:
 	explicit OpcodeMUSVM(const QByteArray &params);
 	quint8 id() const { return 0xF4; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 musicID;
 };
@@ -2527,6 +2711,7 @@ public:
 	explicit OpcodeMULCK(const QByteArray &params);
 	quint8 id() const { return 0xF5; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 locked;
 };
@@ -2536,6 +2721,7 @@ public:
 	explicit OpcodeBMUSC(const QByteArray &params);
 	quint8 id() const { return 0xF6; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 musicID;
 };
@@ -2545,6 +2731,7 @@ public:
 	explicit OpcodeCHMPH(const QByteArray &params);
 	quint8 id() const { return 0xF7; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[3];
 };
@@ -2554,6 +2741,7 @@ public:
 	explicit OpcodePMVIE(const QByteArray &params);
 	quint8 id() const { return 0xF8; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 movieID;
 };
@@ -2570,6 +2758,7 @@ public:
 	explicit OpcodeMVIEF(const QByteArray &params);
 	quint8 id() const { return 0xFA; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, varCurMovieFrame;
@@ -2580,6 +2769,7 @@ public:
 	explicit OpcodeMVCAM(const QByteArray &params);
 	quint8 id() const { return 0xFB; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 movieCamID;
 };
@@ -2589,6 +2779,7 @@ public:
 	explicit OpcodeFMUSC(const QByteArray &params);
 	quint8 id() const { return 0xFC; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown;
 };
@@ -2598,6 +2789,7 @@ public:
 	explicit OpcodeCMUSC(const QByteArray &params);
 	quint8 id() const { return 0xFD; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	quint8 unknown[5];
 };
@@ -2607,6 +2799,7 @@ public:
 	explicit OpcodeCHMST(const QByteArray &params);
 	quint8 id() const { return 0xFE; }
 	virtual QString toString() const;
+	void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks, var;
