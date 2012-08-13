@@ -24,7 +24,7 @@ CommandeList::CommandeList(QWidget *parent)
 	setColumnHidden(1,true);
 	setHeaderLabels(QStringList(tr("Action")));
 	setAutoScroll(false);
-	setIconSize(QSize(26,11));
+	setIconSize(QSize(32,11));
 	setAlternatingRowColors(true);
 	header()->setStretchLastSection(false);
 	header()->setResizeMode(0, QHeaderView::ResizeToContents);

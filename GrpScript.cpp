@@ -40,16 +40,39 @@ void GrpScript::addScript()
 	scripts.append(new Script());
 }
 
-void GrpScript::addScript(const QByteArray &script, bool explodeInit)
+bool GrpScript::addScript(const QByteArray &script, bool explodeInit)
 {
+	Script *s;
+
+	qDebug() << name << "script" << scripts.size();
+
 	if(explodeInit && scripts.isEmpty())
 	{
 		quint16 pos = Script::posReturn(script);
-		scripts.append(new Script(script.left(pos)));
-		scripts.append(new Script(script.mid(pos)));
+		s = new Script(script.left(pos));
+		if(!s->isValid()) {
+			delete s;
+			return false;
+		}
+		scripts.append(s);
+
+		s = new Script(script.mid(pos));
+		if(!s->isValid()) {
+			delete s;
+			return false;
+		}
+		scripts.append(s);
 	}
-	else
-		scripts.append(new Script(script));
+	else {
+		s = new Script(script);
+		if(!s->isValid()) {
+			delete s;
+			return false;
+		}
+		scripts.append(s);
+	}
+
+	return true;
 }
 
 /* void GrpScript::replaceScript(int row, QByteArray script)

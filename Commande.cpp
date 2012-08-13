@@ -28,7 +28,12 @@ QByteArray Commande::params() const
 
 quint8 Commande::size() const
 {
-	return params().size() + 1;
+	return Opcode::length[id()];
+}
+
+const QString &Commande::name() const
+{
+	return Opcode::name[id()];
 }
 
 void Commande::setParams(const QByteArray &)
@@ -42,9 +47,14 @@ QByteArray Commande::toByteArray() const
 			.append(params());
 }
 
-quint16 Commande::getIndent() const
+bool Commande::isJump() const
 {
-	return 0;
+	return false;
+}
+
+bool Commande::isLabel() const
+{
+	return false;
 }
 
 int Commande::subParam(int cur, int paramSize) const
@@ -59,10 +69,6 @@ int Commande::subParam(int cur, int paramSize) const
 
 	memcpy(&value, p.mid(cur/8, sizeBA), sizeBA);
 	return (value >> ((sizeBA*8-cur%8)-paramSize)) & ((int)pow(2, paramSize)-1);
-}
-
-void Commande::setPos(quint16)
-{
 }
 
 bool Commande::isVoid() const
@@ -385,6 +391,11 @@ OpcodeUnknown::OpcodeUnknown(quint8 id, const QByteArray &params)
 quint8 OpcodeUnknown::id() const
 {
 	return _id;
+}
+
+quint8 OpcodeUnknown::size() const
+{
+	return unknown.size() + 1;
 }
 
 QString OpcodeUnknown::toString() const
@@ -720,6 +731,11 @@ OpcodeSPECIALARROW::OpcodeSPECIALARROW(const QByteArray &params)
 	setParams(params);
 }
 
+quint8 OpcodeSPECIALARROW::size() const
+{
+	return 2;
+}
+
 void OpcodeSPECIALARROW::setParams(const QByteArray &params)
 {
 	hide = params.at(0);// Boolean
@@ -739,6 +755,11 @@ QByteArray OpcodeSPECIALARROW::params() const
 OpcodeSPECIALPNAME::OpcodeSPECIALPNAME(const QByteArray &params)
 {
 	setParams(params);
+}
+
+quint8 OpcodeSPECIALPNAME::size() const
+{
+	return 2;
 }
 
 void OpcodeSPECIALPNAME::setParams(const QByteArray &params)
@@ -762,6 +783,11 @@ OpcodeSPECIALGMSPD::OpcodeSPECIALGMSPD(const QByteArray &params)
 	setParams(params);
 }
 
+quint8 OpcodeSPECIALGMSPD::size() const
+{
+	return 2;
+}
+
 void OpcodeSPECIALGMSPD::setParams(const QByteArray &params)
 {
 	speed = params.at(0);
@@ -781,6 +807,11 @@ QByteArray OpcodeSPECIALGMSPD::params() const
 OpcodeSPECIALSMSPD::OpcodeSPECIALSMSPD(const QByteArray &params)
 {
 	setParams(params);
+}
+
+quint8 OpcodeSPECIALSMSPD::size() const
+{
+	return 3;
 }
 
 void OpcodeSPECIALSMSPD::setParams(const QByteArray &params)
@@ -807,6 +838,11 @@ OpcodeSPECIALFLMAT::OpcodeSPECIALFLMAT()
 {
 }
 
+quint8 OpcodeSPECIALFLMAT::size() const
+{
+	return 1;
+}
+
 QString OpcodeSPECIALFLMAT::toString() const
 {
 	return QObject::tr("Remplir le menu matéria de toutes les matérias en quantité maximum");
@@ -814,6 +850,11 @@ QString OpcodeSPECIALFLMAT::toString() const
 
 OpcodeSPECIALFLITM::OpcodeSPECIALFLITM()
 {
+}
+
+quint8 OpcodeSPECIALFLITM::size() const
+{
+	return 1;
 }
 
 QString OpcodeSPECIALFLITM::toString() const
@@ -825,6 +866,11 @@ QString OpcodeSPECIALFLITM::toString() const
 OpcodeSPECIALBTLCK::OpcodeSPECIALBTLCK(const QByteArray &params)
 {
 	setParams(params);
+}
+
+quint8 OpcodeSPECIALBTLCK::size() const
+{
+	return 2;
 }
 
 void OpcodeSPECIALBTLCK::setParams(const QByteArray &params)
@@ -848,6 +894,11 @@ OpcodeSPECIALMVLCK::OpcodeSPECIALMVLCK(const QByteArray &params)
 	setParams(params);
 }
 
+quint8 OpcodeSPECIALMVLCK::size() const
+{
+	return 2;
+}
+
 void OpcodeSPECIALMVLCK::setParams(const QByteArray &params)
 {
 	lock = params.at(0); // Boolean
@@ -867,6 +918,11 @@ QByteArray OpcodeSPECIALMVLCK::params() const
 OpcodeSPECIALSPCNM::OpcodeSPECIALSPCNM(const QByteArray &params)
 {
 	setParams(params);
+}
+
+quint8 OpcodeSPECIALSPCNM::size() const
+{
+	return 3;
 }
 
 void OpcodeSPECIALSPCNM::setParams(const QByteArray &params)
@@ -903,6 +959,11 @@ OpcodeSPECIALRSGLB::OpcodeSPECIALRSGLB()
 {
 }
 
+quint8 OpcodeSPECIALRSGLB::size() const
+{
+	return 1;
+}
+
 QString OpcodeSPECIALRSGLB::toString() const
 {
 	return QObject::tr("Met le temps à 0, débloque le menu \"PHS\" et \"Sauvegarder\". Nouvelle équipe : Clad | (Vide) | (Vide)");
@@ -910,6 +971,11 @@ QString OpcodeSPECIALRSGLB::toString() const
 
 OpcodeSPECIALCLITM::OpcodeSPECIALCLITM()
 {
+}
+
+quint8 OpcodeSPECIALCLITM::size() const
+{
+	return 1;
 }
 
 QString OpcodeSPECIALCLITM::toString() const
@@ -926,6 +992,11 @@ OpcodeSPECIAL::OpcodeSPECIAL(const QByteArray &params) :
 OpcodeSPECIAL::~OpcodeSPECIAL()
 {
 	delete opcode;
+}
+
+quint8 OpcodeSPECIAL::size() const
+{
+	return 1 + opcode->size();
 }
 
 QString OpcodeSPECIAL::toString() const
@@ -982,33 +1053,59 @@ void OpcodeSPECIAL::setTextID(quint8 textID)
 }
 
 OpcodeJump::OpcodeJump() :
-	_pos(0), _jump(0)
+	_jump(0), _label(0)
 {
 }
 
-quint16 OpcodeJump::pos() const
-{
-	return _pos;
-}
-
-void OpcodeJump::setPos(quint16 pos)
-{
-	_pos = pos;
-}
-
-quint16 OpcodeJump::jump() const
+qint32 OpcodeJump::jump() const
 {
 	return _jump;
 }
 
-void OpcodeJump::setJump(quint16 jump)
+void OpcodeJump::setJump(qint32 jump)
 {
 	_jump = jump;
 }
 
-quint16 OpcodeJump::getIndent() const
+quint32 OpcodeJump::label() const
 {
-	return pos() + jump();
+	return _label;
+}
+
+void OpcodeJump::setLabel(quint32 label)
+{
+	_label = label;
+}
+
+bool OpcodeJump::isJump() const
+{
+	return true;
+}
+
+OpcodeLabel::OpcodeLabel(quint32 label) :
+	_label(label)
+{
+}
+
+QString OpcodeLabel::toString() const
+{
+	return QObject::tr("Label %1")
+			.arg(_label);
+}
+
+bool OpcodeLabel::isLabel() const
+{
+	return true;
+}
+
+quint16 OpcodeLabel::label() const
+{
+	return _label;
+}
+
+void OpcodeLabel::setLabel(quint16 label)
+{
+	_label = label;
 }
 
 OpcodeJMPF::OpcodeJMPF(const QByteArray &params) :
@@ -1024,8 +1121,8 @@ void OpcodeJMPF::setParams(const QByteArray &params)
 
 QString OpcodeJMPF::toString() const
 {
-	return QObject::tr("Aller à l'octet %1 du script")
-			.arg(_pos+_jump);
+	return QObject::tr("Aller au label %1")
+			.arg(_label);
 }
 
 QByteArray OpcodeJMPF::params() const
@@ -1049,8 +1146,8 @@ void OpcodeJMPFL::setParams(const QByteArray &params)
 
 QString OpcodeJMPFL::toString() const
 {
-	return QObject::tr("Aller à l'octet %1 du script")
-			.arg(_pos+_jump);
+	return QObject::tr("Aller au label %1")
+			.arg(_label);
 }
 
 QByteArray OpcodeJMPFL::params() const
@@ -1072,8 +1169,8 @@ void OpcodeJMPB::setParams(const QByteArray &params)
 
 QString OpcodeJMPB::toString() const
 {
-	return QObject::tr("Aller à l'octet %1 du script")
-			.arg(int(_pos+_jump));
+	return QObject::tr("Aller au label %1")
+			.arg(int(_label));
 }
 
 QByteArray OpcodeJMPB::params() const
@@ -1097,8 +1194,8 @@ void OpcodeJMPBL::setParams(const QByteArray &params)
 
 QString OpcodeJMPBL::toString() const
 {
-	return QObject::tr("Aller à l'octet %1 du script")
-			.arg(_pos+_jump);
+	return QObject::tr("Aller au label %1")
+			.arg(_label);
 }
 
 QByteArray OpcodeJMPBL::params() const
@@ -1132,16 +1229,16 @@ void OpcodeIFUB::setParams(const QByteArray &params)
 	value1 = params.at(1); // bank 1
 	value2 = params.at(2); // bank 2
 	oper = params.at(3);
-	_jump = params.at(4) + 5;
+	_jump = (quint8)params.at(4) + 5;
 }
 
 QString OpcodeIFUB::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_pos + _jump)
+			.arg(_label)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1174,11 +1271,11 @@ void OpcodeIFUBL::setParams(const QByteArray &params)
 
 QString OpcodeIFUBL::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_pos + _jump)
+			.arg(_label)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1208,16 +1305,16 @@ void OpcodeIFSW::setParams(const QByteArray &params)
 	value1 = v1;
 	value2 = v2;
 	oper = params.at(5);
-	_jump = params.at(6) + 7;
+	_jump = (quint8)params.at(6) + 7;
 }
 
 QString OpcodeIFSW::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_pos + _jump)
+			.arg(_label)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1254,11 +1351,11 @@ void OpcodeIFSWL::setParams(const QByteArray &params)
 
 QString OpcodeIFSWL::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_pos + _jump)
+			.arg(_label)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1289,16 +1386,16 @@ void OpcodeIFUW::setParams(const QByteArray &params)
 	value1 = v1;
 	value2 = v2;
 	oper = params.at(5);
-	_jump = params.at(6) + 7;
+	_jump = (quint8)params.at(6) + 7;
 }
 
 QString OpcodeIFUW::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_pos + _jump)
+			.arg(_label)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1335,11 +1432,11 @@ void OpcodeIFUWL::setParams(const QByteArray &params)
 
 QString OpcodeIFUWL::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller à l'octet %4 du script sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_pos + _jump)
+			.arg(_label)
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1630,6 +1727,11 @@ OpcodeKAWAITRNSP::OpcodeKAWAITRNSP(const QByteArray &params)
 	setParams(params);
 }
 
+quint8 OpcodeKAWAITRNSP::size() const
+{
+	return 2 + data.size();
+}
+
 void OpcodeKAWAITRNSP::setParams(const QByteArray &params)
 {
 	enableTransparency = params.at(0);
@@ -1708,6 +1810,11 @@ OpcodeKAWAI::OpcodeKAWAI(const QByteArray &params) :
 OpcodeKAWAI::~OpcodeKAWAI()
 {
 	delete opcode;
+}
+
+quint8 OpcodeKAWAI::size() const
+{
+	return opcode->size() + 2;
 }
 
 QString OpcodeKAWAI::toString() const
@@ -1973,7 +2080,7 @@ OpcodeIfKey::OpcodeIfKey(const QByteArray &params)
 void OpcodeIfKey::setParams(const QByteArray &params)
 {
 	memcpy(&keys, params.constData(), 2);
-	_jump = params.at(2) + 3;
+	_jump = (quint8)params.at(2) + 3;
 }
 
 QByteArray OpcodeIfKey::params() const
@@ -2001,9 +2108,9 @@ OpcodeIFKEY::OpcodeIFKEY(const QByteArray &params) :
 
 QString OpcodeIFKEY::toString() const
 {
-	return QObject::tr("Si appuie sur la touche %1 (aller à l'octet %2 du script sinon)")
+	return QObject::tr("Si appuie sur la touche %1 (aller au label %2 sinon)")
 			.arg(keyString())
-			.arg(_pos + _jump);
+			.arg(_label);
 }
 
 OpcodeIFKEYON::OpcodeIFKEYON(const QByteArray &params) :
@@ -2013,9 +2120,9 @@ OpcodeIFKEYON::OpcodeIFKEYON(const QByteArray &params) :
 
 QString OpcodeIFKEYON::toString() const
 {
-	return QObject::tr("Si appuie sur la touche %1 une fois (aller à l'octet %2 du script sinon)")
+	return QObject::tr("Si appuie sur la touche %1 une fois (aller au label %2 sinon)")
 			.arg(keyString())
-			.arg(_pos + _jump);
+			.arg(_label);
 }
 
 OpcodeIFKEYOFF::OpcodeIFKEYOFF(const QByteArray &params) :
@@ -2025,9 +2132,9 @@ OpcodeIFKEYOFF::OpcodeIFKEYOFF(const QByteArray &params) :
 
 QString OpcodeIFKEYOFF::toString() const
 {
-	return QObject::tr("Si relache la touche %1 pour la première fois (aller à l'octet %2 du script sinon)")
+	return QObject::tr("Si relache la touche %1 pour la première fois (aller au label %2 sinon)")
 			.arg(keyString())
-			.arg(_pos + _jump);
+			.arg(_label);
 }
 
 OpcodeUC::OpcodeUC(const QByteArray &params)
@@ -6012,14 +6119,14 @@ OpcodeIFPRTYQ::OpcodeIFPRTYQ(const QByteArray &params) :
 void OpcodeIFPRTYQ::setParams(const QByteArray &params)
 {
 	charID = params.at(0);
-	_jump = params.at(1) + 2;
+	_jump = (quint8)params.at(1) + 2;
 }
 
 QString OpcodeIFPRTYQ::toString() const
 {
-	return QObject::tr("Si %1 est dans l'équipe actuelle (aller à l'octet %2 sinon)")
+	return QObject::tr("Si %1 est dans l'équipe actuelle (aller au label %2 sinon)")
 			.arg(_personnage(charID))
-			.arg(_pos + _jump);
+			.arg(_label);
 }
 
 QByteArray OpcodeIFPRTYQ::params() const
@@ -6038,14 +6145,14 @@ OpcodeIFMEMBQ::OpcodeIFMEMBQ(const QByteArray &params) :
 void OpcodeIFMEMBQ::setParams(const QByteArray &params)
 {
 	charID = params.at(0);
-	_jump = params.at(1) + 2;
+	_jump = (quint8)params.at(1) + 2;
 }
 
 QString OpcodeIFMEMBQ::toString() const
 {
-	return QObject::tr("Si %1 existe (aller à l'octet %2 sinon)")
+	return QObject::tr("Si %1 existe (aller au label %2 sinon)")
 			.arg(_personnage(charID))
-			.arg(_pos + _jump);
+			.arg(_label);
 }
 
 QByteArray OpcodeIFMEMBQ::params() const

@@ -30,7 +30,7 @@ public:
 	virtual ~GrpScript();
 
 	void addScript();
-	void addScript(const QByteArray &script, bool explodeInit=true);
+	bool addScript(const QByteArray &script, bool explodeInit=true);
 	// void replaceScript(int row, QByteArray script=QByteArray());
 
 	QString getName() const;

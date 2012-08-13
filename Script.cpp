@@ -17,39 +17,14 @@
  ****************************************************************************/
 #include "Script.h"
 
-Script::Script()
+Script::Script() :
+	valid(true)
 {
 }
 
 Script::Script(const QByteArray &script)
 {
-	openScript(script);
-//	quint16 pos = 0, scriptSize = script.size(), longueur;
-//	quint8 opcode;
-//	while(pos < scriptSize)
-//	{
-//		longueur = 0;
-//		switch(opcode = (quint8)script.at(pos))
-//		{
-//		case 0x0F://SPECIAL
-//			switch((quint8)script.at(pos+1))
-//			{
-//			case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
-//				longueur = 1;
-//				break;
-//			case 0xF8:case 0xFD:
-//				longueur = 2;
-//				break;
-//			}
-//			break;
-//		case 0x28://KAWAI
-//			longueur = (quint8)script.at(pos+1);
-//			break;
-//		}
-//		longueur += Opcode::length[opcode];
-//		commandes.append(new Commande(script.mid(pos, longueur), pos));
-//		pos += longueur;
-//	}
+	valid = openScript(script);
 }
 
 Script::~Script()
@@ -57,19 +32,53 @@ Script::~Script()
 	foreach(Commande *commande, commandes)	delete commande;
 }
 
-void Script::openScript(const QByteArray &script)
+bool Script::openScript(const QByteArray &script)
 {
 	int pos = 0, scriptSize = script.size();
 	quint8 opcode;
 	Commande *op;
+	QList<int> positions;
+	QMultiMap<int, OpcodeJump *> indents;
 
+	int commandeID=0;
 	while(pos < scriptSize)
 	{
 		opcode = (quint8)script.at(pos);
 		op = createOpcode(script, pos);
 		commandes.append(op);
+		positions.append(pos);
+		qDebug() << "pos" << pos << "index" << commandeID++;
+		if(op->isJump()) {
+			indents.insert(pos + ((OpcodeJump *)op)->jump(), (OpcodeJump *)op);
+			qDebug() << "\tjump" << (pos + ((OpcodeJump *)op)->jump());
+		}
 		pos += op->size();
 	}
+
+	QList<int> indentsKeys = indents.uniqueKeys();
+
+	qDebug() << "========";
+
+	for(int i=indentsKeys.size()-1 ; i >= 0 ; --i) {
+		int jump = indentsKeys.at(i);
+		int index;
+		if((index = positions.indexOf(jump)) != -1) {
+			commandes.insert(index, new OpcodeLabel(i+1));
+			qDebug() << "Jump" << jump << "index" << index << "label" << (i+1);
+
+			foreach(OpcodeJump *opJump, indents.values(jump)) {
+				qDebug() << "\tsetLabel" << (i+1);
+				opJump->setLabel(i+1);
+			}
+		} else {
+			qDebug() << "Error" << jump << "label" << (i+1);
+//			return false;//TODO
+		}
+	}
+
+	qDebug() << "_______";
+
+	return true;
 }
 
 Commande *Script::createOpcode(const QByteArray &script, int pos)
@@ -408,6 +417,11 @@ bool Script::isEmpty() const
 	return commandes.isEmpty();
 }
 
+bool Script::isValid() const
+{
+	return valid;
+}
+
 Commande *Script::getCommande(quint16 commandeID)
 {
 	// if(commandeID >= commandes.size())	return NULL;
@@ -417,8 +431,9 @@ Commande *Script::getCommande(quint16 commandeID)
 QByteArray Script::toByteArray() const
 {
 	QByteArray ret;
-	foreach(Commande *commande, commandes)
+	foreach(Commande *commande, commandes) {
 		ret.append(commande->toByteArray());
+	}
 	return ret;
 }
 
@@ -923,12 +938,12 @@ void Script::shiftJumpsSwap(Commande *commande, int shift)
 
 void Script::lecture(QTreeWidget *zoneScript)
 {
-	indent.clear();
+	QList<quint16> indent;
 	QList<QTreeWidgetItem *> row;
 	QTreeWidgetItem *parentItem = 0;
 	QString description;
 	quint8 clef;
-	quint16 commandeID = 0, nbCommandes = commandes.size(), pos = 0;
+	quint16 commandeID = 0, nbCommandes = commandes.size();
 	Commande *curCommande;
 	QPixmap fontPixmap(":/images/chiffres.png");
 	bool error = false;
@@ -936,13 +951,16 @@ void Script::lecture(QTreeWidget *zoneScript)
 	while(commandeID < nbCommandes)
 	{
 		curCommande = commandes.at(commandeID);
-		curCommande->setPos(pos);
-		
-		while(!indent.isEmpty() && pos>=indent.last())
-		{
-			if(pos>indent.last())	error = true;
-			indent.removeLast();
-			parentItem = parentItem->parent();
+
+		if(curCommande->isLabel()) {
+			while(!indent.isEmpty() &&
+				  ((OpcodeLabel *)curCommande)->label() >= indent.last())
+			{
+				if(((OpcodeLabel *)curCommande)->label() > indent.last())
+					error = true;
+				indent.removeLast();
+				parentItem = parentItem->parent();
+			}
 		}
 		
 		description = curCommande->toString();
@@ -970,20 +988,20 @@ void Script::lecture(QTreeWidget *zoneScript)
 			description += " " + QObject::tr("Erreur : dépassement") + "";
 			item->setBackground(0, QColor(0xFF,0xCC,0xCC));
 		} */
-		QPixmap wordPixmap(26,11);
-		item->setIcon(0, QIcon(posNumber(pos, fontPixmap, wordPixmap)));
-		item->setToolTip(0, Opcode::name[curCommande->id()]);
+		QPixmap wordPixmap(32,11);
+		item->setIcon(0, QIcon(posNumber(commandeID, fontPixmap, wordPixmap)));
+		item->setToolTip(0, curCommande->name());
 		if((clef>=0x14 && clef<=0x19) || (clef>=0x30 && clef<=0x32) || clef==0xcb || clef==0xcc)
 		{
 			item->setForeground(0, QColor(0x00,0x66,0xcc));
-			indent.append(curCommande->getIndent());
+			indent.append(((OpcodeJump *)curCommande)->label());
 			parentItem = item;
 		}
 		else if(clef>=0x01 && clef<=0x07)
 			item->setForeground(0, QColor(0xcc,0x66,0x00));
 		else if(clef>=0x10 && clef<=0x13)
 			item->setForeground(0, QColor(0x66,0xcc,0x00));
-		else if(clef==0x00 || clef==0x07)
+		else if(clef==0x00 || clef==0x07 || curCommande->isLabel())
 			item->setForeground(0, QColor(0x66,0x66,0x66));
 
 		if(error)
@@ -992,7 +1010,6 @@ void Script::lecture(QTreeWidget *zoneScript)
 			error = false;
 		}
 
-		pos += curCommande->size();
 		++commandeID;
 	}
 
@@ -1014,7 +1031,7 @@ void Script::setExpandedItems(const QList<Commande *> &expandedItems)
 
 QPixmap &Script::posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap)
 {
-	QString strNum = QString("%1").arg(num, 4, 10, QChar(' '));
+	QString strNum = QString("%1").arg(num, 5, 10, QChar(' '));
 	wordPixmap.fill(QColor(0,0,0,0));
 	QPainter painter(&wordPixmap);
 	
@@ -1023,10 +1040,12 @@ QPixmap &Script::posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixm
 	if(strNum.at(1)!=' ')
 		painter.drawTiledPixmap(7, 1, 5, 9, fontPixmap, 5*strNum.mid(1,1).toInt(), 0);
 	if(strNum.at(2)!=' ')
-		painter.drawTiledPixmap(13, 1, 5, 9, fontPixmap, 5*strNum.mid(2,1).toInt(), 0); 
+		painter.drawTiledPixmap(13, 1, 5, 9, fontPixmap, 5*strNum.mid(2,1).toInt(), 0);
 	if(strNum.at(3)!=' ')
 		painter.drawTiledPixmap(19, 1, 5, 9, fontPixmap, 5*strNum.mid(3,1).toInt(), 0);
-	
+	if(strNum.at(4)!=' ')
+		painter.drawTiledPixmap(25, 1, 5, 9, fontPixmap, 5*strNum.mid(4,1).toInt(), 0);
+
 	painter.end();
 	return wordPixmap;
 }

@@ -29,9 +29,10 @@ public:
 	explicit Script(const QByteArray &script);
 	virtual ~Script();
 
-	void openScript(const QByteArray &script);
+	bool openScript(const QByteArray &script);
 	int size() const;
 	bool isEmpty() const;
+	bool isValid() const;
 	Commande *getCommande(quint16 commandeID);
 	bool isVoid() const;
 	QByteArray toByteArray() const;
@@ -70,8 +71,9 @@ private:
 //	int posOfCommand(int commandID) const;
 
 	QList<Commande *> commandes;
-	QList<quint16> indent;
 	QList<Commande *> expandedItems;
+
+	bool valid;
 };
 
 #endif
