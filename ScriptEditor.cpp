@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "ScriptEditor.h"
 
-ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isInit, QWidget *parent)
+ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), isInit(isInit)
 {
 	//Affichage
@@ -48,19 +48,11 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
 	textEdit->setReadOnly(true);
 	textEdit->setFixedHeight(38);
 	
-	model = new QStandardItemModel(this);
-	tableView = new QTableView(this);
-	tableView->setModel(model);
-	tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-	tableView->setSelectionMode(QAbstractItemView::SingleSelection);
-	tableView->horizontalHeader()->setVisible(false);
-	tableView->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::DoubleClicked | QAbstractItemView::SelectedClicked);
-	tableView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+	editorWidget = new ScriptEditorGenericList(script, this);
 	
-	SpinBoxDelegate *delegate = new SpinBoxDelegate(this);
-	tableView->setItemDelegate(delegate);
-	tableView->horizontalHeader()->setStretchLastSection(true);
-	
+//	editorLayout = new QStackedLayout;
+//	editorLayout->addWidget(new ScriptEditorGenericList(script, this));
+//	editorLayout->addWidget(new ScriptEditorGotoPage(script, this));
 /*	nouvelEditeur = new QStackedWidget;
 	nouvelEditeur->setFixedHeight(300);
     nouvelEditeur->addWidget(new GotoPage);
@@ -76,17 +68,11 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
     nouvelEditeur->addWidget(new Op1Page);
 	nouvelEditeur->addWidget(new BgParamStatePage);
 */	
-	addButton = new QPushButton(tr("Ajouter une ligne"),this);
-	addButton->hide();
-	delButton = new QPushButton(tr("Effacer une ligne"),this);
-	delButton->hide();
 	ok = new QPushButton(tr("OK"),this);
 	ok->setDefault(true);
 	cancel = new QPushButton(tr("Annuler"),this);
 	
 	buttonLayout = new QHBoxLayout();
-	buttonLayout->addWidget(addButton);
-	buttonLayout->addWidget(delButton);
 	buttonLayout->addStretch();
 	buttonLayout->addWidget(ok);
 	buttonLayout->addWidget(cancel);
@@ -96,7 +82,8 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
 	layout->addWidget(comboBox);
 	layout->addWidget(textEdit);
 	layout->addWidget(new QLabel(tr("Paramètres :"), this));
-	layout->addWidget(tableView);
+	layout->addWidget(editorWidget);
+//	layout->addLayout(editorLayout);
 	//layout->addWidget(nouvelEditeur);
 	layout->addStretch();
 	layout->addLayout(buttonLayout);
@@ -110,17 +97,23 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
 	
 	if(modify)
 	{
-		this->commandeID = commandeID;
-		this->commande = Script::createOpcode(script->getCommande(commandeID)->toByteArray());
+		this->opcodeID = opcodeID;
+		Opcode *com = script->getOpcode(opcodeID);
+		if(com->isLabel()) {
+			this->opcode = new OpcodeLabel(((OpcodeLabel *)com)->label());
+		} else {
+			this->opcode = Script::createOpcode(com->toByteArray());
+		}
+
 		int index, i;
 		for(i=0 ; i<comboBox0->count() ; ++i)
 		{
 			buildList(i);
-			index = commande->id();
+			index = opcode->id();
 			if(index == 0x0F)
-				index = (((OpcodeSPECIAL *)commande)->opcode->id() << 8) | index;
+				index = (((OpcodeSPECIAL *)opcode)->opcode->id() << 8) | index;
 			else if(index == 0x28)
-				index = (((OpcodeKAWAI *)commande)->opcode->id() << 8) | index;
+				index = (((OpcodeKAWAI *)opcode)->opcode->id() << 8) | index;
 			if((index = comboBox->findData(index)) != -1)
 			{
 				comboBox0->setCurrentIndex(i);
@@ -133,18 +126,18 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
 			setEnabled(false);
 			return;
 		}
-		textEdit->setPlainText(commande->toString());
-		fillModel(commande->id());
+		textEdit->setPlainText(opcode->toString());
+		editorWidget->setOpcode(opcode);
 		
 		connect(ok, SIGNAL(released()), SLOT(modify()));
 	}
 	else
 	{
-		this->commandeID = commandeID < 0 ? script->size() : commandeID + 1;
-		this->commande = new OpcodeRET();
+		this->opcodeID = opcodeID < 0 ? script->size() : opcodeID + 1;
+		this->opcode = new OpcodeRET();
 		comboBox->setCurrentIndex(0);
 		changeCurrentOpcode(0);
-		fillModel(0);
+		editorWidget->setOpcode(opcode);
 
 		connect(ok, SIGNAL(released()), SLOT(add()));
 	}
@@ -154,10 +147,8 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
 			<< 0xB4 << 0xB5 << 0xBA << 0xBB << 0xBC << 0xC0 << 0xC2;
 
 	connect(comboBox0, SIGNAL(currentIndexChanged(int)), SLOT(buildList(int)));
-	connect(model, SIGNAL(itemChanged(QStandardItem *)), SLOT(refreshTextEdit()));
+	connect(editorWidget, SIGNAL(opcodeChanged()), SLOT(refreshTextEdit()));
 	connect(comboBox, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
-	connect(addButton, SIGNAL(released()), SLOT(addParam()));
-	connect(delButton, SIGNAL(released()), SLOT(delLastRow()));
 	/* for(int i=0 ; i<256 ; i++) {
 
 		QList<int> paramTypes = this->paramTypes(i);
@@ -176,11 +167,13 @@ ScriptEditor::ScriptEditor(Script *script, int commandeID, bool modify, bool isI
 
 ScriptEditor::~ScriptEditor()
 {
-	delete commande;
+	delete opcode;
 }
 
-QByteArray ScriptEditor::parseModel()
+/*QByteArray ScriptEditor::parseModel(bool *isLabel)
 {
+	*isLabel = false;
+
 	/* quint8 opcode = comboBox->itemData(comboBox->currentIndex()).toInt();
 
 	if(opcode>=0x10 && opcode<=0x13)
@@ -242,24 +235,27 @@ QByteArray ScriptEditor::parseModel()
 	{
 		nouvelEditeur->setCurrentIndex(11);
 		return ((BgParamStatePage *)nouvelEditeur->currentWidget())->save();
-	}*/
+	}
 
-	QByteArray nouvelleCommande;
+	QByteArray newOpcode;
 	quint8 byte, length, start;
 	int itemData;
 	
 	itemData = comboBox->itemData(comboBox->currentIndex()).toInt();
+	if(itemData == 0x100) {
+		*isLabel = true;
+	}
 	byte = itemData & 0xFF;
 	// qDebug() << "byte= " << byte;
-	nouvelleCommande.append((char)byte);
-	//Calcul longueur commande
+	newOpcode.append((char)byte);
+	//Calcul longueur opcode
 	length = 0;
 	start = 1;
 	
 	if(byte == 0x0F)//SPECIAL
 	{
 		quint8 byte2 = (itemData >> 8) & 0xFF;
-		nouvelleCommande.append((char)byte2);
+		newOpcode.append((char)byte2);
 		switch(byte2)
 		{
 		case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
@@ -277,20 +273,20 @@ QByteArray ScriptEditor::parseModel()
 		// qDebug() << "byte3= " << byte3;
 		length = model->rowCount()+3;
 		// qDebug() << "length = " << length;
-		nouvelleCommande.append((char)length);
-		nouvelleCommande.append((char)byte3);
-		// qDebug() << "nouvelleCommande= " << nouvelleCommande.toHex();
+		newOpcode.append((char)length);
+		newOpcode.append((char)byte3);
+		// qDebug() << "newOpcode= " << newOpcode.toHex();
 		for(quint8 i=0 ; i<length-3 ; ++i)
-			nouvelleCommande.append(model->item(i, 1)->text().toUInt());
-		// qDebug() << "nouvelleCommande= " << nouvelleCommande.toHex();
-		return nouvelleCommande;
+			newOpcode.append(model->item(i, 1)->text().toUInt());
+		// qDebug() << "newOpcode= " << newOpcode.toHex();
+		return newOpcode;
 	}
 	
 	// qDebug() << "byte= " << byte;
 	length += Opcode::length[byte];
 	// qDebug() << "length= " << length;
-	nouvelleCommande.append(QByteArray(length-start, '\x0'));
-	// qDebug() << "nouvelleCommande= " << nouvelleCommande.toHex();
+	newOpcode.append(QByteArray(length-start, '\x0'));
+	// qDebug() << "newOpcode= " << newOpcode.toHex();
 	int paramSize, paramType, cur = 8, departBA, tailleBA, departLocal;
 	QList<int> paramTypes = this->paramTypes(byte);
 	int value;
@@ -324,23 +320,23 @@ QByteArray ScriptEditor::parseModel()
 			{
 				departLocal = cur%8;
 				// qDebug() << "departLocal= " << departLocal;
-				nouvelleCommande[departBA] = (char)((quint8)nouvelleCommande.at(departBA) | (value << (8-paramSize-departLocal)));
-				// qDebug() << "nouvelleCommande[" << departBA << "]=" << QString("%1").arg((quint8)nouvelleCommande[departBA],8,2,QChar('0'));
+				newOpcode[departBA] = (char)((quint8)newOpcode.at(departBA) | (value << (8-paramSize-departLocal)));
+				// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
 			}
 			else if(paramSize == 8)
 			{
-				nouvelleCommande[departBA] = (char)(value & 0xFF);
-				// qDebug() << "nouvelleCommande[" << departBA << "]=" << QString("%1").arg((quint8)nouvelleCommande[departBA],8,2,QChar('0'));
+				newOpcode[departBA] = (char)(value & 0xFF);
+				// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
 			}
 			else
 			{
 				for(int j=0 ; j<tailleBA ; j++)
 				{
-					nouvelleCommande[departBA+j] = (char)((value>>(j*8)) & 0xFF);
-					// qDebug() << "nouvelleCommande[" << departBA << "]=" << QString("%1").arg((quint8)nouvelleCommande[departBA],8,2,QChar('0'));
+					newOpcode[departBA+j] = (char)((value>>(j*8)) & 0xFF);
+					// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
 				}
 			}
-			// qDebug() << "nouvelleCommande= " << nouvelleCommande.toHex();
+			// qDebug() << "newOpcode= " << newOpcode.toHex();
 			
 			cur += paramSize;
 			// qDebug() << "cur= " << cur;
@@ -349,11 +345,11 @@ QByteArray ScriptEditor::parseModel()
 	else
 	{
 		for(quint8 i=start ; i<length ; ++i)
-			nouvelleCommande[i] = model->item(i-start, 1)->text().toUInt();
+			newOpcode[i] = model->item(i-start, 1)->text().toUInt();
 	}
 	
-	return nouvelleCommande;
-}
+	return newOpcode;
+}*/
 
 void ScriptEditor::modify()
 {
@@ -361,9 +357,7 @@ void ScriptEditor::modify()
 		close();
 		return;
 	} */
-	QByteArray nouvelleCommande = parseModel();
-	if(nouvelleCommande.isEmpty())	return;
-	script->setCommande(this->commandeID, Script::createOpcode(nouvelleCommande));
+	script->setOpcode(this->opcodeID, editorWidget->opcode());
 	accept();
 }
 
@@ -373,9 +367,7 @@ void ScriptEditor::add()
 		close();
 		return;
 	} */
-	QByteArray nouvelleCommande = parseModel();
-	if(nouvelleCommande.isEmpty())	return;
-	script->insertCommande(this->commandeID, Script::createOpcode(nouvelleCommande));
+	script->insertOpcode(this->opcodeID, editorWidget->opcode());
 	accept();
 }
 
@@ -383,49 +375,10 @@ void ScriptEditor::refreshTextEdit()
 {
 	this->change = true;
 
-	QByteArray nouvelleCommande = parseModel();
-	if(commande->id() == (int)nouvelleCommande.at(0)) {
-		commande->setParams(nouvelleCommande.mid(1));
-	} else {
-		delete commande;
-		commande = Script::createOpcode(nouvelleCommande); // change all
-	}
-	textEdit->setPlainText(commande->toString());
+	textEdit->setPlainText(editorWidget->opcode()->toString());
 }
 
-void ScriptEditor::addParam()
-{
-	if(model->rowCount()<252)
-	{
-		addRow(0, 0, 255, inconnu);
-		refreshTextEdit();
-	}
-}
-
-void ScriptEditor::delLastRow()
-{
-	QList<QStandardItem *> items = model->takeRow(model->rowCount()-1);
-	foreach(QStandardItem *item, items)	delete item;
-	refreshTextEdit();
-}
-
-void ScriptEditor::addRow(int value, int minValue, int maxValue, int type)
-{
-	QList<QStandardItem *> items;
-	QStandardItem *standardItem;
-	standardItem = new QStandardItem(paramName(type));
-	standardItem->setEditable(false);
-	items << standardItem;
-	
-	standardItem = new QStandardItem(QString("%1").arg(value));
-	standardItem->setData(minValue, Qt::UserRole);
-	standardItem->setData(maxValue, Qt::UserRole+1);
-	standardItem->setData(type, Qt::UserRole+2);
-	items << standardItem;
-	model->appendRow(items);
-}
-
-void ScriptEditor::fillModel(int opcode)
+/*void ScriptEditor::fillModel(int id)
 {
 	addButton->hide();
 	delButton->hide();
@@ -436,94 +389,94 @@ void ScriptEditor::fillModel(int opcode)
 	if(opcode>=0x10 && opcode<=0x13)
 	{
 		nouvelEditeur->setCurrentIndex(0);
-		((GotoPage *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((GotoPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	else if(opcode==0x00 || opcode==0x07)
 	{
 		nouvelEditeur->setCurrentIndex(1);
-		((ReturnPage *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((ReturnPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	else if(opcode>=0x01 && opcode<=0x03)
 	{
 		nouvelEditeur->setCurrentIndex(2);
-		((ExecPage *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((ExecPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	else if(opcode>=0x04 && opcode<=0x06)
 	{
 		nouvelEditeur->setCurrentIndex(3);
-		((ExecCharPage *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((ExecCharPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	else if(opcode>=0x14 && opcode<=0x19)
 	{
 		nouvelEditeur->setCurrentIndex(4);
-		((IfPage *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((IfPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	else if(opcode>=0x30 && opcode<=0x32)
 	{
 		nouvelEditeur->setCurrentIndex(5);
-		((IfKeyPage *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((IfKeyPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	else if(opcode==0xCB || opcode==0xCC)
 	{
 		nouvelEditeur->setCurrentIndex(6);
-		((IfCharPage *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((IfCharPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	else if(opcode==0x24)
 	{
 		nouvelEditeur->setCurrentIndex(7);
-		((WaitPage *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((WaitPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	else if(opcode==0x5F)
 	{
 		nouvelEditeur->setCurrentIndex(8);
-		((NopPage *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((NopPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	else if((opcode>=0x76 && opcode<=0x79) || opcode==0x80 || opcode==0x81 || (opcode>=0x85 && opcode<=0x94))
 	{
 		nouvelEditeur->setCurrentIndex(9);
-		((OpPage *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((OpPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	else if((opcode>=0x7A && opcode<=0x7D) || (opcode>=0x95 && opcode<=0x98))
 	{
 		nouvelEditeur->setCurrentIndex(10);
-		((Op1Page *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((Op1Page *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	else if(opcode==0xE0 || opcode==0xE1)
 	{
 		nouvelEditeur->setCurrentIndex(11);
-		((BgParamStatePage *)nouvelEditeur->currentWidget())->fill(opcode, commande->getParams());
+		((BgParamStatePage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
 		return;
 	}
 	
 	tableView->show();
-	nouvelEditeur->hide();*/
+	nouvelEditeur->hide();
 	
 	int paramSize, paramType, cur = 0, maxValue, minValue, value=0;
-	QList<int> paramTypes = this->paramTypes(opcode);
+	QList<int> paramTypes = this->paramTypes(id);
 	
 	if(paramTypes.isEmpty())
 	{
 		int start = 0;
-		if(opcode == 0x0F)//SPECIAL
+		if(id == 0x0F)//SPECIAL
 			start = 1;
-		if(opcode == 0x28)//KAWAI
+		if(id == 0x28)//KAWAI
 		{
 			start = 2;
 			addButton->show();
 			delButton->show();
 		}
-		const QByteArray params = commande->params();
+		const QByteArray params = opcode->params();
 		for(int i=start ; i<params.size() ; ++i)
 			addRow((quint8)params.at(i), 0, 255, inconnu);
 	}
@@ -533,7 +486,7 @@ void ScriptEditor::fillModel(int opcode)
 		{
 			paramType = paramTypes.at(i);
 			paramSize = this->paramSize(paramType);
-			value = commande->subParam(cur, paramSize);
+			value = opcode->subParam(cur, paramSize);
 			// qDebug() << value;
 			if(paramIsSigned(paramType)) {
 				maxValue = (int)pow(2, paramSize-1)-1;
@@ -550,65 +503,70 @@ void ScriptEditor::fillModel(int opcode)
 			cur += paramSize;
 		}
 	}
-}
+}*/
 
 void ScriptEditor::changeCurrentOpcode(int index)
 {
 	this->change = true;
-	QByteArray nouvelleCommande;
+	QByteArray newOpcode;
 	int itemData = comboBox->itemData(index).toInt();
-	const quint8 opcode = itemData & 0xFF;
-	nouvelleCommande.append((char)opcode);
+	const quint8 id = itemData & 0xFF;
+	bool isLabel = itemData == 0x100;
+	newOpcode.append((char)id);
 	
-	if(opcode == 0x28)//KAWAI
+	if(id == 0x28)//KAWAI
 	{
-		nouvelleCommande.append('\x03');
-		nouvelleCommande.append((char)((itemData >> 8) & 0xFF));
+		newOpcode.append('\x03');
+		newOpcode.append((char)((itemData >> 8) & 0xFF));
 	}
-	else if(opcode == 0x0F)//SPECIAL
+	else if(id == 0x0F)//SPECIAL
 	{
 		quint8 byte2 = (itemData >> 8) & 0xFF;
-		nouvelleCommande.append((char)byte2);
+		newOpcode.append((char)byte2);
 		switch(byte2)
 		{
 		case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
-					nouvelleCommande.append('\x00');
+					newOpcode.append('\x00');
 			break;
 		case 0xF8:case 0xFD:
-					nouvelleCommande.append('\x00');
-			nouvelleCommande.append('\x00');
+					newOpcode.append('\x00');
+			newOpcode.append('\x00');
 			break;
 		}
 	}
-	else
+	else if(!isLabel)
 	{
-		for(quint8 pos=1 ; pos<Opcode::length[opcode] ; ++pos)
-			nouvelleCommande.append('\x00');
+		for(quint8 pos=1 ; pos<Opcode::length[id] ; ++pos)
+			newOpcode.append('\x00');
 	}
-	if(opcode == commande->id()) {
-		commande->setParams(nouvelleCommande.mid(1)); // same opcode, just change params
+
+	if(isLabel) {
+		if(itemData == opcode->id()) {
+			((OpcodeLabel *)opcode)->setLabel(0);
+		} else {
+			opcode = new OpcodeLabel(0);
+		}
 	} else {
-		delete commande;
-		commande = Script::createOpcode(nouvelleCommande); // change all
+		if(id == opcode->id()) {
+			opcode->setParams(newOpcode.mid(1)); // same opcode, just change params
+		} else { // change all
+			delete opcode;
+			opcode = Script::createOpcode(newOpcode);
+		}
 	}
 	
-	fillModel(opcode);
-	
-	textEdit->setPlainText(commande->toString());
-	if(isInit && crashIfInit.contains(opcode))
+	editorWidget->setOpcode(opcode);
+	textEdit->setPlainText(opcode->toString());
+	if(isInit && crashIfInit.contains(id))
 	{
 		textEdit->setDisabled(true);
-		tableView->setDisabled(true);
-		addButton->setDisabled(true);
-		delButton->setDisabled(true);
+		editorWidget->setDisabled(true);
 		ok->setDisabled(true);
 	}
 	else
 	{
 		textEdit->setEnabled(true);
-		tableView->setEnabled(true);
-		addButton->setEnabled(true);
-		delButton->setEnabled(true);
+		editorWidget->setEnabled(true);
 		ok->setEnabled(true);
 	}
 }
@@ -630,6 +588,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Exécuter un script d'un équipier"), 0x05);
 		comboBox->addItem(tr("Exécuter un script d'un équipier"), 0x06);
 		comboBox->insertSeparator(comboBox->count());
+		comboBox->addItem(tr("Label"), 0x100);
 		comboBox->addItem(tr("Saut court en avant"), 0x10);
 		comboBox->addItem(tr("Saut long en avant"), 0x11);
 		comboBox->addItem(tr("Saut court en arrière"), 0x12);
@@ -934,386 +893,4 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("SEARCHX"), 0x9F);
 		return;
 	}
-}
-
-QList<int> ScriptEditor::paramTypes(int id)
-{
-	QList<int> paramTypes;
-	switch(id)
-	{
-	//case 0x00:return paramTypes;
-	case 0x01:case 0x02:case 0x03:
-		paramTypes<<group_id<<priorite<<script_id;return paramTypes;
-	case 0x04:case 0x05:case 0x06:
-		paramTypes<<party_id<<priorite<<script_id;return paramTypes;
-	case 0x07:
-		paramTypes<<priorite<<script_id;return paramTypes;
-	case 0x08:
-		paramTypes<<vitesse;return paramTypes;
-	case 0x09:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<direction<<coord_x<<coord_y<<direction<<vitesse;return paramTypes;
-	case 0x0A:case 0x0B:
-		paramTypes<<bank<<bank<<bank<<bank<<party_id<<party_id<<party_id;return paramTypes;
-	//case 0x0C:case 0x0D:return paramTypes;
-	case 0x0E:
-		paramTypes<<cd_id;return paramTypes;
-	//case 0x0F:return;//SPECIAL
-	case 0x10:case 0x12:
-		paramTypes<<jump;return paramTypes;
-	case 0x11:case 0x13:
-		paramTypes<<jump_l;return paramTypes;
-	case 0x14:
-		paramTypes<<bank<<bank<<byte<<byte<<operateur<<jump;return paramTypes;
-	case 0x15:
-		paramTypes<<bank<<bank<<byte<<byte<<operateur<<jump_l;return paramTypes;
-	case 0x16:
-		paramTypes<<bank<<bank<<sword<<sword<<operateur<<jump;return paramTypes;
-	case 0x17:
-		paramTypes<<bank<<bank<<sword<<sword<<operateur<<jump_l;return paramTypes;
-	case 0x18:
-		paramTypes<<bank<<bank<<word<<word<<operateur<<jump;return paramTypes;
-	case 0x19:
-		paramTypes<<bank<<bank<<word<<word<<operateur<<jump_l;return paramTypes;
-	//case 0x1A:case 0x1B:case 0x1C:case 0x1D:case 0x1E:case 0x1F:return paramTypes;
-	case 0x20:
-		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<byte<<minijeu_id;return paramTypes;
-	case 0x21:
-		paramTypes<<tuto_id;return paramTypes;
-	case 0x22:
-		paramTypes<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit;return paramTypes;
-	case 0x23:
-		paramTypes<<bank<<bank<<byte;return paramTypes;
-	case 0x24:
-		paramTypes<<word;return paramTypes;
-	case 0x25://TODO
-		paramTypes<<inconnu<<inconnu<<inconnu<<color<<inconnu<<inconnu;return paramTypes;
-	case 0x26:
-		paramTypes<<boolean;return paramTypes;
-	case 0x27:
-		paramTypes<<boolean;return paramTypes;
-	//case 0x28://KAWAI
-	//case 0x29:return paramTypes;
-	case 0x2A:
-		paramTypes<<party_id;return paramTypes;
-	case 0x2B:
-		paramTypes<<boolean;return paramTypes;
-	case 0x2C:
-		paramTypes<<bank<<bank<<layer_id<<coord_z;return paramTypes;
-	case 0x2D:
-		paramTypes<<bank<<bank<<layer_id<<sword<<sword;return paramTypes;
-	case 0x2E:
-		paramTypes<<window_id;return paramTypes;
-	case 0x2F:
-		paramTypes<<window_id<<coord_x<<coord_y<<window_w<<window_h;return paramTypes;
-	case 0x30:case 0x31:case 0x32:
-		paramTypes<<keys<<jump;return paramTypes;
-	case 0x33:
-		paramTypes<<boolean;return paramTypes;
-	case 0x34:
-		paramTypes<<party_id;return paramTypes;
-	case 0x35:
-		paramTypes<<party_id<<vitesse<<rotation;return paramTypes;
-	case 0x36:
-		paramTypes<<window_id<<window_num<<byte<<byte;return paramTypes;
-	case 0x37:
-		paramTypes<<bank<<bank<<window_id<<word<<word<<byte;return paramTypes;
-	case 0x38:
-		paramTypes<<bank<<bank<<bank<<bank<<byte<<byte<<byte;return paramTypes;
-	case 0x39:case 0x3A:
-		paramTypes<<bank<<bank<<word<<word;return paramTypes;
-	case 0x3B:
-		paramTypes<<bank<<bank<<adress<<adress;return paramTypes;
-	//case 0x3C:case 0x3D:case 0x3E:case 0x3F:return paramTypes;
-	case 0x40:
-		paramTypes<<window_id<<text_id;return paramTypes;
-	case 0x41:
-		paramTypes<<bank<<bank<<window_id<<window_var<<byte;return paramTypes;
-	case 0x42:
-		paramTypes<<bank<<bank<<window_id<<window_var<<word;return paramTypes;
-	case 0x43:
-		paramTypes<<text_id;return paramTypes;
-	//case 0x44:case 0x46:return paramTypes;
-	case 0x45:case 0x47:
-		paramTypes<<bank<<bank<<party_id<<word;return paramTypes;
-	case 0x48:
-		paramTypes<<bank<<bank<<window_id<<text_id<<byte<<byte<<adress;return paramTypes;
-	case 0x49:
-		paramTypes<<bank<<bank<<menu<<byte;return paramTypes;
-	case 0x4A:
-		paramTypes<<boolean;return paramTypes;
-	case 0x4B:
-		paramTypes<<byte;return paramTypes;
-	//case 0x4C:case 0x4E:return paramTypes;
-	case 0x4D:case 0x4F:
-		paramTypes<<bank<<bank<<party_id<<word;return paramTypes;
-	case 0x50:
-		paramTypes<<window_id<<coord_x<<coord_y<<window_w<<window_h;return paramTypes;
-	case 0x51:
-		paramTypes<<window_id<<coord_x<<coord_y;return paramTypes;
-	case 0x52:
-		paramTypes<<window_id<<window_type<<boolean;return paramTypes;
-	case 0x53:case 0x54:
-		paramTypes<<window_id;return paramTypes;
-	case 0x55:
-		paramTypes<<window_id<<byte;return paramTypes;
-	case 0x56:
-		paramTypes<<bank<<bank<<bank<<bank<<adress<<adress<<adress<<adress;return paramTypes;
-	case 0x57:
-		paramTypes<<bank<<bank<<bank<<bank<<byte<<color;return paramTypes;
-	case 0x58:case 0x59:
-		paramTypes<<bank<<bank<<item_id<<quantity;return paramTypes;
-	case 0x5A:
-		paramTypes<<bank<<bank<<item_id<<adress;return paramTypes;
-	case 0x5B:
-		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte;return paramTypes;
-	case 0x5C:
-		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<quantity;return paramTypes;
-	case 0x5D:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<inconnu<<adress;return paramTypes;
-	//case 0x5E://TODO
-	//case 0x5F:return paramTypes;
-	case 0x60:
-		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<direction;return paramTypes;
-	//case 0x61:case 0x62://TODO
-	case 0x63:
-		paramTypes<<bank<<bank<<vitesse2<<group_id<<byte;return paramTypes;
-	case 0x64:
-		paramTypes<<bank<<bank<<coord_x<<coord_y;return paramTypes;
-	//case 0x65:case 0x67:return paramTypes;
-	case 0x66:case 0x68:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<vitesse2;return paramTypes;
-	case 0x69:
-		paramTypes<<boolean;return paramTypes;
-	//case 0x6A://TODO
-	case 0x6B:
-		paramTypes<<bank<<bank<<bank<<bank<<color<<vitesse<<byte<<byte;return paramTypes;
-	//case 0x6C:return paramTypes;
-	case 0x6D:
-		paramTypes<<boolean<<polygone_id;return paramTypes;
-	case 0x6E:
-		paramTypes<<bank<<bank<<adress;return paramTypes;
-	case 0x6F:
-		paramTypes<<bank<<bank<<vitesse2<<party_id<<byte;return paramTypes;
-	case 0x70:
-		paramTypes<<bank<<bank<<word;return paramTypes;
-	case 0x71:
-		paramTypes<<boolean;return paramTypes;
-	//case 0x72://TODO
-	case 0x73:case 0x74:
-		paramTypes<<bank<<bank<<party_id<<adress;return paramTypes;
-	case 0x75:
-		paramTypes<<bank<<bank<<bank<<bank<<party_id<<adress<<adress<<adress<<adress;return paramTypes;
-	case 0x76:case 0x78:case 0x80:case 0x82:case 0x83:case 0x84:case 0x85:case 0x87:case 0x89:case 0x8B:case 0x8D:case 0x8F:case 0x91:case 0x93:case 0x9A:
-		paramTypes<<bank<<bank<<adress<<byte;return paramTypes;
-	case 0x77:case 0x79:case 0x81:case 0x86:case 0x88:case 0x8A:case 0x8C:case 0x8E:case 0x90:case 0x92:case 0x94:case 0x9B:
-		paramTypes<<bank<<bank<<adress<<word;return paramTypes;
-	case 0x7A:case 0x7B:case 0x7C:case 0x7D:case 0x95:case 0x96:case 0x97:case 0x98:case 0x99:
-		paramTypes<<bank<<bank<<adress;return paramTypes;
-	case 0x7E:
-		paramTypes<<boolean;return paramTypes;
-	case 0x7F:
-		paramTypes<<bank<<bank<<byte;return paramTypes;
-	case 0x9C:
-		paramTypes<<bank<<bank<<bank<<bank<<adress<<byte<<byte;return paramTypes;
-	//case 0x9D:case 0x9E:case 0x9F://TODO
-	case 0xA0:
-		paramTypes<<personnage_id;return paramTypes;
-	case 0xA1:
-		paramTypes<<byte;return paramTypes;
-	case 0xA2:case 0xA3:case 0xAE:case 0xAF:
-		paramTypes<<animation_id<<vitesse;return paramTypes;
-	case 0xA4:
-		paramTypes<<boolean;return paramTypes;
-	case 0xA5:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z<<polygone_id;return paramTypes;
-	case 0xA6:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<polygone_id;return paramTypes;
-	case 0xA7:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z;return paramTypes;
-	case 0xA8:case 0xA9:case 0xAD:
-		paramTypes<<bank<<bank<<coord_x<<coord_y;return paramTypes;
-	case 0xAA:
-		paramTypes<<group_id;return paramTypes;
-	case 0xAB:
-		paramTypes<<group_id<<rotation<<vitesse;return paramTypes;
-	//case 0xAC:return paramTypes;
-	case 0xB0:case 0xB1:case 0xBB:case 0xBC:
-		paramTypes<<animation_id<<byte<<byte<<vitesse;return paramTypes;
-	case 0xB2:case 0xBD:
-		paramTypes<<bank<<bank<<vitesse2;return paramTypes;
-	case 0xB3:
-		paramTypes<<bank<<bank<<direction;return paramTypes;
-	case 0xB4:case 0xB5:
-		paramTypes<<bank<<bank<<direction<<byte<<vitesse<<inconnu;return paramTypes;
-	case 0xB6:
-		paramTypes<<group_id;return paramTypes;
-	case 0xB7:case 0xB9:
-		paramTypes<<bank<<bank<<group_id<<adress;return paramTypes;
-	case 0xB8:
-		paramTypes<<bank<<bank<<group_id<<adress<<adress;return paramTypes;
-	case 0xBA:
-		paramTypes<<animation_id<<vitesse;return paramTypes;
-	//case 0xBE:return paramTypes;
-	case 0xBF:
-		paramTypes<<group_id;return paramTypes;
-	case 0xC0:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<polygone_id<<word;return paramTypes;
-	case 0xC1:
-		paramTypes<<bank<<bank<<bank<<bank<<group_id<<adress<<adress<<adress<<adress;return paramTypes;
-	case 0xC2:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z<<polygone_id<<byte<<animation_id<<direction<<vitesse;return paramTypes;
-	case 0xC3:
-		paramTypes<<bank<<bank<<bank<<bank<<byte<<coord_x<<coord_y<<coord_z<<vitesse2;return paramTypes;
-	//case 0xC4:return paramTypes;
-	case 0xC5:case 0xC6:
-		paramTypes<<bank<<bank<<byte;return paramTypes;
-	case 0xC7:
-		paramTypes<<boolean;return paramTypes;
-	case 0xC8:case 0xC9:case 0xCE:case 0xCF:
-		paramTypes<<personnage_id;return paramTypes;
-	case 0xCA:
-		paramTypes<<personnage_id<<personnage_id<<personnage_id;return paramTypes;
-	case 0xCB:case 0xCC:
-		paramTypes<<personnage_id<<jump;return paramTypes;
-	case 0xCD:
-		paramTypes<<boolean<<personnage_id;return paramTypes;
-	case 0xD0:
-		paramTypes<<coord_x<<coord_y<<coord_z<<coord_x<<coord_y<<coord_z;return paramTypes;
-	case 0xD1:case 0xD2:
-		paramTypes<<boolean;return paramTypes;
-	case 0xD3:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z<<coord_x<<coord_y<<coord_z;return paramTypes;
-	case 0xD4:case 0xD5:
-		paramTypes<<bank<<bank<<bank<<bank<<word<<word<<word<<byte;return paramTypes;
-	case 0xD6:case 0xD7:
-		paramTypes<<bank<<bank<<word;return paramTypes;
-	case 0xD8:
-		paramTypes<<field_id;return paramTypes;
-	//case 0xD9:return paramTypes;
-	//case 0xDA://TODO
-	case 0xDB:
-		paramTypes<<boolean;return paramTypes;
-	case 0xDC:
-		paramTypes<<animation_id<<vitesse<<byte;return paramTypes;
-	//case 0xDD:case 0xDE:return paramTypes;
-	//case 0xDF://TODO
-	case 0xE0:case 0xE1:
-		paramTypes<<bank<<bank<<parametre_id<<state_id;return paramTypes;
-	case 0xE2:case 0xE3:case 0xE4:
-		paramTypes<<bank<<bank<<parametre_id;return paramTypes;
-	//case 0xE5:case 0xE6:case 0xE7:case 0xE8:case 0xE9:case 0xEA:case 0xEB:case 0xEC:case 0xED:case 0xEE:case 0xEF://TODO
-	case 0xF0:case 0xF3:case 0xF4:case 0xF6:
-		paramTypes<<music_id;return paramTypes;
-	case 0xF1:
-		paramTypes<<bank<<bank<<sound_id<<byte;return paramTypes;
-	//case 0xF2:case 0xF7://TODO
-	case 0xF5:
-		paramTypes<<boolean;return paramTypes;
-	case 0xF8:
-		paramTypes<<movie_id;return paramTypes;
-	//case 0xF9:return paramTypes;
-	case 0xFA:
-		paramTypes<<bank<<bank<<adress;return paramTypes;
-	case 0xFB:
-		paramTypes<<boolean;return paramTypes;
-	//case 0xFC:case 0xFD://TODO
-	case 0xFE:
-		paramTypes<<bank<<bank<<adress;return paramTypes;
-	//case 0xFF:return paramTypes;
-	}
-	return paramTypes;
-}
-
-int ScriptEditor::paramSize(int type)
-{
-	switch(type)
-	{
-	case color:				return 24;
-	case word:
-	case sword:
-	case jump_l:
-	case coord_x:
-	case coord_y:
-	case coord_z:
-	case window_w:
-	case window_h:
-	case item_id:
-	case vitesse2:
-	case polygone_id:
-	case sound_id:
-	case keys:
-	case field_id:			return 16;
-	case script_id:			return 5;
-	case bank:				return 4;
-	case priorite:			return 3;
-	case bit: 				return 1;
-	}
-	return 8;
-}
-
-bool ScriptEditor::paramIsSigned(int type)
-{
-	switch(type)
-	{
-	case sword:
-	case coord_x:
-	case coord_y:
-	case coord_z:	return true;
-	default:		return false;
-	}
-}
-
-QString ScriptEditor::paramName(int type)
-{
-	switch(type)
-	{
-	case word:				return tr("Entier long");
-	case sword:				return tr("Entier long signé");
-	case coord_x:			return tr("Coordonnée X");
-	case coord_y:			return tr("Coordonnée Y");
-	case coord_z:			return tr("Coordonnée Z");
-	case field_id:			return tr("Écran");
-	case tuto_id:			return tr("Tutoriel");
-	case personnage_id:		return tr("Personnage");
-	case cd_id:				return tr("Disque");
-	case minijeu_id:		return tr("Mini-jeu");
-	case byte:				return tr("Entier court");
-	case vitesse:			return tr("Vitesse (8 bits)");
-	case vitesse2:			return tr("Vitesse (16 bits)");
-	case direction:			return tr("Direction");
-	case polygone_id:		return tr("Polygone");
-	case group_id:			return tr("Groupe");
-	case script_id:			return tr("Script");
-	case party_id:			return tr("Équipier");
-	case bank:				return tr("Bank");
-	case adress:			return tr("Adresse");
-	case priorite:			return tr("Priorité");
-	case bit: 				return tr("Flag");
-	case jump: 				return tr("Saut court");
-	case jump_l: 			return tr("Saut long");
-	case operateur: 		return tr("Opérateur");
-	case boolean: 			return tr("Booléen");
-	case layer_id: 			return tr("Couche");
-	case parametre_id: 		return tr("Paramètre");
-	case state_id: 			return tr("État");
-	case window_id: 		return tr("Fenêtre");
-	case window_w: 			return tr("Largeur");
-	case window_h: 			return tr("Hauteur");
-	case window_var: 		return tr("Variable");
-	case keys: 				return tr("Touche(s)");
-	case rotation: 			return tr("Sens de rotation");
-	case window_num: 		return tr("Type d'affichage");
-	case text_id: 			return tr("Texte");
-	case menu: 				return tr("Menu");
-	case window_type: 		return tr("Type de fenêtre");
-	case item_id: 			return tr("Objet");
-	case materia_id: 		return tr("Matéria");
-	case quantity: 			return tr("Quantité");
-	case color: 			return tr("Couleur");
-	case animation_id: 		return tr("Animation");
-	case music_id: 			return tr("Musique");
-	case sound_id: 			return tr("Son");
-	case movie_id: 			return tr("Vidéo");
-	}
-	return tr("???");
 }

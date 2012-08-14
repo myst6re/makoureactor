@@ -36,13 +36,13 @@ public:
 	int fileID;
 	int grpScriptID;
 	int scriptID;
-	int commandeID;
+	int opcodeID;
 
 public slots:
 	void changeFileID(int);
 	void changeGrpScriptID(int);
 	void changeScriptID(int);
-	void changeCommandeID(int);
+	void changeOpcodeID(int);
 
 private slots:
 	void cancelSearching();
@@ -66,7 +66,7 @@ private:
 	QComboBox *executionGroup;
 	QSpinBox *executionScript;
 
-	quint8 clef;
+	int clef;
 	QRegExp text;
 	quint8 bank;
 	quint8 adress;

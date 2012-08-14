@@ -50,6 +50,58 @@ int main(int argc, char *argv[])
 	if(argc>1)
 		fenetre.ouvrir(argv[1]);
 
+	/*
+	// some tests for new opcode style
+	QByteArray filledFF(128, '\xff'), filled00(128, '\x00'), filledRandom;
+
+	srand(QTime::currentTime().second());
+
+	for(int i=0 ; i<128 ; ++i) {
+		filledRandom.append(char(rand() % 256));
+	}
+
+	for(int id=0 ; id<256 ; ++id) {
+		if(id == 0x0F || id == 0x28) continue;
+		QByteArray op;
+		op.append((char)id);
+		Opcode *opcode = Script::createOpcode(op + filledFF);
+		if(opcode->id() != id) {
+			qDebug() << "Opcode error id" << id << opcode->id();
+		}
+		QByteArray res = opcode->params();
+		if(res.size() + 1 != Opcode::length[id]) {
+			qDebug() << "Opcode error size" << id << (res.size() + 1) << Opcode::length[id];
+		}
+		if(res != filledFF.left(res.size())) {
+			qDebug() << "Opcode error params" << id << res.toHex() << filledFF.left(res.size()).toHex();
+		}
+		delete opcode;
+		opcode = Script::createOpcode(op + filled00);
+		if(opcode->id() != id) {
+			qDebug() << "Opcode error id" << id << opcode->id();
+		}
+		res = opcode->params();
+		if(res.size() + 1 != Opcode::length[id]) {
+			qDebug() << "Opcode error size" << id << (res.size() + 1) << Opcode::length[id];
+		}
+		if(res != filled00.left(res.size())) {
+			qDebug() << "Opcode error params" << id << res.toHex() << filled00.left(res.size()).toHex();
+		}
+		delete opcode;
+		opcode = Script::createOpcode(op + filledRandom);
+		if(opcode->id() != id) {
+			qDebug() << "Opcode error id" << id << opcode->id();
+		}
+		res = opcode->params();
+		if(res.size() + 1 != Opcode::length[id]) {
+			qDebug() << "Opcode error size" << id << (res.size() + 1) << Opcode::length[id];
+		}
+		if(res != filledRandom.left(res.size())) {
+			qDebug() << "Opcode error params" << id << res.toHex() << filledRandom.left(res.size()).toHex();
+		}
+		delete opcode;
+	}*/
+
 //	Config::setValue("jp_txt", true);
 //	bool jp = true/*Config::value("jp_txt", false).toBool()*/;
 	/*for(int i=0 ; i<255 ; ++i) {

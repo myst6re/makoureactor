@@ -36,7 +36,6 @@ public:
 	static QList<QStringList> *currentAnimNames;
 	static QStringList field_names;
 	static QStringList movie_names;
-	static QList<Opcode> opcodes;
 
 private:
 	static void fill(const QByteArray &data, QStringList &names);

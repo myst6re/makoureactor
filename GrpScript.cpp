@@ -44,8 +44,6 @@ bool GrpScript::addScript(const QByteArray &script, bool explodeInit)
 {
 	Script *s;
 
-	qDebug() << name << "script" << scripts.size();
-
 	if(explodeInit && scripts.isEmpty())
 	{
 		quint16 pos = Script::posReturn(script);
@@ -88,27 +86,31 @@ void GrpScript::setType()
 	
 	Script *firstScript = scripts.first();
 	
-	quint16 nbCommandes = firstScript->size();
+	quint16 opcodeCount = firstScript->size();
 	
-	for(quint16 i=0 ; i<nbCommandes ; ++i)
+	for(quint16 i=0 ; i<opcodeCount ; ++i)
 	{
-		switch(firstScript->getCommande(i)->id())
+		switch((Opcode::Keys)firstScript->getOpcode(i)->id())
 		{
-		case 0xA0://Definition du personnage
-			character = ((OpcodePC *)firstScript->getCommande(i))->charID;
+		case Opcode::PC://Definition du personnage
+			character = ((OpcodePC *)firstScript->getOpcode(i))->charID;
 			return;
-		case 0xA1://Definition du modèle 3D
+		case Opcode::CHAR://Definition du modèle 3D
 			character = 0xFF;
 			break;
-		case 0xD0://definition d'une zone
+		case Opcode::LINE://definition d'une zone
 			if(character==-1)	location = true;
 			return;
-		case 0x2C:case 0x2D:case 0xE0:case 0xE1:case 0xE2:case 0xE3:case 0xE4://bg paramètres
+		case Opcode::BGPDH:case Opcode::BGSCR:case Opcode::BGON:
+		case Opcode::BGOFF:case Opcode::BGROL:case Opcode::BGROL2:
+		case Opcode::BGCLR://bg paramètres
 			if(character==-1)	animation = true;
 			return;
-		case 0x43://mapname
+		case Opcode::MPNAM://mapname
 			if(character==-1)	director = true;
 			return;
+		default:
+			break;
 		}
 	}
 }
@@ -181,7 +183,7 @@ QString GrpScript::getType()
 	{
 	case 1:
 		if(character == 0xFF)	return QObject::tr("Objet 3D");
-		return QString("%1").arg(Commande::_personnage(character));
+		return QString("%1").arg(Opcode::_personnage(character));
 	case 2:	return QObject::tr("Zone");
 	case 3:	return QObject::tr("Animation");
 	case 4:	return QObject::tr("Main");
@@ -234,7 +236,7 @@ QString GrpScript::getScriptName(quint8 scriptID)
 	return QObject::tr("Script %1").arg(scriptID-1);
 }
 
-bool GrpScript::rechercherOpCode(quint8 opCode, int &scriptID, int &commandeID) const
+bool GrpScript::rechercherOpcode(int opcode, int &scriptID, int &opcodeID) const
 {
 	if(scriptID < 0)	scriptID = 0;
 
@@ -242,14 +244,14 @@ bool GrpScript::rechercherOpCode(quint8 opCode, int &scriptID, int &commandeID) 
 	
 	while(scriptID < nbScripts)
 	{
-		if(scripts.at(scriptID)->rechercherOpCode(opCode, commandeID))	return true;
+		if(scripts.at(scriptID)->rechercherOpcode(opcode, opcodeID))	return true;
 		++scriptID;
-		commandeID = 0;
+		opcodeID = 0;
 	}
 	return false;
 }
 
-bool GrpScript::rechercherVar(quint8 bank, quint8 adress, int value, int &scriptID, int &commandeID) const
+bool GrpScript::rechercherVar(quint8 bank, quint8 adress, int value, int &scriptID, int &opcodeID) const
 {
 	if(scriptID < 0)	scriptID = 0;
 
@@ -257,9 +259,9 @@ bool GrpScript::rechercherVar(quint8 bank, quint8 adress, int value, int &script
 	
 	while(scriptID < nbScripts)
 	{
-		if(scripts.at(scriptID)->rechercherVar(bank, adress, value, commandeID))	return true;
+		if(scripts.at(scriptID)->rechercherVar(bank, adress, value, opcodeID))	return true;
 		++scriptID;
-		commandeID = 0;
+		opcodeID = 0;
 	}
 	return false;
 }
@@ -275,7 +277,7 @@ QList<FF7Var> GrpScript::searchAllVars() const
 	return vars;
 }
 
-bool GrpScript::rechercherExec(quint8 group, quint8 script, int &scriptID, int &commandeID) const
+bool GrpScript::rechercherExec(quint8 group, quint8 script, int &scriptID, int &opcodeID) const
 {
 	if(scriptID < 0)	scriptID = 0;
 
@@ -283,14 +285,14 @@ bool GrpScript::rechercherExec(quint8 group, quint8 script, int &scriptID, int &
 
 	while(scriptID < nbScripts)
 	{
-		if(scripts.at(scriptID)->rechercherExec(group, script, commandeID))	return true;
+		if(scripts.at(scriptID)->rechercherExec(group, script, opcodeID))	return true;
 		++scriptID;
-		commandeID = 0;
+		opcodeID = 0;
 	}
 	return false;
 }
 
-bool GrpScript::rechercherTexte(const QRegExp &texte, int &scriptID, int &commandeID) const
+bool GrpScript::rechercherTexte(const QRegExp &texte, int &scriptID, int &opcodeID) const
 {
 	if(scriptID < 0)	scriptID = 0;
 
@@ -298,66 +300,66 @@ bool GrpScript::rechercherTexte(const QRegExp &texte, int &scriptID, int &comman
 	
 	while(scriptID < nbScripts)
 	{
-		if(scripts.at(scriptID)->rechercherTexte(texte, commandeID))	return true;
+		if(scripts.at(scriptID)->rechercherTexte(texte, opcodeID))	return true;
 		++scriptID;
-		commandeID = 0;
+		opcodeID = 0;
 	}
 	return false;
 }
 
-bool GrpScript::rechercherOpCodeP(quint8 opCode, int &scriptID, int &commandeID) const
+bool GrpScript::rechercherOpcodeP(int opcode, int &scriptID, int &opcodeID) const
 {
 	if(scriptID >= scripts.size())	scriptID = scripts.size()-1;
 
 	while(scriptID >= 0)
 	{
-		if(scripts.at(scriptID)->rechercherOpCodeP(opCode, commandeID))	return true;
+		if(scripts.at(scriptID)->rechercherOpcodeP(opcode, opcodeID))	return true;
 		--scriptID;
 		if(scriptID >= 0) {
-			commandeID = scripts.at(scriptID)->size()-1;
+			opcodeID = scripts.at(scriptID)->size()-1;
 		}
 	}
 
 	return false;
 }
 
-bool GrpScript::rechercherVarP(quint8 bank, quint8 adress, int value, int &scriptID, int &commandeID) const
+bool GrpScript::rechercherVarP(quint8 bank, quint8 adress, int value, int &scriptID, int &opcodeID) const
 {
 	if(scriptID >= scripts.size())	scriptID = scripts.size()-1;
 
 	while(scriptID >= 0)
 	{
-		if(scripts.at(scriptID)->rechercherVarP(bank, adress, value, commandeID))	return true;
+		if(scripts.at(scriptID)->rechercherVarP(bank, adress, value, opcodeID))	return true;
 		--scriptID;
-		if(scriptID >= 0)	commandeID = scripts.at(scriptID)->size()-1;
+		if(scriptID >= 0)	opcodeID = scripts.at(scriptID)->size()-1;
 	}
 
 	return false;
 }
 
-bool GrpScript::rechercherExecP(quint8 group, quint8 script, int &scriptID, int &commandeID) const
+bool GrpScript::rechercherExecP(quint8 group, quint8 script, int &scriptID, int &opcodeID) const
 {
 	if(scriptID >= scripts.size())	scriptID = scripts.size()-1;
 
 	while(scriptID >= 0)
 	{
-		if(scripts.at(scriptID)->rechercherExecP(group, script, commandeID))	return true;
+		if(scripts.at(scriptID)->rechercherExecP(group, script, opcodeID))	return true;
 		--scriptID;
-		if(scriptID >= 0)	commandeID = scripts.at(scriptID)->size()-1;
+		if(scriptID >= 0)	opcodeID = scripts.at(scriptID)->size()-1;
 	}
 
 	return false;
 }
 
-bool GrpScript::rechercherTexteP(const QRegExp &texte, int &scriptID, int &commandeID) const
+bool GrpScript::rechercherTexteP(const QRegExp &texte, int &scriptID, int &opcodeID) const
 {
 	if(scriptID >= scripts.size())	scriptID = scripts.size()-1;
 
 	while(scriptID >= 0)
 	{
-		if(scripts.at(scriptID)->rechercherTexteP(texte, commandeID))	return true;
+		if(scripts.at(scriptID)->rechercherTexteP(texte, opcodeID))	return true;
 		--scriptID;
-		if(scriptID >= 0)	commandeID = scripts.at(scriptID)->size()-1;
+		if(scriptID >= 0)	opcodeID = scripts.at(scriptID)->size()-1;
 	}
 
 	return false;

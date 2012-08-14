@@ -15,47 +15,39 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SE
-#define DEF_SE
+#ifndef DEF_SCRIPTEDITORVIEW
+#define DEF_SCRIPTEDITORVIEW
 
 #include <QtGui>
 #include "GrpScript.h"
-#include "ScriptEditorGenericList.h"
-//#include "ScriptEditor_dialogs.h"
 
-class ScriptEditor : public QDialog
+class ScriptEditorView : public QWidget
 {
 	Q_OBJECT
 
 public:
-	ScriptEditor();
-	ScriptEditor(Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent=0);
-	virtual ~ScriptEditor();
+	ScriptEditorView(Script *script, QWidget *parent=0);
+	virtual ~ScriptEditorView();
 
-private slots:
-	void modify();
-	void add();
-	void refreshTextEdit();
-	void changeCurrentOpcode(int);
-	void buildList(int);
+	virtual Opcode *opcode();
+	virtual void setOpcode(Opcode *opcode);
+signals:
+	void opcodeChanged();
 	
-private:
-	QVBoxLayout *layout;
-	QHBoxLayout *buttonLayout;
-	QComboBox *comboBox0, *comboBox;
-	QPlainTextEdit *textEdit;
-	QStackedLayout *editorLayout;
-	//QStackedWidget *nouvelEditeur;
-	QPushButton *ok, *cancel;
-	ScriptEditorView *editorWidget;
-
-	Script *script;
-	quint16 opcodeID;
-	Opcode *opcode;
-	bool isInit;
-	QList<quint8> crashIfInit;
-
-	bool change;
+protected:
+	Script *_script;
+	Opcode *_opcode;
 };
 
-#endif
+class ScriptEditorGotoPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	ScriptEditorGotoPage(Script *script, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private:
+	QComboBox *label, *range;
+};
+
+#endif // DEF_SCRIPTEDITORVIEW

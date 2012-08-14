@@ -1140,7 +1140,7 @@ QList<FF7Var> Field::searchAllVars() const
 	return vars;
 }
 
-bool Field::rechercherOpCode(quint8 opCode, int &groupID, int &scriptID, int &commandeID) const
+bool Field::rechercherOpcode(int opcode, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID < 0)	groupID = 0;
 
@@ -1148,14 +1148,14 @@ bool Field::rechercherOpCode(quint8 opCode, int &groupID, int &scriptID, int &co
 
 	while(groupID < nbGroups)
 	{
-		if(grpScripts.at(groupID)->rechercherOpCode(opCode, scriptID, commandeID))	return true;
+		if(grpScripts.at(groupID)->rechercherOpcode(opcode, scriptID, opcodeID))	return true;
 		++groupID;
-		scriptID = commandeID = 0;
+		scriptID = opcodeID = 0;
 	}
 	return false;
 }
 
-bool Field::rechercherVar(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &commandeID) const
+bool Field::rechercherVar(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID < 0)	groupID = 0;
 
@@ -1163,14 +1163,14 @@ bool Field::rechercherVar(quint8 bank, quint8 adress, int value, int &groupID, i
 
 	while(groupID < nbGroups)
 	{
-		if(grpScripts.at(groupID)->rechercherVar(bank, adress, value, scriptID, commandeID))	return true;
+		if(grpScripts.at(groupID)->rechercherVar(bank, adress, value, scriptID, opcodeID))	return true;
 		++groupID;
-		scriptID = commandeID = 0;
+		scriptID = opcodeID = 0;
 	}
 	return false;
 }
 
-bool Field::rechercherExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &commandeID) const
+bool Field::rechercherExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID < 0)	groupID = 0;
 
@@ -1178,14 +1178,14 @@ bool Field::rechercherExec(quint8 group, quint8 script, int &groupID, int &scrip
 
 	while(groupID < nbGroups)
 	{
-		if(grpScripts.at(groupID)->rechercherExec(group, script, scriptID, commandeID))	return true;
+		if(grpScripts.at(groupID)->rechercherExec(group, script, scriptID, opcodeID))	return true;
 		++groupID;
-		scriptID = commandeID = 0;
+		scriptID = opcodeID = 0;
 	}
 	return false;
 }
 
-bool Field::rechercherTexte(const QRegExp &texte, int &groupID, int &scriptID, int &commandeID) const
+bool Field::rechercherTexte(const QRegExp &texte, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID < 0)	groupID = 0;
 
@@ -1195,68 +1195,68 @@ bool Field::rechercherTexte(const QRegExp &texte, int &groupID, int &scriptID, i
 
 	while(groupID < nbGroups)
 	{
-		if(grpScripts.at(groupID)->rechercherTexte(texte, scriptID, commandeID))	return true;
+		if(grpScripts.at(groupID)->rechercherTexte(texte, scriptID, opcodeID))	return true;
 		++groupID;
-		scriptID = commandeID = 0;
+		scriptID = opcodeID = 0;
 	}
 	return false;
 }
 
-bool Field::rechercherOpCodeP(quint8 opCode, int &groupID, int &scriptID, int &commandeID) const
+bool Field::rechercherOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID >= grpScripts.size())	groupID = grpScripts.size()-1;
 
 	while(groupID >= 0)
 	{
-		if(grpScripts.at(groupID)->rechercherOpCodeP(opCode, scriptID, commandeID))	return true;
+		if(grpScripts.at(groupID)->rechercherOpcodeP(opcode, scriptID, opcodeID))	return true;
 		--groupID;
 		if(groupID >= 0) {
 			scriptID = grpScripts.at(groupID)->size()-1;
 			if(scriptID >= 0) {
-				commandeID = grpScripts.at(groupID)->getScript(scriptID)->size()-1;
+				opcodeID = grpScripts.at(groupID)->getScript(scriptID)->size()-1;
 			}
 		}
 	}
 	return false;
 }
 
-bool Field::rechercherVarP(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &commandeID) const
+bool Field::rechercherVarP(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID >= grpScripts.size())	groupID = grpScripts.size()-1;
 
 	while(groupID >= 0)
 	{
-		if(grpScripts.at(groupID)->rechercherVarP(bank, adress, value, scriptID, commandeID))	return true;
+		if(grpScripts.at(groupID)->rechercherVarP(bank, adress, value, scriptID, opcodeID))	return true;
 		--groupID;
 		if(groupID >= 0) {
 			scriptID = grpScripts.at(groupID)->size()-1;
 			if(scriptID >= 0) {
-				commandeID = grpScripts.at(groupID)->getScript(scriptID)->size()-1;
+				opcodeID = grpScripts.at(groupID)->getScript(scriptID)->size()-1;
 			}
 		}
 	}
 	return false;
 }
 
-bool Field::rechercherExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &commandeID) const
+bool Field::rechercherExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID >= grpScripts.size())	groupID = grpScripts.size()-1;
 
 	while(groupID >= 0)
 	{
-		if(grpScripts.at(groupID)->rechercherExecP(group, script, scriptID, commandeID))	return true;
+		if(grpScripts.at(groupID)->rechercherExecP(group, script, scriptID, opcodeID))	return true;
 		--groupID;
 		if(groupID >= 0) {
 			scriptID = grpScripts.at(groupID)->size()-1;
 			if(scriptID >= 0) {
-				commandeID = grpScripts.at(groupID)->getScript(scriptID)->size()-1;
+				opcodeID = grpScripts.at(groupID)->getScript(scriptID)->size()-1;
 			}
 		}
 	}
 	return false;
 }
 
-bool Field::rechercherTexteP(const QRegExp &texte, int &groupID, int &scriptID, int &commandeID) const
+bool Field::rechercherTexteP(const QRegExp &texte, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID >= grpScripts.size())	groupID = grpScripts.size()-1;
 
@@ -1264,12 +1264,12 @@ bool Field::rechercherTexteP(const QRegExp &texte, int &groupID, int &scriptID, 
 
 	while(groupID >= 0)
 	{
-		if(grpScripts.at(groupID)->rechercherTexteP(texte, scriptID, commandeID))	return true;
+		if(grpScripts.at(groupID)->rechercherTexteP(texte, scriptID, opcodeID))	return true;
 		--groupID;
 		if(groupID >= 0) {
 			scriptID = grpScripts.at(groupID)->size()-1;
 			if(scriptID >= 0) {
-				commandeID = grpScripts.at(groupID)->getScript(scriptID)->size()-1;
+				opcodeID = grpScripts.at(groupID)->getScript(scriptID)->size()-1;
 			}
 		}
 	}

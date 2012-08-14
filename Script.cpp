@@ -29,59 +29,50 @@ Script::Script(const QByteArray &script)
 
 Script::~Script()
 {
-	foreach(Commande *commande, commandes)	delete commande;
+	foreach(Opcode *opcode, opcodes)	delete opcode;
 }
 
 bool Script::openScript(const QByteArray &script)
 {
 	int pos = 0, scriptSize = script.size();
 	quint8 opcode;
-	Commande *op;
+	Opcode *op;
 	QList<int> positions;
 	QMultiMap<int, OpcodeJump *> indents;
 
-	int commandeID=0;
 	while(pos < scriptSize)
 	{
 		opcode = (quint8)script.at(pos);
 		op = createOpcode(script, pos);
-		commandes.append(op);
+		opcodes.append(op);
 		positions.append(pos);
-		qDebug() << "pos" << pos << "index" << commandeID++;
 		if(op->isJump()) {
 			indents.insert(pos + ((OpcodeJump *)op)->jump(), (OpcodeJump *)op);
-			qDebug() << "\tjump" << (pos + ((OpcodeJump *)op)->jump());
 		}
 		pos += op->size();
 	}
 
 	QList<int> indentsKeys = indents.uniqueKeys();
 
-	qDebug() << "========";
-
 	for(int i=indentsKeys.size()-1 ; i >= 0 ; --i) {
 		int jump = indentsKeys.at(i);
 		int index;
 		if((index = positions.indexOf(jump)) != -1) {
-			commandes.insert(index, new OpcodeLabel(i+1));
-			qDebug() << "Jump" << jump << "index" << index << "label" << (i+1);
+			opcodes.insert(index, new OpcodeLabel(i+1));
 
 			foreach(OpcodeJump *opJump, indents.values(jump)) {
-				qDebug() << "\tsetLabel" << (i+1);
 				opJump->setLabel(i+1);
 			}
 		} else {
-			qDebug() << "Error" << jump << "label" << (i+1);
+			qWarning() << "Error" << jump << "label" << (i+1);
 //			return false;//TODO
 		}
 	}
 
-	qDebug() << "_______";
-
 	return true;
 }
 
-Commande *Script::createOpcode(const QByteArray &script, int pos)
+Opcode *Script::createOpcode(const QByteArray &script, int pos)
 {
 	quint8 opcode = (quint8)script.at(pos);
 	quint8 size = Opcode::length[opcode] - 1;
@@ -409,12 +400,12 @@ int Script::posReturn(const QByteArray &script)
 
 int Script::size() const
 {
-	return commandes.size();
+	return opcodes.size();
 }
 
 bool Script::isEmpty() const
 {
-	return commandes.isEmpty();
+	return opcodes.isEmpty();
 }
 
 bool Script::isValid() const
@@ -422,104 +413,107 @@ bool Script::isValid() const
 	return valid;
 }
 
-Commande *Script::getCommande(quint16 commandeID)
+Opcode *Script::getOpcode(quint16 opcodeID)
 {
-	// if(commandeID >= commandes.size())	return NULL;
-	return commandes.at(commandeID);
+	return opcodes.at(opcodeID);
 }
 
 QByteArray Script::toByteArray() const
 {
+	quint32 pos=0;
+	QMap<quint32, quint32> labelPositions;// Each label is unique
 	QByteArray ret;
-	foreach(Commande *commande, commandes) {
-		ret.append(commande->toByteArray());
+
+	foreach(Opcode *opcode, opcodes) {
+		if(opcode->isLabel()) {
+			labelPositions.insert(((OpcodeLabel *)opcode)->label(), pos);
+		} else {
+			pos += opcode->size();
+		}
 	}
+
+	pos = 0;
+	foreach(Opcode *opcode, opcodes) {
+		if(opcode->isJump()) {
+			((OpcodeJump *)opcode)->setJump(labelPositions.value(((OpcodeJump *)opcode)->label()) - pos);
+		}
+		ret.append(opcode->toByteArray());
+		pos += opcode->size();
+	}
+
 	return ret;
 }
 
 bool Script::isVoid() const
 {
-	foreach(Commande *commande, commandes)
-		if(!commande->isVoid())	return false;
+	foreach(Opcode *opcode, opcodes)
+		if(!opcode->isVoid())	return false;
 	return true;
 }
 
-void Script::setCommande(quint16 commandeID, Commande *commande)
+void Script::setOpcode(quint16 opcodeID, Opcode *opcode)
 {
-	Commande *curCommand = commandes.at(commandeID);
-//	int oldSize = curCommand->size();
-	commandes.replace(commandeID, commande);
-	delete curCommand;
-//	shiftJumps(commandeID, commande->size()-oldSize);
+	Opcode *curOpcode = opcodes.at(opcodeID);
+	opcodes.replace(opcodeID, opcode);
+	delete curOpcode;
 }
 
-void Script::delCommande(quint16 commandeID)
+void Script::delOpcode(quint16 opcodeID)
 {
-//	int oldSize = commandes.at(commandeID)->size();
-	delete commandes.takeAt(commandeID);
-//	shiftJumps(commandeID, -oldSize);
+	delete opcodes.takeAt(opcodeID);
 }
 
-Commande *Script::removeCommande(quint16 commandeID)
+Opcode *Script::removeOpcode(quint16 opcodeID)
 {
-//	int oldSize = commandes.at(commandeID)->size();
-	Commande *commande = commandes.takeAt(commandeID);
-//	shiftJumps(commandeID, -oldSize);
-	return commande;
+	Opcode *opcode = opcodes.takeAt(opcodeID);
+	return opcode;
 }
 
-void Script::insertCommande(quint16 commandeID, Commande *commande)
+void Script::insertOpcode(quint16 opcodeID, Opcode *opcode)
 {
-	commandes.insert(commandeID, commande);
-//	shiftJumps(commandeID, commande->size());
+	opcodes.insert(opcodeID, opcode);
 }
 
-bool Script::moveCommande(quint16 commandeID, bool direction)
+bool Script::moveOpcode(quint16 opcodeID, bool direction)
 {
-	if(commandeID >= commandes.size())	return false;
-
-	Commande *commande;
+	if(opcodeID >= opcodes.size())	return false;
 	
 	if(direction) // DOWN
 	{
-		if(commandeID == commandes.size()-1)	return false;
-		commande = removeCommande(commandeID);
-		insertCommande(commandeID+1, commande);
-//		shiftJumpsSwap(commande, -commandes.at(commandeID)->size());
+		if(opcodeID == opcodes.size()-1)	return false;
+		opcodes.swap(opcodeID, opcodeID+1);
 	}
 	else // UP
 	{
-		if(commandeID == 0)	return false;
-		commande = removeCommande(commandeID);
-		insertCommande(commandeID-1, commande);
-//		shiftJumpsSwap(commande, commandes.at(commandeID)->size());
+		if(opcodeID == 0)	return false;
+		opcodes.swap(opcodeID, opcodeID-1);
 	}
 	return true;
 }
 
-bool Script::rechercherOpCode(quint8 opCode, int &commandeID) const
+bool Script::rechercherOpcode(int opcode, int &opcodeID) const
 {
-	if(commandeID < 0)	commandeID = 0;
+	if(opcodeID < 0)	opcodeID = 0;
 
-	int nbCommandes = commandes.size();
-	while(commandeID < nbCommandes)
+	int opcodeCount = opcodes.size();
+	while(opcodeID < opcodeCount)
 	{
-		if(opCode == commandes.at(commandeID)->id())	return true;
-		++commandeID;
-		// qDebug() << "SCRIPT_commandeID " << commandeID;
+		if(opcode == opcodes.at(opcodeID)->id())	return true;
+		++opcodeID;
+		// qDebug() << "SCRIPT_opcodeID " << opcodeID;
 	}
 	return false;
 }
 
-bool Script::rechercherVar(quint8 bank, quint8 adress, int value, int &commandeID) const
+bool Script::rechercherVar(quint8 bank, quint8 adress, int value, int &opcodeID) const
 {
-	if(commandeID < 0)	commandeID = 0;
+	if(opcodeID < 0)	opcodeID = 0;
 
-	int nbCommandes = commandes.size();
-	while(commandeID < nbCommandes)
+	int opcodeCount = opcodes.size();
+	while(opcodeID < opcodeCount)
 	{
-		if(commandes.at(commandeID)->rechercherVar(bank, adress, value))	return true;
-		++commandeID;
+		if(opcodes.at(opcodeID)->rechercherVar(bank, adress, value))	return true;
+		++opcodeID;
 	}
 	return false;
 }
@@ -528,86 +522,86 @@ QList<FF7Var> Script::searchAllVars() const
 {
 	QList<FF7Var> vars;
 
-	foreach(Commande *commande, commandes) {
-		commande->getVariables(vars);
+	foreach(Opcode *opcode, opcodes) {
+		opcode->getVariables(vars);
 	}
 
 	return vars;
 }
 
-bool Script::rechercherExec(quint8 group, quint8 script, int &commandeID) const
+bool Script::rechercherExec(quint8 group, quint8 script, int &opcodeID) const
 {
-	if(commandeID < 0)	commandeID = 0;
+	if(opcodeID < 0)	opcodeID = 0;
 
-	int nbCommandes = commandes.size();
-	while(commandeID < nbCommandes)
+	int opcodeCount = opcodes.size();
+	while(opcodeID < opcodeCount)
 	{
-		if(commandes.at(commandeID)->rechercherExec(group, script))	return true;
-		++commandeID;
+		if(opcodes.at(opcodeID)->rechercherExec(group, script))	return true;
+		++opcodeID;
 	}
 	return false;
 }
 
-bool Script::rechercherTexte(const QRegExp &texte, int &commandeID) const
+bool Script::rechercherTexte(const QRegExp &texte, int &opcodeID) const
 {
-	if(commandeID < 0)	commandeID = 0;
+	if(opcodeID < 0)	opcodeID = 0;
 
-	int nbCommandes = commandes.size();
-	while(commandeID < nbCommandes)
+	int opcodeCount = opcodes.size();
+	while(opcodeID < opcodeCount)
 	{
-		if(commandes.at(commandeID)->rechercherTexte(texte))	return true;
-		++commandeID;
+		if(opcodes.at(opcodeID)->rechercherTexte(texte))	return true;
+		++opcodeID;
 	}
 	return false;
 }
 
-bool Script::rechercherOpCodeP(quint8 opCode, int &commandeID) const
+bool Script::rechercherOpcodeP(int opcode, int &opcodeID) const
 {
-	if(commandeID >= commandes.size())	commandeID = commandes.size()-1;
+	if(opcodeID >= opcodes.size())	opcodeID = opcodes.size()-1;
 	
-	while(commandeID >= 0)
+	while(opcodeID >= 0)
 	{
-		if(opCode == commandes.at(commandeID)->id())	return true;
-		--commandeID;
+		if(opcode == opcodes.at(opcodeID)->id())	return true;
+		--opcodeID;
 	}
 
 	return false;
 }
 
-bool Script::rechercherVarP(quint8 bank, quint8 adress, int value, int &commandeID) const
+bool Script::rechercherVarP(quint8 bank, quint8 adress, int value, int &opcodeID) const
 {
-	if(commandeID >= commandes.size())	commandeID = commandes.size()-1;
+	if(opcodeID >= opcodes.size())	opcodeID = opcodes.size()-1;
 	
-	while(commandeID >= 0)
+	while(opcodeID >= 0)
 	{
-		if(commandes.at(commandeID)->rechercherVar(bank, adress, value))	return true;
-		--commandeID;
+		if(opcodes.at(opcodeID)->rechercherVar(bank, adress, value))	return true;
+		--opcodeID;
 	}
 
 	return false;
 }
 
-bool Script::rechercherExecP(quint8 group, quint8 script, int &commandeID) const
+bool Script::rechercherExecP(quint8 group, quint8 script, int &opcodeID) const
 {
-	if(commandeID >= commandes.size())	commandeID = commandes.size()-1;
+	if(opcodeID >= opcodes.size())	opcodeID = opcodes.size()-1;
 
-	while(commandeID >= 0)
+	while(opcodeID >= 0)
 	{
-		if(commandes.at(commandeID)->rechercherExec(group, script))	return true;
-		--commandeID;
+		if(opcodes.at(opcodeID)->rechercherExec(group, script))	return true;
+		--opcodeID;
 	}
 
 	return false;
 }
 
-bool Script::rechercherTexteP(const QRegExp &texte, int &commandeID) const
+bool Script::rechercherTexteP(const QRegExp &texte, int &opcodeID) const
 {
-	if(commandeID >= commandes.size())	commandeID = commandes.size()-1;
+	if(opcodeID >= opcodes.size())	opcodeID = opcodes.size()-1;
 	
-	while(commandeID >= 0)
+	while(opcodeID >= 0)
 	{
-		if(commandes.at(commandeID)->rechercherTexte(texte))	return true;
-		--commandeID;
+		if(opcodes.at(opcodeID)->rechercherTexte(texte))	return true;
+		--opcodeID;
 	}
 
 	return false;
@@ -615,326 +609,45 @@ bool Script::rechercherTexteP(const QRegExp &texte, int &commandeID) const
 
 void Script::listUsedTexts(QSet<quint8> &usedTexts) const
 {
-	foreach(Commande *commande, commandes)
-		commande->listUsedTexts(usedTexts);
+	foreach(Opcode *opcode, opcodes)
+		opcode->listUsedTexts(usedTexts);
 }
 
 void Script::listUsedTuts(QSet<quint8> &usedTuts) const
 {
-	foreach(Commande *commande, commandes)
-		commande->listUsedTuts(usedTuts);
+	foreach(Opcode *opcode, opcodes)
+		opcode->listUsedTuts(usedTuts);
 }
 
 void Script::shiftTextIds(int textId, int steps)
 {
-	foreach(Commande *commande, commandes)
-		commande->shiftTextIds(textId, steps);
+	foreach(Opcode *opcode, opcodes)
+		opcode->shiftTextIds(textId, steps);
 }
 
 void Script::shiftTutIds(int tutId, int steps)
 {
-	foreach(Commande *commande, commandes)
-		commande->shiftTutIds(tutId, steps);
+	foreach(Opcode *opcode, opcodes)
+		opcode->shiftTutIds(tutId, steps);
 }
 
 void Script::listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8, quint8> &text2win) const
 {
-	foreach(Commande *commande, commandes)
-		commande->listWindows(windows, text2win);
+	foreach(Opcode *opcode, opcodes)
+		opcode->listWindows(windows, text2win);
 }
 
 void Script::getBgParams(QHash<quint8, quint8> &paramActifs) const
 {
-	foreach(Commande *commande, commandes)
-		commande->getBgParams(paramActifs);
+	foreach(Opcode *opcode, opcodes)
+		opcode->getBgParams(paramActifs);
 }
 
 void Script::getBgMove(qint16 z[2], qint16 *x, qint16 *y) const
 {
-	foreach(Commande *commande, commandes)
-		commande->getBgMove(z, x, y);
+	foreach(Opcode *opcode, opcodes)
+		opcode->getBgMove(z, x, y);
 }
-
-/*int Script::posOfCommand(int commandID) const
-{
-	int currentCommandID=0, pos=0;
-
-	foreach(Commande *commande, commandes)
-	{
-		if(commandID==currentCommandID)
-		{
-			return pos;
-		}
-		++currentCommandID;
-		pos += commande->size();
-	}
-
-	return pos;
-}
-
-void Script::shiftJumps(int commandID, int shift)
-{
-	if(shift == 0)	return;
-
-	int currentCommandID=0, pos=posOfCommand(commandID), currentPos=0, jump;
-
-	foreach(Commande *commande, commandes)
-	{
-		if(currentCommandID < commandID)
-		{
-			switch(commande->id())
-			{
-			case 0x10:// JMPF (Jump)
-				jump = commande->getConstParams().at(0);
-				if(currentPos + 1 + jump > pos) {
-					jump += shift;
-					if(jump >= 0 && jump < 256) {
-						commande->getParams()[0] = jump;
-//						qDebug() << "JMPF" << (jump-shift) << jump;
-					} else if(jump >= 0 && jump < 65536)// -> JMPFL
-					{
-						commande->setCommande(QByteArray().append('\x11').append((char *)&jump, 2));
-//						qDebug() << "JMPF -> JMPFL" << (jump-shift) << jump;
-					}
-				}
-				break;
-			case 0x11:// JMPFL (Long Jump)
-				jump=0;
-				memcpy(&jump, commande->getConstParams().mid(0,2).constData(), 2);
-				if(currentPos + 1 + jump > pos) {
-					jump += shift;
-					if(jump >= 0 && jump < 65536) {
-						memcpy(commande->getParams().data(), &jump, 2);
-//						qDebug() << "JMPFL" << (jump-shift) << jump;
-					}
-				}
-				break;
-			case 0x14:// IFUB (Jump)
-				jump = commande->getConstParams().at(4);
-				if(currentPos + 5 + jump > pos) {
-					jump += shift;
-					if(jump >= 0 && jump < 256) {
-						commande->getParams()[4] = jump;
-//						qDebug() << "IFUB" << (jump-shift) << jump;
-					}
-					else if(jump >= 0 && jump < 65536)// -> IFUBL
-					{
-						commande->setCommande(QByteArray().append('\x15').append(commande->getConstParams().left(4)).append((char *)&jump, 2));
-//						qDebug() << "IFUB -> IFUBL" << (jump-shift) << jump;
-					}
-				}
-				break;
-			case 0x15:// IFUBL (Long Jump)
-				jump=0;
-				memcpy(&jump, commande->getConstParams().mid(4,2).constData(), 2);
-				if(currentPos + 5 + jump > pos) {
-					jump += shift;
-					if(jump >= 0 && jump < 65536) {
-						memcpy(commande->getParams().data() + 4, &jump, 2);
-//						qDebug() << "IFUBL" << (jump-shift) << jump;
-					}
-				}
-				break;
-			case 0x16:// IFSW (Jump)
-			case 0x18:// IFUW (Jump)
-				jump = commande->getConstParams().at(6);
-				if(currentPos + 7 + jump > pos) {
-					jump += shift;
-					if(jump >= 0 && jump < 256) {
-						commande->getParams()[6] = jump;
-//						qDebug() << (commande->id()==0x16 ? "IFSW" : "IFUW") << (jump-shift) << jump;
-					} else if(jump >= 0 && jump < 65536)// -> IFSWL/IFUWL
-					{
-						commande->setCommande(QByteArray().append(commande->id()==0x16 ? '\x17' : '\x19').append(commande->getConstParams().left(6)).append((char *)&jump, 2));
-//						qDebug() << (commande->id()==0x16 ? "IFSW -> IFSWL" : "IFUW -> IFUWL") << (jump-shift) << jump;
-					}
-				}
-				break;
-			case 0x17:// IFSWL (Long Jump)
-			case 0x19:// IFUWL (Long Jump)
-				jump=0;
-				memcpy(&jump, commande->getConstParams().mid(6,2).constData(), 2);
-				if(currentPos + 7 + jump > pos) {
-					jump += shift;
-					if(jump >= 0 && jump < 65536) {
-						memcpy(commande->getParams().data() + 6, &jump, 2);
-//						qDebug() << (commande->id()==0x17 ? "IFSWL" : "IFUWL") << (jump-shift) << jump;
-					}
-				}
-				break;
-			case 0x30:// IFKEY (Jump)
-			case 0x31:// IFKEYON (Jump)
-			case 0x32:// IFKEYOFF (Jump)
-				jump = commande->getConstParams().at(2);
-				if(currentPos + 3 + jump > pos) {
-					jump += shift;
-					if(jump >= 0 && jump < 256) {
-						commande->getParams()[2] = jump;
-//						qDebug() << (commande->id()==0x30 ? "IFKEY" : (commande->id()==0x31 ? "IFKEYON" : "IFKEYOFF")) << (jump-shift) << jump;
-					}
-				}
-				break;
-			case 0xCB:// IFPRTYQ (Jump)
-			case 0xCC:// IFMEMBQ (Jump)
-				jump = commande->getConstParams().at(1);
-				if(currentPos + 2 + jump > pos) {
-					jump += shift;
-					if(jump >= 0 && jump < 256) {
-						commande->getParams()[1] = jump;
-//						qDebug() << (commande->id()==0xCB ? "IFPRTYQ" : "IFMEMBQ") << (jump-shift) << jump;
-					}
-				}
-				break;
-			}
-		}
-		else
-		{
-			switch(commande->id())
-			{
-			case 0x12:// JMPB (Jump Forward)
-				jump = commande->getConstParams().at(0);
-				if(currentPos - jump > pos) {
-					jump -= shift;
-					if(jump >= 0 && jump < 256) {
-						commande->getParams()[0] = jump;
-//						qDebug() << "JMPB" << (jump-shift) << jump;
-					}
-					else if(jump >= 0 && jump < 65536)// -> JMPBL
-					{
-						commande->setCommande(QByteArray().append('\x13').append((char *)&jump, 2));
-//						qDebug() << "JMPB -> JMPBL" << (jump-shift) << jump;
-					}
-				}
-				break;
-			case 0x13:// JMPBL (Long Jump Forward)
-				jump=0;
-				memcpy(&jump, commande->getConstParams().mid(0,2).constData(), 2);
-				if(currentPos - jump > pos) {
-					jump -= shift;
-					if(jump >= 0 && jump < 65536) {
-						memcpy(commande->getParams().data(), &jump, 2);
-//						qDebug() << "JMPBL" << (jump-shift) << jump;
-					}
-				}
-				break;
-			}
-		}
-		++currentCommandID;
-		currentPos += commande->size();
-	}
-}
-
-void Script::shiftJumpsSwap(Commande *commande, int shift)
-{
-	if(shift == 0)	return;
-
-	int jump;
-
-	switch(commande->id())
-	{
-	case 0x10:// JMPF (Jump)
-		jump = commande->getConstParams().at(0) + shift;
-		if(jump >= 0 && jump < 256) {
-			commande->getParams()[0] = jump;
-//			qDebug() << "JMPF" << (jump-shift) << jump;
-		} else if(jump >= 0 && jump < 65536)// -> JMPFL
-		{
-			commande->setCommande(QByteArray().append('\x11').append((char *)&jump, 2));
-//			qDebug() << "JMPF -> JMPFL" << (jump-shift) << jump;
-		}
-		break;
-	case 0x11:// JMPFL (Long Jump)
-		jump=0;
-		memcpy(&jump, commande->getConstParams().mid(0,2).constData(), 2);
-		jump += shift;
-		if(jump >= 0 && jump < 65536) {
-			memcpy(commande->getParams().data(), &jump, 2);
-//			qDebug() << "JMPFL" << (jump-shift) << jump;
-		}
-		break;
-	case 0x12:// JMPB (Jump Forward)
-		jump = commande->getConstParams().at(0) - shift;
-		if(jump >= 0 && jump < 256) {
-			commande->getParams()[0] = jump;
-//			qDebug() << "JMPB" << (jump-shift) << jump;
-		}
-		else if(jump >= 0 && jump < 65536)// -> JMPBL
-		{
-			commande->setCommande(QByteArray().append('\x13').append((char *)&jump, 2));
-//			qDebug() << "JMPB -> JMPBL" << (jump-shift) << jump;
-		}
-		break;
-	case 0x13:// JMPBL (Long Jump Forward)
-		jump=0;
-		memcpy(&jump, commande->getConstParams().mid(0,2).constData(), 2);
-		jump -= shift;
-		if(jump >= 0 && jump < 65536) {
-			memcpy(commande->getParams().data(), &jump, 2);
-//			qDebug() << "JMPBL" << (jump-shift) << jump;
-		}
-		break;
-	case 0x14:// IFUB (Jump)
-		jump = commande->getConstParams().at(4) + shift;
-		if(jump >= 0 && jump < 256) {
-			commande->getParams()[4] = jump;
-//			qDebug() << "IFUB" << (jump-shift) << jump;
-		}
-		else if(jump >= 0 && jump < 65536)// -> IFUBL
-		{
-			commande->setCommande(QByteArray().append('\x15').append(commande->getConstParams().left(4)).append((char *)&jump, 2));
-//			qDebug() << "IFUB -> IFUBL" << (jump-shift) << jump;
-		}
-		break;
-	case 0x15:// IFUBL (Long Jump)
-		jump=0;
-		memcpy(&jump, commande->getConstParams().mid(4,2).constData(), 2);
-		jump += shift;
-		if(jump >= 0 && jump < 65536) {
-			memcpy(commande->getParams().data() + 4, &jump, 2);
-//			qDebug() << "IFUBL" << (jump-shift) << jump;
-		}
-		break;
-	case 0x16:// IFSW (Jump)
-	case 0x18:// IFUW (Jump)
-		jump = commande->getConstParams().at(6) + shift;
-		if(jump >= 0 && jump < 256) {
-			commande->getParams()[6] = jump;
-//			qDebug() << (commande->id()==0x16 ? "IFSW" : "IFUW") << (jump-shift) << jump;
-		} else if(jump >= 0 && jump < 65536)// -> IFSWL/IFUWL
-		{
-			commande->setCommande(QByteArray().append(commande->id()==0x16 ? '\x17' : '\x19').append(commande->getConstParams().left(6)).append((char *)&jump, 2));
-//			qDebug() << (commande->id()==0x16 ? "IFSW -> IFSWL" : "IFUW -> IFUWL") << (jump-shift) << jump;
-		}
-		break;
-	case 0x17:// IFSWL (Long Jump)
-	case 0x19:// IFUWL (Long Jump)
-		jump=0;
-		memcpy(&jump, commande->getConstParams().mid(6,2).constData(), 2);
-		jump += shift;
-		if(jump >= 0 && jump < 65536) {
-			memcpy(commande->getParams().data() + 6, &jump, 2);
-//			qDebug() << (commande->id()==0x17 ? "IFSWL" : "IFUWL") << (jump-shift) << jump;
-		}
-		break;
-	case 0x30:// IFKEY (Jump)
-	case 0x31:// IFKEYON (Jump)
-	case 0x32:// IFKEYOFF (Jump)
-		jump = commande->getConstParams().at(2) + shift;
-		if(jump >= 0 && jump < 256) {
-			commande->getParams()[2] = jump;
-//			qDebug() << (commande->id()==0x30 ? "IFKEY" : (commande->id()==0x31 ? "IFKEYON" : "IFKEYOFF")) << (jump-shift) << jump;
-		}
-		break;
-	case 0xCB:// IFPRTYQ (Jump)
-	case 0xCC:// IFMEMBQ (Jump)
-		jump = commande->getConstParams().at(1) + shift;
-		if(jump >= 0 && jump < 256) {
-			commande->getParams()[1] = jump;
-//			qDebug() << (commande->id()==0xCB ? "IFPRTYQ" : "IFMEMBQ") << (jump-shift) << jump;
-		}
-		break;
-	}
-}*/
 
 void Script::lecture(QTreeWidget *zoneScript)
 {
@@ -943,65 +656,46 @@ void Script::lecture(QTreeWidget *zoneScript)
 	QTreeWidgetItem *parentItem = 0;
 	QString description;
 	quint8 clef;
-	quint16 commandeID = 0, nbCommandes = commandes.size();
-	Commande *curCommande;
+	quint16 opcodeID = 0, opcodeCount = opcodes.size();
+	Opcode *curOpcode;
 	QPixmap fontPixmap(":/images/chiffres.png");
 	bool error = false;
 	
-	while(commandeID < nbCommandes)
+	while(opcodeID < opcodeCount)
 	{
-		curCommande = commandes.at(commandeID);
+		curOpcode = opcodes.at(opcodeID);
 
-		if(curCommande->isLabel()) {
+		if(curOpcode->isLabel()) {
 			while(!indent.isEmpty() &&
-				  ((OpcodeLabel *)curCommande)->label() >= indent.last())
+				  ((OpcodeLabel *)curOpcode)->label() >= indent.last())
 			{
-				if(((OpcodeLabel *)curCommande)->label() > indent.last())
+				if(((OpcodeLabel *)curOpcode)->label() > indent.last())
 					error = true;
 				indent.removeLast();
 				parentItem = parentItem->parent();
 			}
 		}
 		
-		description = curCommande->toString();
-		clef = curCommande->id();
+		description = curOpcode->toString();
+		clef = curOpcode->id();
 		
-		/* description += QString(" | %1 || ").arg(clef,0,16);
-		for(quint8 cur=0 ; cur<curCommande->getConstParams().size() ; ++cur)
-		{
-			description += QString("%1 | ").arg((quint8)curCommande->getConstParams().at(cur));
-		} */
-		
-		/* description += " | ";
-		for(quint8 cur=0 ; cur<indent.size() ; ++cur)
-		{
-			description += QString("%1 | ").arg(indent.at(cur));
-		} */ //DEBUG
-		QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList() << description << QString::number(commandeID));
+		QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList() << description << QString::number(opcodeID));
 		row.append(item);
 		
-		// pos += Data::opcode_length[clef];
-		
-		//ERREUR
-		/* if(pos>script.size())
-		{
-			description += " " + QObject::tr("Erreur : dépassement") + "";
-			item->setBackground(0, QColor(0xFF,0xCC,0xCC));
-		} */
 		QPixmap wordPixmap(32,11);
-		item->setIcon(0, QIcon(posNumber(commandeID, fontPixmap, wordPixmap)));
-		item->setToolTip(0, curCommande->name());
+		item->setIcon(0, QIcon(posNumber(opcodeID, fontPixmap, wordPixmap)));
+		item->setToolTip(0, curOpcode->name());
 		if((clef>=0x14 && clef<=0x19) || (clef>=0x30 && clef<=0x32) || clef==0xcb || clef==0xcc)
 		{
 			item->setForeground(0, QColor(0x00,0x66,0xcc));
-			indent.append(((OpcodeJump *)curCommande)->label());
+			indent.append(((OpcodeJump *)curOpcode)->label());
 			parentItem = item;
 		}
 		else if(clef>=0x01 && clef<=0x07)
 			item->setForeground(0, QColor(0xcc,0x66,0x00));
 		else if(clef>=0x10 && clef<=0x13)
 			item->setForeground(0, QColor(0x66,0xcc,0x00));
-		else if(clef==0x00 || clef==0x07 || curCommande->isLabel())
+		else if(clef==0x00 || clef==0x07 || curOpcode->isLabel())
 			item->setForeground(0, QColor(0x66,0x66,0x66));
 
 		if(error)
@@ -1010,21 +704,21 @@ void Script::lecture(QTreeWidget *zoneScript)
 			error = false;
 		}
 
-		++commandeID;
+		++opcodeID;
 	}
 
 	zoneScript->addTopLevelItems(row);
 
-	commandeID = 0;
+	opcodeID = 0;
 	foreach(QTreeWidgetItem *item, row) {
-		if(expandedItems.contains(commandes.at(commandeID))) {
+		if(expandedItems.contains(opcodes.at(opcodeID))) {
 			item->setExpanded(true);
 		}
-		++commandeID;
+		++opcodeID;
 	}
 }
 
-void Script::setExpandedItems(const QList<Commande *> &expandedItems)
+void Script::setExpandedItems(const QList<Opcode *> &expandedItems)
 {
 	this->expandedItems = expandedItems;
 }

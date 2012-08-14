@@ -30,7 +30,7 @@
 #include "Search.h"
 #include "GrpScriptList.h"
 #include "ScriptList.h"
-#include "CommandeList.h"
+#include "OpcodeList.h"
 #include "ModelManager.h"
 #include "FieldModel.h"
 #include "WalkmeshManager.h"
@@ -61,7 +61,7 @@ public slots:
 	void enregistrer();
 	int fermer(bool quit=false);
 
-	void gotoCommande(int fileID, int grpScriptID, int scriptID, int commandeID);
+	void gotoOpcode(int fileID, int grpScriptID, int scriptID, int opcodeID);
 
 	void jp_txt(bool);
 
@@ -81,7 +81,7 @@ public slots:
 	void searchManager();
 	void a_propos();
 private slots:
-	void emitCommandeID();
+	void emitOpcodeID();
 	void changeHistoric(const Historic &);
 	void undo();
 	void redo();
@@ -96,13 +96,13 @@ signals:
 	void fileIDChanged(int);
 	void grpScriptIDChanged(int);
 	void scriptIDChanged(int);
-	void commandeIDChanged(int);
+	void opcodeIDChanged(int);
 private:
 	QLineEdit *lineSearch;
 	QTreeWidget *liste;
 	GrpScriptList *liste2;
 	ScriptList *liste3;
-	CommandeList *zoneScript;
+	OpcodeList *zoneScript;
 	QStackedWidget *zonePreview;
 	ApercuBG *zoneImage;
 	FieldModel *fieldModel;

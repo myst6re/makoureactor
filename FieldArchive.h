@@ -48,14 +48,14 @@ public:
 	bool isAllOpened();
 	QList<FF7Var> searchAllVars();
 	void searchAll();// research & debug function
-	bool rechercherOpCode(quint8 opCode, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting);
-	bool rechercherVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting);
-	bool rechercherExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting);
-	bool rechercherTexte(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting);
-	bool rechercherOpCodeP(quint8 opCode, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting);
-	bool rechercherVarP(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting);
-	bool rechercherExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting);
-	bool rechercherTexteP(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting);
+	bool rechercherOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
+	bool rechercherVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
+	bool rechercherExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
+	bool rechercherTexte(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
+	bool rechercherOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
+	bool rechercherVarP(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
+	bool rechercherExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
+	bool rechercherTexteP(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 
 	void close();
 	quint8 open(QList<QTreeWidgetItem *> &items);

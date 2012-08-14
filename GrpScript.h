@@ -47,15 +47,15 @@ public:
 	QColor getTypeColor();
 	QString getScriptName(quint8 scriptID);
 
-	bool rechercherOpCode(quint8 opCode, int &scriptID, int &commandeID) const;
-	bool rechercherVar(quint8 bank, quint8 adress, int value, int &scriptID, int &commandeID) const;
+	bool rechercherOpcode(int opcode, int &scriptID, int &opcodeID) const;
+	bool rechercherVar(quint8 bank, quint8 adress, int value, int &scriptID, int &opcodeID) const;
 	QList<FF7Var> searchAllVars() const;
-	bool rechercherExec(quint8 group, quint8 script, int &scriptID, int &commandeID) const;
-	bool rechercherTexte(const QRegExp &texte, int &scriptID, int &commandeID) const;
-	bool rechercherOpCodeP(quint8 opCode, int &scriptID, int &commandeID) const;
-	bool rechercherVarP(quint8 bank, quint8 adress, int value, int &scriptID, int &commandeID) const;
-	bool rechercherExecP(quint8 group, quint8 script, int &scriptID, int &commandeID) const;
-	bool rechercherTexteP(const QRegExp &texte, int &scriptID, int &commandeID) const;
+	bool rechercherExec(quint8 group, quint8 script, int &scriptID, int &opcodeID) const;
+	bool rechercherTexte(const QRegExp &texte, int &scriptID, int &opcodeID) const;
+	bool rechercherOpcodeP(int opCode, int &scriptID, int &opcodeID) const;
+	bool rechercherVarP(quint8 bank, quint8 adress, int value, int &scriptID, int &opcodeID) const;
+	bool rechercherExecP(quint8 group, quint8 script, int &scriptID, int &opcodeID) const;
+	bool rechercherTexteP(const QRegExp &texte, int &scriptID, int &opcodeID) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void shiftTextIds(int textId, int steps=1);

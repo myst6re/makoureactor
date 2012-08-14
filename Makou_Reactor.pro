@@ -10,8 +10,7 @@ INCLUDEPATH += .
 # Input
 HEADERS += ApercuBG.h \
     ColorDisplay.h \
-    Commande.h \
-    CommandeList.h \
+    OpcodeList.h \
     Config.h \
     Delegate.h \
     Field.h \
@@ -59,11 +58,12 @@ HEADERS += ApercuBG.h \
     NeoMidgar.h \
     GZIP.h \
     Data.h \
-    OrientationWidget.h
+    OrientationWidget.h \
+    ScriptEditorView.h \
+    ScriptEditorGenericList.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
-    Commande.cpp \
-    CommandeList.cpp \
+    OpcodeList.cpp \
     Config.cpp \
     Delegate.cpp \
     Field.cpp \
@@ -112,7 +112,9 @@ SOURCES += ApercuBG.cpp \
     NeoMidgar.cpp \
     GZIP.cpp \
     Data.cpp \
-    OrientationWidget.cpp
+    OrientationWidget.cpp \
+    ScriptEditorView.cpp \
+    ScriptEditorGenericList.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts
