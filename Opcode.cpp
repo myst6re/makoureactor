@@ -1138,6 +1138,11 @@ OpcodeJMPF::OpcodeJMPF(const QByteArray &params) :
 	setParams(params);
 }
 
+OpcodeJMPF::OpcodeJMPF(const OpcodeJump &op) :
+	OpcodeJump(op)
+{
+}
+
 void OpcodeJMPF::setParams(const QByteArray &params)
 {
 	_jump = (quint8)params.at(0) + jumpPosData();
@@ -1158,6 +1163,11 @@ OpcodeJMPFL::OpcodeJMPFL(const QByteArray &params) :
 	OpcodeJump()
 {
 	setParams(params);
+}
+
+OpcodeJMPFL::OpcodeJMPFL(const OpcodeJump &op) :
+	OpcodeJump(op)
+{
 }
 
 void OpcodeJMPFL::setParams(const QByteArray &params)
@@ -1186,6 +1196,11 @@ OpcodeJMPB::OpcodeJMPB(const QByteArray &params) :
 	setParams(params);
 }
 
+OpcodeJMPB::OpcodeJMPB(const OpcodeJump &op) :
+	OpcodeJump(op)
+{
+}
+
 void OpcodeJMPB::setParams(const QByteArray &params)
 {
 	_jump = -(quint8)params.at(0);
@@ -1206,6 +1221,11 @@ OpcodeJMPBL::OpcodeJMPBL(const QByteArray &params) :
 	OpcodeJump()
 {
 	setParams(params);
+}
+
+OpcodeJMPBL::OpcodeJMPBL(const OpcodeJump &op) :
+	OpcodeJump(op)
+{
 }
 
 void OpcodeJMPBL::setParams(const QByteArray &params)
@@ -1233,6 +1253,11 @@ OpcodeIf::OpcodeIf() :
 {
 }
 
+OpcodeIf::OpcodeIf(const OpcodeJump &op) :
+	OpcodeJump(op), banks(0), value1(0), value2(0), oper(0)
+{
+}
+
 void OpcodeIf::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
@@ -1249,10 +1274,10 @@ OpcodeIFUB::OpcodeIFUB(const QByteArray &params) :
 
 void OpcodeIFUB::setParams(const QByteArray &params)
 {
-	banks = params.at(0);
-	value1 = params.at(1); // bank 1
-	value2 = params.at(2); // bank 2
-	oper = params.at(3);
+	banks = (quint8)params.at(0);
+	value1 = (quint8)params.at(1); // bank 1
+	value2 = (quint8)params.at(2); // bank 2
+	oper = (quint8)params.at(3);
 	_jump = (quint8)params.at(4) + jumpPosData();
 }
 
@@ -1281,13 +1306,18 @@ OpcodeIFUBL::OpcodeIFUBL(const QByteArray &params)
 	setParams(params);
 }
 
+OpcodeIFUBL::OpcodeIFUBL(const OpcodeIFUB &op) :
+	OpcodeIf(op)
+{
+}
+
 void OpcodeIFUBL::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
-	banks = params.at(0);
-	value1 = params.at(1); // bank 1
-	value2 = params.at(2); // bank 2
-	oper = params.at(3);
+	banks = (quint8)params.at(0);
+	value1 = (quint8)params.at(1); // bank 1
+	value2 = (quint8)params.at(2); // bank 2
+	oper = (quint8)params.at(3);
 	quint16 jump;
 	memcpy(&jump, &constParams[4], 2);
 	_jump = jump + jumpPosData();
@@ -1322,13 +1352,13 @@ OpcodeIFSW::OpcodeIFSW(const QByteArray &params)
 void OpcodeIFSW::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
-	banks = params.at(0);
+	banks = (quint8)params.at(0);
 	qint16 v1, v2;
 	memcpy(&v1, &constParams[1], 2);
 	memcpy(&v2, &constParams[3], 2);
 	value1 = v1;
 	value2 = v2;
-	oper = params.at(5);
+	oper = (quint8)params.at(5);
 	_jump = (quint8)params.at(6) + jumpPosData();
 }
 
@@ -1358,16 +1388,21 @@ OpcodeIFSWL::OpcodeIFSWL(const QByteArray &params)
 	setParams(params);
 }
 
+OpcodeIFSWL::OpcodeIFSWL(const OpcodeIFSW &op) :
+	OpcodeIf(op)
+{
+}
+
 void OpcodeIFSWL::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
-	banks = params.at(0);
+	banks = (quint8)params.at(0);
 	qint16 v1, v2;
 	memcpy(&v1, &constParams[1], 2);
 	memcpy(&v2, &constParams[3], 2);
 	value1 = v1;
 	value2 = v2;
-	oper = params.at(5);
+	oper = (quint8)params.at(5);
 	quint16 jump;
 	memcpy(&jump, &constParams[6], 2);
 	_jump = jump + jumpPosData();
@@ -1403,13 +1438,13 @@ OpcodeIFUW::OpcodeIFUW(const QByteArray &params)
 void OpcodeIFUW::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
-	banks = params.at(0);
+	banks = (quint8)params.at(0);
 	quint16 v1, v2;
 	memcpy(&v1, &constParams[1], 2);
 	memcpy(&v2, &constParams[3], 2);
 	value1 = v1;
 	value2 = v2;
-	oper = params.at(5);
+	oper = (quint8)params.at(5);
 	_jump = (quint8)params.at(6) + jumpPosData();
 }
 
@@ -1439,16 +1474,22 @@ OpcodeIFUWL::OpcodeIFUWL(const QByteArray &params)
 	setParams(params);
 }
 
+
+OpcodeIFUWL::OpcodeIFUWL(const OpcodeIFUW &op) :
+	OpcodeIf(op)
+{
+}
+
 void OpcodeIFUWL::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
-	banks = params.at(0);
+	banks = (quint8)params.at(0);
 	quint16 v1, v2;
 	memcpy(&v1, &constParams[1], 2);
 	memcpy(&v2, &constParams[3], 2);
 	value1 = v1;
 	value2 = v2;
-	oper = params.at(5);
+	oper = (quint8)params.at(5);
 	quint16 jump;
 	memcpy(&jump, &constParams[6], 2);
 	_jump = jump + jumpPosData();
@@ -1488,8 +1529,8 @@ void OpcodeMINIGAME::setParams(const QByteArray &params)
 	memcpy(&targetX, &constParams[2], 2);
 	memcpy(&targetY, &constParams[4], 2);
 	memcpy(&targetI, &constParams[6], 2);
-	minigameParam = params.at(8);
-	minigameID = params.at(9);
+	minigameParam = (quint8)params.at(8);
+	minigameID = (quint8)params.at(9);
 }
 
 QString OpcodeMINIGAME::toString() const
@@ -1533,7 +1574,7 @@ OpcodeTUTOR::OpcodeTUTOR(const QByteArray &params)
 
 void OpcodeTUTOR::setParams(const QByteArray &params)
 {
-	tutoID = params.at(0);
+	tutoID = (quint8)params.at(0);
 }
 
 QString OpcodeTUTOR::toString() const
@@ -1604,8 +1645,8 @@ OpcodeBTRLD::OpcodeBTRLD(const QByteArray &params)
 
 void OpcodeBTRLD::setParams(const QByteArray &params)
 {
-	banks = params.at(0);
-	var = params.at(1); // bank 2
+	banks = (quint8)params.at(0);
+	var = (quint8)params.at(1); // bank 2
 }
 
 QString OpcodeBTRLD::toString() const

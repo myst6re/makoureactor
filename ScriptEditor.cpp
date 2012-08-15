@@ -20,6 +20,8 @@
 ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), isInit(isInit)
 {
+
+	qDebug() << "new ScriptEditor";
 	//Affichage
 	setWindowTitle(tr("Éditeur%1").arg(isInit ? tr(" (init mode)") : ""));
 	setFixedSize(500, 318);
@@ -48,26 +50,11 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 	textEdit->setReadOnly(true);
 	textEdit->setFixedHeight(38);
 	
-	editorWidget = new ScriptEditorGenericList(script, this);
-	
-//	editorLayout = new QStackedLayout;
-//	editorLayout->addWidget(new ScriptEditorGenericList(script, this));
-//	editorLayout->addWidget(new ScriptEditorGotoPage(script, this));
-/*	nouvelEditeur = new QStackedWidget;
-	nouvelEditeur->setFixedHeight(300);
-    nouvelEditeur->addWidget(new GotoPage);
-    nouvelEditeur->addWidget(new ReturnPage);
-    nouvelEditeur->addWidget(new ExecPage);
-    nouvelEditeur->addWidget(new ExecCharPage);
-    nouvelEditeur->addWidget(new IfPage);
-    nouvelEditeur->addWidget(new IfKeyPage);
-    nouvelEditeur->addWidget(new IfCharPage);
-    nouvelEditeur->addWidget(new WaitPage);
-    nouvelEditeur->addWidget(new NopPage);
-    nouvelEditeur->addWidget(new OpPage);
-    nouvelEditeur->addWidget(new Op1Page);
-	nouvelEditeur->addWidget(new BgParamStatePage);
-*/	
+	editorLayout = new QStackedLayout;
+	editorLayout->addWidget(editorWidget = new ScriptEditorGenericList(script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorGotoPage(script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorIfPage(script, opcodeID, this));
+
 	ok = new QPushButton(tr("OK"),this);
 	ok->setDefault(true);
 	cancel = new QPushButton(tr("Annuler"),this);
@@ -82,9 +69,7 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 	layout->addWidget(comboBox);
 	layout->addWidget(textEdit);
 	layout->addWidget(new QLabel(tr("Paramètres :"), this));
-	layout->addWidget(editorWidget);
-//	layout->addLayout(editorLayout);
-	//layout->addWidget(nouvelEditeur);
+	layout->addLayout(editorLayout);
 	layout->addStretch();
 	layout->addLayout(buttonLayout);
 	
@@ -98,12 +83,7 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 	if(modify)
 	{
 		this->opcodeID = opcodeID;
-		Opcode *com = script->getOpcode(opcodeID);
-		if(com->isLabel()) {
-			this->opcode = new OpcodeLabel(((OpcodeLabel *)com)->label());
-		} else {
-			this->opcode = Script::createOpcode(com->toByteArray());
-		}
+		this->opcode = Script::copyOpcode(script->getOpcode(opcodeID));
 
 		int index, i;
 		for(i=0 ; i<comboBox0->count() ; ++i)
@@ -127,7 +107,7 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 			return;
 		}
 		textEdit->setPlainText(opcode->toString());
-		editorWidget->setOpcode(opcode);
+		fillEditor();
 		
 		connect(ok, SIGNAL(released()), SLOT(modify()));
 	}
@@ -137,7 +117,7 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 		this->opcode = new OpcodeRET();
 		comboBox->setCurrentIndex(0);
 		changeCurrentOpcode(0);
-		editorWidget->setOpcode(opcode);
+		fillEditor();
 
 		connect(ok, SIGNAL(released()), SLOT(add()));
 	}
@@ -147,22 +127,9 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 			<< 0xB4 << 0xB5 << 0xBA << 0xBB << 0xBC << 0xC0 << 0xC2;
 
 	connect(comboBox0, SIGNAL(currentIndexChanged(int)), SLOT(buildList(int)));
-	connect(editorWidget, SIGNAL(opcodeChanged()), SLOT(refreshTextEdit()));
+	for(int i=0 ; i<editorLayout->count() ; ++i)
+		connect((ScriptEditorView *)editorLayout->widget(i), SIGNAL(opcodeChanged()), SLOT(refreshTextEdit()));
 	connect(comboBox, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
-	/* for(int i=0 ; i<256 ; i++) {
-
-		QList<int> paramTypes = this->paramTypes(i);
-		int tailleParam = 0;
-		for(int j=0 ; j<paramTypes.size() ; j++)
-			tailleParam += paramSize(paramTypes.at(j));
-
-		if(tailleParam/8 != Opcode::length[i]-1) {
-			qDebug() << QString("Erreur taille (0x%1) : %2 et %3").arg(i,0,16).arg(tailleParam/8).arg(Opcode::length[i]-1);
-		}
-		if(tailleParam%8!=0) {
-			qDebug() << QString("Pas multiple de 8 (0x%1) : %2").arg(i,0,16).arg(tailleParam);
-		}
-	} */
 }
 
 ScriptEditor::~ScriptEditor()
@@ -170,343 +137,64 @@ ScriptEditor::~ScriptEditor()
 	delete opcode;
 }
 
-/*QByteArray ScriptEditor::parseModel(bool *isLabel)
+void ScriptEditor::fillEditor()
 {
-	*isLabel = false;
+	qDebug() << "ScriptEditor::fillEditor";
 
-	/* quint8 opcode = comboBox->itemData(comboBox->currentIndex()).toInt();
-
-	if(opcode>=0x10 && opcode<=0x13)
-	{
-		nouvelEditeur->setCurrentIndex(0);
-		return ((GotoPage *)nouvelEditeur->currentWidget())->save();
+	switch((Opcode::Keys)opcode->id()) {
+	case Opcode::JMPF:case Opcode::JMPFL:
+	case Opcode::JMPB:case Opcode::JMPBL:
+		editorWidget = (ScriptEditorView *)editorLayout->widget(1);
+		break;
+	case Opcode::IFUB:case Opcode::IFUBL:
+	case Opcode::IFSW:case Opcode::IFSWL:
+	case Opcode::IFUW:case Opcode::IFUWL:
+		editorWidget = (ScriptEditorView *)editorLayout->widget(2);
+		break;
+	default:
+		editorWidget = (ScriptEditorView *)editorLayout->widget(0);
 	}
-	else if(opcode==0x00 || opcode==0x07)
-	{
-		nouvelEditeur->setCurrentIndex(1);
-		return ((ReturnPage *)nouvelEditeur->currentWidget())->save();
-	}
-	else if(opcode>=0x01 && opcode<=0x03)
-	{
-		nouvelEditeur->setCurrentIndex(2);
-		return ((ExecPage *)nouvelEditeur->currentWidget())->save();
-	}
-	else if(opcode>=0x04 && opcode<=0x06)
-	{
-		nouvelEditeur->setCurrentIndex(3);
-		return ((ExecCharPage *)nouvelEditeur->currentWidget())->save();
-	}
-	else if(opcode>=0x14 && opcode<=0x19)
-	{
-		nouvelEditeur->setCurrentIndex(4);
-		return ((IfPage *)nouvelEditeur->currentWidget())->save();
-	}
-	else if(opcode>=0x30 && opcode<=0x32)
-	{
-		nouvelEditeur->setCurrentIndex(5);
-		return ((IfKeyPage *)nouvelEditeur->currentWidget())->save();
-	}
-	else if(opcode==0xCB || opcode==0xCC)
-	{
-		nouvelEditeur->setCurrentIndex(6);
-		return ((IfCharPage *)nouvelEditeur->currentWidget())->save();
-	}
-	else if(opcode==0x24)
-	{
-		nouvelEditeur->setCurrentIndex(7);
-		return ((WaitPage *)nouvelEditeur->currentWidget())->save();
-	}
-	else if(opcode==0x5F)
-	{
-		nouvelEditeur->setCurrentIndex(8);
-		return ((NopPage *)nouvelEditeur->currentWidget())->save();
-	}
-	else if((opcode>=0x76 && opcode<=0x79) || opcode==0x80 || opcode==0x81 || (opcode>=0x85 && opcode<=0x94))
-	{
-		nouvelEditeur->setCurrentIndex(9);
-		return ((OpPage *)nouvelEditeur->currentWidget())->save();
-	}
-	else if((opcode>=0x7A && opcode<=0x7D) || (opcode>=0x95 && opcode<=0x98))
-	{
-		nouvelEditeur->setCurrentIndex(10);
-		return ((Op1Page *)nouvelEditeur->currentWidget())->save();
-	}
-	else if(opcode==0xE0 || opcode==0xE1)
-	{
-		nouvelEditeur->setCurrentIndex(11);
-		return ((BgParamStatePage *)nouvelEditeur->currentWidget())->save();
-	}
-
-	QByteArray newOpcode;
-	quint8 byte, length, start;
-	int itemData;
-	
-	itemData = comboBox->itemData(comboBox->currentIndex()).toInt();
-	if(itemData == 0x100) {
-		*isLabel = true;
-	}
-	byte = itemData & 0xFF;
-	// qDebug() << "byte= " << byte;
-	newOpcode.append((char)byte);
-	//Calcul longueur opcode
-	length = 0;
-	start = 1;
-	
-	if(byte == 0x0F)//SPECIAL
-	{
-		quint8 byte2 = (itemData >> 8) & 0xFF;
-		newOpcode.append((char)byte2);
-		switch(byte2)
-		{
-		case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
-					length = 1;
-			break;
-		case 0xF8:case 0xFD:
-					length = 2;
-			break;
-		}
-		start = 2;
-	}
-	else if(byte == 0x28)//KAWAI
-	{
-		quint8 byte3 = (itemData >> 8) & 0xFF;
-		// qDebug() << "byte3= " << byte3;
-		length = model->rowCount()+3;
-		// qDebug() << "length = " << length;
-		newOpcode.append((char)length);
-		newOpcode.append((char)byte3);
-		// qDebug() << "newOpcode= " << newOpcode.toHex();
-		for(quint8 i=0 ; i<length-3 ; ++i)
-			newOpcode.append(model->item(i, 1)->text().toUInt());
-		// qDebug() << "newOpcode= " << newOpcode.toHex();
-		return newOpcode;
-	}
-	
-	// qDebug() << "byte= " << byte;
-	length += Opcode::length[byte];
-	// qDebug() << "length= " << length;
-	newOpcode.append(QByteArray(length-start, '\x0'));
-	// qDebug() << "newOpcode= " << newOpcode.toHex();
-	int paramSize, paramType, cur = 8, departBA, tailleBA, departLocal;
-	QList<int> paramTypes = this->paramTypes(byte);
-	int value;
-	
-	if(!paramTypes.isEmpty())
-	{
-		for(quint8 i=0 ; i<paramTypes.size() ; ++i)
-		{
-			// qDebug() << "i= " << i;
-			paramType = paramTypes.at(i);
-			// qDebug() << "paramType= " << paramName(paramType);
-			value = model->data(model->index(i, 1), Qt::EditRole).toInt();
-			// qDebug() << "value= " << value;
-			// qDebug() << "data(Qt::DisplayRole)= " << model->data(model->index(i, 1), Qt::DisplayRole);
-			// qDebug() << "data(Qt::EditRole)= " << model->data(model->index(i, 1), Qt::EditRole);
-			// qDebug() << "data(Qt::UserRole)= " << model->data(model->index(i, 1), Qt::UserRole);
-			// qDebug() << "data(Qt::UserRole+1)= " << model->data(model->index(i, 1), Qt::UserRole+1);
-			// qDebug() << "data(Qt::UserRole+2)= " << model->data(model->index(i, 1), Qt::UserRole+2);
-			
-			paramSize = this->paramSize(paramType);
-			// qDebug() << "paramSize= " << paramSize;
-			departBA = cur/8;
-			// qDebug() << "departBA= " << departBA;
-			if(paramSize%8 !=0)
-				tailleBA = paramSize/8+1;
-			else
-				tailleBA = paramSize/8;
-			// qDebug() << "tailleBA= " << tailleBA;
-			
-			if(paramSize < 8)
-			{
-				departLocal = cur%8;
-				// qDebug() << "departLocal= " << departLocal;
-				newOpcode[departBA] = (char)((quint8)newOpcode.at(departBA) | (value << (8-paramSize-departLocal)));
-				// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
-			}
-			else if(paramSize == 8)
-			{
-				newOpcode[departBA] = (char)(value & 0xFF);
-				// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
-			}
-			else
-			{
-				for(int j=0 ; j<tailleBA ; j++)
-				{
-					newOpcode[departBA+j] = (char)((value>>(j*8)) & 0xFF);
-					// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
-				}
-			}
-			// qDebug() << "newOpcode= " << newOpcode.toHex();
-			
-			cur += paramSize;
-			// qDebug() << "cur= " << cur;
-		}
-	}
-	else
-	{
-		for(quint8 i=start ; i<length ; ++i)
-			newOpcode[i] = model->item(i-start, 1)->text().toUInt();
-	}
-	
-	return newOpcode;
-}*/
+	qDebug() << "ScriptEditor::fillEditor2";
+	editorWidget->setOpcode(opcode);
+	editorLayout->setCurrentWidget(editorWidget);
+}
 
 void ScriptEditor::modify()
 {
+	qDebug() << "ScriptEditor::modify";
 	/* if(!this->change) {
 		close();
 		return;
 	} */
-	script->setOpcode(this->opcodeID, editorWidget->opcode());
+	script->setOpcode(this->opcodeID, Script::copyOpcode(editorWidget->opcode()));
 	accept();
+	qDebug() << "ScriptEditor::/modify";
 }
 
 void ScriptEditor::add()
 {
+	qDebug() << "ScriptEditor::add";
 	/* if(!this->change) {
 		close();
 		return;
 	} */
-	script->insertOpcode(this->opcodeID, editorWidget->opcode());
+	script->insertOpcode(this->opcodeID, Script::copyOpcode(editorWidget->opcode()));
 	accept();
 }
 
 void ScriptEditor::refreshTextEdit()
 {
+	qDebug() << "ScriptEditor::refreshTextEdit";
+
 	this->change = true;
 
 	textEdit->setPlainText(editorWidget->opcode()->toString());
 }
 
-/*void ScriptEditor::fillModel(int id)
-{
-	addButton->hide();
-	delButton->hide();
-	model->clear();
-	/* tableView->hide();
-	nouvelEditeur->show();
-	
-	if(opcode>=0x10 && opcode<=0x13)
-	{
-		nouvelEditeur->setCurrentIndex(0);
-		((GotoPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	else if(opcode==0x00 || opcode==0x07)
-	{
-		nouvelEditeur->setCurrentIndex(1);
-		((ReturnPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	else if(opcode>=0x01 && opcode<=0x03)
-	{
-		nouvelEditeur->setCurrentIndex(2);
-		((ExecPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	else if(opcode>=0x04 && opcode<=0x06)
-	{
-		nouvelEditeur->setCurrentIndex(3);
-		((ExecCharPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	else if(opcode>=0x14 && opcode<=0x19)
-	{
-		nouvelEditeur->setCurrentIndex(4);
-		((IfPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	else if(opcode>=0x30 && opcode<=0x32)
-	{
-		nouvelEditeur->setCurrentIndex(5);
-		((IfKeyPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	else if(opcode==0xCB || opcode==0xCC)
-	{
-		nouvelEditeur->setCurrentIndex(6);
-		((IfCharPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	else if(opcode==0x24)
-	{
-		nouvelEditeur->setCurrentIndex(7);
-		((WaitPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	else if(opcode==0x5F)
-	{
-		nouvelEditeur->setCurrentIndex(8);
-		((NopPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	else if((opcode>=0x76 && opcode<=0x79) || opcode==0x80 || opcode==0x81 || (opcode>=0x85 && opcode<=0x94))
-	{
-		nouvelEditeur->setCurrentIndex(9);
-		((OpPage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	else if((opcode>=0x7A && opcode<=0x7D) || (opcode>=0x95 && opcode<=0x98))
-	{
-		nouvelEditeur->setCurrentIndex(10);
-		((Op1Page *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	else if(opcode==0xE0 || opcode==0xE1)
-	{
-		nouvelEditeur->setCurrentIndex(11);
-		((BgParamStatePage *)nouvelEditeur->currentWidget())->fill(opcode, opcode->getParams());
-		return;
-	}
-	
-	tableView->show();
-	nouvelEditeur->hide();
-	
-	int paramSize, paramType, cur = 0, maxValue, minValue, value=0;
-	QList<int> paramTypes = this->paramTypes(id);
-	
-	if(paramTypes.isEmpty())
-	{
-		int start = 0;
-		if(id == 0x0F)//SPECIAL
-			start = 1;
-		if(id == 0x28)//KAWAI
-		{
-			start = 2;
-			addButton->show();
-			delButton->show();
-		}
-		const QByteArray params = opcode->params();
-		for(int i=start ; i<params.size() ; ++i)
-			addRow((quint8)params.at(i), 0, 255, inconnu);
-	}
-	else
-	{
-		for(quint8 i=0 ; i<paramTypes.size() ; ++i)
-		{
-			paramType = paramTypes.at(i);
-			paramSize = this->paramSize(paramType);
-			value = opcode->subParam(cur, paramSize);
-			// qDebug() << value;
-			if(paramIsSigned(paramType)) {
-				maxValue = (int)pow(2, paramSize-1)-1;
-				minValue = -maxValue-1;
-				if(value>maxValue)
-					value -= (int)pow(2, paramSize);
-			}
-			else
-			{
-				maxValue = (int)pow(2, paramSize)-1;
-				minValue = 0;
-			}			
-			addRow(value, minValue, maxValue, paramType);
-			cur += paramSize;
-		}
-	}
-}*/
-
 void ScriptEditor::changeCurrentOpcode(int index)
 {
+	qDebug() << "ScriptEditor::changeCurrentOpcode" << index;
+
 	this->change = true;
 	QByteArray newOpcode;
 	int itemData = comboBox->itemData(index).toInt();
@@ -541,7 +229,7 @@ void ScriptEditor::changeCurrentOpcode(int index)
 	}
 
 	if(isLabel) {
-		if(itemData == opcode->id()) {
+		if(0x100 == opcode->id()) {
 			((OpcodeLabel *)opcode)->setLabel(0);
 		} else {
 			opcode = new OpcodeLabel(0);
@@ -555,7 +243,7 @@ void ScriptEditor::changeCurrentOpcode(int index)
 		}
 	}
 	
-	editorWidget->setOpcode(opcode);
+	fillEditor();
 	textEdit->setPlainText(opcode->toString());
 	if(isInit && crashIfInit.contains(id))
 	{

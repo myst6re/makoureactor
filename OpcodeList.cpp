@@ -18,10 +18,9 @@
 #include "OpcodeList.h"
 
 OpcodeList::OpcodeList(QWidget *parent)
-	: QTreeWidget(parent), hasCut(false), isInit(false)
+	: QTreeWidget(parent), hasCut(false), isInit(false), script(0)
 {
-	setColumnCount(2);
-	setColumnHidden(1,true);
+	setColumnCount(1);
 	setHeaderLabels(QStringList(tr("Action")));
 	setAutoScroll(false);
 	setIconSize(QSize(32,11));
@@ -65,7 +64,7 @@ OpcodeList::OpcodeList(QWidget *parent)
 	down_A->setEnabled(false);
 	QAction *expand_A = new QAction(tr("Étendre l'arbre"), this);
 	
-	connect(edit_A, SIGNAL(triggered()), SLOT(edit()));
+	connect(edit_A, SIGNAL(triggered()), SLOT(scriptEditor()));
 	connect(add_A, SIGNAL(triggered()), SLOT(add()));
 	connect(del_A, SIGNAL(triggered()), SLOT(del()));
 	connect(cut_A, SIGNAL(triggered()), SLOT(cut()));
@@ -162,7 +161,7 @@ void OpcodeList::upDownEnabled()
 	else
 	{
 		actions().at(0)->setEnabled(true);
-		actions().at(2)->setEnabled(!script->isEmpty());
+		actions().at(2)->setEnabled(script && !script->isEmpty());
 		actions().at(4)->setEnabled(true);
 		actions().at(5)->setEnabled(true);
 		actions().at(8)->setEnabled(/* topLevelItemCount() > 1 && */ currentItem() != topLevelItem(0));
@@ -172,21 +171,27 @@ void OpcodeList::upDownEnabled()
 
 void OpcodeList::saveExpandedItems()
 {
+	qDebug() << "OpcodeList::saveExpandedItems";
+
 	if(script) {
 		QList<Opcode *> expandedItems;
 		int size = topLevelItemCount();
 		for(int i=0 ; i<size ; ++i) {
 			QTreeWidgetItem *item = topLevelItem(i);
 			if(item->isExpanded()) {
-				expandedItems.append(script->getOpcode(item->text(1).toInt()));
+				expandedItems.append(script->getOpcode(item->data(0, Qt::UserRole).toInt()));
 			}
 		}
 		if(size>0) script->setExpandedItems(expandedItems);
 	}
+
+	qDebug() << "/OpcodeList::saveExpandedItems";
 }
 
 void OpcodeList::fill(Script *_script)
 {
+	qDebug() << "OpcodeList::fill";
+
 	if(_script) {
 		saveExpandedItems();
 		script = _script;
@@ -195,14 +200,69 @@ void OpcodeList::fill(Script *_script)
 	clear();
 	header()->setMinimumSectionSize(0);
 	
-	if(!script->isEmpty())
-		script->lecture(this);
+	if(!script->isEmpty()) {
+		QList<quint16> indent;
+		QList<QTreeWidgetItem *> items;
+		QTreeWidgetItem *parentItem = 0;
+		int id;
+		quint16 opcodeID = 0;
+		QPixmap fontPixmap(":/images/chiffres.png");
+
+		foreach(Opcode *curOpcode, script->getOpcodes()) {
+
+			if(curOpcode->isLabel()) {
+				while(!indent.isEmpty() &&
+					  ((OpcodeLabel *)curOpcode)->label() == indent.last())
+				{
+					indent.removeLast();
+					if(parentItem != 0)
+						parentItem = parentItem->parent();
+				}
+			}
+
+			id = curOpcode->id();
+
+			QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList(curOpcode->toString()));
+			item->setData(0, Qt::UserRole, opcodeID);
+			items.append(item);
+
+			QPixmap wordPixmap(32,11);
+			item->setIcon(0, QIcon(posNumber(opcodeID, fontPixmap, wordPixmap)));
+			item->setToolTip(0, curOpcode->name());
+			if((id>=0x14 && id<=0x19) || (id>=0x30 && id<=0x32) || id==0xcb || id==0xcc)
+			{
+				item->setForeground(0, QColor(0x00,0x66,0xcc));
+				indent.append(((OpcodeJump *)curOpcode)->label());
+				parentItem = item;
+			}
+			else if(id>=0x01 && id<=0x07)
+				item->setForeground(0, QColor(0xcc,0x66,0x00));
+			else if(id>=0x10 && id<=0x13)
+				item->setForeground(0, QColor(0x66,0xcc,0x00));
+			else if(id==0x00 || id==0x07 || curOpcode->isLabel())
+				item->setForeground(0, QColor(0x66,0x66,0x66));
+
+			++opcodeID;
+		}
+
+		addTopLevelItems(items);
+
+		opcodeID = 0;
+		foreach(QTreeWidgetItem *item, items) {
+			if(script->getExpandedItems().contains(script->getOpcode(opcodeID))) {
+				item->setExpanded(true);
+			}
+			++opcodeID;
+		}
+	}
 	else
 	{
 		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList(tr("Si ce script est exécuté,\n considérez que c'est le dernier script non vide qui est exécuté")));
 		item->setIcon(0, QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation));
 		item->setFlags(Qt::NoItemFlags);
+		item->setData(0, Qt::UserRole, -1);
 	}
+	qDebug() << "OpcodeList::fill2";
 	scrollToTop();
 
 	if(header()->sectionSize(0) < width())	header()->setMinimumSectionSize(width()-2);
@@ -214,12 +274,13 @@ void OpcodeList::fill(Script *_script)
 	// actions().at(5)->setEnabled(true);
 	actions().at(6)->setEnabled(!opcodeCopied.isEmpty());
 	upDownEnabled();
-	disconnect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(edit(QTreeWidgetItem *, int)));
-	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), SLOT(edit(QTreeWidgetItem *, int)));
+	disconnect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(scriptEditor()));
+	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), SLOT(scriptEditor()));
 	disconnect(this, SIGNAL(itemSelectionChanged()), this, SLOT(itemSelected()));
 	connect(this, SIGNAL(itemSelectionChanged()), SLOT(itemSelected()));
 	disconnect(this, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this, SLOT(evidence(QTreeWidgetItem *, QTreeWidgetItem *)));
 	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), SLOT(evidence(QTreeWidgetItem *, QTreeWidgetItem *)));
+	qDebug() << "/OpcodeList::fill";
 }
 
 void OpcodeList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
@@ -237,9 +298,10 @@ void OpcodeList::setIsInit(bool isInit)
 	this->isInit = isInit;
 }
 
-void OpcodeList::edit() { scriptEditor(true); }
-void OpcodeList::edit(QTreeWidgetItem *, int) { scriptEditor(true); }
-void OpcodeList::add() { scriptEditor(false); }
+void OpcodeList::add()
+{
+	scriptEditor(false);
+}
 
 void OpcodeList::emitHist(int type, int opcodeID, const QByteArray &data)
 {
@@ -269,24 +331,35 @@ void OpcodeList::emitHist(int type, const QList<int> &opcodeIDs, const QList<QBy
 
 void OpcodeList::scriptEditor(bool modify)
 {
+	if(!script)		return;
+	qDebug() << "OpcodeList::scriptEditor" << modify;
+
 	int opcodeID = selectedID();
 	if(opcodeID==-1) {
 		opcodeID = 0;
 		modify = false;
 	}
 
+	qDebug() << "OpcodeList::scriptEditor opcodeID" << opcodeID << script->size() << script->getOpcode(opcodeID)->name();
+
 	QByteArray oldVersion;
 
 	saveExpandedItems();
 
+	qDebug() << "OpcodeList::scriptEditor 0";
+
 	if(modify)
 		oldVersion = script->getOpcode(opcodeID)->toByteArray();
+
+	qDebug() << "OpcodeList::scriptEditor 00";
 	
 	ScriptEditor editor(script, opcodeID, modify, isInit, this);
 	
 	if(editor.exec()==QDialog::Accepted)
 	{
+		qDebug() << "OpcodeList::scriptEditor1";
 		fill();
+		qDebug() << "OpcodeList::scriptEditor2";
 		scroll(modify ? opcodeID : opcodeID+1);
 		if(modify) {
 			emitHist(HIST_MOD, opcodeID, oldVersion);
@@ -294,7 +367,9 @@ void OpcodeList::scriptEditor(bool modify)
 		else {
 			emitHist(HIST_ADD, opcodeID+1);
 		}
+		qDebug() << "OpcodeList::scriptEditor3";
 		emit changed();
+		qDebug() << "OpcodeList::scriptEditor4";
 	}
 }
 
@@ -344,7 +419,7 @@ void OpcodeList::copy()
 
 	QMap<int, QTreeWidgetItem *> listeitems;
 	foreach(QTreeWidgetItem *item, selectedItems())
-		listeitems.insert(item->text(1).toInt(), item);
+		listeitems.insert(item->data(0, Qt::UserRole).toInt(), item);
 
 	QString copiedText;
 	QTreeWidgetItem *lastitem=NULL, *parentitem;
@@ -388,11 +463,8 @@ void OpcodeList::paste()
 	int opcodeID = selectedID()+1, scrollID = opcodeID;
 	foreach(Opcode *Ocopied, opcodeCopied) {
 		IDs.append(opcodeID);
-		if(Ocopied->isLabel()) { // TODO
-			script->insertOpcode(opcodeID++, new OpcodeLabel(((OpcodeLabel *)Ocopied)->label()));
-		} else {
-			script->insertOpcode(opcodeID++, Script::createOpcode(Ocopied->toByteArray()));
-		}
+		// TODO: label duplication case
+		script->insertOpcode(opcodeID++, Script::copyOpcode(Ocopied));
 	}
 
 	fill();
@@ -443,22 +515,28 @@ void OpcodeList::scroll(int id, bool focus)
 
 QTreeWidgetItem *OpcodeList::findItem(int id)
 {
-	QList<QTreeWidgetItem *> items = this->findItems(QString("%1").arg(id), Qt::MatchExactly | Qt::MatchRecursive, 1);
-	if(items.isEmpty())	return NULL;
-	return items.at(0);
+	QTreeWidgetItemIterator it(this);
+	while(*it) {
+		if((*it)->data(0, Qt::UserRole).toInt() == id) {
+			return *it;
+		}
+		++it;
+	}
+
+	return NULL;
 }
 
 int OpcodeList::selectedID()
 {
-	if(currentItem()==NULL || currentItem()->text(1).isEmpty())	return -1;
-	return currentItem()->text(1).toInt();
+	if(currentItem()==NULL)	return -1;
+	return currentItem()->data(0, Qt::UserRole).toInt();
 }
 
 QList<int> OpcodeList::selectedIDs()
 {
 	QList<int> liste;
 	foreach(QTreeWidgetItem *item, selectedItems())
-		liste.append(item->text(1).toInt());
+		liste.append(item->data(0, Qt::UserRole).toInt());
 	qSort(liste);
 	return liste;
 }
@@ -467,4 +545,25 @@ int OpcodeList::selectedOpcode()
 {
 	int opcodeID = selectedID();
 	return opcodeID==-1 ? 0 : script->getOpcode(opcodeID)->id();
+}
+
+QPixmap &OpcodeList::posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap)
+{
+	QString strNum = QString("%1").arg(num, 5, 10, QChar(' '));
+	wordPixmap.fill(QColor(0,0,0,0));
+	QPainter painter(&wordPixmap);
+
+	if(strNum.at(0)!=' ')
+		painter.drawTiledPixmap(1, 1, 5, 9, fontPixmap, 5*strNum.mid(0,1).toInt(), 0);
+	if(strNum.at(1)!=' ')
+		painter.drawTiledPixmap(7, 1, 5, 9, fontPixmap, 5*strNum.mid(1,1).toInt(), 0);
+	if(strNum.at(2)!=' ')
+		painter.drawTiledPixmap(13, 1, 5, 9, fontPixmap, 5*strNum.mid(2,1).toInt(), 0);
+	if(strNum.at(3)!=' ')
+		painter.drawTiledPixmap(19, 1, 5, 9, fontPixmap, 5*strNum.mid(3,1).toInt(), 0);
+	if(strNum.at(4)!=' ')
+		painter.drawTiledPixmap(25, 1, 5, 9, fontPixmap, 5*strNum.mid(4,1).toInt(), 0);
+
+	painter.end();
+	return wordPixmap;
 }

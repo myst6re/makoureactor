@@ -40,12 +40,13 @@ private slots:
 	void buildList(int);
 	
 private:
+	void fillEditor();
+
 	QVBoxLayout *layout;
 	QHBoxLayout *buttonLayout;
 	QComboBox *comboBox0, *comboBox;
 	QPlainTextEdit *textEdit;
 	QStackedLayout *editorLayout;
-	//QStackedWidget *nouvelEditeur;
 	QPushButton *ok, *cancel;
 	ScriptEditorView *editorWidget;
 

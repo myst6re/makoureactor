@@ -761,7 +761,8 @@ quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		quint32 filePos;
 		QList<quint32> listPos;
 
-		const char *tocData = fic->read(27 * nbFiles).constData();
+		QByteArray toc = fic->read(27 * nbFiles);
+		const char *tocData = toc.constData();
 
 		quint32 i;
 		for(i=0 ; i<nbFiles ; ++i)
@@ -923,7 +924,8 @@ quint8 FieldArchive::save(QString path)
 
 		//	QTime t;t.start();
 		//Parcourir la table des matière
-		const char *tocData = fic->read(27 * nbFiles).constData();
+		QByteArray toc = fic->read(27 * nbFiles);
+		const char *tocData = toc.constData();
 
 		for(quint32 i=0 ; i<nbFiles ; ++i)
 		{

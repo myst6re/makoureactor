@@ -17,8 +17,8 @@
  ****************************************************************************/
 #include "ScriptEditorGenericList.h"
 
-ScriptEditorGenericList::ScriptEditorGenericList(Script *script, QWidget *parent)
-	: ScriptEditorView(script, parent)
+ScriptEditorGenericList::ScriptEditorGenericList(Script *script, int opcodeID, QWidget *parent)
+	: ScriptEditorView(script, opcodeID, parent)
 {
 	model = new QStandardItemModel(this);
 	tableView = new QTableView(this);

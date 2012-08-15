@@ -58,9 +58,8 @@ public:
 	void enableActions(bool);
 
 private slots:
-	void edit();
-	void edit(QTreeWidgetItem *, int);
 	void add();
+	void scriptEditor(bool modify=true);
 	void del(bool totalDel=true);
 	void cut();
 	void copy();
@@ -78,13 +77,14 @@ private:
 	void upDownEnabled();
 	bool hasCut;
 	bool isInit;
-	void scriptEditor(bool modify);
 	void move(bool direction);
 	QTreeWidgetItem *findItem(int id);
 	QList<int> selectedIDs();
 
 	void emitHist(int type, int opcodeID=0, const QByteArray &data=QByteArray());
 	void emitHist(int type, const QList<int> &opcodeIDs, const QList<QByteArray> &data);
+
+	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);
 
 	QToolBar *_toolBar;
 

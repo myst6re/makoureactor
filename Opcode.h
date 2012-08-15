@@ -149,15 +149,15 @@ public:
 
 	bool rechercherVar(quint8 bank, quint8 adress, int value=65536) const;
 
-	int getTextID() const;
-	void setTextID(quint8 textID);
-	int getTutoID() const;
-	void setTutoID(quint8 tutoID);
-	int getWindowID() const;
-	void setWindowID(quint8 windowID);
-	bool getWindow(FF7Window &window) const;
-	void setWindow(const FF7Window &window);
-	void getVariables(QList<FF7Var> &vars) const;
+	virtual int getTextID() const;
+	virtual void setTextID(quint8 textID);
+	virtual int getTutoID() const;
+	virtual void setTutoID(quint8 tutoID);
+	virtual int getWindowID() const;
+	virtual void setWindowID(quint8 windowID);
+	virtual bool getWindow(FF7Window &window) const;
+	virtual void setWindow(const FF7Window &window);
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	bool rechercherExec(quint8 group, quint8 script) const;
 	bool rechercherTexte(const QRegExp &texte) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
@@ -475,8 +475,9 @@ public:
 	quint32 label() const;
 	void setLabel(quint32 label);
 	bool isJump() const;
-protected:
+	virtual bool isLongJump() const=0;
 	virtual quint8 jumpPosData() const=0;
+protected:
 	qint32 _jump;
 	quint32 _label;
 };
@@ -497,54 +498,59 @@ public:
 class OpcodeJMPF : public OpcodeJump {
 public:
 	explicit OpcodeJMPF(const QByteArray &params);
+	explicit OpcodeJMPF(const OpcodeJump &op);
 	int id() const { return 0x10; }
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	bool isVoid() const { return true; }
-private:
+	bool isLongJump() const { return false; }
 	quint8 jumpPosData() const { return 1; }
 };
 
 class OpcodeJMPFL : public OpcodeJump {
 public:
 	explicit OpcodeJMPFL(const QByteArray &params);
+	explicit OpcodeJMPFL(const OpcodeJump &op);
 	int id() const { return 0x11; }
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	bool isVoid() const { return true; }
-private:
+	bool isLongJump() const { return true; }
 	quint8 jumpPosData() const { return 1; }
 };
 
 class OpcodeJMPB : public OpcodeJump {
 public:
 	explicit OpcodeJMPB(const QByteArray &params);
+	explicit OpcodeJMPB(const OpcodeJump &op);
 	int id() const { return 0x12; }
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	bool isVoid() const { return true; }
-private:
+	bool isLongJump() const { return false; }
 	quint8 jumpPosData() const { return 0; }
 };
 
 class OpcodeJMPBL : public OpcodeJump {
 public:
 	explicit OpcodeJMPBL(const QByteArray &params);
+	explicit OpcodeJMPBL(const OpcodeJump &op);
 	int id() const { return 0x13; }
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	bool isVoid() const { return true; }
-private:
+	bool isLongJump() const { return true; }
 	quint8 jumpPosData() const { return 0; }
 };
 
 class OpcodeIf : public OpcodeJump {
 public:
 	explicit OpcodeIf();
+	explicit OpcodeIf(const OpcodeJump &op);
 	void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	qint32 value1, value2;
@@ -558,18 +564,19 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-private:
+	bool isLongJump() const { return false; }
 	quint8 jumpPosData() const { return 5; }
 };
 
 class OpcodeIFUBL : public OpcodeIf {
 public:
 	explicit OpcodeIFUBL(const QByteArray &params);
+	explicit OpcodeIFUBL(const OpcodeIFUB &op);
 	int id() const { return 0x15; }
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-private:
+	bool isLongJump() const { return true; }
 	quint8 jumpPosData() const { return 5; }
 };
 
@@ -580,18 +587,19 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-private:
+	bool isLongJump() const { return false; }
 	quint8 jumpPosData() const { return 7; }
 };
 
 class OpcodeIFSWL : public OpcodeIf {
 public:
 	explicit OpcodeIFSWL(const QByteArray &params);
+	explicit OpcodeIFSWL(const OpcodeIFSW &op);
 	int id() const { return 0x17; }
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-private:
+	bool isLongJump() const { return true; }
 	quint8 jumpPosData() const { return 7; }
 };
 
@@ -602,18 +610,19 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-private:
+	bool isLongJump() const { return false; }
 	quint8 jumpPosData() const { return 7; }
 };
 
 class OpcodeIFUWL : public OpcodeIf {
 public:
 	explicit OpcodeIFUWL(const QByteArray &params);
+	explicit OpcodeIFUWL(const OpcodeIFUW &op);
 	int id() const { return 0x19; }
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-private:
+	bool isLongJump() const { return true; }
 	quint8 jumpPosData() const { return 7; }
 };
 
@@ -856,9 +865,9 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	QString keyString() const;
-	quint16 keys;
-private:
+	bool isLongJump() const { return false; }
 	quint8 jumpPosData() const { return 3; }
+	quint16 keys;
 };
 
 class OpcodeIFKEY : public OpcodeIfKey {
@@ -2415,7 +2424,7 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 charID;
-private:
+	bool isLongJump() const { return false; }
 	quint8 jumpPosData() const { return 2; }
 };
 // note: same struct as IFPRTYQ
@@ -2427,7 +2436,7 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 charID;
-private:
+	bool isLongJump() const { return false; }
 	quint8 jumpPosData() const { return 2; }
 };
 

@@ -35,14 +35,12 @@ Script::~Script()
 bool Script::openScript(const QByteArray &script)
 {
 	int pos = 0, scriptSize = script.size();
-	quint8 opcode;
 	Opcode *op;
 	QList<int> positions;
 	QMultiMap<int, OpcodeJump *> indents;
 
 	while(pos < scriptSize)
 	{
-		opcode = (quint8)script.at(pos);
 		op = createOpcode(script, pos);
 		opcodes.append(op);
 		positions.append(pos);
@@ -342,6 +340,263 @@ Opcode *Script::createOpcode(const QByteArray &script, int pos)
 	}
 }
 
+Opcode *Script::copyOpcode(Opcode *opcode)
+{
+	switch(opcode->id())
+	{
+	case 0x00:	return new OpcodeRET(*(OpcodeRET *)opcode);
+	case 0x01:	return new OpcodeREQ(*(OpcodeREQ *)opcode);
+	case 0x02:	return new OpcodeREQEW(*(OpcodeREQEW *)opcode);
+	case 0x03:	return new OpcodeREQEW(*(OpcodeREQEW *)opcode);
+	case 0x04:	return new OpcodePREQ(*(OpcodePREQ *)opcode);
+	case 0x05:	return new OpcodePRQSW(*(OpcodePRQSW *)opcode);
+	case 0x06:	return new OpcodePRQEW(*(OpcodePRQEW *)opcode);
+	case 0x07:	return new OpcodeRETTO(*(OpcodeRETTO *)opcode);
+	case 0x08:	return new OpcodeJOIN(*(OpcodeJOIN *)opcode);
+	case 0x09:	return new OpcodeSPLIT(*(OpcodeSPLIT *)opcode);
+	case 0x0A:	return new OpcodeSPTYE(*(OpcodeSPTYE *)opcode);
+	case 0x0B:	return new OpcodeGTPYE(*(OpcodeGTPYE *)opcode);
+	case 0x0E:	return new OpcodeDSKCG(*(OpcodeDSKCG *)opcode);
+	case 0x0F:	return new OpcodeSPECIAL(*(OpcodeSPECIAL *)opcode);
+	case 0x10:	return new OpcodeJMPF(*(OpcodeJMPF *)opcode);
+	case 0x11:	return new OpcodeJMPFL(*(OpcodeJMPFL *)opcode);
+	case 0x12:	return new OpcodeJMPB(*(OpcodeJMPB *)opcode);
+	case 0x13:	return new OpcodeJMPBL(*(OpcodeJMPBL *)opcode);
+	case 0x14:	return new OpcodeIFUB(*(OpcodeIFUB *)opcode);
+	case 0x15:	return new OpcodeIFUBL(*(OpcodeIFUBL *)opcode);
+	case 0x16:	return new OpcodeIFSW(*(OpcodeIFSW *)opcode);
+	case 0x17:	return new OpcodeIFSWL(*(OpcodeIFSWL *)opcode);
+	case 0x18:	return new OpcodeIFUW(*(OpcodeIFUW *)opcode);
+	case 0x19:	return new OpcodeIFUWL(*(OpcodeIFUWL *)opcode);
+	case 0x20:	return new OpcodeMINIGAME(*(OpcodeMINIGAME *)opcode);
+	case 0x21:	return new OpcodeTUTOR(*(OpcodeTUTOR *)opcode);
+	case 0x22:	return new OpcodeBTMD2(*(OpcodeBTMD2 *)opcode);
+	case 0x23:	return new OpcodeBTRLD(*(OpcodeBTRLD *)opcode);
+	case 0x24:	return new OpcodeWAIT(*(OpcodeWAIT *)opcode);
+	case 0x25:	return new OpcodeNFADE(*(OpcodeNFADE *)opcode);
+	case 0x26:	return new OpcodeBLINK(*(OpcodeBLINK *)opcode);
+	case 0x27:	return new OpcodeBGMOVIE(*(OpcodeBGMOVIE *)opcode);
+	case 0x28:	return new OpcodeKAWAI(*(OpcodeKAWAI *)opcode);
+	case 0x29:	return new OpcodeKAWIW(*(OpcodeKAWIW *)opcode);
+	case 0x2A:	return new OpcodePMOVA(*(OpcodePMOVA *)opcode);
+	case 0x2B:	return new OpcodeSLIP(*(OpcodeSLIP *)opcode);
+	case 0x2C:	return new OpcodeBGPDH(*(OpcodeBGPDH *)opcode);
+	case 0x2D:	return new OpcodeBGSCR(*(OpcodeBGSCR *)opcode);
+	case 0x2E:	return new OpcodeWCLS(*(OpcodeWCLS *)opcode);
+	case 0x2F:	return new OpcodeWSIZW(*(OpcodeWSIZW *)opcode);
+	case 0x30:	return new OpcodeIFKEY(*(OpcodeIFKEY *)opcode);
+	case 0x31:	return new OpcodeIFKEYON(*(OpcodeIFKEYON *)opcode);
+	case 0x32:	return new OpcodeIFKEYOFF(*(OpcodeIFKEYOFF *)opcode);
+	case 0x33:	return new OpcodeUC(*(OpcodeUC *)opcode);
+	case 0x34:	return new OpcodePDIRA(*(OpcodePDIRA *)opcode);
+	case 0x35:	return new OpcodePTURA(*(OpcodePTURA *)opcode);
+	case 0x36:	return new OpcodeWSPCL(*(OpcodeWSPCL *)opcode);
+	case 0x37:	return new OpcodeWNUMB(*(OpcodeWNUMB *)opcode);
+	case 0x38:	return new OpcodeSTTIM(*(OpcodeSTTIM *)opcode);
+	case 0x39:	return new OpcodeGOLDu(*(OpcodeGOLDu *)opcode);
+	case 0x3A:	return new OpcodeGOLDd(*(OpcodeGOLDd *)opcode);
+	case 0x3B:	return new OpcodeCHGLD(*(OpcodeCHGLD *)opcode);
+	case 0x3C:	return new OpcodeHMPMAX1(*(OpcodeHMPMAX1 *)opcode);
+	case 0x3D:	return new OpcodeHMPMAX2(*(OpcodeHMPMAX2 *)opcode);
+	case 0x3E:	return new OpcodeMHMMX(*(OpcodeMHMMX *)opcode);
+	case 0x3F:	return new OpcodeHMPMAX3(*(OpcodeHMPMAX3 *)opcode);
+	case 0x40:	return new OpcodeMESSAGE(*(OpcodeMESSAGE *)opcode);
+	case 0x41:	return new OpcodeMPARA(*(OpcodeMPARA *)opcode);
+	case 0x42:	return new OpcodeMPRA2(*(OpcodeMPRA2 *)opcode);
+	case 0x43:	return new OpcodeMPNAM(*(OpcodeMPNAM *)opcode);
+
+	case 0x45:	return new OpcodeMPu(*(OpcodeMPu *)opcode);
+
+	case 0x47:	return new OpcodeMPd(*(OpcodeMPd *)opcode);
+	case 0x48:	return new OpcodeASK(*(OpcodeASK *)opcode);
+	case 0x49:	return new OpcodeMENU(*(OpcodeMENU *)opcode);
+	case 0x4A:	return new OpcodeMENU2(*(OpcodeMENU2 *)opcode);
+	case 0x4B:	return new OpcodeBTLTB(*(OpcodeBTLTB *)opcode);
+
+	case 0x4D:	return new OpcodeHPu(*(OpcodeHPu *)opcode);
+
+	case 0x4F:	return new OpcodeHPd(*(OpcodeHPd *)opcode);
+	case 0x50:	return new OpcodeWINDOW(*(OpcodeWINDOW *)opcode);
+	case 0x51:	return new OpcodeWMOVE(*(OpcodeWMOVE *)opcode);
+	case 0x52:	return new OpcodeWMODE(*(OpcodeWMODE *)opcode);
+	case 0x53:	return new OpcodeWREST(*(OpcodeWREST *)opcode);
+	case 0x54:	return new OpcodeWCLSE(*(OpcodeWCLSE *)opcode);
+	case 0x55:	return new OpcodeWROW(*(OpcodeWROW *)opcode);
+	case 0x56:	return new OpcodeGWCOL(*(OpcodeGWCOL *)opcode);
+	case 0x57:	return new OpcodeSWCOL(*(OpcodeSWCOL *)opcode);
+	case 0x58:	return new OpcodeSTITM(*(OpcodeSTITM *)opcode);
+	case 0x59:	return new OpcodeDLITM(*(OpcodeDLITM *)opcode);
+	case 0x5A:	return new OpcodeCKITM(*(OpcodeCKITM *)opcode);
+	case 0x5B:	return new OpcodeSMTRA(*(OpcodeSMTRA *)opcode);
+	case 0x5C:	return new OpcodeDMTRA(*(OpcodeDMTRA *)opcode);
+	case 0x5D:	return new OpcodeCMTRA(*(OpcodeCMTRA *)opcode);
+	case 0x5E:	return new OpcodeSHAKE(*(OpcodeSHAKE *)opcode);
+	case 0x5F:	return new OpcodeNOP(*(OpcodeNOP *)opcode);
+	case 0x60:	return new OpcodeMAPJUMP(*(OpcodeMAPJUMP *)opcode);
+	case 0x61:	return new OpcodeSCRLO(*(OpcodeSCRLO *)opcode);
+	case 0x62:	return new OpcodeSCRLC(*(OpcodeSCRLC *)opcode);
+	case 0x63:	return new OpcodeSCRLA(*(OpcodeSCRLA *)opcode);
+	case 0x64:	return new OpcodeSCR2D(*(OpcodeSCR2D *)opcode);
+	case 0x65:	return new OpcodeSCRCC(*(OpcodeSCRCC *)opcode);
+	case 0x66:	return new OpcodeSCR2DC(*(OpcodeSCR2DC *)opcode);
+	case 0x67:	return new OpcodeSCRLW(*(OpcodeSCRLW *)opcode);
+	case 0x68:	return new OpcodeSCR2DL(*(OpcodeSCR2DL *)opcode);
+	case 0x69:	return new OpcodeMPDSP(*(OpcodeMPDSP *)opcode);
+	case 0x6A:	return new OpcodeVWOFT(*(OpcodeVWOFT *)opcode);
+	case 0x6B:	return new OpcodeFADE(*(OpcodeFADE *)opcode);
+	case 0x6C:	return new OpcodeFADEW(*(OpcodeFADEW *)opcode);
+	case 0x6D:	return new OpcodeIDLCK(*(OpcodeIDLCK *)opcode);
+	case 0x6E:	return new OpcodeLSTMP(*(OpcodeLSTMP *)opcode);
+	case 0x6F:	return new OpcodeSCRLP(*(OpcodeSCRLP *)opcode);
+	case 0x70:	return new OpcodeBATTLE(*(OpcodeBATTLE *)opcode);
+	case 0x71:	return new OpcodeBTLON(*(OpcodeBTLON *)opcode);
+	case 0x72:	return new OpcodeBTLMD(*(OpcodeBTLMD *)opcode);
+	case 0x73:	return new OpcodePGTDR(*(OpcodePGTDR *)opcode);
+	case 0x74:	return new OpcodeGETPC(*(OpcodeGETPC *)opcode);
+	case 0x75:	return new OpcodePXYZI(*(OpcodePXYZI *)opcode);
+	case 0x76:	return new OpcodePLUSX(*(OpcodePLUSX *)opcode);
+	case 0x77:	return new OpcodePLUS2X(*(OpcodePLUS2X *)opcode);
+	case 0x78:	return new OpcodeMINUSX(*(OpcodeMINUSX *)opcode);
+	case 0x79:	return new OpcodeMINUS2X(*(OpcodeMINUS2X *)opcode);
+	case 0x7A:	return new OpcodeINCX(*(OpcodeINCX *)opcode);
+	case 0x7B:	return new OpcodeINC2X(*(OpcodeINC2X *)opcode);
+	case 0x7C:	return new OpcodeDECX(*(OpcodeDECX *)opcode);
+	case 0x7D:	return new OpcodeDEC2X(*(OpcodeDEC2X *)opcode);
+	case 0x7E:	return new OpcodeTLKON(*(OpcodeTLKON *)opcode);
+	case 0x7F:	return new OpcodeRDMSD(*(OpcodeRDMSD *)opcode);
+	case 0x80:	return new OpcodeSETBYTE(*(OpcodeSETBYTE *)opcode);
+	case 0x81:	return new OpcodeSETWORD(*(OpcodeSETWORD *)opcode);
+	case 0x82:	return new OpcodeBITON(*(OpcodeBITON *)opcode);
+	case 0x83:	return new OpcodeBITOFF(*(OpcodeBITOFF *)opcode);
+	case 0x84:	return new OpcodeBITXOR(*(OpcodeBITXOR *)opcode);
+	case 0x85:	return new OpcodePLUS(*(OpcodePLUS *)opcode);
+	case 0x86:	return new OpcodePLUS2(*(OpcodePLUS2 *)opcode);
+	case 0x87:	return new OpcodeMINUS(*(OpcodeMINUS *)opcode);
+	case 0x88:	return new OpcodeMINUS2(*(OpcodeMINUS2 *)opcode);
+	case 0x89:	return new OpcodeMUL(*(OpcodeMUL *)opcode);
+	case 0x8A:	return new OpcodeMUL2(*(OpcodeMUL2 *)opcode);
+	case 0x8B:	return new OpcodeDIV(*(OpcodeDIV *)opcode);
+	case 0x8C:	return new OpcodeDIV2(*(OpcodeDIV2 *)opcode);
+	case 0x8D:	return new OpcodeMOD(*(OpcodeMOD *)opcode);
+	case 0x8E:	return new OpcodeMOD2(*(OpcodeMOD2 *)opcode);
+	case 0x8F:	return new OpcodeAND(*(OpcodeAND *)opcode);
+	case 0x90:	return new OpcodeAND2(*(OpcodeAND2 *)opcode);
+	case 0x91:	return new OpcodeOR(*(OpcodeOR *)opcode);
+	case 0x92:	return new OpcodeOR2(*(OpcodeOR2 *)opcode);
+	case 0x93:	return new OpcodeXOR(*(OpcodeXOR *)opcode);
+	case 0x94:	return new OpcodeXOR2(*(OpcodeXOR2 *)opcode);
+	case 0x95:	return new OpcodeINC(*(OpcodeINC *)opcode);
+	case 0x96:	return new OpcodeINC2(*(OpcodeINC2 *)opcode);
+	case 0x97:	return new OpcodeDEC(*(OpcodeDEC *)opcode);
+	case 0x98:	return new OpcodeDEC2(*(OpcodeDEC2 *)opcode);
+	case 0x99:	return new OpcodeRANDOM(*(OpcodeRANDOM *)opcode);
+	case 0x9A:	return new OpcodeLBYTE(*(OpcodeLBYTE *)opcode);
+	case 0x9B:	return new OpcodeHBYTE(*(OpcodeHBYTE *)opcode);
+	case 0x9C:	return new Opcode2BYTE(*(Opcode2BYTE *)opcode);
+	case 0x9D:	return new OpcodeSETX(*(OpcodeSETX *)opcode);
+	case 0x9E:	return new OpcodeGETX(*(OpcodeGETX *)opcode);
+	case 0x9F:	return new OpcodeSEARCHX(*(OpcodeSEARCHX *)opcode);
+	case 0xA0:	return new OpcodePC(*(OpcodePC *)opcode);
+	case 0xA1:	return new OpcodeCHAR(*(OpcodeCHAR *)opcode);
+	case 0xA2:	return new OpcodeDFANM(*(OpcodeDFANM *)opcode);
+	case 0xA3:	return new OpcodeANIME1(*(OpcodeANIME1 *)opcode);
+	case 0xA4:	return new OpcodeVISI(*(OpcodeVISI *)opcode);
+	case 0xA5:	return new OpcodeXYZI(*(OpcodeXYZI *)opcode);
+	case 0xA6:	return new OpcodeXYI(*(OpcodeXYI *)opcode);
+	case 0xA7:	return new OpcodeXYZ(*(OpcodeXYZ *)opcode);
+	case 0xA8:	return new OpcodeMOVE(*(OpcodeMOVE *)opcode);
+	case 0xA9:	return new OpcodeCMOVE(*(OpcodeCMOVE *)opcode);
+	case 0xAA:	return new OpcodeMOVA(*(OpcodeMOVA *)opcode);
+	case 0xAB:	return new OpcodeTURA(*(OpcodeTURA *)opcode);
+	case 0xAC:	return new OpcodeANIMW(*(OpcodeANIMW *)opcode);
+	case 0xAD:	return new OpcodeFMOVE(*(OpcodeFMOVE *)opcode);
+	case 0xAE:	return new OpcodeANIME2(*(OpcodeANIME2 *)opcode);
+	case 0xAF:	return new OpcodeANIMX1(*(OpcodeANIMX1 *)opcode);
+	case 0xB0:	return new OpcodeCANIM1(*(OpcodeCANIM1 *)opcode);
+	case 0xB1:	return new OpcodeCANMX1(*(OpcodeCANMX1 *)opcode);
+	case 0xB2:	return new OpcodeMSPED(*(OpcodeMSPED *)opcode);
+	case 0xB3:	return new OpcodeDIR(*(OpcodeDIR *)opcode);
+	case 0xB4:	return new OpcodeTURNGEN(*(OpcodeTURNGEN *)opcode);
+	case 0xB5:	return new OpcodeTURN(*(OpcodeTURN *)opcode);
+	case 0xB6:	return new OpcodeDIRA(*(OpcodeDIRA *)opcode);
+	case 0xB7:	return new OpcodeGETDIR(*(OpcodeGETDIR *)opcode);
+	case 0xB8:	return new OpcodeGETAXY(*(OpcodeGETAXY *)opcode);
+	case 0xB9:	return new OpcodeGETAI(*(OpcodeGETAI *)opcode);
+	case 0xBA:	return new OpcodeANIMX2(*(OpcodeANIMX2 *)opcode);
+	case 0xBB:	return new OpcodeCANIM2(*(OpcodeCANIM2 *)opcode);
+	case 0xBC:	return new OpcodeCANMX2(*(OpcodeCANMX2 *)opcode);
+	case 0xBD:	return new OpcodeASPED(*(OpcodeASPED *)opcode);
+
+	case 0xBF:	return new OpcodeCC(*(OpcodeCC *)opcode);
+	case 0xC0:	return new OpcodeJUMP(*(OpcodeJUMP *)opcode);
+	case 0xC1:	return new OpcodeAXYZI(*(OpcodeAXYZI *)opcode);
+	case 0xC2:	return new OpcodeLADER(*(OpcodeLADER *)opcode);
+	case 0xC3:	return new OpcodeOFST(*(OpcodeOFST *)opcode);
+	case 0xC4:	return new OpcodeOFSTW(*(OpcodeOFSTW *)opcode);
+	case 0xC5:	return new OpcodeTALKR(*(OpcodeTALKR *)opcode);
+	case 0xC6:	return new OpcodeSLIDR(*(OpcodeSLIDR *)opcode);
+	case 0xC7:	return new OpcodeSOLID(*(OpcodeSOLID *)opcode);
+	case 0xC8:	return new OpcodePRTYP(*(OpcodePRTYP *)opcode);
+	case 0xC9:	return new OpcodePRTYM(*(OpcodePRTYM *)opcode);
+	case 0xCA:	return new OpcodePRTYE(*(OpcodePRTYE *)opcode);
+	case 0xCB:	return new OpcodeIFPRTYQ(*(OpcodeIFPRTYQ *)opcode);
+	case 0xCC:	return new OpcodeIFMEMBQ(*(OpcodeIFMEMBQ *)opcode);
+	case 0xCD:	return new OpcodeMMBUD(*(OpcodeMMBUD *)opcode);
+	case 0xCE:	return new OpcodeMMBLK(*(OpcodeMMBLK *)opcode);
+	case 0xCF:	return new OpcodeMMBUK(*(OpcodeMMBUK *)opcode);
+	case 0xD0:	return new OpcodeLINE(*(OpcodeLINE *)opcode);
+	case 0xD1:	return new OpcodeLINON(*(OpcodeLINON *)opcode);
+	case 0xD2:	return new OpcodeMPJPO(*(OpcodeMPJPO *)opcode);
+	case 0xD3:	return new OpcodeSLINE(*(OpcodeSLINE *)opcode);
+	case 0xD4:	return new OpcodeSIN(*(OpcodeSIN *)opcode);
+	case 0xD5:	return new OpcodeCOS(*(OpcodeCOS *)opcode);
+	case 0xD6:	return new OpcodeTLKR2(*(OpcodeTLKR2 *)opcode);
+	case 0xD7:	return new OpcodeSLDR2(*(OpcodeSLDR2 *)opcode);
+	case 0xD8:	return new OpcodePMJMP(*(OpcodePMJMP *)opcode);
+	case 0xD9:	return new OpcodePMJMP2(*(OpcodePMJMP2 *)opcode);
+	case 0xDA:	return new OpcodeAKAO2(*(OpcodeAKAO2 *)opcode);
+	case 0xDB:	return new OpcodeFCFIX(*(OpcodeFCFIX *)opcode);
+	case 0xDC:	return new OpcodeCCANM(*(OpcodeCCANM *)opcode);
+	case 0xDD:	return new OpcodeANIMB(*(OpcodeANIMB *)opcode);
+	case 0xDE:	return new OpcodeTURNW(*(OpcodeTURNW *)opcode);
+	case 0xDF:	return new OpcodeMPPAL(*(OpcodeMPPAL *)opcode);
+	case 0xE0:	return new OpcodeBGON(*(OpcodeBGON *)opcode);
+	case 0xE1:	return new OpcodeBGOFF(*(OpcodeBGOFF *)opcode);
+	case 0xE2:	return new OpcodeBGROL(*(OpcodeBGROL *)opcode);
+	case 0xE3:	return new OpcodeBGROL2(*(OpcodeBGROL2 *)opcode);
+	case 0xE4:	return new OpcodeBGCLR(*(OpcodeBGCLR *)opcode);
+	case 0xE5:	return new OpcodeSTPAL(*(OpcodeSTPAL *)opcode);
+	case 0xE6:	return new OpcodeLDPAL(*(OpcodeLDPAL *)opcode);
+	case 0xE7:	return new OpcodeCPPAL(*(OpcodeCPPAL *)opcode);
+	case 0xE8:	return new OpcodeRTPAL(*(OpcodeRTPAL *)opcode);
+	case 0xE9:	return new OpcodeADPAL(*(OpcodeADPAL *)opcode);
+	case 0xEA:	return new OpcodeMPPAL2(*(OpcodeMPPAL2 *)opcode);
+	case 0xEB:	return new OpcodeSTPLS(*(OpcodeSTPLS *)opcode);
+	case 0xEC:	return new OpcodeLDPLS(*(OpcodeLDPLS *)opcode);
+	case 0xED:	return new OpcodeCPPAL2(*(OpcodeCPPAL2 *)opcode);
+	case 0xEE:	return new OpcodeRTPAL2(*(OpcodeRTPAL2 *)opcode);
+	case 0xEF:	return new OpcodeADPAL2(*(OpcodeADPAL2 *)opcode);
+	case 0xF0:	return new OpcodeMUSIC(*(OpcodeMUSIC *)opcode);
+	case 0xF1:	return new OpcodeSOUND(*(OpcodeSOUND *)opcode);
+	case 0xF2:	return new OpcodeAKAO(*(OpcodeAKAO *)opcode);
+	case 0xF3:	return new OpcodeMUSVT(*(OpcodeMUSVT *)opcode);
+	case 0xF4:	return new OpcodeMUSVM(*(OpcodeMUSVM *)opcode);
+	case 0xF5:	return new OpcodeMULCK(*(OpcodeMULCK *)opcode);
+	case 0xF6:	return new OpcodeBMUSC(*(OpcodeBMUSC *)opcode);
+	case 0xF7:	return new OpcodeCHMPH(*(OpcodeCHMPH *)opcode);
+	case 0xF8:	return new OpcodePMVIE(*(OpcodePMVIE *)opcode);
+	case 0xF9:	return new OpcodeMOVIE(*(OpcodeMOVIE *)opcode);
+	case 0xFA:	return new OpcodeMVIEF(*(OpcodeMVIEF *)opcode);
+	case 0xFB:	return new OpcodeMVCAM(*(OpcodeMVCAM *)opcode);
+	case 0xFC:	return new OpcodeFMUSC(*(OpcodeFMUSC *)opcode);
+	case 0xFD:	return new OpcodeCMUSC(*(OpcodeCMUSC *)opcode);
+	case 0xFE:	return new OpcodeCHMST(*(OpcodeCHMST *)opcode);
+	case 0xFF:	return new OpcodeGAMEOVER(*(OpcodeGAMEOVER *)opcode);
+	case 0x100:	return new OpcodeLabel(*(OpcodeLabel *)opcode);
+	default:	return new OpcodeUnknown(*(OpcodeUnknown *)opcode);
+	}
+}
+
 int Script::posReturn(const QByteArray &script)
 {
 	quint16 pos=0, longueur, param16;
@@ -413,9 +668,14 @@ bool Script::isValid() const
 	return valid;
 }
 
-Opcode *Script::getOpcode(quint16 opcodeID)
+Opcode *Script::getOpcode(quint16 opcodeID) const
 {
 	return opcodes.at(opcodeID);
+}
+
+const QList<Opcode *> &Script::getOpcodes() const
+{
+	return opcodes;
 }
 
 QByteArray Script::toByteArray() const
@@ -434,11 +694,81 @@ QByteArray Script::toByteArray() const
 
 	pos = 0;
 	foreach(Opcode *opcode, opcodes) {
+		bool delPlease = false;
 		if(opcode->isJump()) {
-			((OpcodeJump *)opcode)->setJump(labelPositions.value(((OpcodeJump *)opcode)->label()) - pos);
+			OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
+			qint32 jump = labelPositions.value(opcodeJump->label()) - pos;
+			opcodeJump->setJump(jump);
+
+			// if jump < 0 and this is not a jump back
+			if(jump < 0 && opcodeJump->id() != Opcode::JMPB && opcodeJump->id() != Opcode::JMPBL) {
+				switch((Opcode::Keys)opcodeJump->id()) {
+				case Opcode::JMPF:
+					opcode = new OpcodeJMPB(*opcodeJump);
+					delPlease = true;
+					break;
+				case Opcode::JMPFL:
+					opcode = new OpcodeJMPBL(*opcodeJump);
+					delPlease = true;
+					break;
+				default:
+					//TODO: critical situation
+					break;
+				}
+			}
+
+			// if jump > 0 and this is not a jump forward
+			if(jump > 0 && opcodeJump->id() != Opcode::JMPF && opcodeJump->id() != Opcode::JMPFL) {
+				switch((Opcode::Keys)opcodeJump->id()) {
+				case Opcode::JMPB:
+					opcode = new OpcodeJMPF(*opcodeJump);
+					delPlease = true;
+					break;
+				case Opcode::JMPBL:
+					opcode = new OpcodeJMPFL(*opcodeJump);
+					delPlease = true;
+					break;
+				default:
+					//TODO: critical situation
+					break;
+				}
+			}
+
+			// if this is a long jump and opcode is not for a long jump
+			if(!opcodeJump->isLongJump() && jump - opcodeJump->jumpPosData() > 255) {
+				switch((Opcode::Keys)opcodeJump->id()) {
+				case Opcode::JMPF:
+					opcode = new OpcodeJMPFL(*(OpcodeJMPF *)opcodeJump);
+					delPlease = true;
+					break;
+				case Opcode::JMPB:
+					opcode = new OpcodeJMPBL(*(OpcodeJMPB *)opcodeJump);
+					delPlease = true;
+					break;
+				case Opcode::IFUB:
+					opcode = new OpcodeIFUBL(*(OpcodeIFUB *)opcodeJump);
+					delPlease = true;
+					break;
+				case Opcode::IFSW:
+					opcode = new OpcodeIFSWL(*(OpcodeIFSW *)opcodeJump);
+					delPlease = true;
+					break;
+				case Opcode::IFUW:
+					opcode = new OpcodeIFUWL(*(OpcodeIFUW *)opcodeJump);
+					delPlease = true;
+					break;
+				default:
+					//TODO: critical situation
+					break;
+				}
+			}
 		}
 		ret.append(opcode->toByteArray());
 		pos += opcode->size();
+
+		if(delPlease) {
+			delete opcode;
+		}
 	}
 
 	return ret;
@@ -649,97 +979,12 @@ void Script::getBgMove(qint16 z[2], qint16 *x, qint16 *y) const
 		opcode->getBgMove(z, x, y);
 }
 
-void Script::lecture(QTreeWidget *zoneScript)
+const QList<Opcode *> &Script::getExpandedItems() const
 {
-	QList<quint16> indent;
-	QList<QTreeWidgetItem *> row;
-	QTreeWidgetItem *parentItem = 0;
-	QString description;
-	quint8 clef;
-	quint16 opcodeID = 0, opcodeCount = opcodes.size();
-	Opcode *curOpcode;
-	QPixmap fontPixmap(":/images/chiffres.png");
-	bool error = false;
-	
-	while(opcodeID < opcodeCount)
-	{
-		curOpcode = opcodes.at(opcodeID);
-
-		if(curOpcode->isLabel()) {
-			while(!indent.isEmpty() &&
-				  ((OpcodeLabel *)curOpcode)->label() >= indent.last())
-			{
-				if(((OpcodeLabel *)curOpcode)->label() > indent.last())
-					error = true;
-				indent.removeLast();
-				parentItem = parentItem->parent();
-			}
-		}
-		
-		description = curOpcode->toString();
-		clef = curOpcode->id();
-		
-		QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList() << description << QString::number(opcodeID));
-		row.append(item);
-		
-		QPixmap wordPixmap(32,11);
-		item->setIcon(0, QIcon(posNumber(opcodeID, fontPixmap, wordPixmap)));
-		item->setToolTip(0, curOpcode->name());
-		if((clef>=0x14 && clef<=0x19) || (clef>=0x30 && clef<=0x32) || clef==0xcb || clef==0xcc)
-		{
-			item->setForeground(0, QColor(0x00,0x66,0xcc));
-			indent.append(((OpcodeJump *)curOpcode)->label());
-			parentItem = item;
-		}
-		else if(clef>=0x01 && clef<=0x07)
-			item->setForeground(0, QColor(0xcc,0x66,0x00));
-		else if(clef>=0x10 && clef<=0x13)
-			item->setForeground(0, QColor(0x66,0xcc,0x00));
-		else if(clef==0x00 || clef==0x07 || curOpcode->isLabel())
-			item->setForeground(0, QColor(0x66,0x66,0x66));
-
-		if(error)
-		{
-			item->setBackground(0, QColor(0xFF,0xCC,0xCC));
-			error = false;
-		}
-
-		++opcodeID;
-	}
-
-	zoneScript->addTopLevelItems(row);
-
-	opcodeID = 0;
-	foreach(QTreeWidgetItem *item, row) {
-		if(expandedItems.contains(opcodes.at(opcodeID))) {
-			item->setExpanded(true);
-		}
-		++opcodeID;
-	}
+	return expandedItems;
 }
 
 void Script::setExpandedItems(const QList<Opcode *> &expandedItems)
 {
 	this->expandedItems = expandedItems;
-}
-
-QPixmap &Script::posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap)
-{
-	QString strNum = QString("%1").arg(num, 5, 10, QChar(' '));
-	wordPixmap.fill(QColor(0,0,0,0));
-	QPainter painter(&wordPixmap);
-	
-	if(strNum.at(0)!=' ')
-		painter.drawTiledPixmap(1, 1, 5, 9, fontPixmap, 5*strNum.mid(0,1).toInt(), 0);
-	if(strNum.at(1)!=' ')
-		painter.drawTiledPixmap(7, 1, 5, 9, fontPixmap, 5*strNum.mid(1,1).toInt(), 0);
-	if(strNum.at(2)!=' ')
-		painter.drawTiledPixmap(13, 1, 5, 9, fontPixmap, 5*strNum.mid(2,1).toInt(), 0);
-	if(strNum.at(3)!=' ')
-		painter.drawTiledPixmap(19, 1, 5, 9, fontPixmap, 5*strNum.mid(3,1).toInt(), 0);
-	if(strNum.at(4)!=' ')
-		painter.drawTiledPixmap(25, 1, 5, 9, fontPixmap, 5*strNum.mid(4,1).toInt(), 0);
-
-	painter.end();
-	return wordPixmap;
 }

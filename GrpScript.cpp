@@ -86,14 +86,12 @@ void GrpScript::setType()
 	
 	Script *firstScript = scripts.first();
 	
-	quint16 opcodeCount = firstScript->size();
-	
-	for(quint16 i=0 ; i<opcodeCount ; ++i)
+	foreach(Opcode *opcode, firstScript->getOpcodes())
 	{
-		switch((Opcode::Keys)firstScript->getOpcode(i)->id())
+		switch((Opcode::Keys)opcode->id())
 		{
 		case Opcode::PC://Definition du personnage
-			character = ((OpcodePC *)firstScript->getOpcode(i))->charID;
+			character = ((OpcodePC *)opcode)->charID;
 			return;
 		case Opcode::CHAR://Definition du modèle 3D
 			character = 0xFF;

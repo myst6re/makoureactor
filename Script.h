@@ -18,7 +18,7 @@
 #ifndef DEF_SCRIPT
 #define DEF_SCRIPT
 
-#include <QtGui>
+#include <QtCore>
 #include "FF7Text.h"
 #include "Opcode.h"
 
@@ -33,7 +33,8 @@ public:
 	int size() const;
 	bool isEmpty() const;
 	bool isValid() const;
-	Opcode *getOpcode(quint16 opcodeID);
+	Opcode *getOpcode(quint16 opcodeID) const;
+	const QList<Opcode *> &getOpcodes() const;
 	bool isVoid() const;
 	QByteArray toByteArray() const;
 	void setOpcode(quint16 opcodeID, Opcode *opcode);
@@ -59,14 +60,13 @@ public:
 	void getBgParams(QHash<quint8, quint8> &paramActifs) const;
 	void getBgMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
-	void lecture(QTreeWidget *zoneScript);
+	const QList<Opcode *> &getExpandedItems() const;
 	void setExpandedItems(const QList<Opcode *> &expandedItems);
 
 	static int posReturn(const QByteArray &script);
 	static Opcode *createOpcode(const QByteArray &script, int pos=0);
+	static Opcode *copyOpcode(Opcode *opcode);
 private:
-	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);
-
 	QList<Opcode *> opcodes;
 	QList<Opcode *> expandedItems;
 
