@@ -754,6 +754,7 @@ QPixmap Field::ouvrirBackgroundPS(const QByteArray &mimDataDec, const QByteArray
 	{
 		headerEffect.size = 4;
 		headerEffect.w = 0;
+		headerEffect.x = 0;
 	}
 	
 	/*--- OUVERTURE DU DAT ---*/
