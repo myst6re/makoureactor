@@ -18,7 +18,7 @@
 #include "ScriptEditorView.h"
 
 ScriptEditorView::ScriptEditorView(Script *script, int opcodeID, QWidget *parent)
-	: QWidget(parent), _script(script), _opcode(0), _opcodeID(opcodeID)
+	: QWidget(parent), _script(script), _opcode(0), _opcodeID(opcodeID), _valid(true)
 {
 }
 
@@ -34,6 +34,11 @@ Opcode *ScriptEditorView::opcode()
 void ScriptEditorView::setOpcode(Opcode *opcode)
 {
 	_opcode = opcode;
+}
+
+bool ScriptEditorView::isValid() const
+{
+	return _valid;
 }
 
 VarOrValueWidget::VarOrValueWidget(QWidget *parent) :
@@ -160,7 +165,60 @@ void VarOrValueWidget::setOnlyVar(bool onlyVar)
 	setIsValue(onlyVar);
 }
 
-ScriptEditorGotoPage::ScriptEditorGotoPage(Script *script, int opcodeID, QWidget *parent) :
+ScriptEditorLabelPage::ScriptEditorLabelPage(Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(script, opcodeID, parent)
+{
+	label = new QDoubleSpinBox(this);
+	label->setDecimals(0);
+	label->setRange(0, (quint32)-1);
+
+	warningLabel = new QLabel(tr("Ce label existe déjà, veuillez en choisir un autre."), this);
+	QPalette pal = warningLabel->palette();
+	pal.setColor(QPalette::Active, QPalette::WindowText, Qt::red);
+	warningLabel->setPalette(pal);
+	warningLabel->hide();
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Label")), 0, 0);
+	layout->addWidget(label, 0, 1);
+	layout->addWidget(warningLabel, 1, 0, 1, 2);
+	layout->setRowStretch(2, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(label, SIGNAL(valueChanged(double)), SIGNAL(opcodeChanged()));
+	connect(label, SIGNAL(valueChanged(double)), SLOT(showWarning()));
+}
+
+Opcode *ScriptEditorLabelPage::opcode()
+{
+	OpcodeLabel *opcodeLabel = (OpcodeLabel *)_opcode;
+	opcodeLabel->setLabel(label->value());
+
+	return ScriptEditorView::opcode();
+}
+
+void ScriptEditorLabelPage::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	labels.clear();
+	foreach(Opcode *op, _script->getOpcodes()) {
+		if(op->isLabel()) {
+			labels.append(((OpcodeLabel *)op)->label());
+		}
+	}
+
+	OpcodeLabel *opcodeLabel = (OpcodeLabel *)opcode;
+	labels.removeOne(opcodeLabel->label());
+	label->setValue(opcodeLabel->label());
+}
+
+void ScriptEditorLabelPage::showWarning()
+{
+	warningLabel->setVisible(labels.contains(label->value()));
+}
+
+ScriptEditorJumpPage::ScriptEditorJumpPage(Script *script, int opcodeID, QWidget *parent) :
 	ScriptEditorView(script, opcodeID, parent)
 {
 	label = new QComboBox(this);
@@ -181,33 +239,67 @@ ScriptEditorGotoPage::ScriptEditorGotoPage(Script *script, int opcodeID, QWidget
 //	connect(range, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
 }
 
-Opcode *ScriptEditorGotoPage::opcode()
+Opcode *ScriptEditorJumpPage::opcode()
 {
-	qDebug() << "ScriptEditorGotoPage::opcode";
 	OpcodeJump *opcodeJump = (OpcodeJump *)_opcode;
 	opcodeJump->setLabel(label->itemData(label->currentIndex()).toUInt());
 
 	return ScriptEditorView::opcode();
 }
 
-void ScriptEditorGotoPage::setOpcode(Opcode *opcode)
+void ScriptEditorJumpPage::setOpcode(Opcode *opcode)
 {
-	qDebug() << "ScriptEditorGotoPage::setOpcode";
 	ScriptEditorView::setOpcode(opcode);
 
 	label->clear();
 
-	foreach(Opcode *opcode, _script->getOpcodes()) {
-		if(opcode->isLabel()) {
-			quint32 lbl = ((OpcodeLabel *)opcode)->label();
-			label->addItem(tr("Label %1").arg(lbl), lbl);
+	OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
+	int i=0, pos=0, posOpcodeJump=-1, maxJump;
+	bool isBackward = opcodeJump->id() == Opcode::JMPB || opcodeJump->id() == Opcode::JMPBL;
+
+	foreach(Opcode *op, _script->getOpcodes()) {
+		if(i == _opcodeID) {
+			posOpcodeJump = pos;
+			break;
 		}
+		pos += op->size();
+		++i;
+	}
+	if(posOpcodeJump == -1) {
+		posOpcodeJump = pos;
 	}
 
-	OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
-	int index = label->findData(opcodeJump->label());
-	if(index < 0)		index = 0;
-	label->setCurrentIndex(index);
+	pos = i = 0;
+
+	if(opcodeJump->isLongJump()) {
+		maxJump = 65535 + opcodeJump->jumpPosData();
+	} else {
+		maxJump = 255 + opcodeJump->jumpPosData();
+	}
+
+	foreach(Opcode *op, _script->getOpcodes()) {
+
+		if(op->isLabel() &&
+				((isBackward && (i <= _opcodeID && pos >= posOpcodeJump - maxJump)) ||
+				(!isBackward && (i >= _opcodeID && pos <= posOpcodeJump + maxJump)))) {
+			quint32 lbl = ((OpcodeLabel *)op)->label();
+			label->addItem(tr("Label %1").arg(lbl), lbl);
+		}
+
+		pos += op->size();
+		++i;
+
+		if(isBackward && i > _opcodeID)
+			break;
+	}
+
+	_valid = label->count() > 0;
+
+	if(_valid) {
+		int index = label->findData(opcodeJump->label());
+		if(index < 0)		index = 0;
+		label->setCurrentIndex(index);
+	}
 
 //	if(opcode->id() == Opcode::JMPF || opcode->id() == Opcode::JMPB) {
 //		range->setCurrentIndex(0);
@@ -245,7 +337,6 @@ ScriptEditorIfPage::ScriptEditorIfPage(Script *script, int opcodeID, QWidget *pa
 
 Opcode *ScriptEditorIfPage::opcode()
 {
-	qDebug() << "ScriptEditorGotoPage::opcode";
 	OpcodeIf *opcodeIf = (OpcodeIf *)_opcode;
 
 	quint8 bank1, bank2;
@@ -281,7 +372,6 @@ Opcode *ScriptEditorIfPage::opcode()
 
 void ScriptEditorIfPage::setOpcode(Opcode *opcode)
 {
-	qDebug() << "ScriptEditorGotoPage::setOpcode";
 	ScriptEditorView::setOpcode(opcode);
 
 	OpcodeIf *opcodeIf = (OpcodeIf *)opcode;
@@ -321,15 +411,218 @@ void ScriptEditorIfPage::setOpcode(Opcode *opcode)
 
 	label->clear();
 
-	for(int i=_opcodeID+1 ; i<_script->size() ; ++i) {
-		if(_script->getOpcode(i)->isLabel()) {
-			quint32 lbl = ((OpcodeLabel *)_script->getOpcode(i))->label();
+	OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
+
+	int i=0, pos=0, posOpcodeJump=-1, maxJump;
+
+	if(opcodeJump->isLongJump()) {
+		maxJump = 65535 + opcodeJump->jumpPosData();
+	} else {
+		maxJump = 255 + opcodeJump->jumpPosData();
+	}
+
+	foreach(Opcode *op, _script->getOpcodes()) {
+		if(i == _opcodeID) {
+			posOpcodeJump = pos;
+		}
+
+		if(i >= _opcodeID && op->isLabel() && pos < posOpcodeJump + maxJump) {
+			quint32 lbl = ((OpcodeLabel *)op)->label();
 			label->addItem(tr("Label %1").arg(lbl), lbl);
+		}
+
+		pos += op->size();
+		++i;
+	}
+
+	_valid = label->count() > 0;
+
+	if(_valid) {
+		int index = label->findData(opcodeJump->label());
+		if(index < 0)		index = 0;
+		label->setCurrentIndex(index);
+	}
+}
+
+ScriptEditorIfKeyPage::ScriptEditorIfKeyPage(Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(script, opcodeID, parent)
+{
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Touches")), 0, 0, 1, 4);
+
+	int row=1, column=0;
+
+	foreach(const QString &keyName, Data::key_names) {
+		QCheckBox *key = new QCheckBox(keyName, this);
+		keys.append(key);
+		connect(key, SIGNAL(toggled(bool)), SIGNAL(opcodeChanged()));
+		layout->addWidget(key, row, column);
+
+		if(column == 3) {
+			column = 0;
+			++row;
+		} else {
+			++column;
 		}
 	}
 
+	if(column != 0) {
+		column = 0;
+		++row;
+	}
+
+	label = new QComboBox(this);
+
+	layout->addWidget(new QLabel(tr("Label")), row, column);
+	layout->addWidget(label, row, column+1, 1, 3);
+	layout->setRowStretch(row+1, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(label, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+}
+
+Opcode *ScriptEditorIfKeyPage::opcode()
+{
+	OpcodeIfKey *opcodeIfKey = (OpcodeIfKey *)_opcode;
+
+	quint16 result = 0;
+
+	for(int i=0 ; i<keys.size() ; ++i) {
+		if(keys.at(i)->isChecked()) {
+			result |= 1 << i;
+		}
+	}
+
+	opcodeIfKey->keys = result;
+
+	OpcodeJump *opcodeJump = (OpcodeJump *)_opcode;
+	opcodeJump->setLabel(label->itemData(label->currentIndex()).toUInt());
+
+	return ScriptEditorView::opcode();
+}
+
+void ScriptEditorIfKeyPage::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	OpcodeIfKey *opcodeIfKey = (OpcodeIfKey *)opcode;
+
+	for(int i=0 ; i<keys.size() ; ++i) {
+		keys.at(i)->setChecked(bool((opcodeIfKey->keys >> i) & 1));
+	}
+
+	label->clear();
+
 	OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
-	int index = label->findData(opcodeJump->label());
-	if(index < 0)		index = 0;
-	label->setCurrentIndex(index);
+
+	int i=0, pos=0, posOpcodeJump=-1, maxJump;
+
+	if(opcodeJump->isLongJump()) {
+		maxJump = 65535 + opcodeJump->jumpPosData();
+	} else {
+		maxJump = 255 + opcodeJump->jumpPosData();
+	}
+
+	foreach(Opcode *op, _script->getOpcodes()) {
+		if(i == _opcodeID) {
+			posOpcodeJump = pos;
+		}
+
+		if(i >= _opcodeID && op->isLabel() && pos < posOpcodeJump + maxJump) {
+			quint32 lbl = ((OpcodeLabel *)op)->label();
+			label->addItem(tr("Label %1").arg(lbl), lbl);
+		}
+
+		pos += op->size();
+		++i;
+	}
+
+	_valid = label->count() > 0;
+
+	if(_valid) {
+		int index = label->findData(opcodeJump->label());
+		if(index < 0)		index = 0;
+		label->setCurrentIndex(index);
+	}
+}
+
+ScriptEditorIfQPage::ScriptEditorIfQPage(Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(script, opcodeID, parent)
+{
+	charList = new QComboBox(this);
+	charList->addItems(Data::char_names);
+	int nbItems = charList->count();
+	for(int i=nbItems ; i<100 ; i++)
+		charList->addItem(QString("%1").arg(i));
+	for(int i=100 ; i<254 ; i++)
+		charList->addItem(Data::char_names.last());
+
+	charList->addItem(tr("(Vide)"));
+	charList->addItem(tr("(Vide)"));
+
+	label = new QComboBox(this);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Personnage")), 0, 0);
+	layout->addWidget(charList, 0, 1);
+	layout->addWidget(new QLabel(tr("Label")), 1, 0);
+	layout->addWidget(label, 1, 1);
+	layout->setRowStretch(2, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(charList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(label, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+}
+
+Opcode *ScriptEditorIfQPage::opcode()
+{
+	OpcodeIfQ *opcodeIfQ = (OpcodeIfQ *)_opcode;
+	opcodeIfQ->charID = charList->currentIndex();
+
+	OpcodeJump *opcodeJump = (OpcodeJump *)_opcode;
+	opcodeJump->setLabel(label->itemData(label->currentIndex()).toUInt());
+
+	return ScriptEditorView::opcode();
+}
+
+void ScriptEditorIfQPage::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	OpcodeIfQ *opcodeIfQ = (OpcodeIfQ *)_opcode;
+	charList->setCurrentIndex(opcodeIfQ->charID);
+
+	label->clear();
+
+	OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
+
+	int i=0, pos=0, posOpcodeJump=-1, maxJump;
+
+	if(opcodeJump->isLongJump()) {
+		maxJump = 65535 + opcodeJump->jumpPosData();
+	} else {
+		maxJump = 255 + opcodeJump->jumpPosData();
+	}
+
+	foreach(Opcode *op, _script->getOpcodes()) {
+		if(i == _opcodeID) {
+			posOpcodeJump = pos;
+		}
+
+		if(i >= _opcodeID && op->isLabel() && pos < posOpcodeJump + maxJump) {
+			quint32 lbl = ((OpcodeLabel *)op)->label();
+			label->addItem(tr("Label %1").arg(lbl), lbl);
+		}
+
+		pos += op->size();
+		++i;
+	}
+
+	_valid = label->count() > 0;
+
+	if(_valid) {
+		int index = label->findData(opcodeJump->label());
+		if(index < 0)		index = 0;
+		label->setCurrentIndex(index);
+	}
 }

@@ -31,13 +31,15 @@ public:
 
 	virtual Opcode *opcode();
 	virtual void setOpcode(Opcode *opcode);
+	bool isValid() const;
 signals:
 	void opcodeChanged();
 	
 protected:
-	Script *_script;
+	const Script *const _script;
 	Opcode *_opcode;
 	int _opcodeID;
+	bool _valid;
 };
 
 class VarOrValueWidget : public QWidget
@@ -67,11 +69,26 @@ private:
 	QSpinBox *_value, *_bank, *_adress;
 };
 
-class ScriptEditorGotoPage : public ScriptEditorView
+class ScriptEditorLabelPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorGotoPage(Script *script, int opcodeID, QWidget *parent = 0);
+	explicit ScriptEditorLabelPage(Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private slots:
+	void showWarning();
+private:
+	QDoubleSpinBox *label;
+	QLabel *warningLabel;
+	QList<quint32> labels;
+};
+
+class ScriptEditorJumpPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorJumpPage(Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
 private:
@@ -88,6 +105,29 @@ public:
 private:
 	VarOrValueWidget *varOrValue1, *varOrValue2;
 	QComboBox *operatorList, *label;
+};
+
+class ScriptEditorIfKeyPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorIfKeyPage(Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private:
+	QList<QCheckBox *> keys;
+	QComboBox *label;
+};
+
+class ScriptEditorIfQPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorIfQPage(Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private:
+	QComboBox *charList, *label;
 };
 
 #endif // DEF_SCRIPTEDITORVIEW

@@ -171,8 +171,6 @@ void OpcodeList::upDownEnabled()
 
 void OpcodeList::saveExpandedItems()
 {
-	qDebug() << "OpcodeList::saveExpandedItems";
-
 	if(script) {
 		QList<Opcode *> expandedItems;
 		int size = topLevelItemCount();
@@ -184,14 +182,10 @@ void OpcodeList::saveExpandedItems()
 		}
 		if(size>0) script->setExpandedItems(expandedItems);
 	}
-
-	qDebug() << "/OpcodeList::saveExpandedItems";
 }
 
 void OpcodeList::fill(Script *_script)
 {
-	qDebug() << "OpcodeList::fill";
-
 	if(_script) {
 		saveExpandedItems();
 		script = _script;
@@ -262,7 +256,6 @@ void OpcodeList::fill(Script *_script)
 		item->setFlags(Qt::NoItemFlags);
 		item->setData(0, Qt::UserRole, -1);
 	}
-	qDebug() << "OpcodeList::fill2";
 	scrollToTop();
 
 	if(header()->sectionSize(0) < width())	header()->setMinimumSectionSize(width()-2);
@@ -280,7 +273,6 @@ void OpcodeList::fill(Script *_script)
 	connect(this, SIGNAL(itemSelectionChanged()), SLOT(itemSelected()));
 	disconnect(this, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this, SLOT(evidence(QTreeWidgetItem *, QTreeWidgetItem *)));
 	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), SLOT(evidence(QTreeWidgetItem *, QTreeWidgetItem *)));
-	qDebug() << "/OpcodeList::fill";
 }
 
 void OpcodeList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
@@ -332,7 +324,6 @@ void OpcodeList::emitHist(int type, const QList<int> &opcodeIDs, const QList<QBy
 void OpcodeList::scriptEditor(bool modify)
 {
 	if(!script)		return;
-	qDebug() << "OpcodeList::scriptEditor" << modify;
 
 	int opcodeID = selectedID();
 	if(opcodeID==-1) {
@@ -340,36 +331,28 @@ void OpcodeList::scriptEditor(bool modify)
 		modify = false;
 	}
 
-	qDebug() << "OpcodeList::scriptEditor opcodeID" << opcodeID << script->size() << script->getOpcode(opcodeID)->name();
-
 	QByteArray oldVersion;
 
 	saveExpandedItems();
 
-	qDebug() << "OpcodeList::scriptEditor 0";
-
 	if(modify)
 		oldVersion = script->getOpcode(opcodeID)->toByteArray();
-
-	qDebug() << "OpcodeList::scriptEditor 00";
+	else
+		++opcodeID;
 	
 	ScriptEditor editor(script, opcodeID, modify, isInit, this);
 	
 	if(editor.exec()==QDialog::Accepted)
 	{
-		qDebug() << "OpcodeList::scriptEditor1";
 		fill();
-		qDebug() << "OpcodeList::scriptEditor2";
-		scroll(modify ? opcodeID : opcodeID+1);
+		scroll(opcodeID);
 		if(modify) {
 			emitHist(HIST_MOD, opcodeID, oldVersion);
 		}
 		else {
-			emitHist(HIST_ADD, opcodeID+1);
+			emitHist(HIST_ADD, opcodeID);
 		}
-		qDebug() << "OpcodeList::scriptEditor3";
 		emit changed();
-		qDebug() << "OpcodeList::scriptEditor4";
 	}
 }
 

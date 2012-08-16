@@ -139,6 +139,7 @@ public:
 	virtual void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual quint8 size() const;
+	bool hasParams() const;
 	virtual const QString &name() const;
 	virtual QByteArray toByteArray() const;
 	virtual bool isJump() const;
@@ -2416,28 +2417,28 @@ public:
 	quint8 charID[3];
 };
 
-class OpcodeIFPRTYQ : public OpcodeJump {
+class OpcodeIfQ : public OpcodeJump {
+public:
+	explicit OpcodeIfQ(const QByteArray &params);
+	void setParams(const QByteArray &params);
+	QByteArray params() const;
+	bool isLongJump() const { return false; }
+	quint8 jumpPosData() const { return 2; }
+	quint8 charID;
+};
+
+class OpcodeIFPRTYQ : public OpcodeIfQ {
 public:
 	explicit OpcodeIFPRTYQ(const QByteArray &params);
 	int id() const { return 0xCB; }
 	QString toString() const;
-	void setParams(const QByteArray &params);
-	QByteArray params() const;
-	quint8 charID;
-	bool isLongJump() const { return false; }
-	quint8 jumpPosData() const { return 2; }
 };
-// note: same struct as IFPRTYQ
-class OpcodeIFMEMBQ : public OpcodeJump {
+
+class OpcodeIFMEMBQ : public OpcodeIfQ {
 public:
 	explicit OpcodeIFMEMBQ(const QByteArray &params);
 	int id() const { return 0xCC; }
 	QString toString() const;
-	void setParams(const QByteArray &params);
-	QByteArray params() const;
-	quint8 charID;
-	bool isLongJump() const { return false; }
-	quint8 jumpPosData() const { return 2; }
 };
 
 class OpcodeMMBUD : public Opcode {

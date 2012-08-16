@@ -41,20 +41,19 @@ private slots:
 	
 private:
 	void fillEditor();
+	void fillView();
 
-	QVBoxLayout *layout;
-	QHBoxLayout *buttonLayout;
 	QComboBox *comboBox0, *comboBox;
 	QPlainTextEdit *textEdit;
 	QStackedLayout *editorLayout;
-	QPushButton *ok, *cancel;
+	QPushButton *ok;
 	ScriptEditorView *editorWidget;
 
 	Script *script;
 	quint16 opcodeID;
 	Opcode *opcode;
 	bool isInit;
-	QList<quint8> crashIfInit;
+	static QList<quint8> crashIfInit;
 
 	bool change;
 };

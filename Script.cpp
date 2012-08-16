@@ -49,6 +49,7 @@ bool Script::openScript(const QByteArray &script)
 		}
 		pos += op->size();
 	}
+	positions.append(pos);
 
 	QList<int> indentsKeys = indents.uniqueKeys();
 

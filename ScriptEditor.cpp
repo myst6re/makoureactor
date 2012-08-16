@@ -17,29 +17,35 @@
  ****************************************************************************/
 #include "ScriptEditor.h"
 
-ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent)
-	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), isInit(isInit)
-{
+QList<quint8> ScriptEditor::crashIfInit;
 
-	qDebug() << "new ScriptEditor";
+ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent)
+	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), opcodeID(opcodeID), isInit(isInit)
+{
+	if(crashIfInit.isEmpty()) {
+		crashIfInit << 0x08 << 0x09 << 0x0E << 0x20 << 0x21 << 0x2A << 0x35 << 0x40 << 0x48 << 0x49
+					<< 0x60 << 0x70 << 0xA2 << 0xA3 << 0xA8 << 0xA9 << 0xAD << 0xAE << 0xAF << 0xB0 << 0xB1
+					<< 0xB4 << 0xB5 << 0xBA << 0xBB << 0xBC << 0xC0 << 0xC2;
+	}
+
 	//Affichage
 	setWindowTitle(tr("Éditeur%1").arg(isInit ? tr(" (init mode)") : ""));
 	setFixedSize(500, 318);
-//	setFixedSize(500, 618);
+	//	setFixedSize(500, 618);
 	
 	QStringList liste0;
 	liste0 <<
-			tr("Structures de contrôle") <<
-			tr("Opérations mathématiques") <<
-			tr("Fenêtres et messages") <<
-			tr("Équipe et inventaire") <<
-			tr("Objets 3D et animations") <<
-			tr("Zones") <<
-			tr("Background") <<
-			tr("Transitions et caméra") <<
-			tr("Audio et vidéo") <<
-			tr("Modules") <<
-			tr("Inconnu");
+			  tr("Structures de contrôle") <<
+			  tr("Opérations mathématiques") <<
+			  tr("Fenêtres et messages") <<
+			  tr("Équipe et inventaire") <<
+			  tr("Objets 3D et animations") <<
+			  tr("Zones") <<
+			  tr("Background") <<
+			  tr("Transitions et caméra") <<
+			  tr("Audio et vidéo") <<
+			  tr("Modules") <<
+			  tr("Inconnu");
 	
 	comboBox0 = new QComboBox(this);
 	comboBox0->addItems(liste0);
@@ -52,23 +58,25 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 	
 	editorLayout = new QStackedLayout;
 	editorLayout->addWidget(editorWidget = new ScriptEditorGenericList(script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorGotoPage(script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorLabelPage(script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorJumpPage(script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorIfPage(script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorIfKeyPage(script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorIfQPage(script, opcodeID, this));
 
 	ok = new QPushButton(tr("OK"),this);
 	ok->setDefault(true);
-	cancel = new QPushButton(tr("Annuler"),this);
+	QPushButton *cancel = new QPushButton(tr("Annuler"),this);
 	
-	buttonLayout = new QHBoxLayout();
+	QHBoxLayout *buttonLayout = new QHBoxLayout();
 	buttonLayout->addStretch();
 	buttonLayout->addWidget(ok);
 	buttonLayout->addWidget(cancel);
 	
-	layout = new QVBoxLayout(this);
+	QVBoxLayout *layout = new QVBoxLayout(this);
 	layout->addWidget(comboBox0);
 	layout->addWidget(comboBox);
 	layout->addWidget(textEdit);
-	layout->addWidget(new QLabel(tr("Paramètres :"), this));
 	layout->addLayout(editorLayout);
 	layout->addStretch();
 	layout->addLayout(buttonLayout);
@@ -79,10 +87,9 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 	//Remplissage
 	this->script = script;
 	this->change = false;
-	
+
 	if(modify)
 	{
-		this->opcodeID = opcodeID;
 		this->opcode = Script::copyOpcode(script->getOpcode(opcodeID));
 
 		int index, i;
@@ -106,25 +113,18 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 			setEnabled(false);
 			return;
 		}
-		textEdit->setPlainText(opcode->toString());
-		fillEditor();
+		fillView();
 		
 		connect(ok, SIGNAL(released()), SLOT(modify()));
 	}
 	else
 	{
-		this->opcodeID = opcodeID < 0 ? script->size() : opcodeID + 1;
 		this->opcode = new OpcodeRET();
 		comboBox->setCurrentIndex(0);
 		changeCurrentOpcode(0);
-		fillEditor();
 
 		connect(ok, SIGNAL(released()), SLOT(add()));
 	}
-
-	crashIfInit << 0x08 << 0x09 << 0x0E << 0x20 << 0x21 << 0x2A << 0x35 << 0x40 << 0x48 << 0x49
-			<< 0x60 << 0x70 << 0xA2 << 0xA3 << 0xA8 << 0xA9 << 0xAD << 0xAE << 0xAF << 0xB0 << 0xB1
-			<< 0xB4 << 0xB5 << 0xBA << 0xBB << 0xBC << 0xC0 << 0xC2;
 
 	connect(comboBox0, SIGNAL(currentIndexChanged(int)), SLOT(buildList(int)));
 	for(int i=0 ; i<editorLayout->count() ; ++i)
@@ -139,41 +139,65 @@ ScriptEditor::~ScriptEditor()
 
 void ScriptEditor::fillEditor()
 {
-	qDebug() << "ScriptEditor::fillEditor";
+	int index;
 
+	// Change current editor widget
 	switch((Opcode::Keys)opcode->id()) {
+	case Opcode::LABEL:
+		index = 1;
+		break;
 	case Opcode::JMPF:case Opcode::JMPFL:
 	case Opcode::JMPB:case Opcode::JMPBL:
-		editorWidget = (ScriptEditorView *)editorLayout->widget(1);
+		index = 2;
 		break;
 	case Opcode::IFUB:case Opcode::IFUBL:
 	case Opcode::IFSW:case Opcode::IFSWL:
 	case Opcode::IFUW:case Opcode::IFUWL:
-		editorWidget = (ScriptEditorView *)editorLayout->widget(2);
+		index = 3;
+		break;
+	case Opcode::IFKEY:case Opcode::IFKEYON:
+	case Opcode::IFKEYOFF:
+		index = 4;
+		break;
+	case Opcode::IFMEMBQ:case Opcode::IFPRTYQ:
+		index = 5;
 		break;
 	default:
-		editorWidget = (ScriptEditorView *)editorLayout->widget(0);
+		index = 0;
 	}
-	qDebug() << "ScriptEditor::fillEditor2";
+
+	editorWidget = (ScriptEditorView *)editorLayout->widget(index);
+	bool hasParams = opcode->hasParams() || opcode->isLabel();
+	editorWidget->setVisible(hasParams);
 	editorWidget->setOpcode(opcode);
 	editorLayout->setCurrentWidget(editorWidget);
 }
 
+void ScriptEditor::fillView()
+{
+	textEdit->setPlainText(opcode->toString()); // text part
+	fillEditor(); // editor part
+
+	// disable if necessary
+	bool disableEditor = (isInit && crashIfInit.contains(opcode->id())) || !editorWidget->isValid();
+
+	textEdit->setDisabled(disableEditor);
+	editorWidget->setDisabled(disableEditor);
+	ok->setDisabled(disableEditor);
+}
+
 void ScriptEditor::modify()
 {
-	qDebug() << "ScriptEditor::modify";
 	/* if(!this->change) {
 		close();
 		return;
 	} */
 	script->setOpcode(this->opcodeID, Script::copyOpcode(editorWidget->opcode()));
 	accept();
-	qDebug() << "ScriptEditor::/modify";
 }
 
 void ScriptEditor::add()
 {
-	qDebug() << "ScriptEditor::add";
 	/* if(!this->change) {
 		close();
 		return;
@@ -184,8 +208,6 @@ void ScriptEditor::add()
 
 void ScriptEditor::refreshTextEdit()
 {
-	qDebug() << "ScriptEditor::refreshTextEdit";
-
 	this->change = true;
 
 	textEdit->setPlainText(editorWidget->opcode()->toString());
@@ -193,8 +215,6 @@ void ScriptEditor::refreshTextEdit()
 
 void ScriptEditor::changeCurrentOpcode(int index)
 {
-	qDebug() << "ScriptEditor::changeCurrentOpcode" << index;
-
 	this->change = true;
 	QByteArray newOpcode;
 	int itemData = comboBox->itemData(index).toInt();
@@ -204,20 +224,20 @@ void ScriptEditor::changeCurrentOpcode(int index)
 	
 	if(id == 0x28)//KAWAI
 	{
-		newOpcode.append('\x03');
-		newOpcode.append((char)((itemData >> 8) & 0xFF));
+		newOpcode.append('\x03'); // size
+		newOpcode.append((char)((itemData >> 8) & 0xFF)); // KAWAI ID
 	}
 	else if(id == 0x0F)//SPECIAL
 	{
 		quint8 byte2 = (itemData >> 8) & 0xFF;
-		newOpcode.append((char)byte2);
+		newOpcode.append((char)byte2); // SPECIAL ID
 		switch(byte2)
 		{
 		case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
-					newOpcode.append('\x00');
+			newOpcode.append('\x00');
 			break;
 		case 0xF8:case 0xFD:
-					newOpcode.append('\x00');
+			newOpcode.append('\x00');
 			newOpcode.append('\x00');
 			break;
 		}
@@ -243,20 +263,7 @@ void ScriptEditor::changeCurrentOpcode(int index)
 		}
 	}
 	
-	fillEditor();
-	textEdit->setPlainText(opcode->toString());
-	if(isInit && crashIfInit.contains(id))
-	{
-		textEdit->setDisabled(true);
-		editorWidget->setDisabled(true);
-		ok->setDisabled(true);
-	}
-	else
-	{
-		textEdit->setEnabled(true);
-		editorWidget->setEnabled(true);
-		ok->setEnabled(true);
-	}
+	fillView();
 }
 
 void ScriptEditor::buildList(int id)

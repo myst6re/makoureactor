@@ -45,6 +45,7 @@ ScriptEditorGenericList::ScriptEditorGenericList(Script *script, int opcodeID, Q
 	buttonLayout->setContentsMargins(QMargins());
 	
 	QVBoxLayout *layout = new QVBoxLayout(this);
+	layout->addWidget(new QLabel(tr("Paramètres :"), this));
 	layout->addWidget(tableView);
 	layout->addStretch();
 	layout->addLayout(buttonLayout);

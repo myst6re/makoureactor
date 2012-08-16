@@ -50,6 +50,11 @@ quint8 Opcode::size() const
 	return Opcode::length[id()];
 }
 
+bool Opcode::hasParams() const
+{
+	return size() > 1;
+}
+
 const QString &Opcode::name() const
 {
 	return Opcode::names[id()];
@@ -3520,7 +3525,7 @@ void OpcodeCMTRA::setParams(const QByteArray &params)
 
 QString OpcodeCMTRA::toString() const
 {
-	return QObject::tr("%4 = quantité de matéria %1 dans l'inventaire (AP=%2, ???=%3)")
+	return QObject::tr("%4 = quantité de matéria %1 dans l'inventaire (AP=%2, ?=%3)")
 			.arg(_materia(materiaID, B1(banks[0])))
 			.arg(_var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])))
 			.arg(unknown)
@@ -6175,16 +6180,28 @@ QByteArray OpcodePRTYE::params() const
 	return QByteArray().append((char *)&charID, 3);
 }
 
-OpcodeIFPRTYQ::OpcodeIFPRTYQ(const QByteArray &params) :
+OpcodeIfQ::OpcodeIfQ(const QByteArray &params) :
 	OpcodeJump()
 {
 	setParams(params);
 }
 
-void OpcodeIFPRTYQ::setParams(const QByteArray &params)
+void OpcodeIfQ::setParams(const QByteArray &params)
 {
 	charID = params.at(0);
 	_jump = (quint8)params.at(1) + jumpPosData();
+}
+
+QByteArray OpcodeIfQ::params() const
+{
+	return QByteArray()
+			.append((char)charID)
+			.append(char(_jump - jumpPosData()));
+}
+
+OpcodeIFPRTYQ::OpcodeIFPRTYQ(const QByteArray &params) :
+	OpcodeIfQ(params)
+{
 }
 
 QString OpcodeIFPRTYQ::toString() const
@@ -6194,23 +6211,9 @@ QString OpcodeIFPRTYQ::toString() const
 			.arg(_label);
 }
 
-QByteArray OpcodeIFPRTYQ::params() const
-{
-	return QByteArray()
-			.append((char)charID)
-			.append(char(_jump - jumpPosData()));
-}
-
 OpcodeIFMEMBQ::OpcodeIFMEMBQ(const QByteArray &params) :
-	OpcodeJump()
+	OpcodeIfQ(params)
 {
-	setParams(params);
-}
-
-void OpcodeIFMEMBQ::setParams(const QByteArray &params)
-{
-	charID = params.at(0);
-	_jump = (quint8)params.at(1) + jumpPosData();
 }
 
 QString OpcodeIFMEMBQ::toString() const
@@ -6218,13 +6221,6 @@ QString OpcodeIFMEMBQ::toString() const
 	return QObject::tr("Si %1 existe (aller au label %2 sinon)")
 			.arg(_personnage(charID))
 			.arg(_label);
-}
-
-QByteArray OpcodeIFMEMBQ::params() const
-{
-	return QByteArray()
-			.append((char)charID)
-			.append(char(_jump - jumpPosData()));
 }
 
 OpcodeMMBUD::OpcodeMMBUD(const QByteArray &params)
