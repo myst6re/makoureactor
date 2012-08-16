@@ -20,7 +20,7 @@
 
 #include <QtGui>
 #include "GrpScript.h"
-#include "Delegate.h"
+#include "ScriptEditorGenericList.h"
 //#include "ScriptEditor_dialogs.h"
 
 class ScriptEditor : public QDialog
@@ -29,48 +29,32 @@ class ScriptEditor : public QDialog
 
 public:
 	ScriptEditor();
-	ScriptEditor(Script *script, int commandeID, bool modify, bool isInit, QWidget *parent=0);
+	ScriptEditor(Field *field, GrpScript *grpScript, Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent=0);
 	virtual ~ScriptEditor();
 
-	enum paramType {
-		/*0*/inconnu, field_id, tuto_id, group_id, script_id, /*5*/personnage_id, party_id, cd_id, minijeu_id, polygone_id,
-			 /*10*/layer_id, parametre_id, state_id, window_id, text_id, /*15*/item_id, materia_id, animation_id, music_id, sound_id, /*20*/movie_id,
-				   operateur, keys, color, coord_x, coord_y, coord_z, window_w, window_h, window_num, window_type, window_var, direction, vitesse, vitesse2,
-				   priorite, menu, jump, jump_l, rotation, quantity,
-				   bank, adress, byte, word, sword, bit, boolean
-			   };
 private slots:
 	void modify();
 	void add();
-	void addParam();
-	void delLastRow();
 	void refreshTextEdit();
 	void changeCurrentOpcode(int);
 	void buildList(int);
 	
 private:
-	void addRow(int value, int minValue, int maxValue, int type);
-	void fillModel(int opcode);
-	QByteArray parseModel();
-	QList<int> paramTypes(int id);
-	int paramSize(int type);
-	bool paramIsSigned(int type);
-	QString paramName(int type);
+	void fillEditor();
+	void fillView();
+	void setCurrentMenu(int id);
 
-	QVBoxLayout *layout;
-	QHBoxLayout *buttonLayout;
 	QComboBox *comboBox0, *comboBox;
 	QPlainTextEdit *textEdit;
-	//QStackedWidget *nouvelEditeur;
-	QPushButton *addButton, *delButton, *ok, *cancel;
-	QTableView *tableView;
-	QStandardItemModel *model;
+	QStackedWidget *editorLayout;
+	QPushButton *ok;
+	ScriptEditorView *editorWidget;
 
 	Script *script;
-	quint16 commandeID;
-	Commande *commande;
+	quint16 opcodeID;
+	Opcode *opcode;
 	bool isInit;
-	QList<quint8> crashIfInit;
+	static QList<quint8> crashIfInit;
 
 	bool change;
 };

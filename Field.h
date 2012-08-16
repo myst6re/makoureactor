@@ -132,15 +132,15 @@ public:
 	void deleteGrpScript(int row);
 	void removeGrpScript(int row);
 	bool moveGrpScript(int row, bool direction);
-	QList<int> searchAllVars() const;
-	bool rechercherOpCode(quint8 opCode, int &groupID, int &scriptID, int &commandeID) const;
-	bool rechercherVar(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &commandeID) const;
-	bool rechercherExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &commandeID) const;
-	bool rechercherTexte(const QRegExp &texte, int &groupID, int &scriptID, int &commandeID) const;
-	bool rechercherOpCodeP(quint8 opCode, int &groupID, int &scriptID, int &commandeID) const;
-	bool rechercherVarP(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &commandeID) const;
-	bool rechercherExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &commandeID) const;
-	bool rechercherTexteP(const QRegExp &texte, int &groupID, int &scriptID, int &commandeID) const;
+	QList<FF7Var> searchAllVars() const;
+	bool rechercherOpcode(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
+	bool rechercherVar(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const;
+	bool rechercherExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
+	bool rechercherTexte(const QRegExp &texte, int &groupID, int &scriptID, int &opcodeID) const;
+	bool rechercherOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
+	bool rechercherVarP(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const;
+	bool rechercherExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
+	bool rechercherTexteP(const QRegExp &texte, int &groupID, int &scriptID, int &opcodeID) const;
 
 	void insertText(int row);
 	void deleteText(int row);

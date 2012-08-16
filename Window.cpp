@@ -145,7 +145,7 @@ Window::Window()
 	liste3 = new ScriptList(this);
 	liste3->setFont(font);
 	
-	zoneScript = new CommandeList(this);
+	zoneScript = new OpcodeList(this);
 	connect(zoneScript, SIGNAL(changed()), SLOT(activerSave()));
 	connect(zoneScript, SIGNAL(changed()), SLOT(refresh()));
 //	connect(zoneScript, SIGNAL(historicChanged(Historic)), SLOT(changeHistoric(Historic)));//TODO
@@ -193,13 +193,13 @@ Window::Window()
 	menuBar()->addMenu(createPopupMenu());
 	menuBar()->addAction("&?", this, SLOT(a_propos()));
 	
-	connect(searchDialog, SIGNAL(found(int, int, int, int)), SLOT(gotoCommande(int, int, int, int)));
+	connect(searchDialog, SIGNAL(found(int, int, int, int)), SLOT(gotoOpcode(int, int, int, int)));
 	connect(lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap()));
 	connect(lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
 	connect(this, SIGNAL(fileIDChanged(int)), searchDialog, SLOT(changeFileID(int)));
 	connect(this, SIGNAL(grpScriptIDChanged(int)), searchDialog, SLOT(changeGrpScriptID(int)));
 	connect(this, SIGNAL(scriptIDChanged(int)), searchDialog, SLOT(changeScriptID(int)));
-	connect(this, SIGNAL(commandeIDChanged(int)), searchDialog, SLOT(changeCommandeID(int)));
+	connect(this, SIGNAL(opcodeIDChanged(int)), searchDialog, SLOT(changeOpcodeID(int)));
 
 	liste2->toolBar()->setVisible(Config::value("grpToolbarVisible", true).toBool());
 	zoneScript->toolBar()->setVisible(Config::value("scriptToolbarVisible", true).toBool());
@@ -338,7 +338,7 @@ int Window::fermer(bool quit)
 		liste2->enableActions(false);
 		liste3->clear();
 		zoneScript->clear();
-		zoneScript->clearCopiedCommandes();
+		zoneScript->clearCopiedOpcodes();
 		zoneScript->enableActions(false);
 		zoneImage->clear();
 		if(fieldModel)	fieldModel->clear();
@@ -590,7 +590,7 @@ void Window::afficherScripts()
 	zoneScript->setEnabled(true);
 
 	zoneScript->saveExpandedItems();
-	disconnect(zoneScript, SIGNAL(itemSelectionChanged()), this, SLOT(emitCommandeID()));
+	disconnect(zoneScript, SIGNAL(itemSelectionChanged()), this, SLOT(emitOpcodeID()));
 	zoneScript->enableActions(false);
 	zoneScript->clear();
 	
@@ -601,11 +601,11 @@ void Window::afficherScripts()
 	
 	Script *currentScript = liste3->currentScript();
 	if(currentScript==NULL)	return;
-	zoneScript->fill(currentScript);
+	zoneScript->fill(field, liste2->currentGrpScript(), currentScript);
 	zoneScript->setIsInit(liste3->selectedID()==0);
 	zoneScript->scroll(0, false);
 	
-	connect(zoneScript, SIGNAL(itemSelectionChanged()), SLOT(emitCommandeID()));
+	connect(zoneScript, SIGNAL(itemSelectionChanged()), SLOT(emitOpcodeID()));
 }
 
 void Window::filterMap()
@@ -659,31 +659,31 @@ void Window::undo()
 	zoneScript->setFocus();
 
 	Script *script = fieldArchive->field(hist.fieldID)->grpScripts.at(hist.groupID)->getScript(hist.scriptID);
-	int firstCommande = hist.commandeIDs.first();
+	int firstOpcode = hist.opcodeIDs.first();
 	QByteArray sav;
 
 	switch(hist.type) {
 	case HIST_ADD:
-		for(int i=hist.commandeIDs.size()-1 ; i>=0 ; --i) {
-			hist.data.prepend(script->getCommande(hist.commandeIDs.at(i))->toByteArray());
-			script->delCommande(hist.commandeIDs.at(i));
+		for(int i=hist.opcodeIDs.size()-1 ; i>=0 ; --i) {
+			hist.data.prepend(script->getOpcode(hist.opcodeIDs.at(i))->toByteArray());
+			script->delOpcode(hist.opcodeIDs.at(i));
 		}
 		break;
 	case HIST_REM:
-		for(int i=0 ; i<hist.commandeIDs.size() ; ++i)
-			script->insertCommande(hist.commandeIDs.at(i), hist.data.at(i));
+		for(int i=0 ; i<hist.opcodeIDs.size() ; ++i)
+			script->insertOpcode(hist.opcodeIDs.at(i), Script::createOpcode(hist.data.at(i)));
 		hist.data.clear();
 		break;
 	case HIST_MOD:
-		sav = script->getCommande(firstCommande)->toByteArray();
-		script->setCommande(firstCommande, hist.data.first());
+		sav = script->getOpcode(firstOpcode)->toByteArray();
+		script->setOpcode(firstOpcode, Script::createOpcode(hist.data.first()));
 		hist.data.replace(0, sav);
 		break;
 	case HIST_UPW:
-		script->moveCommande(firstCommande-1, DIR_DOWN);
+		script->moveOpcode(firstOpcode-1, DIR_DOWN);
 		break;
 	case HIST_DOW:
-		script->moveCommande(firstCommande+1, DIR_UP);
+		script->moveOpcode(firstOpcode+1, DIR_UP);
 		break;
 	}
 	restoreHists.push(hist);
@@ -691,7 +691,7 @@ void Window::undo()
 	activerSave(true);
 
 	afficherScripts();//Refresh view
-	gotoCommande(hist.fieldID, hist.groupID, hist.scriptID, firstCommande);
+	gotoOpcode(hist.fieldID, hist.groupID, hist.scriptID, firstOpcode);
 }
 
 void Window::redo()
@@ -701,31 +701,31 @@ void Window::redo()
 	zoneScript->setFocus();
 
 	Script *script = fieldArchive->field(hist.fieldID)->grpScripts.at(hist.groupID)->getScript(hist.scriptID);
-	int firstCommande = hist.commandeIDs.first();
+	int firstOpcode = hist.opcodeIDs.first();
 	QByteArray sav;
 	
 	switch(hist.type) {
 	case HIST_ADD:
-		for(int i=0 ; i<hist.commandeIDs.size() ; ++i)
-			script->insertCommande(hist.commandeIDs.at(i), hist.data.at(i));
+		for(int i=0 ; i<hist.opcodeIDs.size() ; ++i)
+			script->insertOpcode(hist.opcodeIDs.at(i), Script::createOpcode(hist.data.at(i)));
 		hist.data.clear();
 		break;
 	case HIST_REM:
-		for(int i=hist.commandeIDs.size()-1 ; i>=0 ; --i) {
-			hist.data.prepend(script->getCommande(hist.commandeIDs.at(i))->toByteArray());
-			script->delCommande(hist.commandeIDs.at(i));
+		for(int i=hist.opcodeIDs.size()-1 ; i>=0 ; --i) {
+			hist.data.prepend(script->getOpcode(hist.opcodeIDs.at(i))->toByteArray());
+			script->delOpcode(hist.opcodeIDs.at(i));
 		}
 		break;
 	case HIST_MOD:
-		sav = script->getCommande(firstCommande)->toByteArray();
-		script->setCommande(firstCommande, hist.data.first());
+		sav = script->getOpcode(firstOpcode)->toByteArray();
+		script->setOpcode(firstOpcode, Script::createOpcode(hist.data.first()));
 		hist.data.replace(0, sav);
 		break;
 	case HIST_UPW:
-		script->moveCommande(--firstCommande, DIR_DOWN);
+		script->moveOpcode(--firstOpcode, DIR_DOWN);
 	break;
 	case HIST_DOW:
-		script->moveCommande(++firstCommande, DIR_UP);
+		script->moveOpcode(++firstOpcode, DIR_UP);
 	break;
 	}
 
@@ -734,7 +734,7 @@ void Window::redo()
 	activerSave(true);
 
 	afficherScripts();//Refresh view
-	gotoCommande(hist.fieldID, hist.groupID, hist.scriptID, firstCommande);
+	gotoOpcode(hist.fieldID, hist.groupID, hist.scriptID, firstOpcode);
 }
 
 void Window::enregistrer() { enregistrerSous(true); }
@@ -802,7 +802,7 @@ void Window::enregistrerSous(bool currentPath)
 	setEnabled(true);
 }
 
-void Window::gotoCommande(int fileID, int grpScriptID, int scriptID, int commandeID)
+void Window::gotoOpcode(int fileID, int grpScriptID, int scriptID, int opcodeID)
 {
 	int i, size=liste->topLevelItemCount();
 	for(i=0 ; i<size ; ++i) {
@@ -817,12 +817,12 @@ void Window::gotoCommande(int fileID, int grpScriptID, int scriptID, int command
 	
 	liste2->scroll(grpScriptID, false);
 	liste3->scroll(scriptID, false);
-	zoneScript->scroll(commandeID);
+	zoneScript->scroll(opcodeID);
 }
 
-void Window::emitCommandeID()
+void Window::emitOpcodeID()
 {
-	if(zoneScript->selectedID() != -1)	emit commandeIDChanged(zoneScript->selectedID());
+	if(zoneScript->selectedID() != -1)	emit opcodeIDChanged(zoneScript->selectedID());
 }
 
 /* void Window::notifyFileChanged(const QString &path)

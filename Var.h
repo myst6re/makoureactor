@@ -18,7 +18,7 @@
 #ifndef DEF_VAR
 #define DEF_VAR
 
-#include <QtGui>
+#include <QtCore>
 
 class Var
 {

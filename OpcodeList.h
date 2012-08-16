@@ -15,8 +15,8 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_COMMANDELIST
-#define DEF_COMMANDELIST
+#ifndef DEF_OPCODELIST
+#define DEF_OPCODELIST
 
 #define HIST_ADD	0
 #define HIST_REM	1
@@ -26,7 +26,7 @@
 
 #include <QtGui>
 #include "Field.h"
-#include "Commande.h"
+#include "Opcode.h"
 #include "ScriptEditor.h"
 
 typedef struct{
@@ -34,16 +34,16 @@ typedef struct{
 	int fieldID;
 	int groupID;
 	int scriptID;
-	QList<int> commandeIDs;
+	QList<int> opcodeIDs;
 	QList<QByteArray> data;
 } Historic;
 
-class CommandeList : public QTreeWidget
+class OpcodeList : public QTreeWidget
 {
     Q_OBJECT
 public:
-	CommandeList(QWidget *parent=0);
-	virtual ~CommandeList();
+	OpcodeList(QWidget *parent=0);
+	virtual ~OpcodeList();
 
 	int selectedID();
 	int selectedOpcode();
@@ -52,15 +52,14 @@ public:
 
 	QToolBar *toolBar();
 	void setEnabled(bool enabled);
-	void clearCopiedCommandes();
-	void fill(Script *script=NULL);
+	void clearCopiedOpcodes();
+	void fill(Field *_field=0, GrpScript *_grpScript=0, Script *_script=0);
 	void scroll(int, bool focus=true);
 	void enableActions(bool);
 
 private slots:
-	void edit();
-	void edit(QTreeWidgetItem *, int);
 	void add();
+	void scriptEditor(bool modify=true);
 	void del(bool totalDel=true);
 	void cut();
 	void copy();
@@ -78,20 +77,23 @@ private:
 	void upDownEnabled();
 	bool hasCut;
 	bool isInit;
-	void scriptEditor(bool modify);
 	void move(bool direction);
 	QTreeWidgetItem *findItem(int id);
 	QList<int> selectedIDs();
 
-	void emitHist(int type, int commandeID=0, const QByteArray &data=QByteArray());
-	void emitHist(int type, const QList<int> &commandeIDs, const QList<QByteArray> &data);
+	void emitHist(int type, int opcodeID=0, const QByteArray &data=QByteArray());
+	void emitHist(int type, const QList<int> &opcodeIDs, const QList<QByteArray> &data);
+
+	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);
 
 	QToolBar *_toolBar;
 
+	Field *field;
+	GrpScript *grpScript;
 	Script *script;
-	QList<Commande *> commandeCopied;
+	QList<Opcode *> opcodeCopied;
 
 	QBrush previousBG;
 };
 
-#endif
+#endif // DEF_OPCODELIST

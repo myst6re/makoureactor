@@ -19,7 +19,7 @@
 #include "Window.h"
 
 Search::Search(QWidget *parent)
-	: QDialog(parent, Qt::Tool), fileID(0), grpScriptID(0), scriptID(0), commandeID(0), clef(0), text(QString()), bank(0), adress(0), e_script(0), e_group(0)
+	: QDialog(parent, Qt::Tool), fileID(0), grpScriptID(0), scriptID(0), opcodeID(0), clef(0), text(QString()), bank(0), adress(0), e_script(0), e_group(0)
 {
 	setWindowTitle(tr("Rechercher"));
 	activateWindow();
@@ -53,7 +53,8 @@ Search::Search(QWidget *parent)
 	QWidget *opc = new QWidget(this);
 	opcode = new QComboBox(opc);
 	for(quint16 i=0 ; i<256 ; ++i)
-		opcode->addItem(QString("%1 - %2").arg(i,2,16,QChar('0')).arg(Opcode::name[i]));
+		opcode->addItem(QString("%1 - %2").arg(i,2,16,QChar('0')).arg(Opcode::names[i]));
+	opcode->addItem(QString("100 - %1").arg(Opcode::names[0x100]));
 	QVBoxLayout *opcodeLayout = new QVBoxLayout(opc);
 	opcodeLayout->setContentsMargins(QMargins());
 	opcodeLayout->addWidget(opcode);
@@ -136,24 +137,24 @@ void Search::updateRunSearch()
 void Search::changeFileID(int fileID)
 {
 	this->fileID = fileID;
-	grpScriptID = scriptID = commandeID = -1;
+	grpScriptID = scriptID = opcodeID = -1;
 }
 
 void Search::changeGrpScriptID(int grpScriptID)
 {
 	this->grpScriptID = grpScriptID;
-	scriptID = commandeID = -1;
+	scriptID = opcodeID = -1;
 }
 
 void Search::changeScriptID(int scriptID)
 {
 	this->scriptID = scriptID;
-	commandeID = -1;
+	opcodeID = -1;
 }
 
-void Search::changeCommandeID(int commandeID)
+void Search::changeOpcodeID(int opcodeID)
 {
-	this->commandeID = commandeID;
+	this->opcodeID = opcodeID;
 }
 
 void Search::cancelSearching()
@@ -169,37 +170,37 @@ void Search::chercherSuivant()
 	const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
 	FieldArchive::Sorting sorting = ((Window *)parentWidget())->getFieldSorting();
 
-	++commandeID;
+	++opcodeID;
 	
 	setSearchValues();
 
 	switch(liste->currentIndex())
 	{
 	case 0:
-		if(fieldArchive->rechercherTexte(text, fileID, grpScriptID, scriptID, commandeID, sorting))
+		if(fieldArchive->rechercherTexte(text, fileID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, commandeID);
+			emit found(fileID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 1:
-		if(fieldArchive->rechercherVar(bank, adress, value, fileID, grpScriptID, scriptID, commandeID, sorting))
+		if(fieldArchive->rechercherVar(bank, adress, value, fileID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, commandeID);
+			emit found(fileID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 2:
-		if(fieldArchive->rechercherOpCode(clef, fileID, grpScriptID, scriptID, commandeID, sorting))
+		if(fieldArchive->rechercherOpcode(clef, fileID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, commandeID);
+			emit found(fileID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 3:
-		if(fieldArchive->rechercherExec(e_group, e_script, fileID, grpScriptID, scriptID, commandeID, sorting))
+		if(fieldArchive->rechercherExec(e_group, e_script, fileID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, commandeID);
+			emit found(fileID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
@@ -208,7 +209,7 @@ void Search::chercherSuivant()
 	QMessageBox::information(this, windowTitle(), tr("Dernier fichier,\npoursuite de la recherche dans le premier fichier."));
 
 	Data::currentTextes = currentTextesSav;
-	this->fileID = grpScriptID = scriptID = commandeID = -1;
+	this->fileID = grpScriptID = scriptID = opcodeID = -1;
 
 after:
 	parentWidget()->setEnabled(true);
@@ -222,37 +223,37 @@ void Search::chercherPrecedent()
 	const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
 	FieldArchive::Sorting sorting = ((Window *)parentWidget())->getFieldSorting();
 
-	--commandeID;
+	--opcodeID;
 
 	setSearchValues();
 
 	switch(liste->currentIndex())
 	{
 	case 0:
-		if(fieldArchive->rechercherTexteP(text, fileID, grpScriptID, scriptID, commandeID, sorting))
+		if(fieldArchive->rechercherTexteP(text, fileID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, commandeID);
+			emit found(fileID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 1:
-		if(fieldArchive->rechercherVarP(bank, adress, value, fileID, grpScriptID, scriptID, commandeID, sorting))
+		if(fieldArchive->rechercherVarP(bank, adress, value, fileID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, commandeID);
+			emit found(fileID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 2:
-		if(fieldArchive->rechercherOpCodeP(clef, fileID, grpScriptID, scriptID, commandeID, sorting))
+		if(fieldArchive->rechercherOpcodeP(clef, fileID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, commandeID);
+			emit found(fileID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 3:
-		if(fieldArchive->rechercherExecP(e_group, e_script, fileID, grpScriptID, scriptID, commandeID, sorting))
+		if(fieldArchive->rechercherExecP(e_group, e_script, fileID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, commandeID);
+			emit found(fileID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
@@ -269,11 +270,11 @@ void Search::chercherPrecedent()
 			if(grpScriptID >= 0) {
 				scriptID = field->grpScripts.at(grpScriptID)->size()-1;
 				if(scriptID >= 0) {
-					commandeID = field->grpScripts.at(grpScriptID)->getScript(scriptID)->size();
+					opcodeID = field->grpScripts.at(grpScriptID)->getScript(scriptID)->size();
 				}
 			}
 		} else {
-			grpScriptID = scriptID = commandeID = 65535;
+			grpScriptID = scriptID = opcodeID = 65535;
 		}
 	}
 

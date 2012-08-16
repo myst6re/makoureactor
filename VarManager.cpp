@@ -135,7 +135,7 @@ void VarManager::changeBank(int row)
 		if(item==NULL)	continue;
 		item->setText(1, local_var_names.value(adressID | ((row+1) << 8)));
 
-		if(allVars.contains(b | (adressID << 4))) {
+		if(allVars.contains(FF7Var(b, adressID))) {
 			item->setBackground(0, QColor(0xff,0xe5,0x99));
 			item->setBackground(1, QColor(0xff,0xe5,0x99));
 		} else {
@@ -208,7 +208,7 @@ void VarManager::search()
 	
 	for(int adress=0 ; adress<256 ; ++adress)
 	{
-		if(allVars.contains(b | (adress << 4))) {
+		if(allVars.contains(FF7Var(b, adress))) {
 			liste2->topLevelItem(adress)->setBackground(0, QColor(0xff,0xe5,0x99));
 			liste2->topLevelItem(adress)->setBackground(1, QColor(0xff,0xe5,0x99));
 		} else {

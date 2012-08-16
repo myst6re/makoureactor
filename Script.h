@@ -18,9 +18,9 @@
 #ifndef DEF_SCRIPT
 #define DEF_SCRIPT
 
-#include <QtGui>
+#include <QtCore>
 #include "FF7Text.h"
-#include "Commande.h"
+#include "Opcode.h"
 
 class Script
 {
@@ -29,46 +29,48 @@ public:
 	explicit Script(const QByteArray &script);
 	virtual ~Script();
 
+	bool openScript(const QByteArray &script);
 	int size() const;
 	bool isEmpty() const;
-	Commande *getCommande(quint16 commandeID);
+	bool isValid() const;
+	Opcode *getOpcode(quint16 opcodeID) const;
+	const QList<Opcode *> &getOpcodes() const;
 	bool isVoid() const;
 	QByteArray toByteArray() const;
-	void setCommande(quint16 commandeID, const QByteArray &commande);
-	void delCommande(quint16 commandeID);
-	Commande *removeCommande(quint16 commandeID);
-	void insertCommande(quint16 commandeID, const QByteArray &commande);
-	void insertCommande(quint16 commandeID, Commande *commande);
-	bool moveCommande(quint16 commandeID, bool direction);
+	void setOpcode(quint16 opcodeID, Opcode *opcode);
+	void delOpcode(quint16 opcodeID);
+	Opcode *removeOpcode(quint16 opcodeID);
+	void insertOpcode(quint16 opcodeID, Opcode *opcode);
+	bool moveOpcode(quint16 opcodeID, bool direction);
 	void shiftTextIds(int textId, int steps=1);
 	void shiftTutIds(int tutId, int steps=1);
 
-	bool rechercherOpCode(quint8 opCode, int &commandeID) const;
-	bool rechercherVar(quint8 bank, quint8 adress, int value, int &commandeID) const;
-	QList<int> searchAllVars() const;
-	bool rechercherExec(quint8 group, quint8 script, int &commandeID) const;
-	bool rechercherTexte(const QRegExp &texte, int &commandeID) const;
-	bool rechercherOpCodeP(quint8 opCode, int &commandeID) const;
-	bool rechercherVarP(quint8 bank, quint8 adress, int value, int &commandeID) const;
-	bool rechercherExecP(quint8 group, quint8 script, int &commandeID) const;
-	bool rechercherTexteP(const QRegExp &texte, int &commandeID) const;
+	bool rechercherOpcode(int opcode, int &opcodeID) const;
+	bool rechercherVar(quint8 bank, quint8 adress, int value, int &opcodeID) const;
+	QList<FF7Var> searchAllVars() const;
+	bool rechercherExec(quint8 group, quint8 script, int &opcodeID) const;
+	bool rechercherTexte(const QRegExp &texte, int &opcodeID) const;
+	bool rechercherOpcodeP(int opcode, int &opcodeID) const;
+	bool rechercherVarP(quint8 bank, quint8 adress, int value, int &opcodeID) const;
+	bool rechercherExecP(quint8 group, quint8 script, int &opcodeID) const;
+	bool rechercherTexteP(const QRegExp &texte, int &opcodeID) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8, quint8> &text2win) const;
+	void getBgParams(QHash<quint8, quint8> &paramActifs) const;
+	void getBgMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
-	void lecture(QTreeWidget *zoneScript);
-	void setExpandedItems(const QList<Commande *> &expandedItems);
+	const QList<Opcode *> &getExpandedItems() const;
+	void setExpandedItems(const QList<Opcode *> &expandedItems);
 
 	static int posReturn(const QByteArray &script);
+	static Opcode *createOpcode(const QByteArray &script, int pos=0);
+	static Opcode *copyOpcode(Opcode *opcode);
 private:
-	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);
-	void shiftJumps(int commandID, int shift);
-	void shiftJumpsSwap(Commande *commande, int shift);
-	int posOfCommand(int commandID) const;
+	QList<Opcode *> opcodes;
+	QList<Opcode *> expandedItems;
 
-	QList<Commande *> commandes;
-	QList<quint16> indent;
-	QList<Commande *> expandedItems;
+	bool valid;
 };
 
 #endif

@@ -300,9 +300,9 @@ bool FieldArchive::isAllOpened()
 	return true;
 }
 
-QList<int> FieldArchive::searchAllVars()
+QList<FF7Var> FieldArchive::searchAllVars()
 {
-	QList<int> vars;
+	QList<FF7Var> vars;
 	int size = fileList.size();
 
 	for(int i=0 ; i<size ; ++i) {
@@ -346,7 +346,7 @@ void FieldArchive::searchAll()
 	}
 }
 
-bool FieldArchive::rechercherOpCode(quint8 opCode, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting)
+bool FieldArchive::rechercherOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
 	if(fieldID < 0)	fieldID = 0;
 
@@ -356,10 +356,10 @@ bool FieldArchive::rechercherOpCode(quint8 opCode, int &fieldID, int &groupID, i
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID);
-		if(f!=NULL && f->rechercherOpCode(opCode, groupID, scriptID, commandeID))
+		if(f!=NULL && f->rechercherOpcode(opcode, groupID, scriptID, opcodeID))
 			return true;
 		++fieldID;
-		groupID = scriptID = commandeID = 0;
+		groupID = scriptID = opcodeID = 0;
 	}
 	return false;
 
@@ -388,14 +388,14 @@ bool FieldArchive::rechercherOpCode(quint8 opCode, int &fieldID, int &groupID, i
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->rechercherOpCode(opCode, groupID, scriptID, commandeID))
+		if(f!=NULL && f->rechercherOpcode(opcode, groupID, scriptID, opcodeID))
 			return true;
-		groupID = scriptID = commandeID = 0;
+		groupID = scriptID = opcodeID = 0;
 	}
 	return false;*/
 }
 
-bool FieldArchive::rechercherVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting)
+bool FieldArchive::rechercherVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
 	if(fieldID < 0)	fieldID = 0;
 
@@ -405,10 +405,10 @@ bool FieldArchive::rechercherVar(quint8 bank, quint8 adress, int value, int &fie
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID);
-		if(f!=NULL && f->rechercherVar(bank, adress, value, groupID, scriptID, commandeID))
+		if(f!=NULL && f->rechercherVar(bank, adress, value, groupID, scriptID, opcodeID))
 			return true;
 		++fieldID;
-		groupID = scriptID = commandeID = 0;
+		groupID = scriptID = opcodeID = 0;
 	}
 	return false;
 
@@ -437,14 +437,14 @@ bool FieldArchive::rechercherVar(quint8 bank, quint8 adress, int value, int &fie
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->rechercherVar(bank, adress, value, groupID, scriptID, commandeID))
+		if(f!=NULL && f->rechercherVar(bank, adress, value, groupID, scriptID, opcodeID))
 			return true;
-		groupID = scriptID = commandeID = 0;
+		groupID = scriptID = opcodeID = 0;
 	}
 	return false;*/
 }
 
-bool FieldArchive::rechercherExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting)
+bool FieldArchive::rechercherExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
 	if(fieldID < 0)	fieldID = 0;
 
@@ -454,10 +454,10 @@ bool FieldArchive::rechercherExec(quint8 group, quint8 script, int &fieldID, int
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID);
-		if(f!=NULL && f->rechercherExec(group, script, groupID, scriptID, commandeID))
+		if(f!=NULL && f->rechercherExec(group, script, groupID, scriptID, opcodeID))
 			return true;
 		++fieldID;
-		groupID = scriptID = commandeID = 0;
+		groupID = scriptID = opcodeID = 0;
 	}
 	return false;
 
@@ -486,14 +486,14 @@ bool FieldArchive::rechercherExec(quint8 group, quint8 script, int &fieldID, int
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->rechercherExec(group, script, groupID, scriptID, commandeID))
+		if(f!=NULL && f->rechercherExec(group, script, groupID, scriptID, opcodeID))
 			return true;
-		groupID = scriptID = commandeID = 0;
+		groupID = scriptID = opcodeID = 0;
 	}
 	return false;*/
 }
 
-bool FieldArchive::rechercherTexte(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting)
+bool FieldArchive::rechercherTexte(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
 	if(fieldID < 0)	fieldID = 0;
 
@@ -503,10 +503,10 @@ bool FieldArchive::rechercherTexte(const QRegExp &texte, int &fieldID, int &grou
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID);
-		if(f!=NULL && f->rechercherTexte(texte, groupID, scriptID, commandeID))
+		if(f!=NULL && f->rechercherTexte(texte, groupID, scriptID, opcodeID))
 			return true;
 		++fieldID;
-		groupID = scriptID = commandeID = 0;
+		groupID = scriptID = opcodeID = 0;
 	}
 	return false;
 
@@ -535,14 +535,14 @@ bool FieldArchive::rechercherTexte(const QRegExp &texte, int &fieldID, int &grou
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->rechercherTexte(texte, groupID, scriptID, commandeID))
+		if(f!=NULL && f->rechercherTexte(texte, groupID, scriptID, opcodeID))
 			return true;
-		groupID = scriptID = commandeID = 0;
+		groupID = scriptID = opcodeID = 0;
 	}
 	return false;*/
 }
 
-bool FieldArchive::rechercherOpCodeP(quint8 opCode, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting)
+bool FieldArchive::rechercherOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
 	//	if(fieldID < 0)	return false;
 
@@ -569,7 +569,7 @@ bool FieldArchive::rechercherOpCodeP(quint8 opCode, int &fieldID, int &groupID, 
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->rechercherOpCodeP(opCode, groupID, scriptID, commandeID))
+		if(f!=NULL && f->rechercherOpcodeP(opcode, groupID, scriptID, opcodeID))
 			return true;
 		if(i != begin) {
 			fieldID = (i-1).value();
@@ -578,7 +578,7 @@ bool FieldArchive::rechercherOpCodeP(quint8 opCode, int &fieldID, int &groupID, 
 				if(groupID >= 0) {
 					scriptID = field(fieldID)->grpScripts.at(groupID)->size()-1;
 					if(scriptID >= 0) {
-						commandeID = field(fieldID)->grpScripts.at(groupID)->getScript(scriptID)->size()-1;
+						opcodeID = field(fieldID)->grpScripts.at(groupID)->getScript(scriptID)->size()-1;
 					}
 				}
 			}
@@ -593,14 +593,14 @@ bool FieldArchive::rechercherOpCodeP(quint8 opCode, int &fieldID, int &groupID, 
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID);
-		if(f!=NULL && f->rechercherOpCodeP(opCode, groupID, scriptID, commandeID))	return true;
+		if(f!=NULL && f->rechercherOpcodeP(opcode, groupID, scriptID, opcodeID))	return true;
 		--fieldID;
 		if(fieldID >= 0) {
 			groupID = field(fieldID)->grpScripts.size()-1;
 			if(groupID >= 0) {
 				scriptID = field(fieldID)->grpScripts.at(groupID)->size()-1;
 				if(scriptID >= 0) {
-					commandeID = field(fieldID)->grpScripts.at(groupID)->getScript(scriptID)->size()-1;
+					opcodeID = field(fieldID)->grpScripts.at(groupID)->getScript(scriptID)->size()-1;
 				}
 			}
 		}
@@ -608,7 +608,7 @@ bool FieldArchive::rechercherOpCodeP(quint8 opCode, int &fieldID, int &groupID, 
 	return false;
 }
 
-bool FieldArchive::rechercherVarP(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting)
+bool FieldArchive::rechercherVarP(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
 	if(fieldID >= fileList.size())	fieldID = fileList.size()-1;
 
@@ -616,14 +616,14 @@ bool FieldArchive::rechercherVarP(quint8 bank, quint8 adress, int value, int &fi
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID);
-		if(f!=NULL && f->rechercherVarP(bank, adress, value, groupID, scriptID, commandeID))	return true;
+		if(f!=NULL && f->rechercherVarP(bank, adress, value, groupID, scriptID, opcodeID))	return true;
 		--fieldID;
 		if(fieldID >= 0) {
 			groupID = field(fieldID)->grpScripts.size()-1;
 			if(groupID >= 0) {
 				scriptID = field(fieldID)->grpScripts.at(groupID)->size()-1;
 				if(scriptID >= 0) {
-					commandeID = field(fieldID)->grpScripts.at(groupID)->getScript(scriptID)->size()-1;
+					opcodeID = field(fieldID)->grpScripts.at(groupID)->getScript(scriptID)->size()-1;
 				}
 			}
 		}
@@ -631,7 +631,7 @@ bool FieldArchive::rechercherVarP(quint8 bank, quint8 adress, int value, int &fi
 	return false;
 }
 
-bool FieldArchive::rechercherExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting)
+bool FieldArchive::rechercherExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
 	if(fieldID >= fileList.size())	fieldID = fileList.size()-1;
 
@@ -639,14 +639,14 @@ bool FieldArchive::rechercherExecP(quint8 group, quint8 script, int &fieldID, in
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID);
-		if(f!=NULL && f->rechercherExecP(group, script, groupID, scriptID, commandeID))	return true;
+		if(f!=NULL && f->rechercherExecP(group, script, groupID, scriptID, opcodeID))	return true;
 		--fieldID;
 		if(fieldID >= 0) {
 			groupID = field(fieldID)->grpScripts.size()-1;
 			if(groupID >= 0) {
 				scriptID = field(fieldID)->grpScripts.at(groupID)->size()-1;
 				if(scriptID >= 0) {
-					commandeID = field(fieldID)->grpScripts.at(groupID)->getScript(scriptID)->size()-1;
+					opcodeID = field(fieldID)->grpScripts.at(groupID)->getScript(scriptID)->size()-1;
 				}
 			}
 		}
@@ -654,7 +654,7 @@ bool FieldArchive::rechercherExecP(quint8 group, quint8 script, int &fieldID, in
 	return false;
 }
 
-bool FieldArchive::rechercherTexteP(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &commandeID, Sorting sorting)
+bool FieldArchive::rechercherTexteP(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
 	if(fieldID >= fileList.size())	fieldID = fileList.size()-1;
 
@@ -662,14 +662,14 @@ bool FieldArchive::rechercherTexteP(const QRegExp &texte, int &fieldID, int &gro
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID);
-		if(f!=NULL && f->rechercherTexteP(texte, groupID, scriptID, commandeID))	return true;
+		if(f!=NULL && f->rechercherTexteP(texte, groupID, scriptID, opcodeID))	return true;
 		--fieldID;
 		if(fieldID >= 0) {
 			groupID = field(fieldID)->grpScripts.size()-1;
 			if(groupID >= 0) {
 				scriptID = field(fieldID)->grpScripts.at(groupID)->size()-1;
 				if(scriptID >= 0) {
-					commandeID = field(fieldID)->grpScripts.at(groupID)->getScript(scriptID)->size()-1;
+					opcodeID = field(fieldID)->grpScripts.at(groupID)->getScript(scriptID)->size()-1;
 				}
 			}
 		}
@@ -819,7 +819,7 @@ quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		// qDebug() << FICHIER::size << " o";
 		// qDebug() << "nbGS : " << GrpScript::COUNT;
 		// qDebug() << "nbS : " << Script::COUNT;
-		// qDebug() << "nbC : " << Commande::COUNT;
+		// qDebug() << "nbC : " << Opcode::COUNT;
 		// qDebug("-------------------------------------------------");
 	}
 	if(items.isEmpty())	return 3;
