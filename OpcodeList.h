@@ -53,7 +53,7 @@ public:
 	QToolBar *toolBar();
 	void setEnabled(bool enabled);
 	void clearCopiedOpcodes();
-	void fill(Script *script=NULL);
+	void fill(Field *_field=0, GrpScript *_grpScript=0, Script *_script=0);
 	void scroll(int, bool focus=true);
 	void enableActions(bool);
 
@@ -88,6 +88,8 @@ private:
 
 	QToolBar *_toolBar;
 
+	Field *field;
+	GrpScript *grpScript;
 	Script *script;
 	QList<Opcode *> opcodeCopied;
 

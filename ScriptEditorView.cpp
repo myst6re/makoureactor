@@ -17,8 +17,9 @@
  ****************************************************************************/
 #include "ScriptEditorView.h"
 
-ScriptEditorView::ScriptEditorView(Script *script, int opcodeID, QWidget *parent)
-	: QWidget(parent), _script(script), _opcode(0), _opcodeID(opcodeID), _valid(true)
+ScriptEditorView::ScriptEditorView(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent)
+	: QWidget(parent), _field(field), _grpScript(grpScript), _script(script),
+	  _opcode(0), _opcodeID(opcodeID), _valid(true)
 {
 }
 
@@ -41,132 +42,176 @@ bool ScriptEditorView::isValid() const
 	return _valid;
 }
 
-VarOrValueWidget::VarOrValueWidget(QWidget *parent) :
-	QWidget(parent), _longValueType(true), _signedValueType(true)
+ScriptEditorReturnToPage::ScriptEditorReturnToPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
 {
-	typeSelect = new QComboBox(this);
-	typeSelect->addItem(tr("Valeur"));
-	typeSelect->addItem(tr("Variable"));
+	scriptList = new QComboBox(this);
+	for(int i=0 ; i<32 ; ++i) {
+		scriptList->addItem(tr("Script %1").arg(i));
+	}
 
-	_value = new QSpinBox(this);
-	updateValueRange();
+	priority = new QSpinBox(this);
+	priority->setRange(0, 7);
 
-	_bank = new QSpinBox(this);
-	_bank->setRange(1, 15);
-
-	_adress = new QSpinBox(this);
-	_adress->setRange(0, 255);
-
-	QWidget *bankAndAdress = new QWidget(this);
-	QHBoxLayout *bankAndAdressLayout = new QHBoxLayout(bankAndAdress);
-	bankAndAdressLayout->addWidget(_bank);
-	bankAndAdressLayout->addWidget(_adress);
-	bankAndAdressLayout->setContentsMargins(QMargins());
-
-	varOrValuelayout = new QStackedLayout();
-	varOrValuelayout->addWidget(_value);
-	varOrValuelayout->addWidget(bankAndAdress);
-	varOrValuelayout->setContentsMargins(QMargins());
-
-	QHBoxLayout *layout = new QHBoxLayout(this);
-	layout->addWidget(typeSelect);
-	layout->addLayout(varOrValuelayout);
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Script")), 0, 0);
+	layout->addWidget(scriptList, 0, 1);
+	layout->addWidget(new QLabel(tr("Priorité")), 1, 0);
+	layout->addWidget(priority, 1, 1);
+	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
-	typeSelect->setCurrentIndex(0);
-	varOrValuelayout->setCurrentIndex(0);
-
-	connect(typeSelect, SIGNAL(currentIndexChanged(int)), varOrValuelayout, SLOT(setCurrentIndex(int)));
-	connect(typeSelect, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()));
-	connect(_value, SIGNAL(valueChanged(int)), SIGNAL(changed()));
-	connect(_bank, SIGNAL(valueChanged(int)), SIGNAL(changed()));
-	connect(_adress, SIGNAL(valueChanged(int)), SIGNAL(changed()));
+	connect(scriptList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(priority, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
 }
 
-int VarOrValueWidget::value() const
+Opcode *ScriptEditorReturnToPage::opcode()
 {
-	return _value->value();
+	OpcodeRETTO *opcodeRETTO = (OpcodeRETTO *)_opcode;
+	opcodeRETTO->scriptID = scriptList->currentIndex();
+	opcodeRETTO->priority = priority->value();
+
+	return ScriptEditorView::opcode();
 }
 
-void VarOrValueWidget::setValue(int value)
+void ScriptEditorReturnToPage::setOpcode(Opcode *opcode)
 {
-	_value->setValue(value);
+	ScriptEditorView::setOpcode(opcode);
+
+	OpcodeRETTO *opcodeRETTO = (OpcodeRETTO *)_opcode;
+	scriptList->setCurrentIndex(opcodeRETTO->scriptID);
+	priority->setValue(opcodeRETTO->priority);
 }
 
-void VarOrValueWidget::var(quint8 &bank, quint8 &adress) const
+ScriptEditorExecPage::ScriptEditorExecPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
 {
-	bank = _bank->value();
-	adress = _adress->value();
+	groupList = new QComboBox(this);
+	int i=0;
+	foreach(const QString &groupName, Data::currentGrpScriptNames) {
+		groupList->addItem(QString("%1 - %2").arg(i++).arg(groupName));
+	}
+
+	scriptList = new QComboBox(this);
+	for(int i=0 ; i<32 ; ++i) {
+		scriptList->addItem("");
+	}
+
+	priority = new QSpinBox(this);
+	priority->setRange(0, 7);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Groupe")), 0, 0);
+	layout->addWidget(groupList, 0, 1);
+	layout->addWidget(new QLabel(tr("Script")), 1, 0);
+	layout->addWidget(scriptList, 1, 1);
+	layout->addWidget(new QLabel(tr("Priorité")), 2, 0);
+	layout->addWidget(priority, 2, 1);
+	layout->setRowStretch(3, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(groupList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(scriptList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(priority, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+	connect(groupList, SIGNAL(currentIndexChanged(int)), SLOT(updateScriptList(int)));
 }
 
-void VarOrValueWidget::setVar(quint8 bank, quint8 adress)
+Opcode *ScriptEditorExecPage::opcode()
 {
-	_bank->setValue(bank);
-	_adress->setValue(adress);
+	OpcodeExec *opcodeExec = (OpcodeExec *)_opcode;
+	opcodeExec->groupID = groupList->currentIndex();
+	opcodeExec->scriptID = scriptList->currentIndex();
+	opcodeExec->priority = priority->value();
+
+	return ScriptEditorView::opcode();
 }
 
-bool VarOrValueWidget::isValue() const
+void ScriptEditorExecPage::setOpcode(Opcode *opcode)
 {
-	return typeSelect->currentIndex() == 0;
-}
+	ScriptEditorView::setOpcode(opcode);
 
-void VarOrValueWidget::setIsValue(bool isValue)
-{
-	typeSelect->setCurrentIndex(isValue ? 0 : 1);
-}
+	OpcodeExec *opcodeExec = (OpcodeExec *)opcode;
 
-bool VarOrValueWidget::isLongValueType() const
-{
-	return _longValueType;
-}
-
-void VarOrValueWidget::setLongValueType(bool longValueType)
-{
-	_longValueType = longValueType;
-	updateValueRange();
-}
-
-bool VarOrValueWidget::isSignedValueType() const
-{
-	return _signedValueType;
-}
-
-void VarOrValueWidget::setSignedValueType(bool signedValueType)
-{
-	_signedValueType = signedValueType;
-	updateValueRange();
-}
-
-void VarOrValueWidget::updateValueRange()
-{
-	if(isSignedValueType()) {
-		if(isLongValueType()) {
-			_value->setRange(-32768, 32767);
-		} else {
-			_value->setRange(-128, 127);
-		}
+	GrpScript *grp = _field->grpScripts.value(opcodeExec->groupID, 0);
+	if(!grp) {
+		_valid = false;
+		return;
 	} else {
-		if(isLongValueType()) {
-			_value->setRange(0, 65535);
-		} else {
-			_value->setRange(0, 255);
-		}
+		_valid = true;
+	}
+
+	groupList->setCurrentIndex(opcodeExec->groupID);
+
+	for(int i=0 ; i<32 ; ++i) {
+		scriptList->setItemText(i, grp->getScriptName(i+1));
+	}
+	scriptList->setCurrentIndex(opcodeExec->scriptID);
+
+	priority->setValue(opcodeExec->priority);
+}
+
+void ScriptEditorExecPage::updateScriptList(int groupID)
+{
+	GrpScript *grp = _field->grpScripts.value(groupID, 0);
+	if(!grp) {
+		return;
+	}
+
+	for(int i=0 ; i<32 ; ++i) {
+		scriptList->setItemText(i, grp->getScriptName(i+1));
 	}
 }
 
-bool VarOrValueWidget::isOnlyVar() const
+ScriptEditorExecCharPage::ScriptEditorExecCharPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
 {
-	return typeSelect->isHidden();
+	partyID = new QSpinBox(this);
+	partyID->setRange(0, 255);
+	scriptList = new QComboBox(this);
+	for(int i=0 ; i<32 ; ++i) {
+		scriptList->addItem(tr("Script %1").arg(i));
+	}
+
+	priority = new QSpinBox(this);
+	priority->setRange(0, 7);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Équipier")), 0, 0);
+	layout->addWidget(partyID, 0, 1);
+	layout->addWidget(new QLabel(tr("Script")), 1, 0);
+	layout->addWidget(scriptList, 1, 1);
+	layout->addWidget(new QLabel(tr("Priorité")), 2, 0);
+	layout->addWidget(priority, 2, 1);
+	layout->setRowStretch(3, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(partyID, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+	connect(scriptList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+	connect(priority, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
 }
 
-void VarOrValueWidget::setOnlyVar(bool onlyVar)
+Opcode *ScriptEditorExecCharPage::opcode()
 {
-	typeSelect->setHidden(onlyVar);
-	setIsValue(onlyVar);
+	OpcodeExecChar *opcodeExecChar = (OpcodeExecChar *)_opcode;
+	opcodeExecChar->partyID = partyID->value();
+	opcodeExecChar->scriptID = scriptList->currentIndex();
+	opcodeExecChar->priority = priority->value();
+
+	return ScriptEditorView::opcode();
 }
 
-ScriptEditorLabelPage::ScriptEditorLabelPage(Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(script, opcodeID, parent)
+void ScriptEditorExecCharPage::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	OpcodeExecChar *opcodeExecChar = (OpcodeExecChar *)opcode;
+	partyID->setValue(opcodeExecChar->partyID);
+	scriptList->setCurrentIndex(opcodeExecChar->scriptID);
+	priority->setValue(opcodeExecChar->priority);
+}
+
+ScriptEditorLabelPage::ScriptEditorLabelPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
 {
 	label = new QDoubleSpinBox(this);
 	label->setDecimals(0);
@@ -218,8 +263,8 @@ void ScriptEditorLabelPage::showWarning()
 	warningLabel->setVisible(labels.contains(label->value()));
 }
 
-ScriptEditorJumpPage::ScriptEditorJumpPage(Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(script, opcodeID, parent)
+ScriptEditorJumpPage::ScriptEditorJumpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
 {
 	label = new QComboBox(this);
 
@@ -308,8 +353,8 @@ void ScriptEditorJumpPage::setOpcode(Opcode *opcode)
 //	}
 }
 
-ScriptEditorIfPage::ScriptEditorIfPage(Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(script, opcodeID, parent)
+ScriptEditorIfPage::ScriptEditorIfPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
 {
 	varOrValue1 = new VarOrValueWidget(this);
 	varOrValue2 = new VarOrValueWidget(this);
@@ -444,8 +489,8 @@ void ScriptEditorIfPage::setOpcode(Opcode *opcode)
 	}
 }
 
-ScriptEditorIfKeyPage::ScriptEditorIfKeyPage(Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(script, opcodeID, parent)
+ScriptEditorIfKeyPage::ScriptEditorIfKeyPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
 {
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Touches")), 0, 0, 1, 4);
@@ -546,8 +591,8 @@ void ScriptEditorIfKeyPage::setOpcode(Opcode *opcode)
 	}
 }
 
-ScriptEditorIfQPage::ScriptEditorIfQPage(Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(script, opcodeID, parent)
+ScriptEditorIfQPage::ScriptEditorIfQPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
 {
 	charList = new QComboBox(this);
 	charList->addItems(Data::char_names);
@@ -589,7 +634,7 @@ void ScriptEditorIfQPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	OpcodeIfQ *opcodeIfQ = (OpcodeIfQ *)_opcode;
+	OpcodeIfQ *opcodeIfQ = (OpcodeIfQ *)opcode;
 	charList->setCurrentIndex(opcodeIfQ->charID);
 
 	label->clear();
@@ -624,5 +669,201 @@ void ScriptEditorIfQPage::setOpcode(Opcode *opcode)
 		int index = label->findData(opcodeJump->label());
 		if(index < 0)		index = 0;
 		label->setCurrentIndex(index);
+	}
+}
+
+ScriptEditorWaitPage::ScriptEditorWaitPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+{
+	frames = new QSpinBox(this);
+	frames->setRange(0, 65535);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Images")), 0, 0);
+	layout->addWidget(frames, 0, 1);
+	layout->setRowStretch(1, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(frames, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+}
+
+Opcode *ScriptEditorWaitPage::opcode()
+{
+	OpcodeWAIT *opcodeWAIT = (OpcodeWAIT *)_opcode;
+	opcodeWAIT->frameCount = frames->value();
+
+	return ScriptEditorView::opcode();
+}
+
+void ScriptEditorWaitPage::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	OpcodeWAIT *opcodeWAIT = (OpcodeWAIT *)opcode;
+	frames->setValue(opcodeWAIT->frameCount);
+}
+
+ScriptEditorBinaryOpPage::ScriptEditorBinaryOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+{
+	var = new VarOrValueWidget(this);
+	var->setOnlyVar(true);
+
+	varOrValue = new VarOrValueWidget(this);
+	varOrValue->setSignedValueType(false);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(var, 0, 0);
+	layout->addWidget(varOrValue, 1, 0);
+	layout->setRowStretch(2, 1);
+	layout->setColumnStretch(1, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(var, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(varOrValue, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+}
+
+Opcode *ScriptEditorBinaryOpPage::opcode()
+{
+	OpcodeBinaryOperation *opcodeBinaryOperation = (OpcodeBinaryOperation *)_opcode;
+
+	quint8 bank1, bank2, adress1;
+	int value;
+
+	var->var(bank1, adress1);
+
+	if(varOrValue->isValue()) {
+		bank2 = 0;
+		value = varOrValue->value();
+	} else {
+		quint8 adress2;
+		varOrValue->var(bank2, adress2);
+		value = adress2;
+	}
+
+	opcodeBinaryOperation->banks = (bank1 << 4) | bank2;
+	opcodeBinaryOperation->var = adress1;
+	opcodeBinaryOperation->value = value;
+
+	return ScriptEditorView::opcode();
+}
+
+void ScriptEditorBinaryOpPage::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	OpcodeBinaryOperation *opcodeBinaryOperation = (OpcodeBinaryOperation *)opcode;
+
+	var->setVar(B1(opcodeBinaryOperation->banks), opcodeBinaryOperation->var);
+
+	varOrValue->setLongValueType(opcodeBinaryOperation->isLong());
+	if(B2(opcodeBinaryOperation->banks) != 0) {
+		varOrValue->setVar(B2(opcodeBinaryOperation->banks), opcodeBinaryOperation->value & 0xFF);
+		varOrValue->setIsValue(false);
+	} else {
+		varOrValue->setValue(opcodeBinaryOperation->value);
+		varOrValue->setIsValue(true);
+	}
+}
+
+ScriptEditorUnaryOpPage::ScriptEditorUnaryOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+{
+	var = new VarOrValueWidget(this);
+	var->setOnlyVar(true);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(var, 0, 0);
+	layout->setRowStretch(1, 1);
+	layout->setColumnStretch(1, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(var, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+}
+
+Opcode *ScriptEditorUnaryOpPage::opcode()
+{
+	OpcodeUnaryOperation *opcodeUnaryOperation = (OpcodeUnaryOperation *)_opcode;
+
+	quint8 bank2, adress;
+
+	var->var(bank2, adress);
+
+	opcodeUnaryOperation->banks = bank2;
+	opcodeUnaryOperation->var = adress;
+
+	return ScriptEditorView::opcode();
+}
+
+void ScriptEditorUnaryOpPage::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	OpcodeUnaryOperation *opcodeUnaryOperation = (OpcodeUnaryOperation *)opcode;
+
+	var->setVar(B2(opcodeUnaryOperation->banks), opcodeUnaryOperation->var);
+}
+
+ScriptEditorBitOpPage::ScriptEditorBitOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+{
+	var = new VarOrValueWidget(this);
+	var->setOnlyVar(true);
+
+	position = new VarOrValueWidget(this);
+	position->setLongValueType(false);
+	position->setSignedValueType(false);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Variable")), 0, 0);
+	layout->addWidget(var, 0, 1);
+	layout->addWidget(new QLabel(tr("Position")), 1, 0);
+	layout->addWidget(position, 1, 1);
+	layout->setRowStretch(2, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(var, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+	connect(position, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+}
+
+Opcode *ScriptEditorBitOpPage::opcode()
+{
+	OpcodeBitOperation *opcodeBitOperation = (OpcodeBitOperation *)_opcode;
+
+	quint8 bank1, bank2, adress1;
+	int value;
+
+	var->var(bank1, adress1);
+
+	if(position->isValue()) {
+		bank2 = 0;
+		value = position->value();
+	} else {
+		quint8 adress2;
+		position->var(bank2, adress2);
+		value = adress2;
+	}
+
+	opcodeBitOperation->banks = (bank1 << 4) | bank2;
+	opcodeBitOperation->var = adress1;
+	opcodeBitOperation->position = value;
+
+	return ScriptEditorView::opcode();
+}
+
+void ScriptEditorBitOpPage::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	OpcodeBitOperation *opcodeBitOperation = (OpcodeBitOperation *)opcode;
+
+	var->setVar(B1(opcodeBitOperation->banks), opcodeBitOperation->var);
+
+	if(B2(opcodeBitOperation->banks) != 0) {
+		position->setVar(B2(opcodeBitOperation->banks), opcodeBitOperation->position);
+		position->setIsValue(false);
+	} else {
+		position->setValue(opcodeBitOperation->position);
+		position->setIsValue(true);
 	}
 }

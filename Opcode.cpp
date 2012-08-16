@@ -478,7 +478,7 @@ OpcodeREQ::OpcodeREQ(const QByteArray &params) :
 
 QString OpcodeREQ::toString() const
 {
-	return QObject::tr("Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
+	return QObject::tr("Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
 			.arg(_script(groupID))
 			.arg(priority)
 			.arg(scriptID);
@@ -491,7 +491,7 @@ OpcodeREQSW::OpcodeREQSW(const QByteArray &params) :
 
 QString OpcodeREQSW::toString() const
 {
-	return QObject::tr("Exécuter le script n°%3 du groupe %1 (priorité %2/6)")
+	return QObject::tr("Exécuter le script n°%3 du groupe externe %1 (priorité %2/6)")
 			.arg(_script(groupID))
 			.arg(priority)
 			.arg(scriptID);
@@ -504,7 +504,7 @@ OpcodeREQEW::OpcodeREQEW(const QByteArray &params) :
 
 QString OpcodeREQEW::toString() const
 {
-	return QObject::tr("Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Attend la fin de l'exécution pour continuer")
+	return QObject::tr("Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Attend la fin de l'exécution pour continuer")
 			.arg(_script(groupID))
 			.arg(priority)
 			.arg(scriptID);
@@ -536,7 +536,7 @@ OpcodePREQ::OpcodePREQ(const QByteArray &params) :
 
 QString OpcodePREQ::toString() const
 {
-	return QObject::tr("Exécuter le script n°%3 du groupe lié au personnage n°%1 de l'équipe (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
+	return QObject::tr("Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l'équipe (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
 			.arg(partyID)
 			.arg(priority)
 			.arg(scriptID);
@@ -549,7 +549,7 @@ OpcodePRQSW::OpcodePRQSW(const QByteArray &params) :
 
 QString OpcodePRQSW::toString() const
 {
-	return QObject::tr("Exécuter le script n°%3 du groupe lié au personnage n°%1 de l'équipe (priorité %2/6)")
+	return QObject::tr("Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l'équipe (priorité %2/6)")
 			.arg(partyID)
 			.arg(priority)
 			.arg(scriptID);
@@ -3103,7 +3103,7 @@ QString OpcodeWMODE::toString() const
 	default:		typeStr = QString("%1?").arg(mode);
 	}
 
-	return QObject::tr("Déplacer la fenêtre n°%1 (X=%2, Y=%3)")
+	return QObject::tr("Décoration de la fenêtre n°%1 : %2 (%3 la fermeture de la fenêtre par le joueur)")
 			.arg(windowID)
 			.arg(typeStr)
 			.arg(preventClose == 0 ? QObject::tr("autoriser") : QObject::tr("empêcher"));
@@ -3243,9 +3243,9 @@ QString OpcodeGWCOL::toString() const
 {
 	return QObject::tr("Obtenir la couleur du côté %1 des fenêtres et en stocker les composantes dans %2 (R), %3 (V) et %4 (B)")
 			.arg(_windowCorner(corner, B1(banks[0])))
-			.arg(_var(varR, B2(banks[0])))
-			.arg(_var(varG, B1(banks[1])))
-			.arg(_var(varB, B2(banks[1])));
+			.arg(_bank(varR, B2(banks[0])))
+			.arg(_bank(varG, B1(banks[1])))
+			.arg(_bank(varB, B2(banks[1])));
 }
 
 QByteArray OpcodeGWCOL::params() const
@@ -3402,7 +3402,7 @@ QString OpcodeCKITM::toString() const
 {
 	return QObject::tr("%2 = quantité d'objets %1 dans l'inventaire")
 			.arg(_item(itemID, B1(banks)))
-			.arg(_var(varQuantity, B2(banks)));
+			.arg(_bank(varQuantity, B2(banks)));
 }
 
 QByteArray OpcodeCKITM::params() const
@@ -4244,6 +4244,10 @@ void OpcodePXYZI::getVariables(QList<FF7Var> &vars) const
 		vars.append(FF7Var(B2(banks[1]), varI));
 }
 
+OpcodeBinaryOperation::OpcodeBinaryOperation()
+{
+}
+
 OpcodeOperation::OpcodeOperation(const QByteArray &params)
 {
 	setParams(params);
@@ -4251,9 +4255,9 @@ OpcodeOperation::OpcodeOperation(const QByteArray &params)
 
 void OpcodeOperation::setParams(const QByteArray &params)
 {
-	banks = params.at(0);
-	var = params.at(1); // bank 1
-	value = params.at(2); // bank 2
+	banks = (quint8)params.at(0);
+	var = (quint8)params.at(1); // bank 1
+	value = (quint8)params.at(2); // bank 2
 }
 
 QByteArray OpcodeOperation::params() const
@@ -4261,7 +4265,7 @@ QByteArray OpcodeOperation::params() const
 	return QByteArray()
 			.append((char)banks)
 			.append((char)var)
-			.append((char)value);
+			.append((char)(value & 0xFF));
 }
 
 void OpcodeOperation::getVariables(QList<FF7Var> &vars) const
@@ -4269,7 +4273,7 @@ void OpcodeOperation::getVariables(QList<FF7Var> &vars) const
 	if(B1(banks) != 0)
 		vars.append(FF7Var(B1(banks), var));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), value));
+		vars.append(FF7Var(B2(banks), value & 0xFF));
 }
 
 OpcodeOperation2::OpcodeOperation2(const QByteArray &params)
@@ -4279,8 +4283,9 @@ OpcodeOperation2::OpcodeOperation2(const QByteArray &params)
 
 void OpcodeOperation2::setParams(const QByteArray &params)
 {
-	banks = params.at(0);
-	var = params.at(1);
+	banks = (quint8)params.at(0);
+	var = (quint8)params.at(1);
+	value = 0;
 	memcpy(&value, &(params.constData()[2]), 2);
 }
 
@@ -4437,15 +4442,28 @@ QByteArray OpcodeTLKON::params() const
 	return QByteArray().append((char)disabled);
 }
 
-OpcodeRDMSD::OpcodeRDMSD(const QByteArray &params) :
-	OpcodeUnaryOperation(params)
+OpcodeRDMSD::OpcodeRDMSD(const QByteArray &params)
 {
+	setParams(params);
+}
+
+void OpcodeRDMSD::setParams(const QByteArray &params)
+{
+	banks = params.at(0);
+	value = params.at(1); // bank 2
 }
 
 QString OpcodeRDMSD::toString() const
 {
 	return QObject::tr("Seed Random Generator : %1")
-			.arg(_var(var, B2(banks)));
+			.arg(_var(value, B2(banks)));
+}
+
+QByteArray OpcodeRDMSD::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char)value);
 }
 
 OpcodeSETBYTE::OpcodeSETBYTE(const QByteArray &params) :

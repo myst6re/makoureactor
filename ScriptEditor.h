@@ -29,7 +29,7 @@ class ScriptEditor : public QDialog
 
 public:
 	ScriptEditor();
-	ScriptEditor(Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent=0);
+	ScriptEditor(Field *field, GrpScript *grpScript, Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent=0);
 	virtual ~ScriptEditor();
 
 private slots:
@@ -42,10 +42,11 @@ private slots:
 private:
 	void fillEditor();
 	void fillView();
+	void setCurrentMenu(int id);
 
 	QComboBox *comboBox0, *comboBox;
 	QPlainTextEdit *textEdit;
-	QStackedLayout *editorLayout;
+	QStackedWidget *editorLayout;
 	QPushButton *ok;
 	ScriptEditorView *editorWidget;
 

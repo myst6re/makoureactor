@@ -19,14 +19,15 @@
 #define DEF_SCRIPTEDITORVIEW
 
 #include <QtGui>
-#include "GrpScript.h"
+#include "VarOrValueWidget.h"
+#include "Field.h"
 
 class ScriptEditorView : public QWidget
 {
 	Q_OBJECT
 
 public:
-	ScriptEditorView(Script *script, int opcodeID, QWidget *parent=0);
+	ScriptEditorView(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent=0);
 	virtual ~ScriptEditorView();
 
 	virtual Opcode *opcode();
@@ -36,44 +37,57 @@ signals:
 	void opcodeChanged();
 	
 protected:
-	const Script *const _script;
+	Field *_field;
+	GrpScript *_grpScript;
+	Script *_script;
 	Opcode *_opcode;
 	int _opcodeID;
 	bool _valid;
 };
 
-class VarOrValueWidget : public QWidget
+class ScriptEditorReturnToPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit VarOrValueWidget(QWidget *parent = 0);
-	int value() const;
-	void setValue(int value);
-	void var(quint8 &bank, quint8 &adress) const;
-	void setVar(quint8 bank, quint8 adress);
-	bool isValue() const;
-	void setIsValue(bool isValue);
-	bool isLongValueType() const;
-	void setLongValueType(bool longValueType);
-	bool isSignedValueType() const;
-	void setSignedValueType(bool signedValueType);
-	bool isOnlyVar() const;
-	void setOnlyVar(bool onlyVar);
-signals:
-	void changed();
+	explicit ScriptEditorReturnToPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
 private:
-	void updateValueRange();
-	bool _longValueType, _signedValueType;
-	QStackedLayout *varOrValuelayout;
-	QComboBox *typeSelect;
-	QSpinBox *_value, *_bank, *_adress;
+	QComboBox *scriptList;
+	QSpinBox *priority;
+};
+
+class ScriptEditorExecPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorExecPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private slots:
+	void updateScriptList(int groupID);
+private:
+	QComboBox *groupList, *scriptList;
+	QSpinBox *priority;
+};
+
+class ScriptEditorExecCharPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorExecCharPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private:
+	QComboBox *scriptList;
+	QSpinBox *partyID, *priority;
 };
 
 class ScriptEditorLabelPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorLabelPage(Script *script, int opcodeID, QWidget *parent = 0);
+	explicit ScriptEditorLabelPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
 private slots:
@@ -88,7 +102,7 @@ class ScriptEditorJumpPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorJumpPage(Script *script, int opcodeID, QWidget *parent = 0);
+	explicit ScriptEditorJumpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
 private:
@@ -99,7 +113,7 @@ class ScriptEditorIfPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorIfPage(Script *script, int opcodeID, QWidget *parent = 0);
+	explicit ScriptEditorIfPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
 private:
@@ -111,7 +125,7 @@ class ScriptEditorIfKeyPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorIfKeyPage(Script *script, int opcodeID, QWidget *parent = 0);
+	explicit ScriptEditorIfKeyPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
 private:
@@ -123,11 +137,55 @@ class ScriptEditorIfQPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorIfQPage(Script *script, int opcodeID, QWidget *parent = 0);
+	explicit ScriptEditorIfQPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
 private:
 	QComboBox *charList, *label;
+};
+
+class ScriptEditorWaitPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorWaitPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private:
+	QSpinBox *frames;
+};
+
+class ScriptEditorBinaryOpPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorBinaryOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private:
+	VarOrValueWidget *var, *varOrValue;
+};
+
+class ScriptEditorUnaryOpPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorUnaryOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private:
+	VarOrValueWidget *var;
+};
+
+class ScriptEditorBitOpPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorBitOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private:
+	VarOrValueWidget *var, *position;
 };
 
 #endif // DEF_SCRIPTEDITORVIEW

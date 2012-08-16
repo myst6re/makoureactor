@@ -17,8 +17,9 @@
  ****************************************************************************/
 #include "OpcodeList.h"
 
-OpcodeList::OpcodeList(QWidget *parent)
-	: QTreeWidget(parent), hasCut(false), isInit(false), script(0)
+OpcodeList::OpcodeList(QWidget *parent) :
+	QTreeWidget(parent), hasCut(false), isInit(false),
+	field(0), grpScript(0), script(0)
 {
 	setColumnCount(1);
 	setHeaderLabels(QStringList(tr("Action")));
@@ -184,10 +185,12 @@ void OpcodeList::saveExpandedItems()
 	}
 }
 
-void OpcodeList::fill(Script *_script)
+void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 {
 	if(_script) {
 		saveExpandedItems();
+		field = _field;
+		grpScript = _grpScript;
 		script = _script;
 	}
 	previousBG = QBrush();
@@ -340,7 +343,7 @@ void OpcodeList::scriptEditor(bool modify)
 	else
 		++opcodeID;
 	
-	ScriptEditor editor(script, opcodeID, modify, isInit, this);
+	ScriptEditor editor(field, grpScript, script, opcodeID, modify, isInit, this);
 	
 	if(editor.exec()==QDialog::Accepted)
 	{

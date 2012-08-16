@@ -601,7 +601,7 @@ void Window::afficherScripts()
 	
 	Script *currentScript = liste3->currentScript();
 	if(currentScript==NULL)	return;
-	zoneScript->fill(currentScript);
+	zoneScript->fill(field, liste2->currentGrpScript(), currentScript);
 	zoneScript->setIsInit(liste3->selectedID()==0);
 	zoneScript->scroll(0, false);
 	

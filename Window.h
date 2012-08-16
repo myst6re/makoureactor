@@ -40,8 +40,6 @@
 #include "MiscWidget.h"
 #include "ImportDialog.h"
 
-#include "NeoMidgar.h"
-
 class Window : public QMainWindow
 {
     Q_OBJECT

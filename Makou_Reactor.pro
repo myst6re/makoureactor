@@ -55,12 +55,12 @@ HEADERS += ApercuBG.h \
     FieldModelLoader.h \
     ImportDialog.h \
     VertexWidget.h \
-    NeoMidgar.h \
     GZIP.h \
     Data.h \
     OrientationWidget.h \
     ScriptEditorView.h \
-    ScriptEditorGenericList.h
+    ScriptEditorGenericList.h \
+    VarOrValueWidget.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -109,12 +109,12 @@ SOURCES += ApercuBG.cpp \
     FieldModelLoader.cpp \
     ImportDialog.cpp \
     VertexWidget.cpp \
-    NeoMidgar.cpp \
     GZIP.cpp \
     Data.cpp \
     OrientationWidget.cpp \
     ScriptEditorView.cpp \
-    ScriptEditorGenericList.cpp
+    ScriptEditorGenericList.cpp \
+    VarOrValueWidget.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts

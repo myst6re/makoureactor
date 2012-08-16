@@ -663,7 +663,7 @@ public:
 	QByteArray params() const;
 	quint32 battleMode;
 };
-
+//note: same struct as UnaryOperation
 class OpcodeBTRLD : public Opcode {
 public:
 	explicit OpcodeBTRLD(const QByteArray &params);
@@ -672,8 +672,7 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
-	quint8 banks;
-	quint8 var;
+	quint8 banks, var;
 };
 
 class OpcodeWAIT : public Opcode {
@@ -1528,7 +1527,7 @@ public:
 	quint16 triangleID;
 	quint8 locked;
 };
-
+//note: same struct as UnaryOperation
 class OpcodeLSTMP : public Opcode {
 public:
 	explicit OpcodeLSTMP(const QByteArray &params);
@@ -1618,23 +1617,30 @@ public:
 	quint8 banks[2], partyID, varX, varY, varZ, varI;
 };
 
-class OpcodeOperation : public Opcode {
+class OpcodeBinaryOperation : public Opcode {
+public:
+	explicit OpcodeBinaryOperation();
+	virtual bool isLong() const=0;
+	quint8 banks, var;
+	quint16 value;
+};
+
+class OpcodeOperation : public OpcodeBinaryOperation {
 public:
 	explicit OpcodeOperation(const QByteArray &params);
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
-	quint8 banks, var, value;
+	bool isLong() const { return false; }
 };
 
-class OpcodeOperation2 : public Opcode {
+class OpcodeOperation2 : public OpcodeBinaryOperation {
 public:
 	explicit OpcodeOperation2(const QByteArray &params);
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
-	quint8 banks, var;
-	quint16 value;
+	bool isLong() const { return true; }
 };
 
 class OpcodeUnaryOperation : public Opcode {
@@ -1712,11 +1718,14 @@ public:
 	quint8 disabled;
 };
 
-class OpcodeRDMSD : public OpcodeUnaryOperation {
+class OpcodeRDMSD : public Opcode {
 public:
 	explicit OpcodeRDMSD(const QByteArray &params);
 	int id() const { return 0x7F; }
 	QString toString() const;
+	void setParams(const QByteArray &params);
+	QByteArray params() const;
+	quint8 banks, value;
 };
 
 class OpcodeSETBYTE : public OpcodeOperation {
@@ -2942,7 +2951,7 @@ public:
 	QByteArray params() const;
 	quint8 unknown[5];
 };
-
+// same struct as unaryOperation
 class OpcodeCHMST : public Opcode {
 public:
 	explicit OpcodeCHMST(const QByteArray &params);

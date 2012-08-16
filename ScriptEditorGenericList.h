@@ -35,7 +35,7 @@ public:
 		bank, adress, byte, word, sword, bit, boolean, label
 	};
 
-	ScriptEditorGenericList(Script *script, int opcodeID, QWidget *parent=0);
+	ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent=0);
 	virtual ~ScriptEditorGenericList();
 
 	virtual Opcode *opcode();

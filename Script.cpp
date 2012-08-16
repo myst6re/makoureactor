@@ -347,7 +347,7 @@ Opcode *Script::copyOpcode(Opcode *opcode)
 	{
 	case 0x00:	return new OpcodeRET(*(OpcodeRET *)opcode);
 	case 0x01:	return new OpcodeREQ(*(OpcodeREQ *)opcode);
-	case 0x02:	return new OpcodeREQEW(*(OpcodeREQEW *)opcode);
+	case 0x02:	return new OpcodeREQSW(*(OpcodeREQSW *)opcode);
 	case 0x03:	return new OpcodeREQEW(*(OpcodeREQEW *)opcode);
 	case 0x04:	return new OpcodePREQ(*(OpcodePREQ *)opcode);
 	case 0x05:	return new OpcodePRQSW(*(OpcodePRQSW *)opcode);

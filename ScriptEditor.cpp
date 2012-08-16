@@ -19,8 +19,9 @@
 
 QList<quint8> ScriptEditor::crashIfInit;
 
-ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent)
-	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), opcodeID(opcodeID), isInit(isInit)
+ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent) :
+	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
+	script(script), opcodeID(opcodeID), isInit(isInit), change(false)
 {
 	if(crashIfInit.isEmpty()) {
 		crashIfInit << 0x08 << 0x09 << 0x0E << 0x20 << 0x21 << 0x2A << 0x35 << 0x40 << 0x48 << 0x49
@@ -28,14 +29,11 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 					<< 0xB4 << 0xB5 << 0xBA << 0xBB << 0xBC << 0xC0 << 0xC2;
 	}
 
-	//Affichage
 	setWindowTitle(tr("Éditeur%1").arg(isInit ? tr(" (init mode)") : ""));
 	setFixedSize(500, 318);
-	//	setFixedSize(500, 618);
 	
 	QStringList liste0;
-	liste0 <<
-			  tr("Structures de contrôle") <<
+	liste0 << tr("Structures de contrôle") <<
 			  tr("Opérations mathématiques") <<
 			  tr("Fenêtres et messages") <<
 			  tr("Équipe et inventaire") <<
@@ -56,13 +54,20 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 	textEdit->setReadOnly(true);
 	textEdit->setFixedHeight(38);
 	
-	editorLayout = new QStackedLayout;
-	editorLayout->addWidget(editorWidget = new ScriptEditorGenericList(script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorLabelPage(script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorJumpPage(script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorIfPage(script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorIfKeyPage(script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorIfQPage(script, opcodeID, this));
+	editorLayout = new QStackedWidget;
+	editorLayout->addWidget(editorWidget = new ScriptEditorGenericList(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorReturnToPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorExecPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorExecCharPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorLabelPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorJumpPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorIfPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorIfKeyPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorIfQPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorWaitPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorBinaryOpPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorUnaryOpPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorBitOpPage(field, grpScript, script, opcodeID, this));
 
 	ok = new QPushButton(tr("OK"),this);
 	ok->setDefault(true);
@@ -77,42 +82,21 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 	layout->addWidget(comboBox0);
 	layout->addWidget(comboBox);
 	layout->addWidget(textEdit);
-	layout->addLayout(editorLayout);
+	layout->addWidget(editorLayout);
 	layout->addStretch();
 	layout->addLayout(buttonLayout);
-	
-	//Rouage
-	connect(cancel, SIGNAL(released()), SLOT(close()));
-	
-	//Remplissage
-	this->script = script;
-	this->change = false;
 
 	if(modify)
 	{
 		this->opcode = Script::copyOpcode(script->getOpcode(opcodeID));
+		int id = opcode->id();
 
-		int index, i;
-		for(i=0 ; i<comboBox0->count() ; ++i)
-		{
-			buildList(i);
-			index = opcode->id();
-			if(index == 0x0F)
-				index = (((OpcodeSPECIAL *)opcode)->opcode->id() << 8) | index;
-			else if(index == 0x28)
-				index = (((OpcodeKAWAI *)opcode)->opcode->id() << 8) | index;
-			if((index = comboBox->findData(index)) != -1)
-			{
-				comboBox0->setCurrentIndex(i);
-				comboBox->setCurrentIndex(index);
-				break;
-			}
-		}
-		if(i==comboBox0->count())
-		{
-			setEnabled(false);
-			return;
-		}
+		if(id == Opcode::SPECIAL)
+			id = (((OpcodeSPECIAL *)opcode)->opcode->id() << 8) | id;
+		else if(id == Opcode::KAWAI)
+			id = (((OpcodeKAWAI *)opcode)->opcode->id() << 8) | id;
+
+		setCurrentMenu(id);
 		fillView();
 		
 		connect(ok, SIGNAL(released()), SLOT(modify()));
@@ -126,6 +110,7 @@ ScriptEditor::ScriptEditor(Script *script, int opcodeID, bool modify, bool isIni
 		connect(ok, SIGNAL(released()), SLOT(add()));
 	}
 
+	connect(cancel, SIGNAL(released()), SLOT(close()));
 	connect(comboBox0, SIGNAL(currentIndexChanged(int)), SLOT(buildList(int)));
 	for(int i=0 ; i<editorLayout->count() ; ++i)
 		connect((ScriptEditorView *)editorLayout->widget(i), SIGNAL(opcodeChanged()), SLOT(refreshTextEdit()));
@@ -143,24 +128,63 @@ void ScriptEditor::fillEditor()
 
 	// Change current editor widget
 	switch((Opcode::Keys)opcode->id()) {
-	case Opcode::LABEL:
+	case Opcode::RETTO:
 		index = 1;
+		break;
+	case Opcode::REQEW:case Opcode::REQ:
+	case Opcode::REQSW:
+		index = 2;
+		break;
+	case Opcode::PRQEW:case Opcode::PREQ:
+	case Opcode::PRQSW:
+		index = 3;
+		break;
+	case Opcode::LABEL:
+		index = 4;
 		break;
 	case Opcode::JMPF:case Opcode::JMPFL:
 	case Opcode::JMPB:case Opcode::JMPBL:
-		index = 2;
+		index = 5;
 		break;
 	case Opcode::IFUB:case Opcode::IFUBL:
 	case Opcode::IFSW:case Opcode::IFSWL:
 	case Opcode::IFUW:case Opcode::IFUWL:
-		index = 3;
+		index = 6;
 		break;
 	case Opcode::IFKEY:case Opcode::IFKEYON:
 	case Opcode::IFKEYOFF:
-		index = 4;
+		index = 7;
 		break;
 	case Opcode::IFMEMBQ:case Opcode::IFPRTYQ:
-		index = 5;
+		index = 8;
+		break;
+	case Opcode::WAIT:
+		index = 9;
+		break;
+	case Opcode::PLUSX:case Opcode::PLUS2X:
+	case Opcode::MINUSX:case Opcode::MINUS2X:
+	case Opcode::SETBYTE:case Opcode::SETWORD:
+	case Opcode::PLUS:case Opcode::PLUS2:
+	case Opcode::MINUS:case Opcode::MINUS2:
+	case Opcode::MUL:case Opcode::MUL2:
+	case Opcode::DIV:case Opcode::DIV2:
+	case Opcode::MOD:case Opcode::MOD2:
+	case Opcode::AND:case Opcode::AND2:
+	case Opcode::OR:case Opcode::OR2:
+	case Opcode::XOR:case Opcode::XOR2:
+	case Opcode::LBYTE:case Opcode::HBYTE:
+		index = 10;
+		break;
+	case Opcode::INCX:case Opcode::INC2X:
+	case Opcode::INC:case Opcode::INC2:
+	case Opcode::DECX:case Opcode::DEC2X:
+	case Opcode::DEC:case Opcode::DEC2:
+	case Opcode::RANDOM:
+		index = 11;
+		break;
+	case Opcode::BITOFF:case Opcode::BITON:
+	case Opcode::BITXOR:
+		index = 12;
 		break;
 	default:
 		index = 0;
@@ -168,7 +192,7 @@ void ScriptEditor::fillEditor()
 
 	editorWidget = (ScriptEditorView *)editorLayout->widget(index);
 	bool hasParams = opcode->hasParams() || opcode->isLabel();
-	editorWidget->setVisible(hasParams);
+	editorLayout->setVisible(hasParams);
 	editorWidget->setOpcode(opcode);
 	editorLayout->setCurrentWidget(editorWidget);
 }
@@ -222,12 +246,14 @@ void ScriptEditor::changeCurrentOpcode(int index)
 	bool isLabel = itemData == 0x100;
 	newOpcode.append((char)id);
 	
-	if(id == 0x28)//KAWAI
+	// Fill opcode with \x00
+
+	if(id == Opcode::KAWAI)//KAWAI
 	{
 		newOpcode.append('\x03'); // size
 		newOpcode.append((char)((itemData >> 8) & 0xFF)); // KAWAI ID
 	}
-	else if(id == 0x0F)//SPECIAL
+	else if(id == Opcode::SPECIAL)//SPECIAL
 	{
 		quint8 byte2 = (itemData >> 8) & 0xFF;
 		newOpcode.append((char)byte2); // SPECIAL ID
@@ -264,6 +290,24 @@ void ScriptEditor::changeCurrentOpcode(int index)
 	}
 	
 	fillView();
+}
+
+void ScriptEditor::setCurrentMenu(int id)
+{
+	int index, i;
+	for(i=0 ; i<comboBox0->count() ; ++i)
+	{
+		buildList(i);
+		if((index = comboBox->findData(id)) != -1)
+		{
+			comboBox0->setCurrentIndex(i);
+			comboBox->setCurrentIndex(index);
+			setEnabled(true);
+			return;
+		}
+	}
+
+	setEnabled(false);
 }
 
 void ScriptEditor::buildList(int id)
