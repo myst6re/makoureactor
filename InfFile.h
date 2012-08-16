@@ -61,10 +61,10 @@ typedef struct {
 	char name[9];
 	quint8 control;
 	quint16 u0;
-	Range camera_range;
-	quint32 _blank1;
-	Range unknown_range;
-	quint8 _blank2[24];
+	Range camera_range; // 8 bytes
+	quint32 u1;
+	Range unknown_range; // 8 bytes
+	quint8 u2[24];
 	Exit doors[12];// 24 * 12 bytes
 	Trigger triggers[12];// 16 * 12 bytes
 	// Only in occidental/international version

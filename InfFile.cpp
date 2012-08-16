@@ -171,12 +171,12 @@ void InfFile::test()
 	}
 	return;
 
-	if(data._blank1 != 0) {
-		qDebug() << "blank1" << QByteArray((char *)&data._blank1, 4).toHex();
+	if(data.u1 != 0) {
+		qDebug() << "blank1" << QByteArray((char *)&data.u1, 4).toHex();
 	}
 	for(int i=0 ; i<24 ; ++i) {
-		if(data._blank2[i] != 0) {
-			qDebug() << "blank2" << QByteArray((char *)&data._blank2, 24).toHex();
+		if(data.u2[i] != 0) {
+			qDebug() << "blank2" << QByteArray((char *)&data.u2, 24).toHex();
 			break;
 		}
 	}
