@@ -19,24 +19,24 @@
 #define INFFILE_H
 
 #include <QtCore>
-#include "FieldModelPart.h"
+#include "WalkmeshFile.h"
 
 typedef struct {
-	quint16 left;
-	quint16 bottom;
-	quint16 right;
-	quint16 top; // maybe bottom
+	qint16 left;
+	qint16 bottom;
+	qint16 right;
+	qint16 top; // maybe bottom
 } Range;
 
 typedef struct {
-	VertexPS exit_line[2];
-	VertexPS destination;
+	Vertex_s exit_line[2];
+	Vertex_s destination;
 	quint16 fieldID;
 	quint32 u1;
 } Exit;
 
 typedef struct {
-	VertexPS trigger_line[2];
+	Vertex_s trigger_line[2];
 	quint8 background_parameter;
 	quint8 background_state;
 	quint8 behavior;
@@ -87,8 +87,14 @@ public:
 	void setMapName(const QString &name);
 	quint8 control();
 	void setControl(quint8 control);
+	const Range &cameraRange() const;
+	void setCameraRange(const Range &range);
+	const Range &screenRange() const;
+	void setScreenRange(const Range &range);
+	QList<Exit> exitLines() const;
 	Exit exitLine(quint8 id);
 	void setExitLine(quint8 id, const Exit &line);
+	QList<Trigger> triggers() const;
 	const Trigger &trigger(quint8 id) const;
 	void setTrigger(quint8 id, const Trigger &trigger);
 	bool arrowIsDisplayed(quint8 id);

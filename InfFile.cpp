@@ -76,6 +76,11 @@ bool InfFile::open(const QByteArray &contenu, bool importMode)
 			return false;
 	}
 
+	QFile curInf("curInf.inf");
+	curInf.open(QIODevice::WriteOnly);
+	curInf.write(&constData[debutSection], size);
+	curInf.close();
+
 	memset(&data, 0, sizeof(InfData));
 	memcpy(&data, &constData[debutSection], size);
 	data.name[8] = '\x00';
@@ -120,6 +125,35 @@ void InfFile::setControl(quint8 control)
 	_isModified = true;
 }
 
+const Range &InfFile::cameraRange() const
+{
+	return data.camera_range;
+}
+
+void InfFile::setCameraRange(const Range &range)
+{
+	data.camera_range = range;
+}
+
+const Range &InfFile::screenRange() const
+{
+	return data.unknown_range;
+}
+
+void InfFile::setScreenRange(const Range &range)
+{
+	data.unknown_range = range;
+}
+
+QList<Exit> InfFile::exitLines() const
+{
+	QList<Exit> exit;
+	for(int i=0 ; i<12 ; ++i) {
+		exit.append(data.doors[i]);
+	}
+	return exit;
+}
+
 Exit InfFile::exitLine(quint8 id)
 {
 	return data.doors[id];
@@ -129,6 +163,15 @@ void InfFile::setExitLine(quint8 id, const Exit &line)
 {
 	data.doors[id] = line;
 	_isModified = true;
+}
+
+QList<Trigger> InfFile::triggers() const
+{
+	QList<Trigger> trigger;
+	for(int i=0 ; i<12 ; ++i) {
+		trigger.append(data.triggers[i]);
+	}
+	return trigger;
 }
 
 const Trigger &InfFile::trigger(quint8 id) const
@@ -164,15 +207,17 @@ void InfFile::setArrow(quint8 id, const Arrow &arrow)
 
 void InfFile::test()
 {
-	for(int i=0 ; i<12 ; ++i) {
-		if(data.arrows[i].type == 0) {
-			qDebug() << "arrow unknown" << QByteArray((char *)&data.arrows[i].type, 4).toHex();
-		}
+//	for(int i=0 ; i<12 ; ++i) {
+//		if(data.arrows[i].type == 0) {
+//			qDebug() << "arrow unknown" << QByteArray((char *)&data.arrows[i].type, 4).toHex();
+//		}
+//	}
+//	return;
+	if(data.u0 != 0) {
+		qDebug() << "blank0" << QByteArray((char *)&data.u0, 2).toHex() << data.u0 << int(data.u0);
 	}
-	return;
-
 	if(data.u1 != 0) {
-		qDebug() << "blank1" << QByteArray((char *)&data.u1, 4).toHex();
+		qDebug() << "blank1" << QByteArray((char *)&data.u1, 4).toHex() << data.u1 << int((data.u1 >> 16) & 0xFFFF) << int(data.u1 & 0xFFFF);
 	}
 	for(int i=0 ; i<24 ; ++i) {
 		if(data.u2[i] != 0) {

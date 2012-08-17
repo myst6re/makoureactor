@@ -19,6 +19,7 @@
 #define FIELDMODELPART_H
 
 #include <QtGui>
+#include "WalkmeshFile.h"
 
 typedef struct {
 	quint32 version;
@@ -68,11 +69,7 @@ typedef struct {
 } VertexPC;
 
 typedef struct {
-	qint16 x, z, y;
-} VertexPS;
-
-typedef struct {
-	VertexPS v;
+	Vertex_s v;
 	quint16 unknown;
 } Vertex;
 

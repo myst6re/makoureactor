@@ -471,6 +471,8 @@ void Window::ouvrir(const QString &cheminFic, bool isDir)
 	actionClose->setEnabled(true);
 	actionFind->setEnabled(true);
 	actionText->setEnabled(true);
+
+	fieldArchive->searchAll();
 }
 
 void Window::ouvrirField()
@@ -970,8 +972,11 @@ void Window::varManager()
 
 void Window::runFF7()
 {
-	if(!QProcess::startDetached("\"" % Data::ff7AppPath() % "/ff7.exe\"", QStringList(), Data::ff7AppPath())) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Final Fantasy VII n'a pas pu être lancé.\n%1").arg(Data::ff7AppPath() % "/FF7.exe"));
+	QString ff7exe = !Data::isRereleasedPath() ? "ff7.exe" : "FF7_Launcher.exe";
+	QString ff7exeFullPath = Data::ff7AppPath() % "/" % ff7exe;
+
+	if(!QProcess::startDetached("\"" % ff7exeFullPath % "\"", QStringList(), Data::ff7AppPath())) {
+		QMessageBox::warning(this, tr("Erreur"), tr("Final Fantasy VII n'a pas pu être lancé.\n%1").arg(ff7exeFullPath));
 	}
 }
 
@@ -1048,11 +1053,14 @@ void Window::tutManager()
 void Window::walkmeshManager()
 {
 	if(field) {
+		InfFile *inf = field->getInf();
+		if(!inf->isOpen())
+			inf->open(fieldArchive->getFieldData(field));
 		WalkmeshFile *walk = field->getWalkmesh();
 		if(!walk->isOpenCa() || !walk->isOpenId())
 			walk->open(fieldArchive->getFieldData(field));
 		if(walk->isOpenCa() && walk->isOpenId()) {
-			WalkmeshManager walkmeshManager(walk, this);
+			WalkmeshManager walkmeshManager(walk, inf, field, this);
 			walkmeshManager.exec();
 		} else {
 			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir le walkmesh !"));

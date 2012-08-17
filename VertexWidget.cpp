@@ -18,7 +18,7 @@
 #include "VertexWidget.h"
 
 VertexWidget::VertexWidget(QWidget *parent) :
-	QWidget(parent)
+	QWidget(parent), dontEmit(false)
 {
 	x = new QSpinBox;
 	x->setRange(-32768, 32767);
@@ -30,25 +30,48 @@ VertexWidget::VertexWidget(QWidget *parent) :
 	QHBoxLayout *layout = new QHBoxLayout(this);
 	layout->setContentsMargins(QMargins());
 	layout->addWidget(new QLabel(tr("X")));
-	layout->addWidget(x);
+	layout->addWidget(x, 1);
 	layout->addWidget(new QLabel(tr("Y")));
-	layout->addWidget(y);
+	layout->addWidget(y, 1);
 	layout->addWidget(new QLabel(tr("Z")));
-	layout->addWidget(z);
+	layout->addWidget(z, 1);
+
+	connect(x, SIGNAL(valueChanged(int)), SLOT(emitValuesChanged()));
+	connect(y, SIGNAL(valueChanged(int)), SLOT(emitValuesChanged()));
+	connect(z, SIGNAL(valueChanged(int)), SLOT(emitValuesChanged()));
 }
 
-VertexPS VertexWidget::values() const
+Vertex_s VertexWidget::values() const
 {
-	VertexPS v;
+	Vertex_s v;
 	v.x = x->value();
 	v.y = y->value();
 	v.z = z->value();
 	return v;
 }
 
-void VertexWidget::setValues(const VertexPS &v)
+void VertexWidget::setValues(const Vertex_s &v)
 {
 	x->setValue(v.x);
 	y->setValue(v.y);
 	z->setValue(v.z);
+}
+
+void VertexWidget::emitValuesChanged()
+{
+	if(!dontEmit) {
+		emit valuesChanged(values());
+	}
+}
+
+bool VertexWidget::isReadOnly() const
+{
+	return x->isReadOnly();
+}
+
+void VertexWidget::setReadOnly(bool ro)
+{
+	x->setReadOnly(ro);
+	y->setReadOnly(ro);
+	z->setReadOnly(ro);
 }

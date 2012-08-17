@@ -18,27 +18,115 @@ QStringList Data::operateur_names;
 QStringList Data::key_names;
 QString Data::ff7DataPath_cache;
 QString Data::ff7AppPath_cache;
+QString Data::ff7RereleasePath_cache;
+bool Data::ff7RereleaseAlreadySearched = false;
 QHash<QString, int> Data::charlgp_listPos;
 QHash<QString, int> Data::charlgp_animBoneCount;
 
+const QString &Data::searchRereleasedFF7Path()
+{
+#ifdef Q_WS_WIN
+	if(ff7RereleasePath_cache.isNull() && !ff7RereleaseAlreadySearched) {
+		ff7RereleaseAlreadySearched = true;
+		HKEY phkResult, phkResult2;
+		LONG error;
+
+		// direct
+		ff7RereleasePath_cache = QSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", QSettings::NativeFormat).value("InstallLocation", "").toString();
+		if(!ff7RereleasePath_cache.isEmpty()) {
+			return ff7RereleasePath_cache;
+		}
+
+		// if another id
+		error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"), 0, KEY_READ, &phkResult);
+
+		if(ERROR_SUCCESS == error) {
+			DWORD index = 0;
+			WCHAR subKeyName[MAX_PATH];
+			DWORD subKeyCName = MAX_PATH;
+			while(ERROR_NO_MORE_ITEMS != (error = RegEnumKeyEx(phkResult, index, subKeyName, &subKeyCName, NULL, NULL, NULL, NULL))) {
+				QString subKeyNameStr = QString::fromUtf16((ushort *)subKeyName);
+				if(subKeyNameStr.endsWith("_is1")) {
+					error = RegOpenKeyEx(phkResult, (LPCWSTR)QString("%1\\").arg(subKeyNameStr).utf16(), 0, KEY_READ, &phkResult2);
+					if(ERROR_SUCCESS == error) {
+						BYTE value[MAX_PATH];
+						DWORD cValue = MAX_PATH, type;
+						error = RegQueryValueEx(phkResult2, TEXT("DisplayName"), NULL, &type, value, &cValue);
+						if(ERROR_SUCCESS == error) {
+							if(type == REG_SZ) {
+								QString softwareNameStr = QString::fromUtf16((ushort *)value);
+								if(softwareNameStr.compare("FINAL FANTASY VII", Qt::CaseInsensitive) == 0) {
+									cValue = MAX_PATH;
+									error = RegQueryValueEx(phkResult2, TEXT("InstallLocation"), NULL, &type, value, &cValue);
+									if(ERROR_SUCCESS == error) {
+										if(type == REG_SZ) {
+											RegCloseKey(phkResult2);
+											RegCloseKey(phkResult);
+											return ff7RereleasePath_cache = QString::fromUtf16((ushort *)value);
+										}
+									}
+								}
+							}
+						}
+
+
+					}
+					RegCloseKey(phkResult2);
+				}
+				++index;
+				subKeyCName = MAX_PATH;
+			}
+
+			RegCloseKey(phkResult);
+		}
+	}
+#endif
+	return ff7RereleasePath_cache;
+}
+
 const QString &Data::ff7DataPath()
 {
+#ifdef Q_WS_WIN
 	if(ff7DataPath_cache.isNull()) {
-		ff7DataPath_cache = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("DataPath", "").toString();
-		if(!ff7DataPath_cache.isEmpty())
-			ff7DataPath_cache = QDir::cleanPath(ff7DataPath_cache)%"/";
+		// Search for new version
+		ff7DataPath_cache = searchRereleasedFF7Path();
+		// Search for old version
+		if(ff7DataPath_cache.isEmpty()) {
+			ff7DataPath_cache = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("DataPath", "").toString();
+		} else {
+			ff7DataPath_cache.append("\\data");
+		}
+		// Clean
+		if(!ff7DataPath_cache.isEmpty()) {
+			ff7DataPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(ff7DataPath_cache)%"/");
+		}
 	}
+#endif
 	return ff7DataPath_cache;
 }
 
 const QString &Data::ff7AppPath()
 {
+#ifdef Q_WS_WIN
 	if(ff7AppPath_cache.isNull()) {
-		ff7AppPath_cache = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("AppPath", "").toString();
-		if(!ff7AppPath_cache.isEmpty())
-			ff7AppPath_cache = QDir::cleanPath(ff7AppPath_cache)%"/";
+		// Search for new version
+		ff7AppPath_cache = searchRereleasedFF7Path();
+		// Search for old version
+		if(ff7AppPath_cache.isEmpty()) {
+			ff7AppPath_cache = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("AppPath", "").toString();
+		}
+		// Clean
+		if(!ff7AppPath_cache.isEmpty()) {
+			ff7AppPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(ff7AppPath_cache)%"/");
+		}
 	}
+#endif
 	return ff7AppPath_cache;
+}
+
+bool Data::isRereleasedPath()
+{
+	return !ff7RereleasePath_cache.isEmpty();
 }
 
 QString Data::charlgp_path()

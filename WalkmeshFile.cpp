@@ -179,6 +179,29 @@ QByteArray WalkmeshFile::saveId() const
 	return id;
 }
 
+Vertex_sr WalkmeshFile::fromVertex_s(const Vertex_s &vertex_s)
+{
+	Vertex_sr vertex_sr;
+
+	vertex_sr.x = vertex_s.x;
+	vertex_sr.y = vertex_s.y;
+	vertex_sr.z = vertex_s.z;
+	vertex_sr.res = 0;
+
+	return vertex_sr;
+}
+
+Vertex_s WalkmeshFile::toVertex_s(const Vertex_sr &vertex_sr)
+{
+	Vertex_s vertex_s;
+
+	vertex_s.x = vertex_sr.x;
+	vertex_s.y = vertex_sr.y;
+	vertex_s.z = vertex_sr.z;
+
+	return vertex_s;
+}
+
 bool WalkmeshFile::test() const
 {
 	if(camera_axis[2].z != camera_axis2z) {

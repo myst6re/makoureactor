@@ -6,12 +6,19 @@
 #include "Opcode.h"
 #include "Config.h"
 #include "LZS.h"
+#ifdef Q_WS_WIN
+#include <windef.h>
+#include <winbase.h>
+#include <winerror.h>
+#include <winreg.h>
+#endif
 
 class Data
 {
 public:
 	static const QString &ff7DataPath();
 	static const QString &ff7AppPath();
+	static bool isRereleasedPath();
 	static QString charlgp_path();
 	static void charlgp_loadListPos(QFile *);
 	static void charlgp_loadAnimBoneCount();
@@ -38,9 +45,12 @@ public:
 	static QStringList movie_names;
 
 private:
+	static const QString &searchRereleasedFF7Path();
 	static void fill(const QByteArray &data, QStringList &names);
 	static QString ff7DataPath_cache;
 	static QString ff7AppPath_cache;
+	static QString ff7RereleasePath_cache;
+	static bool ff7RereleaseAlreadySearched;
 
 };
 

@@ -60,6 +60,8 @@ public:
 	QList<Triangle> triangles;
 	QList<Access> access;
 
+	static Vertex_sr fromVertex_s(const Vertex_s &vertex_s);
+	static Vertex_s toVertex_s(const Vertex_sr &vertex_sr);
 	bool test() const;
 private:
 	bool _isOpenCa, _isOpenId, _isModifiedCa, _isModifiedId;

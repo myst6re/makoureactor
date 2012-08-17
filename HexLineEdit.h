@@ -1,5 +1,5 @@
 /****************************************************************************
- ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Deling Final Fantasy VIII Field Editor
  ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
@@ -15,28 +15,32 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef VERTEXWIDGET_H
-#define VERTEXWIDGET_H
+#ifndef HEXLINEEDIT_H
+#define HEXLINEEDIT_H
 
 #include <QtGui>
-#include "WalkmeshFile.h"
 
-class VertexWidget : public QWidget
+class HexLineEdit : public QLineEdit
 {
 	Q_OBJECT
 public:
-	explicit VertexWidget(QWidget *parent=0);
-	Vertex_s values() const;
-	void setValues(const Vertex_s &v);
-	bool isReadOnly() const;
-	void setReadOnly(bool ro);
-private slots:
-	void emitValuesChanged();
+	explicit HexLineEdit(QWidget *parent=0);
+	explicit HexLineEdit(const QByteArray &contents, QWidget *parent=0);
+	QByteArray data() const;
+public slots:
+	void setData(const QByteArray &contents);
 signals:
-	void valuesChanged(const Vertex_s &v);
+	void dataChanged(const QByteArray &data);
+	void dataEdited(const QByteArray &data);
 private:
-	QSpinBox *x, *y, *z;
-	bool dontEmit;
+	QString text() const;
+	void setMaxLength(int maxLength);
+	void setInputMask(const QString &inputMask);
+
+	bool _noEmit;
+private slots:
+	void emitDataEdited();
+	void setText(const QString &);
 };
 
-#endif // VERTEXWIDGET_H
+#endif // HEXLINEEDIT_H

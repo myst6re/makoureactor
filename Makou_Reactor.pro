@@ -60,7 +60,9 @@ HEADERS += ApercuBG.h \
     OrientationWidget.h \
     ScriptEditorView.h \
     ScriptEditorGenericList.h \
-    VarOrValueWidget.h
+    VarOrValueWidget.h \
+    HexLineEdit.h \
+    Listwidget.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -114,7 +116,9 @@ SOURCES += ApercuBG.cpp \
     OrientationWidget.cpp \
     ScriptEditorView.cpp \
     ScriptEditorGenericList.cpp \
-    VarOrValueWidget.cpp
+    VarOrValueWidget.cpp \
+    HexLineEdit.cpp \
+    Listwidget.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts

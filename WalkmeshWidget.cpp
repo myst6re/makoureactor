@@ -20,7 +20,7 @@
 WalkmeshWidget::WalkmeshWidget(WalkmeshFile *walkmesh, QWidget *parent)
 	: QGLWidget(parent), distance(0.0), xRot(0.0), yRot(0.0), zRot(0.0), walkmesh(walkmesh)
 {
-	setFixedSize(640, 480);
+	setMinimumSize(640, 480);
 }
 
 void WalkmeshWidget::initializeGL()
