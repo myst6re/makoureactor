@@ -19,13 +19,13 @@
 #define INFFILE_H
 
 #include <QtCore>
-#include "WalkmeshFile.h"
+#include "IdFile.h"
 
 typedef struct {
 	qint16 left;
-	qint16 bottom;
+	qint16 top;
 	qint16 right;
-	qint16 top; // maybe bottom
+	qint16 bottom;
 } Range;
 
 typedef struct {
@@ -99,8 +99,15 @@ public:
 	void setTrigger(quint8 id, const Trigger &trigger);
 	bool arrowIsDisplayed(quint8 id);
 	void setArrowDiplay(quint8 id, bool display);
+	QList<Arrow> arrows() const;
 	const Arrow &arrow(quint8 id) const;
 	void setArrow(quint8 id, const Arrow &arrow);
+	QByteArray unknown0() const;
+	void setUnknown0(const QByteArray &u);
+	QByteArray unknown1() const;
+	void setUnknown1(const QByteArray &u);
+	QByteArray unknown2() const;
+	void setUnknown2(const QByteArray &u);
 	void test();
 private:
 	bool _isOpen, _isModified;

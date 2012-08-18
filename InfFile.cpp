@@ -61,8 +61,10 @@ bool InfFile::open(const QByteArray &contenu, bool importMode)
 
 		size = debutSection9-debutSection;
 
-		if((quint32)contenu.size() <= debutSection9 || size != sizeof(InfData))
+		if((quint32)contenu.size() <= debutSection9) {
+			qWarning() << "Error inf data size" << debutSection9 << contenu.size();
 			return false;
+		}
 	} else {
 		memcpy(&debutSection1, constData, 4);
 		memcpy(&debutSection, &constData[16], 4);// section 5
@@ -72,14 +74,20 @@ bool InfFile::open(const QByteArray &contenu, bool importMode)
 
 		size = debutSection6-debutSection;
 
-		if((quint32)contenu.size() <= debutSection6 || size > sizeof(InfData))
+		if((quint32)contenu.size() <= debutSection6) {
+			qWarning() << "Error inf data size" << debutSection6 << contenu.size();
 			return false;
+		}
 	}
 
-	QFile curInf("curInf.inf");
-	curInf.open(QIODevice::WriteOnly);
-	curInf.write(&constData[debutSection], size);
-	curInf.close();
+	if(size != 740 && size != 536) {
+		qWarning() << "Error inf size" << size;
+//		QFile debinf("debugInf.inf");
+//		debinf.open(QIODevice::WriteOnly);
+//		debinf.write(&constData[debutSection], size);
+//		debinf.close();
+		return false;
+	}
 
 	memset(&data, 0, sizeof(InfData));
 	memcpy(&data, &constData[debutSection], size);
@@ -133,6 +141,7 @@ const Range &InfFile::cameraRange() const
 void InfFile::setCameraRange(const Range &range)
 {
 	data.camera_range = range;
+	_isModified = true;
 }
 
 const Range &InfFile::screenRange() const
@@ -143,6 +152,7 @@ const Range &InfFile::screenRange() const
 void InfFile::setScreenRange(const Range &range)
 {
 	data.unknown_range = range;
+	_isModified = true;
 }
 
 QList<Exit> InfFile::exitLines() const
@@ -182,6 +192,7 @@ const Trigger &InfFile::trigger(quint8 id) const
 void InfFile::setTrigger(quint8 id, const Trigger &trigger)
 {
 	data.triggers[id] = trigger;
+	_isModified = true;
 }
 
 bool InfFile::arrowIsDisplayed(quint8 id)
@@ -195,6 +206,15 @@ void InfFile::setArrowDiplay(quint8 id, bool display)
 	_isModified = true;
 }
 
+QList<Arrow> InfFile::arrows() const
+{
+	QList<Arrow> arrowList;
+	for(int i=0 ; i<12 ; ++i) {
+		arrowList.append(data.arrows[i]);
+	}
+	return arrowList;
+}
+
 const Arrow &InfFile::arrow(quint8 id) const
 {
 	return data.arrows[id];
@@ -203,6 +223,40 @@ const Arrow &InfFile::arrow(quint8 id) const
 void InfFile::setArrow(quint8 id, const Arrow &arrow)
 {
 	data.arrows[id] = arrow;
+	_isModified = true;
+}
+
+QByteArray InfFile::unknown0() const
+{
+	return QByteArray((char *)&data.u0, 2);
+}
+
+void InfFile::setUnknown0(const QByteArray &u)
+{
+	memcpy(&data.u0, u.leftJustified(2, '\0', true).constData(), 2);
+	_isModified = true;
+}
+
+QByteArray InfFile::unknown1() const
+{
+	return QByteArray((char *)&data.u1, 4);
+}
+
+void InfFile::setUnknown1(const QByteArray &u)
+{
+	memcpy(&data.u1, u.leftJustified(4, '\0', true).constData(), 4);
+	_isModified = true;
+}
+
+QByteArray InfFile::unknown2() const
+{
+	return QByteArray((char *)data.u2, 24);
+}
+
+void InfFile::setUnknown2(const QByteArray &u)
+{
+	memcpy(data.u2, u.leftJustified(24, '\0', true).constData(), 24);
+	_isModified = true;
 }
 
 void InfFile::test()

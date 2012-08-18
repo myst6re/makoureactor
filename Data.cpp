@@ -88,13 +88,14 @@ const QString &Data::ff7DataPath()
 {
 #ifdef Q_WS_WIN
 	if(ff7DataPath_cache.isNull()) {
-		// Search for new version
-		ff7DataPath_cache = searchRereleasedFF7Path();
 		// Search for old version
+		ff7DataPath_cache = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("DataPath", "").toString();
+		// Search for new version
 		if(ff7DataPath_cache.isEmpty()) {
-			ff7DataPath_cache = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("DataPath", "").toString();
-		} else {
-			ff7DataPath_cache.append("\\data");
+			ff7DataPath_cache = searchRereleasedFF7Path();
+			if(!ff7DataPath_cache.isEmpty()) {
+				ff7DataPath_cache.append("\\data");
+			}
 		}
 		// Clean
 		if(!ff7DataPath_cache.isEmpty()) {
@@ -109,11 +110,11 @@ const QString &Data::ff7AppPath()
 {
 #ifdef Q_WS_WIN
 	if(ff7AppPath_cache.isNull()) {
-		// Search for new version
-		ff7AppPath_cache = searchRereleasedFF7Path();
 		// Search for old version
+		ff7AppPath_cache = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("AppPath", "").toString();
+		// Search for new version
 		if(ff7AppPath_cache.isEmpty()) {
-			ff7AppPath_cache = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("AppPath", "").toString();
+			ff7AppPath_cache = searchRereleasedFF7Path();
 		}
 		// Clean
 		if(!ff7AppPath_cache.isEmpty()) {

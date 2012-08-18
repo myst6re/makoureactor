@@ -49,7 +49,6 @@ HEADERS += ApercuBG.h \
     TutWidget.h \
     InfFile.h \
 	MiscWidget.h \
-    WalkmeshFile.h \
     FieldModelFile.h \
     TextPreview.h \
     FieldModelLoader.h \
@@ -62,7 +61,9 @@ HEADERS += ApercuBG.h \
     ScriptEditorGenericList.h \
     VarOrValueWidget.h \
     HexLineEdit.h \
-    Listwidget.h
+    Listwidget.h \
+    IdFile.h \
+    CaFile.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -105,7 +106,6 @@ SOURCES += ApercuBG.cpp \
     TutWidget.cpp \
     InfFile.cpp \
 	MiscWidget.cpp \
-    WalkmeshFile.cpp \
     FieldModelFile.cpp \
     TextPreview.cpp \
     FieldModelLoader.cpp \
@@ -118,7 +118,9 @@ SOURCES += ApercuBG.cpp \
     ScriptEditorGenericList.cpp \
     VarOrValueWidget.cpp \
     HexLineEdit.cpp \
-    Listwidget.cpp
+    Listwidget.cpp \
+    IdFile.cpp \
+    CaFile.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts

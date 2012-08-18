@@ -3618,7 +3618,7 @@ void OpcodeMAPJUMP::setParams(const QByteArray &params)
 QString OpcodeMAPJUMP::toString() const
 {
 	return QObject::tr("Aller à l'écran %1 (X=%2, Y=%3, polygone id=%4, direction=%5)")
-			.arg(fieldID)
+			.arg(_field(fieldID))
 			.arg(targetX)
 			.arg(targetY)
 			.arg(targetI)
@@ -4960,13 +4960,12 @@ void OpcodeCHAR::setParams(const QByteArray &params)
 QString OpcodeCHAR::toString() const
 {
 	return QObject::tr("Ce groupe est un objet 3D (id=%1)")
-			.arg(_personnage(objectID));
+			.arg(objectID);
 }
 
 QByteArray OpcodeCHAR::params() const
 {
-	return QByteArray()
-			.append((char)objectID);
+	return QByteArray().append((char)objectID);
 }
 
 OpcodeDFANM::OpcodeDFANM(const QByteArray &params)

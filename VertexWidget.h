@@ -19,7 +19,7 @@
 #define VERTEXWIDGET_H
 
 #include <QtGui>
-#include "WalkmeshFile.h"
+#include "IdFile.h"
 
 class VertexWidget : public QWidget
 {

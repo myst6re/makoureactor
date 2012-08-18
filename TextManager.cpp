@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "TextManager.h"
 
-TextManager::TextManager(Field *field, QWidget *parent)
+TextManager::TextManager(QWidget *parent)
 	: QWidget(parent, Qt::Tool)
 {
 	setWindowTitle(tr("Textes"));
@@ -244,8 +244,6 @@ TextManager::TextManager(Field *field, QWidget *parent)
 	connect(textEdit, SIGNAL(textChanged()), SLOT(setTextChanged()));
 	connect(prevPage, SIGNAL(released()), SLOT(prevTextPreviewPage()));
 	connect(nextPage, SIGNAL(released()), SLOT(nextTextPreviewPage()));
-
-	setField(field);
 }
 
 void TextManager::focusInEvent(QFocusEvent *e)

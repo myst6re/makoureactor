@@ -38,6 +38,7 @@
         <file>images/icon-member_3.png</file>
         <file>images/font.png</file>
         <file>images/keys.png</file>
-        <file>images/field-arrow.png</file>
+        <file>images/field-arrow-green.png</file>
+        <file>images/field-arrow-red.png</file>
     </qresource>
 </RCC>

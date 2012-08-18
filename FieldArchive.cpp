@@ -330,15 +330,6 @@ void FieldArchive::searchAll()
 					inf->test();
 				}
 			}
-//			qDebug() << field->getName();
-//			WalkmeshFile *walkmesh = field->getWalkmesh();
-//			if(!walkmesh->isOpen()) {
-//				if(walkmesh->open(getFieldData(field))) {
-//					if(walkmesh->test()) {
-//						qDebug() << field->getName();
-//					}
-//				}
-//			}
 			if(!field->isModified()) {
 				field->close();
 			}

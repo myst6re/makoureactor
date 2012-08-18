@@ -52,9 +52,12 @@ Vertex_s VertexWidget::values() const
 
 void VertexWidget::setValues(const Vertex_s &v)
 {
+	dontEmit = true;
 	x->setValue(v.x);
 	y->setValue(v.y);
 	z->setValue(v.z);
+	dontEmit = false;
+	emitValuesChanged();
 }
 
 void VertexWidget::emitValuesChanged()

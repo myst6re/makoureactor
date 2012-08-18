@@ -17,34 +17,33 @@
  ****************************************************************************/
 #include "WalkmeshManager.h"
 
-WalkmeshManager::WalkmeshManager(WalkmeshFile *walkmeshFile, InfFile *infFile, Field *field, QWidget *parent)
-	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), walkmeshFile(walkmeshFile), infFile(infFile), field(field)
+WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) :
+	QDialog(parent, Qt::Tool),
+	idFile(0), caFile(0), infFile(0)
 {
 	setWindowTitle(tr("Zones"));
 
-	walkmesh = Config::value("OpenGL", true).toBool() ? new WalkmeshWidget(walkmeshFile) : 0;
+	walkmesh = Config::value("OpenGL", true).toBool() ? new WalkmeshWidget(this, shareWidget) : 0;
 	QWidget *walkmeshWidget = walkmesh ? walkmesh : new QWidget(this);
 
 	QSlider *slider1 = new QSlider(this);
 	QSlider *slider2 = new QSlider(this);
 	QSlider *slider3 = new QSlider(this);
-//	QSlider *slider4 = new QSlider(this);
 
 	slider1->setRange(0, 360);
 	slider2->setRange(0, 360);
 	slider3->setRange(0, 360);
-//	slider4->setRange(-4096, 4096);
 
 	slider1->setValue(0);
 	slider2->setValue(0);
 	slider3->setValue(0);
-//	slider4->setValue(0);
 
 	tabWidget = new QTabWidget(this);
 	tabWidget->addTab(buildCameraPage(), tr("Caméra"));
 	tabWidget->addTab(buildWalkmeshPage(), tr("Walkmesh"));
 	tabWidget->addTab(buildGatewaysPage(), tr("Sorties"));
 	tabWidget->addTab(buildDoorsPage(), tr("Portes"));
+	tabWidget->addTab(buildArrowPage(), tr("Flêches"));
 	tabWidget->addTab(buildCameraRangePage(), tr("Limites caméra"));
 	tabWidget->addTab(buildMiscPage(), tr("Divers"));
 	tabWidget->setFixedHeight(250);
@@ -55,16 +54,12 @@ WalkmeshManager::WalkmeshManager(WalkmeshFile *walkmeshFile, InfFile *infFile, F
 	layout->addWidget(slider1, 0, 1);
 	layout->addWidget(slider2, 0, 2);
 	layout->addWidget(slider3, 0, 3);
-//	layout->addWidget(slider4, 0, 4);
 
 	if(walkmesh) {
 		connect(slider1, SIGNAL(valueChanged(int)), walkmesh, SLOT(setXRotation(int)));
 		connect(slider2, SIGNAL(valueChanged(int)), walkmesh, SLOT(setYRotation(int)));
 		connect(slider3, SIGNAL(valueChanged(int)), walkmesh, SLOT(setZRotation(int)));
-//		connect(slider4, SIGNAL(valueChanged(int)), walkmesh, SLOT(setZoom(int)));
 	}
-
-	fill();
 }
 
 QWidget *WalkmeshManager::buildCameraPage()
@@ -206,11 +201,15 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 
 	unknownExit = new HexLineEdit(ret);
 
+	arrowDisplay = new QCheckBox(tr("Afficher une flêche"), ret);
+	arrowDisplay->setIcon(QIcon(":/images/field-arrow-red.png"));
+
 	QGridLayout *idsLayout = new QGridLayout;
 	idsLayout->addWidget(new QLabel(tr("Id écran :")), 0, 0);
-	idsLayout->addWidget(fieldId, 0, 1, 1, 4);
+	idsLayout->addWidget(fieldId, 0, 1);
+	idsLayout->addWidget(arrowDisplay, 0, 2, 1, 2);
 	idsLayout->addWidget(new QLabel(tr("Inconnu :")), 1, 0);
-	idsLayout->addWidget(unknownExit, 1, 1, 1, 4);
+	idsLayout->addWidget(unknownExit, 1, 1, 1, 3);
 
 	QGridLayout *layout = new QGridLayout(ret);
 	layout->addWidget(gateList, 0, 0, 5, 1, Qt::AlignLeft);
@@ -227,6 +226,7 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	connect(exitPoints[1], SIGNAL(valuesChanged(Vertex_s)), SLOT(editExitPoint(Vertex_s)));
 	connect(entryPoint, SIGNAL(valuesChanged(Vertex_s)), SLOT(editEntryPoint(Vertex_s)));
 	connect(fieldId, SIGNAL(valueChanged(int)), SLOT(editFieldId(int)));
+	connect(arrowDisplay, SIGNAL(toggled(bool)), SLOT(editArrowDisplay(bool)));
 	connect(unknownExit, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknownExit(QByteArray)));
 
 	return ret;
@@ -255,9 +255,9 @@ QWidget *WalkmeshManager::buildDoorsPage()
 	doorSoundId->setRange(0, 255);
 
 	QGridLayout *idsLayout = new QGridLayout;
-	idsLayout->addWidget(new QLabel(tr("Id parametre décors :")), 0, 0);
+	idsLayout->addWidget(new QLabel(tr("Id parametre décor :")), 0, 0);
 	idsLayout->addWidget(bgParamId, 0, 1);
-	idsLayout->addWidget(new QLabel(tr("Id état décors :")), 1, 0);
+	idsLayout->addWidget(new QLabel(tr("Id état décor :")), 1, 0);
 	idsLayout->addWidget(bgStateId, 1, 1);
 	idsLayout->addWidget(new QLabel(tr("Comportement :")), 2, 0);
 	idsLayout->addWidget(doorBehavior, 2, 1);
@@ -283,59 +283,103 @@ QWidget *WalkmeshManager::buildDoorsPage()
 	return ret;
 }
 
+QWidget *WalkmeshManager::buildArrowPage()
+{
+	QWidget *ret = new QWidget(this);
+
+	arrowList = new QListWidget(ret);
+	arrowList->setFixedWidth(125);
+
+	arrowX = new QDoubleSpinBox(ret);
+	arrowX->setDecimals(0);
+	arrowX->setRange(-pow(2, 31), pow(2, 31)-1);
+
+	arrowY = new QDoubleSpinBox(ret);
+	arrowY->setDecimals(0);
+	arrowY->setRange(-pow(2, 31), pow(2, 31)-1);
+
+	arrowZ = new QDoubleSpinBox(ret);
+	arrowZ->setDecimals(0);
+	arrowZ->setRange(-pow(2, 31), pow(2, 31)-1);
+
+	arrowType = new QComboBox(ret);
+	arrowType->addItem(tr("Invisible"), 0);
+	arrowType->addItem(QIcon(":/images/field-arrow-red.png"), tr("Rouge"), 1);
+	arrowType->addItem(QIcon(":/images/field-arrow-green.png"), tr("Vert"), 2);
+
+	QHBoxLayout *posLayout = new QHBoxLayout;
+	posLayout->addWidget(new QLabel(tr("X :")));
+	posLayout->addWidget(arrowX);
+	posLayout->addWidget(new QLabel(tr("Y :")));
+	posLayout->addWidget(arrowY);
+	posLayout->addWidget(new QLabel(tr("Z :")));
+	posLayout->addWidget(arrowZ);
+	posLayout->addStretch();
+
+	QGridLayout *layout = new QGridLayout(ret);
+	layout->addWidget(arrowList, 0, 0, 4, 1, Qt::AlignLeft);
+	layout->addWidget(new QLabel(tr("Position :")), 0, 1);
+	layout->addLayout(posLayout, 1, 1);
+	layout->addWidget(arrowType, 2, 1);
+	layout->setRowStretch(3, 1);
+
+	connect(arrowList, SIGNAL(currentRowChanged(int)), SLOT(setCurrentArrow(int)));
+	connect(arrowX, SIGNAL(valueChanged(double)), SLOT(editArrowX(double)));
+	connect(arrowY, SIGNAL(valueChanged(double)), SLOT(editArrowY(double)));
+	connect(arrowZ, SIGNAL(valueChanged(double)), SLOT(editArrowZ(double)));
+	connect(arrowType, SIGNAL(currentIndexChanged(int)), SLOT(editArrowType(int)));
+
+	return ret;
+}
+
 QWidget *WalkmeshManager::buildCameraRangePage()
 {
 	QWidget *ret = new QWidget(this);
 
-	rangeList1 = new QListWidget(ret);
-	rangeList1->setFixedWidth(125);
-
-	for(int i=0 ; i<1 ; ++i) {
-		rangeList1->addItem(tr("Limite caméra %1").arg(i+1));
-	}
-
-	rangeList2 = new QListWidget(ret);
-	rangeList2->setFixedWidth(125);
-
-	for(int i=0 ; i<1 ; ++i) {
-		rangeList2->addItem(tr("Limite écran %1").arg(i+1));
-	}
+	QGroupBox *group1 = new QGroupBox(tr("Limites caméra"), ret);
+	QGroupBox *group2 = new QGroupBox(tr("Inconnu"), ret);
 
 	for(int i=0 ; i<4 ; ++i) {
-		rangeEdit1[i] = new QSpinBox(ret);
+		rangeEdit1[i] = new QSpinBox(group1);
 		rangeEdit1[i]->setRange(-32768, 32767);
-		rangeEdit2[i] = new QSpinBox(ret);
+		rangeEdit2[i] = new QSpinBox(group2);
 		rangeEdit2[i]->setRange(-32768, 32767);
 	}
 
-	QGridLayout *layout = new QGridLayout(ret);
-	layout->addWidget(rangeList1, 0, 0, 3, 1, Qt::AlignLeft);
-	layout->addWidget(rangeList2, 3, 0, 3, 1, Qt::AlignLeft);
-	layout->addWidget(new QLabel(tr("Haut")), 0, 1);
-	layout->addWidget(rangeEdit1[0], 0, 2);
-	layout->addWidget(new QLabel(tr("Bas")), 0, 3);
-	layout->addWidget(rangeEdit1[1], 0, 4);
-	layout->addWidget(new QLabel(tr("Droite")), 1, 1);
-	layout->addWidget(rangeEdit1[2], 1, 2);
-	layout->addWidget(new QLabel(tr("Gauche")), 1, 3);
-	layout->addWidget(rangeEdit1[3], 1, 4);
-	layout->addWidget(new QLabel(tr("Haut")), 3, 1);
-	layout->addWidget(rangeEdit2[0], 3, 2);
-	layout->addWidget(new QLabel(tr("Bas")), 3, 3);
-	layout->addWidget(rangeEdit2[1], 3, 4);
-	layout->addWidget(new QLabel(tr("Droite")), 4, 1);
-	layout->addWidget(rangeEdit2[2], 4, 2);
-	layout->addWidget(new QLabel(tr("Gauche")), 4, 3);
-	layout->addWidget(rangeEdit2[3], 4, 4);
-	layout->setRowStretch(2, 1);
-	layout->setRowStretch(5, 1);
-	layout->setColumnStretch(1, 1);
-	layout->setColumnStretch(2, 1);
-	layout->setColumnStretch(3, 1);
-	layout->setColumnStretch(4, 1);
+	QGridLayout *layout1 = new QGridLayout(group1);
+	layout1->addWidget(new QLabel(tr("Haut")), 0, 0);
+	layout1->addWidget(rangeEdit1[0], 0, 1);
+	layout1->addWidget(new QLabel(tr("Bas")), 0, 2);
+	layout1->addWidget(rangeEdit1[1], 0, 3);
+	layout1->addWidget(new QLabel(tr("Droite")), 1, 0);
+	layout1->addWidget(rangeEdit1[2], 1, 1);
+	layout1->addWidget(new QLabel(tr("Gauche")), 1, 2);
+	layout1->addWidget(rangeEdit1[3], 1, 3);
+	layout1->setColumnStretch(0, 1);
+	layout1->setColumnStretch(1, 1);
+	layout1->setColumnStretch(2, 1);
+	layout1->setColumnStretch(3, 1);
 
-	connect(rangeList1, SIGNAL(currentRowChanged(int)), SLOT(setCurrentRange1(int)));
-	connect(rangeList2, SIGNAL(currentRowChanged(int)), SLOT(setCurrentRange2(int)));
+	QGridLayout *layout2 = new QGridLayout(group2);
+	layout2->addWidget(new QLabel(tr("Haut")), 0, 0);
+	layout2->addWidget(rangeEdit2[0], 0, 1);
+	layout2->addWidget(new QLabel(tr("Bas")), 0, 2);
+	layout2->addWidget(rangeEdit2[1], 0, 3);
+	layout2->addWidget(new QLabel(tr("Droite")), 1, 0);
+	layout2->addWidget(rangeEdit2[2], 1, 1);
+	layout2->addWidget(new QLabel(tr("Gauche")), 1, 2);
+	layout2->addWidget(rangeEdit2[3], 1, 3);
+	layout2->setRowStretch(2, 1);
+	layout2->setColumnStretch(0, 1);
+	layout2->setColumnStretch(1, 1);
+	layout2->setColumnStretch(2, 1);
+	layout2->setColumnStretch(3, 1);
+
+	QVBoxLayout *layout = new QVBoxLayout(ret);
+	layout->addWidget(group1);
+	layout->addWidget(group2);
+	layout->addStretch();
+
 	for(int i=0 ; i<4 ; ++i) {
 		connect(rangeEdit1[i], SIGNAL(valueChanged(int)), SLOT(editRange(int)));
 		connect(rangeEdit2[i], SIGNAL(valueChanged(int)), SLOT(editRange(int)));
@@ -353,34 +397,55 @@ QWidget *WalkmeshManager::buildMiscPage()
 	navigation2->setRange(0, 255);
 	navigation2->setWrapping(true);
 
-//	unknown = new HexLineEdit(ret);
-//	cameraFocus = new QSpinBox(ret);
-//	cameraFocus->setRange(0, 65535);
+	unknown0 = new HexLineEdit(ret);
+	unknown1 = new HexLineEdit(ret);
+	unknown2 = new HexLineEdit(ret);
 
 	QGridLayout *layout = new QGridLayout(ret);
 	layout->addWidget(new QLabel(tr("Orientation des mouvements :")), 0, 0);
 	layout->addWidget(navigation, 0, 1);
 	layout->addWidget(navigation2, 0, 2);
-//	layout->addWidget(new QLabel(tr("Inconnu :")), 1, 0);
-//	layout->addWidget(unknown, 1, 1, 1, 2);
-//	layout->addWidget(new QLabel(tr("Hauteur focus caméra sur le personnage :")), 2, 0);
-//	layout->addWidget(cameraFocus, 2, 1, 1, 2);
+	layout->addWidget(new QLabel(tr("Inconnu 1 :")), 1, 0);
+	layout->addWidget(unknown0, 1, 1, 1, 2);
+	layout->addWidget(new QLabel(tr("Inconnu 2 :")), 2, 0);
+	layout->addWidget(unknown1, 2, 1, 1, 2);
+	layout->addWidget(new QLabel(tr("Inconnu 3 :")), 3, 0);
+	layout->addWidget(unknown2, 3, 1, 1, 2);
 	layout->setRowStretch(4, 1);
 
 	connect(navigation, SIGNAL(valueEdited(int)), navigation2, SLOT(setValue(int)));
 	connect(navigation2, SIGNAL(valueChanged(int)), SLOT(editNavigation(int)));
-//	connect(unknown, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknown(QByteArray)));
-//	connect(cameraFocus, SIGNAL(valueChanged(int)), SLOT(editCameraFocus(int)));
+	connect(unknown0, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknown0(QByteArray)));
+	connect(unknown1, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknown1(QByteArray)));
+	connect(unknown2, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknown2(QByteArray)));
 
 	return ret;
 }
 
-void WalkmeshManager::fill()
+void WalkmeshManager::fill(FieldArchive *fieldArchive, Field *field)
 {
+	infFile = field->getInf();
+	if(!infFile->isOpen())
+		infFile->open(fieldArchive->getFieldData(field));
+	idFile = field->getId();
+	if(!idFile->isOpen())
+		idFile->open(fieldArchive->getFieldData(field));
+	caFile = field->getCa();
+	if(!caFile->isOpen())
+		caFile->open(fieldArchive->getFieldData(field));
+
+	if(!idFile->isOpen() || !caFile->isOpen() || !infFile->isOpen()) {
+		QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Erreur d'ouverture du walkmesh"));
+	}
+
 	int camCount = 0;
 
-	if(walkmeshFile->isOpenCa()) {
-		camCount = 1; // TODO
+	if(walkmesh) {
+		walkmesh->fill(idFile, caFile, infFile);
+	}
+
+	if(caFile->isOpen()) {
+		camCount = caFile->cameraCount();
 
 		if(camList->count() != camCount) {
 			camList->blockSignals(true);
@@ -393,10 +458,10 @@ void WalkmeshManager::fill()
 
 		setCurrentCamera(0);
 	}
-	tabWidget->widget(0)->setEnabled(walkmeshFile->isOpenCa() && camCount > 0);
+	tabWidget->widget(0)->setEnabled(caFile->isOpen() && camCount > 0);
 
-	if(walkmeshFile->isOpenId()) {
-		int triangleCount = walkmeshFile->triangles.size();
+	if(idFile->isOpen()) {
+		int triangleCount = idFile->triangleCount();
 
 		if(idList->count() != triangleCount) {
 			idList->blockSignals(true);
@@ -409,7 +474,7 @@ void WalkmeshManager::fill()
 		idList->setCurrentRow(0);
 		setCurrentId(0);
 	}
-	tabWidget->widget(1)->setEnabled(walkmeshFile->isOpenId());
+	tabWidget->widget(1)->setEnabled(idFile->isOpen());
 
 	if(infFile->isOpen()) {
 		gateList->clear();
@@ -427,47 +492,78 @@ void WalkmeshManager::fill()
 		int doorID = 0;
 		foreach(const Trigger &trigger, infFile->triggers()) {
 			if(trigger.background_parameter != 0xFF) {
-				doorList->addItem(tr("Porte %1").arg(doorID++));
+				doorList->addItem(tr("Porte %1").arg(doorID));
 			} else {
 				doorList->addItem(tr("Inutilisé"));
 			}
+			++doorID;
 		}
 		doorList->setCurrentRow(0);
 		setCurrentDoor(0);
 
-		rangeList1->setCurrentRow(0);
-		setCurrentRange1(0);
-		rangeList2->setCurrentRow(0);
-		setCurrentRange2(0);
+		if(!infFile->isJap()) {
+			arrowList->clear();
+			int arrowID = 0;
+			foreach(const Arrow &arrow, infFile->arrows()) {
+				if(arrow.type != 0) {
+					arrowList->addItem(tr("Flêche %1").arg(arrowID));
+				} else {
+					arrowList->addItem(tr("Inutilisé"));
+				}
+				++arrowID;
+			}
+			arrowList->setCurrentRow(0);
+			setCurrentArrow(0);
+		}
+		arrowDisplay->setVisible(!infFile->isJap());
+
+		const Range &range1 = infFile->cameraRange();
+
+		rangeEdit1[0]->setValue(range1.top);
+		rangeEdit1[1]->setValue(range1.bottom);
+		rangeEdit1[2]->setValue(range1.right);
+		rangeEdit1[3]->setValue(range1.left);
+
+		const Range &range2 = infFile->screenRange();
+
+		rangeEdit2[0]->setValue(range2.top);
+		rangeEdit2[1]->setValue(range2.bottom);
+		rangeEdit2[2]->setValue(range2.right);
+		rangeEdit2[3]->setValue(range2.left);
 
 		navigation->setValue(infFile->control());
 		navigation2->setValue(infFile->control());
-//		unknown->setData(infFile->unknown());
-//		cameraFocus->setValue(data()->getInfFile()->cameraFocusHeight());
+
+		unknown0->setData(infFile->unknown0());
+		unknown1->setData(infFile->unknown1());
+		unknown2->setData(infFile->unknown2());
 	}
 	tabWidget->widget(2)->setEnabled(infFile->isOpen());
 	tabWidget->widget(3)->setEnabled(infFile->isOpen());
-	tabWidget->widget(4)->setEnabled(infFile->isOpen());
+	tabWidget->widget(4)->setEnabled(infFile->isOpen() && !infFile->isJap());
 	tabWidget->widget(5)->setEnabled(infFile->isOpen());
+	tabWidget->widget(6)->setEnabled(infFile->isOpen());
 }
 
 int WalkmeshManager::currentCamera() const
 {
-	if(!walkmeshFile->isOpenCa())	return 0;
+	if(!caFile->isOpen())	return 0;
 
 	int camID = camList->currentRow();
-	return camID < 0 || camID >= 1 ? 0 : camID;//TODO: camCount
+	return camID < 0 || camID >= caFile->cameraCount() ? 0 : camID;
 }
 
 void WalkmeshManager::setCurrentCamera(int camID)
 {
-	if(!walkmeshFile->isOpenCa() || camID < 0) {
+	if(!caFile->isOpen() || camID < 0) {
 		return;
 	}
 
-	bool hasCamera = camID < 1;//TODO: camCount
+	bool hasCamera = camID < caFile->cameraCount();
 
 	if(hasCamera) {
+		const Camera &cam = caFile->camera(camID);
+
 		caVectorXEdit->blockSignals(true);
 		caVectorYEdit->blockSignals(true);
 		caVectorZEdit->blockSignals(true);
@@ -476,17 +572,17 @@ void WalkmeshManager::setCurrentCamera(int camID)
 		caSpaceZEdit->blockSignals(true);
 		caZoomEdit->blockSignals(true);
 
-		caVectorXEdit->setValues(walkmeshFile->camera_axis[0]);
-		caVectorYEdit->setValues(walkmeshFile->camera_axis[1]);
-		caVectorZEdit->setValues(walkmeshFile->camera_axis[2]);
+		caVectorXEdit->setValues(cam.camera_axis[0]);
+		caVectorYEdit->setValues(cam.camera_axis[1]);
+		caVectorZEdit->setValues(cam.camera_axis[2]);
 
-		caSpaceXEdit->setValue(walkmeshFile->camera_position[0]);
-		caSpaceYEdit->setValue(walkmeshFile->camera_position[1]);
-		caSpaceZEdit->setValue(walkmeshFile->camera_position[2]);
+		caSpaceXEdit->setValue(cam.camera_position[0]);
+		caSpaceYEdit->setValue(cam.camera_position[1]);
+		caSpaceZEdit->setValue(cam.camera_position[2]);
 
-		caZoomEdit->setValue(walkmeshFile->camera_zoom);
+		caZoomEdit->setValue(cam.camera_zoom);
 
-//		walkmesh->setCurrentFieldCamera(camID);
+		walkmesh->setCurrentFieldCamera(camID);
 		caVectorXEdit->blockSignals(false);
 		caVectorYEdit->blockSignals(false);
 		caVectorZEdit->blockSignals(false);
@@ -515,42 +611,44 @@ void WalkmeshManager::setCurrentCamera(int camID)
 
 void WalkmeshManager::addCamera()
 {
-	/*int row = camList->currentRow();
+	int row = camList->currentRow();
 
-	if(walkmeshFile->isOpenCa()) {
-		CaStruct ca;
-		if(row < data()->getCaFile()->cameraCount()) {
-			ca = data()->getCaFile()->camera(row);
+	if(caFile->isOpen()) {
+		Camera ca;
+		if(row < caFile->cameraCount()) {
+			ca = caFile->camera(row);
 		} else {
-			memset(&ca, 0, sizeof(CaStruct));
+			memset(&ca, 0, sizeof(Camera));
 		}
-		data()->getCaFile()->insertCamera(row+1, ca);
+		caFile->insertCamera(row+1, ca);
 		camList->insertItem(row+1, tr("Camera %1").arg(row+1));
 		for(int i=row+2 ; i<camList->count() ; ++i) {
 			camList->item(i)->setText(tr("Camera %1").arg(i));
 		}
 		camList->setCurrentRow(row+1);
+
 		emit modified();
-	}*/
+	}
 }
 
 void WalkmeshManager::removeCamera()
 {
-	/*if(data()->getCaFile()->cameraCount() < 2) return;
+	if(caFile->cameraCount() < 2) return;
 
 	int row = camList->currentRow();
 
 	if(row < 0)		return;
 
-	if(walkmeshFile->isOpenCa() && row < data()->getCaFile()->cameraCount()) {
-		data()->getCaFile()->removeCamera(row);
+	if(caFile->isOpen() && row < caFile->cameraCount()) {
+		caFile->removeCamera(row);
 		delete camList->item(row);
 		for(int i=row ; i<camList->count() ; ++i) {
 			camList->item(i)->setText(tr("Camera %1").arg(i));
 		}
 		setCurrentCamera(row);
+
 		emit modified();
-	}*/
+	}
 }
 
 void WalkmeshManager::editCaVector(const Vertex_s &values)
@@ -564,16 +662,16 @@ void WalkmeshManager::editCaVector(const Vertex_s &values)
 
 void WalkmeshManager::editCaVector(int id, const Vertex_s &values)
 {
-	qDebug() << "editCaVector" << id;
-	if(walkmeshFile->isOpenCa()/* && data()->getCaFile()->cameraCount() > 0*/) {
-//		const int camID = currentCamera();
-//		CaStruct cam = data()->getCaFile()->camera(camID);
-		Vertex_s oldV = walkmeshFile->camera_axis[id];
+	if(caFile->isOpen() && caFile->hasCamera()) {
+		const int camID = currentCamera();
+		Camera cam = caFile->camera(camID);
+		Vertex_s oldV = cam.camera_axis[id];
 
 		if(oldV.x != values.x || oldV.y != values.y || oldV.z != values.z) {
-			walkmeshFile->camera_axis[id] = values;
-//			data()->getCaFile()->setCamera(camID, cam);
+			cam.camera_axis[id] = values;
+			caFile->setCamera(camID, cam);
 			walkmesh->updateGL();
+
 			emit modified();
 		}
 	}
@@ -590,13 +688,14 @@ void WalkmeshManager::editCaPos(double value)
 
 void WalkmeshManager::editCaPos(int id, double value)
 {
-	if(walkmeshFile->isOpenCa()/* && data()->getCaFile()->cameraCount() > 0*/) {
-//		const int camID = currentCamera();
-//		CaStruct cam = data()->getCaFile()->camera(camID);
-		if(walkmeshFile->camera_position[id] != (qint32)value) {
-			walkmeshFile->camera_position[id] = value;
-//			data()->getCaFile()->setCamera(camID, cam);
+	if(caFile->isOpen() && caFile->hasCamera()) {
+		const int camID = currentCamera();
+		Camera cam = caFile->camera(camID);
+		if(cam.camera_position[id] != (qint32)value) {
+			cam.camera_position[id] = value;
+			caFile->setCamera(camID, cam);
 			walkmesh->updateGL();
+
 			emit modified();
 		}
 	}
@@ -604,13 +703,14 @@ void WalkmeshManager::editCaPos(int id, double value)
 
 void WalkmeshManager::editCaZoom(int value)
 {
-	if(walkmeshFile->isOpenCa()/* && data()->getCaFile()->cameraCount() > 0*/) {
-//		const int camID = currentCamera();
-//		CaStruct cam = data()->getCaFile()->camera(camID);
-		if(walkmeshFile->camera_zoom != value) {
-			walkmeshFile->camera_zoom = value;
-//			data()->getCaFile()->setCamera(camID, cam);
-//			walkmesh->updatePerspective();
+	if(caFile->isOpen() && caFile->hasCamera()) {
+		const int camID = currentCamera();
+		Camera cam = caFile->camera(camID);
+		if(cam.camera_zoom != value) {
+			cam.camera_zoom = value;
+			caFile->setCamera(camID, cam);
+			walkmesh->updatePerspective();
+
 			emit modified();
 		}
 	}
@@ -618,45 +718,45 @@ void WalkmeshManager::editCaZoom(int value)
 
 void WalkmeshManager::setCurrentId(int i)
 {
-	if(!walkmeshFile->isOpenId() || i < 0)	return;
+	if(!idFile->isOpen() || i < 0)	return;
 
-	if(walkmeshFile->triangles.size() <= i)	return;
+	if(idFile->triangleCount() <= i)	return;
 
-	const Triangle &triangle = walkmeshFile->triangles.at(i);
-	const Access &access = walkmeshFile->access.at(i);
+	const Triangle &triangle = idFile->triangle(i);
+	const Access &access = idFile->access(i);
 
-	idVertices[0]->setValues(WalkmeshFile::toVertex_s(triangle.vertices[0]));
-	idVertices[1]->setValues(WalkmeshFile::toVertex_s(triangle.vertices[1]));
-	idVertices[2]->setValues(WalkmeshFile::toVertex_s(triangle.vertices[2]));
+	idVertices[0]->setValues(IdFile::toVertex_s(triangle.vertices[0]));
+	idVertices[1]->setValues(IdFile::toVertex_s(triangle.vertices[1]));
+	idVertices[2]->setValues(IdFile::toVertex_s(triangle.vertices[2]));
 
 	idAccess[0]->setValue(access.a[0]);
 	idAccess[1]->setValue(access.a[1]);
 	idAccess[2]->setValue(access.a[2]);
 
-//	walkmesh->setSelectedTriangle(i);
+	walkmesh->setSelectedTriangle(i);
 }
 
 void WalkmeshManager::addTriangle()
 {
 	int row = idList->currentRow();
 
-	if(walkmeshFile->isOpenId()) {
+	if(idFile->isOpen()) {
 		Triangle tri;
 		Access acc;
-		if(row < walkmeshFile->triangles.size()) {
-			tri = walkmeshFile->triangles.at(row);
-			acc = walkmeshFile->access.at(row);
+		if(row < idFile->triangleCount()) {
+			tri = idFile->triangle(row);
+			acc = idFile->access(row);
 		} else {
 			memset(&tri, 0, sizeof(Triangle));
 			memset(&acc, 0, sizeof(Access));
 		}
-		walkmeshFile->triangles.insert(row+1, tri);
-		walkmeshFile->access.insert(row+1, acc);
+		idFile->insertTriangle(row+1, tri, acc);
 		idList->insertItem(row+1, tr("Triangle %1").arg(row+1));
 		for(int i=row+2 ; i<idList->count() ; ++i) {
 			idList->item(i)->setText(tr("Triangle %1").arg(i));
 		}
 		idList->setCurrentRow(row+1);
+
 		emit modified();
 	}
 }
@@ -667,14 +767,14 @@ void WalkmeshManager::removeTriangle()
 
 	if(row < 0)		return;
 
-	if(walkmeshFile->isOpenId() && row < walkmeshFile->triangles.size()) {
-		walkmeshFile->triangles.removeAt(row);
-		walkmeshFile->access.removeAt(row);
+	if(idFile->isOpen() && row < idFile->triangleCount()) {
+		idFile->removeTriangle(row);
 		delete idList->item(row);
 		for(int i=row ; i<idList->count() ; ++i) {
 			idList->item(i)->setText(tr("Triangle %1").arg(i));
 		}
 		setCurrentId(row);
+
 		emit modified();
 	}
 }
@@ -690,15 +790,16 @@ void WalkmeshManager::editIdTriangle(const Vertex_s &values)
 
 void WalkmeshManager::editIdTriangle(int id, const Vertex_s &values)
 {
-	if(walkmeshFile->isOpenId()) {
+	if(idFile->isOpen()) {
 		const int triangleID = idList->currentRow();
-		if(triangleID > -1 && triangleID < walkmeshFile->triangles.size()) {
-			Triangle old = walkmeshFile->triangles.at(triangleID);
+		if(triangleID > -1 && triangleID < idFile->triangleCount()) {
+			Triangle old = idFile->triangle(triangleID);
 			Vertex_sr &oldV = old.vertices[id];
 			if(oldV.x != values.x || oldV.y != values.y || oldV.z != values.z) {
-				oldV = WalkmeshFile::fromVertex_s(values);
-				walkmeshFile->triangles.replace(triangleID, old);
+				oldV = IdFile::fromVertex_s(values);
+				idFile->setTriangle(triangleID, old);
 				walkmesh->updateGL();
+
 				emit modified();
 			}
 		}
@@ -716,15 +817,16 @@ void WalkmeshManager::editIdAccess(int value)
 
 void WalkmeshManager::editIdAccess(int id, int value)
 {
-	if(walkmeshFile->isOpenId()) {
+	if(idFile->isOpen()) {
 		const int triangleID = idList->currentRow();
-		if(triangleID > -1 && triangleID < walkmeshFile->access.size()) {
-			Access old = walkmeshFile->access.at(triangleID);
+		if(triangleID > -1 && triangleID < idFile->triangleCount()) {
+			Access old = idFile->access(triangleID);
 			qint16 oldV = old.a[id];
 			if(oldV != value) {
 				old.a[id] = value;
-				walkmeshFile->access.replace(triangleID, old);
+				idFile->setAccess(triangleID, old);
 				walkmesh->updateGL();
+
 				emit modified();
 			}
 		}
@@ -741,10 +843,13 @@ void WalkmeshManager::setCurrentGateway(int id)
 	exitPoints[1]->setValues(gateway.exit_line[1]);
 	entryPoint->setValues(gateway.destination);
 	fieldId->setValue(gateway.fieldID);
+	if(!infFile->isJap()) {
+		arrowDisplay->setChecked(infFile->arrowIsDisplayed(id));
+	}
 
 	unknownExit->setData(QByteArray((char *)&gateway.u1, 4));
 
-//	walkmesh->setSelectedGate(id);
+	walkmesh->setSelectedGate(id);
 }
 
 void WalkmeshManager::setCurrentDoor(int id)
@@ -760,7 +865,27 @@ void WalkmeshManager::setCurrentDoor(int id)
 	doorBehavior->setValue(trigger.behavior);
 	doorSoundId->setValue(trigger.soundID);
 
-//	walkmesh->setSelectedDoor(id);
+	walkmesh->setSelectedDoor(id);
+}
+
+void WalkmeshManager::setCurrentArrow(int id)
+{
+	if(!infFile->isOpen() || id < 0 || 12 <= id)    return;
+
+	const Arrow &arrow = infFile->arrow(id);
+
+	arrowX->setValue(arrow.positionX);
+	arrowY->setValue(arrow.positionY);
+	arrowZ->setValue(arrow.positionZ);
+	int index = arrowType->findData(arrow.type);
+	if(index != -1) {
+		arrowType->setCurrentIndex(index);
+	} else {
+		arrowType->addItem(tr("?"), arrow.type);
+		arrowType->setCurrentIndex(arrowType->count()-1);
+	}
+
+	walkmesh->setSelectedArrow(id);
 }
 
 void WalkmeshManager::editExitPoint(const Vertex_s &values)
@@ -781,6 +906,7 @@ void WalkmeshManager::editExitPoint(int id, const Vertex_s &values)
 			old.exit_line[id] = values;
 			infFile->setExitLine(gateId, old);
 			walkmesh->updateGL();
+
 			emit modified();
 		}
 	}
@@ -795,6 +921,7 @@ void WalkmeshManager::editEntryPoint(const Vertex_s &values)
 		if(oldVertex.x != values.x || oldVertex.y != values.y || oldVertex.z != values.z) {
 			old.destination = values;
 			infFile->setExitLine(gateId, old);
+
 			emit modified();
 		}
 	}
@@ -818,6 +945,7 @@ void WalkmeshManager::editDoorPoint(int id, const Vertex_s &values)
 			old.trigger_line[id] = values;
 			infFile->setTrigger(gateId, old);
 			walkmesh->updateGL();
+
 			emit modified();
 		}
 	}
@@ -832,6 +960,7 @@ void WalkmeshManager::editUnknownExit(const QByteArray &u)
 		memcpy(&old.u1, uData, 4);
 		if(old.u1 != infFile->exitLine(gateId).u1) {
 			infFile->setExitLine(gateId, old);
+
 			emit modified();
 		}
 	}
@@ -850,6 +979,18 @@ void WalkmeshManager::editFieldId(int v)
 			} else {
 				gateList->currentItem()->setText(tr("Inutilisé"));
 			}
+
+			emit modified();
+		}
+	}
+}
+
+void WalkmeshManager::editArrowDisplay(bool checked)
+{
+	if(infFile->isOpen()) {
+		int gateId = gateList->currentRow();
+		if(infFile->arrowIsDisplayed(gateId) != checked) {
+			infFile->setArrowDiplay(gateId, checked);
 
 			emit modified();
 		}
@@ -921,28 +1062,66 @@ void WalkmeshManager::editSoundId(int v)
 	}
 }
 
-void WalkmeshManager::setCurrentRange1(int id)
+void WalkmeshManager::editArrowX(double value)
 {
-	if(!infFile->isOpen())    return;
+	if(infFile->isOpen()) {
+		int arrowId = arrowList->currentRow();
+		Arrow old = infFile->arrow(arrowId);
+		if(old.positionX != value) {
+			old.positionX = value;
+			infFile->setArrow(arrowId, old);
 
-	const Range &range = infFile->cameraRange();
-
-	rangeEdit1[0]->setValue(range.top);
-	rangeEdit1[1]->setValue(range.bottom);
-	rangeEdit1[2]->setValue(range.right);
-	rangeEdit1[3]->setValue(range.left);
+			emit modified();
+		}
+	}
 }
 
-void WalkmeshManager::setCurrentRange2(int id)
+void WalkmeshManager::editArrowY(double value)
 {
-	if(!infFile->isOpen())    return;
+	if(infFile->isOpen()) {
+		int arrowId = arrowList->currentRow();
+		Arrow old = infFile->arrow(arrowId);
+		if(old.positionY != value) {
+			old.positionY = value;
+			infFile->setArrow(arrowId, old);
 
-	const Range &range = infFile->screenRange();
+			emit modified();
+		}
+	}
+}
 
-	rangeEdit2[0]->setValue(range.top);
-	rangeEdit2[1]->setValue(range.bottom);
-	rangeEdit2[2]->setValue(range.right);
-	rangeEdit2[3]->setValue(range.left);
+void WalkmeshManager::editArrowZ(double value)
+{
+	if(infFile->isOpen()) {
+		int arrowId = arrowList->currentRow();
+		Arrow old = infFile->arrow(arrowId);
+		if(old.positionZ != value) {
+			old.positionZ = value;
+			infFile->setArrow(arrowId, old);
+
+			emit modified();
+		}
+	}
+}
+
+void WalkmeshManager::editArrowType(int index)
+{
+	if(infFile->isOpen()) {
+		int arrowId = arrowList->currentRow();
+		quint32 value = arrowType->itemData(index).toUInt();
+		Arrow old = infFile->arrow(arrowId);
+		if(old.type != value) {
+			old.type = index;
+			infFile->setArrow(arrowId, old);
+			if(index != 0) {
+				arrowList->currentItem()->setText(tr("Flêche %1").arg(arrowId));
+			} else {
+				arrowList->currentItem()->setText(tr("Inutilisé"));
+			}
+
+			emit modified();
+		}
+	}
 }
 
 void WalkmeshManager::editRange(int v)
@@ -962,7 +1141,6 @@ void WalkmeshManager::editRange(int v)
 void WalkmeshManager::editRange1(int id, int v)
 {
 	if(infFile->isOpen()) {
-		const int currentRange = rangeList1->currentRow();
 		Range old = infFile->cameraRange();
 		qint16 oldv=0;
 
@@ -981,6 +1159,7 @@ void WalkmeshManager::editRange1(int id, int v)
 			case 3:	old.left = v;	break;
 			}
 			infFile->setCameraRange(old);
+
 			emit modified();
 		}
 	}
@@ -989,7 +1168,6 @@ void WalkmeshManager::editRange1(int id, int v)
 void WalkmeshManager::editRange2(int id, int v)
 {
 	if(infFile->isOpen()) {
-		const int currentRange = rangeList2->currentRow();
 		Range old = infFile->screenRange();
 		qint16 oldv=0;
 
@@ -1008,6 +1186,7 @@ void WalkmeshManager::editRange2(int id, int v)
 			case 3:	old.left = v;	break;
 			}
 			infFile->setScreenRange(old);
+
 			emit modified();
 		}
 	}
@@ -1020,27 +1199,41 @@ void WalkmeshManager::editNavigation(int v)
 		if(old != v) {
 			navigation->setValue(v);
 			infFile->setControl(v);
+
 			emit modified();
 		}
 	}
 }
 
-/*void WalkmeshManager::editUnknown(const QByteArray &u)
+void WalkmeshManager::editUnknown0(const QByteArray &data)
 {
 	if(infFile->isOpen()) {
-		if(u != data()->getInfFile()->unknown()) {
-			data()->getInfFile()->setUnknown(u);
+		QByteArray old = infFile->unknown0();
+		if(old != data) {
+			infFile->setUnknown0(data);
 			emit modified();
 		}
 	}
-}*/
+}
 
-/*void WalkmeshManager::editCameraFocus(int value)
+void WalkmeshManager::editUnknown1(const QByteArray &data)
 {
 	if(infFile->isOpen()) {
-		if(value != data()->getInfFile()->cameraFocusHeight()) {
-			data()->getInfFile()->setCameraFocusHeight(value);
+		QByteArray old = infFile->unknown1();
+		if(old != data) {
+			infFile->setUnknown1(data);
 			emit modified();
 		}
 	}
-}*/
+}
+
+void WalkmeshManager::editUnknown2(const QByteArray &data)
+{
+	if(infFile->isOpen()) {
+		QByteArray old = infFile->unknown2();
+		if(old != data) {
+			infFile->setUnknown2(data);
+			emit modified();
+		}
+	}
+}

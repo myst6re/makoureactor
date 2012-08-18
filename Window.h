@@ -134,6 +134,7 @@ private:
 	QMenu *menuLang;
 
 	TextManager *textDialog;
+	WalkmeshManager *_walkmeshManager;
 
 	QProgressBar *progression;
 	QLabel *auteurLbl;

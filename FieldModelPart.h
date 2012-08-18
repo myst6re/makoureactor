@@ -19,7 +19,7 @@
 #define FIELDMODELPART_H
 
 #include <QtGui>
-#include "WalkmeshFile.h"
+#include "IdFile.h"
 
 typedef struct {
 	quint32 version;

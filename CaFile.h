@@ -1,5 +1,5 @@
 /****************************************************************************
- ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Deling Final Fantasy VIII Field Editor
  ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
@@ -15,28 +15,42 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef MISCWIDGET_H
-#define MISCWIDGET_H
+#ifndef CAFILE_H
+#define CAFILE_H
 
-#include <QtGui>
-#include "InfFile.h"
-#include "Field.h"
-#include "Data.h"
-#include "VertexWidget.h"
+#include <QtCore>
 
-class MiscWidget : public QDialog
+typedef struct {
+	qint16 x, y, z;
+} Vertex_s;
+
+typedef struct {
+	Vertex_s camera_axis[3];
+	qint16 camera_axis2z;// copy (padding)
+	qint32 camera_position[3];
+	qint32 blank;
+	quint16 camera_zoom;
+	quint16 padding;
+} Camera;
+
+class CaFile
 {
-	Q_OBJECT
 public:
-	explicit MiscWidget(InfFile *data, Field *field, QWidget *parent=0);
+	CaFile();
+	bool open(const QByteArray &data);
+	bool save(QByteArray &ca);
+	bool isOpen() const;
+	bool isModified() const;
+	void setModified(bool modified);
+	bool hasCamera() const;
+	int cameraCount() const;
+	const Camera &camera(int camID) const;
+	void setCamera(int camID, const Camera &cam);
+	void insertCamera(int camID, const Camera &cam);
+	void removeCamera(int camID);
 private:
-	void fill();
-	InfFile *data;
-	Field *field;
-	QLineEdit *mapName, *mapAuthor;
-	QSpinBox *mapScale;
-protected:
-	void accept();
+	QList<Camera> cameras;
+	bool opened, modified;
 };
 
-#endif // MISCWIDGET_H
+#endif // CAFILE_H

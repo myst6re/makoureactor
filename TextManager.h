@@ -28,7 +28,7 @@ class TextManager : public QWidget
 	Q_OBJECT
 
 public:
-	explicit TextManager(Field *field, QWidget *parent=0);
+	explicit TextManager(QWidget *parent=0);
 	void setField(Field *field);
 	void updateText();
 signals:

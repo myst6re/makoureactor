@@ -26,7 +26,8 @@
 #include "IsoArchive.h"
 #include "EncounterFile.h"
 #include "TutFile.h"
-#include "WalkmeshFile.h"
+#include "CaFile.h"
+#include "IdFile.h"
 #include "InfFile.h"
 #include "FieldModelLoader.h"
 
@@ -161,7 +162,8 @@ public:
 
 	EncounterFile *getEncounter();
 	TutFile *getTut();
-	WalkmeshFile *getWalkmesh();
+	IdFile *getId();
+	CaFile *getCa();
 	InfFile *getInf();
 	FieldModelLoader *getFieldModelLoader();
 
@@ -199,7 +201,8 @@ private:
 
 	EncounterFile *encounter;
 	TutFile *tut;
-	WalkmeshFile *walkmesh;
+	IdFile *id;
+	CaFile *ca;
 	InfFile *inf;
 	FieldModelLoader *modelLoader;
 };

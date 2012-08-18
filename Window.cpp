@@ -18,8 +18,8 @@
 #include "Window.h"
 #include "parametres.h"
 
-Window::Window()
-	: field(0), firstShow(true), varDialog(0), textDialog(0)
+Window::Window() :
+	field(0), firstShow(true), varDialog(0), textDialog(0), _walkmeshManager(0)
 {
 	setWindowTitle(PROG_FULLNAME);
 	setMinimumSize(700,600);
@@ -349,6 +349,7 @@ int Window::fermer(bool quit)
 		setWindowTitle(PROG_FULLNAME);
 		searchDialog->close();
 		if(textDialog) 	textDialog->close();
+		if(_walkmeshManager)	_walkmeshManager->close();
 		
 		actionSave->setEnabled(false);
 		actionSaveAs->setEnabled(false);
@@ -472,7 +473,7 @@ void Window::ouvrir(const QString &cheminFic, bool isDir)
 	actionFind->setEnabled(true);
 	actionText->setEnabled(true);
 
-	fieldArchive->searchAll();
+//	fieldArchive->searchAll();
 }
 
 void Window::ouvrirField()
@@ -509,8 +510,10 @@ void Window::ouvrirField()
 		zoneScript->setEnabled(false);
 		return;
 	}
-	if(textDialog)
+	if(textDialog && textDialog->isVisible())
 		textDialog->setField(field);
+	if(_walkmeshManager && _walkmeshManager->isVisible())
+		_walkmeshManager->fill(fieldArchive, field);
 
 	//Réouvrir fichier pour afficher le background
 	zoneImage->fill(fieldArchive, field);
@@ -991,9 +994,10 @@ void Window::textManager()
 {
 	if(field) {
 		if(!textDialog) {
-			textDialog = new TextManager(field, this);
+			textDialog = new TextManager(this);
 			connect(textDialog, SIGNAL(modified()), SLOT(activerSave()));
 		}
+		textDialog->setField(field);
 		textDialog->show();
 		textDialog->raise();
 		textDialog->activateWindow();
@@ -1053,18 +1057,14 @@ void Window::tutManager()
 void Window::walkmeshManager()
 {
 	if(field) {
-		InfFile *inf = field->getInf();
-		if(!inf->isOpen())
-			inf->open(fieldArchive->getFieldData(field));
-		WalkmeshFile *walk = field->getWalkmesh();
-		if(!walk->isOpenCa() || !walk->isOpenId())
-			walk->open(fieldArchive->getFieldData(field));
-		if(walk->isOpenCa() && walk->isOpenId()) {
-			WalkmeshManager walkmeshManager(walk, inf, field, this);
-			walkmeshManager.exec();
-		} else {
-			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir le walkmesh !"));
+		if(!_walkmeshManager) {
+			_walkmeshManager = new WalkmeshManager(this);
+			connect(_walkmeshManager, SIGNAL(modified()), SLOT(activerSave()));
 		}
+
+		_walkmeshManager->fill(fieldArchive, field);
+		_walkmeshManager->show();
+		_walkmeshManager->activateWindow();
 	}
 }
 

@@ -21,22 +21,42 @@
 #include <QtGui>
 #include <QGLWidget>
 #include <GL/glu.h>
-#include "WalkmeshFile.h"
+#include "IdFile.h"
+#include "CaFile.h"
+#include "InfFile.h"
 
 class WalkmeshWidget : public QGLWidget
 {
 	Q_OBJECT
 public:
-	explicit WalkmeshWidget(WalkmeshFile *walkmesh, QWidget *parent=0);
+	explicit WalkmeshWidget(QWidget *parent=0, const QGLWidget *shareWidget=0);
+	void clear();
+	void fill(IdFile *walkmesh, CaFile *camera, InfFile *infFile);
+	void updatePerspective();
 public slots:
 	void setXRotation(int);
 	void setYRotation(int);
 	void setZRotation(int);
 	void setZoom(int);
+	void setCurrentFieldCamera(int camID);
+	void setSelectedTriangle(int triangle);
+	void setSelectedDoor(int door);
+	void setSelectedGate(int gate);
+	void setSelectedArrow(int arrow);
 private:
+	void computeFov();
+	void drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access);
 	double distance;
 	float xRot, yRot, zRot;
-	WalkmeshFile *walkmesh;
+	int camID;
+	int _selectedTriangle;
+	int _selectedDoor;
+	int _selectedGate;
+	int _selectedArrow;
+	double fovy;
+	IdFile *walkmesh;
+	CaFile *camera;
+	InfFile *infFile;
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);

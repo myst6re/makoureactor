@@ -18,17 +18,17 @@
 #include "Field.h"
 
 Field::Field()
-	: _isOpen(false), _isModified(false), name(QString()), position(0), encounter(0), tut(0), walkmesh(0), inf(0), modelLoader(0)
+	: _isOpen(false), _isModified(false), name(QString()), position(0), encounter(0), tut(0), id(0), ca(0), inf(0), modelLoader(0)
 {
 }
 
 Field::Field(const QString &name)
-	: _isOpen(false), _isModified(false), name(name), position(0), encounter(0), tut(0), walkmesh(0), inf(0), modelLoader(0)
+	: _isOpen(false), _isModified(false), name(name), position(0), encounter(0), tut(0), id(0), ca(0), inf(0), modelLoader(0)
 {
 }
 
 Field::Field(quint32 position, const QString &name)
-	: _isOpen(false), _isModified(false), name(name), position(position), encounter(0), tut(0), walkmesh(0), inf(0), modelLoader(0)
+	: _isOpen(false), _isModified(false), name(name), position(position), encounter(0), tut(0), id(0), ca(0), inf(0), modelLoader(0)
 {
 }
 
@@ -38,7 +38,8 @@ Field::~Field()
 	foreach(FF7Text *texte, textes)	delete texte;
 	if(encounter)		delete encounter;
 	if(tut)				delete tut;
-	if(walkmesh)		delete walkmesh;
+	if(id)				delete id;
+	if(ca)				delete ca;
 	if(inf)				delete inf;
 	if(modelLoader)		delete modelLoader;
 }
@@ -1328,10 +1329,16 @@ TutFile *Field::getTut()
 	return tut = new TutFile();
 }
 
-WalkmeshFile *Field::getWalkmesh()
+IdFile *Field::getId()
 {
-	if(walkmesh)	return walkmesh;
-	return walkmesh = new WalkmeshFile();
+	if(id)	return id;
+	return id = new IdFile();
+}
+
+CaFile *Field::getCa()
+{
+	if(ca)	return ca;
+	return ca = new CaFile();
 }
 
 InfFile *Field::getInf()
@@ -1409,10 +1416,8 @@ void Field::setSaved()
 {
 	if(encounter)	encounter->setModified(false);
 	if(tut)			tut->setModified(false);
-	if(walkmesh) {
-		walkmesh->setModifiedId(false);
-		walkmesh->setModifiedCa(false);
-	}
+	if(id)			id->setModified(false);
+	if(ca)			ca->setModified(false);
 	if(inf)			inf->setModified(false);
 }
 
@@ -1439,10 +1444,9 @@ QByteArray Field::save(const QByteArray &fileData, bool compress)
 	toc.append((char *)&size, 4);
 
 	// Section 2 (camera)
-	if(walkmesh && walkmesh->isModifiedCa()) {
-		section = walkmesh->saveCa();
+	section = QByteArray();
+	if(ca && ca->isModified() && ca->save(section)) {
 		section_size = section.size();
-
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
 		newData.append(&decompresseData[debutSections[1]], debutSections[2]-debutSections[1]);
@@ -1467,10 +1471,9 @@ QByteArray Field::save(const QByteArray &fileData, bool compress)
 	toc.append((char *)&size, 4);
 
 	// Section 5 (walkmesh)
-	if(walkmesh && walkmesh->isModifiedId()) {
-		section = walkmesh->saveId();
+	section = QByteArray();
+	if(id && id->isModified() && id->save(section)) {
 		section_size = section.size();
-
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
 		newData.append(&decompresseData[debutSections[4]], debutSections[5]-debutSections[4]);
@@ -1557,8 +1560,9 @@ QByteArray Field::saveDat(const QByteArray &fileData, bool compress)
 	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
 
 	// Section 2 (walkmesh)
-	if(walkmesh && walkmesh->isModifiedId()) {
-		newData.append(walkmesh->saveId());
+	QByteArray section;
+	if(id && id->isModified() && id->save(section)) {
+		newData.append(section);
 	} else {
 		newData.append(decompresse.mid(debutSections[1]-padd, debutSections[2]-debutSections[1]));
 	}
@@ -1569,8 +1573,9 @@ QByteArray Field::saveDat(const QByteArray &fileData, bool compress)
 	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
 
 	// Section 4 (camera)
-	if(walkmesh && walkmesh->isModifiedCa()) {
-		newData.append(walkmesh->saveCa());
+	section = QByteArray();
+	if(ca && ca->isModified() && ca->save(section)) {
+		newData.append(section);
 	} else {
 		newData.append(decompresse.mid(debutSections[3]-padd, debutSections[4]-debutSections[3]));
 	}
@@ -1774,11 +1779,15 @@ qint8 Field::importer(const QString &path, FieldParts part)
 		if(!enc->open(contenu))		return 3;
 		enc->setModified(true);
 	}
-	if(part.testFlag(Walkmesh) || part.testFlag(Camera)) {
-		WalkmeshFile *walk = getWalkmesh();
-		if(!walk->open(contenu, part.testFlag(Camera)))	return 3;
-		if(part.testFlag(Walkmesh))		walk->setModifiedCa(true);
-		if(part.testFlag(Camera))		walk->setModifiedId(true);
+	if(part.testFlag(Walkmesh)) {
+		IdFile *walk = getId();
+		if(!walk->open(contenu))	return 3;
+		walk->setModified(true);
+	}
+	if(part.testFlag(Camera)) {
+		CaFile *ca = getCa();
+		if(!ca->open(contenu))		return 3;
+		ca->setModified(true);
 	}
 	if(part.testFlag(Inf)) {
 		InfFile *inf = getInf();
