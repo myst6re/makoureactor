@@ -68,7 +68,7 @@ private slots:
 	void editRange(int v);
 	void editUnknownExit(const QByteArray &u);
 	void editNavigation(int v);
-	void editUnknown0(const QByteArray &data);
+	void editCameraFocusHeight(int value);
 	void editUnknown1(const QByteArray &data);
 	void editUnknown2(const QByteArray &data);
 private:
@@ -85,8 +85,8 @@ private:
 	void editIdAccess(int id, int value);
 	void editExitPoint(int id, const Vertex_s &values);
 	void editDoorPoint(int id, const Vertex_s &values);
-	void editRange1(int id, int v);
-	void editRange2(int id, int v);
+	void editRange(int id, int v);
+	void editBgSize(int id, int v);
 
 	IdFile *idFile;
 	CaFile *caFile;
@@ -119,11 +119,11 @@ private:
 	QSpinBox *bgParamId, *bgStateId, *doorBehavior, *doorSoundId;
 	VertexWidget *doorPosition[2];
 	//CameraRangePage
-	QSpinBox *rangeEdit1[4], *rangeEdit2[4];
+	QSpinBox *rangeEdit[4], *bgSizeEdit[4];
 	//MiscPage
 	OrientationWidget *navigation;
-	QSpinBox *navigation2;
-	HexLineEdit *unknown0, *unknown1, *unknown2;
+	QSpinBox *navigation2, *cameraFocusHeight;
+	HexLineEdit *unknown1, *unknown2;
 };
 
 #endif // WALKMESHMANAGER_H

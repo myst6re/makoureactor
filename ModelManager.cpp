@@ -80,8 +80,15 @@ ModelManager::ModelManager(Field *field, const QGLWidget *shareWidget, QWidget *
 	model_anims->setHeaderLabel(tr("Animations"));
 	model_anims->setFixedWidth(120);
 
-	model_preview = Config::value("OpenGL", true).toBool() ? new FieldModel(0, shareWidget) : 0;
-	QWidget *modelWidget = model_preview ? model_preview : new QWidget(this);
+	QWidget *modelWidget;
+	if(Config::value("OpenGL", true).toBool()) {
+		model_preview = new FieldModel(0, shareWidget);
+		modelWidget = model_preview;
+		model_preview->setFixedSize(304, 214);
+	} else {
+		model_preview = 0;
+		modelWidget = new QWidget(this);
+	}
 
 	QGridLayout *frameLayout = new QGridLayout();
 	frameLayout->addWidget(new QLabel(tr("Nom (non utilisé)")), 0, 0);

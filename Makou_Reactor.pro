@@ -63,7 +63,9 @@ HEADERS += ApercuBG.h \
     HexLineEdit.h \
     Listwidget.h \
     IdFile.h \
-    CaFile.h
+    CaFile.h \
+    FieldModelPartPS.h \
+    FieldModelPartPC.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -120,7 +122,9 @@ SOURCES += ApercuBG.cpp \
     HexLineEdit.cpp \
     Listwidget.cpp \
     IdFile.cpp \
-    CaFile.cpp
+    CaFile.cpp \
+    FieldModelPartPS.cpp \
+    FieldModelPartPC.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts

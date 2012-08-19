@@ -19,7 +19,8 @@
 #define FIELDMODELFILE_H
 
 #include <QtGui>
-#include "FieldModelPart.h"
+#include "FieldModelPartPC.h"
+#include "FieldModelPartPS.h"
 #include "Data.h"
 #include "Palette.h"
 
@@ -47,7 +48,6 @@ typedef struct {
 typedef struct {
 	quint32 size;
 	quint32 offset_models;
-	quint8 unknown[4];
 } BSX_header;
 
 typedef struct {
@@ -86,8 +86,8 @@ typedef struct {
 } Bone;
 
 typedef struct {
-	quint16 size;
-	quint8 parent;
+	qint16 length;
+	qint8 parent;
 	quint8 unknown;
 } BonePS;
 
@@ -95,12 +95,13 @@ class FieldModelFile
 {
 public:
 	FieldModelFile();
+	virtual ~FieldModelFile();
 	bool isLoaded() const;
 	quint8 load(QString hrc, QString a, bool animate=false);
 	quint8 load(const QByteArray &BSX_data, int model_id);
 	void clear();
 
-	QMultiMap<int, FieldModelPart> P_files;
+	QMultiMap<int, FieldModelPart *> parts;
 	QMultiMap<int, QList<int> > tex_files;
 	QHash<int, QPixmap> loaded_tex;
 	QList<Bone> bones;

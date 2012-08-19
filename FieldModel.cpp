@@ -20,7 +20,6 @@
 FieldModel::FieldModel(QWidget *parent, const QGLWidget *shareWidget)
 	: QGLWidget(parent, shareWidget), blockAll(false), distance(-35), currentFrame(0), xRot(270*16), yRot(90*16), zRot(0)
 {
-	setFixedSize(304, 214);
 	connect(&timer, SIGNAL(timeout()), SLOT(animate()));
 }
 
@@ -29,7 +28,7 @@ void FieldModel::clear()
 	timer.stop();
 	currentFrame = 0;
 	data.clear();
-	glClearColor(0.0,0.0,0.0,0.0);
+//	glClearColor(0.0,0.0,0.0,0.0);
 }
 
 quint8 FieldModel::load(const QString &hrc, const QString &a, bool animate)
@@ -65,8 +64,8 @@ int FieldModel::nb_bones()
 
 void FieldModel::initializeGL()
 {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+//	glMatrixMode(GL_PROJECTION);
+//	glLoadIdentity();
 
 	glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_COLOR_MATERIAL);
@@ -75,77 +74,77 @@ void FieldModel::initializeGL()
 	glDisable(GL_LIGHTING);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	gluPerspective(70, 1, 1, 1000);
+//	gluPerspective(70, (double)width()/(double)height(), 0.001, 1000.0);
 }
 
 void FieldModel::drawP(int index)
 {
-	Color color;
-	color.blue = color.red = color.green = color.alpha = 0;
-	Coord coord;
-	coord.x = coord.y = 0;
-	VertexPC vertex;
-	vertex.x = vertex.y = vertex.z = 0;
-	quint32 polyID, j;
-	QList<FieldModelPart> ps = data.P_files.values(index);
+	quint32 j;
+	QList<FieldModelPart *> ps = data.parts.values(index);
 	QList<QList<int> > texss = data.tex_files.values(index);
 	QList<int> texs;
+	int pID=0;
 
-	for(int pID=0 ; pID<ps.size() ; ++pID)
-	{
-		const FieldModelPart &p = ps.at(pID);
+	foreach(FieldModelPart *p, ps) {
 		texs = texss.value(pID, QList<int>());
 
-		foreach(const Group &g, p.groups) {
-			if(g.areTexturesUsed && (int)g.textureNumber<texs.size()) {
+		foreach(const FieldModelGroup &g, p->groups()) {
+			GLuint texture_id;
+			bool hasTexture = g.textureNumber()>-1 && (int)g.textureNumber()<texs.size();
+
+			if(hasTexture) {
 				glEnable(GL_TEXTURE_2D);
 
-				GLuint texture_id = bindTexture(data.loaded_tex.value(texs.value(g.textureNumber, -1), QPixmap()), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
+				texture_id = bindTexture(data.loaded_tex.value(texs.at(g.textureNumber()), QPixmap()), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
+			}
 
-				glBegin(GL_TRIANGLES);
-				//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+			glBegin(GL_TRIANGLES);
 
-				for(polyID=0 ; polyID<g.numPolygons ; ++polyID) {
-					const Polygon_p &poly = p.polys.at(g.polygonStartIndex+polyID);
-					for(j=0 ; j<3 ; ++j) {
-						color = p.vertexColors.value(g.verticesStartIndex+poly.VertexIndex[j], color);
-						glColor3ub(color.red, color.green, color.blue);
+			foreach(const TrianglePoly &t, g.triangles()) {
 
-						coord = p.texCs.value(g.texCoordStartIndex+poly.VertexIndex[j], coord);
+				for(j=0 ; j<3 ; ++j) {
+					QRgb color = t.color(j);
+					glColor3ub(qRed(color), qGreen(color), qBlue(color));
+
+					if(hasTexture && t.hasTexture()) {
+						TexCoord coord = t.texCoord(j);
 						glTexCoord2d(coord.x, coord.y);
-
-						vertex = p.vertices.value(g.verticesStartIndex+poly.VertexIndex[j], vertex);
-						glVertex3f(vertex.x, vertex.y, vertex.z);
 					}
+
+					PolyVertex vertex = t.vertex(j);
+					glVertex3f(vertex.x, vertex.y, vertex.z);
 				}
+			}
 
-				glEnd();
+			glEnd();
 
+			glBegin(GL_QUADS);
+
+			foreach(const QuadPoly &q, g.quads()) {
+
+				for(j=0 ; j<4 ; ++j) {
+					QRgb color = q.color(j);
+					glColor3ub(qRed(color), qGreen(color), qBlue(color));
+
+					if(hasTexture && q.hasTexture()) {
+						TexCoord coord = q.texCoord(j);
+						glTexCoord2d(coord.x, coord.y);
+					}
+
+					PolyVertex vertex = q.vertex(j);
+					glVertex3f(vertex.x, vertex.y, vertex.z);
+				}
+			}
+
+			glEnd();
+
+			if(hasTexture) {
 				deleteTexture(texture_id);
 
 				glDisable(GL_TEXTURE_2D);
 			}
-			else {
-				glBegin(GL_TRIANGLES);
-				//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-
-				for(polyID=0 ; polyID<g.numPolygons ; ++polyID) {
-					const Polygon_p &poly = p.polys.at(g.polygonStartIndex+polyID);
-					for(j=0 ; j<3 ; ++j) {
-						color = p.vertexColors.value(g.verticesStartIndex+poly.VertexIndex[j], color);
-						glColor3ub(color.red, color.green, color.blue);
-
-						//vertex = p.normals.value(poly.NormalIndex[j], vertex);
-						//glNormal3f(vertex.x, vertex.y, vertex.z);
-
-						vertex = p.vertices.value(g.verticesStartIndex+poly.VertexIndex[j], vertex);
-						glVertex3f(vertex.x, vertex.y, vertex.z);
-					}
-				}
-
-				glEnd();
-			}
 		}
+		++pID;
 	}
 }
 
@@ -203,6 +202,18 @@ void FieldModel::setZRotation(int angle)
 	}
 }
 
+void FieldModel::resizeGL(int width, int height)
+{
+	glViewport(0, 0, width, height);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	gluPerspective(70, (double)width/(double)height, 0.001, 1000.0);
+
+	glMatrixMode(GL_MODELVIEW);
+}
+
 void FieldModel::paintGL()
 {
 	QStack<int> parent;
@@ -213,6 +224,8 @@ void FieldModel::paintGL()
 	glLoadIdentity();
 
 	if(!data.isLoaded())	return;
+
+	resizeGL(width(), height()); // hack (?)
 
 	gluLookAt(distance,0,0,0,0,0,0,0,1);
 

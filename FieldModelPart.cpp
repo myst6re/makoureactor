@@ -17,60 +17,112 @@
  ****************************************************************************/
 #include "FieldModelPart.h"
 
+Poly::Poly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords)
+{
+	setVertices(vertices, colors, texCoords);
+}
+
+Poly::Poly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords)
+{
+	setVertices(vertices, color, texCoords);
+}
+
+void Poly::setVertices(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords)
+{
+	_vertices = vertices;
+	_colors = colors;
+	_texCoords = texCoords;
+}
+
+void Poly::setVertices(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords)
+{
+	_vertices = vertices;
+	_colors.clear();
+	_colors.append(color);
+	_texCoords = texCoords;
+}
+
+const PolyVertex &Poly::vertex(quint8 id) const
+{
+	return _vertices.at(id);
+}
+
+QRgb Poly::color(quint8 id) const
+{
+	return _colors.value(id, _colors.first());
+}
+
+const TexCoord &Poly::texCoord(quint8 id) const
+{
+	return _texCoords.at(id);
+}
+
+bool Poly::hasTexture() const
+{
+	return !_texCoords.isEmpty();
+}
+
+QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords) :
+	Poly(vertices, colors, texCoords)
+{
+}
+
+QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords) :
+	Poly(vertices, color, texCoords)
+{
+}
+
+TrianglePoly::TrianglePoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords) :
+	Poly(vertices, colors, texCoords)
+{
+}
+
+TrianglePoly::TrianglePoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords) :
+	Poly(vertices, color, texCoords)
+{
+}
+
+FieldModelGroup::FieldModelGroup() :
+	_textureNumber(-1)
+{
+}
+
+const QList<QuadPoly> &FieldModelGroup::quads() const
+{
+	return _quads;
+}
+
+const QList<TrianglePoly> &FieldModelGroup::triangles() const
+{
+	return _triangles;
+}
+
+int FieldModelGroup::textureNumber() const
+{
+	return _textureNumber;
+}
+
+void FieldModelGroup::setTextureNumber(int texNumber)
+{
+	_textureNumber = texNumber;
+}
+
+
+void FieldModelGroup::addQuad(const QuadPoly &quad)
+{
+	_quads.append(quad);
+}
+
+void FieldModelGroup::addTriangle(const TrianglePoly &triangle)
+{
+	_triangles.append(triangle);
+}
+
 FieldModelPart::FieldModelPart()
 {
 }
 
-bool FieldModelPart::open_p(QFile *p_file)
+const QList<FieldModelGroup> &FieldModelPart::groups() const
 {
-	p_header header;
-	VertexPC vertex;
-	Coord texC;
-	Color vertexColor;
-	Polygon_p poly;
-	Group group;
-	quint32 i;
-
-	if(p_file->read((char *)&header, 128)!=128
-		|| header.version!=1 || header.off04!=1 || header.vertexType!=1)
-		return false;
-
-	for(i=0 ; i<header.numVertices ; ++i) {
-		if(p_file->read((char *)&vertex, 12)!=12)	return false;
-		vertices.append(vertex);
-//		qDebug() << "vertex" << i << vertex.x << vertex.y << vertex.z;
-	}
-
-	for(i=0 ; i<header.numNormals ; ++i) {
-		if(p_file->read((char *)&vertex, 12)!=12)	return false;
-		normals.append(vertex);
-	}
-
-	p_file->seek(p_file->pos()+header.numUnknown1*12);
-
-	for(i=0 ; i<header.numTexCs ; ++i) {
-		if(p_file->read((char *)&texC, 8)!=8)	return false;
-		this->texCs.append(texC);
-	}
-
-	for(i=0 ; i<header.numVertexColors ; ++i) {
-		if(p_file->read((char *)&vertexColor, 4)!=4)	return false;
-		this->vertexColors.append(vertexColor);
-	}
-
-	p_file->seek(p_file->pos()+(header.numPolys+header.numEdges)*4);
-
-	for(i=0 ; i<header.numPolys ; ++i) {
-		if(p_file->read((char *)&poly, 24)!=24)	return false;
-		this->polys.append(poly);
-	}
-
-	p_file->seek(p_file->pos()+header.numHundreds*100);
-
-	for(i=0 ; i<header.numGroups ; ++i) {
-		if(p_file->read((char *)&group, 56)!=56)	return false;
-		this->groups.append(group);
-	}
-
-	return true;
+	return _groups;
 }

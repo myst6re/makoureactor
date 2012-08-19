@@ -133,6 +133,17 @@ void InfFile::setControl(quint8 control)
 	_isModified = true;
 }
 
+qint16 InfFile::cameraFocusHeight() const
+{
+	return data.cameraFocusHeight;
+}
+
+void InfFile::setCameraFocusHeight(qint16 cameraFocusHeight)
+{
+	data.cameraFocusHeight = cameraFocusHeight;
+	_isModified = true;
+}
+
 const Range &InfFile::cameraRange() const
 {
 	return data.camera_range;
@@ -144,14 +155,47 @@ void InfFile::setCameraRange(const Range &range)
 	_isModified = true;
 }
 
-const Range &InfFile::screenRange() const
+qint16 InfFile::bgLayer3Width() const
 {
-	return data.unknown_range;
+	return data.bg_layer3_width;
 }
 
-void InfFile::setScreenRange(const Range &range)
+void InfFile::setBgLayer3Width(qint16 width)
 {
-	data.unknown_range = range;
+	data.bg_layer3_width = width;
+	_isModified = true;
+}
+
+qint16 InfFile::bgLayer3Height() const
+{
+	return data.bg_layer3_height;
+}
+
+void InfFile::setBgLayer3Height(qint16 height)
+{
+	data.bg_layer3_height = height;
+	_isModified = true;
+}
+
+qint16 InfFile::bgLayer4Width() const
+{
+	return data.bg_layer4_width;
+}
+
+void InfFile::setBgLayer4Width(qint16 width)
+{
+	data.bg_layer4_width = width;
+	_isModified = true;
+}
+
+qint16 InfFile::bgLayer4Height() const
+{
+	return data.bg_layer4_height;
+}
+
+void InfFile::setBgLayer4Height(qint16 height)
+{
+	data.bg_layer4_height = height;
 	_isModified = true;
 }
 
@@ -226,17 +270,6 @@ void InfFile::setArrow(quint8 id, const Arrow &arrow)
 	_isModified = true;
 }
 
-QByteArray InfFile::unknown0() const
-{
-	return QByteArray((char *)&data.u0, 2);
-}
-
-void InfFile::setUnknown0(const QByteArray &u)
-{
-	memcpy(&data.u0, u.leftJustified(2, '\0', true).constData(), 2);
-	_isModified = true;
-}
-
 QByteArray InfFile::unknown1() const
 {
 	return QByteArray((char *)&data.u1, 4);
@@ -267,9 +300,6 @@ void InfFile::test()
 //		}
 //	}
 //	return;
-	if(data.u0 != 0) {
-		qDebug() << "blank0" << QByteArray((char *)&data.u0, 2).toHex() << data.u0 << int(data.u0);
-	}
 	if(data.u1 != 0) {
 		qDebug() << "blank1" << QByteArray((char *)&data.u1, 4).toHex() << data.u1 << int((data.u1 >> 16) & 0xFFFF) << int(data.u1 & 0xFFFF);
 	}

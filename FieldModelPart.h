@@ -22,98 +22,70 @@
 #include "IdFile.h"
 
 typedef struct {
-	quint32 version;
-	quint32 off04;
-	quint32 vertexType;
-	quint32 numVertices;
-	quint32 numNormals;
-	quint32 numUnknown1;
-	quint32 numTexCs;
-	quint32 numVertexColors;
-	quint32 numEdges;
-	quint32 numPolys;
-	quint32 numUnknown2;
-	quint32 numUnknown3;
-	quint32 numHundreds;
-	quint32 numGroups;
-	quint32 numBoundingBoxes;
-	quint32 normIndexTableFlag;
-	quint32 runtime_data[16];
-} p_header;
-
-typedef struct {
-	quint8 unknown;					// 0 - not calculate stage lighting and color. 1 - calculate.
-	quint8 bone_index;				// bone to which this part attached to.
-	quint8 numVertices;				// Number of vertices
-	quint8 numTexCs;				// Number of Texture coord
-	quint8 num_quad_color_tex;		// number of textured quads (Gourad Shading)
-	quint8 num_tri_color_tex;		// number of textured triangles (Gourad Shading)
-	quint8 num_quad_mono_tex;		// number of textured quads (Flat Shading)
-	quint8 num_tri_mono_tex;		// number of textured triangles (Flat Shading)
-	quint8 num_tri_mono;			// number of monochrome triangles
-	quint8 num_quad_mono;			// number of monochrome quads
-	quint8 num_tri_color;			// number of gradated triangles
-	quint8 num_quad_color;			// number of gradated quads
-	quint16 num_flags;				// number of data in block 4 (flags).
-	quint16 offset_poly;			// Relative offset to ?
-	quint16 offset_texcoord;		// Relative offset to ?
-	quint16 offset_flags;			// Relative offset to texture settings. Indexed by 5th block data (control).
-	quint16 offset_control;			// Relative offset to one byte stream for every packet with texture.
-	quint16 buffer_size;			// Relative offset to ?
-	quint32 offset_vertex;			// Offset to skeleton data section
-	quint32 offset_prec;			// Offset to ?
-} Part;
-
-typedef struct {
 	float x, y, z;
-} VertexPC;
-
-typedef struct {
-	Vertex_s v;
-	quint16 unknown;
-} Vertex;
+} PolyVertex;
 
 typedef struct {
 	float x, y;
-} Coord;
+} TexCoord;
 
-typedef struct {
-	quint8 blue, green, red, alpha;
-} Color;
+class Poly
+{
+public:
+	Poly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	Poly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	void setVertices(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	void setVertices(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	virtual int count() const=0;
+	const PolyVertex &vertex(quint8 id) const;
+	QRgb color(quint8 id) const;
+	const TexCoord &texCoord(quint8 id) const;
+	bool hasTexture() const;
+protected:
+	QList<PolyVertex> _vertices;
+	QList<QRgb> _colors;
+	QList<TexCoord> _texCoords;
+};
 
-typedef struct {
-	quint16 zero;
-	quint16 VertexIndex[3], NormalIndex[3], EdgeIndex[3];
-	quint16 u[2];
-} Polygon_p;
+class QuadPoly : public Poly
+{
+public:
+	QuadPoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	QuadPoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	int count() const { return 4; }
+};
 
-typedef struct {
-	quint32 primitiveType;
-	quint32 polygonStartIndex;
-	quint32 numPolygons;
-	quint32 verticesStartIndex;
-	quint32 numVertices;
-	quint32 edgeStartIndex;
-	quint32 numEdges;
-	quint32 u1;
-	quint32 u2;
-	quint32 u3;
-	quint32 u4;
-	quint32 texCoordStartIndex;
-	quint32 areTexturesUsed;
-	quint32 textureNumber;
-} Group;
+class TrianglePoly : public Poly
+{
+public:
+	TrianglePoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	TrianglePoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	int count() const { return 3; }
+};
+
+class FieldModelGroup
+{
+public:
+	FieldModelGroup();
+	const QList<QuadPoly> &quads() const;
+	const QList<TrianglePoly> &triangles() const;
+	void addQuad(const QuadPoly &quad);
+	void addTriangle(const TrianglePoly &triangle);
+	int textureNumber() const;
+	void setTextureNumber(int texNumber);
+private:
+	int _textureNumber;
+	QList<QuadPoly> _quads;
+	QList<TrianglePoly> _triangles;
+};
 
 class FieldModelPart
 {
 public:
-    FieldModelPart();
-	bool open_p(QFile *);
-	QList<VertexPC> vertices, normals;
-	QList<Coord> texCs;
-	QList<Color> vertexColors;
-	QList<Polygon_p> polys;
-	QList<Group> groups;
+	FieldModelPart();
+	const QList<FieldModelGroup> &groups() const;
+protected:
+	QList<FieldModelGroup> _groups;
 };
 
 #endif // FIELDMODELPART_H

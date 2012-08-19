@@ -56,6 +56,7 @@ private:
 	QPoint lastPos;
 protected:
 	void initializeGL();
+	void resizeGL(int w, int h);
 	void paintGL();
 	void wheelEvent(QWheelEvent *event);
 	void mousePressEvent(QMouseEvent *event);

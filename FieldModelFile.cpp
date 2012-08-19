@@ -22,11 +22,19 @@ FieldModelFile::FieldModelFile()
 {
 }
 
+FieldModelFile::~FieldModelFile()
+{
+	foreach(FieldModelPart *part, parts)
+		delete part;
+}
+
 void FieldModelFile::clear()
 {
 	dataLoaded = false;
 	rsd_files.clear();
-	P_files.clear();
+	foreach(FieldModelPart *part, parts)
+		delete part;
+	parts.clear();
 	tex_files.clear();
 	loaded_tex.clear();
 	tex2id.clear();
@@ -78,11 +86,13 @@ quint8 FieldModelFile::load(QString hrc, QString a, bool animate)
 					if((pos=Data::charlgp_listPos.value(rsd%".rsd"))>0 && fic.seek(pos+20)) {
 						p = open_rsd(&fic, boneID);
 						if(!p.isNull()) {
-							FieldModelPart part;
+							FieldModelPartPC *part = new FieldModelPartPC();
 
 							if((pos=Data::charlgp_listPos.value(p%".p"))>0 && fic.seek(pos+24)
-									&& part.open_p(&fic)) {
-								P_files.insert(boneID, part);
+									&& part->open(&fic)) {
+								parts.insert(boneID, part);
+							} else {
+								delete part;
 							}
 						}
 					}
@@ -90,7 +100,7 @@ quint8 FieldModelFile::load(QString hrc, QString a, bool animate)
 			}
 			rsd_files.clear();
 
-			if(!P_files.isEmpty()
+			if(!parts.isEmpty()
 					&& (pos=Data::charlgp_listPos.value(a%".a"))>0 && fic.seek(pos+20) && open_a(&fic, animate))
 			{
 				QList<QList<int> > values = tex_files.values();
@@ -341,8 +351,7 @@ quint8 FieldModelFile::load(const QByteArray &BSX_data, int model_id)
 
 	memcpy(&header, constData, sizeof(BSX_header));
 	qDebug() << "==== HEADER ====" << 0 << sizeof(BSX_header);
-	qDebug() << header.size << header.offset_models;
-	qDebug() << header.unknown[0] << header.unknown[1] << header.unknown[2] << header.unknown[3];
+	qDebug() << "size" << header.size << "offset_models" << header.offset_models;
 
 	if((quint32)BSX_data.size() != header.size || header.offset_models >= header.size) {
 		qDebug() << BSX_data.size() << "error";
@@ -352,38 +361,52 @@ quint8 FieldModelFile::load(const QByteArray &BSX_data, int model_id)
 	memcpy(&model_header, &constData[header.offset_models], sizeof(Model_header));
 
 	qDebug() << "==== Model header ====" << header.offset_models << sizeof(Model_header);
-	qDebug() << model_header.num_models << QString::number(model_header.psx_memory, 16);
-	qDebug() << model_header.texture_pointer << model_header.unknown_pointer;
+	qDebug() << "num_models" << model_header.num_models << "vram" << QString::number(model_header.psx_memory, 16);
+	qDebug() << "texPointer" << model_header.texture_pointer << "unknownPointer" << model_header.unknown_pointer;
 
 	if(model_id >= (int)model_header.num_models) {
-		qDebug() << "model_id trop grand" << model_id << model_header.num_models;
+		qDebug() << "model_id too large" << model_id << model_header.num_models;
 		return 2;
 	}
 
-	memcpy(&model, &constData[header.offset_models+sizeof(Model_header)+model_id*sizeof(Model)], sizeof(Model));
+	memcpy(&model, &constData[header.offset_models + sizeof(Model_header) + model_id*sizeof(Model)], sizeof(Model));
 
 	qDebug() << "==== Model ====" << header.offset_models+sizeof(Model_header) << sizeof(Model) << model_header.num_models*sizeof(Model);
-	qDebug() << model.model_id << model.scale << model.offset_skeleton;
-	qDebug() << model.r1 << model.g1 << model.b1;
+	qDebug() << "modelID" << model.model_id << "modelScale" << model.scale << "offsetSkeleton" << model.offset_skeleton;
+	qDebug() << "r" << model.r1 << "g" << model.g1 << "b" << model.b1;
 	qDebug() << "???" << model.unknown1;
-	qDebug() << model.unknown2[0] << model.unknown2[1] << model.unknown2[2] << model.unknown2[3] << model.unknown2[4] << model.unknown2[5];
-	qDebug() << model.unknown3;
-	qDebug() << model.r2 << model.g2 << model.b2;
-	qDebug() << "bones" << model.index_bones << model.num_bones;
-	qDebug() << model.unknown4[0] << model.unknown4[1] << model.unknown4[2] << model.unknown4[3] << model.unknown4[4] << model.unknown4[5];
-	qDebug() << model.unknown5;
-	qDebug() << model.r3 << model.g3 << model.b3;
-	qDebug() << "parts" << model.index_parts << model.num_parts;
-	qDebug() << model.unknown6[0] << model.unknown6[1] << model.unknown6[2] << model.unknown6[3] << model.unknown6[4] << model.unknown6[5];
-	qDebug() << model.unknown7;
-	qDebug() << model.r4 << model.g4 << model.b4;
-	qDebug() << "animations" << model.index_animations << model.num_animations;
+	qDebug() << "???" << model.unknown2[0] << model.unknown2[1] << model.unknown2[2] << model.unknown2[3] << model.unknown2[4] << model.unknown2[5];
+	qDebug() << "???" << model.unknown3;
+	qDebug() << "r" << model.r2 << "g" << model.g2 << "b" << model.b2;
+	qDebug() << "bones index" << model.index_bones << "count" << model.num_bones;
+	qDebug() << "???" << model.unknown4[0] << model.unknown4[1] << model.unknown4[2] << model.unknown4[3] << model.unknown4[4] << model.unknown4[5];
+	qDebug() << "???" << model.unknown5;
+	qDebug() << "r" << model.r3 << "g" << model.g3 << "b" << model.b3;
+	qDebug() << "parts index" << model.index_parts << "count" << model.num_parts;
+	qDebug() << "???" << model.unknown6[0] << model.unknown6[1] << model.unknown6[2] << model.unknown6[3] << model.unknown6[4] << model.unknown6[5];
+	qDebug() << "???" << model.unknown7;
+	qDebug() << "r" << model.r4 << "g" << model.g4 << "b" << model.b4;
+	qDebug() << "animations index" << model.index_animations << "count" << model.num_animations;
 
-	int curOff = header.offset_models+sizeof(Model_header)+model_id*sizeof(Model)+model.offset_skeleton;
+	int curOff = header.offset_models + sizeof(Model_header) + model_id*sizeof(Model) + model.offset_skeleton;
 	BonePS bone;
 	for(quint8 i=0 ; i<model.num_bones ; ++i) {
 		memcpy(&bone, &constData[curOff+i*4], sizeof(BonePS));
-		qDebug() << "bone" << i << (bone.size >> 8) << (bone.size & 0xFF) << bone.parent << bone.unknown;
+		qDebug() << "bone" << i << bone.length << bone.parent << bone.unknown;
+	}
+
+	curOff += model.num_bones*4;
+
+	for(quint8 i=0 ; i<model.num_parts ; ++i) {
+		FieldModelPartPS *part = new FieldModelPartPS();
+		qDebug() << "==== PART" << i << "====";
+		if(part->open(constData, curOff, BSX_data.size())) {
+			parts.insert(part->boneID(), part);
+		} else {
+			qWarning() << "Error open part" << i;
+			delete part;
+		}
+		curOff += 32;
 	}
 
 /*

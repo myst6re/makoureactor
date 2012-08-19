@@ -60,10 +60,13 @@ typedef struct {
 typedef struct {
 	char name[9];
 	quint8 control;
-	quint16 u0;
+	qint16 cameraFocusHeight;
 	Range camera_range; // 8 bytes
 	quint32 u1;
-	Range unknown_range; // 8 bytes
+	qint16 bg_layer3_width;
+	qint16 bg_layer3_height;
+	qint16 bg_layer4_width;
+	qint16 bg_layer4_height;
 	quint8 u2[24];
 	Exit doors[12];// 24 * 12 bytes
 	Trigger triggers[12];// 16 * 12 bytes
@@ -87,10 +90,18 @@ public:
 	void setMapName(const QString &name);
 	quint8 control();
 	void setControl(quint8 control);
+	qint16 cameraFocusHeight() const;
+	void setCameraFocusHeight(qint16 cameraFocusHeight);
 	const Range &cameraRange() const;
 	void setCameraRange(const Range &range);
-	const Range &screenRange() const;
-	void setScreenRange(const Range &range);
+	qint16 bgLayer3Width() const;
+	void setBgLayer3Width(qint16 width);
+	qint16 bgLayer3Height() const;
+	void setBgLayer3Height(qint16 height);
+	qint16 bgLayer4Width() const;
+	void setBgLayer4Width(qint16 width);
+	qint16 bgLayer4Height() const;
+	void setBgLayer4Height(qint16 height);
 	QList<Exit> exitLines() const;
 	Exit exitLine(quint8 id);
 	void setExitLine(quint8 id, const Exit &line);
@@ -102,8 +113,6 @@ public:
 	QList<Arrow> arrows() const;
 	const Arrow &arrow(quint8 id) const;
 	void setArrow(quint8 id, const Arrow &arrow);
-	QByteArray unknown0() const;
-	void setUnknown0(const QByteArray &u);
 	QByteArray unknown1() const;
 	void setUnknown1(const QByteArray &u);
 	QByteArray unknown2() const;

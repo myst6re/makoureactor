@@ -23,7 +23,7 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 {
 	setWindowTitle(tr("Zones"));
 
-	walkmesh = Config::value("OpenGL", true).toBool() ? new WalkmeshWidget(this, shareWidget) : 0;
+	walkmesh = Config::value("OpenGL", true).toBool() ? new WalkmeshWidget(0, shareWidget) : 0;
 	QWidget *walkmeshWidget = walkmesh ? walkmesh : new QWidget(this);
 
 	QSlider *slider1 = new QSlider(this);
@@ -337,38 +337,38 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 	QWidget *ret = new QWidget(this);
 
 	QGroupBox *group1 = new QGroupBox(tr("Limites caméra"), ret);
-	QGroupBox *group2 = new QGroupBox(tr("Inconnu"), ret);
+	QGroupBox *group2 = new QGroupBox(tr("Tailles des couches (pour les animations de couche)"), ret);
 
 	for(int i=0 ; i<4 ; ++i) {
-		rangeEdit1[i] = new QSpinBox(group1);
-		rangeEdit1[i]->setRange(-32768, 32767);
-		rangeEdit2[i] = new QSpinBox(group2);
-		rangeEdit2[i]->setRange(-32768, 32767);
+		rangeEdit[i] = new QSpinBox(group1);
+		rangeEdit[i]->setRange(-32768, 32767);
+		bgSizeEdit[i] = new QSpinBox(group2);
+		bgSizeEdit[i]->setRange(-32768, 32767);
 	}
 
 	QGridLayout *layout1 = new QGridLayout(group1);
 	layout1->addWidget(new QLabel(tr("Haut")), 0, 0);
-	layout1->addWidget(rangeEdit1[0], 0, 1);
+	layout1->addWidget(rangeEdit[0], 0, 1);
 	layout1->addWidget(new QLabel(tr("Bas")), 0, 2);
-	layout1->addWidget(rangeEdit1[1], 0, 3);
+	layout1->addWidget(rangeEdit[1], 0, 3);
 	layout1->addWidget(new QLabel(tr("Droite")), 1, 0);
-	layout1->addWidget(rangeEdit1[2], 1, 1);
+	layout1->addWidget(rangeEdit[2], 1, 1);
 	layout1->addWidget(new QLabel(tr("Gauche")), 1, 2);
-	layout1->addWidget(rangeEdit1[3], 1, 3);
+	layout1->addWidget(rangeEdit[3], 1, 3);
 	layout1->setColumnStretch(0, 1);
 	layout1->setColumnStretch(1, 1);
 	layout1->setColumnStretch(2, 1);
 	layout1->setColumnStretch(3, 1);
 
 	QGridLayout *layout2 = new QGridLayout(group2);
-	layout2->addWidget(new QLabel(tr("Haut")), 0, 0);
-	layout2->addWidget(rangeEdit2[0], 0, 1);
-	layout2->addWidget(new QLabel(tr("Bas")), 0, 2);
-	layout2->addWidget(rangeEdit2[1], 0, 3);
-	layout2->addWidget(new QLabel(tr("Droite")), 1, 0);
-	layout2->addWidget(rangeEdit2[2], 1, 1);
-	layout2->addWidget(new QLabel(tr("Gauche")), 1, 2);
-	layout2->addWidget(rangeEdit2[3], 1, 3);
+	layout2->addWidget(new QLabel(tr("Largeur couche 3 décor")), 0, 0);
+	layout2->addWidget(bgSizeEdit[0], 0, 1);
+	layout2->addWidget(new QLabel(tr("Hauteur couche 3 décor")), 0, 2);
+	layout2->addWidget(bgSizeEdit[1], 0, 3);
+	layout2->addWidget(new QLabel(tr("Largeur couche 4 décor")), 1, 0);
+	layout2->addWidget(bgSizeEdit[2], 1, 1);
+	layout2->addWidget(new QLabel(tr("Hauteur couche 4 décor")), 1, 2);
+	layout2->addWidget(bgSizeEdit[3], 1, 3);
 	layout2->setRowStretch(2, 1);
 	layout2->setColumnStretch(0, 1);
 	layout2->setColumnStretch(1, 1);
@@ -381,8 +381,8 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 	layout->addStretch();
 
 	for(int i=0 ; i<4 ; ++i) {
-		connect(rangeEdit1[i], SIGNAL(valueChanged(int)), SLOT(editRange(int)));
-		connect(rangeEdit2[i], SIGNAL(valueChanged(int)), SLOT(editRange(int)));
+		connect(rangeEdit[i], SIGNAL(valueChanged(int)), SLOT(editRange(int)));
+		connect(bgSizeEdit[i], SIGNAL(valueChanged(int)), SLOT(editRange(int)));
 	}
 
 	return ret;
@@ -397,7 +397,9 @@ QWidget *WalkmeshManager::buildMiscPage()
 	navigation2->setRange(0, 255);
 	navigation2->setWrapping(true);
 
-	unknown0 = new HexLineEdit(ret);
+	cameraFocusHeight = new QSpinBox(ret);
+	cameraFocusHeight->setRange(-32768, 32767);
+
 	unknown1 = new HexLineEdit(ret);
 	unknown2 = new HexLineEdit(ret);
 
@@ -405,8 +407,8 @@ QWidget *WalkmeshManager::buildMiscPage()
 	layout->addWidget(new QLabel(tr("Orientation des mouvements :")), 0, 0);
 	layout->addWidget(navigation, 0, 1);
 	layout->addWidget(navigation2, 0, 2);
-	layout->addWidget(new QLabel(tr("Inconnu 1 :")), 1, 0);
-	layout->addWidget(unknown0, 1, 1, 1, 2);
+	layout->addWidget(new QLabel(tr("Hauteur focus caméra sur le personnage :")), 1, 0);
+	layout->addWidget(cameraFocusHeight, 1, 1, 1, 2);
 	layout->addWidget(new QLabel(tr("Inconnu 2 :")), 2, 0);
 	layout->addWidget(unknown1, 2, 1, 1, 2);
 	layout->addWidget(new QLabel(tr("Inconnu 3 :")), 3, 0);
@@ -415,7 +417,7 @@ QWidget *WalkmeshManager::buildMiscPage()
 
 	connect(navigation, SIGNAL(valueEdited(int)), navigation2, SLOT(setValue(int)));
 	connect(navigation2, SIGNAL(valueChanged(int)), SLOT(editNavigation(int)));
-	connect(unknown0, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknown0(QByteArray)));
+	connect(cameraFocusHeight, SIGNAL(valueChanged(int)), SLOT(editCameraFocusHeight(int)));
 	connect(unknown1, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknown1(QByteArray)));
 	connect(unknown2, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknown2(QByteArray)));
 
@@ -519,22 +521,20 @@ void WalkmeshManager::fill(FieldArchive *fieldArchive, Field *field)
 
 		const Range &range1 = infFile->cameraRange();
 
-		rangeEdit1[0]->setValue(range1.top);
-		rangeEdit1[1]->setValue(range1.bottom);
-		rangeEdit1[2]->setValue(range1.right);
-		rangeEdit1[3]->setValue(range1.left);
+		rangeEdit[0]->setValue(range1.top);
+		rangeEdit[1]->setValue(range1.bottom);
+		rangeEdit[2]->setValue(range1.right);
+		rangeEdit[3]->setValue(range1.left);
 
-		const Range &range2 = infFile->screenRange();
-
-		rangeEdit2[0]->setValue(range2.top);
-		rangeEdit2[1]->setValue(range2.bottom);
-		rangeEdit2[2]->setValue(range2.right);
-		rangeEdit2[3]->setValue(range2.left);
+		bgSizeEdit[0]->setValue(infFile->bgLayer3Width());
+		bgSizeEdit[1]->setValue(infFile->bgLayer3Height());
+		bgSizeEdit[2]->setValue(infFile->bgLayer4Width());
+		bgSizeEdit[3]->setValue(infFile->bgLayer4Height());
 
 		navigation->setValue(infFile->control());
 		navigation2->setValue(infFile->control());
 
-		unknown0->setData(infFile->unknown0());
+		cameraFocusHeight->setValue(infFile->cameraFocusHeight());
 		unknown1->setData(infFile->unknown1());
 		unknown2->setData(infFile->unknown2());
 	}
@@ -1128,17 +1128,17 @@ void WalkmeshManager::editRange(int v)
 {
 	QObject *s = sender();
 
-	if(s == rangeEdit1[0])			editRange1(0, v);
-	else if(s == rangeEdit1[1])		editRange1(1, v);
-	else if(s == rangeEdit1[2])		editRange1(2, v);
-	else if(s == rangeEdit1[3])		editRange1(3, v);
-	else if(s == rangeEdit2[0])		editRange2(0, v);
-	else if(s == rangeEdit2[1])		editRange2(1, v);
-	else if(s == rangeEdit2[2])		editRange2(2, v);
-	else if(s == rangeEdit2[3])		editRange2(3, v);
+	if(s == rangeEdit[0])			editRange(0, v);
+	else if(s == rangeEdit[1])		editRange(1, v);
+	else if(s == rangeEdit[2])		editRange(2, v);
+	else if(s == rangeEdit[3])		editRange(3, v);
+	else if(s == bgSizeEdit[0])		editBgSize(0, v);
+	else if(s == bgSizeEdit[1])		editBgSize(1, v);
+	else if(s == bgSizeEdit[2])		editBgSize(2, v);
+	else if(s == bgSizeEdit[3])		editBgSize(3, v);
 }
 
-void WalkmeshManager::editRange1(int id, int v)
+void WalkmeshManager::editRange(int id, int v)
 {
 	if(infFile->isOpen()) {
 		Range old = infFile->cameraRange();
@@ -1165,27 +1165,25 @@ void WalkmeshManager::editRange1(int id, int v)
 	}
 }
 
-void WalkmeshManager::editRange2(int id, int v)
+void WalkmeshManager::editBgSize(int id, int v)
 {
 	if(infFile->isOpen()) {
-		Range old = infFile->screenRange();
 		qint16 oldv=0;
 
 		switch(id) {
-		case 0:	oldv = old.top;		break;
-		case 1:	oldv = old.bottom;	break;
-		case 2:	oldv = old.right;	break;
-		case 3:	oldv = old.left;	break;
+		case 0:	oldv = infFile->bgLayer3Width();	break;
+		case 1:	oldv = infFile->bgLayer3Height();	break;
+		case 2:	oldv = infFile->bgLayer4Width();	break;
+		case 3:	oldv = infFile->bgLayer4Height();	break;
 		}
 
 		if(oldv != v) {
 			switch(id) {
-			case 0:	old.top = v;	break;
-			case 1:	old.bottom = v;	break;
-			case 2:	old.right = v;	break;
-			case 3:	old.left = v;	break;
+			case 0:	infFile->setBgLayer3Width(v);	break;
+			case 1:	infFile->setBgLayer3Height(v);	break;
+			case 2:	infFile->setBgLayer4Width(v);	break;
+			case 3:	infFile->setBgLayer4Height(v);	break;
 			}
-			infFile->setScreenRange(old);
 
 			emit modified();
 		}
@@ -1205,12 +1203,12 @@ void WalkmeshManager::editNavigation(int v)
 	}
 }
 
-void WalkmeshManager::editUnknown0(const QByteArray &data)
+void WalkmeshManager::editCameraFocusHeight(int value)
 {
 	if(infFile->isOpen()) {
-		QByteArray old = infFile->unknown0();
-		if(old != data) {
-			infFile->setUnknown0(data);
+		int old = infFile->cameraFocusHeight();
+		if(old != value) {
+			infFile->setCameraFocusHeight(value);
 			emit modified();
 		}
 	}

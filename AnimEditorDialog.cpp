@@ -22,8 +22,15 @@ AnimEditorDialog::AnimEditorDialog(int animID, const QGLWidget *shareWidget, QWi
 {
 	setWindowTitle(tr("Sélection d'une animation"));
 
-	fieldModel = Config::value("OpenGL", true).toBool() ? new FieldModel(0, shareWidget) : 0;
-	QWidget *modelWidget = fieldModel ? fieldModel : new QWidget(this);
+	QWidget *modelWidget;
+	if(Config::value("OpenGL", true).toBool()) {
+		fieldModel = new FieldModel(0, shareWidget);
+		fieldModel->setFixedSize(304, 214);
+		modelWidget = fieldModel;
+	} else {
+		fieldModel = 0;
+		modelWidget = new QWidget(this);
+	}
 
 	aList = new QListWidget(this);
 	aList->setUniformItemSizes(true);

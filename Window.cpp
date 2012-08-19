@@ -151,7 +151,12 @@ Window::Window() :
 //	connect(zoneScript, SIGNAL(historicChanged(Historic)), SLOT(changeHistoric(Historic)));//TODO
 
 	zoneImage = new ApercuBG();
-	fieldModel = Config::value("OpenGL", true).toBool() ? new FieldModel() : 0;
+	if(Config::value("OpenGL", true).toBool()) {
+		fieldModel = new FieldModel();
+		fieldModel->setFixedSize(304, 214);
+	} else {
+		fieldModel = 0;
+	}
 
 	zonePreview = new QStackedWidget(this);
 	zonePreview->setFixedSize(304, 214);
@@ -576,9 +581,9 @@ void Window::afficherGrpScripts()
 	if(fieldModel && modelID != -1) {
 		if(fieldArchive->isLgp()) {
 			modelLoaded = fieldModel->load(field->HRCName(modelID), field->AName(modelID), true);
-		}/* else {
+		} else {
 			modelLoaded = fieldModel->load(fieldArchive->getModelData(field), modelID);
-		}*/
+		}
 	}
 
 	zonePreview->setCurrentIndex(modelLoaded==1);
