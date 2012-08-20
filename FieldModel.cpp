@@ -17,17 +17,28 @@
  ****************************************************************************/
 #include "FieldModel.h"
 
-FieldModel::FieldModel(QWidget *parent, const QGLWidget *shareWidget)
-	: QGLWidget(parent, shareWidget), blockAll(false), distance(-35), currentFrame(0), xRot(270*16), yRot(90*16), zRot(0)
+FieldModel::FieldModel(QWidget *parent, const QGLWidget *shareWidget) :
+	QGLWidget(parent, shareWidget), blockAll(false), distance(-35),
+	currentFrame(0), data(0), xRot(270*16), yRot(90*16), zRot(0)
 {
 	connect(&timer, SIGNAL(timeout()), SLOT(animate()));
+}
+
+FieldModel::~FieldModel()
+{
+	if(data) {
+		delete data;
+	}
 }
 
 void FieldModel::clear()
 {
 	timer.stop();
 	currentFrame = 0;
-	data.clear();
+	if(data) {
+		delete data;
+		data = 0;
+	}
 //	glClearColor(0.0,0.0,0.0,0.0);
 }
 
@@ -41,25 +52,65 @@ quint8 FieldModel::load(const QString &hrc, const QString &a, bool animate)
 
 	blockAll = true;
 
-	quint8 err = data.load(hrc, a, animate);
+	if(data == 0) {
+		data = new FieldModelFilePC();
+	} else if(data->isPS()) {
+		delete data;
+		data = new FieldModelFilePC();
+	}
+
+	quint8 err = ((FieldModelFilePC *)data)->load(hrc, a, animate);
 	if(err==1) {
 		updateGL();
-		if(animate && data.frames.size()>1)	timer.start(30);
+		if(animate && data->frames.size()>1)	timer.start(30);
 	}
 
 	blockAll = false;
 
+	QFile textOut("fieldModelBonePC.txt");
+	textOut.open(QIODevice::WriteOnly);
+	textOut.write(data->toStringBones().toLatin1());
+	textOut.close();
+
 	return err;
 }
 
-quint8 FieldModel::load(const QByteArray &BSX_data, int model_id)
+quint8 FieldModel::load(const QByteArray &BSX_data, int model_id, int animation_id, bool animate)
 {
-	return data.load(BSX_data, model_id);
+	if(blockAll) {
+		return 2;
+	}
+
+	clear();
+
+	blockAll = true;
+
+	if(data == 0) {
+		data = new FieldModelFilePS();
+	} else if(!data->isPS()) {
+		delete data;
+		data = new FieldModelFilePS();
+	}
+
+	quint8 err = ((FieldModelFilePS *)data)->load(BSX_data, model_id, animation_id, animate);
+	if(err==1) {
+		updateGL();
+		if(animate && data->frames.size()>1)	timer.start(30);
+	}
+
+	blockAll = false;
+
+	QFile textOut("fieldModelBonePS.txt");
+	textOut.open(QIODevice::WriteOnly);
+	textOut.write(data->toStringBones().toLatin1());
+	textOut.close();
+
+	return err;
 }
 
 int FieldModel::nb_bones()
 {
-	return data.bones.size();
+	return data ? data->bones.size() : 0;
 }
 
 void FieldModel::initializeGL()
@@ -79,64 +130,67 @@ void FieldModel::initializeGL()
 
 void FieldModel::drawP(int index)
 {
+	if(!data)	return;
+
 	quint32 j;
-	QList<FieldModelPart *> ps = data.parts.values(index);
-	QList<QList<int> > texss = data.tex_files.values(index);
+	QList<FieldModelPart *> ps = data->parts.values(index);
+	QList<QList<int> > texss = data->tex_files.values(index);
 	QList<int> texs;
 	int pID=0;
 
 	foreach(FieldModelPart *p, ps) {
 		texs = texss.value(pID, QList<int>());
 
-		foreach(const FieldModelGroup &g, p->groups()) {
-			GLuint texture_id;
-			bool hasTexture = g.textureNumber()>-1 && (int)g.textureNumber()<texs.size();
+		foreach(FieldModelGroup *g, p->groups()) {
+			GLuint texture_id=-1;
+			bool hasTexture = g->textureNumber()>-1 && (int)g->textureNumber()<texs.size();
 
 			if(hasTexture) {
 				glEnable(GL_TEXTURE_2D);
 
-				texture_id = bindTexture(data.loaded_tex.value(texs.at(g.textureNumber()), QPixmap()), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
+				texture_id = bindTexture(data->loaded_tex.value(texs.at(g->textureNumber()), QPixmap()), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
 			}
 
-			glBegin(GL_TRIANGLES);
+			int curPolyType = 0;
 
-			foreach(const TrianglePoly &t, g.triangles()) {
+			foreach(const Poly *p, g->polygons()) {
+				if(curPolyType != p->count()) {
+					if(curPolyType != 0) {
+						glEnd();
+					}
 
-				for(j=0 ; j<3 ; ++j) {
-					QRgb color = t.color(j);
+					if(p->count() == 3) {
+						glBegin(GL_TRIANGLES);
+					} else {
+						glBegin(GL_QUADS);
+					}
+					curPolyType = p->count();
+				}
+
+				if(p->isMonochrome()) {
+					const QRgb &color = p->color();
 					glColor3ub(qRed(color), qGreen(color), qBlue(color));
+				}
 
-					if(hasTexture && t.hasTexture()) {
-						TexCoord coord = t.texCoord(j);
+				for(j=0 ; j<(quint8)p->count() ; ++j) {
+					if(!p->isMonochrome()) {
+						QRgb color = p->color(j);
+						glColor3ub(qRed(color), qGreen(color), qBlue(color));
+					}
+
+					if(hasTexture && p->hasTexture()) {
+						TexCoord coord = p->texCoord(j);
 						glTexCoord2d(coord.x, coord.y);
 					}
 
-					PolyVertex vertex = t.vertex(j);
+					PolyVertex vertex = p->vertex(j);
 					glVertex3f(vertex.x, vertex.y, vertex.z);
 				}
 			}
 
-			glEnd();
-
-			glBegin(GL_QUADS);
-
-			foreach(const QuadPoly &q, g.quads()) {
-
-				for(j=0 ; j<4 ; ++j) {
-					QRgb color = q.color(j);
-					glColor3ub(qRed(color), qGreen(color), qBlue(color));
-
-					if(hasTexture && q.hasTexture()) {
-						TexCoord coord = q.texCoord(j);
-						glTexCoord2d(coord.x, coord.y);
-					}
-
-					PolyVertex vertex = q.vertex(j);
-					glVertex3f(vertex.x, vertex.y, vertex.z);
-				}
+			if(curPolyType != 0) {
+				glEnd();
 			}
-
-			glEnd();
 
 			if(hasTexture) {
 				deleteTexture(texture_id);
@@ -223,7 +277,7 @@ void FieldModel::paintGL()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	if(!data.isLoaded())	return;
+	if(!data || !data->isLoaded())	return;
 
 	resizeGL(width(), height()); // hack (?)
 
@@ -259,19 +313,19 @@ void FieldModel::paintGL()
 //	glVertex3f(0.0, 0.0, -20.0);
 //	glEnd();
 
-	if(data.a_bones_count<=1) {
+	if(data->a_bones_count<=1) {
 		drawP(0);
 		return;
 	}
 
-	QList<VertexPC> rot = data.frames.value(currentFrame, QList<VertexPC>());
+	QList<PolyVertex> rot = data->frames.value(currentFrame, QList<PolyVertex>());
 	if(rot.isEmpty()) return;
 	parent.push(-1);
 
-	for(i=0 ; i<data.a_bones_count ; ++i)
+	for(i=0 ; i<data->a_bones_count ; ++i)
 	{
-		const VertexPC &rotation = rot.at(i);
-		const Bone &bone = data.bones.at(i);
+		const PolyVertex &rotation = rot.at(i);
+		const Bone &bone = data->bones.at(i);
 
 		while(!parent.isEmpty() && parent.top() != bone.parent) {
 			parent.pop();
@@ -280,12 +334,16 @@ void FieldModel::paintGL()
 		parent.push(i);
 		glPushMatrix();
 
+		if(data->isPS())
+			glTranslatef(0.0, 0.0, bone.size);
+
 		glRotatef(rotation.y, 0.0, 1.0, 0.0);
 		glRotatef(rotation.x, 1.0, 0.0, 0.0);
 		glRotatef(rotation.z, 0.0, 0.0, 1.0);
 		drawP(i);
 
-		glTranslatef(0.0, 0.0, -bone.size);
+		if(!data->isPS())
+			glTranslatef(0.0, 0.0, bone.size);
 	}
 
 	while(parent.top() != -1) {
@@ -312,8 +370,8 @@ void FieldModel::mousePressEvent(QMouseEvent *event)
 
 void FieldModel::animate()
 {
-	if(isVisible()) {
-		currentFrame = (currentFrame + 1) % data.frames.size();
+	if(data && isVisible()) {
+		currentFrame = (currentFrame + 1) % data->frames.size();
 		updateGL();
 	}
 }

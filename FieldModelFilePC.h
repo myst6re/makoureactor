@@ -15,21 +15,37 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELLOADER_H
-#define FIELDMODELLOADER_H
+#ifndef FIELDMODELFILEPC_H
+#define FIELDMODELFILEPC_H
 
-#include <QtCore>
+#include <QtGui>
+#include "FieldModelFile.h"
+#include "FieldModelPartPC.h"
 
-class FieldModelLoader
+typedef struct {
+	quint32 version;
+	quint32 frames_count;
+	quint32 bones_count;
+	quint8 rotation_order[3];
+	quint8 unused;
+	quint32 runtime_data[5];
+} a_header;
+
+class FieldModelFilePC : public FieldModelFile
 {
 public:
-    FieldModelLoader();
-	bool isLoaded() const;
-	bool isModified() const;
-	void setModified(bool modified);
+	FieldModelFilePC();
+	void clear();
+	bool isPS() const { return false; }
+	quint8 load(QString hrc, QString a, bool animate=false);
+private:
+	QMultiMap<int, QStringList> rsd_files;
+	QList<QString> tex2id;
 
-protected:
-	bool loaded, modified;
+	bool open_hrc(QFile *);
+	bool open_a(QFile *, bool animate=false);
+	QString open_rsd(QFile *, int);
+	static QPixmap open_tex(QFile *);
 };
 
-#endif // FIELDMODELLOADER_H
+#endif // FIELDMODELFILEPC_H

@@ -22,6 +22,10 @@ Poly::Poly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const Q
 	setVertices(vertices, colors, texCoords);
 }
 
+Poly::~Poly()
+{
+}
+
 Poly::Poly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords)
 {
 	setVertices(vertices, color, texCoords);
@@ -47,6 +51,11 @@ const PolyVertex &Poly::vertex(quint8 id) const
 	return _vertices.at(id);
 }
 
+const QRgb &Poly::color() const
+{
+	return _colors.first();
+}
+
 QRgb Poly::color(quint8 id) const
 {
 	return _colors.value(id, _colors.first());
@@ -55,6 +64,11 @@ QRgb Poly::color(quint8 id) const
 const TexCoord &Poly::texCoord(quint8 id) const
 {
 	return _texCoords.at(id);
+}
+
+bool Poly::isMonochrome() const
+{
+	return _colors.size() == 1;
 }
 
 bool Poly::hasTexture() const
@@ -87,14 +101,16 @@ FieldModelGroup::FieldModelGroup() :
 {
 }
 
-const QList<QuadPoly> &FieldModelGroup::quads() const
+FieldModelGroup::~FieldModelGroup()
 {
-	return _quads;
+	foreach(Poly *p, _polys) {
+		delete p;
+	}
 }
 
-const QList<TrianglePoly> &FieldModelGroup::triangles() const
+const QList<Poly *> &FieldModelGroup::polygons() const
 {
-	return _triangles;
+	return _polys;
 }
 
 int FieldModelGroup::textureNumber() const
@@ -108,21 +124,56 @@ void FieldModelGroup::setTextureNumber(int texNumber)
 }
 
 
-void FieldModelGroup::addQuad(const QuadPoly &quad)
+void FieldModelGroup::addPolygon(Poly *polygon)
 {
-	_quads.append(quad);
-}
-
-void FieldModelGroup::addTriangle(const TrianglePoly &triangle)
-{
-	_triangles.append(triangle);
+	_polys.append(polygon);
 }
 
 FieldModelPart::FieldModelPart()
 {
 }
 
-const QList<FieldModelGroup> &FieldModelPart::groups() const
+FieldModelPart::~FieldModelPart()
+{
+	foreach(FieldModelGroup *group, _groups) {
+		delete group;
+	}
+}
+
+const QList<FieldModelGroup *> &FieldModelPart::groups() const
 {
 	return _groups;
+}
+
+QString FieldModelPart::toString() const
+{
+	QString ret;
+	int groupID=0, ID;
+
+	foreach(FieldModelGroup *group, _groups) {
+		ret.append(QString("==== GROUP %1 ==== texNumber: %2\n").arg(groupID).arg(group->textureNumber()));
+
+		ID = 0;
+		foreach(Poly *poly, group->polygons()) {
+			ret.append(QString("==== poly %1 ====\n").arg(ID));
+
+			for(int i=0 ; i<poly->count() ; ++i) {
+				ret.append(QString("%1: vertex(%2, %3, %4) color(%5, %6, %7)")
+						   .arg(i)
+						   .arg(poly->vertex(i).x).arg(poly->vertex(i).y).arg(poly->vertex(i).z)
+						   .arg(qRed(poly->color(i))).arg(qGreen(poly->color(i))).arg(qBlue(poly->color(i))));
+				if(poly->hasTexture()) {
+					ret.append(QString(" texCoord(%1, %2)")
+							   .arg(poly->texCoord(i).x).arg(poly->texCoord(i).y));
+				}
+				ret.append("\n");
+			}
+
+			++ID;
+		}
+
+		++groupID;
+	}
+
+	return ret;
 }

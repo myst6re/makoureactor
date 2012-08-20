@@ -42,10 +42,6 @@ typedef struct {
 } p_header;
 
 typedef struct {
-	float x, y, z;
-} VertexPC;
-
-typedef struct {
 	Vertex_s v;
 	quint16 unknown;
 } Vertex;

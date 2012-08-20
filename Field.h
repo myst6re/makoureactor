@@ -29,7 +29,8 @@
 #include "CaFile.h"
 #include "IdFile.h"
 #include "InfFile.h"
-#include "FieldModelLoader.h"
+#include "FieldModelLoaderPC.h"
+#include "FieldModelLoaderPS.h"
 
 //Sizeof : 36
 typedef struct {
@@ -121,11 +122,11 @@ public:
 	void close();
 	int getModelID(quint8) const;
 	void getBgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z=0, qint16 *x=0, qint16 *y=0) const;
-	QPixmap openModelAndBackground(const QByteArray &contenu);
+	QPixmap openModelAndBackgroundPC(const QByteArray &contenu);
+	QPixmap openModelAndBackgroundPS(const QByteArray &mimDataDec, const QByteArray &datDataDec);
 	bool getUsedParamsPC(const QByteArray &contenu, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
 	bool getUsedParamsPS(const QByteArray &datData, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
 	QPixmap ouvrirBackgroundPC(const QByteArray &contenu, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
-	QPixmap ouvrirBackgroundPS(const QByteArray &mimDataDec, const QByteArray &datDataDec) const;
 	QPixmap ouvrirBackgroundPS(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
 
 	void insertGrpScript(int row);
@@ -157,15 +158,13 @@ public:
 	qint8 exporterDat(const QString &path, const QByteArray &datData);
 	qint8 importer(const QString &path, FieldParts part);
 
-	QString HRCName(int modelID);
-	QString AName(int modelID, int numA=0);
-
 	EncounterFile *getEncounter();
 	TutFile *getTut();
 	IdFile *getId();
 	CaFile *getCa();
 	InfFile *getInf();
-	FieldModelLoader *getFieldModelLoader();
+	FieldModelLoaderPC *getFieldModelLoaderPC();
+	FieldModelLoaderPS *getFieldModelLoaderPS();
 
 	const QString &getName() const;
 	void setName(const QString &name);

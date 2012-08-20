@@ -21,7 +21,8 @@
 #include <QtGui>
 #include <QGLWidget>
 #include <GL/glu.h>
-#include "FieldModelFile.h"
+#include "FieldModelFilePC.h"
+#include "FieldModelFilePS.h"
 #include "Data.h"
 #include "Palette.h"
 #include "Field.h"
@@ -31,8 +32,9 @@ class FieldModel : public QGLWidget
 	Q_OBJECT
 public:
 	FieldModel(QWidget *parent=0, const QGLWidget *shareWidget=0);
+	virtual ~FieldModel();
 	quint8 load(const QString &hrc, const QString &a, bool animate=false);
-	quint8 load(const QByteArray &BSX_data, int model_id);
+	quint8 load(const QByteArray &BSX_data, int model_id, int animation_id, bool animate=false);
 	void clear();
 	int nb_bones();
 public slots:
@@ -47,7 +49,7 @@ private:
 	int distance;
 	int currentFrame;
 
-	FieldModelFile data;
+	FieldModelFile *data;
 	QTimer timer;
 
 	int xRot;

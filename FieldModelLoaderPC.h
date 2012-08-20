@@ -15,21 +15,29 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELLOADER_H
-#define FIELDMODELLOADER_H
+#ifndef FIELDMODELLOADERPC_H
+#define FIELDMODELLOADERPC_H
 
 #include <QtCore>
+#include <QRgb>
+#include "FieldModelLoader.h"
 
-class FieldModelLoader
+class FieldModelLoaderPC : public FieldModelLoader
 {
 public:
-    FieldModelLoader();
-	bool isLoaded() const;
-	bool isModified() const;
-	void setModified(bool modified);
+	FieldModelLoaderPC();
+	void load(const QByteArray &contenu, const QString &name);
+	QByteArray save(const QByteArray &contenu, const QString &name) const;
+	QString HRCName(int modelID) const;
+	QString AName(int modelID, int numA=0) const;
 
-protected:
-	bool loaded, modified;
+	quint16 typeHRC;
+	QStringList model_nameChar;
+	QStringList model_nameHRC;
+	QList<QStringList> model_anims;
+	QList<quint16> model_unknown;
+	QList<quint16> model_typeHRC;
+	QList< QList<QRgb> > colors;
 };
 
-#endif // FIELDMODELLOADER_H
+#endif // FIELDMODELLOADERPC_H

@@ -65,7 +65,11 @@ HEADERS += ApercuBG.h \
     IdFile.h \
     CaFile.h \
     FieldModelPartPS.h \
-    FieldModelPartPC.h
+    FieldModelPartPC.h \
+    FieldModelFilePS.h \
+    FieldModelFilePC.h \
+    FieldModelLoaderPC.h \
+    FieldModelLoaderPS.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -124,7 +128,11 @@ SOURCES += ApercuBG.cpp \
     IdFile.cpp \
     CaFile.cpp \
     FieldModelPartPS.cpp \
-    FieldModelPartPC.cpp
+    FieldModelPartPC.cpp \
+    FieldModelFilePS.cpp \
+    FieldModelFilePC.cpp \
+    FieldModelLoaderPC.cpp \
+    FieldModelLoaderPS.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts

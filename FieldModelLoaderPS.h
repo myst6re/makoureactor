@@ -15,21 +15,26 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELLOADER_H
-#define FIELDMODELLOADER_H
+#ifndef FIELDMODELLOADERPS_H
+#define FIELDMODELLOADERPS_H
 
 #include <QtCore>
+#include <QRgb>
+#include "FieldModelLoader.h"
 
-class FieldModelLoader
+typedef struct {
+	quint8 faceID, bonesCount, partsCount, animationCount;
+	quint8 unknown1, unknown2, unknown3, modelID;
+} FieldModelLoaderStruct;
+
+class FieldModelLoaderPS : public FieldModelLoader
 {
 public:
-    FieldModelLoader();
-	bool isLoaded() const;
-	bool isModified() const;
-	void setModified(bool modified);
+	FieldModelLoaderPS();
+	bool load(const QByteArray &data);
 
-protected:
-	bool loaded, modified;
+private:
+	QList<FieldModelLoaderStruct> _modelLoaders;
 };
 
-#endif // FIELDMODELLOADER_H
+#endif // FIELDMODELLOADERPS_H

@@ -23,13 +23,13 @@ FieldModelPartPC::FieldModelPartPC()
 
 bool FieldModelPartPC::open(QFile *p_file)
 {
-	QList<VertexPC> vertices/*, normals*/;
+	QList<PolyVertex> vertices/*, normals*/;
 	QList<TexCoord> texCs;
 	QList<Color> vertexColors;
 	QList<Polygon_p> polys;
 	QList<Group> groups;
 	p_header header;
-	VertexPC vertex;
+	PolyVertex vertex;
 	TexCoord texC;
 	Color vertexColor;
 	Polygon_p poly;
@@ -43,7 +43,6 @@ bool FieldModelPartPC::open(QFile *p_file)
 	for(i=0 ; i<header.numVertices ; ++i) {
 		if(p_file->read((char *)&vertex, 12)!=12)	return false;
 		vertices.append(vertex);
-//		qDebug() << "vertex" << i << vertex.x << vertex.y << vertex.z;
 	}
 
 //	for(i=0 ; i<header.numNormals ; ++i) {
@@ -81,10 +80,10 @@ bool FieldModelPartPC::open(QFile *p_file)
 	QRgb color;
 
 	foreach(const Group &g, groups) {
-		FieldModelGroup grp;
+		FieldModelGroup *grp = new FieldModelGroup();
 
 		if(g.areTexturesUsed) {
-			grp.setTextureNumber(g.textureNumber);
+			grp->setTextureNumber(g.textureNumber);
 		}
 
 		for(quint32 polyID=0 ; polyID<g.numPolygons && g.polygonStartIndex + polyID < (quint32)polys.size() ; ++polyID) {
@@ -131,7 +130,7 @@ bool FieldModelPartPC::open(QFile *p_file)
 					}
 				}
 			}
-			grp.addTriangle(TrianglePoly(polyVertices, polyColors, polyTexCoords));
+			grp->addPolygon(new TrianglePoly(polyVertices, polyColors, polyTexCoords));
 		}
 
 		_groups.append(grp);

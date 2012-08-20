@@ -29,7 +29,7 @@ class ModelManager : public QDialog
 public:
 	ModelManager(Field *field, const QGLWidget *shareWidget=0, QWidget *parent=0);
 private:
-	FieldModelLoader *fieldModelLoader;
+	FieldModelLoaderPC *fieldModelLoader;
 	bool page_filled;
 	QSpinBox *typeHRC;
 	QTreeWidget *models;

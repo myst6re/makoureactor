@@ -255,16 +255,6 @@ int Field::getModelID(quint8 grpScriptID) const
 	return ID;
 }
 
-QString Field::HRCName(int modelID)
-{
-	return getFieldModelLoader()->model_nameHRC.value(modelID);
-}
-
-QString Field::AName(int modelID, int numA)
-{
-	return getFieldModelLoader()->model_anims.value(modelID).value(numA);
-}
-
 void Field::getBgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z, qint16 *x, qint16 *y) const
 {
 	foreach(GrpScript *grpScript, grpScripts) {
@@ -273,22 +263,37 @@ void Field::getBgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z, q
 	}
 }
 
-QPixmap Field::openModelAndBackground(const QByteArray &contenu)
+QPixmap Field::openModelAndBackgroundPC(const QByteArray &contenu)
 {
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
-	Field::getBgParamAndBgMove(paramActifs, z);
+	getBgParamAndBgMove(paramActifs, z);
 
-	getFieldModelLoader();
+	FieldModelLoaderPC *fieldModelLoader = getFieldModelLoaderPC();
 
-	if(!modelLoader->isLoaded())
-		modelLoader->load(contenu, this->name);
+	if(!fieldModelLoader->isLoaded())
+		fieldModelLoader->load(contenu, this->name);
 
 //	Data::currentCharNames = model_nameChar;
-	Data::currentHrcNames = &modelLoader->model_nameHRC;
-	Data::currentAnimNames = &modelLoader->model_anims;
+	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
+	Data::currentAnimNames = &fieldModelLoader->model_anims;
 
 	return ouvrirBackgroundPC(contenu, paramActifs, z);
+}
+
+QPixmap Field::openModelAndBackgroundPS(const QByteArray &mimDataDec, const QByteArray &datDataDec)
+{
+	if(mimDataDec.isEmpty() || datDataDec.isEmpty())	return QPixmap();
+	QHash<quint8, quint8> paramActifs;
+	qint16 z[] = {-1, -1};
+	getBgParamAndBgMove(paramActifs, z);
+
+	FieldModelLoaderPS *fieldModelLoader = getFieldModelLoaderPS();
+
+	if(!fieldModelLoader->isLoaded())
+		fieldModelLoader->load(datDataDec);
+
+	return ouvrirBackgroundPS(mimDataDec, datDataDec, paramActifs, z);
 }
 
 bool Field::getUsedParamsPC(const QByteArray &contenu, QHash<quint8, quint8> &usedParams, bool *layerExists) const
@@ -715,15 +720,6 @@ QPixmap Field::ouvrirBackgroundPC(const QByteArray &contenu, const QHash<quint8,
 	}
 	
 	return QPixmap::fromImage(image);
-}
-
-QPixmap Field::ouvrirBackgroundPS(const QByteArray &mimDataDec, const QByteArray &datDataDec) const
-{
-	if(mimDataDec.isEmpty() || datDataDec.isEmpty())	return QPixmap();
-	QHash<quint8, quint8> paramActifs;
-	qint16 z[] = {-1, -1};
-	getBgParamAndBgMove(paramActifs, z);
-	return ouvrirBackgroundPS(mimDataDec, datDataDec, paramActifs, z);
 }
 
 QPixmap Field::ouvrirBackgroundPS(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
@@ -1347,10 +1343,16 @@ InfFile *Field::getInf()
 	return inf = new InfFile();
 }
 
-FieldModelLoader *Field::getFieldModelLoader()
+FieldModelLoaderPC *Field::getFieldModelLoaderPC()
 {
-	if(modelLoader)	return modelLoader;
-	return modelLoader = new FieldModelLoader();
+	if(modelLoader)	return (FieldModelLoaderPC *)modelLoader;
+	return (FieldModelLoaderPC *)(modelLoader = new FieldModelLoaderPC());
+}
+
+FieldModelLoaderPS *Field::getFieldModelLoaderPS()
+{
+	if(modelLoader)	return (FieldModelLoaderPS *)modelLoader;
+	return (FieldModelLoaderPS *)(modelLoader = new FieldModelLoaderPS());
 }
 
 const QString &Field::getName() const
@@ -1456,7 +1458,7 @@ QByteArray Field::save(const QByteArray &fileData, bool compress)
 	toc.append((char *)&size, 4);
 
 	// Section 3 (model loader PC)
-	section = getFieldModelLoader()->save(decompresse.mid(debutSections[2]+4, debutSections[3]-debutSections[2]-4), this->name);
+	section = getFieldModelLoaderPC()->save(decompresse.mid(debutSections[2]+4, debutSections[3]-debutSections[2]-4), this->name);
 	section_size = section.size();
 
 	newData.append((char *)&section_size, 4).append(section);
@@ -1796,7 +1798,7 @@ qint8 Field::importer(const QString &path, FieldParts part)
 	}
 	if(part.testFlag(HrcLoader)) {
 		if(!path.endsWith(".dat", Qt::CaseInsensitive) && position != 0) {
-			getFieldModelLoader()->load(contenu, this->name);
+			getFieldModelLoaderPC()->load(contenu, this->name);
 		}
 	}
 	

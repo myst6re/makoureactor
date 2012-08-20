@@ -62,11 +62,11 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 	for(i=0 ; i<partHeader.numVertices ; ++i) {
 		qint16 v;
 		memcpy(&v, &data[offsetToVertex + i*8 + 4], 2);
-		vertex.x = -v / 4096.0f;
+		vertex.x = v / 31.0f;
 		memcpy(&v, &data[offsetToVertex + i*8 + 6], 2);
-		vertex.z = -v / 4096.0f;
+		vertex.y = v / 31.0f;
 		memcpy(&v, &data[offsetToVertex + i*8 + 8], 2);
-		vertex.y = -v / 4096.0f;
+		vertex.z = v / 31.0f;
 
 		vertices.append(vertex);
 	}
@@ -84,8 +84,8 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 	}
 
 	for(i=0 ; i<partHeader.numTexCs ; ++i) {
-		texCoord.x = (quint8)data[offsetToTexCoords + i * 2];
-		texCoord.y = (quint8)data[offsetToTexCoords + i * 2 + 1];
+		texCoord.x = (quint8)data[offsetToTexCoords + i * 2] / 512.0f;
+		texCoord.y = (quint8)data[offsetToTexCoords + i * 2 + 1] / 256.0f;
 
 		texCoords.append(texCoord);
 	}
@@ -94,7 +94,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	// Polygons
 	quint32 offsetToPoly = offsetToVertex + partHeader.offset_poly;
-	FieldModelGroup group;
+	FieldModelGroup *group = new FieldModelGroup();
 
 	qDebug() << "Offset to poly (tex quads)" << offsetToPoly;
 	qDebug() << "Offset to flags" << (offsetToVertex+partHeader.offset_flags);
@@ -102,6 +102,14 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 	qDebug() << "Offset to control" << (offsetToVertex+partHeader.offset_control);
 	qDebug() << "Offset to unknown" << partHeader.offset_unknown;
 	qDebug() << "Offset to prec" << partHeader.offset_prec;
+	qDebug() << "color tex quad count" << partHeader.num_quad_color_tex;
+	qDebug() << "mono tex quad count" << partHeader.num_quad_mono_tex;
+	qDebug() << "color quad count" << partHeader.num_quad_color;
+	qDebug() << "mono quad count" << partHeader.num_quad_mono;
+	qDebug() << "color tex triangle count" << partHeader.num_tri_color_tex;
+	qDebug() << "mono tex triangle count" << partHeader.num_tri_mono_tex;
+	qDebug() << "color triangle count" << partHeader.num_tri_color;
+	qDebug() << "mono triangle count" << partHeader.num_tri_mono;
 
 	//--> Textured Quads
 
@@ -124,7 +132,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			}
 		}
 
-		group.addQuad(QuadPoly(polyVertices, polyColors, polyTexCoords));
+		group->addPolygon(new QuadPoly(polyVertices, polyColors, polyTexCoords));
 
 		offsetToPoly += sizeof(TexturedQuad);
 	}
@@ -152,7 +160,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			}
 		}
 
-		group.addTriangle(TrianglePoly(polyVertices, polyColors, polyTexCoords));
+		group->addPolygon(new TrianglePoly(polyVertices, polyColors, polyTexCoords));
 
 		offsetToPoly += sizeof(TexturedTriangle);
 	}
@@ -179,7 +187,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			}
 		}
 
-		group.addQuad(QuadPoly(polyVertices, polyColor, polyTexCoords));
+		group->addPolygon(new QuadPoly(polyVertices, polyColor, polyTexCoords));
 
 		offsetToPoly += sizeof(MonochromeTexturedQuad);
 	}
@@ -206,7 +214,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			}
 		}
 
-		group.addTriangle(TrianglePoly(polyVertices, polyColor, polyTexCoords));
+		group->addPolygon(new TrianglePoly(polyVertices, polyColor, polyTexCoords));
 
 		offsetToPoly += sizeof(MonochromeTexturedTriangle);
 	}
@@ -230,7 +238,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			}
 		}
 
-		group.addTriangle(TrianglePoly(polyVertices, polyColor));
+		group->addPolygon(new TrianglePoly(polyVertices, polyColor));
 
 		offsetToPoly += sizeof(MonochromeTriangle);
 	}
@@ -254,7 +262,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			}
 		}
 
-		group.addQuad(QuadPoly(polyVertices, polyColor));
+		group->addPolygon(new QuadPoly(polyVertices, polyColor));
 
 		offsetToPoly += sizeof(MonochromeQuad);
 	}
@@ -279,7 +287,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			}
 		}
 
-		group.addTriangle(TrianglePoly(polyVertices, polyColors));
+		group->addPolygon(new TrianglePoly(polyVertices, polyColors));
 
 		offsetToPoly += sizeof(ColorTriangle);
 	}
@@ -304,10 +312,12 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			}
 		}
 
-		group.addQuad(QuadPoly(polyVertices, polyColors));
+		group->addPolygon(new QuadPoly(polyVertices, polyColors));
 
 		offsetToPoly += sizeof(ColorQuad);
 	}
+
+	_groups.append(group);
 
 	qDebug() << "Offset to poly (after all)" << offsetToPoly;
 

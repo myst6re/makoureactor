@@ -34,12 +34,15 @@ class Poly
 public:
 	Poly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	Poly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	virtual ~Poly();
 	void setVertices(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	void setVertices(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	virtual int count() const=0;
 	const PolyVertex &vertex(quint8 id) const;
+	const QRgb &color() const;
 	QRgb color(quint8 id) const;
 	const TexCoord &texCoord(quint8 id) const;
+	bool isMonochrome() const;
 	bool hasTexture() const;
 protected:
 	QList<PolyVertex> _vertices;
@@ -67,25 +70,25 @@ class FieldModelGroup
 {
 public:
 	FieldModelGroup();
-	const QList<QuadPoly> &quads() const;
-	const QList<TrianglePoly> &triangles() const;
-	void addQuad(const QuadPoly &quad);
-	void addTriangle(const TrianglePoly &triangle);
+	virtual ~FieldModelGroup();
+	const QList<Poly *> &polygons() const;
+	void addPolygon(Poly *polygon);
 	int textureNumber() const;
 	void setTextureNumber(int texNumber);
 private:
 	int _textureNumber;
-	QList<QuadPoly> _quads;
-	QList<TrianglePoly> _triangles;
+	QList<Poly *> _polys;
 };
 
 class FieldModelPart
 {
 public:
 	FieldModelPart();
-	const QList<FieldModelGroup> &groups() const;
+	virtual ~FieldModelPart();
+	const QList<FieldModelGroup *> &groups() const;
+	QString toString() const;
 protected:
-	QList<FieldModelGroup> _groups;
+	QList<FieldModelGroup *> _groups;
 };
 
 #endif // FIELDMODELPART_H
