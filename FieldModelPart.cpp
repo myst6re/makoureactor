@@ -79,11 +79,27 @@ bool Poly::hasTexture() const
 QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords) :
 	Poly(vertices, colors, texCoords)
 {
+	QList<PolyVertex> vertices2;
+
+	vertices2.append(vertices.at(0));
+	vertices2.append(vertices.at(1));
+	vertices2.append(vertices.at(3));// swapping the two last vertices
+	vertices2.append(vertices.at(2));
+
+	_vertices = vertices2;
 }
 
 QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords) :
 	Poly(vertices, color, texCoords)
 {
+	QList<PolyVertex> vertices2;
+
+	vertices2.append(vertices.at(0));
+	vertices2.append(vertices.at(1));
+	vertices2.append(vertices.at(3));// swapping the two last vertices
+	vertices2.append(vertices.at(2));
+
+	_vertices = vertices2;
 }
 
 TrianglePoly::TrianglePoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords) :

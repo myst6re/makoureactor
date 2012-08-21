@@ -96,20 +96,23 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 	quint32 offsetToPoly = offsetToVertex + partHeader.offset_poly;
 	FieldModelGroup *group = new FieldModelGroup();
 
-	qDebug() << "Offset to poly (tex quads)" << offsetToPoly;
 	qDebug() << "Offset to flags" << (offsetToVertex+partHeader.offset_flags);
 	qDebug() << "Offset to flags (after all)" << (offsetToVertex+partHeader.offset_flags+partHeader.num_flags*4) << "num" << partHeader.num_flags;
 	qDebug() << "Offset to control" << (offsetToVertex+partHeader.offset_control);
 	qDebug() << "Offset to unknown" << partHeader.offset_unknown;
 	qDebug() << "Offset to prec" << partHeader.offset_prec;
-	qDebug() << "color tex quad count" << partHeader.num_quad_color_tex;
-	qDebug() << "mono tex quad count" << partHeader.num_quad_mono_tex;
-	qDebug() << "color quad count" << partHeader.num_quad_color;
-	qDebug() << "mono quad count" << partHeader.num_quad_mono;
-	qDebug() << "color tex triangle count" << partHeader.num_tri_color_tex;
-	qDebug() << "mono tex triangle count" << partHeader.num_tri_mono_tex;
-	qDebug() << "color triangle count" << partHeader.num_tri_color;
-	qDebug() << "mono triangle count" << partHeader.num_tri_mono;
+	qDebug() << "color tex quad count" << partHeader.num_quad_color_tex << sizeof(TexturedQuad);
+	qDebug() << "mono tex quad count" << partHeader.num_quad_mono_tex << sizeof(TexturedTriangle);
+	qDebug() << "color quad count" << partHeader.num_quad_color << sizeof(MonochromeTexturedQuad);
+	qDebug() << "mono quad count" << partHeader.num_quad_mono << sizeof(MonochromeTexturedTriangle);
+	qDebug() << "mono tex triangle count" << partHeader.num_tri_mono_tex << sizeof(MonochromeTriangle);
+	qDebug() << "color tex triangle count" << partHeader.num_tri_color_tex << sizeof(MonochromeQuad);
+	qDebug() << "mono triangle count" << partHeader.num_tri_mono << sizeof(ColorTriangle);
+	qDebug() << "color triangle count" << partHeader.num_tri_color << sizeof(ColorQuad);
+
+	qDebug() << "Offset to poly (tex quads)" << offsetToPoly;
+
+	bool notAdd;
 
 	//--> Textured Quads
 
@@ -120,6 +123,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		QList<PolyVertex> polyVertices;
 		QList<QRgb> polyColors;
 		QList<TexCoord> polyTexCoords;
+		notAdd = false;
 
 		for(int j=0 ; j<4 ; ++j) {
 			quint8 vertexIndex = texturedQuad.vertexIndex[j];
@@ -129,10 +133,15 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				Color2 color = texturedQuad.color[j];
 				polyColors.append(qRgb(color.red, color.green, color.blue));
 				polyTexCoords.append(texCoords.at(texCoordIndex));
+			} else {
+				notAdd = true;
+				qDebug() << "error index col tex quad" << i << j;
+				break;
 			}
 		}
 
-		group->addPolygon(new QuadPoly(polyVertices, polyColors, polyTexCoords));
+		if(!notAdd)
+			group->addPolygon(new QuadPoly(polyVertices, polyColors, polyTexCoords));
 
 		offsetToPoly += sizeof(TexturedQuad);
 	}
@@ -148,6 +157,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		QList<PolyVertex> polyVertices;
 		QList<QRgb> polyColors;
 		QList<TexCoord> polyTexCoords;
+		notAdd = false;
 
 		for(int j=0 ; j<3 ; ++j) {
 			quint8 vertexIndex = texturedTriangle.vertexIndex[j];
@@ -157,10 +167,15 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				Color2 color = texturedTriangle.color[j];
 				polyColors.append(qRgb(color.red, color.green, color.blue));
 				polyTexCoords.append(texCoords.at(texCoordIndex));
+			} else {
+				notAdd = true;
+				qDebug() << "error index col tex tri" << i << j;
+				break;
 			}
 		}
 
-		group->addPolygon(new TrianglePoly(polyVertices, polyColors, polyTexCoords));
+		if(!notAdd)
+			group->addPolygon(new TrianglePoly(polyVertices, polyColors, polyTexCoords));
 
 		offsetToPoly += sizeof(TexturedTriangle);
 	}
@@ -177,6 +192,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		Color2 color = monochromeTexturedQuad.color;
 		QRgb polyColor = qRgb(color.red, color.green, color.blue);
 		QList<TexCoord> polyTexCoords;
+		notAdd = false;
 
 		for(int j=0 ; j<4 ; ++j) {
 			quint8 vertexIndex = monochromeTexturedQuad.vertexIndex[j];
@@ -184,10 +200,15 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			if(vertexIndex < vertices.size() && texCoordIndex < texCoords.size()) {
 				polyVertices.append(vertices.at(vertexIndex));
 				polyTexCoords.append(texCoords.at(texCoordIndex));
+			} else {
+				notAdd = true;
+				qDebug() << "error index mono tex quad" << i << j;
+				break;
 			}
 		}
 
-		group->addPolygon(new QuadPoly(polyVertices, polyColor, polyTexCoords));
+		if(!notAdd)
+			group->addPolygon(new QuadPoly(polyVertices, polyColor, polyTexCoords));
 
 		offsetToPoly += sizeof(MonochromeTexturedQuad);
 	}
@@ -204,6 +225,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		Color2 color = monochromeTexturedTriangle.color;
 		QRgb polyColor = qRgb(color.red, color.green, color.blue);
 		QList<TexCoord> polyTexCoords;
+		notAdd = false;
 
 		for(int j=0 ; j<3 ; ++j) {
 			quint8 vertexIndex = monochromeTexturedTriangle.vertexIndex[j];
@@ -211,10 +233,15 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			if(vertexIndex < vertices.size() && texCoordIndex < texCoords.size()) {
 				polyVertices.append(vertices.at(vertexIndex));
 				polyTexCoords.append(texCoords.at(texCoordIndex));
+			} else {
+				notAdd = true;
+				qDebug() << "error index mono tex tri" << i << j;
+				break;
 			}
 		}
 
-		group->addPolygon(new TrianglePoly(polyVertices, polyColor, polyTexCoords));
+		if(!notAdd)
+			group->addPolygon(new TrianglePoly(polyVertices, polyColor, polyTexCoords));
 
 		offsetToPoly += sizeof(MonochromeTexturedTriangle);
 	}
@@ -230,15 +257,21 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		QList<PolyVertex> polyVertices;
 		Color2 color = monochromeTriangle.color;
 		QRgb polyColor = qRgb(color.red, color.green, color.blue);
+		notAdd = false;
 
 		for(int j=0 ; j<3 ; ++j) {
 			quint8 vertexIndex = monochromeTriangle.vertexIndex[j];
 			if(vertexIndex < vertices.size()) {
 				polyVertices.append(vertices.at(vertexIndex));
+			} else {
+				notAdd = true;
+				qDebug() << "error index mono tri" << i << j;
+				break;
 			}
 		}
 
-		group->addPolygon(new TrianglePoly(polyVertices, polyColor));
+		if(!notAdd)
+			group->addPolygon(new TrianglePoly(polyVertices, polyColor));
 
 		offsetToPoly += sizeof(MonochromeTriangle);
 	}
@@ -254,15 +287,21 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		QList<PolyVertex> polyVertices;
 		Color2 color = monochromeQuad.color;
 		QRgb polyColor = qRgb(color.red, color.green, color.blue);
+		notAdd = false;
 
 		for(int j=0 ; j<4 ; ++j) {
 			quint8 vertexIndex = monochromeQuad.vertexIndex[j];
 			if(vertexIndex < vertices.size()) {
 				polyVertices.append(vertices.at(vertexIndex));
+			} else {
+				notAdd = true;
+				qDebug() << "error index mono quad" << i << j;
+				break;
 			}
 		}
 
-		group->addPolygon(new QuadPoly(polyVertices, polyColor));
+		if(!notAdd)
+			group->addPolygon(new QuadPoly(polyVertices, polyColor));
 
 		offsetToPoly += sizeof(MonochromeQuad);
 	}
@@ -277,6 +316,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 		QList<PolyVertex> polyVertices;
 		QList<QRgb> polyColors;
+		notAdd = false;
 
 		for(int j=0 ; j<3 ; ++j) {
 			quint8 vertexIndex = colorTriangle.vertexIndex[j];
@@ -284,10 +324,15 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyVertices.append(vertices.at(vertexIndex));
 				Color2 color = colorTriangle.color[j];
 				polyColors.append(qRgb(color.red, color.green, color.blue));
+			} else {
+				notAdd = true;
+				qDebug() << "error index col tri" << i << j;
+				break;
 			}
 		}
 
-		group->addPolygon(new TrianglePoly(polyVertices, polyColors));
+		if(!notAdd)
+			group->addPolygon(new TrianglePoly(polyVertices, polyColors));
 
 		offsetToPoly += sizeof(ColorTriangle);
 	}
@@ -302,6 +347,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 		QList<PolyVertex> polyVertices;
 		QList<QRgb> polyColors;
+		notAdd = false;
 
 		for(int j=0 ; j<4 ; ++j) {
 			quint8 vertexIndex = colorQuad.vertexIndex[j];
@@ -309,10 +355,15 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyVertices.append(vertices.at(vertexIndex));
 				Color2 color = colorQuad.color[j];
 				polyColors.append(qRgb(color.red, color.green, color.blue));
+			} else {
+				notAdd = true;
+				qDebug() << "error index col quad" << i << j;
+				break;
 			}
 		}
 
-		group->addPolygon(new QuadPoly(polyVertices, polyColors));
+		if(!notAdd)
+			group->addPolygon(new QuadPoly(polyVertices, polyColors));
 
 		offsetToPoly += sizeof(ColorQuad);
 	}
