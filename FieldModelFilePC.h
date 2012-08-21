@@ -21,6 +21,7 @@
 #include <QtGui>
 #include "FieldModelFile.h"
 #include "FieldModelPartPC.h"
+#include "FieldModelLoaderPC.h"
 
 typedef struct {
 	quint32 version;
@@ -37,6 +38,7 @@ public:
 	FieldModelFilePC();
 	void clear();
 	bool isPS() const { return false; }
+	quint8 load(FieldModelLoaderPC *modelLoader, int modelID, int animID, bool animate=false);
 	quint8 load(QString hrc, QString a, bool animate=false);
 private:
 	QMultiMap<int, QStringList> rsd_files;

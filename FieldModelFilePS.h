@@ -21,6 +21,9 @@
 #include <QtGui>
 #include "FieldModelFile.h"
 #include "FieldModelPartPS.h"
+#include "FieldModelLoaderPS.h"
+#include "FieldArchive.h"
+#include "TdbFile.h"
 
 typedef struct {
 	quint16 num_frames;					// Number of frames
@@ -83,6 +86,19 @@ typedef struct {
 } Model;
 
 typedef struct {
+	quint16 u0;
+	quint8 num_bones;
+	quint8 num_parts;
+	quint8 num_animations;
+	quint8 u1[17];
+	quint16 scale;
+	quint16 offset_parts; // relative to the end of this structure
+	quint16 offset_animations; // relative to the end of this structure
+	quint32 offset_skeleton;
+	quint32 u2;
+} BCXModel;
+
+typedef struct {
 	qint16 length;
 	qint8 parent;
 	quint8 unknown;
@@ -93,10 +109,13 @@ class FieldModelFilePS : public FieldModelFile
 public:
 	FieldModelFilePS();
 	bool isPS() const { return true; }
-	quint8 load(const QByteArray &BSX_data, int model_id, int animation_id, bool animate=false);
+	quint8 load(FieldArchive *fieldArchive, Field *currentField, int model_id, int animation_id, bool animate=false);
 
 private:
+	int openSkeleton(const char *constData, int curOff, int size, quint8 numBones);
+	int openMesh(const char *constData, int curOff, int size, quint8 numParts);
 	bool openAnimation(const char *constData, int curOff, int animation_id, int size, bool animate=false);
+	bool openBCX(const QByteArray &BCX, int animationID, bool animation=false);
 };
 
 #endif // FIELDMODELFILEPS_H

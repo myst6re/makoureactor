@@ -18,7 +18,7 @@
 #include "IdFile.h"
 
 IdFile::IdFile() :
-	modified(false), opened(false)
+	modified(false), opened(false), _unknown(0), _hasUnknownData(false)
 {
 }
 
@@ -74,8 +74,14 @@ bool IdFile::open(const QByteArray &data)
 	quint32 accessStart = posSectionId+nbSector*24, i;
 
 	if((quint32)sizeId != accessStart+nbSector*6 - posSectionId + 4) {
-		qWarning() << "size id error" << sizeId << ((accessStart+nbSector*6) - posSectionId + 4);
-		return false;
+
+		if((quint32)sizeId == accessStart+nbSector*6 - posSectionId + 4 + 2) {
+			memcpy(&_unknown, &constData[accessStart+nbSector*6], 2);
+			_hasUnknownData = true;
+		} else {
+			qWarning() << "size id error" << sizeId << ((accessStart+nbSector*6) - posSectionId + 4);
+			return false;
+		}
 	}
 
 	Triangle triangle;
@@ -116,6 +122,10 @@ bool IdFile::save(QByteArray &id)
 
 	foreach(const Access &access, _access) {
 		id.append((char *)&access, sizeof(Access));
+	}
+
+	if(_hasUnknownData) {
+		id.append((char *)&_unknown, 2);
 	}
 
 	return true;
@@ -185,6 +195,16 @@ void IdFile::setAccess(int triangleID, const Access &access)
 {
 	_access[triangleID] = access;
 	modified = true;
+}
+
+bool IdFile::hasUnknownData() const
+{
+	return _hasUnknownData;
+}
+
+qint16 IdFile::unknown() const
+{
+	return _unknown;
 }
 
 Vertex_sr IdFile::fromVertex_s(const Vertex_s &vertex_s)

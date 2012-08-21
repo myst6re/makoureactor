@@ -99,6 +99,12 @@ typedef struct {
 	Color2 color[4];
 } ColorQuad;
 
+typedef struct {
+	quint8 type, bpp;
+	quint8 imgX, imgY;
+	quint8 palX, palY;
+} TextureInfo;
+
 class FieldModelPartPS : public FieldModelPart
 {
 public:
@@ -106,7 +112,9 @@ public:
 	bool open(const char *data, quint32 offset, quint32 size);
 	qint8 boneID() const;
 private:
+	void addTexture(const char *data, quint32 offsetControl, quint32 offsetFlag, quint32 size);
 	qint8 _boneID;
+	QList<TextureInfo> _textures;
 };
 
 #endif // FIELDMODELPARTPS_H

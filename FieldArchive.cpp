@@ -181,25 +181,8 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 		if((quint32)data.size() != lzsSize + 4)				return QByteArray();
 
 		return unlzs ? LZS::decompress(data.mid(4)) : data;
-	} else if(isIso()) {
-		data = iso->file(isoFieldDirectory->file(field->getName().toUpper()+".DAT"));
-
-		memcpy(&lzsSize, data.constData(), 4);
-
-		if((quint32)data.size() != lzsSize+4)	return QByteArray();
-
-		return unlzs ? LZS::decompress(data.mid(4)) : data;
-	} else if(isDirectory()) {
-		QFile fic(chemin()+field->getName().toUpper()+".DAT");
-		if(!fic.open(QIODevice::ReadOnly))	return QByteArray();
-		data = fic.readAll();
-		fic.close();
-
-		memcpy(&lzsSize, data.constData(), 4);
-
-		if((quint32)data.size() != lzsSize+4)	return QByteArray();
-
-		return unlzs ? LZS::decompress(data.mid(4)) : data;
+	} else if(isIso() || isDirectory()) {
+		return getFileData(field->getName().toUpper()+".DAT", unlzs);
 	} else {
 		return QByteArray();
 	}
@@ -207,36 +190,15 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 
 QByteArray FieldArchive::getMimData(Field *field, bool unlzs)
 {
-	quint32 lzsSize;
-	QByteArray data;
-
-	if(isLgp()) {
-		return QByteArray();
-	} else if(isIso()) {
-		data = iso->file(isoFieldDirectory->file(field->getName().toUpper()+".MIM"));
-
-		memcpy(&lzsSize, data.constData(), 4);
-
-		if((quint32)data.size() != lzsSize+4)	return QByteArray();
-
-		return unlzs ? LZS::decompress(data.mid(4)) : data;
-	} else if(isDatFile() || isDirectory()) {
-		QFile fic(chemin()+field->getName().toUpper()+".MIM");
-		if(!fic.open(QIODevice::ReadOnly))	return QByteArray();
-		data = fic.readAll();
-		fic.close();
-
-		memcpy(&lzsSize, data.constData(), 4);
-
-		if((quint32)data.size() != lzsSize+4)	return QByteArray();
-
-		return unlzs ? LZS::decompress(data.mid(4)) : data;
-	} else {
-		return QByteArray();
-	}
+	return getFileData(field->getName().toUpper()+".MIM", unlzs);
 }
 
 QByteArray FieldArchive::getModelData(Field *field, bool unlzs)
+{
+	return getFileData(field->getName().toUpper()+".BSX", unlzs);
+}
+
+QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 {
 	quint32 lzsSize;
 	QByteArray data;
@@ -244,7 +206,7 @@ QByteArray FieldArchive::getModelData(Field *field, bool unlzs)
 	if(isLgp()) {
 		return QByteArray();
 	} else if(isIso()) {
-		data = iso->file(isoFieldDirectory->file(field->getName().toUpper()+".BSX"));
+		data = iso->file(isoFieldDirectory->file(fileName.toUpper()));
 
 		memcpy(&lzsSize, data.constData(), 4);
 
@@ -252,7 +214,7 @@ QByteArray FieldArchive::getModelData(Field *field, bool unlzs)
 
 		return unlzs ? LZS::decompress(data.mid(4)) : data;
 	} else if(isDatFile() || isDirectory()) {
-		QFile fic(chemin()+field->getName().toUpper()+".BSX");
+		QFile fic(chemin()+fileName.toUpper());
 		if(!fic.open(QIODevice::ReadOnly))	return QByteArray();
 		data = fic.readAll();
 		fic.close();

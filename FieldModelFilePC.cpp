@@ -30,6 +30,14 @@ void FieldModelFilePC::clear()
 	FieldModelFile::clear();
 }
 
+quint8 FieldModelFilePC::load(FieldModelLoaderPC *modelLoader, int modelID, int animID, bool animate)
+{
+	QString hrc = modelLoader->HRCName(modelID);
+	QString a = modelLoader->AName(modelID, animID);
+
+	return load(hrc, a, animate);
+}
+
 quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 {
 	if(hrc.isEmpty() || a.isEmpty()) {
@@ -73,9 +81,9 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 
 							if((pos=Data::charlgp_listPos.value(p%".p"))>0 && fic.seek(pos+24)
 									&& part->open(&fic)) {
-								parts.insert(boneID, part);
+								_parts.insert(boneID, part);
 
-								QFile textOut(QString("fieldModelPartPC%1.txt").arg(parts.size()-1));
+								QFile textOut(QString("fieldModelPartPC%1.txt").arg(_parts.size()-1));
 								textOut.open(QIODevice::WriteOnly);
 								textOut.write(part->toString().toLatin1());
 								textOut.close();
@@ -88,15 +96,15 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 			}
 			rsd_files.clear();
 
-			if(!parts.isEmpty()
+			if(!_parts.isEmpty()
 					&& (pos=Data::charlgp_listPos.value(a%".a"))>0 && fic.seek(pos+20) && open_a(&fic, animate))
 			{
-				QList<QList<int> > values = tex_files.values();
+				QList<QList<int> > values = _tex_files.values();
 
 				foreach(const QList<int> &texs, values) {
 					foreach(const int &tex, texs) {
-						if(!loaded_tex.contains(tex) && (pos=Data::charlgp_listPos.value(tex2id.at(tex)%".tex"))>0 && fic.seek(pos+20)) {
-							loaded_tex.insert(tex, open_tex(&fic));
+						if(!_loaded_tex.contains(tex) && (pos=Data::charlgp_listPos.value(tex2id.at(tex)%".tex"))>0 && fic.seek(pos+20)) {
+							_loaded_tex.insert(tex, open_tex(&fic));
 						}
 					}
 				}
@@ -159,7 +167,7 @@ bool FieldModelFilePC::open_hrc(QFile *hrc_file)
 		case 2: //Length
 			bone.size = -line.toFloat(&ok);
 			if(!ok) return false;
-			bones.append(bone);
+			_bones.append(bone);
 			break;
 		case 3:
 			rsdlist = line.split(' ', QString::SkipEmptyParts);
@@ -193,10 +201,10 @@ bool FieldModelFilePC::open_a(QFile *a_file, bool animate)
 	   || header.frames_count==0 || a_file->pos()+header.frames_count*(24+12*header.bones_count)>fileSize)
 		return false;
 
-	//qDebug() << header.bones_count << this->bones.size();
+	//qDebug() << header.bones_count << _bones.size();
 	//qDebug() << header.frames_count << fileSize-a_file->pos();
 
-	this->a_bones_count = qMin((int)header.bones_count, this->bones.size());
+	this->a_bones_count = qMin((int)header.bones_count, _bones.size());
 
 	if(!animate)	header.frames_count = qMin(header.frames_count, (quint32)1);
 
@@ -211,7 +219,7 @@ bool FieldModelFilePC::open_a(QFile *a_file, bool animate)
 			if(a_file->read((char *)&rot, 12)!=12)	return false;
 			rotation_coords.append(rot);
 		}
-		this->frames.insert(i, rotation_coords);
+		_frames.insert(i, rotation_coords);
 	}
 	return true;
 }
@@ -258,7 +266,7 @@ QString FieldModelFilePC::open_rsd(QFile *rsd_file, int boneID)
 			}
 		}
 	}
-	tex_files.insert(boneID, texFiles);
+	_tex_files.insert(boneID, texFiles);
 
 	return pname;
 }

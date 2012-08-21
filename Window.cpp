@@ -580,9 +580,9 @@ void Window::afficherGrpScripts()
 	Data::currentModelID = modelID;
 	if(fieldModel && modelID != -1) {
 		if(fieldArchive->isLgp()) {
-			modelLoaded = fieldModel->load(field->getFieldModelLoaderPC()->HRCName(modelID), field->getFieldModelLoaderPC()->AName(modelID), true);
+			modelLoaded = fieldModel->load(field->getFieldModelLoaderPC(), modelID, 0, true);
 		} else {
-			modelLoaded = fieldModel->load(fieldArchive->getModelData(field), modelID, 0, true);
+			modelLoaded = fieldModel->load(fieldArchive, field, modelID, 0, true);
 		}
 	}
 

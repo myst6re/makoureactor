@@ -25,6 +25,7 @@
 #include "FieldModelFilePS.h"
 #include "Data.h"
 #include "Palette.h"
+#include "FieldArchive.h"
 #include "Field.h"
 
 class FieldModel : public QGLWidget
@@ -33,14 +34,15 @@ class FieldModel : public QGLWidget
 public:
 	FieldModel(QWidget *parent=0, const QGLWidget *shareWidget=0);
 	virtual ~FieldModel();
+	quint8 load(FieldModelLoaderPC *modelLoader, int model_id, int animation_id, bool animate=false);
 	quint8 load(const QString &hrc, const QString &a, bool animate=false);
-	quint8 load(const QByteArray &BSX_data, int model_id, int animation_id, bool animate=false);
+	quint8 load(FieldArchive *fieldArchive, Field *currentField, int model_id, int animation_id, bool animate=false);
 	void clear();
 	int nb_bones();
 public slots:
 	void animate();
 private:
-	void drawP(int);
+	void drawP(int partID);
 	void setXRotation(int angle);
 	void setYRotation(int angle);
 	void setZRotation(int angle);

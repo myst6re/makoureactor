@@ -42,6 +42,14 @@ void FieldModel::clear()
 //	glClearColor(0.0,0.0,0.0,0.0);
 }
 
+quint8 FieldModel::load(FieldModelLoaderPC *modelLoader, int modelID, int animID, bool animate)
+{
+	QString hrc = modelLoader->HRCName(modelID);
+	QString a = modelLoader->AName(modelID, animID);
+
+	return load(hrc, a, animate);
+}
+
 quint8 FieldModel::load(const QString &hrc, const QString &a, bool animate)
 {
 	if(blockAll) {
@@ -62,7 +70,7 @@ quint8 FieldModel::load(const QString &hrc, const QString &a, bool animate)
 	quint8 err = ((FieldModelFilePC *)data)->load(hrc, a, animate);
 	if(err==1) {
 		updateGL();
-		if(animate && data->frames.size()>1)	timer.start(30);
+		if(animate && data->frameCount()>1)	timer.start(30);
 	}
 
 	blockAll = false;
@@ -75,7 +83,7 @@ quint8 FieldModel::load(const QString &hrc, const QString &a, bool animate)
 	return err;
 }
 
-quint8 FieldModel::load(const QByteArray &BSX_data, int model_id, int animation_id, bool animate)
+quint8 FieldModel::load(FieldArchive *fieldArchive, Field *currentField, int model_id, int animation_id, bool animate)
 {
 	if(blockAll) {
 		return 2;
@@ -92,10 +100,10 @@ quint8 FieldModel::load(const QByteArray &BSX_data, int model_id, int animation_
 		data = new FieldModelFilePS();
 	}
 
-	quint8 err = ((FieldModelFilePS *)data)->load(BSX_data, model_id, animation_id, animate);
+	quint8 err = ((FieldModelFilePS *)data)->load(fieldArchive, currentField, model_id, animation_id, animate);
 	if(err==1) {
 		updateGL();
-		if(animate && data->frames.size()>1)	timer.start(30);
+		if(animate && data->frameCount()>1)	timer.start(30);
 	}
 
 	blockAll = false;
@@ -110,7 +118,7 @@ quint8 FieldModel::load(const QByteArray &BSX_data, int model_id, int animation_
 
 int FieldModel::nb_bones()
 {
-	return data ? data->bones.size() : 0;
+	return data ? data->boneCount() : 0;
 }
 
 void FieldModel::initializeGL()
@@ -128,13 +136,13 @@ void FieldModel::initializeGL()
 //	gluPerspective(70, (double)width()/(double)height(), 0.001, 1000.0);
 }
 
-void FieldModel::drawP(int index)
+void FieldModel::drawP(int partID)
 {
 	if(!data)	return;
 
 	quint32 j;
-	QList<FieldModelPart *> ps = data->parts.values(index);
-	QList<QList<int> > texss = data->tex_files.values(index);
+	QList<FieldModelPart *> ps = data->parts(partID);
+	QList<QList<int> > texss = data->texFiles(partID);
 	QList<int> texs;
 	int pID=0;
 
@@ -148,7 +156,7 @@ void FieldModel::drawP(int index)
 			if(hasTexture) {
 				glEnable(GL_TEXTURE_2D);
 
-				texture_id = bindTexture(data->loaded_tex.value(texs.at(g->textureNumber()), QPixmap()), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
+				texture_id = bindTexture(data->loadedTexture(texs.at(g->textureNumber())), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
 			}
 
 			int curPolyType = 0;
@@ -313,19 +321,19 @@ void FieldModel::paintGL()
 //	glVertex3f(0.0, 0.0, -20.0);
 //	glEnd();
 
-	if(data->a_bones_count<=1) {
+	if(data->animBoneCount() <= 1) {
 		drawP(0);
 		return;
 	}
 
-	QList<PolyVertex> rot = data->frames.value(currentFrame, QList<PolyVertex>());
+	QList<PolyVertex> rot = data->rotation(currentFrame);
 	if(rot.isEmpty()) return;
 	parent.push(-1);
 
-	for(i=0 ; i<data->a_bones_count ; ++i)
+	for(i=0 ; i<data->animBoneCount() ; ++i)
 	{
 		const PolyVertex &rotation = rot.at(i);
-		const Bone &bone = data->bones.at(i);
+		const Bone &bone = data->bone(i);
 
 		while(!parent.isEmpty() && parent.top() != bone.parent) {
 			parent.pop();
@@ -371,7 +379,7 @@ void FieldModel::mousePressEvent(QMouseEvent *event)
 void FieldModel::animate()
 {
 	if(data && isVisible()) {
-		currentFrame = (currentFrame + 1) % data->frames.size();
+		currentFrame = (currentFrame + 1) % data->frameCount();
 		updateGL();
 	}
 }

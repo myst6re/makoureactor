@@ -22,19 +22,27 @@ FieldModelFilePS::FieldModelFilePS() :
 {
 }
 
-quint8 FieldModelFilePS::load(const QByteArray &BSX_data, int model_id, int animation_id, bool animate)
+quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, int model_id, int animation_id, bool animate)
 {
+	QByteArray BSX_data = fieldArchive->getModelData(currentField);
+	FieldModelLoaderPS *modelLoader = currentField->getFieldModelLoaderPS();
+	quint8 model_global_id = model_id < modelLoader->modelCount() ? modelLoader->model(model_id).modelID : 0;
 	const char *constData = BSX_data.constData();
 	BSX_header header;
 	Model_header model_header;
 	Model model;
 
+	if((quint32)BSX_data.size() < sizeof(BSX_header)) {
+		qWarning() << "invalid BSX size" << BSX_data.size();
+		return 2;
+	}
+
 	memcpy(&header, constData, sizeof(BSX_header));
-	qDebug() << "==== HEADER ====" << 0 << sizeof(BSX_header);
+	qDebug() << "==== BSX HEADER ====" << 0 << sizeof(BSX_header);
 	qDebug() << "size" << header.size << "offset_models" << header.offset_models;
 
 	if((quint32)BSX_data.size() != header.size || header.offset_models >= header.size) {
-		qDebug() << BSX_data.size() << "error";
+		qWarning() << BSX_data.size() << "error";
 		return 2;
 	}
 
@@ -45,7 +53,7 @@ quint8 FieldModelFilePS::load(const QByteArray &BSX_data, int model_id, int anim
 	qDebug() << "texPointer" << model_header.texture_pointer << "unknownPointer" << model_header.unknown_pointer;
 
 	if(model_id >= (int)model_header.num_models) {
-		qDebug() << "model_id too large" << model_id << model_header.num_models;
+		qWarning() << "model_id too large" << model_id << model_header.num_models;
 		return 2;
 	}
 
@@ -75,49 +83,78 @@ quint8 FieldModelFilePS::load(const QByteArray &BSX_data, int model_id, int anim
 
 		qDebug() << "after model header" << (offsetModelHeader + sizeof(Model)) << "skeleton offset" << curOff;
 
-		BonePS bonePS;
-		Bone bone;
-		for(quint8 i=0 ; i<model.num_bones ; ++i) {
-			memcpy(&bonePS, &constData[curOff], sizeof(BonePS));
-			qDebug() << "bone" << i << bonePS.length << bonePS.parent << bonePS.unknown;
-			bone.size = bonePS.length / 31.0f;
-			bone.parent = bonePS.parent;
-			bones.append(bone);
-			curOff += sizeof(BonePS);
-		}
-
-		qDebug() << "after bones position" << curOff;
-
-		for(quint8 i=0 ; i<model.num_parts ; ++i) {
-			FieldModelPartPS *part = new FieldModelPartPS();
-			qDebug() << "==== PART" << i << "====" << curOff;
-			if(part->open(constData, curOff, BSX_data.size())) {
-				parts.insert(part->boneID(), part);
-
-				QFile textOut(QString("fieldModelPartPS%1.txt").arg(i));
-				textOut.open(QIODevice::WriteOnly);
-				textOut.write(part->toString().toLatin1());
-				textOut.close();
-
-			} else {
-				qWarning() << "Error open part" << i;
-				delete part;
+		if(model_global_id >= 1 && model_global_id <= 9) {
+			QString fileName;
+			switch(model_global_id) {
+			case 1:
+				fileName = "CLOUD";
+				break;
+			case 2:
+				fileName = "EARITH";
+				break;
+			case 3:
+				fileName = "BALLET";
+				break;
+			case 4:
+				fileName = "TIFA";
+				break;
+			case 5:
+				fileName = "RED";
+				break;
+			case 6:
+				fileName = "CID";
+				break;
+			case 7:
+				fileName = "YUFI";
+				break;
+			case 8:
+				fileName = "KETCY";
+				break;
+			case 9:
+				fileName = "VINCENT";
+				break;
+			default:
+				break;
 			}
-			curOff += sizeof(Part);
+			if(!openBCX(fieldArchive->getFileData(fileName + ".BCX"), animation_id, animate)) {
+				return false;
+			}
+
+			if(!_frames.isEmpty()) {
+				animation_id -= 3;
+			}
 		}
 
-		qDebug() << "after part headers position" << curOff;
-
-		if(animation_id >= model.num_animations) {
-			qWarning() << "No animation called" << animation_id;
+		if(curOff + model.num_bones * sizeof(BonePS) >= (quint32)BSX_data.size()) {
+			qWarning() << "invalid skeleton size" << model.num_bones;
 			return false;
 		}
 
-//		for(animation_id=0 ; animation_id < model.num_animations ; ++animation_id) {
-			openAnimation(constData, curOff, animation_id, BSX_data.size(), animate);
-//		}
+		curOff = openSkeleton(constData, curOff, BSX_data.size(), model.num_bones);
 
-		qDebug() << "after animation headers position" << (curOff + sizeof(Animation) * model.num_animations);
+		qDebug() << "after bones position" << curOff;
+
+		if(curOff + model.num_parts * sizeof(Part) >= (quint32)BSX_data.size()) {
+			qWarning() << "invalid parts size" << model.num_parts;
+			return false;
+		}
+
+		curOff = openMesh(constData, curOff, BSX_data.size(), model.num_parts);
+
+		qDebug() << "after part headers position" << curOff;
+
+		if(_frames.isEmpty()) {
+			if(animation_id >= model.num_animations) {
+				qWarning() << "No animation called" << animation_id;
+				return false;
+			}
+
+//			for(animation_id=0 ; animation_id < model.num_animations ; ++animation_id) {
+				openAnimation(constData, curOff, animation_id, BSX_data.size(), animate);
+//			}
+
+			qDebug() << "after animation headers position" << (curOff + sizeof(Animation) * model.num_animations);
+		}
 //	}
 
 	quint32 offsetTexHeader = header.offset_models + model_header.texture_pointer;
@@ -139,11 +176,65 @@ quint8 FieldModelFilePS::load(const QByteArray &BSX_data, int model_id, int anim
 		qDebug() << "==== TEXTURE HEADER" << tex << "====" << (offsetTexHeader + 8 + tex*sizeof(TexHeader));
 		qDebug() << "width" << texHeader.width << "height" << texHeader.height << "x" << texHeader.vramX << "y" << texHeader.vramY;
 		qDebug() << "offsetData" << texHeader.offset_data << "endData" << (texHeader.offset_data + texHeader.width * 2 * texHeader.height);
+
+		QImage img(texHeader.width * 2, texHeader.height, QImage::Format_RGB32);
+		QRgb *px = (QRgb *)img.bits();
+		int i=0;
+		for(int y=0 ; y<texHeader.height ; ++y) {
+			for(int x=0 ; x<texHeader.width*2 ; ++x) {
+				px[i] = qRgb(constData[texHeader.offset_data + i], constData[texHeader.offset_data + i], constData[texHeader.offset_data + i]);
+				++i;
+			}
+		}
+		img.save(QString("FieldModelFilePSTex%1.png").arg(tex));
 	}
+
+	TdbFile tdb;
+	tdb.open(fieldArchive->getFileData("FIELD.TDB"));
 
 	dataLoaded = true;
 
 	return true;
+}
+
+int FieldModelFilePS::openSkeleton(const char *constData, int curOff, int size, quint8 numBones)
+{
+	for(quint32 i=0 ; i<numBones ; ++i) {
+		BonePS bonePS;
+		Bone bone;
+		memcpy(&bonePS, &constData[curOff], sizeof(BonePS));
+		qDebug() << "bone" << i << bonePS.length << bonePS.parent << bonePS.unknown;
+		bone.size = bonePS.length / 31.0f;
+		bone.parent = bonePS.parent;
+		_bones.append(bone);
+
+		curOff += sizeof(BonePS);
+	}
+
+	return curOff;
+}
+
+int FieldModelFilePS::openMesh(const char *constData, int curOff, int size, quint8 numParts)
+{
+	for(quint32 i=0 ; i<numParts ; ++i) {
+		FieldModelPartPS *part = new FieldModelPartPS();
+		qDebug() << "==== PART" << i << "====" << curOff;
+		if(part->open(constData, curOff, size)) {
+			_parts.insert(part->boneID(), part);
+
+//			QFile textOut(QString("fieldModelPartPS%1.txt").arg(i));
+//			textOut.open(QIODevice::WriteOnly);
+//			textOut.write(part->toString().toLatin1());
+//			textOut.close();
+
+		} else {
+			qWarning() << "Error open part" << i;
+			delete part;
+		}
+		curOff += sizeof(Part);
+	}
+
+	return curOff;
 }
 
 bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int animation_id, int size, bool animate)
@@ -173,7 +264,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 
 	qDebug() << "Unknown" << unknown << QString::number(unknown, 16);
 
-	this->a_bones_count = qMin((int)a.num_bones, this->bones.size());
+	this->a_bones_count = qMin((int)a.num_bones, _bones.size());
 
 	quint16 numFrames2 = animate ? a.num_frames : qMin((quint16)1, a.num_frames);
 
@@ -305,10 +396,77 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 			rotation_coords.append(rot);
 		}
 
-		frames.insert(frame, rotation_coords);
+		_frames.insert(frame, rotation_coords);
 	}
 
 	qDebug() << "maxOffset animation" << maxOffset;
+
+	return true;
+}
+
+bool FieldModelFilePS::openBCX(const QByteArray &BCX, int animationID, bool animate)
+{
+	BSX_header header;
+	BCXModel model;
+	const char *constData = BCX.constData();
+
+	if((quint32)BCX.size() < sizeof(BSX_header)) {
+		qWarning() << "invalid BSX size" << BCX.size();
+		return false;
+	}
+
+	memcpy(&header, constData, sizeof(BSX_header));
+	qDebug() << "==== BCX HEADER ====" << 0 << sizeof(BSX_header);
+	qDebug() << "size" << header.size << "offset_models" << header.offset_models;
+
+	if((quint32)BCX.size() != header.size || header.offset_models >= header.size) {
+		qWarning() << BCX.size() << "error";
+		return false;
+	}
+
+	memcpy(&model, &constData[header.offset_models], sizeof(BCXModel));
+
+	model.offset_skeleton -= 0x80000000;
+
+	qDebug() << "==== Model ====" << header.offset_models << sizeof(BCXModel) << (header.offset_models+sizeof(BCXModel));
+	qDebug() << "unknown" << model.u0;
+	qDebug() << "bones count" << model.num_bones;
+	qDebug() << "parts count" << model.num_parts;
+	qDebug() << "animations count" << model.num_animations;
+	qDebug() << "unknown" << QByteArray((char *)&model.u1, 17).toHex();
+	qDebug() << "scale" << model.scale;
+	qDebug() << "offsetParts" << (header.offset_models + sizeof(BCXModel) + model.offset_parts)
+				<< "offsetAnimations" << (header.offset_models + sizeof(BCXModel) + model.offset_animations);
+	qDebug() << "offsetSkeleton" << model.offset_skeleton;
+	qDebug() << "unknown" << model.u2 << QString::number(model.u2, 16);
+
+	quint32 curOff = model.offset_skeleton;
+
+	if(curOff + model.num_bones * sizeof(BonePS) >= (quint32)BCX.size()) {
+		qWarning() << "invalid skeleton size" << model.num_bones;
+		return false;
+	}
+
+	curOff = openSkeleton(constData, curOff, BCX.size(), model.num_bones);
+
+	qDebug() << "after bones position" << curOff;
+
+	if(curOff + model.num_parts * sizeof(Part) >= (quint32)BCX.size()) {
+		qWarning() << "invalid parts size" << model.num_parts;
+		return false;
+	}
+
+	curOff = openMesh(constData, curOff, BCX.size(), model.num_parts);
+
+	qDebug() << "after part headers position" << curOff;
+
+	if(animationID < model.num_animations) {
+		openAnimation(constData, curOff, animationID, BCX.size(), animate);
+	}
+
+	qDebug() << "after animation headers position" << (curOff + sizeof(Animation) * model.num_animations);
+
+	qDebug() << "rest of the file" << BCX.mid(curOff + sizeof(Animation) * model.num_animations).toHex();
 
 	return true;
 }

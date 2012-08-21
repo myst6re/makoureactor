@@ -43,7 +43,7 @@ bool CaFile::open(const QByteArray &data)
 
 		// warning : some padding data in ca section
 		if((quint32)data.size() <= posSection3) {
-			qWarning() << "invalid data size walkmesh" << posSection3 << data.size();
+			qWarning() << "invalid data size ca" << posSection3 << data.size();
 			return false;
 		}
 	} else {
@@ -57,12 +57,12 @@ bool CaFile::open(const QByteArray &data)
 
 		// warning : some padding data in ca section
 		if((quint32)data.size() <= posSection5) {
-			qWarning() << "invalid data size walkmesh" << posSection5 << data.size();
+			qWarning() << "invalid data size ca" << posSection5 << data.size();
 			return false;
 		}
 	}
 
-	if(caSize != 38 && caSize % 38 != 0) {
+	if(caSize < 38) {
 		qWarning() << "invalid ca size" << caSize;
 		return false;
 	}

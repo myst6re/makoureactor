@@ -37,15 +37,24 @@ public:
 	virtual void clear();
 	virtual bool isPS() const=0;
 
+	const Bone &bone(int index) const;
+	int boneCount() const;
+	int animBoneCount() const; // valid bone count
+	QList<FieldModelPart *> parts(int partID) const;
+	QList< QList<int> > texFiles(int partID) const;
+	QPixmap loadedTexture(int texID) const;
+	QList<PolyVertex> rotation(int frameID) const;
+	int frameCount() const;
 	QString toStringBones() const;
 
-	QMultiMap<int, FieldModelPart *> parts;
-	QMultiMap<int, QList<int> > tex_files;
-	QHash<int, QPixmap> loaded_tex;
-	QList<Bone> bones;
-	int a_bones_count;
-	QHash<int, QList<PolyVertex> > frames;
+
 protected:
+	QMultiMap<int, FieldModelPart *> _parts;
+	QMultiMap<int, QList<int> > _tex_files;
+	QHash<int, QPixmap> _loaded_tex;
+	QList<Bone> _bones;
+	int a_bones_count;
+	QHash<int, QList<PolyVertex> > _frames;
 	bool dataLoaded;
 };
 

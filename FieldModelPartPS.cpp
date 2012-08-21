@@ -47,8 +47,6 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 	// Vertices
 	quint32 offsetToVertex = partHeader.offset_vertex;
 
-	qDebug() << "Offset to vertex" << offsetToVertex;
-
 	if(offsetToVertex + partHeader.numVertices*8 >= size) {
 		qWarning() << "Invalid part size2" << offsetToVertex << partHeader.numVertices << size;
 		return false;
@@ -71,12 +69,8 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		vertices.append(vertex);
 	}
 
-	qDebug() << "Offset to vertex (after all)" << (offsetToVertex + 4 + partHeader.numVertices*8);
-
 	// Texture coordinates
 	quint32 offsetToTexCoords = offsetToVertex + partHeader.offset_texcoord;
-
-	qDebug() << "Offset to tex Coords" << offsetToTexCoords;
 
 	if(offsetToTexCoords + partHeader.numTexCs*2 >= size) {
 		qWarning() << "Invalid part size3" << size;
@@ -90,27 +84,19 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		texCoords.append(texCoord);
 	}
 
-	qDebug() << "Offset to tex Coords (after all)" << (offsetToTexCoords + partHeader.numTexCs*2);
-
 	// Polygons
 	quint32 offsetToPoly = offsetToVertex + partHeader.offset_poly;
 	FieldModelGroup *group = new FieldModelGroup();
 
+	quint32 offsetToFlag = offsetToVertex+partHeader.offset_flags;
+	quint32 offsetToControl = offsetToVertex + partHeader.offset_control;
+
+	qDebug() << "Offset to vertex" << offsetToVertex;
 	qDebug() << "Offset to flags" << (offsetToVertex+partHeader.offset_flags);
 	qDebug() << "Offset to flags (after all)" << (offsetToVertex+partHeader.offset_flags+partHeader.num_flags*4) << "num" << partHeader.num_flags;
 	qDebug() << "Offset to control" << (offsetToVertex+partHeader.offset_control);
 	qDebug() << "Offset to unknown" << partHeader.offset_unknown;
 	qDebug() << "Offset to prec" << partHeader.offset_prec;
-	qDebug() << "color tex quad count" << partHeader.num_quad_color_tex << sizeof(TexturedQuad);
-	qDebug() << "mono tex quad count" << partHeader.num_quad_mono_tex << sizeof(TexturedTriangle);
-	qDebug() << "color quad count" << partHeader.num_quad_color << sizeof(MonochromeTexturedQuad);
-	qDebug() << "mono quad count" << partHeader.num_quad_mono << sizeof(MonochromeTexturedTriangle);
-	qDebug() << "mono tex triangle count" << partHeader.num_tri_mono_tex << sizeof(MonochromeTriangle);
-	qDebug() << "color tex triangle count" << partHeader.num_tri_color_tex << sizeof(MonochromeQuad);
-	qDebug() << "mono triangle count" << partHeader.num_tri_mono << sizeof(ColorTriangle);
-	qDebug() << "color triangle count" << partHeader.num_tri_color << sizeof(ColorQuad);
-
-	qDebug() << "Offset to poly (tex quads)" << offsetToPoly;
 
 	bool notAdd;
 
@@ -119,6 +105,8 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 	for(i=0 ; i<partHeader.num_quad_color_tex ; ++i) {
 		TexturedQuad texturedQuad;
 		memcpy(&texturedQuad, &data[offsetToPoly], sizeof(TexturedQuad));
+
+		addTexture(data, offsetToControl++, offsetToFlag, size);
 
 		QList<PolyVertex> polyVertices;
 		QList<QRgb> polyColors;
@@ -146,13 +134,13 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		offsetToPoly += sizeof(TexturedQuad);
 	}
 
-	qDebug() << "Offset to poly (tex triangles)" << offsetToPoly;
-
 	//--> Textured Triangles
 
 	for(i=0 ; i<partHeader.num_tri_color_tex ; ++i) {
 		TexturedTriangle texturedTriangle;
 		memcpy(&texturedTriangle, &data[offsetToPoly], sizeof(TexturedTriangle));
+
+		addTexture(data, offsetToControl++, offsetToFlag, size);
 
 		QList<PolyVertex> polyVertices;
 		QList<QRgb> polyColors;
@@ -180,13 +168,13 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		offsetToPoly += sizeof(TexturedTriangle);
 	}
 
-	qDebug() << "Offset to poly (mono tex quads)" << offsetToPoly;
-
 	//--> Monochrome Textured Quads
 
 	for(i=0 ; i<partHeader.num_quad_mono_tex ; ++i) {
 		MonochromeTexturedQuad monochromeTexturedQuad;
 		memcpy(&monochromeTexturedQuad, &data[offsetToPoly], sizeof(MonochromeTexturedQuad));
+
+		addTexture(data, offsetToControl++, offsetToFlag, size);
 
 		QList<PolyVertex> polyVertices;
 		Color2 color = monochromeTexturedQuad.color;
@@ -213,13 +201,13 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		offsetToPoly += sizeof(MonochromeTexturedQuad);
 	}
 
-	qDebug() << "Offset to poly (mono tex triangles)" << offsetToPoly;
-
 	//--> Monochrome Textured Triangles
 
 	for(i=0 ; i<partHeader.num_tri_mono_tex ; ++i) {
 		MonochromeTexturedTriangle monochromeTexturedTriangle;
 		memcpy(&monochromeTexturedTriangle, &data[offsetToPoly], sizeof(MonochromeTexturedTriangle));
+
+		addTexture(data, offsetToControl++, offsetToFlag, size);
 
 		QList<PolyVertex> polyVertices;
 		Color2 color = monochromeTexturedTriangle.color;
@@ -245,8 +233,6 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 		offsetToPoly += sizeof(MonochromeTexturedTriangle);
 	}
-
-	qDebug() << "Offset to poly (mono triangles)" << offsetToPoly;
 
 	//--> Monochrome Triangles
 
@@ -276,8 +262,6 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		offsetToPoly += sizeof(MonochromeTriangle);
 	}
 
-	qDebug() << "Offset to poly (mono quads)" << offsetToPoly;
-
 	//--> Monochrome Quads
 
 	for(i=0 ; i<partHeader.num_quad_mono ; ++i) {
@@ -305,8 +289,6 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 		offsetToPoly += sizeof(MonochromeQuad);
 	}
-
-	qDebug() << "Offset to poly (color triangles)" << offsetToPoly;
 
 	//--> Color Triangles
 
@@ -336,8 +318,6 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 		offsetToPoly += sizeof(ColorTriangle);
 	}
-
-	qDebug() << "Offset to poly (color quads)" << offsetToPoly;
 
 	//--> Color Quads
 
@@ -370,12 +350,40 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	_groups.append(group);
 
-	qDebug() << "Offset to poly (after all)" << offsetToPoly;
-
 	return true;
 }
 
 qint8 FieldModelPartPS::boneID() const
 {
 	return _boneID;
+}
+
+void FieldModelPartPS::addTexture(const char *data, quint32 offsetControl, quint32 offsetFlag, quint32 size)
+{
+	quint8 control = data[offsetControl];
+
+	quint8 blend = (control >> 4) & 0x03;
+	quint8 flagID = control & 0x0F;
+
+	quint32 flag;
+	memcpy(&flag, &data[offsetFlag + flagID*4], 4);
+
+	TextureInfo texInfo;
+
+	texInfo.type	= flag & 0x3F;					// 0000 0000 0000 0000 0000 0000 0011 1111
+	texInfo.bpp		= (flag >> 6) & 0x03;			// 0000 0000 0000 0000 0000 0000 1100 0000
+	texInfo.imgX	= ((flag >> 8) & 0x0f) * 64;	// 0000 0000 0000 0000 0000 1111 0000 0000
+	texInfo.imgY	= ((flag >> 12) & 0x01) * 256;	// 0000 0000 0000 0000 0001 0000 0000 0000
+	quint8 u1		= ((flag >> 13) & 0x07);
+	texInfo.palX	= ((flag >> 16) & 0x3F) * 16;	// 0000 0000 0011 1111 0000 0000 0000 0000
+	texInfo.palY	= ((flag >> 22) & 0x01FF);		// 0111 1111 1100 0000 0000 0000 0000 0000
+	quint8 u2		= ((flag >> 31) & 0x01);
+
+	_textures.append(texInfo);
+
+	qDebug() << "ADDTEXTURE" << flagID;
+	qDebug() << "blend" << blend << "type" << texInfo.type << "bpp" << texInfo.bpp;
+	qDebug() << "imgX" << texInfo.imgX << "imgY" << texInfo.imgY << "u1" << u1;
+	qDebug() << "palX" << texInfo.palX << "palY" << texInfo.palY << "u2" << u2;
+
 }

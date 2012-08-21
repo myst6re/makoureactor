@@ -70,3 +70,13 @@ bool FieldModelLoaderPS::load(const QByteArray &data)
 	loaded = true;
 	return true;
 }
+
+int FieldModelLoaderPS::modelCount() const
+{
+	return _modelLoaders.size();
+}
+
+const FieldModelLoaderStruct &FieldModelLoaderPS::model(int id) const
+{
+	return _modelLoaders.at(id);
+}

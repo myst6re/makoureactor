@@ -32,7 +32,8 @@ class FieldModelLoaderPS : public FieldModelLoader
 public:
 	FieldModelLoaderPS();
 	bool load(const QByteArray &data);
-
+	int modelCount() const;
+	const FieldModelLoaderStruct &model(int id) const;
 private:
 	QList<FieldModelLoaderStruct> _modelLoaders;
 };

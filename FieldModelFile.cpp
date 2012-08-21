@@ -24,20 +24,20 @@ FieldModelFile::FieldModelFile() :
 
 FieldModelFile::~FieldModelFile()
 {
-	foreach(FieldModelPart *part, parts)
+	foreach(FieldModelPart *part, _parts)
 		delete part;
 }
 
 void FieldModelFile::clear()
 {
 	dataLoaded = false;
-	foreach(FieldModelPart *part, parts)
+	foreach(FieldModelPart *part, _parts)
 		delete part;
-	parts.clear();
-	tex_files.clear();
-	loaded_tex.clear();
-	bones.clear();
-	frames.clear();
+	_parts.clear();
+	_tex_files.clear();
+	_loaded_tex.clear();
+	_bones.clear();
+	_frames.clear();
 }
 
 bool FieldModelFile::isLoaded() const
@@ -45,12 +45,52 @@ bool FieldModelFile::isLoaded() const
 	return dataLoaded;
 }
 
+const Bone &FieldModelFile::bone(int index) const
+{
+	return _bones.at(index);
+}
+
+int FieldModelFile::boneCount() const
+{
+	return _bones.size();
+}
+
+int FieldModelFile::animBoneCount() const
+{
+	return a_bones_count;
+}
+
+QList<FieldModelPart *> FieldModelFile::parts(int partID) const
+{
+	return _parts.values(partID);
+}
+
+QList< QList<int> > FieldModelFile::texFiles(int partID) const
+{
+	return _tex_files.values(partID);
+}
+
+QPixmap FieldModelFile::loadedTexture(int texID) const
+{
+	return _loaded_tex.value(texID);
+}
+
+QList<PolyVertex> FieldModelFile::rotation(int frameID) const
+{
+	return _frames.value(frameID);
+}
+
+int FieldModelFile::frameCount() const
+{
+	return _frames.size();
+}
+
 QString FieldModelFile::toStringBones() const
 {
 	QString ret;
 	int boneID=0;
 
-	foreach(const Bone &bone, bones) {
+	foreach(const Bone &bone, _bones) {
 		ret.append(QString("Bone %1: parent= %2 size= %3\n")
 				   .arg(boneID)
 				   .arg(bone.parent)

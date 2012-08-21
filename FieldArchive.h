@@ -43,6 +43,7 @@ public:
 	QByteArray getFieldData(Field *field, bool unlzs=true);
 	QByteArray getMimData(Field *field, bool unlzs=true);
 	QByteArray getModelData(Field *field, bool unlzs=true);
+	QByteArray getFileData(const QString &fileName, bool unlzs=true);
 	TutFile *getTut(const QString &name);
 
 	bool isAllOpened();
