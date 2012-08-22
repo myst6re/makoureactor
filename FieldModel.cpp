@@ -75,10 +75,10 @@ quint8 FieldModel::load(const QString &hrc, const QString &a, bool animate)
 
 	blockAll = false;
 
-	QFile textOut("fieldModelBonePC.txt");
-	textOut.open(QIODevice::WriteOnly);
-	textOut.write(data->toStringBones().toLatin1());
-	textOut.close();
+//	QFile textOut("fieldModelBonePC.txt");
+//	textOut.open(QIODevice::WriteOnly);
+//	textOut.write(data->toStringBones().toLatin1());
+//	textOut.close();
 
 	return err;
 }
@@ -108,10 +108,10 @@ quint8 FieldModel::load(FieldArchive *fieldArchive, Field *currentField, int mod
 
 	blockAll = false;
 
-	QFile textOut("fieldModelBonePS.txt");
-	textOut.open(QIODevice::WriteOnly);
-	textOut.write(data->toStringBones().toLatin1());
-	textOut.close();
+//	QFile textOut("fieldModelBonePS.txt");
+//	textOut.open(QIODevice::WriteOnly);
+//	textOut.write(data->toStringBones().toLatin1());
+//	textOut.close();
 
 	return err;
 }
@@ -136,18 +136,16 @@ void FieldModel::initializeGL()
 //	gluPerspective(70, (double)width()/(double)height(), 0.001, 1000.0);
 }
 
-void FieldModel::drawP(int partID)
+void FieldModel::drawP(int boneID)
 {
 	if(!data)	return;
 
-	quint32 j;
-	QList<FieldModelPart *> ps = data->parts(partID);
-	QList<QList<int> > texss = data->texFiles(partID);
-	QList<int> texs;
-	int pID=0;
+	QList<FieldModelPart *> ps = data->parts(boneID);
+	QList<QList<int> > texss = data->texFiles(boneID);
+	int pID = 0;
 
 	foreach(FieldModelPart *p, ps) {
-		texs = texss.value(pID, QList<int>());
+		QList<int> texs = texss.value(pID);
 
 		foreach(FieldModelGroup *g, p->groups()) {
 			GLuint texture_id=-1;
@@ -155,7 +153,6 @@ void FieldModel::drawP(int partID)
 
 			if(hasTexture) {
 				glEnable(GL_TEXTURE_2D);
-
 				texture_id = bindTexture(data->loadedTexture(texs.at(g->textureNumber())), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
 			}
 
@@ -180,7 +177,7 @@ void FieldModel::drawP(int partID)
 					glColor3ub(qRed(color), qGreen(color), qBlue(color));
 				}
 
-				for(j=0 ; j<(quint8)p->count() ; ++j) {
+				for(quint32 j=0 ; j<(quint8)p->count() ; ++j) {
 					if(!p->isMonochrome()) {
 						QRgb color = p->color(j);
 						glColor3ub(qRed(color), qGreen(color), qBlue(color));

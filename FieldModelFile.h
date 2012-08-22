@@ -40,8 +40,8 @@ public:
 	const Bone &bone(int index) const;
 	int boneCount() const;
 	int animBoneCount() const; // valid bone count
-	QList<FieldModelPart *> parts(int partID) const;
-	QList< QList<int> > texFiles(int partID) const;
+	QList<FieldModelPart *> parts(int boneID) const;
+	QList< QList<int> > texFiles(int boneID) const;
 	QPixmap loadedTexture(int texID) const;
 	QList<PolyVertex> rotation(int frameID) const;
 	int frameCount() const;

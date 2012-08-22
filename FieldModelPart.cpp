@@ -79,27 +79,29 @@ bool Poly::hasTexture() const
 QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords) :
 	Poly(vertices, colors, texCoords)
 {
-	QList<PolyVertex> vertices2;
+	// swapping the two last vertices for right OpenGL quad order
 
-	vertices2.append(vertices.at(0));
-	vertices2.append(vertices.at(1));
-	vertices2.append(vertices.at(3));// swapping the two last vertices
-	vertices2.append(vertices.at(2));
+	_vertices.swap(2, 3);
 
-	_vertices = vertices2;
+	if(colors.size() == 4) {
+		_colors.swap(2, 3);
+	}
+
+	if(!texCoords.isEmpty()) {
+		_texCoords.swap(2, 3);
+	}
 }
 
 QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords) :
 	Poly(vertices, color, texCoords)
 {
-	QList<PolyVertex> vertices2;
+	// swapping the two last vertices for right OpenGL quad order
 
-	vertices2.append(vertices.at(0));
-	vertices2.append(vertices.at(1));
-	vertices2.append(vertices.at(3));// swapping the two last vertices
-	vertices2.append(vertices.at(2));
+	_vertices.swap(2, 3);
 
-	_vertices = vertices2;
+	if(!texCoords.isEmpty()) {
+		_texCoords.swap(2, 3);
+	}
 }
 
 TrianglePoly::TrianglePoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords) :

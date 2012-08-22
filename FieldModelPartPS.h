@@ -15,6 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
+/* Many thanks to Akari for his work. */
 #ifndef FIELDMODELPARTPS_H
 #define FIELDMODELPARTPS_H
 
@@ -34,7 +35,8 @@ typedef struct {
 	quint8 num_quad_mono;			// number of monochrome quads
 	quint8 num_tri_color;			// number of gradated triangles
 	quint8 num_quad_color;			// number of gradated quads
-	quint16 num_flags;				// number of data in block 4 (flags).
+	quint8 num_flags;				// number of data in block 4 (flags).
+	quint8 num_control;				// number of data in block 5 (control).
 	quint16 offset_poly;			// Relative offset to ?
 	quint16 offset_texcoord;		// Relative offset to ?
 	quint16 offset_flags;			// Relative offset to texture settings. Indexed by 5th block data (control).
@@ -99,10 +101,26 @@ typedef struct {
 	Color2 color[4];
 } ColorQuad;
 
-typedef struct {
-	quint8 type, bpp;
+typedef struct TextureInfo_ {
+	quint8 type; // 0: eye, 1: mouth, 2: normal
+	quint8 bpp;
 	quint8 imgX, imgY;
 	quint8 palX, palY;
+
+	bool operator==(const struct TextureInfo_ &ti) const
+	{
+		return ti.bpp == bpp
+				&& ti.imgX == imgX
+				&& ti.imgY == imgY
+				&& ti.palX == palX
+				&& ti.palY == palY
+				&& ti.type == type;
+	}
+
+	bool operator<(const struct TextureInfo_ &) const
+	{
+		return false;
+	}
 } TextureInfo;
 
 class FieldModelPartPS : public FieldModelPart
@@ -111,8 +129,10 @@ public:
 	FieldModelPartPS();
 	bool open(const char *data, quint32 offset, quint32 size);
 	qint8 boneID() const;
+	const QList<TextureInfo> &textures() const;
 private:
-	void addTexture(const char *data, quint32 offsetControl, quint32 offsetFlag, quint32 size);
+	void addTexturedPolygon(quint8 control, Poly *polygon);
+	void addPolygon(Poly *polygon);
 	qint8 _boneID;
 	QList<TextureInfo> _textures;
 };

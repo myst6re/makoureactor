@@ -41,10 +41,9 @@ public:
 	quint8 load(FieldModelLoaderPC *modelLoader, int modelID, int animID, bool animate=false);
 	quint8 load(QString hrc, QString a, bool animate=false);
 private:
-	QMultiMap<int, QStringList> rsd_files;
 	QList<QString> tex2id;
 
-	bool open_hrc(QFile *);
+	bool open_hrc(QFile *, QMultiMap<int, QStringList> &rsd_files);
 	bool open_a(QFile *, bool animate=false);
 	QString open_rsd(QFile *, int);
 	static QPixmap open_tex(QFile *);

@@ -60,14 +60,14 @@ int FieldModelFile::animBoneCount() const
 	return a_bones_count;
 }
 
-QList<FieldModelPart *> FieldModelFile::parts(int partID) const
+QList<FieldModelPart *> FieldModelFile::parts(int boneID) const
 {
-	return _parts.values(partID);
+	return _parts.values(boneID);
 }
 
-QList< QList<int> > FieldModelFile::texFiles(int partID) const
+QList< QList<int> > FieldModelFile::texFiles(int boneID) const
 {
-	return _tex_files.values(partID);
+	return _tex_files.values(boneID);
 }
 
 QPixmap FieldModelFile::loadedTexture(int texID) const

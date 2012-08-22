@@ -42,7 +42,7 @@ public:
 public slots:
 	void animate();
 private:
-	void drawP(int partID);
+	void drawP(int boneID);
 	void setXRotation(int angle);
 	void setYRotation(int angle);
 	void setZRotation(int angle);

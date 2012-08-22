@@ -16,8 +16,21 @@ typedef struct {
 class TdbFile
 {
 public:
+	enum TextureType {
+		Eye=0,
+		EyeClosed1, EyeClosed2,
+		EyeOpened1, EyeOpened2,
+		MouthClosed, MouthOpened,
+		Empty
+	};
+
 	TdbFile();
 	bool open(const QByteArray &data);
+	QPixmap texture(quint8 faceID, TextureType type);
+private:
+	static int faceIdToImageId(quint8 faceID, TextureType type);
+	TdbHeader header;
+	QByteArray data;
 };
 
 #endif // TDBFILE_H

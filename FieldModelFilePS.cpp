@@ -38,8 +38,8 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 	}
 
 	memcpy(&header, constData, sizeof(BSX_header));
-	qDebug() << "==== BSX HEADER ====" << 0 << sizeof(BSX_header);
-	qDebug() << "size" << header.size << "offset_models" << header.offset_models;
+//	qDebug() << "==== BSX HEADER ====" << 0 << sizeof(BSX_header);
+//	qDebug() << "size" << header.size << "offset_models" << header.offset_models;
 
 	if((quint32)BSX_data.size() != header.size || header.offset_models >= header.size) {
 		qWarning() << BSX_data.size() << "error";
@@ -48,9 +48,9 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 
 	memcpy(&model_header, &constData[header.offset_models], sizeof(Model_header));
 
-	qDebug() << "==== Model header ====" << header.offset_models << sizeof(Model_header);
-	qDebug() << "num_models" << model_header.num_models << "vram" << QString::number(model_header.psx_memory, 16);
-	qDebug() << "texPointer" << model_header.texture_pointer << "unknownPointer" << model_header.unknown_pointer;
+//	qDebug() << "==== Model header ====" << header.offset_models << sizeof(Model_header);
+//	qDebug() << "num_models" << model_header.num_models << "vram" << QString::number(model_header.psx_memory, 16);
+//	qDebug() << "texPointer" << model_header.texture_pointer << "unknownPointer" << model_header.unknown_pointer;
 
 	if(model_id >= (int)model_header.num_models) {
 		qWarning() << "model_id too large" << model_id << model_header.num_models;
@@ -81,7 +81,7 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 
 		int curOff = offsetModelHeader + model.offset_skeleton;
 
-		qDebug() << "after model header" << (offsetModelHeader + sizeof(Model)) << "skeleton offset" << curOff;
+//		qDebug() << "after model header" << (offsetModelHeader + sizeof(Model)) << "skeleton offset" << curOff;
 
 		if(model_global_id >= 1 && model_global_id <= 9) {
 			QString fileName;
@@ -132,7 +132,7 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 
 		curOff = openSkeleton(constData, curOff, BSX_data.size(), model.num_bones);
 
-		qDebug() << "after bones position" << curOff;
+//		qDebug() << "after bones position" << curOff;
 
 		if(curOff + model.num_parts * sizeof(Part) >= (quint32)BSX_data.size()) {
 			qWarning() << "invalid parts size" << model.num_parts;
@@ -141,7 +141,7 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 
 		curOff = openMesh(constData, curOff, BSX_data.size(), model.num_parts);
 
-		qDebug() << "after part headers position" << curOff;
+//		qDebug() << "after part headers position" << curOff;
 
 		if(_frames.isEmpty()) {
 			if(animation_id >= model.num_animations) {
@@ -153,7 +153,7 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 				openAnimation(constData, curOff, animation_id, BSX_data.size(), animate);
 //			}
 
-			qDebug() << "after animation headers position" << (curOff + sizeof(Animation) * model.num_animations);
+//			qDebug() << "after animation headers position" << (curOff + sizeof(Animation) * model.num_animations);
 		}
 //	}
 
@@ -177,20 +177,67 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 		qDebug() << "width" << texHeader.width << "height" << texHeader.height << "x" << texHeader.vramX << "y" << texHeader.vramY;
 		qDebug() << "offsetData" << texHeader.offset_data << "endData" << (texHeader.offset_data + texHeader.width * 2 * texHeader.height);
 
-		QImage img(texHeader.width * 2, texHeader.height, QImage::Format_RGB32);
-		QRgb *px = (QRgb *)img.bits();
-		int i=0;
-		for(int y=0 ; y<texHeader.height ; ++y) {
-			for(int x=0 ; x<texHeader.width*2 ; ++x) {
-				px[i] = qRgb(constData[texHeader.offset_data + i], constData[texHeader.offset_data + i], constData[texHeader.offset_data + i]);
-				++i;
-			}
-		}
-		img.save(QString("FieldModelFilePSTex%1.png").arg(tex));
+//		QImage img(texHeader.width * 2, texHeader.height, QImage::Format_RGB32);
+//		QRgb *px = (QRgb *)img.bits();
+//		int i=0;
+//		for(int y=0 ; y<texHeader.height ; ++y) {
+//			for(int x=0 ; x<texHeader.width*2 ; ++x) {
+//				px[i] = qRgb(constData[texHeader.offset_data + i], constData[texHeader.offset_data + i], constData[texHeader.offset_data + i]);
+//				++i;
+//			}
+//		}
+//		img.save(QString("FieldModelFilePSTex%1.png").arg(tex));
 	}
 
-	TdbFile tdb;
-	tdb.open(fieldArchive->getFileData("FIELD.TDB"));
+	if(model_id < modelLoader->modelCount()) {
+		TdbFile tdb;
+		tdb.open(fieldArchive->getFileData("FIELD.TDB"));
+
+		quint8 faceID = modelLoader->model(model_id).faceID;
+		QMap<TextureInfo, int> texAlreadyLoaded;
+
+		if(faceID < 0x21) {
+			int texID=0;
+
+			foreach(FieldModelPart *part, _parts) {
+				QList<int> texIds;
+
+				foreach(const TextureInfo &texInfo, ((FieldModelPartPS *)part)->textures()) {
+
+					QMapIterator<TextureInfo, int> it(texAlreadyLoaded);
+					bool contains = false;
+					while(it.hasNext()) {
+						it.next();
+						if(it.key() == texInfo) {
+							contains = true;
+							break;
+						}
+					}
+
+					if(contains) {
+						texIds.append(texAlreadyLoaded.value(texInfo));
+					} else {
+						texIds.append(texID);
+						texAlreadyLoaded.insert(texInfo, texID);
+
+						if(texInfo.type == 0) { // Eye
+							qDebug() << "EYE" << texID;
+							_loaded_tex.insert(texID++, tdb.texture(faceID, TdbFile::Eye));
+						} else if(texInfo.type == 1) { // Mouth
+							qDebug() << "MOUTH" << texID;
+							_loaded_tex.insert(texID++, tdb.texture(faceID, TdbFile::MouthClosed));
+						} else {
+							qDebug() << "OTHER" << texID;
+							_loaded_tex.insert(texID++, QPixmap());
+						}
+					}
+				}
+
+				if(!texIds.isEmpty())
+					_tex_files.insert(((FieldModelPartPS *)part)->boneID(), texIds);
+			}
+		}
+	}
 
 	dataLoaded = true;
 
@@ -203,7 +250,7 @@ int FieldModelFilePS::openSkeleton(const char *constData, int curOff, int size, 
 		BonePS bonePS;
 		Bone bone;
 		memcpy(&bonePS, &constData[curOff], sizeof(BonePS));
-		qDebug() << "bone" << i << bonePS.length << bonePS.parent << bonePS.unknown;
+//		qDebug() << "bone" << i << bonePS.length << bonePS.parent << bonePS.unknown;
 		bone.size = bonePS.length / 31.0f;
 		bone.parent = bonePS.parent;
 		_bones.append(bone);
@@ -244,11 +291,11 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 
 	a.offset_data -= 0x80000000;
 
-	qDebug() << "==== ANIMATION" << animation_id << "====" << (curOff + sizeof(Animation)*animation_id);
-	qDebug() << "numFrames" << a.num_frames << "numBones" << a.num_bones;
-	qDebug() << "numFramesTrans" << a.num_frames_translation << "numFramesStaticTrans" << a.num_static_translation << "numFramesRot" << a.num_frames_rotation;
-	qDebug() << "offsetFramesTrans" << (a.offset_data + a.offset_frames_translation) << "offsetFramesStaticTrans" << (a.offset_data + a.offset_static_translation) << "offsetFramesRot" << (a.offset_data + a.offset_frames_rotation);
-	qDebug() << "offsetData" << a.offset_data;
+//	qDebug() << "==== ANIMATION" << animation_id << "====" << (curOff + sizeof(Animation)*animation_id);
+//	qDebug() << "numFrames" << a.num_frames << "numBones" << a.num_bones;
+//	qDebug() << "numFramesTrans" << a.num_frames_translation << "numFramesStaticTrans" << a.num_static_translation << "numFramesRot" << a.num_frames_rotation;
+//	qDebug() << "offsetFramesTrans" << (a.offset_data + a.offset_frames_translation) << "offsetFramesStaticTrans" << (a.offset_data + a.offset_static_translation) << "offsetFramesRot" << (a.offset_data + a.offset_frames_rotation);
+//	qDebug() << "offsetData" << a.offset_data;
 
 	quint32 offsetFrameRotation = a.offset_data + a.offset_frames_rotation;
 	quint32 offsetFrameStatic = a.offset_data + a.offset_static_translation;
@@ -262,7 +309,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 	quint32 unknown;
 	memcpy(&unknown, &constData[a.offset_data], 4);
 
-	qDebug() << "Unknown" << unknown << QString::number(unknown, 16);
+//	qDebug() << "Unknown" << unknown << QString::number(unknown, 16);
 
 	this->a_bones_count = qMin((int)a.num_bones, _bones.size());
 
@@ -399,7 +446,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 		_frames.insert(frame, rotation_coords);
 	}
 
-	qDebug() << "maxOffset animation" << maxOffset;
+//	qDebug() << "maxOffset animation" << maxOffset;
 
 	return true;
 }

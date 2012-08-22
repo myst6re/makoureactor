@@ -24,7 +24,6 @@ FieldModelFilePC::FieldModelFilePC() :
 
 void FieldModelFilePC::clear()
 {
-	rsd_files.clear();
 	tex2id.clear();
 
 	FieldModelFile::clear();
@@ -66,9 +65,10 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 
 		clear();
 
+		QMultiMap<int, QStringList> rsd_files;
 		int pos;
 		if((pos=Data::charlgp_listPos.value(hrc%".hrc"))>0 && fic.seek(pos+20)
-				&& open_hrc(&fic))
+				&& open_hrc(&fic, rsd_files))
 		{
 			foreach(const QStringList &Ps, rsd_files) {
 				foreach(QString rsd, Ps) {
@@ -83,10 +83,10 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 									&& part->open(&fic)) {
 								_parts.insert(boneID, part);
 
-								QFile textOut(QString("fieldModelPartPC%1.txt").arg(_parts.size()-1));
-								textOut.open(QIODevice::WriteOnly);
-								textOut.write(part->toString().toLatin1());
-								textOut.close();
+//								QFile textOut(QString("fieldModelPartPC%1.txt").arg(_parts.size()-1));
+//								textOut.open(QIODevice::WriteOnly);
+//								textOut.write(part->toString().toLatin1());
+//								textOut.close();
 							} else {
 								delete part;
 							}
@@ -122,7 +122,7 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 	return this->dataLoaded;
 }
 
-bool FieldModelFilePC::open_hrc(QFile *hrc_file)
+bool FieldModelFilePC::open_hrc(QFile *hrc_file, QMultiMap<int, QStringList> &rsd_files)
 {
 	bool ok;
 	quint32 boneID=0, fileSize;
@@ -176,7 +176,7 @@ bool FieldModelFilePC::open_hrc(QFile *hrc_file)
 			if(ok && nbP!=0) {
 				rsdlist.removeFirst();
 				if(rsdlist.size()==nbP) {
-					this->rsd_files.insert(boneID, rsdlist);
+					rsd_files.insert(boneID, rsdlist);
 				}
 			}
 			++boneID;
@@ -227,7 +227,7 @@ bool FieldModelFilePC::open_a(QFile *a_file, bool animate)
 QString FieldModelFilePC::open_rsd(QFile *rsd_file, int boneID)
 {
 	QString line, pname, tex;
-	QList<int> texFiles;
+	QList<int> texIds;
 	quint32 nTex=0, fileSize, i;
 	int index;
 	bool ok;
@@ -258,15 +258,15 @@ QString FieldModelFilePC::open_rsd(QFile *rsd_file, int boneID)
 					line.truncate(index);
 				tex = line.mid(line.indexOf('=')+1).toLower();
 				if((index=tex2id.indexOf(tex)) != -1) {
-					texFiles.append(index);
+					texIds.append(index);
 				} else {
 					tex2id.append(tex);
-					texFiles.append(tex2id.size()-1);
+					texIds.append(tex2id.size()-1);
 				}
 			}
 		}
 	}
-	_tex_files.insert(boneID, texFiles);
+	_tex_files.insert(boneID, texIds);
 
 	return pname;
 }
