@@ -25,13 +25,13 @@ bool FieldModelPartPC::open(QFile *p_file)
 {
 	QList<PolyVertex> vertices/*, normals*/;
 	QList<TexCoord> texCs;
-	QList<Color> vertexColors;
+	QList<ColorBGRA> vertexColors;
 	QList<Polygon_p> polys;
 	QList<Group> groups;
 	p_header header;
 	PolyVertex vertex;
 	TexCoord texC;
-	Color vertexColor;
+	ColorBGRA vertexColor;
 	Polygon_p poly;
 	Group group;
 	quint32 i;

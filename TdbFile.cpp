@@ -54,8 +54,8 @@ bool TdbFile::open(const QByteArray &data)
 //	}
 
 //	for(quint8 faceID=0 ; faceID < 0x21 ; ++faceID) {
-////		texture(faceID, Eye).save(QString("TdbTexEye%1.png").arg(faceID));
-//		texture(faceID, MouthClosed).save(QString("TdbTexMouthClosed%1.png").arg(faceID));
+//		texture(faceID, Eye).save(QString("TdbTexEye%1.png").arg(faceID));
+////		texture(faceID, MouthClosed).save(QString("TdbTexMouthClosed%1.png").arg(faceID));
 //	}
 
 	return true;
@@ -72,7 +72,7 @@ QPixmap TdbFile::texture(quint8 faceID, TextureType type)
 
 	quint32 offsetImage = header.imageOffset + imgID * 512;
 
-	int pal = faceID;
+	int pal = qMin((quint16)faceID, quint16(header.paletteCount-1));
 
 	quint32 offsetPalette = header.paletteOffset + pal * 32;
 
@@ -100,9 +100,10 @@ int TdbFile::faceIdToImageId(quint8 faceID, TextureType type)
 	} else {
 		switch(type) {
 		case Eye:
-		case EyeClosed1:case EyeClosed2:
 		case EyeOpened1:case EyeOpened2:
 			return 10 * 8 + (faceID - 10) * 2;
+		case EyeClosed1:case EyeClosed2:
+			return 126;
 		case MouthClosed:
 			return 126;
 		case MouthOpened:

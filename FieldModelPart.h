@@ -21,6 +21,7 @@
 #include <QtGui>
 #include "IdFile.h"
 
+
 typedef struct {
 	float x, y, z;
 } PolyVertex;
@@ -37,6 +38,7 @@ public:
 	virtual ~Poly();
 	void setVertices(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	void setVertices(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	void divTexCoords(float texWidth, float texHeight);
 	virtual int count() const=0;
 	const PolyVertex &vertex(quint8 id) const;
 	const QRgb &color() const;
@@ -70,6 +72,7 @@ class FieldModelGroup
 {
 public:
 	FieldModelGroup();
+	FieldModelGroup(int texNumber);
 	virtual ~FieldModelGroup();
 	const QList<Poly *> &polygons() const;
 	void addPolygon(Poly *polygon);

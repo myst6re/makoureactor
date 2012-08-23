@@ -58,14 +58,12 @@ bool FieldModelLoaderPS::load(const QByteArray &data)
 
 		_modelLoaders.append(modelLoader);
 
-		qDebug() << "=== model loader ===";
-		qDebug() << "faceID" << modelLoader.faceID << "bonesCount" << modelLoader.bonesCount;
-		qDebug() << "partsCount" << modelLoader.partsCount << "animationCount" << modelLoader.animationCount;
-		qDebug() << "u" << modelLoader.unknown1 << modelLoader.unknown2 << modelLoader.unknown3;
-		qDebug() << "modelID" << modelLoader.modelID;
+//		qDebug() << "=== model loader ===";
+//		qDebug() << "faceID" << modelLoader.faceID << "bonesCount" << modelLoader.bonesCount;
+//		qDebug() << "partsCount" << modelLoader.partsCount << "animationCount" << modelLoader.animationCount;
+//		qDebug() << "u" << modelLoader.unknown1 << modelLoader.unknown2 << modelLoader.unknown3;
+//		qDebug() << "modelID" << modelLoader.modelID;
 	}
-
-
 
 	loaded = true;
 	return true;

@@ -48,7 +48,7 @@ typedef struct {
 
 typedef struct {
 	quint8 blue, green, red, alpha;
-} Color;
+} ColorBGRA;
 
 typedef struct {
 	quint16 zero;

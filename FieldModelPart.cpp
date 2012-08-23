@@ -46,6 +46,14 @@ void Poly::setVertices(const QList<PolyVertex> &vertices, const QRgb &color, con
 	_texCoords = texCoords;
 }
 
+void Poly::divTexCoords(float texWidth, float texHeight)
+{
+	for(int i=0 ; i<_texCoords.size() ; ++i) {
+		_texCoords[i].x /= texWidth;
+		_texCoords[i].y /= texHeight;
+	}
+}
+
 const PolyVertex &Poly::vertex(quint8 id) const
 {
 	return _vertices.at(id);
@@ -116,6 +124,11 @@ TrianglePoly::TrianglePoly(const QList<PolyVertex> &vertices, const QRgb &color,
 
 FieldModelGroup::FieldModelGroup() :
 	_textureNumber(-1)
+{
+}
+
+FieldModelGroup::FieldModelGroup(int texNumber) :
+	_textureNumber(texNumber)
 {
 }
 

@@ -1789,7 +1789,7 @@ OpcodeKAWAIEYETX::OpcodeKAWAIEYETX(const QByteArray &params) :
 
 QString OpcodeKAWAIEYETX::toString() const
 {
-	return QObject::tr("EYETX");
+	return QObject::tr("EYETX : Changer l'état de la texture des yeux ou de la bouche");
 }
 
 OpcodeKAWAITRNSP::OpcodeKAWAITRNSP(const QByteArray &params)

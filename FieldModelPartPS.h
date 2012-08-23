@@ -42,39 +42,38 @@ typedef struct {
 	quint16 offset_flags;			// Relative offset to texture settings. Indexed by 5th block data (control).
 	quint16 offset_control;			// Relative offset to one byte stream for every packet with texture.
 	quint16 buffer_size;			// Relative offset to ?
-	quint16 offset_vertex;			// Offset to skeleton data section
-	quint16 offset_unknown;
+	quint32 offset_vertex;			// Offset to skeleton data section
 	quint32 offset_prec;			// Offset to ?
 } Part;
 
 typedef struct {
 	quint8 red, green, blue, alpha;
-} Color2;
+} ColorRGBA;
 
 typedef struct {
 	quint8 vertexIndex[4];
-	Color2 color[4];
+	ColorRGBA color[4];
 	quint8 texCoordId[4];
 } TexturedQuad;
 
 typedef struct {
 	quint8 vertexIndex[3];
 	quint8 padding1;
-	Color2 color[3];
+	ColorRGBA color[3];
 	quint8 texCoordId[3];
 	quint8 padding2;
 } TexturedTriangle;
 
 typedef struct {
 	quint8 vertexIndex[4];
-	Color2 color;
+	ColorRGBA color;
 	quint8 texCoordId[4];
 } MonochromeTexturedQuad;
 
 typedef struct {
 	quint8 vertexIndex[3];
 	quint8 padding1;
-	Color2 color;
+	ColorRGBA color;
 	quint8 texCoordId[3];
 	quint8 padding2;
 } MonochromeTexturedTriangle;
@@ -82,30 +81,30 @@ typedef struct {
 typedef struct {
 	quint8 vertexIndex[3];
 	quint8 padding;
-	Color2 color;
+	ColorRGBA color;
 } MonochromeTriangle;
 
 typedef struct {
 	quint8 vertexIndex[4];
-	Color2 color;
+	ColorRGBA color;
 } MonochromeQuad;
 
 typedef struct {
 	quint8 vertexIndex[3];
 	quint8 padding;
-	Color2 color[3];
+	ColorRGBA color[3];
 } ColorTriangle;
 
 typedef struct {
 	quint8 vertexIndex[4];
-	Color2 color[4];
+	ColorRGBA color[4];
 } ColorQuad;
 
 typedef struct TextureInfo_ {
 	quint8 type; // 0: eye, 1: mouth, 2: normal
 	quint8 bpp;
-	quint8 imgX, imgY;
-	quint8 palX, palY;
+	quint16 imgX, imgY;
+	quint16 palX, palY;
 
 	bool operator==(const struct TextureInfo_ &ti) const
 	{

@@ -42,20 +42,18 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	_boneID = partHeader.bone_index;
 
-	qDebug() << "BoneID" << _boneID << "unknown" << partHeader.unknown;
+//	qDebug() << "==== PART ====";
+//	qDebug() << "BoneID" << _boneID << "unknown" << partHeader.unknown;
 
 	// Vertices
-	quint32 offsetToVertex = partHeader.offset_vertex;
+	quint32 offsetToVertex = partHeader.offset_vertex - 0x80000000;
 
 	if(offsetToVertex + partHeader.numVertices*8 >= size) {
 		qWarning() << "Invalid part size2" << offsetToVertex << partHeader.numVertices << size;
 		return false;
 	}
 
-//	quint32 unknown;
-//	memcpy(&unknown, &data[offsetToVertex], 4);
-
-//	qDebug() << "unknown data vertex" << unknown << QString::number(unknown, 16);
+	// Note: there are four empty bytes here
 
 	for(i=0 ; i<partHeader.numVertices ; ++i) {
 		qint16 v;
@@ -78,8 +76,8 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 	}
 
 	for(i=0 ; i<partHeader.numTexCs ; ++i) {
-		texCoord.x = (quint8)data[offsetToTexCoords + i * 2] / 32.0f;
-		texCoord.y = (quint8)data[offsetToTexCoords + i * 2 + 1] / 32.0f;
+		texCoord.x = (quint8)data[offsetToTexCoords + i * 2];
+		texCoord.y = (quint8)data[offsetToTexCoords + i * 2 + 1];
 
 		texCoords.append(texCoord);
 	}
@@ -100,25 +98,23 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 		TextureInfo texInfo;
 
-		texInfo.type	= flag & 0x3F;					// 0000 0000 0000 0000 0000 0000 0011 1111
-		texInfo.bpp		= (flag >> 6) & 0x03;			// 0000 0000 0000 0000 0000 0000 1100 0000
-		texInfo.imgX	= ((flag >> 8) & 0x0f) * 64;	// 0000 0000 0000 0000 0000 1111 0000 0000
-		texInfo.imgY	= ((flag >> 12) & 0x01) * 256;	// 0000 0000 0000 0000 0001 0000 0000 0000
-		quint8 u1		= ((flag >> 13) & 0x07);
-		texInfo.palX	= ((flag >> 16) & 0x3F) * 16;	// 0000 0000 0011 1111 0000 0000 0000 0000
-		texInfo.palY	= ((flag >> 22) & 0x01FF);		// 0111 1111 1100 0000 0000 0000 0000 0000
-		quint8 u2		= ((flag >> 31) & 0x01);
+		texInfo.type	= flag & 0x3F;							// 0000 0000 0000 0000 0000 0000 0011 1111
+		texInfo.bpp		= (flag >> 6) & 0x03;					// 0000 0000 0000 0000 0000 0000 1100 0000
+		texInfo.imgX	= /*512 + */((flag >> 8) & 0x0f) * 64;		// 0000 0000 0000 0000 0000 1111 0000 0000
+		texInfo.imgY	= /*256 + */((flag >> 12) & 0x01) * 256;	// 0000 0000 0000 0000 0001 0000 0000 0000
+//		quint8 u1		= ((flag >> 13) & 0x07);
+		texInfo.palX	= /*512 + */((flag >> 16) & 0x3F) * 16;		// 0000 0000 0011 1111 0000 0000 0000 0000
+		texInfo.palY	= /*256 + */((flag >> 22) & 0x01FF);		// 0111 1111 1100 0000 0000 0000 0000 0000
+//		quint8 u2		= ((flag >> 31) & 0x01);
 
 		_textures.append(texInfo);
 
-		qDebug() << "ADDTEXTURE" << i;
-		qDebug() << "type" << texInfo.type << "bpp" << texInfo.bpp;
-		qDebug() << "imgX" << texInfo.imgX/64 << "imgY" << texInfo.imgY/256 << "u1" << u1;
-		qDebug() << "palX" << texInfo.palX/16 << "palY" << texInfo.palY << "u2" << u2;
+//		qDebug() << "ADDTEXTURE" << i;
+//		qDebug() << "type" << texInfo.type << "bpp" << texInfo.bpp;
+//		qDebug() << "imgX" << texInfo.imgX << "imgY" << texInfo.imgY << "u1" << u1;
+//		qDebug() << "palX" << texInfo.palX << "palY" << texInfo.palY << "u2" << u2;
 
-		FieldModelGroup *group = new FieldModelGroup();
-		group->setTextureNumber(i);
-		_groups.append(group);
+		_groups.append(new FieldModelGroup(i));
 	}
 
 
@@ -126,14 +122,34 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 	quint32 offsetToPoly = offsetToVertex + partHeader.offset_poly;
 	quint32 offsetToControl = offsetToVertex + partHeader.offset_control;
 
-	qDebug() << "Offset to vertex" << offsetToVertex;
-	qDebug() << "Offset to flags" << offsetToTexInfos << "num" << partHeader.num_flags;
-	qDebug() << "Offset to flags (after all)" << (offsetToTexInfos + partHeader.num_flags*4);
-	qDebug() << "Offset to control" << offsetToControl << "num" << partHeader.num_control;
-	qDebug() << "Offset to control (after all)" << (offsetToControl + partHeader.num_control);
-	qDebug() << "BufferSize" << partHeader.buffer_size;
-	qDebug() << "Offset to unknown" << partHeader.offset_unknown;
-	qDebug() << "Offset to prec" << partHeader.offset_prec;
+//	qDebug() << "Offset to vertex" << offsetToVertex << "num" << partHeader.numVertices;
+//	qDebug() << "Offset to vertex (after all)" << (offsetToVertex + partHeader.numVertices*8);
+//	quint32 offsetDebug = offsetToPoly;
+//	qDebug() << "Offset to textured quads" << offsetDebug << "num" << partHeader.num_quad_color_tex;
+//	offsetDebug += partHeader.num_quad_color_tex*sizeof(TexturedQuad);
+//	qDebug() << "Offset to textured triangles" << offsetDebug << "num" << partHeader.num_tri_color_tex;
+//	offsetDebug += partHeader.num_tri_color_tex*sizeof(TexturedTriangle);
+//	qDebug() << "Offset to mono textured quads" << offsetDebug << "num" << partHeader.num_quad_mono_tex;
+//	offsetDebug += partHeader.num_quad_mono_tex*sizeof(MonochromeTexturedQuad);
+//	qDebug() << "Offset to mono textured triangles" << offsetDebug << "num" << partHeader.num_tri_mono_tex;
+//	offsetDebug += partHeader.num_tri_mono_tex*sizeof(MonochromeTexturedTriangle);
+//	qDebug() << "Offset to mono triangles" << offsetDebug << "num" << partHeader.num_tri_mono;
+//	offsetDebug += partHeader.num_tri_mono*sizeof(MonochromeTriangle);
+//	qDebug() << "Offset to mono quads" << offsetDebug << "num" << partHeader.num_quad_mono;
+//	offsetDebug += partHeader.num_quad_mono*sizeof(MonochromeQuad);
+//	qDebug() << "Offset to color triangles" << offsetDebug << "num" << partHeader.num_tri_color;
+//	offsetDebug += partHeader.num_tri_color*sizeof(ColorTriangle);
+//	qDebug() << "Offset to color quads" << offsetDebug << "num" << partHeader.num_quad_color;
+//	offsetDebug += partHeader.num_quad_color*sizeof(ColorQuad);
+//	qDebug() << "Offset to polygons (after all)" << offsetDebug;
+//	qDebug() << "Offset to texsCoords" << offsetToTexCoords << "num" << partHeader.numTexCs;
+//	qDebug() << "Offset to texsCoords (after all)" << (offsetToTexCoords + partHeader.numTexCs * 2);
+//	qDebug() << "Offset to flags" << offsetToTexInfos << "num" << partHeader.num_flags;
+//	qDebug() << "Offset to flags (after all)" << (offsetToTexInfos + partHeader.num_flags*4);
+//	qDebug() << "Offset to control" << offsetToControl << "num" << partHeader.num_control;
+//	qDebug() << "Offset to control (after all)" << (offsetToControl + partHeader.num_control);
+//	qDebug() << "BufferSize" << partHeader.buffer_size;
+//	qDebug() << "Offset to prec" << partHeader.offset_prec;
 
 	bool notAdd;
 
@@ -153,12 +169,12 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			quint8 texCoordIndex = texturedQuad.texCoordId[j];
 			if(vertexIndex < vertices.size() && texCoordIndex < texCoords.size()) {
 				polyVertices.append(vertices.at(vertexIndex));
-				Color2 color = texturedQuad.color[j];
+				const ColorRGBA &color = texturedQuad.color[j];
 				polyColors.append(qRgb(color.red, color.green, color.blue));
 				polyTexCoords.append(texCoords.at(texCoordIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index col tex quad" << i << j;
+				qDebug() << "error index col tex quad" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
 				break;
 			}
 		}
@@ -185,12 +201,12 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			quint8 texCoordIndex = texturedTriangle.texCoordId[j];
 			if(vertexIndex < vertices.size() && texCoordIndex < texCoords.size()) {
 				polyVertices.append(vertices.at(vertexIndex));
-				Color2 color = texturedTriangle.color[j];
+				const ColorRGBA &color = texturedTriangle.color[j];
 				polyColors.append(qRgb(color.red, color.green, color.blue));
 				polyTexCoords.append(texCoords.at(texCoordIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index col tex tri" << i << j;
+				qDebug() << "error index col tex tri" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
 				break;
 			}
 		}
@@ -208,7 +224,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		memcpy(&monochromeTexturedQuad, &data[offsetToPoly], sizeof(MonochromeTexturedQuad));
 
 		QList<PolyVertex> polyVertices;
-		Color2 color = monochromeTexturedQuad.color;
+		const ColorRGBA &color = monochromeTexturedQuad.color;
 		QRgb polyColor = qRgb(color.red, color.green, color.blue);
 		QList<TexCoord> polyTexCoords;
 		notAdd = false;
@@ -221,7 +237,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyTexCoords.append(texCoords.at(texCoordIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index mono tex quad" << i << j;
+				qDebug() << "error index mono tex quad" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
 				break;
 			}
 		}
@@ -239,7 +255,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		memcpy(&monochromeTexturedTriangle, &data[offsetToPoly], sizeof(MonochromeTexturedTriangle));
 
 		QList<PolyVertex> polyVertices;
-		Color2 color = monochromeTexturedTriangle.color;
+		const ColorRGBA &color = monochromeTexturedTriangle.color;
 		QRgb polyColor = qRgb(color.red, color.green, color.blue);
 		QList<TexCoord> polyTexCoords;
 		notAdd = false;
@@ -252,7 +268,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyTexCoords.append(texCoords.at(texCoordIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index mono tex tri" << i << j;
+				qDebug() << "error index mono tex tri" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
 				break;
 			}
 		}
@@ -270,7 +286,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		memcpy(&monochromeTriangle, &data[offsetToPoly], sizeof(MonochromeTriangle));
 
 		QList<PolyVertex> polyVertices;
-		Color2 color = monochromeTriangle.color;
+		const ColorRGBA &color = monochromeTriangle.color;
 		QRgb polyColor = qRgb(color.red, color.green, color.blue);
 		notAdd = false;
 
@@ -280,7 +296,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyVertices.append(vertices.at(vertexIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index mono tri" << i << j;
+				qDebug() << "error index mono tri" << i << j << vertexIndex << vertices.size();
 				break;
 			}
 		}
@@ -298,7 +314,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		memcpy(&monochromeQuad, &data[offsetToPoly], sizeof(MonochromeQuad));
 
 		QList<PolyVertex> polyVertices;
-		Color2 color = monochromeQuad.color;
+		const ColorRGBA &color = monochromeQuad.color;
 		QRgb polyColor = qRgb(color.red, color.green, color.blue);
 		notAdd = false;
 
@@ -308,7 +324,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyVertices.append(vertices.at(vertexIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index mono quad" << i << j;
+				qDebug() << "error index mono quad" << i << j << vertexIndex << vertices.size();
 				break;
 			}
 		}
@@ -333,11 +349,11 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			quint8 vertexIndex = colorTriangle.vertexIndex[j];
 			if(vertexIndex < vertices.size()) {
 				polyVertices.append(vertices.at(vertexIndex));
-				Color2 color = colorTriangle.color[j];
+				const ColorRGBA &color = colorTriangle.color[j];
 				polyColors.append(qRgb(color.red, color.green, color.blue));
 			} else {
 				notAdd = true;
-				qDebug() << "error index col tri" << i << j;
+				qDebug() << "error index col tri" << i << j << "index" << vertexIndex << "size" << vertices.size();
 				break;
 			}
 		}
@@ -362,11 +378,11 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 			quint8 vertexIndex = colorQuad.vertexIndex[j];
 			if(vertexIndex < vertices.size()) {
 				polyVertices.append(vertices.at(vertexIndex));
-				Color2 color = colorQuad.color[j];
+				const ColorRGBA &color = colorQuad.color[j];
 				polyColors.append(qRgb(color.red, color.green, color.blue));
 			} else {
 				notAdd = true;
-				qDebug() << "error index col quad" << i << j;
+				qDebug() << "error index col quad" << i << j << "index" << vertexIndex << "size" << vertices.size();
 				break;
 			}
 		}
@@ -392,7 +408,7 @@ const QList<TextureInfo> &FieldModelPartPS::textures() const
 
 void FieldModelPartPS::addTexturedPolygon(quint8 control, Poly *polygon)
 {
-	quint8 blend = (control >> 4) & 0x03;
+//	quint8 blend = (control >> 4) & 0x03;
 	quint8 flagID = control & 0x0F;
 
 	if(flagID < _groups.size()) {

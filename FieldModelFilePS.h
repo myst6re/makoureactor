@@ -63,39 +63,46 @@ typedef struct {
 } Model_header;
 
 typedef struct {
+	quint8 red, green, blue;
+} ColorRGB;
+
+typedef struct {
 	quint16 model_id;        // ID of the model
 	quint16 scale;
 	quint32 offset_skeleton; // Offset to the parts, bones and animations of the model
 	quint8 r1, g1, b1;
-	quint8 unknown1;
-	quint8 unknown2[6];
-	quint8 index_bones;
-	quint8 unknown3;
+	quint8 unknown;
 	quint8 r2, g2, b2;
-	quint8 num_bones;      // Number of bones in the model's skeleton
-	quint8 unknown4[6];
-	quint8 index_parts;
-	quint8 unknown5;
 	quint8 r3, g3, b3;
-	quint8 num_parts;      // Number of parts in the model's skeleton
-	quint8 unknown6[6];
-	quint8 index_animations;
-	quint8 unknown7;
+	quint8 index_bones_start;
+	quint8 index_bones_end;
 	quint8 r4, g4, b4;
+	quint8 num_bones;      // Number of bones in the model's skeleton
+	quint8 r5, g5, b5;
+	quint8 r6, g6, b6;
+	quint8 index_parts_start;
+	quint8 index_parts_end;
+	quint8 r7, g7, b7;
+	quint8 num_parts;      // Number of parts in the model's skeleton
+	quint8 r8, g8, b8;
+	quint8 r9, g9, b9;
+	quint8 index_animations_start;
+	quint8 index_animations_end;
+	quint8 r10, g10, b10;
 	quint8 num_animations; // Number of animations
 } Model;
 
 typedef struct {
-	quint16 u0;
+	quint16 unknown;
 	quint8 num_bones;
 	quint8 num_parts;
 	quint8 num_animations;
-	quint8 u1[17];
+	quint8 blank1[17];
 	quint16 scale;
 	quint16 offset_parts; // relative to the end of this structure
 	quint16 offset_animations; // relative to the end of this structure
 	quint32 offset_skeleton;
-	quint32 u2;
+	quint32 blank2;
 } BCXModel;
 
 typedef struct {
@@ -115,6 +122,7 @@ private:
 	int openSkeleton(const char *constData, int curOff, int size, quint8 numBones);
 	int openMesh(const char *constData, int curOff, int size, quint8 numParts);
 	bool openAnimation(const char *constData, int curOff, int animation_id, int size, bool animate=false);
+	QPixmap openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp);
 	bool openBCX(const QByteArray &BCX, int animationID, bool animation=false);
 };
 
