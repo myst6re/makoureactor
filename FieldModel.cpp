@@ -140,20 +140,16 @@ void FieldModel::drawP(int boneID)
 {
 	if(!data)	return;
 
-	QList<FieldModelPart *> ps = data->parts(boneID);
-	QList<QList<int> > texss = data->texFiles(boneID);
-	int pID = 0;
-
-	foreach(FieldModelPart *p, ps) {
-		QList<int> texs = texss.value(pID);
+	foreach(FieldModelPart *p, data->parts(boneID)) {
 
 		foreach(FieldModelGroup *g, p->groups()) {
-			GLuint texture_id=-1;
-			bool hasTexture = g->textureNumber()>-1 && (int)g->textureNumber()<texs.size();
+			GLuint texture_id = -1;
+			bool hasTexture = g->textureNumber() > -1
+					&& (int)g->textureNumber() < data->loadedTextureCount();
 
 			if(hasTexture) {
 				glEnable(GL_TEXTURE_2D);
-				texture_id = bindTexture(data->loadedTexture(texs.at(g->textureNumber())), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
+				texture_id = bindTexture(data->loadedTexture(g->textureNumber()), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
 			}
 
 			int curPolyType = 0;
@@ -203,7 +199,6 @@ void FieldModel::drawP(int boneID)
 				glDisable(GL_TEXTURE_2D);
 			}
 		}
-		++pID;
 	}
 }
 

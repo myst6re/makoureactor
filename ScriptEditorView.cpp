@@ -132,7 +132,7 @@ void ScriptEditorExecPage::setOpcode(Opcode *opcode)
 
 	OpcodeExec *opcodeExec = (OpcodeExec *)opcode;
 
-	GrpScript *grp = _field->grpScripts.value(opcodeExec->groupID, 0);
+	GrpScript *grp = _field->grpScripts().value(opcodeExec->groupID, 0);
 	if(!grp) {
 		_valid = false;
 		return;
@@ -152,7 +152,7 @@ void ScriptEditorExecPage::setOpcode(Opcode *opcode)
 
 void ScriptEditorExecPage::updateScriptList(int groupID)
 {
-	GrpScript *grp = _field->grpScripts.value(groupID, 0);
+	GrpScript *grp = _field->grpScripts().value(groupID, 0);
 	if(!grp) {
 		return;
 	}

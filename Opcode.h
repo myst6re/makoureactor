@@ -148,7 +148,7 @@ public:
 
 	virtual bool isVoid() const;
 
-	bool rechercherVar(quint8 bank, quint8 adress, int value=65536) const;
+	bool searchVar(quint8 bank, quint8 adress, int value=65536) const;
 
 	virtual int getTextID() const;
 	virtual void setTextID(quint8 textID);
@@ -159,8 +159,8 @@ public:
 	virtual bool getWindow(FF7Window &window) const;
 	virtual void setWindow(const FF7Window &window);
 	virtual void getVariables(QList<FF7Var> &vars) const;
-	bool rechercherExec(quint8 group, quint8 script) const;
-	bool rechercherTexte(const QRegExp &texte) const;
+	bool searchExec(quint8 group, quint8 script) const;
+	bool searchText(const QRegExp &texte) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void shiftTextIds(int textId, int steps);

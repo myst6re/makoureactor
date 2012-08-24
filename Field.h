@@ -23,14 +23,12 @@
 #include "FF7Text.h"
 #include "Palette.h"
 #include "LZS.h"
-#include "IsoArchive.h"
 #include "EncounterFile.h"
 #include "TutFile.h"
 #include "CaFile.h"
 #include "IdFile.h"
 #include "InfFile.h"
-#include "FieldModelLoaderPC.h"
-#include "FieldModelLoaderPS.h"
+#include "FieldModelLoader.h"
 
 //Sizeof : 36
 typedef struct {
@@ -53,46 +51,6 @@ typedef struct {
 	quint8 deph, unused12;
 } Tile;
 
-//Sizeof : 8
-typedef struct {
-	qint16 cibleX, cibleY;
-	quint8 srcX, srcY;
-	unsigned ZZ1:6;
-	unsigned palID:4;
-	unsigned ZZ2:6;
-} layer1Tile;
-
-//Sizeof : 2
-typedef struct {
-	unsigned page_x:4;
-	unsigned page_y:1;
-	unsigned typeTrans:2;//transparence n°3
-	unsigned deph:2;
-	unsigned ZZZ:7;
-} layer2Tile;
-
-//Sizeof : 2
-typedef struct {
-	unsigned param:7;
-	unsigned blending:1;//transparence n°1
-	quint8 state;
-} layer3Tile;
-
-//Sizeof : 4
-typedef struct {
-	quint16 group;//id
-	unsigned param:7;
-	unsigned blending:1;//transparence n°1
-	quint8 state;
-} paramTile;
-
-//Sizeof : 12
-typedef struct {
-	quint32 size;// = 12 + w*2*h
-	quint16 x, y;
-	quint16 w, h;
-} MIM;
-
 class Field
 {
 public:
@@ -110,79 +68,71 @@ public:
 
 	Field();
 	Field(const QString &name);
-	Field(quint32 position, const QString &name);
 	virtual ~Field();
 
 	bool isOpen() const;
 	bool isModified() const;
 	void setModified(bool modified);
 
-	qint8 open(const QByteArray &fileData);
-	qint8 open2(const QByteArray &fileData);
+	virtual qint8 open(const QByteArray &fileData)=0;
 	void close();
+
 	int getModelID(quint8) const;
 	void getBgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z=0, qint16 *x=0, qint16 *y=0) const;
-	QPixmap openModelAndBackgroundPC(const QByteArray &contenu);
-	QPixmap openModelAndBackgroundPS(const QByteArray &mimDataDec, const QByteArray &datDataDec);
-	bool getUsedParamsPC(const QByteArray &contenu, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
-	bool getUsedParamsPS(const QByteArray &datData, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
-	QPixmap ouvrirBackgroundPC(const QByteArray &contenu, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
-	QPixmap ouvrirBackgroundPS(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
+	virtual bool getUsedParams(const QByteArray &contenu, QHash<quint8, quint8> &usedParams, bool *layerExists) const=0;
 
+	const QList<GrpScript *> &grpScripts() const;
+	GrpScript *grpScript(int groupID) const;
+	int grpScriptCount() const;
 	void insertGrpScript(int row);
 	void insertGrpScript(int row, GrpScript *grpScript);
 	void deleteGrpScript(int row);
 	void removeGrpScript(int row);
 	bool moveGrpScript(int row, bool direction);
-	QList<FF7Var> searchAllVars() const;
-	bool rechercherOpcode(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
-	bool rechercherVar(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const;
-	bool rechercherExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
-	bool rechercherTexte(const QRegExp &texte, int &groupID, int &scriptID, int &opcodeID) const;
-	bool rechercherOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
-	bool rechercherVarP(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const;
-	bool rechercherExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
-	bool rechercherTexteP(const QRegExp &texte, int &groupID, int &scriptID, int &opcodeID) const;
 
+	QList<FF7Var> searchAllVars() const;
+	bool searchOpcode(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchVar(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchText(const QRegExp &texte, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchVarP(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchTextP(const QRegExp &texte, int &groupID, int &scriptID, int &opcodeID) const;
+
+	void shiftTutIds(int row, int shift);
+
+	QList<FF7Text *> *getTexts();
+	int getNbTexts() const;
+	FF7Text *getText(int textID) const;
 	void insertText(int row);
 	void deleteText(int row);
 	QSet<quint8> listUsedTexts() const;
 	QSet<quint8> listUsedTuts() const;
 
-	void shiftTutIds(int row, int shift);
-
 	void setSaved();
-	QByteArray save(const QByteArray &fileData, bool compress);
-	QByteArray saveDat(const QByteArray &fileData, bool compress);
+	virtual QByteArray save(const QByteArray &fileData, bool compress)=0;
 	qint8 exporter(const QString &path, const QByteArray &data, bool compress);
-	qint8 exporterDat(const QString &path, const QByteArray &datData);
+	qint8 exporterDat(const QString &path, const QByteArray &data);
 	qint8 importer(const QString &path, FieldParts part);
+	virtual qint8 importer(const QByteArray &data, bool isDat, FieldParts part);
 
 	EncounterFile *getEncounter();
 	TutFile *getTut();
 	IdFile *getId();
 	CaFile *getCa();
 	InfFile *getInf();
-	FieldModelLoaderPC *getFieldModelLoaderPC();
-	FieldModelLoaderPS *getFieldModelLoaderPS();
+	virtual FieldModelLoader *getFieldModelLoader()=0;
 
 	const QString &getName() const;
 	void setName(const QString &name);
-
-	quint32 getPosition() const;
-	void setPosition(quint32 position);
 
 	const QString &getAuthor() const;
 	void setAuthor(const QString &author);
 
 	quint16 getScale() const;
 	void setScale(quint16 scale);
-
-	QList<GrpScript *> grpScripts;
-	QList<FF7Text *> *getTexts();
-	int getNbTexts() const;
-	FF7Text *getText(int textID) const;
-private:
+protected:
 	qint8 openSection1(const QByteArray &contenu, int posStart);
 	QByteArray saveSection1(const QByteArray &contenu) const;
 
@@ -191,11 +141,11 @@ private:
 	bool _isOpen, _isModified;
 
 	QString name;
-	quint32 position;
 	QString author;
 	quint16 scale;
 	// quint8 nbObjets3D;
 
+	QList<GrpScript *> _grpScripts;
 	QList<FF7Text *> textes;
 
 	EncounterFile *encounter;

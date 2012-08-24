@@ -79,7 +79,7 @@ void BGDialog::fillWidgets()
 	QHash<quint8, quint8> usedParams;
 	bool layerExists[] = {false, false, false};
 
-	if((!isPS && field->getUsedParamsPC(fieldData, usedParams, layerExists)) || (isPS && field->getUsedParamsPS(fieldData, usedParams, layerExists)))
+	if(field->getUsedParams(fieldData, usedParams, layerExists))
 	{
 		foreach(const quint8 &param, usedParams.keys()) {
 			parametersWidget->addItem(tr("Paramètre %1").arg(param), param);
@@ -209,8 +209,8 @@ void BGDialog::changeZ(int value)
 void BGDialog::fill()
 {
 	if(isPS) {
-		image->setPixmap(field->ouvrirBackgroundPS(mimData, fieldData, params, z, layers));
+		image->setPixmap(((FieldPS *)field)->ouvrirBackground(mimData, fieldData, params, z, layers));
 	} else {
-		image->setPixmap(field->ouvrirBackgroundPC(fieldData, params, z, layers));
+		image->setPixmap(((FieldPC *)field)->ouvrirBackground(fieldData, params, z, layers));
 	}
 }

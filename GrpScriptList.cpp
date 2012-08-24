@@ -125,7 +125,7 @@ GrpScript *GrpScriptList::currentGrpScript()
 {
 	int grpScriptID = selectedID();
 	if(grpScriptID != -1)
-		return field->grpScripts.at(grpScriptID);
+		return field->grpScript(grpScriptID);
 	return NULL;
 }
 
@@ -167,7 +167,7 @@ void GrpScriptList::fill(Field *field)
 	clear();
 	
 	int i=0;
-	foreach(GrpScript *grpScript, this->field->grpScripts)
+	foreach(GrpScript *grpScript, this->field->grpScripts())
 	{
 		item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->getName() << grpScript->getType());
 		item->setForeground(2, QBrush(grpScript->getTypeColor()));
@@ -190,7 +190,7 @@ void GrpScriptList::localeRefresh()
 	QTreeWidgetItem *currentItem = this->currentItem();
 	if(grpScriptID != -1 && currentItem != NULL)
 	{
-		GrpScript *currentGrpScript = field->grpScripts.at(grpScriptID);
+		GrpScript *currentGrpScript = field->grpScript(grpScriptID);
 		currentItem->setText(2, currentGrpScript->getType());
 		currentItem->setForeground(2, currentGrpScript->getTypeColor());
 	}
@@ -217,7 +217,7 @@ void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 	QString newName = item->text(1).left(8);
 	item->setText(1, newName);
 	Data::currentGrpScriptNames.replace(item->text(0).toInt(), newName);
-	field->grpScripts.at(selectedID())->setName(newName);
+	field->grpScript(selectedID())->setName(newName);
 	emit changed();
 }
 
@@ -268,7 +268,7 @@ void GrpScriptList::copy()
 	hasCut = false;
 	clearCopiedGroups();
 	foreach(const int &id, selectedIDs)
-		grpScriptCopied.append(field->grpScripts.at(id));
+		grpScriptCopied.append(field->grpScript(id));
 
 	actions().at(6)->setEnabled(true);
 }

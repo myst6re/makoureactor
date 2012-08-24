@@ -1,5 +1,5 @@
 /****************************************************************************
- ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Makou Reactor Final Fantasy VII FieldPC Script Editor
  ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
@@ -15,39 +15,35 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELFILEPC_H
-#define FIELDMODELFILEPC_H
+#ifndef DEF_FIELDPC
+#define DEF_FIELDPC
 
 #include <QtGui>
-#include "FieldModelFile.h"
-#include "FieldModelPartPC.h"
+#include "Field.h"
 #include "FieldModelLoaderPC.h"
 
-typedef struct {
-	quint32 version;
-	quint32 frames_count;
-	quint32 bones_count;
-	quint8 rotation_order[3];
-	quint8 unused;
-	quint32 runtime_data[5];
-} a_header;
-
-class FieldModelFilePC : public FieldModelFile
+class FieldPC : public Field
 {
 public:
-	FieldModelFilePC();
-	void clear();
-	bool isPS() const { return false; }
-	quint8 load(FieldModelLoaderPC *modelLoader, int modelID, int animID, bool animate=false);
-	quint8 load(QString hrc, QString a, bool animate=false);
-private:
-	QMultiMap<int, QList<int> > _tex_files;
-	QList<QString> tex2id;
+	FieldPC();
+	FieldPC(quint32 position, const QString &name);
+	FieldPC(const Field &field);
+	virtual ~FieldPC();
 
-	bool open_hrc(QFile *, QMultiMap<int, QStringList> &rsd_files);
-	bool open_a(QFile *, bool animate=false);
-	QString open_rsd(QFile *, int);
-	static QPixmap open_tex(QFile *);
+	qint8 open(const QByteArray &fileData);
+	QPixmap openModelAndBackground(const QByteArray &data);
+	bool getUsedParams(const QByteArray &contenu, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
+	QPixmap ouvrirBackground(const QByteArray &contenu, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
+
+	quint32 getPosition() const;
+	void setPosition(quint32 position);
+
+	QByteArray save(const QByteArray &fileData, bool compress);
+	qint8 importer(const QByteArray &data, bool isDat, FieldParts part);
+
+	FieldModelLoaderPC *getFieldModelLoader();
+private:
+	quint32 position;
 };
 
-#endif // FIELDMODELFILEPC_H
+#endif // DEF_FIELDPC

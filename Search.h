@@ -33,7 +33,7 @@ public:
 	void setScriptExec(int groupID, int scriptID);
 	void updateRunSearch();
 
-	int fileID;
+	int fieldID;
 	int grpScriptID;
 	int scriptID;
 	int opcodeID;
@@ -45,6 +45,8 @@ public slots:
 	void changeOpcodeID(int);
 
 private slots:
+	void updateComboVarName();
+	void updateChampAdress();
 	void cancelSearching();
 	void chercherSuivant();
 	void chercherPrecedent();
@@ -60,9 +62,11 @@ private:
 	QSpinBox *champBank;
 	QSpinBox *champAdress;
 	QLineEdit *champValue;
+	QComboBox *comboVarName;
 	QGridLayout *grid;
 	QPushButton *buttonSuiv;
 	QPushButton *buttonPrec;
+	QLabel *returnToBegin;
 	QComboBox *executionGroup;
 	QSpinBox *executionScript;
 

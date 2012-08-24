@@ -14,6 +14,8 @@ HEADERS += ApercuBG.h \
     Config.h \
     Delegate.h \
     Field.h \
+	FieldPC.h \
+	FieldPS.h \
     FieldModel.h \
     FieldModelPart.h \
     GrpScript.h \
@@ -77,6 +79,8 @@ SOURCES += ApercuBG.cpp \
     Config.cpp \
     Delegate.cpp \
     Field.cpp \
+	FieldPC.cpp \
+	FieldPS.cpp \
     FieldModel.cpp \
     FieldModelPart.cpp \
     GrpScript.cpp \

@@ -33,7 +33,7 @@ public:
 	bool search(const QRegExp &texte) const;
 
 private:
-	QString getCaract(quint8 ord, quint8 table=0) const;
+	static QString getCaract(quint8 ord, quint8 table=0);
 	static const char *caract[256];
 	static const char *caract_jp[256];
 	static const char *caract_jp_fa[256];

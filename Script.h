@@ -45,15 +45,15 @@ public:
 	void shiftTextIds(int textId, int steps=1);
 	void shiftTutIds(int tutId, int steps=1);
 
-	bool rechercherOpcode(int opcode, int &opcodeID) const;
-	bool rechercherVar(quint8 bank, quint8 adress, int value, int &opcodeID) const;
+	bool searchOpcode(int opcode, int &opcodeID) const;
+	bool searchVar(quint8 bank, quint8 adress, int value, int &opcodeID) const;
 	QList<FF7Var> searchAllVars() const;
-	bool rechercherExec(quint8 group, quint8 script, int &opcodeID) const;
-	bool rechercherTexte(const QRegExp &texte, int &opcodeID) const;
-	bool rechercherOpcodeP(int opcode, int &opcodeID) const;
-	bool rechercherVarP(quint8 bank, quint8 adress, int value, int &opcodeID) const;
-	bool rechercherExecP(quint8 group, quint8 script, int &opcodeID) const;
-	bool rechercherTexteP(const QRegExp &texte, int &opcodeID) const;
+	bool searchExec(quint8 group, quint8 script, int &opcodeID) const;
+	bool searchText(const QRegExp &texte, int &opcodeID) const;
+	bool searchOpcodeP(int opcode, int &opcodeID) const;
+	bool searchVarP(quint8 bank, quint8 adress, int value, int &opcodeID) const;
+	bool searchExecP(quint8 group, quint8 script, int &opcodeID) const;
+	bool searchTextP(const QRegExp &texte, int &opcodeID) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8, quint8> &text2win) const;

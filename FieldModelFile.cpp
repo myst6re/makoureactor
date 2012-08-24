@@ -34,8 +34,6 @@ void FieldModelFile::clear()
 	foreach(FieldModelPart *part, _parts)
 		delete part;
 	_parts.clear();
-	_tex_files.clear();
-	_loaded_tex.clear();
 	_bones.clear();
 	_frames.clear();
 }
@@ -65,9 +63,9 @@ QList<FieldModelPart *> FieldModelFile::parts(int boneID) const
 	return _parts.values(boneID);
 }
 
-QList< QList<int> > FieldModelFile::texFiles(int boneID) const
+int FieldModelFile::loadedTextureCount() const
 {
-	return _tex_files.values(boneID);
+	return _loaded_tex.size();
 }
 
 QPixmap FieldModelFile::loadedTexture(int texID) const

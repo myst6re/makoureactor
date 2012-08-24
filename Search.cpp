@@ -19,12 +19,10 @@
 #include "Window.h"
 
 Search::Search(QWidget *parent)
-	: QDialog(parent, Qt::Tool), fileID(0), grpScriptID(0), scriptID(0), opcodeID(0), clef(0), text(QString()), bank(0), adress(0), e_script(0), e_group(0)
+	: QDialog(parent, Qt::Tool), fieldID(0), grpScriptID(0), scriptID(0), opcodeID(0), clef(0), text(QString()), bank(0), adress(0), e_script(0), e_group(0)
 {
 	setWindowTitle(tr("Rechercher"));
 	activateWindow();
-	
-	grid = new QGridLayout(this);
 	
 	liste = new QComboBox(this);
 	liste->addItem(tr("Texte"));
@@ -68,9 +66,14 @@ Search::Search(QWidget *parent)
 	variableLayout->addWidget(champAdress = new QSpinBox(variable), 0, 2);
 	variableLayout->addWidget(new QLabel("="), 0, 3);
 	variableLayout->addWidget(champValue = new QLineEdit(variable), 0, 4);
+	variableLayout->addWidget(comboVarName = new QComboBox(variable), 1, 0, 1, 5);
 	variableLayout->setRowStretch(1, 1);
 	champBank->setRange(1,15);
 	champAdress->setRange(0,255);
+	for(int i=0 ; i<256 ; ++i) {
+		comboVarName->addItem(QString());
+	}
+	updateComboVarName();
 
 	QWidget *execution = new QWidget(this);
 	executionGroup = new QComboBox(execution);
@@ -97,15 +100,32 @@ Search::Search(QWidget *parent)
 	buttonPrec->setAutoDefault(false);
 	buttonSuiv->setAutoDefault(false);
 	buttonSuiv->setDefault(true);
-	
-	grid->addWidget(liste, 0, 0, Qt::AlignTop);
-	grid->addWidget(stack, 0, 1, Qt::AlignTop);
-	grid->addWidget(buttonSuiv, 1, 0, 1, 2, Qt::AlignHCenter);
-	grid->addWidget(buttonPrec, 2, 0, 1, 2, Qt::AlignHCenter);
+
+	returnToBegin = new QLabel();
+	returnToBegin->setWordWrap(true);
+	returnToBegin->setAlignment(Qt::AlignRight);
+	QPalette pal = returnToBegin->palette();
+	pal.setColor(QPalette::Active, QPalette::WindowText, Qt::red);
+	returnToBegin->setPalette(pal);
+	returnToBegin->hide();
+
+	QHBoxLayout *topLayout = new QHBoxLayout();
+	topLayout->addWidget(liste, 0, Qt::AlignTop);
+	topLayout->addWidget(stack, 1, Qt::AlignTop);
+	topLayout->addStretch();
+
+	grid = new QGridLayout(this);
+	grid->addLayout(topLayout, 0, 0, 1, 3, Qt::AlignTop);
+	grid->addWidget(buttonSuiv, 1, 1, Qt::AlignHCenter);
+	grid->addWidget(buttonPrec, 2, 1, Qt::AlignHCenter);
+	grid->addWidget(returnToBegin, 1, 2, 2, 1, Qt::AlignRight | Qt::AlignBottom);
 	
 	connect(buttonSuiv, SIGNAL(released()), SLOT(chercherSuivant()));
 	connect(buttonPrec, SIGNAL(released()), SLOT(chercherPrecedent()));
 	connect(liste, SIGNAL(currentIndexChanged(int)), stack, SLOT(setCurrentIndex(int)));
+	connect(champBank, SIGNAL(valueChanged(int)), SLOT(updateComboVarName()));
+	connect(champAdress, SIGNAL(valueChanged(int)), comboVarName, SLOT(setCurrentIndex(int)));
+	connect(comboVarName, SIGNAL(currentIndexChanged(int)), SLOT(updateChampAdress()));
 }
 
 void Search::setFieldArchive(FieldArchive *fieldArchive)
@@ -134,9 +154,9 @@ void Search::updateRunSearch()
 		executionGroup->addItem(QString("%1 - %2").arg(i++).arg(name));
 }
 
-void Search::changeFileID(int fileID)
+void Search::changeFileID(int fieldID)
 {
-	this->fileID = fileID;
+	this->fieldID = fieldID;
 	grpScriptID = scriptID = opcodeID = -1;
 }
 
@@ -157,6 +177,20 @@ void Search::changeOpcodeID(int opcodeID)
 	this->opcodeID = opcodeID;
 }
 
+void Search::updateComboVarName()
+{
+	for(int i=0 ; i<256 ; ++i) {
+		comboVarName->setItemText(i, QString("%1 - %2").arg(i, 3, 10, QChar('0')).arg(Var::name(champBank->value(), i)));
+	}
+}
+
+void Search::updateChampAdress()
+{
+	champAdress->blockSignals(true);
+	champAdress->setValue(comboVarName->currentIndex());
+	champAdress->blockSignals(false);
+}
+
 void Search::cancelSearching()
 {
 	cancel = true;
@@ -166,7 +200,9 @@ void Search::chercherSuivant()
 {
 	parentWidget()->setEnabled(false);
 	buttonSuiv->setDefault(true);
+	returnToBegin->hide();
 
+	bool localSearch=false;
 	const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
 	FieldArchive::Sorting sorting = ((Window *)parentWidget())->getFieldSorting();
 
@@ -177,39 +213,46 @@ void Search::chercherSuivant()
 	switch(liste->currentIndex())
 	{
 	case 0:
-		if(fieldArchive->rechercherTexte(text, fileID, grpScriptID, scriptID, opcodeID, sorting))
+		if(fieldArchive->searchText(text, fieldID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, opcodeID);
+			emit found(fieldID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 1:
-		if(fieldArchive->rechercherVar(bank, adress, value, fileID, grpScriptID, scriptID, opcodeID, sorting))
+		if(fieldArchive->searchVar(bank, adress, value, fieldID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, opcodeID);
+			emit found(fieldID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 2:
-		if(fieldArchive->rechercherOpcode(clef, fileID, grpScriptID, scriptID, opcodeID, sorting))
+		if(fieldArchive->searchOpcode(clef, fieldID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, opcodeID);
+			emit found(fieldID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 3:
-		if(fieldArchive->rechercherExec(e_group, e_script, fileID, grpScriptID, scriptID, opcodeID, sorting))
+		if(fieldID < 0)							fieldID = 0;
+		if(fieldID > fieldArchive->size())		fieldID = fieldArchive->size()-1;
+		Field *currentField = fieldArchive->field(fieldID);
+		if(currentField && currentField->searchExec(e_group, e_script, grpScriptID, scriptID, opcodeID))
 		{
-			emit found(fileID, grpScriptID, scriptID, opcodeID);
+			emit found(fieldID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
+		localSearch = true;
 		break;
 	}
-	
-	QMessageBox::information(this, windowTitle(), tr("Dernier fichier,\npoursuite de la recherche dans le premier fichier."));
+
+	returnToBegin->setText(tr("Dernier %1,\npoursuite au début.")
+						   .arg(localSearch ? tr("groupe") : tr("écran")));
+	returnToBegin->show();
 
 	Data::currentTextes = currentTextesSav;
-	this->fileID = grpScriptID = scriptID = opcodeID = -1;
+	if(!localSearch)	fieldID = -1;
+	grpScriptID = scriptID = opcodeID = -1;
 
 after:
 	parentWidget()->setEnabled(true);
@@ -219,7 +262,9 @@ void Search::chercherPrecedent()
 {
 	parentWidget()->setEnabled(false);
 	buttonPrec->setDefault(true);
+	returnToBegin->hide();
 
+	bool localSearch=false;
 	const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
 	FieldArchive::Sorting sorting = ((Window *)parentWidget())->getFieldSorting();
 
@@ -230,53 +275,46 @@ void Search::chercherPrecedent()
 	switch(liste->currentIndex())
 	{
 	case 0:
-		if(fieldArchive->rechercherTexteP(text, fileID, grpScriptID, scriptID, opcodeID, sorting))
+		if(fieldArchive->searchTextP(text, fieldID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, opcodeID);
+			emit found(fieldID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 1:
-		if(fieldArchive->rechercherVarP(bank, adress, value, fileID, grpScriptID, scriptID, opcodeID, sorting))
+		if(fieldArchive->searchVarP(bank, adress, value, fieldID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, opcodeID);
+			emit found(fieldID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 2:
-		if(fieldArchive->rechercherOpcodeP(clef, fileID, grpScriptID, scriptID, opcodeID, sorting))
+		if(fieldArchive->searchOpcodeP(clef, fieldID, grpScriptID, scriptID, opcodeID, sorting))
 		{
-			emit found(fileID, grpScriptID, scriptID, opcodeID);
+			emit found(fieldID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 		break;
 	case 3:
-		if(fieldArchive->rechercherExecP(e_group, e_script, fileID, grpScriptID, scriptID, opcodeID, sorting))
+		if(fieldID < 0)							fieldID = 0;
+		if(fieldID > fieldArchive->size())		fieldID = fieldArchive->size()-1;
+		Field *currentField = fieldArchive->field(fieldID);
+		if(currentField && currentField->searchExecP(e_group, e_script, grpScriptID, scriptID, opcodeID))
 		{
-			emit found(fileID, grpScriptID, scriptID, opcodeID);
+			emit found(fieldID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
+		localSearch = true;
 		break;
 	}
 
-	QMessageBox::information(this, windowTitle(), tr("Premier fichier,\npoursuite de la recherche dans le dernier fichier."));
+	returnToBegin->setText(tr("Premier %1,\npoursuite à la fin.")
+						   .arg(localSearch ? tr("groupe") : tr("écran")));
+	returnToBegin->show();
 
 	Data::currentTextes = currentTextesSav;
-	fileID = fieldArchive->size()-1;
-	if(fileID >= 0) {
-		Field *field = fieldArchive->field(fileID);
-		if(field != NULL) {
-			grpScriptID = field->grpScripts.size()-1;
-			if(grpScriptID >= 0) {
-				scriptID = field->grpScripts.at(grpScriptID)->size()-1;
-				if(scriptID >= 0) {
-					opcodeID = field->grpScripts.at(grpScriptID)->getScript(scriptID)->size();
-				}
-			}
-		} else {
-			grpScriptID = scriptID = opcodeID = 65535;
-		}
-	}
+	if(!localSearch)	fieldID = 2147483647;
+	grpScriptID = scriptID = opcodeID = 2147483647;
 
 after:
 	parentWidget()->setEnabled(true);

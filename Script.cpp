@@ -822,28 +822,27 @@ bool Script::moveOpcode(quint16 opcodeID, bool direction)
 	return true;
 }
 
-bool Script::rechercherOpcode(int opcode, int &opcodeID) const
+bool Script::searchOpcode(int opcode, int &opcodeID) const
 {
-	if(opcodeID < 0)	opcodeID = 0;
+	if(opcodeID < 0) 	opcodeID = 0;
 
 	int opcodeCount = opcodes.size();
 	while(opcodeID < opcodeCount)
 	{
 		if(opcode == opcodes.at(opcodeID)->id())	return true;
 		++opcodeID;
-		// qDebug() << "SCRIPT_opcodeID " << opcodeID;
 	}
 	return false;
 }
 
-bool Script::rechercherVar(quint8 bank, quint8 adress, int value, int &opcodeID) const
+bool Script::searchVar(quint8 bank, quint8 adress, int value, int &opcodeID) const
 {
 	if(opcodeID < 0)	opcodeID = 0;
 
 	int opcodeCount = opcodes.size();
 	while(opcodeID < opcodeCount)
 	{
-		if(opcodes.at(opcodeID)->rechercherVar(bank, adress, value))	return true;
+		if(opcodes.at(opcodeID)->searchVar(bank, adress, value))	return true;
 		++opcodeID;
 	}
 	return false;
@@ -860,35 +859,37 @@ QList<FF7Var> Script::searchAllVars() const
 	return vars;
 }
 
-bool Script::rechercherExec(quint8 group, quint8 script, int &opcodeID) const
+bool Script::searchExec(quint8 group, quint8 script, int &opcodeID) const
+{
+	if(opcodeID < 0)	opcodeID = 0;
+
+	qDebug() << "Script::searchExec" << opcodeID;
+
+	int opcodeCount = opcodes.size();
+	while(opcodeID < opcodeCount)
+	{
+		if(opcodes.at(opcodeID)->searchExec(group, script))	return true;
+		++opcodeID;
+	}
+	return false;
+}
+
+bool Script::searchText(const QRegExp &texte, int &opcodeID) const
 {
 	if(opcodeID < 0)	opcodeID = 0;
 
 	int opcodeCount = opcodes.size();
 	while(opcodeID < opcodeCount)
 	{
-		if(opcodes.at(opcodeID)->rechercherExec(group, script))	return true;
+		if(opcodes.at(opcodeID)->searchText(texte))	return true;
 		++opcodeID;
 	}
 	return false;
 }
 
-bool Script::rechercherTexte(const QRegExp &texte, int &opcodeID) const
+bool Script::searchOpcodeP(int opcode, int &opcodeID) const
 {
-	if(opcodeID < 0)	opcodeID = 0;
-
-	int opcodeCount = opcodes.size();
-	while(opcodeID < opcodeCount)
-	{
-		if(opcodes.at(opcodeID)->rechercherTexte(texte))	return true;
-		++opcodeID;
-	}
-	return false;
-}
-
-bool Script::rechercherOpcodeP(int opcode, int &opcodeID) const
-{
-	if(opcodeID >= opcodes.size())	opcodeID = opcodes.size()-1;
+	if(opcodeID >= opcodes.size()) opcodeID = opcodes.size()-1;
 	
 	while(opcodeID >= 0)
 	{
@@ -899,39 +900,39 @@ bool Script::rechercherOpcodeP(int opcode, int &opcodeID) const
 	return false;
 }
 
-bool Script::rechercherVarP(quint8 bank, quint8 adress, int value, int &opcodeID) const
+bool Script::searchVarP(quint8 bank, quint8 adress, int value, int &opcodeID) const
 {
 	if(opcodeID >= opcodes.size())	opcodeID = opcodes.size()-1;
 	
 	while(opcodeID >= 0)
 	{
-		if(opcodes.at(opcodeID)->rechercherVar(bank, adress, value))	return true;
+		if(opcodes.at(opcodeID)->searchVar(bank, adress, value))	return true;
 		--opcodeID;
 	}
 
 	return false;
 }
 
-bool Script::rechercherExecP(quint8 group, quint8 script, int &opcodeID) const
+bool Script::searchExecP(quint8 group, quint8 script, int &opcodeID) const
 {
 	if(opcodeID >= opcodes.size())	opcodeID = opcodes.size()-1;
 
 	while(opcodeID >= 0)
 	{
-		if(opcodes.at(opcodeID)->rechercherExec(group, script))	return true;
+		if(opcodes.at(opcodeID)->searchExec(group, script))	return true;
 		--opcodeID;
 	}
 
 	return false;
 }
 
-bool Script::rechercherTexteP(const QRegExp &texte, int &opcodeID) const
+bool Script::searchTextP(const QRegExp &texte, int &opcodeID) const
 {
 	if(opcodeID >= opcodes.size())	opcodeID = opcodes.size()-1;
 	
 	while(opcodeID >= 0)
 	{
-		if(opcodes.at(opcodeID)->rechercherTexte(texte))	return true;
+		if(opcodes.at(opcodeID)->searchText(texte))	return true;
 		--opcodeID;
 	}
 

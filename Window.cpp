@@ -580,7 +580,7 @@ void Window::afficherGrpScripts()
 	Data::currentModelID = modelID;
 	if(fieldModel && modelID != -1) {
 		if(fieldArchive->isLgp()) {
-			modelLoaded = fieldModel->load(field->getFieldModelLoaderPC(), modelID, 0, true);
+			modelLoaded = fieldModel->load(((FieldPC *)field)->getFieldModelLoader(), modelID, 0, true);
 		} else {
 			modelLoaded = fieldModel->load(fieldArchive, field, modelID, 0, true);
 		}
@@ -655,7 +655,7 @@ void Window::changeHistoric(const Historic &hist)
 	actionUndo->setEnabled(true);
 	actionRedo->setEnabled(false);
 	Historic newHist = hist;
-	newHist.fieldID = searchDialog->fileID;
+	newHist.fieldID = searchDialog->fieldID;
 	newHist.groupID = searchDialog->grpScriptID;
 	newHist.scriptID = searchDialog->scriptID;
 	hists.push(newHist);
@@ -668,7 +668,7 @@ void Window::undo()
 	actionUndo->setEnabled(!hists.isEmpty());
 	zoneScript->setFocus();
 
-	Script *script = fieldArchive->field(hist.fieldID)->grpScripts.at(hist.groupID)->getScript(hist.scriptID);
+	Script *script = fieldArchive->field(hist.fieldID)->grpScript(hist.groupID)->getScript(hist.scriptID);
 	int firstOpcode = hist.opcodeIDs.first();
 	QByteArray sav;
 
@@ -710,7 +710,7 @@ void Window::redo()
 	actionRedo->setEnabled(!restoreHists.isEmpty());
 	zoneScript->setFocus();
 
-	Script *script = fieldArchive->field(hist.fieldID)->grpScripts.at(hist.groupID)->getScript(hist.scriptID);
+	Script *script = fieldArchive->field(hist.fieldID)->grpScript(hist.groupID)->getScript(hist.scriptID);
 	int firstOpcode = hist.opcodeIDs.first();
 	QByteArray sav;
 	
@@ -777,7 +777,7 @@ void Window::enregistrerSous(bool currentPath)
 			if(DATfic.open(QIODevice::ReadOnly))
 			{
 				DATfic.seek(4);
-				tempFic.write(field->saveDat(DATfic.readAll(), true));
+				tempFic.write(field->save(DATfic.readAll(), true));
 				DATfic.reset();
 				if(cheminFic!=DATfic.fileName() || DATfic.remove())
 				{
@@ -812,22 +812,25 @@ void Window::enregistrerSous(bool currentPath)
 	setEnabled(true);
 }
 
-void Window::gotoOpcode(int fileID, int grpScriptID, int scriptID, int opcodeID)
+void Window::gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID)
 {
+	blockSignals(true);
 	int i, size=liste->topLevelItemCount();
 	for(i=0 ; i<size ; ++i) {
 		QTreeWidgetItem *item = liste->topLevelItem(i);
-		if(item->data(0, Qt::UserRole).toInt() == fileID) {
+		if(item->data(0, Qt::UserRole).toInt() == fieldID) {
 			liste->setCurrentItem(item);
 			liste->scrollToItem(item);
 			break;
 		}
 	}
-	if(i==size)	return;
-	
-	liste2->scroll(grpScriptID, false);
-	liste3->scroll(scriptID, false);
-	zoneScript->scroll(opcodeID);
+
+	if(i!=size) {
+		liste2->scroll(grpScriptID, false);
+		liste3->scroll(scriptID, false);
+		zoneScript->scroll(opcodeID);
+	}
+	blockSignals(false);
 }
 
 void Window::emitOpcodeID()
@@ -948,13 +951,13 @@ void Window::importer()
 		activerSave(true);
 		// remove field history
 		for(int i=hists.size()-1 ; i>=0 ; --i) {
-			if(hists.at(i).fieldID == searchDialog->fileID) {
+			if(hists.at(i).fieldID == searchDialog->fieldID) {
 				hists.remove(i);
 			}
 		}
 		actionUndo->setEnabled(!hists.isEmpty());
 		for(int i=restoreHists.size()-1 ; i>=0 ; --i) {
-			if(restoreHists.at(i).fieldID == searchDialog->fileID) {
+			if(restoreHists.at(i).fieldID == searchDialog->fieldID) {
 				restoreHists.remove(i);
 			}
 		}

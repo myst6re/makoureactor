@@ -18,7 +18,7 @@
 #include "ModelManager.h"
 
 ModelManager::ModelManager(Field *field, const QGLWidget *shareWidget, QWidget *parent)
-	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), fieldModelLoader(field->getFieldModelLoaderPC()), page_filled(false)
+	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), fieldModelLoader(((FieldPC *)field)->getFieldModelLoader()), page_filled(false)
 {
 	field_model_unknown = fieldModelLoader->model_unknown;
 	field_model_nameChar = fieldModelLoader->model_nameChar;

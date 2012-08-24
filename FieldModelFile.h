@@ -41,7 +41,7 @@ public:
 	int boneCount() const;
 	int animBoneCount() const; // valid bone count
 	QList<FieldModelPart *> parts(int boneID) const;
-	QList< QList<int> > texFiles(int boneID) const;
+	int loadedTextureCount() const;
 	QPixmap loadedTexture(int texID) const;
 	QList<PolyVertex> rotation(int frameID) const;
 	int frameCount() const;
@@ -50,7 +50,6 @@ public:
 
 protected:
 	QMultiMap<int, FieldModelPart *> _parts;
-	QMultiMap<int, QList<int> > _tex_files;
 	QHash<int, QPixmap> _loaded_tex;
 	QList<Bone> _bones;
 	int a_bones_count;

@@ -348,7 +348,7 @@ void FF7Text::setText(const QString &string, bool jp)
 	this->texte = ff7str;
 }
 
-QString FF7Text::getCaract(quint8 ord, quint8 table) const
+QString FF7Text::getCaract(quint8 ord, quint8 table)
 {
 	switch(table) {
 	case 2:

@@ -59,7 +59,7 @@ public slots:
 	void enregistrer();
 	int fermer(bool quit=false);
 
-	void gotoOpcode(int fileID, int grpScriptID, int scriptID, int opcodeID);
+	void gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID);
 
 	void jp_txt(bool);
 

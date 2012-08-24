@@ -140,7 +140,7 @@ void Opcode::getVariables(QList<FF7Var> &) const
 {
 }
 
-bool Opcode::rechercherVar(quint8 bank, quint8 adress, int value) const
+bool Opcode::searchVar(quint8 bank, quint8 adress, int value) const
 {
 	if(value != 65536) {
 		if(id()==0x80) {
@@ -169,8 +169,9 @@ bool Opcode::rechercherVar(quint8 bank, quint8 adress, int value) const
 	return false;
 }
 
-bool Opcode::rechercherExec(quint8 group, quint8 script) const
+bool Opcode::searchExec(quint8 group, quint8 script) const
 {
+	qDebug() << "Opcode::searchExec" << group << script;
 	if(id()==0x01 || id()==0x02 || id()==0x03) {
 		OpcodeExec *exec = (OpcodeExec *)this;
 		return exec->groupID == group && exec->scriptID == script;
@@ -178,7 +179,7 @@ bool Opcode::rechercherExec(quint8 group, quint8 script) const
 	return false;
 }
 
-bool Opcode::rechercherTexte(const QRegExp &texte) const
+bool Opcode::searchText(const QRegExp &texte) const
 {
 	qint16 textID = getTextID();
 	return textID != -1

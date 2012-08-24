@@ -25,7 +25,7 @@ FieldModelFilePS::FieldModelFilePS() :
 quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, int model_id, int animation_id, bool animate)
 {
 	QByteArray BSX_data = fieldArchive->getModelData(currentField);
-	FieldModelLoaderPS *modelLoader = currentField->getFieldModelLoaderPS();
+	FieldModelLoaderPS *modelLoader = ((FieldPS *)currentField)->getFieldModelLoader();
 	quint8 model_global_id = model_id < modelLoader->modelCount() ? modelLoader->model(model_id).modelID : 0;
 	const char *constData = BSX_data.constData();
 	BSX_header header;
@@ -225,7 +225,8 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 			if(!texIds.isEmpty()) {
 				foreach(FieldModelGroup *group, part->groups()) {
 					if(group->textureNumber() != -1) {
-						const QPixmap currentTex = _loaded_tex.value(texIds.at(group->textureNumber()));
+						group->setTextureNumber(texIds.at(group->textureNumber()));
+						const QPixmap currentTex = _loaded_tex.value(group->textureNumber());
 						int texWidth=currentTex.width(), texHeight=currentTex.height();
 
 						foreach(Poly *poly, group->polygons()) {
@@ -233,7 +234,6 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 						}
 					}
 				}
-				_tex_files.insert(((FieldModelPartPS *)part)->boneID(), texIds);
 			}
 		}
 	}

@@ -25,6 +25,7 @@ FieldModelFilePC::FieldModelFilePC() :
 void FieldModelFilePC::clear()
 {
 	tex2id.clear();
+	_tex_files.clear();
 
 	FieldModelFile::clear();
 }
@@ -99,14 +100,25 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 			if(!_parts.isEmpty()
 					&& (pos=Data::charlgp_listPos.value(a%".a"))>0 && fic.seek(pos+20) && open_a(&fic, animate))
 			{
-				QList<QList<int> > values = _tex_files.values();
+				QList<QList<int> > texss = _tex_files.values();
 
-				foreach(const QList<int> &texs, values) {
+				foreach(const QList<int> &texs, texss) {
 					foreach(const int &tex, texs) {
 						if(!_loaded_tex.contains(tex) && (pos=Data::charlgp_listPos.value(tex2id.at(tex)%".tex"))>0 && fic.seek(pos+20)) {
 							_loaded_tex.insert(tex, open_tex(&fic));
 						}
 					}
+				}
+
+				int pID = 0;
+				foreach(FieldModelPart *part, _parts) {
+					QList<int> texs = texss.value(pID);
+					foreach(FieldModelGroup *group, part->groups()) {
+						if(group->textureNumber() != -1 && group->textureNumber() < texs.size()) {
+							group->setTextureNumber(texs.at(group->textureNumber()));
+						}
+					}
+					++pID;
 				}
 
 				tex2id.clear();

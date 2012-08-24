@@ -38,9 +38,9 @@ void ApercuBG::fill(FieldArchive *archive, Field *field)
 	QPixmap background;
 
 	if(archive->isLgp()) {
-		background = field->openModelAndBackgroundPC(archive->getFieldData(field));
+		background = ((FieldPC *)field)->openModelAndBackground(archive->getFieldData(field));
 	} else {
-		background = field->openModelAndBackgroundPS(archive->getMimData(field), archive->getFieldData(field));
+		background = ((FieldPS *)field)->openModelAndBackground(archive->getMimData(field), archive->getFieldData(field));
 	}
 
 	QPixmap newBg;
