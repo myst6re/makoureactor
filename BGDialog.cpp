@@ -17,15 +17,10 @@
  ****************************************************************************/
 #include "BGDialog.h"
 
-BGDialog::BGDialog(FieldArchive *archive, Field *field, QWidget *parent)
-	: QDialog(parent, Qt::Dialog | Qt::WindowSystemMenuHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint), archive(archive), field(field)
+BGDialog::BGDialog(QWidget *parent) :
+	QDialog(parent, Qt::Tool),
+	archive(0), field(0)
 {
-	setWindowTitle(tr("Aperçu %1").arg(field->getName()));
-
-	mimData = archive->getMimData(field);
-	isPS = !mimData.isEmpty();
-	fieldData = archive->getFieldData(field);
-
 	QScrollArea *scrollArea = new QScrollArea(this);
 	scrollArea->setWidgetResizable(true);
 
@@ -61,13 +56,25 @@ BGDialog::BGDialog(FieldArchive *archive, Field *field, QWidget *parent)
 	layout->addLayout(hLayout, 3, 1, Qt::AlignRight);
 	layout->setColumnStretch(0, 1);
 
-	fillWidgets();
-
 	connect(parametersWidget, SIGNAL(currentIndexChanged(int)), SLOT(parameterChanged(int)));
 	connect(layersWidget, SIGNAL(itemSelectionChanged()), SLOT(layerChanged()));
 	connect(statesWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(enableState(QListWidgetItem*)));
 	connect(layersWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(enableLayer(QListWidgetItem*)));
 	connect(zWidget, SIGNAL(valueChanged(int)), SLOT(changeZ(int)));
+}
+
+void BGDialog::fill(FieldArchive *fieldArchive, Field *field)
+{
+	this->archive = fieldArchive;
+	this->field = field;
+
+	setWindowTitle(tr("Aperçu %1").arg(field->getName()));
+
+	mimData = archive->getMimData(field);
+	isPS = !mimData.isEmpty();
+	fieldData = archive->getFieldData(field);
+
+	fillWidgets();
 
 	parameterChanged(0);
 	layerChanged();
@@ -78,6 +85,13 @@ void BGDialog::fillWidgets()
 {
 	QHash<quint8, quint8> usedParams;
 	bool layerExists[] = {false, false, false};
+
+	parametersWidget->clear();
+	layersWidget->clear();
+	layers[0] = true;
+	layers[3] = layers[2] = layers[1] = false;
+	allparams.clear();
+	params.clear();
 
 	if(field->getUsedParams(fieldData, usedParams, layerExists))
 	{
@@ -209,8 +223,8 @@ void BGDialog::changeZ(int value)
 void BGDialog::fill()
 {
 	if(isPS) {
-		image->setPixmap(((FieldPS *)field)->ouvrirBackground(mimData, fieldData, params, z, layers));
+		image->setPixmap(((FieldPS *)field)->openBackground(mimData, fieldData, params, z, layers));
 	} else {
-		image->setPixmap(((FieldPC *)field)->ouvrirBackground(fieldData, params, z, layers));
+		image->setPixmap(((FieldPC *)field)->openBackground(fieldData, params, z, layers));
 	}
 }

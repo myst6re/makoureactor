@@ -100,8 +100,7 @@ FF7Window TextPreview::getWindow()
 	if(!ff7Windows.isEmpty())
 		return ff7Windows.at(currentWin);
 	else {
-		FF7Window ff7Window;
-		memset(&ff7Window, '\x00', sizeof(FF7Window));
+		FF7Window ff7Window = FF7Window();
 		ff7Window.type = NOWIN;
 		return ff7Window;
 	}
@@ -176,7 +175,7 @@ void TextPreview::calcSize()
 {
 //	qDebug() << "TextPreview::calcSize()";
 
-	int line=0, width=18, height=22, size=ff7Text.size();
+	int line=0, width=20, height=25, size=ff7Text.size();
 	maxW=maxH=0;
 	pagesPos.clear();
 	pagesPos.append(0);
@@ -280,16 +279,22 @@ void TextPreview::calcSize()
 	update();
 }
 
+QSize TextPreview::getCalculatedSize() const
+{
+	return QSize(maxW, maxH);
+}
+
 QPoint TextPreview::realPos(const FF7Window &ff7Window)
 {
 //	qDebug() << "TextPreview::realPos()";
+	if(ff7Window.type == NOWIN)	return QPoint();
 
 	int windowX=ff7Window.x, windowY=ff7Window.y;
-	if(windowX+maxW>312) {
-		windowX = 312-maxW;
+	if(windowX+ff7Window.w>312) {
+		windowX = 312-ff7Window.w;
 	}
-	if(windowY+maxH>223) {
-		windowY = 223-maxH;
+	if(windowY+ff7Window.h>223) {
+		windowY = 223-ff7Window.h;
 	}
 
 	if(windowX<8)	windowX = 8;
@@ -382,8 +387,6 @@ void TextPreview::drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTo
 
 bool TextPreview::drawTextArea(QPainter *painter)
 {
-	if(ff7Text.isEmpty())	return false;
-
 	bool blink = false, use_timer = false, jp = Config::value("jp_txt", false).toBool();
 	FF7Window ff7Window = getWindow();
 	spaced_characters = false;
@@ -406,6 +409,8 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	drawWindow(painter, maxW, maxH, windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight);
 
 	/* Text */
+
+	if(ff7Text.isEmpty())	return false;
 
 	setFontColor(WHITE);
 

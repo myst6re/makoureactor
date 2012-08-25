@@ -70,7 +70,7 @@ QPixmap FieldPC::openModelAndBackground(const QByteArray &data)
 	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
 	Data::currentAnimNames = &fieldModelLoader->model_anims;
 
-	return ouvrirBackground(data, paramActifs, z);
+	return openBackground(data, paramActifs, z);
 }
 
 bool FieldPC::getUsedParams(const QByteArray &contenu, QHash<quint8, quint8> &usedParams, bool *layerExists) const
@@ -163,7 +163,7 @@ bool FieldPC::getUsedParams(const QByteArray &contenu, QHash<quint8, quint8> &us
 	return true;
 }
 
-QPixmap FieldPC::ouvrirBackground(const QByteArray &contenu, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
+QPixmap FieldPC::openBackground(const QByteArray &contenu, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
 {
 	const char *constContenu = contenu.constData();
 	QList<Palette> palettes;

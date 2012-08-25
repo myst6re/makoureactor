@@ -59,8 +59,8 @@ HEADERS += ApercuBG.h \
     GZIP.h \
     Data.h \
     OrientationWidget.h \
-    ScriptEditorView.h \
-    ScriptEditorGenericList.h \
+	ScriptEditorWidgets/ScriptEditorView.h \
+	ScriptEditorWidgets/ScriptEditorGenericList.h \
     VarOrValueWidget.h \
     HexLineEdit.h \
     Listwidget.h \
@@ -72,7 +72,8 @@ HEADERS += ApercuBG.h \
     FieldModelFilePC.h \
     FieldModelLoaderPC.h \
     FieldModelLoaderPS.h \
-    TdbFile.h
+    TdbFile.h \
+    ScriptEditorWidgets/ScriptEditorWindowPage.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -125,8 +126,8 @@ SOURCES += ApercuBG.cpp \
     GZIP.cpp \
     Data.cpp \
     OrientationWidget.cpp \
-    ScriptEditorView.cpp \
-    ScriptEditorGenericList.cpp \
+	ScriptEditorWidgets/ScriptEditorView.cpp \
+	ScriptEditorWidgets/ScriptEditorGenericList.cpp \
     VarOrValueWidget.cpp \
     HexLineEdit.cpp \
     Listwidget.cpp \
@@ -138,7 +139,8 @@ SOURCES += ApercuBG.cpp \
     FieldModelFilePC.cpp \
     FieldModelLoaderPC.cpp \
     FieldModelLoaderPS.cpp \
-    TdbFile.cpp
+    TdbFile.cpp \
+    ScriptEditorWidgets/ScriptEditorWindowPage.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts

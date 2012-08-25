@@ -33,7 +33,7 @@ public:
 	qint8 open(const QByteArray &fileData);
 	QPixmap openModelAndBackground(const QByteArray &data);
 	bool getUsedParams(const QByteArray &contenu, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
-	QPixmap ouvrirBackground(const QByteArray &contenu, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
+	QPixmap openBackground(const QByteArray &contenu, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
 
 	quint32 getPosition() const;
 	void setPosition(quint32 position);

@@ -55,6 +55,7 @@ public:
 	void nextPage();
 	void prevPage();
 	void calcSize();
+	QSize getCalculatedSize() const;
 	QPixmap getIconImage(int iconId);
 	static void drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTopLeft, QRgb colorTopRight, QRgb colorBottomLeft, QRgb colorBottomRight);
 private slots:

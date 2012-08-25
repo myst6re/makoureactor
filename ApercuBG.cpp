@@ -91,18 +91,10 @@ void ApercuBG::clear()
 	error = false;
 }
 
-void ApercuBG::execDialog()
-{
-	if(!error && archive && field) {
-		BGDialog dialog(archive, field, this);
-		dialog.exec();
-	}
-}
-
 void ApercuBG::mouseReleaseEvent(QMouseEvent *event)
 {
-	if(event->button() == Qt::LeftButton)
+	if(event->button() == Qt::LeftButton && !error)
 	{
-		execDialog();
+		emit clicked();
 	}
 }

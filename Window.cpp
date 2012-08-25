@@ -19,7 +19,8 @@
 #include "parametres.h"
 
 Window::Window() :
-	field(0), firstShow(true), varDialog(0), textDialog(0), _walkmeshManager(0)
+	field(0), firstShow(true), varDialog(0),
+	textDialog(0), _walkmeshManager(0), _backgroundManager(0)
 {
 	setWindowTitle(PROG_FULLNAME);
 	setMinimumSize(700,600);
@@ -196,8 +197,9 @@ Window::Window() :
 	
 	searchDialog = new Search(this);
 	menuBar()->addMenu(createPopupMenu());
-	menuBar()->addAction("&?", this, SLOT(a_propos()));
+	menuBar()->addAction("&?", this, SLOT(about()));
 	
+	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
 	connect(searchDialog, SIGNAL(found(int, int, int, int)), SLOT(gotoOpcode(int, int, int, int)));
 	connect(lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap()));
 	connect(lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
@@ -355,6 +357,7 @@ int Window::fermer(bool quit)
 		searchDialog->close();
 		if(textDialog) 	textDialog->close();
 		if(_walkmeshManager)	_walkmeshManager->close();
+		if(_backgroundManager)	_backgroundManager->close();
 		
 		actionSave->setEnabled(false);
 		actionSaveAs->setEnabled(false);
@@ -519,6 +522,8 @@ void Window::ouvrirField()
 		textDialog->setField(field);
 	if(_walkmeshManager && _walkmeshManager->isVisible())
 		_walkmeshManager->fill(fieldArchive, field);
+	if(_backgroundManager && _backgroundManager->isVisible())
+		_backgroundManager->fill(fieldArchive, field);
 
 	//Réouvrir fichier pour afficher le background
 	zoneImage->fill(fieldArchive, field);
@@ -1078,8 +1083,14 @@ void Window::walkmeshManager()
 
 void Window::backgroundManager()
 {
-	if(field) {
-		zoneImage->execDialog();
+	if(fieldArchive && field) {
+		if(!_backgroundManager) {
+			_backgroundManager = new BGDialog(this);
+		}
+
+		_backgroundManager->fill(fieldArchive, field);
+		_backgroundManager->show();
+		_backgroundManager->activateWindow();
 	}
 }
 
@@ -1116,7 +1127,7 @@ void Window::config()
 	}
 }
 
-void Window::a_propos()
+void Window::about()
 {
 	QDialog apropos(this, Qt::Dialog | Qt::CustomizeWindowHint);
 	apropos.setFixedSize(200, 200);

@@ -77,7 +77,7 @@ public slots:
 	void backgroundManager();
 	void miscManager();
 	void searchManager();
-	void a_propos();
+	void about();
 private slots:
 	void emitOpcodeID();
 	void changeHistoric(const Historic &);
@@ -135,6 +135,7 @@ private:
 
 	TextManager *textDialog;
 	WalkmeshManager *_walkmeshManager;
+	BGDialog *_backgroundManager;
 
 	QProgressBar *progression;
 	QLabel *auteurLbl;

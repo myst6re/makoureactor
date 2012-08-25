@@ -171,7 +171,6 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, int value) const
 
 bool Opcode::searchExec(quint8 group, quint8 script) const
 {
-	qDebug() << "Opcode::searchExec" << group << script;
 	if(id()==0x01 || id()==0x02 || id()==0x03) {
 		OpcodeExec *exec = (OpcodeExec *)this;
 		return exec->groupID == group && exec->scriptID == script;
@@ -223,8 +222,7 @@ void Opcode::listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8
 {
 	int windowID = getWindowID();
 	if(windowID != -1) {
-		FF7Window win;
-		memset(&win, 0, sizeof(FF7Window));
+		FF7Window win = FF7Window();
 		win.type = id();
 
 		if(getWindow(win)) {
@@ -2081,18 +2079,60 @@ void OpcodeWCLS::setWindowID(quint8 windowID)
 	this->windowID = windowID;
 }
 
-OpcodeWSIZW::OpcodeWSIZW(const QByteArray &params)
+OpcodeWindow::OpcodeWindow(const QByteArray &params)
 {
 	setParams(params);
 }
 
-void OpcodeWSIZW::setParams(const QByteArray &params)
+void OpcodeWindow::setParams(const QByteArray &params)
 {
 	windowID = params.at(0);
 	memcpy(&targetX, &(params.constData()[1]), 2);
 	memcpy(&targetY, &(params.constData()[3]), 2);
 	memcpy(&width, &(params.constData()[5]), 2);
 	memcpy(&height, &(params.constData()[7]), 2);
+}
+
+QByteArray OpcodeWindow::params() const
+{
+	return QByteArray()
+			.append((char)windowID)
+			.append((char *)&targetX, 2)
+			.append((char *)&targetY, 2)
+			.append((char *)&width, 2)
+			.append((char *)&height, 2);
+}
+
+int OpcodeWindow::getWindowID() const
+{
+	return windowID;
+}
+
+void OpcodeWindow::setWindowID(quint8 windowID)
+{
+	this->windowID = windowID;
+}
+
+bool OpcodeWindow::getWindow(FF7Window &window) const
+{
+	window.x = targetX;
+	window.y = targetY;
+	window.w = width;
+	window.h = height;
+	return true;
+}
+
+void OpcodeWindow::setWindow(const FF7Window &window)
+{
+	targetX = window.x;
+	targetY = window.y;
+	width = window.w;
+	height = window.h;
+}
+
+OpcodeWSIZW::OpcodeWSIZW(const QByteArray &params) :
+	OpcodeWindow(params)
+{
 }
 
 QString OpcodeWSIZW::toString() const
@@ -2103,44 +2143,6 @@ QString OpcodeWSIZW::toString() const
 			.arg(targetY)
 			.arg(width)
 			.arg(height);
-}
-
-QByteArray OpcodeWSIZW::params() const
-{
-	return QByteArray()
-			.append((char)windowID)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&width, 2)
-			.append((char *)&height, 2);
-}
-
-int OpcodeWSIZW::getWindowID() const
-{
-	return windowID;
-}
-
-void OpcodeWSIZW::setWindowID(quint8 windowID)
-{
-	this->windowID = windowID;
-}
-
-bool OpcodeWSIZW::getWindow(FF7Window &window) const
-{
-	window.x = targetX;
-	window.y = targetY;
-	window.w = width;
-	window.h = height;
-
-	return true;
-}
-
-void OpcodeWSIZW::setWindow(const FF7Window &window)
-{
-	targetX = window.x;
-	targetY = window.y;
-	width = window.w;
-	height = window.h;
 }
 
 OpcodeIfKey::OpcodeIfKey(const QByteArray &params)
@@ -2969,18 +2971,9 @@ QString OpcodeHPd::toString() const
 			.arg(_var(value, B2(banks)));
 }
 
-OpcodeWINDOW::OpcodeWINDOW(const QByteArray &params)
+OpcodeWINDOW::OpcodeWINDOW(const QByteArray &params) :
+	OpcodeWindow(params)
 {
-	setParams(params);
-}
-
-void OpcodeWINDOW::setParams(const QByteArray &params)
-{
-	windowID = params.at(0);
-	memcpy(&targetX, &(params.constData()[1]), 2);
-	memcpy(&targetY, &(params.constData()[3]), 2);
-	memcpy(&width, &(params.constData()[5]), 2);
-	memcpy(&height, &(params.constData()[7]), 2);
 }
 
 QString OpcodeWINDOW::toString() const
@@ -2991,43 +2984,6 @@ QString OpcodeWINDOW::toString() const
 			.arg(targetY)
 			.arg(width)
 			.arg(height);
-}
-
-QByteArray OpcodeWINDOW::params() const
-{
-	return QByteArray()
-			.append((char)windowID)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&width, 2)
-			.append((char *)&height, 2);
-}
-
-int OpcodeWINDOW::getWindowID() const
-{
-	return windowID;
-}
-
-void OpcodeWINDOW::setWindowID(quint8 windowID)
-{
-	this->windowID = windowID;
-}
-
-bool OpcodeWINDOW::getWindow(FF7Window &window) const
-{
-	window.x = targetX;
-	window.y = targetY;
-	window.w = width;
-	window.h = height;
-	return true;
-}
-
-void OpcodeWINDOW::setWindow(const FF7Window &window)
-{
-	targetX = window.x;
-	targetY = window.y;
-	width = window.w;
-	height = window.h;
 }
 
 OpcodeWMOVE::OpcodeWMOVE(const QByteArray &params)
@@ -4254,6 +4210,12 @@ OpcodeOperation::OpcodeOperation(const QByteArray &params)
 	setParams(params);
 }
 
+
+OpcodeOperation::OpcodeOperation(const OpcodeBinaryOperation &op) :
+	OpcodeBinaryOperation(op)
+{
+}
+
 void OpcodeOperation::setParams(const QByteArray &params)
 {
 	banks = (quint8)params.at(0);
@@ -4280,6 +4242,11 @@ void OpcodeOperation::getVariables(QList<FF7Var> &vars) const
 OpcodeOperation2::OpcodeOperation2(const QByteArray &params)
 {
 	setParams(params);
+}
+
+OpcodeOperation2::OpcodeOperation2(const OpcodeBinaryOperation &op) :
+	OpcodeBinaryOperation(op)
+{
 }
 
 void OpcodeOperation2::setParams(const QByteArray &params)
@@ -4335,6 +4302,11 @@ OpcodePLUSX::OpcodePLUSX(const QByteArray &params) :
 {
 }
 
+OpcodePLUSX::OpcodePLUSX(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
+{
+}
+
 QString OpcodePLUSX::toString() const
 {
 	return QObject::tr("%1 = %1 + %2 (8 bits)")
@@ -4344,6 +4316,11 @@ QString OpcodePLUSX::toString() const
 
 OpcodePLUS2X::OpcodePLUS2X(const QByteArray &params) :
 	OpcodeOperation2(params)
+{
+}
+
+OpcodePLUS2X::OpcodePLUS2X(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
 {
 }
 
@@ -4359,6 +4336,11 @@ OpcodeMINUSX::OpcodeMINUSX(const QByteArray &params) :
 {
 }
 
+OpcodeMINUSX::OpcodeMINUSX(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
+{
+}
+
 QString OpcodeMINUSX::toString() const
 {
 	return QObject::tr("%1 = %1 - %2 (8 bits)")
@@ -4368,6 +4350,11 @@ QString OpcodeMINUSX::toString() const
 
 OpcodeMINUS2X::OpcodeMINUS2X(const QByteArray &params) :
 	OpcodeOperation2(params)
+{
+}
+
+OpcodeMINUS2X::OpcodeMINUS2X(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
 {
 }
 
@@ -4383,6 +4370,12 @@ OpcodeINCX::OpcodeINCX(const QByteArray &params) :
 {
 }
 
+
+OpcodeINCX::OpcodeINCX(const OpcodeUnaryOperation &op) :
+	OpcodeUnaryOperation(op)
+{
+}
+
 QString OpcodeINCX::toString() const
 {
 	return QObject::tr("%1 = %1 + 1 (8 bits)")
@@ -4391,6 +4384,11 @@ QString OpcodeINCX::toString() const
 
 OpcodeINC2X::OpcodeINC2X(const QByteArray &params) :
 	OpcodeUnaryOperation(params)
+{
+}
+
+OpcodeINC2X::OpcodeINC2X(const OpcodeUnaryOperation &op) :
+	OpcodeUnaryOperation(op)
 {
 }
 
@@ -4405,6 +4403,11 @@ OpcodeDECX::OpcodeDECX(const QByteArray &params) :
 {
 }
 
+OpcodeDECX::OpcodeDECX(const OpcodeUnaryOperation &op) :
+	OpcodeUnaryOperation(op)
+{
+}
+
 QString OpcodeDECX::toString() const
 {
 	return QObject::tr("%1 = %1 - 1 (8 bits)")
@@ -4413,6 +4416,11 @@ QString OpcodeDECX::toString() const
 
 OpcodeDEC2X::OpcodeDEC2X(const QByteArray &params) :
 	OpcodeUnaryOperation(params)
+{
+}
+
+OpcodeDEC2X::OpcodeDEC2X(const OpcodeUnaryOperation &op) :
+	OpcodeUnaryOperation(op)
 {
 }
 
@@ -4472,6 +4480,11 @@ OpcodeSETBYTE::OpcodeSETBYTE(const QByteArray &params) :
 {
 }
 
+OpcodeSETBYTE::OpcodeSETBYTE(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
+{
+}
+
 QString OpcodeSETBYTE::toString() const
 {
 	return QObject::tr("%1 = %2 (8 bits)")
@@ -4481,6 +4494,11 @@ QString OpcodeSETBYTE::toString() const
 
 OpcodeSETWORD::OpcodeSETWORD(const QByteArray &params) :
 	OpcodeOperation2(params)
+{
+}
+
+OpcodeSETWORD::OpcodeSETWORD(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
 {
 }
 
@@ -4524,6 +4542,11 @@ OpcodeBITON::OpcodeBITON(const QByteArray &params) :
 {
 }
 
+OpcodeBITON::OpcodeBITON(const OpcodeBitOperation &op) :
+	OpcodeBitOperation(op)
+{
+}
+
 QString OpcodeBITON::toString() const
 {
 	return QObject::tr("Mettre le bit %2 à 1 dans %1")
@@ -4533,6 +4556,11 @@ QString OpcodeBITON::toString() const
 
 OpcodeBITOFF::OpcodeBITOFF(const QByteArray &params) :
 	OpcodeBitOperation(params)
+{
+}
+
+OpcodeBITOFF::OpcodeBITOFF(const OpcodeBitOperation &op) :
+	OpcodeBitOperation(op)
 {
 }
 
@@ -4548,6 +4576,11 @@ OpcodeBITXOR::OpcodeBITXOR(const QByteArray &params) :
 {
 }
 
+OpcodeBITXOR::OpcodeBITXOR(const OpcodeBitOperation &op) :
+	OpcodeBitOperation(op)
+{
+}
+
 QString OpcodeBITXOR::toString() const
 {
 	return QObject::tr("Inverser la valeur du bit %2 dans %1")
@@ -4557,6 +4590,11 @@ QString OpcodeBITXOR::toString() const
 
 OpcodePLUS::OpcodePLUS(const QByteArray &params) :
 	OpcodeOperation(params)
+{
+}
+
+OpcodePLUS::OpcodePLUS(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
 {
 }
 
@@ -4572,6 +4610,11 @@ OpcodePLUS2::OpcodePLUS2(const QByteArray &params) :
 {
 }
 
+OpcodePLUS2::OpcodePLUS2(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
+{
+}
+
 QString OpcodePLUS2::toString() const
 {
 	return QObject::tr("%1 = %1 + %2 (16 bits)")
@@ -4581,6 +4624,11 @@ QString OpcodePLUS2::toString() const
 
 OpcodeMINUS::OpcodeMINUS(const QByteArray &params) :
 	OpcodeOperation(params)
+{
+}
+
+OpcodeMINUS::OpcodeMINUS(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
 {
 }
 
@@ -4596,6 +4644,11 @@ OpcodeMINUS2::OpcodeMINUS2(const QByteArray &params) :
 {
 }
 
+OpcodeMINUS2::OpcodeMINUS2(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
+{
+}
+
 QString OpcodeMINUS2::toString() const
 {
 	return QObject::tr("%1 = %1 - %2 (16 bits)")
@@ -4605,6 +4658,11 @@ QString OpcodeMINUS2::toString() const
 
 OpcodeMUL::OpcodeMUL(const QByteArray &params) :
 	OpcodeOperation(params)
+{
+}
+
+OpcodeMUL::OpcodeMUL(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
 {
 }
 
@@ -4620,6 +4678,11 @@ OpcodeMUL2::OpcodeMUL2(const QByteArray &params) :
 {
 }
 
+OpcodeMUL2::OpcodeMUL2(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
+{
+}
+
 QString OpcodeMUL2::toString() const
 {
 	return QObject::tr("%1 = %1 * %2 (16 bits)")
@@ -4629,6 +4692,11 @@ QString OpcodeMUL2::toString() const
 
 OpcodeDIV::OpcodeDIV(const QByteArray &params) :
 	OpcodeOperation(params)
+{
+}
+
+OpcodeDIV::OpcodeDIV(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
 {
 }
 
@@ -4644,6 +4712,11 @@ OpcodeDIV2::OpcodeDIV2(const QByteArray &params) :
 {
 }
 
+OpcodeDIV2::OpcodeDIV2(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
+{
+}
+
 QString OpcodeDIV2::toString() const
 {
 	return QObject::tr("%1 = %1 / %2 (16 bits)")
@@ -4653,6 +4726,11 @@ QString OpcodeDIV2::toString() const
 
 OpcodeMOD::OpcodeMOD(const QByteArray &params) :
 	OpcodeOperation(params)
+{
+}
+
+OpcodeMOD::OpcodeMOD(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
 {
 }
 
@@ -4668,6 +4746,11 @@ OpcodeMOD2::OpcodeMOD2(const QByteArray &params) :
 {
 }
 
+OpcodeMOD2::OpcodeMOD2(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
+{
+}
+
 QString OpcodeMOD2::toString() const
 {
 	return QObject::tr("%1 = %1 mod %2 (16 bits)")
@@ -4677,6 +4760,11 @@ QString OpcodeMOD2::toString() const
 
 OpcodeAND::OpcodeAND(const QByteArray &params) :
 	OpcodeOperation(params)
+{
+}
+
+OpcodeAND::OpcodeAND(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
 {
 }
 
@@ -4692,6 +4780,11 @@ OpcodeAND2::OpcodeAND2(const QByteArray &params) :
 {
 }
 
+OpcodeAND2::OpcodeAND2(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
+{
+}
+
 QString OpcodeAND2::toString() const
 {
 	return QObject::tr("%1 = %1 & %2 (16 bits)")
@@ -4701,6 +4794,11 @@ QString OpcodeAND2::toString() const
 
 OpcodeOR::OpcodeOR(const QByteArray &params) :
 	OpcodeOperation(params)
+{
+}
+
+OpcodeOR::OpcodeOR(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
 {
 }
 
@@ -4716,6 +4814,11 @@ OpcodeOR2::OpcodeOR2(const QByteArray &params) :
 {
 }
 
+OpcodeOR2::OpcodeOR2(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
+{
+}
+
 QString OpcodeOR2::toString() const
 {
 	return QObject::tr("%1 = %1 | %2 (16 bits)")
@@ -4725,6 +4828,11 @@ QString OpcodeOR2::toString() const
 
 OpcodeXOR::OpcodeXOR(const QByteArray &params) :
 	OpcodeOperation(params)
+{
+}
+
+OpcodeXOR::OpcodeXOR(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
 {
 }
 
@@ -4740,6 +4848,11 @@ OpcodeXOR2::OpcodeXOR2(const QByteArray &params) :
 {
 }
 
+OpcodeXOR2::OpcodeXOR2(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
+{
+}
+
 QString OpcodeXOR2::toString() const
 {
 	return QObject::tr("%1 = %1 ^ %2 (16 bits)")
@@ -4749,6 +4862,11 @@ QString OpcodeXOR2::toString() const
 
 OpcodeINC::OpcodeINC(const QByteArray &params) :
 	OpcodeUnaryOperation(params)
+{
+}
+
+OpcodeINC::OpcodeINC(const OpcodeUnaryOperation &op) :
+	OpcodeUnaryOperation(op)
 {
 }
 
@@ -4763,6 +4881,11 @@ OpcodeINC2::OpcodeINC2(const QByteArray &params) :
 {
 }
 
+OpcodeINC2::OpcodeINC2(const OpcodeUnaryOperation &op) :
+	OpcodeUnaryOperation(op)
+{
+}
+
 QString OpcodeINC2::toString() const
 {
 	return QObject::tr("%1 = %1 + 1 (16 bits)")
@@ -4771,6 +4894,11 @@ QString OpcodeINC2::toString() const
 
 OpcodeDEC::OpcodeDEC(const QByteArray &params) :
 	OpcodeUnaryOperation(params)
+{
+}
+
+OpcodeDEC::OpcodeDEC(const OpcodeUnaryOperation &op) :
+	OpcodeUnaryOperation(op)
 {
 }
 
@@ -4785,6 +4913,11 @@ OpcodeDEC2::OpcodeDEC2(const QByteArray &params) :
 {
 }
 
+OpcodeDEC2::OpcodeDEC2(const OpcodeUnaryOperation &op) :
+	OpcodeUnaryOperation(op)
+{
+}
+
 QString OpcodeDEC2::toString() const
 {
 	return QObject::tr("%1 = %1 - 1 (16 bits)")
@@ -4793,6 +4926,11 @@ QString OpcodeDEC2::toString() const
 
 OpcodeRANDOM::OpcodeRANDOM(const QByteArray &params) :
 	OpcodeUnaryOperation(params)
+{
+}
+
+OpcodeRANDOM::OpcodeRANDOM(const OpcodeUnaryOperation &op) :
+	OpcodeUnaryOperation(op)
 {
 }
 
@@ -4807,6 +4945,11 @@ OpcodeLBYTE::OpcodeLBYTE(const QByteArray &params) :
 {
 }
 
+OpcodeLBYTE::OpcodeLBYTE(const OpcodeBinaryOperation &op) :
+	OpcodeOperation(op)
+{
+}
+
 QString OpcodeLBYTE::toString() const
 {
 	return QObject::tr("%1 = %2 & 0xFF (low byte)")
@@ -4816,6 +4959,11 @@ QString OpcodeLBYTE::toString() const
 
 OpcodeHBYTE::OpcodeHBYTE(const QByteArray &params) :
 	OpcodeOperation2(params)
+{
+}
+
+OpcodeHBYTE::OpcodeHBYTE(const OpcodeBinaryOperation &op) :
+	OpcodeOperation2(op)
 {
 }
 
@@ -4879,7 +5027,8 @@ void OpcodeSETX::setParams(const QByteArray &params)
 
 QString OpcodeSETX::toString() const
 {
-	return QObject::tr("SETX");
+	return QObject::tr("SETX %1")
+			.arg(QString(QByteArray((char *)&unknown, 6).toHex()));
 }
 
 QByteArray OpcodeSETX::params() const
@@ -4899,7 +5048,8 @@ void OpcodeGETX::setParams(const QByteArray &params)
 
 QString OpcodeGETX::toString() const
 {
-	return QObject::tr("GETX");
+	return QObject::tr("GETX %1")
+			.arg(QString(QByteArray((char *)&unknown, 6).toHex()));
 }
 
 QByteArray OpcodeGETX::params() const
@@ -4919,7 +5069,8 @@ void OpcodeSEARCHX::setParams(const QByteArray &params)
 
 QString OpcodeSEARCHX::toString() const
 {
-	return QObject::tr("SEARCHX");
+	return QObject::tr("SEARCHX %1")
+			.arg(QString(QByteArray((char *)&unknown, 10).toHex()));
 }
 
 QByteArray OpcodeSEARCHX::params() const
@@ -6634,7 +6785,8 @@ void OpcodeAKAO2::setParams(const QByteArray &params)
 
 QString OpcodeAKAO2::toString() const
 {
-	return QObject::tr("AKAO2");
+	return QObject::tr("AKAO2 %1")
+			.arg(QString(QByteArray((char *)&unknown, 14).toHex()));
 }
 
 QByteArray OpcodeAKAO2::params() const
@@ -6723,7 +6875,8 @@ void OpcodeMPPAL::setParams(const QByteArray &params)
 
 QString OpcodeMPPAL::toString() const
 {
-	return QObject::tr("MPPAL");
+	return QObject::tr("MPPAL")
+			.arg(QString(QByteArray((char *)&unknown, 10).toHex()));
 }
 
 QByteArray OpcodeMPPAL::params() const
@@ -6903,7 +7056,8 @@ void OpcodeSTPAL::setParams(const QByteArray &params)
 
 QString OpcodeSTPAL::toString() const
 {
-	return QObject::tr("STPAL");
+	return QObject::tr("STPAL %1")
+			.arg(QString(QByteArray((char *)&unknown, 4).toHex()));
 }
 
 QByteArray OpcodeSTPAL::params() const
@@ -6923,7 +7077,8 @@ void OpcodeLDPAL::setParams(const QByteArray &params)
 
 QString OpcodeLDPAL::toString() const
 {
-	return QObject::tr("LDPAL");
+	return QObject::tr("LDPAL %1")
+			.arg(QString(QByteArray((char *)&unknown, 4).toHex()));
 }
 
 QByteArray OpcodeLDPAL::params() const
@@ -6943,7 +7098,8 @@ void OpcodeCPPAL::setParams(const QByteArray &params)
 
 QString OpcodeCPPAL::toString() const
 {
-	return QObject::tr("CPPAL");
+	return QObject::tr("CPPAL %1")
+			.arg(QString(QByteArray((char *)&unknown, 4).toHex()));
 }
 
 QByteArray OpcodeCPPAL::params() const
@@ -6963,7 +7119,8 @@ void OpcodeRTPAL::setParams(const QByteArray &params)
 
 QString OpcodeRTPAL::toString() const
 {
-	return QObject::tr("RTPAL");
+	return QObject::tr("RTPAL %1")
+			.arg(QString(QByteArray((char *)&unknown, 6).toHex()));
 }
 
 QByteArray OpcodeRTPAL::params() const
@@ -6983,7 +7140,8 @@ void OpcodeADPAL::setParams(const QByteArray &params)
 
 QString OpcodeADPAL::toString() const
 {
-	return QObject::tr("ADPAL");
+	return QObject::tr("ADPAL %1")
+			.arg(QString(QByteArray((char *)&unknown, 9).toHex()));
 }
 
 QByteArray OpcodeADPAL::params() const
@@ -7008,10 +7166,12 @@ void OpcodeMPPAL2::setParams(const QByteArray &params)
 
 QString OpcodeMPPAL2::toString() const
 {
-	return QObject::tr("MPPAL2 (R=%1, V=%2, B=%3)")
+	return QObject::tr("MPPAL2 (R=%1, V=%2, B=%3) %4 %5")
 			.arg(_var(r, B1(banks[1])))
 			.arg(_var(g, B2(banks[1])))
-			.arg(_var(b, B1(banks[2])));
+			.arg(_var(b, B1(banks[2])))
+			.arg(QString(QByteArray((char *)&unknown1, 2).toHex()))
+			.arg(QString(QByteArray((char *)&unknown2, 1).toHex()));
 }
 
 QByteArray OpcodeMPPAL2::params() const
@@ -7047,7 +7207,8 @@ void OpcodeSTPLS::setParams(const QByteArray &params)
 
 QString OpcodeSTPLS::toString() const
 {
-	return QObject::tr("STPLS");
+	return QObject::tr("STPLS %1")
+			.arg(QString(QByteArray((char *)&unknown, 4).toHex()));
 }
 
 QByteArray OpcodeSTPLS::params() const
@@ -7067,7 +7228,8 @@ void OpcodeLDPLS::setParams(const QByteArray &params)
 
 QString OpcodeLDPLS::toString() const
 {
-	return QObject::tr("LDPLS");
+	return QObject::tr("LDPLS %1")
+			.arg(QString(QByteArray((char *)&unknown, 4).toHex()));
 }
 
 QByteArray OpcodeLDPLS::params() const
@@ -7087,7 +7249,8 @@ void OpcodeCPPAL2::setParams(const QByteArray &params)
 
 QString OpcodeCPPAL2::toString() const
 {
-	return QObject::tr("CPPAL2");
+	return QObject::tr("CPPAL2 %1")
+			.arg(QString(QByteArray((char *)&unknown, 7).toHex()));
 }
 
 QByteArray OpcodeCPPAL2::params() const
@@ -7107,7 +7270,8 @@ void OpcodeRTPAL2::setParams(const QByteArray &params)
 
 QString OpcodeRTPAL2::toString() const
 {
-	return QObject::tr("RTPAL2");
+	return QObject::tr("RTPAL2 %1")
+			.arg(QString(QByteArray((char *)&unknown, 7).toHex()));
 }
 
 QByteArray OpcodeRTPAL2::params() const
@@ -7127,7 +7291,8 @@ void OpcodeADPAL2::setParams(const QByteArray &params)
 
 QString OpcodeADPAL2::toString() const
 {
-	return QObject::tr("ADPAL2");
+	return QObject::tr("ADPAL2 %1")
+			.arg(QString(QByteArray((char *)&unknown, 10).toHex()));
 }
 
 QByteArray OpcodeADPAL2::params() const
@@ -7203,7 +7368,8 @@ void OpcodeAKAO::setParams(const QByteArray &params)
 
 QString OpcodeAKAO::toString() const
 {
-	return QObject::tr("AKAO");
+	return QObject::tr("AKAO %1")
+			.arg(QString(QByteArray((char *)&unknown, 13).toHex()));
 }
 
 QByteArray OpcodeAKAO::params() const
@@ -7307,7 +7473,8 @@ void OpcodeCHMPH::setParams(const QByteArray &params)
 
 QString OpcodeCHMPH::toString() const
 {
-	return QObject::tr("CHMPH");
+	return QObject::tr("CHMPH %1")
+			.arg(QString(QByteArray((char *)&unknown, 3).toHex()));
 }
 
 QByteArray OpcodeCHMPH::params() const
@@ -7429,7 +7596,8 @@ void OpcodeCMUSC::setParams(const QByteArray &params)
 
 QString OpcodeCMUSC::toString() const
 {
-	return QObject::tr("CMUSC");
+	return QObject::tr("CMUSC %1")
+			.arg(QString(QByteArray((char *)&unknown, 5).toHex()));
 }
 
 QByteArray OpcodeCMUSC::params() const

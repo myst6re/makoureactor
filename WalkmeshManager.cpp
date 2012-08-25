@@ -618,7 +618,7 @@ void WalkmeshManager::addCamera()
 		if(row < caFile->cameraCount()) {
 			ca = caFile->camera(row);
 		} else {
-			memset(&ca, 0, sizeof(Camera));
+			ca = Camera();
 		}
 		caFile->insertCamera(row+1, ca);
 		camList->insertItem(row+1, tr("Camera %1").arg(row+1));
@@ -747,8 +747,8 @@ void WalkmeshManager::addTriangle()
 			tri = idFile->triangle(row);
 			acc = idFile->access(row);
 		} else {
-			memset(&tri, 0, sizeof(Triangle));
-			memset(&acc, 0, sizeof(Access));
+			tri = Triangle();
+			acc = Access();
 		}
 		idFile->insertTriangle(row+1, tri, acc);
 		idList->insertItem(row+1, tr("Triangle %1").arg(row+1));

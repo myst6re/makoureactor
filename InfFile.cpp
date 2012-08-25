@@ -89,7 +89,7 @@ bool InfFile::open(const QByteArray &contenu, bool importMode)
 		return false;
 	}
 
-	memset(&data, 0, sizeof(InfData));
+	data = InfData();
 	memcpy(&data, &constData[debutSection], size);
 	data.name[8] = '\x00';
 

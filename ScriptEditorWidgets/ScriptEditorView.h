@@ -162,8 +162,14 @@ public:
 	explicit ScriptEditorBinaryOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
+private slots:
+	void updateValueRange();
+	void changeCurrentOpcode(int);
 private:
+	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var, *varOrValue;
+	QComboBox *operationList;
+	QRadioButton *type1, *type2;
 };
 
 class ScriptEditorUnaryOpPage : public ScriptEditorView
@@ -173,8 +179,14 @@ public:
 	explicit ScriptEditorUnaryOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
+private slots:
+	void updateValueRange();
+	void changeCurrentOpcode(int);
 private:
+	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var;
+	QComboBox *operationList;
+	QRadioButton *type1, *type2;
 };
 
 class ScriptEditorBitOpPage : public ScriptEditorView
@@ -184,8 +196,12 @@ public:
 	explicit ScriptEditorBitOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
+private slots:
+	void changeCurrentOpcode(int);
 private:
+	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var, *position;
+	QComboBox *operationList;
 };
 
 #endif // DEF_SCRIPTEDITORVIEW

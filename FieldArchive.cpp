@@ -615,7 +615,7 @@ void FieldArchive::close()
 
 void FieldArchive::addDAT(const QString &name, QList<QTreeWidgetItem *> &items)
 {
-	Field *field = new FieldPS(name);
+	Field *field = new FieldPS(name.toLower());
 
 	QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name.toLower() << QString());
 	item->setData(0, Qt::UserRole, fileList.size());

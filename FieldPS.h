@@ -74,7 +74,7 @@ public:
 	qint8 open(const QByteArray &fileData);
 	QPixmap openModelAndBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec);
 	bool getUsedParams(const QByteArray &datData, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
-	QPixmap ouvrirBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
+	QPixmap openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
 
 	QByteArray save(const QByteArray &fileData, bool compress);
 

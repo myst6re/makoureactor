@@ -27,7 +27,8 @@ class BGDialog : public QDialog
 {
     Q_OBJECT
 public:
-	explicit BGDialog(FieldArchive *archive, Field *field, QWidget *parent);
+	explicit BGDialog(QWidget *parent);
+	void fill(FieldArchive *fieldArchive, Field *field);
 private slots:
 	void parameterChanged(int index);
 	void layerChanged();

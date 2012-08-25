@@ -69,7 +69,7 @@ QPixmap FieldPS::openModelAndBackground(const QByteArray &mimDataDec, const QByt
 	if(!fieldModelLoader->isLoaded())
 		fieldModelLoader->load(datDataDec);
 
-	return ouvrirBackground(mimDataDec, datDataDec, paramActifs, z);
+	return openBackground(mimDataDec, datDataDec, paramActifs, z);
 }
 
 bool FieldPS::getUsedParams(const QByteArray &datDataDec, QHash<quint8, quint8> &usedParams, bool *layerExists) const
@@ -168,7 +168,7 @@ bool FieldPS::getUsedParams(const QByteArray &datDataDec, QHash<quint8, quint8> 
 	return true;
 }
 
-QPixmap FieldPS::ouvrirBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
+QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
 {
 	if(mimDataDec.isEmpty() || datDataDec.isEmpty())	return QPixmap();
 	
@@ -183,6 +183,8 @@ QPixmap FieldPS::ouvrirBackground(const QByteArray &mimDataDec, const QByteArray
 	QList<Palette> palettes;
 	for(i=0 ; i<headerPal.h ; ++i)
 		palettes.append(Palette(mimDataDec.mid(12+i*512,512)));
+
+	qDebug() << "palette count" << palettes.size();
 
 	memcpy(&headerImg, &constMimData[headerPal.size], 12);
 	

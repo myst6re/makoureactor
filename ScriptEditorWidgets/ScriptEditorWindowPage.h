@@ -15,48 +15,30 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SE
-#define DEF_SE
+#ifndef DEF_SCRIPTEDITORWINDOWPAGE
+#define DEF_SCRIPTEDITORWINDOWPAGE
 
 #include <QtGui>
-#include "GrpScript.h"
-#include "ScriptEditorWidgets/ScriptEditorGenericList.h"
-#include "ScriptEditorWidgets/ScriptEditorWindowPage.h"
+#include "ScriptEditorView.h"
+#include "TextPreview.h"
 
-class ScriptEditor : public QDialog
+class ScriptEditorWindowPage : public ScriptEditorView
 {
 	Q_OBJECT
-
 public:
-	ScriptEditor();
-	ScriptEditor(Field *field, GrpScript *grpScript, Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent=0);
-	virtual ~ScriptEditor();
-
+	explicit ScriptEditorWindowPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
 private slots:
-	void modify();
-	void add();
-	void refreshTextEdit();
-	void changeCurrentOpcode(int);
-	void buildList(int);
-	
+	void updatePreview();
+	void updateText(int textID);
+	void setPositionWindow(const QPoint &point);
+	void resizeWindow();
 private:
-	void fillEditor();
-	void fillView();
-	void setCurrentMenu(int id);
-
-	QComboBox *comboBox0, *comboBox;
-	QPlainTextEdit *textEdit;
-	QStackedWidget *editorLayout;
-	QPushButton *ok;
-	ScriptEditorView *editorWidget;
-
-	Script *script;
-	quint16 opcodeID;
-	Opcode *opcode;
-	bool isInit;
-	static QList<quint8> crashIfInit;
-
-	bool change;
+	TextPreview *textPreview;
+	QSpinBox *winID, *x, *y, *w, *h;
+	QComboBox *previewText;
+	QPushButton *autoSize;
 };
 
-#endif
+#endif // DEF_SCRIPTEDITORWINDOWPAGE

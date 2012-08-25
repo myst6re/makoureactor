@@ -843,11 +843,9 @@ public:
 	quint8 windowID;
 };
 
-class OpcodeWSIZW : public Opcode {
+class OpcodeWindow : public Opcode {
 public:
-	explicit OpcodeWSIZW(const QByteArray &params);
-	int id() const { return 0x2F; }
-	QString toString() const;
+	explicit OpcodeWindow(const QByteArray &params);
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -857,6 +855,13 @@ public:
 	quint8 windowID;
 	quint16 targetX, targetY;
 	quint16 width, height;
+};
+
+class OpcodeWSIZW : public OpcodeWindow {
+public:
+	explicit OpcodeWSIZW(const QByteArray &params);
+	int id() const { return 0x2F; }
+	QString toString() const;
 };
 
 class OpcodeIfKey : public OpcodeJump {
@@ -1176,21 +1181,12 @@ public:
 	int id() const { return 0x4F; }
 	QString toString() const;
 };
-// note: same struct as WSIZW
-class OpcodeWINDOW : public Opcode {
+
+class OpcodeWINDOW : public OpcodeWindow {
 public:
 	explicit OpcodeWINDOW(const QByteArray &params);
 	int id() const { return 0x50; }
 	QString toString() const;
-	void setParams(const QByteArray &params);
-	QByteArray params() const;
-	int getWindowID() const;
-	void setWindowID(quint8 windowID);
-	bool getWindow(FF7Window &window) const;
-	void setWindow(const FF7Window &window);
-	quint8 windowID;
-	quint16 targetX, targetY;
-	quint16 width, height;
 };
 
 class OpcodeWMOVE : public Opcode {
@@ -1628,6 +1624,7 @@ public:
 class OpcodeOperation : public OpcodeBinaryOperation {
 public:
 	explicit OpcodeOperation(const QByteArray &params);
+	explicit OpcodeOperation(const OpcodeBinaryOperation &op);
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1637,6 +1634,7 @@ public:
 class OpcodeOperation2 : public OpcodeBinaryOperation {
 public:
 	explicit OpcodeOperation2(const QByteArray &params);
+	explicit OpcodeOperation2(const OpcodeBinaryOperation &op);
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1649,12 +1647,14 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
+	virtual bool isLong() const=0;
 	quint8 banks, var;
 };
 
 class OpcodePLUSX : public OpcodeOperation {
 public:
 	explicit OpcodePLUSX(const QByteArray &params);
+	explicit OpcodePLUSX(const OpcodeBinaryOperation &op);
 	int id() const { return 0x76; }
 	QString toString() const;
 };
@@ -1662,6 +1662,7 @@ public:
 class OpcodePLUS2X : public OpcodeOperation2 {
 public:
 	explicit OpcodePLUS2X(const QByteArray &params);
+	explicit OpcodePLUS2X(const OpcodeBinaryOperation &op);
 	int id() const { return 0x77; }
 	QString toString() const;
 };
@@ -1669,6 +1670,7 @@ public:
 class OpcodeMINUSX : public OpcodeOperation {
 public:
 	explicit OpcodeMINUSX(const QByteArray &params);
+	explicit OpcodeMINUSX(const OpcodeBinaryOperation &op);
 	int id() const { return 0x78; }
 	QString toString() const;
 };
@@ -1676,6 +1678,7 @@ public:
 class OpcodeMINUS2X : public OpcodeOperation2 {
 public:
 	explicit OpcodeMINUS2X(const QByteArray &params);
+	explicit OpcodeMINUS2X(const OpcodeBinaryOperation &op);
 	int id() const { return 0x79; }
 	QString toString() const;
 };
@@ -1683,29 +1686,37 @@ public:
 class OpcodeINCX : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeINCX(const QByteArray &params);
+	explicit OpcodeINCX(const OpcodeUnaryOperation &op);
 	int id() const { return 0x7A; }
 	QString toString() const;
+	bool isLong() const { return false; }
 };
 
 class OpcodeINC2X : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeINC2X(const QByteArray &params);
+	explicit OpcodeINC2X(const OpcodeUnaryOperation &op);
 	int id() const { return 0x7B; }
 	QString toString() const;
+	bool isLong() const { return true; }
 };
 
 class OpcodeDECX : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeDECX(const QByteArray &params);
+	explicit OpcodeDECX(const OpcodeUnaryOperation &op);
 	int id() const { return 0x7C; }
 	QString toString() const;
+	bool isLong() const { return false; }
 };
 
 class OpcodeDEC2X : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeDEC2X(const QByteArray &params);
+	explicit OpcodeDEC2X(const OpcodeUnaryOperation &op);
 	int id() const { return 0x7D; }
 	QString toString() const;
+	bool isLong() const { return true; }
 };
 
 class OpcodeTLKON : public Opcode {
@@ -1731,6 +1742,7 @@ public:
 class OpcodeSETBYTE : public OpcodeOperation {
 public:
 	explicit OpcodeSETBYTE(const QByteArray &params);
+	explicit OpcodeSETBYTE(const OpcodeBinaryOperation &op);
 	int id() const { return 0x80; }
 	QString toString() const;
 };
@@ -1738,6 +1750,7 @@ public:
 class OpcodeSETWORD : public OpcodeOperation2 {
 public:
 	explicit OpcodeSETWORD(const QByteArray &params);
+	explicit OpcodeSETWORD(const OpcodeBinaryOperation &op);
 	int id() const { return 0x81; }
 	QString toString() const;
 };
@@ -1754,6 +1767,7 @@ public:
 class OpcodeBITON : public OpcodeBitOperation {
 public:
 	explicit OpcodeBITON(const QByteArray &params);
+	explicit OpcodeBITON(const OpcodeBitOperation &op);
 	int id() const { return 0x82; }
 	QString toString() const;
 };
@@ -1761,6 +1775,7 @@ public:
 class OpcodeBITOFF : public OpcodeBitOperation {
 public:
 	explicit OpcodeBITOFF(const QByteArray &params);
+	explicit OpcodeBITOFF(const OpcodeBitOperation &op);
 	int id() const { return 0x83; }
 	QString toString() const;
 };
@@ -1768,6 +1783,7 @@ public:
 class OpcodeBITXOR : public OpcodeBitOperation {
 public:
 	explicit OpcodeBITXOR(const QByteArray &params);
+	explicit OpcodeBITXOR(const OpcodeBitOperation &op);
 	int id() const { return 0x84; }
 	QString toString() const;
 };
@@ -1775,6 +1791,7 @@ public:
 class OpcodePLUS : public OpcodeOperation {
 public:
 	explicit OpcodePLUS(const QByteArray &params);
+	explicit OpcodePLUS(const OpcodeBinaryOperation &op);
 	int id() const { return 0x85; }
 	QString toString() const;
 };
@@ -1782,6 +1799,7 @@ public:
 class OpcodePLUS2 : public OpcodeOperation2 {
 public:
 	explicit OpcodePLUS2(const QByteArray &params);
+	explicit OpcodePLUS2(const OpcodeBinaryOperation &op);
 	int id() const { return 0x86; }
 	QString toString() const;
 };
@@ -1789,6 +1807,7 @@ public:
 class OpcodeMINUS : public OpcodeOperation {
 public:
 	explicit OpcodeMINUS(const QByteArray &params);
+	explicit OpcodeMINUS(const OpcodeBinaryOperation &op);
 	int id() const { return 0x87; }
 	QString toString() const;
 };
@@ -1796,6 +1815,7 @@ public:
 class OpcodeMINUS2 : public OpcodeOperation2 {
 public:
 	explicit OpcodeMINUS2(const QByteArray &params);
+	explicit OpcodeMINUS2(const OpcodeBinaryOperation &op);
 	int id() const { return 0x88; }
 	QString toString() const;
 };
@@ -1803,6 +1823,7 @@ public:
 class OpcodeMUL : public OpcodeOperation {
 public:
 	explicit OpcodeMUL(const QByteArray &params);
+	explicit OpcodeMUL(const OpcodeBinaryOperation &op);
 	int id() const { return 0x89; }
 	QString toString() const;
 };
@@ -1810,6 +1831,7 @@ public:
 class OpcodeMUL2 : public OpcodeOperation2 {
 public:
 	explicit OpcodeMUL2(const QByteArray &params);
+	explicit OpcodeMUL2(const OpcodeBinaryOperation &op);
 	int id() const { return 0x8A; }
 	QString toString() const;
 };
@@ -1817,6 +1839,7 @@ public:
 class OpcodeDIV : public OpcodeOperation {
 public:
 	explicit OpcodeDIV(const QByteArray &params);
+	explicit OpcodeDIV(const OpcodeBinaryOperation &op);
 	int id() const { return 0x8B; }
 	QString toString() const;
 };
@@ -1824,6 +1847,7 @@ public:
 class OpcodeDIV2 : public OpcodeOperation2 {
 public:
 	explicit OpcodeDIV2(const QByteArray &params);
+	explicit OpcodeDIV2(const OpcodeBinaryOperation &op);
 	int id() const { return 0x8C; }
 	QString toString() const;
 };
@@ -1831,6 +1855,7 @@ public:
 class OpcodeMOD : public OpcodeOperation {
 public:
 	explicit OpcodeMOD(const QByteArray &params);
+	explicit OpcodeMOD(const OpcodeBinaryOperation &op);
 	int id() const { return 0x8D; }
 	QString toString() const;
 };
@@ -1838,6 +1863,7 @@ public:
 class OpcodeMOD2 : public OpcodeOperation2 {
 public:
 	explicit OpcodeMOD2(const QByteArray &params);
+	explicit OpcodeMOD2(const OpcodeBinaryOperation &op);
 	int id() const { return 0x8E; }
 	QString toString() const;
 };
@@ -1845,6 +1871,7 @@ public:
 class OpcodeAND : public OpcodeOperation {
 public:
 	explicit OpcodeAND(const QByteArray &params);
+	explicit OpcodeAND(const OpcodeBinaryOperation &op);
 	int id() const { return 0x8F; }
 	QString toString() const;
 };
@@ -1852,6 +1879,7 @@ public:
 class OpcodeAND2 : public OpcodeOperation2 {
 public:
 	explicit OpcodeAND2(const QByteArray &params);
+	explicit OpcodeAND2(const OpcodeBinaryOperation &op);
 	int id() const { return 0x90; }
 	QString toString() const;
 };
@@ -1859,6 +1887,7 @@ public:
 class OpcodeOR : public OpcodeOperation {
 public:
 	explicit OpcodeOR(const QByteArray &params);
+	explicit OpcodeOR(const OpcodeBinaryOperation &op);
 	int id() const { return 0x91; }
 	QString toString() const;
 };
@@ -1866,6 +1895,7 @@ public:
 class OpcodeOR2 : public OpcodeOperation2 {
 public:
 	explicit OpcodeOR2(const QByteArray &params);
+	explicit OpcodeOR2(const OpcodeBinaryOperation &op);
 	int id() const { return 0x92; }
 	QString toString() const;
 };
@@ -1873,6 +1903,7 @@ public:
 class OpcodeXOR : public OpcodeOperation {
 public:
 	explicit OpcodeXOR(const QByteArray &params);
+	explicit OpcodeXOR(const OpcodeBinaryOperation &op);
 	int id() const { return 0x93; }
 	QString toString() const;
 };
@@ -1880,6 +1911,7 @@ public:
 class OpcodeXOR2 : public OpcodeOperation2 {
 public:
 	explicit OpcodeXOR2(const QByteArray &params);
+	explicit OpcodeXOR2(const OpcodeBinaryOperation &op);
 	int id() const { return 0x94; }
 	QString toString() const;
 };
@@ -1887,41 +1919,52 @@ public:
 class OpcodeINC : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeINC(const QByteArray &params);
+	explicit OpcodeINC(const OpcodeUnaryOperation &op);
 	int id() const { return 0x95; }
 	QString toString() const;
+	bool isLong() const { return false; }
 };
 
 class OpcodeINC2 : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeINC2(const QByteArray &params);
+	explicit OpcodeINC2(const OpcodeUnaryOperation &op);
 	int id() const { return 0x96; }
 	QString toString() const;
+	bool isLong() const { return true; }
 };
 
 class OpcodeDEC : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeDEC(const QByteArray &params);
+	explicit OpcodeDEC(const OpcodeUnaryOperation &op);
 	int id() const { return 0x97; }
 	QString toString() const;
+	bool isLong() const { return false; }
 };
 
 class OpcodeDEC2 : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeDEC2(const QByteArray &params);
+	explicit OpcodeDEC2(const OpcodeUnaryOperation &op);
 	int id() const { return 0x98; }
 	QString toString() const;
+	bool isLong() const { return true; }
 };
 
 class OpcodeRANDOM : public OpcodeUnaryOperation {
 public:
 	explicit OpcodeRANDOM(const QByteArray &params);
+	explicit OpcodeRANDOM(const OpcodeUnaryOperation &op);
 	int id() const { return 0x99; }
 	QString toString() const;
+	bool isLong() const { return false; }
 };
 
 class OpcodeLBYTE : public OpcodeOperation {
 public:
 	explicit OpcodeLBYTE(const QByteArray &params);
+	explicit OpcodeLBYTE(const OpcodeBinaryOperation &op);
 	int id() const { return 0x9A; }
 	QString toString() const;
 };
@@ -1929,6 +1972,7 @@ public:
 class OpcodeHBYTE : public OpcodeOperation2 {
 public:
 	explicit OpcodeHBYTE(const QByteArray &params);
+	explicit OpcodeHBYTE(const OpcodeBinaryOperation &op);
 	int id() const { return 0x9B; }
 	QString toString() const;
 };
@@ -2708,6 +2752,8 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown[4];
+	/* quint8 banks, u3, u1, colorCount;
+	 */
 };
 
 class OpcodeLDPAL : public Opcode {
@@ -2718,6 +2764,8 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown[4];
+	/* quint8 banks, u2, u3, colorCount;
+	 */
 };
 
 class OpcodeCPPAL : public Opcode {
@@ -2748,6 +2796,8 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown[9];
+	/* quint8 banks[3], u1, u2, varR, varG, varB, colorCount;
+	 */
 };
 
 class OpcodeMPPAL2 : public Opcode {
@@ -2759,6 +2809,8 @@ public:
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[3], unknown1[2], r, g, b, unknown2;
+	/* quint8 banks[3], u1, u2, varR, varG, varB, colorCount;
+	 */
 };
 
 class OpcodeSTPLS : public Opcode {
