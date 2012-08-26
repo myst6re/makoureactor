@@ -66,9 +66,12 @@ public:
 	void setOpcode(Opcode *opcode);
 private slots:
 	void updateScriptList(int groupID);
+	void changeCurrentOpcode(int index);
 private:
+	void convertOpcode(Opcode::Keys key);
 	QComboBox *groupList, *scriptList;
 	QSpinBox *priority;
+	QComboBox *execType;
 };
 
 class ScriptEditorExecCharPage : public ScriptEditorView
@@ -78,9 +81,13 @@ public:
 	explicit ScriptEditorExecCharPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
+private slots:
+	void changeCurrentOpcode(int index);
 private:
+	void convertOpcode(Opcode::Keys key);
 	QComboBox *scriptList;
 	QSpinBox *partyID, *priority;
+	QComboBox *execType;
 };
 
 class ScriptEditorLabelPage : public ScriptEditorView
@@ -90,12 +97,8 @@ public:
 	explicit ScriptEditorLabelPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
-private slots:
-	void showWarning();
 private:
-	QDoubleSpinBox *label;
-	QLabel *warningLabel;
-	QList<quint32> labels;
+	QLabel *label;
 };
 
 class ScriptEditorJumpPage : public ScriptEditorView

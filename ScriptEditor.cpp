@@ -236,13 +236,11 @@ void ScriptEditor::add()
 
 void ScriptEditor::refreshTextEdit()
 {
-	qDebug() << "ScriptEditor::refreshTextEdit()";
 	this->change = true;
 
 	opcode = editorWidget->opcode();
 
 	textEdit->setPlainText(opcode->toString());
-	qDebug() << "/ScriptEditor::refreshTextEdit()";
 }
 
 void ScriptEditor::changeCurrentOpcode(int index)
@@ -338,13 +336,10 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Retourner"), QList<QVariant>() << 0x00);
 		comboBox->addItem(tr("Retourner à"), QList<QVariant>() << 0x07);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Exécuter un script"), QList<QVariant>() << 0x01);
-		comboBox->addItem(tr("Exécuter un script"), QList<QVariant>() << 0x02);
-		comboBox->addItem(tr("Exécuter un script"), QList<QVariant>() << 0x03);
-		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Exécuter un script d'un équipier"), QList<QVariant>() << 0x04);
-		comboBox->addItem(tr("Exécuter un script d'un équipier"), QList<QVariant>() << 0x05);
-		comboBox->addItem(tr("Exécuter un script d'un équipier"), QList<QVariant>() << 0x06);
+		comboBox->addItem(tr("Exécuter un script"), QList<QVariant>()
+						  << 0x01 << 0x02 << 0x03);
+		comboBox->addItem(tr("Exécuter un script d'un équipier"), QList<QVariant>()
+						  << 0x04 << 0x05 << 0x06);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Label"), QList<QVariant>() << 0x100);
 		comboBox->addItem(tr("Saut court en avant"), QList<QVariant>() << 0x10);

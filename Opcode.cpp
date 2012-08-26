@@ -475,6 +475,11 @@ OpcodeREQ::OpcodeREQ(const QByteArray &params) :
 {
 }
 
+OpcodeREQ::OpcodeREQ(const OpcodeExec &op) :
+	OpcodeExec(op)
+{
+}
+
 QString OpcodeREQ::toString() const
 {
 	return QObject::tr("Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
@@ -488,6 +493,11 @@ OpcodeREQSW::OpcodeREQSW(const QByteArray &params) :
 {
 }
 
+OpcodeREQSW::OpcodeREQSW(const OpcodeExec &op) :
+	OpcodeExec(op)
+{
+}
+
 QString OpcodeREQSW::toString() const
 {
 	return QObject::tr("Exécuter le script n°%3 du groupe externe %1 (priorité %2/6)")
@@ -498,6 +508,11 @@ QString OpcodeREQSW::toString() const
 
 OpcodeREQEW::OpcodeREQEW(const QByteArray &params) :
 	OpcodeExec(params)
+{
+}
+
+OpcodeREQEW::OpcodeREQEW(const OpcodeExec &op) :
+	OpcodeExec(op)
 {
 }
 
@@ -533,6 +548,11 @@ OpcodePREQ::OpcodePREQ(const QByteArray &params) :
 {
 }
 
+OpcodePREQ::OpcodePREQ(const OpcodeExecChar &op) :
+	OpcodeExecChar(op)
+{
+}
+
 QString OpcodePREQ::toString() const
 {
 	return QObject::tr("Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l'équipe (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
@@ -546,6 +566,11 @@ OpcodePRQSW::OpcodePRQSW(const QByteArray &params) :
 {
 }
 
+OpcodePRQSW::OpcodePRQSW(const OpcodeExecChar &op) :
+	OpcodeExecChar(op)
+{
+}
+
 QString OpcodePRQSW::toString() const
 {
 	return QObject::tr("Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l'équipe (priorité %2/6)")
@@ -556,6 +581,11 @@ QString OpcodePRQSW::toString() const
 
 OpcodePRQEW::OpcodePRQEW(const QByteArray &params) :
 	OpcodeExecChar(params)
+{
+}
+
+OpcodePRQEW::OpcodePRQEW(const OpcodeExecChar &op) :
+	OpcodeExecChar(op)
 {
 }
 
@@ -712,6 +742,11 @@ OpcodeSPTYE::OpcodeSPTYE(const QByteArray &params) :
 {
 }
 
+OpcodeSPTYE::OpcodeSPTYE(const OpcodePartyE &op) :
+	OpcodePartyE(op)
+{
+}
+
 QString OpcodeSPTYE::toString() const
 {
 	return QObject::tr("Sauvegarder les membres de l'équipe : %1 | %2 | %3")
@@ -722,6 +757,11 @@ QString OpcodeSPTYE::toString() const
 
 OpcodeGTPYE::OpcodeGTPYE(const QByteArray &params) :
 	OpcodePartyE(params)
+{
+}
+
+OpcodeGTPYE::OpcodeGTPYE(const OpcodePartyE &op) :
+	OpcodePartyE(op)
 {
 }
 
@@ -1270,10 +1310,14 @@ void OpcodeIf::getVariables(QList<FF7Var> &vars) const
 		vars.append(FF7Var(B2(banks), value2 & 0xFF));
 }
 
-OpcodeIFUB::OpcodeIFUB(const QByteArray &params) :
-	OpcodeIf()
+OpcodeIFUB::OpcodeIFUB(const QByteArray &params)
 {
 	setParams(params);
+}
+
+OpcodeIFUB::OpcodeIFUB(const OpcodeIf &op) :
+	OpcodeIf(op)
+{
 }
 
 void OpcodeIFUB::setParams(const QByteArray &params)
@@ -1310,7 +1354,7 @@ OpcodeIFUBL::OpcodeIFUBL(const QByteArray &params)
 	setParams(params);
 }
 
-OpcodeIFUBL::OpcodeIFUBL(const OpcodeIFUB &op) :
+OpcodeIFUBL::OpcodeIFUBL(const OpcodeIf &op) :
 	OpcodeIf(op)
 {
 }
@@ -1353,6 +1397,11 @@ OpcodeIFSW::OpcodeIFSW(const QByteArray &params)
 	setParams(params);
 }
 
+OpcodeIFSW::OpcodeIFSW(const OpcodeIf &op) :
+	OpcodeIf(op)
+{
+}
+
 void OpcodeIFSW::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
@@ -1392,7 +1441,7 @@ OpcodeIFSWL::OpcodeIFSWL(const QByteArray &params)
 	setParams(params);
 }
 
-OpcodeIFSWL::OpcodeIFSWL(const OpcodeIFSW &op) :
+OpcodeIFSWL::OpcodeIFSWL(const OpcodeIf &op) :
 	OpcodeIf(op)
 {
 }
@@ -1439,6 +1488,11 @@ OpcodeIFUW::OpcodeIFUW(const QByteArray &params)
 	setParams(params);
 }
 
+OpcodeIFUW::OpcodeIFUW(const OpcodeIf &op) :
+	OpcodeIf(op)
+{
+}
+
 void OpcodeIFUW::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
@@ -1478,8 +1532,7 @@ OpcodeIFUWL::OpcodeIFUWL(const QByteArray &params)
 	setParams(params);
 }
 
-
-OpcodeIFUWL::OpcodeIFUWL(const OpcodeIFUW &op) :
+OpcodeIFUWL::OpcodeIFUWL(const OpcodeIf &op) :
 	OpcodeIf(op)
 {
 }
@@ -2135,6 +2188,11 @@ OpcodeWSIZW::OpcodeWSIZW(const QByteArray &params) :
 {
 }
 
+OpcodeWSIZW::OpcodeWSIZW(const OpcodeWindow &op) :
+	OpcodeWindow(op)
+{
+}
+
 QString OpcodeWSIZW::toString() const
 {
 	return QObject::tr("Redimensionner fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)")
@@ -2148,6 +2206,11 @@ QString OpcodeWSIZW::toString() const
 OpcodeIfKey::OpcodeIfKey(const QByteArray &params)
 {
 	setParams(params);
+}
+
+OpcodeIfKey::OpcodeIfKey(const OpcodeJump &op) :
+	OpcodeJump(op)
+{
 }
 
 void OpcodeIfKey::setParams(const QByteArray &params)
@@ -2179,6 +2242,11 @@ OpcodeIFKEY::OpcodeIFKEY(const QByteArray &params) :
 {
 }
 
+OpcodeIFKEY::OpcodeIFKEY(const OpcodeIfKey &op) :
+	OpcodeIfKey(op)
+{
+}
+
 QString OpcodeIFKEY::toString() const
 {
 	return QObject::tr("Si appuie sur la touche %1 (aller au label %2 sinon)")
@@ -2191,6 +2259,11 @@ OpcodeIFKEYON::OpcodeIFKEYON(const QByteArray &params) :
 {
 }
 
+OpcodeIFKEYON::OpcodeIFKEYON(const OpcodeIfKey &op) :
+	OpcodeIfKey(op)
+{
+}
+
 QString OpcodeIFKEYON::toString() const
 {
 	return QObject::tr("Si appuie sur la touche %1 une fois (aller au label %2 sinon)")
@@ -2200,6 +2273,11 @@ QString OpcodeIFKEYON::toString() const
 
 OpcodeIFKEYOFF::OpcodeIFKEYOFF(const QByteArray &params) :
 	OpcodeIfKey(params)
+{
+}
+
+OpcodeIFKEYOFF::OpcodeIFKEYOFF(const OpcodeIfKey &op) :
+	OpcodeIfKey(op)
 {
 }
 
@@ -2450,6 +2528,11 @@ OpcodeGOLDu::OpcodeGOLDu(const QByteArray &params) :
 {
 }
 
+OpcodeGOLDu::OpcodeGOLDu(const OpcodeGOLD &op) :
+	OpcodeGOLD(op)
+{
+}
+
 QString OpcodeGOLDu::toString() const
 {
 	return QObject::tr("Ajouter %1 gils à l'équipe")
@@ -2458,6 +2541,11 @@ QString OpcodeGOLDu::toString() const
 
 OpcodeGOLDd::OpcodeGOLDd(const QByteArray &params) :
 	OpcodeGOLD(params)
+{
+}
+
+OpcodeGOLDd::OpcodeGOLDd(const OpcodeGOLD &op) :
+	OpcodeGOLD(op)
 {
 }
 
@@ -2707,19 +2795,19 @@ void OpcodeMPNAM::setTextID(quint8 textID)
 	this->textID = textID;
 }
 
-OpcodeMP::OpcodeMP(const QByteArray &params)
+OpcodeHPMP::OpcodeHPMP(const QByteArray &params)
 {
 	setParams(params);
 }
 
-void OpcodeMP::setParams(const QByteArray &params)
+void OpcodeHPMP::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	partyID = params.at(1);
 	memcpy(&value, &(params.constData()[2]), 2); // bank 2??
 }
 
-QByteArray OpcodeMP::params() const
+QByteArray OpcodeHPMP::params() const
 {
 	return QByteArray()
 			.append((char)banks)
@@ -2727,14 +2815,19 @@ QByteArray OpcodeMP::params() const
 			.append((char *)&value, 2);
 }
 
-void OpcodeMP::getVariables(QList<FF7Var> &vars) const
+void OpcodeHPMP::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
 		vars.append(FF7Var(B2(banks), value & 0xFF));
 }
 
 OpcodeMPu::OpcodeMPu(const QByteArray &params) :
-	OpcodeMP(params)
+	OpcodeHPMP(params)
+{
+}
+
+OpcodeMPu::OpcodeMPu(const OpcodeHPMP &op) :
+	OpcodeHPMP(op)
 {
 }
 
@@ -2746,7 +2839,12 @@ QString OpcodeMPu::toString() const
 }
 
 OpcodeMPd::OpcodeMPd(const QByteArray &params) :
-	OpcodeMP(params)
+	OpcodeHPMP(params)
+{
+}
+
+OpcodeMPd::OpcodeMPd(const OpcodeHPMP &op) :
+	OpcodeHPMP(op)
 {
 }
 
@@ -2921,34 +3019,13 @@ QByteArray OpcodeBTLTB::params() const
 	return QByteArray().append((char)battleTableID);
 }
 
-OpcodeHP::OpcodeHP(const QByteArray &params)
-{
-	setParams(params);
-}
-
-void OpcodeHP::setParams(const QByteArray &params)
-{
-	banks = params.at(0);
-	partyID = params.at(1);
-	memcpy(&value, &(params.constData()[2]), 2); // bank 2??
-}
-
-QByteArray OpcodeHP::params() const
-{
-	return QByteArray()
-			.append((char)banks)
-			.append((char)partyID)
-			.append((char *)&value, 2);
-}
-
-void OpcodeHP::getVariables(QList<FF7Var> &vars) const
-{
-	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), value));
-}
-
 OpcodeHPu::OpcodeHPu(const QByteArray &params) :
-	OpcodeHP(params)
+	OpcodeHPMP(params)
+{
+}
+
+OpcodeHPu::OpcodeHPu(const OpcodeHPMP &op) :
+	OpcodeHPMP(op)
 {
 }
 
@@ -2960,7 +3037,12 @@ QString OpcodeHPu::toString() const
 }
 
 OpcodeHPd::OpcodeHPd(const QByteArray &params) :
-	OpcodeHP(params)
+	OpcodeHPMP(params)
+{
+}
+
+OpcodeHPd::OpcodeHPd(const OpcodeHPMP &op) :
+	OpcodeHPMP(op)
 {
 }
 
@@ -2973,6 +3055,11 @@ QString OpcodeHPd::toString() const
 
 OpcodeWINDOW::OpcodeWINDOW(const QByteArray &params) :
 	OpcodeWindow(params)
+{
+}
+
+OpcodeWINDOW::OpcodeWINDOW(const OpcodeWindow &op) :
+	OpcodeWindow(op)
 {
 }
 
@@ -3181,58 +3268,12 @@ void OpcodeWROW::setWindowID(quint8 windowID)
 	this->windowID = windowID;
 }
 
-OpcodeGWCOL::OpcodeGWCOL(const QByteArray &params)
+OpcodeWCOL::OpcodeWCOL(const QByteArray &params)
 {
 	setParams(params);
 }
 
-void OpcodeGWCOL::setParams(const QByteArray &params)
-{
-	banks[0] = params.at(0);
-	banks[1] = params.at(1);
-	corner = params.at(2); // bank 1
-	varR = params.at(3); // bank 2
-	varG = params.at(4); // bank 3
-	varB = params.at(5); // bank 4
-}
-
-QString OpcodeGWCOL::toString() const
-{
-	return QObject::tr("Obtenir la couleur du côté %1 des fenêtres et en stocker les composantes dans %2 (R), %3 (V) et %4 (B)")
-			.arg(_windowCorner(corner, B1(banks[0])))
-			.arg(_bank(varR, B2(banks[0])))
-			.arg(_bank(varG, B1(banks[1])))
-			.arg(_bank(varB, B2(banks[1])));
-}
-
-QByteArray OpcodeGWCOL::params() const
-{
-	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)corner)
-			.append((char)varR)
-			.append((char)varG)
-			.append((char)varB);
-}
-
-void OpcodeGWCOL::getVariables(QList<FF7Var> &vars) const
-{
-	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), corner));
-	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), varR));
-	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), varG));
-	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), varB));
-}
-
-OpcodeSWCOL::OpcodeSWCOL(const QByteArray &params)
-{
-	setParams(params);
-}
-
-void OpcodeSWCOL::setParams(const QByteArray &params)
+void OpcodeWCOL::setParams(const QByteArray &params)
 {
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
@@ -3242,16 +3283,7 @@ void OpcodeSWCOL::setParams(const QByteArray &params)
 	b = params.at(5); // bank 4
 }
 
-QString OpcodeSWCOL::toString() const
-{
-	return QObject::tr("Changer la couleur du côté %1 des fenêtres : RVB(%2, %3, %4)")
-			.arg(_windowCorner(corner, B1(banks[0])))
-			.arg(_var(r, B2(banks[0])))
-			.arg(_var(g, B1(banks[1])))
-			.arg(_var(b, B2(banks[1])));
-}
-
-QByteArray OpcodeSWCOL::params() const
+QByteArray OpcodeWCOL::params() const
 {
 	return QByteArray()
 			.append((char *)&banks, 2)
@@ -3261,7 +3293,7 @@ QByteArray OpcodeSWCOL::params() const
 			.append((char)b);
 }
 
-void OpcodeSWCOL::getVariables(QList<FF7Var> &vars) const
+void OpcodeWCOL::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
 		vars.append(FF7Var(B1(banks[0]), corner));
@@ -3273,16 +3305,82 @@ void OpcodeSWCOL::getVariables(QList<FF7Var> &vars) const
 		vars.append(FF7Var(B2(banks[1]), b));
 }
 
-OpcodeSTITM::OpcodeSTITM(const QByteArray &params)
+OpcodeGWCOL::OpcodeGWCOL(const QByteArray &params) :
+	OpcodeWCOL(params)
+{
+}
+
+OpcodeGWCOL::OpcodeGWCOL(const OpcodeWCOL &op) :
+	OpcodeWCOL(op)
+{
+}
+
+QString OpcodeGWCOL::toString() const
+{
+	return QObject::tr("Obtenir la couleur du côté %1 des fenêtres et en stocker les composantes dans %2 (R), %3 (V) et %4 (B)")
+			.arg(_windowCorner(corner, B1(banks[0])))
+			.arg(_bank(r, B2(banks[0])))
+			.arg(_bank(g, B1(banks[1])))
+			.arg(_bank(b, B2(banks[1])));
+}
+
+OpcodeSWCOL::OpcodeSWCOL(const QByteArray &params) :
+	OpcodeWCOL(params)
 {
 	setParams(params);
 }
 
-void OpcodeSTITM::setParams(const QByteArray &params)
+OpcodeSWCOL::OpcodeSWCOL(const OpcodeWCOL &op) :
+	OpcodeWCOL(op)
+{
+}
+
+QString OpcodeSWCOL::toString() const
+{
+	return QObject::tr("Changer la couleur du côté %1 des fenêtres : RVB(%2, %3, %4)")
+			.arg(_windowCorner(corner, B1(banks[0])))
+			.arg(_var(r, B2(banks[0])))
+			.arg(_var(g, B1(banks[1])))
+			.arg(_var(b, B2(banks[1])));
+}
+
+OpcodeItem::OpcodeItem(const QByteArray &params)
+{
+	setParams(params);
+}
+
+void OpcodeItem::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	memcpy(&itemID, &(params.constData()[1]), 2); // bank 1
 	quantity = params.at(3); // bank 2
+}
+
+QByteArray OpcodeItem::params() const
+{
+	return QByteArray()
+			.append((char)banks)
+			.append((char *)&itemID, 2)
+			.append((char)quantity);
+}
+
+void OpcodeItem::getVariables(QList<FF7Var> &vars) const
+{
+	if(B1(banks) != 0)
+		vars.append(FF7Var(B1(banks), itemID & 0xFF));
+	if(B2(banks) != 0)
+		vars.append(FF7Var(B2(banks), quantity));
+}
+
+OpcodeSTITM::OpcodeSTITM(const QByteArray &params) :
+	OpcodeItem(params)
+{
+	setParams(params);
+}
+
+OpcodeSTITM::OpcodeSTITM(const OpcodeItem &op) :
+	OpcodeItem(op)
+{
 }
 
 QString OpcodeSTITM::toString() const
@@ -3292,32 +3390,14 @@ QString OpcodeSTITM::toString() const
 			.arg(_var(quantity, B2(banks)));
 }
 
-QByteArray OpcodeSTITM::params() const
+OpcodeDLITM::OpcodeDLITM(const QByteArray &params) :
+	OpcodeItem(params)
 {
-	return QByteArray()
-			.append((char)banks)
-			.append((char *)&itemID, 2)
-			.append((char)quantity);
 }
 
-void OpcodeSTITM::getVariables(QList<FF7Var> &vars) const
+OpcodeDLITM::OpcodeDLITM(const OpcodeItem &op) :
+	OpcodeItem(op)
 {
-	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), itemID & 0xFF));
-	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), quantity));
-}
-
-OpcodeDLITM::OpcodeDLITM(const QByteArray &params)
-{
-	setParams(params);
-}
-
-void OpcodeDLITM::setParams(const QByteArray &params)
-{
-	banks = params.at(0);
-	memcpy(&itemID, &(params.constData()[1]), 2); // bank 1
-	quantity = params.at(3); // bank 2
 }
 
 QString OpcodeDLITM::toString() const
@@ -3327,55 +3407,21 @@ QString OpcodeDLITM::toString() const
 			.arg(_var(quantity, B2(banks)));
 }
 
-QByteArray OpcodeDLITM::params() const
+OpcodeCKITM::OpcodeCKITM(const QByteArray &params) :
+	OpcodeItem(params)
 {
-	return QByteArray()
-			.append((char)banks)
-			.append((char *)&itemID, 2)
-			.append((char)quantity);
 }
 
-void OpcodeDLITM::getVariables(QList<FF7Var> &vars) const
+OpcodeCKITM::OpcodeCKITM(const OpcodeItem &op) :
+	OpcodeItem(op)
 {
-	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), itemID & 0xFF));
-	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), quantity));
-}
-
-OpcodeCKITM::OpcodeCKITM(const QByteArray &params)
-{
-	setParams(params);
-}
-
-void OpcodeCKITM::setParams(const QByteArray &params)
-{
-	banks = params.at(0);
-	memcpy(&itemID, &(params.constData()[1]), 2); // bank 1
-	varQuantity = params.at(3); // bank 2
 }
 
 QString OpcodeCKITM::toString() const
 {
 	return QObject::tr("%2 = quantité d'objets %1 dans l'inventaire")
 			.arg(_item(itemID, B1(banks)))
-			.arg(_bank(varQuantity, B2(banks)));
-}
-
-QByteArray OpcodeCKITM::params() const
-{
-	return QByteArray()
-			.append((char)banks)
-			.append((char *)&itemID, 2)
-			.append((char)varQuantity);
-}
-
-void OpcodeCKITM::getVariables(QList<FF7Var> &vars) const
-{
-	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), itemID & 0xFF));
-	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), varQuantity));
+			.arg(_bank(quantity, B2(banks)));
 }
 
 OpcodeSMTRA::OpcodeSMTRA(const QByteArray &params)
@@ -6870,18 +6916,54 @@ OpcodeMPPAL::OpcodeMPPAL(const QByteArray &params)
 
 void OpcodeMPPAL::setParams(const QByteArray &params)
 {
-	memcpy(unknown, params.constData(), 10);
+	memcpy(&banks, params.constData(), 2);
+	u0 = (quint8)params.at(2);
+	posSrc = (quint8)params.at(3);
+	posDst = (quint8)params.at(4);
+	a = (quint8)params.at(5); // bank 1
+	r = (quint8)params.at(6); // bank 2
+	g = (quint8)params.at(7); // bank 3
+	b = (quint8)params.at(8); // bank 4
+	colorCount = (quint8)params.at(9);
 }
 
 QString OpcodeMPPAL::toString() const
 {
-	return QObject::tr("MPPAL")
-			.arg(QString(QByteArray((char *)&unknown, 10).toHex()));
+	return QObject::tr("Créer une palette à la position %3 à partir des couleurs à la position %2 et appliquer RVBA(%5, %6, %7, %4) sur %8 couleur(s) (inconnu=%1)")
+			.arg(u0)
+			.arg(posSrc)
+			.arg(posDst)
+			.arg(_var(a, B1(banks[0])))
+			.arg(_var(r, B2(banks[0])))
+			.arg(_var(g, B1(banks[1])))
+			.arg(_var(b, B2(banks[1])))
+			.arg(colorCount+1);
 }
 
 QByteArray OpcodeMPPAL::params() const
 {
-	return QByteArray().append((char *)&unknown, 10);
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append(char(u0))
+			.append(char(posSrc))
+			.append(char(posDst))
+			.append(char(a))
+			.append(char(r))
+			.append(char(g))
+			.append(char(b))
+			.append(char(colorCount));
+}
+
+void OpcodeMPPAL::getVariables(QList<FF7Var> &vars) const
+{
+	if(B1(banks[0]) != 0)
+		vars.append(FF7Var(B1(banks[0]), a));
+	if(B2(banks[0]) != 0)
+		vars.append(FF7Var(B2(banks[0]), r));
+	if(B1(banks[1]) != 0)
+		vars.append(FF7Var(B1(banks[1]), g));
+	if(B2(banks[1]) != 0)
+		vars.append(FF7Var(B2(banks[1]), b));
 }
 
 OpcodeBGON::OpcodeBGON(const QByteArray &params)
@@ -7051,18 +7133,35 @@ OpcodeSTPAL::OpcodeSTPAL(const QByteArray &params)
 
 void OpcodeSTPAL::setParams(const QByteArray &params)
 {
-	memcpy(unknown, params.constData(), 4);
+	banks = (quint8)params.at(0);
+	palID = (quint8)params.at(1); // bank 1
+	position = (quint8)params.at(2); // bank 2
+	colorCount = (quint8)params.at(3);
 }
 
 QString OpcodeSTPAL::toString() const
 {
-	return QObject::tr("STPAL %1")
-			.arg(QString(QByteArray((char *)&unknown, 4).toHex()));
+	return QObject::tr("Charger la palette n°%1 à la position %2 (colorCount=%3)")
+			.arg(_var(palID, B1(banks)))
+			.arg(_var(position, B2(banks)))
+			.arg(colorCount+1);
 }
 
 QByteArray OpcodeSTPAL::params() const
 {
-	return QByteArray().append((char *)&unknown, 4);
+	return QByteArray()
+			.append(char(banks))
+			.append(char(palID))
+			.append(char(position))
+			.append(char(colorCount));
+}
+
+void OpcodeSTPAL::getVariables(QList<FF7Var> &vars) const
+{
+	if(B1(banks) != 0)
+		vars.append(FF7Var(B1(banks), palID));
+	if(B2(banks) != 0)
+		vars.append(FF7Var(B2(banks), position));
 }
 
 OpcodeLDPAL::OpcodeLDPAL(const QByteArray &params)
@@ -7072,18 +7171,35 @@ OpcodeLDPAL::OpcodeLDPAL(const QByteArray &params)
 
 void OpcodeLDPAL::setParams(const QByteArray &params)
 {
-	memcpy(unknown, params.constData(), 4);
+	banks = (quint8)params.at(0);
+	position = (quint8)params.at(1); // bank 1
+	palID = (quint8)params.at(2); // bank 2
+	colorCount = (quint8)params.at(3);
 }
 
 QString OpcodeLDPAL::toString() const
 {
-	return QObject::tr("LDPAL %1")
-			.arg(QString(QByteArray((char *)&unknown, 4).toHex()));
+	return QObject::tr("Charger la position %1 dans la palette n°%2 (colorCount=%3)")
+			.arg(_var(position, B1(banks)))
+			.arg(_var(palID, B2(banks)))
+			.arg(colorCount+1);
 }
 
 QByteArray OpcodeLDPAL::params() const
 {
-	return QByteArray().append((char *)&unknown, 4);
+	return QByteArray()
+			.append(char(banks))
+			.append(char(position))
+			.append(char(palID))
+			.append(char(colorCount));
+}
+
+void OpcodeLDPAL::getVariables(QList<FF7Var> &vars) const
+{
+	if(B1(banks) != 0)
+		vars.append(FF7Var(B1(banks), position));
+	if(B2(banks) != 0)
+		vars.append(FF7Var(B2(banks), palID));
 }
 
 OpcodeCPPAL::OpcodeCPPAL(const QByteArray &params)
@@ -7093,18 +7209,35 @@ OpcodeCPPAL::OpcodeCPPAL(const QByteArray &params)
 
 void OpcodeCPPAL::setParams(const QByteArray &params)
 {
-	memcpy(unknown, params.constData(), 4);
+	banks = (quint8)params.at(0);
+	posSrc = (quint8)params.at(1); // bank 1
+	posDst = (quint8)params.at(2); // bank 2
+	colorCount = (quint8)params.at(3);
 }
 
 QString OpcodeCPPAL::toString() const
 {
-	return QObject::tr("CPPAL %1")
-			.arg(QString(QByteArray((char *)&unknown, 4).toHex()));
+	return QObject::tr("Copier palette de la position %1 vers la position %2 (colorCount=%3)")
+			.arg(_var(posSrc, B1(banks)))
+			.arg(_var(posDst, B2(banks)))
+			.arg(colorCount+1);
 }
 
 QByteArray OpcodeCPPAL::params() const
 {
-	return QByteArray().append((char *)&unknown, 4);
+	return QByteArray()
+			.append(char(banks))
+			.append(char(posSrc))
+			.append(char(posDst))
+			.append(char(colorCount));
+}
+
+void OpcodeCPPAL::getVariables(QList<FF7Var> &vars) const
+{
+	if(B1(banks) != 0)
+		vars.append(FF7Var(B1(banks), posSrc));
+	if(B2(banks) != 0)
+		vars.append(FF7Var(B2(banks), posDst));
 }
 
 OpcodeRTPAL::OpcodeRTPAL(const QByteArray &params)
@@ -7114,18 +7247,40 @@ OpcodeRTPAL::OpcodeRTPAL(const QByteArray &params)
 
 void OpcodeRTPAL::setParams(const QByteArray &params)
 {
-	memcpy(unknown, params.constData(), 6);
+	memcpy(&banks, params.constData(), 2);
+	u1 = (quint8)params.at(1); // bank 1
+	u2 = (quint8)params.at(2); // bank 2
+	u3 = (quint8)params.at(3); // bank 4
+	u5 = (quint8)params.at(4);
 }
 
 QString OpcodeRTPAL::toString() const
 {
-	return QObject::tr("RTPAL %1")
-			.arg(QString(QByteArray((char *)&unknown, 6).toHex()));
+	return QObject::tr("RTPAL (u1=%1, u2=%2, u3=%3, u5=%4)")
+			.arg(_var(u1, B1(banks[0])))
+			.arg(_var(u2, B2(banks[0])))
+			.arg(_var(u3, B2(banks[1])))
+			.arg(u5);
 }
 
 QByteArray OpcodeRTPAL::params() const
 {
-	return QByteArray().append((char *)&unknown, 6);
+	return QByteArray()
+			.append((char *)&banks, 2)
+			.append(char(u1))
+			.append(char(u2))
+			.append(char(u3))
+			.append(char(u5));
+}
+
+void OpcodeRTPAL::getVariables(QList<FF7Var> &vars) const
+{
+	if(B1(banks[0]) != 0)
+		vars.append(FF7Var(B1(banks[0]), u1));
+	if(B2(banks[0]) != 0)
+		vars.append(FF7Var(B2(banks[0]), u2));
+	if(B2(banks[1]) != 0)
+		vars.append(FF7Var(B2(banks[1]), u3));
 }
 
 OpcodeADPAL::OpcodeADPAL(const QByteArray &params)
@@ -7135,18 +7290,50 @@ OpcodeADPAL::OpcodeADPAL(const QByteArray &params)
 
 void OpcodeADPAL::setParams(const QByteArray &params)
 {
-	memcpy(unknown, params.constData(), 9);
+	memcpy(&banks, params.constData(), 3);
+	posSrc = (quint8)params.at(3); // bank 1
+	posDst = (quint8)params.at(4); // bank 2
+	r = (quint8)params.at(5); // bank 3
+	g = (quint8)params.at(6); // bank 4
+	b = (quint8)params.at(7); // bank 5
+	colorCount = (quint8)params.at(8);
 }
 
 QString OpcodeADPAL::toString() const
 {
-	return QObject::tr("ADPAL %1")
-			.arg(QString(QByteArray((char *)&unknown, 9).toHex()));
+	return QObject::tr("Créer une palette à la position %2 à partir des couleurs à la position %1 et appliquer RVB(%3, %4, %5) sur %6 couleur(s)")
+			.arg(_var(posSrc, B1(banks[0])))
+			.arg(_var(posDst, B2(banks[0])))
+			.arg(_var(r, B1(banks[1])))
+			.arg(_var(g, B2(banks[1])))
+			.arg(_var(b, B1(banks[2])))
+			.arg(colorCount+1);
 }
 
 QByteArray OpcodeADPAL::params() const
 {
-	return QByteArray().append((char *)&unknown, 9);
+	return QByteArray()
+			.append((char *)&banks, 3)
+			.append(char(posSrc))
+			.append(char(posDst))
+			.append(char(r))
+			.append(char(g))
+			.append(char(b))
+			.append(char(colorCount));
+}
+
+void OpcodeADPAL::getVariables(QList<FF7Var> &vars) const
+{
+	if(B1(banks[0]) != 0)
+		vars.append(FF7Var(B1(banks[0]), posSrc));
+	if(B2(banks[0]) != 0)
+		vars.append(FF7Var(B2(banks[0]), posDst));
+	if(B1(banks[1]) != 0)
+		vars.append(FF7Var(B1(banks[1]), r));
+	if(B2(banks[1]) != 0)
+		vars.append(FF7Var(B2(banks[1]), g));
+	if(B1(banks[2]) != 0)
+		vars.append(FF7Var(B1(banks[2]), b));
 }
 
 OpcodeMPPAL2::OpcodeMPPAL2(const QByteArray &params)
@@ -7156,43 +7343,50 @@ OpcodeMPPAL2::OpcodeMPPAL2(const QByteArray &params)
 
 void OpcodeMPPAL2::setParams(const QByteArray &params)
 {
-	memcpy(banks, params.constData(), 3);
-	memcpy(unknown1, &(params.constData()[3]), 2);
-	r = params.at(5); // bank 3
-	g = params.at(6); // bank 4
-	b = params.at(7); // bank 5
-	unknown2 = params.at(8);
+	memcpy(&banks, params.constData(), 3);
+	posSrc = (quint8)params.at(3); // bank 1
+	posDst = (quint8)params.at(4); // bank 2
+	r = (quint8)params.at(5); // bank 3
+	g = (quint8)params.at(6); // bank 4
+	b = (quint8)params.at(7); // bank 5
+	colorCount = (quint8)params.at(8);
 }
 
 QString OpcodeMPPAL2::toString() const
 {
-	return QObject::tr("MPPAL2 (R=%1, V=%2, B=%3) %4 %5")
+	return QObject::tr("Créer une palette à la position %2 à partir des couleurs à la position %1 et appliquer RVB(%3, %4, %5) sur %6 couleur(s)")
+			.arg(_var(posSrc, B1(banks[0])))
+			.arg(_var(posDst, B2(banks[0])))
 			.arg(_var(r, B1(banks[1])))
 			.arg(_var(g, B2(banks[1])))
 			.arg(_var(b, B1(banks[2])))
-			.arg(QString(QByteArray((char *)&unknown1, 2).toHex()))
-			.arg(QString(QByteArray((char *)&unknown2, 1).toHex()));
+			.arg(colorCount+1);
 }
 
 QByteArray OpcodeMPPAL2::params() const
 {
 	return QByteArray()
 			.append((char *)&banks, 3)
-			.append((char *)&unknown1, 2)
-			.append((char)r)
-			.append((char)g)
-			.append((char)b)
-			.append((char)unknown2);
+			.append(char(posSrc))
+			.append(char(posDst))
+			.append(char(r))
+			.append(char(g))
+			.append(char(b))
+			.append(char(colorCount));
 }
 
 void OpcodeMPPAL2::getVariables(QList<FF7Var> &vars) const
 {
+	if(B1(banks[0]) != 0)
+		vars.append(FF7Var(B1(banks[0]), posSrc));
+	if(B2(banks[0]) != 0)
+		vars.append(FF7Var(B2(banks[0]), posDst));
 	if(B1(banks[1]) != 0)
 		vars.append(FF7Var(B1(banks[1]), r));
 	if(B2(banks[1]) != 0)
 		vars.append(FF7Var(B2(banks[1]), g));
 	if(B1(banks[2]) != 0)
-		vars.append(FF7Var(B2(banks[1]), b));
+		vars.append(FF7Var(B1(banks[2]), b));
 }
 
 OpcodeSTPLS::OpcodeSTPLS(const QByteArray &params)
@@ -7202,18 +7396,28 @@ OpcodeSTPLS::OpcodeSTPLS(const QByteArray &params)
 
 void OpcodeSTPLS::setParams(const QByteArray &params)
 {
-	memcpy(unknown, params.constData(), 4);
+	palID = (quint8)params.at(0);
+	u1 = (quint8)params.at(1);
+	u6 = (quint8)params.at(2);
+	colorCount = (quint8)params.at(3);
 }
 
 QString OpcodeSTPLS::toString() const
 {
-	return QObject::tr("STPLS %1")
-			.arg(QString(QByteArray((char *)&unknown, 4).toHex()));
+	return QObject::tr("STPLS (palID=%1, u1=%2, u6=%3, colorCount=%4")
+			.arg(palID)
+			.arg(u1)
+			.arg(u6)
+			.arg(colorCount+1);
 }
 
 QByteArray OpcodeSTPLS::params() const
 {
-	return QByteArray().append((char *)&unknown, 4);
+	return QByteArray()
+			.append(char(palID))
+			.append(char(u1))
+			.append(char(u6))
+			.append(char(colorCount));
 }
 
 OpcodeLDPLS::OpcodeLDPLS(const QByteArray &params)
@@ -7223,18 +7427,28 @@ OpcodeLDPLS::OpcodeLDPLS(const QByteArray &params)
 
 void OpcodeLDPLS::setParams(const QByteArray &params)
 {
-	memcpy(unknown, params.constData(), 4);
+	u2 = (quint8)params.at(0);
+	palID = (quint8)params.at(1);
+	u6 = (quint8)params.at(2);
+	colorCount = (quint8)params.at(3);
 }
 
 QString OpcodeLDPLS::toString() const
 {
-	return QObject::tr("LDPLS %1")
-			.arg(QString(QByteArray((char *)&unknown, 4).toHex()));
+	return QObject::tr("LDPLS (u2=%1, palID=%2, u6=%3, colorCount=%4)")
+			.arg(u2)
+			.arg(palID)
+			.arg(u6)
+			.arg(colorCount+1);
 }
 
 QByteArray OpcodeLDPLS::params() const
 {
-	return QByteArray().append((char *)&unknown, 4);
+	return QByteArray()
+			.append(char(u2))
+			.append(char(palID))
+			.append(char(u6))
+			.append(char(colorCount));
 }
 
 OpcodeCPPAL2::OpcodeCPPAL2(const QByteArray &params)

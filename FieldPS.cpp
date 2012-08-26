@@ -184,8 +184,6 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 	for(i=0 ; i<headerPal.h ; ++i)
 		palettes.append(Palette(mimDataDec.mid(12+i*512,512)));
 
-	qDebug() << "palette count" << palettes.size();
-
 	memcpy(&headerImg, &constMimData[headerPal.size], 12);
 	
 	headerImg.w *= 2;

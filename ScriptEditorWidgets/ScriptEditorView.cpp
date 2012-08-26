@@ -100,6 +100,11 @@ ScriptEditorExecPage::ScriptEditorExecPage(Field *field, GrpScript *grpScript, S
 	priority = new QSpinBox(this);
 	priority->setRange(0, 7);
 
+	execType = new QComboBox(this);
+	execType->addItem(tr("Asynchrone, n'attend pas"));
+	execType->addItem(tr("Asynchrone, attend"));
+	execType->addItem(tr("Synchrone, attend"));
+
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Groupe")), 0, 0);
 	layout->addWidget(groupList, 0, 1);
@@ -107,13 +112,16 @@ ScriptEditorExecPage::ScriptEditorExecPage(Field *field, GrpScript *grpScript, S
 	layout->addWidget(scriptList, 1, 1);
 	layout->addWidget(new QLabel(tr("Priorité")), 2, 0);
 	layout->addWidget(priority, 2, 1);
-	layout->setRowStretch(3, 1);
+	layout->addWidget(new QLabel(tr("Type")), 3, 0);
+	layout->addWidget(execType, 3, 1);
+	layout->setRowStretch(4, 1);
 	layout->setContentsMargins(QMargins());
 
 	connect(groupList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
 	connect(scriptList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
 	connect(priority, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
 	connect(groupList, SIGNAL(currentIndexChanged(int)), SLOT(updateScriptList(int)));
+	connect(execType, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
 }
 
 Opcode *ScriptEditorExecPage::opcode()
@@ -130,7 +138,14 @@ void ScriptEditorExecPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	OpcodeExec *opcodeExec = (OpcodeExec *)opcode;
+	switch((Opcode::Keys)opcode->id()) {
+	case Opcode::REQ:		execType->setCurrentIndex(0);	break;
+	case Opcode::REQSW:		execType->setCurrentIndex(1);	break;
+	case Opcode::REQEW:		execType->setCurrentIndex(2);	break;
+	default:	break;
+	}
+
+	OpcodeExec *opcodeExec = (OpcodeExec *)_opcode;
 
 	GrpScript *grp = _field->grpScripts().value(opcodeExec->groupID, 0);
 	if(!grp) {
@@ -162,6 +177,40 @@ void ScriptEditorExecPage::updateScriptList(int groupID)
 	}
 }
 
+void ScriptEditorExecPage::changeCurrentOpcode(int index)
+{
+	Opcode::Keys key;
+
+	switch(index) {
+	case 0:		key = Opcode::REQ;		break;
+	case 1:		key = Opcode::REQSW;	break;
+	case 2:		key = Opcode::REQEW;	break;
+	default:	key = (Opcode::Keys)_opcode->id();
+	}
+
+	if(key != _opcode->id()) {
+		convertOpcode(key);
+
+		emit(opcodeChanged());
+	}
+}
+
+void ScriptEditorExecPage::convertOpcode(Opcode::Keys key)
+{
+	if(key == _opcode->id())	return;
+
+	OpcodeExec *exec = (OpcodeExec *)_opcode;
+
+	switch(key) {
+	case Opcode::REQ:		_opcode = new OpcodeREQ(*exec);		break;
+	case Opcode::REQSW:		_opcode = new OpcodeREQSW(*exec);	break;
+	case Opcode::REQEW:		_opcode = new OpcodeREQEW(*exec);	break;
+	default:	return;
+	}
+
+	delete exec;
+}
+
 ScriptEditorExecCharPage::ScriptEditorExecCharPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
 	ScriptEditorView(field, grpScript, script, opcodeID, parent)
 {
@@ -175,6 +224,11 @@ ScriptEditorExecCharPage::ScriptEditorExecCharPage(Field *field, GrpScript *grpS
 	priority = new QSpinBox(this);
 	priority->setRange(0, 7);
 
+	execType = new QComboBox(this);
+	execType->addItem(tr("Asynchrone, n'attend pas"));
+	execType->addItem(tr("Asynchrone, attend"));
+	execType->addItem(tr("Synchrone, attend"));
+
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Équipier")), 0, 0);
 	layout->addWidget(partyID, 0, 1);
@@ -182,12 +236,15 @@ ScriptEditorExecCharPage::ScriptEditorExecCharPage(Field *field, GrpScript *grpS
 	layout->addWidget(scriptList, 1, 1);
 	layout->addWidget(new QLabel(tr("Priorité")), 2, 0);
 	layout->addWidget(priority, 2, 1);
-	layout->setRowStretch(3, 1);
+	layout->addWidget(new QLabel(tr("Type")), 3, 0);
+	layout->addWidget(execType, 3, 1);
+	layout->setRowStretch(4, 1);
 	layout->setContentsMargins(QMargins());
 
 	connect(partyID, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
 	connect(scriptList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
 	connect(priority, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+	connect(execType, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
 }
 
 Opcode *ScriptEditorExecCharPage::opcode()
@@ -204,40 +261,70 @@ void ScriptEditorExecCharPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	OpcodeExecChar *opcodeExecChar = (OpcodeExecChar *)opcode;
+	switch((Opcode::Keys)opcode->id()) {
+	case Opcode::PREQ:		execType->setCurrentIndex(0);	break;
+	case Opcode::PRQSW:		execType->setCurrentIndex(1);	break;
+	case Opcode::PRQEW:		execType->setCurrentIndex(2);	break;
+	default:	break;
+	}
+
+	OpcodeExecChar *opcodeExecChar = (OpcodeExecChar *)_opcode;
 	partyID->setValue(opcodeExecChar->partyID);
 	scriptList->setCurrentIndex(opcodeExecChar->scriptID);
 	priority->setValue(opcodeExecChar->priority);
 }
 
+
+void ScriptEditorExecCharPage::changeCurrentOpcode(int index)
+{
+	Opcode::Keys key;
+
+	switch(index) {
+	case 0:		key = Opcode::PREQ;		break;
+	case 1:		key = Opcode::PRQSW;	break;
+	case 2:		key = Opcode::PRQEW;	break;
+	default:	key = (Opcode::Keys)_opcode->id();
+	}
+
+	if(key != _opcode->id()) {
+		convertOpcode(key);
+
+		emit(opcodeChanged());
+	}
+}
+
+void ScriptEditorExecCharPage::convertOpcode(Opcode::Keys key)
+{
+	if(key == _opcode->id())	return;
+
+	OpcodeExecChar *exec = (OpcodeExecChar *)_opcode;
+
+	switch(key) {
+	case Opcode::PREQ:		_opcode = new OpcodePREQ(*exec);	break;
+	case Opcode::PRQSW:		_opcode = new OpcodePRQSW(*exec);	break;
+	case Opcode::PRQEW:		_opcode = new OpcodePRQEW(*exec);	break;
+	default:	return;
+	}
+
+	delete exec;
+}
+
 ScriptEditorLabelPage::ScriptEditorLabelPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
 	ScriptEditorView(field, grpScript, script, opcodeID, parent)
 {
-	label = new QDoubleSpinBox(this);
-	label->setDecimals(0);
-	label->setRange(0, (quint32)-1);
-
-	warningLabel = new QLabel(tr("Ce label existe déjà, veuillez en choisir un autre."), this);
-	QPalette pal = warningLabel->palette();
-	pal.setColor(QPalette::Active, QPalette::WindowText, Qt::red);
-	warningLabel->setPalette(pal);
-	warningLabel->hide();
+	label = new QLabel(this);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Label")), 0, 0);
 	layout->addWidget(label, 0, 1);
-	layout->addWidget(warningLabel, 1, 0, 1, 2);
-	layout->setRowStretch(2, 1);
+	layout->setRowStretch(1, 1);
 	layout->setContentsMargins(QMargins());
-
-	connect(label, SIGNAL(valueChanged(double)), SIGNAL(opcodeChanged()));
-	connect(label, SIGNAL(valueChanged(double)), SLOT(showWarning()));
 }
 
 Opcode *ScriptEditorLabelPage::opcode()
 {
 	OpcodeLabel *opcodeLabel = (OpcodeLabel *)_opcode;
-	opcodeLabel->setLabel(label->value());
+	opcodeLabel->setLabel(label->text().toUInt());
 
 	return ScriptEditorView::opcode();
 }
@@ -246,21 +333,23 @@ void ScriptEditorLabelPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	labels.clear();
-	foreach(Opcode *op, _script->getOpcodes()) {
-		if(op->isLabel()) {
-			labels.append(((OpcodeLabel *)op)->label());
-		}
-	}
-
 	OpcodeLabel *opcodeLabel = (OpcodeLabel *)opcode;
-	labels.removeOne(opcodeLabel->label());
-	label->setValue(opcodeLabel->label());
-}
+	if(opcodeLabel->label() == 0) {
+		quint32 greaterLabel=1;
+		foreach(Opcode *op, _script->getOpcodes()) {
+			if(op->isLabel()) {
+				quint32 lbl = ((OpcodeLabel *)op)->label();
+				if(lbl >= greaterLabel) {
+					greaterLabel = lbl + 1;
+				}
+			}
+		}
 
-void ScriptEditorLabelPage::showWarning()
-{
-	warningLabel->setVisible(labels.contains(label->value()));
+		label->setNum((double)greaterLabel);
+		emit opcodeChanged();
+	} else {
+		label->setNum((double)opcodeLabel->label());
+	}
 }
 
 ScriptEditorJumpPage::ScriptEditorJumpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
