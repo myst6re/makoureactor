@@ -444,6 +444,24 @@ bool FieldArchive::searchExec(quint8 group, quint8 script, int &fieldID, int &gr
 	return false;*/
 }
 
+bool FieldArchive::searchMapJump(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+{
+	if(fieldID < 0)	fieldID = groupID = scriptID = opcodeID = 0;
+
+	int nbFields = fileList.size();
+
+	while(fieldID < nbFields)
+	{
+		QCoreApplication::processEvents();
+		Field *f = field(fieldID);
+		if(f!=NULL && f->searchMapJump(_field, groupID, scriptID, opcodeID))
+			return true;
+		++fieldID;
+		groupID = scriptID = opcodeID = 0;
+	}
+	return false;
+}
+
 bool FieldArchive::searchText(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
 	if(fieldID < 0)	fieldID = groupID = scriptID = opcodeID = 0;
@@ -584,6 +602,24 @@ bool FieldArchive::searchExecP(quint8 group, quint8 script, int &fieldID, int &g
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID);
 		if(f!=NULL && f->searchExecP(group, script, groupID, scriptID, opcodeID))	return true;
+		--fieldID;
+		groupID = scriptID = opcodeID = 2147483647;
+	}
+	return false;
+}
+
+bool FieldArchive::searchMapJumpP(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+{
+	if(fieldID >= fileList.size()) {
+		fieldID = fileList.size()-1;
+		groupID = scriptID = opcodeID = 2147483647;
+	}
+
+	while(fieldID >= 0)
+	{
+		QCoreApplication::processEvents();
+		Field *f = field(fieldID);
+		if(f!=NULL && f->searchMapJumpP(_field, groupID, scriptID, opcodeID))	return true;
 		--fieldID;
 		groupID = scriptID = opcodeID = 2147483647;
 	}

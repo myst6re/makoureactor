@@ -29,6 +29,7 @@ Search::Search(QWidget *parent)
 	liste->addItem(tr("Variable"));
 	liste->addItem(tr("Opcode"));
 	liste->addItem(tr("Exec"));
+	liste->addItem(tr("Saut d'écran"));
 
 	QWidget *texte = new QWidget(this);
 
@@ -53,6 +54,9 @@ Search::Search(QWidget *parent)
 	for(quint16 i=0 ; i<256 ; ++i)
 		opcode->addItem(QString("%1 - %2").arg(i,2,16,QChar('0')).arg(Opcode::names[i]));
 	opcode->addItem(QString("100 - %1").arg(Opcode::names[0x100]));
+	// set config values
+	opcode->setCurrentIndex(Config::value("SearchedOpcode").toInt());
+
 	QVBoxLayout *opcodeLayout = new QVBoxLayout(opc);
 	opcodeLayout->setContentsMargins(QMargins());
 	opcodeLayout->addWidget(opcode);
@@ -75,10 +79,23 @@ Search::Search(QWidget *parent)
 	}
 	updateComboVarName();
 
+	// set config values
+	champBank->setValue(Config::value("SearchedVarBank").toInt());
+	champAdress->setValue(Config::value("SearchedVarAdress").toInt());
+	comboVarName->setCurrentIndex(Config::value("SearchedVarAdress").toInt());
+	int searchedVarValue = Config::value("SearchedVarValue", 65536).toInt();
+	if(searchedVarValue != 65536) {
+		champValue->setText(QString::number(searchedVarValue));
+	}
+
 	QWidget *execution = new QWidget(this);
 	executionGroup = new QComboBox(execution);
 	executionScript = new QSpinBox(execution);
 	executionScript->setRange(0,31);
+
+	// set config values
+	executionGroup->setCurrentIndex(Config::value("SearchedGroupScript").toInt());
+	executionScript->setValue(Config::value("SearchedScript").toInt());
 
 	QGridLayout *executionLayout = new QGridLayout(execution);
 	executionLayout->setContentsMargins(QMargins());
@@ -88,11 +105,20 @@ Search::Search(QWidget *parent)
 	executionLayout->addWidget(executionGroup, 1, 1);
 	executionLayout->setColumnStretch(1, 1);
 	
+	QWidget *jump = new QWidget(this);
+	mapJump = new QComboBox(jump);
+
+	QHBoxLayout *jumpLayout = new QHBoxLayout(jump);
+	jumpLayout->setContentsMargins(QMargins());
+	jumpLayout->addWidget(mapJump, 1, Qt::AlignTop);
+	jumpLayout->addStretch();
+
 	QStackedWidget *stack = new QStackedWidget(this);
 	stack->addWidget(texte);
 	stack->addWidget(variable);
 	stack->addWidget(opc);
 	stack->addWidget(execution);
+	stack->addWidget(jump);
 	
 	buttonSuiv = new QPushButton(tr("Chercher le suivant"), this);
 	buttonPrec = new QPushButton(tr("Chercher le précédent"), this);
@@ -131,6 +157,14 @@ Search::Search(QWidget *parent)
 void Search::setFieldArchive(FieldArchive *fieldArchive)
 {
 	this->fieldArchive = fieldArchive;
+	if(mapJump->count() <= 0) {
+		int mapID=0;
+		foreach(const QString &fieldName, Data::field_names) {
+			mapJump->addItem(QString("%1 - %2").arg(mapID++, 3, 10, QChar('0')).arg(fieldName));
+		}
+		// set config values
+		mapJump->setCurrentIndex(Config::value("SearchedMapJump").toInt());
+	}
 }
 
 void Search::setOpcode(int opcode)
@@ -233,6 +267,13 @@ void Search::chercherSuivant()
 			goto after;
 		}
 		break;
+	case 4:
+		if(fieldArchive->searchMapJump(field, fieldID, grpScriptID, scriptID, opcodeID, sorting))
+		{
+			emit found(fieldID, grpScriptID, scriptID, opcodeID);
+			goto after;
+		}
+		break;
 	case 3:
 		if(fieldID < 0)							fieldID = 0;
 		if(fieldID > fieldArchive->size())		fieldID = fieldArchive->size()-1;
@@ -295,6 +336,13 @@ void Search::chercherPrecedent()
 			goto after;
 		}
 		break;
+	case 4:
+		if(fieldArchive->searchMapJumpP(field, fieldID, grpScriptID, scriptID, opcodeID, sorting))
+		{
+			emit found(fieldID, grpScriptID, scriptID, opcodeID);
+			goto after;
+		}
+		break;
 	case 3:
 		if(fieldID < 0)							fieldID = 0;
 		if(fieldID > fieldArchive->size())		fieldID = fieldArchive->size()-1;
@@ -351,13 +399,23 @@ void Search::setSearchValues()
 		adress = champAdress->value();
 		value = champValue->text().toInt(&ok);
 		if(!ok)	value = 65536;
+		Config::setValue("SearchedVarBank", bank);
+		Config::setValue("SearchedVarAdress", adress);
+		Config::setValue("SearchedVarValue", value);
 		break;
 	case 2:
 		clef = opcode->currentIndex();
+		Config::setValue("SearchedOpcode", clef);
 		break;
 	case 3:
 		e_group = executionGroup->currentIndex();
 		e_script = executionScript->value();
+		Config::setValue("SearchedGroupScript", e_group);
+		Config::setValue("SearchedScript", e_script);
+		break;
+	case 4:
+		field = mapJump->currentIndex();
+		Config::setValue("SearchedMapJump", field);
 		break;
 	default:return;
 	}

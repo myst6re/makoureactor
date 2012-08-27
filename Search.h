@@ -19,6 +19,7 @@
 #define DEF_SEARCH
 
 #include <QtGui>
+#include <QtTest/QTest>
 #include "FieldArchive.h"
 
 class Search : public QDialog
@@ -69,6 +70,7 @@ private:
 	QLabel *returnToBegin;
 	QComboBox *executionGroup;
 	QSpinBox *executionScript;
+	QComboBox *mapJump;
 
 	int clef;
 	QRegExp text;
@@ -76,6 +78,7 @@ private:
 	quint8 adress;
 	int value;
 	quint8 e_script, e_group;
+	quint16 field;
 	bool cancel;
 
 signals:

@@ -338,74 +338,62 @@ QList<FF7Var> Field::searchAllVars() const
 
 bool Field::searchOpcode(int opcode, int &groupID, int &scriptID, int &opcodeID) const
 {
-	if(groupID < 0) {
+	if(groupID < 0)
 		groupID = scriptID = opcodeID = 0;
-	}
+	if(groupID >= _grpScripts.size())
+		return false;
+	if(_grpScripts.at(groupID)->searchOpcode(opcode, scriptID, opcodeID))
+		return true;
 
-	int nbGroups = _grpScripts.size();
-
-	while(groupID < nbGroups)
-	{
-		if(_grpScripts.at(groupID)->searchOpcode(opcode, scriptID, opcodeID))	return true;
-		++groupID;
-		scriptID = opcodeID = 0;
-	}
-	return false;
+	return searchOpcode(opcode, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
 bool Field::searchVar(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const
 {
-	if(groupID < 0) {
+	if(groupID < 0)
 		groupID = scriptID = opcodeID = 0;
-	}
+	if(groupID >= _grpScripts.size())
+		return false;
+	if(_grpScripts.at(groupID)->searchVar(bank, adress, value, scriptID, opcodeID))
+		return true;
 
-	int nbGroups = _grpScripts.size();
-
-	while(groupID < nbGroups)
-	{
-		if(_grpScripts.at(groupID)->searchVar(bank, adress, value, scriptID, opcodeID))	return true;
-		++groupID;
-		scriptID = opcodeID = 0;
-	}
-	return false;
+	return searchVar(bank, adress, value, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
 bool Field::searchExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const
 {
-	if(groupID < 0) {
+	if(groupID < 0)
 		groupID = scriptID = opcodeID = 0;
-	}
+	if(groupID >= _grpScripts.size())
+		return false;
+	if(_grpScripts.at(groupID)->searchExec(group, script, scriptID, opcodeID))
+		return true;
 
-	qDebug() << "Field::searchExec" << name << groupID << scriptID << opcodeID;
-
-	int nbGroups = _grpScripts.size();
-
-	while(groupID < nbGroups)
-	{
-		if(_grpScripts.at(groupID)->searchExec(group, script, scriptID, opcodeID))	return true;
-		++groupID;
-		scriptID = opcodeID = 0;
-	}
-	return false;
+	return searchExec(group, script, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
-bool Field::searchText(const QRegExp &texte, int &groupID, int &scriptID, int &opcodeID) const
+bool Field::searchMapJump(quint16 field, int &groupID, int &scriptID, int &opcodeID) const
 {
-	if(groupID < 0) {
+	if(groupID < 0)
 		groupID = scriptID = opcodeID = 0;
-	}
+	if(groupID >= _grpScripts.size())
+		return false;
+	if(_grpScripts.at(groupID)->searchMapJump(field, scriptID, opcodeID))
+		return true;
 
-	Data::currentTextes = &textes;
+	return searchMapJump(field, ++groupID, scriptID = 0, opcodeID = 0);
+}
 
-	int nbGroups = _grpScripts.size();
+bool Field::searchText(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const
+{
+	if(groupID < 0)
+		groupID = scriptID = opcodeID = 0;
+	if(groupID >= _grpScripts.size())
+		return false;
+	if(_grpScripts.at(groupID)->searchText(text, scriptID, opcodeID))
+		return true;
 
-	while(groupID < nbGroups)
-	{
-		if(_grpScripts.at(groupID)->searchText(texte, scriptID, opcodeID))	return true;
-		++groupID;
-		scriptID = opcodeID = 0;
-	}
-	return false;
+	return searchText(text, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
 bool Field::searchOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID) const
@@ -414,14 +402,12 @@ bool Field::searchOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID
 		groupID = _grpScripts.size()-1;
 		scriptID = opcodeID = 2147483647;
 	}
+	if(groupID < 0)
+		return false;
+	if(_grpScripts.at(groupID)->searchOpcodeP(opcode, scriptID, opcodeID))
+		return true;
 
-	while(groupID >= 0)
-	{
-		if(_grpScripts.at(groupID)->searchOpcodeP(opcode, scriptID, opcodeID))	return true;
-		--groupID;
-		scriptID = opcodeID = 2147483647;
-	}
-	return false;
+	return searchOpcodeP(opcode, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
 bool Field::searchVarP(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const
@@ -430,14 +416,12 @@ bool Field::searchVarP(quint8 bank, quint8 adress, int value, int &groupID, int 
 		groupID = _grpScripts.size()-1;
 		scriptID = opcodeID = 2147483647;
 	}
+	if(groupID < 0)
+		return false;
+	if(_grpScripts.at(groupID)->searchVarP(bank, adress, value, scriptID, opcodeID))
+		return true;
 
-	while(groupID >= 0)
-	{
-		if(_grpScripts.at(groupID)->searchVarP(bank, adress, value, scriptID, opcodeID))	return true;
-		--groupID;
-		scriptID = opcodeID = 2147483647;
-	}
-	return false;
+	return searchVarP(bank, adress, value, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
 bool Field::searchExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const
@@ -446,32 +430,40 @@ bool Field::searchExecP(quint8 group, quint8 script, int &groupID, int &scriptID
 		groupID = _grpScripts.size()-1;
 		scriptID = opcodeID = 2147483647;
 	}
+	if(groupID < 0)
+		return false;
+	if(_grpScripts.at(groupID)->searchExecP(group, script, scriptID, opcodeID))
+		return true;
 
-	while(groupID >= 0)
-	{
-		if(_grpScripts.at(groupID)->searchExecP(group, script, scriptID, opcodeID))	return true;
-		--groupID;
-		scriptID = opcodeID = 2147483647;
-	}
-	return false;
+	return searchExecP(group, script, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
-bool Field::searchTextP(const QRegExp &texte, int &groupID, int &scriptID, int &opcodeID) const
+bool Field::searchMapJumpP(quint16 field, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID >= _grpScripts.size()) {
 		groupID = _grpScripts.size()-1;
 		scriptID = opcodeID = 2147483647;
 	}
+	if(groupID < 0)
+		return false;
+	if(_grpScripts.at(groupID)->searchMapJumpP(field, scriptID, opcodeID))
+		return true;
 
-	Data::currentTextes = &textes;
+	return searchMapJumpP(field, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
+}
 
-	while(groupID >= 0)
-	{
-		if(_grpScripts.at(groupID)->searchTextP(texte, scriptID, opcodeID))	return true;
-		--groupID;
+bool Field::searchTextP(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const
+{
+	if(groupID >= _grpScripts.size()) {
+		groupID = _grpScripts.size()-1;
 		scriptID = opcodeID = 2147483647;
 	}
-	return false;
+	if(groupID < 0)
+		return false;
+	if(_grpScripts.at(groupID)->searchTextP(text, scriptID, opcodeID))
+		return true;
+
+	return searchTextP(text, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
 QList<FF7Text *> *Field::getTexts()

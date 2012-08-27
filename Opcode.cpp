@@ -171,9 +171,20 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, int value) const
 
 bool Opcode::searchExec(quint8 group, quint8 script) const
 {
-	if(id()==0x01 || id()==0x02 || id()==0x03) {
+	if(id()==REQ || id()==REQSW || id()==REQEW) {
 		OpcodeExec *exec = (OpcodeExec *)this;
 		return exec->groupID == group && exec->scriptID == script;
+	}
+	return false;
+}
+
+bool Opcode::searchMapJump(quint16 fieldID) const
+{
+	if(id()==MAPJUMP) {
+		return ((OpcodeMAPJUMP *)this)->fieldID == fieldID;
+	}
+	if(id()==MINIGAME) {
+		return ((OpcodeMINIGAME *)this)->fieldID == fieldID;
 	}
 	return false;
 }

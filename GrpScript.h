@@ -51,11 +51,13 @@ public:
 	bool searchVar(quint8 bank, quint8 adress, int value, int &scriptID, int &opcodeID) const;
 	QList<FF7Var> searchAllVars() const;
 	bool searchExec(quint8 group, quint8 script, int &scriptID, int &opcodeID) const;
-	bool searchText(const QRegExp &texte, int &scriptID, int &opcodeID) const;
+	bool searchMapJump(quint16 mapJump, int &scriptID, int &opcodeID) const;
+	bool searchText(const QRegExp &text, int &scriptID, int &opcodeID) const;
 	bool searchOpcodeP(int opCode, int &scriptID, int &opcodeID) const;
 	bool searchVarP(quint8 bank, quint8 adress, int value, int &scriptID, int &opcodeID) const;
 	bool searchExecP(quint8 group, quint8 script, int &scriptID, int &opcodeID) const;
-	bool searchTextP(const QRegExp &texte, int &scriptID, int &opcodeID) const;
+	bool searchMapJumpP(quint16 field, int &scriptID, int &opcodeID) const;
+	bool searchTextP(const QRegExp &text, int &scriptID, int &opcodeID) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void shiftTextIds(int textId, int steps=1);
