@@ -31,8 +31,11 @@ public:
 	explicit TextManager(QWidget *parent=0);
 	void setField(Field *field);
 	void updateText();
+	void gotoText(int textID, int from, int size);
 signals:
 	void modified();
+	void textIDChanged(int);
+	void fromChanged(int);
 private slots:
 	void selectText(QListWidgetItem *, QListWidgetItem *previous=0);
 	void showList();
@@ -49,6 +52,7 @@ private slots:
 	void changeRect(QRect rect);
 	void changeXCoord(int);
 	void changeYCoord(int);
+	void emitFromChanged();
 private:
 	void updateWindowCoord();
 

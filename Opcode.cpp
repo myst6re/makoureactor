@@ -189,12 +189,12 @@ bool Opcode::searchMapJump(quint16 fieldID) const
 	return false;
 }
 
-bool Opcode::searchText(const QRegExp &texte) const
+bool Opcode::searchTextInScripts(const QRegExp &text) const
 {
 	qint16 textID = getTextID();
 	return textID != -1
 			&& textID < Data::currentTextes->size()
-			&& Data::currentTextes->at(textID)->search(texte);
+			&& Data::currentTextes->at(textID)->contains(text);
 }
 
 void Opcode::listUsedTexts(QSet<quint8> &usedTexts) const
@@ -7258,11 +7258,11 @@ OpcodeRTPAL::OpcodeRTPAL(const QByteArray &params)
 
 void OpcodeRTPAL::setParams(const QByteArray &params)
 {
-	memcpy(&banks, params.constData(), 2);
-	u1 = (quint8)params.at(1); // bank 1
-	u2 = (quint8)params.at(2); // bank 2
-	u3 = (quint8)params.at(3); // bank 4
-	u5 = (quint8)params.at(4);
+	memcpy(banks, params.constData(), 2);
+	u1 = (quint8)params.at(2); // bank 1
+	u2 = (quint8)params.at(3); // bank 2
+	u3 = (quint8)params.at(4); // bank 4
+	u5 = (quint8)params.at(5);
 }
 
 QString OpcodeRTPAL::toString() const

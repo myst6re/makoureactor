@@ -338,7 +338,7 @@ void TutFile::parseText(int tutID, const QString &tuto)
 		}
 		else {
 			ret.append('\x10');
-			ret.append(FF7Text(line.mid(5), jp).getData()).append('\xff');
+			ret.append(FF7Text(line, jp).getData()).append('\xff');
 		}
 	}
 

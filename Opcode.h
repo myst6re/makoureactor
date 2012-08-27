@@ -161,7 +161,7 @@ public:
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	bool searchExec(quint8 group, quint8 script) const;
 	bool searchMapJump(quint16 fieldID) const;
-	bool searchText(const QRegExp &texte) const;
+	bool searchTextInScripts(const QRegExp &text) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void shiftTextIds(int textId, int steps);

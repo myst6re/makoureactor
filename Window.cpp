@@ -48,8 +48,9 @@ Window::Window() :
 	menu->addAction(tr("Ouvrir un &dossier Field (PS)..."), this, SLOT(ouvrirDossier()), QKeySequence("Shift+Ctrl+O"));
 	actionSave = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Enregi&strer"), this, SLOT(enregistrer()), QKeySequence("Ctrl+S"));
 	actionSaveAs = menu->addAction(tr("Enre&gistrer Sous..."), this, SLOT(enregistrerSous()), QKeySequence("Shift+Ctrl+S"));
-	actionExport = menu->addAction(tr("&Exporter..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
-	actionImport = menu->addAction(tr("&Importer..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
+	actionExport = menu->addAction(tr("&Exporter l'écran courant..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
+	actionMassExport = menu->addAction(tr("&Exporter en masse..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
+	actionImport = menu->addAction(tr("&Importer dans l'écran courant..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
 	menu->addSeparator();
 	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("Fe&rmer"), this, SLOT(fermer()));
 	menu->addAction(tr("&Quitter"), this, SLOT(close()), QKeySequence::Quit);
@@ -200,10 +201,11 @@ Window::Window() :
 	menuBar()->addAction("&?", this, SLOT(about()));
 	
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
-	connect(searchDialog, SIGNAL(found(int, int, int, int)), SLOT(gotoOpcode(int, int, int, int)));
+	connect(searchDialog, SIGNAL(found(int,int,int,int)), SLOT(gotoOpcode(int,int,int,int)));
+	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
 	connect(lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap()));
 	connect(lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
-	connect(this, SIGNAL(fileIDChanged(int)), searchDialog, SLOT(changeFileID(int)));
+	connect(this, SIGNAL(fieldIDChanged(int)), searchDialog, SLOT(changeFieldID(int)));
 	connect(this, SIGNAL(grpScriptIDChanged(int)), searchDialog, SLOT(changeGrpScriptID(int)));
 	connect(this, SIGNAL(scriptIDChanged(int)), searchDialog, SLOT(changeScriptID(int)));
 	connect(this, SIGNAL(opcodeIDChanged(int)), searchDialog, SLOT(changeOpcodeID(int)));
@@ -362,6 +364,7 @@ int Window::fermer(bool quit)
 		actionSave->setEnabled(false);
 		actionSaveAs->setEnabled(false);
 		actionExport->setEnabled(false);
+		actionMassExport->setEnabled(false);
 		actionImport->setEnabled(false);
 		actionClose->setEnabled(false);
 		actionFind->setEnabled(false);
@@ -472,6 +475,7 @@ void Window::ouvrir(const QString &cheminFic, bool isDir)
 	actionMisc->setEnabled(true);
 	actionWalkmesh->setEnabled(true);
 	actionExport->setEnabled(true);
+	actionMassExport->setEnabled(true);
 	actionSaveAs->setEnabled(true);
 	actionImport->setEnabled(true);
 	if(fieldArchive->isLgp()/* || fieldArchive->isIso()*/) {
@@ -530,12 +534,10 @@ void Window::ouvrirField()
 
 	zonePreview->setCurrentIndex(0);
 	
-	Data::currentTextes = field->getTexts();
-	
 	auteurLbl->setText(tr("Auteur : %1").arg(field->getAuthor()));
 	auteurLbl->show();
 	
-	emit fileIDChanged(id);
+	emit fieldIDChanged(id);
 	liste2->setEnabled(true);
 	liste2->fill(field);
 
@@ -817,25 +819,47 @@ void Window::enregistrerSous(bool currentPath)
 	setEnabled(true);
 }
 
-void Window::gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID)
+bool Window::gotoField(int fieldID)
 {
-	blockSignals(true);
 	int i, size=liste->topLevelItemCount();
 	for(i=0 ; i<size ; ++i) {
 		QTreeWidgetItem *item = liste->topLevelItem(i);
 		if(item->data(0, Qt::UserRole).toInt() == fieldID) {
+			blockSignals(true);
 			liste->setCurrentItem(item);
 			liste->scrollToItem(item);
-			break;
+			blockSignals(false);
+			return true;
 		}
 	}
+	return false;
+}
 
-	if(i!=size) {
+void Window::gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID)
+{
+	if(gotoField(fieldID)) {
+		blockSignals(true);
 		liste2->scroll(grpScriptID, false);
 		liste3->scroll(scriptID, false);
 		zoneScript->scroll(opcodeID);
+		blockSignals(false);
 	}
-	blockSignals(false);
+}
+
+void Window::gotoText(int fieldID, int textID, int from, int size)
+{
+	if(textDialog) {
+		textDialog->blockSignals(true);
+	}
+	if(gotoField(fieldID)) {
+		textManager(false); // show texts dialog
+		if(textDialog) {
+			textDialog->gotoText(textID, from, size);
+		}
+	}
+	if(textDialog) {
+		textDialog->blockSignals(false);
+	}
 }
 
 void Window::emitOpcodeID()
@@ -918,6 +942,13 @@ void Window::exporter()
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
 }
 
+void Window::massExport()
+{
+	if(!fieldArchive) return;
+
+	//TODO
+}
+
 void Window::importer()
 {
 	if(!field) return;
@@ -988,7 +1019,7 @@ void Window::varManager()
 
 void Window::runFF7()
 {
-	QString ff7exe = !Data::isRereleasedPath() ? "ff7.exe" : "FF7_Launcher.exe";
+	QString ff7exe = QFile::exists(Data::ff7AppPath() % "/ff7.exe") ? "ff7.exe" : "FF7_Launcher.exe";
 	QString ff7exeFullPath = Data::ff7AppPath() % "/" % ff7exe;
 
 	if(!QProcess::startDetached("\"" % ff7exeFullPath % "\"", QStringList(), Data::ff7AppPath())) {
@@ -1003,18 +1034,23 @@ void Window::searchManager()
 	searchDialog->show();
 }
 
-void Window::textManager()
+void Window::textManager(bool activate)
 {
 	if(field) {
 		if(!textDialog) {
 			textDialog = new TextManager(this);
 			connect(textDialog, SIGNAL(modified()), SLOT(activerSave()));
+			connect(textDialog, SIGNAL(textIDChanged(int)), searchDialog, SLOT(changeTextID(int)));
+			connect(textDialog, SIGNAL(fromChanged(int)), searchDialog, SLOT(changeFrom(int)));
 		}
+
 		textDialog->setField(field);
 		textDialog->show();
-		textDialog->raise();
-		textDialog->activateWindow();
-		textDialog->setFocus();
+		if(activate) {
+			textDialog->activateWindow();
+		} else {
+			searchDialog->raise();
+		}
 	}
 }
 

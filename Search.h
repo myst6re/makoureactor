@@ -38,35 +38,40 @@ public:
 	int grpScriptID;
 	int scriptID;
 	int opcodeID;
+	int textID;
+	int from;
 
 public slots:
-	void changeFileID(int);
+	void changeFieldID(int);
 	void changeGrpScriptID(int);
 	void changeScriptID(int);
 	void changeOpcodeID(int);
+	void changeTextID(int);
+	void changeFrom(int);
 
 private slots:
 	void updateComboVarName();
 	void updateChampAdress();
 	void cancelSearching();
-	void chercherSuivant();
-	void chercherPrecedent();
+	void findNext();
+	void findPrev();
 
 private:
+	QWidget *scriptPageWidget();
+	QWidget *textPageWidget();
 	void setSearchValues();
 
+	QTabWidget *tabWidget;
 	FieldArchive *fieldArchive;
-	QComboBox *champ;
+	QComboBox *champ, *champ2;
 	QComboBox *liste;
 	QComboBox *opcode;
-	QCheckBox *caseSens, *useRegexp;
+	QCheckBox *caseSens, *useRegexp, *caseSens2, *useRegexp2;
 	QSpinBox *champBank;
 	QSpinBox *champAdress;
 	QLineEdit *champValue;
 	QComboBox *comboVarName;
-	QGridLayout *grid;
-	QPushButton *buttonSuiv;
-	QPushButton *buttonPrec;
+	QPushButton *buttonNext, *buttonPrev;
 	QLabel *returnToBegin;
 	QComboBox *executionGroup;
 	QSpinBox *executionScript;
@@ -83,6 +88,7 @@ private:
 
 signals:
 	void found(int, int, int, int);
+	void foundText(int, int, int, int);
 
 protected:
 	void showEvent(QShowEvent *event) {

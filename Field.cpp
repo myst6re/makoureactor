@@ -34,7 +34,7 @@ Field::Field(const QString &name) :
 Field::~Field()
 {
 	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
-	foreach(FF7Text *texte, textes)				delete texte;
+	foreach(FF7Text *texte, texts)				delete texte;
 	if(encounter)		delete encounter;
 	if(tut)				delete tut;
 	if(id)				delete id;
@@ -46,9 +46,9 @@ Field::~Field()
 void Field::close()
 {
 	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
-	foreach(FF7Text *texte, textes)				delete texte;
+	foreach(FF7Text *texte, texts)				delete texte;
 	_grpScripts.clear();
-	textes.clear();
+	texts.clear();
 	author.clear();
 
 	_isOpen = false;
@@ -173,9 +173,9 @@ qint8 Field::openSection1(const QByteArray &contenu, int posStart)
 		posAKAO = contenuSize;
 	}
 
-	/* ---------- TEXTES ---------- */
+	/* ---------- TEXTS ---------- */
 
-	if((posAKAO -= posTextes) > 4)//Si il y a des textes
+	if((posAKAO -= posTextes) > 4)//If there are texts
 	{
 		quint16 posDeb, posFin, nbTextes;
 		if(contenuSize < posTextes+2)	return -1;
@@ -188,11 +188,11 @@ qint8 Field::openSection1(const QByteArray &contenu, int posStart)
 
 			if(contenuSize < posTextes+posFin)	return -1;
 
-			textes.append(new FF7Text(contenu.mid(posTextes+posDeb, posFin-posDeb)));
+			texts.append(new FF7Text(contenu.mid(posTextes+posDeb, posFin-posDeb)));
 			posDeb = posFin;
 		}
 		if((quint32)contenuSize < posAKAO)	return -1;
-		textes.append(new FF7Text(contenu.mid(posTextes+posDeb, posAKAO-posDeb)));
+		texts.append(new FF7Text(contenu.mid(posTextes+posDeb, posAKAO-posDeb)));
 	}
 
 	_isOpen = true;
@@ -326,14 +326,10 @@ bool Field::moveGrpScript(int row, bool direction)
 	return true;
 }
 
-QList<FF7Var> Field::searchAllVars() const
+void Field::searchAllVars(QList<FF7Var> &vars) const
 {
-	QList<FF7Var> vars;
-
 	foreach(GrpScript *group, _grpScripts)
-		vars.append(group->searchAllVars());
-
-	return vars;
+		group->searchAllVars(vars);
 }
 
 bool Field::searchOpcode(int opcode, int &groupID, int &scriptID, int &opcodeID) const
@@ -384,16 +380,29 @@ bool Field::searchMapJump(quint16 field, int &groupID, int &scriptID, int &opcod
 	return searchMapJump(field, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
-bool Field::searchText(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const
+bool Field::searchTextInScripts(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID < 0)
 		groupID = scriptID = opcodeID = 0;
 	if(groupID >= _grpScripts.size())
 		return false;
-	if(_grpScripts.at(groupID)->searchText(text, scriptID, opcodeID))
+
+	if(_grpScripts.at(groupID)->searchTextInScripts(text, scriptID, opcodeID))
 		return true;
 
-	return searchText(text, ++groupID, scriptID = 0, opcodeID = 0);
+	return searchTextInScripts(text, ++groupID, scriptID = 0, opcodeID = 0);
+}
+
+bool Field::searchText(const QRegExp &text, int &textID, int &from, int &size) const
+{
+	if(textID < 0)
+		textID = 0;
+	if(textID >= texts.size())
+		return false;
+	if((from = texts.at(textID)->indexOf(text, from, size)) != -1)
+		return true;
+
+	return searchText(text, ++textID, from = 0, size);
 }
 
 bool Field::searchOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID) const
@@ -452,7 +461,7 @@ bool Field::searchMapJumpP(quint16 field, int &groupID, int &scriptID, int &opco
 	return searchMapJumpP(field, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
-bool Field::searchTextP(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const
+bool Field::searchTextInScriptsP(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID >= _grpScripts.size()) {
 		groupID = _grpScripts.size()-1;
@@ -460,30 +469,44 @@ bool Field::searchTextP(const QRegExp &text, int &groupID, int &scriptID, int &o
 	}
 	if(groupID < 0)
 		return false;
-	if(_grpScripts.at(groupID)->searchTextP(text, scriptID, opcodeID))
+	if(_grpScripts.at(groupID)->searchTextInScriptsP(text, scriptID, opcodeID))
 		return true;
 
-	return searchTextP(text, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
+	return searchTextInScriptsP(text, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
+}
+
+bool Field::searchTextP(const QRegExp &text, int &textID, int &from, int &size) const
+{
+	if(textID >= texts.size()) {
+		textID = texts.size()-1;
+		from = -1;
+	}
+	if(textID < 0)
+		return false;
+	if((from = texts.at(textID)->lastIndexOf(text, from, size)) != -1)
+		return true;
+
+	return searchTextP(text, --textID, from = -1, size);
 }
 
 QList<FF7Text *> *Field::getTexts()
 {
-	return &textes;
+	return &texts;
 }
 
 int Field::getNbTexts() const
 {
-	return textes.size();
+	return texts.size();
 }
 
 FF7Text *Field::getText(int textID) const
 {
-	return textes.at(textID);
+	return texts.at(textID);
 }
 
 void Field::insertText(int row)
 {
-	textes.insert(row, new FF7Text);
+	texts.insert(row, new FF7Text);
 	foreach(GrpScript *grpScript, _grpScripts)
 		grpScript->shiftTextIds(row-1, +1);
 	_isModified = true;
@@ -491,8 +514,8 @@ void Field::insertText(int row)
 
 void Field::deleteText(int row)
 {
-	if(row < textes.size()) {
-		delete textes.takeAt(row);
+	if(row < texts.size()) {
+		delete texts.takeAt(row);
 		foreach(GrpScript *grpScript, _grpScripts)
 			grpScript->shiftTextIds(row, -1);
 		_isModified = true;
@@ -616,7 +639,7 @@ QByteArray Field::saveSection1(const QByteArray &contenu) const
 		grpScriptNames.append( grpScript->getRealName().leftJustified(8, QChar('\x00'), true) );
 		for(quint8 j=0 ; j<32 ; ++j)
 		{
-			realScript = grpScript->getRealScript(j);
+			realScript = grpScript->toByteArray(j);
 			if(!realScript.isEmpty())	pos = posScripts + allScripts.size();
 			positionsScripts.append((char *)&pos, 2);
 			allScripts.append(realScript);
@@ -627,9 +650,9 @@ QByteArray Field::saveSection1(const QByteArray &contenu) const
 	//Création nouvelles positions Textes
 	newPosTextes = posScripts + allScripts.size();
 
-	quint16 newNbText = textes.size();
+	quint16 newNbText = texts.size();
 
-	foreach(FF7Text *text, textes)
+	foreach(FF7Text *text, texts)
 	{
 		pos = 2 + newNbText*2 + allTexts.size();
 		positionsTexts.append((char *)&pos, 2);

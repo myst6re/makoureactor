@@ -368,7 +368,21 @@ QString FF7Text::getCaract(quint8 ord, quint8 table)
 	}
 }
 
-bool FF7Text::search(const QRegExp &texte) const
+bool FF7Text::contains(const QRegExp &text) const
 {
-	return texte.indexIn(getText(Config::value("jp_txt", false).toBool())) != -1;
+	return getText(Config::value("jp_txt", false).toBool()).contains(text);
+}
+
+int FF7Text::indexOf(const QRegExp &text, int from, int &size) const
+{
+	int index = text.indexIn(getText(Config::value("jp_txt", false).toBool()), from);
+	if(index != -1)		size = text.matchedLength();
+	return index;
+}
+
+int FF7Text::lastIndexOf(const QRegExp &text, int from, int &size) const
+{
+	int index = text.lastIndexIn(getText(Config::value("jp_txt", false).toBool()), from);
+	if(index != -1)		size = text.matchedLength();
+	return index;
 }

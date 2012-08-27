@@ -28,8 +28,10 @@ class ConfigWindow : public QDialog
 public:
 	ConfigWindow(QWidget *parent=0);
 private:
+	void fillConfig();
 	static void setWindowColorIcon(QAbstractButton *widget, QRgb color);
 	void setWindowColors();
+	QTreeWidget *listFF7;
 	QCheckBox *kernelAuto, *charAuto;
 	QLabel *kernelPath, *charPath;
 	QPushButton *kernelButton, *charButton;

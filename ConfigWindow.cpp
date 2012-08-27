@@ -22,28 +22,31 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 {
 	setWindowTitle(tr("Configuration"));
 
-	QString kernel_path = Config::value("kernel2Path").toString();
-	QString char_path = Config::value("charPath").toString();
-	QString ff7_path = Data::ff7DataPath();
-
 	QGroupBox *dependances = new QGroupBox(tr("Dépendances"), this);
+
+	listFF7 = new QTreeWidget(dependances);
+	listFF7->setColumnCount(1);
+	listFF7->setUniformRowHeights(true);
+	listFF7->setHeaderLabels(QStringList(tr("Final Fantasy VII installés")));
+	listFF7->setFixedHeight(80);
 
 	kernelAuto = new QCheckBox(tr("Kernel2.bin"), dependances);
 	kernelPath = new QLabel(dependances);
 	kernelPath->setFixedWidth(500);
 	kernelButton = new QPushButton(tr("Changer"), dependances);
 	charAuto = new QCheckBox(tr("char.lgp"), dependances);
-	charPath = new QLabel(char_path, dependances);
+	charPath = new QLabel(dependances);
 	charPath->setFixedWidth(500);
 	charButton = new QPushButton(tr("Changer"), dependances);
 
 	QGridLayout *dependLayout = new QGridLayout(dependances);
-	dependLayout->addWidget(kernelAuto, 0, 0);
-	dependLayout->addWidget(kernelPath, 0, 1);
-	dependLayout->addWidget(kernelButton, 0, 2);
-	dependLayout->addWidget(charAuto, 1, 0);
-	dependLayout->addWidget(charPath, 1, 1);
-	dependLayout->addWidget(charButton, 1, 2);
+	dependLayout->addWidget(listFF7, 0, 0, 1, 3);
+	dependLayout->addWidget(kernelAuto, 1, 0);
+	dependLayout->addWidget(kernelPath, 1, 1);
+	dependLayout->addWidget(kernelButton, 1, 2);
+	dependLayout->addWidget(charAuto, 2, 0);
+	dependLayout->addWidget(charPath, 2, 1);
+	dependLayout->addWidget(charButton, 2, 2);
 
 	QGroupBox *openGL = new QGroupBox(tr("OpenGL"), this);
 
@@ -100,8 +103,30 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	connect(OKButton, SIGNAL(released()), SLOT(accept()));
 	connect(cancelButton, SIGNAL(released()), SLOT(reject()));
 
+	fillConfig();
+}
+
+void ConfigWindow::fillConfig()
+{
+	QString kernel_path = Config::value("kernel2Path").toString();
+	QString char_path = Config::value("charPath").toString();
+	QString ff7_path = Data::ff7DataPath();
+	QString ff7_app_path = Data::ff7AppPath();
+	QStringList ff7PathList = Data::ff7AppPathList();
+
+	listFF7->clear();
+	QTreeWidgetItem *selectedItem = 0;
+	foreach(const QString &ff7Path, ff7PathList) {
+		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(ff7Path)));
+		if(ff7Path.compare(ff7_app_path, Qt::CaseInsensitive) == 0) {
+			selectedItem = item;
+		}
+		listFF7->addTopLevelItem(item);
+	}
+	if(selectedItem)	listFF7->setCurrentItem(selectedItem);
+
 	if(kernel_path.isEmpty()) {
-		kernel_path = ff7_path%"kernel/kernel2.bin";
+		kernel_path = ff7_path%"/kernel/kernel2.bin";
 		kernelAutoChange(false);
 	}
 	else {
@@ -109,7 +134,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	}
 
 	if(char_path.isEmpty()) {
-		char_path = ff7_path%"field/char.lgp";
+		char_path = ff7_path%"/field/char.lgp";
 		charAutoChange(false);
 	}
 	else {
@@ -130,6 +155,14 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	japEnc->setChecked(Config::value("jp_txt", false).toBool());
 
 	setWindowColors();
+
+	for(int j=0 ; j<listFF7->topLevelItemCount() ; ++j) {
+		QCoreApplication::processEvents();
+		QTreeWidgetItem *item = listFF7->topLevelItem(j);
+		if(item == NULL)	break;
+		QString ff7exe = item->text(0) % "/" % (QFile::exists(item->text(0) % "/ff7.exe") ? "ff7.exe" : "FF7_Launcher.exe");
+		item->setIcon(0, QFileIconProvider().icon(QFileInfo(ff7exe)));
+	}
 }
 
 void ConfigWindow::kernelAutoChange(bool checked)
@@ -218,6 +251,8 @@ void ConfigWindow::setWindowColors()
 
 void ConfigWindow::accept()
 {
+	QTreeWidgetItem *currentSelectedFF7Path = listFF7->currentItem();
+	Config::setValue("useRereleaseFF7Path", currentSelectedFF7Path!=NULL && currentSelectedFF7Path == listFF7->topLevelItem(1));
 	Config::setValue("kernel2Path", kernelAuto->isChecked() ? kernelPath->text() : QString());
 	Config::setValue("charPath", charAuto->isChecked() ? charPath->text() : QString());
 	if(!disableOGL->isChecked() != Config::value("OpenGL", true).toBool()) {
@@ -231,6 +266,7 @@ void ConfigWindow::accept()
 	Config::setValue("dontOptimizeTexts", !optiText->isChecked());
 	Config::setValue("jp_txt", japEnc->isChecked());
 	Data::load();//Reload kernel2.bin data
+	Data::refreshFF7Paths();// refresh ff7 paths
 	Data::charlgp_listPos.clear();//Refresh cached lgp TOC
 	QDialog::accept();
 }

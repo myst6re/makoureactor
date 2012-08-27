@@ -130,13 +130,16 @@ Field *FieldArchive::field(quint32 id, bool open)
 	if(field!=NULL && open && openField(field) != 0) {
 		return NULL;
 	}
+	if(field!=NULL) {
+		Data::currentTextes = field->getTexts();
+	}
 	return field;
 }
 
 Field *FieldArchive::field(const QString &name, bool open)
 {
 	int index;
-	if((index = rechercherFichier(name)) != -1) {
+	if((index = findField(name)) != -1) {
 		return field(index, open);
 	}
 	return NULL;
@@ -269,7 +272,7 @@ QList<FF7Var> FieldArchive::searchAllVars()
 		QCoreApplication::processEvents();
 		Field *field = this->field(i);
 		if(field != NULL) {
-			vars.append(field->searchAllVars());
+			field->searchAllVars(vars);
 		}
 	}
 
@@ -462,7 +465,7 @@ bool FieldArchive::searchMapJump(quint16 _field, int &fieldID, int &groupID, int
 	return false;
 }
 
-bool FieldArchive::searchText(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchTextInScripts(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
 	if(fieldID < 0)	fieldID = groupID = scriptID = opcodeID = 0;
 
@@ -472,7 +475,7 @@ bool FieldArchive::searchText(const QRegExp &texte, int &fieldID, int &groupID, 
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID);
-		if(f!=NULL && f->searchText(texte, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->searchTextInScripts(text, groupID, scriptID, opcodeID))
 			return true;
 		++fieldID;
 		groupID = scriptID = opcodeID = 0;
@@ -504,11 +507,29 @@ bool FieldArchive::searchText(const QRegExp &texte, int &fieldID, int &groupID, 
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchText(texte, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->searchTextInScripts(texte, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
 	}
 	return false;*/
+}
+
+bool FieldArchive::searchText(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting)
+{
+	if(fieldID < 0)	fieldID = textID = from = 0;
+
+	int nbFields = fileList.size();
+
+	while(fieldID < nbFields)
+	{
+		QCoreApplication::processEvents();
+		Field *f = field(fieldID);
+		if(f!=NULL && f->searchText(text, textID, from, size))
+			return true;
+		++fieldID;
+		textID = from = 0;
+	}
+	return false;
 }
 
 bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
@@ -626,7 +647,7 @@ bool FieldArchive::searchMapJumpP(quint16 _field, int &fieldID, int &groupID, in
 	return false;
 }
 
-bool FieldArchive::searchTextP(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
 	if(fieldID >= fileList.size()) {
 		fieldID = fileList.size()-1;
@@ -637,9 +658,27 @@ bool FieldArchive::searchTextP(const QRegExp &texte, int &fieldID, int &groupID,
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID);
-		if(f!=NULL && f->searchTextP(texte, groupID, scriptID, opcodeID))	return true;
+		if(f!=NULL && f->searchTextInScriptsP(text, groupID, scriptID, opcodeID))	return true;
 		--fieldID;
 		groupID = scriptID = opcodeID = 2147483647;
+	}
+	return false;
+}
+
+bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting)
+{
+	if(fieldID >= fileList.size()) {
+		fieldID = fileList.size()-1;
+		textID = from = 2147483647;
+	}
+
+	while(fieldID >= 0)
+	{
+		QCoreApplication::processEvents();
+		Field *f = field(fieldID);
+		if(f!=NULL && f->searchTextP(text, textID, from, size))	return true;
+		--fieldID;
+		textID = from = 2147483647;
 	}
 	return false;
 }
@@ -812,7 +851,7 @@ quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
 	return 0;
 }
 
-qint32 FieldArchive::rechercherFichier(const QString &name) const
+qint32 FieldArchive::findField(const QString &name) const
 {
 	qint32 i=0;
 	foreach(Field *field, fileList) {
@@ -887,9 +926,9 @@ quint8 FieldArchive::save(QString path)
 
 		if(nbFiles>1000 || nbFiles==0) 	return 5;
 
-		emit nbFilesChanged(nbFiles+2);
+		emit nbFilesChanged(nbFiles+21);
 
-		//	QTime t;t.start();
+//			QTime t;t.start();
 		//Parcourir la table des matière
 		QByteArray toc = fic->read(27 * nbFiles);
 		const char *tocData = toc.constData();
@@ -899,16 +938,18 @@ quint8 FieldArchive::save(QString path)
 			memcpy(&pos, &tocData[27 * i + 20], 4);
 			positions1.insert(pos, i);
 		}
-		// qDebug("Lister les positions des fichiers : %d ms", t.elapsed());
-		// t.restart();
 
 		QMap<quint32, quint32>::const_iterator i = positions1.constBegin();
-		const quint32 positionPremierFichier = i.key();
+		const quint32 positionFirstFile = i.key();
 
 		//	qDebug() << i.key() << (27*nbFiles + 16);//CRC size
 
-		if(!tempFic.resize(positionPremierFichier))		return 2;
-		if(!tempFic.seek(positionPremierFichier))		return 2;
+		fic->reset();
+		tempFic.write(fic->read(positionFirstFile));
+
+//		qDebug("Lister les positions des fichiers : %d ms", t.elapsed());
+//		t.restart();
+
 		quint16 avancement = 0;
 		while(i != positions1.constEnd())
 		{
@@ -920,7 +961,7 @@ quint8 FieldArchive::save(QString path)
 			pos = tempFic.pos();
 			positions2.insert(i.value(), pos);
 
-			fieldID = rechercherFichier(QString(chaine = fic->read(20)));
+			fieldID = findField(QString(chaine = fic->read(20)));
 			if(chaine.size() != 20 || fic->read((char *)&oldtaille, 4) != 4) 	return 3;
 			tempFic.write(chaine);//Nom du fichier
 			//			qDebug() << QString(chaine);
@@ -928,7 +969,7 @@ quint8 FieldArchive::save(QString path)
 			if(fieldID != -1)
 			{
 				Field *field = fileList.at(fieldID);
-				qDebug() << "[FIELD]" << fieldID << field->getName();
+//				qDebug() << "[FIELD]" << fieldID << field->getName();
 
 				if(!saveAs)
 					newPositions.insert(field, pos);
@@ -936,7 +977,7 @@ quint8 FieldArchive::save(QString path)
 				//vérifier si on a pas une nouvelle version du fichier
 				if(field->isOpen() && field->isModified())
 				{
-					qDebug() << "======== modified";
+//					qDebug() << "======== modified";
 					//Récupérer l'ancien fichier
 					if(fic->read((char *)&fileSize, 4) != 4)	return 3;
 					if(oldtaille != fileSize+4)					return 3;
@@ -952,7 +993,7 @@ quint8 FieldArchive::save(QString path)
 				}
 				else
 				{
-					qDebug() << "unmodified";
+//					qDebug() << "unmodified";
 					tempFic.write((char *)&oldtaille, 4);//Taille
 					tempFic.write(fic->read(oldtaille));//Fichier
 				}
@@ -961,62 +1002,58 @@ quint8 FieldArchive::save(QString path)
 			{
 				TutFile *tut = tuts.value(tutName);
 
-				qDebug() << "[TUT]" << tutName;
+//				qDebug() << "[TUT]" << tutName;
 
 				if(!saveAs)
 					newPositionsTut.insert(tutName, pos);
 
 				if(tut->isModified())
 				{
-					qDebug() << "======== modified";
-					QByteArray toc, tutData;
-					tutData = tut->save(toc);
-					toc.append(tutData);
-					taille = toc.size();
+//					qDebug() << "======== modified";
+					QByteArray tocTut, tutData;
+					tutData = tut->save(tocTut);
+					tocTut.append(tutData);
+					taille = tocTut.size();
 					tempFic.write((char *)&taille, 4);//Taille
-					tempFic.write(toc);//Fichier
+					tempFic.write(tocTut);//Fichier
 				}
 				else
 				{
-					qDebug() << "unmodified";
+//					qDebug() << "unmodified";
 					tempFic.write((char *)&oldtaille, 4);//Taille
 					tempFic.write(fic->read(oldtaille));//Fichier
 				}
 			}
 			else
 			{
-				qDebug() << "[NOTHING] unmodified" << QString(chaine);
+//				qDebug() << "[NOTHING] unmodified" << QString(chaine);
 				tempFic.write((char *)&oldtaille, 4);//Taille
 				tempFic.write(fic->read(oldtaille));//Fichier
 			}
+//			qDebug("Ecrire un fichier : %d ms", t.elapsed());
+//			t.restart();
 			emit progress(avancement++);
 			++i;
 		}
 
-		emit progress(nbFiles);
-		tempFic.write(fic->readAll());
+//		tempFic.write(fic->readAll());
+		tempFic.write("FINAL FANTASY7", 14);
 
-		// qDebug("Ecrire les fichiers : %d ms", t.elapsed());
-		// t.restart();
-
-		fic->reset();
-		tempFic.reset();
-		tempFic.write(fic->read(16));
+//		qDebug("Ecrire les fichiers : %d ms", t.elapsed());
+//		t.restart();
 
 		//fabrication de la nouvelle table des matières
 		for(quint32 i=0 ; i<nbFiles ; ++i)
 		{
-			tempFic.write(fic->read(20));
+			tempFic.seek(16 + i*27 + 20);
 			pos = positions2.value(i);
 			tempFic.write((char *)&pos, 4);
-			fic->seek(fic->pos() + 4);
-			tempFic.write(fic->read(3));
 		}
-		tempFic.write(fic->read(positionPremierFichier-fic->pos()));
-		// qDebug("Ecrire la table des matières : %d ms", t.elapsed());
-		// t.restart();
 
-		emit progress(nbFiles+2);
+//		qDebug("Ecrire la table des matières : %d ms", t.elapsed());
+//		t.restart();
+
+		emit progress(nbFiles+7);
 
 		if(saveAs)
 		{
@@ -1042,11 +1079,14 @@ quint8 FieldArchive::save(QString path)
 			}
 			//			qDebug() << tutPos;
 		}
+		emit progress(nbFiles+14);
 		tempFic.copy(path);
+
+		emit progress(nbFiles+21);
 
 		setSaved();
 
-		//	qDebug("Ecrire le nouvel Lgp : %d ms", t.elapsed());
+//			qDebug("Ecrire le nouvel Lgp : %d ms", t.elapsed());
 		return 0;
 	}
 	else if(isIso())

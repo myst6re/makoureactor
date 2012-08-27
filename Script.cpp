@@ -840,15 +840,11 @@ bool Script::searchVar(quint8 bank, quint8 adress, int value, int &opcodeID) con
 	return searchVar(bank, adress, value, ++opcodeID);
 }
 
-QList<FF7Var> Script::searchAllVars() const
+void Script::searchAllVars(QList<FF7Var> &vars) const
 {
-	QList<FF7Var> vars;
-
 	foreach(Opcode *opcode, opcodes) {
 		opcode->getVariables(vars);
 	}
-
-	return vars;
 }
 
 bool Script::searchExec(quint8 group, quint8 script, int &opcodeID) const
@@ -869,13 +865,13 @@ bool Script::searchMapJump(quint16 field, int &opcodeID) const
 	return searchMapJump(field, ++opcodeID);
 }
 
-bool Script::searchText(const QRegExp &text, int &opcodeID) const
+bool Script::searchTextInScripts(const QRegExp &text, int &opcodeID) const
 {
 	if(opcodeID < 0) 	opcodeID = 0;
 	if(opcodeID >= opcodes.size())					return false;
-	if(opcodes.at(opcodeID)->searchText(text))		return true;
+	if(opcodes.at(opcodeID)->searchTextInScripts(text))		return true;
 
-	return searchText(text, ++opcodeID);
+	return searchTextInScripts(text, ++opcodeID);
 }
 
 bool Script::searchOpcodeP(int opcode, int &opcodeID) const
@@ -914,13 +910,13 @@ bool Script::searchMapJumpP(quint16 field, int &opcodeID) const
 	return searchMapJumpP(field, --opcodeID);
 }
 
-bool Script::searchTextP(const QRegExp &text, int &opcodeID) const
+bool Script::searchTextInScriptsP(const QRegExp &text, int &opcodeID) const
 {
 	if(opcodeID >= opcodes.size()) opcodeID = opcodes.size()-1;
 	if(opcodeID < 0)								return false;
-	if(opcodes.at(opcodeID)->searchText(text))		return true;
+	if(opcodes.at(opcodeID)->searchTextInScripts(text))		return true;
 
-	return searchTextP(text, --opcodeID);
+	return searchTextInScriptsP(text, --opcodeID);
 }
 
 void Script::listUsedTexts(QSet<quint8> &usedTexts) const

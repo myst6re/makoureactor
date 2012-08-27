@@ -54,12 +54,14 @@ public:
 	bool searchVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchMapJump(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
-	bool searchText(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
+	bool searchTextInScripts(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
+	bool searchText(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting);
 	bool searchOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchVarP(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchMapJumpP(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
-	bool searchTextP(const QRegExp &texte, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
+	bool searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
+	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting);
 
 	void close();
 	quint8 open(QList<QTreeWidgetItem *> &items);
@@ -86,7 +88,7 @@ signals:
 	
 private:
 	void addDAT(const QString &name, QList<QTreeWidgetItem *> &items);
-	qint32 rechercherFichier(const QString &name) const;
+	qint32 findField(const QString &name) const;
 	qint8 openField(Field *field);
 	void setSaved();
 	QByteArray updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory);

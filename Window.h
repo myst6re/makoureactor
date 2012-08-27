@@ -59,17 +59,20 @@ public slots:
 	void enregistrer();
 	int fermer(bool quit=false);
 
+	bool gotoField(int fieldID);
 	void gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID);
+	void gotoText(int fieldID, int textID, int from, int size);
 
 	void jp_txt(bool);
 
 	//	void notifyFileChanged(const QString &path);
 	//	void notifyDirectoryChanged(const QString &path);
 	void exporter();
+	void massExport();
 	void importer();
 	void varManager();
 	void runFF7();
-	void textManager();
+	void textManager(bool activate=true);
 	void modelManager();
 	void encounterManager();
 	void tutManager();
@@ -91,7 +94,7 @@ private slots:
 	void change_language(QAction *);
 	void config();
 signals:
-	void fileIDChanged(int);
+	void fieldIDChanged(int);
 	void grpScriptIDChanged(int);
 	void scriptIDChanged(int);
 	void opcodeIDChanged(int);
@@ -118,6 +121,7 @@ private:
 	QAction *actionSave;
 	QAction *actionSaveAs;
 	QAction *actionExport;
+	QAction *actionMassExport;
 	QAction *actionImport;
 	QAction *actionClose;
 	QAction *actionFind;

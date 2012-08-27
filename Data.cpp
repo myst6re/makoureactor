@@ -23,6 +23,11 @@ bool Data::ff7RereleaseAlreadySearched = false;
 QHash<QString, int> Data::charlgp_listPos;
 QHash<QString, int> Data::charlgp_animBoneCount;
 
+void Data::refreshFF7Paths()
+{
+	ff7AppPath_cache = ff7DataPath_cache = QString();
+}
+
 const QString &Data::searchRereleasedFF7Path()
 {
 #ifdef Q_WS_WIN
@@ -84,6 +89,14 @@ const QString &Data::searchRereleasedFF7Path()
 	return ff7RereleasePath_cache;
 }
 
+QString Data::searchFF7Path()
+{
+#ifdef Q_WS_WIN
+	return QSettings("Square Soft, Inc.", "Final Fantasy VII").value("AppPath", "").toString();
+#endif
+	return QString();
+}
+
 const QString &Data::ff7DataPath()
 {
 #ifdef Q_WS_WIN
@@ -106,15 +119,41 @@ const QString &Data::ff7DataPath()
 	return ff7DataPath_cache;
 }
 
+QStringList Data::ff7AppPathList()
+{
+#ifdef Q_WS_WIN
+	QStringList ff7List;
+	QString oldFF7 = searchFF7Path();
+	if(!oldFF7.isEmpty())
+		ff7List.append(QDir::cleanPath(QDir::fromNativeSeparators(oldFF7)));
+	QString newFF7 = searchRereleasedFF7Path();
+	if(!newFF7.isEmpty())
+		ff7List.append(QDir::cleanPath(QDir::fromNativeSeparators(newFF7)));
+	return ff7List;
+#else
+	return QStringList();
+#endif
+}
+
 const QString &Data::ff7AppPath()
 {
 #ifdef Q_WS_WIN
 	if(ff7AppPath_cache.isNull()) {
-		// Search for old version
-		ff7AppPath_cache = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("AppPath", "").toString();
-		// Search for new version
-		if(ff7AppPath_cache.isEmpty()) {
+		bool useNew = Config::value("useRereleaseFF7Path", false).toBool();
+		if(!useNew) {
+			// Search for old version
+			ff7AppPath_cache = searchFF7Path();
+			// Search for new version
+			if(ff7AppPath_cache.isEmpty()) {
+				ff7AppPath_cache = searchRereleasedFF7Path();
+			}
+		} else {
+			// Search for new version
 			ff7AppPath_cache = searchRereleasedFF7Path();
+			// Search for old version
+			if(ff7AppPath_cache.isEmpty()) {
+				ff7AppPath_cache = searchFF7Path();
+			}
 		}
 		// Clean
 		if(!ff7AppPath_cache.isEmpty()) {
@@ -123,11 +162,6 @@ const QString &Data::ff7AppPath()
 	}
 #endif
 	return ff7AppPath_cache;
-}
-
-bool Data::isRereleasedPath()
-{
-	return !ff7RereleasePath_cache.isEmpty();
 }
 
 QString Data::charlgp_path()

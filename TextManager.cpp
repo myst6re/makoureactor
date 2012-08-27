@@ -242,8 +242,14 @@ TextManager::TextManager(QWidget *parent)
 	connect(menu1, SIGNAL(triggered(QAction*)), SLOT(insertTag(QAction*)));
 	connect(menu2, SIGNAL(triggered(QAction*)), SLOT(insertTag(QAction*)));
 	connect(textEdit, SIGNAL(textChanged()), SLOT(setTextChanged()));
+	connect(textEdit, SIGNAL(cursorPositionChanged()), SLOT(emitFromChanged()));
 	connect(prevPage, SIGNAL(released()), SLOT(prevTextPreviewPage()));
 	connect(nextPage, SIGNAL(released()), SLOT(nextTextPreviewPage()));
+}
+
+void TextManager::emitFromChanged()
+{
+	emit fromChanged(textEdit->textCursor().position());
 }
 
 void TextManager::focusInEvent(QFocusEvent *e)
@@ -285,6 +291,7 @@ void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 	textEdit->setPlainText(t->getText(Config::value("jp_txt", false).toBool()));
 	changeTextPreviewPage();
 	changeTextPreviewWin();
+	emit textIDChanged(item->data(Qt::UserRole).toInt());
 }
 
 void TextManager::showList()
@@ -315,6 +322,25 @@ void TextManager::updateText()
 {
 	selectText(liste1->currentItem());
 	textPreview->calcSize();
+}
+
+void TextManager::gotoText(int textID, int from, int size)
+{
+	for(int i=0 ; i<liste1->count() ; ++i) {
+		if(textID == liste1->item(i)->data(Qt::UserRole).toInt()) {
+			blockSignals(true);
+			textEdit->blockSignals(true);
+			liste1->setCurrentItem(liste1->item(i));
+			selectText(liste1->item(i));
+			liste1->scrollToItem(liste1->item(i));
+			QTextCursor t = textEdit->textCursor();
+			t.setPosition(from);
+			t.setPosition(from + size, QTextCursor::KeepAnchor);
+			textEdit->setTextCursor(t);
+			blockSignals(false);
+			textEdit->blockSignals(false);
+		}
+	}
 }
 
 void TextManager::addText()

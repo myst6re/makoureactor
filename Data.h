@@ -16,9 +16,10 @@
 class Data
 {
 public:
+	static void refreshFF7Paths();
 	static const QString &ff7DataPath();
 	static const QString &ff7AppPath();
-	static bool isRereleasedPath();
+	static QStringList ff7AppPathList();
 	static QString charlgp_path();
 	static void charlgp_loadListPos(QFile *);
 	static void charlgp_loadAnimBoneCount();
@@ -46,6 +47,7 @@ public:
 
 private:
 	static const QString &searchRereleasedFF7Path();
+	static QString searchFF7Path();
 	static void fill(const QByteArray &data, QStringList &names);
 	static QString ff7DataPath_cache;
 	static QString ff7AppPath_cache;

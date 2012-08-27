@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
 	if(argc>1)
 		fenetre.ouvrir(argv[1]);
 
+
 	/*
 	// some tests for new opcode style
 	QByteArray filledFF(128, '\xff'), filled00(128, '\x00'), filledRandom;
@@ -61,7 +62,7 @@ int main(int argc, char *argv[])
 	}
 
 	for(int id=0 ; id<256 ; ++id) {
-		if(id == 0x0F || id == 0x28) continue;
+		//if(id == 0x0F || id == 0x28) continue;
 		QByteArray op;
 		op.append((char)id);
 		Opcode *opcode = Script::createOpcode(op + filledFF);
