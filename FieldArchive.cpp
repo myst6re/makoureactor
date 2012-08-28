@@ -145,6 +145,9 @@ Field *FieldArchive::field(const QString &name, bool open)
 	return NULL;
 }
 
+QByteArray FieldArchive::dataCache;
+Field *FieldArchive::fieldCache=0;
+
 QByteArray FieldArchive::getLgpData(int position)
 {
 	if(fic==NULL)	return QByteArray();
@@ -165,6 +168,13 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 {
 	quint32 lzsSize;
 	QByteArray data;
+	QTime t;
+	t.start();
+
+	 // use data from the cache
+	if(unlzs && fieldCache && fieldCache == field) {
+		return dataCache;
+	}
 
 	if(isDatFile()) {
 		if(!fic->open(QIODevice::ReadOnly))		return QByteArray();
@@ -175,18 +185,22 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 
 		if((quint32)data.size() != lzsSize+4)	return QByteArray();
 
-		return unlzs ? LZS::decompress(data.mid(4)) : data;
+		data = unlzs ? LZS::decompress(data.mid(4)) : data;
 	} else if(isLgp()) {
 		data = getLgpData(((FieldPC *)field)->getPosition());
 		memcpy(&lzsSize, data.constData(), 4);
 		if((quint32)data.size() != lzsSize + 4)				return QByteArray();
 
-		return unlzs ? LZS::decompress(data.mid(4)) : data;
+		data = unlzs ? LZS::decompress(data.mid(4)) : data;
 	} else if(isIso() || isDirectory()) {
-		return getFileData(field->getName().toUpper()+".DAT", unlzs);
-	} else {
-		return QByteArray();
+		data = getFileData(field->getName().toUpper()+".DAT", unlzs);
 	}
+
+	if(unlzs) { // put decompressed data in the cache
+		fieldCache = field;
+		dataCache = data;
+	}
+	return data;
 }
 
 QByteArray FieldArchive::getMimData(Field *field, bool unlzs)
@@ -300,26 +314,9 @@ void FieldArchive::searchAll()
 	}
 }
 
-bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting)
 {
-	if(fieldID < 0)	fieldID = groupID = scriptID = opcodeID = 0;
-
-	int nbFields = fileList.size();
-
-	while(fieldID < nbFields)
-	{
-		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
-		if(f!=NULL && f->searchOpcode(opcode, groupID, scriptID, opcodeID))
-			return true;
-		++fieldID;
-		groupID = scriptID = opcodeID = 0;
-	}
-	return false;
-
-	/*if(fieldID >= fileList.size())		return false;
-
-	QMap<QString, int>::const_iterator i, end;
+	if(fieldID >= fileList.size())		return false;
 
 	switch(sorting) {
 	case SortByName:
@@ -328,15 +325,22 @@ bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scr
 		if(i==end) {
 			i = fieldsSortByName.constBegin();
 		}
-		break;
+		return true;
 	case SortByMapId:
 		i = fieldsSortByMapId.constFind(fieldsSortByMapId.key(fieldID), fieldID);
 		end = fieldsSortByMapId.constEnd();
 		if(i==end) {
 			i = fieldsSortByMapId.constBegin();
 		}
-		break;
+		return true;
 	}
+	return true;
+}
+
+bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+{
+	QMap<QString, int>::const_iterator i, end;
+	if(!searchIterators(i, end, fieldID, sorting))	return false;
 
 	for( ; i != end ; ++i)
 	{
@@ -346,46 +350,13 @@ bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scr
 			return true;
 		groupID = scriptID = opcodeID = 0;
 	}
-	return false;*/
+	return false;
 }
 
 bool FieldArchive::searchVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
-	if(fieldID < 0)	fieldID = groupID = scriptID = opcodeID = 0;
-
-	int nbFields = fileList.size();
-
-	while(fieldID < nbFields)
-	{
-		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
-		if(f!=NULL && f->searchVar(bank, adress, value, groupID, scriptID, opcodeID))
-			return true;
-		++fieldID;
-		groupID = scriptID = opcodeID = 0;
-	}
-	return false;
-
-	/*if(fieldID >= fileList.size())		return false;
-
 	QMap<QString, int>::const_iterator i, end;
-
-	switch(sorting) {
-	case SortByName:
-		i = fieldsSortByName.constFind(fieldsSortByName.key(fieldID), fieldID);
-		end = fieldsSortByName.constEnd();
-		if(i==end) {
-			i = fieldsSortByName.constBegin();
-		}
-		break;
-	case SortByMapId:
-		i = fieldsSortByMapId.constFind(fieldsSortByMapId.key(fieldID), fieldID);
-		end = fieldsSortByMapId.constEnd();
-		if(i==end) {
-			i = fieldsSortByMapId.constBegin();
-		}
-		break;
-	}
+	if(!searchIterators(i, end, fieldID, sorting))	return false;
 
 	for( ; i != end ; ++i)
 	{
@@ -395,46 +366,13 @@ bool FieldArchive::searchVar(quint8 bank, quint8 adress, int value, int &fieldID
 			return true;
 		groupID = scriptID = opcodeID = 0;
 	}
-	return false;*/
+	return false;
 }
 
 bool FieldArchive::searchExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
-	if(fieldID < 0)	fieldID = groupID = scriptID = opcodeID = 0;
-
-	int nbFields = fileList.size();
-
-	while(fieldID < nbFields)
-	{
-		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
-		if(f!=NULL && f->searchExec(group, script, groupID, scriptID, opcodeID))
-			return true;
-		++fieldID;
-		groupID = scriptID = opcodeID = 0;
-	}
-	return false;
-
-	/*if(fieldID >= fileList.size())		return false;
-
 	QMap<QString, int>::const_iterator i, end;
-
-	switch(sorting) {
-	case SortByName:
-		i = fieldsSortByName.constFind(fieldsSortByName.key(fieldID), fieldID);
-		end = fieldsSortByName.constEnd();
-		if(i==end) {
-			i = fieldsSortByName.constBegin();
-		}
-		break;
-	case SortByMapId:
-		i = fieldsSortByMapId.constFind(fieldsSortByMapId.key(fieldID), fieldID);
-		end = fieldsSortByMapId.constEnd();
-		if(i==end) {
-			i = fieldsSortByMapId.constBegin();
-		}
-		break;
-	}
+	if(!searchIterators(i, end, fieldID, sorting))	return false;
 
 	for( ; i != end ; ++i)
 	{
@@ -444,22 +382,20 @@ bool FieldArchive::searchExec(quint8 group, quint8 script, int &fieldID, int &gr
 			return true;
 		groupID = scriptID = opcodeID = 0;
 	}
-	return false;*/
+	return false;
 }
 
 bool FieldArchive::searchMapJump(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
-	if(fieldID < 0)	fieldID = groupID = scriptID = opcodeID = 0;
+	QMap<QString, int>::const_iterator i, end;
+	if(!searchIterators(i, end, fieldID, sorting))	return false;
 
-	int nbFields = fileList.size();
-
-	while(fieldID < nbFields)
+	for( ; i != end ; ++i)
 	{
 		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
+		Field *f = field(fieldID = i.value());
 		if(f!=NULL && f->searchMapJump(_field, groupID, scriptID, opcodeID))
 			return true;
-		++fieldID;
 		groupID = scriptID = opcodeID = 0;
 	}
 	return false;
@@ -467,76 +403,39 @@ bool FieldArchive::searchMapJump(quint16 _field, int &fieldID, int &groupID, int
 
 bool FieldArchive::searchTextInScripts(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
-	if(fieldID < 0)	fieldID = groupID = scriptID = opcodeID = 0;
-
-	int nbFields = fileList.size();
-
-	while(fieldID < nbFields)
-	{
-		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
-		if(f!=NULL && f->searchTextInScripts(text, groupID, scriptID, opcodeID))
-			return true;
-		++fieldID;
-		groupID = scriptID = opcodeID = 0;
-	}
-	return false;
-
-	/*if(fieldID >= fileList.size())		return false;
-
 	QMap<QString, int>::const_iterator i, end;
-
-	switch(sorting) {
-	case SortByName:
-		i = fieldsSortByName.constFind(fieldsSortByName.key(fieldID), fieldID);
-		end = fieldsSortByName.constEnd();
-		if(i==end) {
-			i = fieldsSortByName.constBegin();
-		}
-		break;
-	case SortByMapId:
-		i = fieldsSortByMapId.constFind(fieldsSortByMapId.key(fieldID), fieldID);
-		end = fieldsSortByMapId.constEnd();
-		if(i==end) {
-			i = fieldsSortByMapId.constBegin();
-		}
-		break;
-	}
+	if(!searchIterators(i, end, fieldID, sorting))	return false;
 
 	for( ; i != end ; ++i)
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchTextInScripts(texte, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->searchTextInScripts(text, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
 	}
-	return false;*/
+	return false;
 }
 
 bool FieldArchive::searchText(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting)
 {
-	if(fieldID < 0)	fieldID = textID = from = 0;
+	QMap<QString, int>::const_iterator i, end;
+	if(!searchIterators(i, end, fieldID, sorting))	return false;
 
-	int nbFields = fileList.size();
-
-	while(fieldID < nbFields)
+	for( ; i != end ; ++i)
 	{
 		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
+		Field *f = field(fieldID = i.value());
 		if(f!=NULL && f->searchText(text, textID, from, size))
 			return true;
-		++fieldID;
 		textID = from = 0;
 	}
 	return false;
 }
 
-bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &begin, int fieldID, Sorting sorting)
 {
-	//	if(fieldID < 0)	return false;
-
-	/*QMap<QString, int>::const_iterator i, begin;
+	if(fieldID < 0)		return false;
 
 	switch(sorting) {
 	case SortByName:
@@ -545,15 +444,22 @@ bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &sc
 		if(i==fieldsSortByName.constEnd()) {
 			--i;
 		}
-		break;
+		return true;
 	case SortByMapId:
 		begin = fieldsSortByMapId.constBegin();
 		i = fieldsSortByMapId.constFind(fieldsSortByMapId.key(fieldID), fieldID);
 		if(i==fieldsSortByMapId.constEnd()) {
 			--i;
 		}
-		break;
+		return true;
 	}
+	return true;
+}
+
+bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+{
+	QMap<QString, int>::const_iterator i, begin;
+	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
 
 	for( ; i != begin-1 ; --i)
 	{
@@ -561,51 +467,23 @@ bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &sc
 		Field *f = field(fieldID = i.value());
 		if(f!=NULL && f->searchOpcodeP(opcode, groupID, scriptID, opcodeID))
 			return true;
-		if(i != begin) {
-			fieldID = (i-1).value();
-			if(fieldID >= 0) {
-				groupID = field(fieldID)->grpScriptCount()-1;
-				if(groupID >= 0) {
-					scriptID = field(fieldID)->grpScript(groupID)->size()-1;
-					if(scriptID >= 0) {
-						opcodeID = field(fieldID)->grpScript(groupID)->getScript(scriptID)->size()-1;
-					}
-				}
-			}
-		}
-	}
-	fieldID = -1;
-	return false;*/
-
-	if(fieldID >= fileList.size()) {
-		fieldID = fileList.size()-1;
 		groupID = scriptID = opcodeID = 2147483647;
 	}
 
-	while(fieldID >= 0)
-	{
-		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
-		if(f!=NULL && f->searchOpcodeP(opcode, groupID, scriptID, opcodeID))	return true;
-		--fieldID;
-		groupID = scriptID = opcodeID = 2147483647;
-	}
 	return false;
 }
 
 bool FieldArchive::searchVarP(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
-	if(fieldID >= fileList.size()) {
-		fieldID = fileList.size()-1;
-		groupID = scriptID = opcodeID = 2147483647;
-	}
+	QMap<QString, int>::const_iterator i, begin;
+	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
 
-	while(fieldID >= 0)
+	for( ; i != begin-1 ; --i)
 	{
 		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
-		if(f!=NULL && f->searchVarP(bank, adress, value, groupID, scriptID, opcodeID))	return true;
-		--fieldID;
+		Field *f = field(fieldID = i.value());
+		if(f!=NULL && f->searchVarP(bank, adress, value, groupID, scriptID, opcodeID))
+			return true;
 		groupID = scriptID = opcodeID = 2147483647;
 	}
 	return false;
@@ -613,17 +491,15 @@ bool FieldArchive::searchVarP(quint8 bank, quint8 adress, int value, int &fieldI
 
 bool FieldArchive::searchExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
-	if(fieldID >= fileList.size()) {
-		fieldID = fileList.size()-1;
-		groupID = scriptID = opcodeID = 2147483647;
-	}
+	QMap<QString, int>::const_iterator i, begin;
+	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
 
-	while(fieldID >= 0)
+	for( ; i != begin-1 ; --i)
 	{
 		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
-		if(f!=NULL && f->searchExecP(group, script, groupID, scriptID, opcodeID))	return true;
-		--fieldID;
+		Field *f = field(fieldID = i.value());
+		if(f!=NULL && f->searchExecP(group, script, groupID, scriptID, opcodeID))
+			return true;
 		groupID = scriptID = opcodeID = 2147483647;
 	}
 	return false;
@@ -631,17 +507,15 @@ bool FieldArchive::searchExecP(quint8 group, quint8 script, int &fieldID, int &g
 
 bool FieldArchive::searchMapJumpP(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
-	if(fieldID >= fileList.size()) {
-		fieldID = fileList.size()-1;
-		groupID = scriptID = opcodeID = 2147483647;
-	}
+	QMap<QString, int>::const_iterator i, begin;
+	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
 
-	while(fieldID >= 0)
+	for( ; i != begin-1 ; --i)
 	{
 		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
-		if(f!=NULL && f->searchMapJumpP(_field, groupID, scriptID, opcodeID))	return true;
-		--fieldID;
+		Field *f = field(fieldID = i.value());
+		if(f!=NULL && f->searchMapJumpP(_field, groupID, scriptID, opcodeID))
+			return true;
 		groupID = scriptID = opcodeID = 2147483647;
 	}
 	return false;
@@ -649,17 +523,15 @@ bool FieldArchive::searchMapJumpP(quint16 _field, int &fieldID, int &groupID, in
 
 bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
 {
-	if(fieldID >= fileList.size()) {
-		fieldID = fileList.size()-1;
-		groupID = scriptID = opcodeID = 2147483647;
-	}
+	QMap<QString, int>::const_iterator i, begin;
+	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
 
-	while(fieldID >= 0)
+	for( ; i != begin-1 ; --i)
 	{
 		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
-		if(f!=NULL && f->searchTextInScriptsP(text, groupID, scriptID, opcodeID))	return true;
-		--fieldID;
+		Field *f = field(fieldID = i.value());
+		if(f!=NULL && f->searchTextInScriptsP(text, groupID, scriptID, opcodeID))
+			return true;
 		groupID = scriptID = opcodeID = 2147483647;
 	}
 	return false;
@@ -667,17 +539,15 @@ bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &fieldID, int &
 
 bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting)
 {
-	if(fieldID >= fileList.size()) {
-		fieldID = fileList.size()-1;
-		textID = from = 2147483647;
-	}
+	QMap<QString, int>::const_iterator i, begin;
+	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
 
-	while(fieldID >= 0)
+	for( ; i != begin-1 ; --i)
 	{
 		QCoreApplication::processEvents();
-		Field *f = field(fieldID);
-		if(f!=NULL && f->searchTextP(text, textID, from, size))	return true;
-		--fieldID;
+		Field *f = field(fieldID = i.value());
+		if(f!=NULL && f->searchTextP(text, textID, from, size))
+			return true;
 		textID = from = 2147483647;
 	}
 	return false;

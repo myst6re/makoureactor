@@ -53,6 +53,8 @@ private:
 	static QString ff7AppPath_cache;
 	static QString ff7RereleasePath_cache;
 	static bool ff7RereleaseAlreadySearched;
+	static const char *movieList[106];
+	static const char *mapList[787];
 
 };
 

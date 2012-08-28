@@ -229,19 +229,21 @@ void Opcode::shiftTutIds(int tutId, int steps)
 	}
 }
 
-void Opcode::listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8, quint8> &text2win) const
+void Opcode::listWindows(int groupID, int scriptID, int opcodeID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const
 {
 	int windowID = getWindowID();
 	if(windowID != -1) {
 		FF7Window win = FF7Window();
-		win.type = id();
-
+		win.groupID = groupID;
+		win.scriptID = scriptID;
+		win.opcodeID = opcodeID;
 		if(getWindow(win)) {
-			windows.insert(windowID, win);
+			win.type = id();
+			windows.insert((groupID << 16) | (scriptID << 8) | windowID, win);
 		}
 		int textID = getTextID();
 		if(textID != -1) {
-			text2win.insert(textID, windowID);
+			text2win.insert(textID, (groupID << 16) | (scriptID << 8) | windowID);
 		}
 	}
 }
@@ -1161,6 +1163,15 @@ bool OpcodeJump::isJump() const
 	return true;
 }
 
+qint32 OpcodeJump::maxJump() const
+{
+	if(isLongJump()) {
+		return 65535 + jumpPosData();
+	} else {
+		return 255 + jumpPosData();
+	}
+}
+
 OpcodeLabel::OpcodeLabel(quint32 label) :
 	_label(label)
 {
@@ -1616,7 +1627,7 @@ QString OpcodeMINIGAME::toString() const
 	default:		miniGame = QObject::tr("%1? (paramètre %2)").arg(minigameID).arg(minigameParam);break;
 	}
 
-	return QObject::tr("Lancer un mini-jeu : %5 (Après le jeu aller à l'écran %1 (X=%2, Y=%3, polygone id=%4))")
+	return QObject::tr("Lancer un mini-jeu : %5 (Après le jeu aller à l'écran %1 (X=%2, Y=%3, triangle id=%4))")
 			.arg(_field(fieldID))
 			.arg(targetX)
 			.arg(targetY)
@@ -3631,7 +3642,7 @@ void OpcodeMAPJUMP::setParams(const QByteArray &params)
 
 QString OpcodeMAPJUMP::toString() const
 {
-	return QObject::tr("Aller à l'écran %1 (X=%2, Y=%3, polygone id=%4, direction=%5)")
+	return QObject::tr("Aller à l'écran %1 (X=%2, Y=%3, triangle id=%4, direction=%5)")
 			.arg(_field(fieldID))
 			.arg(targetX)
 			.arg(targetY)
@@ -3993,7 +4004,7 @@ void OpcodeIDLCK::setParams(const QByteArray &params)
 
 QString OpcodeIDLCK::toString() const
 {
-	return QObject::tr("%1 le polygone n°%2")
+	return QObject::tr("%1 le triangle n°%2")
 			.arg(triangleID)
 			.arg(locked == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
 }
@@ -5265,7 +5276,7 @@ void OpcodeXYZI::setParams(const QByteArray &params)
 
 QString OpcodeXYZI::toString() const
 {
-	return QObject::tr("Place l'objet 3D (X=%1, Y=%2, Z=%3, polygone id=%4)")
+	return QObject::tr("Place l'objet 3D (X=%1, Y=%2, Z=%3, triangle id=%4)")
 			.arg(_var(targetX, B1(banks[0])))
 			.arg(_var(targetY, B2(banks[0])))
 			.arg(_var(targetZ, B1(banks[1])))
@@ -5309,7 +5320,7 @@ void OpcodeXYI::setParams(const QByteArray &params)
 
 QString OpcodeXYI::toString() const
 {
-	return QObject::tr("Place l'objet 3D (X=%1, Y=%2, polygone id=%4)")
+	return QObject::tr("Place l'objet 3D (X=%1, Y=%2, triangle id=%4)")
 			.arg(_var(targetX, B1(banks[0])))
 			.arg(_var(targetY, B2(banks[0])))
 			.arg(_var(targetI, B1(banks[1])));
@@ -5895,7 +5906,7 @@ void OpcodeGETAI::setParams(const QByteArray &params)
 
 QString OpcodeGETAI::toString() const
 {
-	return QObject::tr("Stocker dans %2 le polygone id du groupe %1")
+	return QObject::tr("Stocker dans %2 le triangle id du groupe %1")
 			.arg(_script(groupID))
 			.arg(_bank(varI, B2(banks)));
 }
@@ -6069,7 +6080,7 @@ void OpcodeJUMP::setParams(const QByteArray &params)
 
 QString OpcodeJUMP::toString() const
 {
-	return QObject::tr("Faire sauter un personnage (X=%1, Y=%2, polygone id=%3, hauteur=%4)")
+	return QObject::tr("Faire sauter un personnage (X=%1, Y=%2, triangle id=%3, hauteur=%4)")
 			.arg(_var(targetX, B1(banks[0])))
 			.arg(_var(targetY, B2(banks[0])))
 			.arg(_var(targetI, B1(banks[1])))
@@ -6115,7 +6126,7 @@ void OpcodeAXYZI::setParams(const QByteArray &params)
 
 QString OpcodeAXYZI::toString() const
 {
-	return QObject::tr("Stocker la position du groupe %1 dans des variables (%2=X, %3=Y, %4=Z, %5=polygone id)")
+	return QObject::tr("Stocker la position du groupe %1 dans des variables (%2=X, %3=Y, %4=Z, %5=triangle id)")
 			.arg(_script(groupID))
 			.arg(_bank(varX, B1(banks[0])))
 			.arg(_bank(varY, B2(banks[0])))
@@ -6166,7 +6177,7 @@ void OpcodeLADER::setParams(const QByteArray &params)
 
 QString OpcodeLADER::toString() const
 {
-	return QObject::tr("Monter une échelle avec l'animation %6 (X=%1, Y=%2, Z=%3, polygone id=%4, sens=%5, direction=%7, vitesse=%8)")
+	return QObject::tr("Monter une échelle avec l'animation %6 (X=%1, Y=%2, Z=%3, triangle id=%4, sens=%5, direction=%7, vitesse=%8)")
 			.arg(_var(targetX, B1(banks[0])))
 			.arg(_var(targetY, B2(banks[0])))
 			.arg(_var(targetZ, B1(banks[1])))

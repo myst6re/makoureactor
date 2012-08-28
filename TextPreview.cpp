@@ -25,7 +25,7 @@ int TextPreview::fontColor = WHITE;
 QImage TextPreview::fontImage;
 
 TextPreview::TextPreview(QWidget *parent)
-	: QWidget(parent), currentPage(0), currentWin(0), acceptMove(false)
+	: QWidget(parent), currentPage(0), currentWin(0), acceptMove(false), readOnly(false)
 {
 	pagesPos.append(0);
 
@@ -74,6 +74,11 @@ void TextPreview::clear()
 	ff7Text.clear();
 //	ff7Windows.clear();
 	maxW=maxH=0;
+}
+
+void TextPreview::setReadOnly(bool ro)
+{
+	readOnly = ro;
 }
 
 void TextPreview::setWins(const QList<FF7Window> &windows, bool update)
@@ -560,7 +565,7 @@ void TextPreview::paintEvent(QPaintEvent */* event */)
 
 void TextPreview::mousePressEvent(QMouseEvent *event)
 {
-	if(event->button() == Qt::LeftButton) {
+	if(event->button() == Qt::LeftButton && !readOnly) {
 		FF7Window ff7Window = getWindow();
 		if(ff7Window.type!=NOWIN) {
 			QPoint real = realPos(ff7Window);

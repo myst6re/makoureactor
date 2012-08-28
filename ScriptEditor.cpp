@@ -371,7 +371,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Opération unaire"), QList<QVariant>()
 						  << 0x95 << 0x96 << 0x7A << 0x7B << 0x97 << 0x98
 						  << 0x7C << 0x7D << 0x99);
-		comboBox->addItem(tr("Opération sur les bits"), QList<QVariant>()
+		comboBox->addItem(tr("Opération bit à bit"), QList<QVariant>()
 						  << 0x82 << 0x83 << 0x84);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Seed Random Generator"), QList<QVariant>() << 0x7F);
@@ -439,8 +439,8 @@ void ScriptEditor::buildList(int id)
 		comboBox->insertSeparator(comboBox->count());//Get
 		comboBox->addItem(tr("Obtenir la direction d'un groupe (Dir)"), QList<QVariant>() << 0xB7);
 		comboBox->addItem(tr("Obtenir la direction d'un équipier (Dir)"), QList<QVariant>() << 0x73);
-		comboBox->addItem(tr("Obtenir le polygone id d'un groupe (I)"), QList<QVariant>() << 0xB9);
-		comboBox->addItem(tr("Obtenir le polygone id d'un équipier (I)"), QList<QVariant>() << 0x74);
+		comboBox->addItem(tr("Obtenir le triangle id d'un groupe (I)"), QList<QVariant>() << 0xB9);
+		comboBox->addItem(tr("Obtenir le triangle id d'un équipier (I)"), QList<QVariant>() << 0x74);
 		comboBox->addItem(tr("Obtenir les coordonnées d'un groupe (X,Y)"), QList<QVariant>() << 0xB8);
 		comboBox->addItem(tr("Obtenir les coordonnées d'un groupe (X,Y,Z,I)"), QList<QVariant>() << 0xC1);
 		comboBox->addItem(tr("Obtenir les coordonnées d'un équipier (X,Y,Z,I)"), QList<QVariant>() << 0x75);
@@ -519,7 +519,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Créer zone"), QList<QVariant>() << 0xD0);
 		comboBox->addItem(tr("Modifier zone"), QList<QVariant>() << 0xD3);
 		comboBox->addItem(tr("Activer/Désactiver zone"), QList<QVariant>() << 0xD1);
-		comboBox->addItem(tr("Activer/Désactiver polygone"), QList<QVariant>() << 0x6D);
+		comboBox->addItem(tr("Activer/Désactiver triangle"), QList<QVariant>() << 0x6D);
 		return;
 	case 6:
 		comboBox->addItem(tr("Déplacer une couche du décor (Z)"), QList<QVariant>() << 0x2C);

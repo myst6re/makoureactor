@@ -386,8 +386,16 @@ void GrpScript::shiftTutIds(int tutId, int steps)
 		script->shiftTutIds(tutId, steps);
 }
 
-void GrpScript::listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8, quint8> &text2win) const
+void GrpScript::setWindow(const FF7Window &win)
 {
+	if(win.scriptID < scripts.size()) {
+		scripts.at(win.scriptID)->setWindow(win);
+	}
+}
+
+void GrpScript::listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const
+{
+	int scriptID=0;
 	foreach(Script *script, scripts)
-		script->listWindows(windows, text2win);
+		script->listWindows(groupID, scriptID++, windows, text2win);
 }

@@ -67,6 +67,14 @@ Search::Search(QWidget *parent)
 
 	connect(buttonNext, SIGNAL(released()), SLOT(findNext()));
 	connect(buttonPrev, SIGNAL(released()), SLOT(findPrev()));
+
+	connect(champ->lineEdit(), SIGNAL(textEdited(QString)), champ2->lineEdit(), SLOT(setText(QString)));
+	connect(caseSens, SIGNAL(clicked(bool)), caseSens2, SLOT(setChecked(bool)));
+	connect(useRegexp, SIGNAL(clicked(bool)), useRegexp2, SLOT(setChecked(bool)));
+
+	connect(champ2->lineEdit(), SIGNAL(textEdited(QString)), champ->lineEdit(), SLOT(setText(QString)));
+	connect(caseSens2, SIGNAL(clicked(bool)), caseSens, SLOT(setChecked(bool)));
+	connect(useRegexp2, SIGNAL(clicked(bool)), useRegexp, SLOT(setChecked(bool)));
 }
 
 QWidget *Search::scriptPageWidget()

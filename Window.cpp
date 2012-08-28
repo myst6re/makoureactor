@@ -49,7 +49,7 @@ Window::Window() :
 	actionSave = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Enregi&strer"), this, SLOT(enregistrer()), QKeySequence("Ctrl+S"));
 	actionSaveAs = menu->addAction(tr("Enre&gistrer Sous..."), this, SLOT(enregistrerSous()), QKeySequence("Shift+Ctrl+S"));
 	actionExport = menu->addAction(tr("&Exporter l'écran courant..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
-	actionMassExport = menu->addAction(tr("&Exporter en masse..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
+	actionMassExport = menu->addAction(tr("Exporter en &masse..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
 	actionImport = menu->addAction(tr("&Importer dans l'écran courant..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
 	menu->addSeparator();
 	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("Fe&rmer"), this, SLOT(fermer()));
@@ -946,7 +946,79 @@ void Window::massExport()
 {
 	if(!fieldArchive) return;
 
-	//TODO
+	MassExportDialog *massExportDialog = new MassExportDialog(this);
+	massExportDialog->fill(fieldArchive, 0);
+	if(massExportDialog->exec() == QDialog::Accepted) {
+		QList<int> selectedFields = massExportDialog->selectedFields();
+		if(!selectedFields.isEmpty()) {
+			QString extension, path;
+			int currentField=0;
+			QProgressDialog progressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
+			progressDialog.setWindowModality(Qt::WindowModal);
+			progressDialog.setCancelButtonText(tr("Arrêter"));
+			progressDialog.setRange(0, selectedFields.size()-1);
+
+			if(massExportDialog->exportBackground()) {
+				progressDialog.setLabelText(tr("Exportation des décors..."));
+				switch(massExportDialog->exportBackgroundFormat()) {
+				case 0:		extension = "png"; break;
+				case 1:		extension = "jpg"; break;
+				case 2:		extension = "bmp"; break;
+				}
+
+				foreach(const int &fieldID, selectedFields) {
+					QCoreApplication::processEvents();
+					if(progressDialog.wasCanceled()) 	break;
+
+					Field *f = fieldArchive->field(fieldID);
+					if(f) {
+						path = QDir::cleanPath(QString("%1/%2.%3").arg(massExportDialog->directory(), f->getName(), extension));
+
+						if(massExportDialog->overwrite() || !QFile::exists(path)) {
+							QPixmap background;
+							if(fieldArchive->isLgp()) {
+								background = ((FieldPC *)f)->openBackground(fieldArchive->getFieldData(f));
+							} else {
+								background = ((FieldPS *)f)->openBackground(fieldArchive->getMimData(f), fieldArchive->getFieldData(f));
+							}
+
+							background.save(path);
+						}
+					}
+					progressDialog.setValue(currentField++);
+				}
+			} else if(massExportDialog->exportAkao()) {
+				progressDialog.setLabelText(tr("Exportation des sons..."));
+				extension = "akao";
+
+				foreach(const int &fieldID, selectedFields) {
+					QCoreApplication::processEvents();
+					if(progressDialog.wasCanceled()) 	break;
+
+					Field *f = fieldArchive->field(fieldID);
+					if(f) {
+						TutFile *akaoList = field->getTut();
+						if(!akaoList->isOpen())
+							akaoList->open(fieldArchive->getFieldData(f));
+						int akaoCount = akaoList->size();
+						for(int i=0 ; i<akaoCount ; ++i) {
+							if(!akaoList->isTut(i)) {
+								path = QDir::cleanPath(QString("%1/%2.%3").arg(massExportDialog->directory(), f->getName(), extension));
+								if(massExportDialog->overwrite() || !QFile::exists(path)) {
+									QFile tutExport(path);
+									if(tutExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+										tutExport.write(akaoList->data(i));
+										tutExport.close();
+									}
+								}
+							}
+						}
+					}
+					progressDialog.setValue(currentField++);
+				}
+			}
+		}
+	}
 }
 
 void Window::importer()

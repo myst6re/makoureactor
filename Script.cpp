@@ -598,6 +598,92 @@ Opcode *Script::copyOpcode(Opcode *opcode)
 	}
 }
 
+OpcodeJump *Script::convertOpcodeJump(OpcodeJump *opcodeJump, bool &ok) const
+{
+	qint32 jump = opcodeJump->jump();
+	ok = true;
+
+	if(jump < 0) {
+		if(opcodeJump->id() == Opcode::JMPB || opcodeJump->id() == Opcode::JMPBL) {
+			// OK: jump back
+		} else if(opcodeJump->id() == Opcode::JMPF || opcodeJump->id() == Opcode::JMPFL) {
+			// Conversion
+			if(jump >= -240) {
+				qDebug() << "convert" << opcodeJump->name() << "to JMPB because" << jump << ">=" << -240;
+				return new OpcodeJMPB(*opcodeJump);
+			} else if(jump >= -65520) {
+				qDebug() << "convert" << opcodeJump->name() << "to JMPBL because" << jump << ">=" << -65520;
+				return new OpcodeJMPBL(*opcodeJump);
+			} else {
+				ok = false;
+//				lastError = QObject::tr("\"Aller à\" trop grand, le label est inaccessible.");
+			}
+		} else {
+			ok = false;
+//			lastError = QObject::tr("Le label doit se trouver après la commande.");
+		}
+	} else if(jump > 0) {
+		if(opcodeJump->id() == Opcode::JMPB || opcodeJump->id() == Opcode::JMPBL) {
+			// Conversion
+			if(jump <= 240) {
+				qDebug() << "convert" << opcodeJump->name() << "to JMPF because" << jump << "<=" << 240;
+				return new OpcodeJMPF(*opcodeJump);
+			} else if(jump <= 65520) {
+				qDebug() << "convert" << opcodeJump->name() << "to JMPFL because" << jump << "<=" << 65520;
+				return new OpcodeJMPFL(*opcodeJump);
+			} else {
+				ok = false;
+//				lastError = QObject::tr("\"Aller à\" trop grand, le label est inaccessible.");
+			}
+		}
+	}
+
+	// if this is a long jump and opcode is a short jump
+	if(!opcodeJump->isLongJump() && jump > 240) {
+		if(jump < 65535) {
+			switch((Opcode::Keys)opcodeJump->id()) {
+			case Opcode::JMPF:
+				return new OpcodeJMPFL(*opcodeJump);
+			case Opcode::JMPB:
+				return new OpcodeJMPBL(*opcodeJump);
+			case Opcode::IFUB:
+				return new OpcodeIFUBL(*(OpcodeIf *)opcodeJump);
+			case Opcode::IFSW:
+				return new OpcodeIFSWL(*(OpcodeIf *)opcodeJump);
+			case Opcode::IFUW:
+				return new OpcodeIFUWL(*(OpcodeIf *)opcodeJump);
+			default:
+				ok = false;
+//				lastError = QObject::tr("\"Aller à\" trop grand, le label est inaccessible.");
+				break;
+			}
+		} else {
+			ok = false;
+//			lastError = QObject::tr("\"Aller à\" trop grand, le label est inaccessible.");
+		}
+	}
+
+	// Optimization: if this is a short jump and opcode is a long jump
+	if(opcodeJump->isLongJump() && jump/* - opcodeJump->jumpPosData()*/ <= 240) {
+		switch((Opcode::Keys)opcodeJump->id()) {
+		case Opcode::JMPFL:
+			return new OpcodeJMPF(*opcodeJump);
+		case Opcode::JMPBL:
+			return new OpcodeJMPB(*opcodeJump);
+		case Opcode::IFUBL:
+			return new OpcodeIFUB(*(OpcodeIf *)opcodeJump);
+		case Opcode::IFSWL:
+			return new OpcodeIFSW(*(OpcodeIf *)opcodeJump);
+		case Opcode::IFUWL:
+			return new OpcodeIFUW(*(OpcodeIf *)opcodeJump);
+		default:
+			break;
+		}
+	}
+
+	return opcodeJump;
+}
+
 int Script::posReturn(const QByteArray &script)
 {
 	quint16 pos=0, longueur, param16;
@@ -679,7 +765,7 @@ const QList<Opcode *> &Script::getOpcodes() const
 	return opcodes;
 }
 
-QByteArray Script::toByteArray() const
+QByteArray Script::toByteArray(/*bool &ok, int &opcodeID*/) const
 {
 	quint32 pos=0;
 	QMap<quint32, quint32> labelPositions;// Each label is unique
@@ -693,79 +779,25 @@ QByteArray Script::toByteArray() const
 		}
 	}
 
-	pos = 0;
+	/*opcodeID =*/ pos = 0;
 	foreach(Opcode *opcode, opcodes) {
-		bool delPlease = false;
+		bool delPlease = false, ok;
 		if(opcode->isJump()) {
 			OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
-			qint32 jump = labelPositions.value(opcodeJump->label()) - pos;
-			opcodeJump->setJump(jump);
+			opcodeJump->setJump(labelPositions.value(opcodeJump->label()) - pos);
 
-			// if jump < 0 and this is not a jump back
-			if(jump < 0 && opcodeJump->id() != Opcode::JMPB && opcodeJump->id() != Opcode::JMPBL) {
-				switch((Opcode::Keys)opcodeJump->id()) {
-				case Opcode::JMPF:
-					opcode = new OpcodeJMPB(*opcodeJump);
-					delPlease = true;
-					break;
-				case Opcode::JMPFL:
-					opcode = new OpcodeJMPBL(*opcodeJump);
-					delPlease = true;
-					break;
-				default:
-					//TODO: critical situation
-					break;
-				}
-			}
+			opcode = convertOpcodeJump(opcodeJump, ok);
+//			if(!ok) {
+//				return QByteArray();
+//			}
 
-			// if jump > 0 and this is not a jump forward
-			if(jump > 0 && opcodeJump->id() != Opcode::JMPF && opcodeJump->id() != Opcode::JMPFL) {
-				switch((Opcode::Keys)opcodeJump->id()) {
-				case Opcode::JMPB:
-					opcode = new OpcodeJMPF(*opcodeJump);
-					delPlease = true;
-					break;
-				case Opcode::JMPBL:
-					opcode = new OpcodeJMPFL(*opcodeJump);
-					delPlease = true;
-					break;
-				default:
-					//TODO: critical situation
-					break;
-				}
-			}
-
-			// if this is a long jump and opcode is not for a long jump
-			if(!opcodeJump->isLongJump() && jump - opcodeJump->jumpPosData() > 255) {
-				switch((Opcode::Keys)opcodeJump->id()) {
-				case Opcode::JMPF:
-					opcode = new OpcodeJMPFL(*(OpcodeJMPF *)opcodeJump);
-					delPlease = true;
-					break;
-				case Opcode::JMPB:
-					opcode = new OpcodeJMPBL(*(OpcodeJMPB *)opcodeJump);
-					delPlease = true;
-					break;
-				case Opcode::IFUB:
-					opcode = new OpcodeIFUBL(*(OpcodeIFUB *)opcodeJump);
-					delPlease = true;
-					break;
-				case Opcode::IFSW:
-					opcode = new OpcodeIFSWL(*(OpcodeIFSW *)opcodeJump);
-					delPlease = true;
-					break;
-				case Opcode::IFUW:
-					opcode = new OpcodeIFUWL(*(OpcodeIFUW *)opcodeJump);
-					delPlease = true;
-					break;
-				default:
-					//TODO: critical situation
-					break;
-				}
+			if(opcode != opcodeJump) {
+				delPlease = true;
 			}
 		}
 		ret.append(opcode->toByteArray());
 		pos += opcode->size();
+//		++opcodeID;
 
 		if(delPlease) {
 			delete opcode;
@@ -943,10 +975,18 @@ void Script::shiftTutIds(int tutId, int steps)
 		opcode->shiftTutIds(tutId, steps);
 }
 
-void Script::listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8, quint8> &text2win) const
+void Script::setWindow(const FF7Window &win)
 {
+	if(win.opcodeID < opcodes.size()) {
+		opcodes.at(win.opcodeID)->setWindow(win);
+	}
+}
+
+void Script::listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const
+{
+	int opcodeID=0;
 	foreach(Opcode *opcode, opcodes)
-		opcode->listWindows(windows, text2win);
+		opcode->listWindows(groupID, scriptID, opcodeID++, windows, text2win);
 }
 
 void Script::getBgParams(QHash<quint8, quint8> &paramActifs) const

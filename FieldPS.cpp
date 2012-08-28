@@ -43,33 +43,30 @@ qint8 FieldPS::open(const QByteArray &fileData)
 	memcpy(&size, fileDataConst, 4);
 	if(size+4 != (quint32)fileData.size()) 	return -1;
 
-	QByteArray contenu = QByteArray(&fileDataConst[4], size);
+	QByteArray data = QByteArray(&fileDataConst[4], size);
 
-	const QByteArray &contenuDec = LZS::decompress(contenu, 8);//décompression partielle
-	if(contenuDec.size() < 8) 	return -1;
-	const char *contenu_const = contenuDec.constData();
+	const QByteArray &dataDec = LZS::decompress(data, 8);//décompression partielle
+	if(dataDec.size() < 8) 	return -1;
+	const char *constData = dataDec.constData();
 
 	quint32 debutSection1, debutSection2;
-	memcpy(&debutSection1, contenu_const, 4);
-	memcpy(&debutSection2, &contenu_const[4], 4);
+	memcpy(&debutSection1, constData, 4);
+	memcpy(&debutSection2, &constData[4], 4);
 	debutSection2 = debutSection2 - debutSection1 + 28;
 
-	return openSection1(LZS::decompress(contenu, debutSection2), 28);
+	return openSection1(LZS::decompress(data, debutSection2), 28);
 }
 
 QPixmap FieldPS::openModelAndBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec)
 {
-	if(mimDataDec.isEmpty() || datDataDec.isEmpty())	return QPixmap();
-	QHash<quint8, quint8> paramActifs;
-	qint16 z[] = {-1, -1};
-	getBgParamAndBgMove(paramActifs, z);
+	if(datDataDec.isEmpty())	return QPixmap();
 
 	FieldModelLoaderPS *fieldModelLoader = getFieldModelLoader();
 
 	if(!fieldModelLoader->isLoaded())
 		fieldModelLoader->load(datDataDec);
 
-	return openBackground(mimDataDec, datDataDec, paramActifs, z);
+	return openBackground(mimDataDec, datDataDec);
 }
 
 bool FieldPS::getUsedParams(const QByteArray &datDataDec, QHash<quint8, quint8> &usedParams, bool *layerExists) const
@@ -166,6 +163,17 @@ bool FieldPS::getUsedParams(const QByteArray &datDataDec, QHash<quint8, quint8> 
 	}
 
 	return true;
+}
+
+QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec) const
+{
+	if(mimDataDec.isEmpty() || datDataDec.isEmpty())	return QPixmap();
+	// Search default background params
+	QHash<quint8, quint8> paramActifs;
+	qint16 z[] = {-1, -1};
+	getBgParamAndBgMove(paramActifs, z);
+
+	return openBackground(mimDataDec, datDataDec, paramActifs, z);
 }
 
 QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const

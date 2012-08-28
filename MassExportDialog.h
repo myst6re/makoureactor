@@ -15,26 +15,42 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef COLORDISPLAY_H
-#define COLORDISPLAY_H
+#ifndef MASSEXPORTDIALOG_H
+#define MASSEXPORTDIALOG_H
 
 #include <QtGui>
+#include "FieldArchive.h"
 
-class ColorDisplay : public QWidget
+class MassExportDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit ColorDisplay(QWidget *parent=0);
-	void setColors(const QList<QRgb> &colors);
-	const QList<QRgb> &getColors() const;
+	explicit MassExportDialog(QWidget *parent = 0);
+	void fill(FieldArchive *fieldArchive, int fieldID);
+	QList<int> selectedFields() const;
+	bool exportBackground() const;
+	int exportBackgroundFormat() const;
+	bool exportAkao() const;
+	int exportAkaoFormat() const;
+	QString directory() const;
+	bool overwrite() const;
+private slots:
+	void chooseExportDirectory();
 private:
-	QList<QRgb> colors;
+	void buildBgExportWidget();
+	void buildAkaoExportWidget();
+	QListWidget *fieldList;
+	QGroupBox *bgExport, *akaoExport, *fieldExport;
+	QComboBox *bgFormat, *akaoFormat;
+	QPushButton *selectAll, *clearSelection, *selectCurrentField;
+	QLineEdit *dirPath;
+	QPushButton *changeDir;
+	QCheckBox *overwriteIfExists;
+
+	FieldArchive *_fieldArchive;
+	int _fieldID;
 protected:
-	void paintEvent(QPaintEvent *);
-	void enterEvent(QEvent *);
-	void leaveEvent(QEvent *);
-	void mouseMoveEvent(QMouseEvent *);
-	void mouseReleaseEvent(QMouseEvent *);
+	void accept();
 };
 
-#endif // COLORDISPLAY_H
+#endif // MASSEXPORTDIALOG_H

@@ -405,11 +405,7 @@ void ScriptEditorJumpPage::setOpcode(Opcode *opcode)
 
 	pos = i = 0;
 
-	if(opcodeJump->isLongJump()) {
-		maxJump = 65535 + opcodeJump->jumpPosData();
-	} else {
-		maxJump = 255 + opcodeJump->jumpPosData();
-	}
+	maxJump = opcodeJump->maxJump();
 
 	foreach(Opcode *op, _script->getOpcodes()) {
 
@@ -549,11 +545,7 @@ void ScriptEditorIfPage::setOpcode(Opcode *opcode)
 
 	int i=0, pos=0, posOpcodeJump=-1, maxJump;
 
-	if(opcodeJump->isLongJump()) {
-		maxJump = 65535 + opcodeJump->jumpPosData();
-	} else {
-		maxJump = 255 + opcodeJump->jumpPosData();
-	}
+	maxJump = opcodeJump->maxJump();
 
 	foreach(Opcode *op, _script->getOpcodes()) {
 		if(i == _opcodeID) {
@@ -651,11 +643,7 @@ void ScriptEditorIfKeyPage::setOpcode(Opcode *opcode)
 
 	int i=0, pos=0, posOpcodeJump=-1, maxJump;
 
-	if(opcodeJump->isLongJump()) {
-		maxJump = 65535 + opcodeJump->jumpPosData();
-	} else {
-		maxJump = 255 + opcodeJump->jumpPosData();
-	}
+	maxJump = opcodeJump->maxJump();
 
 	foreach(Opcode *op, _script->getOpcodes()) {
 		if(i == _opcodeID) {
@@ -732,11 +720,7 @@ void ScriptEditorIfQPage::setOpcode(Opcode *opcode)
 
 	int i=0, pos=0, posOpcodeJump=-1, maxJump;
 
-	if(opcodeJump->isLongJump()) {
-		maxJump = 65535 + opcodeJump->jumpPosData();
-	} else {
-		maxJump = 255 + opcodeJump->jumpPosData();
-	}
+	maxJump = opcodeJump->maxJump();
 
 	foreach(Opcode *op, _script->getOpcodes()) {
 		if(i == _opcodeID) {

@@ -103,6 +103,8 @@ public:
 	bool searchMapJumpP(quint16 mapJump, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchTextInScriptsP(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchTextP(const QRegExp &text, int &textID, int &from, int &size) const;
+	void setWindow(const FF7Window &win);
+	void listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
 
 	void shiftTutIds(int row, int shift);
 

@@ -36,7 +36,7 @@ public:
 	Opcode *getOpcode(quint16 opcodeID) const;
 	const QList<Opcode *> &getOpcodes() const;
 	bool isVoid() const;
-	QByteArray toByteArray() const;
+	QByteArray toByteArray(/*bool &ok, int &opcodeID*/) const;
 	void setOpcode(quint16 opcodeID, Opcode *opcode);
 	void delOpcode(quint16 opcodeID);
 	Opcode *removeOpcode(quint16 opcodeID);
@@ -44,6 +44,7 @@ public:
 	bool moveOpcode(quint16 opcodeID, bool direction);
 	void shiftTextIds(int textId, int steps=1);
 	void shiftTutIds(int tutId, int steps=1);
+	void setWindow(const FF7Window &win);
 
 	bool searchOpcode(int opcode, int &opcodeID) const;
 	bool searchVar(quint8 bank, quint8 adress, int value, int &opcodeID) const;
@@ -58,7 +59,7 @@ public:
 	bool searchTextInScriptsP(const QRegExp &text, int &opcodeID) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
-	void listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8, quint8> &text2win) const;
+	void listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
 	void getBgParams(QHash<quint8, quint8> &paramActifs) const;
 	void getBgMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
@@ -69,8 +70,10 @@ public:
 	static Opcode *createOpcode(const QByteArray &script, int pos=0);
 	static Opcode *copyOpcode(Opcode *opcode);
 private:
+	OpcodeJump *convertOpcodeJump(OpcodeJump *opcodeJump, bool &ok) const;
 	QList<Opcode *> opcodes;
 	QList<Opcode *> expandedItems;
+	QString lastError;
 
 	bool valid;
 };

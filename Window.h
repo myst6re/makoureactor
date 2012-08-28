@@ -39,6 +39,7 @@
 #include "TutWidget.h"
 #include "MiscWidget.h"
 #include "ImportDialog.h"
+#include "MassExportDialog.h"
 
 class Window : public QMainWindow
 {

@@ -165,6 +165,7 @@ TextManager::TextManager(QWidget *parent)
 
 	QWidget *groupTextPreview = new QWidget(this);
 	textPreview = new TextPreview(groupTextPreview);
+	textPreview->setReadOnly(true);//TODO: unlock
 
 	prevPage = new QToolButton(groupTextPreview);
 	prevPage->setArrowType(Qt::UpArrow);
@@ -188,32 +189,28 @@ TextManager::TextManager(QWidget *parent)
 	yCoord = new QSpinBox(groupTextPreview);
 	xCoord->setRange(-32768, 32767);
 	yCoord->setRange(-32768, 32767);
+	xCoord->setReadOnly(true);
+	yCoord->setReadOnly(true);
 
 	wSize = new QSpinBox(groupTextPreview);
 	hSize = new QSpinBox(groupTextPreview);
 	wSize->setRange(0, 65535);
 	hSize->setRange(0, 65535);
-
-	prevWin->hide();
-	nextWin->hide();
-	textWin->hide();
-	xCoord->hide();
-	yCoord->hide();
-	wSize->hide();
-	hSize->hide();
+	wSize->setReadOnly(true);
+	hSize->setReadOnly(true);
 
 	QGridLayout *layoutTextPreview = new QGridLayout(groupTextPreview);
 	layoutTextPreview->addWidget(textPreview, 0, 0, 8, 1, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(prevPage, 0, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(textPage, 1, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(nextPage, 2, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
-//	layoutTextPreview->addWidget(new QLabel(tr("X")), 3, 1, Qt::AlignLeft | Qt::AlignHCenter);
+	layoutTextPreview->addWidget(new QLabel(tr("X")), 3, 1, Qt::AlignLeft | Qt::AlignHCenter);
 	layoutTextPreview->addWidget(xCoord, 3, 2, Qt::AlignLeft | Qt::AlignHCenter);
-//	layoutTextPreview->addWidget(new QLabel(tr("Y")), 4, 1, Qt::AlignLeft | Qt::AlignHCenter);
+	layoutTextPreview->addWidget(new QLabel(tr("Y")), 4, 1, Qt::AlignLeft | Qt::AlignHCenter);
 	layoutTextPreview->addWidget(yCoord, 4, 2, Qt::AlignLeft | Qt::AlignHCenter);
-//	layoutTextPreview->addWidget(new QLabel(tr("W")), 3, 3, Qt::AlignLeft | Qt::AlignHCenter);
+	layoutTextPreview->addWidget(new QLabel(tr("W")), 3, 3, Qt::AlignLeft | Qt::AlignHCenter);
 	layoutTextPreview->addWidget(wSize, 3, 4, Qt::AlignLeft | Qt::AlignHCenter);
-//	layoutTextPreview->addWidget(new QLabel(tr("H")), 4, 3, Qt::AlignLeft | Qt::AlignHCenter);
+	layoutTextPreview->addWidget(new QLabel(tr("H")), 4, 3, Qt::AlignLeft | Qt::AlignHCenter);
 	layoutTextPreview->addWidget(hSize, 4, 4, Qt::AlignLeft | Qt::AlignHCenter);
 	layoutTextPreview->addWidget(prevWin, 5, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
 	layoutTextPreview->addWidget(textWin, 6, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
@@ -245,6 +242,8 @@ TextManager::TextManager(QWidget *parent)
 	connect(textEdit, SIGNAL(cursorPositionChanged()), SLOT(emitFromChanged()));
 	connect(prevPage, SIGNAL(released()), SLOT(prevTextPreviewPage()));
 	connect(nextPage, SIGNAL(released()), SLOT(nextTextPreviewPage()));
+	connect(prevWin, SIGNAL(released()), SLOT(prevTextPreviewWin()));
+	connect(nextWin, SIGNAL(released()), SLOT(nextTextPreviewWin()));
 }
 
 void TextManager::emitFromChanged()
@@ -260,6 +259,9 @@ void TextManager::focusInEvent(QFocusEvent *e)
 void TextManager::setField(Field *field)
 {
 	this->field = field;
+	_windows.clear();
+	_text2win.clear();
+	field->listWindows(_windows, _text2win);
 	usedTexts = field->listUsedTexts();
 	showList();
 	liste1->setCurrentRow(0);
@@ -283,15 +285,32 @@ void TextManager::setTextChanged()
 	}
 }
 
+QList<FF7Window> TextManager::getWindows(quint8 textID) const
+{
+	QList<quint64> winIDs = _text2win.values(textID);
+	QList<quint64> sawAlready;
+	QList<FF7Window> windows;
+	foreach(const quint64 &winID, winIDs) {
+		if(!sawAlready.contains(winID)) {
+			windows.append(_windows.values(winID));
+			sawAlready.append(winID);
+		}
+	}
+	return windows;
+}
+
 void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 {
 	if(!item)	return;
-	FF7Text *t = field->getText(item->data(Qt::UserRole).toInt());
+	int textID = item->data(Qt::UserRole).toInt();
+	FF7Text *t = field->getText(textID);
+	textPreview->resetCurrentWin();
+	textPreview->setWins(getWindows(textID));
 	textPreview->setText(t->getData());
 	textEdit->setPlainText(t->getText(Config::value("jp_txt", false).toBool()));
 	changeTextPreviewPage();
 	changeTextPreviewWin();
-	emit textIDChanged(item->data(Qt::UserRole).toInt());
+	emit textIDChanged(textID);
 }
 
 void TextManager::showList()
@@ -437,40 +456,46 @@ void TextManager::changeRect(QRect rect)
 	hSize->setValue(rect.height());
 }
 
-void TextManager::changeXCoord(int /*x*/)
+void TextManager::changeXCoord(int x)
 {
-//	if(textPreview->getNbWin()<=0)	return;
+	if(textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
 
-//	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
-//	int winID = textPreview->getCurrentWin()-1;
-//	FF7Window ff7Window = textPreview->getWindow();
-//	if(ff7Window.x != x) {
-//		ff7Window.x = x;
+	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
+	int winID = textPreview->getCurrentWin()-1;
+	FF7Window ff7Window = textPreview->getWindow();
+	if(ff7Window.x != x) {
+		ff7Window.x = x;
 
-//		qDebug() << "changeXCoord()" << x << textID << winID;
+		qDebug() << "changeXCoord()" << x << textID << winID;
 
-//		jsmFile->setWindow(textID, winID, ff7Window);
-//		textPreview->setWins(jsmFile->windows(textID));
-//		emit modified(true);
-//	}
+		field->setWindow(ff7Window);
+		_windows.clear();
+		_text2win.clear();
+		field->listWindows(_windows, _text2win); // refresh
+		textPreview->setWins(getWindows(textID));
+		emit modified();
+	}
 }
 
-void TextManager::changeYCoord(int /*y*/)
+void TextManager::changeYCoord(int y)
 {
-//	if(textPreview->getNbWin()<=0)	return;
+	if(textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
 
-//	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
-//	int winID = textPreview->getCurrentWin()-1;
-//	FF7Window ff7Window = textPreview->getWindow();
-//	if(ff7Window.y != y) {
-//		ff7Window.y = y;
+	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
+	int winID = textPreview->getCurrentWin()-1;
+	FF7Window ff7Window = textPreview->getWindow();
+	if(ff7Window.y != y) {
+		ff7Window.y = y;
 
-//		qDebug() << "changeYCoord()" << y << textID << winID;
+		qDebug() << "changeYCoord()" << y << textID << winID;
 
-//		jsmFile->setWindow(textID, winID, ff7Window);
-//		textPreview->setWins(jsmFile->windows(textID));
-//		emit modified(true);
-//	}
+		field->setWindow(ff7Window);
+		_windows.clear();
+		_text2win.clear();
+		field->listWindows(_windows, _text2win); // refresh
+		textPreview->setWins(getWindows(textID));
+		emit modified();
+	}
 }
 
 void TextManager::updateWindowCoord()

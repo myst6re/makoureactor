@@ -73,7 +73,8 @@ HEADERS += ApercuBG.h \
     FieldModelLoaderPC.h \
     FieldModelLoaderPS.h \
     TdbFile.h \
-    ScriptEditorWidgets/ScriptEditorWindowPage.h
+    ScriptEditorWidgets/ScriptEditorWindowPage.h \
+    MassExportDialog.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -140,7 +141,8 @@ SOURCES += ApercuBG.cpp \
     FieldModelLoaderPC.cpp \
     FieldModelLoaderPS.cpp \
     TdbFile.cpp \
-    ScriptEditorWidgets/ScriptEditorWindowPage.cpp
+    ScriptEditorWidgets/ScriptEditorWindowPage.cpp \
+    MassExportDialog.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts

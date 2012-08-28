@@ -489,6 +489,20 @@ bool Field::searchTextP(const QRegExp &text, int &textID, int &from, int &size) 
 	return searchTextP(text, --textID, from = -1, size);
 }
 
+void Field::setWindow(const FF7Window &win)
+{
+	if(win.groupID < _grpScripts.size()) {
+		_grpScripts.at(win.groupID)->setWindow(win);
+	}
+}
+
+void Field::listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const
+{
+	int groupID=0;
+	foreach(GrpScript *group, _grpScripts)
+		group->listWindows(groupID++, windows, text2win);
+}
+
 QList<FF7Text *> *Field::getTexts()
 {
 	return &texts;

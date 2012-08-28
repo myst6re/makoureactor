@@ -41,6 +41,7 @@ class TextPreview : public QWidget
 public:
 	explicit TextPreview(QWidget *parent=0);
 	void clear();
+	void setReadOnly(bool ro);
 	void setWins(const QList<FF7Window> &windows, bool update=true);
 	void resetCurrentWin();
 	int getCurrentWin();
@@ -75,6 +76,7 @@ private:
 	bool acceptMove;
 	bool spaced_characters;
 	QPoint moveStartPosition;
+	bool readOnly;
 
 	static int startMulticolor;
 	static int multicolor;

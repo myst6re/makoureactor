@@ -87,6 +87,8 @@ signals:
 //	void directoryChanged(const QString &path);
 	
 private:
+	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting);
+	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting);
 	void addDAT(const QString &name, QList<QTreeWidgetItem *> &items);
 	qint32 findField(const QString &name) const;
 	qint8 openField(Field *field);
@@ -103,6 +105,8 @@ private:
 	QMap<QString, int> tutPos;
 	QMap<QString, TutFile *> tuts;
 	bool isDat;
+	static QByteArray dataCache;
+	static Field *fieldCache;
 	// QFileSystemWatcher fileWatcher;
 };
 

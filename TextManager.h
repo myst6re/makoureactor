@@ -55,6 +55,7 @@ private slots:
 	void emitFromChanged();
 private:
 	void updateWindowCoord();
+	QList<FF7Window> getWindows(quint8 textID) const;
 
 	QCheckBox *dispUnusedText;
 	QListWidget *liste1;
@@ -68,7 +69,9 @@ private:
 	QSpinBox *xCoord, *yCoord;
 	QSpinBox *wSize, *hSize;
 
-	Field* field;
+	Field *field;
+	QMultiMap<quint64, FF7Window> _windows;
+	QMultiMap<quint8, quint64> _text2win;
 	QSet<quint8> usedTexts;
 protected:
 	virtual void focusInEvent(QFocusEvent *e);

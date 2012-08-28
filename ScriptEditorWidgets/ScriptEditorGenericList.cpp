@@ -630,7 +630,7 @@ QString ScriptEditorGenericList::paramName(int type)
 	case vitesse:			return tr("Vitesse (8 bits)");
 	case vitesse2:			return tr("Vitesse (16 bits)");
 	case direction:			return tr("Direction");
-	case polygone_id:		return tr("Polygone");
+	case polygone_id:		return tr("Triangle");
 	case group_id:			return tr("Groupe");
 	case script_id:			return tr("Script");
 	case party_id:			return tr("Équipier");

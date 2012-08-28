@@ -64,7 +64,8 @@ public:
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void shiftTextIds(int textId, int steps=1);
 	void shiftTutIds(int tutId, int steps=1);
-	void listWindows(QMultiMap<quint8, FF7Window> &windows, QMultiMap<quint8, quint8> &text2win) const;
+	void setWindow(const FF7Window &win);
+	void listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
 private:
 	QString name;
 	QList<Script *> scripts;
