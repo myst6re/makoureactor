@@ -26,82 +26,29 @@ FieldModel::FieldModel(QWidget *parent, const QGLWidget *shareWidget) :
 
 FieldModel::~FieldModel()
 {
-	if(data) {
-		delete data;
-	}
 }
 
 void FieldModel::clear()
 {
 	timer.stop();
 	currentFrame = 0;
-	if(data) {
-		delete data;
-		data = 0;
-	}
+	data = 0;
 //	glClearColor(0.0,0.0,0.0,0.0);
+	updateGL();
 }
 
-quint8 FieldModel::load(FieldModelLoaderPC *modelLoader, int modelID, int animID, bool animate)
-{
-	QString hrc = modelLoader->HRCName(modelID);
-	QString a = modelLoader->AName(modelID, animID);
-
-	return load(hrc, a, animate);
-}
-
-quint8 FieldModel::load(const QString &hrc, const QString &a, bool animate)
+bool FieldModel::load(FieldPC *field, const QString &hrc, const QString &a, bool animate)
 {
 	if(blockAll) {
-		return 2;
+		return false;
 	}
 
 	clear();
 
 	blockAll = true;
 
-	if(data == 0) {
-		data = new FieldModelFilePC();
-	} else if(data->isPS()) {
-		delete data;
-		data = new FieldModelFilePC();
-	}
-
-	quint8 err = ((FieldModelFilePC *)data)->load(hrc, a, animate);
-	if(err==1) {
-		updateGL();
-		if(animate && data->frameCount()>1)	timer.start(30);
-	}
-
-	blockAll = false;
-
-//	QFile textOut("fieldModelBonePC.txt");
-//	textOut.open(QIODevice::WriteOnly);
-//	textOut.write(data->toStringBones().toLatin1());
-//	textOut.close();
-
-	return err;
-}
-
-quint8 FieldModel::load(FieldArchive *fieldArchive, Field *currentField, int model_id, int animation_id, bool animate)
-{
-	if(blockAll) {
-		return 2;
-	}
-
-	clear();
-
-	blockAll = true;
-
-	if(data == 0) {
-		data = new FieldModelFilePS();
-	} else if(!data->isPS()) {
-		delete data;
-		data = new FieldModelFilePS();
-	}
-
-	quint8 err = ((FieldModelFilePS *)data)->load(fieldArchive, currentField, model_id, animation_id, animate);
-	if(err==1) {
+	data = field->getFieldModel(hrc, a, animate); // warning: async!
+	if(data->isLoaded()) {
 		updateGL();
 		if(animate && data->frameCount()>1)	timer.start(30);
 	}
@@ -113,7 +60,33 @@ quint8 FieldModel::load(FieldArchive *fieldArchive, Field *currentField, int mod
 //	textOut.write(data->toStringBones().toLatin1());
 //	textOut.close();
 
-	return err;
+	return true;
+}
+
+bool FieldModel::load(Field *field, int modelID, int animationID, bool animate)
+{
+	if(blockAll) {
+		return false;
+	}
+
+	clear();
+
+	blockAll = true;
+
+	data = field->getFieldModel(modelID, animationID, animate); // warning: async!
+	if(data->isLoaded()) {
+		updateGL();
+		if(animate && data->frameCount()>1)	timer.start(30);
+	}
+
+	blockAll = false;
+
+//	QFile textOut("fieldModelBonePS.txt");
+//	textOut.open(QIODevice::WriteOnly);
+//	textOut.write(data->toStringBones().toLatin1());
+//	textOut.close();
+
+	return true;
 }
 
 int FieldModel::nb_bones()

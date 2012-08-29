@@ -30,14 +30,6 @@ void FieldModelFilePC::clear()
 	FieldModelFile::clear();
 }
 
-quint8 FieldModelFilePC::load(FieldModelLoaderPC *modelLoader, int modelID, int animID, bool animate)
-{
-	QString hrc = modelLoader->HRCName(modelID);
-	QString a = modelLoader->AName(modelID, animID);
-
-	return load(hrc, a, animate);
-}
-
 quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 {
 	if(hrc.isEmpty() || a.isEmpty()) {
@@ -100,25 +92,26 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 			if(!_parts.isEmpty()
 					&& (pos=Data::charlgp_listPos.value(a%".a"))>0 && fic.seek(pos+20) && open_a(&fic, animate))
 			{
-				QList<QList<int> > texss = _tex_files.values();
-
-				foreach(const QList<int> &texs, texss) {
-					foreach(const int &tex, texs) {
-						if(!_loaded_tex.contains(tex) && (pos=Data::charlgp_listPos.value(tex2id.at(tex)%".tex"))>0 && fic.seek(pos+20)) {
-							_loaded_tex.insert(tex, open_tex(&fic));
-						}
+				// Open all loaded tex
+				int texID=0;
+				foreach(const QString &texName, tex2id) {
+					if((pos=Data::charlgp_listPos.value(texName%".tex"))>0 && fic.seek(pos+20)) {
+						_loaded_tex.insert(texID, open_tex(&fic));
 					}
+					++texID;
 				}
 
-				int pID = 0;
-				foreach(FieldModelPart *part, _parts) {
-					QList<int> texs = texss.value(pID);
-					foreach(FieldModelGroup *group, part->groups()) {
+				// Convert relative group tex IDs to absolute (relative to _loaded_tex) tex IDs
+				QMapIterator<int, FieldModelPart *> it(_parts);
+				while(it.hasNext()) {
+					it.next();
+					int boneID = it.key();
+					QList<int> texs = _tex_files.value(boneID);
+					foreach(FieldModelGroup *group, it.value()->groups()) {
 						if(group->textureNumber() != -1 && group->textureNumber() < texs.size()) {
 							group->setTextureNumber(texs.at(group->textureNumber()));
 						}
 					}
-					++pID;
 				}
 
 				tex2id.clear();
@@ -269,6 +262,7 @@ QString FieldModelFilePC::open_rsd(QFile *rsd_file, int boneID)
 				if((index=line.lastIndexOf('.'))!=-1)
 					line.truncate(index);
 				tex = line.mid(line.indexOf('=')+1).toLower();
+
 				if((index=tex2id.indexOf(tex)) != -1) {
 					texIds.append(index);
 				} else {
@@ -278,7 +272,8 @@ QString FieldModelFilePC::open_rsd(QFile *rsd_file, int boneID)
 			}
 		}
 	}
-	_tex_files.insert(boneID, texIds);
+	if(!texIds.isEmpty())
+		_tex_files.insert(boneID, texIds);
 
 	return pname;
 }

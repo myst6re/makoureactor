@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModelFilePS.h"
+#include "FieldArchive.h"
 
 FieldModelFilePS::FieldModelFilePS() :
 	FieldModelFile()
@@ -31,6 +32,8 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 	BSX_header header;
 	Model_header model_header;
 	Model model;
+
+	clear();
 
 	if((quint32)BSX_data.size() < sizeof(BSX_header)) {
 		qWarning() << "invalid BSX size" << BSX_data.size();
@@ -152,9 +155,14 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 
 		qDebug() << "==== TEXTURE HEADER" << tex << "====" << (offsetTexHeader + 8 + tex*sizeof(TexHeader));
 		qDebug() << "width" << texHeader.width << "height" << texHeader.height << "x" << texHeader.vramX << "y" << texHeader.vramY;
-	//	qDebug() << "offsetData" << texHeader.offset_data << "endData" << (texHeader.offset_data + texHeader.width * 2 * texHeader.height);
+		qDebug() << "offsetData" << texHeader.offset_data << "endData" << (texHeader.offset_data + texHeader.width * 2 * texHeader.height);
 
 		texHeaders.append(texHeader);
+	}
+
+	for(int tex=0 ; tex<texHeaders.size() ; ++tex) {
+		if(tex==1)	continue;
+		openTexture(constData, 0, texHeaders.at(tex), texHeaders.at(1), 1).save(QString("Makou-Texture%1.png").arg(tex));
 	}
 
 	if(model_id < modelLoader->modelCount()) {
@@ -168,13 +176,28 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 
 		foreach(FieldModelPart *part, _parts) {
 			QList<int> texIds;
+			QList<TextureInfo> texAlreadyLoadedInPart;
+			int lastTexHeight=0;
 
-			foreach(const TextureInfo &texInfo, ((FieldModelPartPS *)part)->textures()) {
+			foreach(TextureInfo texInfo, ((FieldModelPartPS *)part)->textures()) {
+				bool contains2 = false;
+				foreach(const TextureInfo &texInfo2, texAlreadyLoadedInPart) {
+					if(texInfo2 == texInfo) {
+						contains2 = true;
+						break;
+					}
+				}
+				if(!contains2) {
+					texAlreadyLoadedInPart.append(texInfo);
+				}
+				if(contains2 && (faceID >= 0x21 || (texInfo.type != 0 && texInfo.type != 1))) {
+					texInfo.imgY += lastTexHeight;
+				}
+
 				qDebug() << "TEXTUREINFO";
 				qDebug() << "type" << texInfo.type << "bpp" << texInfo.bpp;
 				qDebug() << "imgX" << texInfo.imgX << "imgY" << texInfo.imgY;
 				qDebug() << "palX" << texInfo.palX << "palY" << texInfo.palY;
-
 
 				QMapIterator<TextureInfo, int> it(texAlreadyLoaded);
 				bool contains = false;
@@ -189,7 +212,7 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 				if(contains) {
 					texIds.append(texAlreadyLoaded.value(texInfo));
 				} else {
-					if(texInfo.type == 0 || texInfo.type == 1) { // Eye and Mouth
+					if(faceID < 0x21 && (texInfo.type == 0 || texInfo.type == 1)) { // Eye and Mouth
 						qDebug() << (texInfo.type == 0 ? "EYE" : "MOUTH") << texID;
 						texIds.append(texID);
 						texAlreadyLoaded.insert(texInfo, texID);
@@ -200,16 +223,17 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 						TexHeader imgHeader=TexHeader(), palHeader=TexHeader();
 						bool imgFound=false, palFound=false;
 						foreach(const TexHeader &texHeader, texHeaders) {
-							if(texInfo.imgX == texHeader.vramX && texInfo.imgY == texHeader.vramY) {
+							if(!imgFound && texInfo.imgX == texHeader.vramX && texInfo.imgY == texHeader.vramY) {
 								imgHeader = texHeader;
 								imgFound = true;
-							} else if(texInfo.palX == texHeader.vramX && texInfo.palY == texHeader.vramY) {
+							} else if(!palFound && texInfo.palX == texHeader.vramX && texInfo.palY == texHeader.vramY) {
 								palHeader = texHeader;
 								palFound = true;
 							}
 							if(imgFound && palFound)	break;
 						}
 						if(imgFound && palFound) {
+							lastTexHeight += imgHeader.height;
 							texIds.append(texID);
 							texAlreadyLoaded.insert(texInfo, texID);
 							_loaded_tex.insert(texID++, openTexture(constData, BSX_data.size(), imgHeader, palHeader, texInfo.bpp));
@@ -305,8 +329,8 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 		return false;
 	}
 
-	quint32 unknown;
-	memcpy(&unknown, &constData[a.offset_data], 4);
+//	quint32 unknown;
+//	memcpy(&unknown, &constData[a.offset_data], 4);
 
 //	qDebug() << "Unknown" << unknown << QString::number(unknown, 16);
 
@@ -445,19 +469,34 @@ QPixmap FieldModelFilePS::openTexture(const char *constData, int size, const Tex
 //		return QPixmap();
 //	}
 
-	QImage img(imgHeader.width * 2, imgHeader.height, QImage::Format_ARGB32);
+	int width = imgHeader.width;
+	if(bpp == 1) {
+		width *= 2;
+	} else if(bpp == 0) {
+		width *= 4;
+	}
+	QImage img(width, imgHeader.height, QImage::Format_ARGB32);
 	QRgb *px = (QRgb *)img.bits();
 	int i=0;
 	for(int y=0 ; y<imgHeader.height ; ++y) {
-		for(int x=0 ; x<imgHeader.width*2 ; ++x) {
+		for(int x=0 ; x<width ; ++x) {
+			quint8 index = constData[imgHeader.offset_data + i];
+			quint16 color;
+
 			if(bpp == 1) {
-				quint8 index = constData[imgHeader.offset_data + i];
-				quint16 color;
 				memcpy(&color, &constData[palHeader.offset_data + index*2], 2);
 
 				px[i] = PsColor::fromPsColor(color, true);
-				++i;
+			} else if(bpp == 0) {
+				memcpy(&color, &constData[palHeader.offset_data + (index & 0xF)*2], 2);
+
+				px[i*2] = PsColor::fromPsColor(color, true);
+
+				memcpy(&color, &constData[palHeader.offset_data + (index >> 4)*2], 2);
+
+				px[i*2] = PsColor::fromPsColor(color, true);
 			}
+			++i;
 		}
 	}
 	return QPixmap::fromImage(img);
@@ -491,13 +530,13 @@ bool FieldModelFilePS::openBCX(const QByteArray &BCX, int animationID, bool anim
 
 	model.offset_skeleton -= 0x80000000;
 
-	qDebug() << "==== Model ====" << header.offset_models << sizeof(BCXModel) << (header.offset_models+sizeof(BCXModel));
-	qDebug() << "unknown" << model.unknown << (model.unknown & 0xFF) << ((model.unknown >> 8) & 0xFF) << QString::number(model.unknown, 16);
-	qDebug() << "bones count" << model.num_bones << "parts count" << model.num_parts << "animations count" << model.num_animations;
-	qDebug() << "scale" << model.scale;
-	qDebug() << "offsetParts" << (header.offset_models + sizeof(BCXModel) + model.offset_parts)
-				<< "offsetAnimations" << (header.offset_models + sizeof(BCXModel) + model.offset_animations);
-	qDebug() << "offsetSkeleton" << model.offset_skeleton;
+//	qDebug() << "==== Model ====" << header.offset_models << sizeof(BCXModel) << (header.offset_models+sizeof(BCXModel));
+//	qDebug() << "unknown" << model.unknown << (model.unknown & 0xFF) << ((model.unknown >> 8) & 0xFF) << QString::number(model.unknown, 16);
+//	qDebug() << "bones count" << model.num_bones << "parts count" << model.num_parts << "animations count" << model.num_animations;
+//	qDebug() << "scale" << model.scale;
+//	qDebug() << "offsetParts" << (header.offset_models + sizeof(BCXModel) + model.offset_parts)
+//				<< "offsetAnimations" << (header.offset_models + sizeof(BCXModel) + model.offset_animations);
+//	qDebug() << "offsetSkeleton" << model.offset_skeleton;
 
 	quint32 curOff = model.offset_skeleton;
 

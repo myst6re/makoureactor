@@ -28,7 +28,7 @@ class BGDialog : public QDialog
     Q_OBJECT
 public:
 	explicit BGDialog(QWidget *parent);
-	void fill(FieldArchive *fieldArchive, Field *field);
+	void fill(Field *field);
 private slots:
 	void parameterChanged(int index);
 	void layerChanged();
@@ -39,9 +39,6 @@ private:
 	void fillWidgets();
 	void fill();
 
-	bool isPS;
-	QByteArray fieldData, mimData;
-	FieldArchive *archive;
 	Field *field;
 	ApercuBGLabel *image;
 	QComboBox *parametersWidget;

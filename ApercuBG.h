@@ -27,13 +27,12 @@ class ApercuBG : public QScrollArea
 	Q_OBJECT
 public:
 	explicit ApercuBG(QWidget *parent=0);
-	void fill(FieldArchive *archive, Field *field);
+	void fill(Field *field);
 	void clear();
 signals:
 	void clicked();
 private:
 	static QPixmap errorPixmap(int w, int h);
-	FieldArchive *archive;
 	Field *field;
 	bool error;
 protected:

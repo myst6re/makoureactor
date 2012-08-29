@@ -18,7 +18,7 @@
 #include "ApercuBG.h"
 
 ApercuBG::ApercuBG(QWidget *parent)
-	: QScrollArea(parent), archive(0), field(0), error(false)
+	: QScrollArea(parent), field(0), error(false)
 {
 	setAlignment(Qt::AlignCenter);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -30,18 +30,11 @@ ApercuBG::ApercuBG(QWidget *parent)
 	setPalette(pal);
 }
 
-void ApercuBG::fill(FieldArchive *archive, Field *field)
+void ApercuBG::fill(Field *field)
 {
-	this->archive = archive;
 	this->field = field;
 
-	QPixmap background;
-
-	if(archive->isLgp()) {
-		background = ((FieldPC *)field)->openModelAndBackground(archive->getFieldData(field));
-	} else {
-		background = ((FieldPS *)field)->openModelAndBackground(archive->getMimData(field), archive->getFieldData(field));
-	}
+	QPixmap background = field->openModelAndBackground();
 
 	QPixmap newBg;
 	int w=width()-2, h=height()-2;
@@ -86,7 +79,6 @@ void ApercuBG::clear()
 {
 	setWidget(new QWidget);
 	setCursor(Qt::ArrowCursor);
-	archive = 0;
 	field = 0;
 	error = false;
 }

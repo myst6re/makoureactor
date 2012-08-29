@@ -16,14 +16,15 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldPS.h"
+#include "FieldArchive.h"
 
-FieldPS::FieldPS() :
-	Field()
-{
-}
+//FieldPS::FieldPS() :
+//	Field()
+//{
+//}
 
-FieldPS::FieldPS(const QString &name) :
-	Field(name)
+FieldPS::FieldPS(const QString &name, FieldArchive *fieldArchive) :
+	Field(name, fieldArchive)
 {
 }
 
@@ -57,8 +58,9 @@ qint8 FieldPS::open(const QByteArray &fileData)
 	return openSection1(LZS::decompress(data, debutSection2), 28);
 }
 
-QPixmap FieldPS::openModelAndBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec)
+QPixmap FieldPS::openModelAndBackground()
 {
+	QByteArray datDataDec = fieldArchive->getFieldData(this);
 	if(datDataDec.isEmpty())	return QPixmap();
 
 	FieldModelLoaderPS *fieldModelLoader = getFieldModelLoader();
@@ -66,7 +68,12 @@ QPixmap FieldPS::openModelAndBackground(const QByteArray &mimDataDec, const QByt
 	if(!fieldModelLoader->isLoaded())
 		fieldModelLoader->load(datDataDec);
 
-	return openBackground(mimDataDec, datDataDec);
+	return openBackground(fieldArchive->getMimData(this), datDataDec);
+}
+
+bool FieldPS::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
+{
+	return getUsedParams(fieldArchive->getFieldData(this), usedParams, layerExists);
 }
 
 bool FieldPS::getUsedParams(const QByteArray &datDataDec, QHash<quint8, quint8> &usedParams, bool *layerExists) const
@@ -163,6 +170,16 @@ bool FieldPS::getUsedParams(const QByteArray &datDataDec, QHash<quint8, quint8> 
 	}
 
 	return true;
+}
+
+QPixmap FieldPS::openBackground()
+{
+	return openBackground(fieldArchive->getMimData(this), fieldArchive->getFieldData(this));
+}
+
+QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+{
+	return openBackground(fieldArchive->getMimData(this), fieldArchive->getFieldData(this), paramActifs, z, layers);
 }
 
 QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec) const
@@ -496,6 +513,13 @@ FieldModelLoaderPS *FieldPS::getFieldModelLoader()
 {
 	if(modelLoader)	return (FieldModelLoaderPS *)modelLoader;
 	return (FieldModelLoaderPS *)(modelLoader = new FieldModelLoaderPS());
+}
+
+FieldModelFilePS *FieldPS::getFieldModel(int modelID, int animationID, bool animate)
+{
+	if(!fieldModel) 	fieldModel = new FieldModelFilePS();
+	((FieldModelFilePS *)fieldModel)->load(fieldArchive, this, modelID, animationID, animate);
+	return (FieldModelFilePS *)fieldModel;
 }
 
 QByteArray FieldPS::save(const QByteArray &fileData, bool compress)

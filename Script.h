@@ -36,6 +36,7 @@ public:
 	Opcode *getOpcode(quint16 opcodeID) const;
 	const QList<Opcode *> &getOpcodes() const;
 	bool isVoid() const;
+	bool compile(int &opcodeID, QString &errorStr);
 	QByteArray toByteArray(/*bool &ok, int &opcodeID*/) const;
 	void setOpcode(quint16 opcodeID, Opcode *opcode);
 	void delOpcode(quint16 opcodeID);

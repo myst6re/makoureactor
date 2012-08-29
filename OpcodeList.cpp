@@ -401,7 +401,6 @@ void OpcodeList::copy()
 {
 	QList<int> selectedIDs = this->selectedIDs();
 	if(selectedIDs.isEmpty())	return;
-	hasCut = false;
 
 	QMap<int, QTreeWidgetItem *> listeitems;
 	foreach(QTreeWidgetItem *item, selectedItems())
@@ -440,6 +439,7 @@ void OpcodeList::copy()
 		opcodeCopied.append(script->getOpcode(id));
 
 	actions().at(6)->setEnabled(true);
+	hasCut = false;
 }
 
 void OpcodeList::paste()

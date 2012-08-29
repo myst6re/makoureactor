@@ -29,6 +29,7 @@
 #include "IdFile.h"
 #include "InfFile.h"
 #include "FieldModelLoader.h"
+#include "FieldModelFile.h"
 
 //Sizeof : 36
 typedef struct {
@@ -51,6 +52,8 @@ typedef struct {
 	quint8 deph, unused12;
 } Tile;
 
+class FieldArchive;
+
 class Field
 {
 public:
@@ -66,8 +69,7 @@ public:
 	};
 	Q_DECLARE_FLAGS(FieldParts, FieldPart)
 
-	Field();
-	Field(const QString &name);
+	Field(const QString &name, FieldArchive *fieldArchive);
 	virtual ~Field();
 
 	bool isOpen() const;
@@ -77,9 +79,13 @@ public:
 	virtual qint8 open(const QByteArray &fileData)=0;
 	void close();
 
+	virtual QPixmap openModelAndBackground()=0;
+	virtual QPixmap openBackground()=0;
+	virtual QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
+
 	int getModelID(quint8) const;
 	void getBgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z=0, qint16 *x=0, qint16 *y=0) const;
-	virtual bool getUsedParams(const QByteArray &contenu, QHash<quint8, quint8> &usedParams, bool *layerExists) const=0;
+	virtual bool getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)=0;
 
 	const QList<GrpScript *> &grpScripts() const;
 	GrpScript *grpScript(int groupID) const;
@@ -123,12 +129,13 @@ public:
 	qint8 importer(const QString &path, FieldParts part);
 	virtual qint8 importer(const QByteArray &data, bool isDat, FieldParts part);
 
-	EncounterFile *getEncounter();
-	TutFile *getTut();
-	IdFile *getId();
-	CaFile *getCa();
-	InfFile *getInf();
+	EncounterFile *getEncounter(bool open=true);
+	TutFile *getTut(bool open=true);
+	IdFile *getId(bool open=true);
+	CaFile *getCa(bool open=true);
+	InfFile *getInf(bool open=true);
 	virtual FieldModelLoader *getFieldModelLoader()=0;
+	virtual FieldModelFile *getFieldModel(int modelID, int animationID=0, bool animate=true)=0;
 
 	const QString &getName() const;
 	void setName(const QString &name);
@@ -160,6 +167,8 @@ protected:
 	CaFile *ca;
 	InfFile *inf;
 	FieldModelLoader *modelLoader;
+	FieldModelFile *fieldModel;
+	FieldArchive *fieldArchive;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Field::FieldParts)

@@ -16,18 +16,14 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Field.h"
+#include "FieldArchive.h"
 #include "FieldPC.h"
 #include "FieldPS.h"
 
-Field::Field() :
-	_isOpen(false), _isModified(false), name(QString()),
-	encounter(0), tut(0), id(0), ca(0), inf(0), modelLoader(0)
-{
-}
-
-Field::Field(const QString &name) :
+Field::Field(const QString &name, FieldArchive *fieldArchive) :
 	_isOpen(false), _isModified(false), name(name),
-	encounter(0), tut(0), id(0), ca(0), inf(0), modelLoader(0)
+	encounter(0), tut(0), id(0), ca(0), inf(0), modelLoader(0), fieldModel(0),
+	fieldArchive(fieldArchive)
 {
 }
 
@@ -41,6 +37,7 @@ Field::~Field()
 	if(ca)				delete ca;
 	if(inf)				delete inf;
 	if(modelLoader)		delete modelLoader;
+	if(fieldModel)		delete fieldModel;
 }
 
 void Field::close()
@@ -69,11 +66,11 @@ void Field::setModified(bool modified)
 	_isModified = modified;
 }
 
-qint8 Field::openSection1(const QByteArray &contenu, int posStart)
+qint8 Field::openSection1(const QByteArray &data, int posStart)
 {
 	quint16 posTextes;
-	int contenuSize = contenu.size();
-	const char *constContenu = contenu.constData();
+	int contenuSize = data.size();
+	const char *constContenu = data.constData();
 
 	if(contenuSize < 32)	return -1;
 
@@ -85,7 +82,7 @@ qint8 Field::openSection1(const QByteArray &contenu, int posStart)
 
 	quint32 posAKAO = 0;
 	quint16 nbAKAO, posScripts, pos;
-	quint8 j, k, grpVides=0, nbScripts = (quint8)contenu.at(posStart+2);
+	quint8 j, k, grpVides=0, nbScripts = (quint8)data.at(posStart+2);
 
 	GrpScript *grpScript;
 
@@ -93,16 +90,16 @@ qint8 Field::openSection1(const QByteArray &contenu, int posStart)
 	posScripts = posStart+32+8*nbScripts+4*nbAKAO;
 
 	if(posTextes < posScripts+64*nbScripts)	return -1;
-	this->author = contenu.mid(posStart+16, 8);
-	//this->nbObjets3D = (quint8)contenu.at(posStart+3);
+	this->author = data.mid(posStart+16, 8);
+	//this->nbObjets3D = (quint8)data.at(posStart+3);
 	memcpy(&this->scale, &constContenu[posStart+8], 2);
-	//QString name2 = contenu.mid(posStart+24, 8);
+	//QString name2 = data.mid(posStart+24, 8);
 
 	quint16 positions[33];
 
 	for(quint8 i=0 ; i<nbScripts ; ++i)
 	{
-		grpScript = new GrpScript(QString(contenu.mid(posStart+32+8*i,8)));
+		grpScript = new GrpScript(QString(data.mid(posStart+32+8*i,8)));
 		if(grpVides > 1)
 		{
 			for(int j=0 ; j<32 ; ++j)	grpScript->addScript();
@@ -139,7 +136,7 @@ qint8 Field::openSection1(const QByteArray &contenu, int posStart)
 		{
 			if(positions[j+1] > positions[j])
 			{
-				grpScript->addScript(contenu.mid(posStart + positions[j], positions[j+1]-positions[j]));
+				grpScript->addScript(data.mid(posStart + positions[j], positions[j+1]-positions[j]));
 				for(int l=k ; l<j ; ++l)	grpScript->addScript();
 				k=j+1;
 			}
@@ -156,8 +153,8 @@ qint8 Field::openSection1(const QByteArray &contenu, int posStart)
 		for(int i=0 ; i<nbAKAO ; ++i) {
 			memcpy(&posAKAO, &constContenu[posStart+32+8*nbScripts+i*4], 4);
 			posAKAO += posStart;
-			out.append(QString("%1 %2 %3 %4 (%5)\n").arg(i).arg(name).arg(posAKAO-posStart).arg(QString(contenu.mid(posAKAO, 4))).arg(QString(contenu.mid(posAKAO-4, 8).toHex())));
-			if(contenu.mid(posAKAO, 4) != "AKAO" && contenu.at(posAKAO) != '\x12') {
+			out.append(QString("%1 %2 %3 %4 (%5)\n").arg(i).arg(name).arg(posAKAO-posStart).arg(QString(data.mid(posAKAO, 4))).arg(QString(data.mid(posAKAO-4, 8).toHex())));
+			if(data.mid(posAKAO, 4) != "AKAO" && data.at(posAKAO) != '\x12') {
 				pasok = true;
 			}
 		}
@@ -188,11 +185,11 @@ qint8 Field::openSection1(const QByteArray &contenu, int posStart)
 
 			if(contenuSize < posTextes+posFin)	return -1;
 
-			texts.append(new FF7Text(contenu.mid(posTextes+posDeb, posFin-posDeb)));
+			texts.append(new FF7Text(data.mid(posTextes+posDeb, posFin-posDeb)));
 			posDeb = posFin;
 		}
 		if((quint32)contenuSize < posAKAO)	return -1;
-		texts.append(new FF7Text(contenu.mid(posTextes+posDeb, posAKAO-posDeb)));
+		texts.append(new FF7Text(data.mid(posTextes+posDeb, posAKAO-posDeb)));
 	}
 
 	_isOpen = true;
@@ -558,34 +555,44 @@ QSet<quint8> Field::listUsedTuts() const
 	return usedTuts;
 }
 
-EncounterFile *Field::getEncounter()
+EncounterFile *Field::getEncounter(bool open)
 {
 	if(encounter)	return encounter;
-	return encounter = new EncounterFile();
+	encounter = new EncounterFile();
+	if(open)	encounter->open(fieldArchive->getFieldData(this));
+	return encounter;
 }
 
-TutFile *Field::getTut()
+TutFile *Field::getTut(bool open)
 {
 	if(tut)		return tut;
-	return tut = new TutFile();
+	tut = new TutFile();
+	if(open)	tut->open(fieldArchive->getFieldData(this));
+	return tut;
 }
 
-IdFile *Field::getId()
+IdFile *Field::getId(bool open)
 {
 	if(id)	return id;
-	return id = new IdFile();
+	id = new IdFile();
+	if(open)	id->open(fieldArchive->getFieldData(this));
+	return id;
 }
 
-CaFile *Field::getCa()
+CaFile *Field::getCa(bool open)
 {
 	if(ca)	return ca;
-	return ca = new CaFile();
+	ca = new CaFile();
+	if(open)	ca->open(fieldArchive->getFieldData(this));
+	return ca;
 }
 
-InfFile *Field::getInf()
+InfFile *Field::getInf(bool open)
 {
 	if(inf)	return inf;
-	return inf = new InfFile();
+	inf = new InfFile();
+	if(open)	inf->open(fieldArchive->getFieldData(this));
+	return inf;
 }
 
 const QString &Field::getName() const
@@ -630,15 +637,15 @@ void Field::setSaved()
 	if(inf)			inf->setModified(false);
 }
 
-QByteArray Field::saveSection1(const QByteArray &contenu) const
+QByteArray Field::saveSection1(const QByteArray &data) const
 {
 	QByteArray grpScriptNames, positionsScripts, positionsAKAO, allScripts, realScript, positionsTexts, allTexts, allAKAOs;
 	quint32 posAKAO, posFirstAKAO;
 	quint16 posTextes, posScripts, newPosTextes, nbAKAO, pos;
 	quint8 nbGrpScripts, newNbGrpScripts;
-	const char *constData = contenu.constData();
+	const char *constData = data.constData();
 	
-	nbGrpScripts = (quint8)contenu.at(2);//nbGrpScripts
+	nbGrpScripts = (quint8)data.at(2);//nbGrpScripts
 	newNbGrpScripts = _grpScripts.size();
 	memcpy(&posTextes, &constData[4], 2);//posTextes (et fin des scripts)
 	memcpy(&nbAKAO, &constData[6], 2);//nbAKAO
@@ -688,14 +695,14 @@ QByteArray Field::saveSection1(const QByteArray &contenu) const
 			positionsAKAO.append((char *)&posAKAO, 4);
 		}
 
-		allAKAOs = contenu.mid(posFirstAKAO);
+		allAKAOs = data.mid(posFirstAKAO);
 	}
 
 	QByteArray mapauthor = author.toLatin1().leftJustified(8, '\x00', true), mapname = name.toLower().toLatin1().leftJustified(8, '\x00', true);
 	mapauthor[7] = '\x00';
 	mapname[7] = '\x00';
 
-	return contenu.left(2) //Début
+	return data.left(2) //Début
 			.append((char)newNbGrpScripts) //nbGrpScripts
 			.append((char)nbObjets3D) //nbObjets3D
 			.append((char *)&newPosTextes, 2) //PosTextes
@@ -790,27 +797,27 @@ qint8 Field::importer(const QByteArray &data, bool isDat, FieldParts part)
 	}
 
 	if(part.testFlag(Akaos)) {
-		TutFile *tut = getTut();
+		TutFile *tut = getTut(false);
 		if(!tut->open(data))		return 3;
 		tut->setModified(true);
 	}
 	if(part.testFlag(Encounter)) {
-		EncounterFile *enc = getEncounter();
+		EncounterFile *enc = getEncounter(false);
 		if(!enc->open(data))		return 3;
 		enc->setModified(true);
 	}
 	if(part.testFlag(Walkmesh)) {
-		IdFile *walk = getId();
+		IdFile *walk = getId(false);
 		if(!walk->open(data))	return 3;
 		walk->setModified(true);
 	}
 	if(part.testFlag(Camera)) {
-		CaFile *ca = getCa();
+		CaFile *ca = getCa(false);
 		if(!ca->open(data))		return 3;
 		ca->setModified(true);
 	}
 	if(part.testFlag(Inf)) {
-		InfFile *inf = getInf();
+		InfFile *inf = getInf(false);
 		if(!inf->open(data, true))		return 3;
 		inf->setModified(true);
 	}

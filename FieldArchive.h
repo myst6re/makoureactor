@@ -105,8 +105,8 @@ private:
 	QMap<QString, int> tutPos;
 	QMap<QString, TutFile *> tuts;
 	bool isDat;
-	static QByteArray dataCache;
-	static Field *fieldCache;
+	static QByteArray fieldDataCache, mimDataCache, modelDataCache;
+	static Field *fieldCache, *mimCache, *modelCache;
 	// QFileSystemWatcher fileWatcher;
 };
 

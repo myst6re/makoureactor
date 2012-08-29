@@ -424,17 +424,11 @@ QWidget *WalkmeshManager::buildMiscPage()
 	return ret;
 }
 
-void WalkmeshManager::fill(FieldArchive *fieldArchive, Field *field)
+void WalkmeshManager::fill(Field *field)
 {
 	infFile = field->getInf();
-	if(!infFile->isOpen())
-		infFile->open(fieldArchive->getFieldData(field));
 	idFile = field->getId();
-	if(!idFile->isOpen())
-		idFile->open(fieldArchive->getFieldData(field));
 	caFile = field->getCa();
-	if(!caFile->isOpen())
-		caFile->open(fieldArchive->getFieldData(field));
 
 	if(!idFile->isOpen() || !caFile->isOpen() || !infFile->isOpen()) {
 		QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Erreur d'ouverture du walkmesh"));

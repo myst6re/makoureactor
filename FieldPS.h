@@ -22,6 +22,7 @@
 #include "Field.h"
 #include "IsoArchive.h"
 #include "FieldModelLoaderPS.h"
+#include "FieldModelFilePS.h"
 
 //Sizeof : 8
 typedef struct {
@@ -66,26 +67,26 @@ typedef struct {
 class FieldPS : public Field
 {
 public:
-	FieldPS();
-	FieldPS(const QString &name);
+//	FieldPS();
+	FieldPS(const QString &name, FieldArchive *fieldArchive);
 	FieldPS(const Field &field);
 	virtual ~FieldPS();
 
 	qint8 open(const QByteArray &fileData);
-	QPixmap openModelAndBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec);
-	bool getUsedParams(const QByteArray &datData, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
-	QPixmap openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec) const;
-	QPixmap openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
+	QPixmap openModelAndBackground();
+	QPixmap openBackground();
+	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
+
+	bool getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 
 	QByteArray save(const QByteArray &fileData, bool compress);
 
-	EncounterFile *getEncounter();
-	TutFile *getTut();
-	IdFile *getId();
-	CaFile *getCa();
-	InfFile *getInf();
 	FieldModelLoaderPS *getFieldModelLoader();
+	FieldModelFilePS *getFieldModel(int modelID, int animationID=0, bool animate=true);
 private:
+	QPixmap openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec) const;
+	QPixmap openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
+	bool getUsedParams(const QByteArray &datData, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
 };
 
 #endif // DEF_FIELDPS

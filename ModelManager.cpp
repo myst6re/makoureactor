@@ -18,7 +18,8 @@
 #include "ModelManager.h"
 
 ModelManager::ModelManager(Field *field, const QGLWidget *shareWidget, QWidget *parent)
-	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), fieldModelLoader(((FieldPC *)field)->getFieldModelLoader()), page_filled(false)
+	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), field((FieldPC *)field),
+	  fieldModelLoader(((FieldPC *)field)->getFieldModelLoader()), page_filled(false)
 {
 	field_model_unknown = fieldModelLoader->model_unknown;
 	field_model_nameChar = fieldModelLoader->model_nameChar;
@@ -208,9 +209,9 @@ void ModelManager::add_HRC()
 		else {
 			if(model_preview) {
 				newItem = model_anims->currentItem();
-				if(item!=NULL && newItem!=NULL)
-					model_preview->load(item->text(0), newItem->text(0), true);
-				else
+				if(item!=NULL && newItem!=NULL) {
+					model_preview->load(field, item->text(0), newItem->text(0));
+				} else
 					model_preview->clear();
 			}
 			return;
@@ -329,59 +330,30 @@ void ModelManager::renameOK_HRC(QTreeWidgetItem *item)
 void ModelManager::modifyHRC(const QString &hrc)
 {
 	if(model_preview) {
-		model_preview->load(hrc, "aafe", false);
+		model_preview->load(field, hrc, "aafe", false);
+		QString a;
 		switch(model_preview->nb_bones()) {
-		case 5:
-			model_preview->load(hrc, "avhd", false);
-			break;
-		case 9:
-			model_preview->load(hrc, "geaf", false);
-			break;
-		case 11:
-			model_preview->load(hrc, "bdfe", false);
-			break;
-		case 12:
-			model_preview->load(hrc, "atcf", false);
-			break;
-		case 13:
-			model_preview->load(hrc, "bria", false);
-			break;
-		case 14:
-			model_preview->load(hrc, "fgad", false);
-			break;
-		case 15:
-			model_preview->load(hrc, "gcad", false);
-			break;
-		case 17:
-			model_preview->load(hrc, "hkga", false);
-			break;
-		case 18:
-			model_preview->load(hrc, "gsia", false);
-			break;
-		case 20:
-			model_preview->load(hrc, "FZGB", false);
-			break;
-		case 23:
-			model_preview->load(hrc, "anhd", false);
-			break;
-		case 24:
-			model_preview->load(hrc, "abcd", false);
-			break;
-		case 25:
-			model_preview->load(hrc, "afdf", false);
-			break;
-		case 26:
-			model_preview->load(hrc, "hlfb", false);
-			break;
-		case 27:
-			model_preview->load(hrc, "fhhb", false);
-			break;
-		case 28:
-			model_preview->load(hrc, "aeha", false);
-			break;
-		case 29:
-			model_preview->load(hrc, "aeae", false);
-			break;
+		case 5:		a = "avhd";	break;
+		case 9:		a = "geaf";	break;
+		case 11:	a = "bdfe";	break;
+		case 12:	a = "atcf";	break;
+		case 13:	a = "bria";	break;
+		case 14:	a = "fgad";	break;
+		case 15:	a = "gcad";	break;
+		case 17:	a = "hkga";	break;
+		case 18:	a = "gsia";	break;
+		case 20:	a = "FZGB";	break;
+		case 23:	a = "anhd";	break;
+		case 24:	a = "abcd";	break;
+		case 25:	a = "afdf";	break;
+		case 26:	a = "hlfb";	break;
+		case 27:	a = "fhhb";	break;
+		case 28:	a = "aeha";	break;
+		case 29:	a = "aeae";	break;
+		}
+
+		if(!a.isEmpty()) {
+			model_preview->load(field, hrc, a, false);
 		}
 	}
 }
@@ -447,7 +419,7 @@ void ModelManager::add_anim()
 		else {
 			if(model_preview) {
 				if(item!=NULL)
-					model_preview->load(models->currentItem()->text(0), item->text(0), true);
+					model_preview->load(field, models->currentItem()->text(0), item->text(0));
 				else
 					model_preview->clear();
 			}
@@ -478,7 +450,7 @@ void ModelManager::add_anim()
 
 void ModelManager::modifyAnimation(const QString &a)
 {
-	if(model_preview)	model_preview->load(models->currentItem()->text(0), a, true);
+	if(model_preview)	model_preview->load(field, models->currentItem()->text(0), a);
 }
 
 void ModelManager::del_anim()
@@ -548,7 +520,7 @@ void ModelManager::show_model(QTreeWidgetItem *item)
 			return;
 		}
 //		qDebug() << "show_model()" << item->text(0);
-		model_preview->load(models->currentItem()->text(0), item->text(0), true);
+		model_preview->load(field, models->currentItem()->text(0), item->text(0));
 	}
 }
 

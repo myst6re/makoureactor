@@ -111,8 +111,6 @@ typedef struct TextureInfo_ {
 		return ti.bpp == bpp
 				&& ti.imgX == imgX
 				&& ti.imgY == imgY
-				&& ti.palX == palX
-				&& ti.palY == palY
 				&& ti.type == type;
 	}
 

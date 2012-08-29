@@ -34,9 +34,8 @@ class FieldModel : public QGLWidget
 public:
 	FieldModel(QWidget *parent=0, const QGLWidget *shareWidget=0);
 	virtual ~FieldModel();
-	quint8 load(FieldModelLoaderPC *modelLoader, int model_id, int animation_id, bool animate=false);
-	quint8 load(const QString &hrc, const QString &a, bool animate=false);
-	quint8 load(FieldArchive *fieldArchive, Field *currentField, int model_id, int animation_id, bool animate=false);
+	bool load(FieldPC *field, const QString &hrc, const QString &a, bool animate=true);
+	bool load(Field *field, int modelID, int animationID=0, bool animate=true);
 	void clear();
 	int nb_bones();
 public slots:

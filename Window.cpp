@@ -525,12 +525,12 @@ void Window::ouvrirField()
 	if(textDialog && textDialog->isVisible())
 		textDialog->setField(field);
 	if(_walkmeshManager && _walkmeshManager->isVisible())
-		_walkmeshManager->fill(fieldArchive, field);
+		_walkmeshManager->fill(field);
 	if(_backgroundManager && _backgroundManager->isVisible())
-		_backgroundManager->fill(fieldArchive, field);
+		_backgroundManager->fill(field);
 
 	//Réouvrir fichier pour afficher le background
-	zoneImage->fill(fieldArchive, field);
+	zoneImage->fill(field);
 
 	zonePreview->setCurrentIndex(0);
 	
@@ -581,19 +581,15 @@ void Window::afficherGrpScripts()
 	connect(liste3, SIGNAL(itemSelectionChanged()), SLOT(afficherScripts()));
 	liste3->setCurrentRow(0);
 
-	quint8 modelLoaded = 0;
+	bool modelLoaded = false;
 
 	int modelID = field->getModelID(liste2->selectedID());
 	Data::currentModelID = modelID;
 	if(fieldModel && modelID != -1) {
-		if(fieldArchive->isLgp()) {
-			modelLoaded = fieldModel->load(((FieldPC *)field)->getFieldModelLoader(), modelID, 0, true);
-		} else {
-			modelLoaded = fieldModel->load(fieldArchive, field, modelID, 0, true);
-		}
+		modelLoaded = fieldModel->load(field, modelID);
 	}
 
-	zonePreview->setCurrentIndex(modelLoaded==1);
+	zonePreview->setCurrentIndex((int)modelLoaded);
 }
 
 void Window::afficherScripts()
@@ -975,14 +971,9 @@ void Window::massExport()
 						path = QDir::cleanPath(QString("%1/%2.%3").arg(massExportDialog->directory(), f->getName(), extension));
 
 						if(massExportDialog->overwrite() || !QFile::exists(path)) {
-							QPixmap background;
-							if(fieldArchive->isLgp()) {
-								background = ((FieldPC *)f)->openBackground(fieldArchive->getFieldData(f));
-							} else {
-								background = ((FieldPS *)f)->openBackground(fieldArchive->getMimData(f), fieldArchive->getFieldData(f));
-							}
-
-							background.save(path);
+							QPixmap background = f->openBackground();
+							if(!background.isNull())
+								background.save(path);
 						}
 					}
 					progressDialog.setValue(currentField++);
@@ -1003,7 +994,7 @@ void Window::massExport()
 						int akaoCount = akaoList->size();
 						for(int i=0 ; i<akaoCount ; ++i) {
 							if(!akaoList->isTut(i)) {
-								path = QDir::cleanPath(QString("%1/%2.%3").arg(massExportDialog->directory(), f->getName(), extension));
+								path = QDir::cleanPath(QString("%1/%2-%3.%4").arg(massExportDialog->directory(), f->getName()).arg(i).arg(extension));
 								if(massExportDialog->overwrite() || !QFile::exists(path)) {
 									QFile tutExport(path);
 									if(tutExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -1141,8 +1132,6 @@ void Window::encounterManager()
 {
 	if(field) {
 		EncounterFile *encounter = field->getEncounter();
-		if(!encounter->isOpen())
-			encounter->open(fieldArchive->getFieldData(field));
 		if(encounter->isOpen()) {
 			EncounterWidget dialog(encounter, this);
 			if(dialog.exec()==QDialog::Accepted)
@@ -1160,8 +1149,6 @@ void Window::tutManager()
 {
 	if(field) {
 		TutFile *tut = field->getTut(), *tutPC = fieldArchive->getTut(field->getName());
-		if(!tut->isOpen())
-			tut->open(fieldArchive->getFieldData(field));
 		if(tut->isOpen()) {
 			TutWidget dialog(field, tut, tutPC, this);
 			if(dialog.exec()==QDialog::Accepted)
@@ -1183,7 +1170,7 @@ void Window::walkmeshManager()
 			connect(_walkmeshManager, SIGNAL(modified()), SLOT(activerSave()));
 		}
 
-		_walkmeshManager->fill(fieldArchive, field);
+		_walkmeshManager->fill(field);
 		_walkmeshManager->show();
 		_walkmeshManager->activateWindow();
 	}
@@ -1196,7 +1183,7 @@ void Window::backgroundManager()
 			_backgroundManager = new BGDialog(this);
 		}
 
-		_backgroundManager->fill(fieldArchive, field);
+		_backgroundManager->fill(field);
 		_backgroundManager->show();
 		_backgroundManager->activateWindow();
 	}
@@ -1206,8 +1193,6 @@ void Window::miscManager()
 {
 	if(field) {
 		InfFile *inf = field->getInf();
-		if(!inf->isOpen())
-			inf->open(fieldArchive->getFieldData(field));
 		if(inf->isOpen()) {
 			MiscWidget dialog(inf, field, this);
 			if(dialog.exec()==QDialog::Accepted)

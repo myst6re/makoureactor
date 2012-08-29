@@ -38,8 +38,7 @@ public:
 	FieldModelFilePC();
 	void clear();
 	bool isPS() const { return false; }
-	quint8 load(FieldModelLoaderPC *modelLoader, int modelID, int animID, bool animate=false);
-	quint8 load(QString hrc, QString a, bool animate=false);
+	quint8 load(QString hrc, QString a, bool animate=true);
 private:
 	QMultiMap<int, QList<int> > _tex_files;
 	QList<QString> tex2id;

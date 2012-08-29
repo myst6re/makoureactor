@@ -21,20 +21,22 @@
 #include <QtGui>
 #include "Field.h"
 #include "FieldModelLoaderPC.h"
+#include "FieldModelFilePC.h"
 
 class FieldPC : public Field
 {
 public:
-	FieldPC();
-	FieldPC(quint32 position, const QString &name);
+//	FieldPC();
+	FieldPC(quint32 position, const QString &name, FieldArchive *fieldArchive);
 	FieldPC(const Field &field);
 	virtual ~FieldPC();
 
 	qint8 open(const QByteArray &fileData);
-	QPixmap openModelAndBackground(const QByteArray &data);
-	bool getUsedParams(const QByteArray &contenu, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
-	QPixmap openBackground(const QByteArray &data) const;
-	QPixmap openBackground(const QByteArray &contenu, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
+	QPixmap openModelAndBackground();
+	QPixmap openBackground();
+	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
+
+	bool getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 
 	quint32 getPosition() const;
 	void setPosition(quint32 position);
@@ -43,7 +45,13 @@ public:
 	qint8 importer(const QByteArray &data, bool isDat, FieldParts part);
 
 	FieldModelLoaderPC *getFieldModelLoader();
+	FieldModelFilePC *getFieldModel(int modelID, int animationID=0, bool animate=true);
+	FieldModelFilePC *getFieldModel(const QString &hrc, const QString &a, bool animate=true);
 private:
+	bool getUsedParams(const QByteArray &data, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
+	QPixmap openBackground(const QByteArray &data) const;
+	QPixmap openBackground(const QByteArray &data, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
+
 	quint32 position;
 };
 

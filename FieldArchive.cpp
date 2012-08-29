@@ -145,8 +145,12 @@ Field *FieldArchive::field(const QString &name, bool open)
 	return NULL;
 }
 
-QByteArray FieldArchive::dataCache;
+QByteArray FieldArchive::fieldDataCache;
+QByteArray FieldArchive::mimDataCache;
+QByteArray FieldArchive::modelDataCache;
 Field *FieldArchive::fieldCache=0;
+Field *FieldArchive::mimCache=0;
+Field *FieldArchive::modelCache=0;
 
 QByteArray FieldArchive::getLgpData(int position)
 {
@@ -168,12 +172,10 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 {
 	quint32 lzsSize;
 	QByteArray data;
-	QTime t;
-	t.start();
 
-	 // use data from the cache
+	// use data from the cache
 	if(unlzs && fieldCache && fieldCache == field) {
-		return dataCache;
+		return fieldDataCache;
 	}
 
 	if(isDatFile()) {
@@ -198,19 +200,41 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 
 	if(unlzs) { // put decompressed data in the cache
 		fieldCache = field;
-		dataCache = data;
+		fieldDataCache = data;
 	}
 	return data;
 }
 
 QByteArray FieldArchive::getMimData(Field *field, bool unlzs)
 {
-	return getFileData(field->getName().toUpper()+".MIM", unlzs);
+	// use data from the cache
+	if(unlzs && mimCache && mimCache == field) {
+		return mimDataCache;
+	}
+
+	QByteArray data = getFileData(field->getName().toUpper()+".MIM", unlzs);
+
+	if(unlzs) { // put decompressed data in the cache
+		mimCache = field;
+		mimDataCache = data;
+	}
+	return data;
 }
 
 QByteArray FieldArchive::getModelData(Field *field, bool unlzs)
 {
-	return getFileData(field->getName().toUpper()+".BSX", unlzs);
+	// use data from the cache
+	if(unlzs && modelCache && modelCache == field) {
+		return modelDataCache;
+	}
+
+	QByteArray data = getFileData(field->getName().toUpper()+".BSX", unlzs);
+
+	if(unlzs) { // put decompressed data in the cache
+		modelCache = field;
+		modelDataCache = data;
+	}
+	return data;
 }
 
 QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
@@ -302,10 +326,8 @@ void FieldArchive::searchAll()
 		if(field != NULL) {
 			qDebug() << field->getName();
 			InfFile *inf = field->getInf();
-			if(!inf->isOpen()) {
-				if(inf->open(getFieldData(field))) {
-					inf->test();
-				}
+			if(inf->isOpen()) {
+				inf->test();
 			}
 			if(!field->isModified()) {
 				field->close();
@@ -560,7 +582,7 @@ void FieldArchive::close()
 
 void FieldArchive::addDAT(const QString &name, QList<QTreeWidgetItem *> &items)
 {
-	Field *field = new FieldPS(name.toLower());
+	Field *field = new FieldPS(name.toLower(), this);
 
 	QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name.toLower() << QString());
 	item->setData(0, Qt::UserRole, fileList.size());
@@ -682,7 +704,7 @@ quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
 				fic->read((char *)&lzsSize, 4);
 				if(fileSize != lzsSize+4)	continue;
 
-				field = new FieldPC(pos, name);
+				field = new FieldPC(pos, name, this);
 
 				QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << QString());
 				item->setData(0, Qt::UserRole, fileList.size());

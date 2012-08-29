@@ -18,8 +18,7 @@
 #include "BGDialog.h"
 
 BGDialog::BGDialog(QWidget *parent) :
-	QDialog(parent, Qt::Tool),
-	archive(0), field(0)
+	QDialog(parent, Qt::Tool), field(0)
 {
 	QScrollArea *scrollArea = new QScrollArea(this);
 	scrollArea->setWidgetResizable(true);
@@ -63,16 +62,11 @@ BGDialog::BGDialog(QWidget *parent) :
 	connect(zWidget, SIGNAL(valueChanged(int)), SLOT(changeZ(int)));
 }
 
-void BGDialog::fill(FieldArchive *fieldArchive, Field *field)
+void BGDialog::fill(Field *field)
 {
-	this->archive = fieldArchive;
 	this->field = field;
 
 	setWindowTitle(tr("Aperçu %1").arg(field->getName()));
-
-	mimData = archive->getMimData(field);
-	isPS = !mimData.isEmpty();
-	fieldData = archive->getFieldData(field);
 
 	fillWidgets();
 
@@ -93,7 +87,7 @@ void BGDialog::fillWidgets()
 	allparams.clear();
 	params.clear();
 
-	if(field->getUsedParams(fieldData, usedParams, layerExists))
+	if(field->getUsedParams(usedParams, layerExists))
 	{
 		foreach(const quint8 &param, usedParams.keys()) {
 			parametersWidget->addItem(tr("Paramètre %1").arg(param), param);
@@ -222,9 +216,5 @@ void BGDialog::changeZ(int value)
 
 void BGDialog::fill()
 {
-	if(isPS) {
-		image->setPixmap(((FieldPS *)field)->openBackground(mimData, fieldData, params, z, layers));
-	} else {
-		image->setPixmap(((FieldPC *)field)->openBackground(fieldData, params, z, layers));
-	}
+	image->setPixmap(field->openBackground(params, z, layers));
 }

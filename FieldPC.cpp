@@ -16,14 +16,15 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldPC.h"
+#include "FieldArchive.h"
 
-FieldPC::FieldPC() :
-	Field(), position(0)
-{
-}
+//FieldPC::FieldPC() :
+//	Field(), position(0)
+//{
+//}
 
-FieldPC::FieldPC(quint32 position, const QString &name) :
-	Field(name), position(position)
+FieldPC::FieldPC(quint32 position, const QString &name, FieldArchive *fieldArchive) :
+	Field(name, fieldArchive), position(position)
 {
 }
 
@@ -55,108 +56,28 @@ qint8 FieldPC::open(const QByteArray &fileData)
 	return openSection1(LZS::decompress(data, debutSection2), 46);
 }
 
-QPixmap FieldPC::openModelAndBackground(const QByteArray &data)
+QPixmap FieldPC::openModelAndBackground()
 {
 	FieldModelLoaderPC *fieldModelLoader = getFieldModelLoader();
 
 	if(!fieldModelLoader->isLoaded())
-		fieldModelLoader->load(data, this->name);
+		fieldModelLoader->load(fieldArchive->getFieldData(this), this->name);
 
 //	Data::currentCharNames = model_nameChar;
-	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
-	Data::currentAnimNames = &fieldModelLoader->model_anims;
+//	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
+//	Data::currentAnimNames = &fieldModelLoader->model_anims;
 
-	return openBackground(data);
+	return openBackground();
 }
 
-bool FieldPC::getUsedParams(const QByteArray &data, QHash<quint8, quint8> &usedParams, bool *layerExists) const
+QPixmap FieldPC::openBackground()
 {
-	const char *constData = data.constData();
-	quint32 debutSection9, i;
+	return openBackground(fieldArchive->getFieldData(this));
+}
 
-	if(data.isEmpty())	return false;
-
-	memcpy(&debutSection9, &constData[38], 4);//Adresse Section 9
-
-	if((quint32)data.size() <= debutSection9+153)	return false;
-
-	quint32 aTex = debutSection9+48;
-	quint16 nbTiles1, nbTiles2=0, nbTiles3=0, nbTiles4=0;
-	bool exist2, exist3, exist4;
-
-	memcpy(&nbTiles1, &constData[aTex], 2);//nbTiles1
-	aTex += 8+nbTiles1*52;
-	if((exist2 = (bool)data.at(aTex)))
-	{
-		memcpy(&nbTiles2, &constData[aTex+5], 2);//nbTiles2
-		aTex += 26+nbTiles2*52;
-	}
-	aTex++;
-	if((exist3 = (bool)data.at(aTex)))
-	{
-		memcpy(&nbTiles3, &constData[aTex+5], 2);//nbTiles3
-		aTex += 20+nbTiles3*52;
-	}
-	aTex++;
-	if((exist4 = (bool)data.at(aTex)))
-	{
-		memcpy(&nbTiles4, &constData[aTex+5], 2);//nbTiles4
-		aTex += 20+nbTiles4*52;
-	}
-
-	layerExists[0] = exist2;
-	layerExists[1] = exist3;
-	layerExists[2] = exist4;
-
-	Tile tile;
-
-	//BG 0
-	aTex = debutSection9+56 + nbTiles1*52 + 1;
-
-	//BG 1
-	if(exist2)
-	{
-		aTex += 26;
-		for(i=0 ; i<nbTiles2 ; ++i)
-		{
-			memcpy(&tile, &constData[aTex+i*52], 34);
-			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
-			{
-				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
-			}
-		}
-	}
-	aTex += nbTiles2*52 + 1;
-
-	//BG 2
-	if(exist3)
-	{
-		aTex += 20;
-		for(i=0 ; i<nbTiles3 ; ++i)
-		{
-			memcpy(&tile, &constData[aTex+i*52], 34);
-			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
-			{
-				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
-			}
-		}
-	}
-	aTex += nbTiles3*52 + 1;
-
-	//BG 3
-	if(exist4)
-	{
-		aTex += 20;
-		for(i=0 ; i<nbTiles4 ; ++i)
-		{
-			memcpy(&tile, &constData[aTex+i*52], 34);
-			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
-			{
-				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
-			}
-		}
-	}
-	return true;
+QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+{
+	return openBackground(fieldArchive->getFieldData(this), paramActifs, z, layers);
 }
 
 QPixmap FieldPC::openBackground(const QByteArray &data) const
@@ -409,10 +330,121 @@ QPixmap FieldPC::openBackground(const QByteArray &data, const QHash<quint8, quin
 	return QPixmap::fromImage(image);
 }
 
+bool FieldPC::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
+{
+	return getUsedParams(fieldArchive->getFieldData(this), usedParams, layerExists);
+}
+
+bool FieldPC::getUsedParams(const QByteArray &data, QHash<quint8, quint8> &usedParams, bool *layerExists) const
+{
+	const char *constData = data.constData();
+	quint32 debutSection9, i;
+
+	if(data.isEmpty())	return false;
+
+	memcpy(&debutSection9, &constData[38], 4);//Adresse Section 9
+
+	if((quint32)data.size() <= debutSection9+153)	return false;
+
+	quint32 aTex = debutSection9+48;
+	quint16 nbTiles1, nbTiles2=0, nbTiles3=0, nbTiles4=0;
+	bool exist2, exist3, exist4;
+
+	memcpy(&nbTiles1, &constData[aTex], 2);//nbTiles1
+	aTex += 8+nbTiles1*52;
+	if((exist2 = (bool)data.at(aTex)))
+	{
+		memcpy(&nbTiles2, &constData[aTex+5], 2);//nbTiles2
+		aTex += 26+nbTiles2*52;
+	}
+	aTex++;
+	if((exist3 = (bool)data.at(aTex)))
+	{
+		memcpy(&nbTiles3, &constData[aTex+5], 2);//nbTiles3
+		aTex += 20+nbTiles3*52;
+	}
+	aTex++;
+	if((exist4 = (bool)data.at(aTex)))
+	{
+		memcpy(&nbTiles4, &constData[aTex+5], 2);//nbTiles4
+		aTex += 20+nbTiles4*52;
+	}
+
+	layerExists[0] = exist2;
+	layerExists[1] = exist3;
+	layerExists[2] = exist4;
+
+	Tile tile;
+
+	//BG 0
+	aTex = debutSection9+56 + nbTiles1*52 + 1;
+
+	//BG 1
+	if(exist2)
+	{
+		aTex += 26;
+		for(i=0 ; i<nbTiles2 ; ++i)
+		{
+			memcpy(&tile, &constData[aTex+i*52], 34);
+			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
+			{
+				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
+			}
+		}
+	}
+	aTex += nbTiles2*52 + 1;
+
+	//BG 2
+	if(exist3)
+	{
+		aTex += 20;
+		for(i=0 ; i<nbTiles3 ; ++i)
+		{
+			memcpy(&tile, &constData[aTex+i*52], 34);
+			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
+			{
+				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
+			}
+		}
+	}
+	aTex += nbTiles3*52 + 1;
+
+	//BG 3
+	if(exist4)
+	{
+		aTex += 20;
+		for(i=0 ; i<nbTiles4 ; ++i)
+		{
+			memcpy(&tile, &constData[aTex+i*52], 34);
+			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
+			{
+				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
+			}
+		}
+	}
+	return true;
+}
+
 FieldModelLoaderPC *FieldPC::getFieldModelLoader()
 {
 	if(modelLoader)	return (FieldModelLoaderPC *)modelLoader;
 	return (FieldModelLoaderPC *)(modelLoader = new FieldModelLoaderPC());
+}
+
+FieldModelFilePC *FieldPC::getFieldModel(int modelID, int animationID, bool animate)
+{
+	FieldModelLoaderPC *modelLoader = getFieldModelLoader();
+	QString hrc = modelLoader->HRCName(modelID);
+	QString a = modelLoader->AName(modelID, animationID);
+
+	return getFieldModel(hrc, a, animate);
+}
+
+FieldModelFilePC *FieldPC::getFieldModel(const QString &hrc, const QString &a, bool animate)
+{
+	if(!fieldModel)		fieldModel = new FieldModelFilePC();
+	((FieldModelFilePC *)fieldModel)->load(hrc, a, animate);
+	return (FieldModelFilePC *)fieldModel;
 }
 
 quint32 FieldPC::getPosition() const

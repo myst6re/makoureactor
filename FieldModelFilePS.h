@@ -22,7 +22,6 @@
 #include "FieldModelFile.h"
 #include "FieldModelPartPS.h"
 #include "FieldModelLoaderPS.h"
-#include "FieldArchive.h"
 #include "TdbFile.h"
 
 typedef struct {
@@ -110,6 +109,9 @@ typedef struct {
 	qint8 parent;
 	quint8 unknown;
 } BonePS;
+
+class FieldArchive;
+class Field;
 
 class FieldModelFilePS : public FieldModelFile
 {

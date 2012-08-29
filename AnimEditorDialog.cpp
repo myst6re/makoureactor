@@ -34,7 +34,7 @@ AnimEditorDialog::AnimEditorDialog(int animID, const QGLWidget *shareWidget, QWi
 
 	aList = new QListWidget(this);
 	aList->setUniformItemSizes(true);
-	aList->addItems(Data::currentAnimNames->value(Data::currentModelID));
+//	aList->addItems(Data::currentAnimNames->value(Data::currentModelID));
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 
@@ -53,8 +53,8 @@ AnimEditorDialog::AnimEditorDialog(int animID, const QGLWidget *shareWidget, QWi
 
 void AnimEditorDialog::changeModelAnimation()
 {
-	if(fieldModel)
-		fieldModel->load(Data::currentHrcNames->value(Data::currentModelID), Data::currentAnimNames->value(Data::currentModelID).value(chosenAnimation()), true);
+//	if(fieldModel)
+//		fieldModel->load(Data::currentHrcNames->value(Data::currentModelID), Data::currentAnimNames->value(Data::currentModelID).value(chosenAnimation()), true);
 }
 
 int AnimEditorDialog::chosenAnimation()
