@@ -71,6 +71,8 @@ private slots:
 	void editCameraFocusHeight(int value);
 	void editUnknown1(const QByteArray &data);
 	void editUnknown2(const QByteArray &data);
+protected:
+	virtual void focusInEvent(QFocusEvent *e);
 private:
 	QWidget *buildCameraPage();
 	QWidget *buildWalkmeshPage();

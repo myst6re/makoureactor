@@ -48,6 +48,8 @@ private:
 	void drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access);
 	double distance;
 	float xRot, yRot, zRot;
+	float xTrans, yTrans, transStep;
+	int lastKeyPressed;
 	int camID;
 	int _selectedTriangle;
 	int _selectedDoor;
@@ -63,6 +65,7 @@ protected:
 	void paintGL();
 	void wheelEvent(QWheelEvent *event);
 	void mousePressEvent(QMouseEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 };
 
 #endif // WALKMESHWIDGET_H

@@ -576,7 +576,7 @@ void WalkmeshManager::setCurrentCamera(int camID)
 
 		caZoomEdit->setValue(cam.camera_zoom);
 
-		walkmesh->setCurrentFieldCamera(camID);
+		if(walkmesh)	walkmesh->setCurrentFieldCamera(camID);
 		caVectorXEdit->blockSignals(false);
 		caVectorYEdit->blockSignals(false);
 		caVectorZEdit->blockSignals(false);
@@ -664,7 +664,7 @@ void WalkmeshManager::editCaVector(int id, const Vertex_s &values)
 		if(oldV.x != values.x || oldV.y != values.y || oldV.z != values.z) {
 			cam.camera_axis[id] = values;
 			caFile->setCamera(camID, cam);
-			walkmesh->updateGL();
+			if(walkmesh)	walkmesh->updateGL();
 
 			emit modified();
 		}
@@ -703,7 +703,7 @@ void WalkmeshManager::editCaZoom(int value)
 		if(cam.camera_zoom != value) {
 			cam.camera_zoom = value;
 			caFile->setCamera(camID, cam);
-			walkmesh->updatePerspective();
+			if(walkmesh)	walkmesh->updatePerspective();
 
 			emit modified();
 		}
@@ -727,7 +727,7 @@ void WalkmeshManager::setCurrentId(int i)
 	idAccess[1]->setValue(access.a[1]);
 	idAccess[2]->setValue(access.a[2]);
 
-	walkmesh->setSelectedTriangle(i);
+	if(walkmesh)	walkmesh->setSelectedTriangle(i);
 }
 
 void WalkmeshManager::addTriangle()
@@ -792,7 +792,7 @@ void WalkmeshManager::editIdTriangle(int id, const Vertex_s &values)
 			if(oldV.x != values.x || oldV.y != values.y || oldV.z != values.z) {
 				oldV = IdFile::fromVertex_s(values);
 				idFile->setTriangle(triangleID, old);
-				walkmesh->updateGL();
+				if(walkmesh)	walkmesh->updateGL();
 
 				emit modified();
 			}
@@ -819,7 +819,7 @@ void WalkmeshManager::editIdAccess(int id, int value)
 			if(oldV != value) {
 				old.a[id] = value;
 				idFile->setAccess(triangleID, old);
-				walkmesh->updateGL();
+				if(walkmesh)	walkmesh->updateGL();
 
 				emit modified();
 			}
@@ -843,7 +843,7 @@ void WalkmeshManager::setCurrentGateway(int id)
 
 	unknownExit->setData(QByteArray((char *)&gateway.u1, 4));
 
-	walkmesh->setSelectedGate(id);
+	if(walkmesh)	walkmesh->setSelectedGate(id);
 }
 
 void WalkmeshManager::setCurrentDoor(int id)
@@ -859,7 +859,7 @@ void WalkmeshManager::setCurrentDoor(int id)
 	doorBehavior->setValue(trigger.behavior);
 	doorSoundId->setValue(trigger.soundID);
 
-	walkmesh->setSelectedDoor(id);
+	if(walkmesh)	walkmesh->setSelectedDoor(id);
 }
 
 void WalkmeshManager::setCurrentArrow(int id)
@@ -879,7 +879,7 @@ void WalkmeshManager::setCurrentArrow(int id)
 		arrowType->setCurrentIndex(arrowType->count()-1);
 	}
 
-	walkmesh->setSelectedArrow(id);
+	if(walkmesh)	walkmesh->setSelectedArrow(id);
 }
 
 void WalkmeshManager::editExitPoint(const Vertex_s &values)
@@ -899,7 +899,7 @@ void WalkmeshManager::editExitPoint(int id, const Vertex_s &values)
 		if(oldVertex.x != values.x || oldVertex.y != values.y || oldVertex.z != values.z) {
 			old.exit_line[id] = values;
 			infFile->setExitLine(gateId, old);
-			walkmesh->updateGL();
+			if(walkmesh)	walkmesh->updateGL();
 
 			emit modified();
 		}
@@ -938,7 +938,7 @@ void WalkmeshManager::editDoorPoint(int id, const Vertex_s &values)
 		if(oldVertex.x != values.x || oldVertex.y != values.y || oldVertex.z != values.z) {
 			old.trigger_line[id] = values;
 			infFile->setTrigger(gateId, old);
-			walkmesh->updateGL();
+			if(walkmesh)	walkmesh->updateGL();
 
 			emit modified();
 		}
@@ -1005,7 +1005,7 @@ void WalkmeshManager::editParamId(int v)
 				doorList->currentItem()->setText(tr("Inutilisé"));
 			}
 
-			walkmesh->updateGL();
+			if(walkmesh)	walkmesh->updateGL();
 			emit modified();
 		}
 	}
@@ -1020,7 +1020,7 @@ void WalkmeshManager::editStateId(int v)
 			old.background_state = v;
 			infFile->setTrigger(gateId, old);
 
-			walkmesh->updateGL();
+			if(walkmesh)	walkmesh->updateGL();
 			emit modified();
 		}
 	}
@@ -1035,7 +1035,7 @@ void WalkmeshManager::editBehavior(int v)
 			old.behavior = v;
 			infFile->setTrigger(gateId, old);
 
-			walkmesh->updateGL();
+			if(walkmesh)	walkmesh->updateGL();
 			emit modified();
 		}
 	}
@@ -1050,7 +1050,7 @@ void WalkmeshManager::editSoundId(int v)
 			old.soundID = v;
 			infFile->setTrigger(gateId, old);
 
-			walkmesh->updateGL();
+			if(walkmesh)	walkmesh->updateGL();
 			emit modified();
 		}
 	}
@@ -1228,4 +1228,10 @@ void WalkmeshManager::editUnknown2(const QByteArray &data)
 			emit modified();
 		}
 	}
+}
+
+void WalkmeshManager::focusInEvent(QFocusEvent *e)
+{
+	if(walkmesh)	walkmesh->setFocus();
+	QWidget::focusInEvent(e);
 }

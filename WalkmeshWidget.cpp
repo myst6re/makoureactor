@@ -18,7 +18,8 @@
 #include "WalkmeshWidget.h"
 
 WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
-	QGLWidget(parent, shareWidget), distance(0.0), xRot(0.0), yRot(0.0), zRot(0.0),
+	QGLWidget(parent, shareWidget), distance(0.0f), xRot(0.0f), yRot(0.0f), zRot(0.0f),
+	xTrans(0.0f), yTrans(0.0f), transStep(360.0f), lastKeyPressed(-1),
 	camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
 	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0)
 {
@@ -115,6 +116,7 @@ void WalkmeshWidget::paintGL()
 		double ty = -(camPosX*camAxisXy + camPosY*camAxisYy + camPosZ*camAxisZy);
 		double tz = -(camPosX*camAxisXz + camPosY*camAxisYz + camPosZ*camAxisZz);
 
+		glTranslatef(xTrans, yTrans, 0.0f);
 		gluLookAt(tx, ty, tz, tx + camAxisZx, ty + camAxisZy, tz + camAxisZz, camAxisYx, camAxisYy, camAxisYz);
 	}
 
@@ -123,8 +125,6 @@ void WalkmeshWidget::paintGL()
 		glRotatef(xRot, 1.0, 0.0, 0.0);
 		glRotatef(yRot, 0.0, 1.0, 0.0);
 		glRotatef(zRot, 0.0, 0.0, 1.0);
-
-		//glTranslatef(xtrans, ytrans, ztrans);
 
 		/*glBegin(GL_LINES);
 		glColor3f(0.0, 0.0, 1.0);
@@ -263,6 +263,45 @@ void WalkmeshWidget::mousePressEvent(QMouseEvent *event)
 	{
 		distance = -35;
 		updateGL();
+	}
+}
+
+void WalkmeshWidget::keyPressEvent(QKeyEvent *event)
+{
+	if(lastKeyPressed == event->key()
+			&& (event->key() == Qt::Key_Left
+				|| event->key() == Qt::Key_Right
+				|| event->key() == Qt::Key_Down
+				|| event->key() == Qt::Key_Up)) {
+		if(transStep > 100.0f) {
+			transStep *= 0.90f; // accelerator
+		}
+	} else {
+		transStep = 360.0f;
+	}
+	lastKeyPressed = event->key();
+
+	switch(event->key())
+	{
+	case Qt::Key_Left:
+		xTrans += 1.0f/transStep;
+		updateGL();
+		break;
+	case Qt::Key_Right:
+		xTrans -= 1.0f/transStep;
+		updateGL();
+		break;
+	case Qt::Key_Down:
+		yTrans += 1.0f/transStep;
+		updateGL();
+		break;
+	case Qt::Key_Up:
+		yTrans -= 1.0f/transStep;
+		updateGL();
+		break;
+	default:
+		QWidget::keyPressEvent(event);
+		return;
 	}
 }
 
