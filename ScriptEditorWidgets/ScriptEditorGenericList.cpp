@@ -20,6 +20,16 @@
 ScriptEditorGenericList::ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent)
 	: ScriptEditorView(field, grpScript, script, opcodeID, parent)
 {
+}
+
+ScriptEditorGenericList::~ScriptEditorGenericList()
+{
+}
+
+void ScriptEditorGenericList::build()
+{
+	qDebug() << "build ScriptEditorGenericList";
+
 	model = new QStandardItemModel(this);
 	tableView = new QTableView(this);
 	tableView->setModel(model);
@@ -28,22 +38,22 @@ ScriptEditorGenericList::ScriptEditorGenericList(Field *field, GrpScript *grpScr
 	tableView->horizontalHeader()->setVisible(false);
 	tableView->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::DoubleClicked | QAbstractItemView::SelectedClicked);
 	tableView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-	
+
 	SpinBoxDelegate *delegate = new SpinBoxDelegate(this);
 	tableView->setItemDelegate(delegate);
 	tableView->horizontalHeader()->setStretchLastSection(true);
-	
+
 	addButton = new QPushButton(tr("Ajouter une ligne"),this);
 	addButton->hide();
 	delButton = new QPushButton(tr("Effacer une ligne"),this);
 	delButton->hide();
-	
+
 	QHBoxLayout *buttonLayout = new QHBoxLayout();
 	buttonLayout->addWidget(addButton);
 	buttonLayout->addWidget(delButton);
 	buttonLayout->addStretch();
 	buttonLayout->setContentsMargins(QMargins());
-	
+
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	layout->addWidget(new QLabel(tr("Paramètres :"), this));
 	layout->addWidget(tableView);
@@ -54,10 +64,6 @@ ScriptEditorGenericList::ScriptEditorGenericList(Field *field, GrpScript *grpScr
 	connect(model, SIGNAL(itemChanged(QStandardItem *)), SIGNAL(opcodeChanged()));
 	connect(addButton, SIGNAL(released()), SLOT(addParam()));
 	connect(delButton, SIGNAL(released()), SLOT(delLastRow()));
-}
-
-ScriptEditorGenericList::~ScriptEditorGenericList()
-{
 }
 
 Opcode *ScriptEditorGenericList::opcode()

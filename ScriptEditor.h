@@ -21,6 +21,8 @@
 #include <QtGui>
 #include "GrpScript.h"
 #include "ScriptEditorWidgets/ScriptEditorGenericList.h"
+#include "ScriptEditorWidgets/ScriptEditorStructPage.h"
+#include "ScriptEditorWidgets/ScriptEditorMathPage.h"
 #include "ScriptEditorWidgets/ScriptEditorWindowPage.h"
 
 class ScriptEditor : public QDialog

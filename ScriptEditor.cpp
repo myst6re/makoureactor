@@ -187,7 +187,7 @@ void ScriptEditor::fillEditor()
 	case Opcode::BITXOR:
 		index = 12;
 		break;
-	case Opcode::WINDOW:case Opcode::WSIZW:
+	case Opcode::WINDOW:case Opcode::WSIZW:case Opcode::WROW:
 		index = 13;
 		break;
 	default:
@@ -197,8 +197,8 @@ void ScriptEditor::fillEditor()
 	editorWidget = (ScriptEditorView *)editorLayout->widget(index);
 	bool hasParams = opcode->hasParams() || opcode->isLabel();
 	editorLayout->setVisible(hasParams);
-	editorWidget->setOpcode(opcode);
 	editorLayout->setCurrentWidget(editorWidget);
+	editorWidget->setOpcode(opcode);
 }
 
 void ScriptEditor::fillView()
@@ -342,20 +342,11 @@ void ScriptEditor::buildList(int id)
 						  << 0x04 << 0x05 << 0x06);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Label"), QList<QVariant>() << 0x100);
-		comboBox->addItem(tr("Saut court en avant"), QList<QVariant>() << 0x10);
-		comboBox->addItem(tr("Saut long en avant"), QList<QVariant>() << 0x11);
-		comboBox->addItem(tr("Saut court en arrière"), QList<QVariant>() << 0x12);
-		comboBox->addItem(tr("Saut long en arrière"), QList<QVariant>() << 0x13);
+		comboBox->addItem(tr("Aller au label"), QList<QVariant>() << 0x10 << 0x11 << 0x12 << 0x13);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Si...alors (8 bits, saut court)"), QList<QVariant>() << 0x14);
-		comboBox->addItem(tr("Si...alors (8 bits, saut long)"), QList<QVariant>() << 0x15);
-		comboBox->addItem(tr("Si...alors (16 bits-signé, saut court)"), QList<QVariant>() << 0x16);
-		comboBox->addItem(tr("Si...alors (16 bits-signé, saut long)"), QList<QVariant>() << 0x17);
-		comboBox->addItem(tr("Si...alors (16 bits-non signé, saut court)"), QList<QVariant>() << 0x18);
-		comboBox->addItem(tr("Si...alors (16 bits-non signé, saut long)"), QList<QVariant>() << 0x19);
-		comboBox->addItem(tr("Si touche pressée"), QList<QVariant>() << 0x30);
-		comboBox->addItem(tr("Si touche pressée une fois"), QList<QVariant>() << 0x31);
-		comboBox->addItem(tr("Si touche lachée une fois"), QList<QVariant>() << 0x32);
+		comboBox->addItem(tr("Si...alors"), QList<QVariant>()
+						  << 0x14 << 0x15 << 0x16 << 0x17 << 0x18 << 0x19);
+		comboBox->addItem(tr("Si touche pressée"), QList<QVariant>() << 0x30 << 0x31 << 0x32);
 		comboBox->addItem(tr("Si personnage membre de l'équipe"), QList<QVariant>() << 0xCB);
 		comboBox->addItem(tr("Si personnage existe"), QList<QVariant>() << 0xCC);
 		comboBox->insertSeparator(comboBox->count());
@@ -400,8 +391,8 @@ void ScriptEditor::buildList(int id)
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Modifier le nom du lieu"), QList<QVariant>() << 0x43);
 		comboBox->addItem(tr("Activer/Désactiver menu"), QList<QVariant>() << 0x4A);
-		comboBox->addItem(tr("GWCOL"), QList<QVariant>() << 0x56);
-		comboBox->addItem(tr("SWCOL"), QList<QVariant>() << 0x57);
+		comboBox->addItem(tr("Obtenir la couleur d'une fenêtre"), QList<QVariant>() << 0x56);
+		comboBox->addItem(tr("Changer la couleur d'une fenêtre"), QList<QVariant>() << 0x57);
 		return;
 	case 3:
 		comboBox->addItem(tr("HP/MP restaurés (1)"), QList<QVariant>() << 0x3C);

@@ -37,7 +37,7 @@ public:
 	const QList<Opcode *> &getOpcodes() const;
 	bool isVoid() const;
 	bool compile(int &opcodeID, QString &errorStr);
-	QByteArray toByteArray(/*bool &ok, int &opcodeID*/) const;
+	QByteArray toByteArray() const;
 	void setOpcode(quint16 opcodeID, Opcode *opcode);
 	void delOpcode(quint16 opcodeID);
 	Opcode *removeOpcode(quint16 opcodeID);
@@ -46,6 +46,7 @@ public:
 	void shiftTextIds(int textId, int steps=1);
 	void shiftTutIds(int tutId, int steps=1);
 	void setWindow(const FF7Window &win);
+	int opcodePositionInBytes(quint16 opcodeID);
 
 	bool searchOpcode(int opcode, int &opcodeID) const;
 	bool searchVar(quint8 bank, quint8 adress, int value, int &opcodeID) const;
@@ -71,7 +72,8 @@ public:
 	static Opcode *createOpcode(const QByteArray &script, int pos=0);
 	static Opcode *copyOpcode(Opcode *opcode);
 private:
-	OpcodeJump *convertOpcodeJump(OpcodeJump *opcodeJump, bool &ok) const;
+	OpcodeJump *convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok=0) const;
+	OpcodeJump *convertOpcodeJumpRange(OpcodeJump *opcodeJump, bool &ok) const;
 	QList<Opcode *> opcodes;
 	QList<Opcode *> expandedItems;
 	QString lastError;

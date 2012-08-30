@@ -12,7 +12,7 @@ HEADERS += ApercuBG.h \
     ColorDisplay.h \
     OpcodeList.h \
     Config.h \
-    Delegate.h \
+	ScriptEditorWidgets/Delegate.h \
     Field.h \
 	FieldPC.h \
 	FieldPS.h \
@@ -74,12 +74,14 @@ HEADERS += ApercuBG.h \
     FieldModelLoaderPS.h \
     TdbFile.h \
     ScriptEditorWidgets/ScriptEditorWindowPage.h \
-    MassExportDialog.h
+    MassExportDialog.h \
+    ScriptEditorWidgets/ScriptEditorStructPage.h \
+    ScriptEditorWidgets/ScriptEditorMathPage.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
     Config.cpp \
-    Delegate.cpp \
+	ScriptEditorWidgets/Delegate.cpp \
     Field.cpp \
 	FieldPC.cpp \
 	FieldPS.cpp \
@@ -142,7 +144,9 @@ SOURCES += ApercuBG.cpp \
     FieldModelLoaderPS.cpp \
     TdbFile.cpp \
     ScriptEditorWidgets/ScriptEditorWindowPage.cpp \
-    MassExportDialog.cpp
+    MassExportDialog.cpp \
+    ScriptEditorWidgets/ScriptEditorStructPage.cpp \
+    ScriptEditorWidgets/ScriptEditorMathPage.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts

@@ -46,6 +46,7 @@ private slots:
 	void delLastRow();
 
 private:
+	void build();
 	void addRow(int value, int minValue, int maxValue, int type);
 	void fillModel();
 	QByteArray parseModel(bool *isLabel);

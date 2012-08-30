@@ -1241,6 +1241,8 @@ public:
 	QByteArray params() const;
 	int getWindowID() const;
 	void setWindowID(quint8 windowID);
+	bool getWindow(FF7Window &window) const;
+	void setWindow(const FF7Window &window);
 	quint8 windowID;
 };
 // note: same struct as WREST

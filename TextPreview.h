@@ -39,6 +39,10 @@ class TextPreview : public QWidget
 {
 	Q_OBJECT
 public:
+	enum WindowType {
+		Normal=0, WithoutFrame, Transparent
+	};
+
 	explicit TextPreview(QWidget *parent=0);
 	void clear();
 	void setReadOnly(bool ro);
@@ -58,7 +62,7 @@ public:
 	void calcSize();
 	QSize getCalculatedSize() const;
 	QPixmap getIconImage(int iconId);
-	static void drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTopLeft, QRgb colorTopRight, QRgb colorBottomLeft, QRgb colorBottomRight);
+	static void drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTopLeft, QRgb colorTopRight, QRgb colorBottomLeft, QRgb colorBottomRight, WindowType type=Normal);
 private slots:
 	void animate();
 signals:

@@ -35,6 +35,8 @@ private slots:
 	void setPositionWindow(const QPoint &point);
 	void resizeWindow();
 private:
+	void build();
+	QLabel *xLabel, *yLabel, *wLabel, *hLabel;
 	TextPreview *textPreview;
 	QSpinBox *winID, *x, *y, *w, *h;
 	QComboBox *previewText;

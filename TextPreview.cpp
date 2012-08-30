@@ -318,76 +318,85 @@ void TextPreview::animate()
 	repaint();
 }
 
-void TextPreview::drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTopLeft, QRgb colorTopRight, QRgb colorBottomLeft, QRgb colorBottomRight)
+void TextPreview::drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTopLeft, QRgb colorTopRight, QRgb colorBottomLeft, QRgb colorBottomRight, WindowType type)
 {
-	// Thx Sithlord48 :3
-	QImage gradient(2, 2, QImage::Format_ARGB32);
-	gradient.setPixel(0, 0, colorTopLeft);
-	gradient.setPixel(1, 0, colorTopRight);
-	gradient.setPixel(0, 1, colorBottomLeft);
-	gradient.setPixel(1, 1, colorBottomRight);
-	painter->setBrush(QPixmap::fromImage(gradient.scaled(maxW, maxH, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
+	if(type != WithoutFrame) {
+		if(type == Transparent) {
+			colorTopLeft = qRgba(qRed(colorTopLeft), qGreen(colorTopLeft), qBlue(colorTopLeft), 127);
+			colorTopRight = qRgba(qRed(colorTopRight), qGreen(colorTopRight), qBlue(colorTopRight), 127);
+			colorBottomLeft = qRgba(qRed(colorBottomLeft), qGreen(colorBottomLeft), qBlue(colorBottomLeft), 127);
+			colorBottomRight = qRgba(qRed(colorBottomRight), qGreen(colorBottomRight), qBlue(colorBottomRight), 127);
+		}
 
-	/* Frame */
-	QPen pen;
-	pen.setStyle(Qt::NoPen);
-	painter->setPen(pen);
-	painter->drawRect(3, 3, maxW-6, maxH-6);
+		// Thx Sithlord48 :3
+		QImage gradient(2, 2, QImage::Format_ARGB32);
+		gradient.setPixel(0, 0, colorTopLeft);
+		gradient.setPixel(1, 0, colorTopRight);
+		gradient.setPixel(0, 1, colorBottomLeft);
+		gradient.setPixel(1, 1, colorBottomRight);
+		painter->setBrush(QPixmap::fromImage(gradient.scaled(maxW, maxH, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
 
-	// Vertical
+		/* Frame */
+		QPen pen;
+		pen.setStyle(Qt::NoPen);
+		painter->setPen(pen);
+		painter->drawRect(3, 3, maxW-6, maxH-6);
 
-	painter->setPen(QColor(123,123,123));
+		// Vertical
 
-	painter->drawPoint(1, 1);
-	painter->drawPoint(2, 2);
-	painter->drawLine(0, 2, 0, maxH-4);
-	painter->drawPoint(1, maxH-3);
-	painter->drawPoint(2, maxH-4);
+		painter->setPen(QColor(123,123,123));
 
-	painter->drawPoint(maxW-2, 2);
-	painter->drawLine(maxW-3, 3, maxW-3, maxH-4);
-	painter->drawPoint(maxW-2, maxH-3);
+		painter->drawPoint(1, 1);
+		painter->drawPoint(2, 2);
+		painter->drawLine(0, 2, 0, maxH-4);
+		painter->drawPoint(1, maxH-3);
+		painter->drawPoint(2, maxH-4);
 
-	painter->setPen(QColor(198,198,198));
+		painter->drawPoint(maxW-2, 2);
+		painter->drawLine(maxW-3, 3, maxW-3, maxH-4);
+		painter->drawPoint(maxW-2, maxH-3);
 
-	painter->drawLine(1, 2, 1, maxH-4);
-	painter->drawPoint(2, maxH-3);
+		painter->setPen(QColor(198,198,198));
 
-	painter->drawPoint(maxW-3, 2);
-	painter->drawLine(maxW-2, 3, maxW-2, maxH-4);
-	painter->drawPoint(maxW-3, maxH-3);
+		painter->drawLine(1, 2, 1, maxH-4);
+		painter->drawPoint(2, maxH-3);
 
-	painter->setPen(QColor(49,49,49));
+		painter->drawPoint(maxW-3, 2);
+		painter->drawLine(maxW-2, 3, maxW-2, maxH-4);
+		painter->drawPoint(maxW-3, maxH-3);
 
-	painter->drawLine(2, 3, 2, maxH-5);
-	painter->drawPoint(0, maxH-3);
-	painter->drawPoint(1, maxH-2);
+		painter->setPen(QColor(49,49,49));
 
-	painter->drawPoint(maxW-2, 1);
-	painter->drawLine(maxW-1, 2, maxW-1, maxH-3);
-	painter->drawPoint(maxW-2, maxH-2);
+		painter->drawLine(2, 3, 2, maxH-5);
+		painter->drawPoint(0, maxH-3);
+		painter->drawPoint(1, maxH-2);
 
-	// Horizontal
-	painter->setPen(QColor(148,148,148));
+		painter->drawPoint(maxW-2, 1);
+		painter->drawLine(maxW-1, 2, maxW-1, maxH-3);
+		painter->drawPoint(maxW-2, maxH-2);
 
-	painter->drawLine(2, 0, maxW-4, 0);
-	painter->drawPoint(maxW-3, 1);
-	painter->drawPoint(maxW-4, 2);
+		// Horizontal
+		painter->setPen(QColor(148,148,148));
 
-	painter->drawPoint(2, maxH-2);
-	painter->drawLine(3, maxH-3, maxW-4, maxH-3);
-	painter->drawPoint(maxW-3, maxH-2);
+		painter->drawLine(2, 0, maxW-4, 0);
+		painter->drawPoint(maxW-3, 1);
+		painter->drawPoint(maxW-4, 2);
 
-	painter->setPen(QColor(222,222,222));
+		painter->drawPoint(2, maxH-2);
+		painter->drawLine(3, maxH-3, maxW-4, maxH-3);
+		painter->drawPoint(maxW-3, maxH-2);
 
-	painter->drawLine(2, 1, maxW-4, 1);
-	painter->drawLine(3, maxH-2, maxW-4, maxH-2);
+		painter->setPen(QColor(222,222,222));
 
-	painter->setPen(QColor(74,74,74));
+		painter->drawLine(2, 1, maxW-4, 1);
+		painter->drawLine(3, maxH-2, maxW-4, maxH-2);
 
-	painter->drawLine(3, 2, maxW-5, 2);
-	painter->drawPoint(maxW-3, 0);
-	painter->drawLine(2, maxH-1, maxW-3, maxH-1);
+		painter->setPen(QColor(74,74,74));
+
+		painter->drawLine(3, 2, maxW-5, 2);
+		painter->drawPoint(maxW-3, 0);
+		painter->drawLine(2, maxH-1, maxW-3, maxH-1);
+	}
 }
 
 bool TextPreview::drawTextArea(QPainter *painter)

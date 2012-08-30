@@ -3224,6 +3224,19 @@ void OpcodeWREST::setWindowID(quint8 windowID)
 	this->windowID = windowID;
 }
 
+bool OpcodeWREST::getWindow(FF7Window &window) const
+{
+	window.x = 8;
+	window.y = 149;
+	window.w = 304;
+	window.h = 74;
+	return true;
+}
+
+void OpcodeWREST::setWindow(const FF7Window &)
+{
+}
+
 OpcodeWCLSE::OpcodeWCLSE(const QByteArray &params)
 {
 	setParams(params);
