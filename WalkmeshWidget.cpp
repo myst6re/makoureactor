@@ -93,6 +93,11 @@ void WalkmeshWidget::paintGL()
 
 	if(!walkmesh)	return;
 
+	glTranslatef(xTrans, yTrans, distance);
+	glRotatef(xRot, 1.0, 0.0, 0.0);
+	glRotatef(yRot, 0.0, 1.0, 0.0);
+	glRotatef(zRot, 0.0, 0.0, 1.0);
+
 	if(camera->isOpen() && camera->hasCamera() && camID < camera->cameraCount()) {
 		const Camera &cam = camera->camera(camID);
 
@@ -116,15 +121,11 @@ void WalkmeshWidget::paintGL()
 		double ty = -(camPosX*camAxisXy + camPosY*camAxisYy + camPosZ*camAxisZy);
 		double tz = -(camPosX*camAxisXz + camPosY*camAxisYz + camPosZ*camAxisZz);
 
-		glTranslatef(xTrans, yTrans, 0.0f);
+
 		gluLookAt(tx, ty, tz, tx + camAxisZx, ty + camAxisZy, tz + camAxisZz, camAxisYx, camAxisYy, camAxisYz);
 	}
 
 	if(walkmesh->isOpen()) {
-
-		glRotatef(xRot, 1.0, 0.0, 0.0);
-		glRotatef(yRot, 0.0, 1.0, 0.0);
-		glRotatef(zRot, 0.0, 0.0, 1.0);
 
 		/*glBegin(GL_LINES);
 		glColor3f(0.0, 0.0, 1.0);
@@ -253,7 +254,7 @@ void WalkmeshWidget::drawIdLine(int triangleID, const Vertex_sr &vertex1, const 
 
 void WalkmeshWidget::wheelEvent(QWheelEvent *event)
 {
-	distance += event->delta()/120;
+	distance += event->delta() / 4096.0;
 	updateGL();
 }
 
@@ -264,6 +265,18 @@ void WalkmeshWidget::mousePressEvent(QMouseEvent *event)
 		distance = -35;
 		updateGL();
 	}
+	else if(event->button()==Qt::LeftButton)
+	{
+		moveStart = event->pos();
+	}
+}
+
+void WalkmeshWidget::mouseMoveEvent(QMouseEvent *event)
+{
+	xTrans += (event->pos().x() - moveStart.x()) / 4096.0;
+	yTrans -= (event->pos().y() - moveStart.y()) / 4096.0;
+	moveStart = event->pos();
+	updateGL();
 }
 
 void WalkmeshWidget::keyPressEvent(QKeyEvent *event)
@@ -343,6 +356,14 @@ void WalkmeshWidget::setZRotation(int angle)
 void WalkmeshWidget::setZoom(int zoom)
 {
 	distance = zoom / 4096.0;
+}
+
+void WalkmeshWidget::resetCamera()
+{
+	distance = 0;
+	zRot = yRot = xRot = 0;
+	xTrans = yTrans = 0;
+	updateGL();
 }
 
 void WalkmeshWidget::setCurrentFieldCamera(int camID)

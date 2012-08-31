@@ -111,7 +111,7 @@ void FieldModel::initializeGL()
 
 void FieldModel::drawP(int boneID)
 {
-	if(!data)	return;
+	if(!data || !data->isLoaded())	return;
 
 	foreach(FieldModelPart *p, data->parts(boneID)) {
 
@@ -343,7 +343,7 @@ void FieldModel::mousePressEvent(QMouseEvent *event)
 
 void FieldModel::animate()
 {
-	if(data && isVisible()) {
+	if(data && data->isLoaded() && isVisible()) {
 		currentFrame = (currentFrame + 1) % data->frameCount();
 		updateGL();
 	}

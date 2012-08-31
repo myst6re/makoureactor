@@ -38,6 +38,7 @@ public slots:
 	void setYRotation(int);
 	void setZRotation(int);
 	void setZoom(int);
+	void resetCamera();
 	void setCurrentFieldCamera(int camID);
 	void setSelectedTriangle(int triangle);
 	void setSelectedDoor(int door);
@@ -59,12 +60,14 @@ private:
 	IdFile *walkmesh;
 	CaFile *camera;
 	InfFile *infFile;
+	QPoint moveStart;
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);
 	void paintGL();
 	void wheelEvent(QWheelEvent *event);
 	void mousePressEvent(QMouseEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
 	void keyPressEvent(QKeyEvent *event);
 };
 

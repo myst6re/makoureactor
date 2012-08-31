@@ -318,6 +318,16 @@ void TextPreview::animate()
 	repaint();
 }
 
+void TextPreview::drawWindow(QPainter *painter, WindowType type)
+{
+	QRgb windowColorTopLeft = Config::value("windowColorTopLeft", qRgb(0,88,176)).toInt();
+	QRgb windowColorTopRight = Config::value("windowColorTopRight", qRgb(0,0,80)).toInt();
+	QRgb windowColorBottomLeft = Config::value("windowColorBottomLeft", qRgb(0,0,128)).toInt();
+	QRgb windowColorBottomRight = Config::value("windowColorBottomRight", qRgb(0,0,32)).toInt();
+
+	drawWindow(painter, maxW, maxH, windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight, type);
+}
+
 void TextPreview::drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTopLeft, QRgb colorTopRight, QRgb colorBottomLeft, QRgb colorBottomRight, WindowType type)
 {
 	if(type != WithoutFrame) {
@@ -406,6 +416,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	spaced_characters = false;
 	multicolor = -1;
 	int savFontColor = fontColor;
+	WindowType mode = Normal;
 
 	/* Window Background */
 
@@ -413,14 +424,10 @@ bool TextPreview::drawTextArea(QPainter *painter)
 		painter->translate(realPos(ff7Window));
 		maxW = ff7Window.w;
 		maxH = ff7Window.h;
+		mode = (WindowType)ff7Window.mode;
 	}
 
-	QRgb windowColorTopLeft = Config::value("windowColorTopLeft", qRgb(0,88,176)).toInt();
-	QRgb windowColorTopRight = Config::value("windowColorTopRight", qRgb(0,0,80)).toInt();
-	QRgb windowColorBottomLeft = Config::value("windowColorBottomLeft", qRgb(0,0,128)).toInt();
-	QRgb windowColorBottomRight = Config::value("windowColorBottomRight", qRgb(0,0,32)).toInt();
-
-	drawWindow(painter, maxW, maxH, windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight);
+	drawWindow(painter, mode);
 
 	/* Text */
 

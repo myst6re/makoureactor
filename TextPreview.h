@@ -62,6 +62,7 @@ public:
 	void calcSize();
 	QSize getCalculatedSize() const;
 	QPixmap getIconImage(int iconId);
+	void drawWindow(QPainter *painter, WindowType type=Normal);
 	static void drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTopLeft, QRgb colorTopRight, QRgb colorBottomLeft, QRgb colorBottomRight, WindowType type=Normal);
 private slots:
 	void animate();

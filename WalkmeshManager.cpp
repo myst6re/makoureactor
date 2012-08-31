@@ -26,17 +26,24 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 	walkmesh = Config::value("OpenGL", true).toBool() ? new WalkmeshWidget(0, shareWidget) : 0;
 	QWidget *walkmeshWidget = walkmesh ? walkmesh : new QWidget(this);
 
-	QSlider *slider1 = new QSlider(this);
-	QSlider *slider2 = new QSlider(this);
-	QSlider *slider3 = new QSlider(this);
+	slider1 = new QSlider(this);
+	slider2 = new QSlider(this);
+	slider3 = new QSlider(this);
 
-	slider1->setRange(0, 360);
-	slider2->setRange(0, 360);
-	slider3->setRange(0, 360);
+	slider1->setRange(-180, 180);
+	slider2->setRange(-180, 180);
+	slider3->setRange(-180, 180);
 
 	slider1->setValue(0);
 	slider2->setValue(0);
 	slider3->setValue(0);
+
+	QLabel *keyInfos = new QLabel(tr("Utilisez les touches directionnelles pour déplacer la caméra."));
+	keyInfos->setTextFormat(Qt::PlainText);
+	keyInfos->setWordWrap(true);
+
+	QPushButton *resetCamera = new QPushButton(tr("Remettre à 0"));
+
 
 	tabWidget = new QTabWidget(this);
 	tabWidget->addTab(buildCameraPage(), tr("Caméra"));
@@ -49,17 +56,35 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 	tabWidget->setFixedHeight(250);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(walkmeshWidget, 0, 0);
-	layout->addWidget(tabWidget, 1, 0, 1, 4);
+	layout->addWidget(walkmeshWidget, 0, 0, 3, 1);
 	layout->addWidget(slider1, 0, 1);
 	layout->addWidget(slider2, 0, 2);
 	layout->addWidget(slider3, 0, 3);
+	layout->addWidget(keyInfos, 1, 1, 1, 3);
+	layout->addWidget(resetCamera, 2, 1, 1, 3);
+	layout->addWidget(tabWidget, 3, 0, 1, 4);
 
 	if(walkmesh) {
 		connect(slider1, SIGNAL(valueChanged(int)), walkmesh, SLOT(setXRotation(int)));
 		connect(slider2, SIGNAL(valueChanged(int)), walkmesh, SLOT(setYRotation(int)));
 		connect(slider3, SIGNAL(valueChanged(int)), walkmesh, SLOT(setZRotation(int)));
+		connect(resetCamera, SIGNAL(clicked()), walkmesh, SLOT(resetCamera()));
+		connect(resetCamera, SIGNAL(clicked()), SLOT(resetCamera()));
 	}
+}
+
+void WalkmeshManager::resetCamera()
+{
+	slider1->blockSignals(true);
+	slider2->blockSignals(true);
+	slider3->blockSignals(true);
+	slider1->setValue(0);
+	slider2->setValue(0);
+	slider3->setValue(0);
+	slider1->blockSignals(false);
+	slider2->blockSignals(false);
+	slider3->blockSignals(false);
+	walkmesh->resetCamera();
 }
 
 QWidget *WalkmeshManager::buildCameraPage()
@@ -1232,6 +1257,6 @@ void WalkmeshManager::editUnknown2(const QByteArray &data)
 
 void WalkmeshManager::focusInEvent(QFocusEvent *e)
 {
-	if(walkmesh)	walkmesh->setFocus();
+	if(walkmesh)	walkmesh->grabKeyboard();
 	QWidget::focusInEvent(e);
 }

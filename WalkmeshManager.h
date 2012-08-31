@@ -37,6 +37,7 @@ public:
 signals:
 	void modified();
 public slots:
+	void resetCamera();
 	void setCurrentCamera(int camID);
 private slots:
 	void addCamera();
@@ -94,6 +95,7 @@ private:
 	CaFile *caFile;
 	InfFile *infFile;
 	WalkmeshWidget *walkmesh;
+	QSlider *slider1, *slider2, *slider3;
 	QTabWidget *tabWidget;
 	//CamPage
 	QToolBar *caToolbar;
