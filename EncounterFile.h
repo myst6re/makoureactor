@@ -34,11 +34,11 @@ class EncounterFile
 {
 public:
 	EncounterFile();
-	EncounterFile(const QByteArray &contenu);
+	EncounterFile(const QByteArray &data);
 	bool isOpen() const;
 	bool isModified() const;
 	void setModified(bool);
-	bool open(const QByteArray &contenu);
+	bool open(const QByteArray &data);
 	QByteArray save() const;
 	const EncounterTable &encounterTable(bool tableID) const;
 	void setEncounterTable(bool tableID, const EncounterTable &table);

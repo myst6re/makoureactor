@@ -14,6 +14,7 @@ QStringList *Data::currentHrcNames=0;
 QList<QStringList> *Data::currentAnimNames=0;
 QStringList Data::field_names;
 QStringList Data::movie_names;
+QStringList Data::music_names;
 QStringList Data::operateur_names;
 QStringList Data::key_names;
 QString Data::ff7DataPath_cache;
@@ -37,7 +38,8 @@ const QString &Data::searchRereleasedFF7Path()
 		LONG error;
 
 		// direct
-		ff7RereleasePath_cache = QSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", QSettings::NativeFormat).value("InstallLocation", "").toString();
+		ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(QSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", QSettings::NativeFormat)
+																			.value("InstallLocation").toString()));
 		if(!ff7RereleasePath_cache.isEmpty()) {
 			return ff7RereleasePath_cache;
 		}
@@ -67,7 +69,8 @@ const QString &Data::searchRereleasedFF7Path()
 										if(type == REG_SZ) {
 											RegCloseKey(phkResult2);
 											RegCloseKey(phkResult);
-											return ff7RereleasePath_cache = QString::fromUtf16((ushort *)value);
+											ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(QDir::fromNativeSeparators(QDir::cleanPath(QString::fromUtf16((ushort *)value)))));
+											return ff7RereleasePath_cache;
 										}
 									}
 								}
@@ -89,11 +92,27 @@ const QString &Data::searchRereleasedFF7Path()
 	return ff7RereleasePath_cache;
 }
 
-QString Data::searchFF7Path()
+QString Data::searchFF7Exe()
 {
 #ifdef Q_WS_WIN
-	return QSettings("Square Soft, Inc.", "Final Fantasy VII").value("AppPath", "").toString();
+	QString ff7MusicPath = QDir::cleanPath(QDir::fromNativeSeparators(QSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\FF7Music", QSettings::NativeFormat).value("InstDir").toString()));
+	if(!ff7MusicPath.isEmpty() && QFile::exists(ff7MusicPath + "/launchff7.exe")) {
+		return ff7MusicPath + "/launchff7.exe";
+	}
+	QString ff7Path = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("AppPath").toString();
+	if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/ff7.exe")) {
+		return ff7Path + "/ff7.exe";
+	}
 #endif
+	return QString();
+}
+
+QString Data::searchRereleasedFF7Exe()
+{
+	QString ff7Path = searchRereleasedFF7Path();
+	if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/FF7_Launcher.exe")) {
+		return ff7Path + "/FF7_Launcher.exe";
+	}
 	return QString();
 }
 
@@ -101,18 +120,27 @@ const QString &Data::ff7DataPath()
 {
 #ifdef Q_WS_WIN
 	if(ff7DataPath_cache.isNull()) {
-		// Search for old version
-		ff7DataPath_cache = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("DataPath", "").toString();
-		// Search for new version
-		if(ff7DataPath_cache.isEmpty()) {
+		bool useNew = Config::value("useRereleaseFF7Path", false).toBool();
+		if(!useNew) {
+			// Search for old version
+			ff7DataPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(QSettings("Square Soft, Inc.", "Final Fantasy VII").value("DataPath").toString()));
+			// Search for new version
+			if(ff7DataPath_cache.isEmpty() || !QFile::exists(ff7DataPath_cache)) {
+				ff7DataPath_cache = searchRereleasedFF7Path();
+				if(!ff7DataPath_cache.isEmpty()) {
+					ff7DataPath_cache.append("/data");
+				}
+			}
+		} else {
+			// Search for new version
 			ff7DataPath_cache = searchRereleasedFF7Path();
 			if(!ff7DataPath_cache.isEmpty()) {
-				ff7DataPath_cache.append("\\data");
+				ff7DataPath_cache.append("/data");
 			}
-		}
-		// Clean
-		if(!ff7DataPath_cache.isEmpty()) {
-			ff7DataPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(ff7DataPath_cache)%"/");
+			// Search for old version
+			if(ff7DataPath_cache.isEmpty() || !QFile::exists(ff7DataPath_cache)) {
+				ff7DataPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(QSettings("Square Soft, Inc.", "Final Fantasy VII").value("DataPath").toString()));
+			}
 		}
 	}
 #endif
@@ -121,18 +149,14 @@ const QString &Data::ff7DataPath()
 
 QStringList Data::ff7AppPathList()
 {
-#ifdef Q_WS_WIN
 	QStringList ff7List;
-	QString oldFF7 = searchFF7Path();
+	QString oldFF7 = searchFF7Exe();
 	if(!oldFF7.isEmpty())
-		ff7List.append(QDir::cleanPath(QDir::fromNativeSeparators(oldFF7)));
-	QString newFF7 = searchRereleasedFF7Path();
+		ff7List.append(oldFF7);
+	QString newFF7 = searchRereleasedFF7Exe();
 	if(!newFF7.isEmpty())
-		ff7List.append(QDir::cleanPath(QDir::fromNativeSeparators(newFF7)));
+		ff7List.append(newFF7);
 	return ff7List;
-#else
-	return QStringList();
-#endif
 }
 
 const QString &Data::ff7AppPath()
@@ -142,22 +166,18 @@ const QString &Data::ff7AppPath()
 		bool useNew = Config::value("useRereleaseFF7Path", false).toBool();
 		if(!useNew) {
 			// Search for old version
-			ff7AppPath_cache = searchFF7Path();
+			ff7AppPath_cache = searchFF7Exe();
 			// Search for new version
 			if(ff7AppPath_cache.isEmpty()) {
-				ff7AppPath_cache = searchRereleasedFF7Path();
+				ff7AppPath_cache = searchRereleasedFF7Exe();
 			}
 		} else {
 			// Search for new version
 			ff7AppPath_cache = searchRereleasedFF7Path();
 			// Search for old version
 			if(ff7AppPath_cache.isEmpty()) {
-				ff7AppPath_cache = searchFF7Path();
+				ff7AppPath_cache = searchRereleasedFF7Exe();
 			}
-		}
-		// Clean
-		if(!ff7AppPath_cache.isEmpty()) {
-			ff7AppPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(ff7AppPath_cache)%"/");
 		}
 	}
 #endif
@@ -296,6 +316,12 @@ int Data::load()
 	if(movie_names.isEmpty()) {
 		for(int i=0 ; i<106 ; ++i) {
 			movie_names.append(movieList[i]);
+		}
+	}
+
+	if(music_names.isEmpty()) {
+		for(int i=0 ; i<100 ; ++i) {
+			music_names.append(musicList[i]);
 		}
 	}
 
@@ -585,3 +611,20 @@ void Data::openMaplist(bool PC)
 		field_names[735] = "sbwy4_22";
 	}
 }
+
+const char *Data::musicList[100] =
+{
+	"none", "none", "oa", "ob", "dun2", "guitar2", "fanfare", "makoro", "bat",
+	"fiddle", "kurai", "chu", "ketc", "earis", "ta", "tb", "sato",
+	"parade", "comical", "yume", "mati", "sido", "siera", "walz", "corneo",
+	"horror", "canyon", "red", "seto", "ayasi", "sinra", "sinraslo", "dokubo",
+	"bokujo", "tm", "tifa", "costa", "rocket", "earislo", "chase", "rukei",
+	"cephiros", "barret", "corel", "boo", "elec", "rhythm", "fan2", "hiku",
+	"cannon", "date", "cintro", "cinco", "chu2", "yufi", "aseri", "gold1",
+	"mura1", "yado", "over2", "crwin", "crlost", "odds", "geki", "junon",
+	"tender", "wind", "vincent", "bee", "jukai", "sadbar", "aseri2", "kita",
+	"sid2", "sadsid", "iseki", "hen", "utai", "snow", "yufi2", "mekyu",
+	"condor", "lb2", "gun", "weapon", "pj", "sea", "ld", "lb1",
+	"sensui", "ro", "jyro", "nointro", "riku", "si", "mogu", "pre",
+	"fin", "heart", "roll"
+};

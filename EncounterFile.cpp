@@ -22,10 +22,10 @@ EncounterFile::EncounterFile()
 {
 }
 
-EncounterFile::EncounterFile(const QByteArray &contenu)
+EncounterFile::EncounterFile(const QByteArray &data)
 	: _isOpen(false), _isModified(false)
 {
-	open(contenu);
+	open(data);
 }
 
 bool EncounterFile::isOpen() const
@@ -43,30 +43,19 @@ void EncounterFile::setModified(bool modified)
 	_isModified = modified;
 }
 
-bool EncounterFile::open(const QByteArray &contenu)
+bool EncounterFile::open(const QByteArray &data)
 {
-	const char *constData = contenu.constData();
-	quint32 debutSection1, debutSection7, debutSection8, debutSection;
-
-	if(contenu.startsWith(QByteArray("\x00\x00\x09\x00\x00\x00", 6))) {
-		memcpy(&debutSection, &constData[30], 4);// section 7
-		memcpy(&debutSection8, &constData[34], 4);
-		debutSection += 4;
-
-		if((quint32)contenu.size() <= debutSection8 || debutSection8-debutSection != 48)
-			return false;
-	} else {
-		memcpy(&debutSection1, constData, 4);
-		memcpy(&debutSection, &constData[20], 4);// section 6
-		memcpy(&debutSection7, &constData[24], 4);
-		debutSection = debutSection - debutSection1 + 28;
-		debutSection7 = debutSection7 - debutSection1 + 28;
-
-		if((quint32)contenu.size() <= debutSection7 || debutSection7-debutSection != 48)
-			return false;
+	if(sizeof(EncounterTable) != 24) {
+		qWarning() << "Encounter invalid struct size" << sizeof(EncounterTable);
+		return false;
 	}
 
-	memcpy(tables, &constData[debutSection], sizeof(EncounterTable) * 2);
+	if(data.size() != 48) {
+		qWarning() << "Encounter invalid data size" << data.size();
+		return false;
+	}
+
+	memcpy(tables, data.constData(), sizeof(EncounterTable) * 2);
 
 	_isOpen = true;
 

@@ -22,15 +22,11 @@ FieldModelLoaderPC::FieldModelLoaderPC() :
 {
 }
 
-void FieldModelLoaderPC::load(const QByteArray &contenu, const QString &name)
+bool FieldModelLoaderPC::load(const QByteArray &data, const QString &name)
 {
-	const char *constContenu = contenu.constData();
+	const char *constData = data.constData();
 
-	quint32 posSection3, debutSection4;
-	memcpy(&posSection3, &constContenu[14], 4);//Adresse Section 3
-	memcpy(&debutSection4, &constContenu[18], 4);//Adresse Section 4
-
-	if((quint32)contenu.size() < debutSection4)	return;
+	if((quint32)data.size() < 6)	return false;
 
 	quint32 i, j;
 	quint16 nb;
@@ -43,46 +39,57 @@ void FieldModelLoaderPC::load(const QByteArray &contenu, const QString &name)
 	this->model_unknown.clear();
 	this->colors.clear();
 
-	memcpy(&nb, &constContenu[posSection3+6], 2);
-	memcpy(&typeHRC, &constContenu[posSection3+8], 2);
-	posSection3 += 10;
+	memcpy(&nb, &constData[2], 2);
+	memcpy(&typeHRC, &constData[4], 2);
+	quint32 curPos = 6;
 	for(i=0 ; i<nb ; ++i)
 	{
-		memcpy(&len, &constContenu[posSection3], 2);
-		model_nameChar.append(QString(contenu.mid(posSection3+2+name.size(),len-name.size())));
-		memcpy(&model_unknown, &constContenu[posSection3+2+len], 2);
+		if((quint32)data.size() < curPos+2)			return false;
+
+		memcpy(&len, &constData[curPos], 2); // model name len
+
+		if((quint32)data.size() < curPos+48+len)	return false;
+		 // model name
+		model_nameChar.append(QString(data.mid(curPos+2+name.size(),len-name.size())));
+		memcpy(&model_unknown, &constData[curPos+2+len], 2);
 		this->model_unknown.append(model_unknown);
-		model_nameHRC.append(QString(contenu.mid(posSection3+4+len,8)));
+		model_nameHRC.append(QString(data.mid(curPos+4+len,8)));
 		bool ok;
-		int typeHRC_value = QString(contenu.mid(posSection3+12+len,4)).toInt(&ok);
+		int typeHRC_value = QString(data.mid(curPos+12+len,4)).toInt(&ok);
 		if(!ok)	typeHRC_value = typeHRC;
 		model_typeHRC.append(typeHRC_value);
 
-		memcpy(&nbAnim, &constContenu[posSection3+16+len], 2);
+		memcpy(&nbAnim, &constData[curPos+16+len], 2);
 
 		QList<QRgb> color;
 
 		for(j=0 ; j<10 ; ++j) {
-			color.append(qRgb(contenu.at(posSection3+18+len+j*3), contenu.at(posSection3+19+len+j*3), contenu.at(posSection3+20+len+j*3)));
+			color.append(qRgb(data.at(curPos+18+len+j*3), data.at(curPos+19+len+j*3), data.at(curPos+20+len+j*3)));
 		}
 		this->colors.append(color);
 
-		posSection3 += 48+len;
+		curPos += 48+len;
 
 		QStringList anims;
 		for(j=0 ; j<nbAnim ; ++j) {
-			memcpy(&len, &constContenu[posSection3], 2);
-			anims.append(QString(contenu.mid(posSection3+2, len)));
-			posSection3 += 4+len;
+			if((quint32)data.size() < curPos+2)		return false;
+
+			memcpy(&len, &constData[curPos], 2); // animation name len
+
+			if((quint32)data.size() < curPos+4+len)	return false;
+
+			anims.append(QString(data.mid(curPos+2, len))); // animation name
+			curPos += 4+len;
 		}
 		model_anims.append(anims);
 	}
 	loaded = true;
+	return true;
 }
 
-QByteArray FieldModelLoaderPC::save(const QByteArray &contenu, const QString &name) const
+QByteArray FieldModelLoaderPC::save(const QByteArray &data, const QString &name) const
 {
-	if(!loaded || !modified)	return contenu;
+	if(!loaded || !modified)	return data;
 
 	quint16 nbHRC = this->model_nameHRC.size(), nbAnim, nameSize, i, j;
 	QByteArray HRCs;

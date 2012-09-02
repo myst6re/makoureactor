@@ -33,6 +33,7 @@ public:
 	virtual Opcode *opcode();
 	virtual void setOpcode(Opcode *opcode);
 	bool isValid() const;
+	virtual void clear();
 signals:
 	void opcodeChanged();
 	

@@ -50,15 +50,15 @@ MiscWidget::MiscWidget(InfFile *data, Field *field, QWidget *parent) :
 void MiscWidget::fill()
 {
 	mapName->setText(data->mapName());
-	mapAuthor->setText(field->getAuthor());
-	mapScale->setValue(field->getScale());
+	mapAuthor->setText(field->scriptsAndTexts()->author());
+	mapScale->setValue(field->scriptsAndTexts()->scale());
 }
 
 void MiscWidget::accept()
 {
 	data->setMapName(mapName->text());
-	field->setAuthor(mapAuthor->text());
-	field->setScale(mapScale->value());
+	field->scriptsAndTexts()->setAuthor(mapAuthor->text());
+	field->scriptsAndTexts()->setScale(mapScale->value());
 
 	QDialog::accept();
 }

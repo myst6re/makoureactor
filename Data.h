@@ -44,10 +44,11 @@ public:
 	static QList<QStringList> *currentAnimNames;
 	static QStringList field_names;
 	static QStringList movie_names;
-
+	static QStringList music_names;
 private:
 	static const QString &searchRereleasedFF7Path();
-	static QString searchFF7Path();
+	static QString searchFF7Exe();
+	static QString searchRereleasedFF7Exe();
 	static void fill(const QByteArray &data, QStringList &names);
 	static QString ff7DataPath_cache;
 	static QString ff7AppPath_cache;
@@ -55,6 +56,7 @@ private:
 	static bool ff7RereleaseAlreadySearched;
 	static const char *movieList[106];
 	static const char *mapList[787];
+	static const char *musicList[100];
 
 };
 

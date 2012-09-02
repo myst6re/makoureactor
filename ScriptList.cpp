@@ -42,24 +42,28 @@ void ScriptList::fill(GrpScript *_grpScript)
 	if(_grpScript != NULL)	grpScript = _grpScript;
 	
 	clear();
-	quint8 nbScripts = grpScript->size();
+	int i=0;
 	
-	for(quint8 i=0 ; i<nbScripts ; ++i)
+	foreach(Script *script, grpScript->getScripts())
 	{
 		QListWidgetItem *item = new QListWidgetItem(grpScript->getScriptName(i), this);
-		if(grpScript->getScript(i)->isEmpty())			item->setForeground(QColor(0xCC,0xCC,0xCC));
-		else if(grpScript->getScript(i)->isVoid())		item->setForeground(QColor(0x66,0x66,0x66));
+		if(script->isEmpty())			item->setForeground(QColor(0xCC,0xCC,0xCC));
+		else if(script->isVoid())		item->setForeground(QColor(0x66,0x66,0x66));
+		++i;
 	}
 }
 
 void ScriptList::localeRefresh()
 {
-	for(quint8 i=0 ; i<grpScript->size() ; ++i)
+	int i=0;
+	foreach(Script *script, grpScript->getScripts())
 	{
-		item(i)->setText(grpScript->getScriptName(i));
-		if(grpScript->getScript(i)->isEmpty())				item(i)->setForeground(QColor(0xCC,0xCC,0xCC));
-		else if(grpScript->getScript(i)->isVoid())			item(i)->setForeground(QColor(0x66,0x66,0x66));
-		else												item(i)->setForeground(QBrush());
+		QListWidgetItem *itm = item(i);
+		itm->setText(grpScript->getScriptName(i));
+		if(script->isEmpty())			itm->setForeground(QColor(0xCC,0xCC,0xCC));
+		else if(script->isVoid())		itm->setForeground(QColor(0x66,0x66,0x66));
+		else							itm->setForeground(QBrush());
+		++i;
 	}
 }
 

@@ -25,24 +25,13 @@ FieldModelLoaderPS::FieldModelLoaderPS() :
 bool FieldModelLoaderPS::load(const QByteArray &data)
 {
 	const char *constData = data.constData();
-	quint32 posSection1, posSectionModelLoader;
-
-	memcpy(&posSection1, constData, 4);
-	memcpy(&posSectionModelLoader, &constData[24], 4);// section 7
-	// convert vram position to relative position
-	posSectionModelLoader = posSectionModelLoader - posSection1 + 28;
-
-	if(posSectionModelLoader >= (quint32)data.size()) {
-		qWarning() << "empty model loader!";
-		return false;
-	}
 
 	quint16 size, modelCount;
-	memcpy(&size, &constData[posSectionModelLoader], 2);
-	memcpy(&modelCount, &constData[posSectionModelLoader+2], 2);
+	memcpy(&size, constData, 2);
+	memcpy(&modelCount, &constData[2], 2);
 
-	if(size != data.size() - posSectionModelLoader || (size-4) / 8 != modelCount || (size-4) % 8 != 0) {
-		qWarning() << "invalid model loader size" << size << modelCount << (data.size() - posSectionModelLoader);
+	if(size != data.size() || (size-4) / 8 != modelCount || (size-4) % 8 != 0) {
+		qWarning() << "invalid model loader size" << size << modelCount << data.size();
 		return false;
 	}
 
@@ -54,7 +43,7 @@ bool FieldModelLoaderPS::load(const QByteArray &data)
 	FieldModelLoaderStruct modelLoader;
 
 	for(quint32 i=0 ; i<modelCount ; ++i) {
-		memcpy(&modelLoader, &constData[posSectionModelLoader + 4 + i*sizeof(FieldModelLoaderStruct)], sizeof(FieldModelLoaderStruct));
+		memcpy(&modelLoader, &constData[4 + i*sizeof(FieldModelLoaderStruct)], sizeof(FieldModelLoaderStruct));
 
 		_modelLoaders.append(modelLoader);
 

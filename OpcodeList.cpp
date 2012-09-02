@@ -330,18 +330,23 @@ void OpcodeList::scriptEditor(bool modify)
 
 	int opcodeID = selectedID();
 	if(opcodeID==-1) {
-		opcodeID = 0;
 		modify = false;
 	}
 
 	QByteArray oldVersion;
 
+	qDebug() << "scriptEditor" << opcodeID << modify;
+
 	saveExpandedItems();
+
+	qDebug() << "scriptEditor" << opcodeID << modify << script->getOpcode(opcodeID);
 
 	if(modify)
 		oldVersion = script->getOpcode(opcodeID)->toByteArray();
 	else
 		++opcodeID;
+
+	qDebug() << "scriptEditor" << opcodeID << modify;
 	
 	ScriptEditor editor(field, grpScript, script, opcodeID, modify, isInit, this);
 	

@@ -70,6 +70,7 @@ private:
 	QSpinBox *wSize, *hSize;
 
 	Field *field;
+	Section1File *scriptsAndTexts;
 	QMultiMap<quint64, FF7Window> _windows;
 	QMultiMap<quint8, quint64> _text2win;
 	QSet<quint8> usedTexts;

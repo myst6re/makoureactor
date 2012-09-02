@@ -22,10 +22,10 @@ InfFile::InfFile()
 {
 }
 
-InfFile::InfFile(const QByteArray &contenu)
+InfFile::InfFile(const QByteArray &data)
 	: _isOpen(false), _isModified(false)
 {
-	open(contenu);
+	open(data);
 }
 
 bool InfFile::isOpen()
@@ -43,55 +43,28 @@ void InfFile::setModified(bool modified)
 	_isModified = modified;
 }
 
-bool InfFile::open(const QByteArray &contenu, bool importMode)
+bool InfFile::open(const QByteArray &data, bool importMode)
 {
-	const char *constData = contenu.constData();
-	quint32 debutSection1, debutSection6, debutSection9, debutSection;
 	quint32 oldSize = size;
+	size = data.size();
 
 	if(sizeof(InfData) != 740) {
 		qWarning() << "Error InfData" << sizeof(InfData) << "must be 740";
 		return false;
 	}
 
-	if(contenu.startsWith(QByteArray("\x00\x00\x09\x00\x00\x00", 6))) {
-		memcpy(&debutSection, &constData[34], 4);// section 8
-		memcpy(&debutSection9, &constData[38], 4);
-		debutSection += 4;
-
-		size = debutSection9-debutSection;
-
-		if((quint32)contenu.size() <= debutSection9) {
-			qWarning() << "Error inf data size" << debutSection9 << contenu.size();
-			return false;
-		}
-	} else {
-		memcpy(&debutSection1, constData, 4);
-		memcpy(&debutSection, &constData[16], 4);// section 5
-		memcpy(&debutSection6, &constData[20], 4);
-		debutSection = debutSection - debutSection1 + 28;
-		debutSection6 = debutSection6 - debutSection1 + 28;
-
-		size = debutSection6-debutSection;
-
-		if((quint32)contenu.size() <= debutSection6) {
-			qWarning() << "Error inf data size" << debutSection6 << contenu.size();
-			return false;
-		}
-	}
-
 	if(size != 740 && size != 536) {
 		qWarning() << "Error inf size" << size;
 //		QFile debinf("debugInf.inf");
 //		debinf.open(QIODevice::WriteOnly);
-//		debinf.write(&constData[debutSection], size);
+//		debinf.write(data);
 //		debinf.close();
 		return false;
 	}
 
-	data = InfData();
-	memcpy(&data, &constData[debutSection], size);
-	data.name[8] = '\x00';
+	this->data = InfData();
+	memcpy(&this->data, data.constData(), size);
+	this->data.name[8] = '\x00';
 
 	if(importMode && _isOpen)		size = oldSize;
 

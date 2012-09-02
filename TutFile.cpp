@@ -22,10 +22,10 @@ TutFile::TutFile()
 {
 }
 
-TutFile::TutFile(const QByteArray &contenu, bool tutType)
+TutFile::TutFile(const QByteArray &data, bool tutType)
 	: _isOpen(false), _isModified(false)
 {
-	open(contenu, tutType);
+	open(data, tutType);
 }
 
 bool TutFile::isOpen() const
@@ -43,52 +43,36 @@ void TutFile::setModified(bool modified)
 	_isModified = modified;
 }
 
-bool TutFile::open(const QByteArray &contenu, bool tutType)
+bool TutFile::open(const QByteArray &data, bool tutType)
 {
-	const char *constData = contenu.constData();
+	const char *constData = data.constData();
 	QList<quint32> positions;
-	quint32 contenuSize = contenu.size();
+	quint32 dataSize = data.size();
 
 	this->tutType = tutType;
 
 	if(!tutType) {
-		quint32 debutSection1, debutSection2, posAKAO, posAKAOList;
+		quint32 posAKAO, posAKAOList;
 		quint16 nbAKAO;
 		quint8 nbEntity;
 
-		if(contenu.startsWith(QByteArray("\x00\x00\x09\x00\x00\x00", 6))) {
-			memcpy(&debutSection2, &constData[10], 4);
-			debutSection1 = 46;
-
-			if(contenuSize <= debutSection2)
-				return false;
-		} else {
-			memcpy(&debutSection1, constData, 4);
-			memcpy(&debutSection2, &constData[4], 4);
-			debutSection2 = debutSection2 - debutSection1 + 28;
-			debutSection1 = 28;
-
-			if(contenuSize <= debutSection2)
-				return false;
-		}
-
-		if(contenuSize <= debutSection1+8)
+		if(dataSize <= 8)
 			return false;
 
-		nbEntity = constData[debutSection1+2];
-		memcpy(&nbAKAO, &constData[debutSection1+6], 2);
+		nbEntity = constData[2];
+		memcpy(&nbAKAO, &constData[6], 2);
 
-		posAKAOList = debutSection1+32+nbEntity*8;
+		posAKAOList = 32+nbEntity*8;
 
-		if(contenuSize <= debutSection1+posAKAOList+nbAKAO*4)
+		if(dataSize <= posAKAOList+nbAKAO*4)
 			return false;
 
 		for(int i=0 ; i<nbAKAO ; ++i) {
 			memcpy(&posAKAO, &constData[posAKAOList+i*4], 4);
-			positions.append(debutSection1+posAKAO);
+			positions.append(posAKAO);
 		}
 
-		positions.append(debutSection2);
+		positions.append(dataSize);
 	} else {
 		quint16 posTut;
 		for(int i=0 ; i<9 ; ++i) {
@@ -97,13 +81,13 @@ bool TutFile::open(const QByteArray &contenu, bool tutType)
 			positions.append(posTut);
 		}
 
-		positions.append(contenuSize);
+		positions.append(dataSize);
 	}
 
 	tutos.clear();
 	for(int i=0 ; i<positions.size()-1 ; ++i) {
-		if(positions.at(i) < contenuSize && positions.at(i) < positions.at(i+1)) {
-			tutos.append(contenu.mid(positions.at(i), positions.at(i+1)-positions.at(i)));
+		if(positions.at(i) < dataSize && positions.at(i) < positions.at(i+1)) {
+			tutos.append(data.mid(positions.at(i), positions.at(i+1)-positions.at(i)));
 		}
 	}
 
@@ -120,13 +104,12 @@ QByteArray TutFile::save(QByteArray &toc, quint32 firstPos) const
 	toc.clear();
 
 	if(!tutType) {
-		for(int i=0 ; i<tutos.size() ; ++i) {
+		foreach(const QByteArray &tuto, tutos) {
 			pos = firstPos + ret.size();
 			toc.append((char *)&pos, 4);
-			ret.append(tutos.at(i));
+			ret.append(tuto);
 		}
 	} else {
-		qDebug() << "tutos" << tutos.size();
 		for(int i=0 ; i<9 ; ++i) {
 			if(i < tutos.size()) {
 				pos = 18 + ret.size();
@@ -136,7 +119,6 @@ QByteArray TutFile::save(QByteArray &toc, quint32 firstPos) const
 			}
 			toc.append((char *)&pos, 2);
 		}
-		qDebug() << "toc" << toc.toHex();
 	}
 
 	return ret;
@@ -173,6 +155,20 @@ bool TutFile::insertTut(int tutID)
 		tutos.insert(tutID, QByteArray("\x11", 1));
 		_isModified = true;
 		return true;
+	}
+	return false;
+}
+
+bool TutFile::insertAkao(int tutID, const QString &akaoPath)
+{
+	if(!tutType) {
+		QFile f(akaoPath);
+		if(f.open(QIODevice::ReadOnly)) {
+			tutos.insert(tutID, f.readAll());
+			_isModified = true;
+			f.close();
+			return true;
+		}
 	}
 	return false;
 }
@@ -271,6 +267,8 @@ QString TutFile::parseScripts(int tutID) const
 
 void TutFile::parseText(int tutID, const QString &tuto)
 {
+	if(!isTut(tutID))	return;
+
 	QStringList lines = tuto.split('\n', QString::SkipEmptyParts), params;
 	QByteArray ret;
 	bool ok;
@@ -344,5 +342,23 @@ void TutFile::parseText(int tutID, const QString &tuto)
 
 	tutos.replace(tutID, ret);
 
+	_isModified = true;
+}
+
+int TutFile::akaoID(int tutID) const
+{
+	if(isTut(tutID))	return -1;
+
+	quint16 id;
+	memcpy(&id, &(tutos.value(tutID).constData()[4]), 2);
+
+	return id;
+}
+
+void TutFile::setAkaoID(int tutID, quint16 akaoID)
+{
+	if(isTut(tutID))	return;
+
+	tutos[tutID].replace(4, 2, (char *)&akaoID, 2);
 	_isModified = true;
 }

@@ -143,8 +143,8 @@ void ConfigWindow::fillConfig()
 
 	disableOGL->setChecked(!Config::value("OpenGL", true).toBool());
 
-	kernelPath->setText(kernel_path);
-	charPath->setText(char_path);
+	kernelPath->setText(QDir::toNativeSeparators(QDir::cleanPath(kernel_path)));
+	charPath->setText(QDir::toNativeSeparators(QDir::cleanPath(char_path)));
 
 	windowColorTopLeft = Config::value("windowColorTopLeft", qRgb(0,88,176)).toInt();
 	windowColorTopRight = Config::value("windowColorTopRight", qRgb(0,0,80)).toInt();
@@ -160,8 +160,7 @@ void ConfigWindow::fillConfig()
 		QCoreApplication::processEvents();
 		QTreeWidgetItem *item = listFF7->topLevelItem(j);
 		if(item == NULL)	break;
-		QString ff7exe = item->text(0) % "/" % (QFile::exists(item->text(0) % "/ff7.exe") ? "ff7.exe" : "FF7_Launcher.exe");
-		item->setIcon(0, QFileIconProvider().icon(QFileInfo(ff7exe)));
+		item->setIcon(0, QFileIconProvider().icon(QFileInfo(item->text(0))));
 	}
 }
 
@@ -181,14 +180,14 @@ void ConfigWindow::changeKernelPath()
 {
 	QString cheminFic = QFileDialog::getOpenFileName(this, tr("Chercher kernel2.bin"), kernelPath->text(), tr("Fichiers BIN (*.bin)"));
 	if(!cheminFic.isNull())
-		kernelPath->setText(cheminFic);
+		kernelPath->setText(QDir::toNativeSeparators(cheminFic));
 }
 
 void ConfigWindow::changeCharPath()
 {
 	QString cheminFic = QFileDialog::getOpenFileName(this, tr("Chercher char.lgp"), charPath->text(), tr("Archives LGP (*.lgp)"));
 	if(!cheminFic.isNull())
-		charPath->setText(cheminFic);
+		charPath->setText(QDir::toNativeSeparators(cheminFic));
 }
 
 void ConfigWindow::changeColor()
@@ -253,8 +252,8 @@ void ConfigWindow::accept()
 {
 	QTreeWidgetItem *currentSelectedFF7Path = listFF7->currentItem();
 	Config::setValue("useRereleaseFF7Path", currentSelectedFF7Path!=NULL && currentSelectedFF7Path == listFF7->topLevelItem(1));
-	Config::setValue("kernel2Path", kernelAuto->isChecked() ? kernelPath->text() : QString());
-	Config::setValue("charPath", charAuto->isChecked() ? charPath->text() : QString());
+	Config::setValue("kernel2Path", kernelAuto->isChecked() ? QDir::fromNativeSeparators(kernelPath->text()) : QString());
+	Config::setValue("charPath", charAuto->isChecked() ? QDir::fromNativeSeparators(charPath->text()) : QString());
 	if(!disableOGL->isChecked() != Config::value("OpenGL", true).toBool()) {
 		Config::setValue("OpenGL", !disableOGL->isChecked());
 		QMessageBox::information(this, tr("Information"), tr("Vous devez redémarrer Makou Reactor pour appliquer tous les changements."));

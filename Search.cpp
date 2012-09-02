@@ -348,7 +348,7 @@ void Search::findNext()
 			if(fieldID < 0)							fieldID = 0;
 			if(fieldID > fieldArchive->size())		fieldID = fieldArchive->size()-1;
 			Field *currentField = fieldArchive->field(fieldID);
-			if(currentField && currentField->searchExec(e_group, e_script, grpScriptID, scriptID, opcodeID))
+			if(currentField && currentField->scriptsAndTexts()->searchExec(e_group, e_script, grpScriptID, scriptID, opcodeID))
 			{
 				emit found(fieldID, grpScriptID, scriptID, opcodeID);
 				goto after;
@@ -427,7 +427,7 @@ void Search::findPrev()
 			if(fieldID < 0)							fieldID = 0;
 			if(fieldID > fieldArchive->size())		fieldID = fieldArchive->size()-1;
 			Field *currentField = fieldArchive->field(fieldID);
-			if(currentField && currentField->searchExecP(e_group, e_script, grpScriptID, scriptID, opcodeID))
+			if(currentField && currentField->scriptsAndTexts()->searchExecP(e_group, e_script, grpScriptID, scriptID, opcodeID))
 			{
 				emit found(fieldID, grpScriptID, scriptID, opcodeID);
 				goto after;

@@ -28,8 +28,6 @@ ScriptEditorGenericList::~ScriptEditorGenericList()
 
 void ScriptEditorGenericList::build()
 {
-	qDebug() << "build ScriptEditorGenericList";
-
 	model = new QStandardItemModel(this);
 	tableView = new QTableView(this);
 	tableView->setModel(model);
@@ -441,7 +439,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<bank<<bank<<bank<<bank<<color<<vitesse<<byte<<byte;return paramTypes;
 	//case 0x6C:return paramTypes;
 	case 0x6D:
-		paramTypes<<boolean<<polygone_id;return paramTypes;
+		paramTypes<<polygone_id<<boolean;return paramTypes;
 	case 0x6E:
 		paramTypes<<bank<<bank<<adress;return paramTypes;
 	case 0x6F:

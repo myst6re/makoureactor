@@ -26,13 +26,11 @@
 class FieldPC : public Field
 {
 public:
-//	FieldPC();
 	FieldPC(quint32 position, const QString &name, FieldArchive *fieldArchive);
 	FieldPC(const Field &field);
 	virtual ~FieldPC();
 
-	qint8 open(const QByteArray &fileData);
-	QPixmap openModelAndBackground();
+	bool open(bool dontOptimize=false);
 	QPixmap openBackground();
 	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 
@@ -42,17 +40,21 @@ public:
 	void setPosition(quint32 position);
 
 	QByteArray save(const QByteArray &fileData, bool compress);
-	qint8 importer(const QByteArray &data, bool isDat, FieldParts part);
+	qint8 importer(const QByteArray &data, bool isPSField, FieldParts part);
 
-	FieldModelLoaderPC *getFieldModelLoader();
+	FieldModelLoaderPC *getFieldModelLoader(bool open=true);
 	FieldModelFilePC *getFieldModel(int modelID, int animationID=0, bool animate=true);
 	FieldModelFilePC *getFieldModel(const QString &hrc, const QString &a, bool animate=true);
+protected:
+	QByteArray sectionData(FieldPart part);
+	QByteArray sectionData(int idPart);
 private:
 	bool getUsedParams(const QByteArray &data, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
-	QPixmap openBackground(const QByteArray &data) const;
+	QPixmap openBackground(const QByteArray &data);
 	QPixmap openBackground(const QByteArray &data, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
 
 	quint32 position;
+	quint32 sectionPositions[9];
 };
 
 #endif // DEF_FIELDPC

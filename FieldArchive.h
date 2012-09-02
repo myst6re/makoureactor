@@ -38,7 +38,7 @@ public:
 	virtual ~FieldArchive();
 
 	int size() const;
-	Field *field(quint32 id, bool open=true);
+	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
 	Field *field(const QString &name, bool open=true);
 	QByteArray getLgpData(int position);
 	QByteArray getFieldData(Field *field, bool unlzs=true);
@@ -46,6 +46,9 @@ public:
 	QByteArray getModelData(Field *field, bool unlzs=true);
 	QByteArray getFileData(const QString &fileName, bool unlzs=true);
 	TutFile *getTut(const QString &name);
+	bool fieldDataIsCached(Field *field) const;
+	bool mimDataIsCached(Field *field) const;
+	bool modelDataIsCached(Field *field) const;
 
 	bool isAllOpened();
 	QList<FF7Var> searchAllVars();
@@ -91,7 +94,7 @@ private:
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting);
 	void addDAT(const QString &name, QList<QTreeWidgetItem *> &items);
 	qint32 findField(const QString &name) const;
-	qint8 openField(Field *field);
+	bool openField(Field *field, bool dontOptimize=false);
 	void setSaved();
 	QByteArray updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory);
 	

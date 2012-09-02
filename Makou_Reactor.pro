@@ -76,7 +76,8 @@ HEADERS += ApercuBG.h \
     ScriptEditorWidgets/ScriptEditorWindowPage.h \
     MassExportDialog.h \
     ScriptEditorWidgets/ScriptEditorStructPage.h \
-    ScriptEditorWidgets/ScriptEditorMathPage.h
+    ScriptEditorWidgets/ScriptEditorMathPage.h \
+    Section1File.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -146,7 +147,8 @@ SOURCES += ApercuBG.cpp \
     ScriptEditorWidgets/ScriptEditorWindowPage.cpp \
     MassExportDialog.cpp \
     ScriptEditorWidgets/ScriptEditorStructPage.cpp \
-    ScriptEditorWidgets/ScriptEditorMathPage.cpp
+    ScriptEditorWidgets/ScriptEditorMathPage.cpp \
+    Section1File.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts

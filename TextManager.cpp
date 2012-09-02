@@ -259,10 +259,11 @@ void TextManager::focusInEvent(QFocusEvent *e)
 void TextManager::setField(Field *field)
 {
 	this->field = field;
+	this->scriptsAndTexts = field->scriptsAndTexts();
 	_windows.clear();
 	_text2win.clear();
-	field->listWindows(_windows, _text2win);
-	usedTexts = field->listUsedTexts();
+	scriptsAndTexts->listWindows(_windows, _text2win);
+	usedTexts = scriptsAndTexts->listUsedTexts();
 	showList();
 	liste1->setCurrentRow(0);
 	selectText(liste1->item(0));
@@ -274,7 +275,7 @@ void TextManager::setTextChanged()
 	if(item == NULL)	return;
 
 	QString newText = textEdit->toPlainText();
-	FF7Text *t = field->getText(item->data(Qt::UserRole).toInt());
+	FF7Text *t = scriptsAndTexts->text(item->data(Qt::UserRole).toInt());
 	bool jp = Config::value("jp_txt", false).toBool();
 	if(newText != t->getText(jp)) {
 		t->setText(newText, jp);
@@ -303,7 +304,7 @@ void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 {
 	if(!item)	return;
 	int textID = item->data(Qt::UserRole).toInt();
-	FF7Text *t = field->getText(textID);
+	FF7Text *t = scriptsAndTexts->text(textID);
 	textPreview->resetCurrentWin();
 	textPreview->setWins(getWindows(textID));
 	textPreview->setText(t->getData());
@@ -317,7 +318,7 @@ void TextManager::showList()
 {
 	bool show = dispUnusedText->isChecked();
 	liste1->blockSignals(true);
-	int nbTextes = field->getNbTexts();
+	int nbTextes = scriptsAndTexts->getNbTexts();
 	liste1->clear();
 
 	Config::setValue("dispUnusedText", show);
@@ -365,10 +366,10 @@ void TextManager::gotoText(int textID, int from, int size)
 void TextManager::addText()
 {
 	QListWidgetItem *item = liste1->currentItem();
-	int row = !item ? field->getNbTexts() : item->data(Qt::UserRole).toInt()+1;
+	int row = !item ? scriptsAndTexts->getNbTexts() : item->data(Qt::UserRole).toInt()+1;
 	liste1->blockSignals(true);
-	field->insertText(row);
-	usedTexts = field->listUsedTexts();
+	scriptsAndTexts->insertText(row);
+	usedTexts = scriptsAndTexts->listUsedTexts();
 	dispUnusedText->setChecked(true);
 	showList();
 	liste1->setCurrentRow(row < liste1->count() ? row : liste1->count()-1);
@@ -389,8 +390,8 @@ void TextManager::delText()
 			return;
 		}
 	}
-	field->deleteText(row);
-	usedTexts = field->listUsedTexts();
+	scriptsAndTexts->deleteText(row);
+	usedTexts = scriptsAndTexts->listUsedTexts();
 	dispUnusedText->setChecked(true);
 	showList();
 	liste1->setCurrentRow(row < liste1->count() ? row : liste1->count()-1);
@@ -468,10 +469,10 @@ void TextManager::changeXCoord(int x)
 
 		qDebug() << "changeXCoord()" << x << textID << winID;
 
-		field->setWindow(ff7Window);
+		scriptsAndTexts->setWindow(ff7Window);
 		_windows.clear();
 		_text2win.clear();
-		field->listWindows(_windows, _text2win); // refresh
+		scriptsAndTexts->listWindows(_windows, _text2win); // refresh
 		textPreview->setWins(getWindows(textID));
 		emit modified();
 	}
@@ -489,10 +490,10 @@ void TextManager::changeYCoord(int y)
 
 		qDebug() << "changeYCoord()" << y << textID << winID;
 
-		field->setWindow(ff7Window);
+		scriptsAndTexts->setWindow(ff7Window);
 		_windows.clear();
 		_text2win.clear();
-		field->listWindows(_windows, _text2win); // refresh
+		scriptsAndTexts->listWindows(_windows, _text2win); // refresh
 		textPreview->setWins(getWindows(textID));
 		emit modified();
 	}

@@ -29,6 +29,12 @@ GrpScript::GrpScript(const QString &name)
 {
 }
 
+GrpScript::GrpScript(const QString &name, const QList<Script *> &scripts)
+	: name(name), character(-1), animation(false), location(false), director(false)
+{
+	setScripts(scripts, true);
+}
+
 GrpScript::~GrpScript()
 {
 	foreach(Script *script, scripts)	delete script;
@@ -152,6 +158,23 @@ int GrpScript::size() const
 Script *GrpScript::getScript(quint8 scriptID) const
 {
 	return scripts.at(scriptID);
+}
+
+const QList<Script *> &GrpScript::getScripts() const
+{
+	return scripts;
+}
+
+void GrpScript::setScripts(const QList<Script *> &scripts, bool copy)
+{
+	if(copy) {
+		this->scripts.clear();
+		foreach(Script *script, scripts) {
+			addScript(script->toByteArray(), false);
+		}
+	} else {
+		this->scripts = scripts;
+	}
 }
 
 QByteArray GrpScript::toByteArray(quint8 scriptID) const

@@ -27,6 +27,7 @@ class GrpScript
 public:
 	GrpScript();
 	GrpScript(const QString &name);
+	GrpScript(const QString &name, const QList<Script *> &scripts);
 	virtual ~GrpScript();
 
 	void addScript();
@@ -38,6 +39,8 @@ public:
 	void setName(const QString &name);
 	int size() const;
 	Script *getScript(quint8 scriptID) const;
+	const QList<Script *> &getScripts() const;
+	void setScripts(const QList<Script *> &scripts, bool copy=false);
 	QByteArray toByteArray(quint8 scriptID) const;
 	void getBgParams(QHash<quint8, quint8> &paramActifs) const;
 	void getBgMove(qint16 z[2], qint16 *x=0, qint16 *y=0) const;

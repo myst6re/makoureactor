@@ -36,13 +36,18 @@ private slots:
 	void exportation();
 	void importation();
 private:
+	QWidget *buildTutPage();
+	QWidget *buildSoundPage();
 	void fillList();
 	void saveText(QListWidgetItem *item);
 
+	QStackedWidget *stackedWidget;
 	QRadioButton *versionPS;
 	QListWidget *list;
 	QPushButton *exportButton, *importButton;
 	QPlainTextEdit *textEdit;
+	QLabel *akaoDesc;
+	QComboBox *akaoIDList;
 	Field *field;
 	TutFile *tut, *tutPC, *currentTut, tutCpy, tutPCCpy;
 	bool textChanged;

@@ -24,7 +24,7 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, QWidget *par
 
 	QGroupBox *group = new QGroupBox(tr("Importer"));
 	scripts = new QCheckBox(tr("Scripts/Textes"));
-	akaos = new QCheckBox(tr("Sons/Tutoriaux"));
+	akaos = new QCheckBox(tr("Musiques/Tutoriels"));
 	ca = new QCheckBox(tr("Caméra"));
 	id = new QCheckBox(tr("Walkmesh"));
 	encounter = new QCheckBox(tr("Combats aléatoires"));
@@ -80,7 +80,7 @@ Field::FieldParts ImportDialog::getParts()
 	if(id->isChecked())			parts |= Field::Walkmesh;
 	if(encounter->isChecked())	parts |= Field::Encounter;
 	if(inf->isChecked())		parts |= Field::Inf;
-	if(model->isChecked())		parts |= Field::HrcLoader;
+	if(model->isChecked())		parts |= Field::ModelLoader;
 //	if(mim->isChecked())		parts |= Field::Background;
 
 	return parts;

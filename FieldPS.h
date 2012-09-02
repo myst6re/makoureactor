@@ -67,13 +67,11 @@ typedef struct {
 class FieldPS : public Field
 {
 public:
-//	FieldPS();
 	FieldPS(const QString &name, FieldArchive *fieldArchive);
 	FieldPS(const Field &field);
 	virtual ~FieldPS();
 
-	qint8 open(const QByteArray &fileData);
-	QPixmap openModelAndBackground();
+	bool open(bool dontOptimize=false);
 	QPixmap openBackground();
 	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 
@@ -81,12 +79,17 @@ public:
 
 	QByteArray save(const QByteArray &fileData, bool compress);
 
-	FieldModelLoaderPS *getFieldModelLoader();
+	FieldModelLoaderPS *getFieldModelLoader(bool open=true);
 	FieldModelFilePS *getFieldModel(int modelID, int animationID=0, bool animate=true);
+protected:
+	QByteArray sectionData(FieldPart part);
+	QByteArray sectionData(int idPart);
 private:
-	QPixmap openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec) const;
+	QPixmap openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec);
 	QPixmap openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
 	bool getUsedParams(const QByteArray &datData, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
+
+	quint32 sectionPositions[7];
 };
 
 #endif // DEF_FIELDPS

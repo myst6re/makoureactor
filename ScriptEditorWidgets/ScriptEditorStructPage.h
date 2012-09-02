@@ -86,12 +86,14 @@ class ScriptEditorJumpPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorJumpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	void clear();
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
 private:
 	void build();
 	void convertOpcode(Opcode::Keys key);
 	QComboBox *label, *range;
+	bool addJump;
 };
 
 class ScriptEditorIfPage : public ScriptEditorView
@@ -99,6 +101,7 @@ class ScriptEditorIfPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorIfPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	void clear();
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
 private slots:
@@ -108,6 +111,7 @@ private:
 	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *varOrValue1, *varOrValue2;
 	QComboBox *operatorList, *rangeTest, *label, *rangeJump;
+	bool addJump;
 };
 
 class ScriptEditorIfKeyPage : public ScriptEditorView

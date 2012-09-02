@@ -37,6 +37,10 @@ void ScriptEditorView::showEvent(QShowEvent *e)
 	QWidget::showEvent(e);
 }
 
+void ScriptEditorView::clear()
+{
+}
+
 Opcode *ScriptEditorView::opcode()
 {
 	return _opcode;

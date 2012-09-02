@@ -116,22 +116,22 @@ bool FieldArchive::isIso() const
 	return iso != NULL;
 }
 
-qint8 FieldArchive::openField(Field *field)
+bool FieldArchive::openField(Field *field, bool dontOptimize)
 {
 	if(!field->isOpen()) {
-		return field->open(getFieldData(field, false));
+		return field->open(dontOptimize);
 	}
-	return 0;
+	return true;
 }
 
-Field *FieldArchive::field(quint32 id, bool open)
+Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 {
 	Field *field = fileList.value(id, NULL);
-	if(field!=NULL && open && openField(field) != 0) {
+	if(field!=NULL && open && !openField(field, dontOptimize)) {
 		return NULL;
 	}
 	if(field!=NULL) {
-		Data::currentTextes = field->getTexts();
+		Data::currentTextes = field->scriptsAndTexts()->texts();
 	}
 	return field;
 }
@@ -174,8 +174,11 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 	QByteArray data;
 
 	// use data from the cache
-	if(unlzs && fieldCache && fieldCache == field) {
+	if(unlzs && fieldDataIsCached(field)) {
+		qDebug() << "FieldArchive use field data from cache" << field->getName();
 		return fieldDataCache;
+	} else {
+		qDebug() << "FieldArchive don't use field data from cache" << field->getName() << unlzs;
 	}
 
 	if(isDatFile()) {
@@ -208,7 +211,7 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 QByteArray FieldArchive::getMimData(Field *field, bool unlzs)
 {
 	// use data from the cache
-	if(unlzs && mimCache && mimCache == field) {
+	if(unlzs && mimDataIsCached(field)) {
 		return mimDataCache;
 	}
 
@@ -224,7 +227,7 @@ QByteArray FieldArchive::getMimData(Field *field, bool unlzs)
 QByteArray FieldArchive::getModelData(Field *field, bool unlzs)
 {
 	// use data from the cache
-	if(unlzs && modelCache && modelCache == field) {
+	if(unlzs && modelDataIsCached(field)) {
 		return modelDataCache;
 	}
 
@@ -293,6 +296,21 @@ TutFile *FieldArchive::getTut(const QString &name)
 	return NULL;
 }
 
+bool FieldArchive::fieldDataIsCached(Field *field) const
+{
+	return fieldCache && fieldCache == field;
+}
+
+bool FieldArchive::mimDataIsCached(Field *field) const
+{
+	return mimCache && mimCache == field;
+}
+
+bool FieldArchive::modelDataIsCached(Field *field) const
+{
+	return modelCache && modelCache == field;
+}
+
 bool FieldArchive::isAllOpened()
 {
 	foreach(Field *f, fileList) {
@@ -310,7 +328,7 @@ QList<FF7Var> FieldArchive::searchAllVars()
 		QCoreApplication::processEvents();
 		Field *field = this->field(i);
 		if(field != NULL) {
-			field->searchAllVars(vars);
+			field->scriptsAndTexts()->searchAllVars(vars);
 		}
 	}
 
@@ -328,9 +346,6 @@ void FieldArchive::searchAll()
 			InfFile *inf = field->getInf();
 			if(inf->isOpen()) {
 				inf->test();
-			}
-			if(!field->isModified()) {
-				field->close();
 			}
 		}
 	}
@@ -368,7 +383,7 @@ bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scr
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchOpcode(opcode, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->scriptsAndTexts()->searchOpcode(opcode, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
 	}
@@ -384,7 +399,7 @@ bool FieldArchive::searchVar(quint8 bank, quint8 adress, int value, int &fieldID
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchVar(bank, adress, value, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->scriptsAndTexts()->searchVar(bank, adress, value, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
 	}
@@ -400,7 +415,7 @@ bool FieldArchive::searchExec(quint8 group, quint8 script, int &fieldID, int &gr
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchExec(group, script, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->scriptsAndTexts()->searchExec(group, script, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
 	}
@@ -416,7 +431,7 @@ bool FieldArchive::searchMapJump(quint16 _field, int &fieldID, int &groupID, int
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchMapJump(_field, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->scriptsAndTexts()->searchMapJump(_field, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
 	}
@@ -432,7 +447,7 @@ bool FieldArchive::searchTextInScripts(const QRegExp &text, int &fieldID, int &g
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchTextInScripts(text, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->scriptsAndTexts()->searchTextInScripts(text, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
 	}
@@ -448,7 +463,7 @@ bool FieldArchive::searchText(const QRegExp &text, int &fieldID, int &textID, in
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchText(text, textID, from, size))
+		if(f!=NULL && f->scriptsAndTexts()->searchText(text, textID, from, size))
 			return true;
 		textID = from = 0;
 	}
@@ -487,7 +502,7 @@ bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &sc
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchOpcodeP(opcode, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->scriptsAndTexts()->searchOpcodeP(opcode, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 2147483647;
 	}
@@ -504,7 +519,7 @@ bool FieldArchive::searchVarP(quint8 bank, quint8 adress, int value, int &fieldI
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchVarP(bank, adress, value, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->scriptsAndTexts()->searchVarP(bank, adress, value, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 2147483647;
 	}
@@ -520,7 +535,7 @@ bool FieldArchive::searchExecP(quint8 group, quint8 script, int &fieldID, int &g
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchExecP(group, script, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->scriptsAndTexts()->searchExecP(group, script, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 2147483647;
 	}
@@ -536,7 +551,7 @@ bool FieldArchive::searchMapJumpP(quint16 _field, int &fieldID, int &groupID, in
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchMapJumpP(_field, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->scriptsAndTexts()->searchMapJumpP(_field, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 2147483647;
 	}
@@ -552,7 +567,7 @@ bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &fieldID, int &
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchTextInScriptsP(text, groupID, scriptID, opcodeID))
+		if(f!=NULL && f->scriptsAndTexts()->searchTextInScriptsP(text, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 2147483647;
 	}
@@ -568,7 +583,7 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->searchTextP(text, textID, from, size))
+		if(f!=NULL && f->scriptsAndTexts()->searchTextP(text, textID, from, size))
 			return true;
 		textID = from = 2147483647;
 	}
@@ -869,7 +884,7 @@ quint8 FieldArchive::save(QString path)
 				//vérifier si on a pas une nouvelle version du fichier
 				if(field->isOpen() && field->isModified())
 				{
-//					qDebug() << "======== modified";
+//					qDebug() << field->getName() << "======== modified";
 					//Récupérer l'ancien fichier
 					if(fic->read((char *)&fileSize, 4) != 4)	return 3;
 					if(oldtaille != fileSize+4)					return 3;
@@ -972,7 +987,7 @@ quint8 FieldArchive::save(QString path)
 			//			qDebug() << tutPos;
 		}
 		emit progress(nbFiles+14);
-		tempFic.copy(path);
+		if(!tempFic.copy(path))	return 4;
 
 		emit progress(nbFiles+21);
 

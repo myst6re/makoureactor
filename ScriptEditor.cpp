@@ -69,6 +69,8 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	editorLayout->addWidget(new ScriptEditorUnaryOpPage(field, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorBitOpPage(field, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorWindowPage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorWindowModePage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorWindowMovePage(field, grpScript, script, opcodeID, this));
 
 	ok = new QPushButton(tr("OK"),this);
 	ok->setDefault(true);
@@ -126,6 +128,8 @@ ScriptEditor::~ScriptEditor()
 void ScriptEditor::fillEditor()
 {
 	int index;
+
+	editorWidget->clear();
 
 	// Change current editor widget
 	switch((Opcode::Keys)opcode->id()) {
@@ -187,8 +191,15 @@ void ScriptEditor::fillEditor()
 	case Opcode::BITXOR:
 		index = 12;
 		break;
-	case Opcode::WINDOW:case Opcode::WSIZW:case Opcode::WROW:
+	case Opcode::WINDOW:case Opcode::WSIZW:
+	case Opcode::WROW:
 		index = 13;
+		break;
+	case Opcode::WMODE:
+		index = 14;
+		break;
+	case Opcode::WMOVE:
+		index = 15;
 		break;
 	default:
 		index = 0;
@@ -521,18 +532,18 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Afficher l'état précédent d'un paramètre"), QList<QVariant>() << 0xE3);
 		comboBox->addItem(tr("Cacher un paramètre"), QList<QVariant>() << 0xE4);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("MP Palette"), QList<QVariant>() << 0xDF);
-		comboBox->addItem(tr("MP Palette (2)"), QList<QVariant>() << 0xEA);
-		comboBox->addItem(tr("ST (Store) Palette"), QList<QVariant>() << 0xE5);
-		comboBox->addItem(tr("ST (Store) PLS"), QList<QVariant>() << 0xEB);
-		comboBox->addItem(tr("LD (Load) Palette"), QList<QVariant>() << 0xE6);
-		comboBox->addItem(tr("LD (Load) PLS"), QList<QVariant>() << 0xEC);
-		comboBox->addItem(tr("CP (Copy) Palette"), QList<QVariant>() << 0xE7);
-		comboBox->addItem(tr("CP (Copy) Palette (2)"), QList<QVariant>() << 0xED);
-		comboBox->addItem(tr("RT Palette"), QList<QVariant>() << 0xE8);
-		comboBox->addItem(tr("RT Palette (2)"), QList<QVariant>() << 0xEE);
-		comboBox->addItem(tr("AD Palette"), QList<QVariant>() << 0xE9);
-		comboBox->addItem(tr("AD Palette (2)"), QList<QVariant>() << 0xEF);
+		comboBox->addItem(tr("Store Palette"), QList<QVariant>() << 0xE5);
+		comboBox->addItem(tr("Store Palette (S)"), QList<QVariant>() << 0xEB);
+		comboBox->addItem(tr("Load Palette"), QList<QVariant>() << 0xE6);
+		comboBox->addItem(tr("Load Palette (S)"), QList<QVariant>() << 0xEC);
+		comboBox->addItem(tr("Copy Palette"), QList<QVariant>() << 0xE7);
+		comboBox->addItem(tr("Copy Palette (2)"), QList<QVariant>() << 0xED);
+		comboBox->addItem(tr("Partial Copy Palette"), QList<QVariant>() << 0xE8);
+		comboBox->addItem(tr("Partial Copy Palette (2)"), QList<QVariant>() << 0xEE);
+		comboBox->addItem(tr("Multiplier Palette"), QList<QVariant>() << 0xDF);
+		comboBox->addItem(tr("Multiplier Palette (2)"), QList<QVariant>() << 0xEA);
+		comboBox->addItem(tr("Additionner Palette"), QList<QVariant>() << 0xE9);
+		comboBox->addItem(tr("Additionner Palette (2)"), QList<QVariant>() << 0xEF);
 		return;
 	case 7:
 		comboBox->addItem(tr("Centrer sur le personnage jouable"), QList<QVariant>() << 0x65);
@@ -579,14 +590,14 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Afficher menu"), QList<QVariant>() << 0x49);
 		comboBox->addItem(tr("Changer de disque"), QList<QVariant>() << 0x0E);
 		comboBox->addItem(tr("Mini-jeu"), QList<QVariant>() << 0x20);
-		comboBox->addItem(tr("Mode de combat"), QList<QVariant>() << 0x22);
 		comboBox->addItem(tr("Résultat du dernier combat"), QList<QVariant>() << 0x23);
 		comboBox->addItem(tr("Table de combat"), QList<QVariant>() << 0x4B);
 		comboBox->addItem(tr("Changer d'écran"), QList<QVariant>() << 0x60);
 		comboBox->addItem(tr("ID de l'écran précédent"), QList<QVariant>() << 0x6E);
 		comboBox->addItem(tr("Combattre"), QList<QVariant>() << 0x70);
 		comboBox->addItem(tr("Activer/désactiver les combats"), QList<QVariant>() << 0x71);
-		comboBox->addItem(tr("BTLMD"), QList<QVariant>() << 0x72);
+		comboBox->addItem(tr("Mode de combat"), QList<QVariant>() << 0x72);
+		comboBox->addItem(tr("Mode de combat (2)"), QList<QVariant>() << 0x22);
 		comboBox->addItem(tr("Activer/désactiver les changements d'écran"), QList<QVariant>() << 0xD2);
 		comboBox->addItem(tr("Activer/Désactiver déplacements"), QList<QVariant>() << 0x33);
 		comboBox->addItem(tr("Précharger un écran"), QList<QVariant>() << 0xD8);

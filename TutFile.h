@@ -27,21 +27,24 @@ class TutFile
 {
 public:
 	TutFile();
-	explicit TutFile(const QByteArray &contenu, bool tutType=false);
+	explicit TutFile(const QByteArray &data, bool tutType=false);
 	bool isOpen() const;
 	bool isModified() const;
 	void setModified(bool);
-	bool open(const QByteArray &contenu, bool tutType=false);
+	bool open(const QByteArray &data, bool tutType=false);
 	QByteArray save(QByteArray &toc, quint32 firstPos=0) const;
 	int size() const;
 	bool hasTut() const;
 	bool isTut(int tutID) const;
 	void removeTut(int tutID);
 	bool insertTut(int tutID);
+	bool insertAkao(int tutID, const QString &akaoPath);
 	const QByteArray &data(int tutID) const;
 	void setData(int tutID, const QByteArray &data);
 	QString parseScripts(int tutID) const;
 	void parseText(int tutID, const QString &tuto);
+	int akaoID(int tutID) const;
+	void setAkaoID(int tutID, quint16 akaoID);
 private:
 	bool _isOpen, _isModified, tutType;
 	QList<QByteArray> tutos;

@@ -25,41 +25,12 @@ IdFile::IdFile() :
 bool IdFile::open(const QByteArray &data)
 {
 	const char *constData = data.constData();
-	quint32 posSection1, posSection3, posSectionId, posSection6, nbSector;
-	int sizeId;
+	quint32 nbSector;
+	int sizeId = data.size();
 
 	if(sizeof(Triangle) != 24 || sizeof(Access) != 6) {
 		qWarning() << "Error id struct size" << sizeof(Triangle) << sizeof(Access);
 		return false;
-	}
-
-	if(data.startsWith(QByteArray("\x00\x00\x09\x00\x00\x00", 6))) {
-		memcpy(&posSectionId, &constData[22], 4);// section 5
-		memcpy(&posSection6, &constData[26], 4);
-
-		posSectionId += 4;
-
-		sizeId = posSection6 - posSectionId;
-
-		// warning : some padding data in ca section
-		if((quint32)data.size() <= posSection6) {
-			qWarning() << "invalid data size walkmesh" << posSection6 << data.size();
-			return false;
-		}
-	} else {
-		memcpy(&posSection1, constData, 4);
-		memcpy(&posSectionId, &constData[4], 4);// section 2
-		memcpy(&posSection3, &constData[8], 4);
-		posSectionId = posSectionId - posSection1 + 28;
-		posSection3 = posSection3 - posSection1 + 28;
-
-		sizeId = posSection3 - posSectionId;
-
-		// warning : some padding data in ca section
-		if((quint32)data.size() <= posSection3) {
-			qWarning() << "invalid data size walkmesh" << posSection3 << data.size();
-			return false;
-		}
 	}
 
 	if(sizeId < 4) {
@@ -67,19 +38,16 @@ bool IdFile::open(const QByteArray &data)
 		return false;
 	}
 
-	memcpy(&nbSector, &constData[posSectionId], 4);
+	memcpy(&nbSector, constData, 4);
 
-	posSectionId += 4;
+	quint32 accessStart = 4 + nbSector*24, i;
 
-	quint32 accessStart = posSectionId+nbSector*24, i;
-
-	if((quint32)sizeId != accessStart+nbSector*6 - posSectionId + 4) {
-
-		if((quint32)sizeId == accessStart+nbSector*6 - posSectionId + 4 + 2) {
-			memcpy(&_unknown, &constData[accessStart+nbSector*6], 2);
+	if((quint32)sizeId != accessStart + nbSector*6) {
+		if((quint32)sizeId == accessStart + nbSector*6 + 2) {
+			memcpy(&_unknown, &constData[accessStart + nbSector*6], 2);
 			_hasUnknownData = true;
 		} else {
-			qWarning() << "size id error" << sizeId << ((accessStart+nbSector*6) - posSectionId + 4);
+			qWarning() << "size id error" << sizeId << (accessStart + nbSector*6);
 			return false;
 		}
 	}
@@ -89,13 +57,13 @@ bool IdFile::open(const QByteArray &data)
 	triangles.clear();
 	_access.clear();
 	for(i=0 ; i<nbSector ; ++i) {
-		memcpy(&triangle, &constData[posSectionId+i*24], 24);
+		memcpy(&triangle, &constData[4 + i*24], 24);
 		triangles.append(triangle);
 //		qDebug() << triangle.vertices[0].x << triangle.vertices[0].y << triangle.vertices[0].z << triangle.vertices[0].res;
 //		qDebug() << triangle.vertices[1].x << triangle.vertices[1].y << triangle.vertices[1].z << triangle.vertices[1].res;
 //		qDebug() << triangle.vertices[2].x << triangle.vertices[2].y << triangle.vertices[2].z << triangle.vertices[2].res;
 //		qDebug() << "=====";
-		memcpy(&acc, &constData[accessStart+i*6], 6);
+		memcpy(&acc, &constData[accessStart + i*6], 6);
 		_access.append(acc);
 //		qDebug() << acc.a1 << acc.a2 << acc.a3;
 //		qDebug() << "=====";

@@ -43,4 +43,32 @@ private:
 	QPushButton *autoSize;
 };
 
+class ScriptEditorWindowModePage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorWindowModePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private slots:
+	void updatePreview();
+private:
+	void build();
+	TextPreview *textPreview;
+	QSpinBox *winID;
+	QComboBox *winType, *winClose;
+};
+
+class ScriptEditorWindowMovePage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorWindowMovePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private:
+	void build();
+	QSpinBox *winID, *x, *y;
+};
+
 #endif // DEF_SCRIPTEDITORWINDOWPAGE

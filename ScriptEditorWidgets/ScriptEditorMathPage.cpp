@@ -24,8 +24,6 @@ ScriptEditorBinaryOpPage::ScriptEditorBinaryOpPage(Field *field, GrpScript *grpS
 
 void ScriptEditorBinaryOpPage::build()
 {
-	qDebug() << "ScriptEditorBinaryOpPage";
-
 	var = new VarOrValueWidget(this);
 	var->setOnlyVar(true);
 
@@ -352,8 +350,6 @@ ScriptEditorUnaryOpPage::ScriptEditorUnaryOpPage(Field *field, GrpScript *grpScr
 
 void ScriptEditorUnaryOpPage::build()
 {
-	qDebug() << "ScriptEditorUnaryOpPage";
-
 	var = new VarOrValueWidget(this);
 	var->setOnlyVar(true);
 
@@ -547,8 +543,6 @@ ScriptEditorBitOpPage::ScriptEditorBitOpPage(Field *field, GrpScript *grpScript,
 
 void ScriptEditorBitOpPage::build()
 {
-	qDebug() << "ScriptEditorBitOpPage";
-
 	var = new VarOrValueWidget(this);
 	var->setOnlyVar(true);
 

@@ -36,7 +36,7 @@ public:
 	void clearCopiedGroups();
 	void setEnabled(bool);
 
-	void fill(Field *field=NULL);
+	void fill(Section1File *scripts=0);
 	void localeRefresh();
 	void scroll(int, bool focus=true);
 	void enableActions(bool);
@@ -65,7 +65,7 @@ private:
 
 	QToolBar *_toolBar;
 
-	Field *field;
+	Section1File *scripts;
 	QList<GrpScript *> grpScriptCopied;
 };
 

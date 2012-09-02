@@ -63,7 +63,7 @@ Window::Window() :
 	actionText = menu->addAction(tr("&Textes..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
 	actionModels = menu->addAction(tr("&Modèles 3D..."), this, SLOT(modelManager()));
 	actionEncounter = menu->addAction(tr("&Rencontres aléatoires..."), this, SLOT(encounterManager()));
-	actionTut = menu->addAction(tr("&Tutoriels/Sons..."), this, SLOT(tutManager()));
+	actionTut = menu->addAction(tr("&Tutoriels/Musiques..."), this, SLOT(tutManager()));
 	actionWalkmesh = menu->addAction(tr("&Zones..."), this, SLOT(walkmeshManager()));
 	actionBackground = menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()));
 	actionMisc = menu->addAction(tr("&Divers..."), this, SLOT(miscManager()));
@@ -512,7 +512,7 @@ void Window::ouvrirField()
 
 	setWindowTitle((!fieldArchive->isDirectory() ? "" : "[*]") + selectedItems.first()->text(0) + (!fieldArchive->isDirectory() ? " ([*]" + fieldArchive->name() + ")" : "") + " - " + PROG_FULLNAME);
 
-	field = fieldArchive->field(id);
+	field = fieldArchive->field(id, true, true);
 	if(field == NULL) {
 		zoneImage->clear();
 		liste2->setEnabled(false);
@@ -534,12 +534,12 @@ void Window::ouvrirField()
 
 	zonePreview->setCurrentIndex(0);
 	
-	auteurLbl->setText(tr("Auteur : %1").arg(field->getAuthor()));
+	auteurLbl->setText(tr("Auteur : %1").arg(field->scriptsAndTexts()->author()));
 	auteurLbl->show();
 	
 	emit fieldIDChanged(id);
 	liste2->setEnabled(true);
-	liste2->fill(field);
+	liste2->fill(field->scriptsAndTexts());
 
 	searchDialog->updateRunSearch();
 
@@ -583,7 +583,7 @@ void Window::afficherGrpScripts()
 
 	bool modelLoaded = false;
 
-	int modelID = field->getModelID(liste2->selectedID());
+	int modelID = field->scriptsAndTexts()->getModelID(liste2->selectedID());
 	Data::currentModelID = modelID;
 	if(fieldModel && modelID != -1) {
 		modelLoaded = fieldModel->load(field, modelID);
@@ -671,7 +671,7 @@ void Window::undo()
 	actionUndo->setEnabled(!hists.isEmpty());
 	zoneScript->setFocus();
 
-	Script *script = fieldArchive->field(hist.fieldID)->grpScript(hist.groupID)->getScript(hist.scriptID);
+	Script *script = fieldArchive->field(hist.fieldID)->scriptsAndTexts()->grpScript(hist.groupID)->getScript(hist.scriptID);
 	int firstOpcode = hist.opcodeIDs.first();
 	QByteArray sav;
 
@@ -713,7 +713,7 @@ void Window::redo()
 	actionRedo->setEnabled(!restoreHists.isEmpty());
 	zoneScript->setFocus();
 
-	Script *script = fieldArchive->field(hist.fieldID)->grpScript(hist.groupID)->getScript(hist.scriptID);
+	Script *script = fieldArchive->field(hist.fieldID)->scriptsAndTexts()->grpScript(hist.groupID)->getScript(hist.scriptID);
 	int firstOpcode = hist.opcodeIDs.first();
 	QByteArray sav;
 	
@@ -988,7 +988,7 @@ void Window::massExport()
 
 					Field *f = fieldArchive->field(fieldID);
 					if(f) {
-						TutFile *akaoList = field->getTut();
+						TutFile *akaoList = f->tutosAndSounds();
 						if(!akaoList->isOpen())
 							akaoList->open(fieldArchive->getFieldData(f));
 						int akaoCount = akaoList->size();
@@ -1017,21 +1017,24 @@ void Window::importer()
 	if(!field) return;
 
 	int index;
-	QString types, name, selectedFilter,
-			fieldDec = tr("Field décompressé (*.dec)"),
-			fieldLzs = tr("Field compressé (*.lzs)"),
-			dat = tr("Fichier DAT (*.DAT)");
+	QString name, selectedFilter;
+	QStringList filter;
+	filter << tr("Écran PC (*)")
+		   << tr("Fichier DAT (*.DAT)")
+		   << tr("Écran PC décompressé (*)")
+		   << tr("Fichier DAT décompressé (*)");
 
 	name = liste->selectedItems().first()->text(0);
 	if(!fieldArchive->isLgp())
 		name = name.toUpper();
-	types = fieldDec+";;"+fieldLzs+";;"+dat;
 
 	QString path = Config::value("importPath").toString().isEmpty() ? fieldArchive->chemin() : Config::value("importPath").toString()+"/";
-	path = QFileDialog::getOpenFileName(this, tr("Importer un fichier"), path+name, types, &selectedFilter);
+	path = QFileDialog::getOpenFileName(this, tr("Importer un fichier"), path+name, filter.join(";;"), &selectedFilter);
 	if(path.isNull())		return;
 
-	ImportDialog dialog((selectedFilter==dat && !fieldArchive->isLgp()) || (selectedFilter!=dat && fieldArchive->isLgp()), selectedFilter==dat, this);
+	bool isDat = selectedFilter == filter.at(1) || selectedFilter == filter.at(3);
+
+	ImportDialog dialog((isDat && !fieldArchive->isLgp()) || (!isDat && fieldArchive->isLgp()), isDat, this);
 	if(dialog.exec() != QDialog::Accepted) {
 		return;
 	}
@@ -1041,7 +1044,7 @@ void Window::importer()
 		return;
 	}
 	
-	qint8 error = field->importer(path, parts);
+	qint8 error = field->importer(path, filter.indexOf(selectedFilter), parts);
 	
 	QString out;
 	switch(error)
@@ -1082,11 +1085,11 @@ void Window::varManager()
 
 void Window::runFF7()
 {
-	QString ff7exe = QFile::exists(Data::ff7AppPath() % "/ff7.exe") ? "ff7.exe" : "FF7_Launcher.exe";
-	QString ff7exeFullPath = Data::ff7AppPath() % "/" % ff7exe;
+	QString FF7Exe = Data::ff7AppPath();
+	QString FF7ExeDir = FF7Exe.left(FF7Exe.lastIndexOf('/'));
 
-	if(!QProcess::startDetached("\"" % ff7exeFullPath % "\"", QStringList(), Data::ff7AppPath())) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Final Fantasy VII n'a pas pu être lancé.\n%1").arg(ff7exeFullPath));
+	if(!QProcess::startDetached("\"" % FF7Exe % "\"", QStringList(), FF7ExeDir)) {
+		QMessageBox::warning(this, tr("Erreur"), tr("Final Fantasy VII n'a pas pu être lancé.\n%1").arg(FF7Exe));
 	}
 }
 
@@ -1131,7 +1134,7 @@ void Window::modelManager()
 void Window::encounterManager()
 {
 	if(field) {
-		EncounterFile *encounter = field->getEncounter();
+		EncounterFile *encounter = field->encounter();
 		if(encounter->isOpen()) {
 			EncounterWidget dialog(encounter, this);
 			if(dialog.exec()==QDialog::Accepted)
@@ -1148,7 +1151,7 @@ void Window::encounterManager()
 void Window::tutManager()
 {
 	if(field) {
-		TutFile *tut = field->getTut(), *tutPC = fieldArchive->getTut(field->getName());
+		TutFile *tut = field->tutosAndSounds(), *tutPC = fieldArchive->getTut(field->getName());
 		if(tut->isOpen()) {
 			TutWidget dialog(field, tut, tutPC, this);
 			if(dialog.exec()==QDialog::Accepted)
@@ -1157,7 +1160,7 @@ void Window::tutManager()
 					activerSave(true);
 			}
 		} else {
-			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les sons et les tutoriaux !"));
+			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les sons et les tutoriels !"));
 		}
 	}
 }
@@ -1199,7 +1202,7 @@ void Window::miscManager()
 			{
 				if(inf->isModified() || field->isModified()) {
 					activerSave(true);
-					auteurLbl->setText(tr("Auteur : %1").arg(field->getAuthor()));
+					auteurLbl->setText(tr("Auteur : %1").arg(field->scriptsAndTexts()->author()));
 				}
 			}
 		} else {

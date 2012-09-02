@@ -135,7 +135,7 @@ void BGDialog::fillWidgets()
 		y[1] = -1;
 		z[0] = -1;
 		z[1] = -1;
-		field->getBgParamAndBgMove(params, z, x, y);
+		field->scriptsAndTexts()->getBgParamAndBgMove(params, z, x, y);
 	}
 }
 

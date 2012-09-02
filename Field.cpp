@@ -20,35 +20,32 @@
 #include "FieldPC.h"
 #include "FieldPS.h"
 
+Field::Field(const QString &name) :
+	_isOpen(false), _isModified(false), name(name),
+	section1(0), _encounter(0), _tut(0), id(0), ca(0), inf(0),
+	modelLoader(0), fieldModel(0),
+	fieldArchive(0)
+{
+}
+
 Field::Field(const QString &name, FieldArchive *fieldArchive) :
 	_isOpen(false), _isModified(false), name(name),
-	encounter(0), tut(0), id(0), ca(0), inf(0), modelLoader(0), fieldModel(0),
+	section1(0), _encounter(0), _tut(0), id(0), ca(0), inf(0),
+	modelLoader(0), fieldModel(0),
 	fieldArchive(fieldArchive)
 {
 }
 
 Field::~Field()
 {
-	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
-	foreach(FF7Text *texte, texts)				delete texte;
-	if(encounter)		delete encounter;
-	if(tut)				delete tut;
+	if(section1)		delete section1;
+	if(_encounter)		delete _encounter;
+	if(_tut)			delete _tut;
 	if(id)				delete id;
 	if(ca)				delete ca;
 	if(inf)				delete inf;
 	if(modelLoader)		delete modelLoader;
 	if(fieldModel)		delete fieldModel;
-}
-
-void Field::close()
-{
-	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
-	foreach(FF7Text *texte, texts)				delete texte;
-	_grpScripts.clear();
-	texts.clear();
-	author.clear();
-
-	_isOpen = false;
 }
 
 bool Field::isOpen() const
@@ -64,159 +61,7 @@ bool Field::isModified() const
 void Field::setModified(bool modified)
 {
 	_isModified = modified;
-}
-
-qint8 Field::openSection1(const QByteArray &data, int posStart)
-{
-	quint16 posTextes;
-	int contenuSize = data.size();
-	const char *constContenu = data.constData();
-
-	if(contenuSize < 32)	return -1;
-
-	memcpy(&posTextes, &constContenu[posStart+4], 2);//posTextes (et fin des scripts)
-	posTextes += posStart;
-	if((quint32)contenuSize < posTextes || posTextes < 32)	return -1;
-
-	/* ---------- SCRIPTS ---------- */
-
-	quint32 posAKAO = 0;
-	quint16 nbAKAO, posScripts, pos;
-	quint8 j, k, grpVides=0, nbScripts = (quint8)data.at(posStart+2);
-
-	GrpScript *grpScript;
-
-	memcpy(&nbAKAO, &constContenu[posStart+6], 2);//nbAKAO
-	posScripts = posStart+32+8*nbScripts+4*nbAKAO;
-
-	if(posTextes < posScripts+64*nbScripts)	return -1;
-	this->author = data.mid(posStart+16, 8);
-	//this->nbObjets3D = (quint8)data.at(posStart+3);
-	memcpy(&this->scale, &constContenu[posStart+8], 2);
-	//QString name2 = data.mid(posStart+24, 8);
-
-	quint16 positions[33];
-
-	for(quint8 i=0 ; i<nbScripts ; ++i)
-	{
-		grpScript = new GrpScript(QString(data.mid(posStart+32+8*i,8)));
-		if(grpVides > 1)
-		{
-			for(int j=0 ; j<32 ; ++j)	grpScript->addScript();
-			_grpScripts.append(grpScript);
-			grpVides--;
-			continue;
-		}
-
-		//Listage des positions de départ
-		memcpy(positions, &constContenu[posScripts+64*i], 64);
-
-		//Ajout de la position de fin
-		if(i==nbScripts-1)	positions[32] = posTextes - posStart;
-		else
-		{
-			memcpy(&pos, &constContenu[posScripts+64*i+64], 2);
-
-			if(pos > positions[31])	positions[32] = pos;
-			else
-			{
-				grpVides = 1;
-				while(pos <= positions[31] && i+grpVides<nbScripts-1)
-				{
-					memcpy(&pos, &constContenu[posScripts+64*(i+grpVides)+64], 2);
-					grpVides++;
-				}
-				if(i+grpVides==nbScripts)	positions[32] = posTextes - posStart;
-				else	positions[32] = pos;
-			}
-		}
-
-		k=0;
-		for(j=0 ; j<32 ; ++j)
-		{
-			if(positions[j+1] > positions[j])
-			{
-				grpScript->addScript(data.mid(posStart + positions[j], positions[j+1]-positions[j]));
-				for(int l=k ; l<j ; ++l)	grpScript->addScript();
-				k=j+1;
-			}
-		}
-		for(int l=k ; l<32 ; ++l)	grpScript->addScript();
-		_grpScripts.append(grpScript);
-	}
-
-	if(nbAKAO>0)
-	{
-		//INTERGRITY TEST
-		/*QString out;
-		bool pasok = false;
-		for(int i=0 ; i<nbAKAO ; ++i) {
-			memcpy(&posAKAO, &constContenu[posStart+32+8*nbScripts+i*4], 4);
-			posAKAO += posStart;
-			out.append(QString("%1 %2 %3 %4 (%5)\n").arg(i).arg(name).arg(posAKAO-posStart).arg(QString(data.mid(posAKAO, 4))).arg(QString(data.mid(posAKAO-4, 8).toHex())));
-			if(data.mid(posAKAO, 4) != "AKAO" && data.at(posAKAO) != '\x12') {
-				pasok = true;
-			}
-		}
-		if(pasok) {
-			qDebug() << out;
-		}*/
-
-		memcpy(&posAKAO, &constContenu[posStart+32+8*nbScripts], 4);//posAKAO
-		posAKAO += posStart;
-	}
-	else
-	{
-		posAKAO = contenuSize;
-	}
-
-	/* ---------- TEXTS ---------- */
-
-	if((posAKAO -= posTextes) > 4)//If there are texts
-	{
-		quint16 posDeb, posFin, nbTextes;
-		if(contenuSize < posTextes+2)	return -1;
-		memcpy(&posDeb, &constContenu[posTextes+2], 2);
-		nbTextes = posDeb/2 - 1;
-
-		for(quint16 i=1 ; i<nbTextes ; ++i)
-		{
-			memcpy(&posFin, &constContenu[posTextes+2+i*2], 2);
-
-			if(contenuSize < posTextes+posFin)	return -1;
-
-			texts.append(new FF7Text(data.mid(posTextes+posDeb, posFin-posDeb)));
-			posDeb = posFin;
-		}
-		if((quint32)contenuSize < posAKAO)	return -1;
-		texts.append(new FF7Text(data.mid(posTextes+posDeb, posAKAO-posDeb)));
-	}
-
-	_isOpen = true;
-
-	return 0;
-}
-
-int Field::getModelID(quint8 grpScriptID) const
-{
-	if(_grpScripts.at(grpScriptID)->getTypeID()!=1)	return -1;
-
-	int ID=0;
-
-	for(int i=0 ; i<grpScriptID ; ++i)
-	{
-		if(_grpScripts.at(i)->getTypeID()==1)
-			++ID;
-	}
-	return ID;
-}
-
-void Field::getBgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z, qint16 *x, qint16 *y) const
-{
-	foreach(GrpScript *grpScript, _grpScripts) {
-		grpScript->getBgParams(paramActifs);
-		if(z)	grpScript->getBgMove(z, x, y);
-	}
+	if(section1)	section1->setModified(modified);
 }
 
 QRgb Field::blendColor(quint8 type, QRgb color0, QRgb color1)
@@ -258,324 +103,36 @@ QRgb Field::blendColor(quint8 type, QRgb color0, QRgb color1)
 	return qRgb(r, g, b);
 }
 
-const QList<GrpScript *> &Field::grpScripts() const
+Section1File *Field::scriptsAndTexts(bool open)
 {
-	return _grpScripts;
+	if(section1)	return section1;
+	section1 = new Section1File();
+	if(open)	section1->open(sectionData(Scripts));
+	return section1;
 }
 
-GrpScript *Field::grpScript(int groupID) const
+EncounterFile *Field::encounter(bool open)
 {
-	return _grpScripts.at(groupID);
+	if(_encounter)	return _encounter;
+	_encounter = new EncounterFile();
+	if(open)	_encounter->open(sectionData(Encounter));
+	return _encounter;
 }
 
-int Field::grpScriptCount() const
+TutFile *Field::tutosAndSounds(bool open)
 {
-	return _grpScripts.size();
-}
-
-void Field::insertGrpScript(int row)
-{
-	_grpScripts.insert(row, new GrpScript);
-	_isModified = true;
-}
-
-void Field::insertGrpScript(int row, GrpScript *grpScript)
-{
-	GrpScript *newGrpScript = new GrpScript(grpScript->getName());
-	for(int i=0 ; i<grpScript->size() ; i++)
-		newGrpScript->addScript(grpScript->getScript(i)->toByteArray(), false);
-	_grpScripts.insert(row, newGrpScript);
-	_isModified = true;
-}
-
-void Field::deleteGrpScript(int row)
-{
-	if(row < _grpScripts.size()) {
-		delete _grpScripts.takeAt(row);
-		_isModified = true;
-	}
-}
-
-void Field::removeGrpScript(int row)
-{
-	if(row < _grpScripts.size()) {
-		_grpScripts.removeAt(row);
-		_isModified = true;
-	}
-}
-
-bool Field::moveGrpScript(int row, bool direction)
-{
-	if(row >= _grpScripts.size())	return false;
-	
-	if(direction)
-	{
-		if(row == _grpScripts.size()-1)	return false;
-		_grpScripts.swap(row, row+1);
-		_isModified = true;
-	}
-	else
-	{
-		if(row == 0)	return false;
-		_grpScripts.swap(row, row-1);
-		_isModified = true;
-	}
-	return true;
-}
-
-void Field::searchAllVars(QList<FF7Var> &vars) const
-{
-	foreach(GrpScript *group, _grpScripts)
-		group->searchAllVars(vars);
-}
-
-bool Field::searchOpcode(int opcode, int &groupID, int &scriptID, int &opcodeID) const
-{
-	if(groupID < 0)
-		groupID = scriptID = opcodeID = 0;
-	if(groupID >= _grpScripts.size())
-		return false;
-	if(_grpScripts.at(groupID)->searchOpcode(opcode, scriptID, opcodeID))
-		return true;
-
-	return searchOpcode(opcode, ++groupID, scriptID = 0, opcodeID = 0);
-}
-
-bool Field::searchVar(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const
-{
-	if(groupID < 0)
-		groupID = scriptID = opcodeID = 0;
-	if(groupID >= _grpScripts.size())
-		return false;
-	if(_grpScripts.at(groupID)->searchVar(bank, adress, value, scriptID, opcodeID))
-		return true;
-
-	return searchVar(bank, adress, value, ++groupID, scriptID = 0, opcodeID = 0);
-}
-
-bool Field::searchExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const
-{
-	if(groupID < 0)
-		groupID = scriptID = opcodeID = 0;
-	if(groupID >= _grpScripts.size())
-		return false;
-	if(_grpScripts.at(groupID)->searchExec(group, script, scriptID, opcodeID))
-		return true;
-
-	return searchExec(group, script, ++groupID, scriptID = 0, opcodeID = 0);
-}
-
-bool Field::searchMapJump(quint16 field, int &groupID, int &scriptID, int &opcodeID) const
-{
-	if(groupID < 0)
-		groupID = scriptID = opcodeID = 0;
-	if(groupID >= _grpScripts.size())
-		return false;
-	if(_grpScripts.at(groupID)->searchMapJump(field, scriptID, opcodeID))
-		return true;
-
-	return searchMapJump(field, ++groupID, scriptID = 0, opcodeID = 0);
-}
-
-bool Field::searchTextInScripts(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const
-{
-	if(groupID < 0)
-		groupID = scriptID = opcodeID = 0;
-	if(groupID >= _grpScripts.size())
-		return false;
-
-	if(_grpScripts.at(groupID)->searchTextInScripts(text, scriptID, opcodeID))
-		return true;
-
-	return searchTextInScripts(text, ++groupID, scriptID = 0, opcodeID = 0);
-}
-
-bool Field::searchText(const QRegExp &text, int &textID, int &from, int &size) const
-{
-	if(textID < 0)
-		textID = 0;
-	if(textID >= texts.size())
-		return false;
-	if((from = texts.at(textID)->indexOf(text, from, size)) != -1)
-		return true;
-
-	return searchText(text, ++textID, from = 0, size);
-}
-
-bool Field::searchOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID) const
-{
-	if(groupID >= _grpScripts.size()) {
-		groupID = _grpScripts.size()-1;
-		scriptID = opcodeID = 2147483647;
-	}
-	if(groupID < 0)
-		return false;
-	if(_grpScripts.at(groupID)->searchOpcodeP(opcode, scriptID, opcodeID))
-		return true;
-
-	return searchOpcodeP(opcode, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
-}
-
-bool Field::searchVarP(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const
-{
-	if(groupID >= _grpScripts.size()) {
-		groupID = _grpScripts.size()-1;
-		scriptID = opcodeID = 2147483647;
-	}
-	if(groupID < 0)
-		return false;
-	if(_grpScripts.at(groupID)->searchVarP(bank, adress, value, scriptID, opcodeID))
-		return true;
-
-	return searchVarP(bank, adress, value, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
-}
-
-bool Field::searchExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const
-{
-	if(groupID >= _grpScripts.size()) {
-		groupID = _grpScripts.size()-1;
-		scriptID = opcodeID = 2147483647;
-	}
-	if(groupID < 0)
-		return false;
-	if(_grpScripts.at(groupID)->searchExecP(group, script, scriptID, opcodeID))
-		return true;
-
-	return searchExecP(group, script, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
-}
-
-bool Field::searchMapJumpP(quint16 field, int &groupID, int &scriptID, int &opcodeID) const
-{
-	if(groupID >= _grpScripts.size()) {
-		groupID = _grpScripts.size()-1;
-		scriptID = opcodeID = 2147483647;
-	}
-	if(groupID < 0)
-		return false;
-	if(_grpScripts.at(groupID)->searchMapJumpP(field, scriptID, opcodeID))
-		return true;
-
-	return searchMapJumpP(field, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
-}
-
-bool Field::searchTextInScriptsP(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const
-{
-	if(groupID >= _grpScripts.size()) {
-		groupID = _grpScripts.size()-1;
-		scriptID = opcodeID = 2147483647;
-	}
-	if(groupID < 0)
-		return false;
-	if(_grpScripts.at(groupID)->searchTextInScriptsP(text, scriptID, opcodeID))
-		return true;
-
-	return searchTextInScriptsP(text, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
-}
-
-bool Field::searchTextP(const QRegExp &text, int &textID, int &from, int &size) const
-{
-	if(textID >= texts.size()) {
-		textID = texts.size()-1;
-		from = -1;
-	}
-	if(textID < 0)
-		return false;
-	if((from = texts.at(textID)->lastIndexOf(text, from, size)) != -1)
-		return true;
-
-	return searchTextP(text, --textID, from = -1, size);
-}
-
-void Field::setWindow(const FF7Window &win)
-{
-	if(win.groupID < _grpScripts.size()) {
-		_grpScripts.at(win.groupID)->setWindow(win);
-	}
-}
-
-void Field::listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const
-{
-	int groupID=0;
-	foreach(GrpScript *group, _grpScripts)
-		group->listWindows(groupID++, windows, text2win);
-}
-
-QList<FF7Text *> *Field::getTexts()
-{
-	return &texts;
-}
-
-int Field::getNbTexts() const
-{
-	return texts.size();
-}
-
-FF7Text *Field::getText(int textID) const
-{
-	return texts.at(textID);
-}
-
-void Field::insertText(int row)
-{
-	texts.insert(row, new FF7Text);
-	foreach(GrpScript *grpScript, _grpScripts)
-		grpScript->shiftTextIds(row-1, +1);
-	_isModified = true;
-}
-
-void Field::deleteText(int row)
-{
-	if(row < texts.size()) {
-		delete texts.takeAt(row);
-		foreach(GrpScript *grpScript, _grpScripts)
-			grpScript->shiftTextIds(row, -1);
-		_isModified = true;
-	}
-}
-
-QSet<quint8> Field::listUsedTexts() const
-{
-	QSet<quint8> usedTexts;
-	foreach(GrpScript *grpScript, _grpScripts)
-		grpScript->listUsedTexts(usedTexts);
-	return usedTexts;
-}
-
-void Field::shiftTutIds(int row, int shift)
-{
-	foreach(GrpScript *grpScript, _grpScripts)
-		grpScript->shiftTutIds(row, shift);
-}
-
-QSet<quint8> Field::listUsedTuts() const
-{
-	QSet<quint8> usedTuts;
-	foreach(GrpScript *grpScript, _grpScripts)
-		grpScript->listUsedTuts(usedTuts);
-	return usedTuts;
-}
-
-EncounterFile *Field::getEncounter(bool open)
-{
-	if(encounter)	return encounter;
-	encounter = new EncounterFile();
-	if(open)	encounter->open(fieldArchive->getFieldData(this));
-	return encounter;
-}
-
-TutFile *Field::getTut(bool open)
-{
-	if(tut)		return tut;
-	tut = new TutFile();
-	if(open)	tut->open(fieldArchive->getFieldData(this));
-	return tut;
+	if(_tut)		return _tut;
+	_tut = new TutFile();
+	scriptsAndTexts(false)->setTut(_tut);
+	if(open)	_tut->open(sectionData(Scripts));
+	return _tut;
 }
 
 IdFile *Field::getId(bool open)
 {
 	if(id)	return id;
 	id = new IdFile();
-	if(open)	id->open(fieldArchive->getFieldData(this));
+	if(open)	id->open(sectionData(Walkmesh));
 	return id;
 }
 
@@ -583,7 +140,7 @@ CaFile *Field::getCa(bool open)
 {
 	if(ca)	return ca;
 	ca = new CaFile();
-	if(open)	ca->open(fieldArchive->getFieldData(this));
+	if(open)	ca->open(sectionData(Camera));
 	return ca;
 }
 
@@ -591,7 +148,7 @@ InfFile *Field::getInf(bool open)
 {
 	if(inf)	return inf;
 	inf = new InfFile();
-	if(open)	inf->open(fieldArchive->getFieldData(this));
+	if(open)	inf->open(sectionData(Inf));
 	return inf;
 }
 
@@ -606,118 +163,14 @@ void Field::setName(const QString &name)
 	_isModified = true;
 }
 
-const QString &Field::getAuthor() const
-{
-	return author;
-}
-
-void Field::setAuthor(const QString &author)
-{
-	this->author = author;
-	_isModified = true;
-}
-
-quint16 Field::getScale() const
-{
-	return scale;
-}
-
-void Field::setScale(quint16 scale)
-{
-	this->scale = scale;
-	_isModified = true;
-}
-
 void Field::setSaved()
 {
-	if(encounter)	encounter->setModified(false);
-	if(tut)			tut->setModified(false);
+	if(_encounter)	_encounter->setModified(false);
+	if(_tut)			_tut->setModified(false);
 	if(id)			id->setModified(false);
 	if(ca)			ca->setModified(false);
 	if(inf)			inf->setModified(false);
 }
-
-QByteArray Field::saveSection1(const QByteArray &data) const
-{
-	QByteArray grpScriptNames, positionsScripts, positionsAKAO, allScripts, realScript, positionsTexts, allTexts, allAKAOs;
-	quint32 posAKAO, posFirstAKAO;
-	quint16 posTextes, posScripts, newPosTextes, nbAKAO, pos;
-	quint8 nbGrpScripts, newNbGrpScripts;
-	const char *constData = data.constData();
-	
-	nbGrpScripts = (quint8)data.at(2);//nbGrpScripts
-	newNbGrpScripts = _grpScripts.size();
-	memcpy(&posTextes, &constData[4], 2);//posTextes (et fin des scripts)
-	memcpy(&nbAKAO, &constData[6], 2);//nbAKAO
-	
-	posScripts = 32 + newNbGrpScripts * 72 + nbAKAO * 4;
-	pos = posScripts;
-	
-	//Création posScripts + scripts
-	quint8 nbObjets3D = 0;
-	foreach(GrpScript *grpScript, _grpScripts)
-	{
-		grpScriptNames.append( grpScript->getRealName().leftJustified(8, QChar('\x00'), true) );
-		for(quint8 j=0 ; j<32 ; ++j)
-		{
-			realScript = grpScript->toByteArray(j);
-			if(!realScript.isEmpty())	pos = posScripts + allScripts.size();
-			positionsScripts.append((char *)&pos, 2);
-			allScripts.append(realScript);
-		}
-		if(grpScript->getTypeID() == 1)		++nbObjets3D;
-	}
-
-	//Création nouvelles positions Textes
-	newPosTextes = posScripts + allScripts.size();
-
-	quint16 newNbText = texts.size();
-
-	foreach(FF7Text *text, texts)
-	{
-		pos = 2 + newNbText*2 + allTexts.size();
-		positionsTexts.append((char *)&pos, 2);
-		allTexts.append(text->getData());
-		allTexts.append('\xff');// end of text
-	}
-
-	if(tut!=NULL && tut->isModified()) {
-		allAKAOs = tut->save(positionsAKAO, newPosTextes + (2 + newNbText*2 + allTexts.size()));
-	} else if(nbAKAO > 0) {
-		memcpy(&posFirstAKAO, &constData[32+nbGrpScripts*8], 4);
-		qint32 diff = (newPosTextes - posTextes) + ((2 + newNbText*2 + allTexts.size()) - (posFirstAKAO - posTextes));// (newSizeBeforeTexts - oldSizeBeforeTexts) + (newSizeTexts - olSizeTexts)
-
-		//Création nouvelles positions AKAO
-		for(quint32 i=0 ; i<nbAKAO ; ++i)
-		{
-			memcpy(&posAKAO, &constData[32+nbGrpScripts*8+i*4], 4);
-			posAKAO += diff;
-			positionsAKAO.append((char *)&posAKAO, 4);
-		}
-
-		allAKAOs = data.mid(posFirstAKAO);
-	}
-
-	QByteArray mapauthor = author.toLatin1().leftJustified(8, '\x00', true), mapname = name.toLower().toLatin1().leftJustified(8, '\x00', true);
-	mapauthor[7] = '\x00';
-	mapname[7] = '\x00';
-
-	return data.left(2) //Début
-			.append((char)newNbGrpScripts) //nbGrpScripts
-			.append((char)nbObjets3D) //nbObjets3D
-			.append((char *)&newPosTextes, 2) //PosTextes
-			.append(&constData[6], 2) //AKAO count
-			.append((char *)&scale, 2)
-			.append(&constData[10], 6) //Empty
-			.append(mapauthor).append(mapname) //Strings
-			.append(grpScriptNames) //Noms des grpScripts
-			.append(positionsAKAO).append(positionsScripts).append(allScripts) //PosAKAO + PosScripts + Scripts
-			.append((char *)&newNbText, 2) // nbTexts
-			.append(positionsTexts) // positionsTexts
-			.append(allTexts) // Texts
-			.append(allAKAOs); // AKAO / tutos
-}
-
 
 qint8 Field::exporter(const QString &path, const QByteArray &data, bool compress)
 {
@@ -755,16 +208,15 @@ qint8 Field::exporterDat(const QString &path, const QByteArray &data)
 	return 0;
 }
 
-qint8 Field::importer(const QString &path, FieldParts part)
+qint8 Field::importer(const QString &path, int type, FieldParts part)
 {
 	QFile fic(path);
 	if(!fic.open(QIODevice::ReadOnly))	return 1;
 	if(fic.size() > 10000000)	return 1;
 
 	QByteArray data;
-	bool isDat = false;
 
-	if(path.endsWith(".lzs", Qt::CaseInsensitive))
+	if(type == 0 || type == 1) // compressed field
 	{
 		quint32 fileSize;
 		fic.read((char *)&fileSize, 4);
@@ -772,54 +224,94 @@ qint8 Field::importer(const QString &path, FieldParts part)
 
 		data = LZS::decompress(fic.readAll());
 	}
-	else if(path.endsWith(".dat", Qt::CaseInsensitive))
-	{
-		quint32 fileSize;
-		fic.read((char *)&fileSize, 4);
-		if(fileSize+4 != fic.size()) return 2;
-
-		data = LZS::decompress(fic.readAll());
-		isDat = true;
-	}
-	else
+	else if(type == 2 || type == 3) // uncompressed field
 	{
 		data = fic.readAll();
 	}
 	
-	return importer(data, isDat, part);
+	return importer(data, type == 1 || type == 3, part);
 }
 
-qint8 Field::importer(const QByteArray &data, bool isDat, FieldParts part)
+qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 {
-	if(part.testFlag(Scripts)) {
-		close();
-		if(openSection1(data, isDat? 28 : 46) == -1)	return 3;
-	}
+	if(isPSField) {
+		quint32 sectionPositions[7];
+		const int headerSize = 28;
 
-	if(part.testFlag(Akaos)) {
-		TutFile *tut = getTut(false);
-		if(!tut->open(data))		return 3;
-		tut->setModified(true);
-	}
-	if(part.testFlag(Encounter)) {
-		EncounterFile *enc = getEncounter(false);
-		if(!enc->open(data))		return 3;
-		enc->setModified(true);
-	}
-	if(part.testFlag(Walkmesh)) {
-		IdFile *walk = getId(false);
-		if(!walk->open(data))	return 3;
-		walk->setModified(true);
-	}
-	if(part.testFlag(Camera)) {
-		CaFile *ca = getCa(false);
-		if(!ca->open(data))		return 3;
-		ca->setModified(true);
-	}
-	if(part.testFlag(Inf)) {
-		InfFile *inf = getInf(false);
-		if(!inf->open(data, true))		return 3;
-		inf->setModified(true);
+		if(data.size() < headerSize)	return 3;
+		memcpy(sectionPositions, data.constData(), headerSize); // header
+		qint32 vramDiff = sectionPositions[0] - headerSize;// vram section1 pos - real section 1 pos
+
+		for(int i=0 ; i<7 ; ++i) {
+			sectionPositions[i] -= vramDiff;
+		}
+
+		if(part.testFlag(Scripts)) {
+			Section1File *section1 = scriptsAndTexts(false);
+			if(!section1->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))		return 3;
+			section1->setModified(true);
+		}
+		if(part.testFlag(Akaos)) {
+			TutFile *_tut = tutosAndSounds(false);
+			if(!_tut->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))		return 3;
+			_tut->setModified(true);
+		}
+		if(part.testFlag(Encounter)) {
+			EncounterFile *enc = encounter(false);
+			if(!enc->open(data.mid(sectionPositions[5], sectionPositions[6]-sectionPositions[5])))		return 3;
+			enc->setModified(true);
+		}
+		if(part.testFlag(Walkmesh)) {
+			IdFile *walk = getId(false);
+			if(!walk->open(data.mid(sectionPositions[1], sectionPositions[2]-sectionPositions[1])))	return 3;
+			walk->setModified(true);
+		}
+		if(part.testFlag(Camera)) {
+			CaFile *ca = getCa(false);
+			if(!ca->open(data.mid(sectionPositions[3], sectionPositions[4]-sectionPositions[3])))		return 3;
+			ca->setModified(true);
+		}
+		if(part.testFlag(Inf)) {
+			InfFile *inf = getInf(false);
+			if(!inf->open(data.mid(sectionPositions[4], sectionPositions[5]-sectionPositions[4]), true))		return 3;
+			inf->setModified(true);
+		}
+	} else {
+		quint32 sectionPositions[9];
+
+		if(data.size() < 6 + 9 * 4)	return 3;
+		memcpy(sectionPositions, &(data.constData()[6]), 9 * 4); // header
+
+		if(part.testFlag(Scripts)) {
+			Section1File *section1 = scriptsAndTexts(false);
+			if(!section1->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))		return 3;
+			section1->setModified(true);
+		}
+		if(part.testFlag(Akaos)) {
+			TutFile *_tut = tutosAndSounds(false);
+			if(!_tut->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))		return 3;
+			_tut->setModified(true);
+		}
+		if(part.testFlag(Encounter)) {
+			EncounterFile *enc = encounter(false);
+			if(!enc->open(data.mid(sectionPositions[6]+4, sectionPositions[7]-sectionPositions[6]-4)))		return 3;
+			enc->setModified(true);
+		}
+		if(part.testFlag(Walkmesh)) {
+			IdFile *walk = getId(false);
+			if(!walk->open(data.mid(sectionPositions[4]+4, sectionPositions[5]-sectionPositions[4]-4)))	return 3;
+			walk->setModified(true);
+		}
+		if(part.testFlag(Camera)) {
+			CaFile *ca = getCa(false);
+			if(!ca->open(data.mid(sectionPositions[1]+4, sectionPositions[2]-sectionPositions[1]-4)))		return 3;
+			ca->setModified(true);
+		}
+		if(part.testFlag(Inf)) {
+			InfFile *inf = getInf(false);
+			if(!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4), true))		return 3;
+			inf->setModified(true);
+		}
 	}
 
 	return 0;

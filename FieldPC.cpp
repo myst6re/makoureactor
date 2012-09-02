@@ -18,11 +18,6 @@
 #include "FieldPC.h"
 #include "FieldArchive.h"
 
-//FieldPC::FieldPC() :
-//	Field(), position(0)
-//{
-//}
-
 FieldPC::FieldPC(quint32 position, const QString &name, FieldArchive *fieldArchive) :
 	Field(name, fieldArchive), position(position)
 {
@@ -37,37 +32,89 @@ FieldPC::~FieldPC()
 {
 }
 
-qint8 FieldPC::open(const QByteArray &fileData)
+bool FieldPC::open(bool dontOptimize)
 {
-	quint32 size;
-	const char *fileDataConst = fileData.constData();
-	memcpy(&size, fileDataConst, 4);
-	if(size+4 != (quint32)fileData.size()) 	return -1;
+	QByteArray fileData;
 
-	QByteArray data = QByteArray(&fileDataConst[4], size);
+	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
+		QByteArray lzsData = fieldArchive->getFieldData(this, false);
+		quint32 size;
+		memcpy(&size, lzsData.constData(), 4);
+		if(size+4 != (quint32)lzsData.size()) 	return false;
 
-	const QByteArray &dataDec = LZS::decompress(data, 14);//décompression partielle
-	if(dataDec.size() < 14)	return -1;
-	const char *constData = dataDec.constData();
+		fileData = LZS::decompress(lzsData.mid(4), 42);//partial decompression
+	} else {
+		fileData = fieldArchive->getFieldData(this);
+	}
 
-	int debutSection2;
-	memcpy(&debutSection2, &constData[10], 4);
+	if(fileData.size() < 42)	return false;
 
-	return openSection1(LZS::decompress(data, debutSection2), 46);
+	memcpy(sectionPositions, &(fileData.constData()[6]), 9 * 4); // header
+
+	_isOpen = true;
+
+	return true;
+
+//	QByteArray data = QByteArray(&fileDataConst[4], size);
+
+//	const QByteArray &dataDec = LZS::decompress(data, 14);//décompression partielle
+//	if(dataDec.size() < 14)	return -1;
+//	const char *constData = dataDec.constData();
+
+//	int debutSection2;
+//	memcpy(&debutSection2, &constData[10], 4);
+
+//	return openSection1(LZS::decompress(data, debutSection2), 46);
 }
 
-QPixmap FieldPC::openModelAndBackground()
+QByteArray FieldPC::sectionData(FieldPart part)
 {
-	FieldModelLoaderPC *fieldModelLoader = getFieldModelLoader();
+	if(!_isOpen)	return QByteArray();
 
-	if(!fieldModelLoader->isLoaded())
-		fieldModelLoader->load(fieldArchive->getFieldData(this), this->name);
+	switch(part) {
+	case Scripts:
+		return sectionData(0);
+	case Akaos:
+		return sectionData(0);
+	case Camera:
+		return sectionData(1);
+	case ModelLoader:
+		return sectionData(2);
+	case Walkmesh:
+		return sectionData(4);
+	case Encounter:
+		return sectionData(6);
+	case Inf:
+		return sectionData(7);
+	case Background:
+		return sectionData(8);
+	}
 
-//	Data::currentCharNames = model_nameChar;
-//	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
-//	Data::currentAnimNames = &fieldModelLoader->model_anims;
+	return QByteArray();
+}
 
-	return openBackground();
+QByteArray FieldPC::sectionData(int idPart)
+{
+	int position = sectionPositions[idPart] + 4;
+	int size;
+
+	if(idPart < 8) {
+		size = sectionPositions[idPart+1] - position;
+	} else {
+		size = -1;
+	}
+
+	if(size == -1 || fieldArchive->fieldDataIsCached(this)) {
+		return fieldArchive->getFieldData(this).mid(position, size);
+	} else {
+		QByteArray lzsData = fieldArchive->getFieldData(this, false);
+		quint32 lzsSize;
+		const char *lzsDataConst = lzsData.constData();
+		memcpy(&lzsSize, lzsDataConst, 4);
+		if(lzsSize+4 != (quint32)lzsData.size()) 	return QByteArray();
+
+		return LZS::decompress(lzsData.mid(4), sectionPositions[idPart+1]).mid(position, size);
+	}
 }
 
 QPixmap FieldPC::openBackground()
@@ -80,12 +127,12 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	return openBackground(fieldArchive->getFieldData(this), paramActifs, z, layers);
 }
 
-QPixmap FieldPC::openBackground(const QByteArray &data) const
+QPixmap FieldPC::openBackground(const QByteArray &data)
 {
 	// Search default background params
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
-	getBgParamAndBgMove(paramActifs, z);
+	scriptsAndTexts()->getBgParamAndBgMove(paramActifs, z);
 
 	return openBackground(data, paramActifs, z);
 }
@@ -425,10 +472,19 @@ bool FieldPC::getUsedParams(const QByteArray &data, QHash<quint8, quint8> &usedP
 	return true;
 }
 
-FieldModelLoaderPC *FieldPC::getFieldModelLoader()
+FieldModelLoaderPC *FieldPC::getFieldModelLoader(bool open)
 {
-	if(modelLoader)	return (FieldModelLoaderPC *)modelLoader;
-	return (FieldModelLoaderPC *)(modelLoader = new FieldModelLoaderPC());
+	if(this->modelLoader)	return (FieldModelLoaderPC *)this->modelLoader;
+	FieldModelLoaderPC *modelLoader = new FieldModelLoaderPC();
+	if(open && !modelLoader->isLoaded()) {
+		modelLoader->load(sectionData(ModelLoader), this->name);
+		//	Data::currentCharNames = model_nameChar;
+		//	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
+		//	Data::currentAnimNames = &fieldModelLoader->model_anims;
+	}
+	this->modelLoader = modelLoader;
+
+	return modelLoader;
 }
 
 FieldModelFilePC *FieldPC::getFieldModel(int modelID, int animationID, bool animate)
@@ -472,10 +528,13 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 	toc.append(decompresseData, 10);
 
 	// Section 1 (scripts + textes + akaos/tutos)
-	section = saveSection1(decompresse.mid(debutSections[0]+4, debutSections[1]-debutSections[0]-4));
-	section_size = section.size();
-
-	newData.append((char *)&section_size, 4).append(section);
+	if(section1 && section1->isModified()) {
+		section = section1->save(decompresse.mid(debutSections[0]+4, debutSections[1]-debutSections[0]-4));
+		section_size = section.size();
+		newData.append((char *)&section_size, 4).append(section);
+	} else {
+		newData.append(&decompresseData[debutSections[0]], debutSections[1]-debutSections[0]);
+	}
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);
@@ -526,8 +585,8 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 	toc.append((char *)&size, 4);
 
 	// Section 7 (encounter)
-	if(encounter && encounter->isModified()) {
-		section = encounter->save();
+	if(_encounter && _encounter->isModified()) {
+		section = _encounter->save();
 		section_size = section.size();
 
 		newData.append((char *)&section_size, 4).append(section);
@@ -579,13 +638,18 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 	return newData;
 }
 
-qint8 FieldPC::importer(const QByteArray &data, bool isDat, FieldParts part)
+qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldParts part)
 {
-	if(part.testFlag(HrcLoader)) {
-		if(!isDat) {
-			getFieldModelLoader()->load(data, this->name);
+	if(!isPSField) {
+		quint32 sectionPositions[9];
+
+		if(data.size() < 6 + 9 * 4)	return 3;
+		memcpy(sectionPositions, &(data.constData()[6]), 9 * 4); // header
+
+		if(part.testFlag(ModelLoader)) {
+			getFieldModelLoader(false)->load(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4), this->name);
 		}
 	}
 
-	return Field::importer(data, part);
+	return Field::importer(data, isPSField, part);
 }

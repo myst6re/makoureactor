@@ -79,11 +79,11 @@ class InfFile
 {
 public:
 	InfFile();
-	InfFile(const QByteArray &contenu);
+	InfFile(const QByteArray &data);
 	bool isOpen();
 	bool isModified();
 	void setModified(bool);
-	bool open(const QByteArray &contenu, bool importMode=false);
+	bool open(const QByteArray &data, bool importMode=false);
 	QByteArray save();
 	bool isJap();
 	QString mapName();

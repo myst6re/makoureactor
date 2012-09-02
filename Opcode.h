@@ -30,7 +30,7 @@ typedef struct {
 	qint16 x, y;
 	quint16 w, h;
 	quint16 ask_first, ask_last;
-	quint8 type;
+	quint8 type, mode;
 	quint16 groupID, scriptID, opcodeID;
 } FF7Window;
 
@@ -1213,10 +1213,8 @@ public:
 	QByteArray params() const;
 	int getWindowID() const;
 	void setWindowID(quint8 windowID);
-	bool getWindow(FF7Window &window) const;
-	void setWindow(const FF7Window &window);
 	quint8 windowID;
-	quint16 targetX, targetY;
+	qint16 relativeX, relativeY;
 };
 
 class OpcodeWMODE : public Opcode {
@@ -1593,7 +1591,7 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	quint16 unknown;
+	quint16 battleMode;
 };
 
 class OpcodePGTDR : public Opcode {
@@ -2031,7 +2029,10 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	quint8 unknown[10];
+	void getVariables(QList<FF7Var> &vars) const;
+	quint8 banks[3], searchStart;
+	quint16 start, end;
+	quint8 value, varResult;
 };
 
 class OpcodePC : public Opcode {
@@ -2658,7 +2659,9 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	quint8 unknown[14];
+	void getVariables(QList<FF7Var> &vars) const;
+	quint8 banks[3], unknown1;
+	quint16 unknown2, unknown3, unknown4, unknown5, unknown6;
 };
 
 class OpcodeFCFIX : public Opcode {
@@ -2703,7 +2706,7 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
-	quint8 banks[2], u0, posSrc, posDst, a, r, g, b, colorCount;
+	quint8 banks[3], posSrc, posDst, start, b, g, r, colorCount;
 };
 
 class OpcodeBGON : public Opcode {
@@ -2802,7 +2805,7 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
-	quint8 banks[2], u1, u2, u3, u5;
+	quint8 banks[2], posSrc, posDst, start, end;
 };
 
 class OpcodeADPAL : public Opcode {
@@ -2813,7 +2816,9 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
-	quint8 banks[3], posSrc, posDst, r, g, b, colorCount;
+	quint8 banks[3], posSrc, posDst;
+	qint8 b, g, r;
+	quint8 colorCount;
 };
 // note: same struct as ADPAL
 class OpcodeMPPAL2 : public Opcode {
@@ -2824,7 +2829,7 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
-	quint8 banks[3], posSrc, posDst, r, g, b, colorCount;
+	quint8 banks[3], posSrc, posDst, b, g, r, colorCount;
 };
 
 class OpcodeSTPLS : public Opcode {
@@ -2834,7 +2839,7 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	quint8 palID, u1, u6, colorCount;
+	quint8 palID, posSrc, start, colorCount;
 };
 
 class OpcodeLDPLS : public Opcode {
@@ -2844,7 +2849,7 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	quint8 u2, palID, u6, colorCount;
+	quint8 posSrc, palID, start, colorCount;
 };
 
 class OpcodeCPPAL2 : public Opcode {
@@ -2907,7 +2912,9 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	quint8 unknown[13];
+	void getVariables(QList<FF7Var> &vars) const;
+	quint8 banks[3], unknown1, unknown2;
+	quint16 unknown3, unknown4, unknown5, unknown6;
 };
 // note: same struct as MUSIC
 class OpcodeMUSVT : public Opcode {
@@ -2954,10 +2961,11 @@ class OpcodeCHMPH : public Opcode {
 public:
 	explicit OpcodeCHMPH(const QByteArray &params);
 	inline int id() const { return 0xF7; }
-	QString toString() const;
+	QString toString() const;//TODO: unknown
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	quint8 unknown[3];
+	void getVariables(QList<FF7Var> &vars) const;
+	quint8 banks, var1, var2;
 };
 
 class OpcodePMVIE : public Opcode {
@@ -3015,7 +3023,9 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	quint8 unknown[5];
+	void getVariables(QList<FF7Var> &vars) const;
+	quint8 banks;
+	quint16 unknown1, unknown2;
 };
 // same struct as unaryOperation
 class OpcodeCHMST : public Opcode {

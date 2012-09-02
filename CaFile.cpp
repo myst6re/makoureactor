@@ -25,41 +25,11 @@ CaFile::CaFile() :
 bool CaFile::open(const QByteArray &data)
 {
 	const char *constData = data.constData();
-	quint32 posSection1, posSectionCa, posSection3, posSection5;
-	int caSize;
+	int caSize = data.size();
 
 	if(sizeof(Camera) != 40) {
 		qWarning() << "sizeof ca struct error" << sizeof(Camera);
 		return false;
-	}
-
-	if(data.startsWith(QByteArray("\x00\x00\x09\x00\x00\x00", 6))) {
-		memcpy(&posSectionCa, &constData[10], 4);// section 2
-		memcpy(&posSection3, &constData[14], 4);
-
-		posSectionCa += 4;
-
-		caSize = posSection3-posSectionCa;
-
-		// warning : some padding data in ca section
-		if((quint32)data.size() <= posSection3) {
-			qWarning() << "invalid data size ca" << posSection3 << data.size();
-			return false;
-		}
-	} else {
-		memcpy(&posSection1, constData, 4);
-		memcpy(&posSectionCa, &constData[12], 4);// section 4
-		memcpy(&posSection5, &constData[16], 4);
-		posSectionCa = posSectionCa - posSection1 + 28;
-		posSection5 = posSection5 - posSection1 + 28;
-
-		caSize = posSection5-posSectionCa;
-
-		// warning : some padding data in ca section
-		if((quint32)data.size() <= posSection5) {
-			qWarning() << "invalid data size ca" << posSection5 << data.size();
-			return false;
-		}
 	}
 
 	if(caSize < 38) {
@@ -74,7 +44,7 @@ bool CaFile::open(const QByteArray &data)
 	quint32 caCount = caSize / 38;
 
 	for(quint32 i=0 ; i<caCount ; ++i) {
-		memcpy(&camera, &constData[posSectionCa + i*38], 38);
+		memcpy(&camera, &constData[i*38], 38);
 
 		cameras.append(camera);
 	}

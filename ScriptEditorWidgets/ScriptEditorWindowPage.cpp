@@ -24,8 +24,6 @@ ScriptEditorWindowPage::ScriptEditorWindowPage(Field *field, GrpScript *grpScrip
 
 void ScriptEditorWindowPage::build()
 {
-	qDebug() << "build ScriptEditorWindowPage";
-
 	textPreview = new TextPreview(this);
 	winID = new QSpinBox(this);
 	x = new QSpinBox(this);
@@ -80,13 +78,20 @@ void ScriptEditorWindowPage::build()
 
 Opcode *ScriptEditorWindowPage::opcode()
 {
-	if(_opcode->id() == Opcode::WROW) {
-		OpcodeWROW *opcodeWROW = (OpcodeWROW *)_opcode;
+	OpcodeWROW *opcodeWROW;
+
+	switch((Opcode::Keys)_opcode->id()) {
+	case Opcode::WINDOW:
+	case Opcode::WSIZW:
+		_opcode->setWindowID(winID->value());
+		_opcode->setWindow(textPreview->getWindow());
+		break;
+	case Opcode::WROW:
+		opcodeWROW = (OpcodeWROW *)_opcode;
 		opcodeWROW->windowID = winID->value();
 		opcodeWROW->rowCount = h->value();
-	} else if(_opcode->id() == Opcode::WINDOW || _opcode->id() == Opcode::WSIZW) {
-		OpcodeWindow *opcodeWindow = (OpcodeWindow *)_opcode;
-		opcodeWindow->setWindow(textPreview->getWindow());
+		break;
+	default:break;
 	}
 
 	return ScriptEditorView::opcode();
@@ -95,6 +100,7 @@ Opcode *ScriptEditorWindowPage::opcode()
 void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
+
 	winID->blockSignals(true);
 	x->blockSignals(true);
 	y->blockSignals(true);
@@ -178,6 +184,8 @@ void ScriptEditorWindowPage::setPositionWindow(const QPoint &point)
 	y->setValue(point.y());
 	x->blockSignals(false);
 	y->blockSignals(false);
+
+	emit opcodeChanged();
 }
 
 void ScriptEditorWindowPage::resizeWindow()
@@ -197,4 +205,143 @@ void ScriptEditorWindowPage::resizeWindow()
 	h->blockSignals(false);
 
 	updatePreview();
+}
+
+ScriptEditorWindowModePage::ScriptEditorWindowModePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorWindowModePage::build()
+{
+	textPreview = new TextPreview(this);
+	winID = new QSpinBox(this);
+	winID->setRange(0, 255);
+
+	winType = new QComboBox(this);
+	winType->addItem(tr("Normal"));
+	winType->addItem(tr("Sans bords"));
+	winType->addItem(tr("Transparent"));
+
+	winClose = new QComboBox(this);
+	winClose->addItem(tr("Autoriser"));
+	winClose->addItem(tr("Empêcher"));
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(textPreview, 0, 0, 4, 1);
+	layout->addWidget(new QLabel(tr("Fenêtre ID")), 0, 1);
+	layout->addWidget(winID, 0, 2);
+	layout->addWidget(new QLabel(tr("Type")), 1, 1);
+	layout->addWidget(winType, 1, 2);
+	layout->addWidget(new QLabel(tr("Fermeture")), 2, 1);
+	layout->addWidget(winClose, 2, 2);
+	layout->setRowStretch(3, 1);
+	layout->setRowStretch(4, 1);
+	layout->setColumnStretch(2, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(winID, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+	connect(winType, SIGNAL(currentIndexChanged(int)), SLOT(updatePreview()));
+	connect(winClose, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+}
+
+Opcode *ScriptEditorWindowModePage::opcode()
+{
+	OpcodeWMODE *opcodeWMODE = (OpcodeWMODE *)_opcode;
+	opcodeWMODE->windowID = winID->value();
+	opcodeWMODE->mode = winType->currentIndex();
+	opcodeWMODE->preventClose = winClose->currentIndex();
+
+	return ScriptEditorView::opcode();
+}
+
+void ScriptEditorWindowModePage::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+	winID->blockSignals(true);
+	winType->blockSignals(true);
+	winClose->blockSignals(true);
+
+	OpcodeWMODE *opcodeWMODE = (OpcodeWMODE *)_opcode;
+	FF7Window ff7Win = FF7Window();
+	ff7Win.w = 300;
+	ff7Win.h = 9 + 5 * 16;
+	ff7Win.mode = opcodeWMODE->mode;
+
+	textPreview->setWins(QList<FF7Window>() << ff7Win);
+	winID->setValue(opcodeWMODE->windowID);
+	winType->setCurrentIndex(opcodeWMODE->mode);
+	winClose->setCurrentIndex(opcodeWMODE->preventClose);
+
+	winID->blockSignals(false);
+	winType->blockSignals(false);
+	winClose->blockSignals(false);
+}
+
+void ScriptEditorWindowModePage::updatePreview()
+{
+	FF7Window ff7Win = textPreview->getWindow();
+	ff7Win.mode = winType->currentIndex();
+	textPreview->setWins(QList<FF7Window>() << ff7Win);
+	emit opcodeChanged();
+}
+
+ScriptEditorWindowMovePage::ScriptEditorWindowMovePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorWindowMovePage::build()
+{
+	winID = new QSpinBox(this);
+	winID->setRange(0, 255);
+
+	x = new QSpinBox(this);
+	y = new QSpinBox(this);
+
+	x->setRange(-32768, 32767);
+	y->setRange(-32768, 32767);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Fenêtre ID")), 0, 0);
+	layout->addWidget(winID, 0, 1);
+	layout->addWidget(new QLabel(tr("X relatif")), 1, 0);
+	layout->addWidget(x, 1, 1);
+	layout->addWidget(new QLabel(tr("Y relatif")), 2, 0);
+	layout->addWidget(y, 2, 1);
+	layout->setRowStretch(3, 1);
+	layout->setColumnStretch(2, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(winID, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+	connect(x, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+	connect(y, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+}
+
+Opcode *ScriptEditorWindowMovePage::opcode()
+{
+	OpcodeWMOVE *opcodeWMOVE = (OpcodeWMOVE *)_opcode;
+	opcodeWMOVE->windowID = winID->value();
+	opcodeWMOVE->relativeX = x->value();
+	opcodeWMOVE->relativeY = y->value();
+
+	return ScriptEditorView::opcode();
+}
+
+void ScriptEditorWindowMovePage::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	winID->blockSignals(true);
+	x->blockSignals(true);
+	y->blockSignals(true);
+
+	OpcodeWMOVE *opcodeWMOVE = (OpcodeWMOVE *)_opcode;
+	winID->setValue(opcodeWMOVE->windowID);
+	x->setValue(opcodeWMOVE->relativeX);
+	y->setValue(opcodeWMOVE->relativeY);
+
+	winID->blockSignals(false);
+	x->blockSignals(false);
+	y->blockSignals(false);
 }
