@@ -18,12 +18,14 @@
 #include "WalkmeshWidget.h"
 
 WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
-	QGLWidget(parent, shareWidget), distance(0.0f), xRot(0.0f), yRot(0.0f), zRot(0.0f),
+	QGLWidget(/*QGLFormat(QGL::SampleBuffers),*/ parent, shareWidget), distance(0.0f), xRot(0.0f), yRot(0.0f), zRot(0.0f),
 	xTrans(0.0f), yTrans(0.0f), transStep(360.0f), lastKeyPressed(-1),
 	camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
 	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0)
 {
 	setMinimumSize(640, 480);
+//	setAutoFillBackground(false);
+	arrow = QPixmap(":/images/field-arrow-red.png");
 }
 
 void WalkmeshWidget::clear()
@@ -68,7 +70,6 @@ void WalkmeshWidget::initializeGL()
 	glDepthFunc(GL_LEQUAL);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_LIGHTING);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -94,6 +95,30 @@ void WalkmeshWidget::paintGL()
 	if(!walkmesh)	return;
 
 	glTranslatef(xTrans, yTrans, distance);
+
+//	glBegin(GL_QUADS);
+//	glColor3ub(255, 0, 0);
+//	glVertex3f(0.0f, 0.0f, 1.0f);
+//	glVertex3f(9.0f/256.0f, 0.0f, 1.0f);
+//	glVertex3f(9.0f/256.0f, 6.0f/256.0f, 1.0f);
+//	glVertex3f(0.0f, 6.0f/256.0f, 1.0f);
+//	glEnd();
+
+//	QPainter painter;
+//	painter.begin(this);
+//	painter.setRenderHint(QPainter::Antialiasing);
+//	int arrowW, arrowH;
+//	if(width() < height()) {
+//		arrowW = width() * 9 / 320;
+//		arrowH = width() * 6 / 320;
+//	} else {
+//		arrowW = height() * 9 / 240;
+//		arrowH = height() * 6 / 240;
+//	}
+//	painter.drawPixmap(0, 0, arrowW, arrowH, arrow);
+//	painter.end();
+
+
 	glRotatef(xRot, 1.0, 0.0, 0.0);
 	glRotatef(yRot, 0.0, 1.0, 0.0);
 	glRotatef(zRot, 0.0, 0.0, 1.0);
@@ -166,7 +191,10 @@ void WalkmeshWidget::paintGL()
 
 		if(infFile && infFile->isOpen()) {
 			glColor3ub(0xFF, 0x00, 0x00);
+//			glEnable(GL_TEXTURE_2D);
+//			GLuint texID = bindTexture(arrow);
 
+			int gateID=0;
 			foreach(const Exit &gate, infFile->exitLines()) {
 				if(gate.fieldID != 0x7FFF) {
 					Vertex_s vertex;
@@ -174,8 +202,16 @@ void WalkmeshWidget::paintGL()
 					glVertex3f(vertex.x/4096.0f, vertex.y/4096.0f, vertex.z/4096.0f);
 					vertex = gate.exit_line[1];
 					glVertex3f(vertex.x/4096.0f, vertex.y/4096.0f, vertex.z/4096.0f);
+					if(infFile->arrowIsDisplayed(gateID)) {
+//						glTexCoord2d(0.0, 1.0);
+//						glTexCoord2d(1.0, 0.0);
+					}
 				}
+				++gateID;
 			}
+
+//			deleteTexture(texID);
+//			glDisable(GL_TEXTURE_2D);
 
 			glColor3ub(0x00, 0xFF, 0x00);
 
@@ -254,12 +290,14 @@ void WalkmeshWidget::drawIdLine(int triangleID, const Vertex_sr &vertex1, const 
 
 void WalkmeshWidget::wheelEvent(QWheelEvent *event)
 {
+	setFocus();
 	distance += event->delta() / 4096.0;
 	updateGL();
 }
 
 void WalkmeshWidget::mousePressEvent(QMouseEvent *event)
 {
+	setFocus();
 	if(event->button()==Qt::MidButton)
 	{
 		distance = -35;
@@ -316,6 +354,18 @@ void WalkmeshWidget::keyPressEvent(QKeyEvent *event)
 		QWidget::keyPressEvent(event);
 		return;
 	}
+}
+
+void WalkmeshWidget::focusInEvent(QFocusEvent *event)
+{
+	grabKeyboard();
+	QWidget::focusInEvent(event);
+}
+
+void WalkmeshWidget::focusOutEvent(QFocusEvent *event)
+{
+	releaseKeyboard();
+	QWidget::focusOutEvent(event);
 }
 
 static void qNormalizeAngle(int &angle)

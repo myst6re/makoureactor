@@ -1257,6 +1257,12 @@ void WalkmeshManager::editUnknown2(const QByteArray &data)
 
 void WalkmeshManager::focusInEvent(QFocusEvent *e)
 {
-	if(walkmesh)	walkmesh->grabKeyboard();
+	if(walkmesh)	walkmesh->setFocus();
 	QWidget::focusInEvent(e);
+}
+
+void WalkmeshManager::focusOutEvent(QFocusEvent *e)
+{
+	if(walkmesh)	walkmesh->clearFocus();
+	QWidget::focusOutEvent(e);
 }

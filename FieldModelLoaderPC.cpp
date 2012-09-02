@@ -87,10 +87,8 @@ bool FieldModelLoaderPC::load(const QByteArray &data, const QString &name)
 	return true;
 }
 
-QByteArray FieldModelLoaderPC::save(const QByteArray &data, const QString &name) const
+QByteArray FieldModelLoaderPC::save(const QString &name) const
 {
-	if(!loaded || !modified)	return data;
-
 	quint16 nbHRC = this->model_nameHRC.size(), nbAnim, nameSize, i, j;
 	QByteArray HRCs;
 	QString modelName;

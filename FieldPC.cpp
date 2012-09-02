@@ -552,10 +552,13 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 	toc.append((char *)&size, 4);
 
 	// Section 3 (model loader PC)
-	section = getFieldModelLoader()->save(decompresse.mid(debutSections[2]+4, debutSections[3]-debutSections[2]-4), this->name);
-	section_size = section.size();
-
-	newData.append((char *)&section_size, 4).append(section);
+	if(modelLoader && modelLoader->isLoaded() && modelLoader->isModified()) {
+		section = getFieldModelLoader()->save(this->name);
+		section_size = section.size();
+		newData.append((char *)&section_size, 4).append(section);
+	} else {
+		newData.append(&decompresseData[debutSections[2]], debutSections[3]-debutSections[2]);
+	}
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);

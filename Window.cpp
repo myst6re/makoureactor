@@ -142,13 +142,13 @@ Window::Window() :
 	liste2 = new GrpScriptList(this);
 	liste2->setFixedWidth(180);
 	liste2->setFont(font);
-	connect(liste2, SIGNAL(changed()), SLOT(activerSave()));
+	connect(liste2, SIGNAL(changed()), SLOT(setModified()));
 	
 	liste3 = new ScriptList(this);
 	liste3->setFont(font);
 	
 	zoneScript = new OpcodeList(this);
-	connect(zoneScript, SIGNAL(changed()), SLOT(activerSave()));
+	connect(zoneScript, SIGNAL(changed()), SLOT(setModified()));
 	connect(zoneScript, SIGNAL(changed()), SLOT(refresh()));
 //	connect(zoneScript, SIGNAL(historicChanged(Historic)), SLOT(changeHistoric(Historic)));//TODO
 
@@ -635,9 +635,9 @@ void Window::refresh()
 	liste3->localeRefresh();
 }
 
-void Window::activerSave(bool enabled)
+void Window::setModified(bool enabled)
 {
-	if(field!=NULL)		field->setModified(enabled);
+	if(field != NULL)		field->setModified(enabled);
 	actionSave->setEnabled(enabled);
 	setWindowModified(enabled);
 	
@@ -701,7 +701,7 @@ void Window::undo()
 	}
 	restoreHists.push(hist);
 	actionRedo->setEnabled(true);
-	activerSave(true);
+	setModified(true);
 
 	afficherScripts();//Refresh view
 	gotoOpcode(hist.fieldID, hist.groupID, hist.scriptID, firstOpcode);
@@ -744,7 +744,7 @@ void Window::redo()
 
 	hists.push(hist);
 	actionUndo->setEnabled(true);
-	activerSave(true);
+	setModified(true);
 
 	afficherScripts();//Refresh view
 	gotoOpcode(hist.fieldID, hist.groupID, hist.scriptID, firstOpcode);
@@ -803,7 +803,7 @@ void Window::enregistrerSous(bool currentPath)
 	QString out;
 	switch(error)
 	{
-	case 0:	activerSave(false);break;
+	case 0:	setModified(false);break;
 	case 1:	out = tr("Le fichier est inaccessible");break;
 	case 2:	out = tr("Impossible de créer un fichier temporaire");break;
 	case 3:	out = tr("Erreur de réouverture du fichier");break;
@@ -1050,7 +1050,7 @@ void Window::importer()
 	switch(error)
 	{
 	case 0:
-		activerSave(true);
+		setModified(true);
 		// remove field history
 		for(int i=hists.size()-1 ; i>=0 ; --i) {
 			if(hists.at(i).fieldID == searchDialog->fieldID) {
@@ -1105,7 +1105,7 @@ void Window::textManager(bool activate)
 	if(field) {
 		if(!textDialog) {
 			textDialog = new TextManager(this);
-			connect(textDialog, SIGNAL(modified()), SLOT(activerSave()));
+			connect(textDialog, SIGNAL(modified()), SLOT(setModified()));
 			connect(textDialog, SIGNAL(textIDChanged(int)), searchDialog, SLOT(changeTextID(int)));
 			connect(textDialog, SIGNAL(fromChanged(int)), searchDialog, SLOT(changeFrom(int)));
 		}
@@ -1126,7 +1126,7 @@ void Window::modelManager()
 		ModelManager modelManager(field, fieldModel, this);
 		if(modelManager.exec()==QDialog::Accepted)
 		{
-			activerSave(true);
+			setModified(true);
 		}
 	}
 }
@@ -1140,7 +1140,7 @@ void Window::encounterManager()
 			if(dialog.exec()==QDialog::Accepted)
 			{
 				if(encounter->isModified())
-					activerSave(true);
+					setModified(true);
 			}
 		} else {
 			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les combats aléatoires !"));
@@ -1157,7 +1157,7 @@ void Window::tutManager()
 			if(dialog.exec()==QDialog::Accepted)
 			{
 				if(tut->isModified() || (tutPC != NULL && tutPC->isModified()))
-					activerSave(true);
+					setModified(true);
 			}
 		} else {
 			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les sons et les tutoriels !"));
@@ -1170,7 +1170,7 @@ void Window::walkmeshManager()
 	if(field) {
 		if(!_walkmeshManager) {
 			_walkmeshManager = new WalkmeshManager(this);
-			connect(_walkmeshManager, SIGNAL(modified()), SLOT(activerSave()));
+			connect(_walkmeshManager, SIGNAL(modified()), SLOT(setModified()));
 		}
 
 		_walkmeshManager->fill(field);
@@ -1201,7 +1201,7 @@ void Window::miscManager()
 			if(dialog.exec()==QDialog::Accepted)
 			{
 				if(inf->isModified() || field->isModified()) {
-					activerSave(true);
+					setModified(true);
 					auteurLbl->setText(tr("Auteur : %1").arg(field->scriptsAndTexts()->author()));
 				}
 			}
@@ -1225,43 +1225,40 @@ void Window::config()
 
 void Window::about()
 {
-	QDialog apropos(this, Qt::Dialog | Qt::CustomizeWindowHint);
-	apropos.setFixedSize(200, 200);
+	QDialog about(this, Qt::Dialog | Qt::CustomizeWindowHint);
+	about.setFixedSize(200, 270);
 
 	QFont font;
 	font.setPointSize(12);
 
-	QLabel image(&apropos);
+	QLabel image(&about);
 	image.setPixmap(QPixmap(":/images/reactor.png"));
-	image.move(82, 49);
+	image.move(82, about.height() - 150);
 	
-	QLabel desc1(PROG_FULLNAME, &apropos);
+	QLabel desc1(PROG_FULLNAME, &about);
 	desc1.setFont(font);
 	desc1.setFixedWidth(200);
 	desc1.setAlignment(Qt::AlignHCenter);
 
 	font.setPointSize(8);
 
-	QLabel desc2(tr("Par myst6re"), &apropos);
+	QLabel desc2(tr("Par myst6re<br/><a href=\"https://sourceforge.net/projects/makoureactor/\">sourceforge.net/projects/makoureactor</a><br/><br/>Merci à :<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li></ul>"), &about);
+	desc2.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
+	desc2.setTextFormat(Qt::RichText);
+	desc2.setOpenExternalLinks(true);
 	desc2.move(9, 40);
 	desc2.setFont(font);
 
-	QLabel desc3("myst6re@gmail.com", &apropos);
-	desc3.move(9, 52);
-	desc3.setFont(font);
-	desc3.setTextFormat(Qt::PlainText);
-	desc3.setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+	QPushButton button(tr("Fermer"), &about);
+	button.move(8, about.height()-8-button.sizeHint().height());
+	connect(&button, SIGNAL(released()), &about, SLOT(close()));
 
-	QLabel desc4(QString("Qt %1").arg(QT_VERSION_STR), &apropos);
-	desc4.move(9, 150);
-	desc4.setFont(font);
+	QLabel desc4(QString("Qt %1").arg(QT_VERSION_STR), &about);
 	QPalette pal = desc4.palette();
 	pal.setColor(QPalette::WindowText, QColor(0xAA,0xAA,0xAA));
 	desc4.setPalette(pal);
+	desc4.move(9, about.height()-16-desc4.sizeHint().height()-button.sizeHint().height());
+	desc4.setFont(font);
 
-	QPushButton button(tr("Fermer"), &apropos);
-	button.move(8, 169);
-	connect(&button, SIGNAL(released()), &apropos, SLOT(close()));
-
-	apropos.exec();
+	about.exec();
 }

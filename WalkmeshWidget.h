@@ -61,6 +61,7 @@ private:
 	CaFile *camera;
 	InfFile *infFile;
 	QPoint moveStart;
+	QPixmap arrow;
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);
@@ -69,6 +70,8 @@ protected:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void keyPressEvent(QKeyEvent *event);
+	void focusInEvent(QFocusEvent *event);
+	void focusOutEvent(QFocusEvent *event);
 };
 
 #endif // WALKMESHWIDGET_H

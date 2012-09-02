@@ -55,7 +55,7 @@ public slots:
 	void ouvrirDossier();
 	void refresh();
 
-	void activerSave(bool enabled=true);
+	void setModified(bool enabled=true);
 	void enregistrerSous(bool currentPath=false);
 	void enregistrer();
 	int fermer(bool quit=false);

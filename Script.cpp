@@ -1052,6 +1052,13 @@ void Script::listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window
 		opcode->listWindows(groupID, scriptID, opcodeID++, windows, text2win);
 }
 
+//void Script::searchWindows() const
+//{
+//	foreach(Opcode *opcode, opcodes) {
+
+//	}
+//}
+
 void Script::getBgParams(QHash<quint8, quint8> &paramActifs) const
 {
 	foreach(Opcode *opcode, opcodes)
