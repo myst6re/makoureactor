@@ -25,6 +25,10 @@
 class Script
 {
 public:
+	enum MoveDirection {
+		Up, Down
+	};
+
 	Script();
 	explicit Script(const QByteArray &script);
 	virtual ~Script();
@@ -42,7 +46,7 @@ public:
 	void delOpcode(quint16 opcodeID);
 	Opcode *removeOpcode(quint16 opcodeID);
 	void insertOpcode(quint16 opcodeID, Opcode *opcode);
-	bool moveOpcode(quint16 opcodeID, bool direction);
+	bool moveOpcode(quint16 opcodeID, MoveDirection direction);
 	void shiftTextIds(int textId, int steps=1);
 	void shiftTutIds(int tutId, int steps=1);
 	void setWindow(const FF7Window &win);
@@ -73,7 +77,7 @@ public:
 	static Opcode *copyOpcode(Opcode *opcode);
 private:
 	OpcodeJump *convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok=0) const;
-	OpcodeJump *convertOpcodeJumpRange(OpcodeJump *opcodeJump, bool &ok) const;
+	bool verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const;
 	QList<Opcode *> opcodes;
 	QList<Opcode *> expandedItems;
 	QString lastError;

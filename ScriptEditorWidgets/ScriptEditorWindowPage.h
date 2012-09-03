@@ -61,7 +61,6 @@ private:
 
 class ScriptEditorWindowMovePage : public ScriptEditorView
 {
-	Q_OBJECT
 public:
 	explicit ScriptEditorWindowMovePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();

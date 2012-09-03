@@ -18,9 +18,6 @@
 #ifndef DEF_WINDOW
 #define DEF_WINDOW
 
-#define DIR_UP		0
-#define DIR_DOWN	1
-
 #include <QtGui>
 #include "FieldArchive.h"
 #include "GrpScript.h"
@@ -48,23 +45,23 @@ public:
 	explicit Window();
 	virtual ~Window();
 
-	void ouvrir(const QString &cheminFic, bool isDir=false);
+	void open(const QString &cheminFic, bool isDir=false);
 	FieldArchive::Sorting getFieldSorting();
 public slots:
-	void ouvrirFichier();
-	void ouvrirDossier();
+	void openFile();
+	void openDir();
 	void refresh();
 
 	void setModified(bool enabled=true);
-	void enregistrerSous(bool currentPath=false);
-	void enregistrer();
-	int fermer(bool quit=false);
+	void saveAs(bool currentPath=false);
+	void save();
+	int close(bool quit=false);
 
 	bool gotoField(int fieldID);
 	void gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID);
 	void gotoText(int fieldID, int textID, int from, int size);
 
-	void jp_txt(bool);
+	void jpText(bool);
 
 	//	void notifyFileChanged(const QString &path);
 	//	void notifyDirectoryChanged(const QString &path);
@@ -84,15 +81,13 @@ public slots:
 	void about();
 private slots:
 	void emitOpcodeID();
-	void changeHistoric(const Historic &);
-	void undo();
-	void redo();
 
-	void ouvrirField();
-	void afficherGrpScripts();
-	void afficherScripts();
+	void openField();
+	void showGrpScripts();
+	void showScripts();
+	void compile();
 	void filterMap();
-	void change_language(QAction *);
+	void changeLanguage(QAction *);
 	void config();
 signals:
 	void fieldIDChanged(int);
@@ -100,11 +95,14 @@ signals:
 	void scriptIDChanged(int);
 	void opcodeIDChanged(int);
 private:
+	void restartNow();
+
 	QLineEdit *lineSearch;
-	QTreeWidget *liste;
-	GrpScriptList *liste2;
-	ScriptList *liste3;
-	OpcodeList *zoneScript;
+	QTreeWidget *fieldList;
+	GrpScriptList *groupScriptList;
+	ScriptList *scriptList;
+	OpcodeList *opcodeList;
+	QLabel *compileScriptIcon, *compileScriptLabel;
 	QStackedWidget *zonePreview;
 	ApercuBG *zoneImage;
 	FieldModel *fieldModel;
@@ -119,23 +117,11 @@ private:
 	Search *searchDialog;
 	VarManager *varDialog;
 
-	QAction *actionSave;
-	QAction *actionSaveAs;
-	QAction *actionExport;
-	QAction *actionMassExport;
-	QAction *actionImport;
-	QAction *actionClose;
-	QAction *actionFind;
-	QAction *actionText;
-	QAction *actionModels;
-	QAction *actionEncounter;
-	QAction *actionTut;
-	QAction *actionWalkmesh;
-	QAction *actionBackground;
-	QAction *actionMisc;
-	QAction *actionJp_txt;
-	QAction *actionUndo;
-	QAction *actionRedo;
+	QAction *actionSave, *actionSaveAs, *actionExport;
+	QAction *actionMassExport, *actionImport, *actionClose;
+	QAction *actionFind, *actionText, *actionModels;
+	QAction *actionEncounter, *actionTut, *actionWalkmesh;
+	QAction *actionBackground, *actionMisc, *actionJp_txt;
 	QMenu *menuLang;
 
 	TextManager *textDialog;
@@ -143,12 +129,7 @@ private:
 	BGDialog *_backgroundManager;
 
 	QProgressBar *progression;
-	QLabel *auteurLbl;
-
-	void restart_now();
-	QStack<Historic> hists;
-	QStack<Historic> restoreHists;
-	int currentHistPos;
+	QLabel *authorLbl;
 protected:
 	void showEvent(QShowEvent *);
 	void closeEvent(QCloseEvent *);

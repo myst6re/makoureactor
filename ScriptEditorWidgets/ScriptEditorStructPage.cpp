@@ -303,19 +303,23 @@ ScriptEditorLabelPage::ScriptEditorLabelPage(Field *field, GrpScript *grpScript,
 
 void ScriptEditorLabelPage::build()
 {
-	label = new QLabel(this);
+	label = new QDoubleSpinBox(this);
+	label->setDecimals(0);
+	label->setRange(0, pow(2, 32)-1);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Label")), 0, 0);
 	layout->addWidget(label, 0, 1);
 	layout->setRowStretch(1, 1);
 	layout->setContentsMargins(QMargins());
+
+	connect(label, SIGNAL(valueChanged(double)), SIGNAL(opcodeChanged()));
 }
 
 Opcode *ScriptEditorLabelPage::opcode()
 {
 	OpcodeLabel *opcodeLabel = (OpcodeLabel *)_opcode;
-	opcodeLabel->setLabel(label->text().toUInt());
+	opcodeLabel->setLabel(label->value());
 
 	return ScriptEditorView::opcode();
 }
@@ -336,10 +340,11 @@ void ScriptEditorLabelPage::setOpcode(Opcode *opcode)
 			}
 		}
 
-		label->setNum((double)greaterLabel);
-		emit opcodeChanged();
+		label->setValue((double)greaterLabel);
 	} else {
-		label->setNum((double)opcodeLabel->label());
+		label->blockSignals(true);
+		label->setValue((double)opcodeLabel->label());
+		label->blockSignals(false);
 	}
 }
 

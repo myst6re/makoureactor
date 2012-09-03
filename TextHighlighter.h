@@ -23,7 +23,6 @@
 
 class TextHighlighter : public QSyntaxHighlighter
 {
-	Q_OBJECT
 public:
 	explicit TextHighlighter(QTextDocument *parent=0, bool tut=false);
 

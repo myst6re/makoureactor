@@ -77,7 +77,8 @@ HEADERS += ApercuBG.h \
     MassExportDialog.h \
     ScriptEditorWidgets/ScriptEditorStructPage.h \
     ScriptEditorWidgets/ScriptEditorMathPage.h \
-    Section1File.h
+    Section1File.h \
+    QLockedFile.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -148,7 +149,8 @@ SOURCES += ApercuBG.cpp \
     MassExportDialog.cpp \
     ScriptEditorWidgets/ScriptEditorStructPage.cpp \
     ScriptEditorWidgets/ScriptEditorMathPage.cpp \
-    Section1File.cpp
+    Section1File.cpp \
+    QLockedFile.cpp
 RESOURCES += Makou_Reactor.qrc
 TRANSLATIONS += Makou_Reactor_en.ts \
 	Makou_Reactor_ja.ts

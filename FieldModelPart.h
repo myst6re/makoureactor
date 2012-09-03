@@ -18,7 +18,8 @@
 #ifndef FIELDMODELPART_H
 #define FIELDMODELPART_H
 
-#include <QtGui>
+#include <QtCore>
+#include <QRgb>
 #include "IdFile.h"
 
 

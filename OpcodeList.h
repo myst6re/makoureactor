@@ -18,30 +18,25 @@
 #ifndef DEF_OPCODELIST
 #define DEF_OPCODELIST
 
-#define HIST_ADD	0
-#define HIST_REM	1
-#define HIST_MOD	2
-#define HIST_UPW	3
-#define HIST_DOW	4
-
 #include <QtGui>
 #include "Field.h"
 #include "Opcode.h"
 #include "ScriptEditor.h"
 
-typedef struct{
-	int type;
-	int fieldID;
-	int groupID;
-	int scriptID;
-	QList<int> opcodeIDs;
-	QList<QByteArray> data;
-} Historic;
-
 class OpcodeList : public QTreeWidget
 {
     Q_OBJECT
 public:
+	enum HistoricType {
+		Add, Remove, Modify, Up, Down
+	};
+
+	typedef struct{
+		HistoricType type;
+		QList<int> opcodeIDs;
+		QList<QByteArray> data;
+	} Historic;
+
 	OpcodeList(QWidget *parent=0);
 	virtual ~OpcodeList();
 
@@ -51,11 +46,13 @@ public:
 	void saveExpandedItems();
 
 	QToolBar *toolBar();
+	void clear();
 	void setEnabled(bool enabled);
 	void clearCopiedOpcodes();
 	void fill(Field *_field=0, GrpScript *_grpScript=0, Script *_script=0);
 	void scroll(int, bool focus=true);
 	void enableActions(bool);
+	void setErrorLine(int opcodeID);
 
 private slots:
 	void add();
@@ -68,23 +65,25 @@ private slots:
 	void down();
 	void itemSelected();
 	void evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous);
+	void undo();
+	void redo();
 
 signals:
 	void changed();
-	void historicChanged(const Historic &);
-
 private:
 	void upDownEnabled();
-	bool hasCut;
-	bool isInit;
-	void move(bool direction);
+	void move(Script::MoveDirection direction);
 	QTreeWidgetItem *findItem(int id);
 	QList<int> selectedIDs();
 
-	void emitHist(int type, int opcodeID=0, const QByteArray &data=QByteArray());
-	void emitHist(int type, const QList<int> &opcodeIDs, const QList<QByteArray> &data);
+	QString showHistoric();
+	void changeHist(HistoricType type, int opcodeID=0, const QByteArray &data=QByteArray());
+	void changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<QByteArray> &data);
+	void clearHist();
 
 	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);
+
+	bool hasCut, isInit;
 
 	QToolBar *_toolBar;
 
@@ -93,7 +92,14 @@ private:
 	Script *script;
 	QList<Opcode *> opcodeCopied;
 
-	QBrush previousBG;
+	QBrush previousBG, previousErrorBg;
+	int errorLine;
+
+	QAction *undo_A, *redo_A;
+
+	QStack<Historic> hists;
+	QStack<Historic> restoreHists;
+//	int currentHistPos;
 };
 
 #endif // DEF_OPCODELIST

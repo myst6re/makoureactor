@@ -18,7 +18,7 @@
 #ifndef FIELDMODELPARTPC_H
 #define FIELDMODELPARTPC_H
 
-#include <QtGui>
+#include <QtCore>
 #include "FieldModelPart.h"
 
 typedef struct {

@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 	Window fenetre;
 	fenetre.show();
 	if(argc>1)
-		fenetre.ouvrir(argv[1]);
+		fenetre.open(argv[1]);
 
 
 	/*

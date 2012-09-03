@@ -251,7 +251,7 @@ void TextManager::emitFromChanged()
 	emit fromChanged(textEdit->textCursor().position());
 }
 
-void TextManager::focusInEvent(QFocusEvent *e)
+void TextManager::focusInEvent(QFocusEvent *)
 {
 	liste1->setFocus();
 }

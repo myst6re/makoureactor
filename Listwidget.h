@@ -22,7 +22,6 @@
 
 class ListWidget : public QWidget
 {
-    Q_OBJECT
 public:
     enum ActionType {
 		Invisible, Add, Rem, Up, Down
@@ -34,9 +33,6 @@ public:
 
     QToolBar *toolBar() const;
     QListWidget *listWidget() const;
-signals:
-    
-public slots:
 private:
     QToolBar *_toolBar;
     QListWidget *_listWidget;

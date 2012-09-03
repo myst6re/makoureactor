@@ -19,7 +19,7 @@
 #ifndef FIELDMODELPARTPS_H
 #define FIELDMODELPARTPS_H
 
-#include <QtGui>
+#include <QtCore>
 #include "FieldModelPart.h"
 
 typedef struct {

@@ -46,8 +46,6 @@ public:
 	QList<PolyVertex> rotation(int frameID) const;
 	int frameCount() const;
 	QString toStringBones() const;
-
-
 protected:
 	QMultiMap<int, FieldModelPart *> _parts;
 	QHash<int, QPixmap> _loaded_tex;

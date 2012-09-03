@@ -26,7 +26,6 @@
 
 class MiscWidget : public QDialog
 {
-	Q_OBJECT
 public:
 	explicit MiscWidget(InfFile *data, Field *field, QWidget *parent=0);
 private:

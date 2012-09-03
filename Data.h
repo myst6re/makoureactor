@@ -1,7 +1,7 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include <QtGui>
+#include <QtCore>
 #include "FF7Text.h"
 #include "Opcode.h"
 #include "Config.h"

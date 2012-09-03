@@ -24,7 +24,6 @@
 
 class EncounterWidget : public QDialog
 {
-    Q_OBJECT
 public:
 	explicit EncounterWidget(EncounterFile *data, QWidget *parent=0);
 private:

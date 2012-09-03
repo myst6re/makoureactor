@@ -23,8 +23,6 @@
 
 class KeyEditorDialog : public QDialog
 {
-	Q_OBJECT
-
 public:
 	explicit KeyEditorDialog(quint16, QWidget *parent=0);
 	int keys();

@@ -28,8 +28,6 @@ class AnimEditorDialog : public QDialog
 public:
 	explicit AnimEditorDialog(int animID, const QGLWidget *shareWidget=0, QWidget *parent=0);
 	int chosenAnimation();
-signals:
-
 private slots:
 	void changeModelAnimation();
 private:

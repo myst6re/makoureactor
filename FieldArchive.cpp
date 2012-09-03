@@ -40,7 +40,7 @@ FieldArchive::FieldArchive(const QString &path, bool isDirectory)
 		}
 		else {
 			isDat = ext == "dat";
-			fic = new QFile(path);
+			fic = new QLockedFile(path);
 		}
 	}
 	//	fileWatcher.addPath(path);
@@ -157,7 +157,7 @@ QByteArray FieldArchive::getLgpData(int position)
 	if(fic==NULL)	return QByteArray();
 	quint32 fileSize;
 
-	if(!fic->open(QIODevice::ReadOnly))		return QByteArray();
+	if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))		return QByteArray();
 	fic->seek(position+20);
 	fic->read((char *)&fileSize, 4);
 
@@ -182,7 +182,8 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 	}
 
 	if(isDatFile()) {
-		if(!fic->open(QIODevice::ReadOnly))		return QByteArray();
+		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))		return QByteArray();
+		fic->reset();
 		data = fic->readAll();
 		fic->close();
 
@@ -256,10 +257,10 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 
 		return unlzs ? LZS::decompress(data.mid(4)) : data;
 	} else if(isDatFile() || isDirectory()) {
-		QFile fic(chemin()+fileName.toUpper());
-		if(!fic.open(QIODevice::ReadOnly))	return QByteArray();
-		data = fic.readAll();
-		fic.close();
+		QFile f(chemin()+fileName.toUpper());
+		if(!f.open(QIODevice::ReadOnly))	return QByteArray();
+		data = f.readAll();
+		f.close();
 
 		memcpy(&lzsSize, data.constData(), 4);
 
@@ -662,7 +663,7 @@ quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		}
 		//		qDebug("Ouverture : %d ms", t.elapsed());
 	} else if(isLgp()) {
-		if(!fic->open(QIODevice::ReadOnly))	return 1;
+		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))	return 1;
 
 		quint32 nbFiles;
 
@@ -824,7 +825,7 @@ quint8 FieldArchive::save(QString path)
 		saveAs = path != fic->fileName();
 
 		// QFile fic(this->path());
-		if(!fic->open(QIODevice::ReadOnly))	return 1;
+		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))	return 1;
 		QTemporaryFile tempFic(path%".makoutemp");
 		if(!tempFic.open())		return 2;
 
@@ -988,6 +989,10 @@ quint8 FieldArchive::save(QString path)
 		}
 		emit progress(nbFiles+14);
 		if(!tempFic.copy(path))	return 4;
+
+		if(!saveAs) {
+			fic->open(QIODevice::ReadOnly);// reopen archive
+		}
 
 		emit progress(nbFiles+21);
 

@@ -31,8 +31,6 @@ public:
 	void setBattleIdsValues(const QList<int> &ids);
 	void setBattleProbasValues(const QList<int> &probas);
 	void setRateValue(int value);
-signals:
-
 public slots:
 	void changePercent();
 	void changeProbaCount();

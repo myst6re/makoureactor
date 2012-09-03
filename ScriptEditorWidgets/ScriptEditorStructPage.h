@@ -78,7 +78,7 @@ public:
 	void setOpcode(Opcode *opcode);
 private:
 	void build();
-	QLabel *label;
+	QDoubleSpinBox *label;
 };
 
 class ScriptEditorJumpPage : public ScriptEditorView

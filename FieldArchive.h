@@ -19,6 +19,7 @@
 #define DEF_FIELDARCHIVE
 
 #include <QtGui>
+#include "QLockedFile.h"
 #include "FieldPS.h"
 #include "FieldPC.h"
 #include "IsoArchive.h"
@@ -101,7 +102,7 @@ private:
 	QList<Field *> fileList;
 	QMultiMap<QString, int> fieldsSortByName;
 	QMultiMap<QString, int> fieldsSortByMapId;
-	QFile *fic;
+	QLockedFile *fic;
 	QDir *dir;
 	IsoArchive *iso;
 	IsoDirectory *isoFieldDirectory;
