@@ -307,8 +307,9 @@ void FieldModel::paintGL()
 		parent.push(i);
 		glPushMatrix();
 
-		if(data->isPS())
+		if(data->isPS()) {
 			glTranslatef(0.0, 0.0, bone.size);
+		}
 
 		glRotatef(rotation.y, 0.0, 1.0, 0.0);
 		glRotatef(rotation.x, 1.0, 0.0, 0.0);

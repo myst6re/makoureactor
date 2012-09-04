@@ -111,7 +111,9 @@ bool Section1File::open(const QByteArray &data)
 		{
 			if(positions[j+1] > positions[j])
 			{
-				grpScript->addScript(data.mid(positions[j], positions[j+1]-positions[j]));
+				if(!grpScript->addScript(data.mid(positions[j], positions[j+1]-positions[j]))) {
+					return false;
+				}
 				for(int l=k ; l<j ; ++l)	grpScript->addScript();
 				k=j+1;
 			}

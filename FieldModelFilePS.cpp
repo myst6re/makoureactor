@@ -140,8 +140,8 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 	memcpy(&unknownTex2, &constData[offsetTexHeader+4], 4);
 	quint8 texCount = unknownTex2 & 0xFF;
 
-	qDebug() << "==== TEXTURES HEADER ====" << offsetTexHeader;
-	qDebug() << "texCount" << texCount << "unknown1" << unknownTex << "unknown2" << (unknownTex2 & 0xFFFFFF00);
+//	qDebug() << "==== TEXTURES HEADER ====" << offsetTexHeader;
+//	qDebug() << "texCount" << texCount << "unknown1" << unknownTex << "unknown2" << (unknownTex2 & 0xFFFFFF00);
 
 	/*** Open texture Headers ***/
 
@@ -153,9 +153,9 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 
 		texHeader.offset_data += offsetTexHeader;
 
-		qDebug() << "==== TEXTURE HEADER" << tex << "====" << (offsetTexHeader + 8 + tex*sizeof(TexHeader));
-		qDebug() << "width" << texHeader.width << "height" << texHeader.height << "x" << texHeader.vramX << "y" << texHeader.vramY;
-		qDebug() << "offsetData" << texHeader.offset_data << "endData" << (texHeader.offset_data + texHeader.width * 2 * texHeader.height);
+//		qDebug() << "==== TEXTURE HEADER" << tex << "====" << (offsetTexHeader + 8 + tex*sizeof(TexHeader));
+//		qDebug() << "width" << texHeader.width << "height" << texHeader.height << "x" << texHeader.vramX << "y" << texHeader.vramY;
+//		qDebug() << "offsetData" << texHeader.offset_data << "endData" << (texHeader.offset_data + texHeader.width * 2 * texHeader.height);
 
 		texHeaders.append(texHeader);
 	}
@@ -194,10 +194,10 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 					texInfo.imgY += lastTexHeight;
 				}
 
-				qDebug() << "TEXTUREINFO";
-				qDebug() << "type" << texInfo.type << "bpp" << texInfo.bpp;
-				qDebug() << "imgX" << texInfo.imgX << "imgY" << texInfo.imgY;
-				qDebug() << "palX" << texInfo.palX << "palY" << texInfo.palY;
+//				qDebug() << "TEXTUREINFO";
+//				qDebug() << "type" << texInfo.type << "bpp" << texInfo.bpp;
+//				qDebug() << "imgX" << texInfo.imgX << "imgY" << texInfo.imgY;
+//				qDebug() << "palX" << texInfo.palX << "palY" << texInfo.palY;
 
 				QMapIterator<TextureInfo, int> it(texAlreadyLoaded);
 				bool contains = false;
@@ -213,12 +213,12 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 					texIds.append(texAlreadyLoaded.value(texInfo));
 				} else {
 					if(faceID < 0x21 && (texInfo.type == 0 || texInfo.type == 1)) { // Eye and Mouth
-						qDebug() << (texInfo.type == 0 ? "EYE" : "MOUTH") << texID;
+//						qDebug() << (texInfo.type == 0 ? "EYE" : "MOUTH") << texID;
 						texIds.append(texID);
 						texAlreadyLoaded.insert(texInfo, texID);
 						_loaded_tex.insert(texID++, tdb.texture(faceID, texInfo.type == 0 ? TdbFile::Eye : TdbFile::MouthClosed));
 					} else {
-						qDebug() << "OTHER" << texID;
+//						qDebug() << "OTHER" << texID;
 
 						TexHeader imgHeader=TexHeader(), palHeader=TexHeader();
 						bool imgFound=false, palFound=false;
@@ -244,7 +244,7 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 				}
 			}
 
-			qDebug() << "texIds" << ((FieldModelPartPS *)part)->boneID() << texIds;
+//			qDebug() << "texIds" << ((FieldModelPartPS *)part)->boneID() << texIds;
 
 			if(!texIds.isEmpty()) {
 				foreach(FieldModelGroup *group, part->groups()) {
@@ -321,8 +321,8 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 //	qDebug() << "offsetData" << a.offset_data;
 
 	quint32 offsetFrameRotation = a.offset_data + a.offset_frames_rotation;
-	quint32 offsetFrameStatic = a.offset_data + a.offset_static_translation;
-	quint32 offsetFrameTranslation = a.offset_data + a.offset_frames_translation;
+//	quint32 offsetFrameStatic = a.offset_data + a.offset_static_translation;
+//	quint32 offsetFrameTranslation = a.offset_data + a.offset_frames_translation;
 
 	if(a.offset_data + 4 + a.num_bones * 8 >= (quint32)size) {
 		qWarning() << "invalid size animation" << (a.offset_data + 4 + a.num_bones * 8) << size;
@@ -339,11 +339,11 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 	quint16 numFrames2 = animate ? a.num_frames : qMin((quint16)1, a.num_frames);
 
 	for(int frame=0 ; frame<numFrames2 ; ++frame) {
-		QList<PolyVertex> rotation_coords;
+		QList<PolyVertex> rotation_coords/*, rotation_coordsTrans*/;
 
 		for(int bone=0 ; bone<a.num_bones ; ++bone) {
 			FrameTranslation frameTrans;
-			PolyVertex rot;
+			PolyVertex rot/*, trans*/;
 
 			memcpy(&frameTrans, &constData[a.offset_data + 4 + bone*8], sizeof(FrameTranslation));
 
@@ -390,72 +390,79 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 
 			// (translation)
 
-			qint16 translation;
+//			qint16 translation=0;
 
-			if(frameTrans.flag & 0x10) {
-				quint32 offsetToTranslation = offsetFrameTranslation + frameTrans.tx * a.num_frames * 2 + frame * 2;
+//			if(frameTrans.flag & 0x10) {
+//				quint32 offsetToTranslation = offsetFrameTranslation + frameTrans.tx * a.num_frames * 2 + frame * 2;
 
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
+//				if(offsetToTranslation >= (quint32)size) {
+//					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
+//					continue;
+//				}
 
-				memcpy(&translation, &constData[offsetToTranslation], 2);
-			} else if(frameTrans.tx != 0xFF) {
-				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.tx * 2;
+//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//			} else if(frameTrans.tx != 0xFF) {
+//				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.tx * 2;
 
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
+//				if(offsetToTranslation >= (quint32)size) {
+//					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
+//					continue;
+//				}
 
-				memcpy(&translation, &constData[offsetToTranslation], 2);
-			}
+//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//			}
+//			trans.x = -translation / 31.0f;
+//			translation=0;
 
-			if(frameTrans.flag & 0x20) {
-				quint32 offsetToTranslation = offsetFrameTranslation + frameTrans.ty * a.num_frames * 2 + frame * 2;
+//			if(frameTrans.flag & 0x20) {
+//				quint32 offsetToTranslation = offsetFrameTranslation + frameTrans.ty * a.num_frames * 2 + frame * 2;
 
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
+//				if(offsetToTranslation >= (quint32)size) {
+//					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
+//					continue;
+//				}
 
-				memcpy(&translation, &constData[offsetToTranslation], 2);
-			} else if(frameTrans.tx != 0xFF) {
-				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.ty * 2;
+//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//			} else if(frameTrans.tx != 0xFF) {
+//				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.ty * 2;
 
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
+//				if(offsetToTranslation >= (quint32)size) {
+//					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
+//					continue;
+//				}
 
-				memcpy(&translation, &constData[offsetToTranslation], 2);
-			}
+//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//			}
+//			trans.y = -translation / 31.0f;
+//			translation=0;
 
-			if(frameTrans.flag & 0x40) {
-				quint32 offsetToTranslation = offsetFrameTranslation + frameTrans.tz * a.num_frames * 2 + frame * 2;
+//			if(frameTrans.flag & 0x40) {
+//				quint32 offsetToTranslation = offsetFrameTranslation + frameTrans.tz * a.num_frames * 2 + frame * 2;
 
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
+//				if(offsetToTranslation >= (quint32)size) {
+//					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
+//					continue;
+//				}
 
-				memcpy(&translation, &constData[offsetToTranslation], 2);
-			} else if(frameTrans.tx != 0xFF) {
-				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.tz * 2;
+//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//			} else if(frameTrans.tx != 0xFF) {
+//				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.tz * 2;
 
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
+//				if(offsetToTranslation >= (quint32)size) {
+//					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
+//					continue;
+//				}
 
-				memcpy(&translation, &constData[offsetToTranslation], 2);
-			}
+//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//			}
+//			trans.z = -translation / 31.0f;
 
 			rotation_coords.append(rot);
+//			rotation_coordsTrans.append(trans);
 		}
 
 		_frames.insert(frame, rotation_coords);
+//		_framesTrans.insert(frame, rotation_coordsTrans);
 	}
 
 	return true;

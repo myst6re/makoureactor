@@ -779,29 +779,29 @@
         <translation>Down</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="309"/>
+        <location filename="OpcodeList.cpp" line="311"/>
         <source>Si ce script est exécuté,
  considérez que c&apos;est le dernier script non vide qui est exécuté</source>
         <translation>If this script is run,
  assume that the last non-empty script that runs</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="566"/>
+        <location filename="OpcodeList.cpp" line="556"/>
         <source>Suppression</source>
         <translation>Delete</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="566"/>
+        <location filename="OpcodeList.cpp" line="556"/>
         <source>Voulez-vous vraiment supprimer %1 ?</source>
         <translation>Are you sure you want to delete %1?</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="566"/>
+        <location filename="OpcodeList.cpp" line="556"/>
         <source>la commande sélectionnée</source>
         <translation>the selected command</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="566"/>
+        <location filename="OpcodeList.cpp" line="556"/>
         <source>les commandes sélectionnées</source>
         <translation>the selected commands</translation>
     </message>

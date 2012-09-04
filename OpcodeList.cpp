@@ -128,6 +128,10 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	redo_A->setStatusTip(redo_A->text());
 	
 	enableActions(false);
+
+	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(scriptEditor()));
+	connect(this, SIGNAL(itemSelectionChanged()), SLOT(itemSelected()));
+	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(evidence(QTreeWidgetItem*,QTreeWidgetItem*)));
 }
 
 OpcodeList::~OpcodeList()
@@ -141,7 +145,6 @@ OpcodeList::~OpcodeList()
 
 void OpcodeList::clear()
 {
-	qDebug() << "OpcodeList::clear()";
 	saveExpandedItems();
 	enableActions(false);
 	QTreeWidget::clear();
@@ -237,7 +240,6 @@ void OpcodeList::saveExpandedItems()
 
 void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 {
-	qDebug() << "OpcodeList::fill()";
 	if(_script) {
 		saveExpandedItems();
 		clearHist();
@@ -324,12 +326,6 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 	// actions().at(5)->setEnabled(true);
 	actions().at(6)->setEnabled(!opcodeCopied.isEmpty());
 	upDownEnabled();
-	disconnect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(scriptEditor()));
-	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), SLOT(scriptEditor()));
-	disconnect(this, SIGNAL(itemSelectionChanged()), this, SLOT(itemSelected()));
-	connect(this, SIGNAL(itemSelectionChanged()), SLOT(itemSelected()));
-	disconnect(this, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this, SLOT(evidence(QTreeWidgetItem *, QTreeWidgetItem *)));
-	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), SLOT(evidence(QTreeWidgetItem *, QTreeWidgetItem *)));
 }
 
 void OpcodeList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
@@ -410,7 +406,7 @@ void OpcodeList::changeHist(HistoricType type, const QList<int> &opcodeIDs, cons
 	redo_A->setEnabled(false);
 	hists.push(hist);
 	restoreHists.clear();
-	qDebug() << showHistoric();
+//	qDebug() << showHistoric();
 }
 
 void OpcodeList::clearHist()
@@ -419,7 +415,7 @@ void OpcodeList::clearHist()
 	redo_A->setEnabled(false);
 	hists.clear();
 	restoreHists.clear();
-	qDebug() << showHistoric();
+//	qDebug() << showHistoric();
 }
 
 void OpcodeList::undo()
@@ -460,7 +456,7 @@ void OpcodeList::undo()
 	restoreHists.push(hist);
 	redo_A->setEnabled(true);
 
-	qDebug() << showHistoric();
+//	qDebug() << showHistoric();
 
 	fill();// Refresh view
 
@@ -507,7 +503,7 @@ void OpcodeList::redo()
 	hists.push(hist);
 	undo_A->setEnabled(true);
 
-	qDebug() << showHistoric();
+//	qDebug() << showHistoric();
 
 	fill();// Refresh view
 
@@ -527,19 +523,13 @@ void OpcodeList::scriptEditor(bool modify)
 
 	QByteArray oldVersion;
 
-	qDebug() << "scriptEditor" << opcodeID << modify;
-
 	saveExpandedItems();
-
-	qDebug() << "scriptEditor" << opcodeID << modify << script->getOpcode(opcodeID);
 
 	if(modify)
 		oldVersion = script->getOpcode(opcodeID)->toByteArray();
 	else
 		++opcodeID;
 
-	qDebug() << "scriptEditor" << opcodeID << modify;
-	
 	ScriptEditor editor(field, grpScript, script, opcodeID, modify, isInit, this);
 	
 	if(editor.exec()==QDialog::Accepted)

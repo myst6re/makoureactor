@@ -891,29 +891,29 @@
         <translation>下へ</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="309"/>
+        <location filename="OpcodeList.cpp" line="311"/>
         <source>Si ce script est exécuté,
  considérez que c&apos;est le dernier script non vide qui est exécuté</source>
         <translation>このスクリプトを実行した場合
 空ではないスクリプトの最後のものが実行されます</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="566"/>
+        <location filename="OpcodeList.cpp" line="556"/>
         <source>Suppression</source>
         <translation>削除</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="566"/>
+        <location filename="OpcodeList.cpp" line="556"/>
         <source>Voulez-vous vraiment supprimer %1 ?</source>
         <translation>%1 を削除しますか？</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="566"/>
+        <location filename="OpcodeList.cpp" line="556"/>
         <source>la commande sélectionnée</source>
         <translation>選択コマンド</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="566"/>
+        <location filename="OpcodeList.cpp" line="556"/>
         <source>les commandes sélectionnées</source>
         <translation>選択したコマンド</translation>
     </message>
@@ -5809,12 +5809,12 @@ channelCount=%3</translation>
     <message>
         <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="227"/>
         <source>Autoriser</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">許可</translation>
     </message>
     <message>
         <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="228"/>
         <source>Empêcher</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">禁止</translation>
     </message>
     <message>
         <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="232"/>

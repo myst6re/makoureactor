@@ -44,6 +44,7 @@ public:
 	int loadedTextureCount() const;
 	QPixmap loadedTexture(int texID) const;
 	QList<PolyVertex> rotation(int frameID) const;
+	QList<PolyVertex> translation(int frameID) const;
 	int frameCount() const;
 	QString toStringBones() const;
 protected:
@@ -52,6 +53,7 @@ protected:
 	QList<Bone> _bones;
 	int a_bones_count;
 	QHash<int, QList<PolyVertex> > _frames;
+	QHash<int, QList<PolyVertex> > _framesTrans;
 	bool dataLoaded;
 };
 

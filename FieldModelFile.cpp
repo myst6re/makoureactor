@@ -78,6 +78,11 @@ QList<PolyVertex> FieldModelFile::rotation(int frameID) const
 	return _frames.value(frameID);
 }
 
+QList<PolyVertex> FieldModelFile::translation(int frameID) const
+{
+	return _framesTrans.value(frameID);
+}
+
 int FieldModelFile::frameCount() const
 {
 	return _frames.size();

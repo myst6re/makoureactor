@@ -68,7 +68,7 @@ QPixmap TdbFile::texture(quint8 faceID, TextureType type)
 	const char *constData = data.constData();
 	int imgID = faceIdToImageId(faceID, type);
 
-	qDebug() << "faceID" << faceID << "imgID" << imgID;
+//	qDebug() << "faceID" << faceID << "imgID" << imgID;
 
 	quint32 offsetImage = header.imageOffset + imgID * 512;
 

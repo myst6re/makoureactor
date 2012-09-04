@@ -61,7 +61,7 @@ private:
 	CaFile *camera;
 	InfFile *infFile;
 	QPoint moveStart;
-	QPixmap arrow;
+//	QPixmap arrow;
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);

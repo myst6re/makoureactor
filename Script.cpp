@@ -64,7 +64,7 @@ bool Script::openScript(const QByteArray &script)
 			}
 		} else {
 			qWarning() << "Error" << jump << "label" << (i+1);
-//			return false;//TODO
+			return false;
 		}
 	}
 

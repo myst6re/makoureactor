@@ -174,7 +174,7 @@ bool FieldModelFilePC::open_hrc(QFile *hrc_file, QMultiMap<int, QStringList> &rs
 			if(!ok) return false;
 			_bones.append(bone);
 			break;
-		case 3:
+		case 3: //RSD list
 			rsdlist = line.split(' ', QString::SkipEmptyParts);
 			if(rsdlist.size()<1) return false;
 			nbP = rsdlist.first().toUInt(&ok);
@@ -196,7 +196,7 @@ bool FieldModelFilePC::open_hrc(QFile *hrc_file, QMultiMap<int, QStringList> &rs
 bool FieldModelFilePC::open_a(QFile *a_file, bool animate)
 {
 	a_header header;
-	PolyVertex rot;
+	PolyVertex rot/*, trans*/;
 	quint32 fileSize, i, j;
 
 	a_file->read((char *)&fileSize, 4);
@@ -216,6 +216,7 @@ bool FieldModelFilePC::open_a(QFile *a_file, bool animate)
 	for(i=0 ; i<header.frames_count ; ++i)
 	{
 		if(!a_file->seek(a_file->pos()+24))	return false;
+//		if(a_file->read((char *)&trans, 12)!=12)	return false;
 
 		QList<PolyVertex> rotation_coords;
 
@@ -225,6 +226,7 @@ bool FieldModelFilePC::open_a(QFile *a_file, bool animate)
 			rotation_coords.append(rot);
 		}
 		_frames.insert(i, rotation_coords);
+//		_framesTrans.insert(i, QList<PolyVertex>() << trans);
 	}
 	return true;
 }

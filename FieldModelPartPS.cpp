@@ -109,10 +109,10 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 		_textures.append(texInfo);
 
-		qDebug() << "ADDTEXTURE" << i;
-		qDebug() << "type" << texInfo.type << "bpp" << texInfo.bpp;
-		qDebug() << "imgX" << texInfo.imgX << "imgY" << texInfo.imgY << "u1" << u1;
-		qDebug() << "palX" << texInfo.palX << "palY" << texInfo.palY << "u2" << u2;
+//		qDebug() << "ADDTEXTURE" << i;
+//		qDebug() << "type" << texInfo.type << "bpp" << texInfo.bpp;
+//		qDebug() << "imgX" << texInfo.imgX << "imgY" << texInfo.imgY << "u1" << u1;
+//		qDebug() << "palX" << texInfo.palX << "palY" << texInfo.palY << "u2" << u2;
 
 		_groups.append(new FieldModelGroup(i));
 	}

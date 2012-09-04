@@ -25,7 +25,7 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
 {
 	setMinimumSize(640, 480);
 //	setAutoFillBackground(false);
-	arrow = QPixmap(":/images/field-arrow-red.png");
+//	arrow = QPixmap(":/images/field-arrow-red.png");
 }
 
 void WalkmeshWidget::clear()
@@ -96,14 +96,6 @@ void WalkmeshWidget::paintGL()
 
 	glTranslatef(xTrans, yTrans, distance);
 
-//	glBegin(GL_QUADS);
-//	glColor3ub(255, 0, 0);
-//	glVertex3f(0.0f, 0.0f, 1.0f);
-//	glVertex3f(9.0f/256.0f, 0.0f, 1.0f);
-//	glVertex3f(9.0f/256.0f, 6.0f/256.0f, 1.0f);
-//	glVertex3f(0.0f, 6.0f/256.0f, 1.0f);
-//	glEnd();
-
 //	QPainter painter;
 //	painter.begin(this);
 //	painter.setRenderHint(QPainter::Antialiasing);
@@ -151,6 +143,41 @@ void WalkmeshWidget::paintGL()
 	}
 
 	if(walkmesh->isOpen()) {
+
+//		if(infFile && infFile->isOpen()) {
+//			glBegin(GL_QUADS);
+//			glColor3ub(255, 0, 0);
+
+//			float arrowW, arrowH;
+//			if(width() < height()) {
+//				arrowW = width() * 9.0f / 320.0f;
+//				arrowH = width() * 6.0f / 320.0f;
+//			} else {
+//				arrowW = height() * 9.0f / 240.0f;
+//				arrowH = height() * 6.0f / 240.0f;
+//			}
+
+//			int gateID=0;
+//			foreach(const Exit &gate, infFile->exitLines()) {
+//				if(gate.fieldID != 0x7FFF && infFile->arrowIsDisplayed(gateID)) {
+//					Vertex_s vertex1, vertex2, vertex3;
+//					vertex1 = gate.exit_line[0];
+//					vertex2 = gate.exit_line[1];
+//					vertex3.x = ((vertex1.x - vertex2.x) / 2.0f) / 4096.0f;
+//					vertex3.y = ((vertex1.y - vertex2.y) / 2.0f) / 4096.0f;
+//					vertex3.z = ((vertex1.z - vertex2.z) / 2.0f) / 4096.0f;
+
+//					glVertex3f(vertex1.x, vertex1.y, vertex3.z);
+//					glVertex3f(vertex1.x, vertex2.y, vertex3.z);
+//					glVertex3f(vertex2.x, vertex1.y, vertex3.z);
+//					glVertex3f(vertex2.x, vertex2.y, vertex3.z);
+//				}
+//				++gateID;
+//			}
+
+//			glEnd();
+//		}
+
 
 		/*glBegin(GL_LINES);
 		glColor3f(0.0, 0.0, 1.0);

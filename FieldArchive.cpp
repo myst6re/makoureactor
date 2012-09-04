@@ -175,11 +175,11 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 
 	// use data from the cache
 	if(unlzs && fieldDataIsCached(field)) {
-		qDebug() << "FieldArchive use field data from cache" << field->getName();
+//		qDebug() << "FieldArchive use field data from cache" << field->getName();
 		return fieldDataCache;
-	} else {
+	}/* else {
 		qDebug() << "FieldArchive don't use field data from cache" << field->getName() << unlzs;
-	}
+	}*/
 
 	if(isDatFile()) {
 		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))		return QByteArray();
