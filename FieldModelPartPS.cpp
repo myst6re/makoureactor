@@ -102,10 +102,10 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 		texInfo.bpp		= (flag >> 6) & 0x03;					// 0000 0000 0000 0000 0000 0000 1100 0000
 		texInfo.imgX	= /*512 + */((flag >> 8) & 0x0f) * 64;		// 0000 0000 0000 0000 0000 1111 0000 0000
 		texInfo.imgY	= /*256 + */((flag >> 12) & 0x01) * 256;	// 0000 0000 0000 0000 0001 0000 0000 0000
-		quint8 u1		= ((flag >> 13) & 0x07);
+//		quint8 u1		= ((flag >> 13) & 0x07);
 		texInfo.palX	= /*512 + */((flag >> 16) & 0x3F) * 16;		// 0000 0000 0011 1111 0000 0000 0000 0000
 		texInfo.palY	= /*256 + */((flag >> 22) & 0x01FF);		// 0111 1111 1100 0000 0000 0000 0000 0000
-		quint8 u2		= ((flag >> 31) & 0x01);
+//		quint8 u2		= ((flag >> 31) & 0x01);
 
 		_textures.append(texInfo);
 
