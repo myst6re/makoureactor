@@ -5741,7 +5741,7 @@ Are you sure you want to continue?</translation>
     <message>
         <location filename="VarManager.cpp" line="53"/>
         <source>Adresse</source>
-        <translation>Adress</translation>
+        <translation type="unfinished">Address</translation>
     </message>
     <message>
         <location filename="VarManager.cpp" line="53"/>
@@ -5751,7 +5751,7 @@ Are you sure you want to continue?</translation>
     <message>
         <location filename="VarManager.cpp" line="64"/>
         <source>Adresses utilisées</source>
-        <translation>Adresses used</translation>
+        <translation type="unfinished">Addresses used</translation>
     </message>
     <message>
         <location filename="VarManager.cpp" line="65"/>
