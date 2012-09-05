@@ -207,6 +207,7 @@ void Data::charlgp_loadListPos(QFile *char_file)
 		QString fileName;
 		quint32 filePos;
 		QByteArray charToc = char_file->read(27 * nbFiles);
+		if(charToc.size() != 27 * nbFiles)	return;
 		const char *charTocData = charToc.constData();
 		charlgp_listPos.reserve(nbFiles);
 
@@ -239,8 +240,8 @@ void Data::charlgp_loadAnimBoneCount()
 					i.next();
 					if(i.key().endsWith(".a", Qt::CaseInsensitive)) {
 						QCoreApplication::processEvents();
-						char_file.seek(i.value()+32);
-						char_file.read((char *)&boneCount, 4);
+						if(!char_file.seek(i.value()+32))	break;
+						if(char_file.read((char *)&boneCount, 4) != 4)	break;
 						charlgp_animBoneCount.insert(i.key().toLower(), boneCount);
 					}
 				}

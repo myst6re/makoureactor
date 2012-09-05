@@ -77,7 +77,7 @@ public:
 	static Opcode *copyOpcode(Opcode *opcode);
 private:
 	OpcodeJump *convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok=0) const;
-	bool verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const;
+//	bool verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const;
 	QList<Opcode *> opcodes;
 	QList<Opcode *> expandedItems;
 	QString lastError;

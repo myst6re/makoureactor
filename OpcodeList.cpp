@@ -283,7 +283,9 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 			if((id>=0x14 && id<=0x19) || (id>=0x30 && id<=0x32) || id==0xcb || id==0xcc)
 			{
 				item->setForeground(0, QColor(0x00,0x66,0xcc));
-				indent.append(((OpcodeJump *)curOpcode)->label());
+				if(!((OpcodeJump *)curOpcode)->isBadJump()) {
+					indent.append(((OpcodeJump *)curOpcode)->label());
+				}
 				parentItem = item;
 			}
 			else if(id>=0x01 && id<=0x07)

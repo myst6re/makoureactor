@@ -1134,7 +1134,7 @@ void OpcodeSPECIAL::setTextID(quint8 textID)
 }
 
 OpcodeJump::OpcodeJump() :
-	_jump(0), _label(0)
+	_jump(0), _label(0), _badJump(false)
 {
 }
 
@@ -1156,6 +1156,17 @@ quint32 OpcodeJump::label() const
 void OpcodeJump::setLabel(quint32 label)
 {
 	_label = label;
+	_badJump = false;
+}
+
+bool OpcodeJump::isBadJump() const
+{
+	return _badJump;
+}
+
+void OpcodeJump::setBadJump(bool badJump)
+{
+	_badJump = badJump;
 }
 
 bool OpcodeJump::isJump() const
@@ -1216,8 +1227,10 @@ void OpcodeJMPF::setParams(const QByteArray &params)
 
 QString OpcodeJMPF::toString() const
 {
-	return QObject::tr("Aller au label %1")
-			.arg(_label);
+	return _badJump ? QObject::tr("Avancer de %1 octet%2")
+					  .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+					: QObject::tr("Aller au label %1")
+					  .arg(_label);
 }
 
 QByteArray OpcodeJMPF::params() const
@@ -1246,8 +1259,10 @@ void OpcodeJMPFL::setParams(const QByteArray &params)
 
 QString OpcodeJMPFL::toString() const
 {
-	return QObject::tr("Aller au label %1")
-			.arg(_label);
+	return _badJump ? QObject::tr("Avancer de %1 octet%2")
+					  .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+					: QObject::tr("Aller au label %1")
+					  .arg(_label);
 }
 
 QByteArray OpcodeJMPFL::params() const
@@ -1274,8 +1289,10 @@ void OpcodeJMPB::setParams(const QByteArray &params)
 
 QString OpcodeJMPB::toString() const
 {
-	return QObject::tr("Aller au label %1")
-			.arg(int(_label));
+	return _badJump ? QObject::tr("Reculer de %1 octet%2")
+					  .arg(-_jump).arg(-_jump > 1 ? QObject::tr("s") : QString())
+					: QObject::tr("Aller au label %1")
+					  .arg(_label);
 }
 
 QByteArray OpcodeJMPB::params() const
@@ -1304,8 +1321,10 @@ void OpcodeJMPBL::setParams(const QByteArray &params)
 
 QString OpcodeJMPBL::toString() const
 {
-	return QObject::tr("Aller au label %1")
-			.arg(_label);
+	return _badJump ? QObject::tr("Reculer de %1 octet%2")
+					  .arg(-_jump).arg(-_jump > 1 ? QObject::tr("s") : QString())
+					: QObject::tr("Aller au label %1")
+					  .arg(_label);
 }
 
 QByteArray OpcodeJMPBL::params() const
@@ -1353,11 +1372,14 @@ void OpcodeIFUB::setParams(const QByteArray &params)
 
 QString OpcodeIFUB::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label)
+			.arg(_badJump
+				 ? QObject::tr("avancer de %1 octet%2 sinon")
+				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1395,11 +1417,14 @@ void OpcodeIFUBL::setParams(const QByteArray &params)
 
 QString OpcodeIFUBL::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label)
+			.arg(_badJump
+				 ? QObject::tr("avancer de %1 octet%2 sinon")
+				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1439,11 +1464,14 @@ void OpcodeIFSW::setParams(const QByteArray &params)
 
 QString OpcodeIFSW::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label)
+			.arg(_badJump
+				 ? QObject::tr("avancer de %1 octet%2 sinon")
+				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1485,11 +1513,14 @@ void OpcodeIFSWL::setParams(const QByteArray &params)
 
 QString OpcodeIFSWL::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label)
+			.arg(_badJump
+				 ? QObject::tr("avancer de %1 octet%2 sinon")
+				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1530,11 +1561,14 @@ void OpcodeIFUW::setParams(const QByteArray &params)
 
 QString OpcodeIFUW::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label)
+			.arg(_badJump
+				 ? QObject::tr("avancer de %1 octet%2 sinon")
+				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1576,11 +1610,14 @@ void OpcodeIFUWL::setParams(const QByteArray &params)
 
 QString OpcodeIFUWL::toString() const
 {
-	return QObject::tr("Si %1 %3 %2%5 (aller au label %4 sinon)")
+	return QObject::tr("Si %1 %3 %2%5 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
-			.arg(_label)
+			.arg(_badJump
+				 ? QObject::tr("avancer de %1 octet%2 sinon")
+				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
 
@@ -1860,14 +1897,42 @@ QByteArray OpcodeBGMOVIE::params() const
 	return QByteArray().append((char)disabled);
 }
 
-OpcodeKAWAIEYETX::OpcodeKAWAIEYETX(const QByteArray &params) :
-	OpcodeUnknown(0x00, params)
+OpcodeKAWAIEYETX::OpcodeKAWAIEYETX(const QByteArray &params)
 {
+	setParams(params);
+}
+
+quint8 OpcodeKAWAIEYETX::size() const
+{
+	return 5 + data.size();
+}
+
+void OpcodeKAWAIEYETX::setParams(const QByteArray &params)
+{
+	eyeID1 = (quint8)params.at(0);
+	eyeID2 = (quint8)params.at(1);
+	mouthID = (quint8)params.at(2);
+	objectID = (quint8)params.at(3);
+	data = params.mid(4);
 }
 
 QString OpcodeKAWAIEYETX::toString() const
 {
-	return QObject::tr("EYETX : Changer l'état de la texture des yeux ou de la bouche");
+	return QObject::tr("Changer l'état de la texture des yeux ou de la bouche (oeil 1=%1, oeil 2=%2, bouche=%3, ID objet 3D=%4)")
+			.arg(eyeID1)
+			.arg(eyeID2)
+			.arg(mouthID)
+			.arg(objectID);
+}
+
+QByteArray OpcodeKAWAIEYETX::params() const
+{
+	return QByteArray()
+			.append((char)eyeID1)
+			.append((char)eyeID2)
+			.append((char)mouthID)
+			.append((char)objectID)
+			.append(data);
 }
 
 OpcodeKAWAITRNSP::OpcodeKAWAITRNSP(const QByteArray &params)
@@ -1882,7 +1947,7 @@ quint8 OpcodeKAWAITRNSP::size() const
 
 void OpcodeKAWAITRNSP::setParams(const QByteArray &params)
 {
-	enableTransparency = params.at(0);
+	enableTransparency = (quint8)params.at(0);
 	data = params.mid(1);
 }
 
@@ -1895,18 +1960,55 @@ QString OpcodeKAWAITRNSP::toString() const
 QByteArray OpcodeKAWAITRNSP::params() const
 {
 	return QByteArray()
-			.append(enableTransparency)
+			.append((char)enableTransparency)
 			.append(data);
 }
 
-OpcodeKAWAIAMBNT::OpcodeKAWAIAMBNT(const QByteArray &params) :
-	OpcodeUnknown(0x02, params)
+OpcodeKAWAIAMBNT::OpcodeKAWAIAMBNT(const QByteArray &params)
 {
+	setParams(params);
+}
+
+quint8 OpcodeKAWAIAMBNT::size() const
+{
+	return 8 + data.size();
+}
+
+void OpcodeKAWAIAMBNT::setParams(const QByteArray &params)
+{
+	r1 = (quint8)params.at(0);
+	r2 = (quint8)params.at(1);
+	g1 = (quint8)params.at(2);
+	g2 = (quint8)params.at(3);
+	b1 = (quint8)params.at(4);
+	b2 = (quint8)params.at(5);
+	flags = (quint8)params.at(6);
+	data = params.mid(7);
 }
 
 QString OpcodeKAWAIAMBNT::toString() const
 {
-	return QObject::tr("AMBNT");
+	return QObject::tr("Change la couleur ambiante du modèle : RVB(%1, %2, %3) RVB(%4, %5, %6) (flags=%7)")
+			.arg(r1)
+			.arg(g1)
+			.arg(b1)
+			.arg(r2)
+			.arg(g2)
+			.arg(b2)
+			.arg(flags);
+}
+
+QByteArray OpcodeKAWAIAMBNT::params() const
+{
+	return QByteArray()
+			.append((char)r1)
+			.append((char)r2)
+			.append((char)g1)
+			.append((char)g2)
+			.append((char)b1)
+			.append((char)b2)
+			.append((char)flags)
+			.append(data);
 }
 
 OpcodeKAWAILIGHT::OpcodeKAWAILIGHT(const QByteArray &params) :
@@ -2275,9 +2377,12 @@ OpcodeIFKEY::OpcodeIFKEY(const OpcodeIfKey &op) :
 
 QString OpcodeIFKEY::toString() const
 {
-	return QObject::tr("Si appuie sur la touche %1 (aller au label %2 sinon)")
+	return QObject::tr("Si appuie sur la touche %1 (%2)")
 			.arg(keyString())
-			.arg(_label);
+			.arg(_badJump
+				 ? QObject::tr("avancer de %1 octet%2 sinon")
+				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
 OpcodeIFKEYON::OpcodeIFKEYON(const QByteArray &params) :
@@ -2292,9 +2397,12 @@ OpcodeIFKEYON::OpcodeIFKEYON(const OpcodeIfKey &op) :
 
 QString OpcodeIFKEYON::toString() const
 {
-	return QObject::tr("Si appuie sur la touche %1 une fois (aller au label %2 sinon)")
+	return QObject::tr("Si appuie sur la touche %1 une fois (%2)")
 			.arg(keyString())
-			.arg(_label);
+			.arg(_badJump
+				 ? QObject::tr("avancer de %1 octet%2 sinon")
+				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
 OpcodeIFKEYOFF::OpcodeIFKEYOFF(const QByteArray &params) :
@@ -2309,9 +2417,12 @@ OpcodeIFKEYOFF::OpcodeIFKEYOFF(const OpcodeIfKey &op) :
 
 QString OpcodeIFKEYOFF::toString() const
 {
-	return QObject::tr("Si relache la touche %1 pour la première fois (aller au label %2 sinon)")
+	return QObject::tr("Si relache la touche %1 pour la première fois (%2)")
 			.arg(keyString())
-			.arg(_label);
+			.arg(_badJump
+				 ? QObject::tr("avancer de %1 octet%2 sinon")
+				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
 OpcodeUC::OpcodeUC(const QByteArray &params)
@@ -6493,9 +6604,12 @@ OpcodeIFPRTYQ::OpcodeIFPRTYQ(const QByteArray &params) :
 
 QString OpcodeIFPRTYQ::toString() const
 {
-	return QObject::tr("Si %1 est dans l'équipe actuelle (aller au label %2 sinon)")
+	return QObject::tr("Si %1 est dans l'équipe actuelle (%2)")
 			.arg(_personnage(charID))
-			.arg(_label);
+			.arg(_badJump
+				 ? QObject::tr("avancer de %1 octet%2 sinon")
+				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
 OpcodeIFMEMBQ::OpcodeIFMEMBQ(const QByteArray &params) :
@@ -6505,9 +6619,12 @@ OpcodeIFMEMBQ::OpcodeIFMEMBQ(const QByteArray &params) :
 
 QString OpcodeIFMEMBQ::toString() const
 {
-	return QObject::tr("Si %1 existe (aller au label %2 sinon)")
+	return QObject::tr("Si %1 existe (%2)")
 			.arg(_personnage(charID))
-			.arg(_label);
+			.arg(_badJump
+				 ? QObject::tr("avancer de %1 octet%2 sinon")
+				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
 OpcodeMMBUD::OpcodeMMBUD(const QByteArray &params)

@@ -71,6 +71,7 @@
 
 class SpinBoxDelegate : public QItemDelegate
 {
+	Q_OBJECT
 public:
 	SpinBoxDelegate(QObject *parent = 0);
 

@@ -132,8 +132,9 @@ bool FieldModelFilePC::open_hrc(QFile *hrc_file, QMultiMap<int, QStringList> &rs
 	bool ok;
 	quint32 boneID=0, fileSize;
 
-	hrc_file->read((char *)&fileSize, 4);
+	if(hrc_file->read((char *)&fileSize, 4) != 4)	return false;
 	fileSize += hrc_file->pos();
+	if(hrc_file->size() < fileSize)		return false;
 
 	QString line;
 	quint32 nb_bones=0;
@@ -199,8 +200,10 @@ bool FieldModelFilePC::open_a(QFile *a_file, bool animate)
 	PolyVertex rot/*, trans*/;
 	quint32 fileSize, i, j;
 
-	a_file->read((char *)&fileSize, 4);
+	if(a_file->read((char *)&fileSize, 4) != 4)	return false;
 	fileSize += a_file->pos();
+
+	if(a_file->size() < fileSize)		return false;
 
 	if(a_file->read((char *)&header, 36)!=36
 	   || header.frames_count==0 || a_file->pos()+header.frames_count*(24+12*header.bones_count)>fileSize)
@@ -239,10 +242,12 @@ QString FieldModelFilePC::open_rsd(QFile *rsd_file, int boneID)
 	int index;
 	bool ok;
 
-	rsd_file->read((char *)&fileSize, 4);
+	if(rsd_file->read((char *)&fileSize, 4) != 4)	return false;
 	fileSize += rsd_file->pos();
 
-	while(rsd_file->pos()<fileSize)
+	if(rsd_file->size() < fileSize)		return false;
+
+	while(rsd_file->pos() < fileSize)
 	{
 		line = QString(rsd_file->readLine(fileSize-rsd_file->pos()+1)).trimmed();
 		if(pname.isNull() && (line.startsWith(QString("PLY=")) || line.startsWith(QString("MAT=")) || line.startsWith(QString("GRP="))))
@@ -284,8 +289,8 @@ QPixmap FieldModelFilePC::open_tex(QFile *tex_file)
 {
 	quint32 fileSize, l, h, nbPal, entreesPal, bitPerPx;
 
-	tex_file->read((char *)&fileSize, 4);
-	if(fileSize<236)	return QPixmap();
+	if(tex_file->read((char *)&fileSize, 4) != 4)			return QPixmap();
+	if(tex_file->size() < fileSize || fileSize < 236)		return QPixmap();
 
 	tex_file->seek(tex_file->pos()+48);
 	tex_file->read((char *)&nbPal, 4);
@@ -306,7 +311,9 @@ QPixmap FieldModelFilePC::open_tex(QFile *tex_file)
 
 	if(nbPal > 0)
 	{
-		int sizePal = entreesPal*4*nbPal;
+		if(bitPerPx != 1)	return QPixmap();
+
+		quint32 sizePal = entreesPal*4*nbPal;
 		char paletteData[sizePal];
 		if(tex_file->read(paletteData, sizePal)==sizePal && tex_file->read(imageData, size)==size)
 		{
@@ -315,6 +322,9 @@ QPixmap FieldModelFilePC::open_tex(QFile *tex_file)
 			for(i=0 ; i<size ; ++i)
 			{
 				index = ((quint8)imageData[i])*4;
+				if(index+3 >= sizePal) {
+					return QPixmap();
+				}
 				pixels[x + y*l] = qRgba(paletteData[index+2], paletteData[index+1], paletteData[index], paletteData[index+3]);
 
 				if(++x==l)
@@ -327,6 +337,8 @@ QPixmap FieldModelFilePC::open_tex(QFile *tex_file)
 	}
 	else
 	{
+		if(bitPerPx != 2)	return QPixmap();
+
 		if(tex_file->read(imageData, size)==size)
 		{
 			quint16 color;

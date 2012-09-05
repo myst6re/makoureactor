@@ -483,6 +483,8 @@ public:
 	void setJump(qint32 jump);
 	quint32 label() const;
 	void setLabel(quint32 label);
+	bool isBadJump() const;
+	void setBadJump(bool badJump);
 	bool isJump() const;
 	virtual bool isLongJump() const=0;
 	qint32 maxJump() const;
@@ -490,6 +492,7 @@ public:
 protected:
 	qint32 _jump;
 	quint32 _label;
+	bool _badJump;
 };
 
 class OpcodeLabel : public Opcode {
@@ -731,10 +734,16 @@ public:
 	quint8 disabled;
 };
 
-class OpcodeKAWAIEYETX : public OpcodeUnknown {
+class OpcodeKAWAIEYETX : public Opcode {
 public:
 	explicit OpcodeKAWAIEYETX(const QByteArray &params);
+	inline int id() const { return 0x00; }
+	quint8 size() const;
 	QString toString() const;
+	void setParams(const QByteArray &params);
+	QByteArray params() const;
+	quint8 eyeID1, eyeID2, mouthID, objectID;
+	QByteArray data;
 };
 
 class OpcodeKAWAITRNSP : public Opcode {
@@ -749,10 +758,17 @@ public:
 	QByteArray data;
 };
 
-class OpcodeKAWAIAMBNT : public OpcodeUnknown {
+class OpcodeKAWAIAMBNT : public Opcode {
 public:
 	explicit OpcodeKAWAIAMBNT(const QByteArray &params);
+	inline int id() const { return 0x02; }
+	quint8 size() const;
 	QString toString() const;
+	void setParams(const QByteArray &params);
+	QByteArray params() const;
+	quint8 r1, r2, g1, g2, b1, b2;
+	quint8 flags;
+	QByteArray data;
 };
 
 class OpcodeKAWAILIGHT : public OpcodeUnknown {

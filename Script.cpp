@@ -34,7 +34,7 @@ Script::~Script()
 
 bool Script::openScript(const QByteArray &script)
 {
-	int pos = 0, scriptSize = script.size();
+	int pos = 0, scriptSize = script.size(), opcodeID=1;
 	Opcode *op;
 	QList<int> positions;
 	QMultiMap<int, OpcodeJump *> indents;
@@ -46,8 +46,10 @@ bool Script::openScript(const QByteArray &script)
 		positions.append(pos);
 		if(op->isJump()) {
 			indents.insert(pos + ((OpcodeJump *)op)->jump(), (OpcodeJump *)op);
+//			qDebug() << opcodeID << "jump to" << (pos + ((OpcodeJump *)op)->jump());
 		}
 		pos += op->size();
+		++opcodeID;
 	}
 	positions.append(pos);
 
@@ -58,14 +60,36 @@ bool Script::openScript(const QByteArray &script)
 		int index;
 		if((index = positions.indexOf(jump)) != -1) {
 			opcodes.insert(index, new OpcodeLabel(i+1));
-
+//			qDebug() << (index+1) << "label" << (i+1);
 			foreach(OpcodeJump *opJump, indents.values(jump)) {
 				opJump->setLabel(i+1);
 			}
 		} else {
 			qWarning() << "Error" << jump << "label" << (i+1);
-			return false;
+			foreach(OpcodeJump *opJump, indents.values(jump)) {
+				opJump->setBadJump(true);
+			}
+//			return false;
+			/*int opID=0;
+			bool repaired=false;
+			foreach(const int &pos, positions) {
+				if(pos > jump) {
+					// Repair bad jump: Insert label to the nearest valid position
+					opcodes.insert(opID, new OpcodeLabel(i+1));
+//					qDebug() << (opID+1) << "repair label" << (i+1);
+					repaired = true;
+					break;
+				}
+				++opID;
+			}
+			if(!repaired) {
+				// Repair bad jump: Put label at the end
+				opcodes.append(new OpcodeLabel(i+1));
+//				qDebug() << "repair label" << (i+1);
+			}*/
 		}
+
+
 	}
 
 	return true;
@@ -600,55 +624,55 @@ Opcode *Script::copyOpcode(Opcode *opcode)
 
 int Script::posReturn(const QByteArray &script)
 {
-	quint16 pos=0, longueur, param16;
+	quint16 pos=0, size, param16;
 	int scriptSize = script.size();
-	quint8 clef;
+	quint8 key;
 	
 	if(scriptSize <= 0)	return -1;
 	
 	while(pos < scriptSize)
 	{
-		longueur = 0;
-		switch(clef = (quint8)script.at(pos))
+		size = 0;
+		switch(key = (quint8)script.at(pos))
 		{
-		case 0x10://Saut
+		case 0x10://Jump
 			pos += (quint8)script.at(pos+1) - 1;
 			break;
-		case 0x11://Saut
+		case 0x11://Jump
 			memcpy(&param16, script.mid(pos+1,2), 2);
 			pos += param16 - 1;
 			break;
-		case 0x14://If -> Saut
+		case 0x14://If -> Jump
 			pos += (quint8)script.at(pos+5) - 1;
 			break;
-		case 0x15://If -> Saut
+		case 0x15://If -> Jump
 			memcpy(&param16, script.mid(pos+5,2), 2);
 			pos += param16 - 1;
 			break;
-		case 0x16:case 0x18://If -> Saut
-					pos += (quint8)script.at(pos+7) - 1;
+		case 0x16:case 0x18://If -> Jump
+			pos += (quint8)script.at(pos+7) - 1;
 			break;
-		case 0x17:case 0x19://If -> Saut
-					memcpy(&param16, script.mid(pos+7,2), 2);
+		case 0x17:case 0x19://If -> Jump
+			memcpy(&param16, script.mid(pos+7,2), 2);
 			pos += param16 - 1;
 			break;
 		case 0x0F://SPECIAL
 			switch((quint8)script.at(pos+1))
 			{
 			case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
-						longueur = 1;
+				size = 1;
 				break;
 			case 0xF8:case 0xFD:
-						longueur = 2;
+				size = 2;
 				break;
 			}
 			break;
 		case 0x28://KAWAI
-			longueur = (quint8)script.at(pos+1);
+			size = (quint8)script.at(pos+1);
 			break;
 		}
-		pos += Opcode::length[clef] + longueur;
-		if(clef == 0x00 || clef == 0x07)	break;
+		pos += Opcode::length[key] + size;
+		if(key == 0x00 || key == 0x07)	break;
 	}
 	
 	return pos;
@@ -716,7 +740,7 @@ OpcodeJump *Script::convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok)
 
 	return opcodeJump;
 }
-
+/*
 bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const
 {
 	// Warning: this can change the opcode size when converted
@@ -764,7 +788,7 @@ bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) co
 	return true;
 
 	// Optimization: if this is a short jump and opcode is a long jump
-//	if(opcodeJump->isLongJump() && jump/* - opcodeJump->jumpPosData()*/ <= 240) {
+//	if(opcodeJump->isLongJump() && jump/* - opcodeJump->jumpPosData() <= 240) {
 //		switch((Opcode::Keys)opcodeJump->id()) {
 //		case Opcode::JMPFL:
 //			qDebug() << "convert" << opcodeJump->name() << "to JMPF because" << jump << "<=" << 240;
@@ -787,7 +811,7 @@ bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) co
 //	}
 
 //	return true;
-}
+}*/
 
 bool Script::compile(int &opcodeID, QString &errorStr)
 {
@@ -815,6 +839,10 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 	foreach(Opcode *opcode, opcodes) {
 		if(opcode->isJump()) {
 			OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
+			if(opcodeJump->isBadJump()) {
+				errorStr = QObject::tr("Ce saut est invalide, veuillez mettre un label valide.");
+				return false;
+			}
 			qint32 jump = labelPositions.value(opcodeJump->label()) - pos;
 			opcodeJump->setJump(jump);
 

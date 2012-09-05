@@ -22,6 +22,7 @@
 
 class ColorDisplay : public QWidget
 {
+	Q_OBJECT
 public:
 	explicit ColorDisplay(QWidget *parent=0);
 	void setColors(const QList<QRgb> &colors);

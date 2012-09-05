@@ -23,6 +23,7 @@
 
 class ApercuBGLabel : public QLabel
 {
+	Q_OBJECT
 public:
 	explicit ApercuBGLabel(const QString &name, QWidget *parent=0);
 private:

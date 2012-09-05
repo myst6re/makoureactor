@@ -23,7 +23,7 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
 	camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
 	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0)
 {
-	setMinimumSize(640, 480);
+	setMinimumSize(320, 240);
 //	setAutoFillBackground(false);
 //	arrow = QPixmap(":/images/field-arrow-red.png");
 }

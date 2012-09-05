@@ -349,8 +349,10 @@ int TutFile::akaoID(int tutID) const
 {
 	if(isTut(tutID))	return -1;
 
+	QByteArray data = tutos.value(tutID);
+	if(data.size() < 6)		return -1;
 	quint16 id;
-	memcpy(&id, &(tutos.value(tutID).constData()[4]), 2);
+	memcpy(&id, &(data.constData()[4]), 2);
 
 	return id;
 }

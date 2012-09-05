@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "KeyEditorDialog.h"
+#include "Data.h"
 
 KeyEditorDialog::KeyEditorDialog(quint16 value, QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)

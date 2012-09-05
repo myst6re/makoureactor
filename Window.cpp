@@ -61,11 +61,11 @@ Window::Window() :
 	menu->addAction(tr("&Gestionnaire de variables..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
 	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("Rec&hercher..."), this, SLOT(searchManager()), QKeySequence("Ctrl+F"));
 	actionText = menu->addAction(tr("&Textes..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
-	actionModels = menu->addAction(tr("&Modèles 3D..."), this, SLOT(modelManager()));
-	actionEncounter = menu->addAction(tr("&Rencontres aléatoires..."), this, SLOT(encounterManager()));
-	actionTut = menu->addAction(tr("&Tutoriels/Musiques..."), this, SLOT(tutManager()));
-	actionWalkmesh = menu->addAction(tr("&Zones..."), this, SLOT(walkmeshManager()));
-	actionBackground = menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()));
+	actionModels = menu->addAction(tr("&Modèles 3D..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
+	actionEncounter = menu->addAction(tr("&Rencontres aléatoires..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
+	actionTut = menu->addAction(tr("&Tutoriels/Musiques..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
+	actionWalkmesh = menu->addAction(tr("&Zones..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
+	actionBackground = menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("&Divers..."), this, SLOT(miscManager()));
 
 	menu = menuBar()->addMenu(tr("&Paramètres"));
