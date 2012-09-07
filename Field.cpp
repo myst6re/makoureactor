@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Field.h"
+#include "LZS.h"
 #include "FieldArchive.h"
 #include "FieldPC.h"
 #include "FieldPS.h"

@@ -19,7 +19,6 @@
 #define DEF_FF7TEXT
 
 #include <QtCore>
-#include "Config.h"
 
 class FF7Text
 {

@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "ApercuBGLabel.h"
+#include "Config.h"
 
 ApercuBGLabel::ApercuBGLabel(const QString &name, QWidget *parent)
 	: QLabel(parent), name(name), showSave(false)

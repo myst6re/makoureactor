@@ -20,8 +20,6 @@
 
 #include <QtGui>
 #include "FieldModelPart.h"
-#include "Data.h"
-#include "Palette.h"
 
 typedef struct {
 	float size;

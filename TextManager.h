@@ -19,8 +19,6 @@
 #define DEF_TEXTMANAGER
 
 #include "Field.h"
-#include "FF7Text.h"
-#include "TextHighlighter.h"
 #include "TextPreview.h"
 
 class TextManager : public QWidget

@@ -19,7 +19,6 @@
 #define WALKMESHMANAGER_H
 
 #include <QtGui>
-#include "FieldArchive.h"
 #include "Field.h"
 #include "WalkmeshWidget.h"
 #include "VertexWidget.h"

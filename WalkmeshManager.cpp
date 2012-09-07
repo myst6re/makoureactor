@@ -16,6 +16,8 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "WalkmeshManager.h"
+#include "Config.h"
+#include "Data.h"
 
 WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) :
 	QDialog(parent, Qt::Tool),

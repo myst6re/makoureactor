@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "ScriptEditorGenericList.h"
+#include "Delegate.h"
 
 ScriptEditorGenericList::ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent)
 	: ScriptEditorView(field, grpScript, script, opcodeID, parent)

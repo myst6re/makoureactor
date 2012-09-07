@@ -20,10 +20,8 @@
 
 #include <QtGui>
 #include "QLockedFile.h"
-#include "FieldPS.h"
-#include "FieldPC.h"
+#include "Field.h"
 #include "IsoArchive.h"
-#include "GZIP.h"
 
 class FieldArchive : public QObject, IsoControl
 {

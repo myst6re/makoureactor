@@ -20,6 +20,7 @@
 
 #include <QtCore>
 #include "FieldModelPart.h"
+#include "IdFile.h"
 
 typedef struct {
 	quint32 version;

@@ -35,6 +35,10 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Opcode.h"
+#include "FF7Text.h"
+#include "Var.h"
+#include "Data.h"
+#include "Config.h"
 
 Opcode::Opcode()
 {

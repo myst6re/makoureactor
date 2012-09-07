@@ -18,8 +18,9 @@
 #ifndef DEF_VARMANAGER
 #define DEF_VARMANAGER
 
+#include <QtGui>
+#include "FieldArchive.h"
 #include "Var.h"
-#include "Search.h"
 
 class VarManager : public QWidget
 {

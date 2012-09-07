@@ -16,6 +16,9 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TutWidget.h"
+#include "TextHighlighter.h"
+#include "Data.h"
+#include "Config.h"
 
 TutWidget::TutWidget(Field *field, TutFile *tut, TutFile *tutPC, QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), field(field), tut(tut), tutPC(tutPC), tutCpy(*tut), textChanged(false)

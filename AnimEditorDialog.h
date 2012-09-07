@@ -19,7 +19,6 @@
 #define ANIMEDITORDIALOG_H
 
 #include <QtGui>
-#include "Field.h"
 #include "FieldModel.h"
 
 class AnimEditorDialog : public QDialog

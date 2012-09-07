@@ -1,4 +1,5 @@
 #include "TdbFile.h"
+#include <QImage>
 
 TdbFile::TdbFile()
 {

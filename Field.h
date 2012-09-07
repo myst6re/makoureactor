@@ -19,10 +19,6 @@
 #define DEF_FIELD
 
 #include <QtGui>
-#include "GrpScript.h"
-#include "FF7Text.h"
-#include "Palette.h"
-#include "LZS.h"
 #include "Section1File.h"
 #include "EncounterFile.h"
 #include "TutFile.h"

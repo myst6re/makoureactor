@@ -19,8 +19,7 @@
 #define DEF_GRPSCRIPTLIST
 
 #include <QtGui>
-#include "Field.h"
-#include "GrpScript.h"
+#include "Section1File.h"
 
 class GrpScriptList : public QTreeWidget
 {

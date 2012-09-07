@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "GrpScript.h"
+#include "FF7Text.h"
 
 GrpScript::GrpScript()
 	: name(QString()), character(-1), animation(false), location(false), director(false)

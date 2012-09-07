@@ -16,6 +16,11 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldArchive.h"
+#include "FieldPS.h"
+#include "FieldPC.h"
+#include "GZIP.h"
+#include "LZS.h"
+#include "Data.h"
 
 FieldArchive::FieldArchive()
 	: fic(NULL), dir(NULL), iso(NULL), isDat(false)

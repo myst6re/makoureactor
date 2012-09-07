@@ -19,8 +19,6 @@
 #define CONFIGWINDOW_H
 
 #include <QtGui>
-#include "Data.h"
-#include "TextPreview.h"
 
 class ConfigWindow : public QDialog
 {

@@ -19,7 +19,6 @@
 #define APERCUBGLABEL_H
 
 #include <QtGui>
-#include "Config.h"
 
 class ApercuBGLabel : public QLabel
 {

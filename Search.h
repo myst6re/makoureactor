@@ -19,7 +19,6 @@
 #define DEF_SEARCH
 
 #include <QtGui>
-#include <QtTest/QTest>
 #include "FieldArchive.h"
 
 class Search : public QDialog

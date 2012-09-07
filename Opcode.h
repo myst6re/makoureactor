@@ -18,10 +18,7 @@
 #ifndef DEF_OPCODE
 #define DEF_OPCODE
 
-#include <QtGui>
-#include "FF7Text.h"
-#include "Var.h"
-#include "Data.h"
+#include <QtCore>
 
 #define B1(v)		((v>>4)&0xF)
 #define B2(v)		(v&0xF)

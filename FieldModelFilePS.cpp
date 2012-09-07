@@ -17,6 +17,11 @@
  ****************************************************************************/
 #include "FieldModelFilePS.h"
 #include "FieldArchive.h"
+#include "FieldModelPartPS.h"
+#include "FieldModelLoaderPS.h"
+#include "TdbFile.h"
+#include "Palette.h"
+#include "FieldPS.h"
 
 FieldModelFilePS::FieldModelFilePS() :
 	FieldModelFile()

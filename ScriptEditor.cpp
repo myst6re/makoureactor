@@ -16,6 +16,10 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "ScriptEditor.h"
+#include "ScriptEditorWidgets/ScriptEditorGenericList.h"
+#include "ScriptEditorWidgets/ScriptEditorStructPage.h"
+#include "ScriptEditorWidgets/ScriptEditorMathPage.h"
+#include "ScriptEditorWidgets/ScriptEditorWindowPage.h"
 
 QList<quint8> ScriptEditor::crashIfInit;
 

@@ -20,8 +20,6 @@
 
 #include <QtGui>
 #include "FieldModelFile.h"
-#include "FieldModelPartPC.h"
-#include "FieldModelLoaderPC.h"
 
 typedef struct {
 	quint32 version;

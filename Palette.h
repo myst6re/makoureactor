@@ -18,7 +18,8 @@
 #ifndef DEF_PALETTE
 #define DEF_PALETTE
 
-#include <QtGui>
+#include <QtCore>
+#include <QRgb>
 #define COEFF_COLOR	8.2258064516129032258064516129032 // 255/31
 
 class PsColor

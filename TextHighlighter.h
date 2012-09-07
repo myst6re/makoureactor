@@ -19,7 +19,6 @@
 #define TEXTHIGHLIGHTER_H
 
 #include <QtGui>
-#include "FF7Text.h"
 
 class TextHighlighter : public QSyntaxHighlighter
 {

@@ -17,6 +17,8 @@
  ****************************************************************************/
 #include "FieldPS.h"
 #include "FieldArchive.h"
+#include "Palette.h"
+#include "LZS.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchive *fieldArchive) :
 	Field(name, fieldArchive)

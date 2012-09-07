@@ -20,7 +20,6 @@
 
 #include <QtGui>
 #include "Field.h"
-#include "IsoArchive.h"
 #include "FieldModelLoaderPS.h"
 #include "FieldModelFilePS.h"
 

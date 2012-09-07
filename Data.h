@@ -3,15 +3,6 @@
 
 #include <QtCore>
 #include "FF7Text.h"
-#include "Opcode.h"
-#include "Config.h"
-#include "LZS.h"
-#ifdef Q_WS_WIN
-#include <windef.h>
-#include <winbase.h>
-#include <winerror.h>
-#include <winreg.h>
-#endif
 
 class Data
 {

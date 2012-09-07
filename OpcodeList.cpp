@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "OpcodeList.h"
+#include "ScriptEditor.h"
 
 OpcodeList::OpcodeList(QWidget *parent) :
 	QTreeWidget(parent), hasCut(false), isInit(false),

@@ -2,7 +2,7 @@
 #define TDBFILE_H
 
 #include <QtCore>
-#include <QImage>
+#include <QPixmap>
 #include "Palette.h"
 
 typedef struct {

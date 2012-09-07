@@ -20,8 +20,6 @@
 
 #include <QtCore>
 #include <QRgb>
-#include "IdFile.h"
-
 
 typedef struct {
 	float x, y, z;

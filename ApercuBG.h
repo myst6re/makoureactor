@@ -19,8 +19,7 @@
 #define DEF_APERCUBG
 
 #include <QtGui>
-#include "ApercuBGLabel.h"
-#include "BGDialog.h"
+#include "Field.h"
 
 class ApercuBG : public QScrollArea
 {

@@ -59,15 +59,7 @@
 #ifndef DELEGATE_H
 #define DELEGATE_H
 
-#include <QItemDelegate>
-#include <QModelIndex>
-#include <QObject>
-#include <QSize>
-#include <QSpinBox>
-#include "Data.h"
-#include "Config.h"
-#include "KeyEditorDialog.h"
-#include "AnimEditorDialog.h"
+#include <QtGui>
 
 class SpinBoxDelegate : public QItemDelegate
 {

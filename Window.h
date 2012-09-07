@@ -20,23 +20,16 @@
 
 #include <QtGui>
 #include "FieldArchive.h"
-#include "GrpScript.h"
 #include "VarManager.h"
 #include "TextManager.h"
+#include "BGDialog.h"
 #include "ApercuBG.h"
 #include "Search.h"
 #include "GrpScriptList.h"
 #include "ScriptList.h"
 #include "OpcodeList.h"
-#include "ModelManager.h"
 #include "FieldModel.h"
 #include "WalkmeshManager.h"
-#include "ConfigWindow.h"
-#include "EncounterWidget.h"
-#include "TutWidget.h"
-#include "MiscWidget.h"
-#include "ImportDialog.h"
-#include "MassExportDialog.h"
 
 class Window : public QMainWindow
 {

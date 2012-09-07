@@ -16,6 +16,8 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "AnimEditorDialog.h"
+#include "Config.h"
+#include "Data.h"
 
 AnimEditorDialog::AnimEditorDialog(int animID, const QGLWidget *shareWidget, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)

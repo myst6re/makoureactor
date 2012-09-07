@@ -21,12 +21,8 @@
 #include <QtGui>
 #include <QGLWidget>
 #include <GL/glu.h>
-#include "FieldModelFilePC.h"
-#include "FieldModelFilePS.h"
-#include "Data.h"
-#include "Palette.h"
-#include "FieldArchive.h"
-#include "Field.h"
+#include "FieldModelFile.h"
+#include "FieldPC.h"
 
 class FieldModel : public QGLWidget
 {

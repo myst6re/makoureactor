@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FF7Text.h"
+#include "Config.h"
 
 FF7Text::FF7Text(const QByteArray &texte)
 {

@@ -17,6 +17,8 @@
  ****************************************************************************/
 #include "Search.h"
 #include "Window.h"
+#include "Config.h"
+#include "Data.h"
 
 Search::Search(QWidget *parent)
 	: QDialog(parent, Qt::Tool),

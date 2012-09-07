@@ -21,7 +21,6 @@
 #include <QtGui>
 #include "ApercuBGLabel.h"
 #include "Field.h"
-#include "FieldArchive.h"
 
 class BGDialog : public QDialog
 {

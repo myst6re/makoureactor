@@ -19,7 +19,6 @@
 #define FIELDMODELLOADERPS_H
 
 #include <QtCore>
-#include <QRgb>
 #include "FieldModelLoader.h"
 
 typedef struct {

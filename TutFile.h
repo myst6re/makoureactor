@@ -19,9 +19,6 @@
 #define TUTFILE_H
 
 #include <QtCore>
-#include "Config.h"
-#include "FF7Text.h"
-#include "TextHighlighter.h"
 
 class TutFile
 {

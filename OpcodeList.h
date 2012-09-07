@@ -21,7 +21,6 @@
 #include <QtGui>
 #include "Field.h"
 #include "Opcode.h"
-#include "ScriptEditor.h"
 
 class OpcodeList : public QTreeWidget
 {

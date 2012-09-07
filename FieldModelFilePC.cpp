@@ -16,6 +16,9 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModelFilePC.h"
+#include "Data.h"
+#include "Palette.h"
+#include "FieldModelPartPC.h"
 
 FieldModelFilePC::FieldModelFilePC() :
 	FieldModelFile()

@@ -17,6 +17,8 @@
  ****************************************************************************/
 #include "FieldPC.h"
 #include "FieldArchive.h"
+#include "Palette.h"
+#include "LZS.h"
 
 FieldPC::FieldPC(quint32 position, const QString &name, FieldArchive *fieldArchive) :
 	Field(name, fieldArchive), position(position)

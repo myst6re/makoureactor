@@ -17,6 +17,16 @@
  ****************************************************************************/
 #include "Window.h"
 #include "parametres.h"
+#include "GrpScript.h"
+#include "ModelManager.h"
+#include "ConfigWindow.h"
+#include "EncounterWidget.h"
+#include "TutWidget.h"
+#include "MiscWidget.h"
+#include "ImportDialog.h"
+#include "MassExportDialog.h"
+#include "Config.h"
+#include "Data.h"
 
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),

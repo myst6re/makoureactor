@@ -19,8 +19,7 @@
 #define TEXTPREVIEW_H
 
 #include <QtGui>
-#include "FF7Text.h"
-#include "Script.h"
+#include "Opcode.h"
 
 #define NOWIN		255
 #define DARKGREY	0
@@ -33,7 +32,7 @@
 #define WHITE		7
 #define LEFT_PADD(w)	(w >> 5)
 #define CHAR_WIDTH(w)	(w & 0x1F)
-#include "Data.h"
+
 
 class TextPreview : public QWidget
 {

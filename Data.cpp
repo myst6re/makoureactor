@@ -1,4 +1,12 @@
 #include "Data.h"
+#include "Config.h"
+#include "LZS.h"
+#ifdef Q_WS_WIN
+#include <windef.h>
+#include <winbase.h>
+#include <winerror.h>
+#include <winreg.h>
+#endif
 
 QStringList Data::char_names;
 QStringList Data::item_names;

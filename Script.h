@@ -19,7 +19,6 @@
 #define DEF_SCRIPT
 
 #include <QtCore>
-#include "FF7Text.h"
 #include "Opcode.h"
 
 class Script

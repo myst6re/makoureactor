@@ -18,8 +18,8 @@
 #ifndef DEF_GRPSCRIPT
 #define DEF_GRPSCRIPT
 
-#include <QtGui>
-#include "FF7Text.h"
+#include <QtCore>
+#include <QColor>
 #include "Script.h"
 
 class GrpScript

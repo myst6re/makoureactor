@@ -16,6 +16,8 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "ModelManager.h"
+#include "Config.h"
+#include "Data.h"
 
 ModelManager::ModelManager(Field *field, const QGLWidget *shareWidget, QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), field((FieldPC *)field),

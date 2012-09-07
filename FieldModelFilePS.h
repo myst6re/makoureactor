@@ -20,9 +20,6 @@
 
 #include <QtGui>
 #include "FieldModelFile.h"
-#include "FieldModelPartPS.h"
-#include "FieldModelLoaderPS.h"
-#include "TdbFile.h"
 
 typedef struct {
 	quint16 num_frames;					// Number of frames

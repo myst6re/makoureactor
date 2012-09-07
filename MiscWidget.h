@@ -21,8 +21,6 @@
 #include <QtGui>
 #include "InfFile.h"
 #include "Field.h"
-#include "Data.h"
-#include "VertexWidget.h"
 
 class MiscWidget : public QDialog
 {
