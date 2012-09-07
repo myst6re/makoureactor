@@ -242,10 +242,10 @@ QString FieldModelFilePC::open_rsd(QFile *rsd_file, int boneID)
 	int index;
 	bool ok;
 
-	if(rsd_file->read((char *)&fileSize, 4) != 4)	return false;
+	if(rsd_file->read((char *)&fileSize, 4) != 4)	return QString();
 	fileSize += rsd_file->pos();
 
-	if(rsd_file->size() < fileSize)		return false;
+	if(rsd_file->size() < fileSize)		return QString();
 
 	while(rsd_file->pos() < fileSize)
 	{

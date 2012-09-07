@@ -50,6 +50,7 @@ public:
 	bool fieldDataIsCached(Field *field) const;
 	bool mimDataIsCached(Field *field) const;
 	bool modelDataIsCached(Field *field) const;
+	void clearCachedData();
 
 	bool isAllOpened();
 	QList<FF7Var> searchAllVars();

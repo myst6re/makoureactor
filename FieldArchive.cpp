@@ -312,6 +312,16 @@ bool FieldArchive::modelDataIsCached(Field *field) const
 	return modelCache && modelCache == field;
 }
 
+void FieldArchive::clearCachedData()
+{
+	fieldCache = 0;
+	mimCache = 0;
+	modelCache = 0;
+	fieldDataCache.clear();
+	mimDataCache.clear();
+	modelDataCache.clear();
+}
+
 bool FieldArchive::isAllOpened()
 {
 	foreach(Field *f, fileList) {
@@ -785,6 +795,8 @@ quint8 FieldArchive::save(QString path)
 	qint32 fieldID;
 	bool saveAs;
 
+	clearCachedData(); // Important: the file data will change
+
 	if(isDirectory() || isDatFile())
 	{
 		nbFiles = fileList.size();
@@ -800,7 +812,7 @@ quint8 FieldArchive::save(QString path)
 				QFile DATfic(isDatFile() ? fic->fileName() : dir->filePath(field->getName()+".DAT"));
 				if(!DATfic.open(QIODevice::ReadOnly)) return 1;
 				DATfic.read((char *)&fileSize,4);
-				tempFic.write(field->save(DATfic.read(fileSize), true));//nouveau fichier
+				tempFic.write(field->save(DATfic.read(fileSize), true));
 				if(!DATfic.remove()) return 4;
 				tempFic.copy(DATfic.fileName());
 			}
@@ -816,18 +828,19 @@ quint8 FieldArchive::save(QString path)
 		QMap<quint32, quint32> positions1, positions2;
 		QMap<Field *, quint32> newPositions;
 		QMap<QString, quint32> newPositionsTut;
-		QByteArray chaine, nouveauFichier;
+		QByteArray fileName, newFile;
 		QString tutName;
 
 		if(path.isNull())
 			path = fic->fileName();
 
-		saveAs = path != fic->fileName();
+		// Replace if the new path is the same as the old
+		saveAs = QFileInfo(path) != QFileInfo(*fic);
 
 		// QFile fic(this->path());
 		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))	return 1;
-		QTemporaryFile tempFic(path%".makoutemp");
-		if(!tempFic.open())		return 2;
+		QFile tempFic(path % ".makoutemp");
+		if(!tempFic.open(QIODevice::WriteOnly))		return 2;
 
 		fic->seek(12);
 		fic->read((char *)&nbFiles, 4);
@@ -836,7 +849,7 @@ quint8 FieldArchive::save(QString path)
 
 		emit nbFilesChanged(nbFiles+21);
 
-//			QTime t;t.start();
+		//QTime t;t.start();
 		//Parcourir la table des matière
 		QByteArray toc = fic->read(27 * nbFiles);
 		const char *tocData = toc.constData();
@@ -850,7 +863,7 @@ quint8 FieldArchive::save(QString path)
 		QMap<quint32, quint32>::const_iterator i = positions1.constBegin();
 		const quint32 positionFirstFile = i.key();
 
-		//	qDebug() << i.key() << (27*nbFiles + 16);//CRC size
+		// qDebug() << i.key() << (27*nbFiles + 16);//CRC size
 
 		fic->reset();
 		tempFic.write(fic->read(positionFirstFile));
@@ -869,18 +882,17 @@ quint8 FieldArchive::save(QString path)
 			pos = tempFic.pos();
 			positions2.insert(i.value(), pos);
 
-			fieldID = findField(QString(chaine = fic->read(20)));
-			if(chaine.size() != 20 || fic->read((char *)&oldtaille, 4) != 4) 	return 3;
-			tempFic.write(chaine);//Nom du fichier
-			//			qDebug() << QString(chaine);
+			fieldID = findField(QString(fileName = fic->read(20)));
+			if(fileName.size() != 20 || fic->read((char *)&oldtaille, 4) != 4) 	return 3;
+			tempFic.write(fileName);// File Name
+			// qDebug() << QString(fileName);
 
 			if(fieldID != -1)
 			{
 				Field *field = fileList.at(fieldID);
-//				qDebug() << "[FIELD]" << fieldID << field->getName();
+				// qDebug() << "[FIELD]" << fieldID << field->getName();
 
-				if(!saveAs)
-					newPositions.insert(field, pos);
+				newPositions.insert(field, pos);
 
 				//vérifier si on a pas une nouvelle version du fichier
 				if(field->isOpen() && field->isModified())
@@ -890,14 +902,14 @@ quint8 FieldArchive::save(QString path)
 					if(fic->read((char *)&fileSize, 4) != 4)	return 3;
 					if(oldtaille != fileSize+4)					return 3;
 					//Créer le nouveau fichier à partir de l'ancien
-					nouveauFichier = field->save(fic->read(fileSize), true);
+					newFile = field->save(fic->read(fileSize), true);
 
 					//Refaire les tailles
-					taille = nouveauFichier.size();
+					taille = newFile.size();
 
 					//Écrire le nouveau fichier dans le fichier temporaire
 					tempFic.write((char *)&taille, 4);//nouvelle taille
-					tempFic.write(nouveauFichier);//nouveau fichier
+					tempFic.write(newFile);//nouveau fichier
 				}
 				else
 				{
@@ -906,14 +918,13 @@ quint8 FieldArchive::save(QString path)
 					tempFic.write(fic->read(oldtaille));//Fichier
 				}
 			}
-			else if(QString(chaine).endsWith(".tut", Qt::CaseInsensitive) && tuts.contains(tutName = chaine.left(chaine.lastIndexOf('.'))))
+			else if(QString(fileName).endsWith(".tut", Qt::CaseInsensitive) && tuts.contains(tutName = fileName.left(fileName.lastIndexOf('.'))))
 			{
 				TutFile *tut = tuts.value(tutName);
 
 //				qDebug() << "[TUT]" << tutName;
 
-				if(!saveAs)
-					newPositionsTut.insert(tutName, pos);
+				newPositionsTut.insert(tutName, pos);
 
 				if(tut->isModified())
 				{
@@ -934,7 +945,7 @@ quint8 FieldArchive::save(QString path)
 			}
 			else
 			{
-//				qDebug() << "[NOTHING] unmodified" << QString(chaine);
+//				qDebug() << "[NOTHING] unmodified" << QString(fileName);
 				tempFic.write((char *)&oldtaille, 4);//Taille
 				tempFic.write(fic->read(oldtaille));//Fichier
 			}
@@ -963,42 +974,44 @@ quint8 FieldArchive::save(QString path)
 
 		emit progress(nbFiles+7);
 
-		if(saveAs)
-		{
-			fic->close();
-			//		fic->setFileName(path);
-		}
-		else
-		{
-			//création nouveau lgp
-			if(!fic->remove())	return 4;
-			// qDebug("Supprimer l'ancien Lgp : %d ms", t.elapsed());
-			// t.restart();
-			QMapIterator<Field *, quint32> fieldIt(newPositions);
-			while(fieldIt.hasNext()) {
-				fieldIt.next();
-				((FieldPC *)fieldIt.key())->setPosition(fieldIt.value());
-			}
-			//			qDebug() << tutPos << newPositionsTut;
-			QMapIterator<QString, quint32> tutIt(newPositionsTut);
-			while(tutIt.hasNext()) {
-				tutIt.next();
-				tutPos.insert(tutIt.key(), tutIt.value());
-			}
-			//			qDebug() << tutPos;
-		}
-		emit progress(nbFiles+14);
-		if(!tempFic.copy(path))	return 4;
-
+		// Remove or close the old file
 		if(!saveAs) {
-			fic->open(QIODevice::ReadOnly);// reopen archive
+			if(!fic->remove())	return 4;
+		} else {
+			fic->close();
+			fic->setFileName(path);
 		}
 
+		emit progress(nbFiles+14);
+		//t.restart();
+
+		// Move the temporary file
+		if(QFile::exists(path) && !QFile::remove(path))		return 4;
+		if(!tempFic.rename(path))			return 4;
+
+		//qDebug("Copy the temporary file: %d ms", t.elapsed());
+
+		fic->open(QIODevice::ReadOnly);// reopen archive
+
+		// t.restart();
+		// Update fieldPC positions
+		QMapIterator<Field *, quint32> fieldIt(newPositions);
+		while(fieldIt.hasNext()) {
+			fieldIt.next();
+			((FieldPC *)fieldIt.key())->setPosition(fieldIt.value());
+		}
+		// Update tut positions
+		QMapIterator<QString, quint32> tutIt(newPositionsTut);
+		while(tutIt.hasNext()) {
+			tutIt.next();
+			tutPos.insert(tutIt.key(), tutIt.value());
+		}
 		emit progress(nbFiles+21);
 
+		// Clear "isModified" state
 		setSaved();
 
-//			qDebug("Ecrire le nouvel Lgp : %d ms", t.elapsed());
+		// qDebug("Ecrire le nouvel Lgp : %d ms", t.elapsed());
 		return 0;
 	}
 	else if(isIso())
@@ -1006,7 +1019,7 @@ quint8 FieldArchive::save(QString path)
 		if(path.isNull())
 			path = iso->fileName();
 
-		saveAs = path != iso->fileName();
+		saveAs = QFileInfo(path) != QFileInfo(*iso);
 
 		IsoArchive isoTemp(path%".makoutemp");
 		if(!isoTemp.open(QIODevice::ReadWrite | QIODevice::Truncate))		return 2;
@@ -1017,7 +1030,7 @@ quint8 FieldArchive::save(QString path)
 
 		foreach(Field *field, fileList) {
 			if(field->isOpen() && field->isModified()) {
-				IsoFile *isoField = isoFieldDirectory->file(field->getName() + ".DAT");
+				IsoFile *isoField = isoFieldDirectory->file(field->getName().toUpper() + ".DAT");
 				if(isoField == NULL) {
 					continue;
 				}
@@ -1044,23 +1057,22 @@ quint8 FieldArchive::save(QString path)
 		if(!iso->pack(&isoTemp, this))
 			return 3;
 
-		// Fin
+		// End
 
-		if(saveAs)
-		{
-			iso->close();
-		}
-		else
-		{
-			//création nouveau iso
+		// Remove or close the old file
+		if(!saveAs) {
 			if(!iso->remove())	return 4;
+		} else {
+			iso->close();
+			iso->setFileName(path);
 		}
+		// Move the temporary file
+		if(QFile::exists(path) && !QFile::remove(path))		return 4;
 		isoTemp.rename(path);
 
-		if(!saveAs) {
-			if(!iso->open(QIODevice::ReadOnly))		return 4;
-		}
+		if(!iso->open(QIODevice::ReadOnly))		return 4;
 
+		// Clear "isModified" state
 		setSaved();
 
 		return 0;

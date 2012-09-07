@@ -518,22 +518,22 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 {
 	QByteArray decompresse = LZS::decompress(fileData), newData, section, toc;
 	const char *decompresseData = decompresse.constData();
-	quint32 debutSections[9], size, section_size;
+	quint32 startSections[9], size, section_size;
 
-	debutSections[0] = 42;
+	startSections[0] = 42;
 	for(quint8 i=1 ; i<9 ; ++i)
-		memcpy(&debutSections[i], &decompresseData[6+4*i], 4);
+		memcpy(&startSections[i], &decompresseData[6+4*i], 4);
 
 	// Header + pos section 1
 	toc.append(decompresseData, 10);
 
 	// Section 1 (scripts + textes + akaos/tutos)
 	if(section1 && section1->isModified()) {
-		section = section1->save(decompresse.mid(debutSections[0]+4, debutSections[1]-debutSections[0]-4));
+		section = section1->save(decompresse.mid(startSections[0]+4, startSections[1]-startSections[0]-4));
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[debutSections[0]], debutSections[1]-debutSections[0]);
+		newData.append(&decompresseData[startSections[0]], startSections[1]-startSections[0]);
 	}
 
 	size = 42 + newData.size();
@@ -545,7 +545,7 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[debutSections[1]], debutSections[2]-debutSections[1]);
+		newData.append(&decompresseData[startSections[1]], startSections[2]-startSections[1]);
 	}
 
 	size = 42 + newData.size();
@@ -557,14 +557,14 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[debutSections[2]], debutSections[3]-debutSections[2]);
+		newData.append(&decompresseData[startSections[2]], startSections[3]-startSections[2]);
 	}
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);
 	
 	// Section 4 (background palette PC)
-	newData.append(&decompresseData[debutSections[3]], debutSections[4]-debutSections[3]);
+	newData.append(&decompresseData[startSections[3]], startSections[4]-startSections[3]);
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);
@@ -575,14 +575,14 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[debutSections[4]], debutSections[5]-debutSections[4]);
+		newData.append(&decompresseData[startSections[4]], startSections[5]-startSections[4]);
 	}
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);
 
 	// Section 6 (background tileMap -unused-)
-	newData.append(&decompresseData[debutSections[5]], debutSections[6]-debutSections[5]);
+	newData.append(&decompresseData[startSections[5]], startSections[6]-startSections[5]);
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);
@@ -594,7 +594,7 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[debutSections[6]], debutSections[7]-debutSections[6]);
+		newData.append(&decompresseData[startSections[6]], startSections[7]-startSections[6]);
 	}
 
 	size = 42 + newData.size();
@@ -607,14 +607,14 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[debutSections[7]], debutSections[8]-debutSections[7]);
+		newData.append(&decompresseData[startSections[7]], startSections[8]-startSections[7]);
 	}
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);
 
 	// Section 9 (background PC)
-	newData.append(decompresse.mid(debutSections[8]));
+	newData.append(decompresse.mid(startSections[8]));
 
 	newData.prepend(toc);
 

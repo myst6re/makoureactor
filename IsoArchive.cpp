@@ -140,7 +140,7 @@ IsoFileOrDirectory *IsoDirectory::fileOrDirectory(const QString &path) const
 	int index;
 
 	if((index = path.indexOf("/")) != -1) {
-		IsoFileOrDirectory *fOrD = _filesAndDirectories.value(path.left(index), NULL);
+		IsoFileOrDirectory *fOrD = _filesAndDirectories.value(path.left(index).toUpper(), NULL);
 
 		if(fOrD == NULL)	return NULL;
 
@@ -150,7 +150,7 @@ IsoFileOrDirectory *IsoDirectory::fileOrDirectory(const QString &path) const
 			return NULL;
 		}
 	} else {
-		return _filesAndDirectories.value(path, NULL);
+		return _filesAndDirectories.value(path.toUpper(), NULL);
 	}
 
 }

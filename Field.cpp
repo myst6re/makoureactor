@@ -165,8 +165,9 @@ void Field::setName(const QString &name)
 
 void Field::setSaved()
 {
+	_isOpen = false; // Force reopen to refresh positions automatically
 	if(_encounter)	_encounter->setModified(false);
-	if(_tut)			_tut->setModified(false);
+	if(_tut)		_tut->setModified(false);
 	if(id)			id->setModified(false);
 	if(ca)			ca->setModified(false);
 	if(inf)			inf->setModified(false);

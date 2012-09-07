@@ -176,7 +176,7 @@ const QString &Data::ff7AppPath()
 			ff7AppPath_cache = searchRereleasedFF7Path();
 			// Search for old version
 			if(ff7AppPath_cache.isEmpty()) {
-				ff7AppPath_cache = searchRereleasedFF7Exe();
+				ff7AppPath_cache = searchFF7Exe();
 			}
 		}
 	}

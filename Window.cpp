@@ -19,10 +19,10 @@
 #include "parametres.h"
 
 Window::Window() :
-	field(0), firstShow(true), varDialog(0),
+	fieldArchive(0), field(0), firstShow(true), varDialog(0),
 	textDialog(0), _walkmeshManager(0), _backgroundManager(0)
 {
-	setWindowTitle(PROG_FULLNAME);
+	setWindowTitle();
 	setMinimumSize(700, 600);
 	resize(900, 700);
 
@@ -52,7 +52,7 @@ Window::Window() :
 	actionMassExport = menu->addAction(tr("Exporter en &masse..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
 	actionImport = menu->addAction(tr("&Importer dans l'écran courant..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
 	menu->addSeparator();
-	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("Fe&rmer"), this, SLOT(close()));
+	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("Fe&rmer"), this, SLOT(closeFile()));
 	menu->addAction(tr("&Quitter"), this, SLOT(close()), QKeySequence::Quit);
 	
 	/* Menu 'Outils' */
@@ -226,8 +226,7 @@ Window::Window() :
 	restoreState(Config::value("windowState").toByteArray());
 	restoreGeometry(Config::value("windowGeometry").toByteArray());
 	fieldList->setFocus();
-	fieldArchive = NULL;
-	close();
+	closeFile();
 }
 
 Window::~Window()
@@ -249,7 +248,7 @@ void Window::showEvent(QShowEvent *)
 
 void Window::closeEvent(QCloseEvent *event)
 {
-	if(!isEnabled() || close(true)==QMessageBox::Cancel)	event->ignore();
+	if(!isEnabled() || closeFile(true)==QMessageBox::Cancel)	event->ignore();
 	else {
 		Config::setValue("windowState", saveState());
 		Config::setValue("windowGeometry", saveGeometry());
@@ -313,7 +312,7 @@ void Window::restartNow()
 	QMessageBox::information(this, str_title, str_text);
 }
 
-int Window::close(bool quit)
+int Window::closeFile(bool quit)
 {
 	if(fieldList->currentItem() != NULL)
 		Config::setValue("currentField", fieldList->currentItem()->text(0));
@@ -365,7 +364,7 @@ int Window::close(bool quit)
 
 		authorLbl->hide();
 		setWindowModified(false);
-		setWindowTitle(PROG_FULLNAME);
+		setWindowTitle();
 		searchDialog->close();
 		if(textDialog) 	textDialog->close();
 		if(_walkmeshManager)	_walkmeshManager->close();
@@ -422,7 +421,7 @@ void Window::openDir()
 
 void Window::open(const QString &cheminFic, bool isDir)
 {
-	close();
+	closeFile();
 	
 	setEnabled(false);
 	fieldArchive = new FieldArchive(cheminFic, isDir);
@@ -493,6 +492,26 @@ void Window::open(const QString &cheminFic, bool isDir)
 //	fieldArchive->searchAll();
 }
 
+void Window::setWindowTitle()
+{
+	QString windowTitle;
+	if(fieldArchive) {
+		QList<QTreeWidgetItem *> selectedItems = fieldList->selectedItems();
+		if(selectedItems.isEmpty()) {
+			windowTitle = PROG_FULLNAME;
+		} else {
+			if(fieldArchive->isDirectory()) {
+				windowTitle = "[*]" + selectedItems.first()->text(0) + " - " + PROG_FULLNAME;
+			} else {
+				windowTitle = selectedItems.first()->text(0) + " ([*]" + fieldArchive->name() + ") - " + PROG_FULLNAME;
+			}
+		}
+	} else {
+		windowTitle = PROG_FULLNAME;
+	}
+	QWidget::setWindowTitle(windowTitle);
+}
+
 void Window::openField()
 {
 	disconnect(groupScriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showGrpScripts()));
@@ -513,7 +532,7 @@ void Window::openField()
 	Data::currentHrcNames = 0;
 	Data::currentAnimNames = 0;
 
-	setWindowTitle((!fieldArchive->isDirectory() ? "" : "[*]") + selectedItems.first()->text(0) + (!fieldArchive->isDirectory() ? " ([*]" + fieldArchive->name() + ")" : "") + " - " + PROG_FULLNAME);
+	setWindowTitle();
 
 	// Get and set field
 	field = fieldArchive->field(id, true, true);
@@ -680,7 +699,17 @@ void Window::saveAs(bool currentPath)
 	QString cheminFic;
 	if(!currentPath)
 	{
-		cheminFic = QFileDialog::getSaveFileName(this, tr("Enregistrer Sous"), fieldArchive->path(), !fieldArchive->isDirectory() ? tr("Fichier Lgp (*.lgp)") : tr("Fichier DAT (*.DAT)"));
+		QString filter;
+		if(fieldArchive->isLgp()) {
+			filter = tr("Fichier Lgp (*.lgp)");
+		} else if(fieldArchive->isDirectory() || fieldArchive->isDatFile()) {
+			filter = tr("Fichier DAT (*.DAT)");
+		} else if(fieldArchive->isIso()) {
+			filter = tr("Fichier Iso (*.iso *.bin)");
+		} else {
+			return;
+		}
+		cheminFic = QFileDialog::getSaveFileName(this, tr("Enregistrer Sous"), fieldArchive->path(), filter);
 		if(cheminFic.isNull())		return;
 	}
 	
@@ -702,10 +731,11 @@ void Window::saveAs(bool currentPath)
 			QFile DATfic(fieldArchive->path()+"/"+field->getName()+".DAT");
 			if(DATfic.open(QIODevice::ReadOnly))
 			{
+				bool saveAs = cheminFic!=DATfic.fileName();
 				DATfic.seek(4);
 				tempFic.write(field->save(DATfic.readAll(), true));
 				DATfic.reset();
-				if(cheminFic!=DATfic.fileName() || DATfic.remove())
+				if(saveAs || DATfic.remove())
 				{
 					tempFic.copy(cheminFic);
 				}
@@ -726,12 +756,12 @@ void Window::saveAs(bool currentPath)
 	QString out;
 	switch(error)
 	{
-	case 0:	setModified(false);break;
-	case 1:	out = tr("Le fichier est inaccessible");break;
-	case 2:	out = tr("Impossible de créer un fichier temporaire");break;
-	case 3:	out = tr("Erreur de réouverture du fichier");break;
+	case 0:	setModified(false);setWindowTitle();					break;
+	case 1:	out = tr("Le fichier est inaccessible");				break;
+	case 2:	out = tr("Impossible de créer un fichier temporaire");	break;
+	case 3:	out = tr("Erreur de réouverture du fichier");			break;
 	case 4:	out = tr("Impossible d'écrire dans l'archive, vérifiez les droits d'écriture.");break;
-	case 5:	out = tr("Problème de validation");break;
+	case 5:	out = tr("Problème de validation");						break;
 	}
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
 	

@@ -55,7 +55,7 @@ public slots:
 	void setModified(bool enabled=true);
 	void saveAs(bool currentPath=false);
 	void save();
-	int close(bool quit=false);
+	int closeFile(bool quit=false);
 
 	bool gotoField(int fieldID);
 	void gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID);
@@ -95,6 +95,7 @@ signals:
 	void scriptIDChanged(int);
 	void opcodeIDChanged(int);
 private:
+	void setWindowTitle();
 	void restartNow();
 
 	QLineEdit *lineSearch;
