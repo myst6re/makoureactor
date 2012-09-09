@@ -31,8 +31,10 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 
 	buildBgExportWidget();
 	buildAkaoExportWidget();
+	buildTextExportWidget();
 
 	dirPath = new QLineEdit(this);
+	dirPath->setText(Config::value("exportDirectory").toString());
 	changeDir = new QPushButton(tr("Choisir..."), this);
 
 	overwriteIfExists = new QCheckBox(tr("Écraser les fichiers existants"), this);
@@ -46,12 +48,13 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	layout->addWidget(fieldList, 0, 0, 6, 1);
 	layout->addWidget(bgExport, 0, 1, 1, 2);
 	layout->addWidget(akaoExport, 1, 1, 1, 2);
-	layout->addWidget(new QLabel(tr("Emplacement de l'export :")), 2, 1, 1, 2);
-	layout->addWidget(dirPath, 3, 1);
-	layout->addWidget(changeDir, 3, 2);
-	layout->addWidget(overwriteIfExists, 4, 1, 1, 2);
-	layout->addWidget(buttonBox, 6, 0, 1, 3, Qt::AlignRight);
-	layout->setRowStretch(5, 1);
+	layout->addWidget(textExport, 2, 1, 1, 2);
+	layout->addWidget(new QLabel(tr("Emplacement de l'export :")), 3, 1, 1, 2);
+	layout->addWidget(dirPath, 4, 1);
+	layout->addWidget(changeDir, 4, 2);
+	layout->addWidget(overwriteIfExists, 5, 1, 1, 2);
+	layout->addWidget(buttonBox, 7, 0, 1, 3, Qt::AlignRight);
+	layout->setRowStretch(6, 1);
 	layout->setColumnStretch(1, 1);
 
 	connect(changeDir, SIGNAL(clicked()),  SLOT(chooseExportDirectory()));
@@ -87,6 +90,20 @@ void MassExportDialog::buildAkaoExportWidget()
 
 	QVBoxLayout *layout = new QVBoxLayout(akaoExport);
 	layout->addWidget(akaoFormat);
+}
+
+void MassExportDialog::buildTextExportWidget()
+{
+	textExport = new QGroupBox(tr("Exporter les textes"), this);
+	textExport->setCheckable(true);
+	textExport->setChecked(false);
+
+	textFormat = new QComboBox(textExport);
+	textFormat->addItem(tr("Texte simple TXT"));
+	textFormat->setEnabled(false);
+
+	QVBoxLayout *layout = new QVBoxLayout(textExport);
+	layout->addWidget(textFormat);
 }
 
 void MassExportDialog::fill(FieldArchive *fieldArchive, int fieldID)
@@ -147,6 +164,16 @@ bool MassExportDialog::exportAkao() const
 int MassExportDialog::exportAkaoFormat() const
 {
 	return akaoFormat->currentIndex();
+}
+
+bool MassExportDialog::exportText() const
+{
+	return textExport->isChecked();
+}
+
+int MassExportDialog::exportTextFormat() const
+{
+	return textFormat->currentIndex();
 }
 
 QString MassExportDialog::directory() const

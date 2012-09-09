@@ -32,6 +32,8 @@ public:
 	int exportBackgroundFormat() const;
 	bool exportAkao() const;
 	int exportAkaoFormat() const;
+	bool exportText() const;
+	int exportTextFormat() const;
 	QString directory() const;
 	bool overwrite() const;
 private slots:
@@ -39,9 +41,10 @@ private slots:
 private:
 	void buildBgExportWidget();
 	void buildAkaoExportWidget();
+	void buildTextExportWidget();
 	QListWidget *fieldList;
-	QGroupBox *bgExport, *akaoExport, *fieldExport;
-	QComboBox *bgFormat, *akaoFormat;
+	QGroupBox *bgExport, *akaoExport, *textExport;
+	QComboBox *bgFormat, *akaoFormat, *textFormat;
 	QPushButton *selectAll, *clearSelection, *selectCurrentField;
 	QLineEdit *dirPath;
 	QPushButton *changeDir;

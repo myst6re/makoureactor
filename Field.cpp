@@ -106,50 +106,44 @@ QRgb Field::blendColor(quint8 type, QRgb color0, QRgb color1)
 
 Section1File *Field::scriptsAndTexts(bool open)
 {
-	if(section1)	return section1;
-	section1 = new Section1File();
-	if(open)	section1->open(sectionData(Scripts));
+	if(!section1) 	section1 = new Section1File();
+	if(open && !section1->isOpen())	section1->open(sectionData(Scripts));
 	return section1;
 }
 
 EncounterFile *Field::encounter(bool open)
 {
-	if(_encounter)	return _encounter;
-	_encounter = new EncounterFile();
-	if(open)	_encounter->open(sectionData(Encounter));
+	if(!_encounter)	_encounter = new EncounterFile();
+	if(open && !_encounter->isOpen())		_encounter->open(sectionData(Encounter));
 	return _encounter;
 }
 
 TutFile *Field::tutosAndSounds(bool open)
 {
-	if(_tut)		return _tut;
-	_tut = new TutFile();
+	if(!_tut)	_tut = new TutFile();
 	scriptsAndTexts(false)->setTut(_tut);
-	if(open)	_tut->open(sectionData(Scripts));
+	if(open && !_tut->isOpen())	_tut->open(sectionData(Scripts));
 	return _tut;
 }
 
 IdFile *Field::getId(bool open)
 {
-	if(id)	return id;
-	id = new IdFile();
-	if(open)	id->open(sectionData(Walkmesh));
+	if(!id)		id = new IdFile();
+	if(open && !id->isOpen())	id->open(sectionData(Walkmesh));
 	return id;
 }
 
 CaFile *Field::getCa(bool open)
 {
-	if(ca)	return ca;
-	ca = new CaFile();
-	if(open)	ca->open(sectionData(Camera));
+	if(!ca)		ca = new CaFile();
+	if(open && !ca->isOpen())	ca->open(sectionData(Camera));
 	return ca;
 }
 
 InfFile *Field::getInf(bool open)
 {
-	if(inf)	return inf;
-	inf = new InfFile();
-	if(open)	inf->open(sectionData(Inf));
+	if(inf)		inf = new InfFile();
+	if(open && !inf->isOpen())	inf->open(sectionData(Inf));
 	return inf;
 }
 

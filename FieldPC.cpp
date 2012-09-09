@@ -476,8 +476,8 @@ bool FieldPC::getUsedParams(const QByteArray &data, QHash<quint8, quint8> &usedP
 
 FieldModelLoaderPC *FieldPC::getFieldModelLoader(bool open)
 {
-	if(this->modelLoader)	return (FieldModelLoaderPC *)this->modelLoader;
-	FieldModelLoaderPC *modelLoader = new FieldModelLoaderPC();
+	FieldModelLoaderPC *modelLoader = (FieldModelLoaderPC *)this->modelLoader;
+	if(!modelLoader)	modelLoader = new FieldModelLoaderPC();
 	if(open && !modelLoader->isLoaded()) {
 		modelLoader->load(sectionData(ModelLoader), this->name);
 		//	Data::currentCharNames = model_nameChar;

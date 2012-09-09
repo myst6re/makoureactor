@@ -571,8 +571,8 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 
 FieldModelLoaderPS *FieldPS::getFieldModelLoader(bool open)
 {
-	if(this->modelLoader)	return (FieldModelLoaderPS *)this->modelLoader;
-	FieldModelLoaderPS *modelLoader = new FieldModelLoaderPS();
+	FieldModelLoaderPS *modelLoader = (FieldModelLoaderPS *)this->modelLoader;
+	if(!modelLoader)	modelLoader = new FieldModelLoaderPS();
 	if(open && !modelLoader->isLoaded()) {
 		modelLoader->load(sectionData(ModelLoader));
 	}

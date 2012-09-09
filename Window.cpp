@@ -941,7 +941,8 @@ void Window::massExport()
 					}
 					progressDialog.setValue(currentField++);
 				}
-			} else if(massExportDialog->exportAkao()) {
+			}
+			if(massExportDialog->exportAkao()) {
 				progressDialog.setLabelText(tr("Exportation des sons..."));
 				extension = "akao";
 
@@ -952,18 +953,47 @@ void Window::massExport()
 					Field *f = fieldArchive->field(fieldID);
 					if(f) {
 						TutFile *akaoList = f->tutosAndSounds();
-						if(!akaoList->isOpen())
-							akaoList->open(fieldArchive->getFieldData(f));
-						int akaoCount = akaoList->size();
-						for(int i=0 ; i<akaoCount ; ++i) {
-							if(!akaoList->isTut(i)) {
-								path = QDir::cleanPath(QString("%1/%2-%3.%4").arg(massExportDialog->directory(), f->getName()).arg(i).arg(extension));
-								if(massExportDialog->overwrite() || !QFile::exists(path)) {
-									QFile tutExport(path);
-									if(tutExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-										tutExport.write(akaoList->data(i));
-										tutExport.close();
+						if(akaoList->isOpen()) {
+							int akaoCount = akaoList->size();
+							for(int i=0 ; i<akaoCount ; ++i) {
+								if(!akaoList->isTut(i)) {
+									path = QDir::cleanPath(QString("%1/%2-%3.%4").arg(massExportDialog->directory(), f->getName()).arg(i).arg(extension));
+									if(massExportDialog->overwrite() || !QFile::exists(path)) {
+										QFile tutExport(path);
+										if(tutExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+											tutExport.write(akaoList->data(i));
+											tutExport.close();
+										}
 									}
+								}
+							}
+						}
+					}
+					progressDialog.setValue(currentField++);
+				}
+			}
+			if(massExportDialog->exportText()) {
+				progressDialog.setLabelText(tr("Exportation des textes..."));
+				extension = "txt";
+				bool jp_txt = Config::value("jp_txt", false).toBool();
+
+				foreach(const int &fieldID, selectedFields) {
+					QCoreApplication::processEvents();
+					if(progressDialog.wasCanceled()) 	break;
+
+					Field *f = fieldArchive->field(fieldID);
+					if(f) {
+						Section1File *section1 = f->scriptsAndTexts();
+						if(section1->isOpen()) {
+							path = QDir::cleanPath(QString("%1/%2.%3").arg(massExportDialog->directory(), f->getName(), extension));
+							if(massExportDialog->overwrite() || !QFile::exists(path)) {
+								QFile textExport(path);
+								if(textExport.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+									int i=0;
+									foreach(FF7Text *text, *section1->texts()) {
+										textExport.write(QString("---TEXT%1---\n%2\n").arg(i++, 3, 10, QChar('0')).arg(text->getText(jp_txt)).toUtf8());
+									}
+									textExport.close();
 								}
 							}
 						}
