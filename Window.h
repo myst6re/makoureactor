@@ -113,7 +113,7 @@ private:
 
 	QAction *actionSave, *actionSaveAs, *actionExport;
 	QAction *actionMassExport, *actionImport, *actionClose;
-	QAction *actionFind, *actionText, *actionModels;
+	QAction *actionFind, *actionRun, *actionText, *actionModels;
 	QAction *actionEncounter, *actionTut, *actionWalkmesh;
 	QAction *actionBackground, *actionMisc, *actionJp_txt;
 	QMenu *menuLang;

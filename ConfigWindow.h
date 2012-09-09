@@ -32,13 +32,16 @@ private:
 	QTreeWidget *listFF7;
 	QCheckBox *kernelAuto, *charAuto;
 	QLabel *kernelPath, *charPath;
-	QPushButton *kernelButton, *charButton;
+	QPushButton *ff7ButtonMod, *ff7ButtonRem, *kernelButton, *charButton;
 	QCheckBox *disableOGL;
 	QPushButton *windowColor1, *windowColor2, *windowColor3, *windowColor4, *windowColorReset;
 	QLabel *windowPreview;
 	QCheckBox *optiText, *japEnc;
 	QRgb windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight;
 private slots:
+	void changeFF7ListButtonsState();
+	void modifyCustomFF7Path();
+	void removeCustomFF7Path();
 	void kernelAutoChange(bool);
 	void charAutoChange(bool);
 	void changeKernelPath();

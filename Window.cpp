@@ -117,10 +117,10 @@ Window::Window() :
 	toolBar->addSeparator();
 	toolBar->addAction(actionFind);
 	actionFind->setStatusTip(tr("Rechercher"));
-	action = toolBar->addAction(QIcon(":/images/ff7.png"), tr("Lancer FF7"), this, SLOT(runFF7()));
-	action->setShortcut(Qt::Key_F8);
-	action->setShortcutContext(Qt::ApplicationShortcut);
-	action->setEnabled(!Data::ff7AppPath().isEmpty());
+	actionRun = toolBar->addAction(QIcon(":/images/ff7.png"), tr("Lancer FF7"), this, SLOT(runFF7()));
+	actionRun->setShortcut(Qt::Key_F8);
+	actionRun->setShortcutContext(Qt::ApplicationShortcut);
+	actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
 
 	QFont font;
 	font.setPointSize(8);
@@ -1202,6 +1202,7 @@ void Window::config()
 		if(textDialog) {
 			textDialog->updateText();
 		}
+		actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
 		showScripts();
 	}
 }

@@ -33,6 +33,9 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	listFF7->setHeaderLabels(QStringList(tr("Final Fantasy VII installés")));
 	listFF7->setFixedHeight(80);
 
+	ff7ButtonMod = new QPushButton(dependances);
+	ff7ButtonRem = new QPushButton(tr("Supprimer"), dependances);
+
 	kernelAuto = new QCheckBox(tr("Kernel2.bin"), dependances);
 	kernelPath = new QLabel(dependances);
 	kernelPath->setFixedWidth(500);
@@ -43,13 +46,16 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	charButton = new QPushButton(tr("Changer"), dependances);
 
 	QGridLayout *dependLayout = new QGridLayout(dependances);
-	dependLayout->addWidget(listFF7, 0, 0, 1, 3);
-	dependLayout->addWidget(kernelAuto, 1, 0);
-	dependLayout->addWidget(kernelPath, 1, 1);
-	dependLayout->addWidget(kernelButton, 1, 2);
-	dependLayout->addWidget(charAuto, 2, 0);
-	dependLayout->addWidget(charPath, 2, 1);
-	dependLayout->addWidget(charButton, 2, 2);
+	dependLayout->addWidget(listFF7, 0, 0, 3, 2);
+	dependLayout->addWidget(ff7ButtonMod, 0, 2);
+	dependLayout->addWidget(ff7ButtonRem, 1, 2);
+	dependLayout->setRowStretch(2, 1);
+	dependLayout->addWidget(kernelAuto, 3, 0);
+	dependLayout->addWidget(kernelPath, 3, 1);
+	dependLayout->addWidget(kernelButton, 3, 2);
+	dependLayout->addWidget(charAuto, 4, 0);
+	dependLayout->addWidget(charPath, 4, 1);
+	dependLayout->addWidget(charButton, 4, 2);
 
 	QGroupBox *openGL = new QGroupBox(tr("OpenGL"), this);
 
@@ -94,6 +100,9 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	layout->addWidget(cancelButton, 3, 2);
 	layout->setColumnStretch(0, 1);
 
+	connect(listFF7, SIGNAL(itemSelectionChanged()), SLOT(changeFF7ListButtonsState()));
+	connect(ff7ButtonMod, SIGNAL(released()), SLOT(modifyCustomFF7Path()));
+	connect(ff7ButtonRem, SIGNAL(released()), SLOT(removeCustomFF7Path()));
 	connect(kernelAuto, SIGNAL(toggled(bool)), SLOT(kernelAutoChange(bool)));
 	connect(charAuto, SIGNAL(toggled(bool)), SLOT(charAutoChange(bool)));
 	connect(kernelButton, SIGNAL(released()), SLOT(changeKernelPath()));
@@ -107,6 +116,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	connect(cancelButton, SIGNAL(released()), SLOT(reject()));
 
 	fillConfig();
+	changeFF7ListButtonsState();
 }
 
 void ConfigWindow::fillConfig()
@@ -119,12 +129,17 @@ void ConfigWindow::fillConfig()
 
 	listFF7->clear();
 	QTreeWidgetItem *selectedItem = 0;
+	int ff7PathID=0;
 	foreach(const QString &ff7Path, ff7PathList) {
-		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(ff7Path)));
-		if(ff7Path.compare(ff7_app_path, Qt::CaseInsensitive) == 0) {
-			selectedItem = item;
+		if(!ff7Path.isEmpty()) {
+			QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(ff7Path)));
+			if(ff7Path.compare(ff7_app_path, Qt::CaseInsensitive) == 0) {
+				selectedItem = item;
+			}
+			item->setData(0, Qt::UserRole, ff7PathID);
+			listFF7->addTopLevelItem(item);
 		}
-		listFF7->addTopLevelItem(item);
+		++ff7PathID;
 	}
 	if(selectedItem)	listFF7->setCurrentItem(selectedItem);
 
@@ -167,6 +182,73 @@ void ConfigWindow::fillConfig()
 	}
 }
 
+void ConfigWindow::changeFF7ListButtonsState()
+{
+	QTreeWidgetItem *item = listFF7->currentItem();
+	if(item) {
+		int id = item->data(0, Qt::UserRole).toInt();
+		if(id == 2) {
+			ff7ButtonRem->setEnabled(true);
+			ff7ButtonMod->setText(tr("Modifier"));
+		} else {
+			ff7ButtonRem->setEnabled(false);
+			ff7ButtonMod->setText(tr("Ajouter"));
+		}
+	} else {
+		ff7ButtonRem->setEnabled(false);
+		ff7ButtonMod->setText(tr("Ajouter"));
+	}
+
+	for(int i=0 ; i<listFF7->topLevelItemCount() ; ++i) {
+		if(listFF7->topLevelItem(i)->data(0, Qt::UserRole).toInt() == 2) {
+			ff7ButtonMod->setEnabled(item == listFF7->topLevelItem(i));
+			return;
+		}
+	}
+	ff7ButtonMod->setEnabled(true);
+}
+
+void ConfigWindow::modifyCustomFF7Path()
+{
+	QTreeWidgetItem *item = listFF7->currentItem();
+	if(item) {
+		int id = item->data(0, Qt::UserRole).toInt();
+		if(id == 2) {
+			// Modify
+			QString path = QFileDialog::getOpenFileName(this, tr("Chercher ff7.exe"), item->text(0), tr("Fichiers EXE (*.exe)"));
+			if(!path.isNull()) {
+				Config::setValue("customFF7Path", path);
+				item->setText(0, QDir::toNativeSeparators(path));
+			}
+			return;
+		}
+	}
+	// Add
+	QString path = QFileDialog::getOpenFileName(this, tr("Chercher ff7.exe"), item->text(0), tr("Fichiers EXE (*.exe)"));
+	if(!path.isNull()) {
+		Config::setValue("customFF7Path", path);
+		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(path)));
+		item->setData(0, Qt::UserRole, 2);
+		item->setIcon(0, QFileIconProvider().icon(QFileInfo(path)));
+		listFF7->addTopLevelItem(item);
+		listFF7->setCurrentItem(item);
+	}
+}
+
+void ConfigWindow::removeCustomFF7Path()
+{
+	QTreeWidgetItem *item = listFF7->currentItem();
+	if(item) {
+		int id = item->data(0, Qt::UserRole).toInt();
+		if(id == 2) {
+			// Remove
+			Config::setValue("customFF7Path", QString());
+			delete item;
+			changeFF7ListButtonsState();
+		}
+	}
+}
+
 void ConfigWindow::kernelAutoChange(bool checked)
 {
 	kernelPath->setEnabled(checked);
@@ -181,16 +263,16 @@ void ConfigWindow::charAutoChange(bool checked)
 
 void ConfigWindow::changeKernelPath()
 {
-	QString cheminFic = QFileDialog::getOpenFileName(this, tr("Chercher kernel2.bin"), kernelPath->text(), tr("Fichiers BIN (*.bin)"));
-	if(!cheminFic.isNull())
-		kernelPath->setText(QDir::toNativeSeparators(cheminFic));
+	QString path = QFileDialog::getOpenFileName(this, tr("Chercher kernel2.bin"), kernelPath->text(), tr("Fichiers BIN (*.bin)"));
+	if(!path.isNull())
+		kernelPath->setText(QDir::toNativeSeparators(path));
 }
 
 void ConfigWindow::changeCharPath()
 {
-	QString cheminFic = QFileDialog::getOpenFileName(this, tr("Chercher char.lgp"), charPath->text(), tr("Archives LGP (*.lgp)"));
-	if(!cheminFic.isNull())
-		charPath->setText(QDir::toNativeSeparators(cheminFic));
+	QString path = QFileDialog::getOpenFileName(this, tr("Chercher char.lgp"), charPath->text(), tr("Archives LGP (*.lgp)"));
+	if(!path.isNull())
+		charPath->setText(QDir::toNativeSeparators(path));
 }
 
 void ConfigWindow::changeColor()
@@ -254,7 +336,12 @@ void ConfigWindow::setWindowColors()
 void ConfigWindow::accept()
 {
 	QTreeWidgetItem *currentSelectedFF7Path = listFF7->currentItem();
-	Config::setValue("useRereleaseFF7Path", currentSelectedFF7Path!=NULL && currentSelectedFF7Path == listFF7->topLevelItem(1));
+	int currentFF7Path = 0;
+	if(currentSelectedFF7Path) {
+		currentFF7Path = currentSelectedFF7Path->data(0, Qt::UserRole).toInt();
+	}
+	Config::setValue("useRereleaseFF7Path", currentFF7Path == 1);
+	Config::setValue("useCustomFF7Path", currentFF7Path == 2);
 	Config::setValue("kernel2Path", kernelAuto->isChecked() ? QDir::fromNativeSeparators(kernelPath->text()) : QString());
 	Config::setValue("charPath", charAuto->isChecked() ? QDir::fromNativeSeparators(charPath->text()) : QString());
 	if(!disableOGL->isChecked() != Config::value("OpenGL", true).toBool()) {

@@ -21,7 +21,7 @@
 #include "Field.h"
 #include "TextPreview.h"
 
-class TextManager : public QWidget
+class TextManager : public QDialog
 {
 	Q_OBJECT
 

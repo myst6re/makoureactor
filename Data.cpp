@@ -175,12 +175,9 @@ const QString &Data::ff7DataPath()
 QStringList Data::ff7AppPathList()
 {
 	QStringList ff7List;
-	QString oldFF7 = searchFF7Exe();
-	if(!oldFF7.isEmpty())
-		ff7List.append(oldFF7);
-	QString newFF7 = searchRereleasedFF7Exe();
-	if(!newFF7.isEmpty())
-		ff7List.append(newFF7);
+	ff7List.append(searchFF7Exe());
+	ff7List.append(searchRereleasedFF7Exe());
+	ff7List.append(Config::value("customFF7Path").toString());
 	return ff7List;
 }
 
@@ -189,19 +186,24 @@ const QString &Data::ff7AppPath()
 #ifdef Q_WS_WIN
 	if(ff7AppPath_cache.isNull()) {
 		bool useNew = Config::value("useRereleaseFF7Path", false).toBool();
-		if(!useNew) {
-			// Search for old version
-			ff7AppPath_cache = searchFF7Exe();
-			// Search for new version
-			if(ff7AppPath_cache.isEmpty()) {
-				ff7AppPath_cache = searchRereleasedFF7Exe();
-			}
+		bool useCustom = Config::value("useCustomFF7Path", false).toBool();
+		if(useCustom) {
+			ff7AppPath_cache = Config::value("customFF7Path").toString();
 		} else {
-			// Search for new version
-			ff7AppPath_cache = searchRereleasedFF7Path();
-			// Search for old version
-			if(ff7AppPath_cache.isEmpty()) {
+			if(!useNew) {
+				// Search for old version
 				ff7AppPath_cache = searchFF7Exe();
+				// Search for new version
+				if(ff7AppPath_cache.isEmpty()) {
+					ff7AppPath_cache = searchRereleasedFF7Exe();
+				}
+			} else {
+				// Search for new version
+				ff7AppPath_cache = searchRereleasedFF7Path();
+				// Search for old version
+				if(ff7AppPath_cache.isEmpty()) {
+					ff7AppPath_cache = searchFF7Exe();
+				}
 			}
 		}
 	}

@@ -21,8 +21,8 @@
 #include "Config.h"
 #include "Data.h"
 
-TextManager::TextManager(QWidget *parent)
-	: QWidget(parent, Qt::Tool)
+TextManager::TextManager(QWidget *parent) :
+	QDialog(parent, Qt::Tool)
 {
 	setWindowTitle(tr("Textes"));
 	QFont font;
