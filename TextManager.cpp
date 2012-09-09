@@ -180,45 +180,45 @@ TextManager::TextManager(QWidget *parent)
 	textPage = new QLabel(groupTextPreview);
 	textPage->setTextFormat(Qt::PlainText);
 
-	prevWin = new QToolButton(groupTextPreview);
-	prevWin->setArrowType(Qt::UpArrow);
-	prevWin->setToolButtonStyle(Qt::ToolButtonIconOnly);
-	nextWin = new QToolButton(groupTextPreview);
-	nextWin->setArrowType(Qt::DownArrow);
-	nextWin->setToolButtonStyle(Qt::ToolButtonIconOnly);
-	textWin = new QLabel(groupTextPreview);
-	textWin->setTextFormat(Qt::PlainText);
+//	prevWin = new QToolButton(groupTextPreview);
+//	prevWin->setArrowType(Qt::UpArrow);
+//	prevWin->setToolButtonStyle(Qt::ToolButtonIconOnly);
+//	nextWin = new QToolButton(groupTextPreview);
+//	nextWin->setArrowType(Qt::DownArrow);
+//	nextWin->setToolButtonStyle(Qt::ToolButtonIconOnly);
+//	textWin = new QLabel(groupTextPreview);
+//	textWin->setTextFormat(Qt::PlainText);
 
-	xCoord = new QSpinBox(groupTextPreview);
-	yCoord = new QSpinBox(groupTextPreview);
-	xCoord->setRange(-32768, 32767);
-	yCoord->setRange(-32768, 32767);
-	xCoord->setReadOnly(true);
-	yCoord->setReadOnly(true);
+//	xCoord = new QSpinBox(groupTextPreview);
+//	yCoord = new QSpinBox(groupTextPreview);
+//	xCoord->setRange(-32768, 32767);
+//	yCoord->setRange(-32768, 32767);
+//	xCoord->setReadOnly(true);
+//	yCoord->setReadOnly(true);
 
-	wSize = new QSpinBox(groupTextPreview);
-	hSize = new QSpinBox(groupTextPreview);
-	wSize->setRange(0, 65535);
-	hSize->setRange(0, 65535);
-	wSize->setReadOnly(true);
-	hSize->setReadOnly(true);
+//	wSize = new QSpinBox(groupTextPreview);
+//	hSize = new QSpinBox(groupTextPreview);
+//	wSize->setRange(0, 65535);
+//	hSize->setRange(0, 65535);
+//	wSize->setReadOnly(true);
+//	hSize->setReadOnly(true);
 
 	QGridLayout *layoutTextPreview = new QGridLayout(groupTextPreview);
 	layoutTextPreview->addWidget(textPreview, 0, 0, 8, 1, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(prevPage, 0, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(textPage, 1, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(nextPage, 2, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
-	layoutTextPreview->addWidget(new QLabel(tr("X")), 3, 1, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(xCoord, 3, 2, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(new QLabel(tr("Y")), 4, 1, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(yCoord, 4, 2, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(new QLabel(tr("W")), 3, 3, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(wSize, 3, 4, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(new QLabel(tr("H")), 4, 3, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(hSize, 4, 4, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(prevWin, 5, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
-	layoutTextPreview->addWidget(textWin, 6, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
-	layoutTextPreview->addWidget(nextWin, 7, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
+//	layoutTextPreview->addWidget(new QLabel(tr("X")), 3, 1, Qt::AlignLeft | Qt::AlignHCenter);
+//	layoutTextPreview->addWidget(xCoord, 3, 2, Qt::AlignLeft | Qt::AlignHCenter);
+//	layoutTextPreview->addWidget(new QLabel(tr("Y")), 4, 1, Qt::AlignLeft | Qt::AlignHCenter);
+//	layoutTextPreview->addWidget(yCoord, 4, 2, Qt::AlignLeft | Qt::AlignHCenter);
+//	layoutTextPreview->addWidget(new QLabel(tr("W")), 3, 3, Qt::AlignLeft | Qt::AlignHCenter);
+//	layoutTextPreview->addWidget(wSize, 3, 4, Qt::AlignLeft | Qt::AlignHCenter);
+//	layoutTextPreview->addWidget(new QLabel(tr("H")), 4, 3, Qt::AlignLeft | Qt::AlignHCenter);
+//	layoutTextPreview->addWidget(hSize, 4, 4, Qt::AlignLeft | Qt::AlignHCenter);
+//	layoutTextPreview->addWidget(prevWin, 5, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
+//	layoutTextPreview->addWidget(textWin, 6, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
+//	layoutTextPreview->addWidget(nextWin, 7, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
 	layoutTextPreview->setColumnStretch(2, 1);
 	layoutTextPreview->setRowStretch(2, 1);
 	layoutTextPreview->setRowStretch(5, 1);
@@ -246,8 +246,8 @@ TextManager::TextManager(QWidget *parent)
 	connect(textEdit, SIGNAL(cursorPositionChanged()), SLOT(emitFromChanged()));
 	connect(prevPage, SIGNAL(released()), SLOT(prevTextPreviewPage()));
 	connect(nextPage, SIGNAL(released()), SLOT(nextTextPreviewPage()));
-	connect(prevWin, SIGNAL(released()), SLOT(prevTextPreviewWin()));
-	connect(nextWin, SIGNAL(released()), SLOT(nextTextPreviewWin()));
+//	connect(prevWin, SIGNAL(released()), SLOT(prevTextPreviewWin()));
+//	connect(nextWin, SIGNAL(released()), SLOT(nextTextPreviewWin()));
 }
 
 void TextManager::emitFromChanged()
@@ -264,9 +264,9 @@ void TextManager::setField(Field *field)
 {
 	this->field = field;
 	this->scriptsAndTexts = field->scriptsAndTexts();
-	_windows.clear();
-	_text2win.clear();
-	scriptsAndTexts->listWindows(_windows, _text2win);
+//	_windows.clear();
+//	_text2win.clear();
+//	scriptsAndTexts->listWindows(_windows, _text2win);
 	usedTexts = scriptsAndTexts->listUsedTexts();
 	showList();
 	liste1->setCurrentRow(0);
@@ -290,7 +290,7 @@ void TextManager::setTextChanged()
 	}
 }
 
-QList<FF7Window> TextManager::getWindows(quint8 textID) const
+/*QList<FF7Window> TextManager::getWindows(quint8 textID) const
 {
 	QList<quint64> winIDs = _text2win.values(textID);
 	QList<quint64> sawAlready;
@@ -302,15 +302,15 @@ QList<FF7Window> TextManager::getWindows(quint8 textID) const
 		}
 	}
 	return windows;
-}
+}*/
 
 void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 {
 	if(!item)	return;
 	int textID = item->data(Qt::UserRole).toInt();
 	FF7Text *t = scriptsAndTexts->text(textID);
-	textPreview->resetCurrentWin();
-	textPreview->setWins(getWindows(textID));
+//	textPreview->resetCurrentWin();
+//	textPreview->setWins(getWindows(textID));
 	textPreview->setText(t->getData());
 	textEdit->setPlainText(t->getText(Config::value("jp_txt", false).toBool()));
 	changeTextPreviewPage();
@@ -427,30 +427,30 @@ void TextManager::changeTextPreviewPage()
 
 void TextManager::prevTextPreviewWin()
 {
-	textPreview->prevWin();
-	changeTextPreviewWin();
+//	textPreview->prevWin();
+//	changeTextPreviewWin();
 }
 
 void TextManager::nextTextPreviewWin()
 {
-	textPreview->nextWin();
-	changeTextPreviewWin();
+//	textPreview->nextWin();
+//	changeTextPreviewWin();
 }
 
 void TextManager::changeTextPreviewWin()
 {
-	int currentWin = textPreview->getCurrentWin(), nbWin = textPreview->getNbWin();
+//	int currentWin = textPreview->getCurrentWin(), nbWin = textPreview->getNbWin();
 
-	textWin->setText(tr("Fenêtre %1/%2").arg(currentWin).arg(nbWin));
-	prevWin->setEnabled(currentWin > 1);
-	nextWin->setEnabled(currentWin < nbWin);
-	textWin->setEnabled(nbWin > 0);
-	xCoord->setEnabled(nbWin > 0);
-	yCoord->setEnabled(nbWin > 0);
-	wSize->setEnabled(nbWin > 0);
-	hSize->setEnabled(nbWin > 0);
+//	textWin->setText(tr("Fenêtre %1/%2").arg(currentWin).arg(nbWin));
+//	prevWin->setEnabled(currentWin > 1);
+//	nextWin->setEnabled(currentWin < nbWin);
+//	textWin->setEnabled(nbWin > 0);
+//	xCoord->setEnabled(nbWin > 0);
+//	yCoord->setEnabled(nbWin > 0);
+//	wSize->setEnabled(nbWin > 0);
+//	hSize->setEnabled(nbWin > 0);
 
-	updateWindowCoord();
+//	updateWindowCoord();
 }
 
 void TextManager::changeRect(QRect rect)
@@ -474,10 +474,10 @@ void TextManager::changeXCoord(int x)
 		qDebug() << "changeXCoord()" << x << textID << winID;
 
 		scriptsAndTexts->setWindow(ff7Window);
-		_windows.clear();
-		_text2win.clear();
-		scriptsAndTexts->listWindows(_windows, _text2win); // refresh
-		textPreview->setWins(getWindows(textID));
+//		_windows.clear();
+//		_text2win.clear();
+//		scriptsAndTexts->listWindows(_windows, _text2win); // refresh
+//		textPreview->setWins(getWindows(textID));
 		emit modified();
 	}
 }
@@ -495,10 +495,10 @@ void TextManager::changeYCoord(int y)
 		qDebug() << "changeYCoord()" << y << textID << winID;
 
 		scriptsAndTexts->setWindow(ff7Window);
-		_windows.clear();
-		_text2win.clear();
-		scriptsAndTexts->listWindows(_windows, _text2win); // refresh
-		textPreview->setWins(getWindows(textID));
+//		_windows.clear();
+//		_text2win.clear();
+//		scriptsAndTexts->listWindows(_windows, _text2win); // refresh
+//		textPreview->setWins(getWindows(textID));
 		emit modified();
 	}
 }

@@ -142,7 +142,7 @@ CaFile *Field::getCa(bool open)
 
 InfFile *Field::getInf(bool open)
 {
-	if(inf)		inf = new InfFile();
+	if(!inf)	inf = new InfFile();
 	if(open && !inf->isOpen())	inf->open(sectionData(Inf));
 	return inf;
 }

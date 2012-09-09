@@ -232,7 +232,10 @@ void OpcodeList::saveExpandedItems()
 		for(int i=0 ; i<size ; ++i) {
 			QTreeWidgetItem *item = topLevelItem(i);
 			if(item->isExpanded()) {
-				expandedItems.append(script->getOpcode(item->data(0, Qt::UserRole).toInt()));
+				int opcodeID = item->data(0, Qt::UserRole).toInt();
+				if(opcodeID >= 0 && opcodeID < script->size()) {
+					expandedItems.append(script->getOpcode(opcodeID));
+				}
 			}
 		}
 		if(size>0) script->setExpandedItems(expandedItems);
