@@ -709,17 +709,17 @@ OpcodeJump *Script::convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok)
 	qint32 jump = opcodeJump->jump();
 	if(ok)	*ok = true;
 
-	qDebug() << "opcodeJump" << opcodeJump->name() << jump << "label" << opcodeJump->label();
+//	qDebug() << "opcodeJump" << opcodeJump->name() << jump << "label" << opcodeJump->label();
 
 	if(jump - opcodeJump->jumpPosData() < 0) {
 		if(opcodeJump->id() == Opcode::JMPB || opcodeJump->id() == Opcode::JMPBL) {
 			// OK: jump back
-			qDebug() << "OK -> jump back";
+//			qDebug() << "OK -> jump back";
 		} else if(opcodeJump->id() == Opcode::JMPF) {
-			qDebug() << "convert" << opcodeJump->name() << "to JMPB";
+//			qDebug() << "convert" << opcodeJump->name() << "to JMPB";
 			return new OpcodeJMPB(*opcodeJump);
 		} else if(opcodeJump->id() == Opcode::JMPFL) {
-			qDebug() << "convert" << opcodeJump->name() << "to JMPBL";
+//			qDebug() << "convert" << opcodeJump->name() << "to JMPBL";
 			return new OpcodeJMPBL(*opcodeJump);
 		} else {
 			if(ok)	*ok = false;
@@ -728,13 +728,13 @@ OpcodeJump *Script::convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok)
 		}
 	} else if(jump - opcodeJump->jumpPosData() > 0) {
 		if(opcodeJump->id() == Opcode::JMPB) {
-			qDebug() << "convert" << opcodeJump->name() << "to JMPF";
+//			qDebug() << "convert" << opcodeJump->name() << "to JMPF";
 			return new OpcodeJMPF(*opcodeJump);
 		} else if(opcodeJump->id() == Opcode::JMPBL) {
-			qDebug() << "convert" << opcodeJump->name() << "to JMPFL";
+//			qDebug() << "convert" << opcodeJump->name() << "to JMPFL";
 			return new OpcodeJMPFL(*opcodeJump);
 		} else {
-			qDebug() << "OK -> jump forward";
+//			qDebug() << "OK -> jump forward";
 		}
 	}
 

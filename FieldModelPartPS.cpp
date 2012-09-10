@@ -174,7 +174,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyTexCoords.append(texCoords.at(texCoordIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index col tex quad" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
+				qWarning() << "error index col tex quad" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
 				break;
 			}
 		}
@@ -206,7 +206,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyTexCoords.append(texCoords.at(texCoordIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index col tex tri" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
+				qWarning() << "error index col tex tri" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
 				break;
 			}
 		}
@@ -237,7 +237,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyTexCoords.append(texCoords.at(texCoordIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index mono tex quad" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
+				qWarning() << "error index mono tex quad" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
 				break;
 			}
 		}
@@ -268,7 +268,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyTexCoords.append(texCoords.at(texCoordIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index mono tex tri" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
+				qWarning() << "error index mono tex tri" << i << j << vertexIndex << vertices.size() << texCoordIndex << texCoords.size();
 				break;
 			}
 		}
@@ -296,7 +296,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyVertices.append(vertices.at(vertexIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index mono tri" << i << j << vertexIndex << vertices.size();
+				qWarning() << "error index mono tri" << i << j << vertexIndex << vertices.size();
 				break;
 			}
 		}
@@ -324,7 +324,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyVertices.append(vertices.at(vertexIndex));
 			} else {
 				notAdd = true;
-				qDebug() << "error index mono quad" << i << j << vertexIndex << vertices.size();
+				qWarning() << "error index mono quad" << i << j << vertexIndex << vertices.size();
 				break;
 			}
 		}
@@ -353,7 +353,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyColors.append(qRgb(color.red, color.green, color.blue));
 			} else {
 				notAdd = true;
-				qDebug() << "error index col tri" << i << j << "index" << vertexIndex << "size" << vertices.size();
+				qWarning() << "error index col tri" << i << j << "index" << vertexIndex << "size" << vertices.size();
 				break;
 			}
 		}
@@ -382,7 +382,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 				polyColors.append(qRgb(color.red, color.green, color.blue));
 			} else {
 				notAdd = true;
-				qDebug() << "error index col quad" << i << j << "index" << vertexIndex << "size" << vertices.size();
+				qWarning() << "error index col quad" << i << j << "index" << vertexIndex << "size" << vertices.size();
 				break;
 			}
 		}

@@ -461,9 +461,9 @@ void TextManager::changeRect(QRect rect)
 	hSize->setValue(rect.height());
 }
 
-void TextManager::changeXCoord(int x)
+void TextManager::changeXCoord(int /*x*/)
 {
-	if(textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
+	/*if(textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
 
 	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
 	int winID = textPreview->getCurrentWin()-1;
@@ -471,7 +471,7 @@ void TextManager::changeXCoord(int x)
 	if(ff7Window.x != x) {
 		ff7Window.x = x;
 
-		qDebug() << "changeXCoord()" << x << textID << winID;
+//		qDebug() << "changeXCoord()" << x << textID << winID;
 
 		scriptsAndTexts->setWindow(ff7Window);
 //		_windows.clear();
@@ -479,12 +479,12 @@ void TextManager::changeXCoord(int x)
 //		scriptsAndTexts->listWindows(_windows, _text2win); // refresh
 //		textPreview->setWins(getWindows(textID));
 		emit modified();
-	}
+	}*/
 }
 
-void TextManager::changeYCoord(int y)
+void TextManager::changeYCoord(int /*y*/)
 {
-	if(textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
+	/*if(textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
 
 	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
 	int winID = textPreview->getCurrentWin()-1;
@@ -492,7 +492,7 @@ void TextManager::changeYCoord(int y)
 	if(ff7Window.y != y) {
 		ff7Window.y = y;
 
-		qDebug() << "changeYCoord()" << y << textID << winID;
+//		qDebug() << "changeYCoord()" << y << textID << winID;
 
 		scriptsAndTexts->setWindow(ff7Window);
 //		_windows.clear();
@@ -500,7 +500,7 @@ void TextManager::changeYCoord(int y)
 //		scriptsAndTexts->listWindows(_windows, _text2win); // refresh
 //		textPreview->setWins(getWindows(textID));
 		emit modified();
-	}
+	}*/
 }
 
 void TextManager::updateWindowCoord()

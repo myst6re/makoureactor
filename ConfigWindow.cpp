@@ -211,6 +211,7 @@ void ConfigWindow::changeFF7ListButtonsState()
 void ConfigWindow::modifyCustomFF7Path()
 {
 	QTreeWidgetItem *item = listFF7->currentItem();
+	QString currentPath;
 	if(item) {
 		int id = item->data(0, Qt::UserRole).toInt();
 		if(id == 2) {
@@ -222,9 +223,10 @@ void ConfigWindow::modifyCustomFF7Path()
 			}
 			return;
 		}
+		currentPath = item->text(0);
 	}
 	// Add
-	QString path = QFileDialog::getOpenFileName(this, tr("Chercher ff7.exe"), item->text(0), tr("Fichiers EXE (*.exe)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Chercher ff7.exe"), currentPath, tr("Fichiers EXE (*.exe)"));
 	if(!path.isNull()) {
 		Config::setValue("customFF7Path", path);
 		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(path)));
@@ -339,6 +341,8 @@ void ConfigWindow::accept()
 	int currentFF7Path = 0;
 	if(currentSelectedFF7Path) {
 		currentFF7Path = currentSelectedFF7Path->data(0, Qt::UserRole).toInt();
+	} else if(listFF7->topLevelItemCount() > 0) {
+		currentFF7Path = listFF7->topLevelItem(0)->data(0, Qt::UserRole).toInt();
 	}
 	Config::setValue("useRereleaseFF7Path", currentFF7Path == 1);
 	Config::setValue("useCustomFF7Path", currentFF7Path == 2);

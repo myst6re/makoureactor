@@ -20,12 +20,12 @@
 #include "Config.h"
 #include "Data.h"
 
-Search::Search(QWidget *parent)
-	: QDialog(parent, Qt::Tool),
-	  fieldID(0), grpScriptID(0), scriptID(0),
-	  opcodeID(0), textID(0), from(0),
-	  clef(0), text(QString()),
-	  bank(0), adress(0), e_script(0), e_group(0)
+Search::Search(QWidget *parent) :
+	QDialog(parent, Qt::Tool),
+	fieldID(0), grpScriptID(0), scriptID(0),
+	opcodeID(0), textID(0), from(0),
+	clef(0), text(QString()),
+	bank(0), adress(0), e_script(0), e_group(0)
 {
 	setWindowTitle(tr("Rechercher"));
 	

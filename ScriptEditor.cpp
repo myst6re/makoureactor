@@ -518,14 +518,14 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Distance pour toucher (8 bits)"), QList<QVariant>() << 0xC6);
 		comboBox->addItem(tr("Distance pour parler (16 bits)"), QList<QVariant>() << 0xD6);
 		comboBox->addItem(tr("Distance pour toucher (16 bits)"), QList<QVariant>() << 0xD7);
-		comboBox->insertSeparator(comboBox->count());//???
-		comboBox->addItem(tr("SLIP"), QList<QVariant>() << 0x2B);
 		return;
 	case 5:
 		comboBox->addItem(tr("Créer zone"), QList<QVariant>() << 0xD0);
 		comboBox->addItem(tr("Modifier zone"), QList<QVariant>() << 0xD3);
 		comboBox->addItem(tr("Activer/Désactiver zone"), QList<QVariant>() << 0xD1);
 		comboBox->addItem(tr("Activer/Désactiver triangle"), QList<QVariant>() << 0x6D);
+		comboBox->insertSeparator(comboBox->count());//???
+		comboBox->addItem(tr("SLIP"), QList<QVariant>() << 0x2B);
 		return;
 	case 6:
 		comboBox->addItem(tr("Déplacer une couche du décor (Z)"), QList<QVariant>() << 0x2C);

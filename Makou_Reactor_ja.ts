@@ -4,7 +4,7 @@
 <context>
     <name>AnimEditorDialog</name>
     <message>
-        <location filename="AnimEditorDialog.cpp" line="23"/>
+        <location filename="AnimEditorDialog.cpp" line="25"/>
         <source>Sélection d&apos;une animation</source>
         <translatorcomment>Animation Selector</translatorcomment>
         <translation>アニメーション セレクター</translation>
@@ -21,13 +21,13 @@
 <context>
     <name>ApercuBGLabel</name>
     <message>
-        <location filename="ApercuBGLabel.cpp" line="60"/>
+        <location filename="ApercuBGLabel.cpp" line="61"/>
         <source>Enregistrer le background</source>
         <translatorcomment>Save the background</translatorcomment>
         <translation>背景を保存</translation>
     </message>
     <message>
-        <location filename="ApercuBGLabel.cpp" line="60"/>
+        <location filename="ApercuBGLabel.cpp" line="61"/>
         <source>Image PNG (*.png);;Image JPG (*.jpg);;Image BMP (*.bmp);;Portable Pixmap (*.ppm)</source>
         <translatorcomment>PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)</translatorcomment>
         <translation>PNG 画像 (*.png);;JPG 画像 (*.jpg);;BMP 画像 (*.bmp);;Portable Pixmap (*.ppm)</translation>
@@ -201,117 +201,145 @@
 <context>
     <name>ConfigWindow</name>
     <message>
-        <location filename="ConfigWindow.cpp" line="23"/>
+        <location filename="ConfigWindow.cpp" line="26"/>
         <source>Configuration</source>
         <translation>構成設定</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="25"/>
+        <location filename="ConfigWindow.cpp" line="28"/>
         <source>Dépendances</source>
         <translatorcomment>Dependencies</translatorcomment>
         <translation>依存関係</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="30"/>
+        <location filename="ConfigWindow.cpp" line="33"/>
         <source>Final Fantasy VII installés</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="33"/>
+        <location filename="ConfigWindow.cpp" line="37"/>
+        <source>Supprimer</source>
+        <translation type="unfinished">削除</translation>
+    </message>
+    <message>
+        <location filename="ConfigWindow.cpp" line="39"/>
         <source>Kernel2.bin</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="36"/>
-        <location filename="ConfigWindow.cpp" line="40"/>
+        <location filename="ConfigWindow.cpp" line="42"/>
+        <location filename="ConfigWindow.cpp" line="46"/>
         <source>Changer</source>
         <translatorcomment>Change</translatorcomment>
         <translation>変更</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="37"/>
+        <location filename="ConfigWindow.cpp" line="43"/>
         <source>char.lgp</source>
         <translation>char.lgp</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="51"/>
+        <location filename="ConfigWindow.cpp" line="60"/>
         <source>OpenGL</source>
         <translatorcomment>OpenGL</translatorcomment>
         <translation>OpenGL</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="53"/>
+        <location filename="ConfigWindow.cpp" line="62"/>
         <source>Désactiver OpenGL</source>
         <translatorcomment>Disable OpenGL</translatorcomment>
         <translation>OpenGL を無効化</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="58"/>
+        <location filename="ConfigWindow.cpp" line="67"/>
         <source>Editeur de texte</source>
         <translatorcomment>Text Editor</translatorcomment>
         <translation>テキスト エディター</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="65"/>
+        <location filename="ConfigWindow.cpp" line="74"/>
         <source>Valeurs par défaut</source>
         <translatorcomment>Defaults</translatorcomment>
         <translation>デフォルト</translation>
     </message>
     <message utf8="true">
-        <location filename="ConfigWindow.cpp" line="67"/>
+        <location filename="ConfigWindow.cpp" line="76"/>
         <source>Optimiser automatiquement les duos de caractères « .  », « .&quot; » et « …&quot; ».</source>
         <translatorcomment>●</translatorcomment>
         <translation>ブラケットのペア « .  », « .&quot; », « …&quot; » を自動的に最適化。</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="70"/>
+        <location filename="ConfigWindow.cpp" line="79"/>
         <source>Caractères japonais</source>
         <translation>日本語版文字コード</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="83"/>
+        <location filename="ConfigWindow.cpp" line="92"/>
         <source>OK</source>
         <translatorcomment>OK</translatorcomment>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="84"/>
+        <location filename="ConfigWindow.cpp" line="93"/>
         <source>Annuler</source>
         <translatorcomment>Cancel</translatorcomment>
         <translation>キャンセル</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="181"/>
+        <location filename="ConfigWindow.cpp" line="192"/>
+        <source>Modifier</source>
+        <translation type="unfinished">編集</translation>
+    </message>
+    <message>
+        <location filename="ConfigWindow.cpp" line="195"/>
+        <location filename="ConfigWindow.cpp" line="199"/>
+        <source>Ajouter</source>
+        <translation type="unfinished">追加</translation>
+    </message>
+    <message>
+        <location filename="ConfigWindow.cpp" line="219"/>
+        <location filename="ConfigWindow.cpp" line="229"/>
+        <source>Chercher ff7.exe</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ConfigWindow.cpp" line="219"/>
+        <location filename="ConfigWindow.cpp" line="229"/>
+        <source>Fichiers EXE (*.exe)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ConfigWindow.cpp" line="268"/>
         <source>Chercher kernel2.bin</source>
         <translatorcomment>Find kernel2.bin</translatorcomment>
         <translation>kernel2.bin の選択</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="181"/>
+        <location filename="ConfigWindow.cpp" line="268"/>
         <source>Fichiers BIN (*.bin)</source>
         <translatorcomment>BIN files (*.bin)</translatorcomment>
         <translation>BIN ファイル (*.bin)</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="188"/>
+        <location filename="ConfigWindow.cpp" line="275"/>
         <source>Chercher char.lgp</source>
         <translatorcomment>Find char.lgp</translatorcomment>
         <translation>char.lgp の検出</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="188"/>
+        <location filename="ConfigWindow.cpp" line="275"/>
         <source>Archives LGP (*.lgp)</source>
         <translatorcomment>LGP archives (*.lgp)</translatorcomment>
         <translation>LGP アーカイブ (*.lgp)</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="259"/>
+        <location filename="ConfigWindow.cpp" line="353"/>
         <source>Information</source>
         <translatorcomment>Information</translatorcomment>
         <translation>インフォメーション</translation>
     </message>
     <message>
-        <location filename="ConfigWindow.cpp" line="259"/>
+        <location filename="ConfigWindow.cpp" line="353"/>
         <source>Vous devez redémarrer Makou Reactor pour appliquer tous les changements.</source>
         <translatorcomment>You must restart Makou Reactor to apply all changes.</translatorcomment>
         <translation>変更を適用するために Makou Reactor を再起動してください。</translation>
@@ -411,119 +439,119 @@
 <context>
     <name>GrpScriptList</name>
     <message>
-        <location filename="GrpScriptList.cpp" line="24"/>
+        <location filename="GrpScriptList.cpp" line="25"/>
         <source>Id</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="24"/>
+        <location filename="GrpScriptList.cpp" line="25"/>
         <source>Groupe</source>
         <translatorcomment>Group</translatorcomment>
         <translation>グループ</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="24"/>
+        <location filename="GrpScriptList.cpp" line="25"/>
         <source>Type</source>
         <translation>タイプ</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="35"/>
+        <location filename="GrpScriptList.cpp" line="36"/>
         <source>Renommer groupe</source>
         <translatorcomment>Rename group</translatorcomment>
         <translation>グループのリネーム</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="38"/>
+        <location filename="GrpScriptList.cpp" line="39"/>
         <source>Ajouter groupe</source>
         <translatorcomment>Add group</translatorcomment>
         <translation>グループの追加</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="41"/>
+        <location filename="GrpScriptList.cpp" line="42"/>
         <source>Supprimer groupe</source>
         <translatorcomment>Delete group</translatorcomment>
         <translation>グループの削除</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="45"/>
+        <location filename="GrpScriptList.cpp" line="46"/>
         <source>Couper groupe</source>
         <translatorcomment>Cut group</translatorcomment>
         <translation>グループの切り取り</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="49"/>
+        <location filename="GrpScriptList.cpp" line="50"/>
         <source>Copier groupe</source>
         <translatorcomment>Copy group</translatorcomment>
         <translation>グループのコピー</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="53"/>
+        <location filename="GrpScriptList.cpp" line="54"/>
         <source>Coller groupe</source>
         <translatorcomment>Paste group</translatorcomment>
         <translation>グループの貼り付け</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="57"/>
+        <location filename="GrpScriptList.cpp" line="58"/>
         <source>Déplacer vers le haut</source>
         <translatorcomment>Up</translatorcomment>
         <translation>上に</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="61"/>
+        <location filename="GrpScriptList.cpp" line="62"/>
         <source>Déplacer vers le bas</source>
         <translatorcomment>Down</translatorcomment>
         <translation>下に</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="93"/>
+        <location filename="GrpScriptList.cpp" line="94"/>
         <source>Édition des &amp;groupes</source>
         <translatorcomment>&amp;Group editor</translatorcomment>
         <translation>グループ エディター(&amp;G)</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="96"/>
+        <location filename="GrpScriptList.cpp" line="97"/>
         <source>Ajouter un groupe</source>
         <translatorcomment>Add a group</translatorcomment>
         <translation>グループの追加</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="98"/>
+        <location filename="GrpScriptList.cpp" line="99"/>
         <source>Supprimer un groupe</source>
         <translatorcomment>Remove a group</translatorcomment>
         <translation>グループの削除</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="101"/>
+        <location filename="GrpScriptList.cpp" line="102"/>
         <source>Monter un groupe</source>
         <translatorcomment>Up</translatorcomment>
         <translation>上へ</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="103"/>
+        <location filename="GrpScriptList.cpp" line="104"/>
         <source>Descendre un groupe</source>
         <translatorcomment>Down</translatorcomment>
         <translation>下へ</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="243"/>
+        <location filename="GrpScriptList.cpp" line="244"/>
         <source>Suppression</source>
         <translatorcomment>Delete</translatorcomment>
         <translation>削除</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="243"/>
+        <location filename="GrpScriptList.cpp" line="244"/>
         <source>Voulez-vous vraiment supprimer %1 ?</source>
         <translatorcomment>Are you sure you want to delete %1?</translatorcomment>
         <translation>%1 を削除しますか？</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="243"/>
+        <location filename="GrpScriptList.cpp" line="244"/>
         <source>le groupe sélectionné</source>
         <translatorcomment>the group selected</translatorcomment>
         <translation>選択グループ</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="243"/>
+        <location filename="GrpScriptList.cpp" line="244"/>
         <source>les groupes sélectionnés</source>
         <translatorcomment>the selected groups</translatorcomment>
         <translation>選択グループ</translation>
@@ -594,62 +622,72 @@
 <context>
     <name>MassExportDialog</name>
     <message>
-        <location filename="MassExportDialog.cpp" line="24"/>
+        <location filename="MassExportDialog.cpp" line="25"/>
         <source>Exporter en masse</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MassExportDialog.cpp" line="35"/>
+        <location filename="MassExportDialog.cpp" line="38"/>
         <source>Choisir...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MassExportDialog.cpp" line="37"/>
+        <location filename="MassExportDialog.cpp" line="40"/>
         <source>Écraser les fichiers existants</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MassExportDialog.cpp" line="41"/>
+        <location filename="MassExportDialog.cpp" line="44"/>
         <source>Exporter</source>
         <translation>エクスポート</translation>
     </message>
     <message>
-        <location filename="MassExportDialog.cpp" line="48"/>
+        <location filename="MassExportDialog.cpp" line="52"/>
         <source>Emplacement de l&apos;export :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MassExportDialog.cpp" line="63"/>
+        <location filename="MassExportDialog.cpp" line="67"/>
         <source>Exporter les décors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MassExportDialog.cpp" line="68"/>
+        <location filename="MassExportDialog.cpp" line="72"/>
         <source>Image PNG</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MassExportDialog.cpp" line="69"/>
+        <location filename="MassExportDialog.cpp" line="73"/>
         <source>Image JPG</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MassExportDialog.cpp" line="70"/>
+        <location filename="MassExportDialog.cpp" line="74"/>
         <source>Image BMP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MassExportDialog.cpp" line="79"/>
+        <location filename="MassExportDialog.cpp" line="83"/>
         <source>Exporter les sons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MassExportDialog.cpp" line="84"/>
+        <location filename="MassExportDialog.cpp" line="88"/>
         <source>Son AKAO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MassExportDialog.cpp" line="111"/>
+        <location filename="MassExportDialog.cpp" line="97"/>
+        <source>Exporter les textes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="MassExportDialog.cpp" line="102"/>
+        <source>Texte simple TXT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="MassExportDialog.cpp" line="129"/>
         <source>Choisir un dossier</source>
         <translation type="unfinished"></translation>
     </message>
@@ -739,65 +777,65 @@
 <context>
     <name>ModelManager</name>
     <message>
-        <location filename="ModelManager.cpp" line="31"/>
-        <location filename="ModelManager.cpp" line="49"/>
+        <location filename="ModelManager.cpp" line="33"/>
+        <location filename="ModelManager.cpp" line="51"/>
         <source>Modèles 3D</source>
         <translatorcomment>Field Models</translatorcomment>
         <translation>3Dモデル</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="81"/>
+        <location filename="ModelManager.cpp" line="83"/>
         <source>Animations</source>
         <translatorcomment>Animations</translatorcomment>
         <translation>アニメーション</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="95"/>
+        <location filename="ModelManager.cpp" line="97"/>
         <source>Nom (non utilisé)</source>
         <translatorcomment>Name (unused)</translatorcomment>
         <translation>名称 (未使用)</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="97"/>
+        <location filename="ModelManager.cpp" line="99"/>
         <source>Inconnu</source>
         <translatorcomment>Unknown</translatorcomment>
         <translation>不明</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="99"/>
+        <location filename="ModelManager.cpp" line="101"/>
         <source>Taille modèle</source>
         <translatorcomment>Model size</translatorcomment>
         <translation>モデル サイズ</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="117"/>
+        <location filename="ModelManager.cpp" line="119"/>
         <source>Taille modèles (non utilisé)</source>
         <translatorcomment>Models size (unused)</translatorcomment>
         <translation>モデル サイズ (未使用)</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="101"/>
+        <location filename="ModelManager.cpp" line="103"/>
         <source>Lumière</source>
         <translatorcomment>Light</translatorcomment>
         <translation>光源</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="108"/>
-        <location filename="ModelManager.cpp" line="197"/>
-        <location filename="ModelManager.cpp" line="406"/>
+        <location filename="ModelManager.cpp" line="110"/>
+        <location filename="ModelManager.cpp" line="199"/>
+        <location filename="ModelManager.cpp" line="408"/>
         <source>OK</source>
         <translatorcomment>OK</translatorcomment>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="109"/>
+        <location filename="ModelManager.cpp" line="111"/>
         <source>Annuler</source>
         <translatorcomment>Cancel</translatorcomment>
         <translation>キャンセル</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="179"/>
-        <location filename="ModelManager.cpp" line="369"/>
+        <location filename="ModelManager.cpp" line="181"/>
+        <location filename="ModelManager.cpp" line="371"/>
         <source>Ajouter un modèle 3D</source>
         <translatorcomment>Add a field model</translatorcomment>
         <translation>3Dモデルの追加</translation>
@@ -806,114 +844,114 @@
 <context>
     <name>OpcodeList</name>
     <message>
-        <location filename="OpcodeList.cpp" line="25"/>
+        <location filename="OpcodeList.cpp" line="26"/>
         <source>Action</source>
         <translation>アクション</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="35"/>
+        <location filename="OpcodeList.cpp" line="36"/>
         <source>Modifier</source>
         <translation>編集</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="39"/>
+        <location filename="OpcodeList.cpp" line="40"/>
         <source>Ajouter</source>
         <translation>追加</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="42"/>
+        <location filename="OpcodeList.cpp" line="43"/>
         <source>Supprimer</source>
         <translation>削除</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="46"/>
+        <location filename="OpcodeList.cpp" line="47"/>
         <source>Couper</source>
         <translation>切り取り</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="50"/>
+        <location filename="OpcodeList.cpp" line="51"/>
         <source>Copier</source>
         <translation>コピー</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="54"/>
+        <location filename="OpcodeList.cpp" line="55"/>
         <source>Coller</source>
         <translation>貼り付け</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="58"/>
+        <location filename="OpcodeList.cpp" line="59"/>
         <source>Déplacer vers le haut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="62"/>
+        <location filename="OpcodeList.cpp" line="63"/>
         <source>Déplacer vers le bas</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="66"/>
+        <location filename="OpcodeList.cpp" line="67"/>
         <source>Étendre l&apos;arbre</source>
         <translation>ツリーを展く</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="67"/>
+        <location filename="OpcodeList.cpp" line="68"/>
         <source>Annuler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="71"/>
+        <location filename="OpcodeList.cpp" line="72"/>
         <source>Refaire</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="108"/>
+        <location filename="OpcodeList.cpp" line="109"/>
         <source>Édition du &amp;script</source>
         <translation>スクリプト エディター(&amp;S)</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="114"/>
+        <location filename="OpcodeList.cpp" line="115"/>
         <source>Ajouter une commande</source>
         <translation>行の追加</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="116"/>
+        <location filename="OpcodeList.cpp" line="117"/>
         <source>Supprimer une commande</source>
         <translation>行の削除</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="119"/>
+        <location filename="OpcodeList.cpp" line="120"/>
         <source>Monter une commande</source>
         <translation>上へ</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="121"/>
+        <location filename="OpcodeList.cpp" line="122"/>
         <source>Descendre une commande</source>
         <translation>下へ</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="313"/>
+        <location filename="OpcodeList.cpp" line="317"/>
         <source>Si ce script est exécuté,
  considérez que c&apos;est le dernier script non vide qui est exécuté</source>
         <translation>このスクリプトを実行した場合
 空ではないスクリプトの最後のものが実行されます</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="558"/>
+        <location filename="OpcodeList.cpp" line="562"/>
         <source>Suppression</source>
         <translation>削除</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="558"/>
+        <location filename="OpcodeList.cpp" line="562"/>
         <source>Voulez-vous vraiment supprimer %1 ?</source>
         <translation>%1 を削除しますか？</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="558"/>
+        <location filename="OpcodeList.cpp" line="562"/>
         <source>la commande sélectionnée</source>
         <translation>選択コマンド</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="558"/>
+        <location filename="OpcodeList.cpp" line="562"/>
         <source>les commandes sélectionnées</source>
         <translation>選択したコマンド</translation>
     </message>
@@ -930,126 +968,110 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="Opcode.cpp" line="303"/>
-        <location filename="Opcode.cpp" line="339"/>
+        <location filename="Opcode.cpp" line="307"/>
+        <location filename="Opcode.cpp" line="343"/>
         <source> (n°%1)</source>
         <translatorcomment> (No%1)</translatorcomment>
         <translation>(No.%1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="304"/>
+        <location filename="Opcode.cpp" line="308"/>
         <source>? (n°%1)</source>
         <translatorcomment>? (No%1)</translatorcomment>
         <translation>? (No.%1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="311"/>
+        <location filename="Opcode.cpp" line="315"/>
         <source>(Pas de texte)</source>
         <translatorcomment>(No text)</translatorcomment>
         <translation>(テキストなし)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="316"/>
-        <location filename="Opcode.cpp" line="326"/>
-        <location filename="Opcode.cpp" line="331"/>
-        <location filename="Opcode.cpp" line="334"/>
-        <location filename="Opcode.cpp" line="340"/>
-        <location filename="Opcode.cpp" line="346"/>
+        <location filename="Opcode.cpp" line="320"/>
+        <location filename="Opcode.cpp" line="330"/>
+        <location filename="Opcode.cpp" line="335"/>
+        <location filename="Opcode.cpp" line="338"/>
+        <location filename="Opcode.cpp" line="344"/>
+        <location filename="Opcode.cpp" line="350"/>
         <source>n°%1</source>
         <translatorcomment>No%1</translatorcomment>
         <translation>No.%1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="383"/>
+        <location filename="Opcode.cpp" line="387"/>
         <source> et </source>
         <translatorcomment> and </translatorcomment>
         <translation> + </translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="390"/>
+        <location filename="Opcode.cpp" line="394"/>
         <source>(Vide)</source>
         <translatorcomment>(Empty)</translatorcomment>
         <translation>(Empty)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="444"/>
+        <location filename="Opcode.cpp" line="448"/>
         <source>? (id=%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="464"/>
+        <location filename="Opcode.cpp" line="468"/>
         <source>Retourner</source>
         <translation>リターン</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="498"/>
+        <location filename="Opcode.cpp" line="502"/>
         <source>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</source>
         <translation type="unfinished">グループ %1 のスクリプト #%3 を実行 (優先度 %2/6) - スクリプトが実行されていない場合のみ</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="516"/>
+        <location filename="Opcode.cpp" line="520"/>
         <source>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6)</source>
         <translation type="unfinished">グループ %1 のスクリプト #%3 を実行 (優先度 %2/6)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="534"/>
+        <location filename="Opcode.cpp" line="538"/>
         <source>Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</source>
         <translation type="unfinished">外部グループ %1 のスクリプト #%3 を実行 (優先度 %2/6) - 完了してから次へ</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="571"/>
+        <location filename="Opcode.cpp" line="575"/>
         <source>Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</source>
         <translation type="unfinished">現在のパーティのキャラクター #%1 のグループのスクリプト #%3 を実行 (優先度 %2/6) - スクリプトが実行されていない場合のみ</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="589"/>
+        <location filename="Opcode.cpp" line="593"/>
         <source>Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l&apos;équipe (priorité %2/6)</source>
         <translation type="unfinished">現在のパーティのキャラクター #%1 のグループのスクリプト #%3 を実行 (優先度 %2/6)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="626"/>
+        <location filename="Opcode.cpp" line="630"/>
         <source>Retourner et exécuter le script n°%2 du groupe appelant (priorité %1/6)</source>
         <translation>リターンして呼び出したグループのスクリプト #%2 を実行 (優先度 %1/6)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="879"/>
+        <location filename="Opcode.cpp" line="883"/>
         <source>Modifier la vitesse de jeu (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1193"/>
+        <location filename="Opcode.cpp" line="1197"/>
         <source>Label %1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="Opcode.cpp" line="1234"/>
+        <location filename="Opcode.cpp" line="1265"/>
+        <source>Avancer de %n octet(s)</source>
+        <comment>With plural</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1230"/>
-        <location filename="Opcode.cpp" line="1262"/>
-        <source>Avancer de %1 octet%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="1231"/>
-        <location filename="Opcode.cpp" line="1263"/>
-        <location filename="Opcode.cpp" line="1293"/>
-        <location filename="Opcode.cpp" line="1325"/>
-        <location filename="Opcode.cpp" line="1381"/>
-        <location filename="Opcode.cpp" line="1426"/>
-        <location filename="Opcode.cpp" line="1473"/>
-        <location filename="Opcode.cpp" line="1522"/>
-        <location filename="Opcode.cpp" line="1570"/>
-        <location filename="Opcode.cpp" line="1619"/>
-        <location filename="Opcode.cpp" line="2381"/>
-        <location filename="Opcode.cpp" line="2401"/>
-        <location filename="Opcode.cpp" line="2421"/>
-        <location filename="Opcode.cpp" line="6608"/>
-        <location filename="Opcode.cpp" line="6623"/>
-        <source>s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="1232"/>
-        <location filename="Opcode.cpp" line="1264"/>
-        <location filename="Opcode.cpp" line="1294"/>
+        <location filename="Opcode.cpp" line="1235"/>
+        <location filename="Opcode.cpp" line="1266"/>
+        <location filename="Opcode.cpp" line="1295"/>
         <location filename="Opcode.cpp" line="1326"/>
         <source>Aller au label %1</source>
         <translation type="unfinished"></translation>
@@ -1059,68 +1081,68 @@
         <translation type="obsolete">%1 %3 %2%5 の場合 (他はバイト %4 へジャンプ)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1657"/>
+        <location filename="Opcode.cpp" line="1651"/>
         <source>Course de moto (paramètre %1)</source>
         <translatorcomment>Bike (parameter %1)</translatorcomment>
         <translation>バイク (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1658"/>
+        <location filename="Opcode.cpp" line="1652"/>
         <source>Course de chocobo (paramètre %1)</source>
         <translatorcomment>Chocobo Races (parameter %1)</translatorcomment>
         <translation>チョコボ レース (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1659"/>
+        <location filename="Opcode.cpp" line="1653"/>
         <source>Descente en snowboard -mode normal- (paramètre %1)</source>
         <translatorcomment>Snowboard -normal mode- (parameter %1)</translatorcomment>
         <translation>スノーボード・アイシクル (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1660"/>
+        <location filename="Opcode.cpp" line="1654"/>
         <source>Fort Condor (paramètre %1)</source>
         <translatorcomment>Fort Condor (parameter %1)</translatorcomment>
         <translation>コンドルフォート (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1661"/>
+        <location filename="Opcode.cpp" line="1655"/>
         <source>Sous-marin (paramètre %1)</source>
         <translatorcomment>Submarine (parameter %1)</translatorcomment>
         <translation>潜水艦 (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1662"/>
+        <location filename="Opcode.cpp" line="1656"/>
         <source>Speed Square (paramètre %1)</source>
         <translatorcomment>Speed Square (parameter %1)</translatorcomment>
         <translation>スピードスクエア (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1663"/>
+        <location filename="Opcode.cpp" line="1657"/>
         <source>Descente en snowboard -mode Gold Saucer- (paramètre %1)</source>
         <translatorcomment>Snowboard -Gold Saucer mode- (parameter %1)</translatorcomment>
         <translation>スノーボード・ゴールドソーサー (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1664"/>
-        <location filename="Opcode.cpp" line="3090"/>
+        <location filename="Opcode.cpp" line="1658"/>
+        <location filename="Opcode.cpp" line="3084"/>
         <source>%1? (paramètre %2)</source>
         <translatorcomment>%1? (parameter %2)</translatorcomment>
         <translation>%1? (パラメータ %2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1740"/>
-        <location filename="Opcode.cpp" line="4271"/>
+        <location filename="Opcode.cpp" line="1734"/>
+        <location filename="Opcode.cpp" line="4265"/>
         <source>Active l&apos;arène de combat du Gold Saucer</source>
         <translation>バトル アリーナの有効化</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1749"/>
-        <location filename="Opcode.cpp" line="4279"/>
+        <location filename="Opcode.cpp" line="1743"/>
+        <location filename="Opcode.cpp" line="4273"/>
         <source>Aucun</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1826"/>
+        <location filename="Opcode.cpp" line="1820"/>
         <source>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (u1=%1, u2=%5)</source>
         <translation type="unfinished">画面を RGB(%1, %2, %3) にフェード</translation>
     </message>
@@ -1133,27 +1155,27 @@
         <translation type="obsolete">AMBNT</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2018"/>
+        <location filename="Opcode.cpp" line="2015"/>
         <source>LIGHT</source>
         <translation type="unfinished">LIGHT</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2028"/>
+        <location filename="Opcode.cpp" line="2025"/>
         <source>SBOBJ</source>
         <translation type="unfinished">SBOBJ</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2038"/>
+        <location filename="Opcode.cpp" line="2035"/>
         <source>SHINE</source>
         <translation type="unfinished">SHINE</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2048"/>
+        <location filename="Opcode.cpp" line="2045"/>
         <source>RESET</source>
         <translation type="unfinished">RESET</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2069"/>
+        <location filename="Opcode.cpp" line="2066"/>
         <source>Filtre graphique sur l&apos;objet 3D - %1</source>
         <translation>3Dモデル グラフィック フィルター - %1</translation>
     </message>
@@ -1170,121 +1192,121 @@
         <translation type="obsolete">キー %1 が一度離された場合 (他はバイト %2 へジャンプ)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3070"/>
+        <location filename="Opcode.cpp" line="3064"/>
         <source>Fermer le programme (paramètre %1)</source>
         <translatorcomment>Exit program (parameter %1)</translatorcomment>
         <translation>プログラムの終了 (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3071"/>
+        <location filename="Opcode.cpp" line="3065"/>
         <source>Encount Error (paramètre %1)</source>
         <translatorcomment>Encount Error (parameter %1)</translatorcomment>
         <translation>エンカウント エラー (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3072"/>
+        <location filename="Opcode.cpp" line="3066"/>
         <source>Crédits de ff7 (paramètre %1)</source>
         <translatorcomment>ff7 credits (parameter %1)</translatorcomment>
         <translation>FF7 クレジット (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3073"/>
+        <location filename="Opcode.cpp" line="3067"/>
         <source>Changer nom de %1</source>
         <translatorcomment>Change name of %1</translatorcomment>
         <translation>名前の変更: %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3074"/>
+        <location filename="Opcode.cpp" line="3068"/>
         <source>Changer l&apos;équipe (paramètre %1)</source>
         <translatorcomment>Change party (parameter %1)</translatorcomment>
         <translation>パーティ変更 (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3075"/>
+        <location filename="Opcode.cpp" line="3069"/>
         <source>magasin n°%1</source>
         <translatorcomment>Shop No%1</translatorcomment>
         <translation>ショップ No.%1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3076"/>
+        <location filename="Opcode.cpp" line="3070"/>
         <source>principal (paramètre %1)</source>
         <translatorcomment>main (parameter %1)</translatorcomment>
         <translation>メイン (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3077"/>
+        <location filename="Opcode.cpp" line="3071"/>
         <source>course de moto (paramètre %1)</source>
         <translatorcomment>bike (parameter %1)</translatorcomment>
         <translation>バイク (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3078"/>
+        <location filename="Opcode.cpp" line="3072"/>
         <source>Sauvegarde (paramètre %1)</source>
         <translatorcomment>Save (parameter %1)</translatorcomment>
         <translation>セーブ (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3081"/>
+        <location filename="Opcode.cpp" line="3075"/>
         <source>Effacer la Matéria de %1</source>
         <translatorcomment>Remove %1&apos;s Materia</translatorcomment>
         <translation>%1 のマテリアを解除</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3084"/>
-        <location filename="Opcode.cpp" line="3086"/>
-        <location filename="Opcode.cpp" line="3088"/>
-        <location filename="Opcode.cpp" line="3089"/>
+        <location filename="Opcode.cpp" line="3078"/>
+        <location filename="Opcode.cpp" line="3080"/>
+        <location filename="Opcode.cpp" line="3082"/>
+        <location filename="Opcode.cpp" line="3083"/>
         <source>? (paramètre %1)</source>
         <translatorcomment>? (parameter %1)</translatorcomment>
         <translation>? (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3085"/>
+        <location filename="Opcode.cpp" line="3079"/>
         <source>HPs à 1 (paramètre %1)</source>
         <translatorcomment>HP to 1 (parameter %1)</translatorcomment>
         <translation>HP を 1 に (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3087"/>
+        <location filename="Opcode.cpp" line="3081"/>
         <source>maitre ? (paramètre %1)</source>
         <translatorcomment>master ? (parameter %1)</translatorcomment>
         <translation>マスター ? (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3224"/>
+        <location filename="Opcode.cpp" line="3218"/>
         <source>Déplacer la fenêtre n°%1 (déplacement : X=%2, Y=%3)</source>
         <translation type="unfinished">ウィンドウ #%1 を移動 (X=%2, Y=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3265"/>
+        <location filename="Opcode.cpp" line="3259"/>
         <source>Normale</source>
         <translatorcomment>Normal</translatorcomment>
         <translation>ノーマル</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3266"/>
+        <location filename="Opcode.cpp" line="3260"/>
         <source>Pas de fond, ni de bordure</source>
         <translatorcomment>No Background/Border</translatorcomment>
         <translation>背景/ボーダーなし</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3267"/>
+        <location filename="Opcode.cpp" line="3261"/>
         <source>Fond semi-transparent</source>
         <translatorcomment>Transparent Background</translatorcomment>
         <translation>背景の透過</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7683"/>
+        <location filename="Opcode.cpp" line="7675"/>
         <source>CPPAL2 %1</source>
         <translation type="unfinished">CPPAL2 %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7704"/>
+        <location filename="Opcode.cpp" line="7696"/>
         <source>RTPAL2 %1</source>
         <translation type="unfinished">RTPAL2 %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7725"/>
+        <location filename="Opcode.cpp" line="7717"/>
         <source>ADPAL2 %1</source>
         <translation type="unfinished">ADPAL2 %1</translation>
     </message>
@@ -1297,7 +1319,7 @@
         <translation type="obsolete">CHMPH %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="8055"/>
+        <location filename="Opcode.cpp" line="8047"/>
         <source>FMUSC (?=%1)</source>
         <translation type="unfinished">FMUSC (?=%1)</translation>
     </message>
@@ -1306,95 +1328,95 @@
         <translation type="obsolete">CMUSC %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2513"/>
+        <location filename="Opcode.cpp" line="2507"/>
         <source>(vide)</source>
         <translatorcomment>(none)</translatorcomment>
         <translation>(なし)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2514"/>
+        <location filename="Opcode.cpp" line="2508"/>
         <source>Horloge</source>
         <translatorcomment>Clock (00:00)</translatorcomment>
         <translation>クロック (00:00)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2515"/>
+        <location filename="Opcode.cpp" line="2509"/>
         <source>Affichage numérique</source>
         <translatorcomment>Numeric (000000)</translatorcomment>
         <translation>数値 (000000)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="401"/>
+        <location filename="Opcode.cpp" line="405"/>
         <source>haut gauche</source>
         <translatorcomment>Top Left</translatorcomment>
         <translation>左上</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="402"/>
+        <location filename="Opcode.cpp" line="406"/>
         <source>bas gauche</source>
         <translatorcomment>Bottom Left</translatorcomment>
         <translation>左下</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="403"/>
+        <location filename="Opcode.cpp" line="407"/>
         <source>haut droit</source>
         <translatorcomment>Top Right</translatorcomment>
         <translation>右上</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="404"/>
+        <location filename="Opcode.cpp" line="408"/>
         <source>bas droit</source>
         <translatorcomment>Bottom Right</translatorcomment>
         <translation>右下</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="413"/>
-        <location filename="Opcode.cpp" line="414"/>
+        <location filename="Opcode.cpp" line="417"/>
+        <location filename="Opcode.cpp" line="418"/>
         <source>inverse</source>
         <translatorcomment>reverse</translatorcomment>
         <translation>反転</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="415"/>
+        <location filename="Opcode.cpp" line="419"/>
         <source>normal</source>
         <translatorcomment>normal</translatorcomment>
         <translation>ノーマル</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1991"/>
+        <location filename="Opcode.cpp" line="1985"/>
         <source>Change la couleur ambiante du modèle : RVB(%1, %2, %3) RVB(%4, %5, %6) (flags=%7)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2362"/>
+        <location filename="Opcode.cpp" line="2359"/>
         <source> ou </source>
         <translatorcomment> or </translatorcomment>
         <translation>または</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1736"/>
-        <location filename="Opcode.cpp" line="4267"/>
+        <location filename="Opcode.cpp" line="1730"/>
+        <location filename="Opcode.cpp" line="4261"/>
         <source>Compte à rebours</source>
         <translatorcomment>Countdown</translatorcomment>
         <translation>カウントダウン</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1737"/>
-        <location filename="Opcode.cpp" line="4268"/>
+        <location filename="Opcode.cpp" line="1731"/>
+        <location filename="Opcode.cpp" line="4262"/>
         <source>Attaque préventive</source>
         <translatorcomment>Pre-emptive attack</translatorcomment>
         <translation>先制攻撃</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1738"/>
-        <location filename="Opcode.cpp" line="4269"/>
+        <location filename="Opcode.cpp" line="1732"/>
+        <location filename="Opcode.cpp" line="4263"/>
         <source>Impossible de fuir</source>
         <translatorcomment>The party cannot escape the battle</translatorcomment>
         <translation>パーティはバトルから逃走不能</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1739"/>
-        <location filename="Opcode.cpp" line="4270"/>
+        <location filename="Opcode.cpp" line="1733"/>
+        <location filename="Opcode.cpp" line="4264"/>
         <source>Ne pas jouer Fanfare</source>
         <translatorcomment>Do not play the battle victory music</translatorcomment>
         <translation>バトル勝利時の BGM を再生しない</translation>
@@ -1405,167 +1427,146 @@
         <translation type="obsolete">バトル アリーナの有効化</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1741"/>
-        <location filename="Opcode.cpp" line="4272"/>
+        <location filename="Opcode.cpp" line="1735"/>
+        <location filename="Opcode.cpp" line="4266"/>
         <source>Ne pas afficher d&apos;écran de récompense</source>
         <translatorcomment>Do not display the AP/EXP/Gil/items received screens</translatorcomment>
         <translation>バトル後の AP/EXP/ギル/アイテム 精算画面を表示しない</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1742"/>
+        <location filename="Opcode.cpp" line="1736"/>
         <source>Les personnages ne font pas leur animation de victoire</source>
         <translatorcomment>The party members do not perform their victory celebrations at the end of battle</translatorcomment>
         <translation>バトル後のメンバーの決めポーズをやめる</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1743"/>
-        <location filename="Opcode.cpp" line="4273"/>
+        <location filename="Opcode.cpp" line="1737"/>
+        <location filename="Opcode.cpp" line="4267"/>
         <source>Désactiver Game Over</source>
         <translatorcomment>Disable game over</translatorcomment>
         <translation>ゲーム オーバーを無効化</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="827"/>
+        <location filename="Opcode.cpp" line="831"/>
         <source>%1 le curseur main</source>
         <translatorcomment>%1 arrow</translatorcomment>
         <translation>カーソルを %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="828"/>
-        <location filename="Opcode.cpp" line="5412"/>
+        <location filename="Opcode.cpp" line="832"/>
+        <location filename="Opcode.cpp" line="5406"/>
         <source>Afficher</source>
         <translatorcomment>Display</translatorcomment>
         <translation>表示</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="828"/>
+        <location filename="Opcode.cpp" line="832"/>
         <source>Ne pas afficher</source>
         <translatorcomment>Hide</translatorcomment>
         <translation>隠す</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="853"/>
+        <location filename="Opcode.cpp" line="857"/>
         <source>PNAME - Désactiver le menu de droite (%1)</source>
         <translatorcomment>PNAME - Disable right menu (%1)</translatorcomment>
         <translation>PNAME - 右のメニューを無効化 (%1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="906"/>
+        <location filename="Opcode.cpp" line="910"/>
         <source>Modifier la vitesse des messages (%2) | %1 |</source>
         <translatorcomment>Set field message speed (%2) | %1 |</translatorcomment>
         <translation>フィールド メッセージ速度をセット (%2) | %1 |</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="943"/>
+        <location filename="Opcode.cpp" line="947"/>
         <source>Remplir l&apos;inventaire par tous les objets en quantité maximum</source>
         <translatorcomment>Fills all available item entries in full quantity</translatorcomment>
         <translation>すべての使用可能な所持アイテムを最大化</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="964"/>
+        <location filename="Opcode.cpp" line="968"/>
         <source>%1 les combats</source>
         <translatorcomment>%1 battles</translatorcomment>
         <translation>バトルを %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="965"/>
-        <location filename="Opcode.cpp" line="991"/>
-        <location filename="Opcode.cpp" line="1957"/>
-        <location filename="Opcode.cpp" line="2438"/>
-        <location filename="Opcode.cpp" line="4121"/>
-        <location filename="Opcode.cpp" line="4240"/>
-        <location filename="Opcode.cpp" line="4644"/>
-        <location filename="Opcode.cpp" line="6505"/>
-        <location filename="Opcode.cpp" line="7074"/>
+        <location filename="Opcode.cpp" line="969"/>
+        <location filename="Opcode.cpp" line="995"/>
+        <location filename="Opcode.cpp" line="1951"/>
+        <location filename="Opcode.cpp" line="2432"/>
+        <location filename="Opcode.cpp" line="4115"/>
+        <location filename="Opcode.cpp" line="4234"/>
+        <location filename="Opcode.cpp" line="4638"/>
+        <location filename="Opcode.cpp" line="6499"/>
+        <location filename="Opcode.cpp" line="7066"/>
         <source>Activer</source>
         <translatorcomment>Activate</translatorcomment>
         <translation>有効化</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="965"/>
-        <location filename="Opcode.cpp" line="991"/>
-        <location filename="Opcode.cpp" line="1957"/>
-        <location filename="Opcode.cpp" line="2438"/>
-        <location filename="Opcode.cpp" line="4121"/>
-        <location filename="Opcode.cpp" line="4240"/>
-        <location filename="Opcode.cpp" line="4644"/>
-        <location filename="Opcode.cpp" line="6505"/>
-        <location filename="Opcode.cpp" line="7074"/>
+        <location filename="Opcode.cpp" line="969"/>
+        <location filename="Opcode.cpp" line="995"/>
+        <location filename="Opcode.cpp" line="1951"/>
+        <location filename="Opcode.cpp" line="2432"/>
+        <location filename="Opcode.cpp" line="4115"/>
+        <location filename="Opcode.cpp" line="4234"/>
+        <location filename="Opcode.cpp" line="4638"/>
+        <location filename="Opcode.cpp" line="6499"/>
+        <location filename="Opcode.cpp" line="7066"/>
         <source>Désactiver</source>
         <translatorcomment>Deactivate</translatorcomment>
         <translation>無効化</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1017"/>
+        <location filename="Opcode.cpp" line="1021"/>
         <source>Changer le nom de %1 par le texte %2</source>
         <translatorcomment>Change name of %1 by text %2</translatorcomment>
         <translation>%1 の名前をテキスト %2 に変更</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1050"/>
+        <location filename="Opcode.cpp" line="1054"/>
         <source>Met le temps à 0, débloque le menu &quot;PHS&quot; et &quot;Sauvegarder&quot;. Nouvelle équipe : Clad | (Vide) | (Vide)</source>
         <translatorcomment>Set game time to 0, unlock PHS and Save menu. New party: Cloud | (empty) | (empty)</translatorcomment>
         <translation>プレイ時間を 0 に, PHS とセーブを有効化, 新しいパーティ クラウド | (空き) | (空き)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1064"/>
+        <location filename="Opcode.cpp" line="1068"/>
         <source>Supprimer tous les objets de l&apos;inventaire</source>
         <translatorcomment>Remove all items</translatorcomment>
         <translation>すべてのアイテムを削除</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1292"/>
-        <location filename="Opcode.cpp" line="1324"/>
-        <source>Reculer de %1 octet%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="1375"/>
-        <location filename="Opcode.cpp" line="1420"/>
-        <location filename="Opcode.cpp" line="1467"/>
-        <location filename="Opcode.cpp" line="1516"/>
-        <location filename="Opcode.cpp" line="1564"/>
-        <location filename="Opcode.cpp" line="1613"/>
+        <location filename="Opcode.cpp" line="1419"/>
+        <location filename="Opcode.cpp" line="1465"/>
+        <location filename="Opcode.cpp" line="1513"/>
+        <location filename="Opcode.cpp" line="1560"/>
+        <location filename="Opcode.cpp" line="1608"/>
         <source>Si %1 %3 %2%5 (%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1380"/>
+        <location filename="Opcode.cpp" line="1381"/>
         <location filename="Opcode.cpp" line="1425"/>
-        <location filename="Opcode.cpp" line="1472"/>
-        <location filename="Opcode.cpp" line="1521"/>
-        <location filename="Opcode.cpp" line="1569"/>
-        <location filename="Opcode.cpp" line="1618"/>
-        <location filename="Opcode.cpp" line="2380"/>
-        <location filename="Opcode.cpp" line="2400"/>
-        <location filename="Opcode.cpp" line="2420"/>
-        <location filename="Opcode.cpp" line="6607"/>
-        <location filename="Opcode.cpp" line="6622"/>
-        <source>avancer de %1 octet%2 sinon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="1382"/>
-        <location filename="Opcode.cpp" line="1427"/>
-        <location filename="Opcode.cpp" line="1474"/>
-        <location filename="Opcode.cpp" line="1523"/>
-        <location filename="Opcode.cpp" line="1571"/>
-        <location filename="Opcode.cpp" line="1620"/>
-        <location filename="Opcode.cpp" line="2382"/>
-        <location filename="Opcode.cpp" line="2402"/>
-        <location filename="Opcode.cpp" line="2422"/>
-        <location filename="Opcode.cpp" line="6609"/>
-        <location filename="Opcode.cpp" line="6624"/>
+        <location filename="Opcode.cpp" line="1471"/>
+        <location filename="Opcode.cpp" line="1519"/>
+        <location filename="Opcode.cpp" line="1566"/>
+        <location filename="Opcode.cpp" line="1614"/>
+        <location filename="Opcode.cpp" line="2378"/>
+        <location filename="Opcode.cpp" line="2397"/>
+        <location filename="Opcode.cpp" line="2416"/>
+        <location filename="Opcode.cpp" line="6602"/>
+        <location filename="Opcode.cpp" line="6616"/>
         <source>aller au label %1 sinon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1921"/>
+        <location filename="Opcode.cpp" line="1915"/>
         <source>Changer l&apos;état de la texture des yeux ou de la bouche (oeil 1=%1, oeil 2=%2, bouche=%3, ID objet 3D=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1956"/>
+        <location filename="Opcode.cpp" line="1950"/>
         <source>%1 transparence</source>
         <translatorcomment>%1 blending</translatorcomment>
         <translation>透過効果を %1</translation>
@@ -1600,7 +1601,7 @@
         <translation type="obsolete">現在のパーティのキャラクター #%1 のグループのスクリプト #%3 を実行 (優先度 %2/6)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="607"/>
+        <location filename="Opcode.cpp" line="611"/>
         <source>Exécuter le script n°%3 du groupe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</source>
         <translatorcomment>Execute the script #%3 in group associated with the character #%1 in the current party (priority %2/6) - Waiting for end of execution to continue</translatorcomment>
         <translation>現在のパーティのキャラクター #%1 のグループのスクリプト #%3 を実行 (優先度 %2/6) - 完了したら次へ</translation>
@@ -1611,37 +1612,37 @@
         <translation type="obsolete">リターンして呼び出したグループのスクリプト #%2 を実行 (優先度 %1/6)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="649"/>
+        <location filename="Opcode.cpp" line="653"/>
         <source>Rassembler les membres de l&apos;équipe dans le personnage jouable (vitesse=%1)</source>
         <translatorcomment>Join party field (speed=%1)</translatorcomment>
         <translation>パーティ合流フィールド (速度=%1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="680"/>
+        <location filename="Opcode.cpp" line="684"/>
         <source>Faire sortir les membres de l&apos;équipe à partir du personnage jouable (perso 1 : X=%1, Y=%2, dir=%3 ; perso 2 : X=%4, Y=%5, dir=%6) (vitesse %7)</source>
         <translatorcomment>Split party field (member 1: X=%1, Y=%2, dir=%3 ; member 2 : X=%4, Y=%5, dir=%6) (speed %7)</translatorcomment>
         <translation>メンバー分割フィールド (メンバー 1: X=%1, Y=%2, dir=%3 ; メンバー 2 : X=%4, Y=%5, dir=%6) (速度 %7)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="765"/>
+        <location filename="Opcode.cpp" line="769"/>
         <source>Sauvegarder les membres de l&apos;équipe : %1 | %2 | %3</source>
         <translatorcomment>Set party from memory: %1 | %2 | %3</translatorcomment>
         <translation>パーティをメモリからセット: %1 | %2 | %3</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="783"/>
+        <location filename="Opcode.cpp" line="787"/>
         <source>Récupérer les membres de l&apos;équipe : %1 | %2 | %3</source>
         <translatorcomment>Get party to memory: %1 | %2 | %3</translatorcomment>
         <translation>パーティをメモリに送る: %1 | %2 | %3</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="801"/>
+        <location filename="Opcode.cpp" line="805"/>
         <source>Demander le CD %1</source>
         <translatorcomment>Ask the disk %1</translatorcomment>
         <translation>ディスク %1 の確認</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1085"/>
+        <location filename="Opcode.cpp" line="1089"/>
         <source>SPECIAL - </source>
         <translatorcomment>SPECIAL - </translatorcomment>
         <translation>SPECIAL -</translation>
@@ -1652,33 +1653,33 @@
         <translation type="obsolete">バイト %1 へジャンプ</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1667"/>
+        <location filename="Opcode.cpp" line="1661"/>
         <source>Lancer un mini-jeu : %5 (Après le jeu aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4))</source>
         <oldsource>Lancer un mini-jeu : %5 (Après le jeu aller à l&apos;écran %1 (X=%2, Y=%3, polygone id=%4))</oldsource>
         <translatorcomment>Mini-game: %5 (After the game goto field %1 (X=%2, Y=%3, triangle ID=%4))</translatorcomment>
         <translation>ミニゲーム: %5 (ゲームがフィールド %1 (X=%2, Y=%3, ポリゴンID=%4) に達したとき)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1698"/>
+        <location filename="Opcode.cpp" line="1692"/>
         <source>Lancer le tutoriel n°%1</source>
         <translatorcomment>Tutorial no%1</translatorcomment>
         <translation>解説 No.%1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1749"/>
-        <location filename="Opcode.cpp" line="4279"/>
+        <location filename="Opcode.cpp" line="1743"/>
+        <location filename="Opcode.cpp" line="4273"/>
         <source>Mode de combat : %1</source>
         <translatorcomment>Battle mode: %1</translatorcomment>
         <translation>バトル モード : %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1770"/>
+        <location filename="Opcode.cpp" line="1764"/>
         <source>Stocker le résultat du dernier combat dans %1</source>
         <translatorcomment>Stores the result of the last battle in %1</translatorcomment>
         <translation>最後のバトル結果を %1 に保存</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1799"/>
+        <location filename="Opcode.cpp" line="1793"/>
         <source>Attendre %1 img</source>
         <translatorcomment>Wait %1 frame</translatorcomment>
         <translation>%1 フレーム待機</translation>
@@ -1689,27 +1690,27 @@
         <translation type="obsolete">画面を RGB(%1, %2, %3) にフェード</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1870"/>
+        <location filename="Opcode.cpp" line="1864"/>
         <source>L&apos;objet 3D cligne des yeux : %1</source>
         <translatorcomment>Field Model blink : %1</translatorcomment>
         <translation>3Dモデルを点滅させる : %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1871"/>
-        <location filename="Opcode.cpp" line="1892"/>
-        <location filename="Opcode.cpp" line="2150"/>
+        <location filename="Opcode.cpp" line="1865"/>
+        <location filename="Opcode.cpp" line="1886"/>
+        <location filename="Opcode.cpp" line="2147"/>
         <source>ON</source>
         <translation>オン</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1871"/>
-        <location filename="Opcode.cpp" line="1892"/>
-        <location filename="Opcode.cpp" line="2150"/>
+        <location filename="Opcode.cpp" line="1865"/>
+        <location filename="Opcode.cpp" line="1886"/>
+        <location filename="Opcode.cpp" line="2147"/>
         <source>OFF</source>
         <translation>オフ</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="1891"/>
+        <location filename="Opcode.cpp" line="1885"/>
         <source>BGMOVIE : %1</source>
         <translation>BGMOVIE : %1</translation>
     </message>
@@ -1719,43 +1720,43 @@
         <translation type="obsolete">3Dモデル グラフィック フィルター -</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2113"/>
+        <location filename="Opcode.cpp" line="2110"/>
         <source>Attendre la fin de l&apos;exécution du filtre graphique</source>
         <translatorcomment>Wait for graphic filter</translatorcomment>
         <translation>グラフィック フィルター待ち</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2128"/>
+        <location filename="Opcode.cpp" line="2125"/>
         <source>Déplacer l&apos;objet 3D vers le membre n°%1 de l&apos;équipe</source>
         <translatorcomment>Move Field Model to Party Member #%1</translatorcomment>
         <translation>3Dモデルをパーティ メンバー #%1 に移動</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2149"/>
+        <location filename="Opcode.cpp" line="2146"/>
         <source>SLIP : %1</source>
         <translatorcomment>SLIP: %1</translatorcomment>
         <translation>SLIP: %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2172"/>
+        <location filename="Opcode.cpp" line="2169"/>
         <source>Déplacer la couche %1 du décor (Z=%2)</source>
         <translatorcomment>Set Z-deph for the background layer #%1 (Z=%2)</translatorcomment>
         <translation>背景レイヤー #%1 の Z 値をセット (Z=%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2206"/>
+        <location filename="Opcode.cpp" line="2203"/>
         <source>Animer la couche %1 du décor (horizontalement=%2, verticalement=%3)</source>
         <translatorcomment>Animate the background layer #%1 (Horizontally=%2, Vertically=%3)</translatorcomment>
         <translation>背景レイヤー  #%1 をアニメーション (水平=%2, 垂直=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2241"/>
+        <location filename="Opcode.cpp" line="2238"/>
         <source>WCLS (fenêtre n°%1)</source>
         <translatorcomment>Window close (window #%1)</translatorcomment>
         <translation>ウィンドウを閉じる (ウィンドウ #%1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2323"/>
+        <location filename="Opcode.cpp" line="2320"/>
         <source>Redimensionner fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</source>
         <oldsource>Redimmensionner fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</oldsource>
         <translatorcomment>Resizes/Repositions the window #%1 (X=%2, Y=%3, width=%4, height=%5)</translatorcomment>
@@ -1777,154 +1778,154 @@
         <translation type="obsolete">キー %1 が一度離された場合 (他はバイト %2 へジャンプ)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2437"/>
+        <location filename="Opcode.cpp" line="2431"/>
         <source>%1 les déplacements du personnage jouable</source>
         <translatorcomment>%1 the movability of the playable character</translatorcomment>
         <translation>操作可能キャラクターの移動能力を %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2458"/>
+        <location filename="Opcode.cpp" line="2452"/>
         <source>Tourner instantanément l&apos;objet 3D vers le membre de l&apos;équipe n°%1</source>
         <translatorcomment>Instantly turns the field model to face the party member #%1</translatorcomment>
         <translation>3Dモデルの向きをパーティ メンバー #%1 の方へただちにターン</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2481"/>
+        <location filename="Opcode.cpp" line="2475"/>
         <source>Tourner l&apos;objet 3D vers le membre de l&apos;équipe n°%1 (Vitesse=%2, SensRotation=%3)</source>
         <translatorcomment>Turns the field model to face the party member #%1 (Speed=%2, Rotation=%3)</translatorcomment>
         <translation>3Dモデルの向きをパーティ メンバー #%1 の方へターン (速度=%2, 回転=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2519"/>
+        <location filename="Opcode.cpp" line="2513"/>
         <source>%2 dans fenêtre n°%1 (gauche=%3, haut=%4)</source>
         <translatorcomment>%2 in the window #%1 (left=%3, top=%4)</translatorcomment>
         <translation>ウィンドウ #%1 内の %2 (左=%3, 上=%4)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2560"/>
+        <location filename="Opcode.cpp" line="2554"/>
         <source>Affecter %2 dans la fenêtre n°%1 et afficher %3 chiffres</source>
         <translatorcomment>Sets %2 in window #%1 (show %3 digits)</translatorcomment>
         <translation>%2 をウィンドウ #%1 にセット (%3 回表示)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2609"/>
+        <location filename="Opcode.cpp" line="2603"/>
         <source>Affecter une valeur au compte à rebours (H=%1, M=%2, S=%3)</source>
         <translatorcomment>Set Timer (H=%1, M=%2, S=%3)</translatorcomment>
         <translation>タイマーをセット (H=%1, M=%2, S=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2672"/>
+        <location filename="Opcode.cpp" line="2666"/>
         <source>Ajouter %1 gils à l&apos;équipe</source>
         <translatorcomment>Add %1 gils to the party</translatorcomment>
         <translation>パーティの所持ギルに %1 を加える</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2688"/>
+        <location filename="Opcode.cpp" line="2682"/>
         <source>Retirer %1 gils à l&apos;équipe</source>
         <translatorcomment>Remove %1 gils to the party</translatorcomment>
         <translation>パーティの所持ギルから %1 を減らす</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2706"/>
+        <location filename="Opcode.cpp" line="2700"/>
         <source>Copier le nombre de Gils dans %1 et %2</source>
         <translatorcomment>Copies the amount of gil in %1 and %2</translatorcomment>
         <translation>%1 と %2 にギルの総額をコピー</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2733"/>
-        <location filename="Opcode.cpp" line="2742"/>
-        <location filename="Opcode.cpp" line="2760"/>
+        <location filename="Opcode.cpp" line="2727"/>
+        <location filename="Opcode.cpp" line="2736"/>
+        <location filename="Opcode.cpp" line="2754"/>
         <source>Redonne les HP/MP aux membres de l&apos;équipe</source>
         <translatorcomment>Restores full HP and MP of every party member</translatorcomment>
         <translation>すべてのパーティメンバーの HP, MP を回復</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2751"/>
+        <location filename="Opcode.cpp" line="2745"/>
         <source>Redonne les HP/MP à tous et soigne les troubles de statut</source>
         <translatorcomment>Restores full HP and MP of every available character and removing status effects</translatorcomment>
         <translation>利用可能なすべてのキャラクターの HP, MP を回復してステータス異常も解消</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2776"/>
+        <location filename="Opcode.cpp" line="2770"/>
         <source>Afficher message %2 dans la fenêtre n°%1</source>
         <translatorcomment>Displays the dialog %2 in the window #%1</translatorcomment>
         <translation>ダイアログ %2 をウィンドウ #%1 に表示</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2823"/>
-        <location filename="Opcode.cpp" line="2869"/>
+        <location filename="Opcode.cpp" line="2817"/>
+        <location filename="Opcode.cpp" line="2863"/>
         <source>Affecter %3 à la variable n°%2 dans la fenêtre n°%1</source>
         <translatorcomment>Set %3 to the variable #%2 in the window #%1</translatorcomment>
         <translation>ウィンドウ #%1 の変数 #%2 に %3 をセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2912"/>
+        <location filename="Opcode.cpp" line="2906"/>
         <source>Afficher %1 dans le menu</source>
         <translatorcomment>Display %1 in the main menu</translatorcomment>
         <translation>%1 をメイン メニューに表示</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2970"/>
+        <location filename="Opcode.cpp" line="2964"/>
         <source>Augmenter de %2 MPs le membre n°%1 de l&apos;équipe</source>
         <translatorcomment>Add %2 MP to party member #%1</translatorcomment>
         <translation>パーティ メンバー #%1 の MP を %2 増やす</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2987"/>
+        <location filename="Opcode.cpp" line="2981"/>
         <source>Diminuer de %2 MPs le membre n°%1 de l&apos;équipe</source>
         <translatorcomment>Remove %2 MP to party member #%1</translatorcomment>
         <translation>パーティ メンバー #%1 の MP を %2 減らす</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3009"/>
+        <location filename="Opcode.cpp" line="3003"/>
         <source>Poser question %2 dans la fenêtre n°%1 (et mettre la réponse sélectionnée dans %5) première ligne=%3, dernière ligne=%4</source>
         <translatorcomment>Ask Question %2 in the window #%1 (and put selected answer in %5) first line=%3, last line=%4</translatorcomment>
         <translation>ウィンドウ #%1 に選択肢 %2 を表示 (続いてプレーヤーの選択を %5 にセット) 最初の行=%3, 最後の行=%4</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3096"/>
+        <location filename="Opcode.cpp" line="3090"/>
         <source>Afficher menu %1</source>
         <translatorcomment>Show menu %1</translatorcomment>
         <translation>メニュー %1 を表示</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3126"/>
+        <location filename="Opcode.cpp" line="3120"/>
         <source>%1 l&apos;accès aux menus</source>
         <translatorcomment>%1 access to the main menu</translatorcomment>
         <translation>メイン メニューへのアクセスを %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3127"/>
+        <location filename="Opcode.cpp" line="3121"/>
         <source>Permettre</source>
         <translatorcomment>Enables</translatorcomment>
         <translation>有効化</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3127"/>
+        <location filename="Opcode.cpp" line="3121"/>
         <source>Interdire</source>
         <translatorcomment>Disables</translatorcomment>
         <translation>無効化</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3147"/>
+        <location filename="Opcode.cpp" line="3141"/>
         <source>Choisir la battle table : %1</source>
         <translatorcomment>Set battle table: %1</translatorcomment>
         <translation>バトル テーブル %1 をセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3168"/>
+        <location filename="Opcode.cpp" line="3162"/>
         <source>Augmenter de %2 HPs le membre n°%1 de l&apos;équipe</source>
         <translatorcomment>Add %2 HP to party member #%1</translatorcomment>
         <translation>パーティ メンバー #%1 の HP を %2 増やす</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3185"/>
+        <location filename="Opcode.cpp" line="3179"/>
         <source>Diminuer de %2 HPs le membre n°%1 de l&apos;équipe</source>
         <translatorcomment>Remove %2 HP to party member #%1</translatorcomment>
         <translation>パーティ メンバー  #%1 の HP を %2 減らす</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3202"/>
+        <location filename="Opcode.cpp" line="3196"/>
         <source>Créer la fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</source>
         <translatorcomment>Create window #%1 (X=%2, Y=%3, Width=%4, Height=%5)</translatorcomment>
         <translation>ウィンドウ #%1 の作成 (X=%2, Y=%3, 幅=%4, 高さ=%5)</translation>
@@ -1935,103 +1936,103 @@
         <translation type="obsolete">ウィンドウ #%1 を移動 (X=%2, Y=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3271"/>
+        <location filename="Opcode.cpp" line="3265"/>
         <source>Décoration de la fenêtre n°%1 : %2 (%3 la fermeture de la fenêtre par le joueur)</source>
         <translatorcomment>Set the window #%1 mode: %2 (%3 the closing of the window by the player)</translatorcomment>
         <translation>ウィンドウ #%1 モード: %2 をセット (プレーヤーがウィンドウを閉じる操作を %3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3274"/>
+        <location filename="Opcode.cpp" line="3268"/>
         <source>autoriser</source>
         <translatorcomment>authorize</translatorcomment>
         <translation>許可</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3274"/>
+        <location filename="Opcode.cpp" line="3268"/>
         <source>empêcher</source>
         <translatorcomment>prevent</translatorcomment>
         <translation>禁止</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3307"/>
+        <location filename="Opcode.cpp" line="3301"/>
         <source>Remettre la fenêtre n°%1 à zéro</source>
         <translatorcomment>Reset the window #%1</translatorcomment>
         <translation>ウィンドウ #%1 をリセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3351"/>
+        <location filename="Opcode.cpp" line="3345"/>
         <source>Fermer la fenêtre n°%1</source>
         <translatorcomment>Close the window #%1</translatorcomment>
         <translation>ウィンドウ #%1 を閉じる</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3383"/>
+        <location filename="Opcode.cpp" line="3377"/>
         <source>Configurer le nombre de lignes de texte à %2 dans la fenêtre n°%1</source>
         <translatorcomment>Number of row in the window #%1 = %2</translatorcomment>
         <translation>ウィンドウ #%1 の桁数 = %2</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3454"/>
+        <location filename="Opcode.cpp" line="3448"/>
         <source>Obtenir la couleur du côté %1 des fenêtres et en stocker les composantes dans %2 (R), %3 (V) et %4 (B)</source>
         <translatorcomment>Get windows %1 color to %2 (R), %3 (G) and %4 (B)</translatorcomment>
         <translation>ウィンドウ %1 の色を  %2 (R), %3 (G), %4 (B) に変更</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3474"/>
+        <location filename="Opcode.cpp" line="3468"/>
         <source>Changer la couleur du côté %1 des fenêtres : RVB(%2, %3, %4)</source>
         <translatorcomment>Set windows %1 color: RGB(%2, %3, %4)</translatorcomment>
         <translation>ウィンドウ %1 の色をセット: RGB(%2, %3, %4)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3522"/>
+        <location filename="Opcode.cpp" line="3516"/>
         <source>Ajouter %2 objet(s) %1 dans l&apos;inventaire</source>
         <translatorcomment>Add %2 item(s) %1 to the inventory</translatorcomment>
         <translation>アイテム %1 の所持数を %2 増やす</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3539"/>
+        <location filename="Opcode.cpp" line="3533"/>
         <source>Supprimer %2 objet(s) %1 dans l&apos;inventaire</source>
         <translatorcomment>Remove %2 item(s) %1 from the inventory</translatorcomment>
         <translation>アイテム %1 の所持数を %2 減らす</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3556"/>
+        <location filename="Opcode.cpp" line="3550"/>
         <source>%2 = quantité d&apos;objets %1 dans l&apos;inventaire</source>
         <translatorcomment>%2 = amount of item %1 in the inventory</translatorcomment>
         <translation>%2 = アイテム %1 の所持数</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3079"/>
+        <location filename="Opcode.cpp" line="3073"/>
         <source>Effacer toutes les matérias (paramètre %1)</source>
         <translatorcomment>Remove all materias (parameter %1)</translatorcomment>
         <translation>すべてのマテリアを解除 (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3080"/>
+        <location filename="Opcode.cpp" line="3074"/>
         <source>Rétablir toutes les matérias (paramètre %1)</source>
         <translatorcomment>Restore all materias (parameter %1)</translatorcomment>
         <translation>すべてのマテリアを戻す (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3082"/>
+        <location filename="Opcode.cpp" line="3076"/>
         <source>Effacer les matérias de Clad (paramètre %1)</source>
         <translatorcomment>Clear Cloud&apos;s materias (parameter %1)</translatorcomment>
         <translation>クラウドのマテリアを解除 (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3083"/>
+        <location filename="Opcode.cpp" line="3077"/>
         <source>Rétablir les matérias de Clad (paramètre %1)</source>
         <translatorcomment>Restore Cloud&apos;s materias (parameter %1)</translatorcomment>
         <translation>クラウドのマテリアを戻す (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="929"/>
+        <location filename="Opcode.cpp" line="933"/>
         <source>Remplir le menu matéria de toutes les matérias en quantité maximum</source>
         <translatorcomment>Fill materia menu with all materias in full quantity</translatorcomment>
         <translation>マテリア メニューのマテリアを最大数に</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="990"/>
+        <location filename="Opcode.cpp" line="994"/>
         <source>%1 les cinématiques</source>
         <translatorcomment>%1 movies</translatorcomment>
         <translation>ムービーを %1</translation>
@@ -2041,13 +2042,13 @@
         <translation type="obsolete">%1 %3 %2%5 の場合 (他はバイト %4 へジャンプ)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3577"/>
+        <location filename="Opcode.cpp" line="3571"/>
         <source>Ajouter la matéria %1 dans l&apos;inventaire (AP=%2)</source>
         <translatorcomment>Add %1 materia to the inventory (AP=%2)</translatorcomment>
         <translation>所持アイテムにマテリア %1 を追加 (AP=%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3619"/>
+        <location filename="Opcode.cpp" line="3613"/>
         <source>Supprimer %3 matéria(s) %1 dans l&apos;inventaire (AP=%2)</source>
         <translatorcomment>Remove %3 materia(s) %1 from the inventory (AP=%2)</translatorcomment>
         <translation>所持アイテムから%3 マテリア %1 を減らす (AP=%2)</translation>
@@ -2058,74 +2059,74 @@
         <translation type="obsolete">%4 = 所持アイテム中のマテリア %1 の数 (AP=%2, ???=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3714"/>
+        <location filename="Opcode.cpp" line="3708"/>
         <source>Secouer l&apos;écran (nbOscillations=%1, Amplitude=%2, vitesse=%3)</source>
         <translatorcomment>Shake (nbSwings=%1, Amplitude=%2, speed=%3)</translatorcomment>
         <translation>揺らす (nb周期=%1, 拡がり=%2, 速度=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3738"/>
+        <location filename="Opcode.cpp" line="3732"/>
         <source>Ne rien faire...</source>
         <translatorcomment>Perform no operation...</translatorcomment>
         <translation>何もしない...</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3757"/>
+        <location filename="Opcode.cpp" line="3751"/>
         <source>Aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4, direction=%5)</source>
         <oldsource>Aller à l&apos;écran %1 (X=%2, Y=%3, polygone id=%4, direction=%5)</oldsource>
         <translatorcomment>Jump to map %1 (X=%2, Y=%3, triangle ID=%4, direction=%5)</translatorcomment>
         <translation>マップ %1 にジャンプ (X=%2, Y=%3, ポリゴンID=%4, 方向=%5)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3832"/>
+        <location filename="Opcode.cpp" line="3826"/>
         <source>Centrer sur le groupe %2 (vitesse=%1, type=%3)</source>
         <translatorcomment>Scroll to group %2 (speed=%1, type=%3)</translatorcomment>
         <translation>グループ %2 へスクロール (速度=%1, タイプ=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3867"/>
+        <location filename="Opcode.cpp" line="3861"/>
         <source>Centrer sur zone (X=%1, Y=%2)</source>
         <translatorcomment>Scroll to location (X=%1, Y=%2)</translatorcomment>
         <translation>エリアにスクロール (X=%1, Y=%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3894"/>
+        <location filename="Opcode.cpp" line="3888"/>
         <source>Centrer sur le personnage jouable</source>
         <translatorcomment>Scroll to playable character</translatorcomment>
         <translation>操作可能なキャラクターへスクロール</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3913"/>
-        <location filename="Opcode.cpp" line="3963"/>
+        <location filename="Opcode.cpp" line="3907"/>
+        <location filename="Opcode.cpp" line="3957"/>
         <source>Centrer sur zone (X=%1, Y=%2, vitesse=%3)</source>
         <translatorcomment>Scroll to location (X=%1, Y=%2, speed=%3)</translatorcomment>
         <translation>エリアにスクロール (X=%1, Y=%2, 速度=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3944"/>
+        <location filename="Opcode.cpp" line="3938"/>
         <source>Attendre la fin du dernier centrage pour continuer</source>
         <translatorcomment>Wait for scroll</translatorcomment>
         <translation>スクロール待ち</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4000"/>
+        <location filename="Opcode.cpp" line="3994"/>
         <source>MPDSP : %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4024"/>
+        <location filename="Opcode.cpp" line="4018"/>
         <source>Centrer sur Zone (?=%1, ?=%2, ?=%3)</source>
         <translatorcomment>Scroll to location (?=%1, ?=%2, ?=%3)</translatorcomment>
         <translation>エリアにスクロール (?=%1, ?=%2, ?=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4066"/>
+        <location filename="Opcode.cpp" line="4060"/>
         <source>Voiler l&apos;écran avec la couleur RVB(%1, %2, %3) (vitesse=%4, type=%5, adjust=%6)</source>
         <translatorcomment>Fades the screen to the colour RGB(%1, %2, %3) (speed=%4, type=%5, adjust=%6)</translatorcomment>
         <translation>画面の色を RGB(%1, %2, %3) にフェード (速度=%4, タイプ=%5, アジャスト=%6)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4103"/>
+        <location filename="Opcode.cpp" line="4097"/>
         <source>Attendre la fin du voilage de l&apos;écran pour continuer</source>
         <translatorcomment>Wait for fade</translatorcomment>
         <translation>フェード待ち</translation>
@@ -2142,535 +2143,535 @@
         <translation type="obsolete">%1 の最後のフィールドのフィールドID を再取得</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4176"/>
+        <location filename="Opcode.cpp" line="4170"/>
         <source>Centrer sur le personnage n°%2 de l&apos;équipe actuelle (vitesse=%1 img, type=%3)</source>
         <translatorcomment>Scroll to party member #%2 (speed=%1 frames, type=%3) (速度=%1 フレーム, タイプ=%3)</translatorcomment>
         <translation>パーティ メンバー#%2 にスクロール (速度=%1 フレーム, タイプ=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4210"/>
+        <location filename="Opcode.cpp" line="4204"/>
         <source>Commencer le combat n°%1</source>
         <translatorcomment>Start battle #%1</translatorcomment>
         <translation>バトル #%1 の開始</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4239"/>
+        <location filename="Opcode.cpp" line="4233"/>
         <source>%1 les combats aléatoires</source>
         <translatorcomment>%1 random battle</translatorcomment>
         <translation>ランダム バトルを %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4301"/>
+        <location filename="Opcode.cpp" line="4295"/>
         <source>Obtenir la direction du personnage n°%1 de l&apos;équipe actuelle et la stocker dans %2</source>
         <translatorcomment>Get direction of the party member #%1 to %2</translatorcomment>
         <translation>パーティ メンバー #%1 の向きを取得して %2 へ保存</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4334"/>
+        <location filename="Opcode.cpp" line="4328"/>
         <source>Obtenir l&apos;id du personnage n°%1 de l&apos;équipe actuelle et le stocker dans %2</source>
         <translatorcomment>Get group ID of the party member #%1 to %2</translatorcomment>
         <translation>パーティ メンバー #%1 のグループID を取得して %2 へ保存</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4371"/>
+        <location filename="Opcode.cpp" line="4365"/>
         <source>Obtenir les coordonnées du personnage n°%1 de l&apos;équipe actuelle (stocker : X dans %2, Y dans %3, Z dans %4 et l&apos;id dans %5)</source>
         <translatorcomment>Get coordinates of the party member #%1 (store : X in %2, Y in %3, Z in %4 and triangle ID in %5)</translatorcomment>
         <translation>パーティ メンバー #%1 の座標を取得して保存 (X → %2 , Y → %3, Z → %4, ポリゴンID → %5)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4510"/>
-        <location filename="Opcode.cpp" line="4801"/>
+        <location filename="Opcode.cpp" line="4504"/>
+        <location filename="Opcode.cpp" line="4795"/>
         <source>%1 = %1 + %2 (8 bits)</source>
         <translatorcomment>%1 = %1 + %2 (8-bit)</translatorcomment>
         <translation>%1 = %1 + %2 (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4527"/>
-        <location filename="Opcode.cpp" line="4818"/>
+        <location filename="Opcode.cpp" line="4521"/>
+        <location filename="Opcode.cpp" line="4812"/>
         <source>%1 = %1 + %2 (16 bits)</source>
         <translatorcomment>%1 = %1 + %2 (16-bit)</translatorcomment>
         <translation>%1 = %1 + %2 (16-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4544"/>
-        <location filename="Opcode.cpp" line="4835"/>
+        <location filename="Opcode.cpp" line="4538"/>
+        <location filename="Opcode.cpp" line="4829"/>
         <source>%1 = %1 - %2 (8 bits)</source>
         <translatorcomment>%1 = %1 - %2 (8-bit)</translatorcomment>
         <translation>%1 = %1 - %2 (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4561"/>
-        <location filename="Opcode.cpp" line="4852"/>
+        <location filename="Opcode.cpp" line="4555"/>
+        <location filename="Opcode.cpp" line="4846"/>
         <source>%1 = %1 - %2 (16 bits)</source>
         <translatorcomment>%1 = %1 - %2 (16-bit)</translatorcomment>
         <translation>%1 = %1 - %2 (16-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4579"/>
-        <location filename="Opcode.cpp" line="5073"/>
+        <location filename="Opcode.cpp" line="4573"/>
+        <location filename="Opcode.cpp" line="5067"/>
         <source>%1 = %1 + 1 (8 bits)</source>
         <translatorcomment>%1 = %1 + 1 (8-bit)</translatorcomment>
         <translation>%1 = %1 + 1 (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4595"/>
-        <location filename="Opcode.cpp" line="5089"/>
+        <location filename="Opcode.cpp" line="4589"/>
+        <location filename="Opcode.cpp" line="5083"/>
         <source>%1 = %1 + 1 (16 bits)</source>
         <translatorcomment>%1 = %1 + 1 (16-bit)</translatorcomment>
         <translation>%1 = %1 + 1 (16-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4611"/>
-        <location filename="Opcode.cpp" line="5105"/>
+        <location filename="Opcode.cpp" line="4605"/>
+        <location filename="Opcode.cpp" line="5099"/>
         <source>%1 = %1 - 1 (8 bits)</source>
         <translatorcomment>%1 = %1 - 1 (8-bit)</translatorcomment>
         <translation>%1 = %1 - 1 (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4627"/>
-        <location filename="Opcode.cpp" line="5121"/>
+        <location filename="Opcode.cpp" line="4621"/>
+        <location filename="Opcode.cpp" line="5115"/>
         <source>%1 = %1 - 1 (16 bits)</source>
         <translatorcomment>%1 = %1 - 1 (16-bit)</translatorcomment>
         <translation>%1 = %1 - 1 (16-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4643"/>
+        <location filename="Opcode.cpp" line="4637"/>
         <source>%1 la possibilité de parler à l&apos;objet 3D</source>
         <translatorcomment>%1 talk script for the current field model</translatorcomment>
         <translation>3Dモデルのダイアログ スクリプトを %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4665"/>
+        <location filename="Opcode.cpp" line="4659"/>
         <source>Seed Random Generator : %1</source>
         <translatorcomment>Seed Random Generator: %1</translatorcomment>
         <translation>乱数ジェネレータをシード: %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4688"/>
+        <location filename="Opcode.cpp" line="4682"/>
         <source>%1 = %2 (8 bits)</source>
         <translatorcomment>%1 = %2 (8-bit)</translatorcomment>
         <translation>%1 = %2 (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4705"/>
+        <location filename="Opcode.cpp" line="4699"/>
         <source>%1 = %2 (16 bits)</source>
         <translatorcomment>%1 = %2 (16 bit)</translatorcomment>
         <translation>%1 = %2 (16 bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4750"/>
+        <location filename="Opcode.cpp" line="4744"/>
         <source>Mettre le bit %2 à 1 dans %1</source>
         <translatorcomment>Set the %2 bit to 1 in %1</translatorcomment>
         <translation>%1 の %2 ビット目を 1 にセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4767"/>
+        <location filename="Opcode.cpp" line="4761"/>
         <source>Mettre le bit %2 à 0 dans %1</source>
         <translatorcomment>Set the %2 bit to 0 in %1</translatorcomment>
         <translation>%1 の %2 ビット目を 0 にセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4784"/>
+        <location filename="Opcode.cpp" line="4778"/>
         <source>Inverser la valeur du bit %2 dans %1</source>
         <translatorcomment>Toggles the %2 bit in %1</translatorcomment>
         <translation>%1 の %2 ビット目を切り替え</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4869"/>
+        <location filename="Opcode.cpp" line="4863"/>
         <source>%1 = %1 * %2 (8 bits)</source>
         <translatorcomment>%1 = %1 * %2 (8-bit)</translatorcomment>
         <translation>%1 = %1 * %2 (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4886"/>
+        <location filename="Opcode.cpp" line="4880"/>
         <source>%1 = %1 * %2 (16 bits)</source>
         <translatorcomment>%1 = %1 * %2 (16-bit)</translatorcomment>
         <translation>%1 = %1 * %2 (16-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4903"/>
+        <location filename="Opcode.cpp" line="4897"/>
         <source>%1 = %1 / %2 (8 bits)</source>
         <translatorcomment>%1 = %1 / %2 (8-bit)</translatorcomment>
         <translation>%1 = %1 / %2 (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4920"/>
+        <location filename="Opcode.cpp" line="4914"/>
         <source>%1 = %1 / %2 (16 bits)</source>
         <translatorcomment>%1 = %1 / %2 (16-bit)</translatorcomment>
         <translation>%1 = %1 / %2 (16-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4937"/>
+        <location filename="Opcode.cpp" line="4931"/>
         <source>%1 = %1 mod %2 (8 bits)</source>
         <translatorcomment>%1 = %1 mod %2 (8-bit)</translatorcomment>
         <translation>%1 = %1 mod %2 (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4954"/>
+        <location filename="Opcode.cpp" line="4948"/>
         <source>%1 = %1 mod %2 (16 bits)</source>
         <translatorcomment>%1 = %1 mod %2 (16-bit)</translatorcomment>
         <translation>%1 = %1 mod %2 (16-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4971"/>
+        <location filename="Opcode.cpp" line="4965"/>
         <source>%1 = %1 &amp; %2 (8 bits)</source>
         <translatorcomment>%1 = %1 &amp; %2 (8-bit)</translatorcomment>
         <translation>%1 = %1 &amp; %2 (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4988"/>
+        <location filename="Opcode.cpp" line="4982"/>
         <source>%1 = %1 &amp; %2 (16 bits)</source>
         <translatorcomment>%1 = %1 &amp; %2 (16-bit)</translatorcomment>
         <translation>%1 = %1 &amp; %2 (16-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5005"/>
+        <location filename="Opcode.cpp" line="4999"/>
         <source>%1 = %1 | %2 (8 bits)</source>
         <translatorcomment>%1 = %1 | %2 (8-bit)</translatorcomment>
         <translation>%1 = %1 | %2 (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5022"/>
+        <location filename="Opcode.cpp" line="5016"/>
         <source>%1 = %1 | %2 (16 bits)</source>
         <translatorcomment>%1 = %1 | %2 (16-bit)</translatorcomment>
         <translation>%1 = %1 | %2 (16-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5039"/>
+        <location filename="Opcode.cpp" line="5033"/>
         <source>%1 = %1 ^ %2 (8 bits)</source>
         <translatorcomment>%1 = %1 ^ %2 (8-bit)</translatorcomment>
         <translation>%1 = %1 ^ %2 (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5056"/>
+        <location filename="Opcode.cpp" line="5050"/>
         <source>%1 = %1 ^ %2 (16 bits)</source>
         <translatorcomment>%1 = %1 ^ %2 (16-bit)</translatorcomment>
         <translation>%1 = %1 ^ %2 (16-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5137"/>
+        <location filename="Opcode.cpp" line="5131"/>
         <source>Affecter une valeur aléatoire à %1 (8 bits)</source>
         <translatorcomment>Set random value to %1 (8-bit)</translatorcomment>
         <translation>%1 にランダムな値をセット (8-bit)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5153"/>
+        <location filename="Opcode.cpp" line="5147"/>
         <source>%1 = %2 &amp; 0xFF (low byte)</source>
         <translation>%1 = %2 &amp; 0xFF (下位バイト)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5170"/>
+        <location filename="Opcode.cpp" line="5164"/>
         <source>%1 = (%2 &gt;&gt; 8) &amp; 0xFF (high byte)</source>
         <translation>%1 = (%2 &gt;&gt; 8) &amp; 0xFF (上位バイト)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5191"/>
+        <location filename="Opcode.cpp" line="5185"/>
         <source>%1 = (%2 &amp; 0xFF) | ((%3 &amp; 0xFF) &lt;&lt; 8)</source>
         <translation>%1 = (%2 &amp; 0xFF) | ((%3 &amp; 0xFF) &lt;&lt; 8)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5275"/>
+        <location filename="Opcode.cpp" line="5269"/>
         <source>Rechercher la valeur %5 dans la mémoire (bank=%1, début=%2+%3, fin=%2+%4) et mettre la position dans %6</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5319"/>
+        <location filename="Opcode.cpp" line="5313"/>
         <source>L&apos;objet 3D est jouable et c&apos;est %1</source>
         <translatorcomment>Field model is playable and it is %1</translatorcomment>
         <translation>操作可能な 3Dモデル %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5340"/>
+        <location filename="Opcode.cpp" line="5334"/>
         <source>Ce groupe est un objet 3D (id=%1)</source>
         <translatorcomment>This group is a field model (ID=%1)</translatorcomment>
         <translation>この項は 3Dモデル (ID=%1) のグループ</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5362"/>
-        <location filename="Opcode.cpp" line="5748"/>
-        <location filename="Opcode.cpp" line="6099"/>
+        <location filename="Opcode.cpp" line="5356"/>
+        <location filename="Opcode.cpp" line="5742"/>
+        <location filename="Opcode.cpp" line="6093"/>
         <source>Joue l&apos;animation %1 de l&apos;objet 3D (vitesse=%2)</source>
         <translatorcomment>Play animation #%1 of the field model (speed=%2)</translatorcomment>
         <translation>3Dモデルのアニメーション #%1 を再生 (速度=%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5387"/>
-        <location filename="Opcode.cpp" line="5723"/>
+        <location filename="Opcode.cpp" line="5381"/>
+        <location filename="Opcode.cpp" line="5717"/>
         <source>Joue l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (vitesse=%2)</source>
         <translatorcomment>Play animation #%1 of the field model and reset to previous state (speed=%2)</translatorcomment>
         <translation>3Dモデルのアニメーション #%1 を再生して前のステートをリセット (速度=%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5411"/>
+        <location filename="Opcode.cpp" line="5405"/>
         <source>%1 l&apos;objet 3D</source>
         <translatorcomment>%1 field model</translatorcomment>
         <translation>3Dモデルを %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5412"/>
+        <location filename="Opcode.cpp" line="5406"/>
         <source>Cacher</source>
         <translatorcomment>Hide</translatorcomment>
         <translation>隠す</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5437"/>
+        <location filename="Opcode.cpp" line="5431"/>
         <source>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3, triangle id=%4)</source>
         <oldsource>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3, polygone id=%4)</oldsource>
         <translatorcomment>Place field Model (X=%1, Y=%2, Z=%3, triangle ID=%4)</translatorcomment>
         <translation>3Dモデルを配置 (X=%1, Y=%2, Z=%3, ポリゴンID=%4)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5481"/>
+        <location filename="Opcode.cpp" line="5475"/>
         <source>Place l&apos;objet 3D (X=%1, Y=%2, triangle id=%4)</source>
         <oldsource>Place l&apos;objet 3D (X=%1, Y=%2, polygone id=%4)</oldsource>
         <translatorcomment>Place field Model (X=%1, Y=%2, triangle ID=%4)</translatorcomment>
         <translation>3Dモデルを配置 (X=%1, Y=%2, ポリゴンID=%4)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5521"/>
+        <location filename="Opcode.cpp" line="5515"/>
         <source>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3)</source>
         <translatorcomment>Place field Model (X=%1, Y=%2, Z=%3)</translatorcomment>
         <translation>3Dモデルを配置 (X=%1, Y=%2, Z=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5560"/>
+        <location filename="Opcode.cpp" line="5554"/>
         <source>Déplace l&apos;objet 3D (X=%1, Y=%2)</source>
         <translatorcomment>Move field Model (X=%1, Y=%2)</translatorcomment>
         <translation>3Dモデルを移動 (X=%1, Y=%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5595"/>
-        <location filename="Opcode.cpp" line="5689"/>
+        <location filename="Opcode.cpp" line="5589"/>
+        <location filename="Opcode.cpp" line="5683"/>
         <source>Déplace l&apos;objet 3D sans animation (X=%1, Y=%2)</source>
         <translatorcomment>Place field Model without animation (X=%1, Y=%2)</translatorcomment>
         <translation>3Dモデルをアニメーション抜きで移動 (X=%1, Y=%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5628"/>
+        <location filename="Opcode.cpp" line="5622"/>
         <source>Déplace l&apos;objet 3D vers le groupe %1</source>
         <translatorcomment>Move field Model to the group %1</translatorcomment>
         <translation>3Dモデルをグループ %1 に移動</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5652"/>
+        <location filename="Opcode.cpp" line="5646"/>
         <source>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%2, SensRotation=%3)</source>
         <translatorcomment>Rotation of the field model to group %1 (speed=%2, rotation=%3)</translatorcomment>
         <translation>3Dモデルをグループ %1 の方向へ回転 (速度=%2, 回転=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5672"/>
+        <location filename="Opcode.cpp" line="5666"/>
         <source>Attendre que l&apos;animation soit terminée pour continuer</source>
         <translatorcomment>Wait for animation</translatorcomment>
         <translation>アニメーション待ち</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5775"/>
-        <location filename="Opcode.cpp" line="6126"/>
+        <location filename="Opcode.cpp" line="5769"/>
+        <location filename="Opcode.cpp" line="6120"/>
         <source>Joue partiellement l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (première img=%2, dernière img=%3, vitesse=%4)</source>
         <translatorcomment>Play partially the animation #%1 of the field model and reset to initial state (first frame=%2, last frame=%3, speed=%4)</translatorcomment>
         <translation>3Dモデルのアニメーション #%1 の一部を再生して初期状態にリセット (最初のフレーム=%2, 最後のフレーム=%3, 速度=%4)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5806"/>
-        <location filename="Opcode.cpp" line="6157"/>
+        <location filename="Opcode.cpp" line="5800"/>
+        <location filename="Opcode.cpp" line="6151"/>
         <source>Joue partiellement l&apos;animation %1 de l&apos;objet 3D (première img=%2, dernière img=%3, vitesse=%4)</source>
         <translatorcomment>Play partially the animation #%1 of the field model (first frame=%2, last frame=%3, speed=%4)</translatorcomment>
         <translation>3Dモデルのアニメーション #%1 の一部を再生 (最初のフレーム=%2, 最後のフレーム=%3, 速度=%4)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5835"/>
+        <location filename="Opcode.cpp" line="5829"/>
         <source>Configurer la vitesse des déplacements de l&apos;objet 3D : %1</source>
         <translatorcomment>Set the field model move speed: %1</translatorcomment>
         <translation>3Dモデルの移動速度を %1 にセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5865"/>
+        <location filename="Opcode.cpp" line="5859"/>
         <source>Mettre l&apos;objet 3D dans la direction : %1</source>
         <translatorcomment>Set field model direction: %1</translatorcomment>
         <translation>3Dモデルの向きを %1 にセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5898"/>
+        <location filename="Opcode.cpp" line="5892"/>
         <source>Rotation (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</source>
         <translatorcomment>Rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)</translatorcomment>
         <translation>回転 (方向=%1, nb回転量=%2, 速度=%3, ?=%4)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5937"/>
+        <location filename="Opcode.cpp" line="5931"/>
         <source>Rotation inversée (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</source>
         <translatorcomment>Inversed rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)</translatorcomment>
         <translation>反回転 (方向=%1, nb回転量=%2, 速度=%3, ?=%4)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5972"/>
+        <location filename="Opcode.cpp" line="5966"/>
         <source>Mettre l&apos;objet 3D en direction du groupe %1</source>
         <translatorcomment>Direct the field model towards the group %1</translatorcomment>
         <translation>3Dモデルの向きグループ %1の方向へセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5996"/>
+        <location filename="Opcode.cpp" line="5990"/>
         <source>Stocker dans %2 la direction du groupe %1</source>
         <translatorcomment>Store direction of the group %1 in %2</translatorcomment>
         <translation>グループ %1 の向きを %2 に保存</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6030"/>
+        <location filename="Opcode.cpp" line="6024"/>
         <source>Stocker dans %2 et %3 la position X et Y du groupe %1</source>
         <translatorcomment>Store position of the group %1 in %2 (X) and %3 (Y)</translatorcomment>
         <translation>グループ %1 の向きを %2 (X), %3 (Y) に保存</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6067"/>
+        <location filename="Opcode.cpp" line="6061"/>
         <source>Stocker dans %2 le triangle id du groupe %1</source>
         <oldsource>Stocker dans %2 le polygone id du groupe %1</oldsource>
         <translatorcomment>Store triangle ID of the group %1 in %2</translatorcomment>
         <translation type="unfinished">グループ %1 のポリゴンを %2 に保存</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6186"/>
+        <location filename="Opcode.cpp" line="6180"/>
         <source>Configurer la vitesse des animations de l&apos;objet 3D : %1</source>
         <translatorcomment>Set the field model animations speed: %1</translatorcomment>
         <translation>3D アニメーションの速度を %1 にセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6215"/>
+        <location filename="Opcode.cpp" line="6209"/>
         <source>Prendre le contrôle du groupe %1</source>
         <translatorcomment>Control the group %1</translatorcomment>
         <translation>グループ %1 のコントロール</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6241"/>
+        <location filename="Opcode.cpp" line="6235"/>
         <source>Faire sauter un personnage (X=%1, Y=%2, triangle id=%3, hauteur=%4)</source>
         <oldsource>Faire sauter un personnage (X=%1, Y=%2, polygone id=%3, hauteur=%4)</oldsource>
         <translatorcomment>Field model jump (X=%1, Y=%2, triangle ID=%3, Steps=%4)</translatorcomment>
         <translation>3Dモデルのジャンプ (X=%1, Y=%2, ポリゴンID=%3, 歩数=%4)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6287"/>
+        <location filename="Opcode.cpp" line="6281"/>
         <source>Stocker la position du groupe %1 dans des variables (%2=X, %3=Y, %4=Z, %5=triangle id)</source>
         <oldsource>Stocker la position du groupe %1 dans des variables (%2=X, %3=Y, %4=Z, %5=polygone id)</oldsource>
         <translatorcomment>Store position of the group %1 in %2 (X), %3 (Y), %4 (Z) and %5 (triangle ID)</translatorcomment>
         <translation>グループ %1 の位置を保存 %2(X), %3(Y), %4(Z), %5(ポリゴンID) </translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6338"/>
+        <location filename="Opcode.cpp" line="6332"/>
         <source>Monter une échelle avec l&apos;animation %6 (X=%1, Y=%2, Z=%3, triangle id=%4, sens=%5, direction=%7, vitesse=%8)</source>
         <oldsource>Monter une échelle avec l&apos;animation %6 (X=%1, Y=%2, Z=%3, polygone id=%4, sens=%5, direction=%7, vitesse=%8)</oldsource>
         <translatorcomment>Climb a ladder with the animation #%6 (X=%1, Y=%2, Z=%3, triangle ID=%4, direction1=%5, direction2=%7, speed=%8)</translatorcomment>
         <translation>匍匐アニメーション #%6 (X=%1, Y=%2, Z=%3, ポリゴンID=%4, 方向1=%5, 方向2=%7, 速度=%8)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6392"/>
+        <location filename="Opcode.cpp" line="6386"/>
         <source>Offset Object (mouvement=%1, X=%2, Y=%3, Z=%4, vitesse=%5)</source>
         <translatorcomment>Offset Object (movement=%1, X=%2, Y=%3, Z=%4, speed=%5)</translatorcomment>
         <translation>オブジェの移動 (移動量=%1, X=%2, Y=%3, Z=%4, 速度=%5)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6429"/>
+        <location filename="Opcode.cpp" line="6423"/>
         <source>Attendre la fin de l&apos;exécution de l&apos;Offset Object pour continuer</source>
         <translatorcomment>Wait for offset object</translatorcomment>
         <translation>オブジェの移動待ち</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6445"/>
-        <location filename="Opcode.cpp" line="6931"/>
+        <location filename="Opcode.cpp" line="6439"/>
+        <location filename="Opcode.cpp" line="6923"/>
         <source>Modifier la distance nécessaire pour parler avec l&apos;objet 3D : %1</source>
         <translatorcomment>Set range of the talk circle for the field model: %1</translatorcomment>
         <translation>3Dモデル %1 のダイアログ範囲の大きさをセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6475"/>
-        <location filename="Opcode.cpp" line="6961"/>
+        <location filename="Opcode.cpp" line="6469"/>
+        <location filename="Opcode.cpp" line="6953"/>
         <source>Modifier la distance nécessaire pour toucher l&apos;objet 3D : %1</source>
         <translatorcomment>Set range of the contact circle for the field model: %1</translatorcomment>
         <translation>3Dモデル %1 のコンタクト範囲の大きさをセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6504"/>
+        <location filename="Opcode.cpp" line="6498"/>
         <source>%1 la possibilité de toucher l&apos;objet 3D</source>
         <translatorcomment>%1 contact with field model</translatorcomment>
         <translation>3Dモデルとのコンタクトを %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6525"/>
+        <location filename="Opcode.cpp" line="6519"/>
         <source>Ajouter %1 à l&apos;équipe actuelle</source>
         <translatorcomment>Add %1 to the current party</translatorcomment>
         <translation>現在のパーティに %1 が加わる</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6546"/>
+        <location filename="Opcode.cpp" line="6540"/>
         <source>Retirer %1 de l&apos;équipe actuelle</source>
         <translatorcomment>Remove %1 from the current party</translatorcomment>
         <translation>現在のパーティから %1 が離脱</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6567"/>
+        <location filename="Opcode.cpp" line="6561"/>
         <source>Nouvelle équipe : %1 | %2 | %3</source>
         <translatorcomment>New party: %1 | %2 | %3</translatorcomment>
         <translation>新しいパーティ: %1 | %2 | %3</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6604"/>
+        <location filename="Opcode.cpp" line="6598"/>
         <source>Si %1 est dans l&apos;équipe actuelle (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 がパーティにいる場合 (%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6619"/>
+        <location filename="Opcode.cpp" line="6612"/>
         <source>Si %1 existe (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6844"/>
+        <location filename="Opcode.cpp" line="6836"/>
         <source>%4 = ((Sinus(%1) * %2) + %3) &gt;&gt; 12</source>
         <translation type="unfinished">%4 = ((サイン (%1) * %2) + %3) &gt;&gt; 12</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6889"/>
+        <location filename="Opcode.cpp" line="6881"/>
         <source>%4 = ((Cosinus(%1) * %2) + %3) &gt;&gt; 12</source>
         <translation type="unfinished">%4 = ((コサイン (%1) * %2) + %3) &gt;&gt; 12</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7149"/>
+        <location filename="Opcode.cpp" line="7141"/>
         <source>Multiplier RVB(%6, %5, %4) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%7+1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7361"/>
+        <location filename="Opcode.cpp" line="7353"/>
         <source>Charger la palette n°%1 à la position %2 (nombre de couleurs=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7399"/>
+        <location filename="Opcode.cpp" line="7391"/>
         <source>Charger la position %1 dans la palette n°%2 (nombre de couleurs=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7437"/>
+        <location filename="Opcode.cpp" line="7429"/>
         <source>Copier palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7476"/>
+        <location filename="Opcode.cpp" line="7468"/>
         <source>Copier un morceau de palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7521"/>
+        <location filename="Opcode.cpp" line="7513"/>
         <source>Additionner RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7574"/>
+        <location filename="Opcode.cpp" line="7566"/>
         <source>Multiplier RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7624"/>
+        <location filename="Opcode.cpp" line="7616"/>
         <source>Charger la palette n°%1 à la position %2 (première couleur=%3, nombre de couleurs=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7655"/>
+        <location filename="Opcode.cpp" line="7647"/>
         <source>Charger la position %1 dans la palette n°%2 (première couleur=%3, nombre de couleurs=%4)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2685,78 +2686,78 @@
         <translation type="obsolete">%1 が操作可能な場合 (他はバイト %2 へジャンプ)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6640"/>
+        <location filename="Opcode.cpp" line="6632"/>
         <source>%2 %1</source>
         <translation>%2 %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6641"/>
+        <location filename="Opcode.cpp" line="6633"/>
         <source>n&apos;existe plus</source>
         <translatorcomment>not available</translatorcomment>
         <translation>操作不能</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6641"/>
+        <location filename="Opcode.cpp" line="6633"/>
         <source>existe</source>
         <translatorcomment>available</translatorcomment>
         <translation>使用可能</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6664"/>
+        <location filename="Opcode.cpp" line="6656"/>
         <source>Bloque %1 dans le menu PHS</source>
         <translatorcomment>Locks %1 in PHS menu</translatorcomment>
         <translation>PHS メニューの %1 をロック</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6685"/>
+        <location filename="Opcode.cpp" line="6677"/>
         <source>Débloque %1 dans le menu PHS</source>
         <translatorcomment>Unlock %1 in PHS menu</translatorcomment>
         <translation>PHS メニューの %1 をアンロック</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6711"/>
+        <location filename="Opcode.cpp" line="6703"/>
         <source>Définit la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
         <translatorcomment>Set location (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translatorcomment>
         <translation>エリアをセット (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6743"/>
+        <location filename="Opcode.cpp" line="6735"/>
         <source>%1 la zone</source>
         <translatorcomment>%1 the location</translatorcomment>
         <translation>エリアを %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6744"/>
+        <location filename="Opcode.cpp" line="6736"/>
         <source>Effacer</source>
         <translatorcomment>Clear</translatorcomment>
         <translation>クリア</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6744"/>
+        <location filename="Opcode.cpp" line="6736"/>
         <source>Tracer</source>
         <translatorcomment>Trace</translatorcomment>
         <translation>トレース</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6764"/>
+        <location filename="Opcode.cpp" line="6756"/>
         <source>%1 les changements de décor par le joueur</source>
         <translatorcomment>Gateways %1 ●</translatorcomment>
         <translation>出入り口 %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6765"/>
+        <location filename="Opcode.cpp" line="6757"/>
         <source>Autoriser</source>
         <translatorcomment>ON</translatorcomment>
         <translation>許可</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6765"/>
+        <location filename="Opcode.cpp" line="6757"/>
         <source>Empêcher</source>
         <translatorcomment>OFF</translatorcomment>
         <translation>禁止</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6791"/>
+        <location filename="Opcode.cpp" line="6783"/>
         <source>Redimensionner la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
         <oldsource>Redimmensionner la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</oldsource>
         <translatorcomment>Resize location (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translatorcomment>
@@ -2771,81 +2772,108 @@
         <translation type="obsolete">%4 = コサイン (%1) %2 %3</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="6990"/>
+        <location filename="Opcode.cpp" line="6982"/>
         <source>Commencer à charger l&apos;écran %1</source>
         <translatorcomment>Preload the field map %1</translatorcomment>
         <translation>フィールド マップ %1 の先読み</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7005"/>
+        <location filename="Opcode.cpp" line="6997"/>
         <source>PMJMP2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7026"/>
+        <location filename="Opcode.cpp" line="7018"/>
         <source>AKAO2 (u1=%1, u2=%2, u3=%3, u4=%4, u5=%5, u6=%6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7073"/>
+        <location filename="Opcode.cpp" line="7065"/>
         <source>%1 rotation</source>
         <translation>回転を %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7096"/>
+        <location filename="Opcode.cpp" line="7088"/>
         <source>Jouer animation n°%1 pour &apos;%3&apos; (vitesse=%2)</source>
         <translatorcomment>Play animation #%1 for &apos;%3&apos; (speed=%2)</translatorcomment>
         <translation>&apos;%3&apos; のアニメーション #%1 を再生 (速度=%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7101"/>
+        <location filename="Opcode.cpp" line="7093"/>
         <source>courir</source>
         <translatorcomment>run</translatorcomment>
         <translation>走る</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7099"/>
+        <location filename="Opcode.cpp" line="7091"/>
         <source>rester immobile</source>
         <translatorcomment>stay</translatorcomment>
         <translation>止まる</translation>
     </message>
-    <message>
+    <message numerus="yes">
+        <location filename="Opcode.cpp" line="1294"/>
+        <location filename="Opcode.cpp" line="1325"/>
+        <source>Reculer de %n octet(s)</source>
+        <comment>With plural</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="Opcode.cpp" line="1380"/>
+        <location filename="Opcode.cpp" line="1424"/>
+        <location filename="Opcode.cpp" line="1470"/>
+        <location filename="Opcode.cpp" line="1518"/>
+        <location filename="Opcode.cpp" line="1565"/>
+        <location filename="Opcode.cpp" line="1613"/>
         <location filename="Opcode.cpp" line="2377"/>
+        <location filename="Opcode.cpp" line="2396"/>
+        <location filename="Opcode.cpp" line="2415"/>
+        <location filename="Opcode.cpp" line="6601"/>
+        <location filename="Opcode.cpp" line="6615"/>
+        <source>avancer de %n octet(s) sinon</source>
+        <comment>With plural</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="2374"/>
         <source>Si appuie sur la touche %1 (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">キー %1 が押された場合 (%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2397"/>
+        <location filename="Opcode.cpp" line="2393"/>
         <source>Si appuie sur la touche %1 une fois (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">キー %1 が一度押された場合 (%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="2417"/>
+        <location filename="Opcode.cpp" line="2412"/>
         <source>Si relache la touche %1 pour la première fois (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">キー %1 が一度離された場合 (%2)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3665"/>
+        <location filename="Opcode.cpp" line="3659"/>
         <source>%4 = quantité de matéria %1 dans l&apos;inventaire (AP=%2, ?=%3)</source>
         <translation>%4 = 所持アイテム中のマテリア %1 の数 (AP=%2, ?=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3787"/>
+        <location filename="Opcode.cpp" line="3781"/>
         <source>SCRLO (?=%1)</source>
         <translation type="unfinished">SCRLO (?=%1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="3808"/>
+        <location filename="Opcode.cpp" line="3802"/>
         <source>SCRLC (?=%1)</source>
         <translation type="unfinished">SCRLC (?=%1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4119"/>
+        <location filename="Opcode.cpp" line="4113"/>
         <source>%2 le triangle n°%1</source>
         <translation type="unfinished">ポリゴン #%1 を %2</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="4144"/>
+        <location filename="Opcode.cpp" line="4138"/>
         <source>Stocker l&apos;id de l&apos;écran précédent dans %1</source>
         <translation>%1 の最後のフィールドのフィールドID を再取得</translation>
     </message>
@@ -2854,12 +2882,12 @@
         <translation type="obsolete">SCRLC (?=%1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5228"/>
+        <location filename="Opcode.cpp" line="5222"/>
         <source>SETX %1</source>
         <translation type="unfinished">SETX %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="5249"/>
+        <location filename="Opcode.cpp" line="5243"/>
         <source>GETX %1</source>
         <translation type="unfinished">GETX %1</translation>
     </message>
@@ -2880,19 +2908,19 @@
         <translation type="obsolete">AKAO2 %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7100"/>
+        <location filename="Opcode.cpp" line="7092"/>
         <source>marcher</source>
         <translatorcomment>walk</translatorcomment>
         <translation>歩く</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7118"/>
+        <location filename="Opcode.cpp" line="7110"/>
         <source>Stoppe l&apos;animation de l&apos;objet 3D</source>
         <translatorcomment>Break field model animation</translatorcomment>
         <translation>3Dモデルのアニメーションを停止</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7127"/>
+        <location filename="Opcode.cpp" line="7119"/>
         <source>Attendre que la rotation soit terminée pour continuer</source>
         <translatorcomment>Wait for rotation</translatorcomment>
         <translation>回転待ち</translation>
@@ -2902,31 +2930,31 @@
         <translation type="obsolete">MPPAL</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7200"/>
+        <location filename="Opcode.cpp" line="7192"/>
         <source>Afficher l&apos;état n°%2 du paramètre n°%1</source>
         <translatorcomment>Show the state #%2 of the background parameter #%1</translatorcomment>
         <translation>背景パラメータ #%1 のステート #%2 を表示</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7235"/>
+        <location filename="Opcode.cpp" line="7227"/>
         <source>Cacher l&apos;état n°%2 du paramètre n°%1</source>
         <translatorcomment>Hide the state #%2 of the background parameter #%1</translatorcomment>
         <translation>背景パラメータ #%1 のステート #%2 を隠す</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7269"/>
+        <location filename="Opcode.cpp" line="7261"/>
         <source>Afficher l&apos;état suivant du paramètre n°%1</source>
         <translatorcomment>Show next state of the  parameter #%1</translatorcomment>
         <translation>背景パラメータ #%1 の次のステートを表示</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7299"/>
+        <location filename="Opcode.cpp" line="7291"/>
         <source>Afficher l&apos;état précédent du paramètre n°%1</source>
         <translatorcomment>Show previous state of the background parameter #%1</translatorcomment>
         <translation>背景パラメータ #%1 の前のステートを表示</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7329"/>
+        <location filename="Opcode.cpp" line="7321"/>
         <source>Cacher paramètre n°%1</source>
         <translatorcomment>Hide background parameter #%1</translatorcomment>
         <translation>背景パラメータ #%1 を隠す</translation>
@@ -2937,349 +2965,349 @@
         <translation type="obsolete">MPPAL2 (R=%1, G=%2, B=%3)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7746"/>
+        <location filename="Opcode.cpp" line="7738"/>
         <source>Jouer musique n°%1</source>
         <translatorcomment>Play music #%1</translatorcomment>
         <translation>BGM #%1 を再生</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7769"/>
+        <location filename="Opcode.cpp" line="7761"/>
         <source>Jouer son n°%1 (position=%2/127)</source>
         <translatorcomment>Play sound #%1 (position=%2/127)</translatorcomment>
         <translation>効果音 #%1 を再生 (位置=%2/127)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7808"/>
+        <location filename="Opcode.cpp" line="7800"/>
         <source>AKAO (u1=%1, u2=%2, u3=%3, u4=%4, u5=%5, u6=%6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7855"/>
+        <location filename="Opcode.cpp" line="7847"/>
         <source>MUSVT (musique n°%1)</source>
         <translatorcomment>MUSVT (music #%1)</translatorcomment>
         <translation>MUSVT (BGM #%1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7876"/>
+        <location filename="Opcode.cpp" line="7868"/>
         <source>MUSVM (musique n°%1)</source>
         <translatorcomment>MUSVM (music #%1)</translatorcomment>
         <translation>MUSVM (BGM #%1)</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7897"/>
+        <location filename="Opcode.cpp" line="7889"/>
         <source>%1 musique</source>
         <translatorcomment>%1 music</translatorcomment>
         <translation>BGM を%1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7898"/>
+        <location filename="Opcode.cpp" line="7890"/>
         <source>Déverrouiller</source>
         <oldsource>Déverouiller</oldsource>
         <translatorcomment>Unlock</translatorcomment>
         <translation>アンロック</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7898"/>
+        <location filename="Opcode.cpp" line="7890"/>
         <source>Verrouiller</source>
         <comment>test</comment>
         <translatorcomment>Lock</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7918"/>
+        <location filename="Opcode.cpp" line="7910"/>
         <source>Choisir musique n°%1 comme musique de combat</source>
         <translatorcomment>Set the music #%1 for next battle</translatorcomment>
         <translation>次のバトル BGM に #%1 をセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7941"/>
+        <location filename="Opcode.cpp" line="7933"/>
         <source>CHMPH : Sauvegarder (inconnu) dans %1 et (inconnu) dans %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7974"/>
+        <location filename="Opcode.cpp" line="7966"/>
         <source>Choisir prochaine cinématique : %1</source>
         <translatorcomment>Set next movie: %1</translatorcomment>
         <translation>次のムービーをセット : %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="7989"/>
+        <location filename="Opcode.cpp" line="7981"/>
         <source>Jouer la cinématique choisie</source>
         <translatorcomment>Play movie</translatorcomment>
         <translation>ムービーを再生</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="8005"/>
+        <location filename="Opcode.cpp" line="7997"/>
         <source>Stocker Movie frame dans %1</source>
         <translatorcomment>Save Movie frame in %1</translatorcomment>
         <translation>ムービー フレームを %1 に保存</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="8034"/>
+        <location filename="Opcode.cpp" line="8026"/>
         <source>Camera Movie : %1</source>
         <translatorcomment>Camera Movie: %1</translatorcomment>
         <translation>カメラ ムービー : %1</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="8078"/>
+        <location filename="Opcode.cpp" line="8070"/>
         <source>CMUSC (unknown1=%1, unknown2=%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="8112"/>
+        <location filename="Opcode.cpp" line="8104"/>
         <source>Si la musique est jouée mettre %1 à 1</source>
         <translatorcomment>If music is currently playing set %1 to 1</translatorcomment>
         <translation>BGM が再生されたとき %1 に 1 をセット</translation>
     </message>
     <message>
-        <location filename="Opcode.cpp" line="8135"/>
+        <location filename="Opcode.cpp" line="8127"/>
         <source>Game Over</source>
         <translation>ゲーム・オーバー</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="140"/>
+        <location filename="GrpScript.cpp" line="141"/>
         <source>Sans nom</source>
         <translatorcomment>Untitled</translatorcomment>
         <translation>Untitled</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="205"/>
+        <location filename="GrpScript.cpp" line="206"/>
         <source>Objet 3D</source>
         <translatorcomment>Field model</translatorcomment>
         <translation>3Dモデル</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="207"/>
+        <location filename="GrpScript.cpp" line="208"/>
         <source>Zone</source>
         <translatorcomment>Location</translatorcomment>
         <translation>エリア</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="208"/>
+        <location filename="GrpScript.cpp" line="209"/>
         <source>Animation</source>
         <translation>アニメーション</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="209"/>
+        <location filename="GrpScript.cpp" line="210"/>
         <source>Main</source>
         <translation>メイン</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="232"/>
+        <location filename="GrpScript.cpp" line="233"/>
         <source>S0 - Init</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="233"/>
+        <location filename="GrpScript.cpp" line="234"/>
         <source>S0 - Main</source>
         <translation>S0 - メイン</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="235"/>
+        <location filename="GrpScript.cpp" line="236"/>
         <source>S1 - Parler</source>
         <translatorcomment>S1 - Talk</translatorcomment>
         <translation>S1 - ダイアログ</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="236"/>
+        <location filename="GrpScript.cpp" line="237"/>
         <source>S1 - [OK]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="239"/>
+        <location filename="GrpScript.cpp" line="240"/>
         <source>S2 - Toucher</source>
         <translatorcomment>S2 - Contact</translatorcomment>
         <translation>S2 - コンタクト</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="240"/>
+        <location filename="GrpScript.cpp" line="241"/>
         <source>S2 - Bouger</source>
         <translatorcomment>S2 - Move</translatorcomment>
         <translation>S2 - 通過</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="243"/>
+        <location filename="GrpScript.cpp" line="244"/>
         <source>S3 - Bouger</source>
         <translatorcomment>S3 - Move</translatorcomment>
         <translation>S3 - 通過</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="246"/>
+        <location filename="GrpScript.cpp" line="247"/>
         <source>S4 - Aller</source>
         <translatorcomment>S4 - Go</translatorcomment>
         <translation>S4 - 進入</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="249"/>
+        <location filename="GrpScript.cpp" line="250"/>
         <source>S5 - Aller 1x</source>
         <translatorcomment>S5 - Go 1x</translatorcomment>
         <translation>S5 - 進入 1x</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="252"/>
+        <location filename="GrpScript.cpp" line="253"/>
         <source>S6 - Partir</source>
         <translatorcomment>S6 - Go away</translatorcomment>
         <translation>S6 - 離れる</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="256"/>
+        <location filename="GrpScript.cpp" line="257"/>
         <source>Script %1</source>
         <translation>スクリプト %1</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="294"/>
+        <location filename="Data.cpp" line="319"/>
         <source>Clad</source>
         <translatorcomment>Cloud</translatorcomment>
         <translation>クラウド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="294"/>
+        <location filename="Data.cpp" line="319"/>
         <source>Barret</source>
         <translation>バレット</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="294"/>
+        <location filename="Data.cpp" line="319"/>
         <source>Tifa</source>
         <translation>ティファ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="295"/>
+        <location filename="Data.cpp" line="320"/>
         <source>Aeris</source>
         <translatorcomment>Aeris</translatorcomment>
         <translation>エアリス</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="295"/>
+        <location filename="Data.cpp" line="320"/>
         <source>Red XIII</source>
         <translation>レッドXIII</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="295"/>
+        <location filename="Data.cpp" line="320"/>
         <source>Youfie</source>
         <translatorcomment>Yuffie</translatorcomment>
         <translation>ユフィ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="296"/>
+        <location filename="Data.cpp" line="321"/>
         <source>Cait Sith</source>
         <translation>ケット・シー</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="296"/>
+        <location filename="Data.cpp" line="321"/>
         <source>Vincent</source>
         <translation>ヴィンセント</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="296"/>
+        <location filename="Data.cpp" line="321"/>
         <source>Cid</source>
         <translation>シド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="297"/>
+        <location filename="Data.cpp" line="322"/>
         <source>Jeune Clad</source>
         <translatorcomment>Young Cloud</translatorcomment>
         <translation>昔のクラウド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="297"/>
+        <location filename="Data.cpp" line="322"/>
         <source>Sephiroth</source>
         <translation>セフィロス</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="297"/>
+        <location filename="Data.cpp" line="322"/>
         <source>Chocobo</source>
         <translation>チョコボ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="307"/>
+        <location filename="Data.cpp" line="332"/>
         <source>[CAMERA|L2]</source>
         <translation>[視点|L2]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="307"/>
+        <location filename="Data.cpp" line="332"/>
         <source>[CIBLE|R2]</source>
         <translatorcomment>[TARGET|R2]</translatorcomment>
         <translation>[テーゲット|R2]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="308"/>
+        <location filename="Data.cpp" line="333"/>
         <source>[PAGE HAUT|L1]</source>
         <translatorcomment>[PAGE UP|L1]</translatorcomment>
         <translation>|ページ送り|L1}ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="308"/>
+        <location filename="Data.cpp" line="333"/>
         <source>[PAGE BAS|R1]</source>
         <translatorcomment>[PAGE DOWN|R1]</translatorcomment>
         <translation>[ページ逆送り|R1]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="309"/>
+        <location filename="Data.cpp" line="334"/>
         <source>[MENU|TRIANGLE]</source>
         <translation>[メニュー|△]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="309"/>
+        <location filename="Data.cpp" line="334"/>
         <source>[OK|ROND]</source>
         <translatorcomment>[OK|CIRCLE]</translatorcomment>
         <translation>[決定|○]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="310"/>
+        <location filename="Data.cpp" line="335"/>
         <source>[ANNULER|CROIX]</source>
         <translatorcomment>[CANCEL|CROSS]</translatorcomment>
         <translation>[キャンセル|×]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="310"/>
+        <location filename="Data.cpp" line="335"/>
         <source>[CHANGER|CARRE]</source>
         <translatorcomment>[SWITCH|SQUARE]</translatorcomment>
         <translation>[ＥＸＴ|□]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="311"/>
+        <location filename="Data.cpp" line="336"/>
         <source>[ASSISTER|SELECT]</source>
         <translatorcomment>[ヘルプ|ASSIST|SELECT]</translatorcomment>
         <translation>[SELECT]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="312"/>
+        <location filename="Data.cpp" line="337"/>
         <source>[DEMARRER|START]</source>
         <translatorcomment>[START]</translatorcomment>
         <translation>[START]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="313"/>
+        <location filename="Data.cpp" line="338"/>
         <source>[HAUT]</source>
         <translatorcomment>[UP]</translatorcomment>
         <translation>[↑]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="313"/>
+        <location filename="Data.cpp" line="338"/>
         <source>[DROITE]</source>
         <translatorcomment>[RIGHT]</translatorcomment>
         <translation>[→]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="314"/>
+        <location filename="Data.cpp" line="339"/>
         <source>[BAS]</source>
         <translatorcomment>[LEFT]</translatorcomment>
         <translation>[↓]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="314"/>
+        <location filename="Data.cpp" line="339"/>
         <source>[GAUCHE]</source>
         <translatorcomment>[LEFT]</translatorcomment>
         <translation>[←]ボタン</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="44"/>
+        <location filename="main.cpp" line="46"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="44"/>
+        <location filename="main.cpp" line="46"/>
         <source>Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
 Vérifiez que ce fichier est valide ou supprimez-le.</source>
         <translatorcomment>The file &apos;var.cfg&apos; could not be loaded.
@@ -3288,7 +3316,7 @@ Make sure it is valid or delete it.</translatorcomment>
 ファイルが有効か確認するか、または削除してください。。</translation>
     </message>
     <message>
-        <location filename="TutFile.cpp" line="258"/>
+        <location filename="TutFile.cpp" line="261"/>
         <source>totalLength=%4
 id=%1
 length=%2
@@ -3332,76 +3360,76 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditor</name>
     <message>
-        <location filename="ScriptEditor.cpp" line="32"/>
+        <location filename="ScriptEditor.cpp" line="36"/>
         <source>Éditeur%1</source>
         <translatorcomment>Editor%1</translatorcomment>
         <translation>エディター%1</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="32"/>
+        <location filename="ScriptEditor.cpp" line="36"/>
         <source> (init mode)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="36"/>
+        <location filename="ScriptEditor.cpp" line="40"/>
         <source>Structures de contrôle</source>
         <translatorcomment>Control Structures</translatorcomment>
         <translation>コントロール ストラクチャ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="37"/>
+        <location filename="ScriptEditor.cpp" line="41"/>
         <source>Opérations mathématiques</source>
         <translatorcomment>Mathematics</translatorcomment>
         <translation>演算命令</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="38"/>
+        <location filename="ScriptEditor.cpp" line="42"/>
         <source>Fenêtres et messages</source>
         <translatorcomment>Windowing and messages</translatorcomment>
         <translation>ウィンドウとメッセージ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="39"/>
+        <location filename="ScriptEditor.cpp" line="43"/>
         <source>Équipe et inventaire</source>
         <translatorcomment>Party and inventory</translatorcomment>
         <translation>パーティと所持アイテム</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="40"/>
+        <location filename="ScriptEditor.cpp" line="44"/>
         <source>Objets 3D et animations</source>
         <translatorcomment>Field Models and animations</translatorcomment>
         <translation>3Dモデルとアニメーション</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="41"/>
+        <location filename="ScriptEditor.cpp" line="45"/>
         <source>Zones</source>
         <translatorcomment>Walkmesh and locations</translatorcomment>
         <translation>ウォーク メッシュとエリア</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="42"/>
+        <location filename="ScriptEditor.cpp" line="46"/>
         <source>Background</source>
         <translation>背景</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="43"/>
+        <location filename="ScriptEditor.cpp" line="47"/>
         <source>Transitions et caméra</source>
         <translatorcomment>Fade and camera</translatorcomment>
         <translation>フェードとカメラ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="44"/>
+        <location filename="ScriptEditor.cpp" line="48"/>
         <source>Audio et vidéo</source>
         <translatorcomment>Audio and video</translatorcomment>
         <translation>サウンドとビデオ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="45"/>
+        <location filename="ScriptEditor.cpp" line="49"/>
         <source>Modules</source>
         <translation>モジュール</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="46"/>
+        <location filename="ScriptEditor.cpp" line="50"/>
         <source>Inconnu</source>
         <translatorcomment>Unknown</translatorcomment>
         <translation>不明</translation>
@@ -3417,12 +3445,12 @@ channelCount=%3</translation>
         <translation type="obsolete">行の削除</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="75"/>
+        <location filename="ScriptEditor.cpp" line="79"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="77"/>
+        <location filename="ScriptEditor.cpp" line="81"/>
         <source>Annuler</source>
         <translatorcomment>Cancel</translatorcomment>
         <translation>キャンセル</translation>
@@ -3433,25 +3461,25 @@ channelCount=%3</translation>
         <translation type="obsolete">パラメータ :</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="347"/>
+        <location filename="ScriptEditor.cpp" line="351"/>
         <source>Retourner</source>
         <translatorcomment>Return</translatorcomment>
         <translation>リターン</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="348"/>
+        <location filename="ScriptEditor.cpp" line="352"/>
         <source>Retourner à</source>
         <translatorcomment>Return to</translatorcomment>
         <translation>リターン →</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="350"/>
+        <location filename="ScriptEditor.cpp" line="354"/>
         <source>Exécuter un script</source>
         <translatorcomment>Execute a script</translatorcomment>
         <translation>スクリプトの実行</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="352"/>
+        <location filename="ScriptEditor.cpp" line="356"/>
         <source>Exécuter un script d&apos;un équipier</source>
         <translatorcomment>Execute a script from a party member</translatorcomment>
         <translation>パーティ メンバーのスクリプトを実行</translation>
@@ -3467,25 +3495,25 @@ channelCount=%3</translation>
         <translation type="obsolete">条件に一致する場合 (8-bit, short jump)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="360"/>
+        <location filename="ScriptEditor.cpp" line="364"/>
         <source>Si touche pressée</source>
         <translatorcomment>If key pressed</translatorcomment>
         <translation>キーが押された場合</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="361"/>
+        <location filename="ScriptEditor.cpp" line="365"/>
         <source>Si personnage membre de l&apos;équipe</source>
         <translatorcomment>If Party Member</translatorcomment>
         <translation>パーティ メンバーの場合</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="364"/>
+        <location filename="ScriptEditor.cpp" line="368"/>
         <source>Attendre</source>
         <translatorcomment>Wait</translatorcomment>
         <translation>完了待ち</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="365"/>
+        <location filename="ScriptEditor.cpp" line="369"/>
         <source>Ne rien faire</source>
         <translatorcomment>No Operation</translatorcomment>
         <translation>命令なし</translation>
@@ -3511,7 +3539,7 @@ channelCount=%3</translation>
         <translation type="obsolete">ビットを切り替え</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="379"/>
+        <location filename="ScriptEditor.cpp" line="383"/>
         <source>Seed Random Generator</source>
         <translation>乱数ジェネレータをシード</translation>
     </message>
@@ -3521,7 +3549,7 @@ channelCount=%3</translation>
         <translation type="obsolete">ランダム値</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="396"/>
+        <location filename="ScriptEditor.cpp" line="400"/>
         <source>Compte à rebours</source>
         <translatorcomment>Countdown</translatorcomment>
         <translation>カウントダウン</translation>
@@ -3537,400 +3565,400 @@ channelCount=%3</translation>
         <translation type="obsolete">上位バイト</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="380"/>
+        <location filename="ScriptEditor.cpp" line="384"/>
         <source>Créer un mot de deux octets</source>
         <translatorcomment>Two Byte from two one-byte</translatorcomment>
         <translation>1-バイト二つからなる 2-バイト</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="381"/>
+        <location filename="ScriptEditor.cpp" line="385"/>
         <source>Sinus</source>
         <translation>サイン</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="382"/>
+        <location filename="ScriptEditor.cpp" line="386"/>
         <source>Cosinus</source>
         <translation>コサイン</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="385"/>
+        <location filename="ScriptEditor.cpp" line="389"/>
         <source>Créer une fenêtre</source>
         <translatorcomment>Window creation</translatorcomment>
         <translation>ウィンドウの作成</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="391"/>
+        <location filename="ScriptEditor.cpp" line="395"/>
         <source>Fermer une fenêtre (1)</source>
         <translatorcomment>Close a window (1)</translatorcomment>
         <translation>ウィンドウを閉じる (1)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="392"/>
+        <location filename="ScriptEditor.cpp" line="396"/>
         <source>Fermer une fenêtre (2)</source>
         <translatorcomment>Close a window (2)</translatorcomment>
         <translation>ウィンドウを閉じる (2)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="386"/>
+        <location filename="ScriptEditor.cpp" line="390"/>
         <source>Redimensionner une fenêtre</source>
         <oldsource>Redimmensionner une fenêtre</oldsource>
         <translatorcomment>Resizes/Repositions a window</translatorcomment>
         <translation>ウィンドウの大きさ,位置の変更</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="355"/>
+        <location filename="ScriptEditor.cpp" line="359"/>
         <source>Label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="356"/>
+        <location filename="ScriptEditor.cpp" line="360"/>
         <source>Aller au label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="358"/>
+        <location filename="ScriptEditor.cpp" line="362"/>
         <source>Si...alors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="368"/>
+        <location filename="ScriptEditor.cpp" line="372"/>
         <source>Opération binaire</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="373"/>
+        <location filename="ScriptEditor.cpp" line="377"/>
         <source>Opération unaire</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="376"/>
+        <location filename="ScriptEditor.cpp" line="380"/>
         <source>Opération bit à bit</source>
         <oldsource>Opération sur les bits</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="387"/>
+        <location filename="ScriptEditor.cpp" line="391"/>
         <source>Modifier le nombre de lignes dans fenêtre</source>
         <translatorcomment>Set line count in window</translatorcomment>
         <translation>ウィンドウの行数をセット</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="388"/>
+        <location filename="ScriptEditor.cpp" line="392"/>
         <source>Déplacer une fenêtre</source>
         <translatorcomment>Move a window</translatorcomment>
         <translation>ウィンドウの移動</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="389"/>
+        <location filename="ScriptEditor.cpp" line="393"/>
         <source>Modifier type de fenêtre</source>
         <translatorcomment>Set window type</translatorcomment>
         <translation>ウィンドウ タイプのセット</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="390"/>
+        <location filename="ScriptEditor.cpp" line="394"/>
         <source>Remettre une fenêtre à zéro</source>
         <translatorcomment>Reset a window</translatorcomment>
         <translation>ウィンドウのリセット</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="394"/>
+        <location filename="ScriptEditor.cpp" line="398"/>
         <source>Mettre un compteur dans fenêtre</source>
         <translatorcomment>Numerical Display</translatorcomment>
         <translation>数値表示</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="395"/>
+        <location filename="ScriptEditor.cpp" line="399"/>
         <source>Modifier valeur du compteur dans fenêtre</source>
         <translatorcomment>Set Number in a window</translatorcomment>
         <translation>ウィンドウに番号をセット</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="397"/>
+        <location filename="ScriptEditor.cpp" line="401"/>
         <source>Modifier variable dans fenêtre (8 bits)</source>
         <translatorcomment>Set window variable (8-bit)</translatorcomment>
         <translation>ウィンドウの変数をセット (8-ビット)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="398"/>
+        <location filename="ScriptEditor.cpp" line="402"/>
         <source>Modifier variable dans fenêtre (16 bits)</source>
         <translatorcomment>Set window variable (16-bit)</translatorcomment>
         <translation>ウィンドウの変数をセット (16-ビット)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="400"/>
+        <location filename="ScriptEditor.cpp" line="404"/>
         <source>Afficher texte</source>
         <translatorcomment>Set window Text</translatorcomment>
         <translation>ウィンドウにテキストをセット</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="401"/>
+        <location filename="ScriptEditor.cpp" line="405"/>
         <source>Poser une question</source>
         <translatorcomment>Ask Question</translatorcomment>
         <translation>選択肢を表示</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="403"/>
+        <location filename="ScriptEditor.cpp" line="407"/>
         <source>Modifier le nom du lieu</source>
         <translatorcomment>Set map name</translatorcomment>
         <translation>マップ名をセット</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="404"/>
+        <location filename="ScriptEditor.cpp" line="408"/>
         <source>Activer/Désactiver menu</source>
         <translatorcomment>Enable/Disable menu</translatorcomment>
         <translation>メニューの有効化/無効化</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="409"/>
+        <location filename="ScriptEditor.cpp" line="413"/>
         <source>HP/MP restaurés (1)</source>
         <translatorcomment>HP/MP Maximum (1)</translatorcomment>
         <translation>HP/MP 最大化 (1)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="410"/>
+        <location filename="ScriptEditor.cpp" line="414"/>
         <source>HP/MP restaurés (2)</source>
         <translatorcomment>HP/MP Maximum (2)</translatorcomment>
         <translation>HP/MP 最大化 (2)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="411"/>
+        <location filename="ScriptEditor.cpp" line="415"/>
         <source>HP/MP/statut restaurés</source>
         <translatorcomment>HP/MP Maximum with Status Clear</translatorcomment>
         <translation>HP/MP を最大化してステータス異常を解消</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="412"/>
+        <location filename="ScriptEditor.cpp" line="416"/>
         <source>HP/MP restaurés (3)</source>
         <translatorcomment>HP/MP Maximum (3)</translatorcomment>
         <translation>HP/MP 最大化 (3)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="414"/>
+        <location filename="ScriptEditor.cpp" line="418"/>
         <source>Augmenter les MPs</source>
         <translatorcomment>Increase MP</translatorcomment>
         <translation>MP を増加</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="415"/>
+        <location filename="ScriptEditor.cpp" line="419"/>
         <source>Diminuer les MPs</source>
         <translatorcomment>Decrease MP</translatorcomment>
         <translation>MP を増加</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="416"/>
+        <location filename="ScriptEditor.cpp" line="420"/>
         <source>Augmenter les HPs</source>
         <translatorcomment>Increase HP</translatorcomment>
         <translation>HP を増加</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="417"/>
+        <location filename="ScriptEditor.cpp" line="421"/>
         <source>Diminuer les HPs</source>
         <translatorcomment>Decrease HP</translatorcomment>
         <translation>HP を減少</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="418"/>
+        <location filename="ScriptEditor.cpp" line="422"/>
         <source>Ajouter des gils</source>
         <translatorcomment>Increase amount of gil</translatorcomment>
         <translation>所持ギルを増加</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="419"/>
+        <location filename="ScriptEditor.cpp" line="423"/>
         <source>Retirer des gils</source>
         <translatorcomment>Decrease amount of gil</translatorcomment>
         <translation>所持ギルを減少</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="420"/>
+        <location filename="ScriptEditor.cpp" line="424"/>
         <source>Quantité d&apos;argent</source>
         <translatorcomment>Amount of gil</translatorcomment>
         <translation>所持ギル</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="421"/>
+        <location filename="ScriptEditor.cpp" line="425"/>
         <source>Ajouter objet</source>
         <translatorcomment>Add item</translatorcomment>
         <translation>アイテムを追加</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="422"/>
+        <location filename="ScriptEditor.cpp" line="426"/>
         <source>Retirer objet</source>
         <translatorcomment>Remove item</translatorcomment>
         <translation>アイテムを削除</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="423"/>
+        <location filename="ScriptEditor.cpp" line="427"/>
         <source>Quantité d&apos;objets</source>
         <translatorcomment>Amount of item</translatorcomment>
         <translation>アイテムの数　●</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="424"/>
+        <location filename="ScriptEditor.cpp" line="428"/>
         <source>Ajouter Matéria</source>
         <translatorcomment>Add Materia</translatorcomment>
         <translation>マテリアを追加</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="425"/>
+        <location filename="ScriptEditor.cpp" line="429"/>
         <source>Retirer Matéria</source>
         <translatorcomment>Remove Materia</translatorcomment>
         <translation>マテリアを削除</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="426"/>
+        <location filename="ScriptEditor.cpp" line="430"/>
         <source>Quantité de Matérias</source>
         <translatorcomment>Amount of Materia</translatorcomment>
         <translation>マテリアの数</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="428"/>
+        <location filename="ScriptEditor.cpp" line="432"/>
         <source>Nouvelle équipe</source>
         <translatorcomment>Party Change</translatorcomment>
         <translation>パーティ変更</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="429"/>
+        <location filename="ScriptEditor.cpp" line="433"/>
         <source>Ajouter un personnage</source>
         <translatorcomment>Add Character to the party</translatorcomment>
         <translation>パーティにキャラクターを追加</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="430"/>
+        <location filename="ScriptEditor.cpp" line="434"/>
         <source>Retirer un personnage</source>
         <translatorcomment>Remove Character from the party</translatorcomment>
         <translation>パーティからキャラクターをはずす</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="431"/>
+        <location filename="ScriptEditor.cpp" line="435"/>
         <source>Sauvegarder l&apos;équipe</source>
         <translatorcomment>Save party</translatorcomment>
         <translation>パーティを保存</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="432"/>
+        <location filename="ScriptEditor.cpp" line="436"/>
         <source>Restaurer l&apos;équipe</source>
         <translatorcomment>Load party</translatorcomment>
         <translation>パーティを読み込み</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="433"/>
+        <location filename="ScriptEditor.cpp" line="437"/>
         <source>Créer/effacer personnage</source>
         <translatorcomment>Create/Delete character</translatorcomment>
         <translation>キャラクターの作成/削除</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="434"/>
+        <location filename="ScriptEditor.cpp" line="438"/>
         <source>Bloquer personnage</source>
         <translatorcomment>Locks character</translatorcomment>
         <translation>キャラクターをロック</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="435"/>
+        <location filename="ScriptEditor.cpp" line="439"/>
         <source>Débloquer personnage</source>
         <translatorcomment>Unlocks character</translatorcomment>
         <translation>キャラクターをアンロック</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="438"/>
+        <location filename="ScriptEditor.cpp" line="442"/>
         <source>Définir objet 3D</source>
         <translatorcomment>Set Field Model</translatorcomment>
         <translation>3Dモデルをセット</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="439"/>
+        <location filename="ScriptEditor.cpp" line="443"/>
         <source>Affecter personnage à objet 3D</source>
         <translatorcomment>Set character to FIeld Model</translatorcomment>
         <translation>3Dモデルにキャラクターを追加</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="440"/>
+        <location filename="ScriptEditor.cpp" line="444"/>
         <source>Prendre le contrôle d&apos;un groupe</source>
         <translatorcomment>Group control</translatorcomment>
         <translation>グループ コントロール</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="442"/>
+        <location filename="ScriptEditor.cpp" line="446"/>
         <source>Obtenir la direction d&apos;un groupe (Dir)</source>
         <translatorcomment>Get Group Direction (Dir)</translatorcomment>
         <translation>グループの向きを取得 (Dir)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="443"/>
+        <location filename="ScriptEditor.cpp" line="447"/>
         <source>Obtenir la direction d&apos;un équipier (Dir)</source>
         <translatorcomment>Get Party Member Direction (Dir)</translatorcomment>
         <translation>パーティ メンバーの向きを取得 (Dir)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="444"/>
+        <location filename="ScriptEditor.cpp" line="448"/>
         <source>Obtenir le triangle id d&apos;un groupe (I)</source>
         <oldsource>Obtenir le polygone id d&apos;un groupe (I)</oldsource>
         <translatorcomment>Get Group Triangle ID (I)</translatorcomment>
         <translation>グループのポリゴンID を取得 (I)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="445"/>
+        <location filename="ScriptEditor.cpp" line="449"/>
         <source>Obtenir le triangle id d&apos;un équipier (I)</source>
         <oldsource>Obtenir le polygone id d&apos;un équipier (I)</oldsource>
         <translatorcomment>Get Party Member Triangle ID (I)</translatorcomment>
         <translation>パーティ メンバーのポリゴンID を取得 (I)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="446"/>
+        <location filename="ScriptEditor.cpp" line="450"/>
         <source>Obtenir les coordonnées d&apos;un groupe (X,Y)</source>
         <translatorcomment>Get Group coordinates (X,Y)</translatorcomment>
         <translation>グループの座標を取得 (X,Y)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="447"/>
+        <location filename="ScriptEditor.cpp" line="451"/>
         <source>Obtenir les coordonnées d&apos;un groupe (X,Y,Z,I)</source>
         <translatorcomment>Get Group coordinates (X,Y,Z,I)</translatorcomment>
         <translation>グループの座標を取得 (X,Y,Z,I)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="448"/>
+        <location filename="ScriptEditor.cpp" line="452"/>
         <source>Obtenir les coordonnées d&apos;un équipier (X,Y,Z,I)</source>
         <translatorcomment>Get Group coordinates (X,Y,Z,I)</translatorcomment>
         <translation>他のメンバーの座標を取得 (X,Y,Z,I)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="450"/>
+        <location filename="ScriptEditor.cpp" line="454"/>
         <source>Placer (X,Y,Z)</source>
         <translatorcomment>Place (X,Y,Z)</translatorcomment>
         <translation>位置 (X,Y,Z)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="451"/>
+        <location filename="ScriptEditor.cpp" line="455"/>
         <source>Placer (X,Y,I)</source>
         <translatorcomment>Place (X,Y,I)</translatorcomment>
         <translation>位置 (X,Y,I)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="452"/>
+        <location filename="ScriptEditor.cpp" line="456"/>
         <source>Placer (X,Y,Z,I)</source>
         <translatorcomment>Place (X,Y,Z,I)</translatorcomment>
         <translation>位置 (X,Y,Z,I)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="453"/>
+        <location filename="ScriptEditor.cpp" line="457"/>
         <source>Placer (Dir)</source>
         <translatorcomment>Place (Dir)</translatorcomment>
         <translation>位置 (Dir)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="455"/>
+        <location filename="ScriptEditor.cpp" line="459"/>
         <source>Déplacer</source>
         <translatorcomment>Move</translatorcomment>
         <translation>移動</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="456"/>
+        <location filename="ScriptEditor.cpp" line="460"/>
         <source>Déplacer sans animation</source>
         <oldsource>Déplacer (C)</oldsource>
         <translatorcomment>Move without animation</translatorcomment>
         <translation>アニメーションぬきで移動</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="457"/>
+        <location filename="ScriptEditor.cpp" line="461"/>
         <source>Déplacer sans animation ni rotation</source>
         <translatorcomment>Move without animation or rotation</translatorcomment>
         <translation>アニメーション・回転せずに移動</translation>
@@ -3941,77 +3969,77 @@ channelCount=%3</translation>
         <translation type="obsolete">MP Palette (2)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="535"/>
+        <location filename="ScriptEditor.cpp" line="539"/>
         <source>Store Palette</source>
         <oldsource>ST (Store) Palette</oldsource>
         <translatorcomment>●</translatorcomment>
         <translation type="unfinished">ST (保存) Palette</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="536"/>
+        <location filename="ScriptEditor.cpp" line="540"/>
         <source>Store Palette (S)</source>
         <oldsource>ST (Store) PLS</oldsource>
         <translatorcomment>●</translatorcomment>
         <translation type="unfinished">ST (保存) PLS</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="537"/>
+        <location filename="ScriptEditor.cpp" line="541"/>
         <source>Load Palette</source>
         <oldsource>LD (Load) Palette</oldsource>
         <translatorcomment>●</translatorcomment>
         <translation type="unfinished">LD (読み込み) Palette</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="538"/>
+        <location filename="ScriptEditor.cpp" line="542"/>
         <source>Load Palette (S)</source>
         <oldsource>LD (Load) PLS</oldsource>
         <translatorcomment>●</translatorcomment>
         <translation type="unfinished">LD (読み込み) PLS</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="539"/>
+        <location filename="ScriptEditor.cpp" line="543"/>
         <source>Copy Palette</source>
         <oldsource>CP (Copy) Palette</oldsource>
         <translatorcomment>●</translatorcomment>
         <translation type="unfinished">CP (コピー) Palette</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="540"/>
+        <location filename="ScriptEditor.cpp" line="544"/>
         <source>Copy Palette (2)</source>
         <oldsource>CP (Copy) Palette (2)</oldsource>
         <translatorcomment>●</translatorcomment>
         <translation type="unfinished">CP (コピー) Palette (2)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="541"/>
+        <location filename="ScriptEditor.cpp" line="545"/>
         <source>Partial Copy Palette</source>
         <oldsource>RT Palette</oldsource>
         <translatorcomment>●</translatorcomment>
         <translation type="unfinished">RT Palette</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="542"/>
+        <location filename="ScriptEditor.cpp" line="546"/>
         <source>Partial Copy Palette (2)</source>
         <oldsource>RT Palette (2)</oldsource>
         <translatorcomment>●</translatorcomment>
         <translation type="unfinished">RT Palette (2)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="543"/>
+        <location filename="ScriptEditor.cpp" line="547"/>
         <source>Multiplier Palette</source>
         <oldsource>AD Palette</oldsource>
         <translatorcomment>●</translatorcomment>
         <translation type="unfinished">AD Palette</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="544"/>
+        <location filename="ScriptEditor.cpp" line="548"/>
         <source>Multiplier Palette (2)</source>
         <oldsource>AD Palette (2)</oldsource>
         <translatorcomment>●</translatorcomment>
         <translation type="unfinished">AD Palette (2)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="458"/>
+        <location filename="ScriptEditor.cpp" line="462"/>
         <source>Déplacer vers un groupe</source>
         <translatorcomment>Move to Group</translatorcomment>
         <translation>グループに移動</translation>
@@ -4067,7 +4095,7 @@ channelCount=%3</translation>
         <translation type="obsolete">キーが一度離された場合</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="362"/>
+        <location filename="ScriptEditor.cpp" line="366"/>
         <source>Si personnage existe</source>
         <translatorcomment>If character exists</translatorcomment>
         <translation>キャラクターが存在する場合</translation>
@@ -4219,396 +4247,396 @@ channelCount=%3</translation>
         <translation type="obsolete">XOR (16-bit - mod 65536)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="459"/>
+        <location filename="ScriptEditor.cpp" line="463"/>
         <source>Déplacer vers un équipier</source>
         <translatorcomment>Move to Party Member</translatorcomment>
         <translation>パーティ メンバーの方へ移動</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="461"/>
+        <location filename="ScriptEditor.cpp" line="465"/>
         <source>Rotation</source>
         <translatorcomment>Turn</translatorcomment>
         <translation>回転</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="462"/>
+        <location filename="ScriptEditor.cpp" line="466"/>
         <source>Rotation vers un groupe</source>
         <translatorcomment>Direction to Group</translatorcomment>
         <translation>グループへの方向</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="463"/>
+        <location filename="ScriptEditor.cpp" line="467"/>
         <source>Rotation vers un équipier</source>
         <translatorcomment>Direction to Party Member</translatorcomment>
         <translation>パーティ メンバーへの方向</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="464"/>
+        <location filename="ScriptEditor.cpp" line="468"/>
         <source>Rotation inversée</source>
         <translatorcomment>Inversed Turn</translatorcomment>
         <translation>反転</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="465"/>
+        <location filename="ScriptEditor.cpp" line="469"/>
         <source>Rotation inversée vers un groupe</source>
         <translatorcomment>Direction (inversed) to Group</translatorcomment>
         <translation>向きをグループの方へ反転</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="466"/>
+        <location filename="ScriptEditor.cpp" line="470"/>
         <source>Rotation inversée vers un équipier</source>
         <translatorcomment>Direction (inversed) to Party Member</translatorcomment>
         <translation>向きをパーティ メンバーの方へ反転</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="467"/>
+        <location filename="ScriptEditor.cpp" line="471"/>
         <source>Attendre fin rotation</source>
         <translatorcomment>Wait for Turn</translatorcomment>
         <translation>回転待ち</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="469"/>
+        <location filename="ScriptEditor.cpp" line="473"/>
         <source>Jouer animation en boucle</source>
         <translatorcomment>Play animation (loop)</translatorcomment>
         <translation>アニメーションを再生 (ループ)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="470"/>
+        <location filename="ScriptEditor.cpp" line="474"/>
         <source>Jouer animation (1)</source>
         <translatorcomment>Play animation (1)</translatorcomment>
         <translation>アニメーションを再生 (1)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="471"/>
+        <location filename="ScriptEditor.cpp" line="475"/>
         <source>Jouer animation (2)</source>
         <translatorcomment>Play animation (2)</translatorcomment>
         <translation>アニメーションを再生 (2)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="472"/>
+        <location filename="ScriptEditor.cpp" line="476"/>
         <source>Jouer animation et revenir (1)</source>
         <translatorcomment>Play animation and return (1)</translatorcomment>
         <translation>アニメーションを再生してリターン (1)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="473"/>
+        <location filename="ScriptEditor.cpp" line="477"/>
         <source>Jouer animation et revenir (2)</source>
         <translatorcomment>Play animation and return (2)</translatorcomment>
         <translation>アニメーションを再生してリターン (2)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="474"/>
+        <location filename="ScriptEditor.cpp" line="478"/>
         <source>Jouer partiellement animation (1)</source>
         <translatorcomment>Play partial animation (1)</translatorcomment>
         <translation>アニメーションの一部を再生 (1)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="475"/>
+        <location filename="ScriptEditor.cpp" line="479"/>
         <source>Jouer partiellement animation (2)</source>
         <translatorcomment>Play partial animation (2)</translatorcomment>
         <translation>アニメーションの一部を再生 (2)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="476"/>
+        <location filename="ScriptEditor.cpp" line="480"/>
         <source>Jouer partiellement animation et revenir (1)</source>
         <translatorcomment>Play partial animation and return (1)</translatorcomment>
         <translation>アニメーションの一部を再生してリターン (1)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="477"/>
+        <location filename="ScriptEditor.cpp" line="481"/>
         <source>Jouer partiellement animation et revenir (2)</source>
         <translatorcomment>Play partial animation and return (2)</translatorcomment>
         <translation>アニメーションの一部を再生してリターン (2)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="478"/>
+        <location filename="ScriptEditor.cpp" line="482"/>
         <source>Jouer animation Stand/Walk/Run</source>
         <translatorcomment>Play Stand/Walk/Run animation</translatorcomment>
         <translation>直立/歩行/走行 アニメーションを再生</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="479"/>
+        <location filename="ScriptEditor.cpp" line="483"/>
         <source>Jouer animation du saut</source>
         <translatorcomment>Play jump animation</translatorcomment>
         <translation>ジャンプ アニメーションを再生</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="480"/>
+        <location filename="ScriptEditor.cpp" line="484"/>
         <source>Jouer animation de l&apos;échelle</source>
         <translatorcomment>Play climb animation</translatorcomment>
         <translation>登攀アニメーションを再生</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="481"/>
+        <location filename="ScriptEditor.cpp" line="485"/>
         <source>Rejoindre le leader</source>
         <translatorcomment>Party field join</translatorcomment>
         <translation>パーティ合流フィールド</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="482"/>
+        <location filename="ScriptEditor.cpp" line="486"/>
         <source>Séparer les membres de l&apos;équipe</source>
         <translatorcomment>Party field split</translatorcomment>
         <translation>パーティ分割フィールド</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="483"/>
+        <location filename="ScriptEditor.cpp" line="487"/>
         <source>Arrêter animation</source>
         <translatorcomment>Stop animation</translatorcomment>
         <translation>アニメーション停止</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="484"/>
+        <location filename="ScriptEditor.cpp" line="488"/>
         <source>Attendre fin animation</source>
         <translatorcomment>Wait for animation</translatorcomment>
         <translation>アニメーション待ち</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="486"/>
+        <location filename="ScriptEditor.cpp" line="490"/>
         <source>Filtre graphique - OEil ouvert/fermé</source>
         <translatorcomment>Character Graphics - Eye open/close</translatorcomment>
         <translation>キャラクター グラフィック - 目を開ける/閉じる</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="487"/>
+        <location filename="ScriptEditor.cpp" line="491"/>
         <source>Filtre graphique - Activer/Désactiver transparence</source>
         <translatorcomment>Character Graphics - </translatorcomment>
         <translation>キャラクター グラフィック - 透過のオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="488"/>
+        <location filename="ScriptEditor.cpp" line="492"/>
         <source>Filtre graphique - AMBNT</source>
         <translatorcomment>Character Graphics - AMBNT</translatorcomment>
         <translation>キャラクター グラフィック - AMBNT</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="489"/>
+        <location filename="ScriptEditor.cpp" line="493"/>
         <source>Filtre graphique - ??? (1)</source>
         <translatorcomment>Character Graphics - ??? (1)</translatorcomment>
         <translation>キャラクター グラフィック - ??? (1)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="490"/>
+        <location filename="ScriptEditor.cpp" line="494"/>
         <source>Filtre graphique - ??? (2)</source>
         <translatorcomment>Character Graphics - ??? (2)</translatorcomment>
         <translation>キャラクター グラフィック - ??? (2)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="491"/>
+        <location filename="ScriptEditor.cpp" line="495"/>
         <source>Filtre graphique - ??? (3)</source>
         <translatorcomment>Character Graphics - ??? (3)</translatorcomment>
         <translation>キャラクター グラフィック - ??? (3)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="492"/>
+        <location filename="ScriptEditor.cpp" line="496"/>
         <source>Filtre graphique - LIGHT</source>
         <translatorcomment>Character Graphics - LIGHT</translatorcomment>
         <translation>キャラクター グラフィック - LIGHT</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="493"/>
+        <location filename="ScriptEditor.cpp" line="497"/>
         <source>Filtre graphique - ??? (4)</source>
         <translatorcomment>Character Graphics - ??? (4)</translatorcomment>
         <translation>キャラクター グラフィック - ??? (4)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="494"/>
+        <location filename="ScriptEditor.cpp" line="498"/>
         <source>Filtre graphique - ??? (5)</source>
         <translatorcomment>Character Graphics - ??? (5)</translatorcomment>
         <translation>キャラクター グラフィック - ??? (5)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="495"/>
+        <location filename="ScriptEditor.cpp" line="499"/>
         <source>Filtre graphique - ??? (6)</source>
         <translatorcomment>Character Graphics - ??? (6)</translatorcomment>
         <translation>キャラクター グラフィック - ??? (6)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="496"/>
+        <location filename="ScriptEditor.cpp" line="500"/>
         <source>Filtre graphique - SBOBJ</source>
         <translatorcomment>Character Graphics - SBOBJ</translatorcomment>
         <translation>キャラクター グラフィック - SBOBJ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="497"/>
+        <location filename="ScriptEditor.cpp" line="501"/>
         <source>Filtre graphique - ??? (7)</source>
         <translatorcomment>Character Graphics - ??? (7)</translatorcomment>
         <translation>キャラクター グラフィック - ??? (7)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="498"/>
+        <location filename="ScriptEditor.cpp" line="502"/>
         <source>Filtre graphique - ??? (8)</source>
         <translatorcomment>Character Graphics - ??? (8)</translatorcomment>
         <translation>キャラクター グラフィック - ??? (8)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="499"/>
+        <location filename="ScriptEditor.cpp" line="503"/>
         <source>Filtre graphique - SHINE</source>
         <translatorcomment>Character Graphics - SHINE</translatorcomment>
         <translation>キャラクター グラフィック - SHINE</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="500"/>
+        <location filename="ScriptEditor.cpp" line="504"/>
         <source>Filtre graphique - RESET</source>
         <translatorcomment>Character Graphics - RESET</translatorcomment>
         <translation>キャラクター グラフィック - RESET</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="501"/>
+        <location filename="ScriptEditor.cpp" line="505"/>
         <source>Attendre fin filtre graphique</source>
         <translatorcomment>Wait For Character Graphics</translatorcomment>
         <translation>キャラクター グラフィック待ち</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="503"/>
+        <location filename="ScriptEditor.cpp" line="507"/>
         <source>OFST</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="504"/>
+        <location filename="ScriptEditor.cpp" line="508"/>
         <source>OFSTW</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="506"/>
+        <location filename="ScriptEditor.cpp" line="510"/>
         <source>Vitesse déplacements</source>
         <translatorcomment>Movement Speed</translatorcomment>
         <translation>移動速度</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="507"/>
+        <location filename="ScriptEditor.cpp" line="511"/>
         <source>Vitesse animations</source>
         <translatorcomment>Animation Speed</translatorcomment>
         <translation>アニメーション速度</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="508"/>
+        <location filename="ScriptEditor.cpp" line="512"/>
         <source>Cacher/Afficher objet 3D</source>
         <translatorcomment>Hide/Display Field Model</translatorcomment>
         <translation>3Dモデルを表示/隠す</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="509"/>
+        <location filename="ScriptEditor.cpp" line="513"/>
         <source>Activer/Désactiver rotation</source>
         <translatorcomment>Enable/Disable rotation</translatorcomment>
         <translation>回転のオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="510"/>
+        <location filename="ScriptEditor.cpp" line="514"/>
         <source>Cligner des yeux</source>
         <translatorcomment>Character Blink</translatorcomment>
         <translation>キャラクターの瞬き</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="511"/>
+        <location filename="ScriptEditor.cpp" line="515"/>
         <source>Activer/désactiver parler</source>
         <translatorcomment>Talk On/Off</translatorcomment>
         <translation>ダイアログのオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="512"/>
+        <location filename="ScriptEditor.cpp" line="516"/>
         <source>Activer/désactiver toucher</source>
         <translatorcomment>Contact On/Off</translatorcomment>
         <translation>コンタクトのオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="513"/>
+        <location filename="ScriptEditor.cpp" line="517"/>
         <source>Distance pour parler (8 bits)</source>
         <translatorcomment>Talk Range (8-bit)</translatorcomment>
         <translation>ダイアログ範囲 (8-bit)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="514"/>
+        <location filename="ScriptEditor.cpp" line="518"/>
         <source>Distance pour toucher (8 bits)</source>
         <translatorcomment>Contact range (8-bit)</translatorcomment>
         <translation>コンタクト範囲 (8-bit)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="515"/>
+        <location filename="ScriptEditor.cpp" line="519"/>
         <source>Distance pour parler (16 bits)</source>
         <translatorcomment>Talk Range (16-bit)</translatorcomment>
         <translation>ダイアログ範囲 (16-bit)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="516"/>
+        <location filename="ScriptEditor.cpp" line="520"/>
         <source>Distance pour toucher (16 bits)</source>
         <translatorcomment>Contact range (16-bit)</translatorcomment>
         <translation>コンタクト範囲 (16-bit)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="518"/>
+        <location filename="ScriptEditor.cpp" line="528"/>
         <source>SLIP</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="521"/>
+        <location filename="ScriptEditor.cpp" line="523"/>
         <source>Créer zone</source>
         <translatorcomment>Create location</translatorcomment>
         <translation>エリアを作成</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="522"/>
+        <location filename="ScriptEditor.cpp" line="524"/>
         <source>Modifier zone</source>
         <translatorcomment>Set location</translatorcomment>
         <translation>エリアをセット</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="523"/>
+        <location filename="ScriptEditor.cpp" line="525"/>
         <source>Activer/Désactiver zone</source>
         <translatorcomment>Location On/Off</translatorcomment>
         <translation>エリアをオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="524"/>
+        <location filename="ScriptEditor.cpp" line="526"/>
         <source>Activer/Désactiver triangle</source>
         <oldsource>Activer/Désactiver polygone</oldsource>
         <translatorcomment>Triangle On/Off</translatorcomment>
         <translation>ポリゴンをオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="527"/>
+        <location filename="ScriptEditor.cpp" line="531"/>
         <source>Déplacer une couche du décor (Z)</source>
         <translatorcomment>Move background layer (Z)</translatorcomment>
         <translation>背景レイヤーを移動 (Z)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="528"/>
+        <location filename="ScriptEditor.cpp" line="532"/>
         <source>Animer une couche du décor</source>
         <oldsource>Déplacer une couche du décor (X,Y)</oldsource>
         <translatorcomment>Animate background layer</translatorcomment>
         <translation>背景レイヤーをアニメーション</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="529"/>
+        <location filename="ScriptEditor.cpp" line="533"/>
         <source>Afficher un état d&apos;un paramètre</source>
         <translatorcomment>Show a background state</translatorcomment>
         <translation>背景ステートを表示</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="530"/>
+        <location filename="ScriptEditor.cpp" line="534"/>
         <source>Cacher un état d&apos;un paramètre</source>
         <translatorcomment>Hide background state</translatorcomment>
         <translation>背景ステートを隠す</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="531"/>
+        <location filename="ScriptEditor.cpp" line="535"/>
         <source>Afficher l&apos;état suivant d&apos;un paramètre</source>
         <translatorcomment>Show next background state</translatorcomment>
         <translation>次の背景ステートを表示</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="532"/>
+        <location filename="ScriptEditor.cpp" line="536"/>
         <source>Afficher l&apos;état précédent d&apos;un paramètre</source>
         <translatorcomment>Show previous background state</translatorcomment>
         <translation>前の背景ステートを表示</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="533"/>
+        <location filename="ScriptEditor.cpp" line="537"/>
         <source>Cacher un paramètre</source>
         <translatorcomment>Hide background parameters</translatorcomment>
         <translation>背景パラメータを隠す</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="600"/>
+        <location filename="ScriptEditor.cpp" line="604"/>
         <source>Mode de combat (2)</source>
         <translation type="unfinished">バトル モード</translation>
     </message>
@@ -4619,366 +4647,366 @@ channelCount=%3</translation>
         <translation type="obsolete">MP Palette</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="549"/>
+        <location filename="ScriptEditor.cpp" line="553"/>
         <source>Centrer sur le personnage jouable</source>
         <translatorcomment>Scroll to playable character</translatorcomment>
         <translation>操作可能なキャラクターにスクロール</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="550"/>
+        <location filename="ScriptEditor.cpp" line="554"/>
         <source>Centrer sur personnage</source>
         <translatorcomment>Scroll to party member</translatorcomment>
         <translation>パーティ メンバーにスクロール</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="551"/>
+        <location filename="ScriptEditor.cpp" line="555"/>
         <source>Centrer sur groupe</source>
         <translatorcomment>Scroll to group</translatorcomment>
         <translation>グループにスクロール</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="553"/>
+        <location filename="ScriptEditor.cpp" line="557"/>
         <source>Centrer (X,Y)</source>
         <translatorcomment>Scroll (X,Y)</translatorcomment>
         <translation>スクロール (X,Y)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="554"/>
+        <location filename="ScriptEditor.cpp" line="558"/>
         <source>Centrer (X,Y,Vitesse amortie)</source>
         <translatorcomment>Scroll (X,Y,Smooth)</translatorcomment>
         <translation>スクロール (X,Y,リスムース)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="555"/>
+        <location filename="ScriptEditor.cpp" line="559"/>
         <source>Centrer (X,Y,Vitesse linéaire)</source>
         <translatorcomment>Scroll (X,Y,Linear)</translatorcomment>
         <translation>スクロール (X,Y,リニア)</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="556"/>
+        <location filename="ScriptEditor.cpp" line="560"/>
         <source>SCRLO</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="557"/>
+        <location filename="ScriptEditor.cpp" line="561"/>
         <source>SCRLC</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="559"/>
+        <location filename="ScriptEditor.cpp" line="563"/>
         <source>Secouer l&apos;écran</source>
         <translatorcomment>Shake</translatorcomment>
         <translation>画面を揺らす</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="560"/>
+        <location filename="ScriptEditor.cpp" line="564"/>
         <source>Attendre fin centrage</source>
         <translatorcomment>Wait for scroll</translatorcomment>
         <translation>スクロール待ち</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="562"/>
+        <location filename="ScriptEditor.cpp" line="566"/>
         <source>VWOFT</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="563"/>
+        <location filename="ScriptEditor.cpp" line="567"/>
         <source>FADE</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="564"/>
+        <location filename="ScriptEditor.cpp" line="568"/>
         <source>FADEW</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="565"/>
+        <location filename="ScriptEditor.cpp" line="569"/>
         <source>NFADE</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="568"/>
+        <location filename="ScriptEditor.cpp" line="572"/>
         <source>Jouer son</source>
         <translatorcomment>Play sound</translatorcomment>
         <translation>効果音を再生</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="569"/>
+        <location filename="ScriptEditor.cpp" line="573"/>
         <source>AKAO</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="570"/>
+        <location filename="ScriptEditor.cpp" line="574"/>
         <source>AKAO2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="572"/>
+        <location filename="ScriptEditor.cpp" line="576"/>
         <source>Jouer musique</source>
         <translatorcomment>Play music</translatorcomment>
         <translation>BGM を再生</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="573"/>
+        <location filename="ScriptEditor.cpp" line="577"/>
         <source>MUSVT</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="574"/>
+        <location filename="ScriptEditor.cpp" line="578"/>
         <source>MUSVM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="575"/>
+        <location filename="ScriptEditor.cpp" line="579"/>
         <source>Activer/Désactiver musique</source>
         <translatorcomment>Music On/Off</translatorcomment>
         <translation>BGM のオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="576"/>
+        <location filename="ScriptEditor.cpp" line="580"/>
         <source>Musique de combat</source>
         <translatorcomment>Battle music</translatorcomment>
         <translation>バトル BGM</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="577"/>
+        <location filename="ScriptEditor.cpp" line="581"/>
         <source>CHMPH</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="578"/>
+        <location filename="ScriptEditor.cpp" line="582"/>
         <source>CHMST</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="579"/>
+        <location filename="ScriptEditor.cpp" line="583"/>
         <source>FMUSC</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="580"/>
+        <location filename="ScriptEditor.cpp" line="584"/>
         <source>CMUSC</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="582"/>
+        <location filename="ScriptEditor.cpp" line="586"/>
         <source>Prochaine cinématique</source>
         <translatorcomment>Set next movie</translatorcomment>
         <translation>次のムービーをセット</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="583"/>
+        <location filename="ScriptEditor.cpp" line="587"/>
         <source>Jouer cinématique</source>
         <translatorcomment>Play movie</translatorcomment>
         <translation>ムービーの再生</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="584"/>
+        <location filename="ScriptEditor.cpp" line="588"/>
         <source>MVIEF</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="585"/>
+        <location filename="ScriptEditor.cpp" line="589"/>
         <source>MVCAM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="586"/>
+        <location filename="ScriptEditor.cpp" line="590"/>
         <source>BGMOVIE</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="589"/>
+        <location filename="ScriptEditor.cpp" line="593"/>
         <source>Lancer un tutoriel</source>
         <translatorcomment>Play tutorial</translatorcomment>
         <translation>解説を再生</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="590"/>
+        <location filename="ScriptEditor.cpp" line="594"/>
         <source>Afficher menu</source>
         <translatorcomment>Display a menu</translatorcomment>
         <translation>メニューの表示</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="591"/>
+        <location filename="ScriptEditor.cpp" line="595"/>
         <source>Changer de disque</source>
         <translatorcomment>Disk change screen</translatorcomment>
         <translation>デスクの変更画面</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="592"/>
+        <location filename="ScriptEditor.cpp" line="596"/>
         <source>Mini-jeu</source>
         <translatorcomment>Minigame</translatorcomment>
         <translation>ミニゲーム</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="599"/>
+        <location filename="ScriptEditor.cpp" line="603"/>
         <source>Mode de combat</source>
         <translatorcomment>Battle mode</translatorcomment>
         <translation>バトル モード</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="593"/>
+        <location filename="ScriptEditor.cpp" line="597"/>
         <source>Résultat du dernier combat</source>
         <translatorcomment>Battle result load</translatorcomment>
         <translation>バトル結果の読み込み</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="405"/>
+        <location filename="ScriptEditor.cpp" line="409"/>
         <source>Obtenir la couleur d&apos;une fenêtre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="406"/>
+        <location filename="ScriptEditor.cpp" line="410"/>
         <source>Changer la couleur d&apos;une fenêtre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="545"/>
+        <location filename="ScriptEditor.cpp" line="549"/>
         <source>Additionner Palette</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="546"/>
+        <location filename="ScriptEditor.cpp" line="550"/>
         <source>Additionner Palette (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="594"/>
+        <location filename="ScriptEditor.cpp" line="598"/>
         <source>Table de combat</source>
         <translatorcomment>Battle Table</translatorcomment>
         <translation>バトル テーブル</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="595"/>
+        <location filename="ScriptEditor.cpp" line="599"/>
         <source>Changer d&apos;écran</source>
         <translatorcomment>Change Field</translatorcomment>
         <translation>フィールドの変更</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="596"/>
+        <location filename="ScriptEditor.cpp" line="600"/>
         <source>ID de l&apos;écran précédent</source>
         <translatorcomment>Last Map ID　●</translatorcomment>
         <translation>最後のマップ ID</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="597"/>
+        <location filename="ScriptEditor.cpp" line="601"/>
         <source>Combattre</source>
         <translatorcomment>Start Battle</translatorcomment>
         <translation>バトル開始</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="598"/>
+        <location filename="ScriptEditor.cpp" line="602"/>
         <source>Activer/désactiver les combats</source>
         <translatorcomment>Battle On/Off</translatorcomment>
         <translation>バトルをオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="601"/>
+        <location filename="ScriptEditor.cpp" line="605"/>
         <source>Activer/désactiver les changements d&apos;écran</source>
         <translatorcomment>Map Jump On/Off</translatorcomment>
         <translation>マップのジャンプをオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="602"/>
+        <location filename="ScriptEditor.cpp" line="606"/>
         <source>Activer/Désactiver déplacements</source>
         <translatorcomment>Character movability On/Off</translatorcomment>
         <translation>キャラクターの移動をオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="603"/>
+        <location filename="ScriptEditor.cpp" line="607"/>
         <source>Précharger un écran</source>
         <translatorcomment>Preload field Map</translatorcomment>
         <translation>フィールド マップの先読み</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="604"/>
+        <location filename="ScriptEditor.cpp" line="608"/>
         <source>PMJMP2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="605"/>
+        <location filename="ScriptEditor.cpp" line="609"/>
         <source>Game Over</source>
         <translation>ゲーム オーバー</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="606"/>
+        <location filename="ScriptEditor.cpp" line="610"/>
         <source>SPECIAL - Activer/Désactiver curseur</source>
         <translatorcomment>SPECIAL - Cursor On/Off</translatorcomment>
         <translation>SPECIAL - カーソルのオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="607"/>
+        <location filename="ScriptEditor.cpp" line="611"/>
         <source>SPECIAL - PNAME</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="608"/>
+        <location filename="ScriptEditor.cpp" line="612"/>
         <source>SPECIAL - Vitesse du jeu</source>
         <translatorcomment>SPECIAL - Game Speed</translatorcomment>
         <translation>SPECIAL - ゲーム速度</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="609"/>
+        <location filename="ScriptEditor.cpp" line="613"/>
         <source>SPECIAL - Vitesse des message</source>
         <translatorcomment>SPECIAL - Messages Speed</translatorcomment>
         <translation>SPECIAL - メッセージ速度</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="610"/>
+        <location filename="ScriptEditor.cpp" line="614"/>
         <source>SPECIAL - Full Materia</source>
         <translation>SPECIAL - フル マテリア</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="611"/>
+        <location filename="ScriptEditor.cpp" line="615"/>
         <source>SPECIAL - Full Item</source>
         <translation>SPECIAL - フル アイテム</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="612"/>
+        <location filename="ScriptEditor.cpp" line="616"/>
         <source>SPECIAL - Activer/Désactiver combats</source>
         <translatorcomment>SPECIAL - Battle On/Off</translatorcomment>
         <translation>SPECIAL - バトルをオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="613"/>
+        <location filename="ScriptEditor.cpp" line="617"/>
         <source>SPECIAL - Activer/Désactiver mouvements</source>
         <translatorcomment>SPECIAL - Character movability On/Off</translatorcomment>
         <translation>SPECIAL - キャラクターの移動をオン/オフ</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="614"/>
+        <location filename="ScriptEditor.cpp" line="618"/>
         <source>SPECIAL - Renommer personnage</source>
         <translatorcomment>SPECIAL - Rename character</translatorcomment>
         <translation>SPECIAL - キャラクターのリネーム</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="615"/>
+        <location filename="ScriptEditor.cpp" line="619"/>
         <source>SPECIAL - Clear Game</source>
         <translation>SPECIAL - ゲームをクリア</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="616"/>
+        <location filename="ScriptEditor.cpp" line="620"/>
         <source>SPECIAL - Clear Items</source>
         <translation>SPECIAL - アイテムをクリア</translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="619"/>
+        <location filename="ScriptEditor.cpp" line="623"/>
         <source>MPDSP</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="620"/>
+        <location filename="ScriptEditor.cpp" line="624"/>
         <source>SETX</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="621"/>
+        <location filename="ScriptEditor.cpp" line="625"/>
         <source>GETX</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ScriptEditor.cpp" line="622"/>
+        <location filename="ScriptEditor.cpp" line="626"/>
         <source>SEARCHX</source>
         <translation></translation>
     </message>
@@ -5326,42 +5354,42 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorExecCharPage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="208"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="209"/>
         <source>Script %1</source>
         <translation type="unfinished">スクリプト %1</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="215"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="216"/>
         <source>Asynchrone, n&apos;attend pas</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="216"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="217"/>
         <source>Asynchrone, attend</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="217"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="218"/>
         <source>Synchrone, attend</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="220"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="221"/>
         <source>Équipier</source>
         <translation type="unfinished">チーム メンバー</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="222"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="223"/>
         <source>Script</source>
         <translation type="unfinished">スクリプト</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="224"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="225"/>
         <source>Priorité</source>
         <translation type="unfinished">優先度</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="226"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="227"/>
         <source>Type</source>
         <translation type="unfinished">タイプ</translation>
     </message>
@@ -5369,37 +5397,37 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorExecPage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="87"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="88"/>
         <source>Asynchrone, n&apos;attend pas</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="88"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="89"/>
         <source>Asynchrone, attend</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="89"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="90"/>
         <source>Synchrone, attend</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="92"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="93"/>
         <source>Groupe</source>
         <translation type="unfinished">グループ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="94"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="95"/>
         <source>Script</source>
         <translation type="unfinished">スクリプト</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="96"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="97"/>
         <source>Priorité</source>
         <translation type="unfinished">優先度</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="98"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="99"/>
         <source>Type</source>
         <translation type="unfinished">タイプ</translation>
     </message>
@@ -5407,87 +5435,87 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorGenericList</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="44"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="45"/>
         <source>Ajouter une ligne</source>
         <translation type="unfinished">行の追加</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="46"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="47"/>
         <source>Effacer une ligne</source>
         <translation type="unfinished">行の削除</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="56"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="57"/>
         <source>Paramètres :</source>
         <translation type="unfinished">パラメータ :</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="623"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="624"/>
         <source>Entier long</source>
         <translation type="unfinished">Long</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="624"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="625"/>
         <source>Entier long signé</source>
         <translation type="unfinished">符号付き long</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="625"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="626"/>
         <source>Coordonnée X</source>
         <translation type="unfinished">X 座標</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="626"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="627"/>
         <source>Coordonnée Y</source>
         <translation type="unfinished">Y 座標</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="627"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="628"/>
         <source>Coordonnée Z</source>
         <translation type="unfinished">Z 座標</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="628"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="629"/>
         <source>Écran</source>
         <translation type="unfinished">マップ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="629"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="630"/>
         <source>Tutoriel</source>
         <translation type="unfinished">解説</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="630"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="631"/>
         <source>Personnage</source>
         <translation type="unfinished">キャラクター</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="631"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="632"/>
         <source>Disque</source>
         <translation type="unfinished">ディスク</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="632"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="633"/>
         <source>Mini-jeu</source>
         <translation type="unfinished">ミニゲーム</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="633"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="634"/>
         <source>Entier court</source>
         <translation type="unfinished">Short</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="634"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="635"/>
         <source>Vitesse (8 bits)</source>
         <translation type="unfinished">速度 (8 ビット)</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="635"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="636"/>
         <source>Vitesse (16 bits)</source>
         <translation type="unfinished">速度 (16 ビット)</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="636"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="637"/>
         <source>Direction</source>
         <translation type="unfinished">方向</translation>
     </message>
@@ -5496,177 +5524,177 @@ channelCount=%3</translation>
         <translation type="obsolete">ポリゴン</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="637"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="638"/>
         <source>Triangle</source>
         <translation type="unfinished">△</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="638"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="639"/>
         <source>Groupe</source>
         <translation type="unfinished">グループ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="639"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="640"/>
         <source>Script</source>
         <translation type="unfinished">スクリプト</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="640"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="641"/>
         <source>Équipier</source>
         <translation type="unfinished">チーム メンバー</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="641"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="642"/>
         <source>Bank</source>
         <translation type="unfinished">バンク</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="642"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="643"/>
         <source>Adresse</source>
         <translation type="unfinished">アドレス</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="643"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="644"/>
         <source>Priorité</source>
         <translation type="unfinished">優先度</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="644"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="645"/>
         <source>Flag</source>
         <translation type="unfinished">フラグ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="645"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="646"/>
         <source>Saut court</source>
         <translation type="unfinished">ジャンプ (short)</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="646"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="647"/>
         <source>Saut long</source>
         <translation type="unfinished">ジャンプ (long)</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="647"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="648"/>
         <source>Opérateur</source>
         <translation type="unfinished">演算子</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="648"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="649"/>
         <source>Booléen</source>
         <translation type="unfinished">ブーリアン</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="649"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="650"/>
         <source>Couche</source>
         <translation type="unfinished">レイヤー</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="650"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="651"/>
         <source>Paramètre</source>
         <translation type="unfinished">パラメータ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="651"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="652"/>
         <source>État</source>
         <translation type="unfinished">ステート</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="652"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="653"/>
         <source>Fenêtre</source>
         <translation type="unfinished">ウィンドウ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="653"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="654"/>
         <source>Largeur</source>
         <translation type="unfinished">幅</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="654"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="655"/>
         <source>Hauteur</source>
         <translation type="unfinished">高さ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="655"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="656"/>
         <source>Variable</source>
         <translation type="unfinished">変数</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="656"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="657"/>
         <source>Touche(s)</source>
         <translation type="unfinished">キー</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="657"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="658"/>
         <source>Sens de rotation</source>
         <translation type="unfinished">回転</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="658"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="659"/>
         <source>Type d&apos;affichage</source>
         <translation type="unfinished">表示タイプ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="659"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="660"/>
         <source>Texte</source>
         <translation type="unfinished">テキスト</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="660"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="661"/>
         <source>Menu</source>
         <translation type="unfinished">メニュー</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="661"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="662"/>
         <source>Type de fenêtre</source>
         <translation type="unfinished">ウィンドウのタイプ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="662"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="663"/>
         <source>Objet</source>
         <translation type="unfinished">アイテム</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="663"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="664"/>
         <source>Matéria</source>
         <translation type="unfinished">マテリア</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="664"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="665"/>
         <source>Quantité</source>
         <translation type="unfinished">所持数</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="665"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="666"/>
         <source>Couleur</source>
         <translation type="unfinished">カラー</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="666"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="667"/>
         <source>Animation</source>
         <translation type="unfinished">アニメーション</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="667"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="668"/>
         <source>Musique</source>
         <translation type="unfinished">BGM</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="668"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="669"/>
         <source>Son</source>
         <translation type="unfinished">効果音</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="669"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="670"/>
         <source>Vidéo</source>
         <translation type="unfinished">ビデオ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="670"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="671"/>
         <source>Label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="672"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="673"/>
         <source>???</source>
         <translation type="unfinished">???</translation>
     </message>
@@ -5674,37 +5702,37 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorIfKeyPage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="773"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="774"/>
         <source>Touches</source>
         <translation type="unfinished">キー</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="798"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="799"/>
         <source>Touche pressée</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="799"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="800"/>
         <source>Touche pressée une fois</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="800"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="801"/>
         <source>Touche lâchée une fois</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="802"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="803"/>
         <source>Type</source>
         <translation type="unfinished">タイプ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="804"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="805"/>
         <source>Label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="879"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="880"/>
         <source>Label %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5712,52 +5740,52 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorIfPage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="505"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="506"/>
         <source>Sur 8 bits non signés</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="506"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="507"/>
         <source>Sur 16 bits signés</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="507"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="508"/>
         <source>Sur 16 bits non signés</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="512"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="513"/>
         <source>Court (8 bits)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="513"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="514"/>
         <source>Long (16 bits)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="516"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="517"/>
         <source>Test à effectuer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="520"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="521"/>
         <source>Type de comparaison</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="522"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="523"/>
         <source>Label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="524"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="525"/>
         <source>Type de saut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="691"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="692"/>
         <source>Label %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5765,23 +5793,23 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorIfQPage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="927"/>
         <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="928"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="929"/>
         <source>(Vide)</source>
         <translation type="unfinished">(Empty)</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="933"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="934"/>
         <source>Personnage</source>
         <translation type="unfinished">キャラクター</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="935"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="936"/>
         <source>Label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="977"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="978"/>
         <source>Label %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5789,27 +5817,27 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorJumpPage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="361"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="362"/>
         <source>Court (8 bits)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="362"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="363"/>
         <source>Long (16 bits)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="365"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="366"/>
         <source>Label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="367"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="368"/>
         <source>Type</source>
         <translation type="unfinished">タイプ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="448"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="449"/>
         <source>Label %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5817,7 +5845,7 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorLabelPage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="311"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="312"/>
         <source>Label</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5825,17 +5853,17 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorReturnToPage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="29"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="30"/>
         <source>Script %1</source>
         <translation type="unfinished">スクリプト %1</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="36"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="37"/>
         <source>Script</source>
         <translation type="unfinished">スクリプト</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="38"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="39"/>
         <source>Priorité</source>
         <translation type="unfinished">優先度</translation>
     </message>
@@ -5881,7 +5909,7 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorWaitPage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="1004"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="1005"/>
         <source>Images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5889,42 +5917,42 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorWindowModePage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="222"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="224"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="223"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="225"/>
         <source>Sans bords</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="224"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="226"/>
         <source>Transparent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="227"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="229"/>
         <source>Autoriser</source>
         <translation type="unfinished">許可</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="228"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="230"/>
         <source>Empêcher</source>
         <translation type="unfinished">禁止</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="232"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="234"/>
         <source>Fenêtre ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="234"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="236"/>
         <source>Type</source>
         <translation type="unfinished">タイプ</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="236"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="238"/>
         <source>Fermeture</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5932,17 +5960,17 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorWindowMovePage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="306"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="308"/>
         <source>Fenêtre ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="308"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="310"/>
         <source>X relatif</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="310"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="312"/>
         <source>Y relatif</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5950,47 +5978,47 @@ channelCount=%3</translation>
 <context>
     <name>ScriptEditorWindowPage</name>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="41"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="43"/>
         <source>[Laisser la fenêtre vide]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="47"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="49"/>
         <source>Taille auto.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="52"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="54"/>
         <source>Fenêtre ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="54"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="56"/>
         <source>X</source>
         <translation type="unfinished">X</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="56"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="58"/>
         <source>Y</source>
         <translation type="unfinished">Y</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="58"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="60"/>
         <source>L</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="116"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="118"/>
         <source>Lignes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="133"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="135"/>
         <source>H</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="62"/>
+        <location filename="ScriptEditorWidgets/ScriptEditorWindowPage.cpp" line="64"/>
         <source>Texte en aperçu :</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5998,106 +6026,106 @@ channelCount=%3</translation>
 <context>
     <name>Search</name>
     <message>
-        <location filename="Search.cpp" line="28"/>
+        <location filename="Search.cpp" line="30"/>
         <source>Rechercher</source>
         <translatorcomment>Find</translatorcomment>
         <translation>検索</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="31"/>
+        <location filename="Search.cpp" line="33"/>
         <source>Scripts</source>
         <translation type="unfinished">スクリプト</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="32"/>
+        <location filename="Search.cpp" line="34"/>
         <source>Textes</source>
         <translation type="unfinished">テキスト</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="85"/>
+        <location filename="Search.cpp" line="87"/>
         <source>Texte</source>
         <translatorcomment>Text</translatorcomment>
         <translation>テキスト</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="86"/>
+        <location filename="Search.cpp" line="88"/>
         <source>Variable</source>
         <translation>変数</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="87"/>
+        <location filename="Search.cpp" line="89"/>
         <source>Opcode</source>
         <translation>オプコード</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="88"/>
+        <location filename="Search.cpp" line="90"/>
         <source>Exec</source>
         <translation>実行</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="89"/>
+        <location filename="Search.cpp" line="91"/>
         <source>Saut d&apos;écran</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="98"/>
-        <location filename="Search.cpp" line="202"/>
+        <location filename="Search.cpp" line="100"/>
+        <location filename="Search.cpp" line="204"/>
         <source>Sensible à la casse</source>
         <translation>大文字と小文字を区別</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="100"/>
-        <location filename="Search.cpp" line="204"/>
+        <location filename="Search.cpp" line="102"/>
+        <location filename="Search.cpp" line="206"/>
         <source>Utiliser les expressions régulières</source>
         <translation>正規表現</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="125"/>
+        <location filename="Search.cpp" line="127"/>
         <source>Var</source>
         <translation>変数</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="161"/>
+        <location filename="Search.cpp" line="163"/>
         <source>Groupe</source>
         <translation>グループ</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="369"/>
+        <location filename="Search.cpp" line="371"/>
         <source>Dernier %1,
 poursuite au début.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="370"/>
-        <location filename="Search.cpp" line="449"/>
+        <location filename="Search.cpp" line="372"/>
+        <location filename="Search.cpp" line="451"/>
         <source>groupe</source>
         <translation type="unfinished">グループ</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="370"/>
-        <location filename="Search.cpp" line="449"/>
+        <location filename="Search.cpp" line="372"/>
+        <location filename="Search.cpp" line="451"/>
         <source>écran</source>
         <translation type="unfinished">マップ</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="448"/>
+        <location filename="Search.cpp" line="450"/>
         <source>Premier %1,
 poursuite à la fin.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="159"/>
+        <location filename="Search.cpp" line="161"/>
         <source>Script</source>
         <translation>スクリプト</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="34"/>
+        <location filename="Search.cpp" line="36"/>
         <source>Chercher le suivant</source>
         <translatorcomment>Find next</translatorcomment>
         <translation>次を検索</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="35"/>
+        <location filename="Search.cpp" line="37"/>
         <source>Chercher le précédent</source>
         <translatorcomment>Find previous</translatorcomment>
         <translation>前を検索</translation>
@@ -6120,14 +6148,14 @@ poursuite de la recherche dans le dernier fichier.</source>
 <context>
     <name>SpinBoxDelegate</name>
     <message>
-        <location filename="ScriptEditorWidgets/Delegate.cpp" line="112"/>
-        <location filename="ScriptEditorWidgets/Delegate.cpp" line="113"/>
+        <location filename="ScriptEditorWidgets/Delegate.cpp" line="114"/>
+        <location filename="ScriptEditorWidgets/Delegate.cpp" line="115"/>
         <source>(Vide)</source>
         <translatorcomment>(Empty)</translatorcomment>
         <translation>(Empty)</translation>
     </message>
     <message>
-        <location filename="ScriptEditorWidgets/Delegate.cpp" line="210"/>
+        <location filename="ScriptEditorWidgets/Delegate.cpp" line="212"/>
         <source>Choisir une nouvelle couleur</source>
         <translatorcomment>Choose a new color</translatorcomment>
         <translation>変更する色の選択</translation>
@@ -6136,297 +6164,285 @@ poursuite de la recherche dans le dernier fichier.</source>
 <context>
     <name>TextManager</name>
     <message>
-        <location filename="TextManager.cpp" line="23"/>
+        <location filename="TextManager.cpp" line="27"/>
         <source>Textes</source>
         <translatorcomment>Texts</translatorcomment>
         <translation>テキスト</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="27"/>
+        <location filename="TextManager.cpp" line="31"/>
         <source>Afficher les textes non utilisés</source>
         <translatorcomment>Show unused texts</translatorcomment>
         <translation>未使用のテキストを表示</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="37"/>
+        <location filename="TextManager.cpp" line="41"/>
         <source>Nouvelle page</source>
         <translatorcomment>New Page</translatorcomment>
         <translation>新しいページ</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="58"/>
+        <location filename="TextManager.cpp" line="62"/>
         <source>Membre 1</source>
         <translatorcomment>Member 1</translatorcomment>
         <translation>メンバー 1</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="60"/>
+        <location filename="TextManager.cpp" line="64"/>
         <source>Membre 2</source>
         <translatorcomment>Member 2</translatorcomment>
         <translation>メンバー 2</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="62"/>
+        <location filename="TextManager.cpp" line="66"/>
         <source>Membre 3</source>
         <translatorcomment>Member 3</translatorcomment>
         <translation>メンバー 3</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="67"/>
+        <location filename="TextManager.cpp" line="71"/>
         <source>Pause</source>
         <translatorcomment>Pause</translatorcomment>
         <translation>ポーズ</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="69"/>
+        <location filename="TextManager.cpp" line="73"/>
         <source>Pause 0</source>
         <translatorcomment>Pause 0</translatorcomment>
         <translation>ポーズ 0</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="71"/>
+        <location filename="TextManager.cpp" line="75"/>
         <source>Pause 5</source>
         <translatorcomment>Pause 5</translatorcomment>
         <translation>ポーズ 5</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="73"/>
+        <location filename="TextManager.cpp" line="77"/>
         <source>Pause 10</source>
         <translatorcomment>Pause 10</translatorcomment>
         <translation>ポーズ 10</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="75"/>
+        <location filename="TextManager.cpp" line="79"/>
         <source>Pause 15</source>
         <translatorcomment>Pause 15</translatorcomment>
         <translation>ポーズ 15</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="77"/>
+        <location filename="TextManager.cpp" line="81"/>
         <source>Pause 20</source>
         <translatorcomment>Pause 20</translatorcomment>
         <translation>ポーズ 20</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="79"/>
+        <location filename="TextManager.cpp" line="83"/>
         <source>Pause 30</source>
         <translatorcomment>Pause 30</translatorcomment>
         <translation>ポーズ 30</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="81"/>
+        <location filename="TextManager.cpp" line="85"/>
         <source>Pause 40</source>
         <translatorcomment>Pause 40</translatorcomment>
         <translation>ポーズ 40</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="83"/>
+        <location filename="TextManager.cpp" line="87"/>
         <source>Pause 50</source>
         <translatorcomment>Pause 50</translatorcomment>
         <translation>ポーズ 50</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="85"/>
+        <location filename="TextManager.cpp" line="89"/>
         <source>Pause 60</source>
         <translatorcomment>Pause 60</translatorcomment>
         <translation>ポーズ 60</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="87"/>
+        <location filename="TextManager.cpp" line="91"/>
         <source>Pauses</source>
         <translatorcomment>Pauses</translatorcomment>
         <translation>ポーズ</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="93"/>
+        <location filename="TextManager.cpp" line="97"/>
         <source>Gris</source>
         <translatorcomment>Grey</translatorcomment>
         <translation>灰色</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="95"/>
+        <location filename="TextManager.cpp" line="99"/>
         <source>Bleu</source>
         <translatorcomment>Blue</translatorcomment>
         <translation>青色</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="97"/>
+        <location filename="TextManager.cpp" line="101"/>
         <source>Rouge</source>
         <translatorcomment>Red</translatorcomment>
         <translation>赤色</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="99"/>
+        <location filename="TextManager.cpp" line="103"/>
         <source>Violet</source>
         <translatorcomment>Purple</translatorcomment>
         <translation>紫色</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="101"/>
+        <location filename="TextManager.cpp" line="105"/>
         <source>Vert</source>
         <translatorcomment>Green</translatorcomment>
         <translation>緑色</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="103"/>
+        <location filename="TextManager.cpp" line="107"/>
         <source>Cyan</source>
         <translatorcomment>Cyan</translatorcomment>
         <translation>シアン</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="105"/>
+        <location filename="TextManager.cpp" line="109"/>
         <source>Jaune</source>
         <translatorcomment>Yellow</translatorcomment>
         <translation>黄色</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="107"/>
+        <location filename="TextManager.cpp" line="111"/>
         <source>Blanc</source>
         <translatorcomment>White</translatorcomment>
         <translation>白色</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="109"/>
+        <location filename="TextManager.cpp" line="113"/>
         <source>Clignotant</source>
         <translatorcomment>Blink</translatorcomment>
         <translation>点滅</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="111"/>
+        <location filename="TextManager.cpp" line="115"/>
         <source>Multicolor</source>
         <translatorcomment>Multicolour</translatorcomment>
         <translation>マルチカラー</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="114"/>
+        <location filename="TextManager.cpp" line="118"/>
         <source>Var1</source>
         <translatorcomment>Var1</translatorcomment>
         <translation>変数1</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="116"/>
+        <location filename="TextManager.cpp" line="120"/>
         <source>Var2</source>
         <translatorcomment>Var2</translatorcomment>
         <translation>変数2</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="118"/>
+        <location filename="TextManager.cpp" line="122"/>
         <source>Var3</source>
         <translatorcomment>Var3</translatorcomment>
         <translation>変数3</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="123"/>
+        <location filename="TextManager.cpp" line="127"/>
         <source>Cercle</source>
         <translatorcomment>Circle</translatorcomment>
         <translation>○</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="125"/>
+        <location filename="TextManager.cpp" line="129"/>
         <source>Triangle</source>
         <translatorcomment>Triangle</translatorcomment>
         <translation>△</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="127"/>
+        <location filename="TextManager.cpp" line="131"/>
         <source>Carré</source>
         <translatorcomment>Square</translatorcomment>
         <translation>□</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="129"/>
+        <location filename="TextManager.cpp" line="133"/>
         <source>Croix</source>
         <translatorcomment>Cross</translatorcomment>
         <translation>×</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="131"/>
+        <location filename="TextManager.cpp" line="135"/>
         <source>Scrolling</source>
         <translatorcomment>Scrolling ●</translatorcomment>
         <translation>スクロール</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="133"/>
+        <location filename="TextManager.cpp" line="137"/>
         <source>Caractères espacés</source>
         <translatorcomment>Spaced characters</translatorcomment>
         <translation>スペース (空白)</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="135"/>
+        <location filename="TextManager.cpp" line="139"/>
         <source>Accès mémoire</source>
         <translatorcomment>Memory access ●</translatorcomment>
         <translation>メモリー アクセス</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="137"/>
+        <location filename="TextManager.cpp" line="141"/>
         <source>Nouvelle page²</source>
         <translatorcomment>New page²</translatorcomment>
         <translation>新しいページ No,</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="139"/>
+        <location filename="TextManager.cpp" line="143"/>
         <source>Autres</source>
         <translatorcomment>Others</translatorcomment>
         <translation>その他</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="149"/>
+        <location filename="TextManager.cpp" line="153"/>
         <source>Ajouter texte</source>
         <translatorcomment>Add text</translatorcomment>
         <translation>テキストの追加</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="151"/>
+        <location filename="TextManager.cpp" line="155"/>
         <source>Ajouter un texte</source>
         <translatorcomment>Add a text</translatorcomment>
         <translation>テキストの追加</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="152"/>
+        <location filename="TextManager.cpp" line="156"/>
         <source>Supprimer texte</source>
         <translatorcomment>Remove text</translatorcomment>
         <translation>テキストの削除</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="154"/>
+        <location filename="TextManager.cpp" line="158"/>
         <source>Supprimer un texte</source>
         <translatorcomment>Remove a text</translatorcomment>
         <translation>テキストの削除</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="207"/>
         <source>X</source>
-        <translation type="unfinished">X</translation>
+        <translation type="obsolete">X</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="209"/>
         <source>Y</source>
-        <translation type="unfinished">Y</translation>
+        <translation type="obsolete">Y</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="211"/>
-        <source>W</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="TextManager.cpp" line="213"/>
-        <source>H</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="TextManager.cpp" line="330"/>
+        <location filename="TextManager.cpp" line="334"/>
         <source>Texte %1</source>
         <translatorcomment>Text %1</translatorcomment>
         <translation>テキスト %1</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="387"/>
+        <location filename="TextManager.cpp" line="391"/>
         <source>Texte utilisé dans les script</source>
         <translatorcomment>Text used in scripts</translatorcomment>
         <translation>スクリプトのテキスト</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="387"/>
+        <location filename="TextManager.cpp" line="391"/>
         <source>Ce texte est utilisé par un ou plusieurs scripts de cet écran.
 Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
 Êtes-vous sûr de vouloir continuer ?</source>
@@ -6438,34 +6454,33 @@ Are you sure you want to continue?</translatorcomment>
 削除を実行してもかまいませんか？</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="418"/>
+        <location filename="TextManager.cpp" line="422"/>
         <source>Page %1/%2</source>
         <translatorcomment>Page %1/%2</translatorcomment>
         <translation>ページ %1/%2</translation>
     </message>
     <message>
-        <location filename="TextManager.cpp" line="440"/>
         <source>Fenêtre %1/%2</source>
         <translatorcomment>Window %1/%2</translatorcomment>
-        <translation>ウィンドウ %1/%2</translation>
+        <translation type="obsolete">ウィンドウ %1/%2</translation>
     </message>
 </context>
 <context>
     <name>TextPreview</name>
     <message>
-        <location filename="TextPreview.cpp" line="40"/>
+        <location filename="TextPreview.cpp" line="44"/>
         <source>Membre 1</source>
         <translatorcomment>Member 1</translatorcomment>
         <translation>メンバー 1</translation>
     </message>
     <message>
-        <location filename="TextPreview.cpp" line="41"/>
+        <location filename="TextPreview.cpp" line="45"/>
         <source>Membre 2</source>
         <translatorcomment>Member 2</translatorcomment>
         <translation>メンバー 2</translation>
     </message>
     <message>
-        <location filename="TextPreview.cpp" line="42"/>
+        <location filename="TextPreview.cpp" line="46"/>
         <source>Membre 3</source>
         <translatorcomment>Member 3</translatorcomment>
         <translation>メンバー 3</translation>
@@ -6474,56 +6489,56 @@ Are you sure you want to continue?</translatorcomment>
 <context>
     <name>TutWidget</name>
     <message>
-        <location filename="TutWidget.cpp" line="23"/>
+        <location filename="TutWidget.cpp" line="26"/>
         <source>Tutoriels/Musiques</source>
         <oldsource>Tutoriels/Sons</oldsource>
         <translatorcomment>Tutorials/Sounds</translatorcomment>
         <translation>解説/サウンド</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="27"/>
+        <location filename="TutWidget.cpp" line="30"/>
         <source>Ajouter tutoriel</source>
         <translatorcomment>Add tutorial</translatorcomment>
         <translation>解説を追加</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="29"/>
+        <location filename="TutWidget.cpp" line="32"/>
         <source>Supprimer tutoriel</source>
         <oldsource>Ajouter un tutoriel</oldsource>
         <translatorcomment>Remove tutorial</translatorcomment>
         <translation>解説を削除</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="40"/>
+        <location filename="TutWidget.cpp" line="43"/>
         <source>Exporter...</source>
         <translatorcomment>Export...</translatorcomment>
         <translation>エクスポート...</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="41"/>
+        <location filename="TutWidget.cpp" line="44"/>
         <source>Importer...</source>
         <translatorcomment>Import...</translatorcomment>
         <translation>インポート...</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="51"/>
+        <location filename="TutWidget.cpp" line="54"/>
         <source>PlayStation</source>
         <translatorcomment>PlayStation</translatorcomment>
         <translation>PlayStation</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="54"/>
+        <location filename="TutWidget.cpp" line="57"/>
         <source>PC</source>
         <translatorcomment>PC</translatorcomment>
         <translation>PC</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="120"/>
+        <location filename="TutWidget.cpp" line="123"/>
         <source>ID musique :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="158"/>
+        <location filename="TutWidget.cpp" line="161"/>
         <source>Tuto %1</source>
         <translatorcomment>Tuto %1</translatorcomment>
         <translation>説明 %1</translation>
@@ -6534,14 +6549,14 @@ Are you sure you want to continue?</translatorcomment>
         <translation type="obsolete">サウンド %1</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="256"/>
-        <location filename="TutWidget.cpp" line="284"/>
+        <location filename="TutWidget.cpp" line="259"/>
+        <location filename="TutWidget.cpp" line="287"/>
         <source>Tutoriel utilisé dans les script</source>
         <translatorcomment>Tutorial used in scripts</translatorcomment>
         <translation>スクリプト内の解説</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="256"/>
+        <location filename="TutWidget.cpp" line="259"/>
         <source>Insérer un tutoriel ici va décaler les identifiants des tutoriels qui suit, cela risque de poser problème.
 Êtes-vous sûr de vouloir continuer ?</source>
         <translatorcomment>Insert a tutorial here will shift the IDs of the tutorials that follows, this may be a problem.
@@ -6550,7 +6565,7 @@ Are you sure you want to continue?</translatorcomment>
 挿入を実行してもかまいませんか？</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="284"/>
+        <location filename="TutWidget.cpp" line="287"/>
         <source>Ce tutoriel est peut-être utilisé par un ou plusieurs scripts de cet écran.
 Le supprimer peut provoquer des erreurs.
 Êtes-vous sûr de vouloir continuer ?</source>
@@ -6562,7 +6577,7 @@ Are you sure you want to continue?</translatorcomment>
 それでも削除しますか？</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="284"/>
+        <location filename="TutWidget.cpp" line="287"/>
         <source>Ce tutoriel est utilisé par un ou plusieurs scripts de cet écran.
 Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui suit.
 Êtes-vous sûr de vouloir continuer ?</source>
@@ -6574,65 +6589,65 @@ Are you sure you want to continue?</translatorcomment>
 それでも削除しますか？</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="308"/>
+        <location filename="TutWidget.cpp" line="311"/>
         <source>Exporter</source>
         <translatorcomment>Export</translatorcomment>
         <translation>エクスポート</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="249"/>
-        <location filename="TutWidget.cpp" line="308"/>
-        <location filename="TutWidget.cpp" line="331"/>
+        <location filename="TutWidget.cpp" line="252"/>
+        <location filename="TutWidget.cpp" line="311"/>
+        <location filename="TutWidget.cpp" line="334"/>
         <source>son_%1.akao</source>
         <translatorcomment>sound_%1.akao</translatorcomment>
         <translation>sound_%1.akao</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="158"/>
+        <location filename="TutWidget.cpp" line="161"/>
         <source>Musique %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="231"/>
+        <location filename="TutWidget.cpp" line="234"/>
         <source>Tutoriel</source>
         <translation type="unfinished">解説</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="232"/>
+        <location filename="TutWidget.cpp" line="235"/>
         <source>Musique</source>
         <translation type="unfinished">BGM</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="249"/>
-        <location filename="TutWidget.cpp" line="308"/>
-        <location filename="TutWidget.cpp" line="331"/>
+        <location filename="TutWidget.cpp" line="252"/>
+        <location filename="TutWidget.cpp" line="311"/>
+        <location filename="TutWidget.cpp" line="334"/>
         <source>Son Final Fantasy (*.akao)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="314"/>
-        <location filename="TutWidget.cpp" line="337"/>
+        <location filename="TutWidget.cpp" line="317"/>
+        <location filename="TutWidget.cpp" line="340"/>
         <source>Erreur d&apos;ouverture du fichier</source>
         <translatorcomment>Opening error</translatorcomment>
         <translation>オープン エラー</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="341"/>
+        <location filename="TutWidget.cpp" line="344"/>
         <source>Fichier trop gros</source>
         <translatorcomment>File too large</translatorcomment>
         <translation>ファイルが大きすぎます</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="314"/>
-        <location filename="TutWidget.cpp" line="337"/>
-        <location filename="TutWidget.cpp" line="341"/>
+        <location filename="TutWidget.cpp" line="317"/>
+        <location filename="TutWidget.cpp" line="340"/>
+        <location filename="TutWidget.cpp" line="344"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="TutWidget.cpp" line="249"/>
-        <location filename="TutWidget.cpp" line="331"/>
+        <location filename="TutWidget.cpp" line="252"/>
+        <location filename="TutWidget.cpp" line="334"/>
         <source>Importer</source>
         <translatorcomment>Import</translatorcomment>
         <translation>インポート</translation>
@@ -6641,49 +6656,49 @@ Are you sure you want to continue?</translatorcomment>
 <context>
     <name>VarManager</name>
     <message>
-        <location filename="VarManager.cpp" line="23"/>
+        <location filename="VarManager.cpp" line="24"/>
         <source>Gestionnaire de variables</source>
         <translatorcomment>Variable manager</translatorcomment>
         <translation>変数マネージャー</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="37"/>
+        <location filename="VarManager.cpp" line="38"/>
         <source>Renommer</source>
         <translatorcomment>Rename</translatorcomment>
         <translation>リネーム</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="53"/>
+        <location filename="VarManager.cpp" line="54"/>
         <source>Adresse</source>
         <translatorcomment>Adress</translatorcomment>
         <translation>アドレス</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="53"/>
+        <location filename="VarManager.cpp" line="54"/>
         <source>Surnom</source>
         <translatorcomment>Nickname</translatorcomment>
         <translation>ニックネーム</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="64"/>
+        <location filename="VarManager.cpp" line="65"/>
         <source>Adresses utilisées</source>
         <translatorcomment>Adresses used</translatorcomment>
         <translation>アドレスに適用</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="65"/>
+        <location filename="VarManager.cpp" line="66"/>
         <source>Enregistrer</source>
         <translatorcomment>Save</translatorcomment>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="193"/>
+        <location filename="VarManager.cpp" line="194"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="193"/>
+        <location filename="VarManager.cpp" line="194"/>
         <source>Fichier vars.cfg inaccessible.
 Échec de l&apos;enregistrement.</source>
         <translatorcomment>Save failed.</translatorcomment>
@@ -6691,13 +6706,13 @@ Are you sure you want to continue?</translatorcomment>
 保存に失敗しました。</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="201"/>
+        <location filename="VarManager.cpp" line="202"/>
         <source>Recherche</source>
         <translatorcomment>Searching</translatorcomment>
         <translation>検索中</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="201"/>
+        <location filename="VarManager.cpp" line="202"/>
         <source>Recherche des variables en cours, cela peut prendre une minute...</source>
         <translatorcomment>Searching,it may take a minute... </translatorcomment>
         <translation>検索しています。しばらく時間がかかります...</translation>
@@ -6706,12 +6721,12 @@ Are you sure you want to continue?</translatorcomment>
 <context>
     <name>VarOrValueWidget</name>
     <message>
-        <location filename="VarOrValueWidget.cpp" line="7"/>
+        <location filename="VarOrValueWidget.cpp" line="24"/>
         <source>Valeur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="VarOrValueWidget.cpp" line="8"/>
+        <location filename="VarOrValueWidget.cpp" line="25"/>
         <source>Variable</source>
         <translation type="unfinished">変数</translation>
     </message>
@@ -6737,341 +6752,341 @@ Are you sure you want to continue?</translatorcomment>
 <context>
     <name>WalkmeshManager</name>
     <message>
-        <location filename="WalkmeshManager.cpp" line="24"/>
+        <location filename="WalkmeshManager.cpp" line="26"/>
         <source>Zones</source>
         <translatorcomment>Walkmesh</translatorcomment>
         <translation>ウォーク メッシュ</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="41"/>
+        <location filename="WalkmeshManager.cpp" line="43"/>
         <source>Utilisez les touches directionnelles pour déplacer la caméra.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="45"/>
+        <location filename="WalkmeshManager.cpp" line="47"/>
         <source>Remettre à 0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="49"/>
+        <location filename="WalkmeshManager.cpp" line="51"/>
         <source>Caméra</source>
         <translation type="unfinished">カメラ</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="50"/>
+        <location filename="WalkmeshManager.cpp" line="52"/>
         <source>Walkmesh</source>
         <translation type="unfinished">ウォークメッシュ</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="51"/>
+        <location filename="WalkmeshManager.cpp" line="53"/>
         <source>Sorties</source>
         <translation type="unfinished">出入り口</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="52"/>
+        <location filename="WalkmeshManager.cpp" line="54"/>
         <source>Portes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="53"/>
+        <location filename="WalkmeshManager.cpp" line="55"/>
         <source>Flêches</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="54"/>
-        <location filename="WalkmeshManager.cpp" line="364"/>
+        <location filename="WalkmeshManager.cpp" line="56"/>
+        <location filename="WalkmeshManager.cpp" line="366"/>
         <source>Limites caméra</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="55"/>
+        <location filename="WalkmeshManager.cpp" line="57"/>
         <source>Divers</source>
         <translation>各種情報</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="95"/>
+        <location filename="WalkmeshManager.cpp" line="97"/>
         <source>Ajouter caméra</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="96"/>
+        <location filename="WalkmeshManager.cpp" line="98"/>
         <source>Supprimer caméra</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="121"/>
+        <location filename="WalkmeshManager.cpp" line="123"/>
         <source>Distance (zoom) :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="123"/>
+        <location filename="WalkmeshManager.cpp" line="125"/>
         <source>Axes de la caméra :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="127"/>
+        <location filename="WalkmeshManager.cpp" line="129"/>
         <source>Position de la caméra :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="128"/>
+        <location filename="WalkmeshManager.cpp" line="130"/>
         <source>X</source>
         <translation>X</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="130"/>
+        <location filename="WalkmeshManager.cpp" line="132"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="132"/>
+        <location filename="WalkmeshManager.cpp" line="134"/>
         <source>Z</source>
         <translation>Z</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="159"/>
+        <location filename="WalkmeshManager.cpp" line="161"/>
         <source>Ajouter triangle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="160"/>
+        <location filename="WalkmeshManager.cpp" line="162"/>
         <source>Supprimer triangle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="178"/>
+        <location filename="WalkmeshManager.cpp" line="180"/>
         <source>Triangle accessible via la ligne 1-2 :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="182"/>
+        <location filename="WalkmeshManager.cpp" line="184"/>
         <source>Triangle accessible via la ligne 2-3 :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="186"/>
+        <location filename="WalkmeshManager.cpp" line="188"/>
         <source>Triangle accessible via la ligne 3-1 :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="191"/>
+        <location filename="WalkmeshManager.cpp" line="193"/>
         <source>Point 1 :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="193"/>
+        <location filename="WalkmeshManager.cpp" line="195"/>
         <source>Point 2 :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="195"/>
+        <location filename="WalkmeshManager.cpp" line="197"/>
         <source>Point 3 :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="229"/>
+        <location filename="WalkmeshManager.cpp" line="231"/>
         <source>Afficher une flêche</source>
         <translation type="unfinished">矢印を表示</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="233"/>
+        <location filename="WalkmeshManager.cpp" line="235"/>
         <source>Id écran :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="236"/>
+        <location filename="WalkmeshManager.cpp" line="238"/>
         <source>Inconnu :</source>
         <translation type="unfinished">不明:</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="241"/>
+        <location filename="WalkmeshManager.cpp" line="243"/>
         <source>Ligne de sortie :</source>
         <translation type="unfinished">退出ライン:</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="244"/>
+        <location filename="WalkmeshManager.cpp" line="246"/>
         <source>Point de destination :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="283"/>
+        <location filename="WalkmeshManager.cpp" line="285"/>
         <source>Id parametre décor :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="285"/>
+        <location filename="WalkmeshManager.cpp" line="287"/>
         <source>Id état décor :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="287"/>
+        <location filename="WalkmeshManager.cpp" line="289"/>
         <source>Comportement :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="289"/>
+        <location filename="WalkmeshManager.cpp" line="291"/>
         <source>Id son :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="294"/>
+        <location filename="WalkmeshManager.cpp" line="296"/>
         <source>Ligne déclench. porte :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="331"/>
+        <location filename="WalkmeshManager.cpp" line="333"/>
         <source>Invisible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="332"/>
+        <location filename="WalkmeshManager.cpp" line="334"/>
         <source>Rouge</source>
         <translation type="unfinished">赤色</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="333"/>
+        <location filename="WalkmeshManager.cpp" line="335"/>
         <source>Vert</source>
         <translation type="unfinished">緑色</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="336"/>
+        <location filename="WalkmeshManager.cpp" line="338"/>
         <source>X :</source>
         <translation type="unfinished">X:</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="338"/>
+        <location filename="WalkmeshManager.cpp" line="340"/>
         <source>Y :</source>
         <translation type="unfinished">Y:</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="340"/>
+        <location filename="WalkmeshManager.cpp" line="342"/>
         <source>Z :</source>
         <translation type="unfinished">Z:</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="346"/>
+        <location filename="WalkmeshManager.cpp" line="348"/>
         <source>Position :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="365"/>
+        <location filename="WalkmeshManager.cpp" line="367"/>
         <source>Tailles des couches (pour les animations de couche)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="375"/>
+        <location filename="WalkmeshManager.cpp" line="377"/>
         <source>Haut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="377"/>
+        <location filename="WalkmeshManager.cpp" line="379"/>
         <source>Bas</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="379"/>
+        <location filename="WalkmeshManager.cpp" line="381"/>
         <source>Droite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="381"/>
+        <location filename="WalkmeshManager.cpp" line="383"/>
         <source>Gauche</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="389"/>
+        <location filename="WalkmeshManager.cpp" line="391"/>
         <source>Largeur couche 3 décor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="391"/>
+        <location filename="WalkmeshManager.cpp" line="393"/>
         <source>Hauteur couche 3 décor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="393"/>
+        <location filename="WalkmeshManager.cpp" line="395"/>
         <source>Largeur couche 4 décor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="395"/>
+        <location filename="WalkmeshManager.cpp" line="397"/>
         <source>Hauteur couche 4 décor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="432"/>
+        <location filename="WalkmeshManager.cpp" line="434"/>
         <source>Orientation des mouvements :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="435"/>
+        <location filename="WalkmeshManager.cpp" line="437"/>
         <source>Hauteur focus caméra sur le personnage :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="437"/>
+        <location filename="WalkmeshManager.cpp" line="439"/>
         <source>Inconnu 2 :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="439"/>
+        <location filename="WalkmeshManager.cpp" line="441"/>
         <source>Inconnu 3 :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="459"/>
+        <location filename="WalkmeshManager.cpp" line="461"/>
         <source>Erreur d&apos;ouverture</source>
         <translation>オープン エラー</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="459"/>
+        <location filename="WalkmeshManager.cpp" line="461"/>
         <source>Erreur d&apos;ouverture du walkmesh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="475"/>
+        <location filename="WalkmeshManager.cpp" line="477"/>
         <source>Caméra %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="491"/>
-        <location filename="WalkmeshManager.cpp" line="773"/>
+        <location filename="WalkmeshManager.cpp" line="493"/>
         <location filename="WalkmeshManager.cpp" line="775"/>
-        <location filename="WalkmeshManager.cpp" line="793"/>
+        <location filename="WalkmeshManager.cpp" line="777"/>
+        <location filename="WalkmeshManager.cpp" line="795"/>
         <source>Triangle %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="506"/>
-        <location filename="WalkmeshManager.cpp" line="518"/>
-        <location filename="WalkmeshManager.cpp" line="532"/>
-        <location filename="WalkmeshManager.cpp" line="999"/>
-        <location filename="WalkmeshManager.cpp" line="1030"/>
-        <location filename="WalkmeshManager.cpp" line="1138"/>
+        <location filename="WalkmeshManager.cpp" line="508"/>
+        <location filename="WalkmeshManager.cpp" line="520"/>
+        <location filename="WalkmeshManager.cpp" line="534"/>
+        <location filename="WalkmeshManager.cpp" line="1001"/>
+        <location filename="WalkmeshManager.cpp" line="1032"/>
+        <location filename="WalkmeshManager.cpp" line="1140"/>
         <source>Inutilisé</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="516"/>
-        <location filename="WalkmeshManager.cpp" line="1028"/>
+        <location filename="WalkmeshManager.cpp" line="518"/>
+        <location filename="WalkmeshManager.cpp" line="1030"/>
         <source>Porte %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="530"/>
-        <location filename="WalkmeshManager.cpp" line="1136"/>
+        <location filename="WalkmeshManager.cpp" line="532"/>
+        <location filename="WalkmeshManager.cpp" line="1138"/>
         <source>Flêche %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="643"/>
         <location filename="WalkmeshManager.cpp" line="645"/>
-        <location filename="WalkmeshManager.cpp" line="665"/>
+        <location filename="WalkmeshManager.cpp" line="647"/>
+        <location filename="WalkmeshManager.cpp" line="667"/>
         <source>Camera %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="903"/>
+        <location filename="WalkmeshManager.cpp" line="905"/>
         <source>?</source>
         <translation type="unfinished">?</translation>
     </message>
@@ -7079,38 +7094,38 @@ Are you sure you want to continue?</translatorcomment>
 <context>
     <name>Window</name>
     <message>
-        <location filename="Window.cpp" line="45"/>
+        <location filename="Window.cpp" line="55"/>
         <source>&amp;Fichier</source>
         <translatorcomment>&amp;File</translatorcomment>
         <translation>ファイル(&amp;F)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="59"/>
+        <location filename="Window.cpp" line="69"/>
         <source>&amp;Outils</source>
         <translatorcomment>T&amp;ools</translatorcomment>
         <translation>ツール(&amp;O)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="47"/>
+        <location filename="Window.cpp" line="57"/>
         <source>&amp;Ouvrir...</source>
         <translatorcomment>&amp;Open...</translatorcomment>
         <translation>開く(&amp;O)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="48"/>
+        <location filename="Window.cpp" line="58"/>
         <source>Ouvrir un &amp;dossier Field (PS)...</source>
         <oldsource>Ouvrir un &amp;dossier FIELD (PS)...</oldsource>
         <translatorcomment>Open a FIELD &amp;dir (PS)...</translatorcomment>
         <translation>FIELD ディレクトリ [PS] を開く (&amp;D)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="49"/>
+        <location filename="Window.cpp" line="59"/>
         <source>Enregi&amp;strer</source>
         <translatorcomment>&amp;Save</translatorcomment>
         <translation>保存(&amp;S)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="50"/>
+        <location filename="Window.cpp" line="60"/>
         <source>Enre&amp;gistrer Sous...</source>
         <translatorcomment>Save &amp;As...</translatorcomment>
         <translation>名前を付けて保存(&amp;A)...</translation>
@@ -7126,31 +7141,31 @@ Are you sure you want to continue?</translatorcomment>
         <translation type="obsolete">インポート(&amp;I)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="55"/>
+        <location filename="Window.cpp" line="65"/>
         <source>Fe&amp;rmer</source>
         <translatorcomment>C&amp;lose</translatorcomment>
         <translation>閉じる(&amp;L)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="56"/>
+        <location filename="Window.cpp" line="66"/>
         <source>&amp;Quitter</source>
         <translatorcomment>E&amp;xit</translatorcomment>
         <translation>終了(&amp;X)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="61"/>
+        <location filename="Window.cpp" line="71"/>
         <source>&amp;Gestionnaire de variables...</source>
         <translatorcomment>Variable Mana&amp;ger...</translatorcomment>
         <translation>変数マネージャー(&amp;G)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="62"/>
+        <location filename="Window.cpp" line="72"/>
         <source>Rec&amp;hercher...</source>
         <translatorcomment>F&amp;ind...</translatorcomment>
         <translation>検索(&amp;F)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="99"/>
+        <location filename="Window.cpp" line="109"/>
         <source>Barre d&apos;outils &amp;principale</source>
         <translatorcomment>Main &amp;toolbar</translatorcomment>
         <translation>メイン ツールバー(&amp;T)</translation>
@@ -7164,35 +7179,35 @@ Are you sure you want to continue?</translatorcomment>
         <translation type="obsolete">リドゥ</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="110"/>
+        <location filename="Window.cpp" line="120"/>
         <source>Lancer FF7</source>
         <translation>FF7 を実行</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="124"/>
+        <location filename="Window.cpp" line="134"/>
         <source>Id</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="124"/>
+        <location filename="Window.cpp" line="134"/>
         <source>Fichier</source>
         <translatorcomment>File</translatorcomment>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="264"/>
+        <location filename="Window.cpp" line="273"/>
         <source>&amp;Affichage</source>
         <translatorcomment>&amp;View</translatorcomment>
         <translation>表示(&amp;V)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="338"/>
+        <location filename="Window.cpp" line="347"/>
         <source>Sauvegarder</source>
         <translatorcomment>Save</translatorcomment>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="338"/>
+        <location filename="Window.cpp" line="347"/>
         <source>Voulez-vous enregistrer les changements de %1 ?
 
 Fichiers modifiés :%2</source>
@@ -7204,321 +7219,331 @@ Edited files: %2 ●</translatorcomment>
 編集済みファイル: %2</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="104"/>
-        <location filename="Window.cpp" line="402"/>
+        <location filename="Window.cpp" line="114"/>
+        <location filename="Window.cpp" line="411"/>
         <source>Ouvrir un fichier</source>
         <translatorcomment>Open a file</translatorcomment>
         <translation>ファイルを開く</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="402"/>
+        <location filename="Window.cpp" line="411"/>
         <source>Fichiers compatibles (*.lgp *.DAT *.bin *.iso);;Fichiers Lgp (*.lgp);;Fichier DAT (*.DAT);;Image disque (*.bin *.iso)</source>
         <translatorcomment>Compatible files (*.lgp *.DAT *.bin *.iso);;LGP files (*.lgp);;DAT files (*.DAT);;Disk Image (*.bin *.iso)</translatorcomment>
         <translation>互換ファイル (*.lgp *.DAT *.bin *.iso);;LGP ファイル (*.lgp);;DAT ファイル (*.DAT);ディスク イメージ (*.bin *.iso)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="460"/>
-        <location filename="Window.cpp" line="736"/>
-        <location filename="Window.cpp" line="861"/>
-        <location filename="Window.cpp" line="988"/>
-        <location filename="Window.cpp" line="1005"/>
+        <location filename="Window.cpp" line="469"/>
+        <location filename="Window.cpp" line="776"/>
+        <location filename="Window.cpp" line="901"/>
+        <location filename="Window.cpp" line="1058"/>
+        <location filename="Window.cpp" line="1075"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="541"/>
-        <location filename="Window.cpp" line="1118"/>
+        <location filename="Window.cpp" line="570"/>
+        <location filename="Window.cpp" line="1188"/>
         <source>Auteur : %1</source>
         <translatorcomment>Author: %1</translatorcomment>
         <translation>作者: %1</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="683"/>
+        <location filename="Window.cpp" line="722"/>
         <source>Enregistrer Sous</source>
         <translatorcomment>Save As</translatorcomment>
         <translation>名前を付けて保存</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="733"/>
+        <location filename="Window.cpp" line="773"/>
         <source>Impossible d&apos;écrire dans l&apos;archive, vérifiez les droits d&apos;écriture.</source>
         <translatorcomment>Unable to write to the archive, check write permissions.</translatorcomment>
         <translation>アーカイブに書き込むことができません。書き込み権限を確認してください。</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="825"/>
+        <location filename="Window.cpp" line="865"/>
         <source>Field décompressé (*.dec)</source>
         <translatorcomment>Uncompressed Field (*.dec) ●</translatorcomment>
         <translation>未圧縮フィールド (*.dec)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="826"/>
+        <location filename="Window.cpp" line="866"/>
         <source>Field compressé (*.lzs)</source>
         <translatorcomment>Compressed Field (*.lzs) ●</translatorcomment>
         <translation>圧縮済みフィールド (*.lzs)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="856"/>
-        <location filename="Window.cpp" line="984"/>
+        <location filename="Window.cpp" line="896"/>
+        <location filename="Window.cpp" line="1054"/>
         <source>L&apos;archive Lgp est inaccessible</source>
         <translatorcomment>lgp archive is inaccessible</translatorcomment>
         <translation>lgp アーカイブにアクセスできません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="731"/>
+        <location filename="Window.cpp" line="771"/>
         <source>Impossible de créer un fichier temporaire</source>
         <translatorcomment>Can not create temporary file</translatorcomment>
         <translation>一時ファイルが作成できません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="51"/>
+        <location filename="Window.cpp" line="61"/>
         <source>&amp;Exporter l&apos;écran courant...</source>
         <translation type="unfinished">現在のファイルをエクスポート...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="52"/>
+        <location filename="Window.cpp" line="62"/>
         <source>Exporter en &amp;masse...</source>
         <oldsource>&amp;Exporter en masse...</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="53"/>
+        <location filename="Window.cpp" line="63"/>
         <source>&amp;Importer dans l&apos;écran courant...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="63"/>
+        <location filename="Window.cpp" line="73"/>
         <source>&amp;Textes...</source>
         <translatorcomment>&amp;Texts...</translatorcomment>
         <translation>テキスト(&amp;T)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="64"/>
+        <location filename="Window.cpp" line="74"/>
         <source>&amp;Modèles 3D...</source>
         <translatorcomment>Field &amp;Models...</translatorcomment>
         <translation>3Dモデル(&amp;M)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="65"/>
+        <location filename="Window.cpp" line="75"/>
         <source>&amp;Rencontres aléatoires...</source>
         <translatorcomment>Encounte&amp;rs...</translatorcomment>
         <translation>エンカウント(&amp;E)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="66"/>
+        <location filename="Window.cpp" line="76"/>
         <source>&amp;Tutoriels/Musiques...</source>
         <oldsource>&amp;Tutoriels/Sons...</oldsource>
         <translatorcomment>&amp;Tutorials/Sounds...</translatorcomment>
         <translation>解説/サウンド(&amp;S)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="67"/>
+        <location filename="Window.cpp" line="77"/>
         <source>&amp;Zones...</source>
         <translatorcomment>&amp;Walkmesh...</translatorcomment>
         <translation>ウォーク メッシュ(&amp;W)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="68"/>
+        <location filename="Window.cpp" line="78"/>
         <source>&amp;Background...</source>
         <translatorcomment>&amp;Background...</translatorcomment>
         <translation>背景(&amp;B)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="69"/>
+        <location filename="Window.cpp" line="79"/>
         <source>&amp;Divers...</source>
         <translatorcomment>M&amp;iscellaneous...</translatorcomment>
         <translation>各種情報(&amp;I)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="71"/>
+        <location filename="Window.cpp" line="81"/>
         <source>&amp;Paramètres</source>
         <translatorcomment>&amp;Settings</translatorcomment>
         <translation>設定(&amp;S)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="73"/>
+        <location filename="Window.cpp" line="83"/>
         <source>Caractères japonais</source>
         <translatorcomment>Japanese Characters</translatorcomment>
         <translation>日本語版文字コードを使用</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="77"/>
+        <location filename="Window.cpp" line="87"/>
         <source>&amp;Langues</source>
         <translatorcomment>&amp;Language</translatorcomment>
         <translation>言語(&amp;L)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="80"/>
+        <location filename="Window.cpp" line="90"/>
         <source>Français (défaut)</source>
         <translatorcomment>French (default)</translatorcomment>
         <translation>Français (デフォルト)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="89"/>
+        <location filename="Window.cpp" line="99"/>
         <source>Français</source>
         <translatorcomment>English</translatorcomment>
         <translation>Japanese (日本語)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="97"/>
+        <location filename="Window.cpp" line="107"/>
         <source>Configuration...</source>
         <translation>構成設定...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="106"/>
+        <location filename="Window.cpp" line="116"/>
         <source>Enregistrer</source>
         <translatorcomment>Save</translatorcomment>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="109"/>
+        <location filename="Window.cpp" line="119"/>
         <source>Rechercher</source>
         <translatorcomment>Find</translatorcomment>
         <translation>検索</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="120"/>
+        <location filename="Window.cpp" line="130"/>
         <source>Recherche rapide</source>
         <translatorcomment>Quick search</translatorcomment>
         <translation>クイック検索</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="306"/>
+        <location filename="Window.cpp" line="315"/>
         <source>Paramètres modifiés</source>
         <translatorcomment>Settings changed</translatorcomment>
         <translation>設定の変更</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="307"/>
+        <location filename="Window.cpp" line="316"/>
         <source>Relancez le programme pour que les paramètres prennent effet.</source>
         <translatorcomment>Restart the program for the settings to take effect.</translatorcomment>
         <translation>プログラムを再起動して設定の変更を適用してください。</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="449"/>
-        <location filename="Window.cpp" line="730"/>
+        <location filename="Window.cpp" line="458"/>
+        <location filename="Window.cpp" line="770"/>
         <source>Le fichier est inaccessible</source>
         <oldsource>Le fichier est inaccessible.</oldsource>
         <translatorcomment>The file is inaccessible</translatorcomment>
         <translation>ファイルにアクセスできません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="452"/>
+        <location filename="Window.cpp" line="461"/>
         <source>Le fichier est invalide</source>
         <oldsource>Le fichier est invalide.</oldsource>
         <translatorcomment>Invalid file</translatorcomment>
         <translation>無効なファイル</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="455"/>
+        <location filename="Window.cpp" line="464"/>
         <source>Rien trouvé !</source>
         <translatorcomment>Nothing found!</translatorcomment>
         <translation>見つかりませんでした！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="683"/>
+        <location filename="Window.cpp" line="714"/>
         <source>Fichier Lgp (*.lgp)</source>
         <translatorcomment>Lgp File (*.lgp)</translatorcomment>
         <translation>Lgp ファイル (*.lgp)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="683"/>
-        <location filename="Window.cpp" line="827"/>
-        <location filename="Window.cpp" line="946"/>
+        <location filename="Window.cpp" line="716"/>
+        <location filename="Window.cpp" line="867"/>
+        <location filename="Window.cpp" line="1016"/>
         <source>Fichier DAT (*.DAT)</source>
         <translatorcomment>DAT File (*.DAT)</translatorcomment>
         <translation>DAT ファイル (*.DAT)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="732"/>
-        <location filename="Window.cpp" line="857"/>
-        <location filename="Window.cpp" line="985"/>
+        <location filename="Window.cpp" line="718"/>
+        <source>Fichier Iso (*.iso *.bin)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Window.cpp" line="772"/>
+        <location filename="Window.cpp" line="897"/>
+        <location filename="Window.cpp" line="1055"/>
         <source>Erreur de réouverture du fichier</source>
         <translatorcomment>Error reopening file</translatorcomment>
         <translation>ファイルの再読み込みに失敗</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="734"/>
+        <location filename="Window.cpp" line="774"/>
         <source>Problème de validation</source>
         <translation>検証の失敗</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="839"/>
+        <location filename="Window.cpp" line="879"/>
         <source>Exporter le fichier courant</source>
         <translatorcomment>Export the current file</translatorcomment>
         <translation>現在のファイルをエクスポート</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="859"/>
+        <location filename="Window.cpp" line="899"/>
         <source>Pas encore implémenté !</source>
         <translation>まだ実装されていません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1076"/>
+        <location filename="Window.cpp" line="976"/>
+        <source>Exportation des textes...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Window.cpp" line="1146"/>
         <source>Impossible d&apos;ouvrir les sons et les tutoriels !</source>
         <translation>サウンドと解説が開けません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1158"/>
+        <location filename="Window.cpp" line="1229"/>
         <source>Par myst6re&lt;br/&gt;&lt;a href=&quot;https://sourceforge.net/projects/makoureactor/&quot;&gt;sourceforge.net/projects/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Merci à :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;/ul&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="858"/>
+        <location filename="Window.cpp" line="898"/>
         <source>Impossible de créer le nouveau fichier</source>
         <translatorcomment>Unable to create the new file</translatorcomment>
         <translation>新規ファイルを作成できません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="414"/>
+        <location filename="Window.cpp" line="423"/>
         <source>Sélectionnez un dossier contenant des fichiers .DAT issus de Final Fantasy VII (PlayStation)</source>
         <translatorcomment>Select a folder containing .DAT files from Final Fantasy VII (PlayStation)</translatorcomment>
         <translation>Final Fantasy VII (PlayStation) の DAT ファイル格納フォルダを選択</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="877"/>
+        <location filename="Window.cpp" line="917"/>
         <source>Arrêter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="881"/>
+        <location filename="Window.cpp" line="921"/>
         <source>Exportation des décors...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="905"/>
+        <location filename="Window.cpp" line="946"/>
         <source>Exportation des sons...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="945"/>
+        <location filename="Window.cpp" line="1015"/>
         <source>Écran PC (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="947"/>
+        <location filename="Window.cpp" line="1017"/>
         <source>Écran PC décompressé (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="948"/>
+        <location filename="Window.cpp" line="1018"/>
         <source>Fichier DAT décompressé (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="955"/>
+        <location filename="Window.cpp" line="1025"/>
         <source>Importer un fichier</source>
         <translatorcomment>Import a file</translatorcomment>
         <translation>ファイルのインポート</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="986"/>
+        <location filename="Window.cpp" line="1056"/>
         <source>Erreur lors de l&apos;ouverture du fichier</source>
         <translatorcomment>Error reopening file</translatorcomment>
         <translation>ファイルの再読み込みに失敗</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1005"/>
+        <location filename="Window.cpp" line="1075"/>
         <source>Final Fantasy VII n&apos;a pas pu être lancé.
 %1</source>
         <translatorcomment>Final Fantasy VII couldn&apos;t be launched
@@ -7527,15 +7552,15 @@ Edited files: %2 ●</translatorcomment>
 %1</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1059"/>
-        <location filename="Window.cpp" line="1076"/>
-        <location filename="Window.cpp" line="1122"/>
+        <location filename="Window.cpp" line="1129"/>
+        <location filename="Window.cpp" line="1146"/>
+        <location filename="Window.cpp" line="1192"/>
         <source>Erreur d&apos;ouverture</source>
         <translatorcomment>Opening error　●</translatorcomment>
         <translation>オープン エラー</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1059"/>
+        <location filename="Window.cpp" line="1129"/>
         <source>Impossible d&apos;ouvrir les combats aléatoires !</source>
         <translatorcomment>Can not open encounters!　●</translatorcomment>
         <translation>エンカウントが開けません！</translation>
@@ -7551,7 +7576,7 @@ Edited files: %2 ●</translatorcomment>
         <translation type="obsolete">ウォークメッシュが開けません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1122"/>
+        <location filename="Window.cpp" line="1192"/>
         <source>Impossible d&apos;ouvrir les infos diverses !</source>
         <translatorcomment>Can not open miscellaneous informations! ●</translatorcomment>
         <translation>各種情報が開けません！</translation>
@@ -7562,7 +7587,7 @@ Edited files: %2 ●</translatorcomment>
         <translation type="obsolete">By myst6re</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1165"/>
+        <location filename="Window.cpp" line="1236"/>
         <source>Fermer</source>
         <translatorcomment>Close</translatorcomment>
         <translation>閉じる</translation>

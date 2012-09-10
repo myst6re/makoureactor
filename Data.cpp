@@ -183,7 +183,6 @@ QStringList Data::ff7AppPathList()
 
 const QString &Data::ff7AppPath()
 {
-#ifdef Q_WS_WIN
 	if(ff7AppPath_cache.isNull()) {
 		bool useNew = Config::value("useRereleaseFF7Path", false).toBool();
 		bool useCustom = Config::value("useCustomFF7Path", false).toBool();
@@ -207,7 +206,6 @@ const QString &Data::ff7AppPath()
 			}
 		}
 	}
-#endif
 	return ff7AppPath_cache;
 }
 
@@ -253,7 +251,7 @@ void Data::charlgp_loadAnimBoneCount()
 {
 	if(charlgp_animBoneCount.isEmpty())
 	{
-		QTime t;t.start();
+//		QTime t;t.start();
 
 		QString charPath = charlgp_path();
 		if(!charPath.isEmpty()) {
@@ -276,7 +274,7 @@ void Data::charlgp_loadAnimBoneCount()
 				char_file.close();
 			}
 		}
-		qDebug() << t.elapsed();
+//		qDebug() << t.elapsed();
 	}
 }
 

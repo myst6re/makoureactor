@@ -94,9 +94,9 @@ bool QLockedFile::open(OpenMode mode)
 		if(fcntl(handle, F_SETLKW, &lock) == -1) {
 			qWarning() << "QLockedFile::open error lock";
 			return false;
-		} else {
+		}/* else {
 			qDebug() << "file locked";
-		}
+		}*/
 	} else {
 		return false;
 	}

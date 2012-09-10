@@ -1231,8 +1231,7 @@ void OpcodeJMPF::setParams(const QByteArray &params)
 
 QString OpcodeJMPF::toString() const
 {
-	return _badJump ? QObject::tr("Avancer de %1 octet%2")
-					  .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+	return _badJump ? QObject::tr("Avancer de %n octet(s)", "With plural", _jump)
 					: QObject::tr("Aller au label %1")
 					  .arg(_label);
 }
@@ -1263,8 +1262,7 @@ void OpcodeJMPFL::setParams(const QByteArray &params)
 
 QString OpcodeJMPFL::toString() const
 {
-	return _badJump ? QObject::tr("Avancer de %1 octet%2")
-					  .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+	return _badJump ? QObject::tr("Avancer de %n octet(s)", "With plural", _jump)
 					: QObject::tr("Aller au label %1")
 					  .arg(_label);
 }
@@ -1293,8 +1291,7 @@ void OpcodeJMPB::setParams(const QByteArray &params)
 
 QString OpcodeJMPB::toString() const
 {
-	return _badJump ? QObject::tr("Reculer de %1 octet%2")
-					  .arg(-_jump).arg(-_jump > 1 ? QObject::tr("s") : QString())
+	return _badJump ? QObject::tr("Reculer de %n octet(s)", "With plural", -_jump)
 					: QObject::tr("Aller au label %1")
 					  .arg(_label);
 }
@@ -1325,8 +1322,7 @@ void OpcodeJMPBL::setParams(const QByteArray &params)
 
 QString OpcodeJMPBL::toString() const
 {
-	return _badJump ? QObject::tr("Reculer de %1 octet%2")
-					  .arg(-_jump).arg(-_jump > 1 ? QObject::tr("s") : QString())
+	return _badJump ? QObject::tr("Reculer de %n octet(s)", "With plural", -_jump)
 					: QObject::tr("Aller au label %1")
 					  .arg(_label);
 }
@@ -1381,8 +1377,7 @@ QString OpcodeIFUB::toString() const
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
-				 ? QObject::tr("avancer de %1 octet%2 sinon")
-				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
 				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
@@ -1426,8 +1421,7 @@ QString OpcodeIFUBL::toString() const
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
-				 ? QObject::tr("avancer de %1 octet%2 sinon")
-				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
 				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
@@ -1473,8 +1467,7 @@ QString OpcodeIFSW::toString() const
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
-				 ? QObject::tr("avancer de %1 octet%2 sinon")
-				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
 				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
@@ -1522,8 +1515,7 @@ QString OpcodeIFSWL::toString() const
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
-				 ? QObject::tr("avancer de %1 octet%2 sinon")
-				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
 				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
@@ -1570,8 +1562,7 @@ QString OpcodeIFUW::toString() const
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
-				 ? QObject::tr("avancer de %1 octet%2 sinon")
-				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
 				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
@@ -1619,8 +1610,7 @@ QString OpcodeIFUWL::toString() const
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
-				 ? QObject::tr("avancer de %1 octet%2 sinon")
-				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
 				 : QObject::tr("aller au label %1 sinon").arg(_label))
 			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
 }
@@ -2384,8 +2374,7 @@ QString OpcodeIFKEY::toString() const
 	return QObject::tr("Si appuie sur la touche %1 (%2)")
 			.arg(keyString())
 			.arg(_badJump
-				 ? QObject::tr("avancer de %1 octet%2 sinon")
-				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
 				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
@@ -2404,8 +2393,7 @@ QString OpcodeIFKEYON::toString() const
 	return QObject::tr("Si appuie sur la touche %1 une fois (%2)")
 			.arg(keyString())
 			.arg(_badJump
-				 ? QObject::tr("avancer de %1 octet%2 sinon")
-				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
 				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
@@ -2424,8 +2412,7 @@ QString OpcodeIFKEYOFF::toString() const
 	return QObject::tr("Si relache la touche %1 pour la première fois (%2)")
 			.arg(keyString())
 			.arg(_badJump
-				 ? QObject::tr("avancer de %1 octet%2 sinon")
-				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
 				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
@@ -6611,8 +6598,7 @@ QString OpcodeIFPRTYQ::toString() const
 	return QObject::tr("Si %1 est dans l'équipe actuelle (%2)")
 			.arg(_personnage(charID))
 			.arg(_badJump
-				 ? QObject::tr("avancer de %1 octet%2 sinon")
-				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
 				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
@@ -6626,8 +6612,7 @@ QString OpcodeIFMEMBQ::toString() const
 	return QObject::tr("Si %1 existe (%2)")
 			.arg(_personnage(charID))
 			.arg(_badJump
-				 ? QObject::tr("avancer de %1 octet%2 sinon")
-				   .arg(_jump).arg(_jump > 1 ? QObject::tr("s") : QString())
+				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
 				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 

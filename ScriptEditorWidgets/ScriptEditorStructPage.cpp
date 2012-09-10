@@ -545,7 +545,7 @@ void ScriptEditorIfPage::clear()
 
 Opcode *ScriptEditorIfPage::opcode()
 {
-	qDebug() << "opcode" << _opcode->name();
+//	qDebug() << "opcode" << _opcode->name();
 	if(rangeJump->currentIndex() == 0) { // short jump
 		switch(_opcode->id()) {
 		case Opcode::IFUBL:		convertOpcode(Opcode::IFUB);	break;
@@ -625,13 +625,13 @@ Opcode *ScriptEditorIfPage::opcode()
 
 	OpcodeJump *opcodeJump = (OpcodeJump *)_opcode;
 	opcodeJump->setLabel(labelVal);
-	qDebug() << "/opcode" << _opcode->name();
+//	qDebug() << "/opcode" << _opcode->name();
 	return ScriptEditorView::opcode();
 }
 
 void ScriptEditorIfPage::setOpcode(Opcode *opcode)
 {
-	qDebug() << "setOpcode" << opcode->name();
+//	qDebug() << "setOpcode" << opcode->name();
 
 	ScriptEditorView::setOpcode(opcode);
 
@@ -727,23 +727,23 @@ void ScriptEditorIfPage::setOpcode(Opcode *opcode)
 	}
 	rangeTest->blockSignals(false);
 
-	qDebug() << "/setOpcode" << opcode->name();
+//	qDebug() << "/setOpcode" << opcode->name();
 }
 
 void ScriptEditorIfPage::changeTestRange()
 {
-	qDebug() << "changeTestRange" << _opcode->name();
+//	qDebug() << "changeTestRange" << _opcode->name();
 	setOpcode(opcode());
 
 	emit opcodeChanged();
-	qDebug() << "/changeTestRange" << _opcode->name();
+//	qDebug() << "/changeTestRange" << _opcode->name();
 }
 
 void ScriptEditorIfPage::convertOpcode(Opcode::Keys key)
 {
-	qDebug() << "convertOpcode" << _opcode->name();
+//	qDebug() << "convertOpcode" << _opcode->name();
 	if(key == _opcode->id()) {
-		qDebug() << "convertOpcode1" << _opcode->name();
+//		qDebug() << "convertOpcode1" << _opcode->name();
 		return;
 	}
 
@@ -756,11 +756,11 @@ void ScriptEditorIfPage::convertOpcode(Opcode::Keys key)
 	case Opcode::IFSWL:	_opcode = new OpcodeIFSWL(*ifop);	break;
 	case Opcode::IFUW:	_opcode = new OpcodeIFUW(*ifop);	break;
 	case Opcode::IFUWL:	_opcode = new OpcodeIFUWL(*ifop);	break;
-	default:qDebug() << "/convertOpcode2" << _opcode->name();	return;
+	default:/*qDebug() << "/convertOpcode2" << _opcode->name();*/	return;
 	}
 
 	delete ifop;
-	qDebug() << "/convertOpcode" << _opcode->name();
+//	qDebug() << "/convertOpcode" << _opcode->name();
 }
 
 ScriptEditorIfKeyPage::ScriptEditorIfKeyPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :

@@ -26,7 +26,7 @@ HEADERS += ApercuBG.h \
     ModelManager.h \
     Opcode.h \
     Palette.h \
-    parametres.h \
+	Parameters.h \
     Script.h \
     ScriptEditor.h \
     ScriptList.h \

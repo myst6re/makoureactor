@@ -1057,7 +1057,7 @@ quint8 FieldArchive::save(QString path)
 		}
 		isoFieldBin->setData(data);
 
-		qDebug() << "start";
+//		qDebug() << "start";
 
 		if(!iso->pack(&isoTemp, this))
 			return 3;
@@ -1117,7 +1117,7 @@ QByteArray FieldArchive::updateFieldBin(const QByteArray &data, IsoDirectory *fi
 	ungzip = GZIP::decompress(data.mid(8), decSize);
 	if(ungzip.isEmpty())	return QByteArray();
 
-	qDebug() << "header field.bin" << header.toHex() << QString::number(data.size()-8,16) << decSize << ungzip.size();
+//	qDebug() << "header field.bin" << header.toHex() << QString::number(data.size()-8,16) << decSize << ungzip.size();
 
 	// mise à jour
 
@@ -1128,17 +1128,17 @@ QByteArray FieldArchive::updateFieldBin(const QByteArray &data, IsoDirectory *fi
 		i.next();
 		count = copy.count(i.key());
 		if(count == 0) {
-			qDebug() << "Erreur introuvable !" << fichiers.value(i.key());
+			qWarning() << "Error not found!" << fichiers.value(i.key());
 			return QByteArray();
 		} else if(count == 1) {
 			indicativePosition = copy.indexOf(i.key());
 			ungzip.replace(i.key(), i.value());
 		} else {
-			qDebug() << "error multiple occurrences 1" << fichiers.value(i.key());
+			qWarning() << "error multiple occurrences 1" << fichiers.value(i.key());
 			if(copy.mid(indicativePosition).count(i.key())==1) {
 				ungzip.replace(copy.indexOf(i.key(), indicativePosition), 8, i.value());
 			} else {
-				qDebug() << "error multiple occurrences 2" << fichiers.value(i.key());
+				qWarning() << "error multiple occurrences 2" << fichiers.value(i.key());
 				return QByteArray();
 			}
 		}

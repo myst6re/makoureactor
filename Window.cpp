@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Window.h"
-#include "parametres.h"
+#include "Parameters.h"
 #include "GrpScript.h"
 #include "ModelManager.h"
 #include "ConfigWindow.h"
@@ -1038,18 +1038,15 @@ void Window::importer()
 	}
 	
 	qint8 error = field->importer(path, filter.indexOf(selectedFilter), parts);
-	qDebug() << "importation success";
+
 	QString out;
 	switch(error)
 	{
 	case 0:
-		qDebug() << "setModified";
 		setModified(true);
 		index = path.lastIndexOf('/');
 		Config::setValue("importPath", index == -1 ? path : path.left(index));
-		qDebug() << "openField";
 		openField();
-		qDebug() << "/openField";
 		break;
 	case 1:	out = tr("L'archive Lgp est inaccessible");break;
 	case 2:	out = tr("Erreur de réouverture du fichier");break;
