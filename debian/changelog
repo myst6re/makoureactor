@@ -1,23 +1,23 @@
-makoureactor (1.5) precise; urgency=log
+makoureactor (1.5) precise; urgency=low
 
-  *Fix a crash when saving LGP (nobody noticed?)
-  *Can save an image disc PSX
-  *Massive export: new feature to extract backgrounds and sounds from all fields at once
-  *Import dialog: can import a dat in a PC field and vice versa
-  *Compatibility with the rereleased FF7
-  *[Scripts] Goto/Label system
-  *[Scripts] Editor 2.0 (work in progress)
-  *[Scripts] Some unknown values identified (thanks to Akari and the Q-Gears)
-  *[Scripts] Search dialog: search exec is a local search. New feature: can search for mapjumps
-  *[Texts] Search dialog: can search for texts directly
-  *[Walkmesh] Full editor like Deling
-  *[3D model] PSX model viewer (thanks to Akari and the Q-Gears)
-  *[Tutos/Sounds] Fix some bugs when saving AKAOs and tutos
-  *[Tutos/Sounds] Can edit the AKAO ID
-  *[Tutos/Sounds] Can add an AKAO from an existing file
-  *Many many many code changes
-
-  -- Chris Rizzitello <sithlord48@gmail.com>  Mon,10 Sep 2012 20:04:28 -0400
+  * Fix a crash when saving LGP (nobody noticed?)
+  * Can save an image disc PSX
+  * Massive export: new feature to extract backgrounds and sounds from all fields at once
+  * Import dialog: can import a dat in a PC field and vice versa
+  * Compatibility with the rereleased FF7
+  * [Scripts] Goto/Label system
+  * [Scripts] Editor 2.0 (work in progress)
+  * [Scripts] Some unknown values identified (thanks to Akari and the Q-Gears)
+  * [Scripts] Search dialog: search exec is a local search. New feature: can search for mapjumps
+  * [Texts] Search dialog: can search for texts directly
+  * [Walkmesh] Full editor like Deling
+  * [3D model] PSX model viewer (thanks to Akari and the Q-Gears)
+  * [Tutos/Sounds] Fix some bugs when saving AKAOs and tutos
+  * [Tutos/Sounds] Can edit the AKAO ID
+  * [Tutos/Sounds] Can add an AKAO from an existing file
+  * Many many many code changes
+  
+ -- Chris Rizzitello <sithlord48@gmail.com>  Mon, 10 Sep 2012 20:04:28 -0400
 
 makoureactor (1.4.1-package1) natty; urgency=low
 
