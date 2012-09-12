@@ -356,6 +356,64 @@ QString Opcode::_movie(quint8 movieID)
 	return QObject::tr("n°%1").arg(objet3D_ID);
 } */
 
+QString Opcode::_akao(quint8 akaoOp)
+{
+	switch(akaoOp) {
+	case 0x28:	return QObject::tr("Play a sound effect on channel #1");
+	case 0x29:	return QObject::tr("Play a sound effect on channel #2");
+	case 0x2A:	return QObject::tr("Play a sound effect on channel #3");
+	case 0x2B:	return QObject::tr("Play a sound effect on channel #4");
+	case 0x98:	return QObject::tr("Resumes music and sound effects");
+	case 0x99:	return QObject::tr("Pauses music and sound effects");
+	case 0x9A:	return QObject::tr("Resumes only the music");
+	case 0x9B:	return QObject::tr("Pauses only the music");
+	case 0x9C:	return QObject::tr("Resumes only sound effects");
+	case 0x9D:	return QObject::tr("Pauses only sound effects");
+	case 0xA0:	return QObject::tr("Volume control (channel #1)");
+	case 0xA1:	return QObject::tr("Volume control (channel #2)");
+	case 0xA2:	return QObject::tr("Volume control (channel #3)");
+	case 0xA3:	return QObject::tr("Volume control (channel #4)");
+	case 0xA4:	return QObject::tr("Volume transitions (channel #1)");
+	case 0xA5:	return QObject::tr("Volume transitions (channel #2)");
+	case 0xA6:	return QObject::tr("Volume transitions (channel #3)");
+	case 0xA7:	return QObject::tr("Volume transitions (channel #4)");
+	case 0xA8:	return QObject::tr("Pan control (channel #1)");
+	case 0xA9:	return QObject::tr("Pan control (channel #2)");
+	case 0xAA:	return QObject::tr("Pan control (channel #3)");
+	case 0xAB:	return QObject::tr("Pan control (channel #4)");
+	case 0xAC:	return QObject::tr("Pan transitions (channel #1)");
+	case 0xAD:	return QObject::tr("Pan transitions (channel #2)");
+	case 0xAE:	return QObject::tr("Pan transitions (channel #3)");
+	case 0xAF:	return QObject::tr("Pan transitions (channel #4)");
+	case 0xB0:	return QObject::tr("Tempo control (channel #1)");
+	case 0xB1:	return QObject::tr("Tempo control (channel #2)");
+	case 0xB2:	return QObject::tr("Tempo control (channel #3)");
+	case 0xB3:	return QObject::tr("Tempo control (channel #4)");
+	case 0xB4:	return QObject::tr("Tempo transitions (channel #1)");
+	case 0xB5:	return QObject::tr("Tempo transitions (channel #2)");
+	case 0xB6:	return QObject::tr("Tempo transitions (channel #3)");
+	case 0xB7:	return QObject::tr("Tempo transitions (channel #4)");
+	case 0xB8:	return QObject::tr("Volume control for all channels");
+	case 0xB9:	return QObject::tr("Volume transitions for all channels");
+	case 0xBA:	return QObject::tr("Pan control for all channels");
+	case 0xBB:	return QObject::tr("Pan transitions for all channels");
+	case 0xBC:	return QObject::tr("Tempo control for all channels");
+	case 0xBD:	return QObject::tr("Tempo transitions for all channels");
+	case 0xC0:	return QObject::tr("Set music volume");
+	case 0xC1:	return QObject::tr("Music volume transition");
+	case 0xC2:	return QObject::tr("Music volume fade");
+	case 0xC8:	return QObject::tr("Set music pan");
+	case 0xC9:	return QObject::tr("Music pan transition");
+	case 0xCA:	return QObject::tr("Music pan fade");
+	case 0xD0:	return QObject::tr("Set music tempo");
+	case 0xD1:	return QObject::tr("Music tempo transition");
+	case 0xD2:	return QObject::tr("Music tempo fade");
+	case 0xF0:	return QObject::tr("Stop music");
+	case 0xF1:	return QObject::tr("Stop sound effects");
+	default:	return QObject::tr("AKAO : %1?").arg(akaoOp);
+	}
+}
+
 QString Opcode::_bank(quint8 adress, quint8 bank)
 {
 	if(Var::name(bank, adress)!="")	return Var::name(bank, adress);
@@ -7005,49 +7063,49 @@ OpcodeAKAO2::OpcodeAKAO2(const QByteArray &params)
 void OpcodeAKAO2::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 3);
-	unknown1 = (quint8)params.at(3);
-	memcpy(&unknown2, &(params.constData()[4]), 2); // bank 1
-	memcpy(&unknown3, &(params.constData()[6]), 2); // bank 2
-	memcpy(&unknown4, &(params.constData()[8]), 2); // bank 3
-	memcpy(&unknown5, &(params.constData()[10]), 2); // bank 4
-	memcpy(&unknown6, &(params.constData()[12]), 2); // bank 6
+	opcode = (quint8)params.at(3);
+	memcpy(&param1, &(params.constData()[4]), 2); // bank 1
+	memcpy(&param2, &(params.constData()[6]), 2); // bank 2
+	memcpy(&param3, &(params.constData()[8]), 2); // bank 3
+	memcpy(&param4, &(params.constData()[10]), 2); // bank 4
+	memcpy(&param5, &(params.constData()[12]), 2); // bank 6
 }
 
 QString OpcodeAKAO2::toString() const
 {
-	return QObject::tr("AKAO2 (u1=%1, u2=%2, u3=%3, u4=%4, u5=%5, u6=%6)")
-			.arg(unknown1)
-			.arg(_var(unknown2, B1(banks[0])))
-			.arg(_var(unknown3, B2(banks[0])))
-			.arg(_var(unknown4, B1(banks[1])))
-			.arg(_var(unknown5, B2(banks[1])))
-			.arg(_var(unknown6, B2(banks[2])));
+	return QObject::tr("%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)")
+			.arg(_akao(opcode))
+			.arg(_var(param1, B1(banks[0])))
+			.arg(_var(param2, B2(banks[0])))
+			.arg(_var(param3, B1(banks[1])))
+			.arg(_var(param4, B2(banks[1])))
+			.arg(_var(param5, B2(banks[2])));
 }
 
 QByteArray OpcodeAKAO2::params() const
 {
 	return QByteArray()
 			.append((char *)&banks, 3)
-			.append((char)unknown1)
-			.append((char *)&unknown2, 2)
-			.append((char *)&unknown3, 2)
-			.append((char *)&unknown4, 2)
-			.append((char *)&unknown5, 2)
-			.append((char *)&unknown6, 2);
+			.append((char)opcode)
+			.append((char *)&param1, 2)
+			.append((char *)&param2, 2)
+			.append((char *)&param3, 2)
+			.append((char *)&param4, 2)
+			.append((char *)&param5, 2);
 }
 
 void OpcodeAKAO2::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), unknown2));
+		vars.append(FF7Var(B1(banks[0]), param1));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), unknown3));
+		vars.append(FF7Var(B2(banks[0]), param2));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), unknown4));
+		vars.append(FF7Var(B1(banks[1]), param3));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), unknown5));
+		vars.append(FF7Var(B2(banks[1]), param4));
 	if(B2(banks[2]) != 0)
-		vars.append(FF7Var(B2(banks[2]), unknown6));
+		vars.append(FF7Var(B2(banks[2]), param5));
 }
 
 OpcodeFCFIX::OpcodeFCFIX(const QByteArray &params)
@@ -7787,49 +7845,49 @@ OpcodeAKAO::OpcodeAKAO(const QByteArray &params)
 void OpcodeAKAO::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 3);
-	unknown1 = (quint8)params.at(3);
-	unknown2 = (quint8)params.at(4); // bank 1
-	memcpy(&unknown3, &(params.constData()[5]), 2); // bank 2
-	memcpy(&unknown4, &(params.constData()[7]), 2); // bank 3
-	memcpy(&unknown5, &(params.constData()[9]), 2); // bank 4
-	memcpy(&unknown6, &(params.constData()[11]), 2); // bank 6
+	opcode = (quint8)params.at(3);
+	param1 = (quint8)params.at(4); // bank 1
+	memcpy(&param2, &(params.constData()[5]), 2); // bank 2
+	memcpy(&param3, &(params.constData()[7]), 2); // bank 3
+	memcpy(&param4, &(params.constData()[9]), 2); // bank 4
+	memcpy(&param5, &(params.constData()[11]), 2); // bank 6
 }
 
 QString OpcodeAKAO::toString() const
 {
-	return QObject::tr("AKAO (u1=%1, u2=%2, u3=%3, u4=%4, u5=%5, u6=%6)")
-			.arg(unknown1)
-			.arg(_var(unknown2, B1(banks[0])))
-			.arg(_var(unknown3, B2(banks[0])))
-			.arg(_var(unknown4, B1(banks[1])))
-			.arg(_var(unknown5, B2(banks[1])))
-			.arg(_var(unknown6, B2(banks[2])));
+	return QObject::tr("%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)")
+			.arg(_akao(opcode))
+			.arg(_var(param1, B1(banks[0])))
+			.arg(_var(param2, B2(banks[0])))
+			.arg(_var(param3, B1(banks[1])))
+			.arg(_var(param4, B2(banks[1])))
+			.arg(_var(param5, B2(banks[2])));
 }
 
 QByteArray OpcodeAKAO::params() const
 {
 	return QByteArray()
 			.append((char *)&banks, 3)
-			.append((char)unknown1)
-			.append((char)unknown2)
-			.append((char *)&unknown3, 2)
-			.append((char *)&unknown4, 2)
-			.append((char *)&unknown5, 2)
-			.append((char *)&unknown6, 2);
+			.append((char)opcode)
+			.append((char)param1)
+			.append((char *)&param2, 2)
+			.append((char *)&param3, 2)
+			.append((char *)&param4, 2)
+			.append((char *)&param5, 2);
 }
 
 void OpcodeAKAO::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), unknown2));
+		vars.append(FF7Var(B1(banks[0]), param1));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), unknown3));
+		vars.append(FF7Var(B2(banks[0]), param2));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), unknown4));
+		vars.append(FF7Var(B1(banks[1]), param3));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), unknown5));
+		vars.append(FF7Var(B2(banks[1]), param4));
 	if(B2(banks[2]) != 0)
-		vars.append(FF7Var(B2(banks[2]), unknown6));
+		vars.append(FF7Var(B2(banks[2]), param5));
 }
 
 OpcodeMUSVT::OpcodeMUSVT(const QByteArray &params)

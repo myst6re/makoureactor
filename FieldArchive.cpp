@@ -355,15 +355,51 @@ void FieldArchive::searchAll()
 {
 	int size = fileList.size();
 
+	QSet<quint8> unknown1Values;
+
 	for(int i=0 ; i<size ; ++i) {
 		Field *field = this->field(i);
 		if(field != NULL) {
-			qDebug() << field->getName();
-			InfFile *inf = field->getInf();
-			if(inf->isOpen()) {
-				inf->test();
+			Section1File *section1 = field->scriptsAndTexts();
+			if(section1->isOpen()) {
+				foreach(GrpScript *grpScript, section1->grpScripts()) {
+					foreach(Script *script, grpScript->getScripts()) {
+						foreach(Opcode *opcode, script->getOpcodes()) {
+							if(opcode->id() == Opcode::AKAO) {
+								OpcodeAKAO *akao = (OpcodeAKAO *)opcode;
+								unknown1Values.insert(akao->opcode);
+							}
+							if(opcode->id() == Opcode::AKAO2) {
+								OpcodeAKAO2 *akao = (OpcodeAKAO2 *)opcode;
+								unknown1Values.insert(akao->opcode);
+							}
+						}
+					}
+				}
 			}
+//			TutFile *tut = field->tutosAndSounds();
+//			if(tut->isOpen()) {
+//				qDebug() << field->getName();
+//				for(int akaoID=0 ; akaoID<tut->size() ; ++akaoID) {
+//					if(!tut->isTut(akaoID)) {
+//						if(tut->akaoID(akaoID) >= 100) {
+//							qDebug() << "error" << akaoID << tut->akaoID(akaoID);
+//						}
+//					}
+//				}
+//			}
+
+//			InfFile *inf = field->getInf();
+//			if(inf->isOpen()) {
+//				inf->test();
+//			}
 		}
+	}
+
+	QList<quint8> l = unknown1Values.toList();
+	qSort(l);
+	foreach(quint8 u1, l) {
+		qDebug() << u1;
 	}
 }
 

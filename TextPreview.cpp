@@ -17,7 +17,6 @@
  ****************************************************************************/
 #include "TextPreview.h"
 #include "FF7Text.h"
-#include "Script.h"
 #include "Data.h"
 #include "Config.h"
 

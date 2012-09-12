@@ -178,6 +178,7 @@ protected:
 	static QString _field(quint16 fieldID);
 	static QString _movie(quint8 movieID);
 	// static QString _objet3D(quint8 objet3D_ID);
+	static QString _akao(quint8 akaoOp);
 
 	static QString _bank(quint8 adress, quint8 bank);
 	static QString _var(int value, quint8 bank);
@@ -2673,8 +2674,8 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
-	quint8 banks[3], unknown1;
-	quint16 unknown2, unknown3, unknown4, unknown5, unknown6;
+	quint8 banks[3], opcode;
+	quint16 param1, param2, param3, param4, param5;
 };
 
 class OpcodeFCFIX : public Opcode {
@@ -2926,8 +2927,8 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
-	quint8 banks[3], unknown1, unknown2;
-	quint16 unknown3, unknown4, unknown5, unknown6;
+	quint8 banks[3], opcode, param1;
+	quint16 param2, param3, param4, param5;
 };
 // note: same struct as MUSIC
 class OpcodeMUSVT : public Opcode {
