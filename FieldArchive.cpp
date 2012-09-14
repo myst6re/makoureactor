@@ -163,8 +163,8 @@ QByteArray FieldArchive::getLgpData(int position)
 	quint32 fileSize;
 
 	if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))		return QByteArray();
-	fic->seek(position+20);
-	fic->read((char *)&fileSize, 4);
+	if(!fic->seek(position+20))					return QByteArray();
+	if(fic->read((char *)&fileSize, 4) != 4)	return QByteArray();
 
 	QByteArray data = fic->read(fileSize);
 
@@ -192,6 +192,8 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 		data = fic->readAll();
 		fic->close();
 
+		if(data.size() < 4)		return QByteArray();
+
 		memcpy(&lzsSize, data.constData(), 4);
 
 		if((quint32)data.size() != lzsSize+4)	return QByteArray();
@@ -199,6 +201,9 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 		data = unlzs ? LZS::decompress(data.mid(4)) : data;
 	} else if(isLgp()) {
 		data = getLgpData(((FieldPC *)field)->getPosition());
+
+		if(data.size() < 4)		return QByteArray();
+
 		memcpy(&lzsSize, data.constData(), 4);
 		if((quint32)data.size() != lzsSize + 4)				return QByteArray();
 
@@ -256,6 +261,8 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 	} else if(isIso()) {
 		data = iso->file(isoFieldDirectory->file(fileName.toUpper()));
 
+		if(data.size() < 4)		return QByteArray();
+
 		memcpy(&lzsSize, data.constData(), 4);
 
 		if((quint32)data.size() != lzsSize+4)	return QByteArray();
@@ -266,6 +273,8 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 		if(!f.open(QIODevice::ReadOnly))	return QByteArray();
 		data = f.readAll();
 		f.close();
+
+		if(data.size() < 4)		return QByteArray();
 
 		memcpy(&lzsSize, data.constData(), 4);
 

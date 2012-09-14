@@ -41,6 +41,7 @@ bool FieldPC::open(bool dontOptimize)
 	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
 		QByteArray lzsData = fieldArchive->getFieldData(this, false);
 		quint32 size;
+		if(lzsData.size() < 4)		return false;
 		memcpy(&size, lzsData.constData(), 4);
 		if(size+4 != (quint32)lzsData.size()) 	return false;
 
@@ -142,16 +143,21 @@ QPixmap FieldPC::openBackground(const QByteArray &data)
 QPixmap FieldPC::openBackground(const QByteArray &data, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
 {
 	const char *constData = data.constData();
+	quint32 dataSize = data.size();
 	QList<Palette> palettes;
 	quint32 debutSection4, debutSection9, i, j;
 	quint16 nb;
 
+	if(dataSize < 42)	return QPixmap();
+
 	memcpy(&debutSection4, &constData[18], 4);//Adresse Section 4
 	memcpy(&debutSection9, &constData[38], 4);//Adresse Section 9
 
-	if((quint32)data.size() <= debutSection9+153)	return QPixmap();
+	if(dataSize < debutSection4+16)	return QPixmap();
 
 	memcpy(&nb, &constData[debutSection4+14], 2);//nbPalettes
+
+	if(dataSize < debutSection4+16+nb*512)	return QPixmap();
 	
 	for(i=0 ; i<nb ; ++i)
 		palettes.append(Palette(&constData[debutSection4+16+i*512], data.at(debutSection9+16+i)));
@@ -159,37 +165,44 @@ QPixmap FieldPC::openBackground(const QByteArray &data, const QHash<quint8, quin
 	quint32 aTex = debutSection9+48;
 	quint16 nbTiles1, nbTiles2=0, nbTiles3=0, nbTiles4=0;
 	bool exist2, exist3, exist4;
+
+	if(dataSize < aTex+2)	return QPixmap();
 	
 	memcpy(&nbTiles1, &constData[aTex], 2);//nbTiles1
 	aTex += 8+nbTiles1*52;
 	if((exist2 = (bool)data.at(aTex)))
 	{
+		if(dataSize < aTex+7)	return QPixmap();
 		memcpy(&nbTiles2, &constData[aTex+5], 2);//nbTiles2
 		aTex += 26+nbTiles2*52;
 	}
 	aTex++;
 	if((exist3 = (bool)data.at(aTex)))
 	{
+		if(dataSize < aTex+7)	return QPixmap();
 		memcpy(&nbTiles3, &constData[aTex+5], 2);//nbTiles3
 		aTex += 20+nbTiles3*52;
 	}
 	aTex++;
 	if((exist4 = (bool)data.at(aTex)))
 	{
+		if(dataSize < aTex+7)	return QPixmap();
 		memcpy(&nbTiles4, &constData[aTex+5], 2);//nbTiles4
 		aTex += 20+nbTiles4*52;
 	}
 	
 	aTex += 8;
 	QHash<quint8, quint32> posTextures;
-	
+
 	//Textures
 	for(i=0 ; i<42 ; ++i)
 	{
+		if(dataSize < aTex+2)	return QPixmap();
 		if((bool)data.at(aTex))
 		{
 			posTextures.insert(i, aTex+4);
 			aTex += (quint8)data.at(aTex+4)*65536 + 4;
+			if(dataSize < aTex)	return QPixmap();
 		}
 		aTex += 2;
 	}

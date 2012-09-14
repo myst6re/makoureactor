@@ -42,6 +42,7 @@ bool FieldPS::open(bool dontOptimize)
 	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
 		QByteArray lzsData = fieldArchive->getFieldData(this, false);
 		quint32 size;
+		if(lzsData.size() < 4)		return false;
 		memcpy(&size, lzsData.constData(), 4);
 		if(size+4 != (quint32)lzsData.size()) 	return false;
 		fileData = LZS::decompress(lzsData.mid(4), headerSize);//partial decompression
@@ -49,7 +50,7 @@ bool FieldPS::open(bool dontOptimize)
 		fileData = fieldArchive->getFieldData(this);
 	}
 
-	if(fileData.size() < headerSize)	return false;
+	if(fileData.size() < headerSize) 	return false;
 
 	memcpy(sectionPositions, fileData.constData(), headerSize); // header
 	qint32 vramDiff = sectionPositions[0] - headerSize;// vram section1 pos - real section 1 pos
@@ -61,24 +62,6 @@ bool FieldPS::open(bool dontOptimize)
 	_isOpen = true;
 
 	return true;
-
-//	quint32 size;
-//	const char *fileDataConst = fileData.constData();
-//	memcpy(&size, fileDataConst, 4);
-//	if(size+4 != (quint32)fileData.size()) 	return -1;
-
-//	QByteArray data = QByteArray(&fileDataConst[4], size);
-
-//	const QByteArray &dataDec = LZS::decompress(data, 8);//décompression partielle
-//	if(dataDec.size() < 8) 	return -1;
-//	const char *constData = dataDec.constData();
-
-//	quint32 debutSection1, debutSection2;
-//	memcpy(&debutSection1, constData, 4);
-//	memcpy(&debutSection2, &constData[4], 4);
-//	debutSection2 = debutSection2 - debutSection1 + 28;
-
-//	return openSection1(LZS::decompress(data, debutSection2), 28);
 }
 
 QByteArray FieldPS::sectionData(FieldPart part)
@@ -259,21 +242,27 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 	
 	/*--- OUVERTURE DU MIM ---*/
 	const char *constMimData = mimDataDec.constData();
-	int mimDataSize = mimDataDec.size();
+	quint32 mimDataSize = mimDataDec.size();
 	MIM headerPal, headerImg, headerEffect;
 	quint32 i;
+
+	if(mimDataSize < 12)	return QPixmap();
 	
 	memcpy(&headerPal, constMimData, 12);
+
+	if(mimDataSize < (quint32)12+headerPal.h*512)	return QPixmap();
 	
 	QList<Palette> palettes;
 	for(i=0 ; i<headerPal.h ; ++i)
 		palettes.append(Palette(mimDataDec.mid(12+i*512,512)));
 
+	if(mimDataSize < headerPal.size + 12)	return QPixmap();
+
 	memcpy(&headerImg, &constMimData[headerPal.size], 12);
 	
 	headerImg.w *= 2;
 
-	if((int)(headerPal.size+headerImg.size+12) < mimDataSize)
+	if(headerPal.size+headerImg.size+12 < mimDataSize)
 	{
 		memcpy(&headerEffect, &constMimData[headerPal.size+headerImg.size], 12);
 		headerEffect.w *= 2;
@@ -287,7 +276,10 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 	
 	/*--- OUVERTURE DU DAT ---*/
 	const char *constDatData = datDataDec.constData();
+	quint32 datDataSize = datDataDec.size();
 	quint32 start, debutSection3, debutSection4, debut1, debut2, debut3, debut4, debut5;
+
+	if(datDataSize < 16)	return QPixmap();
 
 	memcpy(&start, &constDatData[0], 4);
 	memcpy(&debutSection3, &constDatData[8], 4);
@@ -309,6 +301,9 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 	fdebug.close(); */
 	
 	start = debutSection3 - start + 28;
+
+	if(datDataSize < start+16)	return QPixmap();
+
 	memcpy(&debut1, &constDatData[start], 4);
 	memcpy(&debut2, &constDatData[start+4], 4);
 	memcpy(&debut3, &constDatData[start+8], 4);
@@ -322,6 +317,8 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 	i = 16;
 	while(i<debut1)
 	{
+		if(datDataSize < start+i+2)	return QPixmap();
+
 		memcpy(&type, &constDatData[start+i], 2);
 		
 		if(type==0x7FFF)
@@ -339,6 +336,8 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 				nbTilesTex.append(tilePos+tileCount);
 			}
 			else {
+				if(datDataSize < start+i+6)	return QPixmap();
+
 				memcpy(&tilePos, &constDatData[start+i+2], 2);
 				memcpy(&tileCount, &constDatData[start+i+4], 2);
 			}
@@ -358,6 +357,9 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 	quint32 size, tileID=0;
 
 	size = (debut3-debut2)/2;
+
+	if(datDataSize < start+debut2+size*2)	return QPixmap();
+
 	for(i=0 ; i<size ; ++i) {
 		memcpy(&tile2, &constDatData[start+debut2+i*2], 2);
 		tiles2.append(tile2);
@@ -368,6 +370,9 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 	tile2 = tiles2.first();
 
 	size = (debut2-debut1)/8;
+
+	if(datDataSize < start+debut1+size*8)	return QPixmap();
+
 	for(i=0 ; i<size ; ++i)
 	{
 		memcpy(&tile1, &constDatData[start+debut1+i*8], 8);
@@ -409,6 +414,9 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 	}
 	
 	size = (debut4-debut3)/14;
+
+	if(datDataSize < start+debut3+size*14)	return QPixmap();
+
 	for(i=0 ; i<size ; ++i)
 	{
 		memcpy(&tile1, &constDatData[start+debut3+i*14], 8);
@@ -455,6 +463,9 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 	layerID = 2;
 
 	size = (debut5-debut4)/10;
+
+	if(datDataSize < start+debut4+size*10)	return QPixmap();
+
 	for(i=0 ; i<size ; ++i)
 	{
 		memcpy(&tile1, &constDatData[start+debut4+i*10], 8);
@@ -526,6 +537,8 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 
 		if(tile.deph == 2)
 		{
+			if(mimDataSize < origin + width*tile.size)	return QPixmap();
+
 			for(quint16 j=0 ; j<width*tile.size ; j+=2)
 			{
 				memcpy(&deuxOctets, &constMimData[origin+j], 2);
@@ -543,6 +556,8 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 		else if(tile.deph == 1)
 		{
 			const Palette &palette = palettes.at(tile.paletteID);
+
+			if(mimDataSize < origin + width*tile.size)	return QPixmap();
 
 			for(quint16 j=0 ; j<width*tile.size ; ++j)
 			{
