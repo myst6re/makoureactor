@@ -385,9 +385,10 @@ void FieldArchive::searchAll()
 //						}
 //					}
 //				}
+				bool jp = true;
 				foreach(FF7Text *text, *section1->texts()) {
-					if(text->getData() != FF7Text(text->getText(false), false).getData()) {
-						qDebug() << "error" << text->getText(false) << FF7Text(text->getText(false), false).getText(false);
+					if(text->getData() != FF7Text(text->getText(jp), jp).getData()) {
+						qDebug() << "error" << text->getText(jp) << FF7Text(text->getText(jp), jp).getText(jp);
 
 					}
 				}

@@ -262,6 +262,7 @@ void TextManager::focusInEvent(QFocusEvent *)
 
 void TextManager::setField(Field *field)
 {
+	if(this->field == field)	return;
 	this->field = field;
 	this->scriptsAndTexts = field->scriptsAndTexts();
 //	_windows.clear();
@@ -365,6 +366,11 @@ void TextManager::gotoText(int textID, int from, int size)
 			textEdit->blockSignals(false);
 		}
 	}
+}
+
+QString TextManager::selectedText() const
+{
+	return textEdit->textCursor().selectedText();
 }
 
 void TextManager::addText()

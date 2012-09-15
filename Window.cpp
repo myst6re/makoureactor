@@ -329,7 +329,7 @@ int Window::closeFile(bool quit)
 
 	if(actionSave->isEnabled() && fieldArchive!=NULL)
 	{
-		QString fileChangedList = "";
+		QString fileChangedList;
 		int i=0;
 		for(int j=0 ; j<fieldArchive->size() ; ++j) {
 			Field *curField = fieldArchive->field(j, false);
@@ -356,7 +356,6 @@ int Window::closeFile(bool quit)
 
 		if(fieldArchive!=NULL)
 		{
-//			fieldArchive->close();
 			delete fieldArchive;
 			fieldArchive = NULL;
 		}
@@ -1074,9 +1073,17 @@ void Window::runFF7()
 
 void Window::searchManager()
 {
+	if(textDialog && textDialog->isVisible()) {
+		QString selectedText = textDialog->selectedText();
+		if(!selectedText.isEmpty()) {
+			searchDialog->setText(selectedText);
+		}
+	}
 	searchDialog->setOpcode(opcodeList->selectedOpcode());
 	searchDialog->setScriptExec(groupScriptList->selectedID(), scriptList->selectedID()-1);
 	searchDialog->show();
+	searchDialog->activateWindow();
+	searchDialog->raise();
 }
 
 void Window::textManager(bool activate)

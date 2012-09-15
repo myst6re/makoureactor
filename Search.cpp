@@ -232,6 +232,12 @@ void Search::setOpcode(int opcode)
 	this->opcode->setCurrentIndex(opcode);
 }
 
+void Search::setText(const QString &text)
+{
+	champ->setEditText(text);
+	champ2->setEditText(text);
+}
+
 void Search::setScriptExec(int groupID, int scriptID)
 {
 	if(groupID >= 0) {

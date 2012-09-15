@@ -64,6 +64,8 @@ BGDialog::BGDialog(QWidget *parent) :
 
 void BGDialog::fill(Field *field)
 {
+	if(this->field == field)	return;
+
 	this->field = field;
 
 	setWindowTitle(tr("Aperçu %1").arg(field->getName()));

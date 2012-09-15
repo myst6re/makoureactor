@@ -150,6 +150,22 @@ void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 	y->blockSignals(false);
 	w->blockSignals(false);
 	h->blockSignals(false);
+
+	// If the current opcode is followed by MESSAGE or ASK, we can put a text in the window preview
+	if(_opcodeID + 1 < _script->size()) {
+		Opcode *nextOpcode = _script->getOpcode(_opcodeID + 1);
+		if(nextOpcode->id() == Opcode::MESSAGE) {
+			OpcodeMESSAGE *mess = (OpcodeMESSAGE *)nextOpcode;
+			if(mess->windowID == winID->value()) {
+				previewText->setCurrentIndex(mess->textID + 1);
+			}
+		} else if(nextOpcode->id() == Opcode::ASK) {
+			OpcodeASK *ask = (OpcodeASK *)nextOpcode;
+			if(ask->windowID == winID->value()) {
+				previewText->setCurrentIndex(ask->textID + 1);
+			}
+		}
+	}
 }
 
 void ScriptEditorWindowPage::updatePreview()

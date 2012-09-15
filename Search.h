@@ -30,6 +30,7 @@ public:
 
 	void setFieldArchive(FieldArchive *fieldArchive);
 	void setOpcode(int opcode);
+	void setText(const QString &text);
 	void setScriptExec(int groupID, int scriptID);
 	void updateRunSearch();
 

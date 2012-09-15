@@ -30,6 +30,7 @@ public:
 	void setField(Field *field);
 	void updateText();
 	void gotoText(int textID, int from, int size);
+	QString selectedText() const;
 signals:
 	void modified();
 	void textIDChanged(int);
