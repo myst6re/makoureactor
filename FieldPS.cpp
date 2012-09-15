@@ -537,7 +537,6 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 
 		if(tile.deph == 2)
 		{
-			if(mimDataSize < origin + width*tile.size)	return QPixmap();
 
 			for(quint16 j=0 ; j<width*tile.size ; j+=2)
 			{
@@ -556,8 +555,6 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 		else if(tile.deph == 1)
 		{
 			const Palette &palette = palettes.at(tile.paletteID);
-
-			if(mimDataSize < origin + width*tile.size)	return QPixmap();
 
 			for(quint16 j=0 ; j<width*tile.size ; ++j)
 			{

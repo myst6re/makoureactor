@@ -196,6 +196,10 @@ void FF7Text::setText(const QString &string, bool jp)
 				ff7str.append('\xe8');
 				c += 11;
 			}
+			else if(string.mid(c+1, 13).compare("{New Page 2}\n", Qt::CaseInsensitive) == 0) {
+				ff7str.append('\xe9');
+				c += 13;
+			}
 			else {
 				ff7str.append('\xe7');
 			}
@@ -264,11 +268,11 @@ void FF7Text::setText(const QString &string, bool jp)
 				goto end;
 			}
 
-			if(rest.startsWith("{PAUSE", Qt::CaseInsensitive) && 8<rest.size() && rest.at(8)=='}') {//{PAUSE000}
-				value = rest.mid(5,3).toUShort(&ok,10);
+			if(rest.startsWith("{PAUSE", Qt::CaseInsensitive) && 9<rest.size() && rest.at(9)=='}') {//{PAUSE000}
+				value = rest.mid(6,3).toUShort(&ok);
 				if(ok) {
 					ff7str.append("\xfe\xdd", 2).append((char)value);
-					c += 8;
+					c += 9;
 					goto end;
 				}
 			}

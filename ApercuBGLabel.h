@@ -24,10 +24,12 @@ class ApercuBGLabel : public QLabel
 {
 	Q_OBJECT
 public:
+	explicit ApercuBGLabel(QWidget *parent=0);
 	explicit ApercuBGLabel(const QString &name, QWidget *parent=0);
+	void setName(const QString &name);
 private:
 	void savePixmap();
-	const QString &name;
+	QString _name;
 	bool showSave;
 protected:
 	void paintEvent(QPaintEvent *);

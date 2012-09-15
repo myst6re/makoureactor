@@ -63,15 +63,15 @@ private:
 	QPoint moveStart;
 //	QPixmap arrow;
 protected:
-	void initializeGL();
-	void resizeGL(int w, int h);
-	void paintGL();
-	void wheelEvent(QWheelEvent *event);
-	void mousePressEvent(QMouseEvent *event);
-	void mouseMoveEvent(QMouseEvent *event);
-	void keyPressEvent(QKeyEvent *event);
-	void focusInEvent(QFocusEvent *event);
-	void focusOutEvent(QFocusEvent *event);
+	virtual void initializeGL();
+	virtual void resizeGL(int w, int h);
+	virtual void paintGL();
+	virtual void wheelEvent(QWheelEvent *event);
+	virtual void mousePressEvent(QMouseEvent *event);
+	virtual void mouseMoveEvent(QMouseEvent *event);
+	virtual void keyPressEvent(QKeyEvent *event);
+	virtual void focusInEvent(QFocusEvent *event);
+	virtual void focusOutEvent(QFocusEvent *event);
 };
 
 #endif // WALKMESHWIDGET_H

@@ -46,7 +46,6 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 
 	QPushButton *resetCamera = new QPushButton(tr("Remettre à 0"));
 
-
 	tabWidget = new QTabWidget(this);
 	tabWidget->addTab(buildCameraPage(), tr("Caméra"));
 	tabWidget->addTab(buildWalkmeshPage(), tr("Walkmesh"));
@@ -70,7 +69,6 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 		connect(slider1, SIGNAL(valueChanged(int)), walkmesh, SLOT(setXRotation(int)));
 		connect(slider2, SIGNAL(valueChanged(int)), walkmesh, SLOT(setYRotation(int)));
 		connect(slider3, SIGNAL(valueChanged(int)), walkmesh, SLOT(setZRotation(int)));
-		connect(resetCamera, SIGNAL(clicked()), walkmesh, SLOT(resetCamera()));
 		connect(resetCamera, SIGNAL(clicked()), SLOT(resetCamera()));
 	}
 }

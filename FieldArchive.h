@@ -90,8 +90,8 @@ signals:
 //	void directoryChanged(const QString &path);
 	
 private:
-	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting);
-	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting);
+	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
+	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
 	void addDAT(const QString &name, QList<QTreeWidgetItem *> &items);
 	qint32 findField(const QString &name) const;
 	bool openField(Field *field, bool dontOptimize=false);

@@ -18,9 +18,19 @@
 #include "ApercuBGLabel.h"
 #include "Config.h"
 
-ApercuBGLabel::ApercuBGLabel(const QString &name, QWidget *parent)
-	: QLabel(parent), name(name), showSave(false)
+ApercuBGLabel::ApercuBGLabel(QWidget *parent)
+	: QLabel(parent), showSave(false)
 {
+}
+
+ApercuBGLabel::ApercuBGLabel(const QString &name, QWidget *parent)
+	: QLabel(parent), _name(name), showSave(false)
+{
+}
+
+void ApercuBGLabel::setName(const QString &name)
+{
+	_name = name;
 }
 
 void ApercuBGLabel::paintEvent(QPaintEvent *e)
@@ -57,9 +67,12 @@ void ApercuBGLabel::mousePressEvent(QMouseEvent *event)
 
 void ApercuBGLabel::savePixmap()
 {
-	QString path = Config::value("saveBGPath").toString().isEmpty() ? "" : Config::value("saveBGPath").toString()+"/";
-	path = QFileDialog::getSaveFileName(this, tr("Enregistrer le background"), path + name + ".png", tr("Image PNG (*.png);;Image JPG (*.jpg);;Image BMP (*.bmp);;Portable Pixmap (*.ppm)"));
-	if(path.isEmpty())	return;
+	QString path = Config::value("saveBGPath").toString();
+	if(!path.isEmpty()) {
+		path.append("/");
+	}
+	path = QFileDialog::getSaveFileName(this, tr("Enregistrer le background"), path + _name + ".png", tr("Image PNG (*.png);;Image JPG (*.jpg);;Image BMP (*.bmp);;Portable Pixmap (*.ppm)"));
+	if(path.isNull())	return;
 
 	pixmap()->save(path);
 

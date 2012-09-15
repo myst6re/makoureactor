@@ -665,7 +665,9 @@ qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldParts part)
 		memcpy(sectionPositions, &(data.constData()[6]), 9 * 4); // header
 
 		if(part.testFlag(ModelLoader)) {
-			getFieldModelLoader(false)->load(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4), this->name);
+			FieldModelLoaderPC *modelLoader = getFieldModelLoader(false);
+			modelLoader->load(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4), this->name);
+			modelLoader->setModified(true);
 		}
 	}
 

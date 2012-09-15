@@ -32,6 +32,11 @@ QLockedFile::QLockedFile(const QString &name, QObject *parent) :
 {
 }
 
+QLockedFile::~QLockedFile()
+{
+	close();
+}
+
 void QLockedFile::close()
 {
 	// Unlock file

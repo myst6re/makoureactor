@@ -29,7 +29,7 @@ BGDialog::BGDialog(QWidget *parent) :
 	pal.setColor(QPalette::Disabled, QPalette::Window, .60*Qt::black);
 	scrollArea->setPalette(pal);
 
-	image = new ApercuBGLabel(field->getName());
+	image = new ApercuBGLabel();
 	image->setAlignment(Qt::AlignCenter);
 	scrollArea->setWidget(image);
 
@@ -217,4 +217,5 @@ void BGDialog::changeZ(int value)
 void BGDialog::fill()
 {
 	image->setPixmap(field->openBackground(params, z, layers));
+	image->setName(field->getName());
 }

@@ -18,7 +18,8 @@
 #include "WalkmeshWidget.h"
 
 WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
-	QGLWidget(/*QGLFormat(QGL::SampleBuffers),*/ parent, shareWidget), distance(0.0f), xRot(0.0f), yRot(0.0f), zRot(0.0f),
+	QGLWidget(/*QGLFormat(QGL::SampleBuffers),*/ parent, shareWidget),
+	distance(0.0f), xRot(0.0f), yRot(0.0f), zRot(0.0f),
 	xTrans(0.0f), yTrans(0.0f), transStep(360.0f), lastKeyPressed(-1),
 	camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
 	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0)
@@ -325,12 +326,12 @@ void WalkmeshWidget::wheelEvent(QWheelEvent *event)
 void WalkmeshWidget::mousePressEvent(QMouseEvent *event)
 {
 	setFocus();
-	if(event->button()==Qt::MidButton)
+	if(event->button() == Qt::MidButton)
 	{
 		distance = -35;
 		updateGL();
 	}
-	else if(event->button()==Qt::LeftButton)
+	else if(event->button() == Qt::LeftButton)
 	{
 		moveStart = event->pos();
 	}

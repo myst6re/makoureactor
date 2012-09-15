@@ -356,6 +356,7 @@ int Window::closeFile(bool quit)
 
 		if(fieldArchive!=NULL)
 		{
+//			fieldArchive->close();
 			delete fieldArchive;
 			fieldArchive = NULL;
 		}
@@ -445,7 +446,6 @@ void Window::open(const QString &cheminFic, bool isDir)
 	
 	QList<QTreeWidgetItem *> items;
 	quint8 error = fieldArchive->open(items);
-//	fieldArchive->close();
 	
 	setCursor(Qt::ArrowCursor);
 	progression->hide();
@@ -758,7 +758,7 @@ void Window::saveAs(bool currentPath)
 		else
 			error = 2;
 	}
-//	fieldArchive->close();
+
 	// qDebug("Temps total enregistrement : %d ms", t.elapsed());
 	
 	setCursor(Qt::ArrowCursor);
@@ -862,14 +862,14 @@ void Window::exporter()
 
 	int index;
 	QString types, name, selectedFilter,
-			fieldDec = tr("Field décompressé (*.dec)"),
-			fieldLzs = tr("Field compressé (*.lzs)"),
-			dat = tr("Fichier DAT (*.DAT)");
+			fieldLzs = tr("Écran PC (*)"),
+			dat = tr("Fichier DAT (*.DAT)"),
+			fieldDec = tr("Écran PC décompressé (*)");
 
 	name = fieldList->selectedItems().first()->text(0);
 
 	if(fieldArchive->isLgp()) {
-		types = fieldDec+";;"+fieldLzs;
+		types = fieldLzs+";;"+fieldDec;
 	} else {
 		types = dat;
 		name = name.toUpper();
@@ -894,7 +894,7 @@ void Window::exporter()
 		Config::setValue("exportPath", index == -1 ? path : path.left(index));
 		break;
 	case 1:	out = tr("L'archive Lgp est inaccessible");break;
-	case 2:	out = tr("Erreur de réouverture du fichier");break;
+	case 2:	out = tr("Erreur lors de l'ouverture du fichier");break;
 	case 3:	out = tr("Impossible de créer le nouveau fichier");break;
 	case 4:	out = tr("Pas encore implémenté !");break;
 	}
@@ -1048,9 +1048,8 @@ void Window::importer()
 		Config::setValue("importPath", index == -1 ? path : path.left(index));
 		openField();
 		break;
-	case 1:	out = tr("L'archive Lgp est inaccessible");break;
-	case 2:	out = tr("Erreur de réouverture du fichier");break;
-	case 3:	out = tr("Erreur lors de l'ouverture du fichier");break;
+	case 1:	out = tr("Erreur lors de l'ouverture du fichier");break;
+	case 2:	out = tr("Le fichier est invalide");break;
 	}
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
 }

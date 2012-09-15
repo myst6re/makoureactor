@@ -168,7 +168,7 @@ QByteArray FieldArchive::getLgpData(int position)
 
 	QByteArray data = fic->read(fileSize);
 
-	fic->close();
+//	fic->close();
 
 	return data;
 }
@@ -371,18 +371,24 @@ void FieldArchive::searchAll()
 		if(field != NULL) {
 			Section1File *section1 = field->scriptsAndTexts();
 			if(section1->isOpen()) {
-				foreach(GrpScript *grpScript, section1->grpScripts()) {
-					foreach(Script *script, grpScript->getScripts()) {
-						foreach(Opcode *opcode, script->getOpcodes()) {
-							if(opcode->id() == Opcode::AKAO) {
-								OpcodeAKAO *akao = (OpcodeAKAO *)opcode;
-								unknown1Values.insert(akao->opcode);
-							}
-							if(opcode->id() == Opcode::AKAO2) {
-								OpcodeAKAO2 *akao = (OpcodeAKAO2 *)opcode;
-								unknown1Values.insert(akao->opcode);
-							}
-						}
+//				foreach(GrpScript *grpScript, section1->grpScripts()) {
+//					foreach(Script *script, grpScript->getScripts()) {
+//						foreach(Opcode *opcode, script->getOpcodes()) {
+//							if(opcode->id() == Opcode::AKAO) {
+//								OpcodeAKAO *akao = (OpcodeAKAO *)opcode;
+//								unknown1Values.insert(akao->opcode);
+//							}
+//							if(opcode->id() == Opcode::AKAO2) {
+//								OpcodeAKAO2 *akao = (OpcodeAKAO2 *)opcode;
+//								unknown1Values.insert(akao->opcode);
+//							}
+//						}
+//					}
+//				}
+				foreach(FF7Text *text, *section1->texts()) {
+					if(text->getData() != FF7Text(text->getText(false), false).getData()) {
+						qDebug() << "error" << text->getText(false) << FF7Text(text->getText(false), false).getText(false);
+
 					}
 				}
 			}
@@ -412,7 +418,7 @@ void FieldArchive::searchAll()
 	}
 }
 
-bool FieldArchive::searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting)
+bool FieldArchive::searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const
 {
 	if(fieldID >= fileList.size())		return false;
 
@@ -531,7 +537,7 @@ bool FieldArchive::searchText(const QRegExp &text, int &fieldID, int &textID, in
 	return false;
 }
 
-bool FieldArchive::searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &begin, int fieldID, Sorting sorting)
+bool FieldArchive::searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &begin, int fieldID, Sorting sorting) const
 {
 	if(fieldID < 0)		return false;
 

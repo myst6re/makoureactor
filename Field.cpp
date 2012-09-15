@@ -177,7 +177,7 @@ qint8 Field::exporter(const QString &path, const QByteArray &data, bool compress
 	QFile fic(path);
 	if(!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 		delete field;
-		return 3;
+		return 2;
 	}
 	fic.write(field->save(data.mid(4), compress));
 
@@ -195,7 +195,7 @@ qint8 Field::exporterDat(const QString &path, const QByteArray &data)
 	QFile fic(path);
 	if(!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 		delete field;
-		return 3;
+		return 2;
 	}
 	fic.write(field->save(data.mid(4), true));
 
@@ -208,14 +208,14 @@ qint8 Field::importer(const QString &path, int type, FieldParts part)
 {
 	QFile fic(path);
 	if(!fic.open(QIODevice::ReadOnly))	return 1;
-	if(fic.size() > 10000000)	return 1;
+	if(fic.size() > 10000000)	return 2;
 
 	QByteArray data;
 
 	if(type == 0 || type == 1) // compressed field
 	{
-		quint32 fileSize;
-		fic.read((char *)&fileSize, 4);
+		quint32 fileSize=0;
+		if(fic.read((char *)&fileSize, 4) != 4)	return 2;
 		if(fileSize+4 != fic.size()) return 2;
 
 		data = LZS::decompress(fic.readAll());
@@ -234,7 +234,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 		quint32 sectionPositions[7];
 		const int headerSize = 28;
 
-		if(data.size() < headerSize)	return 3;
+		if(data.size() < headerSize)	return 2;
 		memcpy(sectionPositions, data.constData(), headerSize); // header
 		qint32 vramDiff = sectionPositions[0] - headerSize;// vram section1 pos - real section 1 pos
 
@@ -244,32 +244,32 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 
 		if(part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
-			if(!section1->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))		return 3;
+			if(!section1->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))	return 2;
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {
 			TutFile *_tut = tutosAndSounds(false);
-			if(!_tut->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))		return 3;
+			if(!_tut->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))		return 2;
 			_tut->setModified(true);
 		}
 		if(part.testFlag(Encounter)) {
 			EncounterFile *enc = encounter(false);
-			if(!enc->open(data.mid(sectionPositions[5], sectionPositions[6]-sectionPositions[5])))		return 3;
+			if(!enc->open(data.mid(sectionPositions[5], sectionPositions[6]-sectionPositions[5])))		return 2;
 			enc->setModified(true);
 		}
 		if(part.testFlag(Walkmesh)) {
 			IdFile *walk = getId(false);
-			if(!walk->open(data.mid(sectionPositions[1], sectionPositions[2]-sectionPositions[1])))	return 3;
+			if(!walk->open(data.mid(sectionPositions[1], sectionPositions[2]-sectionPositions[1])))		return 2;
 			walk->setModified(true);
 		}
 		if(part.testFlag(Camera)) {
 			CaFile *ca = getCa(false);
-			if(!ca->open(data.mid(sectionPositions[3], sectionPositions[4]-sectionPositions[3])))		return 3;
+			if(!ca->open(data.mid(sectionPositions[3], sectionPositions[4]-sectionPositions[3])))		return 2;
 			ca->setModified(true);
 		}
 		if(part.testFlag(Inf)) {
 			InfFile *inf = getInf(false);
-			if(!inf->open(data.mid(sectionPositions[4], sectionPositions[5]-sectionPositions[4]), true))		return 3;
+			if(!inf->open(data.mid(sectionPositions[4], sectionPositions[5]-sectionPositions[4]), true))	return 2;
 			inf->setModified(true);
 		}
 	} else {
@@ -280,32 +280,32 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 
 		if(part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
-			if(!section1->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))		return 3;
+			if(!section1->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))	return 2;
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {
 			TutFile *_tut = tutosAndSounds(false);
-			if(!_tut->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))		return 3;
+			if(!_tut->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))	return 2;
 			_tut->setModified(true);
 		}
 		if(part.testFlag(Encounter)) {
 			EncounterFile *enc = encounter(false);
-			if(!enc->open(data.mid(sectionPositions[6]+4, sectionPositions[7]-sectionPositions[6]-4)))		return 3;
+			if(!enc->open(data.mid(sectionPositions[6]+4, sectionPositions[7]-sectionPositions[6]-4)))	return 2;
 			enc->setModified(true);
 		}
 		if(part.testFlag(Walkmesh)) {
 			IdFile *walk = getId(false);
-			if(!walk->open(data.mid(sectionPositions[4]+4, sectionPositions[5]-sectionPositions[4]-4)))	return 3;
+			if(!walk->open(data.mid(sectionPositions[4]+4, sectionPositions[5]-sectionPositions[4]-4)))	return 2;
 			walk->setModified(true);
 		}
 		if(part.testFlag(Camera)) {
 			CaFile *ca = getCa(false);
-			if(!ca->open(data.mid(sectionPositions[1]+4, sectionPositions[2]-sectionPositions[1]-4)))		return 3;
+			if(!ca->open(data.mid(sectionPositions[1]+4, sectionPositions[2]-sectionPositions[1]-4)))	return 2;
 			ca->setModified(true);
 		}
 		if(part.testFlag(Inf)) {
 			InfFile *inf = getInf(false);
-			if(!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4), true))		return 3;
+			if(!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4), true))	return 2;
 			inf->setModified(true);
 		}
 	}
