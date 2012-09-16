@@ -31,9 +31,10 @@ public:
 	ScriptEditor(Field *field, GrpScript *grpScript, Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent=0);
 	virtual ~ScriptEditor();
 
+	bool needslabel() const;
+
 private slots:
-	void modify();
-	void add();
+	void accept();
 	void refreshTextEdit();
 	void changeCurrentOpcode(int);
 	void buildList(int);
@@ -55,7 +56,7 @@ private:
 	bool isInit;
 	static QList<quint8> crashIfInit;
 
-	bool change;
+	bool modify, change;
 };
 
 #endif

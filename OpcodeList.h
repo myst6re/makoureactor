@@ -27,13 +27,13 @@ class OpcodeList : public QTreeWidget
     Q_OBJECT
 public:
 	enum HistoricType {
-		Add, Remove, Modify, Up, Down
+		Add, Remove, Modify, ModifyAndAddLabel, Up, Down
 	};
 
 	typedef struct{
 		HistoricType type;
 		QList<int> opcodeIDs;
-		QList<QByteArray> data;
+		QList<Opcode *> data;
 	} Historic;
 
 	OpcodeList(QWidget *parent=0);
@@ -76,8 +76,8 @@ private:
 	QList<int> selectedIDs();
 
 	QString showHistoric();
-	void changeHist(HistoricType type, int opcodeID=0, const QByteArray &data=QByteArray());
-	void changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<QByteArray> &data);
+	void changeHist(HistoricType type, int opcodeID=0, Opcode *data=0);
+	void changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<Opcode *> &data);
 	void clearHist();
 
 	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);

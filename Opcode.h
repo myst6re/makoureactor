@@ -483,8 +483,9 @@ public:
 	void setLabel(quint32 label);
 	bool isBadJump() const;
 	void setBadJump(bool badJump);
-	bool isJump() const;
+	inline bool isJump() const { return true; }
 	virtual bool isLongJump() const=0;
+	inline virtual bool isBackJump() { return false; }
 	qint32 maxJump() const;
 	virtual quint8 jumpPosData() const=0;
 protected:
@@ -496,11 +497,11 @@ protected:
 class OpcodeLabel : public Opcode {
 public:
 	explicit OpcodeLabel(quint32 label);
-	int id() const { return 0x100; } // fake id
+	inline int id() const { return 0x100; } // fake id
 	QByteArray toByteArray() const { return QByteArray(); }
 	QString toString() const;
-	bool isLabel() const;
-	bool isVoid() const { return true; }
+	inline bool isLabel() const  { return true; }
+	inline bool isVoid() const { return true; }
 	quint32 label() const;
 	void setLabel(quint32 label);
 	quint32 _label;
@@ -514,8 +515,8 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	bool isVoid() const { return true; }
-	bool isLongJump() const { return false; }
+	inline bool isVoid() const { return true; }
+	inline bool isLongJump() const { return false; }
 	inline quint8 jumpPosData() const { return 1; }
 //	inline static quint8 jumpPosData() { return 1; }
 };
@@ -528,8 +529,8 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	bool isVoid() const { return true; }
-	bool isLongJump() const { return true; }
+	inline bool isVoid() const { return true; }
+	inline bool isLongJump() const { return true; }
 	inline quint8 jumpPosData() const { return 1; }
 };
 
@@ -541,8 +542,9 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	bool isVoid() const { return true; }
-	bool isLongJump() const { return false; }
+	inline bool isVoid() const { return true; }
+	inline bool isLongJump() const { return false; }
+	inline bool isBackJump() { return true; }
 	inline quint8 jumpPosData() const { return 0; }
 };
 
@@ -554,8 +556,9 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	bool isVoid() const { return true; }
-	bool isLongJump() const { return true; }
+	inline bool isVoid() const { return true; }
+	inline bool isLongJump() const { return true; }
+	inline bool isBackJump() { return true; }
 	inline quint8 jumpPosData() const { return 0; }
 };
 
@@ -577,7 +580,7 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	bool isLongJump() const { return false; }
+	inline bool isLongJump() const { return false; }
 	inline quint8 jumpPosData() const { return 5; }
 };
 
@@ -589,7 +592,7 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	bool isLongJump() const { return true; }
+	inline bool isLongJump() const { return true; }
 	inline quint8 jumpPosData() const { return 5; }
 };
 
@@ -601,7 +604,7 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	bool isLongJump() const { return false; }
+	inline bool isLongJump() const { return false; }
 	inline quint8 jumpPosData() const { return 7; }
 };
 
@@ -613,7 +616,7 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	bool isLongJump() const { return true; }
+	inline bool isLongJump() const { return true; }
 	inline quint8 jumpPosData() const { return 7; }
 };
 
@@ -625,7 +628,7 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	bool isLongJump() const { return false; }
+	inline bool isLongJump() const { return false; }
 	inline quint8 jumpPosData() const { return 7; }
 };
 
@@ -637,7 +640,7 @@ public:
 	QString toString() const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
-	bool isLongJump() const { return true; }
+	inline bool isLongJump() const { return true; }
 	inline quint8 jumpPosData() const { return 7; }
 };
 

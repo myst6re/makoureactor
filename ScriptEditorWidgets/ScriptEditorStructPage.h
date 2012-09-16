@@ -81,7 +81,18 @@ private:
 	QDoubleSpinBox *label;
 };
 
-class ScriptEditorJumpPage : public ScriptEditorView
+class ScriptEditorJumpPageInterface : public ScriptEditorView
+{
+public:
+	ScriptEditorJumpPageInterface(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0) :
+		ScriptEditorView(field, grpScript, script, opcodeID, parent) {}
+	virtual bool needsLabel() const=0;
+protected:
+	void fillLabelList(bool jumpBack=false);
+	QComboBox *label;
+};
+
+class ScriptEditorJumpPage : public ScriptEditorJumpPageInterface
 {
 	Q_OBJECT
 public:
@@ -89,14 +100,15 @@ public:
 	void clear();
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
+	bool needsLabel() const;
 private:
 	void build();
 	void convertOpcode(Opcode::Keys key);
-	QComboBox *label, *range;
+	QComboBox *range;
 	bool addJump;
 };
 
-class ScriptEditorIfPage : public ScriptEditorView
+class ScriptEditorIfPage : public ScriptEditorJumpPageInterface
 {
 	Q_OBJECT
 public:
@@ -104,40 +116,43 @@ public:
 	void clear();
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
+	bool needsLabel() const;
 private slots:
 	void changeTestRange();
 private:
 	void build();
 	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *varOrValue1, *varOrValue2;
-	QComboBox *operatorList, *rangeTest, *label, *rangeJump;
+	QComboBox *operatorList, *rangeTest, *rangeJump;
 	bool addJump;
 };
 
-class ScriptEditorIfKeyPage : public ScriptEditorView
+class ScriptEditorIfKeyPage : public ScriptEditorJumpPageInterface
 {
 	Q_OBJECT
 public:
 	explicit ScriptEditorIfKeyPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
+	bool needsLabel() const;
 private:
 	void build();
 	void convertOpcode(Opcode::Keys key);
 	QList<QCheckBox *> keys;
-	QComboBox *label, *typeList;
+	QComboBox *typeList;
 };
 
-class ScriptEditorIfQPage : public ScriptEditorView
+class ScriptEditorIfQPage : public ScriptEditorJumpPageInterface
 {
 	Q_OBJECT
 public:
 	explicit ScriptEditorIfQPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
 	Opcode *opcode();
 	void setOpcode(Opcode *opcode);
+	bool needsLabel() const;
 private:
 	void build();
-	QComboBox *charList, *label;
+	QComboBox *charList;
 };
 
 class ScriptEditorWaitPage : public ScriptEditorView

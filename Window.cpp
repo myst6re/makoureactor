@@ -49,7 +49,7 @@ Window::Window() :
 	statusBar()->addPermanentWidget(progression);
 	
 	QMenu *menu;
-	QAction *actionOpen, *action;
+	QAction *actionOpen, *actionFind, *action;
 	
 	/* Menu 'Fichier' */
 	menu = menuBar()->addMenu(tr("&Fichier"));
@@ -70,12 +70,12 @@ Window::Window() :
 	
 	menu->addAction(tr("&Gestionnaire de variables..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
 	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("Rec&hercher..."), this, SLOT(searchManager()), QKeySequence("Ctrl+F"));
-	actionText = menu->addAction(tr("&Textes..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
+	menu->addAction(tr("&Textes..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
 	actionModels = menu->addAction(tr("&Modèles 3D..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
 	actionEncounter = menu->addAction(tr("&Rencontres aléatoires..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
 	actionTut = menu->addAction(tr("&Tutoriels/Musiques..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
-	actionWalkmesh = menu->addAction(tr("&Zones..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
-	actionBackground = menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
+	menu->addAction(tr("&Zones..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
+	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("&Divers..."), this, SLOT(miscManager()));
 
 	menu = menuBar()->addMenu(tr("&Paramètres"));
@@ -333,7 +333,7 @@ int Window::closeFile(bool quit)
 		int i=0;
 		for(int j=0 ; j<fieldArchive->size() ; ++j) {
 			Field *curField = fieldArchive->field(j, false);
-			if(curField->isModified())
+			if(curField && curField->isOpen() && curField->isModified())
 			{
 				fileChangedList += "\n - " + curField->getName();
 				if(i>10)
@@ -375,10 +375,19 @@ int Window::closeFile(bool quit)
 		authorLbl->hide();
 		setWindowModified(false);
 		setWindowTitle();
-		searchDialog->close();
-		if(textDialog) 	textDialog->close();
-		if(_walkmeshManager)	_walkmeshManager->close();
-		if(_backgroundManager)	_backgroundManager->close();
+		searchDialog->setEnabled(false);
+		if(textDialog) {
+			textDialog->clear();
+			textDialog->setEnabled(false);
+		}
+		if(_walkmeshManager) {
+			_walkmeshManager->clear();
+			_walkmeshManager->setEnabled(false);
+		}
+		if(_backgroundManager) {
+			_backgroundManager->clear();
+			_backgroundManager->setEnabled(false);
+		}
 		
 		actionSave->setEnabled(false);
 		actionSaveAs->setEnabled(false);
@@ -386,14 +395,10 @@ int Window::closeFile(bool quit)
 		actionMassExport->setEnabled(false);
 		actionImport->setEnabled(false);
 		actionClose->setEnabled(false);
-		actionFind->setEnabled(false);
-		actionText->setEnabled(false);
 		actionModels->setEnabled(false);
 		actionEncounter->setEnabled(false);
 		actionTut->setEnabled(false);
 		actionMisc->setEnabled(false);
-		actionWalkmesh->setEnabled(false);
-		actionBackground->setEnabled(false);
 	}
 	
 	return QMessageBox::Yes;
@@ -482,11 +487,10 @@ void Window::open(const QString &cheminFic, bool isDir)
 	fieldList->setFocus();
 	if(varDialog)	varDialog->setFieldArchive(fieldArchive);
 	searchDialog->setFieldArchive(fieldArchive);
-	actionBackground->setEnabled(true);
+	searchDialog->setEnabled(true);
 	actionEncounter->setEnabled(true);
 	actionTut->setEnabled(true);
 	actionMisc->setEnabled(true);
-	actionWalkmesh->setEnabled(true);
 	actionExport->setEnabled(true);
 	actionMassExport->setEnabled(true);
 	actionSaveAs->setEnabled(true);
@@ -495,8 +499,6 @@ void Window::open(const QString &cheminFic, bool isDir)
 		actionModels->setEnabled(true);
 	}
 	actionClose->setEnabled(true);
-	actionFind->setEnabled(true);
-	actionText->setEnabled(true);
 
 //	fieldArchive->searchAll();
 }
@@ -554,12 +556,18 @@ void Window::openField()
 		opcodeList->setEnabled(false);
 		return;
 	}
-	if(textDialog && textDialog->isVisible())
+	if(textDialog && textDialog->isVisible()) {
 		textDialog->setField(field);
-	if(_walkmeshManager && _walkmeshManager->isVisible())
+		textDialog->setEnabled(true);
+	}
+	if(_walkmeshManager && _walkmeshManager->isVisible()) {
 		_walkmeshManager->fill(field);
-	if(_backgroundManager && _backgroundManager->isVisible())
+		_walkmeshManager->setEnabled(true);
+	}
+	if(_backgroundManager && _backgroundManager->isVisible()) {
 		_backgroundManager->fill(field);
+		_backgroundManager->setEnabled(true);
+	}
 
 	// Show background preview
 	zoneImage->fill(field);
@@ -1088,21 +1096,25 @@ void Window::searchManager()
 
 void Window::textManager(bool activate)
 {
-	if(field) {
-		if(!textDialog) {
-			textDialog = new TextManager(this);
-			connect(textDialog, SIGNAL(modified()), SLOT(setModified()));
-			connect(textDialog, SIGNAL(textIDChanged(int)), searchDialog, SLOT(changeTextID(int)));
-			connect(textDialog, SIGNAL(fromChanged(int)), searchDialog, SLOT(changeFrom(int)));
-		}
+	if(!textDialog) {
+		textDialog = new TextManager(this);
+		connect(textDialog, SIGNAL(modified()), SLOT(setModified()));
+		connect(textDialog, SIGNAL(textIDChanged(int)), searchDialog, SLOT(changeTextID(int)));
+		connect(textDialog, SIGNAL(fromChanged(int)), searchDialog, SLOT(changeFrom(int)));
+	}
 
+	if(field) {
 		textDialog->setField(field);
-		textDialog->show();
-		if(activate) {
-			textDialog->activateWindow();
-		} else {
-			searchDialog->raise();
-		}
+		textDialog->setEnabled(true);
+	} else {
+		textDialog->clear();
+		textDialog->setEnabled(false);
+	}
+	textDialog->show();
+	if(activate) {
+		textDialog->activateWindow();
+	} else {
+		searchDialog->raise();
 	}
 }
 
@@ -1153,29 +1165,37 @@ void Window::tutManager()
 
 void Window::walkmeshManager()
 {
-	if(field) {
-		if(!_walkmeshManager) {
-			_walkmeshManager = new WalkmeshManager(this);
-			connect(_walkmeshManager, SIGNAL(modified()), SLOT(setModified()));
-		}
-
-		_walkmeshManager->fill(field);
-		_walkmeshManager->show();
-		_walkmeshManager->activateWindow();
+	if(!_walkmeshManager) {
+		_walkmeshManager = new WalkmeshManager(this);
+		connect(_walkmeshManager, SIGNAL(modified()), SLOT(setModified()));
 	}
+
+	if(field) {
+		_walkmeshManager->fill(field);
+		_walkmeshManager->setEnabled(true);
+	} else {
+		_walkmeshManager->clear();
+		_walkmeshManager->setEnabled(false);
+	}
+	_walkmeshManager->show();
+	_walkmeshManager->activateWindow();
 }
 
 void Window::backgroundManager()
 {
-	if(fieldArchive && field) {
-		if(!_backgroundManager) {
-			_backgroundManager = new BGDialog(this);
-		}
-
-		_backgroundManager->fill(field);
-		_backgroundManager->show();
-		_backgroundManager->activateWindow();
+	if(!_backgroundManager) {
+		_backgroundManager = new BGDialog(this);
 	}
+
+	if(field) {
+		_backgroundManager->fill(field);
+		_backgroundManager->setEnabled(true);
+	} else {
+		_backgroundManager->clear();
+		_backgroundManager->setEnabled(false);
+	}
+	_backgroundManager->show();
+	_backgroundManager->activateWindow();
 }
 
 void Window::miscManager()

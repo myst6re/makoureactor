@@ -119,12 +119,8 @@ QByteArray FieldPS::sectionData(int idPart)
 
 bool FieldPS::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
-	return getUsedParams(fieldArchive->getFieldData(this), usedParams, layerExists);
-}
-
-bool FieldPS::getUsedParams(const QByteArray &datDataDec, QHash<quint8, quint8> &usedParams, bool *layerExists) const
-{
 	/*--- OUVERTURE DU DAT ---*/
+	QByteArray datDataDec = fieldArchive->getFieldData(this);
 	const char *constDatData = datDataDec.constData();
 	quint32 i, start, debutSection3, debutSection4, debut1, debut2, debut3, debut4, debut5;
 
@@ -220,30 +216,18 @@ bool FieldPS::getUsedParams(const QByteArray &datDataDec, QHash<quint8, quint8> 
 
 QPixmap FieldPS::openBackground()
 {
-	return openBackground(fieldArchive->getMimData(this), fieldArchive->getFieldData(this));
-}
-
-QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
-{
-	return openBackground(fieldArchive->getMimData(this), fieldArchive->getFieldData(this), paramActifs, z, layers);
-}
-
-QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec)
-{
-	if(mimDataDec.isEmpty() || datDataDec.isEmpty())	return QPixmap();
 	// Search default background params
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
 	scriptsAndTexts()->getBgParamAndBgMove(paramActifs, z);
 
-	return openBackground(mimDataDec, datDataDec, paramActifs, z);
+	return openBackground(paramActifs, z);
 }
 
-QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
+QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
-	if(mimDataDec.isEmpty() || datDataDec.isEmpty())	return QPixmap();
-	
 	/*--- OUVERTURE DU MIM ---*/
+	QByteArray mimDataDec = fieldArchive->getMimData(this);
 	const char *constMimData = mimDataDec.constData();
 	quint32 mimDataSize = mimDataDec.size();
 	MIM headerPal, headerImg, headerEffect;
@@ -278,6 +262,7 @@ QPixmap FieldPS::openBackground(const QByteArray &mimDataDec, const QByteArray &
 	}
 	
 	/*--- OUVERTURE DU DAT ---*/
+	QByteArray datDataDec = fieldArchive->getFieldData(this);
 	const char *constDatData = datDataDec.constData();
 	quint32 datDataSize = datDataDec.size();
 	quint32 start, debutSection3, debutSection4, debut1, debut2, debut3, debut4, debut5;

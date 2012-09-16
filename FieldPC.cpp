@@ -125,26 +125,17 @@ QByteArray FieldPC::sectionData(int idPart)
 
 QPixmap FieldPC::openBackground()
 {
-	return openBackground(fieldArchive->getFieldData(this));
-}
-
-QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
-{
-	return openBackground(fieldArchive->getFieldData(this), paramActifs, z, layers);
-}
-
-QPixmap FieldPC::openBackground(const QByteArray &data)
-{
 	// Search default background params
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
 	scriptsAndTexts()->getBgParamAndBgMove(paramActifs, z);
 
-	return openBackground(data, paramActifs, z);
+	return openBackground(paramActifs, z);
 }
 
-QPixmap FieldPC::openBackground(const QByteArray &data, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
+QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
+	QByteArray data = fieldArchive->getFieldData(this);
 	const char *constData = data.constData();
 	quint32 dataSize = data.size();
 	QList<Palette> palettes;
@@ -397,11 +388,7 @@ QPixmap FieldPC::openBackground(const QByteArray &data, const QHash<quint8, quin
 
 bool FieldPC::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
-	return getUsedParams(fieldArchive->getFieldData(this), usedParams, layerExists);
-}
-
-bool FieldPC::getUsedParams(const QByteArray &data, QHash<quint8, quint8> &usedParams, bool *layerExists) const
-{
+	QByteArray data = fieldArchive->getFieldData(this);
 	const char *constData = data.constData();
 	quint32 debutSection9, i;
 

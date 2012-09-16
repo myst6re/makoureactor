@@ -28,6 +28,7 @@ class TextManager : public QDialog
 public:
 	explicit TextManager(QWidget *parent=0);
 	void setField(Field *field);
+	void clear();
 	void updateText();
 	void gotoText(int textID, int from, int size);
 	QString selectedText() const;
@@ -68,7 +69,6 @@ private:
 	QSpinBox *xCoord, *yCoord;
 	QSpinBox *wSize, *hSize;
 
-	Field *field;
 	Section1File *scriptsAndTexts;
 //	QMultiMap<quint64, FF7Window> _windows;
 //	QMultiMap<quint8, quint64> _text2win;

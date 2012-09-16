@@ -77,6 +77,7 @@ void TextPreview::clear()
 	ff7Text.clear();
 //	ff7Windows.clear();
 	maxW=maxH=0;
+	update();
 }
 
 void TextPreview::setReadOnly(bool ro)

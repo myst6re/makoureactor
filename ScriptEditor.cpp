@@ -21,11 +21,16 @@
 #include "ScriptEditorWidgets/ScriptEditorMathPage.h"
 #include "ScriptEditorWidgets/ScriptEditorWindowPage.h"
 
+#define JUMP_PAGE	5
+#define IF_PAGE		6
+#define IFKEY_PAGE	7
+#define IFQ_PAGE	8
+
 QList<quint8> ScriptEditor::crashIfInit;
 
 ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-	script(script), opcodeID(opcodeID), isInit(isInit), change(false)
+	script(script), opcodeID(opcodeID), isInit(isInit), modify(modify), change(false)
 {
 	if(crashIfInit.isEmpty()) {
 		crashIfInit << 0x08 << 0x09 << 0x0E << 0x20 << 0x21 << 0x2A << 0x35 << 0x40 << 0x48 << 0x49
@@ -105,18 +110,15 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 
 		setCurrentMenu(id);
 		fillView();
-		
-		connect(ok, SIGNAL(released()), SLOT(modify()));
 	}
 	else
 	{
 		this->opcode = new OpcodeRET();
 		comboBox->setCurrentIndex(0);
 		changeCurrentOpcode(0);
-
-		connect(ok, SIGNAL(released()), SLOT(add()));
 	}
 
+	connect(ok, SIGNAL(released()), SLOT(accept()));
 	connect(cancel, SIGNAL(released()), SLOT(close()));
 	connect(comboBox0, SIGNAL(currentIndexChanged(int)), SLOT(buildList(int)));
 	for(int i=0 ; i<editorLayout->count() ; ++i)
@@ -153,19 +155,19 @@ void ScriptEditor::fillEditor()
 		break;
 	case Opcode::JMPF:case Opcode::JMPFL:
 	case Opcode::JMPB:case Opcode::JMPBL:
-		index = 5;
+		index = JUMP_PAGE;
 		break;
 	case Opcode::IFUB:case Opcode::IFUBL:
 	case Opcode::IFSW:case Opcode::IFSWL:
 	case Opcode::IFUW:case Opcode::IFUWL:
-		index = 6;
+		index = IF_PAGE;
 		break;
 	case Opcode::IFKEY:case Opcode::IFKEYON:
 	case Opcode::IFKEYOFF:
-		index = 7;
+		index = IFKEY_PAGE;
 		break;
 	case Opcode::IFMEMBQ:case Opcode::IFPRTYQ:
-		index = 8;
+		index = IFQ_PAGE;
 		break;
 	case Opcode::WAIT:
 		index = 9;
@@ -229,24 +231,31 @@ void ScriptEditor::fillView()
 	ok->setDisabled(disableEditor);
 }
 
-void ScriptEditor::modify()
+void ScriptEditor::accept()
 {
 	/* if(!this->change) {
 		close();
 		return;
 	} */
-	script->setOpcode(this->opcodeID, Script::copyOpcode(editorWidget->opcode()));
-	accept();
+	if(needslabel()) {
+		script->insertOpcode(this->opcodeID, new OpcodeLabel(((OpcodeJump *)editorWidget->opcode())->label()));
+	}
+
+	if(modify) {
+		script->setOpcode(this->opcodeID, Script::copyOpcode(editorWidget->opcode()));
+	} else {
+		script->insertOpcode(this->opcodeID, Script::copyOpcode(editorWidget->opcode()));
+	}
+	QDialog::accept();
 }
 
-void ScriptEditor::add()
+bool ScriptEditor::needslabel() const
 {
-	/* if(!this->change) {
-		close();
-		return;
-	} */
-	script->insertOpcode(this->opcodeID, Script::copyOpcode(editorWidget->opcode()));
-	accept();
+	return (editorLayout->currentIndex() == JUMP_PAGE
+			|| editorLayout->currentIndex() == IF_PAGE
+			|| editorLayout->currentIndex() == IFKEY_PAGE
+			|| editorLayout->currentIndex() == IFQ_PAGE)
+			&& ((ScriptEditorJumpPageInterface *)editorWidget)->needsLabel();
 }
 
 void ScriptEditor::refreshTextEdit()

@@ -712,7 +712,7 @@ OpcodeJump *Script::convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok)
 //	qDebug() << "opcodeJump" << opcodeJump->name() << jump << "label" << opcodeJump->label();
 
 	if(jump - opcodeJump->jumpPosData() < 0) {
-		if(opcodeJump->id() == Opcode::JMPB || opcodeJump->id() == Opcode::JMPBL) {
+		if(opcodeJump->isBackJump()) {
 			// OK: jump back
 //			qDebug() << "OK -> jump back";
 		} else if(opcodeJump->id() == Opcode::JMPF) {
@@ -852,6 +852,14 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 			}
 			if(opcodeJump->isLongJump() && jump > opcodeJump->maxJump()) {
 				errorStr = QObject::tr("Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.").arg(opcodeJump->label());
+				return false;
+			}
+			if(opcodeJump->id() != Opcode::JMPF
+					&& opcodeJump->id() != Opcode::JMPFL
+					&& opcodeJump->id() != Opcode::JMPB
+					&& opcodeJump->id() != Opcode::JMPBL
+					&& jump - opcodeJump->jumpPosData() < 0) {
+				errorStr = QObject::tr("Le label %1 est inaccessible car il se trouve avant la commande.").arg(opcodeJump->label());
 				return false;
 			}
 		}

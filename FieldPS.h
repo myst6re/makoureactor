@@ -84,10 +84,6 @@ protected:
 	QByteArray sectionData(FieldPart part);
 	QByteArray sectionData(int idPart);
 private:
-	QPixmap openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec);
-	QPixmap openBackground(const QByteArray &mimDataDec, const QByteArray &datDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL) const;
-	bool getUsedParams(const QByteArray &datData, QHash<quint8, quint8> &usedParams, bool *layerExists) const;
-
 	quint32 sectionPositions[7];
 };
 

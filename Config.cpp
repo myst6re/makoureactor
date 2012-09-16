@@ -17,10 +17,10 @@
  ****************************************************************************/
 #include "Config.h"
 
-QSettings *Config::settings = NULL;
+QSettings *Config::settings = 0;
 
 void Config::set() {
-	if(settings==NULL) {
+	if(!settings) {
 #ifdef Q_WS_WIN
 	settings = new QSettings(qApp->applicationDirPath()+"/Makou_Reactor.ini", QSettings::IniFormat);
 #else
@@ -30,8 +30,7 @@ void Config::set() {
 }
 
 void Config::remove() {
-	if(settings!=NULL)
-		delete settings;
+	if(settings)	delete settings;
 }
 
 QVariant Config::value(const QString &key, const QVariant &defaultValue)

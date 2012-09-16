@@ -28,6 +28,7 @@ class BGDialog : public QDialog
 public:
 	explicit BGDialog(QWidget *parent);
 	void fill(Field *field);
+	void clear();
 private slots:
 	void parameterChanged(int index);
 	void layerChanged();

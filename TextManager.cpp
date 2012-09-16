@@ -22,7 +22,7 @@
 #include "Data.h"
 
 TextManager::TextManager(QWidget *parent) :
-	QDialog(parent, Qt::Tool)
+	QDialog(parent, Qt::Tool), scriptsAndTexts(0)
 {
 	setWindowTitle(tr("Textes"));
 	QFont font;
@@ -262,8 +262,8 @@ void TextManager::focusInEvent(QFocusEvent *)
 
 void TextManager::setField(Field *field)
 {
-	if(this->field == field)	return;
-	this->field = field;
+	if(this->scriptsAndTexts == field->scriptsAndTexts() || !field)	return;
+	clear();
 	this->scriptsAndTexts = field->scriptsAndTexts();
 //	_windows.clear();
 //	_text2win.clear();
@@ -274,8 +274,19 @@ void TextManager::setField(Field *field)
 	selectText(liste1->item(0));
 }
 
+void TextManager::clear()
+{
+	scriptsAndTexts = 0;
+	usedTexts.clear();
+	liste1->clear();
+	textEdit->clear();
+	textPreview->clear();
+}
+
 void TextManager::setTextChanged()
 {
+	if(!scriptsAndTexts)	return;
+
 	QListWidgetItem *item = liste1->currentItem();
 	if(item == NULL)	return;
 
@@ -307,7 +318,7 @@ void TextManager::setTextChanged()
 
 void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 {
-	if(!item)	return;
+	if(!item || !scriptsAndTexts)	return;
 	int textID = item->data(Qt::UserRole).toInt();
 	FF7Text *t = scriptsAndTexts->text(textID);
 //	textPreview->resetCurrentWin();
@@ -321,6 +332,7 @@ void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 
 void TextManager::showList()
 {
+	if(!scriptsAndTexts)	return;
 	bool show = dispUnusedText->isChecked();
 	liste1->blockSignals(true);
 	int nbTextes = scriptsAndTexts->textCount();
@@ -375,6 +387,7 @@ QString TextManager::selectedText() const
 
 void TextManager::addText()
 {
+	if(!scriptsAndTexts)	return;
 	QListWidgetItem *item = liste1->currentItem();
 	int row = !item ? scriptsAndTexts->textCount() : item->data(Qt::UserRole).toInt()+1;
 	liste1->blockSignals(true);
@@ -389,6 +402,7 @@ void TextManager::addText()
 
 void TextManager::delText()
 {
+	if(!scriptsAndTexts)	return;
 	QListWidgetItem *item = liste1->currentItem();
 	if(!item) return;
 	liste1->blockSignals(true);
@@ -469,7 +483,7 @@ void TextManager::changeRect(QRect rect)
 
 void TextManager::changeXCoord(int /*x*/)
 {
-	/*if(textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
+	/*if(!scriptsAndTexts || textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
 
 	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
 	int winID = textPreview->getCurrentWin()-1;
@@ -490,7 +504,7 @@ void TextManager::changeXCoord(int /*x*/)
 
 void TextManager::changeYCoord(int /*y*/)
 {
-	/*if(textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
+	/*if(!scriptsAndTexts || textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
 
 	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
 	int winID = textPreview->getCurrentWin()-1;

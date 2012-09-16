@@ -1231,11 +1231,6 @@ void OpcodeJump::setBadJump(bool badJump)
 	_badJump = badJump;
 }
 
-bool OpcodeJump::isJump() const
-{
-	return true;
-}
-
 qint32 OpcodeJump::maxJump() const
 {
 	if(isLongJump()) {
@@ -1254,11 +1249,6 @@ QString OpcodeLabel::toString() const
 {
 	return QObject::tr("Label %1")
 			.arg(_label);
-}
-
-bool OpcodeLabel::isLabel() const
-{
-	return true;
 }
 
 quint32 OpcodeLabel::label() const

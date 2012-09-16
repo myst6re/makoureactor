@@ -135,7 +135,7 @@ Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 	if(field!=NULL && open && !openField(field, dontOptimize)) {
 		return NULL;
 	}
-	if(field!=NULL) {
+	if(field!=NULL && open) {
 		Data::currentTextes = field->scriptsAndTexts()->texts();
 	}
 	return field;

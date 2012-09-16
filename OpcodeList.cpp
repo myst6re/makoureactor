@@ -358,20 +358,6 @@ void OpcodeList::add()
 	scriptEditor(false);
 }
 
-void OpcodeList::changeHist(HistoricType type, int opcodeID, const QByteArray &data)
-{
-	Historic hist;
-	hist.type = type;
-	hist.opcodeIDs = QList<int>() << opcodeID;
-	hist.data = QList<QByteArray>() << data;
-
-	undo_A->setEnabled(true);
-	redo_A->setEnabled(false);
-	hists.push(hist);
-	restoreHists.clear();
-	qDebug() << showHistoric();
-}
-
 QString OpcodeList::showHistoric()
 {
 	QStringList ret;
@@ -380,6 +366,7 @@ QString OpcodeList::showHistoric()
 		switch(h.type) {
 		case Add:	type = "Add";	break;
 		case Modify:	type = "Modify";	break;
+		case ModifyAndAddLabel:	type = "ModifyAndAddLabel";	break;
 		case Remove:	type = "Remove";	break;
 		case Up:	type = "Up";	break;
 		case Down:	type = "Down";	break;
@@ -392,6 +379,7 @@ QString OpcodeList::showHistoric()
 		switch(h.type) {
 		case Add:	type = "Add";	break;
 		case Modify:	type = "Modify";	break;
+		case ModifyAndAddLabel:	type = "ModifyAndAddLabel";	break;
 		case Remove:	type = "Remove";	break;
 		case Up:	type = "Up";	break;
 		case Down:	type = "Down";	break;
@@ -401,7 +389,21 @@ QString OpcodeList::showHistoric()
 	return "(" + ret.join(", ") + ") (" + ret2.join(", ") + ")";
 }
 
-void OpcodeList::changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<QByteArray> &data)
+void OpcodeList::changeHist(HistoricType type, int opcodeID, Opcode *data)
+{
+	Historic hist;
+	hist.type = type;
+	hist.opcodeIDs = QList<int>() << opcodeID;
+	hist.data = QList<Opcode *>() << data;
+
+	undo_A->setEnabled(true);
+	redo_A->setEnabled(false);
+	hists.push(hist);
+	restoreHists.clear();
+	qDebug() << showHistoric();
+}
+
+void OpcodeList::changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<Opcode *> &data)
 {
 	Historic hist;
 	hist.type = type;
@@ -412,7 +414,7 @@ void OpcodeList::changeHist(HistoricType type, const QList<int> &opcodeIDs, cons
 	redo_A->setEnabled(false);
 	hists.push(hist);
 	restoreHists.clear();
-//	qDebug() << showHistoric();
+	qDebug() << showHistoric();
 }
 
 void OpcodeList::clearHist()
@@ -421,7 +423,7 @@ void OpcodeList::clearHist()
 	redo_A->setEnabled(false);
 	hists.clear();
 	restoreHists.clear();
-//	qDebug() << showHistoric();
+	qDebug() << showHistoric();
 }
 
 void OpcodeList::undo()
@@ -432,29 +434,43 @@ void OpcodeList::undo()
 	undo_A->setEnabled(!hists.isEmpty());
 
 	int firstOpcode = hist.opcodeIDs.first();
-	QByteArray sav;
+	Opcode *sav;
 
 	switch(hist.type) {
 	case Add:
+		// del opcodes
 		for(int i=hist.opcodeIDs.size()-1 ; i>=0 ; --i) {
-			hist.data.prepend(script->getOpcode(hist.opcodeIDs.at(i))->toByteArray());
+			hist.data.prepend(Script::copyOpcode(script->getOpcode(hist.opcodeIDs.at(i))));
 			script->delOpcode(hist.opcodeIDs.at(i));
 		}
 		break;
 	case Remove:
+		// restore opcodes
 		for(int i=0 ; i<hist.opcodeIDs.size() ; ++i)
-			script->insertOpcode(hist.opcodeIDs.at(i), Script::createOpcode(hist.data.at(i)));
+			script->insertOpcode(hist.opcodeIDs.at(i), hist.data.at(i));
 		hist.data.clear();
 		break;
 	case Modify:
-		sav = script->getOpcode(firstOpcode)->toByteArray();
-		script->setOpcode(firstOpcode, Script::createOpcode(hist.data.first()));
+		// restore old version
+		sav = Script::copyOpcode(script->getOpcode(firstOpcode));
+		script->setOpcode(firstOpcode, hist.data.first());
+		hist.data.replace(0, sav);
+		break;
+	case ModifyAndAddLabel:
+		// del label
+		hist.data.prepend(Script::copyOpcode(script->getOpcode(firstOpcode+1)));
+		script->delOpcode(firstOpcode+1);
+		// restore old version
+		sav = Script::copyOpcode(script->getOpcode(firstOpcode));
+		script->setOpcode(firstOpcode, hist.data.first());
 		hist.data.replace(0, sav);
 		break;
 	case Up:
+		// move down
 		script->moveOpcode(firstOpcode-1, Script::Down);
 		break;
 	case Down:
+		// move up
 		script->moveOpcode(firstOpcode+1, Script::Up);
 		break;
 	}
@@ -479,24 +495,31 @@ void OpcodeList::redo()
 	redo_A->setEnabled(!restoreHists.isEmpty());
 
 	int firstOpcode = hist.opcodeIDs.first();
-	QByteArray sav;
+	Opcode *sav;
 
 	switch(hist.type) {
 	case Add:
 		for(int i=0 ; i<hist.opcodeIDs.size() ; ++i)
-			script->insertOpcode(hist.opcodeIDs.at(i), Script::createOpcode(hist.data.at(i)));
+			script->insertOpcode(hist.opcodeIDs.at(i), hist.data.at(i));
 		hist.data.clear();
 		break;
 	case Remove:
 		for(int i=hist.opcodeIDs.size()-1 ; i>=0 ; --i) {
-			hist.data.prepend(script->getOpcode(hist.opcodeIDs.at(i))->toByteArray());
+			hist.data.prepend(Script::copyOpcode(script->getOpcode(hist.opcodeIDs.at(i))));
 			script->delOpcode(hist.opcodeIDs.at(i));
 		}
 		break;
 	case Modify:
-		sav = script->getOpcode(firstOpcode)->toByteArray();
-		script->setOpcode(firstOpcode, Script::createOpcode(hist.data.first()));
+		sav = Script::copyOpcode(script->getOpcode(firstOpcode));
+		script->setOpcode(firstOpcode, hist.data.first());
 		hist.data.replace(0, sav);
+		break;
+	case ModifyAndAddLabel:
+		sav = Script::copyOpcode(script->getOpcode(firstOpcode));
+		script->setOpcode(firstOpcode, hist.data.first());
+		hist.data.replace(0, sav);
+		script->insertOpcode(hist.opcodeIDs.at(1), hist.data.at(1));
+		hist.data.removeAt(1);
 		break;
 	case Up:
 		script->moveOpcode(--firstOpcode, Script::Down);
@@ -527,12 +550,12 @@ void OpcodeList::scriptEditor(bool modify)
 		modify = false;
 	}
 
-	QByteArray oldVersion;
+	Opcode *oldVersion = 0;
 
 	saveExpandedItems();
 
 	if(modify)
-		oldVersion = script->getOpcode(opcodeID)->toByteArray();
+		oldVersion = Script::copyOpcode(script->getOpcode(opcodeID));
 	else
 		++opcodeID;
 
@@ -543,10 +566,18 @@ void OpcodeList::scriptEditor(bool modify)
 		fill();
 		scroll(opcodeID);
 		if(modify) {
-			changeHist(Modify, opcodeID, oldVersion);
+			if(editor.needslabel()) {
+				changeHist(ModifyAndAddLabel, opcodeID, oldVersion);
+			} else {
+				changeHist(Modify, opcodeID, oldVersion);
+			}
 		}
 		else {
-			changeHist(Add, opcodeID);
+			if(editor.needslabel()) {
+				changeHist(Add, QList<int>() << opcodeID << (opcodeID + 1), QList<Opcode *>());
+			} else {
+				changeHist(Add, opcodeID);
+			}
 		}
 		emit changed();
 	}
@@ -557,7 +588,7 @@ void OpcodeList::del(bool totalDel)
 	if(topLevelItemCount() == 0)	return;
 	QList<int> selectedIDs = this->selectedIDs();
 	if(selectedIDs.isEmpty())	return;
-	QList<QByteArray> oldVersions;
+	QList<Opcode *> oldVersions;
 
 	if(totalDel && QMessageBox::warning(this, tr("Suppression"), tr("Voulez-vous vraiment supprimer %1 ?").arg(selectedIDs.size()==1 ? tr("la commande sélectionnée") : tr("les commandes sélectionnées")), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel)
 		return;
@@ -566,7 +597,7 @@ void OpcodeList::del(bool totalDel)
 	
 	qSort(selectedIDs);
 	for(int i=selectedIDs.size()-1 ; i>=0 ; --i) {
-		oldVersions.prepend(script->getOpcode(selectedIDs.at(i))->toByteArray());
+		oldVersions.prepend(Script::copyOpcode(script->getOpcode(selectedIDs.at(i))));
 		if(totalDel)
 			script->delOpcode(selectedIDs.at(i));
 		else
@@ -626,10 +657,11 @@ void OpcodeList::copy()
 		lastitem = item;
 	}
 	QApplication::clipboard()->setText(copiedText);
-	
+
 	clearCopiedOpcodes();
-	foreach(const int &id, selectedIDs)
+	foreach(const int &id, selectedIDs) {
 		opcodeCopied.append(script->getOpcode(id));
+	}
 
 	actions().at(6)->setEnabled(true);
 	hasCut = false;
@@ -649,7 +681,7 @@ void OpcodeList::paste()
 	fill();
 	scroll(scrollID);
 	emit changed();
-	changeHist(Add, IDs, QList<QByteArray>());
+	changeHist(Add, IDs, QList<Opcode *>());
 }
 
 void OpcodeList::up()	{	move(Script::Up);		}

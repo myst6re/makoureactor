@@ -20,8 +20,11 @@
 BGDialog::BGDialog(QWidget *parent) :
 	QDialog(parent, Qt::Tool), field(0)
 {
+	setWindowTitle(tr("Aperçu écran"));
+
 	QScrollArea *scrollArea = new QScrollArea(this);
 	scrollArea->setWidgetResizable(true);
+	scrollArea->setMinimumSize(320, 240);
 
 	QPalette pal = scrollArea->palette();
 	pal.setColor(QPalette::Active, QPalette::Window, Qt::black);
@@ -64,7 +67,7 @@ BGDialog::BGDialog(QWidget *parent) :
 
 void BGDialog::fill(Field *field)
 {
-	if(this->field == field)	return;
+	if(this->field == field || !field)	return;
 
 	this->field = field;
 
@@ -77,8 +80,32 @@ void BGDialog::fill(Field *field)
 	fill();
 }
 
+void BGDialog::clear()
+{
+	parametersWidget->blockSignals(true);
+	statesWidget->blockSignals(true);
+	layersWidget->blockSignals(true);
+	zWidget->blockSignals(true);
+
+	field = 0;
+	allparams.clear();
+	params.clear();
+	image->clear();
+	parametersWidget->clear();
+	statesWidget->clear();
+	layersWidget->clear();
+	zWidget->clear();
+
+	parametersWidget->blockSignals(false);
+	statesWidget->blockSignals(false);
+	layersWidget->blockSignals(false);
+	zWidget->blockSignals(false);
+}
+
 void BGDialog::fillWidgets()
 {
+	if(!field)	return;
+
 	QHash<quint8, quint8> usedParams;
 	bool layerExists[] = {false, false, false};
 
@@ -218,6 +245,7 @@ void BGDialog::changeZ(int value)
 
 void BGDialog::fill()
 {
+	if(!field)	return;
 	image->setPixmap(field->openBackground(params, z, layers));
 	image->setName(field->getName());
 }

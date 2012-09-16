@@ -32,6 +32,7 @@ class WalkmeshManager : public QDialog
 public:
 	explicit WalkmeshManager(QWidget *parent=0, const QGLWidget *shareWidget=0);
 	void fill(Field *field);
+	void clear();
 	int currentCamera() const;
 signals:
 	void modified();

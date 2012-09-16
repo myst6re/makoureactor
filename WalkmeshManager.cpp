@@ -202,7 +202,7 @@ QWidget *WalkmeshManager::buildWalkmeshPage()
 	connect(idList, SIGNAL(currentRowChanged(int)), SLOT(setCurrentId(int)));
 	connect(idVertices[0], SIGNAL(valuesChanged(Vertex_s)), SLOT(editIdTriangle(Vertex_s)));
 	connect(idVertices[1], SIGNAL(valuesChanged(Vertex_s)), SLOT(editIdTriangle(Vertex_s)));
-	connect(idVertices[1], SIGNAL(valuesChanged(Vertex_s)), SLOT(editIdTriangle(Vertex_s)));
+	connect(idVertices[2], SIGNAL(valuesChanged(Vertex_s)), SLOT(editIdTriangle(Vertex_s)));
 	connect(idAccess[0], SIGNAL(valueChanged(int)), SLOT(editIdAccess(int)));
 	connect(idAccess[1], SIGNAL(valueChanged(int)), SLOT(editIdAccess(int)));
 	connect(idAccess[2], SIGNAL(valueChanged(int)), SLOT(editIdAccess(int)));
@@ -451,7 +451,7 @@ QWidget *WalkmeshManager::buildMiscPage()
 
 void WalkmeshManager::fill(Field *field)
 {
-	if(field->getInf() == infFile)	return;
+	if(field->getInf() == infFile || !field)	return;
 
 	infFile = field->getInf();
 	idFile = field->getId();
@@ -564,6 +564,17 @@ void WalkmeshManager::fill(Field *field)
 	tabWidget->widget(4)->setEnabled(infFile->isOpen() && !infFile->isJap());
 	tabWidget->widget(5)->setEnabled(infFile->isOpen());
 	tabWidget->widget(6)->setEnabled(infFile->isOpen());
+}
+
+void WalkmeshManager::clear()
+{
+	infFile = 0;
+	idFile = 0;
+	caFile = 0;
+
+	if(walkmesh) {
+		walkmesh->clear();
+	}
 }
 
 int WalkmeshManager::currentCamera() const

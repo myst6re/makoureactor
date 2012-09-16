@@ -349,8 +349,42 @@ void ScriptEditorLabelPage::setOpcode(Opcode *opcode)
 	}
 }
 
+void ScriptEditorJumpPageInterface::fillLabelList(bool jumpBack)
+{
+	qDebug() << "ScriptEditorJumpPageInterface::fillLabelList" << jumpBack << (int)_opcode << (int)label;
+	OpcodeJump *opcodeJump = (OpcodeJump *)_opcode;
+
+	label->blockSignals(true);
+	label->clear();
+
+	quint32 greaterLabel=1;
+	int i=0;
+
+	foreach(Opcode *op, _script->getOpcodes()) {
+		if(op->isLabel()) {
+			quint32 lbl = ((OpcodeLabel *)op)->label();
+			if(jumpBack || i >= _opcodeID) {
+				label->addItem(tr("Label %1").arg(lbl), lbl);
+			}
+			if(lbl >= greaterLabel) {
+				greaterLabel = lbl + 1;
+			}
+		}
+
+		++i;
+	}
+
+	label->addItem(tr("Nouveau label"), greaterLabel);
+
+	int index = label->findData(opcodeJump->label());
+	if(index < 0)		index = 0;
+//	_valid = label->count() > 0;
+	label->setCurrentIndex(index);
+	label->blockSignals(false);
+}
+
 ScriptEditorJumpPage::ScriptEditorJumpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent), addJump(false)
+	ScriptEditorJumpPageInterface(field, grpScript, script, opcodeID, parent), addJump(false)
 {
 }
 
@@ -397,19 +431,19 @@ Opcode *ScriptEditorJumpPage::opcode()
 	}
 
 	// Create a new label if chosen
-	if(opcodeIDLabel >= _script->size()) {
+//	if(opcodeIDLabel >= _script->size()) {
 //		qDebug() << "ScriptEditorJumpPage insertOpcode" << (_opcodeID+1);
 //		opcodeIDLabel = _opcodeID+1;
 //		_script->insertOpcode(opcodeIDLabel, new OpcodeLabel(labelVal));
 //		addJump = true;
-	}
+//	}
 
 	// Remove the new label if not chosen
-	if(addJump && label->currentIndex() < label->count() - 1) {
+//	if(addJump && label->currentIndex() < label->count() - 1) {
 //		qDebug() << "ScriptEditorJumpPage deleteOpcode" << (_opcodeID+1) << _script->getOpcode(_opcodeID+1)->name();
 //		_script->delOpcode(_opcodeID+1);
 //		addJump = false;
-	}
+//	}
 
 	if(opcodeIDLabel < _opcodeID) { // Jump Back
 		if(range->currentIndex() == 0) { // short
@@ -436,29 +470,9 @@ void ScriptEditorJumpPage::setOpcode(Opcode *opcode)
 	ScriptEditorView::setOpcode(opcode);
 
 	addJump = false;
-	label->blockSignals(true);
 	range->blockSignals(true);
-	label->clear();
 
-	OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
-
-//	quint32 greaterLabel=1;
-	foreach(Opcode *op, _script->getOpcodes()) {
-		if(op->isLabel()) {
-			quint32 lbl = ((OpcodeLabel *)op)->label();
-			label->addItem(tr("Label %1").arg(lbl), lbl);
-//			if(lbl >= greaterLabel) {
-//				greaterLabel = lbl + 1;
-//			}
-		}
-	}
-
-//	label->addItem(tr("Nouveau label"), greaterLabel);
-
-	int index = label->findData(opcodeJump->label());
-	if(index < 0)		index = 0;
-	_valid = label->count() > 0;
-	label->setCurrentIndex(index);
+	fillLabelList(true);
 
 	if(opcode->id() == Opcode::JMPF || opcode->id() == Opcode::JMPB) {
 		range->setCurrentIndex(0);
@@ -466,10 +480,14 @@ void ScriptEditorJumpPage::setOpcode(Opcode *opcode)
 		range->setCurrentIndex(1);
 	}
 
-	label->blockSignals(false);
 	range->blockSignals(false);
 
 	emit opcodeChanged();
+}
+
+bool ScriptEditorJumpPage::needsLabel() const
+{
+	return label->currentIndex() == label->count() - 1;
 }
 
 void ScriptEditorJumpPage::convertOpcode(Opcode::Keys key)
@@ -490,7 +508,7 @@ void ScriptEditorJumpPage::convertOpcode(Opcode::Keys key)
 }
 
 ScriptEditorIfPage::ScriptEditorIfPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent), addJump(false)
+	ScriptEditorJumpPageInterface(field, grpScript, script, opcodeID, parent), addJump(false)
 {
 }
 
@@ -677,35 +695,7 @@ void ScriptEditorIfPage::setOpcode(Opcode *opcode)
 	operatorList->setCurrentIndex(opcodeIf->oper);
 	operatorList->blockSignals(false);
 
-	label->blockSignals(true);
-	label->clear();
-
-	OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
-
-	int i=0;
-
-//	quint32 greaterLabel=1;
-	foreach(Opcode *op, _script->getOpcodes()) {
-		if(op->isLabel()) {
-			quint32 lbl = ((OpcodeLabel *)op)->label();
-			if(i >= _opcodeID) {
-				label->addItem(tr("Label %1").arg(lbl), lbl);
-			}
-//			if(lbl >= greaterLabel) {
-//				greaterLabel = lbl + 1;
-//			}
-		}
-
-		++i;
-	}
-
-//	label->addItem(tr("Nouveau label"), greaterLabel);
-
-	int index = label->findData(opcodeJump->label());
-	if(index < 0)		index = 0;
-	_valid = label->count() > 0;
-	label->setCurrentIndex(index);
-	label->blockSignals(false);
+	fillLabelList();
 
 	rangeJump->blockSignals(true);
 	if(opcode->id() == Opcode::IFUB
@@ -728,6 +718,11 @@ void ScriptEditorIfPage::setOpcode(Opcode *opcode)
 	rangeTest->blockSignals(false);
 
 //	qDebug() << "/setOpcode" << opcode->name();
+}
+
+bool ScriptEditorIfPage::needsLabel() const
+{
+	return label->currentIndex() == label->count() - 1;
 }
 
 void ScriptEditorIfPage::changeTestRange()
@@ -764,7 +759,7 @@ void ScriptEditorIfPage::convertOpcode(Opcode::Keys key)
 }
 
 ScriptEditorIfKeyPage::ScriptEditorIfKeyPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+	ScriptEditorJumpPageInterface(field, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -862,36 +857,14 @@ void ScriptEditorIfKeyPage::setOpcode(Opcode *opcode)
 		keys.at(i)->setChecked(bool((opcodeIfKey->keys >> i) & 1));
 	}
 
-	label->clear();
+	fillLabelList();
 
-	OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
-
-	int i=0, pos=0, posOpcodeJump=-1, maxJump;
-
-	maxJump = opcodeJump->maxJump();
-
-	foreach(Opcode *op, _script->getOpcodes()) {
-		if(i == _opcodeID) {
-			posOpcodeJump = pos;
-		}
-
-		if(i >= _opcodeID && op->isLabel() && pos < posOpcodeJump + maxJump) {
-			quint32 lbl = ((OpcodeLabel *)op)->label();
-			label->addItem(tr("Label %1").arg(lbl), lbl);
-		}
-
-		pos += op->size();
-		++i;
-	}
-
-	_valid = label->count() > 0;
-
-	if(_valid) {
-		int index = label->findData(opcodeJump->label());
-		if(index < 0)		index = 0;
-		label->setCurrentIndex(index);
-	}
 	blockSignals(false);
+}
+
+bool ScriptEditorIfKeyPage::needsLabel() const
+{
+	return label->currentIndex() == label->count() - 1;
 }
 
 void ScriptEditorIfKeyPage::convertOpcode(Opcode::Keys key)
@@ -911,7 +884,7 @@ void ScriptEditorIfKeyPage::convertOpcode(Opcode::Keys key)
 }
 
 ScriptEditorIfQPage::ScriptEditorIfQPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+	ScriptEditorJumpPageInterface(field, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -960,35 +933,12 @@ void ScriptEditorIfQPage::setOpcode(Opcode *opcode)
 	OpcodeIfQ *opcodeIfQ = (OpcodeIfQ *)opcode;
 	charList->setCurrentIndex(opcodeIfQ->charID);
 
-	label->clear();
+	fillLabelList();
+}
 
-	OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
-
-	int i=0, pos=0, posOpcodeJump=-1, maxJump;
-
-	maxJump = opcodeJump->maxJump();
-
-	foreach(Opcode *op, _script->getOpcodes()) {
-		if(i == _opcodeID) {
-			posOpcodeJump = pos;
-		}
-
-		if(i >= _opcodeID && op->isLabel() && pos < posOpcodeJump + maxJump) {
-			quint32 lbl = ((OpcodeLabel *)op)->label();
-			label->addItem(tr("Label %1").arg(lbl), lbl);
-		}
-
-		pos += op->size();
-		++i;
-	}
-
-	_valid = label->count() > 0;
-
-	if(_valid) {
-		int index = label->findData(opcodeJump->label());
-		if(index < 0)		index = 0;
-		label->setCurrentIndex(index);
-	}
+bool ScriptEditorIfQPage::needsLabel() const
+{
+	return label->currentIndex() == label->count() - 1;
 }
 
 ScriptEditorWaitPage::ScriptEditorWaitPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
