@@ -323,7 +323,7 @@ void TextManager::showList()
 {
 	bool show = dispUnusedText->isChecked();
 	liste1->blockSignals(true);
-	int nbTextes = scriptsAndTexts->getNbTexts();
+	int nbTextes = scriptsAndTexts->textCount();
 	liste1->clear();
 
 	Config::setValue("dispUnusedText", show);
@@ -376,7 +376,7 @@ QString TextManager::selectedText() const
 void TextManager::addText()
 {
 	QListWidgetItem *item = liste1->currentItem();
-	int row = !item ? scriptsAndTexts->getNbTexts() : item->data(Qt::UserRole).toInt()+1;
+	int row = !item ? scriptsAndTexts->textCount() : item->data(Qt::UserRole).toInt()+1;
 	liste1->blockSignals(true);
 	scriptsAndTexts->insertText(row);
 	usedTexts = scriptsAndTexts->listUsedTexts();

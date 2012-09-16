@@ -61,6 +61,12 @@ bool Field::isModified() const
 
 void Field::setModified(bool modified)
 {
+	if(!_isOpen) {
+		if(!open()) {
+			qWarning() << "Unable to reopen!";
+			return;
+		}
+	}
 	_isModified = modified;
 	if(section1)	section1->setModified(modified);
 }

@@ -142,10 +142,10 @@ public:
 	void setName(const QString &name);
 	void setLocation(quint32 location);
 	void setSize(quint32 size);
-	virtual void pack();
 	virtual bool isDirectory() const=0;
 	bool isFile() const;
 	virtual bool isModified() const;
+	virtual void applyModifications();
 	bool isSpecial() const;
 	qint64 structPosition;
 	void setPaddingAfter(quint8 after);
@@ -165,8 +165,8 @@ public:
 	bool isDirectory() const;
 	const QByteArray &newData() const;
 	void setData(const QByteArray &data);
-	void pack();
 	bool isModified() const;
+	void applyModifications();
 private:
 	QByteArray _newData;
 	bool dataChanged;
@@ -216,6 +216,7 @@ public:
 	qint64 writeIso(const char *data, qint64 maxSize);
 	qint64 writeIso(const QByteArray &byteArray);
 	bool pack(IsoArchive *destination, IsoControl *control, IsoDirectory *directory=NULL);
+	void applyModifications(IsoDirectory *directory);
 	qint64 writeSectors(const QByteArray &data, IsoArchive *isoTemp, quint32 secteur, IsoControl *control, quint32 sectorCount=false);
 	int copyBytes(IsoArchive *isoTemp, int size, int last_esti, IsoControl *control);
 	static void repairLocationSectors(IsoDirectory *directory, IsoArchive *newIso);

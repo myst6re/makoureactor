@@ -1085,6 +1085,8 @@ quint8 FieldArchive::save(QString path)
 
 		// FIELD/*.DAT
 
+		bool archiveModified = false;
+
 		foreach(Field *field, fileList) {
 			if(field->isOpen() && field->isModified()) {
 				IsoFile *isoField = isoFieldDirectory->file(field->getName().toUpper() + ".DAT");
@@ -1093,7 +1095,12 @@ quint8 FieldArchive::save(QString path)
 				}
 
 				isoField->setData(field->save(iso->file(isoField).mid(4), true));
+				archiveModified = true;
 			}
+		}
+
+		if(!archiveModified) {
+			return 3;
 		}
 
 		// FIELD/FIELD.BIN
@@ -1111,7 +1118,7 @@ quint8 FieldArchive::save(QString path)
 
 //		qDebug() << "start";
 
-		if(!iso->pack(&isoTemp, this))
+		if(!iso->pack(&isoTemp, this, isoFieldDirectory))
 			return 3;
 
 		// End
@@ -1130,6 +1137,7 @@ quint8 FieldArchive::save(QString path)
 		if(!iso->open(QIODevice::ReadOnly))		return 4;
 
 		// Clear "isModified" state
+		iso->applyModifications(isoFieldDirectory);
 		setSaved();
 
 		return 0;

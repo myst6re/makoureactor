@@ -73,12 +73,6 @@ void IsoFileOrDirectory::setSize(quint32 size)
 	_newSize = size;
 }
 
-void IsoFileOrDirectory::pack()
-{
-	_location = _newLocation;
-	_size = _newSize;
-}
-
 bool IsoFileOrDirectory::isFile() const
 {
 	return !isDirectory();
@@ -87,6 +81,12 @@ bool IsoFileOrDirectory::isFile() const
 bool IsoFileOrDirectory::isModified() const
 {
 	return _location != _newLocation || _size != _newSize;
+}
+
+void IsoFileOrDirectory::applyModifications()
+{
+	_location = _newLocation;
+	_size = _newSize;
 }
 
 bool IsoFileOrDirectory::isSpecial() const
@@ -225,15 +225,16 @@ void IsoFile::setData(const QByteArray &data)
 	dataChanged = true;
 }
 
-void IsoFile::pack()
-{
-	IsoFileOrDirectory::pack();
-	dataChanged = false;
-}
-
 bool IsoFile::isModified() const
 {
 	return dataChanged || IsoFileOrDirectory::isModified();
+}
+
+void IsoFile::applyModifications()
+{
+	_newData.clear();
+	dataChanged = false;
+	IsoFileOrDirectory::applyModifications();
 }
 
 IsoArchive::IsoArchive(const QString &name) :
@@ -430,7 +431,7 @@ bool IsoArchive::pack(IsoArchive *destination, IsoControl *control, IsoDirectory
 				fileWithPaddingAfter->setPaddingAfter(0);
 				orderedFileList.replace(index, isoFile);
 				writeToTheMain.insert(isoFile->newLocation(), isoFile);
-				qDebug() << "Trouvé un espace suffisant à" << fileWithPaddingAfter->name() << (fileWithPaddingAfter->location() + fileWithPaddingAfter->sectorCount()) << "pour" << isoFile->name();
+//				qDebug() << "Trouvé un espace suffisant à" << fileWithPaddingAfter->name() << (fileWithPaddingAfter->location() + fileWithPaddingAfter->sectorCount()) << "pour" << isoFile->name();
 			} else {
 				writeToTheEnd.append(isoFile);
 				isoFile->setLocation(endOfIso);
@@ -460,20 +461,20 @@ bool IsoArchive::pack(IsoArchive *destination, IsoControl *control, IsoDirectory
 		if(last_esti == -1)			return false;
 
 		// Debug
-		if(destination->pos()%SECTOR_SIZE != 0)			qDebug() << "destination error 1a" << (destination->pos()%SECTOR_SIZE) << isoFile->name();
-		if(destination->pos()/SECTOR_SIZE != secteur)	qDebug() << "destination error 1b" << (destination->pos()/SECTOR_SIZE) << secteur << isoFile->name();
-		if(destination->pos() != pos())					qDebug() << "destination error 1c" << destination->pos() << pos() << isoFile->name();
+		if(destination->pos()%SECTOR_SIZE != 0)			qWarning() << "destination error 1a" << (destination->pos()%SECTOR_SIZE) << isoFile->name();
+		if(destination->pos()/SECTOR_SIZE != secteur)	qWarning() << "destination error 1b" << (destination->pos()/SECTOR_SIZE) << secteur << isoFile->name();
+		if(destination->pos() != pos())					qWarning() << "destination error 1c" << destination->pos() << pos() << isoFile->name();
 
 		// On écrit le même nombre de secteurs que le fichier d'origine
-		qDebug() << "écriture de" << isoFile->name() << "(" << isoFile->sectorCount() << "+" << isoFile->paddingAfter() << "secteurs) dans isoTemp au secteur" << secteur;
+//		qDebug() << "écriture de" << isoFile->name() << "(" << isoFile->sectorCount() << "+" << isoFile->paddingAfter() << "secteurs) dans isoTemp au secteur" << secteur;
 		secteur = writeSectors(isoFile->newData(), destination, secteur, control, isoFile->sectorCount() + isoFile->paddingAfter());
 		if(secteur == -1)			return false;
 		seek(destination->pos());
 
 		// Debug
-		if(destination->pos()%SECTOR_SIZE != 0)			qDebug() << "destination error 2a" << (destination->pos()%SECTOR_SIZE) << isoFile->name();
-		if(destination->pos()/SECTOR_SIZE != secteur)	qDebug() << "destination error 2b" << (destination->pos()/SECTOR_SIZE) << secteur << isoFile->name();
-		if(destination->pos() != pos())					qDebug() << "destination error 2c" << destination->pos() << pos() << isoFile->name();
+		if(destination->pos()%SECTOR_SIZE != 0)			qWarning() << "destination error 2a" << (destination->pos()%SECTOR_SIZE) << isoFile->name();
+		if(destination->pos()/SECTOR_SIZE != secteur)	qWarning() << "destination error 2b" << (destination->pos()/SECTOR_SIZE) << secteur << isoFile->name();
+		if(destination->pos() != pos())					qWarning() << "destination error 2c" << destination->pos() << pos() << isoFile->name();
 
 		// Envoi de la position courante à l'output
 		if(last_esti != (int)(control->baseEstimation + (destination->pos()/SECTOR_SIZE)*control->estimation)) {
@@ -488,9 +489,9 @@ bool IsoArchive::pack(IsoArchive *destination, IsoControl *control, IsoDirectory
 		return false;
 
 	// Debug
-	if(destination->pos()%SECTOR_SIZE != 0)				qDebug() << "destination error 3a" << (destination->pos()%SECTOR_SIZE);
-	if(destination->pos()/SECTOR_SIZE != sectorCount())	qDebug() << "destination error 3b" << (destination->pos()/SECTOR_SIZE) << secteur;
-	if(destination->pos() != pos())						qDebug() << "destination error 3c" << destination->pos() << pos();
+	if(destination->pos()%SECTOR_SIZE != 0)				qWarning() << "destination error 3a" << (destination->pos()%SECTOR_SIZE);
+	if(destination->pos()/SECTOR_SIZE != sectorCount())	qWarning() << "destination error 3b" << (destination->pos()/SECTOR_SIZE) << secteur;
+	if(destination->pos() != pos())						qWarning() << "destination error 3c" << destination->pos() << pos();
 
 	// A la fin de l'ISO
 
@@ -498,7 +499,7 @@ bool IsoArchive::pack(IsoArchive *destination, IsoControl *control, IsoDirectory
 	secteur = destination->pos()/SECTOR_SIZE;
 
 	foreach(IsoFile *isoFile, writeToTheEnd) {
-		qDebug() << "écriture de" << isoFile->name() << "(" << isoFile->sectorCount() << "secteurs) dans isoTemp (à la fin) au secteur" << secteur;
+//		qDebug() << "écriture de" << isoFile->name() << "(" << isoFile->sectorCount() << "secteurs) dans isoTemp (à la fin) au secteur" << secteur;
 		secteur = writeSectors(isoFile->newData(), destination, secteur, control);
 		if(secteur == -1)	return false;
 
@@ -511,11 +512,13 @@ bool IsoArchive::pack(IsoArchive *destination, IsoControl *control, IsoDirectory
 
 	// Modifications données
 
-	// volume_space_size (taille totale de l'ISO)
-	destination->seekIso(SECTOR_SIZE_DATA * 16 + 80);// sector 16 : pos 80 size 4+4
-	quint32 volume_space_size = destination->size()/SECTOR_SIZE, volume_space_size2 = qToBigEndian(volume_space_size);
-	destination->write((char *)&volume_space_size, 4);
-	destination->write((char *)&volume_space_size2, 4);
+	if(destination->size() != size()) {
+		// volume_space_size (taille totale de l'ISO)
+		destination->seekIso(SECTOR_SIZE_DATA * 16 + 80);// sector 16 : pos 80 size 4+4
+		quint32 volume_space_size = destination->size()/SECTOR_SIZE, volume_space_size2 = qToBigEndian(volume_space_size);
+		destination->write((char *)&volume_space_size, 4);
+		destination->write((char *)&volume_space_size2, 4);
+	}
 
 	// Update ISO files locations
 	repairLocationSectors(directory, destination);
@@ -535,8 +538,8 @@ bool IsoArchive::pack(IsoArchive *destination, IsoControl *control, IsoDirectory
 //	}
 //	qDebug() << "vérification done";
 
-//	if(destination->size()%SECTOR_SIZE != 0)	qDebug() << "Taille invalide" << destination->size();
-//	if(destination->size() != size())			qDebug() << "Taille différente" << (destination->size()/SECTOR_SIZE) << (size()/SECTOR_SIZE);
+	if(destination->size()%SECTOR_SIZE != 0)	qWarning() << "Invalid size" << destination->size();
+//	if(destination->size() != size())			qWarning() << "Taille différente" << (destination->size()/SECTOR_SIZE) << (size()/SECTOR_SIZE);
 
 	return true;
 }
@@ -599,7 +602,7 @@ int IsoArchive::copyBytes(IsoArchive *isoTemp, int size, int last_esti, IsoContr
 {
 	int count = size/READ_MAX, i;
 
-	qDebug() << "écriture de" << size << "octets (" << (size/SECTOR_SIZE) << "secteurs) dans isoTemp";
+//	qDebug() << "écriture de" << size << "octets (" << (size/SECTOR_SIZE) << "secteurs) dans isoTemp";
 
 	for(i=0 ; i<count ; ++i) {
 		if(control->wasCanceled())	return -1;
@@ -637,7 +640,7 @@ void IsoArchive::repairLocationSectors(IsoDirectory *directory, IsoArchive *newI
 				newIso->seekIso(pos);
 				newIso->writeIso((char *)&newSectorStart, 4);
 				newIso->writeIso((char *)&newSectorStart2, 4);
-				qDebug() << "nouvelle position" << fileOrDir->name() << oldSectorStart << newSectorStart;
+//				qDebug() << "nouvelle position" << fileOrDir->name() << oldSectorStart << newSectorStart;
 			}
 
 			// data_length
@@ -646,7 +649,7 @@ void IsoArchive::repairLocationSectors(IsoDirectory *directory, IsoArchive *newI
 				newIso->seekIso(pos + 8);
 				newIso->writeIso((char *)&newSize, 4);
 				newIso->writeIso((char *)&newSize2, 4);
-				qDebug() << "nouvelle taille" << fileOrDir->name() << oldSize << newSize;
+//				qDebug() << "nouvelle taille" << fileOrDir->name() << oldSize << newSize;
 			}
 		}
 
@@ -846,7 +849,7 @@ bool IsoArchive::extract(IsoFile *isoFile, const QString &destination, quint32 m
 {
 	if(isoFile == NULL)		return false;
 
-	QTime t;t.start();
+//	QTime t;t.start();
 
 	maxSize = maxSize == 0 ? isoFile->size() : qMin(maxSize, isoFile->size());
 	char data[MAX_ISO_READ];
@@ -861,7 +864,7 @@ bool IsoArchive::extract(IsoFile *isoFile, const QString &destination, quint32 m
 		totalR += r;
 	}
 
-	qDebug() << "time" << t.elapsed();
+//	qDebug() << "time" << t.elapsed();
 
 	return true;
 }
@@ -873,7 +876,7 @@ void IsoArchive::extractAll(const QString &destination)
 
 void IsoArchive::_extractAll(const QString &destination, IsoDirectory *directories, QString currentInternalDir)
 {
-	QTime t;t.start();
+//	QTime t;t.start();
 
 	QDir dir(destination);
 	QString currentPath = dir.absolutePath().append('/');
@@ -895,7 +898,7 @@ void IsoArchive::_extractAll(const QString &destination, IsoDirectory *directori
 		}
 	}
 	
-	qDebug() << "time" << t.elapsed();
+//	qDebug() << "time" << t.elapsed();
 }
 
 bool IsoArchive::seekToFile(const QString &path)
@@ -1048,10 +1051,10 @@ QList<IsoFileOrDirectory *> IsoArchive::getIntegrity() const
 			}
 		}
 
-		if(i.key() != cur && prevFile != NULL) {
-			qDebug() << QString("%1 -> %2 (%3 sectors) : padding after %4 (%5 sectors)").arg(prevFile->location() + prevFile->sectorCount())
-					.arg(i.key()).arg(i.key() - (prevFile->location() + prevFile->sectorCount())).arg(prevFile->name()).arg(prevFile->sectorCount());
-		}
+//		if(i.key() != cur && prevFile != NULL) {
+//			qDebug() << QString("%1 -> %2 (%3 sectors) : padding after %4 (%5 sectors)").arg(prevFile->location() + prevFile->sectorCount())
+//					.arg(i.key()).arg(i.key() - (prevFile->location() + prevFile->sectorCount())).arg(prevFile->name()).arg(prevFile->sectorCount());
+//		}
 
 		cur = i.key() + file->sectorCount();
 		prevFile = file;
@@ -1059,9 +1062,9 @@ QList<IsoFileOrDirectory *> IsoArchive::getIntegrity() const
 
 	if(prevFile != NULL) {
 		prevFile->setPaddingAfter(sectorCount() - (prevFile->location() + prevFile->sectorCount()));
-		qDebug() << QString("%1 -> %2 (%3 sectors) : padding after %4 (%5 sectors)").arg(prevFile->location() + prevFile->sectorCount())
-					.arg(sectorCount()).arg(sectorCount() - (prevFile->location() + prevFile->sectorCount()))
-					.arg(prevFile->name()).arg(prevFile->sectorCount());
+//		qDebug() << QString("%1 -> %2 (%3 sectors) : padding after %4 (%5 sectors)").arg(prevFile->location() + prevFile->sectorCount())
+//					.arg(sectorCount()).arg(sectorCount() - (prevFile->location() + prevFile->sectorCount()))
+//					.arg(prevFile->name()).arg(prevFile->sectorCount());
 		if(prevFile->paddingAfter() > 0) {
 			filesWithPadding.append(prevFile);
 		}
@@ -1090,6 +1093,18 @@ void IsoArchive::getModifiedFiles(QMap<quint32, IsoFile *> &files, IsoDirectory 
 			getModifiedFiles(files, (IsoDirectory *)fileOrDir);
 		} else if(((IsoFile *)fileOrDir)->isModified()) {
 			files.insert(fileOrDir->newLocation(), (IsoFile *)fileOrDir);
+		}
+	}
+}
+
+void IsoArchive::applyModifications(IsoDirectory *directory)
+{
+	foreach(IsoFileOrDirectory *fileOrDir, directory->filesAndDirectories()) {
+		if(fileOrDir->isDirectory()) {
+			applyModifications((IsoDirectory *)fileOrDir);
+		}
+		if(fileOrDir->isModified()) {
+			fileOrDir->applyModifications();
 		}
 	}
 }

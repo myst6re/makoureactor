@@ -66,6 +66,9 @@ bool FieldPS::open(bool dontOptimize)
 
 QByteArray FieldPS::sectionData(FieldPart part)
 {
+	if(!_isOpen) {
+		open();
+	}
 	if(!_isOpen)	return QByteArray();
 
 	switch(part) {

@@ -585,7 +585,7 @@ QList<FF7Text *> *Section1File::texts()
 	return &_texts;
 }
 
-int Section1File::getNbTexts() const
+int Section1File::textCount() const
 {
 	return _texts.size();
 }
