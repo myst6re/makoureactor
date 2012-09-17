@@ -45,12 +45,10 @@ public:
 	void getBgParams(QHash<quint8, quint8> &paramActifs) const;
 	void getBgMove(qint16 z[2], qint16 *x=0, qint16 *y=0) const;
 	int getTypeID();
-	void setType();
 	QString getType();
 	QColor getTypeColor();
 	QString getScriptName(quint8 scriptID);
 
-	bool search(int &scriptID, int &opcodeID) const;
 	bool searchOpcode(int opcode, int &scriptID, int &opcodeID) const;
 	bool searchVar(quint8 bank, quint8 adress, int value, int &scriptID, int &opcodeID) const;
 	void searchAllVars(QList<FF7Var> &vars) const;
@@ -70,6 +68,9 @@ public:
 	void setWindow(const FF7Window &win);
 	void listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
 private:
+	void setType();
+	bool search(int &scriptID, int &opcodeID) const;
+
 	QString name;
 	QList<Script *> scripts;
 

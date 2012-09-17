@@ -10,7 +10,6 @@ Icon=logo-shinra.png
 Exec=/usr/bin/makoureactor
 Path=
 Terminal=false
-MimeType=application/octet-stream
 Categories=Application;Game;
 Keywords=PlayStation;Final Fantasy;
 StartupNotify=false

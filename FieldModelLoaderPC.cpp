@@ -22,7 +22,7 @@ FieldModelLoaderPC::FieldModelLoaderPC() :
 {
 }
 
-bool FieldModelLoaderPC::load(const QByteArray &data, const QString &name)
+bool FieldModelLoaderPC::load(const QByteArray &data)
 {
 	const char *constData = data.constData();
 
@@ -37,6 +37,7 @@ bool FieldModelLoaderPC::load(const QByteArray &data, const QString &name)
 	model_typeHRC.clear();
 	model_anims.clear();
 	this->model_unknown.clear();
+	model_anims_unknown.clear();
 	this->colors.clear();
 
 	memcpy(&nb, &constData[2], 2);
@@ -50,7 +51,7 @@ bool FieldModelLoaderPC::load(const QByteArray &data, const QString &name)
 
 		if((quint32)data.size() < curPos+48+len)	return false;
 		 // model name
-		model_nameChar.append(QString(data.mid(curPos+2+name.size(),len-name.size())));
+		model_nameChar.append(QString(data.mid(curPos+2, len)));
 		memcpy(&model_unknown, &constData[curPos+2+len], 2);
 		this->model_unknown.append(model_unknown);
 		model_nameHRC.append(QString(data.mid(curPos+4+len,8)));
@@ -71,6 +72,7 @@ bool FieldModelLoaderPC::load(const QByteArray &data, const QString &name)
 		curPos += 48+len;
 
 		QStringList anims;
+		QList<quint16> anims_unknown;
 		for(j=0 ; j<nbAnim ; ++j) {
 			if((quint32)data.size() < curPos+2)		return false;
 
@@ -79,15 +81,20 @@ bool FieldModelLoaderPC::load(const QByteArray &data, const QString &name)
 			if((quint32)data.size() < curPos+4+len)	return false;
 
 			anims.append(QString(data.mid(curPos+2, len))); // animation name
+
+			memcpy(&model_unknown, &constData[curPos+2+len], 2);
+			anims_unknown.append(model_unknown);
+
 			curPos += 4+len;
 		}
 		model_anims.append(anims);
+		model_anims_unknown.append(anims_unknown);
 	}
 	loaded = true;
 	return true;
 }
 
-QByteArray FieldModelLoaderPC::save(const QString &name) const
+QByteArray FieldModelLoaderPC::save() const
 {
 	quint16 nbHRC = this->model_nameHRC.size(), nbAnim, nameSize, i, j;
 	QByteArray HRCs;
@@ -96,7 +103,7 @@ QByteArray FieldModelLoaderPC::save(const QString &name) const
 
 	for(i=0 ; i<nbHRC ; ++i)
 	{
-		modelName = name % this->model_nameChar.at(i);
+		modelName = this->model_nameChar.at(i);
 		nameSize = modelName.size();
 		HRCs.append((char *)&nameSize, 2); //model name size
 		HRCs.append(modelName.toLocal8Bit()); //model Name (fieldnamename_of_char.char)
@@ -116,7 +123,7 @@ QByteArray FieldModelLoaderPC::save(const QString &name) const
 			nameSize = this->model_anims.at(i).at(j).size();
 			HRCs.append((char *)&nameSize, 2); //Animation name size
 			HRCs.append(this->model_anims.at(i).at(j)); //Animation name
-			HRCs.append("\x01\x00", 2); //1
+			HRCs.append((char *)&model_anims_unknown.at(i).at(j), 2); //Animation unknown
 		}
 	}
 

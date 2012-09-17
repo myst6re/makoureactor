@@ -20,6 +20,7 @@
 #include "FieldArchive.h"
 #include "FieldPC.h"
 #include "FieldPS.h"
+#include "Data.h"
 
 Field::Field(const QString &name) :
 	_isOpen(false), _isModified(false), name(name),
@@ -114,6 +115,7 @@ Section1File *Field::scriptsAndTexts(bool open)
 {
 	if(!section1) 	section1 = new Section1File();
 	if(open && !section1->isOpen())	section1->open(sectionData(Scripts));
+	if(section1->isOpen())	Data::currentTextes = section1->texts();
 	return section1;
 }
 
@@ -132,14 +134,14 @@ TutFile *Field::tutosAndSounds(bool open)
 	return _tut;
 }
 
-IdFile *Field::getId(bool open)
+IdFile *Field::walkmesh(bool open)
 {
 	if(!id)		id = new IdFile();
 	if(open && !id->isOpen())	id->open(sectionData(Walkmesh));
 	return id;
 }
 
-CaFile *Field::getCa(bool open)
+CaFile *Field::camera(bool open)
 {
 	if(!ca)		ca = new CaFile();
 	if(open && !ca->isOpen())	ca->open(sectionData(Camera));
@@ -174,38 +176,20 @@ void Field::setSaved()
 	if(inf)			inf->setModified(false);
 }
 
-qint8 Field::exporter(const QString &path, const QByteArray &data, bool compress)
+qint8 Field::save(const QString &path, bool compress)
 {
-	if(data.isEmpty())	return 1;
+	QByteArray newData;
 
-	Field *field = new FieldPC(*this);
-
-	QFile fic(path);
-	if(!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-		delete field;
-		return 2;
+	if(save(newData, compress)) {
+		QFile fic(path);
+		if(!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			return 2;
+		}
+		fic.write(newData);
+		fic.close();
+	} else {
+		return 1;
 	}
-	fic.write(field->save(data.mid(4), compress));
-
-	delete field;
-
-	return 0;
-}
-
-qint8 Field::exporterDat(const QString &path, const QByteArray &data)
-{
-	if(data.isEmpty())	return 1;
-
-	Field *field = new FieldPS(*this);
-
-	QFile fic(path);
-	if(!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-		delete field;
-		return 2;
-	}
-	fic.write(field->save(data.mid(4), true));
-
-	delete field;
 
 	return 0;
 }
@@ -264,12 +248,12 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 			enc->setModified(true);
 		}
 		if(part.testFlag(Walkmesh)) {
-			IdFile *walk = getId(false);
+			IdFile *walk = walkmesh(false);
 			if(!walk->open(data.mid(sectionPositions[1], sectionPositions[2]-sectionPositions[1])))		return 2;
 			walk->setModified(true);
 		}
 		if(part.testFlag(Camera)) {
-			CaFile *ca = getCa(false);
+			CaFile *ca = camera(false);
 			if(!ca->open(data.mid(sectionPositions[3], sectionPositions[4]-sectionPositions[3])))		return 2;
 			ca->setModified(true);
 		}
@@ -300,12 +284,12 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 			enc->setModified(true);
 		}
 		if(part.testFlag(Walkmesh)) {
-			IdFile *walk = getId(false);
+			IdFile *walk = walkmesh(false);
 			if(!walk->open(data.mid(sectionPositions[4]+4, sectionPositions[5]-sectionPositions[4]-4)))	return 2;
 			walk->setModified(true);
 		}
 		if(part.testFlag(Camera)) {
-			CaFile *ca = getCa(false);
+			CaFile *ca = camera(false);
 			if(!ca->open(data.mid(sectionPositions[1]+4, sectionPositions[2]-sectionPositions[1]-4)))	return 2;
 			ca->setModified(true);
 		}

@@ -8219,7 +8219,7 @@ const quint8 Opcode::length[257] =
 /*25*//* NFADE */		9,
 /*26*//* BLINK */		2,
 /*27*//* BGMOVIE */		2,
-/*28*//* KAWAI */		0,
+/*28*//* KAWAI */		2,
 /*29*//* KAWIW */		1,
 /*2a*//* PMOVA */		2,
 /*2b*//* SLIP */		2,

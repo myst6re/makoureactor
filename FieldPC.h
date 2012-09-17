@@ -39,7 +39,7 @@ public:
 	quint32 getPosition() const;
 	void setPosition(quint32 position);
 
-	QByteArray save(const QByteArray &fileData, bool compress);
+	bool save(QByteArray &newData, bool compress);
 	qint8 importer(const QByteArray &data, bool isPSField, FieldParts part);
 
 	FieldModelLoaderPC *getFieldModelLoader(bool open=true);

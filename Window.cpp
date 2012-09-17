@@ -449,7 +449,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 	connect(fieldArchive, SIGNAL(nbFilesChanged(int)), progression, SLOT(setMaximum(int)));
 	
 	QList<QTreeWidgetItem *> items;
-	quint8 error = fieldArchive->open(items);
+	FieldArchive::ErrorCode error = fieldArchive->open(items);
 	
 	setCursor(Qt::ArrowCursor);
 	progression->hide();
@@ -458,18 +458,30 @@ void Window::open(const QString &cheminFic, bool isDir)
 	QString out;
 	switch(error)
 	{
-	case 1:
+	case FieldArchive::Ok:
+		break;
+	case FieldArchive::FieldNotFound:
+		out = tr("Rien trouvé !");
+		break;
+	case FieldArchive::ErrorOpening:
 		out = tr("Le fichier est inaccessible");
 		break;
-	case 2:
-		out = tr("Le fichier est invalide");
+	case FieldArchive::ErrorOpeningTemp:
+		out = tr("Impossible de créer un fichier temporaire");
 		break;
-	case 3:
-		out = tr("Rien trouvé !");
+	case FieldArchive::ErrorRemoving:
+		out = tr("Impossible de supprimer le fichier");
+		break;
+	case FieldArchive::Invalid:
+		out = tr("L'archive est invalide");
+		break;
+	case FieldArchive::NotImplemented:
+		out = tr("Cette erreur ne devrais pas s'afficher, merci de le signaler");
 		break;
 	}
 	if(!out.isEmpty())
 	{
+		fieldArchive->close();
 		QMessageBox::warning(this, tr("Erreur"), out);
 		return;
 	}
@@ -713,7 +725,7 @@ void Window::save() { saveAs(true); }
 
 void Window::saveAs(bool currentPath)
 {
-	QString cheminFic;
+	QString path;
 	if(!currentPath)
 	{
 		QString filter;
@@ -726,8 +738,8 @@ void Window::saveAs(bool currentPath)
 		} else {
 			return;
 		}
-		cheminFic = QFileDialog::getSaveFileName(this, tr("Enregistrer Sous"), fieldArchive->path(), filter);
-		if(cheminFic.isNull())		return;
+		path = QFileDialog::getSaveFileName(this, tr("Enregistrer Sous"), fieldArchive->path(), filter);
+		if(path.isNull())		return;
 	}
 	
 	setEnabled(false);
@@ -739,31 +751,17 @@ void Window::saveAs(bool currentPath)
 	
 	// QTime t;t.start();
 	if(!fieldArchive->isDirectory() || currentPath)
-		error = fieldArchive->save(cheminFic);
+		error = fieldArchive->save(path);
 	else {
 		// Cas où on veut enregistrer un seul DAT sous...
-		QTemporaryFile tempFic;
-		if(tempFic.open())
-		{
-			QFile DATfic(fieldArchive->path()+"/"+field->getName()+".DAT");
-			if(DATfic.open(QIODevice::ReadOnly))
-			{
-				bool saveAs = cheminFic!=DATfic.fileName();
-				DATfic.seek(4);
-				tempFic.write(field->save(DATfic.readAll(), true));
-				DATfic.reset();
-				if(saveAs || DATfic.remove())
-				{
-					tempFic.copy(cheminFic);
-				}
-				else
-					error = 4;
-			}
-			else
-				error = 1;
+		qint8 err = field->save(path, true);
+		if(err == 2) {
+			error = 1;
+		} else if(err == 1) {
+			error = 5;
+		} else if(err != 0) {
+			error = 5;
 		}
-		else
-			error = 2;
 	}
 
 	// qDebug("Temps total enregistrement : %d ms", t.elapsed());
@@ -773,12 +771,28 @@ void Window::saveAs(bool currentPath)
 	QString out;
 	switch(error)
 	{
-	case 0:	setModified(false);setWindowTitle();					break;
-	case 1:	out = tr("Le fichier est inaccessible");				break;
-	case 2:	out = tr("Impossible de créer un fichier temporaire");	break;
-	case 3:	out = tr("Erreur de réouverture du fichier");			break;
-	case 4:	out = tr("Impossible d'écrire dans l'archive, vérifiez les droits d'écriture.");break;
-	case 5:	out = tr("Problème de validation");						break;
+	case FieldArchive::Ok:
+		setModified(false);
+		setWindowTitle();
+		break;
+	case FieldArchive::FieldNotFound:
+		out = tr("Rien trouvé !");
+		break;
+	case FieldArchive::ErrorOpening:
+		out = tr("Le fichier est inaccessible");
+		break;
+	case FieldArchive::ErrorOpeningTemp:
+		out = tr("Impossible de créer un fichier temporaire");
+		break;
+	case FieldArchive::ErrorRemoving:
+		out = tr("Impossible d'écrire dans l'archive, vérifiez les droits d'écriture.");
+		break;
+	case FieldArchive::Invalid:
+		out = tr("L'archive est invalide");
+		break;
+	case FieldArchive::NotImplemented:
+		out = tr("Cette erreur ne devrais pas s'afficher, merci de le signaler");
+		break;
 	}
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
 	
@@ -865,7 +879,7 @@ void Window::notifyDirectoryChanged(const QString &path)
 
 void Window::exporter()
 {
-	if(!field) return;
+	if(!field || !fieldArchive) return;
 
 	int index;
 	QString types, name, selectedFilter,
@@ -887,11 +901,7 @@ void Window::exporter()
 	if(path.isNull())		return;
 	qint8 error=4;
 	
-	if(selectedFilter == dat) {
-		error = field->exporterDat(path, fieldArchive->getFieldData(field, false));
-	} else {
-		error = field->exporter(path, fieldArchive->getFieldData(field, false), selectedFilter == fieldLzs);
-	}
+	error = field->save(path, selectedFilter == fieldLzs);
 	
 	QString out;
 	switch(error)

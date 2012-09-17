@@ -76,7 +76,7 @@ public:
 
 	bool getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 
-	QByteArray save(const QByteArray &fileData, bool compress);
+	bool save(QByteArray &newData, bool compress);
 
 	FieldModelLoaderPS *getFieldModelLoader(bool open=true);
 	FieldModelFilePS *getFieldModel(int modelID, int animationID=0, bool animate=true);

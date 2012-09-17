@@ -135,9 +135,6 @@ Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 	if(field!=NULL && open && !openField(field, dontOptimize)) {
 		return NULL;
 	}
-	if(field!=NULL && open) {
-		Data::currentTextes = field->scriptsAndTexts()->texts();
-	}
 	return field;
 }
 
@@ -369,30 +366,31 @@ void FieldArchive::searchAll()
 	for(int i=0 ; i<size ; ++i) {
 		Field *field = this->field(i);
 		if(field != NULL) {
-			Section1File *section1 = field->scriptsAndTexts();
-			if(section1->isOpen()) {
-//				foreach(GrpScript *grpScript, section1->grpScripts()) {
-//					foreach(Script *script, grpScript->getScripts()) {
-//						foreach(Opcode *opcode, script->getOpcodes()) {
-//							if(opcode->id() == Opcode::AKAO) {
-//								OpcodeAKAO *akao = (OpcodeAKAO *)opcode;
-//								unknown1Values.insert(akao->opcode);
-//							}
-//							if(opcode->id() == Opcode::AKAO2) {
-//								OpcodeAKAO2 *akao = (OpcodeAKAO2 *)opcode;
-//								unknown1Values.insert(akao->opcode);
-//							}
-//						}
+//			field->getInf();
+//			Section1File *section1 = field->scriptsAndTexts();
+//			if(section1->isOpen()) {
+////				foreach(GrpScript *grpScript, section1->grpScripts()) {
+////					foreach(Script *script, grpScript->getScripts()) {
+////						foreach(Opcode *opcode, script->getOpcodes()) {
+////							if(opcode->id() == Opcode::AKAO) {
+////								OpcodeAKAO *akao = (OpcodeAKAO *)opcode;
+////								unknown1Values.insert(akao->opcode);
+////							}
+////							if(opcode->id() == Opcode::AKAO2) {
+////								OpcodeAKAO2 *akao = (OpcodeAKAO2 *)opcode;
+////								unknown1Values.insert(akao->opcode);
+////							}
+////						}
+////					}
+////				}
+//				bool jp = true;
+//				foreach(FF7Text *text, *section1->texts()) {
+//					if(text->getData() != FF7Text(text->getText(jp), jp).getData()) {
+//						qDebug() << "error" << text->getText(jp) << FF7Text(text->getText(jp), jp).getText(jp);
+
 //					}
 //				}
-				bool jp = true;
-				foreach(FF7Text *text, *section1->texts()) {
-					if(text->getData() != FF7Text(text->getText(jp), jp).getData()) {
-						qDebug() << "error" << text->getText(jp) << FF7Text(text->getText(jp), jp).getText(jp);
-
-					}
-				}
-			}
+//			}
 //			TutFile *tut = field->tutosAndSounds();
 //			if(tut->isOpen()) {
 //				qDebug() << field->getName();
@@ -673,7 +671,7 @@ void FieldArchive::addDAT(const QString &name, QList<QTreeWidgetItem *> &items)
 	fileList.append(field);
 }
 
-quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
+FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 {
 	foreach(Field *field, fileList)	delete field;
 	foreach(TutFile *tut, tuts)		delete tut;
@@ -692,7 +690,7 @@ quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
 
 		emit nbFilesChanged(list.size());
 
-		//		QTime t;t.start();
+		// QTime t;t.start();
 
 		for(int i=0 ; i<list.size() ; ++i) {
 			QCoreApplication::processEvents();
@@ -703,20 +701,18 @@ quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
 			addDAT(name.left(name.lastIndexOf('.')), items);
 		}
 
-		//		qDebug("Ouverture : %d ms", t.elapsed());
+		// qDebug("Ouverture : %d ms", t.elapsed());
 	} else if(isDatFile()) {
 		QString path = fic->fileName();
 		QString name = path.mid(path.lastIndexOf('/')+1);
 		addDAT(name.left(name.lastIndexOf('.')), items);
 	} else if(isIso()) {
 		isoFieldDirectory = iso->rootDirectory()->directory("FIELD");
-		if(isoFieldDirectory == NULL) {
-			return 4;
-		}
+		if(isoFieldDirectory == NULL)	return FieldNotFound;
 
 		emit nbFilesChanged(isoFieldDirectory->filesAndDirectories().size());
 
-		//		QTime t;t.start();
+		// QTime t;t.start();
 
 		int i=0;
 		foreach(IsoFile *file, isoFieldDirectory->files()) {
@@ -728,16 +724,16 @@ quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
 				addDAT(name.left(name.lastIndexOf('.')), items);
 			}
 		}
-		//		qDebug("Ouverture : %d ms", t.elapsed());
+		// qDebug("Ouverture : %d ms", t.elapsed());
 	} else if(isLgp()) {
-		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))	return 1;
+		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))	return ErrorOpening;
 
 		quint32 nbFiles;
 
 		fic->seek(12);
 		fic->read((char *)&nbFiles,4);
 
-		if(nbFiles==0 || fic->size()<16+27*nbFiles)	return 2;
+		if(nbFiles==0 || fic->size()<16+27*nbFiles)		return Invalid;
 
 		quint32 filePos;
 		QList<quint32> listPos;
@@ -758,14 +754,14 @@ quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
 				tutPos.insert(name, filePos);
 			}
 		}
-		if(listPos.isEmpty())	return 3;
+		if(listPos.isEmpty())	return FieldNotFound;
 		qSort(listPos);
 
 		emit nbFilesChanged(listPos.last());
 
 		quint32 fileSize, lzsSize, freq = listPos.size()>50 ? listPos.size()/50 : 1;
 
-		//		QTime t;t.start();
+		// QTime t;t.start();
 
 		Field *field;
 		i = 0;
@@ -803,7 +799,7 @@ quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		// qDebug() << "nbC : " << Opcode::COUNT;
 		// qDebug("-------------------------------------------------");
 	}
-	if(items.isEmpty())	return 3;
+	if(items.isEmpty())	return FieldNotFound;
 
 	if(Data::field_names.isEmpty()) {
 		Data::openMaplist(isLgp());
@@ -823,7 +819,7 @@ quint8 FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		fieldsSortByMapId.insert(item->text(1), id);
 	}
 
-	return 0;
+	return Ok;
 }
 
 qint32 FieldArchive::findField(const QString &name) const
@@ -846,9 +842,9 @@ void FieldArchive::setSaved()
 	}
 }
 
-quint8 FieldArchive::save(QString path)
+FieldArchive::ErrorCode FieldArchive::save(QString path)
 {
-	quint32 nbFiles, pos, taille, oldtaille, fileSize;
+	quint32 nbFiles, pos, taille, oldtaille;
 	qint32 fieldID;
 	bool saveAs;
 
@@ -864,28 +860,25 @@ quint8 FieldArchive::save(QString path)
 			Field *field = fileList.at(fieldID);
 			if(field->isOpen() && field->isModified())
 			{
-				QTemporaryFile tempFic;
-				if(!tempFic.open())		return 2;
-				QFile DATfic(isDatFile() ? fic->fileName() : dir->filePath(field->getName()+".DAT"));
-				if(!DATfic.open(QIODevice::ReadOnly)) return 1;
-				DATfic.read((char *)&fileSize,4);
-				tempFic.write(field->save(DATfic.read(fileSize), true));
-				if(!DATfic.remove()) return 4;
-				tempFic.copy(DATfic.fileName());
+				QString datPath = isDatFile() ? fic->fileName() : dir->filePath(field->getName()+".DAT");
+				qint8 err = field->save(datPath, true);
+				if(err == 2)	return ErrorOpening;
+				if(err == 1)	return Invalid;
+				if(err != 0)	return NotImplemented;
 			}
 			emit progress(fieldID);
 		}
 
 		setSaved();
 
-		return 0;
+		return Ok;
 	}
 	else if(isLgp())
 	{
 		QMap<quint32, quint32> positions1, positions2;
 		QMap<Field *, quint32> newPositions;
 		QMap<QString, quint32> newPositionsTut;
-		QByteArray fileName, newFile;
+		QByteArray fileName;
 		QString tutName;
 
 		if(path.isNull())
@@ -895,14 +888,14 @@ quint8 FieldArchive::save(QString path)
 		saveAs = QFileInfo(path) != QFileInfo(*fic);
 
 		// QFile fic(this->path());
-		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))	return 1;
+		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))	return ErrorOpening;
 		QFile tempFic(path % ".makoutemp");
-		if(!tempFic.open(QIODevice::WriteOnly))		return 2;
+		if(!tempFic.open(QIODevice::WriteOnly | QIODevice::Truncate))		return ErrorOpeningTemp;
 
 		fic->seek(12);
 		fic->read((char *)&nbFiles, 4);
 
-		if(nbFiles>1000 || nbFiles==0) 	return 5;
+		if(nbFiles>1000 || nbFiles==0) 	return Invalid;
 
 		emit nbFilesChanged(nbFiles+21);
 
@@ -933,14 +926,14 @@ quint8 FieldArchive::save(QString path)
 		{
 			QCoreApplication::processEvents();
 
-			if(!fic->seek(i.key()))	return 3;
+			if(!fic->seek(i.key()))	return Invalid;
 
 			//Listage positions 2
 			pos = tempFic.pos();
 			positions2.insert(i.value(), pos);
 
 			fieldID = findField(QString(fileName = fic->read(20)));
-			if(fileName.size() != 20 || fic->read((char *)&oldtaille, 4) != 4) 	return 3;
+			if(fileName.size() != 20 || fic->read((char *)&oldtaille, 4) != 4) 	return Invalid;
 			tempFic.write(fileName);// File Name
 			// qDebug() << QString(fileName);
 
@@ -955,11 +948,9 @@ quint8 FieldArchive::save(QString path)
 				if(field->isOpen() && field->isModified())
 				{
 //					qDebug() << field->getName() << "======== modified";
-					//Récupérer l'ancien fichier
-					if(fic->read((char *)&fileSize, 4) != 4)	return 3;
-					if(oldtaille != fileSize+4)					return 3;
+					QByteArray newFile;
 					//Créer le nouveau fichier à partir de l'ancien
-					newFile = field->save(fic->read(fileSize), true);
+					if(!field->save(newFile, true))				return Invalid;
 
 					//Refaire les tailles
 					taille = newFile.size();
@@ -1033,7 +1024,7 @@ quint8 FieldArchive::save(QString path)
 
 		// Remove or close the old file
 		if(!saveAs) {
-			if(!fic->remove())	return 4;
+			if(!fic->remove())	return ErrorRemoving;
 		} else {
 			fic->close();
 			fic->setFileName(path);
@@ -1043,8 +1034,8 @@ quint8 FieldArchive::save(QString path)
 		//t.restart();
 
 		// Move the temporary file
-		if(QFile::exists(path) && !QFile::remove(path))		return 4;
-		if(!tempFic.rename(path))			return 4;
+		if(QFile::exists(path) && !QFile::remove(path))		return ErrorRemoving;
+		if(!tempFic.rename(path))			return ErrorRemoving;
 
 		//qDebug("Copy the temporary file: %d ms", t.elapsed());
 
@@ -1069,7 +1060,7 @@ quint8 FieldArchive::save(QString path)
 		setSaved();
 
 		// qDebug("Ecrire le nouvel Lgp : %d ms", t.elapsed());
-		return 0;
+		return Ok;
 	}
 	else if(isIso())
 	{
@@ -1079,7 +1070,7 @@ quint8 FieldArchive::save(QString path)
 		saveAs = QFileInfo(path) != QFileInfo(*iso);
 
 		IsoArchive isoTemp(path%".makoutemp");
-		if(!isoTemp.open(QIODevice::ReadWrite | QIODevice::Truncate))		return 2;
+		if(!isoTemp.open(QIODevice::ReadWrite | QIODevice::Truncate))		return ErrorOpening;
 
 		emit nbFilesChanged(100);
 
@@ -1094,56 +1085,62 @@ quint8 FieldArchive::save(QString path)
 					continue;
 				}
 
-				isoField->setData(field->save(iso->file(isoField).mid(4), true));
-				archiveModified = true;
+				QByteArray newData;
+
+				if(field->save(newData, true)) {
+					isoField->setData(newData);
+					archiveModified = true;
+				} else {
+					return Invalid;
+				}
 			}
 		}
 
 		if(!archiveModified) {
-			return 3;
+			return Invalid;
 		}
 
 		// FIELD/FIELD.BIN
 
 		IsoFile *isoFieldBin = isoFieldDirectory->file("FIELD.BIN");
 		if(isoFieldBin == NULL) {
-			return 3;
+			return Invalid;
 		}
 
 		QByteArray data = updateFieldBin(iso->file(isoFieldBin), isoFieldDirectory);
 		if(data.isEmpty()) {
-			return 3;
+			return Invalid;
 		}
 		isoFieldBin->setData(data);
 
 //		qDebug() << "start";
 
 		if(!iso->pack(&isoTemp, this, isoFieldDirectory))
-			return 3;
+			return Invalid;
 
 		// End
 
 		// Remove or close the old file
 		if(!saveAs) {
-			if(!iso->remove())	return 4;
+			if(!iso->remove())	return ErrorRemoving;
 		} else {
 			iso->close();
 			iso->setFileName(path);
 		}
 		// Move the temporary file
-		if(QFile::exists(path) && !QFile::remove(path))		return 4;
+		if(QFile::exists(path) && !QFile::remove(path))		return ErrorRemoving;
 		isoTemp.rename(path);
 
-		if(!iso->open(QIODevice::ReadOnly))		return 4;
+		iso->open(QIODevice::ReadOnly);
 
 		// Clear "isModified" state
 		iso->applyModifications(isoFieldDirectory);
 		setSaved();
 
-		return 0;
+		return Ok;
 	}
 
-	return 6;
+	return NotImplemented;
 }
 
 QByteArray FieldArchive::updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory)

@@ -41,14 +41,14 @@ void Section1File::clear()
 
 bool Section1File::open(const QByteArray &data)
 {
-	quint16 posTextes;
-	int contenuSize = data.size();
+	quint16 posTexts;
+	int dataSize = data.size();
 	const char *constData = data.constData();
 
-	if(contenuSize < 32)	return false;
+	if(dataSize < 32)	return false;
 
-	memcpy(&posTextes, &constData[4], 2);//posTextes (et fin des scripts)
-	if((quint32)contenuSize < posTextes || posTextes < 32)	return false;
+	memcpy(&posTexts, &constData[4], 2);//posTexts (et fin des scripts)
+	if((quint32)dataSize < posTexts || posTexts < 32)	return false;
 
 	clear();
 
@@ -64,7 +64,7 @@ bool Section1File::open(const QByteArray &data)
 	memcpy(&nbAKAO, &constData[6], 2);//nbAKAO
 	posScripts = 32+8*nbScripts+4*nbAKAO;
 
-	if(posTextes < posScripts+64*nbScripts)	return false;
+	if(posTexts < posScripts+64*nbScripts)	return false;
 
 	memcpy(&_scale, &constData[8], 2);
 	_author = data.mid(16, 8);
@@ -87,7 +87,7 @@ bool Section1File::open(const QByteArray &data)
 		memcpy(positions, &constData[posScripts+64*i], 64);
 
 		//Ajout de la position de fin
-		if(i==nbScripts-1)	positions[32] = posTextes;
+		if(i==nbScripts-1)	positions[32] = posTexts;
 		else
 		{
 			memcpy(&pos, &constData[posScripts+64*i+64], 2);
@@ -101,7 +101,7 @@ bool Section1File::open(const QByteArray &data)
 					memcpy(&pos, &constData[posScripts+64*(i+grpVides)+64], 2);
 					grpVides++;
 				}
-				if(i+grpVides==nbScripts)	positions[32] = posTextes;
+				if(i+grpVides==nbScripts)	positions[32] = posTexts;
 				else	positions[32] = pos;
 			}
 		}
@@ -142,29 +142,29 @@ bool Section1File::open(const QByteArray &data)
 	}
 	else
 	{
-		posAKAO = contenuSize;
+		posAKAO = dataSize;
 	}
 
 	/* ---------- TEXTS ---------- */
 
-	if((posAKAO -= posTextes) > 4)//If there are texts
+	if((posAKAO -= posTexts) > 4)//If there are texts
 	{
 		quint16 posDeb, posFin, nbTextes;
-		if(contenuSize < posTextes+2)	return false;
-		memcpy(&posDeb, &constData[posTextes+2], 2);
+		if(dataSize < posTexts+2)	return false;
+		memcpy(&posDeb, &constData[posTexts+2], 2);
 		nbTextes = posDeb/2 - 1;
 
 		for(quint16 i=1 ; i<nbTextes ; ++i)
 		{
-			memcpy(&posFin, &constData[posTextes+2+i*2], 2);
+			memcpy(&posFin, &constData[posTexts+2+i*2], 2);
 
-			if(contenuSize < posTextes+posFin)	return false;
+			if(dataSize < posTexts+posFin)	return false;
 
-			_texts.append(new FF7Text(data.mid(posTextes+posDeb, posFin-posDeb)));
+			_texts.append(new FF7Text(data.mid(posTexts+posDeb, posFin-posDeb)));
 			posDeb = posFin;
 		}
-		if((quint32)contenuSize < posAKAO)	return false;
-		_texts.append(new FF7Text(data.mid(posTextes+posDeb, posAKAO-posDeb)));
+		if((quint32)dataSize < posAKAO)	return false;
+		_texts.append(new FF7Text(data.mid(posTexts+posDeb, posAKAO-posDeb)));
 	}
 
 	opened = true;
@@ -176,13 +176,13 @@ QByteArray Section1File::save(const QByteArray &data) const
 {
 	QByteArray grpScriptNames, positionsScripts, positionsAKAO, allScripts, realScript, positionsTexts, allTexts, allAKAOs;
 	quint32 posAKAO, posFirstAKAO;
-	quint16 posTextes, posScripts, newPosTextes, newNbAKAO, pos;
+	quint16 posTexts, posScripts, newPosTexts, newNbAKAO, pos;
 	quint8 nbGrpScripts, newNbGrpScripts;
 	const char *constData = data.constData();
 
 	nbGrpScripts = (quint8)data.at(2);//nbGrpScripts
 	newNbGrpScripts = _grpScripts.size();
-	memcpy(&posTextes, &constData[4], 2);//posTextes (et fin des scripts)
+	memcpy(&posTexts, &constData[4], 2);//posTexts (et fin des scripts)
 
 	if(_tut && _tut->isModified()) {
 		newNbAKAO = _tut->size();
@@ -209,7 +209,7 @@ QByteArray Section1File::save(const QByteArray &data) const
 	}
 
 	//Création nouvelles positions Textes
-	newPosTextes = posScripts + allScripts.size();
+	newPosTexts = posScripts + allScripts.size();
 
 	quint16 newNbText = _texts.size();
 
@@ -222,10 +222,10 @@ QByteArray Section1File::save(const QByteArray &data) const
 	}
 
 	if(_tut && _tut->isModified()) {
-		allAKAOs = _tut->save(positionsAKAO, newPosTextes + (2 + newNbText*2 + allTexts.size()));
+		allAKAOs = _tut->save(positionsAKAO, newPosTexts + (2 + newNbText*2 + allTexts.size()));
 	} else if(newNbAKAO > 0) {
 		memcpy(&posFirstAKAO, &constData[32+nbGrpScripts*8], 4);
-		qint32 diff = (newPosTextes - posTextes) + ((2 + newNbText*2 + allTexts.size()) - (posFirstAKAO - posTextes));// (newSizeBeforeTexts - oldSizeBeforeTexts) + (newSizeTexts - olSizeTexts)
+		qint32 diff = (newPosTexts - posTexts) + ((2 + newNbText*2 + allTexts.size()) - (posFirstAKAO - posTexts));// (newSizeBeforeTexts - oldSizeBeforeTexts) + (newSizeTexts - olSizeTexts)
 
 		//Création nouvelles positions AKAO
 		for(quint32 i=0 ; i<newNbAKAO ; ++i)
@@ -244,7 +244,7 @@ QByteArray Section1File::save(const QByteArray &data) const
 	return data.left(2) //Début
 			.append((char)newNbGrpScripts) //nbGrpScripts
 			.append((char)nbObjets3D) //nbObjets3D
-			.append((char *)&newPosTextes, 2) //PosTextes
+			.append((char *)&newPosTexts, 2) //PosTextes
 			.append((char *)&newNbAKAO, 2) //AKAO count
 			.append((char *)&_scale, 2)
 			.append(&constData[10], 6) //Empty

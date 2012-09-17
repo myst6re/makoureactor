@@ -482,7 +482,7 @@ FieldModelLoaderPC *FieldPC::getFieldModelLoader(bool open)
 	FieldModelLoaderPC *modelLoader = (FieldModelLoaderPC *)this->modelLoader;
 	if(!modelLoader)	modelLoader = new FieldModelLoaderPC();
 	if(open && !modelLoader->isLoaded()) {
-		modelLoader->load(sectionData(ModelLoader), this->name);
+		modelLoader->load(sectionData(ModelLoader));
 		//	Data::currentCharNames = model_nameChar;
 		//	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
 		//	Data::currentAnimNames = &fieldModelLoader->model_anims;
@@ -519,26 +519,26 @@ void FieldPC::setPosition(quint32 position)
 		this->position = position;
 }
 
-QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
+bool FieldPC::save(QByteArray &newData, bool compress)
 {
-	QByteArray decompresse = LZS::decompress(fileData), newData, section, toc;
-	const char *decompresseData = decompresse.constData();
-	quint32 startSections[9], size, section_size;
+	if(!isOpen())	return false;
 
-	startSections[0] = 42;
-	for(quint8 i=1 ; i<9 ; ++i)
-		memcpy(&startSections[i], &decompresseData[6+4*i], 4);
+	QByteArray decompresse = fieldArchive->getFieldData(this), section, toc;
+	const char *decompresseData = decompresse.constData();
+	quint32 size, section_size;
+
+	if(decompresse.isEmpty())	return false;
 
 	// Header + pos section 1
 	toc.append(decompresseData, 10);
 
 	// Section 1 (scripts + textes + akaos/tutos)
 	if(section1 && section1->isModified()) {
-		section = section1->save(decompresse.mid(startSections[0]+4, startSections[1]-startSections[0]-4));
+		section = section1->save(decompresse.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4));
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[startSections[0]], startSections[1]-startSections[0]);
+		newData.append(&decompresseData[sectionPositions[0]], sectionPositions[1]-sectionPositions[0]);
 	}
 
 	size = 42 + newData.size();
@@ -550,7 +550,7 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[startSections[1]], startSections[2]-startSections[1]);
+		newData.append(&decompresseData[sectionPositions[1]], sectionPositions[2]-sectionPositions[1]);
 	}
 
 	size = 42 + newData.size();
@@ -558,18 +558,18 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 
 	// Section 3 (model loader PC)
 	if(modelLoader && modelLoader->isLoaded() && modelLoader->isModified()) {
-		section = getFieldModelLoader()->save(this->name);
+		section = getFieldModelLoader()->save();
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[startSections[2]], startSections[3]-startSections[2]);
+		newData.append(&decompresseData[sectionPositions[2]], sectionPositions[3]-sectionPositions[2]);
 	}
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);
 	
 	// Section 4 (background palette PC)
-	newData.append(&decompresseData[startSections[3]], startSections[4]-startSections[3]);
+	newData.append(&decompresseData[sectionPositions[3]], sectionPositions[4]-sectionPositions[3]);
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);
@@ -580,14 +580,14 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[startSections[4]], startSections[5]-startSections[4]);
+		newData.append(&decompresseData[sectionPositions[4]], sectionPositions[5]-sectionPositions[4]);
 	}
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);
 
 	// Section 6 (background tileMap -unused-)
-	newData.append(&decompresseData[startSections[5]], startSections[6]-startSections[5]);
+	newData.append(&decompresseData[sectionPositions[5]], sectionPositions[6]-sectionPositions[5]);
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);
@@ -596,10 +596,9 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 	if(_encounter && _encounter->isModified()) {
 		section = _encounter->save();
 		section_size = section.size();
-
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[startSections[6]], startSections[7]-startSections[6]);
+		newData.append(&decompresseData[sectionPositions[6]], sectionPositions[7]-sectionPositions[6]);
 	}
 
 	size = 42 + newData.size();
@@ -609,17 +608,16 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 	if(inf && inf->isModified()) {
 		section = inf->save();
 		section_size = section.size();
-
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[startSections[7]], startSections[8]-startSections[7]);
+		newData.append(&decompresseData[sectionPositions[7]], sectionPositions[8]-sectionPositions[7]);
 	}
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4);
 
 	// Section 9 (background PC)
-	newData.append(decompresse.mid(startSections[8]));
+	newData.append(decompresse.mid(sectionPositions[8]));
 
 	newData.prepend(toc);
 
@@ -640,10 +638,11 @@ QByteArray FieldPC::save(const QByteArray &fileData, bool compress)
 	{
 		QByteArray compresse = LZS::compress(newData);
 		quint32 taille = compresse.size();
-		return QByteArray((char *)&taille, 4).append(compresse);
+		newData = QByteArray((char *)&taille, 4).append(compresse);
+		return true;
 	}
 
-	return newData;
+	return true;
 }
 
 qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldParts part)
@@ -656,7 +655,7 @@ qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldParts part)
 
 		if(part.testFlag(ModelLoader)) {
 			FieldModelLoaderPC *modelLoader = getFieldModelLoader(false);
-			modelLoader->load(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4), this->name);
+			modelLoader->load(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4));
 			modelLoader->setModified(true);
 		}
 	}

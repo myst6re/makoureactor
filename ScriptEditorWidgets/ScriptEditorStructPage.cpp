@@ -351,7 +351,6 @@ void ScriptEditorLabelPage::setOpcode(Opcode *opcode)
 
 void ScriptEditorJumpPageInterface::fillLabelList(bool jumpBack)
 {
-	qDebug() << "ScriptEditorJumpPageInterface::fillLabelList" << jumpBack << (int)_opcode << (int)label;
 	OpcodeJump *opcodeJump = (OpcodeJump *)_opcode;
 
 	label->blockSignals(true);

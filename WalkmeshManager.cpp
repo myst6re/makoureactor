@@ -454,8 +454,8 @@ void WalkmeshManager::fill(Field *field)
 	if(field->getInf() == infFile || !field)	return;
 
 	infFile = field->getInf();
-	idFile = field->getId();
-	caFile = field->getCa();
+	idFile = field->walkmesh();
+	caFile = field->camera();
 
 	if(!idFile->isOpen() || !caFile->isOpen() || !infFile->isOpen()) {
 		QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Erreur d'ouverture du walkmesh"));

@@ -29,6 +29,7 @@ public:
 	};
 
 	Script();
+	explicit Script(const QList<Opcode *> &opcodes);
 	explicit Script(const QByteArray &script);
 	virtual ~Script();
 
@@ -71,7 +72,7 @@ public:
 	const QList<Opcode *> &getExpandedItems() const;
 	void setExpandedItems(const QList<Opcode *> &expandedItems);
 
-	static int posReturn(const QByteArray &script);
+	Script *splitScriptAtReturn();
 	static Opcode *createOpcode(const QByteArray &script, int pos=0);
 	static Opcode *copyOpcode(Opcode *opcode);
 private:

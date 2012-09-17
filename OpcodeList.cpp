@@ -400,7 +400,7 @@ void OpcodeList::changeHist(HistoricType type, int opcodeID, Opcode *data)
 	redo_A->setEnabled(false);
 	hists.push(hist);
 	restoreHists.clear();
-	qDebug() << showHistoric();
+//	qDebug() << showHistoric();
 }
 
 void OpcodeList::changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<Opcode *> &data)
@@ -414,16 +414,29 @@ void OpcodeList::changeHist(HistoricType type, const QList<int> &opcodeIDs, cons
 	redo_A->setEnabled(false);
 	hists.push(hist);
 	restoreHists.clear();
-	qDebug() << showHistoric();
+//	qDebug() << showHistoric();
 }
 
 void OpcodeList::clearHist()
 {
 	undo_A->setEnabled(false);
 	redo_A->setEnabled(false);
-	hists.clear();
-	restoreHists.clear();
-	qDebug() << showHistoric();
+
+	while(!hists.isEmpty()) {
+		Historic hist = hists.pop();
+		foreach(Opcode *opcode, hist.data) {
+			delete opcode;
+		}
+	}
+
+	while(!restoreHists.isEmpty()) {
+		Historic hist = restoreHists.pop();
+		foreach(Opcode *opcode, hist.data) {
+			delete opcode;
+		}
+	}
+
+//	qDebug() << showHistoric();
 }
 
 void OpcodeList::undo()

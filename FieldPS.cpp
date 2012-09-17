@@ -588,11 +588,15 @@ FieldModelFilePS *FieldPS::getFieldModel(int modelID, int animationID, bool anim
 	return (FieldModelFilePS *)fieldModel;
 }
 
-QByteArray FieldPS::save(const QByteArray &fileData, bool compress)
-{	
-	QByteArray decompresse = LZS::decompress(fileData), toc, newData;
+bool FieldPS::save(QByteArray &newData, bool compress)
+{
+	if(!isOpen())	return false;
+
+	QByteArray decompresse = fieldArchive->getFieldData(this), toc;
 	const char *decompresseData = decompresse.constData();
 	quint32 padd, pos, debutSections[9];
+
+	if(decompresse.isEmpty())	return false;
 
 	for(quint8 i=0 ; i<7 ; ++i)
 		memcpy(&debutSections[i], &decompresseData[4*i], 4);
@@ -669,8 +673,9 @@ QByteArray FieldPS::save(const QByteArray &fileData, bool compress)
 	{
 		QByteArray compresse = LZS::compress(newData);
 		quint32 taille = compresse.size();
-		return QByteArray((char *)&taille, 4).append(compresse);
+		newData = QByteArray((char *)&taille, 4).append(compresse);
+		return true;
 	}
 
-	return newData;
+	return true;
 }

@@ -22,6 +22,11 @@ Script::Script() :
 {
 }
 
+Script::Script(const QList<Opcode *> &opcodes) :
+	opcodes(opcodes), valid(true)
+{
+}
+
 Script::Script(const QByteArray &script)
 {
 	valid = openScript(script);
@@ -98,7 +103,12 @@ bool Script::openScript(const QByteArray &script)
 Opcode *Script::createOpcode(const QByteArray &script, int pos)
 {
 	quint8 opcode = (quint8)script.at(pos);
-	quint8 size = Opcode::length[opcode] - 1;
+	quint8 size = Opcode::length[opcode] - 1; // length of arguments
+
+	if(script.size() < pos+1 + size) {
+		qWarning() << "unknown opcode" << opcode << script.size() << pos << size << (pos+1 + size);
+		return new OpcodeUnknown(opcode, script.mid(pos+1));
+	}
 
 	switch(opcode)
 	{
@@ -124,6 +134,10 @@ Opcode *Script::createOpcode(const QByteArray &script, int pos)
 			size += 2;
 			break;
 		}
+		if(script.size() < pos+1 + size) {
+			qWarning() << "unknown opcode SPECIAL" << opcode << (script.size() - pos - 1);
+			return new OpcodeUnknown(opcode, script.mid(pos+1));
+		}
 		return new OpcodeSPECIAL(script.mid(pos+1, size));
 	case 0x10:	return new OpcodeJMPF(script.mid(pos+1, size));
 	case 0x11:	return new OpcodeJMPFL(script.mid(pos+1, size));
@@ -144,8 +158,14 @@ Opcode *Script::createOpcode(const QByteArray &script, int pos)
 	case 0x26:	return new OpcodeBLINK(script.mid(pos+1, size));
 	case 0x27:	return new OpcodeBGMOVIE(script.mid(pos+1, size));
 	case 0x28://KAWAI
-		size += (quint8)script.at(pos+1);
-		return new OpcodeKAWAI(script.mid(pos+1, size));
+		if(pos+1 < script.size()) {
+			size = (quint8)script.at(pos+1) - 1;
+			if(pos+1 + size <= script.size()) {
+				return new OpcodeKAWAI(script.mid(pos+1, size));
+			}
+		}
+		qWarning() << "unknown opcode KAWAI" << opcode << size << (script.size() - pos - 1);
+		return new OpcodeUnknown(opcode, script.mid(pos+1));
 	case 0x29:	return new OpcodeKAWIW();
 	case 0x2A:	return new OpcodePMOVA(script.mid(pos+1, size));
 	case 0x2B:	return new OpcodeSLIP(script.mid(pos+1, size));
@@ -361,7 +381,9 @@ Opcode *Script::createOpcode(const QByteArray &script, int pos)
 	case 0xFD:	return new OpcodeCMUSC(script.mid(pos+1, size));
 	case 0xFE:	return new OpcodeCHMST(script.mid(pos+1, size));
 	case 0xFF:	return new OpcodeGAMEOVER();
-	default:	return new OpcodeUnknown(opcode, script.mid(pos+1, size));
+	default:
+		qWarning() << "unknown opcode" << opcode << (script.size() - pos - 1);
+		return new OpcodeUnknown(opcode, script.mid(pos+1, size));
 	}
 }
 
@@ -622,60 +644,34 @@ Opcode *Script::copyOpcode(Opcode *opcode)
 	}
 }
 
-int Script::posReturn(const QByteArray &script)
+Script *Script::splitScriptAtReturn()
 {
-	quint16 pos=0, size, param16;
-	int scriptSize = script.size();
-	quint8 key;
-	
-	if(scriptSize <= 0)	return -1;
-	
-	while(pos < scriptSize)
-	{
-		size = 0;
-		switch(key = (quint8)script.at(pos))
-		{
-		case 0x10://Jump
-			pos += (quint8)script.at(pos+1) - 1;
-			break;
-		case 0x11://Jump
-			memcpy(&param16, script.mid(pos+1,2), 2);
-			pos += param16 - 1;
-			break;
-		case 0x14://If -> Jump
-			pos += (quint8)script.at(pos+5) - 1;
-			break;
-		case 0x15://If -> Jump
-			memcpy(&param16, script.mid(pos+5,2), 2);
-			pos += param16 - 1;
-			break;
-		case 0x16:case 0x18://If -> Jump
-			pos += (quint8)script.at(pos+7) - 1;
-			break;
-		case 0x17:case 0x19://If -> Jump
-			memcpy(&param16, script.mid(pos+7,2), 2);
-			pos += param16 - 1;
-			break;
-		case 0x0F://SPECIAL
-			switch((quint8)script.at(pos+1))
-			{
-			case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
-				size = 1;
-				break;
-			case 0xF8:case 0xFD:
-				size = 2;
+	int gotoLabel = -1;
+	int opcodeID = 0;
+
+	foreach(Opcode *opcode, opcodes) {
+		if(opcode->isLabel()) {
+			if(gotoLabel != -1 && ((OpcodeLabel *)opcode)->label() == (quint32)gotoLabel) {
+				gotoLabel = -1;
+			}
+		} else if(gotoLabel == -1) {
+			if(opcode->isJump() && !((OpcodeJump *)opcode)->isBackJump()) {
+				gotoLabel = ((OpcodeJump *)opcode)->label();
+			} else if(opcode->id() == Opcode::RET || opcode->id() == Opcode::RETTO) {
+				++opcodeID;
 				break;
 			}
-			break;
-		case 0x28://KAWAI
-			size = (quint8)script.at(pos+1);
-			break;
 		}
-		pos += Opcode::length[key] + size;
-		if(key == 0x00 || key == 0x07)	break;
+		++opcodeID;
 	}
-	
-	return pos;
+
+	Script *s = new Script(opcodes.mid(opcodeID));
+	int size = opcodes.size();
+	for( ; opcodeID < size ; ++opcodeID) {
+		opcodes.removeLast();
+	}
+
+	return s;
 }
 
 int Script::size() const
@@ -695,7 +691,7 @@ bool Script::isValid() const
 
 Opcode *Script::getOpcode(quint16 opcodeID) const
 {
-	return opcodes.at(opcodeID);
+	return opcodes.value(opcodeID);
 }
 
 const QList<Opcode *> &Script::getOpcodes() const

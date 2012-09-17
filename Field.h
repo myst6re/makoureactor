@@ -82,17 +82,16 @@ public:
 	virtual bool getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)=0;
 
 	void setSaved();
-	virtual QByteArray save(const QByteArray &fileData, bool compress)=0;
-	qint8 exporter(const QString &path, const QByteArray &data, bool compress);
-	qint8 exporterDat(const QString &path, const QByteArray &data);
+	virtual bool save(QByteArray &newData, bool compress)=0;
+	qint8 save(const QString &path, bool compress);
 	qint8 importer(const QString &path, int type, FieldParts part);
 	virtual qint8 importer(const QByteArray &data, bool isPSField, FieldParts part);
 
 	Section1File *scriptsAndTexts(bool open=true);
 	EncounterFile *encounter(bool open=true);
 	TutFile *tutosAndSounds(bool open=true);
-	IdFile *getId(bool open=true);
-	CaFile *getCa(bool open=true);
+	IdFile *walkmesh(bool open=true);
+	CaFile *camera(bool open=true);
 	InfFile *getInf(bool open=true);
 	virtual FieldModelLoader *getFieldModelLoader(bool open=true)=0;
 	virtual FieldModelFile *getFieldModel(int modelID, int animationID=0, bool animate=true)=0;

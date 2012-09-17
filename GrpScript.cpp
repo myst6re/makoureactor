@@ -53,20 +53,13 @@ bool GrpScript::addScript(const QByteArray &script, bool explodeInit)
 
 	if(explodeInit && scripts.isEmpty())
 	{
-		quint16 pos = Script::posReturn(script);
-		s = new Script(script.left(pos));
+		s = new Script(script);
 		if(!s->isValid()) {
 			delete s;
 			return false;
 		}
-		scripts.append(s);
-
-		s = new Script(script.mid(pos));
-		if(!s->isValid()) {
-			delete s;
-			return false;
-		}
-		scripts.append(s);
+		scripts.append(s); // S0 - Init
+		scripts.append(s->splitScriptAtReturn()); // S0 - Main
 	}
 	else {
 		s = new Script(script);
@@ -87,7 +80,7 @@ bool GrpScript::addScript(const QByteArray &script, bool explodeInit)
 
 void GrpScript::setType()
 {
-	if(scripts.size()<1)	return;
+	if(scripts.isEmpty())	return;
 	character = -1;
 	director = animation = location = false;
 	
@@ -122,7 +115,7 @@ void GrpScript::setType()
 
 void GrpScript::getBgParams(QHash<quint8, quint8> &paramActifs) const
 {
-	if(scripts.size()<1)	return;
+	if(scripts.isEmpty())	return;
 
 	scripts.first()->getBgParams(paramActifs);
 }
@@ -158,7 +151,7 @@ int GrpScript::size() const
 
 Script *GrpScript::getScript(quint8 scriptID) const
 {
-	return scripts.at(scriptID);
+	return scripts.value(scriptID);
 }
 
 const QList<Script *> &GrpScript::getScripts() const
@@ -182,10 +175,13 @@ QByteArray GrpScript::toByteArray(quint8 scriptID) const
 {
 	if(scriptID == 0)
 	{
-		if(!scripts.at(0)->isEmpty())		return scripts.at(0)->toByteArray()+scripts.at(1)->toByteArray();
+		if(!scripts.isEmpty() && !scripts.at(0)->isEmpty())
+			return scripts.at(0)->toByteArray()+scripts.at(1)->toByteArray();
 		return QByteArray();
 	}
-	return scripts.at(scriptID+1)->toByteArray();
+	if(scriptID+1 < scripts.size())
+		return scripts.at(scriptID+1)->toByteArray();
+	return QByteArray();
 }
 
 int GrpScript::getTypeID()

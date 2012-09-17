@@ -26,8 +26,8 @@ class FieldModelLoaderPC : public FieldModelLoader
 {
 public:
 	FieldModelLoaderPC();
-	bool load(const QByteArray &data, const QString &name);
-	QByteArray save(const QString &name) const;
+	bool load(const QByteArray &data);
+	QByteArray save() const;
 	QString HRCName(int modelID) const;
 	QString AName(int modelID, int numA=0) const;
 
@@ -35,6 +35,7 @@ public:
 	QStringList model_nameChar;
 	QStringList model_nameHRC;
 	QList<QStringList> model_anims;
+	QList< QList<quint16> > model_anims_unknown;
 	QList<quint16> model_unknown;
 	QList<quint16> model_typeHRC;
 	QList< QList<QRgb> > colors;

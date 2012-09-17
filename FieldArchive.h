@@ -28,8 +28,12 @@ class FieldArchive : public QObject, IsoControl
 	Q_OBJECT
 
 public:
-	enum Sorting{
+	enum Sorting {
 		SortByName, SortByMapId
+	};
+
+	enum ErrorCode {
+		Ok, FieldNotFound, ErrorOpening, ErrorOpeningTemp, ErrorRemoving, Invalid, NotImplemented
 	};
 
 	FieldArchive();
@@ -67,8 +71,8 @@ public:
 	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting);
 
 	void close();
-	quint8 open(QList<QTreeWidgetItem *> &items);
-	quint8 save(QString path=QString());
+	ErrorCode open(QList<QTreeWidgetItem *> &items);
+	ErrorCode save(QString path=QString());
 
 	QString path() const;
 	QString chemin() const;
