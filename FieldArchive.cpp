@@ -60,6 +60,7 @@ FieldArchive::~FieldArchive()
 	if(fic!=NULL)	delete fic;
 	if(dir!=NULL)	delete dir;
 	if(iso!=NULL)	delete iso;
+	clearCachedData();
 }
 
 QString FieldArchive::path() const
@@ -361,12 +362,13 @@ void FieldArchive::searchAll()
 {
 	int size = fileList.size();
 
-	QSet<quint8> unknown1Values;
+//	QSet<quint8> unknown1Values;
 
 	for(int i=0 ; i<size ; ++i) {
 		Field *field = this->field(i);
 		if(field != NULL) {
-//			field->getInf();
+//			qDebug() << field->getName();
+			field->encounter();
 //			Section1File *section1 = field->scriptsAndTexts();
 //			if(section1->isOpen()) {
 ////				foreach(GrpScript *grpScript, section1->grpScripts()) {
@@ -410,11 +412,11 @@ void FieldArchive::searchAll()
 		}
 	}
 
-	QList<quint8> l = unknown1Values.toList();
-	qSort(l);
-	foreach(quint8 u1, l) {
-		qDebug() << u1;
-	}
+//	QList<quint8> l = unknown1Values.toList();
+//	qSort(l);
+//	foreach(quint8 u1, l) {
+//		qDebug() << u1;
+//	}
 }
 
 bool FieldArchive::searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const
@@ -659,6 +661,7 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 void FieldArchive::close()
 {
 	if(fic!=NULL)	fic->close();
+	clearCachedData();
 }
 
 void FieldArchive::addDAT(const QString &name, QList<QTreeWidgetItem *> &items)

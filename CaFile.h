@@ -37,6 +37,7 @@ class CaFile
 {
 public:
 	CaFile();
+	CaFile(const QByteArray &data);
 	bool open(const QByteArray &data);
 	bool save(QByteArray &ca);
 	bool isOpen() const;
@@ -47,7 +48,7 @@ public:
 	const Camera &camera(int camID) const;
 	void setCamera(int camID, const Camera &cam);
 	void insertCamera(int camID, const Camera &cam);
-	void removeCamera(int camID);
+	bool removeCamera(int camID);
 private:
 	QList<Camera> cameras;
 	bool opened, modified;

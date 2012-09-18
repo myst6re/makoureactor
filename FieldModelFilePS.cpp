@@ -114,7 +114,7 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 
 	/*** Open skeleton ***/
 
-	curOff = openSkeleton(constData, curOff, BSX_data.size(), model.num_bones);
+	curOff = openSkeleton(constData, curOff,  model.num_bones);
 
 	if(curOff + model.num_parts * sizeof(Part) >= (quint32)BSX_data.size()) {
 		qWarning() << "invalid parts size" << model.num_parts;
@@ -272,7 +272,7 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 	return true;
 }
 
-int FieldModelFilePS::openSkeleton(const char *constData, int curOff, int size, quint8 numBones)
+int FieldModelFilePS::openSkeleton(const char *constData, int curOff, quint8 numBones)
 {
 	for(quint32 i=0 ; i<numBones ; ++i) {
 		BonePS bonePS;
@@ -473,7 +473,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 	return true;
 }
 
-QPixmap FieldModelFilePS::openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp)
+QPixmap FieldModelFilePS::openTexture(const char *constData, int /*size*/, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp)
 {
 //	if(imgHeader.offset_data + imgHeader.height * imgHeader.width*2 >= (quint32)size
 //			|| palHeader.offset_data + 510 >= (quint32)size) {
@@ -559,7 +559,7 @@ bool FieldModelFilePS::openBCX(const QByteArray &BCX, int animationID, bool anim
 
 	/*** Open skeleton ***/
 
-	curOff = openSkeleton(constData, curOff, BCX.size(), model.num_bones);
+	curOff = openSkeleton(constData, curOff, model.num_bones);
 
 	if(curOff + model.num_parts * sizeof(Part) >= (quint32)BCX.size()) {
 		qWarning() << "invalid parts size" << model.num_parts;

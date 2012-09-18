@@ -117,7 +117,6 @@ public:
 	void setUnknown1(const QByteArray &u);
 	QByteArray unknown2() const;
 	void setUnknown2(const QByteArray &u);
-	void test();
 private:
 	bool _isOpen, _isModified;
 	InfData data;

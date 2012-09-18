@@ -22,6 +22,12 @@ CaFile::CaFile() :
 {
 }
 
+CaFile::CaFile(const QByteArray &data) :
+	opened(false), modified(false)
+{
+	open(data);
+}
+
 bool CaFile::open(const QByteArray &data)
 {
 	const char *constData = data.constData();
@@ -113,10 +119,12 @@ void CaFile::insertCamera(int camID, const Camera &cam)
 	modified = true;
 }
 
-void CaFile::removeCamera(int camID)
+bool CaFile::removeCamera(int camID)
 {
 	if(cameras.size() > 1) {
 		cameras.removeAt(camID);
 		modified = true;
+		return true;
 	}
+	return false;
 }

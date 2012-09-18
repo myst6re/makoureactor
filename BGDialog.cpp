@@ -77,7 +77,8 @@ void BGDialog::fill(Field *field)
 
 	parameterChanged(0);
 	layerChanged();
-	fill();
+	image->setName(field->getName());
+	updateBG();
 }
 
 void BGDialog::clear()
@@ -221,7 +222,7 @@ void BGDialog::enableState(QListWidgetItem *item)
 	else
 		params.insert(parameter, params.value(parameter) & ~state);
 
-	fill();
+	updateBG();
 }
 
 void BGDialog::enableLayer(QListWidgetItem *item)
@@ -231,7 +232,7 @@ void BGDialog::enableLayer(QListWidgetItem *item)
 
 	layers[layer] = enabled;
 
-	fill();
+	updateBG();
 }
 
 void BGDialog::changeZ(int value)
@@ -240,12 +241,11 @@ void BGDialog::changeZ(int value)
 	if(items.isEmpty()) return;
 	z[items.first()->data(Qt::UserRole).toInt()-2] = value;// z[layer - 2]
 
-	fill();
+	updateBG();
 }
 
-void BGDialog::fill()
+void BGDialog::updateBG()
 {
 	if(!field)	return;
 	image->setPixmap(field->openBackground(params, z, layers));
-	image->setName(field->getName());
 }

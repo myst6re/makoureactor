@@ -3,8 +3,7 @@
 # #####################################################################
 TEMPLATE = app
 TARGET = 
-DEPENDPATH += . \
-    release
+DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input

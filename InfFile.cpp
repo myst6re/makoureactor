@@ -264,22 +264,3 @@ void InfFile::setUnknown2(const QByteArray &u)
 	memcpy(data.u2, u.leftJustified(24, '\0', true).constData(), 24);
 	_isModified = true;
 }
-
-void InfFile::test()
-{
-//	for(int i=0 ; i<12 ; ++i) {
-//		if(data.arrows[i].type == 0) {
-//			qDebug() << "arrow unknown" << QByteArray((char *)&data.arrows[i].type, 4).toHex();
-//		}
-//	}
-//	return;
-	if(data.u1 != 0) {
-		qDebug() << "blank1" << QByteArray((char *)&data.u1, 4).toHex() << data.u1 << int((data.u1 >> 16) & 0xFFFF) << int(data.u1 & 0xFFFF);
-	}
-	for(int i=0 ; i<24 ; ++i) {
-		if(data.u2[i] != 0) {
-			qDebug() << "blank2" << QByteArray((char *)&data.u2, 24).toHex();
-			break;
-		}
-	}
-}

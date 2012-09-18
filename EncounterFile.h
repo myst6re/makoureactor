@@ -33,6 +33,10 @@ typedef struct {
 class EncounterFile
 {
 public:
+	enum Table {
+		Table1=0, Table2=1
+	};
+
 	EncounterFile();
 	EncounterFile(const QByteArray &data);
 	bool isOpen() const;
@@ -40,8 +44,8 @@ public:
 	void setModified(bool);
 	bool open(const QByteArray &data);
 	QByteArray save() const;
-	const EncounterTable &encounterTable(bool tableID) const;
-	void setEncounterTable(bool tableID, const EncounterTable &table);
+	const EncounterTable &encounterTable(Table tableID) const;
+	void setEncounterTable(Table tableID, const EncounterTable &table);
 private:
 	EncounterTable tables[2];
 	bool _isOpen, _isModified;

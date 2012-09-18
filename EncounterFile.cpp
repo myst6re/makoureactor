@@ -67,12 +67,12 @@ QByteArray EncounterFile::save() const
 	return QByteArray((char *)&tables, sizeof(EncounterTable) * 2);
 }
 
-const EncounterTable &EncounterFile::encounterTable(bool tableID) const
+const EncounterTable &EncounterFile::encounterTable(Table tableID) const
 {
 	return tables[(int)tableID];
 }
 
-void EncounterFile::setEncounterTable(bool tableID, const EncounterTable &table)
+void EncounterFile::setEncounterTable(Table tableID, const EncounterTable &table)
 {
 	tables[(int)tableID] = table;
 	_isModified = true;

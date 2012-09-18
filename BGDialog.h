@@ -37,7 +37,7 @@ private slots:
 	void changeZ(int value);
 private:
 	void fillWidgets();
-	void fill();
+	void updateBG();
 
 	Field *field;
 	ApercuBGLabel *image;

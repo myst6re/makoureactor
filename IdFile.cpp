@@ -22,6 +22,12 @@ IdFile::IdFile() :
 {
 }
 
+IdFile::IdFile(const QByteArray &data) :
+	modified(false), opened(false), _unknown(0), _hasUnknownData(false)
+{
+	open(data);
+}
+
 bool IdFile::open(const QByteArray &data)
 {
 	const char *constData = data.constData();

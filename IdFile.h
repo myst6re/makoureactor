@@ -37,6 +37,7 @@ class IdFile
 {
 public:
 	IdFile();
+	IdFile(const QByteArray &data);
 	bool open(const QByteArray &data);
 	bool save(QByteArray &id);
 	bool isOpen() const;

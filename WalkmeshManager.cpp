@@ -672,14 +672,15 @@ void WalkmeshManager::removeCamera()
 	if(row < 0)		return;
 
 	if(caFile->isOpen() && row < caFile->cameraCount()) {
-		caFile->removeCamera(row);
-		delete camList->item(row);
-		for(int i=row ; i<camList->count() ; ++i) {
-			camList->item(i)->setText(tr("Camera %1").arg(i));
-		}
-		setCurrentCamera(row);
+		if(caFile->removeCamera(row)) {
+			delete camList->item(row);
+			for(int i=row ; i<camList->count() ; ++i) {
+				camList->item(i)->setText(tr("Camera %1").arg(i));
+			}
+			setCurrentCamera(row);
 
-		emit modified();
+			emit modified();
+		}
 	}
 }
 
