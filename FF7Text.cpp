@@ -385,9 +385,13 @@ int FF7Text::indexOf(const QRegExp &text, int from, int &size) const
 	return index;
 }
 
-int FF7Text::lastIndexOf(const QRegExp &text, int from, int &size) const
+int FF7Text::lastIndexOf(const QRegExp &text, int &from, int &size) const
 {
-	int index = text.lastIndexIn(getText(Config::value("jp_txt", false).toBool()), from);
-	if(index != -1)		size = text.matchedLength();
+	QString t = getText(Config::value("jp_txt", false).toBool());
+	int index = text.lastIndexIn(t, from);
+	if(index != -1) {
+		from = index - t.size();
+		size = text.matchedLength();
+	}
 	return index;
 }

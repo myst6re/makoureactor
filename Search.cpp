@@ -445,10 +445,10 @@ void Search::findPrev()
 		}
 	} else { // texts page
 		--from;
-		int size;
-		if(fieldArchive->searchTextP(text, fieldID, textID, from, size, sorting))
+		int index, size;
+		if(fieldArchive->searchTextP(text, fieldID, textID, from, index, size, sorting))
 		{
-			emit foundText(fieldID, textID, from, size);
+			emit foundText(fieldID, textID, index, size);
 			goto after;
 		}
 	}
@@ -460,7 +460,7 @@ void Search::findPrev()
 	Data::currentTextes = currentTextesSav;
 	if(!localSearch)	fieldID = 2147483647;
 	textID = grpScriptID = scriptID = opcodeID = 2147483647;
-	from = 0;
+	from = -1;
 
 after:
 	parentWidget()->setEnabled(true);

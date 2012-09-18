@@ -31,7 +31,7 @@ public:
 	void setText(const QString &text, bool jp);
 	bool contains(const QRegExp &text) const;
 	int indexOf(const QRegExp &text, int from, int &size) const;
-	int lastIndexOf(const QRegExp &text, int from, int &size) const;
+	int lastIndexOf(const QRegExp &text, int &from, int &size) const;
 private:
 	static QString getCaract(quint8 ord, quint8 table=0);
 	static const char *caract[256];

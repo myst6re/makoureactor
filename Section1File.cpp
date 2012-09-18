@@ -507,7 +507,7 @@ bool Section1File::searchTextInScriptsP(const QRegExp &text, int &groupID, int &
 	return searchTextInScriptsP(text, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
-bool Section1File::searchTextP(const QRegExp &text, int &textID, int &from, int &size) const
+bool Section1File::searchTextP(const QRegExp &text, int &textID, int &from, int &index, int &size) const
 {
 	if(textID >= _texts.size()) {
 		textID = _texts.size()-1;
@@ -515,10 +515,10 @@ bool Section1File::searchTextP(const QRegExp &text, int &textID, int &from, int 
 	}
 	if(textID < 0)
 		return false;
-	if((from = _texts.at(textID)->lastIndexOf(text, from, size)) != -1)
+	if((index = _texts.at(textID)->lastIndexOf(text, from, size)) != -1)
 		return true;
 
-	return searchTextP(text, --textID, from = -1, size);
+	return searchTextP(text, --textID, from = -1, index, size);
 }
 
 void Section1File::setWindow(const FF7Window &win)

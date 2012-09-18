@@ -83,6 +83,7 @@ private:
 
 class ScriptEditorJumpPageInterface : public ScriptEditorView
 {
+	Q_OBJECT
 public:
 	ScriptEditorJumpPageInterface(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0) :
 		ScriptEditorView(field, grpScript, script, opcodeID, parent) {}

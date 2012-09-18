@@ -642,7 +642,7 @@ bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &fieldID, int &
 	return false;
 }
 
-bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting)
+bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting)
 {
 	QMap<QString, int>::const_iterator i, begin;
 	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
@@ -651,9 +651,10 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 	{
 		QCoreApplication::processEvents();
 		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->scriptsAndTexts()->searchTextP(text, textID, from, size))
+		if(f!=NULL && f->scriptsAndTexts()->searchTextP(text, textID, from, index, size))
 			return true;
-		textID = from = 2147483647;
+		textID = 2147483647;
+		from = -1;
 	}
 	return false;
 }

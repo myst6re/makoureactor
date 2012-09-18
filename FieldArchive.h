@@ -68,7 +68,7 @@ public:
 	bool searchExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchMapJumpP(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
-	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting);
+	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting);
 
 	void close();
 	ErrorCode open(QList<QTreeWidgetItem *> &items);
