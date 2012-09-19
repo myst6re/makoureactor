@@ -111,7 +111,7 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 					int boneID = it.key();
 					QList<int> texs = _tex_files.value(boneID);
 					foreach(FieldModelGroup *group, it.value()->groups()) {
-						if(group->textureNumber() != -1 && group->textureNumber() < texs.size()) {
+						if(group->textureNumber() >= 0 && group->textureNumber() < texs.size()) {
 							group->setTextureNumber(texs.at(group->textureNumber()));
 						}
 					}
@@ -295,28 +295,31 @@ QPixmap FieldModelFilePC::open_tex(QFile *tex_file)
 	if(tex_file->read((char *)&fileSize, 4) != 4)			return QPixmap();
 	if(tex_file->size() < fileSize || fileSize < 236)		return QPixmap();
 
-	tex_file->seek(tex_file->pos()+48);
-	tex_file->read((char *)&nbPal, 4);
-	tex_file->read((char *)&entreesPal, 4);
-	tex_file->seek(tex_file->pos()+4);
-	tex_file->read((char *)&l, 4);
-	tex_file->read((char *)&h, 4);
-	tex_file->seek(tex_file->pos()+36);
-	tex_file->read((char *)&bitPerPx, 4);
-	tex_file->seek(tex_file->pos()+128);
+	if(!tex_file->seek(tex_file->pos()+48))					return QPixmap();
+	if(tex_file->read((char *)&nbPal, 4) != 4)				return QPixmap();
+	if(tex_file->read((char *)&entreesPal, 4) != 4)			return QPixmap();
+	if(!tex_file->seek(tex_file->pos()+4))					return QPixmap();
+	if(tex_file->read((char *)&l, 4) != 4)					return QPixmap();
+	if(tex_file->read((char *)&h, 4) != 4)					return QPixmap();
+	if(!tex_file->seek(tex_file->pos()+36))					return QPixmap();
+	if(tex_file->read((char *)&bitPerPx, 4) != 4)			return QPixmap();
+	if(!tex_file->seek(tex_file->pos()+128))				return QPixmap();
 
 	QImage tex(l, h, QImage::Format_ARGB32);
 	QRgb *pixels = (QRgb *)tex.bits();
 
 	int size = l*h*bitPerPx, i;
 	quint32 x=0, y=0;
-	char imageData[size];
+	char *imageData = new char[size];
 
 	if(nbPal > 0)
 	{
-		if(bitPerPx != 1)	return QPixmap();
+		if(bitPerPx != 1) {
+			delete imageData;
+			return QPixmap();
+		}
 
-		quint32 sizePal = entreesPal*4*nbPal;
+		quint32 sizePal = nbPal > 0 ? entreesPal*4 : 0;
 		char paletteData[sizePal];
 		if(tex_file->read(paletteData, sizePal)==sizePal && tex_file->read(imageData, size)==size)
 		{
@@ -326,6 +329,7 @@ QPixmap FieldModelFilePC::open_tex(QFile *tex_file)
 			{
 				index = ((quint8)imageData[i])*4;
 				if(index+3 >= sizePal) {
+					delete imageData;
 					return QPixmap();
 				}
 				pixels[x + y*l] = qRgba(paletteData[index+2], paletteData[index+1], paletteData[index], paletteData[index+3]);
@@ -340,16 +344,25 @@ QPixmap FieldModelFilePC::open_tex(QFile *tex_file)
 	}
 	else
 	{
-		if(bitPerPx != 2)	return QPixmap();
+		if(bitPerPx != 2 && bitPerPx != 3 && bitPerPx != 4) {
+			delete imageData;
+			return QPixmap();
+		}
 
 		if(tex_file->read(imageData, size)==size)
 		{
 			quint16 color;
 
-			for(i=0 ; i<size ; i+=2)
+			for(i=0 ; i<size ; i+=bitPerPx)
 			{
-				memcpy(&color, &imageData[i], 2);
-				pixels[x + y*l] = PsColor::fromPsColor(color);
+				if(bitPerPx == 2) {
+					memcpy(&color, &imageData[i], 2);
+					pixels[x + y*l] = PsColor::fromPsColor(color);
+				} else if(bitPerPx == 3) {
+					pixels[x + y*l] = qRgb(imageData[i+2], imageData[i+1], imageData[i]);
+				} else if(bitPerPx == 4) {
+					pixels[x + y*l] = qRgba(imageData[i+2], imageData[i+1], imageData[i], imageData[i+3]);
+				}
 
 				if(++x==l)
 				{
@@ -359,5 +372,7 @@ QPixmap FieldModelFilePC::open_tex(QFile *tex_file)
 			}
 		}
 	}
+	delete imageData;
+
 	return QPixmap::fromImage(tex);
 }

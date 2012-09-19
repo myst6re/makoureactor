@@ -109,20 +109,29 @@ void FieldModel::initializeGL()
 //	gluPerspective(70, (double)width()/(double)height(), 0.001, 1000.0);
 }
 
-void FieldModel::drawP(int boneID)
+void FieldModel::drawP(int boneID, GLuint &texture_id, int &lastTexID)
 {
 	if(!data || !data->isLoaded())	return;
 
 	foreach(FieldModelPart *p, data->parts(boneID)) {
 
 		foreach(FieldModelGroup *g, p->groups()) {
-			GLuint texture_id = -1;
 			bool hasTexture = g->textureNumber() > -1
 					&& (int)g->textureNumber() < data->loadedTextureCount();
 
-			if(hasTexture) {
-				glEnable(GL_TEXTURE_2D);
+			if(hasTexture && lastTexID != g->textureNumber()) {
+				if(texture_id != (GLuint)-1) {
+					deleteTexture(texture_id);
+				} else {
+					glEnable(GL_TEXTURE_2D);
+				}
 				texture_id = bindTexture(data->loadedTexture(g->textureNumber()), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
+				lastTexID = g->textureNumber();
+			} else if(!hasTexture && texture_id != (GLuint)-1) {
+				deleteTexture(texture_id);
+				glDisable(GL_TEXTURE_2D);
+				texture_id = -1;
+				lastTexID = -1;
 			}
 
 			int curPolyType = 0;
@@ -164,12 +173,6 @@ void FieldModel::drawP(int boneID)
 
 			if(curPolyType != 0) {
 				glEnd();
-			}
-
-			if(hasTexture) {
-				deleteTexture(texture_id);
-
-				glDisable(GL_TEXTURE_2D);
 			}
 		}
 	}
@@ -286,8 +289,15 @@ void FieldModel::paintGL()
 //	glVertex3f(0.0, 0.0, -20.0);
 //	glEnd();
 
+	GLuint texture_id = -1;
+	int lastTexID = -1;
+
 	if(data->animBoneCount() <= 1) {
-		drawP(0);
+		drawP(0, texture_id, lastTexID);
+		if(texture_id != (GLuint)-1) {
+			deleteTexture(texture_id);
+			glDisable(GL_TEXTURE_2D);
+		}
 		return;
 	}
 
@@ -314,10 +324,15 @@ void FieldModel::paintGL()
 		glRotatef(rotation.y, 0.0, 1.0, 0.0);
 		glRotatef(rotation.x, 1.0, 0.0, 0.0);
 		glRotatef(rotation.z, 0.0, 0.0, 1.0);
-		drawP(i);
+		drawP(i, texture_id, lastTexID);
 
 		if(!data->isPS())
 			glTranslatef(0.0, 0.0, bone.size);
+	}
+
+	if(texture_id != (GLuint)-1) {
+		deleteTexture(texture_id);
+		glDisable(GL_TEXTURE_2D);
 	}
 
 	while(parent.top() != -1) {

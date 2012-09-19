@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "GZIP.h"
 #if defined(Q_OS_WIN32) || defined(Q_OS_MAC)
-#include "zlib-1.2.5/zlib.h"
+#include "zlib-1.2.7/zlib.h"
 #else
 #include <zlib.h>
 #endif

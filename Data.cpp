@@ -226,8 +226,8 @@ void Data::charlgp_loadListPos(QFile *char_file)
 	{
 		qint32 nbFiles;
 
-		char_file->seek(12);
-		char_file->read((char *)&nbFiles, 4);
+		if(!char_file->seek(12))	return;
+		if(char_file->read((char *)&nbFiles, 4) != 4)	return;
 
 		QString fileName;
 		quint32 filePos;

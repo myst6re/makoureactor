@@ -37,7 +37,7 @@ public:
 public slots:
 	void animate();
 private:
-	void drawP(int boneID);
+	void drawP(int boneID, GLuint &texture_id, int &lastTexID);
 	void setXRotation(int angle);
 	void setYRotation(int angle);
 	void setZRotation(int angle);
