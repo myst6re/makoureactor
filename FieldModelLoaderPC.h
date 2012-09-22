@@ -28,9 +28,35 @@ public:
 	FieldModelLoaderPC();
 	bool load(const QByteArray &data);
 	QByteArray save() const;
+	quint16 globalScale() const;
+	void setGlobalScale(quint16 scale);
+	int modelCount() const;
+	void insertModel(int modelID, const QString &hrcName);
+	void removeModel(int modelID);
+	void swapModel(int oldModelID, int newModelID);
+	const QStringList &HRCNames() const;
 	QString HRCName(int modelID) const;
+	void setHRCName(int modelID, const QString &HRCName);
+	const QStringList &charNames() const;
+	QString charName(int modelID) const;
+	void setCharName(int modelID, const QString &charName);
+	quint16 scale(int modelID) const;
+	void setScale(int modelID, quint16 scale);
+	quint16 unknown(int modelID) const;
+	void setUnknown(int modelID, quint16 unknown);
+	const QList<QRgb> &lightColors(int modelID) const;
+	void setLightColors(int modelID, const QList<QRgb> &lightColors);
+	void setLightColor(int modelID, int colorID, QRgb lightColor);
+	int animCount(int modelID) const;
+	void insertAnim(int modelID, int numA);
+	void removeAnim(int modelID, int numA);
+	void swapAnim(int modelID, int oldNumA, int newNumA);
+	const QStringList &ANames(int modelID) const;
 	QString AName(int modelID, int numA=0) const;
-
+	void setAName(int modelID, int numA, const QString &animName);
+	quint16 animUnknown(int modelID, int numA) const;
+	void setAnimUnknown(int modelID, int numA, quint16 unknown);
+private:
 	quint16 typeHRC;
 	QStringList model_nameChar;
 	QStringList model_nameHRC;

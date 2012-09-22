@@ -27,6 +27,8 @@ public:
 	explicit ColorDisplay(QWidget *parent=0);
 	void setColors(const QList<QRgb> &colors);
 	const QList<QRgb> &getColors() const;
+signals:
+	void colorEdited(int id, QRgb value);
 private:
 	QList<QRgb> colors;
 protected:

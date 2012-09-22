@@ -38,6 +38,8 @@ bool FieldPC::open(bool dontOptimize)
 {
 	QByteArray fileData;
 
+	qDebug() << "FieldPC::open" << dontOptimize << name;
+
 	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
 		QByteArray lzsData = fieldArchive->getFieldData(this, false);
 		quint32 size;
@@ -72,6 +74,7 @@ bool FieldPC::open(bool dontOptimize)
 
 QByteArray FieldPC::sectionData(FieldPart part)
 {
+	qDebug() << "FieldPC::sectionData" << (int)part;
 	if(!_isOpen) {
 		open();
 	}
@@ -101,6 +104,7 @@ QByteArray FieldPC::sectionData(FieldPart part)
 
 QByteArray FieldPC::sectionData(int idPart)
 {
+	qDebug() << "FieldPC::sectionData2" << idPart;
 	int position = sectionPositions[idPart] + 4;
 	int size;
 
@@ -135,6 +139,7 @@ QPixmap FieldPC::openBackground()
 
 QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
+	qDebug() << "FieldPC::openBackground";
 	QByteArray data = fieldArchive->getFieldData(this);
 	const char *constData = data.constData();
 	quint32 dataSize = data.size();
@@ -161,9 +166,10 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	bool exist2, exist3, exist4;
 
 	if(dataSize < aTex+2)	return QPixmap();
-	
+
 	memcpy(&nbTiles1, &constData[aTex], 2);//nbTiles1
 	aTex += 8+nbTiles1*52;
+	if(dataSize < aTex+1)	return QPixmap();
 	if((exist2 = (bool)data.at(aTex)))
 	{
 		if(dataSize < aTex+7)	return QPixmap();
@@ -171,6 +177,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 		aTex += 26+nbTiles2*52;
 	}
 	aTex++;
+	if(dataSize < aTex+1)	return QPixmap();
 	if((exist3 = (bool)data.at(aTex)))
 	{
 		if(dataSize < aTex+7)	return QPixmap();
@@ -178,13 +185,14 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 		aTex += 20+nbTiles3*52;
 	}
 	aTex++;
+	if(dataSize < aTex+1)	return QPixmap();
 	if((exist4 = (bool)data.at(aTex)))
 	{
 		if(dataSize < aTex+7)	return QPixmap();
 		memcpy(&nbTiles4, &constData[aTex+5], 2);//nbTiles4
 		aTex += 20+nbTiles4*52;
 	}
-	
+
 	aTex += 8;
 	QHash<quint8, quint32> posTextures;
 
@@ -205,7 +213,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	QMultiMap<qint16, Tile> tiles;
 	Tile tile;
 	quint16 largeurMax=0, largeurMin=0, hauteurMax=0, hauteurMin=0;
-	
+
 	//BG 0
 	for(i=0 ; i<nbTiles1 ; ++i) {
 		memcpy(&tile, &constData[aTex+i*52], 34);
@@ -320,7 +328,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 			}
 		}
 	}
-	
+
 	if(tiles.isEmpty())	return QPixmap();
 	
 	int width = largeurMin + largeurMax + 16;
@@ -331,7 +339,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	quint16 deuxOctets, baseX;
 	quint8 index, right;
 	QRgb *pixels = (QRgb *)image.bits();
-	
+
 	foreach(const Tile &tile, tiles)
 	{
 		pos = posTextures.value(tile.textureID);
@@ -382,6 +390,8 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 			}
 		}
 	}
+
+	qDebug() << "/FieldPC::openBackground";
 	
 	return QPixmap::fromImage(image);
 }
@@ -521,13 +531,20 @@ void FieldPC::setPosition(quint32 position)
 
 bool FieldPC::save(QByteArray &newData, bool compress)
 {
+	newData = QByteArray();
+	qDebug() << "FieldPC::save" << compress << name;
+
 	if(!isOpen())	return false;
 
 	QByteArray decompresse = fieldArchive->getFieldData(this), section, toc;
 	const char *decompresseData = decompresse.constData();
-	quint32 size, section_size;
+	quint32 sectionPositions[9], size, section_size;
 
 	if(decompresse.isEmpty())	return false;
+
+	sectionPositions[0] = 42;
+	for(quint8 i=1 ; i<9 ; ++i)
+		memcpy(&sectionPositions[i], &decompresseData[6+4*i], 4);
 
 	// Header + pos section 1
 	toc.append(decompresseData, 10);

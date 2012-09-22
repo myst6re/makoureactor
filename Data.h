@@ -53,6 +53,9 @@ public:
 	static QStringList field_names;
 	static QStringList movie_names;
 	static QStringList music_names;
+#ifdef Q_WS_WIN
+	static QString regValue(const QString &regPath, const QString &regKey);
+#endif
 private:
 	static const QString &searchRereleasedFF7Path();
 	static QString searchFF7Exe();

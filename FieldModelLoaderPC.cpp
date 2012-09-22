@@ -133,12 +133,246 @@ QByteArray FieldModelLoaderPC::save() const
 			.append(HRCs);
 }
 
+quint16 FieldModelLoaderPC::globalScale() const
+{
+	return typeHRC;
+}
+
+void FieldModelLoaderPC::setGlobalScale(quint16 scale)
+{
+	if(typeHRC != scale) {
+		typeHRC = scale;
+		modified = true;
+	}
+}
+
+int FieldModelLoaderPC::modelCount() const
+{
+	return model_nameHRC.size();
+}
+
+void FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
+{
+	QList<QRgb> color;
+	if(!colors.isEmpty())
+		color = colors.first();
+
+	model_unknown.insert(modelID, (quint16)0);
+	model_nameChar.insert(modelID, QString());
+	model_nameHRC.insert(modelID, hrcName);
+	model_typeHRC.insert(modelID, typeHRC);
+	colors.insert(modelID, color);
+
+	model_anims.insert(modelID, QStringList());
+	model_anims_unknown.insert(modelID, QList<quint16>());
+
+	modified = true;
+}
+
+void FieldModelLoaderPC::removeModel(int modelID)
+{
+	if(modelID >= 0 && modelID < modelCount()) {
+		model_unknown.removeAt(modelID);
+		model_nameChar.removeAt(modelID);
+		model_nameHRC.removeAt(modelID);
+		model_typeHRC.removeAt(modelID);
+		colors.removeAt(modelID);
+
+		model_anims.removeAt(modelID);
+		model_anims_unknown.removeAt(modelID);
+
+		modified = true;
+	}
+}
+
+void FieldModelLoaderPC::swapModel(int oldModelID, int newModelID)
+{
+	if(oldModelID != newModelID
+			&& oldModelID >= 0 && oldModelID < modelCount()
+			&& newModelID >= 0 && newModelID < modelCount()) {
+		model_unknown.swap(oldModelID, newModelID);
+		model_nameChar.swap(oldModelID, newModelID);
+		model_nameHRC.swap(oldModelID, newModelID);
+		model_typeHRC.swap(oldModelID, newModelID);
+		colors.swap(oldModelID, newModelID);
+
+		model_anims.swap(oldModelID, newModelID);
+		model_anims_unknown.swap(oldModelID, newModelID);
+
+		modified = true;
+	}
+}
+
+const QStringList &FieldModelLoaderPC::HRCNames() const
+{
+	return model_nameHRC;
+}
+
 QString FieldModelLoaderPC::HRCName(int modelID) const
 {
 	return model_nameHRC.value(modelID);
 }
 
+void FieldModelLoaderPC::setHRCName(int modelID, const QString &HRCName)
+{
+	if(modelID >= 0 && modelID < model_nameHRC.size()
+			&& model_nameHRC.at(modelID) != HRCName) {
+		model_nameHRC.replace(modelID, HRCName);
+		modified = true;
+	}
+}
+
+const QStringList &FieldModelLoaderPC::charNames() const
+{
+	return model_nameChar;
+}
+
+QString FieldModelLoaderPC::charName(int modelID) const
+{
+	return model_nameChar.value(modelID);
+}
+
+void FieldModelLoaderPC::setCharName(int modelID, const QString &charName)
+{
+	if(modelID >= 0 && modelID < model_nameChar.size()
+			&& model_nameChar.at(modelID) != charName) {
+		model_nameChar.replace(modelID, charName);
+		modified = true;
+	}
+}
+
+quint16 FieldModelLoaderPC::scale(int modelID) const
+{
+	return model_typeHRC.value(modelID);
+}
+
+void FieldModelLoaderPC::setScale(int modelID, quint16 scale)
+{
+	if(modelID >= 0 && modelID < model_typeHRC.size()
+			&& model_typeHRC.at(modelID) != scale) {
+		model_typeHRC.replace(modelID, scale);
+		modified = true;
+	}
+}
+
+quint16 FieldModelLoaderPC::unknown(int modelID) const
+{
+	return model_unknown.value(modelID);
+}
+
+void FieldModelLoaderPC::setUnknown(int modelID, quint16 unknown)
+{
+	if(modelID >= 0 && modelID < model_unknown.size()
+			&& model_unknown.at(modelID) != unknown) {
+		model_unknown.replace(modelID, unknown);
+		modified = true;
+	}
+}
+
+const QList<QRgb> &FieldModelLoaderPC::lightColors(int modelID) const
+{
+	return colors.at(modelID);
+}
+
+void FieldModelLoaderPC::setLightColors(int modelID, const QList<QRgb> &lightColors)
+{
+	if(modelID >= 0 && modelID < colors.size()
+			&& colors.at(modelID) != lightColors) {
+		colors.replace(modelID, lightColors);
+		modified = true;
+	}
+}
+
+void FieldModelLoaderPC::setLightColor(int modelID, int colorID, QRgb lightColor)
+{
+	if(modelID >= 0 && modelID < colors.size()
+			&& colorID < colors.at(modelID).size()
+			&& colors.at(modelID).at(colorID) != lightColor) {
+		colors[modelID].replace(colorID, lightColor);
+		modified = true;
+	}
+}
+
+int FieldModelLoaderPC::animCount(int modelID) const
+{
+	if(modelID >= 0 && modelID < model_anims.size())
+		return model_anims.at(modelID).size();
+	return 0;
+}
+
+void FieldModelLoaderPC::insertAnim(int modelID, int numA)
+{
+	if(modelID >= 0 && modelID < modelCount()
+			&& numA >= 0 && numA < animCount(modelID)) {
+		model_anims[modelID].insert(numA, QString());
+		model_anims_unknown[modelID].insert(numA, 1);
+
+		modified = true;
+	}
+}
+
+void FieldModelLoaderPC::removeAnim(int modelID, int numA)
+{
+	if(modelID >= 0 && modelID < modelCount()
+			&& numA >= 0 && numA < animCount(modelID)) {
+		model_anims[modelID].removeAt(numA);
+		model_anims_unknown[modelID].removeAt(numA);
+
+		modified = true;
+	}
+}
+
+void FieldModelLoaderPC::swapAnim(int modelID, int oldNumA, int newNumA)
+{
+	if(modelID >= 0 && modelID < modelCount()
+			&& oldNumA != newNumA
+			&& oldNumA >= 0 && oldNumA < animCount(modelID)
+			&& newNumA >= 0 && newNumA < animCount(modelID)) {
+		model_anims[modelID].swap(oldNumA, newNumA);
+		model_anims_unknown[modelID].swap(oldNumA, newNumA);
+
+		modified = true;
+	}
+}
+
+const QStringList &FieldModelLoaderPC::ANames(int modelID) const
+{
+	return model_anims.at(modelID);
+}
+
 QString FieldModelLoaderPC::AName(int modelID, int numA) const
 {
 	return model_anims.value(modelID).value(numA);
+}
+
+void FieldModelLoaderPC::setAName(int modelID, int numA, const QString &animName)
+{
+	if(modelID >= 0 && modelID < model_anims.size()) {
+		QStringList &animNames = model_anims[modelID];
+		if(numA >= 0 && numA < animNames.size()
+				&& animNames.at(numA) != animName) {
+			animNames.replace(numA, animName);
+			modified = true;
+		}
+	}
+}
+
+quint16 FieldModelLoaderPC::animUnknown(int modelID, int numA) const
+{
+	if(modelID < model_anims_unknown.size())
+		return model_anims_unknown.at(modelID).value(numA);
+	else
+		return 0;
+}
+
+void FieldModelLoaderPC::setAnimUnknown(int modelID, int numA, quint16 unknown)
+{
+	if(modelID >= 0 && modelID < model_anims_unknown.size()) {
+		QList<quint16> &animUnknown = model_anims_unknown[modelID];
+		if(numA >= 0 && numA < animUnknown.size()
+				&& animUnknown.at(numA) != unknown) {
+			animUnknown.replace(numA, unknown);
+			modified = true;
+		}
+	}
 }

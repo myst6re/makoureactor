@@ -18,7 +18,6 @@
 #include "Window.h"
 #include "Parameters.h"
 #include "GrpScript.h"
-#include "ModelManager.h"
 #include "ConfigWindow.h"
 #include "EncounterWidget.h"
 #include "TutWidget.h"
@@ -30,7 +29,7 @@
 
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
-	textDialog(0), _walkmeshManager(0), _backgroundManager(0)
+	textDialog(0), _modelManager(0), _walkmeshManager(0), _backgroundManager(0)
 {
 	setWindowTitle();
 	setMinimumSize(700, 600);
@@ -324,6 +323,7 @@ void Window::restartNow()
 
 int Window::closeFile(bool quit)
 {
+	qDebug() << "Window::closeFile";
 	if(fieldList->currentItem() != NULL)
 		Config::setValue("currentField", fieldList->currentItem()->text(0));
 
@@ -376,9 +376,14 @@ int Window::closeFile(bool quit)
 		setWindowModified(false);
 		setWindowTitle();
 		searchDialog->setEnabled(false);
+		searchDialog->setFieldArchive(NULL);
 		if(textDialog) {
 			textDialog->clear();
 			textDialog->setEnabled(false);
+		}
+		if(_modelManager) {
+			_modelManager->clear();
+			_modelManager->setEnabled(false);
 		}
 		if(_walkmeshManager) {
 			_walkmeshManager->clear();
@@ -400,6 +405,8 @@ int Window::closeFile(bool quit)
 		actionTut->setEnabled(false);
 		actionMisc->setEnabled(false);
 	}
+
+	qDebug() << "/Window::closeFile";
 	
 	return QMessageBox::Yes;
 }
@@ -436,6 +443,7 @@ void Window::openDir()
 
 void Window::open(const QString &cheminFic, bool isDir)
 {
+	qDebug() << "Window::open" << cheminFic << isDir;
 	closeFile();
 	
 	setEnabled(false);
@@ -513,6 +521,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 	actionClose->setEnabled(true);
 
 //	fieldArchive->searchAll();
+	qDebug() << "/Window::open" << cheminFic << isDir;
 }
 
 void Window::setWindowTitle()
@@ -571,6 +580,10 @@ void Window::openField()
 	if(textDialog && textDialog->isVisible()) {
 		textDialog->setField(field);
 		textDialog->setEnabled(true);
+	}
+	if(actionModels->isEnabled() && _modelManager && _modelManager->isVisible()) {
+		_modelManager->fill((FieldPC *)field);
+		_modelManager->setEnabled(true);
 	}
 	if(_walkmeshManager && _walkmeshManager->isVisible()) {
 		_walkmeshManager->fill(field);
@@ -1130,13 +1143,33 @@ void Window::textManager(bool activate)
 
 void Window::modelManager()
 {
-	if(field) {
-		ModelManager modelManager(field, fieldModel, this);
-		if(modelManager.exec()==QDialog::Accepted)
-		{
-			setModified(true);
-		}
+	if(!actionModels->isEnabled())	return;
+
+	if(!_modelManager) {
+		_modelManager = new ModelManager(fieldModel, this);
+		connect(_modelManager, SIGNAL(modified()), SLOT(setModified()));
 	}
+
+	if(field) {
+//		zonePreview->setCurrentIndex(0);
+//		if(fieldModel) {
+//			fieldModel->clear();
+//		}
+
+		_modelManager->fill((FieldPC *)field);
+		_modelManager->setEnabled(true);
+
+//		bool modelLoaded = false;
+//		if(fieldModel && Data::currentModelID != -1) {
+//			modelLoaded = fieldModel->load(field, Data::currentModelID);
+//		}
+//		zonePreview->setCurrentIndex((int)modelLoaded);
+	} else {
+		_modelManager->clear();
+		_modelManager->setEnabled(false);
+	}
+	_modelManager->show();
+	_modelManager->activateWindow();
 }
 
 void Window::encounterManager()

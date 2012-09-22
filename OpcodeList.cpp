@@ -19,7 +19,7 @@
 #include "ScriptEditor.h"
 
 OpcodeList::OpcodeList(QWidget *parent) :
-	QTreeWidget(parent), hasCut(false), isInit(false),
+	QTreeWidget(parent), isInit(false),
 	field(0), grpScript(0), script(0), errorLine(-1)
 {
 	setColumnCount(1);
@@ -137,11 +137,8 @@ OpcodeList::OpcodeList(QWidget *parent) :
 
 OpcodeList::~OpcodeList()
 {
-	if(hasCut)
-	{
-		foreach(const Opcode *opcode, opcodeCopied)
-			delete opcode;
-	}
+	foreach(const Opcode *opcode, opcodeCopied)
+		delete opcode;
 }
 
 void OpcodeList::clear()
@@ -631,7 +628,6 @@ void OpcodeList::cut()
 {
 	copy();
 	del(false);
-	hasCut = true;
 }
 
 void OpcodeList::copy()
@@ -673,11 +669,10 @@ void OpcodeList::copy()
 
 	clearCopiedOpcodes();
 	foreach(const int &id, selectedIDs) {
-		opcodeCopied.append(script->getOpcode(id));
+		opcodeCopied.append(Script::copyOpcode(script->getOpcode(id)));
 	}
 
 	actions().at(6)->setEnabled(true);
-	hasCut = false;
 }
 
 void OpcodeList::paste()
@@ -720,11 +715,8 @@ void OpcodeList::move(Script::MoveDirection direction)
 
 void OpcodeList::clearCopiedOpcodes()
 {
-	if(hasCut)
-	{
-		foreach(const Opcode *opcode, opcodeCopied)
-			delete opcode;
-	}
+	foreach(const Opcode *opcode, opcodeCopied)
+		delete opcode;
 	opcodeCopied.clear();
 }
 

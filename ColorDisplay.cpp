@@ -39,18 +39,22 @@ void ColorDisplay::paintEvent(QPaintEvent *)
 {
 	QPainter painter(this);
 
+	int gray;
 	int size = colors.size(), x;
-	painter.setPen(QColor(0, 0, 0, 0xFF));
+	painter.setPen(QColor(0, 0, 0));
 	for(int i=0 ; i<size ; ++i) {
 		x = i*10;
 		painter.drawRect(x, 0, 10, 10);
-		painter.fillRect(x+1, 1, 9, 9, colors.at(i));
+		gray = qGray(colors.at(i));
+		painter.fillRect(x+1, 1, 9, 9, isEnabled() ? QColor(colors.at(i)) : QColor(gray, gray, gray));
 	}
-	painter.setPen(QColor(0xFF, 0, 0, 0xFF));
-	QPoint cursor_position = this->mapFromGlobal(this->cursor().pos());
-	x = (int)(cursor_position.x()/10)*10;
-	if(x==this->width()-1)	x -= 10;
-		painter.drawRect(x, 0, 10, 10);
+	if(isEnabled()) {
+		painter.setPen(QColor(0xFF, 0, 0));
+		QPoint cursor_position = this->mapFromGlobal(this->cursor().pos());
+		x = (int)(cursor_position.x()/10)*10;
+		if(x==this->width()-1)	x -= 10;
+			painter.drawRect(x, 0, 10, 10);
+	}
 	painter.end();
 }
 
@@ -75,7 +79,9 @@ void ColorDisplay::mouseReleaseEvent(QMouseEvent *event)
 	if(colorIndex >= colors.size())
 		colorIndex = colors.size()-1;
 	QColor color = QColorDialog::getColor(colors.at(colorIndex), this, tr("Choisir une nouvelle couleur"));
-	if(color.isValid())
+	if(color.isValid()) {
 		colors.replace(colorIndex, color.rgb());
+		emit colorEdited(colorIndex, color.rgb());
+	}
 	update();
 }

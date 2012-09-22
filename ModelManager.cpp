@@ -19,159 +19,213 @@
 #include "Config.h"
 #include "Data.h"
 
-ModelManager::ModelManager(Field *field, const QGLWidget *shareWidget, QWidget *parent)
-	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), field((FieldPC *)field),
-	  fieldModelLoader(((FieldPC *)field)->getFieldModelLoader()), page_filled(false)
+ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
+	QDialog(parent, Qt::Tool), field(0), fieldModelLoader(0)
 {
-	field_model_unknown = fieldModelLoader->model_unknown;
-	field_model_nameChar = fieldModelLoader->model_nameChar;
-	field_model_nameHRC = fieldModelLoader->model_nameHRC;
-	field_model_typeHRC = fieldModelLoader->model_typeHRC;
-	field_model_anims = fieldModelLoader->model_anims;
-	field_colors = fieldModelLoader->colors;
-
 	setWindowTitle(tr("Modèles 3D"));
+
 	QFont font;
 	font.setPointSize(8);
 
-	typeHRC = new QSpinBox();
-	typeHRC->setRange(0, 65535);
-	typeHRC->setValue(fieldModelLoader->typeHRC);
+	globalScale = new QSpinBox();
+	globalScale->setRange(0, 65535);
 
 	QToolBar *toolBar1 = new QToolBar();
-	toolBar1->setIconSize(QSize(14,14));
-	toolBar1->addAction(QIcon(":/images/plus.png"), QString(), this, SLOT(add_HRC()));
-	toolBar1->addAction(QIcon(":/images/minus.png"), QString(), this, SLOT(del_HRC()));
-	toolBar1->addAction(QIcon(":/images/up.png"), QString(), this, SLOT(up_HRC()));
-	toolBar1->addAction(QIcon(":/images/down.png"), QString(), this, SLOT(down_HRC()));
+	toolBar1->setIconSize(QSize(14, 14));
+	toolBar1->addAction(QIcon(":/images/plus.png"), QString(), this, SLOT(addModel()));
+	toolBar1->addAction(QIcon(":/images/minus.png"), QString(), this, SLOT(delModel()));
+	toolBar1->addAction(QIcon(":/images/up.png"), QString(), this, SLOT(upModel()));
+	toolBar1->addAction(QIcon(":/images/down.png"), QString(), this, SLOT(downModel()));
 
 	models = new QTreeWidget();
 	models->setColumnCount(1);
 	models->setIndentation(0);
 	models->setHeaderLabel(tr("Modèles 3D"));
 	models->setFixedWidth(120);
-	QTreeWidgetItem *item;
-	int size = field_model_nameHRC.size();
-	for(int i=0 ; i<size ; ++i)
-	{
-		item = new QTreeWidgetItem(QStringList(field_model_nameHRC.at(i)));
-		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
-		models->addTopLevelItem(item);
-	}
 
-	model_frame = new QFrame();
-	model_frame->setFrameShape(QFrame::StyledPanel);
+	modelFrame = new QFrame();
+	modelFrame->setFrameShape(QFrame::StyledPanel);
 
-	model_name = new QLineEdit();
-	model_name->setMaxLength(256-field->getName().size());
-	model_unknown = new QSpinBox();
-	model_unknown->setRange(0, 65535);
-	model_typeHRC = new QSpinBox();
-	model_typeHRC->setRange(0, 4096);
-	model_colorDisplay = new ColorDisplay();
+	modelName = new QLineEdit();
+	modelName->setMaxLength(256);
+	modelUnknown = new QSpinBox();
+	modelUnknown->setRange(0, 65535);
+	modelScale = new QSpinBox();
+	modelScale->setRange(0, 4096);
+	modelColorDisplay = new ColorDisplay();
 
 	toolBar2 = new QToolBar();
-	toolBar2->setIconSize(QSize(14,14));
-	toolBar2->addAction(QIcon(":/images/plus.png"), QString(), this, SLOT(add_anim()));
-	toolBar2->addAction(QIcon(":/images/minus.png"), QString(), this, SLOT(del_anim()));
-	toolBar2->addAction(QIcon(":/images/up.png"), QString(), this, SLOT(up_anim()));
-	toolBar2->addAction(QIcon(":/images/down.png"), QString(), this, SLOT(down_anim()));
+	toolBar2->setIconSize(QSize(14, 14));
+	toolBar2->addAction(QIcon(":/images/plus.png"), QString(), this, SLOT(addAnim()));
+	toolBar2->addAction(QIcon(":/images/minus.png"), QString(), this, SLOT(delAnim()));
+	toolBar2->addAction(QIcon(":/images/up.png"), QString(), this, SLOT(upAnim()));
+	toolBar2->addAction(QIcon(":/images/down.png"), QString(), this, SLOT(downAnim()));
 
-	model_anims = new QTreeWidget();
-	model_anims->setColumnCount(1);
-	model_anims->setIndentation(0);
-	model_anims->setHeaderLabel(tr("Animations"));
-	model_anims->setFixedWidth(120);
+	modelAnims = new QTreeWidget();
+	modelAnims->setColumnCount(1);
+	modelAnims->setIndentation(0);
+	modelAnims->setHeaderLabel(tr("Animations"));
+	modelAnims->setFixedWidth(120);
 
 	QWidget *modelWidget;
 	if(Config::value("OpenGL", true).toBool()) {
-		model_preview = new FieldModel(0, shareWidget);
-		modelWidget = model_preview;
-		model_preview->setFixedSize(304, 214);
+		modelPreview = new FieldModel(0, shareWidget);
+		modelWidget = modelPreview;
+		modelPreview->setFixedSize(304, 214);
 	} else {
-		model_preview = 0;
+		modelPreview = 0;
 		modelWidget = new QWidget(this);
 	}
 
 	QGridLayout *frameLayout = new QGridLayout();
 	frameLayout->addWidget(new QLabel(tr("Nom (non utilisé)")), 0, 0);
-	frameLayout->addWidget(model_name, 0, 1);
+	frameLayout->addWidget(modelName, 0, 1);
 	frameLayout->addWidget(new QLabel(tr("Inconnu")), 1, 0);
-	frameLayout->addWidget(model_unknown, 1, 1);
+	frameLayout->addWidget(modelUnknown, 1, 1);
 	frameLayout->addWidget(new QLabel(tr("Taille modèle")), 2, 0);
-	frameLayout->addWidget(model_typeHRC, 2, 1);
+	frameLayout->addWidget(modelScale, 2, 1);
 	frameLayout->addWidget(new QLabel(tr("Lumière")), 3, 0);
-	frameLayout->addWidget(model_colorDisplay, 3, 1);
+	frameLayout->addWidget(modelColorDisplay, 3, 1);
 	frameLayout->addWidget(toolBar2, 0, 2);
-	frameLayout->addWidget(model_anims, 1, 2, 4, 1);
+	frameLayout->addWidget(modelAnims, 1, 2, 4, 1);
 	frameLayout->addWidget(modelWidget, 0, 3, 5, 1);
-	model_frame->setLayout(frameLayout);
-
-	QPushButton *buttonOK = new QPushButton(tr("OK"));
-	QPushButton *buttonCancel = new QPushButton(tr("Annuler"));
-	QHBoxLayout *buttonLayout = new QHBoxLayout();
-	buttonLayout->addStretch();
-	buttonLayout->addWidget(buttonOK);
-	buttonLayout->addWidget(buttonCancel);
+	modelFrame->setLayout(frameLayout);
 
 	QGridLayout *layout = new QGridLayout();
 	layout->addWidget(toolBar1, 0, 0);
 	layout->addWidget(new QLabel(tr("Taille modèles (non utilisé)")), 0, 1);
-	layout->addWidget(typeHRC, 0, 2);
+	layout->addWidget(globalScale, 0, 2);
 	layout->addWidget(models, 1, 0);
-	layout->addWidget(model_frame, 1, 1, 1, 4);
-	layout->addLayout(buttonLayout, 2, 0, 1, 5);
+	layout->addWidget(modelFrame, 1, 1, 1, 4);
 
 	setLayout(layout);
 	adjustSize();
 
-	connect(models, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(show_HRC_infos(QTreeWidgetItem*,QTreeWidgetItem*)));
+	connect(globalScale, SIGNAL(valueChanged(int)), SLOT(setGlobalScale(int)));
+
+	connect(models, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(showModelInfos(QTreeWidgetItem*,QTreeWidgetItem*)));
 	connect(models, SIGNAL(doubleClicked(QModelIndex)), models, SLOT(edit(QModelIndex)));
-	connect(models, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOK_HRC(QTreeWidgetItem *)));
+	connect(models, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOKModel(QTreeWidgetItem *)));
 
-	connect(model_anims, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(show_model(QTreeWidgetItem*)));
-	connect(model_anims, SIGNAL(doubleClicked(QModelIndex)), model_anims, SLOT(edit(QModelIndex)));
-	connect(model_anims, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOK_anim(QTreeWidgetItem *)));
+	connect(modelAnims, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(showModel(QTreeWidgetItem*)));
+	connect(modelAnims, SIGNAL(doubleClicked(QModelIndex)), modelAnims, SLOT(edit(QModelIndex)));
+	connect(modelAnims, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOKAnim(QTreeWidgetItem *)));
 
-	connect(buttonOK, SIGNAL(released()), SLOT(accept()));
-	connect(buttonCancel, SIGNAL(released()), SLOT(close()));
+	connect(modelName, SIGNAL(textEdited(QString)), SLOT(setModelName(QString)));
+	connect(modelUnknown, SIGNAL(valueChanged(int)), SLOT(setModelUnknown(int)));
+	connect(modelScale, SIGNAL(valueChanged(int)), SLOT(setModelScale(int)));
+	connect(modelColorDisplay, SIGNAL(colorEdited(int,QRgb)), SLOT(setModelColor(int,QRgb)));
+}
 
-	models->setCurrentItem(models->topLevelItem(0));
+void ModelManager::clear()
+{
+	models->blockSignals(true);
+	modelAnims->blockSignals(true);
+
+	models->clear();
+	modelAnims->clear();
+	if(modelPreview)	modelPreview->clear();
+
+	models->blockSignals(false);
+	modelAnims->blockSignals(false);
+}
+
+void ModelManager::fill(FieldPC *field)
+{
+	fieldModelLoader = field->getFieldModelLoader();
+	this->field = field;
+
+	globalScale->blockSignals(true);
+	globalScale->setValue(fieldModelLoader->globalScale());
+	globalScale->blockSignals(false);
+
+	fillModelList();
+
+	QTreeWidgetItem *currentItem = models->topLevelItem(Data::currentModelID);
+	if(currentItem) {
+		models->setCurrentItem(currentItem);
+	} else {
+		models->setCurrentItem(models->topLevelItem(0));
+	}
 	models->setFocus();
 }
 
-void ModelManager::show_HRC_infos(QTreeWidgetItem *item, QTreeWidgetItem *previous)
+void ModelManager::fillModelList()
 {
-	save_page(previous);
-	if(item==NULL) {
-		model_frame->setEnabled(false);
-		return;
-	}
-	model_frame->setEnabled(true);
-	int row = models->indexOfTopLevelItem(item);
-	model_anims->clear();
-
-	if(row < 0 || row >= field_model_anims.size())	return;
-
-	const QStringList &animNames = field_model_anims.at(row);
-	int size = animNames.size();
-	for(int i=0 ; i<size ; ++i)
+	models->blockSignals(true);
+	QTreeWidgetItem *item;
+	foreach(const QString &hrcName, fieldModelLoader->HRCNames())
 	{
-		item = new QTreeWidgetItem(QStringList(animNames.at(i)));
+		item = new QTreeWidgetItem(QStringList(hrcName));
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
-		model_anims->addTopLevelItem(item);
+		models->addTopLevelItem(item);
 	}
-
-	model_name->setText(field_model_nameChar.at(row));
-	model_unknown->setValue(field_model_unknown.at(row));
-	model_typeHRC->setValue(field_model_typeHRC.at(row));
-	model_colorDisplay->setColors(field_colors.at(row));
-	if(model_anims->topLevelItemCount()>0)
-		model_anims->setCurrentItem(model_anims->topLevelItem(0));
-	page_filled = true;
+	models->blockSignals(false);
 }
 
-void ModelManager::add_HRC()
+int ModelManager::currentModelID(QTreeWidgetItem *item) const
+{
+	if(!item) {
+		item = models->currentItem();
+		if(!item)	return -1;
+	}
+	return models->indexOfTopLevelItem(item);
+}
+
+int ModelManager::currentAnimID(QTreeWidgetItem *item) const
+{
+	if(!item) {
+		item = modelAnims->currentItem();
+		if(!item)	return -1;
+	}
+	return modelAnims->indexOfTopLevelItem(item);
+}
+
+void ModelManager::setGlobalScale(int value)
+{
+	fieldModelLoader->setGlobalScale(value);
+	emit modified();
+}
+
+void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *)
+{
+	if(item == NULL) {
+		modelFrame->setEnabled(false);
+		return;
+	}
+	modelFrame->setEnabled(true);
+	int row = currentModelID(item);
+	modelAnims->clear();
+
+	if(row < 0 || row >= fieldModelLoader->modelCount())	return;
+
+	foreach(const QString &animName, fieldModelLoader->ANames(row))
+	{
+		item = new QTreeWidgetItem(QStringList(animName));
+		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
+		modelAnims->addTopLevelItem(item);
+	}
+
+	modelName->blockSignals(true);
+	modelUnknown->blockSignals(true);
+	modelScale->blockSignals(true);
+	modelColorDisplay->blockSignals(true);
+
+	modelName->setText(fieldModelLoader->charName(row));
+	modelUnknown->setValue(fieldModelLoader->unknown(row));
+	modelScale->setValue(fieldModelLoader->scale(row));
+	modelColorDisplay->setColors(fieldModelLoader->lightColors(row));
+
+	modelName->blockSignals(false);
+	modelUnknown->blockSignals(false);
+	modelScale->blockSignals(false);
+	modelColorDisplay->blockSignals(false);
+
+	if(modelAnims->topLevelItemCount() > 0)
+		modelAnims->setCurrentItem(modelAnims->topLevelItem(0));
+}
+
+void ModelManager::addModel()
 {
 	QString hrc("    .HRC");
 	QTreeWidgetItem *item = models->currentItem(), *newItem;
@@ -181,12 +235,13 @@ void ModelManager::add_HRC()
 		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
 
 		QComboBox list(&dialog);
+		list.setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
 		list.setEditable(true);
 		QStringList files;
 		QString file;
 
 		QHashIterator<QString, int> i(Data::charlgp_listPos);
-		while (i.hasNext()) {
+		while(i.hasNext()) {
 			i.next();
 			file = i.key();
 			if(file.endsWith(QString(".hrc"), Qt::CaseInsensitive)) {
@@ -209,132 +264,127 @@ void ModelManager::add_HRC()
 			hrc = list.currentText();
 		}
 		else {
-			if(model_preview) {
-				newItem = model_anims->currentItem();
+			if(modelPreview) {
+				newItem = modelAnims->currentItem();
 				if(item!=NULL && newItem!=NULL) {
-					model_preview->load(field, item->text(0), newItem->text(0));
+					modelPreview->load(field, item->text(0), newItem->text(0));
 				} else
-					model_preview->clear();
+					modelPreview->clear();
 			}
 			return;
 		}
 	}
 
-	if(model_preview)	model_preview->clear();
+	if(modelPreview)	modelPreview->clear();
+
+	models->blockSignals(true);
 
 	newItem = new QTreeWidgetItem(QStringList(hrc));
-	QList<QRgb> color;
-	if(!field_colors.isEmpty())
-		color = field_colors.first();
-	if(item==NULL) {
+
+	if(item == NULL) {
 		models->addTopLevelItem(newItem);
 
-		field_model_unknown.append((quint16)0);
-		field_model_nameChar.append(QString(".char"));
-		field_model_nameHRC.append(QString());
-		field_model_typeHRC.append(typeHRC->value());
-		field_model_anims.append(QStringList());
-		field_colors.append(color);
+		fieldModelLoader->insertModel(models->topLevelItemCount(), hrc);
 	}
 	else {
-		int row = models->indexOfTopLevelItem(item);
+		int row = currentModelID(item);
 		models->insertTopLevelItem(row+1, newItem);
 
-		field_model_unknown.insert(row+1, (quint16)0);
-		field_model_nameChar.insert(row+1, QString(".char"));
-		field_model_nameHRC.insert(row+1, QString());
-		field_model_typeHRC.insert(row+1, typeHRC->value());
-		field_model_anims.insert(row+1, QStringList());
-		field_colors.insert(row+1, color);
+		fieldModelLoader->insertModel(row+1, hrc);
 	}
 	newItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
-	page_filled = false;
+
+	models->blockSignals(false);
+
+	emit modified();
+
 	models->setCurrentItem(newItem);
-	page_filled = true;
+
 	if(Data::charlgp_listPos.isEmpty())
 		models->editItem(newItem);
 }
 
-void ModelManager::del_HRC()
+void ModelManager::delModel()
 {
 	QTreeWidgetItem *item = models->currentItem();
-	if(item==NULL) return;
+	if(item == NULL) return;
+	int row = currentModelID(item);
+	if(row < 0)		return;
 
-	int row = models->indexOfTopLevelItem(item);
-	field_model_unknown.removeAt(row);
-	field_model_nameChar.removeAt(row);
-	field_model_nameHRC.removeAt(row);
-	field_model_typeHRC.removeAt(row);
-	field_model_anims.removeAt(row);
-	field_colors.removeAt(row);
+	fieldModelLoader->removeModel(row);
 
-	page_filled = false;
 	delete item;
-	page_filled = true;
+
+	emit modified();
 }
 
-void ModelManager::up_HRC()
+void ModelManager::upModel()
 {
 	QTreeWidgetItem *item = models->currentItem();
-	if(item==NULL) return;
-	int row = models->indexOfTopLevelItem(item);
-	if(row<=0)	return;
+	if(item == NULL) return;
+	int row = currentModelID(item);
+	if(row <= 0)	return;
 
 	QTreeWidgetItem *itemAbove = models->itemAbove(item);
+
+	models->blockSignals(true);
 
 	QString savText = itemAbove->text(0);
 	itemAbove->setText(0, item->text(0));
 	item->setText(0, savText);
 
-	field_model_unknown.swap(row, row-1);
-	field_model_nameChar.swap(row, row-1);
-	field_model_typeHRC.swap(row, row-1);
-	field_model_anims.swap(row, row-1);
-	field_colors.swap(row, row-1);
+	fieldModelLoader->swapModel(row, row-1);
 
-	page_filled = false;
+	models->blockSignals(false);
+
 	models->setCurrentItem(itemAbove);
-	page_filled = true;
+
+	emit modified();
 }
 
-void ModelManager::down_HRC()
+void ModelManager::downModel()
 {
 	QTreeWidgetItem *item = models->currentItem();
-	if(item==NULL) return;
-	int row = models->indexOfTopLevelItem(item);
-	if(row>=models->topLevelItemCount()-1)	return;
+	if(item == NULL) return;
+	int row = currentModelID(item);
+	if(row < 0 || row >= models->topLevelItemCount()-1)	return;
 
 	QTreeWidgetItem *itemBelow = models->itemBelow(item);
+
+	models->blockSignals(true);
 
 	QString savText = itemBelow->text(0);
 	itemBelow->setText(0, item->text(0));
 	item->setText(0, savText);
 
-	field_model_unknown.swap(row, row+1);
-	field_model_nameChar.swap(row, row+1);
-	field_model_typeHRC.swap(row, row+1);
-	field_model_anims.swap(row, row+1);
-	field_colors.swap(row, row+1);
+	fieldModelLoader->swapModel(row, row+1);
 
-	page_filled = false;
+	models->blockSignals(false);
+
 	models->setCurrentItem(itemBelow);
-	page_filled = true;
+
+	emit modified();
 }
 
-void ModelManager::renameOK_HRC(QTreeWidgetItem *item)
+void ModelManager::renameOKModel(QTreeWidgetItem *item)
 {
+	int modelID = currentModelID();
+	if(modelID < 0)		return;
+
 	QString text = item->text(0).left(8);
-	int row = models->indexOfTopLevelItem(item);
+
 	item->setText(0, text);
-	field_model_nameHRC.replace(row, text);
+	fieldModelLoader->setHRCName(modelID, text);
+
+	emit modified();
 }
 
 void ModelManager::modifyHRC(const QString &hrc)
 {
-	if(model_preview) {
-		model_preview->load(field, hrc, "aafe", false);
+	if(modelPreview) {
+		modelPreview->load(field, hrc, "aafe", false);
 		QString a;
-		switch(model_preview->nb_bones()) {
+		switch(modelPreview->nb_bones()) {
 		case 5:		a = "avhd";	break;
 		case 9:		a = "geaf";	break;
 		case 11:	a = "bdfe";	break;
@@ -355,14 +405,54 @@ void ModelManager::modifyHRC(const QString &hrc)
 		}
 
 		if(!a.isEmpty()) {
-			model_preview->load(field, hrc, a, false);
+			modelPreview->load(field, hrc, a, false);
 		}
 	}
 }
 
-void ModelManager::add_anim()
+void ModelManager::setModelName(const QString &modelName)
 {
-	QTreeWidgetItem *item = model_anims->currentItem(), *newItem;
+	int modelID = currentModelID();
+	if(modelID < 0)	return;
+
+	fieldModelLoader->setCharName(modelID, modelName);
+
+	emit modified();
+}
+
+void ModelManager::setModelUnknown(int unknown)
+{
+	int modelID = currentModelID();
+	if(modelID < 0)	return;
+
+	fieldModelLoader->setUnknown(modelID, unknown);
+
+	emit modified();
+}
+
+void ModelManager::setModelScale(int scale)
+{
+	int modelID = currentModelID();
+	if(modelID < 0)	return;
+
+	fieldModelLoader->setScale(modelID, scale);
+
+	emit modified();
+}
+
+void ModelManager::setModelColor(int id, QRgb color)
+{
+	int modelID = currentModelID();
+	if(modelID < 0)	return;
+
+	fieldModelLoader->setLightColor(modelID, id, color);
+
+	emit modified();
+}
+
+void ModelManager::addAnim()
+{
+	QTreeWidgetItem *item = modelAnims->currentItem(), *newItem;
 	QString a;
 	if(!Data::charlgp_listPos.isEmpty())
 	{
@@ -380,7 +470,7 @@ void ModelManager::add_anim()
 		QString file;
 		QHashIterator<QString, int> i(Data::charlgp_listPos);
 
-		int nb_bones = model_preview ? model_preview->nb_bones() : 0;
+		int nb_bones = modelPreview ? modelPreview->nb_bones() : 0;
 
 		while(i.hasNext()) {
 			QCoreApplication::processEvents();
@@ -419,135 +509,140 @@ void ModelManager::add_anim()
 			a = list.currentText();
 		}
 		else {
-			if(model_preview) {
+			if(modelPreview) {
 				if(item!=NULL)
-					model_preview->load(field, models->currentItem()->text(0), item->text(0));
+					modelPreview->load(field, models->currentItem()->text(0), item->text(0));
 				else
-					model_preview->clear();
+					modelPreview->clear();
 			}
 			return;
 		}
 	}
 
-	newItem = new QTreeWidgetItem(QStringList(a));
-	int page = models->indexOfTopLevelItem(models->currentItem());
-	QStringList stringList = field_model_anims.at(page);
+	int modelID = currentModelID();
+	if(modelID < 0)		return;
 
-	if(item==NULL) {
-		model_anims->addTopLevelItem(newItem);
-		stringList.append(QString());
+	modelAnims->blockSignals(true);
+
+	newItem = new QTreeWidgetItem(QStringList(a));
+
+	if(item == NULL) {
+		modelAnims->addTopLevelItem(newItem);
+
+		fieldModelLoader->insertAnim(modelID, modelAnims->topLevelItemCount());
 	}
 	else {
-		int row = model_anims->indexOfTopLevelItem(item);
-		model_anims->insertTopLevelItem(row+1, newItem);
+		int animID = currentAnimID(item);
+		modelAnims->insertTopLevelItem(animID+1, newItem);
 
-		stringList.insert(row+1, QString());
+		fieldModelLoader->insertAnim(modelID, animID+1);
 	}
-	field_model_anims.replace(page, stringList);
+
+	modelAnims->blockSignals(false);
+
+	emit modified();
+
 	newItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
-	model_anims->setCurrentItem(newItem);
+	modelAnims->setCurrentItem(newItem);
 	if(Data::charlgp_listPos.isEmpty())
-		model_anims->editItem(newItem);
+		modelAnims->editItem(newItem);
 }
 
 void ModelManager::modifyAnimation(const QString &a)
 {
-	if(model_preview)	model_preview->load(field, models->currentItem()->text(0), a);
+	if(modelPreview)	modelPreview->load(field, models->currentItem()->text(0), a);
 }
 
-void ModelManager::del_anim()
+void ModelManager::delAnim()
 {
-	QTreeWidgetItem *item = model_anims->currentItem();
-	if(item==NULL) return;
+	QTreeWidgetItem *item = modelAnims->currentItem();
+	if(item == NULL) return;
+	int modelID = currentModelID();
+	if(modelID < 0)		return;
 
-	int page = models->indexOfTopLevelItem(models->currentItem());
-	int row = model_anims->indexOfTopLevelItem(item);
-	QStringList stringList = field_model_anims.at(page);
-	stringList.removeAt(row);
-	field_model_anims.replace(page, stringList);
-	if(model_preview)	model_preview->clear();
+	fieldModelLoader->removeAnim(modelID, currentAnimID());
+	if(modelPreview)	modelPreview->clear();
 
 	delete item;
+
+	emit modified();
 }
 
-void ModelManager::up_anim()
+void ModelManager::upAnim()
 {
-	QTreeWidgetItem *item = model_anims->currentItem();
-	if(item==NULL) return;
-	int row = model_anims->indexOfTopLevelItem(item);
-	if(row<=0)	return;
+	int modelID = currentModelID();
+	if(modelID < 0)		return;
+	QTreeWidgetItem *item = modelAnims->currentItem();
+	if(item == NULL) return;
+	int animID = currentAnimID(item);
+	if(animID <= 0)	return;
 
-	QTreeWidgetItem *itemAbove = model_anims->itemAbove(item);
+	QTreeWidgetItem *itemAbove = modelAnims->itemAbove(item);
+
+	modelAnims->blockSignals(true);
 
 	QString savText = itemAbove->text(0);
 	itemAbove->setText(0, item->text(0));
 	item->setText(0, savText);
 
-	model_anims->setCurrentItem(itemAbove);
+	fieldModelLoader->swapAnim(modelID, animID, animID-1);
+
+	modelAnims->blockSignals(false);
+
+	modelAnims->setCurrentItem(itemAbove);
+
+	emit modified();
 }
 
-void ModelManager::down_anim()
+void ModelManager::downAnim()
 {
-	QTreeWidgetItem *item = model_anims->currentItem();
-	if(item==NULL) return;
+	int modelID = currentModelID();
+	if(modelID < 0)		return;
+	QTreeWidgetItem *item = modelAnims->currentItem();
+	if(item == NULL) return;
+	int animID = currentAnimID(item);
+	if(animID < 0 || animID >= modelAnims->topLevelItemCount()-1)	return;
 
-	int row = model_anims->indexOfTopLevelItem(item);
-	if(row>=model_anims->topLevelItemCount()-1)	return;
-	QTreeWidgetItem *itemBelow = model_anims->itemBelow(item);
+	QTreeWidgetItem *itemBelow = modelAnims->itemBelow(item);
+
+	modelAnims->blockSignals(true);
 
 	QString savText = itemBelow->text(0);
 	itemBelow->setText(0, item->text(0));
 	item->setText(0, savText);
 
-	model_anims->setCurrentItem(itemBelow);
+	fieldModelLoader->swapAnim(modelID, animID, animID+1);
+
+	modelAnims->blockSignals(false);
+
+	modelAnims->setCurrentItem(itemBelow);
+
+	emit modified();
 }
 
-void ModelManager::renameOK_anim(QTreeWidgetItem *item)
+void ModelManager::renameOKAnim(QTreeWidgetItem *item)
 {
+	int modelID = currentModelID();
+	if(modelID < 0)		return;
+	int animID = currentAnimID(item);
+	if(animID < 0)		return;
+
 	QString text = item->text(0).left(256);
 	item->setText(0, text);
-	int page = models->indexOfTopLevelItem(models->currentItem());
-	int row = model_anims->indexOfTopLevelItem(item);
 
-	QStringList stringList = field_model_anims.at(page);
-	stringList.replace(row, text);
-	field_model_anims.replace(page, stringList);
+	fieldModelLoader->setAName(modelID, animID, text);
+
+	emit modified();
 }
 
-void ModelManager::show_model(QTreeWidgetItem *item)
+void ModelManager::showModel(QTreeWidgetItem *item)
 {
-	if(model_preview) {
-		if(item==NULL) {
-			model_preview->clear();
+	if(modelPreview) {
+		if(item == NULL) {
+			modelPreview->clear();
 			return;
 		}
-//		qDebug() << "show_model()" << item->text(0);
-		model_preview->load(field, models->currentItem()->text(0), item->text(0));
+//		qDebug() << "showModel()" << item->text(0);
+		modelPreview->load(field, models->currentItem()->text(0), item->text(0));
 	}
-}
-
-void ModelManager::save_page(QTreeWidgetItem *item)
-{
-	if(model_preview)	model_preview->clear();
-	if(!page_filled || item==NULL) return;
-
-	int row = models->indexOfTopLevelItem(item);
-	field_model_nameChar.replace(row, model_name->text());
-	field_model_unknown.replace(row, model_unknown->value());
-	field_model_typeHRC.replace(row, model_typeHRC->value());
-	field_colors.replace(row, model_colorDisplay->getColors());
-}
-
-void ModelManager::accept()
-{
-	save_page(models->currentItem());
-	fieldModelLoader->typeHRC = typeHRC->value();
-	fieldModelLoader->model_unknown = field_model_unknown;
-	fieldModelLoader->model_nameChar = field_model_nameChar;
-	fieldModelLoader->model_nameHRC = field_model_nameHRC;
-	fieldModelLoader->model_typeHRC = field_model_typeHRC;
-	fieldModelLoader->model_anims = field_model_anims;
-	fieldModelLoader->colors = field_colors;
-	fieldModelLoader->setModified(true);
-	QDialog::accept();
 }

@@ -1051,10 +1051,10 @@ QList<IsoFileOrDirectory *> IsoArchive::getIntegrity() const
 			}
 		}
 
-//		if(i.key() != cur && prevFile != NULL) {
-//			qDebug() << QString("%1 -> %2 (%3 sectors) : padding after %4 (%5 sectors)").arg(prevFile->location() + prevFile->sectorCount())
-//					.arg(i.key()).arg(i.key() - (prevFile->location() + prevFile->sectorCount())).arg(prevFile->name()).arg(prevFile->sectorCount());
-//		}
+        if(i.key() != cur && prevFile != NULL) {
+            qDebug() << QString("%1 -> %2 (%3 sectors) : padding after %4 (%5 sectors)").arg(prevFile->location() + prevFile->sectorCount())
+                    .arg(i.key()).arg(i.key() - (prevFile->location() + prevFile->sectorCount())).arg(prevFile->name()).arg(prevFile->sectorCount());
+        }
 
 		cur = i.key() + file->sectorCount();
 		prevFile = file;
@@ -1062,9 +1062,9 @@ QList<IsoFileOrDirectory *> IsoArchive::getIntegrity() const
 
 	if(prevFile != NULL) {
 		prevFile->setPaddingAfter(sectorCount() - (prevFile->location() + prevFile->sectorCount()));
-//		qDebug() << QString("%1 -> %2 (%3 sectors) : padding after %4 (%5 sectors)").arg(prevFile->location() + prevFile->sectorCount())
-//					.arg(sectorCount()).arg(sectorCount() - (prevFile->location() + prevFile->sectorCount()))
-//					.arg(prevFile->name()).arg(prevFile->sectorCount());
+        qDebug() << QString("%1 -> %2 (%3 sectors) : padding after %4 (%5 sectors)").arg(prevFile->location() + prevFile->sectorCount())
+                    .arg(sectorCount()).arg(sectorCount() - (prevFile->location() + prevFile->sectorCount()))
+                    .arg(prevFile->name()).arg(prevFile->sectorCount());
 		if(prevFile->paddingAfter() > 0) {
 			filesWithPadding.append(prevFile);
 		}

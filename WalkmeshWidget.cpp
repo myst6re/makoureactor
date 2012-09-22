@@ -43,6 +43,7 @@ void WalkmeshWidget::fill(IdFile *walkmesh, CaFile *camera, InfFile *infFile)
 	this->camera = camera;
 	this->infFile = infFile;
 	updatePerspective();
+	resetCamera();
 }
 
 void WalkmeshWidget::computeFov()

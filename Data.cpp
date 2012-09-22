@@ -54,6 +54,35 @@ void Data::refreshFF7Paths()
 	ff7AppPath_cache = ff7DataPath_cache = QString();
 }
 
+#ifdef Q_WS_WIN
+QString Data::regValue(const QString &regPath, const QString &regKey)
+{
+	HKEY phkResult;
+	LONG error;
+	REGSAM flags = KEY_READ;
+
+#ifdef KEY_WOW64_32KEY
+	flags |= KEY_WOW64_32KEY; // if you compile Makou in 64-bit, force reg search into 32-bit entries
+#endif
+
+	// Open regPath relative to HKEY_LOCAL_MACHINE
+	error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, (wchar_t *)("SOFTWARE\\" + regPath).utf16(), 0, flags, &phkResult);
+	if(ERROR_SUCCESS == error) {
+		BYTE value[MAX_PATH];
+		DWORD cValue = MAX_PATH, type;
+
+		// Open regKey which must is a string value (REG_SZ)
+		RegQueryValueEx(phkResult, (wchar_t *)regKey.utf16(), NULL, &type, value, &cValue);
+		if(ERROR_SUCCESS == error && type == REG_SZ) {
+			RegCloseKey(phkResult);
+			return QString::fromUtf16((ushort *)value);
+		}
+		RegCloseKey(phkResult);
+	}
+	return QString();
+}
+#endif
+
 const QString &Data::searchRereleasedFF7Path()
 {
 #ifdef Q_WS_WIN
@@ -63,8 +92,7 @@ const QString &Data::searchRereleasedFF7Path()
 		LONG error;
 
 		// direct
-		ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(QSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", QSettings::NativeFormat)
-																			.value("InstallLocation").toString()));
+		ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(regValue("Microsoft\\Windows\\CurrentVersion\\Uninstall\\{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", "InstallLocation")));
 		if(!ff7RereleasePath_cache.isEmpty()) {
 			return ff7RereleasePath_cache;
 		}
@@ -120,11 +148,11 @@ const QString &Data::searchRereleasedFF7Path()
 QString Data::searchFF7Exe()
 {
 #ifdef Q_WS_WIN
-	QString ff7MusicPath = QDir::cleanPath(QDir::fromNativeSeparators(QSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\FF7Music", QSettings::NativeFormat).value("InstDir").toString()));
+	QString ff7MusicPath = QDir::cleanPath(QDir::fromNativeSeparators(regValue("FF7Music", "InstDir")));
 	if(!ff7MusicPath.isEmpty() && QFile::exists(ff7MusicPath + "/launchff7.exe")) {
 		return ff7MusicPath + "/launchff7.exe";
 	}
-	QString ff7Path = QSettings("Square Soft, Inc.", "Final Fantasy VII").value("AppPath").toString();
+	QString ff7Path = QDir::cleanPath(QDir::fromNativeSeparators(regValue("Square Soft, Inc.\\Final Fantasy VII", "AppPath")));
 	if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/ff7.exe")) {
 		return ff7Path + "/ff7.exe";
 	}
@@ -148,7 +176,7 @@ const QString &Data::ff7DataPath()
 		bool useNew = Config::value("useRereleaseFF7Path", false).toBool();
 		if(!useNew) {
 			// Search for old version
-			ff7DataPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(QSettings("Square Soft, Inc.", "Final Fantasy VII").value("DataPath").toString()));
+			ff7DataPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(regValue("Square Soft, Inc.\\Final Fantasy VII", "DataPath")));
 			// Search for new version
 			if(ff7DataPath_cache.isEmpty() || !QFile::exists(ff7DataPath_cache)) {
 				ff7DataPath_cache = searchRereleasedFF7Path();
@@ -164,7 +192,7 @@ const QString &Data::ff7DataPath()
 			}
 			// Search for old version
 			if(ff7DataPath_cache.isEmpty() || !QFile::exists(ff7DataPath_cache)) {
-				ff7DataPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(QSettings("Square Soft, Inc.", "Final Fantasy VII").value("DataPath").toString()));
+				ff7DataPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(regValue("Square Soft, Inc.\\Final Fantasy VII", "DataPath")));
 			}
 		}
 	}

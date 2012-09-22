@@ -178,11 +178,11 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 
 	// use data from the cache
 	if(unlzs && fieldDataIsCached(field)) {
-//		qDebug() << "FieldArchive use field data from cache" << field->getName();
+		qDebug() << "FieldArchive use field data from cache" << field->getName();
 		return fieldDataCache;
-	}/* else {
+	} else {
 		qDebug() << "FieldArchive don't use field data from cache" << field->getName() << unlzs;
-	}*/
+	}
 
 	if(isDatFile()) {
 		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))		return QByteArray();
@@ -326,6 +326,7 @@ bool FieldArchive::modelDataIsCached(Field *field) const
 
 void FieldArchive::clearCachedData()
 {
+	qDebug() << "FieldArchive::clearCachedData()";
 	fieldCache = 0;
 	mimCache = 0;
 	modelCache = 0;
@@ -661,8 +662,10 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 
 void FieldArchive::close()
 {
+	qDebug() << "FieldArchive::close()";
 	if(fic!=NULL)	fic->close();
 	clearCachedData();
+	qDebug() << "/FieldArchive::close()";
 }
 
 void FieldArchive::addDAT(const QString &name, QList<QTreeWidgetItem *> &items)
@@ -677,6 +680,7 @@ void FieldArchive::addDAT(const QString &name, QList<QTreeWidgetItem *> &items)
 
 FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 {
+	qDebug() << "FieldArchive::open()";
 	foreach(Field *field, fileList)	delete field;
 	foreach(TutFile *tut, tuts)		delete tut;
 	fileList.clear();
@@ -685,6 +689,7 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 	fieldsSortByName.clear();
 	fieldsSortByMapId.clear();
 	Data::field_names.clear();
+	clearCachedData();
 
 	if(isDirectory())
 	{
@@ -823,6 +828,8 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		fieldsSortByMapId.insert(item->text(1), id);
 	}
 
+	qDebug() << "/FieldArchive::open()";
+
 	return Ok;
 }
 
@@ -848,11 +855,10 @@ void FieldArchive::setSaved()
 
 FieldArchive::ErrorCode FieldArchive::save(QString path)
 {
+	qDebug() << "FieldArchive::save()" << path;
 	quint32 nbFiles, pos, taille, oldtaille;
 	qint32 fieldID;
 	bool saveAs;
-
-	clearCachedData(); // Important: the file data will change
 
 	if(isDirectory() || isDatFile())
 	{
@@ -874,6 +880,7 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 		}
 
 		setSaved();
+		clearCachedData(); // Important: the file data will change
 
 		return Ok;
 	}
@@ -1062,6 +1069,9 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 
 		// Clear "isModified" state
 		setSaved();
+		clearCachedData(); // Important: the file data will change
+
+		qDebug() << "/FieldArchive::save()" << path;
 
 		// qDebug("Ecrire le nouvel Lgp : %d ms", t.elapsed());
 		return Ok;
@@ -1140,6 +1150,7 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 		// Clear "isModified" state
 		iso->applyModifications(isoFieldDirectory);
 		setSaved();
+		clearCachedData(); // Important: the file data will change
 
 		return Ok;
 	}

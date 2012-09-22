@@ -29,6 +29,7 @@
 #include "ScriptList.h"
 #include "OpcodeList.h"
 #include "FieldModel.h"
+#include "ModelManager.h"
 #include "WalkmeshManager.h"
 
 class Window : public QMainWindow
@@ -119,6 +120,7 @@ private:
 	QMenu *menuLang;
 
 	TextManager *textDialog;
+	ModelManager *_modelManager;
 	WalkmeshManager *_walkmeshManager;
 	BGDialog *_backgroundManager;
 

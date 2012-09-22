@@ -27,46 +27,48 @@ class ModelManager : public QDialog
 {
 	Q_OBJECT
 public:
-	ModelManager(Field *field, const QGLWidget *shareWidget=0, QWidget *parent=0);
+	ModelManager(const QGLWidget *shareWidget=0, QWidget *parent=0);
+	void clear();
+	void fill(FieldPC *field);
+signals:
+	void modified();
 private:
+	void fillModelList();
+	int currentModelID(QTreeWidgetItem *item=0) const;
+	int currentAnimID(QTreeWidgetItem *item=0) const;
+
 	FieldPC *field;
 	FieldModelLoaderPC *fieldModelLoader;
-	bool page_filled;
-	QSpinBox *typeHRC;
+	QSpinBox *globalScale;
 	QTreeWidget *models;
-	QFrame *model_frame;
-	QLineEdit *model_name;
-	QSpinBox *model_unknown;
-	QSpinBox *model_typeHRC;
-	QTreeWidget *model_anims;
-	FieldModel *model_preview;
-	ColorDisplay *model_colorDisplay;
+	QFrame *modelFrame;
+	QLineEdit *modelName;
+	QSpinBox *modelUnknown;
+	QSpinBox *modelScale;
+	QTreeWidget *modelAnims;
+	FieldModel *modelPreview;
+	ColorDisplay *modelColorDisplay;
 	QToolBar *toolBar2;
-
-	QList<quint16> field_model_unknown;
-	QStringList field_model_nameChar;
-	QStringList field_model_nameHRC;
-	QList<quint16> field_model_typeHRC;
-	QList<QStringList> field_model_anims;
-	QList< QList<QRgb> > field_colors;
 private slots:
-	void show_HRC_infos(QTreeWidgetItem *, QTreeWidgetItem *);
+	void setGlobalScale(int value);
+	void showModelInfos(QTreeWidgetItem *, QTreeWidgetItem *);
 	void modifyHRC(const QString &hrc);
 	void modifyAnimation(const QString &a);
-	void add_HRC();
-	void del_HRC();
-	void up_HRC();
-	void down_HRC();
-	void renameOK_HRC(QTreeWidgetItem *);
-	void add_anim();
-	void del_anim();
-	void up_anim();
-	void down_anim();
-	void renameOK_anim(QTreeWidgetItem *);
-	void show_model(QTreeWidgetItem *item);
-	void save_page(QTreeWidgetItem *);
-protected:
-	void accept();
+	void addModel();
+	void delModel();
+	void upModel();
+	void downModel();
+	void renameOKModel(QTreeWidgetItem *);
+	void setModelName(const QString &modelName);
+	void setModelUnknown(int unknown);
+	void setModelScale(int scale);
+	void setModelColor(int id, QRgb color);
+	void addAnim();
+	void delAnim();
+	void upAnim();
+	void downAnim();
+	void renameOKAnim(QTreeWidgetItem *);
+	void showModel(QTreeWidgetItem *item);
 };
 
 #endif // MODELMANAGER_H
