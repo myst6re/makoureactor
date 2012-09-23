@@ -62,9 +62,9 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	toolBar2->addAction(QIcon(":/images/down.png"), QString(), this, SLOT(downAnim()));
 
 	modelAnims = new QTreeWidget();
-	modelAnims->setColumnCount(1);
+	modelAnims->setColumnCount(2);
 	modelAnims->setIndentation(0);
-	modelAnims->setHeaderLabel(tr("Animations"));
+	modelAnims->setHeaderLabels(QStringList() << tr("Animations") << tr("?"));
 	modelAnims->setFixedWidth(120);
 
 	QWidget *modelWidget;
@@ -109,7 +109,7 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 
 	connect(modelAnims, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(showModel(QTreeWidgetItem*)));
 	connect(modelAnims, SIGNAL(doubleClicked(QModelIndex)), modelAnims, SLOT(edit(QModelIndex)));
-	connect(modelAnims, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOKAnim(QTreeWidgetItem *)));
+	connect(modelAnims, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOKAnim(QTreeWidgetItem *, int)));
 
 	connect(modelName, SIGNAL(textEdited(QString)), SLOT(setModelName(QString)));
 	connect(modelUnknown, SIGNAL(valueChanged(int)), SLOT(setModelUnknown(int)));
@@ -130,8 +130,12 @@ void ModelManager::clear()
 	modelAnims->blockSignals(false);
 }
 
-void ModelManager::fill(FieldPC *field)
+void ModelManager::fill(FieldPC *field, bool reload)
 {
+	if(!reload && this->field == field)	return;
+
+	clear();
+
 	fieldModelLoader = field->getFieldModelLoader();
 	this->field = field;
 
@@ -199,12 +203,17 @@ void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *)
 
 	if(row < 0 || row >= fieldModelLoader->modelCount())	return;
 
+	int numA=0;
 	foreach(const QString &animName, fieldModelLoader->ANames(row))
 	{
-		item = new QTreeWidgetItem(QStringList(animName));
+		item = new QTreeWidgetItem(QStringList() << animName << QString::number(fieldModelLoader->animUnknown(row, numA)));
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 		modelAnims->addTopLevelItem(item);
+		++numA;
 	}
+
+	modelAnims->resizeColumnToContents(0);
+	modelAnims->resizeColumnToContents(1);
 
 	modelName->blockSignals(true);
 	modelUnknown->blockSignals(true);
@@ -524,7 +533,7 @@ void ModelManager::addAnim()
 
 	modelAnims->blockSignals(true);
 
-	newItem = new QTreeWidgetItem(QStringList(a));
+	newItem = new QTreeWidgetItem(QStringList() << a << "1");
 
 	if(item == NULL) {
 		modelAnims->addTopLevelItem(newItem);
@@ -620,19 +629,33 @@ void ModelManager::downAnim()
 	emit modified();
 }
 
-void ModelManager::renameOKAnim(QTreeWidgetItem *item)
+void ModelManager::renameOKAnim(QTreeWidgetItem *item, int column)
 {
 	int modelID = currentModelID();
 	if(modelID < 0)		return;
 	int animID = currentAnimID(item);
 	if(animID < 0)		return;
 
-	QString text = item->text(0).left(256);
-	item->setText(0, text);
+	if(column == 0) {
+		QString text = item->text(0).left(256);
+		item->setText(0, text);
 
-	fieldModelLoader->setAName(modelID, animID, text);
+		fieldModelLoader->setAName(modelID, animID, text);
+		emit modified();
+	} else if(column == 1) {
+		bool ok;
+		int value = item->text(1).toInt(&ok);
+		if(ok) {
+			if(value > 65535) {
+				value = 65535;
+				item->setText(1, QString::number(value));
+			}
+			fieldModelLoader->setAnimUnknown(modelID, animID, value);
+			emit modified();
+		}
+	}
 
-	emit modified();
+
 }
 
 void ModelManager::showModel(QTreeWidgetItem *item)

@@ -544,7 +544,7 @@ void Window::setWindowTitle()
 	QWidget::setWindowTitle(windowTitle);
 }
 
-void Window::openField()
+void Window::openField(bool reload)
 {
 	disconnect(groupScriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showGrpScripts()));
 	disconnect(scriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showScripts()));
@@ -578,24 +578,24 @@ void Window::openField()
 		return;
 	}
 	if(textDialog && textDialog->isVisible()) {
-		textDialog->setField(field);
+		textDialog->setField(field, reload);
 		textDialog->setEnabled(true);
 	}
 	if(actionModels->isEnabled() && _modelManager && _modelManager->isVisible()) {
-		_modelManager->fill((FieldPC *)field);
+		_modelManager->fill((FieldPC *)field, reload);
 		_modelManager->setEnabled(true);
 	}
 	if(_walkmeshManager && _walkmeshManager->isVisible()) {
-		_walkmeshManager->fill(field);
+		_walkmeshManager->fill(field, reload);
 		_walkmeshManager->setEnabled(true);
 	}
 	if(_backgroundManager && _backgroundManager->isVisible()) {
-		_backgroundManager->fill(field);
+		_backgroundManager->fill(field, reload);
 		_backgroundManager->setEnabled(true);
 	}
 
 	// Show background preview
-	zoneImage->fill(field);
+	zoneImage->fill(field, reload);
 	zonePreview->setCurrentIndex(0);
 
 	// Show author
@@ -1076,7 +1076,7 @@ void Window::importer()
 		setModified(true);
 		index = path.lastIndexOf('/');
 		Config::setValue("importPath", index == -1 ? path : path.left(index));
-		openField();
+		openField(true);
 		break;
 	case 1:	out = tr("Erreur lors de l'ouverture du fichier");break;
 	case 2:	out = tr("Le fichier est invalide");break;

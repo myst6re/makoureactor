@@ -30,8 +30,10 @@ ApercuBG::ApercuBG(QWidget *parent)
 	setPalette(pal);
 }
 
-void ApercuBG::fill(Field *field)
+void ApercuBG::fill(Field *field, bool reload)
 {
+	if(!reload && this->field == field)		return;
+
 	this->field = field;
 
 	QPixmap background = field->openBackground();

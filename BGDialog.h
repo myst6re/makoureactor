@@ -27,7 +27,7 @@ class BGDialog : public QDialog
     Q_OBJECT
 public:
 	explicit BGDialog(QWidget *parent);
-	void fill(Field *field);
+	void fill(Field *field, bool reload=false);
 	void clear();
 private slots:
 	void parameterChanged(int index);

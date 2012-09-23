@@ -260,9 +260,9 @@ void TextManager::focusInEvent(QFocusEvent *)
 	liste1->setFocus();
 }
 
-void TextManager::setField(Field *field)
+void TextManager::setField(Field *field, bool reload)
 {
-	if(this->scriptsAndTexts == field->scriptsAndTexts() || !field)	return;
+	if((!reload && this->scriptsAndTexts == field->scriptsAndTexts()) || !field)	return;
 	clear();
 	this->scriptsAndTexts = field->scriptsAndTexts();
 //	_windows.clear();

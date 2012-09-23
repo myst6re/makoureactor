@@ -27,7 +27,7 @@ class TextManager : public QDialog
 
 public:
 	explicit TextManager(QWidget *parent=0);
-	void setField(Field *field);
+	void setField(Field *field, bool reload=false);
 	void clear();
 	void updateText();
 	void gotoText(int textID, int from, int size);

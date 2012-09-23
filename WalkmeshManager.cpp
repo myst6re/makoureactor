@@ -449,9 +449,9 @@ QWidget *WalkmeshManager::buildMiscPage()
 	return ret;
 }
 
-void WalkmeshManager::fill(Field *field)
+void WalkmeshManager::fill(Field *field, bool reload)
 {
-	if(field->getInf() == infFile || !field)	return;
+	if((!reload && field->getInf() == infFile) || !field)	return;
 
 	infFile = field->getInf();
 	idFile = field->walkmesh();

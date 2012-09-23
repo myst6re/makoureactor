@@ -76,7 +76,7 @@ public slots:
 private slots:
 	void emitOpcodeID();
 
-	void openField();
+	void openField(bool reload=false);
 	void showGrpScripts();
 	void showScripts();
 	void compile();

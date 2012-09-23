@@ -29,7 +29,7 @@ class ModelManager : public QDialog
 public:
 	ModelManager(const QGLWidget *shareWidget=0, QWidget *parent=0);
 	void clear();
-	void fill(FieldPC *field);
+	void fill(FieldPC *field, bool reload=false);
 signals:
 	void modified();
 private:
@@ -67,7 +67,7 @@ private slots:
 	void delAnim();
 	void upAnim();
 	void downAnim();
-	void renameOKAnim(QTreeWidgetItem *);
+	void renameOKAnim(QTreeWidgetItem *item, int column);
 	void showModel(QTreeWidgetItem *item);
 };
 

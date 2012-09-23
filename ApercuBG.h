@@ -26,7 +26,7 @@ class ApercuBG : public QScrollArea
 	Q_OBJECT
 public:
 	explicit ApercuBG(QWidget *parent=0);
-	void fill(Field *field);
+	void fill(Field *field, bool reload=false);
 	void clear();
 signals:
 	void clicked();

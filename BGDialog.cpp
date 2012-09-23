@@ -20,7 +20,7 @@
 BGDialog::BGDialog(QWidget *parent) :
 	QDialog(parent, Qt::Tool), field(0)
 {
-	setWindowTitle(tr("Aperçu écran"));
+	setWindowTitle(tr("Décor"));
 
 	QScrollArea *scrollArea = new QScrollArea(this);
 	scrollArea->setWidgetResizable(true);
@@ -65,13 +65,11 @@ BGDialog::BGDialog(QWidget *parent) :
 	connect(zWidget, SIGNAL(valueChanged(int)), SLOT(changeZ(int)));
 }
 
-void BGDialog::fill(Field *field)
+void BGDialog::fill(Field *field, bool reload)
 {
-	if(this->field == field || !field)	return;
+	if((!reload && this->field == field) || !field)	return;
 
 	this->field = field;
-
-	setWindowTitle(tr("Aperçu %1").arg(field->getName()));
 
 	fillWidgets();
 
