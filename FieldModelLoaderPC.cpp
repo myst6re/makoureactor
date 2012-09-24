@@ -300,11 +300,10 @@ int FieldModelLoaderPC::animCount(int modelID) const
 	return 0;
 }
 
-void FieldModelLoaderPC::insertAnim(int modelID, int numA)
+void FieldModelLoaderPC::insertAnim(int modelID, int numA, const QString &name)
 {
-	if(modelID >= 0 && modelID < modelCount()
-			&& numA >= 0 && numA < animCount(modelID)) {
-		model_anims[modelID].insert(numA, QString());
+	if(modelID >= 0 && modelID < modelCount()) {
+		model_anims[modelID].insert(numA, name);
 		model_anims_unknown[modelID].insert(numA, 1);
 
 		modified = true;

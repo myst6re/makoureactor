@@ -48,7 +48,7 @@ public:
 	void setLightColors(int modelID, const QList<QRgb> &lightColors);
 	void setLightColor(int modelID, int colorID, QRgb lightColor);
 	int animCount(int modelID) const;
-	void insertAnim(int modelID, int numA);
+	void insertAnim(int modelID, int numA, const QString &name);
 	void removeAnim(int modelID, int numA);
 	void swapAnim(int modelID, int oldNumA, int newNumA);
 	const QStringList &ANames(int modelID) const;

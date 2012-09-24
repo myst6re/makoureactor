@@ -581,7 +581,7 @@ void Window::openField(bool reload)
 		textDialog->setField(field, reload);
 		textDialog->setEnabled(true);
 	}
-	if(actionModels->isEnabled() && _modelManager && _modelManager->isVisible()) {
+	if(field->isPC() && _modelManager && _modelManager->isVisible()) {
 		_modelManager->fill((FieldPC *)field, reload);
 		_modelManager->setEnabled(true);
 	}
@@ -1143,7 +1143,7 @@ void Window::textManager(bool activate)
 
 void Window::modelManager()
 {
-	if(!actionModels->isEnabled())	return;
+	if(!field->isPC())	return;
 
 	if(!_modelManager) {
 		_modelManager = new ModelManager(fieldModel, this);

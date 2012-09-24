@@ -538,13 +538,13 @@ void ModelManager::addAnim()
 	if(item == NULL) {
 		modelAnims->addTopLevelItem(newItem);
 
-		fieldModelLoader->insertAnim(modelID, modelAnims->topLevelItemCount());
+		fieldModelLoader->insertAnim(modelID, modelAnims->topLevelItemCount(), a);
 	}
 	else {
 		int animID = currentAnimID(item);
 		modelAnims->insertTopLevelItem(animID+1, newItem);
 
-		fieldModelLoader->insertAnim(modelID, animID+1);
+		fieldModelLoader->insertAnim(modelID, animID+1, a);
 	}
 
 	modelAnims->blockSignals(false);
@@ -652,10 +652,11 @@ void ModelManager::renameOKAnim(QTreeWidgetItem *item, int column)
 			}
 			fieldModelLoader->setAnimUnknown(modelID, animID, value);
 			emit modified();
+		} else {
+			// reset old value
+			item->setText(1, QString::number(fieldModelLoader->animUnknown(modelID, animID)));
 		}
 	}
-
-
 }
 
 void ModelManager::showModel(QTreeWidgetItem *item)

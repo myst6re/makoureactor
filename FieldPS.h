@@ -70,6 +70,8 @@ public:
 	FieldPS(const Field &field);
 	virtual ~FieldPS();
 
+	inline bool isPC() const { return false; }
+
 	bool open(bool dontOptimize=false);
 	QPixmap openBackground();
 	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);

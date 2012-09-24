@@ -74,6 +74,9 @@ public:
 	bool isModified() const;
 	void setModified(bool modified);
 
+	virtual bool isPC() const=0;
+	inline bool isPS() const { return !isPC(); }
+
 	virtual bool open(bool dontOptimize=false)=0;
 
 	virtual QPixmap openBackground()=0;
