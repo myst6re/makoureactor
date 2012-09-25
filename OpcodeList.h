@@ -75,7 +75,7 @@ private:
 	QTreeWidgetItem *findItem(int id);
 	QList<int> selectedIDs();
 
-	QString showHistoric();
+//	QString showHistoric();
 	void changeHist(HistoricType type, int opcodeID=0, Opcode *data=0);
 	void changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<Opcode *> &data);
 	void clearHist();

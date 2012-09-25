@@ -18,22 +18,24 @@
 #include "GrpScript.h"
 #include "FF7Text.h"
 
-GrpScript::GrpScript()
-	: name(QString()), character(-1), animation(false), location(false), director(false)
+GrpScript::GrpScript() :
+	character(-1), animation(false), location(false), director(false)
 {
 	addScript(QByteArray(2, '\x0'));
 	for(int i=1 ; i<32 ; i++)	addScript();
 }
 
-GrpScript::GrpScript(const QString &name)
-	: name(name), character(-1), animation(false), location(false), director(false)
+GrpScript::GrpScript(const QString &name) :
+	name(name), character(-1), animation(false), location(false), director(false)
 {
 }
 
-GrpScript::GrpScript(const QString &name, const QList<Script *> &scripts)
-	: name(name), character(-1), animation(false), location(false), director(false)
+GrpScript::GrpScript(const GrpScript &other)
+	: name(other.getRealName()), character(-1), animation(false), location(false), director(false)
 {
-	setScripts(scripts, true);
+	foreach(Script *script, other.getScripts()) {
+		scripts.append(new Script(*script));
+	}
 }
 
 GrpScript::~GrpScript()
@@ -157,18 +159,6 @@ Script *GrpScript::getScript(quint8 scriptID) const
 const QList<Script *> &GrpScript::getScripts() const
 {
 	return scripts;
-}
-
-void GrpScript::setScripts(const QList<Script *> &scripts, bool copy)
-{
-	if(copy) {
-		this->scripts.clear();
-		foreach(Script *script, scripts) {
-			addScript(script->toByteArray(), false);
-		}
-	} else {
-		this->scripts = scripts;
-	}
 }
 
 QByteArray GrpScript::toByteArray(quint8 scriptID) const

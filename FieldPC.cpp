@@ -38,7 +38,7 @@ bool FieldPC::open(bool dontOptimize)
 {
 	QByteArray fileData;
 
-	qDebug() << "FieldPC::open" << dontOptimize << name;
+//	qDebug() << "FieldPC::open" << dontOptimize << name;
 
 	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
 		QByteArray lzsData = fieldArchive->getFieldData(this, false);
@@ -74,7 +74,6 @@ bool FieldPC::open(bool dontOptimize)
 
 QByteArray FieldPC::sectionData(FieldPart part)
 {
-	qDebug() << "FieldPC::sectionData" << (int)part;
 	if(!_isOpen) {
 		open();
 	}
@@ -104,7 +103,6 @@ QByteArray FieldPC::sectionData(FieldPart part)
 
 QByteArray FieldPC::sectionData(int idPart)
 {
-	qDebug() << "FieldPC::sectionData2" << idPart;
 	int position = sectionPositions[idPart] + 4;
 	int size;
 
@@ -547,7 +545,9 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 		memcpy(&sectionPositions[i], &decompresseData[6+4*i], 4);
 
 	// Header + pos section 1
-	toc.append(decompresseData, 10);
+	toc.append("\x00\x00", 2);
+	toc.append("\x09\x00\x00\x00", 4); // section count
+	toc.append("\x2A\x00\x00\x00", 4); // pos section 1
 
 	// Section 1 (scripts + textes + akaos/tutos)
 	if(section1 && section1->isModified()) {
@@ -559,7 +559,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	}
 
 	size = 42 + newData.size();
-	toc.append((char *)&size, 4);
+	toc.append((char *)&size, 4); // pos section 2
 
 	// Section 2 (camera)
 	section = QByteArray();
@@ -571,7 +571,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	}
 
 	size = 42 + newData.size();
-	toc.append((char *)&size, 4);
+	toc.append((char *)&size, 4); // pos section 3
 
 	// Section 3 (model loader PC)
 	if(modelLoader && modelLoader->isLoaded() && modelLoader->isModified()) {
@@ -583,13 +583,13 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	}
 
 	size = 42 + newData.size();
-	toc.append((char *)&size, 4);
+	toc.append((char *)&size, 4); // pos section 4
 	
 	// Section 4 (background palette PC)
 	newData.append(&decompresseData[sectionPositions[3]], sectionPositions[4]-sectionPositions[3]);
 
 	size = 42 + newData.size();
-	toc.append((char *)&size, 4);
+	toc.append((char *)&size, 4); // pos section 5
 
 	// Section 5 (walkmesh)
 	section = QByteArray();
@@ -601,13 +601,13 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	}
 
 	size = 42 + newData.size();
-	toc.append((char *)&size, 4);
+	toc.append((char *)&size, 4); // pos section 6
 
 	// Section 6 (background tileMap -unused-)
 	newData.append(&decompresseData[sectionPositions[5]], sectionPositions[6]-sectionPositions[5]);
 
 	size = 42 + newData.size();
-	toc.append((char *)&size, 4);
+	toc.append((char *)&size, 4); // pos section 7
 
 	// Section 7 (encounter)
 	if(_encounter && _encounter->isModified()) {
@@ -619,7 +619,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	}
 
 	size = 42 + newData.size();
-	toc.append((char *)&size, 4);
+	toc.append((char *)&size, 4); // pos section 8
 
 	// Section 8 (trigger)
 	if(inf && inf->isModified()) {
@@ -631,7 +631,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	}
 
 	size = 42 + newData.size();
-	toc.append((char *)&size, 4);
+	toc.append((char *)&size, 4); // pos section 9
 
 	// Section 9 (background PC)
 	newData.append(decompresse.mid(sectionPositions[8]));
@@ -672,7 +672,9 @@ qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldParts part)
 
 		if(part.testFlag(ModelLoader)) {
 			FieldModelLoaderPC *modelLoader = getFieldModelLoader(false);
-			modelLoader->load(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4));
+			if(!modelLoader->load(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4))) {
+				return 2;
+			}
 			modelLoader->setModified(true);
 		}
 	}

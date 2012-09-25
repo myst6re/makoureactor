@@ -577,19 +577,19 @@ void Window::openField(bool reload)
 		opcodeList->setEnabled(false);
 		return;
 	}
-	if(textDialog && textDialog->isVisible()) {
+	if(textDialog && (reload || textDialog->isVisible())) {
 		textDialog->setField(field, reload);
 		textDialog->setEnabled(true);
 	}
-	if(field->isPC() && _modelManager && _modelManager->isVisible()) {
+	if(field->isPC() && _modelManager && (reload || _modelManager->isVisible())) {
 		_modelManager->fill((FieldPC *)field, reload);
 		_modelManager->setEnabled(true);
 	}
-	if(_walkmeshManager && _walkmeshManager->isVisible()) {
+	if(_walkmeshManager && (reload || _walkmeshManager->isVisible())) {
 		_walkmeshManager->fill(field, reload);
 		_walkmeshManager->setEnabled(true);
 	}
-	if(_backgroundManager && _backgroundManager->isVisible()) {
+	if(_backgroundManager && (reload || _backgroundManager->isVisible())) {
 		_backgroundManager->fill(field, reload);
 		_backgroundManager->setEnabled(true);
 	}

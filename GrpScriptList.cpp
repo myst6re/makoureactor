@@ -19,7 +19,7 @@
 #include "Data.h"
 
 GrpScriptList::GrpScriptList(QWidget *parent)
-	: QTreeWidget(parent), hasCut(false)
+	: QTreeWidget(parent)
 {
 	setColumnCount(3);
 	setHeaderLabels(QStringList() << tr("Id") << tr("Groupe") << tr("Type"));
@@ -108,11 +108,8 @@ GrpScriptList::GrpScriptList(QWidget *parent)
 
 GrpScriptList::~GrpScriptList()
 {
-	if(hasCut)
-	{
-		foreach(GrpScript *grpScript, grpScriptCopied)
-			delete grpScript;
-	}
+	foreach(GrpScript *grpScript, grpScriptCopied)
+		delete grpScript;
 }
 
 void GrpScriptList::setEnabled(bool enabled)
@@ -259,17 +256,16 @@ void GrpScriptList::cut()
 {
 	copy();
 	del(false);
-	hasCut = true;
 }
 
 void GrpScriptList::copy()
 {
 	QList<int> selectedIDs = this->selectedIDs();
 	if(selectedIDs.isEmpty())	return;
-	hasCut = false;
+
 	clearCopiedGroups();
 	foreach(const int &id, selectedIDs)
-		grpScriptCopied.append(scripts->grpScript(id));
+		grpScriptCopied.append(new GrpScript(*scripts->grpScript(id)));
 
 	actions().at(6)->setEnabled(true);
 }
@@ -279,7 +275,7 @@ void GrpScriptList::paste()
 	int grpScriptID = selectedID()+1, scrollID = grpScriptID;
 	if(grpScriptID == 0)	return;
 	foreach(GrpScript *GScopied, grpScriptCopied)
-		scripts->insertGrpScript(grpScriptID++, GScopied);
+		scripts->insertGrpScript(grpScriptID++, new GrpScript(*GScopied));
 
 	fill();
 	scroll(scrollID);
@@ -288,11 +284,8 @@ void GrpScriptList::paste()
 
 void GrpScriptList::clearCopiedGroups()
 {
-	if(hasCut)
-	{
-		foreach(GrpScript *grpScript, grpScriptCopied)
-			delete grpScript;
-	}
+	foreach(GrpScript *grpScript, grpScriptCopied)
+		delete grpScript;
 	grpScriptCopied.clear();
 }
 

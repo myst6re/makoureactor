@@ -38,7 +38,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 					<< 0xB4 << 0xB5 << 0xBA << 0xBB << 0xBC << 0xC0 << 0xC2;
 	}
 
-	setWindowTitle(tr("Éditeur%1").arg(isInit ? tr(" (init mode)") : ""));
+	setWindowTitle(tr("Éditeur de script%1").arg(isInit ? tr(" (init mode)") : ""));
 	setMinimumSize(500, 400);
 	
 	QStringList liste0;

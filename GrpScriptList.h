@@ -57,7 +57,6 @@ signals:
 	void changed();
 
 private:
-	bool hasCut;
 	void move(bool direction);
 	QTreeWidgetItem *findItem(int id);
 	QList<int> selectedIDs();

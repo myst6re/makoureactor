@@ -235,6 +235,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 		if(part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
 			if(!section1->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))	return 2;
+			if(section1->isOpen())	Data::currentTextes = section1->texts();
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {
@@ -275,22 +276,22 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 		}
 		if(part.testFlag(Akaos)) {
 			TutFile *_tut = tutosAndSounds(false);
-			if(!_tut->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))	return 2;
+			if(!_tut->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))		return 2;
 			_tut->setModified(true);
 		}
 		if(part.testFlag(Encounter)) {
 			EncounterFile *enc = encounter(false);
-			if(!enc->open(data.mid(sectionPositions[6]+4, sectionPositions[7]-sectionPositions[6]-4)))	return 2;
+			if(!enc->open(data.mid(sectionPositions[6]+4, sectionPositions[7]-sectionPositions[6]-4)))		return 2;
 			enc->setModified(true);
 		}
 		if(part.testFlag(Walkmesh)) {
 			IdFile *walk = walkmesh(false);
-			if(!walk->open(data.mid(sectionPositions[4]+4, sectionPositions[5]-sectionPositions[4]-4)))	return 2;
+			if(!walk->open(data.mid(sectionPositions[4]+4, sectionPositions[5]-sectionPositions[4]-4)))		return 2;
 			walk->setModified(true);
 		}
 		if(part.testFlag(Camera)) {
 			CaFile *ca = camera(false);
-			if(!ca->open(data.mid(sectionPositions[1]+4, sectionPositions[2]-sectionPositions[1]-4)))	return 2;
+			if(!ca->open(data.mid(sectionPositions[1]+4, sectionPositions[2]-sectionPositions[1]-4)))		return 2;
 			ca->setModified(true);
 		}
 		if(part.testFlag(Inf)) {

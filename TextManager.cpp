@@ -335,12 +335,12 @@ void TextManager::showList()
 	if(!scriptsAndTexts)	return;
 	bool show = dispUnusedText->isChecked();
 	liste1->blockSignals(true);
-	int nbTextes = scriptsAndTexts->textCount();
+	int nbTexts = scriptsAndTexts->textCount();
 	liste1->clear();
 
 	Config::setValue("dispUnusedText", show);
 
-	for(int i=0 ; i<nbTextes ; ++i)
+	for(int i=0 ; i<nbTexts ; ++i)
 	{
 		if(!show && !usedTexts.contains(i))	continue;
 

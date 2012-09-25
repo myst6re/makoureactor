@@ -276,6 +276,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 
 			QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList(curOpcode->toString()));
 			item->setData(0, Qt::UserRole, opcodeID);
+			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 			items.append(item);
 
 			QPixmap wordPixmap(32,11);
@@ -355,7 +356,7 @@ void OpcodeList::add()
 	scriptEditor(false);
 }
 
-QString OpcodeList::showHistoric()
+/*QString OpcodeList::showHistoric()
 {
 	QStringList ret;
 	foreach(const Historic &h, hists) {
@@ -384,7 +385,7 @@ QString OpcodeList::showHistoric()
 		ret2.append(type);
 	}
 	return "(" + ret.join(", ") + ") (" + ret2.join(", ") + ")";
-}
+}*/
 
 void OpcodeList::changeHist(HistoricType type, int opcodeID, Opcode *data)
 {

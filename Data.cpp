@@ -226,7 +226,7 @@ const QString &Data::ff7AppPath()
 				}
 			} else {
 				// Search for new version
-				ff7AppPath_cache = searchRereleasedFF7Path();
+				ff7AppPath_cache = searchRereleasedFF7Exe();
 				// Search for old version
 				if(ff7AppPath_cache.isEmpty()) {
 					ff7AppPath_cache = searchFF7Exe();
@@ -383,7 +383,16 @@ int Data::load()
 	if(path.isEmpty()) {
 		path = ff7DataPath();
 		if(path.isEmpty())	return 2;
-		path.append("kernel/kernel2.bin");
+		if(QFile::exists(path + "/kernel/kernel2.bin"))
+			path.append("/kernel/kernel2.bin");
+		else {
+			QString lang = QLocale::system().name().toLower();
+			lang = Config::value("lang", lang.left(lang.indexOf("_"))).toString().toLower();
+			if(lang == "de" || lang == "en" || lang == "es" || lang == "fr")
+				path.append(QString("/lang-%1/kernel/kernel2.bin").arg(lang));
+			else
+				path.append(QString("/lang-fr/kernel/kernel2.bin"));
+		}
 	}
 
 	QFile fic(path);

@@ -31,6 +31,7 @@ public:
 	Script();
 	explicit Script(const QList<Opcode *> &opcodes);
 	explicit Script(const QByteArray &script);
+	Script(const Script &other);
 	virtual ~Script();
 
 	bool openScript(const QByteArray &script);

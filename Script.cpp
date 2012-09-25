@@ -32,6 +32,15 @@ Script::Script(const QByteArray &script)
 	valid = openScript(script);
 }
 
+Script::Script(const Script &other) :
+	valid(true)
+{
+	qDebug() << "Script";
+	foreach(Opcode *opcode, other.getOpcodes()) {
+		opcodes.append(Script::copyOpcode(opcode));
+	}
+}
+
 Script::~Script()
 {
 	foreach(Opcode *opcode, opcodes)	delete opcode;
@@ -784,7 +793,7 @@ bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) co
 	return true;
 
 	// Optimization: if this is a short jump and opcode is a long jump
-//	if(opcodeJump->isLongJump() && jump/* - opcodeJump->jumpPosData() <= 240) {
+//	if(opcodeJump->isLongJump() && jump - opcodeJump->jumpPosData() <= 240) {
 //		switch((Opcode::Keys)opcodeJump->id()) {
 //		case Opcode::JMPFL:
 //			qDebug() << "convert" << opcodeJump->name() << "to JMPF because" << jump << "<=" << 240;
