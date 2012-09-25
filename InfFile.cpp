@@ -128,6 +128,50 @@ void InfFile::setCameraRange(const Range &range)
 	_isModified = true;
 }
 
+quint8 InfFile::bgLayer1Flag() const
+{
+	return data.bg_layer1_flag;
+}
+
+void InfFile::setBgLayer1Flag(quint8 flag)
+{
+	data.bg_layer1_flag = flag;
+	_isModified = true;
+}
+
+quint8 InfFile::bgLayer2Flag() const
+{
+	return data.bg_layer2_flag;
+}
+
+void InfFile::setBgLayer2Flag(quint8 flag)
+{
+	data.bg_layer2_flag = flag;
+	_isModified = true;
+}
+
+quint8 InfFile::bgLayer3Flag() const
+{
+	return data.bg_layer3_flag;
+}
+
+void InfFile::setBgLayer3Flag(quint8 flag)
+{
+	data.bg_layer3_flag = flag;
+	_isModified = true;
+}
+
+quint8 InfFile::bgLayer4Flag() const
+{
+	return data.bg_layer4_flag;
+}
+
+void InfFile::setBgLayer4Flag(quint8 flag)
+{
+	data.bg_layer4_flag = flag;
+	_isModified = true;
+}
+
 qint16 InfFile::bgLayer3Width() const
 {
 	return data.bg_layer3_width;
@@ -243,24 +287,13 @@ void InfFile::setArrow(quint8 id, const Arrow &arrow)
 	_isModified = true;
 }
 
-QByteArray InfFile::unknown1() const
+QByteArray InfFile::unknown() const
 {
-	return QByteArray((char *)&data.u1, 4);
+	return QByteArray((char *)data.unknown, 24);
 }
 
-void InfFile::setUnknown1(const QByteArray &u)
+void InfFile::setUnknown(const QByteArray &u)
 {
-	memcpy(&data.u1, u.leftJustified(4, '\0', true).constData(), 4);
-	_isModified = true;
-}
-
-QByteArray InfFile::unknown2() const
-{
-	return QByteArray((char *)data.u2, 24);
-}
-
-void InfFile::setUnknown2(const QByteArray &u)
-{
-	memcpy(data.u2, u.leftJustified(24, '\0', true).constData(), 24);
+	memcpy(data.unknown, u.leftJustified(24, '\0', true).constData(), 24);
 	_isModified = true;
 }

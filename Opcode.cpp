@@ -3112,20 +3112,20 @@ QString OpcodeMENU::menu(const QString &param) const
 	case 1:		return QObject::tr("Fermer le programme (paramètre %1)").arg(param);
 	case 2:		return QObject::tr("Encount Error (paramètre %1)").arg(param);
 	case 5:		return QObject::tr("Crédits de ff7 (paramètre %1)").arg(param);
-	case 6:		return QObject::tr("Changer nom de %1").arg(_personnage(this->param));//Paramètre : personnage id
+	case 6:		return QObject::tr("Changer nom de %1").arg(_personnage(this->param));//Parameter: char id
 	case 7:		return QObject::tr("Changer l'équipe (paramètre %1)").arg(param);
-	case 8:		return QObject::tr("magasin n°%1").arg(param);//Paramètre : magasin id
+	case 8:		return QObject::tr("magasin n°%1").arg(param);//Parameter: shop id
 	case 9:		return QObject::tr("principal (paramètre %1)").arg(param);
 	case 12:	return QObject::tr("course de moto (paramètre %1)").arg(param);
 	case 14:	return QObject::tr("Sauvegarde (paramètre %1)").arg(param);
 	case 15:	return QObject::tr("Effacer toutes les matérias (paramètre %1)").arg(param);
 	case 16:	return QObject::tr("Rétablir toutes les matérias (paramètre %1)").arg(param);
-	case 17:	return QObject::tr("Effacer la Matéria de %1").arg(_personnage(this->param));
+	case 17:	return QObject::tr("Effacer la matéria de %1").arg(_personnage(this->param));//Parameter: char id
 	case 18:	return QObject::tr("Effacer les matérias de Clad (paramètre %1)").arg(param);
 	case 19:	return QObject::tr("Rétablir les matérias de Clad (paramètre %1)").arg(param);
-	case 20:	return QObject::tr("? (paramètre %1)").arg(param);
+	case 20:	return QObject::tr("? (paramètre %1)").arg(param);// TODO
 	case 21:	return QObject::tr("HPs à 1 (paramètre %1)").arg(param);
-	case 22:	return QObject::tr("? (paramètre %1)").arg(param);
+	case 22:	return QObject::tr("? (paramètre %1)").arg(param);// TODO
 	case 23:	return QObject::tr("maitre ? (paramètre %1)").arg(param);
 	case 24:	return QObject::tr("? (paramètre %1)").arg(param);
 	case 25:	return QObject::tr("? (paramètre %1)").arg(param);

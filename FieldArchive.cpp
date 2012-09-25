@@ -178,11 +178,11 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 
 	// use data from the cache
 	if(unlzs && fieldDataIsCached(field)) {
-		qDebug() << "FieldArchive use field data from cache" << field->getName();
+//		qDebug() << "FieldArchive use field data from cache" << field->getName();
 		return fieldDataCache;
-	} else {
+	} /*else {
 		qDebug() << "FieldArchive don't use field data from cache" << field->getName() << unlzs;
-	}
+	}*/
 
 	if(isDatFile()) {
 		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))		return QByteArray();
@@ -369,7 +369,10 @@ void FieldArchive::searchAll()
 		Field *field = this->field(i);
 		if(field != NULL) {
 //			qDebug() << field->getName();
-			field->encounter();
+//			QByteArray u2 = field->getInf()->unknown();
+//			if(u2 != QByteArray(24, '\0')) {
+//				qDebug() << field->getName().leftJustified(8, QChar(' '), true) << "u2" << u2.toHex();
+//			}
 //			Section1File *section1 = field->scriptsAndTexts();
 //			if(section1->isOpen()) {
 ////				foreach(GrpScript *grpScript, section1->grpScripts()) {
@@ -719,12 +722,14 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		isoFieldDirectory = iso->rootDirectory()->directory("FIELD");
 		if(isoFieldDirectory == NULL)	return FieldNotFound;
 
-		emit nbFilesChanged(isoFieldDirectory->filesAndDirectories().size());
+		QList<IsoFile *> files = isoFieldDirectory->files();
+
+		emit nbFilesChanged(files.size());
 
 		// QTime t;t.start();
 
 		int i=0;
-		foreach(IsoFile *file, isoFieldDirectory->files()) {
+		foreach(IsoFile *file, files) {
 			QCoreApplication::processEvents();
 			emit progress(i++);
 
@@ -1087,6 +1092,9 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 		if(!isoTemp.open(QIODevice::ReadWrite | QIODevice::Truncate))		return ErrorOpening;
 
 		emit nbFilesChanged(100);
+		// Reset IsoControl
+		baseEstimation = 0;
+		estimation = 100;
 
 		// FIELD/*.DAT
 

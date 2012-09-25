@@ -62,12 +62,15 @@ typedef struct {
 	quint8 control;
 	qint16 cameraFocusHeight;
 	Range camera_range; // 8 bytes
-	quint32 u1;
+	quint8 bg_layer1_flag;
+	quint8 bg_layer2_flag;
+	quint8 bg_layer3_flag;
+	quint8 bg_layer4_flag;
 	qint16 bg_layer3_width;
 	qint16 bg_layer3_height;
 	qint16 bg_layer4_width;
 	qint16 bg_layer4_height;
-	quint8 u2[24];
+	quint8 unknown[24];
 	Exit doors[12];// 24 * 12 bytes
 	Trigger triggers[12];// 16 * 12 bytes
 	// Only in occidental/international version
@@ -94,6 +97,14 @@ public:
 	void setCameraFocusHeight(qint16 cameraFocusHeight);
 	const Range &cameraRange() const;
 	void setCameraRange(const Range &range);
+	quint8 bgLayer1Flag() const;
+	void setBgLayer1Flag(quint8 flag);
+	quint8 bgLayer2Flag() const;
+	void setBgLayer2Flag(quint8 flag);
+	quint8 bgLayer3Flag() const;
+	void setBgLayer3Flag(quint8 flag);
+	quint8 bgLayer4Flag() const;
+	void setBgLayer4Flag(quint8 flag);
 	qint16 bgLayer3Width() const;
 	void setBgLayer3Width(qint16 width);
 	qint16 bgLayer3Height() const;
@@ -113,10 +124,8 @@ public:
 	QList<Arrow> arrows() const;
 	const Arrow &arrow(quint8 id) const;
 	void setArrow(quint8 id, const Arrow &arrow);
-	QByteArray unknown1() const;
-	void setUnknown1(const QByteArray &u);
-	QByteArray unknown2() const;
-	void setUnknown2(const QByteArray &u);
+	QByteArray unknown() const;
+	void setUnknown(const QByteArray &u);
 private:
 	bool _isOpen, _isModified;
 	InfData data;
