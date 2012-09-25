@@ -136,6 +136,10 @@ void ModelManager::fill(FieldPC *field, bool reload)
 
 	clear();
 
+	if(!field->getFieldModelLoader()->isLoaded()) {
+		return;
+	}
+
 	fieldModelLoader = field->getFieldModelLoader();
 	this->field = field;
 
@@ -269,8 +273,8 @@ void ModelManager::addModel()
 		connect(&list, SIGNAL(currentIndexChanged(QString)), SLOT(modifyHRC(QString)));
 		connect(&OKButton, SIGNAL(released()), &dialog, SLOT(accept()));
 
-		if(dialog.exec()==QDialog::Accepted) {
-			hrc = list.currentText();
+		if(dialog.exec() == QDialog::Accepted) {
+			hrc = list.currentText().left(8).toUpper();
 		}
 		else {
 			if(modelPreview) {
