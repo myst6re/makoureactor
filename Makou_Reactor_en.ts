@@ -33,17 +33,9 @@
 <context>
     <name>BGDialog</name>
     <message>
-        <source>Aperçu %1</source>
-        <translation type="obsolete">%1 preview</translation>
-    </message>
-    <message>
         <location filename="BGDialog.cpp" line="50"/>
         <source>Z :</source>
         <translation>Z:</translation>
-    </message>
-    <message>
-        <source>Aperçu écran</source>
-        <translation type="obsolete">Field preview</translation>
     </message>
     <message>
         <location filename="BGDialog.cpp" line="23"/>
@@ -87,91 +79,6 @@
         <location filename="ColorDisplay.cpp" line="81"/>
         <source>Choisir une nouvelle couleur</source>
         <translation>Choose a new color</translation>
-    </message>
-</context>
-<context>
-    <name>CommandeList</name>
-    <message>
-        <source>Action</source>
-        <translation type="obsolete">Action</translation>
-    </message>
-    <message>
-        <source>Modifier</source>
-        <translation type="obsolete">Edit</translation>
-    </message>
-    <message>
-        <source>Ajouter</source>
-        <translation type="obsolete">Add</translation>
-    </message>
-    <message>
-        <source>Supprimer</source>
-        <translation type="obsolete">Delete</translation>
-    </message>
-    <message>
-        <source>Couper</source>
-        <translation type="obsolete">Cut</translation>
-    </message>
-    <message>
-        <source>Copier</source>
-        <translation type="obsolete">Copy</translation>
-    </message>
-    <message>
-        <source>Coller</source>
-        <translation type="obsolete">Paste</translation>
-    </message>
-    <message>
-        <source>Déplacer vers le haut</source>
-        <translation type="obsolete">Up</translation>
-    </message>
-    <message>
-        <source>Déplacer vers le bas</source>
-        <translation type="obsolete">Down</translation>
-    </message>
-    <message>
-        <source>Étendre l&apos;arbre</source>
-        <translation type="obsolete">Expand the tree</translation>
-    </message>
-    <message>
-        <source>Édition du &amp;script</source>
-        <translation type="obsolete">&amp;Script editor</translation>
-    </message>
-    <message>
-        <source>Ajouter une commande</source>
-        <translation type="obsolete">Add a line</translation>
-    </message>
-    <message>
-        <source>Supprimer une commande</source>
-        <translation type="obsolete">Remove a line</translation>
-    </message>
-    <message>
-        <source>Monter une commande</source>
-        <translation type="obsolete">Up</translation>
-    </message>
-    <message>
-        <source>Descendre une commande</source>
-        <translation type="obsolete">Down</translation>
-    </message>
-    <message>
-        <source>Si ce script est exécuté,
- considérez que c&apos;est le dernier script non vide qui est exécuté</source>
-        <translation type="obsolete">If this script is run,
- assume that the last non-empty script that runs</translation>
-    </message>
-    <message>
-        <source>Suppression</source>
-        <translation type="obsolete">Delete</translation>
-    </message>
-    <message>
-        <source>Voulez-vous vraiment supprimer %1 ?</source>
-        <translation type="obsolete">Are you sure you want to delete %1?</translation>
-    </message>
-    <message>
-        <source>la commande sélectionnée</source>
-        <translation type="obsolete">the command selected</translation>
-    </message>
-    <message>
-        <source>les commandes sélectionnées</source>
-        <translation type="obsolete">the selected commands</translation>
     </message>
 </context>
 <context>
@@ -621,42 +528,6 @@
         <translation>Miscellaneous</translation>
     </message>
     <message>
-        <source>Sorties d&apos;écran</source>
-        <translation type="obsolete">Gateways</translation>
-    </message>
-    <message>
-        <source>Afficher flêche</source>
-        <translation type="obsolete">Show arrow</translation>
-    </message>
-    <message>
-        <source>Désactivé</source>
-        <translation type="obsolete">Disabled</translation>
-    </message>
-    <message>
-        <source>Ligne de sortie</source>
-        <translation type="obsolete">Exit line</translation>
-    </message>
-    <message>
-        <source>Écran de destination</source>
-        <translation type="obsolete">Destination field</translation>
-    </message>
-    <message>
-        <source>Field ID</source>
-        <translation type="obsolete">Field ID</translation>
-    </message>
-    <message>
-        <source>Inconnues 1</source>
-        <translation type="obsolete">Unknown 1</translation>
-    </message>
-    <message>
-        <source>Inconnues 2</source>
-        <translation type="obsolete">Unknown 2</translation>
-    </message>
-    <message>
-        <source>Inconnues 3</source>
-        <translation type="obsolete">Unknown 3</translation>
-    </message>
-    <message>
         <location filename="MiscWidget.cpp" line="36"/>
         <source>Nom écran :</source>
         <translation>Field name:</translation>
@@ -670,14 +541,6 @@
         <location filename="MiscWidget.cpp" line="40"/>
         <source>Zoom écran :</source>
         <translation>Field scale:</translation>
-    </message>
-    <message>
-        <source>Directions contrôles :</source>
-        <translation type="obsolete">Control axis:</translation>
-    </message>
-    <message>
-        <source>Sortie %1</source>
-        <translation type="obsolete">Exit %1</translation>
     </message>
 </context>
 <context>
@@ -728,10 +591,6 @@
         <location filename="ModelManager.cpp" line="511"/>
         <source>OK</source>
         <translation>OK</translation>
-    </message>
-    <message>
-        <source>Annuler</source>
-        <translation type="obsolete">Cancel</translation>
     </message>
     <message>
         <location filename="ModelManager.cpp" line="248"/>
@@ -929,14 +788,6 @@
         <translation>Pauses music and sound effects</translation>
     </message>
     <message>
-        <source>Resumes only the music</source>
-        <translation type="obsolete">Resumes only the music</translation>
-    </message>
-    <message>
-        <source>Pauses only the music</source>
-        <translation type="obsolete">Pauses only the music</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="370"/>
         <source>Reprendre uniquement les effets sonores</source>
         <oldsource>Resumes only sound effects</oldsource>
@@ -1129,52 +980,16 @@
         <translation>Tempo transitions for all channels</translation>
     </message>
     <message>
-        <source>Set music volume</source>
-        <translation type="obsolete">Set music volume</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="403"/>
         <source>Transition sur le volume de la musique</source>
         <oldsource>Music volume transition</oldsource>
         <translation>Music volume transition</translation>
     </message>
     <message>
-        <source>Music volume fade</source>
-        <translation type="obsolete">Music volume fade</translation>
-    </message>
-    <message>
-        <source>Set music pan</source>
-        <translation type="obsolete">Set music pan</translation>
-    </message>
-    <message>
-        <source>Music pan transition</source>
-        <translation type="obsolete">Music pan transition</translation>
-    </message>
-    <message>
-        <source>Music pan fade</source>
-        <translation type="obsolete">Music pan fade</translation>
-    </message>
-    <message>
-        <source>Set music tempo</source>
-        <translation type="obsolete">Set music tempo</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="409"/>
         <source>Transition sur le tempo de la musique</source>
         <oldsource>Music tempo transition</oldsource>
         <translation>Music tempo transition</translation>
-    </message>
-    <message>
-        <source>Music tempo fade</source>
-        <translation type="obsolete">Music tempo fade</translation>
-    </message>
-    <message>
-        <source>Stop music</source>
-        <translation type="obsolete">Stop music</translation>
-    </message>
-    <message>
-        <source>Stop sound effects</source>
-        <translation type="obsolete">Stop sound effects</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="413"/>
@@ -1260,10 +1075,6 @@
         <translation>Go to label %1</translation>
     </message>
     <message>
-        <source>Si %1 %3 %2%5 (aller au label %4 sinon)</source>
-        <translation type="obsolete">If %1 %3 %2%5 (else go to label %4)</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="1699"/>
         <source>Course de moto (paramètre %1)</source>
         <translation>Bike (parameter %1)</translation>
@@ -1322,14 +1133,6 @@
         <translation>Fades the screen to the colour RGB(%2, %3, %4) (u1=%1, u2=%5)</translation>
     </message>
     <message>
-        <source>EYETX : Changer l&apos;état de la texture des yeux ou de la bouche</source>
-        <translation type="obsolete">EYETX: Set state of eye/mouth texture</translation>
-    </message>
-    <message>
-        <source>AMBNT</source>
-        <translation type="obsolete">AMBNT</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="2063"/>
         <source>LIGHT</source>
         <translation>LIGHT</translation>
@@ -1353,18 +1156,6 @@
         <location filename="Opcode.cpp" line="2114"/>
         <source>Filtre graphique sur l&apos;objet 3D - %1</source>
         <translation>Field Model graphic filter - %1</translation>
-    </message>
-    <message>
-        <source>Si appuie sur la touche %1 (aller au label %2 sinon)</source>
-        <translation type="obsolete">If key %1 pressed (else go to label %2)</translation>
-    </message>
-    <message>
-        <source>Si appuie sur la touche %1 une fois (aller au label %2 sinon)</source>
-        <translation type="obsolete">If key %1 pressed once (else go to label %2)</translation>
-    </message>
-    <message>
-        <source>Si relache la touche %1 pour la première fois (aller au label %2 sinon)</source>
-        <translation type="obsolete">If key %1 released once (else goto label %2)</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="3112"/>
@@ -1471,21 +1262,9 @@
         <translation>ADPAL2 %1</translation>
     </message>
     <message>
-        <source>AKAO %1</source>
-        <translation type="obsolete">AKAO %1</translation>
-    </message>
-    <message>
-        <source>CHMPH %1</source>
-        <translation type="obsolete">CHMPH %1</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="8095"/>
         <source>FMUSC (?=%1)</source>
         <translation>FMUSC (?=%1)</translation>
-    </message>
-    <message>
-        <source>CMUSC %1</source>
-        <translation type="obsolete">CMUSC %1</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="2555"/>
@@ -1566,10 +1345,6 @@
         <location filename="Opcode.cpp" line="4312"/>
         <source>Ne pas jouer Fanfare</source>
         <translation>Do not play the battle victory music</translation>
-    </message>
-    <message>
-        <source>Active la battle arena</source>
-        <translation type="obsolete">Activates the battle arena</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="1783"/>
@@ -1756,37 +1531,9 @@
         <translation>%1 blending</translation>
     </message>
     <message>
-        <source>Err.</source>
-        <translation type="obsolete">Err.</translation>
-    </message>
-    <message>
-        <source>Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</source>
-        <translation type="obsolete">Execute the script #%3 in group %1 (priority %2/6) - Only if the script is not already running</translation>
-    </message>
-    <message>
-        <source>Exécuter le script n°%3 du groupe %1 (priorité %2/6)</source>
-        <translation type="obsolete">Execute the script #%3 in group %1 (priority %2/6)</translation>
-    </message>
-    <message>
-        <source>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</source>
-        <translation type="obsolete">Execute the script #%3 in extern group %1 (priority %2/6) - Waiting for end of execution to continue</translation>
-    </message>
-    <message>
-        <source>Exécuter le script n°%3 du groupe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</source>
-        <translation type="obsolete">Execute the script #%3 in group associated with the character #%1 in the current party (priority %2/6) - Only if the script is not already running</translation>
-    </message>
-    <message>
-        <source>Exécuter le script n°%3 du groupe lié au personnage n°%1 de l&apos;équipe (priorité %2/6)</source>
-        <translation type="obsolete">Execute the script #%3 in group associated with the character #%1 in the current party (priority %2/6)</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="669"/>
         <source>Exécuter le script n°%3 du groupe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</source>
         <translation>Execute the script #%3 in group associated with the character #%1 in the current party (priority %2/6) - Waiting for end of execution to continue</translation>
-    </message>
-    <message>
-        <source>Return et exécuter le script n°%2 du groupe appelant (priorité %1/6)</source>
-        <translation type="obsolete">Return and run the script #%2 from the appellant group (Priority %1/6)</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="711"/>
@@ -1819,10 +1566,6 @@
         <translation>SPECIAL - </translation>
     </message>
     <message>
-        <source>Aller à l&apos;octet %1 du script</source>
-        <translation type="obsolete">Jump to byte %1</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="1709"/>
         <source>Lancer un mini-jeu : %5 (Après le jeu aller à l&apos;écran %1 (X=%2, Y=%3, triangle id=%4))</source>
         <oldsource>Lancer un mini-jeu : %5 (Après le jeu aller à l&apos;écran %1 (X=%2, Y=%3, polygone id=%4))</oldsource>
@@ -1850,10 +1593,6 @@
         <translation>Wait %1 frame</translation>
     </message>
     <message>
-        <source>Voiler l&apos;écran avec la couleur RVB(%1, %2, %3)</source>
-        <translation type="obsolete">Fades the screen to the colour RGB(%1, %2, %3)</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="1912"/>
         <source>L&apos;objet 3D cligne des yeux : %1</source>
         <translation>Field Model blink : %1</translation>
@@ -1876,10 +1615,6 @@
         <location filename="Opcode.cpp" line="1933"/>
         <source>BGMOVIE : %1</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>Filtre graphique sur l&apos;objet 3D - </source>
-        <translation type="obsolete">Field Model graphic filter - </translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="2158"/>
@@ -1916,18 +1651,6 @@
         <source>Redimensionner fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</source>
         <oldsource>Redimmensionner fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)</oldsource>
         <translation>Resizes/Repositions the window #%1 (X=%2, Y=%3, width=%4, height=%5)</translation>
-    </message>
-    <message>
-        <source>Si appuie sur la touche %1 (aller à l&apos;octet %2 du script sinon)</source>
-        <translation type="obsolete">If key %1 pressed (else jump to byte %2)</translation>
-    </message>
-    <message>
-        <source>Si appuie sur la touche %1 une fois (aller à l&apos;octet %2 du script sinon)</source>
-        <translation type="obsolete">If key %1 pressed once (else jump to byte %2)</translation>
-    </message>
-    <message>
-        <source>Si relache la touche %1 pour la première fois (aller à l&apos;octet %2 du script sinon)</source>
-        <translation type="obsolete">If key %1 released once (else jump to byte %2)</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="2479"/>
@@ -2058,10 +1781,6 @@
         <translation>Create window #%1 (X=%2, Y=%3, Width=%4, Height=%5)</translation>
     </message>
     <message>
-        <source>Déplacer la fenêtre n°%1 (X=%2, Y=%3)</source>
-        <translation type="obsolete">Move the window #%1 (X=%2, Y=%3)</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="3313"/>
         <source>Décoration de la fenêtre n°%1 : %2 (%3 la fermeture de la fenêtre par le joueur)</source>
         <translation>Set the window #%1 mode: %2 (%3 the closing of the window by the player)</translation>
@@ -2147,10 +1866,6 @@
         <translation>%1 movies</translation>
     </message>
     <message>
-        <source>Si %1 %3 %2%5 (aller à l&apos;octet %4 du script sinon)</source>
-        <translation type="obsolete">If %1 %3 %2%5 (else jump to byte %4)</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="3619"/>
         <source>Ajouter la matéria %1 dans l&apos;inventaire (AP=%2)</source>
         <translation>Add %1 materia to the inventory (AP=%2)</translation>
@@ -2159,10 +1874,6 @@
         <location filename="Opcode.cpp" line="3661"/>
         <source>Supprimer %3 matéria(s) %1 dans l&apos;inventaire (AP=%2)</source>
         <translation>Remove %3 materia(s) %1 from the inventory (AP=%2)</translation>
-    </message>
-    <message>
-        <source>%4 = quantité de matéria %1 dans l&apos;inventaire (AP=%2, ???=%3)</source>
-        <translation type="obsolete">%4 = amount of materia %1 in the inventory (AP=%2, ???=%3)</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="3756"/>
@@ -2225,15 +1936,6 @@
         <location filename="Opcode.cpp" line="4145"/>
         <source>Attendre la fin du voilage de l&apos;écran pour continuer</source>
         <translation>Wait for fade</translation>
-    </message>
-    <message>
-        <source>%1 le triangle n°%2</source>
-        <oldsource>%1 le polygone n°%2</oldsource>
-        <translation type="obsolete">%1 the triangle #%2</translation>
-    </message>
-    <message>
-        <source>Stocker l&apos;id du décor précédent dans %1</source>
-        <translation type="obsolete">Retrieves the field ID number of the last field in %1</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="4218"/>
@@ -2699,14 +2401,6 @@
         <translation>Load the position %1 in the palette #%2 (first color=%3, color count=%4)</translation>
     </message>
     <message>
-        <source>Si %1 est dans l&apos;équipe actuelle (aller à l&apos;octet %2 sinon)</source>
-        <translation type="obsolete">If %1 is in the current party (else jump to byte %2)</translation>
-    </message>
-    <message>
-        <source>Si %1 existe (aller à l&apos;octet %2 sinon)</source>
-        <translation type="obsolete">If %1 exists (else jump to byte %2)</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="6680"/>
         <source>%2 %1</source>
         <translation></translation>
@@ -2781,10 +2475,6 @@
         <location filename="Opcode.cpp" line="7045"/>
         <source>PMJMP2</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>AKAO2 (u1=%1, u2=%2, u3=%3, u4=%4, u5=%5, u6=%6)</source>
-        <translation type="obsolete">AKAO2 (u1=%1, u2=%2, u3=%3, u4=%4, u5=%5, u6=%6)</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="7113"/>
@@ -2876,10 +2566,6 @@
         <translation>Retrieves the field ID number of the last field in %1</translation>
     </message>
     <message>
-        <source>BTLMD (?=%1)</source>
-        <translation type="obsolete">SCRLC (?=%1)</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="5270"/>
         <source>SETX %1</source>
         <translation>SETX %1</translation>
@@ -2888,22 +2574,6 @@
         <location filename="Opcode.cpp" line="5291"/>
         <source>GETX %1</source>
         <translation>GETX %1</translation>
-    </message>
-    <message>
-        <source>SEARCHX %1</source>
-        <translation type="obsolete">SEARCHX %1</translation>
-    </message>
-    <message>
-        <source>Si %1 est dans l&apos;équipe actuelle (aller au label %2 sinon)</source>
-        <translation type="obsolete">If %1 is in the current party (else go to label %2)</translation>
-    </message>
-    <message>
-        <source>Si %1 existe (aller au label %2 sinon)</source>
-        <translation type="obsolete">If %1 exists (else go to label %2)</translation>
-    </message>
-    <message>
-        <source>AKAO2 %1</source>
-        <translation type="obsolete">AKAO2 %1</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="7140"/>
@@ -2951,10 +2621,6 @@
         <translation>Hide background parameter #%1</translation>
     </message>
     <message>
-        <source>MPPAL2 (R=%1, V=%2, B=%3)</source>
-        <translation type="obsolete">MPPAL2 (R=%1, G=%2, B=%3)</translation>
-    </message>
-    <message>
         <location filename="Opcode.cpp" line="7786"/>
         <source>Jouer musique n°%1</source>
         <translation>Play music #%1</translation>
@@ -2963,10 +2629,6 @@
         <location filename="Opcode.cpp" line="7809"/>
         <source>Jouer son n°%1 (position=%2/127)</source>
         <translation>Play sound #%1 (position=%2/127)</translation>
-    </message>
-    <message>
-        <source>AKAO (u1=%1, u2=%2, u3=%3, u4=%4, u5=%5, u6=%6)</source>
-        <translation type="obsolete">AKAO (u1=%1, u2=%2, u3=%3, u4=%4, u5=%5, u6=%6)</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="7895"/>
@@ -3375,14 +3037,6 @@ channelCount=%3
         <translation>Unknown</translation>
     </message>
     <message>
-        <source>Ajouter une ligne</source>
-        <translation type="obsolete">Add a line</translation>
-    </message>
-    <message>
-        <source>Effacer une ligne</source>
-        <translation type="obsolete">Delete a line</translation>
-    </message>
-    <message>
         <location filename="ScriptEditor.cpp" line="84"/>
         <source>OK</source>
         <translation></translation>
@@ -3391,10 +3045,6 @@ channelCount=%3
         <location filename="ScriptEditor.cpp" line="86"/>
         <source>Annuler</source>
         <translation>Cancel</translation>
-    </message>
-    <message>
-        <source>Paramètres :</source>
-        <translation type="obsolete">Arguments:</translation>
     </message>
     <message>
         <location filename="ScriptEditor.cpp" line="360"/>
@@ -3417,14 +3067,6 @@ channelCount=%3
         <translation>Execute a script from a party member</translation>
     </message>
     <message>
-        <source>Saut court en avant</source>
-        <translation type="obsolete">Short jump forward</translation>
-    </message>
-    <message>
-        <source>Si...alors (8 bits, saut court)</source>
-        <translation type="obsolete">If...then (8-bit, short jump)</translation>
-    </message>
-    <message>
         <location filename="ScriptEditor.cpp" line="373"/>
         <source>Si touche pressée</source>
         <translation>If key pressed</translation>
@@ -3445,42 +3087,14 @@ channelCount=%3
         <translation>No Operation</translation>
     </message>
     <message>
-        <source>Incrémentation (8 bits)</source>
-        <translation type="obsolete">Increment (8 bits)</translation>
-    </message>
-    <message>
-        <source>Activer un bit</source>
-        <translation type="obsolete">Set Bit</translation>
-    </message>
-    <message>
-        <source>Désactiver un bit</source>
-        <translation type="obsolete">Reset Bit</translation>
-    </message>
-    <message>
-        <source>Inverser un bit</source>
-        <translation type="obsolete">Toggle Bit</translation>
-    </message>
-    <message>
         <location filename="ScriptEditor.cpp" line="392"/>
         <source>Seed Random Generator</source>
         <translation></translation>
     </message>
     <message>
-        <source>Valeur aléatoire</source>
-        <translation type="obsolete">Random value</translation>
-    </message>
-    <message>
         <location filename="ScriptEditor.cpp" line="409"/>
         <source>Compte à rebours</source>
         <translation>Countdown</translation>
-    </message>
-    <message>
-        <source>Octet de poids faible</source>
-        <translation type="obsolete">Low byte</translation>
-    </message>
-    <message>
-        <source>Octet de poids fort</source>
-        <translation type="obsolete">High Byte</translation>
     </message>
     <message>
         <location filename="ScriptEditor.cpp" line="393"/>
@@ -3888,166 +3502,9 @@ channelCount=%3
         <translation>Move to Group</translation>
     </message>
     <message>
-        <source>Saut long en avant</source>
-        <translation type="obsolete">Long jump forward</translation>
-    </message>
-    <message>
-        <source>Saut court en arrière</source>
-        <translation type="obsolete">Short jump backward</translation>
-    </message>
-    <message>
-        <source>Saut long en arrière</source>
-        <translation type="obsolete">Long jump backward</translation>
-    </message>
-    <message>
-        <source>Si...alors (8 bits, saut long)</source>
-        <translation type="obsolete">If...then (8-bit, long jump)</translation>
-    </message>
-    <message>
-        <source>Si...alors (16 bits-signé, saut court)</source>
-        <translation type="obsolete">If...then (16-bit, short jump)</translation>
-    </message>
-    <message>
-        <source>Si...alors (16 bits-signé, saut long)</source>
-        <translation type="obsolete">If...then (16-bit, long jump)</translation>
-    </message>
-    <message>
-        <source>Si...alors (16 bits-non signé, saut court)</source>
-        <translation type="obsolete">If...then (16-bit unsigned, short jump)</translation>
-    </message>
-    <message>
-        <source>Si...alors (16 bits-non signé, saut long)</source>
-        <translation type="obsolete">If...then (16-bit unsigned, long jump)</translation>
-    </message>
-    <message>
-        <source>Si touche pressée une fois</source>
-        <translation type="obsolete">If key pressed once</translation>
-    </message>
-    <message>
-        <source>Si touche lachée une fois</source>
-        <translation type="obsolete">If key released once</translation>
-    </message>
-    <message>
         <location filename="ScriptEditor.cpp" line="375"/>
         <source>Si personnage existe</source>
         <translation>If character exists</translation>
-    </message>
-    <message>
-        <source>Affectation (8 bits)</source>
-        <oldsource>Opération binaire</oldsource>
-        <translation type="obsolete">Assignment (8-bit)</translation>
-    </message>
-    <message>
-        <source>Affectation (16 bits)</source>
-        <translation type="obsolete">Assignment (16-bit)</translation>
-    </message>
-    <message>
-        <source>Addition (8 bits)</source>
-        <translation type="obsolete">Addition (8-bit)</translation>
-    </message>
-    <message>
-        <source>Addition (8 bits - mod 256)</source>
-        <translation type="obsolete">Addition (8-bit - mod 256)</translation>
-    </message>
-    <message>
-        <source>Addition (16 bits)</source>
-        <translation type="obsolete">Addition (16-bit)</translation>
-    </message>
-    <message>
-        <source>Addition (16 bits - mod 65536)</source>
-        <translation type="obsolete">Addition (16-bit - mod 65536)</translation>
-    </message>
-    <message>
-        <source>Soustraction (8 bits)</source>
-        <translation type="obsolete">Subtraction (8-bit)</translation>
-    </message>
-    <message>
-        <source>Soustraction (8 bits - mod 256)</source>
-        <translation type="obsolete">Subtraction (8-bit - mod 256)</translation>
-    </message>
-    <message>
-        <source>Soustraction (16 bits)</source>
-        <translation type="obsolete">Subtraction (16-bit)</translation>
-    </message>
-    <message>
-        <source>Soustraction (16 bits - mod 65536)</source>
-        <translation type="obsolete">Subtraction (16-bit - mod 65536)</translation>
-    </message>
-    <message>
-        <source>Multiplication (8 bits - mod 256)</source>
-        <translation type="obsolete">Multiplication (8-bit - mod 256)</translation>
-    </message>
-    <message>
-        <source>Multiplication (16 bits - mod 65536)</source>
-        <translation type="obsolete">Multiplication (16-bit - mod 65536)</translation>
-    </message>
-    <message>
-        <source>Division (8 bits - mod 256)</source>
-        <translation type="obsolete">Division (8-bit - mod 256)</translation>
-    </message>
-    <message>
-        <source>Division (16 bits - mod 65536)</source>
-        <translation type="obsolete">Division (16-bit - mod 65536)</translation>
-    </message>
-    <message>
-        <source>Incrémentation (8 bits - mod 256)</source>
-        <translation type="obsolete">Increment (8-bit - mod 256)</translation>
-    </message>
-    <message>
-        <source>Incrémentation (16 bits)</source>
-        <translation type="obsolete">Increment (16-bit)</translation>
-    </message>
-    <message>
-        <source>Incrémentation (16 bits - mod 65536)</source>
-        <translation type="obsolete">Increment (16-bit - mod 65536)</translation>
-    </message>
-    <message>
-        <source>Décrémentation (8 bits)</source>
-        <translation type="obsolete">Decrement (8-bit)</translation>
-    </message>
-    <message>
-        <source>Décrémentation (8 bits - mod 256)</source>
-        <translation type="obsolete">Decrement (8-bit - mod 256)</translation>
-    </message>
-    <message>
-        <source>Décrémentation (16 bits)</source>
-        <translation type="obsolete">Decrement (16-bit)</translation>
-    </message>
-    <message>
-        <source>Décrémentation (16 bits - mod 65536)</source>
-        <translation type="obsolete">Decrement (16-bit - mod 65536)</translation>
-    </message>
-    <message>
-        <source>Modulo (8 bits - mod 256)</source>
-        <translation type="obsolete">Modulus (8-bit - mod 256)</translation>
-    </message>
-    <message>
-        <source>Modulo (16 bits - mod 65536)</source>
-        <translation type="obsolete">Modulus (16-bit - mod 65536)</translation>
-    </message>
-    <message>
-        <source>Et binaire (8 bits - mod 256)</source>
-        <translation type="obsolete">And (8-bit - mod 256)</translation>
-    </message>
-    <message>
-        <source>Et binaire (16 bits - mod 65536)</source>
-        <translation type="obsolete">And (16-bit - mod 65536)</translation>
-    </message>
-    <message>
-        <source>Ou binaire (8 bits - mod 256)</source>
-        <translation type="obsolete">Or (8-bit - mod 256)</translation>
-    </message>
-    <message>
-        <source>Ou binaire (16 bits - mod 65536)</source>
-        <translation type="obsolete">Or (16-bit - mod 65536)</translation>
-    </message>
-    <message>
-        <source>Ou exclusif binaire (8 bits - mod 256)</source>
-        <translation type="obsolete">Xor (8-bit - mod 256)</translation>
-    </message>
-    <message>
-        <source>Ou exclusif binaire (16 bits - mod 65536)</source>
-        <translation type="obsolete">Xor (16-bit - mod 65536)</translation>
     </message>
     <message>
         <location filename="ScriptEditor.cpp" line="472"/>
@@ -4382,11 +3839,6 @@ channelCount=%3
         <translation>Battle mode (2)</translation>
     </message>
     <message>
-        <source>MP Palette</source>
-        <oldsource>MPPAL</oldsource>
-        <translation type="obsolete">MP Palette</translation>
-    </message>
-    <message>
         <location filename="ScriptEditor.cpp" line="562"/>
         <source>Centrer sur le personnage jouable</source>
         <translation>Scroll to playable character</translation>
@@ -4716,170 +4168,6 @@ channelCount=%3
         <source>SEARCHX</source>
         <translation></translation>
     </message>
-    <message>
-        <source>Entier long</source>
-        <translation type="obsolete">Long</translation>
-    </message>
-    <message>
-        <source>Entier long signé</source>
-        <translation type="obsolete">Signed long</translation>
-    </message>
-    <message>
-        <source>Coordonnée X</source>
-        <translation type="obsolete">X coordinate</translation>
-    </message>
-    <message>
-        <source>Coordonnée Y</source>
-        <translation type="obsolete">Y coordinate</translation>
-    </message>
-    <message>
-        <source>Coordonnée Z</source>
-        <translation type="obsolete">Z coordinate</translation>
-    </message>
-    <message>
-        <source>Écran</source>
-        <translation type="obsolete">Map</translation>
-    </message>
-    <message>
-        <source>Tutoriel</source>
-        <translation type="obsolete">Tutorial</translation>
-    </message>
-    <message>
-        <source>Personnage</source>
-        <translation type="obsolete">Character</translation>
-    </message>
-    <message>
-        <source>Disque</source>
-        <translation type="obsolete">Disc</translation>
-    </message>
-    <message>
-        <source>Entier court</source>
-        <translation type="obsolete">Short</translation>
-    </message>
-    <message>
-        <source>Vitesse (8 bits)</source>
-        <translation type="obsolete">Speed (8 bits)</translation>
-    </message>
-    <message>
-        <source>Vitesse (16 bits)</source>
-        <translation type="obsolete">Speed (16 bits)</translation>
-    </message>
-    <message>
-        <source>Polygone</source>
-        <translation type="obsolete">Triangle</translation>
-    </message>
-    <message>
-        <source>Groupe</source>
-        <translation type="obsolete">Group</translation>
-    </message>
-    <message>
-        <source>Équipier</source>
-        <translation type="obsolete">Team member</translation>
-    </message>
-    <message>
-        <source>Adresse</source>
-        <translation type="obsolete">Adress</translation>
-    </message>
-    <message>
-        <source>Priorité</source>
-        <translation type="obsolete">Priority</translation>
-    </message>
-    <message>
-        <source>Saut court</source>
-        <translation type="obsolete">Jump (short)</translation>
-    </message>
-    <message>
-        <source>Saut long</source>
-        <translation type="obsolete">Jump (long)</translation>
-    </message>
-    <message>
-        <source>Opérateur</source>
-        <translation type="obsolete">Operator</translation>
-    </message>
-    <message>
-        <source>Booléen</source>
-        <translation type="obsolete">Boolean</translation>
-    </message>
-    <message>
-        <source>Couche</source>
-        <translation type="obsolete">Layer</translation>
-    </message>
-    <message>
-        <source>Paramètre</source>
-        <translation type="obsolete">Parameter</translation>
-    </message>
-    <message>
-        <source>État</source>
-        <translation type="obsolete">State</translation>
-    </message>
-    <message>
-        <source>Fenêtre</source>
-        <translation type="obsolete">Window</translation>
-    </message>
-    <message>
-        <source>Largeur</source>
-        <translation type="obsolete">Width</translation>
-    </message>
-    <message>
-        <source>Hauteur</source>
-        <translation type="obsolete">Height</translation>
-    </message>
-    <message>
-        <source>Touche(s)</source>
-        <translation type="obsolete">Key(s)</translation>
-    </message>
-    <message>
-        <source>Sens de rotation</source>
-        <translation type="obsolete">Rotation</translation>
-    </message>
-    <message>
-        <source>Type d&apos;affichage</source>
-        <translation type="obsolete">Display Type</translation>
-    </message>
-    <message>
-        <source>Texte</source>
-        <translation type="obsolete">Text</translation>
-    </message>
-    <message>
-        <source>Menu</source>
-        <translation type="obsolete">Menu</translation>
-    </message>
-    <message>
-        <source>Type de fenêtre</source>
-        <translation type="obsolete">Window type</translation>
-    </message>
-    <message>
-        <source>Objet</source>
-        <translation type="obsolete">Item</translation>
-    </message>
-    <message>
-        <source>Matéria</source>
-        <translation type="obsolete">Materia</translation>
-    </message>
-    <message>
-        <source>Quantité</source>
-        <translation type="obsolete">Quantity</translation>
-    </message>
-    <message>
-        <source>Couleur</source>
-        <translation type="obsolete">Color</translation>
-    </message>
-    <message>
-        <source>Musique</source>
-        <translation type="obsolete">Music</translation>
-    </message>
-    <message>
-        <source>Son</source>
-        <translation type="obsolete">Sound</translation>
-    </message>
-    <message>
-        <source>Vidéo</source>
-        <translation type="obsolete">Video</translation>
-    </message>
-    <message>
-        <source>???</source>
-        <translation type="obsolete">???</translation>
-    </message>
 </context>
 <context>
     <name>ScriptEditorBinaryOpPage</name>
@@ -5161,10 +4449,6 @@ channelCount=%3
         <translation>Direction</translation>
     </message>
     <message>
-        <source>Polygone</source>
-        <translation type="obsolete">Triangle</translation>
-    </message>
-    <message>
         <location filename="ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="638"/>
         <source>Triangle</source>
         <translation>Triangle</translation>
@@ -5372,10 +4656,6 @@ channelCount=%3
         <source>Label</source>
         <translation>Label</translation>
     </message>
-    <message>
-        <source>Label %1</source>
-        <translation type="obsolete">Label %1</translation>
-    </message>
 </context>
 <context>
     <name>ScriptEditorIfPage</name>
@@ -5424,10 +4704,6 @@ channelCount=%3
         <source>Type de saut</source>
         <translation>Jump type</translation>
     </message>
-    <message>
-        <source>Label %1</source>
-        <translation type="obsolete">Label %1</translation>
-    </message>
 </context>
 <context>
     <name>ScriptEditorIfQPage</name>
@@ -5446,10 +4722,6 @@ channelCount=%3
         <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="908"/>
         <source>Label</source>
         <translation>Label</translation>
-    </message>
-    <message>
-        <source>Label %1</source>
-        <translation type="obsolete">Label %1</translation>
     </message>
 </context>
 <context>
@@ -5473,10 +4745,6 @@ channelCount=%3
         <location filename="ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="401"/>
         <source>Type</source>
         <translation>Type</translation>
-    </message>
-    <message>
-        <source>Label %1</source>
-        <translation type="obsolete">Label %1</translation>
     </message>
 </context>
 <context>
@@ -5776,16 +5044,6 @@ poursuite à la fin.</source>
         <source>Chercher le précédent</source>
         <translation>Find previous</translation>
     </message>
-    <message>
-        <source>Dernier fichier,
-poursuite de la recherche dans le premier fichier.</source>
-        <translation type="obsolete">Last file.</translation>
-    </message>
-    <message>
-        <source>Premier fichier,
-poursuite de la recherche dans le dernier fichier.</source>
-        <translation type="obsolete">First file.</translation>
-    </message>
 </context>
 <context>
     <name>SpinBoxDelegate</name>
@@ -6019,22 +5277,6 @@ poursuite de la recherche dans le dernier fichier.</source>
         <translation>Remove a text</translation>
     </message>
     <message>
-        <source>X</source>
-        <translation type="obsolete">X</translation>
-    </message>
-    <message>
-        <source>Y</source>
-        <translation type="obsolete">Y</translation>
-    </message>
-    <message>
-        <source>W</source>
-        <translation type="obsolete">W</translation>
-    </message>
-    <message>
-        <source>H</source>
-        <translation type="obsolete">H</translation>
-    </message>
-    <message>
         <location filename="TextManager.cpp" line="347"/>
         <source>Texte %1</source>
         <translation>Text %1</translation>
@@ -6057,10 +5299,6 @@ Are you sure you want to continue?</translation>
         <location filename="TextManager.cpp" line="442"/>
         <source>Page %1/%2</source>
         <translation>Page %1/%2</translation>
-    </message>
-    <message>
-        <source>Fenêtre %1/%2</source>
-        <translation type="obsolete">Window %1/%2</translation>
     </message>
 </context>
 <context>
@@ -6129,10 +5367,6 @@ Are you sure you want to continue?</translation>
         <location filename="TutWidget.cpp" line="161"/>
         <source>Tuto %1</source>
         <translation>Tuto %1</translation>
-    </message>
-    <message>
-        <source>Son %1</source>
-        <translation type="obsolete">Sound %1</translation>
     </message>
     <message>
         <location filename="TutWidget.cpp" line="259"/>
@@ -6609,14 +5843,6 @@ Are you sure you want to continue?</translation>
         <translation>Camera Focus Height on the playable character:</translation>
     </message>
     <message>
-        <source>Inconnu 2 :</source>
-        <translation type="obsolete">Unknown 2:</translation>
-    </message>
-    <message>
-        <source>Inconnu 3 :</source>
-        <translation type="obsolete">Unknown 3:</translation>
-    </message>
-    <message>
         <location filename="WalkmeshManager.cpp" line="477"/>
         <source>Erreur d&apos;ouverture</source>
         <translation>Opening error</translation>
@@ -6708,14 +5934,6 @@ Are you sure you want to continue?</translation>
         <translation>Save &amp;As...</translation>
     </message>
     <message>
-        <source>&amp;Exporter...</source>
-        <translation type="obsolete">&amp;Export...</translation>
-    </message>
-    <message>
-        <source>&amp;Importer...</source>
-        <translation type="obsolete">&amp;Import...</translation>
-    </message>
-    <message>
         <location filename="Window.cpp" line="64"/>
         <source>Fe&amp;rmer</source>
         <translation>C&amp;lose</translation>
@@ -6739,14 +5957,6 @@ Are you sure you want to continue?</translation>
         <location filename="Window.cpp" line="108"/>
         <source>Barre d&apos;outils &amp;principale</source>
         <translation>Main &amp;toolbar</translation>
-    </message>
-    <message>
-        <source>Annuler</source>
-        <translation type="obsolete">Undo</translation>
-    </message>
-    <message>
-        <source>Rétablir</source>
-        <translation type="obsolete">Redo</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="119"/>
@@ -6817,14 +6027,6 @@ Edited files: %2</translation>
         <location filename="Window.cpp" line="801"/>
         <source>Impossible d&apos;écrire dans l&apos;archive, vérifiez les droits d&apos;écriture.</source>
         <translation>Unable to write to the archive, check write permissions.</translation>
-    </message>
-    <message>
-        <source>Field décompressé (*.dec)</source>
-        <translation type="obsolete">Uncompressed Field (*.dec)</translation>
-    </message>
-    <message>
-        <source>Field compressé (*.lzs)</source>
-        <translation type="obsolete">Compressed Field (*.lzs)</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="926"/>
@@ -6998,10 +6200,6 @@ Edited files: %2</translation>
         <translation>Iso file (*.iso *.bin)</translation>
     </message>
     <message>
-        <source>Erreur de réouverture du fichier</source>
-        <translation type="obsolete">Error reopening file</translation>
-    </message>
-    <message>
         <location filename="Window.cpp" line="913"/>
         <source>Exporter le fichier courant</source>
         <translation>Export the current file</translation>
@@ -7099,21 +6297,9 @@ Edited files: %2</translation>
         <translation>Can not open encounters!</translation>
     </message>
     <message>
-        <source>Impossible d&apos;ouvrir les sons et les tutoriaux !</source>
-        <translation type="obsolete">Can not open sounds and tutorials!</translation>
-    </message>
-    <message>
-        <source>Impossible d&apos;ouvrir le walkmesh !</source>
-        <translation type="obsolete">Can not open walkmeh!</translation>
-    </message>
-    <message>
         <location filename="Window.cpp" line="1258"/>
         <source>Impossible d&apos;ouvrir les infos diverses !</source>
         <translation>Can not open miscellaneous informations!</translation>
-    </message>
-    <message>
-        <source>Par myst6re</source>
-        <translation type="obsolete">By myst6re</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="1302"/>
