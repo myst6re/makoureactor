@@ -208,7 +208,7 @@ qint8 Field::importer(const QString &path, int type, FieldParts part)
 		if(fic.read((char *)&fileSize, 4) != 4)	return 2;
 		if(fileSize+4 != fic.size()) return 2;
 
-		data = LZS::decompress(fic.readAll());
+		data = LZS::decompressAll(fic.readAll());
 	}
 	else if(type == 2 || type == 3) // uncompressed field
 	{

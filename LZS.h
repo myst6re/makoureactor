@@ -33,7 +33,8 @@
 class LZS
 {
 public:
-	static const QByteArray &decompress(const QByteArray &fileData, int max=MAX);
+	static const QByteArray &decompress(const QByteArray &fileData, int max);
+	static const QByteArray &decompressAll(const QByteArray &fileData);
 	static QByteArray compress(const QByteArray &fileData);
 
 private:

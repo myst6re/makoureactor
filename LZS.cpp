@@ -35,43 +35,95 @@ QByteArray LZS::result;
 
 const QByteArray &LZS::decompress(const QByteArray &data, int max)
 {
-	const char *fileData = data.constData();
-	int curData=0, curResult=0, fileSize=data.size(), sizeAlloc=(max==MAX ? fileSize*5 : max+10);
-	quint16 curBuff, adresse, premOctet=0, i, length;
+	int curResult=0, fileSize=data.size(), sizeAlloc=max+10;
+	quint16 curBuff=4078, adresse, premOctet=0, i, length;
+	const quint8 *fileData = (const quint8 *)data.constData();
+	const quint8 *endFileData = &fileData[fileSize-1];
 
-	if(result.size()<sizeAlloc)
+	if(result.size() < sizeAlloc)
 		result.resize(sizeAlloc);
 
-	for(curBuff=0 ; curBuff<=4077 ; ++curBuff)
-		text_buf[curBuff] = '\x0';//Le buffer de 4096 octets est initialisé à 0
+	memset(text_buf, 0, 4078);//Le buffer de 4096 octets est initialisé à 0
 
 	forever
 	{
 		if(((premOctet >>= 1) & 256) == 0) {
-			premOctet = (quint8)fileData[curData] | 0xff00;//On récupère le premier octet puis on avance d'un octet
-			++curData;
+			premOctet = *fileData++ | 0xff00;//On récupère le premier octet puis on avance d'un octet
 		}
 
-		if(curData>=fileSize || curResult>=max) {
+		if(fileData >= endFileData || curResult >= max) {
 			result.truncate(curResult);
 			return result;//Fini !
 		}
 
 		if(premOctet & 1)
 		{
-			result[curResult] = text_buf[curBuff] = fileData[curData];//On récupère l'octet (qui n'est pas compressé) et on le sauvegarde dans la chaine finale (result) et dans le buffer. Et bien sûr on fait avancer les curseurs d'un octet.
-			++curData;
+			result[curResult] = text_buf[curBuff] = *fileData++;//On récupère l'octet (qui n'est pas compressé) et on le sauvegarde dans la chaine finale (result) et dans le buffer. Et bien sûr on fait avancer les curseurs d'un octet.
 			curBuff = (curBuff + 1) & 4095;//Le curseur du buffer doit toujours être entre 0 et 4095
 			++curResult;
 		}
 		else
 		{
-			adresse = (quint8)fileData[curData];
-			++curData;
-			length = (quint8)fileData[curData];
+//			quint16 twoBytes = *((const quint16 *)fileData);
+//			adresse = (twoBytes & 0x00FF) | ((twoBytes & 0xF000) >> 4);
+//			length = ((twoBytes & 0x0F00) >> 8) + 2 + adresse;
+//			fileData += 2;
+
+			adresse = *fileData++;
+			length = *fileData++;
 			adresse |= (length & 0xF0) << 4;//on récupère l'adresse dans les deux octets (qui sont "compressés")
 			length = (length & 0xF) + 2 + adresse;
-			++curData;
+
+			for(i=adresse ; i<=length ; ++i)
+			{
+				result[curResult] = text_buf[curBuff] = text_buf[i & 4095];//On va chercher l'octet (qui est décompressé) dans le buffer à l'adresse indiquée puis on le sauvegarde dans la chaine finale et le buffer.
+				curBuff = (curBuff + 1) & 4095;
+				++curResult;
+			}
+		}
+	}
+}
+
+const QByteArray &LZS::decompressAll(const QByteArray &data)
+{
+	int curResult=0, fileSize=data.size(), sizeAlloc=fileSize*5;
+	quint16 curBuff=4078, adresse, premOctet=0, i, length;
+	const quint8 *fileData = (const quint8 *)data.constData();
+	const quint8 *endFileData = &fileData[fileSize-1];
+
+	if(result.size() < sizeAlloc)
+		result.resize(sizeAlloc);
+
+	memset(text_buf, 0, 4078);//Le buffer de 4096 octets est initialisé à 0
+
+	forever
+	{
+		if(((premOctet >>= 1) & 256) == 0) {
+			premOctet = *fileData++ | 0xff00;//On récupère le premier octet puis on avance d'un octet
+		}
+
+		if(fileData >= endFileData) {
+			result.truncate(curResult);
+			return result;//Fini !
+		}
+
+		if(premOctet & 1)
+		{
+			result[curResult] = text_buf[curBuff] = *fileData++;//On récupère l'octet (qui n'est pas compressé) et on le sauvegarde dans la chaine finale (result) et dans le buffer. Et bien sûr on fait avancer les curseurs d'un octet.
+			curBuff = (curBuff + 1) & 4095;//Le curseur du buffer doit toujours être entre 0 et 4095
+			++curResult;
+		}
+		else
+		{
+//			quint16 twoBytes = *((const quint16 *)fileData);
+//			adresse = (twoBytes & 0x00FF) | ((twoBytes & 0xF000) >> 4);
+//			length = ((twoBytes & 0x0F00) >> 8) + 2 + adresse;
+//			fileData += 2;
+
+			adresse = *fileData++;
+			length = *fileData++;
+			adresse |= (length & 0xF0) << 4;//on récupère l'adresse dans les deux octets (qui sont "compressés")
+			length = (length & 0xF) + 2 + adresse;
 
 			for(i=adresse ; i<=length ; ++i)
 			{
@@ -99,7 +151,7 @@ void LZS::InsertNode(qint32 r)
 	rson[r] = lson[r] = 4096;
 	match_length = 0;
 
-	for( ; ; )
+	forever
 	{
 		if (cmp >= 0)
 		{
@@ -217,7 +269,7 @@ QByteArray LZS::compress(const QByteArray &fileData)
 	/* For i = 0 to 4095, rson[i] and lson[i] will be the right and left children of node i. These nodes need not be initialized.
 	Also, dad[i] is the parent of node i. These are initialized to 4096 which stands for 'not used.'
 	For i = 0 to 255, rson[4097 + i] is the root of the tree for strings that begin with character i. These are initialized to 4096. Note there are 256 trees. */
-	
+
 	for(i=4097 ; i<=4352 ; ++i)	rson[i] = 4096;
 	for(i=0 ; i<4096 ; ++i)	dad[i] = 4096;
 
@@ -228,8 +280,9 @@ QByteArray LZS::compress(const QByteArray &fileData)
 	s = 0;
 	r = 4078;
 
-	for(i=s ; i<r ; ++i)
-		text_buf[i] = '\x0';//Clear the buffer with  any character that will appear often.
+//	for(i=s ; i<r ; ++i)
+//		text_buf[i] = '\x0';//Clear the buffer with  any character that will appear often.
+	memset(text_buf, 0, r);
 
 	for(len=0 ; len<18 && curData<sizeData ; ++len)
 		text_buf[r + len] = fileData.at(curData++);//Read 18 bytes into the last 18 bytes of the buffer
@@ -259,8 +312,9 @@ QByteArray LZS::compress(const QByteArray &fileData)
 		
 		if((mask <<= 1) == 0)//Shift mask left one bit.
 		{
-			for(i=0 ; i<code_buf_ptr ; ++i)//Send at most 8 units of
-				result.append(code_buf[i]);//code together
+//			for(i=0 ; i<code_buf_ptr ; ++i)//Send at most 8 units of
+//				result.append(code_buf[i]);//code together
+			result.append((char *)code_buf, code_buf_ptr);
 			// codesize += code_buf_ptr;
 			code_buf[0] = 0;
 			code_buf_ptr = mask = 1;
@@ -296,8 +350,9 @@ QByteArray LZS::compress(const QByteArray &fileData)
 
 	if(code_buf_ptr > 1)//Send remaining code.
 	{
-		for(i = 0; i < code_buf_ptr ; ++i)
-			result.append(code_buf[i]);
+//		for(i = 0; i < code_buf_ptr ; ++i)
+//			result.append(code_buf[i]);
+		result.append((char *)code_buf, code_buf_ptr);
 		// codesize += code_buf_ptr;
 	}
 	return result;

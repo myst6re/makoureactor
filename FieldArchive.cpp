@@ -196,7 +196,7 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 
 		if((quint32)data.size() != lzsSize+4)	return QByteArray();
 
-		data = unlzs ? LZS::decompress(data.mid(4)) : data;
+		data = unlzs ? LZS::decompressAll(data.mid(4)) : data;
 	} else if(isLgp()) {
 		data = getLgpData(((FieldPC *)field)->getPosition());
 
@@ -205,7 +205,7 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 		memcpy(&lzsSize, data.constData(), 4);
 		if((quint32)data.size() != lzsSize + 4)				return QByteArray();
 
-		data = unlzs ? LZS::decompress(data.mid(4)) : data;
+		data = unlzs ? LZS::decompressAll(data.mid(4)) : data;
 	} else if(isIso() || isDirectory()) {
 		data = getFileData(field->getName().toUpper()+".DAT", unlzs);
 	}
@@ -265,7 +265,7 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 
 		if((quint32)data.size() != lzsSize+4)	return QByteArray();
 
-		return unlzs ? LZS::decompress(data.mid(4)) : data;
+		return unlzs ? LZS::decompressAll(data.mid(4)) : data;
 	} else if(isDatFile() || isDirectory()) {
 		QFile f(chemin()+fileName.toUpper());
 		if(!f.open(QIODevice::ReadOnly))	return QByteArray();
@@ -278,7 +278,7 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 
 		if((quint32)data.size() != lzsSize+4)	return QByteArray();
 
-		return unlzs ? LZS::decompress(data.mid(4)) : data;
+		return unlzs ? LZS::decompressAll(data.mid(4)) : data;
 	} else {
 		return QByteArray();
 	}
@@ -365,9 +365,13 @@ void FieldArchive::searchAll()
 
 //	QSet<quint8> unknown1Values;
 
+	QTime t;t.start();
+
 	for(int i=0 ; i<size ; ++i) {
-		Field *field = this->field(i);
+		Field *field = this->field(i, true);
 		if(field != NULL) {
+			field->scriptsAndTexts()->setModified(true);
+			field->setModified(true);
 //			qDebug() << field->getName();
 //			QByteArray u2 = field->getInf()->unknown();
 //			if(u2 != QByteArray(24, '\0')) {
@@ -415,6 +419,8 @@ void FieldArchive::searchAll()
 //			}
 		}
 	}
+
+	qDebug() << "global time" << t.elapsed() << "ms";
 
 //	QList<quint8> l = unknown1Values.toList();
 //	qSort(l);

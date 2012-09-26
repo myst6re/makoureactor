@@ -59,17 +59,6 @@ bool FieldPC::open(bool dontOptimize)
 	_isOpen = true;
 
 	return true;
-
-//	QByteArray data = QByteArray(&fileDataConst[4], size);
-
-//	const QByteArray &dataDec = LZS::decompress(data, 14);//décompression partielle
-//	if(dataDec.size() < 14)	return -1;
-//	const char *constData = dataDec.constData();
-
-//	int debutSection2;
-//	memcpy(&debutSection2, &constData[10], 4);
-
-//	return openSection1(LZS::decompress(data, debutSection2), 46);
 }
 
 QByteArray FieldPC::sectionData(FieldPart part)

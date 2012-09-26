@@ -401,7 +401,7 @@ int Data::load()
 		quint32 fileSize;
 		fic.read((char *)&fileSize, 4);
 		if(fileSize+4!=fic.size())	return 2;
-		const QByteArray &data = LZS::decompress(fic.read(fileSize));
+		const QByteArray &data = LZS::decompressAll(fic.read(fileSize));
 		const char *constData = data.constData();
 		int dataSize = data.size();
 		fic.close();
