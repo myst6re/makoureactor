@@ -13,7 +13,7 @@
 <context>
     <name>ApercuBG</name>
     <message>
-        <location filename="ApercuBG.cpp" line="65"/>
+        <location filename="ApercuBG.cpp" line="67"/>
         <source>Erreur</source>
         <translation>エラー</translation>
     </message>
@@ -36,10 +36,9 @@
 <context>
     <name>BGDialog</name>
     <message>
-        <location filename="BGDialog.cpp" line="74"/>
         <source>Aperçu %1</source>
         <translatorcomment>%1 preview</translatorcomment>
-        <translation>%1 のプレビュー</translation>
+        <translation type="obsolete">%1 のプレビュー</translation>
     </message>
     <message>
         <location filename="BGDialog.cpp" line="50"/>
@@ -49,41 +48,41 @@
     </message>
     <message>
         <location filename="BGDialog.cpp" line="23"/>
-        <source>Aperçu écran</source>
+        <source>Décor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="BGDialog.cpp" line="123"/>
+        <location filename="BGDialog.cpp" line="121"/>
         <source>Paramètre %1</source>
         <translatorcomment>Parameter %1</translatorcomment>
         <translation>パラメータ %1</translation>
     </message>
     <message>
-        <location filename="BGDialog.cpp" line="129"/>
+        <location filename="BGDialog.cpp" line="127"/>
         <source>Couche 1</source>
         <translatorcomment>Layer 1</translatorcomment>
         <translation>レイヤー 1</translation>
     </message>
     <message>
-        <location filename="BGDialog.cpp" line="135"/>
+        <location filename="BGDialog.cpp" line="133"/>
         <source>Couche 2</source>
         <translatorcomment>Layer 2</translatorcomment>
         <translation>レイヤー 2</translation>
     </message>
     <message>
-        <location filename="BGDialog.cpp" line="142"/>
+        <location filename="BGDialog.cpp" line="140"/>
         <source>Couche 3</source>
         <translatorcomment>Layer 3</translatorcomment>
         <translation>レイヤー 3</translation>
     </message>
     <message>
-        <location filename="BGDialog.cpp" line="149"/>
+        <location filename="BGDialog.cpp" line="147"/>
         <source>Couche 4</source>
         <translatorcomment>Layer 4</translatorcomment>
         <translation>レイヤー 4</translation>
     </message>
     <message>
-        <location filename="BGDialog.cpp" line="181"/>
+        <location filename="BGDialog.cpp" line="179"/>
         <source>État %1</source>
         <translatorcomment>State %1</translatorcomment>
         <translation>ステート %1</translation>
@@ -92,7 +91,7 @@
 <context>
     <name>ColorDisplay</name>
     <message>
-        <location filename="ColorDisplay.cpp" line="77"/>
+        <location filename="ColorDisplay.cpp" line="81"/>
         <source>Choisir une nouvelle couleur</source>
         <translatorcomment>Choose a new color</translatorcomment>
         <translation>変更する色の選択</translation>
@@ -538,25 +537,25 @@
         <translation>下へ</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="244"/>
+        <location filename="GrpScriptList.cpp" line="241"/>
         <source>Suppression</source>
         <translatorcomment>Delete</translatorcomment>
         <translation>削除</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="244"/>
+        <location filename="GrpScriptList.cpp" line="241"/>
         <source>Voulez-vous vraiment supprimer %1 ?</source>
         <translatorcomment>Are you sure you want to delete %1?</translatorcomment>
         <translation>%1 を削除しますか？</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="244"/>
+        <location filename="GrpScriptList.cpp" line="241"/>
         <source>le groupe sélectionné</source>
         <translatorcomment>the group selected</translatorcomment>
         <translation>選択グループ</translation>
     </message>
     <message>
-        <location filename="GrpScriptList.cpp" line="244"/>
+        <location filename="GrpScriptList.cpp" line="241"/>
         <source>les groupes sélectionnés</source>
         <translatorcomment>the selected groups</translatorcomment>
         <translation>選択グループ</translation>
@@ -782,65 +781,68 @@
 <context>
     <name>ModelManager</name>
     <message>
-        <location filename="ModelManager.cpp" line="33"/>
-        <location filename="ModelManager.cpp" line="51"/>
+        <location filename="ModelManager.cpp" line="25"/>
+        <location filename="ModelManager.cpp" line="43"/>
         <source>Modèles 3D</source>
         <translatorcomment>Field Models</translatorcomment>
         <translation>3Dモデル</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="83"/>
+        <location filename="ModelManager.cpp" line="67"/>
         <source>Animations</source>
         <translatorcomment>Animations</translatorcomment>
         <translation>アニメーション</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="97"/>
+        <location filename="ModelManager.cpp" line="67"/>
+        <source>?</source>
+        <translation type="unfinished">?</translation>
+    </message>
+    <message>
+        <location filename="ModelManager.cpp" line="81"/>
         <source>Nom (non utilisé)</source>
         <translatorcomment>Name (unused)</translatorcomment>
         <translation>名称 (未使用)</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="99"/>
+        <location filename="ModelManager.cpp" line="83"/>
         <source>Inconnu</source>
         <translatorcomment>Unknown</translatorcomment>
         <translation>不明</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="101"/>
+        <location filename="ModelManager.cpp" line="85"/>
         <source>Taille modèle</source>
         <translatorcomment>Model size</translatorcomment>
         <translation>モデル サイズ</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="119"/>
+        <location filename="ModelManager.cpp" line="96"/>
         <source>Taille modèles (non utilisé)</source>
         <translatorcomment>Models size (unused)</translatorcomment>
         <translation>モデル サイズ (未使用)</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="103"/>
+        <location filename="ModelManager.cpp" line="87"/>
         <source>Lumière</source>
         <translatorcomment>Light</translatorcomment>
         <translation>光源</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="110"/>
-        <location filename="ModelManager.cpp" line="199"/>
-        <location filename="ModelManager.cpp" line="408"/>
+        <location filename="ModelManager.cpp" line="267"/>
+        <location filename="ModelManager.cpp" line="511"/>
         <source>OK</source>
         <translatorcomment>OK</translatorcomment>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="111"/>
         <source>Annuler</source>
         <translatorcomment>Cancel</translatorcomment>
-        <translation>キャンセル</translation>
+        <translation type="obsolete">キャンセル</translation>
     </message>
     <message>
-        <location filename="ModelManager.cpp" line="181"/>
-        <location filename="ModelManager.cpp" line="371"/>
+        <location filename="ModelManager.cpp" line="248"/>
+        <location filename="ModelManager.cpp" line="474"/>
         <source>Ajouter un modèle 3D</source>
         <translatorcomment>Add a field model</translatorcomment>
         <translation>3Dモデルの追加</translation>
@@ -934,29 +936,29 @@
         <translation>下へ</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="317"/>
+        <location filename="OpcodeList.cpp" line="315"/>
         <source>Si ce script est exécuté,
  considérez que c&apos;est le dernier script non vide qui est exécuté</source>
         <translation>このスクリプトを実行した場合
 空ではないスクリプトの最後のものが実行されます</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="606"/>
+        <location filename="OpcodeList.cpp" line="604"/>
         <source>Suppression</source>
         <translation>削除</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="606"/>
+        <location filename="OpcodeList.cpp" line="604"/>
         <source>Voulez-vous vraiment supprimer %1 ?</source>
         <translation>%1 を削除しますか？</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="606"/>
+        <location filename="OpcodeList.cpp" line="604"/>
         <source>la commande sélectionnée</source>
         <translation>選択コマンド</translation>
     </message>
     <message>
-        <location filename="OpcodeList.cpp" line="606"/>
+        <location filename="OpcodeList.cpp" line="604"/>
         <source>les commandes sélectionnées</source>
         <translation>選択したコマンド</translation>
     </message>
@@ -1004,257 +1006,242 @@
     </message>
     <message>
         <location filename="Opcode.cpp" line="362"/>
-        <source>Play a sound effect on channel #1</source>
+        <source>Jouer un effet sonore sur le canal 1</source>
+        <oldsource>Play a sound effect on channel #1</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="363"/>
-        <source>Play a sound effect on channel #2</source>
+        <source>Jouer un effet sonore sur le canal 2</source>
+        <oldsource>Play a sound effect on channel #2</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="364"/>
-        <source>Play a sound effect on channel #3</source>
+        <source>Jouer un effet sonore sur le canal 3</source>
+        <oldsource>Play a sound effect on channel #3</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="365"/>
-        <source>Play a sound effect on channel #4</source>
+        <source>Jouer un effet sonore sur le canal 4</source>
+        <oldsource>Play a sound effect on channel #4</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="366"/>
-        <source>Resumes music and sound effects</source>
+        <source>Reprendre la musique et les effets sonores</source>
+        <oldsource>Resumes music and sound effects</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="367"/>
-        <source>Pauses music and sound effects</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="368"/>
-        <source>Resumes only the music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="369"/>
-        <source>Pauses only the music</source>
+        <source>Mettre en pause la musique et les effets sonores</source>
+        <oldsource>Pauses music and sound effects</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="370"/>
-        <source>Resumes only sound effects</source>
+        <source>Reprendre uniquement les effets sonores</source>
+        <oldsource>Resumes only sound effects</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="371"/>
-        <source>Pauses only sound effects</source>
+        <source>Mettre en pause uniquement les effets sonores</source>
+        <oldsource>Pauses only sound effects</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="372"/>
-        <source>Volume control (channel #1)</source>
+        <source>Contrôle du volume (canal 1)</source>
+        <oldsource>Volume control (channel #1)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="373"/>
-        <source>Volume control (channel #2)</source>
+        <source>Contrôle du volume (canal 2)</source>
+        <oldsource>Volume control (channel #2)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="374"/>
-        <source>Volume control (channel #3)</source>
+        <source>Contrôle du volume (canal 3)</source>
+        <oldsource>Volume control (channel #3)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="375"/>
-        <source>Volume control (channel #4)</source>
+        <source>Contrôle du volume (canal 4)</source>
+        <oldsource>Volume control (channel #4)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="376"/>
-        <source>Volume transitions (channel #1)</source>
+        <source>Volume transitions (canal 1)</source>
+        <oldsource>Volume transitions (channel #1)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="377"/>
-        <source>Volume transitions (channel #2)</source>
+        <source>Volume transitions (canal 2)</source>
+        <oldsource>Volume transitions (channel #2)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="378"/>
-        <source>Volume transitions (channel #3)</source>
+        <source>Volume transitions (canal 3)</source>
+        <oldsource>Volume transitions (channel #3)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="379"/>
-        <source>Volume transitions (channel #4)</source>
+        <source>Volume transitions (canal 4)</source>
+        <oldsource>Volume transitions (channel #4)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="380"/>
-        <source>Pan control (channel #1)</source>
+        <source>Contrôle spatial (canal 1)</source>
+        <oldsource>Pan control (channel #1)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="381"/>
-        <source>Pan control (channel #2)</source>
+        <source>Contrôle spatial (canal 2)</source>
+        <oldsource>Pan control (channel #2)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="382"/>
-        <source>Pan control (channel #3)</source>
+        <source>Contrôle spatial (canal 3)</source>
+        <oldsource>Pan control (channel #3)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="383"/>
-        <source>Pan control (channel #4)</source>
+        <source>Contrôle spatial (canal 4)</source>
+        <oldsource>Pan control (channel #4)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="384"/>
-        <source>Pan transitions (channel #1)</source>
+        <source>Transitions spatiales (canal 1)</source>
+        <oldsource>Pan transitions (channel #1)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="385"/>
-        <source>Pan transitions (channel #2)</source>
+        <source>Transitions spatiales (canal 2)</source>
+        <oldsource>Pan transitions (channel #2)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="386"/>
-        <source>Pan transitions (channel #3)</source>
+        <source>Transitions spatiales (canal 3)</source>
+        <oldsource>Pan transitions (channel #3)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="387"/>
-        <source>Pan transitions (channel #4)</source>
+        <source>Transitions spatiales (canal 4)</source>
+        <oldsource>Pan transitions (channel #4)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="388"/>
-        <source>Tempo control (channel #1)</source>
+        <source>Contrôle du tempo (canal 1)</source>
+        <oldsource>Tempo control (channel #1)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="389"/>
-        <source>Tempo control (channel #2)</source>
+        <source>Contrôle du tempo (canal 2)</source>
+        <oldsource>Tempo control (channel #2)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="390"/>
-        <source>Tempo control (channel #3)</source>
+        <source>Contrôle du tempo (canal 3)</source>
+        <oldsource>Tempo control (channel #3)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="391"/>
-        <source>Tempo control (channel #4)</source>
+        <source>Contrôle du tempo (canal 4)</source>
+        <oldsource>Tempo control (channel #4)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="392"/>
-        <source>Tempo transitions (channel #1)</source>
+        <source>Tempo transitions (canal 1)</source>
+        <oldsource>Tempo transitions (channel #1)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="393"/>
-        <source>Tempo transitions (channel #2)</source>
+        <source>Tempo transitions (canal 2)</source>
+        <oldsource>Tempo transitions (channel #2)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="394"/>
-        <source>Tempo transitions (channel #3)</source>
+        <source>Tempo transitions (canal 3)</source>
+        <oldsource>Tempo transitions (channel #3)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="395"/>
-        <source>Tempo transitions (channel #4)</source>
+        <source>Tempo transitions (canal 4)</source>
+        <oldsource>Tempo transitions (channel #4)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="396"/>
-        <source>Volume control for all channels</source>
+        <source>Contrôle du volume sur tous les canaux</source>
+        <oldsource>Volume control for all channels</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="397"/>
-        <source>Volume transitions for all channels</source>
+        <source>Volume transitions sur tous les canaux</source>
+        <oldsource>Volume transitions for all channels</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="398"/>
-        <source>Pan control for all channels</source>
+        <source>Contrôle spatial sur tous les canaux</source>
+        <oldsource>Pan control for all channels</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="399"/>
-        <source>Pan transitions for all channels</source>
+        <source>Transitions spatiales sur tous les canaux</source>
+        <oldsource>Pan transitions for all channels</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="400"/>
-        <source>Tempo control for all channels</source>
+        <source>Contrôle du tempo sur tous les canaux</source>
+        <oldsource>Tempo control for all channels</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="401"/>
-        <source>Tempo transitions for all channels</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="402"/>
-        <source>Set music volume</source>
+        <source>Tempo transitions sur tous les canaux</source>
+        <oldsource>Tempo transitions for all channels</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="403"/>
-        <source>Music volume transition</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="404"/>
-        <source>Music volume fade</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="405"/>
-        <source>Set music pan</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="406"/>
-        <source>Music pan transition</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="407"/>
-        <source>Music pan fade</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="408"/>
-        <source>Set music tempo</source>
+        <source>Transition sur le volume de la musique</source>
+        <oldsource>Music volume transition</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="409"/>
-        <source>Music tempo transition</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="410"/>
-        <source>Music tempo fade</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="411"/>
-        <source>Stop music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Opcode.cpp" line="412"/>
-        <source>Stop sound effects</source>
+        <source>Transition sur le tempo de la musique</source>
+        <oldsource>Music tempo transition</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1512,9 +1499,10 @@
     </message>
     <message>
         <location filename="Opcode.cpp" line="3123"/>
-        <source>Effacer la Matéria de %1</source>
+        <source>Effacer la matéria de %1</source>
+        <oldsource>Effacer la Matéria de %1</oldsource>
         <translatorcomment>Remove %1&apos;s Materia</translatorcomment>
-        <translation>%1 のマテリアを解除</translation>
+        <translation type="unfinished">%1 のマテリアを解除</translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="3126"/>
@@ -1716,6 +1704,61 @@
         <source>%1 le curseur main</source>
         <translatorcomment>%1 arrow</translatorcomment>
         <translation>カーソルを %1</translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="368"/>
+        <source>Reprendre uniquement la musique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="369"/>
+        <source>Mettre en pause uniquement la musique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="402"/>
+        <source>Modifier le volume de la musique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="404"/>
+        <source>Attenuation du volume de la musique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="405"/>
+        <source>Modifier la spatialisation de la musique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="406"/>
+        <source>Transition sur la spatialisation de la musique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="407"/>
+        <source>Attenuation de la spatialisation de la musique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="408"/>
+        <source>Modifier le tempo de la musique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="410"/>
+        <source>Attenuation du tempo de la musique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="411"/>
+        <source>Arrêter la musique</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Opcode.cpp" line="412"/>
+        <source>Arrêter les effets sonores</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="Opcode.cpp" line="890"/>
@@ -3326,249 +3369,249 @@
         <translation>ゲーム・オーバー</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="134"/>
+        <location filename="GrpScript.cpp" line="136"/>
         <source>Sans nom</source>
         <translatorcomment>Untitled</translatorcomment>
         <translation>Untitled</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="202"/>
+        <location filename="GrpScript.cpp" line="192"/>
         <source>Objet 3D</source>
         <translatorcomment>Field model</translatorcomment>
         <translation>3Dモデル</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="204"/>
+        <location filename="GrpScript.cpp" line="194"/>
         <source>Zone</source>
         <translatorcomment>Location</translatorcomment>
         <translation>エリア</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="205"/>
+        <location filename="GrpScript.cpp" line="195"/>
         <source>Animation</source>
         <translation>アニメーション</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="206"/>
+        <location filename="GrpScript.cpp" line="196"/>
         <source>Main</source>
         <translation>メイン</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="229"/>
+        <location filename="GrpScript.cpp" line="219"/>
         <source>S0 - Init</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="230"/>
+        <location filename="GrpScript.cpp" line="220"/>
         <source>S0 - Main</source>
         <translation>S0 - メイン</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="232"/>
+        <location filename="GrpScript.cpp" line="222"/>
         <source>S1 - Parler</source>
         <translatorcomment>S1 - Talk</translatorcomment>
         <translation>S1 - ダイアログ</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="233"/>
+        <location filename="GrpScript.cpp" line="223"/>
         <source>S1 - [OK]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="236"/>
+        <location filename="GrpScript.cpp" line="226"/>
         <source>S2 - Toucher</source>
         <translatorcomment>S2 - Contact</translatorcomment>
         <translation>S2 - コンタクト</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="237"/>
+        <location filename="GrpScript.cpp" line="227"/>
         <source>S2 - Bouger</source>
         <translatorcomment>S2 - Move</translatorcomment>
         <translation>S2 - 通過</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="240"/>
+        <location filename="GrpScript.cpp" line="230"/>
         <source>S3 - Bouger</source>
         <translatorcomment>S3 - Move</translatorcomment>
         <translation>S3 - 通過</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="243"/>
+        <location filename="GrpScript.cpp" line="233"/>
         <source>S4 - Aller</source>
         <translatorcomment>S4 - Go</translatorcomment>
         <translation>S4 - 進入</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="246"/>
+        <location filename="GrpScript.cpp" line="236"/>
         <source>S5 - Aller 1x</source>
         <translatorcomment>S5 - Go 1x</translatorcomment>
         <translation>S5 - 進入 1x</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="249"/>
+        <location filename="GrpScript.cpp" line="239"/>
         <source>S6 - Partir</source>
         <translatorcomment>S6 - Go away</translatorcomment>
         <translation>S6 - 離れる</translation>
     </message>
     <message>
-        <location filename="GrpScript.cpp" line="253"/>
+        <location filename="GrpScript.cpp" line="243"/>
         <source>Script %1</source>
         <translation>スクリプト %1</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="319"/>
+        <location filename="Data.cpp" line="347"/>
         <source>Clad</source>
         <translatorcomment>Cloud</translatorcomment>
         <translation>クラウド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="319"/>
+        <location filename="Data.cpp" line="347"/>
         <source>Barret</source>
         <translation>バレット</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="319"/>
+        <location filename="Data.cpp" line="347"/>
         <source>Tifa</source>
         <translation>ティファ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="320"/>
+        <location filename="Data.cpp" line="348"/>
         <source>Aeris</source>
         <translatorcomment>Aeris</translatorcomment>
         <translation>エアリス</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="320"/>
+        <location filename="Data.cpp" line="348"/>
         <source>Red XIII</source>
         <translation>レッドXIII</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="320"/>
+        <location filename="Data.cpp" line="348"/>
         <source>Youfie</source>
         <translatorcomment>Yuffie</translatorcomment>
         <translation>ユフィ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="321"/>
+        <location filename="Data.cpp" line="349"/>
         <source>Cait Sith</source>
         <translation>ケット・シー</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="321"/>
+        <location filename="Data.cpp" line="349"/>
         <source>Vincent</source>
         <translation>ヴィンセント</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="321"/>
+        <location filename="Data.cpp" line="349"/>
         <source>Cid</source>
         <translation>シド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="322"/>
+        <location filename="Data.cpp" line="350"/>
         <source>Jeune Clad</source>
         <translatorcomment>Young Cloud</translatorcomment>
         <translation>昔のクラウド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="322"/>
+        <location filename="Data.cpp" line="350"/>
         <source>Sephiroth</source>
         <translation>セフィロス</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="322"/>
+        <location filename="Data.cpp" line="350"/>
         <source>Chocobo</source>
         <translation>チョコボ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="332"/>
+        <location filename="Data.cpp" line="360"/>
         <source>[CAMERA|L2]</source>
         <translation>[視点|L2]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="332"/>
+        <location filename="Data.cpp" line="360"/>
         <source>[CIBLE|R2]</source>
         <translatorcomment>[TARGET|R2]</translatorcomment>
         <translation>[テーゲット|R2]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="333"/>
+        <location filename="Data.cpp" line="361"/>
         <source>[PAGE HAUT|L1]</source>
         <translatorcomment>[PAGE UP|L1]</translatorcomment>
         <translation>|ページ送り|L1}ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="333"/>
+        <location filename="Data.cpp" line="361"/>
         <source>[PAGE BAS|R1]</source>
         <translatorcomment>[PAGE DOWN|R1]</translatorcomment>
         <translation>[ページ逆送り|R1]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="334"/>
+        <location filename="Data.cpp" line="362"/>
         <source>[MENU|TRIANGLE]</source>
         <translation>[メニュー|△]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="334"/>
+        <location filename="Data.cpp" line="362"/>
         <source>[OK|ROND]</source>
         <translatorcomment>[OK|CIRCLE]</translatorcomment>
         <translation>[決定|○]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="335"/>
+        <location filename="Data.cpp" line="363"/>
         <source>[ANNULER|CROIX]</source>
         <translatorcomment>[CANCEL|CROSS]</translatorcomment>
         <translation>[キャンセル|×]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="335"/>
+        <location filename="Data.cpp" line="363"/>
         <source>[CHANGER|CARRE]</source>
         <translatorcomment>[SWITCH|SQUARE]</translatorcomment>
         <translation>[ＥＸＴ|□]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="336"/>
+        <location filename="Data.cpp" line="364"/>
         <source>[ASSISTER|SELECT]</source>
         <translatorcomment>[ヘルプ|ASSIST|SELECT]</translatorcomment>
         <translation>[SELECT]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="337"/>
+        <location filename="Data.cpp" line="365"/>
         <source>[DEMARRER|START]</source>
         <translatorcomment>[START]</translatorcomment>
         <translation>[START]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="338"/>
+        <location filename="Data.cpp" line="366"/>
         <source>[HAUT]</source>
         <translatorcomment>[UP]</translatorcomment>
         <translation>[↑]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="338"/>
+        <location filename="Data.cpp" line="366"/>
         <source>[DROITE]</source>
         <translatorcomment>[RIGHT]</translatorcomment>
         <translation>[→]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="339"/>
+        <location filename="Data.cpp" line="367"/>
         <source>[BAS]</source>
         <translatorcomment>[LEFT]</translatorcomment>
         <translation>[↓]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="339"/>
+        <location filename="Data.cpp" line="367"/>
         <source>[GAUCHE]</source>
         <translatorcomment>[LEFT]</translatorcomment>
         <translation>[←]ボタン</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="46"/>
+        <location filename="main.cpp" line="47"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="46"/>
+        <location filename="main.cpp" line="47"/>
         <source>Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
 Vérifiez que ce fichier est valide ou supprimez-le.</source>
         <translatorcomment>The file &apos;var.cfg&apos; could not be loaded.
@@ -3593,32 +3636,32 @@ length=%2
 channelCount=%3</translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="846"/>
+        <location filename="Script.cpp" line="855"/>
         <source>Le label %1 est inaccessible, veuillez utiliser un saut long.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="824"/>
+        <location filename="Script.cpp" line="833"/>
         <source>Le label %1 est déclaré plusieurs fois.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="839"/>
+        <location filename="Script.cpp" line="848"/>
         <source>Ce saut est invalide, veuillez mettre un label valide.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="850"/>
+        <location filename="Script.cpp" line="859"/>
         <source>Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="858"/>
+        <location filename="Script.cpp" line="867"/>
         <source>Le label %1 est inaccessible car il se trouve avant la commande.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="867"/>
+        <location filename="Script.cpp" line="876"/>
         <source>Script trop grand, il ne doit pas dépasser les 65535 octets. Taille actuelle : %1.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3627,9 +3670,10 @@ channelCount=%3</translation>
     <name>ScriptEditor</name>
     <message>
         <location filename="ScriptEditor.cpp" line="41"/>
-        <source>Éditeur%1</source>
+        <source>Éditeur de script%1</source>
+        <oldsource>Éditeur%1</oldsource>
         <translatorcomment>Editor%1</translatorcomment>
-        <translation>エディター%1</translation>
+        <translation type="unfinished">エディター%1</translation>
     </message>
     <message>
         <location filename="ScriptEditor.cpp" line="41"/>
@@ -6349,25 +6393,25 @@ channelCount=%3</translation>
         <translation>グループ</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="380"/>
+        <location filename="Search.cpp" line="377"/>
         <source>Dernier %1,
 poursuite au début.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="381"/>
-        <location filename="Search.cpp" line="461"/>
+        <location filename="Search.cpp" line="378"/>
+        <location filename="Search.cpp" line="457"/>
         <source>groupe</source>
         <translation type="unfinished">グループ</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="381"/>
-        <location filename="Search.cpp" line="461"/>
+        <location filename="Search.cpp" line="378"/>
+        <location filename="Search.cpp" line="457"/>
         <source>écran</source>
         <translation type="unfinished">マップ</translation>
     </message>
     <message>
-        <location filename="Search.cpp" line="460"/>
+        <location filename="Search.cpp" line="456"/>
         <source>Premier %1,
 poursuite à la fin.</source>
         <translation type="unfinished"></translation>
@@ -7154,6 +7198,7 @@ Are you sure you want to continue?</translatorcomment>
     </message>
     <message>
         <location filename="WalkmeshManager.cpp" line="236"/>
+        <location filename="WalkmeshManager.cpp" line="456"/>
         <source>Inconnu :</source>
         <translation type="unfinished">不明:</translation>
     </message>
@@ -7233,119 +7278,134 @@ Are you sure you want to continue?</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="375"/>
+        <location filename="WalkmeshManager.cpp" line="366"/>
+        <source>Flags couches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="WalkmeshManager.cpp" line="378"/>
         <source>Haut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="377"/>
+        <location filename="WalkmeshManager.cpp" line="380"/>
         <source>Bas</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="379"/>
+        <location filename="WalkmeshManager.cpp" line="382"/>
         <source>Droite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="381"/>
+        <location filename="WalkmeshManager.cpp" line="384"/>
         <source>Gauche</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="389"/>
+        <location filename="WalkmeshManager.cpp" line="392"/>
         <source>Largeur couche 3 décor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="391"/>
+        <location filename="WalkmeshManager.cpp" line="394"/>
         <source>Hauteur couche 3 décor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="393"/>
+        <location filename="WalkmeshManager.cpp" line="396"/>
         <source>Largeur couche 4 décor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="395"/>
+        <location filename="WalkmeshManager.cpp" line="398"/>
         <source>Hauteur couche 4 décor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="432"/>
+        <location filename="WalkmeshManager.cpp" line="407"/>
+        <source>Couche 1</source>
+        <translation type="unfinished">レイヤー 1</translation>
+    </message>
+    <message>
+        <location filename="WalkmeshManager.cpp" line="409"/>
+        <source>Couche 2</source>
+        <translation type="unfinished">レイヤー 2</translation>
+    </message>
+    <message>
+        <location filename="WalkmeshManager.cpp" line="411"/>
+        <source>Couche 3</source>
+        <translation type="unfinished">レイヤー 3</translation>
+    </message>
+    <message>
+        <location filename="WalkmeshManager.cpp" line="413"/>
+        <source>Couche 4</source>
+        <translation type="unfinished">レイヤー 4</translation>
+    </message>
+    <message>
+        <location filename="WalkmeshManager.cpp" line="451"/>
         <source>Orientation des mouvements :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="435"/>
+        <location filename="WalkmeshManager.cpp" line="454"/>
         <source>Hauteur focus caméra sur le personnage :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="437"/>
-        <source>Inconnu 2 :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="WalkmeshManager.cpp" line="439"/>
-        <source>Inconnu 3 :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="WalkmeshManager.cpp" line="461"/>
+        <location filename="WalkmeshManager.cpp" line="477"/>
         <source>Erreur d&apos;ouverture</source>
         <translation>オープン エラー</translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="461"/>
+        <location filename="WalkmeshManager.cpp" line="477"/>
         <source>Erreur d&apos;ouverture du walkmesh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="477"/>
+        <location filename="WalkmeshManager.cpp" line="493"/>
         <source>Caméra %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="493"/>
-        <location filename="WalkmeshManager.cpp" line="787"/>
-        <location filename="WalkmeshManager.cpp" line="789"/>
+        <location filename="WalkmeshManager.cpp" line="509"/>
         <location filename="WalkmeshManager.cpp" line="807"/>
+        <location filename="WalkmeshManager.cpp" line="809"/>
+        <location filename="WalkmeshManager.cpp" line="827"/>
         <source>Triangle %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="508"/>
-        <location filename="WalkmeshManager.cpp" line="520"/>
-        <location filename="WalkmeshManager.cpp" line="534"/>
-        <location filename="WalkmeshManager.cpp" line="1013"/>
-        <location filename="WalkmeshManager.cpp" line="1044"/>
-        <location filename="WalkmeshManager.cpp" line="1152"/>
+        <location filename="WalkmeshManager.cpp" line="524"/>
+        <location filename="WalkmeshManager.cpp" line="536"/>
+        <location filename="WalkmeshManager.cpp" line="550"/>
+        <location filename="WalkmeshManager.cpp" line="1033"/>
+        <location filename="WalkmeshManager.cpp" line="1064"/>
+        <location filename="WalkmeshManager.cpp" line="1172"/>
         <source>Inutilisé</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="518"/>
-        <location filename="WalkmeshManager.cpp" line="1042"/>
+        <location filename="WalkmeshManager.cpp" line="534"/>
+        <location filename="WalkmeshManager.cpp" line="1062"/>
         <source>Porte %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="532"/>
-        <location filename="WalkmeshManager.cpp" line="1150"/>
+        <location filename="WalkmeshManager.cpp" line="548"/>
+        <location filename="WalkmeshManager.cpp" line="1170"/>
         <source>Flêche %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="656"/>
-        <location filename="WalkmeshManager.cpp" line="658"/>
+        <location filename="WalkmeshManager.cpp" line="676"/>
         <location filename="WalkmeshManager.cpp" line="678"/>
+        <location filename="WalkmeshManager.cpp" line="698"/>
         <source>Camera %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="WalkmeshManager.cpp" line="917"/>
+        <location filename="WalkmeshManager.cpp" line="937"/>
         <source>?</source>
         <translation type="unfinished">?</translation>
     </message>
@@ -7353,38 +7413,38 @@ Are you sure you want to continue?</translatorcomment>
 <context>
     <name>Window</name>
     <message>
-        <location filename="Window.cpp" line="55"/>
+        <location filename="Window.cpp" line="54"/>
         <source>&amp;Fichier</source>
         <translatorcomment>&amp;File</translatorcomment>
         <translation>ファイル(&amp;F)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="69"/>
+        <location filename="Window.cpp" line="68"/>
         <source>&amp;Outils</source>
         <translatorcomment>T&amp;ools</translatorcomment>
         <translation>ツール(&amp;O)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="57"/>
+        <location filename="Window.cpp" line="56"/>
         <source>&amp;Ouvrir...</source>
         <translatorcomment>&amp;Open...</translatorcomment>
         <translation>開く(&amp;O)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="58"/>
+        <location filename="Window.cpp" line="57"/>
         <source>Ouvrir un &amp;dossier Field (PS)...</source>
         <oldsource>Ouvrir un &amp;dossier FIELD (PS)...</oldsource>
         <translatorcomment>Open a FIELD &amp;dir (PS)...</translatorcomment>
         <translation>FIELD ディレクトリ [PS] を開く (&amp;D)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="59"/>
+        <location filename="Window.cpp" line="58"/>
         <source>Enregi&amp;strer</source>
         <translatorcomment>&amp;Save</translatorcomment>
         <translation>保存(&amp;S)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="60"/>
+        <location filename="Window.cpp" line="59"/>
         <source>Enre&amp;gistrer Sous...</source>
         <translatorcomment>Save &amp;As...</translatorcomment>
         <translation>名前を付けて保存(&amp;A)...</translation>
@@ -7400,31 +7460,31 @@ Are you sure you want to continue?</translatorcomment>
         <translation type="obsolete">インポート(&amp;I)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="65"/>
+        <location filename="Window.cpp" line="64"/>
         <source>Fe&amp;rmer</source>
         <translatorcomment>C&amp;lose</translatorcomment>
         <translation>閉じる(&amp;L)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="66"/>
+        <location filename="Window.cpp" line="65"/>
         <source>&amp;Quitter</source>
         <translatorcomment>E&amp;xit</translatorcomment>
         <translation>終了(&amp;X)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="71"/>
+        <location filename="Window.cpp" line="70"/>
         <source>&amp;Gestionnaire de variables...</source>
         <translatorcomment>Variable Mana&amp;ger...</translatorcomment>
         <translation>変数マネージャー(&amp;G)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="72"/>
+        <location filename="Window.cpp" line="71"/>
         <source>Rec&amp;hercher...</source>
         <translatorcomment>F&amp;ind...</translatorcomment>
         <translation>検索(&amp;F)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="109"/>
+        <location filename="Window.cpp" line="108"/>
         <source>Barre d&apos;outils &amp;principale</source>
         <translatorcomment>Main &amp;toolbar</translatorcomment>
         <translation>メイン ツールバー(&amp;T)</translation>
@@ -7438,23 +7498,23 @@ Are you sure you want to continue?</translatorcomment>
         <translation type="obsolete">リドゥ</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="120"/>
+        <location filename="Window.cpp" line="119"/>
         <source>Lancer FF7</source>
         <translation>FF7 を実行</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="134"/>
+        <location filename="Window.cpp" line="133"/>
         <source>Id</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="134"/>
+        <location filename="Window.cpp" line="133"/>
         <source>Fichier</source>
         <translatorcomment>File</translatorcomment>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="273"/>
+        <location filename="Window.cpp" line="272"/>
         <source>&amp;Affichage</source>
         <translatorcomment>&amp;View</translatorcomment>
         <translation>表示(&amp;V)</translation>
@@ -7478,43 +7538,43 @@ Edited files: %2 ●</translatorcomment>
 編集済みファイル: %2</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="114"/>
-        <location filename="Window.cpp" line="416"/>
+        <location filename="Window.cpp" line="113"/>
+        <location filename="Window.cpp" line="423"/>
         <source>Ouvrir un fichier</source>
         <translatorcomment>Open a file</translatorcomment>
         <translation>ファイルを開く</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="416"/>
+        <location filename="Window.cpp" line="423"/>
         <source>Fichiers compatibles (*.lgp *.DAT *.bin *.iso);;Fichiers Lgp (*.lgp);;Fichier DAT (*.DAT);;Image disque (*.bin *.iso)</source>
         <translatorcomment>Compatible files (*.lgp *.DAT *.bin *.iso);;LGP files (*.lgp);;DAT files (*.DAT);;Disk Image (*.bin *.iso)</translatorcomment>
         <translation>互換ファイル (*.lgp *.DAT *.bin *.iso);;LGP ファイル (*.lgp);;DAT ファイル (*.DAT);ディスク イメージ (*.bin *.iso)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="485"/>
-        <location filename="Window.cpp" line="797"/>
-        <location filename="Window.cpp" line="918"/>
-        <location filename="Window.cpp" line="1071"/>
-        <location filename="Window.cpp" line="1088"/>
+        <location filename="Window.cpp" line="493"/>
+        <location filename="Window.cpp" line="810"/>
+        <location filename="Window.cpp" line="931"/>
+        <location filename="Window.cpp" line="1084"/>
+        <location filename="Window.cpp" line="1101"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="589"/>
-        <location filename="Window.cpp" line="1221"/>
+        <location filename="Window.cpp" line="602"/>
+        <location filename="Window.cpp" line="1254"/>
         <source>Auteur : %1</source>
         <translatorcomment>Author: %1</translatorcomment>
         <translation>作者: %1</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="741"/>
+        <location filename="Window.cpp" line="754"/>
         <source>Enregistrer Sous</source>
         <translatorcomment>Save As</translatorcomment>
         <translation>名前を付けて保存</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="788"/>
+        <location filename="Window.cpp" line="801"/>
         <source>Impossible d&apos;écrire dans l&apos;archive, vérifiez les droits d&apos;écriture.</source>
         <translatorcomment>Unable to write to the archive, check write permissions.</translatorcomment>
         <translation>アーカイブに書き込むことができません。書き込み権限を確認してください。</translation>
@@ -7530,197 +7590,197 @@ Edited files: %2 ●</translatorcomment>
         <translation type="obsolete">圧縮済みフィールド (*.lzs)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="913"/>
+        <location filename="Window.cpp" line="926"/>
         <source>L&apos;archive Lgp est inaccessible</source>
         <translatorcomment>lgp archive is inaccessible</translatorcomment>
         <translation>lgp アーカイブにアクセスできません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="470"/>
-        <location filename="Window.cpp" line="785"/>
+        <location filename="Window.cpp" line="478"/>
+        <location filename="Window.cpp" line="798"/>
         <source>Impossible de créer un fichier temporaire</source>
         <translatorcomment>Can not create temporary file</translatorcomment>
         <translation>一時ファイルが作成できません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="61"/>
+        <location filename="Window.cpp" line="60"/>
         <source>&amp;Exporter l&apos;écran courant...</source>
         <translation type="unfinished">現在のファイルをエクスポート...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="62"/>
+        <location filename="Window.cpp" line="61"/>
         <source>Exporter en &amp;masse...</source>
         <oldsource>&amp;Exporter en masse...</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="63"/>
+        <location filename="Window.cpp" line="62"/>
         <source>&amp;Importer dans l&apos;écran courant...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="73"/>
+        <location filename="Window.cpp" line="72"/>
         <source>&amp;Textes...</source>
         <translatorcomment>&amp;Texts...</translatorcomment>
         <translation>テキスト(&amp;T)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="74"/>
+        <location filename="Window.cpp" line="73"/>
         <source>&amp;Modèles 3D...</source>
         <translatorcomment>Field &amp;Models...</translatorcomment>
         <translation>3Dモデル(&amp;M)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="75"/>
+        <location filename="Window.cpp" line="74"/>
         <source>&amp;Rencontres aléatoires...</source>
         <translatorcomment>Encounte&amp;rs...</translatorcomment>
         <translation>エンカウント(&amp;E)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="76"/>
+        <location filename="Window.cpp" line="75"/>
         <source>&amp;Tutoriels/Musiques...</source>
         <oldsource>&amp;Tutoriels/Sons...</oldsource>
         <translatorcomment>&amp;Tutorials/Sounds...</translatorcomment>
         <translation>解説/サウンド(&amp;S)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="77"/>
+        <location filename="Window.cpp" line="76"/>
         <source>&amp;Zones...</source>
         <translatorcomment>&amp;Walkmesh...</translatorcomment>
         <translation>ウォーク メッシュ(&amp;W)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="78"/>
+        <location filename="Window.cpp" line="77"/>
         <source>&amp;Background...</source>
         <translatorcomment>&amp;Background...</translatorcomment>
         <translation>背景(&amp;B)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="79"/>
+        <location filename="Window.cpp" line="78"/>
         <source>&amp;Divers...</source>
         <translatorcomment>M&amp;iscellaneous...</translatorcomment>
         <translation>各種情報(&amp;I)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="81"/>
+        <location filename="Window.cpp" line="80"/>
         <source>&amp;Paramètres</source>
         <translatorcomment>&amp;Settings</translatorcomment>
         <translation>設定(&amp;S)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="83"/>
+        <location filename="Window.cpp" line="82"/>
         <source>Caractères japonais</source>
         <translatorcomment>Japanese Characters</translatorcomment>
         <translation>日本語版文字コードを使用</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="87"/>
+        <location filename="Window.cpp" line="86"/>
         <source>&amp;Langues</source>
         <translatorcomment>&amp;Language</translatorcomment>
         <translation>言語(&amp;L)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="90"/>
+        <location filename="Window.cpp" line="89"/>
         <source>Français (défaut)</source>
         <translatorcomment>French (default)</translatorcomment>
         <translation>Français (デフォルト)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="99"/>
+        <location filename="Window.cpp" line="98"/>
         <source>Français</source>
         <translatorcomment>English</translatorcomment>
         <translation>Japanese (日本語)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="107"/>
+        <location filename="Window.cpp" line="106"/>
         <source>Configuration...</source>
         <translation>構成設定...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="116"/>
+        <location filename="Window.cpp" line="115"/>
         <source>Enregistrer</source>
         <translatorcomment>Save</translatorcomment>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="119"/>
+        <location filename="Window.cpp" line="118"/>
         <source>Rechercher</source>
         <translatorcomment>Find</translatorcomment>
         <translation>検索</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="130"/>
+        <location filename="Window.cpp" line="129"/>
         <source>Recherche rapide</source>
         <translatorcomment>Quick search</translatorcomment>
         <translation>クイック検索</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="315"/>
+        <location filename="Window.cpp" line="314"/>
         <source>Paramètres modifiés</source>
         <translatorcomment>Settings changed</translatorcomment>
         <translation>設定の変更</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="316"/>
+        <location filename="Window.cpp" line="315"/>
         <source>Relancez le programme pour que les paramètres prennent effet.</source>
         <translatorcomment>Restart the program for the settings to take effect.</translatorcomment>
         <translation>プログラムを再起動して設定の変更を適用してください。</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="467"/>
-        <location filename="Window.cpp" line="782"/>
+        <location filename="Window.cpp" line="475"/>
+        <location filename="Window.cpp" line="795"/>
         <source>Le fichier est inaccessible</source>
         <oldsource>Le fichier est inaccessible.</oldsource>
         <translatorcomment>The file is inaccessible</translatorcomment>
         <translation>ファイルにアクセスできません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="473"/>
+        <location filename="Window.cpp" line="481"/>
         <source>Impossible de supprimer le fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="476"/>
-        <location filename="Window.cpp" line="791"/>
+        <location filename="Window.cpp" line="484"/>
+        <location filename="Window.cpp" line="804"/>
         <source>L&apos;archive est invalide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="479"/>
-        <location filename="Window.cpp" line="794"/>
+        <location filename="Window.cpp" line="487"/>
+        <location filename="Window.cpp" line="807"/>
         <source>Cette erreur ne devrais pas s&apos;afficher, merci de le signaler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1069"/>
+        <location filename="Window.cpp" line="1082"/>
         <source>Le fichier est invalide</source>
         <oldsource>Le fichier est invalide.</oldsource>
         <translatorcomment>Invalid file</translatorcomment>
         <translation>無効なファイル</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="464"/>
-        <location filename="Window.cpp" line="779"/>
+        <location filename="Window.cpp" line="472"/>
+        <location filename="Window.cpp" line="792"/>
         <source>Rien trouvé !</source>
         <translatorcomment>Nothing found!</translatorcomment>
         <translation>見つかりませんでした！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="733"/>
+        <location filename="Window.cpp" line="746"/>
         <source>Fichier Lgp (*.lgp)</source>
         <translatorcomment>Lgp File (*.lgp)</translatorcomment>
         <translation>Lgp ファイル (*.lgp)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="735"/>
-        <location filename="Window.cpp" line="887"/>
-        <location filename="Window.cpp" line="1033"/>
+        <location filename="Window.cpp" line="748"/>
+        <location filename="Window.cpp" line="900"/>
+        <location filename="Window.cpp" line="1046"/>
         <source>Fichier DAT (*.DAT)</source>
         <translatorcomment>DAT File (*.DAT)</translatorcomment>
         <translation>DAT ファイル (*.DAT)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="737"/>
+        <location filename="Window.cpp" line="750"/>
         <source>Fichier Iso (*.iso *.bin)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7734,90 +7794,90 @@ Edited files: %2 ●</translatorcomment>
         <translation type="obsolete">検証の失敗</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="900"/>
+        <location filename="Window.cpp" line="913"/>
         <source>Exporter le fichier courant</source>
         <translatorcomment>Export the current file</translatorcomment>
         <translation>現在のファイルをエクスポート</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="916"/>
+        <location filename="Window.cpp" line="929"/>
         <source>Pas encore implémenté !</source>
         <translation>まだ実装されていません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="993"/>
+        <location filename="Window.cpp" line="1006"/>
         <source>Exportation des textes...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1171"/>
+        <location filename="Window.cpp" line="1204"/>
         <source>Impossible d&apos;ouvrir les sons et les tutoriels !</source>
         <translation>サウンドと解説が開けません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1262"/>
+        <location filename="Window.cpp" line="1295"/>
         <source>Par myst6re&lt;br/&gt;&lt;a href=&quot;https://sourceforge.net/projects/makoureactor/&quot;&gt;sourceforge.net/projects/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Merci à :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;/ul&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="915"/>
+        <location filename="Window.cpp" line="928"/>
         <source>Impossible de créer le nouveau fichier</source>
         <translatorcomment>Unable to create the new file</translatorcomment>
         <translation>新規ファイルを作成できません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="428"/>
+        <location filename="Window.cpp" line="435"/>
         <source>Sélectionnez un dossier contenant des fichiers .DAT issus de Final Fantasy VII (PlayStation)</source>
         <translatorcomment>Select a folder containing .DAT files from Final Fantasy VII (PlayStation)</translatorcomment>
         <translation>Final Fantasy VII (PlayStation) の DAT ファイル格納フォルダを選択</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="934"/>
+        <location filename="Window.cpp" line="947"/>
         <source>Arrêter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="938"/>
+        <location filename="Window.cpp" line="951"/>
         <source>Exportation des décors...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="963"/>
+        <location filename="Window.cpp" line="976"/>
         <source>Exportation des sons...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="886"/>
-        <location filename="Window.cpp" line="1032"/>
+        <location filename="Window.cpp" line="899"/>
+        <location filename="Window.cpp" line="1045"/>
         <source>Écran PC (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="888"/>
-        <location filename="Window.cpp" line="1034"/>
+        <location filename="Window.cpp" line="901"/>
+        <location filename="Window.cpp" line="1047"/>
         <source>Écran PC décompressé (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1035"/>
+        <location filename="Window.cpp" line="1048"/>
         <source>Fichier DAT décompressé (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1042"/>
+        <location filename="Window.cpp" line="1055"/>
         <source>Importer un fichier</source>
         <translatorcomment>Import a file</translatorcomment>
         <translation>ファイルのインポート</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="914"/>
-        <location filename="Window.cpp" line="1068"/>
+        <location filename="Window.cpp" line="927"/>
+        <location filename="Window.cpp" line="1081"/>
         <source>Erreur lors de l&apos;ouverture du fichier</source>
         <translatorcomment>Error reopening file</translatorcomment>
         <translation>ファイルの再読み込みに失敗</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1088"/>
+        <location filename="Window.cpp" line="1101"/>
         <source>Final Fantasy VII n&apos;a pas pu être lancé.
 %1</source>
         <translatorcomment>Final Fantasy VII couldn&apos;t be launched
@@ -7826,15 +7886,15 @@ Edited files: %2 ●</translatorcomment>
 %1</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1154"/>
-        <location filename="Window.cpp" line="1171"/>
-        <location filename="Window.cpp" line="1225"/>
+        <location filename="Window.cpp" line="1187"/>
+        <location filename="Window.cpp" line="1204"/>
+        <location filename="Window.cpp" line="1258"/>
         <source>Erreur d&apos;ouverture</source>
         <translatorcomment>Opening error　●</translatorcomment>
         <translation>オープン エラー</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1154"/>
+        <location filename="Window.cpp" line="1187"/>
         <source>Impossible d&apos;ouvrir les combats aléatoires !</source>
         <translatorcomment>Can not open encounters!　●</translatorcomment>
         <translation>エンカウントが開けません！</translation>
@@ -7850,7 +7910,7 @@ Edited files: %2 ●</translatorcomment>
         <translation type="obsolete">ウォークメッシュが開けません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1225"/>
+        <location filename="Window.cpp" line="1258"/>
         <source>Impossible d&apos;ouvrir les infos diverses !</source>
         <translatorcomment>Can not open miscellaneous informations! ●</translatorcomment>
         <translation>各種情報が開けません！</translation>
@@ -7861,7 +7921,7 @@ Edited files: %2 ●</translatorcomment>
         <translation type="obsolete">By myst6re</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1269"/>
+        <location filename="Window.cpp" line="1302"/>
         <source>Fermer</source>
         <translatorcomment>Close</translatorcomment>
         <translation>閉じる</translation>
