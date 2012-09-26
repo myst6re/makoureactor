@@ -797,7 +797,11 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 			QString name(data.left(20));
 			memcpy(&fileSize, data.constData()+20, 4);
 
-			if(name.compare("maplist", Qt::CaseInsensitive) == 0)	Data::openMaplist(fic->read(fileSize));
+			if(name.compare("maplist", Qt::CaseInsensitive) == 0) {
+				if(!Data::openMaplist(fic->read(fileSize))) {
+					qWarning() << "Cannot open maplist!";
+				}
+			}
 			else
 			{
 				fic->read((char *)&lzsSize, 4);

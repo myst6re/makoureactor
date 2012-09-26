@@ -34,7 +34,7 @@ public:
 	static QHash<QString, int> charlgp_listPos;
 	static QHash<QString, int> charlgp_animBoneCount;
 	static int load();
-	static void openMaplist(const QByteArray &data);
+	static bool openMaplist(const QByteArray &data);
 	static void openMaplist(bool PC=false);
 	static QStringList char_names;
 	static QStringList operateur_names;
@@ -60,7 +60,7 @@ private:
 	static const QString &searchRereleasedFF7Path();
 	static QString searchFF7Exe();
 	static QString searchRereleasedFF7Exe();
-	static void fill(const QByteArray &data, QStringList &names);
+	static void fill(const QByteArray &data, int pos, int dataSize, QStringList &names);
 	static QString ff7DataPath_cache;
 	static QString ff7AppPath_cache;
 	static QString ff7RereleasePath_cache;

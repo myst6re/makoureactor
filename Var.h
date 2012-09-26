@@ -23,8 +23,8 @@
 class Var
 {
 public:
-	static int load();
-	static int save(const QMap<quint16, QString> &);
+	static bool load();
+	static bool save(const QMap<quint16, QString> &);
 	static QString name(quint8 bank, quint8 adress);
 	static const QMap<quint16, QString> &get();
 	static void set(quint8 bank, quint8 adress, const QString &name);

@@ -279,8 +279,6 @@ void Data::charlgp_loadAnimBoneCount()
 {
 	if(charlgp_animBoneCount.isEmpty())
 	{
-//		QTime t;t.start();
-
 		QString charPath = charlgp_path();
 		if(!charPath.isEmpty()) {
 			QFile char_file(charPath);
@@ -302,46 +300,11 @@ void Data::charlgp_loadAnimBoneCount()
 				char_file.close();
 			}
 		}
-//		qDebug() << t.elapsed();
 	}
 }
 
 int Data::load()
 {
-	/* Data::field_names
- << "BUG" << "World Map - Outside Midgar"
- << "World Map - Outside Kalm" << "World Map - Outside Chocobo Farm"
- << "World Map - Outside Mithryl Mine (Midgar side)" << "World Map - Outside Mithryl Mine (Junon side)"
- << "World Map - Outside Condor" << "World Map - Outside Junon"
- << "World Map - Outside Temple of the Ancients" << "World Map - Outside Old Man's house (receive Mithryl)"
- << "World Map - Outside Gongaga blaksmith (?)" << "World Map - Outside Mideel"
- << "World Map - Outside Materia Cave (Quadra Magic)" << "World Map - Outside Costa Del Sol"
- << "World Map - Outside Mt. Coral" << "World Map - Outside North Coral"
- << "World Map - Outside Gold Saucer (In desert, can't move)" << "World Map - Jungle, Outside blown reactor (Turks)"
- << "World Map - Outside Cosmo Canyon" << "World Map - Outside Nibelheim (Town Side)"
- << "World Map - Outside Rocket Town (South Side)" << "World Map - Outside Rocket Town (South Side)"
- << "World Map - Outside Materia Cave (HP<->MP Materia)" << "World Map - Outside Wutai"
- << "World Map - Outside Materia Cave (Mime Materia)" << "World Map - Outside Bone Village"
- << "World Map - Outside Corel Valley Cave (Icicle Area)" << "World Map - Outside Icicle Inn (South Side)"
- << "World Map - Outside Mystery House" << "World Map - Outside Materia Cave (Knights of the Round Materia)"
- << "World Map - Underwater - Costa del Sol" << "World Map - Underwater - North Area"
- << "World Map - 0,0,0 (Northwest corner)" << "World Map - 0,0,0 (Northwest corner)"
- << "World Map - 0,0,0 (Northwest corner)" << "World Map - 0,0,0 (Northwest corner)"
- << "World Map Event - Ship pulls out of Junon" << "World Map Event - Ship pulls into Costa Del Sol"
- << "World Map Event - Ship goes from Junon to Costa Del Sol" << "World Map Event - Ship goes from Costa Del Sol to Junon"
- << "World Map - Little Bronco Crash start" << "World Map - Junon, On the water"
- << "World Map - Underwater - North Area" << "World Map - Outside Nibelheim (Mt. Nibel Side)"
- << "World Map - Outside Mt. Nibel (Nibelheim Side)" << "World Map - 0,0,0 (Northwest corner)"
- << "World Map - Outside Mt. Nibel (West Side)" << "World Map - Outside Icicle Inn (North Side)"
- << "World Map - Great Glacier" << "World Map - Outside Rocket Town (North Side)"
- << "World Map - 0,0,0 (Northwest corner)" << "World Map - 0,0,0 (Northwest corner)"
- << "World Map - 0,0,0 (Northwest corner)" << "World Map - 0,0,0 (Northwest corner)"
- << "World Map - Junon, On the water" << "World Map - Outside Ancient Forset"
- << "World Map - Underwater - North Area" << "World Map - Valley south of City of Ancients"
- << "World Map - Valley, City of Ancients enterance" << "World Map - 0,0,0 (Northwest corner)"
- << "World Map - Snow Maze" << "World Map - Snow Maze"
- << "World Map - Snow Maze" << "World Map - Snow Maze"
- << "World Map - Snow Maze - Outside Matera Cave (All)"*/
 	if(char_names.isEmpty()) {
 		char_names
 				<< QObject::tr("Clad") << QObject::tr("Barret") << QObject::tr("Tifa")
@@ -379,7 +342,7 @@ int Data::load()
 		}
 	}
 
-	QString path = Config::value("kernel2Path", QString()).toString();
+	QString path = Config::value("kernel2Path").toString();
 	if(path.isEmpty()) {
 		path = ff7DataPath();
 		if(path.isEmpty())	return 2;
@@ -400,119 +363,128 @@ int Data::load()
 	{
 		quint32 fileSize;
 		fic.read((char *)&fileSize, 4);
-		if(fileSize+4!=fic.size())	return 2;
+
+		if(fileSize+4 != fic.size())		return 2;
+
 		const QByteArray &data = LZS::decompressAll(fic.read(fileSize));
 		const char *constData = data.constData();
-		int dataSize = data.size();
+		int pos = 0, dataSize = data.size();
+
 		fic.close();
-		int pos=0;
-//		QStringList descitems, descweapons, descarmors, descaccess;
+
 		for(int i=0 ; i<10 ; ++i)
 		{
+			if(pos + 4 >= dataSize)			return 1;
+
 			memcpy(&fileSize, &constData[pos], 4);
-//			if(i==2) {
-//				fill(data.mid(pos+4, fileSize), descitems);
-//			} else if(i==3) {
-//				fill(data.mid(pos+4, fileSize), descweapons);
-//			} else if(i==4) {
-//				fill(data.mid(pos+4, fileSize), descarmors);
-//			} else if(i==5) {
-//				fill(data.mid(pos+4, fileSize), descaccess);
-//			}
 			pos += fileSize + 4;
-			if(pos > dataSize)	return 1;
 		}
+
+		if(pos + 4 >= dataSize)				return 1;
+
 		memcpy(&fileSize, &constData[pos], 4);
 		pos += 4;
-		if((int)(pos+fileSize) > dataSize)	return 1;
+
+		if(pos + (int)fileSize > dataSize)	return 1;
+
 		item_names.clear();
-		fill(data.mid(pos, fileSize), item_names);
+		fill(data, pos, fileSize, item_names);
 		pos += fileSize;
 
-//		for(int i=0 ; i<descitems.size() ; ++i) {
-//			qDebug() << item_names.at(i).toLatin1().data() << "=>" << descitems.at(i).toLatin1().data();
-//		}
+		if(pos + 4 > dataSize)				return 1;
 
-		if(pos+4 > dataSize)	return 1;
 		memcpy(&fileSize, &constData[pos], 4);
 		pos += 4;
-		if((int)(pos+fileSize) > dataSize)	return 1;
+
+		if(pos + (int)fileSize > dataSize)	return 1;
+
 		weapon_names.clear();
-		fill(data.mid(pos, fileSize), weapon_names);
+		fill(data, pos, fileSize, weapon_names);
 		pos += fileSize;
 
-//		for(int i=0 ; i<descweapons.size() ; ++i) {
-//			qDebug() << weapon_names.at(i).toLatin1().data() << "=>" << descweapons.at(i).toLatin1().data();
-//		}
+		if(pos + 4 > dataSize)				return 1;
 
-		if(pos+4 > dataSize)	return 1;
 		memcpy(&fileSize, &constData[pos], 4);
 		pos += 4;
-		if((int)(pos+fileSize) > dataSize)	return 1;
+
+		if(pos + (int)fileSize > dataSize)	return 1;
+
 		armor_names.clear();
-		fill(data.mid(pos, fileSize), armor_names);
+		fill(data, pos, fileSize, armor_names);
 		pos += fileSize;
 
-//		for(int i=0 ; i<descarmors.size() ; ++i) {
-//			qDebug() << armor_names.at(i).toLatin1().data() << "=>" << descarmors.at(i).toLatin1().data();
-//		}
+		if(pos + 4 > dataSize)				return 1;
 
-		if((int)(pos+4) > dataSize)	return 1;
 		memcpy(&fileSize, &constData[pos], 4);
 		pos += 4;
-		if((int)(pos+fileSize) > dataSize)	return 1;
+
+		if(pos + (int)fileSize > dataSize)	return 1;
+
 		accessory_names.clear();
-		fill(data.mid(pos, fileSize), accessory_names);
+		fill(data, pos, fileSize, accessory_names);
 		pos += fileSize;
 
-//		for(int i=0 ; i<descaccess.size() ; ++i) {
-//			qDebug() << accessory_names.at(i).toLatin1().data() << "=>" << descaccess.at(i).toLatin1().data();
-//		}
+		if(pos + 4 > dataSize)				return 1;
 
-		if((int)(pos+4) > dataSize)	return 1;
 		memcpy(&fileSize, &constData[pos], 4);
 		pos += 4;
-		if((int)(pos+fileSize) > dataSize)	return 1;
-		materia_names.clear();
-		fill(data.mid(pos, fileSize), materia_names);
-		// pos += fileSize;
 
-		/* if(pos+4 > dataSize)	return;
-  memcpy(&fileSize, &constData[pos], 4);
-  pos += 4;
-  if(pos+fileSize > dataSize)	return;
-  Data::fill(data.mid(pos, fileSize), Data::key_item_names); */
+		if(pos + (int)fileSize > dataSize)	return 1;
+
+		materia_names.clear();
+		fill(data, pos, fileSize, materia_names);
 	}
+
 	return 0;
 }
 
-void Data::fill(const QByteArray &data, QStringList &names)
+void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &names)
 {
-//	bool jp = Config::value("jp_txt", false).toBool();
-//	Config::setValue("jp_txt", false);
-	int i=0, dataSize = data.size();
-	quint16 start=0;
-	while(i*2+2 < dataSize)
-	{
-		memcpy(&start, data.mid(i*2,2), 2);
-		if(start >= dataSize)	break;
-		names.append(FF7Text(data.mid(start)).getText(false, true));
-		++i;
+	int i, count;
+	quint16 position, lastPosition=0;
+	const char *constData = data.constData();
+	QList<quint16> positions;
+
+	if(dataSize < 2)				return;
+
+	memcpy(&position, &constData[pos], 2);
+
+	count = position / 2;
+
+	if(dataSize < position)			return;
+
+	for(i=0 ; i<count ; ++i) {
+		memcpy(&position, &constData[pos + i*2], 2);
+		if(position >= dataSize || lastPosition > position)	return;
+		positions.append(position);
+		lastPosition = position;
 	}
-//	Config::setValue("jp_txt", jp);
+	positions.append(dataSize);
+
+	i=0;
+	foreach(position, positions) {
+		names.append(FF7Text(data.mid(pos + position, positions.at(i+1) - position)).getText(false, true));
+		++i;
+		if(i == count)	break;
+	}
 }
 
-void Data::openMaplist(const QByteArray &data)
+bool Data::openMaplist(const QByteArray &data)
 {
-	if(data.size()<2)	return;
+	if(data.size() < 2)				return false;
+
 	quint16 nbMap;
-	memcpy(&nbMap, data.mid(0,2), 2);
-	if(data.size()!=2+nbMap*32)	return;
+	memcpy(&nbMap, data.constData(), 2);
+
+	if(data.size() != 2+nbMap*32)	return false;
+
 	field_names.clear();
 	for(int i=0 ; i<nbMap ; ++i)
 	{
 		field_names.append(QString(data.mid(2+i*32, 32)).simplified());
 	}
+
+	return true;
 }
 
 const char *Data::movieList[106] = {

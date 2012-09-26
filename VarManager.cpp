@@ -188,13 +188,11 @@ void VarManager::renameVar()
 
 void VarManager::save()
 {
-	int error = Var::save(local_var_names);
-	switch(error)
-	{
-	case 1:QMessageBox::warning(this, tr("Erreur"), tr("Fichier vars.cfg inaccessible.\nÉchec de l'enregistrement."));
-		return;
+	if(!Var::save(local_var_names)) {
+		QMessageBox::warning(this, tr("Erreur"), tr("Fichier vars.cfg inaccessible.\nÉchec de l'enregistrement."));
+	} else {
+		ok->setEnabled(false);
 	}
-	ok->setEnabled(false);
 }
 
 void VarManager::search()

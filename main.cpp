@@ -42,15 +42,18 @@ int main(int argc, char *argv[])
 	} else
 		Config::setValue("lang", "fr");
 
-	if(Var::load()==1)
+	if(!Var::load())
 	{
 		QMessageBox::warning(0, QObject::tr("Erreur"), QObject::tr("Le fichier 'var.cfg' n'a pas pu être chargé.\nVérifiez que ce fichier est valide ou supprimez-le."));
 	}
-	Data::load();
+	if(Data::load() != 0)
+	{
+		qWarning() << "Error loading data!";
+	}
 	
 	Window fenetre;
 	fenetre.show();
-	if(argc>1)
+	if(argc > 1)
 		fenetre.open(argv[1]);
 
 
