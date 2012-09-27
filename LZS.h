@@ -28,8 +28,6 @@
 
 #include <QtCore>
 
-#define MAX 1000000
-
 class LZS
 {
 public:
