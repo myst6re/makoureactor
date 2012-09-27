@@ -255,11 +255,15 @@ void LZS::DeleteNode(qint32 p)//deletes node p from tree
 	dad[p] = 4096;
 }
 
-QByteArray LZS::compress(const QByteArray &fileData)
+const QByteArray &LZS::compress(const QByteArray &fileData)
 {	
-	int i, c, len, r, s, last_match_length, code_buf_ptr, curData = 0, sizeData = fileData.size();
+	int i, c, len, r, s, last_match_length, code_buf_ptr,
+			curData = 0, curResult = 0, sizeData = fileData.size(), sizeAlloc = sizeData / 2;
 	unsigned char code_buf[17], mask;
-	QByteArray result;
+
+	if(result.size() < sizeAlloc) {
+		result.resize(sizeAlloc);
+	}
 	
 	/* quint32
 		textsize = 0,//text size counter
@@ -286,7 +290,10 @@ QByteArray LZS::compress(const QByteArray &fileData)
 
 	for(len=0 ; len<18 && curData<sizeData ; ++len)
 		text_buf[r + len] = fileData.at(curData++);//Read 18 bytes into the last 18 bytes of the buffer
-	if(/* (textsize =  */len/* ) */ == 0)	return result;//text of size zero
+	if(/* (textsize =  */len/* ) */ == 0) {
+		result.clear();
+		return result;//text of size zero
+	}
 
 	for(i=1 ; i<=18 ; ++i)
 		InsertNode(r - i);//Insert the 18 strings, each of which begins with one or more 'space' characters.  Note the order in which these strings are inserted.  This way, degenerate trees will be less likely to occur.
@@ -314,8 +321,8 @@ QByteArray LZS::compress(const QByteArray &fileData)
 		{
 //			for(i=0 ; i<code_buf_ptr ; ++i)//Send at most 8 units of
 //				result.append(code_buf[i]);//code together
-			result.append((char *)code_buf, code_buf_ptr);
-			// codesize += code_buf_ptr;
+			result.replace(curResult, code_buf_ptr, (char *)code_buf, code_buf_ptr);
+			curResult += code_buf_ptr;
 			code_buf[0] = 0;
 			code_buf_ptr = mask = 1;
 		}
@@ -352,8 +359,14 @@ QByteArray LZS::compress(const QByteArray &fileData)
 	{
 //		for(i = 0; i < code_buf_ptr ; ++i)
 //			result.append(code_buf[i]);
-		result.append((char *)code_buf, code_buf_ptr);
-		// codesize += code_buf_ptr;
+		result.replace(curResult, code_buf_ptr, (char *)code_buf, code_buf_ptr);
+		curResult += code_buf_ptr;
 	}
+	result.truncate(curResult);
 	return result;
+}
+
+void LZS::clear()
+{
+	result.clear();
 }

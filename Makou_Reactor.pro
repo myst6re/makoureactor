@@ -5,16 +5,16 @@ TEMPLATE = app
 TARGET = 
 DEPENDPATH += .
 INCLUDEPATH += .
+QT += opengl
 
 # Input
 HEADERS += ApercuBG.h \
     ColorDisplay.h \
     OpcodeList.h \
     Config.h \
-	ScriptEditorWidgets/Delegate.h \
     Field.h \
-	FieldPC.h \
-	FieldPS.h \
+    FieldPC.h \
+    FieldPS.h \
     FieldModel.h \
     FieldModelPart.h \
     GrpScript.h \
@@ -25,19 +25,19 @@ HEADERS += ApercuBG.h \
     ModelManager.h \
     Opcode.h \
     Palette.h \
-	Parameters.h \
+    Parameters.h \
     Script.h \
     ScriptEditor.h \
     ScriptList.h \
     Search.h \
-	FF7Text.h \
+    FF7Text.h \
     TextManager.h \
     Var.h \
     VarManager.h \
     Window.h \
     ConfigWindow.h \
     WalkmeshManager.h \
-	WalkmeshWidget.h \
+    WalkmeshWidget.h \
     IsoArchive.h \
     TextHighlighter.h \
     ApercuBGLabel.h \
@@ -45,11 +45,11 @@ HEADERS += ApercuBG.h \
     BGDialog.h \
     EncounterFile.h \
     EncounterWidget.h \
-	EncounterTableWidget.h \
+    EncounterTableWidget.h \
     TutFile.h \
     TutWidget.h \
     InfFile.h \
-	MiscWidget.h \
+    MiscWidget.h \
     FieldModelFile.h \
     TextPreview.h \
     FieldModelLoader.h \
@@ -58,8 +58,6 @@ HEADERS += ApercuBG.h \
     GZIP.h \
     Data.h \
     OrientationWidget.h \
-	ScriptEditorWidgets/ScriptEditorView.h \
-	ScriptEditorWidgets/ScriptEditorGenericList.h \
     VarOrValueWidget.h \
     HexLineEdit.h \
     Listwidget.h \
@@ -72,8 +70,11 @@ HEADERS += ApercuBG.h \
     FieldModelLoaderPC.h \
     FieldModelLoaderPS.h \
     TdbFile.h \
-    ScriptEditorWidgets/ScriptEditorWindowPage.h \
     MassExportDialog.h \
+    ScriptEditorWidgets/Delegate.h \
+    ScriptEditorWidgets/ScriptEditorView.h \
+    ScriptEditorWidgets/ScriptEditorGenericList.h \
+    ScriptEditorWidgets/ScriptEditorWindowPage.h \
     ScriptEditorWidgets/ScriptEditorStructPage.h \
     ScriptEditorWidgets/ScriptEditorMathPage.h \
     Section1File.h \
@@ -82,10 +83,9 @@ SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
     Config.cpp \
-	ScriptEditorWidgets/Delegate.cpp \
     Field.cpp \
-	FieldPC.cpp \
-	FieldPS.cpp \
+    FieldPC.cpp \
+    FieldPS.cpp \
     FieldModel.cpp \
     FieldModelPart.cpp \
     GrpScript.cpp \
@@ -102,14 +102,14 @@ SOURCES += ApercuBG.cpp \
     ScriptEditor.cpp \
     ScriptList.cpp \
     Search.cpp \
-	FF7Text.cpp \
+    FF7Text.cpp \
     TextManager.cpp \
     Var.cpp \
     VarManager.cpp \
     Window.cpp \
-	ConfigWindow.cpp \
+    ConfigWindow.cpp \
     WalkmeshManager.cpp \
-	WalkmeshWidget.cpp \
+    WalkmeshWidget.cpp \
     IsoArchive.cpp \
     TextHighlighter.cpp \
     ApercuBGLabel.cpp \
@@ -117,11 +117,11 @@ SOURCES += ApercuBG.cpp \
     BGDialog.cpp \
     EncounterFile.cpp \
     EncounterWidget.cpp \
-	EncounterTableWidget.cpp \
+    EncounterTableWidget.cpp \
     TutFile.cpp \
     TutWidget.cpp \
     InfFile.cpp \
-	MiscWidget.cpp \
+    MiscWidget.cpp \
     FieldModelFile.cpp \
     TextPreview.cpp \
     FieldModelLoader.cpp \
@@ -130,8 +130,6 @@ SOURCES += ApercuBG.cpp \
     GZIP.cpp \
     Data.cpp \
     OrientationWidget.cpp \
-	ScriptEditorWidgets/ScriptEditorView.cpp \
-	ScriptEditorWidgets/ScriptEditorGenericList.cpp \
     VarOrValueWidget.cpp \
     HexLineEdit.cpp \
     Listwidget.cpp \
@@ -144,47 +142,49 @@ SOURCES += ApercuBG.cpp \
     FieldModelLoaderPC.cpp \
     FieldModelLoaderPS.cpp \
     TdbFile.cpp \
-    ScriptEditorWidgets/ScriptEditorWindowPage.cpp \
     MassExportDialog.cpp \
+    ScriptEditorWidgets/Delegate.cpp \
+    ScriptEditorWidgets/ScriptEditorView.cpp \
+    ScriptEditorWidgets/ScriptEditorGenericList.cpp \
+    ScriptEditorWidgets/ScriptEditorWindowPage.cpp \
     ScriptEditorWidgets/ScriptEditorStructPage.cpp \
     ScriptEditorWidgets/ScriptEditorMathPage.cpp \
     Section1File.cpp \
     QLockedFile.cpp
-RESOURCES += Makou_Reactor.qrc
+
 TRANSLATIONS += Makou_Reactor_en.ts \
-	Makou_Reactor_ja.ts
-win32 {
-	RC_FILE = Makou_Reactor.rc
-}
+    Makou_Reactor_ja.ts
+
+RESOURCES += Makou_Reactor.qrc
+win32:RC_FILE = Makou_Reactor.rc
+macx:ICON = images/Makou_Reactor.icns
 
 OTHER_FILES += Makou_Reactor.rc \
-	Makou_Reactor.desktop
-QT += opengl
+    Makou_Reactor.desktop
 
-macx:ICON=images/Makou_Reactor.icns
 #all other *nix (except for symbian)
 #base for setting up deb packages(rpm too?).
 #becomes 'make install' when qmake generates the makefile
 unix:!macx:!symbian {
-LIBS = -lglut -lGLU
-system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
-target.path = /opt/makoureactor #set to deploy the build target.
+    LIBS = -lglut -lGLU
+    system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
+    target.path = /opt/makoureactor #set to deploy the build target.
 
-lang.path = /opt/makoureactor/
-lang.files = *.qm
+    lang.path = /opt/makoureactor/
+    lang.files = *.qm
 
-vars_cfg.path = /opt/makoureactor/  #a hack to make it so vars.cfg can be written to by all
-vars_cfg.files = vars.cfg           #this file is 'chmod 666' durring post install
+    vars_cfg.path = /opt/makoureactor/  #a hack to make it so vars.cfg can be written to by all
+    vars_cfg.files = vars.cfg           #this file is 'chmod 666' durring post install
 
-icon.path = /usr/share/pixmaps/
-icon.files = images/logo-shinra.png
+    icon.path = /usr/share/pixmaps/
+    icon.files = images/logo-shinra.png
 
-desktop.path =/usr/share/applications/
-desktop.files = Makou_Reactor.desktop
+    desktop.path =/usr/share/applications/
+    desktop.files = Makou_Reactor.desktop
 
-INSTALLS += target \
-	lang  \
-	vars_cfg \
-	icon  \
-	desktop
+    INSTALLS += target \
+        lang  \
+        vars_cfg \
+        icon  \
+        desktop
 }

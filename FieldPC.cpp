@@ -519,7 +519,7 @@ void FieldPC::setPosition(quint32 position)
 bool FieldPC::save(QByteArray &newData, bool compress)
 {
 	newData = QByteArray();
-	qDebug() << "FieldPC::save" << compress << name;
+//	qDebug() << "FieldPC::save" << compress << name;
 
 	if(!isOpen())	return false;
 
@@ -642,7 +642,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 
 	if(compress)
 	{
-		QByteArray compresse = LZS::compress(newData);
+		const QByteArray &compresse = LZS::compress(newData);
 		quint32 taille = compresse.size();
 		newData = QByteArray((char *)&taille, 4).append(compresse);
 		return true;

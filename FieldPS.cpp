@@ -671,7 +671,7 @@ bool FieldPS::save(QByteArray &newData, bool compress)
 
 	if(compress)
 	{
-		QByteArray compresse = LZS::compress(newData);
+		const QByteArray &compresse = LZS::compress(newData);
 		quint32 taille = compresse.size();
 		newData = QByteArray((char *)&taille, 4).append(compresse);
 		return true;
