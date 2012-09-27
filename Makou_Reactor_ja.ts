@@ -3459,147 +3459,147 @@
         <translation>スクリプト %1</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="347"/>
+        <location filename="Data.cpp" line="310"/>
         <source>Clad</source>
         <translatorcomment>Cloud</translatorcomment>
         <translation>クラウド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="347"/>
+        <location filename="Data.cpp" line="310"/>
         <source>Barret</source>
         <translation>バレット</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="347"/>
+        <location filename="Data.cpp" line="310"/>
         <source>Tifa</source>
         <translation>ティファ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="348"/>
+        <location filename="Data.cpp" line="311"/>
         <source>Aeris</source>
         <translatorcomment>Aeris</translatorcomment>
         <translation>エアリス</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="348"/>
+        <location filename="Data.cpp" line="311"/>
         <source>Red XIII</source>
         <translation>レッドXIII</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="348"/>
+        <location filename="Data.cpp" line="311"/>
         <source>Youfie</source>
         <translatorcomment>Yuffie</translatorcomment>
         <translation>ユフィ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="349"/>
+        <location filename="Data.cpp" line="312"/>
         <source>Cait Sith</source>
         <translation>ケット・シー</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="349"/>
+        <location filename="Data.cpp" line="312"/>
         <source>Vincent</source>
         <translation>ヴィンセント</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="349"/>
+        <location filename="Data.cpp" line="312"/>
         <source>Cid</source>
         <translation>シド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="350"/>
+        <location filename="Data.cpp" line="313"/>
         <source>Jeune Clad</source>
         <translatorcomment>Young Cloud</translatorcomment>
         <translation>昔のクラウド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="350"/>
+        <location filename="Data.cpp" line="313"/>
         <source>Sephiroth</source>
         <translation>セフィロス</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="350"/>
+        <location filename="Data.cpp" line="313"/>
         <source>Chocobo</source>
         <translation>チョコボ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="360"/>
+        <location filename="Data.cpp" line="323"/>
         <source>[CAMERA|L2]</source>
         <translation>[視点|L2]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="360"/>
+        <location filename="Data.cpp" line="323"/>
         <source>[CIBLE|R2]</source>
         <translatorcomment>[TARGET|R2]</translatorcomment>
         <translation>[テーゲット|R2]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="361"/>
+        <location filename="Data.cpp" line="324"/>
         <source>[PAGE HAUT|L1]</source>
         <translatorcomment>[PAGE UP|L1]</translatorcomment>
         <translation>|ページ送り|L1}ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="361"/>
+        <location filename="Data.cpp" line="324"/>
         <source>[PAGE BAS|R1]</source>
         <translatorcomment>[PAGE DOWN|R1]</translatorcomment>
         <translation>[ページ逆送り|R1]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="362"/>
+        <location filename="Data.cpp" line="325"/>
         <source>[MENU|TRIANGLE]</source>
         <translation>[メニュー|△]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="362"/>
+        <location filename="Data.cpp" line="325"/>
         <source>[OK|ROND]</source>
         <translatorcomment>[OK|CIRCLE]</translatorcomment>
         <translation>[決定|○]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="363"/>
+        <location filename="Data.cpp" line="326"/>
         <source>[ANNULER|CROIX]</source>
         <translatorcomment>[CANCEL|CROSS]</translatorcomment>
         <translation>[キャンセル|×]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="363"/>
+        <location filename="Data.cpp" line="326"/>
         <source>[CHANGER|CARRE]</source>
         <translatorcomment>[SWITCH|SQUARE]</translatorcomment>
         <translation>[ＥＸＴ|□]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="364"/>
+        <location filename="Data.cpp" line="327"/>
         <source>[ASSISTER|SELECT]</source>
         <translatorcomment>[ヘルプ|ASSIST|SELECT]</translatorcomment>
         <translation>[SELECT]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="365"/>
+        <location filename="Data.cpp" line="328"/>
         <source>[DEMARRER|START]</source>
         <translatorcomment>[START]</translatorcomment>
         <translation>[START]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="366"/>
+        <location filename="Data.cpp" line="329"/>
         <source>[HAUT]</source>
         <translatorcomment>[UP]</translatorcomment>
         <translation>[↑]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="366"/>
+        <location filename="Data.cpp" line="329"/>
         <source>[DROITE]</source>
         <translatorcomment>[RIGHT]</translatorcomment>
         <translation>[→]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="367"/>
+        <location filename="Data.cpp" line="330"/>
         <source>[BAS]</source>
         <translatorcomment>[LEFT]</translatorcomment>
         <translation>[↓]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="367"/>
+        <location filename="Data.cpp" line="330"/>
         <source>[GAUCHE]</source>
         <translatorcomment>[LEFT]</translatorcomment>
         <translation>[←]ボタン</translation>
@@ -3636,32 +3636,32 @@ length=%2
 channelCount=%3</translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="855"/>
+        <location filename="Script.cpp" line="854"/>
         <source>Le label %1 est inaccessible, veuillez utiliser un saut long.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="833"/>
+        <location filename="Script.cpp" line="832"/>
         <source>Le label %1 est déclaré plusieurs fois.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="848"/>
+        <location filename="Script.cpp" line="847"/>
         <source>Ce saut est invalide, veuillez mettre un label valide.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="859"/>
+        <location filename="Script.cpp" line="858"/>
         <source>Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="867"/>
+        <location filename="Script.cpp" line="866"/>
         <source>Le label %1 est inaccessible car il se trouve avant la commande.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="876"/>
+        <location filename="Script.cpp" line="875"/>
         <source>Script trop grand, il ne doit pas dépasser les 65535 octets. Taille actuelle : %1.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6995,13 +6995,13 @@ Are you sure you want to continue?</translatorcomment>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="194"/>
+        <location filename="VarManager.cpp" line="192"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="194"/>
+        <location filename="VarManager.cpp" line="192"/>
         <source>Fichier vars.cfg inaccessible.
 Échec de l&apos;enregistrement.</source>
         <translatorcomment>Save failed.</translatorcomment>
@@ -7009,13 +7009,13 @@ Are you sure you want to continue?</translatorcomment>
 保存に失敗しました。</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="202"/>
+        <location filename="VarManager.cpp" line="200"/>
         <source>Recherche</source>
         <translatorcomment>Searching</translatorcomment>
         <translation>検索中</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="202"/>
+        <location filename="VarManager.cpp" line="200"/>
         <source>Recherche des variables en cours, cela peut prendre une minute...</source>
         <translatorcomment>Searching,it may take a minute... </translatorcomment>
         <translation>検索しています。しばらく時間がかかります...</translation>

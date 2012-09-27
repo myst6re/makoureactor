@@ -126,7 +126,7 @@ QPixmap FieldPC::openBackground()
 
 QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
-	qDebug() << "FieldPC::openBackground";
+//	qDebug() << "FieldPC::openBackground";
 	QByteArray data = fieldArchive->getFieldData(this);
 	const char *constData = data.constData();
 	quint32 dataSize = data.size();
@@ -378,7 +378,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 		}
 	}
 
-	qDebug() << "/FieldPC::openBackground";
+//	qDebug() << "/FieldPC::openBackground";
 	
 	return QPixmap::fromImage(image);
 }

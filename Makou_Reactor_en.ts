@@ -2783,132 +2783,132 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="347"/>
+        <location filename="Data.cpp" line="310"/>
         <source>Clad</source>
         <translation>Cloud</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="347"/>
+        <location filename="Data.cpp" line="310"/>
         <source>Barret</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="347"/>
+        <location filename="Data.cpp" line="310"/>
         <source>Tifa</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="348"/>
+        <location filename="Data.cpp" line="311"/>
         <source>Aeris</source>
         <translation>Aeris</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="348"/>
+        <location filename="Data.cpp" line="311"/>
         <source>Red XIII</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="348"/>
+        <location filename="Data.cpp" line="311"/>
         <source>Youfie</source>
         <translation>Yuffie</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="349"/>
+        <location filename="Data.cpp" line="312"/>
         <source>Cait Sith</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="349"/>
+        <location filename="Data.cpp" line="312"/>
         <source>Vincent</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="349"/>
+        <location filename="Data.cpp" line="312"/>
         <source>Cid</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="350"/>
+        <location filename="Data.cpp" line="313"/>
         <source>Jeune Clad</source>
         <translation>Young Cloud</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="350"/>
+        <location filename="Data.cpp" line="313"/>
         <source>Sephiroth</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="350"/>
+        <location filename="Data.cpp" line="313"/>
         <source>Chocobo</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="360"/>
+        <location filename="Data.cpp" line="323"/>
         <source>[CAMERA|L2]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="360"/>
+        <location filename="Data.cpp" line="323"/>
         <source>[CIBLE|R2]</source>
         <translation>[TARGET|R2]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="361"/>
+        <location filename="Data.cpp" line="324"/>
         <source>[PAGE HAUT|L1]</source>
         <translation>[PAGE UP|L1]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="361"/>
+        <location filename="Data.cpp" line="324"/>
         <source>[PAGE BAS|R1]</source>
         <translation>[PAGE DOWN|R1]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="362"/>
+        <location filename="Data.cpp" line="325"/>
         <source>[MENU|TRIANGLE]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="362"/>
+        <location filename="Data.cpp" line="325"/>
         <source>[OK|ROND]</source>
         <translation>[OK|CIRCLE]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="363"/>
+        <location filename="Data.cpp" line="326"/>
         <source>[ANNULER|CROIX]</source>
         <translation>[CANCEL|CROSS]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="363"/>
+        <location filename="Data.cpp" line="326"/>
         <source>[CHANGER|CARRE]</source>
         <translation>[SWITCH|SQUARE]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="364"/>
+        <location filename="Data.cpp" line="327"/>
         <source>[ASSISTER|SELECT]</source>
         <translation>[ASSIST|SELECT]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="365"/>
+        <location filename="Data.cpp" line="328"/>
         <source>[DEMARRER|START]</source>
         <translation>[START]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="366"/>
+        <location filename="Data.cpp" line="329"/>
         <source>[HAUT]</source>
         <translation>[UP]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="366"/>
+        <location filename="Data.cpp" line="329"/>
         <source>[DROITE]</source>
         <translation>[RIGHT]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="367"/>
+        <location filename="Data.cpp" line="330"/>
         <source>[BAS]</source>
         <translation>[DOWN]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="367"/>
+        <location filename="Data.cpp" line="330"/>
         <source>[GAUCHE]</source>
         <translation>[LEFT]</translation>
     </message>
@@ -2938,32 +2938,32 @@ channelCount=%3
 </translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="855"/>
+        <location filename="Script.cpp" line="854"/>
         <source>Le label %1 est inaccessible, veuillez utiliser un saut long.</source>
         <translation>Label %1 is unreachable, please use a long jump.</translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="833"/>
+        <location filename="Script.cpp" line="832"/>
         <source>Le label %1 est déclaré plusieurs fois.</source>
         <translation>Label %1 is declared several times.</translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="848"/>
+        <location filename="Script.cpp" line="847"/>
         <source>Ce saut est invalide, veuillez mettre un label valide.</source>
         <translation>This jump is invalid, please use a valid label.</translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="859"/>
+        <location filename="Script.cpp" line="858"/>
         <source>Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.</source>
         <translation>Label %1 is unreachable because your script exceeds 65535 bytes, please reduce the size of the script.</translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="867"/>
+        <location filename="Script.cpp" line="866"/>
         <source>Le label %1 est inaccessible car il se trouve avant la commande.</source>
         <translation>The label %1 is unreachable because it is located before the opcode.</translation>
     </message>
     <message>
-        <location filename="Script.cpp" line="876"/>
+        <location filename="Script.cpp" line="875"/>
         <source>Script trop grand, il ne doit pas dépasser les 65535 octets. Taille actuelle : %1.</source>
         <translation>Script too big, it should not exceed 65535 bytes. Actual size: %1.</translation>
     </message>
@@ -5491,23 +5491,23 @@ Are you sure you want to continue?</translation>
         <translation>Save</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="194"/>
+        <location filename="VarManager.cpp" line="192"/>
         <source>Erreur</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="194"/>
+        <location filename="VarManager.cpp" line="192"/>
         <source>Fichier vars.cfg inaccessible.
 Échec de l&apos;enregistrement.</source>
         <translation>Save failed.</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="202"/>
+        <location filename="VarManager.cpp" line="200"/>
         <source>Recherche</source>
         <translation>Searching</translation>
     </message>
     <message>
-        <location filename="VarManager.cpp" line="202"/>
+        <location filename="VarManager.cpp" line="200"/>
         <source>Recherche des variables en cours, cela peut prendre une minute...</source>
         <translation>Searching, it may take a minute...</translation>
     </message>

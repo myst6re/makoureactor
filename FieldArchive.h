@@ -56,7 +56,7 @@ public:
 
 	bool isAllOpened();
 	QList<FF7Var> searchAllVars();
-	void searchAll();// research & debug function
+//	void searchAll();// research & debug function
 	bool searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);

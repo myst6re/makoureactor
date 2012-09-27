@@ -35,7 +35,6 @@ Script::Script(const QByteArray &script)
 Script::Script(const Script &other) :
 	valid(true)
 {
-	qDebug() << "Script";
 	foreach(Opcode *opcode, other.getOpcodes()) {
 		opcodes.append(Script::copyOpcode(opcode));
 	}

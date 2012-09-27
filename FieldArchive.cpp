@@ -326,7 +326,7 @@ bool FieldArchive::modelDataIsCached(Field *field) const
 
 void FieldArchive::clearCachedData()
 {
-	qDebug() << "FieldArchive::clearCachedData()";
+//	qDebug() << "FieldArchive::clearCachedData()";
 	fieldCache = 0;
 	mimCache = 0;
 	modelCache = 0;
@@ -359,7 +359,7 @@ QList<FF7Var> FieldArchive::searchAllVars()
 	return vars;
 }
 
-void FieldArchive::searchAll()
+/*void FieldArchive::searchAll()
 {
 	int size = fileList.size();
 
@@ -420,14 +420,14 @@ void FieldArchive::searchAll()
 		}
 	}
 
-	qDebug() << "global time" << t.elapsed() << "ms";
+//	qDebug() << "global time" << t.elapsed() << "ms";
 
 //	QList<quint8> l = unknown1Values.toList();
 //	qSort(l);
 //	foreach(quint8 u1, l) {
 //		qDebug() << u1;
 //	}
-}
+}*/
 
 bool FieldArchive::searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const
 {
@@ -671,10 +671,10 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 
 void FieldArchive::close()
 {
-	qDebug() << "FieldArchive::close()";
+//	qDebug() << "FieldArchive::close()";
 	if(fic!=NULL)	fic->close();
 	clearCachedData();
-	qDebug() << "/FieldArchive::close()";
+//	qDebug() << "/FieldArchive::close()";
 }
 
 void FieldArchive::addDAT(const QString &name, QList<QTreeWidgetItem *> &items)
@@ -689,7 +689,7 @@ void FieldArchive::addDAT(const QString &name, QList<QTreeWidgetItem *> &items)
 
 FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 {
-	qDebug() << "FieldArchive::open()";
+//	qDebug() << "FieldArchive::open()";
 	foreach(Field *field, fileList)	delete field;
 	foreach(TutFile *tut, tuts)		delete tut;
 	fileList.clear();
@@ -843,7 +843,7 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		fieldsSortByMapId.insert(item->text(1), id);
 	}
 
-	qDebug() << "/FieldArchive::open()";
+//	qDebug() << "/FieldArchive::open()";
 
 	return Ok;
 }
@@ -870,7 +870,7 @@ void FieldArchive::setSaved()
 
 FieldArchive::ErrorCode FieldArchive::save(QString path)
 {
-	qDebug() << "FieldArchive::save()" << path;
+//	qDebug() << "FieldArchive::save()" << path;
 	quint32 nbFiles, pos, taille, oldtaille;
 	qint32 fieldID;
 	bool saveAs;
@@ -1086,7 +1086,7 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 		setSaved();
 		clearCachedData(); // Important: the file data will change
 
-		qDebug() << "/FieldArchive::save()" << path;
+//		qDebug() << "/FieldArchive::save()" << path;
 
 		// qDebug("Ecrire le nouvel Lgp : %d ms", t.elapsed());
 		return Ok;

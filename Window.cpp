@@ -323,7 +323,7 @@ void Window::restartNow()
 
 int Window::closeFile(bool quit)
 {
-	qDebug() << "Window::closeFile";
+//	qDebug() << "Window::closeFile";
 	if(fieldList->currentItem() != NULL)
 		Config::setValue("currentField", fieldList->currentItem()->text(0));
 
@@ -406,7 +406,7 @@ int Window::closeFile(bool quit)
 		actionMisc->setEnabled(false);
 	}
 
-	qDebug() << "/Window::closeFile";
+//	qDebug() << "/Window::closeFile";
 	
 	return QMessageBox::Yes;
 }
@@ -443,7 +443,7 @@ void Window::openDir()
 
 void Window::open(const QString &cheminFic, bool isDir)
 {
-	qDebug() << "Window::open" << cheminFic << isDir;
+//	qDebug() << "Window::open" << cheminFic << isDir;
 	closeFile();
 	
 	setEnabled(false);
@@ -521,7 +521,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 	actionClose->setEnabled(true);
 
 //	fieldArchive->searchAll();
-	qDebug() << "/Window::open" << cheminFic << isDir;
+//	qDebug() << "/Window::open" << cheminFic << isDir;
 }
 
 void Window::setWindowTitle()
