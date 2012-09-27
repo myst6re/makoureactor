@@ -60,7 +60,7 @@ bool FieldModel::load(FieldPC *field, const QString &hrc, const QString &a, bool
 //	textOut.write(data->toStringBones().toLatin1());
 //	textOut.close();
 
-	return true;
+	return data->isLoaded();
 }
 
 bool FieldModel::load(Field *field, int modelID, int animationID, bool animate)
@@ -86,7 +86,7 @@ bool FieldModel::load(Field *field, int modelID, int animationID, bool animate)
 //	textOut.write(data->toStringBones().toLatin1());
 //	textOut.close();
 
-	return true;
+	return data->isLoaded();
 }
 
 int FieldModel::nb_bones()
