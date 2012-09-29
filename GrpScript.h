@@ -25,6 +25,10 @@
 class GrpScript
 {	
 public:
+	enum Type {
+		NoType, Model, Location, Animation, Director
+	};
+
 	GrpScript();
 	explicit GrpScript(const QString &name);
 	GrpScript(const GrpScript &other);
@@ -43,7 +47,7 @@ public:
 	QByteArray toByteArray(quint8 scriptID) const;
 	void getBgParams(QHash<quint8, quint8> &paramActifs) const;
 	void getBgMove(qint16 z[2], qint16 *x=0, qint16 *y=0) const;
-	int getTypeID();
+	Type getTypeID();
 	QString getType();
 	QColor getTypeColor();
 	QString getScriptName(quint8 scriptID);

@@ -205,7 +205,7 @@ QByteArray Section1File::save(const QByteArray &data) const
 			positionsScripts.append((char *)&pos, 2);
 			allScripts.append(realScript);
 		}
-		if(grpScript->getTypeID() == 1)		++nbObjets3D;
+		if(grpScript->getTypeID() == GrpScript::Model)		++nbObjets3D;
 	}
 
 	//Création nouvelles positions Textes
@@ -278,13 +278,13 @@ void Section1File::setModified(bool modified)
 
 int Section1File::getModelID(quint8 grpScriptID) const
 {
-	if(_grpScripts.at(grpScriptID)->getTypeID()!=1)	return -1;
+	if(_grpScripts.at(grpScriptID)->getTypeID() != GrpScript::Model)	return -1;
 
 	int ID=0;
 
 	for(int i=0 ; i<grpScriptID ; ++i)
 	{
-		if(_grpScripts.at(i)->getTypeID()==1)
+		if(_grpScripts.at(i)->getTypeID()==GrpScript::Model)
 			++ID;
 	}
 	return ID;
@@ -548,14 +548,14 @@ void Section1File::listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap
 //			if(scripts.size() > 0) {
 //				scripts.at(1)->searchWindows();
 
-//				if(group->getTypeID() == 1) {
+//				if(group->getTypeID() == GrpScript::Model) {
 //					if(scripts.size() > 1) {
 //						scripts.at(2)->searchWindows(); // talk
 //					}
 //					if(scripts.size() > 2) {
 //						scripts.at(3)->searchWindows(); // touch
 //					}
-//				} else if(group->getTypeID() == 2) {
+//				} else if(group->getTypeID() == GrpScript::Location) {
 //					if(scripts.size() > 1) {
 //						scripts.at(2)->searchWindows(); // talk
 //					}

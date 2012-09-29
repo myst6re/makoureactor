@@ -174,69 +174,69 @@ QByteArray GrpScript::toByteArray(quint8 scriptID) const
 	return QByteArray();
 }
 
-int GrpScript::getTypeID()
+GrpScript::Type GrpScript::getTypeID()
 {
 	setType();
-	if(character != -1)		return 1;
-	if(location)			return 2;
-	if(animation)			return 3;
-	if(director)			return 4;
-	return 0;
+	if(character != -1)		return Model;
+	if(location)			return Location;
+	if(animation)			return Animation;
+	if(director)			return Director;
+	return NoType;
 }
 
 QString GrpScript::getType()
 {
 	switch(getTypeID())
 	{
-	case 1:
+	case Model:
 		if(character == 0xFF)	return QObject::tr("Objet 3D");
 		return QString("%1").arg(Opcode::_personnage(character));
-	case 2:	return QObject::tr("Zone");
-	case 3:	return QObject::tr("Animation");
-	case 4:	return QObject::tr("Main");
+	case Location:	return QObject::tr("Zone");
+	case Animation:	return QObject::tr("Animation");
+	case Director:	return QObject::tr("Main");
+	default:		return QString();
 	}
-	return "";
 }
 
 QColor GrpScript::getTypeColor()
 {
 	switch(getTypeID())
 	{
-	case 1:	return QColor(0x00,0x66,0xcc);
-	case 2:	return QColor(0x00,0xcc,0x66);
-	case 3:	return QColor(0xcc,0x66,0x00);
-	case 4:	return QColor(0x66,0x00,0xcc);
+	case Model:		return QColor(0x00,0x66,0xcc);
+	case Location:	return QColor(0x00,0xcc,0x66);
+	case Animation:	return QColor(0xcc,0x66,0x00);
+	case Director:	return QColor(0x66,0x00,0xcc);
+	default:		return QColor();
 	}
-	return QColor(0x00,0x00,0x00);
 }
 
 QString GrpScript::getScriptName(quint8 scriptID)
 {
-	int type = getTypeID();
+	Type type = getTypeID();
 	
 	switch(scriptID)
 	{
 	case 0:	return QObject::tr("S0 - Init");
 	case 1:	return QObject::tr("S0 - Main");
 	case 2:
-		if(type == 1)	return QObject::tr("S1 - Parler");
-		if(type == 2)	return QObject::tr("S1 - [OK]");
+		if(type == Model)		return QObject::tr("S1 - Parler");
+		if(type == Location)	return QObject::tr("S1 - [OK]");
 		break;
 	case 3:
-		if(type == 1)	return QObject::tr("S2 - Toucher");
-		if(type == 2)	return QObject::tr("S2 - Bouger");
+		if(type == Model)		return QObject::tr("S2 - Toucher");
+		if(type == Location)	return QObject::tr("S2 - Bouger");
 		break;
 	case 4:
-		if(type == 2)	return QObject::tr("S3 - Bouger");
+		if(type == Location)	return QObject::tr("S3 - Bouger");
 		break;
 	case 5:
-		if(type == 2)	return QObject::tr("S4 - Aller");
+		if(type == Location)	return QObject::tr("S4 - Aller");
 		break;
 	case 6:
-		if(type == 2)	return QObject::tr("S5 - Aller 1x");
+		if(type == Location)	return QObject::tr("S5 - Aller 1x");
 		break;
 	case 7:
-		if(type == 2)	return QObject::tr("S6 - Partir");
+		if(type == Location)	return QObject::tr("S6 - Partir");
 		break;
 	}
 	
