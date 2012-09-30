@@ -35,9 +35,14 @@ QByteArray LZS::result;
 
 const QByteArray &LZS::decompress(const QByteArray &data, int max)
 {
-	int curResult=0, fileSize=data.size(), sizeAlloc=max+10;
+	return decompress(data.constData(), data.size(), max);
+}
+
+const QByteArray &LZS::decompress(const char *data, int fileSize, int max)
+{
+	int curResult=0, sizeAlloc=max+10;
 	quint16 curBuff=4078, adresse, premOctet=0, i, length;
-	const quint8 *fileData = (const quint8 *)data.constData();
+	const quint8 *fileData = (const quint8 *)data;
 	const quint8 *endFileData = &fileData[fileSize-1] + 1;
 
 	if(result.size() < sizeAlloc)
@@ -86,9 +91,14 @@ const QByteArray &LZS::decompress(const QByteArray &data, int max)
 
 const QByteArray &LZS::decompressAll(const QByteArray &data)
 {
-	int curResult=0, fileSize=data.size(), sizeAlloc=fileSize*5;
+	return decompressAll(data.constData(), data.size());
+}
+
+const QByteArray &LZS::decompressAll(const char *data, int fileSize)
+{
+	int curResult=0, sizeAlloc=fileSize*5;
 	quint16 curBuff=4078, adresse, premOctet=0, i, length;
-	const quint8 *fileData = (const quint8 *)data.constData();
+	const quint8 *fileData = (const quint8 *)data;
 	const quint8 *endFileData = &fileData[fileSize-1] + 1;
 
 	if(result.size() < sizeAlloc)
@@ -256,12 +266,16 @@ void LZS::DeleteNode(qint32 p)//deletes node p from tree
 }
 
 const QByteArray &LZS::compress(const QByteArray &fileData)
-{	
+{
+	return compress(fileData.constData(), fileData.size());
+}
+
+const QByteArray &LZS::compress(const char *data, int sizeData)
+{
 	int i, c, len, r, s, last_match_length, code_buf_ptr,
-			curResult = 0, sizeData = fileData.size(), sizeAlloc = sizeData / 2;
+			curResult = 0, sizeAlloc = sizeData / 2;
 	unsigned char code_buf[17], mask;
-	const char *fileConstData = fileData.constData();
-	const char *fileConstDataEnd = &fileConstData[sizeData-1] + 1;
+	const char *dataEnd = &data[sizeData-1] + 1;
 
 	if(result.size() < sizeAlloc) {
 		result.resize(sizeAlloc);
@@ -290,8 +304,8 @@ const QByteArray &LZS::compress(const QByteArray &fileData)
 //		text_buf[i] = '\x0';//Clear the buffer with  any character that will appear often.
 	memset(text_buf, 0, r);
 
-	for(len=0 ; len<18 && fileConstData<fileConstDataEnd ; ++len)
-		text_buf[r + len] = *fileConstData++;//Read 18 bytes into the last 18 bytes of the buffer
+	for(len=0 ; len<18 && data<dataEnd ; ++len)
+		text_buf[r + len] = *data++;//Read 18 bytes into the last 18 bytes of the buffer
 	if(/* (textsize =  */len/* ) */ == 0) {
 		result.clear();
 		return result;//text of size zero
@@ -330,9 +344,9 @@ const QByteArray &LZS::compress(const QByteArray &fileData)
 		}
 		
 		last_match_length = match_length;
-		for(i=0 ; i < last_match_length && fileConstData<fileConstDataEnd ; ++i)
+		for(i=0 ; i < last_match_length && data<dataEnd ; ++i)
 		{
-			c = *fileConstData++;
+			c = *data++;
 			DeleteNode(s);//Delete old strings and
 			text_buf[s] = c;//read new bytes
 			

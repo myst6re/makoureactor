@@ -42,12 +42,13 @@ bool FieldPC::open(bool dontOptimize)
 
 	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
 		QByteArray lzsData = fieldArchive->getFieldData(this, false);
-		quint32 size;
+		quint32 lzsSize;
 		if(lzsData.size() < 4)		return false;
-		memcpy(&size, lzsData.constData(), 4);
-		if(size+4 != (quint32)lzsData.size()) 	return false;
+		const char *lzsDataConst = lzsData.constData();
+		memcpy(&lzsSize, lzsDataConst, 4);
+		if(lzsSize+4 != (quint32)lzsData.size()) 	return false;
 
-		fileData = LZS::decompress(lzsData.mid(4), 42);//partial decompression
+		fileData = LZS::decompress(lzsDataConst + 4, lzsSize, 42);//partial decompression
 	} else {
 		fileData = fieldArchive->getFieldData(this);
 	}
@@ -110,7 +111,7 @@ QByteArray FieldPC::sectionData(int idPart)
 		memcpy(&lzsSize, lzsDataConst, 4);
 		if(lzsSize+4 != (quint32)lzsData.size()) 	return QByteArray();
 
-		return LZS::decompress(lzsData.mid(4), sectionPositions[idPart+1]).mid(position, size);
+		return LZS::decompress(lzsDataConst + 4, lzsSize, sectionPositions[idPart+1]).mid(position, size);
 	}
 }
 

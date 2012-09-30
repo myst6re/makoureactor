@@ -192,20 +192,22 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 
 		if(data.size() < 4)		return QByteArray();
 
-		memcpy(&lzsSize, data.constData(), 4);
+		const char *lzsDataConst = data.constData();
+		memcpy(&lzsSize, lzsDataConst, 4);
 
 		if((quint32)data.size() != lzsSize+4)	return QByteArray();
 
-		data = unlzs ? LZS::decompressAll(data.mid(4)) : data;
+		data = unlzs ? LZS::decompressAll(lzsDataConst + 4, lzsSize) : data;
 	} else if(isLgp()) {
 		data = getLgpData(((FieldPC *)field)->getPosition());
 
 		if(data.size() < 4)		return QByteArray();
 
-		memcpy(&lzsSize, data.constData(), 4);
+		const char *lzsDataConst = data.constData();
+		memcpy(&lzsSize, lzsDataConst, 4);
 		if((quint32)data.size() != lzsSize + 4)				return QByteArray();
 
-		data = unlzs ? LZS::decompressAll(data.mid(4)) : data;
+		data = unlzs ? LZS::decompressAll(lzsDataConst + 4, lzsSize) : data;
 	} else if(isIso() || isDirectory()) {
 		data = getFileData(field->getName().toUpper()+".DAT", unlzs);
 	}
@@ -261,11 +263,12 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 
 		if(data.size() < 4)		return QByteArray();
 
-		memcpy(&lzsSize, data.constData(), 4);
+		const char *lzsDataConst = data.constData();
+		memcpy(&lzsSize, lzsDataConst, 4);
 
 		if((quint32)data.size() != lzsSize+4)	return QByteArray();
 
-		return unlzs ? LZS::decompressAll(data.mid(4)) : data;
+		return unlzs ? LZS::decompressAll(lzsDataConst + 4, lzsSize) : data;
 	} else if(isDatFile() || isDirectory()) {
 		QFile f(chemin()+fileName.toUpper());
 		if(!f.open(QIODevice::ReadOnly))	return QByteArray();
@@ -274,11 +277,12 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 
 		if(data.size() < 4)		return QByteArray();
 
-		memcpy(&lzsSize, data.constData(), 4);
+		const char *lzsDataConst = data.constData();
+		memcpy(&lzsSize, lzsDataConst, 4);
 
 		if((quint32)data.size() != lzsSize+4)	return QByteArray();
 
-		return unlzs ? LZS::decompressAll(data.mid(4)) : data;
+		return unlzs ? LZS::decompressAll(lzsDataConst + 4, lzsSize) : data;
 	} else {
 		return QByteArray();
 	}
