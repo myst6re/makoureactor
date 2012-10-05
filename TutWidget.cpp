@@ -251,7 +251,7 @@ void TutWidget::add()
 			akaoPath = QDir::fromNativeSeparators(QDir::cleanPath(Config::value("akaoImportExportPath").toString()));
 			akaoPath = QFileDialog::getOpenFileName(this, tr("Importer"), akaoPath + "/" + tr("son_%1.akao").arg(row), tr("Son Final Fantasy (*.akao)"));
 			if(akaoPath.isNull())	return;
-			Config::setValue("akaoImportExportPath", akaoPath);
+			Config::setValue("akaoImportExportPath", akaoPath.left(akaoPath.lastIndexOf('/')));
 		}
 	}
 
@@ -310,7 +310,7 @@ void TutWidget::exportation()
 	QString path = QDir::fromNativeSeparators(QDir::cleanPath(Config::value("akaoImportExportPath").toString()));
 	path = QFileDialog::getSaveFileName(this, tr("Exporter"), path + "/" + tr("son_%1.akao").arg(row), tr("Son Final Fantasy (*.akao)"));
 	if(path.isNull())	return;
-	Config::setValue("akaoImportExportPath", path);
+	Config::setValue("akaoImportExportPath", path.left(path.lastIndexOf('/')));
 
 	QFile akao(path);
 	if(!akao.open(QIODevice::WriteOnly)) {
@@ -333,7 +333,7 @@ void TutWidget::importation()
 	QString path = QDir::fromNativeSeparators(QDir::cleanPath(Config::value("akaoImportExportPath").toString()));
 	path = QFileDialog::getOpenFileName(this, tr("Importer"), path + "/" + tr("son_%1.akao").arg(row), tr("Son Final Fantasy (*.akao)"));
 	if(path.isNull())	return;
-	Config::setValue("akaoImportExportPath", path);
+	Config::setValue("akaoImportExportPath", path.left(path.lastIndexOf('/')));
 
 	QFile akao(path);
 	if(!akao.open(QIODevice::ReadOnly)) {

@@ -1287,7 +1287,7 @@ void Window::about()
 	
 	QLabel desc1(PROG_FULLNAME, &about);
 	desc1.setFont(font);
-	desc1.setFixedWidth(200);
+	desc1.setFixedWidth(about.width());
 	desc1.setAlignment(Qt::AlignHCenter);
 
 	font.setPointSize(8);

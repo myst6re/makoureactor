@@ -460,7 +460,7 @@ void Search::findPrev()
 	Data::currentTextes = currentTextesSav;
 	if(!localSearch)	fieldID = 2147483647;
 	textID = grpScriptID = scriptID = opcodeID = 2147483647;
-	from = -1;
+	from = 0;
 
 after:
 	parentWidget()->setEnabled(true);
