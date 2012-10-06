@@ -1,3 +1,36 @@
+makoureactor (1.5.1) precise; urgency=low
+
+  * AKAO opcodes identified
+  * Script Editor: in the window editor, if the opcode is followed by ASK or MESSAGE, the text preview is filled automatically.
+  * Script Editor: you can now add a new label when you want to create an "if" or a "jump".
+  * Search text: the search field is filled automatically with the current selected text.
+  * Non-modal dialogs: do not closing the dialogs when the archive is closed.
+  * 3D model: some custom textures are now opened, and optimization.
+  * Model loader editor: the dialog is non-modal + add an unknown data associated to animations.
+  * Walkmesh editor: background flags editor in Camera range tab.
+  * Fix a bug in field file opening
+  * Fix a bug in walkmesh editor: the third vertex is not editable.
+  * Fix a bug in text editor: {PAUSE...} and {NEW PAGE 2} do not work.
+  * Fix a bug in script history: some opcodes (like jump or label) lost some informations.
+  * Fix a bug in search text: search previous does not work.
+  * Fix a bug with the file lock: the file was not unlocked in some cases.
+  * Fix a bug when you import a PC field: the model loader is not saved.
+  * Fix a bug with image disc: temp data is not cleared after saving.
+  * Fix a bug with image disc: when saving, at the second attemp the progress bar will not shown.
+  * Fix a bug (and potential crash) when importing field: non-modal dialog are not reloaded.
+  * Fix a bug with kernel2.bin loader: wrong path + rerelased ff7 version unsupported.
+  * Bug: wrong appPath if you choose the rerelease ff7 version first.
+  * Fix a crash when saving the field background as an image
+  * Fix a crash when opening a large texture (*.tex) file
+  * Fix a crash when copy/paste group or opcode
+  * Prevent some crashes
+  * Optimization: Do not reload non-modal dialogs if filled with the same field.
+  * Optimization: Do not open the script section if it's not necessary.
+  * Some optimizations in LZS algorithms.
+  * Updating ZLib to 1.2.7
+  
+ -- Chris Rizzitello <sithlord48@gmail.com>  Sat, 6 Oct 2012 16:40:39 -0400
+
 makoureactor (1.5) precise; urgency=low
 
   * Fix a crash when saving LGP (nobody noticed?)
