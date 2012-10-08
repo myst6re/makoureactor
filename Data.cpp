@@ -62,7 +62,7 @@ QString Data::regValue(const QString &regPath, const QString &regKey)
 	REGSAM flags = KEY_READ;
 
 #ifdef KEY_WOW64_32KEY
-	flags |= KEY_WOW64_32KEY; // if you compile Makou in 64-bit, force reg search into 32-bit entries
+	flags |= KEY_WOW64_32KEY; // if you compile in 64-bit, force reg search into 32-bit entries
 #endif
 
 	// Open regPath relative to HKEY_LOCAL_MACHINE

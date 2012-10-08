@@ -20,7 +20,11 @@
 
 #include <QtGui>
 #include <QGLWidget>
+#if defined(Q_WS_MAC)
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
+#endif
 #include "FieldModelFile.h"
 #include "FieldPC.h"
 

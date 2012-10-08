@@ -49,9 +49,10 @@ Window::Window() :
 	
 	QMenu *menu;
 	QAction *actionOpen, *actionFind, *action;
+	QMenuBar *menuBar = new QMenuBar(0);
 	
 	/* Menu 'Fichier' */
-	menu = menuBar()->addMenu(tr("&Fichier"));
+	menu = menuBar->addMenu(tr("&Fichier"));
 	
 	actionOpen = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Ouvrir..."), this, SLOT(openFile()), QKeySequence("Ctrl+O"));
 	menu->addAction(tr("Ouvrir un &dossier Field (PS)..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
@@ -62,10 +63,10 @@ Window::Window() :
 	actionImport = menu->addAction(tr("&Importer dans l'écran courant..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
 	menu->addSeparator();
 	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("Fe&rmer"), this, SLOT(closeFile()));
-	menu->addAction(tr("&Quitter"), this, SLOT(close()), QKeySequence::Quit);
+	menu->addAction(tr("&Quitter"), this, SLOT(close()), QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
 	
 	/* Menu 'Outils' */
-	menu = menuBar()->addMenu(tr("&Outils"));
+	menu = menuBar->addMenu(tr("&Outils"));
 	
 	menu->addAction(tr("&Gestionnaire de variables..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
 	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("Rec&hercher..."), this, SLOT(searchManager()), QKeySequence("Ctrl+F"));
@@ -77,7 +78,7 @@ Window::Window() :
 	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("&Divers..."), this, SLOT(miscManager()));
 
-	menu = menuBar()->addMenu(tr("&Paramètres"));
+	menu = menuBar->addMenu(tr("&Paramètres"));
 
 	actionJp_txt = menu->addAction(tr("Caractères japonais"), this, SLOT(jpText(bool)));
 	actionJp_txt->setCheckable(true);
@@ -103,7 +104,7 @@ Window::Window() :
 	}
 	connect(menuLang, SIGNAL(triggered(QAction*)), this, SLOT(changeLanguage(QAction*)));
 
-	menu->addAction(tr("Configuration..."), this, SLOT(config()));
+	menu->addAction(tr("Configuration..."), this, SLOT(config()))->setMenuRole(QAction::PreferencesRole);
 
 	toolBar = new QToolBar(tr("Barre d'outils &principale"));
 	toolBar->setObjectName("toolBar");
@@ -216,9 +217,11 @@ Window::Window() :
 	this->setCentralWidget(widget);
 	
 	searchDialog = new Search(this);
-	menuBar()->addMenu(createPopupMenu());
-	menuBar()->addAction("&?", this, SLOT(about()));
+	menuBar->addMenu(createPopupMenu());
+	menuBar->addAction("&?", this, SLOT(about()))->setMenuRole(QAction::AboutRole);
 	
+	setMenuBar(menuBar);
+
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
 	connect(searchDialog, SIGNAL(found(int,int,int,int)), SLOT(gotoOpcode(int,int,int,int)));
 	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
@@ -728,7 +731,7 @@ void Window::setModified(bool enabled)
 		int i, size=fieldList->topLevelItemCount();
 		for(i=0 ; i<size ; ++i) {
 			QTreeWidgetItem *item = fieldList->topLevelItem(i);
-			if(item->foreground(0).color()==qRgb(0xd1,0x1d,0x1d))
+			if(item->foreground(0).color() == QColor(0xd1,0x1d,0x1d))
 				item->setForeground(0, QColor(0x1d,0xd1,0x1d));
 		}
 	}
