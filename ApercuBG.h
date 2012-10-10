@@ -21,7 +21,7 @@
 #include <QtGui>
 #include "Field.h"
 
-class ApercuBG : public QScrollArea
+class ApercuBG : public QLabel
 {
 	Q_OBJECT
 public:

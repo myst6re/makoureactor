@@ -17,12 +17,11 @@
  ****************************************************************************/
 #include "ApercuBG.h"
 
-ApercuBG::ApercuBG(QWidget *parent)
-	: QScrollArea(parent), field(0), error(false)
+ApercuBG::ApercuBG(QWidget *parent) :
+	QLabel(parent), field(0), error(false)
 {
+	setAutoFillBackground(true);
 	setAlignment(Qt::AlignCenter);
-	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	QPalette pal = palette();
 	pal.setColor(QPalette::Active, QPalette::Window, Qt::black);
 	pal.setColor(QPalette::Inactive, QPalette::Window, Qt::black);
@@ -50,12 +49,11 @@ void ApercuBG::fill(Field *field, bool reload)
 		setCursor(Qt::PointingHandCursor);
 		error = false;
 	}
-	QLabel *label = new QLabel;
+
 	if(newBg.width()>w || newBg.height()>h)
-		label->setPixmap(newBg.scaled(w, h, Qt::KeepAspectRatio));
+		setPixmap(newBg.scaled(w, h, Qt::KeepAspectRatio));
 	else
-		label->setPixmap(newBg);
-	setWidget(label);
+		setPixmap(newBg);
 }
 
 QPixmap ApercuBG::errorPixmap(int w, int h)
@@ -79,7 +77,7 @@ QPixmap ApercuBG::errorPixmap(int w, int h)
 
 void ApercuBG::clear()
 {
-	setWidget(new QWidget);
+	QLabel::clear();
 	setCursor(Qt::ArrowCursor);
 	field = 0;
 	error = false;

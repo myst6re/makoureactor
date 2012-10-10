@@ -167,6 +167,7 @@ Window::Window() :
 	connect(opcodeList, SIGNAL(changed()), SLOT(compile()));
 
 	zoneImage = new ApercuBG();
+	zoneImage->setFixedSize(304, 214);
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
 		fieldModel->setFixedSize(304, 214);
