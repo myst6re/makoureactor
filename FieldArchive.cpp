@@ -362,75 +362,54 @@ QList<FF7Var> FieldArchive::searchAllVars()
 
 	return vars;
 }
-
-/*void FieldArchive::searchAll()
+/*
+void FieldArchive::searchAll()
 {
 	int size = fileList.size();
 
-//	QSet<quint8> unknown1Values;
-
 	QTime t;t.start();
+	bool iff = false, win = false;
+	OpcodeIf *opcodeIf=0;
 
 	for(int i=0 ; i<size ; ++i) {
 		Field *field = this->field(i, true);
 		if(field != NULL) {
-			field->scriptsAndTexts()->setModified(true);
-			field->setModified(true);
 //			qDebug() << field->getName();
-//			QByteArray u2 = field->getInf()->unknown();
-//			if(u2 != QByteArray(24, '\0')) {
-//				qDebug() << field->getName().leftJustified(8, QChar(' '), true) << "u2" << u2.toHex();
-//			}
-//			Section1File *section1 = field->scriptsAndTexts();
-//			if(section1->isOpen()) {
-////				foreach(GrpScript *grpScript, section1->grpScripts()) {
-////					foreach(Script *script, grpScript->getScripts()) {
-////						foreach(Opcode *opcode, script->getOpcodes()) {
-////							if(opcode->id() == Opcode::AKAO) {
-////								OpcodeAKAO *akao = (OpcodeAKAO *)opcode;
-////								unknown1Values.insert(akao->opcode);
-////							}
-////							if(opcode->id() == Opcode::AKAO2) {
-////								OpcodeAKAO2 *akao = (OpcodeAKAO2 *)opcode;
-////								unknown1Values.insert(akao->opcode);
-////							}
-////						}
-////					}
-////				}
-//				bool jp = true;
-//				foreach(FF7Text *text, *section1->texts()) {
-//					if(text->getData() != FF7Text(text->getText(jp), jp).getData()) {
-//						qDebug() << "error" << text->getText(jp) << FF7Text(text->getText(jp), jp).getText(jp);
-
-//					}
-//				}
-//			}
-//			TutFile *tut = field->tutosAndSounds();
-//			if(tut->isOpen()) {
-//				qDebug() << field->getName();
-//				for(int akaoID=0 ; akaoID<tut->size() ; ++akaoID) {
-//					if(!tut->isTut(akaoID)) {
-//						if(tut->akaoID(akaoID) >= 100) {
-//							qDebug() << "error" << akaoID << tut->akaoID(akaoID);
-//						}
-//					}
-//				}
-//			}
-
-//			InfFile *inf = field->getInf();
-//			if(inf->isOpen()) {
-//				inf->test();
-//			}
+			int scriptID=0, opcodeID=0;
+			Section1File *scripts = field->scriptsAndTexts();
+			foreach(GrpScript *group, scripts->grpScripts()) {
+				scriptID=0;
+				foreach(Script *script, group->getScripts()) {
+					opcodeID = 0;
+					opcodeIf = 0;
+					iff = win = false;
+					foreach(Opcode *opcode, script->getOpcodes()) {
+						if(opcode->id() == Opcode::IFUB || opcode->id() == Opcode::IFUBL
+								|| opcode->id() == Opcode::IFSW || opcode->id() == Opcode::IFSWL
+								|| opcode->id() == Opcode::IFUW || opcode->id() == Opcode::IFUWL) {
+							opcodeIf = (OpcodeIf *)opcode;
+							iff = true;
+							win = false;
+						} else if(iff) {
+							iff = false;
+							win = opcode->id() == Opcode::WSIZW || opcode->id() == Opcode::WINDOW;
+						} else if(win) {
+							if(opcode->isJump()) {
+								qDebug() << field->getName() << group->getName() << "script" << scriptID << "line" << opcodeID << opcodeIf->toString();
+							}
+							iff = false;
+							win = false;
+						} else {
+							iff = false;
+							win = false;
+						}
+						opcodeID++;
+					}
+					scriptID++;
+				}
+			}
 		}
 	}
-
-//	qDebug() << "global time" << t.elapsed() << "ms";
-
-//	QList<quint8> l = unknown1Values.toList();
-//	qSort(l);
-//	foreach(quint8 u1, l) {
-//		qDebug() << u1;
-//	}
 }*/
 
 bool FieldArchive::searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const

@@ -64,7 +64,7 @@ public slots:
 	void importer();
 	void varManager();
 	void runFF7();
-	void textManager(bool activate=true);
+	void textManager(int textID=-1, int from=0, int size=0, bool activate=true);
 	void modelManager();
 	void encounterManager();
 	void tutManager();

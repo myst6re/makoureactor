@@ -154,6 +154,7 @@ Window::Window() :
 	opcodeList = new OpcodeList(this);
 	connect(opcodeList, SIGNAL(changed()), SLOT(setModified()));
 	connect(opcodeList, SIGNAL(changed()), SLOT(refresh()));
+	connect(opcodeList, SIGNAL(editText(int)), SLOT(textManager(int)));
 
 	compileScriptLabel = new QLabel(this);
 	compileScriptLabel->hide();
@@ -849,10 +850,7 @@ void Window::gotoText(int fieldID, int textID, int from, int size)
 		textDialog->blockSignals(true);
 	}
 	if(gotoField(fieldID)) {
-		textManager(false); // show texts dialog
-		if(textDialog) {
-			textDialog->gotoText(textID, from, size);
-		}
+		textManager(textID, from, size, false); // show texts dialog
 	}
 	if(textDialog) {
 		textDialog->blockSignals(false);
@@ -1121,7 +1119,7 @@ void Window::searchManager()
 	searchDialog->raise();
 }
 
-void Window::textManager(bool activate)
+void Window::textManager(int textID, int from, int size, bool activate)
 {
 	if(!textDialog) {
 		textDialog = new TextManager(this);
@@ -1142,6 +1140,9 @@ void Window::textManager(bool activate)
 		textDialog->activateWindow();
 	} else {
 		searchDialog->raise();
+	}
+	if(textID >= 0) {
+		textDialog->gotoText(textID, from, size);
 	}
 }
 

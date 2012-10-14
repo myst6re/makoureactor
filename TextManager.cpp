@@ -374,6 +374,7 @@ void TextManager::gotoText(int textID, int from, int size)
 			t.setPosition(from);
 			t.setPosition(from + size, QTextCursor::KeepAnchor);
 			textEdit->setTextCursor(t);
+			textEdit->setFocus();
 			blockSignals(false);
 			textEdit->blockSignals(false);
 		}

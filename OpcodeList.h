@@ -66,9 +66,10 @@ private slots:
 	void evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void undo();
 	void redo();
-
+	void editText();
 signals:
 	void changed();
+	void editText(int textID);
 private:
 	void upDownEnabled();
 	void move(Script::MoveDirection direction);
@@ -94,7 +95,7 @@ private:
 	QBrush previousBG, previousErrorBg;
 	int errorLine;
 
-	QAction *undo_A, *redo_A;
+	QAction *undo_A, *redo_A, *text_A;
 
 	QStack<Historic> hists;
 	QStack<Historic> restoreHists;

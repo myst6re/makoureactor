@@ -73,6 +73,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	redo_A->setShortcut(QKeySequence::Redo);
 	redo_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	redo_A->setEnabled(false);
+	text_A = new QAction(tr("Modifier texte"), this);
 	
 	connect(edit_A, SIGNAL(triggered()), SLOT(scriptEditor()));
 	connect(add_A, SIGNAL(triggered()), SLOT(add()));
@@ -83,12 +84,14 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	connect(up_A, SIGNAL(triggered()), SLOT(up()));
 	connect(down_A, SIGNAL(triggered()), SLOT(down()));
 	connect(expand_A, SIGNAL(triggered()), SLOT(expandAll()));
+	connect(text_A, SIGNAL(triggered()), SLOT(editText()));
 	connect(undo_A, SIGNAL(triggered()), SLOT(undo()));
 	connect(redo_A, SIGNAL(triggered()), SLOT(redo()));
 	
 	addAction(edit_A);
 	addAction(add_A);
 	addAction(del_A);
+	addAction(text_A);
 	QAction *separator = new QAction(this);
 	separator->setSeparator(true);
 	addAction(separator);
@@ -122,6 +125,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	down_A->setStatusTip(tr("Descendre une commande"));
 	_toolBar->addSeparator();
 	_toolBar->addAction(expand_A);
+	_toolBar->addAction(text_A);
 	_toolBar->addSeparator();
 	_toolBar->addAction(undo_A);
 	undo_A->setStatusTip(undo_A->text());
@@ -218,6 +222,20 @@ void OpcodeList::upDownEnabled()
 		actions().at(5)->setEnabled(true);
 		actions().at(8)->setEnabled(/* topLevelItemCount() > 1 && */ currentItem() != topLevelItem(0));
 		actions().at(9)->setEnabled(true/*  topLevelItemCount() > 1 && currentItem() != topLevelItem(topLevelItemCount()-1) */);
+	}
+}
+
+void OpcodeList::editText()
+{
+	if(!script)	return;
+
+	int opcodeID = selectedID();
+	if(opcodeID >= 0 && opcodeID < script->size()) {
+		Opcode *op = script->getOpcode(opcodeID);
+		int textID = op->getTextID();
+		if(textID >= 0) {
+			emit editText(textID);
+		}
 	}
 }
 
