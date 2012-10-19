@@ -1,4 +1,4 @@
-makoureactor (1.5.1) precise; urgency=low
+makoureactor (1.5.1b1) precise; urgency=low
 
   * AKAO opcodes identified
   * Script Editor: in the window editor, if the opcode is followed by ASK or MESSAGE, the text preview is filled automatically.
