@@ -78,7 +78,8 @@ HEADERS += ApercuBG.h \
     ScriptEditorWidgets/ScriptEditorStructPage.h \
     ScriptEditorWidgets/ScriptEditorMathPage.h \
     Section1File.h \
-    QLockedFile.h
+	QLockedFile.h \
+    QTaskBarButton.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -150,14 +151,20 @@ SOURCES += ApercuBG.cpp \
     ScriptEditorWidgets/ScriptEditorStructPage.cpp \
     ScriptEditorWidgets/ScriptEditorMathPage.cpp \
     Section1File.cpp \
-    QLockedFile.cpp
+    QLockedFile.cpp \
+    QTaskBarButton.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts
 
 RESOURCES += Makou_Reactor.qrc
-win32:RC_FILE = Makou_Reactor.rc
 macx:ICON = images/Makou_Reactor.icns
+
+win32 {
+	RC_FILE = Makou_Reactor.rc
+	LIBS += -lole32
+	HEADERS += shobjidl.h
+}
 
 OTHER_FILES += Makou_Reactor.rc \
     Makou_Reactor.desktop

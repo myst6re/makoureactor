@@ -31,6 +31,7 @@
 #include "FieldModel.h"
 #include "ModelManager.h"
 #include "WalkmeshManager.h"
+#include "QTaskBarButton.h"
 
 class Window : public QMainWindow
 {
@@ -124,6 +125,7 @@ private:
 	WalkmeshManager *_walkmeshManager;
 	BGDialog *_backgroundManager;
 
+	QTaskBarButton *taskBarButton;
 	QProgressBar *progression;
 	QLabel *authorLbl;
 protected:

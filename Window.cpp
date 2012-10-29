@@ -29,7 +29,8 @@
 
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
-	textDialog(0), _modelManager(0), _walkmeshManager(0), _backgroundManager(0)
+	textDialog(0), _modelManager(0), _walkmeshManager(0),
+	_backgroundManager(0), taskBarButton(0)
 {
 	setWindowTitle();
 	setMinimumSize(700, 600);
@@ -41,6 +42,14 @@ Window::Window() :
 	progression->setMinimum(0);
 	progression->setAlignment(Qt::AlignCenter);
 	progression->hide();
+
+#ifdef Q_OS_WIN
+	if(QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
+		taskBarButton = new QTaskBarButton(this);
+		taskBarButton->setMinimum(0);
+	}
+#endif
+
 	authorLbl = new QLabel(statusBar());
 	authorLbl->setMargin(2);
 	authorLbl->hide();
@@ -457,15 +466,24 @@ void Window::open(const QString &cheminFic, bool isDir)
 	progression->setValue(0);
 	progression->show();
 	setCursor(Qt::WaitCursor);
+	if(taskBarButton) {
+		taskBarButton->setValue(0);
+		taskBarButton->setState(QTaskBarButton::Normal);
+		connect(fieldArchive, SIGNAL(progress(int)), taskBarButton, SLOT(setValue(int)));
+		connect(fieldArchive, SIGNAL(nbFilesChanged(int)), taskBarButton, SLOT(setMaximum(int)));
+	}
 
 	connect(fieldArchive, SIGNAL(progress(int)), progression, SLOT(setValue(int)));
 	connect(fieldArchive, SIGNAL(nbFilesChanged(int)), progression, SLOT(setMaximum(int)));
-	
+
 	QList<QTreeWidgetItem *> items;
 	FieldArchive::ErrorCode error = fieldArchive->open(items);
 	
 	setCursor(Qt::ArrowCursor);
 	progression->hide();
+	if(taskBarButton) {
+		taskBarButton->setState(QTaskBarButton::Invisible);
+	}
 	
 	setEnabled(true);
 	QString out;
@@ -765,6 +783,10 @@ void Window::saveAs(bool currentPath)
 	progression->setValue(0);
 	progression->show();
 	setCursor(Qt::WaitCursor);
+	if(taskBarButton) {
+		taskBarButton->setValue(0);
+		taskBarButton->setState(QTaskBarButton::Normal);
+	}
 	quint8 error = 0;
 	
 	// QTime t;t.start();
@@ -786,6 +808,9 @@ void Window::saveAs(bool currentPath)
 	
 	setCursor(Qt::ArrowCursor);
 	progression->hide();
+	if(taskBarButton) {
+		taskBarButton->setState(QTaskBarButton::Invisible);
+	}
 	QString out;
 	switch(error)
 	{
