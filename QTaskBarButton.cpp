@@ -6,7 +6,7 @@ QTaskBarButton::QTaskBarButton(QWidget *mainWindow) :
 	QObject(mainWindow), pITask(0), _minimum(0), _maximum(100),
 	_value(0), _state(Invisible)
 {
-	_winId = mainWindow->winId();
+	_winId = mainWindow->window()->winId();
 
 	CoInitialize(NULL);
 	HRESULT hRes = CoCreateInstance(CLSID_TaskbarList,
@@ -83,7 +83,7 @@ void QTaskBarButton::setValue(int value)
 #else
 
 QTaskBarButton::QTaskBarButton(QWidget *parent) :
-	QWidget(parent)
+	QObject(parent)
 {
 }
 
