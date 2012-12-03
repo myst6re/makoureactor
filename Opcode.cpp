@@ -44,6 +44,10 @@ Opcode::Opcode()
 {
 }
 
+Opcode::~Opcode()
+{
+}
+
 QByteArray Opcode::params() const
 {
 	return QByteArray();

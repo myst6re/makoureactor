@@ -25,6 +25,7 @@
 #else
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/file.h>
 #include <fcntl.h>
 #include <unistd.h>
 #endif

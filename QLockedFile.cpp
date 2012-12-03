@@ -43,14 +43,7 @@ void QLockedFile::close()
 #ifdef Q_WS_WIN
 	CloseHandle(handle);
 #else
-	struct flock lock;
-	lock.l_type = F_UNLCK;
-	lock.l_whence = SEEK_SET;
-	lock.l_start = 0;
-	lock.l_len = 0;
-
-	fcntl(handle, F_SETLK, &lock);
-
+	::flock(handle, LOCK_UN);
 	::close(handle);
 #endif
 	QFile::close();
@@ -77,32 +70,13 @@ bool QLockedFile::open(OpenMode mode)
 		return false;
 	}
 #else
-	struct flock lock;
-
-	handle = ::open(QDir::toNativeSeparators(fileName()).toLatin1().data(), O_RDWR);
-	if(handle == -1) {
+	handle = ::open(QDir::toNativeSeparators(fileName()).toLatin1().data(), O_RDONLY);
+	if(handle < 0) {
 		qWarning() << "QLockedFile::open error open";
 		return false;
 	}
-	lock.l_type = F_WRLCK;
-	lock.l_whence = SEEK_SET;
-	lock.l_start = 0;
-	lock.l_len = 0;
-	if(fcntl(handle, F_GETLK, &lock) == -1) {
-		qWarning() << "QLockedFile::open error test lock";
-		return false;
-	}
-
-	if(lock.l_type == F_UNLCK) {
-		lock.l_type = F_WRLCK;
-
-		if(fcntl(handle, F_SETLKW, &lock) == -1) {
-			qWarning() << "QLockedFile::open error lock";
-			return false;
-		}/* else {
-			qDebug() << "file locked";
-		}*/
-	} else {
+	if(::flock(handle, LOCK_SH) < 0) {
+		qWarning() << "QLockedFile::open error flock";
 		return false;
 	}
 #endif

@@ -129,7 +129,7 @@ public:
 	};
 
 	Opcode();
-
+	virtual ~Opcode();
 	virtual int id() const=0;
 	virtual QString toString() const=0;
 	virtual void setParams(const QByteArray &params);
