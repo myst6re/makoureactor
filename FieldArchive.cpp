@@ -22,13 +22,48 @@
 #include "LZS.h"
 #include "Data.h"
 
-FieldArchive::FieldArchive()
-	: fic(NULL), dir(NULL), iso(NULL), isDat(false)
+FieldIO::FieldIO(Field *field, QObject *parent) :
+	QIODevice(parent), _field(field)
 {
 }
 
-FieldArchive::FieldArchive(const QString &path, bool isDirectory)
-	: fic(NULL), dir(NULL), iso(NULL), isDat(false)
+void FieldIO::close()
+{
+	_cache.clear();
+	QIODevice::close();
+}
+
+qint64 FieldIO::readData(char *data, qint64 maxSize)
+{
+	if(setCache()) {
+		if(pos() < _cache.size()) {
+			const char *constData = _cache.constData();
+			qint64 r = qMin(maxSize, _cache.size() - pos());
+			memcpy(data, &constData[pos()], r);
+
+			return r;
+		} else {
+			return 0;
+		}
+	}
+	return -1;
+}
+
+bool FieldIO::setCache()
+{
+	if(_cache.isEmpty()) {
+		if(!_field->save(_cache, true))				return false;
+	}
+	return true;
+}
+
+FieldArchive::FieldArchive() :
+	fic(NULL), lgp(NULL), dir(NULL), iso(NULL), isDat(false)
+{
+}
+
+FieldArchive::FieldArchive(const QString &path, bool isDirectory) :
+	fic(NULL), lgp(NULL), dir(NULL), iso(NULL), isDat(false)
 {
 	if(isDirectory) {
 		dir = new QDir(path);
@@ -45,7 +80,11 @@ FieldArchive::FieldArchive(const QString &path, bool isDirectory)
 		}
 		else {
 			isDat = ext == "dat";
-			fic = new QLockedFile(path);
+			if(isDat) {
+				fic = new QLockedFile(path);
+			} else {
+				lgp = new Lgp(path);
+			}
 		}
 	}
 	//	fileWatcher.addPath(path);
@@ -56,8 +95,9 @@ FieldArchive::FieldArchive(const QString &path, bool isDirectory)
 FieldArchive::~FieldArchive()
 {
 	foreach(Field *field, fileList)	delete field;
-	foreach(TutFile *tut, tuts)		delete tut;
+	foreach(TutFile *tut, tuts)		if(tut != NULL)	delete tut;
 	if(fic!=NULL)	delete fic;
+	if(lgp!=NULL)	delete lgp;
 	if(dir!=NULL)	delete dir;
 	if(iso!=NULL)	delete iso;
 	clearCachedData();
@@ -69,6 +109,8 @@ QString FieldArchive::path() const
 		return dir->path();
 	if(fic!=NULL)
 		return fic->fileName();
+	if(lgp!=NULL)
+		return lgp->fileName();
 	if(iso!=NULL)
 		return iso->fileName();
 
@@ -77,24 +119,28 @@ QString FieldArchive::path() const
 
 QString FieldArchive::name() const
 {
-	if(fic!=NULL)
-		return fic->fileName().mid(fic->fileName().lastIndexOf("/")+1);
-	if(iso!=NULL)
-		return iso->fileName().mid(iso->fileName().lastIndexOf("/")+1);
+	if(dir!=NULL)
+		return QString();
 
-	return QString();
+	QString filePath = path();
+	if(filePath.isEmpty()) {
+		return filePath;
+	}
+
+	return filePath.mid(filePath.lastIndexOf("/") + 1);
 }
 
 QString FieldArchive::chemin() const
 {
 	if(dir!=NULL)
 		return dir->path() + "/";
-	if(fic!=NULL)
-		return fic->fileName().left(fic->fileName().lastIndexOf("/")+1);
-	if(iso!=NULL)
-		return iso->fileName().left(iso->fileName().lastIndexOf("/")+1);
 
-	return QString();
+	QString filePath = path();
+	if(filePath.isEmpty()) {
+		return filePath;
+	}
+
+	return filePath.left(filePath.lastIndexOf("/") + 1);
 }
 
 int FieldArchive::size() const
@@ -114,7 +160,7 @@ bool FieldArchive::isDirectory() const
 
 bool FieldArchive::isLgp() const
 {
-	return fic != NULL && !isDat;
+	return lgp != NULL;
 }
 
 bool FieldArchive::isIso() const
@@ -155,22 +201,6 @@ Field *FieldArchive::fieldCache=0;
 Field *FieldArchive::mimCache=0;
 Field *FieldArchive::modelCache=0;
 
-QByteArray FieldArchive::getLgpData(int position)
-{
-	if(fic==NULL)	return QByteArray();
-	quint32 fileSize;
-
-	if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))		return QByteArray();
-	if(!fic->seek(position+20))					return QByteArray();
-	if(fic->read((char *)&fileSize, 4) != 4)	return QByteArray();
-
-	QByteArray data = fic->read(fileSize);
-
-//	fic->close();
-
-	return data;
-}
-
 QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 {
 	quint32 lzsSize;
@@ -199,15 +229,7 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 
 		data = unlzs ? LZS::decompressAll(lzsDataConst + 4, lzsSize) : data;
 	} else if(isLgp()) {
-		data = getLgpData(((FieldPC *)field)->getPosition());
-
-		if(data.size() < 4)		return QByteArray();
-
-		const char *lzsDataConst = data.constData();
-		memcpy(&lzsSize, lzsDataConst, 4);
-		if((quint32)data.size() != lzsSize + 4)				return QByteArray();
-
-		data = unlzs ? LZS::decompressAll(lzsDataConst + 4, lzsSize) : data;
+		data = getFileData(field->getName(), unlzs);
 	} else if(isIso() || isDirectory()) {
 		data = getFileData(field->getName().toUpper()+".DAT", unlzs);
 	}
@@ -257,7 +279,19 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 	QByteArray data;
 
 	if(isLgp()) {
-		return QByteArray();
+		if(!lgp->isOpen() && !lgp->open(QIODevice::ReadOnly)) return QByteArray();
+
+		data = lgp->fileData(fileName);
+
+		if(data.size() < 4)		return QByteArray();
+
+		const char *lzsDataConst = data.constData();
+		memcpy(&lzsSize, lzsDataConst, 4);
+		if((quint32)data.size() != lzsSize + 4)				return QByteArray();
+
+		data = unlzs ? LZS::decompressAll(lzsDataConst + 4, lzsSize) : data;
+
+		return data;
 	} else if(isIso()) {
 		data = iso->file(isoFieldDirectory->file(fileName.toUpper()));
 
@@ -292,20 +326,28 @@ TutFile *FieldArchive::getTut(const QString &name)
 {
 	if(!isLgp()) return NULL;
 
-	QMapIterator<QString, int> i(tutPos);
-	while(i.hasNext()) {
-		i.next();
-		if(name.startsWith(i.key(), Qt::CaseInsensitive)) {
-			int pos = i.value();
-			if(tuts.contains(i.key())) {
-				return tuts.value(i.key());
-			} else {
-				QByteArray data = getLgpData(pos);
+	QMapIterator<QString, TutFile *> it(tuts);
+
+	while(it.hasNext()) {
+		it.next();
+
+		const QString &tutName = it.key();
+
+		if(name.startsWith(tutName, Qt::CaseInsensitive)) {
+			TutFile *tutFile = it.value();
+			if(tutFile == NULL) {
+				if(!lgp->isOpen() && !lgp->open(QIODevice::ReadOnly))
+					return NULL;
+				QByteArray data = lgp->fileData(tutName + ".tut");
 				if(!data.isEmpty()) {
-					TutFile *tutFile = new TutFile(data, true);
-					tuts.insert(i.key(), tutFile);
+					tutFile = new TutFile(data, true);
+					tuts.insert(name, tutFile);
 					return tutFile;
+				} else {
+					return NULL;
 				}
+			} else {
+				return tutFile;
 			}
 		}
 	}
@@ -362,7 +404,7 @@ QList<FF7Var> FieldArchive::searchAllVars()
 
 	return vars;
 }
-/*
+
 void FieldArchive::searchAll()
 {
 	int size = fileList.size();
@@ -375,7 +417,7 @@ void FieldArchive::searchAll()
 		Field *field = this->field(i, true);
 		if(field != NULL) {
 //			qDebug() << field->getName();
-			int scriptID=0, opcodeID=0;
+			/*int scriptID=0, opcodeID=0;
 			Section1File *scripts = field->scriptsAndTexts();
 			foreach(GrpScript *group, scripts->grpScripts()) {
 				scriptID=0;
@@ -407,10 +449,40 @@ void FieldArchive::searchAll()
 					}
 					scriptID++;
 				}
+			}*/
+			QString out;
+			InfFile *inf = field->getInf();
+			if(inf != NULL) {
+				int curExit=0;
+				QString curOut;
+				foreach(const Exit &exit, inf->exitLines()) {
+					if(exit.fieldID != 0x7FFF && !inf->arrowIsDisplayed(curExit)) {
+						curOut.append(QString("Sortie vers %1 sans flêche\n").arg(Data::field_names.value(exit.fieldID)));
+					}
+					++curExit;
+				}
+				if(!curOut.isEmpty()) {
+					out.append(QString("=== %1 ===\n").arg(field->getName()));
+					out.append(curOut);
+
+					int redArrowCount = 0;
+					foreach(const Arrow &arrow, inf->arrows()) {
+						if(arrow.type == 1) {
+							redArrowCount++;
+						}
+					}
+					if(redArrowCount > 0) {
+						out.append(QString("Mais %1 flêche(s) rouge ont été trouvée(s)\n").arg(redArrowCount));
+					}
+				}
+
+				if(!out.isEmpty())
+					qDebug() << out.toLatin1().data();
 			}
+
 		}
 	}
-}*/
+}
 
 bool FieldArchive::searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const
 {
@@ -656,6 +728,7 @@ void FieldArchive::close()
 {
 //	qDebug() << "FieldArchive::close()";
 	if(fic!=NULL)	fic->close();
+	if(lgp!=NULL)	lgp->close();
 	clearCachedData();
 //	qDebug() << "/FieldArchive::close()";
 }
@@ -674,10 +747,9 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 {
 //	qDebug() << "FieldArchive::open()";
 	foreach(Field *field, fileList)	delete field;
-	foreach(TutFile *tut, tuts)		delete tut;
+	foreach(TutFile *tut, tuts) if(tut != NULL)	delete tut;
 	fileList.clear();
 	tuts.clear();
-	tutPos.clear();
 	fieldsSortByName.clear();
 	fieldsSortByMapId.clear();
 	Data::field_names.clear();
@@ -729,68 +801,46 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		}
 		// qDebug("Ouverture : %d ms", t.elapsed());
 	} else if(isLgp()) {
-		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))	return ErrorOpening;
+		if(!lgp->isOpen() && !lgp->open(QIODevice::ReadOnly))	return ErrorOpening;
 
-		quint32 nbFiles;
+		QStringList archiveList = lgp->fileList();
 
-		fic->seek(12);
-		fic->read((char *)&nbFiles,4);
-
-		if(nbFiles==0 || fic->size()<16+27*nbFiles)		return Invalid;
-
-		quint32 filePos;
-		QList<quint32> listPos;
-
-		QByteArray toc = fic->read(27 * nbFiles);
-		const char *tocData = toc.constData();
-
-		quint32 i;
-		for(i=0 ; i<nbFiles ; ++i)
-		{
-			QString name(QByteArray(&tocData[27 * i], 20));
-			if(!name.contains(".")) {
-				memcpy(&filePos, &tocData[27 * i + 20], 4);
-				listPos.append(filePos);
-			} else if(name.endsWith(".tut", Qt::CaseInsensitive)) {
-				memcpy(&filePos, &tocData[27 * i + 20], 4);
-				name.chop(4);// strip ".tut"
-				tutPos.insert(name, filePos);
-			}
+		if(archiveList.isEmpty()) {
+			return Invalid;
 		}
-		if(listPos.isEmpty())	return FieldNotFound;
-		qSort(listPos);
 
-		emit nbFilesChanged(listPos.last());
+		emit nbFilesChanged(archiveList.size());
 
-		quint32 fileSize, lzsSize, freq = listPos.size()>50 ? listPos.size()/50 : 1;
-
-		// QTime t;t.start();
-
+		quint32 i, fileSize, lzsSize, freq = archiveList.size()>50 ? archiveList.size()/50 : 1;
 		Field *field;
-		i = 0;
-		foreach(const quint32 &pos, listPos)
-		{
-			if(i%freq==0) {
-				QCoreApplication::processEvents();
-				emit progress(pos);
-			}
 
-			if(!fic->seek(pos))	break;
-			QByteArray data = fic->read(24);
-			QString name(data.left(20));
-			memcpy(&fileSize, data.constData()+20, 4);
+		QTime t;t.start();
+
+		i = 0;
+		foreach(const QString &name, archiveList) {
+			if(i % freq == 0) {
+				QCoreApplication::processEvents();
+				emit progress(i);
+			}
 
 			if(name.compare("maplist", Qt::CaseInsensitive) == 0) {
-				if(!Data::openMaplist(fic->read(fileSize))) {
+				if(!Data::openMaplist(lgp->fileData(name))) {
 					qWarning() << "Cannot open maplist!";
 				}
-			}
-			else
-			{
-				fic->read((char *)&lzsSize, 4);
-				if(fileSize != lzsSize+4)	continue;
+			} else if(name.endsWith(".tut", Qt::CaseInsensitive)) {
+				tuts.insert(name.toLower().left(name.size()-4), NULL);
+			} else {
+				QIODevice *io = lgp->file(name);
+				if(io == NULL || !io->open(QIODevice::ReadOnly)) {
+					continue;
+				}
 
-				field = new FieldPC(pos, name, this);
+				fileSize = io->size();
+				io->read((char *)&lzsSize, 4);
+				if(fileSize != lzsSize+4)	continue;
+				io->close();
+
+				field = new FieldPC(name, this);
 
 				QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << QString());
 				item->setData(0, Qt::UserRole, fileList.size());
@@ -799,7 +849,7 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 				++i;
 			}
 		}
-		//		qDebug("Ouverture : %d ms", t.elapsed());
+		qDebug("Ouverture : %d ms", t.elapsed());
 		// qDebug() << FICHIER::size << " o";
 		// qDebug() << "nbGS : " << GrpScript::COUNT;
 		// qDebug() << "nbS : " << Script::COUNT;
@@ -847,15 +897,16 @@ void FieldArchive::setSaved()
 		field->setSaved();
 	}
 	foreach(TutFile *tut, tuts) {
-		tut->setModified(false);
+		if(tut != NULL) {
+			tut->setModified(false);
+		}
 	}
 }
 
 FieldArchive::ErrorCode FieldArchive::save(QString path)
 {
 //	qDebug() << "FieldArchive::save()" << path;
-	quint32 nbFiles, pos, taille, oldtaille;
-	qint32 fieldID;
+	quint32 nbFiles;
 	bool saveAs;
 
 	if(isDirectory() || isDatFile())
@@ -884,192 +935,51 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 	}
 	else if(isLgp())
 	{
-		QMap<quint32, quint32> positions1, positions2;
-		QMap<Field *, quint32> newPositions;
-		QMap<QString, quint32> newPositionsTut;
-		QByteArray fileName;
-		QString tutName;
+		if(!lgp->isOpen() && !lgp->open(QIODevice::ReadOnly))	return ErrorOpening;
 
-		if(path.isNull())
-			path = fic->fileName();
-
-		// Replace if the new path is the same as the old
-		saveAs = QFileInfo(path) != QFileInfo(*fic);
-
-		// QFile fic(this->path());
-		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))	return ErrorOpening;
-		QFile tempFic(path % ".makoutemp");
-		if(!tempFic.open(QIODevice::WriteOnly | QIODevice::Truncate))		return ErrorOpeningTemp;
-
-		fic->seek(12);
-		fic->read((char *)&nbFiles, 4);
-
-		if(nbFiles>1000 || nbFiles==0) 	return Invalid;
-
-		emit nbFilesChanged(nbFiles+21);
-
-		//QTime t;t.start();
-		//Parcourir la table des matière
-		QByteArray toc = fic->read(27 * nbFiles);
-		const char *tocData = toc.constData();
-
-		for(quint32 i=0 ; i<nbFiles ; ++i)
-		{
-			memcpy(&pos, &tocData[27 * i + 20], 4);
-			positions1.insert(pos, i);
-		}
-
-		QMap<quint32, quint32>::const_iterator i = positions1.constBegin();
-		const quint32 positionFirstFile = i.key();
-
-		// qDebug() << i.key() << (27*nbFiles + 16);//CRC size
-
-		fic->reset();
-		tempFic.write(fic->read(positionFirstFile));
-
-//		qDebug("Lister les positions des fichiers : %d ms", t.elapsed());
-//		t.restart();
-
-		quint16 avancement = 0;
-		while(i != positions1.constEnd())
-		{
-			QCoreApplication::processEvents();
-
-			if(!fic->seek(i.key()))	return Invalid;
-
-			//Listage positions 2
-			pos = tempFic.pos();
-			positions2.insert(i.value(), pos);
-
-			fieldID = findField(QString(fileName = fic->read(20)));
-			if(fileName.size() != 20 || fic->read((char *)&oldtaille, 4) != 4) 	return Invalid;
-			tempFic.write(fileName);// File Name
-			// qDebug() << QString(fileName);
-
-			if(fieldID != -1)
-			{
-				Field *field = fileList.at(fieldID);
-				// qDebug() << "[FIELD]" << fieldID << field->getName();
-
-				newPositions.insert(field, pos);
-
-				//vérifier si on a pas une nouvelle version du fichier
-				if(field->isOpen() && field->isModified())
-				{
-//					qDebug() << field->getName() << "======== modified";
-					QByteArray newFile;
-					//Créer le nouveau fichier à partir de l'ancien
-					if(!field->save(newFile, true))				return Invalid;
-
-					//Refaire les tailles
-					taille = newFile.size();
-
-					//Écrire le nouveau fichier dans le fichier temporaire
-					tempFic.write((char *)&taille, 4);//nouvelle taille
-					tempFic.write(newFile);//nouveau fichier
-				}
-				else
-				{
-//					qDebug() << "unmodified";
-					tempFic.write((char *)&oldtaille, 4);//Taille
-					tempFic.write(fic->read(oldtaille));//Fichier
+		foreach(Field *field, fileList) {
+			if(field->isOpen() && field->isModified()) {
+				if(!lgp->setFile(field->getName(), new FieldIO(field))) {
+					return FieldNotFound;
 				}
 			}
-			else if(QString(fileName).endsWith(".tut", Qt::CaseInsensitive) && tuts.contains(tutName = fileName.left(fileName.lastIndexOf('.'))))
-			{
-				TutFile *tut = tuts.value(tutName);
+		}
 
-//				qDebug() << "[TUT]" << tutName;
+		QMapIterator<QString, TutFile *> itTut(tuts);
 
-				newPositionsTut.insert(tutName, pos);
+		while(itTut.hasNext()) {
+			itTut.next();
+			TutFile *tut = itTut.value();
 
-				if(tut->isModified())
-				{
-//					qDebug() << "======== modified";
-					QByteArray tocTut, tutData;
-					tutData = tut->save(tocTut);
-					tocTut.append(tutData);
-					taille = tocTut.size();
-					tempFic.write((char *)&taille, 4);//Taille
-					tempFic.write(tocTut);//Fichier
-				}
-				else
-				{
-//					qDebug() << "unmodified";
-					tempFic.write((char *)&oldtaille, 4);//Taille
-					tempFic.write(fic->read(oldtaille));//Fichier
+			if(tut != NULL && tut->isModified()) {
+//				qDebug() << "[TUT]" << tutName << "======== modified";
+				QByteArray tocTut, tutData;
+				tutData = tut->save(tocTut);
+				tocTut.append(tutData);
+				if(!lgp->setFileData(itTut.key() + ".tut", tocTut)) {
+					return FieldNotFound;
 				}
 			}
-			else
-			{
-//				qDebug() << "[NOTHING] unmodified" << QString(fileName);
-				tempFic.write((char *)&oldtaille, 4);//Taille
-				tempFic.write(fic->read(oldtaille));//Fichier
+		}
+
+		if(!lgp->pack(path, this)) {
+			switch(lgp->error()) {
+			case Lgp::OpenError:
+				return ErrorOpeningTemp;
+			case Lgp::InvalidError:
+				return Invalid;
+			case Lgp::CopyError:
+			case Lgp::RemoveError:
+			case Lgp::RenameError:
+				return ErrorRemoving;
+			default:
+				return Invalid;
 			}
-//			qDebug("Ecrire un fichier : %d ms", t.elapsed());
-//			t.restart();
-			emit progress(avancement++);
-			++i;
 		}
-
-//		tempFic.write(fic->readAll());
-		tempFic.write("FINAL FANTASY7", 14);
-
-//		qDebug("Ecrire les fichiers : %d ms", t.elapsed());
-//		t.restart();
-
-		//fabrication de la nouvelle table des matières
-		for(quint32 i=0 ; i<nbFiles ; ++i)
-		{
-			tempFic.seek(16 + i*27 + 20);
-			pos = positions2.value(i);
-			tempFic.write((char *)&pos, 4);
-		}
-
-//		qDebug("Ecrire la table des matières : %d ms", t.elapsed());
-//		t.restart();
-
-		emit progress(nbFiles+7);
-
-		// Remove or close the old file
-		if(!saveAs) {
-			if(!fic->remove())	return ErrorRemoving;
-		} else {
-			fic->close();
-			fic->setFileName(path);
-		}
-
-		emit progress(nbFiles+14);
-		//t.restart();
-
-		// Move the temporary file
-		if(QFile::exists(path) && !QFile::remove(path))		return ErrorRemoving;
-		if(!tempFic.rename(path))			return ErrorRemoving;
-
-		//qDebug("Copy the temporary file: %d ms", t.elapsed());
-
-		fic->open(QIODevice::ReadOnly);// reopen archive
-
-		// t.restart();
-		// Update fieldPC positions
-		QMapIterator<Field *, quint32> fieldIt(newPositions);
-		while(fieldIt.hasNext()) {
-			fieldIt.next();
-			((FieldPC *)fieldIt.key())->setPosition(fieldIt.value());
-		}
-		// Update tut positions
-		QMapIterator<QString, quint32> tutIt(newPositionsTut);
-		while(tutIt.hasNext()) {
-			tutIt.next();
-			tutPos.insert(tutIt.key(), tutIt.value());
-		}
-		emit progress(nbFiles+21);
 
 		// Clear "isModified" state
 		setSaved();
 		clearCachedData(); // Important: the file data will change
-
-//		qDebug() << "/FieldArchive::save()" << path;
 
 		// qDebug("Ecrire le nouvel Lgp : %d ms", t.elapsed());
 		return Ok;

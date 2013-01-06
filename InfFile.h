@@ -54,7 +54,7 @@ typedef struct {
 	qint32 positionX;
 	qint32 positionZ;
 	qint32 positionY;
-	quint32 type;
+	quint32 type;// 0 - Invisible, 1 - Red, 2 - Green
 } Arrow;
 
 typedef struct {

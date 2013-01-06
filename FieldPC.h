@@ -26,7 +26,7 @@
 class FieldPC : public Field
 {
 public:
-	FieldPC(quint32 position, const QString &name, FieldArchive *fieldArchive);
+	FieldPC(const QString &name, FieldArchive *fieldArchive);
 	FieldPC(const Field &field);
 	virtual ~FieldPC();
 
@@ -38,9 +38,6 @@ public:
 
 	bool getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 
-	quint32 getPosition() const;
-	void setPosition(quint32 position);
-
 	bool save(QByteArray &newData, bool compress);
 	qint8 importer(const QByteArray &data, bool isPSField, FieldParts part);
 
@@ -51,7 +48,6 @@ protected:
 	QByteArray sectionData(FieldPart part);
 	QByteArray sectionData(int idPart);
 private:
-	quint32 position;
 	quint32 sectionPositions[9];
 };
 

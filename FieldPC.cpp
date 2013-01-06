@@ -20,13 +20,13 @@
 #include "Palette.h"
 #include "LZS.h"
 
-FieldPC::FieldPC(quint32 position, const QString &name, FieldArchive *fieldArchive) :
-	Field(name, fieldArchive), position(position)
+FieldPC::FieldPC(const QString &name, FieldArchive *fieldArchive) :
+	Field(name, fieldArchive)
 {
 }
 
 FieldPC::FieldPC(const Field &field) :
-	Field(field), position(0)
+	Field(field)
 {
 }
 
@@ -504,17 +504,6 @@ FieldModelFilePC *FieldPC::getFieldModel(const QString &hrc, const QString &a, b
 	if(!fieldModel)		fieldModel = new FieldModelFilePC();
 	((FieldModelFilePC *)fieldModel)->load(hrc, a, animate);
 	return (FieldModelFilePC *)fieldModel;
-}
-
-quint32 FieldPC::getPosition() const
-{
-	return position;
-}
-
-void FieldPC::setPosition(quint32 position)
-{
-	if(this->position != 0)
-		this->position = position;
 }
 
 bool FieldPC::save(QByteArray &newData, bool compress)

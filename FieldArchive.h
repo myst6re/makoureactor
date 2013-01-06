@@ -22,8 +22,25 @@
 #include "QLockedFile.h"
 #include "Field.h"
 #include "IsoArchive.h"
+#include "Lgp.h"
 
-class FieldArchive : public QObject, IsoControl
+class FieldArchive;
+
+class FieldIO : public QIODevice
+{
+public:
+	FieldIO(Field *field, QObject *parent=0);
+	virtual void close();
+protected:
+	virtual qint64 readData(char *data, qint64 maxSize);
+private:
+	qint64 writeData(const char *, qint64) { return -1; }
+	bool setCache();
+	Field *_field;
+	QByteArray _cache;
+};
+
+class FieldArchive : public QObject, IsoControl, LgpObserver
 {
 	Q_OBJECT
 
@@ -43,7 +60,6 @@ public:
 	int size() const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
 	Field *field(const QString &name, bool open=true);
-	QByteArray getLgpData(int position);
 	QByteArray getFieldData(Field *field, bool unlzs=true);
 	QByteArray getMimData(Field *field, bool unlzs=true);
 	QByteArray getModelData(Field *field, bool unlzs=true);
@@ -56,7 +72,7 @@ public:
 
 	bool isAllOpened();
 	QList<FF7Var> searchAllVars();
-//	void searchAll();// research & debug function
+	void searchAll();// research & debug function
 	bool searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
@@ -83,9 +99,22 @@ public:
 	bool isLgp() const;
 	bool isIso() const;
 
-	void setIsoOut(int val) {
+	void setIsoOut(int value) {
 		QApplication::processEvents();
-		emit progress(val);
+		emit progress(value);
+	}
+	void setObserverValue(int value) {
+		QApplication::processEvents();
+		emit progress(value);
+	}
+	void setObserverMaximum(unsigned int max) {
+		emit nbFilesChanged(max);
+	}
+	bool observerWasCanceled() {
+		return false;
+	}
+	virtual unsigned int observerMaximum() {
+		return 0;
 	}
 signals:
 	void progress(int);
@@ -106,10 +135,10 @@ private:
 	QMultiMap<QString, int> fieldsSortByName;
 	QMultiMap<QString, int> fieldsSortByMapId;
 	QLockedFile *fic;
+	Lgp *lgp;
 	QDir *dir;
 	IsoArchive *iso;
 	IsoDirectory *isoFieldDirectory;
-	QMap<QString, int> tutPos;
 	QMap<QString, TutFile *> tuts;
 	bool isDat;
 	static QByteArray fieldDataCache, mimDataCache, modelDataCache;

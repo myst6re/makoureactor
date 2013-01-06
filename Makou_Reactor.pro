@@ -79,7 +79,8 @@ HEADERS += ApercuBG.h \
     ScriptEditorWidgets/ScriptEditorMathPage.h \
     Section1File.h \
 	QLockedFile.h \
-    QTaskBarButton.h
+	QTaskBarButton.h \
+	Lgp.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -152,7 +153,8 @@ SOURCES += ApercuBG.cpp \
     ScriptEditorWidgets/ScriptEditorMathPage.cpp \
     Section1File.cpp \
     QLockedFile.cpp \
-    QTaskBarButton.cpp
+	QTaskBarButton.cpp \
+	Lgp.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts
