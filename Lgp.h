@@ -1,69 +1,43 @@
+/****************************************************************************
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ **
+ ** This program is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ****************************************************************************/
+/*
+ * This file may contains some code (especially the conflict part)
+ * inspired from LGP/UnLGP tool written by Aali.
+ * http://forums.qhimm.com/index.php?topic=8641.0
+ */
 #ifndef LGP_H
 #define LGP_H
 
 #include <QtCore>
 
-#define LOOKUP_VALUE_MAX 30
-#define LOOKUP_TABLE_ENTRIES LOOKUP_VALUE_MAX * LOOKUP_VALUE_MAX
-
-#define MAX_CONFLICTS 4096
-
-class LgpObserver
+struct LgpObserver
 {
-public:
 	LgpObserver() {}
 	virtual bool observerWasCanceled()=0;
-	virtual unsigned int observerMaximum()=0;
 	virtual void setObserverMaximum(unsigned int max)=0;
 	virtual void setObserverValue(int value)=0;
 };
 
 class LgpHeaderEntry;
 
-class LgpIO : public QIODevice
-{
-public:
-	LgpIO(QIODevice *lgp, LgpHeaderEntry *header, QObject *parent=0);
-	virtual bool open(OpenMode mode);
-	virtual qint64 size() const;
-protected:
-	virtual qint64 readData(char *data, qint64 maxSize);
-private:
-	qint64 writeData(const char *, qint64) { return -1; }
-	QIODevice *_lgp;
-	LgpHeaderEntry *_header;
-};
-
-class LgpHeaderEntry
-{
-public:
-	LgpHeaderEntry(const QString &fileName, quint32 filePosition);
-	virtual ~LgpHeaderEntry();
-	const QString &fileName() const;
-	const QString &fileDir() const;
-	QString filePath() const;
-	quint32 filePosition() const;
-	qint64 fileSize() const;
-	void setFileName(const QString &fileName);
-	void setFileDir(const QString &fileDir);
-	void setFilePosition(quint32 filePosition);
-	void setFileSize(quint32 fileSize);
-	QIODevice *file() const;
-	void setFile(QIODevice *io);
-private:
-	QString _fileName;
-	QString _fileDir;
-	quint32 _filePosition;
-	quint32 _fileSize;
-	bool _hasFileSize;
-	QIODevice *_io;
-};
-
 class LgpToc
 {
 public:
-	static unsigned int count;
-	unsigned int self;
 	LgpToc();
 	LgpToc(const LgpToc &other);
 	virtual ~LgpToc();
@@ -89,41 +63,42 @@ class Lgp
 {
 public:
 	enum LgpError {
-		NoError = 0,
-		ReadError = 1,
-		WriteError = 2,
-		FatalError = 3,
-		ResourceError = 4,
-		OpenError = 5,
-		AbortError = 6,
-		TimeOutError = 7,
-		UnspecifiedError = 8,
-		RemoveError = 9,
-		RenameError = 10,
-		PositionError = 11,
-		ResizeError = 12,
-		PermissionsError = 13,
-		CopyError = 14,
-		InvalidError = 15,
-		FileNotFoundError = 16
+		NoError,
+		ReadError,
+		WriteError,
+		OpenError,
+		AbortError,
+		TimeOutError,
+		RemoveError,
+		RenameError,
+		PositionError,
+		ResizeError,
+		PermissionsError,
+		CopyError,
+		InvalidError,
+		FileNotFoundError
 	};
 
 	Lgp(const QString &name);
 	virtual ~Lgp();
 	QStringList fileList();
+	bool fileExists(const QString &filePath);
 	QIODevice *file(const QString &filePath);
 	QByteArray fileData(const QString &filePath);
 	bool setFile(const QString &filePath, QIODevice *data);
-	bool setFileData(const QString &filePath, const QByteArray &data);
+	bool setFile(const QString &filePath, const QByteArray &data);
 	bool addFile(const QString &filePath, QIODevice *data);
-	bool addFileData(const QString &filePath, const QByteArray &data);
+	bool addFile(const QString &filePath, const QByteArray &data);
 	bool removeFile(const QString &filePath);
 	const QString &companyName();
+	void setCompanyName(const QString &companyName);
 	const QString &productName();
-	bool open(QIODevice::OpenMode mode);
+	void setProductName(const QString &productName);
+	bool open();
 	bool isOpen() const;
 	void close();
 	QString fileName() const;
+	void setFileName(const QString &fileName);
 	bool pack(const QString &destination=QString(), LgpObserver *observer=NULL);
 	LgpError error() const;
 	void unsetError();
@@ -132,13 +107,14 @@ private:
 	bool openHeader();
 	void resolveConflicts();
 	LgpHeaderEntry *headerEntry(const QString &filePath);
-	void setError(LgpError error);
+	void setError(LgpError error, const QString &errorString=QString());
 
 	QString _companyName;
 	LgpToc _files;
 	QString _productName;
 	QFile _file;
 	LgpError _error;
+	QString _errorString;
 
 };
 

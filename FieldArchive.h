@@ -113,9 +113,6 @@ public:
 	bool observerWasCanceled() {
 		return false;
 	}
-	virtual unsigned int observerMaximum() {
-		return 0;
-	}
 signals:
 	void progress(int);
 	void nbFilesChanged(int);

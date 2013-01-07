@@ -80,7 +80,8 @@ HEADERS += ApercuBG.h \
     Section1File.h \
 	QLockedFile.h \
 	QTaskBarButton.h \
-	Lgp.h
+	Lgp.h \
+    Lgp_p.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -154,7 +155,8 @@ SOURCES += ApercuBG.cpp \
     Section1File.cpp \
     QLockedFile.cpp \
 	QTaskBarButton.cpp \
-	Lgp.cpp
+	Lgp.cpp \
+    Lgp_p.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

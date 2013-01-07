@@ -279,7 +279,7 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 	QByteArray data;
 
 	if(isLgp()) {
-		if(!lgp->isOpen() && !lgp->open(QIODevice::ReadOnly)) return QByteArray();
+		if(!lgp->isOpen() && !lgp->open()) return QByteArray();
 
 		data = lgp->fileData(fileName);
 
@@ -336,7 +336,7 @@ TutFile *FieldArchive::getTut(const QString &name)
 		if(name.startsWith(tutName, Qt::CaseInsensitive)) {
 			TutFile *tutFile = it.value();
 			if(tutFile == NULL) {
-				if(!lgp->isOpen() && !lgp->open(QIODevice::ReadOnly))
+				if(!lgp->isOpen() && !lgp->open())
 					return NULL;
 				QByteArray data = lgp->fileData(tutName + ".tut");
 				if(!data.isEmpty()) {
@@ -801,7 +801,7 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		}
 		// qDebug("Ouverture : %d ms", t.elapsed());
 	} else if(isLgp()) {
-		if(!lgp->isOpen() && !lgp->open(QIODevice::ReadOnly))	return ErrorOpening;
+		if(!lgp->isOpen() && !lgp->open())	return ErrorOpening;
 
 		QStringList archiveList = lgp->fileList();
 
@@ -811,7 +811,7 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 
 		emit nbFilesChanged(archiveList.size());
 
-		quint32 i, fileSize, lzsSize, freq = archiveList.size()>50 ? archiveList.size()/50 : 1;
+		quint32 i, freq = archiveList.size()>50 ? archiveList.size()/50 : 1;
 		Field *field;
 
 		QTime t;t.start();
@@ -829,17 +829,7 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 				}
 			} else if(name.endsWith(".tut", Qt::CaseInsensitive)) {
 				tuts.insert(name.toLower().left(name.size()-4), NULL);
-			} else {
-				QIODevice *io = lgp->file(name);
-				if(io == NULL || !io->open(QIODevice::ReadOnly)) {
-					continue;
-				}
-
-				fileSize = io->size();
-				io->read((char *)&lzsSize, 4);
-				if(fileSize != lzsSize+4)	continue;
-				io->close();
-
+			} else if(!name.contains('.')) {
 				field = new FieldPC(name, this);
 
 				QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << QString());
@@ -935,7 +925,7 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 	}
 	else if(isLgp())
 	{
-		if(!lgp->isOpen() && !lgp->open(QIODevice::ReadOnly))	return ErrorOpening;
+		if(!lgp->isOpen() && !lgp->open())	return ErrorOpening;
 
 		foreach(Field *field, fileList) {
 			if(field->isOpen() && field->isModified()) {
@@ -956,7 +946,7 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 				QByteArray tocTut, tutData;
 				tutData = tut->save(tocTut);
 				tocTut.append(tutData);
-				if(!lgp->setFileData(itTut.key() + ".tut", tocTut)) {
+				if(!lgp->setFile(itTut.key() + ".tut", tocTut)) {
 					return FieldNotFound;
 				}
 			}
