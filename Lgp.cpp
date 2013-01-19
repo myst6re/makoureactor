@@ -306,9 +306,6 @@ bool Lgp::setFile(const QString &filePath, QIODevice *data)
 	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
 	if(entry == NULL) return false;
 
-	if(entry->file() != NULL) {
-		entry->file()->deleteLater();
-	}
 	entry->setFile(data);
 
 	return true;

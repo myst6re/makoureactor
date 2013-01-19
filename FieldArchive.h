@@ -59,7 +59,6 @@ public:
 
 	int size() const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
-	Field *field(const QString &name, bool open=true);
 	QByteArray getFieldData(Field *field, bool unlzs=true);
 	QByteArray getMimData(Field *field, bool unlzs=true);
 	QByteArray getModelData(Field *field, bool unlzs=true);
@@ -122,8 +121,7 @@ signals:
 private:
 	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
-	void addDAT(const QString &name, QList<QTreeWidgetItem *> &items);
-	qint32 findField(const QString &name) const;
+	void addField(Field *field, QList<QTreeWidgetItem *> &items);
 	bool openField(Field *field, bool dontOptimize=false);
 	void setSaved();
 	QByteArray updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory);

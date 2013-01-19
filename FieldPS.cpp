@@ -19,6 +19,7 @@
 #include "FieldArchive.h"
 #include "Palette.h"
 #include "LZS.h"
+#include "Config.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchive *fieldArchive) :
 	Field(name, fieldArchive)
@@ -42,17 +43,20 @@ bool FieldPS::open(bool dontOptimize)
 	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
 		QByteArray lzsData = fieldArchive->getFieldData(this, false);
 		quint32 lzsSize;
-		if(lzsData.size() < 4)		return false;
+		if(lzsData.size() < 4) return false;
+
 		const char *lzsDataConst = lzsData.constData();
 		memcpy(&lzsSize, lzsDataConst, 4);
-		if(lzsSize+4 != (quint32)lzsData.size()) 	return false;
 
-		fileData = LZS::decompress(lzsDataConst + 4, lzsSize, headerSize);//partial decompression
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
+			return false;
+
+		fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize);//partial decompression
 	} else {
 		fileData = fieldArchive->getFieldData(this);
 	}
 
-	if(fileData.size() < headerSize) 	return false;
+	if(fileData.size() < headerSize) return false;
 
 	memcpy(sectionPositions, fileData.constData(), headerSize); // header
 	qint32 vramDiff = sectionPositions[0] - headerSize;// vram section1 pos - real section 1 pos
@@ -113,9 +117,11 @@ QByteArray FieldPS::sectionData(int idPart)
 		quint32 lzsSize;
 		const char *lzsDataConst = lzsData.constData();
 		memcpy(&lzsSize, lzsDataConst, 4);
-		if(lzsSize+4 != (quint32)lzsData.size()) 	return QByteArray();
 
-		return LZS::decompress(lzsDataConst + 4, lzsSize, sectionPositions[idPart+1]).mid(position, size);
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
+			return QByteArray();
+
+		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPositions[idPart+1]).mid(position, size);
 	}
 }
 

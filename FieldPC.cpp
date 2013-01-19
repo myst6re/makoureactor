@@ -19,6 +19,7 @@
 #include "FieldArchive.h"
 #include "Palette.h"
 #include "LZS.h"
+#include "Config.h"
 
 FieldPC::FieldPC(const QString &name, FieldArchive *fieldArchive) :
 	Field(name, fieldArchive)
@@ -46,9 +47,11 @@ bool FieldPC::open(bool dontOptimize)
 		if(lzsData.size() < 4)		return false;
 		const char *lzsDataConst = lzsData.constData();
 		memcpy(&lzsSize, lzsDataConst, 4);
-		if(lzsSize+4 != (quint32)lzsData.size()) 	return false;
 
-		fileData = LZS::decompress(lzsDataConst + 4, lzsSize, 42);//partial decompression
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
+			return false;
+
+		fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), 42);//partial decompression
 	} else {
 		fileData = fieldArchive->getFieldData(this);
 	}
@@ -109,9 +112,11 @@ QByteArray FieldPC::sectionData(int idPart)
 		quint32 lzsSize;
 		const char *lzsDataConst = lzsData.constData();
 		memcpy(&lzsSize, lzsDataConst, 4);
-		if(lzsSize+4 != (quint32)lzsData.size()) 	return QByteArray();
 
-		return LZS::decompress(lzsDataConst + 4, lzsSize, sectionPositions[idPart+1]).mid(position, size);
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
+			return QByteArray();
+
+		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPositions[idPart+1]).mid(position, size);
 	}
 }
 

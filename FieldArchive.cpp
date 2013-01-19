@@ -21,6 +21,7 @@
 #include "GZIP.h"
 #include "LZS.h"
 #include "Data.h"
+#include "Config.h"
 
 FieldIO::FieldIO(Field *field, QObject *parent) :
 	QIODevice(parent), _field(field)
@@ -185,15 +186,6 @@ Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 	return field;
 }
 
-Field *FieldArchive::field(const QString &name, bool open)
-{
-	int index;
-	if((index = findField(name)) != -1) {
-		return field(index, open);
-	}
-	return NULL;
-}
-
 QByteArray FieldArchive::fieldDataCache;
 QByteArray FieldArchive::mimDataCache;
 QByteArray FieldArchive::modelDataCache;
@@ -203,7 +195,6 @@ Field *FieldArchive::modelCache=0;
 
 QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 {
-	quint32 lzsSize;
 	QByteArray data;
 
 	// use data from the cache
@@ -214,27 +205,13 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 		qDebug() << "FieldArchive don't use field data from cache" << field->getName() << unlzs;
 	}*/
 
-	if(isDatFile()) {
-		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))		return QByteArray();
-		fic->reset();
-		data = fic->readAll();
-		fic->close();
-
-		if(data.size() < 4)		return QByteArray();
-
-		const char *lzsDataConst = data.constData();
-		memcpy(&lzsSize, lzsDataConst, 4);
-
-		if((quint32)data.size() != lzsSize+4)	return QByteArray();
-
-		data = unlzs ? LZS::decompressAll(lzsDataConst + 4, lzsSize) : data;
-	} else if(isLgp()) {
+	if(isDatFile() || isLgp()) {
 		data = getFileData(field->getName(), unlzs);
 	} else if(isIso() || isDirectory()) {
 		data = getFileData(field->getName().toUpper()+".DAT", unlzs);
 	}
 
-	if(unlzs) { // put decompressed data in the cache
+	if(unlzs && !data.isEmpty()) { // put decompressed data in the cache
 		fieldCache = field;
 		fieldDataCache = data;
 	}
@@ -250,7 +227,7 @@ QByteArray FieldArchive::getMimData(Field *field, bool unlzs)
 
 	QByteArray data = getFileData(field->getName().toUpper()+".MIM", unlzs);
 
-	if(unlzs) { // put decompressed data in the cache
+	if(unlzs && !data.isEmpty()) { // put decompressed data in the cache
 		mimCache = field;
 		mimDataCache = data;
 	}
@@ -266,7 +243,7 @@ QByteArray FieldArchive::getModelData(Field *field, bool unlzs)
 
 	QByteArray data = getFileData(field->getName().toUpper()+".BSX", unlzs);
 
-	if(unlzs) { // put decompressed data in the cache
+	if(unlzs && !data.isEmpty()) { // put decompressed data in the cache
 		modelCache = field;
 		modelDataCache = data;
 	}
@@ -287,9 +264,11 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 
 		const char *lzsDataConst = data.constData();
 		memcpy(&lzsSize, lzsDataConst, 4);
-		if((quint32)data.size() != lzsSize + 4)				return QByteArray();
 
-		data = unlzs ? LZS::decompressAll(lzsDataConst + 4, lzsSize) : data;
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)data.size() != lzsSize + 4)
+			return QByteArray();
+
+		data = unlzs ? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4))) : data;
 
 		return data;
 	} else if(isIso()) {
@@ -300,10 +279,11 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 		const char *lzsDataConst = data.constData();
 		memcpy(&lzsSize, lzsDataConst, 4);
 
-		if((quint32)data.size() != lzsSize+4)	return QByteArray();
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)data.size() != lzsSize + 4)
+			return QByteArray();
 
-		return unlzs ? LZS::decompressAll(lzsDataConst + 4, lzsSize) : data;
-	} else if(isDatFile() || isDirectory()) {
+		return unlzs ? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4))) : data;
+	} else if(isDirectory()) {
 		QFile f(chemin()+fileName.toUpper());
 		if(!f.open(QIODevice::ReadOnly))	return QByteArray();
 		data = f.readAll();
@@ -314,9 +294,25 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 		const char *lzsDataConst = data.constData();
 		memcpy(&lzsSize, lzsDataConst, 4);
 
-		if((quint32)data.size() != lzsSize+4)	return QByteArray();
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)data.size() != lzsSize + 4)
+			return QByteArray();
 
-		return unlzs ? LZS::decompressAll(lzsDataConst + 4, lzsSize) : data;
+		return unlzs ? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4))) : data;
+	} else if(isDatFile()) {
+		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))		return QByteArray();
+		fic->reset();
+		data = fic->readAll();
+		fic->close();
+
+		if(data.size() < 4)		return QByteArray();
+
+		const char *lzsDataConst = data.constData();
+		memcpy(&lzsSize, lzsDataConst, 4);
+
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)data.size() != lzsSize + 4)
+			return QByteArray();
+
+		return unlzs ? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4))) : data;
 	} else {
 		return QByteArray();
 	}
@@ -733,11 +729,9 @@ void FieldArchive::close()
 //	qDebug() << "/FieldArchive::close()";
 }
 
-void FieldArchive::addDAT(const QString &name, QList<QTreeWidgetItem *> &items)
+void FieldArchive::addField(Field *field, QList<QTreeWidgetItem *> &items)
 {
-	Field *field = new FieldPS(name.toLower(), this);
-
-	QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name.toLower() << QString());
+	QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << field->getName() << QString());
 	item->setData(0, Qt::UserRole, fileList.size());
 	items.append(item);
 	fileList.append(field);
@@ -771,14 +765,14 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 
 			QString path = dir->filePath(list.at(i));
 			QString name = path.mid(path.lastIndexOf('/')+1);
-			addDAT(name.left(name.lastIndexOf('.')), items);
+			addField(new FieldPS(name.left(name.lastIndexOf('.')), this), items);
 		}
 
 		// qDebug("Ouverture : %d ms", t.elapsed());
 	} else if(isDatFile()) {
 		QString path = fic->fileName();
 		QString name = path.mid(path.lastIndexOf('/')+1);
-		addDAT(name.left(name.lastIndexOf('.')), items);
+		addField(new FieldPS(name.left(name.lastIndexOf('.')), this), items);
 	} else if(isIso()) {
 		isoFieldDirectory = iso->rootDirectory()->directory("FIELD");
 		if(isoFieldDirectory == NULL)	return FieldNotFound;
@@ -796,7 +790,7 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 
 			if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
 				QString name = file->name().mid(file->name().lastIndexOf('/')+1);
-				addDAT(name.left(name.lastIndexOf('.')), items);
+				addField(new FieldPS(name.left(name.lastIndexOf('.')), this), items);
 			}
 		}
 		// qDebug("Ouverture : %d ms", t.elapsed());
@@ -812,7 +806,6 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		emit nbFilesChanged(archiveList.size());
 
 		quint32 i, freq = archiveList.size()>50 ? archiveList.size()/50 : 1;
-		Field *field;
 
 		QTime t;t.start();
 
@@ -830,12 +823,7 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 			} else if(name.endsWith(".tut", Qt::CaseInsensitive)) {
 				tuts.insert(name.toLower().left(name.size()-4), NULL);
 			} else if(!name.contains('.')) {
-				field = new FieldPC(name, this);
-
-				QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << QString());
-				item->setData(0, Qt::UserRole, fileList.size());
-				fileList.append(field);
-				items.append(item);
+				addField(new FieldPC(name, this), items);
 				++i;
 			}
 		}
@@ -869,16 +857,6 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 //	qDebug() << "/FieldArchive::open()";
 
 	return Ok;
-}
-
-qint32 FieldArchive::findField(const QString &name) const
-{
-	qint32 i=0;
-	foreach(Field *field, fileList) {
-		if(field->getName().compare(name, Qt::CaseInsensitive) == 0)	return i;
-		++i;
-	}
-	return -1;
 }
 
 void FieldArchive::setSaved()

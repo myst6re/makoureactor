@@ -23,7 +23,7 @@
 #include "Data.h"
 
 Field::Field(const QString &name) :
-	_isOpen(false), _isModified(false), name(name),
+	_isOpen(false), _isModified(false), name(name.toLower()),
 	section1(0), _encounter(0), _tut(0), id(0), ca(0), inf(0),
 	modelLoader(0), fieldModel(0),
 	fieldArchive(0)
@@ -31,7 +31,7 @@ Field::Field(const QString &name) :
 }
 
 Field::Field(const QString &name, FieldArchive *fieldArchive) :
-	_isOpen(false), _isModified(false), name(name),
+	_isOpen(false), _isModified(false), name(name.toLower()),
 	section1(0), _encounter(0), _tut(0), id(0), ca(0), inf(0),
 	modelLoader(0), fieldModel(0),
 	fieldArchive(fieldArchive)

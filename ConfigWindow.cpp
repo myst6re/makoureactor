@@ -89,6 +89,14 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	textEditorLayout->addWidget(japEnc, 0, 3, Qt::AlignLeft | Qt::AlignTop);
 	textEditorLayout->setColumnStretch(3, 1);
 
+	QGroupBox *misc = new QGroupBox(tr("Divers"), this);
+
+	lzsNotCheck = new QCheckBox(tr("Ne pas vérifier strictement le format des fichiers"), misc);
+
+	QVBoxLayout *miscLayout = new QVBoxLayout(misc);
+	miscLayout->addWidget(lzsNotCheck);
+	miscLayout->addStretch();
+
 	QPushButton *OKButton = new QPushButton(tr("OK"), dependances);
 	QPushButton *cancelButton = new QPushButton(tr("Annuler"), dependances);
 
@@ -96,8 +104,9 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	layout->addWidget(dependances, 0, 0, 1, 3);
 	layout->addWidget(openGL, 1, 0, 1, 3);
 	layout->addWidget(textEditor, 2, 0, 1, 3);
-	layout->addWidget(OKButton, 3, 1);
-	layout->addWidget(cancelButton, 3, 2);
+	layout->addWidget(misc, 3, 0, 1, 3);
+	layout->addWidget(OKButton, 4, 1);
+	layout->addWidget(cancelButton, 4, 2);
 	layout->setColumnStretch(0, 1);
 
 	connect(listFF7, SIGNAL(itemSelectionChanged()), SLOT(changeFF7ListButtonsState()));
@@ -171,6 +180,7 @@ void ConfigWindow::fillConfig()
 
 	optiText->setChecked(!Config::value("dontOptimizeTexts", false).toBool());
 	japEnc->setChecked(Config::value("jp_txt", false).toBool());
+	lzsNotCheck->setChecked(Config::value("lzsNotCheck", false).toBool());
 
 	setWindowColors();
 
@@ -358,6 +368,8 @@ void ConfigWindow::accept()
 	Config::setValue("windowColorBottomRight", windowColorBottomRight);
 	Config::setValue("dontOptimizeTexts", !optiText->isChecked());
 	Config::setValue("jp_txt", japEnc->isChecked());
+	Config::setValue("lzsNotCheck", lzsNotCheck->isChecked());
+
 	Data::load();//Reload kernel2.bin data
 	Data::refreshFF7Paths();// refresh ff7 paths
 	Data::charlgp_listPos.clear();//Refresh cached lgp TOC
