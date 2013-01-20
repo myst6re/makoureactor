@@ -40,7 +40,7 @@ qint64 FieldIO::readData(char *data, qint64 maxSize)
 		if(pos() < _cache.size()) {
 			const char *constData = _cache.constData();
 			qint64 r = qMin(maxSize, _cache.size() - pos());
-			memcpy(data, &constData[pos()], r);
+			memcpy(data, constData + pos(), r);
 
 			return r;
 		} else {

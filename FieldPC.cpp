@@ -58,7 +58,7 @@ bool FieldPC::open(bool dontOptimize)
 
 	if(fileData.size() < 42)	return false;
 
-	memcpy(sectionPositions, &(fileData.constData()[6]), 9 * 4); // header
+	memcpy(sectionPositions, fileData.constData() + 6, 9 * 4); // header
 
 	_isOpen = true;
 
@@ -116,7 +116,8 @@ QByteArray FieldPC::sectionData(int idPart)
 		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
 			return QByteArray();
 
-		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPositions[idPart+1]).mid(position, size);
+		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPositions[idPart+1])
+				.mid(position, size);
 	}
 }
 
@@ -142,17 +143,17 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 
 	if(dataSize < 42)	return QPixmap();
 
-	memcpy(&debutSection4, &constData[18], 4);//Adresse Section 4
-	memcpy(&debutSection9, &constData[38], 4);//Adresse Section 9
+	memcpy(&debutSection4, constData + 18, 4);//Adresse Section 4
+	memcpy(&debutSection9, constData + 38, 4);//Adresse Section 9
 
 	if(dataSize < debutSection4+16)	return QPixmap();
 
-	memcpy(&nb, &constData[debutSection4+14], 2);//nbPalettes
+	memcpy(&nb, constData + debutSection4+14, 2);//nbPalettes
 
 	if(dataSize < debutSection4+16+nb*512)	return QPixmap();
 	
 	for(i=0 ; i<nb ; ++i)
-		palettes.append(Palette(&constData[debutSection4+16+i*512], data.at(debutSection9+16+i)));
+		palettes.append(Palette(constData + debutSection4+16+i*512, data.at(debutSection9+16+i)));
 
 	quint32 aTex = debutSection9+48;
 	quint16 nbTiles1, nbTiles2=0, nbTiles3=0, nbTiles4=0;
@@ -160,13 +161,13 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 
 	if(dataSize < aTex+2)	return QPixmap();
 
-	memcpy(&nbTiles1, &constData[aTex], 2);//nbTiles1
+	memcpy(&nbTiles1, constData + aTex, 2);//nbTiles1
 	aTex += 8+nbTiles1*52;
 	if(dataSize < aTex+1)	return QPixmap();
 	if((exist2 = (bool)data.at(aTex)))
 	{
 		if(dataSize < aTex+7)	return QPixmap();
-		memcpy(&nbTiles2, &constData[aTex+5], 2);//nbTiles2
+		memcpy(&nbTiles2, constData + aTex+5, 2);//nbTiles2
 		aTex += 26+nbTiles2*52;
 	}
 	aTex++;
@@ -174,7 +175,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	if((exist3 = (bool)data.at(aTex)))
 	{
 		if(dataSize < aTex+7)	return QPixmap();
-		memcpy(&nbTiles3, &constData[aTex+5], 2);//nbTiles3
+		memcpy(&nbTiles3, constData + aTex+5, 2);//nbTiles3
 		aTex += 20+nbTiles3*52;
 	}
 	aTex++;
@@ -182,7 +183,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	if((exist4 = (bool)data.at(aTex)))
 	{
 		if(dataSize < aTex+7)	return QPixmap();
-		memcpy(&nbTiles4, &constData[aTex+5], 2);//nbTiles4
+		memcpy(&nbTiles4, constData + aTex+5, 2);//nbTiles4
 		aTex += 20+nbTiles4*52;
 	}
 
@@ -209,7 +210,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 
 	//BG 0
 	for(i=0 ; i<nbTiles1 ; ++i) {
-		memcpy(&tile, &constData[aTex+i*52], 34);
+		memcpy(&tile, constData + aTex+i*52, 34);
 
 		if(posTextures.contains(tile.textureID) && (tile.paletteID==0 || tile.paletteID < palettes.size())
 			&& qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000) {
@@ -234,7 +235,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	if(exist2) {
 		aTex += 26;
 		for(i=0 ; i<nbTiles2 ; ++i) {
-			memcpy(&tile, &constData[aTex+i*52], 34);
+			memcpy(&tile, constData + aTex+i*52, 34);
 			if(tile.textureID2>0) {
 				tile.srcX = tile.srcX2;
 				tile.srcY = tile.srcY2;
@@ -265,7 +266,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	if(exist3) {
 		aTex += 20;
 		for(i=0 ; i<nbTiles3 ; ++i) {
-			memcpy(&tile, &constData[aTex+i*52], 34);
+			memcpy(&tile, constData + aTex+i*52, 34);
 			if(tile.textureID2>0) {
 				tile.srcX = tile.srcX2;
 				tile.srcY = tile.srcY2;
@@ -296,7 +297,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	if(exist4) {
 		aTex += 20;
 		for(i=0 ; i<nbTiles4 ; ++i) {
-			memcpy(&tile, &constData[aTex+i*52], 34);
+			memcpy(&tile, constData + aTex+i*52, 34);
 			if(tile.textureID2>0) {
 				tile.srcX = tile.srcX2;
 				tile.srcY = tile.srcY2;
@@ -346,7 +347,7 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 		{
 			for(j=0 ; j<tile.size*512 ; j+=2)
 			{
-				memcpy(&deuxOctets, &constData[origin+j], 2);
+				memcpy(&deuxOctets, constData + origin+j, 2);
 				if(deuxOctets!=0)
 					pixels[baseX + right + top] = qRgb( (deuxOctets>>11)*COEFF_COLOR, (deuxOctets>>6 & 31)*COEFF_COLOR, (deuxOctets & 31)*COEFF_COLOR ); // special PC RGB16 color
 				
@@ -397,7 +398,7 @@ bool FieldPC::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists
 
 	if(data.isEmpty())	return false;
 
-	memcpy(&debutSection9, &constData[38], 4);//Adresse Section 9
+	memcpy(&debutSection9, constData + 38, 4);//Adresse Section 9
 
 	if((quint32)data.size() <= debutSection9+153)	return false;
 
@@ -405,23 +406,23 @@ bool FieldPC::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists
 	quint16 nbTiles1, nbTiles2=0, nbTiles3=0, nbTiles4=0;
 	bool exist2, exist3, exist4;
 
-	memcpy(&nbTiles1, &constData[aTex], 2);//nbTiles1
+	memcpy(&nbTiles1, constData + aTex, 2);//nbTiles1
 	aTex += 8+nbTiles1*52;
 	if((exist2 = (bool)data.at(aTex)))
 	{
-		memcpy(&nbTiles2, &constData[aTex+5], 2);//nbTiles2
+		memcpy(&nbTiles2, constData + aTex+5, 2);//nbTiles2
 		aTex += 26+nbTiles2*52;
 	}
 	aTex++;
 	if((exist3 = (bool)data.at(aTex)))
 	{
-		memcpy(&nbTiles3, &constData[aTex+5], 2);//nbTiles3
+		memcpy(&nbTiles3, constData + aTex+5, 2);//nbTiles3
 		aTex += 20+nbTiles3*52;
 	}
 	aTex++;
 	if((exist4 = (bool)data.at(aTex)))
 	{
-		memcpy(&nbTiles4, &constData[aTex+5], 2);//nbTiles4
+		memcpy(&nbTiles4, constData + aTex+5, 2);//nbTiles4
 		aTex += 20+nbTiles4*52;
 	}
 
@@ -440,7 +441,7 @@ bool FieldPC::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists
 		aTex += 26;
 		for(i=0 ; i<nbTiles2 ; ++i)
 		{
-			memcpy(&tile, &constData[aTex+i*52], 34);
+			memcpy(&tile, constData + aTex+i*52, 34);
 			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
 			{
 				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
@@ -455,7 +456,7 @@ bool FieldPC::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists
 		aTex += 20;
 		for(i=0 ; i<nbTiles3 ; ++i)
 		{
-			memcpy(&tile, &constData[aTex+i*52], 34);
+			memcpy(&tile, constData + aTex+i*52, 34);
 			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
 			{
 				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
@@ -470,7 +471,7 @@ bool FieldPC::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists
 		aTex += 20;
 		for(i=0 ; i<nbTiles4 ; ++i)
 		{
-			memcpy(&tile, &constData[aTex+i*52], 34);
+			memcpy(&tile, constData + aTex+i*52, 34);
 			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
 			{
 				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
@@ -526,7 +527,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 
 	sectionPositions[0] = 42;
 	for(quint8 i=1 ; i<9 ; ++i)
-		memcpy(&sectionPositions[i], &decompresseData[6+4*i], 4);
+		memcpy(sectionPositions + i, decompresseData + 6+4*i, 4);
 
 	// Header + pos section 1
 	toc.append("\x00\x00", 2);
@@ -539,7 +540,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[sectionPositions[0]], sectionPositions[1]-sectionPositions[0]);
+		newData.append(decompresseData + sectionPositions[0], sectionPositions[1]-sectionPositions[0]);
 	}
 
 	size = 42 + newData.size();
@@ -551,7 +552,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[sectionPositions[1]], sectionPositions[2]-sectionPositions[1]);
+		newData.append(decompresseData + sectionPositions[1], sectionPositions[2]-sectionPositions[1]);
 	}
 
 	size = 42 + newData.size();
@@ -563,14 +564,14 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[sectionPositions[2]], sectionPositions[3]-sectionPositions[2]);
+		newData.append(decompresseData + sectionPositions[2], sectionPositions[3]-sectionPositions[2]);
 	}
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4); // pos section 4
 	
 	// Section 4 (background palette PC)
-	newData.append(&decompresseData[sectionPositions[3]], sectionPositions[4]-sectionPositions[3]);
+	newData.append(decompresseData + sectionPositions[3], sectionPositions[4]-sectionPositions[3]);
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4); // pos section 5
@@ -581,14 +582,14 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[sectionPositions[4]], sectionPositions[5]-sectionPositions[4]);
+		newData.append(decompresseData + sectionPositions[4], sectionPositions[5]-sectionPositions[4]);
 	}
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4); // pos section 6
 
 	// Section 6 (background tileMap -unused-)
-	newData.append(&decompresseData[sectionPositions[5]], sectionPositions[6]-sectionPositions[5]);
+	newData.append(decompresseData + sectionPositions[5], sectionPositions[6]-sectionPositions[5]);
 
 	size = 42 + newData.size();
 	toc.append((char *)&size, 4); // pos section 7
@@ -599,7 +600,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[sectionPositions[6]], sectionPositions[7]-sectionPositions[6]);
+		newData.append(decompresseData + sectionPositions[6], sectionPositions[7]-sectionPositions[6]);
 	}
 
 	size = 42 + newData.size();
@@ -611,7 +612,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
-		newData.append(&decompresseData[sectionPositions[7]], sectionPositions[8]-sectionPositions[7]);
+		newData.append(decompresseData + sectionPositions[7], sectionPositions[8]-sectionPositions[7]);
 	}
 
 	size = 42 + newData.size();

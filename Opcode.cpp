@@ -2213,7 +2213,7 @@ void OpcodeBGPDH::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	layerID = params.at(1);
-	memcpy(&targetZ, &(params.constData()[2]), 2); // bank 2 ???
+	memcpy(&targetZ, params.constData() + 2, 2); // bank 2 ???
 }
 
 QString OpcodeBGPDH::toString() const
@@ -2246,8 +2246,8 @@ void OpcodeBGSCR::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	layerID = params.at(1);
-	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
-	memcpy(&targetY, &(params.constData()[4]), 2); // bank 2
+	memcpy(&targetX, params.constData() + 2, 2); // bank 1
+	memcpy(&targetY, params.constData() + 4, 2); // bank 2
 }
 
 QString OpcodeBGSCR::toString() const
@@ -2314,10 +2314,10 @@ OpcodeWindow::OpcodeWindow(const QByteArray &params)
 void OpcodeWindow::setParams(const QByteArray &params)
 {
 	windowID = params.at(0);
-	memcpy(&targetX, &(params.constData()[1]), 2);
-	memcpy(&targetY, &(params.constData()[3]), 2);
-	memcpy(&width, &(params.constData()[5]), 2);
-	memcpy(&height, &(params.constData()[7]), 2);
+	memcpy(&targetX, params.constData() + 1, 2);
+	memcpy(&targetY, params.constData() + 3, 2);
+	memcpy(&width, params.constData() + 5, 2);
+	memcpy(&height, params.constData() + 7, 2);
 }
 
 QByteArray OpcodeWindow::params() const
@@ -2597,7 +2597,7 @@ void OpcodeWNUMB::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	windowID = params.at(1);
-	memcpy(&value, &(params.constData()[2]), 4);// bank 1 and 2
+	memcpy(&value, params.constData() + 2, 4);// bank 1 and 2
 	digitCount = params.at(6);
 }
 
@@ -2685,7 +2685,7 @@ OpcodeGOLD::OpcodeGOLD(const QByteArray &params)
 void OpcodeGOLD::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&value, &(params.constData()[1]), 4);// bank 1 and 2
+	memcpy(&value, params.constData() + 1, 4);// bank 1 and 2
 }
 
 QByteArray OpcodeGOLD::params() const
@@ -2907,7 +2907,7 @@ void OpcodeMPRA2::setParams(const QByteArray &params)
 	banks = params.at(0);
 	windowID = params.at(1);
 	windowVarID = params.at(2);
-	memcpy(&value, &(params.constData()[3]), 2); // bank 2
+	memcpy(&value, params.constData() + 3, 2); // bank 2
 }
 
 QString OpcodeMPRA2::toString() const
@@ -2984,7 +2984,7 @@ void OpcodeHPMP::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
 	partyID = params.at(1);
-	memcpy(&value, &(params.constData()[2]), 2); // bank 2??
+	memcpy(&value, params.constData() + 2, 2); // bank 2??
 }
 
 QByteArray OpcodeHPMP::params() const
@@ -3261,8 +3261,8 @@ OpcodeWMOVE::OpcodeWMOVE(const QByteArray &params)
 void OpcodeWMOVE::setParams(const QByteArray &params)
 {
 	windowID = params.at(0);
-	memcpy(&relativeX, &(params.constData()[1]), 2);
-	memcpy(&relativeY, &(params.constData()[3]), 2);
+	memcpy(&relativeX, params.constData() + 1, 2);
+	memcpy(&relativeY, params.constData() + 3, 2);
 }
 
 QString OpcodeWMOVE::toString() const
@@ -3532,7 +3532,7 @@ OpcodeItem::OpcodeItem(const QByteArray &params)
 void OpcodeItem::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&itemID, &(params.constData()[1]), 2); // bank 1
+	memcpy(&itemID, params.constData() + 1, 2); // bank 1
 	quantity = params.at(3); // bank 2
 }
 
@@ -3615,7 +3615,7 @@ void OpcodeSMTRA::setParams(const QByteArray &params)
 	banks[1] = params.at(1);
 	materiaID = params.at(2); // bank 1
 	APCount = 0;
-	memcpy(&APCount, &(params.constData()[3]), 3); // bank 2, bank 3, bank 4
+	memcpy(&APCount, params.constData() + 3, 3); // bank 2, bank 3, bank 4
 }
 
 QString OpcodeSMTRA::toString() const
@@ -3656,7 +3656,7 @@ void OpcodeDMTRA::setParams(const QByteArray &params)
 	banks[1] = params.at(1);
 	materiaID = params.at(2); // bank 1
 	APCount = 0;
-	memcpy(&APCount, &(params.constData()[3]), 3); // bank 2, bank 3, bank 4
+	memcpy(&APCount, params.constData() + 3, 3); // bank 2, bank 3, bank 4
 	quantity = params.at(6);
 }
 
@@ -3701,7 +3701,7 @@ void OpcodeCMTRA::setParams(const QByteArray &params)
 	banks[2] = params.at(2);
 	materiaID = params.at(3); // bank 1
 	APCount = 0;
-	memcpy(&APCount, &(params.constData()[4]), 3); // bank 2, bank 3, bank 4
+	memcpy(&APCount, params.constData() + 4, 3); // bank 2, bank 3, bank 4
 	unknown = params.at(7);
 	varQuantity = params.at(8); // bank 5
 }
@@ -3792,9 +3792,9 @@ OpcodeMAPJUMP::OpcodeMAPJUMP(const QByteArray &params)
 void OpcodeMAPJUMP::setParams(const QByteArray &params)
 {
 	memcpy(&fieldID, params.constData(), 2);
-	memcpy(&targetX, &(params.constData()[2]), 2);
-	memcpy(&targetY, &(params.constData()[4]), 2);
-	memcpy(&targetI, &(params.constData()[6]), 2);
+	memcpy(&targetX, params.constData() + 2, 2);
+	memcpy(&targetY, params.constData() + 4, 2);
+	memcpy(&targetI, params.constData() + 6, 2);
 	direction = params.at(8);
 }
 
@@ -3868,7 +3868,7 @@ OpcodeSCRLA::OpcodeSCRLA(const QByteArray &params)
 void OpcodeSCRLA::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&speed, &(params.constData()[1]), 2); // bank 2
+	memcpy(&speed, params.constData() + 1, 2); // bank 2
 	groupID = params.at(3);
 	scrollType = params.at(4);
 }
@@ -3904,8 +3904,8 @@ OpcodeSCR2D::OpcodeSCR2D(const QByteArray &params)
 void OpcodeSCR2D::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&targetX, &(params.constData()[1]), 2); // bank 1
-	memcpy(&targetY, &(params.constData()[3]), 2); // bank 2
+	memcpy(&targetX, params.constData() + 1, 2); // bank 1
+	memcpy(&targetY, params.constData() + 3, 2); // bank 2
 }
 
 QString OpcodeSCR2D::toString() const
@@ -3949,9 +3949,9 @@ void OpcodeSCR2DC::setParams(const QByteArray &params)
 {
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
-	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
-	memcpy(&targetY, &(params.constData()[4]), 2); // bank 2
-	memcpy(&speed, &(params.constData()[6]), 2); // bank 4
+	memcpy(&targetX, params.constData() + 2, 2); // bank 1
+	memcpy(&targetY, params.constData() + 4, 2); // bank 2
+	memcpy(&speed, params.constData() + 6, 2); // bank 4
 }
 
 QString OpcodeSCR2DC::toString() const
@@ -3999,9 +3999,9 @@ void OpcodeSCR2DL::setParams(const QByteArray &params)
 {
 	banks[0] = params.at(0);
 	banks[1] = params.at(1);
-	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
-	memcpy(&targetY, &(params.constData()[4]), 2); // bank 2
-	memcpy(&speed, &(params.constData()[6]), 2); // bank 4
+	memcpy(&targetX, params.constData() + 2, 2); // bank 1
+	memcpy(&targetY, params.constData() + 4, 2); // bank 2
+	memcpy(&speed, params.constData() + 6, 2); // bank 4
 }
 
 QString OpcodeSCR2DL::toString() const
@@ -4060,8 +4060,8 @@ OpcodeVWOFT::OpcodeVWOFT(const QByteArray &params)
 void OpcodeVWOFT::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&unknown1, &(params.constData()[1]), 2); // bank 1
-	memcpy(&unknown2, &(params.constData()[3]), 2); // bank 2
+	memcpy(&unknown1, params.constData() + 1, 2); // bank 1
+	memcpy(&unknown2, params.constData() + 3, 2); // bank 2
 	unknown3 = params.at(5);
 }
 
@@ -4212,7 +4212,7 @@ OpcodeSCRLP::OpcodeSCRLP(const QByteArray &params)
 void OpcodeSCRLP::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&speed, &(params.constData()[1]), 2); // bank 2
+	memcpy(&speed, params.constData() + 1, 2); // bank 2
 	partyID = params.at(3);
 	scrollType = params.at(4);
 }
@@ -4248,7 +4248,7 @@ OpcodeBATTLE::OpcodeBATTLE(const QByteArray &params)
 void OpcodeBATTLE::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&battleID, &(params.constData()[1]), 2); // bank 2
+	memcpy(&battleID, params.constData() + 1, 2); // bank 2
 }
 
 QString OpcodeBATTLE::toString() const
@@ -4498,7 +4498,7 @@ void OpcodeOperation2::setParams(const QByteArray &params)
 	banks = (quint8)params.at(0);
 	var = (quint8)params.at(1);
 	value = 0;
-	memcpy(&value, &(params.constData()[2]), 2);
+	memcpy(&value, params.constData() + 2, 2);
 }
 
 QByteArray OpcodeOperation2::params() const
@@ -5310,8 +5310,8 @@ void OpcodeSEARCHX::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 3);
 	searchStart = (quint8)params.at(3);
-	memcpy(&start, &(params.constData()[4]), 2); // bank 2
-	memcpy(&end, &(params.constData()[6]), 2); // bank 3
+	memcpy(&start, params.constData() + 4, 2); // bank 2
+	memcpy(&end, params.constData() + 6, 2); // bank 3
 	value = (quint8)params.at(8); // bank 4
 	varResult = (quint8)params.at(9); // bank 6
 }
@@ -5472,10 +5472,10 @@ OpcodeXYZI::OpcodeXYZI(const QByteArray &params)
 void OpcodeXYZI::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
-	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
-	memcpy(&targetY, &(params.constData()[4]), 2); // bank 2
-	memcpy(&targetZ, &(params.constData()[6]), 2); // bank 3
-	memcpy(&targetI, &(params.constData()[8]), 2); // bank 4
+	memcpy(&targetX, params.constData() + 2, 2); // bank 1
+	memcpy(&targetY, params.constData() + 4, 2); // bank 2
+	memcpy(&targetZ, params.constData() + 6, 2); // bank 3
+	memcpy(&targetI, params.constData() + 8, 2); // bank 4
 }
 
 QString OpcodeXYZI::toString() const
@@ -5517,9 +5517,9 @@ OpcodeXYI::OpcodeXYI(const QByteArray &params)
 void OpcodeXYI::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
-	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
-	memcpy(&targetY, &(params.constData()[4]), 2); // bank 2
-	memcpy(&targetI, &(params.constData()[6]), 2); // bank 3
+	memcpy(&targetX, params.constData() + 2, 2); // bank 1
+	memcpy(&targetY, params.constData() + 4, 2); // bank 2
+	memcpy(&targetI, params.constData() + 6, 2); // bank 3
 }
 
 QString OpcodeXYI::toString() const
@@ -5557,9 +5557,9 @@ OpcodeXYZ::OpcodeXYZ(const QByteArray &params)
 void OpcodeXYZ::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
-	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
-	memcpy(&targetY, &(params.constData()[4]), 2); // bank 2
-	memcpy(&targetZ, &(params.constData()[6]), 2); // bank 3
+	memcpy(&targetX, params.constData() + 2, 2); // bank 1
+	memcpy(&targetY, params.constData() + 4, 2); // bank 2
+	memcpy(&targetZ, params.constData() + 6, 2); // bank 3
 }
 
 QString OpcodeXYZ::toString() const
@@ -5597,8 +5597,8 @@ OpcodeMOVE::OpcodeMOVE(const QByteArray &params)
 void OpcodeMOVE::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&targetX, &(params.constData()[1]), 2); // bank 1
-	memcpy(&targetY, &(params.constData()[3]), 2); // bank 2
+	memcpy(&targetX, params.constData() + 1, 2); // bank 1
+	memcpy(&targetY, params.constData() + 3, 2); // bank 2
 }
 
 QString OpcodeMOVE::toString() const
@@ -5632,8 +5632,8 @@ OpcodeCMOVE::OpcodeCMOVE(const QByteArray &params)
 void OpcodeCMOVE::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&targetX, &(params.constData()[1]), 2); // bank 1
-	memcpy(&targetY, &(params.constData()[3]), 2); // bank 2
+	memcpy(&targetX, params.constData() + 1, 2); // bank 1
+	memcpy(&targetY, params.constData() + 3, 2); // bank 2
 }
 
 QString OpcodeCMOVE::toString() const
@@ -5726,8 +5726,8 @@ OpcodeFMOVE::OpcodeFMOVE(const QByteArray &params)
 void OpcodeFMOVE::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&targetX, &(params.constData()[1]), 2);
-	memcpy(&targetY, &(params.constData()[3]), 2);
+	memcpy(&targetX, params.constData() + 1, 2);
+	memcpy(&targetY, params.constData() + 3, 2);
 }
 
 QString OpcodeFMOVE::toString() const
@@ -5873,7 +5873,7 @@ OpcodeMSPED::OpcodeMSPED(const QByteArray &params)
 void OpcodeMSPED::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&speed, &(params.constData()[1]), 2); // bank 2
+	memcpy(&speed, params.constData() + 1, 2); // bank 2
 }
 
 QString OpcodeMSPED::toString() const
@@ -6224,7 +6224,7 @@ OpcodeASPED::OpcodeASPED(const QByteArray &params)
 void OpcodeASPED::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&speed, &(params.constData()[1]), 2); // bank 2
+	memcpy(&speed, params.constData() + 1, 2); // bank 2
 }
 
 QString OpcodeASPED::toString() const
@@ -6276,10 +6276,10 @@ OpcodeJUMP::OpcodeJUMP(const QByteArray &params)
 void OpcodeJUMP::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
-	memcpy(&targetX, &(params.constData()[2]), 2);
-	memcpy(&targetY, &(params.constData()[4]), 2);
-	memcpy(&targetI, &(params.constData()[6]), 2);
-	memcpy(&height, &(params.constData()[8]), 2);
+	memcpy(&targetX, params.constData() + 2, 2);
+	memcpy(&targetY, params.constData() + 4, 2);
+	memcpy(&targetI, params.constData() + 6, 2);
+	memcpy(&height, params.constData() + 8, 2);
 }
 
 QString OpcodeJUMP::toString() const
@@ -6369,10 +6369,10 @@ OpcodeLADER::OpcodeLADER(const QByteArray &params)
 void OpcodeLADER::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
-	memcpy(&targetX, &(params.constData()[2]), 2); // bank 1
-	memcpy(&targetY, &(params.constData()[4]), 2); // bank 2
-	memcpy(&targetZ, &(params.constData()[6]), 2); // bank 3
-	memcpy(&targetI, &(params.constData()[8]), 2); // bank 4
+	memcpy(&targetX, params.constData() + 2, 2); // bank 1
+	memcpy(&targetY, params.constData() + 4, 2); // bank 2
+	memcpy(&targetZ, params.constData() + 6, 2); // bank 3
+	memcpy(&targetI, params.constData() + 8, 2); // bank 4
 	way = params.at(10);
 	animID = params.at(11);
 	direction = params.at(12);
@@ -6427,10 +6427,10 @@ void OpcodeOFST::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
 	moveType = params.at(2);
-	memcpy(&targetX, &(params.constData()[3]), 2); // bank 1
-	memcpy(&targetY, &(params.constData()[5]), 2); // bank 2
-	memcpy(&targetZ, &(params.constData()[7]), 2); // bank 3
-	memcpy(&speed, &(params.constData()[9]), 2); // bank 4
+	memcpy(&targetX, params.constData() + 3, 2); // bank 1
+	memcpy(&targetY, params.constData() + 5, 2); // bank 2
+	memcpy(&targetZ, params.constData() + 7, 2); // bank 3
+	memcpy(&speed, params.constData() + 9, 2); // bank 4
 }
 
 QString OpcodeOFST::toString() const
@@ -6743,11 +6743,11 @@ OpcodeLINE::OpcodeLINE(const QByteArray &params)
 void OpcodeLINE::setParams(const QByteArray &params)
 {
 	memcpy(&targetX1, params.constData(), 2);
-	memcpy(&targetY1, &(params.constData()[2]), 2);
-	memcpy(&targetZ1, &(params.constData()[4]), 2);
-	memcpy(&targetX2, &(params.constData()[6]), 2);
-	memcpy(&targetY2, &(params.constData()[8]), 2);
-	memcpy(&targetZ2, &(params.constData()[10]), 2);
+	memcpy(&targetY1, params.constData() + 2, 2);
+	memcpy(&targetZ1, params.constData() + 4, 2);
+	memcpy(&targetX2, params.constData() + 6, 2);
+	memcpy(&targetY2, params.constData() + 8, 2);
+	memcpy(&targetZ2, params.constData() + 10, 2);
 }
 
 QString OpcodeLINE::toString() const
@@ -6822,12 +6822,12 @@ OpcodeSLINE::OpcodeSLINE(const QByteArray &params)
 void OpcodeSLINE::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 3);
-	memcpy(&targetX1, &(params.constData()[3]), 2); // bank 1
-	memcpy(&targetY1, &(params.constData()[5]), 2); // bank 2
-	memcpy(&targetZ1, &(params.constData()[7]), 2); // bank 3
-	memcpy(&targetX2, &(params.constData()[9]), 2); // bank 4
-	memcpy(&targetY2, &(params.constData()[11]), 2); // bank 5
-	memcpy(&targetZ2, &(params.constData()[13]), 2); // bank 6
+	memcpy(&targetX1, params.constData() + 3, 2); // bank 1
+	memcpy(&targetY1, params.constData() + 5, 2); // bank 2
+	memcpy(&targetZ1, params.constData() + 7, 2); // bank 3
+	memcpy(&targetX2, params.constData() + 9, 2); // bank 4
+	memcpy(&targetY2, params.constData() + 11, 2); // bank 5
+	memcpy(&targetZ2, params.constData() + 13, 2); // bank 6
 }
 
 QString OpcodeSLINE::toString() const
@@ -6877,9 +6877,9 @@ OpcodeSIN::OpcodeSIN(const QByteArray &params)
 void OpcodeSIN::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
-	memcpy(&value1, &(params.constData()[2]), 2); // bank 1
-	memcpy(&value2, &(params.constData()[4]), 2); // bank 2
-	memcpy(&value3, &(params.constData()[6]), 2); // bank 3
+	memcpy(&value1, params.constData() + 2, 2); // bank 1
+	memcpy(&value2, params.constData() + 4, 2); // bank 2
+	memcpy(&value3, params.constData() + 6, 2); // bank 3
 	var = params.at(8); // bank 4
 }
 
@@ -6922,9 +6922,9 @@ OpcodeCOS::OpcodeCOS(const QByteArray &params)
 void OpcodeCOS::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 2);
-	memcpy(&value1, &(params.constData()[2]), 2); // bank 1
-	memcpy(&value2, &(params.constData()[4]), 2); // bank 2
-	memcpy(&value3, &(params.constData()[6]), 2); // bank 3
+	memcpy(&value1, params.constData() + 2, 2); // bank 1
+	memcpy(&value2, params.constData() + 4, 2); // bank 2
+	memcpy(&value3, params.constData() + 6, 2); // bank 3
 	var = params.at(8); // bank 4
 }
 
@@ -6967,7 +6967,7 @@ OpcodeTLKR2::OpcodeTLKR2(const QByteArray &params)
 void OpcodeTLKR2::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&distance, &(params.constData()[1]), 2); // bank 2
+	memcpy(&distance, params.constData() + 1, 2); // bank 2
 }
 
 QString OpcodeTLKR2::toString() const
@@ -6997,7 +6997,7 @@ OpcodeSLDR2::OpcodeSLDR2(const QByteArray &params)
 void OpcodeSLDR2::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&distance, &(params.constData()[1]), 2); // bank 2
+	memcpy(&distance, params.constData() + 1, 2); // bank 2
 }
 
 QString OpcodeSLDR2::toString() const
@@ -7058,11 +7058,11 @@ void OpcodeAKAO2::setParams(const QByteArray &params)
 {
 	memcpy(banks, params.constData(), 3);
 	opcode = (quint8)params.at(3);
-	memcpy(&param1, &(params.constData()[4]), 2); // bank 1
-	memcpy(&param2, &(params.constData()[6]), 2); // bank 2
-	memcpy(&param3, &(params.constData()[8]), 2); // bank 3
-	memcpy(&param4, &(params.constData()[10]), 2); // bank 4
-	memcpy(&param5, &(params.constData()[12]), 2); // bank 6
+	memcpy(&param1, params.constData() + 4, 2); // bank 1
+	memcpy(&param2, params.constData() + 6, 2); // bank 2
+	memcpy(&param3, params.constData() + 8, 2); // bank 3
+	memcpy(&param4, params.constData() + 10, 2); // bank 4
+	memcpy(&param5, params.constData() + 12, 2); // bank 6
 }
 
 QString OpcodeAKAO2::toString() const
@@ -7804,7 +7804,7 @@ OpcodeSOUND::OpcodeSOUND(const QByteArray &params)
 void OpcodeSOUND::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&soundID, &(params.constData()[1]), 2); // bank 1
+	memcpy(&soundID, params.constData() + 1, 2); // bank 1
 	position = params.at(3); // bank 2
 }
 
@@ -7841,10 +7841,10 @@ void OpcodeAKAO::setParams(const QByteArray &params)
 	memcpy(banks, params.constData(), 3);
 	opcode = (quint8)params.at(3);
 	param1 = (quint8)params.at(4); // bank 1
-	memcpy(&param2, &(params.constData()[5]), 2); // bank 2
-	memcpy(&param3, &(params.constData()[7]), 2); // bank 3
-	memcpy(&param4, &(params.constData()[9]), 2); // bank 4
-	memcpy(&param5, &(params.constData()[11]), 2); // bank 6
+	memcpy(&param2, params.constData() + 5, 2); // bank 2
+	memcpy(&param3, params.constData() + 7, 2); // bank 3
+	memcpy(&param4, params.constData() + 9, 2); // bank 4
+	memcpy(&param5, params.constData() + 11, 2); // bank 6
 }
 
 QString OpcodeAKAO::toString() const
@@ -8113,8 +8113,8 @@ OpcodeCMUSC::OpcodeCMUSC(const QByteArray &params)
 void OpcodeCMUSC::setParams(const QByteArray &params)
 {
 	banks = params.at(0);
-	memcpy(&unknown1, &(params.constData()[1]), 2);
-	memcpy(&unknown2, &(params.constData()[3]), 2);
+	memcpy(&unknown1, params.constData() + 1, 2);
+	memcpy(&unknown2, params.constData() + 3, 2);
 }
 
 QString OpcodeCMUSC::toString() const

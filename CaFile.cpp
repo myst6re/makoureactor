@@ -50,7 +50,7 @@ bool CaFile::open(const QByteArray &data)
 	quint32 caCount = caSize / 38;
 
 	for(quint32 i=0 ; i<caCount ; ++i) {
-		memcpy(&camera, &constData[i*38], 38);
+		memcpy(&camera, constData + i*38, 38);
 
 		cameras.append(camera);
 	}

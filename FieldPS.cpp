@@ -132,15 +132,15 @@ bool FieldPS::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists
 	const char *constDatData = datDataDec.constData();
 	quint32 i, start, debutSection3, debutSection4, debut1, debut2, debut3, debut4, debut5;
 
-	memcpy(&start, &constDatData[0], 4);
-	memcpy(&debutSection3, &constDatData[8], 4);
-	memcpy(&debutSection4, &constDatData[12], 4);
+	memcpy(&start, constDatData, 4);
+	memcpy(&debutSection3, constDatData + 8, 4);
+	memcpy(&debutSection4, constDatData + 12, 4);
 
 	start = debutSection3 - start + 28;
-	memcpy(&debut1, &constDatData[start], 4);
-	memcpy(&debut2, &constDatData[start+4], 4);
-	memcpy(&debut3, &constDatData[start+8], 4);
-	memcpy(&debut4, &constDatData[start+12], 4);
+	memcpy(&debut1, constDatData + start, 4);
+	memcpy(&debut2, constDatData + start+4, 4);
+	memcpy(&debut3, constDatData + start+8, 4);
+	memcpy(&debut4, constDatData + start+12, 4);
 	debut5 = debutSection4 - debutSection3;
 
 	quint16 tilePos=0, tileCount=0;
@@ -150,7 +150,7 @@ bool FieldPS::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists
 	i = 16;
 	while(i<debut1)
 	{
-		memcpy(&type, &constDatData[start+i], 2);
+		memcpy(&type, constDatData + start+i, 2);
 
 		if(type==0x7FFF)
 		{
@@ -160,12 +160,12 @@ bool FieldPS::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists
 		{
 			if(type==0x7FFE)
 			{
-				memcpy(&tilePos, &constDatData[start+i-4], 2);
-				memcpy(&tileCount, &constDatData[start+i-2], 2);
+				memcpy(&tilePos, constDatData + start+i-4, 2);
+				memcpy(&tileCount, constDatData + start+i-2, 2);
 			}
 			else {
-				memcpy(&tilePos, &constDatData[start+i+2], 2);
-				memcpy(&tileCount, &constDatData[start+i+4], 2);
+				memcpy(&tilePos, constDatData + start+i+2, 2);
+				memcpy(&tileCount, constDatData + start+i+4, 2);
 			}
 			i+=4;
 		}
@@ -184,9 +184,9 @@ bool FieldPS::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists
 	layerExists[0] = size > 0;
 	for(i=0 ; i<size ; ++i)
 	{
-		memcpy(&tile1, &constDatData[start+debut3+i*14], 8);
+		memcpy(&tile1, constDatData + start+debut3+i*14, 8);
 		if(qAbs(tile1.cibleX) < 1000 || qAbs(tile1.cibleY) < 1000) {
-			memcpy(&tile3, &constDatData[start+debut3+i*14+10], 4);
+			memcpy(&tile3, constDatData + start+debut3+i*14+10, 4);
 			if(tile3.param)
 			{
 				usedParams.insert(tile3.param, usedParams.value(tile3.param) | tile3.state);
@@ -201,9 +201,9 @@ bool FieldPS::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists
 	size = (debut5-debut4)/10;
 	for(i=0 ; i<size ; ++i)
 	{
-		memcpy(&tile1, &constDatData[start+debut4+i*10], 8);
+		memcpy(&tile1, constDatData + start+debut4+i*10, 8);
 		if(qAbs(tile1.cibleX) < 1000 || qAbs(tile1.cibleY) < 1000) {
-			memcpy(&tile4, &constDatData[start+debut4+i*10+8], 2);
+			memcpy(&tile4, constDatData + start+debut4+i*10+8, 2);
 			if(tile4.param)
 			{
 				usedParams.insert(tile4.param, usedParams.value(tile4.param) | tile4.state);
@@ -253,13 +253,13 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 
 	if(mimDataSize < headerPal.size + 12)	return QPixmap();
 
-	memcpy(&headerImg, &constMimData[headerPal.size], 12);
+	memcpy(&headerImg, constMimData + headerPal.size, 12);
 	
 	headerImg.w *= 2;
 
 	if(headerPal.size+headerImg.size+12 < mimDataSize)
 	{
-		memcpy(&headerEffect, &constMimData[headerPal.size+headerImg.size], 12);
+		memcpy(&headerEffect, constMimData + headerPal.size+headerImg.size, 12);
 		headerEffect.w *= 2;
 	}
 	else
@@ -277,17 +277,17 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 
 	if(datDataSize < 16)	return QPixmap();
 
-	memcpy(&start, &constDatData[0], 4);
-	memcpy(&debutSection3, &constDatData[8], 4);
-	memcpy(&debutSection4, &constDatData[12], 4);
+	memcpy(&start, constDatData, 4);
+	memcpy(&debutSection3, constDatData + 8, 4);
+	memcpy(&debutSection4, constDatData + 12, 4);
 
 	/* // MODEL SECTION
 	quint32 debutSection7, start2 = debutSection7 - start + 28;
 	quint16 size7, nb_model7;
 
-	memcpy(&debutSection7, &constDatData[24], 4);
-	memcpy(&size7, &constDatData[start2], 2);
-	memcpy(&nb_model7, &constDatData[start2+2], 2);
+	memcpy(&debutSection7, constDatData + 24, 4);
+	memcpy(&size7, constDatData + start2, 2);
+	memcpy(&nb_model7, constDatData + start2+2, 2);
 	qDebug() << QString("Size = %1 | nbModels = %2").arg(size7).arg(nb_model7);
 	for(i=0 ; i<nb_model7 ; ++i) {
 		qDebug() << QString("??? = %1 | ??? = %2 | ??? = %3 | nbAnims = %4").arg((quint8)datData.at(start2+4+i*8)).arg((quint8)datData.at(start2+5+i*8)).arg((quint8)datData.at(start2+6+i*8)).arg((quint8)datData.at(start2+7+i*8));
@@ -300,10 +300,10 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 
 	if(datDataSize < start+16)	return QPixmap();
 
-	memcpy(&debut1, &constDatData[start], 4);
-	memcpy(&debut2, &constDatData[start+4], 4);
-	memcpy(&debut3, &constDatData[start+8], 4);
-	memcpy(&debut4, &constDatData[start+12], 4);
+	memcpy(&debut1, constDatData + start, 4);
+	memcpy(&debut2, constDatData + start+4, 4);
+	memcpy(&debut3, constDatData + start+8, 4);
+	memcpy(&debut4, constDatData + start+12, 4);
 	debut5 = debutSection4 - debutSection3;
 	
 	quint16 tilePos=0, tileCount=0;
@@ -315,7 +315,7 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	{
 		if(datDataSize < start+i+2)	return QPixmap();
 
-		memcpy(&type, &constDatData[start+i], 2);
+		memcpy(&type, constDatData + start+i, 2);
 		
 		if(type==0x7FFF)
 		{
@@ -326,16 +326,16 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 		{
 			if(type==0x7FFE)
 			{
-				memcpy(&tilePos, &constDatData[start+i-4], 2);
-				memcpy(&tileCount, &constDatData[start+i-2], 2);
+				memcpy(&tilePos, constDatData + start+i-4, 2);
+				memcpy(&tileCount, constDatData + start+i-2, 2);
 				
 				nbTilesTex.append(tilePos+tileCount);
 			}
 			else {
 				if(datDataSize < start+i+6)	return QPixmap();
 
-				memcpy(&tilePos, &constDatData[start+i+2], 2);
-				memcpy(&tileCount, &constDatData[start+i+4], 2);
+				memcpy(&tilePos, constDatData + start+i+2, 2);
+				memcpy(&tileCount, constDatData + start+i+4, 2);
 			}
 			i+=4;
 		}
@@ -357,7 +357,7 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	if(datDataSize < start+debut2+size*2)	return QPixmap();
 
 	for(i=0 ; i<size ; ++i) {
-		memcpy(&tile2, &constDatData[start+debut2+i*2], 2);
+		memcpy(&tile2, constDatData + start+debut2+i*2, 2);
 		tiles2.append(tile2);
 	}
 	if(tiles2.isEmpty()) {
@@ -371,7 +371,7 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 
 	for(i=0 ; i<size ; ++i)
 	{
-		memcpy(&tile1, &constDatData[start+debut1+i*8], 8);
+		memcpy(&tile1, constDatData + start+debut1+i*8, 8);
 		if(qAbs(tile1.cibleX) < 1000 && qAbs(tile1.cibleY) < 1000) {
 			if(tile1.cibleX >= 0 && tile1.cibleX > largeurMax)
 				largeurMax = tile1.cibleX;
@@ -415,7 +415,7 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 
 	for(i=0 ; i<size ; ++i)
 	{
-		memcpy(&tile1, &constDatData[start+debut3+i*14], 8);
+		memcpy(&tile1, constDatData + start+debut3+i*14, 8);
 		if(qAbs(tile1.cibleX) < 1000 || qAbs(tile1.cibleY) < 1000) {
 			if(tile1.cibleX >= 0 && tile1.cibleX > largeurMax)
 				largeurMax = tile1.cibleX;
@@ -432,8 +432,8 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 			tile.srcY = tile1.srcY;
 			tile.paletteID = tile1.palID;
 
-			memcpy(&tile2, &constDatData[start+debut3+i*14+8], 2);
-			memcpy(&tile3, &constDatData[start+debut3+i*14+10], 4);
+			memcpy(&tile2, constDatData + start+debut3+i*14+8, 2);
+			memcpy(&tile3, constDatData + start+debut3+i*14+10, 4);
 
 			tile.param = tile3.param;
 			tile.state = tile3.state;
@@ -464,7 +464,7 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 
 	for(i=0 ; i<size ; ++i)
 	{
-		memcpy(&tile1, &constDatData[start+debut4+i*10], 8);
+		memcpy(&tile1, constDatData + start+debut4+i*10, 8);
 		if(qAbs(tile1.cibleX) < 1000 || qAbs(tile1.cibleY) < 1000) {
 			if(tile1.cibleX >= 0 && tile1.cibleX+16 > largeurMax)
 				largeurMax = tile1.cibleX+16;
@@ -481,7 +481,7 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 			tile.srcY = tile1.srcY;
 			tile.paletteID = tile1.palID;
 
-			memcpy(&tile4, &constDatData[start+debut4+i*10+8], 2);
+			memcpy(&tile4, constDatData + start+debut4+i*10+8, 2);
 
 			tile.param = tile4.param;
 			tile.state = tile4.state;
@@ -536,7 +536,7 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 
 			for(quint16 j=0 ; j<width*tile.size ; j+=2)
 			{
-				memcpy(&deuxOctets, &constMimData[origin+j], 2);
+				memcpy(&deuxOctets, constMimData + origin+j, 2);
 				if(deuxOctets!=0)
 					pixels[baseX + right + top] = PsColor::fromPsColor(deuxOctets);
 
@@ -607,7 +607,7 @@ bool FieldPS::save(QByteArray &newData, bool compress)
 	if(decompresse.isEmpty())	return false;
 
 	for(quint8 i=0 ; i<7 ; ++i)
-		memcpy(&debutSections[i], &decompresseData[4*i], 4);
+		memcpy(debutSections + i, decompresseData + 4*i, 4);
 
 	padd = debutSections[0] - 28;
 

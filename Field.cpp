@@ -267,7 +267,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 		quint32 sectionPositions[9];
 
 		if(data.size() < 6 + 9 * 4)	return 3;
-		memcpy(sectionPositions, &(data.constData()[6]), 9 * 4); // header
+		memcpy(sectionPositions, data.constData() + 6, 9 * 4); // header
 
 		if(part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
