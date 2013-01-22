@@ -165,10 +165,12 @@ quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, i
 		texHeaders.append(texHeader);
 	}
 
+	/*
+	// DEBUG
 	for(int tex=0 ; tex<texHeaders.size() ; ++tex) {
 		if(tex==1)	continue;
 		openTexture(constData, 0, texHeaders.at(tex), texHeaders.at(1), 1).save(QString("Makou-Texture%1.png").arg(tex));
-	}
+	}*/
 
 	if(model_id < modelLoader->modelCount()) {
 		TdbFile tdb;
