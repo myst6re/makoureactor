@@ -40,9 +40,14 @@ qint64 FieldIO::readData(char *data, qint64 maxSize)
 		if(pos() < _cache.size()) {
 			const char *constData = _cache.constData();
 			qint64 r = qMin(maxSize, _cache.size() - pos());
-			memcpy(data, constData + pos(), r);
-
-			return r;
+			if(r > 0) {
+				memcpy(data, constData + pos(), r);
+				return r;
+			} else if(r == 0) {
+				return 0;
+			} else {
+				return -1;
+			}
 		} else {
 			return 0;
 		}
@@ -53,7 +58,10 @@ qint64 FieldIO::readData(char *data, qint64 maxSize)
 bool FieldIO::setCache()
 {
 	if(_cache.isEmpty()) {
-		if(!_field->save(_cache, true))				return false;
+		if(!_field->save(_cache, true)) {
+			_cache.clear();
+			return false;
+		}
 	}
 	return true;
 }
@@ -252,70 +260,37 @@ QByteArray FieldArchive::getModelData(Field *field, bool unlzs)
 
 QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 {
-	quint32 lzsSize;
 	QByteArray data;
 
 	if(isLgp()) {
 		if(!lgp->isOpen() && !lgp->open()) return QByteArray();
-
 		data = lgp->fileData(fileName);
-
-		if(data.size() < 4)		return QByteArray();
-
-		const char *lzsDataConst = data.constData();
-		memcpy(&lzsSize, lzsDataConst, 4);
-
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)data.size() != lzsSize + 4)
-			return QByteArray();
-
-		data = unlzs ? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4))) : data;
-
-		return data;
 	} else if(isIso()) {
 		data = iso->file(isoFieldDirectory->file(fileName.toUpper()));
-
-		if(data.size() < 4)		return QByteArray();
-
-		const char *lzsDataConst = data.constData();
-		memcpy(&lzsSize, lzsDataConst, 4);
-
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)data.size() != lzsSize + 4)
-			return QByteArray();
-
-		return unlzs ? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4))) : data;
 	} else if(isDirectory()) {
-		QFile f(chemin()+fileName.toUpper());
+		QFile f(chemin() + fileName.toUpper());
 		if(!f.open(QIODevice::ReadOnly))	return QByteArray();
 		data = f.readAll();
 		f.close();
-
-		if(data.size() < 4)		return QByteArray();
-
-		const char *lzsDataConst = data.constData();
-		memcpy(&lzsSize, lzsDataConst, 4);
-
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)data.size() != lzsSize + 4)
-			return QByteArray();
-
-		return unlzs ? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4))) : data;
 	} else if(isDatFile()) {
 		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))		return QByteArray();
 		fic->reset();
 		data = fic->readAll();
 		fic->close();
-
-		if(data.size() < 4)		return QByteArray();
-
-		const char *lzsDataConst = data.constData();
-		memcpy(&lzsSize, lzsDataConst, 4);
-
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)data.size() != lzsSize + 4)
-			return QByteArray();
-
-		return unlzs ? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4))) : data;
 	} else {
 		return QByteArray();
 	}
+
+	if(data.size() < 4)		return QByteArray();
+
+	const char *lzsDataConst = data.constData();
+	quint32 lzsSize;
+	memcpy(&lzsSize, lzsDataConst, 4);
+
+	if(!Config::value("lzsNotCheck").toBool() && (quint32)data.size() != lzsSize + 4)
+		return QByteArray();
+
+	return unlzs ? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4))) : data;
 }
 
 TutFile *FieldArchive::getTut(const QString &name)
