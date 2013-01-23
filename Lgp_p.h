@@ -69,7 +69,9 @@ public:
 	void setFilePosition(quint32 filePosition);
 	void setFileSize(quint32 fileSize);
 	QIODevice *file() const;
+	QIODevice *modifiedFile() const;
 	void setFile(QIODevice *io);
+	void setModifiedFile(QIODevice *io);
 private:
 	QString _fileName;
 	QString _fileDir;
@@ -77,6 +79,7 @@ private:
 	quint32 _fileSize;
 	bool _hasFileSize;
 	QIODevice *_io;
+	QIODevice *_newIO;
 };
 
 class LgpIO : public QIODevice

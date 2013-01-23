@@ -24,7 +24,7 @@
 
 LgpHeaderEntry::LgpHeaderEntry(const QString &fileName, quint32 filePosition) :
 	_fileName(fileName), _filePosition(filePosition),
-	_hasFileSize(false), _io(NULL)
+	_hasFileSize(false), _io(NULL), _newIO(NULL)
 {
 }
 
@@ -32,6 +32,9 @@ LgpHeaderEntry::~LgpHeaderEntry()
 {
 	if(_io != NULL) {
 		_io->deleteLater();
+	}
+	if(_newIO != NULL) {
+		_newIO->deleteLater();
 	}
 }
 
@@ -99,9 +102,19 @@ QIODevice *LgpHeaderEntry::file() const
 	return _io;
 }
 
+QIODevice *LgpHeaderEntry::modifiedFile() const
+{
+	return _newIO;
+}
+
 void LgpHeaderEntry::setFile(QIODevice *io)
 {
 	_io = io;
+}
+
+void LgpHeaderEntry::setModifiedFile(QIODevice *io)
+{
+	_newIO = io;
 }
 
 LgpIO::LgpIO(QIODevice *lgp, LgpHeaderEntry *header, QObject *parent) :

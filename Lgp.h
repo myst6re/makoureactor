@@ -85,6 +85,8 @@ public:
 	bool fileExists(const QString &filePath);
 	QIODevice *file(const QString &filePath);
 	QByteArray fileData(const QString &filePath);
+	QIODevice *modifiedFile(const QString &filePath);
+	QByteArray modifiedFileData(const QString &filePath);
 	bool setFile(const QString &filePath, QIODevice *data);
 	bool setFile(const QString &filePath, const QByteArray &data);
 	bool addFile(const QString &filePath, QIODevice *data);

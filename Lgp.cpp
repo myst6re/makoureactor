@@ -247,7 +247,7 @@ bool Lgp::fileExists(const QString &filePath)
 
 /*!
  * Returns the data for the file named \a filePath.
- * \sa fileData()
+ * \sa fileData(), modifiedFile(), modifiedFileData()
  */
 QIODevice *Lgp::file(const QString &filePath)
 {
@@ -281,13 +281,47 @@ QIODevice *Lgp::file(const QString &filePath)
 
 /*!
  * Returns the data for the file named \a filePath.
- * \sa file()
+ * \sa file(), modifiedFile(), modifiedFileData()
  */
 QByteArray Lgp::fileData(const QString &filePath)
 {
 	QIODevice *io = file(filePath);
 	if(io == NULL || !io->open(QIODevice::ReadOnly)) {
-		qWarning() << "fileData error" << (io ? "hasIO" : "notIO");
+		qWarning() << "fileData error";
+		return QByteArray();
+	}
+	QByteArray data = io->readAll();
+	io->close();
+	return data;
+}
+
+/*!
+ * Returns the data, modified by setData if modified, for the file named \a filePath.
+ * \sa file(), fileData(), modifiedFileData()
+ */
+QIODevice *Lgp::modifiedFile(const QString &filePath)
+{
+	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
+	if(entry == NULL) return NULL;
+
+	QIODevice *io = entry->modifiedFile();
+	if(io != NULL) {
+		io->close();
+		return io;
+	} else {
+		return file(filePath);
+	}
+}
+
+/*!
+ * Returns the data, modified by setData if modified, for the file named \a filePath.
+ * \sa file(), fileData(), modifiedFile()
+ */
+QByteArray Lgp::modifiedFileData(const QString &filePath)
+{
+	QIODevice *io = modifiedFile(filePath);
+	if(io == NULL || !io->open(QIODevice::ReadOnly)) {
+		qWarning() << "fileData error";
 		return QByteArray();
 	}
 	QByteArray data = io->readAll();
@@ -306,7 +340,7 @@ bool Lgp::setFile(const QString &filePath, QIODevice *data)
 	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
 	if(entry == NULL) return false;
 
-	entry->setFile(data);
+	entry->setModifiedFile(data);
 
 	return true;
 }
@@ -338,7 +372,7 @@ bool Lgp::addFile(const QString &filePath, QIODevice *data)
 	if(entry != NULL) return false;
 
 	entry = new LgpHeaderEntry(filePath, _file.size());
-	entry->setFile(data);
+	entry->setModifiedFile(data);
 
 	bool ret = _files.addEntry(entry);
 
@@ -805,11 +839,12 @@ bool Lgp::pack(const QString &destination, LgpObserver *observer)
 		// Changes the header info
 		LgpHeaderEntry *newEntry = new LgpHeaderEntry(*lgpEntry);
 		newEntry->setFilePosition(temp.pos());
-		newEntry->setFile(/*new LgpIO(&_file, newEntry)*/0);
+		newEntry->setFile(0);
+		newEntry->setModifiedFile(0);
 		newToc.addEntry(newEntry);
 
 		// Writes the file
-		QIODevice *io = file(path);
+		QIODevice *io = modifiedFile(path);
 		if(io == NULL) {
 			temp.remove();
 			setError(FileNotFoundError, QT_TRANSLATE_NOOP(Lgp, QString("File '%1' not found")
