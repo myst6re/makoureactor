@@ -704,15 +704,7 @@ void FieldArchive::close()
 //	qDebug() << "/FieldArchive::close()";
 }
 
-void FieldArchive::addField(Field *field, QList<QTreeWidgetItem *> &items)
-{
-	QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << field->getName() << QString());
-	item->setData(0, Qt::UserRole, fileList.size());
-	items.append(item);
-	fileList.append(field);
-}
-
-FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
+FieldArchive::ErrorCode FieldArchive::open()
 {
 //	qDebug() << "FieldArchive::open()";
 	foreach(Field *field, fileList)	delete field;
@@ -740,14 +732,14 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 
 			QString path = dir->filePath(list.at(i));
 			QString name = path.mid(path.lastIndexOf('/')+1);
-			addField(new FieldPS(name.left(name.lastIndexOf('.')), this), items);
+			fileList.append(new FieldPS(name.left(name.lastIndexOf('.')), this));
 		}
 
 		// qDebug("Ouverture : %d ms", t.elapsed());
 	} else if(isDatFile()) {
 		QString path = fic->fileName();
 		QString name = path.mid(path.lastIndexOf('/')+1);
-		addField(new FieldPS(name.left(name.lastIndexOf('.')), this), items);
+		fileList.append(new FieldPS(name.left(name.lastIndexOf('.')), this));
 	} else if(isIso()) {
 		isoFieldDirectory = iso->rootDirectory()->directory("FIELD");
 		if(isoFieldDirectory == NULL)	return FieldNotFound;
@@ -765,7 +757,7 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 
 			if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
 				QString name = file->name().mid(file->name().lastIndexOf('/')+1);
-				addField(new FieldPS(name.left(name.lastIndexOf('.')), this), items);
+				fileList.append(new FieldPS(name.left(name.lastIndexOf('.')), this));
 			}
 		}
 		// qDebug("Ouverture : %d ms", t.elapsed());
@@ -798,7 +790,7 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 			} else if(name.endsWith(".tut", Qt::CaseInsensitive)) {
 				tuts.insert(name.toLower().left(name.size()-4), NULL);
 			} else if(!name.contains('.')) {
-				addField(new FieldPC(name, this), items);
+				fileList.append(new FieldPC(name, this));
 				++i;
 			}
 		}
@@ -809,24 +801,26 @@ FieldArchive::ErrorCode FieldArchive::open(QList<QTreeWidgetItem *> &items)
 		// qDebug() << "nbC : " << Opcode::COUNT;
 		// qDebug("-------------------------------------------------");
 	}
-	if(items.isEmpty())	return FieldNotFound;
+	if(fileList.isEmpty())	return FieldNotFound;
 
 	if(Data::field_names.isEmpty()) {
 		Data::openMaplist(isLgp());
 	}
 
-	int index;
-	foreach(QTreeWidgetItem *item, items) {
-		QString name = item->text(0);
-		int id = item->data(0, Qt::UserRole).toInt();
+	int fieldID=0;
+	foreach(Field *f, fileList) {
+		const QString &name = f->getName();
 
+		int index;
+		QString mapId;
 		if((index = Data::field_names.indexOf(name)) != -1) {
-			item->setText(1, QString("%1").arg(index,3));
+			mapId = QString("%1").arg(index, 3);
 		} else {
-			item->setText(1, "~");
+			mapId = "~";
 		}
-		fieldsSortByName.insert(name, id);
-		fieldsSortByMapId.insert(item->text(1), id);
+		fieldsSortByName.insert(name, fieldID);
+		fieldsSortByMapId.insert(mapId, fieldID);
+		++fieldID;
 	}
 
 //	qDebug() << "/FieldArchive::open()";

@@ -476,8 +476,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 	connect(fieldArchive, SIGNAL(progress(int)), progression, SLOT(setValue(int)));
 	connect(fieldArchive, SIGNAL(nbFilesChanged(int)), progression, SLOT(setMaximum(int)));
 
-	QList<QTreeWidgetItem *> items;
-	FieldArchive::ErrorCode error = fieldArchive->open(items);
+	FieldArchive::ErrorCode error = fieldArchive->open();
 	
 	setCursor(Qt::ArrowCursor);
 	progression->hide();
@@ -515,6 +514,24 @@ void Window::open(const QString &cheminFic, bool isDir)
 		fieldArchive->close();
 		QMessageBox::warning(this, tr("Erreur"), out);
 		return;
+	}
+
+	QList<QTreeWidgetItem *> items;
+
+	for(int fieldID=0 ; fieldID<fieldArchive->size() ; ++fieldID) {
+		Field *f = fieldArchive->field(fieldID, false);
+		const QString &name = f->getName();
+
+		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << "");
+		item->setData(0, Qt::UserRole, fieldID);
+		items.append(item);
+
+		int index;
+		if((index = Data::field_names.indexOf(name)) != -1) {
+			item->setText(1, QString("%1").arg(index, 3));
+		} else {
+			item->setText(1, "~");
+		}
 	}
 	
 	fieldList->addTopLevelItems(items);

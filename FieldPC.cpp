@@ -515,15 +515,18 @@ FieldModelFilePC *FieldPC::getFieldModel(const QString &hrc, const QString &a, b
 bool FieldPC::save(QByteArray &newData, bool compress)
 {
 	newData = QByteArray();
-//	qDebug() << "FieldPC::save" << compress << name;
 
-	if(!isOpen())	return false;
+	if(!isOpen()) {
+		return false;
+	}
 
 	QByteArray decompresse = fieldArchive->getFieldData(this), section, toc;
 	const char *decompresseData = decompresse.constData();
 	quint32 sectionPositions[9], size, section_size;
 
-	if(decompresse.isEmpty())	return false;
+	if(decompresse.isEmpty()) {
+		return false;
+	}
 
 	sectionPositions[0] = 42;
 	for(quint8 i=1 ; i<9 ; ++i)

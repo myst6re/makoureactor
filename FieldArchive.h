@@ -18,7 +18,7 @@
 #ifndef DEF_FIELDARCHIVE
 #define DEF_FIELDARCHIVE
 
-#include <QtGui>
+#include <QtCore>
 #include "QLockedFile.h"
 #include "Field.h"
 #include "IsoArchive.h"
@@ -86,7 +86,7 @@ public:
 	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting);
 
 	void close();
-	ErrorCode open(QList<QTreeWidgetItem *> &items);
+	ErrorCode open();
 	ErrorCode save(QString path=QString());
 
 	QString path() const;
@@ -121,7 +121,6 @@ signals:
 private:
 	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
-	void addField(Field *field, QList<QTreeWidgetItem *> &items);
 	bool openField(Field *field, bool dontOptimize=false);
 	void setSaved();
 	QByteArray updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory);
