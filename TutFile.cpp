@@ -90,7 +90,12 @@ bool TutFile::open(const QByteArray &data, bool tutType)
 	tutos.clear();
 	for(int i=0 ; i<positions.size()-1 ; ++i) {
 		if(positions.at(i) < dataSize && positions.at(i) < positions.at(i+1)) {
-			tutos.append(data.mid(positions.at(i), positions.at(i+1)-positions.at(i)));
+			QByteArray t = data.mid(positions.at(i), positions.at(i+1)-positions.at(i));
+			if(t.startsWith("KAO")) {
+				t.prepend('A'); // PC bug
+			}
+//			qDebug() << i << t.left(16).toHex();
+			tutos.append(t);
 		}
 	}
 
@@ -143,7 +148,7 @@ bool TutFile::hasTut() const
 
 bool TutFile::isTut(int tutID) const
 {
-	return tutos.value(tutID).left(4) != "AKAO" && tutos.value(tutID).left(3) != "KAO";// PC bug
+	return !tutos.value(tutID).startsWith("AKAO");
 }
 
 void TutFile::removeTut(int tutID)
@@ -355,7 +360,7 @@ int TutFile::akaoID(int tutID) const
 	QByteArray data = tutos.value(tutID);
 	if(data.size() < 6)		return -1;
 	quint16 id;
-	memcpy(&id, &(data.constData()[4]), 2);
+	memcpy(&id, data.constData() + 4, 2);
 
 	return id;
 }
