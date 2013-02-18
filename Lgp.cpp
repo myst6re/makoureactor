@@ -199,10 +199,71 @@ quint8 LgpToc::lookupValue(const QChar &qc)
 	return c - 'a';
 }
 
+LgpIterator LgpToc::iterator() const
+{
+	return LgpIterator(_header);
+}
+
+LgpIterator::LgpIterator(const QMultiMap<quint16, LgpHeaderEntry *> &header) :
+	_header(header), it(header)
+{
+}
+
+bool LgpIterator::hasNext() const
+{
+	return it.hasNext();
+}
+
+bool LgpIterator::hasPrevious() const
+{
+	return it.hasPrevious();
+}
+
+void LgpIterator::next()
+{
+	it.next();
+}
+
+void LgpIterator::previous()
+{
+	it.previous();
+}
+
+void LgpIterator::toBack()
+{
+	it.toBack();
+}
+
+void LgpIterator::toFront()
+{
+	it.toFront();
+}
+
+QIODevice *LgpIterator::file() const
+{
+	return it.value()->file();
+}
+
+QIODevice *LgpIterator::modifiedFile() const
+{
+	return it.value()->modifiedFile();
+}
+
+const QString &LgpIterator::fileName() const
+{
+	return it.value()->fileName();
+}
+
+Lgp::Lgp() :
+	_error(NoError)
+{
+}
+
 /*!
  * Constructs a new lgp archive object to represent the lgp archive with the given \a name.
  */
-Lgp::Lgp(const QString &name)
+Lgp::Lgp(const QString &name) :
+	_error(NoError)
 {
 	_file.setFileName(name);
 }
@@ -218,8 +279,15 @@ Lgp::~Lgp()
 	_file.deleteLater();
 }
 
+void Lgp::clear()
+{
+	_companyName.clear();
+	_files.clear();
+	_productName.clear();
+}
+
 /*!
- * Returns a list of file names sorted by file position.
+ * Returns a list of file paths sorted by file position.
  */
 QStringList Lgp::fileList()
 {
@@ -230,11 +298,57 @@ QStringList Lgp::fileList()
 	}
 
 	foreach(const LgpHeaderEntry *entry, _files.filesSortedByPosition()) {
-		ret.append(entry->fileName());
+		ret.append(entry->filePath());
 	}
 
 	return ret;
 }
+
+/*!
+ * Returns a list of file names (only files in \a dirPath) sorted by file position.
+ */
+QStringList Lgp::fileListInDir(const QString &dirPath)
+{
+	QStringList ret;
+
+	if(_files.isEmpty() && !openHeader()) {
+		return ret;
+	}
+
+	foreach(const LgpHeaderEntry *entry, _files.filesSortedByPosition()) {
+		if(entry->fileDir().compare(dirPath, Qt::CaseInsensitive) == 0) {
+			ret.append(entry->fileName());
+		}
+	}
+
+	return ret;
+}
+
+/*!
+ * Returns a list of dir names (only dirs in \a dirPath).
+ */
+QStringList Lgp::dirListInDir(const QString &dirPath)
+{
+	QStringList ret;
+
+	if(_files.isEmpty() && !openHeader()) {
+		return ret;
+	}
+
+	foreach(const LgpHeaderEntry *entry, _files.filesSortedByPosition()) {
+		if(entry->fileDir().startsWith(dirPath, Qt::CaseInsensitive)
+				&& entry->fileDir().compare(dirPath, Qt::CaseInsensitive) != 0) {
+			ret.append(entry->fileDir().mid(dirPath.size()));
+		}
+	}
+
+	return ret;
+}
+
+/*LgpIterator Lgp::iterator() const
+{
+	return _files.iterator();
+}*///TODO
 
 /*!
  * Returns true if the file named \a filePath exists; otherwise

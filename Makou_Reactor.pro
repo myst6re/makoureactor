@@ -81,7 +81,8 @@ HEADERS += ApercuBG.h \
 	QLockedFile.h \
 	QTaskBarButton.h \
 	Lgp.h \
-	Lgp_p.h
+	Lgp_p.h \
+    LgpDialog.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -156,13 +157,17 @@ SOURCES += ApercuBG.cpp \
     QLockedFile.cpp \
 	QTaskBarButton.cpp \
 	Lgp.cpp \
-	Lgp_p.cpp
+	Lgp_p.cpp \
+    LgpDialog.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts
 
 RESOURCES += Makou_Reactor.qrc
-macx:ICON = images/Makou_Reactor.icns
+macx {
+	ICON = images/Makou_Reactor.icns
+	LIBS += -lz
+}
 
 win32 {
 	RC_FILE = Makou_Reactor.rc

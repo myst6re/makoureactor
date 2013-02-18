@@ -98,6 +98,8 @@ public:
 	bool isLgp() const;
 	bool isIso() const;
 
+	Lgp *lgp() const;
+
 	void setIsoOut(int value) {
 		QApplication::processEvents();
 		emit progress(value);
@@ -129,7 +131,7 @@ private:
 	QMultiMap<QString, int> fieldsSortByName;
 	QMultiMap<QString, int> fieldsSortByMapId;
 	QLockedFile *fic;
-	Lgp *lgp;
+	Lgp *_lgp;
 	QDir *dir;
 	IsoArchive *iso;
 	IsoDirectory *isoFieldDirectory;

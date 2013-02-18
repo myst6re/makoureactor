@@ -78,7 +78,7 @@ class FieldModelPartPC : public FieldModelPart
 {
 public:
 	FieldModelPartPC();
-	bool open(QFile *);
+	bool open(QIODevice *p_file);
 };
 
 #endif // FIELDMODELPARTPC_H

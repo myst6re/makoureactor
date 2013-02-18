@@ -147,3 +147,8 @@ qint64 LgpIO::readData(char *data, qint64 maxSize)
 	}
 	return -1;
 }
+
+bool LgpIO::canReadLine() const
+{
+	return pos() < size();
+}

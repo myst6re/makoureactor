@@ -67,12 +67,12 @@ bool FieldIO::setCache()
 }
 
 FieldArchive::FieldArchive() :
-	fic(NULL), lgp(NULL), dir(NULL), iso(NULL), isDat(false)
+	fic(NULL), _lgp(NULL), dir(NULL), iso(NULL), isDat(false)
 {
 }
 
 FieldArchive::FieldArchive(const QString &path, bool isDirectory) :
-	fic(NULL), lgp(NULL), dir(NULL), iso(NULL), isDat(false)
+	fic(NULL), _lgp(NULL), dir(NULL), iso(NULL), isDat(false)
 {
 	if(isDirectory) {
 		dir = new QDir(path);
@@ -92,7 +92,7 @@ FieldArchive::FieldArchive(const QString &path, bool isDirectory) :
 			if(isDat) {
 				fic = new QLockedFile(path);
 			} else {
-				lgp = new Lgp(path);
+				_lgp = new Lgp(path);
 			}
 		}
 	}
@@ -106,7 +106,7 @@ FieldArchive::~FieldArchive()
 	foreach(Field *field, fileList)	delete field;
 	foreach(TutFile *tut, tuts)		if(tut != NULL)	delete tut;
 	if(fic!=NULL)	delete fic;
-	if(lgp!=NULL)	delete lgp;
+	if(_lgp!=NULL)	delete _lgp;
 	if(dir!=NULL)	delete dir;
 	if(iso!=NULL)	delete iso;
 	clearCachedData();
@@ -118,8 +118,8 @@ QString FieldArchive::path() const
 		return dir->path();
 	if(fic!=NULL)
 		return fic->fileName();
-	if(lgp!=NULL)
-		return lgp->fileName();
+	if(_lgp!=NULL)
+		return _lgp->fileName();
 	if(iso!=NULL)
 		return iso->fileName();
 
@@ -169,12 +169,17 @@ bool FieldArchive::isDirectory() const
 
 bool FieldArchive::isLgp() const
 {
-	return lgp != NULL;
+	return _lgp != NULL;
 }
 
 bool FieldArchive::isIso() const
 {
 	return iso != NULL;
+}
+
+Lgp *FieldArchive::lgp() const
+{
+	return _lgp;
 }
 
 bool FieldArchive::openField(Field *field, bool dontOptimize)
@@ -263,8 +268,8 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 	QByteArray data;
 
 	if(isLgp()) {
-		if(!lgp->isOpen() && !lgp->open()) return QByteArray();
-		data = lgp->fileData(fileName);
+		if(!_lgp->isOpen() && !_lgp->open()) return QByteArray();
+		data = _lgp->fileData(fileName);
 	} else if(isIso()) {
 		data = iso->file(isoFieldDirectory->file(fileName.toUpper()));
 	} else if(isDirectory()) {
@@ -307,9 +312,9 @@ TutFile *FieldArchive::getTut(const QString &name)
 		if(name.startsWith(tutName, Qt::CaseInsensitive)) {
 			TutFile *tutFile = it.value();
 			if(tutFile == NULL) {
-				if(!lgp->isOpen() && !lgp->open())
+				if(!_lgp->isOpen() && !_lgp->open())
 					return NULL;
-				QByteArray data = lgp->fileData(tutName + ".tut");
+				QByteArray data = _lgp->fileData(tutName + ".tut");
 				if(!data.isEmpty()) {
 					tutFile = new TutFile(data, true);
 					tuts.insert(name, tutFile);
@@ -384,9 +389,23 @@ void FieldArchive::searchAll()
 	bool iff = false, win = false;
 	OpcodeIf *opcodeIf=0;
 
-	for(int i=0 ; i<size ; ++i) {
+	QFile deb("akao_comparison.txt");
+	deb.open(QIODevice::WriteOnly | QIODevice::Text);
+
+
+//	for(int i=0 ; i<size ; ++i) {
+	foreach(int i, fieldsSortByMapId) {
 		Field *field = this->field(i, true);
 		if(field != NULL) {
+			TutFile *tut = field->tutosAndSounds();
+			if(tut->isOpen()) {
+				deb.write(QString("=== %1 ===\n").arg(field->getName()).toLatin1());
+				for(int j=0; j<tut->size(); ++j) {
+					if(!tut->isTut(j)) {
+						deb.write(QString("id= %1\n").arg(tut->akaoID(j)).toLatin1());
+					}
+				}
+			}
 //			qDebug() << field->getName();
 			/*int scriptID=0, opcodeID=0;
 			Section1File *scripts = field->scriptsAndTexts();
@@ -421,7 +440,7 @@ void FieldArchive::searchAll()
 					scriptID++;
 				}
 			}*/
-			QString out;
+			/*QString out;
 			InfFile *inf = field->getInf();
 			if(inf != NULL) {
 				int curExit=0;
@@ -449,7 +468,7 @@ void FieldArchive::searchAll()
 
 				if(!out.isEmpty())
 					qDebug() << out.toLatin1().data();
-			}
+			}*/
 
 		}
 	}
@@ -699,7 +718,7 @@ void FieldArchive::close()
 {
 //	qDebug() << "FieldArchive::close()";
 	if(fic!=NULL)	fic->close();
-	if(lgp!=NULL)	lgp->close();
+	if(_lgp!=NULL)	_lgp->close();
 	clearCachedData();
 //	qDebug() << "/FieldArchive::close()";
 }
@@ -762,9 +781,9 @@ FieldArchive::ErrorCode FieldArchive::open()
 		}
 		// qDebug("Ouverture : %d ms", t.elapsed());
 	} else if(isLgp()) {
-		if(!lgp->isOpen() && !lgp->open())	return ErrorOpening;
+		if(!_lgp->isOpen() && !_lgp->open())	return ErrorOpening;
 
-		QStringList archiveList = lgp->fileList();
+		QStringList archiveList = _lgp->fileList();
 
 		if(archiveList.isEmpty()) {
 			return Invalid;
@@ -784,7 +803,7 @@ FieldArchive::ErrorCode FieldArchive::open()
 			}
 
 			if(name.compare("maplist", Qt::CaseInsensitive) == 0) {
-				if(!Data::openMaplist(lgp->fileData(name))) {
+				if(!Data::openMaplist(_lgp->fileData(name))) {
 					qWarning() << "Cannot open maplist!";
 				}
 			} else if(name.endsWith(".tut", Qt::CaseInsensitive)) {
@@ -872,11 +891,11 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 	}
 	else if(isLgp())
 	{
-		if(!lgp->isOpen() && !lgp->open())	return ErrorOpening;
+		if(!_lgp->isOpen() && !_lgp->open())	return ErrorOpening;
 
 		foreach(Field *field, fileList) {
 			if(field->isOpen() && field->isModified()) {
-				if(!lgp->setFile(field->getName(), new FieldIO(field))) {
+				if(!_lgp->setFile(field->getName(), new FieldIO(field))) {
 					return FieldNotFound;
 				}
 			}
@@ -893,14 +912,14 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 				QByteArray tocTut, tutData;
 				tutData = tut->save(tocTut);
 				tocTut.append(tutData);
-				if(!lgp->setFile(itTut.key() + ".tut", tocTut)) {
+				if(!_lgp->setFile(itTut.key() + ".tut", tocTut)) {
 					return FieldNotFound;
 				}
 			}
 		}
 
-		if(!lgp->pack(path, this)) {
-			switch(lgp->error()) {
+		if(!_lgp->pack(path, this)) {
+			switch(_lgp->error()) {
 			case Lgp::OpenError:
 				return ErrorOpeningTemp;
 			case Lgp::InvalidError:

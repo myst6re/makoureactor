@@ -32,6 +32,7 @@
 #include "ModelManager.h"
 #include "WalkmeshManager.h"
 #include "QTaskBarButton.h"
+#include "LgpDialog.h"
 
 class Window : public QMainWindow
 {
@@ -73,6 +74,7 @@ public slots:
 	void backgroundManager();
 	void miscManager();
 	void searchManager();
+	void archiveManager();
 	void about();
 private slots:
 	void emitOpcodeID();
@@ -115,7 +117,7 @@ private:
 
 	QAction *actionSave, *actionSaveAs, *actionExport;
 	QAction *actionMassExport, *actionImport, *actionClose;
-	QAction *actionRun, *actionModels;
+	QAction *actionRun, *actionModels, *actionArchive;
 	QAction *actionEncounter, *actionTut;
 	QAction *actionMisc, *actionJp_txt;
 	QMenu *menuLang;

@@ -70,6 +70,7 @@ Window::Window() :
 	actionExport = menu->addAction(tr("&Exporter l'écran courant..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
 	actionMassExport = menu->addAction(tr("Exporter en &masse..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
 	actionImport = menu->addAction(tr("&Importer dans l'écran courant..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
+	actionArchive = menu->addAction(tr("&Gestionnaire d'archive..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
 	menu->addSeparator();
 	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("Fe&rmer"), this, SLOT(closeFile()));
 	menu->addAction(tr("&Quitter"), this, SLOT(close()), QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
@@ -413,6 +414,7 @@ int Window::closeFile(bool quit)
 		actionExport->setEnabled(false);
 		actionMassExport->setEnabled(false);
 		actionImport->setEnabled(false);
+		actionArchive->setEnabled(false);
 		actionClose->setEnabled(false);
 		actionModels->setEnabled(false);
 		actionEncounter->setEnabled(false);
@@ -511,9 +513,11 @@ void Window::open(const QString &cheminFic, bool isDir)
 	}
 	if(!out.isEmpty())
 	{
-		fieldArchive->close();
 		QMessageBox::warning(this, tr("Erreur"), out);
-		return;
+		if(error != FieldArchive::FieldNotFound) {
+			fieldArchive->close();
+			return;
+		}
 	}
 
 	QList<QTreeWidgetItem *> items;
@@ -545,19 +549,23 @@ void Window::open(const QString &cheminFic, bool isDir)
 	else if(fieldList->topLevelItemCount() > 0)			fieldList->setCurrentItem(fieldList->topLevelItem(0));
 
 	fieldList->setFocus();
-	if(varDialog)	varDialog->setFieldArchive(fieldArchive);
-	searchDialog->setFieldArchive(fieldArchive);
-	searchDialog->setEnabled(true);
-	actionEncounter->setEnabled(true);
-	actionTut->setEnabled(true);
-	actionMisc->setEnabled(true);
-	actionExport->setEnabled(true);
-	actionMassExport->setEnabled(true);
-	actionSaveAs->setEnabled(true);
-	actionImport->setEnabled(true);
-	if(fieldArchive->isLgp()/* || fieldArchive->isIso()*/) {
-		actionModels->setEnabled(true);
+
+	if(fieldArchive->size() > 0) {
+		if(varDialog)	varDialog->setFieldArchive(fieldArchive);
+		searchDialog->setFieldArchive(fieldArchive);
+		searchDialog->setEnabled(true);
+		actionEncounter->setEnabled(true);
+		actionTut->setEnabled(true);
+		actionMisc->setEnabled(true);
+		actionExport->setEnabled(true);
+		actionMassExport->setEnabled(true);
+		actionImport->setEnabled(true);
+		if(fieldArchive->isLgp()/* || fieldArchive->isIso()*/) {
+			actionModels->setEnabled(true);
+		}
 	}
+	if(fieldArchive->isLgp())	actionArchive->setEnabled(true);
+	actionSaveAs->setEnabled(true);
 	actionClose->setEnabled(true);
 
 //	fieldArchive->searchAll();
@@ -1304,6 +1312,14 @@ void Window::miscManager()
 		} else {
 			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les infos diverses !"));
 		}
+	}
+}
+
+void Window::archiveManager()
+{
+	if(fieldArchive && fieldArchive->isLgp()) {
+		LgpDialog dialog(fieldArchive->lgp(), this);
+		dialog.exec();
 	}
 }
 

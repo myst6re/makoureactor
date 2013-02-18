@@ -46,7 +46,7 @@ QString Data::ff7DataPath_cache;
 QString Data::ff7AppPath_cache;
 QString Data::ff7RereleasePath_cache;
 bool Data::ff7RereleaseAlreadySearched = false;
-QHash<QString, int> Data::charlgp_listPos;
+Lgp Data::charLgp;
 QHash<QString, int> Data::charlgp_animBoneCount;
 
 void Data::refreshFF7Paths()
@@ -248,56 +248,36 @@ QString Data::charlgp_path()
 	return charPath;
 }
 
-void Data::charlgp_loadListPos(QFile *char_file)
+bool Data::charlgp_loadListPos()
 {
-	if(charlgp_listPos.isEmpty())
-	{
-		qint32 nbFiles;
+	if(!charLgp.isOpen()) {
+		QString charPath = Data::charlgp_path();
+		if(charPath.isEmpty())	return false;
 
-		if(!char_file->seek(12))	return;
-		if(char_file->read((char *)&nbFiles, 4) != 4)	return;
-
-		QString fileName;
-		quint32 filePos;
-		QByteArray charToc = char_file->read(27 * nbFiles);
-		if(charToc.size() != 27 * nbFiles)	return;
-		const char *charTocData = charToc.constData();
-		charlgp_listPos.reserve(nbFiles);
-
-		for(qint32 i=0 ; i<nbFiles ; ++i)
-		{
-			QCoreApplication::processEvents();
-			fileName = charToc.mid(27 * i, 20);
-			if(fileName.isEmpty())	return;
-			memcpy(&filePos, &charTocData[27 * i + 20], 4);
-			charlgp_listPos.insert(fileName.toLower(), filePos);
+		charLgp.setFileName(charPath);
+		if(!charLgp.open()) {
+			return false;
 		}
 	}
+	return true;
 }
 
 void Data::charlgp_loadAnimBoneCount()
 {
-	if(charlgp_animBoneCount.isEmpty())
-	{
-		QString charPath = charlgp_path();
-		if(!charPath.isEmpty()) {
-			QFile char_file(charPath);
-			if(char_file.open(QIODevice::ReadOnly)) {
+	if(charlgp_animBoneCount.isEmpty() && charlgp_loadListPos()) {
+		quint32 boneCount;
 
-				quint32 boneCount;
-
-				QHashIterator<QString, int> i(charlgp_listPos);
-				while(i.hasNext()) {
-					i.next();
-					if(i.key().endsWith(".a", Qt::CaseInsensitive)) {
-						QCoreApplication::processEvents();
-						if(!char_file.seek(i.value()+32))	break;
-						if(char_file.read((char *)&boneCount, 4) != 4)	break;
-						charlgp_animBoneCount.insert(i.key().toLower(), boneCount);
-					}
+		foreach(const QString &fileName, charLgp.fileList()) {
+			if(fileName.endsWith(".a", Qt::CaseInsensitive)) {
+				QCoreApplication::processEvents();
+				QIODevice *aFile = charLgp.file(fileName);
+				if(aFile && aFile->open(QIODevice::ReadOnly)) {
+					if(!aFile->seek(8) ||
+							aFile->read((char *)&boneCount, 4) != 4)	break;
+					charlgp_animBoneCount.insert(fileName.toLower(), boneCount);
+				} else {
+					break;
 				}
-
-				char_file.close();
 			}
 		}
 	}

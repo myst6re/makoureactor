@@ -21,7 +21,7 @@ FieldModelPartPC::FieldModelPartPC()
 {
 }
 
-bool FieldModelPartPC::open(QFile *p_file)
+bool FieldModelPartPC::open(QIODevice *p_file)
 {
 	QList<PolyVertex> vertices/*, normals*/;
 	QList<TexCoord> texCs;

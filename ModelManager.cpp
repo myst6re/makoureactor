@@ -243,7 +243,7 @@ void ModelManager::addModel()
 	QString hrc("    .HRC");
 	QTreeWidgetItem *item = models->currentItem(), *newItem;
 
-	if(!Data::charlgp_listPos.isEmpty()) {
+	if(Data::charlgp_loadListPos()) {
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
 		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
 
@@ -251,16 +251,13 @@ void ModelManager::addModel()
 		list.setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
 		list.setEditable(true);
 		QStringList files;
-		QString file;
 
-		QHashIterator<QString, int> i(Data::charlgp_listPos);
-		while(i.hasNext()) {
-			i.next();
-			file = i.key();
-			if(file.endsWith(QString(".hrc"), Qt::CaseInsensitive)) {
+		foreach(const QString &file, Data::charLgp.fileList()) {
+			if(file.endsWith(".hrc", Qt::CaseInsensitive)) {
 				files.append(file);
 			}
 		}
+
 		qSort(files);
 		list.addItems(files);
 
@@ -313,7 +310,7 @@ void ModelManager::addModel()
 
 	models->setCurrentItem(newItem);
 
-	if(Data::charlgp_listPos.isEmpty())
+	if(!Data::charLgp.isOpen())
 		models->editItem(newItem);
 }
 
@@ -467,7 +464,7 @@ void ModelManager::addAnim()
 {
 	QTreeWidgetItem *item = modelAnims->currentItem(), *newItem;
 	QString a;
-	if(!Data::charlgp_listPos.isEmpty())
+	if(Data::charlgp_loadListPos())
 	{
 		toolBar2->setEnabled(false);
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
@@ -480,17 +477,12 @@ void ModelManager::addAnim()
 		Data::charlgp_loadAnimBoneCount();
 
 		QStringList files;
-		QString file;
-		QHashIterator<QString, int> i(Data::charlgp_listPos);
 
 		int nb_bones = modelPreview ? modelPreview->nb_bones() : 0;
 
-		while(i.hasNext()) {
+		foreach(const QString &file, Data::charLgp.fileList()) {
 			QCoreApplication::processEvents();
-			i.next();
-			file = i.key();
-			if(file.endsWith(".a", Qt::CaseInsensitive))
-			{
+			if(file.endsWith(".a", Qt::CaseInsensitive)) {
 				if(nb_bones == 0 || Data::charlgp_animBoneCount.value(file.toLower()) == nb_bones)
 					files.append(file.left(file.size()-2).toUpper());
 			}
@@ -557,7 +549,7 @@ void ModelManager::addAnim()
 
 	newItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 	modelAnims->setCurrentItem(newItem);
-	if(Data::charlgp_listPos.isEmpty())
+	if(!Data::charLgp.isOpen())
 		modelAnims->editItem(newItem);
 }
 

@@ -20,6 +20,7 @@
 
 #include <QtCore>
 #include "FF7Text.h"
+#include "Lgp.h"
 
 class Data
 {
@@ -29,9 +30,9 @@ public:
 	static const QString &ff7AppPath();
 	static QStringList ff7AppPathList();
 	static QString charlgp_path();
-	static void charlgp_loadListPos(QFile *);
+	static bool charlgp_loadListPos();
 	static void charlgp_loadAnimBoneCount();
-	static QHash<QString, int> charlgp_listPos;
+	static Lgp charLgp;
 	static QHash<QString, int> charlgp_animBoneCount;
 	static int load();
 	static bool openMaplist(const QByteArray &data);

@@ -34,6 +34,7 @@ struct LgpObserver
 };
 
 class LgpHeaderEntry;
+class LgpIterator;
 
 class LgpToc
 {
@@ -51,12 +52,31 @@ public:
 	bool isEmpty() const;
 	int size() const;
 	QList<const LgpHeaderEntry *> filesSortedByPosition() const;
+	LgpIterator iterator() const;
 	LgpToc &operator=(const LgpToc &other);
 private:
 	LgpHeaderEntry *entry(const QString &filePath, quint16 id) const;
 	static qint32 lookupValue(const QString &filePath);
 	static quint8 lookupValue(const QChar &qc);
 	QMultiMap<quint16, LgpHeaderEntry *> _header;
+};
+
+class LgpIterator
+{
+public:
+	explicit LgpIterator(const QMultiMap<quint16, LgpHeaderEntry *> &header);
+	bool hasNext() const;
+	bool hasPrevious() const;
+	void next();
+	void previous();
+	void toBack();
+	void toFront();
+	QIODevice *file() const;
+	QIODevice *modifiedFile() const;
+	const QString &fileName() const;
+private:
+	const QMultiMap<quint16, LgpHeaderEntry *> &_header;
+	QMapIterator<quint16, LgpHeaderEntry *> it;
 };
 
 class Lgp
@@ -79,9 +99,14 @@ public:
 		FileNotFoundError
 	};
 
+	Lgp();
 	Lgp(const QString &name);
 	virtual ~Lgp();
+	void clear();
 	QStringList fileList();
+	QStringList fileListInDir(const QString &dirPath);
+	QStringList dirListInDir(const QString &dirPath);
+	//LgpIterator iterator() const;
 	bool fileExists(const QString &filePath);
 	QIODevice *file(const QString &filePath);
 	QByteArray fileData(const QString &filePath);

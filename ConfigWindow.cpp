@@ -372,6 +372,7 @@ void ConfigWindow::accept()
 
 	Data::load();//Reload kernel2.bin data
 	Data::refreshFF7Paths();// refresh ff7 paths
-	Data::charlgp_listPos.clear();//Refresh cached lgp TOC
+	Data::charLgp.clear();//Refresh cached lgp TOC
+	Data::charLgp.close();
 	QDialog::accept();
 }

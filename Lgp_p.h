@@ -88,6 +88,7 @@ public:
 	LgpIO(QIODevice *lgp, LgpHeaderEntry *header, QObject *parent=0);
 	virtual bool open(OpenMode mode);
 	virtual qint64 size() const;
+	virtual bool canReadLine() const;
 protected:
 	virtual qint64 readData(char *data, qint64 maxSize);
 private:

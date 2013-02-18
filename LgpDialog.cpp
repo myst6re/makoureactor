@@ -1,0 +1,159 @@
+#include "LgpDialog.h"
+
+LgpItemModel::LgpItemModel(Lgp *lgp, QObject *parent) :
+	QAbstractItemModel(parent), lgp(lgp)
+{
+	fileList = lgp->fileList();
+}
+
+QModelIndex LgpItemModel::index(int row, int column, const QModelIndex &parent) const
+{
+	if (row < 0 || column < 0 || row >= rowCount(parent) || column >= columnCount(parent))
+		return QModelIndex();
+
+	return createIndex(row, column, (QString *)&fileList[row]);
+}
+
+QModelIndex LgpItemModel::parent(const QModelIndex &index) const
+{
+	Q_UNUSED(index)
+	return QModelIndex();
+}
+
+int LgpItemModel::rowCount(const QModelIndex &parent) const
+{
+	if(!parent.isValid()) {
+		return fileList.size();
+	} else {
+		return 0;
+	}
+}
+
+int LgpItemModel::columnCount(const QModelIndex &parent) const
+{
+	Q_UNUSED(parent)
+	return 2;
+}
+
+QVariant LgpItemModel::data(const QModelIndex &index, int role) const
+{
+	if(!index.isValid()) {
+		return QVariant();
+	}
+
+	QString *filePath = (QString *)index.internalPointer();
+	if(!filePath) {
+		return QVariant();
+	}
+
+	switch(role) {
+	case Qt::EditRole:
+	case Qt::DisplayRole:
+		QIODevice *io;
+		switch(index.column()) {
+		case 0:		return *filePath;
+		case 1:
+			io = lgp->file(*filePath);
+			if(io && io->open(QIODevice::ReadOnly)) {
+				return io->size();
+			} else {
+				return tr("?");
+			}
+		default:	break;
+		}
+		break;
+	case Qt::DecorationRole:
+		if(index.column() == 0) {
+			return iconProvider.icon(QFileIconProvider::File);
+		}
+		break;
+	case Qt::TextAlignmentRole:
+		if(index.column() == 1) {
+			return Qt::AlignRight;
+		}
+		break;
+	}
+
+	return QVariant();
+}
+
+QVariant LgpItemModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+	switch(role) {
+	case Qt::TextAlignmentRole:
+		return Qt::AlignLeft;
+	}
+
+	if(orientation != Qt::Horizontal || role != Qt::DisplayRole)
+		return QAbstractItemModel::headerData(section, orientation, role);
+
+	switch(section) {
+	case 0:		return tr("Nom");
+	case 1:		return tr("Taille");
+	default:	return QVariant();
+	}
+}
+
+LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
+	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), lgp(lgp)
+{
+	resize(800, 600);
+
+	LgpItemModel *model = new LgpItemModel(lgp);
+	treeView = new QTreeView(this);
+	treeView->setModel(model);
+
+	replaceButton = new QPushButton(tr("Remplacer"), this);
+	packButton = new QPushButton(tr("Créer l'image disque modifiée"), this);
+
+	QHBoxLayout *barLayout = new QHBoxLayout;
+	barLayout->addWidget(replaceButton);
+	barLayout->addWidget(packButton);
+	barLayout->addStretch();
+
+	QVBoxLayout *layout = new QVBoxLayout(this);
+	layout->addLayout(barLayout);
+	layout->addWidget(treeView, 1);
+
+	connect(replaceButton, SIGNAL(released()), SLOT(replaceCurrent()));
+	connect(packButton, SIGNAL(released()), SLOT(pack()));
+	connect(treeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(setButtonsState()));
+}
+
+void LgpDialog::replaceCurrent()
+{
+	/*QModelIndex index = treeView->currentIndex();
+	if(index.isValid()) {
+		IsoFileOrDirectory *fileOrDir = (IsoFileOrDirectory *)index.internalPointer();
+		if(fileOrDir && fileOrDir->isFile()) {
+			QString extension = fileOrDir->name().mid(fileOrDir->name().lastIndexOf('.') + 1);
+			QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), "", tr("Fichier %1 (*.%1);;Tous les fichiers (*)").arg(extension));
+			if(path.isNull()) {
+				return;
+			}
+
+			QFile replaceFile(path);
+			if(replaceFile.open(QIODevice::ReadOnly)) {
+				((IsoFile *)fileOrDir)->setData(replaceFile.readAll());
+				replaceFile.close();
+			} else {
+				QMessageBox::warning(this, tr("Erreur"), tr("Impossible d'ouvrir le fichier ! (Message : %1").arg(replaceFile.errorString()));
+			}
+		}
+	}*/
+}
+
+void LgpDialog::pack()
+{
+}
+
+void LgpDialog::setButtonsState()
+{
+	/*QModelIndexList modelIndexList = treeView->selectionModel()->selectedRows();
+	if(!modelIndexList.isEmpty()) {
+		QModelIndex index = modelIndexList.first();
+		replaceButton->setEnabled(((IsoFileOrDirectory *)index.internalPointer())->isFile());
+	} else {
+		replaceButton->setEnabled(false);
+	}*/
+}
