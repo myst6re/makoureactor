@@ -182,7 +182,7 @@ OTHER_FILES += Makou_Reactor.rc \
 #base for setting up deb packages(rpm too?).
 #becomes 'make install' when qmake generates the makefile
 unix:!macx:!symbian {
-    LIBS = -lglut -lGLU
+	LIBS = -lglut -lGLU -lz
     system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
     target.path = /opt/makoureactor #set to deploy the build target.
 
