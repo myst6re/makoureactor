@@ -204,7 +204,7 @@ LgpIterator LgpToc::iterator() const
 	return LgpIterator(_header);
 }
 
-LgpIterator::LgpIterator(const QMultiMap<quint16, LgpHeaderEntry *> &header) :
+LgpIterator::LgpIterator(const QMultiHash<quint16, LgpHeaderEntry *> &header) :
 	_header(header), it(header)
 {
 }
@@ -853,7 +853,7 @@ bool Lgp::pack(const QString &destination, LgpObserver *observer)
 
 	// Lookup Table + conflicts
 	LgpLookupTableEntry lookupTable[LOOKUP_TABLE_ENTRIES];
-	QMap<LgpHeaderEntry *, LgpTocEntry> tocEntries;
+	QHash<LgpHeaderEntry *, LgpTocEntry> tocEntries;
 	int tocIndex = 0;
 
 	for(int i=0; i<LOOKUP_TABLE_ENTRIES; ++i) {

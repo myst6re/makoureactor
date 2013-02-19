@@ -58,13 +58,13 @@ private:
 	LgpHeaderEntry *entry(const QString &filePath, quint16 id) const;
 	static qint32 lookupValue(const QString &filePath);
 	static quint8 lookupValue(const QChar &qc);
-	QMultiMap<quint16, LgpHeaderEntry *> _header;
+	QMultiHash<quint16, LgpHeaderEntry *> _header;
 };
 
 class LgpIterator
 {
 public:
-	explicit LgpIterator(const QMultiMap<quint16, LgpHeaderEntry *> &header);
+	explicit LgpIterator(const QMultiHash<quint16, LgpHeaderEntry *> &header);
 	bool hasNext() const;
 	bool hasPrevious() const;
 	void next();
@@ -75,8 +75,8 @@ public:
 	QIODevice *modifiedFile() const;
 	const QString &fileName() const;
 private:
-	const QMultiMap<quint16, LgpHeaderEntry *> &_header;
-	QMapIterator<quint16, LgpHeaderEntry *> it;
+	const QMultiHash<quint16, LgpHeaderEntry *> &_header;
+	QHashIterator<quint16, LgpHeaderEntry *> it;
 };
 
 class Lgp

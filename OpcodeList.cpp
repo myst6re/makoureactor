@@ -308,12 +308,14 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 				}
 				parentItem = item;
 			}
-			else if(id>=0x01 && id<=0x07)
+			else if(id >= Opcode::REQ && id <= Opcode::RETTO)
 				item->setForeground(0, QColor(0xcc,0x66,0x00));
-			else if(id>=0x10 && id<=0x13)
+			else if(id >= Opcode::JMPF && id <= Opcode::JMPBL)
 				item->setForeground(0, QColor(0x66,0xcc,0x00));
-			else if(id==0x00 || id==0x07 || curOpcode->isLabel())
+			else if(id == Opcode::RET)
 				item->setForeground(0, QColor(0x66,0x66,0x66));
+			else if(curOpcode->isLabel())
+				item->setForeground(0, QColor(0xcc,0x00,0x00));
 
 			++opcodeID;
 		}

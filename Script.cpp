@@ -820,7 +820,7 @@ bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) co
 bool Script::compile(int &opcodeID, QString &errorStr)
 {
 	quint32 pos=0;
-	QMap<quint32, quint32> labelPositions;// Each label is unique
+	QHash<quint32, quint32> labelPositions;// Each label is unique
 
 	// Search labels
 	opcodeID = 0;
@@ -882,7 +882,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 QByteArray Script::toByteArray() const
 {
 	quint32 pos=0;
-	QMap<quint32, quint32> labelPositions;// Each label is unique
+	QHash<quint32, quint32> labelPositions;// Each label is unique
 	QByteArray ret;
 
 	// Search labels
