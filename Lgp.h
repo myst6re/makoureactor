@@ -34,38 +34,12 @@ struct LgpObserver
 };
 
 class LgpHeaderEntry;
-class LgpIterator;
-
-class LgpToc
-{
-public:
-	LgpToc();
-	LgpToc(const LgpToc &other);
-	virtual ~LgpToc();
-	bool addEntry(LgpHeaderEntry *entry);
-	LgpHeaderEntry *entry(const QString &filePath) const;
-	QList<LgpHeaderEntry *> entries(quint16 id) const;
-	const QMultiHash<quint16, LgpHeaderEntry *> &table() const;
-	bool hasEntries(quint16 id) const;
-	bool removeEntry(const QString &filePath);
-	bool contains(const QString &filePath) const;
-	void clear();
-	bool isEmpty() const;
-	int size() const;
-	QList<const LgpHeaderEntry *> filesSortedByPosition() const;
-	LgpIterator iterator(QFile *lgp) const;
-	LgpToc &operator=(const LgpToc &other);
-private:
-	LgpHeaderEntry *entry(const QString &filePath, quint16 id) const;
-	static qint32 lookupValue(const QString &filePath);
-	static quint8 lookupValue(const QChar &qc);
-	QMultiHash<quint16, LgpHeaderEntry *> _header;
-};
+class LgpToc;
 
 class LgpIterator
 {
 public:
-	LgpIterator(const QMultiHash<quint16, LgpHeaderEntry *> &header, QFile *lgp);
+	LgpIterator(LgpToc *toc, QFile *lgp);
 	bool hasNext() const;
 	bool hasPrevious() const;
 	void next();
@@ -108,8 +82,6 @@ public:
 	void clear();
 	QStringList fileList();
 	int fileCount();
-	QStringList fileListInDir(const QString &dirPath);
-	QStringList dirListInDir(const QString &dirPath);
 	LgpIterator iterator();
 	bool fileExists(const QString &filePath);
 	QIODevice *file(const QString &filePath);
@@ -142,7 +114,7 @@ private:
 	void setError(LgpError error, const QString &errorString=QString());
 
 	QString _companyName;
-	LgpToc _files;
+	LgpToc *_files;
 	QString _productName;
 	QFile _file;
 	LgpError _error;
