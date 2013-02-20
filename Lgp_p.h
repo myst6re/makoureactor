@@ -68,11 +68,12 @@ public:
 	void setFileDir(const QString &fileDir);
 	void setFilePosition(quint32 filePosition);
 	void setFileSize(quint32 fileSize);
-	QIODevice *file() const;
-	QIODevice *modifiedFile() const;
+	QIODevice *file(QFile *lgp);
+	QIODevice *modifiedFile(QFile *lgp);
 	void setFile(QIODevice *io);
 	void setModifiedFile(QIODevice *io);
 private:
+	QIODevice *createFile(QFile *lgp);
 	QString _fileName;
 	QString _fileDir;
 	quint32 _filePosition;
@@ -86,13 +87,13 @@ class LgpIO : public QIODevice
 {
 public:
 	LgpIO(QIODevice *lgp, LgpHeaderEntry *header, QObject *parent=0);
-	virtual bool open(OpenMode mode);
-	virtual qint64 size() const;
-	virtual bool canReadLine() const;
+	bool open(OpenMode mode);
+	qint64 size() const;
+	bool canReadLine() const;
 protected:
-	virtual qint64 readData(char *data, qint64 maxSize);
+	qint64 readData(char *data, qint64 maxSize);
+	qint64 writeData(const char *data, qint64 maxSize);
 private:
-	qint64 writeData(const char *, qint64) { return -1; }
 	QIODevice *_lgp;
 	LgpHeaderEntry *_header;
 };

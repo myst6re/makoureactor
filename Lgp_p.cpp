@@ -97,14 +97,24 @@ void LgpHeaderEntry::setFileSize(quint32 fileSize)
 	_hasFileSize = true;
 }
 
-QIODevice *LgpHeaderEntry::file() const
+QIODevice *LgpHeaderEntry::file(QFile *lgp)
 {
-	return _io;
+	if(_io) {
+		_io->close();
+		return _io;
+	} else {
+		return createFile(lgp);
+	}
 }
 
-QIODevice *LgpHeaderEntry::modifiedFile() const
+QIODevice *LgpHeaderEntry::modifiedFile(QFile *lgp)
 {
-	return _newIO;
+	if(_newIO) {
+		_newIO->close();
+		return _newIO;
+	} else {
+		return file(lgp);
+	}
 }
 
 void LgpHeaderEntry::setFile(QIODevice *io)
@@ -117,14 +127,34 @@ void LgpHeaderEntry::setModifiedFile(QIODevice *io)
 	_newIO = io;
 }
 
+QIODevice *LgpHeaderEntry::createFile(QFile *lgp)
+{
+	if(!lgp->seek(filePosition())) {
+		return NULL;
+	}
+	QByteArray name = lgp->read(20);
+	if(name.size() != 20) {
+		return NULL;
+	}
+	quint32 size;
+	if(lgp->read((char *)&size, 4) != 4) {
+		return NULL;
+	}
+
+	setFileSize(size);
+	setFileName(name);
+	QIODevice *io = new LgpIO(lgp, this);
+	setFile(io);
+	return io;
+}
+
 LgpIO::LgpIO(QIODevice *lgp, LgpHeaderEntry *header, QObject *parent) :
 	QIODevice(parent), _lgp(lgp), _header(header)
 {
 }
 
 bool LgpIO::open(OpenMode mode) {
-	if(mode.testFlag(QIODevice::WriteOnly)
-			|| mode.testFlag(QIODevice::Append)
+	if(mode.testFlag(QIODevice::Append)
 			|| mode.testFlag(QIODevice::Truncate)) {
 		return false;
 	}
@@ -144,6 +174,21 @@ qint64 LgpIO::readData(char *data, qint64 maxSize)
 			return -1;
 		}
 		return _lgp->read(data, qMin(maxSize, size - pos()));
+	}
+	return -1;
+}
+
+/*!
+ * You cannot write more than the initial file size.
+ */
+qint64 LgpIO::writeData(const char *data, qint64 maxSize)
+{
+	if(_lgp->seek(_header->filePosition() + 24 + pos())) {
+		qint64 size = this->size();
+		if(size < 0) {
+			return -1;
+		}
+		return _lgp->write(data, qMin(maxSize, size - pos()));
 	}
 	return -1;
 }

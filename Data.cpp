@@ -267,10 +267,14 @@ void Data::charlgp_loadAnimBoneCount()
 	if(charlgp_animBoneCount.isEmpty() && charlgp_loadListPos()) {
 		quint32 boneCount;
 
-		foreach(const QString &fileName, charLgp.fileList()) {
+		LgpIterator it = charLgp.iterator();
+
+		while(it.hasNext()) {
+			it.next();
+			const QString &fileName = it.fileName();
 			if(fileName.endsWith(".a", Qt::CaseInsensitive)) {
 				QCoreApplication::processEvents();
-				QIODevice *aFile = charLgp.file(fileName);
+				QIODevice *aFile = it.file();
 				if(aFile && aFile->open(QIODevice::ReadOnly)) {
 					if(!aFile->seek(8) ||
 							aFile->read((char *)&boneCount, 4) != 4)	break;

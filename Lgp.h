@@ -45,6 +45,7 @@ public:
 	bool addEntry(LgpHeaderEntry *entry);
 	LgpHeaderEntry *entry(const QString &filePath) const;
 	QList<LgpHeaderEntry *> entries(quint16 id) const;
+	const QMultiHash<quint16, LgpHeaderEntry *> &table() const;
 	bool hasEntries(quint16 id) const;
 	bool removeEntry(const QString &filePath);
 	bool contains(const QString &filePath) const;
@@ -52,7 +53,7 @@ public:
 	bool isEmpty() const;
 	int size() const;
 	QList<const LgpHeaderEntry *> filesSortedByPosition() const;
-	LgpIterator iterator() const;
+	LgpIterator iterator(QFile *lgp) const;
 	LgpToc &operator=(const LgpToc &other);
 private:
 	LgpHeaderEntry *entry(const QString &filePath, quint16 id) const;
@@ -64,19 +65,21 @@ private:
 class LgpIterator
 {
 public:
-	explicit LgpIterator(const QMultiHash<quint16, LgpHeaderEntry *> &header);
+	LgpIterator(const QMultiHash<quint16, LgpHeaderEntry *> &header, QFile *lgp);
 	bool hasNext() const;
 	bool hasPrevious() const;
 	void next();
 	void previous();
 	void toBack();
 	void toFront();
-	QIODevice *file() const;
-	QIODevice *modifiedFile() const;
+	QIODevice *file();
+	QIODevice *modifiedFile();
 	const QString &fileName() const;
+	const QString &fileDir() const;
+	QString filePath() const;
 private:
-	const QMultiHash<quint16, LgpHeaderEntry *> &_header;
 	QHashIterator<quint16, LgpHeaderEntry *> it;
+	QFile *_lgp;
 };
 
 class Lgp
@@ -104,9 +107,10 @@ public:
 	virtual ~Lgp();
 	void clear();
 	QStringList fileList();
+	int fileCount();
 	QStringList fileListInDir(const QString &dirPath);
 	QStringList dirListInDir(const QString &dirPath);
-	//LgpIterator iterator() const;
+	LgpIterator iterator();
 	bool fileExists(const QString &filePath);
 	QIODevice *file(const QString &filePath);
 	QByteArray fileData(const QString &filePath);
@@ -132,7 +136,8 @@ public:
 	QString errorString() const;
 private:
 	bool openHeader();
-	void resolveConflicts();
+	bool openCompanyName();
+	bool openProductName();
 	LgpHeaderEntry *headerEntry(const QString &filePath);
 	void setError(LgpError error, const QString &errorString=QString());
 

@@ -29,10 +29,8 @@ LgpToc::LgpToc()
 
 LgpToc::LgpToc(const LgpToc &other)
 {
-	for(int i=0; i<LOOKUP_TABLE_ENTRIES; ++i) {
-		foreach(LgpHeaderEntry *headerEntry, other.entries(i)) {
-			addEntry(new LgpHeaderEntry(*headerEntry));
-		}
+	foreach(LgpHeaderEntry *headerEntry, other.table()) {
+		addEntry(new LgpHeaderEntry(*headerEntry));
 	}
 }
 
@@ -68,6 +66,11 @@ LgpHeaderEntry *LgpToc::entry(const QString &filePath) const
 QList<LgpHeaderEntry *> LgpToc::entries(quint16 id) const
 {
 	return _header.values(id);
+}
+
+const QMultiHash<quint16, LgpHeaderEntry *> &LgpToc::table() const
+{
+	return _header;
 }
 
 bool LgpToc::hasEntries(quint16 id) const
@@ -142,10 +145,8 @@ LgpToc &LgpToc::operator=(const LgpToc &other)
 {
 	if(this != &other) {
 		clear();
-		for(int i=0; i<LOOKUP_TABLE_ENTRIES; ++i) {
-			foreach(LgpHeaderEntry *headerEntry, other.entries(i)) {
-				addEntry(new LgpHeaderEntry(*headerEntry));
-			}
+		foreach(LgpHeaderEntry *headerEntry, other.table()) {
+			addEntry(new LgpHeaderEntry(*headerEntry));
 		}
 	}
 
@@ -199,13 +200,13 @@ quint8 LgpToc::lookupValue(const QChar &qc)
 	return c - 'a';
 }
 
-LgpIterator LgpToc::iterator() const
+LgpIterator LgpToc::iterator(QFile *lgp) const
 {
-	return LgpIterator(_header);
+	return LgpIterator(_header, lgp);
 }
 
-LgpIterator::LgpIterator(const QMultiHash<quint16, LgpHeaderEntry *> &header) :
-	_header(header), it(header)
+LgpIterator::LgpIterator(const QMultiHash<quint16, LgpHeaderEntry *> &header, QFile *lgp) :
+	it(header), _lgp(lgp)
 {
 }
 
@@ -239,19 +240,29 @@ void LgpIterator::toFront()
 	it.toFront();
 }
 
-QIODevice *LgpIterator::file() const
+QIODevice *LgpIterator::file()
 {
-	return it.value()->file();
+	return it.value()->file(_lgp);
 }
 
-QIODevice *LgpIterator::modifiedFile() const
+QIODevice *LgpIterator::modifiedFile()
 {
-	return it.value()->modifiedFile();
+	return it.value()->modifiedFile(_lgp);
 }
 
 const QString &LgpIterator::fileName() const
 {
 	return it.value()->fileName();
+}
+
+const QString &LgpIterator::fileDir() const
+{
+	return it.value()->fileDir();
+}
+
+QString LgpIterator::filePath() const
+{
+	return it.value()->filePath();
 }
 
 Lgp::Lgp() :
@@ -305,6 +316,18 @@ QStringList Lgp::fileList()
 }
 
 /*!
+ * Returns the number of files in the archive, or -1 if there is an error.
+ */
+int Lgp::fileCount()
+{
+	if(_files.isEmpty() && !openHeader()) {
+		return -1;
+	}
+
+	return _files.size();
+}
+
+/*!
  * Returns a list of file names (only files in \a dirPath) sorted by file position.
  */
 QStringList Lgp::fileListInDir(const QString &dirPath)
@@ -345,10 +368,20 @@ QStringList Lgp::dirListInDir(const QString &dirPath)
 	return ret;
 }
 
-/*LgpIterator Lgp::iterator() const
+/*!
+ * Returns an iterator to iterate over the files.
+ * You can not know if there is an error or not.
+ */
+LgpIterator Lgp::iterator()
 {
-	return _files.iterator();
-}*///TODO
+	if(_files.isEmpty()) {
+		if(!openHeader()) {
+			qWarning() << "Lgp::iterator() cannot open lgp header";
+		}
+	}
+
+	return _files.iterator(&_file);
+}
 
 /*!
  * Returns true if the file named \a filePath exists; otherwise
@@ -368,29 +401,7 @@ QIODevice *Lgp::file(const QString &filePath)
 	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
 	if(entry == NULL) return NULL;
 
-	QIODevice *io = entry->file();
-	if(io != NULL) {
-		io->close();
-		return io;
-	} else {
-		if(!_file.seek(entry->filePosition())) {
-			return NULL;
-		}
-		QByteArray name = _file.read(20);
-		if(name.size() != 20) {
-			return NULL;
-		}
-		quint32 size;
-		if(_file.read((char *)&size, 4) != 4) {
-			return NULL;
-		}
-
-		entry->setFileSize(size);
-		entry->setFileName(name);
-		io = new LgpIO(&_file, entry);
-		entry->setFile(io);
-		return io;
-	}
+	return entry->file(&_file);
 }
 
 /*!
@@ -401,7 +412,7 @@ QByteArray Lgp::fileData(const QString &filePath)
 {
 	QIODevice *io = file(filePath);
 	if(io == NULL || !io->open(QIODevice::ReadOnly)) {
-		qWarning() << "fileData error";
+		qWarning() << "Lgp::fileData error";
 		return QByteArray();
 	}
 	QByteArray data = io->readAll();
@@ -418,13 +429,7 @@ QIODevice *Lgp::modifiedFile(const QString &filePath)
 	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
 	if(entry == NULL) return NULL;
 
-	QIODevice *io = entry->modifiedFile();
-	if(io != NULL) {
-		io->close();
-		return io;
-	} else {
-		return file(filePath);
-	}
+	return entry->modifiedFile(&_file);
 }
 
 /*!
@@ -521,6 +526,30 @@ bool Lgp::removeFile(const QString &filePath)
 	return _files.removeEntry(filePath);
 }
 
+bool Lgp::openCompanyName()
+{
+	if(!isOpen()) {
+		qWarning() << "Lgp::companyName: The device is not open for reading";
+		return false;
+	}
+
+	if(!_file.reset()) {
+		return false;
+	}
+	QByteArray companyData = _file.read(12);
+	if(companyData.size() != 12) {
+		return false;
+	}
+	const char *data = companyData.constData();
+	const char *last = data + 12;
+	while(*data == '\0' && data < last) {
+		data++;
+	}
+	_companyName = QByteArray(data, (int)(last - data));
+
+	return true;
+}
+
 /*!
  * Returns the company name (like "SQUARESOFT") or
  * a null string if there is an error.
@@ -529,19 +558,7 @@ bool Lgp::removeFile(const QString &filePath)
 const QString &Lgp::companyName()
 {
 	if(_companyName.isNull()) {
-		if(!isOpen()) {
-			qWarning() << "Lgp::companyName: The device is not open for reading";
-			return _companyName;
-		}
-
-		_file.reset();
-		QByteArray companyData = _file.read(12);
-		const char *data = companyData.constData();
-		const char *last = data + 12;
-		while(*data == '\0' && data < last) {
-			data++;
-		}
-		_companyName = QString(QByteArray(data, (int)(last - data)));
+		openCompanyName();
 	}
 	return _companyName;
 }
@@ -555,6 +572,21 @@ void Lgp::setCompanyName(const QString &companyName)
 	_companyName = companyName;
 }
 
+bool Lgp::openProductName()
+{
+	if(!isOpen()) {
+		qWarning() << "Lgp::companyName: The device is not open for reading";
+		return false;
+	}
+
+	if(!_file.seek(_file.size() - 14)) {
+		return false;
+	}
+	_productName = _file.read(14);
+
+	return true;
+}
+
 /*!
  * Returns the product name (like "FINAL FANTASY7") or
  * a null string if there is an error.
@@ -563,13 +595,7 @@ void Lgp::setCompanyName(const QString &companyName)
 const QString &Lgp::productName()
 {
 	if(_productName.isNull()) {
-		if(!isOpen()) {
-			qWarning() << "Lgp::productName: The device is not open for reading";
-			return _companyName;
-		}
-
-		_file.seek(_file.size() - 14);
-		_productName = _file.read(14);
+		openProductName();
 	}
 	return _productName;
 }
@@ -1069,7 +1095,7 @@ bool Lgp::pack(const QString &destination, LgpObserver *observer)
 
 /*!
  * Returns the last error status.
- * \sa unsetError()
+ * \sa unsetError(), errorString()
  */
 Lgp::LgpError Lgp::error() const
 {
@@ -1084,13 +1110,17 @@ void Lgp::setError(LgpError error, const QString &errorString)
 
 /*!
  * Sets the file's error to Lgp::NoError.
- * \sa error()
+ * \sa error(), errorString()
  */
 void Lgp::unsetError()
 {
 	setError(NoError);
 }
 
+/*!
+ * Returns the last error message.
+ * \sa unsetError(), error()
+ */
 QString Lgp::errorString() const
 {
 	return _errorString.isEmpty()
