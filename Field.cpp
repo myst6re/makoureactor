@@ -272,6 +272,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 		if(part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
 			if(!section1->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))	return 2;
+			if(section1->isOpen())	Data::currentTextes = section1->texts();
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {

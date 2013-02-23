@@ -24,8 +24,6 @@
 #include "IsoArchive.h"
 #include "Lgp.h"
 
-class FieldArchive;
-
 class FieldIO : public QIODevice
 {
 public:

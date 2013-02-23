@@ -999,6 +999,8 @@ void Window::massExport()
 			progressDialog.setCancelButtonText(tr("Arrêter"));
 			progressDialog.setRange(0, selectedFields.size()-1);
 
+			const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
+
 			if(massExportDialog->exportBackground()) {
 				progressDialog.setLabelText(tr("Exportation des décors..."));
 				switch(massExportDialog->exportBackgroundFormat()) {
@@ -1083,6 +1085,7 @@ void Window::massExport()
 					progressDialog.setValue(currentField++);
 				}
 			}
+			Data::currentTextes = currentTextesSav;
 		}
 	}
 }
