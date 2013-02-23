@@ -58,8 +58,8 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 		QMultiMap<int, QStringList> rsd_files;
 		QIODevice *hrcFile = Data::charLgp.file(hrc % ".hrc");
 
-		if(hrcFile && hrcFile->open(QIODevice::ReadOnly) && open_hrc(hrcFile, rsd_files))
-		{
+		if(hrcFile && hrcFile->open(QIODevice::ReadOnly)
+				&& openHrc(hrcFile, rsd_files)) {
 			foreach(const QStringList &Ps, rsd_files) {
 				foreach(QString rsd, Ps) {
 					boneID = rsd_files.key(Ps);
@@ -68,7 +68,7 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 					QIODevice *rsdFile = Data::charLgp.file(rsd % ".rsd");
 
 					if(rsdFile && rsdFile->open(QIODevice::ReadOnly)) {
-						p = open_rsd(rsdFile, boneID);
+						p = openRsd(rsdFile, boneID);
 						if(!p.isNull()) {
 							FieldModelPartPC *part = new FieldModelPartPC();
 
@@ -94,15 +94,17 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 			QIODevice *aFile = Data::charLgp.file(a % ".a");
 
 			if(!_parts.isEmpty()
-					&& aFile && aFile->open(QIODevice::ReadOnly) && open_a(aFile, animate))
+					&& aFile && aFile->open(QIODevice::ReadOnly) && openA(aFile, animate))
 			{
 				// Open all loaded tex
 				int texID=0;
 				foreach(const QString &texName, tex2id) {
+					QPixmap tex;
 					QIODevice *texFile = Data::charLgp.file(texName % ".tex");
 					if(texFile && texFile->open(QIODevice::ReadOnly)) {
-						_loaded_tex.insert(texID, open_tex(texFile));
+						tex = openTex(texFile);
 					}
+					_loaded_tex.insert(texID, tex);
 					++texID;
 				}
 
@@ -132,23 +134,23 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 	return this->dataLoaded;
 }
 
-bool FieldModelFilePC::open_hrc(QIODevice *hrc_file, QMultiMap<int, QStringList> &rsd_files)
+bool FieldModelFilePC::openHrc(QIODevice *hrc_file, QMultiMap<int, QStringList> &rsd_files)
 {
 	bool ok;
 	QString line;
-	quint32 nb_bones=0;
+	quint32 boneCount=0;
 
 	do {
 		line = QString(hrc_file->readLine()).trimmed();
 		if(line.startsWith(QString(":BONES "))) {
-			nb_bones = line.mid(7).toUInt(&ok);
+			boneCount = line.mid(7).toUInt(&ok);
 			if(!ok) return false;
-			if(nb_bones==0)	nb_bones = 1;//Null HRC fix
+			if(boneCount==0)	boneCount = 1;//Null HRC fix
 			break;
 		}
 	} while(hrc_file->canReadLine());
 
-	if(nb_bones==0)	return false;
+	if(boneCount==0)	return false;
 
 	int nbP, lineType=0;
 	quint32 boneID=0;
@@ -158,7 +160,7 @@ bool FieldModelFilePC::open_hrc(QIODevice *hrc_file, QMultiMap<int, QStringList>
 	QStringList rsdlist;
 	nameToId.insert("root", -1);
 
-	while(hrc_file->canReadLine() && boneID < nb_bones) {
+	while(hrc_file->canReadLine() && boneID < boneCount) {
 		QCoreApplication::processEvents();
 		line = QString(hrc_file->readLine()).trimmed();
 		if(line.isEmpty() || line.startsWith(QChar('#')))
@@ -192,10 +194,10 @@ bool FieldModelFilePC::open_hrc(QIODevice *hrc_file, QMultiMap<int, QStringList>
 		lineType = (lineType + 1) % 4;
 	}
 
-	return boneID==nb_bones;
+	return boneID==boneCount;
 }
 
-bool FieldModelFilePC::open_a(QIODevice *a_file, bool animate)
+bool FieldModelFilePC::openA(QIODevice *a_file, bool animate)
 {
 	a_header header;
 	PolyVertex rot/*, trans*/;
@@ -230,7 +232,7 @@ bool FieldModelFilePC::open_a(QIODevice *a_file, bool animate)
 	return true;
 }
 
-QString FieldModelFilePC::open_rsd(QIODevice *rsd_file, int boneID)
+QString FieldModelFilePC::openRsd(QIODevice *rsd_file, int boneID)
 {
 	QString line, pname, tex;
 	QList<int> texIds;
@@ -276,7 +278,7 @@ QString FieldModelFilePC::open_rsd(QIODevice *rsd_file, int boneID)
 	return pname;
 }
 
-QPixmap FieldModelFilePC::open_tex(QIODevice *tex_file)
+QPixmap FieldModelFilePC::openTex(QIODevice *tex_file)
 {
 	quint32 l, h, nbPal, entreesPal, bitPerPx;
 

@@ -28,7 +28,7 @@ int TextPreview::fontColor = WHITE;
 QImage TextPreview::fontImage;
 
 TextPreview::TextPreview(QWidget *parent)
-	: QWidget(parent), currentPage(0), currentWin(0), acceptMove(false), readOnly(false)
+	: QWidget(parent), _currentPage(0), _currentWin(0), acceptMove(false), readOnly(false)
 {
 	pagesPos.append(0);
 
@@ -96,18 +96,18 @@ void TextPreview::setWins(const QList<FF7Window> &windows, bool update)
 
 void TextPreview::resetCurrentWin()
 {
-	currentWin = 0;
+	_currentWin = 0;
 }
 
-int TextPreview::getCurrentWin()
+int TextPreview::currentWin() const
 {
-	return ff7Windows.isEmpty() ? 0 : currentWin+1;
+	return ff7Windows.isEmpty() ? 0 : _currentWin+1;
 }
 
-FF7Window TextPreview::getWindow()
+FF7Window TextPreview::getWindow() const
 {
 	if(!ff7Windows.isEmpty())
-		return ff7Windows.at(currentWin);
+		return ff7Windows.at(_currentWin);
 	else {
 		FF7Window ff7Window = FF7Window();
 		ff7Window.type = NOWIN;
@@ -115,25 +115,25 @@ FF7Window TextPreview::getWindow()
 	}
 }
 
-int TextPreview::getNbWin()
+int TextPreview::winCount() const
 {
 	return ff7Windows.size();
 }
 
 void TextPreview::nextWin()
 {
-	if(currentWin+1 < ff7Windows.size()) {
+	if(_currentWin+1 < ff7Windows.size()) {
 //		qDebug() << "TextPreview::nextWin()";
-		++currentWin;
+		++_currentWin;
 		update();
 	}
 }
 
 void TextPreview::prevWin()
 {
-	if(currentWin > 0) {
+	if(_currentWin > 0) {
 //		qDebug() << "TextPreview::prevWin()";
-		--currentWin;
+		--_currentWin;
 		update();
 	}
 }
@@ -148,34 +148,34 @@ void TextPreview::setText(const QByteArray &textData, bool reset)
 //	qDebug() << "TextPreview::setText()";
 	ff7Text = textData;
 	if(reset)
-		currentPage = 0;
+		_currentPage = 0;
 	calcSize();
 }
 
-int TextPreview::getCurrentPage()
+int TextPreview::currentPage() const
 {
-	return pagesPos.isEmpty() ? 0 : currentPage+1;
+	return pagesPos.isEmpty() ? 0 : _currentPage+1;
 }
 
-int TextPreview::getNbPages()
+int TextPreview::pageCount() const
 {
 	return pagesPos.size();
 }
 
 void TextPreview::nextPage()
 {
-	if(currentPage+1 < pagesPos.size()) {
+	if(_currentPage+1 < pagesPos.size()) {
 //		qDebug() << "TextPreview::nextPage()";
-		++currentPage;
+		++_currentPage;
 		update();
 	}
 }
 
 void TextPreview::prevPage()
 {
-	if(currentPage > 0) {
+	if(_currentPage > 0) {
 //		qDebug() << "TextPreview::prevPage()";
-		--currentPage;
+		--_currentPage;
 		update();
 	}
 }
@@ -322,7 +322,7 @@ void TextPreview::animate()
 	repaint();
 }
 
-void TextPreview::drawWindow(QPainter *painter, WindowType type)
+void TextPreview::drawWindow(QPainter *painter, WindowType type) const
 {
 	QRgb windowColorTopLeft = Config::value("windowColorTopLeft", qRgb(0,88,176)).toInt();
 	QRgb windowColorTopRight = Config::value("windowColorTopRight", qRgb(0,0,80)).toInt();
@@ -440,7 +440,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	setFontColor(WHITE);
 
 	int charId, charId2, line=0, x = 8, y = 6;
-	int start = pagesPos.value(currentPage, 0), size = ff7Text.size();
+	int start = pagesPos.value(_currentPage, 0), size = ff7Text.size();
 
 	for(int i=start ; i<size ; ++i)
 	{
@@ -628,7 +628,7 @@ void TextPreview::mouseMoveEvent(QMouseEvent *event)
 
 	moveStartPosition = event->pos();
 
-	ff7Windows.replace(currentWin, ff7Window);
+	ff7Windows.replace(_currentWin, ff7Window);
 
 	update();
 }

@@ -167,10 +167,10 @@ void GrpScriptList::fill(Section1File *scripts)
 	int i=0;
 	foreach(GrpScript *grpScript, this->scripts->grpScripts())
 	{
-		item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->getName() << grpScript->getType());
-		item->setForeground(2, QBrush(grpScript->getTypeColor()));
+		item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->name() << grpScript->type());
+		item->setForeground(2, QBrush(grpScript->typeColor()));
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-		Data::currentGrpScriptNames.append(grpScript->getName());
+		Data::currentGrpScriptNames.append(grpScript->name());
 	}
 	
 	actions().at(0)->setEnabled(true);
@@ -189,8 +189,8 @@ void GrpScriptList::localeRefresh()
 	if(grpScriptID != -1 && currentItem != NULL)
 	{
 		GrpScript *currentGrpScript = scripts->grpScript(grpScriptID);
-		currentItem->setText(2, currentGrpScript->getType());
-		currentItem->setForeground(2, currentGrpScript->getTypeColor());
+		currentItem->setText(2, currentGrpScript->type());
+		currentItem->setForeground(2, currentGrpScript->typeColor());
 	}
 }
 

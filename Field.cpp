@@ -23,17 +23,17 @@
 #include "Data.h"
 
 Field::Field(const QString &name) :
-	_isOpen(false), _isModified(false), name(name.toLower()),
-	section1(0), _encounter(0), _tut(0), id(0), ca(0), inf(0),
-	modelLoader(0), fieldModel(0),
+	_isOpen(false), _isModified(false), _name(name.toLower()),
+	section1(0), _encounter(0), _tut(0), id(0), ca(0), _inf(0),
+	modelLoader(0), _fieldModel(0),
 	fieldArchive(0)
 {
 }
 
 Field::Field(const QString &name, FieldArchive *fieldArchive) :
-	_isOpen(false), _isModified(false), name(name.toLower()),
-	section1(0), _encounter(0), _tut(0), id(0), ca(0), inf(0),
-	modelLoader(0), fieldModel(0),
+	_isOpen(false), _isModified(false), _name(name.toLower()),
+	section1(0), _encounter(0), _tut(0), id(0), ca(0), _inf(0),
+	modelLoader(0), _fieldModel(0),
 	fieldArchive(fieldArchive)
 {
 }
@@ -45,9 +45,9 @@ Field::~Field()
 	if(_tut)			delete _tut;
 	if(id)				delete id;
 	if(ca)				delete ca;
-	if(inf)				delete inf;
+	if(_inf)			delete _inf;
 	if(modelLoader)		delete modelLoader;
-	if(fieldModel)		delete fieldModel;
+	if(_fieldModel)		delete _fieldModel;
 }
 
 bool Field::isOpen() const
@@ -148,21 +148,21 @@ CaFile *Field::camera(bool open)
 	return ca;
 }
 
-InfFile *Field::getInf(bool open)
+InfFile *Field::inf(bool open)
 {
-	if(!inf)	inf = new InfFile();
-	if(open && !inf->isOpen())	inf->open(sectionData(Inf));
-	return inf;
+	if(!_inf)	_inf = new InfFile();
+	if(open && !_inf->isOpen())	_inf->open(sectionData(Inf));
+	return _inf;
 }
 
-const QString &Field::getName() const
+const QString &Field::name() const
 {
-	return name;
+	return _name;
 }
 
 void Field::setName(const QString &name)
 {
-	this->name = name;
+	_name = name;
 	_isModified = true;
 }
 
@@ -173,7 +173,7 @@ void Field::setSaved()
 	if(_tut)		_tut->setModified(false);
 	if(id)			id->setModified(false);
 	if(ca)			ca->setModified(false);
-	if(inf)			inf->setModified(false);
+	if(_inf)		_inf->setModified(false);
 }
 
 qint8 Field::save(const QString &path, bool compress)
@@ -259,7 +259,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 			ca->setModified(true);
 		}
 		if(part.testFlag(Inf)) {
-			InfFile *inf = getInf(false);
+			InfFile *inf = this->inf(false);
 			if(!inf->open(data.mid(sectionPositions[4], sectionPositions[5]-sectionPositions[4]), true))	return 2;
 			inf->setModified(true);
 		}
@@ -296,7 +296,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 			ca->setModified(true);
 		}
 		if(part.testFlag(Inf)) {
-			InfFile *inf = getInf(false);
+			InfFile *inf = this->inf(false);
 			if(!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4), true))	return 2;
 			inf->setModified(true);
 		}

@@ -438,7 +438,7 @@ void TextManager::nextTextPreviewPage()
 
 void TextManager::changeTextPreviewPage()
 {
-	int currentPage = textPreview->getCurrentPage(), nbPage = textPreview->getNbPages();
+	int currentPage = textPreview->currentPage(), nbPage = textPreview->pageCount();
 
 	textPage->setText(tr("Page %1/%2").arg(currentPage).arg(nbPage));
 	prevPage->setEnabled(currentPage > 1);
@@ -460,7 +460,7 @@ void TextManager::nextTextPreviewWin()
 
 void TextManager::changeTextPreviewWin()
 {
-//	int currentWin = textPreview->getCurrentWin(), nbWin = textPreview->getNbWin();
+//	int currentWin = textPreview->currentWin(), nbWin = textPreview->winCount();
 
 //	textWin->setText(tr("Fenêtre %1/%2").arg(currentWin).arg(nbWin));
 //	prevWin->setEnabled(currentWin > 1);
@@ -484,10 +484,10 @@ void TextManager::changeRect(QRect rect)
 
 void TextManager::changeXCoord(int /*x*/)
 {
-	/*if(!scriptsAndTexts || textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
+	/*if(!scriptsAndTexts || textPreview->winCount()<=0 || liste1->currentItem()==NULL)	return;
 
 	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
-	int winID = textPreview->getCurrentWin()-1;
+	int winID = textPreview->currentWin()-1;
 	FF7Window ff7Window = textPreview->getWindow();
 	if(ff7Window.x != x) {
 		ff7Window.x = x;
@@ -505,10 +505,10 @@ void TextManager::changeXCoord(int /*x*/)
 
 void TextManager::changeYCoord(int /*y*/)
 {
-	/*if(!scriptsAndTexts || textPreview->getNbWin()<=0 || liste1->currentItem()==NULL)	return;
+	/*if(!scriptsAndTexts || textPreview->winCount()<=0 || liste1->currentItem()==NULL)	return;
 
 	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
-	int winID = textPreview->getCurrentWin()-1;
+	int winID = textPreview->currentWin()-1;
 	FF7Window ff7Window = textPreview->getWindow();
 	if(ff7Window.y != y) {
 		ff7Window.y = y;

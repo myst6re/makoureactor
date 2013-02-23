@@ -39,10 +39,10 @@ bool FieldPC::open(bool dontOptimize)
 {
 	QByteArray fileData;
 
-//	qDebug() << "FieldPC::open" << dontOptimize << name;
+//	qDebug() << "FieldPC::open" << dontOptimize << name();
 
 	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
-		QByteArray lzsData = fieldArchive->getFieldData(this, false);
+		QByteArray lzsData = fieldArchive->fieldData(this, false);
 		quint32 lzsSize;
 		if(lzsData.size() < 4)		return false;
 		const char *lzsDataConst = lzsData.constData();
@@ -53,7 +53,7 @@ bool FieldPC::open(bool dontOptimize)
 
 		fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), 42);//partial decompression
 	} else {
-		fileData = fieldArchive->getFieldData(this);
+		fileData = fieldArchive->fieldData(this);
 	}
 
 	if(fileData.size() < 42)	return false;
@@ -106,9 +106,9 @@ QByteArray FieldPC::sectionData(int idPart)
 	}
 
 	if(size == -1 || fieldArchive->fieldDataIsCached(this)) {
-		return fieldArchive->getFieldData(this).mid(position, size);
+		return fieldArchive->fieldData(this).mid(position, size);
 	} else {
-		QByteArray lzsData = fieldArchive->getFieldData(this, false);
+		QByteArray lzsData = fieldArchive->fieldData(this, false);
 		quint32 lzsSize;
 		const char *lzsDataConst = lzsData.constData();
 		memcpy(&lzsSize, lzsDataConst, 4);
@@ -126,7 +126,7 @@ QPixmap FieldPC::openBackground()
 	// Search default background params
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
-	scriptsAndTexts()->getBgParamAndBgMove(paramActifs, z);
+	scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
 
 	return openBackground(paramActifs, z);
 }
@@ -134,7 +134,7 @@ QPixmap FieldPC::openBackground()
 QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
 //	qDebug() << "FieldPC::openBackground";
-	QByteArray data = fieldArchive->getFieldData(this);
+	QByteArray data = fieldArchive->fieldData(this);
 	const char *constData = data.constData();
 	quint32 dataSize = data.size();
 	QList<Palette> palettes;
@@ -390,9 +390,9 @@ QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	return QPixmap::fromImage(image);
 }
 
-bool FieldPC::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
+bool FieldPC::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
-	QByteArray data = fieldArchive->getFieldData(this);
+	QByteArray data = fieldArchive->fieldData(this);
 	const char *constData = data.constData();
 	quint32 debutSection9, i;
 
@@ -481,7 +481,7 @@ bool FieldPC::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists
 	return true;
 }
 
-FieldModelLoaderPC *FieldPC::getFieldModelLoader(bool open)
+FieldModelLoaderPC *FieldPC::fieldModelLoader(bool open)
 {
 	FieldModelLoaderPC *modelLoader = (FieldModelLoaderPC *)this->modelLoader;
 	if(!modelLoader)	modelLoader = new FieldModelLoaderPC();
@@ -496,20 +496,20 @@ FieldModelLoaderPC *FieldPC::getFieldModelLoader(bool open)
 	return modelLoader;
 }
 
-FieldModelFilePC *FieldPC::getFieldModel(int modelID, int animationID, bool animate)
+FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate)
 {
-	FieldModelLoaderPC *modelLoader = getFieldModelLoader();
+	FieldModelLoaderPC *modelLoader = fieldModelLoader();
 	QString hrc = modelLoader->HRCName(modelID);
 	QString a = modelLoader->AName(modelID, animationID);
 
-	return getFieldModel(hrc, a, animate);
+	return fieldModel(hrc, a, animate);
 }
 
-FieldModelFilePC *FieldPC::getFieldModel(const QString &hrc, const QString &a, bool animate)
+FieldModelFilePC *FieldPC::fieldModel(const QString &hrc, const QString &a, bool animate)
 {
-	if(!fieldModel)		fieldModel = new FieldModelFilePC();
-	((FieldModelFilePC *)fieldModel)->load(hrc, a, animate);
-	return (FieldModelFilePC *)fieldModel;
+	if(!_fieldModel)	_fieldModel = new FieldModelFilePC();
+	((FieldModelFilePC *)_fieldModel)->load(hrc, a, animate);
+	return (FieldModelFilePC *)_fieldModel;
 }
 
 bool FieldPC::save(QByteArray &newData, bool compress)
@@ -520,7 +520,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 		return false;
 	}
 
-	QByteArray decompresse = fieldArchive->getFieldData(this), section, toc;
+	QByteArray decompresse = fieldArchive->fieldData(this), section, toc;
 	const char *decompresseData = decompresse.constData();
 	quint32 sectionPositions[9], size, section_size;
 
@@ -563,7 +563,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 
 	// Section 3 (model loader PC)
 	if(modelLoader && modelLoader->isLoaded() && modelLoader->isModified()) {
-		section = getFieldModelLoader()->save();
+		section = fieldModelLoader()->save();
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
@@ -610,8 +610,8 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	toc.append((char *)&size, 4); // pos section 8
 
 	// Section 8 (trigger)
-	if(inf && inf->isModified()) {
-		section = inf->save();
+	if(_inf && _inf->isModified()) {
+		section = _inf->save();
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
@@ -627,15 +627,15 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	newData.prepend(toc);
 
 //	if(decompresse != newData) {
-//		QFile fic("test_"+name+"_nouveau");
+//		QFile fic("test_"+name()+"_nouveau");
 //		fic.open(QIODevice::WriteOnly);
 //		fic.write(newData);
 //		fic.close();
-//		QFile fic2("test_"+name+"_original");
+//		QFile fic2("test_"+name()+"_original");
 //		fic2.open(QIODevice::WriteOnly);
 //		fic2.write(decompresse);
 //		fic2.close();
-//		qDebug() << name << " : ERROR";
+//		qDebug() << name() << " : ERROR";
 ////		newData = decompresse;
 //	}
 
@@ -659,7 +659,7 @@ qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldParts part)
 		memcpy(sectionPositions, &(data.constData()[6]), 9 * 4); // header
 
 		if(part.testFlag(ModelLoader)) {
-			FieldModelLoaderPC *modelLoader = getFieldModelLoader(false);
+			FieldModelLoaderPC *modelLoader = fieldModelLoader(false);
 			if(!modelLoader->load(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4))) {
 				return 2;
 			}

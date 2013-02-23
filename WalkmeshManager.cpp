@@ -467,9 +467,9 @@ QWidget *WalkmeshManager::buildMiscPage()
 
 void WalkmeshManager::fill(Field *field, bool reload)
 {
-	if((!reload && field->getInf() == infFile) || !field)	return;
+	if((!reload && field->inf() == infFile) || !field)	return;
 
-	infFile = field->getInf();
+	infFile = field->inf();
 	idFile = field->walkmesh();
 	caFile = field->camera();
 

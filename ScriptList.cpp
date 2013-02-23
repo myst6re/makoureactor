@@ -33,7 +33,7 @@ Script *ScriptList::currentScript()
 {
 	int scriptID = selectedID();
 	if(scriptID != -1)
-		return grpScript->getScript(scriptID);
+		return grpScript->script(scriptID);
 	return NULL;
 }
 
@@ -44,9 +44,9 @@ void ScriptList::fill(GrpScript *_grpScript)
 	clear();
 	int i=0;
 	
-	foreach(Script *script, grpScript->getScripts())
+	foreach(Script *script, grpScript->scripts())
 	{
-		QListWidgetItem *item = new QListWidgetItem(grpScript->getScriptName(i), this);
+		QListWidgetItem *item = new QListWidgetItem(grpScript->scriptName(i), this);
 		if(script->isEmpty())			item->setForeground(QColor(0xCC,0xCC,0xCC));
 		else if(script->isVoid())		item->setForeground(QColor(0x66,0x66,0x66));
 		++i;
@@ -56,10 +56,10 @@ void ScriptList::fill(GrpScript *_grpScript)
 void ScriptList::localeRefresh()
 {
 	int i=0;
-	foreach(Script *script, grpScript->getScripts())
+	foreach(Script *script, grpScript->scripts())
 	{
 		QListWidgetItem *itm = item(i);
-		itm->setText(grpScript->getScriptName(i));
+		itm->setText(grpScript->scriptName(i));
 		if(script->isEmpty())			itm->setForeground(QColor(0xCC,0xCC,0xCC));
 		else if(script->isVoid())		itm->setForeground(QColor(0x66,0x66,0x66));
 		else							itm->setForeground(QBrush());

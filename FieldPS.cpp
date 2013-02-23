@@ -41,7 +41,7 @@ bool FieldPS::open(bool dontOptimize)
 	const int headerSize = 28;
 
 	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
-		QByteArray lzsData = fieldArchive->getFieldData(this, false);
+		QByteArray lzsData = fieldArchive->fieldData(this, false);
 		quint32 lzsSize;
 		if(lzsData.size() < 4) return false;
 
@@ -53,7 +53,7 @@ bool FieldPS::open(bool dontOptimize)
 
 		fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize);//partial decompression
 	} else {
-		fileData = fieldArchive->getFieldData(this);
+		fileData = fieldArchive->fieldData(this);
 	}
 
 	if(fileData.size() < headerSize) return false;
@@ -111,9 +111,9 @@ QByteArray FieldPS::sectionData(int idPart)
 	}
 
 	if(size == -1 || fieldArchive->fieldDataIsCached(this)) {
-		return fieldArchive->getFieldData(this).mid(position, size);
+		return fieldArchive->fieldData(this).mid(position, size);
 	} else {
-		QByteArray lzsData = fieldArchive->getFieldData(this, false);
+		QByteArray lzsData = fieldArchive->fieldData(this, false);
 		quint32 lzsSize;
 		const char *lzsDataConst = lzsData.constData();
 		memcpy(&lzsSize, lzsDataConst, 4);
@@ -125,10 +125,10 @@ QByteArray FieldPS::sectionData(int idPart)
 	}
 }
 
-bool FieldPS::getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
+bool FieldPS::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
 	/*--- OUVERTURE DU DAT ---*/
-	QByteArray datDataDec = fieldArchive->getFieldData(this);
+	QByteArray datDataDec = fieldArchive->fieldData(this);
 	const char *constDatData = datDataDec.constData();
 	quint32 i, start, debutSection3, debutSection4, debut1, debut2, debut3, debut4, debut5;
 
@@ -227,7 +227,7 @@ QPixmap FieldPS::openBackground()
 	// Search default background params
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
-	scriptsAndTexts()->getBgParamAndBgMove(paramActifs, z);
+	scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
 
 	return openBackground(paramActifs, z);
 }
@@ -235,7 +235,7 @@ QPixmap FieldPS::openBackground()
 QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
 	/*--- OUVERTURE DU MIM ---*/
-	QByteArray mimDataDec = fieldArchive->getMimData(this);
+	QByteArray mimDataDec = fieldArchive->mimData(this);
 	const char *constMimData = mimDataDec.constData();
 	quint32 mimDataSize = mimDataDec.size();
 	MIM headerPal, headerImg, headerEffect;
@@ -270,7 +270,7 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	}
 	
 	/*--- OUVERTURE DU DAT ---*/
-	QByteArray datDataDec = fieldArchive->getFieldData(this);
+	QByteArray datDataDec = fieldArchive->fieldData(this);
 	const char *constDatData = datDataDec.constData();
 	quint32 datDataSize = datDataDec.size();
 	quint32 start, debutSection3, debutSection4, debut1, debut2, debut3, debut4, debut5;
@@ -577,7 +577,7 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	return QPixmap::fromImage(image);
 }
 
-FieldModelLoaderPS *FieldPS::getFieldModelLoader(bool open)
+FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 {
 	FieldModelLoaderPS *modelLoader = (FieldModelLoaderPS *)this->modelLoader;
 	if(!modelLoader)	modelLoader = new FieldModelLoaderPS();
@@ -589,18 +589,18 @@ FieldModelLoaderPS *FieldPS::getFieldModelLoader(bool open)
 	return modelLoader;
 }
 
-FieldModelFilePS *FieldPS::getFieldModel(int modelID, int animationID, bool animate)
+FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate)
 {
-	if(!fieldModel) 	fieldModel = new FieldModelFilePS();
-	((FieldModelFilePS *)fieldModel)->load(fieldArchive, this, modelID, animationID, animate);
-	return (FieldModelFilePS *)fieldModel;
+	if(!_fieldModel) 	_fieldModel = new FieldModelFilePS();
+	((FieldModelFilePS *)_fieldModel)->load(fieldArchive, this, modelID, animationID, animate);
+	return (FieldModelFilePS *)_fieldModel;
 }
 
 bool FieldPS::save(QByteArray &newData, bool compress)
 {
 	if(!isOpen())	return false;
 
-	QByteArray decompresse = fieldArchive->getFieldData(this), toc;
+	QByteArray decompresse = fieldArchive->fieldData(this), toc;
 	const char *decompresseData = decompresse.constData();
 	quint32 padd, pos, debutSections[9];
 
@@ -644,8 +644,8 @@ bool FieldPS::save(QByteArray &newData, bool compress)
 	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
 
 	// Section 5 (trigger)
-	if(inf && inf->isModified()) {
-		newData.append(inf->save());
+	if(_inf && _inf->isModified()) {
+		newData.append(_inf->save());
 	} else {
 		newData.append(decompresse.mid(debutSections[4]-padd, debutSections[5]-debutSections[4]));
 	}
@@ -665,15 +665,15 @@ bool FieldPS::save(QByteArray &newData, bool compress)
 	newData.prepend(toc);
 
 //	if(decompresse != newData) {
-//		QFile fic("test_"+name+"_nouveau");
+//		QFile fic("test_"+name()+"_nouveau");
 //		fic.open(QIODevice::WriteOnly);
 //		fic.write(newData);
 //		fic.close();
-//		QFile fic2("test_"+name+"_original");
+//		QFile fic2("test_"+name()+"_original");
 //		fic2.open(QIODevice::WriteOnly);
 //		fic2.write(decompresse);
 //		fic2.close();
-//		qDebug() << name << " : ERROR";
+//		qDebug() << name() << " : ERROR";
 //		newData = decompresse;
 //	}
 

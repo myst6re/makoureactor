@@ -41,10 +41,10 @@ private:
 	QMultiMap<int, QList<int> > _tex_files;
 	QList<QString> tex2id;
 
-	bool open_hrc(QIODevice *hrc_file, QMultiMap<int, QStringList> &rsd_files);
-	bool open_a(QIODevice *a_file, bool animate=false);
-	QString open_rsd(QIODevice *, int);
-	static QPixmap open_tex(QIODevice *);
+	bool openHrc(QIODevice *hrc_file, QMultiMap<int, QStringList> &rsd_files);
+	bool openA(QIODevice *a_file, bool animate=false);
+	QString openRsd(QIODevice *, int);
+	static QPixmap openTex(QIODevice *);
 };
 
 #endif // FIELDMODELFILEPC_H

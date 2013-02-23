@@ -4,6 +4,8 @@ LgpItemModel::LgpItemModel(Lgp *lgp, QObject *parent) :
 	QAbstractItemModel(parent), lgp(lgp)
 {
 	fileList = lgp->fileList();
+	QFileIconProvider iconProvider;
+	fileIcon = iconProvider.icon(QFileIconProvider::File);
 }
 
 QModelIndex LgpItemModel::index(int row, int column, const QModelIndex &parent) const
@@ -64,7 +66,7 @@ QVariant LgpItemModel::data(const QModelIndex &index, int role) const
 		break;
 	case Qt::DecorationRole:
 		if(index.column() == 0) {
-			return iconProvider.icon(QFileIconProvider::File);
+			return fileIcon;
 		}
 		break;
 	case Qt::TextAlignmentRole:
@@ -104,10 +106,12 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	treeView->setModel(model);
 
 	replaceButton = new QPushButton(tr("Remplacer"), this);
+	extractButton = new QPushButton(tr("Extraire"), this);
 	packButton = new QPushButton(tr("Créer l'image disque modifiée"), this);
 
 	QHBoxLayout *barLayout = new QHBoxLayout;
 	barLayout->addWidget(replaceButton);
+	barLayout->addWidget(extractButton);
 	barLayout->addWidget(packButton);
 	barLayout->addStretch();
 
@@ -116,35 +120,74 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	layout->addWidget(treeView, 1);
 
 	connect(replaceButton, SIGNAL(released()), SLOT(replaceCurrent()));
+	connect(extractButton, SIGNAL(released()), SLOT(extractCurrent()));
 	connect(packButton, SIGNAL(released()), SLOT(pack()));
 	connect(treeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(setButtonsState()));
 }
 
 void LgpDialog::replaceCurrent()
 {
-	/*QModelIndex index = treeView->currentIndex();
+	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		IsoFileOrDirectory *fileOrDir = (IsoFileOrDirectory *)index.internalPointer();
-		if(fileOrDir && fileOrDir->isFile()) {
-			QString extension = fileOrDir->name().mid(fileOrDir->name().lastIndexOf('.') + 1);
+		QString *filePath = (QString *)index.internalPointer();
+		if(filePath) {
+			QString extension = filePath->mid(filePath->lastIndexOf('.') + 1);
 			QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), "", tr("Fichier %1 (*.%1);;Tous les fichiers (*)").arg(extension));
 			if(path.isNull()) {
 				return;
 			}
 
-			QFile replaceFile(path);
-			if(replaceFile.open(QIODevice::ReadOnly)) {
-				((IsoFile *)fileOrDir)->setData(replaceFile.readAll());
-				replaceFile.close();
-			} else {
-				QMessageBox::warning(this, tr("Erreur"), tr("Impossible d'ouvrir le fichier ! (Message : %1").arg(replaceFile.errorString()));
+			if(!lgp->setFile(*filePath, new QFile(path))) {
+				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de modifier l'archive !"));
 			}
 		}
-	}*/
+	}
+}
+
+void LgpDialog::extractCurrent()
+{
+	QModelIndex index = treeView->currentIndex();
+	if(index.isValid()) {
+		QString *filePath = (QString *)index.internalPointer();
+		if(filePath) {
+			QString extension = filePath->mid(filePath->lastIndexOf('.') + 1);
+			QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), "", tr("Fichier %1 (*.%1);;Tous les fichiers (*)").arg(extension));
+			if(path.isNull()) {
+				return;
+			}
+
+			QIODevice *io = lgp->modifiedFile(*filePath);
+			if(io && io->open(QIODevice::ReadOnly)) {
+				QFile file(path);
+				if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+					//TODO
+				}
+//TODO:error
+			}
+		}
+	}
 }
 
 void LgpDialog::pack()
 {
+	QString path = QFileDialog::getOpenFileName(this, tr("Enregistrer sous"), "", tr("Fichier Lgp (*.lgp)"));
+	if(path.isNull()) {
+		return;
+	}
+
+	QFileInfo info1(path), info2(lgp->fileName());
+	if(info1 == info2) {
+		QMessageBox::warning(this, tr("Action impossible"), tr("Merci de sélectionner un autre fichier que celui actuellement ouvert par le logiciel."));
+		return;
+	}
+
+	if(!lgp->pack(path)) {//TODO: observer
+		if(lgp->error() != Lgp::AbortError) {
+			QMessageBox::warning(this, tr("Erreur"), tr("Impossible de créer l'archive (message : %1).").arg(lgp->errorString()));
+		} else {
+			return;
+		}
+	}
 }
 
 void LgpDialog::setButtonsState()

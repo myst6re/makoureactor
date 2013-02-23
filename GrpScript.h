@@ -38,19 +38,19 @@ public:
 	bool addScript(const QByteArray &script, bool explodeInit=true);
 	// void replaceScript(int row, QByteArray script=QByteArray());
 
-	QString getName() const;
-	const QString &getRealName() const;
+	QString name() const;
+	const QString &realName() const;
 	void setName(const QString &name);
 	int size() const;
-	Script *getScript(quint8 scriptID) const;
-	const QList<Script *> &getScripts() const;
+	Script *script(quint8 scriptID) const;
+	const QList<Script *> &scripts() const;
 	QByteArray toByteArray(quint8 scriptID) const;
-	void getBgParams(QHash<quint8, quint8> &paramActifs) const;
-	void getBgMove(qint16 z[2], qint16 *x=0, qint16 *y=0) const;
-	Type getTypeID();
-	QString getType();
-	QColor getTypeColor();
-	QString getScriptName(quint8 scriptID);
+	void backgroundParams(QHash<quint8, quint8> &paramActifs) const;
+	void backgroundMove(qint16 z[2], qint16 *x=0, qint16 *y=0) const;
+	Type typeID();
+	QString type();
+	QColor typeColor();
+	QString scriptName(quint8 scriptID);
 
 	bool searchOpcode(int opcode, int &scriptID, int &opcodeID) const;
 	bool searchVar(quint8 bank, quint8 adress, int value, int &scriptID, int &opcodeID) const;
@@ -74,8 +74,8 @@ private:
 	void setType();
 	bool search(int &scriptID, int &opcodeID) const;
 
-	QString name;
-	QList<Script *> scripts;
+	QString _name;
+	QList<Script *> _scripts;
 
 	qint16 character;
 	bool animation;

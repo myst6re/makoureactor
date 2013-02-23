@@ -115,7 +115,7 @@ void MassExportDialog::fill(FieldArchive *fieldArchive, int fieldID)
 	for(int i=0 ; i<_fieldArchive->size() ; ++i) {
 		Field *field = _fieldArchive->field(i, false);
 		if(field) {
-			QListWidgetItem *item = new QListWidgetItem(field->getName());
+			QListWidgetItem *item = new QListWidgetItem(field->name());
 			item->setData(Qt::UserRole, i);
 			fieldList->addItem(item);
 		}

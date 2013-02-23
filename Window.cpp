@@ -350,7 +350,7 @@ int Window::closeFile(bool quit)
 			Field *curField = fieldArchive->field(j, false);
 			if(curField && curField->isOpen() && curField->isModified())
 			{
-				fileChangedList += "\n - " + curField->getName();
+				fileChangedList += "\n - " + curField->name();
 				if(i>10)
 				{
 					fileChangedList += "\n...";
@@ -524,7 +524,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 
 	for(int fieldID=0 ; fieldID<fieldArchive->size() ; ++fieldID) {
 		Field *f = fieldArchive->field(fieldID, false);
-		const QString &name = f->getName();
+		const QString &name = f->name();
 
 		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << "");
 		item->setData(0, Qt::UserRole, fieldID);
@@ -695,7 +695,7 @@ void Window::showGrpScripts()
 
 	bool modelLoaded = false;
 
-	int modelID = field->scriptsAndTexts()->getModelID(groupScriptList->selectedID());
+	int modelID = field->scriptsAndTexts()->modelID(groupScriptList->selectedID());
 	Data::currentModelID = modelID;
 	if(fieldModel && modelID != -1) {
 		modelLoaded = fieldModel->load(field, modelID);
@@ -1015,7 +1015,7 @@ void Window::massExport()
 
 					Field *f = fieldArchive->field(fieldID);
 					if(f) {
-						path = QDir::cleanPath(QString("%1/%2.%3").arg(massExportDialog->directory(), f->getName(), extension));
+						path = QDir::cleanPath(QString("%1/%2.%3").arg(massExportDialog->directory(), f->name(), extension));
 
 						if(massExportDialog->overwrite() || !QFile::exists(path)) {
 							QPixmap background = f->openBackground();
@@ -1041,7 +1041,7 @@ void Window::massExport()
 							int akaoCount = akaoList->size();
 							for(int i=0 ; i<akaoCount ; ++i) {
 								if(!akaoList->isTut(i)) {
-									path = QDir::cleanPath(QString("%1/%2-%3.%4").arg(massExportDialog->directory(), f->getName()).arg(i).arg(extension));
+									path = QDir::cleanPath(QString("%1/%2-%3.%4").arg(massExportDialog->directory(), f->name()).arg(i).arg(extension));
 									if(massExportDialog->overwrite() || !QFile::exists(path)) {
 										QFile tutExport(path);
 										if(tutExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -1069,7 +1069,7 @@ void Window::massExport()
 					if(f) {
 						Section1File *section1 = f->scriptsAndTexts();
 						if(section1->isOpen()) {
-							path = QDir::cleanPath(QString("%1/%2.%3").arg(massExportDialog->directory(), f->getName(), extension));
+							path = QDir::cleanPath(QString("%1/%2.%3").arg(massExportDialog->directory(), f->name(), extension));
 							if(massExportDialog->overwrite() || !QFile::exists(path)) {
 								QFile textExport(path);
 								if(textExport.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
@@ -1117,7 +1117,7 @@ void Window::importer()
 		return;
 	}
 
-	Field::FieldParts parts = dialog.getParts();
+	Field::FieldParts parts = dialog.parts();
 	if(parts == 0) {
 		return;
 	}
@@ -1250,7 +1250,7 @@ void Window::encounterManager()
 void Window::tutManager()
 {
 	if(field) {
-		TutFile *tut = field->tutosAndSounds(), *tutPC = fieldArchive->getTut(field->getName());
+		TutFile *tut = field->tutosAndSounds(), *tutPC = fieldArchive->tut(field->name());
 		if(tut->isOpen()) {
 			TutWidget dialog(field, tut, tutPC, this);
 			if(dialog.exec()==QDialog::Accepted)
@@ -1302,7 +1302,7 @@ void Window::backgroundManager()
 void Window::miscManager()
 {
 	if(field) {
-		InfFile *inf = field->getInf();
+		InfFile *inf = field->inf();
 		if(inf->isOpen()) {
 			MiscWidget dialog(inf, field, this);
 			if(dialog.exec()==QDialog::Accepted)

@@ -36,7 +36,7 @@ KeyEditorDialog::KeyEditorDialog(quint16 value, QWidget *parent)
 	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
 }
 
-int KeyEditorDialog::keys()
+int KeyEditorDialog::keys() const
 {
 	QList<QCheckBox *> all = this->findChildren<QCheckBox *>();
 	quint16 result = 0;

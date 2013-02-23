@@ -136,11 +136,11 @@ void ModelManager::fill(FieldPC *field, bool reload)
 
 	clear();
 
-	if(!field->getFieldModelLoader()->isLoaded()) {
+	if(!field->fieldModelLoader()->isLoaded()) {
 		return;
 	}
 
-	fieldModelLoader = field->getFieldModelLoader();
+	fieldModelLoader = field->fieldModelLoader();
 	this->field = field;
 
 	globalScale->blockSignals(true);
@@ -394,7 +394,7 @@ void ModelManager::modifyHRC(const QString &hrc)
 	if(modelPreview) {
 		modelPreview->load(field, hrc, "aafe", false);
 		QString a;
-		switch(modelPreview->nb_bones()) {
+		switch(modelPreview->boneCount()) {
 		case 5:		a = "avhd";	break;
 		case 9:		a = "geaf";	break;
 		case 11:	a = "bdfe";	break;
@@ -478,12 +478,12 @@ void ModelManager::addAnim()
 
 		QStringList files;
 
-		int nb_bones = modelPreview ? modelPreview->nb_bones() : 0;
+		int boneCount = modelPreview ? modelPreview->boneCount() : 0;
 
 		foreach(const QString &file, Data::charLgp.fileList()) {
 			QCoreApplication::processEvents();
 			if(file.endsWith(".a", Qt::CaseInsensitive)) {
-				if(nb_bones == 0 || Data::charlgp_animBoneCount.value(file.toLower()) == nb_bones)
+				if(boneCount == 0 || Data::charlgp_animBoneCount.value(file.toLower()) == boneCount)
 					files.append(file.left(file.size()-2).toUpper());
 			}
 		}

@@ -17,7 +17,7 @@ public:
 private:
 	Lgp *lgp;
 	QStringList fileList;
-	QFileIconProvider iconProvider;
+	QIcon fileIcon;
 };
 
 class LgpDialog : public QDialog
@@ -27,12 +27,13 @@ public:
 	LgpDialog(Lgp *lgp, QWidget *parent=0);
 private slots:
 	void replaceCurrent();
+	void extractCurrent();
 	void pack();
 	void setButtonsState();
 private:
 	Lgp *lgp;
 	QTreeView *treeView;
-	QPushButton *replaceButton, *packButton;
+	QPushButton *extractButton, *replaceButton, *packButton;
 };
 
 #endif // LGPDIALOG_H

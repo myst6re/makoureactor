@@ -1117,16 +1117,16 @@ void Script::listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window
 //	}
 //}
 
-void Script::getBgParams(QHash<quint8, quint8> &paramActifs) const
+void Script::backgroundParams(QHash<quint8, quint8> &paramActifs) const
 {
 	foreach(Opcode *opcode, opcodes)
-		opcode->getBgParams(paramActifs);
+		opcode->backgroundParams(paramActifs);
 }
 
-void Script::getBgMove(qint16 z[2], qint16 *x, qint16 *y) const
+void Script::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 {
 	foreach(Opcode *opcode, opcodes)
-		opcode->getBgMove(z, x, y);
+		opcode->backgroundMove(z, x, y);
 }
 
 const QList<Opcode *> &Script::getExpandedItems() const

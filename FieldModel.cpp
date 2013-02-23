@@ -47,7 +47,7 @@ bool FieldModel::load(FieldPC *field, const QString &hrc, const QString &a, bool
 
 	blockAll = true;
 
-	data = field->getFieldModel(hrc, a, animate); // warning: async!
+	data = field->fieldModel(hrc, a, animate); // warning: async!
 	if(data->isLoaded()) {
 		updateGL();
 		if(animate && data->frameCount()>1)	timer.start(30);
@@ -73,7 +73,7 @@ bool FieldModel::load(Field *field, int modelID, int animationID, bool animate)
 
 	blockAll = true;
 
-	data = field->getFieldModel(modelID, animationID, animate); // warning: async!
+	data = field->fieldModel(modelID, animationID, animate); // warning: async!
 	if(data->isLoaded()) {
 		updateGL();
 		if(animate && data->frameCount()>1)	timer.start(30);
@@ -89,7 +89,7 @@ bool FieldModel::load(Field *field, int modelID, int animationID, bool animate)
 	return data->isLoaded();
 }
 
-int FieldModel::nb_bones()
+int FieldModel::boneCount() const
 {
 	return data ? data->boneCount() : 0;
 }

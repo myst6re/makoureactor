@@ -36,14 +36,14 @@ public:
 	QPixmap openBackground();
 	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 
-	bool getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
+	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 
 	bool save(QByteArray &newData, bool compress);
 	qint8 importer(const QByteArray &data, bool isPSField, FieldParts part);
 
-	FieldModelLoaderPC *getFieldModelLoader(bool open=true);
-	FieldModelFilePC *getFieldModel(int modelID, int animationID=0, bool animate=true);
-	FieldModelFilePC *getFieldModel(const QString &hrc, const QString &a, bool animate=true);
+	FieldModelLoaderPC *fieldModelLoader(bool open=true);
+	FieldModelFilePC *fieldModel(int modelID, int animationID=0, bool animate=true);
+	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate=true);
 protected:
 	QByteArray sectionData(FieldPart part);
 	QByteArray sectionData(int idPart);

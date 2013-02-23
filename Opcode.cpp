@@ -256,7 +256,7 @@ void Opcode::listWindows(int groupID, int scriptID, int opcodeID, QMultiMap<quin
 	}
 }
 
-void Opcode::getBgParams(QHash<quint8, quint8> &enabledParams) const
+void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 {
 	quint8 param, state;
 
@@ -284,7 +284,7 @@ void Opcode::getBgParams(QHash<quint8, quint8> &enabledParams) const
 	}*/
 }
 
-void Opcode::getBgMove(qint16 z[2], qint16 *x, qint16 *y) const
+void Opcode::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 {
 	if(id()==0x2C)//Move Background Z
 	{

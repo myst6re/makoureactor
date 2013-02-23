@@ -76,12 +76,12 @@ public:
 	QPixmap openBackground();
 	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 
-	bool getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
+	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 
 	bool save(QByteArray &newData, bool compress);
 
-	FieldModelLoaderPS *getFieldModelLoader(bool open=true);
-	FieldModelFilePS *getFieldModel(int modelID, int animationID=0, bool animate=true);
+	FieldModelLoaderPS *fieldModelLoader(bool open=true);
+	FieldModelFilePS *fieldModel(int modelID, int animationID=0, bool animate=true);
 protected:
 	QByteArray sectionData(FieldPart part);
 	QByteArray sectionData(int idPart);

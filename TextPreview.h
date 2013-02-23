@@ -47,33 +47,33 @@ public:
 	void setReadOnly(bool ro);
 	void setWins(const QList<FF7Window> &windows, bool update=true);
 	void resetCurrentWin();
-	int getCurrentWin();
-	FF7Window getWindow();
-	int getNbWin();
+	int currentWin() const;
+	FF7Window getWindow() const;
+	int winCount() const;
 	void nextWin();
 	void prevWin();
 	void clearWin();
 	void setText(const QByteArray &textData, bool reset=true);
-	int getCurrentPage();
-	int getNbPages();
+	int currentPage() const;
+	int pageCount() const;
 	void nextPage();
 	void prevPage();
 	void calcSize();
 	QSize getCalculatedSize() const;
-	QPixmap getIconImage(int iconId);
-	void drawWindow(QPainter *painter, WindowType type=Normal);
+	static QPixmap getIconImage(int iconId);
+	void drawWindow(QPainter *painter, WindowType type=Normal) const;
 	static void drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTopLeft, QRgb colorTopRight, QRgb colorBottomLeft, QRgb colorBottomRight, WindowType type=Normal);
 private slots:
 	void animate();
 signals:
-	void positionChanged(QPoint);
+	void positionChanged(const QPoint &);
 private:
 	bool drawTextArea(QPainter *painter);
-	QPoint realPos(const FF7Window &ff7Window);
+	static QPoint realPos(const FF7Window &ff7Window);
 	QList<FF7Window> ff7Windows;
 	QByteArray ff7Text;
-	int currentPage;
-	int currentWin;
+	int _currentPage;
+	int _currentWin;
 	QList<int> pagesPos;
 	int maxW, maxH;
 	static bool curFrame;

@@ -75,7 +75,7 @@ void BGDialog::fill(Field *field, bool reload)
 
 	parameterChanged(0);
 	layerChanged();
-	image->setName(field->getName());
+	image->setName(field->name());
 	updateBG();
 }
 
@@ -115,7 +115,7 @@ void BGDialog::fillWidgets()
 	allparams.clear();
 	params.clear();
 
-	if(field->getUsedParams(usedParams, layerExists))
+	if(field->usedParams(usedParams, layerExists))
 	{
 		foreach(const quint8 &param, usedParams.keys()) {
 			parametersWidget->addItem(tr("Paramètre %1").arg(param), param);
@@ -163,7 +163,7 @@ void BGDialog::fillWidgets()
 		y[1] = -1;
 		z[0] = -1;
 		z[1] = -1;
-		field->scriptsAndTexts()->getBgParamAndBgMove(params, z, x, y);
+		field->scriptsAndTexts()->bgParamAndBgMove(params, z, x, y);
 	}
 }
 

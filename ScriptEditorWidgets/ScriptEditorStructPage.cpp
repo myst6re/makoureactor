@@ -142,7 +142,7 @@ void ScriptEditorExecPage::setOpcode(Opcode *opcode)
 	groupList->setCurrentIndex(opcodeExec->groupID);
 
 	for(int i=0 ; i<32 ; ++i) {
-		scriptList->setItemText(i, grp->getScriptName(i+1));
+		scriptList->setItemText(i, grp->scriptName(i+1));
 	}
 	scriptList->setCurrentIndex(opcodeExec->scriptID);
 
@@ -157,7 +157,7 @@ void ScriptEditorExecPage::updateScriptList(int groupID)
 	}
 
 	for(int i=0 ; i<32 ; ++i) {
-		scriptList->setItemText(i, grp->getScriptName(i+1));
+		scriptList->setItemText(i, grp->scriptName(i+1));
 	}
 }
 

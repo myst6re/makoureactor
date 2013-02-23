@@ -26,7 +26,7 @@ class ImportDialog : public QDialog
 	Q_OBJECT
 public:
 	explicit ImportDialog(bool sourceSameTypeAsTarget, bool isDat, QWidget *parent=0);
-	Field::FieldParts getParts();
+	Field::FieldParts parts() const;
 private:
 	QCheckBox *scripts;
 	QCheckBox *akaos;

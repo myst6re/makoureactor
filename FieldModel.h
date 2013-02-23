@@ -37,7 +37,7 @@ public:
 	bool load(FieldPC *field, const QString &hrc, const QString &a, bool animate=true);
 	bool load(Field *field, int modelID, int animationID=0, bool animate=true);
 	void clear();
-	int nb_bones();
+	int boneCount() const;
 public slots:
 	void animate();
 private:

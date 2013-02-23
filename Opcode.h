@@ -163,8 +163,8 @@ public:
 	void shiftTextIds(int textId, int steps);
 	void shiftTutIds(int tutId, int steps);
 	void listWindows(int groupID, int scriptID, int opcodeID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
-	void getBgParams(QHash<quint8, quint8> &enabledParams) const;
-	void getBgMove(qint16 z[2], qint16 *x, qint16 *y) const;
+	void backgroundParams(QHash<quint8, quint8> &enabledParams) const;
+	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
 	static QString _personnage(quint8 persoID);
 

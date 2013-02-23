@@ -35,8 +35,8 @@ public:
 	bool isModified() const;
 	void setModified(bool modified);
 
-	int getModelID(quint8 grpScriptID) const;
-	void getBgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z=0, qint16 *x=0, qint16 *y=0) const;
+	int modelID(quint8 grpScriptID) const;
+	void bgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z=0, qint16 *x=0, qint16 *y=0) const;
 
 	const QList<GrpScript *> &grpScripts() const;
 	GrpScript *grpScript(int groupID) const;

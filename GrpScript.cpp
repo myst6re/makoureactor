@@ -26,42 +26,42 @@ GrpScript::GrpScript() :
 }
 
 GrpScript::GrpScript(const QString &name) :
-	name(name), character(-1), animation(false), location(false), director(false)
+	_name(name), character(-1), animation(false), location(false), director(false)
 {
 }
 
-GrpScript::GrpScript(const GrpScript &other)
-	: name(other.getRealName()), character(-1), animation(false), location(false), director(false)
+GrpScript::GrpScript(const GrpScript &other) :
+	_name(other.realName()), character(-1), animation(false), location(false), director(false)
 {
-	foreach(Script *script, other.getScripts()) {
-		scripts.append(new Script(*script));
+	foreach(Script *script, other.scripts()) {
+		_scripts.append(new Script(*script));
 	}
 }
 
 GrpScript::~GrpScript()
 {
-	foreach(Script *script, scripts)	delete script;
+	foreach(Script *script, _scripts)	delete script;
 }
 
 void GrpScript::addScript()
 {
-	if(scripts.isEmpty())	scripts.append(new Script());
-	scripts.append(new Script());
+	if(_scripts.isEmpty())	_scripts.append(new Script());
+	_scripts.append(new Script());
 }
 
 bool GrpScript::addScript(const QByteArray &script, bool explodeInit)
 {
 	Script *s;
 
-	if(explodeInit && scripts.isEmpty())
+	if(explodeInit && _scripts.isEmpty())
 	{
 		s = new Script(script);
 		if(!s->isValid()) {
 			delete s;
 			return false;
 		}
-		scripts.append(s); // S0 - Init
-		scripts.append(s->splitScriptAtReturn()); // S0 - Main
+		_scripts.append(s); // S0 - Init
+		_scripts.append(s->splitScriptAtReturn()); // S0 - Main
 	}
 	else {
 		s = new Script(script);
@@ -69,7 +69,7 @@ bool GrpScript::addScript(const QByteArray &script, bool explodeInit)
 			delete s;
 			return false;
 		}
-		scripts.append(s);
+		_scripts.append(s);
 	}
 
 	return true;
@@ -77,16 +77,16 @@ bool GrpScript::addScript(const QByteArray &script, bool explodeInit)
 
 /* void GrpScript::replaceScript(int row, QByteArray script)
 {
-	scripts.replace(row, new Script(script));
+	_scripts.replace(row, new Script(script));
 } */
 
 void GrpScript::setType()
 {
-	if(scripts.isEmpty())	return;
+	if(_scripts.isEmpty())	return;
 	character = -1;
 	director = animation = location = false;
 	
-	Script *firstScript = scripts.first();
+	Script *firstScript = _scripts.first();
 	
 	foreach(Opcode *opcode, firstScript->getOpcodes())
 	{
@@ -115,66 +115,66 @@ void GrpScript::setType()
 	}
 }
 
-void GrpScript::getBgParams(QHash<quint8, quint8> &paramActifs) const
+void GrpScript::backgroundParams(QHash<quint8, quint8> &paramActifs) const
 {
-	if(scripts.isEmpty())	return;
+	if(_scripts.isEmpty())	return;
 
-	scripts.first()->getBgParams(paramActifs);
+	_scripts.first()->backgroundParams(paramActifs);
 }
 
-void GrpScript::getBgMove(qint16 z[2], qint16 *x, qint16 *y) const
+void GrpScript::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 {
-	if(scripts.size()<2)	return;
+	if(_scripts.size()<2)	return;
 
-	foreach(Script *script, scripts) {
-		script->getBgMove(z, x, y);
+	foreach(Script *script, _scripts) {
+		script->backgroundMove(z, x, y);
 	}
 }
 
-QString GrpScript::getName() const
+QString GrpScript::name() const
 {
-	return name.isEmpty() ? QObject::tr("Sans nom") : name;
+	return _name.isEmpty() ? QObject::tr("Sans nom") : _name;
 }
 
 void GrpScript::setName(const QString &name)
 {
-	this->name = name;
+	_name = name;
 }
 
-const QString &GrpScript::getRealName() const
+const QString &GrpScript::realName() const
 {
-	return name;
+	return _name;
 }
 
 int GrpScript::size() const
 {
-	return scripts.size();
+	return _scripts.size();
 }
 
-Script *GrpScript::getScript(quint8 scriptID) const
+Script *GrpScript::script(quint8 scriptID) const
 {
-	return scripts.value(scriptID);
+	return _scripts.value(scriptID);
 }
 
-const QList<Script *> &GrpScript::getScripts() const
+const QList<Script *> &GrpScript::scripts() const
 {
-	return scripts;
+	return _scripts;
 }
 
 QByteArray GrpScript::toByteArray(quint8 scriptID) const
 {
 	if(scriptID == 0)
 	{
-		if(!scripts.isEmpty() && !scripts.at(0)->isEmpty())
-			return scripts.at(0)->toByteArray()+scripts.at(1)->toByteArray();
+		if(!_scripts.isEmpty() && !_scripts.first()->isEmpty())
+			return _scripts.first()->toByteArray()+_scripts.at(1)->toByteArray();
 		return QByteArray();
 	}
-	if(scriptID+1 < scripts.size())
-		return scripts.at(scriptID+1)->toByteArray();
+	if(scriptID+1 < _scripts.size())
+		return _scripts.at(scriptID+1)->toByteArray();
 	return QByteArray();
 }
 
-GrpScript::Type GrpScript::getTypeID()
+GrpScript::Type GrpScript::typeID()
 {
 	setType();
 	if(character != -1)		return Model;
@@ -184,9 +184,9 @@ GrpScript::Type GrpScript::getTypeID()
 	return NoType;
 }
 
-QString GrpScript::getType()
+QString GrpScript::type()
 {
-	switch(getTypeID())
+	switch(typeID())
 	{
 	case Model:
 		if(character == 0xFF)	return QObject::tr("Objet 3D");
@@ -198,9 +198,9 @@ QString GrpScript::getType()
 	}
 }
 
-QColor GrpScript::getTypeColor()
+QColor GrpScript::typeColor()
 {
-	switch(getTypeID())
+	switch(typeID())
 	{
 	case Model:		return QColor(0x00,0x66,0xcc);
 	case Location:	return QColor(0x00,0xcc,0x66);
@@ -210,9 +210,9 @@ QColor GrpScript::getTypeColor()
 	}
 }
 
-QString GrpScript::getScriptName(quint8 scriptID)
+QString GrpScript::scriptName(quint8 scriptID)
 {
-	Type type = getTypeID();
+	Type type = typeID();
 	
 	switch(scriptID)
 	{
@@ -247,7 +247,7 @@ bool GrpScript::search(int &scriptID, int &opcodeID) const
 {
 	if(scriptID < 0)
 		opcodeID = scriptID = 0;
-	if(scriptID >= scripts.size())
+	if(scriptID >= _scripts.size())
 		return false;
 	return true;
 }
@@ -256,7 +256,7 @@ bool GrpScript::searchOpcode(int opcode, int &scriptID, int &opcodeID) const
 {
 	if(!search(scriptID, opcodeID))
 		return false;
-	if(scripts.at(scriptID)->searchOpcode(opcode, opcodeID))
+	if(_scripts.at(scriptID)->searchOpcode(opcode, opcodeID))
 		return true;
 
 	return searchOpcode(opcode, ++scriptID, opcodeID = 0);
@@ -266,7 +266,7 @@ bool GrpScript::searchVar(quint8 bank, quint8 adress, int value, int &scriptID, 
 {
 	if(!search(scriptID, opcodeID))
 		return false;
-	if(scripts.at(scriptID)->searchVar(bank, adress, value, opcodeID))
+	if(_scripts.at(scriptID)->searchVar(bank, adress, value, opcodeID))
 		return true;
 
 	return searchVar(bank, adress, value, ++scriptID, opcodeID = 0);
@@ -274,7 +274,7 @@ bool GrpScript::searchVar(quint8 bank, quint8 adress, int value, int &scriptID, 
 
 void GrpScript::searchAllVars(QList<FF7Var> &vars) const
 {
-	foreach(Script *script, scripts) {
+	foreach(Script *script, _scripts) {
 		script->searchAllVars(vars);
 	}
 }
@@ -283,7 +283,7 @@ bool GrpScript::searchExec(quint8 group, quint8 script, int &scriptID, int &opco
 {
 	if(!search(scriptID, opcodeID))
 		return false;
-	if(scripts.at(scriptID)->searchExec(group, script, opcodeID))
+	if(_scripts.at(scriptID)->searchExec(group, script, opcodeID))
 		return true;
 
 	return searchExec(group, script, ++scriptID, opcodeID = 0);
@@ -293,7 +293,7 @@ bool GrpScript::searchMapJump(quint16 field, int &scriptID, int &opcodeID) const
 {
 	if(!search(scriptID, opcodeID))
 		return false;
-	if(scripts.at(scriptID)->searchMapJump(field, opcodeID))
+	if(_scripts.at(scriptID)->searchMapJump(field, opcodeID))
 		return true;
 
 	return searchMapJump(field, ++scriptID, opcodeID = 0);
@@ -303,9 +303,9 @@ bool GrpScript::searchTextInScripts(const QRegExp &text, int &scriptID, int &opc
 {
 	if(scriptID < 0)
 		opcodeID = scriptID = 0;
-	if(scriptID >= scripts.size())
+	if(scriptID >= _scripts.size())
 		return false;
-	if(scripts.at(scriptID)->searchTextInScripts(text, opcodeID))
+	if(_scripts.at(scriptID)->searchTextInScripts(text, opcodeID))
 		return true;
 
 	return searchTextInScripts(text, ++scriptID, opcodeID = 0);
@@ -313,8 +313,8 @@ bool GrpScript::searchTextInScripts(const QRegExp &text, int &scriptID, int &opc
 
 bool GrpScript::searchP(int &scriptID, int &opcodeID) const
 {
-	if(scriptID >= scripts.size()) {
-		scriptID = scripts.size()-1;
+	if(scriptID >= _scripts.size()) {
+		scriptID = _scripts.size()-1;
 		opcodeID = 2147483647;
 	}
 	if(scriptID < 0)
@@ -326,7 +326,7 @@ bool GrpScript::searchOpcodeP(int opcode, int &scriptID, int &opcodeID) const
 {
 	if(!searchP(scriptID, opcodeID))
 		return false;
-	if(scripts.at(scriptID)->searchOpcodeP(opcode, opcodeID))
+	if(_scripts.at(scriptID)->searchOpcodeP(opcode, opcodeID))
 		return true;
 
 	return searchOpcodeP(opcode, --scriptID, opcodeID = 2147483647);
@@ -336,7 +336,7 @@ bool GrpScript::searchVarP(quint8 bank, quint8 adress, int value, int &scriptID,
 {
 	if(!searchP(scriptID, opcodeID))
 		return false;
-	if(scripts.at(scriptID)->searchVarP(bank, adress, value, opcodeID))
+	if(_scripts.at(scriptID)->searchVarP(bank, adress, value, opcodeID))
 		return true;
 
 	return searchVarP(bank, adress, value, --scriptID, opcodeID = 2147483647);
@@ -346,7 +346,7 @@ bool GrpScript::searchExecP(quint8 group, quint8 script, int &scriptID, int &opc
 {
 	if(!searchP(scriptID, opcodeID))
 		return false;
-	if(scripts.at(scriptID)->searchExecP(group, script, opcodeID))
+	if(_scripts.at(scriptID)->searchExecP(group, script, opcodeID))
 		return true;
 
 	return searchExecP(group, script, --scriptID, opcodeID = 2147483647);
@@ -356,7 +356,7 @@ bool GrpScript::searchMapJumpP(quint16 field, int &scriptID, int &opcodeID) cons
 {
 	if(!searchP(scriptID, opcodeID))
 		return false;
-	if(scripts.at(scriptID)->searchMapJumpP(field, opcodeID))
+	if(_scripts.at(scriptID)->searchMapJumpP(field, opcodeID))
 		return true;
 
 	return searchMapJumpP(field, --scriptID, opcodeID = 2147483647);
@@ -366,7 +366,7 @@ bool GrpScript::searchTextInScriptsP(const QRegExp &text, int &scriptID, int &op
 {
 	if(!searchP(scriptID, opcodeID))
 		return false;
-	if(scripts.at(scriptID)->searchTextInScriptsP(text, opcodeID))
+	if(_scripts.at(scriptID)->searchTextInScriptsP(text, opcodeID))
 		return true;
 
 	return searchTextInScriptsP(text, --scriptID, opcodeID = 2147483647);
@@ -374,38 +374,38 @@ bool GrpScript::searchTextInScriptsP(const QRegExp &text, int &scriptID, int &op
 
 void GrpScript::listUsedTexts(QSet<quint8> &usedTexts) const
 {
-	foreach(Script *script, scripts)
+	foreach(Script *script, _scripts)
 		script->listUsedTexts(usedTexts);
 }
 
 void GrpScript::listUsedTuts(QSet<quint8> &usedTuts) const
 {
-	foreach(Script *script, scripts)
+	foreach(Script *script, _scripts)
 		script->listUsedTuts(usedTuts);
 }
 
 void GrpScript::shiftTextIds(int textId, int steps)
 {
-	foreach(Script *script, scripts)
+	foreach(Script *script, _scripts)
 		script->shiftTextIds(textId, steps);
 }
 
 void GrpScript::shiftTutIds(int tutId, int steps)
 {
-	foreach(Script *script, scripts)
+	foreach(Script *script, _scripts)
 		script->shiftTutIds(tutId, steps);
 }
 
 void GrpScript::setWindow(const FF7Window &win)
 {
-	if(win.scriptID < scripts.size()) {
-		scripts.at(win.scriptID)->setWindow(win);
+	if(win.scriptID < _scripts.size()) {
+		_scripts.at(win.scriptID)->setWindow(win);
 	}
 }
 
 void GrpScript::listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const
 {
 	int scriptID=0;
-	foreach(Script *script, scripts)
+	foreach(Script *script, _scripts)
 		script->listWindows(groupID, scriptID++, windows, text2win);
 }

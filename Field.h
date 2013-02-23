@@ -82,7 +82,7 @@ public:
 	virtual QPixmap openBackground()=0;
 	virtual QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
 
-	virtual bool getUsedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)=0;
+	virtual bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)=0;
 
 	void setSaved();
 	virtual bool save(QByteArray &newData, bool compress)=0;
@@ -95,11 +95,11 @@ public:
 	TutFile *tutosAndSounds(bool open=true);
 	IdFile *walkmesh(bool open=true);
 	CaFile *camera(bool open=true);
-	InfFile *getInf(bool open=true);
-	virtual FieldModelLoader *getFieldModelLoader(bool open=true)=0;
-	virtual FieldModelFile *getFieldModel(int modelID, int animationID=0, bool animate=true)=0;
+	InfFile *inf(bool open=true);
+	virtual FieldModelLoader *fieldModelLoader(bool open=true)=0;
+	virtual FieldModelFile *fieldModel(int modelID, int animationID=0, bool animate=true)=0;
 
-	const QString &getName() const;
+	const QString &name() const;
 	void setName(const QString &name);
 protected:
 	virtual QByteArray sectionData(FieldPart part)=0;
@@ -107,16 +107,16 @@ protected:
 
 	bool _isOpen, _isModified;
 
-	QString name;
+	QString _name;
 
 	Section1File *section1;
 	EncounterFile *_encounter;
 	TutFile *_tut;
 	IdFile *id;
 	CaFile *ca;
-	InfFile *inf;
+	InfFile *_inf;
 	FieldModelLoader *modelLoader;
-	FieldModelFile *fieldModel;
+	FieldModelFile *_fieldModel;
 	FieldArchive *fieldArchive;
 };
 

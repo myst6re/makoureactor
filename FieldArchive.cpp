@@ -206,22 +206,22 @@ Field *FieldArchive::fieldCache=0;
 Field *FieldArchive::mimCache=0;
 Field *FieldArchive::modelCache=0;
 
-QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
+QByteArray FieldArchive::fieldData(Field *field, bool unlzs)
 {
 	QByteArray data;
 
 	// use data from the cache
 	if(unlzs && fieldDataIsCached(field)) {
-//		qDebug() << "FieldArchive use field data from cache" << field->getName();
+//		qDebug() << "FieldArchive use field data from cache" << field->name();
 		return fieldDataCache;
 	} /*else {
-		qDebug() << "FieldArchive don't use field data from cache" << field->getName() << unlzs;
+		qDebug() << "FieldArchive don't use field data from cache" << field->name() << unlzs;
 	}*/
 
 	if(isDatFile() || isLgp()) {
-		data = getFileData(field->getName(), unlzs);
+		data = fileData(field->name(), unlzs);
 	} else if(isIso() || isDirectory()) {
-		data = getFileData(field->getName().toUpper()+".DAT", unlzs);
+		data = fileData(field->name().toUpper()+".DAT", unlzs);
 	}
 
 	if(unlzs && !data.isEmpty()) { // put decompressed data in the cache
@@ -231,14 +231,14 @@ QByteArray FieldArchive::getFieldData(Field *field, bool unlzs)
 	return data;
 }
 
-QByteArray FieldArchive::getMimData(Field *field, bool unlzs)
+QByteArray FieldArchive::mimData(Field *field, bool unlzs)
 {
 	// use data from the cache
 	if(unlzs && mimDataIsCached(field)) {
 		return mimDataCache;
 	}
 
-	QByteArray data = getFileData(field->getName().toUpper()+".MIM", unlzs);
+	QByteArray data = fileData(field->name().toUpper()+".MIM", unlzs);
 
 	if(unlzs && !data.isEmpty()) { // put decompressed data in the cache
 		mimCache = field;
@@ -247,14 +247,14 @@ QByteArray FieldArchive::getMimData(Field *field, bool unlzs)
 	return data;
 }
 
-QByteArray FieldArchive::getModelData(Field *field, bool unlzs)
+QByteArray FieldArchive::modelData(Field *field, bool unlzs)
 {
 	// use data from the cache
 	if(unlzs && modelDataIsCached(field)) {
 		return modelDataCache;
 	}
 
-	QByteArray data = getFileData(field->getName().toUpper()+".BSX", unlzs);
+	QByteArray data = fileData(field->name().toUpper()+".BSX", unlzs);
 
 	if(unlzs && !data.isEmpty()) { // put decompressed data in the cache
 		modelCache = field;
@@ -263,7 +263,7 @@ QByteArray FieldArchive::getModelData(Field *field, bool unlzs)
 	return data;
 }
 
-QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
+QByteArray FieldArchive::fileData(const QString &fileName, bool unlzs)
 {
 	QByteArray data;
 
@@ -298,7 +298,7 @@ QByteArray FieldArchive::getFileData(const QString &fileName, bool unlzs)
 	return unlzs ? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4))) : data;
 }
 
-TutFile *FieldArchive::getTut(const QString &name)
+TutFile *FieldArchive::tut(const QString &name)
 {
 	if(!isLgp()) return NULL;
 
@@ -399,19 +399,19 @@ void FieldArchive::searchAll()
 		if(field != NULL) {
 			TutFile *tut = field->tutosAndSounds();
 			if(tut->isOpen()) {
-				deb.write(QString("=== %1 ===\n").arg(field->getName()).toLatin1());
+				deb.write(QString("=== %1 ===\n").arg(field->name()).toLatin1());
 				for(int j=0; j<tut->size(); ++j) {
 					if(!tut->isTut(j)) {
 						deb.write(QString("id= %1\n").arg(tut->akaoID(j)).toLatin1());
 					}
 				}
 			}
-//			qDebug() << field->getName();
+//			qDebug() << field->name();
 			/*int scriptID=0, opcodeID=0;
 			Section1File *scripts = field->scriptsAndTexts();
 			foreach(GrpScript *group, scripts->grpScripts()) {
 				scriptID=0;
-				foreach(Script *script, group->getScripts()) {
+				foreach(Script *script, group->scripts()) {
 					opcodeID = 0;
 					opcodeIf = 0;
 					iff = win = false;
@@ -427,7 +427,7 @@ void FieldArchive::searchAll()
 							win = opcode->id() == Opcode::WSIZW || opcode->id() == Opcode::WINDOW;
 						} else if(win) {
 							if(opcode->isJump()) {
-								qDebug() << field->getName() << group->getName() << "script" << scriptID << "line" << opcodeID << opcodeIf->toString();
+								qDebug() << field->name() << group->name() << "script" << scriptID << "line" << opcodeID << opcodeIf->toString();
 							}
 							iff = false;
 							win = false;
@@ -441,7 +441,7 @@ void FieldArchive::searchAll()
 				}
 			}*/
 			/*QString out;
-			InfFile *inf = field->getInf();
+			InfFile *inf = field->inf();
 			if(inf != NULL) {
 				int curExit=0;
 				QString curOut;
@@ -452,7 +452,7 @@ void FieldArchive::searchAll()
 					++curExit;
 				}
 				if(!curOut.isEmpty()) {
-					out.append(QString("=== %1 ===\n").arg(field->getName()));
+					out.append(QString("=== %1 ===\n").arg(field->name()));
 					out.append(curOut);
 
 					int redArrowCount = 0;
@@ -828,7 +828,7 @@ FieldArchive::ErrorCode FieldArchive::open()
 
 	int fieldID=0;
 	foreach(Field *f, fileList) {
-		const QString &name = f->getName();
+		const QString &name = f->name();
 
 		int index;
 		QString mapId;
@@ -875,7 +875,7 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 			Field *field = fileList.at(fieldID);
 			if(field->isOpen() && field->isModified())
 			{
-				QString datPath = isDatFile() ? fic->fileName() : dir->filePath(field->getName()+".DAT");
+				QString datPath = isDatFile() ? fic->fileName() : dir->filePath(field->name()+".DAT");
 				qint8 err = field->save(datPath, true);
 				if(err == 2)	return ErrorOpening;
 				if(err == 1)	return Invalid;
@@ -895,7 +895,7 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 
 		foreach(Field *field, fileList) {
 			if(field->isOpen() && field->isModified()) {
-				if(!_lgp->setFile(field->getName(), new FieldIO(field))) {
+				if(!_lgp->setFile(field->name(), new FieldIO(field))) {
 					return FieldNotFound;
 				}
 			}
@@ -961,7 +961,7 @@ FieldArchive::ErrorCode FieldArchive::save(QString path)
 
 		foreach(Field *field, fileList) {
 			if(field->isOpen() && field->isModified()) {
-				IsoFile *isoField = isoFieldDirectory->file(field->getName().toUpper() + ".DAT");
+				IsoFile *isoField = isoFieldDirectory->file(field->name().toUpper() + ".DAT");
 				if(isoField == NULL) {
 					continue;
 				}

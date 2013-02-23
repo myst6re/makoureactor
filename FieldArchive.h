@@ -57,11 +57,11 @@ public:
 
 	int size() const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
-	QByteArray getFieldData(Field *field, bool unlzs=true);
-	QByteArray getMimData(Field *field, bool unlzs=true);
-	QByteArray getModelData(Field *field, bool unlzs=true);
-	QByteArray getFileData(const QString &fileName, bool unlzs=true);
-	TutFile *getTut(const QString &name);
+	QByteArray fieldData(Field *field, bool unlzs=true);
+	QByteArray mimData(Field *field, bool unlzs=true);
+	QByteArray modelData(Field *field, bool unlzs=true);
+	QByteArray fileData(const QString &fileName, bool unlzs=true);
+	TutFile *tut(const QString &name);
 	bool fieldDataIsCached(Field *field) const;
 	bool mimDataIsCached(Field *field) const;
 	bool modelDataIsCached(Field *field) const;
