@@ -20,7 +20,7 @@
 
 MassExportDialog::MassExportDialog(QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-	_fieldArchive(0), _fieldID(0)
+	_fieldArchive(0)
 {
 	setWindowTitle(tr("Exporter en masse"));
 
@@ -29,9 +29,20 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	fieldList->setFixedWidth(200);
 	fieldList->setSelectionMode(QAbstractItemView::MultiSelection);
 
-	buildBgExportWidget();
-	buildAkaoExportWidget();
-	buildTextExportWidget();
+	bgExport = new FormatSelectionWidget(tr("Exporter les décors"),
+										 QStringList() <<
+										 tr("Image PNG") <<
+										 tr("Image JPG") <<
+										 tr("Image BMP"), this);
+	bgExport->setCurrentFormat(Config::value("exportBackgroundFormat").toInt());
+
+	akaoExport = new FormatSelectionWidget(tr("Exporter les sons"),
+										   QStringList() <<
+										   tr("Son AKAO"), this);
+
+	textExport = new FormatSelectionWidget(tr("Exporter les textes"),
+										   QStringList() <<
+										   tr("Texte simple TXT"), this);
 
 	dirPath = new QLineEdit(this);
 	dirPath->setText(Config::value("exportDirectory").toString());
@@ -62,54 +73,9 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
 }
 
-void MassExportDialog::buildBgExportWidget()
-{
-	bgExport = new QGroupBox(tr("Exporter les décors"), this);
-	bgExport->setCheckable(true);
-	bgExport->setChecked(true);
-
-	bgFormat = new QComboBox(bgExport);
-	bgFormat->addItem(tr("Image PNG"));
-	bgFormat->addItem(tr("Image JPG"));
-	bgFormat->addItem(tr("Image BMP"));
-	bgFormat->setCurrentIndex(Config::value("exportBackgroundFormat").toInt());
-
-	QVBoxLayout *layout = new QVBoxLayout(bgExport);
-	layout->addWidget(bgFormat);
-}
-
-void MassExportDialog::buildAkaoExportWidget()
-{
-	akaoExport = new QGroupBox(tr("Exporter les sons"), this);
-	akaoExport->setCheckable(true);
-	akaoExport->setChecked(false);
-
-	akaoFormat = new QComboBox(akaoExport);
-	akaoFormat->addItem(tr("Son AKAO"));
-	akaoFormat->setEnabled(false);
-
-	QVBoxLayout *layout = new QVBoxLayout(akaoExport);
-	layout->addWidget(akaoFormat);
-}
-
-void MassExportDialog::buildTextExportWidget()
-{
-	textExport = new QGroupBox(tr("Exporter les textes"), this);
-	textExport->setCheckable(true);
-	textExport->setChecked(false);
-
-	textFormat = new QComboBox(textExport);
-	textFormat->addItem(tr("Texte simple TXT"));
-	textFormat->setEnabled(false);
-
-	QVBoxLayout *layout = new QVBoxLayout(textExport);
-	layout->addWidget(textFormat);
-}
-
-void MassExportDialog::fill(FieldArchive *fieldArchive, int fieldID)
+void MassExportDialog::fill(FieldArchive *fieldArchive)
 {
 	_fieldArchive = fieldArchive;
-	_fieldID = fieldID;
 
 	fieldList->clear();
 	for(int i=0 ; i<_fieldArchive->size() ; ++i) {
@@ -153,7 +119,7 @@ bool MassExportDialog::exportBackground() const
 
 int MassExportDialog::exportBackgroundFormat() const
 {
-	return bgFormat->currentIndex();
+	return bgExport->currentFormat();
 }
 
 bool MassExportDialog::exportAkao() const
@@ -163,7 +129,7 @@ bool MassExportDialog::exportAkao() const
 
 int MassExportDialog::exportAkaoFormat() const
 {
-	return akaoFormat->currentIndex();
+	return akaoExport->currentFormat();
 }
 
 bool MassExportDialog::exportText() const
@@ -173,7 +139,7 @@ bool MassExportDialog::exportText() const
 
 int MassExportDialog::exportTextFormat() const
 {
-	return textFormat->currentIndex();
+	return textExport->currentFormat();
 }
 
 QString MassExportDialog::directory() const

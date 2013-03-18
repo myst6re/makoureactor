@@ -264,9 +264,10 @@ void TutWidget::add()
 
 	if(addTut) {
 		currentTut->insertTut(row);
+		Section1File *scriptsAndTexts = field->scriptsAndTexts();
 		if(tutPC == NULL)
-			field->scriptsAndTexts()->shiftTutIds(row-1, +1);
-		usedTuts = field->scriptsAndTexts()->listUsedTuts();
+			scriptsAndTexts->shiftTutIds(row-1, +1);
+		usedTuts = scriptsAndTexts->listUsedTuts();
 	} else {
 		currentTut->insertAkao(row, akaoPath);
 	}
@@ -290,9 +291,10 @@ void TutWidget::del()
 	list->blockSignals(true);
 
 	currentTut->removeTut(row);
+	Section1File *scriptsAndTexts = field->scriptsAndTexts();
 	if(tutPC == NULL)
-		field->scriptsAndTexts()->shiftTutIds(row, -1);
-	usedTuts = field->scriptsAndTexts()->listUsedTuts();
+		scriptsAndTexts->shiftTutIds(row, -1);
+	usedTuts = scriptsAndTexts->listUsedTuts();
 	fillList();
 
 	list->blockSignals(false);

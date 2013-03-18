@@ -370,6 +370,8 @@ QList<FF7Var> FieldArchive::searchAllVars()
 	QList<FF7Var> vars;
 	int size = fileList.size();
 
+	const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
+
 	for(int i=0 ; i<size ; ++i) {
 		QCoreApplication::processEvents();
 		Field *field = this->field(i);
@@ -377,6 +379,8 @@ QList<FF7Var> FieldArchive::searchAllVars()
 			field->scriptsAndTexts()->searchAllVars(vars);
 		}
 	}
+
+	Data::currentTextes = currentTextesSav;
 
 	return vars;
 }

@@ -97,7 +97,7 @@ void LgpHeaderEntry::setFileSize(quint32 fileSize)
 	_hasFileSize = true;
 }
 
-QIODevice *LgpHeaderEntry::file(QFile *lgp)
+QIODevice *LgpHeaderEntry::file(QIODevice *lgp)
 {
 	if(_io) {
 		_io->close();
@@ -107,7 +107,7 @@ QIODevice *LgpHeaderEntry::file(QFile *lgp)
 	}
 }
 
-QIODevice *LgpHeaderEntry::modifiedFile(QFile *lgp)
+QIODevice *LgpHeaderEntry::modifiedFile(QIODevice *lgp)
 {
 	if(_newIO) {
 		_newIO->close();
@@ -127,7 +127,7 @@ void LgpHeaderEntry::setModifiedFile(QIODevice *io)
 	_newIO = io;
 }
 
-QIODevice *LgpHeaderEntry::createFile(QFile *lgp)
+QIODevice *LgpHeaderEntry::createFile(QIODevice *lgp)
 {
 	if(!lgp->seek(filePosition())) {
 		return NULL;
@@ -220,6 +220,10 @@ bool LgpToc::addEntry(LgpHeaderEntry *entry)
 {
 	qint32 v = lookupValue(entry->fileName());
 	if(v < 0) {
+		return false;
+	}
+
+	if(contains(entry->fileName())) {
 		return false;
 	}
 
@@ -350,7 +354,7 @@ qint32 LgpToc::lookupValue(const QString &filePath)
 
 	char c2 = lookupValue(filePath.at(index + 1));
 
-	if(c1 > LOOKUP_VALUE_MAX) {
+	if(c2 > LOOKUP_VALUE_MAX) {
 		return -1;
 	}
 

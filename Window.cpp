@@ -24,6 +24,7 @@
 #include "MiscWidget.h"
 #include "ImportDialog.h"
 #include "MassExportDialog.h"
+#include "MassImportDialog.h"
 #include "Config.h"
 #include "Data.h"
 
@@ -70,6 +71,7 @@ Window::Window() :
 	actionExport = menu->addAction(tr("&Exporter l'écran courant..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
 	actionMassExport = menu->addAction(tr("Exporter en &masse..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
 	actionImport = menu->addAction(tr("&Importer dans l'écran courant..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
+	actionMassImport = menu->addAction(tr("Importer en m&asse..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
 	actionArchive = menu->addAction(tr("&Gestionnaire d'archive..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
 	menu->addSeparator();
 	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("Fe&rmer"), this, SLOT(closeFile()));
@@ -413,6 +415,7 @@ int Window::closeFile(bool quit)
 		actionSaveAs->setEnabled(false);
 		actionExport->setEnabled(false);
 		actionMassExport->setEnabled(false);
+		actionMassImport->setEnabled(false);
 		actionImport->setEnabled(false);
 		actionArchive->setEnabled(false);
 		actionClose->setEnabled(false);
@@ -559,6 +562,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 		actionMisc->setEnabled(true);
 		actionExport->setEnabled(true);
 		actionMassExport->setEnabled(true);
+		actionMassImport->setEnabled(true);
 		actionImport->setEnabled(true);
 		if(fieldArchive->isLgp()/* || fieldArchive->isIso()*/) {
 			actionModels->setEnabled(true);
@@ -646,14 +650,16 @@ void Window::openField(bool reload)
 	zoneImage->fill(field, reload);
 	zonePreview->setCurrentIndex(0);
 
+	Section1File *scriptsAndTexts = field->scriptsAndTexts();
+
 	// Show author
-	authorLbl->setText(tr("Auteur : %1").arg(field->scriptsAndTexts()->author()));
+	authorLbl->setText(tr("Auteur : %1").arg(scriptsAndTexts->author()));
 	authorLbl->show();
 
 	emit fieldIDChanged(id);
 	// Fill group script list
 	groupScriptList->setEnabled(true);
-	groupScriptList->fill(field->scriptsAndTexts());
+	groupScriptList->fill(scriptsAndTexts);
 
 	searchDialog->updateRunSearch();
 
@@ -988,7 +994,7 @@ void Window::massExport()
 	if(!fieldArchive) return;
 
 	MassExportDialog *massExportDialog = new MassExportDialog(this);
-	massExportDialog->fill(fieldArchive, 0);
+	massExportDialog->fill(fieldArchive);
 	if(massExportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massExportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {
@@ -1087,6 +1093,17 @@ void Window::massExport()
 			}
 			Data::currentTextes = currentTextesSav;
 		}
+	}
+}
+
+void Window::massImport()
+{
+	if(!fieldArchive) return;
+
+	MassImportDialog *massImportDialog = new MassImportDialog(this);
+	massImportDialog->fill(fieldArchive);
+	if(massImportDialog->exec() == QDialog::Accepted) {
+
 	}
 }
 

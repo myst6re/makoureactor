@@ -82,7 +82,9 @@ HEADERS += ApercuBG.h \
 	QTaskBarButton.h \
 	Lgp.h \
 	Lgp_p.h \
-    LgpDialog.h
+    LgpDialog.h \
+    MassImportDialog.h \
+    FormatSelectionWidget.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -158,7 +160,9 @@ SOURCES += ApercuBG.cpp \
 	QTaskBarButton.cpp \
 	Lgp.cpp \
 	Lgp_p.cpp \
-    LgpDialog.cpp
+    LgpDialog.cpp \
+    MassImportDialog.cpp \
+    FormatSelectionWidget.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts
@@ -166,9 +170,10 @@ TRANSLATIONS += Makou_Reactor_en.ts \
 RESOURCES += Makou_Reactor.qrc
 macx {
 	ICON = images/Makou_Reactor.icns
+}
+!win32 {
 	LIBS += -lz
 }
-
 win32 {
 	RC_FILE = Makou_Reactor.rc
 	LIBS += -lole32

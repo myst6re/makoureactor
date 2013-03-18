@@ -63,6 +63,7 @@ public slots:
 	//	void notifyDirectoryChanged(const QString &path);
 	void exporter();
 	void massExport();
+	void massImport();
 	void importer();
 	void varManager();
 	void runFF7();
@@ -116,7 +117,7 @@ private:
 	VarManager *varDialog;
 
 	QAction *actionSave, *actionSaveAs, *actionExport;
-	QAction *actionMassExport, *actionImport, *actionClose;
+	QAction *actionMassExport, *actionImport, *actionMassImport, *actionClose;
 	QAction *actionRun, *actionModels, *actionArchive;
 	QAction *actionEncounter, *actionTut;
 	QAction *actionMisc, *actionJp_txt;

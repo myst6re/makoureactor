@@ -15,41 +15,37 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef MASSEXPORTDIALOG_H
-#define MASSEXPORTDIALOG_H
+#ifndef MASSIMPORTDIALOG_H
+#define MASSIMPORTDIALOG_H
 
 #include <QtGui>
 #include "FieldArchive.h"
 #include "FormatSelectionWidget.h"
 
-class MassExportDialog : public QDialog
+class MassImportDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit MassExportDialog(QWidget *parent = 0);
+	explicit MassImportDialog(QWidget *parent = 0);
 	void fill(FieldArchive *fieldArchive);
 	QList<int> selectedFields() const;
-	bool exportBackground() const;
-	int exportBackgroundFormat() const;
-	bool exportAkao() const;
-	int exportAkaoFormat() const;
-	bool exportText() const;
-	int exportTextFormat() const;
+	bool importAkao() const;
+	int importAkaoFormat() const;
+	bool importText() const;
+	int importTextFormat() const;
 	QString directory() const;
-	bool overwrite() const;
 private slots:
-	void chooseExportDirectory();
+	void chooseImportDirectory();
 private:
 	QListWidget *fieldList;
-	FormatSelectionWidget *bgExport, *akaoExport, *textExport;
+	FormatSelectionWidget *akaoImport, *textImport;
 	QPushButton *selectAll, *clearSelection, *selectCurrentField;
 	QLineEdit *dirPath;
 	QPushButton *changeDir;
-	QCheckBox *overwriteIfExists;
 
 	FieldArchive *_fieldArchive;
 protected:
 	void accept();
 };
 
-#endif // MASSEXPORTDIALOG_H
+#endif // MASSIMPORTDIALOG_H

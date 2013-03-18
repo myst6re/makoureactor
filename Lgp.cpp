@@ -520,14 +520,12 @@ bool Lgp::openHeader()
 		return false;
 	}
 
-	QByteArray headerData;
-	const char *headerConstData;
-	qint32 fileCount;
-
 	if(!_file.seek(12)) {
 		setError(PositionError);
 		return false;
 	}
+
+	qint32 fileCount;
 
 	if(_file.read((char *)&fileCount, 4) != 4) {
 		setError(ReadError);
@@ -543,105 +541,135 @@ bool Lgp::openHeader()
 		return true;
 	}
 
-	headerData = _file.read(fileCount * 27);
-	if(headerData.size() != fileCount * 27) {
+	const qint32 sizeToc = fileCount * 27;
+	QByteArray headerData = _file.read(sizeToc);
+
+	if(headerData.size() != sizeToc) {
 		setError(ReadError);
 		return false;
 	}
 
-	headerConstData = headerData.constData();
+	if(sizeToc < 0) {
+		setError(InvalidError);
+		return false;
+	}
+
+	const char *headerConstData = headerData.constData();
 	QList<LgpHeaderEntry *> tocEntries;
 	QList<quint16> headerConflict;
-	for(int i=0; i<fileCount; ++i) {
-		QString fileName = headerData.mid(i*27, 20);
+	bool hasConflict = false;
+
+	for(qint32 cur=0; cur<sizeToc; cur += 27) {
+		const QString fileName = headerData.mid(cur, 20);
 		quint32 filePos;
 		quint16 conflict;
-		memcpy(&filePos, headerConstData + i*27 + 20, 4);
-		memcpy(&conflict, headerConstData + i*27 + 25, 2);
+		memcpy(&filePos, headerConstData + cur + 20, 4);
+		memcpy(&conflict, headerConstData + cur + 25, 2);
 		tocEntries.append(new LgpHeaderEntry(
 							  fileName, filePos));
 		headerConflict.append(conflict);
+		if(conflict != 0 && !hasConflict) {
+			hasConflict = true;
+		}
 	}
 
 	/* Resolve conflicts */
 
-	// Lookup table ignored
-	if(!_file.seek(_file.pos() + LOOKUP_TABLE_ENTRIES * 4)) {
-		setError(PositionError);
-		return false;
-	}
-
-	// Open conflicts
-	quint16 conflictCount;
-
-	if(_file.read((char *)&conflictCount, 2) != 2) {
-		setError(ReadError);
-		return false;
-	}
-
 	QList< QList<LgpConflictEntry> > conflicts;
 
-	for(int i=0; i<conflictCount; ++i) {
-		quint16 conflictEntryCount;
+	if(hasConflict) {
 
-		// Open conflict entries
-		if(_file.read((char *)&conflictEntryCount, 2) != 2) {
+		// Lookup table ignored
+		if(!_file.seek(_file.pos() + LOOKUP_TABLE_ENTRIES * 4)) {
+			setError(PositionError);
+			return false;
+		}
+
+		// Open conflicts
+		quint16 conflictCount;
+
+		if(_file.read((char *)&conflictCount, 2) != 2) {
 			setError(ReadError);
 			return false;
 		}
 
-		QByteArray conflictData = _file.read(conflictEntryCount * 130);
-		if(conflictData.size() != conflictEntryCount * 130) {
-			setError(ReadError);
-			return false;
+		for(qint32 i=0; i<conflictCount; ++i) {
+			quint16 conflictEntryCount;
+
+			// Open conflict entries
+			if(_file.read((char *)&conflictEntryCount, 2) != 2) {
+				setError(ReadError);
+				return false;
+			}
+
+			const qint32 sizeConflicData = conflictEntryCount * 130;
+			QByteArray conflictData = _file.read(sizeConflicData);
+
+			if(conflictData.size() != sizeConflicData) {
+				setError(ReadError);
+				return false;
+			}
+
+			if(sizeConflicData < 0) {
+				setError(InvalidError);
+				return false;
+			}
+
+			const char *conflictConstData = conflictData.constData();
+			QList<LgpConflictEntry> conflictEntries;
+
+			for(qint32 cur=0; cur<sizeConflicData; cur += 130) {
+				LgpConflictEntry conflictEntry(conflictData.mid(cur, 128));
+
+				memcpy(&conflictEntry.tocIndex, conflictConstData + cur + 128, 2);
+
+				conflictEntries.append(conflictEntry);
+			}
+
+			conflicts.append(conflictEntries);
 		}
 
-		const char *conflictConstData = conflictData.constData();
-		QList<LgpConflictEntry> conflictEntries;
-
-		for(int j=0; j<conflictEntryCount; ++j) {
-			LgpConflictEntry conflictEntry(conflictData.mid(j*130, 130));
-
-			memcpy(&conflictEntry.tocIndex, &conflictConstData[j*130 + 128], 2);
-
-			conflictEntries.append(conflictEntry);
-		}
-
-		conflicts.append(conflictEntries);
 	}
 
-	// Set fileDir
-	_files->clear();
+	/* Populate _files */
+
 	int headerEntryID = 0;
+
+	_files->clear();
+
 	foreach(LgpHeaderEntry *entry, tocEntries) {
-		quint16 conflict = headerConflict.at(headerEntryID);
 		if(!_files->addEntry(entry)) {
 			qWarning() << "Invalid toc name" << entry->fileName();
 			delete entry;
 			continue;
 		}
 
-		if(conflict != 0) {
-			const quint16 conflictID = conflict - 1;
-			bool resolved = false;
+		// Set fileDir
+		if(hasConflict) {
+			const quint16 &conflict = headerConflict.at(headerEntryID);
 
-			if(conflictID < conflicts.size()) {
-				const QList<LgpConflictEntry> &conflictEntries = conflicts.at(conflictID);
+			if(conflict != 0) {
+				const quint16 conflictID = conflict - 1;
+				bool resolved = false;
 
-				foreach(const LgpConflictEntry &conflictEntry, conflictEntries) {
-					if(conflictEntry.tocIndex == headerEntryID) {
-						entry->setFileDir(conflictEntry.fileDir);
-						resolved = true;
-						break;
+				if(conflictID < conflicts.size()) {
+					const QList<LgpConflictEntry> &conflictEntries = conflicts.at(conflictID);
+
+					foreach(const LgpConflictEntry &conflictEntry, conflictEntries) {
+						if(conflictEntry.tocIndex == headerEntryID) {
+							entry->setFileDir(conflictEntry.fileDir);
+							resolved = true;
+							break;
+						}
 					}
 				}
-			}
 
-			if(!resolved) {
-				qWarning() << "Unresolved conflict for" << entry->fileName();
+				if(!resolved) {
+					qWarning() << "Unresolved conflict for" << entry->fileName();
+				}
 			}
+			++headerEntryID;
 		}
-		++headerEntryID;
 	}
 
 	return true;
@@ -661,6 +689,15 @@ bool Lgp::pack(const QString &destination, LgpObserver *observer)
 		return false;
 	}
 
+	const int nbFiles = _files->size();
+	int fileId;
+
+	// Range (0 to max) for the progression indicator
+	if(observer) {
+		observer->setObserverMaximum(nbFiles);
+		fileId = 0;
+	}
+
 	QString destPath = destination;
 
 	if(destination.isEmpty()) {
@@ -673,17 +710,6 @@ bool Lgp::pack(const QString &destination, LgpObserver *observer)
 	if(!temp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 		setError(OpenError, temp.errorString());
 		return false;
-	}
-
-	LgpToc newToc;
-	const QList<const LgpHeaderEntry *> toc = _files->filesSortedByPosition();
-	const int nbFiles = toc.size();
-	int fileId;
-
-	// Range (0 to max) for the progression indicator
-	if(observer) {
-		observer->setObserverMaximum(nbFiles);
-		fileId = 0;
 	}
 
 	// Writes the company name (  SQUARESOFT)
@@ -716,12 +742,12 @@ bool Lgp::pack(const QString &destination, LgpObserver *observer)
 
 	// Lookup Table + conflicts
 	LgpLookupTableEntry lookupTable[LOOKUP_TABLE_ENTRIES];
-	QHash<LgpHeaderEntry *, LgpTocEntry> tocEntries;
+	QHash<const LgpHeaderEntry *, LgpTocEntry> tocEntries;
 	int tocIndex = 0;
 
 	for(int i=0; i<LOOKUP_TABLE_ENTRIES; ++i) {
 		// toc index initialization
-		foreach(LgpHeaderEntry *headerEntry, _files->entries(i)) {
+		foreach(const LgpHeaderEntry *headerEntry, _files->entries(i)) {
 			tocEntries.insert(headerEntry, LgpTocEntry(tocIndex++));
 		}
 	}
@@ -732,13 +758,13 @@ bool Lgp::pack(const QString &destination, LgpObserver *observer)
 		QList<LgpHeaderEntry *> headerEntries = _files->entries(i);
 
 		// Build list conflicts
-		foreach(LgpHeaderEntry *headerEntry, headerEntries) {
+		foreach(const LgpHeaderEntry *headerEntry, headerEntries) {
 			LgpTocEntry &tocEntry = tocEntries[headerEntry];
 
 			if(tocEntry.conflict == 0) {
 				QList<LgpConflictEntry> conflictEntries;
 
-				foreach(LgpHeaderEntry *headerEntry2, headerEntries) {
+				foreach(const LgpHeaderEntry *headerEntry2, headerEntries) {
 					if(headerEntry != headerEntry2 &&
 							headerEntry->fileName().compare(headerEntry2->fileName(),
 															Qt::CaseInsensitive) == 0) {
@@ -798,8 +824,10 @@ bool Lgp::pack(const QString &destination, LgpObserver *observer)
 		return false;
 	}
 
+	LgpToc newToc;
+
 	// Write files
-	foreach(const LgpHeaderEntry *lgpEntry, toc) {
+	foreach(const LgpHeaderEntry *lgpEntry, _files->filesSortedByPosition()) {
 		// Cancels if requested
 		if(observer && observer->observerWasCanceled()) {
 			temp.remove();
@@ -840,7 +868,7 @@ bool Lgp::pack(const QString &destination, LgpObserver *observer)
 			return false;
 		}
 		// File: writes the size
-		QByteArray data = io->readAll();
+		const QByteArray data = io->readAll();
 		io->close();
 		const qint64 size = data.size();
 		if(temp.write((char *)&size, 4) != 4) {
@@ -875,9 +903,7 @@ bool Lgp::pack(const QString &destination, LgpObserver *observer)
 	// Header: TOC
 	QByteArray tocData;
 	for(int i=0; i<LOOKUP_TABLE_ENTRIES; ++i) {
-		QList<LgpHeaderEntry *> headerEntries = newToc.entries(i);
-
-		foreach(LgpHeaderEntry *headerEntry, headerEntries) {
+		foreach(const LgpHeaderEntry *headerEntry, newToc.entries(i)) {
 			tocData.append(headerEntry->fileName().toLower().toLatin1().leftJustified(20, '\0', true));
 			quint32 filePos = headerEntry->filePosition();
 			tocData.append((char *)&filePos, 4);

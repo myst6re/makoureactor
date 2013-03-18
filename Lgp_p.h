@@ -68,12 +68,12 @@ public:
 	void setFileDir(const QString &fileDir);
 	void setFilePosition(quint32 filePosition);
 	void setFileSize(quint32 fileSize);
-	QIODevice *file(QFile *lgp);
-	QIODevice *modifiedFile(QFile *lgp);
+	QIODevice *file(QIODevice *lgp);
+	QIODevice *modifiedFile(QIODevice *lgp);
 	void setFile(QIODevice *io);
 	void setModifiedFile(QIODevice *io);
 private:
-	QIODevice *createFile(QFile *lgp);
+	QIODevice *createFile(QIODevice *lgp);
 	QString _fileName;
 	QString _fileDir;
 	quint32 _filePosition;
