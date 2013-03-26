@@ -361,7 +361,7 @@ int Window::closeFile(bool quit)
 				i++;
 			}
 		}
-		int reponse = QMessageBox::warning(this, tr("Sauvegarder"), tr("Voulez-vous enregistrer les changements de %1 ?\n\nFichiers modifiés :%2").arg(fieldArchive->name()).arg(fileChangedList), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+		int reponse = QMessageBox::warning(this, tr("Sauvegarder"), tr("Voulez-vous enregistrer les changements de %1 ?\n\nFichiers modifiés :%2").arg(fieldArchive->io()->name()).arg(fileChangedList), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 		if(reponse == QMessageBox::Yes)				save();
 		else if(reponse == QMessageBox::Cancel)		return reponse;
 		if(quit)	return reponse;
@@ -481,7 +481,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 	connect(fieldArchive, SIGNAL(progress(int)), progression, SLOT(setValue(int)));
 	connect(fieldArchive, SIGNAL(nbFilesChanged(int)), progression, SLOT(setMaximum(int)));
 
-	FieldArchive::ErrorCode error = fieldArchive->open();
+	FieldArchiveIO::ErrorCode error = fieldArchive->open();
 	
 	setCursor(Qt::ArrowCursor);
 	progression->hide();
@@ -493,31 +493,31 @@ void Window::open(const QString &cheminFic, bool isDir)
 	QString out;
 	switch(error)
 	{
-	case FieldArchive::Ok:
+	case FieldArchiveIO::Ok:
 		break;
-	case FieldArchive::FieldNotFound:
+	case FieldArchiveIO::FieldNotFound:
 		out = tr("Rien trouvé !");
 		break;
-	case FieldArchive::ErrorOpening:
+	case FieldArchiveIO::ErrorOpening:
 		out = tr("Le fichier est inaccessible");
 		break;
-	case FieldArchive::ErrorOpeningTemp:
+	case FieldArchiveIO::ErrorOpeningTemp:
 		out = tr("Impossible de créer un fichier temporaire");
 		break;
-	case FieldArchive::ErrorRemoving:
+	case FieldArchiveIO::ErrorRemoving:
 		out = tr("Impossible de supprimer le fichier");
 		break;
-	case FieldArchive::Invalid:
+	case FieldArchiveIO::Invalid:
 		out = tr("L'archive est invalide");
 		break;
-	case FieldArchive::NotImplemented:
+	case FieldArchiveIO::NotImplemented:
 		out = tr("Cette erreur ne devrais pas s'afficher, merci de le signaler");
 		break;
 	}
 	if(!out.isEmpty())
 	{
 		QMessageBox::warning(this, tr("Erreur"), out);
-		if(error != FieldArchive::FieldNotFound) {
+		if(error != FieldArchiveIO::FieldNotFound) {
 			fieldArchive->close();
 			return;
 		}
@@ -564,11 +564,11 @@ void Window::open(const QString &cheminFic, bool isDir)
 		actionMassExport->setEnabled(true);
 		actionMassImport->setEnabled(true);
 		actionImport->setEnabled(true);
-		if(fieldArchive->isLgp()/* || fieldArchive->isIso()*/) {
+		if(fieldArchive->io()->isLgp()/* || fieldArchive->io()->isIso()*/) {
 			actionModels->setEnabled(true);
 		}
 	}
-	if(fieldArchive->isLgp())	actionArchive->setEnabled(true);
+	if(fieldArchive->io()->isLgp())	actionArchive->setEnabled(true);
 	actionSaveAs->setEnabled(true);
 	actionClose->setEnabled(true);
 
@@ -584,10 +584,10 @@ void Window::setWindowTitle()
 		if(selectedItems.isEmpty()) {
 			windowTitle = PROG_FULLNAME;
 		} else {
-			if(fieldArchive->isDirectory()) {
+			if(!fieldArchive->io()->hasName()) {
 				windowTitle = "[*]" + selectedItems.first()->text(0) + " - " + PROG_FULLNAME;
 			} else {
-				windowTitle = selectedItems.first()->text(0) + " ([*]" + fieldArchive->name() + ") - " + PROG_FULLNAME;
+				windowTitle = selectedItems.first()->text(0) + " ([*]" + fieldArchive->io()->name() + ") - " + PROG_FULLNAME;
 			}
 		}
 	} else {
@@ -796,16 +796,16 @@ void Window::saveAs(bool currentPath)
 	if(!currentPath)
 	{
 		QString filter;
-		if(fieldArchive->isLgp()) {
+		if(fieldArchive->io()->isLgp()) {
 			filter = tr("Fichier Lgp (*.lgp)");
-		} else if(fieldArchive->isDirectory() || fieldArchive->isDatFile()) {
+		} else if(fieldArchive->io()->isDirectory() || fieldArchive->io()->isDatFile()) {
 			filter = tr("Fichier DAT (*.DAT)");
-		} else if(fieldArchive->isIso()) {
+		} else if(fieldArchive->io()->isIso()) {
 			filter = tr("Fichier Iso (*.iso *.bin)");
 		} else {
 			return;
 		}
-		path = QFileDialog::getSaveFileName(this, tr("Enregistrer Sous"), fieldArchive->path(), filter);
+		path = QFileDialog::getSaveFileName(this, tr("Enregistrer Sous"), fieldArchive->io()->path(), filter);
 		if(path.isNull())		return;
 	}
 	
@@ -821,7 +821,7 @@ void Window::saveAs(bool currentPath)
 	quint8 error = 0;
 	
 	// QTime t;t.start();
-	if(!fieldArchive->isDirectory() || currentPath)
+	if(!fieldArchive->io()->isDirectory() || currentPath)
 		error = fieldArchive->save(path);
 	else {
 		// Cas où on veut enregistrer un seul DAT sous...
@@ -845,26 +845,26 @@ void Window::saveAs(bool currentPath)
 	QString out;
 	switch(error)
 	{
-	case FieldArchive::Ok:
+	case FieldArchiveIO::Ok:
 		setModified(false);
 		setWindowTitle();
 		break;
-	case FieldArchive::FieldNotFound:
+	case FieldArchiveIO::FieldNotFound:
 		out = tr("Rien trouvé !");
 		break;
-	case FieldArchive::ErrorOpening:
+	case FieldArchiveIO::ErrorOpening:
 		out = tr("Le fichier est inaccessible");
 		break;
-	case FieldArchive::ErrorOpeningTemp:
+	case FieldArchiveIO::ErrorOpeningTemp:
 		out = tr("Impossible de créer un fichier temporaire");
 		break;
-	case FieldArchive::ErrorRemoving:
+	case FieldArchiveIO::ErrorRemoving:
 		out = tr("Impossible d'écrire dans l'archive, vérifiez les droits d'écriture.");
 		break;
-	case FieldArchive::Invalid:
+	case FieldArchiveIO::Invalid:
 		out = tr("L'archive est invalide");
 		break;
-	case FieldArchive::NotImplemented:
+	case FieldArchiveIO::NotImplemented:
 		out = tr("Cette erreur ne devrais pas s'afficher, merci de le signaler");
 		break;
 	}
@@ -960,14 +960,14 @@ void Window::exporter()
 
 	name = fieldList->selectedItems().first()->text(0);
 
-	if(fieldArchive->isLgp()) {
+	if(fieldArchive->io()->isLgp()) {
 		types = fieldLzs+";;"+fieldDec;
 	} else {
 		types = dat;
 		name = name.toUpper();
 	}
 
-	QString path = Config::value("exportPath").toString().isEmpty() ? fieldArchive->chemin() : Config::value("exportPath").toString()+"/";
+	QString path = Config::value("exportPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("exportPath").toString()+"/";
 	path = QFileDialog::getSaveFileName(this, tr("Exporter le fichier courant"), path+name, types, &selectedFilter);
 	if(path.isNull())		return;
 	qint8 error=4;
@@ -1120,16 +1120,16 @@ void Window::importer()
 		   << tr("Fichier DAT décompressé (*)");
 
 	name = fieldList->selectedItems().first()->text(0);
-	if(!fieldArchive->isLgp())
+	if(!fieldArchive->io()->isLgp())
 		name = name.toUpper();
 
-	QString path = Config::value("importPath").toString().isEmpty() ? fieldArchive->chemin() : Config::value("importPath").toString()+"/";
+	QString path = Config::value("importPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("importPath").toString()+"/";
 	path = QFileDialog::getOpenFileName(this, tr("Importer un fichier"), path+name, filter.join(";;"), &selectedFilter);
 	if(path.isNull())		return;
 
 	bool isDat = selectedFilter == filter.at(1) || selectedFilter == filter.at(3);
 
-	ImportDialog dialog((isDat && !fieldArchive->isLgp()) || (!isDat && fieldArchive->isLgp()), isDat, this);
+	ImportDialog dialog((isDat && !fieldArchive->io()->isLgp()) || (!isDat && fieldArchive->io()->isLgp()), isDat, this);
 	if(dialog.exec() != QDialog::Accepted) {
 		return;
 	}
@@ -1337,8 +1337,8 @@ void Window::miscManager()
 
 void Window::archiveManager()
 {
-	if(fieldArchive && fieldArchive->isLgp()) {
-		LgpDialog dialog(fieldArchive->lgp(), this);
+	if(fieldArchive && fieldArchive->io()->isLgp()) {
+		LgpDialog dialog((Lgp *)fieldArchive->io()->device(), this);
 		dialog.exec();
 	}
 }

@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "Field.h"
 #include "LZS.h"
-#include "FieldArchive.h"
+#include "FieldArchiveIO.h"
 #include "FieldPC.h"
 #include "FieldPS.h"
 #include "Data.h"
@@ -30,7 +30,7 @@ Field::Field(const QString &name) :
 {
 }
 
-Field::Field(const QString &name, FieldArchive *fieldArchive) :
+Field::Field(const QString &name, FieldArchiveIO *fieldArchive) :
 	_isOpen(false), _isModified(false), _name(name.toLower()),
 	section1(0), _encounter(0), _tut(0), id(0), ca(0), _inf(0),
 	modelLoader(0), _fieldModel(0),

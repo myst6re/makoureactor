@@ -26,7 +26,7 @@
 class FieldPC : public Field
 {
 public:
-	FieldPC(const QString &name, FieldArchive *fieldArchive);
+	FieldPC(const QString &name, FieldArchiveIO *fieldArchive);
 	FieldPC(const Field &field);
 	virtual ~FieldPC();
 

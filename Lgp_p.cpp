@@ -136,6 +136,11 @@ QIODevice *LgpHeaderEntry::createFile(QIODevice *lgp)
 	if(name.size() != 20) {
 		return NULL;
 	}
+	if(QString(name).compare(fileName(), Qt::CaseInsensitive) != 0) {
+		qWarning() << "different name";
+		return NULL;
+	}
+
 	quint32 size;
 	if(lgp->read((char *)&size, 4) != 4) {
 		return NULL;

@@ -49,7 +49,7 @@ typedef struct {
 	quint8 deph, unused12;
 } Tile;
 
-class FieldArchive;
+class FieldArchiveIO;
 
 class Field
 {
@@ -67,7 +67,7 @@ public:
 	Q_DECLARE_FLAGS(FieldParts, FieldPart)
 
 	Field(const QString &name);
-	Field(const QString &name, FieldArchive *fieldArchive);
+	Field(const QString &name, FieldArchiveIO *fieldArchive);
 	virtual ~Field();
 
 	bool isOpen() const;
@@ -117,7 +117,7 @@ protected:
 	InfFile *_inf;
 	FieldModelLoader *modelLoader;
 	FieldModelFile *_fieldModel;
-	FieldArchive *fieldArchive;
+	FieldArchiveIO *fieldArchive;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Field::FieldParts)

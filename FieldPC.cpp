@@ -16,12 +16,12 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldPC.h"
-#include "FieldArchive.h"
+#include "FieldArchiveIO.h"
 #include "Palette.h"
 #include "LZS.h"
 #include "Config.h"
 
-FieldPC::FieldPC(const QString &name, FieldArchive *fieldArchive) :
+FieldPC::FieldPC(const QString &name, FieldArchiveIO *fieldArchive) :
 	Field(name, fieldArchive)
 {
 }

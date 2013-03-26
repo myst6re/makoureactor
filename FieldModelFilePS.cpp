@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModelFilePS.h"
-#include "FieldArchive.h"
+#include "FieldArchiveIO.h"
 #include "FieldModelPartPS.h"
 #include "FieldModelLoaderPS.h"
 #include "TdbFile.h"
@@ -28,7 +28,7 @@ FieldModelFilePS::FieldModelFilePS() :
 {
 }
 
-quint8 FieldModelFilePS::load(FieldArchive *fieldArchive, Field *currentField, int model_id, int animation_id, bool animate)
+quint8 FieldModelFilePS::load(FieldArchiveIO *fieldArchive, Field *currentField, int model_id, int animation_id, bool animate)
 {
 	QByteArray BSX_data = fieldArchive->modelData(currentField);
 	FieldModelLoaderPS *modelLoader = ((FieldPS *)currentField)->fieldModelLoader();

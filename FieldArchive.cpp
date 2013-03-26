@@ -18,81 +18,31 @@
 #include "FieldArchive.h"
 #include "FieldPS.h"
 #include "FieldPC.h"
-#include "GZIP.h"
-#include "LZS.h"
 #include "Data.h"
 #include "Config.h"
 
-FieldIO::FieldIO(Field *field, QObject *parent) :
-	QIODevice(parent), _field(field)
-{
-}
-
-void FieldIO::close()
-{
-	_cache.clear();
-	QIODevice::close();
-}
-
-qint64 FieldIO::readData(char *data, qint64 maxSize)
-{
-	if(setCache()) {
-		if(pos() < _cache.size()) {
-			const char *constData = _cache.constData();
-			qint64 r = qMin(maxSize, _cache.size() - pos());
-			if(r > 0) {
-				memcpy(data, constData + pos(), r);
-				return r;
-			} else if(r == 0) {
-				return 0;
-			} else {
-				return -1;
-			}
-		} else {
-			return 0;
-		}
-	}
-	return -1;
-}
-
-bool FieldIO::setCache()
-{
-	if(_cache.isEmpty()) {
-		if(!_field->save(_cache, true)) {
-			_cache.clear();
-			return false;
-		}
-	}
-	return true;
-}
-
 FieldArchive::FieldArchive() :
-	fic(NULL), _lgp(NULL), dir(NULL), iso(NULL), isDat(false)
+	_io(0)
 {
 }
 
 FieldArchive::FieldArchive(const QString &path, bool isDirectory) :
-	fic(NULL), _lgp(NULL), dir(NULL), iso(NULL), isDat(false)
+	_io(0)
 {
 	if(isDirectory) {
-		dir = new QDir(path);
+		_io = new FieldArchiveIODir(path);
 	}
 	else {
-		QString ext = path.mid(path.lastIndexOf('.')+1).toLower();
+		QString ext = path.mid(path.lastIndexOf('.') + 1).toLower();
 
 		if(ext == "iso" || ext == "bin") {
-			iso = new IsoArchive(path);
-			if(!iso->open(QIODevice::ReadOnly)) {
-				delete iso;
-				iso = NULL;
-			}
+			_io = new FieldArchiveIOIso(path);
 		}
 		else {
-			isDat = ext == "dat";
-			if(isDat) {
-				fic = new QLockedFile(path);
-			} else {
-				_lgp = new Lgp(path);
+			if(ext == "dat") {
+				_io = new FieldArchiveIOFile(path);
+			} else if(ext == "lgp") {
+				_io = new FieldArchiveIOLgp(path);
 			}
 		}
 	}
@@ -105,51 +55,68 @@ FieldArchive::~FieldArchive()
 {
 	foreach(Field *field, fileList)	delete field;
 	foreach(TutFile *tut, tuts)		if(tut != NULL)	delete tut;
-	if(fic!=NULL)	delete fic;
-	if(_lgp!=NULL)	delete _lgp;
-	if(dir!=NULL)	delete dir;
-	if(iso!=NULL)	delete iso;
-	clearCachedData();
+	if(_io)		delete _io;
 }
 
-QString FieldArchive::path() const
+FieldArchiveIO::ErrorCode FieldArchive::open()
 {
-	if(dir!=NULL)
-		return dir->path();
-	if(fic!=NULL)
-		return fic->fileName();
-	if(_lgp!=NULL)
-		return _lgp->fileName();
-	if(iso!=NULL)
-		return iso->fileName();
+	if(!_io)	return FieldArchiveIO::Invalid;
+//	qDebug() << "FieldArchive::open()";
+	foreach(Field *field, fileList)	delete field;
+	foreach(TutFile *tut, tuts) if(tut != NULL)	delete tut;
+	fileList.clear();
+	tuts.clear();
+	fieldsSortByName.clear();
+	fieldsSortByMapId.clear();
+	Data::field_names.clear();
 
-	return QString();
-}
-
-QString FieldArchive::name() const
-{
-	if(dir!=NULL)
-		return QString();
-
-	QString filePath = path();
-	if(filePath.isEmpty()) {
-		return filePath;
+	FieldArchiveIO::ErrorCode error = _io->open(fileList, tuts, this);
+	if(error != FieldArchiveIO::Ok) {
+		return error;
 	}
 
-	return filePath.mid(filePath.lastIndexOf("/") + 1);
-}
+	if(fileList.isEmpty())	return FieldArchiveIO::FieldNotFound;
 
-QString FieldArchive::chemin() const
-{
-	if(dir!=NULL)
-		return dir->path() + "/";
-
-	QString filePath = path();
-	if(filePath.isEmpty()) {
-		return filePath;
+	if(Data::field_names.isEmpty()) {
+		Data::openMaplist(_io->isLgp());
 	}
 
-	return filePath.left(filePath.lastIndexOf("/") + 1);
+	int fieldID=0;
+	foreach(Field *f, fileList) {
+		const QString &name = f->name();
+
+		int index;
+		QString mapId;
+		if((index = Data::field_names.indexOf(name)) != -1) {
+			mapId = QString("%1").arg(index, 3);
+		} else {
+			mapId = "~";
+		}
+		fieldsSortByName.insert(name, fieldID);
+		fieldsSortByMapId.insert(mapId, fieldID);
+		++fieldID;
+	}
+
+//	qDebug() << "/FieldArchive::open()";
+
+	return FieldArchiveIO::Ok;
+}
+
+FieldArchiveIO::ErrorCode FieldArchive::save(const QString &path)
+{
+	if(!_io)	return FieldArchiveIO::Invalid;
+
+	FieldArchiveIO::ErrorCode error = _io->save(fileList, tuts, path, this);
+	if(error == FieldArchiveIO::Ok) {
+		// Clear "isModified" state
+		setSaved();
+	}
+	return error;
+}
+
+void FieldArchive::close()
+{
+	if(_io)	_io->close();
 }
 
 int FieldArchive::size() const
@@ -157,29 +124,9 @@ int FieldArchive::size() const
 	return fileList.size();
 }
 
-bool FieldArchive::isDatFile() const
+FieldArchiveIO *FieldArchive::io() const
 {
-	return fic != NULL && isDat;
-}
-
-bool FieldArchive::isDirectory() const
-{
-	return dir != NULL;
-}
-
-bool FieldArchive::isLgp() const
-{
-	return _lgp != NULL;
-}
-
-bool FieldArchive::isIso() const
-{
-	return iso != NULL;
-}
-
-Lgp *FieldArchive::lgp() const
-{
-	return _lgp;
+	return _io;
 }
 
 bool FieldArchive::openField(Field *field, bool dontOptimize)
@@ -199,108 +146,13 @@ Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 	return field;
 }
 
-QByteArray FieldArchive::fieldDataCache;
-QByteArray FieldArchive::mimDataCache;
-QByteArray FieldArchive::modelDataCache;
-Field *FieldArchive::fieldCache=0;
-Field *FieldArchive::mimCache=0;
-Field *FieldArchive::modelCache=0;
-
-QByteArray FieldArchive::fieldData(Field *field, bool unlzs)
-{
-	QByteArray data;
-
-	// use data from the cache
-	if(unlzs && fieldDataIsCached(field)) {
-//		qDebug() << "FieldArchive use field data from cache" << field->name();
-		return fieldDataCache;
-	} /*else {
-		qDebug() << "FieldArchive don't use field data from cache" << field->name() << unlzs;
-	}*/
-
-	if(isDatFile() || isLgp()) {
-		data = fileData(field->name(), unlzs);
-	} else if(isIso() || isDirectory()) {
-		data = fileData(field->name().toUpper()+".DAT", unlzs);
-	}
-
-	if(unlzs && !data.isEmpty()) { // put decompressed data in the cache
-		fieldCache = field;
-		fieldDataCache = data;
-	}
-	return data;
-}
-
-QByteArray FieldArchive::mimData(Field *field, bool unlzs)
-{
-	// use data from the cache
-	if(unlzs && mimDataIsCached(field)) {
-		return mimDataCache;
-	}
-
-	QByteArray data = fileData(field->name().toUpper()+".MIM", unlzs);
-
-	if(unlzs && !data.isEmpty()) { // put decompressed data in the cache
-		mimCache = field;
-		mimDataCache = data;
-	}
-	return data;
-}
-
-QByteArray FieldArchive::modelData(Field *field, bool unlzs)
-{
-	// use data from the cache
-	if(unlzs && modelDataIsCached(field)) {
-		return modelDataCache;
-	}
-
-	QByteArray data = fileData(field->name().toUpper()+".BSX", unlzs);
-
-	if(unlzs && !data.isEmpty()) { // put decompressed data in the cache
-		modelCache = field;
-		modelDataCache = data;
-	}
-	return data;
-}
-
-QByteArray FieldArchive::fileData(const QString &fileName, bool unlzs)
-{
-	QByteArray data;
-
-	if(isLgp()) {
-		if(!_lgp->isOpen() && !_lgp->open()) return QByteArray();
-		data = _lgp->fileData(fileName);
-	} else if(isIso()) {
-		data = iso->file(isoFieldDirectory->file(fileName.toUpper()));
-	} else if(isDirectory()) {
-		QFile f(chemin() + fileName.toUpper());
-		if(!f.open(QIODevice::ReadOnly))	return QByteArray();
-		data = f.readAll();
-		f.close();
-	} else if(isDatFile()) {
-		if(!fic->isOpen() && !fic->open(QIODevice::ReadOnly))		return QByteArray();
-		fic->reset();
-		data = fic->readAll();
-		fic->close();
-	} else {
-		return QByteArray();
-	}
-
-	if(data.size() < 4)		return QByteArray();
-
-	const char *lzsDataConst = data.constData();
-	quint32 lzsSize;
-	memcpy(&lzsSize, lzsDataConst, 4);
-
-	if(!Config::value("lzsNotCheck").toBool() && (quint32)data.size() != lzsSize + 4)
-		return QByteArray();
-
-	return unlzs ? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4))) : data;
-}
-
 TutFile *FieldArchive::tut(const QString &name)
 {
-	if(!isLgp()) return NULL;
+	if(!_io || !_io->isLgp()) {
+		return NULL;
+	}
+
+	Lgp *lgp = (Lgp *)_io->device();
 
 	QMapIterator<QString, TutFile *> it(tuts);
 
@@ -312,9 +164,9 @@ TutFile *FieldArchive::tut(const QString &name)
 		if(name.startsWith(tutName, Qt::CaseInsensitive)) {
 			TutFile *tutFile = it.value();
 			if(tutFile == NULL) {
-				if(!_lgp->isOpen() && !_lgp->open())
+				if(!lgp->isOpen() && !lgp->open())
 					return NULL;
-				QByteArray data = _lgp->fileData(tutName + ".tut");
+				QByteArray data = lgp->fileData(tutName + ".tut");
 				if(!data.isEmpty()) {
 					tutFile = new TutFile(data, true);
 					tuts.insert(name, tutFile);
@@ -329,32 +181,6 @@ TutFile *FieldArchive::tut(const QString &name)
 	}
 
 	return NULL;
-}
-
-bool FieldArchive::fieldDataIsCached(Field *field) const
-{
-	return fieldCache && fieldCache == field;
-}
-
-bool FieldArchive::mimDataIsCached(Field *field) const
-{
-	return mimCache && mimCache == field;
-}
-
-bool FieldArchive::modelDataIsCached(Field *field) const
-{
-	return modelCache && modelCache == field;
-}
-
-void FieldArchive::clearCachedData()
-{
-//	qDebug() << "FieldArchive::clearCachedData()";
-	fieldCache = 0;
-	mimCache = 0;
-	modelCache = 0;
-	fieldDataCache.clear();
-	mimDataCache.clear();
-	modelDataCache.clear();
 }
 
 bool FieldArchive::isAllOpened()
@@ -718,139 +544,6 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 	return false;
 }
 
-void FieldArchive::close()
-{
-//	qDebug() << "FieldArchive::close()";
-	if(fic!=NULL)	fic->close();
-	if(_lgp!=NULL)	_lgp->close();
-	clearCachedData();
-//	qDebug() << "/FieldArchive::close()";
-}
-
-FieldArchive::ErrorCode FieldArchive::open()
-{
-//	qDebug() << "FieldArchive::open()";
-	foreach(Field *field, fileList)	delete field;
-	foreach(TutFile *tut, tuts) if(tut != NULL)	delete tut;
-	fileList.clear();
-	tuts.clear();
-	fieldsSortByName.clear();
-	fieldsSortByMapId.clear();
-	Data::field_names.clear();
-	clearCachedData();
-
-	if(isDirectory())
-	{
-		QStringList list;
-		list.append("*.DAT");
-		list = dir->entryList(list, QDir::Files | QDir::NoSymLinks);
-
-		emit nbFilesChanged(list.size());
-
-		// QTime t;t.start();
-
-		for(int i=0 ; i<list.size() ; ++i) {
-			QCoreApplication::processEvents();
-			emit progress(i);
-
-			QString path = dir->filePath(list.at(i));
-			QString name = path.mid(path.lastIndexOf('/')+1);
-			fileList.append(new FieldPS(name.left(name.lastIndexOf('.')), this));
-		}
-
-		// qDebug("Ouverture : %d ms", t.elapsed());
-	} else if(isDatFile()) {
-		QString path = fic->fileName();
-		QString name = path.mid(path.lastIndexOf('/')+1);
-		fileList.append(new FieldPS(name.left(name.lastIndexOf('.')), this));
-	} else if(isIso()) {
-		isoFieldDirectory = iso->rootDirectory()->directory("FIELD");
-		if(isoFieldDirectory == NULL)	return FieldNotFound;
-
-		QList<IsoFile *> files = isoFieldDirectory->files();
-
-		emit nbFilesChanged(files.size());
-
-		// QTime t;t.start();
-
-		int i=0;
-		foreach(IsoFile *file, files) {
-			QCoreApplication::processEvents();
-			emit progress(i++);
-
-			if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
-				QString name = file->name().mid(file->name().lastIndexOf('/')+1);
-				fileList.append(new FieldPS(name.left(name.lastIndexOf('.')), this));
-			}
-		}
-		// qDebug("Ouverture : %d ms", t.elapsed());
-	} else if(isLgp()) {
-		if(!_lgp->isOpen() && !_lgp->open())	return ErrorOpening;
-
-		QStringList archiveList = _lgp->fileList();
-
-		if(archiveList.isEmpty()) {
-			return Invalid;
-		}
-
-		emit nbFilesChanged(archiveList.size());
-
-		quint32 i, freq = archiveList.size()>50 ? archiveList.size()/50 : 1;
-
-		QTime t;t.start();
-
-		i = 0;
-		foreach(const QString &name, archiveList) {
-			if(i % freq == 0) {
-				QCoreApplication::processEvents();
-				emit progress(i);
-			}
-
-			if(name.compare("maplist", Qt::CaseInsensitive) == 0) {
-				if(!Data::openMaplist(_lgp->fileData(name))) {
-					qWarning() << "Cannot open maplist!";
-				}
-			} else if(name.endsWith(".tut", Qt::CaseInsensitive)) {
-				tuts.insert(name.toLower().left(name.size()-4), NULL);
-			} else if(!name.contains('.')) {
-				fileList.append(new FieldPC(name, this));
-				++i;
-			}
-		}
-		qDebug("Ouverture : %d ms", t.elapsed());
-		// qDebug() << FICHIER::size << " o";
-		// qDebug() << "nbGS : " << GrpScript::COUNT;
-		// qDebug() << "nbS : " << Script::COUNT;
-		// qDebug() << "nbC : " << Opcode::COUNT;
-		// qDebug("-------------------------------------------------");
-	}
-	if(fileList.isEmpty())	return FieldNotFound;
-
-	if(Data::field_names.isEmpty()) {
-		Data::openMaplist(isLgp());
-	}
-
-	int fieldID=0;
-	foreach(Field *f, fileList) {
-		const QString &name = f->name();
-
-		int index;
-		QString mapId;
-		if((index = Data::field_names.indexOf(name)) != -1) {
-			mapId = QString("%1").arg(index, 3);
-		} else {
-			mapId = "~";
-		}
-		fieldsSortByName.insert(name, fieldID);
-		fieldsSortByMapId.insert(mapId, fieldID);
-		++fieldID;
-	}
-
-//	qDebug() << "/FieldArchive::open()";
-
-	return Ok;
-}
-
 void FieldArchive::setSaved()
 {
 	foreach(Field *field, fileList) {
@@ -861,235 +554,4 @@ void FieldArchive::setSaved()
 			tut->setModified(false);
 		}
 	}
-}
-
-FieldArchive::ErrorCode FieldArchive::save(QString path)
-{
-//	qDebug() << "FieldArchive::save()" << path;
-	quint32 nbFiles;
-	bool saveAs;
-
-	if(isDirectory() || isDatFile())
-	{
-		nbFiles = fileList.size();
-		emit nbFilesChanged(nbFiles);
-
-		for(quint32 fieldID=0 ; fieldID<nbFiles ; ++fieldID)
-		{
-			Field *field = fileList.at(fieldID);
-			if(field->isOpen() && field->isModified())
-			{
-				QString datPath = isDatFile() ? fic->fileName() : dir->filePath(field->name()+".DAT");
-				qint8 err = field->save(datPath, true);
-				if(err == 2)	return ErrorOpening;
-				if(err == 1)	return Invalid;
-				if(err != 0)	return NotImplemented;
-			}
-			emit progress(fieldID);
-		}
-
-		setSaved();
-		clearCachedData(); // Important: the file data will change
-
-		return Ok;
-	}
-	else if(isLgp())
-	{
-		if(!_lgp->isOpen() && !_lgp->open())	return ErrorOpening;
-
-		foreach(Field *field, fileList) {
-			if(field->isOpen() && field->isModified()) {
-				if(!_lgp->setFile(field->name(), new FieldIO(field))) {
-					return FieldNotFound;
-				}
-			}
-		}
-
-		QMapIterator<QString, TutFile *> itTut(tuts);
-
-		while(itTut.hasNext()) {
-			itTut.next();
-			TutFile *tut = itTut.value();
-
-			if(tut != NULL && tut->isModified()) {
-//				qDebug() << "[TUT]" << tutName << "======== modified";
-				QByteArray tocTut, tutData;
-				tutData = tut->save(tocTut);
-				tocTut.append(tutData);
-				if(!_lgp->setFile(itTut.key() + ".tut", tocTut)) {
-					return FieldNotFound;
-				}
-			}
-		}
-
-		if(!_lgp->pack(path, this)) {
-			switch(_lgp->error()) {
-			case Lgp::OpenError:
-				return ErrorOpeningTemp;
-			case Lgp::InvalidError:
-				return Invalid;
-			case Lgp::CopyError:
-			case Lgp::RemoveError:
-			case Lgp::RenameError:
-				return ErrorRemoving;
-			default:
-				return Invalid;
-			}
-		}
-
-		// Clear "isModified" state
-		setSaved();
-		clearCachedData(); // Important: the file data will change
-
-		// qDebug("Ecrire le nouvel Lgp : %d ms", t.elapsed());
-		return Ok;
-	}
-	else if(isIso())
-	{
-		if(path.isNull())
-			path = iso->fileName();
-
-		saveAs = QFileInfo(path) != QFileInfo(*iso);
-
-		IsoArchive isoTemp(path%".makoutemp");
-		if(!isoTemp.open(QIODevice::ReadWrite | QIODevice::Truncate))		return ErrorOpening;
-
-		emit nbFilesChanged(100);
-		// Reset IsoControl
-		baseEstimation = 0;
-		estimation = 100;
-
-		// FIELD/*.DAT
-
-		bool archiveModified = false;
-
-		foreach(Field *field, fileList) {
-			if(field->isOpen() && field->isModified()) {
-				IsoFile *isoField = isoFieldDirectory->file(field->name().toUpper() + ".DAT");
-				if(isoField == NULL) {
-					continue;
-				}
-
-				QByteArray newData;
-
-				if(field->save(newData, true)) {
-					isoField->setData(newData);
-					archiveModified = true;
-				} else {
-					return Invalid;
-				}
-			}
-		}
-
-		if(!archiveModified) {
-			return Invalid;
-		}
-
-		// FIELD/FIELD.BIN
-
-		IsoFile *isoFieldBin = isoFieldDirectory->file("FIELD.BIN");
-		if(isoFieldBin == NULL) {
-			return Invalid;
-		}
-
-		QByteArray data = updateFieldBin(iso->file(isoFieldBin), isoFieldDirectory);
-		if(data.isEmpty()) {
-			return Invalid;
-		}
-		isoFieldBin->setData(data);
-
-//		qDebug() << "start";
-
-		if(!iso->pack(&isoTemp, this, isoFieldDirectory))
-			return Invalid;
-
-		// End
-
-		// Remove or close the old file
-		if(!saveAs) {
-			if(!iso->remove())	return ErrorRemoving;
-		} else {
-			iso->close();
-			iso->setFileName(path);
-		}
-		// Move the temporary file
-		if(QFile::exists(path) && !QFile::remove(path))		return ErrorRemoving;
-		isoTemp.rename(path);
-
-		iso->open(QIODevice::ReadOnly);
-
-		// Clear "isModified" state
-		iso->applyModifications(isoFieldDirectory);
-		setSaved();
-		clearCachedData(); // Important: the file data will change
-
-		return Ok;
-	}
-
-	return NotImplemented;
-}
-
-QByteArray FieldArchive::updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory)
-{
-	QByteArray header = data.left(8), ungzip;
-	quint32 oldSectorStart, newSectorStart, oldSize, newSize;
-	QMap<QByteArray, QByteArray> changementsFieldBin;
-	QMap<QByteArray, QString> fichiers;//debug
-
-	foreach(IsoDirectory *fileOrDir, fieldDirectory->directories()) {
-		if(fileOrDir->isModified() && !fileOrDir->name().endsWith(".X") && fileOrDir->name()!="FIELD.BIN") {
-			oldSectorStart = fileOrDir->location();
-			oldSize = fileOrDir->size();
-			newSectorStart = fileOrDir->newLocation();
-			newSize = fileOrDir->newSize();
-
-			QByteArray tempBA = QByteArray((char *)&oldSectorStart, 4).append((char *)&oldSize, 4);
-			changementsFieldBin.insert(tempBA, QByteArray((char *)&newSectorStart, 4).append((char *)&newSize, 4));
-			fichiers.insert(tempBA, fileOrDir->name());
-		}
-	}
-
-	/**
-	 *	HEADER :
-	 *	 4 : ungzipped size
-	 *	 4 : ungzipped size - 51588
-	 */
-	// décompression gzip
-	quint32 decSize;
-	memcpy(&decSize, data.constData(), 4);
-	ungzip = GZIP::decompress(data.mid(8), decSize);
-	if(ungzip.isEmpty())	return QByteArray();
-
-//	qDebug() << "header field.bin" << header.toHex() << QString::number(data.size()-8,16) << decSize << ungzip.size();
-
-	// mise à jour
-
-	int indicativePosition=0x30000, count;
-	QByteArray copy = ungzip;
-	QMapIterator<QByteArray, QByteArray> i(changementsFieldBin);
-	while(i.hasNext()) {
-		i.next();
-		count = copy.count(i.key());
-		if(count == 0) {
-			qWarning() << "Error not found!" << fichiers.value(i.key());
-			return QByteArray();
-		} else if(count == 1) {
-			indicativePosition = copy.indexOf(i.key());
-			ungzip.replace(i.key(), i.value());
-		} else {
-			qWarning() << "error multiple occurrences 1" << fichiers.value(i.key());
-			if(copy.mid(indicativePosition).count(i.key())==1) {
-				ungzip.replace(copy.indexOf(i.key(), indicativePosition), 8, i.value());
-			} else {
-				qWarning() << "error multiple occurrences 2" << fichiers.value(i.key());
-				return QByteArray();
-			}
-		}
-	}
-
-	copy = GZIP::compress(ungzip);
-
-	if(copy.isEmpty())	return QByteArray();
-
-	return header.append(copy);
 }

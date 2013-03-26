@@ -66,7 +66,7 @@ typedef struct {
 class FieldPS : public Field
 {
 public:
-	FieldPS(const QString &name, FieldArchive *fieldArchive);
+	FieldPS(const QString &name, FieldArchiveIO *fieldArchive);
 	FieldPS(const Field &field);
 	virtual ~FieldPS();
 

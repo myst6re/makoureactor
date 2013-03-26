@@ -19,26 +19,10 @@
 #define DEF_FIELDARCHIVE
 
 #include <QtCore>
-#include "QLockedFile.h"
+#include "FieldArchiveIO.h"
 #include "Field.h"
-#include "IsoArchive.h"
-#include "Lgp.h"
 
-class FieldIO : public QIODevice
-{
-public:
-	FieldIO(Field *field, QObject *parent=0);
-	virtual void close();
-protected:
-	virtual qint64 readData(char *data, qint64 maxSize);
-private:
-	qint64 writeData(const char *, qint64) { return -1; }
-	bool setCache();
-	Field *_field;
-	QByteArray _cache;
-};
-
-class FieldArchive : public QObject, IsoControl, LgpObserver
+class FieldArchive : public QObject, FieldArchiveIOObserver
 {
 	Q_OBJECT
 
@@ -47,25 +31,17 @@ public:
 		SortByName, SortByMapId
 	};
 
-	enum ErrorCode {
-		Ok, FieldNotFound, ErrorOpening, ErrorOpeningTemp, ErrorRemoving, Invalid, NotImplemented
-	};
-
 	FieldArchive();
 	FieldArchive(const QString &path, bool isDirectory=false);
 	virtual ~FieldArchive();
 
+	FieldArchiveIO::ErrorCode open();
+	FieldArchiveIO::ErrorCode save(const QString &path=QString());
+	void close();
+
 	int size() const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
-	QByteArray fieldData(Field *field, bool unlzs=true);
-	QByteArray mimData(Field *field, bool unlzs=true);
-	QByteArray modelData(Field *field, bool unlzs=true);
-	QByteArray fileData(const QString &fileName, bool unlzs=true);
 	TutFile *tut(const QString &name);
-	bool fieldDataIsCached(Field *field) const;
-	bool mimDataIsCached(Field *field) const;
-	bool modelDataIsCached(Field *field) const;
-	void clearCachedData();
 
 	bool isAllOpened();
 	QList<FF7Var> searchAllVars();
@@ -83,34 +59,17 @@ public:
 	bool searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting);
 
-	void close();
-	ErrorCode open();
-	ErrorCode save(QString path=QString());
+	FieldArchiveIO *io() const;
 
-	QString path() const;
-	QString chemin() const;
-	QString name() const;
-
-	bool isDatFile() const;
-	bool isDirectory() const;
-	bool isLgp() const;
-	bool isIso() const;
-
-	Lgp *lgp() const;
-
-	void setIsoOut(int value) {
-		QApplication::processEvents();
-		emit progress(value);
-	}
-	void setObserverValue(int value) {
-		QApplication::processEvents();
-		emit progress(value);
+	bool observerWasCanceled() {
+		return false;
 	}
 	void setObserverMaximum(unsigned int max) {
 		emit nbFilesChanged(max);
 	}
-	bool observerWasCanceled() {
-		return false;
+	void setObserverValue(int value) {
+		QApplication::processEvents();
+		emit progress(value);
 	}
 signals:
 	void progress(int);
@@ -123,20 +82,13 @@ private:
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
 	bool openField(Field *field, bool dontOptimize=false);
 	void setSaved();
-	QByteArray updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory);
-	
+
 	QList<Field *> fileList;
 	QMultiMap<QString, int> fieldsSortByName;
 	QMultiMap<QString, int> fieldsSortByMapId;
-	QLockedFile *fic;
-	Lgp *_lgp;
-	QDir *dir;
-	IsoArchive *iso;
-	IsoDirectory *isoFieldDirectory;
 	QMap<QString, TutFile *> tuts;
-	bool isDat;
-	static QByteArray fieldDataCache, mimDataCache, modelDataCache;
-	static Field *fieldCache, *mimCache, *modelCache;
+
+	FieldArchiveIO *_io;
 	// QFileSystemWatcher fileWatcher;
 };
 
