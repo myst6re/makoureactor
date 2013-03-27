@@ -93,6 +93,7 @@ public:
 	bool addFile(const QString &filePath, QIODevice *data);
 	bool addFile(const QString &filePath, const QByteArray &data);
 	bool removeFile(const QString &filePath);
+	bool renameFile(const QString &filePath, const QString &newFilePath);
 	const QString &companyName();
 	void setCompanyName(const QString &companyName);
 	const QString &productName();

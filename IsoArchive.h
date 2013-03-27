@@ -132,6 +132,7 @@ typedef struct{
 class IsoFileOrDirectory
 {
 public:
+	virtual ~IsoFileOrDirectory();
 	const QString &name() const;
 	quint32 location() const;
 	quint32 size() const;

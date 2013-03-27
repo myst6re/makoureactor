@@ -280,7 +280,7 @@ bool LgpToc::removeEntry(const QString &filePath)
 		return false; // invalid file name
 	}
 
-	LgpHeaderEntry *e = entry(filePath, v);
+	LgpHeaderEntry *e = entry(filePath);
 	if(e == NULL) {
 		return false; // file not found
 	}
@@ -288,6 +288,42 @@ bool LgpToc::removeEntry(const QString &filePath)
 	delete e;
 
 	return _header.remove(v, e) > 0;
+}
+
+bool LgpToc::renameEntry(const QString &filePath, const QString &newFilePath)
+{
+	// Get file
+
+	qint32 v = lookupValue(filePath);
+	if(v < 0) {
+		return false; // invalid file name
+	}
+
+	LgpHeaderEntry *e = entry(filePath, v);
+	if(e == NULL) {
+		return false; // file not found
+	}
+
+	// Get new file
+
+	qint32 newV = lookupValue(newFilePath);
+	if(newV < 0) {
+		return false; // invalid file name
+	}
+
+	if(entry(newFilePath, newV) != NULL) {
+		return false; // file found
+	}
+
+	// Move file
+
+	if(_header.remove(v, e) <= 0) {
+		return false;
+	}
+
+	_header.insert(newV, e);
+
+	return true;
 }
 
 bool LgpToc::contains(const QString &filePath) const

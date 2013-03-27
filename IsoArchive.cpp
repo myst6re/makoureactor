@@ -23,6 +23,10 @@ IsoFileOrDirectory::IsoFileOrDirectory(const QString &name, quint32 location, qu
 {
 }
 
+IsoFileOrDirectory::~IsoFileOrDirectory()
+{
+}
+
 const QString &IsoFileOrDirectory::name() const
 {
 	return _name;

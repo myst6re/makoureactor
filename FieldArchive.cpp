@@ -78,7 +78,7 @@ FieldArchiveIO::ErrorCode FieldArchive::open()
 	if(fileList.isEmpty())	return FieldArchiveIO::FieldNotFound;
 
 	if(Data::field_names.isEmpty()) {
-		Data::openMaplist(_io->isLgp());
+		Data::openMaplist(_io->type() == FieldArchiveIO::Lgp);
 	}
 
 	int fieldID=0;
@@ -148,7 +148,7 @@ Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 
 TutFile *FieldArchive::tut(const QString &name)
 {
-	if(!_io || !_io->isLgp()) {
+	if(!_io || _io->type() != FieldArchiveIO::Lgp) {
 		return NULL;
 	}
 

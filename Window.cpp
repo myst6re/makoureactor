@@ -564,11 +564,14 @@ void Window::open(const QString &cheminFic, bool isDir)
 		actionMassExport->setEnabled(true);
 		actionMassImport->setEnabled(true);
 		actionImport->setEnabled(true);
-		if(fieldArchive->io()->isLgp()/* || fieldArchive->io()->isIso()*/) {
+		if(fieldArchive->io()->type() == FieldArchiveIO::Lgp
+				/* || fieldArchive->io()->type() == FieldArchiveIO::Iso*/) {
 			actionModels->setEnabled(true);
 		}
 	}
-	if(fieldArchive->io()->isLgp())	actionArchive->setEnabled(true);
+	if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
+		actionArchive->setEnabled(true);
+	}
 	actionSaveAs->setEnabled(true);
 	actionClose->setEnabled(true);
 
@@ -796,11 +799,12 @@ void Window::saveAs(bool currentPath)
 	if(!currentPath)
 	{
 		QString filter;
-		if(fieldArchive->io()->isLgp()) {
+		if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 			filter = tr("Fichier Lgp (*.lgp)");
-		} else if(fieldArchive->io()->isDirectory() || fieldArchive->io()->isDatFile()) {
+		} else if(fieldArchive->io()->type() == FieldArchiveIO::Dir
+				  || fieldArchive->io()->type() == FieldArchiveIO::File) {
 			filter = tr("Fichier DAT (*.DAT)");
-		} else if(fieldArchive->io()->isIso()) {
+		} else if(fieldArchive->io()->type() == FieldArchiveIO::Iso) {
             filter = tr("Fichier Iso (*.iso *.bin *.img)");
 		} else {
 			return;
@@ -821,10 +825,10 @@ void Window::saveAs(bool currentPath)
 	quint8 error = 0;
 	
 	// QTime t;t.start();
-	if(!fieldArchive->io()->isDirectory() || currentPath)
+	if(fieldArchive->io()->type() != FieldArchiveIO::Dir || currentPath)
 		error = fieldArchive->save(path);
 	else {
-		// Cas où on veut enregistrer un seul DAT sous...
+		// When we want to save one DAT
 		qint8 err = field->save(path, true);
 		if(err == 2) {
 			error = 1;
@@ -835,7 +839,7 @@ void Window::saveAs(bool currentPath)
 		}
 	}
 
-	// qDebug("Temps total enregistrement : %d ms", t.elapsed());
+	// qDebug("Total save time: %d ms", t.elapsed());
 	
 	setCursor(Qt::ArrowCursor);
 	progression->hide();
@@ -960,7 +964,7 @@ void Window::exporter()
 
 	name = fieldList->selectedItems().first()->text(0);
 
-	if(fieldArchive->io()->isLgp()) {
+	if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 		types = fieldLzs+";;"+fieldDec;
 	} else {
 		types = dat;
@@ -1120,7 +1124,7 @@ void Window::importer()
 		   << tr("Fichier DAT décompressé (*)");
 
 	name = fieldList->selectedItems().first()->text(0);
-	if(!fieldArchive->io()->isLgp())
+	if(fieldArchive->io()->type() != FieldArchiveIO::Lgp)
 		name = name.toUpper();
 
 	QString path = Config::value("importPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("importPath").toString()+"/";
@@ -1129,7 +1133,8 @@ void Window::importer()
 
 	bool isDat = selectedFilter == filter.at(1) || selectedFilter == filter.at(3);
 
-	ImportDialog dialog((isDat && !fieldArchive->io()->isLgp()) || (!isDat && fieldArchive->io()->isLgp()), isDat, this);
+	ImportDialog dialog((isDat && fieldArchive->io()->type() != FieldArchiveIO::Lgp)
+						|| (!isDat && fieldArchive->io()->type() == FieldArchiveIO::Lgp), isDat, this);
 	if(dialog.exec() != QDialog::Accepted) {
 		return;
 	}
@@ -1337,7 +1342,7 @@ void Window::miscManager()
 
 void Window::archiveManager()
 {
-	if(fieldArchive && fieldArchive->io()->isLgp()) {
+	if(fieldArchive && fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 		LgpDialog dialog((Lgp *)fieldArchive->io()->device(), this);
 		dialog.exec();
 	}

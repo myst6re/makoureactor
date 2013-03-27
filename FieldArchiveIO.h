@@ -36,6 +36,9 @@ public:
 	enum ErrorCode {
 		Ok, FieldNotFound, ErrorOpening, ErrorOpeningTemp, ErrorRemoving, Invalid, NotImplemented
 	};
+	enum Type {
+		Lgp, File, Iso, Dir
+	};
 
 	virtual ~FieldArchiveIO();
 
@@ -58,10 +61,7 @@ public:
 	QString name() const;
 	virtual inline bool hasName() const { return true; }
 
-	virtual inline bool isDatFile() const { return false; }
-	virtual inline bool isDirectory() const { return false; }
-	virtual inline bool isLgp() const { return false; }
-	virtual inline bool isIso() const { return false; }
+	virtual Type type() const=0;
 
 	virtual void *device()=0;
 protected:
@@ -81,7 +81,7 @@ class FieldArchiveIOLgp : public FieldArchiveIO, LgpObserver
 {
 public:
 	FieldArchiveIOLgp(const QString &path);
-	inline bool isLgp() const { return true; }
+	inline Type type() const { return Lgp; }
 
 	void close();
 
@@ -107,7 +107,7 @@ private:
 	ErrorCode open2(QList<Field *> &fields, QMap<QString, TutFile *> &tuts, FieldArchiveIOObserver *observer);
 	ErrorCode save2(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts, const QString &path, FieldArchiveIOObserver *observer);
 
-	Lgp _lgp;
+	::Lgp _lgp;
 	FieldArchiveIOObserver *observer;
 };
 
@@ -115,7 +115,7 @@ class FieldArchiveIOFile : public FieldArchiveIO
 {
 public:
 	FieldArchiveIOFile(const QString &path);
-	inline bool isDatFile() const { return true; }
+	inline Type type() const { return File; }
 
 	void close();
 	ErrorCode save(const QString &path=QString());
@@ -139,7 +139,7 @@ class FieldArchiveIOIso : public FieldArchiveIO, IsoControl
 {
 public:
 	FieldArchiveIOIso(const QString &path);
-	inline bool isIso() const { return true; }
+	inline Type type() const { return Iso; }
 
 	ErrorCode open(QList<Field *> &fields);
 	ErrorCode save(const QString &path=QString());
@@ -171,7 +171,7 @@ class FieldArchiveIODir : public FieldArchiveIO
 {
 public:
 	FieldArchiveIODir(const QString &path);
-	inline bool isDirectory() const { return true; }
+	inline Type type() const { return Dir; }
 
 	ErrorCode open(QList<Field *> &fields);
 	ErrorCode save(const QString &path=QString());

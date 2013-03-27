@@ -356,11 +356,20 @@ bool Lgp::addFile(const QString &filePath, const QByteArray &data)
 
 /*!
  * Remove the file named \a filePath.
- * Returns false if the file is successfully removed.
+ * Returns true if the file is successfully removed.
  */
 bool Lgp::removeFile(const QString &filePath)
 {
 	return _files->removeEntry(filePath);
+}
+
+/*!
+ * Rename the file named \a filePath by \a newFilePath.
+ * Returns true if the file is successfully renamed.
+ */
+bool Lgp::renameFile(const QString &filePath, const QString &newFilePath)
+{
+	return _files->renameEntry(filePath, newFilePath);
 }
 
 bool Lgp::openCompanyName()
