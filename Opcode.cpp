@@ -154,13 +154,13 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, int value) const
 		if(id()==0x80) {
 			OpcodeSETBYTE *setbyte = (OpcodeSETBYTE *)this;
 			if(B1(setbyte->banks) == bank && setbyte->var == adress
-					&& B2(setbyte->banks) == bank && setbyte->value == value)
+                    && B2(setbyte->banks) == 0 && setbyte->value == value)
 				return true;
 		}
 		if(id()==0x81) {
 			OpcodeSETWORD *setword = (OpcodeSETWORD *)this;
 			if(B1(setword->banks) == bank && setword->var == adress
-					&& B2(setword->banks) == bank && setword->value == (quint16)value)
+                    && B2(setword->banks) == 0 && setword->value == (quint16)value)
 				return true;
 		}
 		return false;

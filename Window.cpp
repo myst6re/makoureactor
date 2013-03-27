@@ -439,7 +439,7 @@ void Window::openFile()
 			cheminFic.append("field/");
 	}
 
-	cheminFic = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"), cheminFic, tr("Fichiers compatibles (*.lgp *.DAT *.bin *.iso);;Fichiers Lgp (*.lgp);;Fichier DAT (*.DAT);;Image disque (*.bin *.iso)"));
+    cheminFic = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"), cheminFic, tr("Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img);;Fichiers Lgp (*.lgp);;Fichier DAT (*.DAT);;Image disque (*.bin *.iso *.img)"));
 	if(!cheminFic.isNull())	{
 		int index;
 		if((index = cheminFic.lastIndexOf('/')) == -1)	index = cheminFic.size();
@@ -801,7 +801,7 @@ void Window::saveAs(bool currentPath)
 		} else if(fieldArchive->io()->isDirectory() || fieldArchive->io()->isDatFile()) {
 			filter = tr("Fichier DAT (*.DAT)");
 		} else if(fieldArchive->io()->isIso()) {
-			filter = tr("Fichier Iso (*.iso *.bin)");
+            filter = tr("Fichier Iso (*.iso *.bin *.img)");
 		} else {
 			return;
 		}
