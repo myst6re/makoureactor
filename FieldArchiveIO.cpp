@@ -5,6 +5,7 @@
 #include "Data.h"
 #include "FieldPC.h"
 #include "FieldPS.h"
+#include "FieldArchive.h"
 
 FieldIO::FieldIO(Field *field, QObject *parent) :
 	QIODevice(parent), _field(field)
@@ -49,28 +50,38 @@ bool FieldIO::setCache()
 	return true;
 }
 
+FieldArchiveIO::FieldArchiveIO(FieldArchive *fieldArchive) :
+	_fieldArchive(fieldArchive)
+{
+}
+
 FieldArchiveIO::~FieldArchiveIO()
 {
 	clearCachedData();
 }
 
-FieldArchiveIOLgp::FieldArchiveIOLgp(const QString &path) :
-	_lgp(path)
+FieldArchive *FieldArchiveIO::fieldArchive()
+{
+	return _fieldArchive;
+}
+
+FieldArchiveIOLgp::FieldArchiveIOLgp(const QString &path, FieldArchive *fieldArchive) :
+	FieldArchiveIO(fieldArchive), _lgp(path)
 {
 }
 
-FieldArchiveIOFile::FieldArchiveIOFile(const QString &path) :
-	fic(path)
+FieldArchiveIOFile::FieldArchiveIOFile(const QString &path, FieldArchive *fieldArchive) :
+	FieldArchiveIO(fieldArchive), fic(path)
 {
 }
 
-FieldArchiveIOIso::FieldArchiveIOIso(const QString &path) :
-	iso(path)
+FieldArchiveIOIso::FieldArchiveIOIso(const QString &path, FieldArchive *fieldArchive) :
+	FieldArchiveIO(fieldArchive), iso(path)
 {
 }
 
-FieldArchiveIODir::FieldArchiveIODir(const QString &path) :
-	dir(path)
+FieldArchiveIODir::FieldArchiveIODir(const QString &path, FieldArchive *fieldArchive) :
+	FieldArchiveIO(fieldArchive), dir(path)
 {
 }
 
@@ -364,15 +375,14 @@ void FieldArchiveIOFile::close()
 	FieldArchiveIO::close();
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIO::open(QList<Field *> &fields, QMap<QString, TutFile *> &tuts, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIO::open(FieldArchiveIOObserver *observer)
 {
 	clearCachedData();
 
-	return open2(fields, tuts, observer);
+	return open2(observer);
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOLgp::open2(QList<Field *> &fields, QMap<QString, TutFile *> &tuts,
-												   FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOLgp::open2(FieldArchiveIOObserver *observer)
 {
 	if(!_lgp.isOpen() && !_lgp.open()) {
 		return ErrorOpening;
@@ -402,9 +412,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOLgp::open2(QList<Field *> &fields, QMap<
 				qWarning() << "Cannot open maplist!";
 			}
 		} else if(name.endsWith(".tut", Qt::CaseInsensitive)) {
-			tuts.insert(name.toLower().left(name.size()-4), NULL);
+			fieldArchive()->addTut(name.toLower().left(name.size()-4));
 		} else if(!name.contains('.')) {
-			fields.append(new FieldPC(name, this));
+			fieldArchive()->addField(new FieldPC(name, this));
 			++i;
 		}
 	}
@@ -418,18 +428,16 @@ FieldArchiveIO::ErrorCode FieldArchiveIOLgp::open2(QList<Field *> &fields, QMap<
 	return Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOFile::open2(QList<Field *> &fields, QMap<QString, TutFile *> &tuts,
-													FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOFile::open2(FieldArchiveIOObserver *observer)
 {
 	QString path = fic.fileName();
 	QString name = path.mid(path.lastIndexOf('/') + 1);
-	fields.append(new FieldPS(name.left(name.lastIndexOf('.')), this));
+	fieldArchive()->addField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 
 	return Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOIso::open2(QList<Field *> &fields, QMap<QString, TutFile *> &tuts,
-												   FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOIso::open2(FieldArchiveIOObserver *observer)
 {
 	if(!iso.isOpen() && !iso.open(QIODevice::ReadOnly)) {
 		return ErrorOpening;
@@ -451,7 +459,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOIso::open2(QList<Field *> &fields, QMap<
 
 		if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
 			QString name = file->name().mid(file->name().lastIndexOf('/')+1);
-			fields.append(new FieldPS(name.left(name.lastIndexOf('.')), this));
+			fieldArchive()->addField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 		}
 	}
 	// qDebug("Ouverture : %d ms", t.elapsed());
@@ -459,8 +467,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOIso::open2(QList<Field *> &fields, QMap<
 	return Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIODir::open2(QList<Field *> &fields, QMap<QString, TutFile *> &tuts,
-												   FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIODir::open2(FieldArchiveIOObserver *observer)
 {
 	QStringList list;
 	list.append("*.DAT");
@@ -476,7 +483,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIODir::open2(QList<Field *> &fields, QMap<
 		if(observer)	observer->setObserverValue(i++);
 
 		if(!name.startsWith("WM", Qt::CaseInsensitive)) {
-			fields.append(new FieldPS(name.left(name.lastIndexOf('.')), this));
+			fieldArchive()->addField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 		}
 	}
 
@@ -485,32 +492,31 @@ FieldArchiveIO::ErrorCode FieldArchiveIODir::open2(QList<Field *> &fields, QMap<
 	return Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIO::save(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts,
-											   const QString &path, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIO::save(const QString &path, FieldArchiveIOObserver *observer)
 {
-	ErrorCode error = save2(fields, tuts, path, observer);
+	ErrorCode error = save2(path, observer);
 	if(error == Ok) {
 		clearCachedData(); // Important: the file data will change
 	}
 	return error;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOLgp::save2(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts,
-												   const QString &path, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOLgp::save2(const QString &path, FieldArchiveIOObserver *observer)
 {
 	if(!_lgp.isOpen() && !_lgp.open()) {
 		return ErrorOpening;
 	}
 
-	foreach(Field *field, fields) {
-		if(field->isOpen() && field->isModified()) {
+	for(int fieldID=0 ; fieldID<fieldArchive()->size() ; ++fieldID) {
+		Field *field = fieldArchive()->field(fieldID, false);
+		if(field && field->isOpen() && field->isModified()) {
 			if(!_lgp.setFile(field->name(), new FieldIO(field))) {
 				return FieldNotFound;
 			}
 		}
 	}
 
-	QMapIterator<QString, TutFile *> itTut(tuts);
+	QMapIterator<QString, TutFile *> itTut(fieldArchive()->tuts());
 
 	while(itTut.hasNext()) {
 		itTut.next();
@@ -537,9 +543,11 @@ FieldArchiveIO::ErrorCode FieldArchiveIOLgp::save2(const QList<Field *> &fields,
 		case Lgp::InvalidError:
 			return Invalid;
 		case Lgp::CopyError:
+			return ErrorCopying;
 		case Lgp::RemoveError:
-		case Lgp::RenameError:
 			return ErrorRemoving;
+		case Lgp::RenameError:
+			return ErrorRenaming;
 		default:
 			return Invalid;
 		}
@@ -550,13 +558,13 @@ FieldArchiveIO::ErrorCode FieldArchiveIOLgp::save2(const QList<Field *> &fields,
 	return Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOFile::save2(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts,
-													const QString &path0, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOFile::save2(const QString &path0, FieldArchiveIOObserver *observer)
 {
+	Q_UNUSED(observer)
 	QString path = path0.isNull() ? fic.fileName() : path0;
 
-	Field *field = fields.first();
-	if(field->isOpen() && field->isModified()) {
+	Field *field = fieldArchive()->field(0, false);
+	if(field && field->isOpen() && field->isModified()) {
 		qint8 err = field->save(path, true);
 		if(err == 2)	return ErrorOpening;
 		if(err == 1)	return Invalid;
@@ -566,8 +574,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOFile::save2(const QList<Field *> &fields
 	return Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOIso::save2(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts,
-												   const QString &path0, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOIso::save2(const QString &path0, FieldArchiveIOObserver *observer)
 {
 	QString path = path0.isNull() ? iso.fileName() : path0;
 
@@ -585,8 +592,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOIso::save2(const QList<Field *> &fields,
 
 	bool archiveModified = false;
 
-	foreach(Field *field, fields) {
-		if(field->isOpen() && field->isModified()) {
+	for(int fieldID=0 ; fieldID<fieldArchive()->size() ; ++fieldID) {
+		Field *field = fieldArchive()->field(fieldID, false);
+		if(field && field->isOpen() && field->isModified()) {
 			IsoFile *isoField = isoFieldDirectory->file(field->name().toUpper() + ".DAT");
 			if(isoField == NULL) {
 				continue;
@@ -650,20 +658,35 @@ FieldArchiveIO::ErrorCode FieldArchiveIOIso::save2(const QList<Field *> &fields,
 	return Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIODir::save2(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts,
-												   const QString &path, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIODir::save2(const QString &path, FieldArchiveIOObserver *observer)
 {
-	quint32 nbFiles = fields.size();
+	bool saveAs;
+
+	if(!path.isEmpty()) {
+		saveAs = QDir::cleanPath(path) != QDir::cleanPath(dir.path());
+	} else {
+		saveAs = false;
+	}
+
+	quint32 nbFiles = fieldArchive()->size();
 	if(observer)	observer->setObserverMaximum(nbFiles);
 
 	for(quint32 fieldID=0 ; fieldID<nbFiles ; ++fieldID) {
-		Field *field = fields.at(fieldID);
-		if(field->isOpen() && field->isModified()) {
-			QString datPath = dir.filePath(field->name().toUpper() + ".DAT");
-			qint8 err = field->save(datPath, true);
-			if(err == 2)	return ErrorOpening;
-			if(err == 1)	return Invalid;
-			if(err != 0)	return NotImplemented;
+		Field *field = fieldArchive()->field(fieldID, false);
+		QString datName = field->name().toUpper() + ".DAT";
+		QString datPath = dir.filePath(datName);
+		if(field) {
+			if(field && field->isOpen() && field->isModified()) {
+				qint8 err = field->save(datPath, true);
+				if(err == 2)	return ErrorOpening;
+				if(err == 1)	return Invalid;
+				if(err != 0)	return NotImplemented;
+			} else if(saveAs) {
+				QString dstPath = path + "/" + datName;
+				if(!QFile::copy(datPath, dstPath)) {
+					return ErrorCopying;
+				}
+			}
 		}
 		if(observer)	observer->setObserverValue(fieldID);
 	}

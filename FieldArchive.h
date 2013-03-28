@@ -42,6 +42,9 @@ public:
 	int size() const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
 	TutFile *tut(const QString &name);
+	const QMap<QString, TutFile *> &tuts() const;
+	void addField(Field *field);
+	void addTut(const QString &name);
 
 	bool isAllOpened();
 	QList<FF7Var> searchAllVars();
@@ -86,7 +89,7 @@ private:
 	QList<Field *> fileList;
 	QMultiMap<QString, int> fieldsSortByName;
 	QMultiMap<QString, int> fieldsSortByMapId;
-	QMap<QString, TutFile *> tuts;
+	QMap<QString, TutFile *> _tuts;
 
 	FieldArchiveIO *_io;
 	// QFileSystemWatcher fileWatcher;

@@ -7,6 +7,7 @@
 #include "IsoArchive.h"
 #include "Lgp.h"
 
+class FieldArchive;
 
 class FieldIO : public QIODevice
 {
@@ -34,12 +35,13 @@ class FieldArchiveIO
 {
 public:
 	enum ErrorCode {
-		Ok, FieldNotFound, ErrorOpening, ErrorOpeningTemp, ErrorRemoving, Invalid, NotImplemented
+		Ok, FieldNotFound, ErrorOpening, ErrorOpeningTemp, ErrorRemoving, ErrorRenaming, ErrorCopying, Invalid, NotImplemented
 	};
 	enum Type {
 		Lgp, File, Iso, Dir
 	};
 
+	FieldArchiveIO(FieldArchive *fieldArchive);
 	virtual ~FieldArchiveIO();
 
 	QByteArray fieldData(Field *field, bool unlzs=true);
@@ -53,8 +55,8 @@ public:
 	void clearCachedData();
 
 	virtual void close();
-	ErrorCode open(QList<Field *> &fields, QMap<QString, TutFile *> &tuts, FieldArchiveIOObserver *observer=0);
-	ErrorCode save(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts, const QString &path=QString(), FieldArchiveIOObserver *observer=0);
+	ErrorCode open(FieldArchiveIOObserver *observer=0);
+	ErrorCode save(const QString &path=QString(), FieldArchiveIOObserver *observer=0);
 
 	virtual QString path() const=0;
 	QString directory() const;
@@ -70,9 +72,12 @@ protected:
 	virtual QByteArray modelData2(Field *field, bool unlzs)=0;
 	virtual QByteArray fileData2(const QString &fileName)=0;
 
-	virtual ErrorCode open2(QList<Field *> &fields, QMap<QString, TutFile *> &tuts, FieldArchiveIOObserver *observer)=0;
-	virtual ErrorCode save2(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts, const QString &path, FieldArchiveIOObserver *observer)=0;
+	virtual ErrorCode open2(FieldArchiveIOObserver *observer)=0;
+	virtual ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer)=0;
+protected:
+	FieldArchive *fieldArchive();
 private:
+	FieldArchive *_fieldArchive;
 	static QByteArray fieldDataCache, mimDataCache, modelDataCache;
 	static Field *fieldCache, *mimCache, *modelCache;
 };
@@ -80,7 +85,7 @@ private:
 class FieldArchiveIOLgp : public FieldArchiveIO, LgpObserver
 {
 public:
-	FieldArchiveIOLgp(const QString &path);
+	FieldArchiveIOLgp(const QString &path, FieldArchive *fieldArchive);
 	inline Type type() const { return Lgp; }
 
 	void close();
@@ -104,8 +109,8 @@ private:
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
-	ErrorCode open2(QList<Field *> &fields, QMap<QString, TutFile *> &tuts, FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts, const QString &path, FieldArchiveIOObserver *observer);
+	ErrorCode open2(FieldArchiveIOObserver *observer);
+	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
 
 	::Lgp _lgp;
 	FieldArchiveIOObserver *observer;
@@ -114,7 +119,7 @@ private:
 class FieldArchiveIOFile : public FieldArchiveIO
 {
 public:
-	FieldArchiveIOFile(const QString &path);
+	FieldArchiveIOFile(const QString &path, FieldArchive *fieldArchive);
 	inline Type type() const { return File; }
 
 	void close();
@@ -129,8 +134,8 @@ private:
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
-	ErrorCode open2(QList<Field *> &fields, QMap<QString, TutFile *> &tuts, FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts, const QString &path, FieldArchiveIOObserver *observer);
+	ErrorCode open2(FieldArchiveIOObserver *observer);
+	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
 
 	QLockedFile fic;
 };
@@ -138,7 +143,7 @@ private:
 class FieldArchiveIOIso : public FieldArchiveIO, IsoControl
 {
 public:
-	FieldArchiveIOIso(const QString &path);
+	FieldArchiveIOIso(const QString &path, FieldArchive *fieldArchive);
 	inline Type type() const { return Iso; }
 
 	ErrorCode open(QList<Field *> &fields);
@@ -157,8 +162,8 @@ private:
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
-	ErrorCode open2(QList<Field *> &fields, QMap<QString, TutFile *> &tuts, FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts, const QString &path, FieldArchiveIOObserver *observer);
+	ErrorCode open2(FieldArchiveIOObserver *observer);
+	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
 
 	static QByteArray updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory);
 
@@ -170,7 +175,7 @@ private:
 class FieldArchiveIODir : public FieldArchiveIO
 {
 public:
-	FieldArchiveIODir(const QString &path);
+	FieldArchiveIODir(const QString &path, FieldArchive *fieldArchive);
 	inline Type type() const { return Dir; }
 
 	ErrorCode open(QList<Field *> &fields);
@@ -186,8 +191,8 @@ private:
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
-	ErrorCode open2(QList<Field *> &fields, QMap<QString, TutFile *> &tuts, FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QList<Field *> &fields, const QMap<QString, TutFile *> &tuts, const QString &path, FieldArchiveIOObserver *observer);
+	ErrorCode open2(FieldArchiveIOObserver *observer);
+	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
 
 	QDir dir;
 };

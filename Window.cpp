@@ -507,6 +507,12 @@ void Window::open(const QString &cheminFic, bool isDir)
 	case FieldArchiveIO::ErrorRemoving:
 		out = tr("Impossible de supprimer le fichier");
 		break;
+	case FieldArchiveIO::ErrorRenaming:
+		out = tr("Impossible de renommer le fichier.");
+		break;
+	case FieldArchiveIO::ErrorCopying:
+		out = tr("Impossible de copier le fichier");
+		break;
 	case FieldArchiveIO::Invalid:
 		out = tr("L'archive est invalide");
 		break;
@@ -798,19 +804,23 @@ void Window::saveAs(bool currentPath)
 	QString path;
 	if(!currentPath)
 	{
-		QString filter;
-		if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
-			filter = tr("Fichier Lgp (*.lgp)");
-		} else if(fieldArchive->io()->type() == FieldArchiveIO::Dir
-				  || fieldArchive->io()->type() == FieldArchiveIO::File) {
-			filter = tr("Fichier DAT (*.DAT)");
-		} else if(fieldArchive->io()->type() == FieldArchiveIO::Iso) {
-            filter = tr("Fichier Iso (*.iso *.bin *.img)");
+		if(fieldArchive->io()->type() == FieldArchiveIO::Dir) {
+			path = QFileDialog::getExistingDirectory(this, tr("Enregistrer dossier sous"), fieldArchive->io()->path());
+			if(path.isNull())		return;
 		} else {
-			return;
+			QString filter;
+			if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
+				filter = tr("Fichier Lgp (*.lgp)");
+			} else if(fieldArchive->io()->type() == FieldArchiveIO::File) {
+				filter = tr("Fichier DAT (*.DAT)");
+			} else if(fieldArchive->io()->type() == FieldArchiveIO::Iso) {
+				filter = tr("Fichier Iso (*.iso *.bin *.img)");
+			} else {
+				return;
+			}
+			path = QFileDialog::getSaveFileName(this, tr("Enregistrer sous"), fieldArchive->io()->path(), filter);
+			if(path.isNull())		return;
 		}
-		path = QFileDialog::getSaveFileName(this, tr("Enregistrer Sous"), fieldArchive->io()->path(), filter);
-		if(path.isNull())		return;
 	}
 	
 	setEnabled(false);
@@ -825,20 +835,7 @@ void Window::saveAs(bool currentPath)
 	quint8 error = 0;
 	
 	// QTime t;t.start();
-	if(fieldArchive->io()->type() != FieldArchiveIO::Dir || currentPath)
-		error = fieldArchive->save(path);
-	else {
-		// When we want to save one DAT
-		qint8 err = field->save(path, true);
-		if(err == 2) {
-			error = 1;
-		} else if(err == 1) {
-			error = 5;
-		} else if(err != 0) {
-			error = 5;
-		}
-	}
-
+	error = fieldArchive->save(path);
 	// qDebug("Total save time: %d ms", t.elapsed());
 	
 	setCursor(Qt::ArrowCursor);
@@ -863,7 +860,13 @@ void Window::saveAs(bool currentPath)
 		out = tr("Impossible de créer un fichier temporaire");
 		break;
 	case FieldArchiveIO::ErrorRemoving:
-		out = tr("Impossible d'écrire dans l'archive, vérifiez les droits d'écriture.");
+		out = tr("Impossible de supprimer le fichier, vérifiez les droits d'écriture.");
+		break;
+	case FieldArchiveIO::ErrorRenaming:
+		out = tr("Impossible de renommer le fichier, vérifiez les droits d'écriture.");
+		break;
+	case FieldArchiveIO::ErrorCopying:
+		out = tr("Impossible de copier le fichier, vérifiez les droits d'écriture.");
 		break;
 	case FieldArchiveIO::Invalid:
 		out = tr("L'archive est invalide");
