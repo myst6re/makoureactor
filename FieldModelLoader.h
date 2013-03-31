@@ -27,6 +27,8 @@ public:
 	bool isLoaded() const;
 	bool isModified() const;
 	void setModified(bool modified);
+	virtual bool load(const QByteArray &data)=0;
+	virtual int modelCount() const=0;
 
 protected:
 	bool loaded, modified;
