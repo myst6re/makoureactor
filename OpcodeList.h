@@ -95,6 +95,9 @@ private:
 	QBrush previousBG, previousErrorBg;
 	int errorLine;
 
+	QAction *edit_A, *add_A, *del_A;
+	QAction *cut_A, *copy_A, *paste_A;
+	QAction *up_A, *down_A, *expand_A;
 	QAction *undo_A, *redo_A, *text_A;
 
 	QStack<Historic> hists;

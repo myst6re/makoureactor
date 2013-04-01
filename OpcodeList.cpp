@@ -33,38 +33,38 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	setSelectionMode(QAbstractItemView::ExtendedSelection);
 	
-	QAction *edit_A = new QAction(tr("Modifier"), this);
+	edit_A = new QAction(tr("Modifier"), this);
 	edit_A->setShortcut(QKeySequence(Qt::Key_Return));
 	edit_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	edit_A->setEnabled(false);
-	QAction *add_A = new QAction(QIcon(":/images/plus.png"), tr("Ajouter"), this);
+	add_A = new QAction(QIcon(":/images/plus.png"), tr("Ajouter"), this);
 	add_A->setShortcut(QKeySequence("Ctrl++"));
 	add_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
-	QAction *del_A = new QAction(QIcon(":/images/minus.png"), tr("Supprimer"), this);
+	del_A = new QAction(QIcon(":/images/minus.png"), tr("Supprimer"), this);
 	del_A->setShortcut(QKeySequence(Qt::Key_Delete));
 	del_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	del_A->setEnabled(false);
-	QAction *cut_A = new QAction(QIcon(":/images/cut.png"), tr("Couper"), this);
+	cut_A = new QAction(QIcon(":/images/cut.png"), tr("Couper"), this);
 	cut_A->setShortcut(QKeySequence("Ctrl+X"));
 	cut_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	cut_A->setEnabled(false);
-	QAction *copy_A = new QAction(QIcon(":/images/copy.png"), tr("Copier"), this);
+	copy_A = new QAction(QIcon(":/images/copy.png"), tr("Copier"), this);
 	copy_A->setShortcut(QKeySequence("Ctrl+C"));
 	copy_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	copy_A->setEnabled(false);
-	QAction *paste_A = new QAction(QIcon(":/images/paste.png"), tr("Coller"), this);
+	paste_A = new QAction(QIcon(":/images/paste.png"), tr("Coller"), this);
 	paste_A->setShortcut(QKeySequence("Ctrl+V"));
 	paste_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	paste_A->setEnabled(false);
-	QAction *up_A = new QAction(QIcon(":/images/up.png"), tr("Déplacer vers le haut"), this);
+	up_A = new QAction(QIcon(":/images/up.png"), tr("Déplacer vers le haut"), this);
 	up_A->setShortcut(QKeySequence("Shift+Up"));
 	up_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	up_A->setEnabled(false);
-	QAction *down_A = new QAction(QIcon(":/images/down.png"), tr("Déplacer vers le bas"), this);
+	down_A = new QAction(QIcon(":/images/down.png"), tr("Déplacer vers le bas"), this);
 	down_A->setShortcut(QKeySequence("Shift+Down"));
 	down_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	down_A->setEnabled(false);
-	QAction *expand_A = new QAction(tr("Étendre l'arbre"), this);
+	expand_A = new QAction(tr("Étendre l'arbre"), this);
 	undo_A = new QAction(QIcon(":/images/undo.png"), tr("Annuler"), this);
 	undo_A->setShortcut(QKeySequence::Undo);
 	undo_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
@@ -207,21 +207,21 @@ void OpcodeList::upDownEnabled()
 {
 	if(selectedItems().isEmpty())
 	{
-		actions().at(0)->setEnabled(false);
-		actions().at(2)->setEnabled(false);
-		actions().at(4)->setEnabled(false);
-		actions().at(5)->setEnabled(false);
-		actions().at(8)->setEnabled(false);
-		actions().at(9)->setEnabled(false);
+		edit_A->setEnabled(false);
+		del_A->setEnabled(false);
+		cut_A->setEnabled(false);
+		copy_A->setEnabled(false);
+		up_A->setEnabled(false);
+		down_A->setEnabled(false);
 	}
 	else
 	{
-		actions().at(0)->setEnabled(true);
-		actions().at(2)->setEnabled(script && !script->isEmpty());
-		actions().at(4)->setEnabled(true);
-		actions().at(5)->setEnabled(true);
-		actions().at(8)->setEnabled(/* topLevelItemCount() > 1 && */ currentItem() != topLevelItem(0));
-		actions().at(9)->setEnabled(true/*  topLevelItemCount() > 1 && currentItem() != topLevelItem(topLevelItemCount()-1) */);
+		edit_A->setEnabled(true);
+		del_A->setEnabled(script && !script->isEmpty());
+		cut_A->setEnabled(true);
+		copy_A->setEnabled(true);
+		up_A->setEnabled(/* topLevelItemCount() > 1 && */ currentItem() != topLevelItem(0));
+		down_A->setEnabled(true/*  topLevelItemCount() > 1 && currentItem() != topLevelItem(topLevelItemCount()-1) */);
 	}
 }
 
@@ -343,12 +343,12 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 
 	if(header()->sectionSize(0) < width())	header()->setMinimumSectionSize(width()-2);
 	
-	// actions().at(0)->setEnabled(true);
-	actions().at(1)->setEnabled(true);
-	// actions().at(2)->setEnabled(!script->isEmpty());
-	// actions().at(4)->setEnabled(true);
-	// actions().at(5)->setEnabled(true);
-	actions().at(6)->setEnabled(!opcodeCopied.isEmpty());
+	// edit_A->setEnabled(true);
+	add_A->setEnabled(true);
+	// del_A->setEnabled(!script->isEmpty());
+	// cut_A->setEnabled(true);
+	// copy_A->setEnabled(true);
+	paste_A->setEnabled(!opcodeCopied.isEmpty());
 	upDownEnabled();
 }
 
@@ -693,7 +693,7 @@ void OpcodeList::copy()
 		opcodeCopied.append(Script::copyOpcode(script->getOpcode(id)));
 	}
 
-	actions().at(6)->setEnabled(true);
+	paste_A->setEnabled(true);
 }
 
 void OpcodeList::paste()
