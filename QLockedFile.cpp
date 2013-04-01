@@ -43,8 +43,7 @@ void QLockedFile::close()
 #ifdef Q_WS_WIN
 	CloseHandle(handle);
 #else
-	::flock(handle, LOCK_UN);
-	::close(handle);
+	::flock(handle(), LOCK_UN);
 #endif
 	QFile::close();
 }
@@ -69,17 +68,16 @@ bool QLockedFile::open(OpenMode mode)
 		qWarning() << "QLockedFile::open error lock";
 		return false;
 	}
+
+	return QFile::open(mode);
 #else
-	handle = ::open(QDir::toNativeSeparators(fileName()).toLatin1().data(), O_RDONLY);
-	if(handle < 0) {
-		qWarning() << "QLockedFile::open error open";
-		return false;
-	}
-	if(::flock(handle, LOCK_SH) < 0) {
+	bool isOpen = QFile::open(mode);
+
+	if(isOpen && ::flock(handle(), LOCK_SH) < 0) {
 		qWarning() << "QLockedFile::open error flock";
 		return false;
 	}
-#endif
 
-	return QFile::open(mode);
+	return isOpen;
+#endif
 }

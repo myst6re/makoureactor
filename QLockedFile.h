@@ -46,8 +46,6 @@ public slots:
 private:
 #ifdef Q_WS_WIN
 	HANDLE handle;
-#else
-	int handle;
 #endif
 };
 

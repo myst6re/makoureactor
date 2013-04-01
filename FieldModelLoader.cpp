@@ -22,6 +22,10 @@ FieldModelLoader::FieldModelLoader() :
 {
 }
 
+FieldModelLoader::~FieldModelLoader()
+{
+}
+
 bool FieldModelLoader::isLoaded() const
 {
 	return loaded;

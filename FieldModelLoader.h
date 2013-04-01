@@ -23,7 +23,8 @@
 class FieldModelLoader
 {
 public:
-    FieldModelLoader();
+	FieldModelLoader();
+	virtual ~FieldModelLoader();
 	bool isLoaded() const;
 	bool isModified() const;
 	void setModified(bool modified);
