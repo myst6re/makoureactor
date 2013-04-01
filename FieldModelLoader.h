@@ -32,6 +32,8 @@ public:
 	virtual int modelCount() const=0;
 
 protected:
+	void setLoaded(bool loaded);
+private:
 	bool loaded, modified;
 };
 

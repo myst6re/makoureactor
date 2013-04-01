@@ -77,9 +77,9 @@ public:
 	virtual bool isPC() const=0;
 	inline bool isPS() const { return !isPC(); }
 
-	virtual bool open(bool dontOptimize=false)=0;
+	bool open(bool dontOptimize=false);
 
-	virtual QPixmap openBackground()=0;
+	QPixmap openBackground();
 	virtual QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
 
 	virtual bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)=0;
@@ -96,18 +96,21 @@ public:
 	IdFile *walkmesh(bool open=true);
 	CaFile *camera(bool open=true);
 	InfFile *inf(bool open=true);
-	virtual FieldModelLoader *fieldModelLoader(bool open=true)=0;
+	virtual FieldModelLoader *fieldModelLoader(bool open=true);
 	virtual FieldModelFile *fieldModel(int modelID, int animationID=0, bool animate=true)=0;
 
 	const QString &name() const;
 	void setName(const QString &name);
 protected:
-	virtual QByteArray sectionData(FieldPart part)=0;
+	virtual int headerSize()=0;
+	virtual void openHeader(const QByteArray &fileData)=0;
+	virtual FieldModelLoader *createFieldModelLoader()=0;
+	QByteArray sectionData(FieldPart part);
+	virtual int sectionId(FieldPart part) const=0;
+	virtual quint32 sectionPosition(int idPart)=0;
+	virtual int sectionCount()=0;
+	virtual int paddingBetweenSections()=0;
 	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
-
-	bool _isOpen, _isModified;
-
-	QString _name;
 
 	Section1File *section1;
 	EncounterFile *_encounter;
@@ -118,6 +121,10 @@ protected:
 	FieldModelLoader *modelLoader;
 	FieldModelFile *_fieldModel;
 	FieldArchiveIO *fieldArchive;
+private:
+	bool _isOpen, _isModified;
+
+	QString _name;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Field::FieldParts)

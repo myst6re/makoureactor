@@ -1,5 +1,5 @@
 /****************************************************************************
- ** Makou Reactor Final Fantasy VII FieldPC Script Editor
+ ** Makou Reactor Final Fantasy VII Field Script Editor
  ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
@@ -31,104 +31,29 @@ FieldPC::FieldPC(const Field &field) :
 {
 }
 
-FieldPC::~FieldPC()
+void FieldPC::openHeader(const QByteArray &fileData)
 {
-}
-
-bool FieldPC::open(bool dontOptimize)
-{
-	QByteArray fileData;
-
-//	qDebug() << "FieldPC::open" << dontOptimize << name();
-
-	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
-		QByteArray lzsData = fieldArchive->fieldData(this, false);
-		quint32 lzsSize;
-		if(lzsData.size() < 4)		return false;
-		const char *lzsDataConst = lzsData.constData();
-		memcpy(&lzsSize, lzsDataConst, 4);
-
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
-			return false;
-
-		fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), 42);//partial decompression
-	} else {
-		fileData = fieldArchive->fieldData(this);
-	}
-
-	if(fileData.size() < 42)	return false;
-
 	memcpy(sectionPositions, fileData.constData() + 6, 9 * 4); // header
-
-	_isOpen = true;
-
-	return true;
 }
 
-QByteArray FieldPC::sectionData(FieldPart part)
+int FieldPC::sectionId(FieldPart part) const
 {
-	if(!_isOpen) {
-		open();
-	}
-	if(!_isOpen)	return QByteArray();
-
 	switch(part) {
-	case Scripts:
-		return sectionData(0);
-	case Akaos:
-		return sectionData(0);
-	case Camera:
-		return sectionData(1);
-	case ModelLoader:
-		return sectionData(2);
-	case Walkmesh:
-		return sectionData(4);
-	case Encounter:
-		return sectionData(6);
-	case Inf:
-		return sectionData(7);
-	case Background:
-		return sectionData(8);
-	}
-
-	return QByteArray();
-}
-
-QByteArray FieldPC::sectionData(int idPart)
-{
-	int position = sectionPositions[idPart] + 4;
-	int size;
-
-	if(idPart < 8) {
-		size = sectionPositions[idPart+1] - position;
-	} else {
-		size = -1;
-	}
-
-	if(size == -1 || fieldArchive->fieldDataIsCached(this)) {
-		return fieldArchive->fieldData(this).mid(position, size);
-	} else {
-		QByteArray lzsData = fieldArchive->fieldData(this, false);
-		quint32 lzsSize;
-		const char *lzsDataConst = lzsData.constData();
-		memcpy(&lzsSize, lzsDataConst, 4);
-
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
-			return QByteArray();
-
-		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPositions[idPart+1])
-				.mid(position, size);
+	case Scripts:		return 0;
+	case Akaos:			return 0;
+	case Camera:		return 1;
+	case ModelLoader:	return 2;
+	case Walkmesh:		return 4;
+	case Encounter:		return 6;
+	case Inf:			return 7;
+	case Background:	return 8;
+	default:			return -1;
 	}
 }
 
-QPixmap FieldPC::openBackground()
+quint32 FieldPC::sectionPosition(int idPart)
 {
-	// Search default background params
-	QHash<quint8, quint8> paramActifs;
-	qint16 z[] = {-1, -1};
-	scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
-
-	return openBackground(paramActifs, z);
+	return sectionPositions[idPart] + paddingBetweenSections();
 }
 
 QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
@@ -481,19 +406,19 @@ bool FieldPC::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 	return true;
 }
 
+FieldModelLoader *FieldPC::createFieldModelLoader()
+{
+	return new FieldModelLoaderPC();
+}
+
 FieldModelLoaderPC *FieldPC::fieldModelLoader(bool open)
 {
-	FieldModelLoaderPC *modelLoader = (FieldModelLoaderPC *)this->modelLoader;
-	if(!modelLoader)	modelLoader = new FieldModelLoaderPC();
-	if(open && !modelLoader->isLoaded()) {
-		modelLoader->load(sectionData(ModelLoader));
-		//	Data::currentCharNames = model_nameChar;
-		//	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
-		//	Data::currentAnimNames = &fieldModelLoader->model_anims;
-	}
-	this->modelLoader = modelLoader;
-
-	return modelLoader;
+	//if(open && !modelLoader->isLoaded()) {
+	//	Data::currentCharNames = model_nameChar;
+	//	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
+	//	Data::currentAnimNames = &fieldModelLoader->model_anims;
+	//}
+	return (FieldModelLoaderPC *)Field::fieldModelLoader(open);
 }
 
 FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate)

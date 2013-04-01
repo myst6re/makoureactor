@@ -54,7 +54,7 @@ bool FieldModelLoaderPS::load(const QByteArray &data)
 //		qDebug() << "modelID" << modelLoader.modelID;
 	}
 
-	loaded = true;
+	setLoaded(true);
 	return true;
 }
 

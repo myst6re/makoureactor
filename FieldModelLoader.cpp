@@ -40,3 +40,8 @@ void FieldModelLoader::setModified(bool modified)
 {
 	this->modified = modified;
 }
+
+void FieldModelLoader::setLoaded(bool loaded)
+{
+	this->loaded = loaded;
+}

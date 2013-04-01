@@ -68,12 +68,9 @@ class FieldPS : public Field
 public:
 	FieldPS(const QString &name, FieldArchiveIO *fieldArchive);
 	FieldPS(const Field &field);
-	virtual ~FieldPS();
 
 	inline bool isPC() const { return false; }
 
-	bool open(bool dontOptimize=false);
-	QPixmap openBackground();
 	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 
 	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
@@ -83,8 +80,13 @@ public:
 	FieldModelLoaderPS *fieldModelLoader(bool open=true);
 	FieldModelFilePS *fieldModel(int modelID, int animationID=0, bool animate=true);
 protected:
-	QByteArray sectionData(FieldPart part);
-	QByteArray sectionData(int idPart);
+	inline int headerSize() { return 28; }
+	void openHeader(const QByteArray &fileData);
+	FieldModelLoader *createFieldModelLoader();
+	int sectionId(FieldPart part) const;
+	quint32 sectionPosition(int idPart);
+	inline int sectionCount() {	return 7; }
+	inline int paddingBetweenSections() { return 0; }
 private:
 	quint32 sectionPositions[7];
 };

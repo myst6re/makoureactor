@@ -28,12 +28,9 @@ class FieldPC : public Field
 public:
 	FieldPC(const QString &name, FieldArchiveIO *fieldArchive);
 	FieldPC(const Field &field);
-	virtual ~FieldPC();
 
 	inline bool isPC() const { return true; }
 
-	bool open(bool dontOptimize=false);
-	QPixmap openBackground();
 	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 
 	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
@@ -45,8 +42,13 @@ public:
 	FieldModelFilePC *fieldModel(int modelID, int animationID=0, bool animate=true);
 	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate=true);
 protected:
-	QByteArray sectionData(FieldPart part);
-	QByteArray sectionData(int idPart);
+	inline int headerSize() { return 42; }
+	void openHeader(const QByteArray &fileData);
+	FieldModelLoader *createFieldModelLoader();
+	int sectionId(FieldPart part) const;
+	quint32 sectionPosition(int idPart);
+	inline int sectionCount() {	return 9; }
+	inline int paddingBetweenSections() { return 4; }
 private:
 	quint32 sectionPositions[9];
 };

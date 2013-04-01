@@ -108,7 +108,7 @@ bool FieldModelLoaderPC::load(const QByteArray &data)
 		model_anims.append(anims);
 		model_anims_unknown.append(anims_unknown);
 	}
-	loaded = true;
+	setLoaded(true);
 	return true;
 }
 
@@ -161,7 +161,7 @@ void FieldModelLoaderPC::setGlobalScale(quint16 scale)
 {
 	if(typeHRC != scale) {
 		typeHRC = scale;
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -185,7 +185,7 @@ void FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
 	model_anims.insert(modelID, QStringList());
 	model_anims_unknown.insert(modelID, QList<quint16>());
 
-	modified = true;
+	setModified(true);
 }
 
 void FieldModelLoaderPC::removeModel(int modelID)
@@ -200,7 +200,7 @@ void FieldModelLoaderPC::removeModel(int modelID)
 		model_anims.removeAt(modelID);
 		model_anims_unknown.removeAt(modelID);
 
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -218,7 +218,7 @@ void FieldModelLoaderPC::swapModel(int oldModelID, int newModelID)
 		model_anims.swap(oldModelID, newModelID);
 		model_anims_unknown.swap(oldModelID, newModelID);
 
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -237,7 +237,7 @@ void FieldModelLoaderPC::setHRCName(int modelID, const QString &HRCName)
 	if(modelID >= 0 && modelID < model_nameHRC.size()
 			&& model_nameHRC.at(modelID) != HRCName) {
 		model_nameHRC.replace(modelID, HRCName);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -256,7 +256,7 @@ void FieldModelLoaderPC::setCharName(int modelID, const QString &charName)
 	if(modelID >= 0 && modelID < model_nameChar.size()
 			&& model_nameChar.at(modelID) != charName) {
 		model_nameChar.replace(modelID, charName);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -270,7 +270,7 @@ void FieldModelLoaderPC::setScale(int modelID, quint16 scale)
 	if(modelID >= 0 && modelID < model_typeHRC.size()
 			&& model_typeHRC.at(modelID) != scale) {
 		model_typeHRC.replace(modelID, scale);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -284,7 +284,7 @@ void FieldModelLoaderPC::setUnknown(int modelID, quint16 unknown)
 	if(modelID >= 0 && modelID < model_unknown.size()
 			&& model_unknown.at(modelID) != unknown) {
 		model_unknown.replace(modelID, unknown);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -298,7 +298,7 @@ void FieldModelLoaderPC::setLightColors(int modelID, const QList<QRgb> &lightCol
 	if(modelID >= 0 && modelID < colors.size()
 			&& colors.at(modelID) != lightColors) {
 		colors.replace(modelID, lightColors);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -308,7 +308,7 @@ void FieldModelLoaderPC::setLightColor(int modelID, int colorID, QRgb lightColor
 			&& colorID < colors.at(modelID).size()
 			&& colors.at(modelID).at(colorID) != lightColor) {
 		colors[modelID].replace(colorID, lightColor);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -324,8 +324,7 @@ void FieldModelLoaderPC::insertAnim(int modelID, int numA, const QString &name)
 	if(modelID >= 0 && modelID < modelCount()) {
 		model_anims[modelID].insert(numA, name);
 		model_anims_unknown[modelID].insert(numA, 1);
-
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -335,8 +334,7 @@ void FieldModelLoaderPC::removeAnim(int modelID, int numA)
 			&& numA >= 0 && numA < animCount(modelID)) {
 		model_anims[modelID].removeAt(numA);
 		model_anims_unknown[modelID].removeAt(numA);
-
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -348,8 +346,7 @@ void FieldModelLoaderPC::swapAnim(int modelID, int oldNumA, int newNumA)
 			&& newNumA >= 0 && newNumA < animCount(modelID)) {
 		model_anims[modelID].swap(oldNumA, newNumA);
 		model_anims_unknown[modelID].swap(oldNumA, newNumA);
-
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -370,7 +367,7 @@ void FieldModelLoaderPC::setAName(int modelID, int numA, const QString &animName
 		if(numA >= 0 && numA < animNames.size()
 				&& animNames.at(numA) != animName) {
 			animNames.replace(numA, animName);
-			modified = true;
+			setModified(true);
 		}
 	}
 }
@@ -390,7 +387,7 @@ void FieldModelLoaderPC::setAnimUnknown(int modelID, int numA, quint16 unknown)
 		if(numA >= 0 && numA < animUnknown.size()
 				&& animUnknown.at(numA) != unknown) {
 			animUnknown.replace(numA, unknown);
-			modified = true;
+			setModified(true);
 		}
 	}
 }

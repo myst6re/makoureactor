@@ -1,5 +1,5 @@
 /****************************************************************************
- ** Makou Reactor Final Fantasy VII FieldPS Script Editor
+ ** Makou Reactor Final Fantasy VII Field Script Editor
  ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
@@ -31,98 +31,34 @@ FieldPS::FieldPS(const Field &field) :
 {
 }
 
-FieldPS::~FieldPS()
+void FieldPS::openHeader(const QByteArray &fileData)
 {
-}
-
-bool FieldPS::open(bool dontOptimize)
-{
-	QByteArray fileData;
-	const int headerSize = 28;
-
-	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
-		QByteArray lzsData = fieldArchive->fieldData(this, false);
-		quint32 lzsSize;
-		if(lzsData.size() < 4) return false;
-
-		const char *lzsDataConst = lzsData.constData();
-		memcpy(&lzsSize, lzsDataConst, 4);
-
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
-			return false;
-
-		fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize);//partial decompression
-	} else {
-		fileData = fieldArchive->fieldData(this);
-	}
-
-	if(fileData.size() < headerSize) return false;
-
-	memcpy(sectionPositions, fileData.constData(), headerSize); // header
-	qint32 vramDiff = sectionPositions[0] - headerSize;// vram section1 pos - real section 1 pos
+	memcpy(sectionPositions, fileData.constData(), headerSize()); // header
+	qint32 vramDiff = sectionPositions[0] - headerSize();// vram section1 pos - real section 1 pos
 
 	for(int i=0 ; i<7 ; ++i) {
 		sectionPositions[i] -= vramDiff;
 	}
-
-	_isOpen = true;
-
-	return true;
 }
 
-QByteArray FieldPS::sectionData(FieldPart part)
+int FieldPS::sectionId(FieldPart part) const
 {
-	if(!_isOpen) {
-		open();
-	}
-	if(!_isOpen)	return QByteArray();
-
 	switch(part) {
-	case Scripts:
-		return sectionData(0);
-	case Akaos:
-		return sectionData(0);
-	case Walkmesh:
-		return sectionData(1);
-	case Background:
-		return sectionData(2);
-	case Camera:
-		return sectionData(3);
-	case Inf:
-		return sectionData(4);
-	case Encounter:
-		return sectionData(5);
-	case ModelLoader:
-		return sectionData(6);
+	case Scripts:		return 0;
+	case Akaos:			return 0;
+	case Walkmesh:		return 1;
+	case Background:	return 2;
+	case Camera:		return 3;
+	case Inf:			return 4;
+	case Encounter:		return 5;
+	case ModelLoader:	return 6;
+	default:			return -1;
 	}
-
-	return QByteArray();
 }
 
-QByteArray FieldPS::sectionData(int idPart)
+quint32 FieldPS::sectionPosition(int idPart)
 {
-	int position = sectionPositions[idPart];
-	int size;
-
-	if(idPart < 6) {
-		size = sectionPositions[idPart+1] - position;
-	} else {
-		size = -1;
-	}
-
-	if(size == -1 || fieldArchive->fieldDataIsCached(this)) {
-		return fieldArchive->fieldData(this).mid(position, size);
-	} else {
-		QByteArray lzsData = fieldArchive->fieldData(this, false);
-		quint32 lzsSize;
-		const char *lzsDataConst = lzsData.constData();
-		memcpy(&lzsSize, lzsDataConst, 4);
-
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
-			return QByteArray();
-
-		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPositions[idPart+1]).mid(position, size);
-	}
+	return sectionPositions[idPart];
 }
 
 bool FieldPS::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
@@ -220,16 +156,6 @@ bool FieldPS::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 	}
 
 	return true;
-}
-
-QPixmap FieldPS::openBackground()
-{
-	// Search default background params
-	QHash<quint8, quint8> paramActifs;
-	qint16 z[] = {-1, -1};
-	scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
-
-	return openBackground(paramActifs, z);
 }
 
 QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
@@ -577,16 +503,14 @@ QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const 
 	return QPixmap::fromImage(image);
 }
 
+FieldModelLoader *FieldPS::createFieldModelLoader()
+{
+	return new FieldModelLoaderPS();
+}
+
 FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 {
-	FieldModelLoaderPS *modelLoader = (FieldModelLoaderPS *)this->modelLoader;
-	if(!modelLoader)	modelLoader = new FieldModelLoaderPS();
-	if(open && !modelLoader->isLoaded()) {
-		modelLoader->load(sectionData(ModelLoader));
-	}
-	this->modelLoader = modelLoader;
-
-	return modelLoader;
+	return (FieldModelLoaderPS *)Field::fieldModelLoader(open);
 }
 
 FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate)

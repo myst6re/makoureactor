@@ -21,20 +21,21 @@
 #include "FieldPC.h"
 #include "FieldPS.h"
 #include "Data.h"
+#include "Config.h"
 
 Field::Field(const QString &name) :
-	_isOpen(false), _isModified(false), _name(name.toLower()),
 	section1(0), _encounter(0), _tut(0), id(0), ca(0), _inf(0),
 	modelLoader(0), _fieldModel(0),
-	fieldArchive(0)
+	fieldArchive(0),
+	_isOpen(false), _isModified(false), _name(name.toLower())
 {
 }
 
 Field::Field(const QString &name, FieldArchiveIO *fieldArchive) :
-	_isOpen(false), _isModified(false), _name(name.toLower()),
 	section1(0), _encounter(0), _tut(0), id(0), ca(0), _inf(0),
 	modelLoader(0), _fieldModel(0),
-	fieldArchive(fieldArchive)
+	fieldArchive(fieldArchive),
+	_isOpen(false), _isModified(false), _name(name.toLower())
 {
 }
 
@@ -70,6 +71,79 @@ void Field::setModified(bool modified)
 	}
 	_isModified = modified;
 	if(section1)	section1->setModified(modified);
+}
+
+bool Field::open(bool dontOptimize)
+{
+	QByteArray fileData;
+
+	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
+		QByteArray lzsData = fieldArchive->fieldData(this, false);
+		quint32 lzsSize;
+		if(lzsData.size() < 4)	return false;
+
+		const char *lzsDataConst = lzsData.constData();
+		memcpy(&lzsSize, lzsDataConst, 4);
+
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
+			return false;
+
+		fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize());//partial decompression
+	} else {
+		fileData = fieldArchive->fieldData(this);
+	}
+
+	if(fileData.size() < headerSize())	return false;
+
+	openHeader(fileData);
+
+	_isOpen = true;
+
+	return true;
+}
+
+QByteArray Field::sectionData(FieldPart part)
+{
+	if(!_isOpen) {
+		open();
+	}
+
+	if(!_isOpen)	return QByteArray();
+
+	int idPart = sectionId(part);
+	int position = sectionPosition(idPart);
+	int size;
+
+	if(idPart < sectionCount() - 1) {
+		size = sectionPosition(idPart+1) - paddingBetweenSections() - position;
+	} else {
+		size = -1;
+	}
+
+	if(size == -1 || fieldArchive->fieldDataIsCached(this)) {
+		return fieldArchive->fieldData(this).mid(position, size);
+	} else {
+		QByteArray lzsData = fieldArchive->fieldData(this, false);
+		quint32 lzsSize;
+		const char *lzsDataConst = lzsData.constData();
+		memcpy(&lzsSize, lzsDataConst, 4);
+
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
+			return QByteArray();
+
+		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1))
+				.mid(position, size);
+	}
+}
+
+QPixmap Field::openBackground()
+{
+	// Search default background params
+	QHash<quint8, quint8> paramActifs;
+	qint16 z[] = {-1, -1};
+	scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
+
+	return openBackground(paramActifs, z);
 }
 
 QRgb Field::blendColor(quint8 type, QRgb color0, QRgb color1)
@@ -153,6 +227,16 @@ InfFile *Field::inf(bool open)
 	if(!_inf)	_inf = new InfFile();
 	if(open && !_inf->isOpen())	_inf->open(sectionData(Inf));
 	return _inf;
+}
+
+FieldModelLoader *Field::fieldModelLoader(bool open)
+{
+	if(!modelLoader)	modelLoader = createFieldModelLoader();
+	if(open && !modelLoader->isLoaded()) {
+		modelLoader->load(sectionData(ModelLoader));
+	}
+
+	return modelLoader;
 }
 
 const QString &Field::name() const
