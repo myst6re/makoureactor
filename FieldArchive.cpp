@@ -58,7 +58,7 @@ FieldArchive::~FieldArchive()
 	if(_io)		delete _io;
 }
 
-FieldArchiveIO::ErrorCode FieldArchive::open()
+FieldArchiveIO::ErrorCode FieldArchive::open(FieldArchiveIOObserver *observer)
 {
 	if(!_io)	return FieldArchiveIO::Invalid;
 //	qDebug() << "FieldArchive::open()";
@@ -70,7 +70,7 @@ FieldArchiveIO::ErrorCode FieldArchive::open()
 	fieldsSortByMapId.clear();
 	Data::field_names.clear();
 
-	FieldArchiveIO::ErrorCode error = _io->open(this);
+	FieldArchiveIO::ErrorCode error = _io->open(observer);
 	if(error != FieldArchiveIO::Ok) {
 		return error;
 	}
@@ -102,11 +102,11 @@ FieldArchiveIO::ErrorCode FieldArchive::open()
 	return FieldArchiveIO::Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchive::save(const QString &path)
+FieldArchiveIO::ErrorCode FieldArchive::save(const QString &path, FieldArchiveIOObserver *observer)
 {
 	if(!_io)	return FieldArchiveIO::Invalid;
 
-	FieldArchiveIO::ErrorCode error = _io->save(path, this);
+	FieldArchiveIO::ErrorCode error = _io->save(path, observer);
 	if(error == FieldArchiveIO::Ok) {
 		// Clear "isModified" state
 		setSaved();
@@ -193,6 +193,11 @@ void FieldArchive::addField(Field *field)
 	fileList.append(field);
 }
 
+void FieldArchive::removeField(quint32 id)
+{
+	fileList.removeAt(id);
+}
+
 void FieldArchive::addTut(const QString &name)
 {
 	_tuts.insert(name, NULL);
@@ -242,7 +247,21 @@ void FieldArchive::searchAll()
 	foreach(int i, fieldsSortByMapId) {
 		Field *field = this->field(i, true);
 		if(field != NULL) {
-			TutFile *tut = field->tutosAndSounds();
+			Data::charlgp_loadAnimBoneCount();
+			FieldModelLoaderPC *modelLoader = (FieldModelLoaderPC *)field->fieldModelLoader();
+			if(modelLoader) {
+				for(int i=0; i<modelLoader->modelCount(); ++i) {
+					int boneCount = field->fieldModel(i)->boneCount();
+					foreach(const QString &animation, modelLoader->ANames(i)) {
+						QString animName = animation.left(animation.lastIndexOf('.')).toLower() + ".a";
+						if(boneCount != Data::charlgp_animBoneCount.value(animName) &&
+								!(boneCount == 1 && Data::charlgp_animBoneCount.value(animName) == 0)) {
+							qDebug() << boneCount << Data::charlgp_animBoneCount.value(animName) << field->name() << modelLoader->HRCName(i) << animation;
+						}
+					}
+				}
+			}
+			/*TutFile *tut = field->tutosAndSounds();
 			if(tut->isOpen()) {
 				deb.write(QString("=== %1 ===\n").arg(field->name()).toLatin1());
 				for(int j=0; j<tut->size(); ++j) {
@@ -250,7 +269,7 @@ void FieldArchive::searchAll()
 						deb.write(QString("id= %1\n").arg(tut->akaoID(j)).toLatin1());
 					}
 				}
-			}
+			}*/
 //			qDebug() << field->name();
 			/*int scriptID=0, opcodeID=0;
 			Section1File *scripts = field->scriptsAndTexts();
@@ -557,6 +576,99 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 		from = -1;
 	}
 	return false;
+}
+
+bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory, bool overwrite, Field::FieldParts toExport, FieldArchiveIOObserver *observer)
+{
+	if(!selectedFields.isEmpty()) {
+		QString extension, path;
+		int currentField=0;
+		observer->setObserverMaximum(selectedFields.size()-1);
+
+		const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
+
+		if(toExport.testFlag(Field::Background)) {
+			/*switch(massExportDialog->exportBackgroundFormat()) {
+			case 0:		extension = "png"; break;
+			case 1:		extension = "jpg"; break;
+			case 2:		extension = "bmp"; break;
+			}*/extension = "png";//TODO
+
+			foreach(const int &fieldID, selectedFields) {
+				if(observer->observerWasCanceled()) 	return false;
+
+				Field *f = field(fieldID);
+				if(f) {
+					path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
+
+					if(overwrite || !QFile::exists(path)) {
+						QPixmap background = f->openBackground();
+						if(!background.isNull())
+							background.save(path);
+					}
+				}
+				observer->setObserverValue(currentField++);
+			}
+		}
+		if(toExport.testFlag(Field::Akaos)) {
+			extension = "akao";
+
+			foreach(const int &fieldID, selectedFields) {
+				if(observer->observerWasCanceled()) 	return false;
+
+				Field *f = field(fieldID);
+				if(f) {
+					TutFile *akaoList = f->tutosAndSounds();
+					if(akaoList->isOpen()) {
+						int akaoCount = akaoList->size();
+						for(int i=0 ; i<akaoCount ; ++i) {
+							if(!akaoList->isTut(i)) {
+								path = QDir::cleanPath(QString("%1/%2-%3.%4").arg(directory, f->name()).arg(i).arg(extension));
+								if(overwrite || !QFile::exists(path)) {
+									QFile tutExport(path);
+									if(tutExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+										tutExport.write(akaoList->data(i));
+										tutExport.close();
+									}
+								}
+							}
+						}
+					}
+				}
+				observer->setObserverValue(currentField++);
+			}
+		}
+		if(toExport.testFlag(Field::Scripts)) {
+			extension = "txt";
+			bool jp_txt = Config::value("jp_txt", false).toBool();
+
+			foreach(const int &fieldID, selectedFields) {
+				if(observer->observerWasCanceled()) 	return false;
+
+				Field *f = field(fieldID);
+				if(f) {
+					Section1File *section1 = f->scriptsAndTexts();
+					if(section1->isOpen()) {
+						path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
+						if(overwrite || !QFile::exists(path)) {
+							QFile textExport(path);
+							if(textExport.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+								int i=0;
+								foreach(FF7Text *text, *section1->texts()) {
+									textExport.write(QString("---TEXT%1---\n%2\n").arg(i++, 3, 10, QChar('0')).arg(text->getText(jp_txt)).toUtf8());
+								}
+								textExport.close();
+							}
+						}
+					}
+				}
+				observer->setObserverValue(currentField++);
+			}
+		}
+		Data::currentTextes = currentTextesSav;
+	}
+
+	return true;
 }
 
 void FieldArchive::setSaved()

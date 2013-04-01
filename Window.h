@@ -34,7 +34,7 @@
 #include "QTaskBarButton.h"
 #include "LgpDialog.h"
 
-class Window : public QMainWindow
+class Window : public QMainWindow, FieldArchiveIOObserver
 {
     Q_OBJECT
 public:
@@ -43,6 +43,11 @@ public:
 
 	void open(const QString &cheminFic, bool isDir=false);
 	FieldArchive::Sorting getFieldSorting();
+
+	bool observerWasCanceled() const;
+	void setObserverMaximum(unsigned int max);
+	void setObserverValue(int value);
+
 public slots:
 	void openFile();
 	void openDir();
@@ -95,6 +100,8 @@ signals:
 private:
 	void setWindowTitle();
 	void restartNow();
+	void showProgression();
+	void hideProgression();
 
 	QLineEdit *lineSearch;
 	QTreeWidget *fieldList;
@@ -130,6 +137,7 @@ private:
 
 	QTaskBarButton *taskBarButton;
 	QProgressBar *progression;
+	QProgressDialog *progressDialog;
 	QLabel *authorLbl;
 protected:
 	void showEvent(QShowEvent *);

@@ -85,7 +85,11 @@ HEADERS += ApercuBG.h \
     LgpDialog.h \
     MassImportDialog.h \
     FormatSelectionWidget.h \
-    FieldArchiveIO.h
+    FieldArchiveIO.h \
+    WindowBinFile.h \
+    TimFile.h \
+    TextureFile.h \
+    TexFile.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -164,7 +168,11 @@ SOURCES += ApercuBG.cpp \
     LgpDialog.cpp \
     MassImportDialog.cpp \
     FormatSelectionWidget.cpp \
-    FieldArchiveIO.cpp
+    FieldArchiveIO.cpp \
+    WindowBinFile.cpp \
+    TimFile.cpp \
+    TextureFile.cpp \
+    TexFile.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

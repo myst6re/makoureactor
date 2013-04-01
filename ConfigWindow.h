@@ -29,10 +29,11 @@ private:
 	void fillConfig();
 	static void setWindowColorIcon(QAbstractButton *widget, QRgb color);
 	void setWindowColors();
+	void addDependency();
 	QTreeWidget *listFF7;
-	QCheckBox *kernelAuto, *charAuto;
-	QLabel *kernelPath, *charPath;
-	QPushButton *ff7ButtonMod, *ff7ButtonRem, *kernelButton, *charButton;
+	QCheckBox *kernelAuto, *windowAuto, *charAuto;
+	QLabel *kernelPath, *windowPath, *charPath;
+	QPushButton *ff7ButtonMod, *ff7ButtonRem, *kernelButton, *windowButton, *charButton;
 	QCheckBox *disableOGL;
 	QPushButton *windowColor1, *windowColor2, *windowColor3, *windowColor4, *windowColorReset;
 	QLabel *windowPreview;
@@ -43,8 +44,10 @@ private slots:
 	void modifyCustomFF7Path();
 	void removeCustomFF7Path();
 	void kernelAutoChange(bool);
+	void windowAutoChange(bool checked);
 	void charAutoChange(bool);
 	void changeKernelPath();
+	void changeWindowPath();
 	void changeCharPath();
 	void changeColor();
 	void resetColor();

@@ -22,10 +22,8 @@
 #include "FieldArchiveIO.h"
 #include "Field.h"
 
-class FieldArchive : public QObject, FieldArchiveIOObserver
+class FieldArchive
 {
-	Q_OBJECT
-
 public:
 	enum Sorting {
 		SortByName, SortByMapId
@@ -35,8 +33,8 @@ public:
 	FieldArchive(const QString &path, bool isDirectory=false);
 	virtual ~FieldArchive();
 
-	FieldArchiveIO::ErrorCode open();
-	FieldArchiveIO::ErrorCode save(const QString &path=QString());
+	FieldArchiveIO::ErrorCode open(FieldArchiveIOObserver *observer=0);
+	FieldArchiveIO::ErrorCode save(const QString &path=QString(), FieldArchiveIOObserver *observer=0);
 	void close();
 
 	int size() const;
@@ -44,6 +42,7 @@ public:
 	TutFile *tut(const QString &name);
 	const QMap<QString, TutFile *> &tuts() const;
 	void addField(Field *field);
+	void removeField(quint32 id);
 	void addTut(const QString &name);
 
 	bool isAllOpened();
@@ -62,24 +61,9 @@ public:
 	bool searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting);
 
-	FieldArchiveIO *io() const;
+	bool exportation(const QList<int> &selectedFields, const QString &directory, bool overwrite, Field::FieldParts toExport, FieldArchiveIOObserver *observer);
 
-	bool observerWasCanceled() {
-		return false;
-	}
-	void setObserverMaximum(unsigned int max) {
-		emit nbFilesChanged(max);
-	}
-	void setObserverValue(int value) {
-		QApplication::processEvents();
-		emit progress(value);
-	}
-signals:
-	void progress(int);
-	void nbFilesChanged(int);
-//	void fileChanged(const QString &path);
-//	void directoryChanged(const QString &path);
-	
+	FieldArchiveIO *io() const;
 private:
 	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;

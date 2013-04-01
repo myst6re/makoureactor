@@ -31,7 +31,7 @@
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
 	textDialog(0), _modelManager(0), _walkmeshManager(0),
-	_backgroundManager(0), taskBarButton(0)
+	_backgroundManager(0), taskBarButton(0), progressDialog(0)
 {
 	setWindowTitle();
 	setMinimumSize(700, 600);
@@ -39,7 +39,7 @@ Window::Window() :
 
 	statusBar()->show();
 	progression = new QProgressBar(statusBar());
-	progression->setFixedSize(160,16);
+	progression->setFixedSize(160, 16);
 	progression->setMinimum(0);
 	progression->setAlignment(Qt::AlignCenter);
 	progression->hide();
@@ -460,6 +460,55 @@ void Window::openDir()
 	}
 }
 
+bool Window::observerWasCanceled() const
+{
+	if(progressDialog) {
+		return progressDialog->wasCanceled();
+	}
+	return false;
+}
+
+void Window::setObserverMaximum(unsigned int max)
+{
+	if(taskBarButton) {
+		taskBarButton->setMaximum(max);
+	}
+	if(progressDialog) {
+		progressDialog->setMaximum(max);
+	}
+	progression->setMaximum(max);
+}
+
+void Window::setObserverValue(int value)
+{
+	QApplication::processEvents();
+
+	if(taskBarButton) {
+		taskBarButton->setValue(value);
+	}
+	if(progressDialog) {
+		progressDialog->setValue(value);
+	}
+	progression->setValue(value);
+}
+
+void Window::showProgression()
+{
+	setObserverValue(0);
+	if(taskBarButton) {
+		taskBarButton->setState(QTaskBarButton::Normal);
+	}
+	progression->show();
+}
+
+void Window::hideProgression()
+{
+	if(taskBarButton) {
+		taskBarButton->setState(QTaskBarButton::Invisible);
+	}
+	progression->hide();
+}
+
 void Window::open(const QString &cheminFic, bool isDir)
 {
 //	qDebug() << "Window::open" << cheminFic << isDir;
@@ -468,26 +517,13 @@ void Window::open(const QString &cheminFic, bool isDir)
 	setEnabled(false);
 	fieldArchive = new FieldArchive(cheminFic, isDir);
 
-	progression->setValue(0);
-	progression->show();
 	setCursor(Qt::WaitCursor);
-	if(taskBarButton) {
-		taskBarButton->setValue(0);
-		taskBarButton->setState(QTaskBarButton::Normal);
-		connect(fieldArchive, SIGNAL(progress(int)), taskBarButton, SLOT(setValue(int)));
-		connect(fieldArchive, SIGNAL(nbFilesChanged(int)), taskBarButton, SLOT(setMaximum(int)));
-	}
+	showProgression();
 
-	connect(fieldArchive, SIGNAL(progress(int)), progression, SLOT(setValue(int)));
-	connect(fieldArchive, SIGNAL(nbFilesChanged(int)), progression, SLOT(setMaximum(int)));
-
-	FieldArchiveIO::ErrorCode error = fieldArchive->open();
+	FieldArchiveIO::ErrorCode error = fieldArchive->open(this);
 	
 	setCursor(Qt::ArrowCursor);
-	progression->hide();
-	if(taskBarButton) {
-		taskBarButton->setState(QTaskBarButton::Invisible);
-	}
+	hideProgression();
 	
 	setEnabled(true);
 	QString out;
@@ -825,24 +861,16 @@ void Window::saveAs(bool currentPath)
 	
 	setEnabled(false);
 
-	progression->setValue(0);
-	progression->show();
 	setCursor(Qt::WaitCursor);
-	if(taskBarButton) {
-		taskBarButton->setValue(0);
-		taskBarButton->setState(QTaskBarButton::Normal);
-	}
+	showProgression();
 	quint8 error = 0;
 	
 	// QTime t;t.start();
-	error = fieldArchive->save(path);
+	error = fieldArchive->save(path, this);
 	// qDebug("Total save time: %d ms", t.elapsed());
 	
 	setCursor(Qt::ArrowCursor);
-	progression->hide();
-	if(taskBarButton) {
-		taskBarButton->setState(QTaskBarButton::Invisible);
-	}
+	hideProgression();
 	QString out;
 	switch(error)
 	{
@@ -1005,100 +1033,33 @@ void Window::massExport()
 	if(massExportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massExportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {
-			QString extension, path;
-			int currentField=0;
-			QProgressDialog progressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-			progressDialog.setWindowModality(Qt::WindowModal);
-			progressDialog.setCancelButtonText(tr("Arrêter"));
-			progressDialog.setRange(0, selectedFields.size()-1);
+			Field::FieldParts toExport;
 
-			const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
+			showProgression();
+			progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
+			progressDialog->setWindowModality(Qt::WindowModal);
+			progressDialog->setCancelButtonText(tr("Arrêter"));
+			progressDialog->setRange(0, selectedFields.size()-1);
 
 			if(massExportDialog->exportBackground()) {
-				progressDialog.setLabelText(tr("Exportation des décors..."));
-				switch(massExportDialog->exportBackgroundFormat()) {
-				case 0:		extension = "png"; break;
-				case 1:		extension = "jpg"; break;
-				case 2:		extension = "bmp"; break;
-				}
-
-				foreach(const int &fieldID, selectedFields) {
-					QCoreApplication::processEvents();
-					if(progressDialog.wasCanceled()) 	break;
-
-					Field *f = fieldArchive->field(fieldID);
-					if(f) {
-						path = QDir::cleanPath(QString("%1/%2.%3").arg(massExportDialog->directory(), f->name(), extension));
-
-						if(massExportDialog->overwrite() || !QFile::exists(path)) {
-							QPixmap background = f->openBackground();
-							if(!background.isNull())
-								background.save(path);
-						}
-					}
-					progressDialog.setValue(currentField++);
-				}
+				progressDialog->setLabelText(tr("Exportation des décors..."));
+				toExport |= Field::Background;
 			}
 			if(massExportDialog->exportAkao()) {
-				progressDialog.setLabelText(tr("Exportation des sons..."));
-				extension = "akao";
-
-				foreach(const int &fieldID, selectedFields) {
-					QCoreApplication::processEvents();
-					if(progressDialog.wasCanceled()) 	break;
-
-					Field *f = fieldArchive->field(fieldID);
-					if(f) {
-						TutFile *akaoList = f->tutosAndSounds();
-						if(akaoList->isOpen()) {
-							int akaoCount = akaoList->size();
-							for(int i=0 ; i<akaoCount ; ++i) {
-								if(!akaoList->isTut(i)) {
-									path = QDir::cleanPath(QString("%1/%2-%3.%4").arg(massExportDialog->directory(), f->name()).arg(i).arg(extension));
-									if(massExportDialog->overwrite() || !QFile::exists(path)) {
-										QFile tutExport(path);
-										if(tutExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-											tutExport.write(akaoList->data(i));
-											tutExport.close();
-										}
-									}
-								}
-							}
-						}
-					}
-					progressDialog.setValue(currentField++);
-				}
+				progressDialog->setLabelText(tr("Exportation des sons..."));
+				toExport |= Field::Akaos;
 			}
 			if(massExportDialog->exportText()) {
-				progressDialog.setLabelText(tr("Exportation des textes..."));
-				extension = "txt";
-				bool jp_txt = Config::value("jp_txt", false).toBool();
-
-				foreach(const int &fieldID, selectedFields) {
-					QCoreApplication::processEvents();
-					if(progressDialog.wasCanceled()) 	break;
-
-					Field *f = fieldArchive->field(fieldID);
-					if(f) {
-						Section1File *section1 = f->scriptsAndTexts();
-						if(section1->isOpen()) {
-							path = QDir::cleanPath(QString("%1/%2.%3").arg(massExportDialog->directory(), f->name(), extension));
-							if(massExportDialog->overwrite() || !QFile::exists(path)) {
-								QFile textExport(path);
-								if(textExport.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-									int i=0;
-									foreach(FF7Text *text, *section1->texts()) {
-										textExport.write(QString("---TEXT%1---\n%2\n").arg(i++, 3, 10, QChar('0')).arg(text->getText(jp_txt)).toUtf8());
-									}
-									textExport.close();
-								}
-							}
-						}
-					}
-					progressDialog.setValue(currentField++);
-				}
+				progressDialog->setLabelText(tr("Exportation des textes..."));
+				toExport |= Field::Scripts;
 			}
-			Data::currentTextes = currentTextesSav;
+
+			fieldArchive->exportation(selectedFields, massExportDialog->directory(), massExportDialog->overwrite(), toExport, this);
+
+			progressDialog->close();
+			delete progressDialog;
+			progressDialog = 0;
+			hideProgression();
 		}
 	}
 }
@@ -1110,7 +1071,35 @@ void Window::massImport()
 	MassImportDialog *massImportDialog = new MassImportDialog(this);
 	massImportDialog->fill(fieldArchive);
 	if(massImportDialog->exec() == QDialog::Accepted) {
+		QList<int> selectedFields = massImportDialog->selectedFields();
+		if(!selectedFields.isEmpty()) {
+			int currentField=0;
+			QProgressDialog progressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
+			progressDialog.setWindowModality(Qt::WindowModal);
+			progressDialog.setCancelButtonText(tr("Arrêter"));
+			progressDialog.setRange(0, selectedFields.size()-1);
 
+			const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
+
+			if(massImportDialog->importText()) {
+				progressDialog.setLabelText(tr("Importation des textes..."));
+
+				foreach(const int &fieldID, selectedFields) {
+					QCoreApplication::processEvents();
+					if(progressDialog.wasCanceled()) 	break;
+
+					Field *f = fieldArchive->field(fieldID);
+					if(f) {
+						Section1File *section1 = f->scriptsAndTexts();
+						if(section1->isOpen()) {
+							//TODO
+						}
+					}
+					progressDialog.setValue(currentField++);
+				}
+			}
+			Data::currentTextes = currentTextesSav;
+		}
 	}
 }
 

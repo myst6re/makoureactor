@@ -48,6 +48,7 @@ QString Data::ff7RereleasePath_cache;
 bool Data::ff7RereleaseAlreadySearched = false;
 Lgp Data::charLgp;
 QHash<QString, int> Data::charlgp_animBoneCount;
+WindowBinFile Data::windowBin;
 
 void Data::refreshFF7Paths()
 {
@@ -237,6 +238,25 @@ const QString &Data::ff7AppPath()
 	return ff7AppPath_cache;
 }
 
+QString Data::ff7KernelPath()
+{
+	QString path = ff7DataPath();
+	if(!path.isEmpty()) {
+		if(QFile::exists(path + "/kernel/KERNEL.BIN")) {
+			path.append("/kernel");
+		} else {
+			QString lang = QLocale::system().name().toLower();
+			lang = Config::value("lang", lang.left(lang.indexOf("_"))).toString().toLower();
+			if(lang == "de" || lang == "en" || lang == "es" || lang == "fr")
+				path.append(QString("/lang-%1/kernel").arg(lang));
+			else
+				path.append(QString("/lang-fr/kernel"));
+		}
+	}
+
+	return path;
+}
+
 QString Data::charlgp_path()
 {
 	QString charPath = Config::value("charPath").toString();
@@ -326,20 +346,13 @@ int Data::load()
 		}
 	}
 
+	// kernel2.bin
+
 	QString path = Config::value("kernel2Path").toString();
 	if(path.isEmpty()) {
-		path = ff7DataPath();
+		path = ff7KernelPath();
 		if(path.isEmpty())	return 2;
-		if(QFile::exists(path + "/kernel/kernel2.bin"))
-			path.append("/kernel/kernel2.bin");
-		else {
-			QString lang = QLocale::system().name().toLower();
-			lang = Config::value("lang", lang.left(lang.indexOf("_"))).toString().toLower();
-			if(lang == "de" || lang == "en" || lang == "es" || lang == "fr")
-				path.append(QString("/lang-%1/kernel/kernel2.bin").arg(lang));
-			else
-				path.append(QString("/lang-fr/kernel/kernel2.bin"));
-		}
+		path.append("/kernel2.bin");
 	}
 
 	QFile fic(path);
@@ -417,6 +430,19 @@ int Data::load()
 
 		materia_names.clear();
 		fill(data, pos, fileSize, materia_names);
+	}
+
+	// window.bin
+
+	path = Config::value("windowBinPath").toString();
+	if(path.isEmpty()) {
+		path = ff7KernelPath();
+		if(path.isEmpty())	return 2;
+		path.append("/window.bin");
+	}
+
+	if(!windowBin.open(path)) {
+		qWarning() << "Cannot open window.bin";
 	}
 
 	return 0;

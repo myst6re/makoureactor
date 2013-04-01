@@ -26,7 +26,7 @@ private:
 struct FieldArchiveIOObserver
 {
 	FieldArchiveIOObserver() {}
-	virtual bool observerWasCanceled()=0;
+	virtual bool observerWasCanceled() const=0;
 	virtual void setObserverMaximum(unsigned int max)=0;
 	virtual void setObserverValue(int value)=0;
 };
@@ -100,7 +100,7 @@ public:
 	void setObserverMaximum(unsigned int max) {
 		if(observer)	observer->setObserverMaximum(max);
 	}
-	bool observerWasCanceled() {
+	bool observerWasCanceled() const {
 		return observer && observer->observerWasCanceled();
 	}
 private:

@@ -21,6 +21,7 @@
 #include <QtCore>
 #include "FF7Text.h"
 #include "Lgp.h"
+#include "WindowBinFile.h"
 
 class Data
 {
@@ -29,11 +30,13 @@ public:
 	static const QString &ff7DataPath();
 	static const QString &ff7AppPath();
 	static QStringList ff7AppPathList();
+	static QString ff7KernelPath();
 	static QString charlgp_path();
 	static bool charlgp_loadListPos();
 	static void charlgp_loadAnimBoneCount();
 	static Lgp charLgp;
 	static QHash<QString, int> charlgp_animBoneCount;
+	static WindowBinFile windowBin;
 	static int load();
 	static bool openMaplist(const QByteArray &data);
 	static void openMaplist(bool PC=false);

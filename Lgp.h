@@ -28,7 +28,7 @@
 struct LgpObserver
 {
 	LgpObserver() {}
-	virtual bool observerWasCanceled()=0;
+	virtual bool observerWasCanceled() const=0;
 	virtual void setObserverMaximum(unsigned int max)=0;
 	virtual void setObserverValue(int value)=0;
 };

@@ -88,6 +88,10 @@ private:
 	static QImage fontImage;
 	void letter(int *x, int *y, int charId, QPainter *painter, quint8 tableId=0);
 	void word(int *x, int *y, const QByteArray &charIds, QPainter *painter, quint8 tableId=0);
+	static quint8 charW(int tableId, int charId);
+	static quint8 leftPadding(int tableId, int charId);
+	static quint8 charFullWidth(int tableId, int charId);
+	static QImage letterImage(int tableId, int charId);
 	static void setFontColor(int id, bool blink=false);
 	static QVector<QRgb> fontPalettes[8];
 	static QTimer timer;

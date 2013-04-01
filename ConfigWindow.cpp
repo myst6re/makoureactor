@@ -36,10 +36,14 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	ff7ButtonMod = new QPushButton(dependances);
 	ff7ButtonRem = new QPushButton(tr("Supprimer"), dependances);
 
-	kernelAuto = new QCheckBox(tr("Kernel2.bin"), dependances);
+	kernelAuto = new QCheckBox(tr("kernel2.bin"), dependances);
 	kernelPath = new QLabel(dependances);
 	kernelPath->setFixedWidth(500);
 	kernelButton = new QPushButton(tr("Changer"), dependances);
+	windowAuto = new QCheckBox(tr("window.bin"), dependances);
+	windowPath = new QLabel(dependances);
+	windowPath->setFixedWidth(500);
+	windowButton = new QPushButton(tr("Changer"), dependances);
 	charAuto = new QCheckBox(tr("char.lgp"), dependances);
 	charPath = new QLabel(dependances);
 	charPath->setFixedWidth(500);
@@ -53,9 +57,12 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	dependLayout->addWidget(kernelAuto, 3, 0);
 	dependLayout->addWidget(kernelPath, 3, 1);
 	dependLayout->addWidget(kernelButton, 3, 2);
-	dependLayout->addWidget(charAuto, 4, 0);
-	dependLayout->addWidget(charPath, 4, 1);
-	dependLayout->addWidget(charButton, 4, 2);
+	dependLayout->addWidget(windowAuto, 4, 0);
+	dependLayout->addWidget(windowPath, 4, 1);
+	dependLayout->addWidget(windowButton, 4, 2);
+	dependLayout->addWidget(charAuto, 5, 0);
+	dependLayout->addWidget(charPath, 5, 1);
+	dependLayout->addWidget(charButton, 5, 2);
 
 	QGroupBox *openGL = new QGroupBox(tr("OpenGL"), this);
 
@@ -113,8 +120,10 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	connect(ff7ButtonMod, SIGNAL(released()), SLOT(modifyCustomFF7Path()));
 	connect(ff7ButtonRem, SIGNAL(released()), SLOT(removeCustomFF7Path()));
 	connect(kernelAuto, SIGNAL(toggled(bool)), SLOT(kernelAutoChange(bool)));
+	connect(windowAuto, SIGNAL(toggled(bool)), SLOT(windowAutoChange(bool)));
 	connect(charAuto, SIGNAL(toggled(bool)), SLOT(charAutoChange(bool)));
 	connect(kernelButton, SIGNAL(released()), SLOT(changeKernelPath()));
+	connect(windowButton, SIGNAL(released()), SLOT(changeWindowPath()));
 	connect(charButton, SIGNAL(released()), SLOT(changeCharPath()));
 	connect(windowColor1, SIGNAL(released()), SLOT(changeColor()));
 	connect(windowColor2, SIGNAL(released()), SLOT(changeColor()));
@@ -131,6 +140,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 void ConfigWindow::fillConfig()
 {
 	QString kernel_path = Config::value("kernel2Path").toString();
+	QString window_path = Config::value("windowBinPath").toString();
 	QString char_path = Config::value("charPath").toString();
 	QString ff7_path = Data::ff7DataPath();
 	QString ff7_app_path = Data::ff7AppPath();
@@ -153,24 +163,30 @@ void ConfigWindow::fillConfig()
 	if(selectedItem)	listFF7->setCurrentItem(selectedItem);
 
 	if(kernel_path.isEmpty()) {
-		kernel_path = ff7_path%"/kernel/kernel2.bin";
+		kernel_path = Data::ff7KernelPath() % "/kernel2.bin";
 		kernelAutoChange(false);
-	}
-	else {
+	} else {
 		kernelAuto->setChecked(true);
 	}
 
-	if(char_path.isEmpty()) {
-		char_path = ff7_path%"/field/char.lgp";
-		charAutoChange(false);
+	if(window_path.isEmpty()) {
+		window_path = Data::ff7KernelPath() % "/window.bin";
+		windowAutoChange(false);
+	} else {
+		windowAuto->setChecked(true);
 	}
-	else {
+
+	if(char_path.isEmpty()) {
+		char_path = ff7_path % "/field/char.lgp";
+		charAutoChange(false);
+	} else {
 		charAuto->setChecked(true);
 	}
 
 	disableOGL->setChecked(!Config::value("OpenGL", true).toBool());
 
 	kernelPath->setText(QDir::toNativeSeparators(QDir::cleanPath(kernel_path)));
+	windowPath->setText(QDir::toNativeSeparators(QDir::cleanPath(window_path)));
 	charPath->setText(QDir::toNativeSeparators(QDir::cleanPath(char_path)));
 
 	windowColorTopLeft = Config::value("windowColorTopLeft", qRgb(0,88,176)).toInt();
@@ -267,6 +283,12 @@ void ConfigWindow::kernelAutoChange(bool checked)
 	kernelButton->setEnabled(checked);
 }
 
+void ConfigWindow::windowAutoChange(bool checked)
+{
+	windowPath->setEnabled(checked);
+	windowButton->setEnabled(checked);
+}
+
 void ConfigWindow::charAutoChange(bool checked)
 {
 	charPath->setEnabled(checked);
@@ -275,14 +297,21 @@ void ConfigWindow::charAutoChange(bool checked)
 
 void ConfigWindow::changeKernelPath()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Chercher kernel2.bin"), kernelPath->text(), tr("Fichiers BIN (*.bin)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Chercher kernel2.bin"), kernelPath->text(), tr("Fichiers BIN (*.bin);;Tous les fichiers (*)"));
 	if(!path.isNull())
 		kernelPath->setText(QDir::toNativeSeparators(path));
 }
 
+void ConfigWindow::changeWindowPath()
+{
+	QString path = QFileDialog::getOpenFileName(this, tr("Chercher window.bin"), windowPath->text(), tr("Fichiers BIN (*.bin);;Tous les fichiers (*)"));
+	if(!path.isNull())
+		windowPath->setText(QDir::toNativeSeparators(path));
+}
+
 void ConfigWindow::changeCharPath()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Chercher char.lgp"), charPath->text(), tr("Archives LGP (*.lgp)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Chercher char.lgp"), charPath->text(), tr("Archives LGP (*.lgp);;Tous les fichiers (*)"));
 	if(!path.isNull())
 		charPath->setText(QDir::toNativeSeparators(path));
 }

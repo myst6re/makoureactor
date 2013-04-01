@@ -403,7 +403,6 @@ FieldArchiveIO::ErrorCode FieldArchiveIOLgp::open2(FieldArchiveIOObserver *obser
 	i = 0;
 	foreach(const QString &name, archiveList) {
 		if(i % freq == 0) {
-			QCoreApplication::processEvents();
 			if(observer)	observer->setObserverValue(i);
 		}
 
@@ -430,6 +429,8 @@ FieldArchiveIO::ErrorCode FieldArchiveIOLgp::open2(FieldArchiveIOObserver *obser
 
 FieldArchiveIO::ErrorCode FieldArchiveIOFile::open2(FieldArchiveIOObserver *observer)
 {
+	Q_UNUSED(observer)
+
 	QString path = fic.fileName();
 	QString name = path.mid(path.lastIndexOf('/') + 1);
 	fieldArchive()->addField(new FieldPS(name.left(name.lastIndexOf('.')), this));
@@ -454,7 +455,6 @@ FieldArchiveIO::ErrorCode FieldArchiveIOIso::open2(FieldArchiveIOObserver *obser
 
 	int i=0;
 	foreach(IsoFile *file, files) {
-		QCoreApplication::processEvents();
 		if(observer)	observer->setObserverValue(i);
 
 		if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
@@ -463,6 +463,12 @@ FieldArchiveIO::ErrorCode FieldArchiveIOIso::open2(FieldArchiveIOObserver *obser
 		}
 	}
 	// qDebug("Ouverture : %d ms", t.elapsed());
+
+	Data::windowBin = WindowBinFile();
+
+	if(!Data::windowBin.open(iso.file("INIT/WINDOW.BIN"))) {
+		qWarning() << "Cannot open window.bin";
+	}
 
 	return Ok;
 }
@@ -479,7 +485,6 @@ FieldArchiveIO::ErrorCode FieldArchiveIODir::open2(FieldArchiveIOObserver *obser
 
 	int i=0;
 	foreach(const QString &name, list) {
-		QCoreApplication::processEvents();
 		if(observer)	observer->setObserverValue(i++);
 
 		if(!name.startsWith("WM", Qt::CaseInsensitive)) {

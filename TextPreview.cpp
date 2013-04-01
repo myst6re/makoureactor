@@ -65,7 +65,7 @@ int TextPreview::calcFF7TextWidth(const QByteArray &ff7Text)
 
 	foreach(const quint8 &c, ff7Text) {
 		if(c<0xe0) {
-			width += LEFT_PADD(charWidth[0][c]) + CHAR_WIDTH(charWidth[0][c]);
+			width += charFullWidth(0, c);
 		}
 	}
 
@@ -213,7 +213,7 @@ void TextPreview::calcSize()
 			++i;
 			caract = (quint8)ff7Text.at(i);
 			if(jp) {
-				width += spaced_characters ? 13 : LEFT_PADD(charWidth[2][caract]) + CHAR_WIDTH(charWidth[2][caract]);
+				width += spaced_characters ? 13 : charFullWidth(2, caract);
 			} else if(caract < 0xd2) {
 				width += spaced_characters ? 13 : 1;
 			}
@@ -222,21 +222,21 @@ void TextPreview::calcSize()
 			++i;
 			if(jp) {
 				caract = (quint8)ff7Text.at(i);
-				width += spaced_characters ? 13 : LEFT_PADD(charWidth[3][caract]) + CHAR_WIDTH(charWidth[3][caract]);
+				width += spaced_characters ? 13 : charFullWidth(3, caract);
 			}
 			break;
 		case 0xfc: // Jap 3
 			++i;
 			if(jp) {
 				caract = (quint8)ff7Text.at(i);
-				width += spaced_characters ? 13 : LEFT_PADD(charWidth[4][caract]) + CHAR_WIDTH(charWidth[4][caract]);
+				width += spaced_characters ? 13 : charFullWidth(4, caract);
 			}
 			break;
 		case 0xfd: // Jap 4
 			++i;
 			if(jp) {
 				caract = (quint8)ff7Text.at(i);
-				width += spaced_characters ? 13 : LEFT_PADD(charWidth[5][caract]) + CHAR_WIDTH(charWidth[5][caract]);
+				width += spaced_characters ? 13 : charFullWidth(5, caract);
 			}
 			break;
 		case 0xfe: // Jap 5 + add
@@ -248,13 +248,13 @@ void TextPreview::calcSize()
 			else if(caract == 0xde || caract == 0xdf || caract == 0xe1) {
 				if(caract == 0xe1)		width += spaced_characters ? 52 : 12;
 				int zeroId = !jp ? 0x10 : 0x33;
-				width += spaced_characters ? 13 : LEFT_PADD(charWidth[0][zeroId]) + CHAR_WIDTH(charWidth[0][zeroId]);
+				width += spaced_characters ? 13 : charFullWidth(0, zeroId);
 			} else if(caract == 0xe2)
 				i += 4;
 			else if(caract == 0xe9)
 				spaced_characters = !spaced_characters;
 			else if(caract < 0xd2 && jp)
-				width += spaced_characters ? 13 : LEFT_PADD(charWidth[6][caract]) + CHAR_WIDTH(charWidth[6][caract]);
+				width += spaced_characters ? 13 : charFullWidth(6, caract);
 			break;
 		default:
 			if(!jp && caract==0xe0) {// {CHOICE}
@@ -263,17 +263,17 @@ void TextPreview::calcSize()
 				width += spaced_characters ? 52 : 12;
 			} else if(!jp && caract>=0xe2 && caract<=0xe4) {// duo
 				const char *duo = optimisedDuo[caract-0xe2];
-				width += spaced_characters ? 13 : LEFT_PADD(charWidth[1][(quint8)duo[0]]) + CHAR_WIDTH(charWidth[1][(quint8)duo[0]]);
-				width += spaced_characters ? 13 : LEFT_PADD(charWidth[1][(quint8)duo[1]]) + CHAR_WIDTH(charWidth[1][(quint8)duo[1]]);
+				width += spaced_characters ? 13 : charFullWidth(1, (quint8)duo[0]);
+				width += spaced_characters ? 13 : charFullWidth(1, (quint8)duo[1]);
 			} else if(caract>=0xea && caract<=0xf5) {// Character names
 				width += spaced_characters ? 13*names.at(caract-0xea).size() : namesWidth[caract-0xea];
 			} else if(caract>=0xf6 && caract<=0xf9) {// Keys
 				width += 17;
 			} else {
 				if(jp) {
-					width += spaced_characters ? 13 : LEFT_PADD(charWidth[1][caract]) + CHAR_WIDTH(charWidth[1][caract]);
+					width += spaced_characters ? 13 : charFullWidth(1, caract);
 				} else {
-					width += spaced_characters ? 13 : LEFT_PADD(charWidth[0][caract]) + CHAR_WIDTH(charWidth[0][caract]);
+					width += spaced_characters ? 13 : charFullWidth(0, caract);
 				}
 			}
 			break;
@@ -642,9 +642,10 @@ void TextPreview::mouseReleaseEvent(QMouseEvent *)
 
 void TextPreview::letter(int *x, int *y, int charId, QPainter *painter, quint8 tableId)
 {
-	int charIdImage = charId + posTable[tableId], cWidth = charWidth[tableId][charId];
+	int charWidth = charW(tableId, charId);
+	int leftPadd = leftPadding(tableId, charId);
 
-	if(*x + LEFT_PADD(cWidth) + CHAR_WIDTH(cWidth) > maxW) {
+	if(*x + leftPadd + charWidth > maxW) {
 		*x = 8;
 		*y += 16;
 	}
@@ -654,9 +655,9 @@ void TextPreview::letter(int *x, int *y, int charId, QPainter *painter, quint8 t
 		multicolor = (multicolor + 1) % 8;
 	}
 
-	if(!spaced_characters)	*x += LEFT_PADD(cWidth);
-	painter->drawImage(*x, *y, fontImage.copy((charIdImage%21)*12, (charIdImage/21)*12, 12, 12));
-	*x += spaced_characters ? 13 : CHAR_WIDTH(cWidth);
+	if(!spaced_characters)	*x += leftPadd;
+	painter->drawImage(*x, *y, letterImage(tableId, charId));
+	*x += spaced_characters ? 13 : charWidth;
 }
 
 void TextPreview::word(int *x, int *y, const QByteArray &charIds, QPainter *painter, quint8 tableId)
@@ -666,9 +667,42 @@ void TextPreview::word(int *x, int *y, const QByteArray &charIds, QPainter *pain
 	}
 }
 
+quint8 TextPreview::charW(int tableId, int charId)
+{
+	return Data::windowBin.isValid()
+			? Data::windowBin.charWidth(tableId, charId)
+			: CHAR_WIDTH(charWidth[tableId][charId]);
+}
+
+quint8 TextPreview::leftPadding(int tableId, int charId)
+{
+	return Data::windowBin.isValid()
+			? Data::windowBin.charLeftPadding(tableId, charId)
+			: LEFT_PADD(charWidth[tableId][charId]);
+}
+
+quint8 TextPreview::charFullWidth(int tableId, int charId)
+{
+	return charW(tableId, charId) + leftPadding(tableId, charId);
+}
+
+QImage TextPreview::letterImage(int tableId, int charId)
+{
+	if(Data::windowBin.isValid() && tableId == 0) {
+		return Data::windowBin.letter(tableId, charId);
+	} else {
+		int charIdImage = charId + posTable[tableId];
+		return fontImage.copy((charIdImage%21)*12, (charIdImage/21)*12, 12, 12);
+	}
+}
+
 void TextPreview::setFontColor(int id, bool blink)
 {
-	fontImage.setColorTable(fontPalettes[blink ? DARKGREY : id]);
+	if(Data::windowBin.isValid()) {
+		Data::windowBin.setFontColor(WindowBinFile::FontColor(blink ? DARKGREY : id));
+	} else {
+		fontImage.setColorTable(fontPalettes[blink ? DARKGREY : id]);
+	}
 	fontColor = id;
 }
 
