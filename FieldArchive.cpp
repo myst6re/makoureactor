@@ -239,7 +239,7 @@ void FieldArchive::searchAll()
 	bool iff = false, win = false;
 	OpcodeIf *opcodeIf=0;
 
-	QFile deb("akao_comparison.txt");
+	QFile deb("model_loader_unknown.txt");
 	deb.open(QIODevice::WriteOnly | QIODevice::Text);
 
 
@@ -248,17 +248,20 @@ void FieldArchive::searchAll()
 		Field *field = this->field(i, true);
 		if(field != NULL) {
 			Data::charlgp_loadAnimBoneCount();
-			FieldModelLoaderPC *modelLoader = (FieldModelLoaderPC *)field->fieldModelLoader();
+			FieldModelLoader *modelLoader = (FieldModelLoader *)field->fieldModelLoader();
 			if(modelLoader) {
 				for(int i=0; i<modelLoader->modelCount(); ++i) {
-					int boneCount = field->fieldModel(i)->boneCount();
+					deb.write(QString("%1: %2 -> %3\n").arg(field->name())
+							  .arg(i).arg(modelLoader->unknown(i)).toLatin1());
+
+					/*int boneCount = field->fieldModel(i)->boneCount();
 					foreach(const QString &animation, modelLoader->ANames(i)) {
 						QString animName = animation.left(animation.lastIndexOf('.')).toLower() + ".a";
 						if(boneCount != Data::charlgp_animBoneCount.value(animName) &&
 								!(boneCount == 1 && Data::charlgp_animBoneCount.value(animName) == 0)) {
 							qDebug() << boneCount << Data::charlgp_animBoneCount.value(animName) << field->name() << modelLoader->HRCName(i) << animation;
 						}
-					}
+					}*/
 				}
 			}
 			/*TutFile *tut = field->tutosAndSounds();

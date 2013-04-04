@@ -63,7 +63,41 @@ int FieldModelLoaderPS::modelCount() const
 	return _modelLoaders.size();
 }
 
-const FieldModelLoaderStruct &FieldModelLoaderPS::model(int id) const
+int FieldModelLoaderPS::animCount(int modelID) const
 {
-	return _modelLoaders.at(id);
+	if(modelID >= 0 && modelID < _modelLoaders.size())
+		return _modelLoaders.at(modelID).animationCount;
+	return 0;
+}
+
+quint16 FieldModelLoaderPS::unknown(int modelID) const
+{
+	// TODO: returns a quint16 word? (unknown2 is quint8)
+	if(modelID >= 0 && modelID < _modelLoaders.size())
+		return _modelLoaders.at(modelID).unknown2/* | (_modelLoaders.at(modelID).unknown3 << 8)*/;
+	return 0;
+}
+
+void FieldModelLoaderPS::setUnknown(int modelID, quint16 unknown)
+{
+	// TODO: sets a quint16 word?
+	if(modelID >= 0 && modelID < _modelLoaders.size()
+			&& _modelLoaders.at(modelID).unknown2 != unknown) {
+		_modelLoaders[modelID].unknown2 = unknown;
+		setModified(true);
+	}
+}
+
+const FieldModelLoaderStruct &FieldModelLoaderPS::model(int modelID) const
+{
+	return _modelLoaders.at(modelID);
+}
+
+void FieldModelLoaderPS::setModel(int modelID, const FieldModelLoaderStruct &modelLoader)
+{
+	if(modelID >= 0 && modelID < _modelLoaders.size()
+			&& memcmp(&modelLoader, &_modelLoaders.at(modelID), sizeof(FieldModelLoaderStruct)) != 0) {
+		_modelLoaders.replace(modelID, modelLoader);
+		setModified(true);
+	}
 }

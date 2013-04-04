@@ -32,13 +32,13 @@ typedef struct {
 class Poly
 {
 public:
-	Poly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
-	Poly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	Poly(int count, const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
+	Poly(int count, const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	virtual ~Poly();
 	void setVertices(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	void setVertices(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	void divTexCoords(float texWidth, float texHeight);
-	virtual int count() const=0;
+	int count() const;
 	const PolyVertex &vertex(quint8 id) const;
 	const QRgb &color() const;
 	QRgb color(quint8 id) const;
@@ -46,6 +46,7 @@ public:
 	bool isMonochrome() const;
 	bool hasTexture() const;
 protected:
+	int _count;
 	QList<PolyVertex> _vertices;
 	QList<QRgb> _colors;
 	QList<TexCoord> _texCoords;
@@ -56,7 +57,6 @@ class QuadPoly : public Poly
 public:
 	QuadPoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	QuadPoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
-	int count() const { return 4; }
 };
 
 class TrianglePoly : public Poly
@@ -64,7 +64,6 @@ class TrianglePoly : public Poly
 public:
 	TrianglePoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	TrianglePoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
-	int count() const { return 3; }
 };
 
 class FieldModelGroup

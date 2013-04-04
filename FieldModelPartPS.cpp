@@ -38,7 +38,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 	}
 
 	// Header
-	memcpy(&partHeader, &data[offset], sizeof(Part));
+	memcpy(&partHeader, data + offset, sizeof(Part));
 
 	_boneID = partHeader.bone_index;
 
@@ -57,11 +57,11 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	for(i=0 ; i<partHeader.numVertices ; ++i) {
 		qint16 v;
-		memcpy(&v, &data[offsetToVertex + i*8 + 4], 2);
+		memcpy(&v, data + offsetToVertex + i*8 + 4, 2);
 		vertex.x = v / 31.0f;
-		memcpy(&v, &data[offsetToVertex + i*8 + 6], 2);
+		memcpy(&v, data + offsetToVertex + i*8 + 6, 2);
 		vertex.y = v / 31.0f;
-		memcpy(&v, &data[offsetToVertex + i*8 + 8], 2);
+		memcpy(&v, data + offsetToVertex + i*8 + 8, 2);
 		vertex.z = v / 31.0f;
 
 		vertices.append(vertex);
@@ -94,7 +94,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	for(i=0 ; i<partHeader.num_flags ; ++i) {
 		quint32 flag;
-		memcpy(&flag, &data[offsetToTexInfos + i*4], 4);
+		memcpy(&flag, data + offsetToTexInfos + i*4, 4);
 
 		TextureInfo texInfo;
 
@@ -157,7 +157,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	for(i=0 ; i<partHeader.num_quad_color_tex ; ++i) {
 		TexturedQuad texturedQuad;
-		memcpy(&texturedQuad, &data[offsetToPoly], sizeof(TexturedQuad));
+		memcpy(&texturedQuad, data + offsetToPoly, sizeof(TexturedQuad));
 
 		QList<PolyVertex> polyVertices;
 		QList<QRgb> polyColors;
@@ -189,7 +189,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	for(i=0 ; i<partHeader.num_tri_color_tex ; ++i) {
 		TexturedTriangle texturedTriangle;
-		memcpy(&texturedTriangle, &data[offsetToPoly], sizeof(TexturedTriangle));
+		memcpy(&texturedTriangle, data + offsetToPoly, sizeof(TexturedTriangle));
 
 		QList<PolyVertex> polyVertices;
 		QList<QRgb> polyColors;
@@ -221,7 +221,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	for(i=0 ; i<partHeader.num_quad_mono_tex ; ++i) {
 		MonochromeTexturedQuad monochromeTexturedQuad;
-		memcpy(&monochromeTexturedQuad, &data[offsetToPoly], sizeof(MonochromeTexturedQuad));
+		memcpy(&monochromeTexturedQuad, data + offsetToPoly, sizeof(MonochromeTexturedQuad));
 
 		QList<PolyVertex> polyVertices;
 		const ColorRGBA &color = monochromeTexturedQuad.color;
@@ -252,7 +252,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	for(i=0 ; i<partHeader.num_tri_mono_tex ; ++i) {
 		MonochromeTexturedTriangle monochromeTexturedTriangle;
-		memcpy(&monochromeTexturedTriangle, &data[offsetToPoly], sizeof(MonochromeTexturedTriangle));
+		memcpy(&monochromeTexturedTriangle, data + offsetToPoly, sizeof(MonochromeTexturedTriangle));
 
 		QList<PolyVertex> polyVertices;
 		const ColorRGBA &color = monochromeTexturedTriangle.color;
@@ -283,7 +283,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	for(i=0 ; i<partHeader.num_tri_mono ; ++i) {
 		MonochromeTriangle monochromeTriangle;
-		memcpy(&monochromeTriangle, &data[offsetToPoly], sizeof(MonochromeTriangle));
+		memcpy(&monochromeTriangle, data + offsetToPoly, sizeof(MonochromeTriangle));
 
 		QList<PolyVertex> polyVertices;
 		const ColorRGBA &color = monochromeTriangle.color;
@@ -311,7 +311,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	for(i=0 ; i<partHeader.num_quad_mono ; ++i) {
 		MonochromeQuad monochromeQuad;
-		memcpy(&monochromeQuad, &data[offsetToPoly], sizeof(MonochromeQuad));
+		memcpy(&monochromeQuad, data + offsetToPoly, sizeof(MonochromeQuad));
 
 		QList<PolyVertex> polyVertices;
 		const ColorRGBA &color = monochromeQuad.color;
@@ -339,7 +339,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	for(i=0 ; i<partHeader.num_tri_color ; ++i) {
 		ColorTriangle colorTriangle;
-		memcpy(&colorTriangle, &data[offsetToPoly], sizeof(ColorTriangle));
+		memcpy(&colorTriangle, data + offsetToPoly, sizeof(ColorTriangle));
 
 		QList<PolyVertex> polyVertices;
 		QList<QRgb> polyColors;
@@ -368,7 +368,7 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 
 	for(i=0 ; i<partHeader.num_quad_color ; ++i) {
 		ColorQuad colorQuad;
-		memcpy(&colorQuad, &data[offsetToPoly], sizeof(ColorQuad));
+		memcpy(&colorQuad, data + offsetToPoly, sizeof(ColorQuad));
 
 		QList<PolyVertex> polyVertices;
 		QList<QRgb> polyColors;

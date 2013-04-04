@@ -25,7 +25,7 @@
 
 Field::Field(const QString &name) :
 	section1(0), _encounter(0), _tut(0), id(0), ca(0), _inf(0),
-	modelLoader(0), _fieldModel(0),
+	modelLoader(0), _fieldModel(0), _bg(0),
 	fieldArchive(0),
 	_isOpen(false), _isModified(false), _name(name.toLower())
 {
@@ -33,7 +33,7 @@ Field::Field(const QString &name) :
 
 Field::Field(const QString &name, FieldArchiveIO *fieldArchive) :
 	section1(0), _encounter(0), _tut(0), id(0), ca(0), _inf(0),
-	modelLoader(0), _fieldModel(0),
+	modelLoader(0), _fieldModel(0), _bg(0),
 	fieldArchive(fieldArchive),
 	_isOpen(false), _isModified(false), _name(name.toLower())
 {
@@ -49,6 +49,7 @@ Field::~Field()
 	if(_inf)			delete _inf;
 	if(modelLoader)		delete modelLoader;
 	if(_fieldModel)		delete _fieldModel;
+	if(_bg)				delete _bg;
 }
 
 bool Field::isOpen() const
@@ -146,43 +147,9 @@ QPixmap Field::openBackground()
 	return openBackground(paramActifs, z);
 }
 
-QRgb Field::blendColor(quint8 type, QRgb color0, QRgb color1)
+bool Field::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
-	int r, g, b;
-
-	switch(type) {
-	case 1:
-		r = qRed(color0) + qRed(color1);
-		if(r>255)	r = 255;
-		g = qGreen(color0) + qGreen(color1);
-		if(g>255)	g = 255;
-		b = qBlue(color0) + qBlue(color1);
-		if(b>255)	b = 255;
-		break;
-	case 2:
-		r = qRed(color0) - qRed(color1);
-		if(r<0)	r = 0;
-		g = qGreen(color0) - qGreen(color1);
-		if(g<0)	g = 0;
-		b = qBlue(color0) - qBlue(color1);
-		if(b<0)	b = 0;
-		break;
-	case 3:
-		r = qRed(color0) + 0.25*qRed(color1);
-		if(r>255)	r = 255;
-		g = qGreen(color0) + 0.25*qGreen(color1);
-		if(g>255)	g = 255;
-		b = qBlue(color0) + 0.25*qBlue(color1);
-		if(b>255)	b = 255;
-		break;
-	default://0
-		r = (qRed(color0) + qRed(color1))/2;
-		g = (qGreen(color0) + qGreen(color1))/2;
-		b = (qBlue(color0) + qBlue(color1))/2;
-		break;
-	}
-
-	return qRgb(r, g, b);
+	return background()->usedParams(sectionData(Background), usedParams, layerExists);
 }
 
 Section1File *Field::scriptsAndTexts(bool open)
@@ -237,6 +204,12 @@ FieldModelLoader *Field::fieldModelLoader(bool open)
 	}
 
 	return modelLoader;
+}
+
+BackgroundFile *Field::background()
+{
+	if(!_bg)	_bg = createBackground();
+	return _bg;
 }
 
 const QString &Field::name() const

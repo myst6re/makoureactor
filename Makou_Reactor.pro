@@ -89,7 +89,10 @@ HEADERS += ApercuBG.h \
     WindowBinFile.h \
     TimFile.h \
     TextureFile.h \
-    TexFile.h
+    TexFile.h \
+    BackgroundFile.h \
+    BackgroundFilePC.h \
+    BackgroundFilePS.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -172,7 +175,10 @@ SOURCES += ApercuBG.cpp \
     WindowBinFile.cpp \
     TimFile.cpp \
     TextureFile.cpp \
-    TexFile.cpp
+    TexFile.cpp \
+    BackgroundFile.cpp \
+    BackgroundFilePC.cpp \
+    BackgroundFilePS.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

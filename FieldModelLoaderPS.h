@@ -32,7 +32,11 @@ public:
 	FieldModelLoaderPS();
 	bool load(const QByteArray &data);
 	int modelCount() const;
-	const FieldModelLoaderStruct &model(int id) const;
+	int animCount(int modelID) const;
+	quint16 unknown(int modelID) const;
+	void setUnknown(int modelID, quint16 unknown);
+	const FieldModelLoaderStruct &model(int modelID) const;
+	void setModel(int modelID, const FieldModelLoaderStruct &modelLoader);
 private:
 	QList<FieldModelLoaderStruct> _modelLoaders;
 };

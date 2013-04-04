@@ -17,18 +17,25 @@
  ****************************************************************************/
 #include "FieldModelPart.h"
 
-Poly::Poly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords)
+Poly::Poly(int count, const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords) :
+	_count(count)
 {
 	setVertices(vertices, colors, texCoords);
+}
+
+Poly::Poly(int count, const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords) :
+	_count(count)
+{
+	setVertices(vertices, color, texCoords);
 }
 
 Poly::~Poly()
 {
 }
 
-Poly::Poly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords)
+int Poly::count() const
 {
-	setVertices(vertices, color, texCoords);
+	return _count;
 }
 
 void Poly::setVertices(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords)
@@ -85,7 +92,7 @@ bool Poly::hasTexture() const
 }
 
 QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords) :
-	Poly(vertices, colors, texCoords)
+	Poly(4, vertices, colors, texCoords)
 {
 	// swapping the two last vertices for right OpenGL quad order
 
@@ -101,7 +108,7 @@ QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors,
 }
 
 QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords) :
-	Poly(vertices, color, texCoords)
+	Poly(4, vertices, color, texCoords)
 {
 	// swapping the two last vertices for right OpenGL quad order
 
@@ -113,12 +120,12 @@ QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QRgb &color, const Q
 }
 
 TrianglePoly::TrianglePoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords) :
-	Poly(vertices, colors, texCoords)
+	Poly(3, vertices, colors, texCoords)
 {
 }
 
 TrianglePoly::TrianglePoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords) :
-	Poly(vertices, color, texCoords)
+	Poly(3, vertices, color, texCoords)
 {
 }
 

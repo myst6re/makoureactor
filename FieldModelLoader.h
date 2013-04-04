@@ -30,6 +30,9 @@ public:
 	void setModified(bool modified);
 	virtual bool load(const QByteArray &data)=0;
 	virtual int modelCount() const=0;
+	virtual int animCount(int modelID) const=0;
+	virtual quint16 unknown(int modelID) const=0;
+	virtual void setUnknown(int modelID, quint16 unknown)=0;
 
 protected:
 	void setLoaded(bool loaded);

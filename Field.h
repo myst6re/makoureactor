@@ -27,27 +27,7 @@
 #include "InfFile.h"
 #include "FieldModelLoader.h"
 #include "FieldModelFile.h"
-
-//Sizeof : 36
-typedef struct {
-	qint16 cibleX, cibleY;
-	quint32 unused1;
-	quint8 srcX, unused2;
-	quint8 srcY, unused3;
-	quint8 srcX2, unused4;
-	quint8 srcY2, unused5;
-	quint32 unused6;
-	quint8 paletteID, unused7;
-	quint16 ID;
-	quint8 param;
-	quint8 state;
-	quint8 blending;
-	quint8 unused8;
-	quint8 typeTrans, size;//Normaly unused
-	quint8 textureID, unused10;
-	quint8 textureID2, unused11;
-	quint8 deph, unused12;
-} Tile;
+#include "BackgroundFile.h"
 
 class FieldArchiveIO;
 
@@ -62,7 +42,8 @@ public:
 		ModelLoader = 0x10,
 		Encounter = 0x20,
 		Inf = 0x40,
-		Background = 0x80
+		Background = 0x80,
+		PalettePC = 0x100
 	};
 	Q_DECLARE_FLAGS(FieldParts, FieldPart)
 
@@ -82,7 +63,7 @@ public:
 	QPixmap openBackground();
 	virtual QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
 
-	virtual bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)=0;
+	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 
 	void setSaved();
 	virtual bool save(QByteArray &newData, bool compress)=0;
@@ -104,13 +85,14 @@ public:
 protected:
 	virtual int headerSize()=0;
 	virtual void openHeader(const QByteArray &fileData)=0;
-	virtual FieldModelLoader *createFieldModelLoader()=0;
+	virtual FieldModelLoader *createFieldModelLoader() const=0;
+	virtual BackgroundFile *createBackground() const=0;
+	BackgroundFile *background();
 	QByteArray sectionData(FieldPart part);
 	virtual int sectionId(FieldPart part) const=0;
 	virtual quint32 sectionPosition(int idPart)=0;
 	virtual int sectionCount()=0;
 	virtual int paddingBetweenSections()=0;
-	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
 
 	Section1File *section1;
 	EncounterFile *_encounter;
@@ -120,6 +102,7 @@ protected:
 	InfFile *_inf;
 	FieldModelLoader *modelLoader;
 	FieldModelFile *_fieldModel;
+	BackgroundFile *_bg;
 	FieldArchiveIO *fieldArchive;
 private:
 	bool _isOpen, _isModified;
