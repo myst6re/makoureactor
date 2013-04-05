@@ -22,8 +22,8 @@
 #include "Config.h"
 #include "BackgroundFilePS.h"
 
-FieldPS::FieldPS(const QString &name, FieldArchiveIO *fieldArchive) :
-	Field(name, fieldArchive)
+FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
+	Field(name, io)
 {
 }
 
@@ -62,11 +62,16 @@ quint32 FieldPS::sectionPosition(int idPart)
 	return sectionPositions[idPart];
 }
 
+FieldArchiveIOPS *FieldPS::io() const
+{
+	return (FieldArchiveIOPS *)Field::io();
+}
+
 QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
 	return background()->openBackground(
 				sectionData(Background),
-				fieldArchive->mimData(this),
+				io()->mimData(this),
 				paramActifs, z, layers);
 }
 
@@ -88,7 +93,7 @@ FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate)
 {
 	if(!_fieldModel) 	_fieldModel = new FieldModelFilePS();
-	((FieldModelFilePS *)_fieldModel)->load(fieldArchive, this, modelID, animationID, animate);
+	((FieldModelFilePS *)_fieldModel)->load(this, modelID, animationID, animate);
 	return (FieldModelFilePS *)_fieldModel;
 }
 
@@ -96,7 +101,7 @@ bool FieldPS::save(QByteArray &newData, bool compress)
 {
 	if(!isOpen())	return false;
 
-	QByteArray decompresse = fieldArchive->fieldData(this), toc;
+	QByteArray decompresse = io()->fieldData(this), toc;
 	const char *decompresseData = decompresse.constData();
 	quint32 padd, pos, debutSections[9];
 

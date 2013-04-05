@@ -6,6 +6,9 @@
 #include "FieldPC.h"
 #include "FieldPS.h"
 #include "FieldArchive.h"
+#include "FieldArchivePC.h"
+#include "FieldArchivePS.h"
+#include "Field.h"
 
 FieldIO::FieldIO(Field *field, QObject *parent) :
 	QIODevice(parent), _field(field)
@@ -66,22 +69,22 @@ FieldArchive *FieldArchiveIO::fieldArchive()
 }
 
 FieldArchiveIOLgp::FieldArchiveIOLgp(const QString &path, FieldArchive *fieldArchive) :
-	FieldArchiveIO(fieldArchive), _lgp(path)
+	FieldArchiveIOPC(fieldArchive), _lgp(path)
 {
 }
 
 FieldArchiveIOFile::FieldArchiveIOFile(const QString &path, FieldArchive *fieldArchive) :
-	FieldArchiveIO(fieldArchive), fic(path)
+	FieldArchiveIOPS(fieldArchive), fic(path)
 {
 }
 
 FieldArchiveIOIso::FieldArchiveIOIso(const QString &path, FieldArchive *fieldArchive) :
-	FieldArchiveIO(fieldArchive), iso(path)
+	FieldArchiveIOPS(fieldArchive), iso(path)
 {
 }
 
 FieldArchiveIODir::FieldArchiveIODir(const QString &path, FieldArchive *fieldArchive) :
-	FieldArchiveIO(fieldArchive), dir(path)
+	FieldArchiveIOPS(fieldArchive), dir(path)
 {
 }
 
@@ -152,11 +155,11 @@ void *FieldArchiveIODir::device()
 }
 
 QByteArray FieldArchiveIO::fieldDataCache;
-QByteArray FieldArchiveIO::mimDataCache;
-QByteArray FieldArchiveIO::modelDataCache;
+QByteArray FieldArchiveIOPS::mimDataCache;
+QByteArray FieldArchiveIOPS::modelDataCache;
 Field *FieldArchiveIO::fieldCache=0;
-Field *FieldArchiveIO::mimCache=0;
-Field *FieldArchiveIO::modelCache=0;
+Field *FieldArchiveIOPS::mimCache=0;
+Field *FieldArchiveIOPS::modelCache=0;
 
 QByteArray FieldArchiveIO::fieldData(Field *field, bool unlzs)
 {
@@ -178,7 +181,7 @@ QByteArray FieldArchiveIO::fieldData(Field *field, bool unlzs)
 	return data;
 }
 
-QByteArray FieldArchiveIO::mimData(Field *field, bool unlzs)
+QByteArray FieldArchiveIOPS::mimData(Field *field, bool unlzs)
 {
 	// use data from the cache
 	if(unlzs && mimDataIsCached(field)) {
@@ -195,7 +198,7 @@ QByteArray FieldArchiveIO::mimData(Field *field, bool unlzs)
 	return data;
 }
 
-QByteArray FieldArchiveIO::modelData(Field *field, bool unlzs)
+QByteArray FieldArchiveIOPS::modelData(Field *field, bool unlzs)
 {
 	// use data from the cache
 	if(unlzs && modelDataIsCached(field)) {
@@ -233,20 +236,6 @@ QByteArray FieldArchiveIO::fileData(const QString &fileName, bool unlzs)
 QByteArray FieldArchiveIOLgp::fieldData2(Field *field, bool unlzs)
 {
 	return fileData(field->name(), unlzs);
-}
-
-QByteArray FieldArchiveIOLgp::mimData2(Field *field, bool unlzs)
-{
-	Q_UNUSED(field)
-	Q_UNUSED(unlzs)
-	return QByteArray();
-}
-
-QByteArray FieldArchiveIOLgp::modelData2(Field *field, bool unlzs)
-{
-	Q_UNUSED(field)
-	Q_UNUSED(unlzs)
-	return QByteArray();
 }
 
 QByteArray FieldArchiveIOLgp::fileData2(const QString &fileName)
@@ -337,12 +326,12 @@ bool FieldArchiveIO::fieldDataIsCached(Field *field) const
 	return fieldCache && fieldCache == field;
 }
 
-bool FieldArchiveIO::mimDataIsCached(Field *field) const
+bool FieldArchiveIOPS::mimDataIsCached(Field *field) const
 {
 	return mimCache && mimCache == field;
 }
 
-bool FieldArchiveIO::modelDataIsCached(Field *field) const
+bool FieldArchiveIOPS::modelDataIsCached(Field *field) const
 {
 	return modelCache && modelCache == field;
 }
@@ -351,11 +340,16 @@ void FieldArchiveIO::clearCachedData()
 {
 //	qDebug() << "FieldArchive::clearCachedData()";
 	fieldCache = 0;
+	fieldDataCache.clear();
+}
+
+void FieldArchiveIOPS::clearCachedData()
+{
 	mimCache = 0;
 	modelCache = 0;
-	fieldDataCache.clear();
 	mimDataCache.clear();
 	modelDataCache.clear();
+	FieldArchiveIO::clearCachedData();
 }
 
 void FieldArchiveIO::close()
@@ -411,7 +405,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOLgp::open2(FieldArchiveIOObserver *obser
 				qWarning() << "Cannot open maplist!";
 			}
 		} else if(name.endsWith(".tut", Qt::CaseInsensitive)) {
-			fieldArchive()->addTut(name.toLower().left(name.size()-4));
+			((FieldArchivePC *)fieldArchive())->addTut(name.toLower().left(name.size()-4));
 		} else if(!name.contains('.')) {
 			fieldArchive()->addField(new FieldPC(name, this));
 			++i;
@@ -521,7 +515,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOLgp::save2(const QString &path, FieldArc
 		}
 	}
 
-	QMapIterator<QString, TutFile *> itTut(fieldArchive()->tuts());
+	QMapIterator<QString, TutFile *> itTut(((FieldArchivePC *)fieldArchive())->tuts());
 
 	while(itTut.hasNext()) {
 		itTut.next();

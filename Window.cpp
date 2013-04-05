@@ -27,6 +27,8 @@
 #include "MassImportDialog.h"
 #include "Config.h"
 #include "Data.h"
+#include "FieldArchivePC.h"
+#include "FieldArchivePS.h"
 
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
@@ -515,7 +517,21 @@ void Window::open(const QString &cheminFic, bool isDir)
 	closeFile();
 	
 	setEnabled(false);
-	fieldArchive = new FieldArchive(cheminFic, isDir);
+
+	bool isPS = true;
+
+	if(!isDir) {
+		QString ext = cheminFic.mid(cheminFic.lastIndexOf('.') + 1).toLower();
+		if(ext == "lgp") {
+			isPS = false;
+		}
+	}
+
+	if(isPS) {
+		fieldArchive = new FieldArchivePS(cheminFic, isDir);
+	} else {
+		fieldArchive = new FieldArchivePC(cheminFic, isDir);
+	}
 
 	setCursor(Qt::WaitCursor);
 	showProgression();
@@ -617,7 +633,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 	actionSaveAs->setEnabled(true);
 	actionClose->setEnabled(true);
 
-//	fieldArchive->searchAll();
+	fieldArchive->searchAll();
 //	qDebug() << "/Window::open" << cheminFic << isDir;
 }
 
@@ -1264,8 +1280,11 @@ void Window::encounterManager()
 void Window::tutManager()
 {
 	if(field) {
-		TutFile *tut = field->tutosAndSounds(), *tutPC = fieldArchive->tut(field->name());
+		TutFile *tut = field->tutosAndSounds(), *tutPC = NULL;
 		if(tut->isOpen()) {
+			if(fieldArchive->isPC()) {
+				tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
+			}
 			TutWidget dialog(field, tut, tutPC, this);
 			if(dialog.exec()==QDialog::Accepted)
 			{

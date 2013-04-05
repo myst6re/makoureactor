@@ -22,8 +22,8 @@
 #include "Config.h"
 #include "BackgroundFilePC.h"
 
-FieldPC::FieldPC(const QString &name, FieldArchiveIO *fieldArchive) :
-	Field(name, fieldArchive)
+FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
+	Field(name, io)
 {
 }
 
@@ -56,6 +56,11 @@ int FieldPC::sectionId(FieldPart part) const
 quint32 FieldPC::sectionPosition(int idPart)
 {
 	return sectionPositions[idPart] + paddingBetweenSections();
+}
+
+FieldArchiveIOPC *FieldPC::io() const
+{
+	return (FieldArchiveIOPC *)Field::io();
 }
 
 QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
@@ -110,7 +115,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 		return false;
 	}
 
-	QByteArray decompresse = fieldArchive->fieldData(this), section, toc;
+	QByteArray decompresse = io()->fieldData(this), section, toc;
 	const char *decompresseData = decompresse.constData();
 	quint32 sectionPositions[9], size, section_size;
 

@@ -26,15 +26,15 @@
 Field::Field(const QString &name) :
 	section1(0), _encounter(0), _tut(0), id(0), ca(0), _inf(0),
 	modelLoader(0), _fieldModel(0), _bg(0),
-	fieldArchive(0),
+	_io(0),
 	_isOpen(false), _isModified(false), _name(name.toLower())
 {
 }
 
-Field::Field(const QString &name, FieldArchiveIO *fieldArchive) :
+Field::Field(const QString &name, FieldArchiveIO *io) :
 	section1(0), _encounter(0), _tut(0), id(0), ca(0), _inf(0),
 	modelLoader(0), _fieldModel(0), _bg(0),
-	fieldArchive(fieldArchive),
+	_io(io),
 	_isOpen(false), _isModified(false), _name(name.toLower())
 {
 }
@@ -78,8 +78,8 @@ bool Field::open(bool dontOptimize)
 {
 	QByteArray fileData;
 
-	if(!dontOptimize && !fieldArchive->fieldDataIsCached(this)) {
-		QByteArray lzsData = fieldArchive->fieldData(this, false);
+	if(!dontOptimize && !_io->fieldDataIsCached(this)) {
+		QByteArray lzsData = _io->fieldData(this, false);
 		quint32 lzsSize;
 		if(lzsData.size() < 4)	return false;
 
@@ -91,7 +91,7 @@ bool Field::open(bool dontOptimize)
 
 		fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize());//partial decompression
 	} else {
-		fileData = fieldArchive->fieldData(this);
+		fileData = _io->fieldData(this);
 	}
 
 	if(fileData.size() < headerSize())	return false;
@@ -121,10 +121,10 @@ QByteArray Field::sectionData(FieldPart part)
 		size = -1;
 	}
 
-	if(size == -1 || fieldArchive->fieldDataIsCached(this)) {
-		return fieldArchive->fieldData(this).mid(position, size);
+	if(size == -1 || _io->fieldDataIsCached(this)) {
+		return _io->fieldData(this).mid(position, size);
 	} else {
-		QByteArray lzsData = fieldArchive->fieldData(this, false);
+		QByteArray lzsData = _io->fieldData(this, false);
 		quint32 lzsSize;
 		const char *lzsDataConst = lzsData.constData();
 		memcpy(&lzsSize, lzsDataConst, 4);
@@ -135,6 +135,11 @@ QByteArray Field::sectionData(FieldPart part)
 		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1))
 				.mid(position, size);
 	}
+}
+
+FieldArchiveIO *Field::io() const
+{
+	return _io;
 }
 
 QPixmap Field::openBackground()

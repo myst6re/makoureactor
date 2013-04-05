@@ -28,10 +28,10 @@ FieldModelFilePS::FieldModelFilePS() :
 {
 }
 
-quint8 FieldModelFilePS::load(FieldArchiveIO *fieldArchive, Field *currentField, int model_id, int animation_id, bool animate)
+quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation_id, bool animate)
 {
-	QByteArray BSX_data = fieldArchive->modelData(currentField);
-	FieldModelLoaderPS *modelLoader = ((FieldPS *)currentField)->fieldModelLoader();
+	QByteArray BSX_data = currentField->io()->modelData(currentField);
+	FieldModelLoaderPS *modelLoader = currentField->fieldModelLoader();
 	quint8 model_global_id = model_id < modelLoader->modelCount() ? modelLoader->model(model_id).modelID : 0;
 	const char *constData = BSX_data.constData();
 	BSX_header header;
@@ -98,7 +98,7 @@ quint8 FieldModelFilePS::load(FieldArchiveIO *fieldArchive, Field *currentField,
 		case 8:		fileName = "KETCY";		break;
 		case 9:		fileName = "VINCENT";	break;
 		}
-		if(!openBCX(fieldArchive->fileData(fileName + ".BCX"), animation_id, animate)) {
+		if(!openBCX(currentField->io()->fileData(fileName + ".BCX"), animation_id, animate)) {
 			return false;
 		}
 
@@ -174,7 +174,7 @@ quint8 FieldModelFilePS::load(FieldArchiveIO *fieldArchive, Field *currentField,
 
 	if(model_id < modelLoader->modelCount()) {
 		TdbFile tdb;
-		tdb.open(fieldArchive->fileData("FIELD.TDB"));
+		tdb.open(currentField->io()->fileData("FIELD.TDB"));
 
 		quint8 faceID = modelLoader->model(model_id).faceID;
 		QMap<TextureInfo, int> texAlreadyLoaded;

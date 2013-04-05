@@ -107,15 +107,15 @@ typedef struct {
 	quint8 unknown;
 } BonePS;
 
-class FieldArchiveIO;
-class Field;
+class FieldArchiveIOPS;
+class FieldPS;
 
 class FieldModelFilePS : public FieldModelFile
 {
 public:
 	FieldModelFilePS();
 	bool isPS() const { return true; }
-	quint8 load(FieldArchiveIO *fieldArchive, Field *currentField, int model_id, int animation_id, bool animate=false);
+	quint8 load(FieldPS *currentField, int model_id, int animation_id, bool animate=false);
 
 private:
 	int openSkeleton(const char *constData, int curOff, quint8 numBones);

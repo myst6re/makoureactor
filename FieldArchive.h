@@ -30,20 +30,20 @@ public:
 	};
 
 	FieldArchive();
-	FieldArchive(const QString &path, bool isDirectory=false);
+	explicit FieldArchive(const QString &path, bool isDirectory=false);
 	virtual ~FieldArchive();
+	virtual bool isPC() const=0;
+	inline bool isPS() { return !isPC(); }
 
 	FieldArchiveIO::ErrorCode open(FieldArchiveIOObserver *observer=0);
 	FieldArchiveIO::ErrorCode save(const QString &path=QString(), FieldArchiveIOObserver *observer=0);
 	void close();
 
+	virtual void clear();
 	int size() const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
-	TutFile *tut(const QString &name);
-	const QMap<QString, TutFile *> &tuts() const;
 	void addField(Field *field);
 	void removeField(quint32 id);
-	void addTut(const QString &name);
 
 	bool isAllOpened();
 	QList<FF7Var> searchAllVars();
@@ -63,17 +63,17 @@ public:
 
 	bool exportation(const QList<int> &selectedFields, const QString &directory, bool overwrite, Field::FieldParts toExport, FieldArchiveIOObserver *observer);
 
-	FieldArchiveIO *io() const;
+	virtual FieldArchiveIO *io() const;
+protected:
+	virtual void setSaved();
 private:
 	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
 	bool openField(Field *field, bool dontOptimize=false);
-	void setSaved();
 
 	QList<Field *> fileList;
 	QMultiMap<QString, int> fieldsSortByName;
 	QMultiMap<QString, int> fieldsSortByMapId;
-	QMap<QString, TutFile *> _tuts;
 
 	FieldArchiveIO *_io;
 	// QFileSystemWatcher fileWatcher;

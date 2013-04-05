@@ -92,7 +92,9 @@ HEADERS += ApercuBG.h \
     TexFile.h \
     BackgroundFile.h \
     BackgroundFilePC.h \
-    BackgroundFilePS.h
+    BackgroundFilePS.h \
+    FieldArchivePC.h \
+    FieldArchivePS.h
 SOURCES += ApercuBG.cpp \
     ColorDisplay.cpp \
     OpcodeList.cpp \
@@ -178,7 +180,9 @@ SOURCES += ApercuBG.cpp \
     TexFile.cpp \
     BackgroundFile.cpp \
     BackgroundFilePC.cpp \
-    BackgroundFilePS.cpp
+    BackgroundFilePS.cpp \
+    FieldArchivePC.cpp \
+    FieldArchivePS.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

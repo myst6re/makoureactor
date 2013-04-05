@@ -22,11 +22,12 @@
 #include "Field.h"
 #include "FieldModelLoaderPS.h"
 #include "FieldModelFilePS.h"
+#include "FieldArchiveIO.h"
 
 class FieldPS : public Field
 {
 public:
-	FieldPS(const QString &name, FieldArchiveIO *fieldArchive);
+	FieldPS(const QString &name, FieldArchiveIO *io);
 	FieldPS(const Field &field);
 
 	inline bool isPC() const { return false; }
@@ -37,6 +38,7 @@ public:
 
 	FieldModelLoaderPS *fieldModelLoader(bool open=true);
 	FieldModelFilePS *fieldModel(int modelID, int animationID=0, bool animate=true);
+	FieldArchiveIOPS *io() const;
 protected:
 	inline int headerSize() { return 28; }
 	void openHeader(const QByteArray &fileData);

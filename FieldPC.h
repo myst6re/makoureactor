@@ -22,11 +22,12 @@
 #include "Field.h"
 #include "FieldModelLoaderPC.h"
 #include "FieldModelFilePC.h"
+#include "FieldArchiveIO.h"
 
 class FieldPC : public Field
 {
 public:
-	FieldPC(const QString &name, FieldArchiveIO *fieldArchive);
+	FieldPC(const QString &name, FieldArchiveIO *io);
 	FieldPC(const Field &field);
 
 	inline bool isPC() const { return true; }
@@ -39,6 +40,7 @@ public:
 	FieldModelLoaderPC *fieldModelLoader(bool open=true);
 	FieldModelFilePC *fieldModel(int modelID, int animationID=0, bool animate=true);
 	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate=true);
+	FieldArchiveIOPC *io() const;
 protected:
 	inline int headerSize() { return 42; }
 	void openHeader(const QByteArray &fileData);

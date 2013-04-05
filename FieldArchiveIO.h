@@ -2,12 +2,14 @@
 #define FIELDARCHIVEIO_H
 
 #include <QtCore>
-#include "Field.h"
 #include "QLockedFile.h"
 #include "IsoArchive.h"
 #include "Lgp.h"
 
 class FieldArchive;
+class FieldArchivePS;
+class FieldArchivePC;
+class Field;
 
 class FieldIO : public QIODevice
 {
@@ -45,14 +47,10 @@ public:
 	virtual ~FieldArchiveIO();
 
 	QByteArray fieldData(Field *field, bool unlzs=true);
-	QByteArray mimData(Field *field, bool unlzs=true);
-	QByteArray modelData(Field *field, bool unlzs=true);
 	QByteArray fileData(const QString &fileName, bool unlzs=true);
 
 	bool fieldDataIsCached(Field *field) const;
-	bool mimDataIsCached(Field *field) const;
-	bool modelDataIsCached(Field *field) const;
-	void clearCachedData();
+	virtual void clearCachedData();
 
 	virtual void close();
 	ErrorCode open(FieldArchiveIOObserver *observer=0);
@@ -68,13 +66,10 @@ public:
 	virtual void *device()=0;
 protected:
 	virtual QByteArray fieldData2(Field *field, bool unlzs)=0;
-	virtual QByteArray mimData2(Field *field, bool unlzs)=0;
-	virtual QByteArray modelData2(Field *field, bool unlzs)=0;
 	virtual QByteArray fileData2(const QString &fileName)=0;
 
 	virtual ErrorCode open2(FieldArchiveIOObserver *observer)=0;
 	virtual ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer)=0;
-protected:
 	FieldArchive *fieldArchive();
 private:
 	FieldArchive *_fieldArchive;
@@ -82,7 +77,46 @@ private:
 	static Field *fieldCache, *mimCache, *modelCache;
 };
 
-class FieldArchiveIOLgp : public FieldArchiveIO, LgpObserver
+class FieldArchiveIOPC : public FieldArchiveIO
+{
+public:
+	FieldArchiveIOPC(FieldArchive *fieldArchive) :
+		FieldArchiveIO(fieldArchive) {}
+	// Removing virtual
+	inline void clearCachedData() {
+		return FieldArchiveIO::clearCachedData();
+	}
+protected:
+	FieldArchivePC *fieldArchive() {
+		return (FieldArchivePC *)FieldArchiveIO::fieldArchive();
+	}
+};
+
+class FieldArchiveIOPS : public FieldArchiveIO
+{
+public:
+	FieldArchiveIOPS(FieldArchive *fieldArchive) :
+		FieldArchiveIO(fieldArchive) {}
+
+	QByteArray mimData(Field *field, bool unlzs=true);
+	QByteArray modelData(Field *field, bool unlzs=true);
+
+	bool mimDataIsCached(Field *field) const;
+	bool modelDataIsCached(Field *field) const;
+	void clearCachedData();
+protected:
+	virtual QByteArray mimData2(Field *field, bool unlzs)=0;
+	virtual QByteArray modelData2(Field *field, bool unlzs)=0;
+
+	FieldArchivePS *fieldArchive() {
+		return (FieldArchivePS *)FieldArchiveIO::fieldArchive();
+	}
+private:
+	static QByteArray mimDataCache, modelDataCache;
+	static Field *mimCache, *modelCache;
+};
+
+class FieldArchiveIOLgp : public FieldArchiveIOPC, LgpObserver
 {
 public:
 	FieldArchiveIOLgp(const QString &path, FieldArchive *fieldArchive);
@@ -105,8 +139,6 @@ public:
 	}
 private:
 	QByteArray fieldData2(Field *field, bool unlzs);
-	QByteArray mimData2(Field *field, bool unlzs);
-	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
 	ErrorCode open2(FieldArchiveIOObserver *observer);
@@ -116,7 +148,7 @@ private:
 	FieldArchiveIOObserver *observer;
 };
 
-class FieldArchiveIOFile : public FieldArchiveIO
+class FieldArchiveIOFile : public FieldArchiveIOPS
 {
 public:
 	FieldArchiveIOFile(const QString &path, FieldArchive *fieldArchive);
@@ -140,7 +172,7 @@ private:
 	QLockedFile fic;
 };
 
-class FieldArchiveIOIso : public FieldArchiveIO, IsoControl
+class FieldArchiveIOIso : public FieldArchiveIOPS, IsoControl
 {
 public:
 	FieldArchiveIOIso(const QString &path, FieldArchive *fieldArchive);
@@ -172,7 +204,7 @@ private:
 	FieldArchiveIOObserver *observer;
 };
 
-class FieldArchiveIODir : public FieldArchiveIO
+class FieldArchiveIODir : public FieldArchiveIOPS
 {
 public:
 	FieldArchiveIODir(const QString &path, FieldArchive *fieldArchive);

@@ -35,7 +35,7 @@ FieldArchive::FieldArchive(const QString &path, bool isDirectory) :
 	else {
 		QString ext = path.mid(path.lastIndexOf('.') + 1).toLower();
 
-		if(ext == "iso" || ext == "bin") {
+		if(ext == "iso" || ext == "bin" || ext == "img") {
 			_io = new FieldArchiveIOIso(path, this);
 		}
 		else {
@@ -54,7 +54,6 @@ FieldArchive::FieldArchive(const QString &path, bool isDirectory) :
 FieldArchive::~FieldArchive()
 {
 	foreach(Field *field, fileList)	delete field;
-	foreach(TutFile *tut, _tuts)	if(tut != NULL)	delete tut;
 	if(_io)		delete _io;
 }
 
@@ -62,13 +61,7 @@ FieldArchiveIO::ErrorCode FieldArchive::open(FieldArchiveIOObserver *observer)
 {
 	if(!_io)	return FieldArchiveIO::Invalid;
 //	qDebug() << "FieldArchive::open()";
-	foreach(Field *field, fileList)	delete field;
-	foreach(TutFile *tut, _tuts) if(tut != NULL)	delete tut;
-	fileList.clear();
-	_tuts.clear();
-	fieldsSortByName.clear();
-	fieldsSortByMapId.clear();
-	Data::field_names.clear();
+	clear();
 
 	FieldArchiveIO::ErrorCode error = _io->open(observer);
 	if(error != FieldArchiveIO::Ok) {
@@ -119,6 +112,15 @@ void FieldArchive::close()
 	if(_io)	_io->close();
 }
 
+void FieldArchive::clear()
+{
+	foreach(Field *field, fileList)	delete field;
+	fileList.clear();
+	fieldsSortByName.clear();
+	fieldsSortByMapId.clear();
+	Data::field_names.clear();
+}
+
 int FieldArchive::size() const
 {
 	return fileList.size();
@@ -146,48 +148,6 @@ Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 	return field;
 }
 
-TutFile *FieldArchive::tut(const QString &name)
-{
-	if(!_io || _io->type() != FieldArchiveIO::Lgp) {
-		return NULL;
-	}
-
-	Lgp *lgp = (Lgp *)_io->device();
-
-	QMapIterator<QString, TutFile *> it(_tuts);
-
-	while(it.hasNext()) {
-		it.next();
-
-		const QString &tutName = it.key();
-
-		if(name.startsWith(tutName, Qt::CaseInsensitive)) {
-			TutFile *tutFile = it.value();
-			if(tutFile == NULL) {
-				if(!lgp->isOpen() && !lgp->open())
-					return NULL;
-				QByteArray data = lgp->fileData(tutName + ".tut");
-				if(!data.isEmpty()) {
-					tutFile = new TutFile(data, true);
-					_tuts.insert(name, tutFile);
-					return tutFile;
-				} else {
-					return NULL;
-				}
-			} else {
-				return tutFile;
-			}
-		}
-	}
-
-	return NULL;
-}
-
-const QMap<QString, TutFile *> &FieldArchive::tuts() const
-{
-	return _tuts;
-}
-
 void FieldArchive::addField(Field *field)
 {
 	fileList.append(field);
@@ -196,11 +156,6 @@ void FieldArchive::addField(Field *field)
 void FieldArchive::removeField(quint32 id)
 {
 	fileList.removeAt(id);
-}
-
-void FieldArchive::addTut(const QString &name)
-{
-	_tuts.insert(name, NULL);
 }
 
 bool FieldArchive::isAllOpened()
@@ -678,10 +633,5 @@ void FieldArchive::setSaved()
 {
 	foreach(Field *field, fileList) {
 		field->setSaved();
-	}
-	foreach(TutFile *tut, _tuts) {
-		if(tut != NULL) {
-			tut->setModified(false);
-		}
 	}
 }

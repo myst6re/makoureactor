@@ -48,7 +48,7 @@ public:
 	Q_DECLARE_FLAGS(FieldParts, FieldPart)
 
 	Field(const QString &name);
-	Field(const QString &name, FieldArchiveIO *fieldArchive);
+	Field(const QString &name, FieldArchiveIO *io);
 	virtual ~Field();
 
 	bool isOpen() const;
@@ -82,6 +82,7 @@ public:
 
 	const QString &name() const;
 	void setName(const QString &name);
+	virtual FieldArchiveIO *io() const;
 protected:
 	virtual int headerSize()=0;
 	virtual void openHeader(const QByteArray &fileData)=0;
@@ -103,8 +104,8 @@ protected:
 	FieldModelLoader *modelLoader;
 	FieldModelFile *_fieldModel;
 	BackgroundFile *_bg;
-	FieldArchiveIO *fieldArchive;
 private:
+	FieldArchiveIO *_io;
 	bool _isOpen, _isModified;
 
 	QString _name;
