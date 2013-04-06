@@ -9,8 +9,7 @@ QT += opengl
 
 # Input
 HEADERS += \
-    Window.h \
-    shobjidl.h \
+	Window.h \
     Parameters.h \
     Data.h \
     widgets/WalkmeshWidget.h \
@@ -38,12 +37,7 @@ HEADERS += \
     widgets/ImportDialog.h \
     widgets/HexLineEdit.h \
     widgets/GrpScriptList.h \
-    widgets/FormatSelectionWidget.h \
-    widgets/FontWidget.h \
-    widgets/FontPalette.h \
-    widgets/FontLetter.h \
-    widgets/FontGrid.h \
-    widgets/FontDisplay.h \
+	widgets/FormatSelectionWidget.h \
     widgets/FieldModel.h \
     widgets/EncounterWidget.h \
     widgets/EncounterTableWidget.h \
@@ -71,8 +65,7 @@ HEADERS += \
     core/Lgp.h \
     core/IsoArchive.h \
     core/GZIP.h \
-    core/FF7Text.h \
-    core/FF7Font.h \
+	core/FF7Text.h \
     core/Config.h \
     core/field/TutFile.h \
     core/field/TdbFile.h \
@@ -138,12 +131,7 @@ SOURCES += \
     widgets/ImportDialog.cpp \
     widgets/HexLineEdit.cpp \
     widgets/GrpScriptList.cpp \
-    widgets/FormatSelectionWidget.cpp \
-    widgets/FontWidget.cpp \
-    widgets/FontPalette.cpp \
-    widgets/FontLetter.cpp \
-    widgets/FontGrid.cpp \
-    widgets/FontDisplay.cpp \
+	widgets/FormatSelectionWidget.cpp \
     widgets/FieldModel.cpp \
     widgets/EncounterWidget.cpp \
     widgets/EncounterTableWidget.cpp \
@@ -171,8 +159,7 @@ SOURCES += \
     core/Lgp.cpp \
     core/IsoArchive.cpp \
     core/GZIP.cpp \
-    core/FF7Text.cpp \
-    core/FF7Font.cpp \
+	core/FF7Text.cpp \
     core/Config.cpp \
     core/field/TutFile.cpp \
     core/field/TdbFile.cpp \
