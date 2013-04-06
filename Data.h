@@ -19,9 +19,9 @@
 #define DATA_H
 
 #include <QtCore>
-#include "FF7Text.h"
-#include "Lgp.h"
-#include "WindowBinFile.h"
+#include "core/FF7Text.h"
+#include "core/Lgp.h"
+#include "core/WindowBinFile.h"
 
 class Data
 {

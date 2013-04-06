@@ -15,32 +15,25 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "FieldArchivePS.h"
+#ifndef FIELDIO_H
+#define FIELDIO_H
 
-FieldArchivePS::FieldArchivePS() :
-	FieldArchive()
-{
-}
+#include <QtCore>
 
-FieldArchivePS::FieldArchivePS(const QString &path, FieldArchiveIO::Type type) :
-	FieldArchive()
-{
-	switch(type) {
-	case FieldArchiveIO::Dir:
-		setIO(new FieldArchiveIOPSDir(path, this));
-		break;
-	case FieldArchiveIO::Iso:
-		setIO(new FieldArchiveIOPSIso(path, this));
-		break;
-	case FieldArchiveIO::File:
-		setIO(new FieldArchiveIOPSFile(path, this));
-		break;
-	default:
-		break;
-	}
-}
+class Field;
 
-FieldArchiveIOPS *FieldArchivePS::io() const
+class FieldSaveIO : public QIODevice
 {
-	return (FieldArchiveIOPS *)FieldArchive::io();
-}
+public:
+	FieldSaveIO(Field *field, QObject *parent=0);
+	virtual void close();
+protected:
+	virtual qint64 readData(char *data, qint64 maxSize);
+private:
+	qint64 writeData(const char *, qint64) { return -1; }
+	bool setCache();
+	Field *_field;
+	QByteArray _cache;
+};
+
+#endif // FIELDIO_H

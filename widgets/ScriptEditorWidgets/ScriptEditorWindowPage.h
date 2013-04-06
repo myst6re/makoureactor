@@ -20,7 +20,7 @@
 
 #include <QtGui>
 #include "ScriptEditorView.h"
-#include "TextPreview.h"
+#include "../TextPreview.h"
 
 class ScriptEditorWindowPage : public ScriptEditorView
 {

@@ -15,38 +15,18 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SCRIPTEDITORVIEW
-#define DEF_SCRIPTEDITORVIEW
+#ifndef DEF_PSCOLOR
+#define DEF_PSCOLOR
 
-#include <QtGui>
-#include "../VarOrValueWidget.h"
-#include "core/field/Field.h"
+#include <QtCore>
+#include <QRgb>
+#define COEFF_COLOR	8.2258064516129032258064516129032 // 255/31
 
-class ScriptEditorView : public QWidget
+class PsColor
 {
-	Q_OBJECT
-
 public:
-	ScriptEditorView(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent=0);
-	virtual ~ScriptEditorView();
-
-	virtual Opcode *opcode();
-	virtual void setOpcode(Opcode *opcode);
-	bool isValid() const;
-	virtual void clear();
-signals:
-	void opcodeChanged();
-	
-protected:
-	virtual void build()=0;
-	virtual void showEvent(QShowEvent *e);
-	bool _builded;
-	Field *_field;
-	GrpScript *_grpScript;
-	Script *_script;
-	Opcode *_opcode;
-	int _opcodeID;
-	bool _valid;
+	static quint16 toPsColor(const QRgb &color);
+	static QRgb fromPsColor(quint16 color, bool useAlpha=false);
 };
 
-#endif // DEF_SCRIPTEDITORVIEW
+#endif // DEF_PSCOLOR

@@ -20,7 +20,7 @@
 
 #include <QtGui>
 #include "ApercuBGLabel.h"
-#include "Field.h"
+#include "core/field/Field.h"
 
 class BGDialog : public QDialog
 {

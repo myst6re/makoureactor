@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "ModelManager.h"
-#include "Config.h"
+#include "core/Config.h"
 #include "Data.h"
 
 ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :

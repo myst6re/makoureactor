@@ -19,7 +19,7 @@
 #define VERTEXWIDGET_H
 
 #include <QtGui>
-#include "IdFile.h"
+#include "core/field/IdFile.h"
 
 class VertexWidget : public QWidget
 {

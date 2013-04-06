@@ -19,8 +19,8 @@
 #define MISCWIDGET_H
 
 #include <QtGui>
-#include "InfFile.h"
-#include "Field.h"
+#include "core/field/InfFile.h"
+#include "core/field/Field.h"
 
 class MiscWidget : public QDialog
 {

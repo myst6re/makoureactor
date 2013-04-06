@@ -15,38 +15,14 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SCRIPTEDITORVIEW
-#define DEF_SCRIPTEDITORVIEW
+#include "PsColor.h"
 
-#include <QtGui>
-#include "../VarOrValueWidget.h"
-#include "core/field/Field.h"
-
-class ScriptEditorView : public QWidget
+quint16 PsColor::toPsColor(const QRgb &color)
 {
-	Q_OBJECT
+	return (qRound(qRed(color)/COEFF_COLOR) & 31) | ((qRound(qGreen(color)/COEFF_COLOR) & 31) << 5) | ((qRound(qBlue(color)/COEFF_COLOR) & 31) << 10) | ((qAlpha(color)==255) << 15);
+}
 
-public:
-	ScriptEditorView(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent=0);
-	virtual ~ScriptEditorView();
-
-	virtual Opcode *opcode();
-	virtual void setOpcode(Opcode *opcode);
-	bool isValid() const;
-	virtual void clear();
-signals:
-	void opcodeChanged();
-	
-protected:
-	virtual void build()=0;
-	virtual void showEvent(QShowEvent *e);
-	bool _builded;
-	Field *_field;
-	GrpScript *_grpScript;
-	Script *_script;
-	Opcode *_opcode;
-	int _opcodeID;
-	bool _valid;
-};
-
-#endif // DEF_SCRIPTEDITORVIEW
+QRgb PsColor::fromPsColor(quint16 color, bool useAlpha)
+{
+	return qRgba(qRound((color & 31)*COEFF_COLOR), qRound((color>>5 & 31)*COEFF_COLOR), qRound((color>>10 & 31)*COEFF_COLOR), color == 0 && useAlpha ? 0 : 255);
+}

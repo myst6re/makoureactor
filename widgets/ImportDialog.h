@@ -19,7 +19,7 @@
 #define IMPORTDIALOG_H
 
 #include <QtGui>
-#include "Field.h"
+#include "core/field/Field.h"
 
 class ImportDialog : public QDialog
 {

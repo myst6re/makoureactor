@@ -19,20 +19,20 @@
 #define DEF_WINDOW
 
 #include <QtGui>
-#include "FieldArchive.h"
-#include "VarManager.h"
-#include "TextManager.h"
-#include "BGDialog.h"
-#include "ApercuBG.h"
-#include "Search.h"
-#include "GrpScriptList.h"
-#include "ScriptList.h"
-#include "OpcodeList.h"
-#include "FieldModel.h"
-#include "ModelManager.h"
-#include "WalkmeshManager.h"
-#include "QTaskBarButton.h"
-#include "LgpDialog.h"
+#include "core/field/FieldArchive.h"
+#include "widgets/VarManager.h"
+#include "widgets/TextManager.h"
+#include "widgets/BGDialog.h"
+#include "widgets/ApercuBG.h"
+#include "widgets/Search.h"
+#include "widgets/GrpScriptList.h"
+#include "widgets/ScriptList.h"
+#include "widgets/OpcodeList.h"
+#include "widgets/FieldModel.h"
+#include "widgets/ModelManager.h"
+#include "widgets/WalkmeshManager.h"
+#include "widgets/QTaskBarButton.h"
+#include "widgets/LgpDialog.h"
 
 class Window : public QMainWindow, FieldArchiveIOObserver
 {

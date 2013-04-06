@@ -19,7 +19,7 @@
 #define DEF_SCRIPTLIST
 
 #include <QtGui>
-#include "GrpScript.h"
+#include "core/field/GrpScript.h"
 
 class ScriptList : public QListWidget
 {

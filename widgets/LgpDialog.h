@@ -2,7 +2,7 @@
 #define LGPDIALOG_H
 
 #include <QtGui>
-#include "Lgp.h"
+#include "core/Lgp.h"
 
 class LgpItemModel : public QAbstractItemModel
 {

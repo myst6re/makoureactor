@@ -19,33 +19,16 @@
 #include "FieldPS.h"
 #include "FieldPC.h"
 #include "Data.h"
-#include "Config.h"
+#include "../Config.h"
 
 FieldArchive::FieldArchive() :
 	_io(0)
 {
 }
 
-FieldArchive::FieldArchive(const QString &path, bool isDirectory) :
-	_io(0)
+FieldArchive::FieldArchive(FieldArchiveIO *io) :
+	_io(io)
 {
-	if(isDirectory) {
-		_io = new FieldArchiveIODir(path, this);
-	}
-	else {
-		QString ext = path.mid(path.lastIndexOf('.') + 1).toLower();
-
-		if(ext == "iso" || ext == "bin" || ext == "img") {
-			_io = new FieldArchiveIOIso(path, this);
-		}
-		else {
-			if(ext == "dat") {
-				_io = new FieldArchiveIOFile(path, this);
-			} else if(ext == "lgp") {
-				_io = new FieldArchiveIOLgp(path, this);
-			}
-		}
-	}
 	//	fileWatcher.addPath(path);
 	//	connect(&fileWatcher, SIGNAL(fileChanged(QString)), this, SIGNAL(fileChanged(QString)));
 	//	connect(&fileWatcher, SIGNAL(directoryChanged(QString)), this, SIGNAL(directoryChanged(QString)));
@@ -71,7 +54,7 @@ FieldArchiveIO::ErrorCode FieldArchive::open(FieldArchiveIOObserver *observer)
 	if(fileList.isEmpty())	return FieldArchiveIO::FieldNotFound;
 
 	if(Data::field_names.isEmpty()) {
-		Data::openMaplist(_io->type() == FieldArchiveIO::Lgp);
+		Data::openMaplist(_io->isPC());
 	}
 
 	int fieldID=0;
@@ -129,6 +112,11 @@ int FieldArchive::size() const
 FieldArchiveIO *FieldArchive::io() const
 {
 	return _io;
+}
+
+void FieldArchive::setIO(FieldArchiveIO *io)
+{
+	_io = io;
 }
 
 bool FieldArchive::openField(Field *field, bool dontOptimize)

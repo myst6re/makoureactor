@@ -17,8 +17,8 @@
  ****************************************************************************/
 #include <QApplication>
 #include "Window.h"
-#include "Var.h"
-#include "Config.h"
+#include "core/Var.h"
+#include "core/Config.h"
 #include "Data.h"
 
 int main(int argc, char *argv[])

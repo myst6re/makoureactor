@@ -65,9 +65,9 @@
 
 #include "Delegate.h"
 #include "Data.h"
-#include "Config.h"
-#include "KeyEditorDialog.h"
-#include "AnimEditorDialog.h"
+#include "core/Config.h"
+#include "../KeyEditorDialog.h"
+#include "../AnimEditorDialog.h"
 
 SpinBoxDelegate::SpinBoxDelegate(QObject *parent)
 	: QItemDelegate(parent)

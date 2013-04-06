@@ -20,7 +20,7 @@
 
 #include <QtCore>
 #include "GrpScript.h"
-#include "FF7Text.h"
+#include "../FF7Text.h"
 #include "TutFile.h"
 
 class Section1File

@@ -30,7 +30,7 @@ public:
 	};
 
 	FieldArchive();
-	explicit FieldArchive(const QString &path, bool isDirectory=false);
+	explicit FieldArchive(FieldArchiveIO *io);
 	virtual ~FieldArchive();
 	virtual bool isPC() const=0;
 	inline bool isPS() { return !isPC(); }
@@ -66,6 +66,7 @@ public:
 	virtual FieldArchiveIO *io() const;
 protected:
 	virtual void setSaved();
+	void setIO(FieldArchiveIO *io);
 private:
 	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;

@@ -17,18 +17,18 @@
  ****************************************************************************/
 #include "Window.h"
 #include "Parameters.h"
-#include "GrpScript.h"
-#include "ConfigWindow.h"
-#include "EncounterWidget.h"
-#include "TutWidget.h"
-#include "MiscWidget.h"
-#include "ImportDialog.h"
-#include "MassExportDialog.h"
-#include "MassImportDialog.h"
-#include "Config.h"
+#include "core/field/GrpScript.h"
+#include "widgets/ConfigWindow.h"
+#include "widgets/EncounterWidget.h"
+#include "widgets/TutWidget.h"
+#include "widgets/MiscWidget.h"
+#include "widgets/ImportDialog.h"
+#include "widgets/MassExportDialog.h"
+#include "widgets/MassImportDialog.h"
+#include "core/Config.h"
 #include "Data.h"
-#include "FieldArchivePC.h"
-#include "FieldArchivePS.h"
+#include "core/field/FieldArchivePC.h"
+#include "core/field/FieldArchivePS.h"
 
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
@@ -67,7 +67,7 @@ Window::Window() :
 	menu = menuBar->addMenu(tr("&Fichier"));
 	
 	actionOpen = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Ouvrir..."), this, SLOT(openFile()), QKeySequence("Ctrl+O"));
-	menu->addAction(tr("Ouvrir un &dossier Field (PS)..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
+	menu->addAction(tr("Ouvrir un &dossier..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
 	actionSave = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Enregi&strer"), this, SLOT(save()), QKeySequence("Ctrl+S"));
 	actionSaveAs = menu->addAction(tr("Enre&gistrer Sous..."), this, SLOT(saveAs()), QKeySequence("Shift+Ctrl+S"));
 	actionExport = menu->addAction(tr("&Exporter l'écran courant..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
@@ -440,12 +440,21 @@ void Window::openFile()
 		if(!cheminFic.isEmpty())
 			cheminFic.append("field/");
 	}
+	QStringList filter;
+	filter.append(tr("Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)"));
+	filter.append(tr("Fichiers Lgp (*.lgp)"));
+	filter.append(tr("Fichier DAT (*.DAT)"));
+	filter.append(tr("Fichier Field PC (*)"));
+	filter.append(tr("Image disque (*.bin *.iso *.img)"));
 
-    cheminFic = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"), cheminFic, tr("Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img);;Fichiers Lgp (*.lgp);;Fichier DAT (*.DAT);;Image disque (*.bin *.iso *.img)"));
+	QString selectedFilter = filter.value(Config::value("open_path_selected_filter").toInt(), filter.first());
+
+	cheminFic = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"), cheminFic, filter.join(";;"), &selectedFilter);
 	if(!cheminFic.isNull())	{
 		int index;
 		if((index = cheminFic.lastIndexOf('/')) == -1)	index = cheminFic.size();
 		Config::setValue("open_path", cheminFic.left(index));
+		Config::setValue("open_path_selected_filter", filter.indexOf(selectedFilter));
 		open(cheminFic);
 	}
 }
@@ -453,7 +462,7 @@ void Window::openFile()
 void Window::openDir()
 {
 	QString cheminFic = QFileDialog::getExistingDirectory(this,
-														  tr("Sélectionnez un dossier contenant des fichiers .DAT issus de Final Fantasy VII (PlayStation)"),
+														  tr("Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII"),
 														  Config::value("open_dir_path").toString());
 
 	if(!cheminFic.isNull())	{
@@ -514,23 +523,50 @@ void Window::hideProgression()
 void Window::open(const QString &cheminFic, bool isDir)
 {
 //	qDebug() << "Window::open" << cheminFic << isDir;
-	closeFile();
-	
-	setEnabled(false);
 
 	bool isPS = true;
+	FieldArchiveIO::Type type;
 
-	if(!isDir) {
+	if(isDir) {
+		type = FieldArchiveIO::Dir;
+		QMessageBox question(QMessageBox::Question, tr("Type de fichiers"),
+							 tr("Quel type de fichiers voulez-vous chercher ?\n"
+								" - Les fichiers field PlayStation (\"EXEMPLE.DAT\")\n"
+								" - Les fichiers field PC (\"exemple\")\n"),
+							 QMessageBox::NoButton, this);
+		QAbstractButton *psButton = question.addButton(tr("PS"), QMessageBox::AcceptRole);
+		question.addButton(tr("PC"), QMessageBox::AcceptRole);
+		question.addButton(QMessageBox::Cancel);
+		if(question.exec() != QMessageBox::Accepted) {
+			return;
+		}
+		isPS = question.clickedButton() == psButton;
+	} else {
 		QString ext = cheminFic.mid(cheminFic.lastIndexOf('.') + 1).toLower();
-		if(ext == "lgp") {
-			isPS = false;
+
+		if(ext == "iso" || ext == "bin" || ext == "img") {
+			type = FieldArchiveIO::Iso;
+		} else {
+			if(ext == "dat") {
+				type = FieldArchiveIO::File;
+			} else if(ext == "lgp") {
+				isPS = false;
+				type = FieldArchiveIO::Lgp;
+			} else {
+				isPS = false;
+				type = FieldArchiveIO::File;
+			}
 		}
 	}
 
+	closeFile();
+
+	setEnabled(false);
+
 	if(isPS) {
-		fieldArchive = new FieldArchivePS(cheminFic, isDir);
+		fieldArchive = new FieldArchivePS(cheminFic, type);
 	} else {
-		fieldArchive = new FieldArchivePC(cheminFic, isDir);
+		fieldArchive = new FieldArchivePC(cheminFic, type);
 	}
 
 	setCursor(Qt::WaitCursor);
@@ -566,7 +602,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 		out = tr("Impossible de copier le fichier");
 		break;
 	case FieldArchiveIO::Invalid:
-		out = tr("L'archive est invalide");
+		out = tr("Le fichier est invalide");
 		break;
 	case FieldArchiveIO::NotImplemented:
 		out = tr("Cette erreur ne devrais pas s'afficher, merci de le signaler");
@@ -622,7 +658,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 		actionMassExport->setEnabled(true);
 		actionMassImport->setEnabled(true);
 		actionImport->setEnabled(true);
-		if(fieldArchive->io()->type() == FieldArchiveIO::Lgp
+		if(fieldArchive->io()->isPC()
 				/* || fieldArchive->io()->type() == FieldArchiveIO::Iso*/) {
 			actionModels->setEnabled(true);
 		}
@@ -633,7 +669,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 	actionSaveAs->setEnabled(true);
 	actionClose->setEnabled(true);
 
-	fieldArchive->searchAll();
+//	fieldArchive->searchAll();
 //	qDebug() << "/Window::open" << cheminFic << isDir;
 }
 
@@ -1011,7 +1047,7 @@ void Window::exporter()
 
 	name = fieldList->selectedItems().first()->text(0);
 
-	if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
+	if(fieldArchive->io()->isPC()) {
 		types = fieldLzs+";;"+fieldDec;
 	} else {
 		types = dat;
@@ -1132,7 +1168,7 @@ void Window::importer()
 		   << tr("Fichier DAT décompressé (*)");
 
 	name = fieldList->selectedItems().first()->text(0);
-	if(fieldArchive->io()->type() != FieldArchiveIO::Lgp)
+	if(fieldArchive->io()->isPS())
 		name = name.toUpper();
 
 	QString path = Config::value("importPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("importPath").toString()+"/";
@@ -1141,8 +1177,8 @@ void Window::importer()
 
 	bool isDat = selectedFilter == filter.at(1) || selectedFilter == filter.at(3);
 
-	ImportDialog dialog((isDat && fieldArchive->io()->type() != FieldArchiveIO::Lgp)
-						|| (!isDat && fieldArchive->io()->type() == FieldArchiveIO::Lgp), isDat, this);
+	ImportDialog dialog((isDat && fieldArchive->io()->isPS())
+						|| (!isDat && fieldArchive->io()->isPC()), isDat, this);
 	if(dialog.exec() != QDialog::Accepted) {
 		return;
 	}

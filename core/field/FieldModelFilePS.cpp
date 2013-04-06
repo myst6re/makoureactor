@@ -20,7 +20,7 @@
 #include "FieldModelPartPS.h"
 #include "FieldModelLoaderPS.h"
 #include "TdbFile.h"
-#include "Palette.h"
+#include "../PsColor.h"
 #include "FieldPS.h"
 
 FieldModelFilePS::FieldModelFilePS() :

@@ -16,11 +16,9 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldPS.h"
-#include "FieldArchiveIO.h"
-#include "Palette.h"
-#include "LZS.h"
-#include "Config.h"
 #include "BackgroundFilePS.h"
+#include "../LZS.h"
+#include "../Config.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
 	Field(name, io)

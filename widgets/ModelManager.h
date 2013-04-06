@@ -19,7 +19,7 @@
 #define MODELMANAGER_H
 
 #include <QtGui>
-#include "Field.h"
+#include "core/field/Field.h"
 #include "ColorDisplay.h"
 #include "FieldModel.h"
 

@@ -16,8 +16,8 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Data.h"
-#include "Config.h"
-#include "LZS.h"
+#include "core/Config.h"
+#include "core/LZS.h"
 #ifdef Q_WS_WIN
 #include <windef.h>
 #include <winbase.h>

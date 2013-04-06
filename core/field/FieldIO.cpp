@@ -15,32 +15,48 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "FieldArchivePS.h"
+#include "FieldIO.h"
+#include "Field.h"
 
-FieldArchivePS::FieldArchivePS() :
-	FieldArchive()
+FieldSaveIO::FieldSaveIO(Field *field, QObject *parent) :
+	QIODevice(parent), _field(field)
 {
 }
 
-FieldArchivePS::FieldArchivePS(const QString &path, FieldArchiveIO::Type type) :
-	FieldArchive()
+void FieldSaveIO::close()
 {
-	switch(type) {
-	case FieldArchiveIO::Dir:
-		setIO(new FieldArchiveIOPSDir(path, this));
-		break;
-	case FieldArchiveIO::Iso:
-		setIO(new FieldArchiveIOPSIso(path, this));
-		break;
-	case FieldArchiveIO::File:
-		setIO(new FieldArchiveIOPSFile(path, this));
-		break;
-	default:
-		break;
+	_cache.clear();
+	QIODevice::close();
+}
+
+qint64 FieldSaveIO::readData(char *data, qint64 maxSize)
+{
+	if(setCache()) {
+		if(pos() < _cache.size()) {
+			const char *constData = _cache.constData();
+			qint64 r = qMin(maxSize, _cache.size() - pos());
+			if(r > 0) {
+				memcpy(data, constData + pos(), r);
+				return r;
+			} else if(r == 0) {
+				return 0;
+			} else {
+				return -1;
+			}
+		} else {
+			return 0;
+		}
 	}
+	return -1;
 }
 
-FieldArchiveIOPS *FieldArchivePS::io() const
+bool FieldSaveIO::setCache()
 {
-	return (FieldArchiveIOPS *)FieldArchive::io();
+	if(_cache.isEmpty()) {
+		if(!_field->save(_cache, true)) {
+			_cache.clear();
+			return false;
+		}
+	}
+	return true;
 }

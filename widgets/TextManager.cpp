@@ -16,9 +16,9 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TextManager.h"
-#include "FF7Text.h"
+#include "core/FF7Text.h"
 #include "TextHighlighter.h"
-#include "Config.h"
+#include "core/Config.h"
 #include "Data.h"
 
 TextManager::TextManager(QWidget *parent) :

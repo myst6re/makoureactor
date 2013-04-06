@@ -1,29 +1,27 @@
+/****************************************************************************
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ **
+ ** This program is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ****************************************************************************/
 #ifndef FIELDARCHIVEIO_H
 #define FIELDARCHIVEIO_H
 
 #include <QtCore>
-#include "QLockedFile.h"
-#include "IsoArchive.h"
-#include "Lgp.h"
 
 class FieldArchive;
-class FieldArchivePS;
-class FieldArchivePC;
 class Field;
-
-class FieldIO : public QIODevice
-{
-public:
-	FieldIO(Field *field, QObject *parent=0);
-	virtual void close();
-protected:
-	virtual qint64 readData(char *data, qint64 maxSize);
-private:
-	qint64 writeData(const char *, qint64) { return -1; }
-	bool setCache();
-	Field *_field;
-	QByteArray _cache;
-};
 
 struct FieldArchiveIOObserver
 {
@@ -45,9 +43,11 @@ public:
 
 	FieldArchiveIO(FieldArchive *fieldArchive);
 	virtual ~FieldArchiveIO();
+	virtual bool isPS() const=0;
+	inline bool isPC() const { return !isPS(); }
 
 	QByteArray fieldData(Field *field, bool unlzs=true);
-	QByteArray fileData(const QString &fileName, bool unlzs=true);
+	QByteArray fileData(const QString &fileName, bool unlzs=true, bool isLzsFile=true);
 
 	bool fieldDataIsCached(Field *field) const;
 	virtual void clearCachedData();
@@ -75,158 +75,6 @@ private:
 	FieldArchive *_fieldArchive;
 	static QByteArray fieldDataCache, mimDataCache, modelDataCache;
 	static Field *fieldCache, *mimCache, *modelCache;
-};
-
-class FieldArchiveIOPC : public FieldArchiveIO
-{
-public:
-	FieldArchiveIOPC(FieldArchive *fieldArchive) :
-		FieldArchiveIO(fieldArchive) {}
-	// Removing virtual
-	inline void clearCachedData() {
-		return FieldArchiveIO::clearCachedData();
-	}
-protected:
-	FieldArchivePC *fieldArchive() {
-		return (FieldArchivePC *)FieldArchiveIO::fieldArchive();
-	}
-};
-
-class FieldArchiveIOPS : public FieldArchiveIO
-{
-public:
-	FieldArchiveIOPS(FieldArchive *fieldArchive) :
-		FieldArchiveIO(fieldArchive) {}
-
-	QByteArray mimData(Field *field, bool unlzs=true);
-	QByteArray modelData(Field *field, bool unlzs=true);
-
-	bool mimDataIsCached(Field *field) const;
-	bool modelDataIsCached(Field *field) const;
-	void clearCachedData();
-protected:
-	virtual QByteArray mimData2(Field *field, bool unlzs)=0;
-	virtual QByteArray modelData2(Field *field, bool unlzs)=0;
-
-	FieldArchivePS *fieldArchive() {
-		return (FieldArchivePS *)FieldArchiveIO::fieldArchive();
-	}
-private:
-	static QByteArray mimDataCache, modelDataCache;
-	static Field *mimCache, *modelCache;
-};
-
-class FieldArchiveIOLgp : public FieldArchiveIOPC, LgpObserver
-{
-public:
-	FieldArchiveIOLgp(const QString &path, FieldArchive *fieldArchive);
-	inline Type type() const { return Lgp; }
-
-	void close();
-
-	QString path() const;
-
-	void *device();
-
-	void setObserverValue(int value) {
-		if(observer)	observer->setObserverValue(value);
-	}
-	void setObserverMaximum(unsigned int max) {
-		if(observer)	observer->setObserverMaximum(max);
-	}
-	bool observerWasCanceled() const {
-		return observer && observer->observerWasCanceled();
-	}
-private:
-	QByteArray fieldData2(Field *field, bool unlzs);
-	QByteArray fileData2(const QString &fileName);
-
-	ErrorCode open2(FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
-
-	::Lgp _lgp;
-	FieldArchiveIOObserver *observer;
-};
-
-class FieldArchiveIOFile : public FieldArchiveIOPS
-{
-public:
-	FieldArchiveIOFile(const QString &path, FieldArchive *fieldArchive);
-	inline Type type() const { return File; }
-
-	void close();
-	ErrorCode save(const QString &path=QString());
-
-	QString path() const;
-
-	void *device();
-private:
-	QByteArray fieldData2(Field *field, bool unlzs);
-	QByteArray mimData2(Field *field, bool unlzs);
-	QByteArray modelData2(Field *field, bool unlzs);
-	QByteArray fileData2(const QString &fileName);
-
-	ErrorCode open2(FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
-
-	QLockedFile fic;
-};
-
-class FieldArchiveIOIso : public FieldArchiveIOPS, IsoControl
-{
-public:
-	FieldArchiveIOIso(const QString &path, FieldArchive *fieldArchive);
-	inline Type type() const { return Iso; }
-
-	ErrorCode open(QList<Field *> &fields);
-	ErrorCode save(const QString &path=QString());
-
-	QString path() const;
-
-	void *device();
-
-	void setIsoOut(int value) {
-		if(observer)	observer->setObserverValue(value);
-	}
-private:
-	QByteArray fieldData2(Field *field, bool unlzs);
-	QByteArray mimData2(Field *field, bool unlzs);
-	QByteArray modelData2(Field *field, bool unlzs);
-	QByteArray fileData2(const QString &fileName);
-
-	ErrorCode open2(FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
-
-	static QByteArray updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory);
-
-	IsoArchive iso;
-	IsoDirectory *isoFieldDirectory;
-	FieldArchiveIOObserver *observer;
-};
-
-class FieldArchiveIODir : public FieldArchiveIOPS
-{
-public:
-	FieldArchiveIODir(const QString &path, FieldArchive *fieldArchive);
-	inline Type type() const { return Dir; }
-
-	ErrorCode open(QList<Field *> &fields);
-	ErrorCode save(const QString &path=QString());
-
-	QString path() const;
-	inline bool hasName() const { return false; }
-
-	void *device();
-private:
-	QByteArray fieldData2(Field *field, bool unlzs);
-	QByteArray mimData2(Field *field, bool unlzs);
-	QByteArray modelData2(Field *field, bool unlzs);
-	QByteArray fileData2(const QString &fileName);
-
-	ErrorCode open2(FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
-
-	QDir dir;
 };
 
 #endif // FIELDARCHIVEIO_H

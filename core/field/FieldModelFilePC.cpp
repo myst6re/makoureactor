@@ -19,7 +19,7 @@
 #include "Data.h"
 #include "Palette.h"
 #include "FieldModelPartPC.h"
-#include "TexFile.h"
+#include "../TexFile.h"
 
 FieldModelFilePC::FieldModelFilePC() :
 	FieldModelFile()

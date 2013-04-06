@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "ConfigWindow.h"
 #include "Data.h"
-#include "Config.h"
+#include "core/Config.h"
 #include "TextPreview.h"
 
 ConfigWindow::ConfigWindow(QWidget *parent)

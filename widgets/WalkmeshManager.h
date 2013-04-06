@@ -19,7 +19,7 @@
 #define WALKMESHMANAGER_H
 
 #include <QtGui>
-#include "Field.h"
+#include "core/field/Field.h"
 #include "WalkmeshWidget.h"
 #include "VertexWidget.h"
 #include "HexLineEdit.h"

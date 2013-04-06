@@ -19,8 +19,8 @@
 #define DEF_OPCODELIST
 
 #include <QtGui>
-#include "Field.h"
-#include "Opcode.h"
+#include "core/field/Field.h"
+#include "core/field/Opcode.h"
 
 class OpcodeList : public QTreeWidget
 {

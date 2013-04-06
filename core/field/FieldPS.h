@@ -22,7 +22,7 @@
 #include "Field.h"
 #include "FieldModelLoaderPS.h"
 #include "FieldModelFilePS.h"
-#include "FieldArchiveIO.h"
+#include "FieldArchiveIOPS.h"
 
 class FieldPS : public Field
 {

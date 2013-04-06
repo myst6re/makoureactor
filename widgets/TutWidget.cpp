@@ -18,7 +18,7 @@
 #include "TutWidget.h"
 #include "TextHighlighter.h"
 #include "Data.h"
-#include "Config.h"
+#include "core/Config.h"
 
 TutWidget::TutWidget(Field *field, TutFile *tut, TutFile *tutPC, QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), field(field), tut(tut), tutPC(tutPC), tutCpy(*tut), textChanged(false)

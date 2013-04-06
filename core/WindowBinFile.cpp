@@ -1,3 +1,20 @@
+/****************************************************************************
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ **
+ ** This program is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ****************************************************************************/
 #include "WindowBinFile.h"
 #include "GZIP.h"
 
@@ -71,6 +88,16 @@ bool WindowBinFile::isValid() const
 	return !_charWidth.isEmpty();
 }
 
+int WindowBinFile::charCount() const
+{
+	return _charWidth.size();
+}
+
+int WindowBinFile::tableCount() const
+{
+	return 1;
+}
+
 bool WindowBinFile::openFont(const QByteArray &data)
 {
 	_font = TimFile(data);
@@ -114,4 +141,14 @@ quint8 WindowBinFile::charWidth(quint8 table, quint8 id) const
 quint8 WindowBinFile::charLeftPadding(quint8 table, quint8 id) const
 {
 	return LEFT_PADD(charInfo(table, id));
+}
+
+void WindowBinFile::setCharWidth(quint8 table, quint8 id, quint8 width)
+{
+	setCharInfo(table, id, (charInfo(table, id) & 0xE0) | (width & 0x1F));
+}
+
+void WindowBinFile::setCharLeftPadding(quint8 table, quint8 id, quint8 padding)
+{
+	setCharInfo(table, id, (padding & 0xE0) | (charInfo(table, id) & 0x1F));
 }

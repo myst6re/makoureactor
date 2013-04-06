@@ -19,7 +19,7 @@
 #define TEXTPREVIEW_H
 
 #include <QtGui>
-#include "Opcode.h"
+#include "core/field/Opcode.h"
 
 #define NOWIN		255
 #define DARKGREY	0

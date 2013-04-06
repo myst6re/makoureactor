@@ -22,15 +22,22 @@ public:
 	bool open(const QString &path);
 	bool open(const QByteArray &data);
 	bool isValid() const;
+	int charCount() const;
+	int tableCount() const;
 	QImage letter(quint8 table, quint8 id) const;
 	void setFontColor(FontColor color);
 	quint8 charWidth(quint8 table, quint8 id) const;
 	quint8 charLeftPadding(quint8 table, quint8 id) const;
+	void setCharWidth(quint8 table, quint8 id, quint8 width);
+	void setCharLeftPadding(quint8 table, quint8 id, quint8 padding);
 private:
 	bool openFont(const QByteArray &data);
 	bool openFontSize(const QByteArray &data);
 	inline quint8 charInfo(quint8 table, quint8 id) const {
 		return _charWidth.at(table * 217 + id);
+	}
+	inline void setCharInfo(quint8 table, quint8 id, quint8 info) {
+		_charWidth.replace(table * 217 + id, info);
 	}
 
 	QVector<quint8> _charWidth;

@@ -19,7 +19,7 @@
 #define MASSEXPORTDIALOG_H
 
 #include <QtGui>
-#include "FieldArchive.h"
+#include "core/field/FieldArchive.h"
 #include "FormatSelectionWidget.h"
 
 class MassExportDialog : public QDialog

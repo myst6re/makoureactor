@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "Search.h"
 #include "Window.h"
-#include "Config.h"
+#include "core/Config.h"
 #include "Data.h"
 
 Search::Search(QWidget *parent) :

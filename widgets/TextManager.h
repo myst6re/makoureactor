@@ -18,7 +18,7 @@
 #ifndef DEF_TEXTMANAGER
 #define DEF_TEXTMANAGER
 
-#include "Field.h"
+#include "core/field/Field.h"
 #include "TextPreview.h"
 
 class TextManager : public QDialog

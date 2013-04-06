@@ -25,9 +25,9 @@
 #else
 #include <GL/glu.h>
 #endif
-#include "IdFile.h"
-#include "CaFile.h"
-#include "InfFile.h"
+#include "core/field/IdFile.h"
+#include "core/field/CaFile.h"
+#include "core/field/InfFile.h"
 
 class WalkmeshWidget : public QGLWidget
 {

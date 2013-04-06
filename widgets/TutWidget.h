@@ -19,8 +19,8 @@
 #define TUTWIDGET_H
 
 #include <QtGui>
-#include "Field.h"
-#include "TutFile.h"
+#include "core/field/Field.h"
+#include "core/field/TutFile.h"
 
 class TutWidget : public QDialog
 {

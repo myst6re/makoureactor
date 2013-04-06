@@ -16,9 +16,8 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TutFile.h"
-#include "Config.h"
-#include "FF7Text.h"
-#include "TextHighlighter.h"
+#include "../Config.h"
+#include "../FF7Text.h"
 
 TutFile::TutFile()
 	: _isOpen(false), _isModified(false), tutType(false)

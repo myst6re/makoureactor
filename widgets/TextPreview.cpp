@@ -16,9 +16,9 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TextPreview.h"
-#include "FF7Text.h"
+#include "core/FF7Text.h"
 #include "Data.h"
-#include "Config.h"
+#include "core/Config.h"
 
 QTimer TextPreview::timer;
 bool TextPreview::curFrame = true;
