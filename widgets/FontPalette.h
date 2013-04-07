@@ -15,49 +15,46 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TUTWIDGET_H
-#define TUTWIDGET_H
+#ifndef FONTPALETTE_H
+#define FONTPALETTE_H
 
 #include <QtGui>
-#include "core/field/Field.h"
-#include "core/field/TutFileStandard.h"
-#include "core/field/TutFilePC.h"
+#include "core/WindowBinFile.h"
 
-class TutWidget : public QDialog
+#define CELL_SIZE		16
+#define BORDER_SIZE		1
+
+class FontPalette : public QWidget
 {
 	Q_OBJECT
 public:
-	TutWidget(Field *field, TutFileStandard *tut, TutFilePC *tutPC, QWidget *parent=0);
-private slots:
-	void changeVersion(bool isPS);
-	void showText(QListWidgetItem *item, QListWidgetItem *lastItem);
-	void setTextChanged();
-	void add();
-	void del();
-	void exportation();
-	void importation();
-private:
-	QWidget *buildTutPage();
-	QWidget *buildSoundPage();
-	void fillList();
-	void saveText(QListWidgetItem *item);
-
-	QStackedWidget *stackedWidget;
-	QRadioButton *versionPS;
-	QListWidget *list;
-	QPushButton *exportButton, *importButton;
-	QPlainTextEdit *textEdit;
-	QLabel *akaoDesc;
-	QComboBox *akaoIDList;
-	Field *field;
-	TutFile *currentTut;
-	TutFileStandard *tut, tutCpy;
-	TutFilePC *tutPC, tutPCCpy;
-	bool textChanged;
-	QSet<quint8> usedTuts;
+	explicit FontPalette(QWidget *parent=0);
+	virtual ~FontPalette();
+	void setReadOnly(bool ro);
+	void setWindowBinFile(WindowBinFile *windowBinFile);
+	void setCurrentPalette(WindowBinFile::FontColor palette);
+	QRgb currentColor() const;
+public slots:
+	void setColor(int id, QRgb color);
+	void clear();
+	void reset();
+signals:
+	void colorChanged(int id);
 protected:
-	void accept();
-	void reject();
+	virtual QSize sizeHint() const;
+	virtual QSize minimumSizeHint() const;
+	virtual void paintEvent(QPaintEvent *e);
+	virtual void mousePressEvent(QMouseEvent *e);
+private:
+	void setColorCount(quint8 colorCount);
+	void setCurrentColor(int id);
+	int getColorId(const QPoint &pos);
+	quint8 colorCount;
+	int _currentColor;
+	WindowBinFile::FontColor _currentPalette;
+	QVector<QRgb> palette, copyPalette;
+	bool readOnly;
+	WindowBinFile *_windowBinFile;
 };
 
-#endif // TUTWIDGET_H
+#endif // FONTPALETTE_H

@@ -25,12 +25,32 @@ class Palette
 {
 public:
 	Palette();
-	explicit Palette(const char *palette);// PS
-	Palette(const char *palette, quint8 transparency);// PC
-	bool transparency;
-	QList<QRgb> couleurs;
-//	QList<bool> masks;
-	QList<bool> isZero;
+	virtual bool notZero(quint8 index) const=0;
+	QRgb color(int index) const;
+	const QList<QRgb> &colors() const;
+protected:
+	QList<QRgb> _colors;
+//	QList<bool> _masks;
+};
+
+class PalettePC : public Palette
+{
+public:
+	PalettePC();
+	PalettePC(const char *palette, quint8 transparency);
+	bool notZero(quint8 index) const;
+private:
+	bool _transparency;
+};
+
+class PalettePS : public Palette
+{
+public:
+	PalettePS();
+	explicit PalettePS(const char *palette);
+	bool notZero(quint8 index) const;
+private:
+	QList<bool> _isZero;
 };
 
 #endif

@@ -19,6 +19,7 @@ public:
 	};
 
 	WindowBinFile();
+	void clear();
 	bool open(const QString &path);
 	bool open(const QByteArray &data);
 	bool isValid() const;

@@ -24,26 +24,29 @@ class TutFile
 {
 public:
 	TutFile();
-	explicit TutFile(const QByteArray &data, bool tutType=false);
 	bool isOpen() const;
 	bool isModified() const;
 	void setModified(bool);
-	bool open(const QByteArray &data, bool tutType=false);
+	bool open(const QByteArray &data);
 	QByteArray save(QByteArray &toc, quint32 firstPos=0) const;
 	int size() const;
-	bool hasTut() const;
-	bool isTut(int tutID) const;
 	void removeTut(int tutID);
 	bool insertTut(int tutID);
-	bool insertAkao(int tutID, const QString &akaoPath);
 	const QByteArray &data(int tutID) const;
 	void setData(int tutID, const QByteArray &data);
-	QString parseScripts(int tutID) const;
-	void parseText(int tutID, const QString &tuto);
-	int akaoID(int tutID) const;
-	void setAkaoID(int tutID, quint16 akaoID);
+	bool insertData(int tutID, const QByteArray &data);
+	bool insertData(int tutID, const QString &path);
+	const QList<QByteArray> &dataList() const;
+	virtual bool isTut(int tutID) const;
+	virtual QString parseScripts(int tutID) const;
+	virtual void parseText(int tutID, const QString &tuto);
+protected:
+	virtual QList<quint32> openPositions(const QByteArray &data) const=0;
+	virtual QByteArray save2(QByteArray &toc, quint32 firstPos) const=0;
+	virtual int maxTutCount() const=0;
+	QByteArray &dataRef(int tutID);
 private:
-	bool _isOpen, _isModified, tutType;
+	bool _isOpen, _isModified;
 	QList<QByteArray> tutos;
 };
 

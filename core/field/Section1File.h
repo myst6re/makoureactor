@@ -21,7 +21,7 @@
 #include <QtCore>
 #include "GrpScript.h"
 #include "../FF7Text.h"
-#include "TutFile.h"
+#include "TutFileStandard.h"
 
 class Section1File
 {
@@ -79,8 +79,8 @@ public:
 	quint16 scale() const;
 	void setScale(quint16 scale);
 
-	TutFile *tut() const;
-	void setTut(TutFile *tut);
+	TutFileStandard *tut() const;
+	void setTut(TutFileStandard *tut);
 private:
 	bool modified, opened;
 
@@ -90,7 +90,7 @@ private:
 
 	QList<GrpScript *> _grpScripts;
 	QList<FF7Text *> _texts;
-	TutFile *_tut;
+	TutFileStandard *_tut;
 };
 
 #endif // SECTION1FILE_H

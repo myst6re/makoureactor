@@ -207,7 +207,7 @@ void FieldArchive::searchAll()
 					}*/
 				}
 			}
-			/*TutFile *tut = field->tutosAndSounds();
+			/*TutFileStandard *tut = field->tutosAndSounds();
 			if(tut->isOpen()) {
 				deb.write(QString("=== %1 ===\n").arg(field->name()).toLatin1());
 				for(int j=0; j<tut->size(); ++j) {
@@ -564,7 +564,7 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 
 				Field *f = field(fieldID);
 				if(f) {
-					TutFile *akaoList = f->tutosAndSounds();
+					TutFileStandard *akaoList = f->tutosAndSounds();
 					if(akaoList->isOpen()) {
 						int akaoCount = akaoList->size();
 						for(int i=0 ; i<akaoCount ; ++i) {

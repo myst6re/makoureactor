@@ -25,6 +25,7 @@
 #include "widgets/ImportDialog.h"
 #include "widgets/MassExportDialog.h"
 #include "widgets/MassImportDialog.h"
+#include "widgets/FontManager.h"
 #include "core/Config.h"
 #include "Data.h"
 #include "core/field/FieldArchivePC.h"
@@ -91,6 +92,8 @@ Window::Window() :
 	menu->addAction(tr("&Zones..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
 	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("&Divers..."), this, SLOT(miscManager()));
+	menu->addSeparator();
+	menu->addAction(tr("&Police de caractères"), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
 
 	menu = menuBar->addMenu(tr("&Paramètres"));
 
@@ -1316,7 +1319,8 @@ void Window::encounterManager()
 void Window::tutManager()
 {
 	if(field) {
-		TutFile *tut = field->tutosAndSounds(), *tutPC = NULL;
+		TutFileStandard *tut = field->tutosAndSounds();
+		TutFilePC *tutPC = NULL;
 		if(tut->isOpen()) {
 			if(fieldArchive->isPC()) {
 				tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
@@ -1393,6 +1397,12 @@ void Window::archiveManager()
 		LgpDialog dialog((Lgp *)fieldArchive->io()->device(), this);
 		dialog.exec();
 	}
+}
+
+void Window::fontManager()
+{
+	FontManager dialog(this);
+	dialog.exec();
 }
 
 void Window::config()

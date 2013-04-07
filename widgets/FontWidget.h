@@ -15,49 +15,50 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TUTWIDGET_H
-#define TUTWIDGET_H
+#ifndef FONTWIDGET_H
+#define FONTWIDGET_H
 
 #include <QtGui>
-#include "core/field/Field.h"
-#include "core/field/TutFileStandard.h"
-#include "core/field/TutFilePC.h"
+#include "FontGrid.h"
+#include "FontLetter.h"
+#include "FontPalette.h"
+#include "core/FF7Font.h"
 
-class TutWidget : public QDialog
+class FontWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	TutWidget(Field *field, TutFileStandard *tut, TutFilePC *tutPC, QWidget *parent=0);
+	FontWidget(QWidget *parent=0);
+	void clear();
+	void setFF7Font(FF7Font *ff7Font);
+	void setWindowBinFile(WindowBinFile *windowBinFile);
+	void setReadOnly(bool ro);
+signals:
+	void letterEdited();
+public slots:
+	void setColor(int i);
+	void setTable(int i);
+	void setLetter(int i);
+	void editLetter(const QString &letter);
+	void exportFont();
+	void importFont();
+	void reset();
+	void resetLetter();
 private slots:
-	void changeVersion(bool isPS);
-	void showText(QListWidgetItem *item, QListWidgetItem *lastItem);
-	void setTextChanged();
-	void add();
-	void del();
-	void exportation();
-	void importation();
+	void setModified();
 private:
-	QWidget *buildTutPage();
-	QWidget *buildSoundPage();
-	void fillList();
-	void saveText(QListWidgetItem *item);
-
-	QStackedWidget *stackedWidget;
-	QRadioButton *versionPS;
-	QListWidget *list;
+	FontGrid *fontGrid;
 	QPushButton *exportButton, *importButton;
-	QPlainTextEdit *textEdit;
-	QLabel *akaoDesc;
-	QComboBox *akaoIDList;
-	Field *field;
-	TutFile *currentTut;
-	TutFileStandard *tut, tutCpy;
-	TutFilePC *tutPC, tutPCCpy;
-	bool textChanged;
-	QSet<quint8> usedTuts;
+	FontLetter *fontLetter;
+	FontPalette *fontPalette;
+	QComboBox *selectPal, *selectTable;
+	QPushButton *fromImage1, *fromImage2;
+	QLineEdit *textLetter;
+	QPushButton *resetButton2;
+	FF7Font *ff7Font;
 protected:
-	void accept();
-	void reject();
+	void focusInEvent(QFocusEvent *);
+
 };
 
-#endif // TUTWIDGET_H
+#endif // FONTWIDGET_H

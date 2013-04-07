@@ -73,7 +73,7 @@ public:
 
 	Section1File *scriptsAndTexts(bool open=true);
 	EncounterFile *encounter(bool open=true);
-	TutFile *tutosAndSounds(bool open=true);
+	TutFileStandard *tutosAndSounds(bool open=true);
 	IdFile *walkmesh(bool open=true);
 	CaFile *camera(bool open=true);
 	InfFile *inf(bool open=true);
@@ -97,7 +97,7 @@ protected:
 
 	Section1File *section1;
 	EncounterFile *_encounter;
-	TutFile *_tut;
+	TutFileStandard *_tut;
 	IdFile *id;
 	CaFile *ca;
 	InfFile *_inf;

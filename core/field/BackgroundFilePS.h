@@ -22,7 +22,7 @@
 
 //Sizeof : 8
 typedef struct {
-	qint16 cibleX, cibleY;
+	qint16 dstX, dstY;
 	quint8 srcX, srcY;
 	unsigned ZZ1:6;
 	unsigned palID:4;
@@ -34,7 +34,7 @@ typedef struct {
 	unsigned page_x:4;
 	unsigned page_y:1;
 	unsigned typeTrans:2;//transparence n°3
-	unsigned deph:2;
+	unsigned depth:2;
 	unsigned ZZZ:7;
 } layer2Tile;
 
@@ -67,6 +67,14 @@ public:
 
 	QPixmap openBackground(const QByteArray &datDataDec, const QByteArray &mimDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 	bool usedParams(const QByteArray &datDataDec, QHash<quint8, quint8> &usedParams, bool *layerExists);
+protected:
+	quint16 textureWidth(const Tile &tile) const;
+	quint8 depth(const Tile &tile) const;
+	quint32 originInData(const Tile &tile) const;
+	QRgb directColor(quint16 color) const;
+private:
+	static QList<Palette *> openPalettes(const QByteArray &data);
+	static MIM headerPal, headerImg, headerEffect;
 };
 
 #endif // BACKGROUNDFILEPS_H

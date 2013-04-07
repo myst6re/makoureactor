@@ -38,6 +38,11 @@ HEADERS += \
     widgets/HexLineEdit.h \
     widgets/GrpScriptList.h \
 	widgets/FormatSelectionWidget.h \
+	widgets/FontWidget.h \
+	widgets/FontPalette.h \
+	widgets/FontLetter.h \
+	widgets/FontGrid.h \
+	widgets/FontDisplay.h \
     widgets/FieldModel.h \
     widgets/EncounterWidget.h \
     widgets/EncounterTableWidget.h \
@@ -66,6 +71,7 @@ HEADERS += \
     core/IsoArchive.h \
     core/GZIP.h \
 	core/FF7Text.h \
+	core/FF7Font.h \
     core/Config.h \
     core/field/TutFile.h \
     core/field/TdbFile.h \
@@ -99,7 +105,10 @@ HEADERS += \
     core/field/BackgroundFilePS.h \
     core/field/BackgroundFilePC.h \
 	core/field/BackgroundFile.h \
-    core/field/FieldIO.h
+    core/field/FieldIO.h \
+    widgets/FontManager.h \
+    core/field/TutFilePC.h \
+    core/field/TutFileStandard.h
 
 SOURCES += \
     Window.cpp \
@@ -132,6 +141,11 @@ SOURCES += \
     widgets/HexLineEdit.cpp \
     widgets/GrpScriptList.cpp \
 	widgets/FormatSelectionWidget.cpp \
+	widgets/FontWidget.cpp \
+	widgets/FontPalette.cpp \
+	widgets/FontLetter.cpp \
+	widgets/FontGrid.cpp \
+	widgets/FontDisplay.cpp \
     widgets/FieldModel.cpp \
     widgets/EncounterWidget.cpp \
     widgets/EncounterTableWidget.cpp \
@@ -160,6 +174,7 @@ SOURCES += \
     core/IsoArchive.cpp \
     core/GZIP.cpp \
 	core/FF7Text.cpp \
+	core/FF7Font.cpp \
     core/Config.cpp \
     core/field/TutFile.cpp \
     core/field/TdbFile.cpp \
@@ -193,7 +208,10 @@ SOURCES += \
     core/field/BackgroundFilePS.cpp \
     core/field/BackgroundFilePC.cpp \
 	core/field/BackgroundFile.cpp \
-    core/field/FieldIO.cpp
+    core/field/FieldIO.cpp \
+    widgets/FontManager.cpp \
+    core/field/TutFilePC.cpp \
+    core/field/TutFileStandard.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

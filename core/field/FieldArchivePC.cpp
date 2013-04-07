@@ -58,9 +58,9 @@ void FieldArchivePC::clear()
 	FieldArchive::clear();
 }
 
-TutFile *FieldArchivePC::tut(const QString &name)
+TutFilePC *FieldArchivePC::tut(const QString &name)
 {
-	QMapIterator<QString, TutFile *> it(_tuts);
+	QMapIterator<QString, TutFilePC *> it(_tuts);
 
 	while(it.hasNext()) {
 		it.next();
@@ -68,11 +68,15 @@ TutFile *FieldArchivePC::tut(const QString &name)
 		const QString &tutName = it.key();
 
 		if(name.startsWith(tutName, Qt::CaseInsensitive)) {
-			TutFile *tutFile = it.value();
+			TutFilePC *tutFile = it.value();
 			if(tutFile == NULL) {
 				QByteArray data = io()->fileData(tutName + ".tut", false, false);
 				if(!data.isEmpty()) {
-					tutFile = new TutFile(data, true);
+					tutFile = new TutFilePC();
+					if(!tutFile->open(data)) {
+						delete tutFile;
+						return NULL;
+					}
 					_tuts.insert(tutName, tutFile);
 					return tutFile;
 				} else {
@@ -87,7 +91,7 @@ TutFile *FieldArchivePC::tut(const QString &name)
 	return NULL;
 }
 
-const QMap<QString, TutFile *> &FieldArchivePC::tuts() const
+const QMap<QString, TutFilePC *> &FieldArchivePC::tuts() const
 {
 	return _tuts;
 }

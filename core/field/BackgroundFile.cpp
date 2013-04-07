@@ -25,6 +25,102 @@ BackgroundFile::~BackgroundFile()
 {
 }
 
+void BackgroundFile::area(const QMultiMap<qint16, Tile> &tiles,
+						  quint16 &minWidth, quint16 &minHeight,
+						  int &width, int &height)
+{
+	quint16 maxWidth=0, maxHeight=0;
+	minWidth = minHeight = 0;
+
+	foreach(const Tile &tile, tiles) {
+		quint8 toAdd = tile.size - 16;
+		if(tile.dstX >= 0 && tile.dstX+toAdd > maxWidth)
+			maxWidth = tile.dstX+toAdd;
+		else if(tile.dstX < 0 && -tile.dstX > minWidth)
+			minWidth = -tile.dstX;
+		if(tile.dstY >= 0 && tile.dstY+toAdd > maxHeight)
+			maxHeight = tile.dstY+toAdd;
+		else if(tile.dstY < 0 && -tile.dstY > minHeight)
+			minHeight = -tile.dstY;
+	}
+
+	width = minWidth + maxWidth + 16;
+	height = minHeight + maxHeight + 16;
+}
+
+QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
+									   const QList<Palette *> &palettes,
+									   const QByteArray &textureData) const
+{
+	if(tiles.isEmpty()) {
+		foreach(Palette *pal, palettes)	delete pal;
+		return QPixmap();
+	}
+
+	quint16 minWidth, minHeight;
+	int width, height;
+	area(tiles, minWidth, minHeight, width, height);
+
+	const char *constTextureData = textureData.constData();
+	QImage image(width, height, QImage::Format_ARGB32);
+	image.fill(0xFF000000);
+
+	quint32 origin, top, texWidth;
+	quint16 color, baseX;
+	quint8 index, right;
+	QRgb *pixels = (QRgb *)image.bits();
+
+	foreach(const Tile &tile, tiles) {
+		texWidth = textureWidth(tile);
+		origin = originInData(tile);
+		right = 0;
+		top = (minHeight + tile.dstY) * width;
+		baseX = minWidth + tile.dstX;
+
+
+		if(depth(tile) == 2) {
+
+			for(quint16 j=0 ; j<tile.size*texWidth ; j+=2) {
+				memcpy(&color, constTextureData + origin+j, 2);
+				if(color != 0) {
+					pixels[baseX + right + top] = directColor(color);
+				}
+
+				if(++right==tile.size) {
+					right = 0;
+					j += texWidth-tile.size*2;
+					top += width;
+				}
+			}
+		} else {
+
+			Palette *palette = palettes.at(tile.paletteID);
+
+			for(quint16 j=0 ; j<tile.size*texWidth ; ++j) {
+				index = textureData.at(origin + j);
+
+				if(palette->notZero(index)) {
+					if(tile.blending) {
+						pixels[baseX + right + top] = blendColor(tile.typeTrans, pixels[baseX + right + top], palette->color(index));
+					} else {
+						pixels[baseX + right + top] = palette->color(index);
+					}
+				}
+
+				if(++right==tile.size) {
+					right = 0;
+					j += texWidth-tile.size;
+					top += width;
+				}
+			}
+		}
+	}
+
+	foreach(Palette *pal, palettes)	delete pal;
+
+	return QPixmap::fromImage(image);
+}
+
 QRgb BackgroundFile::blendColor(quint8 type, QRgb color0, QRgb color1)
 {
 	int r, g, b;

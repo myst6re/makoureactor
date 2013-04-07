@@ -19,6 +19,7 @@
 #define FIELDARCHIVEPC_H
 
 #include "FieldArchive.h"
+#include "TutFilePC.h"
 #include "FieldArchiveIOPC.h"
 
 class FieldArchivePC : public FieldArchive
@@ -31,15 +32,15 @@ public:
 
 	void clear();
 
-	TutFile *tut(const QString &name);
-	const QMap<QString, TutFile *> &tuts() const;
+	TutFilePC *tut(const QString &name);
+	const QMap<QString, TutFilePC *> &tuts() const;
 	void addTut(const QString &name);
 
 	void setSaved();
 
 	FieldArchiveIOPC *io() const;
 private:
-	QMap<QString, TutFile *> _tuts;
+	QMap<QString, TutFilePC *> _tuts;
 };
 
 #endif // FIELDARCHIVEPC_H

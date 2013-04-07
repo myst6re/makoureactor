@@ -123,7 +123,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, FieldA
 		}
 	}
 
-	QMapIterator<QString, TutFile *> itTut(fieldArchive()->tuts());
+	QMapIterator<QString, TutFilePC *> itTut(fieldArchive()->tuts());
 
 	while(itTut.hasNext()) {
 		itTut.next();
@@ -325,7 +325,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, FieldA
 		if(observer)	observer->setObserverValue(fieldID);
 	}
 
-	QMapIterator<QString, TutFile *> itTut(fieldArchive()->tuts());
+	QMapIterator<QString, TutFilePC *> itTut(fieldArchive()->tuts());
 
 	while(itTut.hasNext()) {
 		itTut.next();

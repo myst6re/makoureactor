@@ -15,49 +15,42 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TUTWIDGET_H
-#define TUTWIDGET_H
+#ifndef FONTLETTER_H
+#define FONTLETTER_H
 
 #include <QtGui>
-#include "core/field/Field.h"
-#include "core/field/TutFileStandard.h"
-#include "core/field/TutFilePC.h"
+#include "FontDisplay.h"
+#include "FontGrid.h"
 
-class TutWidget : public QDialog
+#define PIXEL_SIZE	21
+
+class FontLetter : public FontDisplay
 {
 	Q_OBJECT
 public:
-	TutWidget(Field *field, TutFileStandard *tut, TutFilePC *tutPC, QWidget *parent=0);
-private slots:
-	void changeVersion(bool isPS);
-	void showText(QListWidgetItem *item, QListWidgetItem *lastItem);
-	void setTextChanged();
-	void add();
-	void del();
-	void exportation();
-	void importation();
-private:
-	QWidget *buildTutPage();
-	QWidget *buildSoundPage();
-	void fillList();
-	void saveText(QListWidgetItem *item);
-
-	QStackedWidget *stackedWidget;
-	QRadioButton *versionPS;
-	QListWidget *list;
-	QPushButton *exportButton, *importButton;
-	QPlainTextEdit *textEdit;
-	QLabel *akaoDesc;
-	QComboBox *akaoIDList;
-	Field *field;
-	TutFile *currentTut;
-	TutFileStandard *tut, tutCpy;
-	TutFilePC *tutPC, tutPCCpy;
-	bool textChanged;
-	QSet<quint8> usedTuts;
+	explicit FontLetter(QWidget *parent=0);
+	virtual ~FontLetter();
+	void setReadOnly(bool ro);
+	virtual void setWindowBinFile(WindowBinFile *windowBinFile);
+public slots:
+	virtual void setLetter(int letter);
+	void setPixelIndex(int index);
+	void reset();
+signals:
+	void imageChanged(const QRect &rect);
 protected:
-	void accept();
-	void reject();
+	virtual QSize sizeHint() const;
+	virtual QSize minimumSizeHint() const;
+	virtual void paintEvent(QPaintEvent *e);
+	virtual void mouseMoveEvent(QMouseEvent *e);
+	virtual void mousePressEvent(QMouseEvent *e);
+	virtual void mouseReleaseEvent(QMouseEvent *);
+private:
+	QPoint getPixel(const QPoint &pos);
+	bool setPixel(const QPoint &pixel);
+	QImage copyLetter;
+	int _pixelIndex;
+	bool readOnly, startDrag, startDrag2;
 };
 
-#endif // TUTWIDGET_H
+#endif // FONTLETTER_H

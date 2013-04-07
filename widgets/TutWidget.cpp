@@ -20,8 +20,9 @@
 #include "Data.h"
 #include "core/Config.h"
 
-TutWidget::TutWidget(Field *field, TutFile *tut, TutFile *tutPC, QWidget *parent)
-	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), field(field), tut(tut), tutPC(tutPC), tutCpy(*tut), textChanged(false)
+TutWidget::TutWidget(Field *field, TutFileStandard *tut, TutFilePC *tutPC, QWidget *parent) :
+	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
+	field(field), tut(tut), tutCpy(*tut), tutPC(tutPC), textChanged(false)
 {
 	setWindowTitle(tr("Tutoriels/Musiques"));
 
@@ -180,7 +181,7 @@ void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 	} else {
 		stackedWidget->setCurrentIndex(1);
 		akaoDesc->setText(currentTut->parseScripts(id));
-		quint16 akaoID = currentTut->akaoID(id);
+		quint16 akaoID = tut->akaoID(id);
 		int index = akaoIDList->findData(akaoID);
 		if(index != -1) {
 			akaoIDList->setCurrentIndex(index);
@@ -215,8 +216,8 @@ void TutWidget::saveText(QListWidgetItem *item)
 			userText = regExp.capturedTexts().first();
 			akaoID = userText.toInt();
 
-			if(currentTut->akaoID(id) != akaoID) {
-				currentTut->setAkaoID(id, akaoID);
+			if(tut->akaoID(id) != akaoID) {
+				tut->setAkaoID(id, akaoID);
 			}
 		}
 	}
@@ -269,7 +270,7 @@ void TutWidget::add()
 			scriptsAndTexts->shiftTutIds(row-1, +1);
 		usedTuts = scriptsAndTexts->listUsedTuts();
 	} else {
-		currentTut->insertAkao(row, akaoPath);
+		currentTut->insertData(row, akaoPath);
 	}
 	fillList();
 

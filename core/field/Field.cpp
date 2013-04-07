@@ -172,9 +172,9 @@ EncounterFile *Field::encounter(bool open)
 	return _encounter;
 }
 
-TutFile *Field::tutosAndSounds(bool open)
+TutFileStandard *Field::tutosAndSounds(bool open)
 {
-	if(!_tut)	_tut = new TutFile();
+	if(!_tut)	_tut = new TutFileStandard();
 	scriptsAndTexts(false)->setTut(_tut);
 	if(open && !_tut->isOpen())	_tut->open(sectionData(Scripts));
 	return _tut;
@@ -301,7 +301,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {
-			TutFile *_tut = tutosAndSounds(false);
+			TutFileStandard *_tut = tutosAndSounds(false);
 			if(!_tut->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))		return 2;
 			_tut->setModified(true);
 		}
@@ -338,7 +338,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {
-			TutFile *_tut = tutosAndSounds(false);
+			TutFileStandard *_tut = tutosAndSounds(false);
 			if(!_tut->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))		return 2;
 			_tut->setModified(true);
 		}

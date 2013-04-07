@@ -20,14 +20,18 @@
 
 Palette::Palette() {}
 
-Palette::Palette(const char *palette, quint8 transparency) // PC
-	: transparency(transparency)
+PalettePC::PalettePC() : Palette() {}
+
+PalettePS::PalettePS() : Palette() {}
+
+PalettePC::PalettePC(const char *palette, quint8 transparency) :
+	Palette(), _transparency(transparency)
 {
 	quint16 first, color;
 	memcpy(&first, palette, 2);
-	couleurs.append(PsColor::fromPsColor(first));
-//	masks.append(first >> 15);
-//	isZero.append(first==0);
+	_colors.append(PsColor::fromPsColor(first));
+//	_masks.append(first >> 15);
+//	_isZero.append(first==0);
 
 	palette += 2;
 
@@ -36,25 +40,46 @@ Palette::Palette(const char *palette, quint8 transparency) // PC
 		memcpy(&color, palette, 2);
 		if(color==0) color = first;
 
-		couleurs.append(PsColor::fromPsColor(color));
-//		masks.append(color >> 15);
-//		isZero.append(color==0);
+		_colors.append(PsColor::fromPsColor(color));
+//		_masks.append(color >> 15);
+//		_isZero.append(color==0);
 
 		palette += 2;
 	}
 }
 
-Palette::Palette(const char *palette) // PS
+PalettePS::PalettePS(const char *palette) :
+	Palette()
 {
 	for(quint16 i=0 ; i<256 ; ++i)
 	{
 		quint16 color;
 		memcpy(&color, palette, 2);
 
-		couleurs.append(PsColor::fromPsColor(color));
-//		masks.append(color >> 15);
-		isZero.append(color==0);
+		_colors.append(PsColor::fromPsColor(color));
+//		_masks.append(color >> 15);
+		_isZero.append(color==0);
 
 		palette += 2;
 	}
+}
+
+QRgb Palette::color(int index) const
+{
+	return _colors.at(index);
+}
+
+const QList<QRgb> &Palette::colors() const
+{
+	return _colors;
+}
+
+bool PalettePC::notZero(quint8 index) const
+{
+	return index != 0 || !_transparency;
+}
+
+bool PalettePS::notZero(quint8 index) const
+{
+	return !_isZero.at(index);
 }

@@ -15,49 +15,36 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TUTWIDGET_H
-#define TUTWIDGET_H
+#ifndef FONTDISPLAY_H
+#define FONTDISPLAY_H
 
 #include <QtGui>
-#include "core/field/Field.h"
-#include "core/field/TutFileStandard.h"
-#include "core/field/TutFilePC.h"
+#include "core/WindowBinFile.h"
 
-class TutWidget : public QDialog
+class FontDisplay : public QWidget
 {
 	Q_OBJECT
 public:
-	TutWidget(Field *field, TutFileStandard *tut, TutFilePC *tutPC, QWidget *parent=0);
-private slots:
-	void changeVersion(bool isPS);
-	void showText(QListWidgetItem *item, QListWidgetItem *lastItem);
-	void setTextChanged();
-	void add();
-	void del();
-	void exportation();
-	void importation();
-private:
-	QWidget *buildTutPage();
-	QWidget *buildSoundPage();
-	void fillList();
-	void saveText(QListWidgetItem *item);
-
-	QStackedWidget *stackedWidget;
-	QRadioButton *versionPS;
-	QListWidget *list;
-	QPushButton *exportButton, *importButton;
-	QPlainTextEdit *textEdit;
-	QLabel *akaoDesc;
-	QComboBox *akaoIDList;
-	Field *field;
-	TutFile *currentTut;
-	TutFileStandard *tut, tutCpy;
-	TutFilePC *tutPC, tutPCCpy;
-	bool textChanged;
-	QSet<quint8> usedTuts;
+	explicit FontDisplay(QWidget *parent=0);
+	virtual ~FontDisplay();
+	WindowBinFile *windowBinFile() const;
+	virtual void setWindowBinFile(WindowBinFile *windowBinFile);
+	void clear();
+	int currentTable() const;
+	int currentLetter() const;
+public slots:
+	void setCurrentTable(int currentTable);
+	void setColor(WindowBinFile::FontColor color);
+	virtual void setLetter(int letter);
 protected:
-	void accept();
-	void reject();
+	static QPoint getCellPos(const QPoint &pos, const QSize &cellSize);
+	static int getCell(const QPoint &pos, const QSize &cellSize, int colCount);
+	WindowBinFile *_windowBinFile;
+	WindowBinFile::FontColor _color;
+	int _currentTable, _letter;
+private:
+	static int getLetter(QPoint pos);
+	static QPoint getPos(int letter);
 };
 
-#endif // TUTWIDGET_H
+#endif // FONTDISPLAY_H

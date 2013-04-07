@@ -25,6 +25,12 @@ WindowBinFile::WindowBinFile()
 {
 }
 
+void WindowBinFile::clear()
+{
+	_charWidth.clear();
+	_font.clear();
+}
+
 bool WindowBinFile::open(const QString &path)
 {
 	QFile windowFile(path);
@@ -43,6 +49,8 @@ bool WindowBinFile::open(const QString &path)
 
 bool WindowBinFile::open(const QByteArray &data)
 {
+	clear();
+
 	const char *constData = data.constData();
 	int cur=0;
 	quint16 size;

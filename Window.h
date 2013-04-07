@@ -81,6 +81,7 @@ public slots:
 	void miscManager();
 	void searchManager();
 	void archiveManager();
+	void fontManager();
 	void about();
 private slots:
 	void emitOpcodeID();

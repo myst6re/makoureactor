@@ -15,49 +15,34 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TUTWIDGET_H
-#define TUTWIDGET_H
+#ifndef FONTGRID_H
+#define FONTGRID_H
 
 #include <QtGui>
-#include "core/field/Field.h"
-#include "core/field/TutFileStandard.h"
-#include "core/field/TutFilePC.h"
+#include "FontDisplay.h"
 
-class TutWidget : public QDialog
+class FontGrid : public FontDisplay
 {
 	Q_OBJECT
 public:
-	TutWidget(Field *field, TutFileStandard *tut, TutFilePC *tutPC, QWidget *parent=0);
-private slots:
-	void changeVersion(bool isPS);
-	void showText(QListWidgetItem *item, QListWidgetItem *lastItem);
-	void setTextChanged();
-	void add();
-	void del();
-	void exportation();
-	void importation();
-private:
-	QWidget *buildTutPage();
-	QWidget *buildSoundPage();
-	void fillList();
-	void saveText(QListWidgetItem *item);
-
-	QStackedWidget *stackedWidget;
-	QRadioButton *versionPS;
-	QListWidget *list;
-	QPushButton *exportButton, *importButton;
-	QPlainTextEdit *textEdit;
-	QLabel *akaoDesc;
-	QComboBox *akaoIDList;
-	Field *field;
-	TutFile *currentTut;
-	TutFileStandard *tut, tutCpy;
-	TutFilePC *tutPC, tutPCCpy;
-	bool textChanged;
-	QSet<quint8> usedTuts;
+	explicit FontGrid(QWidget *parent=0);
+	virtual ~FontGrid();
+	static QPoint getPos(int letter);
+signals:
+	void letterClicked(int letter);
+public slots:
+	void updateLetter(const QRect &rect);
 protected:
-	void accept();
-	void reject();
+	virtual QSize sizeHint() const;
+	virtual QSize minimumSizeHint() const;
+	virtual void mousePressEvent(QMouseEvent * e);
+	virtual void keyPressEvent(QKeyEvent *e);
+	virtual void paintEvent(QPaintEvent *e);
+	virtual void focusInEvent(QFocusEvent *);
+	virtual void focusOutEvent(QFocusEvent *);
+private:
+	static int getLetter(const QPoint &pos);
+	//QPixmap copyGrid;
 };
 
-#endif // TUTWIDGET_H
+#endif // FONTGRID_H

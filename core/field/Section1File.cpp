@@ -660,12 +660,12 @@ void Section1File::setScale(quint16 scale)
 	modified = true;
 }
 
-TutFile *Section1File::tut() const
+TutFileStandard *Section1File::tut() const
 {
 	return _tut;
 }
 
-void Section1File::setTut(TutFile *tut)
+void Section1File::setTut(TutFileStandard *tut)
 {
 	_tut = tut;
 }
