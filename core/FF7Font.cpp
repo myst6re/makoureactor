@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FF7Font.h"
-#include "parameters.h"
+#include "Parameters.h"
 #include "Config.h"
 
 FF7Font::FF7Font(WindowBinFile *windowBinFile, const QByteArray &txtFileData) :
