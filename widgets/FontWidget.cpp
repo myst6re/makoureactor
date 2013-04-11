@@ -28,9 +28,9 @@ FontWidget::FontWidget(QWidget *parent) :
 	fontPalette = new FontPalette(this);
 	selectPal = new QComboBox(this);
 	QStringList colors;
-	colors << tr("Gris foncé") << tr("Gris") << tr("Jaune") << tr("Rouge") << tr("Vert") << tr("Bleu") << tr("Violet") << tr("Blanc");
+	colors << tr("Gris") << tr("Bleu") << tr("Rouge") << tr("Violet") << tr("Vert") << tr("Cyan") << tr("Jaune") << tr("Blanc");
 	selectPal->addItems(colors);
-	selectPal->setCurrentIndex(7);
+	selectPal->setCurrentIndex(selectPal->count() - 1);
 
 	selectTable = new QComboBox(this);
 
@@ -141,9 +141,9 @@ void FontWidget::setLetter(int i)
 
 	if(fontGrid->currentTable() <= 5) {
 		if(ff7Font) {
-//			textLetter->setText(FF7Text(ba.append((char)i), ff7Font->tables()));//TODO
+//			textLetter->setText(FF7Text(ba.append((char)i), ff7Font->tables()));//TODO: ff7Font
 		} else {
-			textLetter->setText(FF7Text(ba.append((char)i)).getText(false));//TODO
+			textLetter->setText(FF7Text(ba.append((char)i)).getText(false));//TODO: jp
 		}
 	}
 	resetButton2->setEnabled(false);
@@ -160,11 +160,10 @@ void FontWidget::exportFont()
 {
 	WindowBinFile *windowBinFile = fontGrid->windowBinFile();
 
-	QString texF, tdwF, txtF, pngF, jpgF, bmpF;
+	QString binF, tdwF, txtF, pngF, jpgF, bmpF;
 	QStringList filter;
 	if(windowBinFile) {
-//		if(!windowBinFile->isOptimizedVersion()) //TODO
-//			filter.append(texF = tr("Fichier texture FF8 (*.tex)"));
+		filter.append(binF = tr("Fichier police FF7 (*.bin)"));
 		filter.append(tdwF = tr("Fichier police FF8 (*.tdw)"));
 		filter.append(pngF = tr("Fichier image PNG (*.png)"));
 		filter.append(jpgF = tr("Fichier image JPG (*.jpg)"));
@@ -178,24 +177,19 @@ void FontWidget::exportFont()
 	QString path = QFileDialog::getSaveFileName(this, tr("Exporter police de caractère"), "sysfnt", filter.join(";;"), &selectedFilter);
 	if(path.isNull())		return;
 
-	if(selectedFilter == texF) {
+	if(selectedFilter == binF) {
 		/*QByteArray data;
 		//TODO
-		TexFile tex = windowBinFile->toTexFile();
-		if(tex.isValid()) {
-			if(tex.save(data)) {
-				QFile f(path);
-				if(f.open(QIODevice::WriteOnly)) {
-					f.write(data);
-					f.close();
-				} else {
-					QMessageBox::warning(this, tr("Erreur"), tr("Erreur d'ouverture du fichier. (%1)").arg(f.errorString()));
-				}
+		if(windowBinFile->save(data)) {
+			QFile f(path);
+			if(f.open(QIODevice::WriteOnly)) {
+				f.write(data);
+				f.close();
 			} else {
-				QMessageBox::warning(this, tr("Erreur"), tr("Erreur lors de l'enregistrement."));
+				QMessageBox::warning(this, tr("Erreur"), tr("Erreur d'ouverture du fichier. (%1)").arg(f.errorString()));
 			}
 		} else {
-			QMessageBox::information(this, tr("Information"), tr("Format de police de caractère inexportable."));
+			QMessageBox::warning(this, tr("Erreur"), tr("Erreur lors de l'enregistrement."));
 		}*/
 	} else if(selectedFilter == tdwF) {
 		/*QByteArray data;
@@ -231,8 +225,7 @@ void FontWidget::exportFont()
 		} else {
 			format = (char *)"BMP";
 		}
-		// windowBinFile->image((WindowBinFile::FontColor)selectPal->currentIndex()).save(path, format);
-		//TODO
+		windowBinFile->image((WindowBinFile::FontColor)selectPal->currentIndex()).save(path, format);
 	}
 }
 
@@ -255,7 +248,7 @@ void FontWidget::importFont()
 		if(f.open(QIODevice::ReadOnly)) {
 			WindowBinFile newWindowBinFile;
 			if(newWindowBinFile.open(f.readAll())) {
-				//newWindowBinFile.setModified(true);//TODO
+				newWindowBinFile.setModified(true);
 				*windowBinFile = newWindowBinFile;
 				setWindowBinFile(windowBinFile);// update
 				emit letterEdited();

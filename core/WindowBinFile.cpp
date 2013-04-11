@@ -21,7 +21,8 @@
 #define LEFT_PADD(w)	(w >> 5)
 #define CHAR_WIDTH(w)	(w & 0x1F)
 
-WindowBinFile::WindowBinFile()
+WindowBinFile::WindowBinFile() :
+	modified(false)
 {
 }
 
@@ -96,6 +97,16 @@ bool WindowBinFile::isValid() const
 	return !_charWidth.isEmpty();
 }
 
+bool WindowBinFile::isModified() const
+{
+	return modified;
+}
+
+void WindowBinFile::setModified(bool modified)
+{
+	this->modified = modified;
+}
+
 int WindowBinFile::charCount() const
 {
 	return _charWidth.size();
@@ -125,6 +136,17 @@ bool WindowBinFile::openFontSize(const QByteArray &data)
 	return true;
 }
 
+const QImage &WindowBinFile::image(FontColor color)
+{
+	setFontColor(color);
+	return _font.image();
+}
+
+const QImage &WindowBinFile::image() const
+{
+	return _font.image();
+}
+
 QImage WindowBinFile::letter(quint8 table, quint8 id) const
 {
 	if(table != 0) {
@@ -138,7 +160,12 @@ QImage WindowBinFile::letter(quint8 table, quint8 id) const
 
 void WindowBinFile::setFontColor(FontColor color)
 {
-	_font.setCurrentColorTable(int(color) * 2); //TODO: jp font
+	_font.setCurrentColorTable(palette(color)); //TODO: jp font
+}
+
+int WindowBinFile::palette(FontColor color) const
+{
+	return color * 2; //TODO: jp font
 }
 
 quint8 WindowBinFile::charWidth(quint8 table, quint8 id) const

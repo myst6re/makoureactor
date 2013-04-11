@@ -17,6 +17,10 @@
  ****************************************************************************/
 #include "QLockedFile.h"
 
+QLockedFile::QLockedFile()
+{
+}
+
 QLockedFile::QLockedFile(const QString &name) :
 	QFile(name)
 {

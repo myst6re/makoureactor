@@ -34,9 +34,10 @@ class QLockedFile : public QFile
 {
 	Q_OBJECT
 public:
+	QLockedFile();
 	explicit QLockedFile(const QString &name);
 	explicit QLockedFile(QObject *parent);
-	explicit QLockedFile(const QString &name, QObject *parent);
+	QLockedFile(const QString &name, QObject *parent);
 	virtual ~QLockedFile();
 	virtual void close();
 	virtual bool open(OpenMode mode);

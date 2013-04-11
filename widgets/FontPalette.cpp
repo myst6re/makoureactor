@@ -50,7 +50,7 @@ void FontPalette::setColorCount(quint8 colorCount)
 
 void FontPalette::setWindowBinFile(WindowBinFile *windowBinFile)
 {
-	setColorCount(/*windowBinFile->isOptimizedVersion() ?*/ 4 /*: 16*/);//TODO
+	setColorCount(/*windowBinFile->isOptimizedVersion() ?*/ 4 /*: 16*/);//TODO: jp
 
 	_windowBinFile = windowBinFile;
 	setCurrentPalette(_currentPalette);
@@ -59,8 +59,7 @@ void FontPalette::setWindowBinFile(WindowBinFile *windowBinFile)
 void FontPalette::setCurrentPalette(WindowBinFile::FontColor palette)
 {
 	_currentPalette = palette;
-	//TODO
-//	copyPalette = _windowBinFile->image(_currentPalette).colorTable();
+	copyPalette = _windowBinFile->image(_currentPalette).colorTable();
 	this->palette = copyPalette;
 
 	update();

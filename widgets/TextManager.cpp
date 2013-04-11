@@ -112,7 +112,7 @@ TextManager::TextManager(QWidget *parent) :
 	action->setData("{WHITE}");
 	action = toolBar2->addAction(QIcon(":/images/icon-blink.png"), tr("Clignotant"));
 	action->setData("{BLINK}");
-	action = toolBar2->addAction(QIcon(":/images/icon-multicolour.png"), tr("Multicolor"));
+	action = toolBar2->addAction(QIcon(":/images/icon-multicolour.png"), tr("Multicolore"));
 	action->setData("{MULTICOLOUR}");
 	toolBar2->addSeparator();
 	action = toolBar2->addAction(tr("Var1"));

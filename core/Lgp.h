@@ -24,6 +24,7 @@
 #define LGP_H
 
 #include <QtCore>
+#include "QLockedFile.h"
 
 struct LgpObserver
 {
@@ -117,7 +118,7 @@ private:
 	QString _companyName;
 	LgpToc *_files;
 	QString _productName;
-	QFile _file;
+	QLockedFile _file;
 	LgpError _error;
 	QString _errorString;
 

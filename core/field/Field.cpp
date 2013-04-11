@@ -80,10 +80,11 @@ bool Field::open(bool dontOptimize)
 
 	if(!dontOptimize && !_io->fieldDataIsCached(this)) {
 		QByteArray lzsData = _io->fieldData(this, false);
-		quint32 lzsSize;
+
 		if(lzsData.size() < 4)	return false;
 
 		const char *lzsDataConst = lzsData.constData();
+		quint32 lzsSize;
 		memcpy(&lzsSize, lzsDataConst, 4);
 
 		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
@@ -125,12 +126,18 @@ QByteArray Field::sectionData(FieldPart part)
 		return _io->fieldData(this).mid(position, size);
 	} else {
 		QByteArray lzsData = _io->fieldData(this, false);
-		quint32 lzsSize;
+
+		if(lzsData.size() < 4) {
+			return QByteArray();
+		}
+
 		const char *lzsDataConst = lzsData.constData();
+		quint32 lzsSize;
 		memcpy(&lzsSize, lzsDataConst, 4);
 
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4) {
 			return QByteArray();
+		}
 
 		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1))
 				.mid(position, size);

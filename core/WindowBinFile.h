@@ -23,8 +23,12 @@ public:
 	bool open(const QString &path);
 	bool open(const QByteArray &data);
 	bool isValid() const;
+	bool isModified() const;
+	void setModified(bool modified);
 	int charCount() const;
 	int tableCount() const;
+	const QImage &image(FontColor color);
+	const QImage &image() const;
 	QImage letter(quint8 table, quint8 id) const;
 	void setFontColor(FontColor color);
 	quint8 charWidth(quint8 table, quint8 id) const;
@@ -32,6 +36,7 @@ public:
 	void setCharWidth(quint8 table, quint8 id, quint8 width);
 	void setCharLeftPadding(quint8 table, quint8 id, quint8 padding);
 private:
+	int palette(FontColor color) const;
 	bool openFont(const QByteArray &data);
 	bool openFontSize(const QByteArray &data);
 	inline quint8 charInfo(quint8 table, quint8 id) const {
@@ -43,6 +48,7 @@ private:
 
 	QVector<quint8> _charWidth;
 	TimFile _font;
+	bool modified;
 };
 
 #endif // WINDOWBINFILE_H
