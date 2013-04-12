@@ -20,6 +20,8 @@
 
 #include "BackgroundFile.h"
 
+class FieldPC;
+
 //Sizeof : 36
 typedef struct {
 	qint16 dstX, dstY;
@@ -44,10 +46,10 @@ typedef struct {
 class BackgroundFilePC : public BackgroundFile
 {
 public:
-	BackgroundFilePC();
+	explicit BackgroundFilePC(FieldPC *field);
 
-	QPixmap openBackground(const QByteArray &data, const QByteArray &palData, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
-	bool usedParams(const QByteArray &data, QHash<quint8, quint8> &usedParams, bool *layerExists);
+	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
+	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 protected:
 	quint16 textureWidth(const Tile &tile) const;
 	quint8 depth(const Tile &tile) const;

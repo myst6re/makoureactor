@@ -20,6 +20,7 @@
 
 #include <QtCore>
 #include <QPixmap>
+#include "FieldPart.h"
 #include "Palette.h"
 
 typedef struct {
@@ -34,14 +35,19 @@ typedef struct {
 	quint8 depth;
 } Tile;
 
-class BackgroundFile
+class BackgroundFile : public FieldPart
 {
 public:
-	BackgroundFile();
+	explicit BackgroundFile(Field *field);
 	virtual ~BackgroundFile();
 
-	virtual QPixmap openBackground(const QByteArray &data1, const QByteArray &data2, const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
-	virtual bool usedParams(const QByteArray &data, QHash<quint8, quint8> &usedParams, bool *layerExists)=0;
+	bool open() { return true; }
+	bool open(const QByteArray &) { return true; }
+	QByteArray save() const { return QByteArray(); }
+	void clear() { }
+	QPixmap openBackground();
+	virtual QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
+	virtual bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)=0;
 protected:
 	QPixmap drawBackground(const QMultiMap<qint16, Tile> &tiles, const QList<Palette *> &palettes, const QByteArray &textureData) const;
 	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);

@@ -70,9 +70,9 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, QWidget *par
 	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
 }
 
-Field::FieldParts ImportDialog::parts() const
+Field::FieldSections ImportDialog::parts() const
 {
-	Field::FieldParts parts;
+	Field::FieldSections parts;
 
 	if(scripts->isChecked())	parts |= Field::Scripts;
 	if(akaos->isChecked())		parts |= Field::Akaos;

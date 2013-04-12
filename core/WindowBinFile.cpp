@@ -72,7 +72,7 @@ bool WindowBinFile::open(const QByteArray &data)
 
 	memcpy(&size, constData + cur, 2);
 
-	if(!openFont(GZIP::decompress(data.mid(cur + 6, size), 0))) {
+	if(!openFont(GZIP::decompress(constData + cur + 6, size, 0))) {
 		return false;
 	}
 
@@ -85,7 +85,7 @@ bool WindowBinFile::open(const QByteArray &data)
 
 	memcpy(&size, constData + cur, 2);
 
-	if(!openFontSize(GZIP::decompress(data.mid(cur + 6, size), 0))) {
+	if(!openFontSize(GZIP::decompress(constData + cur + 6, size, 0))) {
 		return false;
 	}
 

@@ -16,31 +16,16 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "EncounterFile.h"
+#include "Field.h"
 
-EncounterFile::EncounterFile()
-	: _isOpen(false), _isModified(false)
+EncounterFile::EncounterFile(Field *field) :
+	FieldPart(field)
 {
 }
 
-EncounterFile::EncounterFile(const QByteArray &data)
-	: _isOpen(false), _isModified(false)
+bool EncounterFile::open()
 {
-	open(data);
-}
-
-bool EncounterFile::isOpen() const
-{
-	return _isOpen;
-}
-
-bool EncounterFile::isModified() const
-{
-	return _isModified;
-}
-
-void EncounterFile::setModified(bool modified)
-{
-	_isModified = modified;
+	return open(field()->sectionData(Field::Encounter));
 }
 
 bool EncounterFile::open(const QByteArray &data)
@@ -57,7 +42,7 @@ bool EncounterFile::open(const QByteArray &data)
 
 	memcpy(tables, data.constData(), sizeof(EncounterTable) * 2);
 
-	_isOpen = true;
+	setOpen(true);
 
 	return true;
 }
@@ -65,6 +50,11 @@ bool EncounterFile::open(const QByteArray &data)
 QByteArray EncounterFile::save() const
 {
 	return QByteArray((char *)&tables, sizeof(EncounterTable) * 2);
+}
+
+void EncounterFile::clear()
+{
+	//TODO: clear
 }
 
 const EncounterTable &EncounterFile::encounterTable(Table tableID) const
@@ -75,5 +65,5 @@ const EncounterTable &EncounterFile::encounterTable(Table tableID) const
 void EncounterFile::setEncounterTable(Table tableID, const EncounterTable &table)
 {
 	tables[(int)tableID] = table;
-	_isModified = true;
+	setModified(true);
 }

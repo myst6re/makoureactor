@@ -19,16 +19,14 @@
 #define TUTFILE_H
 
 #include <QtCore>
+#include "FieldPart.h"
 
-class TutFile
+class TutFile : public FieldPart
 {
 public:
-	TutFile();
-	bool isOpen() const;
-	bool isModified() const;
-	void setModified(bool);
+	explicit TutFile(Field *field);
 	bool open(const QByteArray &data);
-	QByteArray save(QByteArray &toc, quint32 firstPos=0) const;
+	void clear();
 	int size() const;
 	void removeTut(int tutID);
 	bool insertTut(int tutID);
@@ -42,11 +40,9 @@ public:
 	virtual void parseText(int tutID, const QString &tuto);
 protected:
 	virtual QList<quint32> openPositions(const QByteArray &data) const=0;
-	virtual QByteArray save2(QByteArray &toc, quint32 firstPos) const=0;
 	virtual int maxTutCount() const=0;
 	QByteArray &dataRef(int tutID);
 private:
-	bool _isOpen, _isModified;
 	QList<QByteArray> tutos;
 };
 

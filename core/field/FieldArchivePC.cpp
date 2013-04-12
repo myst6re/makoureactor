@@ -73,7 +73,7 @@ TutFilePC *FieldArchivePC::tut(const QString &name)
 				QByteArray data = io()->fileData(tutName + ".tut", false, false);
 				if(!data.isEmpty()) {
 					tutFile = new TutFilePC();
-					if(!tutFile->open(data)) {
+					if(!((TutFile *)tutFile)->open(data)) {
 						delete tutFile;
 						return NULL;
 					}

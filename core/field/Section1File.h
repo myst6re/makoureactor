@@ -19,21 +19,21 @@
 #define SECTION1FILE_H
 
 #include <QtCore>
+#include "FieldPart.h"
 #include "GrpScript.h"
 #include "../FF7Text.h"
 #include "TutFileStandard.h"
 
-class Section1File
+class Section1File : public FieldPart
 {
 public:
-	Section1File();
+	explicit Section1File(Field *field);
 	virtual ~Section1File();
 	void clear();
+	bool open();
 	bool open(const QByteArray &data);
-	QByteArray save(const QByteArray &data) const;
-	bool isOpen() const;
+	QByteArray save() const;
 	bool isModified() const;
-	void setModified(bool modified);
 
 	int modelID(quint8 grpScriptID) const;
 	void bgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z=0, qint16 *x=0, qint16 *y=0) const;
@@ -82,8 +82,6 @@ public:
 	TutFileStandard *tut() const;
 	void setTut(TutFileStandard *tut);
 private:
-	bool modified, opened;
-
 	QString _author;
 	quint16 _scale;
 	// quint8 nbObjets3D;

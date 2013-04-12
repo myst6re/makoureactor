@@ -127,6 +127,11 @@ bool FieldArchive::openField(Field *field, bool dontOptimize)
 	return true;
 }
 
+int FieldArchive::indexOfField(const QString &name) const
+{
+	return fieldsSortByName.value(name, -1);
+}
+
 Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 {
 	Field *field = fileList.value(id, NULL);
@@ -136,9 +141,15 @@ Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 	return field;
 }
 
-void FieldArchive::addField(Field *field)
+void FieldArchive::addField(Field *field/*, bool referenceToMaplist*/)
 {
+//	int fieldId = fileList.size();
 	fileList.append(field);
+//	fieldsSortByName.insert(field->name(), fieldId);
+//	fieldsSortByMapId.insert(field->name(), fieldId);
+//	if(referenceToMaplist) {
+		//TODO
+//	}
 }
 
 void FieldArchive::removeField(quint32 id)
@@ -182,7 +193,7 @@ void FieldArchive::searchAll()
 	bool iff = false, win = false;
 	OpcodeIf *opcodeIf=0;
 
-	QFile deb("model_loader_unknown.txt");
+	QFile deb(QString("cameraP%1.txt").arg(isPC() ? "C" : "S"));
 	deb.open(QIODevice::WriteOnly | QIODevice::Text);
 
 
@@ -190,13 +201,101 @@ void FieldArchive::searchAll()
 	foreach(int i, fieldsSortByMapId) {
 		Field *field = this->field(i, true);
 		if(field != NULL) {
-			Data::charlgp_loadAnimBoneCount();
+			/*Section1File *s1 = field->scriptsAndTexts();
+			int groupID = 0;
+			foreach(GrpScript *group, s1->grpScripts()) {
+				int scriptID=0;
+				foreach(Script *script, group->scripts()) {
+					int opcodeID = 0;
+					foreach(Opcode *opcode, script->getOpcodes()) {
+						if(opcode->id() != 0x50 && opcode->id() != 0x48 &&
+								opcode->id() != 0x2f && opcode->id() != 0x40) {
+						deb.write(QString("%1: %2, %3, %4 -> %5\n").arg(i)
+								  .arg(groupID).arg(scriptID).arg(opcodeID)
+								  .arg(QString(opcode->toByteArray().toHex())).toLatin1());
+						}
+						opcodeID++;
+					}
+					scriptID++;
+				}
+				groupID++;
+			}*/
+			/*CaFile *ca = field->camera();
+			if(ca->isOpen()) {
+//				for(int c=0; c<ca->cameraCount(); ++c) {
+					Camera cam = ca->camera(0);
+					deb.write(QString("%1: %2 -> (%3, %4, %5), (%6, %7, %8), (%9, %10, %11), %12, %13, %14, %15\n")
+							  .arg(field->name()).arg(0)
+							  .arg(cam.camera_axis[0].x).arg(cam.camera_axis[0].y).arg(cam.camera_axis[0].z)
+							.arg(cam.camera_axis[1].x).arg(cam.camera_axis[1].y).arg(cam.camera_axis[1].z)
+							.arg(cam.camera_axis[2].x).arg(cam.camera_axis[2].y).arg(cam.camera_axis[2].z)
+							.arg(cam.camera_position[0]).arg(cam.camera_position[1]).arg(cam.camera_position[2])
+							.arg(cam.camera_zoom).toLatin1());
+//				}
+			}*/
+
+			IdFile *id = field->walkmesh();
+			if(id->isOpen()) {
+				deb.write(QString("%1:\n").arg(field->name()).toLatin1());
+				int triangleID = 0;
+				foreach(const Triangle &triangle, id->getTriangles()) {
+					const Access &a = id->access(triangleID++);
+					for(int jj=0; jj<3; ++jj) {
+						deb.write(QString("(x=%1, y=%2, z=%3)+a=%4 ")
+								.arg(triangle.vertices[jj].x)
+								.arg(triangle.vertices[jj].y)
+								.arg(triangle.vertices[jj].z)
+								  .arg(a.a[jj]).toLatin1());
+					}
+					deb.write("\n");
+				}
+			}
+
+
+			/*EncounterFile *e = field->encounter();
+			EncounterTable tables[2];
+			tables[0] = e->encounterTable(EncounterFile::Table1);
+			tables[1] = e->encounterTable(EncounterFile::Table2);
+//			for(int tableId=0; tableId<2; tableId++) {
+//				EncounterTable t = tables[tableId];
+				deb.write(QString("%1\t%2\t%3\n")//, %4, %5, %6, %7, %8, %9, %10, %11, %12, %13, %14, (%15)
+						  .arg(field->name())
+						  .arg(255 - tables[0].rate)
+						  //.arg(t.enabled)
+						  .arg(255 - tables[1].rate)
+						.arg(t.enc_standard[0])
+						.arg(t.enc_standard[1])
+						.arg(t.enc_standard[2])
+						.arg(t.enc_standard[3])
+						.arg(t.enc_standard[4])
+						.arg(t.enc_standard[5])
+						.arg(t.enc_special[0])
+						.arg(t.enc_special[1])
+						.arg(t.enc_special[2])
+						.arg(t.enc_special[3])
+						.arg(t._pad).toLatin1());
+//			}*/
+
+			/*
+			 *for(int i=0; i<tut->size(); ++i) {
+					const QByteArray &data = tut->data(i);
+					quint8 id;
+					if(data.size() < 6) {
+						id = -1;
+					} else {
+						memcpy(&id, data.constData() + 4, 1);
+					}
+					deb.write(QString("%1: %2 -> %3 | %4\n").arg(field->name())
+							  .arg(i).arg(id).arg(QString(tut->data(i).toHex())).toLatin1());
+				}*/
+
+			/*Data::charlgp_loadAnimBoneCount();
 			FieldModelLoader *modelLoader = (FieldModelLoader *)field->fieldModelLoader();
 			if(modelLoader) {
 				for(int i=0; i<modelLoader->modelCount(); ++i) {
 					deb.write(QString("%1: %2 -> %3\n").arg(field->name())
 							  .arg(i).arg(modelLoader->unknown(i)).toLatin1());
-
+*/
 					/*int boneCount = field->fieldModel(i)->boneCount();
 					foreach(const QString &animation, modelLoader->ANames(i)) {
 						QString animName = animation.left(animation.lastIndexOf('.')).toLower() + ".a";
@@ -205,8 +304,8 @@ void FieldArchive::searchAll()
 							qDebug() << boneCount << Data::charlgp_animBoneCount.value(animName) << field->name() << modelLoader->HRCName(i) << animation;
 						}
 					}*/
-				}
-			}
+			//	}
+			//}
 			/*TutFileStandard *tut = field->tutosAndSounds();
 			if(tut->isOpen()) {
 				deb.write(QString("=== %1 ===\n").arg(field->name()).toLatin1());
@@ -524,7 +623,7 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 	return false;
 }
 
-bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory, bool overwrite, Field::FieldParts toExport, FieldArchiveIOObserver *observer)
+bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory, bool overwrite, Field::FieldSections toExport, FieldArchiveIOObserver *observer)
 {
 	if(!selectedFields.isEmpty()) {
 		QString extension, path;
@@ -548,7 +647,7 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 					path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
 
 					if(overwrite || !QFile::exists(path)) {
-						QPixmap background = f->openBackground();
+						QPixmap background = f->background()->openBackground();
 						if(!background.isNull())
 							background.save(path);
 					}

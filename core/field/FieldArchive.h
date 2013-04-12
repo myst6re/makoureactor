@@ -41,6 +41,7 @@ public:
 
 	virtual void clear();
 	int size() const;
+	int indexOfField(const QString &name) const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
 	void addField(Field *field);
 	void removeField(quint32 id);
@@ -61,7 +62,7 @@ public:
 	bool searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting);
 
-	bool exportation(const QList<int> &selectedFields, const QString &directory, bool overwrite, Field::FieldParts toExport, FieldArchiveIOObserver *observer);
+	bool exportation(const QList<int> &selectedFields, const QString &directory, bool overwrite, Field::FieldSections toExport, FieldArchiveIOObserver *observer);
 
 	virtual FieldArchiveIO *io() const;
 protected:

@@ -124,7 +124,7 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 
 				tex2id.clear();
 
-				this->dataLoaded = true;
+				dataLoaded = true;
 			}
 		}
 	}
@@ -132,7 +132,7 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 		return 2;
 	}
 
-	return this->dataLoaded;
+	return dataLoaded;
 }
 
 bool FieldModelFilePC::openHrc(QIODevice *hrc_file, QMultiMap<int, QStringList> &rsd_files)

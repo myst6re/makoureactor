@@ -16,9 +16,10 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Section1File.h"
+#include "Field.h"
 
-Section1File::Section1File() :
-	modified(false), opened(false), _tut(0)
+Section1File::Section1File(Field *field) :
+	FieldPart(field), _tut(0)
 {
 }
 
@@ -36,7 +37,12 @@ void Section1File::clear()
 	_texts.clear();
 	_author.clear();
 
-	opened = false;
+	setOpen(false);
+}
+
+bool Section1File::open()
+{
+	return open(field()->sectionData(Field::Scripts));
 }
 
 bool Section1File::open(const QByteArray &data)
@@ -167,13 +173,14 @@ bool Section1File::open(const QByteArray &data)
 		_texts.append(new FF7Text(data.mid(posTexts+posDeb, posAKAO-posDeb)));
 	}
 
-	opened = true;
+	setOpen(true);
 
 	return true;
 }
 
-QByteArray Section1File::save(const QByteArray &data) const
+QByteArray Section1File::save() const
 {
+	QByteArray data = field()->sectionData(Field::Scripts);
 	QByteArray grpScriptNames, positionsScripts, positionsAKAO, allScripts, realScript, positionsTexts, allTexts, allAKAOs;
 	quint32 posAKAO, posAKAOs, newPosAKAOs;
 	quint16 posTocAKAOs, posTexts, newPosScripts, newPosTexts, newNbAKAO, pos;
@@ -261,19 +268,9 @@ QByteArray Section1File::save(const QByteArray &data) const
 			.append(allAKAOs); // AKAO / tutos
 }
 
-bool Section1File::isOpen() const
-{
-	return opened;
-}
-
 bool Section1File::isModified() const
 {
-	return modified || (_tut && _tut->isModified());
-}
-
-void Section1File::setModified(bool modified)
-{
-	this->modified = modified;
+	return FieldPart::isModified() || (_tut && _tut->isModified());
 }
 
 int Section1File::modelID(quint8 grpScriptID) const
@@ -316,20 +313,20 @@ int Section1File::grpScriptCount() const
 void Section1File::insertGrpScript(int row)
 {
 	_grpScripts.insert(row, new GrpScript);
-	modified = true;
+	setModified(true);
 }
 
 void Section1File::insertGrpScript(int row, GrpScript *grpScript)
 {
 	_grpScripts.insert(row, grpScript);
-	modified = true;
+	setModified(true);
 }
 
 void Section1File::deleteGrpScript(int row)
 {
 	if(row < _grpScripts.size()) {
 		delete _grpScripts.takeAt(row);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -337,7 +334,7 @@ void Section1File::removeGrpScript(int row)
 {
 	if(row < _grpScripts.size()) {
 		_grpScripts.removeAt(row);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -345,18 +342,19 @@ bool Section1File::moveGrpScript(int row, bool direction)
 {
 	if(row >= _grpScripts.size())	return false;
 
-	if(direction)
-	{
-		if(row == _grpScripts.size()-1)	return false;
+	if(direction) {
+		if(row == _grpScripts.size()-1) {
+			return false;
+		}
 		_grpScripts.swap(row, row+1);
-		modified = true;
-	}
-	else
-	{
-		if(row == 0)	return false;
+	} else {
+		if(row == 0) {
+			return false;
+		}
 		_grpScripts.swap(row, row-1);
-		modified = true;
 	}
+	setModified(true);
+
 	return true;
 }
 
@@ -527,7 +525,7 @@ void Section1File::setWindow(const FF7Window &win)
 {
 	if(win.groupID < _grpScripts.size()) {
 		_grpScripts.at(win.groupID)->setWindow(win);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -602,7 +600,7 @@ void Section1File::insertText(int row)
 	_texts.insert(row, new FF7Text);
 	foreach(GrpScript *grpScript, _grpScripts)
 		grpScript->shiftTextIds(row-1, +1);
-	modified = true;
+	setModified(true);
 }
 
 void Section1File::deleteText(int row)
@@ -611,7 +609,7 @@ void Section1File::deleteText(int row)
 		delete _texts.takeAt(row);
 		foreach(GrpScript *grpScript, _grpScripts)
 			grpScript->shiftTextIds(row, -1);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -627,7 +625,7 @@ void Section1File::shiftTutIds(int row, int shift)
 {
 	foreach(GrpScript *grpScript, _grpScripts)
 		grpScript->shiftTutIds(row, shift);
-	modified = true;
+	setModified(true);
 }
 
 QSet<quint8> Section1File::listUsedTuts() const
@@ -646,7 +644,7 @@ const QString &Section1File::author() const
 void Section1File::setAuthor(const QString &author)
 {
 	_author = author;
-	modified = true;
+	setModified(true);
 }
 
 quint16 Section1File::scale() const
@@ -657,7 +655,7 @@ quint16 Section1File::scale() const
 void Section1File::setScale(quint16 scale)
 {
 	_scale = scale;
-	modified = true;
+	setModified(true);
 }
 
 TutFileStandard *Section1File::tut() const

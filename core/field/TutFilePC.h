@@ -8,9 +8,10 @@ class TutFilePC : public TutFile
 {
 public:
 	TutFilePC();
+	bool open();
+	QByteArray save() const;
 protected:
 	QList<quint32> openPositions(const QByteArray &data) const;
-	QByteArray save2(QByteArray &toc, quint32 firstPos) const;
 	inline int maxTutCount() const { return 9; }
 };
 

@@ -40,12 +40,13 @@ Window::Window() :
 	setMinimumSize(700, 600);
 	resize(900, 700);
 
-	statusBar()->show();
+	statusBar()->hide();
 	progression = new QProgressBar(statusBar());
 	progression->setFixedSize(160, 16);
 	progression->setMinimum(0);
 	progression->setAlignment(Qt::AlignCenter);
 	progression->hide();
+	statusBar()->addPermanentWidget(progression);
 
 #ifdef Q_OS_WIN
 	if(QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
@@ -54,11 +55,14 @@ Window::Window() :
 	}
 #endif
 
-	authorLbl = new QLabel(statusBar());
+	authorLbl = new QLabel();
 	authorLbl->setMargin(2);
-	authorLbl->hide();
-	statusBar()->addPermanentWidget(authorLbl);
-	statusBar()->addPermanentWidget(progression);
+
+	QWidget *toolBarRight = new QWidget();
+	QHBoxLayout *toolBarRightLayout = new QHBoxLayout(toolBarRight);
+	toolBarRightLayout->addStretch();
+	toolBarRightLayout->addWidget(authorLbl, 0, Qt::AlignRight);
+	toolBarRightLayout->setContentsMargins(QMargins());
 	
 	QMenu *menu;
 	QAction *actionOpen, *actionFind, *action;
@@ -111,21 +115,21 @@ Window::Window() :
 
 	menuLang->addSeparator();
 	QTranslator translator;
-	foreach(QString str, stringList) {
+	foreach(const QString &str, stringList) {
 		translator.load(qApp->applicationDirPath()+"/"+str);
 		action = menuLang->addAction(translator.translate("Window", "Français"));
-		str = str.mid(14,2);
-		action->setData(str);
+		QString lang = str.mid(14, 2);
+		action->setData(lang);
 		action->setCheckable(true);
-		action->setChecked(Config::value("lang").toString()==str);
+		action->setChecked(Config::value("lang").toString()==lang);
 	}
 	connect(menuLang, SIGNAL(triggered(QAction*)), this, SLOT(changeLanguage(QAction*)));
 
 	menu->addAction(tr("Configuration..."), this, SLOT(config()))->setMenuRole(QAction::PreferencesRole);
 
 	toolBar = new QToolBar(tr("Barre d'outils &principale"));
-	toolBar->setObjectName("toolBar");
-	toolBar->setIconSize(QSize(16,16));
+	toolBar->setObjectName("toolbar");
+	toolBar->setIconSize(QSize(16, 16));
 	addToolBar(toolBar);
 	toolBar->addAction(actionOpen);
 	actionOpen->setStatusTip(tr("Ouvrir un fichier"));
@@ -138,6 +142,7 @@ Window::Window() :
 	actionRun->setShortcut(Qt::Key_F8);
 	actionRun->setShortcutContext(Qt::ApplicationShortcut);
 	actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
+	authorAction = toolBar->addWidget(toolBarRight);
 
 	QFont font;
 	font.setPointSize(8);
@@ -394,7 +399,7 @@ int Window::closeFile(bool quit)
 		if(fieldModel)	fieldModel->clear();
 		zonePreview->setCurrentIndex(0);
 
-		authorLbl->hide();
+		authorAction->setVisible(false);
 		setWindowModified(false);
 		setWindowTitle();
 		searchDialog->setEnabled(false);
@@ -512,6 +517,7 @@ void Window::showProgression()
 	if(taskBarButton) {
 		taskBarButton->setState(QTaskBarButton::Normal);
 	}
+	statusBar()->show();
 	progression->show();
 }
 
@@ -520,6 +526,7 @@ void Window::hideProgression()
 	if(taskBarButton) {
 		taskBarButton->setState(QTaskBarButton::Invisible);
 	}
+	statusBar()->hide();
 	progression->hide();
 }
 
@@ -538,9 +545,11 @@ void Window::open(const QString &cheminFic, bool isDir)
 								" - Les fichiers field PC (\"exemple\")\n"),
 							 QMessageBox::NoButton, this);
 		QAbstractButton *psButton = question.addButton(tr("PS"), QMessageBox::AcceptRole);
-		question.addButton(tr("PC"), QMessageBox::AcceptRole);
+		QAbstractButton *pcButton = question.addButton(tr("PC"), QMessageBox::AcceptRole);
 		question.addButton(QMessageBox::Cancel);
-		if(question.exec() != QMessageBox::Accepted) {
+		question.exec();
+		if(question.clickedButton() != psButton
+				&& question.clickedButton() != pcButton) {
 			return;
 		}
 		isPS = question.clickedButton() == psButton;
@@ -754,7 +763,7 @@ void Window::openField(bool reload)
 
 	// Show author
 	authorLbl->setText(tr("Auteur : %1").arg(scriptsAndTexts->author()));
-	authorLbl->show();
+	authorAction->setVisible(true);
 
 	emit fieldIDChanged(id);
 	// Fill group script list
@@ -1088,7 +1097,7 @@ void Window::massExport()
 	if(massExportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massExportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {
-			Field::FieldParts toExport;
+			Field::FieldSections toExport;
 
 			showProgression();
 			progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
@@ -1186,7 +1195,7 @@ void Window::importer()
 		return;
 	}
 
-	Field::FieldParts parts = dialog.parts();
+	Field::FieldSections parts = dialog.parts();
 	if(parts == 0) {
 		return;
 	}

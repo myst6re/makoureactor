@@ -40,7 +40,7 @@ void FieldPS::openHeader(const QByteArray &fileData)
 	}
 }
 
-int FieldPS::sectionId(FieldPart part) const
+int FieldPS::sectionId(FieldSection part) const
 {
 	switch(part) {
 	case Scripts:		return 0;
@@ -65,22 +65,13 @@ FieldArchiveIOPS *FieldPS::io() const
 	return (FieldArchiveIOPS *)Field::io();
 }
 
-QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+FieldPart *FieldPS::createPart(FieldSection part)
 {
-	return background()->openBackground(
-				sectionData(Background),
-				io()->mimData(this),
-				paramActifs, z, layers);
-}
-
-FieldModelLoader *FieldPS::createFieldModelLoader() const
-{
-	return new FieldModelLoaderPS();
-}
-
-BackgroundFile *FieldPS::createBackground() const
-{
-	return new BackgroundFilePS();
+	switch(part) {
+	case ModelLoader:	return new FieldModelLoaderPS(this);
+	case Background:	return new BackgroundFilePS(this);
+	default:			return Field::createPart(part);
+	}
 }
 
 FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
@@ -102,6 +93,7 @@ bool FieldPS::save(QByteArray &newData, bool compress)
 	QByteArray decompresse = io()->fieldData(this), toc;
 	const char *decompresseData = decompresse.constData();
 	quint32 padd, pos, debutSections[9];
+	FieldPart *fieldPart;
 
 	if(decompresse.isEmpty())	return false;
 
@@ -113,17 +105,18 @@ bool FieldPS::save(QByteArray &newData, bool compress)
 	toc.append((char *)&debutSections[0], 4);
 
 	// Section 1 (scripts + textes + akaos/tutos)
-	if(section1 && section1->isModified()) {
-		newData.append(section1->save(decompresse.mid(28, debutSections[1]-debutSections[0])));
+	fieldPart = part(Scripts);
+	if(fieldPart && fieldPart->isModified()) {
+		newData.append(fieldPart->save());
 	} else {
 		newData.append(decompresse.mid(28, debutSections[1]-debutSections[0]));
 	}
 	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
 
 	// Section 2 (walkmesh)
-	QByteArray section;
-	if(id && id->isModified() && id->save(section)) {
-		newData.append(section);
+	fieldPart = part(Walkmesh);
+	if(fieldPart && fieldPart->isModified()) {
+		newData.append(fieldPart->save());
 	} else {
 		newData.append(decompresse.mid(debutSections[1]-padd, debutSections[2]-debutSections[1]));
 	}
@@ -134,32 +127,39 @@ bool FieldPS::save(QByteArray &newData, bool compress)
 	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
 
 	// Section 4 (camera)
-	section = QByteArray();
-	if(ca && ca->isModified() && ca->save(section)) {
-		newData.append(section);
+	fieldPart = part(Camera);
+	if(fieldPart && fieldPart->isModified()) {
+		newData.append(fieldPart->save());
 	} else {
 		newData.append(decompresse.mid(debutSections[3]-padd, debutSections[4]-debutSections[3]));
 	}
 	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
 
 	// Section 5 (trigger)
-	if(_inf && _inf->isModified()) {
-		newData.append(_inf->save());
+	fieldPart = part(Inf);
+	if(fieldPart && fieldPart->isModified()) {
+		newData.append(fieldPart->save());
 	} else {
 		newData.append(decompresse.mid(debutSections[4]-padd, debutSections[5]-debutSections[4]));
 	}
 	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
 
 	// Section 6 (encounter)
-	if(_encounter && _encounter->isModified()) {
-		newData.append(_encounter->save());
+	fieldPart = part(Encounter);
+	if(fieldPart && fieldPart->isModified()) {
+		newData.append(fieldPart->save());
 	} else {
 		newData.append(decompresse.mid(debutSections[5]-padd, debutSections[6]-debutSections[5]));
 	}
 	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
 
 	// Section 7 (model loader PS)
-	newData.append(decompresse.mid(debutSections[6]-padd));
+	fieldPart = part(ModelLoader);
+	if(fieldPart && fieldPart->isModified()) {
+		newData.append(fieldPart->save());
+	} else {
+		newData.append(decompresse.mid(debutSections[6]-padd));
+	}
 
 	newData.prepend(toc);
 
@@ -179,8 +179,8 @@ bool FieldPS::save(QByteArray &newData, bool compress)
 	if(compress)
 	{
 		const QByteArray &compresse = LZS::compress(newData);
-		quint32 taille = compresse.size();
-		newData = QByteArray((char *)&taille, 4).append(compresse);
+		quint32 lzsSize = compresse.size();
+		newData = QByteArray((char *)&lzsSize, 4).append(compresse);
 		return true;
 	}
 

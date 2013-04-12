@@ -35,7 +35,7 @@ void FieldPC::openHeader(const QByteArray &fileData)
 	memcpy(sectionPositions, fileData.constData() + 6, 9 * 4); // header
 }
 
-int FieldPC::sectionId(FieldPart part) const
+int FieldPC::sectionId(FieldSection part) const
 {
 	switch(part) {
 	case Scripts:		return 0;
@@ -61,27 +61,18 @@ FieldArchiveIOPC *FieldPC::io() const
 	return (FieldArchiveIOPC *)Field::io();
 }
 
-QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+FieldPart *FieldPC::createPart(FieldSection part)
 {
-	return background()->openBackground(
-				sectionData(Background),
-				sectionData(PalettePC),
-				paramActifs, z, layers);
-}
-
-FieldModelLoader *FieldPC::createFieldModelLoader() const
-{
-	return new FieldModelLoaderPC();
-}
-
-BackgroundFile *FieldPC::createBackground() const
-{
-	return new BackgroundFilePC();
+	switch(part) {
+	case ModelLoader:	return new FieldModelLoaderPC(this);
+	case Background:	return new BackgroundFilePC(this);
+	default:			return Field::createPart(part);
+	}
 }
 
 FieldModelLoaderPC *FieldPC::fieldModelLoader(bool open)
 {
-	//if(open && !modelLoader->isLoaded()) {
+	//if(open && !modelLoader->isOpen()) {
 	//	Data::currentCharNames = model_nameChar;
 	//	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
 	//	Data::currentAnimNames = &fieldModelLoader->model_anims;
@@ -116,6 +107,7 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	QByteArray decompresse = io()->fieldData(this), section, toc;
 	const char *decompresseData = decompresse.constData();
 	quint32 sectionPositions[9], size, section_size;
+	FieldPart *fieldPart;
 
 	if(decompresse.isEmpty()) {
 		return false;
@@ -131,8 +123,9 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	toc.append("\x2A\x00\x00\x00", 4); // pos section 1
 
 	// Section 1 (scripts + textes + akaos/tutos)
-	if(section1 && section1->isModified()) {
-		section = section1->save(decompresse.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4));
+	fieldPart = part(Scripts);
+	if(fieldPart && fieldPart->isModified()) {
+		section = fieldPart->save();
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
@@ -143,8 +136,9 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	toc.append((char *)&size, 4); // pos section 2
 
 	// Section 2 (camera)
-	section = QByteArray();
-	if(ca && ca->isModified() && ca->save(section)) {
+	fieldPart = part(Camera);
+	if(fieldPart && fieldPart->isModified()) {
+		section = fieldPart->save();
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
@@ -155,8 +149,9 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	toc.append((char *)&size, 4); // pos section 3
 
 	// Section 3 (model loader PC)
-	if(modelLoader && modelLoader->isLoaded() && modelLoader->isModified()) {
-		section = fieldModelLoader()->save();
+	fieldPart = part(ModelLoader);
+	if(fieldPart && fieldPart->isOpen() && fieldPart->isModified()) {
+		section = fieldPart->save();
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
@@ -173,8 +168,9 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	toc.append((char *)&size, 4); // pos section 5
 
 	// Section 5 (walkmesh)
-	section = QByteArray();
-	if(id && id->isModified() && id->save(section)) {
+	fieldPart = part(Walkmesh);
+	if(fieldPart && fieldPart->isModified()) {
+		section = fieldPart->save();
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
@@ -191,8 +187,9 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	toc.append((char *)&size, 4); // pos section 7
 
 	// Section 7 (encounter)
-	if(_encounter && _encounter->isModified()) {
-		section = _encounter->save();
+	fieldPart = part(Encounter);
+	if(fieldPart && fieldPart->isModified()) {
+		section = fieldPart->save();
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
@@ -203,8 +200,9 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	toc.append((char *)&size, 4); // pos section 8
 
 	// Section 8 (trigger)
-	if(_inf && _inf->isModified()) {
-		section = _inf->save();
+	fieldPart = part(Inf);
+	if(fieldPart && fieldPart->isModified()) {
+		section = fieldPart->save();
 		section_size = section.size();
 		newData.append((char *)&section_size, 4).append(section);
 	} else {
@@ -235,15 +233,15 @@ bool FieldPC::save(QByteArray &newData, bool compress)
 	if(compress)
 	{
 		const QByteArray &compresse = LZS::compress(newData);
-		quint32 taille = compresse.size();
-		newData = QByteArray((char *)&taille, 4).append(compresse);
+		quint32 lzsSize = compresse.size();
+		newData = QByteArray((char *)&lzsSize, 4).append(compresse);
 		return true;
 	}
 
 	return true;
 }
 
-qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldParts part)
+qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldSections part)
 {
 	if(!isPSField) {
 		quint32 sectionPositions[9];
@@ -253,7 +251,7 @@ qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldParts part)
 
 		if(part.testFlag(ModelLoader)) {
 			FieldModelLoaderPC *modelLoader = fieldModelLoader(false);
-			if(!modelLoader->load(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4))) {
+			if(!modelLoader->open(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4))) {
 				return 2;
 			}
 			modelLoader->setModified(true);

@@ -19,25 +19,17 @@
 #define FIELDMODELLOADER_H
 
 #include <QtCore>
+#include "FieldPart.h"
 
-class FieldModelLoader
+class FieldModelLoader : public FieldPart
 {
 public:
-	FieldModelLoader();
+	explicit FieldModelLoader(Field *field);
 	virtual ~FieldModelLoader();
-	bool isLoaded() const;
-	bool isModified() const;
-	void setModified(bool modified);
-	virtual bool load(const QByteArray &data)=0;
 	virtual int modelCount() const=0;
 	virtual int animCount(int modelID) const=0;
 	virtual quint16 unknown(int modelID) const=0;
 	virtual void setUnknown(int modelID, quint16 unknown)=0;
-
-protected:
-	void setLoaded(bool loaded);
-private:
-	bool loaded, modified;
 };
 
 #endif // FIELDMODELLOADER_H

@@ -25,9 +25,10 @@
 class FieldModelLoaderPC : public FieldModelLoader
 {
 public:
-	FieldModelLoaderPC();
+	explicit FieldModelLoaderPC(Field *field);
 	void clear();
-	bool load(const QByteArray &data);
+	bool open();
+	bool open(const QByteArray &data);
 	QByteArray save() const;
 	quint16 globalScale() const;
 	void setGlobalScale(quint16 scale);

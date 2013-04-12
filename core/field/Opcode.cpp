@@ -99,7 +99,7 @@ int Opcode::subParam(int cur, int paramSize) const
 	else
 		sizeBA = paramSize/8;
 
-	memcpy(&value, p.mid(cur/8, sizeBA), sizeBA);
+	memcpy(&value, p.constData() + cur/8, sizeBA);
 	return (value >> ((sizeBA*8-cur%8)-paramSize)) & ((int)pow(2, paramSize)-1);
 }
 

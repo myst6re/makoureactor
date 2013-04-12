@@ -4,10 +4,15 @@
 #include <QtCore>
 #include "TutFile.h"
 
+class Field;
+
 class TutFileStandard : public TutFile
 {
 public:
-	TutFileStandard();
+	explicit TutFileStandard(Field *field);
+	bool open();
+	QByteArray save(QByteArray &toc, quint32 firstPos) const;
+	QByteArray save() const;
 	bool hasTut() const;
 	bool isTut(int tutID) const;
 	bool isAkao(int tutID) const;

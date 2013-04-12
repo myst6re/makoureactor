@@ -16,16 +16,16 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "CaFile.h"
+#include "Field.h"
 
-CaFile::CaFile() :
-	opened(false), modified(false)
+CaFile::CaFile(Field *field) :
+	FieldPart(field)
 {
 }
 
-CaFile::CaFile(const QByteArray &data) :
-	opened(false), modified(false)
+bool CaFile::open()
 {
-	open(data);
+	return open(field()->sectionData(Field::Camera));
 }
 
 bool CaFile::open(const QByteArray &data)
@@ -43,7 +43,7 @@ bool CaFile::open(const QByteArray &data)
 		return false;
 	}
 
-	cameras.clear();
+	clear();
 
 	Camera camera;
 
@@ -55,15 +55,15 @@ bool CaFile::open(const QByteArray &data)
 		cameras.append(camera);
 	}
 
-	opened = true;
-	modified = false;
+	setOpen(true);
+	setModified(false);
 
 	return true;
 }
 
-bool CaFile::save(QByteArray &ca)
+QByteArray CaFile::save() const
 {
-	if(!opened)		return false;
+	QByteArray ca;
 
 	foreach(Camera camera, cameras) {
 		camera.camera_axis2z = camera.camera_axis[2].z;
@@ -74,22 +74,12 @@ bool CaFile::save(QByteArray &ca)
 		qWarning() << "Bad size save ca" << ca.size();
 	}
 
-	return true;
+	return ca;
 }
 
-bool CaFile::isOpen() const
+void CaFile::clear()
 {
-	return opened;
-}
-
-bool CaFile::isModified() const
-{
-	return modified;
-}
-
-void CaFile::setModified(bool modified)
-{
-	this->modified = modified;
+	cameras.clear();
 }
 
 bool CaFile::hasCamera() const
@@ -110,20 +100,20 @@ const Camera &CaFile::camera(int camID) const
 void CaFile::setCamera(int camID, const Camera &cam)
 {
 	cameras[camID] = cam;
-	modified = true;
+	setModified(true);
 }
 
 void CaFile::insertCamera(int camID, const Camera &cam)
 {
 	cameras.insert(camID, cam);
-	modified = true;
+	setModified(true);
 }
 
 bool CaFile::removeCamera(int camID)
 {
 	if(cameras.size() > 1) {
 		cameras.removeAt(camID);
-		modified = true;
+		setModified(true);
 		return true;
 	}
 	return false;

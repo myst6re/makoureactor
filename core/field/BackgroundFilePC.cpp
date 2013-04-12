@@ -18,12 +18,13 @@
 #include "BackgroundFilePC.h"
 #include "Palette.h"
 #include "../PsColor.h"
+#include "FieldPC.h"
 
 QHash<quint8, quint32> BackgroundFilePC::posTextures;
 QByteArray BackgroundFilePC::data;
 
-BackgroundFilePC::BackgroundFilePC() :
-	BackgroundFile()
+BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
+	BackgroundFile(field)
 {
 }
 
@@ -73,12 +74,12 @@ QList<Palette *> BackgroundFilePC::openPalettes(const QByteArray &data, const QB
 	return palettes;
 }
 
-QPixmap BackgroundFilePC::openBackground(const QByteArray &data, const QByteArray &palData, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
-	this->data = data;
+	data = field()->sectionData(Field::Background);
 	const char *constData = data.constData();
 	quint32 dataSize = data.size(), i;
-	QList<Palette *> palettes = openPalettes(data, palData);
+	QList<Palette *> palettes = openPalettes(data, field()->sectionData(Field::PalettePC));
 	quint32 aTex = 44;
 	quint16 nbTiles1, nbTiles2=0, nbTiles3=0, nbTiles4=0;
 	bool exist2, exist3, exist4;
@@ -217,8 +218,9 @@ QPixmap BackgroundFilePC::openBackground(const QByteArray &data, const QByteArra
 	return drawBackground(tiles, palettes, data);
 }
 
-bool BackgroundFilePC::usedParams(const QByteArray &data, QHash<quint8, quint8> &usedParams, bool *layerExists)
+bool BackgroundFilePC::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
+	data = field()->sectionData(Field::Background);
 	if(data.isEmpty())	return false;
 
 	const char *constData = data.constData();

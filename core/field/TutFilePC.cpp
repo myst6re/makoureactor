@@ -1,8 +1,13 @@
 #include "TutFilePC.h"
 
 TutFilePC::TutFilePC() :
-	TutFile()
+	TutFile(0)
 {
+}
+
+bool TutFilePC::open()
+{
+	return false;
 }
 
 QList<quint32> TutFilePC::openPositions(const QByteArray &data) const
@@ -23,12 +28,10 @@ QList<quint32> TutFilePC::openPositions(const QByteArray &data) const
 	return positions;
 }
 
-QByteArray TutFilePC::save2(QByteArray &toc, quint32 firstPos) const
+QByteArray TutFilePC::save() const
 {
-	Q_UNUSED(firstPos)
-
 	quint32 pos;
-	QByteArray ret;
+	QByteArray toc, ret;
 
 	for(int i=0 ; i<9 ; ++i) {
 		if(i < size()) {
@@ -40,5 +43,5 @@ QByteArray TutFilePC::save2(QByteArray &toc, quint32 firstPos) const
 		toc.append((char *)&pos, 2);
 	}
 
-	return ret;
+	return toc.append(ret);
 }

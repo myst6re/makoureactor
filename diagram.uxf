@@ -325,12 +325,12 @@ list of&gt;</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>620</x>
-      <y>570</y>
+      <y>590</y>
       <w>110</w>
-      <h>120</h>
+      <h>100</h>
     </coordinates>
     <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>90;30;30;100</additional_attributes>
+    <additional_attributes>90;30;30;80</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
@@ -1059,6 +1059,18 @@ fg=blue</panel_attributes>
       <h>30</h>
     </coordinates>
     <panel_attributes>FieldArchiveIOPSFile
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>520</x>
+      <y>270</y>
+      <w>120</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>/FieldPart/
 </panel_attributes>
     <additional_attributes/>
   </element>

@@ -19,24 +19,9 @@
 #include "../Config.h"
 #include "../FF7Text.h"
 
-TutFile::TutFile() :
-	_isOpen(false), _isModified(false)
+TutFile::TutFile(Field *field) :
+	FieldPart(field)
 {
-}
-
-bool TutFile::isOpen() const
-{
-	return _isOpen;
-}
-
-bool TutFile::isModified() const
-{
-	return _isModified;
-}
-
-void TutFile::setModified(bool modified)
-{
-	_isModified = modified;
 }
 
 bool TutFile::open(const QByteArray &data)
@@ -53,24 +38,22 @@ bool TutFile::open(const QByteArray &data)
 	for(int i=0 ; i<positions.size()-1 ; ++i) {
 		if(positions.at(i) < dataSize && positions.at(i) < positions.at(i+1)) {
 			QByteArray t = data.mid(positions.at(i), positions.at(i+1)-positions.at(i));
-			if(t.startsWith("KAO")) {
-				t.prepend('A'); // PC bug
-			}
+//			if(t.startsWith("KAO")) {
+//				t.prepend('A'); // PC bug
+//			}
 //			qDebug() << i << t.left(16).toHex();
 			tutos.append(t);
 		}
 	}
 
-	_isOpen = true;
+	setOpen(true);
 
 	return true;
 }
 
-QByteArray TutFile::save(QByteArray &toc, quint32 firstPos) const
+void TutFile::clear()
 {
-	toc.clear();
-
-	return save2(toc, firstPos);
+	tutos.clear();
 }
 
 int TutFile::size() const
@@ -81,7 +64,7 @@ int TutFile::size() const
 void TutFile::removeTut(int tutID)
 {
 	tutos.removeAt(tutID);
-	_isModified = true;
+	setModified(true);
 }
 
 bool TutFile::insertTut(int tutID)
@@ -102,14 +85,14 @@ QByteArray &TutFile::dataRef(int tutID)
 void TutFile::setData(int tutID, const QByteArray &data)
 {
 	tutos.replace(tutID, data);
-	_isModified = true;
+	setModified(true);
 }
 
 bool TutFile::insertData(int tutID, const QByteArray &data)
 {
 	if(size() < maxTutCount()) {
 		tutos.insert(tutID, data);
-		_isModified = true;
+		setModified(true);
 		return true;
 	}
 	return false;
@@ -287,5 +270,5 @@ void TutFile::parseText(int tutID, const QString &tuto)
 
 	tutos.replace(tutID, ret);
 
-	_isModified = true;
+	setModified(true);
 }

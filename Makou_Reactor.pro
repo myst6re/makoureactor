@@ -108,7 +108,8 @@ HEADERS += \
     core/field/FieldIO.h \
     widgets/FontManager.h \
     core/field/TutFilePC.h \
-    core/field/TutFileStandard.h
+    core/field/TutFileStandard.h \
+    core/field/FieldPart.h
 
 SOURCES += \
     Window.cpp \
@@ -211,7 +212,8 @@ SOURCES += \
     core/field/FieldIO.cpp \
     widgets/FontManager.cpp \
     core/field/TutFilePC.cpp \
-    core/field/TutFileStandard.cpp
+    core/field/TutFileStandard.cpp \
+    core/field/FieldPart.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts
@@ -236,7 +238,7 @@ OTHER_FILES += Makou_Reactor.rc \
 #base for setting up deb packages(rpm too?).
 #becomes 'make install' when qmake generates the makefile
 unix:!macx:!symbian {
-	LIBS = -lglut -lGLU -lz
+	LIBS = -lglut -lGLU
     system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
     target.path = /opt/makoureactor #set to deploy the build target.
 

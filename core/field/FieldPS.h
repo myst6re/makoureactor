@@ -32,8 +32,6 @@ public:
 
 	inline bool isPC() const { return false; }
 
-	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
-
 	bool save(QByteArray &newData, bool compress);
 
 	FieldModelLoaderPS *fieldModelLoader(bool open=true);
@@ -42,9 +40,8 @@ public:
 protected:
 	inline int headerSize() { return 28; }
 	void openHeader(const QByteArray &fileData);
-	FieldModelLoader *createFieldModelLoader() const;
-	BackgroundFile *createBackground() const;
-	int sectionId(FieldPart part) const;
+	FieldPart *createPart(FieldSection part);
+	int sectionId(FieldSection part) const;
 	quint32 sectionPosition(int idPart);
 	inline int sectionCount() {	return 7; }
 	inline int paddingBetweenSections() { return 0; }

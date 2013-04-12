@@ -569,13 +569,13 @@ bool Lgp::openHeader()
 	bool hasConflict = false;
 
 	for(qint32 cur=0; cur<sizeToc; cur += 27) {
-		const QString fileName = headerData.mid(cur, 20);
 		quint32 filePos;
 		quint16 conflict;
 		memcpy(&filePos, headerConstData + cur + 20, 4);
 		memcpy(&conflict, headerConstData + cur + 25, 2);
 		tocEntries.append(new LgpHeaderEntry(
-							  fileName, filePos));
+							  headerData.mid(cur, 20),
+							  filePos));
 		headerConflict.append(conflict);
 		if(conflict != 0 && !hasConflict) {
 			hasConflict = true;

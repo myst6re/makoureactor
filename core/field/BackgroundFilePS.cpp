@@ -18,13 +18,14 @@
 #include "BackgroundFilePS.h"
 #include "Palette.h"
 #include "../PsColor.h"
+#include "FieldPS.h"
 
 MIM BackgroundFilePS::headerPal;
 MIM BackgroundFilePS::headerImg;
 MIM BackgroundFilePS::headerEffect;
 
-BackgroundFilePS::BackgroundFilePS() :
-	BackgroundFile()
+BackgroundFilePS::BackgroundFilePS(FieldPS *field) :
+	BackgroundFile(field)
 {
 }
 
@@ -72,9 +73,10 @@ QList<Palette *> BackgroundFilePS::openPalettes(const QByteArray &data)
 	return palettes;
 }
 
-QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QByteArray &mimDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
 	/*--- OUVERTURE DU MIM ---*/
+	QByteArray mimDataDec = ((FieldPS *)field())->io()->mimData(field());
 	const char *constMimData = mimDataDec.constData();
 	quint32 mimDataSize = mimDataDec.size(), i;
 
@@ -102,24 +104,10 @@ QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QBy
 	}
 
 	/*--- OUVERTURE DU DAT ---*/
+	QByteArray datDataDec = field()->sectionData(Field::Background);
 	const char *constDatData = datDataDec.constData();
 	quint32 datDataSize = datDataDec.size();
 	quint32 debut1, debut2, debut3, debut4;
-
-	/* // MODEL SECTION
-	quint32 debutSection7, start2 = debutSection7 - start + 28;
-	quint16 size7, nb_model7;
-
-	memcpy(&debutSection7, constDatData + 24, 4);
-	memcpy(&size7, constDatData + start2, 2);
-	memcpy(&nb_model7, constDatData + start2+2, 2);
-	qDebug() << QString("Size = %1 | nbModels = %2").arg(size7).arg(nb_model7);
-	for(i=0 ; i<nb_model7 ; ++i) {
-		qDebug() << QString("??? = %1 | ??? = %2 | ??? = %3 | nbAnims = %4").arg((quint8)datData.at(start2+4+i*8)).arg((quint8)datData.at(start2+5+i*8)).arg((quint8)datData.at(start2+6+i*8)).arg((quint8)datData.at(start2+7+i*8));
-		qDebug() << QString("??? = %1 | ??? = %2 | ??? = %3 | ??? = %4").arg((quint8)datData.at(start2+8+i*8)).arg((quint8)datData.at(start2+9+i*8)).arg((quint8)datData.at(start2+10+i*8)).arg((quint8)datData.at(start2+11+i*8));
-	}
-	fdebug.write(datData.mid(start2));
-	fdebug.close(); */
 
 	if(datDataSize < 16)	return QPixmap();
 
@@ -311,9 +299,10 @@ QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QBy
 	return drawBackground(tiles, palettes, mimDataDec);
 }
 
-bool BackgroundFilePS::usedParams(const QByteArray &datDataDec, QHash<quint8, quint8> &usedParams, bool *layerExists)
+bool BackgroundFilePS::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
 	/*--- OUVERTURE DU DAT ---*/
+	QByteArray datDataDec = field()->sectionData(Field::Background);
 	const char *constDatData = datDataDec.constData();
 	quint32 datDataSize = datDataDec.size();
 	quint32 i, debut1, debut2, debut3, debut4;

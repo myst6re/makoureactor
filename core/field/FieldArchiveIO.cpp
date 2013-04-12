@@ -49,7 +49,7 @@ QString FieldArchiveIO::name() const
 		return filePath;
 	}
 
-	return filePath.mid(filePath.lastIndexOf("/") + 1);
+	return filePath.mid(filePath.lastIndexOf('/') + 1);
 }
 
 QString FieldArchiveIO::directory() const
@@ -62,7 +62,7 @@ QString FieldArchiveIO::directory() const
 		return filePath;
 	}
 
-	return filePath.left(filePath.lastIndexOf("/") + 1);
+	return filePath.left(filePath.lastIndexOf('/') + 1);
 }
 
 QByteArray FieldArchiveIO::fieldData(Field *field, bool unlzs)

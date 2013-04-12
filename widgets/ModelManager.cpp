@@ -136,7 +136,7 @@ void ModelManager::fill(FieldPC *field, bool reload)
 
 	clear();
 
-	if(!field->fieldModelLoader()->isLoaded()) {
+	if(!field->fieldModelLoader()->isOpen()) {
 		return;
 	}
 

@@ -17,31 +17,11 @@
  ****************************************************************************/
 #include "FieldModelLoader.h"
 
-FieldModelLoader::FieldModelLoader() :
-	loaded(false), modified(false)
+FieldModelLoader::FieldModelLoader(Field *field) :
+	FieldPart(field)
 {
 }
 
 FieldModelLoader::~FieldModelLoader()
 {
-}
-
-bool FieldModelLoader::isLoaded() const
-{
-	return loaded;
-}
-
-bool FieldModelLoader::isModified() const
-{
-	return modified;
-}
-
-void FieldModelLoader::setModified(bool modified)
-{
-	this->modified = modified;
-}
-
-void FieldModelLoader::setLoaded(bool loaded)
-{
-	this->loaded = loaded;
 }

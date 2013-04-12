@@ -19,6 +19,8 @@
 #define ENCOUNTERFILE_H
 
 #include <QtCore>
+#include "FieldPart.h"
+
 #define PROBABILITY(x)		(x >> 10)
 #define BATTLE_ID(x)		(x & 0x03FF)
 
@@ -30,25 +32,22 @@ typedef struct {
 	quint16 _pad;
 } EncounterTable;
 
-class EncounterFile
+class EncounterFile : public FieldPart
 {
 public:
 	enum Table {
 		Table1=0, Table2=1
 	};
 
-	EncounterFile();
-	EncounterFile(const QByteArray &data);
-	bool isOpen() const;
-	bool isModified() const;
-	void setModified(bool);
+	explicit EncounterFile(Field *field);
+	bool open();
 	bool open(const QByteArray &data);
 	QByteArray save() const;
+	void clear();
 	const EncounterTable &encounterTable(Table tableID) const;
 	void setEncounterTable(Table tableID, const EncounterTable &table);
 private:
 	EncounterTable tables[2];
-	bool _isOpen, _isModified;
 };
 
 #endif // ENCOUNTERFILE_H

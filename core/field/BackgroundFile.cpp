@@ -16,13 +16,24 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "BackgroundFile.h"
+#include "Field.h"
 
-BackgroundFile::BackgroundFile()
+BackgroundFile::BackgroundFile(Field *field) :
+	FieldPart(field)
 {
 }
 
 BackgroundFile::~BackgroundFile()
 {
+}
+
+QPixmap BackgroundFile::openBackground()
+{
+	// Search default background params
+	QHash<quint8, quint8> paramActifs;
+	qint16 z[] = {-1, -1};
+	field()->scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
+	return openBackground(paramActifs, z);
 }
 
 void BackgroundFile::area(const QMultiMap<qint16, Tile> &tiles,

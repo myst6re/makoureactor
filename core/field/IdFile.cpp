@@ -16,16 +16,16 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "IdFile.h"
+#include "Field.h"
 
-IdFile::IdFile() :
-	modified(false), opened(false), _unknown(0), _hasUnknownData(false)
+IdFile::IdFile(Field *field) :
+	FieldPart(field), _unknown(0), _hasUnknownData(false)
 {
 }
 
-IdFile::IdFile(const QByteArray &data) :
-	modified(false), opened(false), _unknown(0), _hasUnknownData(false)
+bool IdFile::open()
 {
-	open(data);
+	return open(field()->sectionData(Field::Walkmesh));
 }
 
 bool IdFile::open(const QByteArray &data)
@@ -75,14 +75,15 @@ bool IdFile::open(const QByteArray &data)
 //		qDebug() << "=====";
 	}
 
-	opened = true;
-	modified = false;
+	setOpen(true);
+	setModified(false);
 
 	return true;
 }
 
-bool IdFile::save(QByteArray &id)
+QByteArray IdFile::save() const
 {
+	QByteArray id;
 	quint32 count=triangleCount();
 
 	id.append((char *)&count, 4);
@@ -102,22 +103,14 @@ bool IdFile::save(QByteArray &id)
 		id.append((char *)&_unknown, 2);
 	}
 
-	return true;
+	return id;
 }
 
-bool IdFile::isOpen() const
+void IdFile::clear()
 {
-	return opened;
-}
-
-bool IdFile::isModified() const
-{
-	return modified;
-}
-
-void IdFile::setModified(bool modified)
-{
-	this->modified = modified;
+	triangles.clear();
+	_access.clear();
+	_hasUnknownData = false;
 }
 
 bool IdFile::hasTriangle() const
@@ -143,21 +136,21 @@ const Triangle &IdFile::triangle(int triangleID) const
 void IdFile::setTriangle(int triangleID, const Triangle &triangle)
 {
 	triangles[triangleID] = triangle;
-	modified = true;
+	setModified(true);
 }
 
 void IdFile::insertTriangle(int triangleID, const Triangle &triangle, const Access &access)
 {
 	triangles.insert(triangleID, triangle);
 	_access.insert(triangleID, access);
-	modified = true;
+	setModified(true);
 }
 
 void IdFile::removeTriangle(int triangleID)
 {
 	triangles.removeAt(triangleID);
 	_access.removeAt(triangleID);
-	modified = true;
+	setModified(true);
 }
 
 const Access &IdFile::access(int triangleID) const
@@ -168,7 +161,7 @@ const Access &IdFile::access(int triangleID) const
 void IdFile::setAccess(int triangleID, const Access &access)
 {
 	_access[triangleID] = access;
-	modified = true;
+	setModified(true);
 }
 
 bool IdFile::hasUnknownData() const

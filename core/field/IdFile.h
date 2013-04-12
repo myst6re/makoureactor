@@ -19,6 +19,7 @@
 #define IDFILE_H
 
 #include <QtCore>
+#include "FieldPart.h"
 #include "CaFile.h"
 
 typedef struct {
@@ -33,16 +34,14 @@ typedef struct {
 	qint16 a[3];
 } Access;
 
-class IdFile
+class IdFile : public FieldPart
 {
 public:
-	IdFile();
-	IdFile(const QByteArray &data);
+	explicit IdFile(Field *field);
+	bool open();
 	bool open(const QByteArray &data);
-	bool save(QByteArray &id);
-	bool isOpen() const;
-	bool isModified() const;
-	void setModified(bool modified);
+	QByteArray save() const;
+	void clear();
 	bool hasTriangle() const;
 	int triangleCount() const;
 	const QList<Triangle> &getTriangles() const;
@@ -57,7 +56,6 @@ public:
 	static Vertex_sr fromVertex_s(const Vertex_s &vertex_s);
 	static Vertex_s toVertex_s(const Vertex_sr &vertex_sr);
 private:
-	bool modified, opened;
 	QList<Triangle> triangles;
 	QList<Access> _access;
 	qint16 _unknown;

@@ -19,6 +19,7 @@
 #define INFFILE_H
 
 #include <QtCore>
+#include "FieldPart.h"
 #include "IdFile.h"
 
 typedef struct {
@@ -78,16 +79,14 @@ typedef struct {
 	Arrow arrows[12];// 16 * 12 bytes
 } InfData;
 
-class InfFile
+class InfFile : public FieldPart
 {
 public:
-	InfFile();
-	InfFile(const QByteArray &data);
-	bool isOpen();
-	bool isModified();
-	void setModified(bool);
-	bool open(const QByteArray &data, bool importMode=false);
-	QByteArray save();
+	explicit InfFile(Field *field);
+	bool open();
+	bool open(const QByteArray &data);
+	QByteArray save() const;
+	void clear();
 	bool isJap();
 	QString mapName();
 	void setMapName(const QString &name);
@@ -127,7 +126,6 @@ public:
 	QByteArray unknown() const;
 	void setUnknown(const QByteArray &u);
 private:
-	bool _isOpen, _isModified;
 	InfData data;
 	quint32 size;
 };

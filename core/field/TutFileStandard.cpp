@@ -1,8 +1,14 @@
 #include "TutFileStandard.h"
+#include "Field.h"
 
-TutFileStandard::TutFileStandard() :
-	TutFile()
+TutFileStandard::TutFileStandard(Field *field) :
+	TutFile(field)
 {
+}
+
+bool TutFileStandard::open()
+{
+	return TutFile::open(field()->sectionData(Field::Scripts));
 }
 
 QList<quint32> TutFileStandard::openPositions(const QByteArray &data) const
@@ -37,10 +43,12 @@ QList<quint32> TutFileStandard::openPositions(const QByteArray &data) const
 	return positions;
 }
 
-QByteArray TutFileStandard::save2(QByteArray &toc, quint32 firstPos) const
+QByteArray TutFileStandard::save(QByteArray &toc, quint32 firstPos) const
 {
 	quint32 pos;
 	QByteArray ret;
+
+	toc.clear();
 
 	foreach(const QByteArray &tuto, dataList()) {
 		pos = firstPos + ret.size();
@@ -49,6 +57,11 @@ QByteArray TutFileStandard::save2(QByteArray &toc, quint32 firstPos) const
 	}
 
 	return ret;
+}
+
+QByteArray TutFileStandard::save() const
+{
+	return QByteArray();
 }
 
 bool TutFileStandard::hasTut() const

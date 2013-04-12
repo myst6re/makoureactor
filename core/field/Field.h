@@ -34,7 +34,7 @@ class FieldArchiveIO;
 class Field
 {
 public:
-	enum FieldPart {
+	enum FieldSection {
 		Scripts = 0x01,
 		Akaos = 0x02,
 		Camera = 0x04,
@@ -45,9 +45,8 @@ public:
 		Background = 0x80,
 		PalettePC = 0x100
 	};
-	Q_DECLARE_FLAGS(FieldParts, FieldPart)
+	Q_DECLARE_FLAGS(FieldSections, FieldSection)
 
-	Field(const QString &name);
 	Field(const QString &name, FieldArchiveIO *io);
 	virtual ~Field();
 
@@ -60,16 +59,11 @@ public:
 
 	bool open(bool dontOptimize=false);
 
-	QPixmap openBackground();
-	virtual QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
-
-	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
-
 	void setSaved();
 	virtual bool save(QByteArray &newData, bool compress)=0;
 	qint8 save(const QString &path, bool compress);
-	qint8 importer(const QString &path, int type, FieldParts part);
-	virtual qint8 importer(const QByteArray &data, bool isPSField, FieldParts part);
+	qint8 importer(const QString &path, int type, FieldSections part);
+	virtual qint8 importer(const QByteArray &data, bool isPSField, FieldSections part);
 
 	Section1File *scriptsAndTexts(bool open=true);
 	EncounterFile *encounter(bool open=true);
@@ -77,40 +71,34 @@ public:
 	IdFile *walkmesh(bool open=true);
 	CaFile *camera(bool open=true);
 	InfFile *inf(bool open=true);
+	BackgroundFile *background(bool open=true);
 	virtual FieldModelLoader *fieldModelLoader(bool open=true);
 	virtual FieldModelFile *fieldModel(int modelID, int animationID=0, bool animate=true)=0;
 
 	const QString &name() const;
 	void setName(const QString &name);
 	virtual FieldArchiveIO *io() const;
+	QByteArray sectionData(FieldSection part);
 protected:
 	virtual int headerSize()=0;
 	virtual void openHeader(const QByteArray &fileData)=0;
-	virtual FieldModelLoader *createFieldModelLoader() const=0;
-	virtual BackgroundFile *createBackground() const=0;
-	BackgroundFile *background();
-	QByteArray sectionData(FieldPart part);
-	virtual int sectionId(FieldPart part) const=0;
+	virtual FieldPart *createPart(FieldSection part);
+	FieldPart *part(FieldSection section);
+	virtual int sectionId(FieldSection part) const=0;
 	virtual quint32 sectionPosition(int idPart)=0;
 	virtual int sectionCount()=0;
 	virtual int paddingBetweenSections()=0;
 
-	Section1File *section1;
-	EncounterFile *_encounter;
-	TutFileStandard *_tut;
-	IdFile *id;
-	CaFile *ca;
-	InfFile *_inf;
-	FieldModelLoader *modelLoader;
 	FieldModelFile *_fieldModel;
-	BackgroundFile *_bg;
 private:
+	FieldPart *part(FieldSection section, bool open);
+
+	QHash<FieldSection, FieldPart *> _parts;
 	FieldArchiveIO *_io;
 	bool _isOpen, _isModified;
-
 	QString _name;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(Field::FieldParts)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Field::FieldSections)
 
 #endif

@@ -16,34 +16,19 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "InfFile.h"
+#include "Field.h"
 
-InfFile::InfFile()
-	: _isOpen(false), _isModified(false)
+InfFile::InfFile(Field *field) :
+	FieldPart(field)
 {
 }
 
-InfFile::InfFile(const QByteArray &data)
-	: _isOpen(false), _isModified(false)
+bool InfFile::open()
 {
-	open(data);
+	return open(field()->sectionData(Field::Inf));
 }
 
-bool InfFile::isOpen()
-{
-	return _isOpen;
-}
-
-bool InfFile::isModified()
-{
-	return _isModified;
-}
-
-void InfFile::setModified(bool modified)
-{
-	_isModified = modified;
-}
-
-bool InfFile::open(const QByteArray &data, bool importMode)
+bool InfFile::open(const QByteArray &data)
 {
 	quint32 oldSize = size;
 	size = data.size();
@@ -66,16 +51,21 @@ bool InfFile::open(const QByteArray &data, bool importMode)
 	memcpy(&this->data, data.constData(), size);
 	this->data.name[8] = '\x00';
 
-	if(importMode && _isOpen)		size = oldSize;
+	if(isOpen())		size = oldSize;
 
-	_isOpen = true;
+	setOpen(true);
 
 	return true;
 }
 
-QByteArray InfFile::save()
+QByteArray InfFile::save() const
 {
 	return QByteArray((char *)&data, size);
+}
+
+void InfFile::clear()
+{
+	//TODO: clear
 }
 
 bool InfFile::isJap()
@@ -92,7 +82,7 @@ void InfFile::setMapName(const QString &name)
 {
 	strcpy(data.name, name.toLatin1().constData());
 	data.name[8] = '\x00';
-	_isModified = true;
+	setModified(true);
 }
 
 quint8 InfFile::control()
@@ -103,7 +93,7 @@ quint8 InfFile::control()
 void InfFile::setControl(quint8 control)
 {
 	data.control = control;
-	_isModified = true;
+	setModified(true);
 }
 
 qint16 InfFile::cameraFocusHeight() const
@@ -114,7 +104,7 @@ qint16 InfFile::cameraFocusHeight() const
 void InfFile::setCameraFocusHeight(qint16 cameraFocusHeight)
 {
 	data.cameraFocusHeight = cameraFocusHeight;
-	_isModified = true;
+	setModified(true);
 }
 
 const Range &InfFile::cameraRange() const
@@ -125,7 +115,7 @@ const Range &InfFile::cameraRange() const
 void InfFile::setCameraRange(const Range &range)
 {
 	data.camera_range = range;
-	_isModified = true;
+	setModified(true);
 }
 
 quint8 InfFile::bgLayer1Flag() const
@@ -136,7 +126,7 @@ quint8 InfFile::bgLayer1Flag() const
 void InfFile::setBgLayer1Flag(quint8 flag)
 {
 	data.bg_layer1_flag = flag;
-	_isModified = true;
+	setModified(true);
 }
 
 quint8 InfFile::bgLayer2Flag() const
@@ -147,7 +137,7 @@ quint8 InfFile::bgLayer2Flag() const
 void InfFile::setBgLayer2Flag(quint8 flag)
 {
 	data.bg_layer2_flag = flag;
-	_isModified = true;
+	setModified(true);
 }
 
 quint8 InfFile::bgLayer3Flag() const
@@ -158,7 +148,7 @@ quint8 InfFile::bgLayer3Flag() const
 void InfFile::setBgLayer3Flag(quint8 flag)
 {
 	data.bg_layer3_flag = flag;
-	_isModified = true;
+	setModified(true);
 }
 
 quint8 InfFile::bgLayer4Flag() const
@@ -169,7 +159,7 @@ quint8 InfFile::bgLayer4Flag() const
 void InfFile::setBgLayer4Flag(quint8 flag)
 {
 	data.bg_layer4_flag = flag;
-	_isModified = true;
+	setModified(true);
 }
 
 qint16 InfFile::bgLayer3Width() const
@@ -180,7 +170,7 @@ qint16 InfFile::bgLayer3Width() const
 void InfFile::setBgLayer3Width(qint16 width)
 {
 	data.bg_layer3_width = width;
-	_isModified = true;
+	setModified(true);
 }
 
 qint16 InfFile::bgLayer3Height() const
@@ -191,7 +181,7 @@ qint16 InfFile::bgLayer3Height() const
 void InfFile::setBgLayer3Height(qint16 height)
 {
 	data.bg_layer3_height = height;
-	_isModified = true;
+	setModified(true);
 }
 
 qint16 InfFile::bgLayer4Width() const
@@ -202,7 +192,7 @@ qint16 InfFile::bgLayer4Width() const
 void InfFile::setBgLayer4Width(qint16 width)
 {
 	data.bg_layer4_width = width;
-	_isModified = true;
+	setModified(true);
 }
 
 qint16 InfFile::bgLayer4Height() const
@@ -213,7 +203,7 @@ qint16 InfFile::bgLayer4Height() const
 void InfFile::setBgLayer4Height(qint16 height)
 {
 	data.bg_layer4_height = height;
-	_isModified = true;
+	setModified(true);
 }
 
 QList<Exit> InfFile::exitLines() const
@@ -233,7 +223,7 @@ Exit InfFile::exitLine(quint8 id)
 void InfFile::setExitLine(quint8 id, const Exit &line)
 {
 	data.doors[id] = line;
-	_isModified = true;
+	setModified(true);
 }
 
 QList<Trigger> InfFile::triggers() const
@@ -253,7 +243,7 @@ const Trigger &InfFile::trigger(quint8 id) const
 void InfFile::setTrigger(quint8 id, const Trigger &trigger)
 {
 	data.triggers[id] = trigger;
-	_isModified = true;
+	setModified(true);
 }
 
 bool InfFile::arrowIsDisplayed(quint8 id)
@@ -264,7 +254,7 @@ bool InfFile::arrowIsDisplayed(quint8 id)
 void InfFile::setArrowDiplay(quint8 id, bool display)
 {
 	data.display_arrow[id] = (data.display_arrow[id] & 0xFE) | display;
-	_isModified = true;
+	setModified(true);
 }
 
 QList<Arrow> InfFile::arrows() const
@@ -284,7 +274,7 @@ const Arrow &InfFile::arrow(quint8 id) const
 void InfFile::setArrow(quint8 id, const Arrow &arrow)
 {
 	data.arrows[id] = arrow;
-	_isModified = true;
+	setModified(true);
 }
 
 QByteArray InfFile::unknown() const
@@ -295,5 +285,5 @@ QByteArray InfFile::unknown() const
 void InfFile::setUnknown(const QByteArray &u)
 {
 	memcpy(data.unknown, u.leftJustified(24, '\0', true).constData(), 24);
-	_isModified = true;
+	setModified(true);
 }

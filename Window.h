@@ -139,6 +139,7 @@ private:
 	QTaskBarButton *taskBarButton;
 	QProgressBar *progression;
 	QProgressDialog *progressDialog;
+	QAction *authorAction;
 	QLabel *authorLbl;
 protected:
 	void showEvent(QShowEvent *);

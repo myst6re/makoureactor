@@ -145,8 +145,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::open2(FieldArchiveIOObserver *ob
 {
 	Q_UNUSED(observer)
 
-	QString path = fic.fileName();
-	QString name = path.mid(path.lastIndexOf('/') + 1);
+	QString name = this->name();
 	fieldArchive()->addField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 
 	return fieldArchive()->field(0) != NULL ? Ok : Invalid;
