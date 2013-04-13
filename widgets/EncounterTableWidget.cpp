@@ -31,18 +31,20 @@ EncounterTableWidget::EncounterTableWidget(const QString &title, QWidget *parent
 
 	mainRate->setRange(0, 255);
 
-	QVBoxLayout *rateLayout = new QVBoxLayout;
-	rateLayout->addWidget(rateLabel);
+	QHBoxLayout *rateLayout = new QHBoxLayout;
+	rateLayout->addWidget(new QLabel(tr("-")));
 	rateLayout->addWidget(mainRate);
+	rateLayout->addWidget(new QLabel(tr("+")));
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addLayout(rateLayout, 0, 0, 1, 3, Qt::AlignLeft);
-	layout->addWidget(new QLabel(tr("ID Combat"), this), 1, 1);
-	layout->addWidget(new QLabel(tr("Probabilité"), this), 1, 2);
+	layout->addWidget(rateLabel, 0, 0, 1, 3, Qt::AlignLeft);
+	layout->addLayout(rateLayout, 1, 0, 1, 3, Qt::AlignLeft);
+	layout->addWidget(new QLabel(tr("ID Combat"), this), 2, 1);
+	layout->addWidget(new QLabel(tr("Probabilité"), this), 2, 2);
 	QStringList specialBattleNames;
 	specialBattleNames << tr("Attaque par l'arrière 1") << tr("Attaque par l'arrière 2") << tr("Attaque de côté") << tr("Attaque des deux côtés");
 	QSpinBox *spinBox;
-	int row=2;
+	int row=3;
 	for(int i=0 ; i<10 ; ++i) {
 		layout->addWidget(new QLabel(i>=6 ? specialBattleNames.at(i-6) : tr("Combat %1").arg(i+1), this), row, 0);
 		spinBox = new QSpinBox(this);
@@ -117,7 +119,7 @@ void EncounterTableWidget::setRateValue(int value)
 
 void EncounterTableWidget::changePercent()
 {
-	rateLabel->setText(tr("Fréquence des combats : %1 (%2/255)").arg(rateValue()==0 ? tr("erreur") : QString("%1\%").arg(100 - rateValue() * 100 / 255)).arg(rateValue()));
+	rateLabel->setText(tr("Fréquence des combats : %1/255").arg(rateValue()));
 }
 
 void EncounterTableWidget::changeProbaCount()

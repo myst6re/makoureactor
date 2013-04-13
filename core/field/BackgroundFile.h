@@ -44,6 +44,7 @@ public:
 	bool open() { return true; }
 	bool open(const QByteArray &) { return true; }
 	QByteArray save() const { return QByteArray(); }
+	bool canSave() const { return false; }
 	void clear() { }
 	QPixmap openBackground();
 	virtual QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;

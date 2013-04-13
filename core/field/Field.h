@@ -60,7 +60,7 @@ public:
 	bool open(bool dontOptimize=false);
 
 	void setSaved();
-	virtual bool save(QByteArray &newData, bool compress)=0;
+	bool save(QByteArray &newData, bool compress);
 	qint8 save(const QString &path, bool compress);
 	qint8 importer(const QString &path, int type, FieldSections part);
 	virtual qint8 importer(const QByteArray &data, bool isPSField, FieldSections part);
@@ -78,16 +78,21 @@ public:
 	const QString &name() const;
 	void setName(const QString &name);
 	virtual FieldArchiveIO *io() const;
-	QByteArray sectionData(FieldSection part);
+	QByteArray sectionData(FieldSection part, bool dontOptimize=false);
 protected:
-	virtual int headerSize()=0;
+	virtual int headerSize() const=0;
 	virtual void openHeader(const QByteArray &fileData)=0;
+	virtual QByteArray saveHeader() const=0;
+	virtual QByteArray saveFooter() const=0;
 	virtual FieldPart *createPart(FieldSection part);
-	FieldPart *part(FieldSection section);
+	FieldPart *part(FieldSection section) const;
 	virtual int sectionId(FieldSection part) const=0;
-	virtual quint32 sectionPosition(int idPart)=0;
-	virtual int sectionCount()=0;
-	virtual int paddingBetweenSections()=0;
+	virtual quint32 sectionPosition(int idPart) const=0;
+	virtual int sectionCount() const=0;
+	virtual int paddingBetweenSections() const=0;
+	virtual QList<Field::FieldSection> orderOfSections() const=0;
+	virtual quint32 diffSectionPos() const=0;
+	virtual bool hasSectionHeader() const=0;
 
 	FieldModelFile *_fieldModel;
 private:

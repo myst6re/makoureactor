@@ -91,7 +91,7 @@ bool Field::open(bool dontOptimize)
 	return true;
 }
 
-QByteArray Field::sectionData(FieldSection part)
+QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 {
 	if(!_isOpen) {
 		open();
@@ -109,7 +109,7 @@ QByteArray Field::sectionData(FieldSection part)
 		size = -1;
 	}
 
-	if(size == -1 || _io->fieldDataIsCached(this)) {
+	if(size == -1 || _io->fieldDataIsCached(this) || dontOptimize) {
 		return _io->fieldData(this).mid(position, size);
 	} else {
 		QByteArray lzsData = _io->fieldData(this, false);
@@ -150,7 +150,7 @@ FieldPart *Field::createPart(FieldSection section)
 	}
 }
 
-FieldPart *Field::part(FieldSection section)
+FieldPart *Field::part(FieldSection section) const
 {
 	return _parts.value(section);
 }
@@ -232,6 +232,59 @@ void Field::setSaved()
 	foreach(FieldPart *part, _parts) {
 		part->setModified(false);
 	}
+}
+
+bool Field::save(QByteArray &newData, bool compress)
+{
+	newData = QByteArray();
+
+	if(!isOpen()) {
+		return false;
+	}
+
+	QByteArray toc;
+
+	// Header
+	toc.append(saveHeader());
+
+	// Sections
+	int id=0;
+	foreach(const FieldSection &fieldSection, orderOfSections()) {
+		// Section position
+		quint32 pos = headerSize() + newData.size() + diffSectionPos();
+		toc.append((char *)&pos, 4);
+
+		// Section data
+		FieldPart *fieldPart = part(fieldSection);
+		QByteArray section;
+		if(fieldPart && fieldPart->canSave() &&
+				fieldPart->isOpen() && fieldPart->isModified()) {
+			section = fieldPart->save();
+		} else {
+			section = sectionData(fieldSection, true);
+		}
+		if(hasSectionHeader()) {
+			quint32 section_size = section.size();
+			newData.append((char *)&section_size, 4);
+		}
+		newData.append(section);
+
+		++id;
+	}
+
+	// Footer
+	newData.append(saveFooter());
+
+	// Header prepended to the section data
+	newData.prepend(toc);
+
+	if(compress) {
+		const QByteArray &compresse = LZS::compress(newData);
+		quint32 lzsSize = compresse.size();
+		newData = QByteArray((char *)&lzsSize, 4).append(compresse);
+	}
+
+	return true;
 }
 
 qint8 Field::save(const QString &path, bool compress)

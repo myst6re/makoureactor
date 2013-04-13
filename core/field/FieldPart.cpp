@@ -33,3 +33,8 @@ Field *FieldPart::field() const
 {
 	return _field;
 }
+
+bool FieldPart::canSave() const
+{
+	return true;
+}
