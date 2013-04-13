@@ -409,8 +409,9 @@ int Window::closeFile(bool quit)
 			textDialog->setEnabled(false);
 		}
 		if(_modelManager) {
-			_modelManager->clear();
-			_modelManager->setEnabled(false);
+			_modelManager->close();
+			_modelManager->deleteLater();
+			_modelManager = 0;
 		}
 		if(_walkmeshManager) {
 			_walkmeshManager->clear();
@@ -670,10 +671,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 		actionMassExport->setEnabled(true);
 		actionMassImport->setEnabled(true);
 		actionImport->setEnabled(true);
-		if(fieldArchive->io()->isPC()
-				/* || fieldArchive->io()->type() == FieldArchiveIO::Iso*/) {
-			actionModels->setEnabled(true);
-		}
+		actionModels->setEnabled(true);
 	}
 	if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 		actionArchive->setEnabled(true);
@@ -742,8 +740,8 @@ void Window::openField(bool reload)
 		textDialog->setField(field, reload);
 		textDialog->setEnabled(true);
 	}
-	if(field->isPC() && _modelManager && (reload || _modelManager->isVisible())) {
-		_modelManager->fill((FieldPC *)field, reload);
+	if(_modelManager && (reload || _modelManager->isVisible())) {
+		_modelManager->fill(field, reload);
 		_modelManager->setEnabled(true);
 	}
 	if(_walkmeshManager && (reload || _walkmeshManager->isVisible())) {
@@ -1279,10 +1277,13 @@ void Window::textManager(int textID, int from, int size, bool activate)
 
 void Window::modelManager()
 {
-	if(!field->isPC())	return;
-
 	if(!_modelManager) {
-		_modelManager = new ModelManager(fieldModel, this);
+		if(!field)	return;
+		if(field->isPC()) {
+			_modelManager = new ModelManagerPC(fieldModel, this);
+		} else {
+			_modelManager = new ModelManagerPS(fieldModel, this);
+		}
 		connect(_modelManager, SIGNAL(modified()), SLOT(setModified()));
 	}
 
@@ -1292,7 +1293,7 @@ void Window::modelManager()
 //			fieldModel->clear();
 //		}
 
-		_modelManager->fill((FieldPC *)field);
+		_modelManager->fill(field);
 		_modelManager->setEnabled(true);
 
 //		bool modelLoaded = false;

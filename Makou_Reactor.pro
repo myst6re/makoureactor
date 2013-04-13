@@ -109,7 +109,9 @@ HEADERS += \
     widgets/FontManager.h \
     core/field/TutFilePC.h \
     core/field/TutFileStandard.h \
-    core/field/FieldPart.h
+    core/field/FieldPart.h \
+    widgets/ModelManagerPS.h \
+    widgets/ModelManagerPC.h
 
 SOURCES += \
     Window.cpp \
@@ -213,7 +215,9 @@ SOURCES += \
     widgets/FontManager.cpp \
     core/field/TutFilePC.cpp \
     core/field/TutFileStandard.cpp \
-    core/field/FieldPart.cpp
+    core/field/FieldPart.cpp \
+    widgets/ModelManagerPS.cpp \
+    widgets/ModelManagerPC.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

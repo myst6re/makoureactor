@@ -98,13 +98,12 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 		case 8:		fileName = "KETCY";		break;
 		case 9:		fileName = "VINCENT";	break;
 		}
-		if(!openBCX(currentField->io()->fileData(fileName + ".BCX"), animation_id, animate)) {
+		int bcxAnimationCount;
+		if(!openBCX(currentField->io()->fileData(fileName + ".BCX"), animation_id, animate, &bcxAnimationCount)) {
 			return false;
 		}
 
-		if(!_frames.isEmpty()) {
-			animation_id -= 3;
-		}
+		animation_id -= bcxAnimationCount;
 	}
 
 	if(curOff + model.num_bones * sizeof(BonePS) >= (quint32)BSX_data.size()) {
@@ -516,11 +515,14 @@ QPixmap FieldModelFilePS::openTexture(const char *constData, int /*size*/, const
 	return QPixmap::fromImage(img);
 }
 
-bool FieldModelFilePS::openBCX(const QByteArray &BCX, int animationID, bool animate)
+bool FieldModelFilePS::openBCX(const QByteArray &BCX, int animationID, bool animate, int *numAnimations)
 {
 	BSX_header header;
 	BCXModel model;
 	const char *constData = BCX.constData();
+	if(numAnimations) {
+		*numAnimations = 0;
+	}
 
 	if((quint32)BCX.size() < sizeof(BSX_header)) {
 		qWarning() << "invalid BSX size" << BCX.size();
@@ -541,6 +543,10 @@ bool FieldModelFilePS::openBCX(const QByteArray &BCX, int animationID, bool anim
 	/*** Open model Header ***/
 
 	memcpy(&model, &constData[header.offset_models], sizeof(BCXModel));
+
+	if(numAnimations) {
+		*numAnimations = model.num_animations;
+	}
 
 	model.offset_skeleton -= 0x80000000;
 
