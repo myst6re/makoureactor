@@ -273,7 +273,7 @@ bool Field::save(QByteArray &newData, bool compress)
 	}
 
 	// Footer
-	newData.append(saveFooter());
+//	newData.append(saveFooter()); // For PC footer: Already present in the background data
 
 	// Header prepended to the section data
 	newData.prepend(toc);
