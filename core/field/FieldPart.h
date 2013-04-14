@@ -15,6 +15,7 @@ public:
 	virtual bool open(const QByteArray &data)=0;
 	virtual QByteArray save() const=0;
 	virtual bool canSave() const;
+	virtual void close();
 	virtual void clear()=0;
 
 	bool isOpen() const;

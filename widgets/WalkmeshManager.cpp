@@ -217,14 +217,16 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	gateList = new QListWidget(ret);
 	gateList->setFixedWidth(125);
 
-	exitPoints[0] = new VertexWidget(ret);
-	exitPoints[1] = new VertexWidget(ret);
-	entryPoint = new VertexWidget(ret);
+	QString IDLabel = tr("ID");
+	exitPoints[0] = new VertexWidget(QString(), QString(), IDLabel, ret);
+	exitPoints[1] = new VertexWidget(QString(), QString(), IDLabel, ret);
+	entryPoint = new VertexWidget(QString(), QString(), IDLabel, ret);
 
 	fieldId = new QSpinBox(ret);
 	fieldId->setRange(0, 65535);
 
-	unknownExit = new HexLineEdit(ret);
+	exitDirection = new QSpinBox(ret);
+	exitDirection->setRange(0, 255);
 
 	arrowDisplay = new QCheckBox(tr("Afficher une flêche"), ret);
 	arrowDisplay->setIcon(QIcon(":/images/field-arrow-red.png"));
@@ -233,8 +235,8 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	idsLayout->addWidget(new QLabel(tr("Id écran :")), 0, 0);
 	idsLayout->addWidget(fieldId, 0, 1);
 	idsLayout->addWidget(arrowDisplay, 0, 2, 1, 2);
-	idsLayout->addWidget(new QLabel(tr("Inconnu :")), 1, 0);
-	idsLayout->addWidget(unknownExit, 1, 1, 1, 3);
+	idsLayout->addWidget(new QLabel(tr("Orientation du personnage :")), 1, 0);
+	idsLayout->addWidget(exitDirection, 1, 1, 1, 3);
 
 	QGridLayout *layout = new QGridLayout(ret);
 	layout->addWidget(gateList, 0, 0, 5, 1, Qt::AlignLeft);
@@ -252,7 +254,7 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	connect(entryPoint, SIGNAL(valuesChanged(Vertex_s)), SLOT(editEntryPoint(Vertex_s)));
 	connect(fieldId, SIGNAL(valueChanged(int)), SLOT(editFieldId(int)));
 	connect(arrowDisplay, SIGNAL(toggled(bool)), SLOT(editArrowDisplay(bool)));
-	connect(unknownExit, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknownExit(QByteArray)));
+	connect(exitDirection, SIGNAL(valueChanged(int)), SLOT(editExitDirection(int)));
 
 	return ret;
 }
@@ -264,8 +266,9 @@ QWidget *WalkmeshManager::buildDoorsPage()
 	doorList = new QListWidget(ret);
 	doorList->setFixedWidth(125);
 
-	doorPosition[0] = new VertexWidget(ret);
-	doorPosition[1] = new VertexWidget(ret);
+	QString IDLabel = tr("ID");
+	doorPosition[0] = new VertexWidget(QString(), QString(), IDLabel, ret);
+	doorPosition[1] = new VertexWidget(QString(), QString(), IDLabel, ret);
 
 	bgParamId = new QSpinBox(ret);
 	bgParamId->setRange(0, 255);
@@ -900,7 +903,7 @@ void WalkmeshManager::setCurrentGateway(int id)
 		arrowDisplay->setChecked(infFile->arrowIsDisplayed(id));
 	}
 
-	unknownExit->setData(QByteArray((char *)&gateway.u1, 4));
+	exitDirection->setValue(gateway.dir);
 
 	if(walkmesh)	walkmesh->setSelectedGate(id);
 }
@@ -1004,14 +1007,16 @@ void WalkmeshManager::editDoorPoint(int id, const Vertex_s &values)
 	}
 }
 
-void WalkmeshManager::editUnknownExit(const QByteArray &u)
+void WalkmeshManager::editExitDirection(int dir)
 {
 	if(infFile->isOpen()) {
 		int gateId = gateList->currentRow();
-		const char *uData = u.constData();
 		Exit old = infFile->exitLine(gateId);
-		memcpy(&old.u1, uData, 4);
-		if(old.u1 != infFile->exitLine(gateId).u1) {
+		old.dir_copy1 = old.dir_copy2 = old.dir_copy3 = old.dir = dir;
+		if(old.dir != infFile->exitLine(gateId).dir
+				|| old.dir_copy1 != infFile->exitLine(gateId).dir_copy1
+				|| old.dir_copy2 != infFile->exitLine(gateId).dir_copy2
+				|| old.dir_copy3 != infFile->exitLine(gateId).dir_copy3) {
 			infFile->setExitLine(gateId, old);
 
 			emit modified();

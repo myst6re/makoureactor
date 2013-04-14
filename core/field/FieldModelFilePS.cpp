@@ -58,7 +58,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 
 	/*** Open current model Header ***/
 
-	memcpy(&model_header, &constData[header.offset_models], sizeof(Model_header));
+	memcpy(&model_header, constData + header.offset_models, sizeof(Model_header));
 
 //	qDebug() << "==== Model header ====" << header.offset_models << sizeof(Model_header);
 //	qDebug() << "num_models" << model_header.num_models << "vram" << QString::number(model_header.psx_memory, 16);
@@ -70,7 +70,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 	}
 
 	quint32 offsetModelHeader = header.offset_models + sizeof(Model_header) + model_id*sizeof(Model);
-	memcpy(&model, &constData[offsetModelHeader], sizeof(Model));
+	memcpy(&model, constData + offsetModelHeader, sizeof(Model));
 
 //	qDebug() << "==== Model" << model_id << "====" << offsetModelHeader << sizeof(Model) << model_header.num_models*sizeof(Model);
 //	qDebug() << "modelID" << model.model_id << "modelScale" << model.scale << "offsetSkeleton" << model.offset_skeleton;
@@ -140,8 +140,8 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 	quint32 offsetTexHeader = header.offset_models + model_header.texture_pointer;
 
 	quint32 unknownTex, unknownTex2;
-	memcpy(&unknownTex, &constData[offsetTexHeader], 4);
-	memcpy(&unknownTex2, &constData[offsetTexHeader+4], 4);
+	memcpy(&unknownTex, constData + offsetTexHeader, 4);
+	memcpy(&unknownTex2, constData + offsetTexHeader+4, 4);
 	quint8 texCount = unknownTex2 & 0xFF;
 
 //	qDebug() << "==== TEXTURES HEADER ====" << offsetTexHeader;
@@ -153,7 +153,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 
 	for(int tex=0 ; tex<texCount ; ++tex) {
 		TexHeader texHeader;
-		memcpy(&texHeader, &constData[offsetTexHeader + 8 + tex*sizeof(TexHeader)], sizeof(TexHeader));
+		memcpy(&texHeader, constData + offsetTexHeader + 8 + tex*sizeof(TexHeader), sizeof(TexHeader));
 
 		texHeader.offset_data += offsetTexHeader;
 
@@ -278,7 +278,7 @@ int FieldModelFilePS::openSkeleton(const char *constData, int curOff, quint8 num
 	for(quint32 i=0 ; i<numBones ; ++i) {
 		BonePS bonePS;
 		Bone bone;
-		memcpy(&bonePS, &constData[curOff], sizeof(BonePS));
+		memcpy(&bonePS, constData + curOff, sizeof(BonePS));
 //		qDebug() << "bone" << i << bonePS.length << bonePS.parent << bonePS.unknown;
 		bone.size = bonePS.length / 31.0f;
 		bone.parent = bonePS.parent;
@@ -316,7 +316,7 @@ int FieldModelFilePS::openMesh(const char *constData, int curOff, int size, quin
 bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int animation_id, int size, bool animate)
 {
 	Animation a;
-	memcpy(&a, &constData[curOff + sizeof(Animation)*animation_id], sizeof(Animation));
+	memcpy(&a, constData + curOff + sizeof(Animation)*animation_id, sizeof(Animation));
 
 	a.offset_data -= 0x80000000;
 
@@ -336,7 +336,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 	}
 
 //	quint32 unknown;
-//	memcpy(&unknown, &constData[a.offset_data], 4);
+//	memcpy(&unknown, constData + a.offset_data, 4);
 
 //	qDebug() << "Unknown" << unknown << QString::number(unknown, 16);
 
@@ -351,7 +351,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 			FrameTranslation frameTrans;
 			PolyVertex rot/*, trans*/;
 
-			memcpy(&frameTrans, &constData[a.offset_data + 4 + bone*8], sizeof(FrameTranslation));
+			memcpy(&frameTrans, constData + a.offset_data + 4 + bone*8, sizeof(FrameTranslation));
 
 			// Rotation
 
@@ -406,7 +406,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 //					continue;
 //				}
 
-//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//				memcpy(&translation, constData + offsetToTranslation, 2);
 //			} else if(frameTrans.tx != 0xFF) {
 //				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.tx * 2;
 
@@ -415,7 +415,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 //					continue;
 //				}
 
-//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//				memcpy(&translation, constData + offsetToTranslation, 2);
 //			}
 //			trans.x = -translation / 31.0f;
 //			translation=0;
@@ -428,7 +428,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 //					continue;
 //				}
 
-//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//				memcpy(&translation, constData + offsetToTranslation, 2);
 //			} else if(frameTrans.tx != 0xFF) {
 //				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.ty * 2;
 
@@ -437,7 +437,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 //					continue;
 //				}
 
-//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//				memcpy(&translation, constData + offsetToTranslation, 2);
 //			}
 //			trans.y = -translation / 31.0f;
 //			translation=0;
@@ -450,7 +450,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 //					continue;
 //				}
 
-//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//				memcpy(&translation, constData + offsetToTranslation, 2);
 //			} else if(frameTrans.tx != 0xFF) {
 //				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.tz * 2;
 
@@ -459,7 +459,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 //					continue;
 //				}
 
-//				memcpy(&translation, &constData[offsetToTranslation], 2);
+//				memcpy(&translation, constData + offsetToTranslation, 2);
 //			}
 //			trans.z = -translation / 31.0f;
 
@@ -497,15 +497,15 @@ QPixmap FieldModelFilePS::openTexture(const char *constData, int /*size*/, const
 			quint16 color;
 
 			if(bpp == 1) {
-				memcpy(&color, &constData[palHeader.offset_data + index*2], 2);
+				memcpy(&color, constData + palHeader.offset_data + index*2, 2);
 
 				px[i] = PsColor::fromPsColor(color, true);
 			} else if(bpp == 0) {
-				memcpy(&color, &constData[palHeader.offset_data + (index & 0xF)*2], 2);
+				memcpy(&color, constData + palHeader.offset_data + (index & 0xF)*2, 2);
 
 				px[i*2] = PsColor::fromPsColor(color, true);
 
-				memcpy(&color, &constData[palHeader.offset_data + (index >> 4)*2], 2);
+				memcpy(&color, constData + palHeader.offset_data + (index >> 4)*2, 2);
 
 				px[i*2] = PsColor::fromPsColor(color, true);
 			}
@@ -542,7 +542,7 @@ bool FieldModelFilePS::openBCX(const QByteArray &BCX, int animationID, bool anim
 
 	/*** Open model Header ***/
 
-	memcpy(&model, &constData[header.offset_models], sizeof(BCXModel));
+	memcpy(&model, constData + header.offset_models, sizeof(BCXModel));
 
 	if(numAnimations) {
 		*numAnimations = model.num_animations;

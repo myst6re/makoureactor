@@ -52,8 +52,7 @@ void FontLetter::setPixelIndex(int index)
 void FontLetter::setWindowBinFile(WindowBinFile *windowBinFile)
 {
 	if(windowBinFile) {
-		windowBinFile->setFontColor(_color);
-		copyLetter = windowBinFile->letter(_currentTable, _letter);
+		copyLetter = windowBinFile->letter(_currentTable, _letter, _color);
 	}
 	FontDisplay::setWindowBinFile(windowBinFile);
 }
@@ -61,8 +60,7 @@ void FontLetter::setWindowBinFile(WindowBinFile *windowBinFile)
 void FontLetter::setLetter(int letter)
 {
 	if(_windowBinFile) {
-		_windowBinFile->setFontColor(_color);
-		copyLetter = _windowBinFile->letter(_currentTable, letter);
+		copyLetter = _windowBinFile->letter(_currentTable, letter, _color);
 	}
 	FontDisplay::setLetter(letter);
 }
@@ -84,8 +82,7 @@ void FontLetter::paintEvent(QPaintEvent *)
 	}
 
 	if(_windowBinFile) {
-		_windowBinFile->setFontColor(_color);
-		QImage letter = _windowBinFile->letter(_currentTable, _letter);
+		QImage letter = _windowBinFile->letter(_currentTable, _letter, _color);
 		if(!letter.isNull()) {
 			p.drawImage(QPoint(0, 0), letter.scaled(QSize(12*PIXEL_SIZE, 12*PIXEL_SIZE), Qt::KeepAspectRatio));
 			int linePos = _windowBinFile->charWidth(_currentTable, _letter) * PIXEL_SIZE;

@@ -67,7 +67,7 @@ private slots:
 	void editArrowZ(double value);
 	void editArrowType(int index);
 	void editRange(int v);
-	void editUnknownExit(const QByteArray &u);
+	void editExitDirection(int dir);
 	void editNavigation(int v);
 	void editCameraFocusHeight(int value);
 	void editUnknown(const QByteArray &data);
@@ -111,7 +111,7 @@ private:
 	QSpinBox *idAccess[3];
 	//GatePage
 	QListWidget *gateList;
-	HexLineEdit *unknownExit;
+	QSpinBox *exitDirection;
 	QSpinBox *fieldId;
 	VertexWidget *exitPoints[2], *entryPoint;
 	QCheckBox *arrowDisplay;

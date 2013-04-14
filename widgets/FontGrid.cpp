@@ -65,11 +65,9 @@ void FontGrid::paintEvent(QPaintEvent *)
 	if(_windowBinFile) {
 		int charCount=_windowBinFile->charCount();
 
-		_windowBinFile->setFontColor(_color);
-
 		// Draw odd characters (optimization to reduce the number of palette change)
 		for(int i=0, x2=0, y2=0 ; i<charCount ; i+=2) {
-			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, i));
+			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, i, _color));
 			x2+=2;
 			if(x2 == 16) {
 				++y2;
@@ -79,7 +77,7 @@ void FontGrid::paintEvent(QPaintEvent *)
 
 		// Draw even characters
 		for(int i=1, x2=1, y2=0 ; i<charCount ; i+=2) {
-			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, i));
+			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, i, _color));
 			x2+=2;
 			if(x2 == 17) {
 				++y2;

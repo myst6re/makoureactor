@@ -38,3 +38,9 @@ bool FieldPart::canSave() const
 {
 	return true;
 }
+
+void FieldPart::close()
+{
+	clear();
+	setOpen(false);
+}

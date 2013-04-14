@@ -33,7 +33,7 @@ typedef struct {
 	Vertex_s exit_line[2];
 	Vertex_s destination;
 	quint16 fieldID;
-	quint32 u1;
+	quint8 dir, dir_copy1, dir_copy2, dir_copy3;
 } Exit;
 
 typedef struct {

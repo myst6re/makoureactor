@@ -24,20 +24,22 @@ public:
 	bool open(const QByteArray &data);
 	bool isValid() const;
 	bool isModified() const;
+	bool isJp() const;
 	void setModified(bool modified);
 	int charCount() const;
 	int tableCount() const;
 	const QImage &image(FontColor color);
-	const QImage &image() const;
-	QImage letter(quint8 table, quint8 id) const;
-	void setFontColor(FontColor color);
+	QImage letter(quint8 table, quint8 id, FontColor color);
 	quint8 charWidth(quint8 table, quint8 id) const;
 	quint8 charLeftPadding(quint8 table, quint8 id) const;
 	void setCharWidth(quint8 table, quint8 id, quint8 width);
 	void setCharLeftPadding(quint8 table, quint8 id, quint8 padding);
 private:
-	int palette(FontColor color) const;
+	QImage letter(int id, FontColor color);
+	int palette(FontColor color, quint8 table) const;
+	QRect letterRect(int charId) const;
 	bool openFont(const QByteArray &data);
+	bool openFont2(const QByteArray &data);
 	bool openFontSize(const QByteArray &data);
 	inline quint8 charInfo(quint8 table, quint8 id) const {
 		return _charWidth.at(table * 217 + id);
@@ -47,7 +49,7 @@ private:
 	}
 
 	QVector<quint8> _charWidth;
-	TimFile _font;
+	TimFile _font, _font2;
 	bool modified;
 };
 

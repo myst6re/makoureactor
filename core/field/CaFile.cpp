@@ -56,7 +56,6 @@ bool CaFile::open(const QByteArray &data)
 	}
 
 	setOpen(true);
-	setModified(false);
 
 	return true;
 }

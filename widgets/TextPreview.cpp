@@ -689,7 +689,7 @@ quint8 TextPreview::charFullWidth(int tableId, int charId)
 QImage TextPreview::letterImage(int tableId, int charId)
 {
 	if(Data::windowBin.isValid() && tableId == 0) {
-		return Data::windowBin.letter(tableId, charId);
+		return Data::windowBin.letter(tableId, charId, WindowBinFile::FontColor(fontColor));
 	} else {
 		int charIdImage = charId + posTable[tableId];
 		return fontImage.copy((charIdImage%21)*12, (charIdImage/21)*12, 12, 12);
@@ -698,9 +698,7 @@ QImage TextPreview::letterImage(int tableId, int charId)
 
 void TextPreview::setFontColor(int id, bool blink)
 {
-	if(Data::windowBin.isValid()) {
-		Data::windowBin.setFontColor(WindowBinFile::FontColor(blink ? DARKGREY : id));
-	} else {
+	if(!Data::windowBin.isValid()) {
 		fontImage.setColorTable(fontPalettes[blink ? DARKGREY : id]);
 	}
 	fontColor = id;

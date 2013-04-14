@@ -66,25 +66,25 @@ typedef struct {
 	quint16 model_id;        // ID of the model
 	quint16 scale;
 	quint32 offset_skeleton; // Offset to the parts, bones and animations of the model
-	quint8 r1, g1, b1;
+	ColorRGB color1;
 	quint8 unknown;
-	quint8 r2, g2, b2;
-	quint8 r3, g3, b3;
+	ColorRGB color2;
+	ColorRGB color3;
 	quint8 index_bones_start;
 	quint8 index_bones_end;
-	quint8 r4, g4, b4;
+	ColorRGB color4;
 	quint8 num_bones;      // Number of bones in the model's skeleton
-	quint8 r5, g5, b5;
-	quint8 r6, g6, b6;
+	ColorRGB color5;
+	ColorRGB color6;
 	quint8 index_parts_start;
 	quint8 index_parts_end;
-	quint8 r7, g7, b7;
+	ColorRGB color7;
 	quint8 num_parts;      // Number of parts in the model's skeleton
-	quint8 r8, g8, b8;
-	quint8 r9, g9, b9;
+	ColorRGB color8;
+	ColorRGB color9;
 	quint8 index_animations_start;
 	quint8 index_animations_end;
-	quint8 r10, g10, b10;
+	ColorRGB color10;
 	quint8 num_animations; // Number of animations
 } Model;
 
