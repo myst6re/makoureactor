@@ -27,10 +27,13 @@ public:
 	explicit ColorDisplay(QWidget *parent=0);
 	void setColors(const QList<QRgb> &colors);
 	const QList<QRgb> &getColors() const;
+	bool isReadOnly() const;
+	void setReadOnly(bool ro);
 signals:
 	void colorEdited(int id, QRgb value);
 private:
 	QList<QRgb> colors;
+	bool _ro;
 protected:
 	void paintEvent(QPaintEvent *);
 	void enterEvent(QEvent *);

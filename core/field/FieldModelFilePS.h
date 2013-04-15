@@ -21,6 +21,8 @@
 #include <QtGui>
 #include "FieldModelFile.h"
 
+#define COLORRGB_2_QRGB(c)		qRgb(c.red, c.green, c.blue)
+
 typedef struct {
 	quint16 num_frames;					// Number of frames
 	quint8 num_bones;					// Number of bones
@@ -116,13 +118,16 @@ public:
 	FieldModelFilePS();
 	bool isPS() const { return true; }
 	quint8 load(FieldPS *currentField, int model_id, int animation_id, bool animate=false);
-
+	const QList<QRgb> &lightColors() const;
+	quint16 scale() const;
 private:
 	int openSkeleton(const char *constData, int curOff, quint8 numBones);
 	int openMesh(const char *constData, int curOff, int size, quint8 numParts);
 	bool openAnimation(const char *constData, int curOff, int animation_id, int size, bool animate=false);
 	QPixmap openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp);
 	bool openBCX(const QByteArray &BCX, int animationID, bool animation=false, int *numAnimations=0);
+	QList<QRgb> _currentColors;
+	quint16 _currentScale;
 };
 
 #endif // FIELDMODELFILEPS_H

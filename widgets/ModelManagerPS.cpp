@@ -23,14 +23,26 @@ ModelManagerPS::ModelManagerPS(const QGLWidget *shareWidget, QWidget *parent) :
 	ModelManager(shareWidget, parent)
 {
 	models->setColumnCount(1);
+
+	modelScale = new QSpinBox();
+	modelScale->setRange(0, 4096);
+	modelScale->setReadOnly(true);
+	modelColorDisplay = new ColorDisplay();
+	modelColorDisplay->setReadOnly(true);
+
 	modelAnims->setColumnCount(1);
 	modelAnims->setHeaderLabels(QStringList() << tr("Animations") << tr("?"));
 
 	QGridLayout *frameLayout = new QGridLayout(modelFrame);
 	frameLayout->addWidget(new QLabel(tr("Inconnu")), 0, 0);
 	frameLayout->addWidget(modelUnknown, 0, 1);
-	frameLayout->addWidget(modelAnims, 0, 2);
-	frameLayout->addWidget(modelWidget, 0, 3);
+	frameLayout->addWidget(new QLabel(tr("Taille modèle")), 1, 0);
+	frameLayout->addWidget(modelScale, 1, 1);
+	frameLayout->addWidget(new QLabel(tr("Lumière")), 2, 0);
+	frameLayout->addWidget(modelColorDisplay, 2, 1);
+	frameLayout->addWidget(modelAnims, 0, 2, 4, 1);
+	frameLayout->addWidget(modelWidget, 0, 3, 4, 1);
+	frameLayout->setRowStretch(3, 1);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(models, 0, 0);
@@ -64,6 +76,14 @@ QList<QStringList> ModelManagerPS::animNames(int row) const
 
 void ModelManagerPS::showModelInfos2(int row)
 {
+	modelColorDisplay->blockSignals(true);
+
+	FieldModelFilePS *model = field()->fieldModel(currentModelID(), 0);
+	modelScale->setValue(model->scale());
+	modelColorDisplay->setColors(model->lightColors());
+
+	modelColorDisplay->blockSignals(false);
+
 	ModelManager::showModelInfos2(row);
 }
 

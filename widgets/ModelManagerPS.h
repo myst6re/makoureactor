@@ -20,6 +20,7 @@
 
 #include <QtGui>
 #include "core/field/FieldPS.h"
+#include "ColorDisplay.h"
 #include "ModelManager.h"
 
 class ModelManagerPS : public ModelManager
@@ -35,6 +36,9 @@ protected:
 	void showModel2(QTreeWidgetItem *item);
 	FieldModelLoaderPS *modelLoader() const;
 	FieldPS *field() const;
+private:
+	QSpinBox *modelScale;
+	ColorDisplay *modelColorDisplay;
 };
 
 #endif // MODELMANAGERPS_H

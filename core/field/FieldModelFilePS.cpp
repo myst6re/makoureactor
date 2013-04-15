@@ -51,8 +51,8 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 //	qDebug() << "==== BSX HEADER ====" << 0 << sizeof(BSX_header);
 //	qDebug() << "size" << header.size << "offset_models" << header.offset_models;
 
-	if((quint32)BSX_data.size() != header.size || header.offset_models >= header.size) {
-		qWarning() << BSX_data.size() << "error";
+	if((quint32)BSX_data.size() != header.size || header.offset_models + sizeof(Model_header) > header.size) {
+		qWarning() << BSX_data.size() << "error header";
 		return 2;
 	}
 
@@ -70,7 +70,25 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 	}
 
 	quint32 offsetModelHeader = header.offset_models + sizeof(Model_header) + model_id*sizeof(Model);
+
+	if(offsetModelHeader + sizeof(Model) > (quint32)BSX_data.size()) {
+		qWarning() << BSX_data.size() << "error model";
+		return 2;
+	}
+
 	memcpy(&model, constData + offsetModelHeader, sizeof(Model));
+
+	_currentColors.clear();
+	_currentColors << COLORRGB_2_QRGB(model.color1) << COLORRGB_2_QRGB(model.color2) << COLORRGB_2_QRGB(model.color3)
+				   << COLORRGB_2_QRGB(model.color4) << COLORRGB_2_QRGB(model.color5) << COLORRGB_2_QRGB(model.color6)
+				   << COLORRGB_2_QRGB(model.color7) << COLORRGB_2_QRGB(model.color8) << COLORRGB_2_QRGB(model.color9)
+				   << COLORRGB_2_QRGB(model.color10);
+
+	_currentScale = model.scale;
+
+	if(model.unknown != 0) {
+		qDebug() << "???" << model.unknown;
+	}
 
 //	qDebug() << "==== Model" << model_id << "====" << offsetModelHeader << sizeof(Model) << model_header.num_models*sizeof(Model);
 //	qDebug() << "modelID" << model.model_id << "modelScale" << model.scale << "offsetSkeleton" << model.offset_skeleton;
@@ -106,16 +124,16 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 		animation_id -= bcxAnimationCount;
 	}
 
-	if(curOff + model.num_bones * sizeof(BonePS) >= (quint32)BSX_data.size()) {
+	if(curOff + model.num_bones * sizeof(BonePS) > (quint32)BSX_data.size()) {
 		qWarning() << "invalid skeleton size" << model.num_bones;
 		return false;
 	}
 
 	/*** Open skeleton ***/
 
-	curOff = openSkeleton(constData, curOff,  model.num_bones);
+	curOff = openSkeleton(constData, curOff, model.num_bones);
 
-	if(curOff + model.num_parts * sizeof(Part) >= (quint32)BSX_data.size()) {
+	if(curOff + model.num_parts * sizeof(Part) > (quint32)BSX_data.size()) {
 		qWarning() << "invalid parts size" << model.num_parts;
 		return false;
 	}
@@ -130,6 +148,11 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 			return false;
 		}
 
+		if(curOff + (animation_id + 1) * sizeof(Animation) > (quint32)BSX_data.size()) {
+			qWarning() << "invalid animation size" << animation_id;
+			return false;
+		}
+
 		/*** Open animations ***/
 
 		openAnimation(constData, curOff, animation_id, BSX_data.size(), animate);
@@ -138,6 +161,11 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 	/*** Open textures header ***/
 
 	quint32 offsetTexHeader = header.offset_models + model_header.texture_pointer;
+
+	if(offsetTexHeader + 8 > (quint32)BSX_data.size()) {
+		qWarning() << BSX_data.size() << "error tex header";
+		return 2;
+	}
 
 	quint32 unknownTex, unknownTex2;
 	memcpy(&unknownTex, constData + offsetTexHeader, 4);
@@ -148,6 +176,11 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 //	qDebug() << "texCount" << texCount << "unknown1" << unknownTex << "unknown2" << (unknownTex2 & 0xFFFFFF00);
 
 	/*** Open texture Headers ***/
+
+	if(offsetTexHeader + 8 + texCount*sizeof(TexHeader) > (quint32)BSX_data.size()) {
+		qWarning() << BSX_data.size() << "error tex data";
+		return 2;
+	}
 
 	QList<TexHeader> texHeaders;
 
@@ -474,13 +507,12 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 	return true;
 }
 
-QPixmap FieldModelFilePS::openTexture(const char *constData, int /*size*/, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp)
+QPixmap FieldModelFilePS::openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp)
 {
-//	if(imgHeader.offset_data + imgHeader.height * imgHeader.width*2 >= (quint32)size
-//			|| palHeader.offset_data + 510 >= (quint32)size) {
-//		qWarning() << "Offset texture too large" << (imgHeader.offset_data + imgHeader.height * imgHeader.width*2) << (palHeader.offset_data + 512) << size;
-//		return QPixmap();
-//	}
+	if(imgHeader.offset_data + imgHeader.height * 2 > (quint32)size) {
+		qWarning() << "Offset texture too large" << (imgHeader.offset_data + imgHeader.height * 2);
+		return QPixmap();
+	}
 
 	int width = imgHeader.width;
 	if(bpp == 1) {
@@ -488,26 +520,39 @@ QPixmap FieldModelFilePS::openTexture(const char *constData, int /*size*/, const
 	} else if(bpp == 0) {
 		width *= 4;
 	}
+
 	QImage img(width, imgHeader.height, QImage::Format_ARGB32);
 	QRgb *px = (QRgb *)img.bits();
 	int i=0;
 	for(int y=0 ; y<imgHeader.height ; ++y) {
-		for(int x=0 ; x<width ; ++x) {
+		for(int x=0 ; x<imgHeader.width*2 ; ++x) {
 			quint8 index = constData[imgHeader.offset_data + i];
 			quint16 color;
 
 			if(bpp == 1) {
+				if(palHeader.offset_data + index*2 + 2 > (quint32)size) {
+					qWarning() << "Offset palette too large";
+					continue;
+				}
 				memcpy(&color, constData + palHeader.offset_data + index*2, 2);
 
 				px[i] = PsColor::fromPsColor(color, true);
 			} else if(bpp == 0) {
+				if(palHeader.offset_data + (index & 0xF)*2 + 2 > (quint32)size) {
+					qWarning() << "Offset palette too large";
+					continue;
+				}
 				memcpy(&color, constData + palHeader.offset_data + (index & 0xF)*2, 2);
 
 				px[i*2] = PsColor::fromPsColor(color, true);
 
+				if(palHeader.offset_data + (index >> 4)*2 + 2 > (quint32)size) {
+					qWarning() << "Offset palette too large";
+					continue;
+				}
 				memcpy(&color, constData + palHeader.offset_data + (index >> 4)*2, 2);
 
-				px[i*2] = PsColor::fromPsColor(color, true);
+				px[i*2 + 1] = PsColor::fromPsColor(color, true);
 			}
 			++i;
 		}
@@ -585,4 +630,14 @@ bool FieldModelFilePS::openBCX(const QByteArray &BCX, int animationID, bool anim
 	}
 
 	return true;
+}
+
+const QList<QRgb> &FieldModelFilePS::lightColors() const
+{
+	return _currentColors;
+}
+
+quint16 FieldModelFilePS::scale() const
+{
+	return _currentScale;
 }

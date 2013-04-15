@@ -20,7 +20,6 @@
 #include "core/field/GrpScript.h"
 #include "widgets/ConfigWindow.h"
 #include "widgets/EncounterWidget.h"
-#include "widgets/TutWidget.h"
 #include "widgets/MiscWidget.h"
 #include "widgets/ImportDialog.h"
 #include "widgets/MassExportDialog.h"
@@ -33,7 +32,7 @@
 
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
-	textDialog(0), _modelManager(0), _walkmeshManager(0),
+	textDialog(0), _modelManager(0), _tutManager(0), _walkmeshManager(0),
 	_backgroundManager(0), taskBarButton(0), progressDialog(0)
 {
 	setWindowTitle();
@@ -92,7 +91,7 @@ Window::Window() :
 	menu->addAction(tr("&Textes..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
 	actionModels = menu->addAction(tr("&Modèles 3D..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
 	actionEncounter = menu->addAction(tr("&Rencontres aléatoires..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
-	actionTut = menu->addAction(tr("&Tutoriels/Musiques..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
+	menu->addAction(tr("&Tutoriels/Musiques..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
 	menu->addAction(tr("&Zones..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
 	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("&Divers..."), this, SLOT(miscManager()));
@@ -413,6 +412,10 @@ int Window::closeFile(bool quit)
 			_modelManager->deleteLater();
 			_modelManager = 0;
 		}
+		if(_tutManager) {
+			_tutManager->clear();
+			_tutManager->setEnabled(false);
+		}
 		if(_walkmeshManager) {
 			_walkmeshManager->clear();
 			_walkmeshManager->setEnabled(false);
@@ -432,7 +435,6 @@ int Window::closeFile(bool quit)
 		actionClose->setEnabled(false);
 		actionModels->setEnabled(false);
 		actionEncounter->setEnabled(false);
-		actionTut->setEnabled(false);
 		actionMisc->setEnabled(false);
 	}
 
@@ -665,7 +667,6 @@ void Window::open(const QString &cheminFic, bool isDir)
 		searchDialog->setFieldArchive(fieldArchive);
 		searchDialog->setEnabled(true);
 		actionEncounter->setEnabled(true);
-		actionTut->setEnabled(true);
 		actionMisc->setEnabled(true);
 		actionExport->setEnabled(true);
 		actionMassExport->setEnabled(true);
@@ -679,7 +680,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 	actionSaveAs->setEnabled(true);
 	actionClose->setEnabled(true);
 
-//	fieldArchive->searchAll();
+	fieldArchive->searchAll();
 //	qDebug() << "/Window::open" << cheminFic << isDir;
 }
 
@@ -743,6 +744,14 @@ void Window::openField(bool reload)
 	if(_modelManager && (reload || _modelManager->isVisible())) {
 		_modelManager->fill(field, reload);
 		_modelManager->setEnabled(true);
+	}
+	if(_tutManager && (reload || _tutManager->isVisible())) {
+		TutFilePC *tutPC = NULL;
+		if(fieldArchive->isPC()) {
+			tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
+		}
+		_tutManager->fill(field, tutPC, reload);
+		_tutManager->setEnabled(true);
 	}
 	if(_walkmeshManager && (reload || _walkmeshManager->isVisible())) {
 		_walkmeshManager->fill(field, reload);
@@ -1328,23 +1337,24 @@ void Window::encounterManager()
 
 void Window::tutManager()
 {
-	if(field) {
-		TutFileStandard *tut = field->tutosAndSounds();
-		TutFilePC *tutPC = NULL;
-		if(tut->isOpen()) {
-			if(fieldArchive->isPC()) {
-				tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
-			}
-			TutWidget dialog(field, tut, tutPC, this);
-			if(dialog.exec()==QDialog::Accepted)
-			{
-				if(tut->isModified() || (tutPC != NULL && tutPC->isModified()))
-					setModified(true);
-			}
-		} else {
-			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les sons et les tutoriels !"));
-		}
+	if(!_tutManager) {
+		_tutManager = new TutWidget(this);
+		connect(_tutManager, SIGNAL(modified()), SLOT(setModified()));
 	}
+
+	if(field) {
+		TutFilePC *tutPC = NULL;
+		if(fieldArchive->isPC()) {
+			tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
+		}
+		_tutManager->fill(field, tutPC);
+		_tutManager->setEnabled(true);
+	} else {
+		_tutManager->clear();
+		_tutManager->setEnabled(false);
+	}
+	_tutManager->show();
+	_tutManager->activateWindow();
 }
 
 void Window::walkmeshManager()
