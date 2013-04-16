@@ -31,7 +31,6 @@
 #include "widgets/FieldModel.h"
 #include "widgets/ModelManagerPC.h"
 #include "widgets/ModelManagerPS.h"
-#include "widgets/TutWidget.h"
 #include "widgets/WalkmeshManager.h"
 #include "widgets/QTaskBarButton.h"
 #include "widgets/LgpDialog.h"
@@ -129,13 +128,12 @@ private:
 	QAction *actionSave, *actionSaveAs, *actionExport;
 	QAction *actionMassExport, *actionImport, *actionMassImport, *actionClose;
 	QAction *actionRun, *actionModels, *actionArchive;
-	QAction *actionEncounter;
+	QAction *actionEncounter, *actionTut;
 	QAction *actionMisc, *actionJp_txt;
 	QMenu *menuLang;
 
 	TextManager *textDialog;
 	ModelManager *_modelManager;
-	TutWidget *_tutManager;
 	WalkmeshManager *_walkmeshManager;
 	BGDialog *_backgroundManager;
 
