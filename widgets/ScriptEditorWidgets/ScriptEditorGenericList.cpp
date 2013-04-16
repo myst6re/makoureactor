@@ -39,6 +39,7 @@ void ScriptEditorGenericList::build()
 	tableView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
 	SpinBoxDelegate *delegate = new SpinBoxDelegate(this);
+	delegate->setField(_field);
 	tableView->setItemDelegate(delegate);
 	tableView->horizontalHeader()->setStretchLastSection(true);
 

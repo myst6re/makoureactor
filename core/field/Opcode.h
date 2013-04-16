@@ -42,6 +42,9 @@ typedef struct _ff7Var {
 
 inline bool operator==(FF7Var v1, FF7Var v2) { return v1.bank == v2.bank && v1.adress == v2.adress; }
 
+class Section1File;
+class Field;
+
 class Opcode
 {
 public:
@@ -131,7 +134,7 @@ public:
 	Opcode();
 	virtual ~Opcode();
 	virtual int id() const=0;
-	virtual QString toString() const=0;
+	virtual QString toString(Field *field) const=0;
 	virtual void setParams(const QByteArray &params);
 	virtual QByteArray params() const;
 	virtual quint8 size() const;
@@ -157,7 +160,7 @@ public:
 	virtual void getVariables(QList<FF7Var> &vars) const;
 	bool searchExec(quint8 group, quint8 script) const;
 	bool searchMapJump(quint16 fieldID) const;
-	bool searchTextInScripts(const QRegExp &text) const;
+	bool searchTextInScripts(const QRegExp &text, const Section1File *scriptsAndTexts) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void shiftTextIds(int textId, int steps);
@@ -166,13 +169,13 @@ public:
 	void backgroundParams(QHash<quint8, quint8> &enabledParams) const;
 	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
-	static QString _personnage(quint8 persoID);
+	static QString character(quint8 persoID);
 
 	static const quint8 length[257];
 	static const QString names[257];
 protected:
-	static QString _script(quint8 param);
-	static QString _text(quint8 textID);
+	static QString _script(quint8 param, Section1File *scriptsAndTexts);
+	static QString _text(quint8 textID, Section1File *scriptsAndTexts);
 	static QString _item(quint16 itemID, quint8 bank);
 	static QString _materia(quint8 materiaID, quint8 bank);
 	static QString _field(quint16 fieldID);
@@ -195,7 +198,7 @@ public:
 	explicit OpcodeUnknown(quint8 id, const QByteArray &params=QByteArray());
 	int id() const;
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 _id;
@@ -206,7 +209,7 @@ class OpcodeRET : public Opcode {
 public:
 	explicit OpcodeRET();
 	inline int id() const { return 0x00; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	bool isVoid() const { return true; }
 };
 
@@ -225,7 +228,7 @@ public:
 	explicit OpcodeREQ(const QByteArray &params);
 	explicit OpcodeREQ(const OpcodeExec &op);
 	inline int id() const { return 0x01; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeREQSW : public OpcodeExec {
@@ -233,7 +236,7 @@ public:
 	explicit OpcodeREQSW(const QByteArray &params);
 	explicit OpcodeREQSW(const OpcodeExec &op);
 	inline int id() const { return 0x02; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeREQEW : public OpcodeExec {
@@ -241,7 +244,7 @@ public:
 	explicit OpcodeREQEW(const QByteArray &params);
 	explicit OpcodeREQEW(const OpcodeExec &op);
 	inline int id() const { return 0x03; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeExecChar : public Opcode {
@@ -259,7 +262,7 @@ public:
 	explicit OpcodePREQ(const QByteArray &params);
 	explicit OpcodePREQ(const OpcodeExecChar &op);
 	inline int id() const { return 0x04; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodePRQSW : public OpcodeExecChar {
@@ -267,7 +270,7 @@ public:
 	explicit OpcodePRQSW(const QByteArray &params);
 	explicit OpcodePRQSW(const OpcodeExecChar &op);
 	inline int id() const { return 0x05; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodePRQEW : public OpcodeExecChar {
@@ -275,14 +278,14 @@ public:
 	explicit OpcodePRQEW(const QByteArray &params);
 	explicit OpcodePRQEW(const OpcodeExecChar &op);
 	inline int id() const { return 0x06; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeRETTO : public Opcode {
 public:
 	explicit OpcodeRETTO(const QByteArray &params);
 	inline int id() const { return 0x07; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 scriptID;
@@ -293,7 +296,7 @@ class OpcodeJOIN : public Opcode {
 public:
 	explicit OpcodeJOIN(const QByteArray &params);
 	inline int id() const { return 0x08; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 speed;
@@ -303,7 +306,7 @@ class OpcodeSPLIT : public Opcode {
 public:
 	explicit OpcodeSPLIT(const QByteArray &params);
 	inline int id() const { return 0x09; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -328,7 +331,7 @@ public:
 	explicit OpcodeSPTYE(const QByteArray &params);
 	explicit OpcodeSPTYE(const OpcodePartyE &op);
 	inline int id() const { return 0x0A; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeGTPYE : public OpcodePartyE {
@@ -336,14 +339,14 @@ public:
 	explicit OpcodeGTPYE(const QByteArray &params);
 	explicit OpcodeGTPYE(const OpcodePartyE &op);
 	inline int id() const { return 0x0B; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeDSKCG : public Opcode {
 public:
 	explicit OpcodeDSKCG(const QByteArray &params);
 	inline int id() const { return 0x0E; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 diskID;
@@ -354,7 +357,7 @@ public:
 	explicit OpcodeSPECIALARROW(const QByteArray &params);
 	inline int id() const { return 0xF5; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 hide;
@@ -365,7 +368,7 @@ public:
 	explicit OpcodeSPECIALPNAME(const QByteArray &params);
 	inline int id() const { return 0xF6; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown;
@@ -376,7 +379,7 @@ public:
 	explicit OpcodeSPECIALGMSPD(const QByteArray &params);
 	inline int id() const { return 0xF7; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 speed;
@@ -387,7 +390,7 @@ public:
 	explicit OpcodeSPECIALSMSPD(const QByteArray &params);
 	inline int id() const { return 0xF8; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown, speed;
@@ -398,7 +401,7 @@ public:
 	explicit OpcodeSPECIALFLMAT();
 	inline int id() const { return 0xF9; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeSPECIALFLITM : public Opcode {
@@ -406,7 +409,7 @@ public:
 	explicit OpcodeSPECIALFLITM();
 	inline int id() const { return 0xFA; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeSPECIALBTLCK : public Opcode {
@@ -414,7 +417,7 @@ public:
 	explicit OpcodeSPECIALBTLCK(const QByteArray &params);
 	inline int id() const { return 0xFB; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 lock;
@@ -425,7 +428,7 @@ public:
 	explicit OpcodeSPECIALMVLCK(const QByteArray &params);
 	inline int id() const { return 0xFC; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 lock;
@@ -436,7 +439,7 @@ public:
 	explicit OpcodeSPECIALSPCNM(const QByteArray &params);
 	inline int id() const { return 0xFD; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getTextID() const;
@@ -449,7 +452,7 @@ public:
 	explicit OpcodeSPECIALRSGLB();
 	inline int id() const { return 0xFE; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeSPECIALCLITM : public Opcode {
@@ -457,7 +460,7 @@ public:
 	explicit OpcodeSPECIALCLITM();
 	inline int id() const { return 0xFF; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeSPECIAL : public Opcode {
@@ -466,7 +469,7 @@ public:
 	virtual ~OpcodeSPECIAL();
 	inline int id() const { return 0x0F; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getTextID() const;
@@ -499,7 +502,7 @@ public:
 	explicit OpcodeLabel(quint32 label);
 	inline int id() const { return 0x100; } // fake id
 	QByteArray toByteArray() const { return QByteArray(); }
-	QString toString() const;
+	QString toString(Field *field) const;
 	inline bool isLabel() const  { return true; }
 	inline bool isVoid() const { return true; }
 	quint32 label() const;
@@ -512,7 +515,7 @@ public:
 	explicit OpcodeJMPF(const QByteArray &params);
 	explicit OpcodeJMPF(const OpcodeJump &op);
 	inline int id() const { return 0x10; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	inline bool isVoid() const { return true; }
@@ -526,7 +529,7 @@ public:
 	explicit OpcodeJMPFL(const QByteArray &params);
 	explicit OpcodeJMPFL(const OpcodeJump &op);
 	inline int id() const { return 0x11; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	inline bool isVoid() const { return true; }
@@ -539,7 +542,7 @@ public:
 	explicit OpcodeJMPB(const QByteArray &params);
 	explicit OpcodeJMPB(const OpcodeJump &op);
 	inline int id() const { return 0x12; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	inline bool isVoid() const { return true; }
@@ -553,7 +556,7 @@ public:
 	explicit OpcodeJMPBL(const QByteArray &params);
 	explicit OpcodeJMPBL(const OpcodeJump &op);
 	inline int id() const { return 0x13; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	inline bool isVoid() const { return true; }
@@ -577,7 +580,7 @@ public:
 	explicit OpcodeIFUB(const QByteArray &params);
 	explicit OpcodeIFUB(const OpcodeIf &op);
 	inline int id() const { return 0x14; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	inline bool isLongJump() const { return false; }
@@ -589,7 +592,7 @@ public:
 	explicit OpcodeIFUBL(const QByteArray &params);
 	explicit OpcodeIFUBL(const OpcodeIf &op);
 	inline int id() const { return 0x15; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	inline bool isLongJump() const { return true; }
@@ -601,7 +604,7 @@ public:
 	explicit OpcodeIFSW(const QByteArray &params);
 	explicit OpcodeIFSW(const OpcodeIf &op);
 	inline int id() const { return 0x16; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	inline bool isLongJump() const { return false; }
@@ -613,7 +616,7 @@ public:
 	explicit OpcodeIFSWL(const QByteArray &params);
 	explicit OpcodeIFSWL(const OpcodeIf &op);
 	inline int id() const { return 0x17; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	inline bool isLongJump() const { return true; }
@@ -625,7 +628,7 @@ public:
 	explicit OpcodeIFUW(const QByteArray &params);
 	explicit OpcodeIFUW(const OpcodeIf &op);
 	inline int id() const { return 0x18; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	inline bool isLongJump() const { return false; }
@@ -637,7 +640,7 @@ public:
 	explicit OpcodeIFUWL(const QByteArray &params);
 	explicit OpcodeIFUWL(const OpcodeIf &op);
 	inline int id() const { return 0x19; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	inline bool isLongJump() const { return true; }
@@ -648,7 +651,7 @@ class OpcodeMINIGAME : public Opcode {
 public:
 	explicit OpcodeMINIGAME(const QByteArray &params);
 	inline int id() const { return 0x20; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint16 fieldID;
@@ -663,7 +666,7 @@ class OpcodeTUTOR : public Opcode {
 public:
 	explicit OpcodeTUTOR(const QByteArray &params);
 	inline int id() const { return 0x21; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getTutoID() const;
@@ -675,7 +678,7 @@ class OpcodeBTMD2 : public Opcode {
 public:
 	explicit OpcodeBTMD2(const QByteArray &params);
 	inline int id() const { return 0x22; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint32 battleMode;
@@ -685,7 +688,7 @@ class OpcodeBTRLD : public Opcode {
 public:
 	explicit OpcodeBTRLD(const QByteArray &params);
 	inline int id() const { return 0x23; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -696,7 +699,7 @@ class OpcodeWAIT : public Opcode {
 public:
 	explicit OpcodeWAIT(const QByteArray &params);
 	inline int id() const { return 0x24; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint16 frameCount;
@@ -706,7 +709,7 @@ class OpcodeNFADE : public Opcode {
 public:
 	explicit OpcodeNFADE(const QByteArray &params);
 	inline int id() const { return 0x25; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -719,7 +722,7 @@ class OpcodeBLINK : public Opcode {
 public:
 	explicit OpcodeBLINK(const QByteArray &params);
 	inline int id() const { return 0x26; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 closed;
@@ -729,7 +732,7 @@ class OpcodeBGMOVIE : public Opcode {
 public:
 	explicit OpcodeBGMOVIE(const QByteArray &params);
 	inline int id() const { return 0x27; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 disabled;
@@ -740,7 +743,7 @@ public:
 	explicit OpcodeKAWAIEYETX(const QByteArray &params);
 	inline int id() const { return 0x00; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 eyeID1, eyeID2, mouthID, objectID;
@@ -752,7 +755,7 @@ public:
 	explicit OpcodeKAWAITRNSP(const QByteArray &params);
 	inline int id() const { return 0x01; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 enableTransparency;
@@ -764,7 +767,7 @@ public:
 	explicit OpcodeKAWAIAMBNT(const QByteArray &params);
 	inline int id() const { return 0x02; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 r1, r2, g1, g2, b1, b2;
@@ -775,25 +778,25 @@ public:
 class OpcodeKAWAILIGHT : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAILIGHT(const QByteArray &params);
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeKAWAISBOBJ : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAISBOBJ(const QByteArray &params);
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeKAWAISHINE : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAISHINE(const QByteArray &params);
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeKAWAIRESET : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAIRESET(const QByteArray &params);
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeKAWAI : public Opcode {
@@ -802,7 +805,7 @@ public:
 	virtual ~OpcodeKAWAI();
 	inline int id() const { return 0x28; }
 	quint8 size() const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	Opcode *opcode;
@@ -812,14 +815,14 @@ class OpcodeKAWIW : public Opcode {
 public:
 	explicit OpcodeKAWIW();
 	inline int id() const { return 0x29; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodePMOVA : public Opcode {
 public:
 	explicit OpcodePMOVA(const QByteArray &params);
 	inline int id() const { return 0x2A; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 partyID;
@@ -829,7 +832,7 @@ class OpcodeSLIP : public Opcode {
 public:
 	explicit OpcodeSLIP(const QByteArray &params);
 	inline int id() const { return 0x2B; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 off;
@@ -839,7 +842,7 @@ class OpcodeBGPDH : public Opcode {
 public:
 	explicit OpcodeBGPDH(const QByteArray &params);
 	inline int id() const { return 0x2C; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -852,7 +855,7 @@ class OpcodeBGSCR : public Opcode {
 public:
 	explicit OpcodeBGSCR(const QByteArray &params);
 	inline int id() const { return 0x2D; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -865,7 +868,7 @@ class OpcodeWCLS : public Opcode {
 public:
 	explicit OpcodeWCLS(const QByteArray &params);
 	inline int id() const { return 0x2E; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -892,7 +895,7 @@ public:
 	explicit OpcodeWSIZW(const QByteArray &params);
 	explicit OpcodeWSIZW(const OpcodeWindow &op);
 	inline int id() const { return 0x2F; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeIfKey : public OpcodeJump {
@@ -912,7 +915,7 @@ public:
 	explicit OpcodeIFKEY(const QByteArray &params);
 	explicit OpcodeIFKEY(const OpcodeIfKey &op);
 	inline int id() const { return 0x30; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeIFKEYON : public OpcodeIfKey {
@@ -920,7 +923,7 @@ public:
 	explicit OpcodeIFKEYON(const QByteArray &params);
 	explicit OpcodeIFKEYON(const OpcodeIfKey &op);
 	inline int id() const { return 0x31; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeIFKEYOFF : public OpcodeIfKey {
@@ -928,14 +931,14 @@ public:
 	explicit OpcodeIFKEYOFF(const QByteArray &params);
 	explicit OpcodeIFKEYOFF(const OpcodeIfKey &op);
 	inline int id() const { return 0x32; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeUC : public Opcode {
 public:
 	explicit OpcodeUC(const QByteArray &params);
 	inline int id() const { return 0x33; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 disabled;
@@ -945,7 +948,7 @@ class OpcodePDIRA : public Opcode {
 public:
 	explicit OpcodePDIRA(const QByteArray &params);
 	inline int id() const { return 0x34; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 partyID;
@@ -955,7 +958,7 @@ class OpcodePTURA : public Opcode {
 public:
 	explicit OpcodePTURA(const QByteArray &params);
 	inline int id() const { return 0x35; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 partyID;
@@ -967,7 +970,7 @@ class OpcodeWSPCL : public Opcode {
 public:
 	explicit OpcodeWSPCL(const QByteArray &params);
 	inline int id() const { return 0x36; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -981,7 +984,7 @@ class OpcodeWNUMB : public Opcode {
 public:
 	explicit OpcodeWNUMB(const QByteArray &params);
 	inline int id() const { return 0x37; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -997,7 +1000,7 @@ class OpcodeSTTIM : public Opcode {
 public:
 	explicit OpcodeSTTIM(const QByteArray &params);
 	inline int id() const { return 0x38; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1020,7 +1023,7 @@ public:
 	explicit OpcodeGOLDu(const QByteArray &params);
 	explicit OpcodeGOLDu(const OpcodeGOLD &op);
 	inline int id() const { return 0x39; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeGOLDd : public OpcodeGOLD {
@@ -1028,14 +1031,14 @@ public:
 	explicit OpcodeGOLDd(const QByteArray &params);
 	explicit OpcodeGOLDd(const OpcodeGOLD &op);
 	inline int id() const { return 0x3A; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeCHGLD : public Opcode {
 public:
 	explicit OpcodeCHGLD(const QByteArray &params);
 	inline int id() const { return 0x3B; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1047,35 +1050,35 @@ class OpcodeHMPMAX1 : public Opcode {
 public:
 	explicit OpcodeHMPMAX1();
 	inline int id() const { return 0x3C; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeHMPMAX2 : public Opcode {
 public:
 	explicit OpcodeHMPMAX2();
 	inline int id() const { return 0x3D; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMHMMX : public Opcode {
 public:
 	explicit OpcodeMHMMX();
 	inline int id() const { return 0x3E; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeHMPMAX3 : public Opcode {
 public:
 	explicit OpcodeHMPMAX3();
 	inline int id() const { return 0x3F; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMESSAGE : public Opcode {
 public:
 	explicit OpcodeMESSAGE(const QByteArray &params);
 	inline int id() const { return 0x40; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getTextID() const;
@@ -1089,7 +1092,7 @@ class OpcodeMPARA : public Opcode {
 public:
 	explicit OpcodeMPARA(const QByteArray &params);
 	inline int id() const { return 0x41; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -1102,7 +1105,7 @@ class OpcodeMPRA2 : public Opcode {
 public:
 	explicit OpcodeMPRA2(const QByteArray &params);
 	inline int id() const { return 0x42; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -1116,7 +1119,7 @@ class OpcodeMPNAM : public Opcode {
 public:
 	explicit OpcodeMPNAM(const QByteArray &params);
 	inline int id() const { return 0x43; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getTextID() const;
@@ -1139,7 +1142,7 @@ public:
 	explicit OpcodeMPu(const QByteArray &params);
 	explicit OpcodeMPu(const OpcodeHPMP &op);
 	inline int id() const { return 0x45; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMPd : public OpcodeHPMP {
@@ -1147,14 +1150,14 @@ public:
 	explicit OpcodeMPd(const QByteArray &params);
 	explicit OpcodeMPd(const OpcodeHPMP &op);
 	inline int id() const { return 0x47; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeASK : public Opcode {
 public:
 	explicit OpcodeASK(const QByteArray &params);
 	inline int id() const { return 0x48; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getTextID() const;
@@ -1170,7 +1173,7 @@ public:
 	explicit OpcodeMENU(const QByteArray &params);
 	inline int id() const { return 0x49; }
 	QString menu(const QString &param) const;
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1181,7 +1184,7 @@ class OpcodeMENU2 : public Opcode {
 public:
 	explicit OpcodeMENU2(const QByteArray &params);
 	inline int id() const { return 0x4A; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 disabled;
@@ -1191,7 +1194,7 @@ class OpcodeBTLTB : public Opcode {
 public:
 	explicit OpcodeBTLTB(const QByteArray &params);
 	inline int id() const { return 0x4B; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 battleTableID;
@@ -1202,7 +1205,7 @@ public:
 	explicit OpcodeHPu(const QByteArray &params);
 	explicit OpcodeHPu(const OpcodeHPMP &params);
 	inline int id() const { return 0x4D; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeHPd : public OpcodeHPMP {
@@ -1210,7 +1213,7 @@ public:
 	explicit OpcodeHPd(const QByteArray &params);
 	explicit OpcodeHPd(const OpcodeHPMP &params);
 	inline int id() const { return 0x4F; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeWINDOW : public OpcodeWindow {
@@ -1218,14 +1221,14 @@ public:
 	explicit OpcodeWINDOW(const QByteArray &params);
 	explicit OpcodeWINDOW(const OpcodeWindow &op);
 	inline int id() const { return 0x50; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeWMOVE : public Opcode {
 public:
 	explicit OpcodeWMOVE(const QByteArray &params);
 	inline int id() const { return 0x51; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -1238,7 +1241,7 @@ class OpcodeWMODE : public Opcode {
 public:
 	explicit OpcodeWMODE(const QByteArray &params);
 	inline int id() const { return 0x52; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -1251,7 +1254,7 @@ class OpcodeWREST : public Opcode {
 public:
 	explicit OpcodeWREST(const QByteArray &params);
 	inline int id() const { return 0x53; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -1265,7 +1268,7 @@ class OpcodeWCLSE : public Opcode {
 public:
 	explicit OpcodeWCLSE(const QByteArray &params);
 	inline int id() const { return 0x54; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -1277,7 +1280,7 @@ class OpcodeWROW : public Opcode {
 public:
 	explicit OpcodeWROW(const QByteArray &params);
 	inline int id() const { return 0x55; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -1299,7 +1302,7 @@ public:
 	explicit OpcodeGWCOL(const QByteArray &params);
 	explicit OpcodeGWCOL(const OpcodeWCOL &op);
 	inline int id() const { return 0x56; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeSWCOL : public OpcodeWCOL {
@@ -1307,7 +1310,7 @@ public:
 	explicit OpcodeSWCOL(const QByteArray &params);
 	explicit OpcodeSWCOL(const OpcodeWCOL &op);
 	inline int id() const { return 0x57; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeItem : public Opcode {
@@ -1326,7 +1329,7 @@ public:
 	explicit OpcodeSTITM(const QByteArray &params);
 	explicit OpcodeSTITM(const OpcodeItem &op);
 	inline int id() const { return 0x58; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeDLITM : public OpcodeItem {
@@ -1334,7 +1337,7 @@ public:
 	explicit OpcodeDLITM(const QByteArray &params);
 	explicit OpcodeDLITM(const OpcodeItem &op);
 	inline int id() const { return 0x59; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeCKITM : public OpcodeItem {
@@ -1342,14 +1345,14 @@ public:
 	explicit OpcodeCKITM(const QByteArray &params);
 	explicit OpcodeCKITM(const OpcodeItem &op);
 	inline int id() const { return 0x5A; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeSMTRA : public Opcode {
 public:
 	explicit OpcodeSMTRA(const QByteArray &params);
 	inline int id() const { return 0x5B; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1362,7 +1365,7 @@ class OpcodeDMTRA : public Opcode {
 public:
 	explicit OpcodeDMTRA(const QByteArray &params);
 	inline int id() const { return 0x5C; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1376,7 +1379,7 @@ class OpcodeCMTRA : public Opcode {
 public:
 	explicit OpcodeCMTRA(const QByteArray &params);
 	inline int id() const { return 0x5D; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1390,7 +1393,7 @@ class OpcodeSHAKE : public Opcode {
 public:
 	explicit OpcodeSHAKE(const QByteArray &params);
 	inline int id() const { return 0x5E; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown1, unknown2, shakeCount, unknown3, unknown4;
@@ -1401,14 +1404,14 @@ class OpcodeNOP : public Opcode {
 public:
 	explicit OpcodeNOP();
 	inline int id() const { return 0x5F; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMAPJUMP : public Opcode {
 public:
 	explicit OpcodeMAPJUMP(const QByteArray &params);
 	inline int id() const { return 0x60; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint16 fieldID;
@@ -1421,7 +1424,7 @@ class OpcodeSCRLO : public Opcode {
 public:
 	explicit OpcodeSCRLO(const QByteArray &params);
 	inline int id() const { return 0x61; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown;
@@ -1431,7 +1434,7 @@ class OpcodeSCRLC : public Opcode {
 public:
 	explicit OpcodeSCRLC(const QByteArray &params);
 	inline int id() const { return 0x62; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint32 unknown;
@@ -1441,7 +1444,7 @@ class OpcodeSCRLA : public Opcode {
 public:
 	explicit OpcodeSCRLA(const QByteArray &params);
 	inline int id() const { return 0x63; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1454,7 +1457,7 @@ class OpcodeSCR2D : public Opcode {
 public:
 	explicit OpcodeSCR2D(const QByteArray &params);
 	inline int id() const { return 0x64; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1466,14 +1469,14 @@ class OpcodeSCRCC : public Opcode {
 public:
 	explicit OpcodeSCRCC();
 	inline int id() const { return 0x65; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeSCR2DC : public Opcode {
 public:
 	explicit OpcodeSCR2DC(const QByteArray &params);
 	inline int id() const { return 0x66; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1486,14 +1489,14 @@ class OpcodeSCRLW : public Opcode {
 public:
 	explicit OpcodeSCRLW();
 	inline int id() const { return 0x67; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 // note: same struct as SCR2DC
 class OpcodeSCR2DL : public Opcode {
 public:
 	explicit OpcodeSCR2DL(const QByteArray &params);
 	inline int id() const { return 0x68; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1506,7 +1509,7 @@ class OpcodeMPDSP : public Opcode {
 public:
 	explicit OpcodeMPDSP(const QByteArray &params);
 	inline int id() const { return 0x69; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown;
@@ -1516,7 +1519,7 @@ class OpcodeVWOFT : public Opcode {
 public:
 	explicit OpcodeVWOFT(const QByteArray &params);
 	inline int id() const { return 0x6A; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1529,7 +1532,7 @@ class OpcodeFADE : public Opcode {
 public:
 	explicit OpcodeFADE(const QByteArray &params);
 	inline int id() const { return 0x6B; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1541,14 +1544,14 @@ class OpcodeFADEW : public Opcode {
 public:
 	explicit OpcodeFADEW();
 	inline int id() const { return 0x6C; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeIDLCK : public Opcode {
 public:
 	explicit OpcodeIDLCK(const QByteArray &params);
 	inline int id() const { return 0x6D; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint16 triangleID;
@@ -1559,7 +1562,7 @@ class OpcodeLSTMP : public Opcode {
 public:
 	explicit OpcodeLSTMP(const QByteArray &params);
 	inline int id() const { return 0x6E; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1570,7 +1573,7 @@ class OpcodeSCRLP : public Opcode {
 public:
 	explicit OpcodeSCRLP(const QByteArray &params);
 	inline int id() const { return 0x6F; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1583,7 +1586,7 @@ class OpcodeBATTLE : public Opcode {
 public:
 	explicit OpcodeBATTLE(const QByteArray &params);
 	inline int id() const { return 0x70; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1595,7 +1598,7 @@ class OpcodeBTLON : public Opcode {
 public:
 	explicit OpcodeBTLON(const QByteArray &params);
 	inline int id() const { return 0x71; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 disabled;
@@ -1605,7 +1608,7 @@ class OpcodeBTLMD : public Opcode {
 public:
 	explicit OpcodeBTLMD(const QByteArray &params);
 	inline int id() const { return 0x72; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint16 battleMode;
@@ -1615,7 +1618,7 @@ class OpcodePGTDR : public Opcode {
 public:
 	explicit OpcodePGTDR(const QByteArray &params);
 	inline int id() const { return 0x73; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1626,7 +1629,7 @@ class OpcodeGETPC : public Opcode {
 public:
 	explicit OpcodeGETPC(const QByteArray &params);
 	inline int id() const { return 0x74; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1637,7 +1640,7 @@ class OpcodePXYZI : public Opcode {
 public:
 	explicit OpcodePXYZI(const QByteArray &params);
 	inline int id() const { return 0x75; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -1687,7 +1690,7 @@ public:
 	explicit OpcodePLUSX(const QByteArray &params);
 	explicit OpcodePLUSX(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x76; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodePLUS2X : public OpcodeOperation2 {
@@ -1695,7 +1698,7 @@ public:
 	explicit OpcodePLUS2X(const QByteArray &params);
 	explicit OpcodePLUS2X(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x77; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMINUSX : public OpcodeOperation {
@@ -1703,7 +1706,7 @@ public:
 	explicit OpcodeMINUSX(const QByteArray &params);
 	explicit OpcodeMINUSX(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x78; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMINUS2X : public OpcodeOperation2 {
@@ -1711,7 +1714,7 @@ public:
 	explicit OpcodeMINUS2X(const QByteArray &params);
 	explicit OpcodeMINUS2X(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x79; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeINCX : public OpcodeUnaryOperation {
@@ -1719,7 +1722,7 @@ public:
 	explicit OpcodeINCX(const QByteArray &params);
 	explicit OpcodeINCX(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x7A; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	bool isLong() const { return false; }
 };
 
@@ -1728,7 +1731,7 @@ public:
 	explicit OpcodeINC2X(const QByteArray &params);
 	explicit OpcodeINC2X(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x7B; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	bool isLong() const { return true; }
 };
 
@@ -1737,7 +1740,7 @@ public:
 	explicit OpcodeDECX(const QByteArray &params);
 	explicit OpcodeDECX(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x7C; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	bool isLong() const { return false; }
 };
 
@@ -1746,7 +1749,7 @@ public:
 	explicit OpcodeDEC2X(const QByteArray &params);
 	explicit OpcodeDEC2X(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x7D; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	bool isLong() const { return true; }
 };
 
@@ -1754,7 +1757,7 @@ class OpcodeTLKON : public Opcode {
 public:
 	explicit OpcodeTLKON(const QByteArray &params);
 	inline int id() const { return 0x7E; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 disabled;
@@ -1764,7 +1767,7 @@ class OpcodeRDMSD : public Opcode {
 public:
 	explicit OpcodeRDMSD(const QByteArray &params);
 	inline int id() const { return 0x7F; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 banks, value;
@@ -1775,7 +1778,7 @@ public:
 	explicit OpcodeSETBYTE(const QByteArray &params);
 	explicit OpcodeSETBYTE(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x80; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeSETWORD : public OpcodeOperation2 {
@@ -1783,7 +1786,7 @@ public:
 	explicit OpcodeSETWORD(const QByteArray &params);
 	explicit OpcodeSETWORD(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x81; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeBitOperation : public Opcode {
@@ -1800,7 +1803,7 @@ public:
 	explicit OpcodeBITON(const QByteArray &params);
 	explicit OpcodeBITON(const OpcodeBitOperation &op);
 	inline int id() const { return 0x82; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeBITOFF : public OpcodeBitOperation {
@@ -1808,7 +1811,7 @@ public:
 	explicit OpcodeBITOFF(const QByteArray &params);
 	explicit OpcodeBITOFF(const OpcodeBitOperation &op);
 	inline int id() const { return 0x83; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeBITXOR : public OpcodeBitOperation {
@@ -1816,7 +1819,7 @@ public:
 	explicit OpcodeBITXOR(const QByteArray &params);
 	explicit OpcodeBITXOR(const OpcodeBitOperation &op);
 	inline int id() const { return 0x84; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodePLUS : public OpcodeOperation {
@@ -1824,7 +1827,7 @@ public:
 	explicit OpcodePLUS(const QByteArray &params);
 	explicit OpcodePLUS(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x85; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodePLUS2 : public OpcodeOperation2 {
@@ -1832,7 +1835,7 @@ public:
 	explicit OpcodePLUS2(const QByteArray &params);
 	explicit OpcodePLUS2(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x86; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMINUS : public OpcodeOperation {
@@ -1840,7 +1843,7 @@ public:
 	explicit OpcodeMINUS(const QByteArray &params);
 	explicit OpcodeMINUS(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x87; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMINUS2 : public OpcodeOperation2 {
@@ -1848,7 +1851,7 @@ public:
 	explicit OpcodeMINUS2(const QByteArray &params);
 	explicit OpcodeMINUS2(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x88; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMUL : public OpcodeOperation {
@@ -1856,7 +1859,7 @@ public:
 	explicit OpcodeMUL(const QByteArray &params);
 	explicit OpcodeMUL(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x89; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMUL2 : public OpcodeOperation2 {
@@ -1864,7 +1867,7 @@ public:
 	explicit OpcodeMUL2(const QByteArray &params);
 	explicit OpcodeMUL2(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x8A; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeDIV : public OpcodeOperation {
@@ -1872,7 +1875,7 @@ public:
 	explicit OpcodeDIV(const QByteArray &params);
 	explicit OpcodeDIV(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x8B; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeDIV2 : public OpcodeOperation2 {
@@ -1880,7 +1883,7 @@ public:
 	explicit OpcodeDIV2(const QByteArray &params);
 	explicit OpcodeDIV2(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x8C; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMOD : public OpcodeOperation {
@@ -1888,7 +1891,7 @@ public:
 	explicit OpcodeMOD(const QByteArray &params);
 	explicit OpcodeMOD(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x8D; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMOD2 : public OpcodeOperation2 {
@@ -1896,7 +1899,7 @@ public:
 	explicit OpcodeMOD2(const QByteArray &params);
 	explicit OpcodeMOD2(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x8E; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeAND : public OpcodeOperation {
@@ -1904,7 +1907,7 @@ public:
 	explicit OpcodeAND(const QByteArray &params);
 	explicit OpcodeAND(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x8F; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeAND2 : public OpcodeOperation2 {
@@ -1912,7 +1915,7 @@ public:
 	explicit OpcodeAND2(const QByteArray &params);
 	explicit OpcodeAND2(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x90; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeOR : public OpcodeOperation {
@@ -1920,7 +1923,7 @@ public:
 	explicit OpcodeOR(const QByteArray &params);
 	explicit OpcodeOR(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x91; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeOR2 : public OpcodeOperation2 {
@@ -1928,7 +1931,7 @@ public:
 	explicit OpcodeOR2(const QByteArray &params);
 	explicit OpcodeOR2(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x92; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeXOR : public OpcodeOperation {
@@ -1936,7 +1939,7 @@ public:
 	explicit OpcodeXOR(const QByteArray &params);
 	explicit OpcodeXOR(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x93; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeXOR2 : public OpcodeOperation2 {
@@ -1944,7 +1947,7 @@ public:
 	explicit OpcodeXOR2(const QByteArray &params);
 	explicit OpcodeXOR2(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x94; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeINC : public OpcodeUnaryOperation {
@@ -1952,7 +1955,7 @@ public:
 	explicit OpcodeINC(const QByteArray &params);
 	explicit OpcodeINC(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x95; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	bool isLong() const { return false; }
 };
 
@@ -1961,7 +1964,7 @@ public:
 	explicit OpcodeINC2(const QByteArray &params);
 	explicit OpcodeINC2(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x96; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	bool isLong() const { return true; }
 };
 
@@ -1970,7 +1973,7 @@ public:
 	explicit OpcodeDEC(const QByteArray &params);
 	explicit OpcodeDEC(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x97; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	bool isLong() const { return false; }
 };
 
@@ -1979,7 +1982,7 @@ public:
 	explicit OpcodeDEC2(const QByteArray &params);
 	explicit OpcodeDEC2(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x98; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	bool isLong() const { return true; }
 };
 
@@ -1988,7 +1991,7 @@ public:
 	explicit OpcodeRANDOM(const QByteArray &params);
 	explicit OpcodeRANDOM(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x99; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	bool isLong() const { return false; }
 };
 
@@ -1997,7 +2000,7 @@ public:
 	explicit OpcodeLBYTE(const QByteArray &params);
 	explicit OpcodeLBYTE(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x9A; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeHBYTE : public OpcodeOperation2 {
@@ -2005,14 +2008,14 @@ public:
 	explicit OpcodeHBYTE(const QByteArray &params);
 	explicit OpcodeHBYTE(const OpcodeBinaryOperation &op);
 	inline int id() const { return 0x9B; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class Opcode2BYTE : public Opcode {
 public:
 	explicit Opcode2BYTE(const QByteArray &params);
 	inline int id() const { return 0x9C; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2023,7 +2026,7 @@ class OpcodeSETX : public Opcode {
 public:
 	explicit OpcodeSETX(const QByteArray &params);
 	inline int id() const { return 0x9D; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown[6];
@@ -2033,7 +2036,7 @@ class OpcodeGETX : public Opcode {
 public:
 	explicit OpcodeGETX(const QByteArray &params);
 	inline int id() const { return 0x9E; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown[6];
@@ -2043,7 +2046,7 @@ class OpcodeSEARCHX : public Opcode {
 public:
 	explicit OpcodeSEARCHX(const QByteArray &params);
 	inline int id() const { return 0x9F; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2056,7 +2059,7 @@ class OpcodePC : public Opcode {
 public:
 	explicit OpcodePC(const QByteArray &params);
 	inline int id() const { return 0xA0; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 charID;
@@ -2066,7 +2069,7 @@ class OpcodeCHAR : public Opcode {
 public:
 	explicit OpcodeCHAR(const QByteArray &params);
 	inline int id() const { return 0xA1; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 objectID;
@@ -2076,7 +2079,7 @@ class OpcodeDFANM : public Opcode {
 public:
 	explicit OpcodeDFANM(const QByteArray &params);
 	inline int id() const { return 0xA2; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 animID, speed;
@@ -2086,7 +2089,7 @@ class OpcodeANIME1 : public Opcode {
 public:
 	explicit OpcodeANIME1(const QByteArray &params);
 	inline int id() const { return 0xA3; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 animID, speed;
@@ -2096,7 +2099,7 @@ class OpcodeVISI : public Opcode {
 public:
 	explicit OpcodeVISI(const QByteArray &params);
 	inline int id() const { return 0xA4; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 show;
@@ -2106,7 +2109,7 @@ class OpcodeXYZI : public Opcode {
 public:
 	explicit OpcodeXYZI(const QByteArray &params);
 	inline int id() const { return 0xA5; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2119,7 +2122,7 @@ class OpcodeXYI : public Opcode {
 public:
 	explicit OpcodeXYI(const QByteArray &params);
 	inline int id() const { return 0xA6; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2132,7 +2135,7 @@ class OpcodeXYZ : public Opcode {
 public:
 	explicit OpcodeXYZ(const QByteArray &params);
 	inline int id() const { return 0xA7; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2144,7 +2147,7 @@ class OpcodeMOVE : public Opcode {
 public:
 	explicit OpcodeMOVE(const QByteArray &params);
 	inline int id() const { return 0xA8; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2156,7 +2159,7 @@ class OpcodeCMOVE : public Opcode {
 public:
 	explicit OpcodeCMOVE(const QByteArray &params);
 	inline int id() const { return 0xA9; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2168,7 +2171,7 @@ class OpcodeMOVA : public Opcode {
 public:
 	explicit OpcodeMOVA(const QByteArray &params);
 	inline int id() const { return 0xAA; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 groupID;
@@ -2178,7 +2181,7 @@ class OpcodeTURA : public Opcode {
 public:
 	explicit OpcodeTURA(const QByteArray &params);
 	inline int id() const { return 0xAB; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 groupID, directionRotation, speed;
@@ -2188,14 +2191,14 @@ class OpcodeANIMW : public Opcode {
 public:
 	explicit OpcodeANIMW();
 	inline int id() const { return 0xAC; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeFMOVE : public Opcode {
 public:
 	explicit OpcodeFMOVE(const QByteArray &params);
 	inline int id() const { return 0xAD; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2207,7 +2210,7 @@ class OpcodeANIME2 : public Opcode {
 public:
 	explicit OpcodeANIME2(const QByteArray &params);
 	inline int id() const { return 0xAE; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 animID, speed;
@@ -2217,7 +2220,7 @@ class OpcodeANIMX1 : public Opcode {
 public:
 	explicit OpcodeANIMX1(const QByteArray &params);
 	inline int id() const { return 0xAF; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 animID, speed;
@@ -2227,7 +2230,7 @@ class OpcodeCANIM1 : public Opcode {
 public:
 	explicit OpcodeCANIM1(const QByteArray &params);
 	inline int id() const { return 0xB0; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 animID, firstFrame, lastFrame, speed;
@@ -2237,7 +2240,7 @@ class OpcodeCANMX1 : public Opcode {
 public:
 	explicit OpcodeCANMX1(const QByteArray &params);
 	inline int id() const { return 0xB1; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 animID, firstFrame, lastFrame, speed;
@@ -2247,7 +2250,7 @@ class OpcodeMSPED : public Opcode {
 public:
 	explicit OpcodeMSPED(const QByteArray &params);
 	inline int id() const { return 0xB2; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2259,7 +2262,7 @@ class OpcodeDIR : public Opcode {
 public:
 	explicit OpcodeDIR(const QByteArray &params);
 	inline int id() const { return 0xB3; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2270,7 +2273,7 @@ class OpcodeTURNGEN : public Opcode {
 public:
 	explicit OpcodeTURNGEN(const QByteArray &params);
 	inline int id() const { return 0xB4; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2281,7 +2284,7 @@ class OpcodeTURN : public Opcode {
 public:
 	explicit OpcodeTURN(const QByteArray &params);
 	inline int id() const { return 0xB5; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2292,7 +2295,7 @@ class OpcodeDIRA : public Opcode {
 public:
 	explicit OpcodeDIRA(const QByteArray &params);
 	inline int id() const { return 0xB6; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 groupID;
@@ -2302,7 +2305,7 @@ class OpcodeGETDIR : public Opcode {
 public:
 	explicit OpcodeGETDIR(const QByteArray &params);
 	inline int id() const { return 0xB7; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2313,7 +2316,7 @@ class OpcodeGETAXY : public Opcode {
 public:
 	explicit OpcodeGETAXY(const QByteArray &params);
 	inline int id() const { return 0xB8; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2324,7 +2327,7 @@ class OpcodeGETAI : public Opcode {
 public:
 	explicit OpcodeGETAI(const QByteArray &params);
 	inline int id() const { return 0xB9; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2335,7 +2338,7 @@ class OpcodeANIMX2 : public Opcode {
 public:
 	explicit OpcodeANIMX2(const QByteArray &params);
 	inline int id() const { return 0xBA; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 animID, speed;
@@ -2345,7 +2348,7 @@ class OpcodeCANIM2 : public Opcode {
 public:
 	explicit OpcodeCANIM2(const QByteArray &params);
 	inline int id() const { return 0xBB; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 animID, firstFrame, lastFrame, speed;
@@ -2355,7 +2358,7 @@ class OpcodeCANMX2 : public Opcode {
 public:
 	explicit OpcodeCANMX2(const QByteArray &params);
 	inline int id() const { return 0xBC; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 animID, firstFrame, lastFrame, speed;
@@ -2365,7 +2368,7 @@ class OpcodeASPED : public Opcode {
 public:
 	explicit OpcodeASPED(const QByteArray &params);
 	inline int id() const { return 0xBD; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2377,7 +2380,7 @@ class OpcodeCC : public Opcode {
 public:
 	explicit OpcodeCC(const QByteArray &params);
 	inline int id() const { return 0xBF; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 groupID;
@@ -2387,7 +2390,7 @@ class OpcodeJUMP : public Opcode {
 public:
 	explicit OpcodeJUMP(const QByteArray &params);
 	inline int id() const { return 0xC0; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2401,7 +2404,7 @@ class OpcodeAXYZI : public Opcode {
 public:
 	explicit OpcodeAXYZI(const QByteArray &params);
 	inline int id() const { return 0xC1; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2412,7 +2415,7 @@ class OpcodeLADER : public Opcode {
 public:
 	explicit OpcodeLADER(const QByteArray &params);
 	inline int id() const { return 0xC2; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2426,7 +2429,7 @@ class OpcodeOFST : public Opcode {
 public:
 	explicit OpcodeOFST(const QByteArray &params);
 	inline int id() const { return 0xC3; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2439,14 +2442,14 @@ class OpcodeOFSTW : public Opcode {
 public:
 	explicit OpcodeOFSTW();
 	inline int id() const { return 0xC4; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeTALKR : public Opcode {
 public:
 	explicit OpcodeTALKR(const QByteArray &params);
 	inline int id() const { return 0xC5; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2457,7 +2460,7 @@ class OpcodeSLIDR : public Opcode {
 public:
 	explicit OpcodeSLIDR(const QByteArray &params);
 	inline int id() const { return 0xC6; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2468,7 +2471,7 @@ class OpcodeSOLID : public Opcode {
 public:
 	explicit OpcodeSOLID(const QByteArray &params);
 	inline int id() const { return 0xC7; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 disabled;
@@ -2478,7 +2481,7 @@ class OpcodePRTYP : public Opcode {
 public:
 	explicit OpcodePRTYP(const QByteArray &params);
 	inline int id() const { return 0xC8; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 charID;
@@ -2488,7 +2491,7 @@ class OpcodePRTYM : public Opcode {
 public:
 	explicit OpcodePRTYM(const QByteArray &params);
 	inline int id() const { return 0xC9; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 charID;
@@ -2498,7 +2501,7 @@ class OpcodePRTYE : public Opcode {
 public:
 	explicit OpcodePRTYE(const QByteArray &params);
 	inline int id() const { return 0xCA; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 charID[3];
@@ -2518,21 +2521,21 @@ class OpcodeIFPRTYQ : public OpcodeIfQ {
 public:
 	explicit OpcodeIFPRTYQ(const QByteArray &params);
 	inline int id() const { return 0xCB; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeIFMEMBQ : public OpcodeIfQ {
 public:
 	explicit OpcodeIFMEMBQ(const QByteArray &params);
 	inline int id() const { return 0xCC; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMMBUD : public Opcode {
 public:
 	explicit OpcodeMMBUD(const QByteArray &params);
 	inline int id() const { return 0xCD; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 exists, charID;
@@ -2542,7 +2545,7 @@ class OpcodeMMBLK : public Opcode {
 public:
 	explicit OpcodeMMBLK(const QByteArray &params);
 	inline int id() const { return 0xCE; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 charID;
@@ -2552,7 +2555,7 @@ class OpcodeMMBUK : public Opcode {
 public:
 	explicit OpcodeMMBUK(const QByteArray &params);
 	inline int id() const { return 0xCF; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 charID;
@@ -2562,7 +2565,7 @@ class OpcodeLINE : public Opcode {
 public:
 	explicit OpcodeLINE(const QByteArray &params);
 	inline int id() const { return 0xD0; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	qint16 targetX1, targetY1, targetZ1;
@@ -2573,7 +2576,7 @@ class OpcodeLINON : public Opcode {
 public:
 	explicit OpcodeLINON(const QByteArray &params);
 	inline int id() const { return 0xD1; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 enabled;
@@ -2583,7 +2586,7 @@ class OpcodeMPJPO : public Opcode {
 public:
 	explicit OpcodeMPJPO(const QByteArray &params);
 	inline int id() const { return 0xD2; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 prevent;
@@ -2593,7 +2596,7 @@ class OpcodeSLINE : public Opcode {
 public:
 	explicit OpcodeSLINE(const QByteArray &params);
 	inline int id() const { return 0xD3; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2606,7 +2609,7 @@ class OpcodeSIN : public Opcode {
 public:
 	explicit OpcodeSIN(const QByteArray &params);
 	inline int id() const { return 0xD4; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2619,7 +2622,7 @@ class OpcodeCOS : public Opcode {
 public:
 	explicit OpcodeCOS(const QByteArray &params);
 	inline int id() const { return 0xD5; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2632,7 +2635,7 @@ class OpcodeTLKR2 : public Opcode {
 public:
 	explicit OpcodeTLKR2(const QByteArray &params);
 	inline int id() const { return 0xD6; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2644,7 +2647,7 @@ class OpcodeSLDR2 : public Opcode {
 public:
 	explicit OpcodeSLDR2(const QByteArray &params);
 	inline int id() const { return 0xD7; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2656,7 +2659,7 @@ class OpcodePMJMP : public Opcode {
 public:
 	explicit OpcodePMJMP(const QByteArray &params);
 	inline int id() const { return 0xD8; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint16 fieldID;
@@ -2666,14 +2669,14 @@ class OpcodePMJMP2 : public Opcode {
 public:
 	explicit OpcodePMJMP2();
 	inline int id() const { return 0xD9; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeAKAO2 : public Opcode {
 public:
 	explicit OpcodeAKAO2(const QByteArray &params);
 	inline int id() const { return 0xDA; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2685,7 +2688,7 @@ class OpcodeFCFIX : public Opcode {
 public:
 	explicit OpcodeFCFIX(const QByteArray &params);
 	inline int id() const { return 0xDB; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 disabled;
@@ -2695,7 +2698,7 @@ class OpcodeCCANM : public Opcode {
 public:
 	explicit OpcodeCCANM(const QByteArray &params);
 	inline int id() const { return 0xDC; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 animID, speed, standWalkRun;
@@ -2705,21 +2708,21 @@ class OpcodeANIMB : public Opcode {
 public:
 	explicit OpcodeANIMB();
 	inline int id() const { return 0xDD; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeTURNW : public Opcode {
 public:
 	explicit OpcodeTURNW();
 	inline int id() const { return 0xDE; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMPPAL : public Opcode {
 public:
 	explicit OpcodeMPPAL(const QByteArray &params);
 	inline int id() const { return 0xDF; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2730,7 +2733,7 @@ class OpcodeBGON : public Opcode {
 public:
 	explicit OpcodeBGON(const QByteArray &params);
 	inline int id() const { return 0xE0; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2741,7 +2744,7 @@ class OpcodeBGOFF : public Opcode {
 public:
 	explicit OpcodeBGOFF(const QByteArray &params);
 	inline int id() const { return 0xE1; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2752,7 +2755,7 @@ class OpcodeBGROL : public Opcode {
 public:
 	explicit OpcodeBGROL(const QByteArray &params);
 	inline int id() const { return 0xE2; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2763,7 +2766,7 @@ class OpcodeBGROL2 : public Opcode {
 public:
 	explicit OpcodeBGROL2(const QByteArray &params);
 	inline int id() const { return 0xE3; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2774,7 +2777,7 @@ class OpcodeBGCLR : public Opcode {
 public:
 	explicit OpcodeBGCLR(const QByteArray &params);
 	inline int id() const { return 0xE4; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2785,7 +2788,7 @@ class OpcodeSTPAL : public Opcode {
 public:
 	explicit OpcodeSTPAL(const QByteArray &params);
 	inline int id() const { return 0xE5; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2796,7 +2799,7 @@ class OpcodeLDPAL : public Opcode {
 public:
 	explicit OpcodeLDPAL(const QByteArray &params);
 	inline int id() const { return 0xE6; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2807,7 +2810,7 @@ class OpcodeCPPAL : public Opcode {
 public:
 	explicit OpcodeCPPAL(const QByteArray &params);
 	inline int id() const { return 0xE7; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2818,7 +2821,7 @@ class OpcodeRTPAL : public Opcode {
 public:
 	explicit OpcodeRTPAL(const QByteArray &params);
 	inline int id() const { return 0xE8; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2829,7 +2832,7 @@ class OpcodeADPAL : public Opcode {
 public:
 	explicit OpcodeADPAL(const QByteArray &params);
 	inline int id() const { return 0xE9; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2842,7 +2845,7 @@ class OpcodeMPPAL2 : public Opcode {
 public:
 	explicit OpcodeMPPAL2(const QByteArray &params);
 	inline int id() const { return 0xEA; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2853,7 +2856,7 @@ class OpcodeSTPLS : public Opcode {
 public:
 	explicit OpcodeSTPLS(const QByteArray &params);
 	inline int id() const { return 0xEB; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 palID, posSrc, start, colorCount;
@@ -2863,7 +2866,7 @@ class OpcodeLDPLS : public Opcode {
 public:
 	explicit OpcodeLDPLS(const QByteArray &params);
 	inline int id() const { return 0xEC; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 posSrc, palID, start, colorCount;
@@ -2873,7 +2876,7 @@ class OpcodeCPPAL2 : public Opcode {
 public:
 	explicit OpcodeCPPAL2(const QByteArray &params);
 	inline int id() const { return 0xED; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown[7];
@@ -2883,7 +2886,7 @@ class OpcodeRTPAL2 : public Opcode {
 public:
 	explicit OpcodeRTPAL2(const QByteArray &params);
 	inline int id() const { return 0xEE; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown[7];
@@ -2893,7 +2896,7 @@ class OpcodeADPAL2 : public Opcode {
 public:
 	explicit OpcodeADPAL2(const QByteArray &params);
 	inline int id() const { return 0xEF; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown[10];
@@ -2903,7 +2906,7 @@ class OpcodeMUSIC : public Opcode {
 public:
 	explicit OpcodeMUSIC(const QByteArray &params);
 	inline int id() const { return 0xF0; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 musicID;
@@ -2913,7 +2916,7 @@ class OpcodeSOUND : public Opcode {
 public:
 	explicit OpcodeSOUND(const QByteArray &params);
 	inline int id() const { return 0xF1; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2926,7 +2929,7 @@ class OpcodeAKAO : public Opcode {
 public:
 	explicit OpcodeAKAO(const QByteArray &params);
 	inline int id() const { return 0xF2; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2938,7 +2941,7 @@ class OpcodeMUSVT : public Opcode {
 public:
 	explicit OpcodeMUSVT(const QByteArray &params);
 	inline int id() const { return 0xF3; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 musicID;
@@ -2948,7 +2951,7 @@ class OpcodeMUSVM : public Opcode {
 public:
 	explicit OpcodeMUSVM(const QByteArray &params);
 	inline int id() const { return 0xF4; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 musicID;
@@ -2958,7 +2961,7 @@ class OpcodeMULCK : public Opcode {
 public:
 	explicit OpcodeMULCK(const QByteArray &params);
 	inline int id() const { return 0xF5; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 locked;
@@ -2968,7 +2971,7 @@ class OpcodeBMUSC : public Opcode {
 public:
 	explicit OpcodeBMUSC(const QByteArray &params);
 	inline int id() const { return 0xF6; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 musicID;
@@ -2978,7 +2981,7 @@ class OpcodeCHMPH : public Opcode {
 public:
 	explicit OpcodeCHMPH(const QByteArray &params);
 	inline int id() const { return 0xF7; }
-	QString toString() const;//TODO: unknown
+	QString toString(Field *field) const;//TODO: unknown
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -2989,7 +2992,7 @@ class OpcodePMVIE : public Opcode {
 public:
 	explicit OpcodePMVIE(const QByteArray &params);
 	inline int id() const { return 0xF8; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 movieID;
@@ -2999,14 +3002,14 @@ class OpcodeMOVIE : public Opcode {
 public:
 	explicit OpcodeMOVIE();
 	inline int id() const { return 0xF9; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 class OpcodeMVIEF : public Opcode {
 public:
 	explicit OpcodeMVIEF(const QByteArray &params);
 	inline int id() const { return 0xFA; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -3017,7 +3020,7 @@ class OpcodeMVCAM : public Opcode {
 public:
 	explicit OpcodeMVCAM(const QByteArray &params);
 	inline int id() const { return 0xFB; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 movieCamID;
@@ -3027,7 +3030,7 @@ class OpcodeFMUSC : public Opcode {
 public:
 	explicit OpcodeFMUSC(const QByteArray &params);
 	inline int id() const { return 0xFC; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	quint8 unknown;
@@ -3037,7 +3040,7 @@ class OpcodeCMUSC : public Opcode {
 public:
 	explicit OpcodeCMUSC(const QByteArray &params);
 	inline int id() const { return 0xFD; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -3049,7 +3052,7 @@ class OpcodeCHMST : public Opcode {
 public:
 	explicit OpcodeCHMST(const QByteArray &params);
 	inline int id() const { return 0xFE; }
-	QString toString() const;
+	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
@@ -3060,7 +3063,7 @@ class OpcodeGAMEOVER : public Opcode {
 public:
 	explicit OpcodeGAMEOVER();
 	inline int id() const { return 0xFF; }
-	QString toString() const;
+	QString toString(Field *field) const;
 };
 
 #endif

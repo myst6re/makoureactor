@@ -1005,13 +1005,13 @@ bool Script::searchMapJump(quint16 field, int &opcodeID) const
 	return searchMapJump(field, ++opcodeID);
 }
 
-bool Script::searchTextInScripts(const QRegExp &text, int &opcodeID) const
+bool Script::searchTextInScripts(const QRegExp &text, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if(opcodeID < 0) 	opcodeID = 0;
 	if(opcodeID >= opcodes.size())					return false;
-	if(opcodes.at(opcodeID)->searchTextInScripts(text))		return true;
+	if(opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts))		return true;
 
-	return searchTextInScripts(text, ++opcodeID);
+	return searchTextInScripts(text, ++opcodeID, scriptsAndTexts);
 }
 
 bool Script::searchOpcodeP(int opcode, int &opcodeID) const
@@ -1050,13 +1050,13 @@ bool Script::searchMapJumpP(quint16 field, int &opcodeID) const
 	return searchMapJumpP(field, --opcodeID);
 }
 
-bool Script::searchTextInScriptsP(const QRegExp &text, int &opcodeID) const
+bool Script::searchTextInScriptsP(const QRegExp &text, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if(opcodeID >= opcodes.size()) opcodeID = opcodes.size()-1;
 	if(opcodeID < 0)								return false;
-	if(opcodes.at(opcodeID)->searchTextInScripts(text))		return true;
+	if(opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts))		return true;
 
-	return searchTextInScriptsP(text, --opcodeID);
+	return searchTextInScriptsP(text, --opcodeID, scriptsAndTexts);
 }
 
 void Script::listUsedTexts(QSet<quint8> &usedTexts) const

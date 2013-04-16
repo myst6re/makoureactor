@@ -419,7 +419,7 @@ bool Section1File::searchTextInScripts(const QRegExp &text, int &groupID, int &s
 	if(groupID >= _grpScripts.size())
 		return false;
 
-	if(_grpScripts.at(groupID)->searchTextInScripts(text, scriptID, opcodeID))
+	if(_grpScripts.at(groupID)->searchTextInScripts(text, scriptID, opcodeID, this))
 		return true;
 
 	return searchTextInScripts(text, ++groupID, scriptID = 0, opcodeID = 0);
@@ -501,7 +501,7 @@ bool Section1File::searchTextInScriptsP(const QRegExp &text, int &groupID, int &
 	}
 	if(groupID < 0)
 		return false;
-	if(_grpScripts.at(groupID)->searchTextInScriptsP(text, scriptID, opcodeID))
+	if(_grpScripts.at(groupID)->searchTextInScriptsP(text, scriptID, opcodeID, this))
 		return true;
 
 	return searchTextInScriptsP(text, --groupID, scriptID = 2147483647, opcodeID = 2147483647);

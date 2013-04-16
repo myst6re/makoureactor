@@ -20,9 +20,8 @@
 #include "Data.h"
 #include "core/Config.h"
 
-TutWidget::TutWidget(Field *field, TutFileStandard *tut, TutFilePC *tutPC, QWidget *parent) :
-	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-	field(field), tut(tut), tutCpy(*tut), tutPC(tutPC), textChanged(false)
+TutWidget::TutWidget(QWidget *parent) :
+	QDialog(parent, Qt::Tool)
 {
 	setWindowTitle(tr("Tutoriels/Musiques"));
 
@@ -49,48 +48,60 @@ TutWidget::TutWidget(Field *field, TutFileStandard *tut, TutFilePC *tutPC, QWidg
 	QHBoxLayout *exportLayout = new QHBoxLayout();
 	exportLayout->setContentsMargins(QMargins());
 
-	if(tutPC != NULL)	tutPCCpy = *tutPC;
+	versionPS = new QRadioButton(tr("PlayStation"), this);
+	versionPC = new QRadioButton(tr("PC"), this);
 
-	if(tutPC != NULL && tut->hasTut()) {
-		versionPS = new QRadioButton(tr("PlayStation"), this);
+	exportLayout->addWidget(versionPS);
+	exportLayout->addWidget(versionPC);
 
-		exportLayout->addWidget(versionPS);
-		exportLayout->addWidget(new QRadioButton(tr("PC"), this));
-
-		connect(versionPS, SIGNAL(toggled(bool)), SLOT(changeVersion(bool)));
-	}
+	connect(versionPS, SIGNAL(toggled(bool)), SLOT(changeVersion(bool)));
 
 	exportLayout->addStretch();
 	exportLayout->addWidget(exportButton);
 	exportLayout->addWidget(importButton);
-
-	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addLayout(exportLayout, 0, 0, 1, 2);
 	layout->addWidget(_toolBar, 1, 0);
 	layout->addWidget(list, 2, 0);
 	layout->addWidget(stackedWidget, 1, 1, 2, 1);
-	layout->addWidget(buttonBox, 3, 0, 1, 2, Qt::AlignRight);
-
-	currentTut = tut;
 
 	connect(list, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), SLOT(showText(QListWidgetItem*,QListWidgetItem*)));
 
+	connect(exportButton, SIGNAL(released()), SLOT(exportation()));
+	connect(importButton, SIGNAL(released()), SLOT(importation()));
+}
+
+void TutWidget::fill(Field *field, TutFilePC *tutPC, bool reload)
+{
+	if((!reload && this->tut == field->tutosAndSounds()) || !field)	return;
+	clear();
+	tut = field->tutosAndSounds();
+	this->tutPC = tutPC;
+	usedTuts = field->scriptsAndTexts()->listUsedTuts();
+	currentTut = tut;
+
 	if(tutPC != NULL && tut->hasTut()) {
+		versionPS->setVisible(true);
+		versionPC->setVisible(true);
 		versionPS->setChecked(true);
+		changeVersion(true);
 	} else {
+		versionPS->setVisible(false);
+		versionPC->setVisible(false);
 		fillList();
 		list->setCurrentRow(0);
 	}
+}
 
-	usedTuts = field->scriptsAndTexts()->listUsedTuts();
-
-	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
-
-	connect(exportButton, SIGNAL(released()), SLOT(exportation()));
-	connect(importButton, SIGNAL(released()), SLOT(importation()));
+void TutWidget::clear()
+{
+	tut = 0;
+	tutPC = 0;
+	currentTut = 0;
+	usedTuts.clear();
+	list->clear();
+	textEdit->clear();
 }
 
 QWidget *TutWidget::buildTutPage()
@@ -143,14 +154,13 @@ void TutWidget::changeVersion(bool isPS)
 	}
 
 	textEdit->clear();
-	textChanged = false;
 	fillList();
 	list->setCurrentRow(0);
 }
 
 void TutWidget::setTextChanged()
 {
-	textChanged = true;
+	saveText(list->currentItem());
 }
 
 void TutWidget::fillList()
@@ -193,8 +203,6 @@ void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 	textEdit->setReadOnly(!currentTut->isTut(id));
 	exportButton->setEnabled(!currentTut->isTut(id));
 	importButton->setEnabled(!currentTut->isTut(id));
-
-	textChanged = false;
 }
 
 void TutWidget::saveText(QListWidgetItem *item)
@@ -203,10 +211,8 @@ void TutWidget::saveText(QListWidgetItem *item)
 
 	int id = item->data(Qt::UserRole).toInt();
 	if(currentTut->isTut(id)) {
-		if(textChanged) {
-			currentTut->parseText(id, textEdit->toPlainText());
-			textChanged = false;
-		}
+		currentTut->parseText(id, textEdit->toPlainText());
+		emit modified();
 	} else {
 		quint16 akaoID;
 
@@ -218,6 +224,7 @@ void TutWidget::saveText(QListWidgetItem *item)
 
 			if(tut->akaoID(id) != akaoID) {
 				tut->setAkaoID(id, akaoID);
+				emit modified();
 			}
 		}
 	}
@@ -272,6 +279,7 @@ void TutWidget::add()
 	} else {
 		currentTut->insertData(row, akaoPath);
 	}
+	emit modified();
 	fillList();
 
 	list->blockSignals(false);
@@ -292,6 +300,7 @@ void TutWidget::del()
 	list->blockSignals(true);
 
 	currentTut->removeTut(row);
+	emit modified();
 	Section1File *scriptsAndTexts = field->scriptsAndTexts();
 	if(tutPC == NULL)
 		scriptsAndTexts->shiftTutIds(row, -1);
@@ -350,22 +359,14 @@ void TutWidget::importation()
 
 	currentTut->setData(row, akao.readAll());
 	akao.close();
+	emit modified();
 
 	textEdit->setPlainText(currentTut->parseScripts(row));
-	textChanged = false;
 }
 
-void TutWidget::accept()
-{
-	saveText(list->currentItem());
+//void TutWidget::accept()
+//{
+//	saveText(list->currentItem());
 
-	QDialog::accept();
-}
-
-void TutWidget::reject()
-{
-	*tut = tutCpy;
-	if(tutPC != NULL)	*tutPC = tutPCCpy;
-
-	QDialog::reject();
-}
+//	QDialog::accept();
+//}

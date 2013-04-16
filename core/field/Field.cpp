@@ -173,9 +173,7 @@ FieldPart *Field::part(FieldSection section, bool open)
 
 Section1File *Field::scriptsAndTexts(bool open)
 {
-	Section1File *section1 = (Section1File *)part(Scripts, open);
-	if(section1->isOpen())	Data::currentTextes = section1->texts();
-	return section1;
+	return (Section1File *)part(Scripts, open);
 }
 
 EncounterFile *Field::encounter(bool open)
@@ -346,7 +344,6 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 		if(part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
 			if(!section1->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))	return 2;
-			if(section1->isOpen())	Data::currentTextes = section1->texts();
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {
@@ -383,7 +380,6 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 		if(part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
 			if(!section1->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))	return 2;
-			if(section1->isOpen())	Data::currentTextes = section1->texts();
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {

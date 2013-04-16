@@ -31,8 +31,6 @@ QStringList Data::weapon_names;
 QStringList Data::armor_names;
 QStringList Data::accessory_names;
 QStringList Data::materia_names;
-const QList<FF7Text *> *Data::currentTextes;
-QStringList Data::currentGrpScriptNames;
 //QStringList Data::currentCharNames;
 int Data::currentModelID=-1;
 QStringList *Data::currentHrcNames=0;

@@ -50,6 +50,7 @@ private:
 	QPushButton *ok;
 	ScriptEditorView *editorWidget;
 
+	Field *field;
 	Script *script;
 	quint16 opcodeID;
 	Opcode *opcode;

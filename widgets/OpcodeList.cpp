@@ -292,7 +292,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 
 			id = curOpcode->id();
 
-			QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList(curOpcode->toString()));
+			QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList(curOpcode->toString(field)));
 			item->setData(0, Qt::UserRole, opcodeID);
 			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 			items.append(item);

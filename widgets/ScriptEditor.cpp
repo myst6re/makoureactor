@@ -30,7 +30,7 @@ QList<quint8> ScriptEditor::crashIfInit;
 
 ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-	script(script), opcodeID(opcodeID), isInit(isInit), modify(modify), change(false)
+	field(field), script(script), opcodeID(opcodeID), isInit(isInit), modify(modify), change(false)
 {
 	if(crashIfInit.isEmpty()) {
 		crashIfInit << 0x08 << 0x09 << 0x0E << 0x20 << 0x21 << 0x2A << 0x35 << 0x40 << 0x48 << 0x49
@@ -220,7 +220,7 @@ void ScriptEditor::fillEditor()
 
 void ScriptEditor::fillView()
 {
-	textEdit->setPlainText(opcode->toString()); // text part
+	textEdit->setPlainText(opcode->toString(field)); // text part
 	fillEditor(); // editor part
 
 	// disable if necessary
@@ -264,7 +264,7 @@ void ScriptEditor::refreshTextEdit()
 
 	opcode = editorWidget->opcode();
 
-	textEdit->setPlainText(opcode->toString());
+	textEdit->setPlainText(opcode->toString(field));
 }
 
 void ScriptEditor::changeCurrentOpcode(int index)

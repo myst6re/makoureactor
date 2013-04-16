@@ -60,6 +60,7 @@
 #define DELEGATE_H
 
 #include <QtGui>
+#include "core/field/Field.h"
 
 class SpinBoxDelegate : public QItemDelegate
 {
@@ -84,6 +85,9 @@ public:
 
 	void updateEditorGeometry(QWidget *editor,
 							  const QStyleOptionViewItem &option, const QModelIndex &index) const;
+	void setField(Field *field);
+private:
+	Field *_field;
 };
 
 #endif

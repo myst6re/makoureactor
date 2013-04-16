@@ -48,8 +48,6 @@ public:
 	static QStringList armor_names;
 	static QStringList accessory_names;
 	static QStringList materia_names;
-	static const QList<FF7Text *> *currentTextes;
-	static QStringList currentGrpScriptNames;
 //	static QStringList currentCharNames;
 	static int currentModelID;
 	static QStringList *currentHrcNames;

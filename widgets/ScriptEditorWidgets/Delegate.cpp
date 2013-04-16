@@ -95,10 +95,11 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		comboBox->addItems(Data::field_names);
 		return comboBox;
 	}
-	else if(type == group_id && !Data::currentGrpScriptNames.isEmpty())
+	else if(type == group_id && _field->scriptsAndTexts()->grpScriptCount() > 0)
 	{
 		QComboBox *comboBox = new QComboBox(parent);
-		comboBox->addItems(Data::currentGrpScriptNames);
+		foreach(const GrpScript *grp, _field->scriptsAndTexts()->grpScripts())
+			comboBox->addItem(grp->name());
 		return comboBox;
 	}
 	else if(type == personnage_id)
@@ -115,11 +116,11 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		comboBox->addItem(tr("(Vide)"));
 		return comboBox;
 	}
-	else if(type == text_id && !Data::currentTextes->isEmpty())
+	else if(type == text_id && _field->scriptsAndTexts()->textCount() > 0)
 	{
 		QComboBox *comboBox = new QComboBox(parent);
 		bool jp = Config::value("jp_txt", false).toBool();
-		foreach(FF7Text *t, *Data::currentTextes)
+		foreach(FF7Text *t, *_field->scriptsAndTexts()->texts())
 			comboBox->addItem(t->getText(jp, true).simplified());
 		return comboBox;
 	}
@@ -230,9 +231,9 @@ void SpinBoxDelegate::setEditorData(QWidget *editor,
 	int value = index.model()->data(index, Qt::EditRole).toInt();
 	int type = index.data(Qt::UserRole+2).toInt();
 	if((type == field_id && !Data::field_names.isEmpty())
-			|| (type == group_id && !Data::currentGrpScriptNames.isEmpty())
+			|| (type == group_id && _field->scriptsAndTexts()->grpScriptCount() > 0)
 			|| type == personnage_id
-			|| (type == text_id && !Data::currentTextes->isEmpty())
+			|| (type == text_id && _field->scriptsAndTexts()->textCount() > 0)
 			|| (type == item_id && !Data::item_names.isEmpty())
 			|| (type == materia_id && !Data::materia_names.isEmpty())
 			|| (type == movie_id && !Data::movie_names.isEmpty())
@@ -260,9 +261,9 @@ void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	int value;
 	int type = index.data(Qt::UserRole+2).toInt();
 	if((type == field_id && !Data::field_names.isEmpty())
-			|| (type == group_id && !Data::currentGrpScriptNames.isEmpty())
+			|| (type == group_id && _field->scriptsAndTexts()->grpScriptCount() > 0)
 			|| type == personnage_id
-			|| (type == text_id && !Data::currentTextes->isEmpty())
+			|| (type == text_id && _field->scriptsAndTexts()->textCount() > 0)
 			|| (type == item_id && !Data::item_names.isEmpty())
 			|| (type == materia_id && !Data::materia_names.isEmpty())
 			|| (type == animation_id && Data::currentModelID!=-1 && Data::currentHrcNames && Data::currentAnimNames)
@@ -285,4 +286,9 @@ void SpinBoxDelegate::updateEditorGeometry(QWidget *editor,
 										   const QStyleOptionViewItem &option, const QModelIndex &/* index */) const
 {
 	editor->setGeometry(option.rect);
+}
+
+void SpinBoxDelegate::setField(Field *field)
+{
+	_field = field;
 }

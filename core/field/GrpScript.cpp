@@ -190,7 +190,7 @@ QString GrpScript::type()
 	{
 	case Model:
 		if(character == 0xFF)	return QObject::tr("Objet 3D");
-		return QString("%1").arg(Opcode::_personnage(character));
+		return QString("%1").arg(Opcode::character(character));
 	case Location:	return QObject::tr("Zone");
 	case Animation:	return QObject::tr("Animation");
 	case Director:	return QObject::tr("Main");
@@ -299,16 +299,16 @@ bool GrpScript::searchMapJump(quint16 field, int &scriptID, int &opcodeID) const
 	return searchMapJump(field, ++scriptID, opcodeID = 0);
 }
 
-bool GrpScript::searchTextInScripts(const QRegExp &text, int &scriptID, int &opcodeID) const
+bool GrpScript::searchTextInScripts(const QRegExp &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if(scriptID < 0)
 		opcodeID = scriptID = 0;
 	if(scriptID >= _scripts.size())
 		return false;
-	if(_scripts.at(scriptID)->searchTextInScripts(text, opcodeID))
+	if(_scripts.at(scriptID)->searchTextInScripts(text, opcodeID, scriptsAndTexts))
 		return true;
 
-	return searchTextInScripts(text, ++scriptID, opcodeID = 0);
+	return searchTextInScripts(text, ++scriptID, opcodeID = 0, scriptsAndTexts);
 }
 
 bool GrpScript::searchP(int &scriptID, int &opcodeID) const
@@ -362,14 +362,14 @@ bool GrpScript::searchMapJumpP(quint16 field, int &scriptID, int &opcodeID) cons
 	return searchMapJumpP(field, --scriptID, opcodeID = 2147483647);
 }
 
-bool GrpScript::searchTextInScriptsP(const QRegExp &text, int &scriptID, int &opcodeID) const
+bool GrpScript::searchTextInScriptsP(const QRegExp &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if(!searchP(scriptID, opcodeID))
 		return false;
-	if(_scripts.at(scriptID)->searchTextInScriptsP(text, opcodeID))
+	if(_scripts.at(scriptID)->searchTextInScriptsP(text, opcodeID, scriptsAndTexts))
 		return true;
 
-	return searchTextInScriptsP(text, --scriptID, opcodeID = 2147483647);
+	return searchTextInScriptsP(text, --scriptID, opcodeID = 2147483647, scriptsAndTexts);
 }
 
 void GrpScript::listUsedTexts(QSet<quint8> &usedTexts) const

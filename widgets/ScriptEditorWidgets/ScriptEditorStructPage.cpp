@@ -72,8 +72,8 @@ void ScriptEditorExecPage::build()
 {
 	groupList = new QComboBox(this);
 	int i=0;
-	foreach(const QString &groupName, Data::currentGrpScriptNames) {
-		groupList->addItem(QString("%1 - %2").arg(i++).arg(groupName));
+	foreach(const GrpScript *group, _field->scriptsAndTexts()->grpScripts()) {
+		groupList->addItem(QString("%1 - %2").arg(i++).arg(group->name()));
 	}
 
 	scriptList = new QComboBox(this);

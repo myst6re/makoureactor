@@ -170,8 +170,6 @@ QList<FF7Var> FieldArchive::searchAllVars()
 	QList<FF7Var> vars;
 	int size = fileList.size();
 
-	const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
-
 	for(int i=0 ; i<size ; ++i) {
 		QCoreApplication::processEvents();
 		Field *field = this->field(i);
@@ -179,8 +177,6 @@ QList<FF7Var> FieldArchive::searchAllVars()
 			field->scriptsAndTexts()->searchAllVars(vars);
 		}
 	}
-
-	Data::currentTextes = currentTextesSav;
 
 	return vars;
 }
@@ -234,7 +230,7 @@ void FieldArchive::searchAll()
 //				}
 			}*/
 
-			IdFile *id = field->walkmesh();
+			/*IdFile *id = field->walkmesh();
 			if(id->isOpen()) {
 				deb.write(QString("%1:\n").arg(field->name()).toLatin1());
 				int triangleID = 0;
@@ -249,7 +245,7 @@ void FieldArchive::searchAll()
 					}
 					deb.write("\n");
 				}
-			}
+			}*/
 
 
 			/*EncounterFile *e = field->encounter();
@@ -289,13 +285,14 @@ void FieldArchive::searchAll()
 							  .arg(i).arg(id).arg(QString(tut->data(i).toHex())).toLatin1());
 				}*/
 
-			/*Data::charlgp_loadAnimBoneCount();
+//			Data::charlgp_loadAnimBoneCount();
 			FieldModelLoader *modelLoader = (FieldModelLoader *)field->fieldModelLoader();
-			if(modelLoader) {
+			if(modelLoader->isOpen()) {
 				for(int i=0; i<modelLoader->modelCount(); ++i) {
-					deb.write(QString("%1: %2 -> %3\n").arg(field->name())
-							  .arg(i).arg(modelLoader->unknown(i)).toLatin1());
-*/
+					field->fieldModel(i, 0, false);
+//					deb.write(QString("%1: %2 -> %3\n").arg(field->name())
+//							  .arg(i).arg(modelLoader->unknown(i)).toLatin1());
+
 					/*int boneCount = field->fieldModel(i)->boneCount();
 					foreach(const QString &animation, modelLoader->ANames(i)) {
 						QString animName = animation.left(animation.lastIndexOf('.')).toLower() + ".a";
@@ -304,8 +301,8 @@ void FieldArchive::searchAll()
 							qDebug() << boneCount << Data::charlgp_animBoneCount.value(animName) << field->name() << modelLoader->HRCName(i) << animation;
 						}
 					}*/
-			//	}
-			//}
+				}
+			}
 			/*TutFileStandard *tut = field->tutosAndSounds();
 			if(tut->isOpen()) {
 				deb.write(QString("=== %1 ===\n").arg(field->name()).toLatin1());
@@ -630,8 +627,6 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 		int currentField=0;
 		observer->setObserverMaximum(selectedFields.size()-1);
 
-		const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
-
 		if(toExport.testFlag(Field::Background)) {
 			/*switch(massExportDialog->exportBackgroundFormat()) {
 			case 0:		extension = "png"; break;
@@ -710,7 +705,6 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 				observer->setObserverValue(currentField++);
 			}
 		}
-		Data::currentTextes = currentTextesSav;
 	}
 
 	return true;
