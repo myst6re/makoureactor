@@ -40,6 +40,12 @@ signals:
 protected:
 	virtual void build()=0;
 	virtual void showEvent(QShowEvent *e);
+	Field *field() const;
+	GrpScript *grpScript() const;
+	Script *script() const;
+	int opcodeID() const;
+	void setValid(bool valid);
+private:
 	bool _builded;
 	Field *_field;
 	GrpScript *_grpScript;

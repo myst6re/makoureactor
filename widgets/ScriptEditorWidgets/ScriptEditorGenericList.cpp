@@ -39,7 +39,7 @@ void ScriptEditorGenericList::build()
 	tableView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
 	SpinBoxDelegate *delegate = new SpinBoxDelegate(this);
-	delegate->setField(_field);
+	delegate->setField(field());
 	tableView->setItemDelegate(delegate);
 	tableView->horizontalHeader()->setStretchLastSection(true);
 
@@ -76,12 +76,12 @@ Opcode *ScriptEditorGenericList::opcode()
 	if(isLabel) {
 		quint32 label;
 		memcpy(&label, &(newOpcode.constData()[1]), 4);
-		_opcode = new OpcodeLabel(label);
+		ScriptEditorView::setOpcode(new OpcodeLabel(label));
 	} else {
-		_opcode = Script::createOpcode(newOpcode);
+		ScriptEditorView::setOpcode(Script::createOpcode(newOpcode));
 	}
 
-	return _opcode;
+	return ScriptEditorView::opcode();
 }
 
 void ScriptEditorGenericList::setOpcode(Opcode *opcode)
@@ -96,6 +96,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 
 	QByteArray newOpcode;
 	quint8 byte, length, start;
+	Opcode *_opcode = ScriptEditorView::opcode();
 	
 	*isLabel = _opcode->isLabel();
 	byte = _opcode->id() & 0xFF;
@@ -242,6 +243,7 @@ void ScriptEditorGenericList::fillModel()
 	delButton->hide();
 	model->clear();
 	
+	Opcode *_opcode = ScriptEditorView::opcode();
 	int paramSize, paramType, cur = 0, maxValue, minValue, value=0;
 	QList<int> paramTypes = this->paramTypes(_opcode->id());
 	

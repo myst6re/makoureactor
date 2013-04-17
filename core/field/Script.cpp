@@ -70,8 +70,8 @@ bool Script::openScript(const QByteArray &script)
 
 	for(int i=indentsKeys.size()-1 ; i >= 0 ; --i) {
 		int jump = indentsKeys.at(i);
-		int index;
-		if((index = positions.indexOf(jump)) != -1) {
+		int index = positions.indexOf(jump);
+		if(index != -1) {
 			opcodes.insert(index, new OpcodeLabel(i+1));
 //			qDebug() << (index+1) << "label" << (i+1);
 			foreach(OpcodeJump *opJump, indents.values(jump)) {

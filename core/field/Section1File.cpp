@@ -580,9 +580,9 @@ void Section1File::listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap
 //		group->listWindows(groupID++, windows, text2win);
 //}
 
-QList<FF7Text *> *Section1File::texts()
+const QList<FF7Text *> &Section1File::texts() const
 {
-	return &_texts;
+	return _texts;
 }
 
 int Section1File::textCount() const

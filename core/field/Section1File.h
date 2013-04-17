@@ -65,7 +65,7 @@ public:
 
 	void shiftTutIds(int row, int shift);
 
-	QList<FF7Text *> *texts();
+	const QList<FF7Text *> &texts() const;
 	int textCount() const;
 	FF7Text *text(int textID) const;
 	void insertText(int row);

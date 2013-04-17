@@ -59,3 +59,28 @@ bool ScriptEditorView::isValid() const
 {
 	return _valid;
 }
+
+void ScriptEditorView::setValid(bool valid)
+{
+	_valid = valid;
+}
+
+Field *ScriptEditorView::field() const
+{
+	return _field;
+}
+
+GrpScript *ScriptEditorView::grpScript() const
+{
+	return _grpScript;
+}
+
+Script *ScriptEditorView::script() const
+{
+	return _script;
+}
+
+int ScriptEditorView::opcodeID() const
+{
+	return _opcodeID;
+}
