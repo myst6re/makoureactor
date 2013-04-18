@@ -190,7 +190,7 @@ void FieldArchive::searchAll()
 	OpcodeIf *opcodeIf=0;
 
 	QFile deb(QString("cameraP%1.txt").arg(isPC() ? "C" : "S"));
-	deb.open(QIODevice::WriteOnly | QIODevice::Text);
+	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 
 
 //	for(int i=0 ; i<size ; ++i) {
@@ -216,19 +216,27 @@ void FieldArchive::searchAll()
 				}
 				groupID++;
 			}*/
-			/*CaFile *ca = field->camera();
+			CaFile *ca = field->camera();
 			if(ca->isOpen()) {
-//				for(int c=0; c<ca->cameraCount(); ++c) {
-					Camera cam = ca->camera(0);
-					deb.write(QString("%1: %2 -> (%3, %4, %5), (%6, %7, %8), (%9, %10, %11), %12, %13, %14, %15\n")
-							  .arg(field->name()).arg(0)
+				int c=0;
+//				for(; c<ca->cameraCount(); ++c) {
+					Camera cam = ca->camera(c);
+					deb.write(QString("%1: %2 -> (%3, %4, %5), (%6, %7, %8), (%9, %10, %11), %12, %13, %14, %15, %16\n")
+							  .arg(field->name()).arg(c)
 							  .arg(cam.camera_axis[0].x).arg(cam.camera_axis[0].y).arg(cam.camera_axis[0].z)
 							.arg(cam.camera_axis[1].x).arg(cam.camera_axis[1].y).arg(cam.camera_axis[1].z)
 							.arg(cam.camera_axis[2].x).arg(cam.camera_axis[2].y).arg(cam.camera_axis[2].z)
 							.arg(cam.camera_position[0]).arg(cam.camera_position[1]).arg(cam.camera_position[2])
-							.arg(cam.camera_zoom).toLatin1());
+							.arg(cam.camera_zoom)
+							.arg(field->sectionData(Field::Camera).size()).toLatin1());
 //				}
-			}*/
+				QFile deb2(QString("camera/%1-cameraP%2.bin")
+						   .arg(field->name())
+						   .arg(isPC() ? "C" : "S"));
+				deb2.open(QIODevice::WriteOnly | QIODevice::Truncate);
+				deb2.write(field->sectionData(Field::Camera));
+				deb2.close();
+			}
 
 			/*IdFile *id = field->walkmesh();
 			if(id->isOpen()) {
@@ -286,10 +294,10 @@ void FieldArchive::searchAll()
 				}*/
 
 //			Data::charlgp_loadAnimBoneCount();
-			FieldModelLoader *modelLoader = (FieldModelLoader *)field->fieldModelLoader();
-			if(modelLoader->isOpen()) {
-				for(int i=0; i<modelLoader->modelCount(); ++i) {
-					field->fieldModel(i, 0, false);
+//			FieldModelLoader *modelLoader = (FieldModelLoader *)field->fieldModelLoader();
+//			if(modelLoader->isOpen()) {
+//				for(int i=0; i<modelLoader->modelCount(); ++i) {
+//					field->fieldModel(i, 0, false);
 //					deb.write(QString("%1: %2 -> %3\n").arg(field->name())
 //							  .arg(i).arg(modelLoader->unknown(i)).toLatin1());
 
@@ -301,8 +309,8 @@ void FieldArchive::searchAll()
 							qDebug() << boneCount << Data::charlgp_animBoneCount.value(animName) << field->name() << modelLoader->HRCName(i) << animation;
 						}
 					}*/
-				}
-			}
+//				}
+//			}
 			/*TutFileStandard *tut = field->tutosAndSounds();
 			if(tut->isOpen()) {
 				deb.write(QString("=== %1 ===\n").arg(field->name()).toLatin1());
@@ -313,9 +321,13 @@ void FieldArchive::searchAll()
 				}
 			}*/
 //			qDebug() << field->name();
-			/*int scriptID=0, opcodeID=0;
-			Section1File *scripts = field->scriptsAndTexts();
-			foreach(GrpScript *group, scripts->grpScripts()) {
+//			int scriptID=0, opcodeID=0;
+//			Section1File *scripts = field->scriptsAndTexts();
+//			if(scripts) {
+//				scripts->setModified(true);
+//			}
+//			field->setModified(true);
+			/*foreach(GrpScript *group, scripts->grpScripts()) {
 				scriptID=0;
 				foreach(Script *script, group->scripts()) {
 					opcodeID = 0;
@@ -694,7 +706,7 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 							QFile textExport(path);
 							if(textExport.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
 								int i=0;
-								foreach(FF7Text *text, *section1->texts()) {
+								foreach(FF7Text *text, section1->texts()) {
 									textExport.write(QString("---TEXT%1---\n%2\n").arg(i++, 3, 10, QChar('0')).arg(text->getText(jp_txt)).toUtf8());
 								}
 								textExport.close();
