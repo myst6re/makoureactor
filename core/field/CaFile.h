@@ -31,7 +31,7 @@ typedef struct {
 	qint32 camera_position[3];
 	qint32 blank;
 	quint16 camera_zoom;
-	quint16 padding;
+	quint16 unknown;// seems to be undefined
 } Camera;
 
 class CaFile : public FieldPart
