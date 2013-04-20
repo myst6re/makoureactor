@@ -62,7 +62,9 @@ public:
 	bool searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting);
 
-	bool exportation(const QList<int> &selectedFields, const QString &directory, bool overwrite, Field::FieldSections toExport, FieldArchiveIOObserver *observer);
+	bool exportation(const QList<int> &selectedFields, const QString &directory,
+					 bool overwrite, Field::FieldSection toExport,
+					 const QString &extension, FieldArchiveIOObserver *observer);
 
 	virtual FieldArchiveIO *io() const;
 protected:

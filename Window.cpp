@@ -1104,28 +1104,38 @@ void Window::massExport()
 	if(massExportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massExportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {
-			Field::FieldSections toExport;
+			QString extension;
 
 			showProgression();
 			progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
 			progressDialog->setWindowModality(Qt::WindowModal);
 			progressDialog->setCancelButtonText(tr("Arrêter"));
 			progressDialog->setRange(0, selectedFields.size()-1);
+			progressDialog->setAutoClose(false);
 
 			if(massExportDialog->exportBackground()) {
+				switch(massExportDialog->exportBackgroundFormat()) {
+				case 0:		extension = "png"; break;
+				case 1:		extension = "jpg"; break;
+				case 2:		extension = "bmp"; break;
+				}
 				progressDialog->setLabelText(tr("Exportation des décors..."));
-				toExport |= Field::Background;
+				fieldArchive->exportation(selectedFields, massExportDialog->directory(),
+										  massExportDialog->overwrite(), Field::Background,
+										  extension, this);
 			}
 			if(massExportDialog->exportAkao()) {
 				progressDialog->setLabelText(tr("Exportation des sons..."));
-				toExport |= Field::Akaos;
+				fieldArchive->exportation(selectedFields, massExportDialog->directory(),
+										  massExportDialog->overwrite(), Field::Akaos,
+										  "akao", this);
 			}
 			if(massExportDialog->exportText()) {
 				progressDialog->setLabelText(tr("Exportation des textes..."));
-				toExport |= Field::Scripts;
+				fieldArchive->exportation(selectedFields, massExportDialog->directory(),
+										  massExportDialog->overwrite(), Field::Scripts,
+										  "txt", this);
 			}
-
-			fieldArchive->exportation(selectedFields, massExportDialog->directory(), massExportDialog->overwrite(), toExport, this);
 
 			progressDialog->close();
 			delete progressDialog;

@@ -189,8 +189,8 @@ void FieldArchive::searchAll()
 	bool iff = false, win = false;
 	OpcodeIf *opcodeIf=0;
 
-	QFile deb(QString("cameraP%1.txt").arg(isPC() ? "C" : "S"));
-	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+	QFile deb(QString("cameraUnknownP%1.txt").arg(isPC() ? "C" : "S"));
+	deb.open(QIODevice::WriteOnly | QIODevice::Text/* | QIODevice::Truncate*/);
 
 
 //	for(int i=0 ; i<size ; ++i) {
@@ -218,24 +218,39 @@ void FieldArchive::searchAll()
 			}*/
 			CaFile *ca = field->camera();
 			if(ca->isOpen()) {
-				int c=0;
+				if(field->isPS() && ca->cameraCount() == 1) {
+					deb.write(QString("%1\n").arg(ca->camera(0).unknown).toLatin1());
+				}
+				/*if(ca->cameraCount() == 2) {
+					Camera cam1 = ca->camera(0), cam2 = ca->camera(1);
+					if(isPC()) {
+						if(memcmp(&cam1, &cam2, sizeof(cam1)) != 0) {
+							qWarning() << "different cam! " << field->name();
+						}
+					} else {
+						if(memcmp(&cam1, &cam2, 18) != 0) {
+							qWarning() << "different cam! " << field->name();
+						}
+					}
+				}*/
+//				int c=0;
 //				for(; c<ca->cameraCount(); ++c) {
-					Camera cam = ca->camera(c);
-					deb.write(QString("%1: %2 -> (%3, %4, %5), (%6, %7, %8), (%9, %10, %11), %12, %13, %14, %15, %16\n")
-							  .arg(field->name()).arg(c)
-							  .arg(cam.camera_axis[0].x).arg(cam.camera_axis[0].y).arg(cam.camera_axis[0].z)
-							.arg(cam.camera_axis[1].x).arg(cam.camera_axis[1].y).arg(cam.camera_axis[1].z)
-							.arg(cam.camera_axis[2].x).arg(cam.camera_axis[2].y).arg(cam.camera_axis[2].z)
-							.arg(cam.camera_position[0]).arg(cam.camera_position[1]).arg(cam.camera_position[2])
-							.arg(cam.camera_zoom)
-							.arg(field->sectionData(Field::Camera).size()).toLatin1());
+//					Camera cam = ca->camera(c);
+//					deb.write(QString("%1: %2 -> (%3, %4, %5), (%6, %7, %8), (%9, %10, %11), %12, %13, %14, %15, %16\n")
+//							  .arg(field->name()).arg(c)
+//							  .arg(cam.camera_axis[0].x).arg(cam.camera_axis[0].y).arg(cam.camera_axis[0].z)
+//							.arg(cam.camera_axis[1].x).arg(cam.camera_axis[1].y).arg(cam.camera_axis[1].z)
+//							.arg(cam.camera_axis[2].x).arg(cam.camera_axis[2].y).arg(cam.camera_axis[2].z)
+//							.arg(cam.camera_position[0]).arg(cam.camera_position[1]).arg(cam.camera_position[2])
+//							.arg(cam.camera_zoom)
+//							.arg(field->sectionData(Field::Camera).size()).toLatin1());
 //				}
-				QFile deb2(QString("camera/%1-cameraP%2.bin")
-						   .arg(field->name())
-						   .arg(isPC() ? "C" : "S"));
-				deb2.open(QIODevice::WriteOnly | QIODevice::Truncate);
-				deb2.write(field->sectionData(Field::Camera));
-				deb2.close();
+//				QFile deb2(QString("camera/%1-cameraP%2.bin")
+//						   .arg(field->name())
+//						   .arg(isPC() ? "C" : "S"));
+//				deb2.open(QIODevice::WriteOnly | QIODevice::Truncate);
+//				deb2.write(field->sectionData(Field::Camera));
+//				deb2.close();
 			}
 
 			/*IdFile *id = field->walkmesh();
@@ -632,25 +647,24 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 	return false;
 }
 
-bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory, bool overwrite, Field::FieldSections toExport, FieldArchiveIOObserver *observer)
+bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory,
+							   bool overwrite, Field::FieldSection toExport,
+							   const QString &extension, FieldArchiveIOObserver *observer)
 {
 	if(!selectedFields.isEmpty()) {
-		QString extension, path;
+		QString path;
 		int currentField=0;
 		observer->setObserverMaximum(selectedFields.size()-1);
 
-		if(toExport.testFlag(Field::Background)) {
-			/*switch(massExportDialog->exportBackgroundFormat()) {
-			case 0:		extension = "png"; break;
-			case 1:		extension = "jpg"; break;
-			case 2:		extension = "bmp"; break;
-			}*/extension = "png";//TODO
+		bool jp_txt = Config::value("jp_txt", false).toBool();
 
-			foreach(const int &fieldID, selectedFields) {
-				if(observer->observerWasCanceled()) 	return false;
+		foreach(const int &fieldID, selectedFields) {
+			if(observer->observerWasCanceled()) 	return false;
 
-				Field *f = field(fieldID);
-				if(f) {
+			Field *f = field(fieldID);
+			if(f) {
+				switch(toExport) {
+				case Field::Background:
 					path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
 
 					if(overwrite || !QFile::exists(path)) {
@@ -658,18 +672,8 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 						if(!background.isNull())
 							background.save(path);
 					}
-				}
-				observer->setObserverValue(currentField++);
-			}
-		}
-		if(toExport.testFlag(Field::Akaos)) {
-			extension = "akao";
-
-			foreach(const int &fieldID, selectedFields) {
-				if(observer->observerWasCanceled()) 	return false;
-
-				Field *f = field(fieldID);
-				if(f) {
+					break;
+				case Field::Akaos: {
 					TutFileStandard *akaoList = f->tutosAndSounds();
 					if(akaoList->isOpen()) {
 						int akaoCount = akaoList->size();
@@ -686,19 +690,8 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 							}
 						}
 					}
-				}
-				observer->setObserverValue(currentField++);
-			}
-		}
-		if(toExport.testFlag(Field::Scripts)) {
-			extension = "txt";
-			bool jp_txt = Config::value("jp_txt", false).toBool();
-
-			foreach(const int &fieldID, selectedFields) {
-				if(observer->observerWasCanceled()) 	return false;
-
-				Field *f = field(fieldID);
-				if(f) {
+				} break;
+				case Field::Scripts: {
 					Section1File *section1 = f->scriptsAndTexts();
 					if(section1->isOpen()) {
 						path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
@@ -713,9 +706,12 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 							}
 						}
 					}
+				} break;
+				default:
+					return false;
 				}
-				observer->setObserverValue(currentField++);
 			}
+			observer->setObserverValue(currentField++);
 		}
 	}
 
