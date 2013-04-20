@@ -103,8 +103,6 @@ QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActif
 		headerEffect.x = 0;
 	}
 
-	debugTexture();
-
 	/*--- DAT OPENING ---*/
 	QByteArray datDataDec = field()->sectionData(Field::Background);
 	const char *constDatData = datDataDec.constData();
