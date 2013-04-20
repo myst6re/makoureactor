@@ -157,7 +157,7 @@ FieldPart *Field::part(FieldSection section) const
 
 FieldPart *Field::part(FieldSection section, bool open)
 {
-	FieldPart *p = this->part(section);
+	FieldPart *p = part(section);
 
 	if(!p) {
 		p = createPart(section);

@@ -63,8 +63,10 @@ public:
 	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting);
 
 	bool exportation(const QList<int> &selectedFields, const QString &directory,
-					 bool overwrite, Field::FieldSection toExport,
-					 const QString &extension, FieldArchiveIOObserver *observer);
+					 bool overwrite, const QMap<Field::FieldSection, QString> &toExport, FieldArchiveIOObserver *observer);
+	bool importation(const QList<int> &selectedFields, const QString &directory,
+					 const QMap<Field::FieldSection, QString> &toImport,
+					 FieldArchiveIOObserver *observer);
 
 	virtual FieldArchiveIO *io() const;
 protected:

@@ -41,8 +41,11 @@ quint8 BackgroundFilePS::depth(const Tile &tile) const
 
 quint32 BackgroundFilePS::originInData(const Tile &tile) const
 {
-	quint16 texID = tile.textureID - (tile.textureID2 ? headerEffect.x/64 : headerImg.x/64);
-	return headerPal.size + 12 + (tile.textureID2 ? headerImg.size : 0) + tile.srcY*textureWidth(tile) + tile.srcX*tile.depth + texID*128;
+	quint16 texID = tile.textureID - (tile.textureID2 ? headerEffect.x : headerImg.x)/64;
+	quint32 dataStart = headerPal.size + 12 + (tile.textureID2 ? headerImg.size : 0);
+	quint32 textureStart = texID * 128;
+	quint32 tileStart = tile.srcY * textureWidth(tile) + tile.srcX * (tile.depth == 0 ? 0.5 : tile.depth);
+	return dataStart + textureStart + tileStart;
 }
 
 QRgb BackgroundFilePS::directColor(quint16 color) const
@@ -75,7 +78,7 @@ QList<Palette *> BackgroundFilePS::openPalettes(const QByteArray &data)
 
 QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
-	/*--- OUVERTURE DU MIM ---*/
+	/*--- MIM OPENING ---*/
 	QByteArray mimDataDec = ((FieldPS *)field())->io()->mimData(field());
 	const char *constMimData = mimDataDec.constData();
 	quint32 mimDataSize = mimDataDec.size(), i;
@@ -91,19 +94,18 @@ QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActif
 
 	headerImg.w *= 2;
 
-	if(headerPal.size+headerImg.size+12 < mimDataSize)
-	{
+	if(headerPal.size+headerImg.size+12 <= mimDataSize) {
 		memcpy(&headerEffect, constMimData + headerPal.size+headerImg.size, 12);
 		headerEffect.w *= 2;
-	}
-	else
-	{
+	} else {
 		headerEffect.size = 4;
 		headerEffect.w = 0;
 		headerEffect.x = 0;
 	}
 
-	/*--- OUVERTURE DU DAT ---*/
+	debugTexture();
+
+	/*--- DAT OPENING ---*/
 	QByteArray datDataDec = field()->sectionData(Field::Background);
 	const char *constDatData = datDataDec.constData();
 	quint32 datDataSize = datDataDec.size();

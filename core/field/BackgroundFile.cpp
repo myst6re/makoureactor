@@ -76,22 +76,20 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 	QImage image(width, height, QImage::Format_ARGB32);
 	image.fill(0xFF000000);
 
-	quint32 origin, top, texWidth;
-	quint16 color, baseX;
-	quint8 index, right;
 	QRgb *pixels = (QRgb *)image.bits();
 
 	foreach(const Tile &tile, tiles) {
-		texWidth = textureWidth(tile);
-		origin = originInData(tile);
-		right = 0;
-		top = (minHeight + tile.dstY) * width;
-		baseX = minWidth + tile.dstX;
+		quint32 texWidth = textureWidth(tile);
+		quint32 origin = originInData(tile);
+		quint8 right = 0;
+		quint32 top = (minHeight + tile.dstY) * width;
+		quint16 baseX = minWidth + tile.dstX;
 
 
 		if(depth(tile) == 2) {
 
 			for(quint16 j=0 ; j<tile.size*texWidth ; j+=2) {
+				quint16 color;
 				memcpy(&color, constTextureData + origin+j, 2);
 				if(color != 0) {
 					pixels[baseX + right + top] = directColor(color);
@@ -103,12 +101,12 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 					top += width;
 				}
 			}
-		} else {
+		} else if(depth(tile) == 1) {
 
 			Palette *palette = palettes.at(tile.paletteID);
 
 			for(quint16 j=0 ; j<tile.size*texWidth ; ++j) {
-				index = textureData.at(origin + j);
+				quint8 index = textureData.at(origin + j);
 
 				if(palette->notZero(index)) {
 					if(tile.blending) {
@@ -121,6 +119,41 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 				if(++right==tile.size) {
 					right = 0;
 					j += texWidth-tile.size;
+					top += width;
+				}
+			}
+		} else if(depth(tile) == 0) {
+
+			Palette *palette = palettes.at(tile.paletteID);
+
+			for(quint16 j=0 ; j<tile.size*texWidth ; ++j) {
+				quint8 index = textureData.at(origin + j);
+
+				quint8 index1 = index & 0xF;
+
+				if(palette->notZero(index1)) {
+					if(tile.blending) {
+						pixels[baseX + right + top] = blendColor(tile.typeTrans, pixels[baseX + right + top], palette->color(index1));
+					} else {
+						pixels[baseX + right + top] = palette->color(index1);
+					}
+				}
+
+				++right;
+
+				quint8 index2 = index >> 4;
+
+				if(palette->notZero(index2)) {
+					if(tile.blending) {
+						pixels[baseX + right + top] = blendColor(tile.typeTrans, pixels[baseX + right + top], palette->color(index2));
+					} else {
+						pixels[baseX + right + top] = palette->color(index2);
+					}
+				}
+
+				if(++right==tile.size) {
+					right = 0;
+					j += texWidth-tile.size/2;
 					top += width;
 				}
 			}

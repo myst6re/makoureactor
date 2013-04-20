@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "Section1File.h"
 #include "Field.h"
+#include "core/Config.h"
 
 Section1File::Section1File(Field *field) :
 	FieldPart(field), _tut(0)
@@ -266,6 +267,62 @@ QByteArray Section1File::save() const
 			.append(positionsTexts) // positionsTexts
 			.append(allTexts) // Texts
 			.append(allAKAOs); // AKAO / tutos
+}
+
+bool Section1File::exporter(QIODevice *device, ExportFormat format)
+{
+	bool jp = Config::value("jp_txt", false).toBool();
+
+	QXmlStreamWriter stream(device);
+	stream.setAutoFormatting(true);
+	stream.setCodec("UTF-8");
+	stream.writeStartDocument();
+	stream.writeStartElement("field");
+	stream.writeAttribute("name", field()->name());
+	stream.writeStartElement("texts");
+
+	switch(format) {
+	case XMLText:
+		int id=0;
+		foreach(FF7Text *text, _texts) {
+			stream.writeStartElement("text");
+			stream.writeAttribute("id", QString::number(id));
+			stream.writeCharacters(text->getText(jp));
+			stream.writeEndElement();
+			++id;
+		}
+		break;
+	}
+
+	stream.writeEndDocument();
+
+	return stream.hasError();
+}
+
+bool Section1File::importer(QIODevice *device, ExportFormat format)
+{
+	bool jp = Config::value("jp_txt", false).toBool();
+	bool start, field, texts;
+
+	QXmlStreamReader stream(device);
+
+	while(!stream.atEnd()) {
+		QXmlStreamReader::TokenType type = stream.readNext();
+		if(!start && type == QXmlStreamReader::StartDocument) {
+			start = true;
+		} else if(start && !field && type == QXmlStreamReader::StartElement
+				  && stream.name() == "field") {
+			field = true;
+		} else if(field && !texts && type == QXmlStreamReader::StartElement
+				  && stream.name() == "texts") {
+			texts = true;
+		} else if(texts && type == QXmlStreamReader::StartElement
+				  && stream.name() == "text") {
+//			stream.attributes().value("id");
+		}
+	}
+
+	return stream.hasError();
 }
 
 bool Section1File::isModified() const

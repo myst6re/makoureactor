@@ -27,12 +27,18 @@
 class Section1File : public FieldPart
 {
 public:
+	enum ExportFormat {
+		XMLText
+	};
+
 	explicit Section1File(Field *field);
 	virtual ~Section1File();
 	void clear();
 	bool open();
 	bool open(const QByteArray &data);
 	QByteArray save() const;
+	bool exporter(QIODevice *device, ExportFormat format);
+	bool importer(QIODevice *device, ExportFormat format);
 	bool isModified() const;
 
 	int modelID(quint8 grpScriptID) const;

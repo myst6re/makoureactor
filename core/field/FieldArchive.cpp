@@ -648,71 +648,99 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 }
 
 bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory,
-							   bool overwrite, Field::FieldSection toExport,
-							   const QString &extension, FieldArchiveIOObserver *observer)
+							   bool overwrite, const QMap<Field::FieldSection, QString> &toExport,
+							   FieldArchiveIOObserver *observer)
 {
-	if(!selectedFields.isEmpty()) {
-		QString path;
-		int currentField=0;
-		observer->setObserverMaximum(selectedFields.size()-1);
+	if(selectedFields.isEmpty() || toExport.isEmpty()) {
+		return true;
+	}
 
-		bool jp_txt = Config::value("jp_txt", false).toBool();
+	QString path, extension;
+	int currentField=0;
+	observer->setObserverMaximum(selectedFields.size()-1);
 
-		foreach(const int &fieldID, selectedFields) {
-			if(observer->observerWasCanceled()) 	return false;
+	bool jp_txt = Config::value("jp_txt", false).toBool();
 
-			Field *f = field(fieldID);
-			if(f) {
-				switch(toExport) {
-				case Field::Background:
-					path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
+	foreach(const int &fieldID, selectedFields) {
+		if(observer->observerWasCanceled()) 	return false;
 
-					if(overwrite || !QFile::exists(path)) {
-						QPixmap background = f->background()->openBackground();
-						if(!background.isNull())
-							background.save(path);
-					}
-					break;
-				case Field::Akaos: {
-					TutFileStandard *akaoList = f->tutosAndSounds();
-					if(akaoList->isOpen()) {
-						int akaoCount = akaoList->size();
-						for(int i=0 ; i<akaoCount ; ++i) {
-							if(!akaoList->isTut(i)) {
-								path = QDir::cleanPath(QString("%1/%2-%3.%4").arg(directory, f->name()).arg(i).arg(extension));
-								if(overwrite || !QFile::exists(path)) {
-									QFile tutExport(path);
-									if(tutExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-										tutExport.write(akaoList->data(i));
-										tutExport.close();
-									}
-								}
-							}
-						}
-					}
-				} break;
-				case Field::Scripts: {
-					Section1File *section1 = f->scriptsAndTexts();
-					if(section1->isOpen()) {
-						path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
-						if(overwrite || !QFile::exists(path)) {
-							QFile textExport(path);
-							if(textExport.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-								int i=0;
-								foreach(FF7Text *text, section1->texts()) {
-									textExport.write(QString("---TEXT%1---\n%2\n").arg(i++, 3, 10, QChar('0')).arg(text->getText(jp_txt)).toUtf8());
-								}
-								textExport.close();
-							}
-						}
-					}
-				} break;
-				default:
-					return false;
+		Field *f = field(fieldID);
+		if(f) {
+			if(toExport.contains(Field::Background)) {
+				extension = toExport.value(Field::Background);
+				path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
+
+				if(overwrite || !QFile::exists(path)) {
+					QPixmap background = f->background()->openBackground();
+					if(!background.isNull())
+						background.save(path);
 				}
 			}
-			observer->setObserverValue(currentField++);
+			if(toExport.contains(Field::Akaos)) {
+				TutFileStandard *akaoList = f->tutosAndSounds();
+				if(akaoList->isOpen()) {
+					int akaoCount = akaoList->size();
+					for(int i=0 ; i<akaoCount ; ++i) {
+						if(!akaoList->isTut(i)) {
+							extension = toExport.value(Field::Akaos);
+							path = QDir::cleanPath(QString("%1/%2-%3.%4").arg(directory, f->name()).arg(i).arg(extension));
+							if(overwrite || !QFile::exists(path)) {
+								QFile tutExport(path);
+								if(tutExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+									tutExport.write(akaoList->data(i));
+									tutExport.close();
+								}
+							}
+						}
+					}
+				}
+			}
+			if(toExport.contains(Field::Scripts)) {
+				Section1File *section1 = f->scriptsAndTexts();
+				if(section1->isOpen()) {
+					extension = toExport.value(Field::Scripts);
+					path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
+					if(overwrite || !QFile::exists(path)) {
+						QFile textExport(path);
+						if(textExport.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+							int i=0;
+							foreach(FF7Text *text, section1->texts()) {
+								textExport.write(QString("---TEXT%1---\n%2\n").arg(i++, 3, 10, QChar('0')).arg(text->getText(jp_txt)).toUtf8());
+							}
+							textExport.close();
+						}
+					}
+				}
+			}
 		}
+		observer->setObserverValue(currentField++);
+	}
+
+	return true;
+}
+
+bool FieldArchive::importation(const QList<int> &selectedFields, const QString &directory,
+							   const QMap<Field::FieldSection, QString> &toImport,
+							   FieldArchiveIOObserver *observer)
+{
+	if(selectedFields.isEmpty() || toImport.isEmpty()) {
+		return true;
+	}
+	int currentField=0;
+
+	foreach(const int &fieldID, selectedFields) {
+		if(observer->observerWasCanceled()) 	break;
+
+		Field *f = field(fieldID);
+		if(f) {
+			if(toImport.contains(Field::Scripts)) {
+				Section1File *section1 = f->scriptsAndTexts();
+				if(section1->isOpen()) {
+					//TODO
+				}
+			}
+		}
+		observer->setObserverValue(currentField++);
 	}
 
 	return true;
