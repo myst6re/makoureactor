@@ -149,6 +149,7 @@ Window::Window() :
 	lineSearch = new QLineEdit(this);
 	lineSearch->setFixedWidth(120);
 	lineSearch->setStatusTip(tr("Recherche rapide"));
+	lineSearch->setPlaceholderText(tr("Rechercher..."));
 	
 	fieldList = new QTreeWidget(this);
 	fieldList->setColumnCount(2);

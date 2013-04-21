@@ -4,6 +4,9 @@
 #include <QtCore>
 #include "TimFile.h"
 
+#define LEFT_PADD(w)	(w >> 5)
+#define CHAR_WIDTH(w)	(w & 0x1F)
+
 class WindowBinFile
 {
 public:
@@ -41,11 +44,12 @@ private:
 	bool openFont(const QByteArray &data);
 	bool openFont2(const QByteArray &data);
 	bool openFontSize(const QByteArray &data);
+	static int absoluteId(quint8 table, quint8 id);
 	inline quint8 charInfo(quint8 table, quint8 id) const {
-		return _charWidth.at(table * 217 + id);
+		return _charWidth.at(absoluteId(table, id));
 	}
 	inline void setCharInfo(quint8 table, quint8 id, quint8 info) {
-		_charWidth.replace(table * 217 + id, info);
+		_charWidth.replace(absoluteId(table, id), info);
 	}
 
 	QVector<quint8> _charWidth;

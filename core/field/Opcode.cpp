@@ -16,25 +16,6 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Opcode.h"
-
-/****************************************************************************
- ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
- **
- ** This program is free software: you can redistribute it and/or modify
- ** it under the terms of the GNU General Public License as published by
- ** the Free Software Foundation, either version 3 of the License, or
- ** (at your option) any later version.
- **
- ** This program is distributed in the hope that it will be useful,
- ** but WITHOUT ANY WARRANTY; without even the implied warranty of
- ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- ** GNU General Public License for more details.
- **
- ** You should have received a copy of the GNU General Public License
- ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
- ****************************************************************************/
-#include "Opcode.h"
 #include "core/FF7Text.h"
 #include "core/Var.h"
 #include "Data.h"
@@ -49,45 +30,11 @@ Opcode::~Opcode()
 {
 }
 
-QByteArray Opcode::params() const
-{
-	return QByteArray();
-}
-
-quint8 Opcode::size() const
-{
-	return Opcode::length[id()];
-}
-
-bool Opcode::hasParams() const
-{
-	return size() > 1;
-}
-
-const QString &Opcode::name() const
-{
-	return Opcode::names[id()];
-}
-
-void Opcode::setParams(const QByteArray &)
-{
-}
-
 QByteArray Opcode::toByteArray() const
 {
 	return QByteArray()
 			.append((char)id())
 			.append(params());
-}
-
-bool Opcode::isJump() const
-{
-	return false;
-}
-
-bool Opcode::isLabel() const
-{
-	return false;
 }
 
 int Opcode::subParam(int cur, int paramSize) const
@@ -104,61 +51,16 @@ int Opcode::subParam(int cur, int paramSize) const
 	return (value >> ((sizeBA*8-cur%8)-paramSize)) & ((int)pow(2, paramSize)-1);
 }
 
-bool Opcode::isVoid() const
-{
-	return false;
-}
-
-int Opcode::getTextID() const
-{
-	return -1;
-}
-
-void Opcode::setTextID(quint8)
-{
-}
-
-int Opcode::getTutoID() const
-{
-	return -1;
-}
-
-void Opcode::setTutoID(quint8)
-{
-}
-
-int Opcode::getWindowID() const
-{
-	return -1;
-}
-
-void Opcode::setWindowID(quint8)
-{
-}
-
-bool Opcode::getWindow(FF7Window &) const
-{
-	return false;
-}
-
-void Opcode::setWindow(const FF7Window &)
-{
-}
-
-void Opcode::getVariables(QList<FF7Var> &) const
-{
-}
-
 bool Opcode::searchVar(quint8 bank, quint8 adress, int value) const
 {
 	if(value != 65536) {
-		if(id()==0x80) {
+		if(id() == SETBYTE) {
 			OpcodeSETBYTE *setbyte = (OpcodeSETBYTE *)this;
 			if(B1(setbyte->banks) == bank && setbyte->var == adress
                     && B2(setbyte->banks) == 0 && setbyte->value == value)
 				return true;
 		}
-		if(id()==0x81) {
+		if(id() == SETWORD) {
 			OpcodeSETWORD *setword = (OpcodeSETWORD *)this;
 			if(B1(setword->banks) == bank && setword->var == adress
                     && B2(setword->banks) == 0 && setword->value == (quint16)value)
@@ -180,7 +82,7 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, int value) const
 
 bool Opcode::searchExec(quint8 group, quint8 script) const
 {
-	if(id()==REQ || id()==REQSW || id()==REQEW) {
+	if(id() == REQ || id() == REQSW || id() == REQEW) {
 		OpcodeExec *exec = (OpcodeExec *)this;
 		return exec->groupID == group && exec->scriptID == script;
 	}
@@ -189,10 +91,10 @@ bool Opcode::searchExec(quint8 group, quint8 script) const
 
 bool Opcode::searchMapJump(quint16 fieldID) const
 {
-	if(id()==MAPJUMP) {
+	if(id() == MAPJUMP) {
 		return ((OpcodeMAPJUMP *)this)->fieldID == fieldID;
 	}
-	if(id()==MINIGAME) {
+	if(id() == MINIGAME) {
 		return ((OpcodeMINIGAME *)this)->fieldID == fieldID;
 	}
 	return false;
@@ -261,8 +163,7 @@ void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 {
 	quint8 param, state;
 
-	if(id()==0xE0)//show bg parameter
-	{
+	if(id() == BGON) { //show bg parameter
 		OpcodeBGON *bgon = (OpcodeBGON *)this;
 		if(bgon->banks == 0) {
 			param = bgon->paramID;
@@ -271,9 +172,7 @@ void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 				state |= enabledParams.value(param);
 			enabledParams.insert(param, state);
 		}
-	}
-	/*else if(id()==0xE1)//hide bg parameter
-	{
+	}/*else if(id() == BGOFF) { //hide bg parameter
 		OpcodeBGOFF *bgoff = (OpcodeBGOFF *)this;
 		if(bgoff->banks == 0) {
 			param = bgoff->paramID;
@@ -287,19 +186,14 @@ void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 
 void Opcode::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 {
-	if(id()==0x2C)//Move Background Z
-	{
+	if(id() == BGPDH) { //Move Background Z
 		OpcodeBGPDH *bgpdh = (OpcodeBGPDH *)this;
-		if(bgpdh->banks==0 && bgpdh->layerID>1 && bgpdh->layerID<4)//No var
-		{
+		if(bgpdh->banks==0 && bgpdh->layerID>1 && bgpdh->layerID<4) { //No var
 			z[bgpdh->layerID-2] = bgpdh->targetZ;
 		}
-	}
-	else if(x && y && id()==0x2D)// Animate Background X Y
-	{
+	} else if(x && y && id() == BGSCR) { // Animate Background X Y
 		OpcodeBGSCR *bgscr = (OpcodeBGSCR *)this;
-		if(bgscr->banks==0 && bgscr->layerID>1 && bgscr->layerID<4)//No var
-		{
+		if(bgscr->banks==0 && bgscr->layerID>1 && bgscr->layerID<4) { //No var
 			x[bgscr->layerID-2] = bgscr->targetX;
 			y[bgscr->layerID-2] = bgscr->targetY;
 		}
@@ -322,42 +216,58 @@ QString Opcode::_text(quint8 textID, Section1File *scriptsAndTexts)
 
 QString Opcode::_item(quint16 itemID, quint8 bank)
 {
-	if(bank > 0)	return QObject::tr("n°%1").arg(_bank(itemID & 0xFF, bank));
+	if(bank > 0) {
+		return QObject::tr("n°%1").arg(_bank(itemID & 0xFF, bank));
+	}
 
-	if(itemID < 128){
-		if(!Data::item_names.isEmpty() && itemID < Data::item_names.size())	return Data::item_names.at(itemID);
-	}else if(itemID < 256){
-		if(!Data::weapon_names.isEmpty() && itemID-128 < Data::weapon_names.size())		return Data::weapon_names.at(itemID-128);
-	}else if(itemID < 288){
-		if(!Data::armor_names.isEmpty() && itemID-256 < Data::armor_names.size())		return Data::armor_names.at(itemID-256);
-	}else if(itemID < 320){
-		if(!Data::accessory_names.isEmpty() && itemID-288 < Data::accessory_names.size())	return Data::accessory_names.at(itemID-288);
-	}return QObject::tr("n°%1").arg(itemID);
+	if(itemID < 128) {
+		if(!Data::item_names.isEmpty() && itemID < Data::item_names.size())
+			return Data::item_names.at(itemID);
+	} else if(itemID < 256) {
+		if(!Data::weapon_names.isEmpty() && itemID-128 < Data::weapon_names.size())
+			return Data::weapon_names.at(itemID-128);
+	} else if(itemID < 288) {
+		if(!Data::armor_names.isEmpty() && itemID-256 < Data::armor_names.size())
+			return Data::armor_names.at(itemID-256);
+	} else if(itemID < 320) {
+		if(!Data::accessory_names.isEmpty() && itemID-288 < Data::accessory_names.size())
+			return Data::accessory_names.at(itemID-288);
+	}
+	return QObject::tr("n°%1").arg(itemID);
 }
 
 QString Opcode::_materia(quint8 materiaID, quint8 bank)
 {
-	if(bank > 0)	return QObject::tr("n°%1").arg(_bank(materiaID, bank));
+	if(bank > 0) {
+		return QObject::tr("n°%1").arg(_bank(materiaID, bank));
+	}
 
-	if(materiaID < Data::materia_names.size())	return Data::materia_names.at(materiaID);
+	if(materiaID < Data::materia_names.size())
+		return Data::materia_names.at(materiaID);
 	return QObject::tr("n°%1").arg(materiaID);
 }
 
 QString Opcode::_field(quint16 fieldID)
 {
-	if(fieldID < Data::field_names.size())	return Data::field_names.at(fieldID)+QObject::tr(" (n°%1)").arg(fieldID);
+	if(fieldID < Data::field_names.size())
+		return QObject::tr("%1 (n°%2)")
+				.arg(Data::field_names.at(fieldID))
+				.arg(fieldID);
 	return QObject::tr("n°%1").arg(fieldID);
 }
 
 QString Opcode::_movie(quint8 movieID)
 {
-	if(movieID < Data::movie_names.size() && Data::movie_names.at(movieID)!="")	return Data::movie_names.at(movieID);
+	if(movieID < Data::movie_names.size() &&
+			!Data::movie_names.at(movieID).isEmpty())
+		return Data::movie_names.at(movieID);
 	return QObject::tr("n°%1").arg(movieID);
 }
 
 /* QString Opcode::_objet3D(quint8 objet3D_ID)
 {
-	if(objet3D_ID < Data::currentCharNames.size())	return QString("%1 (%2)").arg(Data::currentCharNames.at(objet3D_ID), Data::currentHrcNames.at(objet3D_ID));
+	if(objet3D_ID < Data::currentCharNames.size())
+		return QString("%1 (%2)").arg(Data::currentCharNames.at(objet3D_ID), Data::currentHrcNames.at(objet3D_ID));
 	return QObject::tr("n°%1").arg(objet3D_ID);
 } */
 
@@ -421,14 +331,19 @@ QString Opcode::_akao(quint8 akaoOp)
 
 QString Opcode::_bank(quint8 adress, quint8 bank)
 {
-	if(Var::name(bank, adress)!="")	return Var::name(bank, adress);
-	if(bank==0)		return QString("?");
+	if(!Var::name(bank, adress).isEmpty()) {
+		return Var::name(bank, adress);
+	}
+	if(bank == 0) {
+		return QString("?");
+	}
 	return QString("Var[%1][%2]").arg(bank).arg(adress);
 }
 
 QString Opcode::_var(int value, quint8 bank)
 {
-	if(bank > 0)	return _bank(value & 0xFF, bank);
+	if(bank > 0)
+		return _bank(value & 0xFF, bank);
 	return QString::number(value);
 }
 
@@ -437,7 +352,7 @@ QString Opcode::_var(int value, quint8 bank1, quint8 bank2)
 	if(bank1 > 0 || bank2 > 0) {
 		QString ret = _var(value & 0xFFFF, bank1);
 		if(bank2 != 0 || ((value >> 16) & 0xFFFF) != 0) {
-			ret += QString(" + ") + _var((value >> 16) & 0xFFFF, bank2) + QString(" * 65536 ");
+			ret += QString(" + %1 * 65536").arg(_var((value >> 16) & 0xFFFF, bank2));
 		}
 		return ret;
 	}
@@ -447,7 +362,10 @@ QString Opcode::_var(int value, quint8 bank1, quint8 bank2)
 QString Opcode::_var(int value, quint8 bank1, quint8 bank2, quint8 bank3)
 {
 	if(bank1 > 0 || bank2 > 0 || bank3 > 0)
-		return _bank(value & 0xFF, bank1) + QObject::tr(" et ") + _bank((value >> 8) & 0xFF, bank2) + QObject::tr(" et ") + _bank((value >> 16) & 0xFF, bank3);
+		return QObject::tr("%1 et %2 et %3")
+				.arg(_bank(value & 0xFF, bank1))
+				.arg(_bank((value >> 8) & 0xFF, bank2))
+				.arg(_bank((value >> 16) & 0xFF, bank3));
 	return QString::number(value);
 }
 
@@ -461,10 +379,11 @@ QString Opcode::character(quint8 persoID)
 
 QString Opcode::_windowCorner(quint8 param, quint8 bank)
 {
-	if(bank>0)	return _bank(param, bank);
+	if(bank > 0) {
+		return _bank(param, bank);
+	}
 
-	switch(param)
-	{
+	switch(param) {
 	case 0:		return QObject::tr("haut gauche");
 	case 1:		return QObject::tr("bas gauche");
 	case 2:		return QObject::tr("haut droit");
@@ -475,8 +394,7 @@ QString Opcode::_windowCorner(quint8 param, quint8 bank)
 
 QString Opcode::_sensRotation(quint8 param)
 {
-	switch(param)
-	{
+	switch(param) {
 	case 1:		return QObject::tr("inverse");
 	case 2:		return QObject::tr("inverse");
 	default:	return QObject::tr("normal");
@@ -733,11 +651,11 @@ void OpcodeSPLIT::setParams(const QByteArray &params)
 	const char *constParams = params.constData();
 	memcpy(banks, constParams, 3);
 
-	memcpy(&targetX1, &constParams[3], 2); // bank 1
-	memcpy(&targetY1, &constParams[5], 2); // bank 2
+	memcpy(&targetX1, constParams + 3, 2); // bank 1
+	memcpy(&targetY1, constParams + 5, 2); // bank 2
 	direction1 = params.at(7); // bank 3
-	memcpy(&targetX2, &constParams[8], 2); // bank 4
-	memcpy(&targetY2, &constParams[10], 2); // bank 5
+	memcpy(&targetX2, constParams + 8, 2); // bank 4
+	memcpy(&targetY2, constParams + 10, 2); // bank 5
 	direction2 = params.at(12); // bank 6
 	speed = params.at(13);
 }
@@ -1463,7 +1381,7 @@ void OpcodeIFUBL::setParams(const QByteArray &params)
 	value2 = (quint8)params.at(2); // bank 2
 	oper = (quint8)params.at(3);
 	quint16 jump;
-	memcpy(&jump, &constParams[4], 2);
+	memcpy(&jump, constParams + 4, 2);
 	_jump = jump + jumpPosData();
 }
 
@@ -1505,8 +1423,8 @@ void OpcodeIFSW::setParams(const QByteArray &params)
 	const char *constParams = params.constData();
 	banks = (quint8)params.at(0);
 	qint16 v1, v2;
-	memcpy(&v1, &constParams[1], 2);
-	memcpy(&v2, &constParams[3], 2);
+	memcpy(&v1, constParams + 1, 2);
+	memcpy(&v2, constParams + 3, 2);
 	value1 = v1;
 	value2 = v2;
 	oper = (quint8)params.at(5);
@@ -1551,13 +1469,13 @@ void OpcodeIFSWL::setParams(const QByteArray &params)
 	const char *constParams = params.constData();
 	banks = (quint8)params.at(0);
 	qint16 v1, v2;
-	memcpy(&v1, &constParams[1], 2);
-	memcpy(&v2, &constParams[3], 2);
+	memcpy(&v1, constParams + 1, 2);
+	memcpy(&v2, constParams + 3, 2);
 	value1 = v1;
 	value2 = v2;
 	oper = (quint8)params.at(5);
 	quint16 jump;
-	memcpy(&jump, &constParams[6], 2);
+	memcpy(&jump, constParams + 6, 2);
 	_jump = jump + jumpPosData();
 }
 
@@ -1600,8 +1518,8 @@ void OpcodeIFUW::setParams(const QByteArray &params)
 	const char *constParams = params.constData();
 	banks = (quint8)params.at(0);
 	quint16 v1, v2;
-	memcpy(&v1, &constParams[1], 2);
-	memcpy(&v2, &constParams[3], 2);
+	memcpy(&v1, constParams + 1, 2);
+	memcpy(&v2, constParams + 3, 2);
 	value1 = v1;
 	value2 = v2;
 	oper = (quint8)params.at(5);
@@ -1646,13 +1564,13 @@ void OpcodeIFUWL::setParams(const QByteArray &params)
 	const char *constParams = params.constData();
 	banks = (quint8)params.at(0);
 	quint16 v1, v2;
-	memcpy(&v1, &constParams[1], 2);
-	memcpy(&v2, &constParams[3], 2);
+	memcpy(&v1, constParams + 1, 2);
+	memcpy(&v2, constParams + 3, 2);
 	value1 = v1;
 	value2 = v2;
 	oper = (quint8)params.at(5);
 	quint16 jump;
-	memcpy(&jump, &constParams[6], 2);
+	memcpy(&jump, constParams + 6, 2);
 	_jump = jump + jumpPosData();
 }
 
@@ -1689,9 +1607,9 @@ void OpcodeMINIGAME::setParams(const QByteArray &params)
 {
 	const char *constParams = params.constData();
 	memcpy(&fieldID, constParams, 2);
-	memcpy(&targetX, &constParams[2], 2);
-	memcpy(&targetY, &constParams[4], 2);
-	memcpy(&targetI, &constParams[6], 2);
+	memcpy(&targetX, constParams + 2, 2);
+	memcpy(&targetY, constParams + 4, 2);
+	memcpy(&targetI, constParams + 6, 2);
 	minigameParam = (quint8)params.at(8);
 	minigameID = (quint8)params.at(9);
 }

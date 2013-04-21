@@ -27,8 +27,9 @@ int TextPreview::multicolor = -1;
 int TextPreview::fontColor = WHITE;
 QImage TextPreview::fontImage;
 
-TextPreview::TextPreview(QWidget *parent)
-	: QWidget(parent), _currentPage(0), _currentWin(0), acceptMove(false), readOnly(false)
+TextPreview::TextPreview(QWidget *parent) :
+	QWidget(parent), _currentPage(0), _currentWin(0),
+	acceptMove(false), readOnly(false)
 {
 	pagesPos.append(0);
 
@@ -669,15 +670,17 @@ void TextPreview::word(int *x, int *y, const QByteArray &charIds, QPainter *pain
 
 quint8 TextPreview::charW(int tableId, int charId)
 {
-	return Data::windowBin.isValid()
-			? Data::windowBin.charWidth(tableId, charId)
+	return Data::windowBin.isValid() &&
+			(tableId != 0 || !Data::windowBin.isJp())
+			? Data::windowBin.charWidth(tableId == 0 ? 0 : tableId - 1, charId)
 			: CHAR_WIDTH(charWidth[tableId][charId]);
 }
 
 quint8 TextPreview::leftPadding(int tableId, int charId)
 {
-	return Data::windowBin.isValid()
-			? Data::windowBin.charLeftPadding(tableId, charId)
+	return Data::windowBin.isValid() &&
+			(tableId != 0 || !Data::windowBin.isJp())
+			? Data::windowBin.charLeftPadding(tableId == 0 ? 0 : tableId - 1, charId)
 			: LEFT_PADD(charWidth[tableId][charId]);
 }
 
@@ -688,8 +691,9 @@ quint8 TextPreview::charFullWidth(int tableId, int charId)
 
 QImage TextPreview::letterImage(int tableId, int charId)
 {
-	if(Data::windowBin.isValid() && tableId == 0) {
-		return Data::windowBin.letter(tableId, charId, WindowBinFile::FontColor(fontColor));
+	if(Data::windowBin.isValid() &&
+			(tableId != 0 || !Data::windowBin.isJp())) {
+		return Data::windowBin.letter(tableId == 0 ? 0 : tableId - 1, charId, WindowBinFile::FontColor(fontColor));
 	} else {
 		int charIdImage = charId + posTable[tableId];
 		return fontImage.copy((charIdImage%21)*12, (charIdImage/21)*12, 12, 12);

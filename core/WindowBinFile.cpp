@@ -18,9 +18,6 @@
 #include "WindowBinFile.h"
 #include "GZIP.h"
 
-#define LEFT_PADD(w)	(w >> 5)
-#define CHAR_WIDTH(w)	(w & 0x1F)
-
 WindowBinFile::WindowBinFile() :
 	modified(false)
 {
@@ -71,10 +68,6 @@ bool WindowBinFile::open(const QByteArray &data)
 		if(!openFont(GZIP::decompress(constData + positions.at(1) + 6, sizes.at(1), 0))) {
 			return false;
 		}
-
-		if(!openFontSize(GZIP::decompress(constData + positions.last() + 6, sizes.last(), 0))) {
-			return false;
-		}
 	} else if(positions.size() == 4) { // jp version
 		if(!openFont(GZIP::decompress(constData + positions.at(1) + 6, sizes.at(1), 0))) {
 			return false;
@@ -83,10 +76,10 @@ bool WindowBinFile::open(const QByteArray &data)
 		if(!openFont2(GZIP::decompress(constData + positions.at(2) + 6, sizes.at(2), 0))) {
 			return false;
 		}
+	}
 
-		if(!openFontSize(GZIP::decompress(constData + positions.last() + 6, sizes.last(), 0))) {
-			return false;
-		}
+	if(!openFontSize(GZIP::decompress(constData + positions.last() + 6, sizes.last(), 0))) {
+		return false;
 	}
 
 	return true;
@@ -178,6 +171,18 @@ int WindowBinFile::palette(FontColor color, quint8 table) const
 {
 	quint8 pal = table == 2 || table == 3 || table == 5;
 	return color * 2 + pal;
+}
+
+int WindowBinFile::absoluteId(quint8 table, quint8 id)
+{
+	switch(table) {
+	case 1:		return 231 + id;
+	case 2:		return 441 + id;
+	case 3:		return 672 + id;
+	case 4:		return 882 + id;
+	case 5:		return 1092 + id;
+	default:	return id;
+	}
 }
 
 quint8 WindowBinFile::charWidth(quint8 table, quint8 id) const
