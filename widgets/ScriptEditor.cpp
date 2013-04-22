@@ -98,9 +98,9 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	layout->addStretch();
 	layout->addLayout(buttonLayout);
 
-	if(modify)
-	{
+	if(modify) {
 		this->opcode = Script::copyOpcode(script->getOpcode(opcodeID));
+		qDebug() << this->opcode->name();
 		int id = opcode->id();
 
 		if(id == Opcode::SPECIAL)
@@ -110,9 +110,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 
 		setCurrentMenu(id);
 		fillView();
-	}
-	else
-	{
+	} else {
 		this->opcode = new OpcodeRET();
 		comboBox->setCurrentIndex(0);
 		changeCurrentOpcode(0);

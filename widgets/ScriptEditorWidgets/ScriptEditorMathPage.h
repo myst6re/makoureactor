@@ -33,7 +33,7 @@ private slots:
 	void changeCurrentOpcode(int);
 private:
 	void build();
-	void convertOpcode(Opcode::Keys key);
+	Opcode *convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var, *varOrValue;
 	QComboBox *operationList;
 	QRadioButton *type1, *type2;
@@ -51,7 +51,7 @@ private slots:
 	void changeCurrentOpcode(int);
 private:
 	void build();
-	void convertOpcode(Opcode::Keys key);
+	Opcode *convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var;
 	QComboBox *operationList;
 	QRadioButton *type1, *type2;
@@ -68,7 +68,7 @@ private slots:
 	void changeCurrentOpcode(int);
 private:
 	void build();
-	void convertOpcode(Opcode::Keys key);
+	Opcode *convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var, *position;
 	QComboBox *operationList;
 };

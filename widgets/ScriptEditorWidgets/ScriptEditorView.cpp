@@ -41,11 +41,6 @@ void ScriptEditorView::clear()
 {
 }
 
-Opcode *ScriptEditorView::opcode()
-{
-	return _opcode;
-}
-
 void ScriptEditorView::setOpcode(Opcode *opcode)
 {
 	if(!_builded) {

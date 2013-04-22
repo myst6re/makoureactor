@@ -71,7 +71,7 @@ Opcode *ScriptEditorGenericList::opcode()
 	bool isLabel;
 	QByteArray newOpcode = parseModel(&isLabel);
 	if(newOpcode.isEmpty())
-		return ScriptEditorView::opcode();
+		return opcodePtr();
 
 	if(isLabel) {
 		quint32 label;
@@ -81,7 +81,7 @@ Opcode *ScriptEditorGenericList::opcode()
 		ScriptEditorView::setOpcode(Script::createOpcode(newOpcode));
 	}
 
-	return ScriptEditorView::opcode();
+	return opcodePtr();
 }
 
 void ScriptEditorGenericList::setOpcode(Opcode *opcode)
@@ -96,10 +96,9 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 
 	QByteArray newOpcode;
 	quint8 byte, length, start;
-	Opcode *_opcode = ScriptEditorView::opcode();
 	
-	*isLabel = _opcode->isLabel();
-	byte = _opcode->id() & 0xFF;
+	*isLabel = opcodePtr()->isLabel();
+	byte = opcodePtr()->id() & 0xFF;
 	// qDebug() << "byte= " << byte;
 	newOpcode.append((char)byte);
 	//Calcul longueur opcode
@@ -108,7 +107,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 	
 	if(byte == 0x0F)//SPECIAL
 	{
-		quint8 byte2 = ((OpcodeSPECIAL *)_opcode)->opcode->id();
+		quint8 byte2 = ((OpcodeSPECIAL *)opcodePtr())->opcode->id();
 		newOpcode.append((char)byte2);
 		switch(byte2)
 		{
@@ -123,7 +122,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 	}
 	else if(byte == 0x28)//KAWAI
 	{
-		quint8 byte3 = ((OpcodeKAWAI *)_opcode)->opcode->id();
+		quint8 byte3 = ((OpcodeKAWAI *)opcodePtr())->opcode->id();
 		// qDebug() << "byte3= " << byte3;
 		length = model->rowCount()+3;
 		// qDebug() << "length = " << length;
@@ -137,12 +136,12 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 	}
 	
 	// qDebug() << "byte= " << byte;
-	length += Opcode::length[_opcode->id()];
+	length += Opcode::length[opcodePtr()->id()];
 	// qDebug() << "length= " << length;
 	newOpcode.append(QByteArray(length-start, '\x0'));
 	// qDebug() << "newOpcode= " << newOpcode.toHex();
 	int paramSize, paramType, cur = 8, departBA, tailleBA, departLocal;
-	QList<int> paramTypes = this->paramTypes(_opcode->id());
+	QList<int> paramTypes = this->paramTypes(opcodePtr()->id());
 	int value;
 	
 	if(!paramTypes.isEmpty())
@@ -242,26 +241,25 @@ void ScriptEditorGenericList::fillModel()
 	addButton->hide();
 	delButton->hide();
 	model->clear();
-	
-	Opcode *_opcode = ScriptEditorView::opcode();
+
 	int paramSize, paramType, cur = 0, maxValue, minValue, value=0;
-	QList<int> paramTypes = this->paramTypes(_opcode->id());
+	QList<int> paramTypes = this->paramTypes(opcodePtr()->id());
 	
-	if(_opcode->isLabel()) {
-		addRow(((OpcodeLabel *)_opcode)->label(), 0, (int)pow(2, 31)-1, label);
+	if(opcodePtr()->isLabel()) {
+		addRow(((OpcodeLabel *)opcodePtr())->label(), 0, (int)pow(2, 31)-1, label);
 	}
 	else if(paramTypes.isEmpty())
 	{
 		int start = 0;
-		if(_opcode->id() == 0x0F)//SPECIAL
+		if(opcodePtr()->id() == 0x0F)//SPECIAL
 			start = 1;
-		if(_opcode->id() == 0x28)//KAWAI
+		if(opcodePtr()->id() == 0x28)//KAWAI
 		{
 			start = 2;
 			addButton->show();
 			delButton->show();
 		}
-		const QByteArray params = _opcode->params();
+		const QByteArray params = opcodePtr()->params();
 		for(int i=start ; i<params.size() ; ++i)
 			addRow((quint8)params.at(i), 0, 255, inconnu);
 	}
@@ -271,7 +269,7 @@ void ScriptEditorGenericList::fillModel()
 		{
 			paramType = paramTypes.at(i);
 			paramSize = this->paramSize(paramType);
-			value = _opcode->subParam(cur, paramSize);
+			value = opcodePtr()->subParam(cur, paramSize);
 			// qDebug() << value;
 			if(paramIsSigned(paramType)) {
 				maxValue = (int)pow(2, paramSize-1)-1;

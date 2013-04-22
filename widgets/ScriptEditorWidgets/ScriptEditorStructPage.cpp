@@ -47,21 +47,28 @@ void ScriptEditorReturnToPage::build()
 
 Opcode *ScriptEditorReturnToPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
-	OpcodeRETTO *opcodeRETTO = (OpcodeRETTO *)ret;
+	OpcodeRETTO *opcodeRETTO = (OpcodeRETTO *)opcodePtr();
 	opcodeRETTO->scriptID = scriptList->currentIndex();
 	opcodeRETTO->priority = priority->value();
 
-	return ret;
+	return opcodePtr();
 }
 
 void ScriptEditorReturnToPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
+	foreach(QObject *o, children()) {
+		o->blockSignals(true);
+	}
+
 	OpcodeRETTO *opcodeRETTO = (OpcodeRETTO *)opcode;
 	scriptList->setCurrentIndex(opcodeRETTO->scriptID);
 	priority->setValue(opcodeRETTO->priority);
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(false);
+	}
 }
 
 ScriptEditorExecPage::ScriptEditorExecPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
@@ -111,18 +118,21 @@ void ScriptEditorExecPage::build()
 
 Opcode *ScriptEditorExecPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
-	OpcodeExec *opcodeExec = (OpcodeExec *)ret;
+	OpcodeExec *opcodeExec = (OpcodeExec *)opcodePtr();
 	opcodeExec->groupID = groupList->currentIndex();
 	opcodeExec->scriptID = scriptList->currentIndex();
 	opcodeExec->priority = priority->value();
 
-	return ret;
+	return opcodePtr();
 }
 
 void ScriptEditorExecPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(true);
+	}
 
 	switch((Opcode::Keys)opcode->id()) {
 	case Opcode::REQ:		execType->setCurrentIndex(0);	break;
@@ -149,6 +159,10 @@ void ScriptEditorExecPage::setOpcode(Opcode *opcode)
 	scriptList->setCurrentIndex(opcodeExec->scriptID);
 
 	priority->setValue(opcodeExec->priority);
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(false);
+	}
 }
 
 void ScriptEditorExecPage::updateScriptList(int groupID)
@@ -171,30 +185,31 @@ void ScriptEditorExecPage::changeCurrentOpcode(int index)
 	case 0:		key = Opcode::REQ;		break;
 	case 1:		key = Opcode::REQSW;	break;
 	case 2:		key = Opcode::REQEW;	break;
-	default:	key = (Opcode::Keys)ScriptEditorView::opcode()->id();
+	default:	key = (Opcode::Keys)opcodePtr()->id();
 	}
 
-	if(key != ScriptEditorView::opcode()->id()) {
+	if(key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
 	}
 }
 
-void ScriptEditorExecPage::convertOpcode(Opcode::Keys key)
+Opcode *ScriptEditorExecPage::convertOpcode(Opcode::Keys key)
 {
-	if(key == ScriptEditorView::opcode()->id())	return;
+	if(key == opcodePtr()->id())	return opcodePtr();
 
-	OpcodeExec *exec = (OpcodeExec *)ScriptEditorView::opcode();
+	OpcodeExec *exec = (OpcodeExec *)opcodePtr();
 
 	switch(key) {
 	case Opcode::REQ:		ScriptEditorView::setOpcode(new OpcodeREQ(*exec));		break;
 	case Opcode::REQSW:		ScriptEditorView::setOpcode(new OpcodeREQSW(*exec));	break;
 	case Opcode::REQEW:		ScriptEditorView::setOpcode(new OpcodeREQEW(*exec));	break;
-	default:	return;
+	default:	return opcodePtr();
 	}
 
 	delete exec;
+	return opcodePtr();
 }
 
 ScriptEditorExecCharPage::ScriptEditorExecCharPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
@@ -239,7 +254,7 @@ void ScriptEditorExecCharPage::build()
 
 Opcode *ScriptEditorExecCharPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
+	Opcode *ret = opcodePtr();
 	OpcodeExecChar *opcodeExecChar = (OpcodeExecChar *)ret;
 	opcodeExecChar->partyID = partyID->value();
 	opcodeExecChar->scriptID = scriptList->currentIndex();
@@ -252,6 +267,10 @@ void ScriptEditorExecCharPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
+	foreach(QObject *o, children()) {
+		o->blockSignals(true);
+	}
+
 	switch((Opcode::Keys)opcode->id()) {
 	case Opcode::PREQ:		execType->setCurrentIndex(0);	break;
 	case Opcode::PRQSW:		execType->setCurrentIndex(1);	break;
@@ -263,6 +282,10 @@ void ScriptEditorExecCharPage::setOpcode(Opcode *opcode)
 	partyID->setValue(opcodeExecChar->partyID);
 	scriptList->setCurrentIndex(opcodeExecChar->scriptID);
 	priority->setValue(opcodeExecChar->priority);
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(false);
+	}
 }
 
 
@@ -274,30 +297,31 @@ void ScriptEditorExecCharPage::changeCurrentOpcode(int index)
 	case 0:		key = Opcode::PREQ;		break;
 	case 1:		key = Opcode::PRQSW;	break;
 	case 2:		key = Opcode::PRQEW;	break;
-	default:	key = (Opcode::Keys)ScriptEditorView::opcode()->id();
+	default:	key = (Opcode::Keys)opcodePtr()->id();
 	}
 
-	if(key != ScriptEditorView::opcode()->id()) {
+	if(key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
 	}
 }
 
-void ScriptEditorExecCharPage::convertOpcode(Opcode::Keys key)
+Opcode *ScriptEditorExecCharPage::convertOpcode(Opcode::Keys key)
 {
-	if(key == ScriptEditorView::opcode()->id())	return;
+	if(key == opcodePtr()->id())	return opcodePtr();
 
-	OpcodeExecChar *exec = (OpcodeExecChar *)ScriptEditorView::opcode();
+	OpcodeExecChar *exec = (OpcodeExecChar *)opcodePtr();
 
 	switch(key) {
 	case Opcode::PREQ:		ScriptEditorView::setOpcode(new OpcodePREQ(*exec));		break;
 	case Opcode::PRQSW:		ScriptEditorView::setOpcode(new OpcodePRQSW(*exec));	break;
 	case Opcode::PRQEW:		ScriptEditorView::setOpcode(new OpcodePRQEW(*exec));	break;
-	default:	return;
+	default:	return opcodePtr();
 	}
 
 	delete exec;
+	return opcodePtr();
 }
 
 ScriptEditorLabelPage::ScriptEditorLabelPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
@@ -322,7 +346,7 @@ void ScriptEditorLabelPage::build()
 
 Opcode *ScriptEditorLabelPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
+	Opcode *ret = opcodePtr();
 	OpcodeLabel *opcodeLabel = (OpcodeLabel *)ret;
 	opcodeLabel->setLabel(label->value());
 
@@ -355,7 +379,7 @@ void ScriptEditorLabelPage::setOpcode(Opcode *opcode)
 
 void ScriptEditorJumpPageInterface::fillLabelList(bool jumpBack)
 {
-	OpcodeJump *opcodeJump = (OpcodeJump *)ScriptEditorView::opcode();
+	OpcodeJump *opcodeJump = (OpcodeJump *)opcodePtr();
 
 	label->blockSignals(true);
 	label->clear();
@@ -422,7 +446,6 @@ void ScriptEditorJumpPage::clear()
 
 Opcode *ScriptEditorJumpPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
 	int opcodeIDLabel=0;
 	quint32 labelVal = label->itemData(label->currentIndex()).toUInt();
 
@@ -463,18 +486,21 @@ Opcode *ScriptEditorJumpPage::opcode()
 		}
 	}
 
-	OpcodeJump *opcodeJump = (OpcodeJump *)ret;
+	OpcodeJump *opcodeJump = (OpcodeJump *)opcodePtr();
 	opcodeJump->setLabel(labelVal);
 
-	return ret;
+	return opcodeJump;
 }
 
 void ScriptEditorJumpPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
+	foreach(QObject *o, children()) {
+		o->blockSignals(true);
+	}
+
 	addJump = false;
-	range->blockSignals(true);
 
 	fillLabelList(true);
 
@@ -484,7 +510,9 @@ void ScriptEditorJumpPage::setOpcode(Opcode *opcode)
 		range->setCurrentIndex(1);
 	}
 
-	range->blockSignals(false);
+	foreach(QObject *o, children()) {
+		o->blockSignals(false);
+	}
 
 	emit opcodeChanged();
 }
@@ -494,21 +522,22 @@ bool ScriptEditorJumpPage::needsLabel() const
 	return label->currentIndex() == label->count() - 1;
 }
 
-void ScriptEditorJumpPage::convertOpcode(Opcode::Keys key)
+Opcode *ScriptEditorJumpPage::convertOpcode(Opcode::Keys key)
 {
-	if(key == ScriptEditorView::opcode()->id())	return;
+	if(key == opcodePtr()->id())	return opcodePtr();
 
-	OpcodeJump *jump = (OpcodeJump *)ScriptEditorView::opcode();
+	OpcodeJump *jump = (OpcodeJump *)opcodePtr();
 
 	switch(key) {
 	case Opcode::JMPF:	ScriptEditorView::setOpcode(new OpcodeJMPF(*jump));		break;
 	case Opcode::JMPFL:	ScriptEditorView::setOpcode(new OpcodeJMPFL(*jump));	break;
 	case Opcode::JMPB:	ScriptEditorView::setOpcode(new OpcodeJMPB(*jump));		break;
 	case Opcode::JMPBL:	ScriptEditorView::setOpcode(new OpcodeJMPBL(*jump));	break;
-	default:	return;
+	default:	return opcodePtr();
 	}
 
 	delete jump;
+	return opcodePtr();
 }
 
 ScriptEditorIfPage::ScriptEditorIfPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
@@ -567,16 +596,15 @@ void ScriptEditorIfPage::clear()
 
 Opcode *ScriptEditorIfPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
 //	qDebug() << "opcode" << _opcode->name();
 	if(rangeJump->currentIndex() == 0) { // short jump
-		switch(ret->id()) {
+		switch(opcodePtr()->id()) {
 		case Opcode::IFUBL:		convertOpcode(Opcode::IFUB);	break;
 		case Opcode::IFSWL:		convertOpcode(Opcode::IFSW);	break;
 		case Opcode::IFUWL:		convertOpcode(Opcode::IFUW);	break;
 		}
 	} else { // long jump
-		switch(ret->id()) {
+		switch(opcodePtr()->id()) {
 		case Opcode::IFUB:		convertOpcode(Opcode::IFUBL);	break;
 		case Opcode::IFSW:		convertOpcode(Opcode::IFSWL);	break;
 		case Opcode::IFUW:		convertOpcode(Opcode::IFUWL);	break;
@@ -584,21 +612,21 @@ Opcode *ScriptEditorIfPage::opcode()
 	}
 
 	if(rangeTest->currentIndex() == 0) { // byte test
-		switch(ret->id()) {
+		switch(opcodePtr()->id()) {
 		case Opcode::IFSW:
 		case Opcode::IFUW:		convertOpcode(Opcode::IFUB);	break;
 		case Opcode::IFSWL:
 		case Opcode::IFUWL:		convertOpcode(Opcode::IFUBL);	break;
 		}
 	} else if(rangeTest->currentIndex() == 1) { // signed word test
-		switch(ret->id()) {
+		switch(opcodePtr()->id()) {
 		case Opcode::IFUB:
 		case Opcode::IFUW:		convertOpcode(Opcode::IFSW);	break;
 		case Opcode::IFUBL:
 		case Opcode::IFUWL:		convertOpcode(Opcode::IFSWL);	break;
 		}
 	} else { // unsigned word test
-		switch(ret->id()) {
+		switch(opcodePtr()->id()) {
 		case Opcode::IFUB:
 		case Opcode::IFSW:		convertOpcode(Opcode::IFUW);	break;
 		case Opcode::IFUBL:
@@ -606,7 +634,7 @@ Opcode *ScriptEditorIfPage::opcode()
 		}
 	}
 
-	OpcodeIf *opcodeIf = (OpcodeIf *)ret;
+	OpcodeIf *opcodeIf = (OpcodeIf *)opcodePtr();
 
 	quint8 bank1, bank2;
 	int value1, value2;
@@ -646,10 +674,10 @@ Opcode *ScriptEditorIfPage::opcode()
 //		addJump = false;
 //	}
 
-	OpcodeJump *opcodeJump = (OpcodeJump *)ret;
+	OpcodeJump *opcodeJump = (OpcodeJump *)opcodePtr();
 	opcodeJump->setLabel(labelVal);
 //	qDebug() << "/opcode" << _opcode->name();
-	return ret;
+	return opcodePtr();
 }
 
 void ScriptEditorIfPage::setOpcode(Opcode *opcode)
@@ -739,15 +767,15 @@ void ScriptEditorIfPage::changeTestRange()
 //	qDebug() << "/changeTestRange" << _opcode->name();
 }
 
-void ScriptEditorIfPage::convertOpcode(Opcode::Keys key)
+Opcode *ScriptEditorIfPage::convertOpcode(Opcode::Keys key)
 {
 //	qDebug() << "convertOpcode" << _opcode->name();
-	if(key == ScriptEditorView::opcode()->id()) {
+	if(key == opcodePtr()->id()) {
 //		qDebug() << "convertOpcode1" << _opcode->name();
-		return;
+		return opcodePtr();
 	}
 
-	OpcodeIf *ifop = (OpcodeIf *)ScriptEditorView::opcode();
+	OpcodeIf *ifop = (OpcodeIf *)opcodePtr();
 
 	switch(key) {
 	case Opcode::IFUB:	ScriptEditorView::setOpcode(new OpcodeIFUB(*ifop));		break;
@@ -756,11 +784,12 @@ void ScriptEditorIfPage::convertOpcode(Opcode::Keys key)
 	case Opcode::IFSWL:	ScriptEditorView::setOpcode(new OpcodeIFSWL(*ifop));	break;
 	case Opcode::IFUW:	ScriptEditorView::setOpcode(new OpcodeIFUW(*ifop));		break;
 	case Opcode::IFUWL:	ScriptEditorView::setOpcode(new OpcodeIFUWL(*ifop));	break;
-	default:/*qDebug() << "/convertOpcode2" << _opcode->name();*/	return;
+	default:/*qDebug() << "/convertOpcode2" << _opcode->name();*/	return opcodePtr();
 	}
 
 	delete ifop;
 //	qDebug() << "/convertOpcode" << _opcode->name();
+	return opcodePtr();
 }
 
 ScriptEditorIfKeyPage::ScriptEditorIfKeyPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
@@ -813,7 +842,6 @@ void ScriptEditorIfKeyPage::build()
 
 Opcode *ScriptEditorIfKeyPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
 	if(typeList->currentIndex() == 0) {
 		convertOpcode(Opcode::IFKEY);
 	} else if(typeList->currentIndex() == 1) {
@@ -822,7 +850,7 @@ Opcode *ScriptEditorIfKeyPage::opcode()
 		convertOpcode(Opcode::IFKEYOFF);
 	}
 
-	OpcodeIfKey *opcodeIfKey = (OpcodeIfKey *)ret;
+	OpcodeIfKey *opcodeIfKey = (OpcodeIfKey *)opcodePtr();
 
 	quint16 result = 0;
 
@@ -834,18 +862,21 @@ Opcode *ScriptEditorIfKeyPage::opcode()
 
 	opcodeIfKey->keys = result;
 
-	OpcodeJump *opcodeJump = (OpcodeJump *)ret;
+	OpcodeJump *opcodeJump = (OpcodeJump *)opcodePtr();
 	opcodeJump->setLabel(label->itemData(label->currentIndex()).toUInt());
 
-	return ret;
+	return opcodePtr();
 }
 
 void ScriptEditorIfKeyPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
+	foreach(QObject *o, children()) {
+		o->blockSignals(true);
+	}
+
 	OpcodeIfKey *opcodeIfKey = (OpcodeIfKey *)opcode;
-	blockSignals(true);
 
 	switch(opcode->id()) {
 	case Opcode::IFKEY:
@@ -865,7 +896,9 @@ void ScriptEditorIfKeyPage::setOpcode(Opcode *opcode)
 
 	fillLabelList();
 
-	blockSignals(false);
+	foreach(QObject *o, children()) {
+		o->blockSignals(false);
+	}
 }
 
 bool ScriptEditorIfKeyPage::needsLabel() const
@@ -873,20 +906,21 @@ bool ScriptEditorIfKeyPage::needsLabel() const
 	return label->currentIndex() == label->count() - 1;
 }
 
-void ScriptEditorIfKeyPage::convertOpcode(Opcode::Keys key)
+Opcode *ScriptEditorIfKeyPage::convertOpcode(Opcode::Keys key)
 {
-	if(key == ScriptEditorView::opcode()->id())	return;
+	if(key == opcodePtr()->id())	return opcodePtr();
 
-	OpcodeIfKey *ifkey = (OpcodeIfKey *)ScriptEditorView::opcode();
+	OpcodeIfKey *ifkey = (OpcodeIfKey *)opcodePtr();
 
 	switch(key) {
 	case Opcode::IFKEY:		ScriptEditorView::setOpcode(new OpcodeIFKEY(*ifkey));		break;
 	case Opcode::IFKEYON:	ScriptEditorView::setOpcode(new OpcodeIFKEYON(*ifkey));		break;
 	case Opcode::IFKEYOFF:	ScriptEditorView::setOpcode(new OpcodeIFKEYOFF(*ifkey));	break;
-	default:	return;
+	default:	return opcodePtr();
 	}
 
 	delete ifkey;
+	return opcodePtr();
 }
 
 ScriptEditorIfQPage::ScriptEditorIfQPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
@@ -923,24 +957,31 @@ void ScriptEditorIfQPage::build()
 
 Opcode *ScriptEditorIfQPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
-	OpcodeIfQ *opcodeIfQ = (OpcodeIfQ *)ret;
+	OpcodeIfQ *opcodeIfQ = (OpcodeIfQ *)opcodePtr();
 	opcodeIfQ->charID = charList->currentIndex();
 
-	OpcodeJump *opcodeJump = (OpcodeJump *)ret;
+	OpcodeJump *opcodeJump = (OpcodeJump *)opcodePtr();
 	opcodeJump->setLabel(label->itemData(label->currentIndex()).toUInt());
 
-	return ret;
+	return opcodePtr();
 }
 
 void ScriptEditorIfQPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
+	foreach(QObject *o, children()) {
+		o->blockSignals(true);
+	}
+
 	OpcodeIfQ *opcodeIfQ = (OpcodeIfQ *)opcode;
 	charList->setCurrentIndex(opcodeIfQ->charID);
 
 	fillLabelList();
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(false);
+	}
 }
 
 bool ScriptEditorIfQPage::needsLabel() const
@@ -969,17 +1010,24 @@ void ScriptEditorWaitPage::build()
 
 Opcode *ScriptEditorWaitPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
-	OpcodeWAIT *opcodeWAIT = (OpcodeWAIT *)ret;
+	OpcodeWAIT *opcodeWAIT = (OpcodeWAIT *)opcodePtr();
 	opcodeWAIT->frameCount = frames->value();
 
-	return ret;
+	return opcodePtr();
 }
 
 void ScriptEditorWaitPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
+	foreach(QObject *o, children()) {
+		o->blockSignals(true);
+	}
+
 	OpcodeWAIT *opcodeWAIT = (OpcodeWAIT *)opcode;
 	frames->setValue(opcodeWAIT->frameCount);
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(false);
+	}
 }

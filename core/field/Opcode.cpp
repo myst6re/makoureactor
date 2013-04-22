@@ -4373,7 +4373,6 @@ OpcodeOperation::OpcodeOperation(const QByteArray &params)
 	setParams(params);
 }
 
-
 OpcodeOperation::OpcodeOperation(const OpcodeBinaryOperation &op) :
 	OpcodeBinaryOperation(op)
 {

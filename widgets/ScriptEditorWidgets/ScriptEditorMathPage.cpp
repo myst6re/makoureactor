@@ -71,8 +71,7 @@ void ScriptEditorBinaryOpPage::build()
 
 Opcode *ScriptEditorBinaryOpPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
-	OpcodeBinaryOperation *opcodeBinaryOperation = (OpcodeBinaryOperation *)ret;
+	OpcodeBinaryOperation *opcodeBinaryOperation = (OpcodeBinaryOperation *)opcodePtr();
 
 	quint8 bank1, bank2, adress1;
 	int value;
@@ -92,12 +91,16 @@ Opcode *ScriptEditorBinaryOpPage::opcode()
 	opcodeBinaryOperation->var = adress1;
 	opcodeBinaryOperation->value = value;
 
-	return ret;
+	return opcodePtr();
 }
 
 void ScriptEditorBinaryOpPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(true);
+	}
 
 	type1->setEnabled(true);
 	type2->setEnabled(true);
@@ -164,12 +167,15 @@ void ScriptEditorBinaryOpPage::setOpcode(Opcode *opcode)
 		varOrValue->setValue(opcodeBinaryOperation->value);
 		varOrValue->setIsValue(true);
 	}
+	foreach(QObject *o, children()) {
+		o->blockSignals(false);
+	}
 }
 
 void ScriptEditorBinaryOpPage::updateValueRange()
 {
 	varOrValue->setLongValueType(type2->isChecked());
-	Opcode::Keys key = (Opcode::Keys)ScriptEditorView::opcode()->id();
+	Opcode::Keys key = (Opcode::Keys)opcodePtr()->id();
 
 	if(type1->isChecked()) {
 		switch(key) {
@@ -203,7 +209,7 @@ void ScriptEditorBinaryOpPage::updateValueRange()
 		}
 	}
 
-	if(key != ScriptEditorView::opcode()->id()) {
+	if(key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
@@ -296,22 +302,22 @@ void ScriptEditorBinaryOpPage::changeCurrentOpcode(int index)
 		type2->blockSignals(false);
 		break;
 	default:
-		key = (Opcode::Keys)ScriptEditorView::opcode()->id();
+		key = (Opcode::Keys)opcodePtr()->id();
 		break;
 	}
 
-	if(key != ScriptEditorView::opcode()->id()) {
+	if(key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
 	}
 }
 
-void ScriptEditorBinaryOpPage::convertOpcode(Opcode::Keys key)
+Opcode *ScriptEditorBinaryOpPage::convertOpcode(Opcode::Keys key)
 {
-	if(key == ScriptEditorView::opcode()->id())	return;
+	if(key == opcodePtr()->id())	return opcodePtr();
 
-	OpcodeBinaryOperation *binop = (OpcodeBinaryOperation *)ScriptEditorView::opcode();
+	OpcodeBinaryOperation *binop = (OpcodeBinaryOperation *)opcodePtr();
 
 	switch(key) {
 	case Opcode::SETBYTE:	ScriptEditorView::setOpcode(new OpcodeSETBYTE(*binop));		break;
@@ -338,10 +344,11 @@ void ScriptEditorBinaryOpPage::convertOpcode(Opcode::Keys key)
 	case Opcode::XOR2:		ScriptEditorView::setOpcode(new OpcodeXOR2(*binop));		break;
 	case Opcode::LBYTE:		ScriptEditorView::setOpcode(new OpcodeLBYTE(*binop));		break;
 	case Opcode::HBYTE: 	ScriptEditorView::setOpcode(new OpcodeHBYTE(*binop));		break;
-	default:	return;
+	default:	return opcodePtr();
 	}
 
 	delete binop;
+	return opcodePtr();
 }
 
 ScriptEditorUnaryOpPage::ScriptEditorUnaryOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
@@ -385,8 +392,7 @@ void ScriptEditorUnaryOpPage::build()
 
 Opcode *ScriptEditorUnaryOpPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
-	OpcodeUnaryOperation *opcodeUnaryOperation = (OpcodeUnaryOperation *)ret;
+	OpcodeUnaryOperation *opcodeUnaryOperation = (OpcodeUnaryOperation *)opcodePtr();
 
 	quint8 bank2, adress;
 
@@ -395,12 +401,16 @@ Opcode *ScriptEditorUnaryOpPage::opcode()
 	opcodeUnaryOperation->banks = bank2;
 	opcodeUnaryOperation->var = adress;
 
-	return ret;
+	return opcodePtr();
 }
 
 void ScriptEditorUnaryOpPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(true);
+	}
 
 	type1->setEnabled(true);
 	type2->setEnabled(true);
@@ -433,11 +443,15 @@ void ScriptEditorUnaryOpPage::setOpcode(Opcode *opcode)
 
 	type1->setChecked(!opcodeUnaryOperation->isLong());
 	type2->setChecked(opcodeUnaryOperation->isLong());
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(false);
+	}
 }
 
 void ScriptEditorUnaryOpPage::updateValueRange()
 {
-	Opcode::Keys key = (Opcode::Keys)ScriptEditorView::opcode()->id();
+	Opcode::Keys key = (Opcode::Keys)opcodePtr()->id();
 
 	if(type1->isChecked()) {
 		switch(key) {
@@ -457,7 +471,7 @@ void ScriptEditorUnaryOpPage::updateValueRange()
 		}
 	}
 
-	if(key != ScriptEditorView::opcode()->id()) {
+	if(key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
@@ -498,29 +512,29 @@ void ScriptEditorUnaryOpPage::changeCurrentOpcode(int index)
 		type2->setEnabled(false);
 		break;
 	default:
-		key = (Opcode::Keys)ScriptEditorView::opcode()->id();
+		key = (Opcode::Keys)opcodePtr()->id();
 		break;
 	}
 
-	if(key != ScriptEditorView::opcode()->id()) {
+	if(key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
 
 		type1->blockSignals(true);
 		type2->blockSignals(true);
-		type1->setChecked(!((OpcodeUnaryOperation *)ScriptEditorView::opcode())->isLong());
-		type2->setChecked(((OpcodeUnaryOperation *)ScriptEditorView::opcode())->isLong());
+		type1->setChecked(!((OpcodeUnaryOperation *)opcodePtr())->isLong());
+		type2->setChecked(((OpcodeUnaryOperation *)opcodePtr())->isLong());
 		type1->blockSignals(false);
 		type2->blockSignals(false);
 	}
 }
 
-void ScriptEditorUnaryOpPage::convertOpcode(Opcode::Keys key)
+Opcode *ScriptEditorUnaryOpPage::convertOpcode(Opcode::Keys key)
 {
-	if(key == ScriptEditorView::opcode()->id())	return;
+	if(key == opcodePtr()->id())	return opcodePtr();
 
-	OpcodeUnaryOperation *unop = (OpcodeUnaryOperation *)ScriptEditorView::opcode();
+	OpcodeUnaryOperation *unop = (OpcodeUnaryOperation *)opcodePtr();
 
 	switch(key) {
 	case Opcode::INC:		ScriptEditorView::setOpcode(new OpcodeINC(*unop));		break;
@@ -532,10 +546,11 @@ void ScriptEditorUnaryOpPage::convertOpcode(Opcode::Keys key)
 	case Opcode::DECX:		ScriptEditorView::setOpcode(new OpcodeDECX(*unop));		break;
 	case Opcode::DEC2X:		ScriptEditorView::setOpcode(new OpcodeDEC2X(*unop));	break;
 	case Opcode::RANDOM:	ScriptEditorView::setOpcode(new OpcodeRANDOM(*unop));	break;
-	default:	return;
+	default:	return opcodePtr();
 	}
 
 	delete unop;
+	return opcodePtr();
 }
 
 ScriptEditorBitOpPage::ScriptEditorBitOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
@@ -574,8 +589,7 @@ void ScriptEditorBitOpPage::build()
 
 Opcode *ScriptEditorBitOpPage::opcode()
 {
-	Opcode *ret = ScriptEditorView::opcode();
-	OpcodeBitOperation *opcodeBitOperation = (OpcodeBitOperation *)ret;
+	OpcodeBitOperation *opcodeBitOperation = (OpcodeBitOperation *)opcodePtr();
 
 	quint8 bank1, bank2, adress1;
 	int value;
@@ -595,12 +609,16 @@ Opcode *ScriptEditorBitOpPage::opcode()
 	opcodeBitOperation->var = adress1;
 	opcodeBitOperation->position = value;
 
-	return ret;
+	return opcodePtr();
 }
 
 void ScriptEditorBitOpPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(true);
+	}
 
 	switch((Opcode::Keys)opcode->id()) {
 	case Opcode::BITON:
@@ -627,6 +645,10 @@ void ScriptEditorBitOpPage::setOpcode(Opcode *opcode)
 		position->setValue(opcodeBitOperation->position);
 		position->setIsValue(true);
 	}
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(false);
+	}
 }
 
 void ScriptEditorBitOpPage::changeCurrentOpcode(int index)
@@ -637,28 +659,29 @@ void ScriptEditorBitOpPage::changeCurrentOpcode(int index)
 	case 0:	key = Opcode::BITON;	break;
 	case 1:	key = Opcode::BITOFF;	break;
 	case 2:	key = Opcode::BITXOR;	break;
-	default: key = (Opcode::Keys)ScriptEditorView::opcode()->id();	break;
+	default: key = (Opcode::Keys)opcodePtr()->id();	break;
 	}
 
-	if(key != ScriptEditorView::opcode()->id()) {
+	if(key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
 	}
 }
 
-void ScriptEditorBitOpPage::convertOpcode(Opcode::Keys key)
+Opcode *ScriptEditorBitOpPage::convertOpcode(Opcode::Keys key)
 {
-	if(key == ScriptEditorView::opcode()->id())	return;
+	if(key == opcodePtr()->id())	return opcodePtr();
 
-	OpcodeBitOperation *bitop = (OpcodeBitOperation *)ScriptEditorView::opcode();
+	OpcodeBitOperation *bitop = (OpcodeBitOperation *)opcodePtr();
 
 	switch(key) {
 	case Opcode::BITON:		ScriptEditorView::setOpcode(new OpcodeBITON(*bitop));	break;
 	case Opcode::BITOFF:	ScriptEditorView::setOpcode(new OpcodeBITOFF(*bitop));	break;
 	case Opcode::BITXOR:	ScriptEditorView::setOpcode(new OpcodeBITXOR(*bitop));	break;
-	default:	return;
+	default:	return opcodePtr();
 	}
 
 	delete bitop;
+	return opcodePtr();
 }

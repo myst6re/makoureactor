@@ -46,7 +46,7 @@ private slots:
 	void changeCurrentOpcode(int index);
 private:
 	void build();
-	void convertOpcode(Opcode::Keys key);
+	Opcode *convertOpcode(Opcode::Keys key);
 	QComboBox *groupList, *scriptList;
 	QSpinBox *priority;
 	QComboBox *execType;
@@ -63,7 +63,7 @@ private slots:
 	void changeCurrentOpcode(int index);
 private:
 	void build();
-	void convertOpcode(Opcode::Keys key);
+	Opcode *convertOpcode(Opcode::Keys key);
 	QComboBox *scriptList;
 	QSpinBox *partyID, *priority;
 	QComboBox *execType;
@@ -104,7 +104,7 @@ public:
 	bool needsLabel() const;
 private:
 	void build();
-	void convertOpcode(Opcode::Keys key);
+	Opcode *convertOpcode(Opcode::Keys key);
 	QComboBox *range;
 	bool addJump;
 };
@@ -122,7 +122,7 @@ private slots:
 	void changeTestRange();
 private:
 	void build();
-	void convertOpcode(Opcode::Keys key);
+	Opcode *convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *varOrValue1, *varOrValue2;
 	QComboBox *operatorList, *rangeTest, *rangeJump;
 	bool addJump;
@@ -138,7 +138,7 @@ public:
 	bool needsLabel() const;
 private:
 	void build();
-	void convertOpcode(Opcode::Keys key);
+	Opcode *convertOpcode(Opcode::Keys key);
 	QList<QCheckBox *> keys;
 	QComboBox *typeList;
 };
