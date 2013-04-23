@@ -24,19 +24,67 @@ FormatSelectionWidget::FormatSelectionWidget(const QString &text, const QStringL
 	setChecked(true);
 
 	format = new QComboBox(this);
-	format->addItems(formats);
-	format->setEnabled(formats.size() > 1);
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	layout->addWidget(format);
+
+	setFormats(formats);
 }
 
-int FormatSelectionWidget::currentFormat() const
+const QString &FormatSelectionWidget::currentFormat() const
 {
-	return format->currentIndex();
+	return extensions.at(format->currentIndex());
 }
 
-void FormatSelectionWidget::setCurrentFormat(int index)
+void FormatSelectionWidget::setCurrentFormat(const QString &f)
 {
-	format->setCurrentIndex(index);
+	int index = extensions.indexOf(f);
+	if(index != -1) {
+		format->setCurrentIndex(index);
+	}
+}
+
+QString FormatSelectionWidget::splitFormatString(const QString &format, QString &extension)
+{
+	QStringList fs = format.split(";;");
+	extension = fs.size() >= 2 ? fs.at(1) : QString();
+	return fs.first();
+}
+
+void FormatSelectionWidget::setFormats(const QStringList &formats)
+{
+	int size = qMin(formats.size(), format->count());
+	QString ext;
+
+	for(int i=0 ; i<size ; ++i) {
+		const QString &f = formats.at(i);
+		format->setItemText(i, splitFormatString(f, ext));
+		extensions.replace(i, ext);
+	}
+
+	if(formats.size() < format->count()) {
+		for(int i=format->count()-1 ; i>=formats.size() ; --i) {
+			format->removeItem(i);
+			extensions.removeAt(i);
+		}
+	} else if(formats.size() > format->count()) {
+		for(int i=format->count() ; i<formats.size() ; ++i) {
+			const QString &f = formats.at(i);
+			format->addItem(splitFormatString(f, ext));
+			extensions.append(ext);
+		}
+	}
+
+	format->setEnabled(formats.size() > 1);
+}
+
+QStringList FormatSelectionWidget::formats() const
+{
+	QStringList formats;
+
+	for(int i=0 ; i<format->count() ; ++i) {
+		formats.append(format->itemText(i));
+	}
+
+	return formats;
 }

@@ -39,7 +39,7 @@ MiscWidget::MiscWidget(InfFile *data, Field *field, QWidget *parent) :
 	layout->addWidget(mapAuthor, 1, 1);
 	layout->addWidget(new QLabel(tr("Zoom écran :")), 2, 0);
 	layout->addWidget(mapScale, 2, 1);
-	layout->addWidget(buttonBox, 3, 0, 1, 2, Qt::AlignRight);
+	layout->addWidget(buttonBox, 3, 0, 1, 2);
 
 	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
 	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));

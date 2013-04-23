@@ -26,22 +26,22 @@ class MassExportDialog : public QDialog
 {
 	Q_OBJECT
 public:
+	enum ExportType {
+		Fields, Backgrounds, Akaos, Texts
+	};
+
 	explicit MassExportDialog(QWidget *parent = 0);
 	void fill(FieldArchive *fieldArchive);
 	QList<int> selectedFields() const;
-	bool exportBackground() const;
-	int exportBackgroundFormat() const;
-	bool exportAkao() const;
-	int exportAkaoFormat() const;
-	bool exportText() const;
-	int exportTextFormat() const;
+	bool exportModule(ExportType type) const;
+	const QString &moduleFormat(ExportType type) const;
 	QString directory() const;
 	bool overwrite() const;
 private slots:
 	void chooseExportDirectory();
 private:
 	QListWidget *fieldList;
-	FormatSelectionWidget *bgExport, *akaoExport, *textExport;
+	QMap<ExportType, FormatSelectionWidget *> exports;
 	QPushButton *selectAll, *clearSelection, *selectCurrentField;
 	QLineEdit *dirPath;
 	QPushButton *changeDir;

@@ -29,6 +29,11 @@ public:
 		SortByName, SortByMapId
 	};
 
+	enum ExportType {
+		Fields, Backgrounds, Akaos, Texts
+	};
+	Q_DECLARE_FLAGS(ExportTypes, ExportType)
+
 	FieldArchive();
 	explicit FieldArchive(FieldArchiveIO *io);
 	virtual ~FieldArchive();
@@ -63,7 +68,7 @@ public:
 	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting);
 
 	bool exportation(const QList<int> &selectedFields, const QString &directory,
-					 bool overwrite, const QMap<Field::FieldSection, QString> &toExport, FieldArchiveIOObserver *observer);
+					 bool overwrite, const QMap<ExportType, QString> &toExport, FieldArchiveIOObserver *observer);
 	bool importation(const QList<int> &selectedFields, const QString &directory,
 					 const QMap<Field::FieldSection, QString> &toImport,
 					 FieldArchiveIOObserver *observer);
@@ -84,5 +89,7 @@ private:
 	FieldArchiveIO *_io;
 	// QFileSystemWatcher fileWatcher;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(FieldArchive::ExportTypes)
 
 #endif

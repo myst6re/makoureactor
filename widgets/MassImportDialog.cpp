@@ -51,7 +51,7 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 	layout->addWidget(new QLabel(tr("Emplacement de la source :")), 2, 1, 1, 2);
 	layout->addWidget(dirPath, 3, 1);
 	layout->addWidget(changeDir, 3, 2);
-	layout->addWidget(buttonBox, 5, 0, 1, 3, Qt::AlignRight);
+	layout->addWidget(buttonBox, 5, 0, 1, 3);
 	layout->setRowStretch(4, 1);
 	layout->setColumnStretch(1, 1);
 
@@ -104,7 +104,7 @@ bool MassImportDialog::importAkao() const
 	return akaoImport->isChecked();
 }
 
-int MassImportDialog::importAkaoFormat() const
+const QString &MassImportDialog::importAkaoFormat() const
 {
 	return akaoImport->currentFormat();
 }
@@ -114,7 +114,7 @@ bool MassImportDialog::importText() const
 	return textImport->isChecked();
 }
 
-int MassImportDialog::importTextFormat() const
+const QString &MassImportDialog::importTextFormat() const
 {
 	return textImport->currentFormat();
 }

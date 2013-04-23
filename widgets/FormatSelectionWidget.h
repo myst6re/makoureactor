@@ -7,11 +7,15 @@ class FormatSelectionWidget : public QGroupBox
 {
 	Q_OBJECT
 public:
-	explicit FormatSelectionWidget(const QString &text, const QStringList &formats, QWidget *parent = 0);
-	int currentFormat() const;
-	void setCurrentFormat(int index);
+	FormatSelectionWidget(const QString &text, const QStringList &formats, QWidget *parent = 0);
+	const QString &currentFormat() const;
+	void setCurrentFormat(const QString &extension);
+	void setFormats(const QStringList &formats);
+	QStringList formats() const;
 private:
+	static QString splitFormatString(const QString &format, QString &extension);
 	QComboBox *format;
+	QStringList extensions;
 };
 
 #endif // FORMATSELECTIONWIDGET_H

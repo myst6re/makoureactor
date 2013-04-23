@@ -30,9 +30,9 @@ public:
 	void fill(FieldArchive *fieldArchive);
 	QList<int> selectedFields() const;
 	bool importAkao() const;
-	int importAkaoFormat() const;
+	const QString &importAkaoFormat() const;
 	bool importText() const;
-	int importTextFormat() const;
+	const QString &importTextFormat() const;
 	QString directory() const;
 private slots:
 	void chooseImportDirectory();

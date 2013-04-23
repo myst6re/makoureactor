@@ -1105,8 +1105,7 @@ void Window::massExport()
 	if(massExportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massExportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {
-			QString extension;
-			QMap<Field::FieldSection, QString> toExport;
+			QMap<FieldArchive::ExportType, QString> toExport;
 
 			showProgression();
 			progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
@@ -1116,20 +1115,17 @@ void Window::massExport()
 			progressDialog->setRange(0, selectedFields.size()-1);
 			progressDialog->setAutoClose(false);
 
-			if(massExportDialog->exportBackground()) {
-
-				switch(massExportDialog->exportBackgroundFormat()) {
-				case 0:		extension = "png"; break;
-				case 1:		extension = "jpg"; break;
-				case 2:		extension = "bmp"; break;
-				}
-				toExport.insert(Field::Background, extension);
+			if(massExportDialog->exportModule(MassExportDialog::Fields)) {
+				toExport.insert(FieldArchive::Fields, massExportDialog->moduleFormat(MassExportDialog::Fields));
 			}
-			if(massExportDialog->exportAkao()) {
-				toExport.insert(Field::Akaos, "akao");
+			if(massExportDialog->exportModule(MassExportDialog::Backgrounds)) {
+				toExport.insert(FieldArchive::Backgrounds, massExportDialog->moduleFormat(MassExportDialog::Backgrounds));
 			}
-			if(massExportDialog->exportText()) {
-				toExport.insert(Field::Scripts, "txt");
+			if(massExportDialog->exportModule(MassExportDialog::Akaos)) {
+				toExport.insert(FieldArchive::Akaos, massExportDialog->moduleFormat(MassExportDialog::Akaos));
+			}
+			if(massExportDialog->exportModule(MassExportDialog::Texts)) {
+				toExport.insert(FieldArchive::Texts, massExportDialog->moduleFormat(MassExportDialog::Texts));
 			}
 
 			fieldArchive->exportation(selectedFields, massExportDialog->directory(),

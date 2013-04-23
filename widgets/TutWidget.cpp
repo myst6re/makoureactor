@@ -246,7 +246,7 @@ void TutWidget::add()
 		QGridLayout *chooseLayout = new QGridLayout(&chooseType);
 		chooseLayout->addWidget(tutType, 0, 0);
 		chooseLayout->addWidget(akaoType, 0, 1);
-		chooseLayout->addWidget(buttonBox, 1, 0, 1, 2, Qt::AlignRight);
+		chooseLayout->addWidget(buttonBox, 1, 0, 1, 2);
 		connect(buttonBox, SIGNAL(accepted()), &chooseType, SLOT(accept()));
 		connect(buttonBox, SIGNAL(rejected()), &chooseType, SLOT(reject()));
 		if(chooseType.exec() != QDialog::Accepted) {

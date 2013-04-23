@@ -648,7 +648,7 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 }
 
 bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory,
-							   bool overwrite, const QMap<Field::FieldSection, QString> &toExport,
+							   bool overwrite, const QMap<ExportType, QString> &toExport,
 							   FieldArchiveIOObserver *observer)
 {
 	if(selectedFields.isEmpty() || toExport.isEmpty()) {
@@ -666,8 +666,26 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 
 		Field *f = field(fieldID);
 		if(f) {
-			if(toExport.contains(Field::Background)) {
-				extension = toExport.value(Field::Background);
+			if(toExport.contains(Fields)) {
+				extension = toExport.value(Fields);
+				path = QDir::cleanPath(extension.isEmpty()
+									   ? QString("%1/%2")
+										 .arg(directory, f->name())
+									   : QString("%1/%2.%3")
+										 .arg(directory, f->name(), extension));
+				if(overwrite || !QFile::exists(path)) {
+					QByteArray fieldData = io()->fieldData(f, extension.compare("dec", Qt::CaseInsensitive) == 0);
+					if(!fieldData.isEmpty()) {
+						QFile fieldExport(path);
+						if(fieldExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+							fieldExport.write(fieldData);
+							fieldExport.close();
+						}
+					}
+				}
+			}
+			if(toExport.contains(Backgrounds)) {
+				extension = toExport.value(Backgrounds);
 				path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
 
 				if(overwrite || !QFile::exists(path)) {
@@ -676,13 +694,13 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 						background.save(path);
 				}
 			}
-			if(toExport.contains(Field::Akaos)) {
+			if(toExport.contains(Akaos)) {
 				TutFileStandard *akaoList = f->tutosAndSounds();
 				if(akaoList->isOpen()) {
 					int akaoCount = akaoList->size();
 					for(int i=0 ; i<akaoCount ; ++i) {
 						if(!akaoList->isTut(i)) {
-							extension = toExport.value(Field::Akaos);
+							extension = toExport.value(Akaos);
 							path = QDir::cleanPath(QString("%1/%2-%3.%4").arg(directory, f->name()).arg(i).arg(extension));
 							if(overwrite || !QFile::exists(path)) {
 								QFile tutExport(path);
@@ -695,10 +713,10 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 					}
 				}
 			}
-			if(toExport.contains(Field::Scripts)) {
+			if(toExport.contains(Texts)) {
 				Section1File *section1 = f->scriptsAndTexts();
 				if(section1->isOpen()) {
-					extension = toExport.value(Field::Scripts);
+					extension = toExport.value(Texts);
 					path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
 					if(overwrite || !QFile::exists(path)) {
 						QFile textExport(path);

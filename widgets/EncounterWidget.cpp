@@ -41,7 +41,7 @@ EncounterWidget::EncounterWidget(EncounterFile *data, QWidget *parent) :
 	layout->addWidget(group1, 0, 0);
 	layout->addWidget(group2, 0, 1);
 	layout->addLayout(helpLayout, 1, 0, 1, 2, Qt::AlignTop);
-	layout->addWidget(buttonBox, 2, 0, 1, 2, Qt::AlignRight);
+	layout->addWidget(buttonBox, 2, 0, 1, 2);
 
 	fillGroup(group1, data->encounterTable(EncounterFile::Table1));
 	fillGroup(group2, data->encounterTable(EncounterFile::Table2));
