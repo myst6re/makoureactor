@@ -31,6 +31,7 @@ public:
 	void setModified(bool modified);
 	int charCount() const;
 	int tableCount() const;
+	static int tableSize(quint8 table);
 	const QImage &image(FontColor color);
 	QImage letter(quint8 table, quint8 id, FontColor color);
 	quint8 charWidth(quint8 table, quint8 id) const;

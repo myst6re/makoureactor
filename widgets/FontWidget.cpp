@@ -23,7 +23,7 @@
 FontWidget::FontWidget(QWidget *parent) :
 	QWidget(parent), ff7Font(0)
 {
-	fontGrid = new FontGrid(this);
+	fontGrid = new FontGrid(16, 16, this);
 	fontLetter = new FontLetter(this);
 	fontPalette = new FontPalette(this);
 	selectPal = new QComboBox(this);
@@ -143,7 +143,7 @@ void FontWidget::setLetter(int i)
 		if(ff7Font) {
 //			textLetter->setText(FF7Text(ba.append((char)i), ff7Font->tables()));//TODO: ff7Font
 		} else {
-			textLetter->setText(FF7Text(ba.append((char)i)).getText(false));//TODO: jp
+			textLetter->setText(FF7Text(ba.append((char)i)).text(false));//TODO: jp
 		}
 	}
 	resetButton2->setEnabled(false);

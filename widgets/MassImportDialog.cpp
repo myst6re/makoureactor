@@ -24,12 +24,18 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 {
 	setWindowTitle(tr("Importer en masse"));
 
-	akaoImport = new FormatSelectionWidget(tr("Importer les sons"),
-										   QStringList() <<
-										   tr("Son AKAO"), this);
-	textImport = new FormatSelectionWidget(tr("Importer les textes"),
-										   QStringList() <<
-										   tr("Texte simple TXT"), this);
+	imports.insert(Fields,
+				   new FormatSelectionWidget(tr("Importer des écrans"),
+											 QStringList(), this));
+	imports.insert(Akaos,
+				   new FormatSelectionWidget(tr("Importer les sons"),
+											 QStringList() <<
+											 tr("Son AKAO") + ";;akao", this));
+	imports.insert(Texts,
+				   new FormatSelectionWidget(tr("Importer les textes"),
+											 QStringList() <<
+											 tr("Texte XML") + ";;xml" <<
+											 tr("Texte simple TXT") + ";;txt", this));
 
 	dirPath = new QLineEdit(this);
 	dirPath->setText(Config::value("importDirectory").toString());
@@ -45,14 +51,16 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 	buttonBox->addButton(QDialogButtonBox::Cancel);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(fieldList, 0, 0, 6, 1);
-	layout->addWidget(akaoImport, 0, 1, 1, 2);
-	layout->addWidget(textImport, 1, 1, 1, 2);
-	layout->addWidget(new QLabel(tr("Emplacement de la source :")), 2, 1, 1, 2);
-	layout->addWidget(dirPath, 3, 1);
-	layout->addWidget(changeDir, 3, 2);
-	layout->addWidget(buttonBox, 5, 0, 1, 3);
-	layout->setRowStretch(4, 1);
+	layout->addWidget(fieldList, 0, 0, 3 + imports.size(), 1);
+	int row = 0;
+	foreach(FormatSelectionWidget *formatSelection, imports) {
+		layout->addWidget(formatSelection, row++, 1, 1, 2);
+	}
+	layout->addWidget(new QLabel(tr("Emplacement de la source :")), row, 1, 1, 2);
+	layout->addWidget(dirPath, row + 1, 1);
+	layout->addWidget(changeDir, row + 1, 2);
+	layout->addWidget(buttonBox, row + 3, 0, 1, 3);
+	layout->setRowStretch(row + 2, 1);
 	layout->setColumnStretch(1, 1);
 
 	connect(changeDir, SIGNAL(clicked()),  SLOT(chooseImportDirectory()));
@@ -63,6 +71,13 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 void MassImportDialog::fill(FieldArchive *fieldArchive)
 {
 	_fieldArchive = fieldArchive;
+
+	QString fieldType = _fieldArchive->isPC() ? tr("PC") : tr("PS");
+	QStringList formats;
+	formats.append(tr("Fichier FIELD %1").arg(fieldType) + (_fieldArchive->isPC() ? "" : ";;dat"));
+	formats.append(tr("Fichier décompressé FIELD %1").arg(fieldType) + ";;dec");
+
+	imports.value(Fields)->setFormats(formats);
 
 	fieldList->clear();
 	for(int i=0 ; i<_fieldArchive->size() ; ++i) {
@@ -78,11 +93,9 @@ void MassImportDialog::fill(FieldArchive *fieldArchive)
 
 void MassImportDialog::chooseImportDirectory()
 {
-	QString dir = Config::value("importDirectory").toString();
-	dir = QFileDialog::getExistingDirectory(this, tr("Choisir un dossier"), dir);
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Choisir un dossier"), directory());
 	if(dir.isNull())	return;
 
-	Config::setValue("importDirectory", dir);
 	dirPath->setText(dir);
 }
 
@@ -99,24 +112,14 @@ QList<int> MassImportDialog::selectedFields() const
 	return ids;
 }
 
-bool MassImportDialog::importAkao() const
+bool MassImportDialog::importModule(ImportType type) const
 {
-	return akaoImport->isChecked();
+	return imports.value(type)->isChecked();
 }
 
-const QString &MassImportDialog::importAkaoFormat() const
+const QString &MassImportDialog::moduleFormat(ImportType type) const
 {
-	return akaoImport->currentFormat();
-}
-
-bool MassImportDialog::importText() const
-{
-	return textImport->isChecked();
-}
-
-const QString &MassImportDialog::importTextFormat() const
-{
-	return textImport->currentFormat();
+	return imports.value(type)->currentFormat();
 }
 
 QString MassImportDialog::directory() const
@@ -126,5 +129,7 @@ QString MassImportDialog::directory() const
 
 void MassImportDialog::accept()
 {
+	Config::setValue("importDirectory", directory());
+
 	QDialog::accept();
 }

@@ -381,11 +381,12 @@ void ModelManagerPC::addAnim()
 		list.addItems(files);
 
 		if(item!=NULL) {
-			QString texte = item->text(0).toLower();
-			int index;
-			if((index=texte.lastIndexOf('.')) != -1)
-				texte.truncate(index);
-			if((index=list.findText(texte)) != -1)
+			QString text = item->text(0).toLower();
+			int index = text.lastIndexOf('.');
+			if(index != -1)
+				text.truncate(index);
+			index = list.findText(text);
+			if(index != -1)
 				list.setCurrentIndex(index);
 		}
 

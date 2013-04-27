@@ -471,7 +471,7 @@ void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &name
 
 	i=0;
 	foreach(position, positions) {
-		names.append(FF7Text(data.mid(pos + position, positions.at(i+1) - position)).getText(false, true));
+		names.append(FF7Text(data.mid(pos + position, positions.at(i+1) - position)).text(false, true));
 		++i;
 		if(i == count)	break;
 	}

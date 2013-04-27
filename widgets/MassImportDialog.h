@@ -26,19 +26,21 @@ class MassImportDialog : public QDialog
 {
 	Q_OBJECT
 public:
+	enum ImportType {
+		Fields, Akaos, Texts
+	};
+
 	explicit MassImportDialog(QWidget *parent = 0);
 	void fill(FieldArchive *fieldArchive);
 	QList<int> selectedFields() const;
-	bool importAkao() const;
-	const QString &importAkaoFormat() const;
-	bool importText() const;
-	const QString &importTextFormat() const;
+	bool importModule(ImportType type) const;
+	const QString &moduleFormat(ImportType type) const;
 	QString directory() const;
 private slots:
 	void chooseImportDirectory();
 private:
 	QListWidget *fieldList;
-	FormatSelectionWidget *akaoImport, *textImport;
+	QMap<ImportType, FormatSelectionWidget *> imports;
 	QPushButton *selectAll, *clearSelection, *selectCurrentField;
 	QLineEdit *dirPath;
 	QPushButton *changeDir;

@@ -43,7 +43,7 @@ void ScriptEditorWindowPage::build()
 	previewText->addItem(tr("[Laisser la fenêtre vide]"));
 	bool jp = Config::value("jp_txt", false).toBool();
 	foreach(FF7Text *t, field()->scriptsAndTexts()->texts())
-		previewText->addItem(t->getText(jp, true).simplified());
+		previewText->addItem(t->text(jp, true).simplified());
 	previewText->setMaximumWidth(textPreview->width()/2);
 
 	autoSize = new QPushButton(tr("Taille auto."), this);
@@ -184,7 +184,7 @@ void ScriptEditorWindowPage::updateText(int textID)
 	--textID;
 
 	textPreview->setText(textID >= 0 && textID < field()->scriptsAndTexts()->textCount()
-						 ? field()->scriptsAndTexts()->text(textID)->getData()
+						 ? field()->scriptsAndTexts()->text(textID)->data()
 						 : QByteArray());
 
 	autoSize->setEnabled(textID >= 0 && textID < field()->scriptsAndTexts()->textCount());

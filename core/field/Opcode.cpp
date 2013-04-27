@@ -209,8 +209,12 @@ QString Opcode::_script(quint8 param, Section1File *scriptsAndTexts)
 
 QString Opcode::_text(quint8 textID, Section1File *scriptsAndTexts)
 {
-	if(textID < scriptsAndTexts->textCount())
-		return "\"" + scriptsAndTexts->text(textID)->getShortText(Config::value("jp_txt", false).toBool()) + "\"";
+	if(textID < scriptsAndTexts->textCount()) {
+		QString t = scriptsAndTexts->text(textID)->text(Config::value("jp_txt", false).toBool(), true).simplified();
+		if(t.size() > 70)
+			t = t.left(35) % QString("...") % t.right(35);
+		return "\"" + t + "\"";
+	}
 	return QObject::tr("(Pas de texte)");
 }
 

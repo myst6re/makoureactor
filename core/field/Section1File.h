@@ -28,7 +28,7 @@ class Section1File : public FieldPart
 {
 public:
 	enum ExportFormat {
-		XMLText
+		XMLText, TXTText
 	};
 
 	explicit Section1File(Field *field);

@@ -293,9 +293,9 @@ void TextManager::setTextChanged()
 	QString newText = textEdit->toPlainText();
 	FF7Text *t = scriptsAndTexts->text(item->data(Qt::UserRole).toInt());
 	bool jp = Config::value("jp_txt", false).toBool();
-	if(newText != t->getText(jp)) {
+	if(newText != t->text(jp)) {
 		t->setText(newText, jp);
-		textPreview->setText(t->getData());
+		textPreview->setText(t->data());
 		changeTextPreviewPage();
 		changeTextPreviewWin();
 		emit modified();
@@ -323,8 +323,8 @@ void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 	FF7Text *t = scriptsAndTexts->text(textID);
 //	textPreview->resetCurrentWin();
 //	textPreview->setWins(getWindows(textID));
-	textPreview->setText(t->getData());
-	textEdit->setPlainText(t->getText(Config::value("jp_txt", false).toBool()));
+	textPreview->setText(t->data());
+	textEdit->setPlainText(t->text(Config::value("jp_txt", false).toBool()));
 	changeTextPreviewPage();
 	changeTextPreviewWin();
 	emit textIDChanged(textID);

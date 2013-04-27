@@ -160,12 +160,12 @@ QString TutFile::parseScripts(int tutID) const
 		case 0x10:
 			endOfText = tuto.indexOf('\xff', i);
 			if(endOfText!=-1) {
-				ret.append(FF7Text(tuto.mid(i, endOfText-i)).getText(jp));
+				ret.append(FF7Text(tuto.mid(i, endOfText-i)).text(jp));
 				if(endOfText+1>i)
 					i = endOfText+1;
 			}
 			else {
-				ret.append(FF7Text(tuto.mid(i)).getText(jp));
+				ret.append(FF7Text(tuto.mid(i)).text(jp));
 				return ret;
 			}
 			break;
@@ -264,7 +264,7 @@ void TutFile::parseText(int tutID, const QString &tuto)
 		}
 		else {
 			ret.append('\x10');
-			ret.append(FF7Text(line, jp).getData()).append('\xff');
+			ret.append(FF7Text(line, jp).data()).append('\xff');
 		}
 	}
 

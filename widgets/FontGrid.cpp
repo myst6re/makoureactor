@@ -17,8 +17,8 @@
  ****************************************************************************/
 #include "FontGrid.h"
 
-FontGrid::FontGrid(QWidget *parent) :
-	FontDisplay(parent)
+FontGrid::FontGrid(int letterCountH, int letterCountV, QWidget *parent) :
+	FontDisplay(parent), _letterCountH(letterCountH), _letterCountV(letterCountV)
 {
 	setFixedSize(sizeHint());
 }
@@ -29,7 +29,7 @@ FontGrid::~FontGrid()
 
 QSize FontGrid::sizeHint() const
 {
-	return QSize(16 * (12 + 1 + 1*2) + 1, 14 * (12 + 1 + 1*2) + 1);
+	return QSize(_letterCountH * (12 + 1 + 1*2) + 1, _letterCountV * (12 + 1 + 1*2) + 1);
 }
 
 QSize FontGrid::minimumSizeHint() const
@@ -39,7 +39,8 @@ QSize FontGrid::minimumSizeHint() const
 
 void FontGrid::paintEvent(QPaintEvent *)
 {
-	const int lineCountV=17, lineCountH=15, charaSize=12, padding=1, cellSize=charaSize+1+padding*2;
+	const int lineCountV=_letterCountH + 1, lineCountH=_letterCountV + 1,
+			charaSize=12, padding=1, cellSize=charaSize+1+padding*2;
 	QLine linesV[lineCountV], linesH[lineCountH];
 
 	for(int i=0 ; i<lineCountV ; ++i) {
@@ -63,13 +64,13 @@ void FontGrid::paintEvent(QPaintEvent *)
 	p.drawLines(linesH, lineCountH);
 
 	if(_windowBinFile) {
-		int charCount=_windowBinFile->charCount();
+		int charCount=_windowBinFile->tableSize(_currentTable);
 
 		// Draw odd characters (optimization to reduce the number of palette change)
 		for(int i=0, x2=0, y2=0 ; i<charCount ; i+=2) {
 			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, i, _color));
 			x2+=2;
-			if(x2 == 16) {
+			if(x2 == _letterCountH) {
 				++y2;
 				x2 = 0;
 			}
@@ -79,7 +80,7 @@ void FontGrid::paintEvent(QPaintEvent *)
 		for(int i=1, x2=1, y2=0 ; i<charCount ; i+=2) {
 			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, i, _color));
 			x2+=2;
-			if(x2 == 17) {
+			if(x2 == _letterCountH + 1) {
 				++y2;
 				x2 = 1;
 			}
@@ -100,14 +101,14 @@ void FontGrid::paintEvent(QPaintEvent *)
 
 int FontGrid::getLetter(const QPoint &pos)
 {
-	return getCell(pos, QSize(15, 15), 16);
+	return getCell(pos, QSize(15, 15), _letterCountH);
 }
 
 QPoint FontGrid::getPos(int letter)
 {
 	const int cellSize = 15;
-	if(letter > 16*14)		return QPoint();
-	return QPoint((letter % 16) * cellSize, (letter / 16) * cellSize);
+	if(letter > _letterCountH*_letterCountV)		return QPoint();
+	return QPoint((letter % _letterCountH) * cellSize, (letter / _letterCountH) * cellSize);
 }
 
 void FontGrid::updateLetter(const QRect &rect)
@@ -123,7 +124,7 @@ void FontGrid::updateLetter(const QRect &rect)
 void FontGrid::mousePressEvent(QMouseEvent *e)
 {
 	int letter = getLetter(e->pos());
-	if(letter < 16*14) {
+	if(letter < _letterCountH*_letterCountV) {
 		setLetter(letter);
 		emit letterClicked(letter);
 	}
@@ -144,21 +145,21 @@ void FontGrid::keyPressEvent(QKeyEvent *e)
 		break;
 	case Qt::Key_Right:
 		letter = _letter + 1;
-		if(letter < 16*14) {
+		if(letter < _letterCountH*_letterCountV) {
 			setLetter(letter);
 			emit letterClicked(letter);
 		}
 		break;
 	case Qt::Key_Up:
-		letter = _letter - 16;
+		letter = _letter - _letterCountH;
 		if(letter >= 0) {
 			setLetter(letter);
 			emit letterClicked(letter);
 		}
 		break;
 	case Qt::Key_Down:
-		letter = _letter + 16;
-		if(letter < 16*14) {
+		letter = _letter + _letterCountH;
+		if(letter < _letterCountH*_letterCountV) {
 			setLetter(letter);
 			emit letterClicked(letter);
 		}

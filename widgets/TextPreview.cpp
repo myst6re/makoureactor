@@ -47,7 +47,7 @@ TextPreview::TextPreview(QWidget *parent) :
 //		bool jp = Config::value("jp_txt", false).toBool();
 //		Config::setValue("jp_txt", false);
 		for(int i=0 ; i<12 ; ++i) {
-			QByteArray nameData = FF7Text(dataNames.at(i), false).getData();
+			QByteArray nameData = FF7Text(dataNames.at(i), false).data();
 			names.append(nameData);
 			namesWidth[i] = calcFF7TextWidth(nameData);
 		}

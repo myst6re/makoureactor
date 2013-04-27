@@ -25,9 +25,9 @@ class FontGrid : public FontDisplay
 {
 	Q_OBJECT
 public:
-	explicit FontGrid(QWidget *parent=0);
+	explicit FontGrid(int letterCountH, int letterCountV, QWidget *parent=0);
 	virtual ~FontGrid();
-	static QPoint getPos(int letter);
+	QPoint getPos(int letter);
 signals:
 	void letterClicked(int letter);
 public slots:
@@ -41,8 +41,9 @@ protected:
 	virtual void focusInEvent(QFocusEvent *);
 	virtual void focusOutEvent(QFocusEvent *);
 private:
-	static int getLetter(const QPoint &pos);
+	int getLetter(const QPoint &pos);
 	//QPixmap copyGrid;
+	int _letterCountH, _letterCountV;
 };
 
 #endif // FONTGRID_H

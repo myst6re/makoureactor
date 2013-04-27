@@ -23,15 +23,14 @@
 class FF7Text
 {
 public:
-	FF7Text(const QByteArray &texte=QByteArray());
-	FF7Text(const QString &texte, bool jp);
-	const QByteArray &getData() const;
-	QString getText(bool jp, bool simplified=false) const;
-	QString getShortText(bool jp) const;
+	FF7Text(const QByteArray &data=QByteArray());
+	FF7Text(const QString &text, bool jp);
+	const QByteArray &data() const;
+	QString text(bool jp, bool simplified=false) const;
 	void setText(const QString &text, bool jp);
-	bool contains(const QRegExp &text) const;
-	int indexOf(const QRegExp &text, int from, int &size) const;
-	int lastIndexOf(const QRegExp &text, int &from, int &size) const;
+	bool contains(const QRegExp &regExp) const;
+	int indexOf(const QRegExp &regExp, int from, int &size) const;
+	int lastIndexOf(const QRegExp &regExp, int &from, int &size) const;
 private:
 	static QString getCaract(quint8 ord, quint8 table=0);
 	static const char *caract[256];
@@ -41,7 +40,7 @@ private:
 	static const char *caract_jp_fc[256];
 	static const char *caract_jp_fd[256];
 	static const char *caract_jp_fe[256];
-	QByteArray texte;
+	QByteArray _data;
 };
 
 #endif

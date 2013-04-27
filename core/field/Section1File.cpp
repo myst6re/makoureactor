@@ -27,13 +27,13 @@ Section1File::Section1File(Field *field) :
 Section1File::~Section1File()
 {
 	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
-	foreach(FF7Text *texte, _texts)				delete texte;
+	foreach(FF7Text *text, _texts)				delete text;
 }
 
 void Section1File::clear()
 {
 	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
-	foreach(FF7Text *texte, _texts)				delete texte;
+	foreach(FF7Text *text, _texts)				delete text;
 	_grpScripts.clear();
 	_texts.clear();
 	_author.clear();
@@ -225,7 +225,7 @@ QByteArray Section1File::save() const
 	{
 		pos = 2 + newNbText*2 + allTexts.size();
 		positionsTexts.append((char *)&pos, 2);
-		allTexts.append(text->getData());
+		allTexts.append(text->data());
 		allTexts.append('\xff');// end of text
 	}
 
@@ -273,30 +273,50 @@ bool Section1File::exporter(QIODevice *device, ExportFormat format)
 {
 	bool jp = Config::value("jp_txt", false).toBool();
 
-	QXmlStreamWriter stream(device);
-	stream.setAutoFormatting(true);
-	stream.setCodec("UTF-8");
-	stream.writeStartDocument();
-	stream.writeStartElement("field");
-	stream.writeAttribute("name", field()->name());
-	stream.writeStartElement("texts");
-
 	switch(format) {
-	case XMLText:
+	case TXTText: {
+		if(!device->open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+			return false;
+		}
+		int i=0;
+		foreach(FF7Text *text, texts()) {
+			device->write(QString("---TEXT%1---\n%2\n")
+						  .arg(i++, 3, 10, QChar('0'))
+						  .arg(text->text(jp))
+						  .toUtf8());
+		}
+		device->close();
+		return true;
+	}
+	case XMLText: {
+		if(!device->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			return false;
+		}
+		QXmlStreamWriter stream(device);
+		stream.setAutoFormatting(true);
+		stream.setCodec("UTF-8");
+		stream.writeStartDocument();
+		stream.writeStartElement("field");
+		stream.writeAttribute("name", field()->name());
+		stream.writeStartElement("texts");
 		int id=0;
 		foreach(FF7Text *text, _texts) {
 			stream.writeStartElement("text");
 			stream.writeAttribute("id", QString::number(id));
-			stream.writeCharacters(text->getText(jp));
-			stream.writeEndElement();
+			stream.writeCharacters(text->text(jp));
+			stream.writeEndElement(); // /text
 			++id;
 		}
-		break;
+
+		stream.writeEndElement(); // /texts
+		stream.writeEndElement(); // /field
+		stream.writeEndDocument();
+		device->close();
+		return true;
+	}
 	}
 
-	stream.writeEndDocument();
-
-	return stream.hasError();
+	return false;
 }
 
 bool Section1File::importer(QIODevice *device, ExportFormat format)

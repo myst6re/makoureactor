@@ -189,7 +189,7 @@ void FieldArchive::searchAll()
 	bool iff = false, win = false;
 	OpcodeIf *opcodeIf=0;
 
-	QFile deb(QString("cameraUnknownP%1.txt").arg(isPC() ? "C" : "S"));
+	QFile deb(QString("scriptP%1.txt").arg(isPC() ? "C" : "S"));
 	deb.open(QIODevice::WriteOnly | QIODevice::Text/* | QIODevice::Truncate*/);
 
 
@@ -197,30 +197,31 @@ void FieldArchive::searchAll()
 	foreach(int i, fieldsSortByMapId) {
 		Field *field = this->field(i, true);
 		if(field != NULL) {
-			/*Section1File *s1 = field->scriptsAndTexts();
+			if(field->name() != "convil_2") continue;
+			Section1File *s1 = field->scriptsAndTexts();
 			int groupID = 0;
 			foreach(GrpScript *group, s1->grpScripts()) {
 				int scriptID=0;
 				foreach(Script *script, group->scripts()) {
 					int opcodeID = 0;
 					foreach(Opcode *opcode, script->getOpcodes()) {
-						if(opcode->id() != 0x50 && opcode->id() != 0x48 &&
-								opcode->id() != 0x2f && opcode->id() != 0x40) {
-						deb.write(QString("%1: %2, %3, %4 -> %5\n").arg(i)
+//						if(opcode->id() != 0x50 && opcode->id() != 0x48 &&
+//								opcode->id() != 0x2f && opcode->id() != 0x40) {
+						deb.write(QString("%1: %2, %3, %4 -> %5\n").arg(Data::field_names.indexOf(field->name()))
 								  .arg(groupID).arg(scriptID).arg(opcodeID)
 								  .arg(QString(opcode->toByteArray().toHex())).toLatin1());
-						}
+//						}
 						opcodeID++;
 					}
 					scriptID++;
 				}
 				groupID++;
-			}*/
-			CaFile *ca = field->camera();
-			if(ca->isOpen()) {
-				if(field->isPS() && ca->cameraCount() == 1) {
-					deb.write(QString("%1\n").arg(ca->camera(0).unknown).toLatin1());
-				}
+			}
+//			CaFile *ca = field->camera();
+//			if(ca->isOpen()) {
+//				if(field->isPS() && ca->cameraCount() == 1) {
+//					deb.write(QString("%1\n").arg(ca->camera(0).unknown).toLatin1());
+//				}
 				/*if(ca->cameraCount() == 2) {
 					Camera cam1 = ca->camera(0), cam2 = ca->camera(1);
 					if(isPC()) {
@@ -251,7 +252,7 @@ void FieldArchive::searchAll()
 //				deb2.open(QIODevice::WriteOnly | QIODevice::Truncate);
 //				deb2.write(field->sectionData(Field::Camera));
 //				deb2.close();
-			}
+//			}
 
 			/*IdFile *id = field->walkmesh();
 			if(id->isOpen()) {
@@ -659,11 +660,8 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 	int currentField=0;
 	observer->setObserverMaximum(selectedFields.size()-1);
 
-	bool jp_txt = Config::value("jp_txt", false).toBool();
-
 	foreach(const int &fieldID, selectedFields) {
 		if(observer->observerWasCanceled()) 	return false;
-
 		Field *f = field(fieldID);
 		if(f) {
 			if(toExport.contains(Fields)) {
@@ -714,18 +712,24 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 				}
 			}
 			if(toExport.contains(Texts)) {
+				qDebug() << f->name();
 				Section1File *section1 = f->scriptsAndTexts();
 				if(section1->isOpen()) {
 					extension = toExport.value(Texts);
 					path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
 					if(overwrite || !QFile::exists(path)) {
 						QFile textExport(path);
-						if(textExport.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-							int i=0;
-							foreach(FF7Text *text, section1->texts()) {
-								textExport.write(QString("---TEXT%1---\n%2\n").arg(i++, 3, 10, QChar('0')).arg(text->getText(jp_txt)).toUtf8());
-							}
-							textExport.close();
+						Section1File::ExportFormat format;
+						if(extension == "txt") {
+							format = Section1File::TXTText;
+						} else if(extension == "xml") {
+							format = Section1File::XMLText;
+						} else {
+							return false;
+						}
+
+						if(!section1->exporter(&textExport, format)) {
+							return false;
 						}
 					}
 				}

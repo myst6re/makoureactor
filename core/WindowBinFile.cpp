@@ -115,6 +115,13 @@ int WindowBinFile::tableCount() const
 	return isJp() ? 6 : 4;
 }
 
+int WindowBinFile::tableSize(quint8 table)
+{
+	return table == 0 || table == 2
+			? 231  /* 21 * 11 */
+			: 210; /* 21 * 10 */
+}
+
 bool WindowBinFile::openFont(const QByteArray &data)
 {
 	_font = TimFile(data);
@@ -175,14 +182,11 @@ int WindowBinFile::palette(FontColor color, quint8 table) const
 
 int WindowBinFile::absoluteId(quint8 table, quint8 id)
 {
-	switch(table) {
-	case 1:		return 231 + id;
-	case 2:		return 441 + id;
-	case 3:		return 672 + id;
-	case 4:		return 882 + id;
-	case 5:		return 1092 + id;
-	default:	return id;
+	int absId = id;
+	for(int i=0 ; i<table ; ++i) {
+		absId += tableSize(i);
 	}
+	return absId;
 }
 
 quint8 WindowBinFile::charWidth(quint8 table, quint8 id) const

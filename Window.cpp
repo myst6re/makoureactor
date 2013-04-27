@@ -1114,6 +1114,7 @@ void Window::massExport()
 			progressDialog->setLabelText(tr("Exportation..."));
 			progressDialog->setRange(0, selectedFields.size()-1);
 			progressDialog->setAutoClose(false);
+			progressDialog->show();
 
 			if(massExportDialog->exportModule(MassExportDialog::Fields)) {
 				toExport.insert(FieldArchive::Fields, massExportDialog->moduleFormat(MassExportDialog::Fields));
@@ -1128,8 +1129,10 @@ void Window::massExport()
 				toExport.insert(FieldArchive::Texts, massExportDialog->moduleFormat(MassExportDialog::Texts));
 			}
 
-			fieldArchive->exportation(selectedFields, massExportDialog->directory(),
-									  massExportDialog->overwrite(), toExport, this);
+			if(!fieldArchive->exportation(selectedFields, massExportDialog->directory(),
+									  massExportDialog->overwrite(), toExport, this)) {
+				QMessageBox::warning(this, tr("Erreur"), tr("Une erreur s'est produite lors de l'exportation"));
+			}
 
 			progressDialog->close();
 			progressDialog->deleteLater();
@@ -1148,20 +1151,27 @@ void Window::massImport()
 	if(massImportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massImportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {
-			QProgressDialog progressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-			progressDialog.setWindowModality(Qt::WindowModal);
-			progressDialog.setCancelButtonText(tr("Arrêter"));
-			progressDialog.setLabelText(tr("Importation..."));
-			progressDialog.setRange(0, selectedFields.size()-1);
-
 			QMap<Field::FieldSection, QString> toImport;
 
-			if(massImportDialog->importText()) {
-				toImport.insert(Field::Scripts, "xml");
+			showProgression();
+			progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
+			progressDialog->setWindowModality(Qt::WindowModal);
+			progressDialog->setCancelButtonText(tr("Arrêter"));
+			progressDialog->setLabelText(tr("Importation..."));
+			progressDialog->setRange(0, selectedFields.size()-1);
+			progressDialog->setAutoClose(false);
+			progressDialog->show();
+
+			if(massImportDialog->importModule(MassImportDialog::Texts)) {
+				toImport.insert(Field::Scripts, massImportDialog->moduleFormat(MassImportDialog::Texts));
 			}
 
 			fieldArchive->importation(selectedFields, massImportDialog->directory(),
 									  toImport, this);
+			progressDialog->close();
+			progressDialog->deleteLater();
+			progressDialog = 0;
+			hideProgression();
 		}
 	}
 }
