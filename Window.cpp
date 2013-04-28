@@ -33,26 +33,18 @@
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
 	textDialog(0), _modelManager(0), _tutManager(0), _walkmeshManager(0),
-	_backgroundManager(0), taskBarButton(0), progressDialog(0)
+	_backgroundManager(0)
 {
 	setWindowTitle();
 	setMinimumSize(700, 600);
 	resize(900, 700);
 
-	statusBar()->hide();
-	progression = new QProgressBar(statusBar());
-	progression->setFixedSize(160, 16);
-	progression->setMinimum(0);
-	progression->setAlignment(Qt::AlignCenter);
-	progression->hide();
-	statusBar()->addPermanentWidget(progression);
+	taskBarButton = new QTaskBarButton(this);
+	taskBarButton->setMinimum(0);
 
-#ifdef Q_OS_WIN
-	if(QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
-		taskBarButton = new QTaskBarButton(this);
-		taskBarButton->setMinimum(0);
-	}
-#endif
+	progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
+	progressDialog->setWindowModality(Qt::WindowModal);
+	progressDialog->setAutoClose(false);
 
 	authorLbl = new QLabel();
 	authorLbl->setMargin(2);
@@ -485,53 +477,37 @@ void Window::openDir()
 
 bool Window::observerWasCanceled() const
 {
-	if(progressDialog) {
-		return progressDialog->wasCanceled();
-	}
-	return false;
+	return progressDialog->wasCanceled();
 }
 
 void Window::setObserverMaximum(unsigned int max)
 {
-	if(taskBarButton) {
-		taskBarButton->setMaximum(max);
-	}
-	if(progressDialog) {
-		progressDialog->setMaximum(max);
-	}
-	progression->setMaximum(max);
+	taskBarButton->setMaximum(max);
+	progressDialog->setMaximum(max);
 }
 
 void Window::setObserverValue(int value)
 {
 	QApplication::processEvents();
 
-	if(taskBarButton) {
-		taskBarButton->setValue(value);
-	}
-	if(progressDialog) {
-		progressDialog->setValue(value);
-	}
-	progression->setValue(value);
+	taskBarButton->setValue(value);
+	progressDialog->setValue(value);
 }
 
-void Window::showProgression()
+void Window::showProgression(const QString &message, bool canBeCanceled)
 {
 	setObserverValue(0);
-	if(taskBarButton) {
-		taskBarButton->setState(QTaskBarButton::Normal);
-	}
-	statusBar()->show();
-	progression->show();
+	taskBarButton->setState(QTaskBarButton::Normal);
+	progressDialog->setLabelText(message);
+	progressDialog->setCancelButtonText(canBeCanceled ? tr("Annuler") : tr("Arrêter"));
+	progressDialog->show();
 }
 
 void Window::hideProgression()
 {
-	if(taskBarButton) {
-		taskBarButton->setState(QTaskBarButton::Invisible);
-	}
-	statusBar()->hide();
-	progression->hide();
+	taskBarButton->setState(QTaskBarButton::Invisible);
+	progressDialog->hide();
+	progressDialog->reset();
 }
 
 void Window::open(const QString &cheminFic, bool isDir)
@@ -577,27 +553,23 @@ void Window::open(const QString &cheminFic, bool isDir)
 
 	closeFile();
 
-	setEnabled(false);
-
 	if(isPS) {
 		fieldArchive = new FieldArchivePS(cheminFic, type);
 	} else {
 		fieldArchive = new FieldArchivePC(cheminFic, type);
 	}
 
-	setCursor(Qt::WaitCursor);
-	showProgression();
+	showProgression(tr("Ouverture..."), false);
 
 	FieldArchiveIO::ErrorCode error = fieldArchive->open(this);
-	
-	setCursor(Qt::ArrowCursor);
+
 	hideProgression();
-	
-	setEnabled(true);
+
 	QString out;
 	switch(error)
 	{
 	case FieldArchiveIO::Ok:
+	case FieldArchiveIO::Aborted:
 		break;
 	case FieldArchiveIO::FieldNotFound:
 		out = tr("Rien trouvé !");
@@ -930,18 +902,14 @@ void Window::saveAs(bool currentPath)
 			if(path.isNull())		return;
 		}
 	}
-	
-	setEnabled(false);
 
-	setCursor(Qt::WaitCursor);
-	showProgression();
+	showProgression(tr("Enregistrement..."), fieldArchive->io()->type() == FieldArchiveIO::Lgp);
 	quint8 error = 0;
 	
 	// QTime t;t.start();
 	error = fieldArchive->save(path, this);
 	// qDebug("Total save time: %d ms", t.elapsed());
-	
-	setCursor(Qt::ArrowCursor);
+
 	hideProgression();
 	QString out;
 	switch(error)
@@ -949,6 +917,8 @@ void Window::saveAs(bool currentPath)
 	case FieldArchiveIO::Ok:
 		setModified(false);
 		setWindowTitle();
+		break;
+	case FieldArchiveIO::Aborted:
 		break;
 	case FieldArchiveIO::FieldNotFound:
 		out = tr("Rien trouvé !");
@@ -976,8 +946,6 @@ void Window::saveAs(bool currentPath)
 		break;
 	}
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
-	
-	setEnabled(true);
 }
 
 bool Window::gotoField(int fieldID)
@@ -1107,14 +1075,7 @@ void Window::massExport()
 		if(!selectedFields.isEmpty()) {
 			QMap<FieldArchive::ExportType, QString> toExport;
 
-			showProgression();
-			progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-			progressDialog->setWindowModality(Qt::WindowModal);
-			progressDialog->setCancelButtonText(tr("Arrêter"));
-			progressDialog->setLabelText(tr("Exportation..."));
-			progressDialog->setRange(0, selectedFields.size()-1);
-			progressDialog->setAutoClose(false);
-			progressDialog->show();
+			showProgression(tr("Exportation..."), false);
 
 			if(massExportDialog->exportModule(MassExportDialog::Fields)) {
 				toExport.insert(FieldArchive::Fields, massExportDialog->moduleFormat(MassExportDialog::Fields));
@@ -1130,13 +1091,11 @@ void Window::massExport()
 			}
 
 			if(!fieldArchive->exportation(selectedFields, massExportDialog->directory(),
-									  massExportDialog->overwrite(), toExport, this)) {
+									  massExportDialog->overwrite(), toExport, this)
+					&& !observerWasCanceled()) {
 				QMessageBox::warning(this, tr("Erreur"), tr("Une erreur s'est produite lors de l'exportation"));
 			}
 
-			progressDialog->close();
-			progressDialog->deleteLater();
-			progressDialog = 0;
 			hideProgression();
 		}
 	}
@@ -1153,24 +1112,18 @@ void Window::massImport()
 		if(!selectedFields.isEmpty()) {
 			QMap<Field::FieldSection, QString> toImport;
 
-			showProgression();
-			progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-			progressDialog->setWindowModality(Qt::WindowModal);
-			progressDialog->setCancelButtonText(tr("Arrêter"));
-			progressDialog->setLabelText(tr("Importation..."));
-			progressDialog->setRange(0, selectedFields.size()-1);
-			progressDialog->setAutoClose(false);
-			progressDialog->show();
+			showProgression(tr("Importation..."), false);
 
 			if(massImportDialog->importModule(MassImportDialog::Texts)) {
 				toImport.insert(Field::Scripts, massImportDialog->moduleFormat(MassImportDialog::Texts));
 			}
 
-			fieldArchive->importation(selectedFields, massImportDialog->directory(),
-									  toImport, this);
-			progressDialog->close();
-			progressDialog->deleteLater();
-			progressDialog = 0;
+			if(!fieldArchive->importation(selectedFields, massImportDialog->directory(),
+									  toImport, this)
+					&& !observerWasCanceled()) {
+				QMessageBox::warning(this, tr("Erreur"), tr("Une erreur s'est produite lors de l'importation"));
+			}
+
 			hideProgression();
 		}
 	}

@@ -219,7 +219,12 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(FieldArchiveIOObserver *obs
 
 	int i=0;
 	foreach(IsoFile *file, files) {
-		if(observer)	observer->setObserverValue(i);
+		if(observer) {
+			if(observer->observerWasCanceled()) {
+				return Aborted;
+			}
+			observer->setObserverValue(i);
+		}
 
 		if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
 			QString name = file->name().mid(file->name().lastIndexOf('/')+1);
@@ -244,7 +249,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Field
 	bool saveAs = QFileInfo(path) != QFileInfo(iso);
 
 	IsoArchive isoTemp(path%".makoutemp");
-	if(!isoTemp.open(QIODevice::ReadWrite | QIODevice::Truncate))		return ErrorOpening;
+	if(!isoTemp.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
+		return ErrorOpening;
+	}
 
 	if(observer)	observer->setObserverMaximum(100);
 	// Reset IsoControl
@@ -253,9 +260,10 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Field
 
 	// FIELD/*.DAT
 
-	bool archiveModified = false;
-
 	for(int fieldID=0 ; fieldID<fieldArchive()->size() ; ++fieldID) {
+		if(observer && observer->observerWasCanceled()) {
+			return Aborted;
+		}
 		Field *field = fieldArchive()->field(fieldID, false);
 		if(field && field->isOpen() && field->isModified()) {
 			IsoFile *isoField = isoFieldDirectory->file(field->name().toUpper() + ".DAT");
@@ -267,15 +275,10 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Field
 
 			if(field->save(newData, true)) {
 				isoField->setData(newData);
-				archiveModified = true;
 			} else {
 				return Invalid;
 			}
 		}
-	}
-
-	if(!archiveModified) {
-		return Invalid;
 	}
 
 	// FIELD/FIELD.BIN
@@ -295,6 +298,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Field
 
 	this->observer = observer;
 	if(!iso.pack(&isoTemp, this, isoFieldDirectory)) {
+		if(wasCanceled()) {
+			return Aborted;
+		}
 		this->observer = 0;
 		return Invalid;
 	}
@@ -440,7 +446,12 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::open2(FieldArchiveIOObserver *obs
 
 	int i=0;
 	foreach(const QString &name, list) {
-		if(observer)	observer->setObserverValue(i++);
+		if(observer) {
+			if(observer->observerWasCanceled()) {
+				return Aborted;
+			}
+			observer->setObserverValue(i++);
+		}
 
 		if(!name.startsWith("WM", Qt::CaseInsensitive)) {
 			fieldArchive()->addField(new FieldPS(name.left(name.lastIndexOf('.')), this));
@@ -466,6 +477,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, FieldA
 	if(observer)	observer->setObserverMaximum(nbFiles);
 
 	for(quint32 fieldID=0 ; fieldID<nbFiles ; ++fieldID) {
+		if(observer && observer->observerWasCanceled()) {
+			return Aborted;
+		}
 		Field *field = fieldArchive()->field(fieldID, false);
 		QString datName = field->name().toUpper() + ".DAT";
 		QString datPath = dir.filePath(datName);

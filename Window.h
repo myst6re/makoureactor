@@ -103,7 +103,7 @@ signals:
 private:
 	void setWindowTitle();
 	void restartNow();
-	void showProgression();
+	void showProgression(const QString &message, bool canBeCanceled);
 	void hideProgression();
 
 	QLineEdit *lineSearch;
@@ -140,7 +140,6 @@ private:
 	BGDialog *_backgroundManager;
 
 	QTaskBarButton *taskBarButton;
-	QProgressBar *progression;
 	QProgressDialog *progressDialog;
 	QAction *authorAction;
 	QLabel *authorLbl;

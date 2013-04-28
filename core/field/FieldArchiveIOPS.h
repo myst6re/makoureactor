@@ -82,6 +82,9 @@ public:
 	void setIsoOut(int value) {
 		if(observer)	observer->setObserverValue(value);
 	}
+	bool wasCanceled() {
+		return observer && observer->observerWasCanceled();
+	}
 private:
 	QByteArray fieldData2(Field *field, bool unlzs);
 	QByteArray mimData2(Field *field, bool unlzs);

@@ -661,7 +661,7 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 	observer->setObserverMaximum(selectedFields.size()-1);
 
 	foreach(const int &fieldID, selectedFields) {
-		if(observer->observerWasCanceled()) 	return false;
+		if(observer->observerWasCanceled()) 	break;
 		Field *f = field(fieldID);
 		if(f) {
 			if(toExport.contains(Fields)) {

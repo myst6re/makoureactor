@@ -35,7 +35,11 @@ class FieldArchiveIO
 {
 public:
 	enum ErrorCode {
-		Ok, FieldNotFound, ErrorOpening, ErrorOpeningTemp, ErrorRemoving, ErrorRenaming, ErrorCopying, Invalid, NotImplemented
+		Ok, FieldNotFound, ErrorOpening,
+		ErrorOpeningTemp, ErrorRemoving,
+		ErrorRenaming, ErrorCopying,
+		Invalid, NotImplemented,
+		Aborted
 	};
 	enum Type {
 		Lgp, File, Iso, Dir

@@ -84,7 +84,12 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(FieldArchiveIOObserver *obs
 	i = 0;
 	foreach(const QString &name, archiveList) {
 		if(i % freq == 0) {
-			if(observer)	observer->setObserverValue(i);
+			if(observer) {
+				if(observer->observerWasCanceled()) {
+					return Aborted;
+				}
+				observer->setObserverValue(i);
+			}
 		}
 
 		if(name.compare("maplist", Qt::CaseInsensitive) == 0) {
@@ -115,6 +120,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, FieldA
 	}
 
 	for(int fieldID=0 ; fieldID<fieldArchive()->size() ; ++fieldID) {
+		if(observer && observer->observerWasCanceled()) {
+			return Aborted;
+		}
 		Field *field = fieldArchive()->field(fieldID, false);
 		if(field && field->isOpen() && field->isModified()) {
 			if(!_lgp.setFile(field->name(), new FieldSaveIO(field))) {
@@ -152,6 +160,8 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, FieldA
 			return ErrorRemoving;
 		case Lgp::RenameError:
 			return ErrorRenaming;
+		case Lgp::AbortError:
+			return Aborted;
 		default:
 			return Invalid;
 		}
@@ -270,7 +280,12 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::open2(FieldArchiveIOObserver *obs
 
 	int i=0;
 	foreach(const QString &name, list) {
-		if(observer)	observer->setObserverValue(i++);
+		if(observer) {
+			if(observer->observerWasCanceled()) {
+				return Aborted;
+			}
+			observer->setObserverValue(i++);
+		}
 
 		if(name.compare("maplist", Qt::CaseInsensitive) == 0) {
 			if(!Data::openMaplist(fileData2(name))) {
@@ -302,6 +317,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, FieldA
 	if(observer)	observer->setObserverMaximum(nbFiles);
 
 	for(quint32 fieldID=0 ; fieldID<nbFiles ; ++fieldID) {
+		if(observer && observer->observerWasCanceled()) {
+			return Aborted;
+		}
 		Field *field = fieldArchive()->field(fieldID, false);
 		if(field) {
 			QString fileName = field->name();
