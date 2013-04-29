@@ -56,8 +56,12 @@ private slots:
 	void editExitPoint(const Vertex_s &values);
 	void editEntryPoint(const Vertex_s &values);
 	void editDoorPoint(const Vertex_s &values);
+	void setGateEnabled(bool enabled);
+	void editGateEnabled(bool enabled);
 	void editFieldId(int v);
 	void editArrowDisplay(bool checked);
+	void setDoorEnabled(bool enabled);
+	void editDoorEnabled(bool enabled);
 	void editParamId(int v);
 	void editStateId(int v);
 	void editBehavior(int v);
@@ -111,6 +115,7 @@ private:
 	QSpinBox *idAccess[3];
 	//GatePage
 	QListWidget *gateList;
+	QCheckBox *gateEnabled;
 	QSpinBox *exitDirection;
 	QSpinBox *fieldId;
 	VertexWidget *exitPoints[2], *entryPoint;
@@ -121,6 +126,7 @@ private:
 	QComboBox *arrowType;
 	//DoorPage
 	QListWidget *doorList;
+	QCheckBox *doorEnabled;
 	QSpinBox *bgParamId, *bgStateId, *doorBehavior, *doorSoundId;
 	VertexWidget *doorPosition[2];
 	//CameraRangePage

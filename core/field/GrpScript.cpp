@@ -409,3 +409,11 @@ void GrpScript::listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows,
 	foreach(Script *script, _scripts)
 		script->listWindows(groupID, scriptID++, windows, text2win);
 }
+
+void GrpScript::listModelPositions(QList<FF7Position> &positions) const
+{
+	if(_scripts.size() >= 1) {
+		_scripts.at(0)->listModelPositions(positions);
+		_scripts.at(1)->listModelPositions(positions);
+	}
+}

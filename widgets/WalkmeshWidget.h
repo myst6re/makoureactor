@@ -25,9 +25,7 @@
 #else
 #include <GL/glu.h>
 #endif
-#include "core/field/IdFile.h"
-#include "core/field/CaFile.h"
-#include "core/field/InfFile.h"
+#include "core/field/Field.h"
 
 class WalkmeshWidget : public QGLWidget
 {
@@ -35,7 +33,7 @@ class WalkmeshWidget : public QGLWidget
 public:
 	explicit WalkmeshWidget(QWidget *parent=0, const QGLWidget *shareWidget=0);
 	void clear();
-	void fill(IdFile *walkmesh, CaFile *camera, InfFile *infFile);
+	void fill(Field *field);
 	void updatePerspective();
 public slots:
 	void setXRotation(int);
@@ -64,6 +62,9 @@ private:
 	IdFile *walkmesh;
 	CaFile *camera;
 	InfFile *infFile;
+	BackgroundFile *bgFile;
+	Section1File *scripts;
+	Field *field;
 	QPoint moveStart;
 //	QPixmap arrow;
 protected:

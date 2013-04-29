@@ -1110,6 +1110,12 @@ void Script::listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window
 		opcode->listWindows(groupID, scriptID, opcodeID++, windows, text2win);
 }
 
+void Script::listModelPositions(QList<FF7Position> &positions) const
+{
+	foreach(Opcode *opcode, opcodes)
+		opcode->listModelPositions(positions);
+}
+
 //void Script::searchWindows() const
 //{
 //	foreach(Opcode *opcode, opcodes) {

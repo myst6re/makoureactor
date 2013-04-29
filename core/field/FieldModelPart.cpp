@@ -33,11 +33,6 @@ Poly::~Poly()
 {
 }
 
-int Poly::count() const
-{
-	return _count;
-}
-
 void Poly::setVertices(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords)
 {
 	_vertices = vertices;

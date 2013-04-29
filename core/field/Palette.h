@@ -25,6 +25,7 @@ class Palette
 {
 public:
 	Palette();
+	virtual ~Palette();
 	virtual bool notZero(quint8 index) const=0;
 	QRgb color(int index) const;
 	const QList<QRgb> &colors() const;

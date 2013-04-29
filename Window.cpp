@@ -158,7 +158,7 @@ Window::Window() :
 	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
 
 	groupScriptList = new GrpScriptList(this);
-	groupScriptList->setFixedWidth(180);
+	groupScriptList->setFixedWidth(176);
 	groupScriptList->setFont(font);
 	connect(groupScriptList, SIGNAL(changed()), SLOT(setModified()));
 	
@@ -182,16 +182,17 @@ Window::Window() :
 	connect(opcodeList, SIGNAL(changed()), SLOT(compile()));
 
 	zoneImage = new ApercuBG();
-	zoneImage->setFixedSize(304, 214);
+	zoneImage->setFixedSize(300, 225);
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
-		fieldModel->setFixedSize(304, 214);
+		fieldModel->setFixedSize(300, 225);
 	} else {
 		fieldModel = 0;
 	}
 
 	zonePreview = new QStackedWidget(this);
-	zonePreview->setFixedSize(304, 214);
+	zonePreview->setContentsMargins(QMargins());
+	zonePreview->setFixedSize(300, 225);
 	zonePreview->addWidget(zoneImage);
 	if(fieldModel)
 		zonePreview->addWidget(fieldModel);

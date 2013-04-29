@@ -38,7 +38,9 @@ public:
 	void setVertices(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	void setVertices(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	void divTexCoords(float texWidth, float texHeight);
-	int count() const;
+	inline int count() const {
+		return _count;
+	}
 	const PolyVertex &vertex(quint8 id) const;
 	const QRgb &color() const;
 	QRgb color(quint8 id) const;

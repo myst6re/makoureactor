@@ -20,6 +20,10 @@
 
 Palette::Palette() {}
 
+Palette::~Palette()
+{
+}
+
 PalettePC::PalettePC() : Palette() {}
 
 PalettePS::PalettePS() : Palette() {}

@@ -159,6 +159,11 @@ void Opcode::listWindows(int groupID, int scriptID, int opcodeID, QMultiMap<quin
 	}
 }
 
+void Opcode::listModelPositions(QList<FF7Position> &positions) const
+{
+	Q_UNUSED(positions);
+}
+
 void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 {
 	quint8 param, state;
@@ -5431,6 +5436,18 @@ void OpcodeXYZI::getVariables(QList<FF7Var> &vars) const
 		vars.append(FF7Var(B2(banks[1]), targetI & 0xFF));
 }
 
+void OpcodeXYZI::listModelPositions(QList<FF7Position> &positions) const
+{
+	FF7Position pos = FF7Position();
+	pos.x = targetX;
+	pos.y = targetY;
+	pos.z = targetZ;
+	pos.id = targetI;
+	pos.hasId = true;
+	pos.hasZ = true;
+	positions.append(pos);
+}
+
 OpcodeXYI::OpcodeXYI(const QByteArray &params)
 {
 	setParams(params);
@@ -5471,6 +5488,17 @@ void OpcodeXYI::getVariables(QList<FF7Var> &vars) const
 		vars.append(FF7Var(B1(banks[1]), targetI & 0xFF));
 }
 
+void OpcodeXYI::listModelPositions(QList<FF7Position> &positions) const
+{
+	FF7Position pos = FF7Position();
+	pos.x = targetX;
+	pos.y = targetY;
+	pos.id = targetI;
+	pos.hasId = true;
+	pos.hasZ = false;
+	positions.append(pos);
+}
+
 OpcodeXYZ::OpcodeXYZ(const QByteArray &params)
 {
 	setParams(params);
@@ -5509,6 +5537,17 @@ void OpcodeXYZ::getVariables(QList<FF7Var> &vars) const
 		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF));
 	if(B1(banks[1]) != 0)
 		vars.append(FF7Var(B1(banks[1]), targetZ & 0xFF));
+}
+
+void OpcodeXYZ::listModelPositions(QList<FF7Position> &positions) const
+{
+	FF7Position pos = FF7Position();
+	pos.x = targetX;
+	pos.y = targetY;
+	pos.z = targetZ;
+	pos.hasId = false;
+	pos.hasZ = true;
+	positions.append(pos);
 }
 
 OpcodeMOVE::OpcodeMOVE(const QByteArray &params)

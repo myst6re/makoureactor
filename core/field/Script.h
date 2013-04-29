@@ -67,6 +67,7 @@ public:
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
+	void listModelPositions(QList<FF7Position> &positions) const;
 	void backgroundParams(QHash<quint8, quint8> &paramActifs) const;
 	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
 

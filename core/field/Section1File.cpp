@@ -613,6 +613,23 @@ void Section1File::listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap
 		group->listWindows(groupID++, windows, text2win);
 }
 
+void Section1File::listModelPositions(QMultiMap<int, FF7Position> &positions) const
+{
+	int modelId=0;
+	foreach(GrpScript *group, _grpScripts) {
+		if(group->typeID() == GrpScript::Model) {
+			QList<FF7Position> pos;
+			group->listModelPositions(pos);
+			if(!pos.isEmpty()) {
+				foreach(const FF7Position &position, pos) {
+					positions.insert(modelId, position);
+				}
+			}
+			++modelId;
+		}
+	}
+}
+
 //void Section1File::searchWindows() const
 //{
 //	int groupID=0;

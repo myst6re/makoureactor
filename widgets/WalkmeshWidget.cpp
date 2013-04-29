@@ -22,7 +22,8 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
 	distance(0.0f), xRot(0.0f), yRot(0.0f), zRot(0.0f),
 	xTrans(0.0f), yTrans(0.0f), transStep(360.0f), lastKeyPressed(-1),
 	camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
-	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0)
+	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0),
+	bgFile(0), scripts(0), field(0)
 {
 	setMinimumSize(320, 240);
 //	setAutoFillBackground(false);
@@ -34,14 +35,20 @@ void WalkmeshWidget::clear()
 	walkmesh = 0;
 	camera = 0;
 	infFile = 0;
+	bgFile = 0;
+	scripts = 0;
+	field = 0;
 	updateGL();
 }
 
-void WalkmeshWidget::fill(IdFile *walkmesh, CaFile *camera, InfFile *infFile)
+void WalkmeshWidget::fill(Field *field)
 {
-	this->walkmesh = walkmesh;
-	this->camera = camera;
-	this->infFile = infFile;
+	this->walkmesh = field->walkmesh();
+	this->camera = field->camera();
+	this->infFile = field->inf();
+	this->bgFile = field->background();
+	this->scripts = field->scriptsAndTexts();
+	this->field = field;
 	updatePerspective();
 	resetCamera();
 }
@@ -116,6 +123,36 @@ void WalkmeshWidget::paintGL()
 	glRotatef(xRot, 1.0, 0.0, 0.0);
 	glRotatef(yRot, 0.0, 1.0, 0.0);
 	glRotatef(zRot, 0.0, 0.0, 1.0);
+
+	/*if(bgFile) {
+		glColor3ub(255, 255, 255);
+		QPixmap pix = bgFile->openBackground();
+		glEnable(GL_TEXTURE_2D);
+		qDebug() << pix.width() << pix.height() << ((-pix.width() / 2) / 4096.0f) << ((-pix.height() / 2) / 4096.0f);
+		GLuint texId = bindTexture(pix, GL_TEXTURE_2D, GL_RGB, QGLContext::MipmapBindOption);
+
+		glBegin(GL_QUADS);
+//		glColor3ub(255, 255, 255);
+		glTexCoord2d(0.0f, 0.0f);
+		glVertex3f((-pix.width() / 1024.0f), (pix.height() / 1024.0f), -4095.0f / 4096.0f);
+
+//		glColor3ub(255, 255, 0);
+		glTexCoord2d(1.0f, 0.0f);
+		glVertex3f((pix.width() / 1024.0f), (pix.height() / 1024.0f), -4095.0f / 4096.0f);
+
+//		glColor3ub(0, 0, 255);
+		glTexCoord2d(1.0f, 1.0f);
+		glVertex3f((pix.width() / 1024.0f), (-pix.height() / 1024.0f), -4095.0f / 4096.0f);
+
+//		glColor3ub(0, 255, 0);
+		glTexCoord2d(0.0f, 1.0f);
+		glVertex3f((-pix.width() / 1024.0f), (-pix.height() / 1024.0f), -4095.0f / 4096.0f);
+
+		glEnd();
+
+		deleteTexture(texId);
+		glDisable(GL_TEXTURE_2D);
+	}*/
 
 	if(camera->isOpen() && camera->hasCamera() && camID < camera->cameraCount()) {
 		const Camera &cam = camera->camera(camID);
@@ -301,6 +338,22 @@ void WalkmeshWidget::paintGL()
 
 		glEnd();
 	}
+
+	/*if(scripts && scripts->isOpen()) {
+		QMultiMap<int, FF7Position> positions;
+		scripts->listModelPositions(positions);
+		if(!positions.isEmpty()) {
+			QMapIterator<int, FF7Position> i(positions);
+			while(i.hasNext()) {
+				i.next();
+				const int modelId = i.key();
+				const FF7Position &position = i.value();
+
+				FieldModelFile *fieldModel = field->fieldModel(modelId);
+
+			}
+		}
+	}*/
 }
 
 void WalkmeshWidget::drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access)
@@ -329,7 +382,7 @@ void WalkmeshWidget::mousePressEvent(QMouseEvent *event)
 	setFocus();
 	if(event->button() == Qt::MidButton)
 	{
-		distance = -35;
+		resetCamera();
 		updateGL();
 	}
 	else if(event->button() == Qt::LeftButton)

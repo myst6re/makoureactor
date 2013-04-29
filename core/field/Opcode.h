@@ -31,6 +31,12 @@ typedef struct {
 	quint16 groupID, scriptID, opcodeID;
 } FF7Window;
 
+typedef struct {
+	qint16 x, y, z;
+	quint16 id;
+	bool hasZ, hasId;
+} FF7Position;
+
 typedef struct _ff7Var {
 	_ff7Var(quint8 b, quint8 a) {
 		bank = b;
@@ -166,6 +172,7 @@ public:
 	void shiftTextIds(int textId, int steps);
 	void shiftTutIds(int tutId, int steps);
 	void listWindows(int groupID, int scriptID, int opcodeID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
+	virtual void listModelPositions(QList<FF7Position> &positions) const;
 	void backgroundParams(QHash<quint8, quint8> &enabledParams) const;
 	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
@@ -2113,6 +2120,7 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
+	void listModelPositions(QList<FF7Position> &positions) const;
 	quint8 banks[2];
 	qint16 targetX, targetY, targetZ;
 	quint16 targetI;
@@ -2126,6 +2134,7 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
+	void listModelPositions(QList<FF7Position> &positions) const;
 	quint8 banks[2];
 	qint16 targetX, targetY;
 	quint16 targetI;
@@ -2139,6 +2148,7 @@ public:
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
+	void listModelPositions(QList<FF7Position> &positions) const;
 	quint8 banks[2];
 	qint16 targetX, targetY, targetZ;
 };

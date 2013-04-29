@@ -68,6 +68,7 @@ public:
 	bool searchTextP(const QRegExp &text, int &textID, int &from, int &index, int &size) const;
 	void setWindow(const FF7Window &win);
 	void listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
+	void listModelPositions(QMultiMap<int, FF7Position> &positions) const;
 
 	void shiftTutIds(int row, int shift);
 
