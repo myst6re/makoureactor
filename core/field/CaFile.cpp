@@ -16,80 +16,100 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "CaFile.h"
+#include "Field.h"
 
-CaFile::CaFile() :
-	opened(false), modified(false)
+CaFile::CaFile(Field *field) :
+	FieldPart(field)
 {
 }
 
-CaFile::CaFile(const QByteArray &data) :
-	opened(false), modified(false)
+bool CaFile::open()
 {
-	open(data);
+	return open(field()->sectionData(Field::Camera));
 }
 
 bool CaFile::open(const QByteArray &data)
 {
 	const char *constData = data.constData();
 	int caSize = data.size();
+	bool isPC;
 
 	if(sizeof(Camera) != 40) {
 		qWarning() << "sizeof ca struct error" << sizeof(Camera);
 		return false;
 	}
 
-	if(caSize < 38) {
+	if(caSize == 40 || (caSize - 38) % 18 == 0) {
+		isPC = false;
+	} else if(caSize == 38 || caSize % 38 == 0) {
+		isPC = true;
+	} else {
 		qWarning() << "invalid ca size" << caSize;
 		return false;
 	}
 
-	cameras.clear();
+	clear();
 
-	Camera camera;
+	Camera camera = Camera();
 
-	quint32 caCount = caSize / 38;
+	// First camera (mandatory)
+	memcpy(&camera, constData, caSize != 40 ? 38 : 40);
+	cameras.append(camera);
 
-	for(quint32 i=0 ; i<caCount ; ++i) {
-		memcpy(&camera, constData + i*38, 38);
-
-		cameras.append(camera);
+	if(caSize > 40) {
+		/* The structure can be partially filled
+		 * In that case, values of the first camera
+		 * are implicitly used to complete. */
+		quint32 caCount;
+		if(isPC) {
+			caCount = caSize/38;
+			for(quint32 i=1 ; i<caCount ; ++i) {
+				memcpy(&camera, constData + i * 38, 38);
+				cameras.append(camera);
+			}
+		} else {
+			caCount = (caSize - 38) / 18;
+			for(quint32 i=0 ; i<caCount ; ++i) {
+				memcpy(&camera, constData + 38 + i * 18, 18);
+				cameras.append(camera);
+			}
+		}
 	}
 
-	opened = true;
-	modified = false;
+	setOpen(true);
 
 	return true;
 }
 
-bool CaFile::save(QByteArray &ca)
+QByteArray CaFile::save() const
 {
-	if(!opened)		return false;
+	QByteArray ca;
 
+	// Camera(s)
+	int camId = 0;
 	foreach(Camera camera, cameras) {
-		camera.camera_axis2z = camera.camera_axis[2].z;
-		ca.append((char *)&camera, 38);
+
+		if(field()->isPS() && camId > 0) {
+			ca.append((char *)&camera, 18);
+		} else {
+			camera.camera_axis2z = camera.camera_axis[2].z;
+			ca.append((char *)&camera, 38);
+		}
+
+		++camId;
 	}
 
-	if(ca.size() % 38 != 0) {
-		qWarning() << "Bad size save ca" << ca.size();
+	// Unknown value
+	if(field()->isPS() && cameras.size() == 1) {
+		ca.append((const char *)&cameras.first().unknown, 2);
 	}
 
-	return true;
+	return ca;
 }
 
-bool CaFile::isOpen() const
+void CaFile::clear()
 {
-	return opened;
-}
-
-bool CaFile::isModified() const
-{
-	return modified;
-}
-
-void CaFile::setModified(bool modified)
-{
-	this->modified = modified;
+	cameras.clear();
 }
 
 bool CaFile::hasCamera() const
@@ -110,20 +130,20 @@ const Camera &CaFile::camera(int camID) const
 void CaFile::setCamera(int camID, const Camera &cam)
 {
 	cameras[camID] = cam;
-	modified = true;
+	setModified(true);
 }
 
 void CaFile::insertCamera(int camID, const Camera &cam)
 {
 	cameras.insert(camID, cam);
-	modified = true;
+	setModified(true);
 }
 
 bool CaFile::removeCamera(int camID)
 {
 	if(cameras.size() > 1) {
 		cameras.removeAt(camID);
-		modified = true;
+		setModified(true);
 		return true;
 	}
 	return false;

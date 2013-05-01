@@ -16,19 +16,34 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModelLoaderPS.h"
+#include "Field.h"
 
-FieldModelLoaderPS::FieldModelLoaderPS() :
-	FieldModelLoader()
+FieldModelLoaderPS::FieldModelLoaderPS(Field *field) :
+	FieldModelLoader(field)
 {
 }
 
-bool FieldModelLoaderPS::load(const QByteArray &data)
+void FieldModelLoaderPS::clear()
+{
+	_modelLoaders.clear();
+}
+
+bool FieldModelLoaderPS::open()
+{
+	return open(field()->sectionData(Field::ModelLoader));
+}
+
+bool FieldModelLoaderPS::open(const QByteArray &data)
 {
 	const char *constData = data.constData();
 
+	if(data.size() < 4) {
+		return false;
+	}
+
 	quint16 size, modelCount;
 	memcpy(&size, constData, 2);
-	memcpy(&modelCount, &constData[2], 2);
+	memcpy(&modelCount, constData + 2, 2);
 
 	if(size != data.size() || (size-4) / 8 != modelCount || (size-4) % 8 != 0) {
 		qWarning() << "invalid model loader size" << size << modelCount << data.size();
@@ -40,10 +55,12 @@ bool FieldModelLoaderPS::load(const QByteArray &data)
 		return false;
 	}
 
+	clear();
+
 	FieldModelLoaderStruct modelLoader;
 
 	for(quint32 i=0 ; i<modelCount ; ++i) {
-		memcpy(&modelLoader, &constData[4 + i*sizeof(FieldModelLoaderStruct)], sizeof(FieldModelLoaderStruct));
+		memcpy(&modelLoader, constData + 4 + i*sizeof(FieldModelLoaderStruct), sizeof(FieldModelLoaderStruct));
 
 		_modelLoaders.append(modelLoader);
 
@@ -54,8 +71,26 @@ bool FieldModelLoaderPS::load(const QByteArray &data)
 //		qDebug() << "modelID" << modelLoader.modelID;
 	}
 
-	setLoaded(true);
+	setOpen(true);
+
 	return true;
+}
+
+QByteArray FieldModelLoaderPS::save() const
+{
+	QByteArray ret;
+
+	quint16 modelCount = _modelLoaders.size(),
+			size = 4 + modelCount * sizeof(FieldModelLoaderStruct);
+
+	ret.append((char *)&size, 2);
+	ret.append((char *)&modelCount, 2);
+
+	foreach(const FieldModelLoaderStruct &modelLoader, _modelLoaders) {
+		ret.append((char *)&modelLoader, sizeof(FieldModelLoaderStruct));
+	}
+
+	return ret;
 }
 
 int FieldModelLoaderPS::modelCount() const

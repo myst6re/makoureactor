@@ -1,31 +1,92 @@
+/****************************************************************************
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ **
+ ** This program is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ****************************************************************************/
 #include "BackgroundFilePC.h"
 #include "Palette.h"
+#include "../PsColor.h"
+#include "FieldPC.h"
 
-BackgroundFilePC::BackgroundFilePC() :
-	BackgroundFile()
+QHash<quint8, quint32> BackgroundFilePC::posTextures;
+QByteArray BackgroundFilePC::data;
+
+BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
+	BackgroundFile(field)
 {
 }
 
-QPixmap BackgroundFilePC::openBackground(const QByteArray &data, const QByteArray &palData, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+quint16 BackgroundFilePC::textureWidth(const Tile &tile) const
 {
-//	qDebug() << "FieldPC::openBackground";
-	const char *constData = data.constData(), *constDataPal = palData.constData();
-	quint32 dataSize = data.size(), dataPalSize = palData.size(), i, j;
-	QList<Palette> palettes;
+	return depth(tile) * 256;
+}
+
+quint8 BackgroundFilePC::depth(const Tile &tile) const
+{
+	quint32 pos = posTextures.value(tile.textureID);
+	return data.at(pos);
+}
+
+quint32 BackgroundFilePC::originInData(const Tile &tile) const
+{
+	quint32 pos = posTextures.value(tile.textureID);
+	return pos + 2 + (tile.srcY * 256 + tile.srcX) * (quint8)data.at(pos);
+}
+
+QRgb BackgroundFilePC::directColor(quint16 color) const
+{
+	return qRgb( (color>>11)*COEFF_COLOR, (color>>6 & 31)*COEFF_COLOR, (color & 31)*COEFF_COLOR ); // special PC RGB16 color
+}
+
+QList<Palette *> BackgroundFilePC::openPalettes(const QByteArray &data, const QByteArray &palData)
+{
+	const char *constDataPal = palData.constData();
+	quint32 dataPalSize = palData.size(), i;
+	QList<Palette *> palettes;
 	quint16 nb;
 
-	if(dataPalSize < 12)	return QPixmap();
+	if(dataPalSize < 12) {
+		return QList<Palette *>() << NULL;
+	}
 
 	memcpy(&nb, constDataPal + 10, 2);//nbPalettes
 
-	if(dataPalSize < quint32(12+nb*512))	return QPixmap();
+	if(dataPalSize < quint32(12+nb*512)) {
+		return QList<Palette *>() << NULL;
+	}
 
-	for(i=0 ; i<nb ; ++i)
-		palettes.append(Palette(constDataPal + 12+i*512, data.at(12+i)));
+	for(i=0 ; i<nb ; ++i) {
+		palettes.append(new PalettePC(constDataPal + 12+i*512, data.at(12+i)));
+	}
 
+	return palettes;
+}
+
+QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+{
+	data = field()->sectionData(Field::Background);
+	const char *constData = data.constData();
+	quint32 dataSize = data.size(), i;
+	QList<Palette *> palettes = openPalettes(data, field()->sectionData(Field::PalettePC));
 	quint32 aTex = 44;
 	quint16 nbTiles1, nbTiles2=0, nbTiles3=0, nbTiles4=0;
 	bool exist2, exist3, exist4;
+
+	if(palettes.size() == 1 && palettes.first() == NULL) {
+		return QPixmap();
+	}
 
 	if(dataSize < aTex+2)	return QPixmap();
 
@@ -56,7 +117,7 @@ QPixmap BackgroundFilePC::openBackground(const QByteArray &data, const QByteArra
 	}
 
 	aTex += 8;
-	QHash<quint8, quint32> posTextures;
+	posTextures.clear();
 
 	//Textures
 	for(i=0 ; i<42 ; ++i)
@@ -72,29 +133,19 @@ QPixmap BackgroundFilePC::openBackground(const QByteArray &data, const QByteArra
 	}
 
 	aTex = 52;
+	TilePC tile;
 	QMultiMap<qint16, Tile> tiles;
-	Tile tile;
-	quint16 largeurMax=0, largeurMin=0, hauteurMax=0, hauteurMin=0;
 
 	//BG 0
 	for(i=0 ; i<nbTiles1 ; ++i) {
 		memcpy(&tile, constData + aTex+i*52, 34);
 
 		if(posTextures.contains(tile.textureID) && (tile.paletteID==0 || tile.paletteID < palettes.size())
-			&& qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000) {
+			&& qAbs(tile.dstX) < 1000 && qAbs(tile.dstY) < 1000) {
 			tile.size = 16;
 
-			if(tile.cibleX >= 0 && tile.cibleX > largeurMax)
-				largeurMax = tile.cibleX;
-			else if(tile.cibleX < 0 && -tile.cibleX > largeurMin)
-				largeurMin = -tile.cibleX;
-			if(tile.cibleY >= 0 && tile.cibleY > hauteurMax)
-				hauteurMax = tile.cibleY;
-			else if(tile.cibleY < 0 && -tile.cibleY > hauteurMin)
-				hauteurMin = -tile.cibleY;
-
 			if(layers==NULL || layers[0])
-				tiles.insert(1, tile);
+				tiles.insert(1, tilePC2Tile(tile));
 		}
 	}
 	aTex += nbTiles1*52 + 1;
@@ -111,20 +162,11 @@ QPixmap BackgroundFilePC::openBackground(const QByteArray &data, const QByteArra
 			}
 
 			if(posTextures.contains(tile.textureID) && (tile.paletteID==0 || tile.paletteID < palettes.size())
-				&& qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000) {
+				&& qAbs(tile.dstX) < 1000 && qAbs(tile.dstY) < 1000) {
 				tile.size = 16;
 
-				if(tile.cibleX >= 0 && tile.cibleX > largeurMax)
-					largeurMax = tile.cibleX;
-				else if(tile.cibleX < 0 && -tile.cibleX > largeurMin)
-					largeurMin = -tile.cibleX;
-				if(tile.cibleY >= 0 && tile.cibleY > hauteurMax)
-					hauteurMax = tile.cibleY;
-				else if(tile.cibleY < 0 && -tile.cibleY > hauteurMin)
-					hauteurMin = -tile.cibleY;
-
 				if((tile.state==0 || paramActifs.value(tile.param, 0)&tile.state) && (layers==NULL || layers[1]))
-					tiles.insert(4096-tile.ID, tile);
+					tiles.insert(4096-tile.ID, tilePC2Tile(tile));
 			}
 		}
 	}
@@ -142,20 +184,11 @@ QPixmap BackgroundFilePC::openBackground(const QByteArray &data, const QByteArra
 			}
 
 			if(posTextures.contains(tile.textureID) && (tile.paletteID==0 || tile.paletteID < palettes.size())
-					&& qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000) {
+					&& qAbs(tile.dstX) < 1000 && qAbs(tile.dstY) < 1000) {
 				tile.size = 32;
 
-				if(tile.cibleX >= 0 && tile.cibleX+16 > largeurMax)
-					largeurMax = tile.cibleX+16;
-				else if(tile.cibleX < 0 && -tile.cibleX > largeurMin)
-					largeurMin = -tile.cibleX;
-				if(tile.cibleY >= 0 && tile.cibleY+16 > hauteurMax)
-					hauteurMax = tile.cibleY+16;
-				else if(tile.cibleY < 0 && -tile.cibleY > hauteurMin)
-					hauteurMin = -tile.cibleY;
-
 				if((tile.state==0 || paramActifs.value(tile.param, 0)&tile.state) && (layers==NULL || layers[2]))
-					tiles.insert(4096-(z[0]!=-1 ? z[0] : tile.ID), tile);
+					tiles.insert(4096-(z[0]!=-1 ? z[0] : tile.ID), tilePC2Tile(tile));
 			}
 		}
 	}
@@ -173,93 +206,21 @@ QPixmap BackgroundFilePC::openBackground(const QByteArray &data, const QByteArra
 			}
 
 			if(posTextures.contains(tile.textureID) && (tile.paletteID==0 || tile.paletteID < palettes.size())
-					&& qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000) {
+					&& qAbs(tile.dstX) < 1000 && qAbs(tile.dstY) < 1000) {
 				tile.size = 32;
 
-				if(tile.cibleX >= 0 && tile.cibleX+16 > largeurMax)
-					largeurMax = tile.cibleX+16;
-				else if(tile.cibleX < 0 && -tile.cibleX > largeurMin)
-					largeurMin = -tile.cibleX;
-				if(tile.cibleY >= 0 && tile.cibleY+16 > hauteurMax)
-					hauteurMax = tile.cibleY+16;
-				else if(tile.cibleY < 0 && -tile.cibleY > hauteurMin)
-					hauteurMin = -tile.cibleY;
-
 				if((tile.state==0 || paramActifs.value(tile.param, 0)&tile.state) && (layers==NULL || layers[3]))
-					tiles.insert(4096-(z[1]!=-1 ? z[1] : tile.ID), tile);
+					tiles.insert(4096-(z[1]!=-1 ? z[1] : tile.ID), tilePC2Tile(tile));
 			}
 		}
 	}
 
-	if(tiles.isEmpty())	return QPixmap();
-
-	int width = largeurMin + largeurMax + 16;
-	QImage image(width, hauteurMin + hauteurMax + 16, QImage::Format_ARGB32);
-	image.fill(0xFF000000);
-
-	quint32 pos, origin, top;
-	quint16 deuxOctets, baseX;
-	quint8 index, right;
-	QRgb *pixels = (QRgb *)image.bits();
-
-	foreach(const Tile &tile, tiles)
-	{
-		pos = posTextures.value(tile.textureID);
-		right = 0;
-		top = (hauteurMin + tile.cibleY) * width;
-		baseX = largeurMin + tile.cibleX;
-
-		origin = pos + 2 + (tile.srcY * 256 + tile.srcX) * (quint8)data.at(pos);
-
-		if((quint8)data.at(pos) == 2)
-		{
-			for(j=0 ; j<tile.size*512 ; j+=2)
-			{
-				memcpy(&deuxOctets, constData + origin+j, 2);
-				if(deuxOctets!=0)
-					pixels[baseX + right + top] = qRgb( (deuxOctets>>11)*COEFF_COLOR, (deuxOctets>>6 & 31)*COEFF_COLOR, (deuxOctets & 31)*COEFF_COLOR ); // special PC RGB16 color
-
-				if(++right==tile.size)
-				{
-					right = 0;
-					j += 512-tile.size*2;
-					top += width;
-				}
-			}
-		}
-		else
-		{
-			const Palette &palette = palettes.at(tile.paletteID);
-
-			for(j=0 ; j<tile.size*256 ; ++j)
-			{
-				index = (quint8)data.at(origin+j);
-				if(index!=0 || !palette.transparency) {
-					if(tile.blending) {
-						pixels[baseX + right + top] = blendColor(tile.typeTrans, pixels[baseX + right + top], palette.couleurs.at(index));
-					}
-					else {
-						pixels[baseX + right + top] = palette.couleurs.at(index);
-					}
-				}
-
-				if(++right==tile.size)
-				{
-					right = 0;
-					j += 256-tile.size;
-					top += width;
-				}
-			}
-		}
-	}
-
-//	qDebug() << "/FieldPC::openBackground";
-
-	return QPixmap::fromImage(image);
+	return drawBackground(tiles, palettes, data);
 }
 
-bool BackgroundFilePC::usedParams(const QByteArray &data, QHash<quint8, quint8> &usedParams, bool *layerExists)
+bool BackgroundFilePC::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
+	data = field()->sectionData(Field::Background);
 	if(data.isEmpty())	return false;
 
 	const char *constData = data.constData();
@@ -299,7 +260,7 @@ bool BackgroundFilePC::usedParams(const QByteArray &data, QHash<quint8, quint8> 
 	layerExists[1] = exist3;
 	layerExists[2] = exist4;
 
-	Tile tile;
+	TilePC tile;
 
 	//BG 0
 	aTex = 52 + nbTiles1*52 + 1;
@@ -312,7 +273,7 @@ bool BackgroundFilePC::usedParams(const QByteArray &data, QHash<quint8, quint8> 
 		for(i=0 ; i<nbTiles2 ; ++i)
 		{
 			memcpy(&tile, constData + aTex+i*52, 34);
-			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
+			if(tile.param && qAbs(tile.dstX) < 1000 && qAbs(tile.dstY) < 1000)
 			{
 				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
 			}
@@ -328,7 +289,7 @@ bool BackgroundFilePC::usedParams(const QByteArray &data, QHash<quint8, quint8> 
 		for(i=0 ; i<nbTiles3 ; ++i)
 		{
 			memcpy(&tile, constData + aTex+i*52, 34);
-			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
+			if(tile.param && qAbs(tile.dstX) < 1000 && qAbs(tile.dstY) < 1000)
 			{
 				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
 			}
@@ -344,11 +305,33 @@ bool BackgroundFilePC::usedParams(const QByteArray &data, QHash<quint8, quint8> 
 		for(i=0 ; i<nbTiles4 ; ++i)
 		{
 			memcpy(&tile, constData + aTex+i*52, 34);
-			if(tile.param && qAbs(tile.cibleX) < 1000 && qAbs(tile.cibleY) < 1000)
+			if(tile.param && qAbs(tile.dstX) < 1000 && qAbs(tile.dstY) < 1000)
 			{
 				usedParams.insert(tile.param, usedParams.value(tile.param) | tile.state);
 			}
 		}
 	}
 	return true;
+}
+
+Tile BackgroundFilePC::tilePC2Tile(const TilePC &tile)
+{
+	Tile ret;
+
+	ret.dstX = tile.dstX;
+	ret.dstY = tile.dstY;
+	ret.srcX = tile.srcX;
+	ret.srcY = tile.srcY;
+	ret.paletteID = tile.paletteID;
+	ret.ID = tile.ID;
+	ret.param = tile.param;
+	ret.state = tile.state;
+	ret.blending = tile.blending;
+	ret.typeTrans = tile.typeTrans;
+	ret.size = tile.size;
+	ret.textureID = tile.textureID;
+	ret.textureID2 = tile.textureID2;
+	ret.depth = tile.depth;
+
+	return ret;
 }

@@ -63,16 +63,16 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, QWidget *par
 
 	layout = new QVBoxLayout(this);
 	layout->addWidget(group);
-	layout->addWidget(buttonBox, Qt::AlignRight);
+	layout->addWidget(buttonBox);
 	layout->addStretch();
 
 	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
 	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
 }
 
-Field::FieldParts ImportDialog::parts() const
+Field::FieldSections ImportDialog::parts() const
 {
-	Field::FieldParts parts;
+	Field::FieldSections parts;
 
 	if(scripts->isChecked())	parts |= Field::Scripts;
 	if(akaos->isChecked())		parts |= Field::Akaos;

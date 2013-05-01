@@ -19,6 +19,7 @@
 #define CAFILE_H
 
 #include <QtCore>
+#include "FieldPart.h"
 
 typedef struct {
 	qint16 x, y, z;
@@ -30,19 +31,17 @@ typedef struct {
 	qint32 camera_position[3];
 	qint32 blank;
 	quint16 camera_zoom;
-	quint16 padding;
+	quint16 unknown;// seems to be undefined
 } Camera;
 
-class CaFile
+class CaFile : public FieldPart
 {
 public:
-	CaFile();
-	CaFile(const QByteArray &data);
+	explicit CaFile(Field *field);
+	bool open();
 	bool open(const QByteArray &data);
-	bool save(QByteArray &ca);
-	bool isOpen() const;
-	bool isModified() const;
-	void setModified(bool modified);
+	QByteArray save() const;
+	void clear();
 	bool hasCamera() const;
 	int cameraCount() const;
 	const Camera &camera(int camID) const;
@@ -51,7 +50,6 @@ public:
 	bool removeCamera(int camID);
 private:
 	QList<Camera> cameras;
-	bool opened, modified;
 };
 
 #endif // CAFILE_H

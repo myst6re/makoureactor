@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "GrpScript.h"
-#include "FF7Text.h"
+#include "../FF7Text.h"
 
 GrpScript::GrpScript() :
 	character(-1), animation(false), location(false), director(false)
@@ -190,7 +190,7 @@ QString GrpScript::type()
 	{
 	case Model:
 		if(character == 0xFF)	return QObject::tr("Objet 3D");
-		return QString("%1").arg(Opcode::_personnage(character));
+		return QString("%1").arg(Opcode::character(character));
 	case Location:	return QObject::tr("Zone");
 	case Animation:	return QObject::tr("Animation");
 	case Director:	return QObject::tr("Main");
@@ -299,16 +299,16 @@ bool GrpScript::searchMapJump(quint16 field, int &scriptID, int &opcodeID) const
 	return searchMapJump(field, ++scriptID, opcodeID = 0);
 }
 
-bool GrpScript::searchTextInScripts(const QRegExp &text, int &scriptID, int &opcodeID) const
+bool GrpScript::searchTextInScripts(const QRegExp &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if(scriptID < 0)
 		opcodeID = scriptID = 0;
 	if(scriptID >= _scripts.size())
 		return false;
-	if(_scripts.at(scriptID)->searchTextInScripts(text, opcodeID))
+	if(_scripts.at(scriptID)->searchTextInScripts(text, opcodeID, scriptsAndTexts))
 		return true;
 
-	return searchTextInScripts(text, ++scriptID, opcodeID = 0);
+	return searchTextInScripts(text, ++scriptID, opcodeID = 0, scriptsAndTexts);
 }
 
 bool GrpScript::searchP(int &scriptID, int &opcodeID) const
@@ -362,14 +362,14 @@ bool GrpScript::searchMapJumpP(quint16 field, int &scriptID, int &opcodeID) cons
 	return searchMapJumpP(field, --scriptID, opcodeID = 2147483647);
 }
 
-bool GrpScript::searchTextInScriptsP(const QRegExp &text, int &scriptID, int &opcodeID) const
+bool GrpScript::searchTextInScriptsP(const QRegExp &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if(!searchP(scriptID, opcodeID))
 		return false;
-	if(_scripts.at(scriptID)->searchTextInScriptsP(text, opcodeID))
+	if(_scripts.at(scriptID)->searchTextInScriptsP(text, opcodeID, scriptsAndTexts))
 		return true;
 
-	return searchTextInScriptsP(text, --scriptID, opcodeID = 2147483647);
+	return searchTextInScriptsP(text, --scriptID, opcodeID = 2147483647, scriptsAndTexts);
 }
 
 void GrpScript::listUsedTexts(QSet<quint8> &usedTexts) const
@@ -408,4 +408,12 @@ void GrpScript::listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows,
 	int scriptID=0;
 	foreach(Script *script, _scripts)
 		script->listWindows(groupID, scriptID++, windows, text2win);
+}
+
+void GrpScript::listModelPositions(QList<FF7Position> &positions) const
+{
+	if(_scripts.size() >= 1) {
+		_scripts.at(0)->listModelPositions(positions);
+		_scripts.at(1)->listModelPositions(positions);
+	}
 }

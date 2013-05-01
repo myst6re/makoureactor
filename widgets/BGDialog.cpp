@@ -115,8 +115,8 @@ void BGDialog::fillWidgets()
 	allparams.clear();
 	params.clear();
 
-	if(field->usedParams(usedParams, layerExists))
-	{
+	if(field->background()->usedParams(usedParams, layerExists)) {
+
 		foreach(const quint8 &param, usedParams.keys()) {
 			parametersWidget->addItem(tr("Paramètre %1").arg(param), param);
 		}
@@ -245,5 +245,5 @@ void BGDialog::changeZ(int value)
 void BGDialog::updateBG()
 {
 	if(!field)	return;
-	image->setPixmap(field->openBackground(params, z, layers));
+	image->setPixmap(field->background()->openBackground(params, z, layers));
 }

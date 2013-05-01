@@ -16,11 +16,9 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldPS.h"
-#include "FieldArchiveIO.h"
-#include "Palette.h"
-#include "LZS.h"
-#include "Config.h"
 #include "BackgroundFilePS.h"
+#include "../LZS.h"
+#include "../Config.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
 	Field(name, io)
@@ -35,14 +33,14 @@ FieldPS::FieldPS(const Field &field) :
 void FieldPS::openHeader(const QByteArray &fileData)
 {
 	memcpy(sectionPositions, fileData.constData(), headerSize()); // header
-	qint32 vramDiff = sectionPositions[0] - headerSize();// vram section1 pos - real section 1 pos
+	vramDiff = sectionPositions[0] - headerSize();// vram section1 pos - real section 1 pos
 
 	for(int i=0 ; i<7 ; ++i) {
 		sectionPositions[i] -= vramDiff;
 	}
 }
 
-int FieldPS::sectionId(FieldPart part) const
+int FieldPS::sectionId(FieldSection part) const
 {
 	switch(part) {
 	case Scripts:		return 0;
@@ -57,7 +55,7 @@ int FieldPS::sectionId(FieldPart part) const
 	}
 }
 
-quint32 FieldPS::sectionPosition(int idPart)
+quint32 FieldPS::sectionPosition(int idPart) const
 {
 	return sectionPositions[idPart];
 }
@@ -67,22 +65,13 @@ FieldArchiveIOPS *FieldPS::io() const
 	return (FieldArchiveIOPS *)Field::io();
 }
 
-QPixmap FieldPS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+FieldPart *FieldPS::createPart(FieldSection part)
 {
-	return background()->openBackground(
-				sectionData(Background),
-				io()->mimData(this),
-				paramActifs, z, layers);
-}
-
-FieldModelLoader *FieldPS::createFieldModelLoader() const
-{
-	return new FieldModelLoaderPS();
-}
-
-BackgroundFile *FieldPS::createBackground() const
-{
-	return new BackgroundFilePS();
+	switch(part) {
+	case ModelLoader:	return new FieldModelLoaderPS(this);
+	case Background:	return new BackgroundFilePS(this);
+	default:			return Field::createPart(part);
+	}
 }
 
 FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
@@ -97,94 +86,19 @@ FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate
 	return (FieldModelFilePS *)_fieldModel;
 }
 
-bool FieldPS::save(QByteArray &newData, bool compress)
+QByteArray FieldPS::saveHeader() const
 {
-	if(!isOpen())	return false;
+	// No header
+	return QByteArray();
+}
 
-	QByteArray decompresse = io()->fieldData(this), toc;
-	const char *decompresseData = decompresse.constData();
-	quint32 padd, pos, debutSections[9];
+QByteArray FieldPS::saveFooter() const
+{
+	// No footer
+	return QByteArray();
+}
 
-	if(decompresse.isEmpty())	return false;
-
-	for(quint8 i=0 ; i<7 ; ++i)
-		memcpy(debutSections + i, decompresseData + 4*i, 4);
-
-	padd = debutSections[0] - 28;
-
-	toc.append((char *)&debutSections[0], 4);
-
-	// Section 1 (scripts + textes + akaos/tutos)
-	if(section1 && section1->isModified()) {
-		newData.append(section1->save(decompresse.mid(28, debutSections[1]-debutSections[0])));
-	} else {
-		newData.append(decompresse.mid(28, debutSections[1]-debutSections[0]));
-	}
-	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
-
-	// Section 2 (walkmesh)
-	QByteArray section;
-	if(id && id->isModified() && id->save(section)) {
-		newData.append(section);
-	} else {
-		newData.append(decompresse.mid(debutSections[1]-padd, debutSections[2]-debutSections[1]));
-	}
-	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
-
-	// Section 3 (background tileMap)
-	newData.append(decompresse.mid(debutSections[2]-padd, debutSections[3]-debutSections[2]));
-	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
-
-	// Section 4 (camera)
-	section = QByteArray();
-	if(ca && ca->isModified() && ca->save(section)) {
-		newData.append(section);
-	} else {
-		newData.append(decompresse.mid(debutSections[3]-padd, debutSections[4]-debutSections[3]));
-	}
-	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
-
-	// Section 5 (trigger)
-	if(_inf && _inf->isModified()) {
-		newData.append(_inf->save());
-	} else {
-		newData.append(decompresse.mid(debutSections[4]-padd, debutSections[5]-debutSections[4]));
-	}
-	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
-
-	// Section 6 (encounter)
-	if(_encounter && _encounter->isModified()) {
-		newData.append(_encounter->save());
-	} else {
-		newData.append(decompresse.mid(debutSections[5]-padd, debutSections[6]-debutSections[5]));
-	}
-	toc.append((char *)&(pos = 28 + newData.size() + padd), 4);
-
-	// Section 7 (model loader PS)
-	newData.append(decompresse.mid(debutSections[6]-padd));
-
-	newData.prepend(toc);
-
-//	if(decompresse != newData) {
-//		QFile fic("test_"+name()+"_nouveau");
-//		fic.open(QIODevice::WriteOnly);
-//		fic.write(newData);
-//		fic.close();
-//		QFile fic2("test_"+name()+"_original");
-//		fic2.open(QIODevice::WriteOnly);
-//		fic2.write(decompresse);
-//		fic2.close();
-//		qDebug() << name() << " : ERROR";
-//		newData = decompresse;
-//	}
-
-	if(compress)
-	{
-		const QByteArray &compresse = LZS::compress(newData);
-		quint32 taille = compresse.size();
-		newData = QByteArray((char *)&taille, 4).append(compresse);
-		return true;
-	}
-
-	return true;
+QList<Field::FieldSection> FieldPS::orderOfSections() const
+{
+	return QList<FieldSection>() << Scripts << Walkmesh << Background << Camera << Inf << Encounter << ModelLoader;
 }

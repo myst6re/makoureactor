@@ -20,7 +20,6 @@
 
 #include <QtCore>
 #include <QPixmap>
-#include "Palette.h"
 
 typedef struct {
 	quint32 size;

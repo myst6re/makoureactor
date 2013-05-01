@@ -1,3 +1,20 @@
+/****************************************************************************
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ **
+ ** This program is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ****************************************************************************/
 #include "FieldArchivePC.h"
 
 FieldArchivePC::FieldArchivePC() :
@@ -5,9 +22,22 @@ FieldArchivePC::FieldArchivePC() :
 {
 }
 
-FieldArchivePC::FieldArchivePC(const QString &path, bool isDirectory) :
-	FieldArchive(path, isDirectory)
+FieldArchivePC::FieldArchivePC(const QString &path, FieldArchiveIO::Type type) :
+	FieldArchive()
 {
+	switch(type) {
+	case FieldArchiveIO::Lgp:
+		setIO(new FieldArchiveIOPCLgp(path, this));
+		break;
+	case FieldArchiveIO::File:
+		setIO(new FieldArchiveIOPCFile(path, this));
+		break;
+	case FieldArchiveIO::Dir:
+		setIO(new FieldArchiveIOPCDir(path, this));
+		break;
+	default:
+		break;
+	}
 }
 
 FieldArchivePC::~FieldArchivePC()
@@ -28,15 +58,9 @@ void FieldArchivePC::clear()
 	FieldArchive::clear();
 }
 
-TutFile *FieldArchivePC::tut(const QString &name)
+TutFilePC *FieldArchivePC::tut(const QString &name)
 {
-	if(!io() || io()->type() != FieldArchiveIO::Lgp) {
-		return NULL;
-	}
-
-	Lgp *lgp = (Lgp *)io()->device();
-
-	QMapIterator<QString, TutFile *> it(_tuts);
+	QMapIterator<QString, TutFilePC *> it(_tuts);
 
 	while(it.hasNext()) {
 		it.next();
@@ -44,14 +68,16 @@ TutFile *FieldArchivePC::tut(const QString &name)
 		const QString &tutName = it.key();
 
 		if(name.startsWith(tutName, Qt::CaseInsensitive)) {
-			TutFile *tutFile = it.value();
+			TutFilePC *tutFile = it.value();
 			if(tutFile == NULL) {
-				if(!lgp->isOpen() && !lgp->open())
-					return NULL;
-				QByteArray data = lgp->fileData(tutName + ".tut");
+				QByteArray data = io()->fileData(tutName + ".tut", false, false);
 				if(!data.isEmpty()) {
-					tutFile = new TutFile(data, true);
-					_tuts.insert(name, tutFile);
+					tutFile = new TutFilePC();
+					if(!((TutFile *)tutFile)->open(data)) {
+						delete tutFile;
+						return NULL;
+					}
+					_tuts.insert(tutName, tutFile);
 					return tutFile;
 				} else {
 					return NULL;
@@ -65,7 +91,7 @@ TutFile *FieldArchivePC::tut(const QString &name)
 	return NULL;
 }
 
-const QMap<QString, TutFile *> &FieldArchivePC::tuts() const
+const QMap<QString, TutFilePC *> &FieldArchivePC::tuts() const
 {
 	return _tuts;
 }
@@ -86,7 +112,7 @@ void FieldArchivePC::setSaved()
 	FieldArchive::setSaved();
 }
 
-FieldArchiveIO *FieldArchivePC::io() const
+FieldArchiveIOPC *FieldArchivePC::io() const
 {
-	return FieldArchive::io();
+	return (FieldArchiveIOPC *)FieldArchive::io();
 }

@@ -29,8 +29,11 @@ typedef struct {
 class FieldModelLoaderPS : public FieldModelLoader
 {
 public:
-	FieldModelLoaderPS();
-	bool load(const QByteArray &data);
+	explicit FieldModelLoaderPS(Field *field);
+	void clear();
+	bool open();
+	bool open(const QByteArray &data);
+	QByteArray save() const;
 	int modelCount() const;
 	int animCount(int modelID) const;
 	quint16 unknown(int modelID) const;

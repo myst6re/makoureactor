@@ -17,7 +17,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "FF7Text.h"
+#include "core/FF7Text.h"
 
 const char *FF7Text::caract[256] =
 {

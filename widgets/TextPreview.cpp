@@ -16,9 +16,9 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TextPreview.h"
-#include "FF7Text.h"
+#include "core/FF7Text.h"
 #include "Data.h"
-#include "Config.h"
+#include "core/Config.h"
 
 QTimer TextPreview::timer;
 bool TextPreview::curFrame = true;
@@ -27,8 +27,9 @@ int TextPreview::multicolor = -1;
 int TextPreview::fontColor = WHITE;
 QImage TextPreview::fontImage;
 
-TextPreview::TextPreview(QWidget *parent)
-	: QWidget(parent), _currentPage(0), _currentWin(0), acceptMove(false), readOnly(false)
+TextPreview::TextPreview(QWidget *parent) :
+	QWidget(parent), _currentPage(0), _currentWin(0),
+	acceptMove(false), readOnly(false)
 {
 	pagesPos.append(0);
 
@@ -46,7 +47,7 @@ TextPreview::TextPreview(QWidget *parent)
 //		bool jp = Config::value("jp_txt", false).toBool();
 //		Config::setValue("jp_txt", false);
 		for(int i=0 ; i<12 ; ++i) {
-			QByteArray nameData = FF7Text(dataNames.at(i), false).getData();
+			QByteArray nameData = FF7Text(dataNames.at(i), false).data();
 			names.append(nameData);
 			namesWidth[i] = calcFF7TextWidth(nameData);
 		}
@@ -669,15 +670,17 @@ void TextPreview::word(int *x, int *y, const QByteArray &charIds, QPainter *pain
 
 quint8 TextPreview::charW(int tableId, int charId)
 {
-	return Data::windowBin.isValid()
-			? Data::windowBin.charWidth(tableId, charId)
+	return Data::windowBin.isValid() &&
+			(tableId != 0 || !Data::windowBin.isJp())
+			? Data::windowBin.charWidth(tableId == 0 ? 0 : tableId - 1, charId)
 			: CHAR_WIDTH(charWidth[tableId][charId]);
 }
 
 quint8 TextPreview::leftPadding(int tableId, int charId)
 {
-	return Data::windowBin.isValid()
-			? Data::windowBin.charLeftPadding(tableId, charId)
+	return Data::windowBin.isValid() &&
+			(tableId != 0 || !Data::windowBin.isJp())
+			? Data::windowBin.charLeftPadding(tableId == 0 ? 0 : tableId - 1, charId)
 			: LEFT_PADD(charWidth[tableId][charId]);
 }
 
@@ -688,8 +691,9 @@ quint8 TextPreview::charFullWidth(int tableId, int charId)
 
 QImage TextPreview::letterImage(int tableId, int charId)
 {
-	if(Data::windowBin.isValid() && tableId == 0) {
-		return Data::windowBin.letter(tableId, charId);
+	if(Data::windowBin.isValid() &&
+			(tableId != 0 || !Data::windowBin.isJp())) {
+		return Data::windowBin.letter(tableId == 0 ? 0 : tableId - 1, charId, WindowBinFile::FontColor(fontColor));
 	} else {
 		int charIdImage = charId + posTable[tableId];
 		return fontImage.copy((charIdImage%21)*12, (charIdImage/21)*12, 12, 12);
@@ -698,9 +702,7 @@ QImage TextPreview::letterImage(int tableId, int charId)
 
 void TextPreview::setFontColor(int id, bool blink)
 {
-	if(Data::windowBin.isValid()) {
-		Data::windowBin.setFontColor(WindowBinFile::FontColor(blink ? DARKGREY : id));
-	} else {
+	if(!Data::windowBin.isValid()) {
 		fontImage.setColorTable(fontPalettes[blink ? DARKGREY : id]);
 	}
 	fontColor = id;

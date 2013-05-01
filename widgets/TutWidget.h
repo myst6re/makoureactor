@@ -19,14 +19,19 @@
 #define TUTWIDGET_H
 
 #include <QtGui>
-#include "Field.h"
-#include "TutFile.h"
+#include "core/field/Field.h"
+#include "core/field/TutFileStandard.h"
+#include "core/field/TutFilePC.h"
 
 class TutWidget : public QDialog
 {
 	Q_OBJECT
 public:
-	TutWidget(Field *field, TutFile *tut, TutFile *tutPC, QWidget *parent=0);
+	TutWidget(QWidget *parent=0);
+	void fill(Field *field, TutFilePC *tutPC, bool reload=false);
+	void clear();
+signals:
+	void modified();
 private slots:
 	void changeVersion(bool isPS);
 	void showText(QListWidgetItem *item, QListWidgetItem *lastItem);
@@ -42,19 +47,17 @@ private:
 	void saveText(QListWidgetItem *item);
 
 	QStackedWidget *stackedWidget;
-	QRadioButton *versionPS;
+	QRadioButton *versionPS, *versionPC;
 	QListWidget *list;
 	QPushButton *exportButton, *importButton;
 	QPlainTextEdit *textEdit;
 	QLabel *akaoDesc;
 	QComboBox *akaoIDList;
 	Field *field;
-	TutFile *tut, *tutPC, *currentTut, tutCpy, tutPCCpy;
-	bool textChanged;
+	TutFile *currentTut;
+	TutFileStandard *tut;
+	TutFilePC *tutPC;
 	QSet<quint8> usedTuts;
-protected:
-	void accept();
-	void reject();
 };
 
 #endif // TUTWIDGET_H

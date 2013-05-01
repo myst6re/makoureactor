@@ -17,47 +17,43 @@
  ****************************************************************************/
 #include "Window.h"
 #include "Parameters.h"
-#include "GrpScript.h"
-#include "ConfigWindow.h"
-#include "EncounterWidget.h"
-#include "TutWidget.h"
-#include "MiscWidget.h"
-#include "ImportDialog.h"
-#include "MassExportDialog.h"
-#include "MassImportDialog.h"
-#include "Config.h"
+#include "core/field/GrpScript.h"
+#include "widgets/ConfigWindow.h"
+#include "widgets/EncounterWidget.h"
+#include "widgets/MiscWidget.h"
+#include "widgets/ImportDialog.h"
+#include "widgets/MassExportDialog.h"
+#include "widgets/MassImportDialog.h"
+#include "widgets/FontManager.h"
+#include "core/Config.h"
 #include "Data.h"
-#include "FieldArchivePC.h"
-#include "FieldArchivePS.h"
+#include "core/field/FieldArchivePC.h"
+#include "core/field/FieldArchivePS.h"
 
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
-	textDialog(0), _modelManager(0), _walkmeshManager(0),
-	_backgroundManager(0), taskBarButton(0), progressDialog(0)
+	textDialog(0), _modelManager(0), _tutManager(0), _walkmeshManager(0),
+	_backgroundManager(0)
 {
 	setWindowTitle();
 	setMinimumSize(700, 600);
 	resize(900, 700);
 
-	statusBar()->show();
-	progression = new QProgressBar(statusBar());
-	progression->setFixedSize(160, 16);
-	progression->setMinimum(0);
-	progression->setAlignment(Qt::AlignCenter);
-	progression->hide();
+	taskBarButton = new QTaskBarButton(this);
+	taskBarButton->setMinimum(0);
 
-#ifdef Q_OS_WIN
-	if(QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7) {
-		taskBarButton = new QTaskBarButton(this);
-		taskBarButton->setMinimum(0);
-	}
-#endif
+	progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
+	progressDialog->setWindowModality(Qt::WindowModal);
+	progressDialog->setAutoClose(false);
 
-	authorLbl = new QLabel(statusBar());
+	authorLbl = new QLabel();
 	authorLbl->setMargin(2);
-	authorLbl->hide();
-	statusBar()->addPermanentWidget(authorLbl);
-	statusBar()->addPermanentWidget(progression);
+
+	QWidget *toolBarRight = new QWidget();
+	QHBoxLayout *toolBarRightLayout = new QHBoxLayout(toolBarRight);
+	toolBarRightLayout->addStretch();
+	toolBarRightLayout->addWidget(authorLbl, 0, Qt::AlignRight);
+	toolBarRightLayout->setContentsMargins(QMargins());
 	
 	QMenu *menu;
 	QAction *actionOpen, *actionFind, *action;
@@ -67,7 +63,7 @@ Window::Window() :
 	menu = menuBar->addMenu(tr("&Fichier"));
 	
 	actionOpen = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Ouvrir..."), this, SLOT(openFile()), QKeySequence("Ctrl+O"));
-	menu->addAction(tr("Ouvrir un &dossier Field (PS)..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
+	menu->addAction(tr("Ouvrir un &dossier..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
 	actionSave = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Enregi&strer"), this, SLOT(save()), QKeySequence("Ctrl+S"));
 	actionSaveAs = menu->addAction(tr("Enre&gistrer Sous..."), this, SLOT(saveAs()), QKeySequence("Shift+Ctrl+S"));
 	actionExport = menu->addAction(tr("&Exporter l'écran courant..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
@@ -87,10 +83,12 @@ Window::Window() :
 	menu->addAction(tr("&Textes..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
 	actionModels = menu->addAction(tr("&Modèles 3D..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
 	actionEncounter = menu->addAction(tr("&Rencontres aléatoires..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
-	actionTut = menu->addAction(tr("&Tutoriels/Musiques..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
+	menu->addAction(tr("&Tutoriels/Musiques..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
 	menu->addAction(tr("&Zones..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
 	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("&Divers..."), this, SLOT(miscManager()));
+	menu->addSeparator();
+	menu->addAction(tr("&Police de caractères"), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
 
 	menu = menuBar->addMenu(tr("&Paramètres"));
 
@@ -108,21 +106,21 @@ Window::Window() :
 
 	menuLang->addSeparator();
 	QTranslator translator;
-	foreach(QString str, stringList) {
+	foreach(const QString &str, stringList) {
 		translator.load(qApp->applicationDirPath()+"/"+str);
 		action = menuLang->addAction(translator.translate("Window", "Français"));
-		str = str.mid(14,2);
-		action->setData(str);
+		QString lang = str.mid(14, 2);
+		action->setData(lang);
 		action->setCheckable(true);
-		action->setChecked(Config::value("lang").toString()==str);
+		action->setChecked(Config::value("lang").toString()==lang);
 	}
 	connect(menuLang, SIGNAL(triggered(QAction*)), this, SLOT(changeLanguage(QAction*)));
 
 	menu->addAction(tr("Configuration..."), this, SLOT(config()))->setMenuRole(QAction::PreferencesRole);
 
 	toolBar = new QToolBar(tr("Barre d'outils &principale"));
-	toolBar->setObjectName("toolBar");
-	toolBar->setIconSize(QSize(16,16));
+	toolBar->setObjectName("toolbar");
+	toolBar->setIconSize(QSize(16, 16));
 	addToolBar(toolBar);
 	toolBar->addAction(actionOpen);
 	actionOpen->setStatusTip(tr("Ouvrir un fichier"));
@@ -135,6 +133,7 @@ Window::Window() :
 	actionRun->setShortcut(Qt::Key_F8);
 	actionRun->setShortcutContext(Qt::ApplicationShortcut);
 	actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
+	authorAction = toolBar->addWidget(toolBarRight);
 
 	QFont font;
 	font.setPointSize(8);
@@ -142,6 +141,7 @@ Window::Window() :
 	lineSearch = new QLineEdit(this);
 	lineSearch->setFixedWidth(120);
 	lineSearch->setStatusTip(tr("Recherche rapide"));
+	lineSearch->setPlaceholderText(tr("Rechercher..."));
 	
 	fieldList = new QTreeWidget(this);
 	fieldList->setColumnCount(2);
@@ -158,7 +158,7 @@ Window::Window() :
 	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
 
 	groupScriptList = new GrpScriptList(this);
-	groupScriptList->setFixedWidth(180);
+	groupScriptList->setFixedWidth(176);
 	groupScriptList->setFont(font);
 	connect(groupScriptList, SIGNAL(changed()), SLOT(setModified()));
 	
@@ -182,16 +182,17 @@ Window::Window() :
 	connect(opcodeList, SIGNAL(changed()), SLOT(compile()));
 
 	zoneImage = new ApercuBG();
-	zoneImage->setFixedSize(304, 214);
+	zoneImage->setFixedSize(300, 225);
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
-		fieldModel->setFixedSize(304, 214);
+		fieldModel->setFixedSize(300, 225);
 	} else {
 		fieldModel = 0;
 	}
 
 	zonePreview = new QStackedWidget(this);
-	zonePreview->setFixedSize(304, 214);
+	zonePreview->setContentsMargins(QMargins());
+	zonePreview->setFixedSize(300, 225);
 	zonePreview->addWidget(zoneImage);
 	if(fieldModel)
 		zonePreview->addWidget(fieldModel);
@@ -391,7 +392,7 @@ int Window::closeFile(bool quit)
 		if(fieldModel)	fieldModel->clear();
 		zonePreview->setCurrentIndex(0);
 
-		authorLbl->hide();
+		authorAction->setVisible(false);
 		setWindowModified(false);
 		setWindowTitle();
 		searchDialog->setEnabled(false);
@@ -401,8 +402,13 @@ int Window::closeFile(bool quit)
 			textDialog->setEnabled(false);
 		}
 		if(_modelManager) {
-			_modelManager->clear();
-			_modelManager->setEnabled(false);
+			_modelManager->close();
+			_modelManager->deleteLater();
+			_modelManager = 0;
+		}
+		if(_tutManager) {
+			_tutManager->clear();
+			_tutManager->setEnabled(false);
 		}
 		if(_walkmeshManager) {
 			_walkmeshManager->clear();
@@ -423,7 +429,6 @@ int Window::closeFile(bool quit)
 		actionClose->setEnabled(false);
 		actionModels->setEnabled(false);
 		actionEncounter->setEnabled(false);
-		actionTut->setEnabled(false);
 		actionMisc->setEnabled(false);
 	}
 
@@ -440,12 +445,21 @@ void Window::openFile()
 		if(!cheminFic.isEmpty())
 			cheminFic.append("field/");
 	}
+	QStringList filter;
+	filter.append(tr("Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)"));
+	filter.append(tr("Fichiers Lgp (*.lgp)"));
+	filter.append(tr("Fichier DAT (*.DAT)"));
+	filter.append(tr("Fichier Field PC (*)"));
+	filter.append(tr("Image disque (*.bin *.iso *.img)"));
 
-    cheminFic = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"), cheminFic, tr("Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img);;Fichiers Lgp (*.lgp);;Fichier DAT (*.DAT);;Image disque (*.bin *.iso *.img)"));
+	QString selectedFilter = filter.value(Config::value("open_path_selected_filter").toInt(), filter.first());
+
+	cheminFic = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"), cheminFic, filter.join(";;"), &selectedFilter);
 	if(!cheminFic.isNull())	{
 		int index;
 		if((index = cheminFic.lastIndexOf('/')) == -1)	index = cheminFic.size();
 		Config::setValue("open_path", cheminFic.left(index));
+		Config::setValue("open_path_selected_filter", filter.indexOf(selectedFilter));
 		open(cheminFic);
 	}
 }
@@ -453,7 +467,7 @@ void Window::openFile()
 void Window::openDir()
 {
 	QString cheminFic = QFileDialog::getExistingDirectory(this,
-														  tr("Sélectionnez un dossier contenant des fichiers .DAT issus de Final Fantasy VII (PlayStation)"),
+														  tr("Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII"),
 														  Config::value("open_dir_path").toString());
 
 	if(!cheminFic.isNull())	{
@@ -464,88 +478,99 @@ void Window::openDir()
 
 bool Window::observerWasCanceled() const
 {
-	if(progressDialog) {
-		return progressDialog->wasCanceled();
-	}
-	return false;
+	return progressDialog->wasCanceled();
 }
 
 void Window::setObserverMaximum(unsigned int max)
 {
-	if(taskBarButton) {
-		taskBarButton->setMaximum(max);
-	}
-	if(progressDialog) {
-		progressDialog->setMaximum(max);
-	}
-	progression->setMaximum(max);
+	taskBarButton->setMaximum(max);
+	progressDialog->setMaximum(max);
 }
 
 void Window::setObserverValue(int value)
 {
 	QApplication::processEvents();
 
-	if(taskBarButton) {
-		taskBarButton->setValue(value);
-	}
-	if(progressDialog) {
-		progressDialog->setValue(value);
-	}
-	progression->setValue(value);
+	taskBarButton->setValue(value);
+	progressDialog->setValue(value);
 }
 
-void Window::showProgression()
+void Window::showProgression(const QString &message, bool canBeCanceled)
 {
 	setObserverValue(0);
-	if(taskBarButton) {
-		taskBarButton->setState(QTaskBarButton::Normal);
-	}
-	progression->show();
+	taskBarButton->setState(QTaskBarButton::Normal);
+	progressDialog->setLabelText(message);
+	progressDialog->setCancelButtonText(canBeCanceled ? tr("Annuler") : tr("Arrêter"));
+	progressDialog->show();
 }
 
 void Window::hideProgression()
 {
-	if(taskBarButton) {
-		taskBarButton->setState(QTaskBarButton::Invisible);
-	}
-	progression->hide();
+	taskBarButton->setState(QTaskBarButton::Invisible);
+	progressDialog->hide();
+	progressDialog->reset();
 }
 
 void Window::open(const QString &cheminFic, bool isDir)
 {
 //	qDebug() << "Window::open" << cheminFic << isDir;
-	closeFile();
-	
-	setEnabled(false);
 
 	bool isPS = true;
+	FieldArchiveIO::Type type;
 
-	if(!isDir) {
+	if(isDir) {
+		type = FieldArchiveIO::Dir;
+		QMessageBox question(QMessageBox::Question, tr("Type de fichiers"),
+							 tr("Quel type de fichiers voulez-vous chercher ?\n"
+								" - Les fichiers field PlayStation (\"EXEMPLE.DAT\")\n"
+								" - Les fichiers field PC (\"exemple\")\n"),
+							 QMessageBox::NoButton, this);
+		QAbstractButton *psButton = question.addButton(tr("PS"), QMessageBox::AcceptRole);
+		QAbstractButton *pcButton = question.addButton(tr("PC"), QMessageBox::AcceptRole);
+		question.addButton(QMessageBox::Cancel);
+		question.exec();
+		if(question.clickedButton() != psButton
+				&& question.clickedButton() != pcButton) {
+			return;
+		}
+		isPS = question.clickedButton() == psButton;
+	} else {
 		QString ext = cheminFic.mid(cheminFic.lastIndexOf('.') + 1).toLower();
-		if(ext == "lgp") {
-			isPS = false;
+
+		if(ext == "iso" || ext == "bin" || ext == "img") {
+			type = FieldArchiveIO::Iso;
+		} else {
+			if(ext == "dat") {
+				type = FieldArchiveIO::File;
+			} else if(ext == "lgp") {
+				isPS = false;
+				type = FieldArchiveIO::Lgp;
+			} else {
+				isPS = false;
+				type = FieldArchiveIO::File;
+			}
 		}
 	}
 
+	closeFile();
+
 	if(isPS) {
-		fieldArchive = new FieldArchivePS(cheminFic, isDir);
+		fieldArchive = new FieldArchivePS(cheminFic, type);
 	} else {
-		fieldArchive = new FieldArchivePC(cheminFic, isDir);
+		fieldArchive = new FieldArchivePC(cheminFic, type);
 	}
 
-	setCursor(Qt::WaitCursor);
-	showProgression();
+	showProgression(tr("Ouverture..."), false);
 
 	FieldArchiveIO::ErrorCode error = fieldArchive->open(this);
-	
-	setCursor(Qt::ArrowCursor);
+
 	hideProgression();
-	
-	setEnabled(true);
+
 	QString out;
 	switch(error)
 	{
 	case FieldArchiveIO::Ok:
+	case FieldArchiveIO::Aborted:
 		break;
 	case FieldArchiveIO::FieldNotFound:
 		out = tr("Rien trouvé !");
@@ -566,7 +591,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 		out = tr("Impossible de copier le fichier");
 		break;
 	case FieldArchiveIO::Invalid:
-		out = tr("L'archive est invalide");
+		out = tr("Le fichier est invalide");
 		break;
 	case FieldArchiveIO::NotImplemented:
 		out = tr("Cette erreur ne devrais pas s'afficher, merci de le signaler");
@@ -616,16 +641,12 @@ void Window::open(const QString &cheminFic, bool isDir)
 		searchDialog->setFieldArchive(fieldArchive);
 		searchDialog->setEnabled(true);
 		actionEncounter->setEnabled(true);
-		actionTut->setEnabled(true);
 		actionMisc->setEnabled(true);
 		actionExport->setEnabled(true);
 		actionMassExport->setEnabled(true);
 		actionMassImport->setEnabled(true);
 		actionImport->setEnabled(true);
-		if(fieldArchive->io()->type() == FieldArchiveIO::Lgp
-				/* || fieldArchive->io()->type() == FieldArchiveIO::Iso*/) {
-			actionModels->setEnabled(true);
-		}
+		actionModels->setEnabled(true);
 	}
 	if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 		actionArchive->setEnabled(true);
@@ -633,7 +654,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 	actionSaveAs->setEnabled(true);
 	actionClose->setEnabled(true);
 
-	fieldArchive->searchAll();
+//	fieldArchive->searchAll();
 //	qDebug() << "/Window::open" << cheminFic << isDir;
 }
 
@@ -694,9 +715,17 @@ void Window::openField(bool reload)
 		textDialog->setField(field, reload);
 		textDialog->setEnabled(true);
 	}
-	if(field->isPC() && _modelManager && (reload || _modelManager->isVisible())) {
-		_modelManager->fill((FieldPC *)field, reload);
+	if(_modelManager && (reload || _modelManager->isVisible())) {
+		_modelManager->fill(field, reload);
 		_modelManager->setEnabled(true);
+	}
+	if(_tutManager && (reload || _tutManager->isVisible())) {
+		TutFilePC *tutPC = NULL;
+		if(fieldArchive->isPC()) {
+			tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
+		}
+		_tutManager->fill(field, tutPC, reload);
+		_tutManager->setEnabled(true);
 	}
 	if(_walkmeshManager && (reload || _walkmeshManager->isVisible())) {
 		_walkmeshManager->fill(field, reload);
@@ -715,7 +744,7 @@ void Window::openField(bool reload)
 
 	// Show author
 	authorLbl->setText(tr("Auteur : %1").arg(scriptsAndTexts->author()));
-	authorLbl->show();
+	authorAction->setVisible(true);
 
 	emit fieldIDChanged(id);
 	// Fill group script list
@@ -874,18 +903,14 @@ void Window::saveAs(bool currentPath)
 			if(path.isNull())		return;
 		}
 	}
-	
-	setEnabled(false);
 
-	setCursor(Qt::WaitCursor);
-	showProgression();
+	showProgression(tr("Enregistrement..."), fieldArchive->io()->type() == FieldArchiveIO::Lgp);
 	quint8 error = 0;
 	
 	// QTime t;t.start();
 	error = fieldArchive->save(path, this);
 	// qDebug("Total save time: %d ms", t.elapsed());
-	
-	setCursor(Qt::ArrowCursor);
+
 	hideProgression();
 	QString out;
 	switch(error)
@@ -893,6 +918,8 @@ void Window::saveAs(bool currentPath)
 	case FieldArchiveIO::Ok:
 		setModified(false);
 		setWindowTitle();
+		break;
+	case FieldArchiveIO::Aborted:
 		break;
 	case FieldArchiveIO::FieldNotFound:
 		out = tr("Rien trouvé !");
@@ -920,8 +947,6 @@ void Window::saveAs(bool currentPath)
 		break;
 	}
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
-	
-	setEnabled(true);
 }
 
 bool Window::gotoField(int fieldID)
@@ -1011,7 +1036,7 @@ void Window::exporter()
 
 	name = fieldList->selectedItems().first()->text(0);
 
-	if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
+	if(fieldArchive->io()->isPC()) {
 		types = fieldLzs+";;"+fieldDec;
 	} else {
 		types = dat;
@@ -1049,32 +1074,29 @@ void Window::massExport()
 	if(massExportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massExportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {
-			Field::FieldParts toExport;
+			QMap<FieldArchive::ExportType, QString> toExport;
 
-			showProgression();
-			progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-			progressDialog->setWindowModality(Qt::WindowModal);
-			progressDialog->setCancelButtonText(tr("Arrêter"));
-			progressDialog->setRange(0, selectedFields.size()-1);
+			showProgression(tr("Exportation..."), false);
 
-			if(massExportDialog->exportBackground()) {
-				progressDialog->setLabelText(tr("Exportation des décors..."));
-				toExport |= Field::Background;
+			if(massExportDialog->exportModule(MassExportDialog::Fields)) {
+				toExport.insert(FieldArchive::Fields, massExportDialog->moduleFormat(MassExportDialog::Fields));
 			}
-			if(massExportDialog->exportAkao()) {
-				progressDialog->setLabelText(tr("Exportation des sons..."));
-				toExport |= Field::Akaos;
+			if(massExportDialog->exportModule(MassExportDialog::Backgrounds)) {
+				toExport.insert(FieldArchive::Backgrounds, massExportDialog->moduleFormat(MassExportDialog::Backgrounds));
 			}
-			if(massExportDialog->exportText()) {
-				progressDialog->setLabelText(tr("Exportation des textes..."));
-				toExport |= Field::Scripts;
+			if(massExportDialog->exportModule(MassExportDialog::Akaos)) {
+				toExport.insert(FieldArchive::Akaos, massExportDialog->moduleFormat(MassExportDialog::Akaos));
+			}
+			if(massExportDialog->exportModule(MassExportDialog::Texts)) {
+				toExport.insert(FieldArchive::Texts, massExportDialog->moduleFormat(MassExportDialog::Texts));
 			}
 
-			fieldArchive->exportation(selectedFields, massExportDialog->directory(), massExportDialog->overwrite(), toExport, this);
+			if(!fieldArchive->exportation(selectedFields, massExportDialog->directory(),
+									  massExportDialog->overwrite(), toExport, this)
+					&& !observerWasCanceled()) {
+				QMessageBox::warning(this, tr("Erreur"), tr("Une erreur s'est produite lors de l'exportation"));
+			}
 
-			progressDialog->close();
-			delete progressDialog;
-			progressDialog = 0;
 			hideProgression();
 		}
 	}
@@ -1089,32 +1111,21 @@ void Window::massImport()
 	if(massImportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massImportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {
-			int currentField=0;
-			QProgressDialog progressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-			progressDialog.setWindowModality(Qt::WindowModal);
-			progressDialog.setCancelButtonText(tr("Arrêter"));
-			progressDialog.setRange(0, selectedFields.size()-1);
+			QMap<Field::FieldSection, QString> toImport;
 
-			const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
+			showProgression(tr("Importation..."), false);
 
-			if(massImportDialog->importText()) {
-				progressDialog.setLabelText(tr("Importation des textes..."));
-
-				foreach(const int &fieldID, selectedFields) {
-					QCoreApplication::processEvents();
-					if(progressDialog.wasCanceled()) 	break;
-
-					Field *f = fieldArchive->field(fieldID);
-					if(f) {
-						Section1File *section1 = f->scriptsAndTexts();
-						if(section1->isOpen()) {
-							//TODO
-						}
-					}
-					progressDialog.setValue(currentField++);
-				}
+			if(massImportDialog->importModule(MassImportDialog::Texts)) {
+				toImport.insert(Field::Scripts, massImportDialog->moduleFormat(MassImportDialog::Texts));
 			}
-			Data::currentTextes = currentTextesSav;
+
+			if(!fieldArchive->importation(selectedFields, massImportDialog->directory(),
+									  toImport, this)
+					&& !observerWasCanceled()) {
+				QMessageBox::warning(this, tr("Erreur"), tr("Une erreur s'est produite lors de l'importation"));
+			}
+
+			hideProgression();
 		}
 	}
 }
@@ -1132,7 +1143,7 @@ void Window::importer()
 		   << tr("Fichier DAT décompressé (*)");
 
 	name = fieldList->selectedItems().first()->text(0);
-	if(fieldArchive->io()->type() != FieldArchiveIO::Lgp)
+	if(fieldArchive->io()->isPS())
 		name = name.toUpper();
 
 	QString path = Config::value("importPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("importPath").toString()+"/";
@@ -1141,13 +1152,13 @@ void Window::importer()
 
 	bool isDat = selectedFilter == filter.at(1) || selectedFilter == filter.at(3);
 
-	ImportDialog dialog((isDat && fieldArchive->io()->type() != FieldArchiveIO::Lgp)
-						|| (!isDat && fieldArchive->io()->type() == FieldArchiveIO::Lgp), isDat, this);
+	ImportDialog dialog((isDat && fieldArchive->io()->isPS())
+						|| (!isDat && fieldArchive->io()->isPC()), isDat, this);
 	if(dialog.exec() != QDialog::Accepted) {
 		return;
 	}
 
-	Field::FieldParts parts = dialog.parts();
+	Field::FieldSections parts = dialog.parts();
 	if(parts == 0) {
 		return;
 	}
@@ -1231,10 +1242,13 @@ void Window::textManager(int textID, int from, int size, bool activate)
 
 void Window::modelManager()
 {
-	if(!field->isPC())	return;
-
 	if(!_modelManager) {
-		_modelManager = new ModelManager(fieldModel, this);
+		if(!field)	return;
+		if(field->isPC()) {
+			_modelManager = new ModelManagerPC(fieldModel, this);
+		} else {
+			_modelManager = new ModelManagerPS(fieldModel, this);
+		}
 		connect(_modelManager, SIGNAL(modified()), SLOT(setModified()));
 	}
 
@@ -1244,7 +1258,7 @@ void Window::modelManager()
 //			fieldModel->clear();
 //		}
 
-		_modelManager->fill((FieldPC *)field);
+		_modelManager->fill(field);
 		_modelManager->setEnabled(true);
 
 //		bool modelLoaded = false;
@@ -1279,22 +1293,24 @@ void Window::encounterManager()
 
 void Window::tutManager()
 {
-	if(field) {
-		TutFile *tut = field->tutosAndSounds(), *tutPC = NULL;
-		if(tut->isOpen()) {
-			if(fieldArchive->isPC()) {
-				tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
-			}
-			TutWidget dialog(field, tut, tutPC, this);
-			if(dialog.exec()==QDialog::Accepted)
-			{
-				if(tut->isModified() || (tutPC != NULL && tutPC->isModified()))
-					setModified(true);
-			}
-		} else {
-			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les sons et les tutoriels !"));
-		}
+	if(!_tutManager) {
+		_tutManager = new TutWidget(this);
+		connect(_tutManager, SIGNAL(modified()), SLOT(setModified()));
 	}
+
+	if(field) {
+		TutFilePC *tutPC = NULL;
+		if(fieldArchive->isPC()) {
+			tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
+		}
+		_tutManager->fill(field, tutPC);
+		_tutManager->setEnabled(true);
+	} else {
+		_tutManager->clear();
+		_tutManager->setEnabled(false);
+	}
+	_tutManager->show();
+	_tutManager->activateWindow();
 }
 
 void Window::walkmeshManager()
@@ -1357,6 +1373,12 @@ void Window::archiveManager()
 		LgpDialog dialog((Lgp *)fieldArchive->io()->device(), this);
 		dialog.exec();
 	}
+}
+
+void Window::fontManager()
+{
+	FontManager dialog(this);
+	dialog.exec();
 }
 
 void Window::config()

@@ -160,7 +160,6 @@ void GrpScriptList::upDownEnabled()
 void GrpScriptList::fill(Section1File *scripts)
 {
 	if(scripts)		this->scripts = scripts;
-	Data::currentGrpScriptNames.clear();
 	QTreeWidgetItem *item;
 	clear();
 	
@@ -170,7 +169,6 @@ void GrpScriptList::fill(Section1File *scripts)
 		item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->name() << grpScript->type());
 		item->setForeground(2, QBrush(grpScript->typeColor()));
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-		Data::currentGrpScriptNames.append(grpScript->name());
 	}
 	
 	actions().at(0)->setEnabled(true);
@@ -214,7 +212,6 @@ void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 	disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(renameOK(QTreeWidgetItem *, int)));
 	QString newName = item->text(1).left(8);
 	item->setText(1, newName);
-	Data::currentGrpScriptNames.replace(item->text(0).toInt(), newName);
 	scripts->grpScript(selectedID())->setName(newName);
 	emit changed();
 }

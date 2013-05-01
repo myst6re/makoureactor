@@ -17,8 +17,8 @@
  ****************************************************************************/
 #include "ColorDisplay.h"
 
-ColorDisplay::ColorDisplay(QWidget *parent)
-	: QWidget(parent)
+ColorDisplay::ColorDisplay(QWidget *parent) :
+	QWidget(parent), _ro(false)
 {
 	setFixedSize(101, 11);
 	setMouseTracking(true);
@@ -35,12 +35,24 @@ const QList<QRgb> &ColorDisplay::getColors() const
 	return colors;
 }
 
+bool ColorDisplay::isReadOnly() const
+{
+	return _ro;
+}
+
+void ColorDisplay::setReadOnly(bool ro)
+{
+	setMouseTracking(!ro);
+	_ro = ro;
+}
+
 void ColorDisplay::paintEvent(QPaintEvent *)
 {
 	QPainter painter(this);
 
 	int gray;
 	int size = colors.size(), x;
+	// Colors
 	painter.setPen(QColor(0, 0, 0));
 	for(int i=0 ; i<size ; ++i) {
 		x = i*10;
@@ -48,7 +60,8 @@ void ColorDisplay::paintEvent(QPaintEvent *)
 		gray = qGray(colors.at(i));
 		painter.fillRect(x+1, 1, 9, 9, isEnabled() ? QColor(colors.at(i)) : QColor(gray, gray, gray));
 	}
-	if(isEnabled()) {
+	// Red frame
+	if(isEnabled() && !isReadOnly()) {
 		painter.setPen(QColor(0xFF, 0, 0));
 		QPoint cursor_position = this->mapFromGlobal(this->cursor().pos());
 		x = (int)(cursor_position.x()/10)*10;
@@ -60,21 +73,25 @@ void ColorDisplay::paintEvent(QPaintEvent *)
 
 void ColorDisplay::enterEvent(QEvent *)
 {
+	if(isReadOnly())	return;
 	update();
 }
 
 void ColorDisplay::leaveEvent(QEvent *)
 {
+	if(isReadOnly())	return;
 	update();
 }
 
 void ColorDisplay::mouseMoveEvent(QMouseEvent *)
 {
+	if(isReadOnly())	return;
 	update();
 }
 
 void ColorDisplay::mouseReleaseEvent(QMouseEvent *event)
 {
+	if(isReadOnly())	return;
 	int colorIndex = event->x()/10;
 	if(colorIndex >= colors.size())
 		colorIndex = colors.size()-1;

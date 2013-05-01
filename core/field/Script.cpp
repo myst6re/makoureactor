@@ -70,8 +70,8 @@ bool Script::openScript(const QByteArray &script)
 
 	for(int i=indentsKeys.size()-1 ; i >= 0 ; --i) {
 		int jump = indentsKeys.at(i);
-		int index;
-		if((index = positions.indexOf(jump)) != -1) {
+		int index = positions.indexOf(jump);
+		if(index != -1) {
 			opcodes.insert(index, new OpcodeLabel(i+1));
 //			qDebug() << (index+1) << "label" << (i+1);
 			foreach(OpcodeJump *opJump, indents.values(jump)) {
@@ -1005,13 +1005,13 @@ bool Script::searchMapJump(quint16 field, int &opcodeID) const
 	return searchMapJump(field, ++opcodeID);
 }
 
-bool Script::searchTextInScripts(const QRegExp &text, int &opcodeID) const
+bool Script::searchTextInScripts(const QRegExp &text, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if(opcodeID < 0) 	opcodeID = 0;
 	if(opcodeID >= opcodes.size())					return false;
-	if(opcodes.at(opcodeID)->searchTextInScripts(text))		return true;
+	if(opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts))		return true;
 
-	return searchTextInScripts(text, ++opcodeID);
+	return searchTextInScripts(text, ++opcodeID, scriptsAndTexts);
 }
 
 bool Script::searchOpcodeP(int opcode, int &opcodeID) const
@@ -1050,13 +1050,13 @@ bool Script::searchMapJumpP(quint16 field, int &opcodeID) const
 	return searchMapJumpP(field, --opcodeID);
 }
 
-bool Script::searchTextInScriptsP(const QRegExp &text, int &opcodeID) const
+bool Script::searchTextInScriptsP(const QRegExp &text, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if(opcodeID >= opcodes.size()) opcodeID = opcodes.size()-1;
 	if(opcodeID < 0)								return false;
-	if(opcodes.at(opcodeID)->searchTextInScripts(text))		return true;
+	if(opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts))		return true;
 
-	return searchTextInScriptsP(text, --opcodeID);
+	return searchTextInScriptsP(text, --opcodeID, scriptsAndTexts);
 }
 
 void Script::listUsedTexts(QSet<quint8> &usedTexts) const
@@ -1108,6 +1108,12 @@ void Script::listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window
 	int opcodeID=0;
 	foreach(Opcode *opcode, opcodes)
 		opcode->listWindows(groupID, scriptID, opcodeID++, windows, text2win);
+}
+
+void Script::listModelPositions(QList<FF7Position> &positions) const
+{
+	foreach(Opcode *opcode, opcodes)
+		opcode->listModelPositions(positions);
 }
 
 //void Script::searchWindows() const

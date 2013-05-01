@@ -18,96 +18,96 @@
 #include "FF7Text.h"
 #include "Config.h"
 
-FF7Text::FF7Text(const QByteArray &texte)
+FF7Text::FF7Text(const QByteArray &data)
 {
 	int index;
-	this->texte = (index = texte.indexOf('\xFF')) != -1 ? texte.left(index) : texte;
+	_data = (index = data.indexOf('\xFF')) != -1 ? data.left(index) : data;
 }
 
-FF7Text::FF7Text(const QString &texte, bool jp)
+FF7Text::FF7Text(const QString &text, bool jp)
 {
-	setText(texte, jp);
+	setText(text, jp);
 }
 
-const QByteArray &FF7Text::getData() const
+const QByteArray &FF7Text::data() const
 {
-	return texte;
+	return _data;
 }
 
-QString FF7Text::getText(bool jp, bool simplified) const
+QString FF7Text::text(bool jp, bool simplified) const
 {
 	QString trad, character;
 	quint8 index;
 //	bool jp = Config::value("jp_txt", false).toBool();
-	int size = texte.size();
+	int size = _data.size();
 	
 	for(quint16 i=0 ; i<size ; ++i)
 	{
-		index = (quint8)texte.at(i);
+		index = (quint8)_data.at(i);
 		if(index == 0xFF)	break;
 		switch(index) {
 		case 0xFA:
 			++i;
 			if(size<=i)	return trad.append(simplified ? "¶" : "{xfa}");
 			if(jp) {
-				character = getCaract(texte.at(i), 3);
+				character = getCaract(_data.at(i), 3);
 				if(character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfa}{x%1}").arg((quint8)texte.at(i), 2, 16, QChar('0'));
+					character = simplified ? "¶" : QString("{xfa}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfa}{x%1}").arg((quint8)texte.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "¶" : QString("{xfa}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFB:
 			++i;
 			if(size<=i)	return trad.append(simplified ? "¶" : "{xfb}");
 			if(jp) {
-				character = getCaract(texte.at(i), 4);
+				character = getCaract(_data.at(i), 4);
 				if(character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfb}{x%1}").arg((quint8)texte.at(i), 2, 16, QChar('0'));
+					character = simplified ? "¶" : QString("{xfb}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfb}{x%1}").arg((quint8)texte.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "¶" : QString("{xfb}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFC:
 			++i;
 			if(size<=i)	return trad.append(simplified ? "¶" : "{xfc}");
 			if(jp) {
-				character = getCaract(texte.at(i), 5);
+				character = getCaract(_data.at(i), 5);
 				if(character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfc}{x%1}").arg((quint8)texte.at(i), 2, 16, QChar('0'));
+					character = simplified ? "¶" : QString("{xfc}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfc}{x%1}").arg((quint8)texte.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "¶" : QString("{xfc}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFD:
 			++i;
 			if(size<=i)	return trad.append(simplified ? "¶" : "{xfd}");
 			if(jp) {
-				character = getCaract(texte.at(i), 6);
+				character = getCaract(_data.at(i), 6);
 				if(character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfd}{x%1}").arg((quint8)texte.at(i), 2, 16, QChar('0'));
+					character = simplified ? "¶" : QString("{xfd}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfd}{x%1}").arg((quint8)texte.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "¶" : QString("{xfd}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFE:
 			++i;
 			if(size<=i) 	return trad.append(simplified ? "¶" : "{xfe}");;
-			index = (quint8)texte.at(i);
+			index = (quint8)_data.at(i);
 
 			if(index == 0xE2) {
 				if(!simplified) {
-					if(i+4 < size && (quint8)texte.at(i+4)==0 && (quint8)texte.at(i+2) <= 4) {
+					if(i+4 < size && (quint8)_data.at(i+4)==0 && (quint8)_data.at(i+2) <= 4) {
 						quint8 bank;
-						switch((quint8)texte.at(i+2)) {
+						switch((quint8)_data.at(i+2)) {
 						case 0:		bank = 1;	break;// 1 & 2
 						case 1:		bank = 3;	break;// 3 & 4
 						case 2:		bank = 11;	break;// 11 & 12
@@ -115,14 +115,14 @@ QString FF7Text::getText(bool jp, bool simplified) const
 						case 4:		bank = 15;	break;// 7 & 15
 						}
 
-						trad.append(QString("{MEMORY:var[%2][%1];size=%3}").arg((quint8)texte.at(i+1)).arg(bank).arg((quint8)texte.at(i+3)));
+						trad.append(QString("{MEMORY:var[%2][%1];size=%3}").arg((quint8)_data.at(i+1)).arg(bank).arg((quint8)_data.at(i+3)));
 						i+=4;
 					} else {
 						trad.append("{xfe}{xe2}");
 						++i;
 						for(int i2=i+4 ; i<i2 ; ++i) {
 							if(size<=i) 	return trad;
-							trad.append(QString("{x%1}").arg((quint8)texte.at(i), 2, 16, QChar('0')));
+							trad.append(QString("{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
 						}
 						--i;
 					}
@@ -133,7 +133,7 @@ QString FF7Text::getText(bool jp, bool simplified) const
 				++i;
 				if(!simplified) {
 					if(size<=i)	return trad.append("{xfe}{xdd}");
-					trad.append(QString("{PAUSE%1}").arg((quint8)texte.at(i), 3, 10, QChar('0')));
+					trad.append(QString("{PAUSE%1}").arg((quint8)_data.at(i), 3, 10, QChar('0')));
 				}
 			} else {
 				if(jp) {
@@ -171,37 +171,30 @@ QString FF7Text::getText(bool jp, bool simplified) const
 	return trad;
 }
 
-QString FF7Text::getShortText(bool jp) const
-{
-	QString trad = getText(jp, true).simplified();
-	if(trad.size()>70)
-		return trad.left(35)%QString("...")%trad.right(35);
-	return trad;
-}
-
 void FF7Text::setText(const QString &string, bool jp)
 {
-	QByteArray ff7str;
 	QChar comp;
 	int stringSize = string.size(), i, table;
 	bool ok;
 	ushort value;
 //	bool jp = Config::value("jp_txt", false).toBool();
 
+	_data.clear();
+
 	for(int c=0 ; c<stringSize ; ++c)
 	{
 		comp = string.at(c);
 		if(comp=='\n') {//\n{New Page}\n,\n
 			if(string.mid(c+1, 11).compare("{New Page}\n", Qt::CaseInsensitive) == 0) {
-				ff7str.append('\xe8');
+				_data.append('\xe8');
 				c += 11;
 			}
 			else if(string.mid(c+1, 13).compare("{New Page 2}\n", Qt::CaseInsensitive) == 0) {
-				ff7str.append('\xe9');
+				_data.append('\xe9');
 				c += 13;
 			}
 			else {
-				ff7str.append('\xe7');
+				_data.append('\xe7');
 			}
 			continue;
 		}
@@ -209,7 +202,7 @@ void FF7Text::setText(const QString &string, bool jp)
 			QString rest = string.mid(c);
 			for(i=0 ; i<16 ; ++i) {
 				if(rest.startsWith(getCaract(0xea + i), Qt::CaseInsensitive)) {//{Name},{Key}
-					ff7str.append((char)(0xea + i));
+					_data.append((char)(0xea + i));
 					c += getCaract(0xea + i).size()-1;
 					goto end;
 				}
@@ -217,7 +210,7 @@ void FF7Text::setText(const QString &string, bool jp)
 
 			for(i=0 ; i<11 ; ++i) {
 				if(rest.startsWith(getCaract(0xd2 + i, 7), Qt::CaseInsensitive)) {//{Colors},{PAUSE}
-					ff7str.append('\xfe').append((char)(0xd2 + i));
+					_data.append('\xfe').append((char)(0xd2 + i));
 					c += getCaract(0xd2 + i, 7).size()-1;
 					goto end;
 				}
@@ -225,7 +218,7 @@ void FF7Text::setText(const QString &string, bool jp)
 
 			for(i=0 ; i<4 ; ++i) {
 				if(rest.startsWith(getCaract(0xde + i, 7), Qt::CaseInsensitive)) {//{Vars}
-					ff7str.append('\xfe').append((char)(0xde + i));
+					_data.append('\xfe').append((char)(0xde + i));
 					c += getCaract(0xde + i, 7).size()-1;
 					goto end;
 				}
@@ -256,14 +249,14 @@ void FF7Text::setText(const QString &string, bool jp)
 						bank = 0;
 						break;
 					}
-					ff7str.append("\xfe\xe2", 2).append((char)list.at(2).toInt()).append(bank).append((char)list.at(3).toInt()).append('\x00');
+					_data.append("\xfe\xe2", 2).append((char)list.at(2).toInt()).append(bank).append((char)list.at(3).toInt()).append('\x00');
 					c += rx.matchedLength()-1;
 					goto end;
 				}
 			}
 
 			if(rest.startsWith(getCaract(0xe9, 7), Qt::CaseInsensitive)) {//{SPACED CHARACTERS}
-				ff7str.append("\xfe\xe9", 2);
+				_data.append("\xfe\xe9", 2);
 				c += getCaract(0xe9, 7).size()-1;
 				goto end;
 			}
@@ -271,7 +264,7 @@ void FF7Text::setText(const QString &string, bool jp)
 			if(rest.startsWith("{PAUSE", Qt::CaseInsensitive) && 9<rest.size() && rest.at(9)=='}') {//{PAUSE000}
 				value = rest.mid(6,3).toUShort(&ok);
 				if(ok) {
-					ff7str.append("\xfe\xdd", 2).append((char)value);
+					_data.append("\xfe\xdd", 2).append((char)value);
 					c += 9;
 					goto end;
 				}
@@ -279,14 +272,14 @@ void FF7Text::setText(const QString &string, bool jp)
 
 			if(!jp) {
 				if(rest.startsWith(getCaract(0xe0), Qt::CaseInsensitive)) {//{CHOICE}
-					ff7str.append('\xe0');
+					_data.append('\xe0');
 					c += 7;
 					goto end;
 				}
 
 				for(i=0 ; i<3 ; ++i) {
 					if(rest.startsWith(getCaract(0xe2 + i))) {//{, }{."}{?"}
-						ff7str.append((char)(0xe2 + i));
+						_data.append((char)(0xe2 + i));
 						c += 3;
 						goto end;
 					}
@@ -296,13 +289,13 @@ void FF7Text::setText(const QString &string, bool jp)
 			if(string.at(c+1)=='x' && string.at(c+4)=='}') {//{x00}
 				value = string.mid(c+2,2).toUShort(&ok,16);
 				if(ok && value != 0xff) {
-					ff7str.append((char)value);
+					_data.append((char)value);
 					c += 4;
 					continue;
 				}
 			}
 
-			ff7str.append('\x5b');// {
+			_data.append('\x5b');// {
 
 			continue;
 		}
@@ -311,7 +304,7 @@ void FF7Text::setText(const QString &string, bool jp)
 		{
 			if(QString::compare(comp, getCaract(i, jp ? 2 : 0))==0)
 			{
-				ff7str.append((char)i);
+				_data.append((char)i);
 				goto end;
 			}
 		}
@@ -325,22 +318,22 @@ void FF7Text::setText(const QString &string, bool jp)
 					{
 						switch(table) {
 						case 3:
-							ff7str.append('\xfa');
+							_data.append('\xfa');
 							break;
 						case 4:
-							ff7str.append('\xfb');
+							_data.append('\xfb');
 							break;
 						case 5:
-							ff7str.append('\xfc');
+							_data.append('\xfc');
 							break;
 						case 6:
-							ff7str.append('\xfd');
+							_data.append('\xfd');
 							break;
 						case 7:
-							ff7str.append('\xfe');
+							_data.append('\xfe');
 							break;
 						}
-						ff7str.append((char)i);
+						_data.append((char)i);
 						goto end;
 					}
 				}
@@ -349,8 +342,6 @@ void FF7Text::setText(const QString &string, bool jp)
 
 		end:;
 	}
-
-	this->texte = ff7str;
 }
 
 QString FF7Text::getCaract(quint8 ord, quint8 table)
@@ -373,25 +364,26 @@ QString FF7Text::getCaract(quint8 ord, quint8 table)
 	}
 }
 
-bool FF7Text::contains(const QRegExp &text) const
+bool FF7Text::contains(const QRegExp &regExp) const
 {
-	return getText(Config::value("jp_txt", false).toBool()).contains(text);
+	return text(Config::value("jp_txt", false).toBool())
+			.contains(regExp);
 }
 
-int FF7Text::indexOf(const QRegExp &text, int from, int &size) const
+int FF7Text::indexOf(const QRegExp &regExp, int from, int &size) const
 {
-	int index = text.indexIn(getText(Config::value("jp_txt", false).toBool()), from);
-	if(index != -1)		size = text.matchedLength();
+	int index = regExp.indexIn(text(Config::value("jp_txt", false).toBool()), from);
+	if(index != -1)		size = regExp.matchedLength();
 	return index;
 }
 
-int FF7Text::lastIndexOf(const QRegExp &text, int &from, int &size) const
+int FF7Text::lastIndexOf(const QRegExp &regExp, int &from, int &size) const
 {
-	QString t = getText(Config::value("jp_txt", false).toBool());
-	int index = text.lastIndexIn(t, from);
+	QString t = text(Config::value("jp_txt", false).toBool());
+	int index = regExp.lastIndexIn(t, from);
 	if(index != -1) {
 		from = index - t.size();
-		size = text.matchedLength();
+		size = regExp.matchedLength();
 	}
 	return index;
 }

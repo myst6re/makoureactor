@@ -16,11 +16,9 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldPC.h"
-#include "FieldArchiveIO.h"
-#include "Palette.h"
-#include "LZS.h"
-#include "Config.h"
 #include "BackgroundFilePC.h"
+#include "../LZS.h"
+#include "../Config.h"
 
 FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
 	Field(name, io)
@@ -37,7 +35,7 @@ void FieldPC::openHeader(const QByteArray &fileData)
 	memcpy(sectionPositions, fileData.constData() + 6, 9 * 4); // header
 }
 
-int FieldPC::sectionId(FieldPart part) const
+int FieldPC::sectionId(FieldSection part) const
 {
 	switch(part) {
 	case Scripts:		return 0;
@@ -53,7 +51,7 @@ int FieldPC::sectionId(FieldPart part) const
 	}
 }
 
-quint32 FieldPC::sectionPosition(int idPart)
+quint32 FieldPC::sectionPosition(int idPart) const
 {
 	return sectionPositions[idPart] + paddingBetweenSections();
 }
@@ -63,27 +61,18 @@ FieldArchiveIOPC *FieldPC::io() const
 	return (FieldArchiveIOPC *)Field::io();
 }
 
-QPixmap FieldPC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+FieldPart *FieldPC::createPart(FieldSection part)
 {
-	return background()->openBackground(
-				sectionData(Background),
-				sectionData(PalettePC),
-				paramActifs, z, layers);
-}
-
-FieldModelLoader *FieldPC::createFieldModelLoader() const
-{
-	return new FieldModelLoaderPC();
-}
-
-BackgroundFile *FieldPC::createBackground() const
-{
-	return new BackgroundFilePC();
+	switch(part) {
+	case ModelLoader:	return new FieldModelLoaderPC(this);
+	case Background:	return new BackgroundFilePC(this);
+	default:			return Field::createPart(part);
+	}
 }
 
 FieldModelLoaderPC *FieldPC::fieldModelLoader(bool open)
 {
-	//if(open && !modelLoader->isLoaded()) {
+	//if(open && !modelLoader->isOpen()) {
 	//	Data::currentCharNames = model_nameChar;
 	//	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
 	//	Data::currentAnimNames = &fieldModelLoader->model_anims;
@@ -107,155 +96,35 @@ FieldModelFilePC *FieldPC::fieldModel(const QString &hrc, const QString &a, bool
 	return (FieldModelFilePC *)_fieldModel;
 }
 
-bool FieldPC::save(QByteArray &newData, bool compress)
+QByteArray FieldPC::saveHeader() const
 {
-	newData = QByteArray();
-
-	if(!isOpen()) {
-		return false;
-	}
-
-	QByteArray decompresse = io()->fieldData(this), section, toc;
-	const char *decompresseData = decompresse.constData();
-	quint32 sectionPositions[9], size, section_size;
-
-	if(decompresse.isEmpty()) {
-		return false;
-	}
-
-	sectionPositions[0] = 42;
-	for(quint8 i=1 ; i<9 ; ++i)
-		memcpy(sectionPositions + i, decompresseData + 6+4*i, 4);
-
-	// Header + pos section 1
-	toc.append("\x00\x00", 2);
-	toc.append("\x09\x00\x00\x00", 4); // section count
-	toc.append("\x2A\x00\x00\x00", 4); // pos section 1
-
-	// Section 1 (scripts + textes + akaos/tutos)
-	if(section1 && section1->isModified()) {
-		section = section1->save(decompresse.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4));
-		section_size = section.size();
-		newData.append((char *)&section_size, 4).append(section);
-	} else {
-		newData.append(decompresseData + sectionPositions[0], sectionPositions[1]-sectionPositions[0]);
-	}
-
-	size = 42 + newData.size();
-	toc.append((char *)&size, 4); // pos section 2
-
-	// Section 2 (camera)
-	section = QByteArray();
-	if(ca && ca->isModified() && ca->save(section)) {
-		section_size = section.size();
-		newData.append((char *)&section_size, 4).append(section);
-	} else {
-		newData.append(decompresseData + sectionPositions[1], sectionPositions[2]-sectionPositions[1]);
-	}
-
-	size = 42 + newData.size();
-	toc.append((char *)&size, 4); // pos section 3
-
-	// Section 3 (model loader PC)
-	if(modelLoader && modelLoader->isLoaded() && modelLoader->isModified()) {
-		section = fieldModelLoader()->save();
-		section_size = section.size();
-		newData.append((char *)&section_size, 4).append(section);
-	} else {
-		newData.append(decompresseData + sectionPositions[2], sectionPositions[3]-sectionPositions[2]);
-	}
-
-	size = 42 + newData.size();
-	toc.append((char *)&size, 4); // pos section 4
-	
-	// Section 4 (background palette PC)
-	newData.append(decompresseData + sectionPositions[3], sectionPositions[4]-sectionPositions[3]);
-
-	size = 42 + newData.size();
-	toc.append((char *)&size, 4); // pos section 5
-
-	// Section 5 (walkmesh)
-	section = QByteArray();
-	if(id && id->isModified() && id->save(section)) {
-		section_size = section.size();
-		newData.append((char *)&section_size, 4).append(section);
-	} else {
-		newData.append(decompresseData + sectionPositions[4], sectionPositions[5]-sectionPositions[4]);
-	}
-
-	size = 42 + newData.size();
-	toc.append((char *)&size, 4); // pos section 6
-
-	// Section 6 (background tileMap -unused-)
-	newData.append(decompresseData + sectionPositions[5], sectionPositions[6]-sectionPositions[5]);
-
-	size = 42 + newData.size();
-	toc.append((char *)&size, 4); // pos section 7
-
-	// Section 7 (encounter)
-	if(_encounter && _encounter->isModified()) {
-		section = _encounter->save();
-		section_size = section.size();
-		newData.append((char *)&section_size, 4).append(section);
-	} else {
-		newData.append(decompresseData + sectionPositions[6], sectionPositions[7]-sectionPositions[6]);
-	}
-
-	size = 42 + newData.size();
-	toc.append((char *)&size, 4); // pos section 8
-
-	// Section 8 (trigger)
-	if(_inf && _inf->isModified()) {
-		section = _inf->save();
-		section_size = section.size();
-		newData.append((char *)&section_size, 4).append(section);
-	} else {
-		newData.append(decompresseData + sectionPositions[7], sectionPositions[8]-sectionPositions[7]);
-	}
-
-	size = 42 + newData.size();
-	toc.append((char *)&size, 4); // pos section 9
-
-	// Section 9 (background PC)
-	newData.append(decompresse.mid(sectionPositions[8]));
-
-	newData.prepend(toc);
-
-//	if(decompresse != newData) {
-//		QFile fic("test_"+name()+"_nouveau");
-//		fic.open(QIODevice::WriteOnly);
-//		fic.write(newData);
-//		fic.close();
-//		QFile fic2("test_"+name()+"_original");
-//		fic2.open(QIODevice::WriteOnly);
-//		fic2.write(decompresse);
-//		fic2.close();
-//		qDebug() << name() << " : ERROR";
-////		newData = decompresse;
-//	}
-
-	if(compress)
-	{
-		const QByteArray &compresse = LZS::compress(newData);
-		quint32 taille = compresse.size();
-		newData = QByteArray((char *)&taille, 4).append(compresse);
-		return true;
-	}
-
-	return true;
+	QByteArray header;
+	header.append("\x00\x00", 2); // Padding?
+	header.append("\x09\x00\x00\x00", 4); // section count (=9)
+	return header;
 }
 
-qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldParts part)
+QByteArray FieldPC::saveFooter() const
+{
+	return QByteArray("FINAL FANTASY7", 14);
+}
+
+QList<Field::FieldSection> FieldPC::orderOfSections() const
+{
+	return QList<FieldSection>() << Scripts << Camera << ModelLoader << PalettePC << Walkmesh << Background << Encounter << Inf << Background;
+}
+
+qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldSections part)
 {
 	if(!isPSField) {
 		quint32 sectionPositions[9];
 
 		if(data.size() < 6 + 9 * 4)	return 3;
-		memcpy(sectionPositions, &(data.constData()[6]), 9 * 4); // header
+		memcpy(sectionPositions, data.constData() + 6, 9 * 4); // header
 
 		if(part.testFlag(ModelLoader)) {
 			FieldModelLoaderPC *modelLoader = fieldModelLoader(false);
-			if(!modelLoader->load(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4))) {
+			if(!modelLoader->open(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4))) {
 				return 2;
 			}
 			modelLoader->setModified(true);

@@ -19,8 +19,8 @@
 #define DEF_VARMANAGER
 
 #include <QtGui>
-#include "FieldArchive.h"
-#include "Var.h"
+#include "core/field/FieldArchive.h"
+#include "core/Var.h"
 
 class VarManager : public QWidget
 {

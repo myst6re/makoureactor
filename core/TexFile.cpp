@@ -1,5 +1,5 @@
 /****************************************************************************
- ** Deling Final Fantasy VIII Field Editor
+ ** Makou Reactor Final Fantasy VII Field Script Editor
  ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TexFile.h"
-#include "Palette.h"
+#include "PsColor.h"
 
 TexFile::TexFile(const QByteArray &data) :
     TextureFile()

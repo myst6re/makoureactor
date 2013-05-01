@@ -38,7 +38,7 @@ void FieldModelFile::clear()
 	_frames.clear();
 }
 
-bool FieldModelFile::isLoaded() const
+bool FieldModelFile::isOpen() const
 {
 	return dataLoaded;
 }

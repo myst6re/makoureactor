@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "Search.h"
 #include "Window.h"
-#include "Config.h"
+#include "core/Config.h"
 #include "Data.h"
 
 Search::Search(QWidget *parent) :
@@ -217,6 +217,7 @@ QWidget *Search::textPageWidget()
 void Search::setFieldArchive(FieldArchive *fieldArchive)
 {
 	this->fieldArchive = fieldArchive;
+	updateRunSearch();
 	if(mapJump->count() <= 0) {
 		int mapID=0;
 		foreach(const QString &fieldName, Data::field_names) {
@@ -249,9 +250,14 @@ void Search::setScriptExec(int groupID, int scriptID)
 void Search::updateRunSearch()
 {
 	executionGroup->clear();
-	int i=0;
-	foreach(const QString &name, Data::currentGrpScriptNames)
-		executionGroup->addItem(QString("%1 - %2").arg(i++).arg(name));
+	if(fieldArchive) {
+		Field *f = fieldArchive->field(fieldID);
+		if(f) {
+			int i=0;
+			foreach(const GrpScript *grp, f->scriptsAndTexts()->grpScripts())
+				executionGroup->addItem(QString("%1 - %2").arg(i++).arg(grp->name()));
+		}
+	}
 }
 
 void Search::changeFieldID(int fieldID)
@@ -314,7 +320,6 @@ void Search::findNext()
 	returnToBegin->hide();
 
 	bool localSearch=false;
-	const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
 	FieldArchive::Sorting sorting = ((Window *)parentWidget())->getFieldSorting();
 	
 	setSearchValues();
@@ -378,7 +383,6 @@ void Search::findNext()
 						   .arg(localSearch ? tr("groupe") : tr("écran")));
 	returnToBegin->show();
 
-	Data::currentTextes = currentTextesSav;
 	if(!localSearch)	fieldID = -1;
 	textID = from = grpScriptID = scriptID = opcodeID = -1;
 
@@ -393,7 +397,6 @@ void Search::findPrev()
 	returnToBegin->hide();
 
 	bool localSearch=false;
-	const QList<FF7Text *> *currentTextesSav = Data::currentTextes;
 	FieldArchive::Sorting sorting = ((Window *)parentWidget())->getFieldSorting();
 
 	setSearchValues();
@@ -457,7 +460,6 @@ void Search::findPrev()
 						   .arg(localSearch ? tr("groupe") : tr("écran")));
 	returnToBegin->show();
 
-	Data::currentTextes = currentTextesSav;
 	if(!localSearch)	fieldID = 2147483647;
 	textID = grpScriptID = scriptID = opcodeID = 2147483647;
 	from = 0;

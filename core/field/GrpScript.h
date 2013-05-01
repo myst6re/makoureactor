@@ -57,19 +57,20 @@ public:
 	void searchAllVars(QList<FF7Var> &vars) const;
 	bool searchExec(quint8 group, quint8 script, int &scriptID, int &opcodeID) const;
 	bool searchMapJump(quint16 mapJump, int &scriptID, int &opcodeID) const;
-	bool searchTextInScripts(const QRegExp &text, int &scriptID, int &opcodeID) const;
+	bool searchTextInScripts(const QRegExp &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const;
 	bool searchP(int &scriptID, int &opcodeID) const;
 	bool searchOpcodeP(int opCode, int &scriptID, int &opcodeID) const;
 	bool searchVarP(quint8 bank, quint8 adress, int value, int &scriptID, int &opcodeID) const;
 	bool searchExecP(quint8 group, quint8 script, int &scriptID, int &opcodeID) const;
 	bool searchMapJumpP(quint16 field, int &scriptID, int &opcodeID) const;
-	bool searchTextInScriptsP(const QRegExp &text, int &scriptID, int &opcodeID) const;
+	bool searchTextInScriptsP(const QRegExp &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void shiftTextIds(int textId, int steps=1);
 	void shiftTutIds(int tutId, int steps=1);
 	void setWindow(const FF7Window &win);
 	void listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
+	void listModelPositions(QList<FF7Position> &positions) const;
 private:
 	void setType();
 	bool search(int &scriptID, int &opcodeID) const;

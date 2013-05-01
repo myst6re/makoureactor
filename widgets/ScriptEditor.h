@@ -19,7 +19,7 @@
 #define DEF_SE
 
 #include <QtGui>
-#include "GrpScript.h"
+#include "core/field/GrpScript.h"
 #include "ScriptEditorWidgets/ScriptEditorView.h"
 
 class ScriptEditor : public QDialog
@@ -50,6 +50,7 @@ private:
 	QPushButton *ok;
 	ScriptEditorView *editorWidget;
 
+	Field *field;
 	Script *script;
 	quint16 opcodeID;
 	Opcode *opcode;

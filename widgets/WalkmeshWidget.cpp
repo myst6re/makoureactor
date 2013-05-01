@@ -18,11 +18,12 @@
 #include "WalkmeshWidget.h"
 
 WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
-	QGLWidget(/*QGLFormat(QGL::SampleBuffers),*/ parent, shareWidget),
+	QGLViewer(/*QGLFormat(QGL::SampleBuffers),*/ parent, shareWidget),
 	distance(0.0f), xRot(0.0f), yRot(0.0f), zRot(0.0f),
 	xTrans(0.0f), yTrans(0.0f), transStep(360.0f), lastKeyPressed(-1),
 	camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
-	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0)
+	_selectedArrow(-1), fovy(70.0), walkmesh(0), _camera(0), infFile(0),
+	bgFile(0), scripts(0), field(0)
 {
 	setMinimumSize(320, 240);
 //	setAutoFillBackground(false);
@@ -32,93 +33,27 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
 void WalkmeshWidget::clear()
 {
 	walkmesh = 0;
-	camera = 0;
+	_camera = 0;
 	infFile = 0;
+	bgFile = 0;
+	scripts = 0;
+	field = 0;
 	updateGL();
 }
 
-void WalkmeshWidget::fill(IdFile *walkmesh, CaFile *camera, InfFile *infFile)
+void WalkmeshWidget::fill(Field *field)
 {
-	this->walkmesh = walkmesh;
-	this->camera = camera;
-	this->infFile = infFile;
+	this->walkmesh = field->walkmesh();
+	this->_camera = field->camera();
+	this->infFile = field->inf();
+	this->bgFile = field->background();
+	this->scripts = field->scriptsAndTexts();
+	this->field = field;
 	updatePerspective();
 	resetCamera();
-}
 
-void WalkmeshWidget::computeFov()
-{
-	if(camera && camera->isOpen()
-			&& camera->hasCamera()
-			&& camID < camera->cameraCount()) {
-		const Camera &cam = camera->camera(camID);
-		fovy = (2 * atan(240.0/(2.0 * cam.camera_zoom))) * 57.29577951;
-	} else {
-		fovy = 70.0;
-	}
-}
-
-void WalkmeshWidget::updatePerspective()
-{
-	computeFov();
-	resizeGL(width(), height());
-	updateGL();
-}
-
-void WalkmeshWidget::initializeGL()
-{
-	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_COLOR_MATERIAL);
-	glDepthFunc(GL_LEQUAL);
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_LIGHTING);
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
-
-void WalkmeshWidget::resizeGL(int width, int height)
-{
-	glViewport(0, 0, width, height);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	gluPerspective(fovy, (double)width/(double)height, 0.001, 1000.0);
-
-	glMatrixMode(GL_MODELVIEW);
-}
-
-void WalkmeshWidget::paintGL()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	if(!walkmesh)	return;
-
-	glTranslatef(xTrans, yTrans, distance);
-
-//	QPainter painter;
-//	painter.begin(this);
-//	painter.setRenderHint(QPainter::Antialiasing);
-//	int arrowW, arrowH;
-//	if(width() < height()) {
-//		arrowW = width() * 9 / 320;
-//		arrowH = width() * 6 / 320;
-//	} else {
-//		arrowW = height() * 9 / 240;
-//		arrowH = height() * 6 / 240;
-//	}
-//	painter.drawPixmap(0, 0, arrowW, arrowH, arrow);
-//	painter.end();
-
-
-	glRotatef(xRot, 1.0, 0.0, 0.0);
-	glRotatef(yRot, 0.0, 1.0, 0.0);
-	glRotatef(zRot, 0.0, 0.0, 1.0);
-
-	if(camera->isOpen() && camera->hasCamera() && camID < camera->cameraCount()) {
-		const Camera &cam = camera->camera(camID);
+	if(_camera->isOpen() && _camera->hasCamera() && camID < _camera->cameraCount()) {
+		const Camera &cam = _camera->camera(camID);
 
 		double camAxisXx = cam.camera_axis[0].x/4096.0;
 		double camAxisXy = cam.camera_axis[0].y/4096.0;
@@ -141,8 +76,161 @@ void WalkmeshWidget::paintGL()
 		double tz = -(camPosX*camAxisXz + camPosY*camAxisYz + camPosZ*camAxisZz);
 
 
-		gluLookAt(tx, ty, tz, tx + camAxisZx, ty + camAxisZy, tz + camAxisZz, camAxisYx, camAxisYy, camAxisYz);
+		double m[3][3];
+		float downScaler = scripts->isOpen() ? 128.0f * scripts->scale() : 4096.0;
+		qglviewer::Quaternion orientation;
+		qglviewer::Vec position(-cam.camera_position[0]/downScaler, -cam.camera_position[1]/downScaler, -cam.camera_position[2]/downScaler);
+
+		m[0][0] = camAxisXx;
+		m[1][0] = camAxisXy;
+		m[2][0] = camAxisXz;
+		m[0][1] = -camAxisYx;
+		m[1][1] = -camAxisYy;
+		m[2][1] = -camAxisYz;
+		m[0][2] = camAxisZx;
+		m[1][2] = camAxisZy;
+		m[2][2] = camAxisZz;
+
+		orientation.setFromRotationMatrix(m);
+		position = orientation * position;
+
+		m[0][1] = -camAxisYx;
+		m[1][1] = -camAxisYy;
+		m[2][1] = -camAxisYz;
+		m[0][2] = -camAxisZx;
+		m[1][2] = -camAxisZy;
+		m[2][2] = -camAxisZz;
+		orientation.setFromRotationMatrix(m);
+
+		qDebug() << "setCam";
+		camera()->setPosition(position);
+		camera()->setOrientation(orientation);
+//		camera()->setFieldOfView(2 * atanf(240.0f / (2.0f * cam.camera_zoom)) * 57.29577951);
+//		camera()->setViewDirection(qglviewer::Vec(tx + camAxisZx, ty + camAxisZy, tz + camAxisZz));
+//		camera()->setUpVector(qglviewer::Vec(camAxisYx, camAxisYy, camAxisYz));
+//		gluLookAt(tx, ty, tz, tx + camAxisZx, ty + camAxisZy, tz + camAxisZz, camAxisYx, camAxisYy, camAxisYz);
 	}
+}
+
+void WalkmeshWidget::computeFov()
+{
+	if(_camera && _camera->isOpen()
+			&& _camera->hasCamera()
+			&& camID < _camera->cameraCount()) {
+		const Camera &cam = _camera->camera(camID);
+		fovy = (2 * atan(240.0/(2.0 * cam.camera_zoom))) * 57.29577951;
+	} else {
+		fovy = 70.0;
+	}
+}
+
+void WalkmeshWidget::updatePerspective()
+{
+	computeFov();
+	resizeGL(width(), height());
+	updateGL();
+}
+
+void WalkmeshWidget::init()
+{
+	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_COLOR_MATERIAL);
+	glDepthFunc(GL_LEQUAL);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_LIGHTING);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+/*void WalkmeshWidget::resizeGL(int width, int height)
+{
+//	glViewport(0, 0, width, height);
+
+//	glMatrixMode(GL_PROJECTION);
+//	glLoadIdentity();
+
+//	gluPerspective(fovy, (double)width/(double)height, 0.001, 1000.0);
+
+//	glMatrixMode(GL_MODELVIEW);
+}*/
+
+void WalkmeshWidget::drawWithNames()
+{
+	qDebug() << "drawWithNames()";
+	int i=0;
+
+	glBegin(GL_LINES);
+
+	foreach(const Triangle &triangle, walkmesh->getTriangles()) {
+		const Access &access = walkmesh->access(i);
+		glPushName(i);
+		drawId(i, triangle, access);
+		glPopName();
+		++i;
+	}
+
+	glEnd();
+}
+
+
+void WalkmeshWidget::draw()
+{
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//	glMatrixMode(GL_MODELVIEW);
+//	glLoadIdentity();
+
+	if(!walkmesh)	return;
+
+//	glTranslatef(xTrans, yTrans, distance);
+
+//	QPainter painter;
+//	painter.begin(this);
+//	painter.setRenderHint(QPainter::Antialiasing);
+//	int arrowW, arrowH;
+//	if(width() < height()) {
+//		arrowW = width() * 9 / 320;
+//		arrowH = width() * 6 / 320;
+//	} else {
+//		arrowW = height() * 9 / 240;
+//		arrowH = height() * 6 / 240;
+//	}
+//	painter.drawPixmap(0, 0, arrowW, arrowH, arrow);
+//	painter.end();
+
+
+//	glRotatef(xRot, 1.0, 0.0, 0.0);
+//	glRotatef(yRot, 0.0, 1.0, 0.0);
+//	glRotatef(zRot, 0.0, 0.0, 1.0);
+
+	/*if(bgFile) {
+		glColor3ub(255, 255, 255);
+		QPixmap pix = bgFile->openBackground();
+		glEnable(GL_TEXTURE_2D);
+		qDebug() << pix.width() << pix.height() << ((-pix.width() / 2) / 4096.0f) << ((-pix.height() / 2) / 4096.0f);
+		GLuint texId = bindTexture(pix, GL_TEXTURE_2D, GL_RGB, QGLContext::MipmapBindOption);
+
+		glBegin(GL_QUADS);
+//		glColor3ub(255, 255, 255);
+		glTexCoord2d(0.0f, 0.0f);
+		glVertex3f((-pix.width() / 1024.0f), (pix.height() / 1024.0f), -4095.0f / 4096.0f);
+
+//		glColor3ub(255, 255, 0);
+		glTexCoord2d(1.0f, 0.0f);
+		glVertex3f((pix.width() / 1024.0f), (pix.height() / 1024.0f), -4095.0f / 4096.0f);
+
+//		glColor3ub(0, 0, 255);
+		glTexCoord2d(1.0f, 1.0f);
+		glVertex3f((pix.width() / 1024.0f), (-pix.height() / 1024.0f), -4095.0f / 4096.0f);
+
+//		glColor3ub(0, 255, 0);
+		glTexCoord2d(0.0f, 1.0f);
+		glVertex3f((-pix.width() / 1024.0f), (-pix.height() / 1024.0f), -4095.0f / 4096.0f);
+
+		glEnd();
+
+		deleteTexture(texId);
+		glDisable(GL_TEXTURE_2D);
+	}*/
 
 	if(walkmesh->isOpen()) {
 
@@ -210,10 +298,7 @@ void WalkmeshWidget::paintGL()
 
 		foreach(const Triangle &triangle, walkmesh->getTriangles()) {
 			const Access &access = walkmesh->access(i);
-
-			drawIdLine(i, triangle.vertices[0], triangle.vertices[1], access.a[0]);
-			drawIdLine(i, triangle.vertices[1], triangle.vertices[2], access.a[1]);
-			drawIdLine(i, triangle.vertices[2], triangle.vertices[0], access.a[2]);
+			drawId(i, triangle, access);
 
 			++i;
 		}
@@ -301,6 +386,33 @@ void WalkmeshWidget::paintGL()
 
 		glEnd();
 	}
+
+	/*if(scripts && scripts->isOpen()) {
+		QMultiMap<int, FF7Position> positions;
+		scripts->listModelPositions(positions);
+		if(!positions.isEmpty()) {
+			QMapIterator<int, FF7Position> i(positions);
+			while(i.hasNext()) {
+				i.next();
+				const int modelId = i.key();
+				const FF7Position &position = i.value();
+
+				FieldModelFile *fieldModel = field->fieldModel(modelId);
+
+			}
+		}
+	}*/
+}
+
+void WalkmeshWidget::drawId(int triangleID, const Triangle &triangle, const Access &access)
+{
+//	glColor3ub(0xFF, 0xFF, 0xFF);
+//	glVertex3f(triangle.vertices[0].x/4096.0f, triangle.vertices[0].y/4096.0f, triangle.vertices[0].z/4096.0f);
+//	glVertex3f(triangle.vertices[1].x/4096.0f, triangle.vertices[1].y/4096.0f, triangle.vertices[1].z/4096.0f);
+//	glVertex3f(triangle.vertices[2].x/4096.0f, triangle.vertices[2].y/4096.0f, triangle.vertices[2].z/4096.0f);
+	drawIdLine(triangleID, triangle.vertices[0], triangle.vertices[1], access.a[0]);
+	drawIdLine(triangleID, triangle.vertices[1], triangle.vertices[2], access.a[1]);
+	drawIdLine(triangleID, triangle.vertices[2], triangle.vertices[0], access.a[2]);
 }
 
 void WalkmeshWidget::drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access)
@@ -319,36 +431,60 @@ void WalkmeshWidget::drawIdLine(int triangleID, const Vertex_sr &vertex1, const 
 
 void WalkmeshWidget::wheelEvent(QWheelEvent *event)
 {
-	setFocus();
+	/*setFocus();
 	distance += event->delta() / 4096.0;
-	updateGL();
+	updateGL();*/
+	QGLViewer::wheelEvent(event);
 }
 
 void WalkmeshWidget::mousePressEvent(QMouseEvent *event)
 {
-	setFocus();
+	/*setFocus();
 	if(event->button() == Qt::MidButton)
 	{
-		distance = -35;
+		resetCamera();
 		updateGL();
 	}
 	else if(event->button() == Qt::LeftButton)
 	{
 		moveStart = event->pos();
-	}
+	}*/
+	QGLViewer::mousePressEvent(event);
 }
 
 void WalkmeshWidget::mouseMoveEvent(QMouseEvent *event)
 {
-	xTrans += (event->pos().x() - moveStart.x()) / 4096.0;
+	/*xTrans += (event->pos().x() - moveStart.x()) / 4096.0;
 	yTrans -= (event->pos().y() - moveStart.y()) / 4096.0;
 	moveStart = event->pos();
-	updateGL();
+	updateGL();*/
+	QGLViewer::mouseMoveEvent(event);
+}
+
+void WalkmeshWidget::postSelection(const QPoint &point)
+{
+	qglviewer::Vec orig, dir, selectedPoint;
+	// Compute orig and dir, used to draw a representation of the intersecting line
+	camera()->convertClickToLine(point, orig, dir);
+
+	// Find the selectedPoint coordinates, using camera()->pointUnderPixel().
+	bool found;
+	selectedPoint = camera()->pointUnderPixel(point, found);
+	selectedPoint -= 0.01f*dir; // Small offset to make point clearly visible.
+	// Note that "found" is different from (selectedObjectId()>=0) because of the size of the select region.
+
+	if (selectedName() == -1)
+		QMessageBox::information(this, "No selection",
+								 "No object selected under pixel " + QString::number(point.x()) + "," + QString::number(point.y()));
+	else
+		QMessageBox::information(this, "Selection",
+								 "Spiral number " + QString::number(selectedName()) + " selected under pixel " +
+								 QString::number(point.x()) + "," + QString::number(point.y()));
 }
 
 void WalkmeshWidget::keyPressEvent(QKeyEvent *event)
 {
-	if(lastKeyPressed == event->key()
+	/*if(lastKeyPressed == event->key()
 			&& (event->key() == Qt::Key_Left
 				|| event->key() == Qt::Key_Right
 				|| event->key() == Qt::Key_Down
@@ -380,21 +516,22 @@ void WalkmeshWidget::keyPressEvent(QKeyEvent *event)
 		updateGL();
 		break;
 	default:
-		QWidget::keyPressEvent(event);
+		QGLViewer::keyPressEvent(event);
 		return;
-	}
+	}*/
+	QGLViewer::keyPressEvent(event);
 }
 
 void WalkmeshWidget::focusInEvent(QFocusEvent *event)
 {
-	grabKeyboard();
-	QWidget::focusInEvent(event);
+	//grabKeyboard();
+	QGLViewer::focusInEvent(event);
 }
 
 void WalkmeshWidget::focusOutEvent(QFocusEvent *event)
 {
-	releaseKeyboard();
-	QWidget::focusOutEvent(event);
+	//releaseKeyboard();
+	QGLViewer::focusOutEvent(event);
 }
 
 static void qNormalizeAngle(int &angle)

@@ -16,120 +16,44 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TutFile.h"
-#include "Config.h"
-#include "FF7Text.h"
-#include "TextHighlighter.h"
+#include "../Config.h"
+#include "../FF7Text.h"
 
-TutFile::TutFile()
-	: _isOpen(false), _isModified(false), tutType(false)
+TutFile::TutFile(Field *field) :
+	FieldPart(field)
 {
 }
 
-TutFile::TutFile(const QByteArray &data, bool tutType)
-	: _isOpen(false), _isModified(false)
+bool TutFile::open(const QByteArray &data)
 {
-	open(data, tutType);
-}
-
-bool TutFile::isOpen() const
-{
-	return _isOpen;
-}
-
-bool TutFile::isModified() const
-{
-	return _isModified;
-}
-
-void TutFile::setModified(bool modified)
-{
-	_isModified = modified;
-}
-
-bool TutFile::open(const QByteArray &data, bool tutType)
-{
-	const char *constData = data.constData();
 	QList<quint32> positions;
 	quint32 dataSize = data.size();
 
-	this->tutType = tutType;
-
-	if(!tutType) {
-		quint32 posAKAO, posAKAOList;
-		quint16 nbAKAO;
-		quint8 nbEntity;
-
-		if(dataSize <= 8)
-			return false;
-
-		nbEntity = constData[2];
-		memcpy(&nbAKAO, &constData[6], 2);
-
-		posAKAOList = 32+nbEntity*8;
-
-		if(dataSize <= posAKAOList+nbAKAO*4)
-			return false;
-
-		for(int i=0 ; i<nbAKAO ; ++i) {
-			memcpy(&posAKAO, &constData[posAKAOList+i*4], 4);
-			positions.append(posAKAO);
-		}
-
-		positions.append(dataSize);
-	} else {
-		quint16 posTut;
-		for(int i=0 ; i<9 ; ++i) {
-			memcpy(&posTut, &constData[i*2], 2);
-			if(posTut < 18)		posTut = 18;
-			positions.append(posTut);
-		}
-
-		positions.append(dataSize);
+	positions = openPositions(data);
+	if(positions.isEmpty()) {
+		return false;
 	}
 
 	tutos.clear();
 	for(int i=0 ; i<positions.size()-1 ; ++i) {
 		if(positions.at(i) < dataSize && positions.at(i) < positions.at(i+1)) {
 			QByteArray t = data.mid(positions.at(i), positions.at(i+1)-positions.at(i));
-			if(t.startsWith("KAO")) {
-				t.prepend('A'); // PC bug
-			}
+//			if(t.startsWith("KAO")) {
+//				t.prepend('A'); // PC bug
+//			}
 //			qDebug() << i << t.left(16).toHex();
 			tutos.append(t);
 		}
 	}
 
-	_isOpen = true;
+	setOpen(true);
 
 	return true;
 }
 
-QByteArray TutFile::save(QByteArray &toc, quint32 firstPos) const
+void TutFile::clear()
 {
-	quint32 pos;
-	QByteArray ret;
-
-	toc.clear();
-
-	if(!tutType) {
-		foreach(const QByteArray &tuto, tutos) {
-			pos = firstPos + ret.size();
-			toc.append((char *)&pos, 4);
-			ret.append(tuto);
-		}
-	} else {
-		for(int i=0 ; i<9 ; ++i) {
-			if(i < tutos.size()) {
-				pos = 18 + ret.size();
-				ret.append(tutos.at(i));
-			} else {
-				pos = 0xffff;
-			}
-			toc.append((char *)&pos, 2);
-		}
-	}
-
-	return ret;
+	tutos.clear();
 }
 
 int TutFile::size() const
@@ -137,48 +61,15 @@ int TutFile::size() const
 	return tutos.size();
 }
 
-bool TutFile::hasTut() const
-{
-	int size = this->size();
-	for(int i=0 ; i<size ; ++i) {
-		if(isTut(i))	return true;
-	}
-	return false;
-}
-
-bool TutFile::isTut(int tutID) const
-{
-	return !tutos.value(tutID).startsWith("AKAO");
-}
-
 void TutFile::removeTut(int tutID)
 {
 	tutos.removeAt(tutID);
-	_isModified = true;
+	setModified(true);
 }
 
 bool TutFile::insertTut(int tutID)
 {
-	if((tutType && size()<9) || (!tutType && size()<256)) {
-		tutos.insert(tutID, QByteArray("\x11", 1));
-		_isModified = true;
-		return true;
-	}
-	return false;
-}
-
-bool TutFile::insertAkao(int tutID, const QString &akaoPath)
-{
-	if(!tutType) {
-		QFile f(akaoPath);
-		if(f.open(QIODevice::ReadOnly)) {
-			tutos.insert(tutID, f.readAll());
-			_isModified = true;
-			f.close();
-			return true;
-		}
-	}
-	return false;
+	return insertData(tutID, QByteArray("\x11", 1));
 }
 
 const QByteArray &TutFile::data(int tutID) const
@@ -186,96 +77,116 @@ const QByteArray &TutFile::data(int tutID) const
 	return tutos.at(tutID);
 }
 
+QByteArray &TutFile::dataRef(int tutID)
+{
+	return tutos[tutID];
+}
+
 void TutFile::setData(int tutID, const QByteArray &data)
 {
 	tutos.replace(tutID, data);
-	_isModified = true;
+	setModified(true);
+}
+
+bool TutFile::insertData(int tutID, const QByteArray &data)
+{
+	if(size() < maxTutCount()) {
+		tutos.insert(tutID, data);
+		setModified(true);
+		return true;
+	}
+	return false;
+}
+
+bool TutFile::insertData(int tutID, const QString &path)
+{
+	QFile f(path);
+	if(f.open(QIODevice::ReadOnly)) {
+		insertData(tutID, f.readAll());
+		f.close();
+		return true;
+	}
+
+	return false;
+}
+
+const QList<QByteArray> &TutFile::dataList() const
+{
+	return tutos;
+}
+
+bool TutFile::isTut(int tutID) const
+{
+	Q_UNUSED(tutID)
+	return true;
 }
 
 QString TutFile::parseScripts(int tutID) const
 {
-	QByteArray tuto = tutos.value(tutID);
+	const QByteArray &tuto = data(tutID);
 	const char *constTuto = tuto.constData();
 	QString ret;
 	bool jp = Config::value("jp_txt", false).toBool();
+	quint8 clef;
+	int i=0, size = tuto.size(), endOfText;
 
-	if(isTut(tutID)) {
-		quint8 clef;
-		int i=0, size = tuto.size(), endOfText;
-
-		while(i<size)
+	while(i < size)
+	{
+		switch(clef = tuto.at(i++))
 		{
-			switch(clef = tuto.at(i++))
-			{
-			case 0x00:
-				quint16 u;
-				memcpy(&u, &constTuto[i], 2);
-				ret.append(QString("PAUSE(%1)").arg(u));
-				i+=2;
-				break;
-			case 0x02:	ret.append("[UP]");			break;
-			case 0x03:	ret.append("[DOWN]");		break;
-			case 0x04:	ret.append("[LEFT]");		break;
-			case 0x05:	ret.append("[RIGHT]");		break;
-			case 0x06:	ret.append("[MENU]");		break;
-			case 0x07:	ret.append("[CANCEL]");		break;
-			case 0x08:	ret.append("[CHANGE]");		break;
-			case 0x09:	ret.append("[OK]");			break;
-			case 0x0A:	ret.append("[R1]");			break;
-			case 0x0B:	ret.append("[R2]");			break;
-			case 0x0C:	ret.append("[L1]");			break;
-			case 0x0D:	ret.append("[L2]");			break;
-			case 0x0E:	ret.append("[START]");		break;
-			case 0x0F:	ret.append("[SELECT]");		break;
-			case 0x10:
-				endOfText = tuto.indexOf('\xff', i);
-				if(endOfText!=-1) {
-					ret.append(FF7Text(tuto.mid(i, endOfText-i)).getText(jp));
-					if(endOfText+1>i)
-						i = endOfText+1;
-				}
-				else {
-					ret.append(FF7Text(tuto.mid(i)).getText(jp));
-					return ret;
-				}
-				break;
-			case 0x11:	ret.append("{FINISH}");		break;
-			case 0x12:
-				quint16 x, y;
-				memcpy(&x, &constTuto[i], 2);
-				memcpy(&y, &constTuto[i+2], 2);
-				ret.append(QString("MOVE(%1,%2)").arg(x).arg(y));
-				i+=4;
-				break;
-			case 0xff:
-				ret.append("{NOP}");
-				break;
-			default:
-				ret.append(QString("[%1]").arg(clef,2,16,QChar('0')));
-				break;
+		case 0x00:
+			if(i + 2 >= size) {
+				return ret;
 			}
-			ret.append("\n");
+			quint16 u;
+			memcpy(&u, constTuto + i, 2);
+			ret.append(QString("PAUSE(%1)").arg(u));
+			i+=2;
+			break;
+		case 0x02:	ret.append("[UP]");			break;
+		case 0x03:	ret.append("[DOWN]");		break;
+		case 0x04:	ret.append("[LEFT]");		break;
+		case 0x05:	ret.append("[RIGHT]");		break;
+		case 0x06:	ret.append("[MENU]");		break;
+		case 0x07:	ret.append("[CANCEL]");		break;
+		case 0x08:	ret.append("[CHANGE]");		break;
+		case 0x09:	ret.append("[OK]");			break;
+		case 0x0A:	ret.append("[R1]");			break;
+		case 0x0B:	ret.append("[R2]");			break;
+		case 0x0C:	ret.append("[L1]");			break;
+		case 0x0D:	ret.append("[L2]");			break;
+		case 0x0E:	ret.append("[START]");		break;
+		case 0x0F:	ret.append("[SELECT]");		break;
+		case 0x10:
+			endOfText = tuto.indexOf('\xff', i);
+			if(endOfText!=-1) {
+				ret.append(FF7Text(tuto.mid(i, endOfText-i)).text(jp));
+				if(endOfText+1>i)
+					i = endOfText+1;
+			}
+			else {
+				ret.append(FF7Text(tuto.mid(i)).text(jp));
+				return ret;
+			}
+			break;
+		case 0x11:	ret.append("{FINISH}");		break;
+		case 0x12:
+			if(i + 4 >= size) {
+				return ret;
+			}
+			quint16 x, y;
+			memcpy(&x, constTuto + i, 2);
+			memcpy(&y, constTuto + i+2, 2);
+			ret.append(QString("MOVE(%1,%2)").arg(x).arg(y));
+			i+=4;
+			break;
+		case 0xff:
+			ret.append("{NOP}");
+			break;
+		default:
+			ret.append(QString("[%1]").arg(clef,2,16,QChar('0')));
+			break;
 		}
-
-	} else {
-		quint16 id, length, firstPos;
-		if(tuto.size() < 6) 	return QObject::tr("Erreur");
-		memcpy(&id, &constTuto[4], 2);
-
-		ret.append(QObject::tr("totalLength=%1\nid=%2\n").arg(tuto.size()).arg(id));
-
-		if(tuto.size() < 8) 	return ret;
-		memcpy(&length, &constTuto[6], 2);
-
-		ret.append(QObject::tr("length=%1\n").arg(length));
-
-		if(tuto.size() < 22) 	return ret;
-		memcpy(&firstPos, &constTuto[20], 2);
-
-		ret.append(QObject::tr("nbCanaux=%1\n").arg(firstPos/2 + 1));
-		ret.append(tuto.mid(8, 8).toHex());
-		ret.append("\n");
-		ret.append(tuto.mid(16, 4).toHex());
 		ret.append("\n");
 	}
 
@@ -353,31 +264,11 @@ void TutFile::parseText(int tutID, const QString &tuto)
 		}
 		else {
 			ret.append('\x10');
-			ret.append(FF7Text(line, jp).getData()).append('\xff');
+			ret.append(FF7Text(line, jp).data()).append('\xff');
 		}
 	}
 
 	tutos.replace(tutID, ret);
 
-	_isModified = true;
-}
-
-int TutFile::akaoID(int tutID) const
-{
-	if(isTut(tutID))	return -1;
-
-	QByteArray data = tutos.value(tutID);
-	if(data.size() < 6)		return -1;
-	quint16 id;
-	memcpy(&id, data.constData() + 4, 2);
-
-	return id;
-}
-
-void TutFile::setAkaoID(int tutID, quint16 akaoID)
-{
-	if(isTut(tutID))	return;
-
-	tutos[tutID].replace(4, 2, (char *)&akaoID, 2);
-	_isModified = true;
+	setModified(true);
 }

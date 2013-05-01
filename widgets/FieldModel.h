@@ -25,8 +25,8 @@
 #else
 #include <GL/glu.h>
 #endif
-#include "FieldModelFile.h"
-#include "FieldPC.h"
+#include "core/field/FieldModelFile.h"
+#include "core/field/FieldPC.h"
 
 class FieldModel : public QGLWidget
 {

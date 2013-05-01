@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "WalkmeshManager.h"
-#include "Config.h"
+#include "core/Config.h"
 #include "Data.h"
 
 WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) :
@@ -217,42 +217,44 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	gateList = new QListWidget(ret);
 	gateList->setFixedWidth(125);
 
+	gateEnabled = new QCheckBox(tr("Activer"), ret);
+
 	exitPoints[0] = new VertexWidget(ret);
 	exitPoints[1] = new VertexWidget(ret);
-	entryPoint = new VertexWidget(ret);
+	entryPoint = new VertexWidget(QString(), QString(), tr("ID"), ret);
 
 	fieldId = new QSpinBox(ret);
-	fieldId->setRange(0, 65535);
+	fieldId->setRange(-32768, 32766);
 
-	unknownExit = new HexLineEdit(ret);
+	exitDirection = new QSpinBox(ret);
+	exitDirection->setRange(0, 255);
 
 	arrowDisplay = new QCheckBox(tr("Afficher une flêche"), ret);
 	arrowDisplay->setIcon(QIcon(":/images/field-arrow-red.png"));
 
-	QGridLayout *idsLayout = new QGridLayout;
-	idsLayout->addWidget(new QLabel(tr("Id écran :")), 0, 0);
-	idsLayout->addWidget(fieldId, 0, 1);
-	idsLayout->addWidget(arrowDisplay, 0, 2, 1, 2);
-	idsLayout->addWidget(new QLabel(tr("Inconnu :")), 1, 0);
-	idsLayout->addWidget(unknownExit, 1, 1, 1, 3);
-
 	QGridLayout *layout = new QGridLayout(ret);
-	layout->addWidget(gateList, 0, 0, 5, 1, Qt::AlignLeft);
-	layout->addWidget(new QLabel(tr("Ligne de sortie :")), 0, 1);
-	layout->addWidget(exitPoints[0], 0, 2);
-	layout->addWidget(exitPoints[1], 1, 2);
-	layout->addWidget(new QLabel(tr("Point de destination :")), 2, 1);
-	layout->addWidget(entryPoint, 2, 2);
-	layout->addLayout(idsLayout, 3, 1, 1, 2);
-	layout->setRowStretch(4, 1);
+	layout->addWidget(gateList, 0, 0, 8, 1, Qt::AlignLeft);
+	layout->addWidget(gateEnabled, 0, 1, 1, 2);
+	layout->addWidget(new QLabel(tr("Ligne de sortie :")), 1, 1);
+	layout->addWidget(exitPoints[0], 1, 2);
+	layout->addWidget(exitPoints[1], 2, 2);
+	layout->addWidget(new QLabel(tr("Point de destination :")), 3, 1);
+	layout->addWidget(entryPoint, 3, 2);
+	layout->addWidget(new QLabel(tr("Orientation du perso. :")), 4, 1);
+	layout->addWidget(exitDirection, 4, 2);
+	layout->addWidget(new QLabel(tr("Id écran :")), 5, 1);
+	layout->addWidget(fieldId, 5, 2);
+	layout->addWidget(arrowDisplay, 6, 1, 1, 2);
+	layout->setRowStretch(7, 1);
 
 	connect(gateList, SIGNAL(currentRowChanged(int)), SLOT(setCurrentGateway(int)));
+	connect(gateEnabled, SIGNAL(toggled(bool)), SLOT(editGateEnabled(bool)));
 	connect(exitPoints[0], SIGNAL(valuesChanged(Vertex_s)), SLOT(editExitPoint(Vertex_s)));
 	connect(exitPoints[1], SIGNAL(valuesChanged(Vertex_s)), SLOT(editExitPoint(Vertex_s)));
 	connect(entryPoint, SIGNAL(valuesChanged(Vertex_s)), SLOT(editEntryPoint(Vertex_s)));
 	connect(fieldId, SIGNAL(valueChanged(int)), SLOT(editFieldId(int)));
 	connect(arrowDisplay, SIGNAL(toggled(bool)), SLOT(editArrowDisplay(bool)));
-	connect(unknownExit, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknownExit(QByteArray)));
+	connect(exitDirection, SIGNAL(valueChanged(int)), SLOT(editExitDirection(int)));
 
 	return ret;
 }
@@ -264,11 +266,13 @@ QWidget *WalkmeshManager::buildDoorsPage()
 	doorList = new QListWidget(ret);
 	doorList->setFixedWidth(125);
 
+	doorEnabled = new QCheckBox(tr("Activer"), ret);
+
 	doorPosition[0] = new VertexWidget(ret);
 	doorPosition[1] = new VertexWidget(ret);
 
 	bgParamId = new QSpinBox(ret);
-	bgParamId->setRange(0, 255);
+	bgParamId->setRange(0, 254);
 
 	bgStateId = new QSpinBox(ret);
 	bgStateId->setRange(0, 255);
@@ -290,14 +294,16 @@ QWidget *WalkmeshManager::buildDoorsPage()
 	idsLayout->addWidget(doorSoundId, 3, 1);
 
 	QGridLayout *layout = new QGridLayout(ret);
-	layout->addWidget(doorList, 0, 0, 4, 1, Qt::AlignLeft);
-	layout->addWidget(new QLabel(tr("Ligne déclench. porte :")), 0, 1);
-	layout->addWidget(doorPosition[0], 0, 2);
-	layout->addWidget(doorPosition[1], 1, 2);
-	layout->addLayout(idsLayout, 2, 1, 1, 2);
-	layout->setRowStretch(3, 1);
+	layout->addWidget(doorList, 0, 0, 5, 1, Qt::AlignLeft);
+	layout->addWidget(doorEnabled, 0, 1, 1, 2);
+	layout->addWidget(new QLabel(tr("Ligne déclench. porte :")), 1, 1);
+	layout->addWidget(doorPosition[0], 1, 2);
+	layout->addWidget(doorPosition[1], 2, 2);
+	layout->addLayout(idsLayout, 3, 1, 1, 2);
+	layout->setRowStretch(4, 1);
 
 	connect(doorList, SIGNAL(currentRowChanged(int)), SLOT(setCurrentDoor(int)));
+	connect(doorEnabled, SIGNAL(toggled(bool)), SLOT(editDoorEnabled(bool)));
 	connect(doorPosition[0], SIGNAL(valuesChanged(Vertex_s)), SLOT(editDoorPoint(Vertex_s)));
 	connect(doorPosition[1], SIGNAL(valuesChanged(Vertex_s)), SLOT(editDoorPoint(Vertex_s)));
 	connect(bgParamId, SIGNAL(valueChanged(int)), SLOT(editParamId(int)));
@@ -333,20 +339,20 @@ QWidget *WalkmeshManager::buildArrowPage()
 	arrowType->addItem(QIcon(":/images/field-arrow-green.png"), tr("Vert"), 2);
 
 	QHBoxLayout *posLayout = new QHBoxLayout;
-	posLayout->addWidget(new QLabel(tr("X :")));
+	posLayout->addWidget(new QLabel(tr("X")));
 	posLayout->addWidget(arrowX);
-	posLayout->addWidget(new QLabel(tr("Y :")));
+	posLayout->addWidget(new QLabel(tr("Y")));
 	posLayout->addWidget(arrowY);
-	posLayout->addWidget(new QLabel(tr("Z :")));
+	posLayout->addWidget(new QLabel(tr("Z")));
 	posLayout->addWidget(arrowZ);
-	posLayout->addStretch();
+	posLayout->setContentsMargins(QMargins());
 
 	QGridLayout *layout = new QGridLayout(ret);
-	layout->addWidget(arrowList, 0, 0, 4, 1, Qt::AlignLeft);
-	layout->addWidget(new QLabel(tr("Position :")), 0, 1);
-	layout->addLayout(posLayout, 1, 1);
-	layout->addWidget(arrowType, 2, 1);
-	layout->setRowStretch(3, 1);
+	layout->addWidget(arrowList, 0, 0, 3, 1, Qt::AlignLeft);
+	layout->addWidget(new QLabel(tr("Position :")), 0, 1, Qt::AlignLeft);
+	layout->addLayout(posLayout, 0, 2);
+	layout->addWidget(arrowType, 1, 2);
+	layout->setRowStretch(2, 1);
 
 	connect(arrowList, SIGNAL(currentRowChanged(int)), SLOT(setCurrentArrow(int)));
 	connect(arrowX, SIGNAL(valueChanged(double)), SLOT(editArrowX(double)));
@@ -480,7 +486,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 	int camCount = 0;
 
 	if(walkmesh) {
-		walkmesh->fill(idFile, caFile, infFile);
+		walkmesh->fill(field);
 	}
 
 	if(caFile->isOpen()) {
@@ -895,12 +901,23 @@ void WalkmeshManager::setCurrentGateway(int id)
 	exitPoints[0]->setValues(gateway.exit_line[0]);
 	exitPoints[1]->setValues(gateway.exit_line[1]);
 	entryPoint->setValues(gateway.destination);
-	fieldId->setValue(gateway.fieldID);
+	fieldId->blockSignals(true);
+	gateEnabled->blockSignals(true);
+	if(gateway.fieldID == 0x7FFF) {
+		gateEnabled->setChecked(false);
+		fieldId->setValue(0);
+	} else {
+		gateEnabled->setChecked(true);
+		fieldId->setValue(gateway.fieldID);
+	}
+	fieldId->blockSignals(false);
+	gateEnabled->blockSignals(false);
+	setGateEnabled(gateEnabled->isChecked());
 	if(!infFile->isJap()) {
 		arrowDisplay->setChecked(infFile->arrowIsDisplayed(id));
 	}
 
-	unknownExit->setData(QByteArray((char *)&gateway.u1, 4));
+	exitDirection->setValue(gateway.dir);
 
 	if(walkmesh)	walkmesh->setSelectedGate(id);
 }
@@ -911,12 +928,39 @@ void WalkmeshManager::setCurrentDoor(int id)
 
 	const Trigger &trigger = infFile->trigger(id);
 
+	doorEnabled->blockSignals(true);
+	bgParamId->blockSignals(true);
+	doorPosition[0]->blockSignals(true);
+	doorPosition[1]->blockSignals(true);
+	bgStateId->blockSignals(true);
+	doorBehavior->blockSignals(true);
+	doorSoundId->blockSignals(true);
+
 	doorPosition[0]->setValues(trigger.trigger_line[0]);
 	doorPosition[1]->setValues(trigger.trigger_line[1]);
-	bgParamId->setValue(trigger.background_parameter);
+
+	if(trigger.background_parameter == 0xFF) {
+		doorEnabled->setChecked(false);
+		bgParamId->setValue(0);
+	} else {
+		doorEnabled->setChecked(true);
+		bgParamId->setValue(trigger.background_parameter);
+	}
+
 	bgStateId->setValue(trigger.background_state);
 	doorBehavior->setValue(trigger.behavior);
 	doorSoundId->setValue(trigger.soundID);
+
+	doorEnabled->blockSignals(false);
+	bgParamId->blockSignals(false);
+	doorPosition[0]->blockSignals(false);
+	doorPosition[1]->blockSignals(false);
+	bgStateId->blockSignals(false);
+	doorBehavior->blockSignals(false);
+	doorSoundId->blockSignals(false);
+
+	setDoorEnabled(doorEnabled->isChecked());
+
 
 	if(walkmesh)	walkmesh->setSelectedDoor(id);
 }
@@ -1004,14 +1048,16 @@ void WalkmeshManager::editDoorPoint(int id, const Vertex_s &values)
 	}
 }
 
-void WalkmeshManager::editUnknownExit(const QByteArray &u)
+void WalkmeshManager::editExitDirection(int dir)
 {
 	if(infFile->isOpen()) {
 		int gateId = gateList->currentRow();
-		const char *uData = u.constData();
 		Exit old = infFile->exitLine(gateId);
-		memcpy(&old.u1, uData, 4);
-		if(old.u1 != infFile->exitLine(gateId).u1) {
+		old.dir_copy1 = old.dir_copy2 = old.dir_copy3 = old.dir = dir;
+		if(old.dir != infFile->exitLine(gateId).dir
+				|| old.dir_copy1 != infFile->exitLine(gateId).dir_copy1
+				|| old.dir_copy2 != infFile->exitLine(gateId).dir_copy2
+				|| old.dir_copy3 != infFile->exitLine(gateId).dir_copy3) {
 			infFile->setExitLine(gateId, old);
 
 			emit modified();
@@ -1019,9 +1065,34 @@ void WalkmeshManager::editUnknownExit(const QByteArray &u)
 	}
 }
 
+void WalkmeshManager::setGateEnabled(bool enabled)
+{
+	exitDirection->setEnabled(enabled);
+	fieldId->setEnabled(enabled);
+	exitPoints[0]->setEnabled(enabled);
+	exitPoints[1]->setEnabled(enabled);
+	entryPoint->setEnabled(enabled);
+	arrowDisplay->setEnabled(enabled);
+}
+
+void WalkmeshManager::editGateEnabled(bool enabled)
+{
+	setGateEnabled(enabled);
+
+	if(enabled) {
+		editFieldId(fieldId->value());
+	} else {
+		editFieldId(0x7FFF);
+	}
+}
+
 void WalkmeshManager::editFieldId(int v)
 {
 	if(infFile->isOpen()) {
+		if(!gateEnabled->isChecked()) {
+			v = 0x7FFF;
+		}
+
 		int gateId = gateList->currentRow();
 		Exit old = infFile->exitLine(gateId);
 		if(old.fieldID != v) {
@@ -1050,9 +1121,34 @@ void WalkmeshManager::editArrowDisplay(bool checked)
 	}
 }
 
+void WalkmeshManager::setDoorEnabled(bool enabled)
+{
+	bgParamId->setEnabled(enabled);
+	bgStateId->setEnabled(enabled);
+	doorPosition[0]->setEnabled(enabled);
+	doorPosition[1]->setEnabled(enabled);
+	doorBehavior->setEnabled(enabled);
+	doorSoundId->setEnabled(enabled);
+}
+
+void WalkmeshManager::editDoorEnabled(bool enabled)
+{
+	setDoorEnabled(enabled);
+
+	if(enabled) {
+		editParamId(fieldId->value());
+	} else {
+		editParamId(0xFF);
+	}
+}
+
 void WalkmeshManager::editParamId(int v)
 {
 	if(infFile->isOpen()) {
+		if(!doorEnabled->isChecked()) {
+			v = 0xFF;
+		}
+
 		int gateId = doorList->currentRow();
 		Trigger old = infFile->trigger(gateId);
 		if(old.background_parameter != v) {

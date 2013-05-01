@@ -22,7 +22,7 @@
 #include "Field.h"
 #include "FieldModelLoaderPC.h"
 #include "FieldModelFilePC.h"
-#include "FieldArchiveIO.h"
+#include "FieldArchiveIOPC.h"
 
 class FieldPC : public Field
 {
@@ -32,24 +32,25 @@ public:
 
 	inline bool isPC() const { return true; }
 
-	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
-
-	bool save(QByteArray &newData, bool compress);
-	qint8 importer(const QByteArray &data, bool isPSField, FieldParts part);
+	qint8 importer(const QByteArray &data, bool isPSField, FieldSections part);
 
 	FieldModelLoaderPC *fieldModelLoader(bool open=true);
 	FieldModelFilePC *fieldModel(int modelID, int animationID=0, bool animate=true);
 	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate=true);
 	FieldArchiveIOPC *io() const;
 protected:
-	inline int headerSize() { return 42; }
+	inline int headerSize() const { return 42; }
 	void openHeader(const QByteArray &fileData);
-	FieldModelLoader *createFieldModelLoader() const;
-	BackgroundFile *createBackground() const;
-	int sectionId(FieldPart part) const;
-	quint32 sectionPosition(int idPart);
-	inline int sectionCount() {	return 9; }
-	inline int paddingBetweenSections() { return 4; }
+	QByteArray saveHeader() const;
+	QByteArray saveFooter() const;
+	FieldPart *createPart(FieldSection part);
+	int sectionId(FieldSection part) const;
+	quint32 sectionPosition(int idPart) const;
+	inline int sectionCount() const {	return 9; }
+	inline int paddingBetweenSections() const { return 4; }
+	QList<Field::FieldSection> orderOfSections() const;
+	inline quint32 diffSectionPos() const { return 0; }
+	inline bool hasSectionHeader() const { return true; }
 private:
 	quint32 sectionPositions[9];
 };

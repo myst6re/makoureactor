@@ -31,7 +31,7 @@ class FieldModelFile
 public:
 	FieldModelFile();
 	virtual ~FieldModelFile();
-	bool isLoaded() const;
+	bool isOpen() const;
 	virtual void clear();
 	virtual bool isPS() const=0;
 

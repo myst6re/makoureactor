@@ -16,27 +16,34 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Section1File.h"
+#include "Field.h"
+#include "core/Config.h"
 
-Section1File::Section1File() :
-	modified(false), opened(false), _tut(0)
+Section1File::Section1File(Field *field) :
+	FieldPart(field), _tut(0)
 {
 }
 
 Section1File::~Section1File()
 {
 	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
-	foreach(FF7Text *texte, _texts)				delete texte;
+	foreach(FF7Text *text, _texts)				delete text;
 }
 
 void Section1File::clear()
 {
 	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
-	foreach(FF7Text *texte, _texts)				delete texte;
+	foreach(FF7Text *text, _texts)				delete text;
 	_grpScripts.clear();
 	_texts.clear();
 	_author.clear();
 
-	opened = false;
+	setOpen(false);
+}
+
+bool Section1File::open()
+{
+	return open(field()->sectionData(Field::Scripts));
 }
 
 bool Section1File::open(const QByteArray &data)
@@ -167,13 +174,14 @@ bool Section1File::open(const QByteArray &data)
 		_texts.append(new FF7Text(data.mid(posTexts+posDeb, posAKAO-posDeb)));
 	}
 
-	opened = true;
+	setOpen(true);
 
 	return true;
 }
 
-QByteArray Section1File::save(const QByteArray &data) const
+QByteArray Section1File::save() const
 {
+	QByteArray data = field()->sectionData(Field::Scripts);
 	QByteArray grpScriptNames, positionsScripts, positionsAKAO, allScripts, realScript, positionsTexts, allTexts, allAKAOs;
 	quint32 posAKAO, posAKAOs, newPosAKAOs;
 	quint16 posTocAKAOs, posTexts, newPosScripts, newPosTexts, newNbAKAO, pos;
@@ -217,7 +225,7 @@ QByteArray Section1File::save(const QByteArray &data) const
 	{
 		pos = 2 + newNbText*2 + allTexts.size();
 		positionsTexts.append((char *)&pos, 2);
-		allTexts.append(text->getData());
+		allTexts.append(text->data());
 		allTexts.append('\xff');// end of text
 	}
 
@@ -261,19 +269,85 @@ QByteArray Section1File::save(const QByteArray &data) const
 			.append(allAKAOs); // AKAO / tutos
 }
 
-bool Section1File::isOpen() const
+bool Section1File::exporter(QIODevice *device, ExportFormat format)
 {
-	return opened;
+	bool jp = Config::value("jp_txt", false).toBool();
+
+	switch(format) {
+	case TXTText: {
+		if(!device->open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+			return false;
+		}
+		int i=0;
+		foreach(FF7Text *text, texts()) {
+			device->write(QString("---TEXT%1---\n%2\n")
+						  .arg(i++, 3, 10, QChar('0'))
+						  .arg(text->text(jp))
+						  .toUtf8());
+		}
+		device->close();
+		return true;
+	}
+	case XMLText: {
+		if(!device->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			return false;
+		}
+		QXmlStreamWriter stream(device);
+		stream.setAutoFormatting(true);
+		stream.setCodec("UTF-8");
+		stream.writeStartDocument();
+		stream.writeStartElement("field");
+		stream.writeAttribute("name", field()->name());
+		stream.writeStartElement("texts");
+		int id=0;
+		foreach(FF7Text *text, _texts) {
+			stream.writeStartElement("text");
+			stream.writeAttribute("id", QString::number(id));
+			stream.writeCharacters(text->text(jp));
+			stream.writeEndElement(); // /text
+			++id;
+		}
+
+		stream.writeEndElement(); // /texts
+		stream.writeEndElement(); // /field
+		stream.writeEndDocument();
+		device->close();
+		return true;
+	}
+	}
+
+	return false;
+}
+
+bool Section1File::importer(QIODevice *device, ExportFormat format)
+{
+	bool jp = Config::value("jp_txt", false).toBool();
+	bool start, field, texts;
+
+	QXmlStreamReader stream(device);
+
+	while(!stream.atEnd()) {
+		QXmlStreamReader::TokenType type = stream.readNext();
+		if(!start && type == QXmlStreamReader::StartDocument) {
+			start = true;
+		} else if(start && !field && type == QXmlStreamReader::StartElement
+				  && stream.name() == "field") {
+			field = true;
+		} else if(field && !texts && type == QXmlStreamReader::StartElement
+				  && stream.name() == "texts") {
+			texts = true;
+		} else if(texts && type == QXmlStreamReader::StartElement
+				  && stream.name() == "text") {
+//			stream.attributes().value("id");
+		}
+	}
+
+	return stream.hasError();
 }
 
 bool Section1File::isModified() const
 {
-	return modified || (_tut && _tut->isModified());
-}
-
-void Section1File::setModified(bool modified)
-{
-	this->modified = modified;
+	return FieldPart::isModified() || (_tut && _tut->isModified());
 }
 
 int Section1File::modelID(quint8 grpScriptID) const
@@ -316,20 +390,20 @@ int Section1File::grpScriptCount() const
 void Section1File::insertGrpScript(int row)
 {
 	_grpScripts.insert(row, new GrpScript);
-	modified = true;
+	setModified(true);
 }
 
 void Section1File::insertGrpScript(int row, GrpScript *grpScript)
 {
 	_grpScripts.insert(row, grpScript);
-	modified = true;
+	setModified(true);
 }
 
 void Section1File::deleteGrpScript(int row)
 {
 	if(row < _grpScripts.size()) {
 		delete _grpScripts.takeAt(row);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -337,7 +411,7 @@ void Section1File::removeGrpScript(int row)
 {
 	if(row < _grpScripts.size()) {
 		_grpScripts.removeAt(row);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -345,18 +419,19 @@ bool Section1File::moveGrpScript(int row, bool direction)
 {
 	if(row >= _grpScripts.size())	return false;
 
-	if(direction)
-	{
-		if(row == _grpScripts.size()-1)	return false;
+	if(direction) {
+		if(row == _grpScripts.size()-1) {
+			return false;
+		}
 		_grpScripts.swap(row, row+1);
-		modified = true;
-	}
-	else
-	{
-		if(row == 0)	return false;
+	} else {
+		if(row == 0) {
+			return false;
+		}
 		_grpScripts.swap(row, row-1);
-		modified = true;
 	}
+	setModified(true);
+
 	return true;
 }
 
@@ -421,7 +496,7 @@ bool Section1File::searchTextInScripts(const QRegExp &text, int &groupID, int &s
 	if(groupID >= _grpScripts.size())
 		return false;
 
-	if(_grpScripts.at(groupID)->searchTextInScripts(text, scriptID, opcodeID))
+	if(_grpScripts.at(groupID)->searchTextInScripts(text, scriptID, opcodeID, this))
 		return true;
 
 	return searchTextInScripts(text, ++groupID, scriptID = 0, opcodeID = 0);
@@ -503,7 +578,7 @@ bool Section1File::searchTextInScriptsP(const QRegExp &text, int &groupID, int &
 	}
 	if(groupID < 0)
 		return false;
-	if(_grpScripts.at(groupID)->searchTextInScriptsP(text, scriptID, opcodeID))
+	if(_grpScripts.at(groupID)->searchTextInScriptsP(text, scriptID, opcodeID, this))
 		return true;
 
 	return searchTextInScriptsP(text, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
@@ -527,7 +602,7 @@ void Section1File::setWindow(const FF7Window &win)
 {
 	if(win.groupID < _grpScripts.size()) {
 		_grpScripts.at(win.groupID)->setWindow(win);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -536,6 +611,23 @@ void Section1File::listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap
 	int groupID=0;
 	foreach(GrpScript *group, _grpScripts)
 		group->listWindows(groupID++, windows, text2win);
+}
+
+void Section1File::listModelPositions(QMultiMap<int, FF7Position> &positions) const
+{
+	int modelId=0;
+	foreach(GrpScript *group, _grpScripts) {
+		if(group->typeID() == GrpScript::Model) {
+			QList<FF7Position> pos;
+			group->listModelPositions(pos);
+			if(!pos.isEmpty()) {
+				foreach(const FF7Position &position, pos) {
+					positions.insert(modelId, position);
+				}
+			}
+			++modelId;
+		}
+	}
 }
 
 //void Section1File::searchWindows() const
@@ -582,9 +674,9 @@ void Section1File::listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap
 //		group->listWindows(groupID++, windows, text2win);
 //}
 
-QList<FF7Text *> *Section1File::texts()
+const QList<FF7Text *> &Section1File::texts() const
 {
-	return &_texts;
+	return _texts;
 }
 
 int Section1File::textCount() const
@@ -602,7 +694,7 @@ void Section1File::insertText(int row)
 	_texts.insert(row, new FF7Text);
 	foreach(GrpScript *grpScript, _grpScripts)
 		grpScript->shiftTextIds(row-1, +1);
-	modified = true;
+	setModified(true);
 }
 
 void Section1File::deleteText(int row)
@@ -611,7 +703,7 @@ void Section1File::deleteText(int row)
 		delete _texts.takeAt(row);
 		foreach(GrpScript *grpScript, _grpScripts)
 			grpScript->shiftTextIds(row, -1);
-		modified = true;
+		setModified(true);
 	}
 }
 
@@ -627,7 +719,7 @@ void Section1File::shiftTutIds(int row, int shift)
 {
 	foreach(GrpScript *grpScript, _grpScripts)
 		grpScript->shiftTutIds(row, shift);
-	modified = true;
+	setModified(true);
 }
 
 QSet<quint8> Section1File::listUsedTuts() const
@@ -646,7 +738,7 @@ const QString &Section1File::author() const
 void Section1File::setAuthor(const QString &author)
 {
 	_author = author;
-	modified = true;
+	setModified(true);
 }
 
 quint16 Section1File::scale() const
@@ -657,15 +749,15 @@ quint16 Section1File::scale() const
 void Section1File::setScale(quint16 scale)
 {
 	_scale = scale;
-	modified = true;
+	setModified(true);
 }
 
-TutFile *Section1File::tut() const
+TutFileStandard *Section1File::tut() const
 {
 	return _tut;
 }
 
-void Section1File::setTut(TutFile *tut)
+void Section1File::setTut(TutFileStandard *tut)
 {
 	_tut = tut;
 }

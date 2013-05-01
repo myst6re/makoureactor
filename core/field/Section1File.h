@@ -19,21 +19,27 @@
 #define SECTION1FILE_H
 
 #include <QtCore>
+#include "FieldPart.h"
 #include "GrpScript.h"
-#include "FF7Text.h"
-#include "TutFile.h"
+#include "../FF7Text.h"
+#include "TutFileStandard.h"
 
-class Section1File
+class Section1File : public FieldPart
 {
 public:
-	Section1File();
+	enum ExportFormat {
+		XMLText, TXTText
+	};
+
+	explicit Section1File(Field *field);
 	virtual ~Section1File();
 	void clear();
+	bool open();
 	bool open(const QByteArray &data);
-	QByteArray save(const QByteArray &data) const;
-	bool isOpen() const;
+	QByteArray save() const;
+	bool exporter(QIODevice *device, ExportFormat format);
+	bool importer(QIODevice *device, ExportFormat format);
 	bool isModified() const;
-	void setModified(bool modified);
 
 	int modelID(quint8 grpScriptID) const;
 	void bgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z=0, qint16 *x=0, qint16 *y=0) const;
@@ -62,10 +68,11 @@ public:
 	bool searchTextP(const QRegExp &text, int &textID, int &from, int &index, int &size) const;
 	void setWindow(const FF7Window &win);
 	void listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
+	void listModelPositions(QMultiMap<int, FF7Position> &positions) const;
 
 	void shiftTutIds(int row, int shift);
 
-	QList<FF7Text *> *texts();
+	const QList<FF7Text *> &texts() const;
 	int textCount() const;
 	FF7Text *text(int textID) const;
 	void insertText(int row);
@@ -79,18 +86,16 @@ public:
 	quint16 scale() const;
 	void setScale(quint16 scale);
 
-	TutFile *tut() const;
-	void setTut(TutFile *tut);
+	TutFileStandard *tut() const;
+	void setTut(TutFileStandard *tut);
 private:
-	bool modified, opened;
-
 	QString _author;
 	quint16 _scale;
 	// quint8 nbObjets3D;
 
 	QList<GrpScript *> _grpScripts;
 	QList<FF7Text *> _texts;
-	TutFile *_tut;
+	TutFileStandard *_tut;
 };
 
 #endif // SECTION1FILE_H

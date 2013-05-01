@@ -19,13 +19,17 @@
 #define VERTEXWIDGET_H
 
 #include <QtGui>
-#include "IdFile.h"
+#include "core/field/IdFile.h"
 
 class VertexWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	explicit VertexWidget(QWidget *parent=0);
+	VertexWidget(QWidget *parent=0);
+	VertexWidget(const QString &xLabel=QString(),
+				 const QString &yLabel=QString(),
+				 const QString &zLabel=QString(),
+				 QWidget *parent=0);
 	Vertex_s values() const;
 	void setValues(const Vertex_s &v);
 	bool isReadOnly() const;
@@ -35,6 +39,9 @@ private slots:
 signals:
 	void valuesChanged(const Vertex_s &v);
 private:
+	void build(const QString &xLabel=QString(),
+			   const QString &yLabel=QString(),
+			   const QString &zLabel=QString());
 	QSpinBox *x, *y, *z;
 	bool dontEmit;
 };

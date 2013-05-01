@@ -16,40 +16,26 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Field.h"
-#include "LZS.h"
+#include "../LZS.h"
 #include "FieldArchiveIO.h"
 #include "FieldPC.h"
 #include "FieldPS.h"
-#include "Data.h"
-#include "Config.h"
-
-Field::Field(const QString &name) :
-	section1(0), _encounter(0), _tut(0), id(0), ca(0), _inf(0),
-	modelLoader(0), _fieldModel(0), _bg(0),
-	_io(0),
-	_isOpen(false), _isModified(false), _name(name.toLower())
-{
-}
+#include "../../Data.h"
+#include "../Config.h"
 
 Field::Field(const QString &name, FieldArchiveIO *io) :
-	section1(0), _encounter(0), _tut(0), id(0), ca(0), _inf(0),
-	modelLoader(0), _fieldModel(0), _bg(0),
-	_io(io),
+	_fieldModel(0), _io(io),
 	_isOpen(false), _isModified(false), _name(name.toLower())
 {
 }
 
 Field::~Field()
 {
-	if(section1)		delete section1;
-	if(_encounter)		delete _encounter;
-	if(_tut)			delete _tut;
-	if(id)				delete id;
-	if(ca)				delete ca;
-	if(_inf)			delete _inf;
-	if(modelLoader)		delete modelLoader;
+	foreach(FieldPart *part, _parts) {
+		if(part)	delete part;
+	}
+
 	if(_fieldModel)		delete _fieldModel;
-	if(_bg)				delete _bg;
 }
 
 bool Field::isOpen() const
@@ -71,6 +57,7 @@ void Field::setModified(bool modified)
 		}
 	}
 	_isModified = modified;
+	FieldPart *section1 = part(Scripts);
 	if(section1)	section1->setModified(modified);
 }
 
@@ -80,10 +67,11 @@ bool Field::open(bool dontOptimize)
 
 	if(!dontOptimize && !_io->fieldDataIsCached(this)) {
 		QByteArray lzsData = _io->fieldData(this, false);
-		quint32 lzsSize;
+
 		if(lzsData.size() < 4)	return false;
 
 		const char *lzsDataConst = lzsData.constData();
+		quint32 lzsSize;
 		memcpy(&lzsSize, lzsDataConst, 4);
 
 		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
@@ -103,7 +91,7 @@ bool Field::open(bool dontOptimize)
 	return true;
 }
 
-QByteArray Field::sectionData(FieldPart part)
+QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 {
 	if(!_isOpen) {
 		open();
@@ -121,16 +109,22 @@ QByteArray Field::sectionData(FieldPart part)
 		size = -1;
 	}
 
-	if(size == -1 || _io->fieldDataIsCached(this)) {
+	if(size == -1 || _io->fieldDataIsCached(this) || dontOptimize) {
 		return _io->fieldData(this).mid(position, size);
 	} else {
 		QByteArray lzsData = _io->fieldData(this, false);
-		quint32 lzsSize;
+
+		if(lzsData.size() < 4) {
+			return QByteArray();
+		}
+
 		const char *lzsDataConst = lzsData.constData();
+		quint32 lzsSize;
 		memcpy(&lzsSize, lzsDataConst, 4);
 
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
+		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4) {
 			return QByteArray();
+		}
 
 		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1))
 				.mid(position, size);
@@ -142,79 +136,81 @@ FieldArchiveIO *Field::io() const
 	return _io;
 }
 
-QPixmap Field::openBackground()
+FieldPart *Field::createPart(FieldSection section)
 {
-	// Search default background params
-	QHash<quint8, quint8> paramActifs;
-	qint16 z[] = {-1, -1};
-	scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
-
-	return openBackground(paramActifs, z);
+	switch(section) {
+	case Scripts:		return new Section1File(this);
+	case Akaos:			return new TutFileStandard(this);
+	case Camera:		return new CaFile(this);
+//	case PalettePC:		return ;
+	case Walkmesh:		return new IdFile(this);
+	case Encounter:		return new EncounterFile(this);
+	case Inf:			return new InfFile(this);
+	default:			return 0;
+	}
 }
 
-bool Field::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
+FieldPart *Field::part(FieldSection section) const
 {
-	return background()->usedParams(sectionData(Background), usedParams, layerExists);
+	return _parts.value(section);
+}
+
+FieldPart *Field::part(FieldSection section, bool open)
+{
+	FieldPart *p = part(section);
+
+	if(!p) {
+		p = createPart(section);
+		_parts.insert(section, p);
+	}
+
+	if(open && !p->isOpen()) {
+		p->open();
+	}
+
+	return p;
 }
 
 Section1File *Field::scriptsAndTexts(bool open)
 {
-	if(!section1) 	section1 = new Section1File();
-	if(open && !section1->isOpen())	section1->open(sectionData(Scripts));
-	if(section1->isOpen())	Data::currentTextes = section1->texts();
-	return section1;
+	return (Section1File *)part(Scripts, open);
 }
 
 EncounterFile *Field::encounter(bool open)
 {
-	if(!_encounter)	_encounter = new EncounterFile();
-	if(open && !_encounter->isOpen())		_encounter->open(sectionData(Encounter));
-	return _encounter;
+	return (EncounterFile *)part(Encounter, open);
 }
 
-TutFile *Field::tutosAndSounds(bool open)
+TutFileStandard *Field::tutosAndSounds(bool open)
 {
-	if(!_tut)	_tut = new TutFile();
-	scriptsAndTexts(false)->setTut(_tut);
-	if(open && !_tut->isOpen())	_tut->open(sectionData(Scripts));
-	return _tut;
+	TutFileStandard *tut = (TutFileStandard *)part(Akaos, open);
+	scriptsAndTexts(false)->setTut(tut);
+	return tut;
 }
 
 IdFile *Field::walkmesh(bool open)
 {
-	if(!id)		id = new IdFile();
-	if(open && !id->isOpen())	id->open(sectionData(Walkmesh));
-	return id;
+	return (IdFile *)part(Walkmesh, open);
 }
 
 CaFile *Field::camera(bool open)
 {
-	if(!ca)		ca = new CaFile();
-	if(open && !ca->isOpen())	ca->open(sectionData(Camera));
-	return ca;
+	return (CaFile *)part(Camera, open);
 }
 
 InfFile *Field::inf(bool open)
 {
-	if(!_inf)	_inf = new InfFile();
-	if(open && !_inf->isOpen())	_inf->open(sectionData(Inf));
-	return _inf;
+	return (InfFile *)part(Inf, open);
 }
 
 FieldModelLoader *Field::fieldModelLoader(bool open)
 {
-	if(!modelLoader)	modelLoader = createFieldModelLoader();
-	if(open && !modelLoader->isLoaded()) {
-		modelLoader->load(sectionData(ModelLoader));
-	}
-
-	return modelLoader;
+	return (FieldModelLoader *)part(ModelLoader, open);
 }
 
-BackgroundFile *Field::background()
+BackgroundFile *Field::background(bool open)
 {
-	if(!_bg)	_bg = createBackground();
-	return _bg;
+	return (BackgroundFile *)part(Background, open);
 }
 
 const QString &Field::name() const
@@ -231,11 +227,62 @@ void Field::setName(const QString &name)
 void Field::setSaved()
 {
 	_isOpen = false; // Force reopen to refresh positions automatically
-	if(_encounter)	_encounter->setModified(false);
-	if(_tut)		_tut->setModified(false);
-	if(id)			id->setModified(false);
-	if(ca)			ca->setModified(false);
-	if(_inf)		_inf->setModified(false);
+	foreach(FieldPart *part, _parts) {
+		part->setModified(false);
+	}
+}
+
+bool Field::save(QByteArray &newData, bool compress)
+{
+	newData = QByteArray();
+
+	if(!isOpen()) {
+		return false;
+	}
+
+	QByteArray toc;
+
+	// Header
+	toc.append(saveHeader());
+
+	// Sections
+	int id=0;
+	foreach(const FieldSection &fieldSection, orderOfSections()) {
+		// Section position
+		quint32 pos = headerSize() + newData.size() + diffSectionPos();
+		toc.append((char *)&pos, 4);
+
+		// Section data
+		FieldPart *fieldPart = part(fieldSection);
+		QByteArray section;
+		if(fieldPart && fieldPart->canSave() &&
+				fieldPart->isOpen() && fieldPart->isModified()) {
+			section = fieldPart->save();
+		} else {
+			section = sectionData(fieldSection, true);
+		}
+		if(hasSectionHeader()) {
+			quint32 section_size = section.size();
+			newData.append((char *)&section_size, 4);
+		}
+		newData.append(section);
+
+		++id;
+	}
+
+	// Footer
+//	newData.append(saveFooter()); // For PC footer: Already present in the background data
+
+	// Header prepended to the section data
+	newData.prepend(toc);
+
+	if(compress) {
+		const QByteArray &compresse = LZS::compress(newData);
+		quint32 lzsSize = compresse.size();
+		newData = QByteArray((char *)&lzsSize, 4).append(compresse);
+	}
+
+	return true;
 }
 
 qint8 Field::save(const QString &path, bool compress)
@@ -256,7 +303,7 @@ qint8 Field::save(const QString &path, bool compress)
 	return 0;
 }
 
-qint8 Field::importer(const QString &path, int type, FieldParts part)
+qint8 Field::importer(const QString &path, int type, FieldSections part)
 {
 	QFile fic(path);
 	if(!fic.open(QIODevice::ReadOnly))	return 1;
@@ -280,7 +327,7 @@ qint8 Field::importer(const QString &path, int type, FieldParts part)
 	return importer(data, type == 1 || type == 3, part);
 }
 
-qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
+qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part)
 {
 	if(isPSField) {
 		quint32 sectionPositions[7];
@@ -297,7 +344,6 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 		if(part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
 			if(!section1->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))	return 2;
-			if(section1->isOpen())	Data::currentTextes = section1->texts();
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {
@@ -322,7 +368,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 		}
 		if(part.testFlag(Inf)) {
 			InfFile *inf = this->inf(false);
-			if(!inf->open(data.mid(sectionPositions[4], sectionPositions[5]-sectionPositions[4]), true))	return 2;
+			if(!inf->open(data.mid(sectionPositions[4], sectionPositions[5]-sectionPositions[4])))	return 2;
 			inf->setModified(true);
 		}
 	} else {
@@ -334,7 +380,6 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 		if(part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
 			if(!section1->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))	return 2;
-			if(section1->isOpen())	Data::currentTextes = section1->texts();
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {
@@ -359,7 +404,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldParts part)
 		}
 		if(part.testFlag(Inf)) {
 			InfFile *inf = this->inf(false);
-			if(!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4), true))	return 2;
+			if(!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4)))	return 2;
 			inf->setModified(true);
 		}
 	}

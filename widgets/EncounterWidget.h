@@ -19,7 +19,7 @@
 #define ENCOUNTERWIDGET_H
 
 #include <QtGui>
-#include "EncounterFile.h"
+#include "core/field/EncounterFile.h"
 #include "EncounterTableWidget.h"
 
 class EncounterWidget : public QDialog

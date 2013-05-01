@@ -48,7 +48,7 @@ bool FieldModel::load(FieldPC *field, const QString &hrc, const QString &a, bool
 	blockAll = true;
 
 	data = field->fieldModel(hrc, a, animate); // warning: async!
-	if(data->isLoaded()) {
+	if(data->isOpen()) {
 		updateGL();
 		if(animate && data->frameCount()>1)	timer.start(30);
 	}
@@ -60,7 +60,7 @@ bool FieldModel::load(FieldPC *field, const QString &hrc, const QString &a, bool
 //	textOut.write(data->toStringBones().toLatin1());
 //	textOut.close();
 
-	return data->isLoaded();
+	return data->isOpen();
 }
 
 bool FieldModel::load(Field *field, int modelID, int animationID, bool animate)
@@ -74,7 +74,7 @@ bool FieldModel::load(Field *field, int modelID, int animationID, bool animate)
 	blockAll = true;
 
 	data = field->fieldModel(modelID, animationID, animate); // warning: async!
-	if(data->isLoaded()) {
+	if(data->isOpen()) {
 		updateGL();
 		if(animate && data->frameCount()>1)	timer.start(30);
 	}
@@ -86,7 +86,7 @@ bool FieldModel::load(Field *field, int modelID, int animationID, bool animate)
 //	textOut.write(data->toStringBones().toLatin1());
 //	textOut.close();
 
-	return data->isLoaded();
+	return data->isOpen();
 }
 
 int FieldModel::boneCount() const
@@ -111,7 +111,7 @@ void FieldModel::initializeGL()
 
 void FieldModel::drawP(int boneID, GLuint &texture_id, int &lastTexID)
 {
-	if(!data || !data->isLoaded())	return;
+	if(!data || !data->isOpen())	return;
 
 	foreach(FieldModelPart *p, data->parts(boneID)) {
 
@@ -253,7 +253,7 @@ void FieldModel::paintGL()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	if(!data || !data->isLoaded())	return;
+	if(!data || !data->isOpen())	return;
 
 	resizeGL(width(), height()); // hack (?)
 
@@ -359,7 +359,7 @@ void FieldModel::mousePressEvent(QMouseEvent *event)
 
 void FieldModel::animate()
 {
-	if(data && data->isLoaded() && isVisible()) {
+	if(data && data->isOpen() && isVisible()) {
 		currentFrame = (currentFrame + 1) % data->frameCount();
 		updateGL();
 	}

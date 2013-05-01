@@ -22,7 +22,7 @@
 #include "Field.h"
 #include "FieldModelLoaderPS.h"
 #include "FieldModelFilePS.h"
-#include "FieldArchiveIO.h"
+#include "FieldArchiveIOPS.h"
 
 class FieldPS : public Field
 {
@@ -32,24 +32,25 @@ public:
 
 	inline bool isPC() const { return false; }
 
-	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
-
-	bool save(QByteArray &newData, bool compress);
-
 	FieldModelLoaderPS *fieldModelLoader(bool open=true);
 	FieldModelFilePS *fieldModel(int modelID, int animationID=0, bool animate=true);
 	FieldArchiveIOPS *io() const;
 protected:
-	inline int headerSize() { return 28; }
+	inline int headerSize() const { return 28; }
 	void openHeader(const QByteArray &fileData);
-	FieldModelLoader *createFieldModelLoader() const;
-	BackgroundFile *createBackground() const;
-	int sectionId(FieldPart part) const;
-	quint32 sectionPosition(int idPart);
-	inline int sectionCount() {	return 7; }
-	inline int paddingBetweenSections() { return 0; }
+	QByteArray saveHeader() const;
+	QByteArray saveFooter() const;
+	FieldPart *createPart(FieldSection part);
+	int sectionId(FieldSection part) const;
+	quint32 sectionPosition(int idPart) const;
+	inline int sectionCount() const {	return 7; }
+	inline int paddingBetweenSections() const { return 0; }
+	QList<Field::FieldSection> orderOfSections() const;
+	inline quint32 diffSectionPos() const { return vramDiff; }
+	inline bool hasSectionHeader() const { return false; }
 private:
 	quint32 sectionPositions[7];
+	qint32 vramDiff;
 };
 
 #endif // DEF_FIELDPS

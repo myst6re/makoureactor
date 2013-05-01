@@ -19,8 +19,8 @@
 #define DEF_SCRIPTEDITORVIEW
 
 #include <QtGui>
-#include "VarOrValueWidget.h"
-#include "Field.h"
+#include "../VarOrValueWidget.h"
+#include "core/field/Field.h"
 
 class ScriptEditorView : public QWidget
 {
@@ -30,7 +30,7 @@ public:
 	ScriptEditorView(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent=0);
 	virtual ~ScriptEditorView();
 
-	virtual Opcode *opcode();
+	virtual Opcode *opcode()=0;
 	virtual void setOpcode(Opcode *opcode);
 	bool isValid() const;
 	virtual void clear();
@@ -40,6 +40,15 @@ signals:
 protected:
 	virtual void build()=0;
 	virtual void showEvent(QShowEvent *e);
+	inline Opcode *opcodePtr() const {
+		return _opcode;
+	}
+	Field *field() const;
+	GrpScript *grpScript() const;
+	Script *script() const;
+	int opcodeID() const;
+	void setValid(bool valid);
+private:
 	bool _builded;
 	Field *_field;
 	GrpScript *_grpScript;

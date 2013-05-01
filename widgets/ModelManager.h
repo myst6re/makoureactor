@@ -19,7 +19,7 @@
 #define MODELMANAGER_H
 
 #include <QtGui>
-#include "Field.h"
+#include "core/field/FieldPC.h"
 #include "ColorDisplay.h"
 #include "FieldModel.h"
 
@@ -28,46 +28,35 @@ class ModelManager : public QDialog
 	Q_OBJECT
 public:
 	ModelManager(const QGLWidget *shareWidget=0, QWidget *parent=0);
-	void clear();
-	void fill(FieldPC *field, bool reload=false);
+	virtual void clear();
+	void fill(Field *field, bool reload=false);
 signals:
 	void modified();
-private:
-	void fillModelList();
+protected:
+	virtual void fill2();
+	virtual QList<QStringList> modelNames() const=0;
+	virtual QList<QStringList> animNames(int row) const=0;
+	virtual void showModelInfos2(int row);
+	virtual void showModel2(QTreeWidgetItem *item)=0;
+	virtual FieldModelLoader *modelLoader() const;
+	virtual Field *field() const;
 	int currentModelID(QTreeWidgetItem *item=0) const;
 	int currentAnimID(QTreeWidgetItem *item=0) const;
 
-	FieldPC *field;
-	FieldModelLoaderPC *fieldModelLoader;
-	QSpinBox *globalScale;
 	QTreeWidget *models;
 	QFrame *modelFrame;
-	QLineEdit *modelName;
 	QSpinBox *modelUnknown;
-	QSpinBox *modelScale;
 	QTreeWidget *modelAnims;
 	FieldModel *modelPreview;
-	ColorDisplay *modelColorDisplay;
-	QToolBar *toolBar2;
+	QWidget *modelWidget;
+private:
+	void fillModelList();
+
+	Field *_field;
+	FieldModelLoader *fieldModelLoader;
 private slots:
-	void setGlobalScale(int value);
 	void showModelInfos(QTreeWidgetItem *, QTreeWidgetItem *);
-	void modifyHRC(const QString &hrc);
-	void modifyAnimation(const QString &a);
-	void addModel();
-	void delModel();
-	void upModel();
-	void downModel();
-	void renameOKModel(QTreeWidgetItem *);
-	void setModelName(const QString &modelName);
 	void setModelUnknown(int unknown);
-	void setModelScale(int scale);
-	void setModelColor(int id, QRgb color);
-	void addAnim();
-	void delAnim();
-	void upAnim();
-	void downAnim();
-	void renameOKAnim(QTreeWidgetItem *item, int column);
 	void showModel(QTreeWidgetItem *item);
 };
 

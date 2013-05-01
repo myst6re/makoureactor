@@ -19,7 +19,7 @@
 #define DEF_APERCUBG
 
 #include <QtGui>
-#include "Field.h"
+#include "core/field/Field.h"
 
 class ApercuBG : public QLabel
 {

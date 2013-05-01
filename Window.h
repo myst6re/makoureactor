@@ -19,20 +19,22 @@
 #define DEF_WINDOW
 
 #include <QtGui>
-#include "FieldArchive.h"
-#include "VarManager.h"
-#include "TextManager.h"
-#include "BGDialog.h"
-#include "ApercuBG.h"
-#include "Search.h"
-#include "GrpScriptList.h"
-#include "ScriptList.h"
-#include "OpcodeList.h"
-#include "FieldModel.h"
-#include "ModelManager.h"
-#include "WalkmeshManager.h"
-#include "QTaskBarButton.h"
-#include "LgpDialog.h"
+#include "core/field/FieldArchive.h"
+#include "widgets/VarManager.h"
+#include "widgets/TextManager.h"
+#include "widgets/BGDialog.h"
+#include "widgets/ApercuBG.h"
+#include "widgets/Search.h"
+#include "widgets/GrpScriptList.h"
+#include "widgets/ScriptList.h"
+#include "widgets/OpcodeList.h"
+#include "widgets/FieldModel.h"
+#include "widgets/ModelManagerPC.h"
+#include "widgets/ModelManagerPS.h"
+#include "widgets/TutWidget.h"
+#include "widgets/WalkmeshManager.h"
+#include "widgets/QTaskBarButton.h"
+#include "widgets/LgpDialog.h"
 
 class Window : public QMainWindow, FieldArchiveIOObserver
 {
@@ -81,6 +83,7 @@ public slots:
 	void miscManager();
 	void searchManager();
 	void archiveManager();
+	void fontManager();
 	void about();
 private slots:
 	void emitOpcodeID();
@@ -100,7 +103,7 @@ signals:
 private:
 	void setWindowTitle();
 	void restartNow();
-	void showProgression();
+	void showProgression(const QString &message, bool canBeCanceled);
 	void hideProgression();
 
 	QLineEdit *lineSearch;
@@ -126,18 +129,19 @@ private:
 	QAction *actionSave, *actionSaveAs, *actionExport;
 	QAction *actionMassExport, *actionImport, *actionMassImport, *actionClose;
 	QAction *actionRun, *actionModels, *actionArchive;
-	QAction *actionEncounter, *actionTut;
+	QAction *actionEncounter;
 	QAction *actionMisc, *actionJp_txt;
 	QMenu *menuLang;
 
 	TextManager *textDialog;
 	ModelManager *_modelManager;
+	TutWidget *_tutManager;
 	WalkmeshManager *_walkmeshManager;
 	BGDialog *_backgroundManager;
 
 	QTaskBarButton *taskBarButton;
-	QProgressBar *progression;
 	QProgressDialog *progressDialog;
+	QAction *authorAction;
 	QLabel *authorLbl;
 protected:
 	void showEvent(QShowEvent *);

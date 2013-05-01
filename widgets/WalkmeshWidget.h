@@ -25,17 +25,16 @@
 #else
 #include <GL/glu.h>
 #endif
-#include "IdFile.h"
-#include "CaFile.h"
-#include "InfFile.h"
+#include "core/field/Field.h"
+#include <QGLViewer/qglviewer.h>
 
-class WalkmeshWidget : public QGLWidget
+class WalkmeshWidget : public QGLViewer
 {
 	Q_OBJECT
 public:
 	explicit WalkmeshWidget(QWidget *parent=0, const QGLWidget *shareWidget=0);
 	void clear();
-	void fill(IdFile *walkmesh, CaFile *camera, InfFile *infFile);
+	void fill(Field *field);
 	void updatePerspective();
 public slots:
 	void setXRotation(int);
@@ -50,6 +49,7 @@ public slots:
 	void setSelectedArrow(int arrow);
 private:
 	void computeFov();
+	void drawId(int triangleID, const Triangle &triangle, const Access &access);
 	void drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access);
 	double distance;
 	float xRot, yRot, zRot;
@@ -62,17 +62,22 @@ private:
 	int _selectedArrow;
 	double fovy;
 	IdFile *walkmesh;
-	CaFile *camera;
+	CaFile *_camera;
 	InfFile *infFile;
+	BackgroundFile *bgFile;
+	Section1File *scripts;
+	Field *field;
 	QPoint moveStart;
 //	QPixmap arrow;
 protected:
-	virtual void initializeGL();
-	virtual void resizeGL(int w, int h);
-	virtual void paintGL();
+	virtual void init();
+//	virtual void resizeGL(int w, int h);
+	virtual void drawWithNames();
+	virtual void draw();
 	virtual void wheelEvent(QWheelEvent *event);
 	virtual void mousePressEvent(QMouseEvent *event);
 	virtual void mouseMoveEvent(QMouseEvent *event);
+	virtual void postSelection(const QPoint &point);
 	virtual void keyPressEvent(QKeyEvent *event);
 	virtual void focusInEvent(QFocusEvent *event);
 	virtual void focusOutEvent(QFocusEvent *event);

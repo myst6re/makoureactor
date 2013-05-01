@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "ConfigWindow.h"
 #include "Data.h"
-#include "Config.h"
+#include "core/Config.h"
 #include "TextPreview.h"
 
 ConfigWindow::ConfigWindow(QWidget *parent)
@@ -386,6 +386,7 @@ void ConfigWindow::accept()
 	Config::setValue("useRereleaseFF7Path", currentFF7Path == 1);
 	Config::setValue("useCustomFF7Path", currentFF7Path == 2);
 	Config::setValue("kernel2Path", kernelAuto->isChecked() ? QDir::fromNativeSeparators(kernelPath->text()) : QString());
+	Config::setValue("windowBinPath", windowAuto->isChecked() ? QDir::fromNativeSeparators(windowPath->text()) : QString());
 	Config::setValue("charPath", charAuto->isChecked() ? QDir::fromNativeSeparators(charPath->text()) : QString());
 	if(!disableOGL->isChecked() != Config::value("OpenGL", true).toBool()) {
 		Config::setValue("OpenGL", !disableOGL->isChecked());
@@ -399,7 +400,7 @@ void ConfigWindow::accept()
 	Config::setValue("jp_txt", japEnc->isChecked());
 	Config::setValue("lzsNotCheck", lzsNotCheck->isChecked());
 
-	Data::load();//Reload kernel2.bin data
+	Data::load();//Reload kernel2.bin + window.bin data
 	Data::refreshFF7Paths();// refresh ff7 paths
 	Data::charLgp.clear();//Refresh cached lgp TOC
 	Data::charLgp.close();

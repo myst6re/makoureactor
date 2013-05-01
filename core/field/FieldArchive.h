@@ -29,8 +29,13 @@ public:
 		SortByName, SortByMapId
 	};
 
+	enum ExportType {
+		Fields, Backgrounds, Akaos, Texts
+	};
+	Q_DECLARE_FLAGS(ExportTypes, ExportType)
+
 	FieldArchive();
-	explicit FieldArchive(const QString &path, bool isDirectory=false);
+	explicit FieldArchive(FieldArchiveIO *io);
 	virtual ~FieldArchive();
 	virtual bool isPC() const=0;
 	inline bool isPS() { return !isPC(); }
@@ -41,6 +46,7 @@ public:
 
 	virtual void clear();
 	int size() const;
+	int indexOfField(const QString &name) const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
 	void addField(Field *field);
 	void removeField(quint32 id);
@@ -61,11 +67,16 @@ public:
 	bool searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting);
 
-	bool exportation(const QList<int> &selectedFields, const QString &directory, bool overwrite, Field::FieldParts toExport, FieldArchiveIOObserver *observer);
+	bool exportation(const QList<int> &selectedFields, const QString &directory,
+					 bool overwrite, const QMap<ExportType, QString> &toExport, FieldArchiveIOObserver *observer);
+	bool importation(const QList<int> &selectedFields, const QString &directory,
+					 const QMap<Field::FieldSection, QString> &toImport,
+					 FieldArchiveIOObserver *observer);
 
 	virtual FieldArchiveIO *io() const;
 protected:
 	virtual void setSaved();
+	void setIO(FieldArchiveIO *io);
 private:
 	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
@@ -78,5 +89,7 @@ private:
 	FieldArchiveIO *_io;
 	// QFileSystemWatcher fileWatcher;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(FieldArchive::ExportTypes)
 
 #endif

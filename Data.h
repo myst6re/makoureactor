@@ -19,9 +19,9 @@
 #define DATA_H
 
 #include <QtCore>
-#include "FF7Text.h"
-#include "Lgp.h"
-#include "WindowBinFile.h"
+#include "core/FF7Text.h"
+#include "core/Lgp.h"
+#include "core/WindowBinFile.h"
 
 class Data
 {
@@ -48,8 +48,6 @@ public:
 	static QStringList armor_names;
 	static QStringList accessory_names;
 	static QStringList materia_names;
-	static const QList<FF7Text *> *currentTextes;
-	static QStringList currentGrpScriptNames;
 //	static QStringList currentCharNames;
 	static int currentModelID;
 	static QStringList *currentHrcNames;

@@ -1,3 +1,20 @@
+/****************************************************************************
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ **
+ ** This program is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ****************************************************************************/
 #include "LgpDialog.h"
 
 LgpItemModel::LgpItemModel(Lgp *lgp, QObject *parent) :
@@ -107,7 +124,7 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 
 	replaceButton = new QPushButton(tr("Remplacer"), this);
 	extractButton = new QPushButton(tr("Extraire"), this);
-	packButton = new QPushButton(tr("Créer l'image disque modifiée"), this);
+	packButton = new QPushButton(tr("Créer l'archive modifiée"), this);
 
 	QHBoxLayout *barLayout = new QHBoxLayout;
 	barLayout->addWidget(replaceButton);
@@ -131,8 +148,15 @@ void LgpDialog::replaceCurrent()
 	if(index.isValid()) {
 		QString *filePath = (QString *)index.internalPointer();
 		if(filePath) {
-			QString extension = filePath->mid(filePath->lastIndexOf('.') + 1);
-			QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), "", tr("Fichier %1 (*.%1);;Tous les fichiers (*)").arg(extension));
+			QString filename = filePath->mid(filePath->lastIndexOf('/') + 1);
+			int index = filename.lastIndexOf('.');
+			QString extension = index==-1 ? QString() : filename.mid(index + 1);
+			QStringList filter;
+			if(!extension.isEmpty()) {
+				filter << tr("Fichier %1 (*.%1)").arg(extension);
+			}
+			filter << tr("Tous les fichiers (*)");
+			QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), filename, filter.join(";;"));
 			if(path.isNull()) {
 				return;
 			}
@@ -150,8 +174,15 @@ void LgpDialog::extractCurrent()
 	if(index.isValid()) {
 		QString *filePath = (QString *)index.internalPointer();
 		if(filePath) {
-			QString extension = filePath->mid(filePath->lastIndexOf('.') + 1);
-			QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), "", tr("Fichier %1 (*.%1);;Tous les fichiers (*)").arg(extension));
+			QString filename = filePath->mid(filePath->lastIndexOf('/') + 1);
+			int index = filename.lastIndexOf('.');
+			QString extension = index==-1 ? QString() : filename.mid(index + 1);
+			QStringList filter;
+			if(!extension.isEmpty()) {
+				filter << tr("Fichier %1 (*.%1)").arg(extension);
+			}
+			filter << tr("Tous les fichiers (*)");
+			QString path = QFileDialog::getSaveFileName(this, tr("Nouveau fichier"), filename, filter.join(";;"));
 			if(path.isNull()) {
 				return;
 			}
@@ -160,9 +191,19 @@ void LgpDialog::extractCurrent()
 			if(io && io->open(QIODevice::ReadOnly)) {
 				QFile file(path);
 				if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-					//TODO
+					while(io->bytesAvailable()) {
+						file.write(io->read(4096));
+					}
+					if(file.error() != QFile::NoError) {
+						QMessageBox::warning(this, tr("Erreur d'écriture"), tr("Impossible d'écrire dans le fichier (message : %1).")
+											 .arg(file.errorString()));
+					}
+					file.close();
+				} else {
+					QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir le fichier (message : %1).")
+										 .arg(file.errorString()));
 				}
-//TODO:error
+				io->close();
 			}
 		}
 	}
@@ -183,7 +224,8 @@ void LgpDialog::pack()
 
 	if(!lgp->pack(path)) {//TODO: observer
 		if(lgp->error() != Lgp::AbortError) {
-			QMessageBox::warning(this, tr("Erreur"), tr("Impossible de créer l'archive (message : %1).").arg(lgp->errorString()));
+			QMessageBox::warning(this, tr("Erreur"), tr("Impossible de créer l'archive (message : %1).")
+								 .arg(lgp->errorString()));
 		} else {
 			return;
 		}

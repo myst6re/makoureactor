@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "MassExportDialog.h"
-#include "Config.h"
+#include "core/Config.h"
 
 MassExportDialog::MassExportDialog(QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
@@ -29,20 +29,26 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	fieldList->setFixedWidth(200);
 	fieldList->setSelectionMode(QAbstractItemView::MultiSelection);
 
-	bgExport = new FormatSelectionWidget(tr("Exporter les décors"),
-										 QStringList() <<
-										 tr("Image PNG") <<
-										 tr("Image JPG") <<
-										 tr("Image BMP"), this);
-	bgExport->setCurrentFormat(Config::value("exportBackgroundFormat").toInt());
+	exports.insert(Fields,
+				   new FormatSelectionWidget(tr("Exporter les écrans"),
+											 QStringList(), this));
+	exports.insert(Backgrounds,
+				   new FormatSelectionWidget(tr("Exporter les décors"),
+											 QStringList() <<
+											 tr("Image PNG") + ";;png" <<
+											 tr("Image JPG") + ";;jpg" <<
+											 tr("Image BMP") + ";;bmp", this));
+	exports.insert(Akaos,
+				   new FormatSelectionWidget(tr("Exporter les sons"),
+											 QStringList() <<
+											 tr("Son AKAO") + ";;akao", this));
+	exports.insert(Texts,
+				   new FormatSelectionWidget(tr("Exporter les textes"),
+											 QStringList() <<
+											 tr("Texte XML") + ";;xml" <<
+											 tr("Texte simple TXT") + ";;txt", this));
 
-	akaoExport = new FormatSelectionWidget(tr("Exporter les sons"),
-										   QStringList() <<
-										   tr("Son AKAO"), this);
-
-	textExport = new FormatSelectionWidget(tr("Exporter les textes"),
-										   QStringList() <<
-										   tr("Texte simple TXT"), this);
+	exports.value(Backgrounds)->setCurrentFormat(Config::value("exportBackgroundFormat").toString());
 
 	dirPath = new QLineEdit(this);
 	dirPath->setText(Config::value("exportDirectory").toString());
@@ -56,16 +62,17 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	buttonBox->addButton(QDialogButtonBox::Cancel);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(fieldList, 0, 0, 6, 1);
-	layout->addWidget(bgExport, 0, 1, 1, 2);
-	layout->addWidget(akaoExport, 1, 1, 1, 2);
-	layout->addWidget(textExport, 2, 1, 1, 2);
-	layout->addWidget(new QLabel(tr("Emplacement de l'export :")), 3, 1, 1, 2);
-	layout->addWidget(dirPath, 4, 1);
-	layout->addWidget(changeDir, 4, 2);
-	layout->addWidget(overwriteIfExists, 5, 1, 1, 2);
-	layout->addWidget(buttonBox, 7, 0, 1, 3, Qt::AlignRight);
-	layout->setRowStretch(6, 1);
+	layout->addWidget(fieldList, 0, 0, 3 + exports.size(), 1);
+	int row = 0;
+	foreach(FormatSelectionWidget *formatSelection, exports) {
+		layout->addWidget(formatSelection, row++, 1, 1, 2);
+	}
+	layout->addWidget(new QLabel(tr("Emplacement de l'export :")), row, 1, 1, 2);
+	layout->addWidget(dirPath, row + 1, 1);
+	layout->addWidget(changeDir, row + 1, 2);
+	layout->addWidget(overwriteIfExists, row + 2, 1, 1, 2);
+	layout->addWidget(buttonBox, row + 4, 0, 1, 3);
+	layout->setRowStretch(row + 3, 1);
 	layout->setColumnStretch(1, 1);
 
 	connect(changeDir, SIGNAL(clicked()),  SLOT(chooseExportDirectory()));
@@ -76,6 +83,13 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 void MassExportDialog::fill(FieldArchive *fieldArchive)
 {
 	_fieldArchive = fieldArchive;
+
+	QString fieldType = _fieldArchive->isPC() ? tr("PC") : tr("PS");
+	QStringList formats;
+	formats.append(tr("Fichier FIELD %1").arg(fieldType) + (_fieldArchive->isPC() ? "" : ";;dat"));
+	formats.append(tr("Fichier décompressé FIELD %1").arg(fieldType) + ";;dec");
+
+	exports.value(Fields)->setFormats(formats);
 
 	fieldList->clear();
 	for(int i=0 ; i<_fieldArchive->size() ; ++i) {
@@ -91,11 +105,9 @@ void MassExportDialog::fill(FieldArchive *fieldArchive)
 
 void MassExportDialog::chooseExportDirectory()
 {
-	QString dir = Config::value("exportDirectory").toString();
-	dir = QFileDialog::getExistingDirectory(this, tr("Choisir un dossier"), dir);
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Choisir un dossier"), directory());
 	if(dir.isNull())	return;
 
-	Config::setValue("exportDirectory", dir);
 	dirPath->setText(dir);
 }
 
@@ -112,34 +124,14 @@ QList<int> MassExportDialog::selectedFields() const
 	return ids;
 }
 
-bool MassExportDialog::exportBackground() const
+bool MassExportDialog::exportModule(ExportType type) const
 {
-	return bgExport->isChecked();
+	return exports.value(type)->isChecked();
 }
 
-int MassExportDialog::exportBackgroundFormat() const
+const QString &MassExportDialog::moduleFormat(ExportType type) const
 {
-	return bgExport->currentFormat();
-}
-
-bool MassExportDialog::exportAkao() const
-{
-	return akaoExport->isChecked();
-}
-
-int MassExportDialog::exportAkaoFormat() const
-{
-	return akaoExport->currentFormat();
-}
-
-bool MassExportDialog::exportText() const
-{
-	return textExport->isChecked();
-}
-
-int MassExportDialog::exportTextFormat() const
-{
-	return textExport->currentFormat();
+	return exports.value(type)->currentFormat();
 }
 
 QString MassExportDialog::directory() const
@@ -155,7 +147,8 @@ bool MassExportDialog::overwrite() const
 void MassExportDialog::accept()
 {
 	Config::setValue("overwriteOnExport", overwrite());
-	Config::setValue("exportBackgroundFormat", exportBackgroundFormat());
+	Config::setValue("exportBackgroundFormat", moduleFormat(Backgrounds));
+	Config::setValue("exportDirectory", directory());
 
 	QDialog::accept();
 }

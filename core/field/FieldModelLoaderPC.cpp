@@ -16,9 +16,10 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModelLoaderPC.h"
+#include "Field.h"
 
-FieldModelLoaderPC::FieldModelLoaderPC() :
-	FieldModelLoader()
+FieldModelLoaderPC::FieldModelLoaderPC(Field *field) :
+	FieldModelLoader(field)
 {
 }
 
@@ -33,7 +34,12 @@ void FieldModelLoaderPC::clear()
 	this->colors.clear();
 }
 
-bool FieldModelLoaderPC::load(const QByteArray &data)
+bool FieldModelLoaderPC::open()
+{
+	return open(field()->sectionData(Field::ModelLoader));
+}
+
+bool FieldModelLoaderPC::open(const QByteArray &data)
 {
 	const char *constData = data.constData();
 
@@ -108,7 +114,8 @@ bool FieldModelLoaderPC::load(const QByteArray &data)
 		model_anims.append(anims);
 		model_anims_unknown.append(anims_unknown);
 	}
-	setLoaded(true);
+	setOpen(true);
+
 	return true;
 }
 

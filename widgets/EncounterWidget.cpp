@@ -27,7 +27,8 @@ EncounterWidget::EncounterWidget(EncounterFile *data, QWidget *parent) :
 
 	QLabel *helpIcon = new QLabel(this);
 	helpIcon->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation).pixmap(32));
-	QLabel *help = new QLabel(tr("<b>Les rencontres :</b> Il y a deux groupes de rencontres aléatoires indépendants, par défaut c'est le groupe 1 qui est actif, mais la commande BTLTB (dans les scripts) permet de passer au groupe 2.<br/><b>Fréquence des combats :</b> Plus le pourcentage est élevé, plus les combats seront fréquents."), this);
+	QLabel *help = new QLabel(tr("<b>Les rencontres :</b> Il y a deux groupes de rencontres aléatoires indépendants, par défaut c'est le groupe 1 qui est actif, mais la commande BTLTB (dans les scripts) permet de passer au groupe 2.<br/>"
+								 "<b>Fréquence des combats :</b> Plus la valeur est basse, plus les combats seront fréquents."), this);
 	help->setTextFormat(Qt::RichText);
 	help->setWordWrap(true);
 	QHBoxLayout *helpLayout = new QHBoxLayout;
@@ -40,7 +41,7 @@ EncounterWidget::EncounterWidget(EncounterFile *data, QWidget *parent) :
 	layout->addWidget(group1, 0, 0);
 	layout->addWidget(group2, 0, 1);
 	layout->addLayout(helpLayout, 1, 0, 1, 2, Qt::AlignTop);
-	layout->addWidget(buttonBox, 2, 0, 1, 2, Qt::AlignRight);
+	layout->addWidget(buttonBox, 2, 0, 1, 2);
 
 	fillGroup(group1, data->encounterTable(EncounterFile::Table1));
 	fillGroup(group2, data->encounterTable(EncounterFile::Table2));

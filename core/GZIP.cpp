@@ -22,7 +22,17 @@
 #include <zlib.h>
 #endif
 
-QByteArray GZIP::decompress(const QByteArray &data, int/* decSize*/)
+QByteArray GZIP::decompress(const QByteArray &data, int decSize)
+{
+	return decompress(data.constData(), data.size(), decSize);
+}
+
+QByteArray GZIP::compress(const QByteArray &ungzip)
+{
+	return compress(ungzip.constData(), ungzip.size());
+}
+
+QByteArray GZIP::decompress(const char *data, int size, int/* decSize*/)
 {
 	QByteArray ungzip;
 
@@ -30,7 +40,7 @@ QByteArray GZIP::decompress(const QByteArray &data, int/* decSize*/)
 	if(!temp.open()) {
 		return QByteArray();
 	}
-	temp.write(data);
+	temp.write(data, size);
 	temp.close();
 	gzFile file = gzopen(temp.fileName().toLatin1(), "rb");
 	if(!file) {
@@ -46,7 +56,7 @@ QByteArray GZIP::decompress(const QByteArray &data, int/* decSize*/)
 	return ungzip;
 }
 
-QByteArray GZIP::compress(const QByteArray &ungzip)
+QByteArray GZIP::compress(const char *ungzip, int size)
 {
 	QString tempPath = QDir::tempPath()+"/qt_temp.gz";
 
@@ -54,7 +64,7 @@ QByteArray GZIP::compress(const QByteArray &ungzip)
 	if(!file2) {
 		return QByteArray();
 	}
-	gzwrite(file2, ungzip.constData(), ungzip.size());
+	gzwrite(file2, ungzip, size);
 	gzclose(file2);
 	QFile finalFile(tempPath);
 	if(!finalFile.open(QIODevice::ReadOnly)) {

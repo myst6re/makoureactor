@@ -19,7 +19,7 @@
 #define TEXTPREVIEW_H
 
 #include <QtGui>
-#include "Opcode.h"
+#include "core/field/Opcode.h"
 
 #define NOWIN		255
 #define DARKGREY	0
@@ -30,9 +30,6 @@
 #define CYAN		5
 #define YELLOW		6
 #define WHITE		7
-#define LEFT_PADD(w)	(w >> 5)
-#define CHAR_WIDTH(w)	(w & 0x1F)
-
 
 class TextPreview : public QWidget
 {

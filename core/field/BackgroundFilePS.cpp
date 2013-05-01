@@ -1,28 +1,92 @@
+/****************************************************************************
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ **
+ ** This program is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ****************************************************************************/
 #include "BackgroundFilePS.h"
 #include "Palette.h"
+#include "../PsColor.h"
+#include "FieldPS.h"
 
-BackgroundFilePS::BackgroundFilePS() :
-	BackgroundFile()
+MIM BackgroundFilePS::headerPal;
+MIM BackgroundFilePS::headerImg;
+MIM BackgroundFilePS::headerEffect;
+
+BackgroundFilePS::BackgroundFilePS(FieldPS *field) :
+	BackgroundFile(field)
 {
 }
 
-QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QByteArray &mimDataDec, const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+quint16 BackgroundFilePS::textureWidth(const Tile &tile) const
 {
-	/*--- OUVERTURE DU MIM ---*/
-	const char *constMimData = mimDataDec.constData();
-	quint32 mimDataSize = mimDataDec.size();
-	MIM headerPal, headerImg, headerEffect;
-	quint32 i;
+	return tile.textureID2 ? headerEffect.w : headerImg.w;
+}
 
-	if(mimDataSize < 12)	return QPixmap();
+quint8 BackgroundFilePS::depth(const Tile &tile) const
+{
+	return tile.depth;
+}
+
+quint32 BackgroundFilePS::originInData(const Tile &tile) const
+{
+	quint16 texID = tile.textureID - (tile.textureID2 ? headerEffect.x : headerImg.x)/64;
+	quint32 dataStart = headerPal.size + 12 + (tile.textureID2 ? headerImg.size : 0);
+	quint32 textureStart = texID * 128;
+	quint32 tileStart = tile.srcY * textureWidth(tile) + tile.srcX * (tile.depth == 0 ? 0.5 : tile.depth);
+	return dataStart + textureStart + tileStart;
+}
+
+QRgb BackgroundFilePS::directColor(quint16 color) const
+{
+	return PsColor::fromPsColor(color);
+}
+
+QList<Palette *> BackgroundFilePS::openPalettes(const QByteArray &data)
+{
+	const char *constMimData = data.constData();
+	quint32 mimDataSize = data.size(), i;
+	QList<Palette *> palettes;
+
+	if(mimDataSize < 12) {
+		return QList<Palette *>() << NULL;
+	}
 
 	memcpy(&headerPal, constMimData, 12);
 
-	if(mimDataSize < (quint32)12+headerPal.h*512)	return QPixmap();
+	if(mimDataSize < quint32(12+headerPal.h*512)) {
+		return QList<Palette *>() << NULL;
+	}
 
-	QList<Palette> palettes;
-	for(i=0 ; i<headerPal.h ; ++i)
-		palettes.append(Palette(mimDataDec.mid(12+i*512,512)));
+	for(i=0 ; i<headerPal.h ; ++i) {
+		palettes.append(new PalettePS(constMimData + 12 + i*512));
+	}
+
+	return palettes;
+}
+
+QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+{
+	/*--- MIM OPENING ---*/
+	QByteArray mimDataDec = ((FieldPS *)field())->io()->mimData(field());
+	const char *constMimData = mimDataDec.constData();
+	quint32 mimDataSize = mimDataDec.size(), i;
+
+	QList<Palette *> palettes = openPalettes(mimDataDec);
+	if(palettes.size() == 1 && palettes.first() == NULL) {
+		return QPixmap();
+	}
 
 	if(mimDataSize < headerPal.size + 12)	return QPixmap();
 
@@ -30,37 +94,20 @@ QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QBy
 
 	headerImg.w *= 2;
 
-	if(headerPal.size+headerImg.size+12 < mimDataSize)
-	{
+	if(headerPal.size+headerImg.size+12 <= mimDataSize) {
 		memcpy(&headerEffect, constMimData + headerPal.size+headerImg.size, 12);
 		headerEffect.w *= 2;
-	}
-	else
-	{
+	} else {
 		headerEffect.size = 4;
 		headerEffect.w = 0;
 		headerEffect.x = 0;
 	}
 
-	/*--- OUVERTURE DU DAT ---*/
+	/*--- DAT OPENING ---*/
+	QByteArray datDataDec = field()->sectionData(Field::Background);
 	const char *constDatData = datDataDec.constData();
 	quint32 datDataSize = datDataDec.size();
 	quint32 debut1, debut2, debut3, debut4;
-
-	/* // MODEL SECTION
-	quint32 debutSection7, start2 = debutSection7 - start + 28;
-	quint16 size7, nb_model7;
-
-	memcpy(&debutSection7, constDatData + 24, 4);
-	memcpy(&size7, constDatData + start2, 2);
-	memcpy(&nb_model7, constDatData + start2+2, 2);
-	qDebug() << QString("Size = %1 | nbModels = %2").arg(size7).arg(nb_model7);
-	for(i=0 ; i<nb_model7 ; ++i) {
-		qDebug() << QString("??? = %1 | ??? = %2 | ??? = %3 | nbAnims = %4").arg((quint8)datData.at(start2+4+i*8)).arg((quint8)datData.at(start2+5+i*8)).arg((quint8)datData.at(start2+6+i*8)).arg((quint8)datData.at(start2+7+i*8));
-		qDebug() << QString("??? = %1 | ??? = %2 | ??? = %3 | ??? = %4").arg((quint8)datData.at(start2+8+i*8)).arg((quint8)datData.at(start2+9+i*8)).arg((quint8)datData.at(start2+10+i*8)).arg((quint8)datData.at(start2+11+i*8));
-	}
-	fdebug.write(datData.mid(start2));
-	fdebug.close(); */
 
 	if(datDataSize < 16)	return QPixmap();
 
@@ -106,13 +153,13 @@ QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QBy
 	}
 
 	QList<layer2Tile> tiles2;
-	QMultiMap<qint16, Tile> tiles;
 	layer1Tile tile1;
 	layer2Tile tile2;
 	layer3Tile tile4;
 	paramTile tile3;
+	QMultiMap<qint16, Tile> tiles;
 	Tile tile;
-	quint16 texID=0, largeurMax=0, largeurMin=0, hauteurMax=0, hauteurMin=0;
+	quint16 texID=0;
 	quint32 size, tileID=0;
 
 	size = (debut3-debut2)/2;
@@ -135,18 +182,9 @@ QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QBy
 	for(i=0 ; i<size ; ++i)
 	{
 		memcpy(&tile1, constDatData + debut1+i*8, 8);
-		if(qAbs(tile1.cibleX) < 1000 && qAbs(tile1.cibleY) < 1000) {
-			if(tile1.cibleX >= 0 && tile1.cibleX > largeurMax)
-				largeurMax = tile1.cibleX;
-			else if(tile1.cibleX < 0 && -tile1.cibleX > largeurMin)
-				largeurMin = -tile1.cibleX;
-			if(tile1.cibleY >= 0 && tile1.cibleY > hauteurMax)
-				hauteurMax = tile1.cibleY;
-			else if(tile1.cibleY < 0 && -tile1.cibleY > hauteurMin)
-				hauteurMin = -tile1.cibleY;
-
-			tile.cibleX = tile1.cibleX;
-			tile.cibleY = tile1.cibleY;
+		if(qAbs(tile1.dstX) < 1000 && qAbs(tile1.dstY) < 1000) {
+			tile.dstX = tile1.dstX;
+			tile.dstY = tile1.dstY;
 			tile.srcX = tile1.srcX;
 			tile.srcY = tile1.srcY;
 			tile.paletteID = tile1.palID;
@@ -158,7 +196,7 @@ QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QBy
 
 			tile.textureID = tile2.page_x;
 			tile.textureID2 = tile2.page_y;
-			tile.deph = tile2.deph;
+			tile.depth = tile2.depth;
 			tile.typeTrans = tile2.typeTrans;
 
 			tile.param = tile.state = tile.blending = 0;
@@ -179,18 +217,9 @@ QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QBy
 	for(i=0 ; i<size ; ++i)
 	{
 		memcpy(&tile1, constDatData + debut3+i*14, 8);
-		if(qAbs(tile1.cibleX) < 1000 || qAbs(tile1.cibleY) < 1000) {
-			if(tile1.cibleX >= 0 && tile1.cibleX > largeurMax)
-				largeurMax = tile1.cibleX;
-			else if(tile1.cibleX < 0 && -tile1.cibleX > largeurMin)
-				largeurMin = -tile1.cibleX;
-			if(tile1.cibleY >= 0 && tile1.cibleY > hauteurMax)
-				hauteurMax = tile1.cibleY;
-			else if(tile1.cibleY < 0 && -tile1.cibleY > hauteurMin)
-				hauteurMin = -tile1.cibleY;
-
-			tile.cibleX = tile1.cibleX;
-			tile.cibleY = tile1.cibleY;
+		if(qAbs(tile1.dstX) < 1000 || qAbs(tile1.dstY) < 1000) {
+			tile.dstX = tile1.dstX;
+			tile.dstY = tile1.dstY;
 			tile.srcX = tile1.srcX;
 			tile.srcY = tile1.srcY;
 			tile.paletteID = tile1.palID;
@@ -204,7 +233,7 @@ QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QBy
 			if(tile.state==0 || paramActifs.value(tile.param, 0)&tile.state) {
 				tile.textureID = tile2.page_x;
 				tile.textureID2 = tile2.page_y;
-				tile.deph = tile2.deph;
+				tile.depth = tile2.depth;
 				tile.typeTrans = tile2.typeTrans;
 
 				tile.blending = tile3.blending;
@@ -228,18 +257,9 @@ QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QBy
 	for(i=0 ; i<size ; ++i)
 	{
 		memcpy(&tile1, constDatData + debut4+i*10, 8);
-		if(qAbs(tile1.cibleX) < 1000 || qAbs(tile1.cibleY) < 1000) {
-			if(tile1.cibleX >= 0 && tile1.cibleX+16 > largeurMax)
-				largeurMax = tile1.cibleX+16;
-			else if(tile1.cibleX < 0 && -tile1.cibleX > largeurMin)
-				largeurMin = -tile1.cibleX;
-			if(tile1.cibleY >= 0 && tile1.cibleY+16 > hauteurMax)
-				hauteurMax = tile1.cibleY+16;
-			else if(tile1.cibleY < 0 && -tile1.cibleY > hauteurMin)
-				hauteurMin = -tile1.cibleY;
-
-			tile.cibleX = tile1.cibleX;
-			tile.cibleY = tile1.cibleY;
+		if(qAbs(tile1.dstX) < 1000 || qAbs(tile1.dstY) < 1000) {
+			tile.dstX = tile1.dstX;
+			tile.dstY = tile1.dstY;
 			tile.srcX = tile1.srcX;
 			tile.srcY = tile1.srcY;
 			tile.paletteID = tile1.palID;
@@ -263,7 +283,7 @@ QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QBy
 
 				tile.textureID = tile2.page_x;
 				tile.textureID2 = tile2.page_y;
-				tile.deph = tile2.deph;
+				tile.depth = tile2.depth;
 				tile.typeTrans = tile2.typeTrans;
 
 				tile.ID = layerID==2 ? 4096 : 0;
@@ -276,73 +296,13 @@ QPixmap BackgroundFilePS::openBackground(const QByteArray &datDataDec, const QBy
 		++tileID;
 	}
 
-	int imageWidth = largeurMin + largeurMax + 16;
-	QImage image(imageWidth, hauteurMin + hauteurMax + 16, QImage::Format_ARGB32);
-	QRgb *pixels = (QRgb *)image.bits();
-	quint32 origin, top;
-	quint16 width, deuxOctets, baseX;
-	quint8 index, right;
-
-	image.fill(0xFF000000);
-
-	foreach(const Tile &tile, tiles)
-	{
-		width = tile.textureID2 ? headerEffect.w : headerImg.w;
-		texID = tile.textureID - (tile.textureID2 ? headerEffect.x/64 : headerImg.x/64);
-		origin = headerPal.size + 12 + (tile.textureID2 ? headerImg.size : 0) + tile.srcY*width + tile.srcX*tile.deph + texID*128;
-		right = 0;
-		top = (hauteurMin + tile.cibleY) * imageWidth;
-		baseX = largeurMin + tile.cibleX;
-
-		if(tile.deph == 2)
-		{
-
-			for(quint16 j=0 ; j<width*tile.size ; j+=2)
-			{
-				memcpy(&deuxOctets, constMimData + origin+j, 2);
-				if(deuxOctets!=0)
-					pixels[baseX + right + top] = PsColor::fromPsColor(deuxOctets);
-
-				if(++right==tile.size)
-				{
-					right = 0;
-					j += width-tile.size*2;
-					top += imageWidth;
-				}
-			}
-		}
-		else if(tile.deph == 1)
-		{
-			const Palette &palette = palettes.at(tile.paletteID);
-
-			for(quint16 j=0 ; j<width*tile.size ; ++j)
-			{
-				index = (quint8)mimDataDec.at(origin+j);
-
-				if(!palette.isZero.at(index)) {
-					if(tile.blending) {
-						pixels[baseX + right + top] = blendColor(tile.typeTrans, pixels[baseX + right + top], palette.couleurs.at(index));
-					} else {
-						pixels[baseX + right + top] = palette.couleurs.at(index);
-					}
-				}
-
-				if(++right==tile.size)
-				{
-					right = 0;
-					j += width-tile.size;
-					top += imageWidth;
-				}
-			}
-		}
-	}
-
-	return QPixmap::fromImage(image);
+	return drawBackground(tiles, palettes, mimDataDec);
 }
 
-bool BackgroundFilePS::usedParams(const QByteArray &datDataDec, QHash<quint8, quint8> &usedParams, bool *layerExists)
+bool BackgroundFilePS::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
 	/*--- OUVERTURE DU DAT ---*/
+	QByteArray datDataDec = field()->sectionData(Field::Background);
 	const char *constDatData = datDataDec.constData();
 	quint32 datDataSize = datDataDec.size();
 	quint32 i, debut1, debut2, debut3, debut4;
@@ -394,7 +354,7 @@ bool BackgroundFilePS::usedParams(const QByteArray &datDataDec, QHash<quint8, qu
 	for(i=0 ; i<size ; ++i)
 	{
 		memcpy(&tile1, constDatData + debut3+i*14, 8);
-		if(qAbs(tile1.cibleX) < 1000 || qAbs(tile1.cibleY) < 1000) {
+		if(qAbs(tile1.dstX) < 1000 || qAbs(tile1.dstY) < 1000) {
 			memcpy(&tile3, constDatData + debut3+i*14+10, 4);
 			if(tile3.param)
 			{
@@ -411,7 +371,7 @@ bool BackgroundFilePS::usedParams(const QByteArray &datDataDec, QHash<quint8, qu
 	for(i=0 ; i<size ; ++i)
 	{
 		memcpy(&tile1, constDatData + debut4+i*10, 8);
-		if(qAbs(tile1.cibleX) < 1000 || qAbs(tile1.cibleY) < 1000) {
+		if(qAbs(tile1.dstX) < 1000 || qAbs(tile1.dstY) < 1000) {
 			memcpy(&tile4, constDatData + debut4+i*10+8, 2);
 			if(tile4.param)
 			{

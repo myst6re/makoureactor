@@ -16,8 +16,8 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Data.h"
-#include "Config.h"
-#include "LZS.h"
+#include "core/Config.h"
+#include "core/LZS.h"
 #ifdef Q_WS_WIN
 #include <windef.h>
 #include <winbase.h>
@@ -31,8 +31,6 @@ QStringList Data::weapon_names;
 QStringList Data::armor_names;
 QStringList Data::accessory_names;
 QStringList Data::materia_names;
-const QList<FF7Text *> *Data::currentTextes;
-QStringList Data::currentGrpScriptNames;
 //QStringList Data::currentCharNames;
 int Data::currentModelID=-1;
 QStringList *Data::currentHrcNames=0;
@@ -473,7 +471,7 @@ void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &name
 
 	i=0;
 	foreach(position, positions) {
-		names.append(FF7Text(data.mid(pos + position, positions.at(i+1) - position)).getText(false, true));
+		names.append(FF7Text(data.mid(pos + position, positions.at(i+1) - position)).text(false, true));
 		++i;
 		if(i == count)	break;
 	}
