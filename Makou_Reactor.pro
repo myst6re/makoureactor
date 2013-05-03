@@ -3,7 +3,6 @@ TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 QT += opengl xml
-LIBS += -L'$$_PRO_FILE_PWD_/QGLViewer' -lQGLViewer2
 
 # Input
 HEADERS += \
@@ -225,11 +224,11 @@ macx {
 	ICON = images/Makou_Reactor.icns
 }
 !win32 {
-	LIBS += -lz
+        LIBS += -lz -L'$$_PRO_FILE_PWD_/QGLViewer' -lQGLViewer
 }
 win32 {
 	RC_FILE = Makou_Reactor.rc
-	LIBS += -lole32
+        LIBS += -lole32 -L'$$_PRO_FILE_PWD_/QGLViewer' -lQGLViewer2
 	HEADERS += shobjidl.h
 }
 
