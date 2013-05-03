@@ -71,9 +71,6 @@ public:
 	void backgroundParams(QHash<quint8, quint8> &paramActifs) const;
 	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
-	const QList<Opcode *> &getExpandedItems() const;
-	void setExpandedItems(const QList<Opcode *> &expandedItems);
-
 	Script *splitScriptAtReturn();
 	static Opcode *createOpcode(const QByteArray &script, int pos=0);
 	static Opcode *copyOpcode(Opcode *opcode);
@@ -81,7 +78,6 @@ private:
 	OpcodeJump *convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok=0) const;
 //	bool verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const;
 	QList<Opcode *> opcodes;
-	QList<Opcode *> expandedItems;
 	QString lastError;
 
 	bool valid;

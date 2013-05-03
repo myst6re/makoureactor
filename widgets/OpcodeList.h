@@ -53,6 +53,9 @@ public:
 	void enableActions(bool);
 	void setErrorLine(int opcodeID);
 
+	bool itemIsExpanded(const Opcode *opcode) const;
+	void setExpandedItems(const QList<const Opcode *> &expandedItems);
+
 private slots:
 	void add();
 	void scriptEditor(bool modify=true);
@@ -91,6 +94,7 @@ private:
 	GrpScript *grpScript;
 	Script *script;
 	QList<Opcode *> opcodeCopied;
+	QHash<const Script *, QList<const Opcode *> > expandedItems;
 
 	QBrush previousBG, previousErrorBg;
 	int errorLine;

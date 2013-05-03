@@ -96,6 +96,19 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	textEditorLayout->addWidget(japEnc, 0, 3, Qt::AlignLeft | Qt::AlignTop);
 	textEditorLayout->setColumnStretch(3, 1);
 
+	QGroupBox *scriptEditor = new QGroupBox(tr("Editeur de script"), this);
+
+	expandedByDefault = new QCheckBox(tr("Lignes expansées par défaut"), scriptEditor);
+
+	QVBoxLayout *scriptEditorLayout = new QVBoxLayout(scriptEditor);
+	scriptEditorLayout->addWidget(expandedByDefault);
+	scriptEditorLayout->addStretch();
+
+	QHBoxLayout *textScriptEditorLayout = new QHBoxLayout;
+	textScriptEditorLayout->addWidget(textEditor, 1);
+	textScriptEditorLayout->addWidget(scriptEditor, 1);
+	textScriptEditorLayout->setContentsMargins(QMargins());
+
 	QGroupBox *misc = new QGroupBox(tr("Divers"), this);
 
 	lzsNotCheck = new QCheckBox(tr("Ne pas vérifier strictement le format des fichiers"), misc);
@@ -110,7 +123,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(dependances, 0, 0, 1, 3);
 	layout->addWidget(openGL, 1, 0, 1, 3);
-	layout->addWidget(textEditor, 2, 0, 1, 3);
+	layout->addLayout(textScriptEditorLayout, 2, 0, 1, 3);
 	layout->addWidget(misc, 3, 0, 1, 3);
 	layout->addWidget(OKButton, 4, 1);
 	layout->addWidget(cancelButton, 4, 2);
@@ -196,6 +209,7 @@ void ConfigWindow::fillConfig()
 
 	optiText->setChecked(!Config::value("dontOptimizeTexts", false).toBool());
 	japEnc->setChecked(Config::value("jp_txt", false).toBool());
+	expandedByDefault->setChecked(Config::value("scriptItemExpandedByDefault", false).toBool());
 	lzsNotCheck->setChecked(Config::value("lzsNotCheck", false).toBool());
 
 	setWindowColors();
@@ -398,6 +412,7 @@ void ConfigWindow::accept()
 	Config::setValue("windowColorBottomRight", windowColorBottomRight);
 	Config::setValue("dontOptimizeTexts", !optiText->isChecked());
 	Config::setValue("jp_txt", japEnc->isChecked());
+	Config::setValue("scriptItemExpandedByDefault", expandedByDefault->isChecked());
 	Config::setValue("lzsNotCheck", lzsNotCheck->isChecked());
 
 	Data::load();//Reload kernel2.bin + window.bin data

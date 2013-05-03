@@ -37,7 +37,7 @@ private:
 	QCheckBox *disableOGL;
 	QPushButton *windowColor1, *windowColor2, *windowColor3, *windowColor4, *windowColorReset;
 	QLabel *windowPreview;
-	QCheckBox *optiText, *japEnc, *lzsNotCheck;
+	QCheckBox *optiText, *japEnc, *expandedByDefault, *lzsNotCheck;
 	QRgb windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight;
 private slots:
 	void changeFF7ListButtonsState();

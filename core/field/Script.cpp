@@ -1134,13 +1134,3 @@ void Script::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 	foreach(Opcode *opcode, opcodes)
 		opcode->backgroundMove(z, x, y);
 }
-
-const QList<Opcode *> &Script::getExpandedItems() const
-{
-	return expandedItems;
-}
-
-void Script::setExpandedItems(const QList<Opcode *> &expandedItems)
-{
-	this->expandedItems = expandedItems;
-}

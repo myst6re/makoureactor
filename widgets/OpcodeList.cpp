@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "OpcodeList.h"
 #include "ScriptEditor.h"
+#include "core/Config.h"
 
 OpcodeList::OpcodeList(QWidget *parent) :
 	QTreeWidget(parent), isInit(false),
@@ -242,7 +243,7 @@ void OpcodeList::editText()
 void OpcodeList::saveExpandedItems()
 {
 	if(script) {
-		QList<Opcode *> expandedItems;
+		QList<const Opcode *> expandedItems;
 		int size = topLevelItemCount();
 		for(int i=0 ; i<size ; ++i) {
 			QTreeWidgetItem *item = topLevelItem(i);
@@ -253,7 +254,22 @@ void OpcodeList::saveExpandedItems()
 				}
 			}
 		}
-		if(size>0) script->setExpandedItems(expandedItems);
+		if(size>0) setExpandedItems(expandedItems);
+	}
+}
+
+bool OpcodeList::itemIsExpanded(const Opcode *opcode) const
+{
+	return script && (
+			(!expandedItems.contains(script)
+			 && Config::value("scriptItemExpandedByDefault", false).toBool())
+			|| expandedItems.value(script).contains(opcode));
+}
+
+void OpcodeList::setExpandedItems(const QList<const Opcode *> &expandedItems)
+{
+	if(script) {
+		this->expandedItems.insert(script, expandedItems);
 	}
 }
 
@@ -324,7 +340,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 
 		opcodeID = 0;
 		foreach(QTreeWidgetItem *item, items) {
-			if(script->getExpandedItems().contains(script->getOpcode(opcodeID))) {
+			if(itemIsExpanded(script->getOpcode(opcodeID))) {
 				item->setExpanded(true);
 			}
 			++opcodeID;
