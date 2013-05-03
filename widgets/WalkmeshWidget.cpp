@@ -77,16 +77,16 @@ void WalkmeshWidget::fill(Field *field)
 
 
 		double m[3][3];
-		float downScaler = scripts->isOpen() ? 128.0f * scripts->scale() : 4096.0;
+		float downScaler = 4096.0/*scripts->isOpen() ? scripts->scale() / 4.0 : 128.0*/;
 		qglviewer::Quaternion orientation;
-		qglviewer::Vec position(-cam.camera_position[0]/downScaler, -cam.camera_position[1]/downScaler, -cam.camera_position[2]/downScaler);
+		qglviewer::Vec position(cam.camera_position[0]/downScaler, -cam.camera_position[1]/downScaler, cam.camera_position[2]/downScaler);
 
 		m[0][0] = camAxisXx;
 		m[1][0] = camAxisXy;
 		m[2][0] = camAxisXz;
-		m[0][1] = -camAxisYx;
-		m[1][1] = -camAxisYy;
-		m[2][1] = -camAxisYz;
+		m[0][1] = camAxisYx;
+		m[1][1] = camAxisYy;
+		m[2][1] = camAxisYz;
 		m[0][2] = camAxisZx;
 		m[1][2] = camAxisZy;
 		m[2][2] = camAxisZz;
@@ -94,18 +94,23 @@ void WalkmeshWidget::fill(Field *field)
 		orientation.setFromRotationMatrix(m);
 		position = orientation * position;
 
-		m[0][1] = -camAxisYx;
-		m[1][1] = -camAxisYy;
-		m[2][1] = -camAxisYz;
-		m[0][2] = -camAxisZx;
-		m[1][2] = -camAxisZy;
-		m[2][2] = -camAxisZz;
+		m[0][0] = m[0][0];
+		m[1][0] = m[1][0];
+		m[2][0] = m[2][0];
+		m[0][1] = m[0][1];
+		m[1][1] = m[1][1];
+		m[2][1] = m[2][1];
+		m[0][2] = -m[0][2];
+		m[1][2] = -m[1][2];
+		m[2][2] = -m[2][2];
 		orientation.setFromRotationMatrix(m);
 
 		qDebug() << "setCam";
+		camera()->setScreenWidthAndHeight(320, 240);
+//		camera()->setFieldOfView(2 * atanf(240.0f / (2.0f * cam.camera_zoom))/* * 57.29577951*/);
 		camera()->setPosition(position);
 		camera()->setOrientation(orientation);
-//		camera()->setFieldOfView(2 * atanf(240.0f / (2.0f * cam.camera_zoom)) * 57.29577951);
+
 //		camera()->setViewDirection(qglviewer::Vec(tx + camAxisZx, ty + camAxisZy, tz + camAxisZz));
 //		camera()->setUpVector(qglviewer::Vec(camAxisYx, camAxisYy, camAxisYz));
 //		gluLookAt(tx, ty, tz, tx + camAxisZx, ty + camAxisZy, tz + camAxisZz, camAxisYx, camAxisYy, camAxisYz);
