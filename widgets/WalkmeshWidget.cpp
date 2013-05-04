@@ -339,8 +339,32 @@ void WalkmeshWidget::paintGL()
 		glEnd();
 	}
 
-	/*if(scripts && scripts->isOpen()) {
-		QMultiMap<int, FF7Position> positions;
+	if(scripts && scripts->isOpen()) {
+		QMap<int, FF7Position *> positions;
+		scripts->linePosition(positions);
+
+		if(!positions.isEmpty()) {
+
+			glBegin(GL_LINES);
+
+			glColor3ub(0x90, 0xFF, 0x00);
+
+			QMapIterator<int, FF7Position *> i(positions);
+			while(i.hasNext()) {
+				i.next();
+				FF7Position *pos = i.value();
+
+				glVertex3f(pos[0].x/4096.0f, pos[0].y/4096.0f, pos[0].z/4096.0f);
+				glVertex3f(pos[1].x/4096.0f, pos[1].y/4096.0f, pos[1].z/4096.0f);
+
+				delete pos;
+			}
+
+			glEnd();
+
+		}
+
+		/*QMultiMap<int, FF7Position> positions;
 		scripts->listModelPositions(positions);
 		if(!positions.isEmpty()) {
 			QMapIterator<int, FF7Position> i(positions);
@@ -352,8 +376,8 @@ void WalkmeshWidget::paintGL()
 				FieldModelFile *fieldModel = field->fieldModel(modelId);
 
 			}
-		}
-	}*/
+		}*/
+	}
 }
 
 void WalkmeshWidget::drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access)

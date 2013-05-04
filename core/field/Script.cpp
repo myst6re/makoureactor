@@ -1116,6 +1116,16 @@ void Script::listModelPositions(QList<FF7Position> &positions) const
 		opcode->listModelPositions(positions);
 }
 
+bool Script::linePosition(FF7Position position[2]) const
+{
+	foreach(Opcode *opcode, opcodes) {
+		if(opcode->linePosition(position)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 //void Script::searchWindows() const
 //{
 //	foreach(Opcode *opcode, opcodes) {

@@ -71,6 +71,7 @@ public:
 	void setWindow(const FF7Window &win);
 	void listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
 	void listModelPositions(QList<FF7Position> &positions) const;
+	bool linePosition(FF7Position position[2]) const;
 private:
 	void setType();
 	bool search(int &scriptID, int &opcodeID) const;

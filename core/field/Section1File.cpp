@@ -630,6 +630,20 @@ void Section1File::listModelPositions(QMultiMap<int, FF7Position> &positions) co
 	}
 }
 
+void Section1File::linePosition(QMap<int, FF7Position *> &positions) const
+{
+	int groupID=0;
+	foreach(GrpScript *group, _grpScripts) {
+		if(group->typeID() == GrpScript::Location) {
+			FF7Position *position = new FF7Position[2];
+			if(group->linePosition(position)) {
+				positions.insert(groupID, position);
+			}
+		}
+		++groupID;
+	}
+}
+
 //void Section1File::searchWindows() const
 //{
 //	int groupID=0;

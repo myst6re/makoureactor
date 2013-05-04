@@ -100,7 +100,6 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 
 	if(modify) {
 		this->opcode = Script::copyOpcode(script->getOpcode(opcodeID));
-		qDebug() << this->opcode->name();
 		int id = opcode->id();
 
 		if(id == Opcode::SPECIAL)

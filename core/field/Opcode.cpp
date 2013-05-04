@@ -164,6 +164,12 @@ void Opcode::listModelPositions(QList<FF7Position> &positions) const
 	Q_UNUSED(positions);
 }
 
+bool Opcode::linePosition(FF7Position position[2]) const
+{
+	Q_UNUSED(position);
+	return false;
+}
+
 void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 {
 	quint8 param, state;
@@ -6731,6 +6737,22 @@ QByteArray OpcodeLINE::params() const
 			.append((char *)&targetX2, 2)
 			.append((char *)&targetY2, 2)
 			.append((char *)&targetZ2, 2);
+}
+
+bool OpcodeLINE::linePosition(FF7Position position[2]) const
+{
+	position[0].x = targetX1;
+	position[0].y = targetY1;
+	position[0].z = targetZ1;
+	position[1].x = targetX2;
+	position[1].y = targetY2;
+	position[1].z = targetZ2;
+	position[0].hasZ = true;
+	position[0].hasId = false;
+	position[1].hasZ = true;
+	position[1].hasId = false;
+
+	return true;
 }
 
 OpcodeLINON::OpcodeLINON(const QByteArray &params)

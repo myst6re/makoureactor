@@ -417,3 +417,11 @@ void GrpScript::listModelPositions(QList<FF7Position> &positions) const
 		_scripts.at(1)->listModelPositions(positions);
 	}
 }
+
+bool GrpScript::linePosition(FF7Position position[2]) const
+{
+	if(!_scripts.isEmpty()) {
+		return _scripts.first()->linePosition(position);
+	}
+	return false;
+}

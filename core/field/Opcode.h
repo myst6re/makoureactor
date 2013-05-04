@@ -173,6 +173,7 @@ public:
 	void shiftTutIds(int tutId, int steps);
 	void listWindows(int groupID, int scriptID, int opcodeID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
 	virtual void listModelPositions(QList<FF7Position> &positions) const;
+	virtual bool linePosition(FF7Position position[2]) const;
 	void backgroundParams(QHash<quint8, quint8> &enabledParams) const;
 	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
@@ -2578,6 +2579,7 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const QByteArray &params);
 	QByteArray params() const;
+	bool linePosition(FF7Position position[2]) const;
 	qint16 targetX1, targetY1, targetZ1;
 	qint16 targetX2, targetY2, targetZ2;
 };
