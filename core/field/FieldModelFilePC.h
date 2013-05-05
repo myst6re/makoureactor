@@ -35,7 +35,7 @@ class FieldModelFilePC : public FieldModelFile
 public:
 	FieldModelFilePC();
 	void clear();
-	bool isPS() const { return false; }
+	inline bool translateAfter() const { return true; }
 	quint8 load(QString hrc, QString a, bool animate=true);
 private:
 	QMultiMap<int, QList<int> > _tex_files;

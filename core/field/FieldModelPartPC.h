@@ -22,6 +22,8 @@
 #include "FieldModelPart.h"
 #include "IdFile.h"
 
+#define MODEL_SCALE_PC				132.0f // 1.0f
+
 typedef struct {
 	quint32 version;
 	quint32 off04;

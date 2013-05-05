@@ -93,8 +93,8 @@ protected:
 	virtual QList<Field::FieldSection> orderOfSections() const=0;
 	virtual quint32 diffSectionPos() const=0;
 	virtual bool hasSectionHeader() const=0;
-
-	FieldModelFile *_fieldModel;
+	FieldModelFile *fieldModelPtr(int modelID) const;
+	void addFieldModel(int modelID, FieldModelFile *fieldModel);
 private:
 	FieldPart *part(FieldSection section, bool open);
 
@@ -102,6 +102,8 @@ private:
 	FieldArchiveIO *_io;
 	bool _isOpen, _isModified;
 	QString _name;
+	static Field *currentFieldForFieldModels;
+	static QMap<int, FieldModelFile *> _fieldModels;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Field::FieldSections)

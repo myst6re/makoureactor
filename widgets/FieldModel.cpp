@@ -18,7 +18,7 @@
 #include "FieldModel.h"
 
 FieldModel::FieldModel(QWidget *parent, const QGLWidget *shareWidget) :
-	QGLWidget(parent, shareWidget), blockAll(false), distance(-35),
+	QGLWidget(parent, shareWidget), blockAll(false), distance(-0.25/*-35*/),
 	currentFrame(0), data(0), xRot(270*16), yRot(90*16), zRot(0)
 {
 	connect(&timer, SIGNAL(timeout()), SLOT(animate()));
@@ -109,9 +109,9 @@ void FieldModel::initializeGL()
 //	gluPerspective(70, (double)width()/(double)height(), 0.001, 1000.0);
 }
 
-void FieldModel::drawP(int boneID, GLuint &texture_id, int &lastTexID)
+void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, int boneID, GLuint &texture_id, int &lastTexID)
 {
-	if(!data || !data->isOpen())	return;
+	if(!data || !data->isOpen() || scale == 0.0f)	return;
 
 	foreach(FieldModelPart *p, data->parts(boneID)) {
 
@@ -121,14 +121,14 @@ void FieldModel::drawP(int boneID, GLuint &texture_id, int &lastTexID)
 
 			if(hasTexture && lastTexID != g->textureNumber()) {
 				if(texture_id != (GLuint)-1) {
-					deleteTexture(texture_id);
+					glWidget->deleteTexture(texture_id);
 				} else {
 					glEnable(GL_TEXTURE_2D);
 				}
-				texture_id = bindTexture(data->loadedTexture(g->textureNumber()), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
+				texture_id = glWidget->bindTexture(data->loadedTexture(g->textureNumber()), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
 				lastTexID = g->textureNumber();
 			} else if(!hasTexture && texture_id != (GLuint)-1) {
-				deleteTexture(texture_id);
+				glWidget->deleteTexture(texture_id);
 				glDisable(GL_TEXTURE_2D);
 				texture_id = -1;
 				lastTexID = -1;
@@ -167,7 +167,7 @@ void FieldModel::drawP(int boneID, GLuint &texture_id, int &lastTexID)
 					}
 
 					PolyVertex vertex = p->vertex(j);
-					glVertex3f(vertex.x, vertex.y, vertex.z);
+					glVertex3f(vertex.x/scale, vertex.y/scale, vertex.z/scale);
 				}
 			}
 
@@ -232,6 +232,13 @@ void FieldModel::setZRotation(int angle)
 	}
 }
 
+void FieldModel::resetCamera()
+{
+	distance = 0;
+	zRot = yRot = xRot = 0;
+	updateGL();
+}
+
 void FieldModel::resizeGL(int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -244,11 +251,66 @@ void FieldModel::resizeGL(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void FieldModel::paintGL()
+void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int currentFrame, float scale)
 {
+	if(!data || !data->isOpen() || scale == 0.0f)	return;
+
 	QStack<int> parent;
 	int i;
+	GLuint texture_id = -1;
+	int lastTexID = -1;
 
+	if(data->animBoneCount() <= 1) {
+		drawP(glWidget, data, scale, 0, texture_id, lastTexID);
+		if(texture_id != (GLuint)-1) {
+			glWidget->deleteTexture(texture_id);
+			glDisable(GL_TEXTURE_2D);
+		}
+		return;
+	}
+
+	QList<PolyVertex> rot = data->rotations(currentFrame);
+	if(rot.isEmpty()) return;
+	parent.push(-1);
+
+	for(i=0 ; i<data->animBoneCount() ; ++i) {
+		const PolyVertex &rotation = rot.at(i);
+		const Bone &bone = data->bone(i);
+
+		while(!parent.isEmpty() && parent.top() != bone.parent) {
+			parent.pop();
+			glPopMatrix();
+		}
+		parent.push(i);
+		glPushMatrix();
+
+		if(!data->translateAfter()) {
+			glTranslatef(0.0, 0.0, bone.size / scale);
+		}
+
+		glRotatef(rotation.y, 0.0, 1.0, 0.0);
+		glRotatef(rotation.x, 1.0, 0.0, 0.0);
+		glRotatef(rotation.z, 0.0, 0.0, 1.0);
+		drawP(glWidget, data, scale, i, texture_id, lastTexID);
+
+		if(data->translateAfter()) {
+			glTranslatef(0.0, 0.0, bone.size / scale);
+		}
+	}
+
+	if(texture_id != (GLuint)-1) {
+		glWidget->deleteTexture(texture_id);
+		glDisable(GL_TEXTURE_2D);
+	}
+
+	while(!parent.isEmpty() && parent.top() != -1) {
+		parent.pop();
+		glPopMatrix();
+	}
+}
+
+void FieldModel::paintGL()
+{
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -258,6 +320,7 @@ void FieldModel::paintGL()
 	resizeGL(width(), height()); // hack (?)
 
 	gluLookAt(distance,0,0,0,0,0,0,0,1);
+//	glTranslatef(distance, 0.0f, 0.0f);
 
 //	glRotatef(270.0, 1.0, 0.0, 0.0);
 //	glRotatef(90.0, 0.0, 1.0, 0.0);
@@ -289,71 +352,20 @@ void FieldModel::paintGL()
 //	glVertex3f(0.0, 0.0, -20.0);
 //	glEnd();
 
-	GLuint texture_id = -1;
-	int lastTexID = -1;
-
-	if(data->animBoneCount() <= 1) {
-		drawP(0, texture_id, lastTexID);
-		if(texture_id != (GLuint)-1) {
-			deleteTexture(texture_id);
-			glDisable(GL_TEXTURE_2D);
-		}
-		return;
-	}
-
-	QList<PolyVertex> rot = data->rotation(currentFrame);
-	if(rot.isEmpty()) return;
-	parent.push(-1);
-
-	for(i=0 ; i<data->animBoneCount() ; ++i)
-	{
-		const PolyVertex &rotation = rot.at(i);
-		const Bone &bone = data->bone(i);
-
-		while(!parent.isEmpty() && parent.top() != bone.parent) {
-			parent.pop();
-			glPopMatrix();
-		}
-		parent.push(i);
-		glPushMatrix();
-
-		if(data->isPS()) {
-			glTranslatef(0.0, 0.0, bone.size);
-		}
-
-		glRotatef(rotation.y, 0.0, 1.0, 0.0);
-		glRotatef(rotation.x, 1.0, 0.0, 0.0);
-		glRotatef(rotation.z, 0.0, 0.0, 1.0);
-		drawP(i, texture_id, lastTexID);
-
-		if(!data->isPS())
-			glTranslatef(0.0, 0.0, bone.size);
-	}
-
-	if(texture_id != (GLuint)-1) {
-		deleteTexture(texture_id);
-		glDisable(GL_TEXTURE_2D);
-	}
-
-	while(parent.top() != -1) {
-		parent.pop();
-		glPopMatrix();
-	}
+	paintModel();
 }
 
 void FieldModel::wheelEvent(QWheelEvent *event)
 {
-	distance += event->delta()/120;
+	distance += double(event->delta())/4096.0;
 	updateGL();
 }
 
 void FieldModel::mousePressEvent(QMouseEvent *event)
 {
 	lastPos = event->pos();
-	if(event->button()==Qt::MidButton)
-	{
-		distance = -35;
-		updateGL();
+	if(event->button() == Qt::MidButton) {
+		resetCamera();
 	}
 }
 

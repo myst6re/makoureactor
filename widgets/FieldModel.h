@@ -38,16 +38,19 @@ public:
 	bool load(Field *field, int modelID, int animationID=0, bool animate=true);
 	void clear();
 	int boneCount() const;
+	static void paintModel(QGLWidget *glWidget, FieldModelFile *data, int currentFrame=0, float scale=1.0f);
 public slots:
 	void animate();
 private:
-	void drawP(int boneID, GLuint &texture_id, int &lastTexID);
+	inline void paintModel() { paintModel(this, data, currentFrame); }
+	static void drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, int boneID, GLuint &texture_id, int &lastTexID);
 	void setXRotation(int angle);
 	void setYRotation(int angle);
 	void setZRotation(int angle);
+	void resetCamera();
 
 	bool blockAll;
-	int distance;
+	double distance;
 	int currentFrame;
 
 	FieldModelFile *data;

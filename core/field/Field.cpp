@@ -24,8 +24,7 @@
 #include "../Config.h"
 
 Field::Field(const QString &name, FieldArchiveIO *io) :
-	_fieldModel(0), _io(io),
-	_isOpen(false), _isModified(false), _name(name.toLower())
+	_io(io), _isOpen(false), _isModified(false), _name(name.toLower())
 {
 }
 
@@ -35,7 +34,12 @@ Field::~Field()
 		if(part)	delete part;
 	}
 
-	if(_fieldModel)		delete _fieldModel;
+	if(currentFieldForFieldModels != this) {
+		foreach(FieldModelFile *fieldModel, _fieldModels) {
+			delete fieldModel;
+		}
+		_fieldModels.clear();
+	}
 }
 
 bool Field::isOpen() const
@@ -211,6 +215,30 @@ FieldModelLoader *Field::fieldModelLoader(bool open)
 BackgroundFile *Field::background(bool open)
 {
 	return (BackgroundFile *)part(Background, open);
+}
+
+Field *Field::currentFieldForFieldModels = 0;
+QMap<int, FieldModelFile *> Field::_fieldModels;
+
+FieldModelFile *Field::fieldModelPtr(int modelID) const
+{
+	if(currentFieldForFieldModels == this) {
+		return _fieldModels.value(modelID, 0);
+	}
+	return 0;
+}
+
+void Field::addFieldModel(int modelID, FieldModelFile *fieldModel)
+{
+	if(currentFieldForFieldModels != this) {
+		foreach(FieldModelFile *model, _fieldModels) {
+			delete model;
+		}
+		_fieldModels.clear();
+		currentFieldForFieldModels = this;
+	}
+
+	_fieldModels.insert(modelID, fieldModel);
 }
 
 const QString &Field::name() const

@@ -65,6 +65,7 @@ private:
 	BackgroundFile *bgFile;
 	Section1File *scripts;
 	Field *field;
+	QMap<int, FieldModelFile *> fieldModels;
 	QPoint moveStart;
 //	QPixmap arrow;
 protected:

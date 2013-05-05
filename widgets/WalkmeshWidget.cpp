@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "WalkmeshWidget.h"
+#include "FieldModel.h"
 
 WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
 	QGLWidget(/*QGLFormat(QGL::SampleBuffers),*/ parent, shareWidget),
@@ -26,6 +27,7 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
 	bgFile(0), scripts(0), field(0)
 {
 	setMinimumSize(320, 240);
+//	setFixedSize(640, 480);
 //	setAutoFillBackground(false);
 //	arrow = QPixmap(":/images/field-arrow-red.png");
 }
@@ -38,6 +40,7 @@ void WalkmeshWidget::clear()
 	bgFile = 0;
 	scripts = 0;
 	field = 0;
+//	fieldModels.clear();
 	updateGL();
 }
 
@@ -49,6 +52,15 @@ void WalkmeshWidget::fill(Field *field)
 	this->bgFile = field->background();
 	this->scripts = field->scriptsAndTexts();
 	this->field = field;
+	/*this->fieldModels.clear();
+	int modelId = 0;
+	foreach(GrpScript *group, scripts->grpScripts()) {
+		if(group->typeID() == GrpScript::Model) {
+			this->fieldModels.insert(modelId, field->fieldModel(modelId));
+			modelId++;
+		}
+	}*/
+
 	updatePerspective();
 	resetCamera();
 }
@@ -364,19 +376,72 @@ void WalkmeshWidget::paintGL()
 
 		}
 
-		/*QMultiMap<int, FF7Position> positions;
-		scripts->listModelPositions(positions);
-		if(!positions.isEmpty()) {
-			QMapIterator<int, FF7Position> i(positions);
-			while(i.hasNext()) {
-				i.next();
-				const int modelId = i.key();
-				const FF7Position &position = i.value();
+		if(!fieldModels.isEmpty()) {
 
-				FieldModelFile *fieldModel = field->fieldModel(modelId);
+			QMultiMap<int, FF7Position> modelPositions;
+			scripts->listModelPositions(modelPositions);
 
+			QMap<int, int> modelDirection;
+			int modelID = 0;
+			foreach(GrpScript *group, scripts->grpScripts()) {
+				if(group->typeID() == GrpScript::Model) {
+					if(!group->scripts().isEmpty()) {
+						foreach(Opcode *op, group->script(0)->getOpcodes()) {
+							if(op->id() == Opcode::DIR) {
+								OpcodeDIR *opDir = (OpcodeDIR *)op;
+								if(opDir->banks == 0) {
+									modelDirection.insert(modelID, opDir->direction);
+									break;
+								}
+							}
+						}
+					}
+					++modelID;
+				}
 			}
-		}*/
+
+			if(!modelPositions.isEmpty()) {
+				int previousModelId = -1;
+				QMapIterator<int, FF7Position> i(modelPositions);
+				while(i.hasNext()) {
+					i.next();
+					const int modelId = i.key();
+					if(previousModelId == modelId) {
+						continue;
+					}
+					previousModelId = modelId;
+					FF7Position position = i.value();
+
+					if(!position.hasZ && position.hasId && position.id < walkmesh->triangleCount()) {
+						position.z = walkmesh->triangle(position.id).vertices[0].z;
+					} else if(!position.hasZ) {
+						continue;
+					}
+
+					FieldModelFile *fieldModel = fieldModels.value(modelId);
+					if(fieldModel) {
+
+						glPushMatrix();
+
+						glTranslatef(position.x/4096.0f, position.y/4096.0f, position.z/4096.0f);
+						glRotatef(270.0f, 1.0, 0.0, 0.0);
+						int direction = modelDirection.value(modelId, -1);
+						if(direction != -1) {
+							glRotatef(-360.0f * direction / 256.0f, 0.0, 1.0, 0.0);
+						}
+
+//						QList<PolyVertex> trans = fieldModel->translations(0);
+//						if(!trans.isEmpty()) {
+//							glTranslatef(trans.first().x/5.0f, trans.first().y/5.0f, trans.first().z/5.0f);
+//						}
+
+						FieldModel::paintModel(this, fieldModel, 0, 5.0f);
+
+						glPopMatrix();
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -407,7 +472,6 @@ void WalkmeshWidget::mousePressEvent(QMouseEvent *event)
 	if(event->button() == Qt::MidButton)
 	{
 		resetCamera();
-		updateGL();
 	}
 	else if(event->button() == Qt::LeftButton)
 	{

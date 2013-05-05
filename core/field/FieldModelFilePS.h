@@ -116,7 +116,7 @@ class FieldModelFilePS : public FieldModelFile
 {
 public:
 	FieldModelFilePS();
-	bool isPS() const { return true; }
+	inline bool translateAfter() const { return false; }
 	quint8 load(FieldPS *currentField, int model_id, int animation_id, bool animate=false);
 	const QList<QRgb> &lightColors() const;
 	quint16 scale() const;

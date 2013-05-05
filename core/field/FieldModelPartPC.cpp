@@ -42,6 +42,9 @@ bool FieldModelPartPC::open(QIODevice *p_file)
 
 	for(i=0 ; i<header.numVertices ; ++i) {
 		if(p_file->read((char *)&vertex, 12)!=12)	return false;
+		vertex.x = vertex.x / MODEL_SCALE_PC;
+		vertex.y = vertex.y / MODEL_SCALE_PC;
+		vertex.z = vertex.z / MODEL_SCALE_PC;
 		vertices.append(vertex);
 	}
 

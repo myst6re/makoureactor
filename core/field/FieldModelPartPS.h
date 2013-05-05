@@ -22,6 +22,8 @@
 #include <QtCore>
 #include "FieldModelPart.h"
 
+#define MODEL_SCALE_PS			4096.0f //31.0f
+
 typedef struct {
 	quint8 unknown;					// 0 - not calculate stage lighting and color. 1 - calculate.
 	qint8 bone_index;				// bone to which this part attached to.

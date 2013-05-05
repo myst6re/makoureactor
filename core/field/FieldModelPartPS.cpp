@@ -58,11 +58,11 @@ bool FieldModelPartPS::open(const char *data, quint32 offset, quint32 size)
 	for(i=0 ; i<partHeader.numVertices ; ++i) {
 		qint16 v;
 		memcpy(&v, data + offsetToVertex + i*8 + 4, 2);
-		vertex.x = v / 31.0f;
+		vertex.x = v / MODEL_SCALE_PS;
 		memcpy(&v, data + offsetToVertex + i*8 + 6, 2);
-		vertex.y = v / 31.0f;
+		vertex.y = v / MODEL_SCALE_PS;
 		memcpy(&v, data + offsetToVertex + i*8 + 8, 2);
-		vertex.z = v / 31.0f;
+		vertex.z = v / MODEL_SCALE_PS;
 
 		vertices.append(vertex);
 	}

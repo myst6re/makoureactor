@@ -175,7 +175,7 @@ bool FieldModelFilePC::openHrc(QIODevice *hrc_file, QMultiMap<int, QStringList> 
 			bone.parent = nameToId.value(line, -1);
 			break;
 		case 2: //Length
-			bone.size = -line.toFloat(&ok);
+			bone.size = -line.toFloat(&ok) / MODEL_SCALE_PC;
 			if(!ok) return false;
 			_bones.append(bone);
 			break;
@@ -201,7 +201,7 @@ bool FieldModelFilePC::openHrc(QIODevice *hrc_file, QMultiMap<int, QStringList> 
 bool FieldModelFilePC::openA(QIODevice *a_file, bool animate)
 {
 	a_header header;
-	PolyVertex rot/*, trans*/;
+	PolyVertex rot, trans;
 
 	if(a_file->read((char *)&header, 36) != 36
 			|| header.frames_count == 0
@@ -217,8 +217,11 @@ bool FieldModelFilePC::openA(QIODevice *a_file, bool animate)
 
 	for(quint32 i=0 ; i<header.frames_count ; ++i)
 	{
-		if(!a_file->seek(a_file->pos()+24))	return false;
-//		if(a_file->read((char *)&trans, 12)!=12)	return false;
+		if(!a_file->seek(a_file->pos() + 12))		return false;
+		if(a_file->read((char *)&trans, 12) != 12)	return false;
+		trans.x = trans.x / MODEL_SCALE_PC;
+		trans.y = trans.y / MODEL_SCALE_PC;
+		trans.z = trans.z / MODEL_SCALE_PC;
 
 		QList<PolyVertex> rotation_coords;
 
@@ -228,7 +231,7 @@ bool FieldModelFilePC::openA(QIODevice *a_file, bool animate)
 			rotation_coords.append(rot);
 		}
 		_frames.insert(i, rotation_coords);
-//		_framesTrans.insert(i, QList<PolyVertex>() << trans);
+		_framesTrans.insert(i, QList<PolyVertex>() << trans);
 	}
 	return true;
 }

@@ -29,6 +29,7 @@ class FieldPC : public Field
 public:
 	FieldPC(const QString &name, FieldArchiveIO *io);
 	FieldPC(const Field &field);
+	virtual ~FieldPC();
 
 	inline bool isPC() const { return true; }
 
@@ -36,7 +37,7 @@ public:
 
 	FieldModelLoaderPC *fieldModelLoader(bool open=true);
 	FieldModelFilePC *fieldModel(int modelID, int animationID=0, bool animate=true);
-	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate=true);
+	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate);
 	FieldArchiveIOPC *io() const;
 protected:
 	inline int headerSize() const { return 42; }
@@ -53,6 +54,8 @@ protected:
 	inline bool hasSectionHeader() const { return true; }
 private:
 	quint32 sectionPositions[9];
+	FieldModelFilePC *_model;
+	QMap<QString, int> modelNameToId;
 };
 
 #endif // DEF_FIELDPC

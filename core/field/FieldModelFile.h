@@ -33,7 +33,7 @@ public:
 	virtual ~FieldModelFile();
 	bool isOpen() const;
 	virtual void clear();
-	virtual bool isPS() const=0;
+	virtual bool translateAfter() const=0;
 
 	const Bone &bone(int index) const;
 	int boneCount() const;
@@ -41,8 +41,8 @@ public:
 	QList<FieldModelPart *> parts(int boneID) const;
 	int loadedTextureCount() const;
 	QPixmap loadedTexture(int texID) const;
-	QList<PolyVertex> rotation(int frameID) const;
-	QList<PolyVertex> translation(int frameID) const;
+	QList<PolyVertex> rotations(int frameID) const;
+	QList<PolyVertex> translations(int frameID) const;
 	int frameCount() const;
 	QString toStringBones() const;
 protected:

@@ -21,13 +21,20 @@
 #include "../Config.h"
 
 FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
-	Field(name, io)
+	Field(name, io), _model(0)
 {
 }
 
 FieldPC::FieldPC(const Field &field) :
-	Field(field)
+	Field(field), _model(0)
 {
+}
+
+FieldPC::~FieldPC()
+{
+	if(_model) {
+		delete _model;
+	}
 }
 
 void FieldPC::openHeader(const QByteArray &fileData)
@@ -86,14 +93,26 @@ FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate
 	QString hrc = modelLoader->HRCName(modelID);
 	QString a = modelLoader->AName(modelID, animationID);
 
-	return fieldModel(hrc, a, animate);
+	// Optimization: Prevent the loading of the same model twice
+	int localModelID = modelNameToId.value(hrc.toLower(), -1);
+	if(localModelID == -1) {
+		localModelID = modelID;
+		modelNameToId.insert(hrc.toLower(), localModelID);
+	}
+
+	FieldModelFilePC *fieldModel = (FieldModelFilePC *)fieldModelPtr(localModelID);
+	if(!fieldModel)		addFieldModel(localModelID, fieldModel = new FieldModelFilePC());
+	if(!fieldModel->isOpen()) {
+		fieldModel->load(hrc, a, animate);
+	}
+	return fieldModel;
 }
 
 FieldModelFilePC *FieldPC::fieldModel(const QString &hrc, const QString &a, bool animate)
 {
-	if(!_fieldModel)	_fieldModel = new FieldModelFilePC();
-	((FieldModelFilePC *)_fieldModel)->load(hrc, a, animate);
-	return (FieldModelFilePC *)_fieldModel;
+	if(!_model)	_model = new FieldModelFilePC();
+	_model->load(hrc, a, animate);
+	return _model;
 }
 
 QByteArray FieldPC::saveHeader() const

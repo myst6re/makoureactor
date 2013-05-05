@@ -81,9 +81,12 @@ FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 
 FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate)
 {
-	if(!_fieldModel) 	_fieldModel = new FieldModelFilePS();
-	((FieldModelFilePS *)_fieldModel)->load(this, modelID, animationID, animate);
-	return (FieldModelFilePS *)_fieldModel;
+	FieldModelFilePS *fieldModel = (FieldModelFilePS *)fieldModelPtr(modelID);
+	if(!fieldModel) 	addFieldModel(modelID, fieldModel = new FieldModelFilePS());
+	if(!fieldModel->isOpen()) {
+		fieldModel->load(this, modelID, animationID, animate);
+	}
+	return fieldModel;
 }
 
 QByteArray FieldPS::saveHeader() const

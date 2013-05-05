@@ -24,6 +24,7 @@ FieldModelFile::FieldModelFile() :
 
 FieldModelFile::~FieldModelFile()
 {
+	dataLoaded = false;
 	foreach(FieldModelPart *part, _parts)
 		delete part;
 }
@@ -73,12 +74,12 @@ QPixmap FieldModelFile::loadedTexture(int texID) const
 	return _loaded_tex.value(texID);
 }
 
-QList<PolyVertex> FieldModelFile::rotation(int frameID) const
+QList<PolyVertex> FieldModelFile::rotations(int frameID) const
 {
 	return _frames.value(frameID);
 }
 
-QList<PolyVertex> FieldModelFile::translation(int frameID) const
+QList<PolyVertex> FieldModelFile::translations(int frameID) const
 {
 	return _framesTrans.value(frameID);
 }
