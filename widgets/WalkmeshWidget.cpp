@@ -40,7 +40,11 @@ void WalkmeshWidget::clear()
 	bgFile = 0;
 	scripts = 0;
 	field = 0;
-//	fieldModels.clear();
+	foreach(FieldModelThread *thread, threads) {
+		delete thread;
+	}
+	threads.clear();
+	fieldModels.clear();
 	updateGL();
 }
 
@@ -52,17 +56,31 @@ void WalkmeshWidget::fill(Field *field)
 	this->bgFile = field->background();
 	this->scripts = field->scriptsAndTexts();
 	this->field = field;
-	/*this->fieldModels.clear();
-	int modelId = 0;
-	foreach(GrpScript *group, scripts->grpScripts()) {
-		if(group->typeID() == GrpScript::Model) {
-			this->fieldModels.insert(modelId, field->fieldModel(modelId));
-			modelId++;
-		}
-	}*/
+	foreach(FieldModelThread *thread, threads) {
+		delete thread;
+	}
+	this->threads.clear();
+	this->fieldModels.clear();
+	int modelCount = scripts->modelCount();
+	for(int modelId=0 ; modelId<modelCount ; ++modelId) {
+		FieldModelThread *thread = new FieldModelThread(this);
+		thread->setField(field);
+		connect(thread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(addModel(Field*,FieldModelFile*,int)));
+		thread->setModelId(modelId);
+		thread->start();
+		threads.append(thread);
+	}
 
 	updatePerspective();
 	resetCamera();
+}
+
+void WalkmeshWidget::addModel(Field *field, FieldModelFile *fieldModelFile, int modelId)
+{
+	if(this->field == field) {
+		fieldModels.insert(modelId, fieldModelFile);
+		updateGL();
+	}
 }
 
 void WalkmeshWidget::computeFov()
@@ -91,8 +109,8 @@ void WalkmeshWidget::initializeGL()
 	glDepthFunc(GL_LEQUAL);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_LIGHTING);
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void WalkmeshWidget::resizeGL(int width, int height)

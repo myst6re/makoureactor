@@ -37,7 +37,7 @@ protected:
 	virtual QList<QStringList> modelNames() const=0;
 	virtual QList<QStringList> animNames(int row) const=0;
 	virtual void showModelInfos2(int row);
-	virtual void showModel2(QTreeWidgetItem *item)=0;
+	virtual FieldModelFile *modelData(QTreeWidgetItem *item)=0;
 	virtual FieldModelLoader *modelLoader() const;
 	virtual Field *field() const;
 	int currentModelID(QTreeWidgetItem *item=0) const;

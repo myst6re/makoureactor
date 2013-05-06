@@ -26,6 +26,7 @@
 #include <GL/glu.h>
 #endif
 #include "core/field/Field.h"
+#include "FieldModelThread.h"
 
 class WalkmeshWidget : public QGLWidget
 {
@@ -46,6 +47,8 @@ public slots:
 	void setSelectedDoor(int door);
 	void setSelectedGate(int gate);
 	void setSelectedArrow(int arrow);
+private slots:
+	void addModel(Field *field, FieldModelFile *fieldModelFile, int modelId);
 private:
 	void computeFov();
 	void drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access);
@@ -66,6 +69,7 @@ private:
 	Section1File *scripts;
 	Field *field;
 	QMap<int, FieldModelFile *> fieldModels;
+	QList<FieldModelThread *> threads;
 	QPoint moveStart;
 //	QPixmap arrow;
 protected:

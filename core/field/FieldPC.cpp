@@ -87,7 +87,7 @@ FieldModelLoaderPC *FieldPC::fieldModelLoader(bool open)
 	return (FieldModelLoaderPC *)Field::fieldModelLoader(open);
 }
 
-FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate)
+FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate, bool open)
 {
 	FieldModelLoaderPC *modelLoader = fieldModelLoader();
 	QString hrc = modelLoader->HRCName(modelID);
@@ -102,7 +102,7 @@ FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate
 
 	FieldModelFilePC *fieldModel = (FieldModelFilePC *)fieldModelPtr(localModelID);
 	if(!fieldModel)		addFieldModel(localModelID, fieldModel = new FieldModelFilePC());
-	if(!fieldModel->isOpen()) {
+	if(open && !fieldModel->isOpen()) {
 		fieldModel->load(hrc, a, animate);
 	}
 	return fieldModel;

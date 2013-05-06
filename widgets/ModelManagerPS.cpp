@@ -87,9 +87,9 @@ void ModelManagerPS::showModelInfos2(int row)
 	ModelManager::showModelInfos2(row);
 }
 
-void ModelManagerPS::showModel2(QTreeWidgetItem *item)
+FieldModelFile *ModelManagerPS::modelData(QTreeWidgetItem *item)
 {
-	modelPreview->load(field(), currentModelID(), currentAnimID(item));
+	return field()->fieldModel(currentModelID(), currentAnimID(item));
 }
 
 FieldModelLoaderPS *ModelManagerPS::modelLoader() const

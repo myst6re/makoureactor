@@ -36,7 +36,7 @@ public:
 	FieldModelFilePC();
 	void clear();
 	inline bool translateAfter() const { return true; }
-	quint8 load(QString hrc, QString a, bool animate=true);
+	quint8 load(const QString &hrc, const QString &a, bool animate=true);
 private:
 	QMultiMap<int, QList<int> > _tex_files;
 	QList<QString> tex2id;
@@ -44,7 +44,7 @@ private:
 	bool openHrc(QIODevice *hrc_file, QMultiMap<int, QStringList> &rsd_files);
 	bool openA(QIODevice *a_file, bool animate=false);
 	QString openRsd(QIODevice *, int);
-	static QPixmap openTex(QIODevice *);
+	static QImage openTex(QIODevice *);
 };
 
 #endif // FIELDMODELFILEPC_H

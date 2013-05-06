@@ -35,6 +35,7 @@
 #include "widgets/WalkmeshManager.h"
 #include "widgets/QTaskBarButton.h"
 #include "widgets/LgpDialog.h"
+#include "FieldModelThread.h"
 
 class Window : public QMainWindow, FieldArchiveIOObserver
 {
@@ -90,6 +91,7 @@ private slots:
 
 	void openField(bool reload=false);
 	void showGrpScripts();
+	void showModel(Field *field, FieldModelFile *fieldModelFile);
 	void showScripts();
 	void compile();
 	void filterMap();
@@ -143,6 +145,8 @@ private:
 	QProgressDialog *progressDialog;
 	QAction *authorAction;
 	QLabel *authorLbl;
+
+	FieldModelThread *modelThread;
 protected:
 	void showEvent(QShowEvent *);
 	void closeEvent(QCloseEvent *);

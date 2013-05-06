@@ -33,7 +33,7 @@ protected:
 	QList<QStringList> modelNames() const;
 	QList<QStringList> animNames(int row) const;
 	void showModelInfos2(int row);
-	void showModel2(QTreeWidgetItem *item);
+	FieldModelFile *modelData(QTreeWidgetItem *item);
 	FieldModelLoaderPS *modelLoader() const;
 	FieldPS *field() const;
 private:

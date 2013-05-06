@@ -176,7 +176,8 @@ void ModelManagerPC::addModel()
 			if(modelPreview) {
 				newItem = modelAnims->currentItem();
 				if(item!=NULL && newItem!=NULL) {
-					modelPreview->load(field(), item->text(0), newItem->text(0));
+					modelPreview->setIsAnimated(true);
+					modelPreview->setFieldModelFile(field()->fieldModel(item->text(0), newItem->text(0)));
 				} else
 					modelPreview->clear();
 			}
@@ -291,7 +292,8 @@ void ModelManagerPC::renameOKModel(QTreeWidgetItem *item)
 void ModelManagerPC::modifyHRC(const QString &hrc)
 {
 	if(modelPreview) {
-		modelPreview->load(field(), hrc, "aafe", false);
+		modelPreview->setIsAnimated(false);
+		modelPreview->setFieldModelFile(field()->fieldModel(hrc, "aafe"));
 		QString a;
 		switch(modelPreview->boneCount()) {
 		case 5:		a = "avhd";	break;
@@ -314,7 +316,8 @@ void ModelManagerPC::modifyHRC(const QString &hrc)
 		}
 
 		if(!a.isEmpty()) {
-			modelPreview->load(field(), hrc, a, false);
+			modelPreview->setIsAnimated(false);
+			modelPreview->setFieldModelFile(field()->fieldModel(hrc, a));
 		}
 	}
 }
@@ -405,9 +408,10 @@ void ModelManagerPC::addAnim()
 		}
 		else {
 			if(modelPreview) {
-				if(item!=NULL)
-					modelPreview->load(field(), models->currentItem()->text(0), item->text(0));
-				else
+				if(item!=NULL) {
+					modelPreview->setIsAnimated(true);
+					modelPreview->setFieldModelFile(field()->fieldModel(models->currentItem()->text(0), item->text(0)));
+				} else
 					modelPreview->clear();
 			}
 			return;
@@ -445,7 +449,10 @@ void ModelManagerPC::addAnim()
 
 void ModelManagerPC::modifyAnimation(const QString &a)
 {
-	if(modelPreview)	modelPreview->load(field(), models->currentItem()->text(0), a);
+	if(modelPreview) {
+		modelPreview->setIsAnimated(true);
+		modelPreview->setFieldModelFile(field()->fieldModel(models->currentItem()->text(0), a));
+	}
 }
 
 void ModelManagerPC::delAnim()
@@ -545,9 +552,9 @@ void ModelManagerPC::renameOKAnim(QTreeWidgetItem *item, int column)
 	}
 }
 
-void ModelManagerPC::showModel2(QTreeWidgetItem *item)
+FieldModelFile *ModelManagerPC::modelData(QTreeWidgetItem *item)
 {
-	modelPreview->load(field(), models->currentItem()->text(0), item->text(0));
+	return field()->fieldModel(models->currentItem()->text(0), item->text(0));
 }
 
 FieldModelLoaderPC *ModelManagerPC::modelLoader() const

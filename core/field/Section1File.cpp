@@ -630,6 +630,18 @@ void Section1File::listModelPositions(QMultiMap<int, FF7Position> &positions) co
 	}
 }
 
+int Section1File::modelCount() const
+{
+	int modelId = 0;
+	foreach(GrpScript *group, grpScripts()) {
+		if(group->typeID() == GrpScript::Model) {
+			modelId++;
+		}
+	}
+
+	return modelId;
+}
+
 void Section1File::linePosition(QMap<int, FF7Position *> &positions) const
 {
 	int groupID=0;

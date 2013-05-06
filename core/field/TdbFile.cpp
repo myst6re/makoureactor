@@ -80,9 +80,9 @@ bool TdbFile::open(const QByteArray &data)
 	return true;
 }
 
-QPixmap TdbFile::texture(quint8 faceID, TextureType type)
+QImage TdbFile::texture(quint8 faceID, TextureType type)
 {
-	if(data.isEmpty())	return QPixmap();
+	if(data.isEmpty())	return QImage();
 
 	const char *constData = data.constData();
 	int imgID = faceIdToImageId(faceID, type);
@@ -108,7 +108,7 @@ QPixmap TdbFile::texture(quint8 faceID, TextureType type)
 		px[i*2+1] = PsColor::fromPsColor(color, true);
 	}
 
-	return QPixmap::fromImage(img);
+	return img;
 }
 
 int TdbFile::faceIdToImageId(quint8 faceID, TextureType type)

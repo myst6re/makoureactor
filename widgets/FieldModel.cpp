@@ -19,7 +19,8 @@
 
 FieldModel::FieldModel(QWidget *parent, const QGLWidget *shareWidget) :
 	QGLWidget(parent, shareWidget), blockAll(false), distance(-0.25/*-35*/),
-	currentFrame(0), data(0), xRot(270*16), yRot(90*16), zRot(0)
+	currentFrame(0), animated(true), data(0),
+	xRot(270*16), yRot(90*16), zRot(0)
 {
 	connect(&timer, SIGNAL(timeout()), SLOT(animate()));
 }
@@ -30,63 +31,36 @@ FieldModel::~FieldModel()
 
 void FieldModel::clear()
 {
-	timer.stop();
 	currentFrame = 0;
 	data = 0;
+	updateTimer();
 //	glClearColor(0.0,0.0,0.0,0.0);
 	updateGL();
 }
 
-bool FieldModel::load(FieldPC *field, const QString &hrc, const QString &a, bool animate)
+void FieldModel::setFieldModelFile(FieldModelFile *fieldModel)
 {
-	if(blockAll) {
-		return false;
-	}
-
-	clear();
-
-	blockAll = true;
-
-	data = field->fieldModel(hrc, a, animate); // warning: async!
+	currentFrame = 0;
+	data = fieldModel;
 	if(data->isOpen()) {
 		updateGL();
-		if(animate && data->frameCount()>1)	timer.start(30);
+		updateTimer();
 	}
-
-	blockAll = false;
-
-//	QFile textOut("fieldModelBonePS.txt");
-//	textOut.open(QIODevice::WriteOnly);
-//	textOut.write(data->toStringBones().toLatin1());
-//	textOut.close();
-
-	return data->isOpen();
 }
 
-bool FieldModel::load(Field *field, int modelID, int animationID, bool animate)
+void FieldModel::setIsAnimated(bool animate)
 {
-	if(blockAll) {
-		return false;
+	animated = animate;
+	updateTimer();
+}
+
+void FieldModel::updateTimer()
+{
+	if(animated && data && data->frameCount() > 1) {
+		timer.start(30);
+	} else {
+		timer.stop();
 	}
-
-	clear();
-
-	blockAll = true;
-
-	data = field->fieldModel(modelID, animationID, animate); // warning: async!
-	if(data->isOpen()) {
-		updateGL();
-		if(animate && data->frameCount()>1)	timer.start(30);
-	}
-
-	blockAll = false;
-
-//	QFile textOut("fieldModelBonePS.txt");
-//	textOut.open(QIODevice::WriteOnly);
-//	textOut.write(data->toStringBones().toLatin1());
-//	textOut.close();
-
-	return data->isOpen();
 }
 
 int FieldModel::boneCount() const
@@ -234,8 +208,10 @@ void FieldModel::setZRotation(int angle)
 
 void FieldModel::resetCamera()
 {
-	distance = 0;
-	zRot = yRot = xRot = 0;
+	distance = -0.25/*-35*/;
+	xRot = 270*16;
+	yRot = 90*16;
+	zRot = 0;
 	updateGL();
 }
 

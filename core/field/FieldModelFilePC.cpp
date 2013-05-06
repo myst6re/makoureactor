@@ -34,22 +34,23 @@ void FieldModelFilePC::clear()
 	FieldModelFile::clear();
 }
 
-quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
+quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate)
 {
 	if(hrc.isEmpty() || a.isEmpty()) {
 		return 2;
 	}
 
-	if(Data::charlgp_loadListPos())
-	{
+	if(Data::charlgp_loadListPos()) {
+		QString hrcFilename, aFilename;
 		int index;
 		if((index=hrc.lastIndexOf('.')) != -1)
-			hrc.truncate(index);
+			hrcFilename = hrc.left(index);
+		else
+			hrcFilename = hrc;
 		if((index=a.lastIndexOf('.')) != -1)
-			a.truncate(index);
-
-		hrc = hrc.toLower();
-		a = a.toLower();
+			aFilename = a.left(index);
+		else
+			aFilename = a;
 
 		QString p;
 		qint32 boneID;
@@ -57,7 +58,7 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 		clear();
 
 		QMultiMap<int, QStringList> rsd_files;
-		QIODevice *hrcFile = Data::charLgp.file(hrc % ".hrc");
+		QIODevice *hrcFile = Data::charLgp.file(hrcFilename.toLower() % ".hrc");
 
 		if(hrcFile && hrcFile->open(QIODevice::ReadOnly)
 				&& openHrc(hrcFile, rsd_files)) {
@@ -92,7 +93,7 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 			}
 			rsd_files.clear();
 
-			QIODevice *aFile = Data::charLgp.file(a % ".a");
+			QIODevice *aFile = Data::charLgp.file(aFilename.toLower() % ".a");
 
 			if(!_parts.isEmpty()
 					&& aFile && aFile->open(QIODevice::ReadOnly) && openA(aFile, animate))
@@ -100,7 +101,7 @@ quint8 FieldModelFilePC::load(QString hrc, QString a, bool animate)
 				// Open all loaded tex
 				int texID=0;
 				foreach(const QString &texName, tex2id) {
-					QPixmap tex;
+					QImage tex;
 					QIODevice *texFile = Data::charLgp.file(texName % ".tex");
 					if(texFile && texFile->open(QIODevice::ReadOnly)) {
 						tex = openTex(texFile);
@@ -162,7 +163,7 @@ bool FieldModelFilePC::openHrc(QIODevice *hrc_file, QMultiMap<int, QStringList> 
 	nameToId.insert("root", -1);
 
 	while(hrc_file->canReadLine() && boneID < boneCount) {
-		QCoreApplication::processEvents();
+//		QCoreApplication::processEvents();
 		line = QString(hrc_file->readLine()).trimmed();
 		if(line.isEmpty() || line.startsWith(QChar('#')))
 			continue;
@@ -282,11 +283,11 @@ QString FieldModelFilePC::openRsd(QIODevice *rsd_file, int boneID)
 	return pname;
 }
 
-QPixmap FieldModelFilePC::openTex(QIODevice *tex_file)
+QImage FieldModelFilePC::openTex(QIODevice *tex_file)
 {
 	TexFile tex(tex_file->readAll());
 	if(!tex.isValid()) {
-		return QPixmap();
+		return QImage();
 	}
-	return QPixmap::fromImage(tex.image());
+	return tex.image();
 }

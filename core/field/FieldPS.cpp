@@ -79,11 +79,11 @@ FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 	return (FieldModelLoaderPS *)Field::fieldModelLoader(open);
 }
 
-FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate)
+FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate, bool open)
 {
 	FieldModelFilePS *fieldModel = (FieldModelFilePS *)fieldModelPtr(modelID);
 	if(!fieldModel) 	addFieldModel(modelID, fieldModel = new FieldModelFilePS());
-	if(!fieldModel->isOpen()) {
+	if(open) {
 		fieldModel->load(this, modelID, animationID, animate);
 	}
 	return fieldModel;

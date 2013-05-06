@@ -289,7 +289,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 				foreach(FieldModelGroup *group, part->groups()) {
 					if(group->textureNumber() != -1) {
 						group->setTextureNumber(texIds.at(group->textureNumber()));
-						const QPixmap currentTex = _loaded_tex.value(group->textureNumber());
+						const QImage currentTex = _loaded_tex.value(group->textureNumber());
 						int texWidth=currentTex.width(), texHeight=currentTex.height();
 
 						foreach(Poly *poly, group->polygons()) {
@@ -507,11 +507,11 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 	return true;
 }
 
-QPixmap FieldModelFilePS::openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp)
+QImage FieldModelFilePS::openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp)
 {
 	if(imgHeader.offset_data + imgHeader.height * 2 > (quint32)size) {
 		qWarning() << "Offset texture too large" << (imgHeader.offset_data + imgHeader.height * 2);
-		return QPixmap();
+		return QImage();
 	}
 
 	int width = imgHeader.width;
@@ -557,7 +557,7 @@ QPixmap FieldModelFilePS::openTexture(const char *constData, int size, const Tex
 			++i;
 		}
 	}
-	return QPixmap::fromImage(img);
+	return img;
 }
 
 bool FieldModelFilePS::openBCX(const QByteArray &BCX, int animationID, bool animate, int *numAnimations)

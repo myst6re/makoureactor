@@ -73,7 +73,8 @@ public:
 	InfFile *inf(bool open=true);
 	BackgroundFile *background(bool open=true);
 	virtual FieldModelLoader *fieldModelLoader(bool open=true);
-	virtual FieldModelFile *fieldModel(int modelID, int animationID=0, bool animate=true)=0;
+	virtual FieldModelFile *fieldModel(int modelID, int animationID=0, bool animate=true, bool open=true)=0;
+	QMap<int, FieldModelFile *> fieldModels(bool animate=true, bool open=true);
 
 	const QString &name() const;
 	void setName(const QString &name);

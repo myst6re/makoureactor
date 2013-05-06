@@ -186,9 +186,13 @@ Window::Window() :
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
 		fieldModel->setFixedSize(300, 225);
+		modelThread = new FieldModelThread(this);
+
+		connect(modelThread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(showModel(Field*,FieldModelFile*)));
 	} else {
 		fieldModel = 0;
 	}
+	qDebug() << "here";
 
 	zonePreview = new QStackedWidget(this);
 	zonePreview->setContentsMargins(QMargins());
@@ -754,6 +758,11 @@ void Window::openField(bool reload)
 	searchDialog->updateRunSearch();
 
 	connect(groupScriptList, SIGNAL(itemSelectionChanged()), SLOT(showGrpScripts()));
+
+	if(fieldModel) {
+		modelThread->cancel();
+		modelThread->setField(field);
+	}
 }
 
 void Window::showGrpScripts()
@@ -789,15 +798,24 @@ void Window::showGrpScripts()
 	connect(scriptList, SIGNAL(itemSelectionChanged()), SLOT(showScripts()));
 	scriptList->setCurrentRow(0);
 
-	bool modelLoaded = false;
-
 	int modelID = field->scriptsAndTexts()->modelID(groupScriptList->selectedID());
 	Data::currentModelID = modelID;
 	if(fieldModel && modelID != -1) {
-		modelLoaded = fieldModel->load(field, modelID);
+		modelThread->cancel();
+		modelThread->setModelId(modelID);
+		modelThread->wait();
+		modelThread->start();
+	} else {
+		zonePreview->setCurrentIndex(0);
 	}
+}
 
-	zonePreview->setCurrentIndex((int)modelLoaded);
+void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
+{
+	if(fieldModel && this->field == field) {
+		fieldModel->setFieldModelFile(fieldModelFile);
+		zonePreview->setCurrentIndex(int(fieldModelFile->isOpen()));
+	}
 }
 
 void Window::showScripts()

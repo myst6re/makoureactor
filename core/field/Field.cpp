@@ -241,6 +241,18 @@ void Field::addFieldModel(int modelID, FieldModelFile *fieldModel)
 	_fieldModels.insert(modelID, fieldModel);
 }
 
+QMap<int, FieldModelFile *> Field::fieldModels(bool animate, bool open)
+{
+	QMap<int, FieldModelFile *> ret;
+
+	int modelCount = scriptsAndTexts()->modelCount();
+	for(int modelId=0 ; modelId < modelCount ; ++modelId) {
+		ret.insert(modelId, fieldModel(modelId, 0, animate, open));
+	}
+
+	return ret;
+}
+
 const QString &Field::name() const
 {
 	return _name;

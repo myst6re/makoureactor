@@ -42,7 +42,7 @@ public:
 
 	TdbFile();
 	bool open(const QByteArray &data);
-	QPixmap texture(quint8 faceID, TextureType type);
+	QImage texture(quint8 faceID, TextureType type);
 private:
 	static int faceIdToImageId(quint8 faceID, TextureType type);
 	TdbHeader header;

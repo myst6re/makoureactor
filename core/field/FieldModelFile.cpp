@@ -69,7 +69,7 @@ int FieldModelFile::loadedTextureCount() const
 	return _loaded_tex.size();
 }
 
-QPixmap FieldModelFile::loadedTexture(int texID) const
+QImage FieldModelFile::loadedTexture(int texID) const
 {
 	return _loaded_tex.value(texID);
 }

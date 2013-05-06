@@ -124,7 +124,7 @@ private:
 	int openSkeleton(const char *constData, int curOff, quint8 numBones);
 	int openMesh(const char *constData, int curOff, int size, quint8 numParts);
 	bool openAnimation(const char *constData, int curOff, int animation_id, int size, bool animate=false);
-	QPixmap openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp);
+	QImage openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp);
 	bool openBCX(const QByteArray &BCX, int animationID, bool animation=false, int *numAnimations=0);
 	QList<QRgb> _currentColors;
 	quint16 _currentScale;

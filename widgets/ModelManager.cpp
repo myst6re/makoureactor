@@ -187,7 +187,7 @@ void ModelManager::showModel(QTreeWidgetItem *item)
 			return;
 		}
 //		qDebug() << "showModel()" << item->text(0);
-		showModel2(item);
+		modelPreview->setFieldModelFile(modelData(item));
 	}
 }
 
