@@ -192,7 +192,6 @@ Window::Window() :
 	} else {
 		fieldModel = 0;
 	}
-	qDebug() << "here";
 
 	zonePreview = new QStackedWidget(this);
 	zonePreview->setContentsMargins(QMargins());
@@ -802,7 +801,7 @@ void Window::showGrpScripts()
 	Data::currentModelID = modelID;
 	if(fieldModel && modelID != -1) {
 		modelThread->cancel();
-		modelThread->setModelId(modelID);
+		modelThread->setModel(modelID);
 		modelThread->wait();
 		modelThread->start();
 	} else {

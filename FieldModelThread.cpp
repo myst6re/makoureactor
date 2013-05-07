@@ -1,12 +1,15 @@
 #include "FieldModelThread.h"
 
-QMutex FieldModelThread::mutexField;
+QMutex *FieldModelThread::mutexField = 0;
 
 FieldModelThread::FieldModelThread(QObject *parent) :
 	QThread(parent), _canceled(false),
-	_field(0), _modelId(0), _animationId(0),
+	_field(0), _animationId(0),
 	_animate(true)
 {
+	if(mutexField == 0) {
+		mutexField = new QMutex();
+	}
 }
 
 FieldModelThread::~FieldModelThread()
@@ -17,28 +20,26 @@ FieldModelThread::~FieldModelThread()
 
 void FieldModelThread::setField(Field *field)
 {
-	mutexField.lock();
+	mutexField->lock();
 	_field = field;
-	mutexField.unlock();
+	mutexField->unlock();
 }
 
-void FieldModelThread::setModelId(int modelId)
+void FieldModelThread::setModel(int modelId, int animationId, bool animate)
 {
 	mutex.lock();
-	_modelId = modelId;
-	mutex.unlock();
-}
-
-void FieldModelThread::setAnimationId(int animationId)
-{
-	mutex.lock();
+	_modelIds.clear();
+	_modelIds.append(modelId);
 	_animationId = animationId;
+	_animate = animate;
 	mutex.unlock();
 }
 
-void FieldModelThread::setIsAnimated(bool animate)
+void FieldModelThread::setModels(const QList<int> &modelIds, bool animate)
 {
 	mutex.lock();
+	_modelIds = modelIds;
+	_animationId = 0;
 	_animate = animate;
 	mutex.unlock();
 }
@@ -59,21 +60,22 @@ void FieldModelThread::run()
 
 	mutex.lock();
 	_canceled = false;
-	int modelId = _modelId;
+	QList<int> modelIds = _modelIds;
 	int animationId = _animationId;
 	bool animate = _animate;
-	mutexField.lock();
-	Field *field = _field;
-	if(_canceled) {
-		mutexField.unlock();
-		mutex.unlock();
-		return;
-	}
-	FieldModelFile *fieldModel = field->fieldModel(modelId, animationId, animate);
-	mutexField.unlock();
 	mutex.unlock();
 
-	if(!_canceled && fieldModel->isOpen()) {
-		emit modelLoaded(field, fieldModel, modelId, animationId, animate);
+	mutexField->lock();
+	Field *field = _field;
+	foreach(int modelId, modelIds) {
+		if(_canceled) {
+			mutexField->unlock();
+			return;
+		}
+		FieldModelFile *fieldModel = field->fieldModel(modelId, animationId, animate);
+		if(!_canceled && fieldModel->isOpen()) {
+			emit modelLoaded(field, fieldModel, modelId, animationId, animate);
+		}
 	}
+	mutexField->unlock();
 }

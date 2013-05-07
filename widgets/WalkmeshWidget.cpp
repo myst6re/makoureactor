@@ -24,10 +24,9 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
 	xTrans(0.0f), yTrans(0.0f), transStep(360.0f), lastKeyPressed(-1),
 	camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
 	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0),
-	bgFile(0), scripts(0), field(0)
+	bgFile(0), scripts(0), field(0), thread(0)
 {
 	setMinimumSize(320, 240);
-//	setFixedSize(640, 480);
 //	setAutoFillBackground(false);
 //	arrow = QPixmap(":/images/field-arrow-red.png");
 }
@@ -40,10 +39,7 @@ void WalkmeshWidget::clear()
 	bgFile = 0;
 	scripts = 0;
 	field = 0;
-	foreach(FieldModelThread *thread, threads) {
-		delete thread;
-	}
-	threads.clear();
+	if(thread)	thread->deleteLater();
 	fieldModels.clear();
 	updateGL();
 }
@@ -56,20 +52,18 @@ void WalkmeshWidget::fill(Field *field)
 	this->bgFile = field->background();
 	this->scripts = field->scriptsAndTexts();
 	this->field = field;
-	foreach(FieldModelThread *thread, threads) {
-		delete thread;
-	}
-	this->threads.clear();
+	if(thread)	thread->deleteLater();
 	this->fieldModels.clear();
 	int modelCount = scripts->modelCount();
+	QList<int> modelIds;
 	for(int modelId=0 ; modelId<modelCount ; ++modelId) {
-		FieldModelThread *thread = new FieldModelThread(this);
-		thread->setField(field);
-		connect(thread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(addModel(Field*,FieldModelFile*,int)));
-		thread->setModelId(modelId);
-		thread->start();
-		threads.append(thread);
+		modelIds.append(modelId);
 	}
+	thread = new FieldModelThread(this);
+	thread->setField(field);
+	connect(thread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(addModel(Field*,FieldModelFile*,int)));
+	thread->setModels(modelIds);
+	thread->start();
 
 	updatePerspective();
 	resetCamera();
@@ -453,7 +447,7 @@ void WalkmeshWidget::paintGL()
 //							glTranslatef(trans.first().x/5.0f, trans.first().y/5.0f, trans.first().z/5.0f);
 //						}
 
-						FieldModel::paintModel(this, fieldModel, 0, 5.0f);
+						FieldModel::paintModel(this, fieldModel, 0, 8.0f);
 
 						glPopMatrix();
 					}

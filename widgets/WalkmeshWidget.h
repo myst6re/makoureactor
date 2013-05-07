@@ -69,7 +69,7 @@ private:
 	Section1File *scripts;
 	Field *field;
 	QMap<int, FieldModelFile *> fieldModels;
-	QList<FieldModelThread *> threads;
+	FieldModelThread *thread;
 	QPoint moveStart;
 //	QPixmap arrow;
 protected:

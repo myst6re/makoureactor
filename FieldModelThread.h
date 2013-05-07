@@ -11,9 +11,8 @@ public:
 	explicit FieldModelThread(QObject *parent = 0);
 	virtual ~FieldModelThread();
 	void setField(Field *field);
-	void setModelId(int modelId);
-	void setAnimationId(int animationId);
-	void setIsAnimated(bool animate);
+	void setModel(int modelId, int animationId=0, bool animate=true);
+	void setModels(const QList<int> &modelIds, bool animate=true);
 	void cancel();
 signals:
 	void modelLoaded(Field *field, FieldModelFile *model, int modelId, int animationId, bool isAnimated);
@@ -22,9 +21,9 @@ protected:
 private:
 	bool _canceled;
 	QMutex mutex;
-	static QMutex mutexField;
+	static QMutex *mutexField;
 	Field *_field;
-	int _modelId;
+	QList<int> _modelIds;
 	int _animationId;
 	bool _animate;
 };
