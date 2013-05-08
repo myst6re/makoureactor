@@ -59,11 +59,17 @@ void WalkmeshWidget::fill(Field *field)
 	for(int modelId=0 ; modelId<modelCount ; ++modelId) {
 		modelIds.append(modelId);
 	}
-	thread = new FieldModelThread(this);
-	thread->setField(field);
-	connect(thread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(addModel(Field*,FieldModelFile*,int)));
-	thread->setModels(modelIds);
-	thread->start();
+	if(field->isPC()) {
+		thread = new FieldModelThread(this);
+		thread->setField(field);
+		connect(thread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(addModel(Field*,FieldModelFile*,int)));
+		thread->setModels(modelIds);
+		thread->start();
+	} else {
+		foreach(int modelId, modelIds) {
+			addModel(field, field->fieldModel(modelId), modelId);
+		}
+	}
 
 	updatePerspective();
 	resetCamera();

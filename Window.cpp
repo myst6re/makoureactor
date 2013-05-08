@@ -392,7 +392,13 @@ int Window::closeFile(bool quit)
 		opcodeList->clear();
 		opcodeList->clearCopiedOpcodes();
 		zoneImage->clear();
-		if(fieldModel)	fieldModel->clear();
+		if(fieldModel) {
+			fieldModel->clear();
+			if(fieldArchive && fieldArchive->io()->isPC()) {
+				modelThread->cancel();
+				modelThread->wait();
+			}
+		}
 		zonePreview->setCurrentIndex(0);
 
 		authorAction->setVisible(false);
@@ -703,6 +709,13 @@ void Window::openField(bool reload)
 
 	setWindowTitle();
 
+	if(fieldModel && fieldArchive->io()->isPC()) {
+		modelThread->cancel();
+		modelThread->wait();
+
+		if(_walkmeshManager)	_walkmeshManager->clear();
+	}
+
 	// Get and set field
 	field = fieldArchive->field(id, true, true);
 	if(field == NULL) {
@@ -713,6 +726,9 @@ void Window::openField(bool reload)
 		opcodeList->clear();
 		opcodeList->setEnabled(false);
 		return;
+	}
+	if(fieldModel && fieldArchive->io()->isPC()) {
+		modelThread->setField(field);
 	}
 	if(textDialog && (reload || textDialog->isVisible())) {
 		textDialog->setField(field, reload);
@@ -757,11 +773,6 @@ void Window::openField(bool reload)
 	searchDialog->updateRunSearch();
 
 	connect(groupScriptList, SIGNAL(itemSelectionChanged()), SLOT(showGrpScripts()));
-
-	if(fieldModel) {
-		modelThread->cancel();
-		modelThread->setField(field);
-	}
 }
 
 void Window::showGrpScripts()
@@ -800,10 +811,14 @@ void Window::showGrpScripts()
 	int modelID = field->scriptsAndTexts()->modelID(groupScriptList->selectedID());
 	Data::currentModelID = modelID;
 	if(fieldModel && modelID != -1) {
-		modelThread->cancel();
-		modelThread->setModel(modelID);
-		modelThread->wait();
-		modelThread->start();
+		if(fieldArchive->io()->isPC()) {
+			modelThread->cancel();
+			modelThread->wait();
+			modelThread->setModel(modelID);
+			modelThread->start();
+		} else {
+			showModel(field, field->fieldModel(modelID));
+		}
 	} else {
 		zonePreview->setCurrentIndex(0);
 	}
