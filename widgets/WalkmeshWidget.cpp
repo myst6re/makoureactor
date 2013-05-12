@@ -24,7 +24,7 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
 	xTrans(0.0f), yTrans(0.0f), transStep(360.0f), lastKeyPressed(-1),
 	camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
 	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0),
-	bgFile(0), scripts(0), field(0), thread(0)
+	bgFile(0), scripts(0), field(0)/*, thread(0)*/
 {
 	setMinimumSize(320, 240);
 //	setAutoFillBackground(false);
@@ -39,7 +39,7 @@ void WalkmeshWidget::clear()
 	bgFile = 0;
 	scripts = 0;
 	field = 0;
-	if(thread)	thread->deleteLater();
+//	if(thread)	thread->deleteLater();
 	fieldModels.clear();
 	updateGL();
 }
@@ -52,24 +52,24 @@ void WalkmeshWidget::fill(Field *field)
 	this->bgFile = field->background();
 	this->scripts = field->scriptsAndTexts();
 	this->field = field;
-	if(thread)	thread->deleteLater();
+//	if(thread)	thread->deleteLater();
 	this->fieldModels.clear();
 	int modelCount = scripts->modelCount();
 	QList<int> modelIds;
 	for(int modelId=0 ; modelId<modelCount ; ++modelId) {
 		modelIds.append(modelId);
 	}
-	if(field->isPC()) {
-		thread = new FieldModelThread(this);
-		thread->setField(field);
-		connect(thread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(addModel(Field*,FieldModelFile*,int)));
-		thread->setModels(modelIds);
-		thread->start();
-	} else {
+//	if(field->isPC()) {
+//		thread = new FieldModelThread(this);
+//		thread->setField(field);
+//		connect(thread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(addModel(Field*,FieldModelFile*,int)));
+//		thread->setModels(modelIds);
+//		thread->start();
+//	} else {
 		foreach(int modelId, modelIds) {
 			addModel(field, field->fieldModel(modelId), modelId);
 		}
-	}
+//	}
 
 	updatePerspective();
 	resetCamera();

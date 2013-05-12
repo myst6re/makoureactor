@@ -186,9 +186,9 @@ Window::Window() :
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
 		fieldModel->setFixedSize(300, 225);
-		modelThread = new FieldModelThread(this);
+//		modelThread = new FieldModelThread(this);
 
-		connect(modelThread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(showModel(Field*,FieldModelFile*)));
+//		connect(modelThread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(showModel(Field*,FieldModelFile*)));
 	} else {
 		fieldModel = 0;
 	}
@@ -394,10 +394,10 @@ int Window::closeFile(bool quit)
 		zoneImage->clear();
 		if(fieldModel) {
 			fieldModel->clear();
-			if(fieldArchive && fieldArchive->io()->isPC()) {
-				modelThread->cancel();
-				modelThread->wait();
-			}
+//			if(fieldArchive && fieldArchive->io()->isPC()) {
+//				modelThread->cancel();
+//				modelThread->wait();
+//			}
 		}
 		zonePreview->setCurrentIndex(0);
 
@@ -709,12 +709,12 @@ void Window::openField(bool reload)
 
 	setWindowTitle();
 
-	if(fieldModel && fieldArchive->io()->isPC()) {
-		modelThread->cancel();
-		modelThread->wait();
+//	if(fieldModel && fieldArchive->io()->isPC()) {
+//		modelThread->cancel();
+//		modelThread->wait();
 
-		if(_walkmeshManager)	_walkmeshManager->clear();
-	}
+//		if(_walkmeshManager)	_walkmeshManager->clear();
+//	}
 
 	// Get and set field
 	field = fieldArchive->field(id, true, true);
@@ -727,9 +727,9 @@ void Window::openField(bool reload)
 		opcodeList->setEnabled(false);
 		return;
 	}
-	if(fieldModel && fieldArchive->io()->isPC()) {
-		modelThread->setField(field);
-	}
+//	if(fieldModel && fieldArchive->io()->isPC()) {
+//		modelThread->setField(field);
+//	}
 	if(textDialog && (reload || textDialog->isVisible())) {
 		textDialog->setField(field, reload);
 		textDialog->setEnabled(true);
@@ -811,14 +811,14 @@ void Window::showGrpScripts()
 	int modelID = field->scriptsAndTexts()->modelID(groupScriptList->selectedID());
 	Data::currentModelID = modelID;
 	if(fieldModel && modelID != -1) {
-		if(fieldArchive->io()->isPC()) {
-			modelThread->cancel();
-			modelThread->wait();
-			modelThread->setModel(modelID);
-			modelThread->start();
-		} else {
+//		if(fieldArchive->io()->isPC()) {
+//			modelThread->cancel();
+//			modelThread->wait();
+//			modelThread->setModel(modelID);
+//			modelThread->start();
+//		} else {
 			showModel(field, field->fieldModel(modelID));
-		}
+//		}
 	} else {
 		zonePreview->setCurrentIndex(0);
 	}
@@ -828,8 +828,8 @@ void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 {
 	if(fieldModel && this->field == field) {
 		fieldModel->setFieldModelFile(fieldModelFile);
-		zonePreview->setCurrentIndex(int(fieldModelFile->isOpen()));
 	}
+	zonePreview->setCurrentIndex(int(fieldModel && fieldModelFile->isOpen()));
 }
 
 void Window::showScripts()

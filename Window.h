@@ -35,7 +35,7 @@
 #include "widgets/WalkmeshManager.h"
 #include "widgets/QTaskBarButton.h"
 #include "widgets/LgpDialog.h"
-#include "FieldModelThread.h"
+//#include "FieldModelThread.h"
 
 class Window : public QMainWindow, FieldArchiveIOObserver
 {
@@ -146,7 +146,7 @@ private:
 	QAction *authorAction;
 	QLabel *authorLbl;
 
-	FieldModelThread *modelThread;
+//	FieldModelThread *modelThread;
 protected:
 	void showEvent(QShowEvent *);
 	void closeEvent(QCloseEvent *);

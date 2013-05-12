@@ -26,7 +26,7 @@
 #include <GL/glu.h>
 #endif
 #include "core/field/Field.h"
-#include "FieldModelThread.h"
+//#include "FieldModelThread.h"
 
 class WalkmeshWidget : public QGLWidget
 {
@@ -69,7 +69,7 @@ private:
 	Section1File *scripts;
 	Field *field;
 	QMap<int, FieldModelFile *> fieldModels;
-	FieldModelThread *thread;
+//	FieldModelThread *thread;
 	QPoint moveStart;
 //	QPixmap arrow;
 protected:
