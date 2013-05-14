@@ -17,8 +17,6 @@
  ****************************************************************************/
 #include "FieldPS.h"
 #include "BackgroundFilePS.h"
-#include "../LZS.h"
-#include "../Config.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
 	Field(name, io)

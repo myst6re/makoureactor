@@ -17,8 +17,6 @@
  ****************************************************************************/
 #include "FieldPC.h"
 #include "BackgroundFilePC.h"
-#include "../LZS.h"
-#include "../Config.h"
 
 FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
 	Field(name, io), _model(0)

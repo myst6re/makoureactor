@@ -16,11 +16,10 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Field.h"
-#include "../LZS.h"
 #include "FieldArchiveIO.h"
 #include "FieldPC.h"
 #include "FieldPS.h"
-#include "../../Data.h"
+#include "../LZS.h"
 #include "../Config.h"
 
 Field::Field(const QString &name, FieldArchiveIO *io) :

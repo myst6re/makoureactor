@@ -19,7 +19,6 @@
 #include "FieldPS.h"
 #include "FieldPC.h"
 #include "Data.h"
-#include "../Config.h"
 
 FieldArchive::FieldArchive() :
 	_io(0)
