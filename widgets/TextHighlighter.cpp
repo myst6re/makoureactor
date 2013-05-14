@@ -16,7 +16,6 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TextHighlighter.h"
-#include "core/FF7Text.h"
 
 TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 	: QSyntaxHighlighter(parent)

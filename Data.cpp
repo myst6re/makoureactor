@@ -18,6 +18,7 @@
 #include "Data.h"
 #include "core/Config.h"
 #include "core/LZS.h"
+#include "core/FF7Text.h"
 #ifdef Q_WS_WIN
 #include <windef.h>
 #include <winbase.h>

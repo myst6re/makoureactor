@@ -74,11 +74,12 @@ public:
 
 	void shiftTutIds(int row, int shift);
 
-	const QList<FF7Text *> &texts() const;
+	const QList<FF7Text> &texts() const;
 	int textCount() const;
-	FF7Text *text(int textID) const;
-	void insertText(int row);
-	void deleteText(int row);
+	const FF7Text &text(int textID) const;
+	void setText(int textID, const FF7Text &text);
+	void insertText(int textID, const FF7Text &text);
+	void deleteText(int textID);
 	QSet<quint8> listUsedTexts() const;
 	QSet<quint8> listUsedTuts() const;
 
@@ -96,7 +97,7 @@ private:
 	// quint8 nbObjets3D;
 
 	QList<GrpScript *> _grpScripts;
-	QList<FF7Text *> _texts;
+	QList<FF7Text> _texts;
 	TutFileStandard *_tut;
 };
 

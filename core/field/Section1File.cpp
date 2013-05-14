@@ -27,13 +27,11 @@ Section1File::Section1File(Field *field) :
 Section1File::~Section1File()
 {
 	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
-	foreach(FF7Text *text, _texts)				delete text;
 }
 
 void Section1File::clear()
 {
 	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
-	foreach(FF7Text *text, _texts)				delete text;
 	_grpScripts.clear();
 	_texts.clear();
 	_author.clear();
@@ -167,11 +165,11 @@ bool Section1File::open(const QByteArray &data)
 
 			if(dataSize < posTexts+posFin)	return false;
 
-			_texts.append(new FF7Text(data.mid(posTexts+posDeb, posFin-posDeb)));
+			_texts.append(FF7Text(data.mid(posTexts+posDeb, posFin-posDeb)));
 			posDeb = posFin;
 		}
 		if((quint32)dataSize < posAKAO)	return false;
-		_texts.append(new FF7Text(data.mid(posTexts+posDeb, posAKAO-posDeb)));
+		_texts.append(FF7Text(data.mid(posTexts+posDeb, posAKAO-posDeb)));
 	}
 
 	setOpen(true);
@@ -219,13 +217,12 @@ QByteArray Section1File::save() const
 	//Création nouvelles positions Textes
 	newPosTexts = newPosScripts + allScripts.size();
 
-	quint16 newNbText = _texts.size();
+	quint16 newNbText = textCount();
 
-	foreach(FF7Text *text, _texts)
-	{
+	foreach(const FF7Text &text, texts()) {
 		pos = 2 + newNbText*2 + allTexts.size();
 		positionsTexts.append((char *)&pos, 2);
-		allTexts.append(text->data());
+		allTexts.append(text.data());
 		allTexts.append('\xff');// end of text
 	}
 
@@ -279,10 +276,10 @@ bool Section1File::exporter(QIODevice *device, ExportFormat format)
 			return false;
 		}
 		int i=0;
-		foreach(FF7Text *text, texts()) {
+		foreach(const FF7Text &text, texts()) {
 			device->write(QString("---TEXT%1---\n%2\n")
 						  .arg(i++, 3, 10, QChar('0'))
-						  .arg(text->text(jp))
+						  .arg(text.text(jp))
 						  .toUtf8());
 		}
 		device->close();
@@ -300,10 +297,10 @@ bool Section1File::exporter(QIODevice *device, ExportFormat format)
 		stream.writeAttribute("name", field()->name());
 		stream.writeStartElement("texts");
 		int id=0;
-		foreach(FF7Text *text, _texts) {
+		foreach(const FF7Text &text, texts()) {
 			stream.writeStartElement("text");
 			stream.writeAttribute("id", QString::number(id));
-			stream.writeCharacters(text->text(jp));
+			stream.writeCharacters(text.text(jp));
 			stream.writeEndElement(); // /text
 			++id;
 		}
@@ -506,9 +503,9 @@ bool Section1File::searchText(const QRegExp &text, int &textID, int &from, int &
 {
 	if(textID < 0)
 		textID = 0;
-	if(textID >= _texts.size())
+	if(textID >= textCount())
 		return false;
-	if((from = _texts.at(textID)->indexOf(text, from, size)) != -1)
+	if((from = this->text(textID).indexOf(text, from, size)) != -1)
 		return true;
 
 	return searchText(text, ++textID, from = 0, size);
@@ -586,13 +583,13 @@ bool Section1File::searchTextInScriptsP(const QRegExp &text, int &groupID, int &
 
 bool Section1File::searchTextP(const QRegExp &text, int &textID, int &from, int &index, int &size) const
 {
-	if(textID >= _texts.size()) {
-		textID = _texts.size()-1;
+	if(textID >= textCount()) {
+		textID = textCount()-1;
 		from = -1;
 	}
 	if(textID < 0)
 		return false;
-	if((index = _texts.at(textID)->lastIndexOf(text, from, size)) != -1)
+	if((index = this->text(textID).lastIndexOf(text, from, size)) != -1)
 		return true;
 
 	return searchTextP(text, --textID, from = -1, index, size);
@@ -700,7 +697,7 @@ void Section1File::linePosition(QMap<int, FF7Position *> &positions) const
 //		group->listWindows(groupID++, windows, text2win);
 //}
 
-const QList<FF7Text *> &Section1File::texts() const
+const QList<FF7Text> &Section1File::texts() const
 {
 	return _texts;
 }
@@ -710,25 +707,33 @@ int Section1File::textCount() const
 	return _texts.size();
 }
 
-FF7Text *Section1File::text(int textID) const
+const FF7Text &Section1File::text(int textID) const
 {
 	return _texts.at(textID);
 }
 
-void Section1File::insertText(int row)
+void Section1File::setText(int textID, const FF7Text &text)
 {
-	_texts.insert(row, new FF7Text);
+	if(textID >=0 && textID < _texts.size()) {
+		_texts.replace(textID, text);
+		setModified(true);
+	}
+}
+
+void Section1File::insertText(int textID, const FF7Text &text)
+{
+	_texts.insert(textID, text);
 	foreach(GrpScript *grpScript, _grpScripts)
-		grpScript->shiftTextIds(row-1, +1);
+		grpScript->shiftTextIds(textID-1, +1);
 	setModified(true);
 }
 
-void Section1File::deleteText(int row)
+void Section1File::deleteText(int textID)
 {
-	if(row < _texts.size()) {
-		delete _texts.takeAt(row);
+	if(textID >=0 && textID < _texts.size()) {
+		_texts.removeAt(textID);
 		foreach(GrpScript *grpScript, _grpScripts)
-			grpScript->shiftTextIds(row, -1);
+			grpScript->shiftTextIds(textID, -1);
 		setModified(true);
 	}
 }

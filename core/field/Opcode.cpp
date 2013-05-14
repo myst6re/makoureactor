@@ -105,7 +105,7 @@ bool Opcode::searchTextInScripts(const QRegExp &text, const Section1File *script
 	qint16 textID = getTextID();
 	return textID != -1
 			&& textID < scriptsAndTexts->textCount()
-			&& scriptsAndTexts->text(textID)->contains(text);
+			&& scriptsAndTexts->text(textID).contains(text);
 }
 
 void Opcode::listUsedTexts(QSet<quint8> &usedTexts) const
@@ -221,7 +221,7 @@ QString Opcode::_script(quint8 param, Section1File *scriptsAndTexts)
 QString Opcode::_text(quint8 textID, Section1File *scriptsAndTexts)
 {
 	if(textID < scriptsAndTexts->textCount()) {
-		QString t = scriptsAndTexts->text(textID)->text(Config::value("jp_txt", false).toBool(), true).simplified();
+		QString t = scriptsAndTexts->text(textID).text(Config::value("jp_txt", false).toBool(), true).simplified();
 		if(t.size() > 70)
 			t = t.left(35) % QString("...") % t.right(35);
 		return "\"" + t + "\"";

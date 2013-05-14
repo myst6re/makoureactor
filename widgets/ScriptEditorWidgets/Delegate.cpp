@@ -120,8 +120,8 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	{
 		QComboBox *comboBox = new QComboBox(parent);
 		bool jp = Config::value("jp_txt", false).toBool();
-		foreach(FF7Text *t, _field->scriptsAndTexts()->texts())
-			comboBox->addItem(t->text(jp, true).simplified());
+		foreach(const FF7Text &t, _field->scriptsAndTexts()->texts())
+			comboBox->addItem(t.text(jp, true).simplified());
 		return comboBox;
 	}
 	else if(type == item_id && !Data::item_names.isEmpty())

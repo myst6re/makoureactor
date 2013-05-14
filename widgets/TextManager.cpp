@@ -291,11 +291,12 @@ void TextManager::setTextChanged()
 	if(item == NULL)	return;
 
 	QString newText = textEdit->toPlainText();
-	FF7Text *t = scriptsAndTexts->text(item->data(Qt::UserRole).toInt());
+	int textId = item->data(Qt::UserRole).toInt();
+	const FF7Text &t = scriptsAndTexts->text(textId);
 	bool jp = Config::value("jp_txt", false).toBool();
-	if(newText != t->text(jp)) {
-		t->setText(newText, jp);
-		textPreview->setText(t->data());
+	if(newText != t.text(jp)) {
+		scriptsAndTexts->setText(textId, FF7Text(newText, jp));
+		textPreview->setText(t.data());
 		changeTextPreviewPage();
 		changeTextPreviewWin();
 		emit modified();
@@ -320,11 +321,11 @@ void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 {
 	if(!item || !scriptsAndTexts)	return;
 	int textID = item->data(Qt::UserRole).toInt();
-	FF7Text *t = scriptsAndTexts->text(textID);
+	const FF7Text &t = scriptsAndTexts->text(textID);
 //	textPreview->resetCurrentWin();
 //	textPreview->setWins(getWindows(textID));
-	textPreview->setText(t->data());
-	textEdit->setPlainText(t->text(Config::value("jp_txt", false).toBool()));
+	textPreview->setText(t.data());
+	textEdit->setPlainText(t.text(Config::value("jp_txt", false).toBool()));
 	changeTextPreviewPage();
 	changeTextPreviewWin();
 	emit textIDChanged(textID);
@@ -392,7 +393,7 @@ void TextManager::addText()
 	QListWidgetItem *item = liste1->currentItem();
 	int row = !item ? scriptsAndTexts->textCount() : item->data(Qt::UserRole).toInt()+1;
 	liste1->blockSignals(true);
-	scriptsAndTexts->insertText(row);
+	scriptsAndTexts->insertText(row, FF7Text());
 	usedTexts = scriptsAndTexts->listUsedTexts();
 	dispUnusedText->setChecked(true);
 	showList();

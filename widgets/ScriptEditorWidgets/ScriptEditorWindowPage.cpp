@@ -42,8 +42,8 @@ void ScriptEditorWindowPage::build()
 	previewText = new QComboBox(this);
 	previewText->addItem(tr("[Laisser la fenêtre vide]"));
 	bool jp = Config::value("jp_txt", false).toBool();
-	foreach(FF7Text *t, field()->scriptsAndTexts()->texts())
-		previewText->addItem(t->text(jp, true).simplified());
+	foreach(const FF7Text &t, field()->scriptsAndTexts()->texts())
+		previewText->addItem(t.text(jp, true).simplified());
 	previewText->setMaximumWidth(textPreview->width()/2);
 
 	autoSize = new QPushButton(tr("Taille auto."), this);
@@ -181,13 +181,14 @@ void ScriptEditorWindowPage::updatePreview()
 
 void ScriptEditorWindowPage::updateText(int textID)
 {
+	bool hasText = textID >= 0 && textID < field()->scriptsAndTexts()->textCount();
 	--textID;
 
-	textPreview->setText(textID >= 0 && textID < field()->scriptsAndTexts()->textCount()
-						 ? field()->scriptsAndTexts()->text(textID)->data()
+	textPreview->setText(hasText
+						 ? field()->scriptsAndTexts()->text(textID).data()
 						 : QByteArray());
 
-	autoSize->setEnabled(textID >= 0 && textID < field()->scriptsAndTexts()->textCount());
+	autoSize->setEnabled(hasText);
 }
 
 void ScriptEditorWindowPage::setPositionWindow(const QPoint &point)

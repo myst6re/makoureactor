@@ -19,7 +19,6 @@
 #define DATA_H
 
 #include <QtCore>
-#include "core/FF7Text.h"
 #include "core/Lgp.h"
 #include "core/WindowBinFile.h"
 
