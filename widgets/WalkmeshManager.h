@@ -38,6 +38,7 @@ signals:
 	void modified();
 public slots:
 	void resetCamera();
+	void setModelsVisible(bool show);
 	void setCurrentCamera(int camID);
 private slots:
 	void addCamera();

@@ -42,6 +42,7 @@ public slots:
 	void setZRotation(int);
 	void setZoom(int);
 	void resetCamera();
+	void setModelsVisible(bool show);
 	void setCurrentFieldCamera(int camID);
 	void setSelectedTriangle(int triangle);
 	void setSelectedDoor(int door);
@@ -52,6 +53,7 @@ private slots:
 private:
 	void computeFov();
 	void drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access);
+	void openModels();
 	double distance;
 	float xRot, yRot, zRot;
 	float xTrans, yTrans, transStep;
@@ -72,6 +74,7 @@ private:
 //	FieldModelThread *thread;
 	QPoint moveStart;
 //	QPixmap arrow;
+	bool modelsVisible;
 protected:
 	virtual void initializeGL();
 	virtual void resizeGL(int w, int h);

@@ -24,7 +24,7 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
 	xTrans(0.0f), yTrans(0.0f), transStep(360.0f), lastKeyPressed(-1),
 	camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
 	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0),
-	bgFile(0), scripts(0), field(0)/*, thread(0)*/
+	bgFile(0), scripts(0), field(0), modelsVisible(true)/*, thread(0)*/
 {
 	setMinimumSize(320, 240);
 //	setAutoFillBackground(false);
@@ -52,8 +52,21 @@ void WalkmeshWidget::fill(Field *field)
 	this->bgFile = field->background();
 	this->scripts = field->scriptsAndTexts();
 	this->field = field;
-//	if(thread)	thread->deleteLater();
 	this->fieldModels.clear();
+	if(modelsVisible) {
+		openModels();
+	}
+
+	updatePerspective();
+	resetCamera();
+}
+
+void WalkmeshWidget::openModels()
+{
+//	if(thread)	thread->deleteLater();
+	if(!this->fieldModels.isEmpty() || !field || !scripts) {
+		return;
+	}
 	int modelCount = scripts->modelCount();
 	QList<int> modelIds;
 	for(int modelId=0 ; modelId<modelCount ; ++modelId) {
@@ -70,9 +83,6 @@ void WalkmeshWidget::fill(Field *field)
 			addModel(field, field->fieldModel(modelId), modelId);
 		}
 //	}
-
-	updatePerspective();
-	resetCamera();
 }
 
 void WalkmeshWidget::addModel(Field *field, FieldModelFile *fieldModelFile, int modelId)
@@ -394,7 +404,7 @@ void WalkmeshWidget::paintGL()
 
 		}
 
-		if(!fieldModels.isEmpty()) {
+		if(modelsVisible && !fieldModels.isEmpty()) {
 
 			QMultiMap<int, FF7Position> modelPositions;
 			scripts->listModelPositions(modelPositions);
@@ -601,6 +611,15 @@ void WalkmeshWidget::resetCamera()
 	distance = 0;
 	zRot = yRot = xRot = 0;
 	xTrans = yTrans = 0;
+	updateGL();
+}
+
+void WalkmeshWidget::setModelsVisible(bool show)
+{
+	modelsVisible = show;
+	if(modelsVisible) {
+		openModels();
+	}
 	updateGL();
 }
 

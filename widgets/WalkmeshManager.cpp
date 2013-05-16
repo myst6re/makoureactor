@@ -46,6 +46,8 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 
 	QPushButton *resetCamera = new QPushButton(tr("Remettre à 0"));
 
+	QCheckBox *showModels = new QCheckBox(tr("Afficher modèles"));
+
 	tabWidget = new QTabWidget(this);
 	tabWidget->addTab(buildCameraPage(), tr("Caméra"));
 	tabWidget->addTab(buildWalkmeshPage(), tr("Walkmesh"));
@@ -57,19 +59,23 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 	tabWidget->setFixedHeight(250);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(walkmeshWidget, 0, 0, 3, 1);
+	layout->addWidget(walkmeshWidget, 0, 0, 4, 1);
 	layout->addWidget(slider1, 0, 1);
 	layout->addWidget(slider2, 0, 2);
 	layout->addWidget(slider3, 0, 3);
 	layout->addWidget(keyInfos, 1, 1, 1, 3);
 	layout->addWidget(resetCamera, 2, 1, 1, 3);
-	layout->addWidget(tabWidget, 3, 0, 1, 4);
+	layout->addWidget(showModels, 3, 1, 1, 3);
+	layout->addWidget(tabWidget, 4, 0, 1, 4);
 
 	if(walkmesh) {
 		connect(slider1, SIGNAL(valueChanged(int)), walkmesh, SLOT(setXRotation(int)));
 		connect(slider2, SIGNAL(valueChanged(int)), walkmesh, SLOT(setYRotation(int)));
 		connect(slider3, SIGNAL(valueChanged(int)), walkmesh, SLOT(setZRotation(int)));
 		connect(resetCamera, SIGNAL(clicked()), SLOT(resetCamera()));
+		connect(showModels, SIGNAL(toggled(bool)), SLOT(setModelsVisible(bool)));
+
+		showModels->setChecked(true);
 	}
 }
 
@@ -85,6 +91,11 @@ void WalkmeshManager::resetCamera()
 	slider2->blockSignals(false);
 	slider3->blockSignals(false);
 	walkmesh->resetCamera();
+}
+
+void WalkmeshManager::setModelsVisible(bool show)
+{
+	walkmesh->setModelsVisible(show);
 }
 
 QWidget *WalkmeshManager::buildCameraPage()
