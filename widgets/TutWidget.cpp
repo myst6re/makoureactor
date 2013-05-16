@@ -123,7 +123,10 @@ QWidget *TutWidget::buildSoundPage()
 	akaoIDList->setEditable(true);
 	int i=0;
 	foreach(const QString &musicName, Data::music_names) {
-		akaoIDList->addItem(QString("%1 - %2").arg(i, 2, 10, QChar('0')).arg(musicName), i);
+		akaoIDList->addItem(tr("%1 - %2 : %3")
+							.arg(i, 2, 10, QChar('0'))
+							.arg(musicName)
+							.arg(Data::music_desc.at(i)), i);
 		++i;
 	}
 

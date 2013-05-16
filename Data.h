@@ -54,6 +54,7 @@ public:
 	static QStringList field_names;
 	static QStringList movie_names;
 	static QStringList music_names;
+	static QStringList music_desc;
 #ifdef Q_WS_WIN
 	static QString regValue(const QString &regPath, const QString &regKey);
 #endif
@@ -69,6 +70,7 @@ private:
 	static const char *movieList[106];
 	static const char *mapList[787];
 	static const char *musicList[100];
+	static const char *musicList2[100];
 
 };
 

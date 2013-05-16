@@ -20,6 +20,7 @@ class TblFile
 public:
 	TblFile();
 	bool open(const QByteArray &data);
+	QByteArray save() const;
 	QString toString() const;
 private:
 	QList<TblFileEntry> _entries;
