@@ -310,7 +310,7 @@ void ScriptEditor::changeCurrentOpcode(int index)
 		}
 	} else {
 		if(id == opcode->id()) {
-			opcode->setParams(newOpcode.mid(1)); // same opcode, just change params
+			opcode->setParams(newOpcode.constData() + 1, newOpcode.size() - 1); // same opcode, just change params
 		} else { // change all
 			delete opcode;
 			opcode = Script::createOpcode(newOpcode);

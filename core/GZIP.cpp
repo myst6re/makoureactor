@@ -60,7 +60,7 @@ QByteArray GZIP::compress(const char *ungzip, int size)
 {
 	QString tempPath = QDir::tempPath()+"/qt_temp.gz";
 
-	gzFile file2 = gzopen(tempPath.toLatin1(), "wb");
+	gzFile file2 = gzopen(tempPath.toLatin1(), "wb9");
 	if(!file2) {
 		return QByteArray();
 	}

@@ -201,7 +201,7 @@ Window::Window() :
 		zonePreview->addWidget(fieldModel);
 
 	gridLayout = new QGridLayout;
-	
+
 	gridLayout->addWidget(fieldList, 0, 0);
 	gridLayout->addWidget(lineSearch, 1, 0);
 	gridLayout->addWidget(zonePreview, 2, 0, 1, 2);
