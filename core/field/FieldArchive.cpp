@@ -647,6 +647,24 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 	return false;
 }
 
+bool FieldArchive::compileScripts(int &fieldID, int &groupID, int &scriptID, int &opcodeID, QString &errorStr)
+{
+	int size = fileList.size();
+
+	for(fieldID=0 ; fieldID<size ; ++fieldID) {
+		QCoreApplication::processEvents();
+		Field *field = this->field(fieldID, false);
+		if(field != NULL && field->isOpen()) {
+			Section1File *section1 = field->scriptsAndTexts();
+			if(section1->isOpen() && !section1->compileScripts(groupID, scriptID, opcodeID, errorStr)) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
 bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory,
 							   bool overwrite, const QMap<ExportType, QString> &toExport,
 							   FieldArchiveIOObserver *observer)

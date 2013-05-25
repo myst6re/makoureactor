@@ -21,7 +21,7 @@
 GrpScript::GrpScript() :
 	character(-1), animation(false), location(false), director(false)
 {
-	addScript(QByteArray(2, '\x0'));
+	addScript(QByteArray(2, char(Opcode::RET)));
 	for(int i=1 ; i<32 ; i++)	addScript();
 }
 
@@ -424,4 +424,17 @@ bool GrpScript::linePosition(FF7Position position[2]) const
 		return _scripts.first()->linePosition(position);
 	}
 	return false;
+}
+
+bool GrpScript::compile(int &scriptID, int &opcodeID, QString &errorStr)
+{
+	scriptID=0;
+	foreach(Script *script, _scripts) {
+		if(!script->compile(opcodeID, errorStr)) {
+			return false;
+		}
+		++scriptID;
+	}
+
+	return true;
 }

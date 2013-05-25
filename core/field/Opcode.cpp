@@ -475,7 +475,7 @@ OpcodeExec::OpcodeExec(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeExec::setParams(const char *params, int size)
+void OpcodeExec::setParams(const char *params, int)
 {
 	groupID = params[0];
 	scriptID = params[1] & 0x1F;
@@ -548,7 +548,7 @@ OpcodeExecChar::OpcodeExecChar(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeExecChar::setParams(const char *params, int size)
+void OpcodeExecChar::setParams(const char *params, int)
 {
 	partyID = params[0];
 	scriptID = params[1] & 0x1F;
@@ -621,7 +621,7 @@ OpcodeRETTO::OpcodeRETTO(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeRETTO::setParams(const char *params, int size)
+void OpcodeRETTO::setParams(const char *params, int)
 {
 	scriptID = params[0] & 0x1F;
 	priority = (params[0] >> 5) & 7;
@@ -645,7 +645,7 @@ OpcodeJOIN::OpcodeJOIN(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeJOIN::setParams(const char *params, int size)
+void OpcodeJOIN::setParams(const char *params, int)
 {
 	speed = params[0];
 }
@@ -667,7 +667,7 @@ OpcodeSPLIT::OpcodeSPLIT(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSPLIT::setParams(const char *params, int size)
+void OpcodeSPLIT::setParams(const char *params, int)
 {
 	memcpy(banks, params, 3);
 
@@ -726,7 +726,7 @@ OpcodePartyE::OpcodePartyE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePartyE::setParams(const char *params, int size)
+void OpcodePartyE::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 
@@ -795,7 +795,7 @@ OpcodeDSKCG::OpcodeDSKCG(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeDSKCG::setParams(const char *params, int size)
+void OpcodeDSKCG::setParams(const char *params, int)
 {
 	diskID = params[0];
 }
@@ -821,7 +821,7 @@ quint8 OpcodeSPECIALARROW::size() const
 	return 2;
 }
 
-void OpcodeSPECIALARROW::setParams(const char *params, int size)
+void OpcodeSPECIALARROW::setParams(const char *params, int)
 {
 	hide = params[0];// Boolean
 }
@@ -847,7 +847,7 @@ quint8 OpcodeSPECIALPNAME::size() const
 	return 2;
 }
 
-void OpcodeSPECIALPNAME::setParams(const char *params, int size)
+void OpcodeSPECIALPNAME::setParams(const char *params, int)
 {
 	unknown = params[0];
 }
@@ -873,7 +873,7 @@ quint8 OpcodeSPECIALGMSPD::size() const
 	return 2;
 }
 
-void OpcodeSPECIALGMSPD::setParams(const char *params, int size)
+void OpcodeSPECIALGMSPD::setParams(const char *params, int)
 {
 	speed = params[0];
 }
@@ -899,7 +899,7 @@ quint8 OpcodeSPECIALSMSPD::size() const
 	return 3;
 }
 
-void OpcodeSPECIALSMSPD::setParams(const char *params, int size)
+void OpcodeSPECIALSMSPD::setParams(const char *params, int)
 {
 	unknown = params[0];
 	speed = params[1];
@@ -958,7 +958,7 @@ quint8 OpcodeSPECIALBTLCK::size() const
 	return 2;
 }
 
-void OpcodeSPECIALBTLCK::setParams(const char *params, int size)
+void OpcodeSPECIALBTLCK::setParams(const char *params, int)
 {
 	lock = params[0]; // Boolean
 }
@@ -984,7 +984,7 @@ quint8 OpcodeSPECIALMVLCK::size() const
 	return 2;
 }
 
-void OpcodeSPECIALMVLCK::setParams(const char *params, int size)
+void OpcodeSPECIALMVLCK::setParams(const char *params, int)
 {
 	lock = params[0]; // Boolean
 }
@@ -1010,7 +1010,7 @@ quint8 OpcodeSPECIALSPCNM::size() const
 	return 3;
 }
 
-void OpcodeSPECIALSPCNM::setParams(const char *params, int size)
+void OpcodeSPECIALSPCNM::setParams(const char *params, int)
 {
 	charID = params[0];
 	textID = params[1];
@@ -1175,7 +1175,7 @@ void OpcodeJump::setBadJump(bool badJump)
 	_badJump = badJump;
 }
 
-qint32 OpcodeJump::maxJump() const
+quint32 OpcodeJump::maxJump() const
 {
 	if(isLongJump()) {
 		return 65535 + jumpPosData();
@@ -1216,7 +1216,7 @@ OpcodeJMPF::OpcodeJMPF(const OpcodeJump &op) :
 {
 }
 
-void OpcodeJMPF::setParams(const char *params, int size)
+void OpcodeJMPF::setParams(const char *params, int)
 {
 	_jump = (quint8)params[0] + jumpPosData();
 }
@@ -1244,7 +1244,7 @@ OpcodeJMPFL::OpcodeJMPFL(const OpcodeJump &op) :
 {
 }
 
-void OpcodeJMPFL::setParams(const char *params, int size)
+void OpcodeJMPFL::setParams(const char *params, int)
 {
 	quint16 jump;
 	memcpy(&jump, params, 2);
@@ -1276,7 +1276,7 @@ OpcodeJMPB::OpcodeJMPB(const OpcodeJump &op) :
 {
 }
 
-void OpcodeJMPB::setParams(const char *params, int size)
+void OpcodeJMPB::setParams(const char *params, int)
 {
 	_jump = -(quint8)params[0];
 }
@@ -1304,7 +1304,7 @@ OpcodeJMPBL::OpcodeJMPBL(const OpcodeJump &op) :
 {
 }
 
-void OpcodeJMPBL::setParams(const char *params, int size)
+void OpcodeJMPBL::setParams(const char *params, int)
 {
 	quint16 jump;
 	memcpy(&jump, params, 2);
@@ -1353,7 +1353,7 @@ OpcodeIFUB::OpcodeIFUB(const OpcodeIf &op) :
 {
 }
 
-void OpcodeIFUB::setParams(const char *params, int size)
+void OpcodeIFUB::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	value1 = (quint8)params[1]; // bank 1
@@ -1394,7 +1394,7 @@ OpcodeIFUBL::OpcodeIFUBL(const OpcodeIf &op) :
 {
 }
 
-void OpcodeIFUBL::setParams(const char *params, int size)
+void OpcodeIFUBL::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	value1 = (quint8)params[1]; // bank 1
@@ -1438,7 +1438,7 @@ OpcodeIFSW::OpcodeIFSW(const OpcodeIf &op) :
 {
 }
 
-void OpcodeIFSW::setParams(const char *params, int size)
+void OpcodeIFSW::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	qint16 v1, v2;
@@ -1483,7 +1483,7 @@ OpcodeIFSWL::OpcodeIFSWL(const OpcodeIf &op) :
 {
 }
 
-void OpcodeIFSWL::setParams(const char *params, int size)
+void OpcodeIFSWL::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	qint16 v1, v2;
@@ -1531,7 +1531,7 @@ OpcodeIFUW::OpcodeIFUW(const OpcodeIf &op) :
 {
 }
 
-void OpcodeIFUW::setParams(const char *params, int size)
+void OpcodeIFUW::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	quint16 v1, v2;
@@ -1576,7 +1576,7 @@ OpcodeIFUWL::OpcodeIFUWL(const OpcodeIf &op) :
 {
 }
 
-void OpcodeIFUWL::setParams(const char *params, int size)
+void OpcodeIFUWL::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	quint16 v1, v2;
@@ -1619,7 +1619,7 @@ OpcodeMINIGAME::OpcodeMINIGAME(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMINIGAME::setParams(const char *params, int size)
+void OpcodeMINIGAME::setParams(const char *params, int)
 {
 	memcpy(&fieldID, params, 2);
 	memcpy(&targetX, params + 2, 2);
@@ -1668,7 +1668,7 @@ OpcodeTUTOR::OpcodeTUTOR(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeTUTOR::setParams(const char *params, int size)
+void OpcodeTUTOR::setParams(const char *params, int)
 {
 	tutoID = (quint8)params[0];
 }
@@ -1699,7 +1699,7 @@ OpcodeBTMD2::OpcodeBTMD2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBTMD2::setParams(const char *params, int size)
+void OpcodeBTMD2::setParams(const char *params, int)
 {
 	memcpy(&battleMode, params, 4);
 }
@@ -1739,7 +1739,7 @@ OpcodeBTRLD::OpcodeBTRLD(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBTRLD::setParams(const char *params, int size)
+void OpcodeBTRLD::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	var = (quint8)params[1]; // bank 2
@@ -1769,7 +1769,7 @@ OpcodeWAIT::OpcodeWAIT(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeWAIT::setParams(const char *params, int size)
+void OpcodeWAIT::setParams(const char *params, int)
 {
 	memcpy(&frameCount, params, 2);
 }
@@ -1790,7 +1790,7 @@ OpcodeNFADE::OpcodeNFADE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeNFADE::setParams(const char *params, int size)
+void OpcodeNFADE::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 	unknown1 = params[2];
@@ -1840,7 +1840,7 @@ OpcodeBLINK::OpcodeBLINK(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBLINK::setParams(const char *params, int size)
+void OpcodeBLINK::setParams(const char *params, int)
 {
 	closed = params[0]; // boolean
 }
@@ -1861,7 +1861,7 @@ OpcodeBGMOVIE::OpcodeBGMOVIE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBGMOVIE::setParams(const char *params, int size)
+void OpcodeBGMOVIE::setParams(const char *params, int)
 {
 	disabled = params[0]; // boolean
 }
@@ -2102,7 +2102,7 @@ OpcodePMOVA::OpcodePMOVA(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePMOVA::setParams(const char *params, int size)
+void OpcodePMOVA::setParams(const char *params, int)
 {
 	partyID = params[0];
 }
@@ -2123,7 +2123,7 @@ OpcodeSLIP::OpcodeSLIP(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSLIP::setParams(const char *params, int size)
+void OpcodeSLIP::setParams(const char *params, int)
 {
 	off = params[0]; // Boolean
 }
@@ -2144,7 +2144,7 @@ OpcodeBGPDH::OpcodeBGPDH(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBGPDH::setParams(const char *params, int size)
+void OpcodeBGPDH::setParams(const char *params, int)
 {
 	banks = params[0];
 	layerID = params[1];
@@ -2177,7 +2177,7 @@ OpcodeBGSCR::OpcodeBGSCR(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBGSCR::setParams(const char *params, int size)
+void OpcodeBGSCR::setParams(const char *params, int)
 {
 	banks = params[0];
 	layerID = params[1];
@@ -2215,7 +2215,7 @@ OpcodeWCLS::OpcodeWCLS(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeWCLS::setParams(const char *params, int size)
+void OpcodeWCLS::setParams(const char *params, int)
 {
 	windowID = params[0];
 }
@@ -2246,7 +2246,7 @@ OpcodeWindow::OpcodeWindow(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeWindow::setParams(const char *params, int size)
+void OpcodeWindow::setParams(const char *params, int)
 {
 	windowID = params[0];
 	memcpy(&targetX, params + 1, 2);
@@ -2322,7 +2322,7 @@ OpcodeIfKey::OpcodeIfKey(const OpcodeJump &op) :
 {
 }
 
-void OpcodeIfKey::setParams(const char *params, int size)
+void OpcodeIfKey::setParams(const char *params, int)
 {
 	memcpy(&keys, params, 2);
 	_jump = (quint8)params[2] + jumpPosData();
@@ -2408,7 +2408,7 @@ OpcodeUC::OpcodeUC(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeUC::setParams(const char *params, int size)
+void OpcodeUC::setParams(const char *params, int)
 {
 	disabled = params[0];
 }
@@ -2429,7 +2429,7 @@ OpcodePDIRA::OpcodePDIRA(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePDIRA::setParams(const char *params, int size)
+void OpcodePDIRA::setParams(const char *params, int)
 {
 	partyID = params[0];
 }
@@ -2450,7 +2450,7 @@ OpcodePTURA::OpcodePTURA(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePTURA::setParams(const char *params, int size)
+void OpcodePTURA::setParams(const char *params, int)
 {
 	partyID = params[0];
 	speed = params[1];
@@ -2478,7 +2478,7 @@ OpcodeWSPCL::OpcodeWSPCL(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeWSPCL::setParams(const char *params, int size)
+void OpcodeWSPCL::setParams(const char *params, int)
 {
 	windowID = params[0];
 	displayType = params[1];
@@ -2528,7 +2528,7 @@ OpcodeWNUMB::OpcodeWNUMB(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeWNUMB::setParams(const char *params, int size)
+void OpcodeWNUMB::setParams(const char *params, int)
 {
 	banks = params[0];
 	windowID = params[1];
@@ -2576,7 +2576,7 @@ OpcodeSTTIM::OpcodeSTTIM(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSTTIM::setParams(const char *params, int size)
+void OpcodeSTTIM::setParams(const char *params, int)
 {
 	banks[0] = params[0];
 	banks[1] = params[1];
@@ -2617,7 +2617,7 @@ OpcodeGOLD::OpcodeGOLD(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeGOLD::setParams(const char *params, int size)
+void OpcodeGOLD::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&value, params + 1, 4);// bank 1 and 2
@@ -2675,7 +2675,7 @@ OpcodeCHGLD::OpcodeCHGLD(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCHGLD::setParams(const char *params, int size)
+void OpcodeCHGLD::setParams(const char *params, int)
 {
 	banks = params[0];
 	var1 = params[1]; // bank 1
@@ -2746,7 +2746,7 @@ OpcodeMESSAGE::OpcodeMESSAGE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMESSAGE::setParams(const char *params, int size)
+void OpcodeMESSAGE::setParams(const char *params, int)
 {
 	windowID = params[0];
 	textID = params[1];
@@ -2791,7 +2791,7 @@ OpcodeMPARA::OpcodeMPARA(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMPARA::setParams(const char *params, int size)
+void OpcodeMPARA::setParams(const char *params, int)
 {
 	banks = params[0];
 	windowID = params[1];
@@ -2837,7 +2837,7 @@ OpcodeMPRA2::OpcodeMPRA2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMPRA2::setParams(const char *params, int size)
+void OpcodeMPRA2::setParams(const char *params, int)
 {
 	banks = params[0];
 	windowID = params[1];
@@ -2883,7 +2883,7 @@ OpcodeMPNAM::OpcodeMPNAM(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMPNAM::setParams(const char *params, int size)
+void OpcodeMPNAM::setParams(const char *params, int)
 {
 	textID = params[0];
 }
@@ -2915,7 +2915,7 @@ OpcodeHPMP::OpcodeHPMP(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeHPMP::setParams(const char *params, int size)
+void OpcodeHPMP::setParams(const char *params, int)
 {
 	banks = params[0];
 	partyID = params[1];
@@ -2975,7 +2975,7 @@ OpcodeASK::OpcodeASK(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeASK::setParams(const char *params, int size)
+void OpcodeASK::setParams(const char *params, int)
 {
 	banks = params[0];
 	windowID = params[1];
@@ -3037,7 +3037,7 @@ OpcodeMENU::OpcodeMENU(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMENU::setParams(const char *params, int size)
+void OpcodeMENU::setParams(const char *params, int)
 {
 	banks = params[0];
 	menuID = params[1];
@@ -3097,7 +3097,7 @@ OpcodeMENU2::OpcodeMENU2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMENU2::setParams(const char *params, int size)
+void OpcodeMENU2::setParams(const char *params, int)
 {
 	disabled = params[0];
 }
@@ -3118,7 +3118,7 @@ OpcodeBTLTB::OpcodeBTLTB(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBTLTB::setParams(const char *params, int size)
+void OpcodeBTLTB::setParams(const char *params, int)
 {
 	battleTableID = params[0];
 }
@@ -3193,7 +3193,7 @@ OpcodeWMOVE::OpcodeWMOVE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeWMOVE::setParams(const char *params, int size)
+void OpcodeWMOVE::setParams(const char *params, int)
 {
 	windowID = params[0];
 	memcpy(&relativeX, params + 1, 2);
@@ -3231,7 +3231,7 @@ OpcodeWMODE::OpcodeWMODE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeWMODE::setParams(const char *params, int size)
+void OpcodeWMODE::setParams(const char *params, int)
 {
 	windowID = params[0];
 	mode = params[1];
@@ -3278,7 +3278,7 @@ OpcodeWREST::OpcodeWREST(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeWREST::setParams(const char *params, int size)
+void OpcodeWREST::setParams(const char *params, int)
 {
 	windowID = params[0];
 }
@@ -3322,7 +3322,7 @@ OpcodeWCLSE::OpcodeWCLSE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeWCLSE::setParams(const char *params, int size)
+void OpcodeWCLSE::setParams(const char *params, int)
 {
 	windowID = params[0];
 }
@@ -3353,7 +3353,7 @@ OpcodeWROW::OpcodeWROW(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeWROW::setParams(const char *params, int size)
+void OpcodeWROW::setParams(const char *params, int)
 {
 	windowID = params[0];
 	rowCount = params[1];
@@ -3388,7 +3388,7 @@ OpcodeWCOL::OpcodeWCOL(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeWCOL::setParams(const char *params, int size)
+void OpcodeWCOL::setParams(const char *params, int)
 {
 	banks[0] = params[0];
 	banks[1] = params[1];
@@ -3464,7 +3464,7 @@ OpcodeItem::OpcodeItem(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeItem::setParams(const char *params, int size)
+void OpcodeItem::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&itemID, params + 1, 2); // bank 1
@@ -3544,7 +3544,7 @@ OpcodeSMTRA::OpcodeSMTRA(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSMTRA::setParams(const char *params, int size)
+void OpcodeSMTRA::setParams(const char *params, int)
 {
 	banks[0] = params[0];
 	banks[1] = params[1];
@@ -3585,7 +3585,7 @@ OpcodeDMTRA::OpcodeDMTRA(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeDMTRA::setParams(const char *params, int size)
+void OpcodeDMTRA::setParams(const char *params, int)
 {
 	banks[0] = params[0];
 	banks[1] = params[1];
@@ -3629,7 +3629,7 @@ OpcodeCMTRA::OpcodeCMTRA(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCMTRA::setParams(const char *params, int size)
+void OpcodeCMTRA::setParams(const char *params, int)
 {
 	banks[0] = params[0];
 	banks[1] = params[1];
@@ -3679,7 +3679,7 @@ OpcodeSHAKE::OpcodeSHAKE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSHAKE::setParams(const char *params, int size)
+void OpcodeSHAKE::setParams(const char *params, int)
 {
 	unknown1 = params[0];
 	unknown2 = params[1];
@@ -3724,7 +3724,7 @@ OpcodeMAPJUMP::OpcodeMAPJUMP(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMAPJUMP::setParams(const char *params, int size)
+void OpcodeMAPJUMP::setParams(const char *params, int)
 {
 	memcpy(&fieldID, params, 2);
 	memcpy(&targetX, params + 2, 2);
@@ -3758,7 +3758,7 @@ OpcodeSCRLO::OpcodeSCRLO(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSCRLO::setParams(const char *params, int size)
+void OpcodeSCRLO::setParams(const char *params, int)
 {
 	unknown = params[0];
 }
@@ -3779,7 +3779,7 @@ OpcodeSCRLC::OpcodeSCRLC(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSCRLC::setParams(const char *params, int size)
+void OpcodeSCRLC::setParams(const char *params, int)
 {
 	memcpy(&unknown, params, 4);
 }
@@ -3800,7 +3800,7 @@ OpcodeSCRLA::OpcodeSCRLA(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSCRLA::setParams(const char *params, int size)
+void OpcodeSCRLA::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&speed, params + 1, 2); // bank 2
@@ -3836,7 +3836,7 @@ OpcodeSCR2D::OpcodeSCR2D(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSCR2D::setParams(const char *params, int size)
+void OpcodeSCR2D::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&targetX, params + 1, 2); // bank 1
@@ -3880,7 +3880,7 @@ OpcodeSCR2DC::OpcodeSCR2DC(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSCR2DC::setParams(const char *params, int size)
+void OpcodeSCR2DC::setParams(const char *params, int)
 {
 	banks[0] = params[0];
 	banks[1] = params[1];
@@ -3930,7 +3930,7 @@ OpcodeSCR2DL::OpcodeSCR2DL(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSCR2DL::setParams(const char *params, int size)
+void OpcodeSCR2DL::setParams(const char *params, int)
 {
 	banks[0] = params[0];
 	banks[1] = params[1];
@@ -3971,7 +3971,7 @@ OpcodeMPDSP::OpcodeMPDSP(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMPDSP::setParams(const char *params, int size)
+void OpcodeMPDSP::setParams(const char *params, int)
 {
 	unknown = params[0];
 }
@@ -3992,7 +3992,7 @@ OpcodeVWOFT::OpcodeVWOFT(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeVWOFT::setParams(const char *params, int size)
+void OpcodeVWOFT::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&unknown1, params + 1, 2); // bank 1
@@ -4030,7 +4030,7 @@ OpcodeFADE::OpcodeFADE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeFADE::setParams(const char *params, int size)
+void OpcodeFADE::setParams(const char *params, int)
 {
 	banks[0] = params[0];
 	banks[1] = params[1];
@@ -4089,7 +4089,7 @@ OpcodeIDLCK::OpcodeIDLCK(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeIDLCK::setParams(const char *params, int size)
+void OpcodeIDLCK::setParams(const char *params, int)
 {
 	memcpy(&triangleID, params, 2);
 	locked = params[2]; // boolean
@@ -4114,7 +4114,7 @@ OpcodeLSTMP::OpcodeLSTMP(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeLSTMP::setParams(const char *params, int size)
+void OpcodeLSTMP::setParams(const char *params, int)
 {
 	banks = params[0];
 	var = params[1];
@@ -4144,7 +4144,7 @@ OpcodeSCRLP::OpcodeSCRLP(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSCRLP::setParams(const char *params, int size)
+void OpcodeSCRLP::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&speed, params + 1, 2); // bank 2
@@ -4180,7 +4180,7 @@ OpcodeBATTLE::OpcodeBATTLE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBATTLE::setParams(const char *params, int size)
+void OpcodeBATTLE::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&battleID, params + 1, 2); // bank 2
@@ -4210,7 +4210,7 @@ OpcodeBTLON::OpcodeBTLON(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBTLON::setParams(const char *params, int size)
+void OpcodeBTLON::setParams(const char *params, int)
 {
 	disabled = params[0];
 }
@@ -4231,7 +4231,7 @@ OpcodeBTLMD::OpcodeBTLMD(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBTLMD::setParams(const char *params, int size)
+void OpcodeBTLMD::setParams(const char *params, int)
 {
 	memcpy(&battleMode, params, 2);
 }
@@ -4270,7 +4270,7 @@ OpcodePGTDR::OpcodePGTDR(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePGTDR::setParams(const char *params, int size)
+void OpcodePGTDR::setParams(const char *params, int)
 {
 	banks = params[0];
 	partyID = params[1];
@@ -4303,7 +4303,7 @@ OpcodeGETPC::OpcodeGETPC(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeGETPC::setParams(const char *params, int size)
+void OpcodeGETPC::setParams(const char *params, int)
 {
 	banks = params[0];
 	partyID = params[1];
@@ -4336,7 +4336,7 @@ OpcodePXYZI::OpcodePXYZI(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePXYZI::setParams(const char *params, int size)
+void OpcodePXYZI::setParams(const char *params, int)
 {
 	banks[0] = params[0];
 	banks[1] = params[1];
@@ -4394,7 +4394,7 @@ OpcodeOperation::OpcodeOperation(const OpcodeBinaryOperation &op) :
 {
 }
 
-void OpcodeOperation::setParams(const char *params, int size)
+void OpcodeOperation::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	var = (quint8)params[1]; // bank 1
@@ -4427,7 +4427,7 @@ OpcodeOperation2::OpcodeOperation2(const OpcodeBinaryOperation &op) :
 {
 }
 
-void OpcodeOperation2::setParams(const char *params, int size)
+void OpcodeOperation2::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	var = (quint8)params[1];
@@ -4456,7 +4456,7 @@ OpcodeUnaryOperation::OpcodeUnaryOperation(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeUnaryOperation::setParams(const char *params, int size)
+void OpcodeUnaryOperation::setParams(const char *params, int)
 {
 	banks = params[0];
 	var = params[1]; // bank 2
@@ -4613,7 +4613,7 @@ OpcodeTLKON::OpcodeTLKON(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeTLKON::setParams(const char *params, int size)
+void OpcodeTLKON::setParams(const char *params, int)
 {
 	disabled = params[0]; // boolean
 }
@@ -4634,7 +4634,7 @@ OpcodeRDMSD::OpcodeRDMSD(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeRDMSD::setParams(const char *params, int size)
+void OpcodeRDMSD::setParams(const char *params, int)
 {
 	banks = params[0];
 	value = params[1]; // bank 2
@@ -4692,7 +4692,7 @@ OpcodeBitOperation::OpcodeBitOperation(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBitOperation::setParams(const char *params, int size)
+void OpcodeBitOperation::setParams(const char *params, int)
 {
 	banks = params[0];
 	var = params[1]; // bank 1
@@ -5157,7 +5157,7 @@ Opcode2BYTE::Opcode2BYTE(const char *params, int size)
 	setParams(params, size);
 }
 
-void Opcode2BYTE::setParams(const char *params, int size)
+void Opcode2BYTE::setParams(const char *params, int)
 {
 	banks[0] = params[0];
 	banks[1] = params[1];
@@ -5198,7 +5198,7 @@ OpcodeSETX::OpcodeSETX(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSETX::setParams(const char *params, int size)
+void OpcodeSETX::setParams(const char *params, int)
 {
 	memcpy(&unknown, params, 6);
 }
@@ -5219,7 +5219,7 @@ OpcodeGETX::OpcodeGETX(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeGETX::setParams(const char *params, int size)
+void OpcodeGETX::setParams(const char *params, int)
 {
 	memcpy(&unknown, params, 6);
 }
@@ -5240,7 +5240,7 @@ OpcodeSEARCHX::OpcodeSEARCHX(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSEARCHX::setParams(const char *params, int size)
+void OpcodeSEARCHX::setParams(const char *params, int)
 {
 	memcpy(banks, params, 3);
 	searchStart = (quint8)params[3];
@@ -5289,7 +5289,7 @@ OpcodePC::OpcodePC(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePC::setParams(const char *params, int size)
+void OpcodePC::setParams(const char *params, int)
 {
 	charID = params[0];
 }
@@ -5310,7 +5310,7 @@ OpcodeCHAR::OpcodeCHAR(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCHAR::setParams(const char *params, int size)
+void OpcodeCHAR::setParams(const char *params, int)
 {
 	objectID = params[0];
 }
@@ -5331,7 +5331,7 @@ OpcodeDFANM::OpcodeDFANM(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeDFANM::setParams(const char *params, int size)
+void OpcodeDFANM::setParams(const char *params, int)
 {
 	animID = params[0];
 	speed = params[1];
@@ -5356,7 +5356,7 @@ OpcodeANIME1::OpcodeANIME1(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeANIME1::setParams(const char *params, int size)
+void OpcodeANIME1::setParams(const char *params, int)
 {
 	animID = params[0];
 	speed = params[1];
@@ -5381,7 +5381,7 @@ OpcodeVISI::OpcodeVISI(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeVISI::setParams(const char *params, int size)
+void OpcodeVISI::setParams(const char *params, int)
 {
 	show = params[0];
 }
@@ -5403,7 +5403,7 @@ OpcodeXYZI::OpcodeXYZI(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeXYZI::setParams(const char *params, int size)
+void OpcodeXYZI::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 	memcpy(&targetX, params + 2, 2); // bank 1
@@ -5460,7 +5460,7 @@ OpcodeXYI::OpcodeXYI(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeXYI::setParams(const char *params, int size)
+void OpcodeXYI::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 	memcpy(&targetX, params + 2, 2); // bank 1
@@ -5511,7 +5511,7 @@ OpcodeXYZ::OpcodeXYZ(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeXYZ::setParams(const char *params, int size)
+void OpcodeXYZ::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 	memcpy(&targetX, params + 2, 2); // bank 1
@@ -5562,7 +5562,7 @@ OpcodeMOVE::OpcodeMOVE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMOVE::setParams(const char *params, int size)
+void OpcodeMOVE::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&targetX, params + 1, 2); // bank 1
@@ -5597,7 +5597,7 @@ OpcodeCMOVE::OpcodeCMOVE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCMOVE::setParams(const char *params, int size)
+void OpcodeCMOVE::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&targetX, params + 1, 2); // bank 1
@@ -5632,7 +5632,7 @@ OpcodeMOVA::OpcodeMOVA(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMOVA::setParams(const char *params, int size)
+void OpcodeMOVA::setParams(const char *params, int)
 {
 	groupID = params[0];
 }
@@ -5654,7 +5654,7 @@ OpcodeTURA::OpcodeTURA(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeTURA::setParams(const char *params, int size)
+void OpcodeTURA::setParams(const char *params, int)
 {
 	groupID = params[0];
 	directionRotation = params[1];
@@ -5691,7 +5691,7 @@ OpcodeFMOVE::OpcodeFMOVE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeFMOVE::setParams(const char *params, int size)
+void OpcodeFMOVE::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&targetX, params + 1, 2);
@@ -5726,7 +5726,7 @@ OpcodeANIME2::OpcodeANIME2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeANIME2::setParams(const char *params, int size)
+void OpcodeANIME2::setParams(const char *params, int)
 {
 	animID = params[0];
 	speed = params[1];
@@ -5751,7 +5751,7 @@ OpcodeANIMX1::OpcodeANIMX1(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeANIMX1::setParams(const char *params, int size)
+void OpcodeANIMX1::setParams(const char *params, int)
 {
 	animID = params[0];
 	speed = params[1];
@@ -5776,7 +5776,7 @@ OpcodeCANIM1::OpcodeCANIM1(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCANIM1::setParams(const char *params, int size)
+void OpcodeCANIM1::setParams(const char *params, int)
 {
 	animID = params[0];
 	firstFrame = params[1];
@@ -5807,7 +5807,7 @@ OpcodeCANMX1::OpcodeCANMX1(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCANMX1::setParams(const char *params, int size)
+void OpcodeCANMX1::setParams(const char *params, int)
 {
 	animID = params[0];
 	firstFrame = params[1];
@@ -5838,7 +5838,7 @@ OpcodeMSPED::OpcodeMSPED(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMSPED::setParams(const char *params, int size)
+void OpcodeMSPED::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&speed, params + 1, 2); // bank 2
@@ -5868,7 +5868,7 @@ OpcodeDIR::OpcodeDIR(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeDIR::setParams(const char *params, int size)
+void OpcodeDIR::setParams(const char *params, int)
 {
 	banks = params[0];
 	direction = params[1]; // bank 2
@@ -5898,7 +5898,7 @@ OpcodeTURNGEN::OpcodeTURNGEN(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeTURNGEN::setParams(const char *params, int size)
+void OpcodeTURNGEN::setParams(const char *params, int)
 {
 	banks = params[0];
 	direction = params[1]; // bank 2
@@ -5937,7 +5937,7 @@ OpcodeTURN::OpcodeTURN(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeTURN::setParams(const char *params, int size)
+void OpcodeTURN::setParams(const char *params, int)
 {
 	banks = params[0];
 	direction = params[1]; // bank 2
@@ -5976,7 +5976,7 @@ OpcodeDIRA::OpcodeDIRA(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeDIRA::setParams(const char *params, int size)
+void OpcodeDIRA::setParams(const char *params, int)
 {
 	groupID = params[0];
 }
@@ -5998,7 +5998,7 @@ OpcodeGETDIR::OpcodeGETDIR(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeGETDIR::setParams(const char *params, int size)
+void OpcodeGETDIR::setParams(const char *params, int)
 {
 	banks = params[0];
 	groupID = params[1];
@@ -6031,7 +6031,7 @@ OpcodeGETAXY::OpcodeGETAXY(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeGETAXY::setParams(const char *params, int size)
+void OpcodeGETAXY::setParams(const char *params, int)
 {
 	banks = params[0];
 	groupID = params[1];
@@ -6069,7 +6069,7 @@ OpcodeGETAI::OpcodeGETAI(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeGETAI::setParams(const char *params, int size)
+void OpcodeGETAI::setParams(const char *params, int)
 {
 	banks = params[0];
 	groupID = params[1];
@@ -6102,7 +6102,7 @@ OpcodeANIMX2::OpcodeANIMX2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeANIMX2::setParams(const char *params, int size)
+void OpcodeANIMX2::setParams(const char *params, int)
 {
 	animID = params[0];
 	speed = params[1];
@@ -6127,7 +6127,7 @@ OpcodeCANIM2::OpcodeCANIM2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCANIM2::setParams(const char *params, int size)
+void OpcodeCANIM2::setParams(const char *params, int)
 {
 	animID = params[0];
 	firstFrame = params[1];
@@ -6158,7 +6158,7 @@ OpcodeCANMX2::OpcodeCANMX2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCANMX2::setParams(const char *params, int size)
+void OpcodeCANMX2::setParams(const char *params, int)
 {
 	animID = params[0];
 	firstFrame = params[1];
@@ -6189,7 +6189,7 @@ OpcodeASPED::OpcodeASPED(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeASPED::setParams(const char *params, int size)
+void OpcodeASPED::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&speed, params + 1, 2); // bank 2
@@ -6219,7 +6219,7 @@ OpcodeCC::OpcodeCC(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCC::setParams(const char *params, int size)
+void OpcodeCC::setParams(const char *params, int)
 {
 	groupID = params[0];
 }
@@ -6241,7 +6241,7 @@ OpcodeJUMP::OpcodeJUMP(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeJUMP::setParams(const char *params, int size)
+void OpcodeJUMP::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 	memcpy(&targetX, params + 2, 2);
@@ -6286,7 +6286,7 @@ OpcodeAXYZI::OpcodeAXYZI(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeAXYZI::setParams(const char *params, int size)
+void OpcodeAXYZI::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 	groupID = params[2];
@@ -6334,7 +6334,7 @@ OpcodeLADER::OpcodeLADER(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeLADER::setParams(const char *params, int size)
+void OpcodeLADER::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 	memcpy(&targetX, params + 2, 2); // bank 1
@@ -6391,7 +6391,7 @@ OpcodeOFST::OpcodeOFST(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeOFST::setParams(const char *params, int size)
+void OpcodeOFST::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 	moveType = params[2];
@@ -6448,7 +6448,7 @@ OpcodeTALKR::OpcodeTALKR(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeTALKR::setParams(const char *params, int size)
+void OpcodeTALKR::setParams(const char *params, int)
 {
 	banks = params[0];
 	distance = params[1]; // bank 2
@@ -6478,7 +6478,7 @@ OpcodeSLIDR::OpcodeSLIDR(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSLIDR::setParams(const char *params, int size)
+void OpcodeSLIDR::setParams(const char *params, int)
 {
 	banks = params[0];
 	distance = params[1]; // bank 2
@@ -6508,7 +6508,7 @@ OpcodeSOLID::OpcodeSOLID(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSOLID::setParams(const char *params, int size)
+void OpcodeSOLID::setParams(const char *params, int)
 {
 	disabled = params[0];
 }
@@ -6529,7 +6529,7 @@ OpcodePRTYP::OpcodePRTYP(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePRTYP::setParams(const char *params, int size)
+void OpcodePRTYP::setParams(const char *params, int)
 {
 	charID = params[0];
 }
@@ -6550,7 +6550,7 @@ OpcodePRTYM::OpcodePRTYM(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePRTYM::setParams(const char *params, int size)
+void OpcodePRTYM::setParams(const char *params, int)
 {
 	charID = params[0];
 }
@@ -6571,7 +6571,7 @@ OpcodePRTYE::OpcodePRTYE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePRTYE::setParams(const char *params, int size)
+void OpcodePRTYE::setParams(const char *params, int)
 {
 	memcpy(charID, params, 3);
 }
@@ -6595,7 +6595,7 @@ OpcodeIfQ::OpcodeIfQ(const char *params, int size) :
 	setParams(params, size);
 }
 
-void OpcodeIfQ::setParams(const char *params, int size)
+void OpcodeIfQ::setParams(const char *params, int)
 {
 	charID = params[0];
 	_jump = (quint8)params[1] + jumpPosData();
@@ -6641,7 +6641,7 @@ OpcodeMMBUD::OpcodeMMBUD(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMMBUD::setParams(const char *params, int size)
+void OpcodeMMBUD::setParams(const char *params, int)
 {
 	exists = params[0]; // boolean
 	charID = params[1];
@@ -6666,7 +6666,7 @@ OpcodeMMBLK::OpcodeMMBLK(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMMBLK::setParams(const char *params, int size)
+void OpcodeMMBLK::setParams(const char *params, int)
 {
 	charID = params[0];
 }
@@ -6687,7 +6687,7 @@ OpcodeMMBUK::OpcodeMMBUK(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMMBUK::setParams(const char *params, int size)
+void OpcodeMMBUK::setParams(const char *params, int)
 {
 	charID = params[0];
 }
@@ -6708,7 +6708,7 @@ OpcodeLINE::OpcodeLINE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeLINE::setParams(const char *params, int size)
+void OpcodeLINE::setParams(const char *params, int)
 {
 	memcpy(&targetX1, params, 2);
 	memcpy(&targetY1, params + 2, 2);
@@ -6761,7 +6761,7 @@ OpcodeLINON::OpcodeLINON(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeLINON::setParams(const char *params, int size)
+void OpcodeLINON::setParams(const char *params, int)
 {
 	enabled = params[0];
 }
@@ -6782,7 +6782,7 @@ OpcodeMPJPO::OpcodeMPJPO(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMPJPO::setParams(const char *params, int size)
+void OpcodeMPJPO::setParams(const char *params, int)
 {
 	prevent = params[0];
 }
@@ -6803,7 +6803,7 @@ OpcodeSLINE::OpcodeSLINE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSLINE::setParams(const char *params, int size)
+void OpcodeSLINE::setParams(const char *params, int)
 {
 	memcpy(banks, params, 3);
 	memcpy(&targetX1, params + 3, 2); // bank 1
@@ -6858,7 +6858,7 @@ OpcodeSIN::OpcodeSIN(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSIN::setParams(const char *params, int size)
+void OpcodeSIN::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 	memcpy(&value1, params + 2, 2); // bank 1
@@ -6903,7 +6903,7 @@ OpcodeCOS::OpcodeCOS(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCOS::setParams(const char *params, int size)
+void OpcodeCOS::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 	memcpy(&value1, params + 2, 2); // bank 1
@@ -6948,7 +6948,7 @@ OpcodeTLKR2::OpcodeTLKR2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeTLKR2::setParams(const char *params, int size)
+void OpcodeTLKR2::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&distance, params + 1, 2); // bank 2
@@ -6978,7 +6978,7 @@ OpcodeSLDR2::OpcodeSLDR2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSLDR2::setParams(const char *params, int size)
+void OpcodeSLDR2::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&distance, params + 1, 2); // bank 2
@@ -7008,7 +7008,7 @@ OpcodePMJMP::OpcodePMJMP(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePMJMP::setParams(const char *params, int size)
+void OpcodePMJMP::setParams(const char *params, int)
 {
 	memcpy(&fieldID, params, 2);
 }
@@ -7038,7 +7038,7 @@ OpcodeAKAO2::OpcodeAKAO2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeAKAO2::setParams(const char *params, int size)
+void OpcodeAKAO2::setParams(const char *params, int)
 {
 	memcpy(banks, params, 3);
 	opcode = (quint8)params[3];
@@ -7091,7 +7091,7 @@ OpcodeFCFIX::OpcodeFCFIX(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeFCFIX::setParams(const char *params, int size)
+void OpcodeFCFIX::setParams(const char *params, int)
 {
 	disabled = params[0];
 }
@@ -7112,7 +7112,7 @@ OpcodeCCANM::OpcodeCCANM(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCCANM::setParams(const char *params, int size)
+void OpcodeCCANM::setParams(const char *params, int)
 {
 	animID = params[0];
 	speed = params[1];
@@ -7160,7 +7160,7 @@ OpcodeMPPAL::OpcodeMPPAL(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMPPAL::setParams(const char *params, int size)
+void OpcodeMPPAL::setParams(const char *params, int)
 {
 	memcpy(banks, params, 3);
 	posSrc = (quint8)params[3];
@@ -7216,7 +7216,7 @@ OpcodeBGON::OpcodeBGON(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBGON::setParams(const char *params, int size)
+void OpcodeBGON::setParams(const char *params, int)
 {
 	banks = params[0];
 	paramID = params[1]; // bank 1
@@ -7251,7 +7251,7 @@ OpcodeBGOFF::OpcodeBGOFF(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBGOFF::setParams(const char *params, int size)
+void OpcodeBGOFF::setParams(const char *params, int)
 {
 	banks = params[0];
 	paramID = params[1]; // bank 1
@@ -7286,7 +7286,7 @@ OpcodeBGROL::OpcodeBGROL(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBGROL::setParams(const char *params, int size)
+void OpcodeBGROL::setParams(const char *params, int)
 {
 	banks = params[0];
 	paramID = params[1]; // bank 2
@@ -7316,7 +7316,7 @@ OpcodeBGROL2::OpcodeBGROL2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBGROL2::setParams(const char *params, int size)
+void OpcodeBGROL2::setParams(const char *params, int)
 {
 	banks = params[0];
 	paramID = params[1]; // bank 2
@@ -7346,7 +7346,7 @@ OpcodeBGCLR::OpcodeBGCLR(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBGCLR::setParams(const char *params, int size)
+void OpcodeBGCLR::setParams(const char *params, int)
 {
 	banks = params[0];
 	paramID = params[1]; // bank 2
@@ -7376,7 +7376,7 @@ OpcodeSTPAL::OpcodeSTPAL(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSTPAL::setParams(const char *params, int size)
+void OpcodeSTPAL::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	palID = (quint8)params[1]; // bank 1
@@ -7414,7 +7414,7 @@ OpcodeLDPAL::OpcodeLDPAL(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeLDPAL::setParams(const char *params, int size)
+void OpcodeLDPAL::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	position = (quint8)params[1]; // bank 1
@@ -7452,7 +7452,7 @@ OpcodeCPPAL::OpcodeCPPAL(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCPPAL::setParams(const char *params, int size)
+void OpcodeCPPAL::setParams(const char *params, int)
 {
 	banks = (quint8)params[0];
 	posSrc = (quint8)params[1]; // bank 1
@@ -7490,7 +7490,7 @@ OpcodeRTPAL::OpcodeRTPAL(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeRTPAL::setParams(const char *params, int size)
+void OpcodeRTPAL::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
 	posSrc = (quint8)params[2]; // bank 1
@@ -7533,7 +7533,7 @@ OpcodeADPAL::OpcodeADPAL(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeADPAL::setParams(const char *params, int size)
+void OpcodeADPAL::setParams(const char *params, int)
 {
 	memcpy(&banks, params, 3);
 	posSrc = (quint8)params[3]; // bank 1
@@ -7586,7 +7586,7 @@ OpcodeMPPAL2::OpcodeMPPAL2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMPPAL2::setParams(const char *params, int size)
+void OpcodeMPPAL2::setParams(const char *params, int)
 {
 	memcpy(&banks, params, 3);
 	posSrc = (quint8)params[3]; // bank 1
@@ -7639,7 +7639,7 @@ OpcodeSTPLS::OpcodeSTPLS(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSTPLS::setParams(const char *params, int size)
+void OpcodeSTPLS::setParams(const char *params, int)
 {
 	palID = (quint8)params[0];
 	posSrc = (quint8)params[1];
@@ -7670,7 +7670,7 @@ OpcodeLDPLS::OpcodeLDPLS(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeLDPLS::setParams(const char *params, int size)
+void OpcodeLDPLS::setParams(const char *params, int)
 {
 	posSrc = (quint8)params[0];
 	palID = (quint8)params[1];
@@ -7701,7 +7701,7 @@ OpcodeCPPAL2::OpcodeCPPAL2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCPPAL2::setParams(const char *params, int size)
+void OpcodeCPPAL2::setParams(const char *params, int)
 {
 	memcpy(unknown, params, 7);
 }
@@ -7722,7 +7722,7 @@ OpcodeRTPAL2::OpcodeRTPAL2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeRTPAL2::setParams(const char *params, int size)
+void OpcodeRTPAL2::setParams(const char *params, int)
 {
 	memcpy(unknown, params, 7);
 }
@@ -7743,7 +7743,7 @@ OpcodeADPAL2::OpcodeADPAL2(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeADPAL2::setParams(const char *params, int size)
+void OpcodeADPAL2::setParams(const char *params, int)
 {
 	memcpy(unknown, params, 10);
 }
@@ -7764,7 +7764,7 @@ OpcodeMUSIC::OpcodeMUSIC(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMUSIC::setParams(const char *params, int size)
+void OpcodeMUSIC::setParams(const char *params, int)
 {
 	musicID = params[0];
 }
@@ -7785,7 +7785,7 @@ OpcodeSOUND::OpcodeSOUND(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeSOUND::setParams(const char *params, int size)
+void OpcodeSOUND::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&soundID, params + 1, 2); // bank 1
@@ -7820,7 +7820,7 @@ OpcodeAKAO::OpcodeAKAO(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeAKAO::setParams(const char *params, int size)
+void OpcodeAKAO::setParams(const char *params, int)
 {
 	memcpy(banks, params, 3);
 	opcode = (quint8)params[3];
@@ -7873,7 +7873,7 @@ OpcodeMUSVT::OpcodeMUSVT(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMUSVT::setParams(const char *params, int size)
+void OpcodeMUSVT::setParams(const char *params, int)
 {
 	musicID = params[0];
 }
@@ -7894,7 +7894,7 @@ OpcodeMUSVM::OpcodeMUSVM(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMUSVM::setParams(const char *params, int size)
+void OpcodeMUSVM::setParams(const char *params, int)
 {
 	musicID = params[0];
 }
@@ -7915,7 +7915,7 @@ OpcodeMULCK::OpcodeMULCK(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMULCK::setParams(const char *params, int size)
+void OpcodeMULCK::setParams(const char *params, int)
 {
 	locked = params[0];
 }
@@ -7936,7 +7936,7 @@ OpcodeBMUSC::OpcodeBMUSC(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeBMUSC::setParams(const char *params, int size)
+void OpcodeBMUSC::setParams(const char *params, int)
 {
 	musicID = params[0];
 }
@@ -7957,7 +7957,7 @@ OpcodeCHMPH::OpcodeCHMPH(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCHMPH::setParams(const char *params, int size)
+void OpcodeCHMPH::setParams(const char *params, int)
 {
 	banks = params[0];
 	var1 = params[1];
@@ -7992,7 +7992,7 @@ OpcodePMVIE::OpcodePMVIE(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodePMVIE::setParams(const char *params, int size)
+void OpcodePMVIE::setParams(const char *params, int)
 {
 	movieID = params[0];
 }
@@ -8022,7 +8022,7 @@ OpcodeMVIEF::OpcodeMVIEF(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMVIEF::setParams(const char *params, int size)
+void OpcodeMVIEF::setParams(const char *params, int)
 {
 	banks = params[0];
 	varCurMovieFrame = params[1];
@@ -8052,7 +8052,7 @@ OpcodeMVCAM::OpcodeMVCAM(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeMVCAM::setParams(const char *params, int size)
+void OpcodeMVCAM::setParams(const char *params, int)
 {
 	movieCamID = params[0];
 }
@@ -8073,7 +8073,7 @@ OpcodeFMUSC::OpcodeFMUSC(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeFMUSC::setParams(const char *params, int size)
+void OpcodeFMUSC::setParams(const char *params, int)
 {
 	unknown = params[0];
 }
@@ -8094,7 +8094,7 @@ OpcodeCMUSC::OpcodeCMUSC(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCMUSC::setParams(const char *params, int size)
+void OpcodeCMUSC::setParams(const char *params, int)
 {
 	banks = params[0];
 	memcpy(&unknown1, params + 1, 2);
@@ -8129,7 +8129,7 @@ OpcodeCHMST::OpcodeCHMST(const char *params, int size)
 	setParams(params, size);
 }
 
-void OpcodeCHMST::setParams(const char *params, int size)
+void OpcodeCHMST::setParams(const char *params, int)
 {
 	banks = params[0];
 	var = params[1]; // bank 2

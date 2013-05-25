@@ -47,8 +47,8 @@ public:
 	const QList<GrpScript *> &grpScripts() const;
 	GrpScript *grpScript(int groupID) const;
 	int grpScriptCount() const;
-	void insertGrpScript(int row);
-	void insertGrpScript(int row, GrpScript *grpScript);
+	bool insertGrpScript(int row);
+	bool insertGrpScript(int row, GrpScript *grpScript);
 	void deleteGrpScript(int row);
 	void removeGrpScript(int row);
 	bool moveGrpScript(int row, bool direction);
@@ -73,12 +73,13 @@ public:
 	void linePosition(QMap<int, FF7Position *> &positions) const;
 
 	void shiftTutIds(int row, int shift);
+	bool compileScripts(int &groupID, int &scriptID, int &opcodeID, QString &errorStr);
 
 	const QList<FF7Text> &texts() const;
 	int textCount() const;
 	const FF7Text &text(int textID) const;
 	void setText(int textID, const FF7Text &text);
-	void insertText(int textID, const FF7Text &text);
+	bool insertText(int textID, const FF7Text &text);
 	void deleteText(int textID);
 	QSet<quint8> listUsedTexts() const;
 	QSet<quint8> listUsedTuts() const;
@@ -91,6 +92,8 @@ public:
 
 	TutFileStandard *tut() const;
 	void setTut(TutFileStandard *tut);
+
+	int availableBytesForScripts() const;
 private:
 	QString _author;
 	quint16 _scale;

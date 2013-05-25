@@ -188,24 +188,22 @@ QByteArray Section1File::save() const
 
 	nbGrpScripts = (quint8)data.at(2);//nbGrpScripts
 	newNbGrpScripts = _grpScripts.size();
-	memcpy(&posTexts, &constData[4], 2);//posTexts (et fin des scripts)
+	memcpy(&posTexts, constData + 4, 2);//posTexts (and end of the scripts section)
 
 	if(_tut && _tut->isModified()) {
 		newNbAKAO = _tut->size();
 	} else {
-		memcpy(&newNbAKAO, &constData[6], 2);//nbAKAO
+		memcpy(&newNbAKAO, constData + 6, 2);//nbAKAO
 	}
 
 	newPosScripts = 32 + newNbGrpScripts * 72 + newNbAKAO * 4;
 	pos = newPosScripts;
 
-	//Création newPosScripts + scripts
+	// Creation newPosScripts + scripts
 	quint8 nbObjets3D = 0;
-	foreach(GrpScript *grpScript, _grpScripts)
-	{
+	foreach(GrpScript *grpScript, _grpScripts) {
 		grpScriptNames.append( grpScript->realName().leftJustified(8, QChar('\x00'), true) );
-		for(quint8 j=0 ; j<32 ; ++j)
-		{
+		for(quint8 j=0 ; j<32 ; ++j) {
 			realScript = grpScript->toByteArray(j);
 			if(!realScript.isEmpty())	pos = newPosScripts + allScripts.size();
 			positionsScripts.append((char *)&pos, 2);
@@ -214,7 +212,7 @@ QByteArray Section1File::save() const
 		if(grpScript->typeID() == GrpScript::Model)		++nbObjets3D;
 	}
 
-	//Création nouvelles positions Textes
+	// Creation new positions Texts
 	newPosTexts = newPosScripts + allScripts.size();
 
 	quint16 newNbText = textCount();
@@ -232,13 +230,12 @@ QByteArray Section1File::save() const
 		allAKAOs = _tut->save(positionsAKAO, newPosAKAOs);
 	} else if(newNbAKAO > 0) {
 		posTocAKAOs = 32 + nbGrpScripts*8;
-		memcpy(&posAKAOs, &constData[posTocAKAOs], 4);
+		memcpy(&posAKAOs, constData + posTocAKAOs, 4);
 		qint32 diff = newPosAKAOs - posAKAOs;
 
-		//Création nouvelles positions AKAO
-		for(quint32 i=0 ; i<newNbAKAO ; ++i)
-		{
-			memcpy(&posAKAO, &constData[posTocAKAOs + i*4], 4);
+		// Creation new positions AKAO
+		for(quint32 i=0 ; i<newNbAKAO ; ++i) {
+			memcpy(&posAKAO, constData + posTocAKAOs + i*4, 4);
 			posAKAO += diff;
 			positionsAKAO.append((char *)&posAKAO, 4);
 		}
@@ -249,17 +246,19 @@ QByteArray Section1File::save() const
 	QByteArray mapauthor = _author.toLatin1().leftJustified(8, '\x00', true);
 	mapauthor[7] = '\x00';
 
-	return data.left(2) //Début
-			.append((char)newNbGrpScripts) //nbGrpScripts
-			.append((char)nbObjets3D) //nbObjets3D
-			.append((char *)&newPosTexts, 2) //PosTextes
-			.append((char *)&newNbAKAO, 2) //AKAO count
+	return data.left(2) // Header
+			.append((char)newNbGrpScripts) // nbGrpScripts
+			.append((char)nbObjets3D) // nb3DObjects
+			.append((char *)&newPosTexts, 2) // PosTexts
+			.append((char *)&newNbAKAO, 2) // AKAO count
 			.append((char *)&_scale, 2)
-			.append(&constData[10], 6) //Empty
-			.append(mapauthor) //mapAuthor
-			.append(&constData[24], 8) //mapName
-			.append(grpScriptNames) //Noms des grpScripts
-			.append(positionsAKAO).append(positionsScripts).append(allScripts) //PosAKAO + PosScripts + Scripts
+			.append(constData + 10, 6) // Empty
+			.append(mapauthor) // mapAuthor
+			.append(constData + 24, 8) // mapName
+			.append(grpScriptNames) // Names of grpScripts
+			.append(positionsAKAO) // PosAKAO
+			.append(positionsScripts) // PosScripts
+			.append(allScripts) // Scripts
 			.append((char *)&newNbText, 2) // nbTexts
 			.append(positionsTexts) // positionsTexts
 			.append(allTexts) // Texts
@@ -384,16 +383,24 @@ int Section1File::grpScriptCount() const
 	return _grpScripts.size();
 }
 
-void Section1File::insertGrpScript(int row)
+bool Section1File::insertGrpScript(int row)
 {
-	_grpScripts.insert(row, new GrpScript);
-	setModified(true);
+	if(grpScriptCount() < 256) {
+		_grpScripts.insert(row, new GrpScript);
+		setModified(true);
+		return true;
+	}
+	return false;
 }
 
-void Section1File::insertGrpScript(int row, GrpScript *grpScript)
+bool Section1File::insertGrpScript(int row, GrpScript *grpScript)
 {
-	_grpScripts.insert(row, grpScript);
-	setModified(true);
+	if(grpScriptCount() < 255) {
+		_grpScripts.insert(row, grpScript);
+		setModified(true);
+		return true;
+	}
+	return false;
 }
 
 void Section1File::deleteGrpScript(int row)
@@ -653,6 +660,19 @@ void Section1File::linePosition(QMap<int, FF7Position *> &positions) const
 	}
 }
 
+bool Section1File::compileScripts(int &groupID, int &scriptID, int &opcodeID, QString &errorStr)
+{
+	groupID=0;
+	foreach(GrpScript *group, _grpScripts) {
+		if(!group->compile(scriptID, opcodeID, errorStr)) {
+			return false;
+		}
+		++groupID;
+	}
+
+	return true;
+}
+
 //void Section1File::searchWindows() const
 //{
 //	int groupID=0;
@@ -720,12 +740,16 @@ void Section1File::setText(int textID, const FF7Text &text)
 	}
 }
 
-void Section1File::insertText(int textID, const FF7Text &text)
+bool Section1File::insertText(int textID, const FF7Text &text)
 {
-	_texts.insert(textID, text);
-	foreach(GrpScript *grpScript, _grpScripts)
-		grpScript->shiftTextIds(textID-1, +1);
-	setModified(true);
+	if(textCount() < 255) {
+		_texts.insert(textID, text);
+		foreach(GrpScript *grpScript, _grpScripts)
+			grpScript->shiftTextIds(textID-1, +1);
+		setModified(true);
+		return true;
+	}
+	return false;
 }
 
 void Section1File::deleteText(int textID)
@@ -791,4 +815,10 @@ TutFileStandard *Section1File::tut() const
 void Section1File::setTut(TutFileStandard *tut)
 {
 	_tut = tut;
+}
+
+int Section1File::availableBytesForScripts() const
+{
+	int AKAOCount = _tut && _tut->isOpen() ? _tut->size() : 0; // TODO: opens tut
+	return 65535 - (32 + grpScriptCount() * 72 + AKAOCount * 4);
 }

@@ -22,7 +22,7 @@ public:
 protected:
 	QList<quint32> openPositions(const QByteArray &data) const;
 	QByteArray save2(QByteArray &toc, quint32 firstPos) const;
-	inline int maxTutCount() const { return 256; }
+	inline int maxTutCount() const { return 255; }
 };
 
 #endif // TUTFILESTANDARD_H

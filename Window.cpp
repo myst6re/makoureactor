@@ -867,7 +867,7 @@ void Window::compile()
 	QString errorStr;
 
 	if(!currentScript->compile(opcodeID, errorStr)) {
-		compileScriptLabel->setText(QString("Erreur ligne %1 : %2").arg(opcodeID+1).arg(errorStr));
+		compileScriptLabel->setText(tr("Erreur ligne %1 : %2").arg(opcodeID+1).arg(errorStr));
 		compileScriptLabel->show();
 		compileScriptIcon->show();
 		opcodeList->setErrorLine(opcodeID);
@@ -914,6 +914,26 @@ void Window::save() { saveAs(true); }
 
 void Window::saveAs(bool currentPath)
 {
+	int fieldID, groupID, scriptID, opcodeID;
+	QString errorStr;
+
+	setEnabled(false);
+	bool compiled = fieldArchive->compileScripts(fieldID, groupID, scriptID, opcodeID, errorStr);
+	setEnabled(true);
+
+	if(!compiled) {
+		QMessageBox::warning(this, tr("Erreur de compilation"), tr("Erreur de compilation des scripts :\n"
+																   "écran %1 (%2), groupe %3 (%4), script %5, ligne %6 : %7")
+							 .arg(fieldArchive->field(fieldID)->name())
+							 .arg(fieldID)
+							 .arg(fieldArchive->field(fieldID)->scriptsAndTexts()->grpScript(groupID)->name())
+							 .arg(groupID).arg(scriptID)
+							 .arg(opcodeID+1).arg(errorStr));
+		gotoOpcode(fieldID, groupID, scriptID, opcodeID);
+		opcodeList->setErrorLine(opcodeID);
+		return;
+	}
+
 	QString path;
 	if(!currentPath)
 	{

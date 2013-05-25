@@ -498,7 +498,7 @@ public:
 	inline bool isJump() const { return true; }
 	virtual bool isLongJump() const=0;
 	inline virtual bool isBackJump() { return false; }
-	qint32 maxJump() const;
+	quint32 maxJump() const;
 	virtual quint8 jumpPosData() const=0;
 protected:
 	qint32 _jump;
