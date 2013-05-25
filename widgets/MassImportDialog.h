@@ -31,21 +31,22 @@ public:
 	};
 
 	explicit MassImportDialog(QWidget *parent = 0);
-	void fill(FieldArchive *fieldArchive);
+	void fill(const FieldArchive *fieldArchive, int currentField);
 	QList<int> selectedFields() const;
 	bool importModule(ImportType type) const;
 	const QString &moduleFormat(ImportType type) const;
 	QString directory() const;
 private slots:
 	void chooseImportDirectory();
+	void selectCurrentField();
 private:
 	QListWidget *fieldList;
 	QMap<ImportType, FormatSelectionWidget *> imports;
-	QPushButton *selectAll, *clearSelection, *selectCurrentField;
 	QLineEdit *dirPath;
 	QPushButton *changeDir;
 
-	FieldArchive *_fieldArchive;
+	const FieldArchive *_fieldArchive;
+	int _currentField;
 protected:
 	void accept();
 };

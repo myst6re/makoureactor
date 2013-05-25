@@ -217,7 +217,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCFile::open2(FieldArchiveIOObserver *ob
 	QString name = this->name();
 	fieldArchive()->addField(new FieldPC(name.left(name.lastIndexOf('.')), this));
 
-	return fieldArchive()->field(0) != NULL ? Ok : Invalid;
+	return fieldArchive()->field(0)->isOpen() ? Ok : Invalid;
 }
 
 FieldArchiveIO::ErrorCode FieldArchiveIOPCFile::save2(const QString &path0, FieldArchiveIOObserver *observer)

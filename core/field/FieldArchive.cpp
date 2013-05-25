@@ -131,6 +131,11 @@ int FieldArchive::indexOfField(const QString &name) const
 	return fieldsSortByName.value(name, -1);
 }
 
+const Field *FieldArchive::field(quint32 id) const
+{
+	return fileList.value(id, NULL);
+}
+
 Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 {
 	Field *field = fileList.value(id, NULL);

@@ -20,7 +20,7 @@
 
 MassExportDialog::MassExportDialog(QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-	_fieldArchive(0)
+	_fieldArchive(0), _currentField(-1)
 {
 	setWindowTitle(tr("Exporter en masse"));
 
@@ -28,6 +28,16 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	fieldList->setUniformItemSizes(true);
 	fieldList->setFixedWidth(200);
 	fieldList->setSelectionMode(QAbstractItemView::MultiSelection);
+
+	QToolBar *toolBar = new QToolBar(this);
+	toolBar->addAction(tr("Courant"), this, SLOT(selectCurrentField()));
+	toolBar->addAction(tr("+"), fieldList, SLOT(selectAll()));
+	toolBar->addAction(tr("-"), fieldList, SLOT(clearSelection()));
+
+	QVBoxLayout *listLayout = new QVBoxLayout;
+	listLayout->addWidget(toolBar);
+	listLayout->addWidget(fieldList, 1);
+	listLayout->setContentsMargins(QMargins());
 
 	exports.insert(Fields,
 				   new FormatSelectionWidget(tr("Exporter les écrans"),
@@ -62,7 +72,7 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	buttonBox->addButton(QDialogButtonBox::Cancel);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(fieldList, 0, 0, 3 + exports.size(), 1);
+	layout->addLayout(listLayout, 0, 0, 3 + exports.size(), 1);
 	int row = 0;
 	foreach(FormatSelectionWidget *formatSelection, exports) {
 		layout->addWidget(formatSelection, row++, 1, 1, 2);
@@ -78,11 +88,14 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	connect(changeDir, SIGNAL(clicked()),  SLOT(chooseExportDirectory()));
 	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
 	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+
+	fieldList->setFocus();
 }
 
-void MassExportDialog::fill(FieldArchive *fieldArchive)
+void MassExportDialog::fill(const FieldArchive *fieldArchive, int currentField)
 {
 	_fieldArchive = fieldArchive;
+	_currentField = currentField;
 
 	QString fieldType = _fieldArchive->isPC() ? tr("PC") : tr("PS");
 	QStringList formats;
@@ -93,7 +106,7 @@ void MassExportDialog::fill(FieldArchive *fieldArchive)
 
 	fieldList->clear();
 	for(int i=0 ; i<_fieldArchive->size() ; ++i) {
-		Field *field = _fieldArchive->field(i, false);
+		const Field *field = _fieldArchive->field(i);
 		if(field) {
 			QListWidgetItem *item = new QListWidgetItem(field->name());
 			item->setData(Qt::UserRole, i);
@@ -109,6 +122,24 @@ void MassExportDialog::chooseExportDirectory()
 	if(dir.isNull())	return;
 
 	dirPath->setText(dir);
+}
+
+void MassExportDialog::selectCurrentField()
+{
+	if(_currentField < 0) {
+		return;
+	}
+
+	fieldList->clearSelection();
+
+	for(int row=0 ; row<fieldList->count() ; ++row) {
+		QListWidgetItem *item = fieldList->item(row);
+		if(item->data(Qt::UserRole).toInt() == _currentField) {
+			fieldList->setItemSelected(item, true);
+			fieldList->scrollToItem(item);
+			return;
+		}
+	}
 }
 
 QList<int> MassExportDialog::selectedFields() const

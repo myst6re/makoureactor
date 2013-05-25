@@ -51,6 +51,8 @@ public:
 	void setObserverMaximum(unsigned int max);
 	void setObserverValue(int value);
 
+	int currentFieldId() const;
+
 public slots:
 	void openFile();
 	void openDir();

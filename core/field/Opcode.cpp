@@ -1991,6 +1991,16 @@ QByteArray OpcodeKAWAIAMBNT::params() const
 			.append(data);
 }
 
+OpcodeKAWAIUNKNOWN4::OpcodeKAWAIUNKNOWN4(const char *params, int size) :
+	OpcodeUnknown(0x04, params, size)
+{
+}
+
+QString OpcodeKAWAIUNKNOWN4::toString(Field *) const
+{
+	return QObject::tr("UNKNOWN4");
+}
+
 OpcodeKAWAILIGHT::OpcodeKAWAILIGHT(const char *params, int size) :
 	OpcodeUnknown(0x06, params, size)
 {
@@ -2001,6 +2011,36 @@ QString OpcodeKAWAILIGHT::toString(Field *) const
 	return QObject::tr("LIGHT");
 }
 
+OpcodeKAWAIUNKNOWN7::OpcodeKAWAIUNKNOWN7(const char *params, int size) :
+	OpcodeUnknown(0x07, params, size)
+{
+}
+
+QString OpcodeKAWAIUNKNOWN7::toString(Field *) const
+{
+	return QObject::tr("UNKNOWN7");
+}
+
+OpcodeKAWAIUNKNOWN8::OpcodeKAWAIUNKNOWN8(const char *params, int size) :
+	OpcodeUnknown(0x08, params, size)
+{
+}
+
+QString OpcodeKAWAIUNKNOWN8::toString(Field *) const
+{
+	return QObject::tr("UNKNOWN8");
+}
+
+OpcodeKAWAIUNKNOWN9::OpcodeKAWAIUNKNOWN9(const char *params, int size) :
+	OpcodeUnknown(0x09, params, size)
+{
+}
+
+QString OpcodeKAWAIUNKNOWN9::toString(Field *) const
+{
+	return QObject::tr("UNKNOWN9");
+}
+
 OpcodeKAWAISBOBJ::OpcodeKAWAISBOBJ(const char *params, int size) :
 	OpcodeUnknown(0x0A, params, size)
 {
@@ -2009,6 +2049,26 @@ OpcodeKAWAISBOBJ::OpcodeKAWAISBOBJ(const char *params, int size) :
 QString OpcodeKAWAISBOBJ::toString(Field *) const
 {
 	return QObject::tr("SBOBJ");
+}
+
+OpcodeKAWAIUNKNOWNB::OpcodeKAWAIUNKNOWNB(const char *params, int size) :
+	OpcodeUnknown(0x0B, params, size)
+{
+}
+
+QString OpcodeKAWAIUNKNOWNB::toString(Field *) const
+{
+	return QObject::tr("UNKNOWNB");
+}
+
+OpcodeKAWAIUNKNOWNC::OpcodeKAWAIUNKNOWNC(const char *params, int size) :
+	OpcodeUnknown(0x0C, params, size)
+{
+}
+
+QString OpcodeKAWAIUNKNOWNC::toString(Field *) const
+{
+	return QObject::tr("UNKNOWNC");
 }
 
 OpcodeKAWAISHINE::OpcodeKAWAISHINE(const char *params, int size) :
@@ -2066,9 +2126,21 @@ void OpcodeKAWAI::setParams(const char *params, int size)
 		break;
 	case 0x02:	opcode = new OpcodeKAWAIAMBNT(params + 2, size - 2);
 		break;
+	case 0x04:	opcode = new OpcodeKAWAIUNKNOWN4(params + 2, size - 2);
+		break;
 	case 0x06:	opcode = new OpcodeKAWAILIGHT(params + 2, size - 2);
 		break;
+	case 0x07:	opcode = new OpcodeKAWAIUNKNOWN7(params + 2, size - 2);
+		break;
+	case 0x08:	opcode = new OpcodeKAWAIUNKNOWN8(params + 2, size - 2);
+		break;
+	case 0x09:	opcode = new OpcodeKAWAIUNKNOWN9(params + 2, size - 2);
+		break;
 	case 0x0A:	opcode = new OpcodeKAWAISBOBJ(params + 2, size - 2);
+		break;
+	case 0x0B:	opcode = new OpcodeKAWAIUNKNOWNB(params + 2, size - 2);
+		break;
+	case 0x0C:	opcode = new OpcodeKAWAIUNKNOWNC(params + 2, size - 2);
 		break;
 	case 0x0D:	opcode = new OpcodeKAWAISHINE(params + 2, size - 2);
 		break;

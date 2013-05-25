@@ -619,17 +619,19 @@ void Window::open(const QString &cheminFic, bool isDir)
 
 	for(int fieldID=0 ; fieldID<fieldArchive->size() ; ++fieldID) {
 		Field *f = fieldArchive->field(fieldID, false);
-		const QString &name = f->name();
+		if(f) {
+			const QString &name = f->name();
 
-		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << "");
-		item->setData(0, Qt::UserRole, fieldID);
-		items.append(item);
+			QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << "");
+			item->setData(0, Qt::UserRole, fieldID);
+			items.append(item);
 
-		int index;
-		if((index = Data::field_names.indexOf(name)) != -1) {
-			item->setText(1, QString("%1").arg(index, 3));
-		} else {
-			item->setText(1, "~");
+			int index;
+			if((index = Data::field_names.indexOf(name)) != -1) {
+				item->setText(1, QString("%1").arg(index, 3));
+			} else {
+				item->setText(1, "~");
+			}
 		}
 	}
 	
@@ -687,6 +689,14 @@ void Window::setWindowTitle()
 	QWidget::setWindowTitle(windowTitle);
 }
 
+int Window::currentFieldId() const
+{
+	QList<QTreeWidgetItem *> selectedItems = fieldList->selectedItems();
+	if(selectedItems.isEmpty())	return -1;
+
+	return selectedItems.first()->data(0, Qt::UserRole).toInt();
+}
+
 void Window::openField(bool reload)
 {
 	disconnect(groupScriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showGrpScripts()));
@@ -696,12 +706,10 @@ void Window::openField(bool reload)
 	groupScriptList->clear();
 	scriptList->clear();
 	opcodeList->clear();
-
-	QList<QTreeWidgetItem *> selectedItems = fieldList->selectedItems();
-	if(selectedItems.isEmpty())	return;
 	
-	int id = selectedItems.first()->data(0, Qt::UserRole).toInt();
-	fieldList->scrollToItem(selectedItems.first());
+	int fieldId = currentFieldId();
+	if(fieldId < 0)	return;
+	fieldList->scrollToItem(fieldList->selectedItems().first());
 
 //	Data::currentCharNames.clear();
 	Data::currentHrcNames = 0;
@@ -717,7 +725,7 @@ void Window::openField(bool reload)
 //	}
 
 	// Get and set field
-	field = fieldArchive->field(id, true, true);
+	field = fieldArchive->field(fieldId, true, true);
 	if(field == NULL) {
 		zoneImage->clear();
 		groupScriptList->setEnabled(false);
@@ -765,7 +773,7 @@ void Window::openField(bool reload)
 	authorLbl->setText(tr("Auteur : %1").arg(scriptsAndTexts->author()));
 	authorAction->setVisible(true);
 
-	emit fieldIDChanged(id);
+	emit fieldIDChanged(fieldId);
 	// Fill group script list
 	groupScriptList->setEnabled(true);
 	groupScriptList->fill(scriptsAndTexts);
@@ -1122,7 +1130,7 @@ void Window::massExport()
 	if(!fieldArchive) return;
 
 	MassExportDialog *massExportDialog = new MassExportDialog(this);
-	massExportDialog->fill(fieldArchive);
+	massExportDialog->fill(fieldArchive, currentFieldId());
 	if(massExportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massExportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {
@@ -1159,7 +1167,7 @@ void Window::massImport()
 	if(!fieldArchive) return;
 
 	MassImportDialog *massImportDialog = new MassImportDialog(this);
-	massImportDialog->fill(fieldArchive);
+	massImportDialog->fill(fieldArchive, currentFieldId());
 	if(massImportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massImportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {

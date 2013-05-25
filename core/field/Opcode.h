@@ -784,15 +784,51 @@ public:
 	QByteArray data;
 };
 
+class OpcodeKAWAIUNKNOWN4 : public OpcodeUnknown {
+public:
+	explicit OpcodeKAWAIUNKNOWN4(const char *params, int size);
+	QString toString(Field *field) const;
+};
+
 class OpcodeKAWAILIGHT : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAILIGHT(const char *params, int size);
 	QString toString(Field *field) const;
 };
 
+class OpcodeKAWAIUNKNOWN7 : public OpcodeUnknown {
+public:
+	explicit OpcodeKAWAIUNKNOWN7(const char *params, int size);
+	QString toString(Field *field) const;
+};
+
+class OpcodeKAWAIUNKNOWN8 : public OpcodeUnknown {
+public:
+	explicit OpcodeKAWAIUNKNOWN8(const char *params, int size);
+	QString toString(Field *field) const;
+};
+
+class OpcodeKAWAIUNKNOWN9 : public OpcodeUnknown {
+public:
+	explicit OpcodeKAWAIUNKNOWN9(const char *params, int size);
+	QString toString(Field *field) const;
+};
+
 class OpcodeKAWAISBOBJ : public OpcodeUnknown {
 public:
 	explicit OpcodeKAWAISBOBJ(const char *params, int size);
+	QString toString(Field *field) const;
+};
+
+class OpcodeKAWAIUNKNOWNB : public OpcodeUnknown {
+public:
+	explicit OpcodeKAWAIUNKNOWNB(const char *params, int size);
+	QString toString(Field *field) const;
+};
+
+class OpcodeKAWAIUNKNOWNC : public OpcodeUnknown {
+public:
+	explicit OpcodeKAWAIUNKNOWNC(const char *params, int size);
 	QString toString(Field *field) const;
 };
 

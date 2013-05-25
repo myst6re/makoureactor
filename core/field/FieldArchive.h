@@ -47,6 +47,7 @@ public:
 	virtual void clear();
 	int size() const;
 	int indexOfField(const QString &name) const;
+	const Field *field(quint32 id) const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
 	void addField(Field *field);
 	void removeField(quint32 id);

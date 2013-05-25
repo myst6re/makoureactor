@@ -31,7 +31,7 @@ public:
 	};
 
 	explicit MassExportDialog(QWidget *parent = 0);
-	void fill(FieldArchive *fieldArchive);
+	void fill(const FieldArchive *fieldArchive, int currentField);
 	QList<int> selectedFields() const;
 	bool exportModule(ExportType type) const;
 	const QString &moduleFormat(ExportType type) const;
@@ -39,15 +39,16 @@ public:
 	bool overwrite() const;
 private slots:
 	void chooseExportDirectory();
+	void selectCurrentField();
 private:
 	QListWidget *fieldList;
 	QMap<ExportType, FormatSelectionWidget *> exports;
-	QPushButton *selectAll, *clearSelection, *selectCurrentField;
 	QLineEdit *dirPath;
 	QPushButton *changeDir;
 	QCheckBox *overwriteIfExists;
 
-	FieldArchive *_fieldArchive;
+	const FieldArchive *_fieldArchive;
+	int _currentField;
 protected:
 	void accept();
 };
