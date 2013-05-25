@@ -33,7 +33,7 @@ public:
 	quint16 globalScale() const;
 	void setGlobalScale(quint16 scale);
 	int modelCount() const;
-	void insertModel(int modelID, const QString &hrcName);
+	bool insertModel(int modelID, const QString &hrcName);
 	void removeModel(int modelID);
 	void swapModel(int oldModelID, int newModelID);
 	const QStringList &HRCNames() const;
@@ -50,7 +50,7 @@ public:
 	void setLightColors(int modelID, const QList<QRgb> &lightColors);
 	void setLightColor(int modelID, int colorID, QRgb lightColor);
 	int animCount(int modelID) const;
-	void insertAnim(int modelID, int numA, const QString &name);
+	bool insertAnim(int modelID, int numA, const QString &name);
 	void removeAnim(int modelID, int numA);
 	void swapAnim(int modelID, int oldNumA, int newNumA);
 	const QStringList &ANames(int modelID) const;

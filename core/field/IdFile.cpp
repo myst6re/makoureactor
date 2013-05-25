@@ -60,11 +60,11 @@ bool IdFile::open(const QByteArray &data)
 
 	Triangle triangle;
 	Access acc;
-	triangles.clear();
+	_triangles.clear();
 	_access.clear();
 	for(i=0 ; i<nbSector ; ++i) {
 		memcpy(&triangle, &constData[4 + i*24], 24);
-		triangles.append(triangle);
+		_triangles.append(triangle);
 //		qDebug() << triangle.vertices[0].x << triangle.vertices[0].y << triangle.vertices[0].z << triangle.vertices[0].res;
 //		qDebug() << triangle.vertices[1].x << triangle.vertices[1].y << triangle.vertices[1].z << triangle.vertices[1].res;
 //		qDebug() << triangle.vertices[2].x << triangle.vertices[2].y << triangle.vertices[2].z << triangle.vertices[2].res;
@@ -87,7 +87,7 @@ QByteArray IdFile::save() const
 
 	id.append((char *)&count, 4);
 
-	foreach(Triangle triangle, triangles) {
+	foreach(Triangle triangle, _triangles) {
 		triangle.vertices[0].res = triangle.vertices[0].z;
 		triangle.vertices[1].res = triangle.vertices[0].z;
 		triangle.vertices[2].res = triangle.vertices[0].z;
@@ -107,47 +107,47 @@ QByteArray IdFile::save() const
 
 void IdFile::clear()
 {
-	triangles.clear();
+	_triangles.clear();
 	_access.clear();
 	_hasUnknownData = false;
 }
 
 bool IdFile::hasTriangle() const
 {
-	return !triangles.empty();
+	return !_triangles.empty();
 }
 
 int IdFile::triangleCount() const
 {
-	return triangles.size();
+	return _triangles.size();
 }
 
-const QList<Triangle> &IdFile::getTriangles() const
+const QList<Triangle> &IdFile::triangles() const
 {
-	return triangles;
+	return _triangles;
 }
 
 const Triangle &IdFile::triangle(int triangleID) const
 {
-	return triangles.at(triangleID);
+	return _triangles.at(triangleID);
 }
 
 void IdFile::setTriangle(int triangleID, const Triangle &triangle)
 {
-	triangles[triangleID] = triangle;
+	_triangles[triangleID] = triangle;
 	setModified(true);
 }
 
 void IdFile::insertTriangle(int triangleID, const Triangle &triangle, const Access &access)
 {
-	triangles.insert(triangleID, triangle);
+	_triangles.insert(triangleID, triangle);
 	_access.insert(triangleID, access);
 	setModified(true);
 }
 
 void IdFile::removeTriangle(int triangleID)
 {
-	triangles.removeAt(triangleID);
+	_triangles.removeAt(triangleID);
 	_access.removeAt(triangleID);
 	setModified(true);
 }

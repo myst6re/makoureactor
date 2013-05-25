@@ -139,6 +139,10 @@ void ModelManagerPC::showModelInfos2(int row)
 
 void ModelManagerPC::addModel()
 {
+	if(modelLoader()->modelCount() >= modelLoader()->maxModelCount()) {
+		return;
+	}
+
 	QString hrc("    .HRC");
 	QTreeWidgetItem *item = models->currentItem(), *newItem;
 
@@ -354,10 +358,16 @@ void ModelManagerPC::setModelColor(int id, QRgb color)
 
 void ModelManagerPC::addAnim()
 {
+	int modelID = currentModelID();
+
+	if(modelID < 0 ||
+			modelLoader()->animCount(modelID) >= modelLoader()->maxAnimCount()) {
+		return;
+	}
+
 	QTreeWidgetItem *item = modelAnims->currentItem(), *newItem;
 	QString a;
-	if(Data::charlgp_loadListPos())
-	{
+	if(Data::charlgp_loadListPos()) {
 		toolBar2->setEnabled(false);
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
 		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
@@ -403,7 +413,7 @@ void ModelManagerPC::addAnim()
 		connect(&OKButton, SIGNAL(released()), &dialog, SLOT(accept()));
 		toolBar2->setEnabled(true);
 
-		if(dialog.exec()==QDialog::Accepted) {
+		if(dialog.exec() == QDialog::Accepted) {
 			a = list.currentText();
 		}
 		else {
@@ -417,9 +427,6 @@ void ModelManagerPC::addAnim()
 			return;
 		}
 	}
-
-	int modelID = currentModelID();
-	if(modelID < 0)		return;
 
 	modelAnims->blockSignals(true);
 

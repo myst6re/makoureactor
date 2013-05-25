@@ -44,7 +44,7 @@ public:
 	void clear();
 	bool hasTriangle() const;
 	int triangleCount() const;
-	const QList<Triangle> &getTriangles() const;
+	const QList<Triangle> &triangles() const;
 	const Triangle &triangle(int triangleID) const;
 	void setTriangle(int triangleID, const Triangle &triangle);
 	void insertTriangle(int triangleID, const Triangle &triangle, const Access &access);
@@ -56,7 +56,7 @@ public:
 	static Vertex_sr fromVertex_s(const Vertex_s &vertex_s);
 	static Vertex_s toVertex_s(const Vertex_sr &vertex_sr);
 private:
-	QList<Triangle> triangles;
+	QList<Triangle> _triangles;
 	QList<Access> _access;
 	qint16 _unknown;
 	bool _hasUnknownData;

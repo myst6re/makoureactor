@@ -177,22 +177,26 @@ int FieldModelLoaderPC::modelCount() const
 	return model_nameHRC.size();
 }
 
-void FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
+bool FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
 {
-	QList<QRgb> color;
-	if(!colors.isEmpty())
-		color = colors.first();
+	if(modelCount() < maxModelCount()) {
+		QList<QRgb> color;
+		if(!colors.isEmpty())
+			color = colors.first();
 
-	model_unknown.insert(modelID, (quint16)0);
-	model_nameChar.insert(modelID, QString());
-	model_nameHRC.insert(modelID, hrcName);
-	model_typeHRC.insert(modelID, typeHRC);
-	colors.insert(modelID, color);
+		model_unknown.insert(modelID, (quint16)0);
+		model_nameChar.insert(modelID, QString());
+		model_nameHRC.insert(modelID, hrcName);
+		model_typeHRC.insert(modelID, typeHRC);
+		colors.insert(modelID, color);
 
-	model_anims.insert(modelID, QStringList());
-	model_anims_unknown.insert(modelID, QList<quint16>());
+		model_anims.insert(modelID, QStringList());
+		model_anims_unknown.insert(modelID, QList<quint16>());
 
-	setModified(true);
+		setModified(true);
+		return true;
+	}
+	return false;
 }
 
 void FieldModelLoaderPC::removeModel(int modelID)
@@ -326,13 +330,15 @@ int FieldModelLoaderPC::animCount(int modelID) const
 	return 0;
 }
 
-void FieldModelLoaderPC::insertAnim(int modelID, int numA, const QString &name)
+bool FieldModelLoaderPC::insertAnim(int modelID, int numA, const QString &name)
 {
-	if(modelID >= 0 && modelID < modelCount()) {
+	if(modelID >= 0 && modelID < modelCount() && animCount(modelID) < maxAnimCount()) {
 		model_anims[modelID].insert(numA, name);
 		model_anims_unknown[modelID].insert(numA, 1);
 		setModified(true);
+		return true;
 	}
+	return false;
 }
 
 void FieldModelLoaderPC::removeAnim(int modelID, int numA)

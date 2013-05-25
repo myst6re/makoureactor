@@ -257,7 +257,7 @@ void FieldArchive::searchAll()
 			if(id->isOpen()) {
 				deb.write(QString("%1:\n").arg(field->name()).toLatin1());
 				int triangleID = 0;
-				foreach(const Triangle &triangle, id->getTriangles()) {
+				foreach(const Triangle &triangle, id->triangles()) {
 					const Access &a = id->access(triangleID++);
 					for(int jj=0; jj<3; ++jj) {
 						deb.write(QString("(x=%1, y=%2, z=%3)+a=%4 ")

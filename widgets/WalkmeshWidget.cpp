@@ -285,7 +285,7 @@ void WalkmeshWidget::paintGL()
 
 		int i=0;
 
-		foreach(const Triangle &triangle, walkmesh->getTriangles()) {
+		foreach(const Triangle &triangle, walkmesh->triangles()) {
 			const Access &access = walkmesh->access(i);
 
 			drawIdLine(i, triangle.vertices[0], triangle.vertices[1], access.a[0]);

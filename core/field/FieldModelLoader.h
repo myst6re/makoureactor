@@ -30,6 +30,10 @@ public:
 	virtual int animCount(int modelID) const=0;
 	virtual quint16 unknown(int modelID) const=0;
 	virtual void setUnknown(int modelID, quint16 unknown)=0;
+	/* Even the file format can store more than 255 models,
+	 * it's useless since the scripts can't deal with it. */
+	inline int maxModelCount() const { return 255; }
+	inline int maxAnimCount() const { return 255; }
 };
 
 #endif // FIELDMODELLOADER_H
