@@ -195,13 +195,24 @@ void OpcodeList::setErrorLine(int opcodeID)
 void OpcodeList::itemSelected()
 {
 	upDownEnabled();
-	/*int opcode = selectedOpcode();
+	int opcode = selectedOpcode();
 
 	switch(opcode) {
-	case 0xa3: // ANIME1
-
+	case Opcode::ASK:
+	case Opcode::MESSAGE:
+	case Opcode::MPNAM:
+		text_A->setEnabled(true);
 		break;
-	}*/
+	case Opcode::SPECIAL:
+	{
+		OpcodeSPECIAL *op = (OpcodeSPECIAL *)script->getOpcode(selectedID());
+		text_A->setEnabled(op && op->opcode->id() == 0xFD);
+	}
+		break;
+	default:
+		text_A->setEnabled(false);
+		break;
+	}
 }
 
 void OpcodeList::upDownEnabled()
@@ -282,8 +293,11 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 		grpScript = _grpScript;
 		script = _script;
 	}
+
 	previousBG = QBrush();
+	blockSignals(true);
 	QTreeWidget::clear();
+	blockSignals(false);
 	header()->setMinimumSectionSize(0);
 	
 	if(!script->isEmpty()) {
@@ -345,19 +359,20 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 			}
 			++opcodeID;
 		}
-	}
-	else
-	{
+	} else {
 		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList(tr("Si ce script est exécuté,\n considérez que c'est le dernier script non vide qui est exécuté")));
 		item->setIcon(0, QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation));
 		item->setFlags(Qt::NoItemFlags);
 		item->setData(0, Qt::UserRole, -2);
 	}
+
 	scrollToTop();
 
 	enableActions(true);
 
-	if(header()->sectionSize(0) < width())	header()->setMinimumSectionSize(width()-2);
+	if(header()->sectionSize(0) < width()) {
+		header()->setMinimumSectionSize(width() - 2);
+	}
 	
 	// edit_A->setEnabled(true);
 	add_A->setEnabled(true);
@@ -365,7 +380,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 	// cut_A->setEnabled(true);
 	// copy_A->setEnabled(true);
 	paste_A->setEnabled(!opcodeCopied.isEmpty());
-	upDownEnabled();
+	itemSelected();
 }
 
 void OpcodeList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
@@ -645,16 +660,18 @@ void OpcodeList::del(bool totalDel)
 	qSort(selectedIDs);
 	for(int i=selectedIDs.size()-1 ; i>=0 ; --i) {
 		oldVersions.prepend(Script::copyOpcode(script->getOpcode(selectedIDs.at(i))));
-		if(totalDel)
+		if(totalDel) {
 			script->delOpcode(selectedIDs.at(i));
-		else
+		} else {
 			script->removeOpcode(selectedIDs.at(i));
+		}
 	}
+
 	fill();
 	emit changed();
 	changeHist(Remove, selectedIDs, oldVersions);
-	if(topLevelItemCount() != 0)
-	{
+
+	if(topLevelItemCount() != 0) {
 		if(selectedIDs.at(0) >= topLevelItemCount() && selectedIDs.at(0) > 0)	scroll(selectedIDs.at(0)-1);
 		else if(selectedIDs.at(0) < topLevelItemCount())	scroll(selectedIDs.at(0));
 	}
@@ -797,7 +814,9 @@ QList<int> OpcodeList::selectedIDs()
 int OpcodeList::selectedOpcode()
 {
 	int opcodeID = selectedID();
-	return opcodeID==-1 ? 0 : script->getOpcode(opcodeID)->id();
+	return opcodeID <= -1 || opcodeID >= script->size()
+			? -1
+			: script->getOpcode(opcodeID)->id();
 }
 
 QPixmap &OpcodeList::posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap)
