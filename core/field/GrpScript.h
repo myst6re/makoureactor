@@ -49,6 +49,7 @@ public:
 	void backgroundMove(qint16 z[2], qint16 *x=0, qint16 *y=0) const;
 	Type typeID();
 	QString type();
+	qint16 character() const;
 	QColor typeColor();
 	QString scriptName(quint8 scriptID);
 
@@ -80,7 +81,7 @@ private:
 	QString _name;
 	QList<Script *> _scripts;
 
-	qint16 character;
+	qint16 _character;
 	bool animation;
 	bool location;
 	bool director;

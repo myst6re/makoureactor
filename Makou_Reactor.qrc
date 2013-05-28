@@ -40,5 +40,9 @@
         <file>images/keys.png</file>
         <file>images/field-arrow-green.png</file>
         <file>images/field-arrow-red.png</file>
+        <file>images/background.png</file>
+        <file>images/location.png</file>
+        <file>images/main.png</file>
+        <file>images/model.png</file>
     </qresource>
 </RCC>

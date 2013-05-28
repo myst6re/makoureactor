@@ -13,6 +13,7 @@ public:
 	bool open();
 	QByteArray save(QByteArray &toc, quint32 firstPos) const;
 	QByteArray save() const;
+	inline int maxTutCount() const { return 255; }
 	bool hasTut() const;
 	bool isTut(int tutID) const;
 	bool isAkao(int tutID) const;
@@ -22,7 +23,6 @@ public:
 protected:
 	QList<quint32> openPositions(const QByteArray &data) const;
 	QByteArray save2(QByteArray &toc, quint32 firstPos) const;
-	inline int maxTutCount() const { return 255; }
 };
 
 #endif // TUTFILESTANDARD_H

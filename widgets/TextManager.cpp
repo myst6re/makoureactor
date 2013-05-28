@@ -389,7 +389,7 @@ QString TextManager::selectedText() const
 
 void TextManager::addText()
 {
-	if(!scriptsAndTexts)	return;
+	if(!scriptsAndTexts || scriptsAndTexts->textCount() >= scriptsAndTexts->maxTextCount())	return;
 	QListWidgetItem *item = liste1->currentItem();
 	int row = !item ? scriptsAndTexts->textCount() : item->data(Qt::UserRole).toInt()+1;
 	liste1->blockSignals(true);

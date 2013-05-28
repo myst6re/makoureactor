@@ -28,6 +28,7 @@ public:
 	bool open(const QByteArray &data);
 	void clear();
 	int size() const;
+	virtual int maxTutCount() const=0;
 	void removeTut(int tutID);
 	bool insertTut(int tutID);
 	const QByteArray &data(int tutID) const;
@@ -40,7 +41,6 @@ public:
 	virtual void parseText(int tutID, const QString &tuto);
 protected:
 	virtual QList<quint32> openPositions(const QByteArray &data) const=0;
-	virtual int maxTutCount() const=0;
 	QByteArray &dataRef(int tutID);
 private:
 	QList<QByteArray> tutos;

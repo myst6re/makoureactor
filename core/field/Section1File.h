@@ -47,6 +47,7 @@ public:
 	const QList<GrpScript *> &grpScripts() const;
 	GrpScript *grpScript(int groupID) const;
 	int grpScriptCount() const;
+	inline static int maxGrpScriptCount() { return 255; }
 	bool insertGrpScript(int row);
 	bool insertGrpScript(int row, GrpScript *grpScript);
 	void deleteGrpScript(int row);
@@ -77,6 +78,7 @@ public:
 
 	const QList<FF7Text> &texts() const;
 	int textCount() const;
+	inline static int maxTextCount() { return 256; }
 	const FF7Text &text(int textID) const;
 	void setText(int textID, const FF7Text &text);
 	bool insertText(int textID, const FF7Text &text);

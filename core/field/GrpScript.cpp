@@ -19,19 +19,19 @@
 #include "../FF7Text.h"
 
 GrpScript::GrpScript() :
-	character(-1), animation(false), location(false), director(false)
+	_character(-1), animation(false), location(false), director(false)
 {
 	addScript(QByteArray(2, char(Opcode::RET)));
 	for(int i=1 ; i<32 ; i++)	addScript();
 }
 
 GrpScript::GrpScript(const QString &name) :
-	_name(name), character(-1), animation(false), location(false), director(false)
+	_name(name), _character(-1), animation(false), location(false), director(false)
 {
 }
 
 GrpScript::GrpScript(const GrpScript &other) :
-	_name(other.realName()), character(-1), animation(false), location(false), director(false)
+	_name(other.realName()), _character(-1), animation(false), location(false), director(false)
 {
 	foreach(Script *script, other.scripts()) {
 		_scripts.append(new Script(*script));
@@ -83,7 +83,7 @@ bool GrpScript::addScript(const QByteArray &script, bool explodeInit)
 void GrpScript::setType()
 {
 	if(_scripts.isEmpty())	return;
-	character = -1;
+	_character = -1;
 	director = animation = location = false;
 	
 	Script *firstScript = _scripts.first();
@@ -93,21 +93,21 @@ void GrpScript::setType()
 		switch((Opcode::Keys)opcode->id())
 		{
 		case Opcode::PC://Definition du personnage
-			character = ((OpcodePC *)opcode)->charID;
+			_character = ((OpcodePC *)opcode)->charID;
 			return;
 		case Opcode::CHAR://Definition du modèle 3D
-			character = 0xFF;
+			_character = 0xFF;
 			break;
 		case Opcode::LINE://definition d'une zone
-			if(character==-1)	location = true;
+			if(_character==-1)	location = true;
 			return;
 		case Opcode::BGPDH:case Opcode::BGSCR:case Opcode::BGON:
 		case Opcode::BGOFF:case Opcode::BGROL:case Opcode::BGROL2:
 		case Opcode::BGCLR://bg paramètres
-			if(character==-1)	animation = true;
+			if(_character==-1)	animation = true;
 			return;
 		case Opcode::MPNAM://mapname
-			if(character==-1)	director = true;
+			if(_character==-1)	director = true;
 			return;
 		default:
 			break;
@@ -177,7 +177,7 @@ QByteArray GrpScript::toByteArray(quint8 scriptID) const
 GrpScript::Type GrpScript::typeID()
 {
 	setType();
-	if(character != -1)		return Model;
+	if(_character != -1)		return Model;
 	if(location)			return Location;
 	if(animation)			return Animation;
 	if(director)			return Director;
@@ -189,13 +189,18 @@ QString GrpScript::type()
 	switch(typeID())
 	{
 	case Model:
-		if(character == 0xFF)	return QObject::tr("Objet 3D");
-		return QString("%1").arg(Opcode::character(character));
+		if(_character == 0xFF)	return QObject::tr("Objet 3D");
+		return QString("%1").arg(Opcode::character(_character));
 	case Location:	return QObject::tr("Zone");
 	case Animation:	return QObject::tr("Animation");
 	case Director:	return QObject::tr("Main");
 	default:		return QString();
 	}
+}
+
+qint16 GrpScript::character() const
+{
+	return _character;
 }
 
 QColor GrpScript::typeColor()

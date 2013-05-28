@@ -61,7 +61,7 @@ bool Section1File::open(const QByteArray &data)
 
 	quint32 posAKAO = 0;
 	quint16 nbAKAO, posScripts, pos;
-	quint8 j, k, grpVides=0, nbScripts = (quint8)data.at(2);
+	quint8 j, k, emptyGrps=0, nbScripts = (quint8)data.at(2);
 
 	GrpScript *grpScript;
 
@@ -80,11 +80,11 @@ bool Section1File::open(const QByteArray &data)
 	for(quint8 i=0 ; i<nbScripts ; ++i)
 	{
 		grpScript = new GrpScript(QString(data.mid(32+8*i,8)));
-		if(grpVides > 1)
+		if(emptyGrps > 1)
 		{
 			for(int j=0 ; j<32 ; ++j)	grpScript->addScript();
 			_grpScripts.append(grpScript);
-			grpVides--;
+			emptyGrps--;
 			continue;
 		}
 
@@ -100,13 +100,13 @@ bool Section1File::open(const QByteArray &data)
 			if(pos > positions[31])	positions[32] = pos;
 			else
 			{
-				grpVides = 1;
-				while(pos <= positions[31] && i+grpVides<nbScripts-1)
+				emptyGrps = 1;
+				while(pos <= positions[31] && i+emptyGrps<nbScripts-1)
 				{
-					memcpy(&pos, &constData[posScripts+64*(i+grpVides)+64], 2);
-					grpVides++;
+					memcpy(&pos, &constData[posScripts+64*(i+emptyGrps)+64], 2);
+					emptyGrps++;
 				}
-				if(i+grpVides==nbScripts)	positions[32] = posTexts;
+				if(i+emptyGrps==nbScripts)	positions[32] = posTexts;
 				else	positions[32] = pos;
 			}
 		}
@@ -385,7 +385,7 @@ int Section1File::grpScriptCount() const
 
 bool Section1File::insertGrpScript(int row)
 {
-	if(grpScriptCount() < 256) {
+	if(grpScriptCount() < maxGrpScriptCount()) {
 		_grpScripts.insert(row, new GrpScript);
 		setModified(true);
 		return true;
@@ -395,7 +395,7 @@ bool Section1File::insertGrpScript(int row)
 
 bool Section1File::insertGrpScript(int row, GrpScript *grpScript)
 {
-	if(grpScriptCount() < 255) {
+	if(grpScriptCount() < maxGrpScriptCount()) {
 		_grpScripts.insert(row, grpScript);
 		setModified(true);
 		return true;
@@ -742,7 +742,7 @@ void Section1File::setText(int textID, const FF7Text &text)
 
 bool Section1File::insertText(int textID, const FF7Text &text)
 {
-	if(textCount() < 255) {
+	if(textCount() < maxTextCount()) {
 		_texts.insert(textID, text);
 		foreach(GrpScript *grpScript, _grpScripts)
 			grpScript->shiftTextIds(textID-1, +1);

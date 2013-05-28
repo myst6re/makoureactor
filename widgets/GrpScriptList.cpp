@@ -26,8 +26,8 @@ GrpScriptList::GrpScriptList(QWidget *parent)
 	setIndentation(0);
 	setItemsExpandable(false);
 	setSortingEnabled(true);
-	setColumnWidth(0,25);
-	setColumnWidth(1,62);
+//	setColumnWidth(0, 25);
+	setColumnWidth(1, 62);
 	resizeColumnToContents(2);
 	setContextMenuPolicy(Qt::ActionsContextMenu);
 	setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -164,12 +164,52 @@ void GrpScriptList::fill(Section1File *scripts)
 	clear();
 	
 	int i=0;
-	foreach(GrpScript *grpScript, this->scripts->grpScripts())
-	{
+	foreach(GrpScript *grpScript, this->scripts->grpScripts()) {
 		item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->name() << grpScript->type());
 		item->setForeground(2, QBrush(grpScript->typeColor()));
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		item->setToolTip(0, grpScript->type());
+		QIcon icon;
+
+		switch(grpScript->character()) {
+		case 0:		icon = QIcon(":/images/icon-cloud.png");		break;
+		case 1:		icon = QIcon(":/images/icon-barret.png");		break;
+		case 2:		icon = QIcon(":/images/icon-tifa.png");			break;
+		case 3:		icon = QIcon(":/images/icon-aeris.png");		break;
+		case 4:		icon = QIcon(":/images/icon-red_xiii.png");		break;
+		case 5:		icon = QIcon(":/images/icon-yuffie.png");		break;
+		case 6:		icon = QIcon(":/images/icon-cait_sith.png");	break;
+		case 7:		icon = QIcon(":/images/icon-vincent.png");		break;
+		case 8:		icon = QIcon(":/images/icon-cid.png");			break;
+		default:
+			switch(grpScript->typeID()) {
+			case GrpScript::Director:
+				icon = QIcon(":/images/main.png");
+				break;
+			case GrpScript::Model:
+				icon = QIcon(":/images/model.png");
+				break;
+			case GrpScript::Animation:
+				icon = QIcon(":/images/background.png");
+				break;
+			case GrpScript::Location:
+				icon = QIcon(":/images/location.png");
+				break;
+			default:
+				QPixmap pixnull(16, 16);
+				pixnull.fill(Qt::transparent);
+				icon = QIcon(pixnull);
+				break;
+			}
+			break;
+		}
+
+		if(!icon.isNull()) {
+			item->setIcon(0, icon);
+		}
 	}
+
+	resizeColumnToContents(0);
 	
 	actions().at(0)->setEnabled(true);
 	actions().at(1)->setEnabled(topLevelItemCount() < 256);
@@ -218,7 +258,7 @@ void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 
 void GrpScriptList::add()
 {
-	if(topLevelItemCount() > 255)		return;
+	if(topLevelItemCount() > scripts->maxGrpScriptCount())		return;
 	
 	int grpScriptID = selectedID()+1;
 
