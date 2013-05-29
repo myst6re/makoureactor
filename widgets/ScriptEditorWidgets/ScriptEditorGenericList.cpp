@@ -338,7 +338,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case 0x24:
 		paramTypes<<word;return paramTypes;
 	case 0x25://TODO
-		paramTypes<<inconnu<<inconnu<<inconnu<<color<<inconnu<<inconnu;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<inconnu<<color<<inconnu<<inconnu;return paramTypes;
 	case 0x26:
 		paramTypes<<boolean;return paramTypes;
 	case 0x27:
@@ -436,7 +436,8 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<vitesse2;return paramTypes;
 	case 0x69:
 		paramTypes<<boolean;return paramTypes;
-	//case 0x6A://TODO
+	case 0x6A:
+		paramTypes<<bank<<bank<<sword<<sword<<byte;return paramTypes;
 	case 0x6B:
 		paramTypes<<bank<<bank<<bank<<bank<<color<<vitesse<<byte<<byte;return paramTypes;
 	//case 0x6C:return paramTypes;
@@ -450,7 +451,8 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<bank<<bank<<word;return paramTypes;
 	case 0x71:
 		paramTypes<<boolean;return paramTypes;
-	//case 0x72://TODO
+	case 0x72:
+		paramTypes<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit;return paramTypes;
 	case 0x73:case 0x74:
 		paramTypes<<bank<<bank<<party_id<<adress;return paramTypes;
 	case 0x75:
@@ -542,7 +544,8 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case 0xD8:
 		paramTypes<<field_id;return paramTypes;
 	//case 0xD9:return paramTypes;
-	//case 0xDA://TODO
+	case 0xDA:
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<word<<word<<word<<word<<word;return paramTypes;
 	case 0xDB:
 		paramTypes<<boolean;return paramTypes;
 	case 0xDC:
@@ -553,14 +556,19 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<bank<<bank<<parametre_id<<state_id;return paramTypes;
 	case 0xE2:case 0xE3:case 0xE4:
 		paramTypes<<bank<<bank<<parametre_id;return paramTypes;
-	//case 0xE5:case 0xE6:case 0xE7:case 0xE8:case 0xE9:case 0xEA:case 0xEB:case 0xEC:case 0xED:case 0xEE:case 0xEF://TODO
+	//case 0xE5:case 0xE6:case 0xE7:case 0xE8:
+	case 0xE9:
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte<<byte<<byte;return paramTypes;
+	//case 0xEA:case 0xEB:case 0xEC:case 0xED:case 0xEE:case 0xEF://TODO
 	case 0xF0:case 0xF3:case 0xF4:case 0xF6:
 		paramTypes<<music_id;return paramTypes;
 	case 0xF1:
 		paramTypes<<bank<<bank<<sound_id<<byte;return paramTypes;
-	//case 0xF2:case 0xF7://TODO
+	case 0xF2:
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<word<<word<<word<<word;return paramTypes;
 	case 0xF5:
 		paramTypes<<boolean;return paramTypes;
+	//case 0xF7://TODO
 	case 0xF8:
 		paramTypes<<movie_id;return paramTypes;
 	//case 0xF9:return paramTypes;
@@ -568,7 +576,9 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<bank<<bank<<adress;return paramTypes;
 	case 0xFB:
 		paramTypes<<boolean;return paramTypes;
-	//case 0xFC:case 0xFD://TODO
+	//case 0xFC://TODO
+	case 0xFD:
+		paramTypes<<bank<<bank<<inconnu<<inconnu;return paramTypes;
 	case 0xFE:
 		paramTypes<<bank<<bank<<adress;return paramTypes;
 	//case 0xFF:return paramTypes;
