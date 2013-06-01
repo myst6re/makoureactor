@@ -75,8 +75,9 @@ protected:
 	quint32 originInData(const Tile &tile) const;
 	QRgb directColor(quint16 color) const;
 private:
-	static QList<Palette *> openPalettes(const QByteArray &data);
-	static MIM headerPal, headerImg, headerEffect;
+	static bool openPalettes(const QByteArray &data, QList<Palette *> &palettes);
+	static quint32 headerPalSize;
+	static MIM headerImg, headerEffect;
 };
 
 #endif // BACKGROUNDFILEPS_H

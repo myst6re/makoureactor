@@ -146,7 +146,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::open2(FieldArchiveIOObserver *ob
 	Q_UNUSED(observer)
 
 	QString name = this->name();
-	fieldArchive()->addField(new FieldPS(name.left(name.lastIndexOf('.')), this));
+	fieldArchive()->appendField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 
 	return fieldArchive()->field(0)->isOpen() ? Ok : Invalid;
 }
@@ -228,7 +228,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(FieldArchiveIOObserver *obs
 
 		if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
 			QString name = file->name().mid(file->name().lastIndexOf('/')+1);
-			fieldArchive()->addField(new FieldPS(name.left(name.lastIndexOf('.')), this));
+			fieldArchive()->appendField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 		}
 	}
 	// qDebug("Ouverture : %d ms", t.elapsed());
@@ -454,7 +454,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::open2(FieldArchiveIOObserver *obs
 		}
 
 		if(!name.startsWith("WM", Qt::CaseInsensitive)) {
-			fieldArchive()->addField(new FieldPS(name.left(name.lastIndexOf('.')), this));
+			fieldArchive()->appendField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 		}
 	}
 

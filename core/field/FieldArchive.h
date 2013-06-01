@@ -49,6 +49,7 @@ public:
 	int indexOfField(const QString &name) const;
 	const Field *field(quint32 id) const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
+	void appendField(Field *field);
 	void addField(Field *field);
 	void removeField(quint32 id);
 
@@ -81,6 +82,7 @@ protected:
 	virtual void setSaved();
 	void setIO(FieldArchiveIO *io);
 private:
+	void updateFieldLists(Field *field, int fieldID);
 	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const;
 	bool openField(Field *field, bool dontOptimize=false);

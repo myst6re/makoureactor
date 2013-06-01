@@ -24,27 +24,32 @@ Palette::~Palette()
 {
 }
 
-PalettePC::PalettePC() : Palette() {}
+PalettePC::PalettePC() :
+	Palette(), _transparency(false)
+{
+}
 
-PalettePS::PalettePS() : Palette() {}
+PalettePS::PalettePS() :
+  Palette()
+{
+}
 
-PalettePC::PalettePC(const char *palette, quint8 transparency) :
+PalettePC::PalettePC(const char *palette, bool transparency) :
 	Palette(), _transparency(transparency)
 {
 	quint16 first, color;
 	memcpy(&first, palette, 2);
-	_colors.append(PsColor::fromPsColor(first));
+	addColor(PsColor::fromPsColor(first));
 //	_masks.append(first >> 15);
 //	_isZero.append(first==0);
 
 	palette += 2;
 
-	for(quint16 i=1 ; i<256 ; ++i)
-	{
+	for(quint16 i=1 ; i<256 ; ++i) {
 		memcpy(&color, palette, 2);
-		if(color==0) color = first;
+		if(color==0 && _transparency) color = first;
 
-		_colors.append(PsColor::fromPsColor(color));
+		addColor(PsColor::fromPsColor(color));
 //		_masks.append(color >> 15);
 //		_isZero.append(color==0);
 
@@ -55,12 +60,11 @@ PalettePC::PalettePC(const char *palette, quint8 transparency) :
 PalettePS::PalettePS(const char *palette) :
 	Palette()
 {
-	for(quint16 i=0 ; i<256 ; ++i)
-	{
+	for(quint16 i=0 ; i<256 ; ++i) {
 		quint16 color;
 		memcpy(&color, palette, 2);
 
-		_colors.append(PsColor::fromPsColor(color));
+		addColor(PsColor::fromPsColor(color));
 //		_masks.append(color >> 15);
 		_isZero.append(color==0);
 
@@ -68,22 +72,85 @@ PalettePS::PalettePS(const char *palette) :
 	}
 }
 
-QRgb Palette::color(int index) const
+QByteArray Palette::toByteArray() const
 {
-	return _colors.at(index);
+	QByteArray data;
+
+	foreach(const QRgb color, _colors) {
+		quint16 psColor = PsColor::toPsColor(color);
+		data.append((char *)&psColor, 2);
+	}
+
+	return data;
 }
 
-const QList<QRgb> &Palette::colors() const
+QImage Palette::toImage() const
 {
-	return _colors;
+	const quint8 size = 16;
+	QImage image(size, size, QImage::Format_ARGB32);
+
+	for(int y=0 ; y<size ; ++y) {
+		for(int x=0 ; x<size ; ++x) {
+			image.setPixel(x, y, color(y * size + x));
+		}
+	}
+
+	return image;
 }
 
-bool PalettePC::notZero(quint8 index) const
+bool PalettePC::isZero(quint8 index) const
 {
-	return index != 0 || !_transparency;
+	return index == 0 && _transparency;
 }
 
-bool PalettePS::notZero(quint8 index) const
+bool PalettePC::transparency() const
 {
-	return !_isZero.at(index);
+	return _transparency;
+}
+
+void PalettePC::setTransparency(bool transparency)
+{
+	_transparency = transparency;
+}
+
+PalettePS PalettePC::toPS() const
+{
+	PalettePS palPS;
+
+	for(int index=0 ; index<256 ; ++index) {
+		palPS.setIsZero(index, isZero(index));
+		palPS.addColor(color(index));
+	}
+
+	return palPS;
+}
+
+bool PalettePS::isZero(quint8 index) const
+{
+	return _isZero.at(index);
+}
+
+void PalettePS::setIsZero(int index, bool transparency)
+{
+	if(_isZero.size() != 256) {
+		for(int i=0 ; i<256 ; ++i) {
+			_isZero.append(i == index);
+		}
+	} else {
+		_isZero.replace(index, transparency);
+	}
+}
+
+PalettePC PalettePS::toPC() const
+{
+	PalettePC palPC;
+
+	for(quint16 index=0 ; index<256 ; ++index) {
+		if(isZero(index)) {
+			palPC.setTransparency(true);// TODO: real conversion?
+		}
+		palPC.addColor(color(index));
+	}
+
+	return palPC;
 }

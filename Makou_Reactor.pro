@@ -113,7 +113,8 @@ HEADERS += \
     widgets/ModelManagerPS.h \
     widgets/ModelManagerPC.h \
     FieldModelThread.h \
-    core/world/TblFile.h
+    core/world/TblFile.h \
+    core/field/PaletteIO.h
 
 SOURCES += \
     Window.cpp \
@@ -221,7 +222,8 @@ SOURCES += \
     widgets/ModelManagerPS.cpp \
     widgets/ModelManagerPC.cpp \
     FieldModelThread.cpp \
-    core/world/TblFile.cpp
+    core/world/TblFile.cpp \
+    core/field/PaletteIO.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

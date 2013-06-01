@@ -17,10 +17,11 @@
  ****************************************************************************/
 #include "BackgroundFilePS.h"
 #include "Palette.h"
+#include "PaletteIO.h"
 #include "../PsColor.h"
 #include "FieldPS.h"
 
-MIM BackgroundFilePS::headerPal;
+quint32 BackgroundFilePS::headerPalSize;
 MIM BackgroundFilePS::headerImg;
 MIM BackgroundFilePS::headerEffect;
 
@@ -42,7 +43,7 @@ quint8 BackgroundFilePS::depth(const Tile &tile) const
 quint32 BackgroundFilePS::originInData(const Tile &tile) const
 {
 	quint16 texID = tile.textureID - (tile.textureID2 ? headerEffect.x : headerImg.x)/64;
-	quint32 dataStart = headerPal.size + 12 + (tile.textureID2 ? headerImg.size : 0);
+	quint32 dataStart = headerPalSize + 12 + (tile.textureID2 ? headerImg.size : 0);
 	quint32 textureStart = texID * 128;
 	quint32 tileStart = tile.srcY * textureWidth(tile) + tile.srcX * (tile.depth == 0 ? 0.5 : tile.depth);
 	return dataStart + textureStart + tileStart;
@@ -53,27 +54,17 @@ QRgb BackgroundFilePS::directColor(quint16 color) const
 	return PsColor::fromPsColor(color);
 }
 
-QList<Palette *> BackgroundFilePS::openPalettes(const QByteArray &data)
+bool BackgroundFilePS::openPalettes(const QByteArray &data, QList<Palette *> &palettes)
 {
-	const char *constMimData = data.constData();
-	quint32 mimDataSize = data.size(), i;
-	QList<Palette *> palettes;
+	QBuffer palBuff;
+	palBuff.setData(data);
 
-	if(mimDataSize < 12) {
-		return QList<Palette *>() << NULL;
+	PaletteIOPS io(&palBuff);
+	if(!io.read(palettes)) {
+		return false;
 	}
 
-	memcpy(&headerPal, constMimData, 12);
-
-	if(mimDataSize < quint32(12+headerPal.h*512)) {
-		return QList<Palette *>() << NULL;
-	}
-
-	for(i=0 ; i<headerPal.h ; ++i) {
-		palettes.append(new PalettePS(constMimData + 12 + i*512));
-	}
-
-	return palettes;
+	return true;
 }
 
 QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
@@ -82,20 +73,22 @@ QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActif
 	QByteArray mimDataDec = ((FieldPS *)field())->io()->mimData(field());
 	const char *constMimData = mimDataDec.constData();
 	quint32 mimDataSize = mimDataDec.size(), i;
+	QList<Palette *> palettes;
 
-	QList<Palette *> palettes = openPalettes(mimDataDec);
-	if(palettes.size() == 1 && palettes.first() == NULL) {
+	if(!openPalettes(mimDataDec, palettes)) {
 		return QPixmap();
 	}
 
-	if(mimDataSize < headerPal.size + 12)	return QPixmap();
+	memcpy(&headerPalSize, constMimData, 4);
 
-	memcpy(&headerImg, constMimData + headerPal.size, 12);
+	if(mimDataSize < headerPalSize + 12)	return QPixmap();
+
+	memcpy(&headerImg, constMimData + headerPalSize, 12);
 
 	headerImg.w *= 2;
 
-	if(headerPal.size+headerImg.size+12 <= mimDataSize) {
-		memcpy(&headerEffect, constMimData + headerPal.size+headerImg.size, 12);
+	if(headerPalSize+headerImg.size+12 <= mimDataSize) {
+		memcpy(&headerEffect, constMimData + headerPalSize+headerImg.size, 12);
 		headerEffect.w *= 2;
 	} else {
 		headerEffect.size = 4;

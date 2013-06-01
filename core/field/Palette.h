@@ -20,26 +20,41 @@
 
 #include <QtCore>
 #include <QRgb>
+#include <QImage>
 
 class Palette
 {
 public:
 	Palette();
 	virtual ~Palette();
-	virtual bool notZero(quint8 index) const=0;
-	QRgb color(int index) const;
-	const QList<QRgb> &colors() const;
-protected:
+	inline bool notZero(quint8 index) const { return !isZero(index); }
+	virtual bool isZero(quint8 index) const=0;
+	inline QRgb color(int index) const { return _colors.at(index); }
+	inline const QList<QRgb> &colors() const { return _colors; }
+	inline void addColor(QRgb color) { _colors.append(color); }
+	inline void setColor(int index, QRgb color) { _colors.replace(index, color); }
+	inline void insertColor(int index, QRgb color) { _colors.insert(index, color); }
+	inline void removeColor(int index) { _colors.removeAt(index); }
+	inline void setColors(const QList<QRgb> &colors) { _colors = colors; }
+	QByteArray toByteArray() const;
+	QImage toImage() const;
+private:
 	QList<QRgb> _colors;
 //	QList<bool> _masks;
 };
+
+class PalettePS;
+class PalettePC;
 
 class PalettePC : public Palette
 {
 public:
 	PalettePC();
-	PalettePC(const char *palette, quint8 transparency);
-	bool notZero(quint8 index) const;
+	explicit PalettePC(const char *palette, bool transparency=false);
+	bool isZero(quint8 index) const;
+	bool transparency() const;
+	void setTransparency(bool transparency);
+	PalettePS toPS() const;
 private:
 	bool _transparency;
 };
@@ -49,7 +64,9 @@ class PalettePS : public Palette
 public:
 	PalettePS();
 	explicit PalettePS(const char *palette);
-	bool notZero(quint8 index) const;
+	bool isZero(quint8 index) const;
+	void setIsZero(int index, bool transparency);
+	PalettePC toPC() const;
 private:
 	QList<bool> _isZero;
 };

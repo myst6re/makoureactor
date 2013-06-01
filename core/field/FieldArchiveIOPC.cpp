@@ -99,7 +99,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(FieldArchiveIOObserver *obs
 		} else if(name.endsWith(".tut", Qt::CaseInsensitive)) {
 			fieldArchive()->addTut(name.toLower().left(name.size()-4));
 		} else if(!name.contains('.')) {
-			fieldArchive()->addField(new FieldPC(name, this));
+			fieldArchive()->appendField(new FieldPC(name, this));
 			++i;
 		}
 	}
@@ -215,7 +215,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCFile::open2(FieldArchiveIOObserver *ob
 	Q_UNUSED(observer)
 
 	QString name = this->name();
-	fieldArchive()->addField(new FieldPC(name.left(name.lastIndexOf('.')), this));
+	fieldArchive()->appendField(new FieldPC(name.left(name.lastIndexOf('.')), this));
 
 	return fieldArchive()->field(0)->isOpen() ? Ok : Invalid;
 }
@@ -294,7 +294,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::open2(FieldArchiveIOObserver *obs
 		} else if(name.endsWith(".tut", Qt::CaseInsensitive)) {
 			fieldArchive()->addTut(name.toLower().left(name.size()-4));
 		} else if(!name.contains(".")) {
-			fieldArchive()->addField(new FieldPC(name, this));
+			fieldArchive()->appendField(new FieldPC(name, this));
 		}
 	}
 

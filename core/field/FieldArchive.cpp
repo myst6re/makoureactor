@@ -58,17 +58,7 @@ FieldArchiveIO::ErrorCode FieldArchive::open(FieldArchiveIOObserver *observer)
 
 	int fieldID=0;
 	foreach(Field *f, fileList) {
-		const QString &name = f->name();
-
-		int index;
-		QString mapId;
-		if((index = Data::field_names.indexOf(name)) != -1) {
-			mapId = QString("%1").arg(index, 3);
-		} else {
-			mapId = "~";
-		}
-		fieldsSortByName.insert(name, fieldID);
-		fieldsSortByMapId.insert(mapId, fieldID);
+		updateFieldLists(f, fieldID);
 		++fieldID;
 	}
 
@@ -145,15 +135,34 @@ Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 	return field;
 }
 
+void FieldArchive::updateFieldLists(Field *field, int fieldID)
+{
+	const QString &name = field->name();
+
+	int index;
+	QString mapId;
+	if((index = Data::field_names.indexOf(name)) != -1) {
+		mapId = QString("%1").arg(index, 3);
+	} else {
+		mapId = "~";
+	}
+	fieldsSortByName.insert(name, fieldID);
+	fieldsSortByMapId.insert(mapId, fieldID);
+}
+
 void FieldArchive::addField(Field *field/*, bool referenceToMaplist*/)
 {
-//	int fieldId = fileList.size();
-	fileList.append(field);
-//	fieldsSortByName.insert(field->name(), fieldId);
-//	fieldsSortByMapId.insert(field->name(), fieldId);
+	int fieldId = fileList.size();
+	appendField(field);
+	updateFieldLists(field, fieldId);
 //	if(referenceToMaplist) {
 		//TODO
 //	}
+}
+
+void FieldArchive::appendField(Field *field)
+{
+	fileList.append(field);
 }
 
 void FieldArchive::removeField(quint32 id)
@@ -193,7 +202,7 @@ void FieldArchive::searchAll()
 	bool iff = false, win = false;
 	OpcodeIf *opcodeIf=0;
 
-	QFile deb(QString("scriptP%1.txt").arg(isPC() ? "C" : "S"));
+	QFile deb(QString("savesP%1.txt").arg(isPC() ? "C" : "S"));
 	deb.open(QIODevice::WriteOnly | QIODevice::Text/* | QIODevice::Truncate*/);
 
 
@@ -201,25 +210,46 @@ void FieldArchive::searchAll()
 	foreach(int i, fieldsSortByMapId) {
 		Field *field = this->field(i, true);
 		if(field != NULL) {
-			if(field->name() != "convil_2") continue;
-			Section1File *s1 = field->scriptsAndTexts();
-			int groupID = 0;
-			foreach(GrpScript *group, s1->grpScripts()) {
-				int scriptID=0;
-				foreach(Script *script, group->scripts()) {
-					int opcodeID = 0;
-					foreach(Opcode *opcode, script->getOpcodes()) {
-//						if(opcode->id() != 0x50 && opcode->id() != 0x48 &&
-//								opcode->id() != 0x2f && opcode->id() != 0x40) {
-						deb.write(QString("%1: %2, %3, %4 -> %5\n").arg(Data::field_names.indexOf(field->name()))
-								  .arg(groupID).arg(scriptID).arg(opcodeID)
-								  .arg(QString(opcode->toByteArray().toHex())).toLatin1());
-//						}
-						opcodeID++;
+			bool modelFound = false;
+			int modelFoundID = 0;
+			FieldModelLoaderPC *modelLoader = (FieldModelLoaderPC *)field->fieldModelLoader();
+			if(modelLoader->isOpen()) {
+				foreach(const QString &HRC, modelLoader->HRCNames()) {
+					if(HRC == "AVFE.HRC") {
+						modelFound = true;
+						break;
 					}
-					scriptID++;
+					++modelFoundID;
 				}
-				groupID++;
+			}
+
+			if(!modelFound) continue;
+
+//			if(field->name() != "convil_2") continue;
+			Section1File *s1 = field->scriptsAndTexts();
+			int modelID = 0;
+			foreach(GrpScript *group, s1->grpScripts()) {
+				if(group->typeID() == GrpScript::Model) {
+					if(modelID == modelFoundID) {
+						if(group->size() > 0) {
+							Script *script = group->script(0);
+							QList<FF7Position> positions;
+							foreach(Opcode *opcode, script->getOpcodes()) {
+								opcode->listModelPositions(positions);
+							}
+
+							if(!positions.isEmpty()) {
+								const FF7Position &pos = positions.first();
+								deb.write(QString("%1,%2,%3,%4,%5,%6\n")
+										  .arg(Data::field_names.indexOf(field->name())).arg(field->name())
+										  .arg(pos.x).arg(pos.y).arg(pos.hasZ ? QString::number(pos.z) : "?").arg(pos.hasId ? QString::number(pos.id) : "?")
+										  .toLatin1());
+							}
+						}
+						break;
+					}
+					modelID++;
+				}
 			}
 //			CaFile *ca = field->camera();
 //			if(ca->isOpen()) {

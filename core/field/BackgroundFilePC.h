@@ -56,7 +56,7 @@ protected:
 	quint32 originInData(const Tile &tile) const;
 	QRgb directColor(quint16 color) const;
 private:
-	static QList<Palette *> openPalettes(const QByteArray &data, const QByteArray &palData);
+	static bool openPalettes(const QByteArray &data, const QByteArray &palData, QList<Palette *> &palettes);
 	static Tile tilePC2Tile(const TilePC &tile);
 	static QHash<quint8, quint32> posTextures;
 	static QByteArray data;

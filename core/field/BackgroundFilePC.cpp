@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "BackgroundFilePC.h"
 #include "Palette.h"
+#include "PaletteIO.h"
 #include "../PsColor.h"
 #include "FieldPC.h"
 
@@ -50,28 +51,24 @@ QRgb BackgroundFilePC::directColor(quint16 color) const
 	return qRgb( (color>>11)*COEFF_COLOR, (color>>6 & 31)*COEFF_COLOR, (color & 31)*COEFF_COLOR ); // special PC RGB16 color
 }
 
-QList<Palette *> BackgroundFilePC::openPalettes(const QByteArray &data, const QByteArray &palData)
+bool BackgroundFilePC::openPalettes(const QByteArray &data, const QByteArray &palData, QList<Palette *> &palettes)
 {
-	const char *constDataPal = palData.constData();
-	quint32 dataPalSize = palData.size(), i;
-	QList<Palette *> palettes;
-	quint16 nb;
+	QBuffer palBuff, buff;
+	palBuff.setData(palData);
+	buff.setData(data);
 
-	if(dataPalSize < 12) {
-		return QList<Palette *>() << NULL;
+	if(!buff.open(QIODevice::ReadOnly) ||
+			!buff.seek(12)) {
+		return false;
 	}
 
-	memcpy(&nb, constDataPal + 10, 2);//nbPalettes
-
-	if(dataPalSize < quint32(12+nb*512)) {
-		return QList<Palette *>() << NULL;
+	PaletteIOPC io(&palBuff);
+	io.setDeviceAlpha(&buff);
+	if(!io.read(palettes)) {
+		return false;
 	}
 
-	for(i=0 ; i<nb ; ++i) {
-		palettes.append(new PalettePC(constDataPal + 12+i*512, data.at(12+i)));
-	}
-
-	return palettes;
+	return true;
 }
 
 QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
@@ -79,12 +76,12 @@ QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActif
 	data = field()->sectionData(Field::Background);
 	const char *constData = data.constData();
 	quint32 dataSize = data.size(), i;
-	QList<Palette *> palettes = openPalettes(data, field()->sectionData(Field::PalettePC));
+	QList<Palette *> palettes;
 	quint32 aTex = 44;
 	quint16 nbTiles1, nbTiles2=0, nbTiles3=0, nbTiles4=0;
 	bool exist2, exist3, exist4;
 
-	if(palettes.size() == 1 && palettes.first() == NULL) {
+	if(!openPalettes(data, field()->sectionData(Field::PalettePC), palettes)) {
 		return QPixmap();
 	}
 
