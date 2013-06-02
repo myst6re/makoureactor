@@ -22,18 +22,7 @@
 #include <QPixmap>
 #include "FieldPart.h"
 #include "Palette.h"
-
-typedef struct {
-	qint16 dstX, dstY;
-	quint8 srcX, srcY;
-	quint8 paletteID;
-	quint16 ID;
-	quint8 param, state;
-	quint8 blending;
-	quint8 typeTrans, size;
-	quint8 textureID, textureID2;
-	quint8 depth;
-} Tile;
+#include "BackgroundTiles.h"
 
 class BackgroundFile : public FieldPart
 {
@@ -48,16 +37,31 @@ public:
 	void clear() { }
 	QPixmap openBackground();
 	virtual QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
-	virtual bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)=0;
+	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 protected:
+	virtual bool openTiles(const QByteArray &data, qint64 *pos=NULL)=0;
 	QPixmap drawBackground(const QMultiMap<qint16, Tile> &tiles, const QList<Palette *> &palettes, const QByteArray &textureData) const;
 	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
 	virtual quint16 textureWidth(const Tile &tile) const=0;
 	virtual quint8 depth(const Tile &tile) const=0;
 	virtual quint32 originInData(const Tile &tile) const=0;
 	virtual QRgb directColor(quint16 color) const=0;
+	inline const BackgroundTiles &tiles() const {
+		return _tiles;
+	}
+	inline void setTiles(const BackgroundTiles &tiles) {
+		if(!tilesAreCached()) {
+			fieldCache = field();
+			_tiles = tiles;
+		}
+	}
+	inline bool tilesAreCached() const {
+		return fieldCache == field();
+	}
 private:
 	static void area(const QMultiMap<qint16, Tile> &tiles, quint16 &minWidth, quint16 &minHeight, int &width, int &height);
+	static BackgroundTiles _tiles;
+	static Field *fieldCache;
 };
 
 #endif // BACKGROUNDFILE_H

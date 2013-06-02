@@ -58,17 +58,17 @@ bool PaletteIO::read(QList<Palette *> &palettes) const
 		return false;
 	}
 
-	quint16 nbPal;
+	quint16 palH;
 
-	memcpy(&nbPal, palData.constData() + 10, 2);
+	memcpy(&palH, palData.constData() + 10, 2);
 
-	palData = device()->read(nbPal * 512);
+	palData = device()->read(palH * 512);
 
-	if(palData.size() < nbPal * 512) {
+	if(palData.size() < palH * 512) {
 		return false;
 	}
 
-	for(quint32 i=0 ; i<nbPal ; ++i) {
+	for(quint32 i=0 ; i<palH ; ++i) {
 		palettes.append(createPalette(palData.constData() + i*512));
 	}
 
@@ -81,15 +81,15 @@ bool PaletteIO::write(const QList<const Palette *> &palettes) const
 		return false;
 	}
 
-	quint16 nbPal = palettes.size();
-	quint16 size = 8 + 512 * nbPal;
-	quint16 palX = 0, palY = 480, colorPerPal = 256;
+	const quint16 palW = 256, palH = palettes.size();
+	const quint16 size = 8 + 512 * palH;
+	const quint16 palX = 0, palY = 480;
 
 	device()->write((char *)&size, 2);
 	device()->write((char *)&palX, 2);
 	device()->write((char *)&palY, 2);
-	device()->write((char *)&colorPerPal, 2);
-	device()->write((char *)&nbPal, 2);
+	device()->write((char *)&palW, 2);
+	device()->write((char *)&palH, 2);
 
 	foreach(const Palette *pal, palettes) {
 		device()->write(pal->toByteArray());

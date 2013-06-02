@@ -47,7 +47,7 @@ PalettePC::PalettePC(const char *palette, bool transparency) :
 
 	for(quint16 i=1 ; i<256 ; ++i) {
 		memcpy(&color, palette, 2);
-		if(color==0 && _transparency) color = first;
+		if(color==0) color = first;
 
 		addColor(PsColor::fromPsColor(color));
 //		_masks.append(color >> 15);

@@ -18,6 +18,9 @@
 #include "BackgroundFile.h"
 #include "Field.h"
 
+BackgroundTiles BackgroundFile::_tiles;
+Field *BackgroundFile::fieldCache = 0;
+
 BackgroundFile::BackgroundFile(Field *field) :
 	FieldPart(field)
 {
@@ -85,6 +88,10 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 		quint32 top = (minHeight + tile.dstY) * width;
 		quint16 baseX = minWidth + tile.dstX;
 
+		if(origin == 0) {
+			qWarning() << "Texture ID overflow";
+			continue;
+		}
 
 		if(depth(tile) == 2) {
 
@@ -102,6 +109,11 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 				}
 			}
 		} else if(depth(tile) == 1) {
+
+			if(tile.paletteID >= palettes.size()) {
+				qWarning() << "Palette ID overflow" << tile.paletteID << palettes.size();
+				continue;
+			}
 
 			Palette *palette = palettes.at(tile.paletteID);
 
@@ -123,6 +135,11 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 				}
 			}
 		} else if(depth(tile) == 0) {
+
+			if(tile.paletteID >= palettes.size()) {
+				qWarning() << "Palette ID overflow" << tile.paletteID << palettes.size();
+				continue;
+			}
 
 			Palette *palette = palettes.at(tile.paletteID);
 
@@ -157,12 +174,27 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 					top += width;
 				}
 			}
+		} else {
+			qWarning() << "Unknown depth";
 		}
 	}
 
 	foreach(Palette *pal, palettes)	delete pal;
 
 	return QPixmap::fromImage(image);
+}
+
+bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
+{
+	if(!tilesAreCached()) {
+		if(!openTiles(field()->sectionData(Field::Background))) {
+			return false;
+		}
+	}
+
+	usedParams = tiles().usedParams(layerExists);
+
+	return true;
 }
 
 QRgb BackgroundFile::blendColor(quint8 type, QRgb color0, QRgb color1)

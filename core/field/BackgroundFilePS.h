@@ -19,41 +19,10 @@
 #define BACKGROUNDFILEPS_H
 
 #include "BackgroundFile.h"
+#include "BackgroundTiles.h"
+#include "BackgroundTilesIO.h"
 
 class FieldPS;
-
-//Sizeof : 8
-typedef struct {
-	qint16 dstX, dstY;
-	quint8 srcX, srcY;
-	unsigned ZZ1:6;
-	unsigned palID:4;
-	unsigned ZZ2:6;
-} layer1Tile;
-
-//Sizeof : 2
-typedef struct {
-	unsigned page_x:4;
-	unsigned page_y:1;
-	unsigned typeTrans:2;//transparence n°3
-	unsigned depth:2;
-	unsigned ZZZ:7;
-} layer2Tile;
-
-//Sizeof : 2
-typedef struct {
-	unsigned param:7;
-	unsigned blending:1;//transparence n°1
-	quint8 state;
-} layer3Tile;
-
-//Sizeof : 4
-typedef struct {
-	quint16 group;//id
-	unsigned param:7;
-	unsigned blending:1;//transparence n°1
-	quint8 state;
-} paramTile;
 
 //Sizeof : 12
 typedef struct {
@@ -68,7 +37,6 @@ public:
 	explicit BackgroundFilePS(FieldPS *field);
 
 	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
-	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 protected:
 	quint16 textureWidth(const Tile &tile) const;
 	quint8 depth(const Tile &tile) const;
@@ -76,6 +44,7 @@ protected:
 	QRgb directColor(quint16 color) const;
 private:
 	static bool openPalettes(const QByteArray &data, QList<Palette *> &palettes);
+	bool openTiles(const QByteArray &data, qint64 *pos=NULL);
 	static quint32 headerPalSize;
 	static MIM headerImg, headerEffect;
 };
