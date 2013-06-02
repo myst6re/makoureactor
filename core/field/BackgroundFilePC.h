@@ -41,6 +41,7 @@ private:
 	static Tile tilePC2Tile(const TilePC &tile);
 	static QHash<quint8, quint32> posTextures;
 	static QByteArray data;
+	qint64 aTex;
 };
 
 #endif // BACKGROUNDFILEPC_H

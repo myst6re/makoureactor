@@ -50,18 +50,10 @@ protected:
 		return _tiles;
 	}
 	inline void setTiles(const BackgroundTiles &tiles) {
-		if(!tilesAreCached()) {
-			fieldCache = field();
-			_tiles = tiles;
-		}
-	}
-	inline bool tilesAreCached() const {
-		return fieldCache == field();
+		_tiles = tiles;
 	}
 private:
-	static void area(const QMultiMap<qint16, Tile> &tiles, quint16 &minWidth, quint16 &minHeight, int &width, int &height);
-	static BackgroundTiles _tiles;
-	static Field *fieldCache;
+	BackgroundTiles _tiles;
 };
 
 #endif // BACKGROUNDFILE_H

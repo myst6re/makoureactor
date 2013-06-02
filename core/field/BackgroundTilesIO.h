@@ -12,17 +12,17 @@ typedef struct {
 	quint8 srcY, unused3;
 	quint8 srcX2, unused4;
 	quint8 srcY2, unused5;
-	quint32 unused6;
-	quint8 paletteID, unused7;
+	quint16 width, height;//Normaly unused
+	quint8 paletteID, unused6;
 	quint16 ID;
 	quint8 param;
 	quint8 state;
 	quint8 blending;
-	quint8 unused8;
+	quint8 unused7;
 	quint8 typeTrans, size;//Normaly unused
-	quint8 textureID, unused10;
-	quint8 textureID2, unused11;
-	quint8 depth, layerID;
+	quint8 textureID, unused8;
+	quint8 textureID2, unused9;
+	quint8 depth, layerID;//Normaly unused
 } TilePC;
 
 //Sizeof : 8
@@ -88,6 +88,7 @@ protected:
 	bool writeData(const BackgroundTiles &tiles) const;
 private:
 	static Tile tilePC2Tile(const TilePC &tile);
+	static TilePC tile2TilePC(const Tile &tile);
 };
 
 class BackgroundTilesIOPS : public BackgroundTilesIO

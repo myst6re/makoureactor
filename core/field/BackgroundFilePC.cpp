@@ -25,7 +25,7 @@ QHash<quint8, quint32> BackgroundFilePC::posTextures;
 QByteArray BackgroundFilePC::data;
 
 BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
-	BackgroundFile(field)
+	BackgroundFile(field), aTex(-1)
 {
 }
 
@@ -36,11 +36,14 @@ quint16 BackgroundFilePC::textureWidth(const Tile &tile) const
 
 quint8 BackgroundFilePC::depth(const Tile &tile) const
 {
+	/* When tile.depth is used, there is a bug,
+	 * because the PC version doesn't understand
+	 * depth = 0. */
 	if(posTextures.contains(tile.textureID)) {
 		quint32 pos = posTextures.value(tile.textureID);
 		return data.at(pos);
 	}
-	return quint8(-1);
+	return qMax(quint8(1), tile.depth);
 }
 
 quint32 BackgroundFilePC::originInData(const Tile &tile) const
@@ -83,10 +86,24 @@ bool BackgroundFilePC::openTiles(const QByteArray &data, qint64 *pos)
 	QBuffer buff;
 	buff.setData(data);
 
+	/*QFile fileIn("tilesIn");
+	if(fileIn.open(QIODevice::WriteOnly)) {
+		fileIn.write(data.mid(0x28));
+		fileIn.close();
+	} else {
+		qWarning() << "tilesIn can't be written";
+	}*/
+
 	BackgroundTilesIOPC io(&buff);
 	if(!io.read(tiles)) {
 		return false;
 	}
+
+	/*QFile file("tilesOut");
+	BackgroundTilesIOPC io2(&file);
+	if(!io2.write(tiles)) {
+		qWarning() << "tilesOut can't be written";
+	}*/
 
 	setTiles(tiles);
 
@@ -124,12 +141,17 @@ QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActif
 	}
 	i=0;*/
 
-	if(!tilesAreCached() && !openTiles(data, &aTex)) {
-		foreach(Palette *palette, palettes) {
-			delete palette;
-		}
+	if(this->aTex < 0) {
+		if(!openTiles(data, &aTex)) {
+			foreach(Palette *palette, palettes) {
+				delete palette;
+			}
 
-		return QPixmap();
+			return QPixmap();
+		}
+		this->aTex = aTex;
+	} else {
+		aTex = this->aTex;
 	}
 
 	aTex += 7;

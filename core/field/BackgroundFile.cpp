@@ -18,9 +18,6 @@
 #include "BackgroundFile.h"
 #include "Field.h"
 
-BackgroundTiles BackgroundFile::_tiles;
-Field *BackgroundFile::fieldCache = 0;
-
 BackgroundFile::BackgroundFile(Field *field) :
 	FieldPart(field)
 {
@@ -39,29 +36,6 @@ QPixmap BackgroundFile::openBackground()
 	return openBackground(paramActifs, z);
 }
 
-void BackgroundFile::area(const QMultiMap<qint16, Tile> &tiles,
-						  quint16 &minWidth, quint16 &minHeight,
-						  int &width, int &height)
-{
-	quint16 maxWidth=0, maxHeight=0;
-	minWidth = minHeight = 0;
-
-	foreach(const Tile &tile, tiles) {
-		quint8 toAdd = tile.size - 16;
-		if(tile.dstX >= 0 && tile.dstX+toAdd > maxWidth)
-			maxWidth = tile.dstX+toAdd;
-		else if(tile.dstX < 0 && -tile.dstX > minWidth)
-			minWidth = -tile.dstX;
-		if(tile.dstY >= 0 && tile.dstY+toAdd > maxHeight)
-			maxHeight = tile.dstY+toAdd;
-		else if(tile.dstY < 0 && -tile.dstY > minHeight)
-			minHeight = -tile.dstY;
-	}
-
-	width = minWidth + maxWidth + 16;
-	height = minHeight + maxHeight + 16;
-}
-
 QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 									   const QList<Palette *> &palettes,
 									   const QByteArray &textureData) const
@@ -73,13 +47,14 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 
 	quint16 minWidth, minHeight;
 	int width, height;
-	area(tiles, minWidth, minHeight, width, height);
+	_tiles.area(minWidth, minHeight, width, height);
 
 	const char *constTextureData = textureData.constData();
 	QImage image(width, height, QImage::Format_ARGB32);
 	image.fill(0xFF000000);
 
 	QRgb *pixels = (QRgb *)image.bits();
+	bool warned = false;
 
 	foreach(const Tile &tile, tiles) {
 		quint32 texWidth = textureWidth(tile);
@@ -89,7 +64,10 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 		quint16 baseX = minWidth + tile.dstX;
 
 		if(origin == 0) {
-			qWarning() << "Texture ID overflow";
+			if(!warned) {
+				qWarning() << "Texture ID overflow";
+				warned = true;
+			}
 			continue;
 		}
 
@@ -111,7 +89,10 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 		} else if(depth(tile) == 1) {
 
 			if(tile.paletteID >= palettes.size()) {
-				qWarning() << "Palette ID overflow" << tile.paletteID << palettes.size();
+				if(!warned) {
+					qWarning() << "Palette ID overflow" << tile.paletteID << palettes.size();
+					warned = true;
+				}
 				continue;
 			}
 
@@ -137,7 +118,10 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 		} else if(depth(tile) == 0) {
 
 			if(tile.paletteID >= palettes.size()) {
-				qWarning() << "Palette ID overflow" << tile.paletteID << palettes.size();
+				if(!warned) {
+					qWarning() << "Palette ID overflow" << tile.paletteID << palettes.size();
+					warned = true;
+				}
 				continue;
 			}
 
@@ -174,8 +158,9 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 					top += width;
 				}
 			}
-		} else {
-			qWarning() << "Unknown depth";
+		} else if(!warned) {
+			qWarning() << "Unknown depth" << depth(tile);
+			warned = true;
 		}
 	}
 
@@ -186,10 +171,8 @@ QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
 
 bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
-	if(!tilesAreCached()) {
-		if(!openTiles(field()->sectionData(Field::Background))) {
-			return false;
-		}
+	if(tiles().isEmpty() && !openTiles(field()->sectionData(Field::Background))) {
+		return false;
 	}
 
 	usedParams = tiles().usedParams(layerExists);

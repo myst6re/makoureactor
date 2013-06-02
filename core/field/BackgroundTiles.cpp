@@ -37,6 +37,19 @@ QMultiMap<qint16, Tile> BackgroundTiles::tiles(const QHash<quint8, quint8> &para
 	return ret;
 }
 
+QMultiMap<qint16, Tile> BackgroundTiles::tiles(quint8 layerID) const
+{
+	QMultiMap<qint16, Tile> ret;
+
+	foreach(const Tile &tile, _tiles) {
+		if(tile.layerID == layerID) {
+			ret.insert(4096 - tile.ID, tile);
+		}
+	}
+
+	return ret;
+}
+
 QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists) const
 {
 	QHash<quint8, quint8> ret;
@@ -68,4 +81,26 @@ QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists) const
 	}
 
 	return ret;
+}
+
+void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
+						   int &width, int &height) const
+{
+	quint16 maxWidth=0, maxHeight=0;
+	minWidth = minHeight = 0;
+
+	foreach(const Tile &tile, _tiles) {
+		quint8 toAdd = tile.size - 16;
+		if(tile.dstX >= 0 && tile.dstX+toAdd > maxWidth)
+			maxWidth = tile.dstX+toAdd;
+		else if(tile.dstX < 0 && -tile.dstX > minWidth)
+			minWidth = -tile.dstX;
+		if(tile.dstY >= 0 && tile.dstY+toAdd > maxHeight)
+			maxHeight = tile.dstY+toAdd;
+		else if(tile.dstY < 0 && -tile.dstY > minHeight)
+			minHeight = -tile.dstY;
+	}
+
+	width = minWidth + maxWidth + 16;
+	height = minHeight + maxHeight + 16;
 }

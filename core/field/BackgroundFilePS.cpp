@@ -138,7 +138,7 @@ QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActif
 
 	/*--- DAT OPENING ---*/
 
-	if(!tilesAreCached() && !openTiles(field()->sectionData(Field::Background))) {
+	if(tiles().isEmpty() && !openTiles(field()->sectionData(Field::Background))) {
 		foreach(Palette *palette, palettes) {
 			delete palette;
 		}
