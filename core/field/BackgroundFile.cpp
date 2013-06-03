@@ -36,7 +36,7 @@ QPixmap BackgroundFile::openBackground()
 	return openBackground(paramActifs, z);
 }
 
-QPixmap BackgroundFile::drawBackground(const QMultiMap<qint16, Tile> &tiles,
+QPixmap BackgroundFile::drawBackground(const BackgroundTiles &tiles,
 									   const QList<Palette *> &palettes,
 									   const QByteArray &textureData) const
 {

@@ -4,6 +4,8 @@
 #include <QtCore>
 #include "BackgroundTiles.h"
 
+#define MAX_TILE_DST	1024
+
 //Sizeof : 36
 typedef struct {
 	qint16 dstX, dstY;

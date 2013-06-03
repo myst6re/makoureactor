@@ -40,7 +40,7 @@ private:
 	bool openTiles(const QByteArray &data, qint64 *pos=NULL);
 	static Tile tilePC2Tile(const TilePC &tile);
 	static QHash<quint8, quint32> posTextures;
-	static QByteArray data;
+	static QHash<quint8, quint8> depthTextures;
 	qint64 aTex;
 };
 

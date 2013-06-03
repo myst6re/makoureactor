@@ -15,31 +15,17 @@ typedef struct {
 	quint8 depth, layerID;
 } Tile;
 
-class BackgroundTiles
+class BackgroundTiles : public QMultiMap<qint16, Tile>
 {
 public:
 	BackgroundTiles();
+	explicit BackgroundTiles(const QMultiMap<qint16, Tile> &tiles);
 
-	inline const QMultiMap<qint16, Tile> &tiles() const {
-		return _tiles;
-	}
-	QMultiMap<qint16, Tile> tiles(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const;
-	QMultiMap<qint16, Tile> tiles(quint8 layerID) const;
-	inline void setTiles(const QMultiMap<qint16, Tile> &tiles) {
-		_tiles = tiles;
-	}
+	BackgroundTiles tiles(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const;
+	BackgroundTiles tiles(quint8 layerID) const;
 	QHash<quint8, quint8> usedParams(bool *layerExists) const;
 	void area(quint16 &minWidth, quint16 &minHeight,
 			  int &width, int &height) const;
-	inline void clear() {
-		_tiles.clear();
-	}
-	inline bool isEmpty() const {
-		return _tiles.isEmpty();
-	}
-
-private:
-	QMultiMap<qint16, Tile> _tiles;
 };
 
 #endif // BACKGROUNDTILES_H

@@ -72,7 +72,6 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 	quint32 i;
 	quint16 nbTiles1, nbTiles2 = 0, nbTiles3 = 0, nbTiles4 = 0;
 	TilePC tile;
-	QMultiMap<qint16, Tile> tileList;
 	QByteArray data;
 	char exists;
 
@@ -99,11 +98,13 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 		for(i=0 ; i<nbTiles1 ; ++i) {
 			memcpy(&tile, data.constData() + i*52, 36);
 
-			if(qAbs(tile.dstX) < 1024 && qAbs(tile.dstY) < 1024) {
+			if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 				tile.size = 16;
 				tile.layerID = 0;
 
-				tileList.insert(1, tilePC2Tile(tile));
+				tiles.insert(1, tilePC2Tile(tile));
+			} else {
+				qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
 			}
 		}
 
@@ -140,7 +141,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 			for(i=0 ; i<nbTiles2 ; ++i) {
 				memcpy(&tile, data.constData() + i*52, 36);
 
-				if(qAbs(tile.dstX) < 1024 && qAbs(tile.dstY) < 1024) {
+				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					if(tile.textureID2 > 0) {
 						tile.srcX = tile.srcX2;
 						tile.srcY = tile.srcY2;
@@ -150,7 +151,9 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 					tile.size = 16;
 					tile.layerID = 1;
 
-					tileList.insert(4096-tile.ID, tilePC2Tile(tile));
+					tiles.insert(4096-tile.ID, tilePC2Tile(tile));
+				} else {
+					qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
 				}
 			}
 		}
@@ -188,7 +191,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 			for(i=0 ; i<nbTiles3 ; ++i) {
 				memcpy(&tile, data.constData() + i*52, 36);
 
-				if(qAbs(tile.dstX) < 1024 && qAbs(tile.dstY) < 1024) {
+				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					if(tile.textureID2 > 0) {
 						tile.srcX = tile.srcX2;
 						tile.srcY = tile.srcY2;
@@ -198,7 +201,9 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 					tile.size = 32;
 					tile.layerID = 2;
 
-					tileList.insert(4096-tile.ID, tilePC2Tile(tile));
+					tiles.insert(4096-tile.ID, tilePC2Tile(tile));
+				} else {
+					qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
 				}
 			}
 
@@ -237,7 +242,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 			for(i=0 ; i<nbTiles4 ; ++i) {
 				memcpy(&tile, data.constData() + i*52, 36);
 
-				if(qAbs(tile.dstX) < 1024 && qAbs(tile.dstY) < 1024) {
+				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					if(tile.textureID2 > 0) {
 						tile.srcX = tile.srcX2;
 						tile.srcY = tile.srcY2;
@@ -247,7 +252,9 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 					tile.size = 32;
 					tile.layerID = 3;
 
-					tileList.insert(4096-tile.ID, tilePC2Tile(tile));
+					tiles.insert(4096-tile.ID, tilePC2Tile(tile));
+				} else {
+					qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
 				}
 			}
 		}
@@ -256,8 +263,6 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 			return false;
 		}
 	}
-
-	tiles.setTiles(tileList);
 
 	return true;
 }
@@ -275,7 +280,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 	w += 16;
 	h += 16;
 
-	QMultiMap<qint16, Tile> tiles1 = tiles.tiles(0);
+	BackgroundTiles tiles1 = tiles.tiles(0);
 	nbTiles = tiles1.size();
 
 	device()->write((char *)&w, 2);
@@ -300,7 +305,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 
 	// Layer 2
 
-	QMultiMap<qint16, Tile> tiles2 = tiles.tiles(1);
+	BackgroundTiles tiles2 = tiles.tiles(1);
 
 	if(!tiles2.isEmpty()) {
 
@@ -334,7 +339,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 
 	// Layer 3
 
-	QMultiMap<qint16, Tile> tiles3 = tiles.tiles(2);
+	BackgroundTiles tiles3 = tiles.tiles(2);
 
 	if(!tiles3.isEmpty()) {
 
@@ -368,7 +373,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 
 	// Layer 4
 
-	QMultiMap<qint16, Tile> tiles4 = tiles.tiles(3);
+	BackgroundTiles tiles4 = tiles.tiles(3);
 
 	if(!tiles4.isEmpty()) {
 
@@ -523,7 +528,6 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	layer2Tile tile2;
 	layer3Tile tile4;
 	paramTile tile3;
-	QMultiMap<qint16, Tile> tileList;
 	Tile tile;
 	quint16 texID=0;
 	quint32 size, tileID=0;
@@ -553,7 +557,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 	for(i=0 ; i<size ; ++i) {
 		memcpy(&tile1, constDatData + start1+i*8, 8);
-		if(qAbs(tile1.dstX) < 1024 && qAbs(tile1.dstY) < 1024) {
+		if(qAbs(tile1.dstX) < MAX_TILE_DST && qAbs(tile1.dstY) < MAX_TILE_DST) {
 			tile.dstX = tile1.dstX;
 			tile.dstY = tile1.dstY;
 			tile.srcX = tile1.srcX;
@@ -576,7 +580,9 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.size = 16;
 			tile.layerID = 0;
 
-			tileList.insert(4096 - tile.ID, tile);
+			tiles.insert(4096 - tile.ID, tile);
+		} else {
+			qWarning() << "Tile destination overflow" << tile1.dstX << tile1.dstY;
 		}
 		++tileID;
 	}
@@ -589,7 +595,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 	for(i=0 ; i<size ; ++i) {
 		memcpy(&tile1, constDatData + start3+i*14, 8);
-		if(qAbs(tile1.dstX) < 1000 || qAbs(tile1.dstY) < 1000) {
+		if(qAbs(tile1.dstX) < MAX_TILE_DST || qAbs(tile1.dstY) < MAX_TILE_DST) {
 			tile.dstX = tile1.dstX;
 			tile.dstY = tile1.dstY;
 			tile.srcX = tile1.srcX;
@@ -612,7 +618,9 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.size = 16;
 			tile.layerID = 1;
 
-			tileList.insert(4096 - tile.ID, tile);
+			tiles.insert(4096 - tile.ID, tile);
+		} else {
+			qWarning() << "Tile destination overflow" << tile1.dstX << tile1.dstY;
 		}
 		++tileID;
 	}
@@ -627,7 +635,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 	for(i=0 ; i<size ; ++i) {
 		memcpy(&tile1, constDatData + start4+i*10, 8);
-		if(qAbs(tile1.dstX) < 1000 || qAbs(tile1.dstY) < 1000) {
+		if(qAbs(tile1.dstX) < MAX_TILE_DST || qAbs(tile1.dstY) < MAX_TILE_DST) {
 			tile.dstX = tile1.dstX;
 			tile.dstY = tile1.dstY;
 			tile.srcX = tile1.srcX;
@@ -658,12 +666,12 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.size = 32;
 			tile.layerID = layerID;
 
-			tileList.insert(4096 - tile.ID, tile);
+			tiles.insert(4096 - tile.ID, tile);
+		} else {
+			qWarning() << "Tile destination overflow" << tile1.dstX << tile1.dstY;
 		}
 		++tileID;
 	}
-
-	tiles.setTiles(tileList);
 
 	return true;
 }

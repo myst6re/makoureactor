@@ -1,17 +1,25 @@
 #include "BackgroundTiles.h"
 
-BackgroundTiles::BackgroundTiles()
+BackgroundTiles::BackgroundTiles() :
+	QMultiMap<qint16, Tile>()
 {
 }
 
-QMultiMap<qint16, Tile> BackgroundTiles::tiles(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
+BackgroundTiles::BackgroundTiles(const QMultiMap<qint16, Tile> &tiles) :
+	QMultiMap<qint16, Tile>(tiles)
+{
+}
+
+BackgroundTiles BackgroundTiles::tiles(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
 {
 	QMultiMap<qint16, Tile> ret;
 
-	foreach(const Tile &tile, _tiles) {
+	foreach(const Tile &tile, *this) {
 		switch(tile.layerID) {
 		case 0:
-			ret.insert(1, tile);
+			if(layers==NULL || layers[0]) {
+				ret.insert(1, tile);
+			}
 			break;
 		case 1:
 			if((tile.state==0 || paramActifs.value(tile.param, 0) & tile.state)
@@ -34,20 +42,20 @@ QMultiMap<qint16, Tile> BackgroundTiles::tiles(const QHash<quint8, quint8> &para
 		}
 	}
 
-	return ret;
+	return BackgroundTiles(ret);
 }
 
-QMultiMap<qint16, Tile> BackgroundTiles::tiles(quint8 layerID) const
+BackgroundTiles BackgroundTiles::tiles(quint8 layerID) const
 {
 	QMultiMap<qint16, Tile> ret;
 
-	foreach(const Tile &tile, _tiles) {
+	foreach(const Tile &tile, *this) {
 		if(tile.layerID == layerID) {
 			ret.insert(4096 - tile.ID, tile);
 		}
 	}
 
-	return ret;
+	return BackgroundTiles(ret);
 }
 
 QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists) const
@@ -55,7 +63,7 @@ QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists) const
 	QHash<quint8, quint8> ret;
 	layerExists[0] = layerExists[1] = layerExists[2] = false;
 
-	foreach(const Tile &tile, _tiles) {
+	foreach(const Tile &tile, *this) {
 		switch(tile.layerID) {
 		case 0:
 			break;
@@ -89,7 +97,7 @@ void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
 	quint16 maxWidth=0, maxHeight=0;
 	minWidth = minHeight = 0;
 
-	foreach(const Tile &tile, _tiles) {
+	foreach(const Tile &tile, *this) {
 		quint8 toAdd = tile.size - 16;
 		if(tile.dstX >= 0 && tile.dstX+toAdd > maxWidth)
 			maxWidth = tile.dstX+toAdd;

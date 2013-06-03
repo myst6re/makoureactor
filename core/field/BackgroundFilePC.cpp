@@ -22,7 +22,7 @@
 #include "FieldPC.h"
 
 QHash<quint8, quint32> BackgroundFilePC::posTextures;
-QByteArray BackgroundFilePC::data;
+QHash<quint8, quint8> BackgroundFilePC::depthTextures;
 
 BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
 	BackgroundFile(field), aTex(-1)
@@ -36,12 +36,11 @@ quint16 BackgroundFilePC::textureWidth(const Tile &tile) const
 
 quint8 BackgroundFilePC::depth(const Tile &tile) const
 {
-	/* When tile.depth is used, there is a bug,
+	/* When tile.depth is used, it can be buggy,
 	 * because the PC version doesn't understand
 	 * depth = 0. */
-	if(posTextures.contains(tile.textureID)) {
-		quint32 pos = posTextures.value(tile.textureID);
-		return data.at(pos);
+	if(depthTextures.contains(tile.textureID)) {
+		return depthTextures.value(tile.textureID);
 	}
 	return qMax(quint8(1), tile.depth);
 }
@@ -50,7 +49,7 @@ quint32 BackgroundFilePC::originInData(const Tile &tile) const
 {
 	if(posTextures.contains(tile.textureID)) {
 		quint32 pos = posTextures.value(tile.textureID);
-		return pos + 2 + (tile.srcY * 256 + tile.srcX) * (quint8)data.at(pos);
+		return pos + (tile.srcY * 256 + tile.srcX) * depth(tile);
 	}
 	return 0;
 }
@@ -116,7 +115,7 @@ bool BackgroundFilePC::openTiles(const QByteArray &data, qint64 *pos)
 
 QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
-	data = field()->sectionData(Field::Background);
+	QByteArray data = field()->sectionData(Field::Background);
 	quint32 dataSize = data.size(), i;
 	QList<Palette *> palettes;
 	qint64 aTex;
@@ -156,6 +155,7 @@ QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActif
 
 	aTex += 7;
 	posTextures.clear();
+	depthTextures.clear();
 
 	//Textures
 	for(i=0 ; i<42 ; ++i) {
@@ -166,8 +166,10 @@ QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActif
 			return QPixmap();
 		}
 		if((bool)data.at(aTex)) {
-			posTextures.insert(i, aTex+4);
-			aTex += (quint8)data.at(aTex+4)*65536 + 4;
+			posTextures.insert(i, aTex + 6);
+			quint8 depth = data.at(aTex + 4);
+			depthTextures.insert(i, depth);
+			aTex += depth * 65536 + 4;
 			if(dataSize < aTex) {
 				foreach(Palette *palette, palettes) {
 					delete palette;
