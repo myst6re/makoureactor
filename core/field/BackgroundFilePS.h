@@ -21,15 +21,9 @@
 #include "BackgroundFile.h"
 #include "BackgroundTiles.h"
 #include "BackgroundTilesIO.h"
+#include "BackgroundTextures.h"
 
 class FieldPS;
-
-//Sizeof : 12
-typedef struct {
-	quint32 size;// = 12 + w*2*h
-	quint16 x, y;
-	quint16 w, h;
-} MIM;
 
 class BackgroundFilePS : public BackgroundFile
 {
@@ -44,9 +38,8 @@ protected:
 	QRgb directColor(quint16 color) const;
 private:
 	static bool openPalettes(const QByteArray &data, QList<Palette *> &palettes);
-	bool openTiles(const QByteArray &data, qint64 *pos=NULL);
-	static quint32 headerPalSize;
-	static MIM headerImg, headerEffect;
+	bool openTiles(const QByteArray &data);
+	BackgroundTexturesPS textures;
 };
 
 #endif // BACKGROUNDFILEPS_H

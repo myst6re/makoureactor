@@ -39,7 +39,7 @@ public:
 	virtual QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
 	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 protected:
-	virtual bool openTiles(const QByteArray &data, qint64 *pos=NULL)=0;
+	virtual bool openTiles(const QByteArray &data)=0;
 	QPixmap drawBackground(const BackgroundTiles &tiles, const QList<Palette *> &palettes, const QByteArray &textureData) const;
 	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
 	virtual quint16 textureWidth(const Tile &tile) const=0;

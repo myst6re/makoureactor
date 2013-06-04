@@ -21,9 +21,6 @@
 #include "../PsColor.h"
 #include "FieldPC.h"
 
-QHash<quint8, quint32> BackgroundFilePC::posTextures;
-QHash<quint8, quint8> BackgroundFilePC::depthTextures;
-
 BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
 	BackgroundFile(field), aTex(-1)
 {
@@ -39,16 +36,16 @@ quint8 BackgroundFilePC::depth(const Tile &tile) const
 	/* When tile.depth is used, it can be buggy,
 	 * because the PC version doesn't understand
 	 * depth = 0. */
-	if(depthTextures.contains(tile.textureID)) {
-		return depthTextures.value(tile.textureID);
+	if(textures.hasTex(tile.textureID)) {
+		return textures.texDepth(tile.textureID);
 	}
 	return qMax(quint8(1), tile.depth);
 }
 
 quint32 BackgroundFilePC::originInData(const Tile &tile) const
 {
-	if(posTextures.contains(tile.textureID)) {
-		quint32 pos = posTextures.value(tile.textureID);
+	if(textures.hasTex(tile.textureID)) {
+		quint32 pos = textures.texPos(tile.textureID);
 		return pos + (tile.srcY * 256 + tile.srcX) * depth(tile);
 	}
 	return 0;
@@ -79,7 +76,7 @@ bool BackgroundFilePC::openPalettes(const QByteArray &data, const QByteArray &pa
 	return true;
 }
 
-bool BackgroundFilePC::openTiles(const QByteArray &data, qint64 *pos)
+bool BackgroundFilePC::openTiles(const QByteArray &data)
 {
 	BackgroundTiles tiles;
 	QBuffer buff;
@@ -106,8 +103,24 @@ bool BackgroundFilePC::openTiles(const QByteArray &data, qint64 *pos)
 
 	setTiles(tiles);
 
-	if(pos) {
-		*pos = buff.pos();
+	aTex = buff.pos() + 7;
+
+	return true;
+}
+
+bool BackgroundFilePC::openTextures(const QByteArray &data)
+{
+	QBuffer buff;
+	buff.setData(data);
+
+	if(!buff.open(QIODevice::ReadOnly) ||
+			!buff.seek(aTex)) {
+		return false;
+	}
+
+	BackgroundTexturesIOPC io(&buff);
+	if(!io.read(&textures)) {
+		return false;
 	}
 
 	return true;
@@ -116,9 +129,7 @@ bool BackgroundFilePC::openTiles(const QByteArray &data, qint64 *pos)
 QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
 	QByteArray data = field()->sectionData(Field::Background);
-	quint32 dataSize = data.size(), i;
 	QList<Palette *> palettes;
-	qint64 aTex;
 
 	if(!openPalettes(data, field()->sectionData(Field::PalettePC), palettes)) {
 		foreach(Palette *palette, palettes) {
@@ -140,67 +151,23 @@ QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActif
 	}
 	i=0;*/
 
-	if(this->aTex < 0) {
-		if(!openTiles(data, &aTex)) {
+	if(aTex < 0) {
+		if(!openTiles(data)) {
 			foreach(Palette *palette, palettes) {
 				delete palette;
 			}
 
 			return QPixmap();
 		}
-		this->aTex = aTex;
-	} else {
-		aTex = this->aTex;
 	}
 
-	aTex += 7;
-	posTextures.clear();
-	depthTextures.clear();
+	if(!openTextures(data)) {
+		foreach(Palette *palette, palettes) {
+			delete palette;
+		}
 
-	//Textures
-	for(i=0 ; i<42 ; ++i) {
-		if(dataSize < aTex+2) {
-			foreach(Palette *palette, palettes) {
-				delete palette;
-			}
-			return QPixmap();
-		}
-		if((bool)data.at(aTex)) {
-			posTextures.insert(i, aTex + 6);
-			quint8 depth = data.at(aTex + 4);
-			depthTextures.insert(i, depth);
-			aTex += depth * 65536 + 4;
-			if(dataSize < aTex) {
-				foreach(Palette *palette, palettes) {
-					delete palette;
-				}
-				return QPixmap();
-			}
-		}
-		aTex += 2;
+		return QPixmap();
 	}
 
 	return drawBackground(tiles().tiles(paramActifs, z, layers), palettes, data);
-}
-
-Tile BackgroundFilePC::tilePC2Tile(const TilePC &tile)
-{
-	Tile ret;
-
-	ret.dstX = tile.dstX;
-	ret.dstY = tile.dstY;
-	ret.srcX = tile.srcX;
-	ret.srcY = tile.srcY;
-	ret.paletteID = tile.paletteID;
-	ret.ID = tile.ID;
-	ret.param = tile.param;
-	ret.state = tile.state;
-	ret.blending = tile.blending;
-	ret.typeTrans = tile.typeTrans;
-	ret.size = tile.size;
-	ret.textureID = tile.textureID;
-	ret.textureID2 = tile.textureID2;
-	ret.depth = tile.depth;
-
-	return ret;
 }

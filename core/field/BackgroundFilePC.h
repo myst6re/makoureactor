@@ -21,6 +21,8 @@
 #include "BackgroundFile.h"
 #include "BackgroundTiles.h"
 #include "BackgroundTilesIO.h"
+#include "BackgroundTextures.h"
+#include "BackgroundTexturesIO.h"
 
 class FieldPC;
 
@@ -37,11 +39,10 @@ protected:
 	QRgb directColor(quint16 color) const;
 private:
 	static bool openPalettes(const QByteArray &data, const QByteArray &palData, QList<Palette *> &palettes);
-	bool openTiles(const QByteArray &data, qint64 *pos=NULL);
-	static Tile tilePC2Tile(const TilePC &tile);
-	static QHash<quint8, quint32> posTextures;
-	static QHash<quint8, quint8> depthTextures;
+	bool openTiles(const QByteArray &data);
+	bool openTextures(const QByteArray &data);
 	qint64 aTex;
+	BackgroundTexturesPC textures;
 };
 
 #endif // BACKGROUNDFILEPC_H

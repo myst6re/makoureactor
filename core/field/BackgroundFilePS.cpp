@@ -21,10 +21,6 @@
 #include "../PsColor.h"
 #include "FieldPS.h"
 
-quint32 BackgroundFilePS::headerPalSize;
-MIM BackgroundFilePS::headerImg;
-MIM BackgroundFilePS::headerEffect;
-
 BackgroundFilePS::BackgroundFilePS(FieldPS *field) :
 	BackgroundFile(field)
 {
@@ -32,7 +28,7 @@ BackgroundFilePS::BackgroundFilePS(FieldPS *field) :
 
 quint16 BackgroundFilePS::textureWidth(const Tile &tile) const
 {
-	return tile.textureID2 ? headerEffect.w : headerImg.w;
+	return textures.pageTexWidth(tile.textureID2);
 }
 
 quint8 BackgroundFilePS::depth(const Tile &tile) const
@@ -42,8 +38,8 @@ quint8 BackgroundFilePS::depth(const Tile &tile) const
 
 quint32 BackgroundFilePS::originInData(const Tile &tile) const
 {
-	quint16 texID = tile.textureID - (tile.textureID2 ? headerEffect.x : headerImg.x)/64;
-	quint32 dataStart = headerPalSize + 12 + (tile.textureID2 ? headerImg.size : 0);
+	quint16 texID = tile.textureID - textures.pageTexPos(tile.textureID2);
+	quint32 dataStart = textures.pageDataPos(tile.textureID2);
 	quint32 textureStart = texID * 128;
 	quint32 tileStart = tile.srcY * textureWidth(tile) + tile.srcX * (tile.depth == 0 ? 0.5 : tile.depth);
 	return dataStart + textureStart + tileStart;
@@ -67,10 +63,8 @@ bool BackgroundFilePS::openPalettes(const QByteArray &data, QList<Palette *> &pa
 	return true;
 }
 
-bool BackgroundFilePS::openTiles(const QByteArray &data, qint64 *pos)
+bool BackgroundFilePS::openTiles(const QByteArray &data)
 {
-	Q_UNUSED(pos)
-
 	BackgroundTiles tiles;
 	QBuffer buff;
 	buff.setData(data);
@@ -90,8 +84,9 @@ QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActif
 	/*--- MIM OPENING ---*/
 	QByteArray mimDataDec = ((FieldPS *)field())->io()->mimData(field());
 	const char *constMimData = mimDataDec.constData();
-	quint32 mimDataSize = mimDataDec.size();
+	quint32 mimDataSize = mimDataDec.size(), headerPalSize;
 	QList<Palette *> palettes;
+	MIM headerImg, headerEffect = MIM();
 
 	if(!openPalettes(mimDataDec, palettes)) {
 		foreach(Palette *palette, palettes) {
@@ -132,9 +127,11 @@ QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActif
 		headerEffect.w *= 2;
 	} else {
 		headerEffect.size = 4;
-		headerEffect.w = 0;
-		headerEffect.x = 0;
 	}
+
+	textures.setDataPos(headerPalSize);
+	textures.setHeaderImg(headerImg);
+	textures.setHeaderEffect(headerEffect);
 
 	/*--- DAT OPENING ---*/
 

@@ -115,8 +115,12 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 
 	cur = device()->pos();
 
+	if(!device()->getChar(&exists)) {
+		return false;
+	}
+
 	// BG 1
-	if(device()->getChar(&exists) && bool(exists)) {
+	if(bool(exists)) {
 
 		if(!device()->seek(cur + 5)) {
 			return false;
@@ -165,8 +169,12 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 		cur = device()->pos();
 	}
 
+	if(!device()->getChar(&exists)) {
+		return false;
+	}
+
 	// BG 2
-	if(device()->getChar(&exists) && bool(exists)) {
+	if(bool(exists)) {
 
 		if(!device()->seek(cur + 5)) {
 			return false;
@@ -216,8 +224,12 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 		cur = device()->pos();
 	}
 
+	if(!device()->getChar(&exists)) {
+		return false;
+	}
+
 	// BG 3
-	if(device()->getChar(&exists) && bool(exists)) {
+	if(bool(exists)) {
 
 		if(!device()->seek(cur + 5)) {
 			return false;
