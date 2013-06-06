@@ -22,6 +22,7 @@
 #include "BackgroundTiles.h"
 #include "BackgroundTilesIO.h"
 #include "BackgroundTextures.h"
+#include "BackgroundTexturesIO.h"
 
 class FieldPS;
 
@@ -30,15 +31,11 @@ class BackgroundFilePS : public BackgroundFile
 public:
 	explicit BackgroundFilePS(FieldPS *field);
 
-	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
-protected:
-	quint16 textureWidth(const Tile &tile) const;
-	quint8 depth(const Tile &tile) const;
-	quint32 originInData(const Tile &tile) const;
-	QRgb directColor(quint16 color) const;
+	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 private:
 	static bool openPalettes(const QByteArray &data, QList<Palette *> &palettes);
 	bool openTiles(const QByteArray &data);
+	bool openTextures(const QByteArray &data);
 	BackgroundTexturesPS textures;
 };
 

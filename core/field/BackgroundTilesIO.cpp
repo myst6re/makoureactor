@@ -555,11 +555,10 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 		tiles2.append(tile2);
 	}
 
-	if(tiles2.isEmpty()) {
-		return false;
+	bool hasTiles2 = !tiles2.isEmpty();
+	if(hasTiles2) {
+		tile2 = tiles2.first();
 	}
-
-	tile2 = tiles2.first();
 
 	size = (start2-start1)/8;
 
@@ -567,7 +566,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 		return false;
 	}
 
-	for(i=0 ; i<size ; ++i) {
+	for(i=0 ; i<size && hasTiles2 ; ++i) {
 		memcpy(&tile1, constDatData + start1+i*8, 8);
 		if(qAbs(tile1.dstX) < MAX_TILE_DST && qAbs(tile1.dstY) < MAX_TILE_DST) {
 			tile.dstX = tile1.dstX;

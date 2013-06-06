@@ -19,7 +19,7 @@
 #define TDBFILE_H
 
 #include <QtCore>
-#include <QPixmap>
+#include <QImage>
 
 typedef struct {
 	quint32 size;

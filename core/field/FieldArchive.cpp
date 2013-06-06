@@ -739,7 +739,7 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 				path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
 
 				if(overwrite || !QFile::exists(path)) {
-					QPixmap background = f->background()->openBackground();
+					QImage background = f->background()->openBackground();
 					if(!background.isNull())
 						background.save(path);
 				}

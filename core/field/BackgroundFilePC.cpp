@@ -26,36 +26,6 @@ BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
 {
 }
 
-quint16 BackgroundFilePC::textureWidth(const Tile &tile) const
-{
-	return depth(tile) * 256;
-}
-
-quint8 BackgroundFilePC::depth(const Tile &tile) const
-{
-	/* When tile.depth is used, it can be buggy,
-	 * because the PC version doesn't understand
-	 * depth = 0. */
-	if(textures.hasTex(tile.textureID)) {
-		return textures.texDepth(tile.textureID);
-	}
-	return qMax(quint8(1), tile.depth);
-}
-
-quint32 BackgroundFilePC::originInData(const Tile &tile) const
-{
-	if(textures.hasTex(tile.textureID)) {
-		quint32 pos = textures.texPos(tile.textureID);
-		return pos + (tile.srcY * 256 + tile.srcX) * depth(tile);
-	}
-	return 0;
-}
-
-QRgb BackgroundFilePC::directColor(quint16 color) const
-{
-	return qRgb( (color>>11)*COEFF_COLOR, (color>>6 & 31)*COEFF_COLOR, (color & 31)*COEFF_COLOR ); // special PC RGB16 color
-}
-
 bool BackgroundFilePC::openPalettes(const QByteArray &data, const QByteArray &palData, QList<Palette *> &palettes)
 {
 	QBuffer palBuff, buff;
@@ -108,7 +78,7 @@ bool BackgroundFilePC::openTiles(const QByteArray &data)
 	return true;
 }
 
-bool BackgroundFilePC::openTextures(const QByteArray &data)
+bool BackgroundFilePC::openTextures(const QByteArray &data, BackgroundTexturesPC &textures)
 {
 	QBuffer buff;
 	buff.setData(data);
@@ -126,17 +96,18 @@ bool BackgroundFilePC::openTextures(const QByteArray &data)
 	return true;
 }
 
-QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+QImage BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
 	QByteArray data = field()->sectionData(Field::Background);
 	QList<Palette *> palettes;
+	BackgroundTexturesPC textures;
 
 	if(!openPalettes(data, field()->sectionData(Field::PalettePC), palettes)) {
 		foreach(Palette *palette, palettes) {
 			delete palette;
 		}
 
-		return QPixmap();
+		return QImage();
 	}
 
 	/*i=0;
@@ -157,17 +128,21 @@ QPixmap BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActif
 				delete palette;
 			}
 
-			return QPixmap();
+			return QImage();
 		}
 	}
 
-	if(!openTextures(data)) {
+	if(!openTextures(data, textures)) {
 		foreach(Palette *palette, palettes) {
 			delete palette;
 		}
 
-		return QPixmap();
+		return QImage();
 	}
 
-	return drawBackground(tiles().tiles(paramActifs, z, layers), palettes, data);
+	QImage ret = drawBackground(tiles().tiles(paramActifs, z, layers), palettes, &textures);
+
+	textures.clear();
+
+	return ret;
 }

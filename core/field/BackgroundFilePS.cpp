@@ -26,30 +26,6 @@ BackgroundFilePS::BackgroundFilePS(FieldPS *field) :
 {
 }
 
-quint16 BackgroundFilePS::textureWidth(const Tile &tile) const
-{
-	return textures.pageTexWidth(tile.textureID2);
-}
-
-quint8 BackgroundFilePS::depth(const Tile &tile) const
-{
-	return tile.depth;
-}
-
-quint32 BackgroundFilePS::originInData(const Tile &tile) const
-{
-	quint16 texID = tile.textureID - textures.pageTexPos(tile.textureID2);
-	quint32 dataStart = textures.pageDataPos(tile.textureID2);
-	quint32 textureStart = texID * 128;
-	quint32 tileStart = tile.srcY * textureWidth(tile) + tile.srcX * (tile.depth == 0 ? 0.5 : tile.depth);
-	return dataStart + textureStart + tileStart;
-}
-
-QRgb BackgroundFilePS::directColor(quint16 color) const
-{
-	return PsColor::fromPsColor(color);
-}
-
 bool BackgroundFilePS::openPalettes(const QByteArray &data, QList<Palette *> &palettes)
 {
 	QBuffer palBuff;
@@ -79,21 +55,31 @@ bool BackgroundFilePS::openTiles(const QByteArray &data)
 	return true;
 }
 
-QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+bool BackgroundFilePS::openTextures(const QByteArray &data)
+{
+	QBuffer buff;
+	buff.setData(data);
+
+	BackgroundTexturesIOPS io(&buff);
+	if(!io.read(&textures)) {
+		return false;
+	}
+
+	return true;
+}
+
+QImage BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
 	/*--- MIM OPENING ---*/
 	QByteArray mimDataDec = ((FieldPS *)field())->io()->mimData(field());
-	const char *constMimData = mimDataDec.constData();
-	quint32 mimDataSize = mimDataDec.size(), headerPalSize;
 	QList<Palette *> palettes;
-	MIM headerImg, headerEffect = MIM();
 
 	if(!openPalettes(mimDataDec, palettes)) {
 		foreach(Palette *palette, palettes) {
 			delete palette;
 		}
 
-		return QPixmap();
+		return QImage();
 	}
 
 	/*i=0;
@@ -108,30 +94,13 @@ QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActif
 	}
 	i=0;*/
 
-	memcpy(&headerPalSize, constMimData, 4);
-
-	if(mimDataSize < headerPalSize + 12) {
+	if(!openTextures(mimDataDec)) {
 		foreach(Palette *palette, palettes) {
 			delete palette;
 		}
 
-		return QPixmap();
+		return QImage();
 	}
-
-	memcpy(&headerImg, constMimData + headerPalSize, 12);
-
-	headerImg.w *= 2;
-
-	if(headerPalSize+headerImg.size+12 <= mimDataSize) {
-		memcpy(&headerEffect, constMimData + headerPalSize+headerImg.size, 12);
-		headerEffect.w *= 2;
-	} else {
-		headerEffect.size = 4;
-	}
-
-	textures.setDataPos(headerPalSize);
-	textures.setHeaderImg(headerImg);
-	textures.setHeaderEffect(headerEffect);
 
 	/*--- DAT OPENING ---*/
 
@@ -140,8 +109,12 @@ QPixmap BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActif
 			delete palette;
 		}
 
-		return QPixmap();
+		return QImage();
 	}
 
-	return drawBackground(tiles().tiles(paramActifs, z, layers), palettes, mimDataDec);
+	QImage ret = drawBackground(tiles().tiles(paramActifs, z, layers), palettes, &textures);
+
+	textures.clear();
+
+	return ret;
 }

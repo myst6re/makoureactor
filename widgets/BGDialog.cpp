@@ -245,5 +245,5 @@ void BGDialog::changeZ(int value)
 void BGDialog::updateBG()
 {
 	if(!field)	return;
-	image->setPixmap(field->background()->openBackground(params, z, layers));
+	image->setPixmap(QPixmap::fromImage(field->background()->openBackground(params, z, layers)));
 }

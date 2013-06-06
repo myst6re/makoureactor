@@ -19,10 +19,11 @@
 #define BACKGROUNDFILE_H
 
 #include <QtCore>
-#include <QPixmap>
+#include <QImage>
 #include "FieldPart.h"
 #include "Palette.h"
 #include "BackgroundTiles.h"
+#include "BackgroundTextures.h"
 
 class BackgroundFile : public FieldPart
 {
@@ -35,17 +36,13 @@ public:
 	QByteArray save() const { return QByteArray(); }
 	bool canSave() const { return false; }
 	void clear() { }
-	QPixmap openBackground();
-	virtual QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
+	QImage openBackground();
+	virtual QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
 	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 protected:
 	virtual bool openTiles(const QByteArray &data)=0;
-	QPixmap drawBackground(const BackgroundTiles &tiles, const QList<Palette *> &palettes, const QByteArray &textureData) const;
+	QImage drawBackground(const BackgroundTiles &tiles, const QList<Palette *> &palettes, const BackgroundTextures *textures) const;
 	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
-	virtual quint16 textureWidth(const Tile &tile) const=0;
-	virtual quint8 depth(const Tile &tile) const=0;
-	virtual quint32 originInData(const Tile &tile) const=0;
-	virtual QRgb directColor(quint16 color) const=0;
 	inline const BackgroundTiles &tiles() const {
 		return _tiles;
 	}

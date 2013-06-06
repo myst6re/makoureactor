@@ -31,18 +31,12 @@ class BackgroundFilePC : public BackgroundFile
 public:
 	explicit BackgroundFilePC(FieldPC *field);
 
-	QPixmap openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
-protected:
-	quint16 textureWidth(const Tile &tile) const;
-	quint8 depth(const Tile &tile) const;
-	quint32 originInData(const Tile &tile) const;
-	QRgb directColor(quint16 color) const;
+	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 private:
 	static bool openPalettes(const QByteArray &data, const QByteArray &palData, QList<Palette *> &palettes);
 	bool openTiles(const QByteArray &data);
-	bool openTextures(const QByteArray &data);
+	bool openTextures(const QByteArray &data, BackgroundTexturesPC &textures);
 	qint64 aTex;
-	BackgroundTexturesPC textures;
 };
 
 #endif // BACKGROUNDFILEPC_H

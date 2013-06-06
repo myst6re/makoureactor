@@ -82,6 +82,9 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 		}
 	}
 
+	device()->reset();
+	textures->setData(device()->readAll());
+
 	return true;
 }
 
@@ -89,6 +92,29 @@ bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures) const
 {
 	if(!canWrite()) {
 		return false;
+	}
+
+	for(quint8 texID=0 ; texID<42 ; ++texID) {
+
+		quint16 exists = textures->hasTex(texID);
+
+		if(device()->write((char *)&exists, 2) != 2) {
+			return false;
+		}
+
+		if(bool(exists)) {
+			BackgroundTexturesPCInfos infos = textures->texInfos(texID);
+
+			if(device()->write((char *)&infos.size, 2) != 2 ||
+					device()->write((char *)&infos.depth, 2) != 2) {
+				return false;
+			}
+
+			if(device()->write(textures->data().mid(infos.pos, infos.depth * 65536))
+					!= infos.depth * 65536) {
+				return false;
+			}
+		}
 	}
 
 	return false;
@@ -105,9 +131,34 @@ bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures) const
 		return false;
 	}
 
-	textures->clear();
+	QByteArray mimDataDec = device()->readAll();
+	const char *constMimData = mimDataDec.constData();
+	quint32 mimDataSize = mimDataDec.size(), headerPalSize;
+	MIM headerImg, headerEffect = MIM();
 
-	return false;
+	memcpy(&headerPalSize, constMimData, 4);
+
+	if(mimDataSize < headerPalSize + 12) {
+		return false;
+	}
+
+	memcpy(&headerImg, constMimData + headerPalSize, 12);
+
+	headerImg.w *= 2;
+
+	if(headerPalSize+headerImg.size+12 <= mimDataSize) {
+		memcpy(&headerEffect, constMimData + headerPalSize+headerImg.size, 12);
+		headerEffect.w *= 2;
+	} else {
+		headerEffect.size = 4;
+	}
+
+	textures->setDataPos(headerPalSize);
+	textures->setHeaderImg(headerImg);
+	textures->setHeaderEffect(headerEffect);
+	textures->setData(mimDataDec);
+
+	return true;
 }
 
 bool BackgroundTexturesIOPS::write(const BackgroundTexturesPS *textures) const
