@@ -55,13 +55,13 @@ bool BackgroundFilePS::openTiles(const QByteArray &data)
 	return true;
 }
 
-bool BackgroundFilePS::openTextures(const QByteArray &data)
+bool BackgroundFilePS::openTextures(const QByteArray &data, BackgroundTexturesPS *textures) const
 {
 	QBuffer buff;
 	buff.setData(data);
 
 	BackgroundTexturesIOPS io(&buff);
-	if(!io.read(&textures)) {
+	if(!io.read(textures)) {
 		return false;
 	}
 
@@ -70,11 +70,14 @@ bool BackgroundFilePS::openTextures(const QByteArray &data)
 
 QImage BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
-	/*--- MIM OPENING ---*/
-	QByteArray mimDataDec = ((FieldPS *)field())->io()->mimData(field());
+	QByteArray mimData = ((FieldPS *)field())->io()->mimData(field());
 	QList<Palette *> palettes;
+	BackgroundTexturesPS textures;
 
-	if(!openPalettes(mimDataDec, palettes)) {
+	if(!openPalettes(mimData, palettes)
+			|| (tiles().isEmpty() &&
+				!openTiles(field()->sectionData(Field::Background)))
+			|| !openTextures(mimData, &textures)) {
 		foreach(Palette *palette, palettes) {
 			delete palette;
 		}
@@ -82,39 +85,6 @@ QImage BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActifs
 		return QImage();
 	}
 
-	/*i=0;
-	foreach(const Palette *palette, palettes) {
-		palette->toImage().scaled(128, 128, Qt::KeepAspectRatio)
-				.save(QString("palettes/PS/palette_%1_%2_PS.png")
-					  .arg(field()->name()).arg(i));
-		((PalettePS *)palette)->toPC().toImage().scaled(128, 128, Qt::KeepAspectRatio)
-				.save(QString("palettes/PS/palette_%1_%2_PS_to_PC.png")
-					  .arg(field()->name()).arg(i));
-		++i;
-	}
-	i=0;*/
-
-	if(!openTextures(mimDataDec)) {
-		foreach(Palette *palette, palettes) {
-			delete palette;
-		}
-
-		return QImage();
-	}
-
-	/*--- DAT OPENING ---*/
-
-	if(tiles().isEmpty() && !openTiles(field()->sectionData(Field::Background))) {
-		foreach(Palette *palette, palettes) {
-			delete palette;
-		}
-
-		return QImage();
-	}
-
-	QImage ret = drawBackground(tiles().tiles(paramActifs, z, layers), palettes, &textures);
-
-	textures.clear();
-
-	return ret;
+	return drawBackground(tiles().tiles(paramActifs, z, layers),
+						  palettes, &textures);
 }

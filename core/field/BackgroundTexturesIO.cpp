@@ -53,6 +53,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 	}
 
 	textures->clear();
+	qint64 initPos = device()->pos();
 
 	for(quint8 texID=0 ; texID<42 ; ++texID) {
 
@@ -73,7 +74,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 			BackgroundTexturesPCInfos infos;
 			infos.size = size;
 			infos.depth = depth;
-			infos.pos = device()->pos();
+			infos.pos = device()->pos() - initPos;
 			textures->addTexInfos(texID, infos);
 
 			if(!device()->seek(device()->pos() + depth * 65536)) {
@@ -82,7 +83,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 		}
 	}
 
-	device()->reset();
+	device()->seek(initPos);
 	textures->setData(device()->readAll());
 
 	return true;

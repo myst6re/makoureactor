@@ -35,7 +35,7 @@ public:
 private:
 	static bool openPalettes(const QByteArray &data, const QByteArray &palData, QList<Palette *> &palettes);
 	bool openTiles(const QByteArray &data);
-	bool openTextures(const QByteArray &data, BackgroundTexturesPC &textures);
+	bool openTextures(const QByteArray &data, BackgroundTexturesPC *textures) const;
 	qint64 aTex;
 };
 

@@ -26,7 +26,8 @@ BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
 {
 }
 
-bool BackgroundFilePC::openPalettes(const QByteArray &data, const QByteArray &palData, QList<Palette *> &palettes)
+bool BackgroundFilePC::openPalettes(const QByteArray &data, const QByteArray &palData,
+									QList<Palette *> &palettes)
 {
 	QBuffer palBuff, buff;
 	palBuff.setData(palData);
@@ -52,24 +53,10 @@ bool BackgroundFilePC::openTiles(const QByteArray &data)
 	QBuffer buff;
 	buff.setData(data);
 
-	/*QFile fileIn("tilesIn");
-	if(fileIn.open(QIODevice::WriteOnly)) {
-		fileIn.write(data.mid(0x28));
-		fileIn.close();
-	} else {
-		qWarning() << "tilesIn can't be written";
-	}*/
-
 	BackgroundTilesIOPC io(&buff);
 	if(!io.read(tiles)) {
 		return false;
 	}
-
-	/*QFile file("tilesOut");
-	BackgroundTilesIOPC io2(&file);
-	if(!io2.write(tiles)) {
-		qWarning() << "tilesOut can't be written";
-	}*/
 
 	setTiles(tiles);
 
@@ -78,7 +65,7 @@ bool BackgroundFilePC::openTiles(const QByteArray &data)
 	return true;
 }
 
-bool BackgroundFilePC::openTextures(const QByteArray &data, BackgroundTexturesPC &textures)
+bool BackgroundFilePC::openTextures(const QByteArray &data, BackgroundTexturesPC *textures) const
 {
 	QBuffer buff;
 	buff.setData(data);
@@ -89,7 +76,7 @@ bool BackgroundFilePC::openTextures(const QByteArray &data, BackgroundTexturesPC
 	}
 
 	BackgroundTexturesIOPC io(&buff);
-	if(!io.read(&textures)) {
+	if(!io.read(textures)) {
 		return false;
 	}
 
@@ -102,7 +89,9 @@ QImage BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActifs
 	QList<Palette *> palettes;
 	BackgroundTexturesPC textures;
 
-	if(!openPalettes(data, field()->sectionData(Field::PalettePC), palettes)) {
+	if(!openPalettes(data, field()->sectionData(Field::PalettePC), palettes)
+			|| (aTex < 0 && !openTiles(data))
+			|| !openTextures(data, &textures)) {
 		foreach(Palette *palette, palettes) {
 			delete palette;
 		}
@@ -110,39 +99,6 @@ QImage BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActifs
 		return QImage();
 	}
 
-	/*i=0;
-	foreach(const Palette *palette, palettes) {
-		palette->toImage().scaled(128, 128, Qt::KeepAspectRatio)
-				.save(QString("palettes/PC/palette_%1_%2_PC.png")
-					  .arg(field()->name()).arg(i));
-		((PalettePC *)palette)->toPS().toImage().scaled(128, 128, Qt::KeepAspectRatio)
-				.save(QString("palettes/PC/palette_%1_%2_PC_to_PS.png")
-					  .arg(field()->name()).arg(i));
-		++i;
-	}
-	i=0;*/
-
-	if(aTex < 0) {
-		if(!openTiles(data)) {
-			foreach(Palette *palette, palettes) {
-				delete palette;
-			}
-
-			return QImage();
-		}
-	}
-
-	if(!openTextures(data, textures)) {
-		foreach(Palette *palette, palettes) {
-			delete palette;
-		}
-
-		return QImage();
-	}
-
-	QImage ret = drawBackground(tiles().tiles(paramActifs, z, layers), palettes, &textures);
-
-	textures.clear();
-
-	return ret;
+	return drawBackground(tiles().tiles(paramActifs, z, layers),
+						  palettes, &textures);
 }

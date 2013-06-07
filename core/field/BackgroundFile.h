@@ -41,6 +41,11 @@ public:
 	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
 protected:
 	virtual bool openTiles(const QByteArray &data)=0;
+	virtual bool openTextures(const QByteArray &data, BackgroundTextures *textures) {
+		Q_UNUSED(data)
+		Q_UNUSED(textures)
+		return false;
+	}
 	QImage drawBackground(const BackgroundTiles &tiles, const QList<Palette *> &palettes, const BackgroundTextures *textures) const;
 	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
 	inline const BackgroundTiles &tiles() const {

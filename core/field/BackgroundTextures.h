@@ -40,6 +40,7 @@ protected:
 	virtual quint16 textureWidth(const Tile &tile) const=0;
 	virtual quint32 originInData(const Tile &tile) const=0;
 	virtual QRgb directColor(quint16 color) const=0;
+	QRgb pixel(quint32 pos) const;
 private:
 	static QByteArray _data;
 };
@@ -60,7 +61,7 @@ public:
 	void addTexInfos(quint8 texID, const BackgroundTexturesPCInfos &infos);
 	void clear();
 	void setTexInfos(const QHash<quint8, BackgroundTexturesPCInfos> &texInfos);
-//	QList<uint> tex(quint8 texID) const;
+	QList<uint> tex(quint8 texID) const;
 	BackgroundTexturesPS toPS() const;
 protected:
 	quint16 textureWidth(const Tile &tile) const;

@@ -16,26 +16,24 @@ QVector<uint> BackgroundTextures::tile(const Tile &tile) const
 	quint8 depth = this->depth(tile);
 	quint8 multiplicator = depth == 0 ? 1 : depth * 2;
 	quint32 texWidth = textureWidth(tile);
-	quint32 pixelCount = tile.size * texWidth;
 	quint32 origin = originInData(tile);
+	quint32 lastByte = origin + tile.size * texWidth;
 	quint8 x = 0;
 
 	if(origin == 0) {
 		return indexOrRgbList;
 	}
 
-	for(quint32 i=0 ; i<pixelCount ; ++i) {
+	for(quint32 i=origin ; i<lastByte ; ++i) {
 		if(depth == 0) {
-			quint8 index = data().at(origin + i);
+			quint8 index = data().at(i);
 			indexOrRgbList.append(index & 0xF);
 			++x;
 			indexOrRgbList.append(index >> 4);
 		} else if(depth == 1) {
-			indexOrRgbList.append(quint8(data().at(origin + i)));
+			indexOrRgbList.append(quint8(data().at(i)));
 		} else if(depth == 2) {
-			quint16 color;
-			memcpy(&color, data().constData() + origin + i, 2);
-			indexOrRgbList.append(directColor(color));
+			indexOrRgbList.append(pixel(i));
 			++i;
 		}
 
@@ -46,6 +44,13 @@ QVector<uint> BackgroundTextures::tile(const Tile &tile) const
 	}
 
 	return indexOrRgbList;
+}
+
+QRgb BackgroundTextures::pixel(quint32 pos) const
+{
+	quint16 color;
+	memcpy(&color, data().constData() + pos, 2);
+	return directColor(color);
 }
 
 BackgroundTexturesPC::BackgroundTexturesPC() :
@@ -100,7 +105,7 @@ void BackgroundTexturesPC::setTexInfos(const QHash<quint8, BackgroundTexturesPCI
 	_texInfos = texInfos;
 }
 
-/*QList<uint> BackgroundTexturesPC::tex(quint8 texID) const
+QList<uint> BackgroundTexturesPC::tex(quint8 texID) const
 {
 	QList<uint> indexOrRgbList;
 	BackgroundTexturesPCInfos infos = texInfos(texID);
@@ -114,12 +119,13 @@ void BackgroundTexturesPC::setTexInfos(const QHash<quint8, BackgroundTexturesPCI
 		} else if(infos.depth == 1) {
 			indexOrRgbList.append(data().at(infos.pos + i));
 		} else if(infos.depth == 2) {
-			indexOrRgbList.append(pixel(infos.pos, i));
+			indexOrRgbList.append(pixel(infos.pos + i));
+			++i;
 		}
 	}
 
 	return indexOrRgbList;
-}*/
+}
 
 quint16 BackgroundTexturesPC::textureWidth(const Tile &tile) const
 {

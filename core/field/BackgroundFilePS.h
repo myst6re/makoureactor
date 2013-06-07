@@ -35,8 +35,7 @@ public:
 private:
 	static bool openPalettes(const QByteArray &data, QList<Palette *> &palettes);
 	bool openTiles(const QByteArray &data);
-	bool openTextures(const QByteArray &data);
-	BackgroundTexturesPS textures;
+	bool openTextures(const QByteArray &data, BackgroundTexturesPS *textures) const;
 };
 
 #endif // BACKGROUNDFILEPS_H
