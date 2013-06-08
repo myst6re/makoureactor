@@ -46,7 +46,7 @@ protected:
 		Q_UNUSED(textures)
 		return false;
 	}
-	QImage drawBackground(const BackgroundTiles &tiles, const QList<Palette *> &palettes, const BackgroundTextures *textures) const;
+	QImage drawBackground(const BackgroundTiles &tiles, const Palettes &palettes, const BackgroundTextures *textures) const;
 	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
 	inline const BackgroundTiles &tiles() const {
 		return _tiles;

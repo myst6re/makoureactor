@@ -37,7 +37,7 @@ QImage BackgroundFile::openBackground()
 }
 
 QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles,
-									   const QList<Palette *> &palettes,
+									   const Palettes &palettes,
 									   const BackgroundTextures *textures) const
 {
 	if(tiles.isEmpty()) {

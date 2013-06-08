@@ -46,7 +46,7 @@ bool PaletteIO::canWrite() const
 	return false;
 }
 
-bool PaletteIO::read(QList<Palette *> &palettes) const
+bool PaletteIO::read(Palettes &palettes) const
 {
 	if(!canRead()) {
 		return false;
@@ -135,7 +135,7 @@ bool PaletteIOPC::canWriteAlpha() const
 	return false;
 }
 
-bool PaletteIOPC::readAfter(QList<Palette *> &palettes) const
+bool PaletteIOPC::readAfter(Palettes &palettes) const
 {
 	if(!canReadAlpha()) {
 		return false;

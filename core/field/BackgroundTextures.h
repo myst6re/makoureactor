@@ -3,7 +3,9 @@
 
 #include <QtCore>
 #include "../PsColor.h"
+#include "../TimFile.h"
 #include "BackgroundTiles.h"
+#include "Palette.h"
 
 struct BackgroundTexturesPCInfos
 {
@@ -26,7 +28,7 @@ public:
 	inline const QByteArray &data() const {
 		return _data;
 	}
-	inline void setData(const QByteArray &data) const {
+	inline void setData(const QByteArray &data) {
 		_data = data;
 	}
 	virtual void clear() {
@@ -42,7 +44,7 @@ protected:
 	virtual QRgb directColor(quint16 color) const=0;
 	QRgb pixel(quint32 pos) const;
 private:
-	static QByteArray _data;
+	QByteArray _data;
 };
 
 class BackgroundTexturesPC;
@@ -62,6 +64,7 @@ public:
 	void clear();
 	void setTexInfos(const QHash<quint8, BackgroundTexturesPCInfos> &texInfos);
 	QList<uint> tex(quint8 texID) const;
+	void setTex(quint8 texID, const QList<uint> &indexOrRgbList, const BackgroundTexturesPCInfos &infos);
 	BackgroundTexturesPS toPS() const;
 protected:
 	quint16 textureWidth(const Tile &tile) const;
@@ -69,6 +72,7 @@ protected:
 	quint32 originInData(const Tile &tile) const;
 	QRgb directColor(quint16 color) const;
 private:
+	static quint16 toPcColor(const QRgb &color);
 	QHash<quint8, BackgroundTexturesPCInfos> _texInfos;
 };
 
@@ -76,18 +80,23 @@ class BackgroundTexturesPS : public BackgroundTextures
 {
 public:
 	BackgroundTexturesPS();
-	quint32 pageDataPos(quint8 pageID) const;
-	quint16 pageTexPos(quint8 pageID) const;
-	quint16 pageTexWidth(quint8 pageID) const;
 	void setDataPos(quint32 dataPos);
 	void setHeaderImg(const MIM &headerImg);
 	void setHeaderEffect(const MIM &headerEffect);
-	BackgroundTexturesPC toPC(const BackgroundTiles &tiles) const;
+	QList<uint> tex(quint8 x, quint8 y, quint8 depth) const;
+	TimFile tim(quint8 pageID, quint8 depth) const;
+	BackgroundTexturesPC toPC(const BackgroundTiles &psTiles,
+							  BackgroundTiles &pcTiles,
+							  const QList< QList<quint8> > &relocateZeroTable) const;
 protected:
 	quint16 textureWidth(const Tile &tile) const;
 	quint32 originInData(const Tile &tile) const;
 	QRgb directColor(quint16 color) const;
 private:
+	quint32 pageDataPos(quint8 pageID) const;
+	quint16 pageTexPos(quint8 pageID) const;
+	quint16 pageTexWidth(quint8 pageID) const;
+	quint32 texturePos(quint8 x, quint8 y) const;
 	quint32 _dataPos;
 	MIM _headerImg, _headerEffect;
 };

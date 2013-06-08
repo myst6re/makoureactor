@@ -16,11 +16,11 @@ public:
 	bool canRead() const;
 	bool canWrite() const;
 
-	virtual bool read(BackgroundTextures *textures) const {
+	virtual bool read(BackgroundTextures *textures) {
 		Q_UNUSED(textures)
 		return false;
 	}
-	virtual bool write(const BackgroundTextures *textures) const {
+	virtual bool write(const BackgroundTextures *textures) {
 		Q_UNUSED(textures)
 		return false;
 	}
@@ -32,16 +32,16 @@ class BackgroundTexturesIOPC : public BackgroundTexturesIO
 {
 public:
 	explicit BackgroundTexturesIOPC(QIODevice *device);
-	bool read(BackgroundTexturesPC *textures) const;
-	bool write(const BackgroundTexturesPC *textures) const;
+	bool read(BackgroundTexturesPC *textures);
+	bool write(const BackgroundTexturesPC *textures);
 };
 
 class BackgroundTexturesIOPS : public BackgroundTexturesIO
 {
 public:
 	explicit BackgroundTexturesIOPS(QIODevice *device);
-	bool read(BackgroundTexturesPS *textures) const;
-	bool write(const BackgroundTexturesPS *textures) const;
+	bool read(BackgroundTexturesPS *textures);
+	bool write(const BackgroundTexturesPS *textures);
 };
 
 #endif // BACKGROUNDTEXTURESIO_H

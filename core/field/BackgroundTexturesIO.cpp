@@ -46,7 +46,7 @@ BackgroundTexturesIOPC::BackgroundTexturesIOPC(QIODevice *device) :
 {
 }
 
-bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
+bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures)
 {
 	if(!canRead()) {
 		return false;
@@ -77,7 +77,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 			infos.pos = device()->pos() - initPos;
 			textures->addTexInfos(texID, infos);
 
-			if(!device()->seek(device()->pos() + depth * 65536)) {
+			if(!device()->seek(device()->pos() + (depth == 0 ? 32768 : depth * 65536))) {
 				return false;
 			}
 		}
@@ -89,7 +89,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 	return true;
 }
 
-bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures) const
+bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures)
 {
 	if(!canWrite()) {
 		return false;
@@ -126,7 +126,7 @@ BackgroundTexturesIOPS::BackgroundTexturesIOPS(QIODevice *device) :
 {
 }
 
-bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures) const
+bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures)
 {
 	if(!canRead()) {
 		return false;
@@ -162,7 +162,7 @@ bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures) const
 	return true;
 }
 
-bool BackgroundTexturesIOPS::write(const BackgroundTexturesPS *textures) const
+bool BackgroundTexturesIOPS::write(const BackgroundTexturesPS *textures)
 {
 	if(!canWrite()) {
 		return false;

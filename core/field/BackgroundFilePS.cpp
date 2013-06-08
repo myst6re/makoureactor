@@ -26,7 +26,7 @@ BackgroundFilePS::BackgroundFilePS(FieldPS *field) :
 {
 }
 
-bool BackgroundFilePS::openPalettes(const QByteArray &data, QList<Palette *> &palettes)
+bool BackgroundFilePS::openPalettes(const QByteArray &data, PalettesPS &palettes)
 {
 	QBuffer palBuff;
 	palBuff.setData(data);
@@ -71,7 +71,7 @@ bool BackgroundFilePS::openTextures(const QByteArray &data, BackgroundTexturesPS
 QImage BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
 	QByteArray mimData = ((FieldPS *)field())->io()->mimData(field());
-	QList<Palette *> palettes;
+	PalettesPS palettes;
 	BackgroundTexturesPS textures;
 
 	if(!openPalettes(mimData, palettes)

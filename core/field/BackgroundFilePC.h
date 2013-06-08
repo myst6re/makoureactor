@@ -33,7 +33,7 @@ public:
 
 	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 private:
-	static bool openPalettes(const QByteArray &data, const QByteArray &palData, QList<Palette *> &palettes);
+	static bool openPalettes(const QByteArray &data, const QByteArray &palData, PalettesPC &palettes);
 	bool openTiles(const QByteArray &data);
 	bool openTextures(const QByteArray &data, BackgroundTexturesPC *textures) const;
 	qint64 aTex;

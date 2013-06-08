@@ -66,9 +66,28 @@ public:
 	explicit PalettePS(const char *palette);
 	bool isZero(quint8 index) const;
 	void setIsZero(int index, bool transparency);
-	PalettePC toPC() const;
+	PalettePC toPC(QList<quint8> &relocateZero) const;
 private:
 	QList<bool> _isZero;
+};
+
+class PalettesPS;
+class PalettesPC;
+
+typedef QList<Palette *> Palettes;
+
+class PalettesPS : public Palettes
+{
+public:
+	PalettesPS();
+	PalettesPC toPC(QList< QList<quint8> > &relocateZeroTable) const;
+};
+
+class PalettesPC : public Palettes
+{
+public:
+	PalettesPC();
+	PalettesPS toPS() const;
 };
 
 #endif

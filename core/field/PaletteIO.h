@@ -17,11 +17,11 @@ public:
 	bool canRead() const;
 	bool canWrite() const;
 
-	bool read(QList<Palette *> &palettes) const;
+	bool read(Palettes &palettes) const;
 	bool write(const QList<const Palette *> &palettes) const;
 protected:
 	virtual Palette *createPalette(const char *data) const=0;
-	virtual bool readAfter(QList<Palette *> &palettes) const {
+	virtual bool readAfter(Palettes &palettes) const {
 		Q_UNUSED(palettes)
 		return true;
 	}
@@ -47,7 +47,7 @@ protected:
 	inline Palette *createPalette(const char *data) const {
 		return new PalettePC(data);
 	}
-	bool readAfter(QList<Palette *> &palettes) const;
+	bool readAfter(Palettes &palettes) const;
 	bool writeAfter(const QList<const Palette *> &palettes) const;
 private:
 	QIODevice *_deviceAlpha;

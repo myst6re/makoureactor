@@ -141,16 +141,51 @@ void PalettePS::setIsZero(int index, bool transparency)
 	}
 }
 
-PalettePC PalettePS::toPC() const
+PalettePC PalettePS::toPC(QList<quint8> &relocateZero) const
 {
 	PalettePC palPC;
 
 	for(quint16 index=0 ; index<256 ; ++index) {
 		if(isZero(index)) {
 			palPC.setTransparency(true);// TODO: real conversion?
+			if(index != 0) {
+				relocateZero.append(index);
+			}
 		}
 		palPC.addColor(color(index));
 	}
 
 	return palPC;
+}
+
+PalettesPC::PalettesPC()
+{
+}
+
+PalettesPS PalettesPC::toPS() const
+{
+	PalettesPS palettesPS;
+
+	foreach(Palette *palette, *this) {
+		palettesPS.append(new PalettePS(((PalettePC *)palette)->toPS()));
+	}
+
+	return palettesPS;
+}
+
+PalettesPS::PalettesPS()
+{
+}
+
+PalettesPC PalettesPS::toPC(QList< QList<quint8> > &relocateZeroTable) const
+{
+	PalettesPC palettesPC;
+
+	foreach(Palette *palette, *this) {
+		QList<quint8> relocateZero;
+		palettesPC.append(new PalettePC(((PalettePS *)palette)->toPC(relocateZero)));
+		relocateZeroTable.append(relocateZero);
+	}
+
+	return palettesPC;
 }

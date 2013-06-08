@@ -27,7 +27,7 @@ BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
 }
 
 bool BackgroundFilePC::openPalettes(const QByteArray &data, const QByteArray &palData,
-									QList<Palette *> &palettes)
+									PalettesPC &palettes)
 {
 	QBuffer palBuff, buff;
 	palBuff.setData(palData);
@@ -86,7 +86,7 @@ bool BackgroundFilePC::openTextures(const QByteArray &data, BackgroundTexturesPC
 QImage BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
 	QByteArray data = field()->sectionData(Field::Background);
-	QList<Palette *> palettes;
+	PalettesPC palettes;
 	BackgroundTexturesPC textures;
 
 	if(!openPalettes(data, field()->sectionData(Field::PalettePC), palettes)
