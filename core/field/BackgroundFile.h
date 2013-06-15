@@ -29,33 +29,51 @@ class BackgroundFile : public FieldPart
 {
 public:
 	explicit BackgroundFile(Field *field);
+	BackgroundFile(const BackgroundFile &other);
 	virtual ~BackgroundFile();
 
-	bool open() { return true; }
+	virtual bool open()=0;
 	bool open(const QByteArray &) { return true; }
-	QByteArray save() const { return QByteArray(); }
-	bool canSave() const { return false; }
-	void clear() { }
+	virtual QByteArray save() const { return QByteArray(); }
+	virtual inline bool canSave() const { return false; }
+	void clear();
 	QImage openBackground();
-	virtual QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL)=0;
+	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
-protected:
-	virtual bool openTiles(const QByteArray &data)=0;
-	virtual bool openTextures(const QByteArray &data, BackgroundTextures *textures) {
-		Q_UNUSED(data)
-		Q_UNUSED(textures)
-		return false;
-	}
-	QImage drawBackground(const BackgroundTiles &tiles, const Palettes &palettes, const BackgroundTextures *textures) const;
-	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
+
 	inline const BackgroundTiles &tiles() const {
 		return _tiles;
 	}
 	inline void setTiles(const BackgroundTiles &tiles) {
 		_tiles = tiles;
 	}
+
+	inline const Palettes &palettes() const {
+		return _palettes;
+	}
+	inline void setPalettes(const Palettes &palettes) {
+		foreach(Palette *pal, _palettes)	delete pal;
+		_palettes = palettes;
+	}
+
+	inline BackgroundTextures *textures() const {
+		return _textures;
+	}
+	inline void setTextures(BackgroundTextures *textures) {
+		if(_textures) {
+			delete _textures;
+		}
+		_textures = textures;
+	}
+
+protected:
+	QImage drawBackground(const BackgroundTiles &tiles) const;
+	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
+
 private:
 	BackgroundTiles _tiles;
+	Palettes _palettes;
+	BackgroundTextures *_textures;
 };
 
 #endif // BACKGROUNDFILE_H

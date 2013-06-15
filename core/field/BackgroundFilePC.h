@@ -23,6 +23,7 @@
 #include "BackgroundTilesIO.h"
 #include "BackgroundTextures.h"
 #include "BackgroundTexturesIO.h"
+#include "BackgroundIO.h"
 
 class FieldPC;
 
@@ -30,13 +31,12 @@ class BackgroundFilePC : public BackgroundFile
 {
 public:
 	explicit BackgroundFilePC(FieldPC *field);
+	BackgroundFilePC(const BackgroundFilePC &other);
 
-	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
-private:
-	static bool openPalettes(const QByteArray &data, const QByteArray &palData, PalettesPC &palettes);
-	bool openTiles(const QByteArray &data);
-	bool openTextures(const QByteArray &data, BackgroundTexturesPC *textures) const;
-	qint64 aTex;
+	bool open();
+	QByteArray save() const;
+	QByteArray savePal() const;
+	virtual inline bool canSave() const { return true; }
 };
 
 #endif // BACKGROUNDFILEPC_H

@@ -128,7 +128,7 @@ QByteArray FieldPC::saveFooter() const
 
 QList<Field::FieldSection> FieldPC::orderOfSections() const
 {
-	return QList<FieldSection>() << Scripts << Camera << ModelLoader << PalettePC << Walkmesh << Background << Encounter << Inf << Background;
+	return QList<FieldSection>() << Scripts << Camera << ModelLoader << PalettePC << Walkmesh << Unused << Encounter << Inf << Background;
 }
 
 qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldSections part)

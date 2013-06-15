@@ -430,10 +430,6 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 	layout3->addWidget(new QLabel(tr("Couche 4")), 0, 6);
 	layout3->addWidget(bgFlagEdit[3], 0, 7);
 	layout3->setRowStretch(1, 1);
-	layout3->setColumnStretch(0, 1);
-	layout3->setColumnStretch(1, 1);
-	layout3->setColumnStretch(2, 1);
-	layout3->setColumnStretch(3, 1);
 
 	QVBoxLayout *layout = new QVBoxLayout(ret);
 	layout->addWidget(group1);

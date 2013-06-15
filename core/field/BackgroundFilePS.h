@@ -19,23 +19,24 @@
 #define BACKGROUNDFILEPS_H
 
 #include "BackgroundFile.h"
+#include "BackgroundIO.h"
 #include "BackgroundTiles.h"
 #include "BackgroundTilesIO.h"
 #include "BackgroundTextures.h"
 #include "BackgroundTexturesIO.h"
 
 class FieldPS;
+class FieldPC;
+class BackgroundFilePC;
 
 class BackgroundFilePS : public BackgroundFile
 {
 public:
 	explicit BackgroundFilePS(FieldPS *field);
+	BackgroundFilePS(const BackgroundFilePS &other);
 
-	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
-private:
-	static bool openPalettes(const QByteArray &data, PalettesPS &palettes);
-	bool openTiles(const QByteArray &data);
-	bool openTextures(const QByteArray &data, BackgroundTexturesPS *textures) const;
+	bool open();
+	BackgroundFilePC toPC(FieldPC *field) const;
 };
 
 #endif // BACKGROUNDFILEPS_H

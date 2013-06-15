@@ -22,83 +22,65 @@
 #include "FieldPC.h"
 
 BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
-	BackgroundFile(field), aTex(-1)
+	BackgroundFile(field)
 {
 }
 
-bool BackgroundFilePC::openPalettes(const QByteArray &data, const QByteArray &palData,
-									PalettesPC &palettes)
+BackgroundFilePC::BackgroundFilePC(const BackgroundFilePC &other) :
+	BackgroundFile(other)
 {
-	QBuffer palBuff, buff;
-	palBuff.setData(palData);
-	buff.setData(data);
-
-	if(!buff.open(QIODevice::ReadOnly) ||
-			!buff.seek(12)) {
-		return false;
-	}
-
-	PaletteIOPC io(&palBuff);
-	io.setDeviceAlpha(&buff);
-	if(!io.read(palettes)) {
-		return false;
-	}
-
-	return true;
-}
-
-bool BackgroundFilePC::openTiles(const QByteArray &data)
-{
-	BackgroundTiles tiles;
-	QBuffer buff;
-	buff.setData(data);
-
-	BackgroundTilesIOPC io(&buff);
-	if(!io.read(tiles)) {
-		return false;
-	}
-
-	setTiles(tiles);
-
-	aTex = buff.pos() + 7;
-
-	return true;
-}
-
-bool BackgroundFilePC::openTextures(const QByteArray &data, BackgroundTexturesPC *textures) const
-{
-	QBuffer buff;
-	buff.setData(data);
-
-	if(!buff.open(QIODevice::ReadOnly) ||
-			!buff.seek(aTex)) {
-		return false;
-	}
-
-	BackgroundTexturesIOPC io(&buff);
-	if(!io.read(textures)) {
-		return false;
-	}
-
-	return true;
-}
-
-QImage BackgroundFilePC::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
-{
-	QByteArray data = field()->sectionData(Field::Background);
+	setTextures(new BackgroundTexturesPC(*(BackgroundTexturesPC *)other.textures()));
 	PalettesPC palettes;
-	BackgroundTexturesPC textures;
+	foreach(Palette *pal, other.palettes()) {
+		palettes.append(new PalettePC(*pal));
+	}
+	setPalettes(palettes);
+}
 
-	if(!openPalettes(data, field()->sectionData(Field::PalettePC), palettes)
-			|| (aTex < 0 && !openTiles(data))
-			|| !openTextures(data, &textures)) {
-		foreach(Palette *palette, palettes) {
-			delete palette;
-		}
-
-		return QImage();
+bool BackgroundFilePC::open()
+{
+	if(isOpen() || isModified()) {
+		setOpen(true);
+		return true;
 	}
 
-	return drawBackground(tiles().tiles(paramActifs, z, layers),
-						  palettes, &textures);
+	QByteArray data = field()->sectionData(Field::Background),
+			palData = field()->sectionData(Field::PalettePC);
+	QBuffer buff, palBuff;
+
+	buff.setData(data);
+	palBuff.setData(palData);
+
+	BackgroundIOPC io(&buff, &palBuff);
+	if(!io.read(*this)) {
+		return false;
+	}
+
+	setOpen(true);
+
+	return true;
+}
+
+QByteArray BackgroundFilePC::save() const
+{
+	QBuffer buff, palBuff;
+
+	BackgroundIOPC io(&buff, &palBuff);
+	if(!io.write(*this)) {
+		return QByteArray();
+	}
+
+	return buff.data();
+}
+
+QByteArray BackgroundFilePC::savePal() const
+{
+	QBuffer buff, palBuff;
+
+	PaletteIOPC io(&palBuff, &buff);
+	if(!io.write(palettes())) {
+		return QByteArray();
+	}
+
+	return palBuff.data();
 }

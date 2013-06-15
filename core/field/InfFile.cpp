@@ -30,8 +30,7 @@ bool InfFile::open()
 
 bool InfFile::open(const QByteArray &data)
 {
-	quint32 oldSize = size;
-	size = data.size();
+	quint32 size = data.size();
 
 	if(sizeof(InfData) != 740) {
 		qWarning() << "Error InfData" << sizeof(InfData) << "must be 740";
@@ -51,8 +50,6 @@ bool InfFile::open(const QByteArray &data)
 	memcpy(&this->data, data.constData(), size);
 	this->data.name[8] = '\x00';
 
-	if(isOpen())		size = oldSize;
-
 	setOpen(true);
 
 	return true;
@@ -60,17 +57,16 @@ bool InfFile::open(const QByteArray &data)
 
 QByteArray InfFile::save() const
 {
-	return QByteArray((char *)&data, size);
+	return QByteArray((char *)&data, field()->sectionSize(Field::Inf));
 }
 
 void InfFile::clear()
 {
-	//TODO: clear
 }
 
 bool InfFile::isJap()
 {
-	return size != sizeof(InfData);
+	return field()->sectionSize(Field::Inf) == 536;
 }
 
 QString InfFile::mapName()

@@ -26,50 +26,50 @@ class Palette
 {
 public:
 	Palette();
+	explicit Palette(const char *data);
 	virtual ~Palette();
 	inline bool notZero(quint8 index) const { return !isZero(index); }
-	virtual bool isZero(quint8 index) const=0;
-	inline QRgb color(int index) const { return _colors.at(index); }
-	inline const QList<QRgb> &colors() const { return _colors; }
-	inline void addColor(QRgb color) { _colors.append(color); }
+	virtual inline bool isZero(quint8 index) const {
+		return _isZero.at(index);
+	}
+	virtual inline QRgb color(int index) const { return _colors.at(index); }
+	inline bool mask(int index) const { return _masks.at(index); }
+	inline void addColor(QRgb color, bool mask, bool isZero) {
+		_colors.append(color);
+		_masks.append(mask);
+		_isZero.append(isZero);
+	}
 	inline void setColor(int index, QRgb color) { _colors.replace(index, color); }
 	inline void insertColor(int index, QRgb color) { _colors.insert(index, color); }
 	inline void removeColor(int index) { _colors.removeAt(index); }
 	inline void setColors(const QList<QRgb> &colors) { _colors = colors; }
+	inline const QList<bool> &areZero() const {
+		return _isZero;
+	}
+	void fromData(const char *data);
 	QByteArray toByteArray() const;
 	QImage toImage() const;
 private:
 	QList<QRgb> _colors;
-//	QList<bool> _masks;
+	QList<bool> _masks;
+	QList<bool> _isZero;
 };
-
-class PalettePS;
-class PalettePC;
 
 class PalettePC : public Palette
 {
 public:
 	PalettePC();
-	explicit PalettePC(const char *palette, bool transparency=false);
+	PalettePC(const Palette &palette, bool transparency=false);
+	explicit PalettePC(const char *data, bool transparency=false);
+	QRgb color(int index) const;
 	bool isZero(quint8 index) const;
 	bool transparency() const;
 	void setTransparency(bool transparency);
-	PalettePS toPS() const;
 private:
 	bool _transparency;
 };
 
-class PalettePS : public Palette
-{
-public:
-	PalettePS();
-	explicit PalettePS(const char *palette);
-	bool isZero(quint8 index) const;
-	void setIsZero(int index, bool transparency);
-	PalettePC toPC(QList<quint8> &relocateZero) const;
-private:
-	QList<bool> _isZero;
-};
+typedef Palette PalettePS;
 
 class PalettesPS;
 class PalettesPC;
@@ -80,7 +80,7 @@ class PalettesPS : public Palettes
 {
 public:
 	PalettesPS();
-	PalettesPC toPC(QList< QList<quint8> > &relocateZeroTable) const;
+	PalettesPC toPC() const;
 };
 
 class PalettesPC : public Palettes

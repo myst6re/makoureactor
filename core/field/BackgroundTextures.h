@@ -20,6 +20,15 @@ typedef struct {
 	quint16 w, h;
 } MIM;
 
+struct BackgroundConversionTexture
+{
+	BackgroundConversionTexture() {}
+	BackgroundConversionTexture(const QVector<uint> &data, const Tile &tile) :
+		data(data), tile(tile) {}
+	QVector<uint> data;
+	Tile tile;
+};
+
 class BackgroundTextures
 {
 public:
@@ -65,6 +74,8 @@ public:
 	void setTexInfos(const QHash<quint8, BackgroundTexturesPCInfos> &texInfos);
 	QList<uint> tex(quint8 texID) const;
 	void setTex(quint8 texID, const QList<uint> &indexOrRgbList, const BackgroundTexturesPCInfos &infos);
+	QImage toImage(quint8 texID) const;
+	QImage toImage(quint8 texID, const BackgroundTiles &tiles, const Palettes &palettes) const;
 	BackgroundTexturesPS toPS() const;
 protected:
 	quint16 textureWidth(const Tile &tile) const;
@@ -87,7 +98,7 @@ public:
 	TimFile tim(quint8 pageID, quint8 depth) const;
 	BackgroundTexturesPC toPC(const BackgroundTiles &psTiles,
 							  BackgroundTiles &pcTiles,
-							  const QList< QList<quint8> > &relocateZeroTable) const;
+							  const PalettesPC &palettesPC) const;
 protected:
 	quint16 textureWidth(const Tile &tile) const;
 	quint32 originInData(const Tile &tile) const;

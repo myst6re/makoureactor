@@ -43,7 +43,8 @@ public:
 		Encounter = 0x20,
 		Inf = 0x40,
 		Background = 0x80,
-		PalettePC = 0x100
+		PalettePC = 0x100,
+		Unused = 0x200
 	};
 	Q_DECLARE_FLAGS(FieldSections, FieldSection)
 
@@ -62,8 +63,8 @@ public:
 	void setSaved();
 	bool save(QByteArray &newData, bool compress);
 	qint8 save(const QString &path, bool compress);
-	qint8 importer(const QString &path, int type, FieldSections part);
-	virtual qint8 importer(const QByteArray &data, bool isPSField, FieldSections part);
+	qint8 importer(const QString &path, int type, FieldSections part, QIODevice *device2=0);
+	virtual qint8 importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *device2=0);
 
 	Section1File *scriptsAndTexts(bool open=true);
 	EncounterFile *encounter(bool open=true);
@@ -79,6 +80,7 @@ public:
 	const QString &name() const;
 	void setName(const QString &name);
 	virtual FieldArchiveIO *io() const;
+	int sectionSize(FieldSection part) const;
 	QByteArray sectionData(FieldSection part, bool dontOptimize=false);
 protected:
 	virtual int headerSize() const=0;

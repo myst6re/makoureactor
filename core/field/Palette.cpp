@@ -18,67 +18,42 @@
 #include "Palette.h"
 #include "../PsColor.h"
 
-Palette::Palette() {}
+Palette::Palette()
+{
+}
+
+Palette::Palette(const char *data)
+{
+	fromData(data);
+}
 
 Palette::~Palette()
 {
 }
 
-PalettePC::PalettePC() :
-	Palette(), _transparency(false)
-{
-}
-
-PalettePS::PalettePS() :
-  Palette()
-{
-}
-
-PalettePC::PalettePC(const char *palette, bool transparency) :
-	Palette(), _transparency(transparency)
-{
-	quint16 first, color;
-	memcpy(&first, palette, 2);
-	addColor(PsColor::fromPsColor(first));
-//	_masks.append(first >> 15);
-//	_isZero.append(first==0);
-
-	palette += 2;
-
-	for(quint16 i=1 ; i<256 ; ++i) {
-		memcpy(&color, palette, 2);
-		if(color==0) color = first;
-
-		addColor(PsColor::fromPsColor(color));
-//		_masks.append(color >> 15);
-//		_isZero.append(color==0);
-
-		palette += 2;
-	}
-}
-
-PalettePS::PalettePS(const char *palette) :
-	Palette()
+void Palette::fromData(const char *data)
 {
 	for(quint16 i=0 ; i<256 ; ++i) {
 		quint16 color;
-		memcpy(&color, palette, 2);
+		memcpy(&color, data, 2);
 
-		addColor(PsColor::fromPsColor(color));
-//		_masks.append(color >> 15);
-		_isZero.append(color==0);
+		addColor(PsColor::fromPsColor(color),
+				 color >> 15, color == 0);
 
-		palette += 2;
+		data += 2;
 	}
 }
 
 QByteArray Palette::toByteArray() const
 {
 	QByteArray data;
+	quint8 colorId = 0;
 
 	foreach(const QRgb color, _colors) {
-		quint16 psColor = PsColor::toPsColor(color);
+		quint16 psColor = PsColor::toPsColor(color)
+				| (_masks.at(colorId) << 15);
 		data.append((char *)&psColor, 2);
+		++colorId;
 	}
 
 	return data;
@@ -98,6 +73,29 @@ QImage Palette::toImage() const
 	return image;
 }
 
+PalettePC::PalettePC() :
+	Palette(), _transparency(false)
+{
+}
+
+PalettePC::PalettePC(const Palette &palette, bool transparency) :
+	Palette(palette), _transparency(transparency)
+{
+}
+
+PalettePC::PalettePC(const char *data, bool transparency) :
+	Palette(data), _transparency(transparency)
+{
+}
+
+QRgb PalettePC::color(int index) const
+{
+	if(Palette::isZero(index)) {
+		return Palette::color(0);
+	}
+	return Palette::color(index);
+}
+
 bool PalettePC::isZero(quint8 index) const
 {
 	return index == 0 && _transparency;
@@ -113,51 +111,6 @@ void PalettePC::setTransparency(bool transparency)
 	_transparency = transparency;
 }
 
-PalettePS PalettePC::toPS() const
-{
-	PalettePS palPS;
-
-	for(int index=0 ; index<256 ; ++index) {
-		palPS.setIsZero(index, isZero(index));
-		palPS.addColor(color(index));
-	}
-
-	return palPS;
-}
-
-bool PalettePS::isZero(quint8 index) const
-{
-	return _isZero.at(index);
-}
-
-void PalettePS::setIsZero(int index, bool transparency)
-{
-	if(_isZero.size() != 256) {
-		for(int i=0 ; i<256 ; ++i) {
-			_isZero.append(i == index);
-		}
-	} else {
-		_isZero.replace(index, transparency);
-	}
-}
-
-PalettePC PalettePS::toPC(QList<quint8> &relocateZero) const
-{
-	PalettePC palPC;
-
-	for(quint16 index=0 ; index<256 ; ++index) {
-		if(isZero(index)) {
-			palPC.setTransparency(true);// TODO: real conversion?
-			if(index != 0) {
-				relocateZero.append(index);
-			}
-		}
-		palPC.addColor(color(index));
-	}
-
-	return palPC;
-}
-
 PalettesPC::PalettesPC()
 {
 }
@@ -167,7 +120,7 @@ PalettesPS PalettesPC::toPS() const
 	PalettesPS palettesPS;
 
 	foreach(Palette *palette, *this) {
-		palettesPS.append(new PalettePS(((PalettePC *)palette)->toPS()));
+		palettesPS.append(new PalettePS(*palette));
 	}
 
 	return palettesPS;
@@ -177,14 +130,12 @@ PalettesPS::PalettesPS()
 {
 }
 
-PalettesPC PalettesPS::toPC(QList< QList<quint8> > &relocateZeroTable) const
+PalettesPC PalettesPS::toPC() const
 {
 	PalettesPC palettesPC;
 
 	foreach(Palette *palette, *this) {
-		QList<quint8> relocateZero;
-		palettesPC.append(new PalettePC(((PalettePS *)palette)->toPC(relocateZero)));
-		relocateZeroTable.append(relocateZero);
+		palettesPC.append(new PalettePC(*palette));
 	}
 
 	return palettesPC;

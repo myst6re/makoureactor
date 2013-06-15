@@ -724,6 +724,14 @@ void Window::openField(bool reload)
 //		if(_walkmeshManager)	_walkmeshManager->clear();
 //	}
 
+	if(field) {
+		BackgroundFile *bgFile = field->background(false);
+		if(!bgFile->isModified()) {
+			bgFile->clear();
+			bgFile->close();
+		}
+	}
+
 	// Get and set field
 	field = fieldArchive->field(fieldId, true, true);
 	if(field == NULL) {
@@ -1213,7 +1221,8 @@ void Window::importer()
 	bool isDat = selectedFilter == filter.at(1) || selectedFilter == filter.at(3);
 
 	ImportDialog dialog((isDat && fieldArchive->io()->isPS())
-						|| (!isDat && fieldArchive->io()->isPC()), isDat, this);
+						|| (!isDat && fieldArchive->io()->isPC()),
+						isDat, path, this);
 	if(dialog.exec() != QDialog::Accepted) {
 		return;
 	}
@@ -1222,8 +1231,11 @@ void Window::importer()
 	if(parts == 0) {
 		return;
 	}
+
+	QString addPath = dialog.additionalPath();
+	QFile addDevice(addPath);
 	
-	qint8 error = field->importer(path, filter.indexOf(selectedFilter), parts);
+	qint8 error = field->importer(path, filter.indexOf(selectedFilter), parts, &addDevice);
 
 	QString out;
 	switch(error)

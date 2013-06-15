@@ -17,7 +17,6 @@
  ****************************************************************************/
 #include "FieldModelFilePC.h"
 #include "Data.h"
-#include "Palette.h"
 #include "FieldModelPartPC.h"
 #include "../TexFile.h"
 

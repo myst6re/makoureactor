@@ -18,14 +18,14 @@ public:
 	bool canWrite() const;
 
 	bool read(Palettes &palettes) const;
-	bool write(const QList<const Palette *> &palettes) const;
+	bool write(const Palettes &palettes) const;
 protected:
 	virtual Palette *createPalette(const char *data) const=0;
 	virtual bool readAfter(Palettes &palettes) const {
 		Q_UNUSED(palettes)
 		return true;
 	}
-	virtual bool writeAfter(const QList<const Palette *> &palettes) const {
+	virtual bool writeAfter(const Palettes &palettes) const {
 		Q_UNUSED(palettes)
 		return true;
 	}
@@ -36,7 +36,7 @@ private:
 class PaletteIOPC : public PaletteIO
 {
 public:
-	explicit PaletteIOPC(QIODevice *device);
+	explicit PaletteIOPC(QIODevice *device, QIODevice *deviceAlpha);
 
 	void setDeviceAlpha(QIODevice *device);
 	QIODevice *deviceAlpha() const;
@@ -48,7 +48,7 @@ protected:
 		return new PalettePC(data);
 	}
 	bool readAfter(Palettes &palettes) const;
-	bool writeAfter(const QList<const Palette *> &palettes) const;
+	bool writeAfter(const Palettes &palettes) const;
 private:
 	QIODevice *_deviceAlpha;
 };

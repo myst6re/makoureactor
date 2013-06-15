@@ -12,7 +12,7 @@ BackgroundTiles::BackgroundTiles(const QMultiMap<qint16, Tile> &tiles) :
 
 BackgroundTiles BackgroundTiles::tiles(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
 {
-	QMultiMap<qint16, Tile> ret;
+	BackgroundTiles ret;
 
 	foreach(const Tile &tile, *this) {
 		switch(tile.layerID) {
@@ -42,20 +42,37 @@ BackgroundTiles BackgroundTiles::tiles(const QHash<quint8, quint8> &paramActifs,
 		}
 	}
 
-	return BackgroundTiles(ret);
+	return ret;
 }
 
-BackgroundTiles BackgroundTiles::tiles(quint8 layerID) const
+BackgroundTiles BackgroundTiles::tiles(quint8 layerID, bool orderedForSaving) const
 {
-	QMultiMap<qint16, Tile> ret;
+	BackgroundTiles ret;
 
 	foreach(const Tile &tile, *this) {
 		if(tile.layerID == layerID) {
-			ret.insert(4096 - tile.ID, tile);
+			ret.insert(orderedForSaving
+					   ? tile.tileID
+					   : 4096 - tile.ID,
+					   tile);
 		}
 	}
 
-	return BackgroundTiles(ret);
+	return ret;
+}
+
+QMap<qint32, Tile> BackgroundTiles::sortedTiles() const
+{
+	QMap<qint32, Tile> ret;
+
+	foreach(const Tile &tile, *this) {
+		if(ret.contains((tile.layerID << 16) | tile.tileID)) {
+			qWarning() << "BackgroundTiles::sortedTiles() tile not unique!" << tile.layerID << tile.tileID;
+		}
+		ret.insert((tile.layerID << 16) | tile.tileID, tile);
+	}
+
+	return ret;
 }
 
 QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists) const
@@ -111,4 +128,21 @@ void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
 
 	width = minWidth + maxWidth + 16;
 	height = minHeight + maxHeight + 16;
+}
+
+Tile BackgroundTiles::search(quint8 textureID1, quint8 textureID2,
+							 quint8 srcX, quint8 srcY) const
+{
+	foreach(const Tile &tile, *this) {
+		if(tile.textureID == textureID1 &&
+				(textureID2 == quint8(-1) || tile.textureID2 == textureID2) &&
+				tile.srcX == srcX &&
+				tile.srcY == srcY) {
+			return tile;
+		}
+	}
+
+	Tile nullTile = Tile();
+	nullTile.tileID = quint16(-1);
+	return nullTile;
 }

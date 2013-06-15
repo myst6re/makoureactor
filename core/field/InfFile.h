@@ -127,7 +127,6 @@ public:
 	void setUnknown(const QByteArray &u);
 private:
 	InfData data;
-	quint32 size;
 };
 
 #endif // INFFILE_H

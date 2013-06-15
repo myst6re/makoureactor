@@ -21,6 +21,7 @@
 #include "FieldPS.h"
 #include "../LZS.h"
 #include "../Config.h"
+#include "BackgroundFilePC.h"
 
 Field::Field(const QString &name, FieldArchiveIO *io) :
 	_io(io), _isOpen(false), _isModified(false), _name(name.toLower())
@@ -94,6 +95,16 @@ bool Field::open(bool dontOptimize)
 	return true;
 }
 
+int Field::sectionSize(FieldSection part) const
+{
+	int idPart = sectionId(part);
+
+	if(idPart < sectionCount() - 1) {
+		return sectionPosition(idPart+1) - paddingBetweenSections() - sectionPosition(idPart);
+	}
+	return -1;
+}
+
 QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 {
 	if(!_isOpen) {
@@ -104,15 +115,13 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 
 	int idPart = sectionId(part);
 	int position = sectionPosition(idPart);
-	int size;
+	int size = sectionSize(part);
 
-	if(idPart < sectionCount() - 1) {
-		size = sectionPosition(idPart+1) - paddingBetweenSections() - position;
-	} else {
-		size = -1;
+	if(size < 0) {
+		dontOptimize = true;
 	}
 
-	if(size == -1 || _io->fieldDataIsCached(this) || dontOptimize) {
+	if(dontOptimize || _io->fieldDataIsCached(this)) {
 		return _io->fieldData(this).mid(position, size);
 	} else {
 		QByteArray lzsData = _io->fieldData(this, false);
@@ -292,14 +301,21 @@ bool Field::save(QByteArray &newData, bool compress)
 		toc.append((char *)&pos, 4);
 
 		// Section data
-		FieldPart *fieldPart = part(fieldSection);
+		FieldPart *fieldPart = part(fieldSection == Field::PalettePC
+									? Field::Background // EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
+									: fieldSection);
 		QByteArray section;
 		if(fieldPart && fieldPart->canSave() &&
 				fieldPart->isOpen() && fieldPart->isModified()) {
-			section = fieldPart->save();
+			if(fieldSection == Field::PalettePC) { // EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
+				section = ((BackgroundFilePC *)fieldPart)->savePal();
+			} else {
+				section = fieldPart->save();
+			}
 		} else {
 			section = sectionData(fieldSection, true);
 		}
+
 		if(hasSectionHeader()) {
 			quint32 section_size = section.size();
 			newData.append((char *)&section_size, 4);
@@ -342,7 +358,7 @@ qint8 Field::save(const QString &path, bool compress)
 	return 0;
 }
 
-qint8 Field::importer(const QString &path, int type, FieldSections part)
+qint8 Field::importer(const QString &path, int type, FieldSections part, QIODevice *device2)
 {
 	QFile fic(path);
 	if(!fic.open(QIODevice::ReadOnly))	return 1;
@@ -363,10 +379,10 @@ qint8 Field::importer(const QString &path, int type, FieldSections part)
 		data = fic.readAll();
 	}
 	
-	return importer(data, type == 1 || type == 3, part);
+	return importer(data, type == 1 || type == 3, part, device2);
 }
 
-qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part)
+qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *device2)
 {
 	if(isPSField) {
 		quint32 sectionPositions[7];
@@ -410,6 +426,48 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 			if(!inf->open(data.mid(sectionPositions[4], sectionPositions[5]-sectionPositions[4])))	return 2;
 			inf->setModified(true);
 		}
+		if(part.testFlag(Background)) {
+			if(!device2) {
+				qWarning() << "Field::importer Additional device need to be initialized";
+				return 2;
+			}
+			if(!device2->open(QIODevice::ReadOnly)) {
+				return 1;
+			}
+
+			quint32 lzsSize;
+
+			if(device2->read((char *)&lzsSize, 4) != 4) {
+				return 2;
+			}
+
+			if(lzsSize + 4 != device2->size()) {
+				return 2;
+			}
+
+			QByteArray mimData = LZS::decompressAll(device2->readAll());
+			QByteArray tilesData = data.mid(sectionPositions[2], sectionPositions[3]-sectionPositions[2]);
+			QBuffer mimBuff, tilesBuff;
+
+			mimBuff.setData(mimData);
+			tilesBuff.setData(tilesData);
+
+			BackgroundFilePS bgFilePS(isPC() ? 0 : (FieldPS *)this);
+			BackgroundIOPS bgIO(&mimBuff, &tilesBuff);
+			if(!bgIO.read(bgFilePS)) {
+				return 2;
+			}
+			delete background(false);
+			BackgroundFile *bg;
+			if(isPC()) {
+				bg = new BackgroundFilePC(bgFilePS.toPC((FieldPC *)this));
+			} else {
+				bg = new BackgroundFilePS(bgFilePS);
+			}
+			_parts.insert(Background, bg);
+			bg->setOpen(true);
+			bg->setModified(true);
+		}
 	} else {
 		quint32 sectionPositions[9];
 
@@ -445,6 +503,26 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 			InfFile *inf = this->inf(false);
 			if(!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4)))	return 2;
 			inf->setModified(true);
+		}
+		if(part.testFlag(Background) && isPC()) {
+			QByteArray data = data.mid(sectionPositions[8]+4, sectionPositions[8]-sectionPositions[7]-4),
+					palData = data.mid(sectionPositions[3]+4, sectionPositions[4]-sectionPositions[3]-4);
+			QBuffer buff, palBuff;
+
+			buff.setData(data);
+			palBuff.setData(palData);
+
+			BackgroundFilePC bgFilePC((FieldPC *)this);
+			BackgroundIOPC bgIO(&buff, &palBuff);
+			if(!bgIO.read(bgFilePC)) {
+				return 2;
+			}
+			BackgroundFile *bg;
+			delete background(false);
+			bg = new BackgroundFilePC(bgFilePC);
+			_parts.insert(Background, bg);
+			bg->setOpen(true);
+			bg->setModified(true);
 		}
 	}
 

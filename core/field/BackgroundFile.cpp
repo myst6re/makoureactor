@@ -19,12 +19,33 @@
 #include "Field.h"
 
 BackgroundFile::BackgroundFile(Field *field) :
-	FieldPart(field)
+	FieldPart(field), _textures(0)
 {
+}
+
+BackgroundFile::BackgroundFile(const BackgroundFile &other) :
+	FieldPart(other.field()), _textures(0)
+{
+	setTiles(other.tiles());
 }
 
 BackgroundFile::~BackgroundFile()
 {
+	foreach(Palette *pal, _palettes)	delete pal;
+	if(_textures) {
+		delete _textures;
+	}
+}
+
+void BackgroundFile::clear()
+{
+	foreach(Palette *pal, _palettes)	delete pal;
+	_palettes.clear();
+	if(_textures) {
+		delete _textures;
+		_textures = 0;
+	}
+	_tiles.clear();
 }
 
 QImage BackgroundFile::openBackground()
@@ -36,12 +57,18 @@ QImage BackgroundFile::openBackground()
 	return openBackground(paramActifs, z);
 }
 
-QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles,
-									   const Palettes &palettes,
-									   const BackgroundTextures *textures) const
+QImage BackgroundFile::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
 {
-	if(tiles.isEmpty()) {
-		foreach(Palette *pal, palettes)	delete pal;
+	if(!isOpen() && !open()) {
+		return QImage();
+	}
+
+	return drawBackground(tiles().tiles(paramActifs, z, layers));
+}
+
+QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
+{
+	if(tiles.isEmpty() || !_textures) {
 		return QImage();
 	}
 
@@ -56,7 +83,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles,
 	bool warned = false;
 
 	foreach(const Tile &tile, tiles) {
-		QVector<uint> indexOrColorList = textures->tile(tile);
+		QVector<uint> indexOrColorList = _textures->tile(tile);
 
 		if(indexOrColorList.isEmpty()) {
 			if(!warned) {
@@ -71,30 +98,32 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles,
 		quint16 baseX = minWidth + tile.dstX;
 		Palette *palette = 0;
 
-		if(textures->depth(tile) == 1
-				|| textures->depth(tile) == 0) {
-			if(tile.paletteID >= palettes.size()) {
+		if(_textures->depth(tile) == 1
+				|| _textures->depth(tile) == 0) {
+			if(tile.paletteID >= _palettes.size()) {
 				if(!warned) {
-					qWarning() << "Palette ID overflow" << tile.paletteID << palettes.size();
+					qWarning() << "Palette ID overflow" << tile.paletteID << _palettes.size();
 					warned = true;
 				}
 				continue;
 			}
 
-			palette = palettes.at(tile.paletteID);
-		} else if(textures->depth(tile) != 2) {
+			palette = _palettes.at(tile.paletteID);
+		} else if(_textures->depth(tile) != 2) {
 			if(!warned) {
-				qWarning() << "Unknown depth" << textures->depth(tile);
+				qWarning() << "Unknown depth" << _textures->depth(tile);
 				warned = true;
 			}
 			continue;
 		}
 
 		foreach(uint indexOrColor, indexOrColorList) {
-			if(textures->depth(tile) == 2) {
-				pixels[baseX + right + top] = indexOrColor;
-			} else if(textures->depth(tile) == 1
-					  || textures->depth(tile) == 0) {
+			if(_textures->depth(tile) == 2) {
+				if(indexOrColor != 0) {
+					pixels[baseX + right + top] = indexOrColor;
+				}
+			} else if(_textures->depth(tile) == 1
+					  || _textures->depth(tile) == 0) {
 				if(palette->notZero(indexOrColor)) {
 					if(tile.blending) {
 						pixels[baseX + right + top] = blendColor(tile.typeTrans,
@@ -112,14 +141,12 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles,
 		}
 	}
 
-	foreach(Palette *pal, palettes)	delete pal;
-
 	return image;
 }
 
 bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
-	if(tiles().isEmpty() && !openTiles(field()->sectionData(Field::Background))) {
+	if(tiles().isEmpty() && !isOpen() && !open()) {
 		return false;
 	}
 

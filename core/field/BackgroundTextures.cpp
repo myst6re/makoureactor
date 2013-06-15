@@ -143,7 +143,7 @@ void BackgroundTexturesPC::setTex(quint8 texID, const QList<uint> &indexOrRgbLis
 
 	foreach(uint indexOrRgb, indexOrRgbList) {
 		if(infos.depth == 0 || infos.depth == 1) {
-			texData.append(quint8(indexOrRgb));
+			texData.append(char(indexOrRgb));
 		} else if(infos.depth == 2) {
 			quint16 color = toPcColor(indexOrRgb);
 			texData.append((char *)&color, 2);
@@ -201,17 +201,84 @@ quint32 BackgroundTexturesPC::originInData(const Tile &tile) const
 
 QRgb BackgroundTexturesPC::directColor(quint16 color) const
 {
-	return qRgb(qRound(COEFF_COLOR * (color >> 11)),
+	return qRgba(qRound(COEFF_COLOR * (color >> 11)),
 				qRound(COEFF_COLOR * (color >> 6 & 31)),
-				qRound(COEFF_COLOR * (color & 31))); // special PC RGB16 color
+				qRound(COEFF_COLOR * (color & 31)),
+				 color == 0 ? 0 : 255); // special PC RGB16 color
 }
 
 quint16 BackgroundTexturesPC::toPcColor(const QRgb &color)
 {
 	// alpha ignored!
 	return ((qRound(qRed(color) / COEFF_COLOR) & 31) << 11) |
-				((qRound(qGreen(color) / COEFF_COLOR) & 31) << 6) |
-				(qRound(qBlue(color) / COEFF_COLOR) & 31); // special PC RGB16 color
+			((qRound(qGreen(color) / COEFF_COLOR) & 31) << 6) |
+			(qRound(qBlue(color) / COEFF_COLOR) & 31); // special PC RGB16 color
+}
+
+QImage BackgroundTexturesPC::toImage(quint8 texID) const
+{
+	QList<uint> indexOrRgbList = tex(texID);
+	const BackgroundTexturesPCInfos &infos = texInfos(texID);
+	QImage img(256, 256, QImage::Format_ARGB32);
+	img.fill(Qt::black);
+	QRgb *bits = (QRgb *)img.bits();
+
+	foreach(uint indexOrRgb, indexOrRgbList) {
+		if(infos.depth != 2) {
+			*bits = qRgb(indexOrRgb, indexOrRgb, indexOrRgb);
+		} else {
+			*bits = indexOrRgb;
+		}
+		bits++;
+	}
+
+	return img;
+}
+
+QImage BackgroundTexturesPC::toImage(quint8 texID, const BackgroundTiles &tiles, const Palettes &palettes) const
+{
+	const BackgroundTexturesPCInfos &infos = texInfos(texID);
+
+	if(infos.depth == 2) {
+		return toImage(texID);
+	}
+
+	QImage img(256, 256, QImage::Format_ARGB32);
+	img.fill(Qt::black);
+	QRgb *bits = (QRgb *)img.bits();
+
+	foreach(const Tile &tile, tiles) {
+		if(tile.textureID == texID) {
+			QVector<uint> indexOrRgbList = this->tile(tile);
+			Palette *palette = 0;
+			quint16 pos = tile.srcY * 256 + tile.srcX;
+			quint8 x = 0, y = 0;
+
+			if(tile.paletteID < palettes.size()) {
+				palette = palettes.at(tile.paletteID);
+			}
+
+			foreach(uint indexOrRgb, indexOrRgbList) {
+//				if(tile.depth == 0) {
+//					bits[pos + y * 256 + x] = qRgb(0, 255, 0);
+//				} else if(tile.depth == 1) {
+//					bits[pos + y * 256 + x] = qRgb(0, 0, 255);
+//				}
+				if(palette) {
+					bits[pos + y * 256 + x] = palette->color(indexOrRgb);
+				} else {
+					bits[pos + y * 256 + x] = qRgb(indexOrRgb, indexOrRgb, indexOrRgb);
+				}
+
+				if(++x >= tile.size) {
+					x = 0;
+					++y;
+				}
+			}
+		}
+	}
+
+	return img;
 }
 
 BackgroundTexturesPS BackgroundTexturesPC::toPS() const
@@ -323,118 +390,148 @@ quint32 BackgroundTexturesPS::originInData(const Tile &tile) const
 
 QRgb BackgroundTexturesPS::directColor(quint16 color) const
 {
-	return PsColor::fromPsColor(color);
+	return PsColor::fromPsColor(color, true);
 }
 
 BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 												BackgroundTiles &pcTiles,
-												const QList< QList<quint8> > &relocateZeroTable) const
+												const PalettesPC &palettesPC) const
 {
 	BackgroundTexturesPC ret;
-	QMap<quint16, quint8> texIdConversionTable;
-	QMap<quint16, BackgroundTexturesPCInfos> infos;
-	QMap<quint16, QList< QVector<uint> > > textures;
+	QMap<quint16, QList<BackgroundConversionTexture> > textures;
 
-	foreach(const Tile &tile, psTiles) {
+	foreach(const Tile &tile, psTiles.sortedTiles()) {
 
 		if((tile.textureID2 == 0 && _headerImg.w <= 0)
-			 || (tile.textureID2 == 1 && _headerEffect.w <= 0)
-			 || tile.textureID2 > 1) {
+			 || (tile.textureID2 == 1 && _headerEffect.w <= 0)) {
 			qWarning() << "BackgroundTexturesPS::toPC: unknown textureID2" << tile.textureID2
 						  << _headerImg.w << _headerEffect.w;
 			continue;
 		}
 
-		quint16 key = (tile.textureID << 2) |
-				(tile.textureID2 << 10) |
-				(tile.size == 32) |
-				(tile.depth << 1);
-		Tile pcTile = tile;
+		quint8 depthKey = 0;
+		switch(tile.depth & 3) {
+		case 0:		depthKey = 1;	break;
+		case 1:		depthKey = 0;	break;
+		default:	depthKey = 2;   break;
+		}
 
-		QList< QVector<uint> > texture = textures.value(key);
-
-		quint8 tileCount = 256 / pcTile.size;
-		pcTile.srcX = (texture.size() % tileCount) * pcTile.size;
-		pcTile.srcY = (texture.size() / tileCount) * pcTile.size;
+		quint16 key = (tile.textureID2 << 3) |
+				(depthKey << 1) |
+				(tile.size == 32);
 
 		QVector<uint> tileData = this->tile(tile);
-		 // On PC version, only the first palette color can be transparent
+		// On PC version, only the first palette color can be transparent
 		if(tile.depth < 2) {
-			QList<quint8> relocateZero = relocateZeroTable.value(tile.paletteID);
-			if(!relocateZero.isEmpty()) {
+			PalettePC *palette = (PalettePC *)palettesPC.value(tile.paletteID);
+			if(palette) {
+
 				int i=0;
 				foreach(uint index, tileData) {
-					if(relocateZero.contains(index)) {
+					if(palette->areZero().at(index)) {
+						// When the index refer to a transparent color, change this index to 0
+
 						tileData[i] = 0;
+						palette->setTransparency(true);
 					}
 					++i;
 				}
 			}
 		}
 
-		texture.append(tileData);
-		textures.insert(key, texture);
-		pcTiles.insert(4096 - pcTile.ID, pcTile);
+		QList<BackgroundConversionTexture> textureList = textures.value(key);
+		textureList.append(BackgroundConversionTexture(tileData, tile));
+		textures.insert(key, textureList);
 	}
 
-	QMapIterator<quint16, QList< QVector<uint> > > it(textures);
-	quint8 curTexID = 0;
+	QMutableMapIterator<quint16, QList<BackgroundConversionTexture> > it(textures);
+	quint8 curTexID = 0, curTexID2 = 15;
+	BackgroundTiles pcTiles2;
 
 	while(it.hasNext()) {
 		it.next();
-		const QList< QVector<uint> > &texture = it.value();
+		QList<BackgroundConversionTexture> &texture = it.value();
 		BackgroundTexturesPCInfos info;
-		QList<uint> flatten;
-		quint16 key = it.key();
 		quint8 texID;
+		const Tile &representativeTile = texture.first().tile;
 
-		if(!texIdConversionTable.contains(key)) {
-			texID = curTexID++;
-			if(texID >= 42) {
-				qWarning() << "BackgroundTexturesPS::toPC: Too many textures!";
-				break;
-			}
-			texIdConversionTable.insert(key, texID);
-		} else {
-			qWarning() << "BackgroundTexturesPS::toPC: texIdConversionTable broken";
-			break;
-		}
-
-		info.depth = (key >> 1) & 1;
-		info.size = key & 1; // 0 = 16, 1 = 32
-		infos.insert(key, info);
+		info.depth = qMin(quint8(representativeTile.depth & 3), quint8(1));
+		info.size = representativeTile.size == 32; // 0 = 16, 1 = 32
+		quint8 textureID2 = representativeTile.textureID2 & 1;
 
 		quint8 tileSize = info.size ? 32 : 16;
 		quint8 tileCount = 256 / tileSize;
+		quint16 tilesPerTexture = tileSize == 16 ? 256 : 64;
+		quint8 textureCount = texture.size() / tilesPerTexture
+				+ (texture.size() % tilesPerTexture != 0);
 
-		for(quint8 tileY=0 ; tileY<tileCount ; ++tileY) {
-			for(quint8 y=0 ; y<tileSize ; ++y) {
-				for(quint8 tileX=0 ; tileX<tileCount ; ++tileX) {
-					for(quint8 x=0 ; x<tileSize ; ++x) {
-						flatten.append(texture
-									   .value(tileY * tileCount + tileX)
-									   .value(y * tileSize + x));
+		if(info.depth < 2) {
+			for(int texConvId=0 ; texConvId < texture.size() ; ++texConvId) {
+				BackgroundConversionTexture &tileConversion = texture[texConvId];
+				PalettePC *palette = (PalettePC *)palettesPC.value(tileConversion.tile.paletteID);
+				if(palette && palette->transparency() && !palette->areZero().first()) {
+
+					int i=0, indexOfFirstZero = palette->areZero().indexOf(true, 1);
+					if(indexOfFirstZero > -1) {
+						foreach(uint index, tileConversion.data) {
+							if(index == 0) {
+								// Reloc when index = 0 and not refer to a transparent color
+
+								tileConversion.data[i] = indexOfFirstZero;
+							}
+							++i;
+						}
+					} else {
+						qWarning() << "BackgroundTexturesPS::toPC relloc color failed";
+						break;
 					}
 				}
 			}
 		}
 
-		ret.setTex(texID, flatten, info);
+		for(int i=0 ; i<textureCount ; ++i) {
+			if(textureID2 || curTexID >= 15) {
+				texID = curTexID2++;
+			} else {
+				texID = curTexID++;
+			}
+			QList<uint> flatten;
+
+			for(quint8 tileY=0 ; tileY<tileCount ; ++tileY) {
+				for(quint8 y=0 ; y<tileSize ; ++y) {
+					for(quint8 tileX=0 ; tileX<tileCount ; ++tileX) {
+						for(quint8 x=0 ; x<tileSize ; ++x) {
+							uint indexOrColor = texture.value(i * tilesPerTexture +
+															  tileY * tileCount + tileX)
+									.data.value(y * tileSize + x);
+							if(info.depth < 2) {
+
+							}
+							flatten.append(indexOrColor);
+						}
+					}
+				}
+			}
+
+			ret.setTex(texID, flatten, info);
+
+			// Update textureID in tiles
+			for(quint16 tileID=0 ; tileID < tilesPerTexture
+				&& i * tilesPerTexture + tileID < texture.size() ; ++tileID) {
+				Tile tile = texture.at(i * tilesPerTexture + tileID).tile;
+
+				tile.srcX = (tileID % tileCount) * tile.size;
+				tile.srcY = (tileID / tileCount) * tile.size;
+
+				tile.textureID = texID;
+				tile.textureID2 = tile.textureID2 ? texID : 0;
+
+				pcTiles2.insert(4096 - tile.ID, tile);
+			}
+		}
 	}
 
-	foreach(Tile tile, pcTiles) {
-		quint16 key = (tile.textureID << 2) |
-				(tile.textureID2 << 10) |
-				(tile.size == 32) |
-				(tile.depth << 1);
-
-		quint8 texID = texIdConversionTable.value(key);
-
-		tile.textureID = texID;
-		tile.textureID2 = texID;
-
-		pcTiles.insert(4096 - tile.ID, tile);
-	}
+	pcTiles = pcTiles2;
 
 	return ret;
 }

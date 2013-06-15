@@ -9,23 +9,27 @@ typedef struct {
 	quint8 paletteID;
 	quint16 ID;
 	quint8 param, state;
-	quint8 blending;
+	bool blending;
 	quint8 typeTrans, size;
 	quint8 textureID, textureID2;
-	quint8 depth, layerID;
+	quint8 depth;
+	quint8 layerID;
+	quint16 tileID;
 } Tile;
 
 class BackgroundTiles : public QMultiMap<qint16, Tile>
 {
 public:
 	BackgroundTiles();
-	explicit BackgroundTiles(const QMultiMap<qint16, Tile> &tiles);
+	BackgroundTiles(const QMultiMap<qint16, Tile> &tiles);
 
 	BackgroundTiles tiles(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const;
-	BackgroundTiles tiles(quint8 layerID) const;
+	BackgroundTiles tiles(quint8 layerID, bool orderedForSaving) const;
+	QMap<qint32, Tile> sortedTiles() const;
 	QHash<quint8, quint8> usedParams(bool *layerExists) const;
 	void area(quint16 &minWidth, quint16 &minHeight,
 			  int &width, int &height) const;
+	Tile search(quint8 textureID1, quint8 textureID2, quint8 srcX, quint8 srcY) const;
 };
 
 #endif // BACKGROUNDTILES_H

@@ -26,65 +26,51 @@ BackgroundFilePS::BackgroundFilePS(FieldPS *field) :
 {
 }
 
-bool BackgroundFilePS::openPalettes(const QByteArray &data, PalettesPS &palettes)
+BackgroundFilePS::BackgroundFilePS(const BackgroundFilePS &other) :
+	BackgroundFile(other)
 {
-	QBuffer palBuff;
-	palBuff.setData(data);
-
-	PaletteIOPS io(&palBuff);
-	if(!io.read(palettes)) {
-		return false;
-	}
-
-	return true;
-}
-
-bool BackgroundFilePS::openTiles(const QByteArray &data)
-{
-	BackgroundTiles tiles;
-	QBuffer buff;
-	buff.setData(data);
-
-	BackgroundTilesIOPS io(&buff);
-	if(!io.read(tiles)) {
-		return false;
-	}
-
-	setTiles(tiles);
-
-	return true;
-}
-
-bool BackgroundFilePS::openTextures(const QByteArray &data, BackgroundTexturesPS *textures) const
-{
-	QBuffer buff;
-	buff.setData(data);
-
-	BackgroundTexturesIOPS io(&buff);
-	if(!io.read(textures)) {
-		return false;
-	}
-
-	return true;
-}
-
-QImage BackgroundFilePS::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
-{
-	QByteArray mimData = ((FieldPS *)field())->io()->mimData(field());
+	setTextures(new BackgroundTexturesPS(*(BackgroundTexturesPS *)other.textures()));
 	PalettesPS palettes;
-	BackgroundTexturesPS textures;
+	foreach(Palette *pal, other.palettes()) {
+		palettes.append(new PalettePS(*pal));
+	}
+	setPalettes(palettes);
+}
 
-	if(!openPalettes(mimData, palettes)
-			|| (tiles().isEmpty() &&
-				!openTiles(field()->sectionData(Field::Background)))
-			|| !openTextures(mimData, &textures)) {
-		foreach(Palette *palette, palettes) {
-			delete palette;
-		}
-
-		return QImage();
+bool BackgroundFilePS::open()
+{
+	if(isOpen() || isModified()) {
+		setOpen(true);
+		return true;
 	}
 
-	return drawBackground(tiles().tiles(paramActifs, z, layers),
-						  palettes, &textures);
+	QByteArray mimData = ((FieldPS *)field())->io()->mimData(field()),
+			tilesData = field()->sectionData(Field::Background);
+	QBuffer mimBuff, tilesBuff;
+
+	mimBuff.setData(mimData);
+	tilesBuff.setData(tilesData);
+
+	BackgroundIOPS io(&mimBuff, &tilesBuff);
+	if(!io.read(*this)) {
+		return false;
+	}
+
+	setOpen(true);
+
+	return true;
+}
+
+BackgroundFilePC BackgroundFilePS::toPC(FieldPC *field) const
+{
+	PalettesPC palettesPC = ((PalettesPS *)&palettes())->toPC();
+	BackgroundTiles tilesPC;
+	BackgroundTexturesPC texturesPC = ((BackgroundTexturesPS *)textures())->toPC(tiles(), tilesPC, palettesPC);
+
+	BackgroundFilePC filePC(field);
+	filePC.setPalettes(palettesPC);
+	filePC.setTextures(new BackgroundTexturesPC(texturesPC));
+	filePC.setTiles(tilesPC);
+
+	return filePC;
 }

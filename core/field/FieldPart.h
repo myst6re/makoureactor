@@ -36,10 +36,10 @@ public:
 	virtual void clear()=0;
 
 	bool isOpen() const;
+	void setOpen(bool open);
 	virtual bool isModified() const;
 	void setModified(bool modified);
 protected:
-	void setOpen(bool open);
 	Field *field() const;
 private:
 	bool modified, opened;

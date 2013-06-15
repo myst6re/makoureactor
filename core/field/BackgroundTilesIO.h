@@ -21,10 +21,10 @@ typedef struct {
 	quint8 state;
 	quint8 blending;
 	quint8 unused7;
-	quint8 typeTrans, size;//Normaly unused
-	quint8 textureID, unused8;
-	quint8 textureID2, unused9;
-	quint8 depth, layerID;//Normaly unused
+	quint8 typeTrans, unused8;
+	quint8 textureID, unused9;
+	quint8 textureID2, unused10;
+	quint8 depth, unused11;//Normaly unused
 } TilePC;
 
 //Sizeof : 8
@@ -40,7 +40,7 @@ typedef struct {
 typedef struct {
 	unsigned page_x:4;
 	unsigned page_y:1;
-	unsigned typeTrans:2;//transparence n°3
+	unsigned typeTrans:2;
 	unsigned depth:2;
 	unsigned ZZZ:7;
 } layer2Tile;
@@ -48,7 +48,7 @@ typedef struct {
 //Sizeof : 2
 typedef struct {
 	unsigned param:7;
-	unsigned blending:1;//transparence n°1
+	unsigned blending:1;
 	quint8 state;
 } layer3Tile;
 
@@ -56,7 +56,7 @@ typedef struct {
 typedef struct {
 	quint16 group;//id
 	unsigned param:7;
-	unsigned blending:1;//transparence n°1
+	unsigned blending:1;
 	quint8 state;
 } paramTile;
 
@@ -89,7 +89,7 @@ protected:
 	bool readData(BackgroundTiles &tiles) const;
 	bool writeData(const BackgroundTiles &tiles) const;
 private:
-	static Tile tilePC2Tile(const TilePC &tile);
+	static Tile tilePC2Tile(const TilePC &tile, quint8 layerID, quint16 tileID);
 	static TilePC tile2TilePC(const Tile &tile);
 };
 

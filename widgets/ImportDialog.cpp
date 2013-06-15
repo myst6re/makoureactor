@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "ImportDialog.h"
 
-ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, QWidget *parent) :
+ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QString &path, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
 {
 	setWindowTitle(tr("Importer"));
@@ -30,10 +30,11 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, QWidget *par
 	encounter = new QCheckBox(tr("Combats aléatoires"));
 	inf = new QCheckBox(tr("Déclencheurs/Liens entre les écrans"));
 	model = new QCheckBox(tr("Liste des modèles 3D"));
-//	mim = new QCheckBox(tr("Background"));
+	mim = new QCheckBox(tr("Background"));
 
 	model->setEnabled(sourceSameTypeAsTarget);
-//	mim->setEnabled(sourceSameTypeAsTarget);
+	mim->setEnabled((isDat && !sourceSameTypeAsTarget) ||
+					(!isDat && sourceSameTypeAsTarget));
 
 	scripts->setChecked(scripts->isEnabled());
 	akaos->setChecked(akaos->isEnabled());
@@ -42,10 +43,29 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, QWidget *par
 	encounter->setChecked(encounter->isEnabled());
 	inf->setChecked(inf->isEnabled());
 	model->setChecked(model->isEnabled());
-//	mim->setChecked(mim->isEnabled());
+	mim->setChecked(mim->isEnabled());
 
 	if(isDat) {
 		model->setVisible(false);
+	}
+
+	pathEdit = new QLineEdit;
+	QPushButton *changePathButton = new QPushButton(tr("Changer"));
+
+	pathWidget = new QWidget;
+	QHBoxLayout *layoutPath = new QHBoxLayout(pathWidget);
+	layoutPath->addWidget(new QLabel(tr("Fichier MIM :")));
+	layoutPath->addWidget(pathEdit);
+	layoutPath->addWidget(changePathButton);
+	layoutPath->setContentsMargins(QMargins());
+
+	if(isDat) {
+		pathWidget->setEnabled(mim->isChecked());
+		int index = path.lastIndexOf(".");
+		pathEdit->setText(index > -1 ? (path.left(index + 1) + "MIM")
+									 : path);
+	} else {
+		pathWidget->hide();
 	}
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
@@ -58,7 +78,8 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, QWidget *par
 	layout->addWidget(encounter);
 	layout->addWidget(inf);
 	layout->addWidget(model);
-//	layout->addWidget(mim);
+	layout->addWidget(mim);
+	layout->addWidget(pathWidget);
 	layout->addStretch();
 
 	layout = new QVBoxLayout(this);
@@ -68,6 +89,8 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, QWidget *par
 
 	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
 	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+	connect(changePathButton, SIGNAL(clicked()), SLOT(setAdditionalPathByUser()));
+	connect(mim, SIGNAL(toggled(bool)), pathWidget, SLOT(setEnabled(bool)));
 }
 
 Field::FieldSections ImportDialog::parts() const
@@ -81,7 +104,22 @@ Field::FieldSections ImportDialog::parts() const
 	if(encounter->isChecked())	parts |= Field::Encounter;
 	if(inf->isChecked())		parts |= Field::Inf;
 	if(model->isChecked())		parts |= Field::ModelLoader;
-//	if(mim->isChecked())		parts |= Field::Background;
+	if(mim->isChecked())		parts |= Field::Background;
 
 	return parts;
+}
+
+QString ImportDialog::additionalPath() const
+{
+	return pathEdit->text();
+}
+
+void ImportDialog::setAdditionalPathByUser()
+{
+	QString path = QFileDialog::getOpenFileName(this, tr("Sélectionner le fichier MIM associé"), pathEdit->text(), tr("Fichier MIM (*.MIM);;Tous les fichiers (*)"));
+	if(path.isNull()) {
+		return;
+	}
+
+	pathEdit->setText(path);
 }

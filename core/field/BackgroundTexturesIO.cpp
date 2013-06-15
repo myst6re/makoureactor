@@ -60,6 +60,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures)
 		quint16 exists;
 
 		if(device()->read((char *)&exists, 2) != 2) {
+			qWarning() << "BackgroundTexturesIOPC::read cannot read exists" << texID;
 			return false;
 		}
 
@@ -68,6 +69,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures)
 
 			if(device()->read((char *)&size, 2) != 2 ||
 					device()->read((char *)&depth, 2) != 2) {
+				qWarning() << "BackgroundTexturesIOPC::read cannot read size or depth" << texID;
 				return false;
 			}
 
@@ -78,12 +80,16 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures)
 			textures->addTexInfos(texID, infos);
 
 			if(!device()->seek(device()->pos() + (depth == 0 ? 32768 : depth * 65536))) {
+				qWarning() << "BackgroundTexturesIOPC::read cannot seek texture" << texID;
 				return false;
 			}
 		}
 	}
 
-	device()->seek(initPos);
+	if(!device()->seek(initPos)) {
+		qWarning() << "BackgroundTexturesIOPC::read cannot reset";
+		return false;
+	}
 	textures->setData(device()->readAll());
 
 	return true;
@@ -106,8 +112,10 @@ bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures)
 		if(bool(exists)) {
 			BackgroundTexturesPCInfos infos = textures->texInfos(texID);
 
-			if(device()->write((char *)&infos.size, 2) != 2 ||
-					device()->write((char *)&infos.depth, 2) != 2) {
+			quint16 size = infos.size, depth = infos.depth;
+
+			if(device()->write((char *)&size, 2) != 2 ||
+					device()->write((char *)&depth, 2) != 2) {
 				return false;
 			}
 
@@ -118,7 +126,7 @@ bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures)
 		}
 	}
 
-	return false;
+	return true;
 }
 
 BackgroundTexturesIOPS::BackgroundTexturesIOPS(QIODevice *device) :

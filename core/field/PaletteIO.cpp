@@ -55,6 +55,7 @@ bool PaletteIO::read(Palettes &palettes) const
 	QByteArray palData = device()->read(12);
 
 	if(palData.size() < 12) {
+		qWarning() << "PaletteIO::read Pal size too short";
 		return false;
 	}
 
@@ -65,6 +66,7 @@ bool PaletteIO::read(Palettes &palettes) const
 	palData = device()->read(palH * 512);
 
 	if(palData.size() < palH * 512) {
+		qWarning() << "PaletteIO::read Pal size too short 2";
 		return false;
 	}
 
@@ -75,17 +77,17 @@ bool PaletteIO::read(Palettes &palettes) const
 	return readAfter(palettes);
 }
 
-bool PaletteIO::write(const QList<const Palette *> &palettes) const
+bool PaletteIO::write(const Palettes &palettes) const
 {
 	if(!canWrite()) {
 		return false;
 	}
 
 	const quint16 palW = 256, palH = palettes.size();
-	const quint16 size = 8 + 512 * palH;
+	const quint32 size = 8 + 512 * palH;
 	const quint16 palX = 0, palY = 480;
 
-	device()->write((char *)&size, 2);
+	device()->write((char *)&size, 4);
 	device()->write((char *)&palX, 2);
 	device()->write((char *)&palY, 2);
 	device()->write((char *)&palW, 2);
@@ -98,8 +100,8 @@ bool PaletteIO::write(const QList<const Palette *> &palettes) const
 	return writeAfter(palettes);
 }
 
-PaletteIOPC::PaletteIOPC(QIODevice *device) :
-	PaletteIO(device)
+PaletteIOPC::PaletteIOPC(QIODevice *device, QIODevice *deviceAlpha) :
+	PaletteIO(device), _deviceAlpha(deviceAlpha)
 {
 }
 
@@ -141,18 +143,16 @@ bool PaletteIOPC::readAfter(Palettes &palettes) const
 		return false;
 	}
 
-	QByteArray palFlags = deviceAlpha()->read(24);
+	QByteArray palFlags = deviceAlpha()->read(16);
 
-	if(palFlags.size() < 24) {
+	if(palFlags.size() < 16) {
 		return false;
 	}
 
 	quint8 palId=0;
 
 	foreach(Palette *palette, palettes) {
-		if(palId >= 24) {
-			/* Not really an error, I don't know the behavior
-			 * when there are more than 24 palettes. */
+		if(palId >= 16) {
 			break;
 		}
 
@@ -164,7 +164,7 @@ bool PaletteIOPC::readAfter(Palettes &palettes) const
 	return true;
 }
 
-bool PaletteIOPC::writeAfter(const QList<const Palette *> &palettes) const
+bool PaletteIOPC::writeAfter(const Palettes &palettes) const
 {
 	if(!canWriteAlpha()) {
 		return false;
@@ -173,7 +173,7 @@ bool PaletteIOPC::writeAfter(const QList<const Palette *> &palettes) const
 	quint8 palId=0;
 
 	foreach(const Palette *palette, palettes) {
-		if(palId >= 24) {
+		if(palId >= 16) {
 			break;
 		}
 
@@ -185,8 +185,7 @@ bool PaletteIOPC::writeAfter(const QList<const Palette *> &palettes) const
 		++palId;
 	}
 
-	if(palId < 24 &&
-			deviceAlpha()->write(QByteArray(24 - palId, '\0')) != 24 - palId) {
+	if(deviceAlpha()->write(QByteArray(24 - palId, '\0')) != 24 - palId) {
 		return false;
 	}
 

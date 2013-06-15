@@ -25,8 +25,11 @@ class ImportDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit ImportDialog(bool sourceSameTypeAsTarget, bool isDat, QWidget *parent=0);
+	explicit ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QString &path, QWidget *parent=0);
 	Field::FieldSections parts() const;
+	QString additionalPath() const;
+private slots:
+	void setAdditionalPathByUser();
 private:
 	QCheckBox *scripts;
 	QCheckBox *akaos;
@@ -35,7 +38,9 @@ private:
 	QCheckBox *encounter;
 	QCheckBox *inf;
 	QCheckBox *model;
-//	QCheckBox *mim;
+	QCheckBox *mim;
+	QWidget *pathWidget;
+	QLineEdit *pathEdit;
 };
 
 #endif // IMPORTDIALOG_H
