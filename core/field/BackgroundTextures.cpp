@@ -397,8 +397,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 												BackgroundTiles &pcTiles,
 												const PalettesPC &palettesPC) const
 {
-	BackgroundTexturesPC ret;
-	QMap<quint16, QList<BackgroundConversionTexture> > textures;
+	QMap<quint16, QList<BackgroundConversionTexture> > groupedTextures;
 
 	foreach(const Tile &tile, psTiles.sortedTiles()) {
 
@@ -409,6 +408,12 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 			continue;
 		}
 
+		/* The key is used to group tiles by:
+		 *  - blending (0 -> 1),
+		 *  - size (16 -> 32),
+		 *  - depth (1 -> 0 -> 2)
+		 */
+
 		quint8 depthKey = 0;
 		switch(tile.depth & 3) {
 		case 0:		depthKey = 1;	break;
@@ -416,22 +421,22 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		default:	depthKey = 2;   break;
 		}
 
-		quint16 key = (tile.textureID2 << 3) |
-				(depthKey << 1) |
-				(tile.size == 32);
+		quint16 key = (tile.blending << 3) |
+				(tile.size == 32) |
+				(depthKey << 1);
 
-		QVector<uint> tileData = this->tile(tile);
+		QVector<uint> tileData = this->tile(tile); // Retrieve tile data
+
 		// On PC version, only the first palette color can be transparent
 		if(tile.depth < 2) {
 			PalettePC *palette = (PalettePC *)palettesPC.value(tile.paletteID);
+			const QList<bool> &areZero = palette->areZero();
 			if(palette) {
+//				palette->setTransparency(tile.blending);
 
 				int i=0;
 				foreach(uint index, tileData) {
-					if(palette->areZero().at(index)) {
-						// When the index refer to a transparent color, change this index to 0
-
-						tileData[i] = 0;
+					if(areZero.at(index)) {
 						palette->setTransparency(true);
 					}
 					++i;
@@ -439,14 +444,13 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 			}
 		}
 
-		QList<BackgroundConversionTexture> textureList = textures.value(key);
-		textureList.append(BackgroundConversionTexture(tileData, tile));
-		textures.insert(key, textureList);
+		groupedTextures[key].append(BackgroundConversionTexture(tileData, tile));
 	}
 
-	QMutableMapIterator<quint16, QList<BackgroundConversionTexture> > it(textures);
-	quint8 curTexID = 0, curTexID2 = 15;
+	QMutableMapIterator<quint16, QList<BackgroundConversionTexture> > it(groupedTextures);
+	quint8 curTexID = 0, curTexID2 = 15; // blending works only if textureID >= 15
 	BackgroundTiles pcTiles2;
+	BackgroundTexturesPC ret;
 
 	while(it.hasNext()) {
 		it.next();
@@ -455,26 +459,25 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		quint8 texID;
 		const Tile &representativeTile = texture.first().tile;
 
-		info.depth = qMin(quint8(representativeTile.depth & 3), quint8(1));
+		info.depth = qMin(representativeTile.depth, quint8(1));
 		info.size = representativeTile.size == 32; // 0 = 16, 1 = 32
-		quint8 textureID2 = representativeTile.textureID2 & 1;
-
-		quint8 tileSize = info.size ? 32 : 16;
-		quint8 tileCount = 256 / tileSize;
-		quint16 tilesPerTexture = tileSize == 16 ? 256 : 64;
-		quint8 textureCount = texture.size() / tilesPerTexture
-				+ (texture.size() % tilesPerTexture != 0);
 
 		if(info.depth < 2) {
 			for(int texConvId=0 ; texConvId < texture.size() ; ++texConvId) {
 				BackgroundConversionTexture &tileConversion = texture[texConvId];
 				PalettePC *palette = (PalettePC *)palettesPC.value(tileConversion.tile.paletteID);
-				if(palette && palette->transparency() && !palette->areZero().first()) {
+				if(palette && palette->transparency()) {
 
-					int i=0, indexOfFirstZero = palette->areZero().indexOf(true, 1);
-					if(indexOfFirstZero > -1) {
+					const QList<bool> &areZero = palette->areZero();
+					bool firstIsZero = areZero.first();
+					int i=0, indexOfFirstZero = areZero.indexOf(true, 1);
+					if(firstIsZero || indexOfFirstZero > -1) {
 						foreach(uint index, tileConversion.data) {
-							if(index == 0) {
+							if(index > 0 && areZero.at(index)) {
+								// When the index refer to a transparent color, change this index to 0
+
+								tileConversion.data[i] = 0;
+							} else if(!firstIsZero && index == 0) {
 								// Reloc when index = 0 and not refer to a transparent color
 
 								tileConversion.data[i] = indexOfFirstZero;
@@ -489,8 +492,14 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 			}
 		}
 
+		quint8 tileCount = 256 / representativeTile.size;
+		quint16 tilesPerTexture = representativeTile.size == 16 ? 256 : 64;
+		quint8 textureCount = texture.size() / tilesPerTexture
+				+ (texture.size() % tilesPerTexture != 0);
+
 		for(int i=0 ; i<textureCount ; ++i) {
-			if(textureID2 || curTexID >= 15) {
+
+			if(representativeTile.blending || curTexID >= 15) {
 				texID = curTexID2++;
 			} else {
 				texID = curTexID++;
@@ -498,12 +507,12 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 			QList<uint> flatten;
 
 			for(quint8 tileY=0 ; tileY<tileCount ; ++tileY) {
-				for(quint8 y=0 ; y<tileSize ; ++y) {
+				for(quint8 y=0 ; y<representativeTile.size ; ++y) {
 					for(quint8 tileX=0 ; tileX<tileCount ; ++tileX) {
-						for(quint8 x=0 ; x<tileSize ; ++x) {
+						for(quint8 x=0 ; x<representativeTile.size ; ++x) {
 							uint indexOrColor = texture.value(i * tilesPerTexture +
 															  tileY * tileCount + tileX)
-									.data.value(y * tileSize + x);
+									.data.value(y * representativeTile.size + x);
 							if(info.depth < 2) {
 
 							}
@@ -524,7 +533,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 				tile.srcY = (tileID / tileCount) * tile.size;
 
 				tile.textureID = texID;
-				tile.textureID2 = tile.textureID2 ? texID : 0;
+				tile.textureID2 = tile.blending ? texID : 0;
 
 				pcTiles2.insert(4096 - tile.ID, tile);
 			}

@@ -23,7 +23,7 @@ public:
 	BackgroundTiles();
 	BackgroundTiles(const QMultiMap<qint16, Tile> &tiles);
 
-	BackgroundTiles tiles(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const;
+	BackgroundTiles filter(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const;
 	BackgroundTiles tiles(quint8 layerID, bool orderedForSaving) const;
 	QMap<qint32, Tile> sortedTiles() const;
 	QHash<quint8, quint8> usedParams(bool *layerExists) const;

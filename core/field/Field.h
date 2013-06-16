@@ -63,7 +63,7 @@ public:
 	void setSaved();
 	bool save(QByteArray &newData, bool compress);
 	qint8 save(const QString &path, bool compress);
-	qint8 importer(const QString &path, int type, FieldSections part, QIODevice *device2=0);
+	qint8 importer(const QString &path, bool isDat, bool compressed, FieldSections part, QIODevice *device2=0);
 	virtual qint8 importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *device2=0);
 
 	Section1File *scriptsAndTexts(bool open=true);

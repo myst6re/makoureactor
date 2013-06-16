@@ -358,7 +358,7 @@ qint8 Field::save(const QString &path, bool compress)
 	return 0;
 }
 
-qint8 Field::importer(const QString &path, int type, FieldSections part, QIODevice *device2)
+qint8 Field::importer(const QString &path, bool isDat, bool compressed, FieldSections part, QIODevice *device2)
 {
 	QFile fic(path);
 	if(!fic.open(QIODevice::ReadOnly))	return 1;
@@ -366,20 +366,17 @@ qint8 Field::importer(const QString &path, int type, FieldSections part, QIODevi
 
 	QByteArray data;
 
-	if(type == 0 || type == 1) // compressed field
-	{
+	if(compressed) { // compressed field
 		quint32 fileSize=0;
 		if(fic.read((char *)&fileSize, 4) != 4)	return 2;
 		if(fileSize+4 != fic.size()) return 2;
 
 		data = LZS::decompressAll(fic.readAll());
-	}
-	else if(type == 2 || type == 3) // uncompressed field
-	{
+	} else { // uncompressed field
 		data = fic.readAll();
 	}
 	
-	return importer(data, type == 1 || type == 3, part, device2);
+	return importer(data, isDat, part, device2);
 }
 
 qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *device2)

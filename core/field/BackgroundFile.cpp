@@ -63,7 +63,7 @@ QImage BackgroundFile::openBackground(const QHash<quint8, quint8> &paramActifs, 
 		return QImage();
 	}
 
-	return drawBackground(tiles().tiles(paramActifs, z, layers));
+	return drawBackground(tiles().filter(paramActifs, z, layers));
 }
 
 QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
@@ -80,7 +80,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 	image.fill(0xFF000000);
 
 	QRgb *pixels = (QRgb *)image.bits();
-	bool warned = false;
+	bool warned = false; // To prevent verbosity of warnings
 
 	foreach(const Tile &tile, tiles) {
 		QVector<uint> indexOrColorList = _textures->tile(tile);
@@ -93,13 +93,10 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 			continue;
 		}
 
-		quint8 right = 0;
-		quint32 top = (minHeight + tile.dstY) * width;
-		quint16 baseX = minWidth + tile.dstX;
+		quint8 depth = _textures->depth(tile);
 		Palette *palette = 0;
 
-		if(_textures->depth(tile) == 1
-				|| _textures->depth(tile) == 0) {
+		if(depth <= 1) {
 			if(tile.paletteID >= _palettes.size()) {
 				if(!warned) {
 					qWarning() << "Palette ID overflow" << tile.paletteID << _palettes.size();
@@ -109,7 +106,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 			}
 
 			palette = _palettes.at(tile.paletteID);
-		} else if(_textures->depth(tile) != 2) {
+		} else if(depth != 2) {
 			if(!warned) {
 				qWarning() << "Unknown depth" << _textures->depth(tile);
 				warned = true;
@@ -117,13 +114,16 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 			continue;
 		}
 
+		quint8 right = 0;
+		quint32 top = (minHeight + tile.dstY) * width;
+		quint16 baseX = minWidth + tile.dstX;
+
 		foreach(uint indexOrColor, indexOrColorList) {
-			if(_textures->depth(tile) == 2) {
+			if(depth == 2) {
 				if(indexOrColor != 0) {
 					pixels[baseX + right + top] = indexOrColor;
 				}
-			} else if(_textures->depth(tile) == 1
-					  || _textures->depth(tile) == 0) {
+			} else {
 				if(palette->notZero(indexOrColor)) {
 					if(tile.blending) {
 						pixels[baseX + right + top] = blendColor(tile.typeTrans,
@@ -146,7 +146,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 
 bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
 {
-	if(tiles().isEmpty() && !isOpen() && !open()) {
+	if(!isOpen() && !open()) {
 		return false;
 	}
 

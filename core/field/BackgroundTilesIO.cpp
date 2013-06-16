@@ -204,7 +204,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				memcpy(&tile, data.constData() + i*52, 36);
 
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
-					tiles.insert(4096-tile.ID, tilePC2Tile(tile, 2, i));
+					tiles.insert(0, tilePC2Tile(tile, 2, i));
 				} else {
 					qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
 				}
@@ -256,7 +256,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				memcpy(&tile, data.constData() + i*52, 36);
 
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
-					tiles.insert(4096-tile.ID, tilePC2Tile(tile, 3, i));
+					tiles.insert(4096, tilePC2Tile(tile, 3, i));
 				} else {
 					qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
 				}
@@ -427,10 +427,14 @@ Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint1
 		ret.param = tile.param;
 		ret.state = tile.state;
 		ret.blending = tile.blending;
-		ret.ID = tile.ID;
 	} else {
 		ret.param = ret.state = ret.blending = 0;
-		ret.ID = 4095;
+	}
+	switch(ret.layerID) {
+	case 0:		ret.ID = 4095;		break;
+	case 2:		ret.ID = 4096;		break;
+	case 3:		ret.ID = 0;			break;
+	default:	ret.ID = tile.ID;	break;
 	}
 	ret.typeTrans = tile.typeTrans;
 	ret.textureID2 = tile.textureID2;
@@ -578,12 +582,11 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 			tile.param = tile.state = tile.blending = 0;
 			tile.ID = 4095;
-
 			tile.size = 16;
 			tile.layerID = 0;
 			tile.tileID = i;
 
-			tiles.insert(4096 - tile.ID, tile);
+			tiles.insert(1, tile);
 		} else {
 			qWarning() << "Tile destination overflow" << tile1.dstX << tile1.dstY;
 		}

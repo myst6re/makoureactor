@@ -10,7 +10,7 @@ BackgroundTiles::BackgroundTiles(const QMultiMap<qint16, Tile> &tiles) :
 {
 }
 
-BackgroundTiles BackgroundTiles::tiles(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
+BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
 {
 	BackgroundTiles ret;
 

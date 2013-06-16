@@ -1116,7 +1116,7 @@ void Window::exporter()
 	if(path.isNull())		return;
 	qint8 error=4;
 	
-	error = field->save(path, selectedFilter == fieldLzs);
+	error = field->save(path, selectedFilter != fieldDec);
 	
 	QString out;
 	switch(error)
@@ -1205,10 +1205,10 @@ void Window::importer()
 	int index;
 	QString name, selectedFilter;
 	QStringList filter;
-	filter << tr("Écran PC (*)")
-		   << tr("Fichier DAT (*.DAT)")
-		   << tr("Écran PC décompressé (*)")
-		   << tr("Fichier DAT décompressé (*)");
+	filter << tr("Fichier DAT (*.DAT)")
+		   << tr("Écran PC (*)")
+		   << tr("Fichier DAT décompressé (*)")
+		   << tr("Écran PC décompressé (*)");
 
 	name = fieldList->selectedItems().first()->text(0);
 	if(fieldArchive->io()->isPS())
@@ -1218,7 +1218,8 @@ void Window::importer()
 	path = QFileDialog::getOpenFileName(this, tr("Importer un fichier"), path+name, filter.join(";;"), &selectedFilter);
 	if(path.isNull())		return;
 
-	bool isDat = selectedFilter == filter.at(1) || selectedFilter == filter.at(3);
+	bool isDat = selectedFilter == filter.at(0) || selectedFilter == filter.at(2);
+	bool isCompressed = selectedFilter == filter.at(0) || selectedFilter == filter.at(1);
 
 	ImportDialog dialog((isDat && fieldArchive->io()->isPS())
 						|| (!isDat && fieldArchive->io()->isPC()),
@@ -1232,10 +1233,9 @@ void Window::importer()
 		return;
 	}
 
-	QString addPath = dialog.additionalPath();
-	QFile addDevice(addPath);
+	QFile addDevice(dialog.additionalPath());
 	
-	qint8 error = field->importer(path, filter.indexOf(selectedFilter), parts, &addDevice);
+	qint8 error = field->importer(path, isDat, isCompressed, parts, &addDevice);
 
 	QString out;
 	switch(error)
@@ -1246,8 +1246,8 @@ void Window::importer()
 		Config::setValue("importPath", index == -1 ? path : path.left(index));
 		openField(true);
 		break;
-	case 1:	out = tr("Erreur lors de l'ouverture du fichier");break;
-	case 2:	out = tr("Le fichier est invalide");break;
+	case 1:	out = tr("Erreur lors de l'ouverture du fichier");	break;
+	case 2:	out = tr("Le fichier est invalide");				break;
 	}
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
 }

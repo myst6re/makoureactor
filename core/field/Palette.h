@@ -34,15 +34,7 @@ public:
 	}
 	virtual inline QRgb color(int index) const { return _colors.at(index); }
 	inline bool mask(int index) const { return _masks.at(index); }
-	inline void addColor(QRgb color, bool mask, bool isZero) {
-		_colors.append(color);
-		_masks.append(mask);
-		_isZero.append(isZero);
-	}
 	inline void setColor(int index, QRgb color) { _colors.replace(index, color); }
-	inline void insertColor(int index, QRgb color) { _colors.insert(index, color); }
-	inline void removeColor(int index) { _colors.removeAt(index); }
-	inline void setColors(const QList<QRgb> &colors) { _colors = colors; }
 	inline const QList<bool> &areZero() const {
 		return _isZero;
 	}
@@ -50,6 +42,12 @@ public:
 	QByteArray toByteArray() const;
 	QImage toImage() const;
 private:
+	inline void addColor(QRgb color, bool mask, bool isZero) {
+		_colors.append(color);
+		_masks.append(mask);
+		_isZero.append(isZero);
+	}
+
 	QList<QRgb> _colors;
 	QList<bool> _masks;
 	QList<bool> _isZero;
