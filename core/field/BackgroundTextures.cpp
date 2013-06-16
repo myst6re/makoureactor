@@ -427,19 +427,17 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 
 		QVector<uint> tileData = this->tile(tile); // Retrieve tile data
 
-		// On PC version, only the first palette color can be transparent
 		if(tile.depth < 2) {
 			PalettePC *palette = (PalettePC *)palettesPC.value(tile.paletteID);
-			const QList<bool> &areZero = palette->areZero();
-			if(palette) {
-//				palette->setTransparency(tile.blending);
+			if(palette && !palette->transparency()) {
 
-				int i=0;
+				// Detection of transparency PC flag: true if one of used indexes is transparent
+				const QList<bool> &areZero = palette->areZero();
 				foreach(uint index, tileData) {
 					if(areZero.at(index)) {
 						palette->setTransparency(true);
+						break;
 					}
-					++i;
 				}
 			}
 		}
@@ -463,6 +461,9 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		info.size = representativeTile.size == 32; // 0 = 16, 1 = 32
 
 		if(info.depth < 2) {
+			/* On PC version, only the first palette color can be transparent
+			 * So we need to change all indexes to a transparent color to 0
+			 * And relocate when index=0 */
 			for(int texConvId=0 ; texConvId < texture.size() ; ++texConvId) {
 				BackgroundConversionTexture &tileConversion = texture[texConvId];
 				PalettePC *palette = (PalettePC *)palettesPC.value(tileConversion.tile.paletteID);
@@ -492,6 +493,8 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 			}
 		}
 
+		// Textures fill
+
 		quint8 tileCount = 256 / representativeTile.size;
 		quint16 tilesPerTexture = representativeTile.size == 16 ? 256 : 64;
 		quint8 textureCount = texture.size() / tilesPerTexture
@@ -510,13 +513,9 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 				for(quint8 y=0 ; y<representativeTile.size ; ++y) {
 					for(quint8 tileX=0 ; tileX<tileCount ; ++tileX) {
 						for(quint8 x=0 ; x<representativeTile.size ; ++x) {
-							uint indexOrColor = texture.value(i * tilesPerTexture +
-															  tileY * tileCount + tileX)
-									.data.value(y * representativeTile.size + x);
-							if(info.depth < 2) {
-
-							}
-							flatten.append(indexOrColor);
+							flatten.append(texture.value(i * tilesPerTexture +
+														 tileY * tileCount + tileX)
+										   .data.value(y * representativeTile.size + x));
 						}
 					}
 				}
@@ -524,7 +523,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 
 			ret.setTex(texID, flatten, info);
 
-			// Update textureID in tiles
+			// Update textureID and src in tiles
 			for(quint16 tileID=0 ; tileID < tilesPerTexture
 				&& i * tilesPerTexture + tileID < texture.size() ; ++tileID) {
 				Tile tile = texture.at(i * tilesPerTexture + tileID).tile;
