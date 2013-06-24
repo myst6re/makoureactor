@@ -34,6 +34,26 @@ void FieldModelLoaderPC::clear()
 	this->colors.clear();
 }
 
+void FieldModelLoaderPC::clean()
+{
+	for(int modelID=0 ; modelID<model_anims.size() ; ++modelID) {
+		if(!model_nameChar.at(modelID).isEmpty()) {
+			setModified(true);
+			model_nameChar[modelID].clear();
+		}
+
+		const QStringList &animNames = model_anims.at(modelID);
+		for(int animID=0 ; animID<animNames.size() ; ++animID) {
+			const QString &animName = animNames.at(animID);
+			int index = animName.lastIndexOf('.');
+			if(index != -1) {
+				model_anims[modelID][animID] = animName.left(index);
+				setModified(true);
+			}
+		}
+	}
+}
+
 bool FieldModelLoaderPC::open()
 {
 	return open(field()->sectionData(Field::ModelLoader));
@@ -52,17 +72,16 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 	clear();
 
-	memcpy(&nb, &constData[2], 2);
-	memcpy(&typeHRC, &constData[4], 2);
+	memcpy(&nb, constData + 2, 2);
+	memcpy(&typeHRC, constData + 4, 2);
 	quint32 curPos = 6;
-	for(i=0 ; i<nb ; ++i)
-	{
+	for(i=0 ; i<nb ; ++i) {
 		if((quint32)data.size() < curPos+2) {
 			clear();
 			return false;
 		}
 
-		memcpy(&len, &constData[curPos], 2); // model name len
+		memcpy(&len, constData + curPos, 2); // model name len
 
 		if((quint32)data.size() < curPos+48+len) {
 			clear();
@@ -70,7 +89,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 		}
 		 // model name
 		model_nameChar.append(QString(data.mid(curPos+2, len)));
-		memcpy(&model_unknown, &constData[curPos+2+len], 2);
+		memcpy(&model_unknown, constData + curPos+2+len, 2);
 		this->model_unknown.append(model_unknown);
 		model_nameHRC.append(QString(data.mid(curPos+4+len,8)));
 		bool ok;
@@ -78,7 +97,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 		if(!ok)	typeHRC_value = typeHRC;
 		model_typeHRC.append(typeHRC_value);
 
-		memcpy(&nbAnim, &constData[curPos+16+len], 2);
+		memcpy(&nbAnim, constData + curPos+16+len, 2);
 
 		QList<QRgb> color;
 
@@ -97,7 +116,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 				return false;
 			}
 
-			memcpy(&len, &constData[curPos], 2); // animation name len
+			memcpy(&len, constData + curPos, 2); // animation name len
 
 			if((quint32)data.size() < curPos+4+len) {
 				clear();
@@ -106,7 +125,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 			anims.append(QString(data.mid(curPos+2, len))); // animation name
 
-			memcpy(&model_unknown, &constData[curPos+2+len], 2);
+			memcpy(&model_unknown, constData + curPos+2+len, 2);
 			anims_unknown.append(model_unknown);
 
 			curPos += 4+len;

@@ -29,6 +29,7 @@
 #include "Data.h"
 #include "core/field/FieldArchivePC.h"
 #include "core/field/FieldArchivePS.h"
+#include "widgets/OperationsManager.h"
 
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
@@ -77,9 +78,6 @@ Window::Window() :
 	
 	/* Menu 'Outils' */
 	menu = menuBar->addMenu(tr("&Outils"));
-	
-	menu->addAction(tr("&Gestionnaire de variables..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
-	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("Rec&hercher..."), this, SLOT(searchManager()), QKeySequence("Ctrl+F"));
 	menu->addAction(tr("&Textes..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
 	actionModels = menu->addAction(tr("&Modèles 3D..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
 	actionEncounter = menu->addAction(tr("&Rencontres aléatoires..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
@@ -88,7 +86,10 @@ Window::Window() :
 	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("&Divers..."), this, SLOT(miscManager()));
 	menu->addSeparator();
-	menu->addAction(tr("&Police de caractères"), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
+	menu->addAction(tr("&Gestionnaire de variables..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
+	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("Rec&hercher..."), this, SLOT(searchManager()), QKeySequence("Ctrl+F"));
+	menu->addAction(tr("Opér&ations diverses..."), this, SLOT(miscOperations()));
+	menu->addAction(tr("&Police de caractères..."), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
 
 	menu = menuBar->addMenu(tr("&Paramètres"));
 
@@ -1444,6 +1445,39 @@ void Window::archiveManager()
 	if(fieldArchive && fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 		LgpDialog dialog((Lgp *)fieldArchive->io()->device(), this);
 		dialog.exec();
+	}
+}
+
+void Window::miscOperations()
+{
+	if(!fieldArchive) {
+		return;
+	}
+
+	OperationsManager dialog(fieldArchive->isPC(), this);
+	if(dialog.exec() == QDialog::Accepted) {
+		OperationsManager::Operations operations = dialog.selectedOperations();
+
+		showProgression(tr("Application en cours..."), false);
+
+		if(operations.testFlag(OperationsManager::CleanUnusedTexts)) {
+			fieldArchive->cleanTexts(this);
+		}
+		if(!observerWasCanceled() && operations.testFlag(OperationsManager::RemoveTexts)) {
+			fieldArchive->removeTexts(this);
+		}
+		if(!observerWasCanceled() && operations.testFlag(OperationsManager::RemoveBattles)) {
+			fieldArchive->removeBattles(this);
+		}
+		if(!observerWasCanceled() && fieldArchive->isPC() && operations.testFlag(OperationsManager::CleanModelLoaderPC)) {
+			((FieldArchivePC *)fieldArchive)->cleanModelLoader(this);
+		}
+
+		hideProgression();
+
+		if(fieldArchive->isModified()) {
+			setModified(true);
+		}
 	}
 }
 

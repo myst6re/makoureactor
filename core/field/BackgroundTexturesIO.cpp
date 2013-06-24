@@ -176,5 +176,9 @@ bool BackgroundTexturesIOPS::write(const BackgroundTexturesPS *textures)
 		return false;
 	}
 
-	return false;
+	if(device()->write(textures->data()) != textures->data().size()) {
+		return false;
+	}
+
+	return true;
 }

@@ -44,8 +44,12 @@ bool BackgroundFilePS::open()
 		return true;
 	}
 
-	QByteArray mimData = ((FieldPS *)field())->io()->mimData(field()),
-			tilesData = field()->sectionData(Field::Background);
+	return open(((FieldPS *)field())->io()->mimData(field()),
+				field()->sectionData(Field::Background));
+}
+
+bool BackgroundFilePS::open(const QByteArray &mimData, const QByteArray &tilesData)
+{
 	QBuffer mimBuff, tilesBuff;
 
 	mimBuff.setData(mimData);
@@ -71,6 +75,7 @@ BackgroundFilePC BackgroundFilePS::toPC(FieldPC *field) const
 	filePC.setPalettes(palettesPC);
 	filePC.setTextures(new BackgroundTexturesPC(texturesPC));
 	filePC.setTiles(tilesPC);
+	filePC.setOpen(true);
 
 	return filePC;
 }

@@ -31,9 +31,9 @@ typedef struct {
 typedef struct {
 	qint16 dstX, dstY;
 	quint8 srcX, srcY;
-	unsigned ZZ1:6;
+	unsigned ZZ1:6; // Always 0
 	unsigned palID:4;
-	unsigned ZZ2:6;
+	unsigned ZZ2:6; // Always 30
 } layer1Tile;
 
 //Sizeof : 2
@@ -42,7 +42,7 @@ typedef struct {
 	unsigned page_y:1;
 	unsigned typeTrans:2;
 	unsigned depth:2;
-	unsigned ZZZ:7;
+	unsigned ZZZ:7; // Always 0
 } layer2Tile;
 
 //Sizeof : 2
@@ -54,7 +54,7 @@ typedef struct {
 
 //Sizeof : 4
 typedef struct {
-	quint16 group;//id
+	quint16 ID;
 	unsigned param:7;
 	unsigned blending:1;
 	quint8 state;

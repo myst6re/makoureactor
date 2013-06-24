@@ -76,7 +76,9 @@ public:
 	void setTex(quint8 texID, const QList<uint> &indexOrRgbList, const BackgroundTexturesPCInfos &infos);
 	QImage toImage(quint8 texID) const;
 	QImage toImage(quint8 texID, const BackgroundTiles &tiles, const Palettes &palettes) const;
-	BackgroundTexturesPS toPS() const;
+	BackgroundTexturesPS toPS(const BackgroundTiles &pcTiles,
+							  BackgroundTiles &psTiles,
+							  const PalettesPS &palettesPS) const;
 protected:
 	quint16 textureWidth(const Tile &tile) const;
 	quint8 depth(const Tile &tile) const;

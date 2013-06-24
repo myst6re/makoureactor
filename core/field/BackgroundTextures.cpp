@@ -281,7 +281,9 @@ QImage BackgroundTexturesPC::toImage(quint8 texID, const BackgroundTiles &tiles,
 	return img;
 }
 
-BackgroundTexturesPS BackgroundTexturesPC::toPS() const
+BackgroundTexturesPS BackgroundTexturesPC::toPS(const BackgroundTiles &pcTiles,
+												BackgroundTiles &psTiles,
+												const PalettesPS &palettesPS) const
 {
 	BackgroundTexturesPS ret;
 

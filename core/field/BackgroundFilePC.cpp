@@ -44,8 +44,12 @@ bool BackgroundFilePC::open()
 		return true;
 	}
 
-	QByteArray data = field()->sectionData(Field::Background),
-			palData = field()->sectionData(Field::PalettePC);
+	return open(field()->sectionData(Field::Background),
+				field()->sectionData(Field::PalettePC));
+}
+
+bool BackgroundFilePC::open(const QByteArray &data, const QByteArray &palData)
+{
 	QBuffer buff, palBuff;
 
 	buff.setData(data);
@@ -83,4 +87,19 @@ QByteArray BackgroundFilePC::savePal() const
 	}
 
 	return palBuff.data();
+}
+
+BackgroundFilePS BackgroundFilePC::toPS(FieldPS *field) const
+{
+	PalettesPS palettesPS = ((PalettesPC *)&palettes())->toPS();
+	BackgroundTiles tilesPS;
+	BackgroundTexturesPS texturesPS = ((BackgroundTexturesPC *)textures())->toPS(tiles(), tilesPS, palettesPS);
+
+	BackgroundFilePS filePS(field);
+	filePS.setPalettes(palettesPS);
+	filePS.setTextures(new BackgroundTexturesPS(texturesPS));
+	filePS.setTiles(tilesPS);
+	filePS.setOpen(true);
+
+	return filePS;
 }

@@ -443,3 +443,15 @@ bool GrpScript::compile(int &scriptID, int &opcodeID, QString &errorStr)
 
 	return true;
 }
+
+bool GrpScript::removeTexts()
+{
+	bool modified = false;
+	foreach(Script *script, _scripts) {
+		if(script->removeTexts()) {
+			modified = true;
+		}
+	}
+
+	return modified;
+}

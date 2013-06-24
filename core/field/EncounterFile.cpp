@@ -54,7 +54,7 @@ QByteArray EncounterFile::save() const
 
 void EncounterFile::clear()
 {
-	//TODO: clear
+	tables[Table1] = tables[Table2] = EncounterTable();
 }
 
 const EncounterTable &EncounterFile::encounterTable(Table tableID) const
@@ -65,5 +65,16 @@ const EncounterTable &EncounterFile::encounterTable(Table tableID) const
 void EncounterFile::setEncounterTable(Table tableID, const EncounterTable &table)
 {
 	tables[(int)tableID] = table;
+	setModified(true);
+}
+
+bool EncounterFile::isBattleEnabled(Table tableID) const
+{
+	return tables[(int)tableID].enabled;
+}
+
+void EncounterFile::setBattleEnabled(Table tableID, bool enabled)
+{
+	tables[(int)tableID].enabled = enabled;
 	setModified(true);
 }

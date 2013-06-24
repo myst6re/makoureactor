@@ -45,7 +45,9 @@ public:
 	void close();
 
 	virtual void clear();
-	int size() const;
+	inline int size() const {
+		return fileList.size();
+	}
 	int indexOfField(const QString &name) const;
 	const Field *field(quint32 id) const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
@@ -53,7 +55,8 @@ public:
 	void addField(Field *field);
 	void removeField(quint32 id);
 
-	bool isAllOpened();
+	bool isAllOpened() const;
+	bool isModified() const;
 	QList<FF7Var> searchAllVars();
 	void searchAll();// research & debug function
 	bool searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
@@ -70,6 +73,9 @@ public:
 	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting);
 
 	bool compileScripts(int &fieldID, int &groupID, int &scriptID, int &opcodeID, QString &errorStr);
+	void removeBattles(FieldArchiveIOObserver *observer);
+	void removeTexts(FieldArchiveIOObserver *observer);
+	void cleanTexts(FieldArchiveIOObserver *observer);
 
 	bool exportation(const QList<int> &selectedFields, const QString &directory,
 					 bool overwrite, const QMap<ExportType, QString> &toExport, FieldArchiveIOObserver *observer);

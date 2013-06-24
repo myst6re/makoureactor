@@ -442,28 +442,29 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 				return 2;
 			}
 
-			QByteArray mimData = LZS::decompressAll(device2->readAll());
-			QByteArray tilesData = data.mid(sectionPositions[2], sectionPositions[3]-sectionPositions[2]);
-			QBuffer mimBuff, tilesBuff;
+			QByteArray mimData = LZS::decompressAll(device2->readAll()),
+					tilesData = data.mid(sectionPositions[2], sectionPositions[3]-sectionPositions[2]);
 
-			mimBuff.setData(mimData);
-			tilesBuff.setData(tilesData);
+			BackgroundFilePS *bg;
 
-			BackgroundFilePS bgFilePS(isPC() ? 0 : (FieldPS *)this);
-			BackgroundIOPS bgIO(&mimBuff, &tilesBuff);
-			if(!bgIO.read(bgFilePS)) {
+			if(isPS()) {
+				bg = (BackgroundFilePS *)background(false);
+			} else {
+				bg = new BackgroundFilePS(0);
+			}
+
+			if(!bg->open(mimData, tilesData)) {
+				if(isPC()) {
+					delete bg;
+				}
 				return 2;
 			}
-			delete background(false);
-			BackgroundFile *bg;
 			if(isPC()) {
-				bg = new BackgroundFilePC(bgFilePS.toPC((FieldPC *)this));
-			} else {
-				bg = new BackgroundFilePS(bgFilePS);
+				_parts.insert(Background, new BackgroundFilePC(bg->toPC((FieldPC *)this)));
+				delete bg;
 			}
-			_parts.insert(Background, bg);
-			bg->setOpen(true);
-			bg->setModified(true);
+
+			background(false)->setModified(true);
 		}
 	} else {
 		quint32 sectionPositions[9];
@@ -502,24 +503,29 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 			inf->setModified(true);
 		}
 		if(part.testFlag(Background) && isPC()) {
-			QByteArray data = data.mid(sectionPositions[8]+4, sectionPositions[8]-sectionPositions[7]-4),
+			QByteArray mimData = data.mid(sectionPositions[8]+4),
 					palData = data.mid(sectionPositions[3]+4, sectionPositions[4]-sectionPositions[3]-4);
-			QBuffer buff, palBuff;
 
-			buff.setData(data);
-			palBuff.setData(palData);
+			BackgroundFilePC *bg;
 
-			BackgroundFilePC bgFilePC((FieldPC *)this);
-			BackgroundIOPC bgIO(&buff, &palBuff);
-			if(!bgIO.read(bgFilePC)) {
+			if(isPC()) {
+				bg = (BackgroundFilePC *)background(false);
+			} else {
+				bg = new BackgroundFilePC(0);
+			}
+
+			if(!bg->open(mimData, palData)) {
+				if(isPS()) {
+					delete bg;
+				}
 				return 2;
 			}
-			BackgroundFile *bg;
-			delete background(false);
-			bg = new BackgroundFilePC(bgFilePC);
-			_parts.insert(Background, bg);
-			bg->setOpen(true);
-			bg->setModified(true);
+			if(isPS()) {
+				_parts.insert(Background, new BackgroundFilePS(bg->toPS((FieldPS *)this)));
+				delete bg;
+			}
+
+			background(false)->setModified(true);
 		}
 	}
 

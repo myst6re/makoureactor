@@ -673,6 +673,27 @@ bool Section1File::compileScripts(int &groupID, int &scriptID, int &opcodeID, QS
 	return true;
 }
 
+void Section1File::removeTexts()
+{
+	foreach(GrpScript *group, _grpScripts) {
+		if(group->removeTexts()) {
+			setModified(true);
+		}
+	}
+}
+
+void Section1File::cleanTexts()
+{
+	QSet<quint8> usedTexts = listUsedTexts();
+
+	for(int textID=0 ; textID<_texts.size() ; ++textID) {
+		if(!usedTexts.contains(textID)) {
+			_texts[textID] = FF7Text();
+			setModified(true);
+		}
+	}
+}
+
 //void Section1File::searchWindows() const
 //{
 //	int groupID=0;

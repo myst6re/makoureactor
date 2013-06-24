@@ -36,6 +36,7 @@ public:
 	BackgroundFilePS(const BackgroundFilePS &other);
 
 	bool open();
+	bool open(const QByteArray &mimData, const QByteArray &tilesData);
 	BackgroundFilePC toPC(FieldPC *field) const;
 };
 

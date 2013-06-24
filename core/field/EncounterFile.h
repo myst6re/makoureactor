@@ -24,13 +24,13 @@
 #define PROBABILITY(x)		(x >> 10)
 #define BATTLE_ID(x)		(x & 0x03FF)
 
-typedef struct {
+struct EncounterTable {
 	quint8 enabled;
 	quint8 rate;
 	quint16 enc_standard[6];// probability(6) | battle_id(10)
 	quint16 enc_special[4];// probability(6) | battle_id(10)
 	quint16 _pad;
-} EncounterTable;
+};
 
 class EncounterFile : public FieldPart
 {
@@ -46,6 +46,8 @@ public:
 	void clear();
 	const EncounterTable &encounterTable(Table tableID) const;
 	void setEncounterTable(Table tableID, const EncounterTable &table);
+	bool isBattleEnabled(Table tableID) const;
+	void setBattleEnabled(Table tableID, bool enabled);
 private:
 	EncounterTable tables[2];
 };

@@ -1147,3 +1147,18 @@ void Script::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 	foreach(Opcode *opcode, opcodes)
 		opcode->backgroundMove(z, x, y);
 }
+
+bool Script::removeTexts()
+{
+	bool modified = false;
+	foreach(Opcode *opcode, opcodes) {
+		if(opcode->id() != Opcode::ASK
+				&& opcode->id() != Opcode::MPNAM
+				&& opcode->getTextID() != -1) {
+			opcodes.removeOne(opcode);
+			modified = true;
+		}
+	}
+
+	return modified;
+}

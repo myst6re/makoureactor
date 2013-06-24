@@ -74,6 +74,7 @@ public:
 	void listModelPositions(QList<FF7Position> &positions) const;
 	bool linePosition(FF7Position position[2]) const;
 	bool compile(int &scriptID, int &opcodeID, QString &errorStr);
+	bool removeTexts();
 private:
 	void setType();
 	bool search(int &scriptID, int &opcodeID) const;

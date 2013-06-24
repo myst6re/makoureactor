@@ -21,6 +21,7 @@
 #include "FieldArchive.h"
 #include "TutFilePC.h"
 #include "FieldArchiveIOPC.h"
+#include "FieldPC.h"
 
 class FieldArchivePC : public FieldArchive
 {
@@ -32,6 +33,9 @@ public:
 
 	void clear();
 
+	const FieldPC *field(quint32 id) const;
+	FieldPC *field(quint32 id, bool open=true, bool dontOptimize=false);
+
 	TutFilePC *tut(const QString &name);
 	const QMap<QString, TutFilePC *> &tuts() const;
 	void addTut(const QString &name);
@@ -39,6 +43,8 @@ public:
 	void setSaved();
 
 	FieldArchiveIOPC *io() const;
+
+	void cleanModelLoader(FieldArchiveIOObserver *observer);
 private:
 	QMap<QString, TutFilePC *> _tuts;
 };

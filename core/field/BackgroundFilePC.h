@@ -26,6 +26,8 @@
 #include "BackgroundIO.h"
 
 class FieldPC;
+class FieldPS;
+class BackgroundFilePS;
 
 class BackgroundFilePC : public BackgroundFile
 {
@@ -34,9 +36,11 @@ public:
 	BackgroundFilePC(const BackgroundFilePC &other);
 
 	bool open();
+	bool open(const QByteArray &data, const QByteArray &palData);
 	QByteArray save() const;
 	QByteArray savePal() const;
 	virtual inline bool canSave() const { return true; }
+	BackgroundFilePS toPS(FieldPS *field) const;
 };
 
 #endif // BACKGROUNDFILEPC_H

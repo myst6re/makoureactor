@@ -142,9 +142,9 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				return false;
 			}
 
-			data = device()->read(nbTiles2 * 52 - 52 + 36);
+			data = device()->read(nbTiles2 * 52 - 52 + /*36*/40);
 
-			if(data.size() != nbTiles2 * 52 - 52 + 36) {
+			if(data.size() != nbTiles2 * 52 - 52 + /*36*/40) {
 				qWarning() << "BackgroundTilesIOPC::readData cannot read tiles data (2)";
 				return false;
 			}
@@ -274,7 +274,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 
 bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 {
-	quint32 srcXBig, srcYBig;
+	quint32 srcZBig, srcXBig, srcYBig;
 	quint16 minW, minH, nbTiles, depth = 1;
 	int w, h;
 
@@ -329,7 +329,8 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 			device()->write("\0\0", 2);
 			TilePC tilePC = tile2TilePC(tile);
 			device()->write((char *)&tilePC, 36);
-			device()->write("\0\0\0\0", 4);
+			srcZBig = qMax(999, tilePC.ID * 10000);
+			device()->write((char *)&srcZBig, 4);
 			srcXBig = tilePC.srcX / 16 * 625000;
 			srcYBig = tilePC.srcY / 16 * 625000;
 			device()->write((char *)&srcXBig, 4);
@@ -411,7 +412,11 @@ Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint1
 {
 	Tile ret;
 
-	if(ret.layerID > 0 && tile.textureID2 > 0) {
+	if(tile.unused8 != 0) {
+		qDebug() << layerID << tile.unused8;
+	}
+
+	if(layerID > 0 && tile.textureID2 > 0) {
 		ret.srcX = tile.srcX2;
 		ret.srcY = tile.srcY2;
 		ret.textureID = tile.textureID2;
@@ -423,14 +428,14 @@ Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint1
 	ret.dstX = tile.dstX;
 	ret.dstY = tile.dstY;
 	ret.paletteID = tile.paletteID;
-	if(ret.layerID > 0) {
+	if(layerID > 0) {
 		ret.param = tile.param;
 		ret.state = tile.state;
 		ret.blending = tile.blending;
 	} else {
 		ret.param = ret.state = ret.blending = 0;
 	}
-	switch(ret.layerID) {
+	switch(layerID) {
 	case 0:		ret.ID = 4095;		break;
 	case 2:		ret.ID = 4096;		break;
 	case 3:		ret.ID = 0;			break;
@@ -513,6 +518,11 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 		}
 		else {
 			if(type == 0x7FFE) {
+				if(i - 4 < 16) {
+					qWarning() << "BackgroundTilesIOPS::readData 0x7FFE positionned too early";
+					return false;
+				}
+
 				memcpy(&tilePos, constDatData + i-4, 2);
 				memcpy(&tileCount, constDatData + i-2, 2);
 
@@ -619,7 +629,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.typeTrans = tile2.typeTrans;
 
 			tile.blending = tile3.blending;
-			tile.ID = tile3.group;
+			tile.ID = tile3.ID;
 
 			tile.size = 16;
 			tile.layerID = 1;

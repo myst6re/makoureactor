@@ -71,6 +71,7 @@ public:
 	bool linePosition(FF7Position position[2]) const;
 	void backgroundParams(QHash<quint8, quint8> &paramActifs) const;
 	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
+	bool removeTexts();
 
 	Script *splitScriptAtReturn();
 	static Opcode *createOpcode(const QByteArray &script, int pos=0);

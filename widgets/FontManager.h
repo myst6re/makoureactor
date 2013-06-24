@@ -6,6 +6,7 @@
 
 class FontManager : public QDialog
 {
+	Q_OBJECT
 public:
 	explicit FontManager(QWidget *parent=0);
 private:

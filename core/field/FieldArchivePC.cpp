@@ -58,6 +58,16 @@ void FieldArchivePC::clear()
 	FieldArchive::clear();
 }
 
+const FieldPC *FieldArchivePC::field(quint32 id) const
+{
+	return (const FieldPC *)FieldArchive::field(id);
+}
+
+FieldPC *FieldArchivePC::field(quint32 id, bool open, bool dontOptimize)
+{
+	return (FieldPC *)FieldArchive::field(id, open, dontOptimize);
+}
+
 TutFilePC *FieldArchivePC::tut(const QString &name)
 {
 	QMapIterator<QString, TutFilePC *> it(_tuts);
@@ -115,4 +125,26 @@ void FieldArchivePC::setSaved()
 FieldArchiveIOPC *FieldArchivePC::io() const
 {
 	return (FieldArchiveIOPC *)FieldArchive::io();
+}
+
+void FieldArchivePC::cleanModelLoader(FieldArchiveIOObserver *observer)
+{
+	observer->setObserverMaximum(size());
+
+	for(int fieldID=0 ; fieldID<size() ; ++fieldID) {
+		if(observer->observerWasCanceled()) {
+			return;
+		}
+		FieldPC *field = this->field(fieldID, true);
+		if(field != NULL) {
+			FieldModelLoaderPC *modelLoader = field->fieldModelLoader();
+			if(modelLoader->isOpen()) {
+				modelLoader->clean();
+				if(modelLoader->isModified() && !field->isModified()) {
+					field->setModified(true);
+				}
+			}
+		}
+		observer->setObserverValue(fieldID);
+	}
 }

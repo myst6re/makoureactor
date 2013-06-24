@@ -75,6 +75,8 @@ public:
 
 	void shiftTutIds(int row, int shift);
 	bool compileScripts(int &groupID, int &scriptID, int &opcodeID, QString &errorStr);
+	void removeTexts();
+	void cleanTexts();
 
 	const QList<FF7Text> &texts() const;
 	int textCount() const;

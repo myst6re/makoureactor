@@ -93,11 +93,6 @@ void FieldArchive::clear()
 	Data::field_names.clear();
 }
 
-int FieldArchive::size() const
-{
-	return fileList.size();
-}
-
 FieldArchiveIO *FieldArchive::io() const
 {
 	return _io;
@@ -170,12 +165,20 @@ void FieldArchive::removeField(quint32 id)
 	fileList.removeAt(id);
 }
 
-bool FieldArchive::isAllOpened()
+bool FieldArchive::isAllOpened() const
 {
 	foreach(Field *f, fileList) {
 		if(!f->isOpen())	return false;
 	}
 	return true;
+}
+
+bool FieldArchive::isModified() const
+{
+	foreach(Field *f, fileList) {
+		if(f->isModified())	return true;
+	}
+	return false;
 }
 
 QList<FF7Var> FieldArchive::searchAllVars()
@@ -194,6 +197,10 @@ QList<FF7Var> FieldArchive::searchAllVars()
 	return vars;
 }
 
+#include "BackgroundFilePC.h"
+#include "BackgroundFilePS.h"
+#include "FieldArchivePS.h"
+
 void FieldArchive::searchAll()
 {
 	int size = fileList.size();
@@ -206,10 +213,177 @@ void FieldArchive::searchAll()
 	deb.open(QIODevice::WriteOnly | QIODevice::Text/* | QIODevice::Truncate*/);
 
 
+	FieldArchivePS ps("C:/Users/Jérôme/Games/Final Fantasy VII-PSX-PAL-FR-CD1.bin", FieldArchiveIO::Iso);
+	if(ps.open() != FieldArchiveIO::Ok) {
+		qWarning() << "error opening ps iso";
+		return;
+	}
+
+	if(!isPC()) {
+		return;
+	}
+
 //	for(int i=0 ; i<size ; ++i) {
 	foreach(int i, fieldsSortByMapId) {
 		Field *field = this->field(i, true);
 		if(field != NULL) {
+//			if(!field->name().startsWith("ancnt3")) {
+//				continue;
+//			}
+			break;
+			if(field->name().compare("startmap") == 0) {
+				continue;
+			}
+
+			qDebug() << "comparison" << field->name();
+
+			BackgroundFilePC *background = (BackgroundFilePC *)field->background();
+			if(!background) {
+				qWarning() << "cannot open bg";
+				continue;
+			}
+			const BackgroundTiles &tiles = background->tiles();
+
+			Field *fieldPs = ps.field(ps.indexOfField("chrin_1a"/*field->name()*/));
+			if(fieldPs != NULL) {
+
+				BackgroundFilePS *backgroundPs = (BackgroundFilePS *)fieldPs->background();
+				if(!backgroundPs) {
+					qWarning() << "cannot open bg2";
+					continue;
+				}
+//				const BackgroundTiles &tilesPs = backgroundPs->tiles();
+				BackgroundFilePC backgroundPsPc = backgroundPs->toPC(0);
+				const BackgroundTiles &tilesPsPc = backgroundPsPc.tiles();
+
+				if(tiles.size() != tilesPsPc.size()) {
+					qWarning() << "size tiles different" << tiles.size() << tilesPsPc.size() << fieldPs->name();
+				}
+
+				if(background->palettes().size() != backgroundPsPc.palettes().size()) {
+					qWarning() << "size palettes different" << background->palettes().size() << backgroundPsPc.palettes().size();
+				}
+
+				int palSize = qMin(background->palettes().size(), backgroundPsPc.palettes().size());
+
+				for(int palID=0; palID<palSize; ++palID) {
+					PalettePC *palPC = (PalettePC *)background->palettes().at(palID);
+					PalettePC *palPS2PC = (PalettePC *)backgroundPsPc.palettes().at(palID);
+
+					if(palPC->transparency() != palPS2PC->transparency()) {
+						qDebug() << "transparency !=" << palPC->transparency() <<
+									palPS2PC->transparency();
+					}
+					for(int colorID=0; colorID<256; ++colorID) {
+						if(palPC->toByteArray().mid(colorID * 2, 2) != palPS2PC->toByteArray().mid(colorID * 2, 2)) {
+							qDebug() << "pal diff" << palID << colorID;
+						}
+					}
+				}
+
+				BackgroundTexturesPC *texturesPc = (BackgroundTexturesPC *)background->textures();
+				BackgroundTexturesPC *texturesPsPc = (BackgroundTexturesPC *)backgroundPsPc.textures();
+
+				for(int texID=0; texID<42; ++texID) {
+					if(texturesPc->hasTex(texID) !=
+							texturesPsPc->hasTex(texID)) {
+						qDebug() << "diff texture ID" << texID << texturesPc->hasTex(texID) << texturesPsPc->hasTex(texID);
+					}
+				}
+
+				QMapIterator<qint16, Tile> it1(tiles.tiles(0, true)
+											   + tiles.tiles(1, true)
+											   + tiles.tiles(2, true)
+											   + tiles.tiles(3, true)),
+						it2(tilesPsPc.tiles(0, true)
+							+ tilesPsPc.tiles(1, true)
+							+ tilesPsPc.tiles(2, true)
+							+ tilesPsPc.tiles(3, true));
+
+				while(it1.hasNext() && it2.hasNext()) {
+					it1.next();
+					it2.next();
+
+//					if(!it1.value().blending) continue;
+					if(it1.value().srcX != it2.value().srcX
+							|| it1.value().srcY != it2.value().srcY) {
+						qWarning() << "tile source !=" << it1.value().srcX << it1.value().srcY <<
+									  it2.value().srcX << it2.value().srcY;
+						break;
+					}
+					if(it1.value().dstX != it2.value().dstX
+							|| it1.value().dstY != it2.value().dstY) {
+						qWarning() << "tile dest !=" << it1.value().dstX << it1.value().dstY <<
+									  it2.value().dstX << it2.value().dstY;
+						break;
+					}
+					if(it1.value().paletteID != it2.value().paletteID) {
+						qWarning() << "tile paletteID !=" << it1.value().paletteID << it2.value().paletteID;
+						break;
+					}
+					if(it1.value().ID != it2.value().ID) {
+						qWarning() << "ID !=" << it1.value().ID << it2.value().ID;
+						break;
+					}
+					if(it1.value().layerID > 0 && it1.value().param != it2.value().param) {
+						qWarning() << "param !=" << it1.value().param << it2.value().param;
+						break;
+					}
+					if(it1.value().layerID > 0 && it1.value().state != it2.value().state) {
+						qWarning() << "state !=" << it1.value().state << it2.value().state;
+						break;
+					}
+					if(it1.value().blending != it2.value().blending) {
+						qWarning() << "blending !=" << it1.value().blending << it2.value().blending;
+						break;
+					}
+					if(it1.value().typeTrans != it2.value().typeTrans) {
+						qWarning() << "typeTrans !=" << it1.value().typeTrans << it2.value().typeTrans;
+						break;
+					}
+					if(it1.value().size != it2.value().size) {
+						qWarning() << "size !=" << it1.value().size << it2.value().size;
+						break;
+					}
+					if(it1.value().depth != it2.value().depth) {
+						qWarning() << "depth !=" << it1.value().depth << it2.value().depth;
+						break;
+					}
+					if(it1.value().layerID != it2.value().layerID) {
+						qWarning() << "layerID !=" << it1.value().layerID << it2.value().layerID;
+						break;
+					}
+					if(it1.value().tileID != it2.value().tileID) {
+						qWarning() << "tileID !=" << it1.value().tileID << it2.value().tileID;
+						break;
+					}
+
+					/*QVector<uint> l1 = texturesPc->tile(it1.value());
+					QVector<uint> l2 = texturesPsPc.textures()->tile(it2.value());
+
+					if(l1.size() == l2.size()
+							&& l1 != l2) {
+						qDebug() << "different texture";
+						if(it2.value().depth < 2 && it2.value().paletteID < background->palettes().size()) {
+							qDebug() << background->palettes().at(it2.value().paletteID)->areZero();
+						}
+						QByteArray palData = background->palettes().at(it2.value().paletteID)->toByteArray();
+						for(int k=0; k<l1.size(); ++k) {
+							if(l1.at(k) != l2.at(k)) {
+								qDebug() << k << l1.at(k) << l2.at(k) << background->palettes().value(it2.value().paletteID)->color(l1.at(k))
+										 << background->palettes().value(it2.value().paletteID)->color(l2.at(k)) << palData.mid(l1.at(k) * 2, 2).toHex()
+											 << palData.mid(l2.at(k) * 2, 2).toHex();
+							}
+						}
+						break;
+					}*/
+				}
+
+			} else {
+				qWarning() << "Cannot open ps field";
+			}
+
+			continue;
 			bool modelFound = false;
 			int modelFoundID = 0;
 			FieldModelLoaderPC *modelLoader = (FieldModelLoaderPC *)field->fieldModelLoader();
@@ -698,6 +872,64 @@ bool FieldArchive::compileScripts(int &fieldID, int &groupID, int &scriptID, int
 	}
 
 	return true;
+}
+
+void FieldArchive::removeBattles(FieldArchiveIOObserver *observer)
+{
+	observer->setObserverMaximum(fileList.size());
+
+	for(int fieldID=0 ; fieldID<fileList.size() ; ++fieldID) {
+		if(observer->observerWasCanceled()) {
+			return;
+		}
+		Field *field = this->field(fieldID, true);
+		if(field != NULL && field->scriptsAndTexts()->isOpen()) {
+			field->encounter()->setBattleEnabled(EncounterFile::Table1, false);
+			field->encounter()->setBattleEnabled(EncounterFile::Table2, false);
+			if(!field->isModified()) {
+				field->setModified(true);
+			}
+		}
+		observer->setObserverValue(fieldID);
+	}
+}
+
+void FieldArchive::removeTexts(FieldArchiveIOObserver *observer)
+{
+	observer->setObserverMaximum(fileList.size());
+
+	for(int fieldID=0 ; fieldID<fileList.size() ; ++fieldID) {
+		if(observer->observerWasCanceled()) {
+			return;
+		}
+		Field *field = this->field(fieldID, true);
+		if(field != NULL && field->scriptsAndTexts()->isOpen()) {
+			field->scriptsAndTexts()->removeTexts();
+			if(field->scriptsAndTexts()->isModified() && !field->isModified()) {
+				field->setModified(true);
+			}
+		}
+		observer->setObserverValue(fieldID);
+	}
+}
+
+void FieldArchive::cleanTexts(FieldArchiveIOObserver *observer)
+{
+	observer->setObserverMaximum(fileList.size());
+
+	for(int fieldID=0 ; fieldID<fileList.size() ; ++fieldID) {
+		if(observer->observerWasCanceled()) {
+			return;
+		}
+		Field *field = this->field(fieldID, true);
+		if(field != NULL && field->scriptsAndTexts()->isOpen()) {
+			field->scriptsAndTexts()->cleanTexts();
+			if(field->scriptsAndTexts()->isModified() && !field->isModified()) {
+				field->setModified(true);
+			}
+		}
+		observer->setObserverValue(fieldID);
+	}
 }
 
 bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory,

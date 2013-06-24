@@ -86,6 +86,7 @@ public slots:
 	void miscManager();
 	void searchManager();
 	void archiveManager();
+	void miscOperations();
 	void fontManager();
 	void about();
 private slots:

@@ -119,7 +119,8 @@ HEADERS += \
     core/field/BackgroundTilesIO.h \
     core/field/BackgroundTextures.h \
     core/field/BackgroundTexturesIO.h \
-    core/field/BackgroundIO.h
+    core/field/BackgroundIO.h \
+    widgets/OperationsManager.h
 
 SOURCES += \
     Window.cpp \
@@ -233,7 +234,8 @@ SOURCES += \
     core/field/BackgroundTilesIO.cpp \
     core/field/BackgroundTextures.cpp \
     core/field/BackgroundTexturesIO.cpp \
-    core/field/BackgroundIO.cpp
+    core/field/BackgroundIO.cpp \
+    widgets/OperationsManager.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts
