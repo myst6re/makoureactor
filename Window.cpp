@@ -385,6 +385,10 @@ int Window::closeFile(bool quit)
 		}
 		field = NULL;
 
+		fieldList->blockSignals(true);
+		groupScriptList->blockSignals(true);
+		scriptList->blockSignals(true);
+		opcodeList->blockSignals(true);
 		fieldList->clear();
 		groupScriptList->clear();
 		groupScriptList->clearCopiedGroups();
@@ -392,6 +396,10 @@ int Window::closeFile(bool quit)
 		scriptList->clear();
 		opcodeList->clear();
 		opcodeList->clearCopiedOpcodes();
+		fieldList->blockSignals(false);
+		groupScriptList->blockSignals(false);
+		scriptList->blockSignals(false);
+		opcodeList->blockSignals(false);
 		zoneImage->clear();
 		if(fieldModel) {
 			fieldModel->clear();
@@ -700,6 +708,8 @@ int Window::currentFieldId() const
 
 void Window::openField(bool reload)
 {
+	if(!fieldArchive) return;
+
 	disconnect(groupScriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showGrpScripts()));
 	disconnect(scriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showScripts()));
 	
@@ -931,6 +941,8 @@ void Window::save() { saveAs(true); }
 
 void Window::saveAs(bool currentPath)
 {
+	if(!fieldArchive) return;
+
 	int fieldID, groupID, scriptID, opcodeID;
 	QString errorStr;
 
