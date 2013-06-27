@@ -20,10 +20,9 @@
 #include "core/Config.h"
 #include "Data.h"
 
-Search::Search(QWidget *parent) :
-	QDialog(parent, Qt::Tool),
-	fieldID(0), grpScriptID(0), scriptID(0),
-	opcodeID(0), textID(0), from(0),
+Search::Search(Window *mainWindow) :
+	QDialog(mainWindow, Qt::Tool),
+	atTheEnd(false), atTheBeginning(false),
 	clef(0), text(QString()),
 	bank(0), adress(0), e_script(0), e_group(0)
 {
@@ -200,6 +199,12 @@ QWidget *Search::textPageWidget()
 	champ2->setEditable(true);
 	champ2->setMaximumWidth(400);
 	champ2->addItems(Config::value("recentSearch").toStringList());
+	replace2 = new QComboBox(ret);
+	replace2->setEditable(true);
+	replace2->setMaximumWidth(400);
+	replace2->addItems(Config::value("recentReplace").toStringList());
+	QPushButton *replaceCurrentButton = new QPushButton(tr("Remplacer"), this);
+	QPushButton *replaceAllButton = new QPushButton(tr("Remplacer tout"), this);
 
 	caseSens2 = new QCheckBox(tr("Sensible à la casse"), ret);
 	caseSens2->setChecked(Config::value("findWithCaseSensitive").toBool());
@@ -207,11 +212,25 @@ QWidget *Search::textPageWidget()
 	useRegexp2->setChecked(Config::value("findWithRegExp").toBool());
 
 	QGridLayout *textLayout = new QGridLayout(ret);
-	textLayout->addWidget(champ2, 0, 0, 1, 2);
-	textLayout->addWidget(caseSens2, 1, 0);
-	textLayout->addWidget(useRegexp2, 1, 1);
+	textLayout->addWidget(champ2, 0, 0, 1, 6);
+	textLayout->addWidget(replace2, 1, 0, 1, 2);
+	textLayout->addWidget(replaceCurrentButton, 1, 2, 1, 2);
+	textLayout->addWidget(replaceAllButton, 1, 4, 1, 2);
+	textLayout->addWidget(caseSens2, 2, 0, 1, 3);
+	textLayout->addWidget(useRegexp2, 2, 3, 1, 3);
+
+	connect(replaceCurrentButton, SIGNAL(clicked()), SLOT(replaceCurrent()));
+	connect(replaceAllButton, SIGNAL(clicked()), SLOT(replaceAll()));
 
 	return ret;
+}
+
+void Search::showEvent(QShowEvent *event)
+{
+	activateWindow();
+	champ->setFocus();
+	champ->lineEdit()->selectAll();
+	QDialog::showEvent(event);
 }
 
 void Search::setFieldArchive(FieldArchive *fieldArchive)
@@ -251,47 +270,13 @@ void Search::updateRunSearch()
 {
 	executionGroup->clear();
 	if(fieldArchive) {
-		Field *f = fieldArchive->field(fieldID);
+		Field *f = fieldArchive->field(mainWindow()->currentFieldId());
 		if(f) {
 			int i=0;
 			foreach(const GrpScript *grp, f->scriptsAndTexts()->grpScripts())
 				executionGroup->addItem(QString("%1 - %2").arg(i++).arg(grp->name()));
 		}
 	}
-}
-
-void Search::changeFieldID(int fieldID)
-{
-	this->fieldID = fieldID;
-	textID = from = grpScriptID = scriptID = opcodeID = -1;
-}
-
-void Search::changeGrpScriptID(int grpScriptID)
-{
-	this->grpScriptID = grpScriptID;
-	scriptID = opcodeID = -1;
-}
-
-void Search::changeScriptID(int scriptID)
-{
-	this->scriptID = scriptID;
-	opcodeID = -1;
-}
-
-void Search::changeOpcodeID(int opcodeID)
-{
-	this->opcodeID = opcodeID;
-}
-
-void Search::changeTextID(int textID)
-{
-	this->textID = textID;
-	from = -1;
-}
-
-void Search::changeFrom(int from)
-{
-	this->from = from;
 }
 
 void Search::updateComboVarName()
@@ -313,16 +298,45 @@ void Search::cancelSearching()
 	cancel = true;
 }
 
+bool Search::isLocalSearch() const
+{
+	return tabWidget->currentIndex() == 0 && liste->currentIndex() == 3;
+}
+
 void Search::findNext()
 {
-	parentWidget()->setEnabled(false);
+	mainWindow()->setEnabled(false);
 	buttonNext->setDefault(true);
 	returnToBegin->hide();
 
-	bool localSearch=false;
-	FieldArchive::Sorting sorting = ((Window *)parentWidget())->getFieldSorting();
+	int fieldID, grpScriptID, scriptID, opcodeID,
+			textID, from;
+	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
 	
 	setSearchValues();
+
+	atTheBeginning = false;
+
+	if(atTheEnd) {
+		if(!isLocalSearch()) {
+			fieldID = -1;
+		} else {
+			fieldID = mainWindow()->currentFieldId();
+		}
+		grpScriptID = scriptID = opcodeID = -1;
+		textID = -1;
+		from = 0;
+		atTheEnd = false;
+	} else {
+		fieldID = mainWindow()->currentFieldId();
+		grpScriptID = mainWindow()->currentGrpScriptId();
+		scriptID = mainWindow()->currentScriptId();
+		opcodeID = mainWindow()->currentOpcodeId();
+		textID = mainWindow()->textDialog() ? mainWindow()->textDialog()->currentTextId() : -1;
+		from = mainWindow()->textDialog() ? qMax(mainWindow()->textDialog()->currentTextPosition(),
+												 mainWindow()->textDialog()->currentAnchorPosition())
+										  : 0;
+	}
 
 	if(tabWidget->currentIndex() == 0) { // scripts page
 		++opcodeID;
@@ -366,11 +380,9 @@ void Search::findNext()
 				emit found(fieldID, grpScriptID, scriptID, opcodeID);
 				goto after;
 			}
-			localSearch = true;
 			break;
 		}
 	} else { // texts page
-		++from;
 		int size;
 		if(fieldArchive->searchText(text, fieldID, textID, from, size, sorting))
 		{
@@ -380,26 +392,52 @@ void Search::findNext()
 	}
 
 	returnToBegin->setText(tr("Dernier %1,\npoursuite au début.")
-						   .arg(localSearch ? tr("groupe") : tr("écran")));
+						   .arg(isLocalSearch() ? tr("groupe") : tr("écran")));
 	returnToBegin->show();
 
-	if(!localSearch)	fieldID = -1;
-	textID = from = grpScriptID = scriptID = opcodeID = -1;
+	atTheEnd = true;
 
 after:
-	parentWidget()->setEnabled(true);
+	mainWindow()->setEnabled(true);
 }
 
 void Search::findPrev()
 {
-	parentWidget()->setEnabled(false);
+	mainWindow()->setEnabled(false);
 	buttonPrev->setDefault(true);
 	returnToBegin->hide();
 
-	bool localSearch=false;
-	FieldArchive::Sorting sorting = ((Window *)parentWidget())->getFieldSorting();
+	int fieldID, grpScriptID, scriptID, opcodeID,
+			textID, from;
+	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
 
 	setSearchValues();
+
+	atTheEnd = false;
+
+	if(atTheBeginning) {
+		if(!isLocalSearch()) {
+			fieldID = 2147483647;
+		} else {
+			fieldID = mainWindow()->currentFieldId();
+		}
+		grpScriptID = scriptID = opcodeID = 2147483647;
+		textID = 2147483647;
+		from = -1;
+		atTheBeginning = false;
+	} else {
+		fieldID = mainWindow()->currentFieldId();
+		grpScriptID = mainWindow()->currentGrpScriptId();
+		scriptID = mainWindow()->currentScriptId();
+		opcodeID = mainWindow()->currentOpcodeId();
+		textID = mainWindow()->textDialog() ? mainWindow()->textDialog()->currentTextId() : -1;
+		from = mainWindow()->textDialog() ? qMin(mainWindow()->textDialog()->currentTextPosition(),
+												 mainWindow()->textDialog()->currentAnchorPosition())
+										  : -1;
+		if(from <= 0) {
+			textID--;
+		}
+	}
 
 	if(tabWidget->currentIndex() == 0) { // scripts page
 		--opcodeID;
@@ -443,7 +481,6 @@ void Search::findPrev()
 				emit found(fieldID, grpScriptID, scriptID, opcodeID);
 				goto after;
 			}
-			localSearch = true;
 			break;
 		}
 	} else { // texts page
@@ -457,15 +494,13 @@ void Search::findPrev()
 	}
 
 	returnToBegin->setText(tr("Premier %1,\npoursuite à la fin.")
-						   .arg(localSearch ? tr("groupe") : tr("écran")));
+						   .arg(isLocalSearch() ? tr("groupe") : tr("écran")));
 	returnToBegin->show();
 
-	if(!localSearch)	fieldID = 2147483647;
-	textID = grpScriptID = scriptID = opcodeID = 2147483647;
-	from = 0;
+	atTheBeginning = true;
 
 after:
-	parentWidget()->setEnabled(true);
+	mainWindow()->setEnabled(true);
 }
 
 void Search::setSearchValues()
@@ -539,4 +574,49 @@ void Search::setSearchValues()
 		Config::setValue("findWithCaseSensitive", caseSens2->isChecked());
 		Config::setValue("findWithRegExp", useRegexp2->isChecked());
 	}
+}
+
+void Search::replaceCurrent()
+{
+	if(!fieldArchive || !mainWindow()->textDialog()) {
+		return;
+	}
+
+	setSearchValues();
+
+	if(fieldArchive->replaceText(text, replace2->lineEdit()->text(),
+								 mainWindow()->currentFieldId(),
+								 mainWindow()->textDialog()->currentTextId(),
+								 qMin(mainWindow()->textDialog()->currentTextPosition(),
+									  mainWindow()->textDialog()->currentAnchorPosition()))) {
+		// Update view
+		mainWindow()->textDialog()->updateText();
+		mainWindow()->setModified();
+	}
+}
+
+void Search::replaceAll()
+{
+	if(!fieldArchive) {
+		return;
+	}
+
+	mainWindow()->setEnabled(false);
+	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
+	setSearchValues();
+
+	QString after = replace2->lineEdit()->text();
+	int fieldID = 0, textID = 0, from = 0, size;
+	while(fieldArchive->searchText(text, fieldID, textID, from, size, sorting)) {
+		fieldArchive->replaceText(text, after, fieldID, textID, from);
+		from += after.size();
+	}
+
+	mainWindow()->setEnabled(true);
+
+	// Update view
+	if(mainWindow()->textDialog()) {
+		mainWindow()->textDialog()->updateText();
+	}
+	mainWindow()->setModified();
 }

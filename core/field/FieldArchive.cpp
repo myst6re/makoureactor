@@ -856,6 +856,22 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 	return false;
 }
 
+bool FieldArchive::replaceText(const QRegExp &search, const QString &after, int fieldID, int textID, int from)
+{
+	if(textID > -1) {
+		Field *field = this->field(fieldID);
+		if(field) {
+			Section1File *texts = field->scriptsAndTexts();
+			if(texts->isOpen() && textID < texts->textCount()) {
+				if(texts->replaceText(search, after, textID, from)) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
 bool FieldArchive::compileScripts(int &fieldID, int &groupID, int &scriptID, int &opcodeID, QString &errorStr)
 {
 	int size = fileList.size();

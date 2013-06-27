@@ -71,6 +71,7 @@ public:
 	bool searchMapJumpP(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting);
 	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting);
+	bool replaceText(const QRegExp &search, const QString &after, int fieldID, int textID, int from);
 
 	bool compileScripts(int &fieldID, int &groupID, int &scriptID, int &opcodeID, QString &errorStr);
 	void removeBattles(FieldArchiveIOObserver *observer);

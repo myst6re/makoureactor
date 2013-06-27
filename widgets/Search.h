@@ -21,12 +21,14 @@
 #include <QtGui>
 #include "core/field/FieldArchive.h"
 
+class Window;
+
 class Search : public QDialog
 {
     Q_OBJECT
 
 public:
-	explicit Search(QWidget *parent=0);
+	explicit Search(Window *mainWindow);
 
 	void setFieldArchive(FieldArchive *fieldArchive);
 	void setOpcode(int opcode);
@@ -34,36 +36,29 @@ public:
 	void setScriptExec(int groupID, int scriptID);
 	void updateRunSearch();
 
-	int fieldID;
-	int grpScriptID;
-	int scriptID;
-	int opcodeID;
-	int textID;
-	int from;
-
-public slots:
-	void changeFieldID(int);
-	void changeGrpScriptID(int);
-	void changeScriptID(int);
-	void changeOpcodeID(int);
-	void changeTextID(int);
-	void changeFrom(int);
-
 private slots:
 	void updateComboVarName();
 	void updateChampAdress();
 	void cancelSearching();
 	void findNext();
 	void findPrev();
+	void replaceCurrent();
+	void replaceAll();
 
 private:
 	QWidget *scriptPageWidget();
 	QWidget *textPageWidget();
 	void setSearchValues();
+	bool isLocalSearch() const;
+	inline Window *mainWindow() const {
+		return (Window *)parentWidget();
+	}
+
+	bool atTheEnd, atTheBeginning;
 
 	QTabWidget *tabWidget;
 	FieldArchive *fieldArchive;
-	QComboBox *champ, *champ2;
+	QComboBox *champ, *champ2, *replace2;
 	QComboBox *liste;
 	QComboBox *opcode;
 	QCheckBox *caseSens, *useRegexp, *caseSens2, *useRegexp2;
@@ -87,16 +82,12 @@ private:
 	bool cancel;
 
 signals:
-	void found(int, int, int, int);
-	void foundText(int, int, int, int);
+	void found(int fieldID, int grpScriptID, int scriptID, int opcodeID);
+	void foundText(int fieldID, int textID, int index, int size);
+	void textReplaced(int fieldID, int textID);
 
 protected:
-	void showEvent(QShowEvent *event) {
-		activateWindow();
-		champ->setFocus();
-		champ->lineEdit()->selectAll();
-		QDialog::showEvent(event);
-	}
+	void showEvent(QShowEvent *event);
 };
 
 #endif

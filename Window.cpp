@@ -33,7 +33,7 @@
 
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
-	textDialog(0), _modelManager(0), _tutManager(0), _walkmeshManager(0),
+	_textDialog(0), _modelManager(0), _tutManager(0), _walkmeshManager(0),
 	_backgroundManager(0)
 {
 	setWindowTitle();
@@ -248,10 +248,6 @@ Window::Window() :
 	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
 	connect(lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap()));
 	connect(lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
-	connect(this, SIGNAL(fieldIDChanged(int)), searchDialog, SLOT(changeFieldID(int)));
-	connect(this, SIGNAL(grpScriptIDChanged(int)), searchDialog, SLOT(changeGrpScriptID(int)));
-	connect(this, SIGNAL(scriptIDChanged(int)), searchDialog, SLOT(changeScriptID(int)));
-	connect(this, SIGNAL(opcodeIDChanged(int)), searchDialog, SLOT(changeOpcodeID(int)));
 
 	groupScriptList->toolBar()->setVisible(Config::value("grpToolbarVisible", true).toBool());
 	opcodeList->toolBar()->setVisible(Config::value("scriptToolbarVisible", true).toBool());
@@ -314,8 +310,8 @@ FieldArchive::Sorting Window::getFieldSorting()
 void Window::jpText(bool enabled)
 {
 	Config::setValue("jp_txt", enabled);
-	if(textDialog) {
-		textDialog->updateText();
+	if(_textDialog) {
+		_textDialog->updateText();
 	}
 	showScripts();
 }
@@ -415,9 +411,9 @@ int Window::closeFile(bool quit)
 		setWindowTitle();
 		searchDialog->setEnabled(false);
 		searchDialog->setFieldArchive(NULL);
-		if(textDialog) {
-			textDialog->clear();
-			textDialog->setEnabled(false);
+		if(_textDialog) {
+			_textDialog->clear();
+			_textDialog->setEnabled(false);
 		}
 		if(_modelManager) {
 			_modelManager->close();
@@ -706,6 +702,21 @@ int Window::currentFieldId() const
 	return selectedItems.first()->data(0, Qt::UserRole).toInt();
 }
 
+int Window::currentGrpScriptId() const
+{
+	return groupScriptList->selectedID();
+}
+
+int Window::currentScriptId() const
+{
+	return scriptList->selectedID();
+}
+
+int Window::currentOpcodeId() const
+{
+	return opcodeList->selectedID();
+}
+
 void Window::openField(bool reload)
 {
 	if(!fieldArchive) return;
@@ -757,9 +768,9 @@ void Window::openField(bool reload)
 //	if(fieldModel && fieldArchive->io()->isPC()) {
 //		modelThread->setField(field);
 //	}
-	if(textDialog && (reload || textDialog->isVisible())) {
-		textDialog->setField(field, reload);
-		textDialog->setEnabled(true);
+	if(_textDialog && (reload || _textDialog->isVisible())) {
+		_textDialog->setField(field, reload);
+		_textDialog->setEnabled(true);
 	}
 	if(_modelManager && (reload || _modelManager->isVisible())) {
 		_modelManager->fill(field, reload);
@@ -792,7 +803,6 @@ void Window::openField(bool reload)
 	authorLbl->setText(tr("Auteur : %1").arg(scriptsAndTexts->author()));
 	authorAction->setVisible(true);
 
-	emit fieldIDChanged(fieldId);
 	// Fill group script list
 	groupScriptList->setEnabled(true);
 	groupScriptList->fill(scriptsAndTexts);
@@ -826,7 +836,6 @@ void Window::showGrpScripts()
 		return;
 	}
 	
-	emit grpScriptIDChanged(groupScriptList->selectedID());
 	GrpScript *currentGrpScript = groupScriptList->currentGrpScript();
 	if(currentGrpScript==NULL)	return;
 
@@ -869,20 +878,15 @@ void Window::showScripts()
 
 	opcodeList->setEnabled(true);
 
-	disconnect(opcodeList, SIGNAL(itemSelectionChanged()), this, SLOT(emitOpcodeID()));
 	opcodeList->clear();
 	
 	if(scriptList->selectedItems().isEmpty())	return;
-	
-	emit scriptIDChanged(scriptList->selectedID());
 	
 	Script *currentScript = scriptList->currentScript();
 	if(currentScript==NULL)	return;
 	opcodeList->fill(field, groupScriptList->currentGrpScript(), currentScript);
 	opcodeList->setIsInit(scriptList->selectedID()==0);
 	opcodeList->scroll(0, false);
-	
-	connect(opcodeList, SIGNAL(itemSelectionChanged()), SLOT(emitOpcodeID()));
 }
 
 void Window::compile()
@@ -1059,20 +1063,15 @@ void Window::gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID
 
 void Window::gotoText(int fieldID, int textID, int from, int size)
 {
-	if(textDialog) {
-		textDialog->blockSignals(true);
+	if(_textDialog) {
+		_textDialog->blockSignals(true);
 	}
 	if(gotoField(fieldID)) {
 		textManager(textID, from, size, false); // show texts dialog
 	}
-	if(textDialog) {
-		textDialog->blockSignals(false);
+	if(_textDialog) {
+		_textDialog->blockSignals(false);
 	}
-}
-
-void Window::emitOpcodeID()
-{
-	if(opcodeList->selectedID() != -1)	emit opcodeIDChanged(opcodeList->selectedID());
 }
 
 /* void Window::notifyFileChanged(const QString &path)
@@ -1285,8 +1284,8 @@ void Window::runFF7()
 
 void Window::searchManager()
 {
-	if(textDialog && textDialog->isVisible()) {
-		QString selectedText = textDialog->selectedText();
+	if(_textDialog && _textDialog->isVisible()) {
+		QString selectedText = _textDialog->selectedText();
 		if(!selectedText.isEmpty()) {
 			searchDialog->setText(selectedText);
 		}
@@ -1300,28 +1299,26 @@ void Window::searchManager()
 
 void Window::textManager(int textID, int from, int size, bool activate)
 {
-	if(!textDialog) {
-		textDialog = new TextManager(this);
-		connect(textDialog, SIGNAL(modified()), SLOT(setModified()));
-		connect(textDialog, SIGNAL(textIDChanged(int)), searchDialog, SLOT(changeTextID(int)));
-		connect(textDialog, SIGNAL(fromChanged(int)), searchDialog, SLOT(changeFrom(int)));
+	if(!_textDialog) {
+		_textDialog = new TextManager(this);
+		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
 	}
 
 	if(field) {
-		textDialog->setField(field);
-		textDialog->setEnabled(true);
+		_textDialog->setField(field);
+		_textDialog->setEnabled(true);
 	} else {
-		textDialog->clear();
-		textDialog->setEnabled(false);
+		_textDialog->clear();
+		_textDialog->setEnabled(false);
 	}
-	textDialog->show();
+	_textDialog->show();
 	if(activate) {
-		textDialog->activateWindow();
+		_textDialog->activateWindow();
 	} else {
 		searchDialog->raise();
 	}
 	if(textID >= 0) {
-		textDialog->gotoText(textID, from, size);
+		_textDialog->gotoText(textID, from, size);
 	}
 }
 
@@ -1504,8 +1501,8 @@ void Window::config()
 	ConfigWindow configWindow(this);
 	if(configWindow.exec() == QDialog::Accepted) {
 		actionJp_txt->setChecked(Config::value("jp_txt", false).toBool());
-		if(textDialog) {
-			textDialog->updateText();
+		if(_textDialog) {
+			_textDialog->updateText();
 		}
 		actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
 		showScripts();

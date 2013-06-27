@@ -52,6 +52,12 @@ public:
 	void setObserverValue(int value);
 
 	int currentFieldId() const;
+	int currentGrpScriptId() const;
+	int currentScriptId() const;
+	int currentOpcodeId() const;
+	inline TextManager *textDialog() const {
+		return _textDialog;
+	}
 
 public slots:
 	void openFile();
@@ -90,8 +96,6 @@ public slots:
 	void fontManager();
 	void about();
 private slots:
-	void emitOpcodeID();
-
 	void openField(bool reload=false);
 	void showGrpScripts();
 	void showModel(Field *field, FieldModelFile *fieldModelFile);
@@ -100,11 +104,6 @@ private slots:
 	void filterMap();
 	void changeLanguage(QAction *);
 	void config();
-signals:
-	void fieldIDChanged(int);
-	void grpScriptIDChanged(int);
-	void scriptIDChanged(int);
-	void opcodeIDChanged(int);
 private:
 	void setWindowTitle();
 	void restartNow();
@@ -138,7 +137,7 @@ private:
 	QAction *actionMisc, *actionJp_txt;
 	QMenu *menuLang;
 
-	TextManager *textDialog;
+	TextManager *_textDialog;
 	ModelManager *_modelManager;
 	TutWidget *_tutManager;
 	WalkmeshManager *_walkmeshManager;

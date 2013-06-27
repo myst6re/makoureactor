@@ -602,6 +602,20 @@ bool Section1File::searchTextP(const QRegExp &text, int &textID, int &from, int 
 	return searchTextP(text, --textID, from = -1, index, size);
 }
 
+bool Section1File::replaceText(const QRegExp &search, const QString &after, int textID, int from)
+{
+	bool jp = Config::value("jp_txt", false).toBool();
+	FF7Text beforeT = text(textID);
+	QString before = beforeT.text(jp);
+
+	if(search.indexIn(before, from) == from) {
+		before.replace(from, search.matchedLength(), after);
+		setText(textID, FF7Text(before, jp));
+		return true;
+	}
+	return false;
+}
+
 void Section1File::setWindow(const FF7Window &win)
 {
 	if(win.groupID < _grpScripts.size()) {

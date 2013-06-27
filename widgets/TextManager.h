@@ -32,10 +32,11 @@ public:
 	void updateText();
 	void gotoText(int textID, int from, int size);
 	QString selectedText() const;
+	int currentTextId() const;
+	int currentTextPosition() const;
+	int currentAnchorPosition() const;
 signals:
 	void modified();
-	void textIDChanged(int);
-	void fromChanged(int);
 private slots:
 	void selectText(QListWidgetItem *, QListWidgetItem *previous=0);
 	void showList();
@@ -52,7 +53,6 @@ private slots:
 	void changeRect(QRect rect);
 	void changeXCoord(int);
 	void changeYCoord(int);
-	void emitFromChanged();
 private:
 	void updateWindowCoord();
 //	QList<FF7Window> getWindows(quint8 textID) const;

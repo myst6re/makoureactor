@@ -84,6 +84,7 @@ public:
 	const FF7Text &text(int textID) const;
 	void setText(int textID, const FF7Text &text);
 	bool insertText(int textID, const FF7Text &text);
+	bool replaceText(const QRegExp &search, const QString &after, int textID, int from);
 	void deleteText(int textID);
 	QSet<quint8> listUsedTexts() const;
 	QSet<quint8> listUsedTuts() const;

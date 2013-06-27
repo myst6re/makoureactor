@@ -243,16 +243,10 @@ TextManager::TextManager(QWidget *parent) :
 	connect(menu1, SIGNAL(triggered(QAction*)), SLOT(insertTag(QAction*)));
 	connect(menu2, SIGNAL(triggered(QAction*)), SLOT(insertTag(QAction*)));
 	connect(textEdit, SIGNAL(textChanged()), SLOT(setTextChanged()));
-	connect(textEdit, SIGNAL(cursorPositionChanged()), SLOT(emitFromChanged()));
 	connect(prevPage, SIGNAL(released()), SLOT(prevTextPreviewPage()));
 	connect(nextPage, SIGNAL(released()), SLOT(nextTextPreviewPage()));
 //	connect(prevWin, SIGNAL(released()), SLOT(prevTextPreviewWin()));
 //	connect(nextWin, SIGNAL(released()), SLOT(nextTextPreviewWin()));
-}
-
-void TextManager::emitFromChanged()
-{
-	emit fromChanged(textEdit->textCursor().position());
 }
 
 void TextManager::focusInEvent(QFocusEvent *)
@@ -328,7 +322,6 @@ void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 	textEdit->setPlainText(t.text(Config::value("jp_txt", false).toBool()));
 	changeTextPreviewPage();
 	changeTextPreviewWin();
-	emit textIDChanged(textID);
 }
 
 void TextManager::showList()
@@ -385,6 +378,25 @@ void TextManager::gotoText(int textID, int from, int size)
 QString TextManager::selectedText() const
 {
 	return textEdit->textCursor().selectedText();
+}
+
+int TextManager::currentTextId() const
+{
+	QListWidgetItem *currentItem = liste1->currentItem();
+	if(currentItem) {
+		return currentItem->data(Qt::UserRole).toInt();
+	}
+	return -1;
+}
+
+int TextManager::currentTextPosition() const
+{
+	return textEdit->textCursor().position();
+}
+
+int TextManager::currentAnchorPosition() const
+{
+	return textEdit->textCursor().anchor();
 }
 
 void TextManager::addText()
