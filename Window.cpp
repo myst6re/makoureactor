@@ -409,7 +409,6 @@ int Window::closeFile(bool quit)
 		authorAction->setVisible(false);
 		setWindowModified(false);
 		setWindowTitle();
-		searchDialog->setEnabled(false);
 		searchDialog->setFieldArchive(NULL);
 		if(_textDialog) {
 			_textDialog->clear();
@@ -574,9 +573,11 @@ void Window::open(const QString &cheminFic, bool isDir)
 		fieldArchive = new FieldArchivePC(cheminFic, type);
 	}
 
+	fieldArchive->setObserver(this);
+
 	showProgression(tr("Ouverture..."), false);
 
-	FieldArchiveIO::ErrorCode error = fieldArchive->open(this);
+	FieldArchiveIO::ErrorCode error = fieldArchive->open();
 
 	hideProgression();
 
@@ -655,7 +656,6 @@ void Window::open(const QString &cheminFic, bool isDir)
 	if(fieldArchive->size() > 0) {
 		if(varDialog)	varDialog->setFieldArchive(fieldArchive);
 		searchDialog->setFieldArchive(fieldArchive);
-		searchDialog->setEnabled(true);
 		actionEncounter->setEnabled(true);
 		actionMisc->setEnabled(true);
 		actionExport->setEnabled(true);
@@ -993,7 +993,7 @@ void Window::saveAs(bool currentPath)
 	quint8 error = 0;
 	
 	// QTime t;t.start();
-	error = fieldArchive->save(path, this);
+	error = fieldArchive->save(path);
 	// qDebug("Total save time: %d ms", t.elapsed());
 
 	hideProgression();
@@ -1172,7 +1172,7 @@ void Window::massExport()
 			}
 
 			if(!fieldArchive->exportation(selectedFields, massExportDialog->directory(),
-									  massExportDialog->overwrite(), toExport, this)
+									  massExportDialog->overwrite(), toExport)
 					&& !observerWasCanceled()) {
 				QMessageBox::warning(this, tr("Erreur"), tr("Une erreur s'est produite lors de l'exportation"));
 			}
@@ -1200,7 +1200,7 @@ void Window::massImport()
 			}
 
 			if(!fieldArchive->importation(selectedFields, massImportDialog->directory(),
-									  toImport, this)
+									  toImport)
 					&& !observerWasCanceled()) {
 				QMessageBox::warning(this, tr("Erreur"), tr("Une erreur s'est produite lors de l'importation"));
 			}
@@ -1470,16 +1470,16 @@ void Window::miscOperations()
 		showProgression(tr("Application en cours..."), false);
 
 		if(operations.testFlag(OperationsManager::CleanUnusedTexts)) {
-			fieldArchive->cleanTexts(this);
+			fieldArchive->cleanTexts();
 		}
 		if(!observerWasCanceled() && operations.testFlag(OperationsManager::RemoveTexts)) {
-			fieldArchive->removeTexts(this);
+			fieldArchive->removeTexts();
 		}
 		if(!observerWasCanceled() && operations.testFlag(OperationsManager::RemoveBattles)) {
-			fieldArchive->removeBattles(this);
+			fieldArchive->removeBattles();
 		}
 		if(!observerWasCanceled() && fieldArchive->isPC() && operations.testFlag(OperationsManager::CleanModelLoaderPC)) {
-			((FieldArchivePC *)fieldArchive)->cleanModelLoader(this);
+			((FieldArchivePC *)fieldArchive)->cleanModelLoader();
 		}
 
 		hideProgression();

@@ -44,7 +44,7 @@ public:
 
 	FieldArchiveIOPC *io() const;
 
-	void cleanModelLoader(FieldArchiveIOObserver *observer);
+	void cleanModelLoader();
 private:
 	QMap<QString, TutFilePC *> _tuts;
 };

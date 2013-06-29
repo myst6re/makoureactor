@@ -127,12 +127,12 @@ FieldArchiveIOPC *FieldArchivePC::io() const
 	return (FieldArchiveIOPC *)FieldArchive::io();
 }
 
-void FieldArchivePC::cleanModelLoader(FieldArchiveIOObserver *observer)
+void FieldArchivePC::cleanModelLoader()
 {
-	observer->setObserverMaximum(size());
+	observer()->setObserverMaximum(size());
 
 	for(int fieldID=0 ; fieldID<size() ; ++fieldID) {
-		if(observer->observerWasCanceled()) {
+		if(observer()->observerWasCanceled()) {
 			return;
 		}
 		FieldPC *field = this->field(fieldID, true);
@@ -145,6 +145,6 @@ void FieldArchivePC::cleanModelLoader(FieldArchiveIOObserver *observer)
 				}
 			}
 		}
-		observer->setObserverValue(fieldID);
+		observer()->setObserverValue(fieldID);
 	}
 }

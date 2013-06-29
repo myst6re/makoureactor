@@ -21,12 +21,12 @@
 #include "Data.h"
 
 FieldArchive::FieldArchive() :
-	_io(0)
+	_io(0), _observer(0)
 {
 }
 
 FieldArchive::FieldArchive(FieldArchiveIO *io) :
-	_io(io)
+	_io(io), _observer(0)
 {
 	//	fileWatcher.addPath(path);
 	//	connect(&fileWatcher, SIGNAL(fileChanged(QString)), this, SIGNAL(fileChanged(QString)));
@@ -39,13 +39,13 @@ FieldArchive::~FieldArchive()
 	if(_io)		delete _io;
 }
 
-FieldArchiveIO::ErrorCode FieldArchive::open(FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchive::open()
 {
 	if(!_io)	return FieldArchiveIO::Invalid;
 //	qDebug() << "FieldArchive::open()";
 	clear();
 
-	FieldArchiveIO::ErrorCode error = _io->open(observer);
+	FieldArchiveIO::ErrorCode error = _io->open(observer());
 	if(error != FieldArchiveIO::Ok) {
 		return error;
 	}
@@ -67,11 +67,11 @@ FieldArchiveIO::ErrorCode FieldArchive::open(FieldArchiveIOObserver *observer)
 	return FieldArchiveIO::Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchive::save(const QString &path, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchive::save(const QString &path)
 {
 	if(!_io)	return FieldArchiveIO::Invalid;
 
-	FieldArchiveIO::ErrorCode error = _io->save(path, observer);
+	FieldArchiveIO::ErrorCode error = _io->save(path, observer());
 	if(error == FieldArchiveIO::Ok) {
 		// Clear "isModified" state
 		setSaved();
@@ -616,7 +616,7 @@ void FieldArchive::searchAll()
 	}
 }
 
-bool FieldArchive::searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting) const
+bool FieldArchive::searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting, SearchScope scope) const
 {
 	if(fieldID >= fileList.size())		return false;
 
@@ -624,25 +624,30 @@ bool FieldArchive::searchIterators(QMap<QString, int>::const_iterator &i, QMap<Q
 	case SortByName:
 		i = fieldsSortByName.constFind(fieldsSortByName.key(fieldID), fieldID);
 		end = fieldsSortByName.constEnd();
-		if(i==end) {
+		if(i == end) {
 			i = fieldsSortByName.constBegin();
 		}
-		return true;
+		break;
 	case SortByMapId:
 		i = fieldsSortByMapId.constFind(fieldsSortByMapId.key(fieldID), fieldID);
 		end = fieldsSortByMapId.constEnd();
-		if(i==end) {
+		if(i == end) {
 			i = fieldsSortByMapId.constBegin();
 		}
-		return true;
+		break;
 	}
+
+	if(scope >= FieldScope && fieldID != i.value()) {
+		return false;
+	}
+
 	return true;
 }
 
-bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, end;
-	if(!searchIterators(i, end, fieldID, sorting))	return false;
+	if(!searchIterators(i, end, fieldID, sorting, scope))	return false;
 
 	for( ; i != end ; ++i)
 	{
@@ -651,14 +656,15 @@ bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scr
 		if(f!=NULL && f->scriptsAndTexts()->searchOpcode(opcode, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
+		if(scope >= FieldScope)		break;
 	}
 	return false;
 }
 
-bool FieldArchive::searchVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, end;
-	if(!searchIterators(i, end, fieldID, sorting))	return false;
+	if(!searchIterators(i, end, fieldID, sorting, scope))	return false;
 
 	for( ; i != end ; ++i)
 	{
@@ -667,14 +673,15 @@ bool FieldArchive::searchVar(quint8 bank, quint8 adress, int value, int &fieldID
 		if(f!=NULL && f->scriptsAndTexts()->searchVar(bank, adress, value, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
+		if(scope >= FieldScope)		break;
 	}
 	return false;
 }
 
-bool FieldArchive::searchExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, end;
-	if(!searchIterators(i, end, fieldID, sorting))	return false;
+	if(!searchIterators(i, end, fieldID, sorting, scope))	return false;
 
 	for( ; i != end ; ++i)
 	{
@@ -683,14 +690,15 @@ bool FieldArchive::searchExec(quint8 group, quint8 script, int &fieldID, int &gr
 		if(f!=NULL && f->scriptsAndTexts()->searchExec(group, script, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
+		if(scope >= FieldScope)		break;
 	}
 	return false;
 }
 
-bool FieldArchive::searchMapJump(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchMapJump(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, end;
-	if(!searchIterators(i, end, fieldID, sorting))	return false;
+	if(!searchIterators(i, end, fieldID, sorting, scope))	return false;
 
 	for( ; i != end ; ++i)
 	{
@@ -699,14 +707,15 @@ bool FieldArchive::searchMapJump(quint16 _field, int &fieldID, int &groupID, int
 		if(f!=NULL && f->scriptsAndTexts()->searchMapJump(_field, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
+		if(scope >= FieldScope)		break;
 	}
 	return false;
 }
 
-bool FieldArchive::searchTextInScripts(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchTextInScripts(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, end;
-	if(!searchIterators(i, end, fieldID, sorting))	return false;
+	if(!searchIterators(i, end, fieldID, sorting, scope))	return false;
 
 	for( ; i != end ; ++i)
 	{
@@ -715,14 +724,15 @@ bool FieldArchive::searchTextInScripts(const QRegExp &text, int &fieldID, int &g
 		if(f!=NULL && f->scriptsAndTexts()->searchTextInScripts(text, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 0;
+		if(scope >= FieldScope)		break;
 	}
 	return false;
 }
 
-bool FieldArchive::searchText(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting)
+bool FieldArchive::searchText(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, end;
-	if(!searchIterators(i, end, fieldID, sorting))	return false;
+	if(!searchIterators(i, end, fieldID, sorting, scope))	return false;
 
 	for( ; i != end ; ++i)
 	{
@@ -731,11 +741,12 @@ bool FieldArchive::searchText(const QRegExp &text, int &fieldID, int &textID, in
 		if(f!=NULL && f->scriptsAndTexts()->searchText(text, textID, from, size))
 			return true;
 		textID = from = 0;
+		if(scope >= FieldScope)		break;
 	}
 	return false;
 }
 
-bool FieldArchive::searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &begin, int fieldID, Sorting sorting) const
+bool FieldArchive::searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &begin, int fieldID, Sorting sorting, SearchScope scope) const
 {
 	if(fieldID < 0)		return false;
 
@@ -746,22 +757,27 @@ bool FieldArchive::searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<
 		if(i==fieldsSortByName.constEnd()) {
 			--i;
 		}
-		return true;
+		break;
 	case SortByMapId:
 		begin = fieldsSortByMapId.constBegin();
 		i = fieldsSortByMapId.constFind(fieldsSortByMapId.key(fieldID), fieldID);
 		if(i==fieldsSortByMapId.constEnd()) {
 			--i;
 		}
-		return true;
+		break;
 	}
+
+	if(scope >= FieldScope && fieldID != i.value()) {
+		return false;
+	}
+
 	return true;
 }
 
-bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
+	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
 
 	for( ; i != begin-1 ; --i)
 	{
@@ -770,15 +786,16 @@ bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &sc
 		if(f!=NULL && f->scriptsAndTexts()->searchOpcodeP(opcode, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 2147483647;
+		if(scope >= FieldScope)		break;
 	}
 
 	return false;
 }
 
-bool FieldArchive::searchVarP(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchVarP(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
+	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
 
 	for( ; i != begin-1 ; --i)
 	{
@@ -787,14 +804,15 @@ bool FieldArchive::searchVarP(quint8 bank, quint8 adress, int value, int &fieldI
 		if(f!=NULL && f->scriptsAndTexts()->searchVarP(bank, adress, value, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 2147483647;
+		if(scope >= FieldScope)		break;
 	}
 	return false;
 }
 
-bool FieldArchive::searchExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
+	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
 
 	for( ; i != begin-1 ; --i)
 	{
@@ -803,14 +821,15 @@ bool FieldArchive::searchExecP(quint8 group, quint8 script, int &fieldID, int &g
 		if(f!=NULL && f->scriptsAndTexts()->searchExecP(group, script, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 2147483647;
+		if(scope >= FieldScope)		break;
 	}
 	return false;
 }
 
-bool FieldArchive::searchMapJumpP(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchMapJumpP(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
+	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
 
 	for( ; i != begin-1 ; --i)
 	{
@@ -819,14 +838,15 @@ bool FieldArchive::searchMapJumpP(quint16 _field, int &fieldID, int &groupID, in
 		if(f!=NULL && f->scriptsAndTexts()->searchMapJumpP(_field, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 2147483647;
+		if(scope >= FieldScope)		break;
 	}
 	return false;
 }
 
-bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting)
+bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
+	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
 
 	for( ; i != begin-1 ; --i)
 	{
@@ -835,14 +855,15 @@ bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &fieldID, int &
 		if(f!=NULL && f->scriptsAndTexts()->searchTextInScriptsP(text, groupID, scriptID, opcodeID))
 			return true;
 		groupID = scriptID = opcodeID = 2147483647;
+		if(scope >= FieldScope)		break;
 	}
 	return false;
 }
 
-bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting)
+bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting, SearchScope scope)
 {
 	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting))	return false;
+	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
 
 	for( ; i != begin-1 ; --i)
 	{
@@ -852,6 +873,7 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 			return true;
 		textID = 2147483647;
 		from = -1;
+		if(scope >= FieldScope)		break;
 	}
 	return false;
 }
@@ -890,12 +912,12 @@ bool FieldArchive::compileScripts(int &fieldID, int &groupID, int &scriptID, int
 	return true;
 }
 
-void FieldArchive::removeBattles(FieldArchiveIOObserver *observer)
+void FieldArchive::removeBattles()
 {
-	observer->setObserverMaximum(fileList.size());
+	observer()->setObserverMaximum(fileList.size());
 
 	for(int fieldID=0 ; fieldID<fileList.size() ; ++fieldID) {
-		if(observer->observerWasCanceled()) {
+		if(observer()->observerWasCanceled()) {
 			return;
 		}
 		Field *field = this->field(fieldID, true);
@@ -906,16 +928,16 @@ void FieldArchive::removeBattles(FieldArchiveIOObserver *observer)
 				field->setModified(true);
 			}
 		}
-		observer->setObserverValue(fieldID);
+		observer()->setObserverValue(fieldID);
 	}
 }
 
-void FieldArchive::removeTexts(FieldArchiveIOObserver *observer)
+void FieldArchive::removeTexts()
 {
-	observer->setObserverMaximum(fileList.size());
+	observer()->setObserverMaximum(fileList.size());
 
 	for(int fieldID=0 ; fieldID<fileList.size() ; ++fieldID) {
-		if(observer->observerWasCanceled()) {
+		if(observer()->observerWasCanceled()) {
 			return;
 		}
 		Field *field = this->field(fieldID, true);
@@ -925,16 +947,16 @@ void FieldArchive::removeTexts(FieldArchiveIOObserver *observer)
 				field->setModified(true);
 			}
 		}
-		observer->setObserverValue(fieldID);
+		observer()->setObserverValue(fieldID);
 	}
 }
 
-void FieldArchive::cleanTexts(FieldArchiveIOObserver *observer)
+void FieldArchive::cleanTexts()
 {
-	observer->setObserverMaximum(fileList.size());
+	observer()->setObserverMaximum(fileList.size());
 
 	for(int fieldID=0 ; fieldID<fileList.size() ; ++fieldID) {
-		if(observer->observerWasCanceled()) {
+		if(observer()->observerWasCanceled()) {
 			return;
 		}
 		Field *field = this->field(fieldID, true);
@@ -944,13 +966,12 @@ void FieldArchive::cleanTexts(FieldArchiveIOObserver *observer)
 				field->setModified(true);
 			}
 		}
-		observer->setObserverValue(fieldID);
+		observer()->setObserverValue(fieldID);
 	}
 }
 
 bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory,
-							   bool overwrite, const QMap<ExportType, QString> &toExport,
-							   FieldArchiveIOObserver *observer)
+							   bool overwrite, const QMap<ExportType, QString> &toExport)
 {
 	if(selectedFields.isEmpty() || toExport.isEmpty()) {
 		return true;
@@ -958,10 +979,10 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 
 	QString path, extension;
 	int currentField=0;
-	observer->setObserverMaximum(selectedFields.size()-1);
+	observer()->setObserverMaximum(selectedFields.size()-1);
 
 	foreach(const int &fieldID, selectedFields) {
-		if(observer->observerWasCanceled()) 	break;
+		if(observer()->observerWasCanceled()) 	break;
 		Field *f = field(fieldID);
 		if(f) {
 			if(toExport.contains(Fields)) {
@@ -1035,15 +1056,14 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 				}
 			}
 		}
-		observer->setObserverValue(currentField++);
+		observer()->setObserverValue(currentField++);
 	}
 
 	return true;
 }
 
 bool FieldArchive::importation(const QList<int> &selectedFields, const QString &directory,
-							   const QMap<Field::FieldSection, QString> &toImport,
-							   FieldArchiveIOObserver *observer)
+							   const QMap<Field::FieldSection, QString> &toImport)
 {
 	if(selectedFields.isEmpty() || toImport.isEmpty()) {
 		return true;
@@ -1051,7 +1071,7 @@ bool FieldArchive::importation(const QList<int> &selectedFields, const QString &
 	int currentField=0;
 
 	foreach(const int &fieldID, selectedFields) {
-		if(observer->observerWasCanceled()) 	break;
+		if(observer()->observerWasCanceled()) 	break;
 
 		Field *f = field(fieldID);
 		if(f) {
@@ -1062,7 +1082,7 @@ bool FieldArchive::importation(const QList<int> &selectedFields, const QString &
 				}
 			}
 		}
-		observer->setObserverValue(currentField++);
+		observer()->setObserverValue(currentField++);
 	}
 
 	return true;

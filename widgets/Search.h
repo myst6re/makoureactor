@@ -44,15 +44,19 @@ private slots:
 	void findPrev();
 	void replaceCurrent();
 	void replaceAll();
+	void updateCaseSensitivity(bool cs);
 
 private:
 	QWidget *scriptPageWidget();
 	QWidget *textPageWidget();
 	void setSearchValues();
-	bool isLocalSearch() const;
+	FieldArchive::SearchScope searchScope() const;
+	QString lastMessage() const;
+	QString firstMessage() const;
 	inline Window *mainWindow() const {
 		return (Window *)parentWidget();
 	}
+	void setActionsEnabled(bool enable);
 
 	bool atTheEnd, atTheBeginning;
 
@@ -71,6 +75,13 @@ private:
 	QComboBox *executionGroup;
 	QSpinBox *executionScript;
 	QComboBox *mapJump;
+	QRadioButton *currentFieldCheckBox,
+	*currentGrpScriptCheckBox,
+	*currentScriptCheckBox;
+	QRadioButton *currentFieldCheckBox2,
+	*currentTextCheckBox;
+	QPushButton *replaceCurrentButton,
+	*replaceAllButton;
 
 	int clef;
 	QRegExp text;
