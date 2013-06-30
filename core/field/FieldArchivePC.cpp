@@ -148,3 +148,20 @@ void FieldArchivePC::cleanModelLoader()
 		observer()->setObserverValue(fieldID);
 	}
 }
+
+void FieldArchivePC::removeUnusedSections()
+{
+	observer()->setObserverMaximum(size());
+
+	for(int fieldID=0 ; fieldID<size() ; ++fieldID) {
+		if(observer()->observerWasCanceled()) {
+			return;
+		}
+		FieldPC *field = this->field(fieldID, true);
+		if(field != NULL) {
+			field->setRemoveUnusedSection(true);
+			field->setModified(true);
+		}
+		observer()->setObserverValue(fieldID);
+	}
+}

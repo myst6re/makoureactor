@@ -82,6 +82,8 @@ public:
 	virtual FieldArchiveIO *io() const;
 	int sectionSize(FieldSection part) const;
 	QByteArray sectionData(FieldSection part, bool dontOptimize=false);
+
+	void setRemoveUnusedSection(bool remove);// FIXME: only in PC version, ugly hack detected!
 protected:
 	virtual int headerSize() const=0;
 	virtual void openHeader(const QByteArray &fileData)=0;
@@ -107,6 +109,7 @@ private:
 	QString _name;
 	static Field *currentFieldForFieldModels;
 	static QMap<int, FieldModelFile *> _fieldModels;
+	bool _removeUnusedSection;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Field::FieldSections)

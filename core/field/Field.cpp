@@ -24,7 +24,8 @@
 #include "BackgroundFilePC.h"
 
 Field::Field(const QString &name, FieldArchiveIO *io) :
-	_io(io), _isOpen(false), _isModified(false), _name(name.toLower())
+	_io(io), _isOpen(false), _isModified(false),
+	_name(name.toLower()), _removeUnusedSection(false)
 {
 }
 
@@ -300,20 +301,25 @@ bool Field::save(QByteArray &newData, bool compress)
 		quint32 pos = headerSize() + newData.size() + diffSectionPos();
 		toc.append((char *)&pos, 4);
 
-		// Section data
-		FieldPart *fieldPart = part(fieldSection == Field::PalettePC
-									? Field::Background // EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
-									: fieldSection);
 		QByteArray section;
-		if(fieldPart && fieldPart->canSave() &&
-				fieldPart->isOpen() && fieldPart->isModified()) {
-			if(fieldSection == Field::PalettePC) { // EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
-				section = ((BackgroundFilePC *)fieldPart)->savePal();
+
+		if(fieldSection != Unused || !_removeUnusedSection) { // FIXME: ugly hack only for PC version
+
+			// Section data
+			FieldPart *fieldPart = part(fieldSection == Field::PalettePC
+										? Field::Background // EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
+										: fieldSection);
+
+			if(fieldPart && fieldPart->canSave() &&
+					fieldPart->isOpen() && fieldPart->isModified()) {
+				if(fieldSection == Field::PalettePC) { // EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
+					section = ((BackgroundFilePC *)fieldPart)->savePal();
+				} else {
+					section = fieldPart->save();
+				}
 			} else {
-				section = fieldPart->save();
+				section = sectionData(fieldSection, true);
 			}
-		} else {
-			section = sectionData(fieldSection, true);
 		}
 
 		if(hasSectionHeader()) {
@@ -530,4 +536,9 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 	}
 
 	return 0;
+}
+
+void Field::setRemoveUnusedSection(bool remove)
+{
+	_removeUnusedSection = remove;
 }

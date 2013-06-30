@@ -12,7 +12,8 @@ public:
 		CleanUnusedTexts = 0x01,
 		RemoveTexts = 0x02,
 		RemoveBattles = 0x04,
-		CleanModelLoaderPC = 0x08
+		CleanModelLoaderPC = 0x08,
+		RemoveUnusedSectionPC = 0x10
 	};
 	Q_DECLARE_FLAGS(Operations, Operation)
 

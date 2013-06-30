@@ -45,6 +45,7 @@ public:
 	FieldArchiveIOPC *io() const;
 
 	void cleanModelLoader();
+	void removeUnusedSections();
 private:
 	QMap<QString, TutFilePC *> _tuts;
 };

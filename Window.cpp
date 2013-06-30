@@ -88,7 +88,7 @@ Window::Window() :
 	menu->addSeparator();
 	menu->addAction(tr("&Gestionnaire de variables..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
 	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("Rec&hercher..."), this, SLOT(searchManager()), QKeySequence("Ctrl+F"));
-	menu->addAction(tr("Opér&ations diverses..."), this, SLOT(miscOperations()));
+	actionMiscOperations = menu->addAction(tr("Opér&ations diverses..."), this, SLOT(miscOperations()));
 	menu->addAction(tr("&Police de caractères..."), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
 
 	menu = menuBar->addMenu(tr("&Paramètres"));
@@ -443,6 +443,7 @@ int Window::closeFile(bool quit)
 		actionModels->setEnabled(false);
 		actionEncounter->setEnabled(false);
 		actionMisc->setEnabled(false);
+		actionMiscOperations->setEnabled(false);
 	}
 
 //	qDebug() << "/Window::closeFile";
@@ -658,6 +659,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 		searchDialog->setFieldArchive(fieldArchive);
 		actionEncounter->setEnabled(true);
 		actionMisc->setEnabled(true);
+		actionMiscOperations->setEnabled(true);
 		actionExport->setEnabled(true);
 		actionMassExport->setEnabled(true);
 		actionMassImport->setEnabled(true);
@@ -1481,6 +1483,9 @@ void Window::miscOperations()
 		if(!observerWasCanceled() && fieldArchive->isPC() && operations.testFlag(OperationsManager::CleanModelLoaderPC)) {
 			((FieldArchivePC *)fieldArchive)->cleanModelLoader();
 		}
+		if(!observerWasCanceled() && fieldArchive->isPC() && operations.testFlag(OperationsManager::RemoveUnusedSectionPC)) {
+			((FieldArchivePC *)fieldArchive)->removeUnusedSections();
+		}
 
 		hideProgression();
 
@@ -1528,7 +1533,7 @@ void Window::about()
 
 	font.setPointSize(8);
 
-	QLabel desc2(tr("Par myst6re<br/><a href=\"https://sourceforge.net/projects/makoureactor/\">sourceforge.net/projects/makoureactor</a><br/><br/>Merci à :<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li></ul>"), &about);
+	QLabel desc2(tr("Par myst6re<br/><a href=\"https://sourceforge.net/projects/makoureactor/\">sourceforge.net/projects/makoureactor</a><br/><br/>Merci à :<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), &about);
 	desc2.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc2.setTextFormat(Qt::RichText);
 	desc2.setOpenExternalLinks(true);

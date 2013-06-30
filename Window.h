@@ -134,7 +134,7 @@ private:
 	QAction *actionMassExport, *actionImport, *actionMassImport, *actionClose;
 	QAction *actionRun, *actionModels, *actionArchive;
 	QAction *actionEncounter;
-	QAction *actionMisc, *actionJp_txt;
+	QAction *actionMisc, *actionMiscOperations, *actionJp_txt;
 	QMenu *menuLang;
 
 	TextManager *_textDialog;

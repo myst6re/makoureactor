@@ -3,11 +3,14 @@
 OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
 {
+	setWindowTitle(tr("Opérations diverses"));
+
 	addOperation(CleanUnusedTexts, tr("Effacer tous les textes inutilisés"));
 	addOperation(RemoveTexts, tr("Désactiver tous les textes du jeu"));
 	addOperation(RemoveBattles, tr("Désactiver tous combats du jeu"));
 	if(isPC) {
 		addOperation(CleanModelLoaderPC, tr("Supprimer les données inutiles des listes des modèles 3D"));
+		addOperation(RemoveUnusedSectionPC, tr("Supprimer les données inutilisées pour les décors"));
 	}
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Cancel);
