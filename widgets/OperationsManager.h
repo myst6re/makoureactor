@@ -19,9 +19,12 @@ public:
 
 	explicit OperationsManager(bool isPC, QWidget *parent = 0);
 	Operations selectedOperations() const;
+private slots:
+	void updateApplyButton();
 private:
 	void addOperation(Operation op, const QString &description);
 	QMap<Operation, QCheckBox *> _operations;
+	QAbstractButton *applyButton;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(OperationsManager::Operations)

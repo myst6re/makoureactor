@@ -13,7 +13,9 @@ OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 		addOperation(RemoveUnusedSectionPC, tr("Supprimer les données inutilisées pour les décors"));
 	}
 
-	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Cancel);
+	QDialogButtonBox *buttonBox = new QDialogButtonBox;
+	applyButton = buttonBox->addButton(tr("Appliquer"), QDialogButtonBox::AcceptRole);
+	buttonBox->addButton(QDialogButtonBox::Cancel);
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	foreach(QCheckBox *operation, _operations) {
@@ -22,8 +24,14 @@ OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 	layout->addStretch();
 	layout->addWidget(buttonBox);
 
-	connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), SLOT(accept()));
+	foreach(QCheckBox *checkBox, _operations) {
+		connect(checkBox, SIGNAL(toggled(bool)), SLOT(updateApplyButton()));
+	}
+
+	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
 	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
+
+	updateApplyButton();
 }
 
 void OperationsManager::addOperation(Operation op, const QString &description)
@@ -45,4 +53,18 @@ OperationsManager::Operations OperationsManager::selectedOperations() const
 	}
 
 	return ret;
+}
+
+void OperationsManager::updateApplyButton()
+{
+	bool enabled = false;
+
+	foreach(QCheckBox *checkBox, _operations) {
+		if(checkBox->isChecked()) {
+			enabled = true;
+			break;
+		}
+	}
+
+	applyButton->setEnabled(enabled);
 }

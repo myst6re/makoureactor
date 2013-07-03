@@ -116,29 +116,30 @@ QVariant LgpItemModel::headerData(int section, Qt::Orientation orientation, int 
 LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), lgp(lgp)
 {
+	setWindowTitle(tr("Gestionnaire d'archive LGP"));
 	resize(800, 600);
 
 	LgpItemModel *model = new LgpItemModel(lgp);
 	treeView = new QTreeView(this);
 	treeView->setModel(model);
 
-	replaceButton = new QPushButton(tr("Remplacer"), this);
+//	replaceButton = new QPushButton(tr("Remplacer"), this);
 	extractButton = new QPushButton(tr("Extraire"), this);
-	packButton = new QPushButton(tr("Créer l'archive modifiée"), this);
+//	packButton = new QPushButton(tr("Créer l'archive modifiée"), this);
 
 	QHBoxLayout *barLayout = new QHBoxLayout;
-	barLayout->addWidget(replaceButton);
+//	barLayout->addWidget(replaceButton);
 	barLayout->addWidget(extractButton);
-	barLayout->addWidget(packButton);
+//	barLayout->addWidget(packButton);
 	barLayout->addStretch();
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	layout->addLayout(barLayout);
 	layout->addWidget(treeView, 1);
 
-	connect(replaceButton, SIGNAL(released()), SLOT(replaceCurrent()));
+//	connect(replaceButton, SIGNAL(released()), SLOT(replaceCurrent()));
 	connect(extractButton, SIGNAL(released()), SLOT(extractCurrent()));
-	connect(packButton, SIGNAL(released()), SLOT(pack()));
+//	connect(packButton, SIGNAL(released()), SLOT(pack()));
 	connect(treeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(setButtonsState()));
 }
 
