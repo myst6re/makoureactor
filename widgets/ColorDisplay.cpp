@@ -20,7 +20,8 @@
 ColorDisplay::ColorDisplay(QWidget *parent) :
 	QWidget(parent), _ro(false)
 {
-	setFixedSize(101, 11);
+	setFixedSize((COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH) * 10 + COLOR_DISPLAY_BORDER_WIDTH,
+				 COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH * 2);
 	setMouseTracking(true);
 }
 
@@ -42,7 +43,6 @@ bool ColorDisplay::isReadOnly() const
 
 void ColorDisplay::setReadOnly(bool ro)
 {
-	setMouseTracking(!ro);
 	_ro = ro;
 }
 
@@ -54,47 +54,53 @@ void ColorDisplay::paintEvent(QPaintEvent *)
 	int size = colors.size(), x;
 	// Colors
 	painter.setPen(QColor(0, 0, 0));
+	const int cellFullWidth = COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH;
 	for(int i=0 ; i<size ; ++i) {
-		x = i*10;
-		painter.drawRect(x, 0, 10, 10);
+		x = i * cellFullWidth;
+		painter.drawRect(x, 0, cellFullWidth, cellFullWidth);
 		gray = qGray(colors.at(i));
-		painter.fillRect(x+1, 1, 9, 9, isEnabled() ? QColor(colors.at(i)) : QColor(gray, gray, gray));
+		painter.fillRect(x+COLOR_DISPLAY_BORDER_WIDTH,
+						 COLOR_DISPLAY_BORDER_WIDTH,
+						 COLOR_DISPLAY_CELL_SIZE,
+						 COLOR_DISPLAY_CELL_SIZE,
+						 isEnabled() ? QColor(colors.at(i)) : QColor(gray, gray, gray));
 	}
 	// Red frame
-	if(isEnabled() && !isReadOnly()) {
+	if(isEnabled()) {
 		painter.setPen(QColor(0xFF, 0, 0));
 		QPoint cursor_position = this->mapFromGlobal(this->cursor().pos());
-		x = (int)(cursor_position.x()/10)*10;
-		if(x==this->width()-1)	x -= 10;
-			painter.drawRect(x, 0, 10, 10);
+		x = colorId(cursor_position) * cellFullWidth;
+		painter.drawRect(x, 0, cellFullWidth, cellFullWidth);
 	}
 	painter.end();
 }
 
-void ColorDisplay::enterEvent(QEvent *)
+int ColorDisplay::colorId(const QPoint &pos) const
 {
-	if(isReadOnly())	return;
+	return qMin(pos.x()/(COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH), colors.size() - 1);
+}
+
+void ColorDisplay::enterEvent(QMouseEvent *event)
+{
+	update();
+	emit colorHovered(colorId(event->pos()));
+}
+
+void ColorDisplay::leaveEvent(QMouseEvent *)
+{
 	update();
 }
 
-void ColorDisplay::leaveEvent(QEvent *)
+void ColorDisplay::mouseMoveEvent(QMouseEvent *event)
 {
-	if(isReadOnly())	return;
 	update();
-}
-
-void ColorDisplay::mouseMoveEvent(QMouseEvent *)
-{
-	if(isReadOnly())	return;
-	update();
+	emit colorHovered(colorId(event->pos()));
 }
 
 void ColorDisplay::mouseReleaseEvent(QMouseEvent *event)
 {
 	if(isReadOnly())	return;
-	int colorIndex = event->x()/10;
-	if(colorIndex >= colors.size())
-		colorIndex = colors.size()-1;
+	int colorIndex = colorId(event->pos());
 	QColor color = QColorDialog::getColor(colors.at(colorIndex), this, tr("Choisir une nouvelle couleur"));
 	if(color.isValid()) {
 		colors.replace(colorIndex, color.rgb());

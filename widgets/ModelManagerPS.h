@@ -36,9 +36,9 @@ protected:
 	FieldModelFile *modelData(QTreeWidgetItem *item);
 	FieldModelLoaderPS *modelLoader() const;
 	FieldPS *field() const;
+	QList<QRgb> lightColors(int modelID) const;
+	quint16 modelScale(int modelID) const;
 private:
-	QSpinBox *modelScale;
-	ColorDisplay *modelColorDisplay;
 };
 
 #endif // MODELMANAGERPS_H

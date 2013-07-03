@@ -24,10 +24,7 @@ ModelManagerPS::ModelManagerPS(const QGLWidget *shareWidget, QWidget *parent) :
 {
 	models->setColumnCount(1);
 
-	modelScale = new QSpinBox();
-	modelScale->setRange(0, 4096);
-	modelScale->setReadOnly(true);
-	modelColorDisplay = new ColorDisplay();
+	modelScaleWidget->setReadOnly(true);
 	modelColorDisplay->setReadOnly(true);
 
 	modelAnims->setColumnCount(1);
@@ -37,12 +34,13 @@ ModelManagerPS::ModelManagerPS(const QGLWidget *shareWidget, QWidget *parent) :
 	frameLayout->addWidget(new QLabel(tr("Inconnu")), 0, 0);
 	frameLayout->addWidget(modelUnknown, 0, 1);
 	frameLayout->addWidget(new QLabel(tr("Taille modèle")), 1, 0);
-	frameLayout->addWidget(modelScale, 1, 1);
+	frameLayout->addWidget(modelScaleWidget, 1, 1);
 	frameLayout->addWidget(new QLabel(tr("Lumière")), 2, 0);
 	frameLayout->addWidget(modelColorDisplay, 2, 1);
-	frameLayout->addWidget(modelAnims, 0, 2, 4, 1);
-	frameLayout->addWidget(modelWidget, 0, 3, 4, 1);
-	frameLayout->setRowStretch(3, 1);
+	frameLayout->addWidget(modelColorLabel, 3, 1);
+	frameLayout->addWidget(modelAnims, 0, 2, 5, 1);
+	frameLayout->addWidget(modelWidget, 0, 3, 5, 1);
+	frameLayout->setRowStretch(4, 1);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(models, 0, 0);
@@ -79,7 +77,7 @@ void ModelManagerPS::showModelInfos2(int row)
 	modelColorDisplay->blockSignals(true);
 
 	FieldModelFilePS *model = field()->fieldModel(currentModelID(), 0);
-	modelScale->setValue(model->scale());
+	modelScaleWidget->setValue(model->scale());
 	modelColorDisplay->setColors(model->lightColors());
 
 	modelColorDisplay->blockSignals(false);
@@ -100,4 +98,14 @@ FieldModelLoaderPS *ModelManagerPS::modelLoader() const
 FieldPS *ModelManagerPS::field() const
 {
 	return (FieldPS *)ModelManager::field();
+}
+
+QList<QRgb> ModelManagerPS::lightColors(int modelID) const
+{
+	return field()->fieldModel(modelID, 0)->lightColors();
+}
+
+quint16 ModelManagerPS::modelScale(int modelID) const
+{
+	return field()->fieldModel(modelID, 0)->scale();
 }

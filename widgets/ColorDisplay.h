@@ -20,6 +20,9 @@
 
 #include <QtGui>
 
+#define COLOR_DISPLAY_CELL_SIZE		9
+#define COLOR_DISPLAY_BORDER_WIDTH	1
+
 class ColorDisplay : public QWidget
 {
 	Q_OBJECT
@@ -31,15 +34,17 @@ public:
 	void setReadOnly(bool ro);
 signals:
 	void colorEdited(int id, QRgb value);
+	void colorHovered(int id);
 private:
+	int colorId(const QPoint &pos) const;
 	QList<QRgb> colors;
 	bool _ro;
 protected:
-	void paintEvent(QPaintEvent *);
-	void enterEvent(QEvent *);
-	void leaveEvent(QEvent *);
-	void mouseMoveEvent(QMouseEvent *);
-	void mouseReleaseEvent(QMouseEvent *);
+	void paintEvent(QPaintEvent *event);
+	void enterEvent(QMouseEvent *event);
+	void leaveEvent(QMouseEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
+	void mouseReleaseEvent(QMouseEvent *event);
 };
 
 #endif // COLORDISPLAY_H

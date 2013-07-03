@@ -36,11 +36,11 @@ protected:
 	FieldModelFile *modelData(QTreeWidgetItem *item);
 	FieldModelLoaderPC *modelLoader() const;
 	FieldPC *field() const;
+	QList<QRgb> lightColors(int modelID) const;
+	quint16 modelScale(int modelID) const;
 private:
 	QSpinBox *globalScale;
 	QLineEdit *modelName;
-	QSpinBox *modelScale;
-	ColorDisplay *modelColorDisplay;
 	QToolBar *toolBar2;
 private slots:
 	void setGlobalScale(int value);

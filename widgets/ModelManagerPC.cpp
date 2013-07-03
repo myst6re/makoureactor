@@ -36,9 +36,6 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 
 	modelName = new QLineEdit();
 	modelName->setMaxLength(256);
-	modelScale = new QSpinBox();
-	modelScale->setRange(0, 4096);
-	modelColorDisplay = new ColorDisplay();
 
 	toolBar2 = new QToolBar();
 	toolBar2->setIconSize(QSize(14, 14));
@@ -56,12 +53,14 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	frameLayout->addWidget(new QLabel(tr("Inconnu")), 1, 0);
 	frameLayout->addWidget(modelUnknown, 1, 1);
 	frameLayout->addWidget(new QLabel(tr("Taille modèle")), 2, 0);
-	frameLayout->addWidget(modelScale, 2, 1);
+	frameLayout->addWidget(modelScaleWidget, 2, 1);
 	frameLayout->addWidget(new QLabel(tr("Lumière")), 3, 0);
 	frameLayout->addWidget(modelColorDisplay, 3, 1);
+	frameLayout->addWidget(modelColorLabel, 4, 1);
 	frameLayout->addWidget(toolBar2, 0, 2);
-	frameLayout->addWidget(modelAnims, 1, 2, 4, 1);
-	frameLayout->addWidget(modelWidget, 0, 3, 5, 1);
+	frameLayout->addWidget(modelAnims, 1, 2, 5, 1);
+	frameLayout->addWidget(modelWidget, 0, 3, 6, 1);
+	frameLayout->setRowStretch(5, 1);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(toolBar1, 0, 0);
@@ -81,7 +80,7 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	connect(modelAnims, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOKAnim(QTreeWidgetItem *, int)));
 
 	connect(modelName, SIGNAL(textEdited(QString)), SLOT(setModelName(QString)));
-	connect(modelScale, SIGNAL(valueChanged(int)), SLOT(setModelScale(int)));
+	connect(modelScaleWidget, SIGNAL(valueChanged(int)), SLOT(setModelScale(int)));
 	connect(modelColorDisplay, SIGNAL(colorEdited(int,QRgb)), SLOT(setModelColor(int,QRgb)));
 }
 
@@ -123,15 +122,15 @@ void ModelManagerPC::setGlobalScale(int value)
 void ModelManagerPC::showModelInfos2(int row)
 {
 	modelName->blockSignals(true);
-	modelScale->blockSignals(true);
+	modelScaleWidget->blockSignals(true);
 	modelColorDisplay->blockSignals(true);
 
 	modelName->setText(modelLoader()->charName(row));
-	modelScale->setValue(modelLoader()->scale(row));
+	modelScaleWidget->setValue(modelLoader()->scale(row));
 	modelColorDisplay->setColors(modelLoader()->lightColors(row));
 
 	modelName->blockSignals(false);
-	modelScale->blockSignals(false);
+	modelScaleWidget->blockSignals(false);
 	modelColorDisplay->blockSignals(false);
 
 	ModelManager::showModelInfos2(row);
@@ -572,4 +571,14 @@ FieldModelLoaderPC *ModelManagerPC::modelLoader() const
 FieldPC *ModelManagerPC::field() const
 {
 	return (FieldPC *)ModelManager::field();
+}
+
+QList<QRgb> ModelManagerPC::lightColors(int modelID) const
+{
+	return modelLoader()->lightColors(modelID);
+}
+
+quint16 ModelManagerPC::modelScale(int modelID) const
+{
+	return modelLoader()->scale(modelID);
 }

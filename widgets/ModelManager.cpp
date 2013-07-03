@@ -38,6 +38,17 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	modelUnknown = new QSpinBox();
 	modelUnknown->setRange(0, 65535);
 
+	modelScaleWidget = new QSpinBox();
+	modelScaleWidget->setRange(0, 4096);
+	modelColorDisplay = new ColorDisplay();
+	modelColorLabel = new QLabel();
+	QPalette modelColorLabelPalette = modelColorLabel->palette();
+	modelColorLabelPalette.setColor(QPalette::Active, QPalette::WindowText,
+									modelColorLabelPalette.color(QPalette::Disabled, QPalette::WindowText));
+	modelColorLabelPalette.setColor(QPalette::Inactive, QPalette::WindowText,
+									modelColorLabelPalette.color(QPalette::Disabled, QPalette::WindowText));
+	modelColorLabel->setPalette(modelColorLabelPalette);
+
 	modelAnims = new QTreeWidget();
 	modelAnims->setColumnCount(2);
 	modelAnims->setIndentation(0);
@@ -55,6 +66,7 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	connect(models, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(showModelInfos(QTreeWidgetItem*,QTreeWidgetItem*)));
 	connect(modelAnims, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(showModel(QTreeWidgetItem*)));
 	connect(modelUnknown, SIGNAL(valueChanged(int)), SLOT(setModelUnknown(int)));
+	connect(modelColorDisplay, SIGNAL(colorHovered(int)), SLOT(setModelColorLabel(int)));
 }
 
 void ModelManager::clear()
@@ -177,6 +189,17 @@ void ModelManager::setModelUnknown(int unknown)
 	fieldModelLoader->setUnknown(modelID, unknown);
 
 	emit modified();
+}
+
+void ModelManager::setModelColorLabel(int colorId)
+{
+	int modelID = currentModelID();
+	if(modelID < 0)	return;
+
+	modelColorLabel->setText(QString("#%1")
+							 .arg(lightColors(modelID)
+								  .value(colorId) & 0xFFFFFF, 6, 16)
+							 .toUpper());
 }
 
 void ModelManager::showModel(QTreeWidgetItem *item)

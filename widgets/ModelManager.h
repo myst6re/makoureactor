@@ -40,12 +40,17 @@ protected:
 	virtual FieldModelFile *modelData(QTreeWidgetItem *item)=0;
 	virtual FieldModelLoader *modelLoader() const;
 	virtual Field *field() const;
+	virtual QList<QRgb> lightColors(int modelID) const=0;
+	virtual quint16 modelScale(int modelID) const=0;
 	int currentModelID(QTreeWidgetItem *item=0) const;
 	int currentAnimID(QTreeWidgetItem *item=0) const;
 
 	QTreeWidget *models;
 	QFrame *modelFrame;
 	QSpinBox *modelUnknown;
+	QSpinBox *modelScaleWidget;
+	ColorDisplay *modelColorDisplay;
+	QLabel *modelColorLabel;
 	QTreeWidget *modelAnims;
 	FieldModel *modelPreview;
 	QWidget *modelWidget;
@@ -58,6 +63,7 @@ private slots:
 	void showModelInfos(QTreeWidgetItem *, QTreeWidgetItem *);
 	void setModelUnknown(int unknown);
 	void showModel(QTreeWidgetItem *item);
+	void setModelColorLabel(int colorId);
 };
 
 #endif // MODELMANAGER_H

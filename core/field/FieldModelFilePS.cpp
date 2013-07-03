@@ -79,10 +79,11 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 	memcpy(&model, constData + offsetModelHeader, sizeof(Model));
 
 	_currentColors.clear();
-	_currentColors << COLORRGB_2_QRGB(model.color1) << COLORRGB_2_QRGB(model.color2) << COLORRGB_2_QRGB(model.color3)
-				   << COLORRGB_2_QRGB(model.color4) << COLORRGB_2_QRGB(model.color5) << COLORRGB_2_QRGB(model.color6)
-				   << COLORRGB_2_QRGB(model.color7) << COLORRGB_2_QRGB(model.color8) << COLORRGB_2_QRGB(model.color9)
-				   << COLORRGB_2_QRGB(model.color10);
+	// We put colors in the same order that the PC version
+	_currentColors << COLORRGB_2_QRGB(model.color4) << COLORRGB_2_QRGB(model.color2) << COLORRGB_2_QRGB(model.color3)
+				   << COLORRGB_2_QRGB(model.color7) << COLORRGB_2_QRGB(model.color5) << COLORRGB_2_QRGB(model.color6)
+				   << COLORRGB_2_QRGB(model.color10) << COLORRGB_2_QRGB(model.color8) << COLORRGB_2_QRGB(model.color9)
+				   << COLORRGB_2_QRGB(model.color1);
 
 	_currentScale = model.scale;
 
