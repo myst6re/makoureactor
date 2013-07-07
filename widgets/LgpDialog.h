@@ -26,14 +26,14 @@ class LgpDialog : public QDialog
 public:
 	LgpDialog(Lgp *lgp, QWidget *parent=0);
 private slots:
+	void renameCurrent();
 	void replaceCurrent();
 	void extractCurrent();
-	void pack();
 	void setButtonsState();
 private:
 	Lgp *lgp;
 	QTreeView *treeView;
-	QPushButton *extractButton, *replaceButton, *packButton;
+	QPushButton *extractButton, *renameButton, *replaceButton, *packButton;
 };
 
 #endif // LGPDIALOG_H

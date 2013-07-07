@@ -123,24 +123,52 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	treeView = new QTreeView(this);
 	treeView->setModel(model);
 
-//	replaceButton = new QPushButton(tr("Remplacer"), this);
+	renameButton = new QPushButton(tr("Renommer"), this);
+	replaceButton = new QPushButton(tr("Remplacer"), this);
 	extractButton = new QPushButton(tr("Extraire"), this);
-//	packButton = new QPushButton(tr("Créer l'archive modifiée"), this);
 
 	QHBoxLayout *barLayout = new QHBoxLayout;
-//	barLayout->addWidget(replaceButton);
+	barLayout->addWidget(renameButton);
+	barLayout->addWidget(replaceButton);
 	barLayout->addWidget(extractButton);
-//	barLayout->addWidget(packButton);
 	barLayout->addStretch();
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	layout->addLayout(barLayout);
 	layout->addWidget(treeView, 1);
 
-//	connect(replaceButton, SIGNAL(released()), SLOT(replaceCurrent()));
+	connect(renameButton, SIGNAL(released()), SLOT(renameCurrent()));
+	connect(replaceButton, SIGNAL(released()), SLOT(replaceCurrent()));
 	connect(extractButton, SIGNAL(released()), SLOT(extractCurrent()));
-//	connect(packButton, SIGNAL(released()), SLOT(pack()));
-	connect(treeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(setButtonsState()));
+	connect(treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(setButtonsState()));
+
+	setButtonsState();
+}
+
+void LgpDialog::renameCurrent()
+{
+	QModelIndex index = treeView->currentIndex();
+	if(index.isValid()) {
+		QString *filePath = (QString *)index.internalPointer();
+		if(filePath) {
+			bool ok;
+			QString newFilePath = QInputDialog::getText(this, tr("Renommer"), tr("Nouveau nom :"), QLineEdit::Normal,
+														*filePath, &ok, Qt::Dialog | Qt::WindowCloseButtonHint);
+			if(!ok) {
+				return;
+			}
+
+			if(!lgp->isNameValid(newFilePath)) {
+				QMessageBox::warning(this, tr("Erreur"), tr("Le nom '%1' est invalide, ne mettez pas de caractères spéciaux.")
+									 .arg(newFilePath));
+			} else if(lgp->fileExists(newFilePath)) {
+				QMessageBox::warning(this, tr("Erreur"), tr("Un fichier nommé '%1' existe déjà, veuillez choisir un autre nom.")
+									 .arg(newFilePath));
+			} else if(!lgp->renameFile(*filePath, newFilePath)) {
+				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de renommer le fichier"));
+			}
+		}
+	}
 }
 
 void LgpDialog::replaceCurrent()
@@ -210,36 +238,12 @@ void LgpDialog::extractCurrent()
 	}
 }
 
-void LgpDialog::pack()
-{
-	QString path = QFileDialog::getOpenFileName(this, tr("Enregistrer sous"), "", tr("Fichier Lgp (*.lgp)"));
-	if(path.isNull()) {
-		return;
-	}
-
-	QFileInfo info1(path), info2(lgp->fileName());
-	if(info1 == info2) {
-		QMessageBox::warning(this, tr("Action impossible"), tr("Merci de sélectionner un autre fichier que celui actuellement ouvert par le logiciel."));
-		return;
-	}
-
-	if(!lgp->pack(path)) {//TODO: observer
-		if(lgp->error() != Lgp::AbortError) {
-			QMessageBox::warning(this, tr("Erreur"), tr("Impossible de créer l'archive (message : %1).")
-								 .arg(lgp->errorString()));
-		} else {
-			return;
-		}
-	}
-}
-
 void LgpDialog::setButtonsState()
 {
-	/*QModelIndexList modelIndexList = treeView->selectionModel()->selectedRows();
-	if(!modelIndexList.isEmpty()) {
-		QModelIndex index = modelIndexList.first();
-		replaceButton->setEnabled(((IsoFileOrDirectory *)index.internalPointer())->isFile());
-	} else {
-		replaceButton->setEnabled(false);
-	}*/
+	QModelIndexList modelIndexList = treeView->selectionModel()->selectedRows();
+	bool enabled = !modelIndexList.isEmpty();
+
+	renameButton->setEnabled(enabled);
+	replaceButton->setEnabled(enabled);
+	extractButton->setEnabled(enabled);
 }

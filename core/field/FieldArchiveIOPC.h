@@ -38,7 +38,7 @@ protected:
 	FieldArchivePC *fieldArchive();
 };
 
-class FieldArchiveIOPCLgp : public FieldArchiveIOPC, LgpObserver
+class FieldArchiveIOPCLgp : public FieldArchiveIOPC, ArchiveObserver
 {
 public:
 	FieldArchiveIOPCLgp(const QString &path, FieldArchivePC *fieldArchive);

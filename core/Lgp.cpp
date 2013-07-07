@@ -140,7 +140,7 @@ QString LgpIterator::filePath() const
  * Constructs a new empty lgp archive.
  */
 Lgp::Lgp() :
-	_files(new LgpToc), _error(NoError)
+	Archive(), _files(new LgpToc), _error(NoError)
 {
 }
 
@@ -148,9 +148,8 @@ Lgp::Lgp() :
  * Constructs a new lgp archive object to represent the lgp archive with the given \a name.
  */
 Lgp::Lgp(const QString &name) :
-	_files(new LgpToc), _error(NoError)
+	Archive(name), _files(new LgpToc), _error(NoError)
 {
-	_file.setFileName(name);
 }
 
 /*!
@@ -158,10 +157,6 @@ Lgp::Lgp(const QString &name) :
  */
 Lgp::~Lgp()
 {
-	if(_file.isOpen()) {
-		_file.close();
-	}
-	_file.deleteLater();
 	delete _files;
 }
 
@@ -178,11 +173,11 @@ void Lgp::clear()
 /*!
  * Returns a list of file paths sorted by file position.
  */
-QStringList Lgp::fileList()
+QStringList Lgp::fileList() const
 {
 	QStringList ret;
 
-	if(_files->isEmpty() && !openHeader()) {
+	if(_files->isEmpty()) {
 		return ret;
 	}
 
@@ -196,12 +191,8 @@ QStringList Lgp::fileList()
 /*!
  * Returns the number of files in the archive, or -1 if there is an error.
  */
-int Lgp::fileCount()
+int Lgp::fileCount() const
 {
-	if(_files->isEmpty() && !openHeader()) {
-		return -1;
-	}
-
 	return _files->size();
 }
 
@@ -211,12 +202,6 @@ int Lgp::fileCount()
  */
 LgpIterator Lgp::iterator()
 {
-	if(_files->isEmpty()) {
-		if(!openHeader()) {
-			qWarning() << "Lgp::iterator() cannot open lgp header";
-		}
-	}
-
 	return LgpIterator(_files, &_file);
 }
 
@@ -224,7 +209,7 @@ LgpIterator Lgp::iterator()
  * Returns true if the file named \a filePath exists; otherwise
  * false.
  */
-bool Lgp::fileExists(const QString &filePath)
+bool Lgp::fileExists(const QString &filePath) const
 {
 	return headerEntry(filePath) != NULL;// need to open the header
 }
@@ -242,22 +227,6 @@ QIODevice *Lgp::file(const QString &filePath)
 }
 
 /*!
- * Returns the data for the file named \a filePath.
- * \sa file(), modifiedFile(), modifiedFileData()
- */
-QByteArray Lgp::fileData(const QString &filePath)
-{
-	QIODevice *io = file(filePath);
-	if(io == NULL || !io->open(QIODevice::ReadOnly)) {
-		qWarning() << "Lgp::fileData error";
-		return QByteArray();
-	}
-	QByteArray data = io->readAll();
-	io->close();
-	return data;
-}
-
-/*!
  * Returns the data, modified by setData if modified, for the file named \a filePath.
  * \sa file(), fileData(), modifiedFileData()
  */
@@ -270,26 +239,10 @@ QIODevice *Lgp::modifiedFile(const QString &filePath)
 }
 
 /*!
- * Returns the data, modified by setData if modified, for the file named \a filePath.
- * \sa file(), fileData(), modifiedFile()
- */
-QByteArray Lgp::modifiedFileData(const QString &filePath)
-{
-	QIODevice *io = modifiedFile(filePath);
-	if(io == NULL || !io->open(QIODevice::ReadOnly)) {
-		qWarning() << "fileData error";
-		return QByteArray();
-	}
-	QByteArray data = io->readAll();
-	io->close();
-	return data;
-}
-
-/*!
  * Change the \a data for the file named \a filePath.
  * Returns false if the file doesn't exists; otherwise
  * returns true.
- * \sa setFile()
+ * \sa setFileData()
  */
 bool Lgp::setFile(const QString &filePath, QIODevice *data)
 {
@@ -302,25 +255,10 @@ bool Lgp::setFile(const QString &filePath, QIODevice *data)
 }
 
 /*!
- * \overload
- *
- * Change the \a data for the file named \a filePath.
- * Returns false if the file doesn't exists; otherwise
- * returns true.
- * \sa setFile()
- */
-bool Lgp::setFile(const QString &filePath, const QByteArray &data)
-{
-	QBuffer *buf = new QBuffer();
-	buf->setData(data);
-	return setFile(filePath, buf);
-}
-
-/*!
  * Add a new file named \a filePath with \a data.
  * Returns false if the file exists; otherwise returns
  * true.
- * \sa addFile()
+ * \sa addFileData()
  */
 bool Lgp::addFile(const QString &filePath, QIODevice *data)
 {
@@ -340,27 +278,21 @@ bool Lgp::addFile(const QString &filePath, QIODevice *data)
 }
 
 /*!
- * \overload
- *
- * Add a new file named \a filePath with \a data.
- * Returns false if the file exists; otherwise returns
- * true.
- * \sa addFile()
- */
-bool Lgp::addFile(const QString &filePath, const QByteArray &data)
-{
-	QBuffer *buf = new QBuffer();
-	buf->setData(data);
-	return addFile(filePath, buf);
-}
-
-/*!
  * Remove the file named \a filePath.
  * Returns true if the file is successfully removed.
  */
 bool Lgp::removeFile(const QString &filePath)
 {
 	return _files->removeEntry(filePath);
+}
+
+/*!
+ * Check if the \a filePath is a valid name.
+ * Returns true if \a filePath is a valid name, false otherwise.
+ */
+bool Lgp::isNameValid(const QString &filePath) const
+{
+	return _files->isNameValid(filePath);
 }
 
 /*!
@@ -455,66 +387,9 @@ void Lgp::setProductName(const QString &productName)
 	_productName = productName;
 }
 
-LgpHeaderEntry *Lgp::headerEntry(const QString &filePath)
+LgpHeaderEntry *Lgp::headerEntry(const QString &filePath) const
 {
-	if(_files->isEmpty() && !openHeader()) {
-		return NULL;
-	}
-
 	return _files->entry(filePath);
-}
-
-/*!
- * Opens the lgp archive, returning true if successful;
- * otherwise false.
- * \sa isOpen(), close()
- */
-bool Lgp::open()
-{
-	if(!_file.exists()) {
-		return true; // Create the file
-	}
-
-	return _file.open(QIODevice::ReadOnly);
-}
-
-/*!
- * Returns true if the lgp archive is open;
- * returns false otherwise.
- * \sa open(), close()
- */
-bool Lgp::isOpen() const
-{
-	return _file.isOpen();
-}
-
-/*!
- * Closes the file.
- * \sa open(), isOpen()
- */
-void Lgp::close()
-{
-	_file.close();
-}
-
-/*!
- * Returns the name set by setFileName() or to the Lgp
- * constructors.
- * \sa setFileName(), QFile::fileName()
- */
-QString Lgp::fileName() const
-{
-	return _file.fileName();
-}
-
-/*!
- * Sets the \a name of the file.
- * Do not call this function if the file has already been opened.
- * \sa fileName(), QFile::setFileName()
- */
-void Lgp::setFileName(const QString &fileName)
-{
-	_file.setFileName(fileName);
 }
 
 bool Lgp::openHeader()
@@ -690,14 +565,8 @@ bool Lgp::openHeader()
  * \a observer is used to notify the progression of the save.
  * It can be NULL.
  */
-bool Lgp::pack(const QString &destination, LgpObserver *observer)
+bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 {
-	// Opens the header
-	if(_files->isEmpty() && !openHeader()) {
-		// Error setted by openHeader()
-		return false;
-	}
-
 	const int nbFiles = _files->size();
 	int fileId;
 
@@ -977,7 +846,7 @@ Lgp::LgpError Lgp::error() const
 void Lgp::setError(LgpError error, const QString &errorString)
 {
 	_error = error;
-	_errorString = errorString;
+	setErrorString(errorString);
 }
 
 /*!
@@ -987,15 +856,4 @@ void Lgp::setError(LgpError error, const QString &errorString)
 void Lgp::unsetError()
 {
 	setError(NoError);
-}
-
-/*!
- * Returns the last error message.
- * \sa unsetError(), error()
- */
-QString Lgp::errorString() const
-{
-	return _errorString.isEmpty()
-			? QLatin1String(QT_TRANSLATE_NOOP(Lgp, ("Unknown error")))
-			: _errorString;
 }

@@ -1279,8 +1279,13 @@ void Window::runFF7()
 	QString FF7Exe = Data::ff7AppPath();
 	QString FF7ExeDir = FF7Exe.left(FF7Exe.lastIndexOf('/'));
 
+#ifndef Q_OS_WIN32 // For others systems like Linux, we try to launch ff7 with WINE
+	FF7Exe.prepend("wine ");
+#endif
+
 	if(!QProcess::startDetached("\"" % FF7Exe % "\"", QStringList(), FF7ExeDir)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Final Fantasy VII n'a pas pu être lancé.\n%1").arg(FF7Exe));
+		QMessageBox::warning(this, tr("Erreur"), tr("Final Fantasy VII n'a pas pu être lancé.\n%1")
+							 .arg(QDir::toNativeSeparators(FF7Exe)));
 	}
 }
 

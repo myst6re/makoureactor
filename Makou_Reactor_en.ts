@@ -163,7 +163,7 @@
     <message>
         <location filename="widgets/ConfigWindow.cpp" line="101"/>
         <source>Lignes expansées par défaut</source>
-        <translation type="unfinished">Expand By Defult</translation>
+        <translation type="unfinished">Expand by default</translation>
     </message>
     <message>
         <location filename="widgets/ConfigWindow.cpp" line="112"/>
@@ -173,7 +173,7 @@
     <message>
         <location filename="widgets/ConfigWindow.cpp" line="114"/>
         <source>Ne pas vérifier strictement le format des fichiers</source>
-        <translation type="unfinished">Don&apos;t strictly varify the file format</translation>
+        <translation type="unfinished">Don&apos;t strictly verify the file format</translation>
     </message>
     <message>
         <location filename="widgets/ConfigWindow.cpp" line="120"/>

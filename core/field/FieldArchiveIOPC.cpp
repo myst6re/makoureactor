@@ -54,7 +54,7 @@ QByteArray FieldArchiveIOPCLgp::fieldData2(Field *field, bool unlzs)
 QByteArray FieldArchiveIOPCLgp::fileData2(const QString &fileName)
 {
 	if(!_lgp.isOpen() && !_lgp.open()) return QByteArray();
-	return _lgp.fileData(fileName);
+	return _lgp.modifiedFileData(fileName);
 }
 
 void FieldArchiveIOPCLgp::close()
@@ -138,7 +138,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, FieldA
 		TutFile *tut = itTut.value();
 
 		if(tut != NULL && tut->isModified()) {
-			if(!_lgp.setFile(itTut.key() + ".tut", tut->save())) {
+			if(!_lgp.setFileData(itTut.key() + ".tut", tut->save())) {
 				return FieldNotFound;
 			}
 		}

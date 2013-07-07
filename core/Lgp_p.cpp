@@ -290,6 +290,11 @@ bool LgpToc::removeEntry(const QString &filePath)
 	return _header.remove(v, e) > 0;
 }
 
+bool LgpToc::isNameValid(const QString &filePath) const
+{
+	return lookupValue(filePath) >= 0;
+}
+
 bool LgpToc::renameEntry(const QString &filePath, const QString &newFilePath)
 {
 	// Get file

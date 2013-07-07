@@ -112,6 +112,7 @@ public:
 	const QMultiHash<quint16, LgpHeaderEntry *> &table() const;
 	bool hasEntries(quint16 id) const;
 	bool removeEntry(const QString &filePath);
+	bool isNameValid(const QString &filePath) const;
 	bool renameEntry(const QString &filePath, const QString &newFilePath);
 	bool contains(const QString &filePath) const;
 	void clear();
