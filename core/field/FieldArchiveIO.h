@@ -19,17 +19,10 @@
 #define FIELDARCHIVEIO_H
 
 #include <QtCore>
+#include "core/Archive.h"
 
 class FieldArchive;
 class Field;
-
-struct FieldArchiveIOObserver
-{
-	FieldArchiveIOObserver() {}
-	virtual bool observerWasCanceled() const=0;
-	virtual void setObserverMaximum(unsigned int max)=0;
-	virtual void setObserverValue(int value)=0;
-};
 
 class FieldArchiveIO
 {
@@ -57,8 +50,8 @@ public:
 	virtual void clearCachedData();
 
 	virtual void close();
-	ErrorCode open(FieldArchiveIOObserver *observer=0);
-	ErrorCode save(const QString &path=QString(), FieldArchiveIOObserver *observer=0);
+	ErrorCode open(ArchiveObserver *observer=0);
+	ErrorCode save(const QString &path=QString(), ArchiveObserver *observer=0);
 
 	virtual QString path() const=0;
 	QString directory() const;
@@ -67,13 +60,13 @@ public:
 
 	virtual Type type() const=0;
 
-	virtual void *device()=0;
+	virtual Archive *device()=0;
 protected:
 	virtual QByteArray fieldData2(Field *field, bool unlzs)=0;
 	virtual QByteArray fileData2(const QString &fileName)=0;
 
-	virtual ErrorCode open2(FieldArchiveIOObserver *observer)=0;
-	virtual ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer)=0;
+	virtual ErrorCode open2(ArchiveObserver *observer)=0;
+	virtual ErrorCode save2(const QString &path, ArchiveObserver *observer)=0;
 	FieldArchive *fieldArchive();
 private:
 	FieldArchive *_fieldArchive;

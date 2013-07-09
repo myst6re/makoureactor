@@ -24,6 +24,7 @@
 #define LGP_H
 
 #include <QtCore>
+#include "QLockedFile.h"
 #include "Archive.h"
 
 class LgpHeaderEntry;

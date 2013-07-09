@@ -12,15 +12,24 @@
 /*!
  * Constructs a new empty archive.
  */
-Archive::Archive()
+Archive::Archive() :
+	_archiveIO(new QFile())
 {
 }
 
 /*!
- * Constructs a new archive object to represent the archive with the given \a name.
+ * Constructs a new archive object to represent the archive with the given \a filename.
  */
-Archive::Archive(const QString &name) :
-	_file(name)
+Archive::Archive(const QString &filename) :
+	_archiveIO(new QFile(filename))
+{
+}
+
+/*!
+ * Constructs a new archive object to represent the archive with the given \a device.
+ */
+Archive::Archive(QFile *device) :
+	_archiveIO(device)
 {
 }
 
@@ -29,10 +38,7 @@ Archive::Archive(const QString &name) :
  */
 Archive::~Archive()
 {
-	if(_file.isOpen()) {
-		_file.close();
-	}
-	_file.deleteLater();
+	_archiveIO->deleteLater();
 }
 
 /*!
@@ -104,8 +110,8 @@ bool Archive::addFileData(const QString &filePath, const QByteArray &data)
  */
 bool Archive::open()
 {
-	return !_file.exists() // Create the file
-			|| (_file.open(QIODevice::ReadOnly)
+	return !_archiveIO->exists() // Create the file
+			|| (_archiveIO->open(QIODevice::ReadOnly)
 				&& openHeader());
 }
 
@@ -116,7 +122,7 @@ bool Archive::open()
  */
 bool Archive::isOpen() const
 {
-	return _file.isOpen();
+	return _archiveIO->isOpen();
 }
 
 /*!
@@ -125,7 +131,7 @@ bool Archive::isOpen() const
  */
 void Archive::close()
 {
-	_file.close();
+	_archiveIO->close();
 }
 
 /*!
@@ -135,7 +141,7 @@ void Archive::close()
  */
 QString Archive::fileName() const
 {
-	return _file.fileName();
+	return _archiveIO->fileName();
 }
 
 /*!
@@ -145,7 +151,7 @@ QString Archive::fileName() const
  */
 void Archive::setFileName(const QString &fileName)
 {
-	_file.setFileName(fileName);
+	_archiveIO->setFileName(fileName);
 }
 
 /*!

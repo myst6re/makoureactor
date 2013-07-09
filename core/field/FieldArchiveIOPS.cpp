@@ -99,9 +99,9 @@ QString FieldArchiveIOPSFile::path() const
 	return fic.fileName();
 }
 
-void *FieldArchiveIOPSFile::device()
+Archive *FieldArchiveIOPSFile::device()
 {
-	return &fic;
+	return NULL;
 }
 
 QByteArray FieldArchiveIOPSFile::fieldData2(Field *field, bool unlzs)
@@ -141,7 +141,7 @@ void FieldArchiveIOPSFile::close()
 	FieldArchiveIO::close();
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::open2(FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::open2(ArchiveObserver *observer)
 {
 	Q_UNUSED(observer)
 
@@ -151,7 +151,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::open2(FieldArchiveIOObserver *ob
 	return fieldArchive()->field(0)->isOpen() ? Ok : Invalid;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::save2(const QString &path0, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::save2(const QString &path0, ArchiveObserver *observer)
 {
 	Q_UNUSED(observer)
 	QString path = path0.isNull() ? fic.fileName() : path0;
@@ -177,9 +177,9 @@ QString FieldArchiveIOPSIso::path() const
 	return iso.fileName();
 }
 
-void *FieldArchiveIOPSIso::device()
+Archive *FieldArchiveIOPSIso::device()
 {
-	return &iso;
+	return NULL;
 }
 
 QByteArray FieldArchiveIOPSIso::fieldData2(Field *field, bool unlzs)
@@ -202,7 +202,7 @@ QByteArray FieldArchiveIOPSIso::fileData2(const QString &fileName)
 	return iso.file(isoFieldDirectory->file(fileName.toUpper()));
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 {
 	if(!iso.isOpen() && !iso.open(QIODevice::ReadOnly)) {
 		return ErrorOpening;
@@ -242,7 +242,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(FieldArchiveIOObserver *obs
 	return Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, ArchiveObserver *observer)
 {
 	QString path = path0.isNull() ? iso.fileName() : path0;
 
@@ -402,9 +402,9 @@ QString FieldArchiveIOPSDir::path() const
 	return dir.path();
 }
 
-void *FieldArchiveIOPSDir::device()
+Archive *FieldArchiveIOPSDir::device()
 {
-	return &dir;
+	return NULL;
 }
 
 QByteArray FieldArchiveIOPSDir::fieldData2(Field *field, bool unlzs)
@@ -434,7 +434,7 @@ QByteArray FieldArchiveIOPSDir::fileData2(const QString &fileName)
 	return data;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::open2(FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::open2(ArchiveObserver *observer)
 {
 	QStringList list;
 	list.append("*.DAT");
@@ -463,7 +463,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::open2(FieldArchiveIOObserver *obs
 	return Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, ArchiveObserver *observer)
 {
 	bool saveAs;
 

@@ -88,14 +88,14 @@ public:
 					 const QMap<Field::FieldSection, QString> &toImport);
 
 	virtual FieldArchiveIO *io() const;
-	inline void setObserver(FieldArchiveIOObserver *observer) {
+	inline void setObserver(ArchiveObserver *observer) {
 		_observer = observer;
 	}
 
 protected:
 	virtual void setSaved();
 	void setIO(FieldArchiveIO *io);
-	inline FieldArchiveIOObserver *observer() const {
+	inline ArchiveObserver *observer() const {
 		return _observer;
 	}
 private:
@@ -109,7 +109,7 @@ private:
 	QMultiMap<QString, int> fieldsSortByMapId;
 
 	FieldArchiveIO *_io;
-	FieldArchiveIOObserver *_observer;
+	ArchiveObserver *_observer;
 	// QFileSystemWatcher fileWatcher;
 };
 

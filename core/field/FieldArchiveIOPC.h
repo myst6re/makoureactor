@@ -48,7 +48,7 @@ public:
 
 	QString path() const;
 
-	void *device();
+	Archive *device();
 
 	void setObserverValue(int value) {
 		if(observer)	observer->setObserverValue(value);
@@ -63,11 +63,11 @@ private:
 	QByteArray fieldData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
-	ErrorCode open2(FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer);
+	ErrorCode save2(const QString &path, ArchiveObserver *observer);
 
 	::Lgp _lgp;
-	FieldArchiveIOObserver *observer;
+	ArchiveObserver *observer;
 };
 
 class FieldArchiveIOPCFile : public FieldArchiveIOPC
@@ -80,13 +80,13 @@ public:
 
 	QString path() const;
 
-	void *device();
+	Archive *device();
 private:
 	QByteArray fieldData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
-	ErrorCode open2(FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer);
+	ErrorCode save2(const QString &path, ArchiveObserver *observer);
 
 	QLockedFile fic;
 };
@@ -100,13 +100,13 @@ public:
 	QString path() const;
 	inline bool hasName() const { return false; }
 
-	void *device();
+	Archive *device();
 private:
 	QByteArray fieldData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
-	ErrorCode open2(FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer);
+	ErrorCode save2(const QString &path, ArchiveObserver *observer);
 
 	QDir dir;
 };

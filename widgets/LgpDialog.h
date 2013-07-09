@@ -6,6 +6,7 @@
 
 class LgpItemModel : public QAbstractItemModel
 {
+	Q_OBJECT
 public:
 	LgpItemModel(Lgp *lgp, QObject *parent=0);
 	QModelIndex index(int row, int column, const QModelIndex &parent=QModelIndex()) const;
@@ -20,20 +21,28 @@ private:
 	QIcon fileIcon;
 };
 
-class LgpDialog : public QDialog
+class LgpDialog : public QDialog, ArchiveObserver
 {
 	Q_OBJECT
 public:
 	LgpDialog(Lgp *lgp, QWidget *parent=0);
+
+	bool observerWasCanceled() const;
+	void setObserverMaximum(unsigned int max);
+	void setObserverValue(int value);
+signals:
+	void modified();
 private slots:
 	void renameCurrent();
 	void replaceCurrent();
 	void extractCurrent();
 	void setButtonsState();
+	void pack();
 private:
 	Lgp *lgp;
 	QTreeView *treeView;
 	QPushButton *extractButton, *renameButton, *replaceButton, *packButton;
+	QProgressDialog *progressDialog;
 };
 
 #endif // LGPDIALOG_H

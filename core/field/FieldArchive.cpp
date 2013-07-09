@@ -230,7 +230,7 @@ void FieldArchive::searchAll()
 //			if(!field->name().startsWith("ancnt3")) {
 //				continue;
 //			}
-			break;
+//			break;
 			if(field->name().compare("startmap") == 0) {
 				continue;
 			}

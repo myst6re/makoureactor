@@ -37,7 +37,7 @@
 #include "widgets/LgpDialog.h"
 //#include "FieldModelThread.h"
 
-class Window : public QMainWindow, FieldArchiveIOObserver
+class Window : public QMainWindow, ArchiveObserver
 {
     Q_OBJECT
 public:

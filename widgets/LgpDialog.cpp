@@ -122,15 +122,22 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	LgpItemModel *model = new LgpItemModel(lgp);
 	treeView = new QTreeView(this);
 	treeView->setModel(model);
+	treeView->setUniformRowHeights(true);
+	treeView->header()->setResizeMode(0, QHeaderView::Stretch);
+	treeView->header()->setStretchLastSection(false);
 
 	renameButton = new QPushButton(tr("Renommer"), this);
 	replaceButton = new QPushButton(tr("Remplacer"), this);
 	extractButton = new QPushButton(tr("Extraire"), this);
+	packButton = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton),
+								 tr("Sauvegarder"), this);
+	packButton->setEnabled(false);
 
 	QHBoxLayout *barLayout = new QHBoxLayout;
 	barLayout->addWidget(renameButton);
 	barLayout->addWidget(replaceButton);
 	barLayout->addWidget(extractButton);
+	barLayout->addWidget(packButton);
 	barLayout->addStretch();
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
@@ -140,6 +147,7 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	connect(renameButton, SIGNAL(released()), SLOT(renameCurrent()));
 	connect(replaceButton, SIGNAL(released()), SLOT(replaceCurrent()));
 	connect(extractButton, SIGNAL(released()), SLOT(extractCurrent()));
+	connect(packButton, SIGNAL(released()), SLOT(pack()));
 	connect(treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(setButtonsState()));
 
 	setButtonsState();
@@ -166,6 +174,10 @@ void LgpDialog::renameCurrent()
 									 .arg(newFilePath));
 			} else if(!lgp->renameFile(*filePath, newFilePath)) {
 				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de renommer le fichier"));
+			} else {
+				//TODO: update view
+				emit modified();
+				packButton->setEnabled(true);
 			}
 		}
 	}
@@ -192,6 +204,10 @@ void LgpDialog::replaceCurrent()
 
 			if(!lgp->setFile(*filePath, new QFile(path))) {
 				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de modifier l'archive !"));
+			} else {
+				//TODO: update view (file size)
+				emit modified();
+				packButton->setEnabled(true);
 			}
 		}
 	}
@@ -236,6 +252,56 @@ void LgpDialog::extractCurrent()
 			}
 		}
 	}
+}
+
+void LgpDialog::pack()
+{
+	QString path = QFileDialog::getSaveFileName(this, tr("Enregistrer sous"), lgp->fileName(), tr("Fichier Lgp (*.lgp)"));
+	if(path.isNull()) {
+		return;
+	}
+
+//	QFileInfo info1(path), info2(lgp->fileName());
+//	if(info1 == info2) {
+//		QMessageBox::warning(this, tr("Action impossible"), tr("Merci de sélectionner un autre fichier que celui actuellement ouvert par le logiciel."));
+//		return;
+//	}
+
+	progressDialog = new QProgressDialog(tr("Sauvegarde..."), tr("Annuler"), 0, 0, this, Qt::Dialog | Qt::WindowCloseButtonHint);
+	progressDialog->setWindowModality(Qt::WindowModal);
+	progressDialog->setAutoClose(false);
+	progressDialog->show();
+
+	bool ok = lgp->pack(path, this);
+
+	progressDialog->hide();
+	progressDialog->deleteLater();
+
+	if(!ok) {
+		if(lgp->error() != Lgp::AbortError) {
+			QMessageBox::warning(this, tr("Erreur"), tr("Impossible de créer l'archive (message : %1).")
+								 .arg(lgp->errorString()));
+		}
+	} else {
+		packButton->setEnabled(false);
+	}
+}
+
+bool LgpDialog::observerWasCanceled() const
+{
+	return progressDialog->wasCanceled();
+}
+
+void LgpDialog::setObserverMaximum(unsigned int max)
+{
+	progressDialog->setMaximum(max);
+}
+
+void LgpDialog::setObserverValue(int value)
+{
+	QApplication::processEvents();
+
+	progressDialog->setValue(value);
 }
 
 void LgpDialog::setButtonsState()

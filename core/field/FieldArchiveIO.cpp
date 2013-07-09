@@ -126,14 +126,14 @@ void FieldArchiveIO::close()
 	clearCachedData();
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIO::open(FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIO::open(ArchiveObserver *observer)
 {
 	clearCachedData();
 
 	return open2(observer);
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIO::save(const QString &path, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIO::save(const QString &path, ArchiveObserver *observer)
 {
 	ErrorCode error = save2(path, observer);
 	if(error == Ok) {

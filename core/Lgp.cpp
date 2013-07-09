@@ -140,7 +140,7 @@ QString LgpIterator::filePath() const
  * Constructs a new empty lgp archive.
  */
 Lgp::Lgp() :
-	Archive(), _files(new LgpToc), _error(NoError)
+	Archive(new QLockedFile()), _files(new LgpToc), _error(NoError)
 {
 }
 
@@ -148,7 +148,7 @@ Lgp::Lgp() :
  * Constructs a new lgp archive object to represent the lgp archive with the given \a name.
  */
 Lgp::Lgp(const QString &name) :
-	Archive(name), _files(new LgpToc), _error(NoError)
+	Archive(new QLockedFile(name)), _files(new LgpToc), _error(NoError)
 {
 }
 
@@ -202,7 +202,7 @@ int Lgp::fileCount() const
  */
 LgpIterator Lgp::iterator()
 {
-	return LgpIterator(_files, &_file);
+	return LgpIterator(_files, archiveIO());
 }
 
 /*!
@@ -223,7 +223,7 @@ QIODevice *Lgp::file(const QString &filePath)
 	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
 	if(entry == NULL) return NULL;
 
-	return entry->file(&_file);
+	return entry->file(archiveIO());
 }
 
 /*!
@@ -235,7 +235,7 @@ QIODevice *Lgp::modifiedFile(const QString &filePath)
 	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
 	if(entry == NULL) return NULL;
 
-	return entry->modifiedFile(&_file);
+	return entry->modifiedFile(archiveIO());
 }
 
 /*!
@@ -265,7 +265,7 @@ bool Lgp::addFile(const QString &filePath, QIODevice *data)
 	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
 	if(entry != NULL) return false;
 
-	entry = new LgpHeaderEntry(filePath, _file.size());
+	entry = new LgpHeaderEntry(filePath, archiveIO()->size());
 	entry->setModifiedFile(data);
 
 	bool ret = _files->addEntry(entry);
@@ -311,10 +311,10 @@ bool Lgp::openCompanyName()
 		return false;
 	}
 
-	if(!_file.reset()) {
+	if(!archiveIO()->reset()) {
 		return false;
 	}
-	QByteArray companyData = _file.read(12);
+	QByteArray companyData = archiveIO()->read(12);
 	if(companyData.size() != 12) {
 		return false;
 	}
@@ -357,10 +357,10 @@ bool Lgp::openProductName()
 		return false;
 	}
 
-	if(!_file.seek(_file.size() - 14)) {
+	if(!archiveIO()->seek(archiveIO()->size() - 14)) {
 		return false;
 	}
-	_productName = _file.read(14);
+	_productName = archiveIO()->read(14);
 
 	return true;
 }
@@ -394,7 +394,7 @@ LgpHeaderEntry *Lgp::headerEntry(const QString &filePath) const
 
 bool Lgp::openHeader()
 {
-	if(!_file.exists()) {
+	if(!archiveIO()->exists()) {
 		return true; // Create the file
 	}
 
@@ -404,14 +404,14 @@ bool Lgp::openHeader()
 		return false;
 	}
 
-	if(!_file.seek(12)) {
+	if(!archiveIO()->seek(12)) {
 		setError(PositionError);
 		return false;
 	}
 
 	qint32 fileCount;
 
-	if(_file.read((char *)&fileCount, 4) != 4) {
+	if(archiveIO()->read((char *)&fileCount, 4) != 4) {
 		setError(ReadError);
 		return false;
 	}
@@ -426,7 +426,7 @@ bool Lgp::openHeader()
 	}
 
 	const qint32 sizeToc = fileCount * 27;
-	QByteArray headerData = _file.read(sizeToc);
+	QByteArray headerData = archiveIO()->read(sizeToc);
 
 	if(headerData.size() != sizeToc) {
 		setError(ReadError);
@@ -464,7 +464,7 @@ bool Lgp::openHeader()
 	if(hasConflict) {
 
 		// Lookup table ignored
-		if(!_file.seek(_file.pos() + LOOKUP_TABLE_ENTRIES * 4)) {
+		if(!archiveIO()->seek(archiveIO()->pos() + LOOKUP_TABLE_ENTRIES * 4)) {
 			setError(PositionError);
 			return false;
 		}
@@ -472,7 +472,7 @@ bool Lgp::openHeader()
 		// Open conflicts
 		quint16 conflictCount;
 
-		if(_file.read((char *)&conflictCount, 2) != 2) {
+		if(archiveIO()->read((char *)&conflictCount, 2) != 2) {
 			setError(ReadError);
 			return false;
 		}
@@ -481,13 +481,13 @@ bool Lgp::openHeader()
 			quint16 conflictEntryCount;
 
 			// Open conflict entries
-			if(_file.read((char *)&conflictEntryCount, 2) != 2) {
+			if(archiveIO()->read((char *)&conflictEntryCount, 2) != 2) {
 				setError(ReadError);
 				return false;
 			}
 
 			const qint32 sizeConflicData = conflictEntryCount * 130;
-			QByteArray conflictData = _file.read(sizeConflicData);
+			QByteArray conflictData = archiveIO()->read(sizeConflicData);
 
 			if(conflictData.size() != sizeConflicData) {
 				setError(ReadError);
@@ -579,7 +579,7 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 	QString destPath = destination;
 
 	if(destination.isEmpty()) {
-		QFileInfo fileInfo(_file);
+		QFileInfo fileInfo(*archiveIO());
 		destPath = fileInfo.absoluteFilePath();
 	}
 
@@ -808,7 +808,7 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 		}
 	}
 
-	_file.close();
+	archiveIO()->close();
 
 	// Remove destination file
 	if(QFile::exists(destPath)) {
@@ -826,7 +826,7 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 	}
 
 	// Now the archive is located in "destination"
-	_file.setFileName(destPath);
+	setFileName(destPath);
 
 	*_files = newToc;
 	setError(NoError);

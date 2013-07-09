@@ -41,7 +41,7 @@ QString FieldArchiveIOPCLgp::path() const
 	return _lgp.fileName();
 }
 
-void *FieldArchiveIOPCLgp::device()
+Archive *FieldArchiveIOPCLgp::device()
 {
 	return &_lgp;
 }
@@ -63,7 +63,7 @@ void FieldArchiveIOPCLgp::close()
 	FieldArchiveIO::close();
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(ArchiveObserver *observer)
 {
 	if(!_lgp.isOpen() && !_lgp.open()) {
 		return ErrorOpening;
@@ -113,7 +113,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(FieldArchiveIOObserver *obs
 	return Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, ArchiveObserver *observer)
 {
 	if(!_lgp.isOpen() && !_lgp.open()) {
 		return ErrorOpening;
@@ -182,9 +182,9 @@ QString FieldArchiveIOPCFile::path() const
 	return fic.fileName();
 }
 
-void *FieldArchiveIOPCFile::device()
+Archive *FieldArchiveIOPCFile::device()
 {
-	return &fic;
+	return NULL;
 }
 
 QByteArray FieldArchiveIOPCFile::fieldData2(Field *field, bool unlzs)
@@ -210,7 +210,7 @@ void FieldArchiveIOPCFile::close()
 	FieldArchiveIO::close();
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPCFile::open2(FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPCFile::open2(ArchiveObserver *observer)
 {
 	Q_UNUSED(observer)
 
@@ -220,7 +220,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCFile::open2(FieldArchiveIOObserver *ob
 	return fieldArchive()->field(0)->isOpen() ? Ok : Invalid;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPCFile::save2(const QString &path0, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPCFile::save2(const QString &path0, ArchiveObserver *observer)
 {
 	Q_UNUSED(observer)
 	QString path = path0.isNull() ? fic.fileName() : path0;
@@ -246,9 +246,9 @@ QString FieldArchiveIOPCDir::path() const
 	return dir.path();
 }
 
-void *FieldArchiveIOPCDir::device()
+Archive *FieldArchiveIOPCDir::device()
 {
-	return &dir;
+	return NULL;
 }
 
 QByteArray FieldArchiveIOPCDir::fieldData2(Field *field, bool unlzs)
@@ -268,7 +268,7 @@ QByteArray FieldArchiveIOPCDir::fileData2(const QString &fileName)
 	return data;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::open2(FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::open2(ArchiveObserver *observer)
 {
 	QStringList list;
 	list.append("*");
@@ -303,7 +303,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::open2(FieldArchiveIOObserver *obs
 	return Ok;
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, FieldArchiveIOObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, ArchiveObserver *observer)
 {
 	bool saveAs;
 

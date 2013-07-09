@@ -56,15 +56,15 @@ public:
 
 	QString path() const;
 
-	void *device();
+	Archive *device();
 private:
 	QByteArray fieldData2(Field *field, bool unlzs);
 	QByteArray mimData2(Field *field, bool unlzs);
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
-	ErrorCode open2(FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer);
+	ErrorCode save2(const QString &path, ArchiveObserver *observer);
 
 	QLockedFile fic;
 };
@@ -77,7 +77,7 @@ public:
 
 	QString path() const;
 
-	void *device();
+	Archive *device();
 
 	void setIsoOut(int value) {
 		if(observer)	observer->setObserverValue(value);
@@ -91,14 +91,14 @@ private:
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
-	ErrorCode open2(FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer);
+	ErrorCode save2(const QString &path, ArchiveObserver *observer);
 
 	static QByteArray updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory);
 
 	IsoArchive iso;
 	IsoDirectory *isoFieldDirectory;
-	FieldArchiveIOObserver *observer;
+	ArchiveObserver *observer;
 };
 
 class FieldArchiveIOPSDir : public FieldArchiveIOPS
@@ -110,15 +110,15 @@ public:
 	QString path() const;
 	inline bool hasName() const { return false; }
 
-	void *device();
+	Archive *device();
 private:
 	QByteArray fieldData2(Field *field, bool unlzs);
 	QByteArray mimData2(Field *field, bool unlzs);
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
-	ErrorCode open2(FieldArchiveIOObserver *observer);
-	ErrorCode save2(const QString &path, FieldArchiveIOObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer);
+	ErrorCode save2(const QString &path, ArchiveObserver *observer);
 
 	QDir dir;
 };

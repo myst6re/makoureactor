@@ -324,7 +324,9 @@ void Search::setFieldArchive(FieldArchive *fieldArchive)
 
 void Search::setOpcode(int opcode)
 {
-	this->opcode->setCurrentIndex(opcode);
+	if(opcode >= 0 && opcode < this->opcode->count()) {
+		this->opcode->setCurrentIndex(opcode);
+	}
 }
 
 void Search::setText(const QString &text)

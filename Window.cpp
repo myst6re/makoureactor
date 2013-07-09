@@ -70,8 +70,8 @@ Window::Window() :
 	actionExport = menu->addAction(tr("&Exporter l'écran courant..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
 	actionMassExport = menu->addAction(tr("Exporter en &masse..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
 	actionImport = menu->addAction(tr("&Importer dans l'écran courant..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
-	actionMassImport = menu->addAction(tr("Importer en m&asse..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
-	actionArchive = menu->addAction(tr("&Gestionnaire d'archive..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
+//	actionMassImport = menu->addAction(tr("Importer en m&asse..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
+	actionArchive = menu->addAction(tr("Ges&tionnaire d'archive..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
 	menu->addSeparator();
 	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("Fe&rmer"), this, SLOT(closeFile()));
 	menu->addAction(tr("&Quitter"), this, SLOT(close()), QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
@@ -81,7 +81,7 @@ Window::Window() :
 	menu->addAction(tr("&Textes..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
 	actionModels = menu->addAction(tr("&Modèles 3D..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
 	actionEncounter = menu->addAction(tr("&Rencontres aléatoires..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
-	menu->addAction(tr("&Tutoriels/Musiques..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
+	menu->addAction(tr("T&utoriels/Musiques..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
 	menu->addAction(tr("&Zones..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
 	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("&Divers..."), this, SLOT(miscManager()));
@@ -93,7 +93,7 @@ Window::Window() :
 
 	menu = menuBar->addMenu(tr("&Paramètres"));
 
-	actionJp_txt = menu->addAction(tr("Caractères japonais"), this, SLOT(jpText(bool)));
+	actionJp_txt = menu->addAction(tr("Caractères &japonais"), this, SLOT(jpText(bool)));
 	actionJp_txt->setCheckable(true);
 	actionJp_txt->setChecked(Config::value("jp_txt", false).toBool());
 
@@ -117,7 +117,7 @@ Window::Window() :
 	}
 	connect(menuLang, SIGNAL(triggered(QAction*)), this, SLOT(changeLanguage(QAction*)));
 
-	menu->addAction(tr("Configuration..."), this, SLOT(config()))->setMenuRole(QAction::PreferencesRole);
+	menu->addAction(tr("&Configuration..."), this, SLOT(config()))->setMenuRole(QAction::PreferencesRole);
 
 	toolBar = new QToolBar(tr("Barre d'outils &principale"));
 	toolBar->setObjectName("toolbar");
@@ -436,7 +436,7 @@ int Window::closeFile(bool quit)
 		actionSaveAs->setEnabled(false);
 		actionExport->setEnabled(false);
 		actionMassExport->setEnabled(false);
-		actionMassImport->setEnabled(false);
+//		actionMassImport->setEnabled(false);
 		actionImport->setEnabled(false);
 		actionArchive->setEnabled(false);
 		actionClose->setEnabled(false);
@@ -662,7 +662,7 @@ void Window::open(const QString &cheminFic, bool isDir)
 		actionMiscOperations->setEnabled(true);
 		actionExport->setEnabled(true);
 		actionMassExport->setEnabled(true);
-		actionMassImport->setEnabled(true);
+//		actionMassImport->setEnabled(true);
 		actionImport->setEnabled(true);
 		actionModels->setEnabled(true);
 	}
@@ -1278,12 +1278,16 @@ void Window::runFF7()
 {
 	QString FF7Exe = Data::ff7AppPath();
 	QString FF7ExeDir = FF7Exe.left(FF7Exe.lastIndexOf('/'));
+	QStringList args;
 
 #ifndef Q_OS_WIN32 // For others systems like Linux, we try to launch ff7 with WINE
-	FF7Exe.prepend("wine ");
+	args.append(FF7Exe);
+	FF7Exe = "wine";
+#else
+	FF7Exe = "\"" % FF7Exe % "\"";
 #endif
 
-	if(!QProcess::startDetached("\"" % FF7Exe % "\"", QStringList(), FF7ExeDir)) {
+	if(!QProcess::startDetached(FF7Exe, args, FF7ExeDir)) {
 		QMessageBox::warning(this, tr("Erreur"), tr("Final Fantasy VII n'a pas pu être lancé.\n%1")
 							 .arg(QDir::toNativeSeparators(FF7Exe)));
 	}

@@ -148,7 +148,7 @@
     <message utf8="true">
         <location filename="widgets/ConfigWindow.cpp" line="83"/>
         <source>Optimiser automatiquement les duos de caractères « .  », « .&quot; » et « …&quot; ».</source>
-        <translation>Automatically optimize the pairs of characters “. ”, “.&quot;” et “…&quot;”.</translation>
+        <translation>Automatically optimize the pairs of characters “. ”, “.&quot;” and “…&quot;”.</translation>
     </message>
     <message>
         <location filename="widgets/ConfigWindow.cpp" line="86"/>
@@ -163,7 +163,7 @@
     <message>
         <location filename="widgets/ConfigWindow.cpp" line="101"/>
         <source>Lignes expansées par défaut</source>
-        <translation type="unfinished">Expand by default</translation>
+        <translation>Expand lines by default</translation>
     </message>
     <message>
         <location filename="widgets/ConfigWindow.cpp" line="112"/>
@@ -173,7 +173,7 @@
     <message>
         <location filename="widgets/ConfigWindow.cpp" line="114"/>
         <source>Ne pas vérifier strictement le format des fichiers</source>
-        <translation type="unfinished">Don&apos;t strictly verify the file format</translation>
+        <translation>Don&apos;t strictly verify the file format</translation>
     </message>
     <message>
         <location filename="widgets/ConfigWindow.cpp" line="120"/>
@@ -303,7 +303,7 @@
     <message>
         <location filename="widgets/EncounterTableWidget.cpp" line="122"/>
         <source>Fréquence des combats : %1/255</source>
-        <translation>Frequency Of Combat : %1/255</translation>
+        <translation>Battle rate: %1/255</translation>
     </message>
     <message>
         <source>Fréquence des combats : %1 (%2/255)</source>
@@ -340,7 +340,7 @@
     <message>
         <location filename="widgets/EncounterWidget.cpp" line="30"/>
         <source>&lt;b&gt;Les rencontres :&lt;/b&gt; Il y a deux groupes de rencontres aléatoires indépendants, par défaut c&apos;est le groupe 1 qui est actif, mais la commande BTLTB (dans les scripts) permet de passer au groupe 2.&lt;br/&gt;&lt;b&gt;Fréquence des combats :&lt;/b&gt; Plus la valeur est basse, plus les combats seront fréquents.</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Encounters:&lt;/b&gt; There are two groups of independent encounters, by default it is the group 1 that is active, but the opcode BTLTB (in scripts) can modify to the group 2.&lt;br/&gt;&lt;b&gt;Battle Rate:&lt;/b&gt; The lower the percentage, the higher the fighting will be frequent.</translation>
     </message>
     <message>
         <source>&lt;b&gt;Les rencontres :&lt;/b&gt; Il y a deux groupes de rencontres aléatoires indépendants, par défaut c&apos;est le groupe 1 qui est actif, mais la commande BTLTB (dans les scripts) permet de passer au groupe 2.&lt;br/&gt;&lt;b&gt;Fréquence des combats :&lt;/b&gt; Plus le pourcentage est élevé, plus les combats seront fréquents.</source>
@@ -401,7 +401,7 @@
         <location filename="widgets/FontWidget.cpp" line="37"/>
         <location filename="widgets/FontWidget.cpp" line="39"/>
         <source>À partir d&apos;une image...</source>
-        <translation type="unfinished">From Image...</translation>
+        <translation>From Image...</translation>
     </message>
     <message>
         <location filename="widgets/FontWidget.cpp" line="43"/>
@@ -416,7 +416,7 @@
     <message>
         <location filename="widgets/FontWidget.cpp" line="45"/>
         <source>Annuler les modifications</source>
-        <translation type="unfinished">Cancel Changes</translation>
+        <translation>Cancel Changes</translation>
     </message>
     <message>
         <location filename="widgets/FontWidget.cpp" line="102"/>
@@ -426,13 +426,13 @@
     <message>
         <location filename="widgets/FontWidget.cpp" line="166"/>
         <source>Fichier police FF7 (*.bin)</source>
-        <translation type="unfinished">FF7 Font file (*.bin)</translation>
+        <translation>FF7 font file (*.bin)</translation>
     </message>
     <message>
         <location filename="widgets/FontWidget.cpp" line="167"/>
         <location filename="widgets/FontWidget.cpp" line="239"/>
         <source>Fichier police FF8 (*.tdw)</source>
-        <translation type="unfinished">FF8 Font file (*.tdw)</translation>
+        <translation>FF8 font file (*.tdw)</translation>
     </message>
     <message>
         <location filename="widgets/FontWidget.cpp" line="168"/>
@@ -452,12 +452,12 @@
     <message>
         <location filename="widgets/FontWidget.cpp" line="174"/>
         <source>Fichier traduction %1 (*.txt)</source>
-        <translation type="unfinished"></translation>
+        <translation>Translation file %1 (*.txt)</translation>
     </message>
     <message>
         <location filename="widgets/FontWidget.cpp" line="177"/>
         <source>Exporter police de caractère</source>
-        <translation type="unfinished">Export Font</translation>
+        <translation>Export font</translation>
     </message>
     <message>
         <location filename="widgets/FontWidget.cpp" line="215"/>
@@ -470,17 +470,17 @@
         <location filename="widgets/FontWidget.cpp" line="215"/>
         <location filename="widgets/FontWidget.cpp" line="260"/>
         <source>Erreur d&apos;ouverture du fichier. (%1)</source>
-        <translation type="unfinished">Error opening file (%1)</translation>
+        <translation>Error opening file (%1)</translation>
     </message>
     <message>
         <location filename="widgets/FontWidget.cpp" line="243"/>
         <source>Importer police de caractère</source>
-        <translation type="unfinished">Import Font</translation>
+        <translation>Import font</translation>
     </message>
     <message>
         <location filename="widgets/FontWidget.cpp" line="256"/>
         <source>Fichier invalide</source>
-        <translation type="unfinished">Invalid File</translation>
+        <translation>Invalid file</translation>
     </message>
 </context>
 <context>
@@ -644,12 +644,12 @@
     <message>
         <location filename="widgets/ImportDialog.cpp" line="57"/>
         <source>Fichier MIM :</source>
-        <translation type="unfinished">MIM File :</translation>
+        <translation>MIM file:</translation>
     </message>
     <message>
         <location filename="widgets/ImportDialog.cpp" line="119"/>
         <source>Sélectionner le fichier MIM associé</source>
-        <translation type="unfinished"></translation>
+        <translation>Select the associated MIM file</translation>
     </message>
     <message>
         <location filename="widgets/ImportDialog.cpp" line="119"/>
@@ -673,83 +673,95 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="127"/>
+        <location filename="widgets/LgpDialog.cpp" line="128"/>
         <source>Extraire</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="157"/>
-        <location filename="widgets/LgpDialog.cpp" line="183"/>
+        <location filename="widgets/LgpDialog.cpp" line="185"/>
+        <location filename="widgets/LgpDialog.cpp" line="211"/>
         <source>Fichier %1 (*.%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="159"/>
-        <location filename="widgets/LgpDialog.cpp" line="185"/>
+        <location filename="widgets/LgpDialog.cpp" line="187"/>
+        <location filename="widgets/LgpDialog.cpp" line="213"/>
         <source>Tous les fichiers (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="160"/>
-        <location filename="widgets/LgpDialog.cpp" line="186"/>
+        <location filename="widgets/LgpDialog.cpp" line="188"/>
+        <location filename="widgets/LgpDialog.cpp" line="214"/>
         <source>Nouveau fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="166"/>
-        <location filename="widgets/LgpDialog.cpp" line="228"/>
+        <location filename="widgets/LgpDialog.cpp" line="162"/>
+        <location filename="widgets/LgpDialog.cpp" line="165"/>
+        <location filename="widgets/LgpDialog.cpp" line="168"/>
+        <location filename="widgets/LgpDialog.cpp" line="194"/>
         <source>Erreur</source>
         <translation type="unfinished">Error</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="166"/>
+        <location filename="widgets/LgpDialog.cpp" line="126"/>
+        <location filename="widgets/LgpDialog.cpp" line="155"/>
+        <source>Renommer</source>
+        <translation type="unfinished">Rename</translation>
+    </message>
+    <message>
+        <location filename="widgets/LgpDialog.cpp" line="127"/>
+        <source>Remplacer</source>
+        <translation type="unfinished">Replace</translation>
+    </message>
+    <message>
+        <location filename="widgets/LgpDialog.cpp" line="155"/>
+        <source>Nouveau nom :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/LgpDialog.cpp" line="162"/>
+        <source>Le nom &apos;%1&apos; est invalide, ne mettez pas de caractères spéciaux.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/LgpDialog.cpp" line="165"/>
+        <source>Un fichier nommé &apos;%1&apos; existe déjà, veuillez choisir un autre nom.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/LgpDialog.cpp" line="168"/>
+        <source>Impossible de renommer le fichier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/LgpDialog.cpp" line="194"/>
         <source>Impossible de modifier l&apos;archive !</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="199"/>
+        <location filename="widgets/LgpDialog.cpp" line="227"/>
         <source>Erreur d&apos;écriture</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="199"/>
+        <location filename="widgets/LgpDialog.cpp" line="227"/>
         <source>Impossible d&apos;écrire dans le fichier (message : %1).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="204"/>
+        <location filename="widgets/LgpDialog.cpp" line="232"/>
         <source>Erreur d&apos;ouverture</source>
         <translation type="unfinished">Opening error</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="204"/>
+        <location filename="widgets/LgpDialog.cpp" line="232"/>
         <source>Impossible d&apos;ouvrir le fichier (message : %1).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="215"/>
-        <source>Enregistrer sous</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/LgpDialog.cpp" line="215"/>
         <source>Fichier Lgp (*.lgp)</source>
-        <translation type="unfinished">Lgp File (*.lgp)</translation>
-    </message>
-    <message>
-        <location filename="widgets/LgpDialog.cpp" line="222"/>
-        <source>Action impossible</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/LgpDialog.cpp" line="222"/>
-        <source>Merci de sélectionner un autre fichier que celui actuellement ouvert par le logiciel.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/LgpDialog.cpp" line="228"/>
-        <source>Impossible de créer l&apos;archive (message : %1).</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Lgp File (*.lgp)</translation>
     </message>
 </context>
 <context>
@@ -757,17 +769,17 @@
     <message>
         <location filename="widgets/LgpDialog.cpp" line="79"/>
         <source>?</source>
-        <translation type="unfinished">?</translation>
+        <translation>?</translation>
     </message>
     <message>
         <location filename="widgets/LgpDialog.cpp" line="110"/>
         <source>Nom</source>
-        <translation type="unfinished"></translation>
+        <translation>Name</translation>
     </message>
     <message>
         <location filename="widgets/LgpDialog.cpp" line="111"/>
         <source>Taille</source>
-        <translation type="unfinished"></translation>
+        <translation>Size</translation>
     </message>
 </context>
 <context>
@@ -805,7 +817,7 @@
     <message>
         <location filename="widgets/MassExportDialog.cpp" line="33"/>
         <source>Courant</source>
-        <translation type="unfinished">Current</translation>
+        <translation>Current</translation>
     </message>
     <message>
         <location filename="widgets/MassExportDialog.cpp" line="34"/>
@@ -820,7 +832,7 @@
     <message>
         <location filename="widgets/MassExportDialog.cpp" line="43"/>
         <source>Exporter les écrans</source>
-        <translation type="unfinished">Scene Exporter</translation>
+        <translation>Export fields</translation>
     </message>
     <message>
         <location filename="widgets/MassExportDialog.cpp" line="48"/>
@@ -865,22 +877,22 @@
     <message>
         <location filename="widgets/MassExportDialog.cpp" line="100"/>
         <source>PC</source>
-        <translation type="unfinished">PC</translation>
+        <translation>PC</translation>
     </message>
     <message>
         <location filename="widgets/MassExportDialog.cpp" line="100"/>
         <source>PS</source>
-        <translation type="unfinished">PS</translation>
+        <translation>PS</translation>
     </message>
     <message>
         <location filename="widgets/MassExportDialog.cpp" line="102"/>
         <source>Fichier FIELD %1</source>
-        <translation type="unfinished">FIELD File %1</translation>
+        <translation>FIELD File %1</translation>
     </message>
     <message>
         <location filename="widgets/MassExportDialog.cpp" line="103"/>
         <source>Fichier décompressé FIELD %1</source>
-        <translation type="unfinished">Unpacked FIELD %1</translation>
+        <translation>Uncompressed FIELD %1</translation>
     </message>
     <message>
         <location filename="widgets/MassExportDialog.cpp" line="121"/>
@@ -893,47 +905,47 @@
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="25"/>
         <source>Importer en masse</source>
-        <translation type="unfinished">Mass Import</translation>
+        <translation>Mass Import</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="28"/>
         <source>Importer des écrans</source>
-        <translation type="unfinished">Import Scene</translation>
+        <translation>Import fields</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="31"/>
         <source>Importer les sons</source>
-        <translation type="unfinished">Import Sound</translation>
+        <translation>Import sounds</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="33"/>
         <source>Son AKAO</source>
-        <translation type="unfinished">AKAO sound</translation>
+        <translation>AKAO sound</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="35"/>
         <source>Importer les textes</source>
-        <translation type="unfinished">Import Text</translation>
+        <translation>Import texts</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="37"/>
         <source>Texte XML</source>
-        <translation type="unfinished">XML Text</translation>
+        <translation>XML Text</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="38"/>
         <source>Texte simple TXT</source>
-        <translation type="unfinished">Simple text TXT</translation>
+        <translation>Simple text TXT</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="42"/>
         <source>Choisir...</source>
-        <translation type="unfinished">Choose...</translation>
+        <translation>Choose...</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="50"/>
         <source>Courant</source>
-        <translation type="unfinished"></translation>
+        <translation>Current</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="51"/>
@@ -948,37 +960,37 @@
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="60"/>
         <source>Importer</source>
-        <translation type="unfinished">Import</translation>
+        <translation>Import</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="69"/>
         <source>Emplacement de la source :</source>
-        <translation type="unfinished"></translation>
+        <translation>Source directory:</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="88"/>
         <source>PC</source>
-        <translation type="unfinished">PC</translation>
+        <translation>PC</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="88"/>
         <source>PS</source>
-        <translation type="unfinished"></translation>
+        <translation>PS</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="90"/>
         <source>Fichier FIELD %1</source>
-        <translation type="unfinished"></translation>
+        <translation>FIELD File %1</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="91"/>
         <source>Fichier décompressé FIELD %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Uncompressed FIELD %1</translation>
     </message>
     <message>
         <location filename="widgets/MassImportDialog.cpp" line="109"/>
         <source>Choisir un dossier</source>
-        <translation type="unfinished">Choose a directory</translation>
+        <translation>Choose a directory</translation>
     </message>
 </context>
 <context>
@@ -1192,7 +1204,7 @@
     <message>
         <location filename="widgets/OpcodeList.cpp" line="77"/>
         <source>Modifier texte</source>
-        <translation type="unfinished">Text Modifier</translation>
+        <translation>Edit text</translation>
     </message>
     <message>
         <location filename="widgets/OpcodeList.cpp" line="113"/>
@@ -1252,37 +1264,37 @@
     <message>
         <location filename="widgets/OperationsManager.cpp" line="6"/>
         <source>Opérations diverses</source>
-        <translation type="unfinished"></translation>
+        <translation>Miscellaneous operations</translation>
     </message>
     <message>
         <location filename="widgets/OperationsManager.cpp" line="8"/>
         <source>Effacer tous les textes inutilisés</source>
-        <translation type="unfinished"></translation>
+        <translation>Clean all unused texts</translation>
     </message>
     <message>
         <location filename="widgets/OperationsManager.cpp" line="9"/>
         <source>Désactiver tous les textes du jeu</source>
-        <translation type="unfinished"></translation>
+        <translation>Disable all texts in the game</translation>
     </message>
     <message>
         <location filename="widgets/OperationsManager.cpp" line="10"/>
         <source>Désactiver tous combats du jeu</source>
-        <translation type="unfinished"></translation>
+        <translation>Disable all battles in the game</translation>
     </message>
     <message>
         <location filename="widgets/OperationsManager.cpp" line="12"/>
         <source>Supprimer les données inutiles des listes des modèles 3D</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove unused data in field model loaders</translation>
     </message>
     <message>
         <location filename="widgets/OperationsManager.cpp" line="13"/>
         <source>Supprimer les données inutilisées pour les décors</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove all unused data for field backgrounds</translation>
     </message>
     <message>
         <location filename="widgets/OperationsManager.cpp" line="17"/>
         <source>Appliquer</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
     </message>
 </context>
 <context>
@@ -2432,12 +2444,12 @@
     <message>
         <location filename="core/field/Opcode.cpp" line="268"/>
         <source>%1 (n°%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 (#%2)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="380"/>
         <source>%1 et %2 et %3</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 and %2 and %3</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="994"/>
@@ -2447,32 +2459,32 @@
     <message>
         <location filename="core/field/Opcode.cpp" line="2001"/>
         <source>UNKNOWN4</source>
-        <translation type="unfinished"></translation>
+        <translation>UNKNOWN4</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="2021"/>
         <source>UNKNOWN7</source>
-        <translation type="unfinished"></translation>
+        <translation>UNKNOWN7</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="2031"/>
         <source>UNKNOWN8</source>
-        <translation type="unfinished"></translation>
+        <translation>UNKNOWN8</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="2041"/>
         <source>UNKNOWN9</source>
-        <translation type="unfinished"></translation>
+        <translation>UNKNOWN9</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="2061"/>
         <source>UNKNOWNB</source>
-        <translation type="unfinished"></translation>
+        <translation>UNKNOWNB</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="2071"/>
         <source>UNKNOWNC</source>
-        <translation type="unfinished"></translation>
+        <translation>UNKNOWNC</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="3630"/>
@@ -3532,19 +3544,23 @@
         <source>totalLength=%1
 id=%2
 </source>
-        <translation type="unfinished"></translation>
+        <translation>totalLength=%1
+id=%2
+</translation>
     </message>
     <message>
         <location filename="core/field/TutFileStandard.cpp" line="103"/>
         <source>length=%1
 </source>
-        <translation type="unfinished"></translation>
+        <translation>length=%1
+</translation>
     </message>
     <message>
         <location filename="core/field/TutFileStandard.cpp" line="108"/>
         <source>nbCanaux=%1
 </source>
-        <translation type="unfinished"></translation>
+        <translation>ChannelCount=%1
+</translation>
     </message>
     <message>
         <location filename="main.cpp" line="47"/>
@@ -5636,106 +5652,106 @@ channelCount=%3
         <location filename="widgets/Search.cpp" line="186"/>
         <location filename="widgets/Search.cpp" line="245"/>
         <source>Contexte</source>
-        <translation type="unfinished"></translation>
+        <translation>Scope</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="187"/>
         <location filename="widgets/Search.cpp" line="246"/>
         <source>Sur tous les écrans</source>
-        <translation type="unfinished"></translation>
+        <translation>All fields</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="188"/>
         <location filename="widgets/Search.cpp" line="247"/>
         <source>Uniquement l&apos;écran courant</source>
-        <translation type="unfinished"></translation>
+        <translation>Current field</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="189"/>
         <source>Uniquement le groupe courant</source>
-        <translation type="unfinished"></translation>
+        <translation>Current group script</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="190"/>
         <source>Uniquement le script courant</source>
-        <translation type="unfinished"></translation>
+        <translation>Current script</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="238"/>
         <source>Remplacer</source>
-        <translation type="unfinished"></translation>
+        <translation>Replace</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="239"/>
         <source>Remplacer tout</source>
-        <translation type="unfinished"></translation>
+        <translation>Replace all</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="248"/>
         <source>Uniquement le texte courant</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/Search.cpp" line="403"/>
-        <source>Dernier écran</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/Search.cpp" line="404"/>
-        <source>Dernier groupe</source>
-        <translation type="unfinished"></translation>
+        <translation>Current text</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="405"/>
-        <source>Dernier script</source>
-        <translation type="unfinished"></translation>
+        <source>Dernier écran</source>
+        <translation>Last field</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="406"/>
-        <source>Dernière instruction</source>
-        <translation type="unfinished"></translation>
+        <source>Dernier groupe</source>
+        <translation>Last group</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="407"/>
+        <source>Dernier script</source>
+        <translation>Last script</translation>
+    </message>
+    <message>
+        <location filename="widgets/Search.cpp" line="408"/>
+        <source>Dernière instruction</source>
+        <translation>Last opcode</translation>
+    </message>
+    <message>
+        <location filename="widgets/Search.cpp" line="409"/>
         <source>Dernier texte</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/Search.cpp" line="415"/>
-        <source>Premier écran</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/Search.cpp" line="416"/>
-        <source>Premier groupe</source>
-        <translation type="unfinished"></translation>
+        <translation>Last text</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="417"/>
-        <source>Premier script</source>
-        <translation type="unfinished"></translation>
+        <source>Premier écran</source>
+        <translation>First field</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="418"/>
-        <source>Première instruction</source>
-        <translation type="unfinished"></translation>
+        <source>Premier groupe</source>
+        <translation>First group</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="419"/>
-        <source>Premier texte</source>
-        <translation type="unfinished"></translation>
+        <source>Premier script</source>
+        <translation>First script</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="518"/>
+        <location filename="widgets/Search.cpp" line="420"/>
+        <source>Première instruction</source>
+        <translation>First opcode</translation>
+    </message>
+    <message>
+        <location filename="widgets/Search.cpp" line="421"/>
+        <source>Premier texte</source>
+        <translation>First text</translation>
+    </message>
+    <message>
+        <location filename="widgets/Search.cpp" line="520"/>
         <source>%1,
 poursuite au début.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="627"/>
+        <location filename="widgets/Search.cpp" line="629"/>
         <source>%1,
 poursuite à la fin.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1</translation>
     </message>
     <message>
         <source>Dernier %1,
@@ -6298,7 +6314,7 @@ Are you sure you want to continue?</translation>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="49"/>
         <source>Afficher modèles</source>
-        <translation type="unfinished"></translation>
+        <translation>Show 3D models</translation>
     </message>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="52"/>
@@ -6423,12 +6439,12 @@ Are you sure you want to continue?</translation>
         <location filename="widgets/WalkmeshManager.cpp" line="231"/>
         <location filename="widgets/WalkmeshManager.cpp" line="280"/>
         <source>Activer</source>
-        <translation type="unfinished">Activate</translation>
+        <translation>Enable</translation>
     </message>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="235"/>
         <source>ID</source>
-        <translation type="unfinished"></translation>
+        <translation>ID</translation>
     </message>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="243"/>
@@ -6438,7 +6454,7 @@ Are you sure you want to continue?</translation>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="254"/>
         <source>Orientation du perso. :</source>
-        <translation type="unfinished"></translation>
+        <translation>Character orientation:</translation>
     </message>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="256"/>
@@ -6705,7 +6721,7 @@ Are you sure you want to continue?</translation>
     <message>
         <location filename="Window.cpp" line="90"/>
         <source>Rec&amp;hercher...</source>
-        <translation>F&amp;ind...</translation>
+        <translation>&amp;Find...</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="122"/>
@@ -6763,13 +6779,13 @@ Edited files: %2</translation>
         <location filename="Window.cpp" line="1179"/>
         <location filename="Window.cpp" line="1207"/>
         <location filename="Window.cpp" line="1266"/>
-        <location filename="Window.cpp" line="1283"/>
+        <location filename="Window.cpp" line="1287"/>
         <source>Erreur</source>
         <translation>Error</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="805"/>
-        <location filename="Window.cpp" line="1445"/>
+        <location filename="Window.cpp" line="1450"/>
         <source>Auteur : %1</source>
         <translation>Author: %1</translation>
     </message>
@@ -6816,11 +6832,12 @@ Edited files: %2</translation>
     <message>
         <location filename="Window.cpp" line="73"/>
         <source>Importer en m&amp;asse...</source>
-        <translation>M&amp;ass Import...</translation>
+        <translation>Mass Im&amp;port...</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="74"/>
-        <source>&amp;Gestionnaire d&apos;archive...</source>
+        <source>Ges&amp;tionnaire d&apos;archive...</source>
+        <oldsource>&amp;Gestionnaire d&apos;archive...</oldsource>
         <translation>Archive Mana&amp;ger...</translation>
     </message>
     <message>
@@ -6840,9 +6857,9 @@ Edited files: %2</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="84"/>
-        <source>&amp;Tutoriels/Musiques...</source>
-        <oldsource>&amp;Tutoriels/Sons...</oldsource>
-        <translation>&amp;Tutorials/Sounds...</translation>
+        <source>T&amp;utoriels/Musiques...</source>
+        <oldsource>&amp;Tutoriels/Musiques...</oldsource>
+        <translation>Tutorials/&amp;Sounds...</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="85"/>
@@ -6862,13 +6879,12 @@ Edited files: %2</translation>
     <message>
         <location filename="Window.cpp" line="91"/>
         <source>Opér&amp;ations diverses...</source>
-        <translation type="unfinished">Various Opper&amp;ations...</translation>
+        <translation>Miscellaneous Opper&amp;ations...</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="92"/>
         <source>&amp;Police de caractères...</source>
-        <translatorcomment>Font Manager would be best text but you will loose the P shortcut, maybe can be changed ? to a letter both share.</translatorcomment>
-        <translation type="unfinished">Font Manager...</translation>
+        <translation>F&amp;ont Manager...</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="94"/>
@@ -6877,8 +6893,9 @@ Edited files: %2</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="96"/>
-        <source>Caractères japonais</source>
-        <translation>Japanese Characters</translation>
+        <source>Caractères &amp;japonais</source>
+        <oldsource>Caractères japonais</oldsource>
+        <translation>&amp;Japanese Characters</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="100"/>
@@ -6897,8 +6914,9 @@ Edited files: %2</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="120"/>
-        <source>Configuration...</source>
-        <translation></translation>
+        <source>&amp;Configuration...</source>
+        <oldsource>Configuration...</oldsource>
+        <translation>&amp;Configuration...</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="129"/>
@@ -6953,7 +6971,7 @@ Edited files: %2</translation>
     <message>
         <location filename="Window.cpp" line="484"/>
         <source>Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII</source>
-        <translation type="unfinished">Select a folder containing the Final Fantasy VII field files</translation>
+        <translation>Select a folder containing the Final Fantasy VII field files</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="517"/>
@@ -6971,7 +6989,7 @@ Edited files: %2</translation>
  - Les fichiers field PlayStation (&quot;EXEMPLE.DAT&quot;)
  - Les fichiers field PC (&quot;exemple&quot;)
 </source>
-        <translation type="unfinished">What type of file to look for ? 
+        <translation>What type of file to look for?
  - Playstation field files (&quot;EXAMPLE.DAT&quot;)
  - PC Field File (&quot;example&quot;)
 </translation>
@@ -6979,17 +6997,17 @@ Edited files: %2</translation>
     <message>
         <location filename="Window.cpp" line="542"/>
         <source>PS</source>
-        <translation type="unfinished">PS</translation>
+        <translation>PS</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="543"/>
         <source>PC</source>
-        <translation type="unfinished">PC</translation>
+        <translation>PC</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="579"/>
         <source>Ouverture...</source>
-        <translation type="unfinished"></translation>
+        <translation>Opening...</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="595"/>
@@ -7006,64 +7024,64 @@ Edited files: %2</translation>
     <message>
         <location filename="Window.cpp" line="604"/>
         <source>Impossible de renommer le fichier.</source>
-        <translation type="unfinished">Failed to remane file.</translation>
+        <translation>Failed to rename file.</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="607"/>
         <source>Impossible de copier le fichier</source>
-        <translation type="unfinished">Failed to copy file</translation>
+        <translation>Failed to copy file</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="903"/>
         <source>Erreur ligne %1 : %2</source>
-        <translation type="unfinished">Error line %1 : %2</translation>
+        <translation>Error line %1: %2</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="960"/>
         <source>Erreur de compilation</source>
-        <translation type="unfinished">Compilation Error</translation>
+        <translation>Compilation Error</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="960"/>
         <source>Erreur de compilation des scripts :
 écran %1 (%2), groupe %3 (%4), script %5, ligne %6 : %7</source>
-        <translation type="unfinished">Error Compiling Scripts :
-scene %1 (%2), group %3 (%4), script %5, line %6 : %7</translation>
+        <translation>Error Compiling Scripts:
+scene %1 (%2), group %3 (%4), script %5, line %6: %7</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="976"/>
         <source>Enregistrer dossier sous</source>
-        <translation type="unfinished">Save File As</translation>
+        <translation>Save Directory As</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="985"/>
         <source>Fichier Iso (*.iso *.bin *.img)</source>
-        <translation type="unfinished">Iso File( *.iso *.bin *.img)</translation>
+        <translation>Iso File (*.iso *.bin *.img)</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="989"/>
         <source>Enregistrer sous</source>
-        <translation type="unfinished">Save As</translation>
+        <translation>Save As</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="994"/>
         <source>Enregistrement...</source>
-        <translation type="unfinished"></translation>
+        <translation>Saving...</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="1021"/>
         <source>Impossible de supprimer le fichier, vérifiez les droits d&apos;écriture.</source>
-        <translation type="unfinished"></translation>
+        <translation>Unable to remove the file, check write permissions.</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="1024"/>
         <source>Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</source>
-        <translation type="unfinished"></translation>
+        <translation>Unable to rename the file, check write permissions.</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="1027"/>
         <source>Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</source>
-        <translation type="unfinished"></translation>
+        <translation>Unable to copy the file, check write permissions.</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="1030"/>
@@ -7181,58 +7199,58 @@ scene %1 (%2), group %3 (%4), script %5, line %6 : %7</translation>
     <message>
         <location filename="Window.cpp" line="1161"/>
         <source>Exportation...</source>
-        <translation type="unfinished">Export...</translation>
+        <translation>Export...</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="1179"/>
         <source>Une erreur s&apos;est produite lors de l&apos;exportation</source>
-        <translation type="unfinished"></translation>
+        <translation>An error occured when exporting</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="1198"/>
         <source>Importation...</source>
-        <translation type="unfinished">Import...</translation>
+        <translation>Import...</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="1207"/>
         <source>Une erreur s&apos;est produite lors de l&apos;importation</source>
-        <translation type="unfinished"></translation>
+        <translation>An error occurred when importing</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1283"/>
+        <location filename="Window.cpp" line="1287"/>
         <source>Final Fantasy VII n&apos;a pas pu être lancé.
 %1</source>
         <translation>Final Fantasy VII couldn&apos;t be launched
 %1</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1373"/>
-        <location filename="Window.cpp" line="1449"/>
+        <location filename="Window.cpp" line="1378"/>
+        <location filename="Window.cpp" line="1454"/>
         <source>Erreur d&apos;ouverture</source>
         <translation>Opening error</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1373"/>
+        <location filename="Window.cpp" line="1378"/>
         <source>Impossible d&apos;ouvrir les combats aléatoires !</source>
         <translation>Can not open encounters!</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1449"/>
+        <location filename="Window.cpp" line="1454"/>
         <source>Impossible d&apos;ouvrir les infos diverses !</source>
         <translation>Can not open miscellaneous informations!</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1472"/>
+        <location filename="Window.cpp" line="1477"/>
         <source>Application en cours...</source>
-        <translation type="unfinished"></translation>
+        <translation>Applying...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1536"/>
+        <location filename="Window.cpp" line="1541"/>
         <source>Par myst6re&lt;br/&gt;&lt;a href=&quot;https://sourceforge.net/projects/makoureactor/&quot;&gt;sourceforge.net/projects/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Merci à :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</source>
         <translation>By myst6re&lt;br/&gt;&lt;a href=&quot;https://sourceforge.net/projects/makoureactor/&quot;&gt;sourceforge.net/projects/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1543"/>
+        <location filename="Window.cpp" line="1548"/>
         <source>Fermer</source>
         <translation>Close</translation>
     </message>

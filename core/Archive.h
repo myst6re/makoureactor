@@ -2,7 +2,6 @@
 #define ARCHIVE_H
 
 #include <QtCore>
-#include "QLockedFile.h"
 
 struct ArchiveObserver
 {
@@ -17,7 +16,8 @@ class Archive
 public:
 
 	Archive();
-	explicit Archive(const QString &name);
+	explicit Archive(const QString &filename);
+	explicit Archive(QFile *device);
 	virtual ~Archive();
 	virtual inline void clear() {}
 	virtual QStringList fileList() const=0;
@@ -46,11 +46,13 @@ protected:
 	inline void setErrorString(const QString &errorString) {
 		_errorString = errorString;
 	}
-
-	QLockedFile _file;
+	inline QFile *archiveIO() const {
+		return _archiveIO;
+	}
 
 private:
 	QString _errorString;
+	QFile *_archiveIO;
 };
 
 #endif // ARCHIVE_H
