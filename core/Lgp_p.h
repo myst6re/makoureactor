@@ -66,6 +66,7 @@ public:
 	qint64 fileSize() const;
 	void setFileName(const QString &fileName);
 	void setFileDir(const QString &fileDir);
+	void setFilePath(const QString &filePath);
 	void setFilePosition(quint32 filePosition);
 	void setFileSize(quint32 fileSize);
 	QIODevice *file(QIODevice *lgp);

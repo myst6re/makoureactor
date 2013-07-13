@@ -562,6 +562,7 @@ bool Lgp::openHeader()
 /*!
  * Save the lgp into \a destination (or overwrite the
  * current archive if \a destination is empty).
+ * The archive is closed after this operation.
  * \a observer is used to notify the progression of the save.
  * It can be NULL.
  */

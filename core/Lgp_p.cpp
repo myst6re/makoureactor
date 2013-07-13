@@ -86,6 +86,18 @@ void LgpHeaderEntry::setFileDir(const QString &fileDir)
 	}
 }
 
+void LgpHeaderEntry::setFilePath(const QString &filePath)
+{
+	int index = filePath.lastIndexOf('/');
+
+	if(index < 0) {
+		setFileName(filePath);
+	} else {
+		setFileDir(filePath.left(index));
+		setFileName(filePath.mid(index + 1));
+	}
+}
+
 void LgpHeaderEntry::setFilePosition(quint32 filePosition)
 {
 	_filePosition = filePosition;
@@ -301,11 +313,13 @@ bool LgpToc::renameEntry(const QString &filePath, const QString &newFilePath)
 
 	qint32 v = lookupValue(filePath);
 	if(v < 0) {
+		qWarning() << "LgpToc::renameEntry invalid filename" << filePath;
 		return false; // invalid file name
 	}
 
 	LgpHeaderEntry *e = entry(filePath, v);
 	if(e == NULL) {
+		qWarning() << "LgpToc::renameEntry file not found" << filePath;
 		return false; // file not found
 	}
 
@@ -313,19 +327,23 @@ bool LgpToc::renameEntry(const QString &filePath, const QString &newFilePath)
 
 	qint32 newV = lookupValue(newFilePath);
 	if(newV < 0) {
+		qWarning() << "LgpToc::renameEntry invalid new filename" << newFilePath;
 		return false; // invalid file name
 	}
 
 	if(entry(newFilePath, newV) != NULL) {
+		qWarning() << "LgpToc::renameEntry new file exists" << newFilePath;
 		return false; // file found
 	}
 
 	// Move file
 
 	if(_header.remove(v, e) <= 0) {
+		qWarning() << "LgpToc::renameEntry cannot remove entry";
 		return false;
 	}
 
+	e->setFilePath(newFilePath);
 	_header.insert(newV, e);
 
 	return true;

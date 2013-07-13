@@ -589,7 +589,12 @@ void Window::open(const QString &cheminFic, bool isDir)
 	case FieldArchiveIO::Aborted:
 		break;
 	case FieldArchiveIO::FieldNotFound:
-		out = tr("Rien trouvé !");
+		if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
+			archiveManager();
+			return;
+		} else {
+			out = tr("Rien trouvé !");
+		}
 		break;
 	case FieldArchiveIO::ErrorOpening:
 		out = tr("Le fichier est inaccessible");
@@ -613,13 +618,10 @@ void Window::open(const QString &cheminFic, bool isDir)
 		out = tr("Cette erreur ne devrais pas s'afficher, merci de le signaler");
 		break;
 	}
-	if(!out.isEmpty())
-	{
+	if(!out.isEmpty()) {
 		QMessageBox::warning(this, tr("Erreur"), out);
-		if(error != FieldArchiveIO::FieldNotFound) {
-			fieldArchive->close();
-			return;
-		}
+		fieldArchive->close();
+		return;
 	}
 
 	QList<QTreeWidgetItem *> items;
