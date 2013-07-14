@@ -364,7 +364,10 @@ int Window::closeFile(bool quit)
 				i++;
 			}
 		}
-		int reponse = QMessageBox::warning(this, tr("Sauvegarder"), tr("Voulez-vous enregistrer les changements de %1 ?\n\nFichiers modifiés :%2").arg(fieldArchive->io()->name()).arg(fileChangedList), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+		if(!fileChangedList.isEmpty()) {
+			fileChangedList.prepend(tr("\n\nFichiers modifiés :"));
+		}
+		int reponse = QMessageBox::warning(this, tr("Sauvegarder"), tr("Voulez-vous enregistrer les changements de %1 ?%2").arg(fieldArchive->io()->name()).arg(fileChangedList), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 		if(reponse == QMessageBox::Yes)				save();
 		else if(reponse == QMessageBox::Cancel)		return reponse;
 		if(quit)	return reponse;
@@ -590,6 +593,8 @@ void Window::open(const QString &cheminFic, bool isDir)
 		break;
 	case FieldArchiveIO::FieldNotFound:
 		if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
+			actionArchive->setEnabled(true);
+			setWindowTitle();
 			archiveManager();
 			return;
 		} else {
@@ -683,19 +688,33 @@ void Window::setWindowTitle()
 	QString windowTitle;
 	if(fieldArchive) {
 		QList<QTreeWidgetItem *> selectedItems = fieldList->selectedItems();
-		if(selectedItems.isEmpty()) {
-			windowTitle = PROG_FULLNAME;
-		} else {
-			if(!fieldArchive->io()->hasName()) {
-				windowTitle = "[*]" + selectedItems.first()->text(0) + " - " + PROG_FULLNAME;
-			} else {
-				windowTitle = selectedItems.first()->text(0) + " ([*]" + fieldArchive->io()->name() + ") - " + PROG_FULLNAME;
-			}
+		QString current;
+		if(!selectedItems.isEmpty()) {
+			current = selectedItems.first()->text(0);
 		}
-	} else {
-		windowTitle = PROG_FULLNAME;
+
+		if(!fieldArchive->io()->hasName()) { // [*][current - ]PROG_NAME
+			windowTitle = "[*]";
+
+			if(!current.isEmpty()) {
+				 windowTitle.append(current).append(" - ");
+			}
+		} else { // [current ](*archive) - PROG_NAME
+			if(!current.isEmpty()) {
+				 windowTitle.append(current).append(" (");
+			}
+
+			windowTitle.append("[*]").append(fieldArchive->io()->name());
+
+			if(!current.isEmpty()) {
+				 windowTitle.append(")");
+			}
+
+			windowTitle.append(" - ");
+		}
 	}
-	QWidget::setWindowTitle(windowTitle);
+
+	QWidget::setWindowTitle(windowTitle.append(PROG_FULLNAME));
 }
 
 int Window::currentFieldId() const
@@ -1466,6 +1485,7 @@ void Window::archiveManager()
 {
 	if(fieldArchive && fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 		LgpDialog dialog((Lgp *)fieldArchive->io()->device(), this);
+		connect(&dialog, SIGNAL(modified()), SLOT(setModified()));
 		dialog.exec();
 	}
 }

@@ -42,6 +42,8 @@ private:
 	QSpinBox *globalScale;
 	QLineEdit *modelName;
 	QToolBar *toolBar2;
+	FieldModelInfosPC _copiedModel;
+	bool copied;
 private slots:
 	void setGlobalScale(int value);
 	void modifyHRC(const QString &hrc);
@@ -59,6 +61,9 @@ private slots:
 	void upAnim();
 	void downAnim();
 	void renameOKAnim(QTreeWidgetItem *item, int column);
+	void copyModel(int modelID);
+	void cutModel(int modelID);
+	void pasteModel(int modelID);
 };
 
 #endif // MODELMANAGERPC_H

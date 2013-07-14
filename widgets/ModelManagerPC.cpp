@@ -582,3 +582,33 @@ quint16 ModelManagerPC::modelScale(int modelID) const
 {
 	return modelLoader()->scale(modelID);
 }
+
+void ModelManagerPC::copyModel(int modelID)
+{
+	_copiedModel = modelLoader()->modelInfos(modelID);
+	copied = true;
+}
+
+void ModelManagerPC::cutModel(int modelID)
+{
+	copyModel(modelID);
+	modelLoader()->removeModel(modelID);
+	delete models->topLevelItem(modelID);
+
+	emit modified();
+}
+
+void ModelManagerPC::pasteModel(int modelID)
+{
+	if(!copied) {
+		return;
+	}
+	modelLoader()->insertModelInfos(modelID, _copiedModel);
+
+	QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(_copiedModel.nameHRC));
+	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
+
+	models->insertTopLevelItem(modelID + 1, item);
+
+	emit modified();
+}

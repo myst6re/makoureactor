@@ -70,24 +70,34 @@ bool LgpFileItem::setFile(QIODevice *io)
 }
 
 bool LgpFileItem::move(const QString &destination) {
-	bool ok = _lgp->renameFile(path(), destination);
+	bool ok, sameDir;
+	QString source = path(), destFileName, destDirName;
+	int index = destination.lastIndexOf('/');
+	if(index < 0) {
+		destFileName = destination;
+	} else {
+		destDirName = destination.left(index);
+		destFileName = destination.mid(index + 1);
+	}
 
+	sameDir = dirName() == destDirName; // We don't need to move the item if the directory is the same
+
+	ok = sameDir || parent()->unrefChild(this);
 	if(ok) {
-		QString destFileName, destDirName;
-		int index = destination.lastIndexOf('/');
-		if(index < 0) {
-			destFileName = destination;
-		} else {
-			destDirName = destination.left(index);
-			destFileName = destination.mid(index + 1);
-		}
-
-		setName(destFileName);
-
-		ok = parent()->unrefChild(this);
+		ok = _lgp->renameFile(source, destination);
 		if(ok) {
-			root()->addChild(destination, this);
+			setName(destFileName);
+			if(!sameDir) {
+				root()->addChild(destination, this);
+			}
+		} else {
+			if(!sameDir) {
+				root()->addChild(source, this); // Cancel renaming
+			}
+			qWarning() << "cannot rename child!";
 		}
+	} else {
+		qWarning() << "cannot unref child!";
 	}
 
 	return ok;
@@ -196,6 +206,9 @@ QModelIndex LgpItemModel::index(int row, int column, const QModelIndex &parent) 
 	}
 
 	LgpDirectoryItem *parentItem = (LgpDirectoryItem *)getItem(parent);
+	if(!parentItem) {
+		parentItem = root;
+	}
 
 	return createIndex(row, column, parentItem->child(row));
 }
@@ -208,7 +221,7 @@ LgpItem *LgpItemModel::getItem(const QModelIndex &index) const
 			return item;
 		}
 	}
-	return root;
+	return 0;
 }
 
 QModelIndex LgpItemModel::parent(const QModelIndex &index) const
@@ -218,7 +231,6 @@ QModelIndex LgpItemModel::parent(const QModelIndex &index) const
 	}
 
 	LgpItem *childItem = getItem(index);
-
 	LgpItem *parentItem = childItem->parent();
 
 	if(parentItem == root || !parentItem) {
@@ -236,6 +248,9 @@ QModelIndex LgpItemModel::parent(const QModelIndex &index) const
 int LgpItemModel::rowCount(const QModelIndex &parent) const
 {
 	LgpItem *parentItem = getItem(parent);
+	if(!parentItem) {
+		parentItem = root;
+	}
 
 	if(parentItem->isDirectory()) {
 		return ((LgpDirectoryItem *)parentItem)->childCount();
@@ -256,6 +271,9 @@ QVariant LgpItemModel::data(const QModelIndex &index, int role) const
 	}
 
 	LgpItem *lgpItem = getItem(index);
+	if(!lgpItem) {
+		return QVariant();
+	}
 
 	switch(role) {
 	case Qt::EditRole:
@@ -296,7 +314,7 @@ bool LgpItemModel::setData(const QModelIndex &index, const QVariant &value, int 
 
 	LgpItem *lgpItem = getItem(index);
 
-	if(lgpItem->isDirectory()) {
+	if(!lgpItem || lgpItem->isDirectory()) {
 		return false;
 	}
 	QString newFilename = value.toString();
@@ -407,9 +425,10 @@ void LgpDialog::renameCurrent()
 		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
 		if(item && !item->isDirectory()) {
 			bool ok;
-			QString newFilePath = QInputDialog::getText(this, tr("Renommer"), tr("Nouveau nom :"), QLineEdit::Normal,
-														item->path(), &ok, Qt::Dialog | Qt::WindowCloseButtonHint);
-			if(!ok) {
+			QString oldFilePath = item->path(),
+					newFilePath = QInputDialog::getText(this, tr("Renommer"), tr("Nouveau nom :"), QLineEdit::Normal,
+														oldFilePath, &ok, Qt::Dialog | Qt::WindowCloseButtonHint);
+			if(!ok || newFilePath == oldFilePath) {
 				return;
 			}
 

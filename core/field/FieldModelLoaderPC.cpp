@@ -423,3 +423,40 @@ void FieldModelLoaderPC::setAnimUnknown(int modelID, int numA, quint16 unknown)
 		}
 	}
 }
+
+FieldModelInfosPC FieldModelLoaderPC::modelInfos(int modelID) const
+{
+	FieldModelInfosPC ret;
+	ret.nameChar = model_nameChar.at(modelID);
+	ret.nameHRC = model_nameHRC.at(modelID);
+	ret.anims = model_anims.at(modelID);
+	ret.animsUnknown = model_anims_unknown.at(modelID);
+	ret.unknown = model_unknown.at(modelID);
+	ret.typeHRC = model_typeHRC.at(modelID);
+	ret.colors = colors.at(modelID);
+	return ret;
+}
+
+void FieldModelLoaderPC::setModelInfos(int modelID, const FieldModelInfosPC &modelInfos)
+{
+	model_nameChar.replace(modelID, modelInfos.nameChar);
+	model_nameHRC.replace(modelID, modelInfos.nameHRC);
+	model_anims.replace(modelID, modelInfos.anims);
+	model_anims_unknown.replace(modelID, modelInfos.animsUnknown);
+	model_unknown.replace(modelID, modelInfos.unknown);
+	model_typeHRC.replace(modelID, modelInfos.typeHRC);
+	colors.replace(modelID, modelInfos.colors);
+	setModified(true);
+}
+
+void FieldModelLoaderPC::insertModelInfos(int modelID, const FieldModelInfosPC &modelInfos)
+{
+	model_nameChar.insert(modelID, modelInfos.nameChar);
+	model_nameHRC.insert(modelID, modelInfos.nameHRC);
+	model_anims.insert(modelID, modelInfos.anims);
+	model_anims_unknown.insert(modelID, modelInfos.animsUnknown);
+	model_unknown.insert(modelID, modelInfos.unknown);
+	model_typeHRC.insert(modelID, modelInfos.typeHRC);
+	colors.insert(modelID, modelInfos.colors);
+	setModified(true);
+}

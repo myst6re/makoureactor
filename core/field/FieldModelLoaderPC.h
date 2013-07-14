@@ -22,6 +22,15 @@
 #include <QRgb>
 #include "FieldModelLoader.h"
 
+struct FieldModelInfosPC
+{
+	QString nameChar, nameHRC;
+	QStringList anims;
+	QList<quint16> animsUnknown;
+	quint16 unknown, typeHRC;
+	QList<QRgb> colors;
+};
+
 class FieldModelLoaderPC : public FieldModelLoader
 {
 public:
@@ -59,6 +68,9 @@ public:
 	void setAName(int modelID, int numA, const QString &animName);
 	quint16 animUnknown(int modelID, int numA) const;
 	void setAnimUnknown(int modelID, int numA, quint16 unknown);
+	FieldModelInfosPC modelInfos(int modelID) const;
+	void setModelInfos(int modelID, const FieldModelInfosPC &modelInfos);
+	void insertModelInfos(int modelID, const FieldModelInfosPC &modelInfos);
 private:
 	quint16 typeHRC;
 	QStringList model_nameChar;
