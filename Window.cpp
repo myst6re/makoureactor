@@ -951,15 +951,20 @@ void Window::setModified(bool enabled)
 	if(field != NULL)		field->setModified(enabled);
 	actionSave->setEnabled(enabled);
 	setWindowModified(enabled);
-	
-	if(enabled && !fieldList->selectedItems().isEmpty())
-		fieldList->selectedItems().first()->setForeground(0, QColor(0xd1,0x1d,0x1d));
-	else if(!enabled) {
-		int i, size=fieldList->topLevelItemCount();
-		for(i=0 ; i<size ; ++i) {
-			QTreeWidgetItem *item = fieldList->topLevelItem(i);
-			if(item->foreground(0).color() == QColor(0xd1,0x1d,0x1d))
-				item->setForeground(0, QColor(0x1d,0xd1,0x1d));
+
+	int size=fieldList->topLevelItemCount();
+	for(int i=0 ; i<size ; ++i) {
+		QTreeWidgetItem *item = fieldList->topLevelItem(i);
+		int fieldId = item->data(0, Qt::UserRole).toInt();
+		if(fieldId >= 0) {
+			Field *curField = fieldArchive->field(fieldId, false);
+			if(curField && curField->isOpen()) {
+				if(enabled && curField->isModified()) {
+					item->setForeground(0, QColor(0xd1,0x1d,0x1d));
+				} else if(!enabled && item->foreground(0).color() == QColor(0xd1,0x1d,0x1d)) {
+					item->setForeground(0, QColor(0x1d,0xd1,0x1d));
+				}
+			}
 		}
 	}
 }
@@ -1276,7 +1281,7 @@ void Window::importer()
 	switch(error)
 	{
 	case 0:
-		setModified(true);
+		setModified();
 		index = path.lastIndexOf('/');
 		Config::setValue("importPath", index == -1 ? path : path.left(index));
 		openField(true);
@@ -1397,7 +1402,7 @@ void Window::encounterManager()
 			if(dialog.exec()==QDialog::Accepted)
 			{
 				if(encounter->isModified())
-					setModified(true);
+					setModified();
 			}
 		} else {
 			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les combats aléatoires !"));
@@ -1471,7 +1476,7 @@ void Window::miscManager()
 			if(dialog.exec()==QDialog::Accepted)
 			{
 				if(inf->isModified() || field->isModified()) {
-					setModified(true);
+					setModified();
 					authorLbl->setText(tr("Auteur : %1").arg(field->scriptsAndTexts()->author()));
 				}
 			}
@@ -1521,7 +1526,7 @@ void Window::miscOperations()
 		hideProgression();
 
 		if(fieldArchive->isModified()) {
-			setModified(true);
+			setModified();
 		}
 	}
 }

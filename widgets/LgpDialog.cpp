@@ -86,9 +86,10 @@ bool LgpFileItem::move(const QString &destination) {
 	if(ok) {
 		ok = _lgp->renameFile(source, destination);
 		if(ok) {
-			setName(destFileName);
 			if(!sameDir) {
 				root()->addChild(destination, this);
+			} else {
+				setName(destFileName);
 			}
 		} else {
 			if(!sameDir) {
@@ -327,6 +328,7 @@ bool LgpItemModel::setData(const QModelIndex &index, const QVariant &value, int 
 
 	if(ok) {
 		emit dataChanged(index, index);
+		emit layoutChanged();
 	}
 
 	return ok;
@@ -441,6 +443,7 @@ void LgpDialog::renameCurrent()
 			} else if(!treeView->model()->setData(index, newFilePath)) {
 				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de renommer le fichier"));
 			} else {
+				treeView->scrollTo(index);
 				emit modified();
 				packButton->setEnabled(true);
 			}
@@ -559,7 +562,7 @@ void LgpDialog::add()
 		QMessageBox::warning(this, tr("Erreur"), tr("Impossible d'ajouter le fichier"));
 	} else {
 		treeView->model()->insertRow(treeView->model()->rowCount());
-//		treeView->scrollTo();
+		treeView->scrollTo(treeView->model()->index(treeView->model()->rowCount() - 1, 0));
 		emit modified();
 		packButton->setEnabled(true);
 	}

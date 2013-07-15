@@ -33,6 +33,13 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	toolBar1->addAction(QIcon(":/images/down.png"), QString(), this, SLOT(downModel()));
 
 	models->setColumnCount(1);
+	models->setContextMenuPolicy(Qt::ActionsContextMenu);
+	cutModelAction = new QAction(QIcon(":/images/cut.png"), tr("Couper"), models);
+	copyModelAction = new QAction(QIcon(":/images/copy.png"), tr("Copier"), models);
+	pasteModelAction = new QAction(QIcon(":/images/paste.png"), tr("Coller"), models);
+	models->addAction(cutModelAction);
+	models->addAction(copyModelAction);
+	models->addAction(pasteModelAction);
 
 	modelName = new QLineEdit();
 	modelName->setMaxLength(256);
@@ -82,6 +89,11 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	connect(modelName, SIGNAL(textEdited(QString)), SLOT(setModelName(QString)));
 	connect(modelScaleWidget, SIGNAL(valueChanged(int)), SLOT(setModelScale(int)));
 	connect(modelColorDisplay, SIGNAL(colorEdited(int,QRgb)), SLOT(setModelColor(int,QRgb)));
+
+	connect(cutModelAction, SIGNAL(triggered()), SLOT(cutCurrentModel()));
+	connect(copyModelAction, SIGNAL(triggered()), SLOT(copyCurrentModel()));
+	connect(pasteModelAction, SIGNAL(triggered()), SLOT(pasteOnCurrentModel()));
+	connect(modelAnims, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(updateActionsState()));
 }
 
 void ModelManagerPC::fill2()
@@ -608,7 +620,43 @@ void ModelManagerPC::pasteModel(int modelID)
 	QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(_copiedModel.nameHRC));
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 
-	models->insertTopLevelItem(modelID + 1, item);
+	models->insertTopLevelItem(modelID, item);
 
 	emit modified();
+}
+
+void ModelManagerPC::copyCurrentModel()
+{
+	int modelID = currentModelID();
+	if(modelID < 0) {
+		return;
+	}
+	copyModel(modelID);
+}
+
+void ModelManagerPC::cutCurrentModel()
+{
+	int modelID = currentModelID();
+	if(modelID < 0) {
+		return;
+	}
+	cutModel(modelID);
+}
+
+void ModelManagerPC::pasteOnCurrentModel()
+{
+	int modelID = currentModelID();
+	if(modelID < 0) {
+		pasteModel(models->topLevelItemCount());
+	} else {
+		pasteModel(modelID + 1);
+	}
+}
+
+void ModelManagerPC::updateActionsState()
+{
+	bool isModelSelected = currentModelID() >= 0;
+
+	cutModelAction->setEnabled(isModelSelected);
+	copyModelAction->setEnabled(isModelSelected);
 }

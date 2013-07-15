@@ -39,9 +39,14 @@ protected:
 	QList<QRgb> lightColors(int modelID) const;
 	quint16 modelScale(int modelID) const;
 private:
+	void copyModel(int modelID);
+	void cutModel(int modelID);
+	void pasteModel(int modelID);
+
 	QSpinBox *globalScale;
 	QLineEdit *modelName;
 	QToolBar *toolBar2;
+	QAction *copyModelAction, *cutModelAction, *pasteModelAction;
 	FieldModelInfosPC _copiedModel;
 	bool copied;
 private slots:
@@ -61,9 +66,10 @@ private slots:
 	void upAnim();
 	void downAnim();
 	void renameOKAnim(QTreeWidgetItem *item, int column);
-	void copyModel(int modelID);
-	void cutModel(int modelID);
-	void pasteModel(int modelID);
+	void copyCurrentModel();
+	void cutCurrentModel();
+	void pasteOnCurrentModel();
+	void updateActionsState();
 };
 
 #endif // MODELMANAGERPC_H
