@@ -78,6 +78,7 @@ void TutWidget::fill(Field *field, TutFilePC *tutPC, bool reload)
 	clear();
 	tut = field->tutosAndSounds();
 	this->tutPC = tutPC;
+	this->field = field;
 	usedTuts = field->scriptsAndTexts()->listUsedTuts();
 	currentTut = tut;
 
@@ -102,6 +103,9 @@ void TutWidget::clear()
 	usedTuts.clear();
 	list->clear();
 	textEdit->clear();
+	akaoIDList->setCurrentIndex(-1);
+	akaoIDList->setEnabled(false);
+	akaoDesc->clear();
 }
 
 QWidget *TutWidget::buildTutPage()
@@ -195,6 +199,7 @@ void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 		stackedWidget->setCurrentIndex(1);
 		akaoDesc->setText(currentTut->parseScripts(id));
 		quint16 akaoID = tut->akaoID(id);
+		akaoIDList->setEnabled(true);
 		int index = akaoIDList->findData(akaoID);
 		if(index != -1) {
 			akaoIDList->setCurrentIndex(index);

@@ -35,6 +35,7 @@ public slots:
 	void changePercent();
 	void changeProbaCount();
 private:
+	static void setProbaLabelColor(QLabel *label, qint16 points);
 	QLabel *rateLabel, *probaLabel, *probaLabel2;
 	QSlider *mainRate;
 	QGroupBox *group;

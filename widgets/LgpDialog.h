@@ -89,6 +89,7 @@ public:
 	}
 
 	bool unrefChild(LgpItem *child);
+	void renameChild(LgpItem *child, const QString &destination);
 	void removeChild(LgpItem *child);
 	void addChild(const QString &name, Lgp *lgp);
 	void addChild(const QString &name, LgpFileItem *item);

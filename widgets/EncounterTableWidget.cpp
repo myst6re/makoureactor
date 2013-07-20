@@ -122,29 +122,30 @@ void EncounterTableWidget::changePercent()
 	rateLabel->setText(tr("Fréquence des combats : %1/255").arg(rateValue()));
 }
 
+void EncounterTableWidget::setProbaLabelColor(QLabel *label, qint16 points)
+{
+	QPalette pal = label->palette();
+	QColor col = QColor(points<0 ? Qt::red : (points==0 ? Qt::darkGreen : Qt::gray));
+	pal.setColor(QPalette::Active, QPalette::WindowText, col);
+	pal.setColor(QPalette::Inactive, QPalette::WindowText, col);
+	label->setPalette(pal);
+}
+
 void EncounterTableWidget::changeProbaCount()
 {
-	int points = 64;
-	for(int i=0 ; i<6 ; ++i) {
+	qint16 points = 64;
+	for(quint8 i=0 ; i<6 ; ++i) {
 		points -= battleProbas.at(i)->value();
 	}
 
-	QPalette pal = probaLabel->palette();
-	QColor col = QColor(points<0 ? "red" : (points==0 ? "green" : "grey"));
-	pal.setColor(QPalette::Active, QPalette::WindowText, col);
-	pal.setColor(QPalette::Inactive, QPalette::WindowText, col);
-	probaLabel->setPalette(pal);
+	setProbaLabelColor(probaLabel, points);
 	probaLabel->setText(tr("Points de probabilité restants : %1").arg(points));
 
 	points = 64;
-	for(int i=6 ; i<10 ; ++i) {
+	for(quint8 i=6 ; i<10 ; ++i) {
 		points -= battleProbas.at(i)->value();
 	}
 
-	pal = probaLabel2->palette();
-	col = QColor(points<0 ? "red" : "green");
-	pal.setColor(QPalette::Active, QPalette::WindowText, col);
-	pal.setColor(QPalette::Inactive, QPalette::WindowText, col);
-	probaLabel2->setPalette(pal);
+	setProbaLabelColor(probaLabel2, points);
 	probaLabel2->setText(tr("Points de probabilité restants : %1").arg(points));
 }

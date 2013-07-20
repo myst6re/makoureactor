@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "LgpDialog.h"
+#include "core/Config.h"
 
 LgpDirectoryItem *LgpItem::root()
 {
@@ -89,7 +90,7 @@ bool LgpFileItem::move(const QString &destination) {
 			if(!sameDir) {
 				root()->addChild(destination, this);
 			} else {
-				setName(destFileName);
+				parent()->renameChild(this, destFileName);
 			}
 		} else {
 			if(!sameDir) {
@@ -159,7 +160,28 @@ bool LgpDirectoryItem::unrefChild(LgpItem *child)
 		ok = _fileChilds.remove(child->name()) == 1;
 	}
 
+	if(!ok) {
+		qWarning() << "LgpDirectoryItem::unrefChild: child not found in hash tables!" << child->isDirectory() << child->name();
+	}
+
 	return ok && _childs.removeOne(child);
+}
+
+void LgpDirectoryItem::renameChild(LgpItem *child, const QString &destination)
+{
+	if(child->isDirectory()) {
+		LgpDirectoryItem *item = _dirChilds.take(child->name());
+		if(item) {
+			item->setName(destination);
+			_dirChilds.insert(destination, item);
+		}
+	} else {
+		LgpFileItem *item = _fileChilds.take(child->name());
+		if(item) {
+			item->setName(destination);
+			_fileChilds.insert(destination, item);
+		}
+	}
 }
 
 void LgpDirectoryItem::removeChild(LgpItem *child)
@@ -444,7 +466,7 @@ void LgpDialog::renameCurrent()
 				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de renommer le fichier"));
 			} else {
 				treeView->scrollTo(index);
-				emit modified();
+//				emit modified();
 				packButton->setEnabled(true);
 			}
 		}
@@ -465,15 +487,23 @@ void LgpDialog::replaceCurrent()
 				filter << tr("Fichier %1 (*.%1)").arg(extension);
 			}
 			filter << tr("Tous les fichiers (*)");
+
+			QString lastDir = Config::value("lgpDialogOpenDirectory").toString();
+			if(!lastDir.isEmpty()) {
+				filename = lastDir + "/" + filename;
+			}
+
 			QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), filename, filter.join(";;"));
 			if(path.isNull()) {
 				return;
 			}
 
+			Config::setValue("lgpDialogOpenDirectory", path.left(path.lastIndexOf('/')));
+
 			if(!((LgpFileItem *)item)->setFile(new QFile(path))) {
 				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de modifier l'archive !"));
 			} else {
-				emit modified();
+//				emit modified();
 				packButton->setEnabled(true);
 			}
 		}
@@ -494,10 +524,18 @@ void LgpDialog::extractCurrent()
 				filter << tr("Fichier %1 (*.%1)").arg(extension);
 			}
 			filter << tr("Tous les fichiers (*)");
+
+			QString lastDir = Config::value("lgpDialogSaveDirectory").toString();
+			if(!lastDir.isEmpty()) {
+				filename = lastDir + "/" + filename;
+			}
+
 			QString path = QFileDialog::getSaveFileName(this, tr("Nouveau fichier"), filename, filter.join(";;"));
 			if(path.isNull()) {
 				return;
 			}
+
+			Config::setValue("lgpDialogSaveDirectory", path.left(path.lastIndexOf('/')));
 
 			QIODevice *io = ((LgpFileItem *)item)->file();
 			if(io && io->open(QIODevice::ReadOnly)) {
@@ -532,12 +570,16 @@ void LgpDialog::add()
 		}
 	}
 
+	QString lastDir = Config::value("lgpDialogOpenDirectory").toString();
+
 	QStringList filter;
 	filter << tr("Tous les fichiers (*)");
-	QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), QString(), filter.join(";;"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), lastDir, filter.join(";;"));
 	if(path.isNull()) {
 		return;
 	}
+
+	Config::setValue("lgpDialogOpenDirectory", path.left(path.lastIndexOf('/')));
 
 	QString name = path.mid(path.lastIndexOf('/') + 1);
 
@@ -563,7 +605,7 @@ void LgpDialog::add()
 	} else {
 		treeView->model()->insertRow(treeView->model()->rowCount());
 		treeView->scrollTo(treeView->model()->index(treeView->model()->rowCount() - 1, 0));
-		emit modified();
+//		emit modified();
 		packButton->setEnabled(true);
 	}
 }
@@ -578,7 +620,7 @@ void LgpDialog::removeCurrent()
 				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de supprimer le fichier !"));
 			} else {
 				treeView->model()->removeRow(index.row());
-				emit modified();
+//				emit modified();
 				packButton->setEnabled(true);
 			}
 		}
@@ -615,7 +657,7 @@ void LgpDialog::pack()
 		}
 	} else {
 		lgp->open();
-		emit modified();
+//		emit modified();
 		packButton->setEnabled(false);
 	}
 }

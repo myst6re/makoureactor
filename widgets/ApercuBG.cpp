@@ -59,7 +59,7 @@ void ApercuBG::fill(Field *field, bool reload)
 QPixmap ApercuBG::errorPixmap(int w, int h)
 {
 	QPixmap errorPix(w, h);
-	errorPix.fill(QColor(0,0,0));
+	errorPix.fill(Qt::black);
 	QFont font;
 	font.setPixelSize(44);
 	QString text = tr("Erreur");
@@ -67,7 +67,7 @@ QPixmap ApercuBG::errorPixmap(int w, int h)
 	int textHeight = QFontMetrics(font).height();
 
 	QPainter p(&errorPix);
-	p.setPen(QColor(0xFF,0xFF,0xFF));
+	p.setPen(Qt::white);
 	p.setFont(font);
 	p.drawStaticText((w-textWidth)/2, (h-textHeight)/2, QStaticText(text));
 	p.end();
