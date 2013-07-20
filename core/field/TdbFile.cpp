@@ -25,6 +25,11 @@ TdbFile::TdbFile()
 
 bool TdbFile::open(const QByteArray &data)
 {
+	if(data.size() < sizeof(TdbHeader)) {
+		qWarning() << "invalid tdb size" << data.size() << sizeof(TdbHeader);
+		return false;
+	}
+
 	const char *constData = data.constData();
 
 	memcpy(&header, constData, sizeof(TdbHeader));
@@ -95,16 +100,21 @@ QImage TdbFile::texture(quint8 faceID, TextureType type)
 
 	quint32 offsetPalette = header.paletteOffset + pal * 32;
 
+	if(data.size() < offsetImage + 512
+			|| data.size() < offsetPalette + 32) {
+		return QImage();
+	}
+
 	QImage img(32, 32, QImage::Format_ARGB32);
 	QRgb *px = (QRgb *)img.bits();
 
 	for(int i=0 ; i<512 ; ++i) {
 		quint8 index = constData[offsetImage + i];
 		quint16 color;
-		memcpy(&color, &constData[offsetPalette + (index & 0x0F)*2], 2);
+		memcpy(&color, constData + offsetPalette + (index & 0x0F)*2, 2);
 		px[i*2] = PsColor::fromPsColor(color, true);
 
-		memcpy(&color, &constData[offsetPalette + (index >> 4)*2], 2);
+		memcpy(&color, constData + offsetPalette + (index >> 4)*2, 2);
 		px[i*2+1] = PsColor::fromPsColor(color, true);
 	}
 

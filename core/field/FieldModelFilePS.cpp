@@ -207,10 +207,12 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 
 	if(model_id < modelLoader->modelCount()) {
 		TdbFile tdb;
-		tdb.open(currentField->io()->fileData("FIELD.TDB"));
-
 		quint8 faceID = modelLoader->model(model_id).faceID;
 		QMap<TextureInfo, int> texAlreadyLoaded;
+
+		if(faceID < 0x21) {
+			tdb.open(currentField->io()->fileData("FIELD.TDB"));
+		}
 
 		int texID=0;
 

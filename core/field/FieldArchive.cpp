@@ -134,13 +134,11 @@ void FieldArchive::updateFieldLists(Field *field, int fieldID)
 {
 	const QString &name = field->name();
 
-	int index;
-	QString mapId;
-	if((index = Data::field_names.indexOf(name)) != -1) {
-		mapId = QString("%1").arg(index, 3);
-	} else {
-		mapId = "~";
-	}
+	int index = Data::field_names.indexOf(name);
+	QString mapId = index != -1 ?
+				QString("%1").arg(index, 3) :
+				"~";
+
 	fieldsSortByName.insert(name, fieldID);
 	fieldsSortByMapId.insert(mapId, fieldID);
 }

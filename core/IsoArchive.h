@@ -269,7 +269,7 @@ public:
 //	const QList<PathTable> &getPathTables2a() const;
 //	const QList<PathTable> &getPathTables2b() const;
 private:
-	void openVolumeDescriptor(quint8 num=0);
+	bool openVolumeDescriptor(quint8 num=0);
 	void openRootDirectory(quint32 sector, quint32 dataSize=SECTOR_SIZE_DATA);
 	IsoDirectory *_openDirectoryRecord(IsoDirectory *directories, QList<quint32> &dirVisisted);
 	QList<PathTable> pathTable(quint32 sector, quint32 dataSize=SECTOR_SIZE_DATA);
