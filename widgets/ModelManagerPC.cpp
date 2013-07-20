@@ -20,7 +20,7 @@
 #include "Data.h"
 
 ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
-	ModelManager(shareWidget, parent)
+	ModelManager(shareWidget, parent), copied(false)
 {
 	globalScale = new QSpinBox();
 	globalScale->setRange(0, 65535);
@@ -40,6 +40,9 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	models->addAction(cutModelAction);
 	models->addAction(copyModelAction);
 	models->addAction(pasteModelAction);
+	cutModelAction->setShortcut(QKeySequence::Cut);
+	copyModelAction->setShortcut(QKeySequence::Copy);
+	pasteModelAction->setShortcut(QKeySequence::Paste);
 
 	modelName = new QLineEdit();
 	modelName->setMaxLength(256);
@@ -647,10 +650,11 @@ void ModelManagerPC::pasteOnCurrentModel()
 {
 	int modelID = currentModelID();
 	if(modelID < 0) {
-		pasteModel(models->topLevelItemCount());
+		modelID = models->topLevelItemCount();
 	} else {
-		pasteModel(modelID + 1);
+		modelID += 1;
 	}
+	pasteModel(modelID);
 }
 
 void ModelManagerPC::updateActionsState()

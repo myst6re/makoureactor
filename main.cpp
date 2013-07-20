@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 	Window window;
 	window.show();
 	if(argc > 1) {
-		window.open(argv[1]);
+		window.openFile(argv[1]);
 	}
 
 	return app.exec();

@@ -19,6 +19,7 @@
 #define TUTWIDGET_H
 
 #include <QtGui>
+#include "widgets/Listwidget.h"
 #include "core/field/Field.h"
 #include "core/field/TutFileStandard.h"
 #include "core/field/TutFilePC.h"
@@ -38,13 +39,21 @@ private slots:
 	void setTextChanged();
 	void add();
 	void del();
+	void cutCurrent();
+	void copyCurrent();
+	void pasteOnCurrent();
 	void exportation();
 	void importation();
 private:
 	QWidget *buildTutPage();
 	QWidget *buildSoundPage();
 	void fillList();
+	QListWidgetItem *createListItem(int id) const;
 	void saveText(QListWidgetItem *item);
+	int currentRow(QListWidgetItem *item=0) const;
+	void cut(int row);
+	void copy(int row);
+	void paste(int row);
 
 	QStackedWidget *stackedWidget;
 	QRadioButton *versionPS, *versionPC;
@@ -58,6 +67,8 @@ private:
 	TutFileStandard *tut;
 	TutFilePC *tutPC;
 	QSet<quint8> usedTuts;
+	QByteArray _copiedData;
+	bool copied;
 };
 
 #endif // TUTWIDGET_H

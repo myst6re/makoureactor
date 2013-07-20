@@ -21,19 +21,19 @@
 #include "core/Config.h"
 
 TutWidget::TutWidget(QWidget *parent) :
-	QDialog(parent, Qt::Tool)
+	QDialog(parent, Qt::Tool), copied(false)
 {
 	setWindowTitle(tr("Tutoriels/Musiques"));
 
-	QToolBar *_toolBar = new QToolBar();
-	_toolBar->setIconSize(QSize(14,14));
-	QAction *add_A = _toolBar->addAction(QIcon(":/images/plus.png"), tr("Ajouter tutoriel"), this, SLOT(add()));
-	add_A->setShortcut(QKeySequence("Ctrl++"));
-	QAction *del_A = _toolBar->addAction(QIcon(":/images/minus.png"), tr("Supprimer tutoriel"), this, SLOT(del()));
-	del_A->setShortcut(Qt::Key_Delete);
-
-	list = new QListWidget(this);
-	list->setFixedWidth(70);
+	ListWidget *_list = new ListWidget(this);
+	_list->setFixedWidth(70);
+	_list->addAction(ListWidget::Add, tr("Ajouter"), this, SLOT(add()));
+	_list->addAction(ListWidget::Rem, tr("Supprimer"), this, SLOT(del()));
+	_list->addSeparator(true);
+	_list->addAction(ListWidget::Cut, tr("Couper"), this, SLOT(cutCurrent()), true);
+	_list->addAction(ListWidget::Copy, tr("Copier"), this, SLOT(copyCurrent()), true);
+	_list->addAction(ListWidget::Paste, tr("Coller"), this, SLOT(pasteOnCurrent()), true);
+	list = _list->listWidget();
 
 	stackedWidget = new QStackedWidget();
 	stackedWidget->addWidget(buildTutPage());
@@ -62,9 +62,8 @@ TutWidget::TutWidget(QWidget *parent) :
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addLayout(exportLayout, 0, 0, 1, 2);
-	layout->addWidget(_toolBar, 1, 0);
-	layout->addWidget(list, 2, 0);
-	layout->addWidget(stackedWidget, 1, 1, 2, 1);
+	layout->addWidget(_list, 1, 0);
+	layout->addWidget(stackedWidget, 1, 1);
 
 	connect(list, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), SLOT(showText(QListWidgetItem*,QListWidgetItem*)));
 
@@ -172,25 +171,44 @@ void TutWidget::setTextChanged()
 
 void TutWidget::fillList()
 {
+	list->blockSignals(true);
 	list->clear();
 	int size = currentTut->size();
 
 	for(int i=0 ; i<size ; ++i) {
-		QListWidgetItem *item = new QListWidgetItem((currentTut->isTut(i) ? tr("Tuto %1") : tr("Musique %1")).arg(i));
-		item->setData(Qt::UserRole, i);
-		list->addItem(item);
+		list->addItem(createListItem(i));
 	}
+	list->blockSignals(false);
+}
+
+QListWidgetItem *TutWidget::createListItem(int id) const
+{
+	return new QListWidgetItem((currentTut->isTut(id)
+								? tr("Tuto %1")
+								: tr("Musique %1"))
+							   .arg(id));
+}
+
+int TutWidget::currentRow(QListWidgetItem *item) const
+{
+	if(!item) {
+		item = list->currentItem();
+	}
+	if(item) {
+		return list->row(item);
+	}
+	return -1;
 }
 
 void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 {
 	if(item == NULL)	return;
 
-	if(lastItem!=NULL) {
+	if(lastItem != NULL) {
 		saveText(lastItem);
 	}
 
-	int id = item->data(Qt::UserRole).toInt();
+	int id = currentRow(item);
 
 	if(currentTut->isTut(id)) {
 		stackedWidget->setCurrentIndex(0);
@@ -217,7 +235,7 @@ void TutWidget::saveText(QListWidgetItem *item)
 {
 	if(item == NULL)	return;
 
-	int id = item->data(Qt::UserRole).toInt();
+	int id = currentRow(item);
 	if(currentTut->isTut(id)) {
 		currentTut->parseText(id, textEdit->toPlainText());
 		emit modified();
@@ -240,8 +258,12 @@ void TutWidget::saveText(QListWidgetItem *item)
 
 void TutWidget::add()
 {
-	QListWidgetItem *item = list->currentItem();
-	int row = !item ? currentTut->size() : item->data(Qt::UserRole).toInt()+1;
+	int row = currentRow();
+	if(row < 0) {
+		row = currentTut->size();
+	} else {
+		row += 1;
+	}
 
 	QString akaoPath;
 	bool addTut = true;
@@ -276,8 +298,6 @@ void TutWidget::add()
 		if(rep == QMessageBox::Cancel) 	return;
 	}
 
-	list->blockSignals(true);
-
 	if(addTut) {
 		currentTut->insertTut(row);
 		Section1File *scriptsAndTexts = field->scriptsAndTexts();
@@ -290,22 +310,20 @@ void TutWidget::add()
 	emit modified();
 	fillList();
 
-	list->blockSignals(false);
 	list->setCurrentItem(list->item(row < list->count() ? row : list->count()-1));
 }
 
 void TutWidget::del()
 {
-	QListWidgetItem *item = list->currentItem();
-	if(!item) return;
-
-	int row = item->data(Qt::UserRole).toInt();
+	int row = currentRow();
+	if(row < 0) {
+		return;
+	}
 
 	if((tutPC == NULL || currentTut == tutPC) && usedTuts.contains(row)) {
 		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutoriel utilisé dans les script"), currentTut == tutPC ? tr("Ce tutoriel est peut-être utilisé par un ou plusieurs scripts de cet écran.\nLe supprimer peut provoquer des erreurs.\nÊtes-vous sûr de vouloir continuer ?") : tr("Ce tutoriel est utilisé par un ou plusieurs scripts de cet écran.\nLe supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui suit.\nÊtes-vous sûr de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if(rep == QMessageBox::Cancel) 	return;
 	}
-	list->blockSignals(true);
 
 	currentTut->removeTut(row);
 	emit modified();
@@ -315,16 +333,79 @@ void TutWidget::del()
 	usedTuts = scriptsAndTexts->listUsedTuts();
 	fillList();
 
-	list->blockSignals(false);
 	list->setCurrentRow(row < list->count() ? row : list->count()-1);
+}
+
+void TutWidget::cutCurrent()
+{
+	int row = currentRow();
+	if(row < 0) {
+		return;
+	}
+	cut(row);
+}
+
+void TutWidget::copyCurrent()
+{
+	int row = currentRow();
+	if(row < 0) {
+		return;
+	}
+	copy(row);
+}
+
+void TutWidget::pasteOnCurrent()
+{
+	int row = currentRow();
+	if(row < 0) {
+		row = list->count();
+	} else {
+		row += 1;
+	}
+	paste(row);
+}
+
+void TutWidget::cut(int row)
+{
+	copy(row);
+
+	currentTut->removeTut(row);
+	list->blockSignals(true);
+	delete list->takeItem(row);
+	list->blockSignals(false);
+
+	fillList();
+	list->setCurrentRow(row);
+
+	emit modified();
+}
+
+void TutWidget::copy(int row)
+{
+	_copiedData = currentTut->data(row);
+	copied = true;
+}
+
+void TutWidget::paste(int row)
+{
+	if(!copied) {
+		return;
+	}
+
+	currentTut->insertData(row, _copiedData);
+	fillList();
+
+	list->setCurrentRow(row);
+
+	emit modified();
 }
 
 void TutWidget::exportation()
 {
-	QListWidgetItem *item = list->currentItem();
-	if(!item) return;
-
-	int row = item->data(Qt::UserRole).toInt();
+	int row = currentRow();
+	if(row < 0) {
+		return;
+	}
 	if(currentTut->isTut(row))	return;
 
 	QString path = QDir::fromNativeSeparators(QDir::cleanPath(Config::value("akaoImportExportPath").toString()));
@@ -344,10 +425,10 @@ void TutWidget::exportation()
 
 void TutWidget::importation()
 {
-	QListWidgetItem *item = list->currentItem();
-	if(!item) return;
-
-	int row = item->data(Qt::UserRole).toInt();
+	int row = currentRow();
+	if(row < 0) {
+		return;
+	}
 	if(currentTut->isTut(row))	return;
 
 	QString path = QDir::fromNativeSeparators(QDir::cleanPath(Config::value("akaoImportExportPath").toString()));

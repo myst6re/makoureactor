@@ -454,43 +454,88 @@ int Window::closeFile(bool quit)
 	return QMessageBox::Yes;
 }
 
-void Window::openFile()
+void Window::openFile(const QString &path)
 {
-	QString cheminFic = Config::value("open_path").toString();
-	if(cheminFic.isEmpty()) {
-		cheminFic = Data::ff7DataPath();
-		if(!cheminFic.isEmpty())
-			cheminFic.append("field/");
-	}
-	QStringList filter;
-	filter.append(tr("Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)"));
-	filter.append(tr("Fichiers Lgp (*.lgp)"));
-	filter.append(tr("Fichier DAT (*.DAT)"));
-	filter.append(tr("Fichier Field PC (*)"));
-	filter.append(tr("Image disque (*.bin *.iso *.img)"));
+	QString filePath;
 
-	QString selectedFilter = filter.value(Config::value("open_path_selected_filter").toInt(), filter.first());
+	if(path.isEmpty()) {
+		filePath = Config::value("open_path").toString();
+		if(filePath.isEmpty()) {
+			filePath = Data::ff7DataPath();
+			if(!filePath.isEmpty())
+				filePath.append("field/");
+		}
+		QStringList filter;
+		filter.append(tr("Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)"));
+		filter.append(tr("Fichiers Lgp (*.lgp)"));
+		filter.append(tr("Fichier DAT (*.DAT)"));
+		filter.append(tr("Fichier Field PC (*)"));
+		filter.append(tr("Image disque (*.bin *.iso *.img)"));
 
-	cheminFic = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"), cheminFic, filter.join(";;"), &selectedFilter);
-	if(!cheminFic.isNull())	{
-		int index;
-		if((index = cheminFic.lastIndexOf('/')) == -1)	index = cheminFic.size();
-		Config::setValue("open_path", cheminFic.left(index));
+		QString selectedFilter = filter.value(Config::value("open_path_selected_filter").toInt(), filter.first());
+
+		filePath = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"), filePath, filter.join(";;"), &selectedFilter);
+		if(filePath.isNull())	{
+			return;
+		}
+
+		int index = filePath.lastIndexOf('/');
+		if(index == -1)	index = filePath.size();
+		Config::setValue("open_path", filePath.left(index));
 		Config::setValue("open_path_selected_filter", filter.indexOf(selectedFilter));
-		open(cheminFic);
+	} else {
+		filePath = path;
 	}
+
+	bool isPS;
+	FieldArchiveIO::Type type;
+	QString ext = filePath.mid(filePath.lastIndexOf('.') + 1).toLower();
+
+	if(ext == "iso" || ext == "bin" || ext == "img") {
+		isPS = true;
+		type = FieldArchiveIO::Iso;
+	} else {
+		if(ext == "dat") {
+			isPS = true;
+			type = FieldArchiveIO::File;
+		} else if(ext == "lgp") {
+			isPS = false;
+			type = FieldArchiveIO::Lgp;
+		} else {
+			isPS = false;
+			type = FieldArchiveIO::File;
+		}
+	}
+
+	open(filePath, type, isPS);
 }
 
 void Window::openDir()
 {
-	QString cheminFic = QFileDialog::getExistingDirectory(this,
+	QString filePath = QFileDialog::getExistingDirectory(this,
 														  tr("Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII"),
 														  Config::value("open_dir_path").toString());
-
-	if(!cheminFic.isNull())	{
-		Config::setValue("open_dir_path", cheminFic);
-		open(cheminFic, true);
+	if(filePath.isNull())	{
+		return;
 	}
+
+	Config::setValue("open_dir_path", filePath);
+
+	QMessageBox question(QMessageBox::Question, tr("Type de fichiers"),
+						 tr("Quel type de fichiers voulez-vous chercher ?\n"
+							" - Les fichiers field PlayStation (\"EXEMPLE.DAT\")\n"
+							" - Les fichiers field PC (\"exemple\")\n"),
+						 QMessageBox::NoButton, this);
+	QAbstractButton *psButton = question.addButton(tr("PS"), QMessageBox::AcceptRole);
+	QAbstractButton *pcButton = question.addButton(tr("PC"), QMessageBox::AcceptRole);
+	question.addButton(QMessageBox::Cancel);
+	question.exec();
+	if(question.clickedButton() != psButton
+			&& question.clickedButton() != pcButton) {
+		return;
+	}
+
+	open(filePath, FieldArchiveIO::Dir, question.clickedButton() == psButton);
 }
 
 bool Window::observerWasCanceled() const
@@ -528,53 +573,14 @@ void Window::hideProgression()
 	progressDialog->reset();
 }
 
-void Window::open(const QString &cheminFic, bool isDir)
+void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 {
-//	qDebug() << "Window::open" << cheminFic << isDir;
-
-	bool isPS = true;
-	FieldArchiveIO::Type type;
-
-	if(isDir) {
-		type = FieldArchiveIO::Dir;
-		QMessageBox question(QMessageBox::Question, tr("Type de fichiers"),
-							 tr("Quel type de fichiers voulez-vous chercher ?\n"
-								" - Les fichiers field PlayStation (\"EXEMPLE.DAT\")\n"
-								" - Les fichiers field PC (\"exemple\")\n"),
-							 QMessageBox::NoButton, this);
-		QAbstractButton *psButton = question.addButton(tr("PS"), QMessageBox::AcceptRole);
-		QAbstractButton *pcButton = question.addButton(tr("PC"), QMessageBox::AcceptRole);
-		question.addButton(QMessageBox::Cancel);
-		question.exec();
-		if(question.clickedButton() != psButton
-				&& question.clickedButton() != pcButton) {
-			return;
-		}
-		isPS = question.clickedButton() == psButton;
-	} else {
-		QString ext = cheminFic.mid(cheminFic.lastIndexOf('.') + 1).toLower();
-
-		if(ext == "iso" || ext == "bin" || ext == "img") {
-			type = FieldArchiveIO::Iso;
-		} else {
-			if(ext == "dat") {
-				type = FieldArchiveIO::File;
-			} else if(ext == "lgp") {
-				isPS = false;
-				type = FieldArchiveIO::Lgp;
-			} else {
-				isPS = false;
-				type = FieldArchiveIO::File;
-			}
-		}
-	}
-
 	closeFile();
 
 	if(isPS) {
-		fieldArchive = new FieldArchivePS(cheminFic, type);
+		fieldArchive = new FieldArchivePS(filePath, type);
 	} else {
-		fieldArchive = new FieldArchivePC(cheminFic, type);
+		fieldArchive = new FieldArchivePC(filePath, type);
 	}
 
 	fieldArchive->setObserver(this);
@@ -680,7 +686,6 @@ void Window::open(const QString &cheminFic, bool isDir)
 	actionClose->setEnabled(true);
 
 //	fieldArchive->searchAll();
-//	qDebug() << "/Window::open" << cheminFic << isDir;
 }
 
 void Window::setWindowTitle()

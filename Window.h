@@ -44,7 +44,7 @@ public:
 	explicit Window();
 	virtual ~Window();
 
-	void open(const QString &cheminFic, bool isDir=false);
+	void open(const QString &cheminFic, FieldArchiveIO::Type type, bool isPS);
 	FieldArchive::Sorting getFieldSorting();
 
 	bool observerWasCanceled() const;
@@ -60,7 +60,7 @@ public:
 	}
 
 public slots:
-	void openFile();
+	void openFile(const QString &path=QString());
 	void openDir();
 	void refresh();
 

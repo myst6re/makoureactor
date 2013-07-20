@@ -39,8 +39,18 @@ ListWidget::ListWidget(QWidget *parent) :
 	layout->setContentsMargins(QMargins());
 }
 
+void ListWidget::addSeparator(bool invisible)
+{
+	if(!invisible) {
+		_toolBar->addSeparator();
+	}
+	QAction *action = new QAction(_listWidget);
+	action->setSeparator(true);
+	insertAction(0, action);
+}
+
 QAction *ListWidget::addAction(ActionType type, const QString &text,
-							   const QObject *receiver, const char *member)
+							   const QObject *receiver, const char *member, bool invisible)
 {
 	QIcon icon;
 	QKeySequence shortcut;
@@ -51,12 +61,6 @@ QAction *ListWidget::addAction(ActionType type, const QString &text,
 		icon = QIcon(":images/plus.png");
 		shortcut = QKeySequence("Ctrl++");
 		break;
-	case Invisible:
-		action = new QAction(text, this);
-		action->setStatusTip(text);
-		insertAction(0, action);
-		connect(action, SIGNAL(triggered()), receiver, member);
-		return action;
 	case Rem:
 		icon = QIcon(":images/minus.png");
 		shortcut = QKeySequence::Delete;
@@ -69,9 +73,26 @@ QAction *ListWidget::addAction(ActionType type, const QString &text,
 		icon = QIcon(":images/down.png");
 		shortcut = QKeySequence("Shift+Down");
 		break;
+	case Cut:
+		icon = QIcon(":images/cut.png");
+		shortcut = QKeySequence::Cut;
+		break;
+	case Copy:
+		icon = QIcon(":images/copy.png");
+		shortcut = QKeySequence::Copy;
+		break;
+	case Paste:
+		icon = QIcon(":images/paste.png");
+		shortcut = QKeySequence::Paste;
+		break;
 	}
 
-	action = _toolBar->addAction(icon, text, receiver, member);
+	if(invisible) {
+		action = new QAction(icon, text, this);
+		connect(action, SIGNAL(triggered()), receiver, member);
+	} else {
+		action = _toolBar->addAction(icon, text, receiver, member);
+	}
 	action->setShortcut(shortcut);
 	action->setStatusTip(text);
 	insertAction(0, action);
