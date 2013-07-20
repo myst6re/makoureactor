@@ -43,6 +43,7 @@ protected:
 	virtual QList<QRgb> lightColors(int modelID) const=0;
 	virtual quint16 modelScale(int modelID) const=0;
 	int currentModelID(QTreeWidgetItem *item=0) const;
+	QList<int> selectedModelIDs() const;
 	int currentAnimID(QTreeWidgetItem *item=0) const;
 
 	QTreeWidget *models;

@@ -133,6 +133,15 @@ int ModelManager::currentModelID(QTreeWidgetItem *item) const
 	return models->indexOfTopLevelItem(item);
 }
 
+QList<int> ModelManager::selectedModelIDs() const
+{
+	QList<int> modelIDs;
+	foreach(QTreeWidgetItem *item, models->selectedItems()) {
+		modelIDs.append(models->indexOfTopLevelItem(item));
+	}
+	return modelIDs;
+}
+
 int ModelManager::currentAnimID(QTreeWidgetItem *item) const
 {
 	if(!item) {

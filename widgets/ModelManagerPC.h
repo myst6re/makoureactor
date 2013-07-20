@@ -39,15 +39,15 @@ protected:
 	QList<QRgb> lightColors(int modelID) const;
 	quint16 modelScale(int modelID) const;
 private:
-	void copyModel(int modelID);
-	void cutModel(int modelID);
-	void pasteModel(int modelID);
+	void copyModels(const QList<int> &modelIDs);
+	void cutModels(const QList<int> &modelIDs);
+	void pasteModels(int modelID);
 
 	QSpinBox *globalScale;
 	QLineEdit *modelName;
 	QToolBar *toolBar2;
 	QAction *copyModelAction, *cutModelAction, *pasteModelAction;
-	FieldModelInfosPC _copiedModel;
+	QList<FieldModelInfosPC> _copiedModels;
 	bool copied;
 private slots:
 	void setGlobalScale(int value);

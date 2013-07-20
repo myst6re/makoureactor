@@ -34,6 +34,7 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 
 	models->setColumnCount(1);
 	models->setContextMenuPolicy(Qt::ActionsContextMenu);
+	models->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	cutModelAction = new QAction(QIcon(":/images/cut.png"), tr("Couper"), models);
 	copyModelAction = new QAction(QIcon(":/images/copy.png"), tr("Copier"), models);
 	pasteModelAction = new QAction(QIcon(":/images/paste.png"), tr("Coller"), models);
@@ -480,7 +481,7 @@ void ModelManagerPC::delAnim()
 {
 	QTreeWidgetItem *item = modelAnims->currentItem();
 	if(item == NULL) return;
-	int modelID = currentModelID();
+	int modelID = currentModelID(item);
 	if(modelID < 0)		return;
 
 	modelLoader()->removeAnim(modelID, currentAnimID());
@@ -598,52 +599,59 @@ quint16 ModelManagerPC::modelScale(int modelID) const
 	return modelLoader()->scale(modelID);
 }
 
-void ModelManagerPC::copyModel(int modelID)
+void ModelManagerPC::copyModels(const QList<int> &modelIDs)
 {
-	_copiedModel = modelLoader()->modelInfos(modelID);
+	if(modelIDs.isEmpty()) {
+		return;
+	}
+
+	_copiedModels.clear();
+	foreach(int modelID, modelIDs) {
+		_copiedModels.append(modelLoader()->modelInfos(modelID));
+	}
 	copied = true;
 }
 
-void ModelManagerPC::cutModel(int modelID)
+void ModelManagerPC::cutModels(const QList<int> &modelIDs)
 {
-	copyModel(modelID);
-	modelLoader()->removeModel(modelID);
-	delete models->topLevelItem(modelID);
+	copyModels(modelIDs);
+	QList<int> mIDs = modelIDs;
+	qSort(mIDs);
+	for(int i=mIDs.size() - 1 ; i>=0 ; --i) {
+		int modelID = mIDs.at(i);
+		modelLoader()->removeModel(modelID);
+		delete models->topLevelItem(modelID);
+	}
 
 	emit modified();
 }
 
-void ModelManagerPC::pasteModel(int modelID)
+void ModelManagerPC::pasteModels(int modelID)
 {
 	if(!copied) {
 		return;
 	}
-	modelLoader()->insertModelInfos(modelID, _copiedModel);
+	for(int i=_copiedModels.size() - 1 ; i>=0 ; --i) {
+		const FieldModelInfosPC &modelInfos = _copiedModels.at(i);
+		modelLoader()->insertModelInfos(modelID, modelInfos);
 
-	QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(_copiedModel.nameHRC));
-	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
+		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(modelInfos.nameHRC));
+		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 
-	models->insertTopLevelItem(modelID, item);
+		models->insertTopLevelItem(modelID, item);
+	}
 
 	emit modified();
 }
 
 void ModelManagerPC::copyCurrentModel()
 {
-	int modelID = currentModelID();
-	if(modelID < 0) {
-		return;
-	}
-	copyModel(modelID);
+	copyModels(selectedModelIDs());
 }
 
 void ModelManagerPC::cutCurrentModel()
 {
-	int modelID = currentModelID();
-	if(modelID < 0) {
-		return;
-	}
-	cutModel(modelID);
+	cutModels(selectedModelIDs());
 }
 
 void ModelManagerPC::pasteOnCurrentModel()
@@ -654,7 +662,7 @@ void ModelManagerPC::pasteOnCurrentModel()
 	} else {
 		modelID += 1;
 	}
-	pasteModel(modelID);
+	pasteModels(modelID);
 }
 
 void ModelManagerPC::updateActionsState()
