@@ -51,8 +51,9 @@ private:
 	QListWidgetItem *createListItem(int id) const;
 	void saveText(QListWidgetItem *item);
 	int currentRow(QListWidgetItem *item=0) const;
-	void cut(int row);
-	void copy(int row);
+	QList<int> selectedRows() const;
+	void cut(const QList<int> &rows);
+	void copy(const QList<int> &rows);
 	void paste(int row);
 
 	QStackedWidget *stackedWidget;
@@ -67,7 +68,7 @@ private:
 	TutFileStandard *tut;
 	TutFilePC *tutPC;
 	QSet<quint8> usedTuts;
-	QByteArray _copiedData;
+	QList<QByteArray> _copiedData;
 	bool copied;
 };
 

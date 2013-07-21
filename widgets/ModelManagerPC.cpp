@@ -614,6 +614,10 @@ void ModelManagerPC::copyModels(const QList<int> &modelIDs)
 
 void ModelManagerPC::cutModels(const QList<int> &modelIDs)
 {
+	if(modelIDs.isEmpty()) {
+		return;
+	}
+
 	copyModels(modelIDs);
 	QList<int> mIDs = modelIDs;
 	qSort(mIDs);
@@ -631,6 +635,7 @@ void ModelManagerPC::pasteModels(int modelID)
 	if(!copied) {
 		return;
 	}
+
 	for(int i=_copiedModels.size() - 1 ; i>=0 ; --i) {
 		const FieldModelInfosPC &modelInfos = _copiedModels.at(i);
 		modelLoader()->insertModelInfos(modelID, modelInfos);
@@ -640,6 +645,11 @@ void ModelManagerPC::pasteModels(int modelID)
 
 		models->insertTopLevelItem(modelID, item);
 	}
+
+	models->selectionModel()->select(
+				QItemSelection(models->model()->index(modelID, 0),
+							   models->model()->index(modelID + _copiedModels.size()-1, 0)),
+				QItemSelectionModel::ClearAndSelect);
 
 	emit modified();
 }

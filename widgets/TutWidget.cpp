@@ -34,6 +34,7 @@ TutWidget::TutWidget(QWidget *parent) :
 	_list->addAction(ListWidget::Copy, tr("Copier"), this, SLOT(copyCurrent()), true);
 	_list->addAction(ListWidget::Paste, tr("Coller"), this, SLOT(pasteOnCurrent()), true);
 	list = _list->listWidget();
+	list->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
 	stackedWidget = new QStackedWidget();
 	stackedWidget->addWidget(buildTutPage());
@@ -200,6 +201,17 @@ int TutWidget::currentRow(QListWidgetItem *item) const
 	return -1;
 }
 
+QList<int> TutWidget::selectedRows() const
+{
+	QList<int> ret;
+	QList<QListWidgetItem *> items = list->selectedItems();
+	foreach(QListWidgetItem *item, items) {
+		ret.append(list->row(item));
+	}
+
+	return ret;
+}
+
 void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 {
 	if(item == NULL)	return;
@@ -338,20 +350,12 @@ void TutWidget::del()
 
 void TutWidget::cutCurrent()
 {
-	int row = currentRow();
-	if(row < 0) {
-		return;
-	}
-	cut(row);
+	cut(selectedRows());
 }
 
 void TutWidget::copyCurrent()
 {
-	int row = currentRow();
-	if(row < 0) {
-		return;
-	}
-	copy(row);
+	copy(selectedRows());
 }
 
 void TutWidget::pasteOnCurrent()
@@ -365,24 +369,40 @@ void TutWidget::pasteOnCurrent()
 	paste(row);
 }
 
-void TutWidget::cut(int row)
+void TutWidget::cut(const QList<int> &rows)
 {
-	copy(row);
+	if(rows.isEmpty()) {
+		return;
+	}
 
-	currentTut->removeTut(row);
-	list->blockSignals(true);
-	delete list->takeItem(row);
-	list->blockSignals(false);
+	copy(rows);
+
+	QList<int> sortedRows = rows;
+	qSort(sortedRows);
+	for(int i=sortedRows.size()-1 ; i>=0 ; --i) {
+		int row = sortedRows.at(i);
+		currentTut->removeTut(row);
+		list->blockSignals(true);
+		delete list->takeItem(row);
+		list->blockSignals(false);
+	}
 
 	fillList();
-	list->setCurrentRow(row);
+	list->setCurrentRow(sortedRows.first());
 
 	emit modified();
 }
 
-void TutWidget::copy(int row)
+void TutWidget::copy(const QList<int> &rows)
 {
-	_copiedData = currentTut->data(row);
+	if(rows.isEmpty()) {
+		return;
+	}
+
+	_copiedData.clear();
+	foreach(int row, rows) {
+		_copiedData.append(currentTut->data(row));
+	}
 	copied = true;
 }
 
@@ -392,10 +412,15 @@ void TutWidget::paste(int row)
 		return;
 	}
 
-	currentTut->insertData(row, _copiedData);
-	fillList();
+	for(int i=_copiedData.size()-1 ; i>=0 ; --i) {
+		currentTut->insertData(row, _copiedData.at(i));
+	}
 
-	list->setCurrentRow(row);
+	fillList();
+	list->selectionModel()->select(
+				QItemSelection(list->model()->index(row, 0),
+							   list->model()->index(row + _copiedData.size()-1, 0)),
+				QItemSelectionModel::ClearAndSelect);
 
 	emit modified();
 }
