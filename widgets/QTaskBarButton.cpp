@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "QTaskBarButton.h"
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 
 QTaskBarButton::QTaskBarButton(QWidget *mainWindow) :
 	QObject(mainWindow), pITask(0), _minimum(0), _maximum(100),

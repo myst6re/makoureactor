@@ -208,7 +208,7 @@ bool FF7Font::listFonts()
 {
 	fonts.clear();
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 	font_dirPath = qApp->applicationDirPath();
 //	font_dirPath = QDir::cleanPath(QSettings(QSettings::IniFormat, QSettings::UserScope, PROG_NAME, PROG_NAME).fileName());
 //	font_dirPath = font_dirPath.left(font_dirPath.lastIndexOf('/'));

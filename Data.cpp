@@ -19,7 +19,7 @@
 #include "core/Config.h"
 #include "core/LZS.h"
 #include "core/FF7Text.h"
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include <windef.h>
 #include <winbase.h>
 #include <winerror.h>
@@ -55,7 +55,7 @@ void Data::refreshFF7Paths()
 	ff7AppPath_cache = ff7DataPath_cache = QString();
 }
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 QString Data::regValue(const QString &regPath, const QString &regKey)
 {
 	HKEY phkResult;
@@ -86,7 +86,7 @@ QString Data::regValue(const QString &regPath, const QString &regKey)
 
 const QString &Data::searchRereleasedFF7Path()
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 	if(ff7RereleasePath_cache.isNull() && !ff7RereleaseAlreadySearched) {
 		ff7RereleaseAlreadySearched = true;
 		HKEY phkResult, phkResult2;
@@ -148,7 +148,7 @@ const QString &Data::searchRereleasedFF7Path()
 
 QString Data::searchFF7Exe()
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 	QString ff7MusicPath = QDir::cleanPath(QDir::fromNativeSeparators(regValue("FF7Music", "InstDir")));
 	if(!ff7MusicPath.isEmpty() && QFile::exists(ff7MusicPath + "/launchff7.exe")) {
 		return ff7MusicPath + "/launchff7.exe";
@@ -172,7 +172,7 @@ QString Data::searchRereleasedFF7Exe()
 
 const QString &Data::ff7DataPath()
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 	if(ff7DataPath_cache.isNull()) {
 		bool useNew = Config::value("useRereleaseFF7Path", false).toBool();
 		if(!useNew) {

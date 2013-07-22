@@ -21,7 +21,7 @@ QSettings *Config::settings = 0;
 
 void Config::set() {
 	if(!settings) {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 	settings = new QSettings(qApp->applicationDirPath()+"/Makou_Reactor.ini", QSettings::IniFormat);
 #else
 	settings = new QSettings("Makou_Reactor");

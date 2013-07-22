@@ -20,6 +20,7 @@
 
 #include "core/field/Field.h"
 #include "TextPreview.h"
+#include "widgets/Listwidget.h"
 
 class TextManager : public QDialog
 {

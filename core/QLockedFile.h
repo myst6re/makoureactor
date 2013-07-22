@@ -19,7 +19,7 @@
 #define QLOCKEDFILE_H
 
 #include <QtCore>
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include <windef.h>
 #include <winbase.h>
 #else
@@ -45,7 +45,7 @@ signals:
 
 public slots:
 private:
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 	HANDLE handle;
 #endif
 };

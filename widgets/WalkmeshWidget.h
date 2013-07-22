@@ -20,7 +20,7 @@
 
 #include <QtGui>
 #include <QGLWidget>
-#if defined(Q_WS_MAC)
+#ifdef Q_OS_MAC
 #include <OpenGL/glu.h>
 #else
 #include <GL/glu.h>

@@ -25,15 +25,15 @@ TextManager::TextManager(QWidget *parent) :
 	QDialog(parent, Qt::Tool), scriptsAndTexts(0)
 {
 	setWindowTitle(tr("Textes"));
-	QFont font;
-	font.setPointSize(8);
 
 	dispUnusedText = new QCheckBox(tr("Afficher les textes non utilisés"), this);
 	dispUnusedText->setChecked(Config::value("dispUnusedText", true).toBool());
 
-	liste1 = new QListWidget(this);
-	liste1->setFont(font);
-	liste1->setFixedWidth(100);
+	ListWidget *listWidget = new ListWidget(this);
+	listWidget->setFixedWidth(100);
+	listWidget->addAction(ListWidget::Add, tr("Ajouter texte"), this, SLOT(addText()));
+	listWidget->addAction(ListWidget::Rem, tr("Supprimer texte"), this, SLOT(delText()));
+	liste1 = listWidget->listWidget();
 
 	QAction *action;
 	toolBar = new QToolBar(this);
@@ -148,19 +148,6 @@ TextManager::TextManager(QWidget *parent) :
 	textEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
 	new TextHighlighter(textEdit->document());
 
-	QToolBar *_toolBar = new QToolBar();
-	_toolBar->setIconSize(QSize(14,14));
-	QAction *add_A = _toolBar->addAction(QIcon(":/images/plus.png"), tr("Ajouter texte"), this, SLOT(addText()));
-	add_A->setShortcut(QKeySequence("Ctrl++"));
-	add_A->setStatusTip(tr("Ajouter un texte"));
-	QAction *del_A = _toolBar->addAction(QIcon(":/images/minus.png"), tr("Supprimer texte"), this, SLOT(delText()));
-	del_A->setShortcut(Qt::Key_Delete);
-	del_A->setStatusTip(tr("Supprimer un texte"));
-
-	QVBoxLayout *textListLayout = new QVBoxLayout;
-	textListLayout->addWidget(_toolBar);
-	textListLayout->addWidget(liste1);
-
 	QVBoxLayout *toolBars = new QVBoxLayout();
 	toolBars->addWidget(toolBar);
 	toolBars->addWidget(toolBar2);
@@ -228,7 +215,7 @@ TextManager::TextManager(QWidget *parent) :
 
 	QGridLayout *layout = new QGridLayout();
 	layout->addWidget(dispUnusedText, 0, 0, 1, 2);
-	layout->addLayout(textListLayout, 1, 0, 3, 1);
+	layout->addWidget(listWidget, 1, 0, 3, 1);
 	layout->addLayout(toolBars, 1, 1);
 	layout->addWidget(textEdit, 2, 1);
 	layout->addWidget(groupTextPreview, 3, 1);
@@ -419,15 +406,14 @@ void TextManager::delText()
 	if(!scriptsAndTexts)	return;
 	QListWidgetItem *item = liste1->currentItem();
 	if(!item) return;
-	liste1->blockSignals(true);
 	int row=item->data(Qt::UserRole).toInt();
 	if(usedTexts.contains(row)) {
 		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Texte utilisé dans les script"), tr("Ce texte est utilisé par un ou plusieurs scripts de cet écran.\nLe supprimer remplacera les appels à ce texte par des appels au texte qui suit.\nÊtes-vous sûr de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if(rep == QMessageBox::Cancel) {
-			liste1->blockSignals(false);
 			return;
 		}
 	}
+	liste1->blockSignals(true);
 	scriptsAndTexts->deleteText(row);
 	usedTexts = scriptsAndTexts->listUsedTexts();
 	dispUnusedText->setChecked(true);

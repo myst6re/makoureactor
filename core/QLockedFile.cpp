@@ -44,7 +44,7 @@ QLockedFile::~QLockedFile()
 void QLockedFile::close()
 {
 	// Unlock file
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 	CloseHandle(handle);
 #else
 	::flock(handle(), LOCK_UN);
@@ -60,7 +60,7 @@ bool QLockedFile::open(OpenMode mode)
 	}
 
 	// Lock file
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 	handle = CreateFileA(QDir::toNativeSeparators(fileName()).toLatin1().data(),
 						 GENERIC_READ,
 						 FILE_SHARE_READ,

@@ -29,12 +29,12 @@ TutWidget::TutWidget(QWidget *parent) :
 	_list->setFixedWidth(70);
 	_list->addAction(ListWidget::Add, tr("Ajouter"), this, SLOT(add()));
 	_list->addAction(ListWidget::Rem, tr("Supprimer"), this, SLOT(del()));
-	_list->addSeparator(true);
-	_list->addAction(ListWidget::Cut, tr("Couper"), this, SLOT(cutCurrent()), true);
-	_list->addAction(ListWidget::Copy, tr("Copier"), this, SLOT(copyCurrent()), true);
-	_list->addAction(ListWidget::Paste, tr("Coller"), this, SLOT(pasteOnCurrent()), true);
+//	_list->addSeparator(true);
+//	_list->addAction(ListWidget::Cut, tr("Couper"), this, SLOT(cutCurrent()), true);
+//	_list->addAction(ListWidget::Copy, tr("Copier"), this, SLOT(copyCurrent()), true);
+//	_list->addAction(ListWidget::Paste, tr("Coller"), this, SLOT(pasteOnCurrent()), true);
 	list = _list->listWidget();
-	list->setSelectionMode(QAbstractItemView::ExtendedSelection);
+//	list->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
 	stackedWidget = new QStackedWidget();
 	stackedWidget->addWidget(buildTutPage());
@@ -377,16 +377,19 @@ void TutWidget::cut(const QList<int> &rows)
 
 	copy(rows);
 
+	Section1File *scriptsAndTexts = field->scriptsAndTexts();
+
 	QList<int> sortedRows = rows;
 	qSort(sortedRows);
+
 	for(int i=sortedRows.size()-1 ; i>=0 ; --i) {
 		int row = sortedRows.at(i);
 		currentTut->removeTut(row);
-		list->blockSignals(true);
-		delete list->takeItem(row);
-		list->blockSignals(false);
+		if(tutPC == NULL)
+			scriptsAndTexts->shiftTutIds(row, -1);
 	}
 
+	usedTuts = scriptsAndTexts->listUsedTuts();
 	fillList();
 	list->setCurrentRow(sortedRows.first());
 
