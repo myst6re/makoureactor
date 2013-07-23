@@ -157,21 +157,23 @@ void ConfigWindow::fillConfig()
 	QString char_path = Config::value("charPath").toString();
 	QString ff7_path = Data::ff7DataPath();
 	QString ff7_app_path = Data::ff7AppPath();
-	QStringList ff7PathList = Data::ff7AppPathList();
+	QMap<Data::FF7Version, QString> ff7PathList = Data::ff7AppPathList();
 
 	listFF7->clear();
 	QTreeWidgetItem *selectedItem = 0;
-	int ff7PathID=0;
-	foreach(const QString &ff7Path, ff7PathList) {
-		if(!ff7Path.isEmpty()) {
-			QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(ff7Path)));
-			if(ff7Path.compare(ff7_app_path, Qt::CaseInsensitive) == 0) {
-				selectedItem = item;
-			}
-			item->setData(0, Qt::UserRole, ff7PathID);
-			listFF7->addTopLevelItem(item);
+	QMapIterator<Data::FF7Version, QString> it(ff7PathList);
+
+	while(it.hasNext()) {
+		it.next();
+
+		const QString &ff7Path = it.value();
+
+		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(ff7Path)));
+		if(ff7Path.compare(ff7_app_path, Qt::CaseInsensitive) == 0) {
+			selectedItem = item;
 		}
-		++ff7PathID;
+		item->setData(0, Qt::UserRole, int(it.key()));
+		listFF7->addTopLevelItem(item);
 	}
 	if(selectedItem)	listFF7->setCurrentItem(selectedItem);
 
@@ -226,8 +228,8 @@ void ConfigWindow::changeFF7ListButtonsState()
 {
 	QTreeWidgetItem *item = listFF7->currentItem();
 	if(item) {
-		int id = item->data(0, Qt::UserRole).toInt();
-		if(id == 2) {
+		Data::FF7Version id = Data::FF7Version(item->data(0, Qt::UserRole).toInt());
+		if(id == Data::Custom) {
 			ff7ButtonRem->setEnabled(true);
 			ff7ButtonMod->setText(tr("Modifier"));
 		} else {
@@ -240,7 +242,7 @@ void ConfigWindow::changeFF7ListButtonsState()
 	}
 
 	for(int i=0 ; i<listFF7->topLevelItemCount() ; ++i) {
-		if(listFF7->topLevelItem(i)->data(0, Qt::UserRole).toInt() == 2) {
+		if(listFF7->topLevelItem(i)->data(0, Qt::UserRole).toInt() == int(Data::Custom)) {
 			ff7ButtonMod->setEnabled(item == listFF7->topLevelItem(i));
 			return;
 		}
@@ -253,8 +255,8 @@ void ConfigWindow::modifyCustomFF7Path()
 	QTreeWidgetItem *item = listFF7->currentItem();
 	QString currentPath;
 	if(item) {
-		int id = item->data(0, Qt::UserRole).toInt();
-		if(id == 2) {
+		Data::FF7Version id = Data::FF7Version(item->data(0, Qt::UserRole).toInt());
+		if(id == Data::Custom) {
 			// Modify
 			QString path = QFileDialog::getOpenFileName(this, tr("Chercher ff7.exe"), item->text(0), tr("Fichiers EXE (*.exe)"));
 			if(!path.isNull()) {
@@ -270,7 +272,7 @@ void ConfigWindow::modifyCustomFF7Path()
 	if(!path.isNull()) {
 		Config::setValue("customFF7Path", path);
 		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(path)));
-		item->setData(0, Qt::UserRole, 2);
+		item->setData(0, Qt::UserRole, int(Data::Custom));
 		item->setIcon(0, QFileIconProvider().icon(QFileInfo(path)));
 		listFF7->addTopLevelItem(item);
 		listFF7->setCurrentItem(item);
@@ -281,8 +283,8 @@ void ConfigWindow::removeCustomFF7Path()
 {
 	QTreeWidgetItem *item = listFF7->currentItem();
 	if(item) {
-		int id = item->data(0, Qt::UserRole).toInt();
-		if(id == 2) {
+		Data::FF7Version id = Data::FF7Version(item->data(0, Qt::UserRole).toInt());
+		if(id == Data::Custom) {
 			// Remove
 			Config::setValue("customFF7Path", QString());
 			delete item;
@@ -397,8 +399,7 @@ void ConfigWindow::accept()
 	} else if(listFF7->topLevelItemCount() > 0) {
 		currentFF7Path = listFF7->topLevelItem(0)->data(0, Qt::UserRole).toInt();
 	}
-	Config::setValue("useRereleaseFF7Path", currentFF7Path == 1);
-	Config::setValue("useCustomFF7Path", currentFF7Path == 2);
+	Config::setValue("FF7ExePathToUse", currentFF7Path);
 	Config::setValue("kernel2Path", kernelAuto->isChecked() ? QDir::fromNativeSeparators(kernelPath->text()) : QString());
 	Config::setValue("windowBinPath", windowAuto->isChecked() ? QDir::fromNativeSeparators(windowPath->text()) : QString());
 	Config::setValue("charPath", charAuto->isChecked() ? QDir::fromNativeSeparators(charPath->text()) : QString());

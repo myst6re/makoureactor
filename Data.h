@@ -22,13 +22,20 @@
 #include "core/Lgp.h"
 #include "core/WindowBinFile.h"
 
+#define FF7_WIN_REGISTER_PATH "Square Soft, Inc./Final Fantasy VII"
+
 class Data
 {
 public:
+	enum FF7Version {
+		Standard, Rerelease, Steam, Custom
+	};
+
 	static void refreshFF7Paths();
 	static const QString &ff7DataPath();
 	static const QString &ff7AppPath();
-	static QStringList ff7AppPathList();
+	static QMap<FF7Version, QString> ff7AppPathList();
+	static QMap<FF7Version, QString> ff7DataPathList();
 	static QString ff7KernelPath();
 	static QString charlgp_path();
 	static bool charlgp_loadListPos();
@@ -60,8 +67,11 @@ public:
 #endif
 private:
 	static const QString &searchRereleasedFF7Path();
-	static QString searchFF7Exe();
-	static QString searchRereleasedFF7Exe();
+	static QString searchSteamFF7Path();
+	static QString searchFF7Exe(FF7Version version);
+	static QString searchFF7DataPath(FF7Version version);
+	static QString ff7Path(const QMap<FF7Version, QString> &pathList);
+	static QMap<Data::FF7Version, QString> ff7PathList(QString (*searchFF7Path)(FF7Version));
 	static void fill(const QByteArray &data, int pos, int dataSize, QStringList &names);
 	static QString ff7DataPath_cache;
 	static QString ff7AppPath_cache;

@@ -67,7 +67,7 @@ QString Data::regValue(const QString &regPath, const QString &regKey)
 #endif
 
 	// Open regPath relative to HKEY_LOCAL_MACHINE
-	error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, (wchar_t *)("SOFTWARE\\" + regPath).utf16(), 0, flags, &phkResult);
+	error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, (wchar_t *)QDir::toNativeSeparators("SOFTWARE/" + regPath).utf16(), 0, flags, &phkResult);
 	if(ERROR_SUCCESS == error) {
 		BYTE value[MAX_PATH];
 		DWORD cValue = MAX_PATH, type;
@@ -93,7 +93,7 @@ const QString &Data::searchRereleasedFF7Path()
 		LONG error;
 
 		// direct
-		ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(regValue("Microsoft\\Windows\\CurrentVersion\\Uninstall\\{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", "InstallLocation")));
+		ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(regValue("Microsoft/Windows/CurrentVersion/Uninstall/{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", "InstallLocation")));
 		if(!ff7RereleasePath_cache.isEmpty()) {
 			return ff7RereleasePath_cache;
 		}
@@ -146,96 +146,147 @@ const QString &Data::searchRereleasedFF7Path()
 	return ff7RereleasePath_cache;
 }
 
-QString Data::searchFF7Exe()
+QString Data::searchSteamFF7Path()
 {
-#ifdef Q_OS_WIN
+	QString steamPath = QDir::cleanPath(QDir::fromNativeSeparators(regValue("Valve/Steam", "InstallPath")));
+	if(!steamPath.isEmpty()) {
+		return steamPath.append("/SteamApps/common/FINAL FANTASY VII");
+	}
+	return QString();
+}
+
+QString Data::searchFF7Exe(FF7Version version)
+{
+	QString ff7Path;
+
+	switch(version) {
+	case Standard:
+		ff7Path = QDir::cleanPath(QDir::fromNativeSeparators(regValue(FF7_WIN_REGISTER_PATH, "AppPath")));
+		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/ff7.exe")) {
+			return ff7Path + "/ff7.exe";
+		}
+		return QString();
+	case Rerelease:
+		ff7Path = searchRereleasedFF7Path();
+		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/FF7_Launcher.exe")) {
+			return ff7Path + "/FF7_Launcher.exe";
+		}
+		return QString();
+	case Steam:
+		ff7Path = searchSteamFF7Path();
+		if(QFile::exists(ff7Path + "/launchff7.exe")) {
+			return ff7Path + "/launchff7.exe";
+		}
+		return QString();
+	case Custom:
+		return Config::value("customFF7Path").toString();
+	}
+
+	/*
 	QString ff7MusicPath = QDir::cleanPath(QDir::fromNativeSeparators(regValue("FF7Music", "InstDir")));
 	if(!ff7MusicPath.isEmpty() && QFile::exists(ff7MusicPath + "/launchff7.exe")) {
 		return ff7MusicPath + "/launchff7.exe";
 	}
-	QString ff7Path = QDir::cleanPath(QDir::fromNativeSeparators(regValue("Square Soft, Inc.\\Final Fantasy VII", "AppPath")));
-	if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/ff7.exe")) {
-		return ff7Path + "/ff7.exe";
-	}
-#endif
+	*/
 	return QString();
 }
 
-QString Data::searchRereleasedFF7Exe()
+QString Data::searchFF7DataPath(FF7Version version)
 {
-	QString ff7Path = searchRereleasedFF7Path();
-	if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/FF7_Launcher.exe")) {
-		return ff7Path + "/FF7_Launcher.exe";
-	}
-	return QString();
-}
+	QString dataPath, ff7Path;
 
-const QString &Data::ff7DataPath()
-{
-#ifdef Q_OS_WIN
-	if(ff7DataPath_cache.isNull()) {
-		bool useNew = Config::value("useRereleaseFF7Path", false).toBool();
-		if(!useNew) {
-			// Search for old version
-			ff7DataPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(regValue("Square Soft, Inc.\\Final Fantasy VII", "DataPath")));
-			// Search for new version
-			if(ff7DataPath_cache.isEmpty() || !QFile::exists(ff7DataPath_cache)) {
-				ff7DataPath_cache = searchRereleasedFF7Path();
-				if(!ff7DataPath_cache.isEmpty()) {
-					ff7DataPath_cache.append("/data");
-				}
-			}
-		} else {
-			// Search for new version
-			ff7DataPath_cache = searchRereleasedFF7Path();
-			if(!ff7DataPath_cache.isEmpty()) {
-				ff7DataPath_cache.append("/data");
-			}
-			// Search for old version
-			if(ff7DataPath_cache.isEmpty() || !QFile::exists(ff7DataPath_cache)) {
-				ff7DataPath_cache = QDir::cleanPath(QDir::fromNativeSeparators(regValue("Square Soft, Inc.\\Final Fantasy VII", "DataPath")));
-			}
+	switch(version) {
+	case Standard:
+		dataPath = QDir::cleanPath(QDir::fromNativeSeparators(regValue(FF7_WIN_REGISTER_PATH, "DataPath")));
+		if(!dataPath.isEmpty() && QFile::exists(dataPath)) {
+			return dataPath;
+		}
+		return QString();
+	case Rerelease:
+		ff7Path = searchRereleasedFF7Path();
+		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/data")) {
+			return ff7Path + "/data";
+		}
+		return QString();
+	case Steam:
+		ff7Path = searchSteamFF7Path();
+		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/data")) {
+			return ff7Path + "/data";
+		}
+		return QString();
+	case Custom:
+		ff7Path = Config::value("customFF7Path").toString();
+		ff7Path = ff7Path.left(ff7Path.lastIndexOf('/'));
+		if(QFile::exists(ff7Path + "/data")) {
+			return ff7Path + "/data";
 		}
 	}
-#endif
-	return ff7DataPath_cache;
+
+	return QString();
 }
 
-QStringList Data::ff7AppPathList()
+QMap<Data::FF7Version, QString> Data::ff7PathList(QString (*searchFF7Path)(FF7Version))
 {
-	QStringList ff7List;
-	ff7List.append(searchFF7Exe());
-	ff7List.append(searchRereleasedFF7Exe());
-	ff7List.append(Config::value("customFF7Path").toString());
+	QMap<FF7Version, QString> ff7List;
+
+	foreach(FF7Version version,
+			QList<FF7Version>() << Standard << Rerelease << Steam << Custom) {
+		QString dataPath = (*searchFF7Path)(version);
+		if(!dataPath.isEmpty()) {
+			ff7List.insert(version, dataPath);
+		}
+	}
+
 	return ff7List;
+}
+
+QMap<Data::FF7Version, QString> Data::ff7AppPathList()
+{
+	return ff7PathList(searchFF7Exe);
+}
+
+QMap<Data::FF7Version, QString> Data::ff7DataPathList()
+{
+	return ff7PathList(searchFF7DataPath);
+}
+
+QString Data::ff7Path(const QMap<FF7Version, QString> &pathList)
+{
+	FF7Version version = FF7Version(Config::value("FF7ExePathToUse", 0).toInt());
+
+	if(!pathList.contains(version)) {
+		foreach(const QString &appPath, pathList) {
+			return appPath;
+		}
+	} else {
+		return pathList.value(version);
+	}
+
+	return QString();
 }
 
 const QString &Data::ff7AppPath()
 {
 	if(ff7AppPath_cache.isNull()) {
-		bool useNew = Config::value("useRereleaseFF7Path", false).toBool();
-		bool useCustom = Config::value("useCustomFF7Path", false).toBool();
-		if(useCustom) {
-			ff7AppPath_cache = Config::value("customFF7Path").toString();
-		} else {
-			if(!useNew) {
-				// Search for old version
-				ff7AppPath_cache = searchFF7Exe();
-				// Search for new version
-				if(ff7AppPath_cache.isEmpty()) {
-					ff7AppPath_cache = searchRereleasedFF7Exe();
-				}
-			} else {
-				// Search for new version
-				ff7AppPath_cache = searchRereleasedFF7Exe();
-				// Search for old version
-				if(ff7AppPath_cache.isEmpty()) {
-					ff7AppPath_cache = searchFF7Exe();
-				}
-			}
+		QString appPath = ff7Path(ff7AppPathList());
+
+		if(!appPath.isEmpty()) {
+			ff7AppPath_cache = appPath;
 		}
 	}
 	return ff7AppPath_cache;
+}
+
+const QString &Data::ff7DataPath()
+{
+	if(ff7DataPath_cache.isNull()) {
+		QString appPath = ff7Path(ff7DataPathList());
+
+		if(!appPath.isEmpty()) {
+			ff7DataPath_cache = appPath;
+		}
+	}
+	return ff7DataPath_cache;
 }
 
 QString Data::ff7KernelPath()
