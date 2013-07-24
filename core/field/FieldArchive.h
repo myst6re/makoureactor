@@ -22,6 +22,78 @@
 #include "FieldArchiveIO.h"
 #include "Field.h"
 
+struct SearchQuery
+{
+};
+
+struct SearchOpcodeQuery : public SearchQuery
+{
+	int opcode;
+	SearchOpcodeQuery(int opcode) :
+		opcode(opcode) {}
+};
+
+struct SearchVarQuery : public SearchQuery
+{
+	quint8 bank, adress;
+	int value;
+	SearchVarQuery(quint8 bank, quint8 adress, int value) :
+		bank(bank), adress(adress), value(value) {}
+};
+
+struct SearchExecQuery : public SearchQuery
+{
+	quint8 group, script;
+	SearchExecQuery(quint8 group, quint8 script) :
+		group(group), script(script) {}
+};
+
+struct SearchFieldQuery : public SearchQuery
+{
+	quint16 fieldID;
+	SearchFieldQuery(quint16 fieldID) :
+		fieldID(fieldID) {}
+};
+
+struct SearchTextQuery : public SearchQuery
+{
+	QRegExp text;
+	SearchTextQuery(QRegExp text) :
+		text(text) {}
+};
+
+struct SearchIn
+{
+	virtual void reset()=0;
+};
+
+struct SearchInScript : public SearchIn
+{
+	int &groupID, &scriptID, &opcodeID;
+
+	SearchInScript(int &groupID, int &scriptID, int &opcodeID) :
+		groupID(groupID), scriptID(scriptID), opcodeID(opcodeID)
+	{}
+
+	void reset() {
+		groupID = scriptID = opcodeID = 0;
+	}
+};
+
+struct SearchInText : public SearchIn
+{
+	int &textID, &from, &size;
+
+	SearchInText(int &textID, int &from, int &size) :
+		textID(textID), from(from), size(size)
+	{}
+
+	void reset() {
+		textID = 0;
+		from = -1;
+	}
+};
+
 class FieldArchive
 {
 public:
@@ -63,6 +135,7 @@ public:
 	bool isModified() const;
 	QList<FF7Var> searchAllVars();
 	void searchAll();// research & debug function
+	bool find(bool (*predicate)(Field *, SearchQuery *, SearchIn *), SearchQuery *toSearch, int &fieldID, SearchIn *searchIn, Sorting sorting, SearchScope scope);
 	bool searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);

@@ -6,6 +6,7 @@ TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 QT += opengl
+QMAKE_CXXFLAGS += -std=c++0x
 
 # Input
 HEADERS += \
