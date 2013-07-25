@@ -55,9 +55,10 @@ void Data::refreshFF7Paths()
 	ff7AppPath_cache = ff7DataPath_cache = QString();
 }
 
-#ifdef Q_OS_WIN
+
 QString Data::regValue(const QString &regPath, const QString &regKey)
 {
+#ifdef Q_OS_WIN
 	HKEY phkResult;
 	LONG error;
 	REGSAM flags = KEY_READ;
@@ -80,9 +81,9 @@ QString Data::regValue(const QString &regPath, const QString &regKey)
 		}
 		RegCloseKey(phkResult);
 	}
+#endif
 	return QString();
 }
-#endif
 
 const QString &Data::searchRereleasedFF7Path()
 {
