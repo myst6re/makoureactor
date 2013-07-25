@@ -65,6 +65,7 @@ struct SearchTextQuery : public SearchQuery
 struct SearchIn
 {
 	virtual void reset()=0;
+	virtual void toEnd()=0;
 };
 
 struct SearchInScript : public SearchIn
@@ -78,18 +79,27 @@ struct SearchInScript : public SearchIn
 	void reset() {
 		groupID = scriptID = opcodeID = 0;
 	}
+
+	void toEnd() {
+		groupID = scriptID = opcodeID = 2147483647;
+	}
 };
 
 struct SearchInText : public SearchIn
 {
-	int &textID, &from, &size;
+	int &textID, &from, &size, &index;
 
-	SearchInText(int &textID, int &from, int &size) :
-		textID(textID), from(from), size(size)
+	SearchInText(int &textID, int &from, int &size, int &index) :
+		textID(textID), from(from), size(size), index(index)
 	{}
 
 	void reset() {
 		textID = 0;
+		from = -1;
+	}
+
+	void toEnd() {
+		textID = 2147483647;
 		from = -1;
 	}
 };
@@ -135,7 +145,12 @@ public:
 	bool isModified() const;
 	QList<FF7Var> searchAllVars();
 	void searchAll();// research & debug function
-	bool find(bool (*predicate)(Field *, SearchQuery *, SearchIn *), SearchQuery *toSearch, int &fieldID, SearchIn *searchIn, Sorting sorting, SearchScope scope);
+	bool find(bool (*predicate)(Field *, SearchQuery *, SearchIn *),
+			  SearchQuery *toSearch, int &fieldID, SearchIn *searchIn,
+			  Sorting sorting, SearchScope scope);
+	bool findLast(bool (*predicate)(Field *, SearchQuery *, SearchIn *),
+				  SearchQuery *toSearch, int &fieldID, SearchIn *searchIn,
+				  Sorting sorting, SearchScope scope);
 	bool searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchVar(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);

@@ -660,12 +660,31 @@ bool FieldArchive::find(bool (*predicate)(Field *, SearchQuery *, SearchIn *),
 	return false;
 }
 
+bool FieldArchive::findLast(bool (*predicate)(Field *, SearchQuery *, SearchIn *),
+						SearchQuery *toSearch, int &fieldID, SearchIn *searchIn,
+						Sorting sorting, SearchScope scope)
+{
+	QMap<QString, int>::const_iterator i, begin;
+	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
+
+	for( ; i != begin-1 ; --i)
+	{
+		QCoreApplication::processEvents();
+		Field *f = field(fieldID = i.value());
+		if(f!=NULL && (*predicate)(f, toSearch, searchIn))
+			return true;
+		searchIn->toEnd();
+		if(scope >= FieldScope)		break;
+	}
+	return false;
+}
+
 bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	SearchOpcodeQuery query(opcode);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
-	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) -> bool {
+	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchOpcodeQuery *query = (SearchOpcodeQuery *)_query;
 		SearchInScript *searchIn = (SearchInScript *)_searchIn;
 		return f->scriptsAndTexts()->searchOpcode(query->opcode, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
@@ -677,7 +696,7 @@ bool FieldArchive::searchVar(quint8 bank, quint8 adress, int value, int &fieldID
 	SearchVarQuery query(bank, adress, value);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
-	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) -> bool {
+	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchVarQuery *query = (SearchVarQuery *)_query;
 		SearchInScript *searchIn = (SearchInScript *)_searchIn;
 		return f->scriptsAndTexts()->searchVar(query->bank, query->adress, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
@@ -689,7 +708,7 @@ bool FieldArchive::searchExec(quint8 group, quint8 script, int &fieldID, int &gr
 	SearchExecQuery query(group, script);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
-	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) -> bool {
+	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchExecQuery *query = (SearchExecQuery *)_query;
 		SearchInScript *searchIn = (SearchInScript *)_searchIn;
 		return f->scriptsAndTexts()->searchExec(query->group, query->script, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
@@ -701,7 +720,7 @@ bool FieldArchive::searchMapJump(quint16 _field, int &fieldID, int &groupID, int
 	SearchFieldQuery query(_field);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
-	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) -> bool {
+	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchFieldQuery *query = (SearchFieldQuery *)_query;
 		SearchInScript *searchIn = (SearchInScript *)_searchIn;
 		return f->scriptsAndTexts()->searchMapJump(query->fieldID, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
@@ -713,7 +732,7 @@ bool FieldArchive::searchTextInScripts(const QRegExp &text, int &fieldID, int &g
 	SearchTextQuery query(text);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
-	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) -> bool {
+	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchTextQuery *query = (SearchTextQuery *)_query;
 		SearchInScript *searchIn = (SearchInScript *)_searchIn;
 		return f->scriptsAndTexts()->searchTextInScripts(query->text, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
@@ -723,9 +742,10 @@ bool FieldArchive::searchTextInScripts(const QRegExp &text, int &fieldID, int &g
 bool FieldArchive::searchText(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting, SearchScope scope)
 {
 	SearchTextQuery query(text);
-	SearchInText searchIn(textID, from, size);
+	int empty;
+	SearchInText searchIn(textID, from, size, empty);
 
-	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) -> bool {
+	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchTextQuery *query = (SearchTextQuery *)_query;
 		SearchInText *searchIn = (SearchInText *)_searchIn;
 		return f->scriptsAndTexts()->searchText(query->text, searchIn->textID, searchIn->from, searchIn->size);
@@ -762,106 +782,74 @@ bool FieldArchive::searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<
 
 bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
-	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
+	SearchOpcodeQuery query(opcode);
+	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
-	for( ; i != begin-1 ; --i)
-	{
-		QCoreApplication::processEvents();
-		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->scriptsAndTexts()->searchOpcodeP(opcode, groupID, scriptID, opcodeID))
-			return true;
-		groupID = scriptID = opcodeID = 2147483647;
-		if(scope >= FieldScope)		break;
-	}
-
-	return false;
+	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
+		SearchOpcodeQuery *query = (SearchOpcodeQuery *)_query;
+		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		return f->scriptsAndTexts()->searchOpcodeP(query->opcode, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
+	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
 bool FieldArchive::searchVarP(quint8 bank, quint8 adress, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
-	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
+	SearchVarQuery query(bank, adress, value);
+	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
-	for( ; i != begin-1 ; --i)
-	{
-		QCoreApplication::processEvents();
-		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->scriptsAndTexts()->searchVarP(bank, adress, value, groupID, scriptID, opcodeID))
-			return true;
-		groupID = scriptID = opcodeID = 2147483647;
-		if(scope >= FieldScope)		break;
-	}
-	return false;
+	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
+		SearchVarQuery *query = (SearchVarQuery *)_query;
+		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		return f->scriptsAndTexts()->searchVarP(query->bank, query->adress, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
+	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
 bool FieldArchive::searchExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
-	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
+	SearchExecQuery query(group, script);
+	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
-	for( ; i != begin-1 ; --i)
-	{
-		QCoreApplication::processEvents();
-		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->scriptsAndTexts()->searchExecP(group, script, groupID, scriptID, opcodeID))
-			return true;
-		groupID = scriptID = opcodeID = 2147483647;
-		if(scope >= FieldScope)		break;
-	}
-	return false;
+	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
+		SearchExecQuery *query = (SearchExecQuery *)_query;
+		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		return f->scriptsAndTexts()->searchExecP(query->group, query->script, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
+	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
 bool FieldArchive::searchMapJumpP(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
-	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
+	SearchFieldQuery query(_field);
+	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
-	for( ; i != begin-1 ; --i)
-	{
-		QCoreApplication::processEvents();
-		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->scriptsAndTexts()->searchMapJumpP(_field, groupID, scriptID, opcodeID))
-			return true;
-		groupID = scriptID = opcodeID = 2147483647;
-		if(scope >= FieldScope)		break;
-	}
-	return false;
+	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
+		SearchFieldQuery *query = (SearchFieldQuery *)_query;
+		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		return f->scriptsAndTexts()->searchMapJumpP(query->fieldID, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
+	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
 bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
-	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
+	SearchTextQuery query(text);
+	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
-	for( ; i != begin-1 ; --i)
-	{
-		QCoreApplication::processEvents();
-		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->scriptsAndTexts()->searchTextInScriptsP(text, groupID, scriptID, opcodeID))
-			return true;
-		groupID = scriptID = opcodeID = 2147483647;
-		if(scope >= FieldScope)		break;
-	}
-	return false;
+	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
+		SearchTextQuery *query = (SearchTextQuery *)_query;
+		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		return f->scriptsAndTexts()->searchTextInScriptsP(query->text, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
+	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
 bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting, SearchScope scope)
 {
-	QMap<QString, int>::const_iterator i, begin;
-	if(!searchIteratorsP(i, begin, fieldID, sorting, scope))	return false;
+	SearchTextQuery query(text);
+	SearchInText searchIn(textID, from, size, index);
 
-	for( ; i != begin-1 ; --i)
-	{
-		QCoreApplication::processEvents();
-		Field *f = field(fieldID = i.value());
-		if(f!=NULL && f->scriptsAndTexts()->searchTextP(text, textID, from, index, size))
-			return true;
-		textID = 2147483647;
-		from = -1;
-		if(scope >= FieldScope)		break;
-	}
-	return false;
+	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
+		SearchTextQuery *query = (SearchTextQuery *)_query;
+		SearchInText *searchIn = (SearchInText *)_searchIn;
+		return f->scriptsAndTexts()->searchTextP(query->text, searchIn->textID, searchIn->from, searchIn->index, searchIn->size);
+	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
 bool FieldArchive::replaceText(const QRegExp &search, const QString &after, int fieldID, int textID, int from)

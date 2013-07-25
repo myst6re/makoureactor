@@ -1278,6 +1278,15 @@ void Window::importer()
 		return;
 	}
 
+	if(parts.testFlag(Field::Background)) {
+		QMessageBox::StandardButton button = QMessageBox::warning(this, tr("Attention"), tr("L'algorithme d'importation des décors "
+													   "donne de mauvais résultats en jeu, "
+													   "vous êtes prévenus !"), QMessageBox::Ok | QMessageBox::Cancel);
+		if(button != QMessageBox::Ok) {
+			return;
+		}
+	}
+
 	QFile addDevice(dialog.additionalPath());
 	
 	qint8 error = field->importer(path, isDat, isCompressed, parts, &addDevice);
