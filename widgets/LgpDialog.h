@@ -1,8 +1,47 @@
+/****************************************************************************
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ **
+ ** This program is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ****************************************************************************/
 #ifndef LGPDIALOG_H
 #define LGPDIALOG_H
 
 #include <QtGui>
 #include "core/Lgp.h"
+
+class IconThread : public QThread
+{
+	Q_OBJECT
+public:
+	IconThread(QObject *parent = 0);
+	~IconThread();
+
+	void clear();
+	void addFile(const QString &filePath);
+signals:
+	void iconLoaded(const QString &filePath, const QIcon &icon) const;
+protected:
+	void run();
+private:
+	QMutex mutexFiles;
+	QWaitCondition hasFilesCondition;
+	bool abort;
+
+	QQueue<QString> _files;
+	QMap<QString, QIcon> cacheIcon;
+};
 
 class LgpDirectoryItem;
 
@@ -35,6 +74,8 @@ public:
 	QString dirName() const;
 	int id() const;
 
+	virtual LgpItem *find(const QString &path);
+
 	virtual void debug() const=0;
 private:
 	QString _name;
@@ -57,10 +98,13 @@ public:
 	qint64 fileSize();
 	QIODevice *file();
 	bool setFile(QIODevice *io);
+	void setIcon(const QIcon &icon);
+	const QIcon &icon() const;
 	bool move(const QString &destination);
 	void debug() const;
 
 private:
+	QIcon _icon;
 	Lgp *_lgp;
 };
 
@@ -93,6 +137,7 @@ public:
 	void removeChild(LgpItem *child);
 	void addChild(const QString &name, Lgp *lgp);
 	void addChild(const QString &name, LgpFileItem *item);
+	LgpItem *find(const QString &path);
 	void debug() const;
 private:
 	QHash<QString, LgpFileItem *> _fileChilds;
@@ -117,7 +162,10 @@ public:
 	bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex());
 	void update(const QModelIndex &index);
 	LgpItem *getItem(const QModelIndex &index) const;
+private slots:
+	void setIcon(const QString &path, const QIcon &icon);
 private:
+//	IconThread iconThread;
 	QIcon fileIcon, directoryIcon;
 	LgpDirectoryItem *root;
 };

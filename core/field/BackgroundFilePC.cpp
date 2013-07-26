@@ -59,6 +59,26 @@ bool BackgroundFilePC::open(const QByteArray &data, const QByteArray &palData)
 	if(!io.read(*this)) {
 		return false;
 	}
+	if(field()->name() == "blackbg1") {
+		qDebug() << "==========================================";
+		QMapIterator<quint16, QList<quint32> > it(BackgroundTilesIOPC::collect);
+		while(it.hasNext()) {
+			it.next();
+			QStringList out;
+			foreach(const quint32 v, it.value()) {
+//				float f;
+//				quint32 shiftedV = v << 7;
+//				memcpy(&f, &shiftedV, sizeof(quint32));
+
+				out.append(QString("%1 (x%2)")
+						   .arg(float(v) / 10000000.0f)
+						   .arg(BackgroundTilesIOPC::collectStats[it.key()][v]));
+			}
+
+			qDebug() << it.key() << out.join(", ");
+		}
+	}
+//	BackgroundTilesIOPC::collect.clear();
 
 	setOpen(true);
 

@@ -186,46 +186,46 @@
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="232"/>
+        <location filename="widgets/ConfigWindow.cpp" line="234"/>
         <source>Modifier</source>
         <translation>Edit</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="235"/>
-        <location filename="widgets/ConfigWindow.cpp" line="239"/>
+        <location filename="widgets/ConfigWindow.cpp" line="237"/>
+        <location filename="widgets/ConfigWindow.cpp" line="241"/>
         <source>Ajouter</source>
         <translation>Add</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="259"/>
-        <location filename="widgets/ConfigWindow.cpp" line="269"/>
+        <location filename="widgets/ConfigWindow.cpp" line="261"/>
+        <location filename="widgets/ConfigWindow.cpp" line="271"/>
         <source>Chercher ff7.exe</source>
         <translation>Find ff7.exe</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="259"/>
-        <location filename="widgets/ConfigWindow.cpp" line="269"/>
+        <location filename="widgets/ConfigWindow.cpp" line="261"/>
+        <location filename="widgets/ConfigWindow.cpp" line="271"/>
         <source>Fichiers EXE (*.exe)</source>
         <translation>EXE files (*.exe)</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="314"/>
+        <location filename="widgets/ConfigWindow.cpp" line="316"/>
         <source>Chercher kernel2.bin</source>
         <translation>Find kernel2.bin</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="314"/>
-        <location filename="widgets/ConfigWindow.cpp" line="321"/>
+        <location filename="widgets/ConfigWindow.cpp" line="316"/>
+        <location filename="widgets/ConfigWindow.cpp" line="323"/>
         <source>Fichiers BIN (*.bin);;Tous les fichiers (*)</source>
         <translation>Bin Files (*.bin);;All Files (*)</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="321"/>
+        <location filename="widgets/ConfigWindow.cpp" line="323"/>
         <source>Chercher window.bin</source>
         <translation>Find window.bin</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="328"/>
+        <location filename="widgets/ConfigWindow.cpp" line="330"/>
         <source>Archives LGP (*.lgp);;Tous les fichiers (*)</source>
         <translation>Lgp Archives (*.lgp);;All Files(*)</translation>
     </message>
@@ -234,7 +234,7 @@
         <translation type="obsolete">BIN files (*.bin)</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="328"/>
+        <location filename="widgets/ConfigWindow.cpp" line="330"/>
         <source>Chercher char.lgp</source>
         <translation>Find char.lgp</translation>
     </message>
@@ -243,12 +243,12 @@
         <translation type="obsolete">LGP archives (*.lgp)</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="407"/>
+        <location filename="widgets/ConfigWindow.cpp" line="408"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="407"/>
+        <location filename="widgets/ConfigWindow.cpp" line="408"/>
         <source>Vous devez redémarrer Makou Reactor pour appliquer tous les changements.</source>
         <translation>You must restart Makou Reactor to apply all changes.</translation>
     </message>
@@ -668,173 +668,183 @@
 <context>
     <name>LgpDialog</name>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="402"/>
+        <location filename="widgets/LgpDialog.cpp" line="532"/>
         <source>Gestionnaire d&apos;archive LGP</source>
-        <translation type="unfinished"></translation>
+        <translation>LGP archive manager</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="414"/>
+        <location filename="widgets/LgpDialog.cpp" line="546"/>
         <source>Extraire</source>
-        <translation type="unfinished"></translation>
+        <translation>Extract</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="487"/>
-        <location filename="widgets/LgpDialog.cpp" line="524"/>
+        <location filename="widgets/LgpDialog.cpp" line="622"/>
+        <location filename="widgets/LgpDialog.cpp" line="659"/>
         <source>Fichier %1 (*.%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 file (*.%1)</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="489"/>
-        <location filename="widgets/LgpDialog.cpp" line="526"/>
-        <location filename="widgets/LgpDialog.cpp" line="576"/>
+        <location filename="widgets/LgpDialog.cpp" line="624"/>
+        <location filename="widgets/LgpDialog.cpp" line="661"/>
+        <location filename="widgets/LgpDialog.cpp" line="711"/>
         <source>Tous les fichiers (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>All files (*)</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="496"/>
-        <location filename="widgets/LgpDialog.cpp" line="533"/>
-        <location filename="widgets/LgpDialog.cpp" line="577"/>
+        <location filename="widgets/LgpDialog.cpp" line="631"/>
+        <location filename="widgets/LgpDialog.cpp" line="668"/>
+        <location filename="widgets/LgpDialog.cpp" line="712"/>
         <source>Nouveau fichier</source>
-        <translation type="unfinished"></translation>
+        <translation>New file</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="460"/>
-        <location filename="widgets/LgpDialog.cpp" line="463"/>
-        <location filename="widgets/LgpDialog.cpp" line="466"/>
-        <location filename="widgets/LgpDialog.cpp" line="504"/>
+        <location filename="widgets/LgpDialog.cpp" line="595"/>
         <location filename="widgets/LgpDialog.cpp" line="598"/>
         <location filename="widgets/LgpDialog.cpp" line="601"/>
-        <location filename="widgets/LgpDialog.cpp" line="604"/>
-        <location filename="widgets/LgpDialog.cpp" line="620"/>
-        <location filename="widgets/LgpDialog.cpp" line="655"/>
+        <location filename="widgets/LgpDialog.cpp" line="639"/>
+        <location filename="widgets/LgpDialog.cpp" line="733"/>
+        <location filename="widgets/LgpDialog.cpp" line="736"/>
+        <location filename="widgets/LgpDialog.cpp" line="739"/>
+        <location filename="widgets/LgpDialog.cpp" line="762"/>
+        <location filename="widgets/LgpDialog.cpp" line="797"/>
         <source>Erreur</source>
-        <translation type="unfinished">Error</translation>
+        <translation>Error</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="412"/>
-        <location filename="widgets/LgpDialog.cpp" line="453"/>
-        <location filename="widgets/LgpDialog.cpp" line="591"/>
+        <location filename="widgets/LgpDialog.cpp" line="542"/>
+        <location filename="widgets/LgpDialog.cpp" line="588"/>
+        <location filename="widgets/LgpDialog.cpp" line="726"/>
         <source>Renommer</source>
-        <translation type="unfinished">Rename</translation>
+        <translation>Rename</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="413"/>
+        <location filename="widgets/LgpDialog.cpp" line="544"/>
         <source>Remplacer</source>
-        <translation type="unfinished">Replace</translation>
+        <translation>Replace</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="415"/>
+        <location filename="widgets/LgpDialog.cpp" line="548"/>
         <source>Ajouter</source>
-        <translation type="unfinished"></translation>
+        <translation>Add</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="416"/>
+        <location filename="widgets/LgpDialog.cpp" line="550"/>
         <source>Supprimer</source>
-        <translation type="unfinished">Delete</translation>
+        <translation>Delete</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="418"/>
+        <location filename="widgets/LgpDialog.cpp" line="553"/>
         <source>Sauvegarder</source>
-        <translation type="unfinished">Save</translation>
+        <translation>Save</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="453"/>
-        <location filename="widgets/LgpDialog.cpp" line="591"/>
+        <location filename="widgets/LgpDialog.cpp" line="588"/>
+        <location filename="widgets/LgpDialog.cpp" line="726"/>
         <source>Nouveau nom :</source>
-        <translation type="unfinished"></translation>
+        <translation>New name:</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="460"/>
-        <location filename="widgets/LgpDialog.cpp" line="598"/>
+        <location filename="widgets/LgpDialog.cpp" line="595"/>
+        <location filename="widgets/LgpDialog.cpp" line="733"/>
         <source>Le nom &apos;%1&apos; est invalide, ne mettez pas de caractères spéciaux.</source>
-        <translation type="unfinished"></translation>
+        <translation>The name &apos;%1&apos; is invalid, don&apos;t put special characters.</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="463"/>
-        <location filename="widgets/LgpDialog.cpp" line="601"/>
+        <location filename="widgets/LgpDialog.cpp" line="598"/>
+        <location filename="widgets/LgpDialog.cpp" line="736"/>
         <source>Un fichier nommé &apos;%1&apos; existe déjà, veuillez choisir un autre nom.</source>
-        <translation type="unfinished"></translation>
+        <translation>A file named &apos;%1&apos; already exists, please choose another name.</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="466"/>
+        <location filename="widgets/LgpDialog.cpp" line="601"/>
         <source>Impossible de renommer le fichier</source>
-        <translation type="unfinished"></translation>
+        <translation>Cannot rename the file</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="504"/>
+        <location filename="widgets/LgpDialog.cpp" line="639"/>
         <source>Impossible de modifier l&apos;archive !</source>
-        <translation type="unfinished"></translation>
+        <translation>Cannot modify the archive!</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="548"/>
+        <location filename="widgets/LgpDialog.cpp" line="683"/>
         <source>Erreur d&apos;écriture</source>
-        <translation type="unfinished"></translation>
+        <translation>Write error</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="548"/>
+        <location filename="widgets/LgpDialog.cpp" line="683"/>
         <source>Impossible d&apos;écrire dans le fichier (message : %1).</source>
-        <translation type="unfinished"></translation>
+        <translation>Cannot write in the file (message: %1).</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="553"/>
+        <location filename="widgets/LgpDialog.cpp" line="688"/>
         <source>Erreur d&apos;ouverture</source>
-        <translation type="unfinished">Opening error</translation>
+        <translation>Opening error</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="553"/>
+        <location filename="widgets/LgpDialog.cpp" line="688"/>
         <source>Impossible d&apos;ouvrir le fichier (message : %1).</source>
-        <translation type="unfinished"></translation>
+        <translation>Cannot open the file (message: %1).</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="604"/>
+        <location filename="widgets/LgpDialog.cpp" line="739"/>
         <source>Impossible d&apos;ajouter le fichier</source>
-        <translation type="unfinished"></translation>
+        <translation>Cannot add the file</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="620"/>
+        <location filename="widgets/LgpDialog.cpp" line="752"/>
+        <source>Supprimer ?</source>
+        <translation>Delete?</translation>
+    </message>
+    <message>
+        <location filename="widgets/LgpDialog.cpp" line="753"/>
+        <source>Êtes-vous sûr de vouloir supprimer ce fichier de l&apos;archive ?</source>
+        <translation>Are you sure you want to delete this file from the archive?</translation>
+    </message>
+    <message>
+        <location filename="widgets/LgpDialog.cpp" line="762"/>
         <source>Impossible de supprimer le fichier !</source>
-        <translation type="unfinished"></translation>
+        <translation>Cannot delete the file!</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="632"/>
+        <location filename="widgets/LgpDialog.cpp" line="774"/>
         <source>Fichier Lgp (*.lgp)</source>
-        <translation type="unfinished">Lgp File (*.lgp)</translation>
+        <translation>Lgp File (*.lgp)</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="632"/>
+        <location filename="widgets/LgpDialog.cpp" line="774"/>
         <source>Enregistrer sous</source>
-        <translation type="unfinished">Save As</translation>
+        <translation>Save as</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="643"/>
+        <location filename="widgets/LgpDialog.cpp" line="785"/>
         <source>Sauvegarde...</source>
-        <translation type="unfinished"></translation>
+        <translation>Saving...</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="643"/>
+        <location filename="widgets/LgpDialog.cpp" line="785"/>
         <source>Annuler</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="655"/>
+        <location filename="widgets/LgpDialog.cpp" line="797"/>
         <source>Impossible de créer l&apos;archive (message : %1).</source>
-        <translation type="unfinished"></translation>
+        <translation>Cannot create the archive (message: %1).</translation>
     </message>
 </context>
 <context>
     <name>LgpItemModel</name>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="311"/>
+        <location filename="widgets/LgpDialog.cpp" line="433"/>
         <source>?</source>
         <translation>?</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="377"/>
+        <location filename="widgets/LgpDialog.cpp" line="507"/>
         <source>Nom</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="378"/>
+        <location filename="widgets/LgpDialog.cpp" line="508"/>
         <source>Taille</source>
         <translation>Size</translation>
     </message>
@@ -3476,132 +3486,132 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="314"/>
+        <location filename="Data.cpp" line="366"/>
         <source>Clad</source>
         <translation>Cloud</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="314"/>
+        <location filename="Data.cpp" line="366"/>
         <source>Barret</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="314"/>
+        <location filename="Data.cpp" line="366"/>
         <source>Tifa</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="315"/>
+        <location filename="Data.cpp" line="367"/>
         <source>Aeris</source>
         <translation>Aeris</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="315"/>
+        <location filename="Data.cpp" line="367"/>
         <source>Red XIII</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="315"/>
+        <location filename="Data.cpp" line="367"/>
         <source>Youfie</source>
         <translation>Yuffie</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="316"/>
+        <location filename="Data.cpp" line="368"/>
         <source>Cait Sith</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="316"/>
+        <location filename="Data.cpp" line="368"/>
         <source>Vincent</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="316"/>
+        <location filename="Data.cpp" line="368"/>
         <source>Cid</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="317"/>
+        <location filename="Data.cpp" line="369"/>
         <source>Jeune Clad</source>
         <translation>Young Cloud</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="317"/>
+        <location filename="Data.cpp" line="369"/>
         <source>Sephiroth</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="317"/>
+        <location filename="Data.cpp" line="369"/>
         <source>Chocobo</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="327"/>
+        <location filename="Data.cpp" line="379"/>
         <source>[CAMERA|L2]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="327"/>
+        <location filename="Data.cpp" line="379"/>
         <source>[CIBLE|R2]</source>
         <translation>[TARGET|R2]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="328"/>
+        <location filename="Data.cpp" line="380"/>
         <source>[PAGE HAUT|L1]</source>
         <translation>[PAGE UP|L1]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="328"/>
+        <location filename="Data.cpp" line="380"/>
         <source>[PAGE BAS|R1]</source>
         <translation>[PAGE DOWN|R1]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="329"/>
+        <location filename="Data.cpp" line="381"/>
         <source>[MENU|TRIANGLE]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="329"/>
+        <location filename="Data.cpp" line="381"/>
         <source>[OK|ROND]</source>
         <translation>[OK|CIRCLE]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="330"/>
+        <location filename="Data.cpp" line="382"/>
         <source>[ANNULER|CROIX]</source>
         <translation>[CANCEL|CROSS]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="330"/>
+        <location filename="Data.cpp" line="382"/>
         <source>[CHANGER|CARRE]</source>
         <translation>[SWITCH|SQUARE]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="331"/>
+        <location filename="Data.cpp" line="383"/>
         <source>[ASSISTER|SELECT]</source>
         <translation>[ASSIST|SELECT]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="332"/>
+        <location filename="Data.cpp" line="384"/>
         <source>[DEMARRER|START]</source>
         <translation>[START]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="333"/>
+        <location filename="Data.cpp" line="385"/>
         <source>[HAUT]</source>
         <translation>[UP]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="333"/>
+        <location filename="Data.cpp" line="385"/>
         <source>[DROITE]</source>
         <translation>[RIGHT]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="334"/>
+        <location filename="Data.cpp" line="386"/>
         <source>[BAS]</source>
         <translation>[DOWN]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="334"/>
+        <location filename="Data.cpp" line="386"/>
         <source>[GAUCHE]</source>
         <translation>[LEFT]</translation>
     </message>
@@ -6098,12 +6108,12 @@ poursuite à la fin.</source>
         <translation>Text %1</translation>
     </message>
     <message>
-        <location filename="widgets/TextManager.cpp" line="412"/>
+        <location filename="widgets/TextManager.cpp" line="411"/>
         <source>Texte utilisé dans les script</source>
         <translation>Text used in scripts</translation>
     </message>
     <message>
-        <location filename="widgets/TextManager.cpp" line="412"/>
+        <location filename="widgets/TextManager.cpp" line="411"/>
         <source>Ce texte est utilisé par un ou plusieurs scripts de cet écran.
 Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
 Êtes-vous sûr de vouloir continuer ?</source>
@@ -6112,7 +6122,7 @@ Remove will replace calls to this text with calls to the text that follows.
 Are you sure you want to continue?</translation>
     </message>
     <message>
-        <location filename="widgets/TextManager.cpp" line="443"/>
+        <location filename="widgets/TextManager.cpp" line="442"/>
         <source>Page %1/%2</source>
         <translation>Page %1/%2</translation>
     </message>
@@ -6852,14 +6862,14 @@ Edited files: %2</translation>
         <location filename="Window.cpp" line="1178"/>
         <location filename="Window.cpp" line="1210"/>
         <location filename="Window.cpp" line="1238"/>
-        <location filename="Window.cpp" line="1297"/>
-        <location filename="Window.cpp" line="1322"/>
+        <location filename="Window.cpp" line="1306"/>
+        <location filename="Window.cpp" line="1331"/>
         <source>Erreur</source>
         <translation>Error</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="831"/>
-        <location filename="Window.cpp" line="1485"/>
+        <location filename="Window.cpp" line="1494"/>
         <source>Auteur : %1</source>
         <translation>Author: %1</translation>
     </message>
@@ -7182,7 +7192,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="626"/>
-        <location filename="Window.cpp" line="1295"/>
+        <location filename="Window.cpp" line="1304"/>
         <source>Le fichier est invalide</source>
         <oldsource>Le fichier est invalide.</oldsource>
         <translation>Invalid file</translation>
@@ -7278,7 +7288,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="1174"/>
-        <location filename="Window.cpp" line="1294"/>
+        <location filename="Window.cpp" line="1303"/>
         <source>Erreur lors de l&apos;ouverture du fichier</source>
         <translation>Error reopening file</translation>
     </message>
@@ -7303,40 +7313,50 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</translation>
         <translation>An error occurred when importing</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1322"/>
+        <location filename="Window.cpp" line="1282"/>
+        <source>Attention</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <location filename="Window.cpp" line="1282"/>
+        <source>L&apos;algorithme d&apos;importation des décors donne de mauvais résultats en jeu, vous êtes prévenus !</source>
+        <translation>The background importation algorithm give bad results in-game, you have been warned!</translation>
+    </message>
+    <message>
+        <location filename="Window.cpp" line="1331"/>
         <source>Final Fantasy VII n&apos;a pas pu être lancé.
 %1</source>
         <translation>Final Fantasy VII couldn&apos;t be launched
 %1</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1413"/>
-        <location filename="Window.cpp" line="1489"/>
+        <location filename="Window.cpp" line="1422"/>
+        <location filename="Window.cpp" line="1498"/>
         <source>Erreur d&apos;ouverture</source>
         <translation>Opening error</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1413"/>
+        <location filename="Window.cpp" line="1422"/>
         <source>Impossible d&apos;ouvrir les combats aléatoires !</source>
         <translation>Can not open encounters!</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1489"/>
+        <location filename="Window.cpp" line="1498"/>
         <source>Impossible d&apos;ouvrir les infos diverses !</source>
         <translation>Can not open miscellaneous informations!</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1513"/>
+        <location filename="Window.cpp" line="1522"/>
         <source>Application en cours...</source>
         <translation>Applying...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1577"/>
+        <location filename="Window.cpp" line="1586"/>
         <source>Par myst6re&lt;br/&gt;&lt;a href=&quot;https://sourceforge.net/projects/makoureactor/&quot;&gt;sourceforge.net/projects/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Merci à :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</source>
         <translation>By myst6re&lt;br/&gt;&lt;a href=&quot;https://sourceforge.net/projects/makoureactor/&quot;&gt;sourceforge.net/projects/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1584"/>
+        <location filename="Window.cpp" line="1593"/>
         <source>Fermer</source>
         <translation>Close</translation>
     </message>

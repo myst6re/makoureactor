@@ -1,3 +1,20 @@
+/****************************************************************************
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ **
+ ** This program is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ****************************************************************************/
 #include "BackgroundTilesIO.h"
 
 BackgroundTilesIO::BackgroundTilesIO(QIODevice *device) :
@@ -65,6 +82,9 @@ BackgroundTilesIOPC::BackgroundTilesIOPC(QIODevice *device) :
 	BackgroundTilesIO(device)
 {
 }
+
+QMap<quint16, QList<quint32> > BackgroundTilesIO::collect;
+QMap<quint16, QMap<quint32, quint32> > BackgroundTilesIO::collectStats;
 
 bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 {
@@ -151,6 +171,13 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 
 			for(i=0 ; i<nbTiles2 ; ++i) {
 				memcpy(&tile, data.constData() + i*52, 36);
+				quint32 zzz;
+				memcpy(&zzz, data.constData() + i*52 + 36, 4);
+
+				if(!collect[tile.ID].contains(zzz)) {
+					collect[tile.ID].append(zzz);
+				}
+				collectStats[tile.ID][zzz]++;
 
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					tiles.insert(4096-tile.ID, tilePC2Tile(tile, 1, i));
@@ -269,12 +296,27 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 		}
 	}
 
+
+//	if(collect.contains(4095)) {
+//		qDebug() << 4095 << collect.values(4095);
+//	}
+//	if(collect.contains(4096)) {
+//		qDebug() << 4096 << collect.values(4096);
+//	}
+//	if(collect.contains(0)) {
+//		qDebug() << 0 << collect.values(0);
+//	}
+//	if(collect.contains(1)) {
+//		qDebug() << 1 << collect.values(1);
+//	}
+
 	return true;
 }
 
 bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 {
-	quint32 srcZBig, srcXBig, srcYBig;
+	float srcZBig;
+	quint32 srcXBig, srcYBig;
 	quint16 minW, minH, nbTiles, depth = 1;
 	int w, h;
 
@@ -325,11 +367,12 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 		device()->write(QByteArray(16, '\0')); // Unknown but unused
 		device()->write("\0\0", 2);
 
+		quint32 unique = 1;
 		foreach(const Tile &tile, tiles2) {
 			device()->write("\0\0", 2);
 			TilePC tilePC = tile2TilePC(tile);
 			device()->write((char *)&tilePC, 36);
-			srcZBig = qMax(999, tilePC.ID * 10000);
+			srcZBig = (tilePC.ID / 4096.0f) * 10000000 + unique++;
 			device()->write((char *)&srcZBig, 4);
 			srcXBig = tilePC.srcX / 16 * 625000;
 			srcYBig = tilePC.srcY / 16 * 625000;

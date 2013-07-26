@@ -17,6 +17,72 @@
  ****************************************************************************/
 #include "LgpDialog.h"
 #include "core/Config.h"
+#include "Parameters.h"
+
+IconThread::IconThread(QObject *parent) :
+	QThread(parent), abort(false)
+{
+}
+
+IconThread::~IconThread()
+{
+	QMutexLocker locker(&mutexFiles);
+	abort = true;
+	hasFilesCondition.wakeOne();
+	locker.unlock();
+	wait();
+}
+
+void IconThread::clear()
+{
+	QMutexLocker locker(&mutexFiles);
+	_files.clear();
+}
+
+void IconThread::addFile(const QString &filePath)
+{
+	QMutexLocker locker(&mutexFiles);
+	_files.enqueue(filePath);
+	hasFilesCondition.wakeAll();
+}
+
+void IconThread::run()
+{
+	forever {
+		QMutexLocker locker(&mutexFiles);
+		if(abort) {
+			return;
+		}
+		qDebug() << "IconThread::run()";
+		if(_files.isEmpty()) {
+			hasFilesCondition.wait(&mutexFiles);
+		}
+		QString path = _files.dequeue();
+		qDebug() << "IconThread::run() treat path" << path;
+		locker.unlock();
+
+		int index = path.lastIndexOf('.');
+		if(index != -1) {
+			QString type = path.mid(index + 1);
+
+			if(cacheIcon.contains(type)) {
+				emit iconLoaded(path, cacheIcon.value(type));
+			} else {
+				QFile tmp(QDir::tempPath() % "/" % PROG_NAME % "." % type);
+				if(tmp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+					QIcon icon = QFileIconProvider().icon(QFileInfo(tmp));
+					tmp.remove();
+
+					cacheIcon.insert(type, icon);
+
+					emit iconLoaded(path, icon);
+				} else {
+					qWarning() << "IconThread::run() cannot create tmp file" << tmp.fileName() << tmp.errorString();
+				}
+			}
+		}
+	}
+}
 
 LgpDirectoryItem *LgpItem::root()
 {
@@ -68,6 +134,16 @@ QIODevice *LgpFileItem::file()
 bool LgpFileItem::setFile(QIODevice *io)
 {
 	return _lgp->setFile(path(), io);
+}
+
+void LgpFileItem::setIcon(const QIcon &icon)
+{
+	_icon = icon;
+}
+
+const QIcon &LgpFileItem::icon() const
+{
+	return _icon;
 }
 
 bool LgpFileItem::move(const QString &destination) {
@@ -195,6 +271,35 @@ void LgpDirectoryItem::removeChild(LgpItem *child)
 	delete _childs.takeAt(child->id());
 }
 
+LgpItem *LgpItem::find(const QString &path)
+{
+	return NULL;
+}
+
+LgpItem *LgpDirectoryItem::find(const QString &path)
+{
+	QString name, rest;
+	int index = path.indexOf('/');
+
+	if(index < 0) {
+		name = path.left(index);
+		rest = path.mid(index + 1);
+	} else {
+		name = path;
+	}
+
+	if(_fileChilds.contains(name)) {
+		return _fileChilds.value(name);
+	}
+	if(_dirChilds.contains(name)) {
+		if(!rest.isEmpty()) {
+			return _dirChilds.value(name)->find(rest);
+		}
+
+	}
+	return NULL;
+}
+
 void LgpDirectoryItem::debug() const
 {
 	qDebug() << "Directory" << path();
@@ -204,22 +309,39 @@ void LgpDirectoryItem::debug() const
 }
 
 LgpItemModel::LgpItemModel(Lgp *lgp, QObject *parent) :
-	QAbstractItemModel(parent)
+	QAbstractItemModel(parent)/*, iconThread(this)*/
 {
 	root = new LgpDirectoryItem("");
 	foreach(const QString &path, lgp->fileList()) {
 		root->addChild(path, lgp);
+//		iconThread.addFile(path);
 	}
 //	root->debug();
+
+//	connect(&iconThread, SIGNAL(iconLoaded(QString,QIcon)), SLOT(setIcon(QString,QIcon)));
 
 	QFileIconProvider iconProvider;
 	fileIcon = iconProvider.icon(QFileIconProvider::File);
 	directoryIcon = iconProvider.icon(QFileIconProvider::Folder);
+
+//	iconThread.start(QThread::LowPriority);
 }
 
 LgpItemModel::~LgpItemModel()
 {
 	delete root;
+}
+
+void LgpItemModel::setIcon(const QString &path, const QIcon &icon)
+{
+	LgpItem *item = root->find(path);
+	if(!item || item->isDirectory()) {
+		return;
+	}
+
+	((LgpFileItem *)item)->setIcon(icon);
+
+	emit layoutChanged();
 }
 
 QModelIndex LgpItemModel::index(int row, int column, const QModelIndex &parent) const
@@ -315,7 +437,15 @@ QVariant LgpItemModel::data(const QModelIndex &index, int role) const
 		break;
 	case Qt::DecorationRole:
 		if(index.column() == 0) {
-			return lgpItem->isDirectory() ? directoryIcon : fileIcon;
+			if(lgpItem->isDirectory()) {
+				return directoryIcon;
+			} else {
+				if(((LgpFileItem *)lgpItem)->icon().isNull()) {
+					return fileIcon;
+				} else {
+					return ((LgpFileItem *)lgpItem)->icon();
+				}
+			}
 		}
 		break;
 	case Qt::TextAlignmentRole:
@@ -410,10 +540,15 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	treeView->header()->setStretchLastSection(false);
 
 	renameButton = new QPushButton(tr("Renommer"), this);
+	renameButton->setShortcut(Qt::Key_F2);
 	replaceButton = new QPushButton(tr("Remplacer"), this);
+	replaceButton->setShortcut(QKeySequence("Ctrl+R"));
 	extractButton = new QPushButton(tr("Extraire"), this);
+	extractButton->setShortcut(QKeySequence("Ctrl+E"));
 	addButton = new QPushButton(QIcon(":/images/plus.png"), tr("Ajouter"), this);
+	addButton->setShortcut(QKeySequence::New);
 	removeButton = new QPushButton(QIcon(":/images/minus.png"), tr("Supprimer"), this);
+	removeButton->setShortcut(QKeySequence::Delete);
 	packButton = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton),
 								 tr("Sauvegarder"), this);
 	packButton->setEnabled(false);
@@ -614,6 +749,13 @@ void LgpDialog::removeCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
+		QMessageBox::StandardButton button = QMessageBox::question(this, tr("Supprimer ?"),
+							  tr("Êtes-vous sûr de vouloir supprimer ce fichier de l'archive ?"),
+							  QMessageBox::Yes | QMessageBox::Cancel);
+		if(button != QMessageBox::Yes) {
+			return;
+		}
+
 		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
 		if(item && !item->isDirectory()) {
 			if(!lgp->removeFile(item->path())) {
