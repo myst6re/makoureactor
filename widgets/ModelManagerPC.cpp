@@ -479,12 +479,14 @@ void ModelManagerPC::modifyAnimation(const QString &a)
 
 void ModelManagerPC::delAnim()
 {
+	int modelID = currentModelID();
+	if(modelID < 0)		return;
 	QTreeWidgetItem *item = modelAnims->currentItem();
 	if(item == NULL) return;
-	int modelID = currentModelID(item);
-	if(modelID < 0)		return;
+	int animID = currentAnimID(item);
+	if(animID <= 0)	return;
 
-	modelLoader()->removeAnim(modelID, currentAnimID());
+	modelLoader()->removeAnim(modelID, animID);
 	if(modelPreview)	modelPreview->clear();
 
 	delete item;
