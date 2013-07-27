@@ -81,6 +81,9 @@ QString Data::regValue(const QString &regPath, const QString &regKey)
 		}
 		RegCloseKey(phkResult);
 	}
+#else
+	Q_UNUSED(regPath)
+	Q_UNUSED(regKey)
 #endif
 	return QString();
 }

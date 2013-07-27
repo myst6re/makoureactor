@@ -302,6 +302,10 @@ BackgroundTexturesPS BackgroundTexturesPC::toPS(const BackgroundTiles &pcTiles,
 												BackgroundTiles &psTiles,
 												const PalettesPS &palettesPS) const
 {
+	Q_UNUSED(pcTiles)
+	Q_UNUSED(psTiles)
+	Q_UNUSED(palettesPS)
+
 	BackgroundTexturesPS ret;
 
 	// TODO: toPS
