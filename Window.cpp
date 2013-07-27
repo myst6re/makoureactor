@@ -462,7 +462,7 @@ void Window::openFile(const QString &path)
 		if(filePath.isEmpty()) {
 			filePath = Data::ff7DataPath();
 			if(!filePath.isEmpty())
-				filePath.append("field/");
+				filePath.append("/field");
 		}
 		QStringList filter;
 		filter.append(tr("Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)"));
