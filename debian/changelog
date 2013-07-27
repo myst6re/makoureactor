@@ -1,3 +1,44 @@
+makoureactor (1.6) precise; urgency=low
+
+  * New dialog to manage LGP archives (extract/replace/add/remove files)
+  * Makou can use a window.bin file to compute text previews
+  * Adding field model loader dialog for PS version, with few editable values
+  * Adding misc operations (I let you discover what it is)
+  * It's now possible to open a directory containing PC field files,  it is also possible to open one PC field
+  * In the walkmesh dialog, the field models can be displayed
+  * Backgrounds can be imported from PS to PC, but the layer 2 doesn't work correctly in-game
+  * Adding search and replace functions
+  * Adding scope in search
+  * Steam FF7 version is automatically detected (not tested)
+  * Opcode list: labels are displayed in red
+  * Group script list: Icons added
+  * Information in the encounter widget are more clear
+  * In the walkmesh dialog, unknown info replaced by exit direction, and exit line is (x, y, ID) not (x, y, z). [Thanks DLPB]
+  * Mass Export dialog: some changes to export easily
+  * In the model loader dialog, the hovered light color is now explicited in #RRGGBB format
+  * In the model loader dialog, it is now possible to cut/copy/paste models
+  * Tut and music dialog is non-modal now
+  * Real names of music are shown in the music dialog
+  * Some main window layout changes
+  * Opening and saving can be canceled
+  * Backgrounds with 4-bit paletted indexes are now supported (PS only)
+  * Adding option to expand (or not) all opcode items by default in the script editor
+  * FF7 is launched by WINE in other OSes than Windows [Thanks Sithlord]
+  * Bug fix: sometimes the displayed texts in scripts are invalid or from another field
+  * Bug fix: searching for an affectation value of a variable does not work
+  * Bug fix: 'copy opcode' action is disabled
+  * Bug fix: additional animations don't work for main field models, like Cloud (PS only)
+  * Bug fix: mutli camera on PS field is not opened correctly
+  * Bug fix: disc image won't save when there are no changes, so you can't save the archive as...
+  * Crash fix: opening an AKAO with short size (< 4 bytes) does not work
+  * Crash fix: Makou does not open FIELD.TDB safely
+  * Crash fix: few model textures cannot be opened in PS version
+  * Crash fix: crash when converting an opcode and when another function uses a non valid (older) pointer of this opcode
+  * LZS decompression is safer
+  * Qt update (4.8.5)
+  
+ -- Chris Rizzitello <sithlord48@gmail.com>  Sat, 27 Jul 2013 18:36:52 -0400
+
 makoureactor (1.5.1b1) precise; urgency=low
 
   * AKAO opcodes identified
