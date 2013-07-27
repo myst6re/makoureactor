@@ -54,7 +54,7 @@ QByteArray FieldArchiveIOPCLgp::fieldData2(Field *field, bool unlzs)
 QByteArray FieldArchiveIOPCLgp::fileData2(const QString &fileName)
 {
 	if(!_lgp.isOpen() && !_lgp.open()) return QByteArray();
-	return _lgp.modifiedFileData(fileName);
+	return _lgp.fileData(fileName);
 }
 
 void FieldArchiveIOPCLgp::close()
