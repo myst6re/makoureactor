@@ -273,6 +273,7 @@ void LgpDirectoryItem::removeChild(LgpItem *child)
 
 LgpItem *LgpItem::find(const QString &path)
 {
+	Q_UNUSED(path) //TODO
 	return NULL;
 }
 

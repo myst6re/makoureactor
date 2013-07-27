@@ -73,6 +73,11 @@ Window::Window() :
 //	actionMassImport = menu->addAction(tr("Importer en m&asse..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
 	actionArchive = menu->addAction(tr("Ges&tionnaire d'archive..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
 	menu->addSeparator();
+	actionRun = menu->addAction(QIcon(":/images/ff7.png"), tr("Lancer FF7"), this, SLOT(runFF7()));
+	actionRun->setShortcut(Qt::Key_F8);
+	actionRun->setShortcutContext(Qt::ApplicationShortcut);
+	actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
+	menu->addSeparator();
 	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("Fe&rmer"), this, SLOT(closeFile()));
 	menu->addAction(tr("&Quitter"), this, SLOT(close()), QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
 	
@@ -130,10 +135,7 @@ Window::Window() :
 	toolBar->addSeparator();
 	toolBar->addAction(actionFind);
 	actionFind->setStatusTip(tr("Rechercher"));
-	actionRun = toolBar->addAction(QIcon(":/images/ff7.png"), tr("Lancer FF7"), this, SLOT(runFF7()));
-	actionRun->setShortcut(Qt::Key_F8);
-	actionRun->setShortcutContext(Qt::ApplicationShortcut);
-	actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
+	toolBar->addAction(actionRun);
 	authorAction = toolBar->addWidget(toolBarRight);
 
 	QFont font;
@@ -343,7 +345,6 @@ void Window::restartNow()
 
 int Window::closeFile(bool quit)
 {
-//	qDebug() << "Window::closeFile";
 	if(fieldList->currentItem() != NULL)
 		Config::setValue("currentField", fieldList->currentItem()->text(0));
 
@@ -448,8 +449,6 @@ int Window::closeFile(bool quit)
 		actionMisc->setEnabled(false);
 		actionMiscOperations->setEnabled(false);
 	}
-
-//	qDebug() << "/Window::closeFile";
 	
 	return QMessageBox::Yes;
 }

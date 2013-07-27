@@ -195,6 +195,8 @@ QList<FF7Var> FieldArchive::searchAllVars()
 	return vars;
 }
 
+#ifdef DEBUG_FUNCTIONS
+
 #include "BackgroundFilePC.h"
 #include "BackgroundFilePS.h"
 #include "FieldArchivePS.h"
@@ -614,6 +616,8 @@ void FieldArchive::searchAll()
 	}
 }
 
+#endif
+
 bool FieldArchive::searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting, SearchScope scope) const
 {
 	if(fieldID >= fileList.size())		return false;
@@ -1007,7 +1011,6 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 				}
 			}
 			if(toExport.contains(Texts)) {
-				qDebug() << f->name();
 				Section1File *section1 = f->scriptsAndTexts();
 				if(section1->isOpen()) {
 					extension = toExport.value(Texts);
@@ -1039,6 +1042,8 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 bool FieldArchive::importation(const QList<int> &selectedFields, const QString &directory,
 							   const QMap<Field::FieldSection, QString> &toImport)
 {
+	Q_UNUSED(directory) //TODO
+
 	if(selectedFields.isEmpty() || toImport.isEmpty()) {
 		return true;
 	}

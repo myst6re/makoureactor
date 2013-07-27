@@ -80,9 +80,6 @@ typedef struct {
 class BackgroundTilesIO
 {
 public:
-	static QMap<quint16, QList<quint32> > collect;
-	static QMap<quint16, QMap<quint32, quint32> > collectStats;
-
 	explicit BackgroundTilesIO(QIODevice *device);
 	virtual ~BackgroundTilesIO();
 

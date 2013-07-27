@@ -18,6 +18,8 @@
 #ifndef DEF_FIELDARCHIVE
 #define DEF_FIELDARCHIVE
 
+// #define DEBUG_FUNCTIONS
+
 #include <QtCore>
 #include "FieldArchiveIO.h"
 #include "Field.h"
@@ -144,7 +146,9 @@ public:
 	bool isAllOpened() const;
 	bool isModified() const;
 	QList<FF7Var> searchAllVars();
+#ifdef DEBUG_FUNCTIONS
 	void searchAll();// research & debug function
+#endif
 	bool find(bool (*predicate)(Field *, SearchQuery *, SearchIn *),
 			  SearchQuery *toSearch, int &fieldID, SearchIn *searchIn,
 			  Sorting sorting, SearchScope scope);

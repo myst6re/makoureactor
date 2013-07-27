@@ -83,9 +83,6 @@ BackgroundTilesIOPC::BackgroundTilesIOPC(QIODevice *device) :
 {
 }
 
-QMap<quint16, QList<quint32> > BackgroundTilesIO::collect;
-QMap<quint16, QMap<quint32, quint32> > BackgroundTilesIO::collectStats;
-
 bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 {
 	qint64 cur;
@@ -162,22 +159,15 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				return false;
 			}
 
-			data = device()->read(nbTiles2 * 52 - 52 + /*36*/40);
+			data = device()->read(nbTiles2 * 52 - 52 + 36);
 
-			if(data.size() != nbTiles2 * 52 - 52 + /*36*/40) {
+			if(data.size() != nbTiles2 * 52 - 52 + 36) {
 				qWarning() << "BackgroundTilesIOPC::readData cannot read tiles data (2)";
 				return false;
 			}
 
 			for(i=0 ; i<nbTiles2 ; ++i) {
 				memcpy(&tile, data.constData() + i*52, 36);
-				quint32 zzz;
-				memcpy(&zzz, data.constData() + i*52 + 36, 4);
-
-				if(!collect[tile.ID].contains(zzz)) {
-					collect[tile.ID].append(zzz);
-				}
-				collectStats[tile.ID][zzz]++;
 
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					tiles.insert(4096-tile.ID, tilePC2Tile(tile, 1, i));
@@ -295,20 +285,6 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 			return false;
 		}
 	}
-
-
-//	if(collect.contains(4095)) {
-//		qDebug() << 4095 << collect.values(4095);
-//	}
-//	if(collect.contains(4096)) {
-//		qDebug() << 4096 << collect.values(4096);
-//	}
-//	if(collect.contains(0)) {
-//		qDebug() << 0 << collect.values(0);
-//	}
-//	if(collect.contains(1)) {
-//		qDebug() << 1 << collect.values(1);
-//	}
 
 	return true;
 }
@@ -454,10 +430,6 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint16 tileID)
 {
 	Tile ret;
-
-	if(tile.unused8 != 0) {
-		qDebug() << layerID << tile.unused8;
-	}
 
 	if(layerID > 0 && tile.textureID2 > 0) {
 		ret.srcX = tile.srcX2;
@@ -743,6 +715,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 {
+	Q_UNUSED(tiles)
 	// TODO
 	return false;
 }

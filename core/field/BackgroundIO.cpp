@@ -334,6 +334,8 @@ bool BackgroundIOPS::read(BackgroundFile &background) const
 
 bool BackgroundIOPS::write(const BackgroundFile &background) const
 {
+	Q_UNUSED(background) //TODO
+
 	if(!canWrite()
 			|| !canWriteTiles()) {
 		return false;

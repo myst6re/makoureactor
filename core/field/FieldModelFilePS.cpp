@@ -87,9 +87,9 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 
 	_currentScale = model.scale;
 
-	if(model.unknown != 0) {
-		qDebug() << "???" << model.unknown;
-	}
+//	if(model.unknown != 0) {
+//		qDebug() << "???" << model.unknown;
+//	}
 
 //	qDebug() << "==== Model" << model_id << "====" << offsetModelHeader << sizeof(Model) << model_header.num_models*sizeof(Model);
 //	qDebug() << "modelID" << model.model_id << "modelScale" << model.scale << "offsetSkeleton" << model.offset_skeleton;

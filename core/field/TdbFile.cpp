@@ -25,7 +25,7 @@ TdbFile::TdbFile()
 
 bool TdbFile::open(const QByteArray &data)
 {
-	if(data.size() < sizeof(TdbHeader)) {
+	if(data.size() < int(sizeof(TdbHeader))) {
 		qWarning() << "invalid tdb size" << data.size() << sizeof(TdbHeader);
 		return false;
 	}
@@ -100,8 +100,8 @@ QImage TdbFile::texture(quint8 faceID, TextureType type)
 
 	quint32 offsetPalette = header.paletteOffset + pal * 32;
 
-	if(data.size() < offsetImage + 512
-			|| data.size() < offsetPalette + 32) {
+	if(quint32(data.size()) < offsetImage + 512
+			|| quint32(data.size()) < offsetPalette + 32) {
 		return QImage();
 	}
 
