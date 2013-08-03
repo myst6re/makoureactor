@@ -221,8 +221,9 @@ void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 	}
 
 	int id = currentRow(item);
+	bool isTut = currentTut->isTut(id);
 
-	if(currentTut->isTut(id)) {
+	if(isTut) {
 		stackedWidget->setCurrentIndex(0);
 		textEdit->setPlainText(currentTut->parseScripts(id));
 	} else {
@@ -238,9 +239,9 @@ void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 		}
 	}
 
-	textEdit->setReadOnly(!currentTut->isTut(id));
-	exportButton->setEnabled(!currentTut->isTut(id));
-	importButton->setEnabled(!currentTut->isTut(id));
+	textEdit->setReadOnly(!isTut);
+	exportButton->setEnabled(true);
+	importButton->setEnabled(true);
 }
 
 void TutWidget::saveText(QListWidgetItem *item)
@@ -250,7 +251,9 @@ void TutWidget::saveText(QListWidgetItem *item)
 	int id = currentRow(item);
 	if(currentTut->isTut(id)) {
 		currentTut->parseText(id, textEdit->toPlainText());
-		emit modified();
+		if(currentTut->isModified()) {
+			emit modified();
+		}
 	} else {
 		quint16 akaoID;
 
@@ -434,11 +437,25 @@ void TutWidget::exportation()
 	if(row < 0) {
 		return;
 	}
-	if(currentTut->isTut(row))	return;
 
+	bool isTut = currentTut->isTut(row);
 	QString path = QDir::fromNativeSeparators(QDir::cleanPath(Config::value("akaoImportExportPath").toString()));
-	path = QFileDialog::getSaveFileName(this, tr("Exporter"), path + "/" + tr("son_%1.akao").arg(row), tr("Son Final Fantasy (*.akao)"));
-	if(path.isNull())	return;
+	QString filename, filter;
+
+	if(isTut) {
+		filename = tr("tuto_%1.tutps").arg(row);
+		filter = tr("Tuto Final Fantasy VII PS (*.tutps)");
+	} else {
+		filename = tr("son_%1.akao").arg(row);
+		filter = tr("Son Final Fantasy (*.akao)");
+	}
+
+	path = QFileDialog::getSaveFileName(this, tr("Exporter"), path + "/" + filename, filter);
+
+	if(path.isNull()) {
+		return;
+	}
+
 	Config::setValue("akaoImportExportPath", path.left(path.lastIndexOf('/')));
 
 	QFile akao(path);
@@ -457,11 +474,26 @@ void TutWidget::importation()
 	if(row < 0) {
 		return;
 	}
-	if(currentTut->isTut(row))	return;
+
+	bool isTut = currentTut->isTut(row);
 
 	QString path = QDir::fromNativeSeparators(QDir::cleanPath(Config::value("akaoImportExportPath").toString()));
-	path = QFileDialog::getOpenFileName(this, tr("Importer"), path + "/" + tr("son_%1.akao").arg(row), tr("Son Final Fantasy (*.akao)"));
-	if(path.isNull())	return;
+	QString filename, filter;
+
+	if(isTut) {
+		filename = tr("tuto_%1.tutps").arg(row);
+		filter = tr("Tuto Final Fantasy VII PS (*.tutps)");
+	} else {
+		filename = tr("son_%1.akao").arg(row);
+		filter = tr("Son Final Fantasy (*.akao)");
+	}
+
+	path = QFileDialog::getOpenFileName(this, tr("Importer"), path + "/" + filename, filter);
+
+	if(path.isNull()) {
+		return;
+	}
+
 	Config::setValue("akaoImportExportPath", path.left(path.lastIndexOf('/')));
 
 	QFile akao(path);
@@ -469,7 +501,8 @@ void TutWidget::importation()
 		QMessageBox::warning(this, tr("Erreur"), tr("Erreur d'ouverture du fichier"));
 		return;
 	}
-	if(akao.size() > 1000000) {
+
+	if(akao.size() > 1000000) { // FIXME: remove fixed limitation
 		QMessageBox::warning(this, tr("Erreur"), tr("Fichier trop gros"));
 		return;
 	}
@@ -478,12 +511,8 @@ void TutWidget::importation()
 	akao.close();
 	emit modified();
 
+	isTut = currentTut->isTut(row);
+
 	textEdit->setPlainText(currentTut->parseScripts(row));
+	textEdit->setReadOnly(!isTut);
 }
-
-//void TutWidget::accept()
-//{
-//	saveText(list->currentItem());
-
-//	QDialog::accept();
-//}

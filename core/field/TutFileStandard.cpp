@@ -97,7 +97,7 @@ bool TutFileStandard::isTut(int tutID) const
 
 bool TutFileStandard::isAkao(int tutID) const
 {
-	return data(tutID).startsWith("AKAO");
+	return data(tutID).startsWith("AKAO")/* || !field()->scriptsAndTexts()->listUsedTuts().contains(tutID) */;
 }
 
 QString TutFileStandard::parseScripts(int tutID) const
@@ -109,17 +109,23 @@ QString TutFileStandard::parseScripts(int tutID) const
 		const char *constTuto = tuto.constData();
 
 		quint16 id, length, firstPos;
-		if(tuto.size() < 6) 	return QObject::tr("Erreur");
+		if(tuto.size() < 6) {
+			return QObject::tr("Erreur");
+		}
 		memcpy(&id, constTuto + 4, 2);
 
 		ret.append(QObject::tr("totalLength=%1\nid=%2\n").arg(tuto.size()).arg(id));
 
-		if(tuto.size() < 8) 	return ret;
+		if(tuto.size() < 8) {
+			return ret;
+		}
 		memcpy(&length, constTuto + 6, 2);
 
 		ret.append(QObject::tr("length=%1\n").arg(length));
 
-		if(tuto.size() < 22) 	return ret;
+		if(tuto.size() < 22) {
+			return ret;
+		}
 		memcpy(&firstPos, constTuto + 20, 2);
 
 		ret.append(QObject::tr("nbCanaux=%1\n").arg(firstPos/2 + 1));

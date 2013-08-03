@@ -22,6 +22,12 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 {
 	HighlightingRule rule;
 
+	if(tut) {
+		rule.pattern = QRegExp("^TEXT\\((.*)\\)", Qt::CaseInsensitive);
+		rule.color = Qt::darkGreen;
+		highlightingRules.append(rule);
+	}
+
 	rule.pattern = QRegExp("\\{x[\\da-fA-F]{2}\\}");
 	rule.color = Qt::darkRed;
 	highlightingRules.append(rule);
@@ -69,7 +75,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 		}
 
 		QStringList op;
-		op << "^\\{FINISH\\}$" << "^\\{NOP\\}$" << "^MOVE\\(\\d+,\\d+\\)$" << "^PAUSE\\(\\d+\\)$";
+		op << "^\\{FINISH\\}$" << "^\\{NOP\\}$" << "^MOVE\\((\\d+),(\\d+)\\)$" << "^PAUSE\\((\\d+)\\)$";
 
 		foreach(const QString &s, op) {
 			rule.pattern = QRegExp(s, Qt::CaseInsensitive);
@@ -83,11 +89,32 @@ void TextHighlighter::highlightBlock(const QString &text)
 {
 	foreach(const HighlightingRule &rule, highlightingRules) {
 		QRegExp expression(rule.pattern);
-		int index = expression.indexIn(text);
-		while(index >= 0) {
-			int length = expression.matchedLength();
-			setFormat(index, length, rule.color);
-			index = expression.indexIn(text, index + length);
-		}
+		int index = 0;
+
+		do {
+			index = expression.indexIn(text, index);
+
+			if(index < 0) {
+				break;
+			}
+
+			int length, lastIndex = index + expression.matchedLength();
+			int firstCapturePos, capNb = 1, capLength;
+
+			do {
+				firstCapturePos = expression.pos(capNb);
+				if(firstCapturePos == -1) {
+					length = lastIndex - index;
+					capLength = 0;
+				} else {
+					length = firstCapturePos - index;
+					capLength = expression.cap(capNb).size();
+				}
+				setFormat(index, length, rule.color);
+
+				index += length + capLength;
+				capNb++;
+			} while(firstCapturePos >= 0);
+		} while(index >= 0);
 	}
 }

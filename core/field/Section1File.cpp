@@ -159,7 +159,7 @@ bool Section1File::open(const QByteArray &data)
 		memcpy(&posDeb, &constData[posTexts+2], 2);
 		nbTextes = posDeb/2 - 1;
 
-		for(quint16 i=1 ; i<nbTextes ; ++i)
+		for(quint32 i=1 ; i<nbTextes ; ++i)
 		{
 			memcpy(&posFin, &constData[posTexts+2+i*2], 2);
 

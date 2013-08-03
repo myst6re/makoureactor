@@ -126,6 +126,7 @@ QString TutFile::parseScripts(int tutID) const
 	const QByteArray &tuto = data(tutID);
 	const char *constTuto = tuto.constData();
 	QString ret;
+	QByteArray textData;
 	bool jp = Config::value("jp_txt", false).toBool();
 	quint8 clef;
 	int i=0, size = tuto.size(), endOfText;
@@ -159,13 +160,21 @@ QString TutFile::parseScripts(int tutID) const
 		case 0x0F:	ret.append("[SELECT]");		break;
 		case 0x10:
 			endOfText = tuto.indexOf('\xff', i);
-			if(endOfText!=-1) {
-				ret.append(FF7Text(tuto.mid(i, endOfText-i)).text(jp));
-				if(endOfText+1>i)
-					i = endOfText+1;
+
+			if(endOfText != -1) {
+				textData = tuto.mid(i, endOfText-i);
+			} else {
+				textData = tuto.mid(i); // FIXME: this can break the bijection
 			}
-			else {
-				ret.append(FF7Text(tuto.mid(i)).text(jp));
+
+			ret.append(QString("TEXT(%1)")
+					   .arg(FF7Text(textData).text(jp)));
+
+			if(endOfText != -1) {
+				if(endOfText + 1 > i) {
+					i = endOfText + 1;
+				}
+			} else {
 				return ret;
 			}
 			break;
@@ -193,18 +202,27 @@ QString TutFile::parseScripts(int tutID) const
 	return ret;
 }
 
-void TutFile::parseText(int tutID, const QString &tuto)
+bool TutFile::parseText(int tutID, const QString &tuto)
 {
-	if(!isTut(tutID))	return;
+	if(!isTut(tutID))	return false;
 
 	QStringList lines = tuto.split('\n', QString::SkipEmptyParts), params;
 	QByteArray ret;
-	bool ok;
+	bool ok, multilineText = false;
 	int value;
 	bool jp = Config::value("jp_txt", false).toBool();
 
 	foreach(QString line, lines) {
-		if(line.startsWith("MOVE(") && line.endsWith(")")) {
+		if(multilineText) {
+			if(line.endsWith(")")) {
+				line.chop(1);// remove ")"
+				multilineText = false;
+			}
+			ret.append(FF7Text(line, jp).data());
+			if(!multilineText) {
+				ret.append('\xff');
+			}
+		} else if(line.startsWith("MOVE(") && line.endsWith(")")) {
 			ret.append('\x12');
 			line.chop(1);// remove ")"
 			params = line.mid(5).split(',');
@@ -212,63 +230,78 @@ void TutFile::parseText(int tutID, const QString &tuto)
 				value = params.first().toInt(&ok);
 				if(ok) {
 					ret.append((char *)&value, 2);
-				}
-				else {
+				} else {
 					ret.append("\x00\x00", 2);
+					//return false;
 				}
 				value = params.at(1).toInt(&ok);
 				if(ok) {
 					ret.append((char *)&value, 2);
-				}
-				else {
+				} else {
 					ret.append("\x00\x00", 2);
+					//return false;
 				}
-			}
-			else {
+			} else {
 				ret.append("\x00\x00\x00\x00", 4);
+				//return false;
 			}
-		}
-		else if(line.startsWith("PAUSE(") && line.endsWith(")")) {
+		} else if(line.startsWith("PAUSE(") && line.endsWith(")")) {
 			ret.append('\x00');
 			line.chop(1);// remove ")"
 
 			value = line.mid(6).toInt(&ok);
 			if(ok) {
 				ret.append((char *)&value, 2);
-			}
-			else {
+			} else {
 				ret.append("\x00\x00", 2);
+				//return false;
+			}
+		} else if(line.startsWith("TEXT(")) {
+			if(line.endsWith(")")) {
+				line.chop(1);// remove ")"
+				multilineText = false;
+			} else {
+				multilineText = true;
+			}
+
+			ret.append('\x10');
+			ret.append(FF7Text(line.mid(5), jp).data());
+
+			if(!multilineText) {
+				ret.append('\xff');
 			}
 		}
-		else if(line=="{FINISH}") {			ret.append('\x11');}
-		else if(line=="{NOP}") {			ret.append('\xff');}
-		else if(line=="[UP]") {				ret.append('\x02');}
-		else if(line=="[DOWN]") {			ret.append('\x03');}
-		else if(line=="[LEFT]") {			ret.append('\x04');}
-		else if(line=="[RIGHT]") {			ret.append('\x05');}
-		else if(line=="[MENU]")	 {			ret.append('\x06');}
-		else if(line=="[CANCEL]") {			ret.append('\x07');}
-		else if(line=="[CHANGE]") {			ret.append('\x08');}
-		else if(line=="[OK]")	 {			ret.append('\x09');}
-		else if(line=="[R1]")	 {			ret.append('\x0a');}
-		else if(line=="[R2]")	 {			ret.append('\x0b');}
-		else if(line=="[L1]")	 {			ret.append('\x0c');}
-		else if(line=="[L2]")	 {			ret.append('\x0d');}
-		else if(line=="[START]") {			ret.append('\x0e');}
-		else if(line=="[SELECT]")	 {		ret.append('\x0f');}
+		else if(line=="{FINISH}") {		ret.append('\x11'); }
+		else if(line=="{NOP}") {		ret.append('\xff'); }
+		else if(line=="[UP]") {			ret.append('\x02'); }
+		else if(line=="[DOWN]") {		ret.append('\x03'); }
+		else if(line=="[LEFT]") {		ret.append('\x04'); }
+		else if(line=="[RIGHT]") {		ret.append('\x05'); }
+		else if(line=="[MENU]") {		ret.append('\x06'); }
+		else if(line=="[CANCEL]") {		ret.append('\x07'); }
+		else if(line=="[CHANGE]") {		ret.append('\x08'); }
+		else if(line=="[OK]") {			ret.append('\x09'); }
+		else if(line=="[R1]") {			ret.append('\x0a'); }
+		else if(line=="[R2]") {			ret.append('\x0b'); }
+		else if(line=="[L1]") {			ret.append('\x0c'); }
+		else if(line=="[L2]") {			ret.append('\x0d'); }
+		else if(line=="[START]") {		ret.append('\x0e'); }
+		else if(line=="[SELECT]") {		ret.append('\x0f'); }
 		else if(line.startsWith("[") && line.endsWith("]")) {
 			value = line.mid(1,2).toInt(&ok);
 			if(ok) {
 				ret.append((char)value);
 			}
-		}
-		else {
+		} else { // Compatibility Makou Reactor <= v1.6
 			ret.append('\x10');
 			ret.append(FF7Text(line, jp).data()).append('\xff');
 		}
 	}
 
-	tutos.replace(tutID, ret);
+	if(tutos.at(tutID) != ret) {
+		tutos.replace(tutID, ret);
 
-	setModified(true);
+		setModified(true);
+	}
+	return true;
 }

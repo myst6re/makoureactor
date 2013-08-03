@@ -38,7 +38,7 @@ public:
 	const QList<QByteArray> &dataList() const;
 	virtual bool isTut(int tutID) const;
 	virtual QString parseScripts(int tutID) const;
-	virtual void parseText(int tutID, const QString &tuto);
+	virtual bool parseText(int tutID, const QString &tuto);
 protected:
 	virtual QList<quint32> openPositions(const QByteArray &data) const=0;
 	QByteArray &dataRef(int tutID);
