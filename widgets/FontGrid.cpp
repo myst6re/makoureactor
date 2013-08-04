@@ -41,7 +41,8 @@ void FontGrid::paintEvent(QPaintEvent *)
 {
 	const int lineCountV=_letterCountH + 1, lineCountH=_letterCountV + 1,
 			charaSize=12, padding=1, cellSize=charaSize+1+padding*2;
-	QLine linesV[lineCountV], linesH[lineCountH];
+	QLine linesV[lineCountV];
+	QLine linesH[lineCountH];
 
 	for(int i=0 ; i<lineCountV ; ++i) {
 		linesV[i].setPoints(QPoint(i*cellSize, 0), QPoint(i*cellSize, height()));
