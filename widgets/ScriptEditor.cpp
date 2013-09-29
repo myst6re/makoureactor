@@ -99,7 +99,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	layout->addLayout(buttonLayout);
 
 	if(modify) {
-		this->opcode = Script::copyOpcode(script->getOpcode(opcodeID));
+		this->opcode = Script::copyOpcode(script->opcode(opcodeID));
 		int id = opcode->id();
 
 		if(id == Opcode::SPECIAL)

@@ -205,7 +205,7 @@ void OpcodeList::itemSelected()
 		break;
 	case Opcode::SPECIAL:
 	{
-		OpcodeSPECIAL *op = (OpcodeSPECIAL *)script->getOpcode(selectedID());
+		OpcodeSPECIAL *op = (OpcodeSPECIAL *)script->opcode(selectedID());
 		text_A->setEnabled(op && op->opcode->id() == 0xFD);
 	}
 		break;
@@ -243,7 +243,7 @@ void OpcodeList::editText()
 
 	int opcodeID = selectedID();
 	if(opcodeID >= 0 && opcodeID < script->size()) {
-		Opcode *op = script->getOpcode(opcodeID);
+		Opcode *op = script->opcode(opcodeID);
 		int textID = op->getTextID();
 		if(textID >= 0) {
 			emit editText(textID);
@@ -261,7 +261,7 @@ void OpcodeList::saveExpandedItems()
 			if(item->isExpanded()) {
 				int opcodeID = item->data(0, Qt::UserRole).toInt();
 				if(opcodeID >= 0 && opcodeID < script->size()) {
-					expandedItems.append(script->getOpcode(opcodeID));
+					expandedItems.append(script->opcode(opcodeID));
 				}
 			}
 		}
@@ -308,7 +308,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 		quint16 opcodeID = 0;
 		QPixmap fontPixmap(":/images/chiffres.png");
 
-		foreach(Opcode *curOpcode, script->getOpcodes()) {
+		foreach(Opcode *curOpcode, script->opcodes()) {
 
 			if(curOpcode->isLabel()) {
 				while(!indent.isEmpty() &&
@@ -354,7 +354,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 
 		opcodeID = 0;
 		foreach(QTreeWidgetItem *item, items) {
-			if(itemIsExpanded(script->getOpcode(opcodeID))) {
+			if(itemIsExpanded(script->opcode(opcodeID))) {
 				item->setExpanded(true);
 			}
 			++opcodeID;
@@ -502,7 +502,7 @@ void OpcodeList::undo()
 	case Add:
 		// del opcodes
 		for(int i=hist.opcodeIDs.size()-1 ; i>=0 ; --i) {
-			hist.data.prepend(Script::copyOpcode(script->getOpcode(hist.opcodeIDs.at(i))));
+			hist.data.prepend(Script::copyOpcode(script->opcode(hist.opcodeIDs.at(i))));
 			script->delOpcode(hist.opcodeIDs.at(i));
 		}
 		break;
@@ -514,16 +514,16 @@ void OpcodeList::undo()
 		break;
 	case Modify:
 		// restore old version
-		sav = Script::copyOpcode(script->getOpcode(firstOpcode));
+		sav = Script::copyOpcode(script->opcode(firstOpcode));
 		script->setOpcode(firstOpcode, hist.data.first());
 		hist.data.replace(0, sav);
 		break;
 	case ModifyAndAddLabel:
 		// del label
-		hist.data.prepend(Script::copyOpcode(script->getOpcode(firstOpcode+1)));
+		hist.data.prepend(Script::copyOpcode(script->opcode(firstOpcode+1)));
 		script->delOpcode(firstOpcode+1);
 		// restore old version
-		sav = Script::copyOpcode(script->getOpcode(firstOpcode));
+		sav = Script::copyOpcode(script->opcode(firstOpcode));
 		script->setOpcode(firstOpcode, hist.data.first());
 		hist.data.replace(0, sav);
 		break;
@@ -567,17 +567,17 @@ void OpcodeList::redo()
 		break;
 	case Remove:
 		for(int i=hist.opcodeIDs.size()-1 ; i>=0 ; --i) {
-			hist.data.prepend(Script::copyOpcode(script->getOpcode(hist.opcodeIDs.at(i))));
+			hist.data.prepend(Script::copyOpcode(script->opcode(hist.opcodeIDs.at(i))));
 			script->delOpcode(hist.opcodeIDs.at(i));
 		}
 		break;
 	case Modify:
-		sav = Script::copyOpcode(script->getOpcode(firstOpcode));
+		sav = Script::copyOpcode(script->opcode(firstOpcode));
 		script->setOpcode(firstOpcode, hist.data.first());
 		hist.data.replace(0, sav);
 		break;
 	case ModifyAndAddLabel:
-		sav = Script::copyOpcode(script->getOpcode(firstOpcode));
+		sav = Script::copyOpcode(script->opcode(firstOpcode));
 		script->setOpcode(firstOpcode, hist.data.first());
 		hist.data.replace(0, sav);
 		script->insertOpcode(hist.opcodeIDs.at(1), hist.data.at(1));
@@ -617,7 +617,7 @@ void OpcodeList::scriptEditor(bool modify)
 	saveExpandedItems();
 
 	if(modify)
-		oldVersion = Script::copyOpcode(script->getOpcode(opcodeID));
+		oldVersion = Script::copyOpcode(script->opcode(opcodeID));
 	else
 		++opcodeID;
 
@@ -659,7 +659,7 @@ void OpcodeList::del(bool totalDel)
 	
 	qSort(selectedIDs);
 	for(int i=selectedIDs.size()-1 ; i>=0 ; --i) {
-		oldVersions.prepend(Script::copyOpcode(script->getOpcode(selectedIDs.at(i))));
+		oldVersions.prepend(Script::copyOpcode(script->opcode(selectedIDs.at(i))));
 		if(totalDel) {
 			script->delOpcode(selectedIDs.at(i));
 		} else {
@@ -723,7 +723,7 @@ void OpcodeList::copy()
 
 	clearCopiedOpcodes();
 	foreach(const int &id, selectedIDs) {
-		opcodeCopied.append(Script::copyOpcode(script->getOpcode(id)));
+		opcodeCopied.append(Script::copyOpcode(script->opcode(id)));
 	}
 
 	paste_A->setEnabled(true);
@@ -816,7 +816,7 @@ int OpcodeList::selectedOpcode()
 	int opcodeID = selectedID();
 	return opcodeID <= -1 || opcodeID >= script->size()
 			? -1
-			: script->getOpcode(opcodeID)->id();
+			: script->opcode(opcodeID)->id();
 }
 
 QPixmap &OpcodeList::posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap)

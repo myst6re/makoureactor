@@ -38,8 +38,8 @@ public:
 	int size() const;
 	bool isEmpty() const;
 	bool isValid() const;
-	Opcode *getOpcode(quint16 opcodeID) const;
-	const QList<Opcode *> &getOpcodes() const;
+	Opcode *opcode(quint16 opcodeID) const;
+	const QList<Opcode *> &opcodes() const;
 	bool isVoid() const;
 	bool compile(int &opcodeID, QString &errorStr);
 	QByteArray toByteArray() const;
@@ -79,7 +79,7 @@ public:
 private:
 	OpcodeJump *convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok=0) const;
 //	bool verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const;
-	QList<Opcode *> opcodes;
+	QList<Opcode *> _opcodes;
 	QString lastError;
 
 	bool valid;

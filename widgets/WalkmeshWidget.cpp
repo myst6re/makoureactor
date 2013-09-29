@@ -414,7 +414,7 @@ void WalkmeshWidget::paintGL()
 			foreach(GrpScript *group, scripts->grpScripts()) {
 				if(group->typeID() == GrpScript::Model) {
 					if(!group->scripts().isEmpty()) {
-						foreach(Opcode *op, group->script(0)->getOpcodes()) {
+						foreach(Opcode *op, group->script(0)->opcodes()) {
 							if(op->id() == Opcode::DIR) {
 								OpcodeDIR *opDir = (OpcodeDIR *)op;
 								if(opDir->banks == 0) {

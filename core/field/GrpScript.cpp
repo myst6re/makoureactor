@@ -88,10 +88,8 @@ void GrpScript::setType()
 	
 	Script *firstScript = _scripts.first();
 	
-	foreach(Opcode *opcode, firstScript->getOpcodes())
-	{
-		switch((Opcode::Keys)opcode->id())
-		{
+	foreach(Opcode *opcode, firstScript->opcodes()) {
+		switch((Opcode::Keys)opcode->id()) {
 		case Opcode::PC://Definition du personnage
 			_character = ((OpcodePC *)opcode)->charID;
 			return;

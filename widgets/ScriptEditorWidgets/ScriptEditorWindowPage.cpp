@@ -149,7 +149,7 @@ void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 
 	// If the current opcode is followed by MESSAGE or ASK, we can put a text in the window preview
 	if(opcodeID() + 1 < script()->size()) {
-		Opcode *nextOpcode = script()->getOpcode(opcodeID() + 1);
+		Opcode *nextOpcode = script()->opcode(opcodeID() + 1);
 		if(nextOpcode->id() == Opcode::MESSAGE) {
 			OpcodeMESSAGE *mess = (OpcodeMESSAGE *)nextOpcode;
 			if(mess->windowID == winID->value()) {

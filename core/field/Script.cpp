@@ -23,7 +23,7 @@ Script::Script() :
 }
 
 Script::Script(const QList<Opcode *> &opcodes) :
-	opcodes(opcodes), valid(true)
+	_opcodes(opcodes), valid(true)
 {
 }
 
@@ -35,14 +35,14 @@ Script::Script(const QByteArray &script)
 Script::Script(const Script &other) :
 	valid(true)
 {
-	foreach(Opcode *opcode, other.getOpcodes()) {
-		opcodes.append(Script::copyOpcode(opcode));
+	foreach(Opcode *opcode, other.opcodes()) {
+		_opcodes.append(Script::copyOpcode(opcode));
 	}
 }
 
 Script::~Script()
 {
-	foreach(Opcode *opcode, opcodes)	delete opcode;
+	foreach(Opcode *opcode, _opcodes)	delete opcode;
 }
 
 bool Script::openScript(const QByteArray &script)
@@ -55,7 +55,7 @@ bool Script::openScript(const QByteArray &script)
 	while(pos < scriptSize)
 	{
 		op = createOpcode(script, pos);
-		opcodes.append(op);
+		_opcodes.append(op);
 		positions.append(pos);
 		if(op->isJump()) {
 			indents.insert(pos + ((OpcodeJump *)op)->jump(), (OpcodeJump *)op);
@@ -72,7 +72,7 @@ bool Script::openScript(const QByteArray &script)
 		int jump = indentsKeys.at(i);
 		int index = positions.indexOf(jump);
 		if(index != -1) {
-			opcodes.insert(index, new OpcodeLabel(i+1));
+			_opcodes.insert(index, new OpcodeLabel(i+1));
 //			qDebug() << (index+1) << "label" << (i+1);
 			foreach(OpcodeJump *opJump, indents.values(jump)) {
 				opJump->setLabel(i+1);
@@ -88,7 +88,7 @@ bool Script::openScript(const QByteArray &script)
 			foreach(const int &pos, positions) {
 				if(pos > jump) {
 					// Repair bad jump: Insert label to the nearest valid position
-					opcodes.insert(opID, new OpcodeLabel(i+1));
+					_opcodes.insert(opID, new OpcodeLabel(i+1));
 //					qDebug() << (opID+1) << "repair label" << (i+1);
 					repaired = true;
 					break;
@@ -97,7 +97,7 @@ bool Script::openScript(const QByteArray &script)
 			}
 			if(!repaired) {
 				// Repair bad jump: Put label at the end
-				opcodes.append(new OpcodeLabel(i+1));
+				_opcodes.append(new OpcodeLabel(i+1));
 //				qDebug() << "repair label" << (i+1);
 			}*/
 		}
@@ -658,7 +658,7 @@ Script *Script::splitScriptAtReturn()
 	int gotoLabel = -1;
 	int opcodeID = 0;
 
-	foreach(Opcode *opcode, opcodes) {
+	foreach(Opcode *opcode, _opcodes) {
 		if(opcode->isLabel()) {
 			if(gotoLabel != -1 && ((OpcodeLabel *)opcode)->label() == (quint32)gotoLabel) {
 				gotoLabel = -1;
@@ -674,10 +674,10 @@ Script *Script::splitScriptAtReturn()
 		++opcodeID;
 	}
 
-	Script *s = new Script(opcodes.mid(opcodeID));
-	int size = opcodes.size();
+	Script *s = new Script(_opcodes.mid(opcodeID));
+	int size = _opcodes.size();
 	for( ; opcodeID < size ; ++opcodeID) {
-		opcodes.removeLast();
+		_opcodes.removeLast();
 	}
 
 	return s;
@@ -685,12 +685,12 @@ Script *Script::splitScriptAtReturn()
 
 int Script::size() const
 {
-	return opcodes.size();
+	return _opcodes.size();
 }
 
 bool Script::isEmpty() const
 {
-	return opcodes.isEmpty();
+	return _opcodes.isEmpty();
 }
 
 bool Script::isValid() const
@@ -698,14 +698,14 @@ bool Script::isValid() const
 	return valid;
 }
 
-Opcode *Script::getOpcode(quint16 opcodeID) const
+Opcode *Script::opcode(quint16 opcodeID) const
 {
-	return opcodes.value(opcodeID);
+	return _opcodes.value(opcodeID);
 }
 
-const QList<Opcode *> &Script::getOpcodes() const
+const QList<Opcode *> &Script::opcodes() const
 {
-	return opcodes;
+	return _opcodes;
 }
 
 OpcodeJump *Script::convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok) const
@@ -825,7 +825,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 
 	// Search labels
 	opcodeID = 0;
-	foreach(Opcode *opcode, opcodes) {
+	foreach(Opcode *opcode, _opcodes) {
 		if(opcode->isLabel()) {
 			if(!labelPositions.contains(((OpcodeLabel *)opcode)->label())) {
 				labelPositions.insert(((OpcodeLabel *)opcode)->label(), pos);
@@ -841,7 +841,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 
 	// Search jumps
 	opcodeID = pos = 0;
-	foreach(Opcode *opcode, opcodes) {
+	foreach(Opcode *opcode, _opcodes) {
 		if(opcode->isJump()) {
 			OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
 			if(opcodeJump->isBadJump()) {
@@ -889,7 +889,7 @@ QByteArray Script::toByteArray() const
 	QByteArray ret;
 
 	// Search labels
-	foreach(Opcode *opcode, opcodes) {
+	foreach(Opcode *opcode, _opcodes) {
 		if(opcode->isLabel()) {
 			labelPositions.insert(((OpcodeLabel *)opcode)->label(), pos);
 		} else {
@@ -898,7 +898,7 @@ QByteArray Script::toByteArray() const
 	}
 
 	pos = 0;
-	foreach(const Opcode *opcode, opcodes) {
+	foreach(const Opcode *opcode, _opcodes) {
 		bool delPlease = false;
 		if(opcode->isJump()) {
 			OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
@@ -920,47 +920,47 @@ QByteArray Script::toByteArray() const
 
 bool Script::isVoid() const
 {
-	foreach(Opcode *opcode, opcodes)
+	foreach(Opcode *opcode, _opcodes)
 		if(!opcode->isVoid())	return false;
 	return true;
 }
 
 void Script::setOpcode(quint16 opcodeID, Opcode *opcode)
 {
-	Opcode *curOpcode = opcodes.at(opcodeID);
-	opcodes.replace(opcodeID, opcode);
+	Opcode *curOpcode = _opcodes.at(opcodeID);
+	_opcodes.replace(opcodeID, opcode);
 	delete curOpcode;
 }
 
 void Script::delOpcode(quint16 opcodeID)
 {
-	delete opcodes.takeAt(opcodeID);
+	delete _opcodes.takeAt(opcodeID);
 }
 
 Opcode *Script::removeOpcode(quint16 opcodeID)
 {
-	Opcode *opcode = opcodes.takeAt(opcodeID);
+	Opcode *opcode = _opcodes.takeAt(opcodeID);
 	return opcode;
 }
 
 void Script::insertOpcode(quint16 opcodeID, Opcode *opcode)
 {
-	opcodes.insert(opcodeID, opcode);
+	_opcodes.insert(opcodeID, opcode);
 }
 
 bool Script::moveOpcode(quint16 opcodeID, MoveDirection direction)
 {
-	if(opcodeID >= opcodes.size())	return false;
+	if(opcodeID >= _opcodes.size())	return false;
 	
 	if(direction == Down)
 	{
-		if(opcodeID == opcodes.size()-1)	return false;
-		opcodes.swap(opcodeID, opcodeID+1);
+		if(opcodeID == _opcodes.size()-1)	return false;
+		_opcodes.swap(opcodeID, opcodeID+1);
 	}
 	else
 	{
 		if(opcodeID == 0)	return false;
-		opcodes.swap(opcodeID, opcodeID-1);
+		_opcodes.swap(opcodeID, opcodeID-1);
 	}
 	return true;
 }
@@ -968,8 +968,8 @@ bool Script::moveOpcode(quint16 opcodeID, MoveDirection direction)
 bool Script::searchOpcode(int opcode, int &opcodeID) const
 {
 	if(opcodeID < 0) 	opcodeID = 0;
-	if(opcodeID >= opcodes.size())				return false;
-	if(opcode == opcodes.at(opcodeID)->id())	return true;
+	if(opcodeID >= _opcodes.size())				return false;
+	if(opcode == _opcodes.at(opcodeID)->id())	return true;
 
 	return searchOpcode(opcode, ++opcodeID);
 }
@@ -977,15 +977,15 @@ bool Script::searchOpcode(int opcode, int &opcodeID) const
 bool Script::searchVar(quint8 bank, quint8 adress, int value, int &opcodeID) const
 {
 	if(opcodeID < 0) 	opcodeID = 0;
-	if(opcodeID >= opcodes.size())								return false;
-	if(opcodes.at(opcodeID)->searchVar(bank, adress, value))	return true;
+	if(opcodeID >= _opcodes.size())								return false;
+	if(_opcodes.at(opcodeID)->searchVar(bank, adress, value))	return true;
 
 	return searchVar(bank, adress, value, ++opcodeID);
 }
 
 void Script::searchAllVars(QList<FF7Var> &vars) const
 {
-	foreach(Opcode *opcode, opcodes) {
+	foreach(Opcode *opcode, _opcodes) {
 		opcode->getVariables(vars);
 	}
 }
@@ -993,8 +993,8 @@ void Script::searchAllVars(QList<FF7Var> &vars) const
 bool Script::searchExec(quint8 group, quint8 script, int &opcodeID) const
 {
 	if(opcodeID < 0) 	opcodeID = 0;
-	if(opcodeID >= opcodes.size())						return false;
-	if(opcodes.at(opcodeID)->searchExec(group, script))	return true;
+	if(opcodeID >= _opcodes.size())						return false;
+	if(_opcodes.at(opcodeID)->searchExec(group, script))	return true;
 
 	return searchExec(group, script, ++opcodeID);
 }
@@ -1002,8 +1002,8 @@ bool Script::searchExec(quint8 group, quint8 script, int &opcodeID) const
 bool Script::searchMapJump(quint16 field, int &opcodeID) const
 {
 	if(opcodeID < 0) 	opcodeID = 0;
-	if(opcodeID >= opcodes.size())					return false;
-	if(opcodes.at(opcodeID)->searchMapJump(field))	return true;
+	if(opcodeID >= _opcodes.size())					return false;
+	if(_opcodes.at(opcodeID)->searchMapJump(field))	return true;
 
 	return searchMapJump(field, ++opcodeID);
 }
@@ -1011,92 +1011,92 @@ bool Script::searchMapJump(quint16 field, int &opcodeID) const
 bool Script::searchTextInScripts(const QRegExp &text, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if(opcodeID < 0) 	opcodeID = 0;
-	if(opcodeID >= opcodes.size())					return false;
-	if(opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts))		return true;
+	if(opcodeID >= _opcodes.size())					return false;
+	if(_opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts))		return true;
 
 	return searchTextInScripts(text, ++opcodeID, scriptsAndTexts);
 }
 
 bool Script::searchOpcodeP(int opcode, int &opcodeID) const
 {
-	if(opcodeID >= opcodes.size()) opcodeID = opcodes.size()-1;
+	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
 	if(opcodeID < 0)							return false;
-	if(opcode == opcodes.at(opcodeID)->id())	return true;
+	if(opcode == _opcodes.at(opcodeID)->id())	return true;
 
 	return searchOpcodeP(opcode, --opcodeID);
 }
 
 bool Script::searchVarP(quint8 bank, quint8 adress, int value, int &opcodeID) const
 {
-	if(opcodeID >= opcodes.size()) opcodeID = opcodes.size()-1;
+	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
 	if(opcodeID < 0)											return false;
-	if(opcodes.at(opcodeID)->searchVar(bank, adress, value))	return true;
+	if(_opcodes.at(opcodeID)->searchVar(bank, adress, value))	return true;
 
 	return searchVarP(bank, adress, value, --opcodeID);
 }
 
 bool Script::searchExecP(quint8 group, quint8 script, int &opcodeID) const
 {
-	if(opcodeID >= opcodes.size()) opcodeID = opcodes.size()-1;
+	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
 	if(opcodeID < 0)										return false;
-	if(opcodes.at(opcodeID)->searchExec(group, script))		return true;
+	if(_opcodes.at(opcodeID)->searchExec(group, script))	return true;
 
 	return searchExecP(group, script, --opcodeID);
 }
 
 bool Script::searchMapJumpP(quint16 field, int &opcodeID) const
 {
-	if(opcodeID >= opcodes.size()) opcodeID = opcodes.size()-1;
+	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
 	if(opcodeID < 0)								return false;
-	if(opcodes.at(opcodeID)->searchMapJump(field))	return true;
+	if(_opcodes.at(opcodeID)->searchMapJump(field))	return true;
 
 	return searchMapJumpP(field, --opcodeID);
 }
 
 bool Script::searchTextInScriptsP(const QRegExp &text, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
-	if(opcodeID >= opcodes.size()) opcodeID = opcodes.size()-1;
+	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
 	if(opcodeID < 0)								return false;
-	if(opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts))		return true;
+	if(_opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts))		return true;
 
 	return searchTextInScriptsP(text, --opcodeID, scriptsAndTexts);
 }
 
 void Script::listUsedTexts(QSet<quint8> &usedTexts) const
 {
-	foreach(Opcode *opcode, opcodes)
+	foreach(Opcode *opcode, _opcodes)
 		opcode->listUsedTexts(usedTexts);
 }
 
 void Script::listUsedTuts(QSet<quint8> &usedTuts) const
 {
-	foreach(Opcode *opcode, opcodes)
+	foreach(Opcode *opcode, _opcodes)
 		opcode->listUsedTuts(usedTuts);
 }
 
 void Script::shiftTextIds(int textId, int steps)
 {
-	foreach(Opcode *opcode, opcodes)
+	foreach(Opcode *opcode, _opcodes)
 		opcode->shiftTextIds(textId, steps);
 }
 
 void Script::shiftTutIds(int tutId, int steps)
 {
-	foreach(Opcode *opcode, opcodes)
+	foreach(Opcode *opcode, _opcodes)
 		opcode->shiftTutIds(tutId, steps);
 }
 
 void Script::setWindow(const FF7Window &win)
 {
-	if(win.opcodeID < opcodes.size()) {
-		opcodes.at(win.opcodeID)->setWindow(win);
+	if(win.opcodeID < _opcodes.size()) {
+		_opcodes.at(win.opcodeID)->setWindow(win);
 	}
 }
 
 int Script::opcodePositionInBytes(quint16 opcodeID)
 {
 	int pos=0, i=0;
-	foreach(Opcode *op, opcodes) {
+	foreach(Opcode *op, _opcodes) {
 		if(i == opcodeID) {
 			return pos;
 		}
@@ -1109,19 +1109,19 @@ int Script::opcodePositionInBytes(quint16 opcodeID)
 void Script::listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const
 {
 	int opcodeID=0;
-	foreach(Opcode *opcode, opcodes)
+	foreach(Opcode *opcode, _opcodes)
 		opcode->listWindows(groupID, scriptID, opcodeID++, windows, text2win);
 }
 
 void Script::listModelPositions(QList<FF7Position> &positions) const
 {
-	foreach(Opcode *opcode, opcodes)
+	foreach(Opcode *opcode, _opcodes)
 		opcode->listModelPositions(positions);
 }
 
 bool Script::linePosition(FF7Position position[2]) const
 {
-	foreach(Opcode *opcode, opcodes) {
+	foreach(Opcode *opcode, _opcodes) {
 		if(opcode->linePosition(position)) {
 			return true;
 		}
@@ -1131,31 +1131,31 @@ bool Script::linePosition(FF7Position position[2]) const
 
 //void Script::searchWindows() const
 //{
-//	foreach(Opcode *opcode, opcodes) {
+//	foreach(Opcode *opcode, _opcodes) {
 
 //	}
 //}
 
 void Script::backgroundParams(QHash<quint8, quint8> &paramActifs) const
 {
-	foreach(Opcode *opcode, opcodes)
+	foreach(Opcode *opcode, _opcodes)
 		opcode->backgroundParams(paramActifs);
 }
 
 void Script::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 {
-	foreach(Opcode *opcode, opcodes)
+	foreach(Opcode *opcode, _opcodes)
 		opcode->backgroundMove(z, x, y);
 }
 
 bool Script::removeTexts()
 {
 	bool modified = false;
-	foreach(Opcode *opcode, opcodes) {
+	foreach(Opcode *opcode, _opcodes) {
 		if(opcode->id() != Opcode::ASK
 				&& opcode->id() != Opcode::MPNAM
 				&& opcode->getTextID() != -1) {
-			opcodes.removeOne(opcode);
+			_opcodes.removeOne(opcode);
 			modified = true;
 		}
 	}

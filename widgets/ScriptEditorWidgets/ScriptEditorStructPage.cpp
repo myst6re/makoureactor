@@ -360,7 +360,7 @@ void ScriptEditorLabelPage::setOpcode(Opcode *opcode)
 	OpcodeLabel *opcodeLabel = (OpcodeLabel *)opcode;
 	if(opcodeLabel->label() == 0) {
 		quint32 greaterLabel=1;
-		foreach(Opcode *op, script()->getOpcodes()) {
+		foreach(Opcode *op, script()->opcodes()) {
 			if(op->isLabel()) {
 				quint32 lbl = ((OpcodeLabel *)op)->label();
 				if(lbl >= greaterLabel) {
@@ -387,7 +387,7 @@ void ScriptEditorJumpPageInterface::fillLabelList(bool jumpBack)
 	quint32 greaterLabel=1;
 	int i=0;
 
-	foreach(Opcode *op, script()->getOpcodes()) {
+	foreach(Opcode *op, script()->opcodes()) {
 		if(op->isLabel()) {
 			quint32 lbl = ((OpcodeLabel *)op)->label();
 			if(jumpBack || i >= opcodeID()) {
@@ -438,7 +438,7 @@ void ScriptEditorJumpPage::build()
 void ScriptEditorJumpPage::clear()
 {
 //	if(addJump) {
-//		qDebug() << "ScriptEditorJumpPage deleteOpcode" << (_opcodeID+1) << _script->getOpcode(_opcodeID+1)->name();
+//		qDebug() << "ScriptEditorJumpPage deleteOpcode" << (_opcodeID+1) << _script->opcode(_opcodeID+1)->name();
 //		_script->delOpcode(_opcodeID+1);
 //		addJump = false;
 //	}
@@ -450,7 +450,7 @@ Opcode *ScriptEditorJumpPage::opcode()
 	quint32 labelVal = label->itemData(label->currentIndex()).toUInt();
 
 	// Search opcode ID for label
-	foreach(Opcode *op, script()->getOpcodes()) {
+	foreach(Opcode *op, script()->opcodes()) {
 		if(op->isLabel() && ((OpcodeLabel *)op)->label() == labelVal) {
 			break;
 		}
@@ -467,7 +467,7 @@ Opcode *ScriptEditorJumpPage::opcode()
 
 	// Remove the new label if not chosen
 //	if(addJump && label->currentIndex() < label->count() - 1) {
-//		qDebug() << "ScriptEditorJumpPage deleteOpcode" << (_opcodeID+1) << _script->getOpcode(_opcodeID+1)->name();
+//		qDebug() << "ScriptEditorJumpPage deleteOpcode" << (_opcodeID+1) << _script->opcode(_opcodeID+1)->name();
 //		_script->delOpcode(_opcodeID+1);
 //		addJump = false;
 //	}
@@ -588,7 +588,7 @@ void ScriptEditorIfPage::build()
 void ScriptEditorIfPage::clear()
 {
 //	if(addJump) {
-//		qDebug() << "ScriptEditorIfPage deleteOpcode" << (_opcodeID+1) << _script->getOpcode(_opcodeID+1)->name();
+//		qDebug() << "ScriptEditorIfPage deleteOpcode" << (_opcodeID+1) << _script->opcode(_opcodeID+1)->name();
 //		_script->delOpcode(_opcodeID+1);
 //		addJump = false;
 //	}
@@ -669,7 +669,7 @@ Opcode *ScriptEditorIfPage::opcode()
 //		_script->insertOpcode(_opcodeID+1, new OpcodeLabel(labelVal));
 //		addJump = true;
 //	} else if(addJump) { // Remove the new label if not chosen
-//		qDebug() << "ScriptEditorIfPage deleteOpcode" << (_opcodeID+1) << _script->getOpcode(_opcodeID+1)->name();
+//		qDebug() << "ScriptEditorIfPage deleteOpcode" << (_opcodeID+1) << _script->opcode(_opcodeID+1)->name();
 //		_script->delOpcode(_opcodeID+1);
 //		addJump = false;
 //	}
