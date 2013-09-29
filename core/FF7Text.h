@@ -31,6 +31,13 @@ public:
 	bool contains(const QRegExp &regExp) const;
 	int indexOf(const QRegExp &regExp, int from, int &size) const;
 	int lastIndexOf(const QRegExp &regExp, int &from, int &size) const;
+	inline bool operator ==(const FF7Text &t2) const {
+		return data() == t2.data();
+	}
+	inline bool operator !=(const FF7Text &t2) const {
+		return data() != t2.data();
+	}
+
 private:
 	static QString getCaract(quint8 ord, quint8 table=0);
 	static const char *caract[256];
