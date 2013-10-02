@@ -1364,14 +1364,13 @@ void OpcodeIFUB::setParams(const char *params, int)
 
 QString OpcodeIFUB::toString(Field *) const
 {
-	return QObject::tr("Si %1 %3 %2%5 (%4)")
+	return QObject::tr("Si %1 %3 %2 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
 				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
-				 : QObject::tr("aller au label %1 sinon").arg(_label))
-			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
+				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
 QByteArray OpcodeIFUB::params() const
@@ -1407,14 +1406,13 @@ void OpcodeIFUBL::setParams(const char *params, int)
 
 QString OpcodeIFUBL::toString(Field *) const
 {
-	return QObject::tr("Si %1 %3 %2%5 (%4)")
+	return QObject::tr("Si %1 %3 %2 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
 				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
-				 : QObject::tr("aller au label %1 sinon").arg(_label))
-			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
+				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
 QByteArray OpcodeIFUBL::params() const
@@ -1452,14 +1450,13 @@ void OpcodeIFSW::setParams(const char *params, int)
 
 QString OpcodeIFSW::toString(Field *) const
 {
-	return QObject::tr("Si %1 %3 %2%5 (%4)")
+	return QObject::tr("Si %1 %3 %2 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
 				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
-				 : QObject::tr("aller au label %1 sinon").arg(_label))
-			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
+				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
 QByteArray OpcodeIFSW::params() const
@@ -1499,14 +1496,13 @@ void OpcodeIFSWL::setParams(const char *params, int)
 
 QString OpcodeIFSWL::toString(Field *) const
 {
-	return QObject::tr("Si %1 %3 %2%5 (%4)")
+	return QObject::tr("Si %1 %3 %2 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
 				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
-				 : QObject::tr("aller au label %1 sinon").arg(_label))
-			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
+				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
 QByteArray OpcodeIFSWL::params() const
@@ -1545,14 +1541,13 @@ void OpcodeIFUW::setParams(const char *params, int)
 
 QString OpcodeIFUW::toString(Field *) const
 {
-	return QObject::tr("Si %1 %3 %2%5 (%4)")
+	return QObject::tr("Si %1 %3 %2 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
 				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
-				 : QObject::tr("aller au label %1 sinon").arg(_label))
-			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
+				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
 QByteArray OpcodeIFUW::params() const
@@ -1592,14 +1587,13 @@ void OpcodeIFUWL::setParams(const char *params, int)
 
 QString OpcodeIFUWL::toString(Field *) const
 {
-	return QObject::tr("Si %1 %3 %2%5 (%4)")
+	return QObject::tr("Si %1 %3 %2 (%4)")
 			.arg(_var(value1, B1(banks)))
 			.arg(_var(value2, B2(banks)))
 			.arg(_operateur(oper))
 			.arg(_badJump
 				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
-				 : QObject::tr("aller au label %1 sinon").arg(_label))
-			.arg(oper==9 || oper==10 ? ")" : "");//mini hack ")"
+				 : QObject::tr("aller au label %1 sinon").arg(_label));
 }
 
 QByteArray OpcodeIFUWL::params() const

@@ -374,7 +374,7 @@ int Data::load()
 
 	if(operateur_names.isEmpty()) {
 		operateur_names
-				<< "==" << "!=" << ">" << "<" << ">=" << "<=" << "&" << "^" << "|" << "& (1 <<" << "^ (1 <<";
+				<< "==" << "!=" << ">" << "<" << ">=" << "<=" << "&" << "^" << "|" << "bit on" << "bit off";
 	}
 
 	if(key_names.isEmpty()) {

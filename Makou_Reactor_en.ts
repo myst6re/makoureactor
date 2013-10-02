@@ -2741,12 +2741,12 @@
     <message>
         <location filename="core/field/Opcode.cpp" line="4802"/>
         <source>Mettre le bit %2 à 1 dans %1</source>
-        <translation>Set the %2 bit to 1 in %1</translation>
+        <translation>Set bit %2 to 1 in %1</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="4819"/>
         <source>Mettre le bit %2 à 0 dans %1</source>
-        <translation>Set the %2 bit to 0 in %1</translation>
+        <translation>Set bit %2 to 0 in %1</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="4836"/>

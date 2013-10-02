@@ -18,7 +18,7 @@
 #ifndef DEF_FIELDPS
 #define DEF_FIELDPS
 
-#include <QtGui>
+#include <QtCore>
 #include "Field.h"
 #include "FieldModelLoaderPS.h"
 #include "FieldModelFilePS.h"

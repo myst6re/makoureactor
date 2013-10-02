@@ -18,7 +18,7 @@
 #ifndef DEF_FIELDPC
 #define DEF_FIELDPC
 
-#include <QtGui>
+#include <QtCore>
 #include "Field.h"
 #include "FieldModelLoaderPC.h"
 #include "FieldModelFilePC.h"
