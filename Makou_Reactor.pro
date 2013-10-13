@@ -260,28 +260,7 @@ OTHER_FILES += Makou_Reactor.rc \
     Makou_Reactor.desktop
 
 #all other *nix (except for symbian)
-#base for setting up deb packages(rpm too?).
-#becomes 'make install' when qmake generates the makefile
 unix:!macx:!symbian {
 	LIBS += -lglut -lGLU
-    system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
-    target.path = /opt/makoureactor #set to deploy the build target.
-
-    lang.path = /opt/makoureactor/
-    lang.files = *.qm
-
-    vars_cfg.path = /opt/makoureactor/  #a hack to make it so vars.cfg can be written to by all
-    vars_cfg.files = vars.cfg           #this file is 'chmod 666' durring post install
-
-    icon.path = /usr/share/pixmaps/
-    icon.files = images/logo-shinra.png
-
-    desktop.path =/usr/share/applications/
-    desktop.files = Makou_Reactor.desktop
-
-    INSTALLS += target \
-        lang  \
-        vars_cfg \
-        icon  \
-        desktop
+	system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
 }

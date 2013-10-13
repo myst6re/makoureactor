@@ -1,0 +1,5 @@
+#!/bin/sh
+#DEBHELPER#
+if [ -d /opt/makoureactor ];then
+ rm -r /opt/makoureactor
+fi

@@ -1,0 +1,4 @@
+Makou_Reactor /usr/share/makoureactor
+*.qm /usr/share/makoureactor
+images/logo-shinra.png /usr/share/pixmaps
+Makou_Reactor.desktop /usr/share/applications
