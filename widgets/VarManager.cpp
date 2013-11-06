@@ -139,9 +139,13 @@ void VarManager::changeBank(int row)
 		if(allVars.contains(FF7Var(b, adressID))) {
 			item->setBackground(0, QColor(0xff,0xe5,0x99));
 			item->setBackground(1, QColor(0xff,0xe5,0x99));
+            item->setForeground(0, QColor(Qt::black));
+			item->setForeground(1, QColor(Qt::black));
 		} else {
-			item->setBackground(0, QBrush());
-			item->setBackground(1, QBrush());
+            item->setBackground(0, palette().base().color());
+            item->setBackground(1, palette().base().color());
+            item->setForeground(0, palette().text().color());
+            item->setForeground(1, palette().text().color());
 		}
 	}
 	fillForm();
@@ -208,11 +212,16 @@ void VarManager::search()
 	for(int adress=0 ; adress<256 ; ++adress)
 	{
 		if(allVars.contains(FF7Var(b, adress))) {
-			liste2->topLevelItem(adress)->setBackground(0, QColor(0xff,0xe5,0x99));
-			liste2->topLevelItem(adress)->setBackground(1, QColor(0xff,0xe5,0x99));
+
+            liste2->topLevelItem(adress)->setBackground(0, QColor(0xff,0xe5,0x99));
+            liste2->topLevelItem(adress)->setBackground(1, QColor(0xff,0xe5,0x99));
+            liste2->topLevelItem(adress)->setForeground(0, QColor(Qt::black));
+            liste2->topLevelItem(adress)->setForeground(1, QColor(Qt::black));
 		} else {
-			liste2->topLevelItem(adress)->setBackground(0, QBrush());
-			liste2->topLevelItem(adress)->setBackground(1, QBrush());
+            liste2->topLevelItem(adress)->setBackground(0, palette().base().color());
+            liste2->topLevelItem(adress)->setBackground(1, palette().base().color());
+            liste2->topLevelItem(adress)->setForeground(0, palette().text().color());
+            liste2->topLevelItem(adress)->setForeground(1, palette().text().color());
 		}
 	}
 }
