@@ -3,3 +3,6 @@
 if [ -d /opt/makoureactor ];then
  rm -r /opt/makoureactor
 fi
+if [ -f /usr/share/makoureactor/makoureactor ];then
+ rm /usr/share/makoureactor/makoureactor
+fi

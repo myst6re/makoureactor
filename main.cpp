@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 	if(translator1.load("qt_" % lang, app.applicationDirPath()) || translator1.load("qt_" % lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
 		app.installTranslator(&translator1);
 	QTranslator translator2;
-	if(translator2.load("Makou_Reactor_" % lang, app.applicationDirPath())) {
+    if(translator2.load("Makou_Reactor_" % lang, Config::programResourceDir())) {
 		app.installTranslator(&translator2);
 		Config::setValue("lang", lang);
 	} else {

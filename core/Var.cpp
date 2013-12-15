@@ -16,11 +16,11 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Var.h"
-
+#include "Config.h"
 bool Var::load()
 {
 	//Chargement du fichier dans Var::var_names
-	QFile fic(qApp->applicationDirPath()+"/vars.cfg");
+    QFile fic(Config::programResourceDir()+"/vars.cfg");
 	if(!fic.exists() && fic.open(QIODevice::WriteOnly | QIODevice::Text))
 	{
 		fic.write(
