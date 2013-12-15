@@ -22,11 +22,11 @@ QSettings *Config::settings = 0;
 QString Config::programResourceDir()
 {
 #if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
-    return qApp->applicationDirPath().startsWith("/usr/bin")
-            ? "/usr/share/makoureactor"
-            : qApp->applicationDirPath();
+	return qApp->applicationDirPath().startsWith("/usr/bin")
+	       ? "/usr/share/makoureactor"
+	       : qApp->applicationDirPath();
 #else
-    return qApp->applicationDirPath();
+	return qApp->applicationDirPath();
 #endif
 }
 

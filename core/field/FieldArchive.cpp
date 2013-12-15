@@ -209,7 +209,7 @@ void FieldArchive::searchAll()
 	bool iff = false, win = false;
 	OpcodeIf *opcodeIf=0;
 
-	QFile deb(QString("savesP%1.txt").arg(isPC() ? "C" : "S"));
+	QFile deb(QString("scriptsP%1_yougan.txt").arg(isPC() ? "C" : "S"));
 	deb.open(QIODevice::WriteOnly | QIODevice::Text/* | QIODevice::Truncate*/);
 
 
@@ -223,10 +223,95 @@ void FieldArchive::searchAll()
 		return;
 	}
 
+	Field *f1 = this->field(fieldsSortByName.value("yougan"), true);
+	if(f1) {
+		Section1File *f1s1 = f1->scriptsAndTexts();
+		if(f1s1->isOpen()) {
+			int groupScriptCount = f1s1->grpScriptCount();
+
+			for (int groupScriptID=0; groupScriptID < groupScriptCount; groupScriptID++) {
+				GrpScript *group1 = f1s1->grpScript(groupScriptID);
+				int scriptCount = group1->size();
+
+				deb.write(QString("--- groupe '%1' (%2) ---\n").arg(group1->name()).arg(groupScriptID).toLatin1());
+
+				for (int scriptID=0; scriptID < scriptCount; scriptID++) {
+					Script *script1 = group1->script(scriptID);
+					int opcodeCount = script1->size();
+
+					deb.write(QString("--- script %1 ---\n").arg(scriptID).toLatin1());
+
+					for (int opcodeID=0; opcodeID < opcodeCount; opcodeID++) {
+						Opcode *opcode1 = script1->opcode(opcodeID);
+
+						deb.write(opcode1->toString(f1).toLatin1() + "\n");
+					}
+				}
+			}
+		}
+	}
+	return;
+
 //	for(int i=0 ; i<size ; ++i) {
 	foreach(int i, fieldsSortByMapId) {
 		Field *field = this->field(i, true);
 		if(field != NULL) {
+
+			Section1File *s1 = field->scriptsAndTexts();
+			bool fieldNameShown = false;
+
+			foreach(GrpScript *group, s1->grpScripts()) {
+				int scriptID = 0;
+				foreach(Script *script, group->scripts()) {
+					int execCharCount = 0, execCharScript = -1, opcodeID = 0, opcodesBetween = 0;
+					foreach(Opcode *opcode, script->opcodes()) {
+						if(opcode->id() == Opcode::PREQ ||
+								opcode->id() == Opcode::PRQSW ||
+								opcode->id() == Opcode::PRQEW) {
+							OpcodeExecChar *execChar = (OpcodeExecChar *)opcode;
+							if(execChar->partyID > 0 && execChar->partyID <= 2) {
+								if(execCharScript == -1 || execChar->scriptID == execCharScript) {
+									execCharCount++;
+								} else {
+									execCharCount = 0;
+								}
+								opcodesBetween = 0;
+								execCharScript = execChar->scriptID;
+
+								if(execCharCount == 2) {
+									if(!fieldNameShown) {
+										qDebug() << QString("=== %1 ===").arg(field->name()).toLatin1().constData();
+										fieldNameShown = true;
+									}
+									qDebug() << QString("%2 > %3 > ligne %4 : partyID=%5 scriptID=%6")
+												.arg(group->name())
+												.arg(group->scriptName(scriptID))
+												.arg(opcodeID + 1)
+												.arg(execChar->partyID)
+												.arg(execChar->scriptID)
+												.toLatin1().constData();
+								}
+							} else {
+								execCharCount = 0;
+								execCharScript = -1;
+								opcodesBetween = 0;
+							}
+						} else {
+							if(opcodesBetween < 3) {
+								opcodesBetween++;
+							} else {
+								execCharCount = 0;
+								execCharScript = -1;
+								opcodesBetween = 0;
+							}
+						}
+						opcodeID++;
+					}
+					scriptID++;
+				}
+			}
+			continue;
+
 //			if(!field->name().startsWith("ancnt3")) {
 //				continue;
 //			}
@@ -400,31 +485,7 @@ void FieldArchive::searchAll()
 			if(!modelFound) continue;
 
 //			if(field->name() != "convil_2") continue;
-			Section1File *s1 = field->scriptsAndTexts();
-			int modelID = 0;
-			foreach(GrpScript *group, s1->grpScripts()) {
-				if(group->typeID() == GrpScript::Model) {
-					if(modelID == modelFoundID) {
-						if(group->size() > 0) {
-							Script *script = group->script(0);
-							QList<FF7Position> positions;
-							foreach(Opcode *opcode, script->getOpcodes()) {
-								opcode->listModelPositions(positions);
-							}
 
-							if(!positions.isEmpty()) {
-								const FF7Position &pos = positions.first();
-								deb.write(QString("%1,%2,%3,%4,%5,%6\n")
-										  .arg(Data::field_names.indexOf(field->name())).arg(field->name())
-										  .arg(pos.x).arg(pos.y).arg(pos.hasZ ? QString::number(pos.z) : "?").arg(pos.hasId ? QString::number(pos.id) : "?")
-										  .toLatin1());
-							}
-						}
-						break;
-					}
-					modelID++;
-				}
-			}
 //			CaFile *ca = field->camera();
 //			if(ca->isOpen()) {
 //				if(field->isPS() && ca->cameraCount() == 1) {
@@ -557,7 +618,7 @@ void FieldArchive::searchAll()
 					opcodeID = 0;
 					opcodeIf = 0;
 					iff = win = false;
-					foreach(Opcode *opcode, script->getOpcodes()) {
+					foreach(Opcode *opcode, script->opcodes()) {
 						if(opcode->id() == Opcode::IFUB || opcode->id() == Opcode::IFUBL
 								|| opcode->id() == Opcode::IFSW || opcode->id() == Opcode::IFSWL
 								|| opcode->id() == Opcode::IFUW || opcode->id() == Opcode::IFUWL) {

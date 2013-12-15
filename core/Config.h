@@ -23,7 +23,7 @@
 class Config
 {
 public:
-    static QString programResourceDir();
+	static QString programResourceDir();
 	static void set();
 	static void remove();
 	static QVariant value(const QString &key, const QVariant &defaultValue = QVariant());

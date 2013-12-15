@@ -127,7 +127,7 @@ const QString &Data::searchRereleasedFF7Path()
 										if(type == REG_SZ) {
 											RegCloseKey(phkResult2);
 											RegCloseKey(phkResult);
-											ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(QDir::fromNativeSeparators(QDir::cleanPath(QString::fromUtf16((ushort *)value)))));
+											ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(QString::fromUtf16((ushort *)value)));
 											return ff7RereleasePath_cache;
 										}
 									}
