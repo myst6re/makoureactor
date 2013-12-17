@@ -103,7 +103,7 @@ Window::Window() :
 	actionJp_txt->setChecked(Config::value("jp_txt", false).toBool());
 
 	menuLang = menu->addMenu(tr("&Langues"));
-	QDir dir(qApp->applicationDirPath());
+	QDir dir(Config::programResourceDir());
 	QStringList stringList = dir.entryList(QStringList("Makou_Reactor_*.qm"), QDir::Files, QDir::Name);
 	action = menuLang->addAction(tr("Français (défaut)"));
 	action->setData("fr");
