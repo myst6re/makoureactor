@@ -29,11 +29,12 @@
 
 class LgpHeaderEntry;
 class LgpToc;
+class Lgp;
 
 class LgpIterator
 {
+	friend class Lgp;
 public:
-	LgpIterator(LgpToc *toc, QFile *lgp);
 	bool hasNext() const;
 	bool hasPrevious() const;
 	void next();
@@ -46,6 +47,7 @@ public:
 	const QString &fileDir() const;
 	QString filePath() const;
 private:
+	LgpIterator(LgpToc *toc, QFile *lgp);
 	QHashIterator<quint16, LgpHeaderEntry *> it;
 	QFile *_lgp;
 };
