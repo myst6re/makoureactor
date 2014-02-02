@@ -251,6 +251,9 @@ public:
 	quint32 sectorCount() const;
 	static quint32 sectorCountData(quint32 dataSize);
 	bool seekToSector(quint32 num);
+protected:
+	qint64 writeSectors(const QByteArray &data, QIODevice *out, quint32 secteur, IsoControl *control, quint32 sectorCount=false);
+	int copyBytes(QIODevice *out, int size, int last_esti, IsoControl *control);
 private:
 	virtual bool _open()=0;
 	static qint64 isoPos(qint64 pos);
@@ -271,10 +274,7 @@ public:
 	virtual ~IsoArchive();
 
 	bool pack(IsoArchive *destination, IsoControl *control, IsoDirectory *directory=NULL);
-	qint64 writeSectors(const QByteArray &data, IsoArchive *isoTemp, quint32 secteur, IsoControl *control, quint32 sectorCount=false);
-	int copyBytes(IsoArchive *isoTemp, int size, int last_esti, IsoControl *control);
 	void applyModifications(IsoDirectory *directory);
-	static void repairLocationSectors(IsoDirectory *directory, IsoArchive *newIso);
 
 	QByteArray file(const QString &path, quint32 maxSize=0);
 	QByteArray file(IsoFile *isoFile, quint32 maxSize=0);
@@ -309,7 +309,9 @@ private:
 	
 	void _extractAll(const QString &destination, IsoDirectory *directories, QString currentInternalDir=QString());
 	void _getIntegrity(QMap<quint32, IsoFileOrDirectory *> &files, IsoDirectory *directory) const;
+	QMap<quint32, IsoFile *> getModifiedFiles(IsoDirectory *directory) const;
 	void getModifiedFiles(QMap<quint32, IsoFile *> &files, IsoDirectory *directory) const;
+	static void repairLocationSectors(IsoDirectory *directory, IsoArchive *newIso);
 
 	VolumeDescriptor volume;
 	IsoDirectory *_rootDirectory;
