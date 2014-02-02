@@ -424,9 +424,8 @@ bool IsoArchive::_open()
 		return false;
 	}
 //	qDebug() << volumeDescriptorToString(volume);
-	qint64 size = QFile::size();
-	if(size%SECTOR_SIZE != 0 || volume.vd1.volume_space_size != sectorCount() || volume.vd1.id[0] != 'C' || volume.vd1.id[1] != 'D' || volume.vd1.id[2] != '0' || volume.vd1.id[3] != '0' || volume.vd1.id[4] != '1') {
-		qWarning() << (size%SECTOR_SIZE) << volume.vd1.volume_space_size << sectorCount();
+	if(volume.vd1.volume_space_size != sectorCount() || volume.vd1.id[0] != 'C' || volume.vd1.id[1] != 'D' || volume.vd1.id[2] != '0' || volume.vd1.id[3] != '0' || volume.vd1.id[4] != '1') {
+		qWarning() << volume.vd1.volume_space_size << sectorCount();
 		return false;
 	}
 
