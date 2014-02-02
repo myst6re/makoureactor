@@ -18,7 +18,7 @@
 #ifndef DEF_FIELD
 #define DEF_FIELD
 
-#include <QtGui>
+#include <QtCore>
 #include "Section1File.h"
 #include "EncounterFile.h"
 #include "TutFile.h"
