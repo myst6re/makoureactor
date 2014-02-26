@@ -75,6 +75,8 @@ public:
 	bool linePosition(FF7Position position[2]) const;
 	bool compile(int &scriptID, int &opcodeID, QString &errorStr);
 	bool removeTexts();
+
+	QString toString(Field *field) const;
 private:
 	void setType();
 	bool search(int &scriptID, int &opcodeID) const;

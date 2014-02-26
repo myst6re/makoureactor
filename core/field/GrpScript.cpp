@@ -453,3 +453,24 @@ bool GrpScript::removeTexts()
 
 	return modified;
 }
+
+QString GrpScript::toString(Field *field) const
+{
+	QString ret(QObject::tr("Groupe '%1' :").arg(name()));
+	int scriptID = 0;
+
+	ret.append("\n");
+
+	foreach(Script *script, _scripts) {
+		if(!script->isEmpty()) {
+			ret.append("\t");
+			ret.append(QObject::tr("Script '%1' :").arg(scriptID));
+			ret.append("\n\t\t");
+			ret.append(script->toString(field).split("\n").join("\n\t\t"));
+			ret.append("\n");
+		}
+		scriptID++;
+	}
+
+	return ret;
+}

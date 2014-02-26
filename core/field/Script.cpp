@@ -1162,3 +1162,15 @@ bool Script::removeTexts()
 
 	return modified;
 }
+
+QString Script::toString(Field *field) const
+{
+	QString ret;
+
+	foreach(Opcode *opcode, _opcodes) {
+		ret.append(opcode->toString(field));
+		ret.append("\n");
+	}
+
+	return ret;
+}

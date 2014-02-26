@@ -799,6 +799,14 @@ void Section1File::deleteText(int textID)
 	}
 }
 
+void Section1File::clearTexts()
+{
+	if(!_texts.isEmpty()) {
+		_texts.clear();
+		setModified(true);
+	}
+}
+
 QSet<quint8> Section1File::listUsedTexts() const
 {
 	QSet<quint8> usedTexts;

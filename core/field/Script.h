@@ -76,6 +76,8 @@ public:
 	Script *splitScriptAtReturn();
 	static Opcode *createOpcode(const QByteArray &script, int pos=0);
 	static Opcode *copyOpcode(Opcode *opcode);
+
+	QString toString(Field *field) const;
 private:
 	OpcodeJump *convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok=0) const;
 //	bool verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const;
