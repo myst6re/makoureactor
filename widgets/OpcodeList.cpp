@@ -75,7 +75,10 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	redo_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	redo_A->setEnabled(false);
 	text_A = new QAction(tr("Modifier texte"), this);
-	
+	text_A->setVisible(false);
+	goto_A = new QAction(tr("Aller au label"), this);
+	goto_A->setVisible(false);
+
 	connect(edit_A, SIGNAL(triggered()), SLOT(scriptEditor()));
 	connect(add_A, SIGNAL(triggered()), SLOT(add()));
 	connect(del_A, SIGNAL(triggered()), SLOT(del()));
@@ -88,11 +91,13 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	connect(text_A, SIGNAL(triggered()), SLOT(editText()));
 	connect(undo_A, SIGNAL(triggered()), SLOT(undo()));
 	connect(redo_A, SIGNAL(triggered()), SLOT(redo()));
+	connect(goto_A, SIGNAL(triggered()), SLOT(gotoLabel()));
 	
 	addAction(edit_A);
 	addAction(add_A);
 	addAction(del_A);
 	addAction(text_A);
+	addAction(goto_A);
 	QAction *separator = new QAction(this);
 	separator->setSeparator(true);
 	addAction(separator);
@@ -109,6 +114,14 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	addAction(separator);
 	addAction(undo_A);
 	addAction(redo_A);
+
+	QWidget *help = new QWidget;
+	_help = new QLabel(tr("Alt + clic pour aller au label"));
+	_help->hide();
+	QHBoxLayout *helpLayout = new QHBoxLayout(help);
+	helpLayout->addStretch();
+	helpLayout->addWidget(_help);
+	helpLayout->setContentsMargins(QMargins());
 	
 	_toolBar = new QToolBar(tr("Édition du &script"));
 	_toolBar->setIconSize(QSize(14,14));
@@ -127,12 +140,14 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	_toolBar->addSeparator();
 	_toolBar->addAction(expand_A);
 	_toolBar->addAction(text_A);
+	_toolBar->addAction(goto_A);
 	_toolBar->addSeparator();
 	_toolBar->addAction(undo_A);
 	undo_A->setStatusTip(undo_A->text());
 	_toolBar->addAction(redo_A);
 	redo_A->setStatusTip(redo_A->text());
-	
+	_toolBar->addWidget(help);
+
 	enableActions(false);
 
 	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(scriptEditor()));
@@ -195,24 +210,31 @@ void OpcodeList::setErrorLine(int opcodeID)
 void OpcodeList::itemSelected()
 {
 	upDownEnabled();
-	int opcode = selectedOpcode();
+	int opcodeID = selectedID();
+	if(opcodeID <= -1 || opcodeID >= script->size()) {
+		return;
+	}
+	Opcode *opcode = script->opcode(opcodeID);
 
-	switch(opcode) {
+	switch(opcode->id()) {
 	case Opcode::ASK:
 	case Opcode::MESSAGE:
 	case Opcode::MPNAM:
-		text_A->setEnabled(true);
+		text_A->setVisible(true);
 		break;
 	case Opcode::SPECIAL:
 	{
-		OpcodeSPECIAL *op = (OpcodeSPECIAL *)script->opcode(selectedID());
-		text_A->setEnabled(op && op->opcode->id() == 0xFD);
+		OpcodeSPECIAL *op = (OpcodeSPECIAL *)opcode;
+		text_A->setVisible(op && op->opcode->id() == 0xFD);
 	}
 		break;
 	default:
-		text_A->setEnabled(false);
+		text_A->setVisible(false);
 		break;
 	}
+
+	goto_A->setVisible(opcode->isJump());
+	_help->setVisible(opcode->isJump());
 }
 
 void OpcodeList::upDownEnabled()
@@ -838,4 +860,44 @@ QPixmap &OpcodeList::posNumber(int num, const QPixmap &fontPixmap, QPixmap &word
 
 	painter.end();
 	return wordPixmap;
+}
+
+void OpcodeList::gotoLabel(QTreeWidgetItem *item)
+{
+	if(item == NULL) {
+		item = currentItem();
+	}
+	int opcodeID = item->data(0, Qt::UserRole).toInt();
+	Opcode *op = script->opcode(opcodeID);
+
+	if(op->isJump()) {
+		OpcodeJump *opJ = (OpcodeJump *)op;
+
+		if(!opJ->isBadJump()) {
+			int opcodeID = 0;
+
+			foreach(const Opcode *op, script->opcodes()) {
+				if(op->isLabel() && ((OpcodeLabel *)op)->label() == opJ->label()) {
+					scroll(opcodeID);
+					break;
+				}
+				++opcodeID;
+			}
+		}
+	}
+}
+
+void OpcodeList::mouseReleaseEvent(QMouseEvent *event)
+{
+	// Alt + left click
+	if(event->button() == Qt::LeftButton &&
+			event->modifiers().testFlag(Qt::AltModifier)) {
+		QTreeWidgetItem *item = itemAt(event->pos());
+		if(item == NULL) {
+			return;
+		}
+
+		gotoLabel(item);
+	}
+	QTreeWidget::mouseReleaseEvent(event);
 }

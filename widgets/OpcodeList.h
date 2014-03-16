@@ -70,9 +70,12 @@ private slots:
 	void undo();
 	void redo();
 	void editText();
+	void gotoLabel(QTreeWidgetItem *item = NULL);
 signals:
 	void changed();
 	void editText(int textID);
+protected:
+	void mouseReleaseEvent(QMouseEvent *event);
 private:
 	void upDownEnabled();
 	void move(Script::MoveDirection direction);
@@ -89,6 +92,7 @@ private:
 	bool hasCut, isInit;
 
 	QToolBar *_toolBar;
+	QWidget *_help;
 
 	Field *field;
 	GrpScript *grpScript;
@@ -102,7 +106,7 @@ private:
 	QAction *edit_A, *add_A, *del_A;
 	QAction *cut_A, *copy_A, *paste_A;
 	QAction *up_A, *down_A, *expand_A;
-	QAction *undo_A, *redo_A, *text_A;
+	QAction *undo_A, *redo_A, *text_A, *goto_A;
 
 	QStack<Historic> hists;
 	QStack<Historic> restoreHists;
