@@ -162,7 +162,7 @@ void GrpScriptList::fill(Section1File *scripts)
 	if(scripts)		this->scripts = scripts;
 	QTreeWidgetItem *item;
 	clear();
-	
+
 	int i=0;
 	foreach(GrpScript *grpScript, this->scripts->grpScripts()) {
 		item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->name() << grpScript->type());
@@ -275,13 +275,19 @@ void GrpScriptList::del(bool totalDel)
 	QList<int> selectedIDs = this->selectedIDs();
 	if(selectedIDs.isEmpty())	return;
 	
-	if(totalDel && QMessageBox::warning(this, tr("Suppression"), tr("Voulez-vous vraiment supprimer %1 ?").arg(selectedIDs.size()==1 ? tr("le groupe sélectionné") : tr("les groupes sélectionnés")), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel)		return;
+	if(totalDel && QMessageBox::warning(this, tr("Suppression"), tr("Voulez-vous vraiment supprimer %1 ?\n"
+																	"Certains scripts peuvent y faire référence !").arg(selectedIDs.size()==1 ? tr("le groupe sélectionné") : tr("les groupes sélectionnés")), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel)		return;
 	
 	qSort(selectedIDs);
 	for(int i=selectedIDs.size()-1 ; i>=0 ; --i)
 		totalDel ? scripts->deleteGrpScript(selectedIDs.at(i)) : scripts->removeGrpScript(selectedIDs.at(i));
+
+	blockSignals(true);
 	fill();
+	blockSignals(false);
+
 	emit changed();
+
 	if(topLevelItemCount() != 0)
 	{
 		if(selectedIDs.at(0) >= topLevelItemCount() && selectedIDs.at(0) > 0)	scroll(selectedIDs.at(0)-1);

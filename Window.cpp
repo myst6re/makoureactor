@@ -164,7 +164,7 @@ Window::Window() :
 	groupScriptList->setFixedWidth(176);
 	groupScriptList->setFont(font);
 	connect(groupScriptList, SIGNAL(changed()), SLOT(setModified()));
-	
+
 	scriptList = new ScriptList(this);
 	scriptList->setFont(font);
 	
@@ -854,15 +854,19 @@ void Window::showGrpScripts()
 
 	disconnect(scriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showScripts()));
 	
+	scriptList->blockSignals(true);
+	opcodeList->blockSignals(true);
 	scriptList->clear();
 	opcodeList->clear();
-	
+	scriptList->blockSignals(false);
+	opcodeList->blockSignals(false);
+
 	if(groupScriptList->selectedItems().isEmpty())
 	{
 		zonePreview->setCurrentIndex(0);
 		return;
 	}
-	
+
 	GrpScript *currentGrpScript = groupScriptList->currentGrpScript();
 	if(currentGrpScript==NULL)	return;
 
