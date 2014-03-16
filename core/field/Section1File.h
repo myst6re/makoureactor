@@ -32,6 +32,7 @@ public:
 	};
 
 	explicit Section1File(Field *field);
+	Section1File(const Section1File &other);
 	virtual ~Section1File();
 	void clear();
 	bool open();

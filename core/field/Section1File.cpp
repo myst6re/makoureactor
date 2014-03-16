@@ -24,6 +24,15 @@ Section1File::Section1File(Field *field) :
 {
 }
 
+Section1File::Section1File(const Section1File &other) :
+	FieldPart(other.field()), _author(other.author()),
+	_scale(other.scale()), _texts(other.texts()), _tut(other.tut())
+{
+	foreach(const GrpScript *grpScript, other.grpScripts()) {
+		_grpScripts.append(new GrpScript(*grpScript));
+	}
+}
+
 Section1File::~Section1File()
 {
 	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
@@ -387,18 +396,15 @@ int Section1File::grpScriptCount() const
 
 bool Section1File::insertGrpScript(int row)
 {
-	if(grpScriptCount() < maxGrpScriptCount()) {
-		_grpScripts.insert(row, new GrpScript);
-		setModified(true);
-		return true;
-	}
-	return false;
+	return insertGrpScript(row, new GrpScript);
 }
 
 bool Section1File::insertGrpScript(int row, GrpScript *grpScript)
 {
 	if(grpScriptCount() < maxGrpScriptCount()) {
 		_grpScripts.insert(row, grpScript);
+		foreach(GrpScript *grpScript, _grpScripts)
+			grpScript->shiftGroupIds(row-1, +1);
 		setModified(true);
 		return true;
 	}
@@ -407,16 +413,22 @@ bool Section1File::insertGrpScript(int row, GrpScript *grpScript)
 
 void Section1File::deleteGrpScript(int row)
 {
+	qDebug() << "Section1File::deleteGrpScript" << row;
 	if(row < _grpScripts.size()) {
 		delete _grpScripts.takeAt(row);
+		/*foreach(GrpScript *grpScript, _grpScripts)
+			grpScript->shiftGroupIds(row, -1);*/
 		setModified(true);
 	}
 }
 
 void Section1File::removeGrpScript(int row)
 {
+	qDebug() << "Section1File::removeGrpScript" << row;
 	if(row < _grpScripts.size()) {
 		_grpScripts.removeAt(row);
+		/*foreach(GrpScript *grpScript, _grpScripts)
+			grpScript->shiftGroupIds(row, -1);*/
 		setModified(true);
 	}
 }
@@ -425,16 +437,20 @@ bool Section1File::moveGrpScript(int row, bool direction)
 {
 	if(row >= _grpScripts.size())	return false;
 
-	if(direction) {
+	if(direction) { // down
 		if(row == _grpScripts.size()-1) {
 			return false;
 		}
 		_grpScripts.swap(row, row+1);
-	} else {
+		foreach(GrpScript *grpScript, _grpScripts)
+			grpScript->swapGroupIds(row, row+1);
+	} else { // up
 		if(row == 0) {
 			return false;
 		}
 		_grpScripts.swap(row, row-1);
+		foreach(GrpScript *grpScript, _grpScripts)
+			grpScript->swapGroupIds(row, row-1);
 	}
 	setModified(true);
 

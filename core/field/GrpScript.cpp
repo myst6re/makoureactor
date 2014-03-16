@@ -387,6 +387,12 @@ void GrpScript::listUsedTuts(QSet<quint8> &usedTuts) const
 		script->listUsedTuts(usedTuts);
 }
 
+void GrpScript::shiftGroupIds(int groupId, int steps)
+{
+	foreach(Script *script, _scripts)
+		script->shiftGroupIds(groupId, steps);
+}
+
 void GrpScript::shiftTextIds(int textId, int steps)
 {
 	foreach(Script *script, _scripts)
@@ -397,6 +403,12 @@ void GrpScript::shiftTutIds(int tutId, int steps)
 {
 	foreach(Script *script, _scripts)
 		script->shiftTutIds(tutId, steps);
+}
+
+void GrpScript::swapGroupIds(int groupId1, int groupId2)
+{
+	foreach(Script *script, _scripts)
+		script->swapGroupIds(groupId1, groupId2);
 }
 
 void GrpScript::setWindow(const FF7Window &win)

@@ -1074,6 +1074,12 @@ void Script::listUsedTuts(QSet<quint8> &usedTuts) const
 		opcode->listUsedTuts(usedTuts);
 }
 
+void Script::shiftGroupIds(int groupId, int steps)
+{
+	foreach(Opcode *opcode, _opcodes)
+		opcode->shiftGroupIds(groupId, steps);
+}
+
 void Script::shiftTextIds(int textId, int steps)
 {
 	foreach(Opcode *opcode, _opcodes)
@@ -1084,6 +1090,12 @@ void Script::shiftTutIds(int tutId, int steps)
 {
 	foreach(Opcode *opcode, _opcodes)
 		opcode->shiftTutIds(tutId, steps);
+}
+
+void Script::swapGroupIds(int groupId1, int groupId2)
+{
+	foreach(Opcode *opcode, _opcodes)
+		opcode->swapGroupIds(groupId1, groupId2);
 }
 
 void Script::setWindow(const FF7Window &win)

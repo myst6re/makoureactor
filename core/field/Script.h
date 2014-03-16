@@ -48,8 +48,10 @@ public:
 	Opcode *removeOpcode(quint16 opcodeID);
 	void insertOpcode(quint16 opcodeID, Opcode *opcode);
 	bool moveOpcode(quint16 opcodeID, MoveDirection direction);
+	void shiftGroupIds(int groupId, int steps=1);
 	void shiftTextIds(int textId, int steps=1);
 	void shiftTutIds(int tutId, int steps=1);
+	void swapGroupIds(int groupId1, int groupId2);
 	void setWindow(const FF7Window &win);
 	int opcodePositionInBytes(quint16 opcodeID);
 

@@ -155,6 +155,8 @@ public:
 
 	bool searchVar(quint8 bank, quint8 adress, int value=65536) const;
 
+	inline virtual int getGroupID() const { return -1; }
+	inline virtual void setGroupID(quint8 groupID) { Q_UNUSED(groupID) }
 	inline virtual int getTextID() const { return -1; }
 	inline virtual void setTextID(quint8 textID) { Q_UNUSED(textID) }
 	inline virtual int getTutoID() const { return -1; }
@@ -169,8 +171,10 @@ public:
 	bool searchTextInScripts(const QRegExp &text, const Section1File *scriptsAndTexts) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
+	void shiftGroupIds(int groupId, int steps);
 	void shiftTextIds(int textId, int steps);
 	void shiftTutIds(int tutId, int steps);
+	void swapGroupIds(int groupId1, int groupId2);
 	void listWindows(int groupID, int scriptID, int opcodeID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
 	virtual void listModelPositions(QList<FF7Position> &positions) const;
 	virtual bool linePosition(FF7Position position[2]) const;
@@ -227,6 +231,8 @@ public:
 	explicit OpcodeExec(const char *params, int size);
 	void setParams(const char *params, int size);
 	QByteArray params() const;
+	inline virtual int getGroupID() const { return groupID; }
+	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 groupID;
 	quint8 scriptID;
 	quint8 priority;
@@ -475,6 +481,7 @@ public:
 class OpcodeSPECIAL : public Opcode {
 public:
 	explicit OpcodeSPECIAL(const char *params, int size);
+	OpcodeSPECIAL(const OpcodeSPECIAL &other);
 	virtual ~OpcodeSPECIAL();
 	inline int id() const { return 0x0F; }
 	quint8 size() const;
@@ -847,6 +854,7 @@ public:
 class OpcodeKAWAI : public Opcode {
 public:
 	explicit OpcodeKAWAI(const char *params, int size);
+	OpcodeKAWAI(const OpcodeKAWAI &other);
 	virtual ~OpcodeKAWAI();
 	inline int id() const { return 0x28; }
 	quint8 size() const;
@@ -1493,6 +1501,8 @@ public:
 	void setParams(const char *params, int size);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
+	inline virtual int getGroupID() const { return groupID; }
+	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 banks;
 	quint16 speed;
 	quint8 groupID, scrollType;
@@ -2222,6 +2232,8 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
 	QByteArray params() const;
+	inline virtual int getGroupID() const { return groupID; }
+	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 groupID;
 };
 
@@ -2232,6 +2244,8 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
 	QByteArray params() const;
+	inline virtual int getGroupID() const { return groupID; }
+	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 groupID, directionRotation, speed;
 };
 
@@ -2346,6 +2360,8 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
 	QByteArray params() const;
+	inline virtual int getGroupID() const { return groupID; }
+	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 groupID;
 };
 
@@ -2357,6 +2373,8 @@ public:
 	void setParams(const char *params, int size);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
+	inline virtual int getGroupID() const { return groupID; }
+	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 banks, groupID, varDir;
 };
 
@@ -2368,6 +2386,8 @@ public:
 	void setParams(const char *params, int size);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
+	inline virtual int getGroupID() const { return groupID; }
+	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 banks, groupID, varX, varY;
 };
 
@@ -2379,6 +2399,8 @@ public:
 	void setParams(const char *params, int size);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
+	inline virtual int getGroupID() const { return groupID; }
+	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 banks, groupID, varI;
 };
 // note: same struct as ANIME2
@@ -2431,6 +2453,8 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
 	QByteArray params() const;
+	inline virtual int getGroupID() const { return groupID; }
+	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 groupID;
 };
 
@@ -2456,6 +2480,8 @@ public:
 	void setParams(const char *params, int size);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
+	inline virtual int getGroupID() const { return groupID; }
+	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 banks[2], groupID, varX, varY, varZ, varI;
 };
 

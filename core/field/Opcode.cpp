@@ -124,6 +124,14 @@ void Opcode::listUsedTuts(QSet<quint8> &usedTuts) const
 	}
 }
 
+void Opcode::shiftGroupIds(int groupId, int steps)
+{
+	int groupID = getGroupID();
+	if(groupID != -1 && groupID > groupId) {
+		setGroupID(groupID + steps);
+	}
+}
+
 void Opcode::shiftTextIds(int textId, int steps)
 {
 	int textID = getTextID();
@@ -137,6 +145,16 @@ void Opcode::shiftTutIds(int tutId, int steps)
 	int tutoID = getTutoID();
 	if(tutoID != -1 && tutoID > tutId) {
 		setTutoID(tutoID + steps);
+	}
+}
+
+void Opcode::swapGroupIds(int groupId1, int groupId2)
+{
+	int groupID = getGroupID();
+	if(groupID == groupId1) {
+		setGroupID(groupId2);
+	} else if(groupID == groupId2) {
+		setGroupID(groupId1);
 	}
 }
 
@@ -847,8 +865,9 @@ quint8 OpcodeSPECIALPNAME::size() const
 	return 2;
 }
 
-void OpcodeSPECIALPNAME::setParams(const char *params, int)
+void OpcodeSPECIALPNAME::setParams(const char *params, int size)
 {
+	Q_UNUSED(size)
 	unknown = params[0];
 }
 
@@ -1072,6 +1091,13 @@ OpcodeSPECIAL::OpcodeSPECIAL(const char *params, int size) :
 	opcode(0)
 {
 	setParams(params, size);
+}
+
+OpcodeSPECIAL::OpcodeSPECIAL(const OpcodeSPECIAL &other) :
+	Opcode(other), opcode(0)
+{
+	// Realloc opcode attribute
+	setParams(other.params().constData(), other.params().size());
 }
 
 OpcodeSPECIAL::~OpcodeSPECIAL()
@@ -2089,6 +2115,13 @@ OpcodeKAWAI::OpcodeKAWAI(const char *params, int size) :
 	opcode(0)
 {
 	setParams(params, size);
+}
+
+OpcodeKAWAI::OpcodeKAWAI(const OpcodeKAWAI &other) :
+	Opcode(other), opcode(0)
+{
+	// Realloc opcode attribute
+	setParams(other.params().constData(), other.params().size());
 }
 
 OpcodeKAWAI::~OpcodeKAWAI()
