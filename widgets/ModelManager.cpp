@@ -50,7 +50,6 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	modelColorLabel->setPalette(modelColorLabelPalette);
 
 	modelAnims = new QTreeWidget();
-	modelAnims->setColumnCount(2);
 	modelAnims->setIndentation(0);
 	modelAnims->setFixedWidth(120);
 

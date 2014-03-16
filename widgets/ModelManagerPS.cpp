@@ -28,7 +28,7 @@ ModelManagerPS::ModelManagerPS(const QGLWidget *shareWidget, QWidget *parent) :
 	modelColorDisplay->setReadOnly(true);
 
 	modelAnims->setColumnCount(1);
-	modelAnims->setHeaderLabels(QStringList() << tr("Animations") << tr("?"));
+	modelAnims->setHeaderLabels(QStringList() << tr("Animations"));
 
 	QGridLayout *frameLayout = new QGridLayout(modelFrame);
 	frameLayout->addWidget(new QLabel(tr("Inconnu")), 0, 0);
