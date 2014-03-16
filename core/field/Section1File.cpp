@@ -413,22 +413,20 @@ bool Section1File::insertGrpScript(int row, GrpScript *grpScript)
 
 void Section1File::deleteGrpScript(int row)
 {
-	qDebug() << "Section1File::deleteGrpScript" << row;
 	if(row < _grpScripts.size()) {
 		delete _grpScripts.takeAt(row);
-		/*foreach(GrpScript *grpScript, _grpScripts)
-			grpScript->shiftGroupIds(row, -1);*/
+		foreach(GrpScript *grpScript, _grpScripts)
+			grpScript->shiftGroupIds(row, -1);
 		setModified(true);
 	}
 }
 
 void Section1File::removeGrpScript(int row)
 {
-	qDebug() << "Section1File::removeGrpScript" << row;
 	if(row < _grpScripts.size()) {
 		_grpScripts.removeAt(row);
-		/*foreach(GrpScript *grpScript, _grpScripts)
-			grpScript->shiftGroupIds(row, -1);*/
+		foreach(GrpScript *grpScript, _grpScripts)
+			grpScript->shiftGroupIds(row, -1);
 		setModified(true);
 	}
 }
