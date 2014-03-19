@@ -272,48 +272,48 @@ void ScriptEditor::refreshTextEdit()
 void ScriptEditor::changeCurrentOpcode(int index)
 {
 	this->change = true;
-	QByteArray newOpcode;
-	QList<QVariant> itemDataList = comboBox->itemData(index).toList();
-	int itemData = !itemDataList.isEmpty() ? itemDataList.first().toInt() : 0;
-	const quint8 id = itemData & 0xFF;
-	bool isLabel = itemData == 0x100;
-	newOpcode.append((char)id);
-	
-	// Fill opcode with \x00
 
-	if(id == Opcode::KAWAI)//KAWAI
-	{
-		newOpcode.append('\x03'); // size
-		newOpcode.append((char)((itemData >> 8) & 0xFF)); // KAWAI ID
-	}
-	else if(id == Opcode::SPECIAL)//SPECIAL
-	{
-		quint8 byte2 = (itemData >> 8) & 0xFF;
-		newOpcode.append((char)byte2); // SPECIAL ID
-		switch(byte2)
-		{
-		case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
-			newOpcode.append('\x00');
-			break;
-		case 0xF8:case 0xFD:
-			newOpcode.append('\x00');
-			newOpcode.append('\x00');
-			break;
-		}
-	}
-	else if(!isLabel)
-	{
-		for(quint8 pos=1 ; pos<Opcode::length[id] ; ++pos)
-			newOpcode.append('\x00');
-	}
+	const QList<QVariant> itemDataList = comboBox->itemData(index).toList();
+	const int itemData = !itemDataList.isEmpty() ? itemDataList.first().toInt() : 0;
 
-	if(isLabel) {
+	// Create opcode
+
+	if(Opcode::LABEL == itemData) { // LABEL exception
 		if(Opcode::LABEL == opcode->id()) {
 			((OpcodeLabel *)opcode)->setLabel(0);
 		} else {
+			delete opcode;
 			opcode = new OpcodeLabel(0);
 		}
 	} else {
+		const quint8 id = itemData & 0xFF;
+		QByteArray newOpcode;
+		newOpcode.append((char)id);
+
+		// Fill opcode with \x00
+
+		if(Opcode::KAWAI == id) { //KAWAI
+			newOpcode.append('\x03'); // size
+			newOpcode.append((char)((itemData >> 8) & 0xFF)); // KAWAI ID
+		} else if(Opcode::SPECIAL == id) { //SPECIAL
+			quint8 byte2 = (itemData >> 8) & 0xFF;
+			newOpcode.append((char)byte2); // SPECIAL ID
+			switch(byte2)
+			{
+			case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
+				newOpcode.append('\x00');
+				break;
+			case 0xF8:case 0xFD:
+				newOpcode.append('\x00');
+				newOpcode.append('\x00');
+				break;
+			}
+		} else {
+			for(quint8 pos=1 ; pos<Opcode::length[id] ; ++pos) {
+				newOpcode.append('\x00');
+			}
+		}
+
 		if(id == opcode->id()) {
 			opcode->setParams(newOpcode.constData() + 1, newOpcode.size() - 1); // same opcode, just change params
 		} else { // change all
@@ -321,15 +321,14 @@ void ScriptEditor::changeCurrentOpcode(int index)
 			opcode = Script::createOpcode(newOpcode);
 		}
 	}
-	
+
 	fillView();
 }
 
 void ScriptEditor::setCurrentMenu(int id)
 {
 	int index, i, j;
-	for(i=0 ; i<comboBox0->count() ; ++i)
-	{
+	for(i=0 ; i<comboBox0->count() ; ++i) {
 		buildList(i);
 		index = -1;
 		for(j=0 ; j<comboBox->count() && index==-1 ; ++j) {
@@ -341,8 +340,8 @@ void ScriptEditor::setCurrentMenu(int id)
 				}
 			}
 		}
-		if(index != -1)
-		{
+
+		if(index != -1) {
 			comboBox0->setCurrentIndex(i);
 			comboBox->setCurrentIndex(index);
 			setEnabled(true);
@@ -356,8 +355,7 @@ void ScriptEditor::setCurrentMenu(int id)
 void ScriptEditor::buildList(int id)
 {
 	comboBox->clear();
-	switch(id)
-	{
+	switch(id) {
 	case 0:
 		comboBox->addItem(tr("Retourner"), QList<QVariant>() << 0x00);
 		comboBox->addItem(tr("Retourner à"), QList<QVariant>() << 0x07);
