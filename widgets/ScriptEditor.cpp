@@ -125,7 +125,12 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 
 ScriptEditor::~ScriptEditor()
 {
-	delete opcode;
+	Opcode *op = editorWidget->opcode();
+	if(op) {
+		delete op;
+	} else {
+		delete this->opcode;
+	}
 }
 
 void ScriptEditor::fillEditor()
@@ -303,7 +308,7 @@ void ScriptEditor::changeCurrentOpcode(int index)
 	}
 
 	if(isLabel) {
-		if(0x100 == opcode->id()) {
+		if(Opcode::LABEL == opcode->id()) {
 			((OpcodeLabel *)opcode)->setLabel(0);
 		} else {
 			opcode = new OpcodeLabel(0);
