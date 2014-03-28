@@ -233,6 +233,11 @@ QByteArray Section1File::save() const
 		allTexts.append('\xff');// end of text
 	}
 
+	// Word padding
+	if(allTexts.size() % 4 != 0) {
+		allTexts.append(QByteArray(allTexts.size() % 4, '\0'));
+	}
+
 	newPosAKAOs = newPosTexts + (2 + newNbText*2 + allTexts.size());
 
 	if(_tut && _tut->isModified()) {
