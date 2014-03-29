@@ -29,8 +29,13 @@ public:
 	explicit BackgroundIO(QIODevice *device);
 	virtual ~BackgroundIO();
 
-	void setDevice(QIODevice *device);
-	QIODevice *device() const;
+	inline void setDevice(QIODevice *device) {
+		_device = device;
+	}
+
+	inline QIODevice *device() const {
+		return _device;
+	}
 
 	bool canRead() const;
 	bool canWrite() const;
@@ -46,8 +51,13 @@ class BackgroundIOPC : public BackgroundIO
 public:
 	explicit BackgroundIOPC(QIODevice *device, QIODevice *devicePal);
 
-	void setDevicePal(QIODevice *device);
-	QIODevice *devicePal() const;
+	inline void setDevicePal(QIODevice *device) {
+		_devicePal = device;
+	}
+
+	inline QIODevice *devicePal() const {
+		return _devicePal;
+	}
 
 	bool canReadPal() const;
 	bool canWritePal() const;
@@ -66,8 +76,13 @@ class BackgroundIOPS : public BackgroundIO
 public:
 	explicit BackgroundIOPS(QIODevice *device, QIODevice *deviceTiles);
 
-	void setDeviceTiles(QIODevice *device);
-	QIODevice *deviceTiles() const;
+	inline void setDeviceTiles(QIODevice *device) {
+		_deviceTiles = device;
+	}
+
+	inline QIODevice *deviceTiles() const {
+		return _deviceTiles;
+	}
 
 	bool canReadTiles() const;
 	bool canWriteTiles() const;

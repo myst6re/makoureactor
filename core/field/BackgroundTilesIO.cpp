@@ -26,16 +26,6 @@ BackgroundTilesIO::~BackgroundTilesIO()
 {
 }
 
-void BackgroundTilesIO::setDevice(QIODevice *device)
-{
-	_device = device;
-}
-
-QIODevice *BackgroundTilesIO::device() const
-{
-	return _device;
-}
-
 bool BackgroundTilesIO::canRead() const
 {
 	if(_device) {
@@ -570,6 +560,10 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 		return false;
 	}
 
+	if ((start3-start2) % 2 != 0) {
+		qWarning() << "BackgroundTilesIOPS::open padding after (1)" << ((start3-start2) % 2);
+	}
+
 	for(i=0 ; i<size ; ++i) {
 		memcpy(&tile2, constDatData + start2+i*2, 2);
 		tiles2.append(tile2);
@@ -584,6 +578,10 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 	if(datDataSize < start1+size*8) {
 		return false;
+	}
+
+	if ((start2-start1) % 8 != 0) {
+		qWarning() << "BackgroundTilesIOPS::open padding after (2)" << ((start2-start1) % 8);
 	}
 
 	for(i=0 ; i<size && hasTiles2 ; ++i) {
@@ -622,6 +620,10 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 	if(datDataSize < start3+size*14) {
 		return false;
+	}
+
+	if ((start4-start3) % 14 != 0) {
+		qWarning() << "BackgroundTilesIOPS::open padding after (3)" << ((start4-start3) % 14);
 	}
 
 	for(i=0 ; i<size ; ++i) {
@@ -664,6 +666,8 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	if(datDataSize < start4+size*10) {
 		return false;
 	}
+
+	// Possible padding (2) at the end
 
 	quint32 j=0;
 

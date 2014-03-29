@@ -28,8 +28,13 @@ public:
 	explicit PaletteIO(QIODevice *device);
 	virtual ~PaletteIO();
 
-	void setDevice(QIODevice *device);
-	QIODevice *device() const;
+	inline void setDevice(QIODevice *device) {
+		_device = device;
+	}
+
+	inline QIODevice *device() const {
+		return _device;
+	}
 
 	bool canRead() const;
 	bool canWrite() const;

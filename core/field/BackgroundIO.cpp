@@ -29,16 +29,6 @@ BackgroundIO::~BackgroundIO()
 {
 }
 
-void BackgroundIO::setDevice(QIODevice *device)
-{
-	_device = device;
-}
-
-QIODevice *BackgroundIO::device() const
-{
-	return _device;
-}
-
 bool BackgroundIO::canRead() const
 {
 	if(_device) {
@@ -64,16 +54,6 @@ bool BackgroundIO::canWrite() const
 BackgroundIOPC::BackgroundIOPC(QIODevice *device, QIODevice *devicePal) :
 	BackgroundIO(device), _devicePal(devicePal)
 {
-}
-
-void BackgroundIOPC::setDevicePal(QIODevice *device)
-{
-	_devicePal = device;
-}
-
-QIODevice *BackgroundIOPC::devicePal() const
-{
-	return _devicePal;
 }
 
 bool BackgroundIOPC::canReadPal() const
@@ -226,16 +206,6 @@ bool BackgroundIOPC::write(const BackgroundFile &background) const
 BackgroundIOPS::BackgroundIOPS(QIODevice *device, QIODevice *deviceTiles) :
 	BackgroundIO(device), _deviceTiles(deviceTiles)
 {
-}
-
-void BackgroundIOPS::setDeviceTiles(QIODevice *device)
-{
-	_deviceTiles = device;
-}
-
-QIODevice *BackgroundIOPS::deviceTiles() const
-{
-	return _deviceTiles;
 }
 
 bool BackgroundIOPS::canReadTiles() const

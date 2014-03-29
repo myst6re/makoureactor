@@ -36,7 +36,7 @@ bool IdFile::open(const QByteArray &data)
 
 	if(sizeof(Triangle) != 24 || sizeof(Access) != 6) {
 		qWarning() << "Error id struct size" << sizeof(Triangle) << sizeof(Access);
-		return false;
+		Q_ASSERT(false);
 	}
 
 	if(sizeId < 4) {

@@ -34,7 +34,7 @@ bool InfFile::open(const QByteArray &data)
 
 	if(sizeof(InfData) != 740) {
 		qWarning() << "Error InfData" << sizeof(InfData) << "must be 740";
-		return false;
+		Q_ASSERT(false);
 	}
 
 	if(size != 740 && size != 536) {

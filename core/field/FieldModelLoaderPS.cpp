@@ -52,7 +52,7 @@ bool FieldModelLoaderPS::open(const QByteArray &data)
 
 	if(sizeof(FieldModelLoaderStruct) != 8) {
 		qWarning() << "invalid model loader struct size" << sizeof(FieldModelLoaderStruct);
-		return false;
+		Q_ASSERT(false);
 	}
 
 	clear();

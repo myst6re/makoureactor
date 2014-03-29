@@ -26,16 +26,6 @@ BackgroundTexturesIO::~BackgroundTexturesIO()
 {
 }
 
-void BackgroundTexturesIO::setDevice(QIODevice *device)
-{
-	_device = device;
-}
-
-QIODevice *BackgroundTexturesIO::device() const
-{
-	return _device;
-}
-
 bool BackgroundTexturesIO::canRead() const
 {
 	if(_device) {
@@ -183,6 +173,10 @@ bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures)
 	textures->setHeaderImg(headerImg);
 	textures->setHeaderEffect(headerEffect);
 	textures->setData(mimDataDec);
+
+	if (mimDataDec.size() != headerPalSize + headerImg.size + headerEffect.size) {
+		qWarning() << "BackgroundTexturesIOPS::open padding after" << (mimDataDec.size() - int(headerPalSize + headerImg.size + headerEffect.size));
+	}
 
 	return true;
 }

@@ -31,16 +31,6 @@ PaletteIO::~PaletteIO()
 {
 }
 
-void PaletteIO::setDevice(QIODevice *device)
-{
-	_device = device;
-}
-
-QIODevice *PaletteIO::device() const
-{
-	return _device;
-}
-
 bool PaletteIO::canRead() const
 {
 	if(_device) {
@@ -71,7 +61,7 @@ bool PaletteIO::read(Palettes &palettes) const
 
 	QByteArray palData = device()->read(12);
 
-	if(palData.size() < 12) {
+	if(palData.size() != 12) {
 		qWarning() << "PaletteIO::read Pal size too short";
 		return false;
 	}
@@ -82,7 +72,7 @@ bool PaletteIO::read(Palettes &palettes) const
 
 	palData = device()->read(palH * 512);
 
-	if(palData.size() < palH * 512) {
+	if(palData.size() != palH * 512) {
 		qWarning() << "PaletteIO::read Pal size too short 2";
 		return false;
 	}
