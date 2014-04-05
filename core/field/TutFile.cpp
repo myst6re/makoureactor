@@ -24,6 +24,12 @@ TutFile::TutFile(Field *field) :
 {
 }
 
+TutFile::TutFile(const QList<QByteArray> &tutos) :
+	FieldPart(0), tutos(tutos)
+{
+	setOpen(true);
+}
+
 bool TutFile::open(const QByteArray &data)
 {
 	QList<quint32> positions;
@@ -51,16 +57,6 @@ bool TutFile::open(const QByteArray &data)
 	return true;
 }
 
-void TutFile::clear()
-{
-	tutos.clear();
-}
-
-int TutFile::size() const
-{
-	return tutos.size();
-}
-
 void TutFile::removeTut(int tutID)
 {
 	tutos.removeAt(tutID);
@@ -70,16 +66,6 @@ void TutFile::removeTut(int tutID)
 bool TutFile::insertTut(int tutID)
 {
 	return insertData(tutID, QByteArray("\x11", 1));
-}
-
-const QByteArray &TutFile::data(int tutID) const
-{
-	return tutos.at(tutID);
-}
-
-QByteArray &TutFile::dataRef(int tutID)
-{
-	return tutos[tutID];
 }
 
 void TutFile::setData(int tutID, const QByteArray &data)
@@ -110,17 +96,6 @@ bool TutFile::insertData(int tutID, const QString &path)
 	return false;
 }
 
-const QList<QByteArray> &TutFile::dataList() const
-{
-	return tutos;
-}
-
-bool TutFile::isTut(int tutID) const
-{
-	Q_UNUSED(tutID)
-	return true;
-}
-
 QString TutFile::parseScripts(int tutID) const
 {
 	const QByteArray &tuto = data(tutID);
@@ -128,21 +103,25 @@ QString TutFile::parseScripts(int tutID) const
 	QString ret;
 	QByteArray textData;
 	bool jp = Config::value("jp_txt", false).toBool();
-	quint8 clef;
+	quint8 key;
 	int i=0, size = tuto.size(), endOfText;
 
-	while(i < size)
-	{
-		switch(clef = tuto.at(i++))
-		{
+	while(i < size) {
+		switch(key = tuto.at(i++)) {
 		case 0x00:
-			if(i + 2 >= size) {
+			if(i + 2 > size) {
+				ret.append(parseScriptsUnknownString(key));
+				ret.append("\n");
+				if(i < size) {
+					ret.append(parseScriptsUnknownString(tuto.at(i)));
+					ret.append("\n");
+				}
 				return ret;
 			}
 			quint16 u;
 			memcpy(&u, constTuto + i, 2);
 			ret.append(QString("PAUSE(%1)").arg(u));
-			i+=2;
+			i += 2;
 			break;
 		case 0x02:	ret.append("[UP]");			break;
 		case 0x03:	ret.append("[DOWN]");		break;
@@ -167,33 +146,48 @@ QString TutFile::parseScripts(int tutID) const
 				textData = tuto.mid(i); // FIXME: this can break the bijection
 			}
 
-			ret.append(QString("TEXT(%1)")
-					   .arg(FF7Text(textData).text(jp)));
+			ret.append(QString("TEXT(\"%1\")")
+					   .arg(FF7Text(textData).text(jp).replace('"', "\\\"")));
 
 			if(endOfText != -1) {
 				if(endOfText + 1 > i) {
 					i = endOfText + 1;
 				}
 			} else {
+				ret.append("\n");
 				return ret;
 			}
 			break;
 		case 0x11:	ret.append("{FINISH}");		break;
 		case 0x12:
-			if(i + 4 >= size) {
+			if(i + 4 > size) {
+				ret.append(parseScriptsUnknownString(key));
+				ret.append("\n");
+				if(i < size) {
+					ret.append(parseScriptsUnknownString(tuto.at(i++)));
+					ret.append("\n");
+					if(i < size) {
+						ret.append(parseScriptsUnknownString(tuto.at(i++)));
+						ret.append("\n");
+						if(i < size) {
+							ret.append(parseScriptsUnknownString(tuto.at(i)));
+							ret.append("\n");
+						}
+					}
+				}
 				return ret;
 			}
 			quint16 x, y;
 			memcpy(&x, constTuto + i, 2);
-			memcpy(&y, constTuto + i+2, 2);
+			memcpy(&y, constTuto + i + 2, 2);
 			ret.append(QString("MOVE(%1,%2)").arg(x).arg(y));
-			i+=4;
+			i += 4;
 			break;
 		case 0xff:
 			ret.append("{NOP}");
 			break;
 		default:
-			ret.append(QString("[%1]").arg(clef,2,16,QChar('0')));
+			ret.append(parseScriptsUnknownString(key));
 			break;
 		}
 		ret.append("\n");
@@ -209,16 +203,20 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 	QStringList lines = tuto.split('\n', QString::SkipEmptyParts), params;
 	QByteArray ret;
 	bool ok, multilineText = false;
-	int value;
+	ushort value;
 	bool jp = Config::value("jp_txt", false).toBool();
 
 	foreach(QString line, lines) {
+		QString rawLine = line;
+		line = line.trimmed();
 		if(multilineText) {
-			if(line.endsWith(")")) {
-				line.chop(1);// remove ")"
+			if(rawLine.endsWith("\")") && !rawLine.endsWith("\\\")")) {
+				rawLine.chop(2);// remove '")'
 				multilineText = false;
+			} else {
+				rawLine.append("\n");
 			}
-			ret.append(FF7Text(line, jp).data());
+			ret.append(FF7Text(rawLine, jp).data());
 			if(!multilineText) {
 				ret.append('\xff');
 			}
@@ -226,46 +224,38 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 			ret.append('\x12');
 			line.chop(1);// remove ")"
 			params = line.mid(5).split(',');
-			if(params.size()>=2) {
-				value = params.first().toInt(&ok);
-				if(ok) {
+
+			if(!params.isEmpty()) {
+				value = params.first().trimmed().toUShort();
+				ret.append((char *)&value, 2);
+
+				if(params.size() >= 2) {
+					value = params.at(1).trimmed().toUShort();
 					ret.append((char *)&value, 2);
 				} else {
-					ret.append("\x00\x00", 2);
-					//return false;
-				}
-				value = params.at(1).toInt(&ok);
-				if(ok) {
+					// Repeat first value
 					ret.append((char *)&value, 2);
-				} else {
-					ret.append("\x00\x00", 2);
-					//return false;
 				}
 			} else {
 				ret.append("\x00\x00\x00\x00", 4);
-				//return false;
 			}
 		} else if(line.startsWith("PAUSE(") && line.endsWith(")")) {
 			ret.append('\x00');
 			line.chop(1);// remove ")"
 
-			value = line.mid(6).toInt(&ok);
-			if(ok) {
-				ret.append((char *)&value, 2);
-			} else {
-				ret.append("\x00\x00", 2);
-				//return false;
-			}
-		} else if(line.startsWith("TEXT(")) {
-			if(line.endsWith(")")) {
-				line.chop(1);// remove ")"
+			value = line.mid(6).trimmed().toUShort();
+			ret.append((char *)&value, 2);
+		} else if(line.startsWith("TEXT(\"")) {
+			if(line.endsWith("\")") && !line.endsWith("\\\")")) {
+				line.chop(2);// remove '")'
 				multilineText = false;
 			} else {
 				multilineText = true;
+				line.append("\n");
 			}
 
 			ret.append('\x10');
-			ret.append(FF7Text(line.mid(5), jp).data());
+			ret.append(FF7Text(line.mid(6).replace("\\\"", "\""), jp).data());
 
 			if(!multilineText) {
 				ret.append('\xff');
@@ -288,13 +278,16 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 		else if(line=="[START]") {		ret.append('\x0e'); }
 		else if(line=="[SELECT]") {		ret.append('\x0f'); }
 		else if(line.startsWith("[") && line.endsWith("]")) {
-			value = line.mid(1,2).toInt(&ok);
+			value = line.mid(1, line.size() - 2).trimmed().toUShort(&ok, 16);
 			if(ok) {
+				if(value > 255) {
+					value = 255;
+				}
 				ret.append((char)value);
 			}
 		} else { // Compatibility Makou Reactor <= v1.6
 			ret.append('\x10');
-			ret.append(FF7Text(line, jp).data()).append('\xff');
+			ret.append(FF7Text(rawLine, jp).data()).append('\xff');
 		}
 	}
 
@@ -304,4 +297,71 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 		setModified(true);
 	}
 	return true;
+}
+
+#include "TutFileStandard.h"
+
+void TutFile::testParsing()
+{
+	// Pause
+	QByteArray pauseTooShort("\x00\x01", 2);QString pauseTooShortResult = "[00]\n[01]\n";
+	QByteArray pauseAlone("\x00\x01\x02", 3);QString pauseAloneResult = "PAUSE(513)\n";
+	QByteArray pauseAndNop("\x00\x01\x02\xFF", 4);QString pauseAndNopResult = "PAUSE(513)\n{NOP}\n";
+	QByteArray pauseBigValues("\x00\xFF\xFF", 3);QString pauseBigValuesResult = "PAUSE(65535)\n";
+	// Keys
+	QByteArray keys("\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F", 14);
+	QString keysResult = "[UP]\n[DOWN]\n[LEFT]\n[RIGHT]\n[MENU]\n[CANCEL]\n[CHANGE]\n[OK]\n[R1]\n[R2]\n[L1]\n[L2]\n[START]\n[SELECT]\n";
+	// Move
+	QByteArray moveTooShort1("\x12\x01", 2);QString moveTooShort1Result = "[12]\n[01]\n";
+	QByteArray moveTooShort2("\x12\x01\x02", 3);QString moveTooShort2Result = "[12]\n[01]\n[02]\n";
+	QByteArray moveTooShort3("\x12\x01\x02\x03", 4);QString moveTooShort3Result = "[12]\n[01]\n[02]\n[03]\n";
+	QByteArray moveAlone("\x12\x01\x02\x03\x04", 5);QString moveAloneResult = "MOVE(513,1027)\n";
+	QByteArray moveAndNop("\x12\x01\x02\x03\x04\xFF", 6);QString moveAndNopResult = "MOVE(513,1027)\n{NOP}\n";
+	QByteArray moveBigValues("\x12\xFF\xFF\xFF\xFF", 5);QString moveBigValuesResult = "MOVE(65535,65535)\n";
+	// Text
+	QByteArray textTooShort1("\x10", 1);QString textTooShort1Result("TEXT(\"\")\n");
+	QByteArray textTooShort2("\x10", 1);textTooShort2 += FF7Text("A", false).data();QString textTooShort2Result("TEXT(\"A\")\n");
+	QByteArray textTooShort3("\x10", 1);textTooShort3 += FF7Text("A", false).data() + QByteArray("\xFF");QString textTooShort3Result("TEXT(\"A\")\n");
+	QByteArray textWithQuotes1("\x10", 1);textWithQuotes1 += FF7Text("A\"B", false).data() + QByteArray("\xFF");QString textWithQuotes1Result("TEXT(\"A\\\"B\")\n");
+	QByteArray textWithQuotes2("\x10", 1);textWithQuotes2 += FF7Text("A\\\"B", false).data() + QByteArray("\xFF");QString textWithQuotes2Result("TEXT(\"A\\\\\"B\")\n");
+	QByteArray textMultiLine1("\x10", 1);textMultiLine1 += FF7Text("A\nB", false).data() + QByteArray("\xFF");QString textMultiLine1Result("TEXT(\"A\nB\")\n");
+
+	QList<QByteArray> tutos;
+	tutos << pauseTooShort << pauseAlone <<
+			 pauseAndNop << pauseBigValues <<
+			 keys <<
+			 moveTooShort1 << moveTooShort2 <<
+			 moveTooShort3 << moveAlone <<
+			 moveAndNop << moveBigValues <<
+			 textTooShort1 << textTooShort2 <<
+			 textTooShort3 << textWithQuotes1 <<
+			 textWithQuotes2 << textMultiLine1;
+	QList<QString> strings;
+	strings << pauseTooShortResult << pauseAloneResult <<
+			   pauseAndNopResult << pauseBigValuesResult <<
+			   keysResult <<
+			   moveTooShort1Result << moveTooShort2Result <<
+			   moveTooShort3Result << moveAloneResult <<
+			   moveAndNopResult << moveBigValuesResult <<
+			   textTooShort1Result << textTooShort2Result <<
+			   textTooShort3Result << textWithQuotes1Result <<
+			   textWithQuotes2Result << textMultiLine1Result;
+
+	TutFileStandard tut(tutos);
+	qWarning() << "TutFile::testParsing Data to text tests";
+	for(int i=0 ; i<tut.size() ; ++i) {
+		if(strings.at(i) != tut.parseScripts(i)) {
+			qWarning() << i << tut.parseScripts(i) << "<>" << strings.at(i) << tutos.at(i).toHex();
+		} else {
+			qWarning() << i << "OK";
+		}
+	}
+	qWarning() << "TutFile::testParsing Text to data tests";
+	for(int i=0 ; i<tut.size() ; ++i) {
+		if(tut.parseText(i, strings.at(i)) && tutos.at(i) != tut.data(i)) {
+			qWarning() << i << tutos.at(i).toHex() << "<>" << tut.data(i).toHex() << strings.at(i);
+		} else {
+			qWarning() << i << "OK";
+		}
+	}
 }

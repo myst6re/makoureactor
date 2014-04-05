@@ -27,6 +27,7 @@ class TutFileStandard : public TutFile
 {
 public:
 	explicit TutFileStandard(Field *field);
+	explicit TutFileStandard(const QList<QByteArray> &tutos);
 	bool open();
 	QByteArray save(QByteArray &toc, quint32 firstPos) const;
 	QByteArray save() const;

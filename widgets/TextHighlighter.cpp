@@ -23,7 +23,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 	HighlightingRule rule;
 
 	if(tut) {
-		rule.pattern = QRegExp("^TEXT\\((.*)\\)", Qt::CaseInsensitive);
+		rule.pattern = QRegExp("^TEXT\\(\"(.*)\"\\)$", Qt::CaseInsensitive);
 		rule.color = Qt::darkGreen;
 		highlightingRules.append(rule);
 	}

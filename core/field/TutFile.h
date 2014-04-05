@@ -24,25 +24,44 @@
 class TutFile : public FieldPart
 {
 public:
-	explicit TutFile(Field *field);
+	explicit TutFile(Field *field = 0);
+	explicit TutFile(const QList<QByteArray> &tutos);
 	bool open(const QByteArray &data);
-	void clear();
-	int size() const;
+	inline void clear() {
+		tutos.clear();
+	}
+	inline int size() const {
+		return tutos.size();
+	}
 	virtual int maxTutCount() const=0;
 	void removeTut(int tutID);
 	bool insertTut(int tutID);
-	const QByteArray &data(int tutID) const;
+	inline const QByteArray &data(int tutID) const {
+		return tutos.at(tutID);
+	}
 	void setData(int tutID, const QByteArray &data);
 	bool insertData(int tutID, const QByteArray &data);
 	bool insertData(int tutID, const QString &path);
-	const QList<QByteArray> &dataList() const;
-	virtual bool isTut(int tutID) const;
+	inline const QList<QByteArray> &dataList() const {
+		return tutos;
+	}
+	virtual inline bool isTut(int tutID) const {
+		Q_UNUSED(tutID)
+		return true;
+	}
 	virtual QString parseScripts(int tutID) const;
 	virtual bool parseText(int tutID, const QString &tuto);
+	static void testParsing();
 protected:
 	virtual QList<quint32> openPositions(const QByteArray &data) const=0;
-	QByteArray &dataRef(int tutID);
+	inline QByteArray &dataRef(int tutID) {
+		return tutos[tutID];
+	}
 private:
+	static inline QString parseScriptsUnknownString(quint8 value) {
+		return QString("[%1]").arg(value, 2, 16, QChar('0'));
+	}
+
 	QList<QByteArray> tutos;
 };
 

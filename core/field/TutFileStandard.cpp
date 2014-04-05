@@ -23,6 +23,11 @@ TutFileStandard::TutFileStandard(Field *field) :
 {
 }
 
+TutFileStandard::TutFileStandard(const QList<QByteArray> &tutos) :
+	TutFile(tutos)
+{
+}
+
 bool TutFileStandard::open()
 {
 	return TutFile::open(field()->sectionData(Field::Scripts));
