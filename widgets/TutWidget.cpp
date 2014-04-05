@@ -160,7 +160,9 @@ void TutWidget::changeVersion(bool isPS)
 		currentTut = tutPC;
 	}
 
+	textEdit->blockSignals(true);
 	textEdit->clear();
+	textEdit->blockSignals(false);
 	fillList();
 	list->setCurrentRow(0);
 }

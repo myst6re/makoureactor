@@ -70,8 +70,10 @@ bool TutFile::insertTut(int tutID)
 
 void TutFile::setData(int tutID, const QByteArray &data)
 {
-	tutos.replace(tutID, data);
-	setModified(true);
+	if(tutos.at(tutID) != data) {
+		tutos.replace(tutID, data);
+		setModified(true);
+	}
 }
 
 bool TutFile::insertData(int tutID, const QByteArray &data)
@@ -291,11 +293,8 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 		}
 	}
 
-	if(tutos.at(tutID) != ret) {
-		tutos.replace(tutID, ret);
+	setData(tutID, ret);
 
-		setModified(true);
-	}
 	return true;
 }
 

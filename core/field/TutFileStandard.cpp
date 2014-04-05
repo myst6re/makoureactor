@@ -47,7 +47,7 @@ QList<quint32> TutFileStandard::openPositions(const QByteArray &data) const
 	}
 
 	nbEntity = constData[2];
-	memcpy(&nbAKAO, &constData[6], 2);
+	memcpy(&nbAKAO, constData + 6, 2);
 
 	posAKAOList = 32+nbEntity*8;
 
@@ -56,7 +56,7 @@ QList<quint32> TutFileStandard::openPositions(const QByteArray &data) const
 	}
 
 	for(int i=0 ; i<nbAKAO ; ++i) {
-		memcpy(&posAKAO, &constData[posAKAOList+i*4], 4);
+		memcpy(&posAKAO, constData + posAKAOList + i*4, 4);
 		positions.append(posAKAO);
 	}
 

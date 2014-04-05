@@ -35,7 +35,7 @@ QList<quint32> TutFilePC::openPositions(const QByteArray &data) const
 
 	quint16 posTut;
 	for(int i=0 ; i<9 ; ++i) {
-		memcpy(&posTut, &constData[i*2], 2);
+		memcpy(&posTut, constData + i*2, 2);
 		if(posTut < 18)		posTut = 18;
 		positions.append(posTut);
 	}
