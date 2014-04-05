@@ -302,7 +302,7 @@ bool LgpToc::removeEntry(const QString &filePath)
 	return _header.remove(v, e) > 0;
 }
 
-bool LgpToc::isNameValid(const QString &filePath) const
+bool LgpToc::isNameValid(const QString &filePath)
 {
 	return lookupValue(filePath) >= 0;
 }

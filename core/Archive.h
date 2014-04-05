@@ -68,6 +68,7 @@ protected:
 	}
 
 private:
+	Q_DISABLE_COPY(Archive)
 	QString _errorString;
 	QFile *_archiveIO;
 };

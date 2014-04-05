@@ -24,7 +24,6 @@
 #define LGP_H
 
 #include <QtCore>
-#include "QLockedFile.h"
 #include "Archive.h"
 
 class LgpHeaderEntry;
@@ -73,6 +72,7 @@ public:
 
 	Lgp();
 	explicit Lgp(const QString &name);
+	explicit Lgp(QFile *device);
 	virtual ~Lgp();
 	void clear();
 	QStringList fileList() const;
@@ -94,6 +94,7 @@ public:
 	LgpError error() const;
 	void unsetError();
 private:
+	Q_DISABLE_COPY(Lgp)
 	bool openHeader();
 	bool openCompanyName();
 	bool openProductName();

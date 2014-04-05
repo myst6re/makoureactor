@@ -22,6 +22,7 @@
  */
 #include "Lgp.h"
 #include "Lgp_p.h"
+#include "QLockedFile.h"
 
 /*!
  * You must use Lgp::iterator() instead.
@@ -149,6 +150,14 @@ Lgp::Lgp() :
  */
 Lgp::Lgp(const QString &name) :
 	Archive(new QLockedFile(name)), _files(new LgpToc), _error(NoError)
+{
+}
+
+/*!
+ * Constructs a new lgp archive object to represent the lgp archive with the given \a device.
+ */
+Lgp::Lgp(QFile *device) :
+	Archive(device), _files(new LgpToc), _error(NoError)
 {
 }
 
@@ -292,7 +301,7 @@ bool Lgp::removeFile(const QString &filePath)
  */
 bool Lgp::isNameValid(const QString &filePath) const
 {
-	return _files->isNameValid(filePath);
+	return LgpToc::isNameValid(filePath);
 }
 
 /*!
