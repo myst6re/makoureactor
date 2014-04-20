@@ -35,12 +35,12 @@ Section1File::Section1File(const Section1File &other) :
 
 Section1File::~Section1File()
 {
-	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
+	qDeleteAll(_grpScripts);
 }
 
 void Section1File::clear()
 {
-	foreach(GrpScript *grpScript, _grpScripts)	delete grpScript;
+	qDeleteAll(_grpScripts);
 	_grpScripts.clear();
 	_texts.clear();
 	_author.clear();

@@ -157,8 +157,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 
 OpcodeList::~OpcodeList()
 {
-	foreach(const Opcode *opcode, opcodeCopied)
-		delete opcode;
+	qDeleteAll(opcodeCopied);
 }
 
 void OpcodeList::clear()
@@ -495,16 +494,12 @@ void OpcodeList::clearHist()
 
 	while(!hists.isEmpty()) {
 		Historic hist = hists.pop();
-		foreach(Opcode *opcode, hist.data) {
-			delete opcode;
-		}
+		qDeleteAll(hist.data);
 	}
 
 	while(!restoreHists.isEmpty()) {
 		Historic hist = restoreHists.pop();
-		foreach(Opcode *opcode, hist.data) {
-			delete opcode;
-		}
+		qDeleteAll(hist.data);
 	}
 
 //	qDebug() << showHistoric();
@@ -791,8 +786,7 @@ void OpcodeList::move(Script::MoveDirection direction)
 
 void OpcodeList::clearCopiedOpcodes()
 {
-	foreach(const Opcode *opcode, opcodeCopied)
-		delete opcode;
+	qDeleteAll(opcodeCopied);
 	opcodeCopied.clear();
 }
 

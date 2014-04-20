@@ -228,9 +228,7 @@ LgpToc::LgpToc(const LgpToc &other)
 
 LgpToc::~LgpToc()
 {
-	foreach(LgpHeaderEntry *entry, _header) {
-		delete entry;
-	}
+	qDeleteAll(_header);
 }
 
 bool LgpToc::addEntry(LgpHeaderEntry *entry)
@@ -356,9 +354,7 @@ bool LgpToc::contains(const QString &filePath) const
 
 void LgpToc::clear()
 {
-	foreach(LgpHeaderEntry *entry, _header) {
-		delete entry;
-	}
+	qDeleteAll(_header);
 
 	_header.clear();
 }

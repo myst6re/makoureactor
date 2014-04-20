@@ -36,9 +36,7 @@ Field::~Field()
 	}
 
 	if(currentFieldForFieldModels != this) {
-		foreach(FieldModelFile *fieldModel, _fieldModels) {
-			delete fieldModel;
-		}
+		qDeleteAll(_fieldModels);
 		_fieldModels.clear();
 	}
 }
@@ -240,9 +238,7 @@ FieldModelFile *Field::fieldModelPtr(int modelID) const
 void Field::addFieldModel(int modelID, FieldModelFile *fieldModel)
 {
 	if(currentFieldForFieldModels != this) {
-		foreach(FieldModelFile *model, _fieldModels) {
-			delete model;
-		}
+		qDeleteAll(_fieldModels);
 		_fieldModels.clear();
 		currentFieldForFieldModels = this;
 	}

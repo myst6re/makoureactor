@@ -42,7 +42,7 @@ Script::Script(const Script &other) :
 
 Script::~Script()
 {
-	foreach(Opcode *opcode, _opcodes)	delete opcode;
+	qDeleteAll(_opcodes);
 }
 
 bool Script::openScript(const QByteArray &script)

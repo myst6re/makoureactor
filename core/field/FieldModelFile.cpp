@@ -25,15 +25,13 @@ FieldModelFile::FieldModelFile() :
 FieldModelFile::~FieldModelFile()
 {
 	dataLoaded = false;
-	foreach(FieldModelPart *part, _parts)
-		delete part;
+	qDeleteAll(_parts);
 }
 
 void FieldModelFile::clear()
 {
 	dataLoaded = false;
-	foreach(FieldModelPart *part, _parts)
-		delete part;
+	qDeleteAll(_parts);
 	_parts.clear();
 	_bones.clear();
 	_frames.clear();

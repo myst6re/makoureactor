@@ -34,6 +34,7 @@ class LgpIterator
 {
 	friend class Lgp;
 public:
+	explicit LgpIterator(const Lgp &lgp);
 	bool hasNext() const;
 	bool hasPrevious() const;
 	void next();
@@ -53,6 +54,7 @@ private:
 
 class Lgp : public Archive
 {
+	friend class LgpIterator;
 public:
 	enum LgpError {
 		NoError,

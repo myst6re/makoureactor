@@ -108,8 +108,7 @@ GrpScriptList::GrpScriptList(QWidget *parent)
 
 GrpScriptList::~GrpScriptList()
 {
-	foreach(GrpScript *grpScript, grpScriptCopied)
-		delete grpScript;
+	qDeleteAll(grpScriptCopied);
 }
 
 void GrpScriptList::setEnabled(bool enabled)
@@ -327,8 +326,7 @@ void GrpScriptList::paste()
 
 void GrpScriptList::clearCopiedGroups()
 {
-	foreach(GrpScript *grpScript, grpScriptCopied)
-		delete grpScript;
+	qDeleteAll(grpScriptCopied);
 	grpScriptCopied.clear();
 }
 

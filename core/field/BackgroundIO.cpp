@@ -137,9 +137,7 @@ bool BackgroundIOPC::read(BackgroundFile &background) const
 	if(!openPalettes(palettes)
 			|| !openTiles(tiles)
 			|| !openTextures(textures)) {
-		foreach(Palette *palette, palettes) {
-			delete palette;
-		}
+		qDeleteAll(palettes);
 		return false;
 	}
 
@@ -288,9 +286,7 @@ bool BackgroundIOPS::read(BackgroundFile &background) const
 	if(!openPalettes(palettes)
 			|| !openTiles(tiles)
 			|| !openTextures(textures)) {
-		foreach(Palette *palette, palettes) {
-			delete palette;
-		}
+		qDeleteAll(palettes);
 		return false;
 	}
 

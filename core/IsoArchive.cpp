@@ -115,9 +115,7 @@ IsoDirectory::IsoDirectory(const QString &name, quint32 location, quint32 size, 
 
 IsoDirectory::~IsoDirectory()
 {
-	foreach(IsoFileOrDirectory *fOrD, _filesAndDirectories) {
-		delete fOrD;
-	}
+	qDeleteAll(_filesAndDirectories);
 }
 
 bool IsoDirectory::isDirectory() const

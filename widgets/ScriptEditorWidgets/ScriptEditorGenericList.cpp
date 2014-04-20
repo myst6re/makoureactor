@@ -215,8 +215,7 @@ void ScriptEditorGenericList::addParam()
 
 void ScriptEditorGenericList::delLastRow()
 {
-	QList<QStandardItem *> items = model->takeRow(model->rowCount()-1);
-	foreach(QStandardItem *item, items)	delete item;
+	qDeleteAll(model->takeRow(model->rowCount()-1));
 	emit opcodeChanged();
 }
 

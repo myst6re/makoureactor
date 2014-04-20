@@ -40,7 +40,7 @@ GrpScript::GrpScript(const GrpScript &other) :
 
 GrpScript::~GrpScript()
 {
-	foreach(Script *script, _scripts)	delete script;
+	qDeleteAll(_scripts);
 }
 
 void GrpScript::addScript()

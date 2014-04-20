@@ -52,7 +52,7 @@ public:
 		return _palettes;
 	}
 	inline void setPalettes(const Palettes &palettes) {
-		foreach(Palette *pal, _palettes)	delete pal;
+		qDeleteAll(_palettes);
 		_palettes = palettes;
 	}
 

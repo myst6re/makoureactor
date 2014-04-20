@@ -31,7 +31,7 @@ BackgroundFile::BackgroundFile(const BackgroundFile &other) :
 
 BackgroundFile::~BackgroundFile()
 {
-	foreach(Palette *pal, _palettes)	delete pal;
+	qDeleteAll(_palettes);
 	if(_textures) {
 		delete _textures;
 	}
@@ -39,7 +39,7 @@ BackgroundFile::~BackgroundFile()
 
 void BackgroundFile::clear()
 {
-	foreach(Palette *pal, _palettes)	delete pal;
+	qDeleteAll(_palettes);
 	_palettes.clear();
 	if(_textures) {
 		delete _textures;

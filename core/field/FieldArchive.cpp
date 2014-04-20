@@ -20,6 +20,40 @@
 #include "FieldPC.h"
 #include "Data.h"
 
+FieldArchiveIterator::FieldArchiveIterator(const FieldArchive &archive) :
+	QListIterator<Field *>(archive.fileList)
+{
+}
+
+Field *FieldArchiveIterator::next(bool open, bool dontOptimize)
+{
+	return openField(QListIterator<Field *>::next(), open, dontOptimize);
+}
+
+Field *FieldArchiveIterator::peekNext(bool open, bool dontOptimize) const
+{
+	return openField(QListIterator<Field *>::peekNext(), open, dontOptimize);
+}
+
+Field *FieldArchiveIterator::peekPrevious(bool open, bool dontOptimize) const
+{
+	return openField(QListIterator<Field *>::peekPrevious(), open, dontOptimize);
+}
+
+Field *FieldArchiveIterator::previous(bool open, bool dontOptimize)
+{
+	return openField(QListIterator<Field *>::previous(), open, dontOptimize);
+}
+
+Field *FieldArchiveIterator::openField(Field *field, bool open, bool dontOptimize) const
+{
+	if(field != NULL && open &&
+			!field->isOpen() && !field->open(dontOptimize)) {
+		return NULL;
+	}
+	return field;
+}
+
 FieldArchive::FieldArchive() :
 	_io(0), _observer(0)
 {
@@ -35,7 +69,7 @@ FieldArchive::FieldArchive(FieldArchiveIO *io) :
 
 FieldArchive::~FieldArchive()
 {
-	foreach(Field *field, fileList)	delete field;
+	qDeleteAll(fileList);
 	if(_io)		delete _io;
 }
 
@@ -86,7 +120,7 @@ void FieldArchive::close()
 
 void FieldArchive::clear()
 {
-	foreach(Field *field, fileList)	delete field;
+	qDeleteAll(fileList);
 	fileList.clear();
 	fieldsSortByName.clear();
 	fieldsSortByMapId.clear();
@@ -199,7 +233,86 @@ QList<FF7Var> FieldArchive::searchAllVars()
 
 #include "BackgroundFilePC.h"
 #include "BackgroundFilePS.h"
-#include "FieldArchivePS.h"
+#include "FieldArchivePC.h"
+
+void FieldArchive::printAkaos()
+{
+	QFile deb(QString("akaos-18-04-2014-P%1.txt").arg(isPC() ? "C" : "S"));
+	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+
+	foreach(int i, fieldsSortByMapId) {
+		Field *f = field(i, true);
+		QString name = Data::field_names.value(fieldsSortByMapId.key(i).toInt());
+		if(f == NULL) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << i << name;
+			continue;
+		}
+
+		TutFileStandard *tutosAndSounds = f->tutosAndSounds();
+		if(!tutosAndSounds->isOpen()) {
+			qWarning() << "FieldArchive::printAkaos: cannot open tutos and sounds" << name;
+		}
+
+		for(int akaoID=0; akaoID < tutosAndSounds->size(); ++akaoID) {
+			if(tutosAndSounds->isTut(akaoID)) {
+				deb.write(QString("%1 > tuto %2\n")
+						  .arg(name)
+						  .arg(akaoID)
+						  .toLatin1());
+			} else {
+				deb.write(QString("%1 > akao %2: %3\n")
+						  .arg(name)
+						  .arg(akaoID)
+						  .arg(tutosAndSounds->akaoID(akaoID))
+						  .toLatin1());
+			}
+		}
+	}
+}
+
+void FieldArchive::printModelLoaders()
+{
+	QFile deb(QString("model-loader-18-04-2014-P%1.txt").arg(isPC() ? "C" : "S"));
+	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+
+	foreach(int i, fieldsSortByMapId) {
+		Field *f = field(i, true);
+		QString name = Data::field_names.value(fieldsSortByMapId.key(i).toInt());
+		if(f == NULL) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << i << name;
+			continue;
+		}
+
+		FieldModelLoader *modelLoader = f->fieldModelLoader();
+		if(!modelLoader->isOpen()) {
+			qWarning() << "FieldArchive::printAkaos: cannot open tutos and sounds" << name;
+		}
+
+		if(f->isPC()) {
+			FieldModelLoaderPC *modelLoaderPC = (FieldModelLoaderPC *)modelLoader;
+
+			int modelID = 0;
+			foreach(const QString &hrc, modelLoaderPC->HRCNames()) {
+				deb.write(QString("%1 > model %2: %3\n")
+						  .arg(name)
+						  .arg(modelID)
+						  .arg(hrc.toLower())
+						  .toLatin1());
+
+				int animID = 0;
+				foreach(const QString &a, modelLoaderPC->ANames(modelID)) {
+					deb.write(QString("\tanim %1: %2\n")
+							  .arg(animID)
+							  .arg(a.toLower().left(a.lastIndexOf('.')))
+							  .toLatin1());
+
+					++animID;
+				}
+				++modelID;
+			}
+		}
+	}
+}
 
 void FieldArchive::searchAll()
 {
@@ -209,11 +322,16 @@ void FieldArchive::searchAll()
 	bool iff = false, win = false;
 	OpcodeIf *opcodeIf=0;
 
-	QFile deb(QString("scriptsP%1_yougan.txt").arg(isPC() ? "C" : "S"));
-	deb.open(QIODevice::WriteOnly | QIODevice::Text/* | QIODevice::Truncate*/);
+	QFile deb(QString("scripts-window-coord-18-04-2014-P%1.txt").arg(isPC() ? "C" : "S"));
+	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 
+	FieldArchivePC original("C:/Program Files/Square Soft, Inc/Final Fantasy VII/data/field/fflevel - original.lgp", FieldArchiveIO::Lgp);
+	if(original.open() != FieldArchiveIO::Ok) {
+		qWarning() << "error opening pc lgp";
+		return;
+	}
 
-	FieldArchivePS ps("C:/Users/Jérôme/Games/Final Fantasy VII-PSX-PAL-FR-CD1.bin", FieldArchiveIO::Iso);
+	/*FieldArchivePS ps("C:/Users/Jérôme/Games/Final Fantasy VII-PSX-PAL-FR-CD1.bin", FieldArchiveIO::Iso);
 	if(ps.open() != FieldArchiveIO::Ok) {
 		qWarning() << "error opening ps iso";
 		return;
@@ -249,428 +367,140 @@ void FieldArchive::searchAll()
 				}
 			}
 		}
-	}
-	return;
+	}*/
 
+	/*QString dest = "scripts-PC-acro-v09-03-2014";
+	QDir tmp;
+	if(!QFile::exists(tmp.absoluteFilePath(dest))) {
+		tmp.mkdir(dest);
+	}
+	tmp.cd(dest);*/
+	QSet<QString> screens;
 //	for(int i=0 ; i<size ; ++i) {
 	foreach(int i, fieldsSortByMapId) {
 		Field *field = this->field(i, true);
+		Field *fieldOriginal = original.field(original.indexOfField(field->name()));
+		if(fieldOriginal == NULL) {
+			qWarning() << "ALERT field not found" << field->name();
+			break;
+		}
 		if(field != NULL) {
-
-			Section1File *s1 = field->scriptsAndTexts();
-			bool fieldNameShown = false;
-
-			foreach(GrpScript *group, s1->grpScripts()) {
-				int scriptID = 0;
-				foreach(Script *script, group->scripts()) {
-					int execCharCount = 0, execCharScript = -1, opcodeID = 0, opcodesBetween = 0;
-					foreach(Opcode *opcode, script->opcodes()) {
-						if(opcode->id() == Opcode::PREQ ||
-								opcode->id() == Opcode::PRQSW ||
-								opcode->id() == Opcode::PRQEW) {
-							OpcodeExecChar *execChar = (OpcodeExecChar *)opcode;
-							if(execChar->partyID > 0 && execChar->partyID <= 2) {
-								if(execCharScript == -1 || execChar->scriptID == execCharScript) {
-									execCharCount++;
-								} else {
-									execCharCount = 0;
+			Section1File *scriptsAndTexts = field->scriptsAndTexts();
+			Section1File *scriptsAndTextsOriginal = fieldOriginal->scriptsAndTexts();
+			if(scriptsAndTexts->isOpen() && scriptsAndTextsOriginal->isOpen()) {
+				qWarning() << field->name();
+				if(scriptsAndTexts->grpScriptCount() < scriptsAndTextsOriginal->grpScriptCount()) {
+					qWarning() << "ALERT much grpscript wow";
+					break;
+				}
+				int grpScriptID = 0, scriptID;
+				foreach(GrpScript *grp2, scriptsAndTextsOriginal->grpScripts()) {
+					GrpScript *grp = scriptsAndTexts->grpScript(grpScriptID);
+					while(grp2->name() != grp->name()) {
+						grpScriptID++;
+						if(grpScriptID >= scriptsAndTexts->grpScriptCount()) {
+							qWarning() << "ALERT end grpScript reached";
+							goto next_group;
+						}
+						grp = scriptsAndTexts->grpScript(grpScriptID);
+					}
+					if(grp->size() != grp2->size()) {
+						qWarning() << "ALERT wrong group size" << grp->size() << grp2->size();
+						break;
+					}
+					scriptID = 0;
+					foreach(Script *script, grp->scripts()) {
+						Script *script2 = grp2->script(scriptID);
+						int opcodeID2 = 0;
+						foreach(Opcode *opcode, script->opcodes()) {
+							FF7Window win, win2;
+							if(opcode->getWindow(win)) {
+								if(opcodeID2 >= script2->size()) {
+									qWarning() << "ALERT wrong script size";
+									break;
 								}
-								opcodesBetween = 0;
-								execCharScript = execChar->scriptID;
-
-								if(execCharCount == 2) {
-									if(!fieldNameShown) {
-										qDebug() << QString("=== %1 ===").arg(field->name()).toLatin1().constData();
-										fieldNameShown = true;
+								Opcode *opcode2 = script2->opcode(opcodeID2);
+								while(!opcode2->getWindow(win2)) {
+									if(opcodeID2 >= script2->size()) {
+										qWarning() << "ALERT wrong script size";
+										goto next_script;
 									}
-									qDebug() << QString("%2 > %3 > ligne %4 : partyID=%5 scriptID=%6")
-												.arg(group->name())
-												.arg(group->scriptName(scriptID))
-												.arg(opcodeID + 1)
-												.arg(execChar->partyID)
-												.arg(execChar->scriptID)
-												.toLatin1().constData();
+									opcode2 = script2->opcode(opcodeID2);
+									opcodeID2++;
 								}
-							} else {
-								execCharCount = 0;
-								execCharScript = -1;
-								opcodesBetween = 0;
-							}
-						} else {
-							if(opcodesBetween < 3) {
-								opcodesBetween++;
-							} else {
-								execCharCount = 0;
-								execCharScript = -1;
-								opcodesBetween = 0;
-							}
-						}
-						opcodeID++;
-					}
-					scriptID++;
-				}
-			}
-			continue;
-
-//			if(!field->name().startsWith("ancnt3")) {
-//				continue;
-//			}
-//			break;
-			if(field->name().compare("startmap") == 0) {
-				continue;
-			}
-
-			qDebug() << "comparison" << field->name();
-
-			BackgroundFilePC *background = (BackgroundFilePC *)field->background();
-			if(!background) {
-				qWarning() << "cannot open bg";
-				continue;
-			}
-			const BackgroundTiles &tiles = background->tiles();
-
-			Field *fieldPs = ps.field(ps.indexOfField("chrin_1a"/*field->name()*/));
-			if(fieldPs != NULL) {
-
-				BackgroundFilePS *backgroundPs = (BackgroundFilePS *)fieldPs->background();
-				if(!backgroundPs) {
-					qWarning() << "cannot open bg2";
-					continue;
-				}
-//				const BackgroundTiles &tilesPs = backgroundPs->tiles();
-				BackgroundFilePC backgroundPsPc = backgroundPs->toPC(0);
-				const BackgroundTiles &tilesPsPc = backgroundPsPc.tiles();
-
-				if(tiles.size() != tilesPsPc.size()) {
-					qWarning() << "size tiles different" << tiles.size() << tilesPsPc.size() << fieldPs->name();
-				}
-
-				if(background->palettes().size() != backgroundPsPc.palettes().size()) {
-					qWarning() << "size palettes different" << background->palettes().size() << backgroundPsPc.palettes().size();
-				}
-
-				int palSize = qMin(background->palettes().size(), backgroundPsPc.palettes().size());
-
-				for(int palID=0; palID<palSize; ++palID) {
-					PalettePC *palPC = (PalettePC *)background->palettes().at(palID);
-					PalettePC *palPS2PC = (PalettePC *)backgroundPsPc.palettes().at(palID);
-
-					if(palPC->transparency() != palPS2PC->transparency()) {
-						qDebug() << "transparency !=" << palPC->transparency() <<
-									palPS2PC->transparency();
-					}
-					for(int colorID=0; colorID<256; ++colorID) {
-						if(palPC->toByteArray().mid(colorID * 2, 2) != palPS2PC->toByteArray().mid(colorID * 2, 2)) {
-							qDebug() << "pal diff" << palID << colorID;
-						}
-					}
-				}
-
-				BackgroundTexturesPC *texturesPc = (BackgroundTexturesPC *)background->textures();
-				BackgroundTexturesPC *texturesPsPc = (BackgroundTexturesPC *)backgroundPsPc.textures();
-
-				for(int texID=0; texID<42; ++texID) {
-					if(texturesPc->hasTex(texID) !=
-							texturesPsPc->hasTex(texID)) {
-						qDebug() << "diff texture ID" << texID << texturesPc->hasTex(texID) << texturesPsPc->hasTex(texID);
-					}
-				}
-
-				QMapIterator<qint16, Tile> it1(tiles.tiles(0, true)
-											   + tiles.tiles(1, true)
-											   + tiles.tiles(2, true)
-											   + tiles.tiles(3, true)),
-						it2(tilesPsPc.tiles(0, true)
-							+ tilesPsPc.tiles(1, true)
-							+ tilesPsPc.tiles(2, true)
-							+ tilesPsPc.tiles(3, true));
-
-				while(it1.hasNext() && it2.hasNext()) {
-					it1.next();
-					it2.next();
-
-//					if(!it1.value().blending) continue;
-					if(it1.value().srcX != it2.value().srcX
-							|| it1.value().srcY != it2.value().srcY) {
-						qWarning() << "tile source !=" << it1.value().srcX << it1.value().srcY <<
-									  it2.value().srcX << it2.value().srcY;
-						break;
-					}
-					if(it1.value().dstX != it2.value().dstX
-							|| it1.value().dstY != it2.value().dstY) {
-						qWarning() << "tile dest !=" << it1.value().dstX << it1.value().dstY <<
-									  it2.value().dstX << it2.value().dstY;
-						break;
-					}
-					if(it1.value().paletteID != it2.value().paletteID) {
-						qWarning() << "tile paletteID !=" << it1.value().paletteID << it2.value().paletteID;
-						break;
-					}
-					if(it1.value().ID != it2.value().ID) {
-						qWarning() << "ID !=" << it1.value().ID << it2.value().ID;
-						break;
-					}
-					if(it1.value().layerID > 0 && it1.value().param != it2.value().param) {
-						qWarning() << "param !=" << it1.value().param << it2.value().param;
-						break;
-					}
-					if(it1.value().layerID > 0 && it1.value().state != it2.value().state) {
-						qWarning() << "state !=" << it1.value().state << it2.value().state;
-						break;
-					}
-					if(it1.value().blending != it2.value().blending) {
-						qWarning() << "blending !=" << it1.value().blending << it2.value().blending;
-						break;
-					}
-					if(it1.value().typeTrans != it2.value().typeTrans) {
-						qWarning() << "typeTrans !=" << it1.value().typeTrans << it2.value().typeTrans;
-						break;
-					}
-					if(it1.value().size != it2.value().size) {
-						qWarning() << "size !=" << it1.value().size << it2.value().size;
-						break;
-					}
-					if(it1.value().depth != it2.value().depth) {
-						qWarning() << "depth !=" << it1.value().depth << it2.value().depth;
-						break;
-					}
-					if(it1.value().layerID != it2.value().layerID) {
-						qWarning() << "layerID !=" << it1.value().layerID << it2.value().layerID;
-						break;
-					}
-					if(it1.value().tileID != it2.value().tileID) {
-						qWarning() << "tileID !=" << it1.value().tileID << it2.value().tileID;
-						break;
-					}
-
-					/*QVector<uint> l1 = texturesPc->tile(it1.value());
-					QVector<uint> l2 = texturesPsPc.textures()->tile(it2.value());
-
-					if(l1.size() == l2.size()
-							&& l1 != l2) {
-						qDebug() << "different texture";
-						if(it2.value().depth < 2 && it2.value().paletteID < background->palettes().size()) {
-							qDebug() << background->palettes().at(it2.value().paletteID)->areZero();
-						}
-						QByteArray palData = background->palettes().at(it2.value().paletteID)->toByteArray();
-						for(int k=0; k<l1.size(); ++k) {
-							if(l1.at(k) != l2.at(k)) {
-								qDebug() << k << l1.at(k) << l2.at(k) << background->palettes().value(it2.value().paletteID)->color(l1.at(k))
-										 << background->palettes().value(it2.value().paletteID)->color(l2.at(k)) << palData.mid(l1.at(k) * 2, 2).toHex()
-											 << palData.mid(l2.at(k) * 2, 2).toHex();
+								if(win.x != win2.x && win.y != win2.y) {
+									deb.write(QString("%1 > %2 > %3: window %4 (retraduit: %5, %6) (original: %7, %8)\n")
+											  .arg(field->name())
+											  .arg(grp->name())
+											  .arg(scriptID)
+											  .arg(opcode->getWindowID())
+											  .arg(win.x)
+											  .arg(win.y)
+											  .arg(win2.x)
+											  .arg(win2.y).toLatin1());
+									screens.insert(field->name());
+								}
 							}
 						}
-						break;
-					}*/
+						next_script:;
+						scriptID++;
+					}
+					next_group:;
+					grpScriptID++;
+				}
+				qDebug() << screens.size() << "écrans";
+				/*QString fieldDir = QString("%1-%2").arg(Data::field_names.indexOf(field->name()), 3, 10, QChar('0')).arg(field->name());
+				if(!tmp.mkdir(fieldDir)) {
+					qWarning() << "cannot create dir" << tmp.absoluteFilePath(fieldDir);
+				}
+				tmp.cd(fieldDir);
+
+				scriptsAndTexts->clearTexts();
+				int grpScriptID = 0;
+				foreach(GrpScript *grp, scriptsAndTexts->grpScripts()) {
+					QString grpFilename = QString("%1-%2").arg(grpScriptID).arg(grp->name());
+					QFile out(tmp.absoluteFilePath(grpFilename));
+					if(out.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+						out.write(grp->toString(field).toLatin1());
+						out.close();
+					}
+					grpScriptID++;
 				}
 
-			} else {
-				qWarning() << "Cannot open ps field";
-			}
+				tmp.cdUp();*/
+				/*QFile out(tmp.absoluteFilePath(fieldDir));
+				if(out.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
 
-			continue;
-			bool modelFound = false;
-			int modelFoundID = 0;
-			FieldModelLoaderPC *modelLoader = (FieldModelLoaderPC *)field->fieldModelLoader();
+					int textID = 0;
+					foreach(const FF7Text &text, scriptsAndTexts->texts()) {
+						out.write(QString("=== Texte %1 ===\n").arg(textID++).toLatin1());
+						out.write(text.text(false).toLatin1());
+						out.write("\n");
+					}
+
+					out.close();
+				}*/
+			}
+			/*FieldPC *fieldPC = (FieldPC *)field;
+			FieldModelLoaderPC *modelLoader = fieldPC->fieldModelLoader();
 			if(modelLoader->isOpen()) {
+				int modelID = 0;
 				foreach(const QString &HRC, modelLoader->HRCNames()) {
-					if(HRC == "AVFE.HRC") {
-						modelFound = true;
-						break;
-					}
-					++modelFoundID;
-				}
-			}
-
-			if(!modelFound) continue;
-
-//			if(field->name() != "convil_2") continue;
-
-//			CaFile *ca = field->camera();
-//			if(ca->isOpen()) {
-//				if(field->isPS() && ca->cameraCount() == 1) {
-//					deb.write(QString("%1\n").arg(ca->camera(0).unknown).toLatin1());
-//				}
-				/*if(ca->cameraCount() == 2) {
-					Camera cam1 = ca->camera(0), cam2 = ca->camera(1);
-					if(isPC()) {
-						if(memcmp(&cam1, &cam2, sizeof(cam1)) != 0) {
-							qWarning() << "different cam! " << field->name();
-						}
-					} else {
-						if(memcmp(&cam1, &cam2, 18) != 0) {
-							qWarning() << "different cam! " << field->name();
-						}
-					}
-				}*/
-//				int c=0;
-//				for(; c<ca->cameraCount(); ++c) {
-//					Camera cam = ca->camera(c);
-//					deb.write(QString("%1: %2 -> (%3, %4, %5), (%6, %7, %8), (%9, %10, %11), %12, %13, %14, %15, %16\n")
-//							  .arg(field->name()).arg(c)
-//							  .arg(cam.camera_axis[0].x).arg(cam.camera_axis[0].y).arg(cam.camera_axis[0].z)
-//							.arg(cam.camera_axis[1].x).arg(cam.camera_axis[1].y).arg(cam.camera_axis[1].z)
-//							.arg(cam.camera_axis[2].x).arg(cam.camera_axis[2].y).arg(cam.camera_axis[2].z)
-//							.arg(cam.camera_position[0]).arg(cam.camera_position[1]).arg(cam.camera_position[2])
-//							.arg(cam.camera_zoom)
-//							.arg(field->sectionData(Field::Camera).size()).toLatin1());
-//				}
-//				QFile deb2(QString("camera/%1-cameraP%2.bin")
-//						   .arg(field->name())
-//						   .arg(isPC() ? "C" : "S"));
-//				deb2.open(QIODevice::WriteOnly | QIODevice::Truncate);
-//				deb2.write(field->sectionData(Field::Camera));
-//				deb2.close();
-//			}
-
-			/*IdFile *id = field->walkmesh();
-			if(id->isOpen()) {
-				deb.write(QString("%1:\n").arg(field->name()).toLatin1());
-				int triangleID = 0;
-				foreach(const Triangle &triangle, id->triangles()) {
-					const Access &a = id->access(triangleID++);
-					for(int jj=0; jj<3; ++jj) {
-						deb.write(QString("(x=%1, y=%2, z=%3)+a=%4 ")
-								.arg(triangle.vertices[jj].x)
-								.arg(triangle.vertices[jj].y)
-								.arg(triangle.vertices[jj].z)
-								  .arg(a.a[jj]).toLatin1());
-					}
-					deb.write("\n");
-				}
-			}*/
-
-
-			/*EncounterFile *e = field->encounter();
-			EncounterTable tables[2];
-			tables[0] = e->encounterTable(EncounterFile::Table1);
-			tables[1] = e->encounterTable(EncounterFile::Table2);
-//			for(int tableId=0; tableId<2; tableId++) {
-//				EncounterTable t = tables[tableId];
-				deb.write(QString("%1\t%2\t%3\n")//, %4, %5, %6, %7, %8, %9, %10, %11, %12, %13, %14, (%15)
-						  .arg(field->name())
-						  .arg(255 - tables[0].rate)
-						  //.arg(t.enabled)
-						  .arg(255 - tables[1].rate)
-						.arg(t.enc_standard[0])
-						.arg(t.enc_standard[1])
-						.arg(t.enc_standard[2])
-						.arg(t.enc_standard[3])
-						.arg(t.enc_standard[4])
-						.arg(t.enc_standard[5])
-						.arg(t.enc_special[0])
-						.arg(t.enc_special[1])
-						.arg(t.enc_special[2])
-						.arg(t.enc_special[3])
-						.arg(t._pad).toLatin1());
-//			}*/
-
-			/*
-			 *for(int i=0; i<tut->size(); ++i) {
-					const QByteArray &data = tut->data(i);
-					quint8 id;
-					if(data.size() < 6) {
-						id = -1;
-					} else {
-						memcpy(&id, data.constData() + 4, 1);
-					}
-					deb.write(QString("%1: %2 -> %3 | %4\n").arg(field->name())
-							  .arg(i).arg(id).arg(QString(tut->data(i).toHex())).toLatin1());
-				}*/
-
-//			Data::charlgp_loadAnimBoneCount();
-//			FieldModelLoader *modelLoader = (FieldModelLoader *)field->fieldModelLoader();
-//			if(modelLoader->isOpen()) {
-//				for(int i=0; i<modelLoader->modelCount(); ++i) {
-//					field->fieldModel(i, 0, false);
-//					deb.write(QString("%1: %2 -> %3\n").arg(field->name())
-//							  .arg(i).arg(modelLoader->unknown(i)).toLatin1());
-
-					/*int boneCount = field->fieldModel(i)->boneCount();
-					foreach(const QString &animation, modelLoader->ANames(i)) {
-						QString animName = animation.left(animation.lastIndexOf('.')).toLower() + ".a";
-						if(boneCount != Data::charlgp_animBoneCount.value(animName) &&
-								!(boneCount == 1 && Data::charlgp_animBoneCount.value(animName) == 0)) {
-							qDebug() << boneCount << Data::charlgp_animBoneCount.value(animName) << field->name() << modelLoader->HRCName(i) << animation;
-						}
-					}*/
-//				}
-//			}
-			/*TutFileStandard *tut = field->tutosAndSounds();
-			if(tut->isOpen()) {
-				deb.write(QString("=== %1 ===\n").arg(field->name()).toLatin1());
-				for(int j=0; j<tut->size(); ++j) {
-					if(!tut->isTut(j)) {
-						deb.write(QString("id= %1\n").arg(tut->akaoID(j)).toLatin1());
-					}
-				}
-			}*/
-//			qDebug() << field->name();
-//			int scriptID=0, opcodeID=0;
-//			Section1File *scripts = field->scriptsAndTexts();
-//			if(scripts) {
-//				scripts->setModified(true);
-//			}
-//			field->setModified(true);
-			/*foreach(GrpScript *group, scripts->grpScripts()) {
-				scriptID=0;
-				foreach(Script *script, group->scripts()) {
-					opcodeID = 0;
-					opcodeIf = 0;
-					iff = win = false;
-					foreach(Opcode *opcode, script->opcodes()) {
-						if(opcode->id() == Opcode::IFUB || opcode->id() == Opcode::IFUBL
-								|| opcode->id() == Opcode::IFSW || opcode->id() == Opcode::IFSWL
-								|| opcode->id() == Opcode::IFUW || opcode->id() == Opcode::IFUWL) {
-							opcodeIf = (OpcodeIf *)opcode;
-							iff = true;
-							win = false;
-						} else if(iff) {
-							iff = false;
-							win = opcode->id() == Opcode::WSIZW || opcode->id() == Opcode::WINDOW;
-						} else if(win) {
-							if(opcode->isJump()) {
-								qDebug() << field->name() << group->name() << "script" << scriptID << "line" << opcodeID << opcodeIf->toString();
+					foreach(const QString &a, modelLoader->ANames(modelID)) {
+						FieldModelFilePC *fieldModel = fieldPC->fieldModel(HRC, a);
+						if(fieldModel->isOpen()) {
+							if(fieldModel->animBoneCount() > 1 && fieldModel->animBoneCount() != fieldModel->boneCount()) {
+								qDebug() << field->name() << modelID << HRC << a << fieldModel->animBoneCount() << fieldModel->boneCount();
 							}
-							iff = false;
-							win = false;
 						} else {
-							iff = false;
-							win = false;
-						}
-						opcodeID++;
-					}
-					scriptID++;
-				}
-			}*/
-			/*QString out;
-			InfFile *inf = field->inf();
-			if(inf != NULL) {
-				int curExit=0;
-				QString curOut;
-				foreach(const Exit &exit, inf->exitLines()) {
-					if(exit.fieldID != 0x7FFF && !inf->arrowIsDisplayed(curExit)) {
-						curOut.append(QString("Sortie vers %1 sans flêche\n").arg(Data::field_names.value(exit.fieldID)));
-					}
-					++curExit;
-				}
-				if(!curOut.isEmpty()) {
-					out.append(QString("=== %1 ===\n").arg(field->name()));
-					out.append(curOut);
-
-					int redArrowCount = 0;
-					foreach(const Arrow &arrow, inf->arrows()) {
-						if(arrow.type == 1) {
-							redArrowCount++;
+							qWarning() << "error" << field->name() << modelID << HRC << a;
 						}
 					}
-					if(redArrowCount > 0) {
-						out.append(QString("Mais %1 flêche(s) rouge ont été trouvée(s)\n").arg(redArrowCount));
-					}
-				}
 
-				if(!out.isEmpty())
-					qDebug() << out.toLatin1().data();
+					modelID++;
+				}
+			} else {
+				qWarning() << "Error opening modelLoader" << field->name();
 			}*/
 
 		}

@@ -188,9 +188,7 @@ void LgpFileItem::debug() const
 
 LgpDirectoryItem::~LgpDirectoryItem()
 {
-	foreach(LgpItem *item, _childs) {
-		delete item;
-	}
+	qDeleteAll(_childs);
 }
 
 void LgpDirectoryItem::addChild(const QString &name, Lgp *lgp)

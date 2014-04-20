@@ -32,6 +32,11 @@ LgpIterator::LgpIterator(LgpToc *toc, QFile *lgp) :
 {
 }
 
+LgpIterator::LgpIterator(const Lgp &lgp) :
+	it(lgp._files->table()), _lgp(lgp.archiveIO())
+{
+}
+
 /*!
  * Returns true if there is at least one item ahead of the iterator, i.e.
  * the iterator is not at the back of the container; otherwise returns false.

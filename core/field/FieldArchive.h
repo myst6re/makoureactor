@@ -106,8 +106,24 @@ struct SearchInText : public SearchIn
 	}
 };
 
+class FieldArchive;
+
+class FieldArchiveIterator : public QListIterator<Field *>
+{
+	friend class FieldArchive;
+public:
+	FieldArchiveIterator(const FieldArchive &archive);
+	Field *next(bool open=true, bool dontOptimize=false);
+	Field *peekNext(bool open=true, bool dontOptimize=false) const;
+	Field *peekPrevious(bool open=true, bool dontOptimize=false) const;
+	Field *previous(bool open=true, bool dontOptimize=false);
+private:
+	Field *openField(Field *field, bool open=true, bool dontOptimize=false) const;
+};
+
 class FieldArchive
 {
+	friend class FieldArchiveIterator;
 public:
 	enum Sorting {
 		SortByName, SortByMapId
@@ -147,6 +163,8 @@ public:
 	bool isModified() const;
 	QList<FF7Var> searchAllVars();
 #ifdef DEBUG_FUNCTIONS
+	void printAkaos();
+	void printModelLoaders();
 	void searchAll();// research & debug function
 #endif
 	bool find(bool (*predicate)(Field *, SearchQuery *, SearchIn *),

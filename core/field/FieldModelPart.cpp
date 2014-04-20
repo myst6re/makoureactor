@@ -136,9 +136,7 @@ FieldModelGroup::FieldModelGroup(int texNumber) :
 
 FieldModelGroup::~FieldModelGroup()
 {
-	foreach(Poly *p, _polys) {
-		delete p;
-	}
+	qDeleteAll(_polys);
 }
 
 const QList<Poly *> &FieldModelGroup::polygons() const
@@ -168,9 +166,7 @@ FieldModelPart::FieldModelPart()
 
 FieldModelPart::~FieldModelPart()
 {
-	foreach(FieldModelGroup *group, _groups) {
-		delete group;
-	}
+	qDeleteAll(_groups);
 }
 
 const QList<FieldModelGroup *> &FieldModelPart::groups() const
