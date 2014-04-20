@@ -684,7 +684,10 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	actionSaveAs->setEnabled(true);
 	actionClose->setEnabled(true);
 
+#ifdef DEBUG_FUNCTIONS
+	fieldArchive->printModelLoaders();
 //	fieldArchive->searchAll();
+#endif
 }
 
 void Window::setWindowTitle()
