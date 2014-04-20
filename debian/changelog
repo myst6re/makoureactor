@@ -1,3 +1,17 @@
+makoureactor (1.6.1) precise; urgency=low
+
+  * Clearer biton/bitoff tests syntax.
+  * Fixing crash when SPECIAL and KAWAI opcodes are copied.
+  * Fixing crash when group is removed.
+  * Updating group IDs in the current field scripts when a group is added/removed/moved.
+  * Model loader editor: adding animation id column in animation list (PC).
+  * Script viewer: new action to jump between gotos and labels.
+  * Script editor: Fixing crash after an opcode conversion.
+  * Tuto editor: Fixing text cleared bug, and some other bugs related to the syntax.
+  * Word alignment needed for AKAOs (PSX version).
+  
+ -- Chris Rizzitello <sithlord48@gmail.com>  Sun, 20 Apr 2014 18:36:52 -0400
+
 makoureactor (1.6) precise; urgency=low
 
   * New dialog to manage LGP archives (extract/replace/add/remove files)
