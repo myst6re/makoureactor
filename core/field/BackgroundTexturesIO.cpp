@@ -174,7 +174,7 @@ bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures)
 	textures->setHeaderEffect(headerEffect);
 	textures->setData(mimDataDec);
 
-	if (mimDataDec.size() != headerPalSize + headerImg.size + headerEffect.size) {
+	if (quint32(mimDataDec.size()) != headerPalSize + headerImg.size + headerEffect.size) {
 		qWarning() << "BackgroundTexturesIOPS::open padding after" << (mimDataDec.size() - int(headerPalSize + headerImg.size + headerEffect.size));
 	}
 
