@@ -328,12 +328,12 @@ bool Lgp::openCompanyName()
 	if(!archiveIO()->reset()) {
 		return false;
 	}
-	QByteArray companyData = archiveIO()->read(12);
-	if(companyData.size() != 12) {
+	QByteArray companyData = archiveIO()->read(LGP_COMPANY_NAME_SIZE);
+	if(companyData.size() != LGP_COMPANY_NAME_SIZE) {
 		return false;
 	}
 	const char *data = companyData.constData();
-	const char *last = data + 12;
+	const char *last = data + LGP_COMPANY_NAME_SIZE;
 	while(*data == '\0' && data < last) {
 		data++;
 	}
@@ -361,7 +361,7 @@ const QString &Lgp::companyName()
  */
 void Lgp::setCompanyName(const QString &companyName)
 {
-	_companyName = companyName;
+	_companyName = companyName.left(LGP_COMPANY_NAME_SIZE);
 }
 
 bool Lgp::openProductName()
@@ -371,10 +371,10 @@ bool Lgp::openProductName()
 		return false;
 	}
 
-	if(!archiveIO()->seek(archiveIO()->size() - 14)) {
+	if(!archiveIO()->seek(archiveIO()->size() - LGP_PRODUCT_NAME_SIZE)) {
 		return false;
 	}
-	_productName = archiveIO()->read(14);
+	_productName = archiveIO()->read(LGP_PRODUCT_NAME_SIZE);
 
 	return true;
 }
@@ -398,7 +398,7 @@ const QString &Lgp::productName()
  */
 void Lgp::setProductName(const QString &productName)
 {
-	_productName = productName;
+	_productName = productName.left(LGP_PRODUCT_NAME_SIZE);
 }
 
 LgpHeaderEntry *Lgp::headerEntry(const QString &filePath) const
@@ -418,7 +418,7 @@ bool Lgp::openHeader()
 		return false;
 	}
 
-	if(!archiveIO()->seek(12)) {
+	if(!archiveIO()->seek(LGP_COMPANY_NAME_SIZE)) {
 		setError(PositionError);
 		return false;
 	}
@@ -606,7 +606,7 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 	}
 
 	// Writes the company name (  SQUARESOFT)
-	if(temp.write(companyName().toLatin1().rightJustified(12, '\0', true)) != 12) {
+	if(temp.write(companyName().toLatin1().rightJustified(LGP_COMPANY_NAME_SIZE, '\0', true)) != LGP_COMPANY_NAME_SIZE) {
 		temp.remove();
 		setError(WriteError, temp.errorString());
 		return false;
@@ -778,7 +778,7 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 	}
 
 	// Writes the product name (FINAL FANTASY7)
-	if(temp.write(productName().toLatin1().leftJustified(14, '\0', true)) != 14) {
+	if(temp.write(productName().toLatin1().leftJustified(LGP_PRODUCT_NAME_SIZE, '\0', true)) != LGP_PRODUCT_NAME_SIZE) {
 		temp.remove();
 		setError(WriteError, temp.errorString());
 		return false;
@@ -827,9 +827,10 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 
 	// Remove destination file
 	if(QFile::exists(destPath)) {
-		if(!QFile::remove(destPath)) {
+		QFile destFile(destPath);
+		if(!destFile.remove()) {
 			temp.remove();
-			setError(RemoveError, temp.errorString());
+			setError(RemoveError, destFile.errorString());
 			return false;
 		}
 	}
