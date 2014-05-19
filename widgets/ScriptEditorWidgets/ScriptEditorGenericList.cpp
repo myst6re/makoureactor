@@ -75,7 +75,7 @@ Opcode *ScriptEditorGenericList::opcode()
 
 	if(isLabel) {
 		quint32 label;
-		memcpy(&label, &(newOpcode.constData()[1]), 4);
+		memcpy(&label, newOpcode.constData() + 1, 4);
 		ScriptEditorView::setOpcode(new OpcodeLabel(label));
 	} else {
 		ScriptEditorView::setOpcode(Script::createOpcode(newOpcode));
