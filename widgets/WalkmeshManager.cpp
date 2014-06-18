@@ -53,7 +53,7 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 	tabWidget->addTab(buildWalkmeshPage(), tr("Walkmesh"));
 	tabWidget->addTab(buildGatewaysPage(), tr("Sorties"));
 	tabWidget->addTab(buildDoorsPage(), tr("Portes"));
-	tabWidget->addTab(buildArrowPage(), tr("Flêches"));
+	tabWidget->addTab(buildArrowPage(), tr("Flèches"));
 	tabWidget->addTab(buildCameraRangePage(), tr("Limites caméra"));
 	tabWidget->addTab(buildMiscPage(), tr("Divers"));
 	tabWidget->setFixedHeight(250);
@@ -240,7 +240,7 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	exitDirection = new QSpinBox(ret);
 	exitDirection->setRange(0, 255);
 
-	arrowDisplay = new QCheckBox(tr("Afficher une flêche"), ret);
+	arrowDisplay = new QCheckBox(tr("Afficher une flèche"), ret);
 	arrowDisplay->setIcon(QIcon(":/images/field-arrow-red.png"));
 
 	QGridLayout *layout = new QGridLayout(ret);
@@ -560,7 +560,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 			int arrowID = 0;
 			foreach(const Arrow &arrow, infFile->arrows()) {
 				if(arrow.type != 0) {
-					arrowList->addItem(tr("Flêche %1").arg(arrowID));
+					arrowList->addItem(tr("Flèche %1").arg(arrowID));
 				} else {
 					arrowList->addItem(tr("Inutilisé"));
 				}
@@ -1272,7 +1272,7 @@ void WalkmeshManager::editArrowType(int index)
 			old.type = index;
 			infFile->setArrow(arrowId, old);
 			if(index != 0) {
-				arrowList->currentItem()->setText(tr("Flêche %1").arg(arrowId));
+				arrowList->currentItem()->setText(tr("Flèche %1").arg(arrowId));
 			} else {
 				arrowList->currentItem()->setText(tr("Inutilisé"));
 			}
