@@ -243,7 +243,12 @@ void TextManager::focusInEvent(QFocusEvent *)
 
 void TextManager::setField(Field *field, bool reload)
 {
-	if((!reload && this->scriptsAndTexts == field->scriptsAndTexts()) || !field)	return;
+	if((!reload && this->scriptsAndTexts == field->scriptsAndTexts())
+			|| !field
+			|| !field->scriptsAndTexts()->isOpen()) {
+		return;
+	}
+
 	clear();
 	this->scriptsAndTexts = field->scriptsAndTexts();
 //	_windows.clear();

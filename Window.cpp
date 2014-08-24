@@ -685,8 +685,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	actionClose->setEnabled(true);
 
 #ifdef DEBUG_FUNCTIONS
-	fieldArchive->printModelLoaders();
-//	fieldArchive->searchAll();
+	// fieldArchive->validateAsk();
 #endif
 }
 
@@ -829,13 +828,17 @@ void Window::openField(bool reload)
 
 	Section1File *scriptsAndTexts = field->scriptsAndTexts();
 
-	// Show author
-	authorLbl->setText(tr("Auteur : %1").arg(scriptsAndTexts->author()));
-	authorAction->setVisible(true);
+	if (scriptsAndTexts->isOpen()) {
+		// Show author
+		authorLbl->setText(tr("Auteur : %1").arg(scriptsAndTexts->author()));
+		authorAction->setVisible(true);
 
-	// Fill group script list
-	groupScriptList->setEnabled(true);
-	groupScriptList->fill(scriptsAndTexts);
+		// Fill group script list
+		groupScriptList->setEnabled(true);
+		groupScriptList->fill(scriptsAndTexts);
+	} else {
+		groupScriptList->setEnabled(false);
+	}
 
 	searchDialog->updateRunSearch();
 
@@ -1361,7 +1364,7 @@ void Window::textManager(int textID, int from, int size, bool activate)
 		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
 	}
 
-	if(field) {
+	if(field && field->scriptsAndTexts()->isOpen()) {
 		_textDialog->setField(field);
 		_textDialog->setEnabled(true);
 	} else {
@@ -1437,7 +1440,7 @@ void Window::tutManager()
 		connect(_tutManager, SIGNAL(modified()), SLOT(setModified()));
 	}
 
-	if(field) {
+	if(field && field->tutosAndSounds()->isOpen()) {
 		TutFilePC *tutPC = NULL;
 		if(fieldArchive->isPC()) {
 			tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
