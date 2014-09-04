@@ -55,7 +55,7 @@ private:
 	quint16 opcodeID;
 	Opcode *opcode;
 	bool isInit;
-	static QList<quint8> crashIfInit;
+	static QList<Opcode::Keys> crashIfInit;
 
 	bool modify, change;
 };

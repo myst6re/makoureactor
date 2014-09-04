@@ -26,16 +26,25 @@
 #define IFKEY_PAGE	7
 #define IFQ_PAGE	8
 
-QList<quint8> ScriptEditor::crashIfInit;
+QList<Opcode::Keys> ScriptEditor::crashIfInit;
 
 ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
 	field(field), script(script), opcodeID(opcodeID), isInit(isInit), modify(modify), change(false)
 {
 	if(crashIfInit.isEmpty()) {
-		crashIfInit << 0x08 << 0x09 << 0x0E << 0x20 << 0x21 << 0x2A << 0x35 << 0x40 << 0x48 << 0x49
-					<< 0x60 << 0x70 << 0xA2 << 0xA3 << 0xA8 << 0xA9 << 0xAD << 0xAE << 0xAF << 0xB0 << 0xB1
-					<< 0xB4 << 0xB5 << 0xBA << 0xBB << 0xBC << 0xC0 << 0xC2;
+		crashIfInit << Opcode::JOIN << Opcode::SPLIT
+					<< Opcode::DSKCG
+					<< Opcode::MINIGAME << Opcode::TUTOR
+					<< Opcode::PMOVA
+					<< Opcode::PTURA
+					<< Opcode::MESSAGE << Opcode::ASK << Opcode::MENU
+					<< Opcode::WINDOW << Opcode::MAPJUMP
+					<< Opcode::DFANM << Opcode::ANIME1
+					<< Opcode::MOVE << Opcode::CMOVE << Opcode::FMOVE
+					<< Opcode::ANIME2 << Opcode::ANIMX1 << Opcode::CANIM1 << Opcode::CANMX1
+					<< Opcode::TURNGEN << Opcode::TURN << Opcode::ANIMX2 << Opcode::CANIM2
+					<< Opcode::CANMX2 << Opcode::JUMP << Opcode::LADER;
 	}
 
 	setWindowTitle(tr("Éditeur de script%1").arg(isInit ? tr(" (init mode)") : ""));
@@ -226,7 +235,7 @@ void ScriptEditor::fillView()
 	fillEditor(); // editor part
 
 	// disable if necessary
-	bool disableEditor = (isInit && crashIfInit.contains(opcode->id())) || !editorWidget->isValid();
+	bool disableEditor = (isInit && crashIfInit.contains(Opcode::Keys(opcode->id()))) || !editorWidget->isValid();
 
 	textEdit->setDisabled(disableEditor);
 	editorWidget->setDisabled(disableEditor);
