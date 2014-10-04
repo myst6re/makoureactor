@@ -124,36 +124,25 @@ void BGDialog::fillWidgets()
 
 		QListWidgetItem *item;
 
-		item = new QListWidgetItem(tr("Couche 1"));
-		item->setData(Qt::UserRole, 0);
-		item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-		item->setCheckState(Qt::Checked);
-		layersWidget->addItem(item);
-		if(layerExists[0]) {
-			item = new QListWidgetItem(tr("Couche 2"));
-			item->setData(Qt::UserRole, 1);
-			item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-			item->setCheckState(Qt::Checked);
-			layersWidget->addItem(item);
-		}
-		if(layerExists[1]) {
-			item = new QListWidgetItem(tr("Couche 3"));
-			item->setData(Qt::UserRole, 2);
-			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-			item->setCheckState(Qt::Checked);
-			layersWidget->addItem(item);
-		}
-		if(layerExists[2]) {
-			item = new QListWidgetItem(tr("Couche 4"));
-			item->setData(Qt::UserRole, 3);
-			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-			item->setCheckState(Qt::Checked);
-			layersWidget->addItem(item);
-		}
 		layers[0] = true;
 		layers[1] = layerExists[0];
 		layers[2] = layerExists[1];
 		layers[3] = layerExists[2];
+
+		for(quint8 layerID = 0 ; layerID < 4 ; ++layerID) {
+			if (layers[layerID]) {
+				item = new QListWidgetItem(tr("Couche %1").arg(layerID));
+				item->setData(Qt::UserRole, layerID);
+				Qt::ItemFlags flags = Qt::ItemIsUserCheckable | Qt::ItemIsEnabled;
+				if (layerID > 1) {
+					flags |= Qt::ItemIsSelectable;
+				}
+				item->setFlags(flags);
+				item->setCheckState(Qt::Checked);
+				layersWidget->addItem(item);
+			}
+		}
+
 		allparams = usedParams;
 
 		params.clear();
@@ -176,7 +165,7 @@ void BGDialog::parameterChanged(int index)
 	statesWidget->clear();
 	for(int i=0 ; i<8 ; ++i) {
 		if((states >> i) & 1) {
-			item = new QListWidgetItem(tr("État %1").arg(i+1));
+			item = new QListWidgetItem(tr("État %1").arg(i));
 			item->setData(Qt::UserRole, 1 << i);
 			item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
 			item->setCheckState((params.value(parameter) >> i) & 1 ? Qt::Checked : Qt::Unchecked);
