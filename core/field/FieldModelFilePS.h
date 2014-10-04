@@ -109,7 +109,6 @@ typedef struct {
 	quint8 unknown;
 } BonePS;
 
-class FieldArchiveIOPS;
 class FieldPS;
 
 class FieldModelFilePS : public FieldModelFile

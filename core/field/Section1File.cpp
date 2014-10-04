@@ -61,7 +61,7 @@ bool Section1File::open(const QByteArray &data)
 
 	if(dataSize < 32)	return false;
 
-	memcpy(&posTexts, &constData[4], 2);//posTexts (et fin des scripts)
+	memcpy(&posTexts, constData + 4, 2);//posTexts (et fin des scripts)
 	if((quint32)dataSize < posTexts || posTexts < 32)	return false;
 
 	clear();
@@ -75,12 +75,12 @@ bool Section1File::open(const QByteArray &data)
 	GrpScript *grpScript;
 
 	//this->nbObjets3D = (quint8)data.at(3);
-	memcpy(&nbAKAO, &constData[6], 2);//nbAKAO
+	memcpy(&nbAKAO, constData + 6, 2); // nbAKAO
 	posScripts = 32+8*nbScripts+4*nbAKAO;
 
 	if(posTexts < posScripts+64*nbScripts)	return false;
 
-	memcpy(&_scale, &constData[8], 2);
+	memcpy(&_scale, constData + 8, 2);
 	_author = data.mid(16, 8);
 	//QString name2 = data.mid(24, 8);
 
@@ -98,13 +98,13 @@ bool Section1File::open(const QByteArray &data)
 		}
 
 		//Listage des positions de départ
-		memcpy(positions, &constData[posScripts+64*i], 64);
+		memcpy(positions, constData + posScripts + 64*i, 64);
 
 		//Ajout de la position de fin
 		if(i==nbScripts-1)	positions[32] = posTexts;
 		else
 		{
-			memcpy(&pos, &constData[posScripts+64*i+64], 2);
+			memcpy(&pos, constData + posScripts + 64*i + 64, 2);
 
 			if(pos > positions[31])	positions[32] = pos;
 			else
@@ -112,7 +112,7 @@ bool Section1File::open(const QByteArray &data)
 				emptyGrps = 1;
 				while(pos <= positions[31] && i+emptyGrps<nbScripts-1)
 				{
-					memcpy(&pos, &constData[posScripts+64*(i+emptyGrps)+64], 2);
+					memcpy(&pos, constData + posScripts + 64*(i+emptyGrps) + 64, 2);
 					emptyGrps++;
 				}
 				if(i+emptyGrps==nbScripts)	positions[32] = posTexts;
@@ -152,7 +152,7 @@ bool Section1File::open(const QByteArray &data)
 //			qDebug() << out;
 //		}
 
-		memcpy(&posAKAO, &constData[32+8*nbScripts], 4);//posAKAO
+		memcpy(&posAKAO, constData + 32 + 8*nbScripts, 4); // posAKAO
 	}
 	else
 	{
@@ -165,12 +165,12 @@ bool Section1File::open(const QByteArray &data)
 	{
 		quint16 posDeb, posFin, nbTextes;
 		if(dataSize < posTexts+2)	return false;
-		memcpy(&posDeb, &constData[posTexts+2], 2);
+		memcpy(&posDeb, constData + posTexts + 2, 2);
 		nbTextes = posDeb/2 - 1;
 
 		for(quint32 i=1 ; i<nbTextes ; ++i)
 		{
-			memcpy(&posFin, &constData[posTexts+2+i*2], 2);
+			memcpy(&posFin, constData + posTexts + 2 + i*2, 2);
 
 			if(dataSize < posTexts+posFin)	return false;
 
