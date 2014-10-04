@@ -315,14 +315,14 @@ bool FF7Font::saveFonts()
 	foreach(FF7Font *font, fonts) {
 		if(font && !font->isReadOnly() && font->isModified()) {
 			QFile f1(font->txtPath());
-			if(f1.open(QIODevice::WriteOnly)) {
+			if(f1.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 				f1.write(font->saveTxt().toUtf8());
 				f1.close();
 			} else {
 				ok = false;
 			}
 			QFile f2(font->windowBinFilePath());
-			if(f2.open(QIODevice::WriteOnly)) {
+			if(f2.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 				//TODO
 				/*QByteArray tdwData;
 				if(font->windowBinFile()->save(tdwData)) {
@@ -355,7 +355,7 @@ bool FF7Font::copyFont(const QString &name, const QString &from, const QString &
 	}
 
 	QFile ftxt(font_dirPath + "/" + name + ".txt");
-	if(!ftxt.open(QIODevice::WriteOnly)) {
+	if(!ftxt.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 		return false;
 	}
 
@@ -370,7 +370,7 @@ bool FF7Font::copyFont(const QString &name, const QString &from, const QString &
 	ftxt2.close();
 
 	QFile ftdw(font_dirPath + "/" + name + ".windowBinFile");
-	if(!ftdw.open(QIODevice::WriteOnly)) {
+	if(!ftdw.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 		return false;
 	}
 

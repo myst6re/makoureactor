@@ -349,7 +349,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, Archiv
 
 		if(tut != NULL && tut->isModified()) {
 			QFile tutFile(dir.filePath(itTut.key() + ".tut"));
-			if(tutFile.open(QIODevice::WriteOnly)) {
+			if(tutFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 				tutFile.write(tut->save());
 				tutFile.close();
 			} else {

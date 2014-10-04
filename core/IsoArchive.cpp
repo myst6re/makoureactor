@@ -927,7 +927,7 @@ bool IsoArchive::extract(IsoFile *isoFile, const QString &destination, quint32 m
 	char data[MAX_ISO_READ];
 	qint64 r, totalR=0;
 	QFile ret(destination);
-	if(!ret.open(QIODevice::WriteOnly))		return false;
+	if(!ret.open(QIODevice::WriteOnly | QIODevice::Truncate))		return false;
 
 	seekToFile(isoFile);
 

@@ -102,7 +102,7 @@ bool Var::save(const QMap<quint16, QString> &new_var_names)
 {
 	//Enregistrement de var_names dans le fichier
 	QFile fic(qApp->applicationDirPath() + "/vars.cfg");
-	if(fic.open(QIODevice::WriteOnly | QIODevice::Text))
+	if(fic.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
 	{
 		var_names = new_var_names;
 		QMapIterator<quint16, QString> i(var_names);

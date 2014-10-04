@@ -461,7 +461,7 @@ void TutWidget::exportation()
 	Config::setValue("akaoImportExportPath", path.left(path.lastIndexOf('/')));
 
 	QFile akao(path);
-	if(!akao.open(QIODevice::WriteOnly)) {
+	if(!akao.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 		QMessageBox::warning(this, tr("Erreur"), tr("Erreur d'ouverture du fichier"));
 		return;
 	}

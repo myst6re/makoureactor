@@ -182,7 +182,7 @@ void FontWidget::exportFont()
 		//TODO
 		if(windowBinFile->save(data)) {
 			QFile f(path);
-			if(f.open(QIODevice::WriteOnly)) {
+			if(f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 				f.write(data);
 				f.close();
 			} else {
@@ -196,7 +196,7 @@ void FontWidget::exportFont()
 		//TODO
 		if(windowBinFile->save(data)) {
 			QFile f(path);
-			if(f.open(QIODevice::WriteOnly)) {
+			if(f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 				f.write(data);
 				f.close();
 			} else {
@@ -208,7 +208,7 @@ void FontWidget::exportFont()
 	} else if(selectedFilter == txtF) {
 		QString data = ff7Font->saveTxt();
 		QFile f(path);
-		if(f.open(QIODevice::WriteOnly)) {
+		if(f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 			f.write(data.toUtf8());
 			f.close();
 		} else {
