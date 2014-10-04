@@ -303,12 +303,12 @@ bool Field::save(QByteArray &newData, bool compress)
 
 			// Section data
 			FieldPart *fieldPart = part(fieldSection == Field::PalettePC
-										? Field::Background // EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
+										? Field::Background // FIXME: EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
 										: fieldSection);
 
 			if(fieldPart && fieldPart->canSave() &&
 					fieldPart->isOpen() && fieldPart->isModified()) {
-				if(fieldSection == Field::PalettePC) { // EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
+				if(fieldSection == Field::PalettePC) { // FIXME: EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
 					section = ((BackgroundFilePC *)fieldPart)->savePal();
 				} else {
 					section = fieldPart->save();
@@ -323,6 +323,11 @@ bool Field::save(QByteArray &newData, bool compress)
 			newData.append((char *)&section_size, 4);
 		}
 		newData.append(section);
+
+		// Alignment padding
+		if (alignment() > 0 && newData.size() % alignment() != 0) {
+			newData.append(QByteArray(alignment() - newData.size() % alignment(), '\0'));
+		}
 
 		++id;
 	}

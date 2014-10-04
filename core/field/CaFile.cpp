@@ -39,7 +39,7 @@ bool CaFile::open(const QByteArray &data)
 		return false;
 	}
 
-	if(caSize == 40 || (caSize - 38) % 18 == 0) {
+	if(caSize == 40 || ((caSize - 38) > 0 && (caSize - 38) % 18 == 0)) {
 		isPC = false;
 	} else if(caSize == 38 || caSize % 38 == 0) {
 		isPC = true;
@@ -97,11 +97,6 @@ QByteArray CaFile::save() const
 		}
 
 		++camId;
-	}
-
-	// Unknown value
-	if(field()->isPS() && cameras.size() == 1) {
-		ca.append((const char *)&cameras.first().unknown, 2);
 	}
 
 	return ca;

@@ -76,6 +76,10 @@ QByteArray TutFileStandard::save(QByteArray &toc, quint32 firstPos) const
 		pos = firstPos + ret.size();
 		toc.append((char *)&pos, 4);
 		ret.append(tuto);
+		// 4 bytes aligned (not for tutos, only for AKAO, but...)
+		if (tuto.size() % 4 != 0) {
+			ret.append(QByteArray(4 - tuto.size() % 4, '\0'));
+		}
 	}
 
 	return ret;

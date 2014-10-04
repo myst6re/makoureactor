@@ -19,7 +19,7 @@
 #include "Field.h"
 
 IdFile::IdFile(Field *field) :
-	FieldPart(field), _unknown(0), _hasUnknownData(false)
+	FieldPart(field)
 {
 }
 
@@ -48,14 +48,11 @@ bool IdFile::open(const QByteArray &data)
 
 	quint32 accessStart = 4 + nbSector*24, i;
 
-	if((quint32)sizeId != accessStart + nbSector*6) {
-		if((quint32)sizeId == accessStart + nbSector*6 + 2) {
-			memcpy(&_unknown, &constData[accessStart + nbSector*6], 2);
-			_hasUnknownData = true;
-		} else {
-			qWarning() << "size id error" << sizeId << (accessStart + nbSector*6);
-			return false;
-		}
+	// Padding possible
+	if((quint32)sizeId != accessStart + nbSector*6
+			&& (quint32)sizeId != accessStart + nbSector*6 + 2) {
+		qWarning() << "size id error" << sizeId << (accessStart + nbSector*6);
+		return false;
 	}
 
 	Triangle triangle;
@@ -63,16 +60,10 @@ bool IdFile::open(const QByteArray &data)
 	_triangles.clear();
 	_access.clear();
 	for(i=0 ; i<nbSector ; ++i) {
-		memcpy(&triangle, &constData[4 + i*24], 24);
+		memcpy(&triangle, constData + 4 + i*24, 24);
 		_triangles.append(triangle);
-//		qDebug() << triangle.vertices[0].x << triangle.vertices[0].y << triangle.vertices[0].z << triangle.vertices[0].res;
-//		qDebug() << triangle.vertices[1].x << triangle.vertices[1].y << triangle.vertices[1].z << triangle.vertices[1].res;
-//		qDebug() << triangle.vertices[2].x << triangle.vertices[2].y << triangle.vertices[2].z << triangle.vertices[2].res;
-//		qDebug() << "=====";
-		memcpy(&acc, &constData[accessStart + i*6], 6);
+		memcpy(&acc, constData + accessStart + i*6, 6);
 		_access.append(acc);
-//		qDebug() << acc.a1 << acc.a2 << acc.a3;
-//		qDebug() << "=====";
 	}
 
 	setOpen(true);
@@ -83,7 +74,7 @@ bool IdFile::open(const QByteArray &data)
 QByteArray IdFile::save() const
 {
 	QByteArray id;
-	quint32 count=triangleCount();
+	quint32 count = triangleCount();
 
 	id.append((char *)&count, 4);
 
@@ -98,10 +89,6 @@ QByteArray IdFile::save() const
 		id.append((char *)&access, sizeof(Access));
 	}
 
-	if(_hasUnknownData) {
-		id.append((char *)&_unknown, 2);
-	}
-
 	return id;
 }
 
@@ -109,7 +96,6 @@ void IdFile::clear()
 {
 	_triangles.clear();
 	_access.clear();
-	_hasUnknownData = false;
 }
 
 bool IdFile::hasTriangle() const
@@ -161,16 +147,6 @@ void IdFile::setAccess(int triangleID, const Access &access)
 {
 	_access[triangleID] = access;
 	setModified(true);
-}
-
-bool IdFile::hasUnknownData() const
-{
-	return _hasUnknownData;
-}
-
-qint16 IdFile::unknown() const
-{
-	return _unknown;
 }
 
 Vertex_sr IdFile::fromVertex_s(const Vertex_s &vertex_s)

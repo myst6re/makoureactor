@@ -95,6 +95,7 @@ protected:
 	virtual quint32 sectionPosition(int idPart) const=0;
 	virtual int sectionCount() const=0;
 	virtual int paddingBetweenSections() const=0;
+	virtual int alignment() const=0;
 	virtual QList<Field::FieldSection> orderOfSections() const=0;
 	virtual quint32 diffSectionPos() const=0;
 	virtual bool hasSectionHeader() const=0;

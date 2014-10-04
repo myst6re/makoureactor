@@ -51,15 +51,11 @@ public:
 	void removeTriangle(int triangleID);
 	const Access &access(int triangleID) const;
 	void setAccess(int triangleID, const Access &access);
-	bool hasUnknownData() const;
-	qint16 unknown() const;
 	static Vertex_sr fromVertex_s(const Vertex_s &vertex_s);
 	static Vertex_s toVertex_s(const Vertex_sr &vertex_sr);
 private:
 	QList<Triangle> _triangles;
 	QList<Access> _access;
-	qint16 _unknown;
-	bool _hasUnknownData;
 };
 
 #endif // IDFILE_H

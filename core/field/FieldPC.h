@@ -49,6 +49,7 @@ protected:
 	quint32 sectionPosition(int idPart) const;
 	inline int sectionCount() const {	return 9; }
 	inline int paddingBetweenSections() const { return 4; }
+	inline int alignment() const { return 0; } // Not aligned
 	QList<Field::FieldSection> orderOfSections() const;
 	inline quint32 diffSectionPos() const { return 0; }
 	inline bool hasSectionHeader() const { return true; }
