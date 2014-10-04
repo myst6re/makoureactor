@@ -650,6 +650,20 @@ void Section1File::listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap
 	int groupID=0;
 	foreach(GrpScript *group, _grpScripts)
 		group->listWindows(groupID++, windows, text2win);
+
+	QMapIterator<quint8, quint64> text2winIt(text2win);
+	while(text2winIt.hasNext()) {
+		text2winIt.next();
+		quint8 textID = text2winIt.key(),
+				groupID = (text2winIt.value() >> 16) & 0xFF,
+				scriptID = (text2winIt.value() >> 8) & 0xFF,
+				opcodeID = (text2winIt.value() >> 24) & 0xFF,
+				windowID = text2winIt.value() & 0xFF;
+		QList<FF7Window> associatedWindows = windows.values(text2winIt.value());
+		foreach(const FF7Window &win, associatedWindows) {
+
+		}
+	}
 }
 
 void Section1File::listModelPositions(QMultiMap<int, FF7Position> &positions) const

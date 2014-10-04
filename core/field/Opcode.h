@@ -134,7 +134,7 @@ public:
 		MUSVM, MULCK, BMUSC, CHMPH,
 		PMVIE, MOVIE, MVIEF, MVCAM,
 		FMUSC, CMUSC, CHMST, GAMEOVER,
-		LABEL
+		LABEL, ELSE, END
 	};
 
 	Opcode();
@@ -183,8 +183,8 @@ public:
 
 	static QString character(quint8 persoID);
 
-	static const quint8 length[257];
-	static const QString names[257];
+	static const quint8 length[259];
+	static const QString names[259];
 protected:
 	static QString _script(quint8 param, Section1File *scriptsAndTexts);
 	static QString _text(quint8 textID, Section1File *scriptsAndTexts);
@@ -203,6 +203,35 @@ protected:
 	static QString _operateur(quint8 param);
 	static QString _windowCorner(quint8 param, quint8 bank);
 	static QString _sensRotation(quint8 param);
+};
+
+class OpcodeLabel : public Opcode {
+public:
+	explicit OpcodeLabel(quint32 label);
+	inline int id() const { return 0x100; } // fake id
+	QByteArray toByteArray() const { return QByteArray(); }
+	QString toString(Field *field) const;
+	inline bool isLabel() const  { return true; }
+	inline bool isVoid() const { return true; }
+	quint32 label() const;
+	void setLabel(quint32 label);
+	quint32 _label;
+};
+
+class OpcodeElse : public OpcodeLabel {
+public:
+	explicit OpcodeElse();
+	inline int id() const { return 0x101; } // fake id
+	QByteArray toByteArray() const { return QByteArray(); }
+	inline QString toString(Field *field) const { Q_UNUSED(field); return QObject::tr("Sinon"); }
+};
+
+class OpcodeEnd : public OpcodeLabel {
+public:
+	explicit OpcodeEnd();
+	inline int id() const { return 0x102; } // fake id
+	QByteArray toByteArray() const { return QByteArray(); }
+	inline QString toString(Field *field) const { Q_UNUSED(field); return QObject::tr("Fin"); }
 };
 
 class OpcodeUnknown : public Opcode {
@@ -505,25 +534,13 @@ public:
 	inline bool isJump() const { return true; }
 	virtual bool isLongJump() const=0;
 	inline virtual bool isBackJump() { return false; }
+	inline virtual bool isConditionnalJump() { return false; }
 	quint32 maxJump() const;
 	virtual quint8 jumpPosData() const=0;
 protected:
 	qint32 _jump;
 	quint32 _label;
 	bool _badJump;
-};
-
-class OpcodeLabel : public Opcode {
-public:
-	explicit OpcodeLabel(quint32 label);
-	inline int id() const { return 0x100; } // fake id
-	QByteArray toByteArray() const { return QByteArray(); }
-	QString toString(Field *field) const;
-	inline bool isLabel() const  { return true; }
-	inline bool isVoid() const { return true; }
-	quint32 label() const;
-	void setLabel(quint32 label);
-	quint32 _label;
 };
 
 class OpcodeJMPF : public OpcodeJump {
@@ -585,16 +602,24 @@ class OpcodeIf : public OpcodeJump {
 public:
 	explicit OpcodeIf();
 	explicit OpcodeIf(const OpcodeJump &op);
+	inline bool isConditionnalJump() { return true; }
+	bool isIfThenElse;
+};
+
+class OpcodeIfTest : public OpcodeIf {
+public:
+	explicit OpcodeIfTest();
+	explicit OpcodeIfTest(const OpcodeJump &op);
 	void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	qint32 value1, value2;
 	quint8 oper;
 };
 
-class OpcodeIFUB : public OpcodeIf {
+class OpcodeIFUB : public OpcodeIfTest {
 public:
 	explicit OpcodeIFUB(const char *params, int size);
-	explicit OpcodeIFUB(const OpcodeIf &op);
+	explicit OpcodeIFUB(const OpcodeIfTest &op);
 	inline int id() const { return 0x14; }
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
@@ -603,10 +628,10 @@ public:
 	inline quint8 jumpPosData() const { return 5; }
 };
 
-class OpcodeIFUBL : public OpcodeIf {
+class OpcodeIFUBL : public OpcodeIfTest {
 public:
 	explicit OpcodeIFUBL(const char *params, int size);
-	explicit OpcodeIFUBL(const OpcodeIf &op);
+	explicit OpcodeIFUBL(const OpcodeIfTest &op);
 	inline int id() const { return 0x15; }
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
@@ -615,10 +640,10 @@ public:
 	inline quint8 jumpPosData() const { return 5; }
 };
 
-class OpcodeIFSW : public OpcodeIf {
+class OpcodeIFSW : public OpcodeIfTest {
 public:
 	explicit OpcodeIFSW(const char *params, int size);
-	explicit OpcodeIFSW(const OpcodeIf &op);
+	explicit OpcodeIFSW(const OpcodeIfTest &op);
 	inline int id() const { return 0x16; }
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
@@ -627,10 +652,10 @@ public:
 	inline quint8 jumpPosData() const { return 7; }
 };
 
-class OpcodeIFSWL : public OpcodeIf {
+class OpcodeIFSWL : public OpcodeIfTest {
 public:
 	explicit OpcodeIFSWL(const char *params, int size);
-	explicit OpcodeIFSWL(const OpcodeIf &op);
+	explicit OpcodeIFSWL(const OpcodeIfTest &op);
 	inline int id() const { return 0x17; }
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
@@ -639,10 +664,10 @@ public:
 	inline quint8 jumpPosData() const { return 7; }
 };
 
-class OpcodeIFUW : public OpcodeIf {
+class OpcodeIFUW : public OpcodeIfTest {
 public:
 	explicit OpcodeIFUW(const char *params, int size);
-	explicit OpcodeIFUW(const OpcodeIf &op);
+	explicit OpcodeIFUW(const OpcodeIfTest &op);
 	inline int id() const { return 0x18; }
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
@@ -651,10 +676,10 @@ public:
 	inline quint8 jumpPosData() const { return 7; }
 };
 
-class OpcodeIFUWL : public OpcodeIf {
+class OpcodeIFUWL : public OpcodeIfTest {
 public:
 	explicit OpcodeIFUWL(const char *params, int size);
-	explicit OpcodeIFUWL(const OpcodeIf &op);
+	explicit OpcodeIFUWL(const OpcodeIfTest &op);
 	inline int id() const { return 0x19; }
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
@@ -951,7 +976,7 @@ public:
 	QString toString(Field *field) const;
 };
 
-class OpcodeIfKey : public OpcodeJump {
+class OpcodeIfKey : public OpcodeIf {
 public:
 	explicit OpcodeIfKey(const char *params, int size);
 	explicit OpcodeIfKey(const OpcodeJump &op);
@@ -2581,7 +2606,7 @@ public:
 	quint8 charID[3];
 };
 
-class OpcodeIfQ : public OpcodeJump {
+class OpcodeIfQ : public OpcodeIf {
 public:
 	explicit OpcodeIfQ(const char *params, int size);
 	void setParams(const char *params, int size);

@@ -55,6 +55,8 @@ public:
 	void setWindow(const FF7Window &win);
 	int opcodePositionInBytes(quint16 opcodeID);
 
+	QList<QString> branches() const;
+
 	bool searchOpcode(int opcode, int &opcodeID) const;
 	bool searchVar(quint8 bank, quint8 adress, int value, int &opcodeID) const;
 	void searchAllVars(QList<FF7Var> &vars) const;
@@ -81,6 +83,7 @@ public:
 
 	QString toString(Field *field) const;
 private:
+	static QList<QString> branches(QList<Opcode *> opcodes);
 	OpcodeJump *convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok=0) const;
 //	bool verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const;
 	QList<Opcode *> _opcodes;

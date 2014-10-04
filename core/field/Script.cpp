@@ -66,6 +66,7 @@ bool Script::openScript(const QByteArray &script)
 	}
 	positions.append(pos);
 
+	// Insert labels
 	QList<int> indentsKeys = indents.uniqueKeys();
 
 	for(int i=indentsKeys.size()-1 ; i >= 0 ; --i) {
@@ -82,26 +83,11 @@ bool Script::openScript(const QByteArray &script)
 			foreach(OpcodeJump *opJump, indents.values(jump)) {
 				opJump->setBadJump(true);
 			}
-//			return false;
-			/*int opID=0;
-			bool repaired=false;
-			foreach(const int &pos, positions) {
-				if(pos > jump) {
-					// Repair bad jump: Insert label to the nearest valid position
-					_opcodes.insert(opID, new OpcodeLabel(i+1));
-//					qDebug() << (opID+1) << "repair label" << (i+1);
-					repaired = true;
-					break;
-				}
-				++opID;
-			}
-			if(!repaired) {
-				// Repair bad jump: Put label at the end
-				_opcodes.append(new OpcodeLabel(i+1));
-//				qDebug() << "repair label" << (i+1);
-			}*/
 		}
+	}
 
+	// Insert if/else/end
+	foreach(Opcode *opcode, _opcodes) {
 
 	}
 
@@ -649,6 +635,8 @@ Opcode *Script::copyOpcode(Opcode *opcode)
 	case 0xFE:	return new OpcodeCHMST(*(OpcodeCHMST *)opcode);
 	case 0xFF:	return new OpcodeGAMEOVER(*(OpcodeGAMEOVER *)opcode);
 	case 0x100:	return new OpcodeLabel(*(OpcodeLabel *)opcode);
+	case 0x101:	return new OpcodeElse(*(OpcodeElse *)opcode);
+	case 0x102:	return new OpcodeEnd(*(OpcodeEnd *)opcode);
 	default:	return new OpcodeUnknown(*(OpcodeUnknown *)opcode);
 	}
 }
@@ -769,15 +757,15 @@ bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) co
 //			case Opcode::IFUB:
 //				return opcodeJump;
 ////				qDebug() << "convert" << opcodeJump->name() << "to IFUBL because" << jump << "<=" << 65535;
-////				return new OpcodeIFUBL(*(OpcodeIf *)opcodeJump);
+////				return new OpcodeIFUBL(*(OpcodeIfTest *)opcodeJump);
 //			case Opcode::IFSW:
 //				return opcodeJump;
 ////				qDebug() << "convert" << opcodeJump->name() << "to IFSW because" << jump << "<=" << 65535;
-////				return new OpcodeIFSWL(*(OpcodeIf *)opcodeJump);
+////				return new OpcodeIFSWL(*(OpcodeIfTest *)opcodeJump);
 //			case Opcode::IFUW:
 //				return opcodeJump;
 ////				qDebug() << "convert" << opcodeJump->name() << "to IFUW because" << jump << "<=" << 65535;
-////				return new OpcodeIFUWL(*(OpcodeIf *)opcodeJump);
+////				return new OpcodeIFUWL(*(OpcodeIfTest *)opcodeJump);
 //			default:
 //				qWarning() << "\"Aller à\" trop grand, le label est inaccessible.";
 //				errorStr = QObject::tr("\"Aller à\" trop grand, le label est inaccessible.");
@@ -803,13 +791,13 @@ bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) co
 //			return new OpcodeJMPB(*opcodeJump);
 //		case Opcode::IFUBL:
 //			qDebug() << "convert" << opcodeJump->name() << "to IFUB because" << jump << "<=" << 240;
-//			return new OpcodeIFUB(*(OpcodeIf *)opcodeJump);
+//			return new OpcodeIFUB(*(OpcodeIfTest *)opcodeJump);
 //		case Opcode::IFSWL:
 //			qDebug() << "convert" << opcodeJump->name() << "to IFSW because" << jump << "<=" << 240;
-//			return new OpcodeIFSW(*(OpcodeIf *)opcodeJump);
+//			return new OpcodeIFSW(*(OpcodeIfTest *)opcodeJump);
 //		case Opcode::IFUWL:
 //			qDebug() << "convert" << opcodeJump->name() << "to IFUW because" << jump << "<=" << 240;
-//			return new OpcodeIFUW(*(OpcodeIf *)opcodeJump);
+//			return new OpcodeIFUW(*(OpcodeIfTest *)opcodeJump);
 //		default:
 //			break;
 //		}
@@ -1173,6 +1161,36 @@ bool Script::removeTexts()
 	}
 
 	return modified;
+}
+
+QList<QString> Script::branches() const
+{
+	return branches(_opcodes);
+}
+
+QList<QString> Script::branches(QList<Opcode *> opcodes)
+{
+	QList<QString> ret;
+	QString currentBranch;
+	QList<qint32> labels;
+
+	foreach(Opcode *opcode, opcodes) {
+		//currentBranch.append(currentBranch);
+		if(opcode->isJump()) {
+			OpcodeJump *opcodeJump = (OpcodeJump *)opcode;
+			if(!opcodeJump->isBadJump()) {
+				if(opcodeJump->isConditionnalJump()) {
+
+				} else {
+				}
+			} else {
+				// FIXME?
+			}
+		} else if(opcode->isLabel()) {
+			// TODO
+		}
+		ret << currentBranch;
+	}
 }
 
 QString Script::toString(Field *field) const

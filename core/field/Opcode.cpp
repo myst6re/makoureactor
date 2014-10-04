@@ -172,7 +172,7 @@ void Opcode::listWindows(int groupID, int scriptID, int opcodeID, QMultiMap<quin
 		}
 		int textID = getTextID();
 		if(textID != -1) {
-			text2win.insert(textID, (groupID << 16) | (scriptID << 8) | windowID);
+			text2win.insert(textID, (opcodeID << 24) | (groupID << 16) | (scriptID << 8) | windowID);
 		}
 	}
 }
@@ -441,15 +441,14 @@ QString Opcode::_operateur(quint8 param)
 	return QString("%1?").arg(param);
 }
 
-OpcodeUnknown::OpcodeUnknown(quint8 id, const QByteArray &params)
+OpcodeUnknown::OpcodeUnknown(quint8 id, const QByteArray &params) :
+	_id(id), unknown(params)
 {
-	_id = id;
-	unknown = params;
 }
 
-OpcodeUnknown::OpcodeUnknown(quint8 id, const char *params, int size)
+OpcodeUnknown::OpcodeUnknown(quint8 id, const char *params, int size) :
+	_id(id)
 {
-	_id = id;
 	setParams(params, size);
 }
 
@@ -1351,17 +1350,26 @@ QByteArray OpcodeJMPBL::params() const
 	return QByteArray().append((char *)&jump, 2);
 }
 
-OpcodeIf::OpcodeIf() :
-	OpcodeJump(), banks(0), value1(0), value2(0), oper(0)
+OpcodeIf::OpcodeIf()
 {
 }
 
 OpcodeIf::OpcodeIf(const OpcodeJump &op) :
-	OpcodeJump(op), banks(0), value1(0), value2(0), oper(0)
+	OpcodeJump(op)
 {
 }
 
-void OpcodeIf::getVariables(QList<FF7Var> &vars) const
+OpcodeIfTest::OpcodeIfTest() :
+	OpcodeIf(), banks(0), value1(0), value2(0), oper(0)
+{
+}
+
+OpcodeIfTest::OpcodeIfTest(const OpcodeJump &op) :
+	OpcodeIf(op), banks(0), value1(0), value2(0), oper(0)
+{
+}
+
+void OpcodeIfTest::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
 		vars.append(FF7Var(B1(banks), value1 & 0xFF));
@@ -1374,8 +1382,8 @@ OpcodeIFUB::OpcodeIFUB(const char *params, int size)
 	setParams(params, size);
 }
 
-OpcodeIFUB::OpcodeIFUB(const OpcodeIf &op) :
-	OpcodeIf(op)
+OpcodeIFUB::OpcodeIFUB(const OpcodeIfTest &op) :
+	OpcodeIfTest(op)
 {
 }
 
@@ -1414,8 +1422,8 @@ OpcodeIFUBL::OpcodeIFUBL(const char *params, int size)
 	setParams(params, size);
 }
 
-OpcodeIFUBL::OpcodeIFUBL(const OpcodeIf &op) :
-	OpcodeIf(op)
+OpcodeIFUBL::OpcodeIFUBL(const OpcodeIfTest &op) :
+	OpcodeIfTest(op)
 {
 }
 
@@ -1457,8 +1465,8 @@ OpcodeIFSW::OpcodeIFSW(const char *params, int size)
 	setParams(params, size);
 }
 
-OpcodeIFSW::OpcodeIFSW(const OpcodeIf &op) :
-	OpcodeIf(op)
+OpcodeIFSW::OpcodeIFSW(const OpcodeIfTest &op) :
+	OpcodeIfTest(op)
 {
 }
 
@@ -1501,8 +1509,8 @@ OpcodeIFSWL::OpcodeIFSWL(const char *params, int size)
 	setParams(params, size);
 }
 
-OpcodeIFSWL::OpcodeIFSWL(const OpcodeIf &op) :
-	OpcodeIf(op)
+OpcodeIFSWL::OpcodeIFSWL(const OpcodeIfTest &op) :
+	OpcodeIfTest(op)
 {
 }
 
@@ -1548,8 +1556,8 @@ OpcodeIFUW::OpcodeIFUW(const char *params, int size)
 	setParams(params, size);
 }
 
-OpcodeIFUW::OpcodeIFUW(const OpcodeIf &op) :
-	OpcodeIf(op)
+OpcodeIFUW::OpcodeIFUW(const OpcodeIfTest &op) :
+	OpcodeIfTest(op)
 {
 }
 
@@ -1592,8 +1600,8 @@ OpcodeIFUWL::OpcodeIFUWL(const char *params, int size)
 	setParams(params, size);
 }
 
-OpcodeIFUWL::OpcodeIFUWL(const OpcodeIf &op) :
-	OpcodeIf(op)
+OpcodeIFUWL::OpcodeIFUWL(const OpcodeIfTest &op) :
+	OpcodeIfTest(op)
 {
 }
 
@@ -2417,7 +2425,7 @@ OpcodeIfKey::OpcodeIfKey(const char *params, int size)
 }
 
 OpcodeIfKey::OpcodeIfKey(const OpcodeJump &op) :
-	OpcodeJump(op)
+	OpcodeIf(op)
 {
 }
 
@@ -6689,7 +6697,7 @@ QByteArray OpcodePRTYE::params() const
 }
 
 OpcodeIfQ::OpcodeIfQ(const char *params, int size) :
-	OpcodeJump()
+	OpcodeIf()
 {
 	setParams(params, size);
 }
@@ -8262,7 +8270,7 @@ QString OpcodeGAMEOVER::toString(Field *) const
 	return QObject::tr("Game Over");
 }
 
-const quint8 Opcode::length[257] =
+const quint8 Opcode::length[259] =
 {
 /*00*//* RET */			1,
 /*01*//* REQ */			3,
@@ -8535,10 +8543,13 @@ const quint8 Opcode::length[257] =
 /*fd*//* CMUSC */	6,
 /*fe*//* CHMST */	3,
 /*ff*//* GAMEOVER */	1,
-/*100*//* LABEL */	0
+
+/*100*//* LABEL */	0,
+/*101*//* ELSE */	0,
+/*102*//* END */	0
 };
 
-const QString Opcode::names[257] =
+const QString Opcode::names[259] =
 {
 /*00*/	"RET",
 /*01*/	"REQ",
@@ -8811,5 +8822,8 @@ const QString Opcode::names[257] =
 /*fd*/	"CMUSC",
 /*fe*/	"CHMST",
 /*ff*/	"GAMEOVER",
-/*100*/	"LABEL"
+
+/*100*/	"LABEL",
+/*101*/	"ELSE",
+/*102*/	"END"
 };

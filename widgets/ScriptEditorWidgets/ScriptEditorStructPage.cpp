@@ -634,7 +634,7 @@ Opcode *ScriptEditorIfPage::opcode()
 		}
 	}
 
-	OpcodeIf *opcodeIf = (OpcodeIf *)opcodePtr();
+	OpcodeIfTest *opcodeIf = (OpcodeIfTest *)opcodePtr();
 
 	quint8 bank1, bank2;
 	int value1, value2;
@@ -688,7 +688,7 @@ void ScriptEditorIfPage::setOpcode(Opcode *opcode)
 
 	addJump = false;
 
-	OpcodeIf *opcodeIf = (OpcodeIf *)opcode;
+	OpcodeIfTest *opcodeIf = (OpcodeIfTest *)opcode;
 	varOrValue1->blockSignals(true);
 	varOrValue2->blockSignals(true);
 	if(opcodeIf->id() == Opcode::IFUB || opcodeIf->id() == Opcode::IFUBL) {
@@ -775,7 +775,7 @@ Opcode *ScriptEditorIfPage::convertOpcode(Opcode::Keys key)
 		return opcodePtr();
 	}
 
-	OpcodeIf *ifop = (OpcodeIf *)opcodePtr();
+	OpcodeIfTest *ifop = (OpcodeIfTest *)opcodePtr();
 
 	switch(key) {
 	case Opcode::IFUB:	ScriptEditorView::setOpcode(new OpcodeIFUB(*ifop));		break;
