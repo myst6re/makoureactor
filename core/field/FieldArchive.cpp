@@ -235,6 +235,88 @@ QList<FF7Var> FieldArchive::searchAllVars()
 #include "BackgroundFilePS.h"
 #include "FieldArchivePC.h"
 
+void FieldArchive::validateAsk()
+{
+	foreach(int i, fieldsSortByMapId) {
+		Field *f = field(i, true);
+		QString name = Data::field_names.value(fieldsSortByMapId.key(i).toInt());
+		if(f == NULL) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << i << name;
+			continue;
+		}
+
+		Section1File *scriptsAndTexts = f->scriptsAndTexts();
+		if(scriptsAndTexts->isOpen()) {
+			//qWarning() << f->name();
+
+			int grpScriptID = 0;
+			foreach(GrpScript *grp, scriptsAndTexts->grpScripts()) {
+				int scriptID = 0;
+				foreach(Script *script, grp->scripts()) {
+					int opcodeID = 0;
+					foreach(Opcode *opcode, script->opcodes()) {
+						if(opcode->id() == Opcode::ASK) {
+							OpcodeASK *opcodeASK = (OpcodeASK *)opcode;
+							quint8 textID = opcodeASK->textID,
+									firstLine = opcodeASK->firstLine,
+									lastLine = opcodeASK->lastLine;
+							if (textID < scriptsAndTexts->textCount()) {
+								QString text = scriptsAndTexts->text(textID).text(false);
+								if (!text.isEmpty()) {
+									int lineNum = 0, autoFirstLine = -1, autoLastLine = -1;
+									bool hasChoice = false;
+									foreach (const QString &line, text.split('\n')) {
+										if (line.startsWith("{CHOICE}")) {
+											if (!hasChoice) {
+												if (autoFirstLine == -1) {
+													autoFirstLine = lineNum;
+												} else {
+													qWarning() << "Multi choices!?";
+												}
+											}
+											autoLastLine = lineNum;
+											hasChoice = true;
+										} else if (line.startsWith("{NEW PAGE")) {
+											lineNum = -1;
+											if (autoFirstLine != -1) {
+												qWarning() << "Choice before new page!?";
+											}
+											hasChoice = false;
+										} else {
+											hasChoice = false;
+										}
+										lineNum++;
+									}
+
+									if (autoFirstLine == -1) {
+										qWarning() << QString("%1 > %2 > %3 > %4: No {CHOICE} here (textID: %9)")
+													  .arg(f->name(), grp->name(), grp->scriptName(scriptID))
+													  .arg(opcodeID + 1)
+													  .arg(textID).toLatin1().data();
+									} else if (autoFirstLine != firstLine
+											|| autoLastLine != lastLine) {
+										qWarning() << QString("%1 > %2 > %3 > %4: %5 should be %6, %7 should be %8 (textID: %9)")
+													  .arg(f->name(), grp->name(), grp->scriptName(scriptID))
+													  .arg(opcodeID + 1)
+													  .arg(firstLine).arg(autoFirstLine)
+													  .arg(lastLine).arg(autoLastLine)
+													  .arg(textID).toLatin1().data();
+									}
+								}
+							} else {
+								qWarning() << "FATAL: textID overflow";
+							}
+						}
+						opcodeID++;
+					}
+					scriptID++;
+				}
+				grpScriptID++;
+			}
+		}
+	}
+}
+
 void FieldArchive::printAkaos()
 {
 	QFile deb(QString("akaos-18-04-2014-P%1.txt").arg(isPC() ? "C" : "S"));
@@ -314,15 +396,158 @@ void FieldArchive::printModelLoaders()
 	}
 }
 
+void FieldArchive::printScripts()
+{
+	QFile deb(QString("scripts-window-coord-17-05-2014-P%1.txt").arg(isPC() ? "C" : "S"));
+	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+
+	foreach(int i, fieldsSortByMapId) {
+		Field *f = field(i, true);
+		QString name = Data::field_names.value(fieldsSortByMapId.key(i).toInt());
+		if(f == NULL) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << i << name;
+			continue;
+		}
+
+		Section1File *scriptsAndTexts = f->scriptsAndTexts();
+		if(scriptsAndTexts->isOpen()) {
+			qWarning() << f->name();
+
+			int grpScriptID = 0;
+			foreach(GrpScript *grp, scriptsAndTexts->grpScripts()) {
+				int scriptID = 0;
+				foreach(Script *script, grp->scripts()) {
+					int opcodeID = 0;
+					foreach(Opcode *opcode, script->opcodes()) {
+						FF7Window win;
+						if(opcode->getWindow(win)) {
+							deb.write(QString("%1 > %2 > %3: %4 %5\n")
+									  .arg(f->name(), grp->name())
+									  .arg(scriptID)
+									  .arg(win.x).arg(win.y).toLatin1());
+						}
+						opcodeID++;
+					}
+					scriptID++;
+				}
+				grpScriptID++;
+			}
+		}
+	}
+}
+
+void FieldArchive::diffScripts()
+{
+	FieldArchivePC original("C:/Program Files/Square Soft, Inc/Final Fantasy VII/data/field/fflevel - original.lgp", FieldArchiveIO::Lgp);
+	if(original.open() != FieldArchiveIO::Ok) {
+		qWarning() << "error opening pc lgp";
+		return;
+	}
+
+	QSet<QString> screens;
+
+	foreach(int i, fieldsSortByMapId) {
+		Field *field = this->field(i, true);
+		Field *fieldOriginal = original.field(original.indexOfField(field->name()));
+		if(fieldOriginal == NULL) {
+			qWarning() << "ALERT field not found" << field->name();
+			break;
+		}
+		if(field != NULL) {
+			Section1File *scriptsAndTexts = field->scriptsAndTexts();
+			Section1File *scriptsAndTextsOriginal = fieldOriginal->scriptsAndTexts();
+			if(scriptsAndTexts->isOpen() && scriptsAndTextsOriginal->isOpen()) {
+				qWarning() << field->name();
+
+				if(scriptsAndTexts->grpScriptCount() < scriptsAndTextsOriginal->grpScriptCount()) {
+					qWarning() << "ALERT much grpscript wow";
+					break;
+				}
+
+				QFile deb(QString("scripts-window-coord-18-05-2014/%1.txt").arg(field->name()));
+				deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+
+				int grpScriptID = 0, scriptID;
+				foreach(GrpScript *grp2, scriptsAndTextsOriginal->grpScripts()) {
+					GrpScript *grp = scriptsAndTexts->grpScript(grpScriptID);
+
+					while(grp2->name() != grp->name()) {
+						grpScriptID++;
+						if(grpScriptID >= scriptsAndTexts->grpScriptCount()) {
+							qWarning() << "ALERT end grpScript reached";
+							goto next_group;
+						}
+						grp = scriptsAndTexts->grpScript(grpScriptID);
+					}
+
+					if(grp->size() != grp2->size()) {
+						qWarning() << "ALERT wrong group size" << grp->size() << grp2->size();
+						break;
+					}
+
+					scriptID = 0;
+					foreach(Script *script2, grp2->scripts()) {
+						Script *script = grp->script(scriptID);
+
+						int opcodeID = 0;
+						foreach(Opcode *opcode2, script2->opcodes()) {
+							FF7Window win, win2;
+
+							if(opcode2->getWindow(win2)) {
+
+								Opcode *opcode;
+
+								do {
+									if(opcodeID >= script->size()) {
+										qWarning() << "ALERT wrong script size";
+										goto next_script;
+									}
+
+									opcode = script->opcode(opcodeID++);
+
+								} while (!opcode->getWindow(win));
+
+								const quint8 minDiff = 1, maxDiff = 5;
+								int diffX = qAbs(win2.x - win.x), diffY = qAbs(win2.y - win.y);
+								bool hasTinyDiffX = diffX >= minDiff && diffX <= maxDiff,
+										hasTinyDiffY = diffY >= minDiff && diffY <= maxDiff,
+										hasLargeDiffX = diffX > 15,//maxDiff,
+										hasLargeDiffY = diffY > 15;//maxDiff;
+								if(diffX > 0 || diffY > 0) { //(hasTinyDiffX && hasLargeDiffY) || (hasTinyDiffY && hasLargeDiffX)) {
+									deb.write(QString("%1 > %2 > %3 > %4: window %5 (retraduit: %6, %7) (original: %8, %9)\n")
+											  .arg(field->name())
+											  .arg(grp->name())
+											  .arg(grp->scriptName(scriptID))
+											  .arg(opcodeID + 1)
+											  .arg(opcode2->getWindowID())
+											  .arg(win.x)
+											  .arg(win.y)
+											  .arg(win2.x)
+											  .arg(win2.y).toLatin1());
+									screens.insert(field->name());
+								}
+							}
+						}
+						next_script:;
+						scriptID++;
+					}
+					next_group:;
+					grpScriptID++;
+				}
+				if(deb.size() == 0) {
+					deb.remove();
+				}
+				qDebug() << screens.size() << "écrans";
+			}
+		}
+	}
+}
+
 void FieldArchive::searchAll()
 {
-	int size = fileList.size();
-
 	QTime t;t.start();
-	bool iff = false, win = false;
-	OpcodeIf *opcodeIf=0;
 
-	QFile deb(QString("scripts-window-coord-18-04-2014-P%1.txt").arg(isPC() ? "C" : "S"));
+	QFile deb(QString("scripts-window-coord-18-05-2014-P%1.txt").arg(isPC() ? "C" : "S"));
 	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 
 	FieldArchivePC original("C:/Program Files/Square Soft, Inc/Final Fantasy VII/data/field/fflevel - original.lgp", FieldArchiveIO::Lgp);
@@ -389,13 +614,16 @@ void FieldArchive::searchAll()
 			Section1File *scriptsAndTextsOriginal = fieldOriginal->scriptsAndTexts();
 			if(scriptsAndTexts->isOpen() && scriptsAndTextsOriginal->isOpen()) {
 				qWarning() << field->name();
+
 				if(scriptsAndTexts->grpScriptCount() < scriptsAndTextsOriginal->grpScriptCount()) {
 					qWarning() << "ALERT much grpscript wow";
 					break;
 				}
+
 				int grpScriptID = 0, scriptID;
 				foreach(GrpScript *grp2, scriptsAndTextsOriginal->grpScripts()) {
 					GrpScript *grp = scriptsAndTexts->grpScript(grpScriptID);
+
 					while(grp2->name() != grp->name()) {
 						grpScriptID++;
 						if(grpScriptID >= scriptsAndTexts->grpScriptCount()) {
@@ -404,36 +632,46 @@ void FieldArchive::searchAll()
 						}
 						grp = scriptsAndTexts->grpScript(grpScriptID);
 					}
+
 					if(grp->size() != grp2->size()) {
 						qWarning() << "ALERT wrong group size" << grp->size() << grp2->size();
 						break;
 					}
+
 					scriptID = 0;
-					foreach(Script *script, grp->scripts()) {
-						Script *script2 = grp2->script(scriptID);
-						int opcodeID2 = 0;
-						foreach(Opcode *opcode, script->opcodes()) {
+					foreach(Script *script2, grp2->scripts()) {
+						Script *script = grp->script(scriptID);
+
+						int opcodeID = 0;
+						foreach(Opcode *opcode2, script2->opcodes()) {
 							FF7Window win, win2;
-							if(opcode->getWindow(win)) {
-								if(opcodeID2 >= script2->size()) {
-									qWarning() << "ALERT wrong script size";
-									break;
-								}
-								Opcode *opcode2 = script2->opcode(opcodeID2);
-								while(!opcode2->getWindow(win2)) {
-									if(opcodeID2 >= script2->size()) {
+
+							if(opcode2->getWindow(win2)) {
+
+								Opcode *opcode;
+
+								do {
+									if(opcodeID >= script->size()) {
 										qWarning() << "ALERT wrong script size";
 										goto next_script;
 									}
-									opcode2 = script2->opcode(opcodeID2);
-									opcodeID2++;
-								}
-								if(win.x != win2.x && win.y != win2.y) {
+
+									opcode = script->opcode(opcodeID++);
+
+								} while (!opcode->getWindow(win));
+
+								const quint8 minDiff = 1, maxDiff = 5;
+								int diffX = qAbs(win2.x - win.x), diffY = qAbs(win2.y - win.y);
+								bool hasTinyDiffX = diffX >= minDiff && diffX <= maxDiff,
+										hasTinyDiffY = diffY >= minDiff && diffY <= maxDiff,
+										hasLargeDiffX = diffX > 15,//maxDiff,
+										hasLargeDiffY = diffY > 15;//maxDiff;
+								if((hasTinyDiffX && hasLargeDiffY) || (hasTinyDiffY && hasLargeDiffX)) {
 									deb.write(QString("%1 > %2 > %3: window %4 (retraduit: %5, %6) (original: %7, %8)\n")
 											  .arg(field->name())
 											  .arg(grp->name())
 											  .arg(scriptID)
-											  .arg(opcode->getWindowID())
+											  .arg(opcode2->getWindowID())
 											  .arg(win.x)
 											  .arg(win.y)
 											  .arg(win2.x)
