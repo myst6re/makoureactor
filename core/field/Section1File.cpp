@@ -174,10 +174,12 @@ bool Section1File::open(const QByteArray &data)
 
 			if(dataSize < posTexts+posFin)	return false;
 
+			// FIXME: possible hidden data between 0xFF and posFin-posDeb
 			_texts.append(FF7Text(data.mid(posTexts+posDeb, posFin-posDeb)));
 			posDeb = posFin;
 		}
 		if((quint32)dataSize < posAKAO)	return false;
+		// FIXME: possible hidden data between 0xFF and posFin-posDeb
 		_texts.append(FF7Text(data.mid(posTexts+posDeb, posAKAO-posDeb)));
 	}
 
