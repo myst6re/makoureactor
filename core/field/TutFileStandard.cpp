@@ -67,7 +67,7 @@ QList<quint32> TutFileStandard::openPositions(const QByteArray &data) const
 
 QByteArray TutFileStandard::save(QByteArray &toc, quint32 firstPos) const
 {
-	quint32 pos;
+	quint32 pos, tutoID = 0;
 	QByteArray ret;
 
 	toc.clear();
@@ -76,10 +76,11 @@ QByteArray TutFileStandard::save(QByteArray &toc, quint32 firstPos) const
 		pos = firstPos + ret.size();
 		toc.append((char *)&pos, 4);
 		ret.append(tuto);
-		// 4 bytes aligned (not for tutos, only for AKAO, but...)
-		if (tuto.size() % 4 != 0) {
+		// 4 bytes aligned (not for tutos, only for AKAO)
+		if (isAkao(tutoID) && tuto.size() % 4 != 0) {
 			ret.append(QByteArray(4 - tuto.size() % 4, '\0'));
 		}
+		++tutoID;
 	}
 
 	return ret;
