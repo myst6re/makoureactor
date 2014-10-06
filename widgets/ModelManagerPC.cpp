@@ -489,7 +489,7 @@ void ModelManagerPC::delAnim()
 	QTreeWidgetItem *item = modelAnims->currentItem();
 	if(item == NULL) return;
 	int animID = currentAnimID(item);
-	if(animID <= 0)	return;
+	if(animID < 0)	return;
 
 	modelLoader()->removeAnim(modelID, animID);
 	if(modelPreview)	modelPreview->clear();
