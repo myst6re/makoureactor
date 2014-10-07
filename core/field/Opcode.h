@@ -137,6 +137,10 @@ public:
 		LABEL
 	};
 
+	enum Operator {
+		None, Assign, BitOn, BitOff, BitXor
+	};
+
 	Opcode();
 	virtual ~Opcode();
 	virtual int id() const=0;
@@ -153,7 +157,7 @@ public:
 
 	inline virtual bool isVoid() const { return false; }
 
-	bool searchVar(quint8 bank, quint8 adress, int value=65536) const;
+	bool searchVar(quint8 bank, quint8 adress, Operator op = None, int value=65536) const;
 
 	inline virtual int getGroupID() const { return -1; }
 	inline virtual void setGroupID(quint8 groupID) { Q_UNUSED(groupID) }

@@ -974,13 +974,13 @@ bool Script::searchOpcode(int opcode, int &opcodeID) const
 	return searchOpcode(opcode, ++opcodeID);
 }
 
-bool Script::searchVar(quint8 bank, quint8 adress, int value, int &opcodeID) const
+bool Script::searchVar(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &opcodeID) const
 {
 	if(opcodeID < 0) 	opcodeID = 0;
 	if(opcodeID >= _opcodes.size())								return false;
-	if(_opcodes.at(opcodeID)->searchVar(bank, adress, value))	return true;
+	if(_opcodes.at(opcodeID)->searchVar(bank, adress, op, value))	return true;
 
-	return searchVar(bank, adress, value, ++opcodeID);
+	return searchVar(bank, adress, op, value, ++opcodeID);
 }
 
 void Script::searchAllVars(QList<FF7Var> &vars) const
@@ -1026,13 +1026,13 @@ bool Script::searchOpcodeP(int opcode, int &opcodeID) const
 	return searchOpcodeP(opcode, --opcodeID);
 }
 
-bool Script::searchVarP(quint8 bank, quint8 adress, int value, int &opcodeID) const
+bool Script::searchVarP(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &opcodeID) const
 {
 	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
 	if(opcodeID < 0)											return false;
-	if(_opcodes.at(opcodeID)->searchVar(bank, adress, value))	return true;
+	if(_opcodes.at(opcodeID)->searchVar(bank, adress, op, value))	return true;
 
-	return searchVarP(bank, adress, value, --opcodeID);
+	return searchVarP(bank, adress, op, value, --opcodeID);
 }
 
 bool Script::searchExecP(quint8 group, quint8 script, int &opcodeID) const

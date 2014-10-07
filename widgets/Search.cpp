@@ -101,6 +101,7 @@ QWidget *Search::scriptPageWidget()
 	champ->setMaximumWidth(400);
 	champ->addItems(Config::value("recentSearch").toStringList());
 	champ->lineEdit()->completer()->setCompletionMode(QCompleter::PopupCompletion);
+	champ->lineEdit()->setPlaceholderText(tr("Rechercher"));
 
 	caseSens = new QCheckBox(tr("Sensible à la casse"), text);
 	useRegexp = new QCheckBox(tr("Utiliser les expressions régulières"), text);
@@ -140,6 +141,7 @@ QWidget *Search::scriptPageWidget()
 	for(int i=0 ; i<256 ; ++i) {
 		comboVarName->addItem(QString());
 	}
+	champValue->setPlaceholderText(tr("Valeur"));
 	updateComboVarName();
 
 	// set config values
@@ -230,11 +232,13 @@ QWidget *Search::textPageWidget()
 	champ2->setMaximumWidth(400);
 	champ2->addItems(Config::value("recentSearch").toStringList());
 	champ2->lineEdit()->completer()->setCompletionMode(QCompleter::PopupCompletion);
+	champ2->lineEdit()->setPlaceholderText(tr("Rechercher"));
 
 	replace2 = new QComboBox(ret);
 	replace2->setEditable(true);
 	replace2->setMaximumWidth(400);
 	replace2->addItems(Config::value("recentReplace").toStringList());
+	replace2->lineEdit()->setPlaceholderText(tr("Remplacer"));
 	replaceCurrentButton = new QPushButton(tr("Remplacer"), this);
 	replaceAllButton = new QPushButton(tr("Remplacer tout"), this);
 
@@ -475,7 +479,7 @@ void Search::findNext()
 			}
 			break;
 		case 1:
-			if(fieldArchive->searchVar(bank, adress, value,
+			if(fieldArchive->searchVar(bank, adress, Opcode::Assign, value,
 									   fieldID, grpScriptID,
 									   scriptID, opcodeID,
 									   sorting, scope)) {
@@ -582,7 +586,7 @@ void Search::findPrev()
 			}
 			break;
 		case 1:
-			if(fieldArchive->searchVarP(bank, adress, value,
+			if(fieldArchive->searchVarP(bank, adress, Opcode::Assign, value,
 										fieldID, grpScriptID,
 										scriptID, opcodeID,
 										sorting, scope)) {

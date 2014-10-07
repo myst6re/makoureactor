@@ -51,9 +51,10 @@ int Opcode::subParam(int cur, int paramSize) const
 	return (value >> ((sizeBA*8-cur%8)-paramSize)) & ((int)pow(2, paramSize)-1);
 }
 
-bool Opcode::searchVar(quint8 bank, quint8 adress, int value) const
+bool Opcode::searchVar(quint8 bank, quint8 adress, Operator op, int value) const
 {
-	if(value != 65536) {
+	switch (op) {
+	case Assign:
 		if(id() == SETBYTE) {
 			OpcodeSETBYTE *setbyte = (OpcodeSETBYTE *)this;
 			if(B1(setbyte->banks) == bank && setbyte->var == adress
@@ -67,17 +68,30 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, int value) const
 				return true;
 		}
 		return false;
+	case BitOn:
+	case BitOff:
+	case BitXor:
+		if(op == BitOn && id() == BITON
+				|| op == BitOff && id() == BITOFF
+				|| op == BitXor && id() == BITXOR) {
+			OpcodeBitOperation *bitOperation = (OpcodeBitOperation *)this;
+			if(B1(bitOperation->banks) == bank && bitOperation->var == adress
+					&& B2(bitOperation->banks) == 0 && bitOperation->position == value) {
+				return true;
+			}
+		}
+		return false;
+	default:
+		QList<FF7Var> vars;
+
+		getVariables(vars);
+
+		foreach(const FF7Var &var, vars) {
+			if(var.bank == bank && var.adress == adress)
+				return true;
+		}
+		return false;
 	}
-
-	QList<FF7Var> vars;
-
-	getVariables(vars);
-
-	foreach(const FF7Var &var, vars) {
-		if(var.bank == bank && var.adress == adress)
-			return true;
-	}
-	return false;
 }
 
 bool Opcode::searchExec(quint8 group, quint8 script) const

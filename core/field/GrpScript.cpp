@@ -265,14 +265,14 @@ bool GrpScript::searchOpcode(int opcode, int &scriptID, int &opcodeID) const
 	return searchOpcode(opcode, ++scriptID, opcodeID = 0);
 }
 
-bool GrpScript::searchVar(quint8 bank, quint8 adress, int value, int &scriptID, int &opcodeID) const
+bool GrpScript::searchVar(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &scriptID, int &opcodeID) const
 {
 	if(!search(scriptID, opcodeID))
 		return false;
-	if(_scripts.at(scriptID)->searchVar(bank, adress, value, opcodeID))
+	if(_scripts.at(scriptID)->searchVar(bank, adress, op, value, opcodeID))
 		return true;
 
-	return searchVar(bank, adress, value, ++scriptID, opcodeID = 0);
+	return searchVar(bank, adress, op, value, ++scriptID, opcodeID = 0);
 }
 
 void GrpScript::searchAllVars(QList<FF7Var> &vars) const
@@ -335,14 +335,14 @@ bool GrpScript::searchOpcodeP(int opcode, int &scriptID, int &opcodeID) const
 	return searchOpcodeP(opcode, --scriptID, opcodeID = 2147483647);
 }
 
-bool GrpScript::searchVarP(quint8 bank, quint8 adress, int value, int &scriptID, int &opcodeID) const
+bool GrpScript::searchVarP(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &scriptID, int &opcodeID) const
 {
 	if(!searchP(scriptID, opcodeID))
 		return false;
-	if(_scripts.at(scriptID)->searchVarP(bank, adress, value, opcodeID))
+	if(_scripts.at(scriptID)->searchVarP(bank, adress, op, value, opcodeID))
 		return true;
 
-	return searchVarP(bank, adress, value, --scriptID, opcodeID = 2147483647);
+	return searchVarP(bank, adress, op, value, --scriptID, opcodeID = 2147483647);
 }
 
 bool GrpScript::searchExecP(quint8 group, quint8 script, int &scriptID, int &opcodeID) const

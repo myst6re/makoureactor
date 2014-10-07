@@ -481,16 +481,16 @@ bool Section1File::searchOpcode(int opcode, int &groupID, int &scriptID, int &op
 	return searchOpcode(opcode, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
-bool Section1File::searchVar(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const
+bool Section1File::searchVar(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID < 0)
 		groupID = scriptID = opcodeID = 0;
 	if(groupID >= _grpScripts.size())
 		return false;
-	if(_grpScripts.at(groupID)->searchVar(bank, adress, value, scriptID, opcodeID))
+	if(_grpScripts.at(groupID)->searchVar(bank, adress, op, value, scriptID, opcodeID))
 		return true;
 
-	return searchVar(bank, adress, value, ++groupID, scriptID = 0, opcodeID = 0);
+	return searchVar(bank, adress, op, value, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
 bool Section1File::searchExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const
@@ -556,7 +556,7 @@ bool Section1File::searchOpcodeP(int opcode, int &groupID, int &scriptID, int &o
 	return searchOpcodeP(opcode, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
-bool Section1File::searchVarP(quint8 bank, quint8 adress, int value, int &groupID, int &scriptID, int &opcodeID) const
+bool Section1File::searchVarP(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID >= _grpScripts.size()) {
 		groupID = _grpScripts.size()-1;
@@ -564,10 +564,10 @@ bool Section1File::searchVarP(quint8 bank, quint8 adress, int value, int &groupI
 	}
 	if(groupID < 0)
 		return false;
-	if(_grpScripts.at(groupID)->searchVarP(bank, adress, value, scriptID, opcodeID))
+	if(_grpScripts.at(groupID)->searchVarP(bank, adress, op, value, scriptID, opcodeID))
 		return true;
 
-	return searchVarP(bank, adress, value, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
+	return searchVarP(bank, adress, op, value, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
 bool Section1File::searchExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const
