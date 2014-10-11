@@ -23,7 +23,7 @@
 #include "Field.h"
 
 const char *Opcode::operators[OPERATORS_SIZE] = {
-	"==", "!=", ">", "<", ">=", "<=", "&", "^", "|", "bit on", "bit off"
+	"==", "!=", ">", "<", ">=", "<=", "&", "^", "|", "bitON", "bitOFF"
 };
 
 Opcode::Opcode()

@@ -1978,7 +1978,7 @@ Certains scripts peuvent y faire référence !</source>
     <message>
         <location filename="core/field/Opcode.cpp" line="629"/>
         <source>Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</source>
-        <translation type="unfinished">現在のパーティのキャラクター #%1 のグループのスクリプト #%3 を実行 (優先度 %2/6) - スクリプトが実行されていない場合のみ</translation>
+        <translation>現在のパーティのキャラクター #%1 のグループのスクリプト #%3 を実行 (優先度 %2/6) - スクリプトが実行されていない場合のみ</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="647"/>
@@ -2085,7 +2085,7 @@ Certains scripts peuvent y faire référence !</source>
     <message>
         <location filename="core/field/Opcode.cpp" line="1860"/>
         <source>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (u1=%1, u2=%5)</source>
-        <translation type="unfinished">画面を RGB(%1, %2, %3) にフェード</translation>
+        <translation type="unfinished">画面を RGB(%2, %3, %4) にフェード (u1=%1, u2=%5)</translation>
     </message>
     <message>
         <source>EYETX : Changer l&apos;état de la texture des yeux ou de la bouche</source>
@@ -2595,7 +2595,7 @@ Certains scripts peuvent y faire référence !</source>
     <message>
         <location filename="core/field/Opcode.cpp" line="665"/>
         <source>Exécuter le script n°%3 du groupe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</source>
-        <translatorcomment>Execute the script #%3 in group associated with the character #%1 in the current party (priority %2/6) - Waiting for end of execution to continue</translatorcomment>
+        <translatorcomment>Execute script #%3 in group associated with the character #%1 in the current party (priority %2/6) - Waiting for end of execution to continue</translatorcomment>
         <translation>現在のパーティのキャラクター #%1 のグループのスクリプト #%3 を実行 (優先度 %2/6) - 完了したら次へ</translation>
     </message>
     <message>

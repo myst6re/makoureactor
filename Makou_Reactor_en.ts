@@ -1703,32 +1703,32 @@ Some scripts can refer to it!</translation>
     <message>
         <location filename="core/field/Opcode.cpp" line="556"/>
         <source>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</source>
-        <translation>Execute the script #%3 in extern group %1 (priority %2/6) - Only if the script is not already running</translation>
+        <translation>Execute script #%3 in extern group %1 (priority %2/6) - Only if the script is not already running</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="574"/>
         <source>Exécuter le script n°%3 du groupe externe %1 (priorité %2/6)</source>
-        <translation>Execute the script #%3 in extern group %1 (priority %2/6)</translation>
+        <translation>Execute script #%3 in extern group %1 (priority %2/6)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="592"/>
         <source>Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</source>
-        <translation>Execute the script #%3 in group %1 (priority %2/6) - Waiting for end of execution to continue</translation>
+        <translation>Execute script #%3 in group %1 (priority %2/6) - Waiting for end of execution to continue</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="629"/>
         <source>Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Seulement si le script n&apos;est pas déjà en cours d&apos;exécution</source>
-        <translation>Execute the script #%3 in extern group associated with the character #%1 in the current party (priority %2/6) - Only if the script is not already running</translation>
+        <translation>Execute script #%3 in extern group associated with the character #%1 in the current party (priority %2/6) - Only if the script is not already running</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="647"/>
         <source>Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l&apos;équipe (priorité %2/6)</source>
-        <translation>Execute the script #%3 in extern group associated with the character #%1 in the current party (priority %2/6)</translation>
+        <translation>Execute script #%3 in extern group associated with the character #%1 in the current party (priority %2/6)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="684"/>
         <source>Retourner et exécuter le script n°%2 du groupe appelant (priorité %1/6)</source>
-        <translation>Return and run the script #%2 from the appellant group (Priority %1/6)</translation>
+        <translation>Return and execute script #%2 from the appellant group (Priority %1/6)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="936"/>
@@ -2211,7 +2211,7 @@ Some scripts can refer to it!</translation>
     <message>
         <location filename="core/field/Opcode.cpp" line="665"/>
         <source>Exécuter le script n°%3 du groupe lié au personnage n°%1 de l&apos;équipe (priorité %2/6) - Attend la fin de l&apos;exécution pour continuer</source>
-        <translation>Execute the script #%3 in group associated with the character #%1 in the current party (priority %2/6) - Waiting for end of execution to continue</translation>
+        <translation>Execute script #%3 in group associated with the character #%1 in the current party (priority %2/6) - Waiting for end of execution to continue</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="707"/>
@@ -2771,17 +2771,17 @@ Some scripts can refer to it!</translation>
     <message>
         <location filename="core/field/Opcode.cpp" line="4866"/>
         <source>Mettre le bit %2 à 1 dans %1</source>
-        <translation>Set bit %2 to 1 in %1</translation>
+        <translation>Bit %2 ON in %1</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="4883"/>
         <source>Mettre le bit %2 à 0 dans %1</source>
-        <translation>Set bit %2 to 0 in %1</translation>
+        <translation>Bit %2 OFF in %1</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="4900"/>
         <source>Inverser la valeur du bit %2 dans %1</source>
-        <translation>Toggles the %2 bit in %1</translation>
+        <translation>Toggle bit %2 in %1</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="4985"/>
@@ -6585,12 +6585,12 @@ Are you sure you want to continue?</translation>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="193"/>
         <source>Triangle accessible via la ligne 2-3 :</source>
-        <translation>Triangle accessible via la ligne 2-3:</translation>
+        <translation>Triangle accessible via the line 2-3:</translation>
     </message>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="197"/>
         <source>Triangle accessible via la ligne 3-1 :</source>
-        <translation>Triangle accessible via la ligne 3-1:</translation>
+        <translation>Triangle accessible via the line 3-1:</translation>
     </message>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="202"/>
