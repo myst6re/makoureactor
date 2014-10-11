@@ -2476,6 +2476,9 @@ QString OpcodeIfKey::keyString() const
 			ret.append(Data::key_names.at(i));
 		}
 	}
+	if(ret.isEmpty()) {
+		return QObject::tr("(aucune touche)");
+	}
 	return ret.join(QObject::tr(" ou "));
 }
 
