@@ -1,3 +1,17 @@
+makoureactor (1.6.2) precise; urgency=low
+
+  * Adding new features to find a variable.
+  * Fixing 4-bytes alignment in DAT file format.
+  * Disabling text and script editor when a field cannot be opened correctly.
+  * Deleting excess bytes when replacing file.
+  * Fixing bad ids for background states and background layers.
+  * Fixing bug: var list not updated correctly at launch.
+  * Fixing bug: cannot delete first animation.
+  * Fixing overflow error in LZS compression.
+  * Some typos/bad translation fixes.
+  
+ -- myst6re <myst6re@gmail.com>  Sat, 11 Oct 2014 22:42:24 +0100
+
 makoureactor (1.6.1) precise; urgency=low
 
   * Clearer biton/bitoff tests syntax.
