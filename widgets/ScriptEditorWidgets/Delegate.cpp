@@ -183,13 +183,15 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 			comboBox->addItem(QString("%1").arg(i), i);
 		return comboBox;
 	}
-	else if(type == operateur && !Data::operateur_names.isEmpty())
+	else if(type == operateur)
 	{
 		QComboBox *comboBox = new QComboBox(parent);
-		comboBox->addItems(Data::operateur_names);
-		int nbItems = comboBox->count();
-		for(int i=nbItems ; i<256 ; ++i)
+		for(int i=0 ; i<OPERATORS_SIZE; ++i) {
+			comboBox->addItem(Opcode::operators[i], i);
+		}
+		for(int i=OPERATORS_SIZE ; i<256 ; ++i) {
 			comboBox->addItem(QString("%1").arg(i), i);
+		}
 		return comboBox;
 	}
 	else if(type == keys && !Data::key_names.isEmpty())
@@ -237,7 +239,7 @@ void SpinBoxDelegate::setEditorData(QWidget *editor,
 			|| (type == item_id && !Data::item_names.isEmpty())
 			|| (type == materia_id && !Data::materia_names.isEmpty())
 			|| (type == movie_id && !Data::movie_names.isEmpty())
-			|| (type == operateur && !Data::operateur_names.isEmpty()))
+			|| type == operateur)
 	{
 		QComboBox *comboBox = static_cast<QComboBox*>(editor);
 		comboBox->setCurrentIndex(value);
@@ -268,7 +270,7 @@ void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 			|| (type == materia_id && !Data::materia_names.isEmpty())
 			|| (type == animation_id && Data::currentModelID!=-1 && Data::currentHrcNames && Data::currentAnimNames)
 			|| (type == movie_id && !Data::movie_names.isEmpty())
-			|| (type == operateur && !Data::operateur_names.isEmpty()))
+			|| type == operateur)
 	{
 		QComboBox *comboBox = static_cast<QComboBox*>(editor);
 		value = comboBox->currentIndex();

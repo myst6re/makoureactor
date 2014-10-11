@@ -481,7 +481,7 @@ bool Section1File::searchOpcode(int opcode, int &groupID, int &scriptID, int &op
 	return searchOpcode(opcode, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
-bool Section1File::searchVar(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &groupID, int &scriptID, int &opcodeID) const
+bool Section1File::searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID < 0)
 		groupID = scriptID = opcodeID = 0;
@@ -556,7 +556,7 @@ bool Section1File::searchOpcodeP(int opcode, int &groupID, int &scriptID, int &o
 	return searchOpcodeP(opcode, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
-bool Section1File::searchVarP(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &groupID, int &scriptID, int &opcodeID) const
+bool Section1File::searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID >= _grpScripts.size()) {
 		groupID = _grpScripts.size()-1;

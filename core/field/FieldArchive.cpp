@@ -824,7 +824,7 @@ bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scr
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchVar(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	SearchVarQuery query(bank, adress, op, value);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
@@ -925,7 +925,7 @@ bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &sc
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchVarP(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	SearchVarQuery query(bank, adress, op, value);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);

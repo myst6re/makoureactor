@@ -40,7 +40,6 @@ QStringList Data::field_names;
 QStringList Data::movie_names;
 QStringList Data::music_names;
 QStringList Data::music_desc;
-QStringList Data::operateur_names;
 QStringList Data::key_names;
 QString Data::ff7DataPath_cache;
 QString Data::ff7AppPath_cache;
@@ -370,11 +369,6 @@ int Data::load()
 				<< QObject::tr("Aeris") << QObject::tr("Red XIII") << QObject::tr("Youfie")
 				<< QObject::tr("Cait Sith") << QObject::tr("Vincent") << QObject::tr("Cid")
 				<< QObject::tr("Jeune Clad") << QObject::tr("Sephiroth") << QObject::tr("Chocobo");
-	}
-
-	if(operateur_names.isEmpty()) {
-		operateur_names
-				<< "==" << "!=" << ">" << "<" << ">=" << "<=" << "&" << "^" << "|" << "bit on" << "bit off";
 	}
 
 	if(key_names.isEmpty()) {

@@ -551,7 +551,9 @@ void ScriptEditorIfPage::build()
 	varOrValue2 = new VarOrValueWidget(this);
 
 	operatorList = new QComboBox(this);
-	operatorList->addItems(Data::operateur_names);
+	for(int i=0 ; i<OPERATORS_SIZE; ++i) {
+		operatorList->addItem(Opcode::operators[i]);
+	}
 
 	rangeTest = new QComboBox();
 	rangeTest->addItem(tr("Sur 8 bits non signés"));

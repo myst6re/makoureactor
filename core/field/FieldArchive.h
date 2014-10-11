@@ -38,9 +38,9 @@ struct SearchOpcodeQuery : public SearchQuery
 struct SearchVarQuery : public SearchQuery
 {
 	quint8 bank, adress;
-	Opcode::Operator op;
+	Opcode::Operation op;
 	int value;
-	SearchVarQuery(quint8 bank, quint8 adress, Opcode::Operator op, int value) :
+	SearchVarQuery(quint8 bank, quint8 adress, Opcode::Operation op, int value) :
 		bank(bank), adress(adress), op(op), value(value) {}
 };
 
@@ -178,13 +178,13 @@ public:
 				  SearchQuery *toSearch, int &fieldID, SearchIn *searchIn,
 				  Sorting sorting, SearchScope scope);
 	bool searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchVar(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchMapJump(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchTextInScripts(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchText(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting, SearchScope scope);
 	bool searchOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchVarP(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchMapJumpP(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);

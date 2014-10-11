@@ -974,7 +974,7 @@ bool Script::searchOpcode(int opcode, int &opcodeID) const
 	return searchOpcode(opcode, ++opcodeID);
 }
 
-bool Script::searchVar(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &opcodeID) const
+bool Script::searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &opcodeID) const
 {
 	if(opcodeID < 0) 	opcodeID = 0;
 	if(opcodeID >= _opcodes.size())								return false;
@@ -1026,7 +1026,7 @@ bool Script::searchOpcodeP(int opcode, int &opcodeID) const
 	return searchOpcodeP(opcode, --opcodeID);
 }
 
-bool Script::searchVarP(quint8 bank, quint8 adress, Opcode::Operator op, int value, int &opcodeID) const
+bool Script::searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &opcodeID) const
 {
 	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
 	if(opcodeID < 0)											return false;

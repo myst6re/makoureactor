@@ -22,6 +22,10 @@
 #include "core/Config.h"
 #include "Field.h"
 
+const char *Opcode::operators[OPERATORS_SIZE] = {
+	"==", "!=", ">", "<", ">=", "<=", "&", "^", "|", "bit on", "bit off"
+};
+
 Opcode::Opcode()
 {
 }
@@ -51,8 +55,9 @@ int Opcode::subParam(int cur, int paramSize) const
 	return (value >> ((sizeBA*8-cur%8)-paramSize)) & ((int)pow(2, paramSize)-1);
 }
 
-bool Opcode::searchVar(quint8 bank, quint8 adress, Operator op, int value) const
+bool Opcode::searchVar(quint8 bank, quint8 adress, Operation op, int value) const
 {
+	// TODO: compare var with var
 	switch (op) {
 	case Assign:
 		if(id() == SETBYTE) {
@@ -68,15 +73,30 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, Operator op, int value) const
 				return true;
 		}
 		return false;
-	case BitOn:
-	case BitOff:
-	case BitXor:
-		if(op == BitOn && id() == BITON
-				|| op == BitOff && id() == BITOFF
-				|| op == BitXor && id() == BITXOR) {
+	case BitAssign:
+		if(id() == BITON
+				|| id() == BITOFF
+				|| id() == BITXOR) {
 			OpcodeBitOperation *bitOperation = (OpcodeBitOperation *)this;
 			if(B1(bitOperation->banks) == bank && bitOperation->var == adress
 					&& B2(bitOperation->banks) == 0 && bitOperation->position == value) {
+				return true;
+			}
+		}
+		return false;
+	case Compare:
+	case BitCompare:
+		if(id() == IFUB
+				|| id() == IFUBL
+				|| id() == IFSW
+				|| id() == IFSWL
+				|| id() == IFUW
+				|| id() == IFUWL) {
+			OpcodeIf *opcodeIf = (OpcodeIf *)this;
+			if(((op == Compare && opcodeIf->oper < quint8(BitAnd))
+				|| (op == BitCompare && opcodeIf->oper >= quint8(BitAnd)))
+					&& B1(opcodeIf->banks) == bank && opcodeIf->value1 == adress
+					&& B2(opcodeIf->banks) == 0 && opcodeIf->value2 == value) {
 				return true;
 			}
 		}
@@ -450,8 +470,8 @@ QString Opcode::_sensRotation(quint8 param)
 
 QString Opcode::_operateur(quint8 param)
 {
-	if(param < Data::operateur_names.size())
-		return Data::operateur_names.at(param);
+	if(param < OPERATORS_SIZE)
+		return operators[param];
 	return QString("%1?").arg(param);
 }
 

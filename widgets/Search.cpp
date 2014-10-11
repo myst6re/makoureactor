@@ -132,7 +132,7 @@ QWidget *Search::scriptPageWidget()
 	variableLayout->addWidget(new QLabel(tr("Var")), 0, 0);
 	variableLayout->addWidget(champBank = new QSpinBox(variable), 0, 1);
 	variableLayout->addWidget(champAdress = new QSpinBox(variable), 0, 2);
-	variableLayout->addWidget(new QLabel("="), 0, 3);
+	variableLayout->addWidget(champOp = new QComboBox(variable), 0, 3);
 	variableLayout->addWidget(champValue = new QLineEdit(variable), 0, 4);
 	variableLayout->addWidget(comboVarName = new QComboBox(variable), 1, 0, 1, 5);
 	variableLayout->setRowStretch(1, 1);
@@ -142,12 +142,17 @@ QWidget *Search::scriptPageWidget()
 		comboVarName->addItem(QString());
 	}
 	champValue->setPlaceholderText(tr("Valeur"));
+	champOp->addItem(tr("Affectation"));
+	champOp->addItem(tr("Affectation Bit"));
+	champOp->addItem(tr("Test"));
+	champOp->addItem(tr("Test bit"));
 	updateComboVarName();
 
 	// set config values
 	champBank->setValue(Config::value("SearchedVarBank").toInt());
 	champAdress->setValue(Config::value("SearchedVarAdress").toInt());
 	comboVarName->setCurrentIndex(Config::value("SearchedVarAdress").toInt());
+	champOp->setCurrentIndex(Config::value("SearchedVarOperation").toInt());
 	int searchedVarValue = Config::value("SearchedVarValue", 65536).toInt();
 	if(searchedVarValue != 65536) {
 		champValue->setText(QString::number(searchedVarValue));
@@ -219,6 +224,7 @@ QWidget *Search::scriptPageWidget()
 	connect(champBank, SIGNAL(valueChanged(int)), SLOT(updateComboVarName()));
 	connect(champAdress, SIGNAL(valueChanged(int)), comboVarName, SLOT(setCurrentIndex(int)));
 	connect(comboVarName, SIGNAL(currentIndexChanged(int)), SLOT(updateChampAdress()));
+	connect(champOp, SIGNAL(currentIndexChanged(int)), SLOT(updateSearchVarPlaceholder(int)));
 
 	return ret;
 }
@@ -374,6 +380,11 @@ void Search::updateChampAdress()
 	champAdress->blockSignals(false);
 }
 
+void Search::updateSearchVarPlaceholder(int opIndex)
+{
+	champValue->setPlaceholderText(opIndex == 0 || opIndex == 2 ? tr("Valeur") : tr("Position"));
+}
+
 void Search::cancelSearching()
 {
 	cancel = true;
@@ -479,7 +490,7 @@ void Search::findNext()
 			}
 			break;
 		case 1:
-			if(fieldArchive->searchVar(bank, adress, Opcode::Assign, value,
+			if(fieldArchive->searchVar(bank, adress, op, value,
 									   fieldID, grpScriptID,
 									   scriptID, opcodeID,
 									   sorting, scope)) {
@@ -586,7 +597,7 @@ void Search::findPrev()
 			}
 			break;
 		case 1:
-			if(fieldArchive->searchVarP(bank, adress, Opcode::Assign, value,
+			if(fieldArchive->searchVarP(bank, adress, op, value,
 										fieldID, grpScriptID,
 										scriptID, opcodeID,
 										sorting, scope)) {
@@ -670,10 +681,12 @@ void Search::setSearchValues()
 		case 1:
 			bank = champBank->value();
 			adress = champAdress->value();
+			op = Opcode::Operation(champOp->currentIndex() + 1);
 			value = champValue->text().toInt(&ok);
 			if(!ok)	value = 65536;
 			Config::setValue("SearchedVarBank", bank);
 			Config::setValue("SearchedVarAdress", adress);
+			Config::setValue("SearchedVarOperation", champOp->currentIndex());
 			Config::setValue("SearchedVarValue", value);
 			break;
 		case 2:

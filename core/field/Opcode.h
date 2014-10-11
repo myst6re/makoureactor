@@ -22,6 +22,7 @@
 
 #define B1(v)		((v>>4)&0xF)
 #define B2(v)		(v&0xF)
+#define OPERATORS_SIZE	11
 
 typedef struct {
 	qint16 x, y;
@@ -137,9 +138,19 @@ public:
 		LABEL
 	};
 
-	enum Operator {
-		None, Assign, BitOn, BitOff, BitXor
+	enum Operation {
+		None, Assign, BitAssign, Compare, BitCompare
 	};
+
+	enum Operator {
+		Equal, NotEqual,
+		UpperThan, LowerThan,
+		UpperThanEqual, LowerThanEqual,
+		BitAnd, BitXOr, BitOr,
+		BitOn, BitOff
+	};
+
+	static const char *operators[OPERATORS_SIZE];
 
 	Opcode();
 	virtual ~Opcode();
@@ -157,7 +168,7 @@ public:
 
 	inline virtual bool isVoid() const { return false; }
 
-	bool searchVar(quint8 bank, quint8 adress, Operator op = None, int value=65536) const;
+	bool searchVar(quint8 bank, quint8 adress, Operation op = None, int value=65536) const;
 
 	inline virtual int getGroupID() const { return -1; }
 	inline virtual void setGroupID(quint8 groupID) { Q_UNUSED(groupID) }

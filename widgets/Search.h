@@ -39,6 +39,7 @@ public:
 private slots:
 	void updateComboVarName();
 	void updateChampAdress();
+	void updateSearchVarPlaceholder(int opIndex);
 	void cancelSearching();
 	void findNext();
 	void findPrev();
@@ -69,6 +70,7 @@ private:
 	QSpinBox *champBank;
 	QSpinBox *champAdress;
 	QLineEdit *champValue;
+	QComboBox *champOp;
 	QComboBox *comboVarName;
 	QPushButton *buttonNext, *buttonPrev;
 	QLabel *returnToBegin;
@@ -87,6 +89,7 @@ private:
 	QRegExp text;
 	quint8 bank;
 	quint8 adress;
+	Opcode::Operation op;
 	int value;
 	quint8 e_script, e_group;
 	quint16 field;

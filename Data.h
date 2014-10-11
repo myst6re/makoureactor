@@ -47,7 +47,6 @@ public:
 	static bool openMaplist(const QByteArray &data);
 	static void openMaplist(bool PC=false);
 	static QStringList char_names;
-	static QStringList operateur_names;
 	static QStringList key_names;
 	static QStringList item_names;
 	static QStringList weapon_names;
