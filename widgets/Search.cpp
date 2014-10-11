@@ -146,7 +146,6 @@ QWidget *Search::scriptPageWidget()
 	champOp->addItem(tr("Affectation Bit"));
 	champOp->addItem(tr("Test"));
 	champOp->addItem(tr("Test bit"));
-	updateComboVarName();
 
 	// set config values
 	champBank->setValue(Config::value("SearchedVarBank").toInt());
@@ -157,6 +156,7 @@ QWidget *Search::scriptPageWidget()
 	if(searchedVarValue != 65536) {
 		champValue->setText(QString::number(searchedVarValue));
 	}
+	updateComboVarName();
 
 	QWidget *execution = new QWidget(ret);
 	executionGroup = new QComboBox(execution);
