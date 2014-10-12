@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<TS version="2.0" language="en_US">
 <context>
     <name>AnimEditorDialog</name>
     <message>
@@ -146,7 +146,7 @@
         <source>Valeurs par défaut</source>
         <translation>Defaults</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="widgets/ConfigWindow.cpp" line="83"/>
         <source>Optimiser automatiquement les duos de caractères « .  », « .&quot; » et « …&quot; ».</source>
         <translation>Automatically optimize the pairs of characters “. ”, “.&quot;” and “…&quot;”.</translation>
