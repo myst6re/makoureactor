@@ -19,7 +19,9 @@
 #define QTASKBARBUTTON_H
 
 #include <QtGui>
-#ifdef Q_OS_WIN
+
+#if defined(Q_OS_WIN) && !defined(__MINGW32__) //MinGW does not provide shobjidl.h.
+//#ifdef Q_OS_WIN
 #include "shobjidl.h"
 #endif
 
@@ -48,7 +50,8 @@ public slots:
 	void setRange(int minimum, int maximum);
 	void setValue(int value);
 private:
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) && !defined(__MINGW32__) //MinGW does not provide shobjidl.h.
+//#ifdef Q_OS_WIN
 	WId _winId;
 	ITaskbarList3 *pITask;
 #endif // Q_OS_WIN
