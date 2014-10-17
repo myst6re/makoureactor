@@ -17,8 +17,7 @@
  ****************************************************************************/
 #include "QTaskBarButton.h"
 
-#if defined(Q_OS_WIN) && !defined(__MINGW32__) //MinGW does not provide shobjidl.h.
-//#ifdef Q_OS_WIN
+#ifdef __ITaskbarList3_INTERFACE_DEFINED__ //Windows 7 SDK required
 
 QTaskBarButton::QTaskBarButton(QWidget *mainWindow) :
 	QObject(mainWindow), pITask(0), _minimum(0), _maximum(100),

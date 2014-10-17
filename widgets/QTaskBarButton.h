@@ -20,8 +20,7 @@
 
 #include <QtGui>
 
-#if defined(Q_OS_WIN) && !defined(__MINGW32__) //MinGW does not provide shobjidl.h.
-//#ifdef Q_OS_WIN
+#ifdef __ITaskbarList3_INTERFACE_DEFINED__ //Windows 7 SDK required
 #include "shobjidl.h"
 #endif
 
@@ -50,8 +49,7 @@ public slots:
 	void setRange(int minimum, int maximum);
 	void setValue(int value);
 private:
-#if defined(Q_OS_WIN) && !defined(__MINGW32__) //MinGW does not provide shobjidl.h.
-//#ifdef Q_OS_WIN
+#ifdef __ITaskbarList3_INTERFACE_DEFINED__ //Windows 7 SDK required
 	WId _winId;
 	ITaskbarList3 *pITask;
 #endif // Q_OS_WIN
