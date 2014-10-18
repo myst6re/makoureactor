@@ -258,7 +258,6 @@ macx {
 win32 {
 	RC_FILE = Makou_Reactor.rc
 	LIBS += -lole32
-	HEADERS += shobjidl.h
 }
 
 OTHER_FILES += Makou_Reactor.rc \

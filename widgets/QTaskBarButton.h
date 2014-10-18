@@ -20,8 +20,8 @@
 
 #include <QtGui>
 
-#ifdef __ITaskbarList3_INTERFACE_DEFINED__ //Windows 7 SDK required
-#include "shobjidl.h"
+#ifdef Q_OS_WIN
+#include <shobjidl.h>
 #endif
 
 class QTaskBarButton : public QObject
@@ -49,7 +49,7 @@ public slots:
 	void setRange(int minimum, int maximum);
 	void setValue(int value);
 private:
-#ifdef __ITaskbarList3_INTERFACE_DEFINED__ //Windows 7 SDK required
+#ifdef Q_OS_WIN
 	WId _winId;
 	ITaskbarList3 *pITask;
 #endif // Q_OS_WIN
