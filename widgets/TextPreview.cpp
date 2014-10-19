@@ -185,7 +185,7 @@ void TextPreview::calcSize()
 {
 //	qDebug() << "TextPreview::calcSize()";
 
-	int line=0, width=20, height=25, size=ff7Text.size();
+	int line=0, width=22, height=25, size=ff7Text.size();
 	maxW=maxH=0;
 	pagesPos.clear();
 	pagesPos.append(0);
@@ -200,14 +200,14 @@ void TextPreview::calcSize()
 		case 0xe9: // New Page 2
 			if(height>maxH)	maxH = height;
 			if(width>maxW)	maxW = width;
-			width = 18;
-			height = 22;
+			width = 22;
+			height = 25;
 			pagesPos.append(i+1);
 			break;
 		case 0xe7: // \n
 			if(width>maxW)	maxW = width;
 			++line;
-			width = 18;
+			width = 22;
 			height += 16;
 			break;
 		case 0xfa: // Jap 1
