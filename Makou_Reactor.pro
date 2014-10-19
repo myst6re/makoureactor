@@ -257,7 +257,12 @@ macx {
 }
 win32 {
 	RC_FILE = Makou_Reactor.rc
-	LIBS += -lole32
+
+	!NO_TASKBAR_BUTTON {
+		LIBS += -lole32
+	} else {
+		DEFINES += NO_TASKBAR_BUTTON
+	}
 }
 
 OTHER_FILES += Makou_Reactor.rc \

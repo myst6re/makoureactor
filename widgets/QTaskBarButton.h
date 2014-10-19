@@ -20,7 +20,7 @@
 
 #include <QtGui>
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) && !defined(NO_TASKBAR_BUTTON)
 #include <shobjidl.h>
 #endif
 
@@ -49,7 +49,7 @@ public slots:
 	void setRange(int minimum, int maximum);
 	void setValue(int value);
 private:
-#ifdef Q_OS_WIN
+#ifdef __ITaskbarList3_INTERFACE_DEFINED__
 	WId _winId;
 	ITaskbarList3 *pITask;
 #endif // Q_OS_WIN
