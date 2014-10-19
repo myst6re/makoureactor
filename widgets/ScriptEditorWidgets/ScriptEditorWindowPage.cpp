@@ -181,8 +181,8 @@ void ScriptEditorWindowPage::updatePreview()
 
 void ScriptEditorWindowPage::updateText(int textID)
 {
-	bool hasText = textID >= 0 && textID < field()->scriptsAndTexts()->textCount();
 	--textID;
+	bool hasText = textID >= 0 && textID < field()->scriptsAndTexts()->textCount();
 
 	textPreview->setText(hasText
 						 ? field()->scriptsAndTexts()->text(textID).data()
