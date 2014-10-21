@@ -85,16 +85,19 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 
 	japEnc = new QCheckBox(tr("Caractères japonais"), textEditor);
 
+	QGridLayout *windowPreviewLayout = new QGridLayout;
+	windowPreviewLayout->addWidget(windowColor1, 0, 0, Qt::AlignRight | Qt::AlignTop);
+	windowPreviewLayout->addWidget(windowColor3, 1, 0, Qt::AlignRight | Qt::AlignBottom);
+	windowPreviewLayout->addWidget(windowPreview, 0, 1, 2, 1, Qt::AlignCenter);
+	windowPreviewLayout->addWidget(windowColor2, 0, 2, Qt::AlignLeft | Qt::AlignTop);
+	windowPreviewLayout->addWidget(windowColor4, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
+	windowPreviewLayout->addWidget(windowColorReset, 2, 0, 1, 3, Qt::AlignLeft);
+	windowPreviewLayout->setColumnStretch(3, 1);
+
 	QGridLayout *textEditorLayout = new QGridLayout(textEditor);
-	textEditorLayout->addWidget(windowColor1, 0, 0, Qt::AlignRight | Qt::AlignTop);
-	textEditorLayout->addWidget(windowColor3, 1, 0, Qt::AlignRight | Qt::AlignBottom);
-	textEditorLayout->addWidget(windowPreview, 0, 1, 2, 1, Qt::AlignCenter);
-	textEditorLayout->addWidget(windowColor2, 0, 2, Qt::AlignLeft | Qt::AlignTop);
-	textEditorLayout->addWidget(windowColor4, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
-	textEditorLayout->addWidget(windowColorReset, 2, 0, 1, 3, Qt::AlignLeft);
-//	textEditorLayout->addWidget(optiText, 0, 3, Qt::AlignLeft | Qt::AlignTop);
-	textEditorLayout->addWidget(japEnc, 0, 3, Qt::AlignLeft | Qt::AlignTop);
-	textEditorLayout->setColumnStretch(3, 1);
+	textEditorLayout->addWidget(japEnc, 0, 0);
+	// windowPreviewLayout->addWidget(optiText, 1, 0);
+	textEditorLayout->addLayout(windowPreviewLayout, 1, 0);
 
 	QGroupBox *scriptEditor = new QGroupBox(tr("Editeur de script"), this);
 
@@ -104,11 +107,6 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	scriptEditorLayout->addWidget(expandedByDefault);
 	scriptEditorLayout->addStretch();
 
-	QHBoxLayout *textScriptEditorLayout = new QHBoxLayout;
-	textScriptEditorLayout->addWidget(textEditor, 1);
-	textScriptEditorLayout->addWidget(scriptEditor, 1);
-	textScriptEditorLayout->setContentsMargins(QMargins());
-
 	QGroupBox *misc = new QGroupBox(tr("Divers"), this);
 
 	lzsNotCheck = new QCheckBox(tr("Ne pas vérifier strictement le format des fichiers"), misc);
@@ -117,17 +115,15 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	miscLayout->addWidget(lzsNotCheck);
 	miscLayout->addStretch();
 
-	QPushButton *OKButton = new QPushButton(tr("OK"), dependances);
-	QPushButton *cancelButton = new QPushButton(tr("Annuler"), dependances);
+	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(dependances, 0, 0, 1, 3);
-	layout->addWidget(openGL, 1, 0, 1, 3);
-	layout->addLayout(textScriptEditorLayout, 2, 0, 1, 3);
-	layout->addWidget(misc, 3, 0, 1, 3);
-	layout->addWidget(OKButton, 4, 1);
-	layout->addWidget(cancelButton, 4, 2);
-	layout->setColumnStretch(0, 1);
+	layout->addWidget(dependances, 0, 0, 1, 2);
+	layout->addWidget(openGL, 1, 0, 1, 2);
+	layout->addWidget(textEditor, 2, 0, 1, 2);
+	layout->addWidget(scriptEditor, 3, 0);
+	layout->addWidget(misc, 3, 1);
+	layout->addWidget(buttonBox, 4, 0, 1, 2);
 
 	connect(listFF7, SIGNAL(itemSelectionChanged()), SLOT(changeFF7ListButtonsState()));
 	connect(ff7ButtonMod, SIGNAL(released()), SLOT(modifyCustomFF7Path()));
@@ -143,8 +139,8 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	connect(windowColor3, SIGNAL(released()), SLOT(changeColor()));
 	connect(windowColor4, SIGNAL(released()), SLOT(changeColor()));
 	connect(windowColorReset, SIGNAL(released()), SLOT(resetColor()));
-	connect(OKButton, SIGNAL(released()), SLOT(accept()));
-	connect(cancelButton, SIGNAL(released()), SLOT(reject()));
+	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
+	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
 
 	fillConfig();
 	changeFF7ListButtonsState();
