@@ -234,6 +234,7 @@ QList<FF7Var> FieldArchive::searchAllVars()
 #include "BackgroundFilePC.h"
 #include "BackgroundFilePS.h"
 #include "FieldArchivePC.h"
+#include "widgets/TextPreview.h"
 
 void FieldArchive::validateAsk()
 {
@@ -305,6 +306,55 @@ void FieldArchive::validateAsk()
 								}
 							} else {
 								qWarning() << "FATAL: textID overflow";
+							}
+						}
+						opcodeID++;
+					}
+					scriptID++;
+				}
+				grpScriptID++;
+			}
+		}
+	}
+}
+
+void FieldArchive::validateOneLineSize()
+{
+	TextPreview tp; // Init textpreview to use autodim algo
+
+	foreach(int i, fieldsSortByMapId) {
+		Field *f = field(i, true);
+		QString name = Data::field_names.value(fieldsSortByMapId.key(i).toInt());
+		if(f == NULL) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << i << name;
+			continue;
+		}
+
+		Section1File *scriptsAndTexts = f->scriptsAndTexts();
+		if(scriptsAndTexts->isOpen()) {
+			//qWarning() << f->name();
+
+			int grpScriptID = 0;
+			foreach(GrpScript *grp, scriptsAndTexts->grpScripts()) {
+				int scriptID = 0;
+				foreach(Script *script, grp->scripts()) {
+					int opcodeID = 0;
+					OpcodeWindow *opcodeWindow = 0;
+					foreach(Opcode *opcode, script->opcodes()) {
+						if(opcode->id() == Opcode::WSIZW
+								|| opcode->id() == Opcode::WINDOW) {
+							opcodeWindow = (OpcodeWindow *)opcode;
+						} else if(opcode->getTextID() >= 0 && opcodeWindow) {
+							FF7Window window;
+							opcodeWindow->getWindow(window);
+							if (opcode->getTextID() < scriptsAndTexts->textCount()) {
+								FF7Text text = scriptsAndTexts->text(opcode->getTextID());
+								QSize optimSize = TextPreview::calcSize(text.data());
+								if (!text.data().isEmpty() && !text.contains(QRegExp("\n")) && (window.w != optimSize.width() || window.h != optimSize.height())) {
+									qWarning() << name << grpScriptID << grp->name() << grp->scriptName(scriptID) << opcodeID << "width=" << window.w << "height=" << window.h << "better size=" << optimSize.width() << optimSize.height();
+								}
+							} else {
+								qWarning() << name << grpScriptID << grp->name() << grp->scriptName(scriptID) << opcodeID << "text not found";
 							}
 						}
 						opcodeID++;

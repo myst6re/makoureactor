@@ -91,7 +91,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	}
 
 	charNameEdit = new QLineEdit(textEditor);
-	charNameEdit->setMaxLength(15);
+	charNameEdit->setMaxLength(9);
 
 	QGridLayout *windowPreviewLayout = new QGridLayout;
 	windowPreviewLayout->addWidget(windowColor1, 0, 0, Qt::AlignRight | Qt::AlignTop);

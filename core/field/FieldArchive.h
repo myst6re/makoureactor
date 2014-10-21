@@ -165,6 +165,7 @@ public:
 	QList<FF7Var> searchAllVars();
 #ifdef DEBUG_FUNCTIONS
 	void validateAsk();
+	void validateOneLineSize();
 	void printAkaos();
 	void printModelLoaders();
 	void printScripts();
