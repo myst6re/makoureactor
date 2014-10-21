@@ -85,6 +85,14 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 
 	japEnc = new QCheckBox(tr("Caractères japonais"), textEditor);
 
+	listCharNames = new QComboBox(textEditor);
+	for(int i=0 ; i<9 ; ++i) {
+		listCharNames->addItem(QIcon(QString(":/images/icon-char-%1.png").arg(i)), Data::char_names.at(i));
+	}
+
+	charNameEdit = new QLineEdit(textEditor);
+	charNameEdit->setMaxLength(15);
+
 	QGridLayout *windowPreviewLayout = new QGridLayout;
 	windowPreviewLayout->addWidget(windowColor1, 0, 0, Qt::AlignRight | Qt::AlignTop);
 	windowPreviewLayout->addWidget(windowColor3, 1, 0, Qt::AlignRight | Qt::AlignBottom);
@@ -98,6 +106,9 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	textEditorLayout->addWidget(japEnc, 0, 0);
 	// windowPreviewLayout->addWidget(optiText, 1, 0);
 	textEditorLayout->addLayout(windowPreviewLayout, 1, 0);
+	textEditorLayout->addWidget(listCharNames, 0, 1, Qt::AlignTop);
+	textEditorLayout->addWidget(charNameEdit, 1, 1, Qt::AlignTop);
+	textEditorLayout->setRowStretch(2, 1);
 
 	QGroupBox *scriptEditor = new QGroupBox(tr("Editeur de script"), this);
 
@@ -139,6 +150,8 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	connect(windowColor3, SIGNAL(released()), SLOT(changeColor()));
 	connect(windowColor4, SIGNAL(released()), SLOT(changeColor()));
 	connect(windowColorReset, SIGNAL(released()), SLOT(resetColor()));
+	connect(listCharNames, SIGNAL(currentIndexChanged(int)), SLOT(fillCharNameEdit()));
+	connect(charNameEdit, SIGNAL(textEdited(QString)), SLOT(setCharName(QString)));
 	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
 	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
 
@@ -211,6 +224,12 @@ void ConfigWindow::fillConfig()
 	lzsNotCheck->setChecked(Config::value("lzsNotCheck", false).toBool());
 
 	setWindowColors();
+
+	for(int charId=0 ; charId<9; ++charId) {
+		customNames << Config::value(QString("customCharName%1").arg(charId), Data::char_names.at(charId)).toString();
+	}
+
+	fillCharNameEdit();
 
 	for(int j=0 ; j<listFF7->topLevelItemCount() ; ++j) {
 		QCoreApplication::processEvents();
@@ -361,6 +380,26 @@ void ConfigWindow::resetColor()
 	setWindowColors();
 }
 
+void ConfigWindow::fillCharNameEdit()
+{
+	int charId = listCharNames->currentIndex();
+	if(charId < 0 || charId > 8) {
+		return;
+	}
+
+	charNameEdit->setText(customNames.at(charId));
+}
+
+void ConfigWindow::setCharName(const QString &charName)
+{
+	int charId = listCharNames->currentIndex();
+	if(charId < 0 || charId > 8) {
+		return;
+	}
+
+	customNames[charId] = charName;
+}
+
 void ConfigWindow::setWindowColorIcon(QAbstractButton *widget, QRgb color)
 {
 	QPixmap pix(widget->iconSize());
@@ -412,9 +451,19 @@ void ConfigWindow::accept()
 	Config::setValue("scriptItemExpandedByDefault", expandedByDefault->isChecked());
 	Config::setValue("lzsNotCheck", lzsNotCheck->isChecked());
 
-	Data::load();//Reload kernel2.bin + window.bin data
-	Data::refreshFF7Paths();// refresh ff7 paths
-	Data::charLgp.clear();//Refresh cached lgp TOC
+	for(int charId=0 ; charId<9; ++charId) {
+		const QString &customName = customNames.at(charId);
+		if(!customName.isEmpty() && customName != Data::char_names.at(charId)) {
+			Config::setValue(QString("customCharName%1").arg(charId), customName);
+		} else {
+			Config::remove(QString("customCharName%1").arg(charId));
+		}
+	}
+
+	Data::load(); // Reload kernel2.bin + window.bin data
+	Data::refreshFF7Paths(); // Refresh ff7 paths
+	Data::charLgp.clear(); // Refresh cached lgp TOC
 	Data::charLgp.close();
+	TextPreview::updateNames(); // Refresh custom names
 	QDialog::accept();
 }

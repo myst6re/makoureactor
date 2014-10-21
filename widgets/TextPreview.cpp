@@ -40,19 +40,37 @@ TextPreview::TextPreview(QWidget *parent) :
 
 	if(names.isEmpty()) {
 		fontImage = QImage(":/images/font.png");
-		QStringList dataNames = Data::char_names;
-		dataNames.replace(9, tr("Membre 1"));
-		dataNames.replace(10, tr("Membre 2"));
-		dataNames.replace(11, tr("Membre 3"));
-//		bool jp = Config::value("jp_txt", false).toBool();
-//		Config::setValue("jp_txt", false);
-		for(int i=0 ; i<12 ; ++i) {
-			QByteArray nameData = FF7Text(dataNames.at(i), false).data();
-			names.append(nameData);
-			namesWidth[i] = calcFF7TextWidth(nameData);
-		}
-//		Config::setValue("jp_txt", jp);
+		fillNames();
 	}
+}
+
+void TextPreview::fillNames()
+{
+	QStringList dataNames = Data::char_names;
+	for(int i=0 ; i<9 ; ++i) {
+		QString customName = Config::value(QString("customCharName%1").arg(i)).toString();
+		if(!customName.isEmpty()) {
+			dataNames.replace(i, customName);
+		}
+	}
+	dataNames.replace(9, tr("Membre 1"));
+	dataNames.replace(10, tr("Membre 2"));
+	dataNames.replace(11, tr("Membre 3"));
+//	bool jp = Config::value("jp_txt", false).toBool();
+//	Config::setValue("jp_txt", false);
+
+	for(int i=0 ; i<12 ; ++i) {
+		QByteArray nameData = FF7Text(dataNames.at(i), false).data();
+		names.append(nameData);
+		namesWidth[i] = calcFF7TextWidth(nameData);
+	}
+//	Config::setValue("jp_txt", jp);
+}
+
+void TextPreview::updateNames()
+{
+	names.clear();
+	fillNames();
 }
 
 QPixmap TextPreview::getIconImage(int iconId)
@@ -185,8 +203,22 @@ void TextPreview::calcSize()
 {
 //	qDebug() << "TextPreview::calcSize()";
 
-	int line=0, width=22, height=25, size=ff7Text.size();
-	maxW=maxH=0;
+	QSize size = calcSize(ff7Text, pagesPos);
+	maxW = size.width();
+	maxH = size.height();
+
+	update();
+}
+
+QSize TextPreview::calcSize(const QByteArray &ff7Text)
+{
+	QList<int> pagesPos;
+	return calcSize(ff7Text, pagesPos);
+}
+
+QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
+{
+	int line=0, width=19, height=25, size=ff7Text.size(), maxW=0, maxH=0;
 	pagesPos.clear();
 	pagesPos.append(0);
 	quint8 caract;
@@ -198,13 +230,16 @@ void TextPreview::calcSize()
 		switch(caract) {
 		case 0xe8: // New Page
 		case 0xe9: // New Page 2
+			if(line == 0)	width += 3;
 			if(height>maxH)	maxH = height;
 			if(width>maxW)	maxW = width;
+			++line;
 			width = 22;
 			height = 25;
 			pagesPos.append(i+1);
 			break;
 		case 0xe7: // \n
+			if(line == 0)	width += 3;
 			if(width>maxW)	maxW = width;
 			++line;
 			width = 22;
@@ -286,7 +321,7 @@ void TextPreview::calcSize()
 	if(maxW>322)	maxW = 322;
 	if(maxH>226)	maxH = 226;
 
-	update();
+	return QSize(maxW, maxH);
 }
 
 QSize TextPreview::getCalculatedSize() const

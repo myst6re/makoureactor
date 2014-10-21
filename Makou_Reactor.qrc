@@ -14,15 +14,6 @@
         <file>images/redo.png</file>
         <file>images/undo.png</file>
         <file>images/ff7.png</file>
-        <file>images/icon-cloud.png</file>
-        <file>images/icon-aeris.png</file>
-        <file>images/icon-barret.png</file>
-        <file>images/icon-cait_sith.png</file>
-        <file>images/icon-cid.png</file>
-        <file>images/icon-red_xiii.png</file>
-        <file>images/icon-tifa.png</file>
-        <file>images/icon-vincent.png</file>
-        <file>images/icon-yuffie.png</file>
         <file>images/icon-blue.png</file>
         <file>images/icon-cyan.png</file>
         <file>images/icon-green.png</file>
@@ -44,5 +35,14 @@
         <file>images/location.png</file>
         <file>images/main.png</file>
         <file>images/model.png</file>
+        <file>images/icon-char-0.png</file>
+        <file>images/icon-char-1.png</file>
+        <file>images/icon-char-2.png</file>
+        <file>images/icon-char-3.png</file>
+        <file>images/icon-char-4.png</file>
+        <file>images/icon-char-5.png</file>
+        <file>images/icon-char-6.png</file>
+        <file>images/icon-char-7.png</file>
+        <file>images/icon-char-8.png</file>
     </qresource>
 </RCC>

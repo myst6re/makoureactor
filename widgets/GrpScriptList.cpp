@@ -170,17 +170,9 @@ void GrpScriptList::fill(Section1File *scripts)
 		item->setToolTip(0, grpScript->type());
 		QIcon icon;
 
-		switch(grpScript->character()) {
-		case 0:		icon = QIcon(":/images/icon-cloud.png");		break;
-		case 1:		icon = QIcon(":/images/icon-barret.png");		break;
-		case 2:		icon = QIcon(":/images/icon-tifa.png");			break;
-		case 3:		icon = QIcon(":/images/icon-aeris.png");		break;
-		case 4:		icon = QIcon(":/images/icon-red_xiii.png");		break;
-		case 5:		icon = QIcon(":/images/icon-yuffie.png");		break;
-		case 6:		icon = QIcon(":/images/icon-cait_sith.png");	break;
-		case 7:		icon = QIcon(":/images/icon-vincent.png");		break;
-		case 8:		icon = QIcon(":/images/icon-cid.png");			break;
-		default:
+		if(grpScript->character() < 9) {
+			icon = QIcon(QString(":/images/icon-char-%1.png").arg(grpScript->character()));
+		} else {
 			switch(grpScript->typeID()) {
 			case GrpScript::Director:
 				icon = QIcon(":/images/main.png");
@@ -200,7 +192,6 @@ void GrpScriptList::fill(Section1File *scripts)
 				icon = QIcon(pixnull);
 				break;
 			}
-			break;
 		}
 
 		if(!icon.isNull()) {

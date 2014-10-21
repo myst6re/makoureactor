@@ -40,6 +40,7 @@ public:
 	};
 
 	explicit TextPreview(QWidget *parent=0);
+	static void updateNames();
 	void clear();
 	void setReadOnly(bool ro);
 	void setWins(const QList<FF7Window> &windows, bool update=true);
@@ -56,6 +57,8 @@ public:
 	void nextPage();
 	void prevPage();
 	void calcSize();
+	static QSize calcSize(const QByteArray &ff7Text);
+	static QSize calcSize(const QByteArray &ff7Text, QList<int> &pagesPos);
 	QSize getCalculatedSize() const;
 	static QPixmap getIconImage(int iconId);
 	void drawWindow(QPainter *painter, WindowType type=Normal) const;
@@ -65,6 +68,7 @@ private slots:
 signals:
 	void positionChanged(const QPoint &);
 private:
+	static void fillNames();
 	bool drawTextArea(QPainter *painter);
 	static QPoint realPos(const FF7Window &ff7Window);
 	QList<FF7Window> ff7Windows;

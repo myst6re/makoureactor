@@ -31,6 +31,8 @@ private:
 	void setWindowColors();
 	void addDependency();
 	QTreeWidget *listFF7;
+	QComboBox *listCharNames;
+	QLineEdit *charNameEdit;
 	QCheckBox *kernelAuto, *windowAuto, *charAuto;
 	QLabel *kernelPath, *windowPath, *charPath;
 	QPushButton *ff7ButtonMod, *ff7ButtonRem, *kernelButton, *windowButton, *charButton;
@@ -39,6 +41,7 @@ private:
 	QLabel *windowPreview;
 	QCheckBox *optiText, *japEnc, *expandedByDefault, *lzsNotCheck;
 	QRgb windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight;
+	QStringList customNames;
 private slots:
 	void changeFF7ListButtonsState();
 	void modifyCustomFF7Path();
@@ -51,6 +54,8 @@ private slots:
 	void changeCharPath();
 	void changeColor();
 	void resetColor();
+	void fillCharNameEdit();
+	void setCharName(const QString &charName);
 protected:
 	void accept();
 };

@@ -28,6 +28,7 @@ public:
 	static void remove();
 	static QVariant value(const QString &key, const QVariant &defaultValue = QVariant());
 	static void setValue(const QString &key, const QVariant &value);
+	static void remove(const QString &key);
 	static void flush();
 private:
 	static QSettings *settings;

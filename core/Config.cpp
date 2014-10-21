@@ -54,6 +54,11 @@ void Config::setValue(const QString &key, const QVariant &value)
 	settings->setValue(key, value);
 }
 
+void Config::remove(const QString &key)
+{
+	settings->remove(key);
+}
+
 void Config::flush()
 {
 	settings->sync();
