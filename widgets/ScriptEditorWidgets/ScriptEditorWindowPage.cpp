@@ -46,11 +46,15 @@ void ScriptEditorWindowPage::build()
 		previewText->addItem(t.text(jp, true).simplified());
 	previewText->setMaximumWidth(textPreview->width()/2);
 
-	autoSize = new QPushButton(tr("Taille auto."), this);
+	hAlign = new QPushButton(tr("Aligner horizontalement"), this);
+	hAlign->setEnabled(false);
+	vAlign = new QPushButton(tr("Aligner verticalement"), this);
+	vAlign->setEnabled(false);
+	autoSize = new QPushButton(tr("Taille automatique"), this);
 	autoSize->setEnabled(false);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(textPreview, 0, 0, 6, 2);
+	layout->addWidget(textPreview, 0, 0, 8, 2);
 	layout->addWidget(new QLabel(tr("Fenêtre ID")), 0, 2);
 	layout->addWidget(winID, 0, 3);
 	layout->addWidget(xLabel = new QLabel(tr("X")), 1, 2);
@@ -61,9 +65,11 @@ void ScriptEditorWindowPage::build()
 	layout->addWidget(w, 3, 3);
 	layout->addWidget(hLabel = new QLabel(), 4, 2);
 	layout->addWidget(h, 4, 3);
-	layout->addWidget(new QLabel(tr("Texte en aperçu :")), 6, 0);
-	layout->addWidget(previewText, 6, 1);
-	layout->addWidget(autoSize, 6, 2, 1, 2);
+	layout->addWidget(new QLabel(tr("Texte en aperçu :")), 8, 0);
+	layout->addWidget(previewText, 8, 1);
+	layout->addWidget(hAlign, 6, 2, 1, 2);
+	layout->addWidget(vAlign, 7, 2, 1, 2);
+	layout->addWidget(autoSize, 8, 2, 1, 2);
 	layout->setRowStretch(5, 1);
 	layout->setColumnStretch(3, 1);
 	layout->setContentsMargins(QMargins());
@@ -75,6 +81,8 @@ void ScriptEditorWindowPage::build()
 	connect(h, SIGNAL(valueChanged(int)), SLOT(updatePreview()));
 	connect(textPreview, SIGNAL(positionChanged(QPoint)), SLOT(setPositionWindow(QPoint)));
 	connect(previewText, SIGNAL(currentIndexChanged(int)), SLOT(updateText(int)));
+	connect(hAlign, SIGNAL(clicked()), SLOT(alignHorizontally()));
+	connect(vAlign, SIGNAL(clicked()), SLOT(alignVertically()));
 	connect(autoSize, SIGNAL(clicked()), SLOT(resizeWindow()));
 }
 
@@ -188,6 +196,8 @@ void ScriptEditorWindowPage::updateText(int textID)
 						 ? field()->scriptsAndTexts()->text(textID).data()
 						 : QByteArray());
 
+	hAlign->setEnabled(hasText);
+	vAlign->setEnabled(hasText);
 	autoSize->setEnabled(hasText);
 }
 
@@ -201,6 +211,22 @@ void ScriptEditorWindowPage::setPositionWindow(const QPoint &point)
 	y->blockSignals(false);
 
 	emit opcodeChanged();
+}
+
+void ScriptEditorWindowPage::align(Qt::Alignment alignment)
+{
+	x->blockSignals(true);
+	y->blockSignals(true);
+	if(alignment.testFlag(Qt::AlignHCenter)) {
+		x->setValue((textPreview->width() - w->value()) / 2);
+	}
+	if(alignment.testFlag(Qt::AlignVCenter)) {
+		y->setValue((textPreview->height() - h->value()) / 2);
+	}
+	x->blockSignals(false);
+	y->blockSignals(false);
+
+	updatePreview();
 }
 
 void ScriptEditorWindowPage::resizeWindow()

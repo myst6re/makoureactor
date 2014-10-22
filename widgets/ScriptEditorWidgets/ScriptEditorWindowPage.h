@@ -34,13 +34,20 @@ private slots:
 	void updateText(int textID);
 	void setPositionWindow(const QPoint &point);
 	void resizeWindow();
+	inline void alignHorizontally() {
+		align(Qt::AlignHCenter);
+	}
+	inline void alignVertically() {
+		align(Qt::AlignVCenter);
+	}
 private:
 	void build();
+	void align(Qt::Alignment alignment);
 	QLabel *xLabel, *yLabel, *wLabel, *hLabel;
 	TextPreview *textPreview;
 	QSpinBox *winID, *x, *y, *w, *h;
 	QComboBox *previewText;
-	QPushButton *autoSize;
+	QPushButton *hAlign, *vAlign, *autoSize;
 };
 
 class ScriptEditorWindowModePage : public ScriptEditorView
