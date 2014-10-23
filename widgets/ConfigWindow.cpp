@@ -164,8 +164,6 @@ void ConfigWindow::fillConfig()
 	QString kernel_path = Config::value("kernel2Path").toString();
 	QString window_path = Config::value("windowBinPath").toString();
 	QString char_path = Config::value("charPath").toString();
-	QString ff7_path = Data::ff7DataPath();
-	QString ff7_app_path = Data::ff7AppPath();
 	QMap<Data::FF7Version, QString> ff7PathList = Data::ff7AppPathList();
 
 	listFF7->clear();
@@ -178,7 +176,7 @@ void ConfigWindow::fillConfig()
 		const QString &ff7Path = it.value();
 
 		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(ff7Path)));
-		if(ff7Path.compare(ff7_app_path, Qt::CaseInsensitive) == 0) {
+		if(ff7Path.compare(Data::ff7AppPath(), Qt::CaseInsensitive) == 0) {
 			selectedItem = item;
 		}
 		item->setData(0, Qt::UserRole, int(it.key()));
@@ -201,7 +199,7 @@ void ConfigWindow::fillConfig()
 	}
 
 	if(char_path.isEmpty()) {
-		char_path = ff7_path % "/field/char.lgp";
+		char_path = Data::ff7DataPath() % "/field/char.lgp";
 		charAutoChange(false);
 	} else {
 		charAuto->setChecked(true);
@@ -328,21 +326,21 @@ void ConfigWindow::charAutoChange(bool checked)
 
 void ConfigWindow::changeKernelPath()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Chercher kernel2.bin"), kernelPath->text(), tr("Fichiers BIN (*.bin);;Tous les fichiers (*)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Chercher kernel2.bin"), QDir::fromNativeSeparators(kernelPath->text()), tr("Fichiers BIN (*.bin);;Tous les fichiers (*)"));
 	if(!path.isNull())
 		kernelPath->setText(QDir::toNativeSeparators(path));
 }
 
 void ConfigWindow::changeWindowPath()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Chercher window.bin"), windowPath->text(), tr("Fichiers BIN (*.bin);;Tous les fichiers (*)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Chercher window.bin"), QDir::fromNativeSeparators(windowPath->text()), tr("Fichiers BIN (*.bin);;Tous les fichiers (*)"));
 	if(!path.isNull())
 		windowPath->setText(QDir::toNativeSeparators(path));
 }
 
 void ConfigWindow::changeCharPath()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Chercher char.lgp"), charPath->text(), tr("Archives LGP (*.lgp);;Tous les fichiers (*)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Chercher char.lgp"), QDir::fromNativeSeparators(charPath->text()), tr("Archives LGP (*.lgp);;Tous les fichiers (*)"));
 	if(!path.isNull())
 		charPath->setText(QDir::toNativeSeparators(path));
 }
@@ -460,7 +458,8 @@ void ConfigWindow::accept()
 		}
 	}
 
-	Data::load(); // Reload kernel2.bin + window.bin data
+	Data::loadKernel2Bin(); // Reload kernel2.bin data
+	Data::loadWindowBin(); // Reload window.bin data
 	Data::refreshFF7Paths(); // Refresh ff7 paths
 	Data::charLgp.clear(); // Refresh cached lgp TOC
 	Data::charLgp.close();

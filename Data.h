@@ -43,7 +43,9 @@ public:
 	static Lgp charLgp;
 	static QHash<QString, int> charlgp_animBoneCount;
 	static WindowBinFile windowBin;
-	static int load();
+	static int loadKernel2Bin();
+	static int loadWindowBin();
+	static bool load();
 	static bool openMaplist(const QByteArray &data);
 	static void openMaplist(bool PC=false);
 	static QStringList char_names;

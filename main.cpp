@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 	if(!Var::load()) {
 		QMessageBox::warning(0, QObject::tr("Erreur"), QObject::tr("Le fichier 'var.cfg' n'a pas pu être chargé.\nVérifiez que ce fichier est valide ou supprimez-le."));
 	}
-	if(Data::load() != 0) {
+	if(!Data::load()) {
 		qWarning() << "Error loading data!";
 	}
 	

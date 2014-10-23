@@ -361,7 +361,139 @@ void Data::charlgp_loadAnimBoneCount()
 	}
 }
 
-int Data::load()
+int Data::loadKernel2Bin()
+{
+	QString path = Config::value("kernel2Path").toString();
+	if(path.isEmpty()) {
+		path = ff7KernelPath();
+		if(path.isEmpty()) {
+			return 2;
+		}
+		path.append("/kernel2.bin");
+	}
+
+	QFile fic(path);
+	if(fic.exists() && fic.open(QIODevice::ReadOnly)) {
+		quint32 fileSize;
+		fic.read((char *)&fileSize, 4);
+
+		if(fileSize+4 != fic.size()) {
+			return 2;
+		}
+
+		const QByteArray &data = LZS::decompressAll(fic.read(fileSize));
+		const char *constData = data.constData();
+		int pos = 0, dataSize = data.size();
+
+		fic.close();
+
+		for(int i=0 ; i<10 ; ++i) {
+			if(pos + 4 >= dataSize) {
+				return 1;
+			}
+
+			memcpy(&fileSize, &constData[pos], 4);
+			pos += fileSize + 4;
+		}
+
+		if(pos + 4 >= dataSize) {
+			return 1;
+		}
+
+		memcpy(&fileSize, &constData[pos], 4);
+		pos += 4;
+
+		if(pos + (int)fileSize > dataSize) {
+			return 1;
+		}
+
+		item_names.clear();
+		fill(data, pos, fileSize, item_names);
+		pos += fileSize;
+
+		if(pos + 4 > dataSize) {
+			return 1;
+		}
+
+		memcpy(&fileSize, &constData[pos], 4);
+		pos += 4;
+
+		if(pos + (int)fileSize > dataSize) {
+			return 1;
+		}
+
+		weapon_names.clear();
+		fill(data, pos, fileSize, weapon_names);
+		pos += fileSize;
+
+		if(pos + 4 > dataSize) {
+			return 1;
+		}
+
+		memcpy(&fileSize, &constData[pos], 4);
+		pos += 4;
+
+		if(pos + (int)fileSize > dataSize) {
+			return 1;
+		}
+
+		armor_names.clear();
+		fill(data, pos, fileSize, armor_names);
+		pos += fileSize;
+
+		if(pos + 4 > dataSize) {
+			return 1;
+		}
+
+		memcpy(&fileSize, &constData[pos], 4);
+		pos += 4;
+
+		if(pos + (int)fileSize > dataSize) {
+			return 1;
+		}
+
+		accessory_names.clear();
+		fill(data, pos, fileSize, accessory_names);
+		pos += fileSize;
+
+		if(pos + 4 > dataSize) {
+			return 1;
+		}
+
+		memcpy(&fileSize, &constData[pos], 4);
+		pos += 4;
+
+		if(pos + (int)fileSize > dataSize) {
+			return 1;
+		}
+
+		materia_names.clear();
+		fill(data, pos, fileSize, materia_names);
+	}
+
+	return 0;
+}
+
+int Data::loadWindowBin()
+{
+	QString path = Config::value("windowBinPath").toString();
+	if(path.isEmpty()) {
+		path = ff7KernelPath();
+		if(path.isEmpty()) {
+			return 1;
+		}
+		path.append("/window.bin");
+	}
+
+	if(!windowBin.open(path)) {
+		qWarning() << "Cannot open window.bin";
+		return 2;
+	}
+
+	return 0;
+}
+
+bool Data::load()
 {
 	if(char_names.isEmpty()) {
 		char_names
@@ -396,106 +528,17 @@ int Data::load()
 		}
 	}
 
-	// kernel2.bin
+	bool ok = true;
 
-	QString path = Config::value("kernel2Path").toString();
-	if(path.isEmpty()) {
-		path = ff7KernelPath();
-		if(path.isEmpty())	return 2;
-		path.append("/kernel2.bin");
+	if (loadKernel2Bin() != 0) {
+		ok = false;
 	}
 
-	QFile fic(path);
-	if(fic.exists() && fic.open(QIODevice::ReadOnly))
-	{
-		quint32 fileSize;
-		fic.read((char *)&fileSize, 4);
-
-		if(fileSize+4 != fic.size())		return 2;
-
-		const QByteArray &data = LZS::decompressAll(fic.read(fileSize));
-		const char *constData = data.constData();
-		int pos = 0, dataSize = data.size();
-
-		fic.close();
-
-		for(int i=0 ; i<10 ; ++i)
-		{
-			if(pos + 4 >= dataSize)			return 1;
-
-			memcpy(&fileSize, &constData[pos], 4);
-			pos += fileSize + 4;
-		}
-
-		if(pos + 4 >= dataSize)				return 1;
-
-		memcpy(&fileSize, &constData[pos], 4);
-		pos += 4;
-
-		if(pos + (int)fileSize > dataSize)	return 1;
-
-		item_names.clear();
-		fill(data, pos, fileSize, item_names);
-		pos += fileSize;
-
-		if(pos + 4 > dataSize)				return 1;
-
-		memcpy(&fileSize, &constData[pos], 4);
-		pos += 4;
-
-		if(pos + (int)fileSize > dataSize)	return 1;
-
-		weapon_names.clear();
-		fill(data, pos, fileSize, weapon_names);
-		pos += fileSize;
-
-		if(pos + 4 > dataSize)				return 1;
-
-		memcpy(&fileSize, &constData[pos], 4);
-		pos += 4;
-
-		if(pos + (int)fileSize > dataSize)	return 1;
-
-		armor_names.clear();
-		fill(data, pos, fileSize, armor_names);
-		pos += fileSize;
-
-		if(pos + 4 > dataSize)				return 1;
-
-		memcpy(&fileSize, &constData[pos], 4);
-		pos += 4;
-
-		if(pos + (int)fileSize > dataSize)	return 1;
-
-		accessory_names.clear();
-		fill(data, pos, fileSize, accessory_names);
-		pos += fileSize;
-
-		if(pos + 4 > dataSize)				return 1;
-
-		memcpy(&fileSize, &constData[pos], 4);
-		pos += 4;
-
-		if(pos + (int)fileSize > dataSize)	return 1;
-
-		materia_names.clear();
-		fill(data, pos, fileSize, materia_names);
+	if (loadWindowBin() != 0) {
+		ok = false;
 	}
 
-	// window.bin
-
-	path = Config::value("windowBinPath").toString();
-	if(path.isEmpty()) {
-		path = ff7KernelPath();
-		if(path.isEmpty())	return 2;
-		path.append("/window.bin");
-	}
-
-	if(!windowBin.open(path)) {
-		qWarning() << "Cannot open window.bin";
-	}
-
-	return 0;
+	return ok;
 }
 
 void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &names)
