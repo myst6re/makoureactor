@@ -373,7 +373,7 @@ int Data::loadKernel2Bin()
 	}
 
 	QFile fic(path);
-	if(fic.exists() && fic.open(QIODevice::ReadOnly)) {
+	if(fic.open(QIODevice::ReadOnly)) {
 		quint32 fileSize;
 		fic.read((char *)&fileSize, 4);
 
@@ -392,7 +392,7 @@ int Data::loadKernel2Bin()
 				return 1;
 			}
 
-			memcpy(&fileSize, &constData[pos], 4);
+			memcpy(&fileSize, constData + pos, 4);
 			pos += fileSize + 4;
 		}
 
@@ -400,7 +400,7 @@ int Data::loadKernel2Bin()
 			return 1;
 		}
 
-		memcpy(&fileSize, &constData[pos], 4);
+		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
 		if(pos + (int)fileSize > dataSize) {
@@ -415,7 +415,7 @@ int Data::loadKernel2Bin()
 			return 1;
 		}
 
-		memcpy(&fileSize, &constData[pos], 4);
+		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
 		if(pos + (int)fileSize > dataSize) {
@@ -430,7 +430,7 @@ int Data::loadKernel2Bin()
 			return 1;
 		}
 
-		memcpy(&fileSize, &constData[pos], 4);
+		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
 		if(pos + (int)fileSize > dataSize) {
@@ -445,7 +445,7 @@ int Data::loadKernel2Bin()
 			return 1;
 		}
 
-		memcpy(&fileSize, &constData[pos], 4);
+		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
 		if(pos + (int)fileSize > dataSize) {
@@ -460,7 +460,7 @@ int Data::loadKernel2Bin()
 			return 1;
 		}
 
-		memcpy(&fileSize, &constData[pos], 4);
+		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
 		if(pos + (int)fileSize > dataSize) {
@@ -548,17 +548,23 @@ void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &name
 	const char *constData = data.constData();
 	QList<quint16> positions;
 
-	if(dataSize < 2)				return;
+	if(dataSize < 2) {
+		return;
+	}
 
-	memcpy(&position, &constData[pos], 2);
+	memcpy(&position, constData + pos, 2);
 
 	count = position / 2;
 
-	if(dataSize < position)			return;
+	if(dataSize < position) {
+		return;
+	}
 
 	for(i=0 ; i<count ; ++i) {
-		memcpy(&position, &constData[pos + i*2], 2);
-		if(position >= dataSize || lastPosition > position)	return;
+		memcpy(&position, constData + pos + i*2, 2);
+		if(position >= dataSize || lastPosition > position) {
+			return;
+		}
 		positions.append(position);
 		lastPosition = position;
 	}
@@ -574,16 +580,19 @@ void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &name
 
 bool Data::openMaplist(const QByteArray &data)
 {
-	if(data.size() < 2)				return false;
+	if(data.size() < 2) {
+		return false;
+	}
 
 	quint16 nbMap;
 	memcpy(&nbMap, data.constData(), 2);
 
-	if(data.size() != 2+nbMap*32)	return false;
+	if(data.size() != 2+nbMap*32) {
+		return false;
+	}
 
 	field_names.clear();
-	for(int i=0 ; i<nbMap ; ++i)
-	{
+	for(int i=0 ; i<nbMap ; ++i) {
 		field_names.append(QString(data.mid(2+i*32, 32)).simplified());
 	}
 
