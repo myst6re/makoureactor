@@ -234,6 +234,7 @@ TextManager::TextManager(QWidget *parent) :
 	connect(nextPage, SIGNAL(released()), SLOT(nextTextPreviewPage()));
 //	connect(prevWin, SIGNAL(released()), SLOT(prevTextPreviewWin()));
 //	connect(nextWin, SIGNAL(released()), SLOT(nextTextPreviewWin()));
+	connect(textPreview, SIGNAL(pageChanged(int)), SLOT(changeTextPreviewPage()));
 }
 
 void TextManager::focusInEvent(QFocusEvent *)

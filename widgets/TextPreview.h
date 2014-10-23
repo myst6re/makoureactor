@@ -67,6 +67,7 @@ private slots:
 	void animate();
 signals:
 	void positionChanged(const QPoint &);
+	void pageChanged(int);
 private:
 	static void fillNames();
 	bool drawTextArea(QPainter *painter);
@@ -107,6 +108,7 @@ protected:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
+	void wheelEvent(QWheelEvent *event);
 };
 
 #endif // TEXTPREVIEW_H

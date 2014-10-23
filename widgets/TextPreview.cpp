@@ -676,6 +676,26 @@ void TextPreview::mouseReleaseEvent(QMouseEvent *)
 	}
 }
 
+void TextPreview::wheelEvent(QWheelEvent *event)
+{
+	int numDegrees = event->delta() / 8,
+			numSteps = numDegrees / 15;
+
+	if(event->orientation() == Qt::Vertical) {
+		int oldPage = _currentPage;
+
+		if(numSteps > 0) {
+			prevPage();
+		} else if(numSteps < 0) {
+			nextPage();
+		}
+
+		if (oldPage != _currentPage) {
+			emit pageChanged(_currentPage);
+		}
+	}
+}
+
 void TextPreview::letter(int *x, int *y, int charId, QPainter *painter, quint8 tableId)
 {
 	int charWidth = charW(tableId, charId);
