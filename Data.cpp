@@ -37,7 +37,9 @@ int Data::currentModelID=-1;
 QStringList *Data::currentHrcNames=0;
 QList<QStringList> *Data::currentAnimNames=0;
 QStringList Data::field_names;
-QStringList Data::movie_names;
+QStringList Data::movie_names_cd1;
+QStringList Data::movie_names_cd2;
+QStringList Data::movie_names_cd3;
 QStringList Data::music_names;
 QStringList Data::music_desc;
 QStringList Data::key_names;
@@ -515,9 +517,23 @@ bool Data::load()
 				<< QObject::tr("[BAS]") << QObject::tr("[GAUCHE]");
 	}
 
-	if(movie_names.isEmpty()) {
-		for(int i=0 ; i<106 ; ++i) {
-			movie_names.append(movieList[i]);
+	if(movie_names_cd1.isEmpty()) {
+		QStringList movie_names_common;
+		for(int i=0 ; i<20 ; ++i) {
+			movie_names_common.append(movieList[i]);
+		}
+
+		movie_names_cd1.append(movie_names_common);
+		movie_names_cd2.append(movie_names_common);
+		movie_names_cd3.append(movie_names_common);
+		for(int i=20 ; i<54 ; ++i) {
+			movie_names_cd1.append(movieList[i]);
+		}
+		for(int i=54 ; i<96 ; ++i) {
+			movie_names_cd2.append(movieList[i]);
+		}
+		for(int i=96 ; i<106 ; ++i) {
+			movie_names_cd3.append(movieList[i]);
 		}
 	}
 
@@ -603,18 +619,18 @@ const char *Data::movieList[106] = {
 	"fship2", "fship2n", "d_ropego", "d_ropein", "u_ropein", "u_ropego",
 	"gold2", "gold3", "gold4", "gold6", "gold5",
 	"boogup", "boogdown", "junair_u", "junair_d", "junelein", "junelego", "junin_in", "junin_go",
-	"moriya", "mkup", "northmk", "mk8", "ontrain", "mainplr", "smk", "southmk", "plrexp", "fallpl",
+	"moriya", /*20*/"mkup", "northmk", "mk8", "ontrain", "mainplr", "smk", "southmk", "plrexp", "fallpl",
 	"monitor", "bike", "mtnvl", "mtnvl2", "brgnvl", "nvlmk", "nivlsfs", "jenova_e",
 	"junon", "hiwind0", "mtcrl", "gold1", "biskdead", "boogdemo", "boogstar", "setogake",
 	"rcktfail", "jairofly", "jairofal", "gold7", "gold7_2", "earithdd", "funeral",
-	"car_1209", "opening", "greatpit", "c_scene1", "c_scene2", "c_scene3", "biglight",
+	"car_1209", "opening", /*ENDCD1*//*20*/"greatpit", "c_scene1", "c_scene2", "c_scene3", "biglight",
 	"meteosky", "weapon0", "weapon1", "weapon2", "weapon3", "weapon4", "weapon5", "hwindfly",
 	"phoenix", "nrcrl", "nrcrl_b", "dumcrush", "zmind01", "zmind02", "zmind03",
 	"gelnica", "rcketoff", "white2", "junsea", "rckethit0", "rckethit1", "meteofix",
 	"canonon", "feelwin0", "feelwin1", "canonht1", "canonht2", "canonh3f",
 	"parashot", "hwindjet", "canonht0", "wh2e2", "loslake1", "lslmv", "canonh1p",
-	"canon", "", "last4_2", "last4_3", "last4_4", "lastmap", "lastflor",
-	"ending1", "ending3", "fcar", "white2", "Ending2"
+	"canon", "", /*ENDCD2*//*20*/"last4_2", "last4_3", "last4_4", "lastmap", "lastflor",
+	"ending1", "ending3", "fcar", "white2", "ending2"
 };
 
 const char *Data::mapList[787] = {

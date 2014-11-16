@@ -60,7 +60,7 @@ public:
 	static QStringList *currentHrcNames;
 	static QList<QStringList> *currentAnimNames;
 	static QStringList field_names;
-	static QStringList movie_names;
+	static QStringList movie_names_cd1, movie_names_cd2, movie_names_cd3;
 	static QStringList music_names;
 	static QStringList music_desc;
 	static QString regValue(const QString &regPath, const QString &regKey);

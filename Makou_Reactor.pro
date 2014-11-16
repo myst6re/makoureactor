@@ -127,7 +127,8 @@ HEADERS += \
     core/field/BackgroundTexturesIO.h \
     core/field/BackgroundIO.h \
     widgets/OperationsManager.h \
-	core/Archive.h
+	core/Archive.h \
+    widgets/ScriptEditorWidgets/ScriptEditorMoviePage.h
 
 SOURCES += \
     Window.cpp \
@@ -243,7 +244,8 @@ SOURCES += \
     core/field/BackgroundTexturesIO.cpp \
     core/field/BackgroundIO.cpp \
     widgets/OperationsManager.cpp \
-	core/Archive.cpp
+	core/Archive.cpp \
+    widgets/ScriptEditorWidgets/ScriptEditorMoviePage.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

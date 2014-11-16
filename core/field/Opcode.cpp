@@ -325,10 +325,19 @@ QString Opcode::_field(quint16 fieldID)
 
 QString Opcode::_movie(quint8 movieID)
 {
-	if(movieID < Data::movie_names.size() &&
-			!Data::movie_names.at(movieID).isEmpty())
-		return Data::movie_names.at(movieID);
-	return QObject::tr("n°%1").arg(movieID);
+	// Movie names are different according to the current disc
+	QString dflt = QObject::tr("n°%1").arg(movieID);
+	QStringList cds;
+	cds << Data::movie_names_cd1.value(movieID, dflt)
+		<< Data::movie_names_cd2.value(movieID, dflt)
+		<< Data::movie_names_cd3.value(movieID, dflt);
+
+	QStringList out;
+	for(int discID = 0 ; discID < 3 ; ++discID) {
+		out.append(QObject::tr("%1 (disque %2)").arg(cds.at(discID)).arg(discID + 1));
+	}
+
+	return out.join(", ");
 }
 
 /* QString Opcode::_objet3D(quint8 objet3D_ID)

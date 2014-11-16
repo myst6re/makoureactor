@@ -20,6 +20,7 @@
 #include "ScriptEditorWidgets/ScriptEditorStructPage.h"
 #include "ScriptEditorWidgets/ScriptEditorMathPage.h"
 #include "ScriptEditorWidgets/ScriptEditorWindowPage.h"
+#include "ScriptEditorWidgets/ScriptEditorMoviePage.h"
 
 #define JUMP_PAGE	5
 #define IF_PAGE		6
@@ -89,6 +90,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	editorLayout->addWidget(new ScriptEditorWindowPage(field, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorWindowModePage(field, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorWindowMovePage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorMoviePage(field, grpScript, script, opcodeID, this));
 
 	ok = new QPushButton(tr("OK"),this);
 	ok->setDefault(true);
@@ -217,6 +219,9 @@ void ScriptEditor::fillEditor()
 		break;
 	case Opcode::WMOVE:
 		index = 15;
+		break;
+	case Opcode::PMVIE:
+		index = 16;
 		break;
 	default:
 		index = 0;
