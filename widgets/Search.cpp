@@ -651,6 +651,13 @@ after:
 	mainWindow()->setEnabled(true);
 }
 
+QRegExp Search::buildRegExp(const QString &lineEditText, bool caseSensitive, bool useRegexp)
+{
+	return QRegExp(lineEditText,
+				   caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive,
+				   useRegexp ? QRegExp::RegExp2 : QRegExp::FixedString);
+}
+
 void Search::setSearchValues()
 {
 	bool ok;
@@ -660,7 +667,7 @@ void Search::setSearchValues()
 		case 0:
 		{
 			QString lineEditText = champ->lineEdit()->text();
-			text = QRegExp(useRegexp->isChecked() ? lineEditText : QRegExp::escape(lineEditText), caseSens->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive);
+			text = buildRegExp(lineEditText, caseSens->isChecked(), useRegexp->isChecked());
 			QStringList recentSearch = Config::value("recentSearch").toStringList();
 			int index;
 			if((index = recentSearch.indexOf(lineEditText)) != -1) {
@@ -707,7 +714,7 @@ void Search::setSearchValues()
 		}
 	} else { // texts page
 		QString lineEditText = champ2->lineEdit()->text();
-		text = QRegExp(useRegexp2->isChecked() ? lineEditText : QRegExp::escape(lineEditText), caseSens2->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive);
+		text = buildRegExp(lineEditText, caseSens2->isChecked(), useRegexp2->isChecked());
 		QStringList recentSearch = Config::value("recentSearch").toStringList();
 		int index;
 		if((index = recentSearch.indexOf(lineEditText)) != -1) {

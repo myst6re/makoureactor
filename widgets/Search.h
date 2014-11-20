@@ -50,6 +50,7 @@ private slots:
 private:
 	QWidget *scriptPageWidget();
 	QWidget *textPageWidget();
+	static QRegExp buildRegExp(const QString &lineEditText, bool caseSensitive, bool useRegexp);
 	void setSearchValues();
 	FieldArchive::SearchScope searchScope() const;
 	QString lastMessage() const;
