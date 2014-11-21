@@ -58,18 +58,19 @@ int Opcode::subParam(int cur, int paramSize) const
 bool Opcode::searchVar(quint8 bank, quint8 adress, Operation op, int value) const
 {
 	// TODO: compare var with var
+	const bool noValue = value > 0xFFFF;
 	switch (op) {
 	case Assign:
 		if(id() == SETBYTE) {
 			OpcodeSETBYTE *setbyte = (OpcodeSETBYTE *)this;
 			if(B1(setbyte->banks) == bank && setbyte->var == adress
-                    && B2(setbyte->banks) == 0 && setbyte->value == value)
+					&& (noValue || (B2(setbyte->banks) == 0 && setbyte->value == value)))
 				return true;
 		}
 		if(id() == SETWORD) {
 			OpcodeSETWORD *setword = (OpcodeSETWORD *)this;
 			if(B1(setword->banks) == bank && setword->var == adress
-                    && B2(setword->banks) == 0 && setword->value == (quint16)value)
+					&& (noValue || (B2(setword->banks) == 0 && setword->value == (quint16)value)))
 				return true;
 		}
 		return false;
@@ -79,7 +80,7 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, Operation op, int value) cons
 				|| id() == BITXOR) {
 			OpcodeBitOperation *bitOperation = (OpcodeBitOperation *)this;
 			if(B1(bitOperation->banks) == bank && bitOperation->var == adress
-					&& B2(bitOperation->banks) == 0 && bitOperation->position == value) {
+					&& (noValue || (B2(bitOperation->banks) == 0 && bitOperation->position == value))) {
 				return true;
 			}
 		}
@@ -96,7 +97,7 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, Operation op, int value) cons
 			if(((op == Compare && opcodeIf->oper < quint8(BitAnd))
 				|| (op == BitCompare && opcodeIf->oper >= quint8(BitAnd)))
 					&& B1(opcodeIf->banks) == bank && opcodeIf->value1 == adress
-					&& B2(opcodeIf->banks) == 0 && opcodeIf->value2 == value) {
+					&& (noValue || (B2(opcodeIf->banks) == 0 && opcodeIf->value2 == value))) {
 				return true;
 			}
 		}

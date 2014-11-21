@@ -142,6 +142,7 @@ QWidget *Search::scriptPageWidget()
 		comboVarName->addItem(QString());
 	}
 	champValue->setPlaceholderText(tr("Valeur"));
+	champOp->addItem(tr("Toutes"));
 	champOp->addItem(tr("Affectation"));
 	champOp->addItem(tr("Affectation Bit"));
 	champOp->addItem(tr("Test"));
@@ -156,6 +157,7 @@ QWidget *Search::scriptPageWidget()
 	if(searchedVarValue != 65536) {
 		champValue->setText(QString::number(searchedVarValue));
 	}
+	updateSearchVarPlaceholder(champOp->currentIndex());
 	updateComboVarName();
 
 	QWidget *execution = new QWidget(ret);
@@ -382,7 +384,12 @@ void Search::updateChampAdress()
 
 void Search::updateSearchVarPlaceholder(int opIndex)
 {
-	champValue->setPlaceholderText(opIndex == 0 || opIndex == 2 ? tr("Valeur") : tr("Position"));
+	if (opIndex == Opcode::None) {
+		champValue->setEnabled(false);
+	} else {
+		champValue->setPlaceholderText(opIndex == Opcode::Assign || opIndex == Opcode::Compare ? tr("Valeur") : tr("Position"));
+		champValue->setEnabled(true);
+	}
 }
 
 void Search::cancelSearching()
@@ -688,9 +695,9 @@ void Search::setSearchValues()
 		case 1:
 			bank = champBank->value();
 			adress = champAdress->value();
-			op = Opcode::Operation(champOp->currentIndex() + 1);
+			op = Opcode::Operation(champOp->currentIndex());
 			value = champValue->text().toInt(&ok);
-			if(!ok)	op = Opcode::None;
+			if(!ok)	value = 0x10000;
 			Config::setValue("SearchedVarBank", bank);
 			Config::setValue("SearchedVarAdress", adress);
 			Config::setValue("SearchedVarOperation", champOp->currentIndex());
