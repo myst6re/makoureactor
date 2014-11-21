@@ -690,7 +690,7 @@ void Search::setSearchValues()
 			adress = champAdress->value();
 			op = Opcode::Operation(champOp->currentIndex() + 1);
 			value = champValue->text().toInt(&ok);
-			if(!ok)	value = 65536;
+			if(!ok)	op = Opcode::None;
 			Config::setValue("SearchedVarBank", bank);
 			Config::setValue("SearchedVarAdress", adress);
 			Config::setValue("SearchedVarOperation", champOp->currentIndex());
