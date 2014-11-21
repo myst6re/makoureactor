@@ -44,7 +44,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 
 	QStringList syst;
 	syst << "\\{GREY\\}" << "\\{BLUE\\}" << "\\{RED\\}" << "\\{PURPLE\\}" << "\\{GREEN\\}" << "\\{CYAN\\}" << "\\{YELLOW\\}" <<
-			"\\{WHITE\\}" << "\\{BLINK\\}" << "\\{MULTICOLOUR\\}" << "\\{VAR1\\}" << "\\{VAR2\\}" << "\\{SCROLLING\\}" << "\\{VAR3\\}" <<
+			"\\{WHITE\\}" << "\\{BLINK\\}" << "\\{MULTICOLOUR\\}" << "\\{VARDEC\\}" << "\\{VARHEX\\}" << "\\{SCROLLING\\}" << "\\{VARDECR\\}" <<
 			"\\{SPACED CHARACTERS\\}" << "\\{PAUSE\\}" << "\\{PAUSE\\d\\d\\d\\}" << "\\{MEMORY:var\\[(\\d+)\\]\\[(\\d+)\\];size=(\\d+)\\}" <<
 			"\\{CHOICE\\}" << "^\\{NEW PAGE\\}$" << "^\\{NEW PAGE 2\\}$" << "\\{CIRCLE\\}" << "\\{TRIANGLE\\}" << "\\{SQUARE\\}" << "\\{CROSS\\}";
 

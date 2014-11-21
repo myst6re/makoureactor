@@ -115,12 +115,12 @@ TextManager::TextManager(QWidget *parent) :
 	action = toolBar2->addAction(QIcon(":/images/icon-multicolour.png"), tr("Multicolore"));
 	action->setData("{MULTICOLOUR}");
 	toolBar2->addSeparator();
-	action = toolBar2->addAction(tr("Var1"));
-	action->setData("{VAR1}");
-	action = toolBar2->addAction(tr("Var2"));
-	action->setData("{VAR2}");
-	action = toolBar2->addAction(tr("Var3"));
-	action->setData("{VAR3}");
+	action = toolBar2->addAction(tr("Var10"));
+	action->setData("{VARDEC}");
+	action = toolBar2->addAction(tr("Var16"));
+	action->setData("{VARHEX}");
+	action = toolBar2->addAction(tr("Var10d"));
+	action->setData("{VARDECR}");
 	toolBar2->addSeparator();
 
 	menu2 = new QMenu(this);
