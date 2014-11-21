@@ -29,6 +29,10 @@ bool Var::load()
 			QString("1|4|$TifaLovePoints\n").toLocal8Bit()+
 			QString("1|5|$YuffieLovePoints\n").toLocal8Bit()+
 			QString("1|6|$BarretLovePoints\n").toLocal8Bit()+
+			QString("1|20|$Hours\n").toLocal8Bit()+
+			QString("1|21|$Minutes\n").toLocal8Bit()+
+			QString("1|22|$Seconds\n").toLocal8Bit()+
+			QString("1|23|$Frames\n").toLocal8Bit()+
 			QString("1|64|$KeyItems\n").toLocal8Bit()+
 			QString("1|65|$KeyItems\n").toLocal8Bit()+
 			QString("1|66|$KeyItems\n").toLocal8Bit()+
