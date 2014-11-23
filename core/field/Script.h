@@ -21,6 +21,8 @@
 #include <QtCore>
 #include "Opcode.h"
 
+typedef QListIterator<Opcode *> OpcodesIterator;
+
 class Script
 {
 public:

@@ -1871,7 +1871,7 @@ QByteArray OpcodeBTRLD::params() const
 void OpcodeBTRLD::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), var, FF7Var::Byte, true)); // FIXME: byte?
+		vars.append(FF7Var(B2(banks), var, FF7Var::Word, true));
 }
 
 OpcodeWAIT::OpcodeWAIT(const char *params, int size)
@@ -7117,13 +7117,13 @@ QByteArray OpcodeSIN::params() const
 void OpcodeSIN::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), value1 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
+		vars.append(FF7Var(B1(banks[0]), value1 & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
 		vars.append(FF7Var(B2(banks[0]), value2 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
 	if(B1(banks[1]) != 0)
 		vars.append(FF7Var(B1(banks[1]), value3 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), var, FF7Var::SignedWord, true)); // FIXME: signed word?
+		vars.append(FF7Var(B2(banks[1]), var, FF7Var::SignedWord, true));
 }
 
 OpcodeCOS::OpcodeCOS(const char *params, int size)
@@ -7162,13 +7162,13 @@ QByteArray OpcodeCOS::params() const
 void OpcodeCOS::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), value1 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
+		vars.append(FF7Var(B1(banks[0]), value1 & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
 		vars.append(FF7Var(B2(banks[0]), value2 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
 	if(B1(banks[1]) != 0)
 		vars.append(FF7Var(B1(banks[1]), value3 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), var, FF7Var::SignedWord, true)); // FIXME: signed word?
+		vars.append(FF7Var(B2(banks[1]), var, FF7Var::SignedWord, true));
 }
 
 OpcodeTLKR2::OpcodeTLKR2(const char *params, int size)
@@ -8272,7 +8272,7 @@ QByteArray OpcodeMVIEF::params() const
 void OpcodeMVIEF::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), varCurMovieFrame, FF7Var::Word, true)); // FIXME: word?
+		vars.append(FF7Var(B2(banks), varCurMovieFrame, FF7Var::Word, true));
 }
 
 OpcodeMVCAM::OpcodeMVCAM(const char *params, int size)
