@@ -43,6 +43,10 @@ void SearchAll::setTextSearch()
 void SearchAll::setFieldArchive(FieldArchive *fieldArchive)
 {
 	_fieldArchive = fieldArchive;
+	setEnabled(fieldArchive);
+	if(!fieldArchive) {
+		_resultList->clear();
+	}
 }
 
 void SearchAll::addResultOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID)

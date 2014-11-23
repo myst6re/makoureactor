@@ -671,12 +671,24 @@ void Search::findAll()
 
 	mainWindow()->setEnabled(false);
 	setSearchValues();
-	int fieldID = -1, grpScriptID = -1, scriptID = -1, opcodeID = -1,
-			textID = -1, from = -1;
+	int fieldID = -1;
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
 	FieldArchive::SearchScope scope = searchScope();
 
+	if(scope == FieldArchive::FieldScope) {
+		fieldID = mainWindow()->currentFieldId();
+	}
+
 	if(tabWidget->currentIndex() == 0) { // scripts page
+		int grpScriptID = -1, scriptID = -1, opcodeID = -1;
+
+		if(scope == FieldArchive::GrpScriptScope) {
+			grpScriptID = mainWindow()->currentGrpScriptId();
+		}
+		if(scope == FieldArchive::ScriptScope) {
+			scriptID = mainWindow()->currentScriptId();
+		}
+
 		searchAllDialog->setScriptSearch();
 		while (findNextScript(sorting, scope,
 						   fieldID, grpScriptID, scriptID, opcodeID)) {
@@ -688,6 +700,12 @@ void Search::findAll()
 			searchAllDialog->addResultOpcode(fieldID, grpScriptID, scriptID, opcodeID);
 		}
 	} else { // texts page
+		int textID = -1, from = -1;
+
+		if(scope == FieldArchive::TextScope && mainWindow()->textDialog()) {
+			textID = mainWindow()->textDialog()->currentTextId();
+		}
+
 		searchAllDialog->setTextSearch();
 		int size;
 		while (findNextText(sorting, scope,
