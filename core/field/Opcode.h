@@ -3144,9 +3144,9 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
 	QByteArray params() const;
-	void getVariables(QList<FF7Var> &vars) const;
-	quint8 banks;
-	quint16 unknown1, unknown2;
+	quint8 musicID, unknown2, unknown3;
+	quint8 unknown4, unknown5, unknown6;
+	quint8 unknown7;
 };
 // same struct as unaryOperation
 class OpcodeCHMST : public Opcode {

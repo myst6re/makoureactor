@@ -8324,32 +8324,37 @@ OpcodeCMUSC::OpcodeCMUSC(const char *params, int size)
 
 void OpcodeCMUSC::setParams(const char *params, int)
 {
-	banks = params[0];
-	memcpy(&unknown1, params + 1, 2);
-	memcpy(&unknown2, params + 3, 2);
+	musicID = params[0];
+	unknown2 = params[1];
+	unknown3 = params[2];
+	unknown4 = params[3];
+	unknown5 = params[4];
+	unknown6 = params[5];
+	unknown7 = params[6];
 }
 
 QString OpcodeCMUSC::toString(Field *) const
 {
-	return QObject::tr("CMUSC (unknown1=%1, unknown2=%2)")
-			.arg(_var(unknown1, B1(banks)))
-			.arg(_var(unknown2, B2(banks)));
+	return QObject::tr("CMUSC (musique n°%1, unknown2=%2, unknown3=%3, unknown4=%4, unknown5=%5, unknown6=%6, unknown7=%7)")
+			.arg(musicID)
+			.arg(unknown2)
+			.arg(unknown3)
+			.arg(unknown4)
+			.arg(unknown5)
+			.arg(unknown6)
+			.arg(unknown7);
 }
 
 QByteArray OpcodeCMUSC::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&unknown1, 2)
-			.append((char *)&unknown2, 2);
-}
-
-void OpcodeCMUSC::getVariables(QList<FF7Var> &vars) const
-{
-	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), unknown1 & 0xFF, FF7Var::Word));
-	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), unknown2 & 0xFF, FF7Var::Word));
+			.append((char)musicID)
+			.append((char)unknown2)
+			.append((char)unknown3)
+			.append((char)unknown4)
+			.append((char)unknown5)
+			.append((char)unknown6)
+			.append((char)unknown7);
 }
 
 OpcodeCHMST::OpcodeCHMST(const char *params, int size)
@@ -8661,7 +8666,7 @@ const quint8 Opcode::length[257] =
 /*fa*//* MVIEF */	3,
 /*fb*//* MVCAM */	2,
 /*fc*//* FMUSC */	2,
-/*fd*//* CMUSC */	6,
+/*fd*//* CMUSC */	8,
 /*fe*//* CHMST */	3,
 /*ff*//* GAMEOVER */	1,
 /*100*//* LABEL */	0

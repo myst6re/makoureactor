@@ -585,7 +585,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<boolean;return paramTypes;
 	//case 0xFC://TODO
 	case 0xFD:
-		paramTypes<<bank<<bank<<inconnu<<inconnu;return paramTypes;
+		paramTypes<<music_id<<inconnu<<inconnu<<inconnu<<inconnu<<inconnu<<inconnu;return paramTypes;
 	case 0xFE:
 		paramTypes<<bank<<bank<<adress;return paramTypes;
 	//case 0xFF:return paramTypes;
