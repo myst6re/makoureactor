@@ -59,19 +59,34 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, Operation op, int value) cons
 {
 	// TODO: compare var with var
 	const bool noValue = value > 0xFFFF;
+	QList<FF7Var> vars;
+
+	getVariables(vars);
+
 	switch (op) {
 	case Assign:
-		if(id() == SETBYTE) {
-			OpcodeSETBYTE *setbyte = (OpcodeSETBYTE *)this;
-			if(B1(setbyte->banks) == bank && setbyte->var == adress
-					&& (noValue || (B2(setbyte->banks) == 0 && setbyte->value == value)))
-				return true;
-		}
-		if(id() == SETWORD) {
-			OpcodeSETWORD *setword = (OpcodeSETWORD *)this;
-			if(B1(setword->banks) == bank && setword->var == adress
-					&& (noValue || (B2(setword->banks) == 0 && setword->value == (quint16)value)))
-				return true;
+		// Compare value if provided
+		if(!noValue) {
+			if(id() == SETBYTE) {
+				OpcodeSETBYTE *setbyte = (OpcodeSETBYTE *)this;
+				if(B1(setbyte->banks) == bank && setbyte->var == adress
+						&& B2(setbyte->banks) == 0 && setbyte->value == value)
+					return true;
+			}
+			if(id() == SETWORD) {
+				OpcodeSETWORD *setword = (OpcodeSETWORD *)this;
+				if(B1(setword->banks) == bank && setword->var == adress
+						&& B2(setword->banks) == 0 && setword->value == (quint16)value)
+					return true;
+			}
+		} else {
+			// Every write vars
+			foreach(const FF7Var &var, vars) {
+				if(var.bank == bank && var.adress == adress
+						&& var.write == true && var.size != FF7Var::Bit) {
+					return true;
+				}
+			}
 		}
 		return false;
 	case BitAssign:
@@ -103,10 +118,6 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, Operation op, int value) cons
 		}
 		return false;
 	default:
-		QList<FF7Var> vars;
-
-		getVariables(vars);
-
 		foreach(const FF7Var &var, vars) {
 			if(var.bank == bank && var.adress == adress)
 				return true;
