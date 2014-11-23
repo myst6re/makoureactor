@@ -20,6 +20,7 @@
 
 #include <QtGui>
 #include "core/field/FieldArchive.h"
+#include "SearchAll.h"
 
 class Window;
 
@@ -43,6 +44,7 @@ private slots:
 	void cancelSearching();
 	void findNext();
 	void findPrev();
+	void findAll();
 	void replaceCurrent();
 	void replaceAll();
 	void updateCaseSensitivity(bool cs);
@@ -59,9 +61,15 @@ private:
 		return (Window *)parentWidget();
 	}
 	void setActionsEnabled(bool enable);
+	bool findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
+				  int &fieldID, int &grpScriptID,
+				  int &scriptID, int &opcodeID);
+	bool findNextText(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
+				  int &fieldID, int &textID, int &from, int &size);
 
 	bool atTheEnd, atTheBeginning;
 
+	SearchAll *searchAllDialog;
 	QTabWidget *tabWidget;
 	FieldArchive *fieldArchive;
 	QComboBox *champ, *champ2, *replace2;
@@ -73,7 +81,7 @@ private:
 	QLineEdit *champValue;
 	QComboBox *champOp;
 	QComboBox *comboVarName;
-	QPushButton *buttonNext, *buttonPrev;
+	QPushButton *buttonNext, *buttonPrev, *buttonAll;
 	QLabel *returnToBegin;
 	QComboBox *executionGroup;
 	QSpinBox *executionScript;
