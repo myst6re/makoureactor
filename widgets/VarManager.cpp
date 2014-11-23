@@ -51,7 +51,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	
 	liste2 = new QTreeWidget(this);
 	liste2->setColumnCount(2);
-	liste2->setHeaderLabels(QStringList() << tr("Adresse") << tr("Surnom"));
+	liste2->setHeaderLabels(QStringList() << tr("Adresse") << tr("Surnom") << tr("Opération") << tr("Taille"));
 	liste2->setIndentation(0);
 	liste2->setItemsExpandable(false);
 	liste2->setSortingEnabled(true);
@@ -115,7 +115,7 @@ void VarManager::fillList2()
 	liste2->clear();
 	for(quint16 adressID=0 ; adressID<256 ; ++adressID)
 	{
-		new QTreeWidgetItem(liste2, QStringList() << QString("%1").arg(adressID, 3) << "");
+		new QTreeWidgetItem(liste2, QStringList() << QString("%1").arg(adressID, 3) << "" << "" << "");
 	}
 	liste2->resizeColumnToContents(0);
 	liste2->resizeColumnToContents(1);
@@ -136,17 +136,7 @@ void VarManager::changeBank(int row)
 		if(item==NULL)	continue;
 		item->setText(1, local_var_names.value(adressID | ((row+1) << 8)));
 
-		if(allVars.contains(FF7Var(b, adressID))) {
-			item->setBackground(0, QColor(0xff,0xe5,0x99));
-			item->setBackground(1, QColor(0xff,0xe5,0x99));
-            item->setForeground(0, QColor(Qt::black));
-			item->setForeground(1, QColor(Qt::black));
-		} else {
-            item->setBackground(0, palette().base().color());
-            item->setBackground(1, palette().base().color());
-            item->setForeground(0, palette().text().color());
-            item->setForeground(1, palette().text().color());
-		}
+		colorizeItem(item, FF7Var(b, adressID));
 	}
 	fillForm();
 	
@@ -208,20 +198,73 @@ void VarManager::search()
 	mess.show();
 	allVars = fieldArchive->searchAllVars();
 	int b = bank->value();
-	
-	for(int adress=0 ; adress<256 ; ++adress)
-	{
-		if(allVars.contains(FF7Var(b, adress))) {
 
-            liste2->topLevelItem(adress)->setBackground(0, QColor(0xff,0xe5,0x99));
-            liste2->topLevelItem(adress)->setBackground(1, QColor(0xff,0xe5,0x99));
-            liste2->topLevelItem(adress)->setForeground(0, QColor(Qt::black));
-            liste2->topLevelItem(adress)->setForeground(1, QColor(Qt::black));
+	for(int adress=0 ; adress<256 ; ++adress) {
+		colorizeItem(liste2->topLevelItem(adress), FF7Var(b, adress));
+	}
+}
+
+void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
+{
+	int index = -1;
+	bool foundR = false, foundW = false;
+	QSet<FF7Var::VarSize> varSize;
+
+	forever {
+		index = allVars.indexOf(var, index + 1);
+		if (index < 0) {
+			break;
+		}
+		FF7Var var = allVars.at(index);
+		varSize.insert(var.size);
+		if (var.write) {
+			foundW = true;
 		} else {
-            liste2->topLevelItem(adress)->setBackground(0, palette().base().color());
-            liste2->topLevelItem(adress)->setBackground(1, palette().base().color());
-            liste2->topLevelItem(adress)->setForeground(0, palette().text().color());
-            liste2->topLevelItem(adress)->setForeground(1, palette().text().color());
+			foundR = true;
 		}
 	}
+
+	QString rwText;
+	QStringList sizeText;
+
+	if(foundR || foundW) {
+		item->setBackground(0, QColor(0xff,0xe5,0x99));
+		item->setBackground(1, QColor(0xff,0xe5,0x99));
+		item->setBackground(2, QColor(0xff,0xe5,0x99));
+		item->setBackground(3, QColor(0xff,0xe5,0x99));
+		item->setForeground(0, QColor(Qt::black));
+		item->setForeground(1, QColor(Qt::black));
+		item->setForeground(2, QColor(Qt::black));
+		item->setForeground(3, QColor(Qt::black));
+		if(foundR && foundW) {
+			rwText = tr("rw");
+		} else if(foundR) {
+			rwText = tr("r");
+		} else {
+			rwText = tr("w");
+		}
+		if(varSize.contains(FF7Var::Bit)) {
+			sizeText.append(tr("bits"));
+		}
+		if(varSize.contains(FF7Var::Byte)) {
+			sizeText.append(tr("1 octet"));
+		}
+		if(varSize.contains(FF7Var::Word)) {
+			sizeText.append(tr("2 octets"));
+		}
+		if(varSize.contains(FF7Var::SignedWord)) {
+			sizeText.append(tr("2 octets signés"));
+		}
+	} else {
+		item->setBackground(0, palette().base().color());
+		item->setBackground(1, palette().base().color());
+		item->setBackground(2, palette().base().color());
+		item->setBackground(3, palette().base().color());
+		item->setForeground(0, palette().text().color());
+		item->setForeground(1, palette().text().color());
+		item->setForeground(2, palette().text().color());
+		item->setForeground(3, palette().text().color());
+	}
+	item->setText(2, rwText);
+	item->setText(3, sizeText.join(", "));
 }

@@ -24,30 +24,36 @@
 #define B2(v)		(v&0xF)
 #define OPERATORS_SIZE	11
 
-typedef struct {
+struct FF7Window {
 	qint16 x, y;
 	quint16 w, h;
 	quint16 ask_first, ask_last;
 	quint8 type, mode;
 	quint16 groupID, scriptID, opcodeID;
-} FF7Window;
+};
 
-typedef struct {
+struct FF7Position {
 	qint16 x, y, z;
 	quint16 id;
 	bool hasZ, hasId;
-} FF7Position;
+};
 
-typedef struct _ff7Var {
-	_ff7Var(quint8 b, quint8 a) {
-		bank = b;
-		adress = a;
-	}
+struct FF7Var {
+	enum VarSize {
+		Byte, Word, SignedWord, Bit
+	};
+
+	FF7Var(quint8 b, quint8 a, VarSize size = Byte, bool w = false)
+		: bank(b), adress(a), size(size), write(w) {}
 	quint8 bank;
 	quint8 adress;
-} FF7Var;
+	VarSize size;
+	bool write;
+};
 
-inline bool operator==(FF7Var v1, FF7Var v2) { return v1.bank == v2.bank && v1.adress == v2.adress; }
+inline bool operator==(const FF7Var &v1, const FF7Var &v2) {
+	return v1.bank == v2.bank && v1.adress == v2.adress;
+}
 
 class Section1File;
 class Field;
@@ -600,7 +606,7 @@ class OpcodeIf : public OpcodeJump {
 public:
 	explicit OpcodeIf();
 	explicit OpcodeIf(const OpcodeJump &op);
-	void getVariables(QList<FF7Var> &vars) const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks;
 	qint32 value1, value2;
 	quint8 oper;
@@ -640,6 +646,7 @@ public:
 	QByteArray params() const;
 	inline bool isLongJump() const { return false; }
 	inline quint8 jumpPosData() const { return 7; }
+	void getVariables(QList<FF7Var> &vars) const;
 };
 
 class OpcodeIFSWL : public OpcodeIf {
@@ -652,6 +659,7 @@ public:
 	QByteArray params() const;
 	inline bool isLongJump() const { return true; }
 	inline quint8 jumpPosData() const { return 7; }
+	void getVariables(QList<FF7Var> &vars) const;
 };
 
 class OpcodeIFUW : public OpcodeIf {
@@ -664,6 +672,7 @@ public:
 	QByteArray params() const;
 	inline bool isLongJump() const { return false; }
 	inline quint8 jumpPosData() const { return 7; }
+	void getVariables(QList<FF7Var> &vars) const;
 };
 
 class OpcodeIFUWL : public OpcodeIf {
@@ -676,6 +685,7 @@ public:
 	QByteArray params() const;
 	inline bool isLongJump() const { return true; }
 	inline quint8 jumpPosData() const { return 7; }
+	void getVariables(QList<FF7Var> &vars) const;
 };
 
 class OpcodeMINIGAME : public Opcode {
@@ -1361,7 +1371,6 @@ public:
 	explicit OpcodeWCOL(const char *params, int size);
 	void setParams(const char *params, int size);
 	QByteArray params() const;
-	void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2], corner, r, g, b;
 };
 
@@ -1371,6 +1380,7 @@ public:
 	explicit OpcodeGWCOL(const OpcodeWCOL &op);
 	inline int id() const { return 0x56; }
 	QString toString(Field *field) const;
+	void getVariables(QList<FF7Var> &vars) const;
 };
 
 class OpcodeSWCOL : public OpcodeWCOL {
@@ -1379,6 +1389,7 @@ public:
 	explicit OpcodeSWCOL(const OpcodeWCOL &op);
 	inline int id() const { return 0x57; }
 	QString toString(Field *field) const;
+	void getVariables(QList<FF7Var> &vars) const;
 };
 
 class OpcodeItem : public Opcode {
@@ -1414,6 +1425,7 @@ public:
 	explicit OpcodeCKITM(const OpcodeItem &op);
 	inline int id() const { return 0x5A; }
 	QString toString(Field *field) const;
+	void getVariables(QList<FF7Var> &vars) const;
 };
 
 class OpcodeSMTRA : public Opcode {
@@ -1750,9 +1762,17 @@ public:
 	explicit OpcodeUnaryOperation(const char *params, int size);
 	void setParams(const char *params, int size);
 	QByteArray params() const;
-	void getVariables(QList<FF7Var> &vars) const;
-	virtual bool isLong() const=0;
+	virtual void getVariables(QList<FF7Var> &vars) const;
+	virtual bool isLong() const { return false; }
 	quint8 banks, var;
+};
+
+class OpcodeUnaryOperation2 : public OpcodeUnaryOperation {
+public:
+	explicit OpcodeUnaryOperation2(const char *params, int size);
+	explicit OpcodeUnaryOperation2(const OpcodeUnaryOperation &other);
+	void getVariables(QList<FF7Var> &vars) const;
+	bool isLong() const { return true; }
 };
 
 class OpcodePLUSX : public OpcodeOperation {
@@ -1793,16 +1813,14 @@ public:
 	explicit OpcodeINCX(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x7A; }
 	QString toString(Field *field) const;
-	inline bool isLong() const { return false; }
 };
 
-class OpcodeINC2X : public OpcodeUnaryOperation {
+class OpcodeINC2X : public OpcodeUnaryOperation2 {
 public:
 	explicit OpcodeINC2X(const char *params, int size);
 	explicit OpcodeINC2X(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x7B; }
 	QString toString(Field *field) const;
-	inline bool isLong() const { return true; }
 };
 
 class OpcodeDECX : public OpcodeUnaryOperation {
@@ -1811,16 +1829,14 @@ public:
 	explicit OpcodeDECX(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x7C; }
 	QString toString(Field *field) const;
-	inline bool isLong() const { return false; }
 };
 
-class OpcodeDEC2X : public OpcodeUnaryOperation {
+class OpcodeDEC2X : public OpcodeUnaryOperation2 {
 public:
 	explicit OpcodeDEC2X(const char *params, int size);
 	explicit OpcodeDEC2X(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x7D; }
 	QString toString(Field *field) const;
-	inline bool isLong() const { return true; }
 };
 
 class OpcodeTLKON : public Opcode {
@@ -2026,16 +2042,14 @@ public:
 	explicit OpcodeINC(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x95; }
 	QString toString(Field *field) const;
-	inline bool isLong() const { return false; }
 };
 
-class OpcodeINC2 : public OpcodeUnaryOperation {
+class OpcodeINC2 : public OpcodeUnaryOperation2 {
 public:
 	explicit OpcodeINC2(const char *params, int size);
 	explicit OpcodeINC2(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x96; }
 	QString toString(Field *field) const;
-	inline bool isLong() const { return true; }
 };
 
 class OpcodeDEC : public OpcodeUnaryOperation {
@@ -2044,16 +2058,14 @@ public:
 	explicit OpcodeDEC(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x97; }
 	QString toString(Field *field) const;
-	inline bool isLong() const { return false; }
 };
 
-class OpcodeDEC2 : public OpcodeUnaryOperation {
+class OpcodeDEC2 : public OpcodeUnaryOperation2 {
 public:
 	explicit OpcodeDEC2(const char *params, int size);
 	explicit OpcodeDEC2(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x98; }
 	QString toString(Field *field) const;
-	inline bool isLong() const { return true; }
 };
 
 class OpcodeRANDOM : public OpcodeUnaryOperation {
@@ -2062,7 +2074,6 @@ public:
 	explicit OpcodeRANDOM(const OpcodeUnaryOperation &op);
 	inline int id() const { return 0x99; }
 	QString toString(Field *field) const;
-	inline bool isLong() const { return false; }
 };
 
 class OpcodeLBYTE : public OpcodeOperation {

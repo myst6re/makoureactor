@@ -42,6 +42,7 @@ private:
 	QTreeWidgetItem *findList2Item(int);
 	void fillList1();
 	void fillList2();
+	void colorizeItem(QTreeWidgetItem *item, const FF7Var &var);
 
 	QMap<quint16, QString> local_var_names;
 

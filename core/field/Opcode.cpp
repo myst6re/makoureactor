@@ -770,17 +770,17 @@ QByteArray OpcodeSPLIT::params() const
 void OpcodeSPLIT::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), targetX1 & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), targetX1 & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), targetY1 & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), targetY1 & 0xFF, FF7Var::SignedWord));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), direction1 & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), direction1 & 0xFF, FF7Var::Byte));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), targetX2 & 0xFF));
+		vars.append(FF7Var(B2(banks[1]), targetX2 & 0xFF, FF7Var::SignedWord));
 	if(B1(banks[2]) != 0)
-		vars.append(FF7Var(B1(banks[2]), targetY2 & 0xFF));
+		vars.append(FF7Var(B1(banks[2]), targetY2 & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[2]) != 0)
-		vars.append(FF7Var(B2(banks[2]), direction2 & 0xFF));
+		vars.append(FF7Var(B2(banks[2]), direction2 & 0xFF, FF7Var::Byte));
 }
 
 OpcodePartyE::OpcodePartyE(const char *params, int size)
@@ -809,11 +809,11 @@ QByteArray OpcodePartyE::params() const
 void OpcodePartyE::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), party1));
+		vars.append(FF7Var(B1(banks[0]), party1, FF7Var::Byte));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), party2));
+		vars.append(FF7Var(B2(banks[0]), party2, FF7Var::Byte));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), party3));
+		vars.append(FF7Var(B1(banks[1]), party3, FF7Var::Byte));
 }
 
 OpcodeSPTYE::OpcodeSPTYE(const char *params, int size) :
@@ -1407,10 +1407,16 @@ OpcodeIf::OpcodeIf(const OpcodeJump &op) :
 
 void OpcodeIf::getVariables(QList<FF7Var> &vars) const
 {
-	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), value1 & 0xFF));
+
+	if(B1(banks) != 0) {
+		Operator op = Operator(oper);
+		vars.append(FF7Var(B1(banks), value1 & 0xFF,
+						   op == BitAnd || op == BitXOr || op == BitOr
+						   || op == BitOn || op == BitOff
+						   ? FF7Var::Bit : FF7Var::Byte));
+	}
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), value2 & 0xFF));
+		vars.append(FF7Var(B2(banks), value2 & 0xFF, FF7Var::Byte));
 }
 
 OpcodeIFUB::OpcodeIFUB(const char *params, int size)
@@ -1540,6 +1546,16 @@ QByteArray OpcodeIFSW::params() const
 			.append(char(_jump - jumpPosData()));
 }
 
+void OpcodeIFSW::getVariables(QList<FF7Var> &vars) const
+{
+	QList<FF7Var> ifVars;
+	OpcodeIf::getVariables(ifVars);
+	for (int i = 0 ; i < ifVars.size() ; ++i) {
+		ifVars[i].size = FF7Var::SignedWord;
+	}
+	vars.append(ifVars);
+}
+
 OpcodeIFSWL::OpcodeIFSWL(const char *params, int size)
 {
 	setParams(params, size);
@@ -1587,6 +1603,16 @@ QByteArray OpcodeIFSWL::params() const
 			.append((char *)&jump, 2);
 }
 
+void OpcodeIFSWL::getVariables(QList<FF7Var> &vars) const
+{
+	QList<FF7Var> ifVars;
+	OpcodeIf::getVariables(ifVars);
+	for (int i = 0 ; i < ifVars.size() ; ++i) {
+		ifVars[i].size = FF7Var::SignedWord;
+	}
+	vars.append(ifVars);
+}
+
 OpcodeIFUW::OpcodeIFUW(const char *params, int size)
 {
 	setParams(params, size);
@@ -1629,6 +1655,16 @@ QByteArray OpcodeIFUW::params() const
 			.append((char *)&v2, 2)
 			.append((char)oper)
 			.append(char(_jump - jumpPosData()));
+}
+
+void OpcodeIFUW::getVariables(QList<FF7Var> &vars) const
+{
+	QList<FF7Var> ifVars;
+	OpcodeIf::getVariables(ifVars);
+	for (int i = 0 ; i < ifVars.size() ; ++i) {
+		ifVars[i].size = FF7Var::Word;
+	}
+	vars.append(ifVars);
 }
 
 OpcodeIFUWL::OpcodeIFUWL(const char *params, int size)
@@ -1676,6 +1712,16 @@ QByteArray OpcodeIFUWL::params() const
 			.append((char *)&v2, 2)
 			.append((char)oper)
 			.append((char *)&jump, 2);
+}
+
+void OpcodeIFUWL::getVariables(QList<FF7Var> &vars) const
+{
+	QList<FF7Var> ifVars;
+	OpcodeIf::getVariables(ifVars);
+	for (int i = 0 ; i < ifVars.size() ; ++i) {
+		ifVars[i].size = FF7Var::Word;
+	}
+	vars.append(ifVars);
 }
 
 OpcodeMINIGAME::OpcodeMINIGAME(const char *params, int size)
@@ -1825,7 +1871,7 @@ QByteArray OpcodeBTRLD::params() const
 void OpcodeBTRLD::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), var));
+		vars.append(FF7Var(B2(banks), var, FF7Var::Byte, true)); // FIXME: byte?
 }
 
 OpcodeWAIT::OpcodeWAIT(const char *params, int size)
@@ -1890,13 +1936,13 @@ QByteArray OpcodeNFADE::params() const
 void OpcodeNFADE::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), r & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), r & 0xFF, FF7Var::Byte));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), g & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), g & 0xFF, FF7Var::Byte));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), b & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), b & 0xFF, FF7Var::Byte));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), unknown2 & 0xFF));
+		vars.append(FF7Var(B2(banks[1]), unknown2 & 0xFF, FF7Var::Byte)); // FIXME: byte?
 }
 
 OpcodeBLINK::OpcodeBLINK(const char *params, int size)
@@ -2312,7 +2358,7 @@ QByteArray OpcodeBGPDH::params() const
 void OpcodeBGPDH::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), targetZ & 0xFF));
+		vars.append(FF7Var(B2(banks), targetZ & 0xFF, FF7Var::SignedWord));
 }
 
 OpcodeBGSCR::OpcodeBGSCR(const char *params, int size)
@@ -2348,9 +2394,9 @@ QByteArray OpcodeBGSCR::params() const
 void OpcodeBGSCR::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks), targetY & 0xFF, FF7Var::SignedWord));
 }
 
 OpcodeWCLS::OpcodeWCLS(const char *params, int size)
@@ -2712,9 +2758,9 @@ void OpcodeWNUMB::setWindowID(quint8 windowID)
 void OpcodeWNUMB::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), value & 0xFF));
+		vars.append(FF7Var(B1(banks), value & 0xFF, FF7Var::Word));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), (value >> 16) & 0xFF));
+		vars.append(FF7Var(B2(banks), (value >> 16) & 0xFF, FF7Var::Word));
 }
 
 OpcodeSTTIM::OpcodeSTTIM(const char *params, int size)
@@ -2751,11 +2797,11 @@ QByteArray OpcodeSTTIM::params() const
 void OpcodeSTTIM::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), h));
+		vars.append(FF7Var(B1(banks[0]), h, FF7Var::Byte));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), m));
+		vars.append(FF7Var(B2(banks[0]), m, FF7Var::Byte));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), s));
+		vars.append(FF7Var(B1(banks[1]), s, FF7Var::Byte));
 }
 
 OpcodeGOLD::OpcodeGOLD(const char *params, int size)
@@ -2779,9 +2825,9 @@ QByteArray OpcodeGOLD::params() const
 void OpcodeGOLD::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), value & 0xFF));
+		vars.append(FF7Var(B1(banks), value & 0xFF, FF7Var::Word));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), (value >> 16) & 0xFF));
+		vars.append(FF7Var(B2(banks), (value >> 16) & 0xFF, FF7Var::Word));
 }
 
 OpcodeGOLDu::OpcodeGOLDu(const char *params, int size) :
@@ -2846,9 +2892,9 @@ QByteArray OpcodeCHGLD::params() const
 void OpcodeCHGLD::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), var1));
+		vars.append(FF7Var(B1(banks), var1, FF7Var::Word, true));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), var2));
+		vars.append(FF7Var(B2(banks), var2, FF7Var::Word, true));
 }
 
 OpcodeHMPMAX1::OpcodeHMPMAX1()
@@ -2975,7 +3021,7 @@ void OpcodeMPARA::setWindowID(quint8 windowID)
 void OpcodeMPARA::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), value));
+		vars.append(FF7Var(B2(banks), value, FF7Var::Byte));
 }
 
 OpcodeMPRA2::OpcodeMPRA2(const char *params, int size)
@@ -3021,7 +3067,7 @@ void OpcodeMPRA2::setWindowID(quint8 windowID)
 void OpcodeMPRA2::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), value & 0xFF));
+		vars.append(FF7Var(B2(banks), value & 0xFF, FF7Var::Word));
 }
 
 OpcodeMPNAM::OpcodeMPNAM(const char *params, int size)
@@ -3079,7 +3125,7 @@ QByteArray OpcodeHPMP::params() const
 void OpcodeHPMP::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), value & 0xFF));
+		vars.append(FF7Var(B2(banks), value & 0xFF, FF7Var::Word));
 }
 
 OpcodeMPu::OpcodeMPu(const char *params, int size) :
@@ -3175,7 +3221,7 @@ void OpcodeASK::setTextID(quint8 textID)
 void OpcodeASK::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), varAnswer));
+		vars.append(FF7Var(B2(banks), varAnswer, FF7Var::Byte, true));
 }
 
 OpcodeMENU::OpcodeMENU(const char *params, int size)
@@ -3235,7 +3281,7 @@ QByteArray OpcodeMENU::params() const
 void OpcodeMENU::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), param));
+		vars.append(FF7Var(B2(banks), param, FF7Var::Byte));
 }
 
 OpcodeMENU2::OpcodeMENU2(const char *params, int size)
@@ -3554,18 +3600,6 @@ QByteArray OpcodeWCOL::params() const
 			.append((char)b);
 }
 
-void OpcodeWCOL::getVariables(QList<FF7Var> &vars) const
-{
-	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), corner));
-	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), r));
-	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), g));
-	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), b));
-}
-
 OpcodeGWCOL::OpcodeGWCOL(const char *params, int size) :
 	OpcodeWCOL(params, size)
 {
@@ -3583,6 +3617,18 @@ QString OpcodeGWCOL::toString(Field *) const
 			.arg(_bank(r, B2(banks[0])))
 			.arg(_bank(g, B1(banks[1])))
 			.arg(_bank(b, B2(banks[1])));
+}
+
+void OpcodeGWCOL::getVariables(QList<FF7Var> &vars) const
+{
+	if(B1(banks[0]) != 0)
+		vars.append(FF7Var(B1(banks[0]), corner, FF7Var::Byte));
+	if(B2(banks[0]) != 0)
+		vars.append(FF7Var(B2(banks[0]), r, FF7Var::Byte, true));
+	if(B1(banks[1]) != 0)
+		vars.append(FF7Var(B1(banks[1]), g, FF7Var::Byte, true));
+	if(B2(banks[1]) != 0)
+		vars.append(FF7Var(B2(banks[1]), b, FF7Var::Byte, true));
 }
 
 OpcodeSWCOL::OpcodeSWCOL(const char *params, int size) :
@@ -3603,6 +3649,18 @@ QString OpcodeSWCOL::toString(Field *) const
 			.arg(_var(r, B2(banks[0])))
 			.arg(_var(g, B1(banks[1])))
 			.arg(_var(b, B2(banks[1])));
+}
+
+void OpcodeSWCOL::getVariables(QList<FF7Var> &vars) const
+{
+	if(B1(banks[0]) != 0)
+		vars.append(FF7Var(B1(banks[0]), corner, FF7Var::Byte));
+	if(B2(banks[0]) != 0)
+		vars.append(FF7Var(B2(banks[0]), r, FF7Var::Byte));
+	if(B1(banks[1]) != 0)
+		vars.append(FF7Var(B1(banks[1]), g, FF7Var::Byte));
+	if(B2(banks[1]) != 0)
+		vars.append(FF7Var(B2(banks[1]), b, FF7Var::Byte));
 }
 
 OpcodeItem::OpcodeItem(const char *params, int size)
@@ -3628,9 +3686,9 @@ QByteArray OpcodeItem::params() const
 void OpcodeItem::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), itemID & 0xFF));
+		vars.append(FF7Var(B1(banks), itemID & 0xFF, FF7Var::Word));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), quantity));
+		vars.append(FF7Var(B2(banks), quantity, FF7Var::Byte));
 }
 
 OpcodeSTITM::OpcodeSTITM(const char *params, int size) :
@@ -3685,6 +3743,14 @@ QString OpcodeCKITM::toString(Field *) const
 			.arg(_bank(quantity, B2(banks)));
 }
 
+void OpcodeCKITM::getVariables(QList<FF7Var> &vars) const
+{
+	if(B1(banks) != 0)
+		vars.append(FF7Var(B1(banks), itemID & 0xFF, FF7Var::Word));
+	if(B2(banks) != 0)
+		vars.append(FF7Var(B2(banks), quantity, FF7Var::Byte, true));
+}
+
 OpcodeSMTRA::OpcodeSMTRA(const char *params, int size)
 {
 	setParams(params, size);
@@ -3717,13 +3783,13 @@ QByteArray OpcodeSMTRA::params() const
 void OpcodeSMTRA::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), materiaID));
+		vars.append(FF7Var(B1(banks[0]), materiaID, FF7Var::Byte));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), APCount & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), APCount & 0xFF, FF7Var::Word));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), (APCount >> 8) & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), (APCount >> 8) & 0xFF, FF7Var::Word));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), (APCount >> 16) & 0xFF));
+		vars.append(FF7Var(B2(banks[1]), (APCount >> 16) & 0xFF, FF7Var::Word)); // FIXME: word?
 }
 
 OpcodeDMTRA::OpcodeDMTRA(const char *params, int size)
@@ -3761,13 +3827,13 @@ QByteArray OpcodeDMTRA::params() const
 void OpcodeDMTRA::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), materiaID));
+		vars.append(FF7Var(B1(banks[0]), materiaID, FF7Var::Byte));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), APCount & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), APCount & 0xFF, FF7Var::Word));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), (APCount >> 8) & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), (APCount >> 8) & 0xFF, FF7Var::Word));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), (APCount >> 16) & 0xFF));
+		vars.append(FF7Var(B2(banks[1]), (APCount >> 16) & 0xFF, FF7Var::Word)); // FIXME: word?
 }
 
 OpcodeCMTRA::OpcodeCMTRA(const char *params, int size)
@@ -3809,15 +3875,15 @@ QByteArray OpcodeCMTRA::params() const
 void OpcodeCMTRA::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), materiaID));
+		vars.append(FF7Var(B1(banks[0]), materiaID, FF7Var::Byte));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), APCount & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), APCount & 0xFF, FF7Var::Word));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), (APCount >> 8) & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), (APCount >> 8) & 0xFF, FF7Var::Word));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), (APCount >> 16) & 0xFF));
+		vars.append(FF7Var(B2(banks[1]), (APCount >> 16) & 0xFF, FF7Var::Word)); // FIXME: word?
 	if(B2(banks[2]) != 0)
-		vars.append(FF7Var(B2(banks[2]), varQuantity));
+		vars.append(FF7Var(B2(banks[2]), varQuantity, FF7Var::Byte, true)); // FIXME: word?
 }
 
 OpcodeSHAKE::OpcodeSHAKE(const char *params, int size)
@@ -3974,7 +4040,7 @@ QByteArray OpcodeSCRLA::params() const
 void OpcodeSCRLA::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), speed & 0xFF));
+		vars.append(FF7Var(B2(banks), speed & 0xFF, FF7Var::Word));
 }
 
 OpcodeSCR2D::OpcodeSCR2D(const char *params, int size)
@@ -4007,9 +4073,9 @@ QByteArray OpcodeSCR2D::params() const
 void OpcodeSCR2D::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks), targetY & 0xFF, FF7Var::SignedWord));
 }
 
 OpcodeSCRCC::OpcodeSCRCC()
@@ -4055,11 +4121,11 @@ QByteArray OpcodeSCR2DC::params() const
 void OpcodeSCR2DC::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), speed & 0xFF));
+		vars.append(FF7Var(B2(banks[1]), speed & 0xFF, FF7Var::Word));
 }
 
 OpcodeSCRLW::OpcodeSCRLW()
@@ -4105,11 +4171,11 @@ QByteArray OpcodeSCR2DL::params() const
 void OpcodeSCR2DL::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), speed & 0xFF));
+		vars.append(FF7Var(B2(banks[1]), speed & 0xFF, FF7Var::Word));
 }
 
 OpcodeMPDSP::OpcodeMPDSP(const char *params, int size)
@@ -4166,9 +4232,9 @@ QByteArray OpcodeVWOFT::params() const
 void OpcodeVWOFT::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), unknown1));
+		vars.append(FF7Var(B1(banks), unknown1 & 0xFF, FF7Var::Word));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), unknown2));
+		vars.append(FF7Var(B2(banks), unknown2 & 0xFF, FF7Var::Word));
 }
 
 OpcodeFADE::OpcodeFADE(const char *params, int size)
@@ -4214,11 +4280,11 @@ QByteArray OpcodeFADE::params() const
 void OpcodeFADE::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), r));
+		vars.append(FF7Var(B1(banks[0]), r, FF7Var::Byte));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), g));
+		vars.append(FF7Var(B2(banks[0]), g, FF7Var::Byte));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), b));
+		vars.append(FF7Var(B2(banks[1]), b, FF7Var::Byte));
 }
 
 OpcodeFADEW::OpcodeFADEW()
@@ -4282,7 +4348,7 @@ QByteArray OpcodeLSTMP::params() const
 void OpcodeLSTMP::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), var));
+		vars.append(FF7Var(B2(banks), var, FF7Var::Word, true));
 }
 
 OpcodeSCRLP::OpcodeSCRLP(const char *params, int size)
@@ -4318,7 +4384,7 @@ QByteArray OpcodeSCRLP::params() const
 void OpcodeSCRLP::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), speed & 0xFF));
+		vars.append(FF7Var(B2(banks), speed & 0xFF, FF7Var::Word));
 }
 
 OpcodeBATTLE::OpcodeBATTLE(const char *params, int size)
@@ -4348,7 +4414,7 @@ QByteArray OpcodeBATTLE::params() const
 void OpcodeBATTLE::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), battleID & 0xFF));
+		vars.append(FF7Var(B2(banks), battleID & 0xFF, FF7Var::Word));
 }
 
 OpcodeBTLON::OpcodeBTLON(const char *params, int size)
@@ -4441,7 +4507,7 @@ QByteArray OpcodePGTDR::params() const
 void OpcodePGTDR::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), varDir));
+		vars.append(FF7Var(B2(banks), varDir, FF7Var::Byte, true));
 }
 
 OpcodeGETPC::OpcodeGETPC(const char *params, int size)
@@ -4474,7 +4540,7 @@ QByteArray OpcodeGETPC::params() const
 void OpcodeGETPC::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), varPC));
+		vars.append(FF7Var(B2(banks), varPC, FF7Var::Byte, true));
 }
 
 OpcodePXYZI::OpcodePXYZI(const char *params, int size)
@@ -4517,13 +4583,13 @@ QByteArray OpcodePXYZI::params() const
 void OpcodePXYZI::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), varX));
+		vars.append(FF7Var(B1(banks[0]), varX, FF7Var::SignedWord, true));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), varY));
+		vars.append(FF7Var(B2(banks[0]), varY, FF7Var::SignedWord, true));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), varZ));
+		vars.append(FF7Var(B1(banks[1]), varZ, FF7Var::SignedWord, true));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), varI));
+		vars.append(FF7Var(B2(banks[1]), varI, FF7Var::Word, true));
 }
 
 OpcodeBinaryOperation::OpcodeBinaryOperation()
@@ -4558,7 +4624,7 @@ QByteArray OpcodeOperation::params() const
 void OpcodeOperation::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), var));
+		vars.append(FF7Var(B1(banks), var, FF7Var::Byte, true));
 	if(B2(banks) != 0)
 		vars.append(FF7Var(B2(banks), value & 0xFF));
 }
@@ -4592,9 +4658,9 @@ QByteArray OpcodeOperation2::params() const
 void OpcodeOperation2::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), var));
+		vars.append(FF7Var(B1(banks), var, FF7Var::Word, true));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), value & 0xFF));
+		vars.append(FF7Var(B2(banks), value & 0xFF, FF7Var::Word));
 }
 
 OpcodeUnaryOperation::OpcodeUnaryOperation(const char *params, int size)
@@ -4618,7 +4684,23 @@ QByteArray OpcodeUnaryOperation::params() const
 void OpcodeUnaryOperation::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), var));
+		vars.append(FF7Var(B2(banks), var, FF7Var::Byte, true));
+}
+
+OpcodeUnaryOperation2::OpcodeUnaryOperation2(const char *params, int size) :
+	OpcodeUnaryOperation(params, size)
+{
+}
+
+OpcodeUnaryOperation2::OpcodeUnaryOperation2(const OpcodeUnaryOperation &other) :
+	OpcodeUnaryOperation(other)
+{
+}
+
+void OpcodeUnaryOperation2::getVariables(QList<FF7Var> &vars) const
+{
+	if(B2(banks) != 0)
+		vars.append(FF7Var(B2(banks), var, FF7Var::Word, true));
 }
 
 OpcodePLUSX::OpcodePLUSX(const char *params, int size) :
@@ -4707,12 +4789,12 @@ QString OpcodeINCX::toString(Field *) const
 }
 
 OpcodeINC2X::OpcodeINC2X(const char *params, int size) :
-	OpcodeUnaryOperation(params, size)
+	OpcodeUnaryOperation2(params, size)
 {
 }
 
 OpcodeINC2X::OpcodeINC2X(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation(op)
+	OpcodeUnaryOperation2(op)
 {
 }
 
@@ -4739,12 +4821,12 @@ QString OpcodeDECX::toString(Field *) const
 }
 
 OpcodeDEC2X::OpcodeDEC2X(const char *params, int size) :
-	OpcodeUnaryOperation(params, size)
+	OpcodeUnaryOperation2(params, size)
 {
 }
 
 OpcodeDEC2X::OpcodeDEC2X(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation(op)
+	OpcodeUnaryOperation2(op)
 {
 }
 
@@ -4856,9 +4938,9 @@ QByteArray OpcodeBitOperation::params() const
 void OpcodeBitOperation::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), var));
+		vars.append(FF7Var(B1(banks), var, FF7Var::Bit, true));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), position));
+		vars.append(FF7Var(B2(banks), position, FF7Var::Byte));
 }
 
 OpcodeBITON::OpcodeBITON(const char *params, int size) :
@@ -5201,12 +5283,12 @@ QString OpcodeINC::toString(Field *) const
 }
 
 OpcodeINC2::OpcodeINC2(const char *params, int size) :
-	OpcodeUnaryOperation(params, size)
+	OpcodeUnaryOperation2(params, size)
 {
 }
 
 OpcodeINC2::OpcodeINC2(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation(op)
+	OpcodeUnaryOperation2(op)
 {
 }
 
@@ -5233,12 +5315,12 @@ QString OpcodeDEC::toString(Field *) const
 }
 
 OpcodeDEC2::OpcodeDEC2(const char *params, int size) :
-	OpcodeUnaryOperation(params, size)
+	OpcodeUnaryOperation2(params, size)
 {
 }
 
 OpcodeDEC2::OpcodeDEC2(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation(op)
+	OpcodeUnaryOperation2(op)
 {
 }
 
@@ -5332,11 +5414,11 @@ QByteArray Opcode2BYTE::params() const
 void Opcode2BYTE::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), var));
+		vars.append(FF7Var(B1(banks[0]), var, FF7Var::Word, true));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), value1));
+		vars.append(FF7Var(B2(banks[0]), value1, FF7Var::Byte));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), value2));
+		vars.append(FF7Var(B2(banks[1]), value2, FF7Var::Byte));
 }
 
 OpcodeSETX::OpcodeSETX(const char *params, int size)
@@ -5421,13 +5503,13 @@ QByteArray OpcodeSEARCHX::params() const
 void OpcodeSEARCHX::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), start & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), start & 0xFF, FF7Var::Word));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), end & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), end & 0xFF, FF7Var::Word));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), value));
+		vars.append(FF7Var(B2(banks[1]), value, FF7Var::Byte));
 	if(B2(banks[2]) != 0)
-		vars.append(FF7Var(B2(banks[2]), varResult));
+		vars.append(FF7Var(B2(banks[2]), varResult, FF7Var::Byte));
 }
 
 OpcodePC::OpcodePC(const char *params, int size)
@@ -5580,13 +5662,13 @@ QByteArray OpcodeXYZI::params() const
 void OpcodeXYZI::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF, FF7Var::SignedWord));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), targetZ & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), targetZ & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), targetI & 0xFF));
+		vars.append(FF7Var(B2(banks[1]), targetI & 0xFF, FF7Var::Word));
 }
 
 void OpcodeXYZI::listModelPositions(QList<FF7Position> &positions) const
@@ -5634,11 +5716,11 @@ QByteArray OpcodeXYI::params() const
 void OpcodeXYI::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF, FF7Var::SignedWord));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), targetI & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), targetI & 0xFF, FF7Var::Word));
 }
 
 void OpcodeXYI::listModelPositions(QList<FF7Position> &positions) const
@@ -5685,11 +5767,11 @@ QByteArray OpcodeXYZ::params() const
 void OpcodeXYZ::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF, FF7Var::SignedWord));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), targetZ & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), targetZ & 0xFF, FF7Var::SignedWord));
 }
 
 void OpcodeXYZ::listModelPositions(QList<FF7Position> &positions) const
@@ -5733,9 +5815,9 @@ QByteArray OpcodeMOVE::params() const
 void OpcodeMOVE::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks), targetY & 0xFF, FF7Var::SignedWord));
 }
 
 OpcodeCMOVE::OpcodeCMOVE(const char *params, int size)
@@ -5768,9 +5850,9 @@ QByteArray OpcodeCMOVE::params() const
 void OpcodeCMOVE::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks), targetY & 0xFF, FF7Var::SignedWord));
 }
 
 OpcodeMOVA::OpcodeMOVA(const char *params, int size)
@@ -5862,9 +5944,9 @@ QByteArray OpcodeFMOVE::params() const
 void OpcodeFMOVE::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks), targetY & 0xFF, FF7Var::SignedWord));
 }
 
 OpcodeANIME2::OpcodeANIME2(const char *params, int size)
@@ -6006,7 +6088,7 @@ QByteArray OpcodeMSPED::params() const
 void OpcodeMSPED::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), speed & 0xFF));
+		vars.append(FF7Var(B2(banks), speed & 0xFF, FF7Var::Word));
 }
 
 OpcodeDIR::OpcodeDIR(const char *params, int size)
@@ -6036,7 +6118,7 @@ QByteArray OpcodeDIR::params() const
 void OpcodeDIR::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), direction));
+		vars.append(FF7Var(B2(banks), direction, FF7Var::Byte));
 }
 
 OpcodeTURNGEN::OpcodeTURNGEN(const char *params, int size)
@@ -6075,7 +6157,7 @@ QByteArray OpcodeTURNGEN::params() const
 void OpcodeTURNGEN::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), direction));
+		vars.append(FF7Var(B2(banks), direction, FF7Var::Byte));
 }
 
 OpcodeTURN::OpcodeTURN(const char *params, int size)
@@ -6114,7 +6196,7 @@ QByteArray OpcodeTURN::params() const
 void OpcodeTURN::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), direction));
+		vars.append(FF7Var(B2(banks), direction, FF7Var::Byte));
 }
 
 OpcodeDIRA::OpcodeDIRA(const char *params, int size)
@@ -6169,7 +6251,7 @@ QByteArray OpcodeGETDIR::params() const
 void OpcodeGETDIR::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), varDir));
+		vars.append(FF7Var(B2(banks), varDir, FF7Var::Byte, true));
 }
 
 OpcodeGETAXY::OpcodeGETAXY(const char *params, int size)
@@ -6205,9 +6287,9 @@ QByteArray OpcodeGETAXY::params() const
 void OpcodeGETAXY::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), varX));
+		vars.append(FF7Var(B1(banks), varX, FF7Var::SignedWord, true));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), varY));
+		vars.append(FF7Var(B2(banks), varY, FF7Var::SignedWord, true));
 }
 
 OpcodeGETAI::OpcodeGETAI(const char *params, int size)
@@ -6240,7 +6322,7 @@ QByteArray OpcodeGETAI::params() const
 void OpcodeGETAI::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), varI));
+		vars.append(FF7Var(B2(banks), varI, FF7Var::Word, true));
 }
 
 OpcodeANIMX2::OpcodeANIMX2(const char *params, int size)
@@ -6357,7 +6439,7 @@ QByteArray OpcodeASPED::params() const
 void OpcodeASPED::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), speed));
+		vars.append(FF7Var(B2(banks), speed & 0xFF, FF7Var::Word));
 }
 
 OpcodeCC::OpcodeCC(const char *params, int size)
@@ -6418,13 +6500,13 @@ QByteArray OpcodeJUMP::params() const
 void OpcodeJUMP::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), targetX));
+		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), targetY));
+		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF, FF7Var::SignedWord));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), targetI));
+		vars.append(FF7Var(B1(banks[1]), targetI & 0xFF, FF7Var::Word));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), height));
+		vars.append(FF7Var(B2(banks[1]), height & 0xFF, FF7Var::SignedWord));
 }
 
 OpcodeAXYZI::OpcodeAXYZI(const char *params, int size)
@@ -6466,13 +6548,13 @@ QByteArray OpcodeAXYZI::params() const
 void OpcodeAXYZI::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), varX));
+		vars.append(FF7Var(B1(banks[0]), varX, FF7Var::SignedWord, true));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), varY));
+		vars.append(FF7Var(B2(banks[0]), varY, FF7Var::SignedWord, true));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), varZ));
+		vars.append(FF7Var(B1(banks[1]), varZ, FF7Var::SignedWord, true));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), varI));
+		vars.append(FF7Var(B2(banks[1]), varI, FF7Var::Word, true));
 }
 
 OpcodeLADER::OpcodeLADER(const char *params, int size)
@@ -6523,13 +6605,13 @@ QByteArray OpcodeLADER::params() const
 void OpcodeLADER::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF, FF7Var::SignedWord));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), targetZ & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), targetZ & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), targetI & 0xFF));
+		vars.append(FF7Var(B2(banks[1]), targetI & 0xFF, FF7Var::Word));
 }
 
 OpcodeOFST::OpcodeOFST(const char *params, int size)
@@ -6571,13 +6653,13 @@ QByteArray OpcodeOFST::params() const
 void OpcodeOFST::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), targetX & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), targetY & 0xFF, FF7Var::SignedWord));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), targetZ & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), targetZ & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), speed & 0xFF));
+		vars.append(FF7Var(B2(banks[1]), speed & 0xFF, FF7Var::Word));
 }
 
 OpcodeOFSTW::OpcodeOFSTW()
@@ -6616,7 +6698,7 @@ QByteArray OpcodeTALKR::params() const
 void OpcodeTALKR::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), distance));
+		vars.append(FF7Var(B2(banks), distance, FF7Var::Byte));
 }
 
 OpcodeSLIDR::OpcodeSLIDR(const char *params, int size)
@@ -6646,7 +6728,7 @@ QByteArray OpcodeSLIDR::params() const
 void OpcodeSLIDR::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), distance));
+		vars.append(FF7Var(B2(banks), distance, FF7Var::Byte));
 }
 
 OpcodeSOLID::OpcodeSOLID(const char *params, int size)
@@ -6986,17 +7068,17 @@ QByteArray OpcodeSLINE::params() const
 void OpcodeSLINE::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), targetX1 & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), targetX1 & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), targetY1 & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), targetY1 & 0xFF, FF7Var::SignedWord));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), targetZ1 & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), targetZ1 & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), targetX2));
+		vars.append(FF7Var(B2(banks[1]), targetX2 & 0xFF, FF7Var::SignedWord));
 	if(B1(banks[2]) != 0)
-		vars.append(FF7Var(B1(banks[2]), targetY2 & 0xFF));
+		vars.append(FF7Var(B1(banks[2]), targetY2 & 0xFF, FF7Var::SignedWord));
 	if(B2(banks[2]) != 0)
-		vars.append(FF7Var(B2(banks[2]), targetZ2));
+		vars.append(FF7Var(B2(banks[2]), targetZ2 & 0xFF, FF7Var::SignedWord));
 }
 
 OpcodeSIN::OpcodeSIN(const char *params, int size)
@@ -7035,13 +7117,13 @@ QByteArray OpcodeSIN::params() const
 void OpcodeSIN::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), value1 & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), value1 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), value2 & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), value2 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), value3 & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), value3 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), var));
+		vars.append(FF7Var(B2(banks[1]), var, FF7Var::SignedWord, true)); // FIXME: signed word?
 }
 
 OpcodeCOS::OpcodeCOS(const char *params, int size)
@@ -7080,13 +7162,13 @@ QByteArray OpcodeCOS::params() const
 void OpcodeCOS::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), value1 & 0xFF));
+		vars.append(FF7Var(B1(banks[0]), value1 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), value2 & 0xFF));
+		vars.append(FF7Var(B2(banks[0]), value2 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), value3 & 0xFF));
+		vars.append(FF7Var(B1(banks[1]), value3 & 0xFF, FF7Var::SignedWord)); // FIXME: signed word?
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), var));
+		vars.append(FF7Var(B2(banks[1]), var, FF7Var::SignedWord, true)); // FIXME: signed word?
 }
 
 OpcodeTLKR2::OpcodeTLKR2(const char *params, int size)
@@ -7116,7 +7198,7 @@ QByteArray OpcodeTLKR2::params() const
 void OpcodeTLKR2::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), distance & 0xFF));
+		vars.append(FF7Var(B2(banks), distance & 0xFF, FF7Var::Word));
 }
 
 OpcodeSLDR2::OpcodeSLDR2(const char *params, int size)
@@ -7146,7 +7228,7 @@ QByteArray OpcodeSLDR2::params() const
 void OpcodeSLDR2::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), distance & 0xFF));
+		vars.append(FF7Var(B2(banks), distance & 0xFF, FF7Var::Word));
 }
 
 OpcodePMJMP::OpcodePMJMP(const char *params, int size)
@@ -7221,15 +7303,15 @@ QByteArray OpcodeAKAO2::params() const
 void OpcodeAKAO2::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), param1));
+		vars.append(FF7Var(B1(banks[0]), param1 & 0xFF, FF7Var::Word));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), param2));
+		vars.append(FF7Var(B2(banks[0]), param2 & 0xFF, FF7Var::Word));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), param3));
+		vars.append(FF7Var(B1(banks[1]), param3 & 0xFF, FF7Var::Word));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), param4));
+		vars.append(FF7Var(B2(banks[1]), param4 & 0xFF, FF7Var::Word));
 	if(B2(banks[2]) != 0)
-		vars.append(FF7Var(B2(banks[2]), param5));
+		vars.append(FF7Var(B2(banks[2]), param5 & 0xFF, FF7Var::Word));
 }
 
 OpcodeFCFIX::OpcodeFCFIX(const char *params, int size)
@@ -7346,15 +7428,15 @@ QByteArray OpcodeMPPAL::params() const
 void OpcodeMPPAL::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), start));
+		vars.append(FF7Var(B1(banks[0]), start, FF7Var::Byte));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), b));
+		vars.append(FF7Var(B2(banks[0]), b, FF7Var::Byte));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), g));
+		vars.append(FF7Var(B1(banks[1]), g, FF7Var::Byte));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), r));
+		vars.append(FF7Var(B2(banks[1]), r, FF7Var::Byte));
 	if(B2(banks[2]) != 0)
-		vars.append(FF7Var(B2(banks[2]), colorCount));
+		vars.append(FF7Var(B2(banks[2]), colorCount, FF7Var::Byte));
 }
 
 OpcodeBGON::OpcodeBGON(const char *params, int size)
@@ -7387,9 +7469,9 @@ QByteArray OpcodeBGON::params() const
 void OpcodeBGON::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), paramID));
+		vars.append(FF7Var(B1(banks), paramID, FF7Var::Byte));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), stateID));
+		vars.append(FF7Var(B2(banks), stateID, FF7Var::Byte));
 }
 
 OpcodeBGOFF::OpcodeBGOFF(const char *params, int size)
@@ -7422,9 +7504,9 @@ QByteArray OpcodeBGOFF::params() const
 void OpcodeBGOFF::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), paramID));
+		vars.append(FF7Var(B1(banks), paramID, FF7Var::Byte));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), stateID));
+		vars.append(FF7Var(B2(banks), stateID, FF7Var::Byte));
 }
 
 OpcodeBGROL::OpcodeBGROL(const char *params, int size)
@@ -7454,7 +7536,7 @@ QByteArray OpcodeBGROL::params() const
 void OpcodeBGROL::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), paramID));
+		vars.append(FF7Var(B2(banks), paramID, FF7Var::Byte));
 }
 
 OpcodeBGROL2::OpcodeBGROL2(const char *params, int size)
@@ -7484,7 +7566,7 @@ QByteArray OpcodeBGROL2::params() const
 void OpcodeBGROL2::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), paramID));
+		vars.append(FF7Var(B2(banks), paramID, FF7Var::Byte));
 }
 
 OpcodeBGCLR::OpcodeBGCLR(const char *params, int size)
@@ -7514,7 +7596,7 @@ QByteArray OpcodeBGCLR::params() const
 void OpcodeBGCLR::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), paramID));
+		vars.append(FF7Var(B2(banks), paramID, FF7Var::Byte));
 }
 
 OpcodeSTPAL::OpcodeSTPAL(const char *params, int size)
@@ -7550,9 +7632,9 @@ QByteArray OpcodeSTPAL::params() const
 void OpcodeSTPAL::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), palID));
+		vars.append(FF7Var(B1(banks), palID, FF7Var::Byte));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), position));
+		vars.append(FF7Var(B2(banks), position, FF7Var::Byte));
 }
 
 OpcodeLDPAL::OpcodeLDPAL(const char *params, int size)
@@ -7588,9 +7670,9 @@ QByteArray OpcodeLDPAL::params() const
 void OpcodeLDPAL::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), position));
+		vars.append(FF7Var(B1(banks), position, FF7Var::Byte));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), palID));
+		vars.append(FF7Var(B2(banks), palID, FF7Var::Byte));
 }
 
 OpcodeCPPAL::OpcodeCPPAL(const char *params, int size)
@@ -7626,9 +7708,9 @@ QByteArray OpcodeCPPAL::params() const
 void OpcodeCPPAL::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), posSrc));
+		vars.append(FF7Var(B1(banks), posSrc, FF7Var::Byte));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), posDst));
+		vars.append(FF7Var(B2(banks), posDst, FF7Var::Byte));
 }
 
 OpcodeRTPAL::OpcodeRTPAL(const char *params, int size)
@@ -7667,11 +7749,11 @@ QByteArray OpcodeRTPAL::params() const
 void OpcodeRTPAL::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), posSrc));
+		vars.append(FF7Var(B1(banks[0]), posSrc, FF7Var::Byte));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), posDst));
+		vars.append(FF7Var(B2(banks[0]), posDst, FF7Var::Byte));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), start));
+		vars.append(FF7Var(B2(banks[1]), start, FF7Var::Byte));
 }
 
 OpcodeADPAL::OpcodeADPAL(const char *params, int size)
@@ -7716,15 +7798,15 @@ QByteArray OpcodeADPAL::params() const
 void OpcodeADPAL::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), posSrc));
+		vars.append(FF7Var(B1(banks[0]), posSrc, FF7Var::Byte));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), posDst));
+		vars.append(FF7Var(B2(banks[0]), posDst, FF7Var::Byte));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), b));
+		vars.append(FF7Var(B1(banks[1]), b, FF7Var::Byte));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), g));
+		vars.append(FF7Var(B2(banks[1]), g, FF7Var::Byte));
 	if(B1(banks[2]) != 0)
-		vars.append(FF7Var(B1(banks[2]), r));
+		vars.append(FF7Var(B1(banks[2]), r, FF7Var::Byte));
 }
 
 OpcodeMPPAL2::OpcodeMPPAL2(const char *params, int size)
@@ -7769,15 +7851,15 @@ QByteArray OpcodeMPPAL2::params() const
 void OpcodeMPPAL2::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), posSrc));
+		vars.append(FF7Var(B1(banks[0]), posSrc, FF7Var::Byte));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), posDst));
+		vars.append(FF7Var(B2(banks[0]), posDst, FF7Var::Byte));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), b));
+		vars.append(FF7Var(B1(banks[1]), b, FF7Var::Byte));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), g));
+		vars.append(FF7Var(B2(banks[1]), g, FF7Var::Byte));
 	if(B1(banks[2]) != 0)
-		vars.append(FF7Var(B1(banks[2]), r));
+		vars.append(FF7Var(B1(banks[2]), r, FF7Var::Byte));
 }
 
 OpcodeSTPLS::OpcodeSTPLS(const char *params, int size)
@@ -7956,9 +8038,9 @@ QByteArray OpcodeSOUND::params() const
 void OpcodeSOUND::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), soundID & 0xFF));
+		vars.append(FF7Var(B1(banks), soundID & 0xFF, FF7Var::Word));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), position));
+		vars.append(FF7Var(B2(banks), position, FF7Var::Byte));
 }
 
 OpcodeAKAO::OpcodeAKAO(const char *params, int size)
@@ -8003,15 +8085,15 @@ QByteArray OpcodeAKAO::params() const
 void OpcodeAKAO::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks[0]) != 0)
-		vars.append(FF7Var(B1(banks[0]), param1));
+		vars.append(FF7Var(B1(banks[0]), param1 & 0xFF, FF7Var::Word));
 	if(B2(banks[0]) != 0)
-		vars.append(FF7Var(B2(banks[0]), param2));
+		vars.append(FF7Var(B2(banks[0]), param2 & 0xFF, FF7Var::Word));
 	if(B1(banks[1]) != 0)
-		vars.append(FF7Var(B1(banks[1]), param3));
+		vars.append(FF7Var(B1(banks[1]), param3 & 0xFF, FF7Var::Word));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), param4));
+		vars.append(FF7Var(B2(banks[1]), param4 & 0xFF, FF7Var::Word));
 	if(B2(banks[2]) != 0)
-		vars.append(FF7Var(B2(banks[2]), param5));
+		vars.append(FF7Var(B2(banks[2]), param5 & 0xFF, FF7Var::Word));
 }
 
 OpcodeMUSVT::OpcodeMUSVT(const char *params, int size)
@@ -8128,9 +8210,9 @@ QByteArray OpcodeCHMPH::params() const
 void OpcodeCHMPH::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), var1));
+		vars.append(FF7Var(B1(banks), var1, FF7Var::Byte, true)); // FIXME: byte?
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), var2));
+		vars.append(FF7Var(B2(banks), var2, FF7Var::Byte, true)); // FIXME: byte?
 }
 
 OpcodePMVIE::OpcodePMVIE(const char *params, int size)
@@ -8190,7 +8272,7 @@ QByteArray OpcodeMVIEF::params() const
 void OpcodeMVIEF::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), varCurMovieFrame));
+		vars.append(FF7Var(B2(banks), varCurMovieFrame, FF7Var::Word, true)); // FIXME: word?
 }
 
 OpcodeMVCAM::OpcodeMVCAM(const char *params, int size)
@@ -8265,9 +8347,9 @@ QByteArray OpcodeCMUSC::params() const
 void OpcodeCMUSC::getVariables(QList<FF7Var> &vars) const
 {
 	if(B1(banks) != 0)
-		vars.append(FF7Var(B1(banks), unknown1));
+		vars.append(FF7Var(B1(banks), unknown1 & 0xFF, FF7Var::Word));
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), unknown2));
+		vars.append(FF7Var(B2(banks), unknown2 & 0xFF, FF7Var::Word));
 }
 
 OpcodeCHMST::OpcodeCHMST(const char *params, int size)
@@ -8297,7 +8379,7 @@ QByteArray OpcodeCHMST::params() const
 void OpcodeCHMST::getVariables(QList<FF7Var> &vars) const
 {
 	if(B2(banks) != 0)
-		vars.append(FF7Var(B2(banks), var));
+		vars.append(FF7Var(B2(banks), var, FF7Var::Byte, true));
 }
 
 OpcodeGAMEOVER::OpcodeGAMEOVER()
