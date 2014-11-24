@@ -19,6 +19,103 @@
 #include "Field.h"
 #include "core/Config.h"
 
+GrpScriptsIterator::GrpScriptsIterator(const GrpScriptsIterator &other) :
+	QListIterator<GrpScript *>(other), _scriptsIt(0)
+{
+	if (other._scriptsIt) {
+		_scriptsIt = new ScriptsIterator(*other._scriptsIt);
+	}
+}
+
+GrpScriptsIterator::~GrpScriptsIterator()
+{
+	if (_scriptsIt) {
+		delete _scriptsIt;
+	}
+}
+
+GrpScript * const &GrpScriptsIterator::next()
+{
+	GrpScript * const &nextGrpScript = QListIterator<GrpScript *>::next();
+	if (_scriptsIt) {
+		delete _scriptsIt;
+	}
+	_scriptsIt = new ScriptsIterator(nextGrpScript->scripts());
+	return nextGrpScript;
+}
+
+GrpScript * const &GrpScriptsIterator::previous()
+{
+	GrpScript * const &previousGrpScript = QListIterator<GrpScript *>::previous();
+	if (_scriptsIt) {
+		delete _scriptsIt;
+	}
+	_scriptsIt = new ScriptsIterator(previousGrpScript->scripts());
+	return previousGrpScript;
+}
+
+Script *GrpScriptsIterator::nextScript()
+{
+	if (_scriptsIt && _scriptsIt->hasNext()) {
+		return _scriptsIt->next();
+	}
+	if (hasNext()) {
+		next();
+		return nextScript();
+	}
+	return NULL;
+}
+
+Script *GrpScriptsIterator::previousScript()
+{
+	if (_scriptsIt && _scriptsIt->hasPrevious()) {
+		return _scriptsIt->previous();
+	}
+	if (hasPrevious()) {
+		previous();
+		return previousScript();
+	}
+	return NULL;
+}
+
+Opcode *GrpScriptsIterator::nextOpcode()
+{
+	if (_scriptsIt) {
+		Opcode *op = _scriptsIt->nextOpcode();
+
+		if (op) {
+			return op;
+		}
+	}
+
+	Script *script = nextScript();
+
+	if (script) {
+		return nextOpcode();
+	}
+
+	return NULL;
+}
+
+Opcode *GrpScriptsIterator::previousOpcode()
+{
+	if (_scriptsIt) {
+		Opcode *op = _scriptsIt->previousOpcode();
+
+		if (op) {
+			return op;
+		}
+	}
+
+	Script *script = previousScript();
+
+	if (script) {
+		return previousOpcode();
+	}
+
+	return NULL;
+}
+
 Section1File::Section1File(Field *field) :
 	FieldPart(field), _tut(0)
 {

@@ -24,6 +24,32 @@
 #include "../FF7Text.h"
 #include "TutFileStandard.h"
 
+class GrpScriptsIterator : public QListIterator<GrpScript *>
+{
+public:
+	inline GrpScriptsIterator(const QList<GrpScript *> &list)
+		: QListIterator<GrpScript *>(list), _scriptsIt(0) {}
+	GrpScriptsIterator(const GrpScriptsIterator &other);
+	virtual ~GrpScriptsIterator();
+
+	GrpScript * const &next();
+	GrpScript * const &previous();
+
+	/* There is no hasNextScript() function
+	 * nextScript() can return NULL
+	 */
+	Script *nextScript();
+	Script *previousScript();
+
+	/* There is no hasNextOpcode() function
+	 * nextOpcode() can return NULL
+	 */
+	Opcode *nextOpcode();
+	Opcode *previousOpcode();
+private:
+	ScriptsIterator *_scriptsIt;
+};
+
 class Section1File : public FieldPart
 {
 public:

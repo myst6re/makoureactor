@@ -6,7 +6,7 @@
 SearchAll::SearchAll(Window *parent) :
 	QDialog(parent, Qt::Tool), _fieldArchive(0)
 {
-	resize(parent->width(), height());
+	resize(parent->width(), 400);
 	_resultList = new QTreeWidget(this);
 	_resultList->setAlternatingRowColors(true);
 	_resultList->setItemsExpandable(true);
@@ -173,15 +173,22 @@ void SearchAll::gotoResult(QTreeWidgetItem *item)
 
 void SearchAll::copySelected() const
 {
-	QList<QTreeWidgetItem *> items = _resultList->selectedItems();
+	QList<QTreeWidgetItem *> selectedItems = _resultList->selectedItems();
 
 	QString str;
-	foreach (QTreeWidgetItem *item, items) {
-		QStringList cols;
-		for (int col = 0 ; col < item->columnCount() ; ++col) {
-			cols.append(item->text(col).trimmed());
+	QTreeWidgetItemIterator it(_resultList);
+	while(*it) {
+		if(selectedItems.contains(*it)) {
+			QStringList cols;
+			for (int col = 0 ; col < (*it)->columnCount() ; ++col) {
+				cols.append((*it)->text(col).trimmed());
+			}
+			str.append(cols.join("\t").trimmed() + "\n");
+			if (cols.value(1).isEmpty()) { // Field row
+				str.append(QString(cols.value(0).size(), '=') + "\n");
+			}
 		}
-		str.append(cols.join("\t") + "\n");
+		++it;
 	}
 
 	QApplication::clipboard()->setText(str);

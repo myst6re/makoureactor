@@ -18,6 +18,67 @@
 #include "GrpScript.h"
 #include "../FF7Text.h"
 
+ScriptsIterator::ScriptsIterator(const ScriptsIterator &other) :
+	QListIterator<Script *>(other), _opcodesIt(0)
+{
+	if (other._opcodesIt) {
+		_opcodesIt = new OpcodesIterator(*other._opcodesIt);
+	}
+}
+
+ScriptsIterator::~ScriptsIterator()
+{
+	if (_opcodesIt) {
+		delete _opcodesIt;
+	}
+}
+
+Script * const &ScriptsIterator::next()
+{
+	Script * const &nextScript = QListIterator<Script *>::next();
+	if (_opcodesIt) {
+		delete _opcodesIt;
+	}
+	_opcodesIt = new OpcodesIterator(nextScript->opcodes());
+	return nextScript;
+}
+
+Script * const &ScriptsIterator::previous()
+{
+	Script * const &previousScript = QListIterator<Script *>::previous();
+	if (_opcodesIt) {
+		delete _opcodesIt;
+	}
+	_opcodesIt = new OpcodesIterator(previousScript->opcodes());
+	return previousScript;
+}
+
+Opcode *ScriptsIterator::nextOpcode()
+{
+	if (_opcodesIt && _opcodesIt->hasNext()) {
+		return _opcodesIt->next();
+	}
+
+	if (hasNext()) {
+		next();
+		return nextOpcode();
+	}
+	return NULL;
+}
+
+Opcode *ScriptsIterator::previousOpcode()
+{
+	if (_opcodesIt && _opcodesIt->hasPrevious()) {
+		return _opcodesIt->previous();
+	}
+
+	if (hasPrevious()) {
+		previous();
+		return previousOpcode();
+	}
+	return NULL;
+}
+
 GrpScript::GrpScript() :
 	_character(-1), animation(false), location(false), director(false)
 {

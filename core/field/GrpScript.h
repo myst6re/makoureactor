@@ -22,6 +22,26 @@
 #include <QColor>
 #include "Script.h"
 
+class ScriptsIterator : public QListIterator<Script *>
+{
+public:
+	inline ScriptsIterator(const QList<Script *> &list)
+		: QListIterator<Script *>(list), _opcodesIt(0) {}
+	ScriptsIterator(const ScriptsIterator &other);
+	virtual ~ScriptsIterator();
+
+	Script * const &next();
+	Script * const &previous();
+
+	/* There is no hasNextOpcode() function
+	 * nextOpcode() can return NULL
+	 */
+	Opcode *nextOpcode();
+	Opcode *previousOpcode();
+private:
+	OpcodesIterator *_opcodesIt;
+};
+
 class GrpScript
 {	
 public:
