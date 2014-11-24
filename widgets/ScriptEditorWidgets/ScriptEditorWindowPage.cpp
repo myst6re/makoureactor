@@ -142,14 +142,13 @@ void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 		h->setRange(0, 65535);
 		OpcodeWindow *opcodeWindow = (OpcodeWindow *)opcode;
 		FF7Window ff7Win = FF7Window();
-		if(opcodeWindow->getWindow(ff7Win)) {
-			textPreview->setWins(QList<FF7Window>() << ff7Win);
-			winID->setValue(opcodeWindow->windowID);
-			x->setValue(opcodeWindow->targetX);
-			y->setValue(opcodeWindow->targetY);
-			w->setValue(opcodeWindow->width);
-			h->setValue(opcodeWindow->height);
-		}
+		opcodeWindow->getWindow(ff7Win);
+		textPreview->setWins(QList<FF7Window>() << ff7Win);
+		winID->setValue(opcodeWindow->windowID);
+		x->setValue(opcodeWindow->targetX);
+		y->setValue(opcodeWindow->targetY);
+		w->setValue(opcodeWindow->width);
+		h->setValue(opcodeWindow->height);
 	}
 	foreach(QObject *o, children()) {
 		o->blockSignals(false);
@@ -203,30 +202,34 @@ void ScriptEditorWindowPage::updateText(int textID)
 
 void ScriptEditorWindowPage::setPositionWindow(const QPoint &point)
 {
-	x->blockSignals(true);
-	y->blockSignals(true);
-	x->setValue(point.x());
-	y->setValue(point.y());
-	x->blockSignals(false);
-	y->blockSignals(false);
+	if(x->isVisible()) {
+		x->blockSignals(true);
+		y->blockSignals(true);
+		x->setValue(point.x());
+		y->setValue(point.y());
+		x->blockSignals(false);
+		y->blockSignals(false);
 
-	emit opcodeChanged();
+		emit opcodeChanged();
+	}
 }
 
 void ScriptEditorWindowPage::align(Qt::Alignment alignment)
 {
-	x->blockSignals(true);
-	y->blockSignals(true);
-	if(alignment.testFlag(Qt::AlignHCenter)) {
-		x->setValue((textPreview->width() - w->value()) / 2);
-	}
-	if(alignment.testFlag(Qt::AlignVCenter)) {
-		y->setValue((textPreview->height() - h->value()) / 2);
-	}
-	x->blockSignals(false);
-	y->blockSignals(false);
+	if(x->isVisible()) {
+		x->blockSignals(true);
+		y->blockSignals(true);
+		if(alignment.testFlag(Qt::AlignHCenter)) {
+			x->setValue((textPreview->width() - w->value()) / 2);
+		}
+		if(alignment.testFlag(Qt::AlignVCenter)) {
+			y->setValue((textPreview->height() - h->value()) / 2);
+		}
+		x->blockSignals(false);
+		y->blockSignals(false);
 
-	updatePreview();
+		updatePreview();
+	}
 }
 
 void ScriptEditorWindowPage::resizeWindow()
