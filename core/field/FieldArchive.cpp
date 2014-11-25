@@ -47,9 +47,8 @@ Field *FieldArchiveIterator::previous(bool open, bool dontOptimize)
 
 Field *FieldArchiveIterator::openField(Field *field, bool open, bool dontOptimize) const
 {
-	if(field != NULL && open &&
-			!field->isOpen() && !field->open(dontOptimize)) {
-		return NULL;
+	if(field != NULL && open && !field->isOpen()) {
+		field->open(dontOptimize);
 	}
 	return field;
 }
