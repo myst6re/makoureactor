@@ -8346,7 +8346,7 @@ void OpcodeCMUSC::setParams(const char *params, int)
 
 QString OpcodeCMUSC::toString(Field *) const
 {
-	return QObject::tr("CMUSC (musique n°%1, unknown2=%2, unknown3=%3, unknown4=%4, unknown5=%5, unknown6=%6, unknown7=%7)")
+	return QObject::tr("CMUSC (musique n°%1, inconnu1=%2, inconnu2=%3, inconnu2=%4, inconnu4=%5, inconnu5=%6, inconnu6=%7)")
 			.arg(musicID)
 			.arg(unknown2)
 			.arg(unknown3)
