@@ -863,6 +863,16 @@ QString OpcodeGTPYE::toString(Field *) const
 			.arg(_var(party3, B1(banks[1])));
 }
 
+void OpcodeGTPYE::getVariables(QList<FF7Var> &vars) const
+{
+	QList<FF7Var> partyVars;
+	OpcodePartyE::getVariables(partyVars);
+	for(int i = 0 ; i < partyVars.size() ; ++i) {
+		partyVars[i].write = true;
+	}
+	vars.append(partyVars);
+}
+
 OpcodeDSKCG::OpcodeDSKCG(const char *params, int size)
 {
 	setParams(params, size);

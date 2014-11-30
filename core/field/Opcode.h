@@ -357,7 +357,7 @@ public:
 	explicit OpcodePartyE(const char *params, int size);
 	void setParams(const char *params, int size);
 	QByteArray params() const;
-	void getVariables(QList<FF7Var> &vars) const;
+	virtual void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	quint8 party1, party2, party3;
 };
@@ -376,6 +376,7 @@ public:
 	explicit OpcodeGTPYE(const OpcodePartyE &op);
 	inline int id() const { return 0x0B; }
 	QString toString(Field *field) const;
+	void getVariables(QList<FF7Var> &vars) const;
 };
 
 class OpcodeDSKCG : public Opcode {
