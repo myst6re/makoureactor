@@ -61,7 +61,7 @@ private:
 	QCheckBox *dispUnusedText;
 	QListWidget *liste1;
 	QToolBar *toolBar, *toolBar2;
-	QMenu *menu1, *menu2;
+	QMenu *menu1, *menu2, *menuVars, *menuKeys;
 	QPlainTextEdit *textEdit;
 	TextPreview *textPreview;
 	QToolButton *prevPage, *prevWin;
