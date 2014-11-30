@@ -47,9 +47,7 @@ void ScriptEditorWindowPage::build()
 	previewText->setMaximumWidth(textPreview->width()/2);
 
 	hAlign = new QPushButton(tr("Aligner horizontalement"), this);
-	hAlign->setEnabled(false);
 	vAlign = new QPushButton(tr("Aligner verticalement"), this);
-	vAlign->setEnabled(false);
 	autoSize = new QPushButton(tr("Taille automatique"), this);
 	autoSize->setEnabled(false);
 
@@ -195,8 +193,6 @@ void ScriptEditorWindowPage::updateText(int textID)
 						 ? field()->scriptsAndTexts()->text(textID).data()
 						 : QByteArray());
 
-	hAlign->setEnabled(hasText);
-	vAlign->setEnabled(hasText);
 	autoSize->setEnabled(hasText);
 }
 
