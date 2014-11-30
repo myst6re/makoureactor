@@ -93,6 +93,12 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	charNameEdit = new QLineEdit(textEditor);
 	charNameEdit->setMaxLength(9);
 
+	autoSizeMarginEdit = new QSpinBox(textEditor);
+	autoSizeMarginEdit->setRange(0, 320);
+
+	spacedCharactersWidthEdit = new QSpinBox(textEditor);
+	spacedCharactersWidthEdit->setRange(0, 320);
+
 	QGridLayout *windowPreviewLayout = new QGridLayout;
 	windowPreviewLayout->addWidget(windowColor1, 0, 0, Qt::AlignRight | Qt::AlignTop);
 	windowPreviewLayout->addWidget(windowColor3, 1, 0, Qt::AlignRight | Qt::AlignBottom);
@@ -103,11 +109,15 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	windowPreviewLayout->setColumnStretch(3, 1);
 
 	QGridLayout *textEditorLayout = new QGridLayout(textEditor);
-	textEditorLayout->addWidget(japEnc, 0, 0);
-	// windowPreviewLayout->addWidget(optiText, 1, 0);
-	textEditorLayout->addLayout(windowPreviewLayout, 1, 0);
-	textEditorLayout->addWidget(listCharNames, 0, 1, Qt::AlignTop);
-	textEditorLayout->addWidget(charNameEdit, 1, 1, Qt::AlignTop);
+	textEditorLayout->addWidget(japEnc, 0, 0, 1, 2);
+	// windowPreviewLayout->addWidget(optiText, 1, 0, 1, 2);
+	textEditorLayout->addLayout(windowPreviewLayout, 1, 0, 4, 2, Qt::AlignTop);
+	textEditorLayout->addWidget(listCharNames, 0, 2, 1, 2, Qt::AlignTop);
+	textEditorLayout->addWidget(charNameEdit, 1, 2, 1, 2, Qt::AlignTop);
+	textEditorLayout->addWidget(new QLabel(tr("Taille auto. : marge à droite")), 3, 2, Qt::AlignBottom);
+	textEditorLayout->addWidget(autoSizeMarginEdit, 3, 3, Qt::AlignBottom);
+	textEditorLayout->addWidget(new QLabel(tr("Largeur {SPACED CHARACTERS}")), 4, 2, Qt::AlignBottom);
+	textEditorLayout->addWidget(spacedCharactersWidthEdit, 4, 3, Qt::AlignBottom);
 	textEditorLayout->setRowStretch(2, 1);
 
 	QGroupBox *scriptEditor = new QGroupBox(tr("Editeur de script"), this);
@@ -228,6 +238,9 @@ void ConfigWindow::fillConfig()
 	}
 
 	fillCharNameEdit();
+
+	autoSizeMarginEdit->setValue(Config::value("autoSizeMarginRight", 14).toInt());
+	spacedCharactersWidthEdit->setValue(Config::value("spacedCharactersWidth", 13).toInt());
 
 	for(int j=0 ; j<listFF7->topLevelItemCount() ; ++j) {
 		QCoreApplication::processEvents();
@@ -457,6 +470,9 @@ void ConfigWindow::accept()
 			Config::remove(QString("customCharName%1").arg(charId));
 		}
 	}
+
+	Config::setValue("autoSizeMarginRight", autoSizeMarginEdit->value());
+	Config::setValue("spacedCharactersWidth", spacedCharactersWidthEdit->value());
 
 	Data::loadKernel2Bin(); // Reload kernel2.bin data
 	Data::loadWindowBin(); // Reload window.bin data

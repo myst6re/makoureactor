@@ -218,11 +218,13 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text)
 
 QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 {
-	int line=0, width=19, height=25, size=ff7Text.size(), maxW=0, maxH=0;
+	const int baseWidth = 8 + Config::value("autoSizeMarginRight", 14).toInt();
+	int line=0, width=baseWidth - 3, height=25, size=ff7Text.size(), maxW=0, maxH=0;
 	pagesPos.clear();
 	pagesPos.append(0);
 	quint8 caract;
 	bool jp = Config::value("jp_txt", false).toBool(), spaced_characters=false;
+	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt();
 
 	for(int i=0 ; i<size ; ++i) {
 		caract = (quint8)ff7Text.at(i);
@@ -234,7 +236,7 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 			if(height>maxH)	maxH = height;
 			if(width>maxW)	maxW = width;
 			++line;
-			width = 22;
+			width = baseWidth;
 			height = 25;
 			pagesPos.append(i+1);
 			break;
@@ -242,37 +244,37 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 			if(line == 0)	width += 3;
 			if(width>maxW)	maxW = width;
 			++line;
-			width = 22;
+			width = baseWidth;
 			height += 16;
 			break;
 		case 0xfa: // Jap 1
 			++i;
 			caract = (quint8)ff7Text.at(i);
 			if(jp) {
-				width += spaced_characters ? 13 : charFullWidth(2, caract);
+				width += spaced_characters ? spacedCharsW : charFullWidth(2, caract);
 			} else if(caract < 0xd2) {
-				width += spaced_characters ? 13 : 1;
+				width += spaced_characters ? spacedCharsW : 1;
 			}
 			break;
 		case 0xfb: // Jap 2
 			++i;
 			if(jp) {
 				caract = (quint8)ff7Text.at(i);
-				width += spaced_characters ? 13 : charFullWidth(3, caract);
+				width += spaced_characters ? spacedCharsW : charFullWidth(3, caract);
 			}
 			break;
 		case 0xfc: // Jap 3
 			++i;
 			if(jp) {
 				caract = (quint8)ff7Text.at(i);
-				width += spaced_characters ? 13 : charFullWidth(4, caract);
+				width += spaced_characters ? spacedCharsW : charFullWidth(4, caract);
 			}
 			break;
 		case 0xfd: // Jap 4
 			++i;
 			if(jp) {
 				caract = (quint8)ff7Text.at(i);
-				width += spaced_characters ? 13 : charFullWidth(5, caract);
+				width += spaced_characters ? spacedCharsW : charFullWidth(5, caract);
 			}
 			break;
 		case 0xfe: // Jap 5 + add
@@ -282,34 +284,34 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 			if(caract == 0xdd)
 				++i;
 			else if(caract == 0xde || caract == 0xdf || caract == 0xe1) {
-				if(caract == 0xe1)		width += spaced_characters ? 52 : 12;
+				if(caract == 0xe1)		width += spaced_characters ? spacedCharsW * 4 : 12;
 				int zeroId = !jp ? 0x10 : 0x33;
-				width += spaced_characters ? 13 : charFullWidth(0, zeroId);
+				width += spaced_characters ? spacedCharsW : charFullWidth(0, zeroId);
 			} else if(caract == 0xe2)
 				i += 4;
 			else if(caract == 0xe9)
 				spaced_characters = !spaced_characters;
 			else if(caract < 0xd2 && jp)
-				width += spaced_characters ? 13 : charFullWidth(6, caract);
+				width += spaced_characters ? spacedCharsW : charFullWidth(6, caract);
 			break;
 		default:
 			if(!jp && caract==0xe0) {// {CHOICE}
-				width += spaced_characters ? 130 : 30;
+				width += spaced_characters ? spacedCharsW * 10 : 30;
 			} else if(!jp && caract==0xe1) {// \t
-				width += spaced_characters ? 52 : 12;
+				width += spaced_characters ? spacedCharsW * 4 : 12;
 			} else if(!jp && caract>=0xe2 && caract<=0xe4) {// duo
 				const char *duo = optimisedDuo[caract-0xe2];
-				width += spaced_characters ? 13 : charFullWidth(1, (quint8)duo[0]);
-				width += spaced_characters ? 13 : charFullWidth(1, (quint8)duo[1]);
+				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[0]);
+				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[1]);
 			} else if(caract>=0xea && caract<=0xf5) {// Character names
-				width += spaced_characters ? 13*names.at(caract-0xea).size() : namesWidth[caract-0xea];
+				width += spaced_characters ? spacedCharsW * names.at(caract-0xea).size() : namesWidth[caract-0xea];
 			} else if(caract>=0xf6 && caract<=0xf9) {// Keys
 				width += 17;
 			} else {
 				if(jp) {
-					width += spaced_characters ? 13 : charFullWidth(1, caract);
+					width += spaced_characters ? spacedCharsW : charFullWidth(1, caract);
 				} else {
-					width += spaced_characters ? 13 : charFullWidth(0, caract);
+					width += spaced_characters ? spacedCharsW : charFullWidth(0, caract);
 				}
 			}
 			break;
@@ -457,6 +459,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	multicolor = -1;
 	int savFontColor = fontColor;
 	WindowType mode = Normal;
+	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt();
 
 	/* Window Background */
 
@@ -495,9 +498,9 @@ bool TextPreview::drawTextArea(QPainter *painter)
 		{
 			if(!jp) {
 				if(charId==0xe0)//{CHOICE}
-					x += spaced_characters ? 130 : 30;
+					x += spaced_characters ? spacedCharsW * 10 : 30;
 				else if(charId==0xe1)//\t
-					x += spaced_characters ? 52 : 12;
+					x += spaced_characters ? spacedCharsW * 4 : 12;
 				else if(charId>=0xe2 && charId<=0xe4) {
 					const quint8 *opti = (const quint8 *)optimisedDuo[charId-0xe2];
 					letter(&x, &y, opti[0], painter, 0);
@@ -527,7 +530,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 			switch(charId) {
 			case 0xfa:
 				if(jp)	letter(&x, &y, charId2, painter, 2);
-				else if(charId2 < 0xd2)		x += spaced_characters ? 13 : 1;
+				else if(charId2 < 0xd2)		x += spaced_characters ? spacedCharsW : 1;
 				break;
 			case 0xfb:
 				if(jp)	letter(&x, &y, charId2, painter, 3);
@@ -559,7 +562,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 				} else if(charId2 == 0xde || charId2 == 0xdf) {
 					letter(&x, &y, !jp ? 0x10 : 0x33, painter, jp);// zero
 				} else if(charId2 == 0xe1) {
-					x += spaced_characters ? 52 : 12;// tab
+					x += spaced_characters ? spacedCharsW * 4 : 12;// tab
 					letter(&x, &y, !jp ? 0x10 : 0x33, painter, jp);// zero
 				} else if(charId2 == 0xe2) {
 					i += 4;
@@ -713,7 +716,7 @@ void TextPreview::letter(int *x, int *y, int charId, QPainter *painter, quint8 t
 
 	if(!spaced_characters)	*x += leftPadd;
 	painter->drawImage(*x, *y, letterImage(tableId, charId));
-	*x += spaced_characters ? 13 : charWidth;
+	*x += spaced_characters ? Config::value("spacedCharactersWidth", 13).toInt() : charWidth;
 }
 
 void TextPreview::word(int *x, int *y, const QByteArray &charIds, QPainter *painter, quint8 tableId)

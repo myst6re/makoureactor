@@ -33,6 +33,7 @@ private:
 	QTreeWidget *listFF7;
 	QComboBox *listCharNames;
 	QLineEdit *charNameEdit;
+	QSpinBox *autoSizeMarginEdit, *spacedCharactersWidthEdit;
 	QCheckBox *kernelAuto, *windowAuto, *charAuto;
 	QLabel *kernelPath, *windowPath, *charPath;
 	QPushButton *ff7ButtonMod, *ff7ButtonRem, *kernelButton, *windowButton, *charButton;
