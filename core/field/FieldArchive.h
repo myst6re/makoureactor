@@ -162,7 +162,7 @@ public:
 
 	bool isAllOpened() const;
 	bool isModified() const;
-	QList<FF7Var> searchAllVars();
+	QList<FF7Var> searchAllVars(QMap<FF7Var, QSet<QString> > &fieldNames);
 #ifdef DEBUG_FUNCTIONS
 	void validateAsk();
 	void validateOneLineSize();

@@ -36,7 +36,6 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	name = new QLineEdit(this);
 	name->setMaxLength(50);
 	rename = new QPushButton(tr("Renommer"), this);
-	rename->setEnabled(false);
 	
 	layout1->addWidget(bank);
 	layout1->addWidget(adress);
@@ -50,7 +49,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	liste1->setFont(font);
 	
 	liste2 = new QTreeWidget(this);
-	liste2->setColumnCount(2);
+	liste2->setColumnCount(4);
 	liste2->setHeaderLabels(QStringList() << tr("Adresse") << tr("Surnom") << tr("Opération") << tr("Taille"));
 	liste2->setIndentation(0);
 	liste2->setItemsExpandable(false);
@@ -80,7 +79,10 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	
 	fillList1();
 	fillList2();
+	liste1->setCurrentRow(0);
+	liste2->setCurrentItem(liste2->topLevelItem(0));
 	changeBank(0);
+	fillForm();
 	
 	connect(bank, SIGNAL(valueChanged(int)), SLOT(scrollToList1(int)));
 	connect(adress, SIGNAL(valueChanged(int)), SLOT(scrollToList2(int)));
@@ -102,26 +104,20 @@ void VarManager::setFieldArchive(FieldArchive *fieldArchive)
 
 void VarManager::fillList1()
 {
-	liste1->clear();
-	for(quint8 bankID=1 ; bankID<16 ; ++bankID)
-	{
+	for(quint8 bankID=1 ; bankID<16 ; ++bankID) {
 		liste1->addItem(QString("%1").arg(bankID, 2, 10, QChar('0')));
 	}
-	liste1->setCurrentRow(0);
 }
 
 void VarManager::fillList2()
 {
-	liste2->clear();
-	for(quint16 adressID=0 ; adressID<256 ; ++adressID)
-	{
-		new QTreeWidgetItem(liste2, QStringList() << QString("%1").arg(adressID, 3) << "" << "" << "");
+	for(quint16 adressID=0 ; adressID<256 ; ++adressID) {
+		new QTreeWidgetItem(liste2, QStringList() << QString("%1").arg(adressID, 3));
 	}
+
 	liste2->resizeColumnToContents(0);
 	liste2->resizeColumnToContents(1);
 	liste2->sortByColumn(0, Qt::AscendingOrder);
-	liste2->setCurrentItem(liste2->topLevelItem(0));
-	rename->setEnabled(true);
 }
 
 void VarManager::changeBank(int row)
@@ -129,18 +125,23 @@ void VarManager::changeBank(int row)
 	int b = row+1;
 	bank->setValue(b);
 	liste2->blockSignals(true);
-	
-	for(quint16 adressID=0 ; adressID<256 ; ++adressID)
-	{
-		QTreeWidgetItem *item = findList2Item(adressID);
-		if(item==NULL)	continue;
-		item->setText(1, local_var_names.value(adressID | ((row+1) << 8)));
 
-		colorizeItem(item, FF7Var(b, adressID));
+	QTreeWidgetItemIterator it(liste2);
+	while(*it) {
+		QTreeWidgetItem *item = *it;
+		quint16 addressID = itemAddress(item);
+		item->setText(1, local_var_names.value(addressID | ((row+1) << 8)));
+		colorizeItem(item, FF7Var(b, addressID));
+		++it;
 	}
 	fillForm();
 	
 	liste2->blockSignals(false);
+}
+
+quint8 VarManager::itemAddress(QTreeWidgetItem *item)
+{
+	return item->text(0).toInt();
 }
 
 void VarManager::scrollToList1(int bankID)
@@ -152,9 +153,10 @@ void VarManager::scrollToList1(int bankID)
 void VarManager::scrollToList2(int adressID)
 {
 	QTreeWidgetItem *item = findList2Item(adressID);
-	if(item==NULL)	return;
-	liste2->setCurrentItem(item);
-	liste2->scrollToItem(item);
+	if(item) {
+		liste2->setCurrentItem(item);
+		liste2->scrollToItem(item);
+	}
 }
 
 QTreeWidgetItem *VarManager::findList2Item(int adressID)
@@ -167,9 +169,9 @@ QTreeWidgetItem *VarManager::findList2Item(int adressID)
 void VarManager::fillForm()
 {
 	if(liste2->selectedItems().isEmpty())	return;
-	QTreeWidgetItem *item = liste2->selectedItems().at(0);
-	adress->setValue(item->text(0).toInt());
-	name->setText(item->text(1));	
+	QTreeWidgetItem *item = liste2->selectedItems().first();
+	adress->setValue(itemAddress(item));
+	name->setText(item->text(1));
 }
 
 void VarManager::renameVar()
@@ -196,7 +198,7 @@ void VarManager::search()
 	mess.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
 	mess.setStandardButtons(QMessageBox::NoButton);
 	mess.show();
-	allVars = fieldArchive->searchAllVars();
+	allVars = fieldArchive->searchAllVars(_fieldNames);
 	int b = bank->value();
 
 	for(int adress=0 ; adress<256 ; ++adress) {
@@ -267,4 +269,5 @@ void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
 	}
 	item->setText(2, rwText);
 	item->setText(3, sizeText.join(", "));
+	//item->setText(4, QStringList(_fieldNames.value(var).toList()).join(", "));
 }

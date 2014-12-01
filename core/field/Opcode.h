@@ -55,6 +55,13 @@ inline bool operator==(const FF7Var &v1, const FF7Var &v2) {
 	return v1.bank == v2.bank && v1.adress == v2.adress;
 }
 
+inline bool operator<(const FF7Var &v1, const FF7Var &v2) {
+	if(v1.bank == v2.bank) {
+		return v1.adress < v2.adress;
+	}
+	return v1.bank < v2.bank;
+}
+
 class Section1File;
 class Field;
 

@@ -212,8 +212,9 @@ bool FieldArchive::isModified() const
 	return false;
 }
 
-QList<FF7Var> FieldArchive::searchAllVars()
+QList<FF7Var> FieldArchive::searchAllVars(QMap<FF7Var, QSet<QString> > &fieldNames)
 {
+	Q_UNUSED(fieldNames)
 	QList<FF7Var> vars;
 	int size = fileList.size();
 
@@ -221,7 +222,15 @@ QList<FF7Var> FieldArchive::searchAllVars()
 		QCoreApplication::processEvents();
 		Field *field = this->field(i);
 		if(field != NULL) {
-			field->scriptsAndTexts()->searchAllVars(vars);
+			QList<FF7Var> fieldVars;
+			field->scriptsAndTexts()->searchAllVars(fieldVars);
+			foreach (const FF7Var &fieldVar, fieldVars) {
+				QSet<QString> names = fieldNames.value(fieldVar);
+				names.insert(field->scriptsAndTexts()->author());
+				fieldNames.insert(fieldVar, names);
+			}
+
+			vars.append(fieldVars);
 		}
 	}
 

@@ -43,6 +43,7 @@ private:
 	void fillList1();
 	void fillList2();
 	void colorizeItem(QTreeWidgetItem *item, const FF7Var &var);
+	static quint8 itemAddress(QTreeWidgetItem *item);
 
 	QMap<quint16, QString> local_var_names;
 
@@ -58,6 +59,7 @@ private:
 
 	FieldArchive *fieldArchive;
 	QList<FF7Var> allVars;
+	QMap<FF7Var, QSet<QString> > _fieldNames;
 };
 
 #endif
