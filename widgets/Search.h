@@ -38,6 +38,8 @@ public:
 	void updateRunSearch();
 
 private slots:
+	void saveCurrentTab(int tab);
+	void saveCurrentScriptTab(int tab);
 	void updateComboVarName();
 	void updateChampAdress();
 	void updateSearchVarPlaceholder(int opIndex);

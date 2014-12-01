@@ -32,6 +32,7 @@ Search::Search(Window *mainWindow) :
 	tabWidget = new QTabWidget(this);
 	tabWidget->addTab(scriptPageWidget(), tr("Scripts"));
 	tabWidget->addTab(textPageWidget(), tr("Textes"));
+	tabWidget->setCurrentIndex(Config::value("searchDialogCurrentModule").toInt());
 
 	QList<QPushButton *> buttons;
 	buttons.append(buttonNext = new QPushButton(tr("Chercher le suivant"), this));
@@ -86,8 +87,15 @@ Search::Search(Window *mainWindow) :
 	connect(caseSens2, SIGNAL(clicked(bool)), SLOT(updateCaseSensitivity(bool)));
 	connect(useRegexp2, SIGNAL(clicked(bool)), useRegexp, SLOT(setChecked(bool)));
 
+	connect(tabWidget, SIGNAL(currentChanged(int)), SLOT(saveCurrentTab(int)));
+
 	setActionsEnabled(false);
 	updateCaseSensitivity(Config::value("findWithCaseSensitive").toBool());
+}
+
+void Search::saveCurrentTab(int tab)
+{
+	Config::setValue("searchDialogCurrentModule", tab);
 }
 
 QWidget *Search::scriptPageWidget()
@@ -230,12 +238,20 @@ QWidget *Search::scriptPageWidget()
 	topLayout->setRowStretch(1, 1);
 
 	connect(liste, SIGNAL(currentIndexChanged(int)), stack, SLOT(setCurrentIndex(int)));
+	connect(liste, SIGNAL(currentIndexChanged(int)), SLOT(saveCurrentScriptTab(int)));
 	connect(champBank, SIGNAL(valueChanged(int)), SLOT(updateComboVarName()));
 	connect(champAdress, SIGNAL(valueChanged(int)), comboVarName, SLOT(setCurrentIndex(int)));
 	connect(comboVarName, SIGNAL(currentIndexChanged(int)), SLOT(updateChampAdress()));
 	connect(champOp, SIGNAL(currentIndexChanged(int)), SLOT(updateSearchVarPlaceholder(int)));
 
+	liste->setCurrentIndex(Config::value("searchDialogScriptCurrentModule").toInt());
+
 	return ret;
+}
+
+void Search::saveCurrentScriptTab(int tab)
+{
+	Config::setValue("searchDialogScriptCurrentModule", tab);
 }
 
 QWidget *Search::textPageWidget()
@@ -670,6 +686,7 @@ void Search::findAll()
 	searchAllDialog->raise();
 
 	mainWindow()->setEnabled(false);
+	setEnabled(false);
 	setSearchValues();
 	int fieldID = -1;
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
@@ -720,6 +737,7 @@ void Search::findAll()
 	}
 
 	mainWindow()->setEnabled(true);
+	setEnabled(true);
 }
 
 QRegExp Search::buildRegExp(const QString &lineEditText, bool caseSensitive, bool useRegexp)
