@@ -21,7 +21,7 @@ SearchAll::SearchAll(Window *parent) :
 	layout->addWidget(_resultList, 0, 0);
 	layout->setContentsMargins(QMargins());
 
-	connect(_resultList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(gotoResult(QTreeWidgetItem*)));
+	connect(_resultList, SIGNAL(itemActivated(QTreeWidgetItem*,int)), SLOT(gotoResult(QTreeWidgetItem*)));
 
 	QAction *copy = new QAction(QIcon(":/images/copy.png"), tr("Copier"), this);
 	copy->setShortcut(QKeySequence("Ctrl+C"));
