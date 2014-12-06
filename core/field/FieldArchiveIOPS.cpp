@@ -333,19 +333,19 @@ QByteArray FieldArchiveIOPSIso::updateFieldBin(const QByteArray &data, IsoDirect
 {
 	QByteArray header = data.left(8), ungzip;
 	quint32 oldSectorStart, newSectorStart, oldSize, newSize;
-	QMap<QByteArray, QByteArray> changementsFieldBin;
-	QMap<QByteArray, QString> fichiers;//debug
+	QMap<QByteArray, QByteArray> changesFieldBin;
+	QMap<QByteArray, QString> files;//debug
 
-	foreach(IsoDirectory *fileOrDir, fieldDirectory->directories()) {
-		if(fileOrDir->isModified() && !fileOrDir->name().endsWith(".X") && fileOrDir->name()!="FIELD.BIN") {
-			oldSectorStart = fileOrDir->location();
-			oldSize = fileOrDir->size();
-			newSectorStart = fileOrDir->newLocation();
-			newSize = fileOrDir->newSize();
+	foreach(IsoFile *file, fieldDirectory->files()) {
+		if(file->isModified() && !file->name().endsWith(".X") && file->name()!="FIELD.BIN") {
+			oldSectorStart = file->location();
+			oldSize = file->size();
+			newSectorStart = file->newLocation();
+			newSize = file->newSize();
 
 			QByteArray tempBA = QByteArray((char *)&oldSectorStart, 4).append((char *)&oldSize, 4);
-			changementsFieldBin.insert(tempBA, QByteArray((char *)&newSectorStart, 4).append((char *)&newSize, 4));
-			fichiers.insert(tempBA, fileOrDir->name());
+			changesFieldBin.insert(tempBA, QByteArray((char *)&newSectorStart, 4).append((char *)&newSize, 4));
+			files.insert(tempBA, file->name());
 		}
 	}
 
@@ -366,22 +366,22 @@ QByteArray FieldArchiveIOPSIso::updateFieldBin(const QByteArray &data, IsoDirect
 
 	int indicativePosition=0x30000, count;
 	QByteArray copy = ungzip;
-	QMapIterator<QByteArray, QByteArray> i(changementsFieldBin);
+	QMapIterator<QByteArray, QByteArray> i(changesFieldBin);
 	while(i.hasNext()) {
 		i.next();
 		count = copy.count(i.key());
 		if(count == 0) {
-			qWarning() << "Error not found!" << fichiers.value(i.key());
+			qWarning() << "Error not found!" << files.value(i.key());
 			return QByteArray();
 		} else if(count == 1) {
 			indicativePosition = copy.indexOf(i.key());
 			ungzip.replace(i.key(), i.value());
 		} else {
-			qWarning() << "error multiple occurrences 1" << fichiers.value(i.key());
+			qWarning() << "error multiple occurrences 1" << files.value(i.key());
 			if(copy.mid(indicativePosition).count(i.key())==1) {
 				ungzip.replace(copy.indexOf(i.key(), indicativePosition), 8, i.value());
 			} else {
-				qWarning() << "error multiple occurrences 2" << fichiers.value(i.key());
+				qWarning() << "error multiple occurrences 2" << files.value(i.key());
 				return QByteArray();
 			}
 		}
