@@ -114,6 +114,8 @@ QPair<quint8, quint8> VarManager::banksFromRow(int row)
 	case 3:
 		return qMakePair(quint8(11), quint8(12));
 	case 4:
+		return qMakePair(quint8(13), quint8(14));
+	case 5:
 		return qMakePair(quint8(15), quint8(7));
 	}
 	Q_ASSERT(false);
@@ -135,9 +137,12 @@ int VarManager::rowFromBank(quint8 bank)
 	case 11:
 	case 12:
 		return 3;
+	case 13:
+	case 14:
+		return 4;
 	case 15:
 	case 7:
-		return 4;
+		return 5;
 	}
 	Q_ASSERT(false);
 	return -1;
@@ -145,7 +150,7 @@ int VarManager::rowFromBank(quint8 bank)
 
 void VarManager::fillList1()
 {
-	for(quint8 row=0 ; row<5 ; ++row) {
+	for(quint8 row=0 ; row<6 ; ++row) {
 		QPair<quint8, quint8> pair = banksFromRow(row);
 		liste1->addItem(QString("%1-%2")
 						.arg(pair.first, 2, 10, QChar('0'))
