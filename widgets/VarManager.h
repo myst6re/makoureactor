@@ -42,8 +42,11 @@ private:
 	QTreeWidgetItem *findList2Item(int);
 	void fillList1();
 	void fillList2();
+	void findVar(const FF7Var &var, bool &foundR, bool &foundW, QSet<FF7Var::VarSize> &varSize);
 	void colorizeItem(QTreeWidgetItem *item, const FF7Var &var);
 	static quint8 itemAddress(QTreeWidgetItem *item);
+	static int rowFromBank(quint8 bank);
+	static QPair<quint8, quint8> banksFromRow(int row);
 
 	QMap<quint16, QString> local_var_names;
 

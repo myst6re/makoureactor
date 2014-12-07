@@ -102,10 +102,54 @@ void VarManager::setFieldArchive(FieldArchive *fieldArchive)
 	searchButton->setEnabled(fieldArchive != 0);
 }
 
+QPair<quint8, quint8> VarManager::banksFromRow(int row)
+{
+	switch(row) {
+	case 0:
+		return qMakePair(quint8(1), quint8(2));
+	case 1:
+		return qMakePair(quint8(3), quint8(4));
+	case 2:
+		return qMakePair(quint8(5), quint8(6));
+	case 3:
+		return qMakePair(quint8(11), quint8(12));
+	case 4:
+		return qMakePair(quint8(15), quint8(7));
+	}
+	Q_ASSERT(false);
+	return qMakePair(quint8(0), quint8(0));
+}
+
+int VarManager::rowFromBank(quint8 bank)
+{
+	switch(bank) {
+	case 1:
+	case 2:
+		return 0;
+	case 3:
+	case 4:
+		return 1;
+	case 5:
+	case 6:
+		return 2;
+	case 11:
+	case 12:
+		return 3;
+	case 15:
+	case 7:
+		return 4;
+	}
+	Q_ASSERT(false);
+	return -1;
+}
+
 void VarManager::fillList1()
 {
-	for(quint8 bankID=1 ; bankID<16 ; ++bankID) {
-		liste1->addItem(QString("%1").arg(bankID, 2, 10, QChar('0')));
+	for(quint8 row=0 ; row<5 ; ++row) {
+		QPair<quint8, quint8> pair = banksFromRow(row);
+		liste1->addItem(QString("%1-%2")
+						.arg(pair.first, 2, 10, QChar('0'))
+						.arg(pair.second, 2, 10, QChar('0')));
 	}
 }
 
@@ -122,7 +166,9 @@ void VarManager::fillList2()
 
 void VarManager::changeBank(int row)
 {
-	int b = row+1;
+	QPair<quint8, quint8> banks = banksFromRow(row);
+	quint8 b = banks.first,
+			b2 = banks.second;
 	bank->setValue(b);
 	liste2->blockSignals(true);
 
@@ -130,7 +176,19 @@ void VarManager::changeBank(int row)
 	while(*it) {
 		QTreeWidgetItem *item = *it;
 		quint16 addressID = itemAddress(item);
-		item->setText(1, local_var_names.value(addressID | ((row+1) << 8)));
+		QString varName1 = local_var_names.value(addressID | (b << 8)),
+				varName2 = local_var_names.value(addressID | (b2 << 8)),
+				varName;
+
+		if (varName1.isEmpty()) {
+			varName = varName2;
+		} else if (varName2.isEmpty()) {
+			varName = varName1;
+		} else {
+			varName = QString("%1, %2").arg(varName1, varName2);
+		}
+
+		item->setText(1, varName);
 		colorizeItem(item, FF7Var(b, addressID));
 		++it;
 	}
@@ -146,8 +204,9 @@ quint8 VarManager::itemAddress(QTreeWidgetItem *item)
 
 void VarManager::scrollToList1(int bankID)
 {
-	liste1->setCurrentRow(bankID-1);
-	liste1->scrollToItem(liste1->item(bankID-1));
+	int row = rowFromBank(bankID);
+	liste1->setCurrentRow(row);
+	liste1->scrollToItem(liste1->item(row));
 }
 
 void VarManager::scrollToList2(int adressID)
@@ -206,25 +265,33 @@ void VarManager::search()
 	}
 }
 
-void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
+void VarManager::findVar(const FF7Var &var, bool &foundR, bool &foundW, QSet<FF7Var::VarSize> &varSize)
 {
 	int index = -1;
-	bool foundR = false, foundW = false;
-	QSet<FF7Var::VarSize> varSize;
 
 	forever {
 		index = allVars.indexOf(var, index + 1);
 		if (index < 0) {
 			break;
 		}
-		FF7Var var = allVars.at(index);
-		varSize.insert(var.size);
-		if (var.write) {
+		FF7Var foundVar = allVars.at(index);
+		varSize.insert(foundVar.size);
+		if (foundVar.write) {
 			foundW = true;
 		} else {
 			foundR = true;
 		}
 	}
+}
+
+void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
+{
+	QPair<quint8, quint8> banks = banksFromRow(rowFromBank(var.bank));
+	bool foundR = false, foundW = false;
+	QSet<FF7Var::VarSize> varSize;
+
+	findVar(FF7Var(banks.first,  var.adress), foundR, foundW, varSize);
+	findVar(FF7Var(banks.second, var.adress), foundR, foundW, varSize);
 
 	QString rwText;
 	QStringList sizeText;
