@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #define PROG_NAME			"Makou Reactor"
-#define PROG_VERSION		"1.6.3 (special build)"
+#define PROG_VERSION		"1.6.3"
 #define PROG_FULLNAME		QString("%1 %2").arg(PROG_NAME, PROG_VERSION)
 
 #define RC_PRODUCT_VERSION			1,6,3,0
