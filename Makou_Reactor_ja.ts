@@ -6151,8 +6151,8 @@ Make sure it is valid or delete it.</translatorcomment>
     <name>Search</name>
     <message>
         <location filename="widgets/Search.cpp" line="30"/>
-        <location filename="widgets/Search.cpp" line="111"/>
-        <location filename="widgets/Search.cpp" line="249"/>
+        <location filename="widgets/Search.cpp" line="119"/>
+        <location filename="widgets/Search.cpp" line="265"/>
         <source>Rechercher</source>
         <translatorcomment>Find</translatorcomment>
         <translation>検索</translation>
@@ -6168,213 +6168,213 @@ Make sure it is valid or delete it.</translatorcomment>
         <translation type="unfinished">テキスト</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="39"/>
+        <location filename="widgets/Search.cpp" line="40"/>
         <source>Chercher tout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="98"/>
+        <location filename="widgets/Search.cpp" line="106"/>
         <source>Texte</source>
         <translatorcomment>Text</translatorcomment>
         <translation>テキスト</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="99"/>
+        <location filename="widgets/Search.cpp" line="107"/>
         <source>Variable</source>
         <translation>変数</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="100"/>
+        <location filename="widgets/Search.cpp" line="108"/>
         <source>Opcode</source>
         <translation>オプコード</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="101"/>
+        <location filename="widgets/Search.cpp" line="109"/>
         <source>Exec</source>
         <translation>実行</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="102"/>
+        <location filename="widgets/Search.cpp" line="110"/>
         <source>Saut d&apos;écran</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="113"/>
-        <location filename="widgets/Search.cpp" line="258"/>
+        <location filename="widgets/Search.cpp" line="121"/>
+        <location filename="widgets/Search.cpp" line="274"/>
         <source>Sensible à la casse</source>
         <translation>大文字と小文字を区別</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="114"/>
-        <location filename="widgets/Search.cpp" line="259"/>
+        <location filename="widgets/Search.cpp" line="122"/>
+        <location filename="widgets/Search.cpp" line="275"/>
         <source>Utiliser les expressions régulières</source>
         <translation>正規表現</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="139"/>
+        <location filename="widgets/Search.cpp" line="147"/>
         <source>Var</source>
         <translation>変数</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="151"/>
-        <location filename="widgets/Search.cpp" line="397"/>
+        <location filename="widgets/Search.cpp" line="159"/>
+        <location filename="widgets/Search.cpp" line="413"/>
         <source>Valeur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="152"/>
+        <location filename="widgets/Search.cpp" line="160"/>
         <source>Tout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="153"/>
+        <location filename="widgets/Search.cpp" line="161"/>
         <source>Affectation</source>
         <translation type="unfinished">代入</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="154"/>
+        <location filename="widgets/Search.cpp" line="162"/>
         <source>Affectation Bit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="155"/>
+        <location filename="widgets/Search.cpp" line="163"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="156"/>
+        <location filename="widgets/Search.cpp" line="164"/>
         <source>Test bit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="183"/>
+        <location filename="widgets/Search.cpp" line="191"/>
         <source>Groupe</source>
         <translation>グループ</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="202"/>
-        <location filename="widgets/Search.cpp" line="262"/>
+        <location filename="widgets/Search.cpp" line="210"/>
+        <location filename="widgets/Search.cpp" line="278"/>
         <source>Contexte</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="203"/>
-        <location filename="widgets/Search.cpp" line="263"/>
+        <location filename="widgets/Search.cpp" line="211"/>
+        <location filename="widgets/Search.cpp" line="279"/>
         <source>Sur tous les écrans</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="204"/>
-        <location filename="widgets/Search.cpp" line="264"/>
+        <location filename="widgets/Search.cpp" line="212"/>
+        <location filename="widgets/Search.cpp" line="280"/>
         <source>Uniquement l&apos;écran courant</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="205"/>
+        <location filename="widgets/Search.cpp" line="213"/>
         <source>Uniquement le groupe courant</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="206"/>
+        <location filename="widgets/Search.cpp" line="214"/>
         <source>Uniquement le script courant</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="254"/>
-        <location filename="widgets/Search.cpp" line="255"/>
+        <location filename="widgets/Search.cpp" line="270"/>
+        <location filename="widgets/Search.cpp" line="271"/>
         <source>Remplacer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="256"/>
+        <location filename="widgets/Search.cpp" line="272"/>
         <source>Remplacer tout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="265"/>
+        <location filename="widgets/Search.cpp" line="281"/>
         <source>Uniquement le texte courant</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="397"/>
+        <location filename="widgets/Search.cpp" line="413"/>
         <source>Position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="434"/>
+        <location filename="widgets/Search.cpp" line="450"/>
         <source>Dernier écran</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="435"/>
+        <location filename="widgets/Search.cpp" line="451"/>
         <source>Dernier groupe</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="436"/>
+        <location filename="widgets/Search.cpp" line="452"/>
         <source>Dernier script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="437"/>
+        <location filename="widgets/Search.cpp" line="453"/>
         <source>Dernière instruction</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="438"/>
+        <location filename="widgets/Search.cpp" line="454"/>
         <source>Dernier texte</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="446"/>
+        <location filename="widgets/Search.cpp" line="462"/>
         <source>Premier écran</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="447"/>
+        <location filename="widgets/Search.cpp" line="463"/>
         <source>Premier groupe</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="448"/>
+        <location filename="widgets/Search.cpp" line="464"/>
         <source>Premier script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="449"/>
+        <location filename="widgets/Search.cpp" line="465"/>
         <source>Première instruction</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="450"/>
+        <location filename="widgets/Search.cpp" line="466"/>
         <source>Premier texte</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="508"/>
+        <location filename="widgets/Search.cpp" line="524"/>
         <source>%1,
 poursuite au début.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="656"/>
+        <location filename="widgets/Search.cpp" line="672"/>
         <source>%1,
 poursuite à la fin.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="181"/>
+        <location filename="widgets/Search.cpp" line="189"/>
         <source>Script</source>
         <translation>スクリプト</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="37"/>
+        <location filename="widgets/Search.cpp" line="38"/>
         <source>Chercher le suivant</source>
         <translatorcomment>Find next</translatorcomment>
         <translation>次を検索</translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="38"/>
+        <location filename="widgets/Search.cpp" line="39"/>
         <source>Chercher le précédent</source>
         <translatorcomment>Find previous</translatorcomment>
         <translation>前を検索</translation>
@@ -6383,37 +6383,42 @@ poursuite à la fin.</source>
 <context>
     <name>SearchAll</name>
     <message>
-        <location filename="widgets/SearchAll.cpp" line="26"/>
+        <location filename="widgets/SearchAll.cpp" line="9"/>
+        <source>Rechercher tout</source>
+        <translation type="unfinished">検索</translation>
+    </message>
+    <message>
+        <location filename="widgets/SearchAll.cpp" line="28"/>
         <source>Copier</source>
         <translation type="unfinished">コピー</translation>
     </message>
     <message>
-        <location filename="widgets/SearchAll.cpp" line="40"/>
+        <location filename="widgets/SearchAll.cpp" line="48"/>
         <source>Groupe</source>
         <translation type="unfinished">グループ</translation>
     </message>
     <message>
-        <location filename="widgets/SearchAll.cpp" line="40"/>
+        <location filename="widgets/SearchAll.cpp" line="48"/>
         <source>Script</source>
         <translation type="unfinished">スクリプト</translation>
     </message>
     <message>
-        <location filename="widgets/SearchAll.cpp" line="40"/>
+        <location filename="widgets/SearchAll.cpp" line="48"/>
         <source>Ligne</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/SearchAll.cpp" line="40"/>
+        <location filename="widgets/SearchAll.cpp" line="48"/>
         <source>Commande</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/SearchAll.cpp" line="48"/>
+        <location filename="widgets/SearchAll.cpp" line="56"/>
         <source>Texte n°</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/SearchAll.cpp" line="48"/>
+        <location filename="widgets/SearchAll.cpp" line="56"/>
         <source>Texte</source>
         <translation type="unfinished">テキスト</translation>
     </message>
@@ -6944,47 +6949,47 @@ Are you sure you want to continue?</translatorcomment>
         <translation>リネーム</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="54"/>
+        <location filename="widgets/VarManager.cpp" line="53"/>
         <source>Adresse</source>
         <translatorcomment>Adress</translatorcomment>
         <translation>アドレス</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="54"/>
+        <location filename="widgets/VarManager.cpp" line="53"/>
         <source>Surnom</source>
         <translatorcomment>Nickname</translatorcomment>
         <translation>ニックネーム</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="54"/>
+        <location filename="widgets/VarManager.cpp" line="53"/>
         <source>Opération</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="54"/>
+        <location filename="widgets/VarManager.cpp" line="53"/>
         <source>Taille</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="65"/>
+        <location filename="widgets/VarManager.cpp" line="64"/>
         <source>Adresses utilisées</source>
         <translatorcomment>Adresses used</translatorcomment>
         <translation>アドレスに適用</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="66"/>
+        <location filename="widgets/VarManager.cpp" line="65"/>
         <source>Enregistrer</source>
         <translatorcomment>Save</translatorcomment>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="186"/>
+        <location filename="widgets/VarManager.cpp" line="247"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="186"/>
+        <location filename="widgets/VarManager.cpp" line="247"/>
         <source>Fichier vars.cfg inaccessible.
 Échec de l&apos;enregistrement.</source>
         <translatorcomment>Save failed.</translatorcomment>
@@ -6992,49 +6997,49 @@ Are you sure you want to continue?</translatorcomment>
 保存に失敗しました。</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="194"/>
+        <location filename="widgets/VarManager.cpp" line="255"/>
         <source>Recherche</source>
         <translatorcomment>Searching</translatorcomment>
         <translation>検索中</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="194"/>
+        <location filename="widgets/VarManager.cpp" line="255"/>
         <source>Recherche des variables en cours, cela peut prendre une minute...</source>
         <translatorcomment>Searching,it may take a minute... </translatorcomment>
         <translation>検索しています。しばらく時間がかかります...</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="240"/>
+        <location filename="widgets/VarManager.cpp" line="309"/>
         <source>rw</source>
         <translation>rw</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="242"/>
+        <location filename="widgets/VarManager.cpp" line="311"/>
         <source>r</source>
         <translation>r</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="244"/>
+        <location filename="widgets/VarManager.cpp" line="313"/>
         <source>w</source>
         <translation>w</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="247"/>
+        <location filename="widgets/VarManager.cpp" line="316"/>
         <source>bits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="250"/>
+        <location filename="widgets/VarManager.cpp" line="319"/>
         <source>1 octet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="253"/>
+        <location filename="widgets/VarManager.cpp" line="322"/>
         <source>2 octets</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="256"/>
+        <location filename="widgets/VarManager.cpp" line="325"/>
         <source>2 octets signés</source>
         <translation type="unfinished"></translation>
     </message>
