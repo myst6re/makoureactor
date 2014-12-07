@@ -6,6 +6,8 @@
 SearchAll::SearchAll(Window *parent) :
 	QDialog(parent, Qt::Tool), _fieldArchive(0)
 {
+	setWindowTitle(tr("Rechercher tout"));
+
 	resize(parent->width(), 400);
 	_resultList = new QTreeWidget(this);
 	_resultList->setAlternatingRowColors(true);
@@ -33,9 +35,15 @@ SearchAll::SearchAll(Window *parent) :
 	setScriptSearch();
 }
 
-void SearchAll::setScriptSearch()
+void SearchAll::clear()
 {
 	_resultList->clear();
+	itemByFieldID.clear();
+}
+
+void SearchAll::setScriptSearch()
+{
+	clear();
 	_resultList->setColumnCount(4);
 	_resultList->setHeaderLabels(QStringList() << tr("Groupe") << tr("Script") << tr("Ligne") << tr("Commande"));
 	_searchMode = ScriptSearch;
@@ -43,7 +51,7 @@ void SearchAll::setScriptSearch()
 
 void SearchAll::setTextSearch()
 {
-	_resultList->clear();
+	clear();
 	_resultList->setColumnCount(2);
 	_resultList->setHeaderLabels(QStringList() << tr("Texte n°") << tr("Texte"));
 	_searchMode = TextSearch;
@@ -54,7 +62,7 @@ void SearchAll::setFieldArchive(FieldArchive *fieldArchive)
 	_fieldArchive = fieldArchive;
 	setEnabled(fieldArchive);
 	if(!fieldArchive) {
-		_resultList->clear();
+		clear();
 	}
 }
 

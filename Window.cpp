@@ -92,7 +92,7 @@ Window::Window() :
 	actionMisc = menu->addAction(tr("&Divers..."), this, SLOT(miscManager()));
 	menu->addSeparator();
 	menu->addAction(tr("&Gestionnaire de variables..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
-	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("Rec&hercher..."), this, SLOT(searchManager()), QKeySequence("Ctrl+F"));
+	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("Rec&hercher..."), this, SLOT(searchManager()), QKeySequence::Find);
 	actionMiscOperations = menu->addAction(tr("Opér&ations diverses..."), this, SLOT(miscOperations()));
 	//menu->addAction(tr("&Police de caractères..."), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
 
