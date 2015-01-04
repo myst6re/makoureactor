@@ -839,7 +839,7 @@ OpcodeSPTYE::OpcodeSPTYE(const OpcodePartyE &op) :
 
 QString OpcodeSPTYE::toString(Field *) const
 {
-	return QObject::tr("Sauvegarder les membres de l'équipe : %1 | %2 | %3")
+	return QObject::tr("Affecter les membres de l'équipe : %1 | %2 | %3")
 			.arg(_var(party1, B1(banks[0])))
 			.arg(_var(party2, B2(banks[0])))
 			.arg(_var(party3, B1(banks[1])));
