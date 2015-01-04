@@ -293,7 +293,7 @@ public:
 private:
 	bool _open();
 	bool openVolumeDescriptor(quint8 num=0);
-	void openRootDirectory(quint32 sector, quint32 dataSize=SECTOR_SIZE_DATA);
+	bool openRootDirectory(quint32 sector, quint32 dataSize=SECTOR_SIZE_DATA);
 	IsoDirectory *_openDirectoryRecord(IsoDirectory *directories, QList<quint32> &dirVisisted);
 	QList<PathTable> pathTable(quint32 sector, quint32 dataSize=SECTOR_SIZE_DATA);
 

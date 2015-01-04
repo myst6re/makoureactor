@@ -504,7 +504,10 @@ bool IsoArchive::_open()
 		return false;
 	}
 
-	openRootDirectory(volume.dr.drh.location_extent, volume.dr.drh.data_length);
+	if (!openRootDirectory(volume.dr.drh.location_extent, volume.dr.drh.data_length)) {
+		qWarning() << "IsoArchive::_open cannot open root directory";
+		return false;
+	}
 //	pathTables1a = pathTable(volume.vd1.type_path_table, volume.vd1.path_table_size);
 //	pathTables1b = pathTable(volume.vd1.opt_type_path_table, volume.vd1.path_table_size);
 //	pathTables2a = pathTable(qFromBigEndian(volume.vd1.type_path_table2), volume.vd1.path_table_size);
@@ -784,10 +787,11 @@ bool IsoArchive::openVolumeDescriptor(quint8 num)
 	return true;
 }
 
-void IsoArchive::openRootDirectory(quint32 sector, quint32 dataSize)
+bool IsoArchive::openRootDirectory(quint32 sector, quint32 dataSize)
 {
 	QList<quint32> dirVisisted;
 	_rootDirectory = _openDirectoryRecord(new IsoDirectory(QString(), sector, dataSize, 0), dirVisisted);
+	return _rootDirectory != NULL;
 }
 
 IsoDirectory *IsoArchive::_openDirectoryRecord(IsoDirectory *directories, QList<quint32> &dirVisisted)
@@ -799,6 +803,7 @@ IsoDirectory *IsoArchive::_openDirectoryRecord(IsoDirectory *directories, QList<
 		dirVisisted.append(sector + i);
 
 	if(!seekToSector(sector)) {
+		qWarning() << "IsoArchive::_openDirectoryRecord cannot seek to sector" << sector;
 		goto _openDirectoryRecordError;
 	}
 
@@ -810,6 +815,7 @@ IsoDirectory *IsoArchive::_openDirectoryRecord(IsoDirectory *directories, QList<
 		const qint64 beginPos = posIso();
 
 		if(readIso((char *)&dr.length_dr, 1) != 1) {
+			qWarning() << "IsoArchive::_openDirectoryRecord cannot read length_dr at" << beginPos;
 			goto _openDirectoryRecordError;
 		}
 
@@ -820,15 +826,21 @@ IsoDirectory *IsoArchive::_openDirectoryRecord(IsoDirectory *directories, QList<
 		}
 
 		if(readIso((char *)&dr.extended_attr_record_length, 1) != 1) {
+			qWarning() << "IsoArchive::_openDirectoryRecord cannot read extended_attr_record_length at" << beginPos;
 			goto _openDirectoryRecordError;
 		}
 		if(readIso((char *)&dr.drh, sizeof(DirectoryRecordHead)) != sizeof(DirectoryRecordHead)) {
+			qWarning() << "IsoArchive::_openDirectoryRecord cannot read drh at" << beginPos;
 			goto _openDirectoryRecordError;
 		}
 
-		if(dr.drh.length_fi > MAX_FILENAME_LENGTH)	break;
+		if(dr.drh.length_fi > MAX_FILENAME_LENGTH) {
+			qWarning() << "IsoArchive::_openDirectoryRecord length filename >" << MAX_FILENAME_LENGTH << dr.drh.length_fi;
+			goto _openDirectoryRecordError;
+		}
 
 		if(!seekIso(beginPos + 33)) {
+			qWarning() << "IsoArchive::_openDirectoryRecord cannot seek to" << beginPos + 33;
 			goto _openDirectoryRecordError;
 		}
 
@@ -837,6 +849,7 @@ IsoDirectory *IsoArchive::_openDirectoryRecord(IsoDirectory *directories, QList<
 		//dr.version = dr.name.mid(index+1);
 		dr.name = dr.name.left(index);
 		if(!seekIso(beginPos + dr.length_dr)) {
+			qWarning() << "IsoArchive::_openDirectoryRecord cannot seek to" << beginPos +  + dr.length_dr;
 			goto _openDirectoryRecordError;
 		}
 
@@ -853,6 +866,7 @@ IsoDirectory *IsoArchive::_openDirectoryRecord(IsoDirectory *directories, QList<
 		if(!dir->isSpecial()) {
 //			qDebug() << "IN DIR" << dir->name() << dir->location();
 			if(!_openDirectoryRecord(dir, dirVisisted)) {
+				qWarning() << "IsoArchive::_openDirectoryRecord cannot open directory" << dir->name() << dir->location();
 				goto _openDirectoryRecordError;
 			}
 //			qDebug() << "OUT DIR" << dir->name();
