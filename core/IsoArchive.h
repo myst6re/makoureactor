@@ -291,6 +291,7 @@ public:
 //	const QList<PathTable> &getPathTables2a() const;
 //	const QList<PathTable> &getPathTables2b() const;
 private:
+	Q_DISABLE_COPY(IsoArchive)
 	bool _open();
 	bool openVolumeDescriptor(quint8 num=0);
 	bool openRootDirectory(quint32 sector, quint32 dataSize=SECTOR_SIZE_DATA);
