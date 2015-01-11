@@ -4410,7 +4410,7 @@ Make sure it is valid or delete it.</translatorcomment>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="466"/>
         <source>Affecter personnage à objet 3D</source>
-        <translatorcomment>Set character to FIeld Model</translatorcomment>
+        <translatorcomment>Set character to Field Model</translatorcomment>
         <translation>3Dモデルにキャラクターを追加</translation>
     </message>
     <message>

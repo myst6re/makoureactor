@@ -4023,7 +4023,7 @@ Make sure it is valid or delete it.</translation>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="466"/>
         <source>Affecter personnage à objet 3D</source>
-        <translation>Set character to FIeld Model</translation>
+        <translation>Set character to Field Model</translation>
     </message>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="467"/>
@@ -4065,7 +4065,7 @@ Make sure it is valid or delete it.</translation>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="475"/>
         <source>Obtenir les coordonnées d&apos;un équipier (X,Y,Z,I)</source>
-        <translation>Get Group coordinates (X,Y,Z,I)</translation>
+        <translation>Get Party coordinates (X,Y,Z,I)</translation>
     </message>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="477"/>
