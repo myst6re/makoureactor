@@ -2432,7 +2432,7 @@ void OpcodeWCLS::setParams(const char *params, int)
 
 QString OpcodeWCLS::toString(Field *) const
 {
-	return QObject::tr("WCLS (fenêtre n°%1)")
+	return QObject::tr("Fermer la fenêtre n°%1")
 			.arg(windowID);
 }
 
@@ -3542,7 +3542,7 @@ void OpcodeWCLSE::setParams(const char *params, int)
 
 QString OpcodeWCLSE::toString(Field *) const
 {
-	return QObject::tr("Fermer la fenêtre n°%1")
+	return QObject::tr("Fermer la fenêtre n°%1 (plus fort)")
 			.arg(windowID);
 }
 
@@ -5538,6 +5538,11 @@ OpcodePC::OpcodePC(const char *params, int size)
 	setParams(params, size);
 }
 
+OpcodePC::OpcodePC(quint8 charID) :
+	charID(charID)
+{
+}
+
 void OpcodePC::setParams(const char *params, int)
 {
 	charID = params[0];
@@ -5557,6 +5562,11 @@ QByteArray OpcodePC::params() const
 OpcodeCHAR::OpcodeCHAR(const char *params, int size)
 {
 	setParams(params, size);
+}
+
+OpcodeCHAR::OpcodeCHAR(quint8 objectID) :
+	objectID(objectID)
+{
 }
 
 void OpcodeCHAR::setParams(const char *params, int)

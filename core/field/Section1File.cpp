@@ -167,7 +167,7 @@ bool Section1File::open(const QByteArray &data)
 
 	quint32 posAKAO = 0;
 	quint16 nbAKAO, posScripts, pos;
-	quint8 j, k, emptyGrps=0, nbScripts = (quint8)data.at(2);
+	quint8 emptyGrps = 0, nbScripts = (quint8)data.at(2);
 
 	GrpScript *grpScript;
 
@@ -186,50 +186,53 @@ bool Section1File::open(const QByteArray &data)
 	for(quint8 i=0 ; i<nbScripts ; ++i)
 	{
 		grpScript = new GrpScript(QString(data.mid(32+8*i,8)));
-		if(emptyGrps > 1)
-		{
-			for(int j=0 ; j<32 ; ++j)	grpScript->addScript();
-			_grpScripts.append(grpScript);
+		if(emptyGrps > 1) {
 			emptyGrps--;
-			continue;
-		}
+		} else {
 
-		//Listage des positions de départ
-		memcpy(positions, constData + posScripts + 64*i, 64);
+			//Listage des positions de départ
+			memcpy(positions, constData + posScripts + 64*i, 64);
 
-		//Ajout de la position de fin
-		if(i==nbScripts-1)	positions[32] = posTexts;
-		else
-		{
-			memcpy(&pos, constData + posScripts + 64*i + 64, 2);
-
-			if(pos > positions[31])	positions[32] = pos;
+			//Ajout de la position de fin
+			if(i==nbScripts-1)	positions[32] = posTexts;
 			else
 			{
-				emptyGrps = 1;
-				while(pos <= positions[31] && i+emptyGrps<nbScripts-1)
-				{
-					memcpy(&pos, constData + posScripts + 64*(i+emptyGrps) + 64, 2);
-					emptyGrps++;
-				}
-				if(i+emptyGrps==nbScripts)	positions[32] = posTexts;
-				else	positions[32] = pos;
-			}
-		}
+				memcpy(&pos, constData + posScripts + 64*i + 64, 2);
 
-		k=0;
-		for(j=0 ; j<32 ; ++j)
-		{
-			if(positions[j+1] > positions[j])
-			{
-				if(!grpScript->addScript(data.mid(positions[j], positions[j+1]-positions[j]))) {
-					return false;
+				if(pos > positions[31])	positions[32] = pos;
+				else
+				{
+					emptyGrps = 1;
+					while(pos <= positions[31] && i+emptyGrps<nbScripts-1)
+					{
+						memcpy(&pos, constData + posScripts + 64*(i+emptyGrps) + 64, 2);
+						emptyGrps++;
+					}
+					if(i+emptyGrps==nbScripts)	positions[32] = posTexts;
+					else	positions[32] = pos;
 				}
-				for(int l=k ; l<j ; ++l)	grpScript->addScript();
-				k=j+1;
+			}
+
+			quint8 scriptID = 0;
+			for(quint8 j=0 ; j<32 ; ++j)
+			{
+				if(positions[j+1] > positions[j])
+				{
+					if (scriptID == 0) {
+						Script *script0 = new Script(data.mid(positions[j], positions[j+1]-positions[j]));
+						if(!script0->isValid()) {
+							delete script0;
+							return false;
+						}
+						grpScript->setScript(0, script0); // S0 - Init
+						grpScript->setScript(1, script0->splitScriptAtReturn()); // S0 - Main
+					} else if (!grpScript->setScript(scriptID + 1, data.mid(positions[j], positions[j+1]-positions[j]))) {
+						return false;
+					}
+					scriptID=j+1;
+				}
 			}
 		}
-		for(int l=k ; l<32 ; ++l)	grpScript->addScript();
 		_grpScripts.append(grpScript);
 	}
 

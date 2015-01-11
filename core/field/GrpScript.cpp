@@ -89,6 +89,7 @@ GrpScript::GrpScript() :
 GrpScript::GrpScript(const QString &name) :
 	_name(name), _character(-1), animation(false), location(false), director(false)
 {
+	for(int i=0 ; i<32 ; i++)	addScript();
 }
 
 GrpScript::GrpScript(const GrpScript &other) :
@@ -102,6 +103,20 @@ GrpScript::GrpScript(const GrpScript &other) :
 GrpScript::~GrpScript()
 {
 	qDeleteAll(_scripts);
+}
+
+GrpScript *GrpScript::createGroupModel(quint8 modelID, int charID)
+{
+	GrpScript *group = new GrpScript;
+	QList<Opcode *> initOps;
+	initOps << new OpcodeCHAR(modelID);
+	if (charID >= 0) {
+		initOps << new OpcodePC(charID);
+	}
+
+	group->setScript(0, new Script(initOps));
+
+	return group;
 }
 
 void GrpScript::addScript()
@@ -136,10 +151,16 @@ bool GrpScript::addScript(const QByteArray &script, bool explodeInit)
 	return true;
 }
 
-/* void GrpScript::replaceScript(int row, QByteArray script)
+bool GrpScript::setScript(int row, const QByteArray &script)
 {
-	_scripts.replace(row, new Script(script));
-} */
+	Script *s = new Script(script);
+	if(!s->isValid()) {
+		delete s;
+		return false;
+	}
+	setScript(row, s);
+	return true;
+}
 
 void GrpScript::setType()
 {
@@ -195,31 +216,6 @@ QString GrpScript::name() const
 	return _name.isEmpty() ? QObject::tr("Sans nom") : _name;
 }
 
-void GrpScript::setName(const QString &name)
-{
-	_name = name;
-}
-
-const QString &GrpScript::realName() const
-{
-	return _name;
-}
-
-int GrpScript::size() const
-{
-	return _scripts.size();
-}
-
-Script *GrpScript::script(quint8 scriptID) const
-{
-	return _scripts.value(scriptID);
-}
-
-const QList<Script *> &GrpScript::scripts() const
-{
-	return _scripts;
-}
-
 QByteArray GrpScript::toByteArray(quint8 scriptID) const
 {
 	if(scriptID == 0)
@@ -255,11 +251,6 @@ QString GrpScript::type()
 	case Director:	return QObject::tr("Main");
 	default:		return QString();
 	}
-}
-
-qint16 GrpScript::character() const
-{
-	return _character;
 }
 
 QColor GrpScript::typeColor()

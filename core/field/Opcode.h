@@ -2147,6 +2147,7 @@ public:
 class OpcodePC : public Opcode {
 public:
 	explicit OpcodePC(const char *params, int size);
+	explicit OpcodePC(quint8 charID);
 	inline int id() const { return 0xA0; }
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
@@ -2157,6 +2158,7 @@ public:
 class OpcodeCHAR : public Opcode {
 public:
 	explicit OpcodeCHAR(const char *params, int size);
+	explicit OpcodeCHAR(quint8 objectID);
 	inline int id() const { return 0xA1; }
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);

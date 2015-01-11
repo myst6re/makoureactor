@@ -54,22 +54,37 @@ public:
 	GrpScript(const GrpScript &other);
 	virtual ~GrpScript();
 
-	void addScript();
-	bool addScript(const QByteArray &script, bool explodeInit=true);
-	// void replaceScript(int row, QByteArray script=QByteArray());
+	static GrpScript *createGroupModel(quint8 modelID, int charID = -1);
+
+	bool setScript(int row, const QByteArray &script);
+	inline void setScript(int row, Script *script) {
+		_scripts.replace(row, script);
+	}
 
 	QString name() const;
-	const QString &realName() const;
-	void setName(const QString &name);
-	int size() const;
-	Script *script(quint8 scriptID) const;
-	const QList<Script *> &scripts() const;
+	inline const QString &realName() const {
+		return _name;
+	}
+	inline void setName(const QString &name) {
+		_name = name;
+	}
+	inline int size() const {
+		return _scripts.size();
+	}
+	inline Script *script(quint8 scriptID) const {
+		return _scripts.value(scriptID);
+	}
+	inline const QList<Script *> &scripts() const {
+		return _scripts;
+	}
 	QByteArray toByteArray(quint8 scriptID) const;
 	void backgroundParams(QHash<quint8, quint8> &paramActifs) const;
 	void backgroundMove(qint16 z[2], qint16 *x=0, qint16 *y=0) const;
 	Type typeID();
 	QString type();
-	qint16 character() const;
+	inline qint16 character() const {
+		return _character;
+	}
 	QColor typeColor();
 	QString scriptName(quint8 scriptID);
 
@@ -100,6 +115,8 @@ public:
 
 	QString toString(Field *field) const;
 private:
+	void addScript();
+	bool addScript(const QByteArray &script, bool explodeInit = true);
 	void setType();
 	bool search(int &scriptID, int &opcodeID) const;
 
