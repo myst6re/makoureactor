@@ -1,3 +1,21 @@
+makoureactor (1.6.3) precise; urgency=low
+
+  * "Find all" feature
+  * Text editor: Some modifications about autosize feature + configuration of margins and character names.
+  * Window opcode editor: Fixing crash and bug (when changing current displayed text).
+  * Window opcode editor: Adding buttons to align the window vertically and horizontally.
+  * Text preview: can change page with the wheel.
+  * Splitting movie list in three lists: one for each disc.
+  * Search var: Fixing regression when searching without value, adding "all" operation to search every occurrences of var.
+  * Text editor: renaming {VAR1}, {VAR2} and {VAR3} tags into {VARDEC}, {VARHEX} and {VARDECR}.
+  * Var Manager: Adding some infos about vars (r/w, size).
+  * Var Manager: Merging related banks (1/2, 3/4, 5/6, 11/12, 13/14 and 15/7) hidding unusable banks (8, 9, 10).
+  * ISO: fixing FIELD.BIN update bug. (need tests)
+  * Fixing bug: window.bin not opened if kernel.bin is not opened.
+  * Fixing CMUSC opcode length.
+
+ -- Chris Rizzitello <sithlord48@gmail.com>  Fri, 06 Feb 2015 21:36:00 -0400
+
 makoureactor (1.6.2) precise; urgency=low
 
   * Adding new features to find a variable.
