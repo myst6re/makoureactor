@@ -119,7 +119,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 		quint16 baseX = minWidth + tile.dstX;
 
 		foreach(uint indexOrColor, indexOrColorList) {
-			if(depth == 2) {
+			if(!palette) {
 				if(indexOrColor != 0) {
 					pixels[baseX + right + top] = indexOrColor;
 				}
