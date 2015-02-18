@@ -150,7 +150,7 @@ QList<uint> BackgroundTexturesPC::tex(quint8 texID) const
 
 void BackgroundTexturesPC::setTex(quint8 texID, const QList<uint> &indexOrRgbList, const BackgroundTexturesPCInfos &_infos)
 {
-	if(indexOrRgbList.size() != 256 * 256 || texID >= 42) {
+	if(indexOrRgbList.size() != 256 * 256 || texID >= BACKGROUND_TEXTURE_PC_MAX_COUNT) {
 		qWarning() << "BackgroundTexturesPC::setTex invalid arguments";
 		return;
 	}

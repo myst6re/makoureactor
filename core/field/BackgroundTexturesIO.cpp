@@ -62,7 +62,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures)
 	textures->clear();
 	qint64 initPos = device()->pos();
 
-	for(quint8 texID=0 ; texID<42 ; ++texID) {
+	for(quint8 texID=0 ; texID<BACKGROUND_TEXTURE_PC_MAX_COUNT ; ++texID) {
 
 		quint16 exists;
 
@@ -108,7 +108,7 @@ bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures)
 		return false;
 	}
 
-	for(quint8 texID=0 ; texID<42 ; ++texID) {
+	for(quint8 texID=0 ; texID<BACKGROUND_TEXTURE_PC_MAX_COUNT ; ++texID) {
 
 		quint16 exists = textures->hasTex(texID);
 
