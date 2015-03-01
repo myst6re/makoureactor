@@ -1090,22 +1090,21 @@ Certains scripts peuvent y faire référence !</source>
         <translation>各種情報</translation>
     </message>
     <message>
-        <location filename="widgets/MiscWidget.cpp" line="36"/>
+        <location filename="widgets/MiscWidget.cpp" line="34"/>
         <source>Nom écran :</source>
         <translatorcomment>Field name:</translatorcomment>
         <translation>フィールド名 :</translation>
     </message>
     <message>
-        <location filename="widgets/MiscWidget.cpp" line="38"/>
+        <location filename="widgets/MiscWidget.cpp" line="36"/>
         <source>Auteur :</source>
         <translatorcomment>Author:</translatorcomment>
         <translation>作者 :</translation>
     </message>
     <message>
-        <location filename="widgets/MiscWidget.cpp" line="40"/>
         <source>Zoom écran :</source>
         <translatorcomment>Field scale:</translatorcomment>
-        <translation>フィールド スケール :</translation>
+        <translation type="obsolete">フィールド スケール :</translation>
     </message>
 </context>
 <context>
@@ -1944,22 +1943,22 @@ Certains scripts peuvent y faire référence !</source>
         <translation>背景の透過</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7960"/>
+        <location filename="core/field/Opcode.cpp" line="7970"/>
         <source>CPPAL2 %1</source>
         <translation type="unfinished">CPPAL2 %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7981"/>
+        <location filename="core/field/Opcode.cpp" line="7991"/>
         <source>RTPAL2 %1</source>
         <translation type="unfinished">RTPAL2 %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8002"/>
+        <location filename="core/field/Opcode.cpp" line="8012"/>
         <source>ADPAL2 %1</source>
         <translation type="unfinished">ADPAL2 %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8332"/>
+        <location filename="core/field/Opcode.cpp" line="8342"/>
         <source>FMUSC (?=%1)</source>
         <translation type="unfinished">FMUSC (?=%1)</translation>
     </message>
@@ -2145,7 +2144,7 @@ Certains scripts peuvent y faire référence !</source>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="915"/>
-        <location filename="core/field/Opcode.cpp" line="5641"/>
+        <location filename="core/field/Opcode.cpp" line="5651"/>
         <source>Afficher</source>
         <translatorcomment>Display</translatorcomment>
         <translation>表示</translation>
@@ -2188,8 +2187,8 @@ Certains scripts peuvent y faire référence !</source>
         <location filename="core/field/Opcode.cpp" line="4335"/>
         <location filename="core/field/Opcode.cpp" line="4454"/>
         <location filename="core/field/Opcode.cpp" line="4873"/>
-        <location filename="core/field/Opcode.cpp" line="6768"/>
-        <location filename="core/field/Opcode.cpp" line="7351"/>
+        <location filename="core/field/Opcode.cpp" line="6778"/>
+        <location filename="core/field/Opcode.cpp" line="7361"/>
         <source>Activer</source>
         <translatorcomment>Activate</translatorcomment>
         <translation>有効化</translation>
@@ -2202,8 +2201,8 @@ Certains scripts peuvent y faire référence !</source>
         <location filename="core/field/Opcode.cpp" line="4335"/>
         <location filename="core/field/Opcode.cpp" line="4454"/>
         <location filename="core/field/Opcode.cpp" line="4873"/>
-        <location filename="core/field/Opcode.cpp" line="6768"/>
-        <location filename="core/field/Opcode.cpp" line="7351"/>
+        <location filename="core/field/Opcode.cpp" line="6778"/>
+        <location filename="core/field/Opcode.cpp" line="7361"/>
         <source>Désactiver</source>
         <translatorcomment>Deactivate</translatorcomment>
         <translation>無効化</translation>
@@ -2236,8 +2235,8 @@ Certains scripts peuvent y faire référence !</source>
         <location filename="core/field/Opcode.cpp" line="2578"/>
         <location filename="core/field/Opcode.cpp" line="2597"/>
         <location filename="core/field/Opcode.cpp" line="2616"/>
-        <location filename="core/field/Opcode.cpp" line="6871"/>
-        <location filename="core/field/Opcode.cpp" line="6885"/>
+        <location filename="core/field/Opcode.cpp" line="6881"/>
+        <location filename="core/field/Opcode.cpp" line="6895"/>
         <source>aller au label %1 sinon</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2272,7 +2271,8 @@ Certains scripts peuvent y faire référence !</source>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="842"/>
-        <source>Sauvegarder les membres de l&apos;équipe : %1 | %2 | %3</source>
+        <source>Affecter les membres de l&apos;équipe : %1 | %2 | %3</source>
+        <oldsource>Sauvegarder les membres de l&apos;équipe : %1 | %2 | %3</oldsource>
         <translatorcomment>Set party from memory: %1 | %2 | %3</translatorcomment>
         <translation>パーティをメモリからセット: %1 | %2 | %3</translation>
     </message>
@@ -2383,7 +2383,8 @@ Certains scripts peuvent y faire référence !</source>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="2435"/>
-        <source>WCLS (fenêtre n°%1)</source>
+        <source>Fermer la fenêtre n°%1</source>
+        <oldsource>WCLS (fenêtre n°%1)</oldsource>
         <translatorcomment>Window close (window #%1)</translatorcomment>
         <translation>ウィンドウを閉じる (ウィンドウ #%1)</translation>
     </message>
@@ -2570,12 +2571,6 @@ Certains scripts peuvent y faire référence !</source>
         <source>Remettre la fenêtre n°%1 à zéro</source>
         <translatorcomment>Reset the window #%1</translatorcomment>
         <translation>ウィンドウ #%1 をリセット</translation>
-    </message>
-    <message>
-        <location filename="core/field/Opcode.cpp" line="3545"/>
-        <source>Fermer la fenêtre n°%1</source>
-        <translatorcomment>Close the window #%1</translatorcomment>
-        <translation>ウィンドウ #%1 を閉じる</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="3577"/>
@@ -2967,426 +2962,426 @@ Certains scripts peuvent y faire référence !</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5548"/>
+        <location filename="core/field/Opcode.cpp" line="5553"/>
         <source>L&apos;objet 3D est jouable et c&apos;est %1</source>
         <translatorcomment>Field model is playable and it is %1</translatorcomment>
         <translation>操作可能な 3Dモデル %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5569"/>
+        <location filename="core/field/Opcode.cpp" line="5579"/>
         <source>Ce groupe est un objet 3D (id=%1)</source>
         <translatorcomment>This group is a field model (ID=%1)</translatorcomment>
         <translation>この項は 3Dモデル (ID=%1) のグループ</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5591"/>
-        <location filename="core/field/Opcode.cpp" line="6011"/>
-        <location filename="core/field/Opcode.cpp" line="6362"/>
+        <location filename="core/field/Opcode.cpp" line="5601"/>
+        <location filename="core/field/Opcode.cpp" line="6021"/>
+        <location filename="core/field/Opcode.cpp" line="6372"/>
         <source>Joue l&apos;animation %1 de l&apos;objet 3D (vitesse=%2)</source>
         <translatorcomment>Play animation #%1 of the field model (speed=%2)</translatorcomment>
         <translation>3Dモデルのアニメーション #%1 を再生 (速度=%2)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5616"/>
-        <location filename="core/field/Opcode.cpp" line="5986"/>
+        <location filename="core/field/Opcode.cpp" line="5626"/>
+        <location filename="core/field/Opcode.cpp" line="5996"/>
         <source>Joue l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (vitesse=%2)</source>
         <translatorcomment>Play animation #%1 of the field model and reset to previous state (speed=%2)</translatorcomment>
         <translation>3Dモデルのアニメーション #%1 を再生して前のステートをリセット (速度=%2)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5640"/>
+        <location filename="core/field/Opcode.cpp" line="5650"/>
         <source>%1 l&apos;objet 3D</source>
         <translatorcomment>%1 field model</translatorcomment>
         <translation>3Dモデルを %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5641"/>
+        <location filename="core/field/Opcode.cpp" line="5651"/>
         <source>Cacher</source>
         <translatorcomment>Hide</translatorcomment>
         <translation>隠す</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5666"/>
+        <location filename="core/field/Opcode.cpp" line="5676"/>
         <source>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3, triangle id=%4)</source>
         <oldsource>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3, polygone id=%4)</oldsource>
         <translatorcomment>Place field Model (X=%1, Y=%2, Z=%3, triangle ID=%4)</translatorcomment>
         <translation>3Dモデルを配置 (X=%1, Y=%2, Z=%3, ポリゴンID=%4)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5722"/>
+        <location filename="core/field/Opcode.cpp" line="5732"/>
         <source>Place l&apos;objet 3D (X=%1, Y=%2, triangle id=%4)</source>
         <oldsource>Place l&apos;objet 3D (X=%1, Y=%2, polygone id=%4)</oldsource>
         <translatorcomment>Place field Model (X=%1, Y=%2, triangle ID=%4)</translatorcomment>
         <translation>3Dモデルを配置 (X=%1, Y=%2, ポリゴンID=%4)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5773"/>
+        <location filename="core/field/Opcode.cpp" line="5783"/>
         <source>Place l&apos;objet 3D (X=%1, Y=%2, Z=%3)</source>
         <translatorcomment>Place field Model (X=%1, Y=%2, Z=%3)</translatorcomment>
         <translation>3Dモデルを配置 (X=%1, Y=%2, Z=%3)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5823"/>
+        <location filename="core/field/Opcode.cpp" line="5833"/>
         <source>Déplace l&apos;objet 3D (X=%1, Y=%2)</source>
         <translatorcomment>Move field Model (X=%1, Y=%2)</translatorcomment>
         <translation>3Dモデルを移動 (X=%1, Y=%2)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5858"/>
-        <location filename="core/field/Opcode.cpp" line="5952"/>
+        <location filename="core/field/Opcode.cpp" line="5868"/>
+        <location filename="core/field/Opcode.cpp" line="5962"/>
         <source>Déplace l&apos;objet 3D sans animation (X=%1, Y=%2)</source>
         <translatorcomment>Place field Model without animation (X=%1, Y=%2)</translatorcomment>
         <translation>3Dモデルをアニメーション抜きで移動 (X=%1, Y=%2)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5891"/>
+        <location filename="core/field/Opcode.cpp" line="5901"/>
         <source>Déplace l&apos;objet 3D vers le groupe %1</source>
         <translatorcomment>Move field Model to the group %1</translatorcomment>
         <translation>3Dモデルをグループ %1 に移動</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5915"/>
+        <location filename="core/field/Opcode.cpp" line="5925"/>
         <source>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%2, SensRotation=%3)</source>
         <translatorcomment>Rotation of the field model to group %1 (speed=%2, rotation=%3)</translatorcomment>
         <translation>3Dモデルをグループ %1 の方向へ回転 (速度=%2, 回転=%3)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="5935"/>
+        <location filename="core/field/Opcode.cpp" line="5945"/>
         <source>Attendre que l&apos;animation soit terminée pour continuer</source>
         <translatorcomment>Wait for animation</translatorcomment>
         <translation>アニメーション待ち</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6038"/>
-        <location filename="core/field/Opcode.cpp" line="6389"/>
+        <location filename="core/field/Opcode.cpp" line="6048"/>
+        <location filename="core/field/Opcode.cpp" line="6399"/>
         <source>Joue partiellement l&apos;animation %1 de l&apos;objet 3D et retourne à l&apos;état précédent (première img=%2, dernière img=%3, vitesse=%4)</source>
         <translatorcomment>Play partially the animation #%1 of the field model and reset to initial state (first frame=%2, last frame=%3, speed=%4)</translatorcomment>
         <translation>3Dモデルのアニメーション #%1 の一部を再生して初期状態にリセット (最初のフレーム=%2, 最後のフレーム=%3, 速度=%4)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6069"/>
-        <location filename="core/field/Opcode.cpp" line="6420"/>
+        <location filename="core/field/Opcode.cpp" line="6079"/>
+        <location filename="core/field/Opcode.cpp" line="6430"/>
         <source>Joue partiellement l&apos;animation %1 de l&apos;objet 3D (première img=%2, dernière img=%3, vitesse=%4)</source>
         <translatorcomment>Play partially the animation #%1 of the field model (first frame=%2, last frame=%3, speed=%4)</translatorcomment>
         <translation>3Dモデルのアニメーション #%1 の一部を再生 (最初のフレーム=%2, 最後のフレーム=%3, 速度=%4)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6098"/>
+        <location filename="core/field/Opcode.cpp" line="6108"/>
         <source>Configurer la vitesse des déplacements de l&apos;objet 3D : %1</source>
         <translatorcomment>Set the field model move speed: %1</translatorcomment>
         <translation>3Dモデルの移動速度を %1 にセット</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6128"/>
+        <location filename="core/field/Opcode.cpp" line="6138"/>
         <source>Mettre l&apos;objet 3D dans la direction : %1</source>
         <translatorcomment>Set field model direction: %1</translatorcomment>
         <translation>3Dモデルの向きを %1 にセット</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6161"/>
+        <location filename="core/field/Opcode.cpp" line="6171"/>
         <source>Rotation (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</source>
         <translatorcomment>Rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)</translatorcomment>
         <translation>回転 (方向=%1, nb回転量=%2, 速度=%3, ?=%4)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6200"/>
+        <location filename="core/field/Opcode.cpp" line="6210"/>
         <source>Rotation inversée (direction=%1, nbTours=%2, vitesse=%3, ?=%4)</source>
         <translatorcomment>Inversed rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)</translatorcomment>
         <translation>反回転 (方向=%1, nb回転量=%2, 速度=%3, ?=%4)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6235"/>
+        <location filename="core/field/Opcode.cpp" line="6245"/>
         <source>Mettre l&apos;objet 3D en direction du groupe %1</source>
         <translatorcomment>Direct the field model towards the group %1</translatorcomment>
         <translation>3Dモデルの向きグループ %1の方向へセット</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6259"/>
+        <location filename="core/field/Opcode.cpp" line="6269"/>
         <source>Stocker dans %2 la direction du groupe %1</source>
         <translatorcomment>Store direction of the group %1 in %2</translatorcomment>
         <translation>グループ %1 の向きを %2 に保存</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6293"/>
+        <location filename="core/field/Opcode.cpp" line="6303"/>
         <source>Stocker dans %2 et %3 la position X et Y du groupe %1</source>
         <translatorcomment>Store position of the group %1 in %2 (X) and %3 (Y)</translatorcomment>
         <translation>グループ %1 の向きを %2 (X), %3 (Y) に保存</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6330"/>
+        <location filename="core/field/Opcode.cpp" line="6340"/>
         <source>Stocker dans %2 le triangle id du groupe %1</source>
         <oldsource>Stocker dans %2 le polygone id du groupe %1</oldsource>
         <translatorcomment>Store triangle ID of the group %1 in %2</translatorcomment>
         <translation type="unfinished">グループ %1 のポリゴンを %2 に保存</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6449"/>
+        <location filename="core/field/Opcode.cpp" line="6459"/>
         <source>Configurer la vitesse des animations de l&apos;objet 3D : %1</source>
         <translatorcomment>Set the field model animations speed: %1</translatorcomment>
         <translation>3D アニメーションの速度を %1 にセット</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6478"/>
+        <location filename="core/field/Opcode.cpp" line="6488"/>
         <source>Prendre le contrôle du groupe %1</source>
         <translatorcomment>Control the group %1</translatorcomment>
         <translation>グループ %1 のコントロール</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6504"/>
+        <location filename="core/field/Opcode.cpp" line="6514"/>
         <source>Faire sauter un personnage (X=%1, Y=%2, triangle id=%3, hauteur=%4)</source>
         <oldsource>Faire sauter un personnage (X=%1, Y=%2, polygone id=%3, hauteur=%4)</oldsource>
         <translatorcomment>Field model jump (X=%1, Y=%2, triangle ID=%3, Steps=%4)</translatorcomment>
         <translation>3Dモデルのジャンプ (X=%1, Y=%2, ポリゴンID=%3, 歩数=%4)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6550"/>
+        <location filename="core/field/Opcode.cpp" line="6560"/>
         <source>Stocker la position du groupe %1 dans des variables (%2=X, %3=Y, %4=Z, %5=triangle id)</source>
         <oldsource>Stocker la position du groupe %1 dans des variables (%2=X, %3=Y, %4=Z, %5=polygone id)</oldsource>
         <translatorcomment>Store position of the group %1 in %2 (X), %3 (Y), %4 (Z) and %5 (triangle ID)</translatorcomment>
         <translation>グループ %1 の位置を保存 %2(X), %3(Y), %4(Z), %5(ポリゴンID) </translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6601"/>
+        <location filename="core/field/Opcode.cpp" line="6611"/>
         <source>Monter une échelle avec l&apos;animation %6 (X=%1, Y=%2, Z=%3, triangle id=%4, sens=%5, direction=%7, vitesse=%8)</source>
         <oldsource>Monter une échelle avec l&apos;animation %6 (X=%1, Y=%2, Z=%3, polygone id=%4, sens=%5, direction=%7, vitesse=%8)</oldsource>
         <translatorcomment>Climb a ladder with the animation #%6 (X=%1, Y=%2, Z=%3, triangle ID=%4, direction1=%5, direction2=%7, speed=%8)</translatorcomment>
         <translation>匍匐アニメーション #%6 (X=%1, Y=%2, Z=%3, ポリゴンID=%4, 方向1=%5, 方向2=%7, 速度=%8)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6655"/>
+        <location filename="core/field/Opcode.cpp" line="6665"/>
         <source>Offset Object (mouvement=%1, X=%2, Y=%3, Z=%4, vitesse=%5)</source>
         <translatorcomment>Offset Object (movement=%1, X=%2, Y=%3, Z=%4, speed=%5)</translatorcomment>
         <translation>オブジェの移動 (移動量=%1, X=%2, Y=%3, Z=%4, 速度=%5)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6692"/>
+        <location filename="core/field/Opcode.cpp" line="6702"/>
         <source>Attendre la fin de l&apos;exécution de l&apos;Offset Object pour continuer</source>
         <translatorcomment>Wait for offset object</translatorcomment>
         <translation>オブジェの移動待ち</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6708"/>
-        <location filename="core/field/Opcode.cpp" line="7208"/>
+        <location filename="core/field/Opcode.cpp" line="6718"/>
+        <location filename="core/field/Opcode.cpp" line="7218"/>
         <source>Modifier la distance nécessaire pour parler avec l&apos;objet 3D : %1</source>
         <translatorcomment>Set range of the talk circle for the field model: %1</translatorcomment>
         <translation>3Dモデル %1 のダイアログ範囲の大きさをセット</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6738"/>
-        <location filename="core/field/Opcode.cpp" line="7238"/>
+        <location filename="core/field/Opcode.cpp" line="6748"/>
+        <location filename="core/field/Opcode.cpp" line="7248"/>
         <source>Modifier la distance nécessaire pour toucher l&apos;objet 3D : %1</source>
         <translatorcomment>Set range of the contact circle for the field model: %1</translatorcomment>
         <translation>3Dモデル %1 のコンタクト範囲の大きさをセット</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6767"/>
+        <location filename="core/field/Opcode.cpp" line="6777"/>
         <source>%1 la possibilité de toucher l&apos;objet 3D</source>
         <translatorcomment>%1 contact with field model</translatorcomment>
         <translation>3Dモデルとのコンタクトを %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6788"/>
+        <location filename="core/field/Opcode.cpp" line="6798"/>
         <source>Ajouter %1 à l&apos;équipe actuelle</source>
         <translatorcomment>Add %1 to the current party</translatorcomment>
         <translation>現在のパーティに %1 が加わる</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6809"/>
+        <location filename="core/field/Opcode.cpp" line="6819"/>
         <source>Retirer %1 de l&apos;équipe actuelle</source>
         <translatorcomment>Remove %1 from the current party</translatorcomment>
         <translation>現在のパーティから %1 が離脱</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6830"/>
+        <location filename="core/field/Opcode.cpp" line="6840"/>
         <source>Nouvelle équipe : %1 | %2 | %3</source>
         <translatorcomment>New party: %1 | %2 | %3</translatorcomment>
         <translation>新しいパーティ: %1 | %2 | %3</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6867"/>
+        <location filename="core/field/Opcode.cpp" line="6877"/>
         <source>Si %1 est dans l&apos;équipe actuelle (%2)</source>
         <translation type="unfinished">%1 がパーティにいる場合 (%2)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6881"/>
+        <location filename="core/field/Opcode.cpp" line="6891"/>
         <source>Si %1 existe (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7121"/>
+        <location filename="core/field/Opcode.cpp" line="7131"/>
         <source>%4 = ((Sinus(%1) * %2) + %3) &gt;&gt; 12</source>
         <translation type="unfinished">%4 = ((サイン (%1) * %2) + %3) &gt;&gt; 12</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7166"/>
+        <location filename="core/field/Opcode.cpp" line="7176"/>
         <source>%4 = ((Cosinus(%1) * %2) + %3) &gt;&gt; 12</source>
         <translation type="unfinished">%4 = ((コサイン (%1) * %2) + %3) &gt;&gt; 12</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7303"/>
-        <location filename="core/field/Opcode.cpp" line="8085"/>
+        <location filename="core/field/Opcode.cpp" line="7313"/>
+        <location filename="core/field/Opcode.cpp" line="8095"/>
         <source>%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7426"/>
+        <location filename="core/field/Opcode.cpp" line="7436"/>
         <source>Multiplier RVB(%6, %5, %4) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%7+1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7638"/>
+        <location filename="core/field/Opcode.cpp" line="7648"/>
         <source>Charger la palette n°%1 à la position %2 (nombre de couleurs=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7676"/>
+        <location filename="core/field/Opcode.cpp" line="7686"/>
         <source>Charger la position %1 dans la palette n°%2 (nombre de couleurs=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7714"/>
+        <location filename="core/field/Opcode.cpp" line="7724"/>
         <source>Copier palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7753"/>
+        <location filename="core/field/Opcode.cpp" line="7763"/>
         <source>Copier un morceau de palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7798"/>
+        <location filename="core/field/Opcode.cpp" line="7808"/>
         <source>Additionner RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7851"/>
+        <location filename="core/field/Opcode.cpp" line="7861"/>
         <source>Multiplier RVB(%5, %4, %3) sur les couleurs d&apos;une palette (sourcePal=%1, ciblePal=%2, nombre de couleurs=%6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7901"/>
+        <location filename="core/field/Opcode.cpp" line="7911"/>
         <source>Charger la palette n°%1 à la position %2 (première couleur=%3, nombre de couleurs=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7932"/>
+        <location filename="core/field/Opcode.cpp" line="7942"/>
         <source>Charger la position %1 dans la palette n°%2 (première couleur=%3, nombre de couleurs=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8359"/>
+        <location filename="core/field/Opcode.cpp" line="8369"/>
         <source>CMUSC (musique n°%1, inconnu1=%2, inconnu2=%3, inconnu2=%4, inconnu4=%5, inconnu5=%6, inconnu6=%7)</source>
         <oldsource>CMUSC (musique n°%1, unknown2=%2, unknown3=%3, unknown4=%4, unknown5=%5, unknown6=%6, unknown7=%7)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6901"/>
+        <location filename="core/field/Opcode.cpp" line="6911"/>
         <source>%2 %1</source>
         <translation>%2 %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6902"/>
+        <location filename="core/field/Opcode.cpp" line="6912"/>
         <source>n&apos;existe plus</source>
         <translatorcomment>not available</translatorcomment>
         <translation>操作不能</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6902"/>
+        <location filename="core/field/Opcode.cpp" line="6912"/>
         <source>existe</source>
         <translatorcomment>available</translatorcomment>
         <translation>使用可能</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6925"/>
+        <location filename="core/field/Opcode.cpp" line="6935"/>
         <source>Bloque %1 dans le menu PHS</source>
         <translatorcomment>Locks %1 in PHS menu</translatorcomment>
         <translation>PHS メニューの %1 をロック</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6946"/>
+        <location filename="core/field/Opcode.cpp" line="6956"/>
         <source>Débloque %1 dans le menu PHS</source>
         <translatorcomment>Unlock %1 in PHS menu</translatorcomment>
         <translation>PHS メニューの %1 をアンロック</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="6972"/>
+        <location filename="core/field/Opcode.cpp" line="6982"/>
         <source>Définit la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
         <translatorcomment>Set location (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translatorcomment>
         <translation>エリアをセット (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7020"/>
+        <location filename="core/field/Opcode.cpp" line="7030"/>
         <source>%1 la zone</source>
         <translatorcomment>%1 the location</translatorcomment>
         <translation>エリアを %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7021"/>
+        <location filename="core/field/Opcode.cpp" line="7031"/>
         <source>Effacer</source>
         <translatorcomment>Clear</translatorcomment>
         <translation>クリア</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7021"/>
+        <location filename="core/field/Opcode.cpp" line="7031"/>
         <source>Tracer</source>
         <translatorcomment>Trace</translatorcomment>
         <translation>トレース</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7041"/>
+        <location filename="core/field/Opcode.cpp" line="7051"/>
         <source>%1 les changements de décor par le joueur</source>
         <translatorcomment>Gateways %1 ●</translatorcomment>
         <translation>出入り口 %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7042"/>
+        <location filename="core/field/Opcode.cpp" line="7052"/>
         <source>Autoriser</source>
         <translatorcomment>ON</translatorcomment>
         <translation>許可</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7042"/>
+        <location filename="core/field/Opcode.cpp" line="7052"/>
         <source>Empêcher</source>
         <translatorcomment>OFF</translatorcomment>
         <translation>禁止</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7068"/>
+        <location filename="core/field/Opcode.cpp" line="7078"/>
         <source>Redimensionner la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
         <oldsource>Redimmensionner la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</oldsource>
         <translatorcomment>Resize location (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translatorcomment>
         <translation>エリアのリサイズ (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7267"/>
+        <location filename="core/field/Opcode.cpp" line="7277"/>
         <source>Commencer à charger l&apos;écran %1</source>
         <translatorcomment>Preload the field map %1</translatorcomment>
         <translation>フィールド マップ %1 の先読み</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7282"/>
+        <location filename="core/field/Opcode.cpp" line="7292"/>
         <source>PMJMP2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7350"/>
+        <location filename="core/field/Opcode.cpp" line="7360"/>
         <source>%1 rotation</source>
         <translation>回転を %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7373"/>
+        <location filename="core/field/Opcode.cpp" line="7383"/>
         <source>Jouer animation n°%1 pour &apos;%3&apos; (vitesse=%2)</source>
         <translatorcomment>Play animation #%1 for &apos;%3&apos; (speed=%2)</translatorcomment>
         <translation>&apos;%3&apos; のアニメーション #%1 を再生 (速度=%2)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7378"/>
+        <location filename="core/field/Opcode.cpp" line="7388"/>
         <source>courir</source>
         <translatorcomment>run</translatorcomment>
         <translation>走る</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7376"/>
+        <location filename="core/field/Opcode.cpp" line="7386"/>
         <source>rester immobile</source>
         <translatorcomment>stay</translatorcomment>
         <translation>止まる</translation>
@@ -3420,8 +3415,8 @@ Certains scripts peuvent y faire référence !</source>
         <location filename="core/field/Opcode.cpp" line="2577"/>
         <location filename="core/field/Opcode.cpp" line="2596"/>
         <location filename="core/field/Opcode.cpp" line="2615"/>
-        <location filename="core/field/Opcode.cpp" line="6870"/>
-        <location filename="core/field/Opcode.cpp" line="6884"/>
+        <location filename="core/field/Opcode.cpp" line="6880"/>
+        <location filename="core/field/Opcode.cpp" line="6894"/>
         <source>avancer de %n octet(s) sinon</source>
         <comment>With plural</comment>
         <translation type="unfinished">
@@ -3515,240 +3510,240 @@ Certains scripts peuvent y faire référence !</source>
         <translation type="unfinished">GETX %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7377"/>
+        <location filename="core/field/Opcode.cpp" line="7387"/>
         <source>marcher</source>
         <translatorcomment>walk</translatorcomment>
         <translation>歩く</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7395"/>
+        <location filename="core/field/Opcode.cpp" line="7405"/>
         <source>Stoppe l&apos;animation de l&apos;objet 3D</source>
         <translatorcomment>Break field model animation</translatorcomment>
         <translation>3Dモデルのアニメーションを停止</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7404"/>
+        <location filename="core/field/Opcode.cpp" line="7414"/>
         <source>Attendre que la rotation soit terminée pour continuer</source>
         <translatorcomment>Wait for rotation</translatorcomment>
         <translation>回転待ち</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7477"/>
+        <location filename="core/field/Opcode.cpp" line="7487"/>
         <source>Afficher l&apos;état n°%2 du paramètre n°%1</source>
         <translatorcomment>Show the state #%2 of the background parameter #%1</translatorcomment>
         <translation>背景パラメータ #%1 のステート #%2 を表示</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7512"/>
+        <location filename="core/field/Opcode.cpp" line="7522"/>
         <source>Cacher l&apos;état n°%2 du paramètre n°%1</source>
         <translatorcomment>Hide the state #%2 of the background parameter #%1</translatorcomment>
         <translation>背景パラメータ #%1 のステート #%2 を隠す</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7546"/>
+        <location filename="core/field/Opcode.cpp" line="7556"/>
         <source>Afficher l&apos;état suivant du paramètre n°%1</source>
         <translatorcomment>Show next state of the  parameter #%1</translatorcomment>
         <translation>背景パラメータ #%1 の次のステートを表示</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7576"/>
+        <location filename="core/field/Opcode.cpp" line="7586"/>
         <source>Afficher l&apos;état précédent du paramètre n°%1</source>
         <translatorcomment>Show previous state of the background parameter #%1</translatorcomment>
         <translation>背景パラメータ #%1 の前のステートを表示</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7606"/>
+        <location filename="core/field/Opcode.cpp" line="7616"/>
         <source>Cacher paramètre n°%1</source>
         <translatorcomment>Hide background parameter #%1</translatorcomment>
         <translation>背景パラメータ #%1 を隠す</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8023"/>
+        <location filename="core/field/Opcode.cpp" line="8033"/>
         <source>Jouer musique n°%1</source>
         <translatorcomment>Play music #%1</translatorcomment>
         <translation>BGM #%1 を再生</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8046"/>
+        <location filename="core/field/Opcode.cpp" line="8056"/>
         <source>Jouer son n°%1 (position=%2/127)</source>
         <translatorcomment>Play sound #%1 (position=%2/127)</translatorcomment>
         <translation>効果音 #%1 を再生 (位置=%2/127)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8132"/>
+        <location filename="core/field/Opcode.cpp" line="8142"/>
         <source>MUSVT (musique n°%1)</source>
         <translatorcomment>MUSVT (music #%1)</translatorcomment>
         <translation>MUSVT (BGM #%1)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8153"/>
+        <location filename="core/field/Opcode.cpp" line="8163"/>
         <source>MUSVM (musique n°%1)</source>
         <translatorcomment>MUSVM (music #%1)</translatorcomment>
         <translation>MUSVM (BGM #%1)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8174"/>
+        <location filename="core/field/Opcode.cpp" line="8184"/>
         <source>%1 musique</source>
         <translatorcomment>%1 music</translatorcomment>
         <translation>BGM を%1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8175"/>
+        <location filename="core/field/Opcode.cpp" line="8185"/>
         <source>Déverrouiller</source>
         <oldsource>Déverouiller</oldsource>
         <translatorcomment>Unlock</translatorcomment>
         <translation>アンロック</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8175"/>
+        <location filename="core/field/Opcode.cpp" line="8185"/>
         <source>Verrouiller</source>
         <comment>test</comment>
         <translatorcomment>Lock</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8195"/>
+        <location filename="core/field/Opcode.cpp" line="8205"/>
         <source>Choisir musique n°%1 comme musique de combat</source>
         <translatorcomment>Set the music #%1 for next battle</translatorcomment>
         <translation>次のバトル BGM に #%1 をセット</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8218"/>
+        <location filename="core/field/Opcode.cpp" line="8228"/>
         <source>CHMPH : Sauvegarder (inconnu) dans %1 et (inconnu) dans %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8251"/>
+        <location filename="core/field/Opcode.cpp" line="8261"/>
         <source>Choisir prochaine cinématique : %1</source>
         <translatorcomment>Set next movie: %1</translatorcomment>
         <translation>次のムービーをセット : %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8266"/>
+        <location filename="core/field/Opcode.cpp" line="8276"/>
         <source>Jouer la cinématique choisie</source>
         <translatorcomment>Play movie</translatorcomment>
         <translation>ムービーを再生</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8282"/>
+        <location filename="core/field/Opcode.cpp" line="8292"/>
         <source>Stocker Movie frame dans %1</source>
         <translatorcomment>Save Movie frame in %1</translatorcomment>
         <translation>ムービー フレームを %1 に保存</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8311"/>
+        <location filename="core/field/Opcode.cpp" line="8321"/>
         <source>Camera Movie : %1</source>
         <translatorcomment>Camera Movie: %1</translatorcomment>
         <translation>カメラ ムービー : %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8394"/>
+        <location filename="core/field/Opcode.cpp" line="8404"/>
         <source>Si la musique est jouée mettre %1 à 1</source>
         <translatorcomment>If music is currently playing set %1 to 1</translatorcomment>
         <translation>BGM が再生されたとき %1 に 1 をセット</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="8417"/>
+        <location filename="core/field/Opcode.cpp" line="8427"/>
         <source>Game Over</source>
         <translation>ゲーム・オーバー</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="195"/>
+        <location filename="core/field/GrpScript.cpp" line="216"/>
         <source>Sans nom</source>
         <translatorcomment>Untitled</translatorcomment>
         <translation>Untitled</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="251"/>
+        <location filename="core/field/GrpScript.cpp" line="247"/>
         <source>Objet 3D</source>
         <translatorcomment>Field model</translatorcomment>
         <translation>3Dモデル</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="253"/>
+        <location filename="core/field/GrpScript.cpp" line="249"/>
         <source>Zone</source>
         <translatorcomment>Location</translatorcomment>
         <translation>エリア</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="254"/>
+        <location filename="core/field/GrpScript.cpp" line="250"/>
         <source>Animation</source>
         <translation>アニメーション</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="255"/>
+        <location filename="core/field/GrpScript.cpp" line="251"/>
         <source>Main</source>
         <translation>メイン</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="283"/>
+        <location filename="core/field/GrpScript.cpp" line="274"/>
         <source>S0 - Init</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="284"/>
+        <location filename="core/field/GrpScript.cpp" line="275"/>
         <source>S0 - Main</source>
         <translation>S0 - メイン</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="286"/>
+        <location filename="core/field/GrpScript.cpp" line="277"/>
         <source>S1 - Parler</source>
         <translatorcomment>S1 - Talk</translatorcomment>
         <translation>S1 - ダイアログ</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="287"/>
+        <location filename="core/field/GrpScript.cpp" line="278"/>
         <source>S1 - [OK]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="290"/>
+        <location filename="core/field/GrpScript.cpp" line="281"/>
         <source>S2 - Toucher</source>
         <translatorcomment>S2 - Contact</translatorcomment>
         <translation>S2 - コンタクト</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="291"/>
+        <location filename="core/field/GrpScript.cpp" line="282"/>
         <source>S2 - Bouger</source>
         <translatorcomment>S2 - Move</translatorcomment>
         <translation>S2 - 通過</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="294"/>
+        <location filename="core/field/GrpScript.cpp" line="285"/>
         <source>S3 - Bouger</source>
         <translatorcomment>S3 - Move</translatorcomment>
         <translation>S3 - 通過</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="297"/>
+        <location filename="core/field/GrpScript.cpp" line="288"/>
         <source>S4 - Aller</source>
         <translatorcomment>S4 - Go</translatorcomment>
         <translation>S4 - 進入</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="300"/>
+        <location filename="core/field/GrpScript.cpp" line="291"/>
         <source>S5 - Aller 1x</source>
         <translatorcomment>S5 - Go 1x</translatorcomment>
         <translation>S5 - 進入 1x</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="303"/>
+        <location filename="core/field/GrpScript.cpp" line="294"/>
         <source>S6 - Partir</source>
         <translatorcomment>S6 - Go away</translatorcomment>
         <translation>S6 - 離れる</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="307"/>
+        <location filename="core/field/GrpScript.cpp" line="298"/>
         <source>Script %1</source>
         <translation>スクリプト %1</translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="532"/>
+        <location filename="core/field/GrpScript.cpp" line="523"/>
         <source>Groupe &apos;%1&apos; :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/GrpScript.cpp" line="540"/>
+        <location filename="core/field/GrpScript.cpp" line="531"/>
         <source>Script &apos;%1&apos; :</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6983,13 +6978,13 @@ Are you sure you want to continue?</translatorcomment>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="247"/>
+        <location filename="widgets/VarManager.cpp" line="252"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="247"/>
+        <location filename="widgets/VarManager.cpp" line="252"/>
         <source>Fichier vars.cfg inaccessible.
 Échec de l&apos;enregistrement.</source>
         <translatorcomment>Save failed.</translatorcomment>
@@ -6997,49 +6992,49 @@ Are you sure you want to continue?</translatorcomment>
 保存に失敗しました。</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="255"/>
+        <location filename="widgets/VarManager.cpp" line="260"/>
         <source>Recherche</source>
         <translatorcomment>Searching</translatorcomment>
         <translation>検索中</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="255"/>
+        <location filename="widgets/VarManager.cpp" line="260"/>
         <source>Recherche des variables en cours, cela peut prendre une minute...</source>
         <translatorcomment>Searching,it may take a minute... </translatorcomment>
         <translation>検索しています。しばらく時間がかかります...</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="309"/>
+        <location filename="widgets/VarManager.cpp" line="314"/>
         <source>rw</source>
         <translation>rw</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="311"/>
+        <location filename="widgets/VarManager.cpp" line="316"/>
         <source>r</source>
         <translation>r</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="313"/>
+        <location filename="widgets/VarManager.cpp" line="318"/>
         <source>w</source>
         <translation>w</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="316"/>
+        <location filename="widgets/VarManager.cpp" line="321"/>
         <source>bits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="319"/>
+        <location filename="widgets/VarManager.cpp" line="324"/>
         <source>1 octet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="322"/>
+        <location filename="widgets/VarManager.cpp" line="327"/>
         <source>2 octets</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="325"/>
+        <location filename="widgets/VarManager.cpp" line="330"/>
         <source>2 octets signés</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7251,7 +7246,7 @@ Are you sure you want to continue?</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="471"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="474"/>
         <source>Inconnu :</source>
         <translation type="unfinished">不明:</translation>
     </message>
@@ -7381,70 +7376,75 @@ Are you sure you want to continue?</translatorcomment>
         <translation type="unfinished">レイヤー 4</translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="466"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="469"/>
         <source>Orientation des mouvements :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="469"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="472"/>
         <source>Hauteur focus caméra sur le personnage :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="492"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="476"/>
+        <source>Zoom écran :</source>
+        <translation>フィールド スケール :</translation>
+    </message>
+    <message>
+        <location filename="widgets/WalkmeshManager.cpp" line="499"/>
         <source>Erreur d&apos;ouverture</source>
         <translation>オープン エラー</translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="492"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="499"/>
         <source>Erreur d&apos;ouverture du walkmesh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="508"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="515"/>
         <source>Caméra %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="524"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="822"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="824"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="531"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="840"/>
         <location filename="widgets/WalkmeshManager.cpp" line="842"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="860"/>
         <source>Triangle %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="539"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="551"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="565"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1113"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1169"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1277"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="546"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="558"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="572"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1131"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1187"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1295"/>
         <source>Inutilisé</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="549"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1167"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="556"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1185"/>
         <source>Porte %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="563"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1275"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="570"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1293"/>
         <source>Flèche %1</source>
         <oldsource>Flêche %1</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="691"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="693"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="713"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="709"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="711"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="731"/>
         <source>Camera %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="990"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1008"/>
         <source>?</source>
         <translation type="unfinished">?</translation>
     </message>

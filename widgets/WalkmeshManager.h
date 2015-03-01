@@ -76,6 +76,7 @@ private slots:
 	void editNavigation(int v);
 	void editCameraFocusHeight(int value);
 	void editUnknown(const QByteArray &data);
+	void editMapScale(int scale);
 protected:
 	virtual void focusInEvent(QFocusEvent *e);
 	virtual void focusOutEvent(QFocusEvent *e);
@@ -101,6 +102,7 @@ private:
 	CaFile *caFile;
 	InfFile *infFile;
 	WalkmeshWidget *walkmesh;
+	Section1File *scriptsAndTexts;
 	QSlider *slider1, *slider2, *slider3;
 	QTabWidget *tabWidget;
 	//CamPage
@@ -136,6 +138,7 @@ private:
 	OrientationWidget *navigation;
 	QSpinBox *navigation2, *cameraFocusHeight;
 	HexLineEdit *unknown;
+	QSpinBox *mapScale;
 };
 
 #endif // WALKMESHMANAGER_H

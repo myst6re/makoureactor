@@ -32,7 +32,6 @@ private:
 	InfFile *data;
 	Field *field;
 	QLineEdit *mapName, *mapAuthor;
-	QSpinBox *mapScale;
 protected:
 	void accept();
 };
