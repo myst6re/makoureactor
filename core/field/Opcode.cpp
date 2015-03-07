@@ -2672,7 +2672,7 @@ void OpcodePTURA::setParams(const char *params, int)
 
 QString OpcodePTURA::toString(Field *) const
 {
-	return QObject::tr("Tourner l'objet 3D vers le membre de l'équipe n°%1 (Vitesse=%2, SensRotation=%3)")
+	return QObject::tr("Tourner l'objet 3D vers le membre de l'équipe n°%1 (vitesse=%2, sens de rotation=%3)")
 			.arg(partyID)
 			.arg(speed)
 			.arg(_sensRotation(directionRotation));
@@ -5922,7 +5922,7 @@ void OpcodeTURA::setParams(const char *params, int)
 
 QString OpcodeTURA::toString(Field *field) const
 {
-	return QObject::tr("Rotation de l'objet 3D vers le groupe %1 (vitesse=%2, SensRotation=%3)")
+	return QObject::tr("Rotation de l'objet 3D vers le groupe %1 (vitesse=%3, sens de rotation=%2)")
 			.arg(_script(groupID, field->scriptsAndTexts()))
 			.arg(_sensRotation(directionRotation))
 			.arg(speed);

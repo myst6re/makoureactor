@@ -2255,7 +2255,8 @@ Some scripts can refer to it!</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="2675"/>
-        <source>Tourner l&apos;objet 3D vers le membre de l&apos;équipe n°%1 (Vitesse=%2, SensRotation=%3)</source>
+        <source>Tourner l&apos;objet 3D vers le membre de l&apos;équipe n°%1 (vitesse=%2, sens de rotation=%3)</source>
+        <oldsource>Tourner l&apos;objet 3D vers le membre de l&apos;équipe n°%1 (Vitesse=%2, SensRotation=%3)</oldsource>
         <translation>Turns the field model to face the party member #%1 (Speed=%2, Rotation=%3)</translation>
     </message>
     <message>
@@ -2510,6 +2511,11 @@ Some scripts can refer to it!</translation>
         <location filename="core/field/Opcode.cpp" line="2557"/>
         <source>(aucune touche)</source>
         <translation>(no key)</translation>
+    </message>
+    <message>
+        <location filename="core/field/Opcode.cpp" line="3545"/>
+        <source>Fermer la fenêtre n°%1 (plus fort)</source>
+        <translation>Close the window #%1 (stronger)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="3791"/>
@@ -2849,8 +2855,9 @@ Some scripts can refer to it!</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="5925"/>
-        <source>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%2, SensRotation=%3)</source>
-        <translation>Rotation of the field model to group %1 (speed=%2, rotation=%3)</translation>
+        <source>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%3, sens de rotation=%2)</source>
+        <oldsource>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%2, SensRotation=%3)</oldsource>
+        <translation>Rotation of the field model to group %1 (Speed=%3, Rotation=%2)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="5945"/>

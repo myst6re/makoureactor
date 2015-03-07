@@ -2409,7 +2409,8 @@ Certains scripts peuvent y faire référence !</source>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="2675"/>
-        <source>Tourner l&apos;objet 3D vers le membre de l&apos;équipe n°%1 (Vitesse=%2, SensRotation=%3)</source>
+        <source>Tourner l&apos;objet 3D vers le membre de l&apos;équipe n°%1 (vitesse=%2, sens de rotation=%3)</source>
+        <oldsource>Tourner l&apos;objet 3D vers le membre de l&apos;équipe n°%1 (Vitesse=%2, SensRotation=%3)</oldsource>
         <translatorcomment>Turns the field model to face the party member #%1 (Speed=%2, Rotation=%3)</translatorcomment>
         <translation>3Dモデルの向きをパーティ メンバー #%1 の方へターン (速度=%2, 回転=%3)</translation>
     </message>
@@ -2643,6 +2644,11 @@ Certains scripts peuvent y faire référence !</source>
         <source>%1 les cinématiques</source>
         <translatorcomment>%1 movies</translatorcomment>
         <translation>ムービーを %1</translation>
+    </message>
+    <message>
+        <location filename="core/field/Opcode.cpp" line="3545"/>
+        <source>Fermer la fenêtre n°%1 (plus fort)</source>
+        <translation type="unfinished">ウィンドウを閉じる (ウィンドウ #%1)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="3791"/>
@@ -3041,9 +3047,10 @@ Certains scripts peuvent y faire référence !</source>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="5925"/>
-        <source>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%2, SensRotation=%3)</source>
+        <source>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%3, sens de rotation=%2)</source>
+        <oldsource>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%2, SensRotation=%3)</oldsource>
         <translatorcomment>Rotation of the field model to group %1 (speed=%2, rotation=%3)</translatorcomment>
-        <translation>3Dモデルをグループ %1 の方向へ回転 (速度=%2, 回転=%3)</translation>
+        <translation>3Dモデルをグループ %1 の方向へ回転 (速度=%3, 回転=%2)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="5945"/>
