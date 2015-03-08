@@ -1809,8 +1809,9 @@ Certains scripts peuvent y faire référence !</source>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="1937"/>
-        <source>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (u1=%1, u2=%5)</source>
-        <translation type="unfinished">画面を RGB(%2, %3, %4) にフェード (u1=%1, u2=%5)</translation>
+        <source>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (vitesse=%5, type=%1)</source>
+        <oldsource>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (u1=%1, u2=%5)</oldsource>
+        <translation type="unfinished">画面を RGB(%2, %3, %4) にフェード (速度=%5, タイプ=%1)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="2142"/>
@@ -6435,7 +6436,7 @@ poursuite à la fin.</source>
         <translation>(Empty)</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/Delegate.cpp" line="216"/>
+        <location filename="widgets/ScriptEditorWidgets/Delegate.cpp" line="217"/>
         <source>Choisir une nouvelle couleur</source>
         <translatorcomment>Choose a new color</translatorcomment>
         <translation>変更する色の選択</translation>

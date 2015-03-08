@@ -1728,8 +1728,9 @@ Some scripts can refer to it!</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="1937"/>
-        <source>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (u1=%1, u2=%5)</source>
-        <translation>Fades the screen to the colour RGB(%2, %3, %4) (u1=%1, u2=%5)</translation>
+        <source>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (vitesse=%5, type=%1)</source>
+        <oldsource>Voiler l&apos;écran avec la couleur RVB(%2, %3, %4) (u1=%1, u2=%5)</oldsource>
+        <translation>Fades the screen to the colour RGB(%2, %3, %4) (speed=%5, type=%1)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="2142"/>
@@ -5920,7 +5921,7 @@ poursuite à la fin.</source>
         <translation>(Empty)</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/Delegate.cpp" line="216"/>
+        <location filename="widgets/ScriptEditorWidgets/Delegate.cpp" line="217"/>
         <source>Choisir une nouvelle couleur</source>
         <translation>Choose a new color</translation>
     </message>
