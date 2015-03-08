@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModelFilePC.h"
-#include "Data.h"
+#include "CharArchive.h"
 #include "FieldModelPartPC.h"
 #include "../TexFile.h"
 
@@ -39,7 +39,8 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 		return 2;
 	}
 
-	if(Data::charlgp_loadListPos()) {
+	CharArchive *charLgp = CharArchive::instance();
+	if(charLgp->isOpen()) {
 		QString hrcFilename, aFilename;
 		int index;
 		if((index=hrc.lastIndexOf('.')) != -1)
@@ -57,7 +58,7 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 		clear();
 
 		QMultiMap<int, QStringList> rsd_files;
-		QIODevice *hrcFile = Data::charLgp.file(hrcFilename.toLower() % ".hrc");
+		QIODevice *hrcFile = charLgp->fileIO(hrcFilename % ".hrc");
 
 		if(hrcFile && hrcFile->open(QIODevice::ReadOnly)
 				&& openHrc(hrcFile, rsd_files)) {
@@ -66,14 +67,14 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 					boneID = rsd_files.key(Ps);
 					rsd = rsd.toLower();
 
-					QIODevice *rsdFile = Data::charLgp.file(rsd % ".rsd");
+					QIODevice *rsdFile = charLgp->fileIO(rsd % ".rsd");
 
 					if(rsdFile && rsdFile->open(QIODevice::ReadOnly)) {
 						p = openRsd(rsdFile, boneID);
 						if(!p.isNull()) {
 							FieldModelPartPC *part = new FieldModelPartPC();
 
-							QIODevice *pFile = Data::charLgp.file(p % ".p");
+							QIODevice *pFile = charLgp->fileIO(p % ".p");
 
 							if(pFile && pFile->open(QIODevice::ReadOnly)
 									&& part->open(pFile)) {
@@ -92,7 +93,7 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 			}
 			rsd_files.clear();
 
-			QIODevice *aFile = Data::charLgp.file(aFilename.toLower() % ".a");
+			QIODevice *aFile = charLgp->fileIO(aFilename % ".a");
 
 			if(!_parts.isEmpty()
 					&& aFile && aFile->open(QIODevice::ReadOnly) && openA(aFile, animate))
@@ -101,7 +102,7 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 				int texID=0;
 				foreach(const QString &texName, tex2id) {
 					QImage tex;
-					QIODevice *texFile = Data::charLgp.file(texName % ".tex");
+					QIODevice *texFile = charLgp->fileIO(texName % ".tex");
 					if(texFile && texFile->open(QIODevice::ReadOnly)) {
 						tex = openTex(texFile);
 					}

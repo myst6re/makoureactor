@@ -21,6 +21,7 @@
 #include <QtCore>
 #include "core/Lgp.h"
 #include "core/WindowBinFile.h"
+#include "core/field/CharArchive.h"
 
 #define FF7_WIN_REGISTER_PATH "Square Soft, Inc./Final Fantasy VII"
 
@@ -38,11 +39,6 @@ public:
 	static QMap<FF7Version, QString> ff7DataPathList();
 	static QString ff7KernelPath();
 	static QString charlgp_path();
-	static bool charlgp_loadListPos();
-	static void charlgp_loadAnimBoneCount();
-	static void charlgp_close();
-	static Lgp charLgp;
-	static QHash<QString, int> charlgp_animBoneCount;
 	static WindowBinFile windowBin;
 	static int loadKernel2Bin();
 	static int loadWindowBin();

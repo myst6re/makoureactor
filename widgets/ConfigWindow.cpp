@@ -477,7 +477,7 @@ void ConfigWindow::accept()
 	Data::loadKernel2Bin(); // Reload kernel2.bin data
 	Data::loadWindowBin(); // Reload window.bin data
 	Data::refreshFF7Paths(); // Refresh ff7 paths
-	Data::charlgp_close(); // Refresh cached lgp TOC
+	CharArchive::instance()->close(); // Refresh cached lgp TOC
 	TextPreview::updateNames(); // Refresh custom names
 	QDialog::accept();
 }

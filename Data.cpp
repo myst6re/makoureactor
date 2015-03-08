@@ -47,8 +47,6 @@ QString Data::ff7DataPath_cache;
 QString Data::ff7AppPath_cache;
 QString Data::ff7RereleasePath_cache;
 bool Data::ff7RereleaseAlreadySearched = false;
-Lgp Data::charLgp;
-QHash<QString, int> Data::charlgp_animBoneCount;
 WindowBinFile Data::windowBin;
 
 void Data::refreshFF7Paths()
@@ -322,52 +320,6 @@ QString Data::charlgp_path()
 	}
 
 	return charPath;
-}
-
-bool Data::charlgp_loadListPos()
-{
-	if(!charLgp.isOpen()) {
-		QString charPath = Data::charlgp_path();
-		if(charPath.isEmpty())	return false;
-
-		charLgp.setFileName(charPath);
-		if(!charLgp.open()) {
-			return false;
-		}
-	}
-	return true;
-}
-
-void Data::charlgp_loadAnimBoneCount()
-{
-	if(charlgp_animBoneCount.isEmpty() && charlgp_loadListPos()) {
-		quint32 boneCount;
-
-		LgpIterator it = charLgp.iterator();
-
-		while(it.hasNext()) {
-			it.next();
-			const QString &fileName = it.fileName();
-			if(fileName.endsWith(".a", Qt::CaseInsensitive)) {
-				QCoreApplication::processEvents();
-				QIODevice *aFile = it.file();
-				if(aFile && aFile->open(QIODevice::ReadOnly)) {
-					if(!aFile->seek(8) ||
-							aFile->read((char *)&boneCount, 4) != 4)	break;
-					charlgp_animBoneCount.insert(fileName.toLower(), boneCount);
-				} else {
-					break;
-				}
-			}
-		}
-	}
-}
-
-void Data::charlgp_close()
-{
-	charLgp.clear();
-	charLgp.close();
-	charlgp_animBoneCount.clear();
 }
 
 int Data::loadKernel2Bin()

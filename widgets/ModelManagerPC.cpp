@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "ModelManagerPC.h"
 #include "core/Config.h"
-#include "Data.h"
+#include "core/field/CharArchive.h"
 
 ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	ModelManager(shareWidget, parent), copied(false)
@@ -160,21 +160,16 @@ void ModelManagerPC::addModel()
 
 	QString hrc("    .HRC");
 	QTreeWidgetItem *item = models->currentItem(), *newItem;
+	CharArchive *charLgp = CharArchive::instance();
 
-	if(Data::charlgp_loadListPos()) {
+	if(charLgp->isOpen()) {
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
 		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
 
 		QComboBox list(&dialog);
 		list.setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
 		list.setEditable(true);
-		QStringList files;
-
-		foreach(const QString &file, Data::charLgp.fileList()) {
-			if(file.endsWith(".hrc", Qt::CaseInsensitive)) {
-				files.append(file);
-			}
-		}
+		QStringList files = charLgp->hrcFiles();
 
 		qSort(files);
 		list.addItems(files);
@@ -229,8 +224,9 @@ void ModelManagerPC::addModel()
 
 	models->setCurrentItem(newItem);
 
-	if(!Data::charLgp.isOpen())
+	if(!charLgp->isOpen()) {
 		models->editItem(newItem);
+	}
 }
 
 void ModelManagerPC::delModel()
@@ -382,7 +378,9 @@ void ModelManagerPC::addAnim()
 
 	QTreeWidgetItem *item = modelAnims->currentItem(), *newItem;
 	QString a;
-	if(Data::charlgp_loadListPos()) {
+	CharArchive *charLgp = CharArchive::instance();
+
+	if(charLgp->isOpen()) {
 		toolBar2->setEnabled(false);
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
 		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
@@ -391,18 +389,10 @@ void ModelManagerPC::addAnim()
 		list.setEditable(true);
 		list.setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
 
-		Data::charlgp_loadAnimBoneCount();
-
-		QStringList files;
-
 		int boneCount = modelPreview ? modelPreview->boneCount() : 0;
-
-		foreach(const QString &file, Data::charLgp.fileList()) {
-			QCoreApplication::processEvents();
-			if(file.endsWith(".a", Qt::CaseInsensitive)) {
-				if(boneCount == 0 || Data::charlgp_animBoneCount.value(file.toLower()) == boneCount)
-					files.append(file.left(file.size()-2).toUpper());
-			}
+		QStringList files = charLgp->aFiles(boneCount);
+		if(boneCount != 0) {
+			files.append(charLgp->aFiles(0)); // Animations without bones work too
 		}
 
 		qSort(files);
@@ -470,8 +460,9 @@ void ModelManagerPC::addAnim()
 
 	newItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 	modelAnims->setCurrentItem(newItem);
-	if(!Data::charLgp.isOpen())
+	if(!charLgp->isOpen()) {
 		modelAnims->editItem(newItem);
+	}
 }
 
 void ModelManagerPC::modifyAnimation(const QString &a)
