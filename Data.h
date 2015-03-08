@@ -40,6 +40,7 @@ public:
 	static QString charlgp_path();
 	static bool charlgp_loadListPos();
 	static void charlgp_loadAnimBoneCount();
+	static void charlgp_close();
 	static Lgp charLgp;
 	static QHash<QString, int> charlgp_animBoneCount;
 	static WindowBinFile windowBin;

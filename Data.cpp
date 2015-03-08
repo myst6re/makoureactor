@@ -363,6 +363,13 @@ void Data::charlgp_loadAnimBoneCount()
 	}
 }
 
+void Data::charlgp_close()
+{
+	charLgp.clear();
+	charLgp.close();
+	charlgp_animBoneCount.clear();
+}
+
 int Data::loadKernel2Bin()
 {
 	QString path = Config::value("kernel2Path").toString();
