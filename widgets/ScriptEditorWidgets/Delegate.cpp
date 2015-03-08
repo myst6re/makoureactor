@@ -213,7 +213,8 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		QSpinBox *editor = new QSpinBox(parent);
 		editor->setMinimum(index.data(Qt::UserRole).toInt());
 		editor->setMaximum(index.data(Qt::UserRole+1).toInt());
-		QColor color = QColorDialog::getColor(QColor(value), parent, tr("Choisir une nouvelle couleur"));
+		QColor color = qRgb(value & 0xFF, (value >> 8) & 0xFF, value >> 16);
+		color = QColorDialog::getColor(color, parent, tr("Choisir une nouvelle couleur"));
 		if(color.isValid()) {
 			QRgb rgb = color.rgb();
 			editor->setValue((qBlue(rgb) << 16) | (qGreen(rgb) << 8) | qRed(rgb));

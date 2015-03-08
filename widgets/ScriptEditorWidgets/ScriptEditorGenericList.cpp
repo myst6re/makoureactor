@@ -112,10 +112,10 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 		switch(byte2)
 		{
 		case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
-					length = 1;
+				length = 1;
 			break;
 		case 0xF8:case 0xFD:
-					length = 2;
+				length = 2;
 			break;
 		}
 		start = 2;
@@ -292,305 +292,305 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	QList<int> paramTypes;
 	switch(id)
 	{
-	//case 0x00:return paramTypes;
+	//case 0x00:break;
 	case 0x01:case 0x02:case 0x03:
-		paramTypes<<group_id<<priorite<<script_id;return paramTypes;
+		paramTypes<<group_id<<priorite<<script_id;break;
 	case 0x04:case 0x05:case 0x06:
-		paramTypes<<party_id<<priorite<<script_id;return paramTypes;
+		paramTypes<<party_id<<priorite<<script_id;break;
 	case 0x07:
-		paramTypes<<priorite<<script_id;return paramTypes;
+		paramTypes<<priorite<<script_id;break;
 	case 0x08:
-		paramTypes<<vitesse;return paramTypes;
+		paramTypes<<vitesse;break;
 	case 0x09:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<direction<<coord_x<<coord_y<<direction<<vitesse;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<direction<<coord_x<<coord_y<<direction<<vitesse;break;
 	case 0x0A:case 0x0B:
-		paramTypes<<bank<<bank<<bank<<bank<<party_id<<party_id<<party_id;return paramTypes;
-	//case 0x0C:case 0x0D:return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<party_id<<party_id<<party_id;break;
+	//case 0x0C:case 0x0D:break;
 	case 0x0E:
-		paramTypes<<cd_id;return paramTypes;
+		paramTypes<<cd_id;break;
 	//case 0x0F:return;//SPECIAL
 	case 0x10:case 0x12:
-		paramTypes<<jump;return paramTypes;
+		paramTypes<<jump;break;
 	case 0x11:case 0x13:
-		paramTypes<<jump_l;return paramTypes;
+		paramTypes<<jump_l;break;
 	case 0x14:
-		paramTypes<<bank<<bank<<byte<<byte<<operateur<<jump;return paramTypes;
+		paramTypes<<bank<<bank<<byte<<byte<<operateur<<jump;break;
 	case 0x15:
-		paramTypes<<bank<<bank<<byte<<byte<<operateur<<jump_l;return paramTypes;
+		paramTypes<<bank<<bank<<byte<<byte<<operateur<<jump_l;break;
 	case 0x16:
-		paramTypes<<bank<<bank<<sword<<sword<<operateur<<jump;return paramTypes;
+		paramTypes<<bank<<bank<<sword<<sword<<operateur<<jump;break;
 	case 0x17:
-		paramTypes<<bank<<bank<<sword<<sword<<operateur<<jump_l;return paramTypes;
+		paramTypes<<bank<<bank<<sword<<sword<<operateur<<jump_l;break;
 	case 0x18:
-		paramTypes<<bank<<bank<<word<<word<<operateur<<jump;return paramTypes;
+		paramTypes<<bank<<bank<<word<<word<<operateur<<jump;break;
 	case 0x19:
-		paramTypes<<bank<<bank<<word<<word<<operateur<<jump_l;return paramTypes;
-	//case 0x1A:case 0x1B:case 0x1C:case 0x1D:case 0x1E:case 0x1F:return paramTypes;
+		paramTypes<<bank<<bank<<word<<word<<operateur<<jump_l;break;
+	//case 0x1A:case 0x1B:case 0x1C:case 0x1D:case 0x1E:case 0x1F:break;
 	case 0x20:
-		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<byte<<minijeu_id;return paramTypes;
+		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<byte<<minijeu_id;break;
 	case 0x21:
-		paramTypes<<tuto_id;return paramTypes;
+		paramTypes<<tuto_id;break;
 	case 0x22:
-		paramTypes<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit;return paramTypes;
+		paramTypes<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit;break;
 	case 0x23:
-		paramTypes<<bank<<bank<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<byte;break;
 	case 0x24:
-		paramTypes<<word;return paramTypes;
-	case 0x25://TODO
-		paramTypes<<bank<<bank<<bank<<bank<<inconnu<<color<<inconnu<<inconnu;return paramTypes;
+		paramTypes<<word;break;
+	case 0x25:
+		paramTypes<<bank<<bank<<bank<<bank<<byte<<color<<vitesse<<inconnu;break;
 	case 0x26:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	case 0x27:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	//case 0x28://KAWAI
-	//case 0x29:return paramTypes;
+	//case 0x29:break;
 	case 0x2A:
-		paramTypes<<party_id;return paramTypes;
+		paramTypes<<party_id;break;
 	case 0x2B:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	case 0x2C:
-		paramTypes<<bank<<bank<<layer_id<<coord_z;return paramTypes;
+		paramTypes<<bank<<bank<<layer_id<<coord_z;break;
 	case 0x2D:
-		paramTypes<<bank<<bank<<layer_id<<sword<<sword;return paramTypes;
+		paramTypes<<bank<<bank<<layer_id<<sword<<sword;break;
 	case 0x2E:
-		paramTypes<<window_id;return paramTypes;
+		paramTypes<<window_id;break;
 	case 0x2F:
-		paramTypes<<window_id<<coord_x<<coord_y<<window_w<<window_h;return paramTypes;
+		paramTypes<<window_id<<coord_x<<coord_y<<window_w<<window_h;break;
 	case 0x30:case 0x31:case 0x32:
-		paramTypes<<keys<<jump;return paramTypes;
+		paramTypes<<keys<<jump;break;
 	case 0x33:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	case 0x34:
-		paramTypes<<party_id;return paramTypes;
+		paramTypes<<party_id;break;
 	case 0x35:
-		paramTypes<<party_id<<vitesse<<rotation;return paramTypes;
+		paramTypes<<party_id<<vitesse<<rotation;break;
 	case 0x36:
-		paramTypes<<window_id<<window_num<<byte<<byte;return paramTypes;
+		paramTypes<<window_id<<window_num<<byte<<byte;break;
 	case 0x37:
-		paramTypes<<bank<<bank<<window_id<<word<<word<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<window_id<<word<<word<<byte;break;
 	case 0x38:
-		paramTypes<<bank<<bank<<bank<<bank<<byte<<byte<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<byte<<byte<<byte;break;
 	case 0x39:case 0x3A:
-		paramTypes<<bank<<bank<<word<<word;return paramTypes;
+		paramTypes<<bank<<bank<<word<<word;break;
 	case 0x3B:
-		paramTypes<<bank<<bank<<adress<<adress;return paramTypes;
-	//case 0x3C:case 0x3D:case 0x3E:case 0x3F:return paramTypes;
+		paramTypes<<bank<<bank<<adress<<adress;break;
+	//case 0x3C:case 0x3D:case 0x3E:case 0x3F:break;
 	case 0x40:
-		paramTypes<<window_id<<text_id;return paramTypes;
+		paramTypes<<window_id<<text_id;break;
 	case 0x41:
-		paramTypes<<bank<<bank<<window_id<<window_var<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<window_id<<window_var<<byte;break;
 	case 0x42:
-		paramTypes<<bank<<bank<<window_id<<window_var<<word;return paramTypes;
+		paramTypes<<bank<<bank<<window_id<<window_var<<word;break;
 	case 0x43:
-		paramTypes<<text_id;return paramTypes;
-	//case 0x44:case 0x46:return paramTypes;
+		paramTypes<<text_id;break;
+	//case 0x44:case 0x46:break;
 	case 0x45:case 0x47:
-		paramTypes<<bank<<bank<<party_id<<word;return paramTypes;
+		paramTypes<<bank<<bank<<party_id<<word;break;
 	case 0x48:
-		paramTypes<<bank<<bank<<window_id<<text_id<<byte<<byte<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<window_id<<text_id<<byte<<byte<<adress;break;
 	case 0x49:
-		paramTypes<<bank<<bank<<menu<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<menu<<byte;break;
 	case 0x4A:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	case 0x4B:
-		paramTypes<<byte;return paramTypes;
-	//case 0x4C:case 0x4E:return paramTypes;
+		paramTypes<<byte;break;
+	//case 0x4C:case 0x4E:break;
 	case 0x4D:case 0x4F:
-		paramTypes<<bank<<bank<<party_id<<word;return paramTypes;
+		paramTypes<<bank<<bank<<party_id<<word;break;
 	case 0x50:
-		paramTypes<<window_id<<coord_x<<coord_y<<window_w<<window_h;return paramTypes;
+		paramTypes<<window_id<<coord_x<<coord_y<<window_w<<window_h;break;
 	case 0x51:
-		paramTypes<<window_id<<coord_x<<coord_y;return paramTypes;
+		paramTypes<<window_id<<coord_x<<coord_y;break;
 	case 0x52:
-		paramTypes<<window_id<<window_type<<boolean;return paramTypes;
+		paramTypes<<window_id<<window_type<<boolean;break;
 	case 0x53:case 0x54:
-		paramTypes<<window_id;return paramTypes;
+		paramTypes<<window_id;break;
 	case 0x55:
-		paramTypes<<window_id<<byte;return paramTypes;
+		paramTypes<<window_id<<byte;break;
 	case 0x56:
-		paramTypes<<bank<<bank<<bank<<bank<<adress<<adress<<adress<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<adress<<adress<<adress<<adress;break;
 	case 0x57:
-		paramTypes<<bank<<bank<<bank<<bank<<byte<<color;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<byte<<color;break;
 	case 0x58:case 0x59:
-		paramTypes<<bank<<bank<<item_id<<quantity;return paramTypes;
+		paramTypes<<bank<<bank<<item_id<<quantity;break;
 	case 0x5A:
-		paramTypes<<bank<<bank<<item_id<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<item_id<<adress;break;
 	case 0x5B:
-		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte;break;
 	case 0x5C:
-		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<quantity;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<quantity;break;
 	case 0x5D:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<inconnu<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<inconnu<<adress;break;
 	//case 0x5E://TODO
-	//case 0x5F:return paramTypes;
+	//case 0x5F:break;
 	case 0x60:
-		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<direction;return paramTypes;
+		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<direction;break;
 	//case 0x61:case 0x62://TODO
 	case 0x63:
-		paramTypes<<bank<<bank<<vitesse2<<group_id<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<vitesse2<<group_id<<byte;break;
 	case 0x64:
-		paramTypes<<bank<<bank<<coord_x<<coord_y;return paramTypes;
-	//case 0x65:case 0x67:return paramTypes;
+		paramTypes<<bank<<bank<<coord_x<<coord_y;break;
+	//case 0x65:case 0x67:break;
 	case 0x66:case 0x68:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<vitesse2;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<vitesse2;break;
 	case 0x69:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	case 0x6A:
-		paramTypes<<bank<<bank<<sword<<sword<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<sword<<sword<<byte;break;
 	case 0x6B:
-		paramTypes<<bank<<bank<<bank<<bank<<color<<vitesse<<byte<<byte;return paramTypes;
-	//case 0x6C:return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<color<<vitesse<<byte<<byte;break;
+	//case 0x6C:break;
 	case 0x6D:
-		paramTypes<<polygone_id<<boolean;return paramTypes;
+		paramTypes<<polygone_id<<boolean;break;
 	case 0x6E:
-		paramTypes<<bank<<bank<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<adress;break;
 	case 0x6F:
-		paramTypes<<bank<<bank<<vitesse2<<party_id<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<vitesse2<<party_id<<byte;break;
 	case 0x70:
-		paramTypes<<bank<<bank<<word;return paramTypes;
+		paramTypes<<bank<<bank<<word;break;
 	case 0x71:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	case 0x72:
-		paramTypes<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit;return paramTypes;
+		paramTypes<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit<<bit;break;
 	case 0x73:case 0x74:
-		paramTypes<<bank<<bank<<party_id<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<party_id<<adress;break;
 	case 0x75:
-		paramTypes<<bank<<bank<<bank<<bank<<party_id<<adress<<adress<<adress<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<party_id<<adress<<adress<<adress<<adress;break;
 	case 0x76:case 0x78:case 0x80:case 0x82:case 0x83:case 0x84:case 0x85:case 0x87:case 0x89:case 0x8B:case 0x8D:case 0x8F:case 0x91:case 0x93:case 0x9A:
-		paramTypes<<bank<<bank<<adress<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<adress<<byte;break;
 	case 0x77:case 0x79:case 0x81:case 0x86:case 0x88:case 0x8A:case 0x8C:case 0x8E:case 0x90:case 0x92:case 0x94:case 0x9B:
-		paramTypes<<bank<<bank<<adress<<word;return paramTypes;
+		paramTypes<<bank<<bank<<adress<<word;break;
 	case 0x7A:case 0x7B:case 0x7C:case 0x7D:case 0x95:case 0x96:case 0x97:case 0x98:case 0x99:
-		paramTypes<<bank<<bank<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<adress;break;
 	case 0x7E:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	case 0x7F:
-		paramTypes<<bank<<bank<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<byte;break;
 	case 0x9C:
-		paramTypes<<bank<<bank<<bank<<bank<<adress<<byte<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<adress<<byte<<byte;break;
 	//case 0x9D:case 0x9E:case 0x9F://TODO
 	case 0xA0:
-		paramTypes<<personnage_id;return paramTypes;
+		paramTypes<<personnage_id;break;
 	case 0xA1:
-		paramTypes<<byte;return paramTypes;
+		paramTypes<<byte;break;
 	case 0xA2:case 0xA3:case 0xAE:case 0xAF:
-		paramTypes<<animation_id<<vitesse;return paramTypes;
+		paramTypes<<animation_id<<vitesse;break;
 	case 0xA4:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	case 0xA5:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z<<polygone_id;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z<<polygone_id;break;
 	case 0xA6:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<polygone_id;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<polygone_id;break;
 	case 0xA7:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z;break;
 	case 0xA8:case 0xA9:case 0xAD:
-		paramTypes<<bank<<bank<<coord_x<<coord_y;return paramTypes;
+		paramTypes<<bank<<bank<<coord_x<<coord_y;break;
 	case 0xAA:
-		paramTypes<<group_id;return paramTypes;
+		paramTypes<<group_id;break;
 	case 0xAB:
-		paramTypes<<group_id<<rotation<<vitesse;return paramTypes;
-	//case 0xAC:return paramTypes;
+		paramTypes<<group_id<<rotation<<vitesse;break;
+	//case 0xAC:break;
 	case 0xB0:case 0xB1:case 0xBB:case 0xBC:
-		paramTypes<<animation_id<<byte<<byte<<vitesse;return paramTypes;
+		paramTypes<<animation_id<<byte<<byte<<vitesse;break;
 	case 0xB2:case 0xBD:
-		paramTypes<<bank<<bank<<vitesse2;return paramTypes;
+		paramTypes<<bank<<bank<<vitesse2;break;
 	case 0xB3:
-		paramTypes<<bank<<bank<<direction;return paramTypes;
+		paramTypes<<bank<<bank<<direction;break;
 	case 0xB4:case 0xB5:
-		paramTypes<<bank<<bank<<direction<<byte<<vitesse<<inconnu;return paramTypes;
+		paramTypes<<bank<<bank<<direction<<byte<<vitesse<<inconnu;break;
 	case 0xB6:
-		paramTypes<<group_id;return paramTypes;
+		paramTypes<<group_id;break;
 	case 0xB7:case 0xB9:
-		paramTypes<<bank<<bank<<group_id<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<group_id<<adress;break;
 	case 0xB8:
-		paramTypes<<bank<<bank<<group_id<<adress<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<group_id<<adress<<adress;break;
 	case 0xBA:
-		paramTypes<<animation_id<<vitesse;return paramTypes;
-	//case 0xBE:return paramTypes;
+		paramTypes<<animation_id<<vitesse;break;
+	//case 0xBE:break;
 	case 0xBF:
-		paramTypes<<group_id;return paramTypes;
+		paramTypes<<group_id;break;
 	case 0xC0:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<polygone_id<<word;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<polygone_id<<word;break;
 	case 0xC1:
-		paramTypes<<bank<<bank<<bank<<bank<<group_id<<adress<<adress<<adress<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<group_id<<adress<<adress<<adress<<adress;break;
 	case 0xC2:
-		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z<<polygone_id<<byte<<animation_id<<direction<<vitesse;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z<<polygone_id<<byte<<animation_id<<direction<<vitesse;break;
 	case 0xC3:
-		paramTypes<<bank<<bank<<bank<<bank<<byte<<coord_x<<coord_y<<coord_z<<vitesse2;return paramTypes;
-	//case 0xC4:return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<byte<<coord_x<<coord_y<<coord_z<<vitesse2;break;
+	//case 0xC4:break;
 	case 0xC5:case 0xC6:
-		paramTypes<<bank<<bank<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<byte;break;
 	case 0xC7:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	case 0xC8:case 0xC9:case 0xCE:case 0xCF:
-		paramTypes<<personnage_id;return paramTypes;
+		paramTypes<<personnage_id;break;
 	case 0xCA:
-		paramTypes<<personnage_id<<personnage_id<<personnage_id;return paramTypes;
+		paramTypes<<personnage_id<<personnage_id<<personnage_id;break;
 	case 0xCB:case 0xCC:
-		paramTypes<<personnage_id<<jump;return paramTypes;
+		paramTypes<<personnage_id<<jump;break;
 	case 0xCD:
-		paramTypes<<boolean<<personnage_id;return paramTypes;
+		paramTypes<<boolean<<personnage_id;break;
 	case 0xD0:
-		paramTypes<<coord_x<<coord_y<<coord_z<<coord_x<<coord_y<<coord_z;return paramTypes;
+		paramTypes<<coord_x<<coord_y<<coord_z<<coord_x<<coord_y<<coord_z;break;
 	case 0xD1:case 0xD2:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	case 0xD3:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z<<coord_x<<coord_y<<coord_z;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<coord_x<<coord_y<<coord_z<<coord_x<<coord_y<<coord_z;break;
 	case 0xD4:case 0xD5:
-		paramTypes<<bank<<bank<<bank<<bank<<word<<word<<word<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<word<<word<<word<<byte;break;
 	case 0xD6:case 0xD7:
-		paramTypes<<bank<<bank<<word;return paramTypes;
+		paramTypes<<bank<<bank<<word;break;
 	case 0xD8:
-		paramTypes<<field_id;return paramTypes;
-	//case 0xD9:return paramTypes;
+		paramTypes<<field_id;break;
+	//case 0xD9:break;
 	case 0xDA:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<word<<word<<word<<word<<word;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<word<<word<<word<<word<<word;break;
 	case 0xDB:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	case 0xDC:
-		paramTypes<<animation_id<<vitesse<<byte;return paramTypes;
-	//case 0xDD:case 0xDE:return paramTypes;
+		paramTypes<<animation_id<<vitesse<<byte;break;
+	//case 0xDD:case 0xDE:break;
 	case 0xDF:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte<<byte<<byte<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte<<byte<<byte<<byte;break;
 	case 0xE0:case 0xE1:
-		paramTypes<<bank<<bank<<parametre_id<<state_id;return paramTypes;
+		paramTypes<<bank<<bank<<parametre_id<<state_id;break;
 	case 0xE2:case 0xE3:case 0xE4:
-		paramTypes<<bank<<bank<<parametre_id;return paramTypes;
+		paramTypes<<bank<<bank<<parametre_id;break;
 	case 0xE5:case 0xE6:case 0xE7:
-		paramTypes<<bank<<bank<<byte<<byte<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<byte<<byte<<byte;break;
 	case 0xE8:
-		paramTypes<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte;break;
 	case 0xE9:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte<<byte<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte<<byte<<byte;break;
 	case 0xEA:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte<<byte<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<byte<<byte<<byte<<byte;break;
 	case 0xEB:case 0xEC:
-		paramTypes<<byte<<byte<<byte<<byte;return paramTypes;
+		paramTypes<<byte<<byte<<byte<<byte;break;
 	//case 0xED:case 0xEE:case 0xEF://TODO
 	case 0xF0:case 0xF3:case 0xF4:case 0xF6:
-		paramTypes<<music_id;return paramTypes;
+		paramTypes<<music_id;break;
 	case 0xF1:
-		paramTypes<<bank<<bank<<sound_id<<byte;return paramTypes;
+		paramTypes<<bank<<bank<<sound_id<<byte;break;
 	case 0xF2:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<word<<word<<word<<word;return paramTypes;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<word<<word<<word<<word;break;
 	case 0xF5:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	//case 0xF7://TODO
 	case 0xF8:
-		paramTypes<<movie_id;return paramTypes;
-	//case 0xF9:return paramTypes;
+		paramTypes<<movie_id;break;
+	//case 0xF9:break;
 	case 0xFA:
-		paramTypes<<bank<<bank<<adress;return paramTypes;
+		paramTypes<<bank<<bank<<adress;break;
 	case 0xFB:
-		paramTypes<<boolean;return paramTypes;
+		paramTypes<<boolean;break;
 	//case 0xFC://TODO
 	case 0xFD:
-		paramTypes<<music_id<<inconnu<<inconnu<<inconnu<<inconnu<<inconnu<<inconnu;return paramTypes;
+		paramTypes<<music_id<<inconnu<<inconnu<<inconnu<<inconnu<<inconnu<<inconnu;break;
 	case 0xFE:
-		paramTypes<<bank<<bank<<adress;return paramTypes;
-	//case 0xFF:return paramTypes;
+		paramTypes<<bank<<bank<<adress;break;
+	//case 0xFF:break;
 	case 0x100:
-		paramTypes<<label;return paramTypes;
+		paramTypes<<label;break;
 	}
 	return paramTypes;
 }
