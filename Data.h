@@ -74,7 +74,7 @@ private:
 	static QString ff7RereleasePath_cache;
 	static bool ff7RereleaseAlreadySearched;
 	static const char *movieList[106];
-	static const char *mapList[787];
+	static const char *mapList[788];
 	static const char *musicList[100];
 	static const char *musicList2[100];
 

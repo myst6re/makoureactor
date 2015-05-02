@@ -592,7 +592,7 @@ const char *Data::movieList[106] = {
 	"ending1", "ending3", "fcar", "white2", "ending2"
 };
 
-const char *Data::mapList[787] = {
+const char *Data::mapList[788] = {
 	"dummy", "wm0", "wm1", "wm2", "wm3", "wm4", "wm5", "wm6",
 	"wm7", "wm8", "wm9", "wm10", "wm11", "wm12", "wm13", "wm14",
 	"wm15", "wm16", "wm17", "wm18", "wm19", "wm20", "wm21", "wm22",
@@ -703,14 +703,14 @@ const char *Data::mapList[787] = {
 	"las2_2", "las2_3", "las2_4", "las3_1", "las3_2", "las3_3", "las4_0", "las4_1",
 	"las4_2", "las4_3", "las4_4", "lastmap", "fallp", "m_endo", "hill2", "bonevil2",
 	"junone22", "rckt32", "jtemplc", "fship_26", "las4_42", "tunnel_6", "md8_52", "sininb34",
-	"mds7st33", "midgal", "sininb35", "nivgate4", "sininb36", "ztruck"
+	"mds7st33", "midgal", "sininb35", "nivgate4", "sininb36", "ztruck", "frcyo2"
 };
 
 // Standard mapList
 void Data::openMaplist(bool PC)
 {
 	field_names.clear();
-	for(int i=0 ; i<787 ; ++i) {
+	for(int i=0 ; i<788 ; ++i) {
 		field_names.append(mapList[i]);
 	}
 
