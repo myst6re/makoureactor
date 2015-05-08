@@ -31,6 +31,21 @@ struct ArchiveObserver
 class Archive
 {
 public:
+	enum ArchiveError {
+		NoError,
+		ReadError,
+		WriteError,
+		OpenError,
+		AbortError,
+		RemoveError,
+		RenameError,
+		PositionError,
+		ResizeError,
+		PermissionsError,
+		CopyError,
+		InvalidError,
+		FileNotFoundError
+	};
 
 	Archive();
 	explicit Archive(const QString &filename);
@@ -57,12 +72,14 @@ public:
 	QString fileName() const;
 	void setFileName(const QString &fileName);
 	virtual bool pack(const QString &destination=QString(), ArchiveObserver *observer=NULL)=0;
+	ArchiveError error() const;
 	QString errorString() const;
 protected:
 	virtual bool openHeader()=0;
 	inline void setErrorString(const QString &errorString) {
 		_errorString = errorString;
 	}
+	void setError(ArchiveError error, const QString &errorString=QString());
 	inline QFile *archiveIO() const {
 		return _archiveIO;
 	}
@@ -70,6 +87,7 @@ protected:
 private:
 	Q_DISABLE_COPY(Archive)
 	QString _errorString;
+	ArchiveError _error;
 	QFile *_archiveIO;
 };
 

@@ -75,7 +75,9 @@ HEADERS += \
     core/Lgp_p.h \
     core/Lgp.h \
     core/IsoArchive.h \
+    core/IsoArchiveFF7.h \
     core/GZIP.h \
+    core/GZIPPS.h \
 	core/FF7Text.h \
 	core/FF7Font.h \
     core/Config.h \
@@ -194,7 +196,9 @@ SOURCES += \
     core/Lgp_p.cpp \
     core/Lgp.cpp \
     core/IsoArchive.cpp \
+    core/IsoArchiveFF7.cpp \
     core/GZIP.cpp \
+    core/GZIPPS.cpp \
 	core/FF7Text.cpp \
 	core/FF7Font.cpp \
     core/Config.cpp \
