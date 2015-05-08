@@ -49,6 +49,7 @@ private:
 	QWidget *buildSoundPage();
 	void fillList();
 	QListWidgetItem *createListItem(int id) const;
+	void updateAkaoID(quint16 akaoID);
 	void saveText(QListWidgetItem *item);
 	int currentRow(QListWidgetItem *item=0) const;
 	QList<int> selectedRows() const;
