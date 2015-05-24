@@ -324,6 +324,8 @@ bool BackgroundTilesIOPC::writeTile(const Tile &tile, quint32 unique) const
 	device()->write((char *)&srcXBig, 4);
 	device()->write((char *)&srcYBig, 4);
 	device()->write("\0\0", 2);
+
+	return true;
 }
 
 bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
