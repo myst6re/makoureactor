@@ -20,6 +20,10 @@ public:
 	const QByteArray &fileLzs(const QString &path, quint32 maxSize=0);
 	Country country() const;
 	IsoFile *exe() const;
+	QByteArray windowBinData() const;
+	IsoDirectory *fieldDirectory() const;
+	IsoDirectory *initDirectory() const;
+	bool isDemo() const;
 private:
 	Q_DISABLE_COPY(IsoArchiveFF7)
 	bool updateFieldBin();

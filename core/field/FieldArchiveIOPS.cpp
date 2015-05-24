@@ -210,7 +210,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::openIso()
 		return ErrorOpening;
 	}
 
-	isoFieldDirectory = iso.rootDirectory()->directory("FIELD");
+	isoFieldDirectory = iso.fieldDirectory();
 	if(isoFieldDirectory == NULL) {
 		return FieldNotFound;
 	}
@@ -249,7 +249,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 
 	Data::windowBin = WindowBinFile();
 
-	if(!Data::windowBin.open(iso.file("INIT/WINDOW.BIN"))) {
+	if(!Data::windowBin.open(iso.windowBinData())) {
 		qWarning() << "Cannot open window.bin";
 	}
 

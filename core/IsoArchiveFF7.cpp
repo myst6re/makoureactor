@@ -29,6 +29,19 @@ IsoFile *IsoArchiveFF7::exe() const
 	return NULL;
 }
 
+QByteArray IsoArchiveFF7::windowBinData() const
+{
+	IsoDirectory *dir = initDirectory();
+	if (!dir) {
+		return QByteArray();
+	}
+	IsoFile *file = dir->file("WINDOW.BIN");
+	if (!file) {
+		return QByteArray();
+	}
+	return file->data();
+}
+
 IsoArchiveFF7::Country IsoArchiveFF7::country() const
 {
 	IsoFile *isoFile = exe();
@@ -52,9 +65,33 @@ IsoArchiveFF7::Country IsoArchiveFF7::country() const
 	return NoCountry;
 }
 
+IsoDirectory *IsoArchiveFF7::fieldDirectory() const
+{
+	IsoDirectory *dir = rootDirectory()->directory("FIELD");
+	if(!dir) {
+		dir = rootDirectory()->directory("NARITA"); // Demo
+	}
+	return dir;
+}
+
+IsoDirectory *IsoArchiveFF7::initDirectory() const
+{
+	IsoDirectory *dir = rootDirectory()->directory("INIT");
+	if(!dir) {
+		dir = rootDirectory()->directory("BATTLE"); // Demo
+	}
+	return dir;
+}
+
+bool IsoArchiveFF7::isDemo() const
+{
+	IsoDirectory *dir = fieldDirectory();
+	return dir && dir->name() == "NARITA";
+}
+
 bool IsoArchiveFF7::updateFieldBin()
 {
-	IsoDirectory *fieldDirectory = rootDirectory()->directory("FIELD");
+	IsoDirectory *fieldDirectory = this->fieldDirectory();
 	if(!fieldDirectory) {
 		qWarning() << "IsoArchiveFF7::updateFieldBin field directory not found";
 		return false;
@@ -145,7 +182,12 @@ bool IsoArchiveFF7::updateFieldBin()
 
 bool IsoArchiveFF7::updateYamadaBin()
 {
-	IsoFile *isoYamadaBin = rootDirectory()->file("INIT/YAMADA.BIN");
+	IsoDirectory *initDirectory = this->initDirectory();
+	if(!initDirectory) {
+		qWarning() << "IsoArchiveFF7::updateYamadaBin INIT directory not found";
+		return false;
+	}
+	IsoFile *isoYamadaBin = initDirectory->file("YAMADA.BIN");
 	if(!isoYamadaBin) {
 		qWarning() << "IsoArchiveFF7::updateYamadaBin YAMADA.BIN file not found";
 		return false;
@@ -159,8 +201,10 @@ bool IsoArchiveFF7::updateYamadaBin()
 	QByteArray yamadaData = isoYamadaBin->data();
 	quint32 *data = (quint32 *)yamadaData.data();
 	QStringList filenames;
-	filenames << /* "INIT/YAMADA.BIN" << */"INIT/WINDOW.BIN"
-			  << "INIT/KERNEL.BIN" << "BATTLE/BROM.X"
+	filenames << /* QString("%1/YAMADA.BIN").arg(initDirectory->name())
+			  << */QString("%1/WINDOW.BIN").arg(initDirectory->name())
+			  << QString("%1/KERNEL.BIN").arg(initDirectory->name())
+			  << "BATTLE/BROM.X"
 			  << "BATTLE/TITLE.BIN" << "BATTLE/BATTLE.X"
 			  << "BATTLE/BATINI.X" << "BATTLE/SCENE.BIN"
 			  << "BATTLE/BATRES.X" << "BATTLE/CO.BIN";
@@ -211,8 +255,8 @@ bool IsoArchiveFF7::reorganizeModifiedFilesAfter(QMap<quint32, const IsoFile *> 
 	qDeleteAll(_devicesToDelete);
 	_devicesToDelete.clear();
 	if(updateFieldBin() && updateYamadaBin()) {
-		IsoFile *isoFieldBin = rootDirectory()->file("FIELD/FIELD.BIN"),
-				*isoYamadaBin = rootDirectory()->file("INIT/YAMADA.BIN");
+		IsoFile *isoFieldBin = fieldDirectory()->file("FIELD.BIN"),
+				*isoYamadaBin = initDirectory()->file("YAMADA.BIN");
 		writeToTheMain.insert(isoFieldBin->newLocation(), isoFieldBin);
 		writeToTheMain.insert(isoYamadaBin->newLocation(), isoYamadaBin);
 		return true;
