@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "FieldArchiveIOPS.h"
 #include "FieldPS.h"
+#include "FieldPSDemo.h"
 #include "FieldArchivePS.h"
 #include "../GZIP.h"
 #include "Data.h"
@@ -104,9 +105,10 @@ Archive *FieldArchiveIOPSFile::device()
 	return NULL;
 }
 
-QByteArray FieldArchiveIOPSFile::fieldData2(Field *field, bool unlzs)
+QByteArray FieldArchiveIOPSFile::fieldData2(Field *field, const QString &extension, bool unlzs)
 {
 	Q_UNUSED(field)
+	Q_UNUSED(extension)
 	return fileData(QString(), unlzs);
 }
 
@@ -184,9 +186,12 @@ Archive *FieldArchiveIOPSIso::device()
 	return NULL;
 }
 
-QByteArray FieldArchiveIOPSIso::fieldData2(Field *field, bool unlzs)
+QByteArray FieldArchiveIOPSIso::fieldData2(Field *field, const QString &extension, bool unlzs)
 {
-	return fileData(field->name().toUpper() + ".DAT", unlzs);
+	if (extension.isEmpty()) {
+		return QByteArray();
+	}
+	return fileData(QString("%1.%2").arg(field->name().toUpper(), extension.toUpper()), unlzs);
 }
 
 QByteArray FieldArchiveIOPSIso::mimData2(Field *field, bool unlzs)
@@ -201,7 +206,11 @@ QByteArray FieldArchiveIOPSIso::modelData2(Field *field, bool unlzs)
 
 QByteArray FieldArchiveIOPSIso::fileData2(const QString &fileName)
 {
-	return isoFieldDirectory->file(fileName.toUpper())->data();
+	IsoFile *file = isoFieldDirectory->file(fileName.toUpper());
+	if(file) {
+		return file->data();
+	}
+	return QByteArray();
 }
 
 FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::openIso()
@@ -228,6 +237,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 	QList<IsoFile *> files = isoFieldDirectory->files();
 
 	if(observer)	observer->setObserverMaximum(files.size());
+	bool isDemo = iso.isDemo();
 
 	// QTime t;t.start();
 
@@ -240,7 +250,12 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 			observer->setObserverValue(i);
 		}
 
-		if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
+		if(isDemo) {
+			if(file->name().endsWith(".ATE")) {
+				QString name = file->name().mid(file->name().lastIndexOf('/')+1);
+				fieldArchive()->appendField(new FieldPSDemo(name.left(name.lastIndexOf('.')), this));
+			}
+		} else if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
 			QString name = file->name().mid(file->name().lastIndexOf('/')+1);
 			fieldArchive()->appendField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 		}
@@ -343,9 +358,12 @@ Archive *FieldArchiveIOPSDir::device()
 	return NULL;
 }
 
-QByteArray FieldArchiveIOPSDir::fieldData2(Field *field, bool unlzs)
+QByteArray FieldArchiveIOPSDir::fieldData2(Field *field, const QString &extension, bool unlzs)
 {
-	return fileData(field->name().toUpper() + ".DAT", unlzs);
+	if (extension.isEmpty()) {
+		return QByteArray();
+	}
+	return fileData(QString("%1.%2").arg(field->name().toUpper(), extension.toUpper()), unlzs);
 }
 
 QByteArray FieldArchiveIOPSDir::mimData2(Field *field, bool unlzs)

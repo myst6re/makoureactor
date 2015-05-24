@@ -58,7 +58,7 @@ public:
 
 	Archive *device();
 private:
-	QByteArray fieldData2(Field *field, bool unlzs);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
 	QByteArray mimData2(Field *field, bool unlzs);
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
@@ -79,7 +79,7 @@ public:
 
 	Archive *device();
 private:
-	QByteArray fieldData2(Field *field, bool unlzs);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
 	QByteArray mimData2(Field *field, bool unlzs);
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
@@ -103,7 +103,7 @@ public:
 
 	Archive *device();
 private:
-	QByteArray fieldData2(Field *field, bool unlzs);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
 	QByteArray mimData2(Field *field, bool unlzs);
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);

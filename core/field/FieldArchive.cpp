@@ -1392,7 +1392,7 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 									   : QString("%1/%2.%3")
 										 .arg(directory, f->name(), extension));
 				if(overwrite || !QFile::exists(path)) {
-					QByteArray fieldData = io()->fieldData(f, extension.compare("dec", Qt::CaseInsensitive) == 0);
+					QByteArray fieldData = io()->fieldData(f, io()->isPC() ? QString() : "DAT", extension.compare("dec", Qt::CaseInsensitive) == 0);
 					if(!fieldData.isEmpty()) {
 						QFile fieldExport(path);
 						if(fieldExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {

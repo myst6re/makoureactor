@@ -3,10 +3,10 @@
 # #####################################################################
 TEMPLATE = app
 !win32 {
-	TARGET = makoureactor
+    TARGET = makoureactor
 }
 win32 {
-	TARGET =
+    TARGET = Makou_Reactor
 }
 DEPENDPATH += .
 INCLUDEPATH += .
@@ -15,7 +15,7 @@ QMAKE_CXXFLAGS += -std=c++0x
 
 # Input
 HEADERS += \
-	Window.h \
+    Window.h \
     Parameters.h \
     Data.h \
     widgets/WalkmeshWidget.h \
@@ -43,12 +43,12 @@ HEADERS += \
     widgets/ImportDialog.h \
     widgets/HexLineEdit.h \
     widgets/GrpScriptList.h \
-	widgets/FormatSelectionWidget.h \
-	widgets/FontWidget.h \
-	widgets/FontPalette.h \
-	widgets/FontLetter.h \
-	widgets/FontGrid.h \
-	widgets/FontDisplay.h \
+    widgets/FormatSelectionWidget.h \
+    widgets/FontWidget.h \
+    widgets/FontPalette.h \
+    widgets/FontLetter.h \
+    widgets/FontGrid.h \
+    widgets/FontDisplay.h \
     widgets/FieldModel.h \
     widgets/EncounterWidget.h \
     widgets/EncounterTableWidget.h \
@@ -63,7 +63,7 @@ HEADERS += \
     widgets/ScriptEditorWidgets/ScriptEditorStructPage.h \
     widgets/ScriptEditorWidgets/ScriptEditorMathPage.h \
     widgets/ScriptEditorWidgets/ScriptEditorGenericList.h \
-	widgets/ScriptEditorWidgets/Delegate.h \
+    widgets/ScriptEditorWidgets/Delegate.h \
     core/WindowBinFile.h \
     core/Var.h \
     core/TimFile.h \
@@ -78,8 +78,8 @@ HEADERS += \
     core/IsoArchiveFF7.h \
     core/GZIP.h \
     core/GZIPPS.h \
-	core/FF7Text.h \
-	core/FF7Font.h \
+    core/FF7Text.h \
+    core/FF7Font.h \
     core/Config.h \
     core/field/TutFile.h \
     core/field/TdbFile.h \
@@ -103,16 +103,16 @@ HEADERS += \
     core/field/FieldModelFile.h \
     core/field/FieldArchivePS.h \
     core/field/FieldArchivePC.h \
-	core/field/FieldArchiveIO.h \
-	core/field/FieldArchiveIOPS.h \
-	core/field/FieldArchiveIOPC.h \
+    core/field/FieldArchiveIO.h \
+    core/field/FieldArchiveIOPS.h \
+    core/field/FieldArchiveIOPC.h \
     core/field/FieldArchive.h \
     core/field/Field.h \
     core/field/EncounterFile.h \
     core/field/CaFile.h \
     core/field/BackgroundFilePS.h \
     core/field/BackgroundFilePC.h \
-	core/field/BackgroundFile.h \
+    core/field/BackgroundFile.h \
     core/field/FieldIO.h \
     widgets/FontManager.h \
     core/field/TutFilePC.h \
@@ -129,10 +129,11 @@ HEADERS += \
     core/field/BackgroundTexturesIO.h \
     core/field/BackgroundIO.h \
     widgets/OperationsManager.h \
-	core/Archive.h \
+    core/Archive.h \
     widgets/ScriptEditorWidgets/ScriptEditorMoviePage.h \
     widgets/SearchAll.h \
-    core/field/CharArchive.h
+    core/field/CharArchive.h \
+    core/field/FieldPSDemo.h
 
 SOURCES += \
     Window.cpp \
@@ -164,12 +165,12 @@ SOURCES += \
     widgets/ImportDialog.cpp \
     widgets/HexLineEdit.cpp \
     widgets/GrpScriptList.cpp \
-	widgets/FormatSelectionWidget.cpp \
-	widgets/FontWidget.cpp \
-	widgets/FontPalette.cpp \
-	widgets/FontLetter.cpp \
-	widgets/FontGrid.cpp \
-	widgets/FontDisplay.cpp \
+    widgets/FormatSelectionWidget.cpp \
+    widgets/FontWidget.cpp \
+    widgets/FontPalette.cpp \
+    widgets/FontLetter.cpp \
+    widgets/FontGrid.cpp \
+    widgets/FontDisplay.cpp \
     widgets/FieldModel.cpp \
     widgets/EncounterWidget.cpp \
     widgets/EncounterTableWidget.cpp \
@@ -184,7 +185,7 @@ SOURCES += \
     widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp \
     widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp \
     widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp \
-	widgets/ScriptEditorWidgets/Delegate.cpp \
+    widgets/ScriptEditorWidgets/Delegate.cpp \
     core/WindowBinFile.cpp \
     core/Var.cpp \
     core/TimFile.cpp \
@@ -199,8 +200,8 @@ SOURCES += \
     core/IsoArchiveFF7.cpp \
     core/GZIP.cpp \
     core/GZIPPS.cpp \
-	core/FF7Text.cpp \
-	core/FF7Font.cpp \
+    core/FF7Text.cpp \
+    core/FF7Font.cpp \
     core/Config.cpp \
     core/field/TutFile.cpp \
     core/field/TdbFile.cpp \
@@ -225,15 +226,15 @@ SOURCES += \
     core/field/FieldArchivePS.cpp \
     core/field/FieldArchivePC.cpp \
     core/field/FieldArchiveIO.cpp \
-	core/field/FieldArchiveIOPS.cpp \
-	core/field/FieldArchiveIOPC.cpp \
+    core/field/FieldArchiveIOPS.cpp \
+    core/field/FieldArchiveIOPC.cpp \
     core/field/FieldArchive.cpp \
     core/field/Field.cpp \
     core/field/EncounterFile.cpp \
     core/field/CaFile.cpp \
     core/field/BackgroundFilePS.cpp \
     core/field/BackgroundFilePC.cpp \
-	core/field/BackgroundFile.cpp \
+    core/field/BackgroundFile.cpp \
     core/field/FieldIO.cpp \
     widgets/FontManager.cpp \
     core/field/TutFilePC.cpp \
@@ -250,29 +251,30 @@ SOURCES += \
     core/field/BackgroundTexturesIO.cpp \
     core/field/BackgroundIO.cpp \
     widgets/OperationsManager.cpp \
-	core/Archive.cpp \
+    core/Archive.cpp \
     widgets/ScriptEditorWidgets/ScriptEditorMoviePage.cpp \
     widgets/SearchAll.cpp \
-    core/field/CharArchive.cpp
+    core/field/CharArchive.cpp \
+    core/field/FieldPSDemo.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts
 
 RESOURCES += Makou_Reactor.qrc
 macx {
-	ICON = images/Makou_Reactor.icns
+    ICON = images/Makou_Reactor.icns
 }
 !win32 {
-	LIBS += -lz
+    LIBS += -lz
 }
 win32 {
-	RC_FILE = Makou_Reactor.rc
+    RC_FILE = Makou_Reactor.rc
 
-	!NO_TASKBAR_BUTTON {
-		LIBS += -lole32
-	} else {
-		DEFINES += NO_TASKBAR_BUTTON
-	}
+    !NO_TASKBAR_BUTTON {
+        LIBS += -lole32
+    } else {
+        DEFINES += NO_TASKBAR_BUTTON
+    }
 }
 
 OTHER_FILES += Makou_Reactor.rc \
@@ -280,6 +282,6 @@ OTHER_FILES += Makou_Reactor.rc \
 
 #all other *nix (except for symbian)
 unix:!macx:!symbian {
-	LIBS += -lglut -lGLU
-	system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
+    LIBS += -lglut -lGLU
+    system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
 }
