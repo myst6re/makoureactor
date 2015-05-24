@@ -20,7 +20,7 @@
 
 #include <QtCore>
 
-typedef struct {
+struct Tile {
 	qint16 dstX, dstY;
 	quint8 srcX, srcY;
 	quint8 paletteID;
@@ -32,7 +32,10 @@ typedef struct {
 	quint8 depth;
 	quint8 layerID;
 	quint16 tileID;
-} Tile;
+#ifdef BG_ID_RESEARCH
+	quint32 IDBig;
+#endif
+};
 
 class BackgroundTiles : public QMultiMap<qint16, Tile>
 {
@@ -46,6 +49,7 @@ public:
 	QHash<quint8, quint8> usedParams(bool *layerExists) const;
 	void area(quint16 &minWidth, quint16 &minHeight,
 			  int &width, int &height) const;
+	QSize area() const;
 	Tile search(quint8 textureID1, quint8 textureID2, quint8 srcX, quint8 srcY) const;
 };
 

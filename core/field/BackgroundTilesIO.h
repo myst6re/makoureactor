@@ -107,10 +107,14 @@ class BackgroundTilesIOPC : public BackgroundTilesIO
 {
 public:
 	explicit BackgroundTilesIOPC(QIODevice *device);
+#ifdef BG_ID_RESEARCH
+	static QMultiMap<int, quint32> IDs;
+#endif
 protected:
 	bool readData(BackgroundTiles &tiles) const;
 	bool writeData(const BackgroundTiles &tiles) const;
 private:
+	bool writeTile(const Tile &tile, quint32 unique = 0) const;
 	static Tile tilePC2Tile(const TilePC &tile, quint8 layerID, quint16 tileID);
 	static TilePC tile2TilePC(const Tile &tile);
 };

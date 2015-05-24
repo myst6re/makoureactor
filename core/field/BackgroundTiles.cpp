@@ -147,6 +147,16 @@ void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
 	height = minHeight + maxHeight + 16;
 }
 
+QSize BackgroundTiles::area() const
+{
+	quint16 minWidth, minHeight;
+	int width, height;
+
+	area(minWidth, minHeight, width, height);
+
+	return QSize(width, height);
+}
+
 Tile BackgroundTiles::search(quint8 textureID1, quint8 textureID2,
 							 quint8 srcX, quint8 srcY) const
 {
