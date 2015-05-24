@@ -1142,7 +1142,11 @@ QByteArray IsoArchive::file(const QString &path, quint32 maxSize) const
 	if (_rootDirectory == NULL) {
 		return QByteArray();
 	}
-	return _rootDirectory->file(path)->data(maxSize);
+	IsoFile *file = _rootDirectory->file(path);
+	if (file == NULL) {
+		return QByteArray();
+	}
+	return file->data(maxSize);
 }
 
 bool IsoArchive::extract(const QString &path, const QString &destination, quint32 maxSize) const
@@ -1150,7 +1154,11 @@ bool IsoArchive::extract(const QString &path, const QString &destination, quint3
 	if (_rootDirectory == NULL) {
 		return false;
 	}
-	return _rootDirectory->file(path)->extract(destination, maxSize);
+	IsoFile *file = _rootDirectory->file(path);
+	if (file == NULL) {
+		return false;
+	}
+	return file->extract(destination, maxSize);
 }
 
 void IsoArchive::extractAll(const QString &destination) const
