@@ -146,7 +146,7 @@ bool FieldArchive::openField(Field *field, bool dontOptimize)
 
 int FieldArchive::indexOfField(const QString &name) const
 {
-	return fieldsSortByName.value(name, -1);
+	return fieldsSortByName.value(name.toLower(), -1);
 }
 
 const Field *FieldArchive::field(quint32 id) const
@@ -163,6 +163,16 @@ Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
 	return field;
 }
 
+const Field *FieldArchive::field(const QString &name) const
+{
+	return field(indexOfField(name));
+}
+
+Field *FieldArchive::field(const QString &name, bool open, bool dontOptimize)
+{
+	return field(indexOfField(name), open, dontOptimize);
+}
+
 void FieldArchive::updateFieldLists(Field *field, int fieldID)
 {
 	const QString &name = field->name();
@@ -172,7 +182,7 @@ void FieldArchive::updateFieldLists(Field *field, int fieldID)
 				QString("%1").arg(index, 3) :
 				"~";
 
-	fieldsSortByName.insert(name, fieldID);
+	fieldsSortByName.insert(name.toLower(), fieldID);
 	fieldsSortByMapId.insert(mapId, fieldID);
 }
 
@@ -375,18 +385,18 @@ void FieldArchive::validateOneLineSize()
 	}
 }
 
-void FieldArchive::printAkaos()
+void FieldArchive::printAkaos(const QString &filename)
 {
-	QFile deb(QString("akaos-18-04-2014-P%1.txt").arg(isPC() ? "C" : "S"));
+	QFile deb(filename);
 	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 
 	foreach(int i, fieldsSortByMapId) {
 		Field *f = field(i, true);
-		QString name = Data::field_names.value(fieldsSortByMapId.key(i).toInt());
 		if(f == NULL) {
-			qWarning() << "FieldArchive::printAkaos: cannot open field" << i << name;
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << i;
 			continue;
 		}
+		QString name = f->inf()->mapName();
 
 		TutFileStandard *tutosAndSounds = f->tutosAndSounds();
 		if(!tutosAndSounds->isOpen()) {
@@ -410,25 +420,69 @@ void FieldArchive::printAkaos()
 	}
 }
 
-void FieldArchive::printModelLoaders()
+void FieldArchive::printModelLoaders(const QString &filename, bool generic)
 {
-	QFile deb(QString("model-loader-18-04-2014-P%1.txt").arg(isPC() ? "C" : "S"));
+	QFile deb(filename);
 	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 
 	foreach(int i, fieldsSortByMapId) {
 		Field *f = field(i, true);
-		QString name = Data::field_names.value(fieldsSortByMapId.key(i).toInt());
 		if(f == NULL) {
-			qWarning() << "FieldArchive::printAkaos: cannot open field" << i << name;
+			qWarning() << "FieldArchive::printModelLoaders: cannot open field" << i;
 			continue;
 		}
+		if (!f->inf()->isOpen()) {
+			qWarning() << "FieldArchive::printModelLoaders: Cannot open inf file";
+			continue;
+		}
+		QString name = f->inf()->mapName();
 
 		FieldModelLoader *modelLoader = f->fieldModelLoader();
 		if(!modelLoader->isOpen()) {
-			qWarning() << "FieldArchive::printAkaos: cannot open tutos and sounds" << name;
+			qWarning() << "FieldArchive::printModelLoaders: cannot open tutos and sounds" << name;
+			continue;
 		}
 
-		if(f->isPC()) {
+		if (generic) {
+			for (int modelId = 0; modelId < modelLoader->modelCount(); ++modelId) {
+				FieldModelFile *fieldModel = f->fieldModel(modelId);
+				quint16 scale;
+				QList<QRgb> colors;
+				int boneCount = fieldModel->boneCount();
+				if (f->isPC()) {
+					FieldModelLoaderPC *modelLoaderPC = (FieldModelLoaderPC *)modelLoader;
+					scale = modelLoaderPC->scale(modelId);
+					colors = modelLoaderPC->lightColors(modelId);
+				} else {
+					FieldModelFilePS *fieldModelPS = (FieldModelFilePS *)fieldModel;
+					scale = fieldModelPS->scale();
+					colors = fieldModelPS->lightColors();
+					boneCount -= 1;
+					if (boneCount <= 0) {
+						boneCount = 1;
+					}
+				}
+				deb.write(QString("%1 > model %2: bones %3\nscale %4\nunknown %5\n")
+						  .arg(name)
+						  .arg(modelId)
+						  .arg(boneCount)
+						  .arg(scale)
+						  .arg(modelLoader->unknown(modelId))
+						  .toLatin1());
+
+				/* foreach (const QRgb &color, colors) {
+					deb.write(QString("%1, ")
+							  .arg(color).toLatin1());
+				}
+				deb.write("\n"); */
+
+				/*for (int animId = 0; animId < modelLoader->animCount(modelId); ++animId) {
+					deb.write(QString("\tanim %1\n")
+							  .arg(animId)
+							  .toLatin1());
+				}*/
+			}
+		} else if(f->isPC()) {
 			FieldModelLoaderPC *modelLoaderPC = (FieldModelLoaderPC *)modelLoader;
 
 			int modelID = 0;
@@ -436,7 +490,7 @@ void FieldArchive::printModelLoaders()
 				deb.write(QString("%1 > model %2: %3\n")
 						  .arg(name)
 						  .arg(modelID)
-						  .arg(hrc.toLower())
+						  .arg(hrc.toLower().left(hrc.lastIndexOf('.')))
 						  .toLatin1());
 
 				int animID = 0;
@@ -454,22 +508,114 @@ void FieldArchive::printModelLoaders()
 	}
 }
 
-void FieldArchive::printScripts()
+void FieldArchive::printTexts(const QString &filename)
 {
-	QFile deb(QString("scripts-window-coord-17-05-2014-P%1.txt").arg(isPC() ? "C" : "S"));
+	QFile deb(filename);
 	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 
 	foreach(int i, fieldsSortByMapId) {
 		Field *f = field(i, true);
-		QString name = Data::field_names.value(fieldsSortByMapId.key(i).toInt());
 		if(f == NULL) {
-			qWarning() << "FieldArchive::printAkaos: cannot open field" << i << name;
+			qWarning() << "FieldArchive::printTexts: cannot open field" << i;
 			continue;
 		}
 
 		Section1File *scriptsAndTexts = f->scriptsAndTexts();
 		if(scriptsAndTexts->isOpen()) {
-			qWarning() << f->name();
+			qWarning() << f->inf()->mapName();
+
+			int textID = 0;
+			foreach(const FF7Text &text, scriptsAndTexts->texts()) {
+				deb.write(QString("%1 > %2:\n%3\n\n")
+						  .arg(f->inf()->mapName())
+						  .arg(textID)
+						  .arg(text.text(false)).toUtf8());
+				textID++;
+			}
+		}
+	}
+}
+
+void FieldArchive::compareTexts(FieldArchive *other)
+{
+	FieldArchiveIO::ErrorCode err = other->open();
+	if (err != FieldArchiveIO::Ok) {
+		qWarning() << "Error opening other field archive";
+		return;
+	}
+	qDebug() << other->size();
+
+	QFile deb(QString("texts-compare-P%1.txt").arg(isPC() ? "C" : "S"));
+	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+	const int dialogWidth = 80; // characters
+
+	FieldArchiveIterator it(*this);
+	while (it.hasNext()) {
+		Field *f1 = it.next();
+		if(f1 == NULL) {
+			qWarning() << "FieldArchive::compareTexts: cannot open field";
+			continue;
+		}
+		Field *f2 = other->field(f1->name());
+		if(f2 == NULL) {
+			qWarning() << "FieldArchive::compareTexts: cannot find field2" << f1->name();
+			continue;
+		}
+
+		Section1File *scriptsAndTexts1 = f1->scriptsAndTexts(),
+				*scriptsAndTexts2 = f2->scriptsAndTexts();
+		if(scriptsAndTexts1->isOpen() && scriptsAndTexts2->isOpen()) {
+			qWarning() << f1->name();
+
+			if (scriptsAndTexts1->textCount() != scriptsAndTexts2->textCount()) {
+				qWarning() << "FieldArchive::compareTexts: different text count" << f1->name();
+				continue;
+			}
+
+			int textID = 0;
+			foreach(const FF7Text &text1, scriptsAndTexts1->texts()) {
+				const FF7Text &text2 = scriptsAndTexts2->text(textID);
+				if (text1 != text2) {
+					QStringList lines1 = text1.text(false).split("\n"),
+								lines2 = text2.text(false).split("\n");
+					QListIterator<QString> it1(lines1), it2(lines2);
+					while (it1.hasNext() || it2.hasNext()) {
+						QString line1, line2;
+						if (it1.hasNext()) {
+							line1 = it1.next();
+						}
+						if (it2.hasNext()) {
+							line2 = it2.next();
+						}
+						deb.write(QString("%1\t%2\n")
+								  .arg(line1.leftJustified(dialogWidth),
+									   line2.leftJustified(dialogWidth)).toUtf8());
+					}
+					deb.write(QString("\n").toUtf8());
+				}
+				textID++;
+			}
+		} else {
+			qWarning() << "FieldArchive::compareTexts: Cannot open texts" << f1->name();
+		}
+	}
+}
+
+void FieldArchive::printScripts(const QString &filename)
+{
+	QFile deb(filename);
+	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+
+	foreach(int i, fieldsSortByMapId) {
+		Field *f = field(i, true);
+		if(f == NULL) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << i;
+			continue;
+		}
+
+		Section1File *scriptsAndTexts = f->scriptsAndTexts();
+		if(scriptsAndTexts->isOpen()) {
+			qWarning() << f->inf()->mapName();
 
 			int grpScriptID = 0;
 			foreach(GrpScript *grp, scriptsAndTexts->grpScripts()) {
@@ -478,12 +624,17 @@ void FieldArchive::printScripts()
 					int opcodeID = 0;
 					foreach(Opcode *opcode, script->opcodes()) {
 						FF7Window win;
-						if(opcode->getWindow(win)) {
+						/* if(opcode->getWindow(win)) {
 							deb.write(QString("%1 > %2 > %3: %4 %5\n")
 									  .arg(f->name(), grp->name())
 									  .arg(scriptID)
 									  .arg(win.x).arg(win.y).toLatin1());
-						}
+						} else if (opcode->getTextID() < 0) { */
+							deb.write(QString("%1 > %2 > %3: %4\n")
+									  .arg(f->inf()->mapName(), grp->name())
+									  .arg(scriptID)
+									  .arg(opcode->toString(f)).toUtf8());
+						// }
 						opcodeID++;
 					}
 					scriptID++;
@@ -601,12 +752,95 @@ void FieldArchive::diffScripts()
 	}
 }
 
+#ifdef BG_ID_RESEARCH
+void FieldArchive::searchBackgroundZ()
+{
+	FieldArchiveIterator it(*this);
+	while (it.hasNext()) {
+		Field *field = it.next();
+		if (field && field->isOpen()/* && field->scriptsAndTexts()->scale() == 512*/) {
+			field->inf();
+//			BackgroundFile *bg = field->background();
+//			if (bg->isOpen()) {
+//				bg->openBackground();
+//				qDebug() << field->name() << field->scriptsAndTexts()->scale();
+//			}
+		}
+	}
+/*
+	foreach (int ID, BackgroundTilesIOPC::IDs.uniqueKeys()) {
+		QList<quint32> zBigs = BackgroundTilesIOPC::IDs.values(ID);
+		QList<quint32> zBigsUnique = zBigs.toSet().toList();
+		qSort(zBigsUnique);
+		foreach (quint32 zBig, zBigsUnique) {
+			qDebug() << ID << zBig << zBigs.count(zBig);
+		}
+//		qDebug() << zBigs;
+	}*/
+}
+#endif
+
 void FieldArchive::searchAll()
 {
 	QTime t;t.start();
 
-	QFile deb(QString("scripts-window-coord-18-05-2014-P%1.txt").arg(isPC() ? "C" : "S"));
+	QFile deb(QString("scripts-unlocked-talk-P%1.txt").arg(isPC() ? "C" : "S"));
 	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+
+	FieldArchiveIterator it(*this);
+	while (it.hasNext()) {
+		Field *field = it.next();
+		if (field && field->isOpen()) {
+			TutFileStandard *tut = field->tutosAndSounds();
+			if (tut->isOpen()) {
+				for (int tutID = 0; tutID < tut->size(); ++tutID) {
+					if (tut->isAkao(tutID)) {
+						if (tut->akaoID(tutID) == 99) {
+							qDebug() << "akao 99 is here:" << field->name();
+						}
+					}
+				}
+			}
+			/*Section1File *section1 = field->scriptsAndTexts();
+			if (section1->isOpen()) {
+				int groupID = 0;
+				foreach (GrpScript *grp, section1->grpScripts()) {
+					if (grp->typeID() == GrpScript::Model || grp->typeID() == GrpScript::Location) {
+						Script *talkScript = grp->script(2); // Talk
+						bool disableMovability = false,
+								disableMenus = false,
+								saySomething = false;
+						foreach (Opcode *op, talkScript->opcodes()) {
+							if (op->id() == Opcode::UC) {
+								disableMovability = true;
+							} else if (op->id() == Opcode::MENU2) {
+								disableMenus = true;
+							} else if (op->getTextID() >= 0) {
+								saySomething = true;
+							}
+						}
+
+						if (saySomething && (!disableMovability || !disableMenus)) {
+							deb.write(QString("%1 -> %2: %3 (blame: %4)\n")
+									  .arg(field->name())
+									  .arg(groupID)
+									  .arg(grp->name())
+									  .arg(section1->author())
+									  .toLatin1());
+						}
+					}
+					groupID++;
+				}
+			}*/
+//			BackgroundFile *bg = field->background();
+//			if (bg->isOpen()) {
+//				bg->openBackground();
+//				qDebug() << field->name() << field->scriptsAndTexts()->scale();
+//			}
+		}
+	}
+
+	return;
 
 	FieldArchivePC original("C:/Program Files/Square Soft, Inc/Final Fantasy VII/data/field/fflevel - original.lgp", FieldArchiveIO::Lgp);
 	if(original.open() != FieldArchiveIO::Ok) {
