@@ -206,7 +206,7 @@ void ModelManager::setModelColorLabel(int colorId)
 
 	modelColorLabel->setText(QString("#%1")
 							 .arg(lightColors(modelID)
-								  .value(colorId) & 0xFFFFFF, 6, 16)
+								  .value(colorId) & 0xFFFFFF, 6, 16, QChar('0'))
 							 .toUpper());
 }
 
