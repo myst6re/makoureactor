@@ -507,6 +507,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	quint32 datDataSize = datDataDec.size();
 	quint32 start1, start2, start3, start4;
 	qint64 i;
+	bool isDemoFormat = false;
 
 	if(datDataSize < 16) {
 		return false;
@@ -517,13 +518,28 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	memcpy(&start3, constDatData + 8, 4);
 	memcpy(&start4, constDatData + 12, 4);
 
+	if (start2 < start1
+			|| start3 < start2
+			|| start4 < start3
+			|| datDataSize < start4) {
+		isDemoFormat = start2 >= start1
+					   && start3 >= start2
+					   && datDataSize >= start3;
+		if (!isDemoFormat) {
+			qWarning() << "BackgroundTilesIOPS::readData invalid header"
+					   << start1 << start2 << start3 << start4 << datDataSize;
+			return false;
+		}
+		start4 = datDataSize;
+	}
+
 	quint16 tilePos=0, tileCount=0;
 	QList<quint32> nbTilesTex, nbTilesLayer;
 	quint8 layerID=0;
 
-	i = 16;
-	while(i<start1) {
-		if(datDataSize < i+2) {
+	i = isDemoFormat ? 12 : 16;
+	while(i < start1) {
+		if(start1 < i+2) {
 			return false;
 		}
 
@@ -534,8 +550,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 		if(type == 0x7FFF) {
 			nbTilesLayer.append(tilePos+tileCount);
 			++layerID;
-		}
-		else {
+		} else {
 			if(type == 0x7FFE) {
 				if(i - 4 < 16) {
 					qWarning() << "BackgroundTilesIOPS::readData 0x7FFE positionned too early";
@@ -547,7 +562,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 				nbTilesTex.append(tilePos+tileCount);
 			} else {
-				if(datDataSize < i+6) {
+				if(start1 < i+6) {
 					return false;
 				}
 
@@ -570,10 +585,6 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 	size = (start3-start2)/2;
 
-	if(datDataSize < start2+size*2) {
-		return false;
-	}
-
 	if ((start3-start2) % 2 != 0) {
 		qWarning() << "BackgroundTilesIOPS::open padding after (1)" << ((start3-start2) % 2);
 	}
@@ -589,10 +600,6 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	}
 
 	size = (start2-start1)/8;
-
-	if(datDataSize < start1+size*8) {
-		return false;
-	}
 
 	if ((start2-start1) % 8 != 0) {
 		qWarning() << "BackgroundTilesIOPS::open padding after (2)" << ((start2-start1) % 8);
@@ -631,10 +638,6 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	}
 
 	size = (start4-start3)/14;
-
-	if(datDataSize < start3+size*14) {
-		return false;
-	}
 
 	if ((start4-start3) % 14 != 0) {
 		qWarning() << "BackgroundTilesIOPS::open padding after (3)" << ((start4-start3) % 14);
@@ -677,11 +680,10 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 	size = (datDataSize-start4)/10;
 
-	if(datDataSize < start4+size*10) {
-		return false;
-	}
-
 	// Possible padding (2) at the end
+	if ((datDataSize-start4) % 10 != 0) {
+		qWarning() << "BackgroundTilesIOPS::open padding after (4)" << ((datDataSize-start4) % 10);
+	}
 
 	quint32 j=0;
 

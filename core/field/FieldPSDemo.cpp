@@ -28,7 +28,7 @@ QString FieldPSDemo::sectionFile(FieldSection part) const
 	case Scripts:		return QString();//"ATE";
 	case Akaos:			return QString();
 	case Walkmesh:		return "ID";
-	case Background:	return QString();//"MAP";
+	case Background:	return "MAP";
 	case Camera:		return "CA";
 	case Inf:			return QString();
 	case Encounter:		return QString();
