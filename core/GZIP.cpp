@@ -16,11 +16,10 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "GZIP.h"
-#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-#include "zlib-1.2.7/zlib.h"
-#else
 #include <zlib.h>
-#endif
+#undef compress // conflict with GZIP::compress
+
+#define BUF_SIZE	8192
 
 QByteArray GZIP::decompress(const QByteArray &data, int decSize)
 {
@@ -46,9 +45,9 @@ QByteArray GZIP::decompress(const char *data, int size, int/* decSize*/)
 	if(!file) {
 		return QByteArray();
 	}
-	char buffer[10000];
+	char buffer[BUF_SIZE];
 	int r;
-	while((r = gzread(file, buffer, 10000)) > 0) {
+	while((r = gzread(file, buffer, BUF_SIZE)) > 0) {
 		ungzip.append(buffer, r);
 	}
 	gzclose(file);
