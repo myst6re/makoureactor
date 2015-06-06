@@ -25,8 +25,8 @@ int FieldPSDemo::sectionId(FieldSection part) const
 QString FieldPSDemo::sectionFile(FieldSection part) const
 {
 	switch(part) {
-	case Scripts:		return QString();//"ATE";
-	case Akaos:			return QString();
+	case Scripts:		return "ATE";
+	case Akaos:			return "ATE";
 	case Walkmesh:		return "ID";
 	case Background:	return "MAP";
 	case Camera:		return "CA";

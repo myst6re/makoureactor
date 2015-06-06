@@ -152,13 +152,18 @@ bool Section1File::open()
 
 bool Section1File::open(const QByteArray &data)
 {
-	quint16 posTexts;
-	int dataSize = data.size();
+	quint16 version, posTexts;
+	int cur, dataSize = data.size();
 	const char *constData = data.constData();
+	bool isDemo;
 
 	if(dataSize < 32)	return false;
 
-	memcpy(&posTexts, constData + 4, 2);//posTexts (et fin des scripts)
+	memcpy(&version, constData, 2);
+
+	isDemo = version == 0x0301; // Check version format
+
+	memcpy(&posTexts, constData + 4, 2); // posTexts (and end of scripts)
 	if((quint32)dataSize < posTexts || posTexts < 32)	return false;
 
 	clear();
@@ -173,48 +178,57 @@ bool Section1File::open(const QByteArray &data)
 
 	//this->nbObjets3D = (quint8)data.at(3);
 	memcpy(&nbAKAO, constData + 6, 2); // nbAKAO
-	posScripts = 32+8*nbScripts+4*nbAKAO;
 
 	if(posTexts < posScripts+64*nbScripts)	return false;
 
-	memcpy(&_scale, constData + 8, 2);
-	_author = data.mid(16, 8);
-	//QString name2 = data.mid(24, 8);
+	if(isDemo) {
+		_scale = 0; // FIXME: better value?
+		cur = 8;
+	} else {
+		memcpy(&_scale, constData + 8, 2);
+		cur = 16;
+	}
+	_author = data.mid(cur, 8);
+	//QString name2 = data.mid(cur + 8, 8);
+	cur += 16;
+
+	posScripts = cur + 8*nbScripts + 4*nbAKAO;
 
 	quint16 positions[33];
+	const int scriptCount = isDemo ? 16 : 32;
 
 	for(quint8 i=0 ; i<nbScripts ; ++i)
 	{
-		grpScript = new GrpScript(QString(data.mid(32+8*i,8)));
+		grpScript = new GrpScript(QString(data.mid(cur + 8*i, 8)));
 		if(emptyGrps > 1) {
 			emptyGrps--;
 		} else {
 
 			//Listage des positions de départ
-			memcpy(positions, constData + posScripts + 64*i, 64);
+			memcpy(positions, constData + posScripts + scriptCount * 2 * i, scriptCount * 2);
 
 			//Ajout de la position de fin
-			if(i==nbScripts-1)	positions[32] = posTexts;
+			if(i==nbScripts-1)	positions[scriptCount] = posTexts;
 			else
 			{
-				memcpy(&pos, constData + posScripts + 64*i + 64, 2);
+				memcpy(&pos, constData + posScripts + scriptCount * 2 * (i + 1), 2);
 
-				if(pos > positions[31])	positions[32] = pos;
+				if(pos > positions[scriptCount - 1])	positions[scriptCount] = pos;
 				else
 				{
 					emptyGrps = 1;
-					while(pos <= positions[31] && i+emptyGrps<nbScripts-1)
+					while(pos <= positions[scriptCount - 1] && i+emptyGrps<nbScripts-1)
 					{
-						memcpy(&pos, constData + posScripts + 64*(i+emptyGrps) + 64, 2);
+						memcpy(&pos, constData + posScripts + scriptCount * 2 * (i + emptyGrps + 1), 2);
 						emptyGrps++;
 					}
-					if(i+emptyGrps==nbScripts)	positions[32] = posTexts;
-					else	positions[32] = pos;
+					if(i+emptyGrps==nbScripts)	positions[scriptCount] = posTexts;
+					else	positions[scriptCount] = pos;
 				}
 			}
 
 			quint8 scriptID = 0;
-			for(quint8 j=0 ; j<32 ; ++j)
+			for(quint8 j=0 ; j<scriptCount ; ++j)
 			{
 				if(positions[j+1] > positions[j])
 				{
@@ -242,7 +256,7 @@ bool Section1File::open(const QByteArray &data)
 //		QString out;
 //		bool pasok = false;
 //		for(int i=0 ; i<nbAKAO ; ++i) {
-//			memcpy(&posAKAO, &constData[32+8*nbScripts+i*4], 4);
+//			memcpy(&posAKAO, &constData[cur+8*nbScripts+i*4], 4);
 //			out.append(QString("%1 %2 %3 (%4)\n").arg(i).arg(posAKAO).arg(QString(data.mid(posAKAO, 4))).arg(QString(data.mid(posAKAO-4, 8).toHex())));
 //			if(data.mid(posAKAO, 4) != "AKAO" && data.at(posAKAO) != '\x12') {
 //				pasok = true;
@@ -252,7 +266,7 @@ bool Section1File::open(const QByteArray &data)
 //			qDebug() << out;
 //		}
 
-		memcpy(&posAKAO, constData + 32 + 8*nbScripts, 4); // posAKAO
+		memcpy(&posAKAO, constData + cur + 8*nbScripts, 4); // posAKAO
 	}
 	else
 	{
