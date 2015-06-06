@@ -96,7 +96,7 @@ const QString &Data::searchRereleasedFF7Path()
 		LONG error;
 
 		// direct
-		ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(regValue("Microsoft/Windows/CurrentVersion/Uninstall/{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", "InstallLocation")));
+		ff7RereleasePath_cache = regValuePath("Microsoft/Windows/CurrentVersion/Uninstall/{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", "InstallLocation");
 		if(!ff7RereleasePath_cache.isEmpty()) {
 			return ff7RereleasePath_cache;
 		}
@@ -151,11 +151,7 @@ const QString &Data::searchRereleasedFF7Path()
 
 QString Data::searchSteamFF7Path()
 {
-	QString steamPath = QDir::cleanPath(QDir::fromNativeSeparators(regValue("Valve/Steam", "InstallPath")));
-	if(!steamPath.isEmpty()) {
-		return steamPath.append("/SteamApps/common/FINAL FANTASY VII");
-	}
-	return QString();
+	return regValuePath("Microsoft/Windows/CurrentVersion/Uninstall/Steam App 39140", "InstallLocation");
 }
 
 QString Data::searchFF7Exe(FF7Version version)
@@ -164,7 +160,7 @@ QString Data::searchFF7Exe(FF7Version version)
 
 	switch(version) {
 	case Standard:
-		ff7Path = QDir::cleanPath(QDir::fromNativeSeparators(regValue(FF7_WIN_REGISTER_PATH, "AppPath")));
+		ff7Path = regValuePath(FF7_WIN_REGISTER_PATH, "AppPath");
 		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/ff7.exe")) {
 			return ff7Path + "/ff7.exe";
 		}
@@ -177,8 +173,8 @@ QString Data::searchFF7Exe(FF7Version version)
 		return QString();
 	case Steam:
 		ff7Path = searchSteamFF7Path();
-		if(QFile::exists(ff7Path + "/launchff7.exe")) {
-			return ff7Path + "/launchff7.exe";
+		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/FF7_Launcher.exe")) {
+			return ff7Path + "/FF7_Launcher.exe";
 		}
 		return QString();
 	case Custom:
@@ -186,7 +182,7 @@ QString Data::searchFF7Exe(FF7Version version)
 	}
 
 	/*
-	QString ff7MusicPath = QDir::cleanPath(QDir::fromNativeSeparators(regValue("FF7Music", "InstDir")));
+	QString ff7MusicPath = regValuePath("FF7Music", "InstDir");
 	if(!ff7MusicPath.isEmpty() && QFile::exists(ff7MusicPath + "/launchff7.exe")) {
 		return ff7MusicPath + "/launchff7.exe";
 	}
@@ -200,7 +196,7 @@ QString Data::searchFF7DataPath(FF7Version version)
 
 	switch(version) {
 	case Standard:
-		dataPath = QDir::cleanPath(QDir::fromNativeSeparators(regValue(FF7_WIN_REGISTER_PATH, "DataPath")));
+		dataPath = regValuePath(FF7_WIN_REGISTER_PATH, "DataPath");
 		if(!dataPath.isEmpty() && QFile::exists(dataPath)) {
 			return dataPath;
 		}

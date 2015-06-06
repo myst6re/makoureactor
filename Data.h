@@ -61,6 +61,9 @@ public:
 	static QStringList music_names;
 	static QStringList music_desc;
 	static QString regValue(const QString &regPath, const QString &regKey);
+	static inline QString regValuePath(const QString &regPath, const QString &regKey) {
+		return QDir::fromNativeSeparators(QDir::cleanPath(regValue(regPath, regKey)));
+	}
 private:
 	static const QString &searchRereleasedFF7Path();
 	static QString searchSteamFF7Path();
