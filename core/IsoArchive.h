@@ -174,6 +174,7 @@ public:
 	virtual ~IsoFile();
 	bool isDirectory() const;
 	QByteArray data(quint32 maxSize=0) const;
+	QByteArray modifiedData(quint32 maxSize=0) const;
 	bool extract(const QString &destination, quint32 maxSize=0) const;
 	QIODevice *file() const;
 	QIODevice *modifiedFile() const;
@@ -320,6 +321,7 @@ public:
 
 	QByteArray file(const QString &path, quint32 maxSize=0) const;
 	bool extract(const QString &path, const QString &destination, quint32 maxSize=0) const;
+	bool extractDir(const QString &path, const QString &destination) const;
 	void extractAll(const QString &destination) const;
 	qint32 diffCountSectors(const QString &path, quint32 newSize) const;
 

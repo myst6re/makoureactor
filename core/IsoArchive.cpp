@@ -233,6 +233,15 @@ QByteArray IsoFile::data(quint32 maxSize) const
 	return QByteArray();
 }
 
+QByteArray IsoFile::modifiedData(quint32 maxSize) const
+{
+	if(_newIO && (_newIO->isOpen() || _newIO->open(QIODevice::ReadOnly))) {
+		_newIO->reset();
+		return maxSize == 0 ? _newIO->readAll() : _newIO->read(maxSize);
+	}
+	return data(maxSize);
+}
+
 bool IsoFile::extract(const QString &destination, quint32 maxSize) const
 {
 //	QTime t;t.start();
@@ -815,7 +824,7 @@ bool IsoArchive::copySectors(IsoArchiveIO *out, qint64 sectorCount, ArchiveObser
 	}
 
 	Q_ASSERT(out->pos() % SECTOR_SIZE == 0);
-	Q_ASSERT(pos() % SECTOR_SIZE == 0);
+	Q_ASSERT(_io.pos() % SECTOR_SIZE == 0);
 
 	for(int i = 0 ; i < sectorCount ; ++i) {
 		if(control && control->observerWasCanceled()) {
@@ -1159,6 +1168,27 @@ bool IsoArchive::extract(const QString &path, const QString &destination, quint3
 		return false;
 	}
 	return file->extract(destination, maxSize);
+}
+
+bool IsoArchive::extractDir(const QString &path, const QString &destination) const
+{
+	if (_rootDirectory == NULL) {
+		return false;
+	}
+	IsoDirectory *dir = _rootDirectory->directory(path);
+	if (dir == NULL) {
+		return false;
+	}
+	QDir destDir(destination);
+	bool error;
+
+	foreach (IsoFile *file, dir->files()) {
+		if (!file->extract(destDir.filePath(file->name()))) {
+			error = true;
+		}
+	}
+
+	return error;
 }
 
 void IsoArchive::extractAll(const QString &destination) const
