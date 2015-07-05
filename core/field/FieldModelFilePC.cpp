@@ -204,12 +204,7 @@ bool FieldModelFilePC::openHrc(QIODevice *hrc_file, QMultiMap<int, QStringList> 
 bool FieldModelFilePC::openA(QIODevice *aFile, bool animate)
 {
 	FieldModelAnimationIOPC io(aFile);
-	bool ok = io.read(_animation, animate ? -1 : 1);
-	if (ok) {
-		a_bones_count = qMin(_animation.bonesCount(), _bones.size());
-	}
-
-	return ok;
+	return io.read(_animation, animate ? -1 : 1);
 }
 
 QString FieldModelFilePC::openRsd(QIODevice *rsd_file, int boneID)

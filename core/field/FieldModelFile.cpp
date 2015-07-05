@@ -18,7 +18,7 @@
 #include "FieldModelFile.h"
 
 FieldModelFile::FieldModelFile() :
-	a_bones_count(0), dataLoaded(false)
+	dataLoaded(false)
 {
 }
 
@@ -54,7 +54,7 @@ int FieldModelFile::boneCount() const
 
 int FieldModelFile::animBoneCount() const
 {
-	return a_bones_count;
+	return qMin(_animation.bonesCount(), _bones.size());
 }
 
 QList<FieldModelPart *> FieldModelFile::parts(int boneID) const

@@ -50,7 +50,6 @@ protected:
 	QMultiMap<int, FieldModelPart *> _parts;
 	QHash<int, QImage> _loaded_tex;
 	QList<Bone> _bones;
-	int a_bones_count;
 	FieldModelAnimation _animation;
 	bool dataLoaded;
 };

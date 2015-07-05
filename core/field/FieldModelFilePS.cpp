@@ -370,12 +370,8 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 	}
 	FieldModelAnimationIOPS animIO(&io);
 	animIO.device()->seek(curOff + sizeof(Animation) * animation_id);
-	bool ok = animIO.read(_animation, animate ? -1 : 1);
-	if (ok) {
-		this->a_bones_count = qMin(_animation.bonesCount(), _bones.size());
-	}
 
-	return ok;
+	return animIO.read(_animation, animate ? -1 : 1);
 }
 
 QImage FieldModelFilePS::openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp)
