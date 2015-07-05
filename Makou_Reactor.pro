@@ -132,7 +132,10 @@ HEADERS += \
     core/field/FieldModelAnimation.h \
     core/field/FieldModelPartIO.h \
     core/field/FieldModelPartIOPC.h \
-    core/field/FieldModelPartIOPS.h
+    core/field/FieldModelPartIOPS.h \
+    core/field/FieldModelAnimationIO.h \
+    core/field/FieldModelAnimationIOPC.h \
+    core/field/FieldModelAnimationIOPS.h
 
 SOURCES += \
     Window.cpp \
@@ -258,7 +261,10 @@ SOURCES += \
     core/field/FieldModelAnimation.cpp \
     core/field/FieldModelPartIO.cpp \
     core/field/FieldModelPartIOPC.cpp \
-    core/field/FieldModelPartIOPS.cpp
+    core/field/FieldModelPartIOPS.cpp \
+    core/field/FieldModelAnimationIO.cpp \
+    core/field/FieldModelAnimationIOPC.cpp \
+    core/field/FieldModelAnimationIOPS.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

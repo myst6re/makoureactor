@@ -27,6 +27,9 @@ public:
 	inline int frameCount() const {
 		return _framesRot.size();
 	}
+	inline int bonesCount() const {
+		return isEmpty() ? 0 : rotations(0).size();
+	}
 	inline bool isEmpty() const {
 		return _framesRot.isEmpty();
 	}

@@ -18,6 +18,7 @@
 #include "FieldModelFilePC.h"
 #include "CharArchive.h"
 #include "FieldModelPartIOPC.h"
+#include "FieldModelAnimationIOPC.h"
 #include "../TexFile.h"
 
 FieldModelFilePC::FieldModelFilePC() :
@@ -200,41 +201,15 @@ bool FieldModelFilePC::openHrc(QIODevice *hrc_file, QMultiMap<int, QStringList> 
 	return boneID==boneCount;
 }
 
-bool FieldModelFilePC::openA(QIODevice *a_file, bool animate)
+bool FieldModelFilePC::openA(QIODevice *aFile, bool animate)
 {
-	a_header header;
-	PolyVertex rot, trans;
-
-	if(a_file->read((char *)&header, 36) != 36
-			|| header.frames_count == 0
-			|| a_file->pos() + header.frames_count*(24+12*header.bones_count) > a_file->size())
-		return false;
-
-//	qDebug() << header.bones_count << _bones.size();
-//	qDebug() << header.frames_count << a_file->size()-a_file->pos();
-
-	this->a_bones_count = qMin((int)header.bones_count, _bones.size());
-
-	if(!animate)	header.frames_count = qMin(header.frames_count, (quint32)1);
-
-	for(quint32 i=0 ; i<header.frames_count ; ++i)
-	{
-		if(!a_file->seek(a_file->pos() + 12))		return false;
-		if(a_file->read((char *)&trans, 12) != 12)	return false;
-		trans.x = trans.x / MODEL_SCALE_PC;
-		trans.y = trans.y / MODEL_SCALE_PC;
-		trans.z = trans.z / MODEL_SCALE_PC;
-
-		QList<PolyVertex> rotation_coords;
-
-		for(quint32 j=0 ; j<header.bones_count ; ++j)
-		{
-			if(a_file->read((char *)&rot, 12) != 12)	return false;
-			rotation_coords.append(rot);
-		}
-		_animation.insertFrame(i, rotation_coords, QList<PolyVertex>() << trans);
+	FieldModelAnimationIOPC io(aFile);
+	bool ok = io.read(_animation, animate ? -1 : 1);
+	if (ok) {
+		a_bones_count = qMin(_animation.bonesCount(), _bones.size());
 	}
-	return true;
+
+	return ok;
 }
 
 QString FieldModelFilePC::openRsd(QIODevice *rsd_file, int boneID)

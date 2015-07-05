@@ -21,15 +21,6 @@
 #include <QtGui>
 #include "FieldModelFile.h"
 
-typedef struct {
-	quint32 version;
-	quint32 frames_count;
-	quint32 bones_count;
-	quint8 rotation_order[3];
-	quint8 unused;
-	quint32 runtime_data[5];
-} a_header;
-
 class FieldModelFilePC : public FieldModelFile
 {
 public:
