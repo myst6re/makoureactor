@@ -232,8 +232,7 @@ bool FieldModelFilePC::openA(QIODevice *a_file, bool animate)
 			if(a_file->read((char *)&rot, 12) != 12)	return false;
 			rotation_coords.append(rot);
 		}
-		_frames.insert(i, rotation_coords);
-		_framesTrans.insert(i, QList<PolyVertex>() << trans);
+		_animation.insertFrame(i, rotation_coords, QList<PolyVertex>() << trans);
 	}
 	return true;
 }

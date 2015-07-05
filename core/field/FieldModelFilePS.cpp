@@ -144,7 +144,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 
 	curOff = openMesh(constData, curOff, BSX_data.size(), model.num_parts);
 
-	if(_frames.isEmpty()) { // if there is no animation opened from BCX
+	if(_animation.isEmpty()) { // if there is no animation opened from BCX
 		if(animation_id >= model.num_animations) {
 			qWarning() << "No animation called" << animation_id;
 			return false;
@@ -513,8 +513,7 @@ bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int anim
 			rotation_coordsTrans.append(trans);
 		}
 
-		_frames.insert(frame, rotation_coords);
-		_framesTrans.insert(frame, rotation_coordsTrans);
+		_animation.insertFrame(frame, rotation_coords, rotation_coordsTrans);
 	}
 
 	return true;

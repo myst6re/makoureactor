@@ -34,7 +34,7 @@ void FieldModelFile::clear()
 	qDeleteAll(_parts);
 	_parts.clear();
 	_bones.clear();
-	_frames.clear();
+	_animation.clear();
 }
 
 bool FieldModelFile::isOpen() const
@@ -74,17 +74,17 @@ QImage FieldModelFile::loadedTexture(int texID) const
 
 QList<PolyVertex> FieldModelFile::rotations(int frameID) const
 {
-	return _frames.value(frameID);
+	return _animation.rotations(frameID);
 }
 
 QList<PolyVertex> FieldModelFile::translations(int frameID) const
 {
-	return _framesTrans.value(frameID);
+	return _animation.translations(frameID);
 }
 
 int FieldModelFile::frameCount() const
 {
-	return _frames.size();
+	return _animation.frameCount();
 }
 
 QString FieldModelFile::toStringBones() const

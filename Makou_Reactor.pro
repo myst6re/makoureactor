@@ -129,6 +129,7 @@ HEADERS += \
     core/field/CharArchive.h \
     core/field/FieldPSDemo.h \
     core/IO.h \
+    core/field/FieldModelAnimation.h \
     core/field/FieldModelPartIO.h \
     core/field/FieldModelPartIOPC.h \
     core/field/FieldModelPartIOPS.h
@@ -254,6 +255,7 @@ SOURCES += \
     core/field/CharArchive.cpp \
     core/field/FieldPSDemo.cpp \
     core/IO.cpp \
+    core/field/FieldModelAnimation.cpp \
     core/field/FieldModelPartIO.cpp \
     core/field/FieldModelPartIOPC.cpp \
     core/field/FieldModelPartIOPS.cpp

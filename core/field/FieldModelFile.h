@@ -20,6 +20,7 @@
 
 #include <QtGui>
 #include "FieldModelPart.h"
+#include "FieldModelAnimation.h"
 
 typedef struct {
 	float size;
@@ -50,8 +51,7 @@ protected:
 	QHash<int, QImage> _loaded_tex;
 	QList<Bone> _bones;
 	int a_bones_count;
-	QHash<int, QList<PolyVertex> > _frames;
-	QHash<int, QList<PolyVertex> > _framesTrans;
+	FieldModelAnimation _animation;
 	bool dataLoaded;
 };
 
