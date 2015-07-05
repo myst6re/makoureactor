@@ -128,7 +128,8 @@ HEADERS += \
     widgets/ScriptEditorWidgets/ScriptEditorMoviePage.h \
     widgets/SearchAll.h \
     core/field/CharArchive.h \
-    core/field/FieldPSDemo.h
+    core/field/FieldPSDemo.h \
+    core/IO.h
 
 SOURCES += \
     Window.cpp \
@@ -250,7 +251,8 @@ SOURCES += \
     widgets/ScriptEditorWidgets/ScriptEditorMoviePage.cpp \
     widgets/SearchAll.cpp \
     core/field/CharArchive.cpp \
-    core/field/FieldPSDemo.cpp
+    core/field/FieldPSDemo.cpp \
+    core/IO.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

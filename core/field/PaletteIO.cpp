@@ -17,40 +17,9 @@
  ****************************************************************************/
 #include "PaletteIO.h"
 
-PaletteIO::PaletteIO() :
-	_device(0)
-{
-}
-
 PaletteIO::PaletteIO(QIODevice *device) :
-	_device(device)
+	IO(device)
 {
-}
-
-PaletteIO::~PaletteIO()
-{
-}
-
-bool PaletteIO::canRead() const
-{
-	if(_device) {
-		if(!_device->isOpen()) {
-			return _device->open(QIODevice::ReadOnly);
-		}
-		return _device->isReadable();
-	}
-	return false;
-}
-
-bool PaletteIO::canWrite() const
-{
-	if(_device) {
-		if(!_device->isOpen()) {
-			return _device->open(QIODevice::WriteOnly);
-		}
-		return _device->isWritable();
-	}
-	return false;
 }
 
 bool PaletteIO::read(Palettes &palettes) const

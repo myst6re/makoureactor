@@ -18,34 +18,8 @@
 #include "BackgroundTexturesIO.h"
 
 BackgroundTexturesIO::BackgroundTexturesIO(QIODevice *device) :
-	_device(device)
+	IO(device)
 {
-}
-
-BackgroundTexturesIO::~BackgroundTexturesIO()
-{
-}
-
-bool BackgroundTexturesIO::canRead() const
-{
-	if(_device) {
-		if(!_device->isOpen()) {
-			return _device->open(QIODevice::ReadOnly);
-		}
-		return _device->isReadable();
-	}
-	return false;
-}
-
-bool BackgroundTexturesIO::canWrite() const
-{
-	if(_device) {
-		if(!_device->isOpen()) {
-			return _device->open(QIODevice::WriteOnly);
-		}
-		return _device->isWritable();
-	}
-	return false;
 }
 
 BackgroundTexturesIOPC::BackgroundTexturesIOPC(QIODevice *device) :

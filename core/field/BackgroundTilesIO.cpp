@@ -18,34 +18,8 @@
 #include "BackgroundTilesIO.h"
 
 BackgroundTilesIO::BackgroundTilesIO(QIODevice *device) :
-	_device(device)
+	IO(device)
 {
-}
-
-BackgroundTilesIO::~BackgroundTilesIO()
-{
-}
-
-bool BackgroundTilesIO::canRead() const
-{
-	if(_device) {
-		if(!_device->isOpen()) {
-			return _device->open(QIODevice::ReadOnly);
-		}
-		return _device->isReadable();
-	}
-	return false;
-}
-
-bool BackgroundTilesIO::canWrite() const
-{
-	if(_device) {
-		if(!_device->isOpen()) {
-			return _device->open(QIODevice::WriteOnly);
-		}
-		return _device->isWritable();
-	}
-	return false;
 }
 
 bool BackgroundTilesIO::read(BackgroundTiles &tiles) const
