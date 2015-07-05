@@ -253,6 +253,15 @@ public:
 		//TODO (if possible): Checksum EDC/ECC (Error Detection Code & Error Correction Code)
 		return QByteArray(SECTOR_SIZE_FOOTER, '\x00');
 	}
+	static inline void headerInfos(const QByteArray &header, quint8 *type, quint8 *mode = NULL) {
+		Q_ASSERT(header.size() != SECTOR_SIZE_HEADER);
+		if (type) {
+			*type = header.at(18);
+		}
+		if (mode) {
+			*mode = header.at(15);
+		}
+	}
 
 	QByteArray sector(quint32 num, quint16 maxSize=SECTOR_SIZE_DATA);
 	QByteArray sectorHeader(quint32 num);
@@ -298,11 +307,11 @@ public:
 	explicit IsoArchive(const QString &name);
 	virtual ~IsoArchive();
 
-	bool open(QIODevice::OpenMode mode);
+	virtual bool open(QIODevice::OpenMode mode);
 	inline virtual bool isOpen() const {
 		return _io.isOpen() && _rootDirectory;
 	}
-	void close();
+	virtual void close();
 	inline QString fileName() const {
 		return _io.fileName();
 	}
@@ -320,6 +329,9 @@ public:
 	void applyModifications(IsoDirectory *directory);
 
 	QByteArray file(const QString &path, quint32 maxSize=0) const;
+	QIODevice *fileDevice(const QString &path) const;
+	QByteArray modifiedFile(const QString &path, quint32 maxSize=0) const;
+	QIODevice *modifiedFileDevice(const QString &path) const;
 	bool extract(const QString &path, const QString &destination, quint32 maxSize=0) const;
 	bool extractDir(const QString &path, const QString &destination) const;
 	void extractAll(const QString &destination) const;
@@ -354,7 +366,7 @@ private:
 	static void repairLocationSectors(IsoDirectory *directory, IsoArchive *newIso);
 
 	bool writeFile(QIODevice *in, quint32 sectorCount = 0, ArchiveObserver *control = NULL);
-	bool copySectors(IsoArchiveIO *out, qint64 size, ArchiveObserver *control = NULL);
+	bool copySectors(IsoArchiveIO *out, qint64 size, ArchiveObserver *control = NULL, bool repair = false);
 
 	IsoArchiveIO _io;
 	VolumeDescriptor volume;
