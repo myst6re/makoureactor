@@ -169,11 +169,6 @@ FieldModelPart::~FieldModelPart()
 	qDeleteAll(_groups);
 }
 
-const QList<FieldModelGroup *> &FieldModelPart::groups() const
-{
-	return _groups;
-}
-
 QString FieldModelPart::toString() const
 {
 	QString ret;

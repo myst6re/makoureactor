@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "FieldModelFilePS.h"
 #include "FieldArchiveIO.h"
+#include "FieldModelPartIOPS.h"
 #include "FieldModelPartPS.h"
 #include "FieldModelLoaderPS.h"
 #include "TdbFile.h"
@@ -328,10 +329,19 @@ int FieldModelFilePS::openSkeleton(const char *constData, int curOff, quint8 num
 
 int FieldModelFilePS::openMesh(const char *constData, int curOff, int size, quint8 numParts)
 {
+	QBuffer io;
+	io.setData(constData, size);
+	if (!io.open(QIODevice::ReadOnly)) {
+		qWarning() << "FieldModelFilePS::openMesh device not opened" << io.errorString();
+		return curOff + numParts * sizeof(Part);
+	}
+	FieldModelPartIOPS partIO(&io);
+
 	for(quint32 i=0 ; i<numParts ; ++i) {
 		FieldModelPartPS *part = new FieldModelPartPS();
 //		qDebug() << "==== PART" << i << "====" << curOff;
-		if(part->open(constData, curOff, size)) {
+		partIO.device()->seek(curOff);
+		if(partIO.read(part)) {
 			_parts.insert(part->boneID(), part);
 
 //			QFile textOut(QString("fieldModelPartPS%1.txt").arg(i));

@@ -88,7 +88,6 @@ HEADERS += \
     core/field/FieldPS.h \
     core/field/FieldPC.h \
     core/field/FieldModelPartPS.h \
-    core/field/FieldModelPartPC.h \
     core/field/FieldModelPart.h \
     core/field/FieldModelLoaderPS.h \
     core/field/FieldModelLoaderPC.h \
@@ -129,7 +128,10 @@ HEADERS += \
     widgets/SearchAll.h \
     core/field/CharArchive.h \
     core/field/FieldPSDemo.h \
-    core/IO.h
+    core/IO.h \
+    core/field/FieldModelPartIO.h \
+    core/field/FieldModelPartIOPC.h \
+    core/field/FieldModelPartIOPS.h
 
 SOURCES += \
     Window.cpp \
@@ -211,7 +213,6 @@ SOURCES += \
     core/field/FieldPS.cpp \
     core/field/FieldPC.cpp \
     core/field/FieldModelPartPS.cpp \
-    core/field/FieldModelPartPC.cpp \
     core/field/FieldModelPart.cpp \
     core/field/FieldModelLoaderPS.cpp \
     core/field/FieldModelLoaderPC.cpp \
@@ -252,7 +253,10 @@ SOURCES += \
     widgets/SearchAll.cpp \
     core/field/CharArchive.cpp \
     core/field/FieldPSDemo.cpp \
-    core/IO.cpp
+    core/IO.cpp \
+    core/field/FieldModelPartIO.cpp \
+    core/field/FieldModelPartIOPC.cpp \
+    core/field/FieldModelPartIOPS.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

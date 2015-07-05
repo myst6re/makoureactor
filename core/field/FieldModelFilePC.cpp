@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "FieldModelFilePC.h"
 #include "CharArchive.h"
-#include "FieldModelPartPC.h"
+#include "FieldModelPartIOPC.h"
 #include "../TexFile.h"
 
 FieldModelFilePC::FieldModelFilePC() :
@@ -72,20 +72,21 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 					if(rsdFile && rsdFile->open(QIODevice::ReadOnly)) {
 						p = openRsd(rsdFile, boneID);
 						if(!p.isNull()) {
-							FieldModelPartPC *part = new FieldModelPartPC();
-
 							QIODevice *pFile = charLgp->fileIO(p % ".p");
 
-							if(pFile && pFile->open(QIODevice::ReadOnly)
-									&& part->open(pFile)) {
-								_parts.insert(boneID, part);
+							if(pFile && pFile->open(QIODevice::ReadOnly)) {
+								FieldModelPartIOPC partIO(pFile);
+								FieldModelPart *part = new FieldModelPart();
+								if(partIO.read(part)) {
+									_parts.insert(boneID, part);
 
-//								QFile textOut(QString("fieldModelPartPC%1.txt").arg(_parts.size()-1));
-//								textOut.open(QIODevice::WriteOnly);
-//								textOut.write(part->toString().toLatin1());
-//								textOut.close();
-							} else {
-								delete part;
+//									QFile textOut(QString("fieldModelPartPC%1.txt").arg(_parts.size()-1));
+//									textOut.open(QIODevice::WriteOnly);
+//									textOut.write(part->toString().toLatin1());
+//									textOut.close();
+								} else {
+									delete part;
+								}
 							}
 						}
 					}

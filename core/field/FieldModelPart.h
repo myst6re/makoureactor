@@ -88,7 +88,12 @@ class FieldModelPart
 public:
 	FieldModelPart();
 	virtual ~FieldModelPart();
-	const QList<FieldModelGroup *> &groups() const;
+	inline const QList<FieldModelGroup *> &groups() const {
+		return _groups;
+	}
+	inline void setGroups(const QList<FieldModelGroup *> &groups) {
+		_groups = groups;
+	}
 	QString toString() const;
 protected:
 	QList<FieldModelGroup *> _groups;
