@@ -179,8 +179,6 @@ bool Section1File::open(const QByteArray &data)
 	//this->nbObjets3D = (quint8)data.at(3);
 	memcpy(&nbAKAO, constData + 6, 2); // nbAKAO
 
-	if(posTexts < posScripts+64*nbScripts)	return false;
-
 	if(isDemo) {
 		_scale = 0; // FIXME: better value?
 		cur = 8;
@@ -193,6 +191,8 @@ bool Section1File::open(const QByteArray &data)
 	cur += 16;
 
 	posScripts = cur + 8*nbScripts + 4*nbAKAO;
+
+	if(posTexts < posScripts+64*nbScripts)	return false;
 
 	quint16 positions[33];
 	const int scriptCount = isDemo ? 16 : 32;
