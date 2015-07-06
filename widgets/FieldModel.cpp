@@ -251,7 +251,7 @@ void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int curre
 
 	for(i=0 ; i<data->animBoneCount() ; ++i) {
 		const PolyVertex &rotation = rot.at(i);
-		const Bone &bone = data->bone(i);
+		const FieldModelBone &bone = data->bone(i);
 
 		while(!parent.isEmpty() && parent.top() != bone.parent) {
 			parent.pop();

@@ -19,13 +19,9 @@
 #define FIELDMODELFILE_H
 
 #include <QtGui>
+#include "FieldModelSkeleton.h"
 #include "FieldModelPart.h"
 #include "FieldModelAnimation.h"
-
-typedef struct {
-	float size;
-	int parent;
-} Bone;
 
 class FieldModelFile
 {
@@ -36,7 +32,7 @@ public:
 	virtual void clear();
 	virtual bool translateAfter() const=0;
 
-	const Bone &bone(int index) const;
+	const FieldModelBone &bone(int index) const;
 	int boneCount() const;
 	int animBoneCount() const; // valid bone count
 	QList<FieldModelPart *> parts(int boneID) const;
@@ -45,11 +41,10 @@ public:
 	QList<PolyVertex> rotations(int frameID) const;
 	QList<PolyVertex> translations(int frameID) const;
 	int frameCount() const;
-	QString toStringBones() const;
 protected:
 	QMultiMap<int, FieldModelPart *> _parts;
 	QHash<int, QImage> _loaded_tex;
-	QList<Bone> _bones;
+	FieldModelSkeleton _skeleton;
 	FieldModelAnimation _animation;
 	bool dataLoaded;
 };

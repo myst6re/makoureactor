@@ -173,6 +173,7 @@ public:
 	void printTexts(const QString &filename);
 	void compareTexts(FieldArchive *other);
 	void printScripts(const QString &filename);
+	void printScriptsDirs(const QString &filename);
 	void diffScripts();
 #ifdef BG_ID_RESEARCH
 	void searchBackgroundZ();

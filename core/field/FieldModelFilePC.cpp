@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "FieldModelFilePC.h"
 #include "CharArchive.h"
+#include "FieldModelSkeletonIOPC.h"
 #include "FieldModelPartIOPC.h"
 #include "FieldModelAnimationIOPC.h"
 #include "../TexFile.h"
@@ -138,67 +139,10 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 	return dataLoaded;
 }
 
-bool FieldModelFilePC::openHrc(QIODevice *hrc_file, QMultiMap<int, QStringList> &rsd_files)
+bool FieldModelFilePC::openHrc(QIODevice *hrcFile, QMultiMap<int, QStringList> &rsdFiles)
 {
-	bool ok;
-	QString line;
-	quint32 boneCount=0;
-
-	do {
-		line = QString(hrc_file->readLine()).trimmed();
-		if(line.startsWith(QString(":BONES "))) {
-			boneCount = line.mid(7).toUInt(&ok);
-			if(!ok) return false;
-			if(boneCount==0)	boneCount = 1;//Null HRC fix
-			break;
-		}
-	} while(hrc_file->canReadLine());
-
-	if(boneCount==0)	return false;
-
-	int nbP, lineType=0;
-	quint32 boneID=0;
-	Bone bone;
-	bone.parent = 0;
-	QMap<QString, int> nameToId;
-	QStringList rsdlist;
-	nameToId.insert("root", -1);
-
-	while(hrc_file->canReadLine() && boneID < boneCount) {
-//		QCoreApplication::processEvents();
-		line = QString(hrc_file->readLine()).trimmed();
-		if(line.isEmpty() || line.startsWith(QChar('#')))
-			continue;
-
-		switch(lineType) {
-		case 0: //Current
-			nameToId.insert(line, boneID);
-			break;
-		case 1: //Parent
-			bone.parent = nameToId.value(line, -1);
-			break;
-		case 2: //Length
-			bone.size = -line.toFloat(&ok) / MODEL_SCALE_PC;
-			if(!ok) return false;
-			_bones.append(bone);
-			break;
-		case 3: //RSD list
-			rsdlist = line.split(' ', QString::SkipEmptyParts);
-			if(rsdlist.size()<1) return false;
-			nbP = rsdlist.first().toUInt(&ok);
-			if(ok && nbP!=0) {
-				rsdlist.removeFirst();
-				if(rsdlist.size()==nbP) {
-					rsd_files.insert(boneID, rsdlist);
-				}
-			}
-			++boneID;
-			break;
-		}
-		lineType = (lineType + 1) % 4;
-	}
-
-	return boneID==boneCount;
+	FieldModelSkeletonIOPC io(hrcFile);
+	return io.read(_skeleton, rsdFiles);
 }
 
 bool FieldModelFilePC::openA(QIODevice *aFile, bool animate)

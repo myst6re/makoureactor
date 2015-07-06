@@ -33,7 +33,7 @@ void FieldModelFile::clear()
 	dataLoaded = false;
 	qDeleteAll(_parts);
 	_parts.clear();
-	_bones.clear();
+	_skeleton.clear();
 	_animation.clear();
 }
 
@@ -42,19 +42,19 @@ bool FieldModelFile::isOpen() const
 	return dataLoaded;
 }
 
-const Bone &FieldModelFile::bone(int index) const
+const FieldModelBone &FieldModelFile::bone(int index) const
 {
-	return _bones.at(index);
+	return _skeleton.bone(index);
 }
 
 int FieldModelFile::boneCount() const
 {
-	return _bones.size();
+	return _skeleton.boneCount();
 }
 
 int FieldModelFile::animBoneCount() const
 {
-	return qMin(_animation.bonesCount(), _bones.size());
+	return qMin(_animation.boneCount(), _skeleton.boneCount());
 }
 
 QList<FieldModelPart *> FieldModelFile::parts(int boneID) const
@@ -85,20 +85,4 @@ QList<PolyVertex> FieldModelFile::translations(int frameID) const
 int FieldModelFile::frameCount() const
 {
 	return _animation.frameCount();
-}
-
-QString FieldModelFile::toStringBones() const
-{
-	QString ret;
-	int boneID=0;
-
-	foreach(const Bone &bone, _bones) {
-		ret.append(QString("Bone %1: parent= %2 size= %3\n")
-				   .arg(boneID)
-				   .arg(bone.parent)
-				   .arg(bone.size));
-		++boneID;
-	}
-
-	return ret;
 }

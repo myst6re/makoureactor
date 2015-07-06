@@ -315,12 +315,12 @@ int FieldModelFilePS::openSkeleton(const char *constData, int curOff, quint8 num
 {
 	for(quint32 i=0 ; i<numBones ; ++i) {
 		BonePS bonePS;
-		Bone bone;
+		FieldModelBone bone;
 		memcpy(&bonePS, constData + curOff, sizeof(BonePS));
 //		qDebug() << "bone" << i << bonePS.length << bonePS.parent << bonePS.unknown;
 		bone.size = bonePS.length / MODEL_SCALE_PS;
 		bone.parent = bonePS.parent;
-		_bones.append(bone);
+		_skeleton.addBone(bone);
 
 		curOff += sizeof(BonePS);
 	}

@@ -645,6 +645,66 @@ void FieldArchive::printScripts(const QString &filename)
 	}
 }
 
+void FieldArchive::printScriptsDirs(const QString &filename)
+{
+	QDir dir(filename);
+
+	foreach(int i, fieldsSortByMapId) {
+		Field *f = field(i, true);
+		if(f == NULL) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << i;
+			continue;
+		}
+
+		if (f->name() != "convil_1") {
+			continue;
+		}
+
+		Section1File *scriptsAndTexts = f->scriptsAndTexts();
+		if(scriptsAndTexts->isOpen()) {
+			qWarning() << f->inf()->mapName();
+
+			int grpScriptID = 0;
+			foreach(GrpScript *grp, scriptsAndTexts->grpScripts()) {
+
+				QString dirname = QString("%1-%2")
+								  .arg(grpScriptID, 2, 10, QChar('0'))
+								  .arg(grp->name());
+				dir.mkdir(dirname);
+				dir.cd(dirname);
+
+				int scriptID = 0;
+				foreach(Script *script, grp->scripts()) {
+
+					QFile deb(dir.filePath(QString("%1-script").arg(scriptID, 2, 10, QChar('0'))));
+					if (!deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+						qWarning() << "error opening debug file" << deb.fileName();
+						return;
+					}
+
+					int opcodeID = 0;
+					foreach(Opcode *opcode, script->opcodes()) {
+						FF7Window win;
+						/* if(opcode->getWindow(win)) {
+							deb.write(QString("%1 > %2 > %3: %4 %5\n")
+									  .arg(f->name(), grp->name())
+									  .arg(scriptID)
+									  .arg(win.x).arg(win.y).toLatin1());
+						} else if (opcode->getTextID() < 0) { */
+							deb.write(QString("%1\n")
+									  .arg(opcode->toString(f)).toUtf8());
+						// }
+						opcodeID++;
+					}
+					scriptID++;
+				}
+				dir.cdUp();
+				grpScriptID++;
+			}
+		}
+	}
+}
+
 void FieldArchive::diffScripts()
 {
 	FieldArchivePC original("C:/Program Files/Square Soft, Inc/Final Fantasy VII/data/field/fflevel - original.lgp", FieldArchiveIO::Lgp);

@@ -16,12 +16,9 @@ bool FieldModelAnimationIOPC::read(FieldModelAnimation &animation, int maxFrames
 
 	if (device()->read((char *)&header, 36) != 36
 			|| header.framesCount == 0
-			|| device()->pos() + header.framesCount * (24 + 12 * header.bonesCount) > device()->size()) {
+			|| device()->pos() + header.framesCount * (24 + 12 * header.boneCount) > device()->size()) {
 		return false;
 	}
-
-//	qDebug() << header.bones_count << _bones.size();
-//	qDebug() << header.frames_count << device()->size()-device()->pos();
 
 	if (maxFrames >= 0) {
 		header.framesCount = qMin(header.framesCount, quint32(maxFrames));
@@ -41,7 +38,7 @@ bool FieldModelAnimationIOPC::read(FieldModelAnimation &animation, int maxFrames
 
 		QList<PolyVertex> rotationCoords;
 
-		for (quint32 j = 0; j < header.bonesCount; ++j) {
+		for (quint32 j = 0; j < header.boneCount; ++j) {
 			if(device()->read((char *)&rot, 12) != 12) {
 				return false;
 			}
