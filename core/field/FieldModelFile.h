@@ -43,7 +43,7 @@ public:
 	int frameCount() const;
 protected:
 	QMultiMap<int, FieldModelPart *> _parts;
-	QHash<int, QImage> _loaded_tex;
+	QHash<int, QImage> _loadedTex;
 	FieldModelSkeleton _skeleton;
 	FieldModelAnimation _animation;
 	bool dataLoaded;

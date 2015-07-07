@@ -23,7 +23,7 @@
 
 #define MODEL_SCALE_PC				132.0f // 1.0f
 
-typedef struct {
+struct PHeader {
 	quint32 version;
 	quint32 off04;
 	quint32 vertexType;
@@ -41,19 +41,19 @@ typedef struct {
 	quint32 numBoundingBoxes;
 	quint32 normIndexTableFlag;
 	quint32 runtime_data[16];
-} p_header;
+};
 
-typedef struct {
+struct ColorBGRA {
 	quint8 blue, green, red, alpha;
-} ColorBGRA;
+};
 
-typedef struct {
+struct PolygonP {
 	quint16 zero;
 	quint16 VertexIndex[3], NormalIndex[3], EdgeIndex[3];
 	quint16 u[2];
-} Polygon_p;
+};
 
-typedef struct {
+struct Group {
 	quint32 primitiveType;
 	quint32 polygonStartIndex;
 	quint32 numPolygons;
@@ -68,14 +68,39 @@ typedef struct {
 	quint32 texCoordStartIndex;
 	quint32 areTexturesUsed;
 	quint32 textureNumber;
-} Group;
+};
+
+class Rsd {
+	friend class FieldModelPartIOPC;
+	QString pName;
+	QList<int> texIds;
+public:
+	inline const QString &pFile() const {
+		return pName;
+	}
+	inline const QList<int> &textureIds() const {
+		return texIds;
+	}
+};
 
 class FieldModelPartIOPC : public FieldModelPartIO
 {
 public:
-	explicit FieldModelPartIOPC(QIODevice *io);
-	bool read(FieldModelPart *part) const;
+	explicit FieldModelPartIOPC(QIODevice *ioRsd);
+	bool readRsd(Rsd &rsd, QStringList &textureNames) const;
+	bool read(FieldModelPart *part, const QList<int> &texIds) const;
 	bool write(const FieldModelPart *part) const;
+private:
+	bool read(FieldModelPart *part) const {
+		Q_UNUSED(part)
+		return false;
+	}
+	inline QIODevice *deviceRsd() const {
+		return _deviceRsd;
+	}
+	bool canReadRsd() const;
+
+	QIODevice *_deviceRsd;
 };
 
 #endif // FIELDMODELPARTIOPC_H

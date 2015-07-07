@@ -64,12 +64,12 @@ QList<FieldModelPart *> FieldModelFile::parts(int boneID) const
 
 int FieldModelFile::loadedTextureCount() const
 {
-	return _loaded_tex.size();
+	return _loadedTex.size();
 }
 
 QImage FieldModelFile::loadedTexture(int texID) const
 {
-	return _loaded_tex.value(texID);
+	return _loadedTex.value(texID);
 }
 
 QList<PolyVertex> FieldModelFile::rotations(int frameID) const

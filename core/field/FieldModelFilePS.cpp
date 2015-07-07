@@ -260,7 +260,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 //						qDebug() << (texInfo.type == 0 ? "EYE" : "MOUTH") << texID;
 						texIds.append(texID);
 						texAlreadyLoaded.insert(texInfo, texID);
-						_loaded_tex.insert(texID++, tdb.texture(faceID, texInfo.type == 0 ? TdbFile::Eye : TdbFile::MouthClosed));
+						_loadedTex.insert(texID++, tdb.texture(faceID, texInfo.type == 0 ? TdbFile::Eye : TdbFile::MouthClosed));
 					} else {
 //						qDebug() << "OTHER" << texID;
 
@@ -280,7 +280,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 							lastTexHeight += imgHeader.height;
 							texIds.append(texID);
 							texAlreadyLoaded.insert(texInfo, texID);
-							_loaded_tex.insert(texID++, openTexture(constData, BSX_data.size(), imgHeader, palHeader, texInfo.bpp));
+							_loadedTex.insert(texID++, openTexture(constData, BSX_data.size(), imgHeader, palHeader, texInfo.bpp));
 						} else {
 							qWarning() << "Tex not found!";
 						}
@@ -294,7 +294,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 				foreach(FieldModelGroup *group, part->groups()) {
 					if(group->textureNumber() != -1) {
 						group->setTextureNumber(texIds.at(group->textureNumber()));
-						const QImage currentTex = _loaded_tex.value(group->textureNumber());
+						const QImage currentTex = _loadedTex.value(group->textureNumber());
 						int texWidth=currentTex.width(), texHeight=currentTex.height();
 
 						foreach(Poly *poly, group->polygons()) {

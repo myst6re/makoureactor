@@ -17,29 +17,39 @@
  ****************************************************************************/
 #include "FieldModelPartIOPC.h"
 
-FieldModelPartIOPC::FieldModelPartIOPC(QIODevice *io) :
-	FieldModelPartIO(io)
+FieldModelPartIOPC::FieldModelPartIOPC(QIODevice *ioRsd) :
+	FieldModelPartIO(0), _deviceRsd(ioRsd)
 {
 }
 
-bool FieldModelPartIOPC::read(FieldModelPart *part) const
+bool FieldModelPartIOPC::canReadRsd() const
+{
+	if(_deviceRsd) {
+		if(!_deviceRsd->isOpen()) {
+			return _deviceRsd->open(QIODevice::ReadOnly);
+		}
+		return _deviceRsd->isReadable();
+	}
+	return false;
+}
+
+bool FieldModelPartIOPC::read(FieldModelPart *part, const QList<int> &texIds) const
 {
 	if(!canRead()) {
-		qWarning() << "FieldModelPartIOPS::read device not opened";
 		return false;
 	}
 
 	QList<PolyVertex> vertices/*, normals*/;
 	QList<TexCoord> texCs;
 	QList<ColorBGRA> vertexColors;
-	QList<Polygon_p> polys;
+	QList<PolygonP> polys;
 	QList<Group> groups;
 	QList<FieldModelGroup *> _groups;
-	p_header header;
+	PHeader header;
 	PolyVertex vertex;
 	TexCoord texC;
 	ColorBGRA vertexColor;
-	Polygon_p poly;
+	PolygonP poly;
 	Group group;
 	quint32 i;
 
@@ -93,11 +103,14 @@ bool FieldModelPartIOPC::read(FieldModelPart *part) const
 		FieldModelGroup *grp = new FieldModelGroup();
 
 		if(g.areTexturesUsed) {
-			grp->setTextureNumber(g.textureNumber);
+			if (g.textureNumber < quint32(texIds.size())) {
+				// Convert relative group tex IDs to absolute tex IDs
+				grp->setTextureNumber(texIds.at(g.textureNumber));
+			}
 		}
 
 		for(quint32 polyID=0 ; polyID<g.numPolygons && g.polygonStartIndex + polyID < (quint32)polys.size() ; ++polyID) {
-			const Polygon_p &poly = polys.at(g.polygonStartIndex + polyID);
+			const PolygonP &poly = polys.at(g.polygonStartIndex + polyID);
 			QList<PolyVertex> polyVertices;
 			QList<QRgb> polyColors;
 			QList<TexCoord> polyTexCoords;
@@ -147,6 +160,64 @@ bool FieldModelPartIOPC::read(FieldModelPart *part) const
 	}
 
 	part->setGroups(_groups);
+
+	return true;
+}
+
+bool FieldModelPartIOPC::readRsd(Rsd &rsd, QStringList &textureNames) const
+{
+	if (!canReadRsd()) {
+		return false;
+	}
+
+	QString pname;
+	QList<int> texIds;
+	quint32 nTex = 0;
+	int index;
+	bool ok;
+
+	while(deviceRsd()->canReadLine()) {
+		QString line = QString(deviceRsd()->readLine()).trimmed();
+		if(pname.isNull() && (line.startsWith(QString("PLY="))
+							  || line.startsWith(QString("MAT="))
+							  || line.startsWith(QString("GRP=")))) {
+			index = line.lastIndexOf('.');
+			if(index != -1) {
+				line.truncate(index);
+			}
+			pname = line.mid(4).toLower();
+		} else if(!pname.isNull() && nTex == 0
+				  && line.startsWith(QString("NTEX="))) {
+			nTex = line.mid(5).toUInt(&ok);
+			if(!ok) {
+				return false;
+			}
+
+			for(quint32 i = 0 ; i < nTex && deviceRsd()->canReadLine() ; ++i) {
+				line = QString(deviceRsd()->readLine()).trimmed();
+				if(!line.startsWith(QString("TEX[%1]=").arg(i))) {
+					return false;
+				}
+
+				index = line.lastIndexOf('.');
+				if(index != -1) {
+					line.truncate(index);
+				}
+				QString tex = line.mid(line.indexOf('=') + 1).toLower();
+
+				index = textureNames.indexOf(tex);
+				if(index > -1) {
+					texIds.append(index);
+				} else {
+					texIds.append(textureNames.size());
+					textureNames.append(tex);
+				}
+			}
+		}
+	}
+
+	rsd.pName = pname;
+	rsd.texIds = texIds;
 
 	return true;
 }
