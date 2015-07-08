@@ -34,7 +34,6 @@ public:
 
 	const FieldModelBone &bone(int index) const;
 	int boneCount() const;
-	int animBoneCount() const; // valid bone count
 	QList<FieldModelPart *> parts(int boneID) const;
 	int loadedTextureCount() const;
 	QImage loadedTexture(int texID) const;

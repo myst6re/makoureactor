@@ -52,11 +52,6 @@ int FieldModelFile::boneCount() const
 	return _skeleton.boneCount();
 }
 
-int FieldModelFile::animBoneCount() const
-{
-	return qMin(_animation.boneCount(), _skeleton.boneCount());
-}
-
 QList<FieldModelPart *> FieldModelFile::parts(int boneID) const
 {
 	return _parts.values(boneID);
