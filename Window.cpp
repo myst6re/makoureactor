@@ -1078,7 +1078,7 @@ void Window::saveAs(bool currentPath)
 		out = tr("L'archive est invalide");
 		break;
 	case FieldArchiveIO::NotImplemented:
-		out = tr("Cette erreur ne devrais pas s'afficher, merci de le signaler");
+		out = tr("Cette fonctionnalité n'est pas terminée");
 		break;
 	}
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
