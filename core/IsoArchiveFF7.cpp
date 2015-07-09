@@ -439,6 +439,6 @@ bool IsoArchiveFF7::reorganizeModifiedFilesAfter(QMap<quint32, const IsoFile *> 
 		writeToTheMain.insert(isoYamadaBin->newLocation(), isoYamadaBin);
 		return true;
 	}
-	setError(Archive::InvalidError, QObject::trUtf8("Impossible de mettre Ã  jour les binaires du jeu."));
+	setError(Archive::InvalidError, QObject::tr("Impossible de mettre à jour les binaires du jeu."));
 	return false;
 }

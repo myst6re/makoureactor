@@ -1120,69 +1120,68 @@ Certains scripts peuvent y faire référence !</source>
 <context>
     <name>ModelManagerPC</name>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="38"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="34"/>
         <source>Couper</source>
         <translation type="unfinished">切り取り</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="39"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="35"/>
         <source>Copier</source>
         <translation type="unfinished">コピー</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="40"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="36"/>
         <source>Coller</source>
         <translation type="unfinished">貼り付け</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="59"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="55"/>
         <source>Animations</source>
         <translation type="unfinished">アニメーション</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="59"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="55"/>
         <source>?</source>
         <translation type="unfinished">?</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="59"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="55"/>
         <source>Id</source>
         <translation type="unfinished">ID</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="62"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="58"/>
         <source>Nom (non utilisé)</source>
         <translation type="unfinished">名称 (未使用)</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="64"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="60"/>
         <source>Inconnu</source>
         <translation type="unfinished">不明</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="66"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="62"/>
         <source>Taille modèle</source>
         <translation type="unfinished">モデル サイズ</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="68"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="64"/>
         <source>Lumière</source>
         <translation type="unfinished">光源</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="78"/>
         <source>Taille modèles (non utilisé)</source>
-        <translation type="unfinished">モデル サイズ (未使用)</translation>
+        <translation type="obsolete">モデル サイズ (未使用)</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="166"/>
-        <location filename="widgets/ModelManagerPC.cpp" line="388"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="147"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="366"/>
         <source>Ajouter un modèle 3D</source>
         <translation type="unfinished">3Dモデルの追加</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="182"/>
-        <location filename="widgets/ModelManagerPC.cpp" line="421"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="157"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="391"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
     </message>
@@ -1190,22 +1189,22 @@ Certains scripts peuvent y faire référence !</source>
 <context>
     <name>ModelManagerPS</name>
     <message>
-        <location filename="widgets/ModelManagerPS.cpp" line="31"/>
+        <location filename="widgets/ModelManagerPS.cpp" line="29"/>
         <source>Animations</source>
         <translation type="unfinished">アニメーション</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPS.cpp" line="34"/>
+        <location filename="widgets/ModelManagerPS.cpp" line="32"/>
         <source>Inconnu</source>
         <translation type="unfinished">不明</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPS.cpp" line="36"/>
+        <location filename="widgets/ModelManagerPS.cpp" line="34"/>
         <source>Taille modèle</source>
         <translation type="unfinished">モデル サイズ</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPS.cpp" line="38"/>
+        <location filename="widgets/ModelManagerPS.cpp" line="36"/>
         <source>Lumière</source>
         <translation type="unfinished">光源</translation>
     </message>
@@ -3756,173 +3755,173 @@ Certains scripts peuvent y faire référence !</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="502"/>
+        <location filename="Data.cpp" line="457"/>
         <source>Clad</source>
         <translatorcomment>Cloud</translatorcomment>
         <translation>クラウド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="502"/>
+        <location filename="Data.cpp" line="457"/>
         <source>Barret</source>
         <translation>バレット</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="502"/>
+        <location filename="Data.cpp" line="457"/>
         <source>Tifa</source>
         <translation>ティファ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="503"/>
+        <location filename="Data.cpp" line="458"/>
         <source>Aeris</source>
         <translatorcomment>Aeris</translatorcomment>
         <translation>エアリス</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="503"/>
+        <location filename="Data.cpp" line="458"/>
         <source>Red XIII</source>
         <translation>レッドXIII</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="503"/>
+        <location filename="Data.cpp" line="458"/>
         <source>Youfie</source>
         <translatorcomment>Yuffie</translatorcomment>
         <translation>ユフィ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="504"/>
+        <location filename="Data.cpp" line="459"/>
         <source>Cait Sith</source>
         <translation>ケット・シー</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="504"/>
+        <location filename="Data.cpp" line="459"/>
         <source>Vincent</source>
         <translation>ヴィンセント</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="504"/>
+        <location filename="Data.cpp" line="459"/>
         <source>Cid</source>
         <translation>シド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="505"/>
+        <location filename="Data.cpp" line="460"/>
         <source>Jeune Clad</source>
         <translatorcomment>Young Cloud</translatorcomment>
         <translation>昔のクラウド</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="505"/>
+        <location filename="Data.cpp" line="460"/>
         <source>Sephiroth</source>
         <translation>セフィロス</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="505"/>
+        <location filename="Data.cpp" line="460"/>
         <source>Chocobo</source>
         <translation>チョコボ</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="510"/>
+        <location filename="Data.cpp" line="465"/>
         <source>[CAMERA|L2]</source>
         <translation>[視点|L2]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="510"/>
+        <location filename="Data.cpp" line="465"/>
         <source>[CIBLE|R2]</source>
         <translatorcomment>[TARGET|R2]</translatorcomment>
         <translation>[テーゲット|R2]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="511"/>
+        <location filename="Data.cpp" line="466"/>
         <source>[PAGE HAUT|L1]</source>
         <translatorcomment>[PAGE UP|L1]</translatorcomment>
         <translation>|ページ送り|L1}ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="511"/>
+        <location filename="Data.cpp" line="466"/>
         <source>[PAGE BAS|R1]</source>
         <translatorcomment>[PAGE DOWN|R1]</translatorcomment>
         <translation>[ページ逆送り|R1]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="512"/>
+        <location filename="Data.cpp" line="467"/>
         <source>[MENU|TRIANGLE]</source>
         <translation>[メニュー|△]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="512"/>
+        <location filename="Data.cpp" line="467"/>
         <source>[OK|ROND]</source>
         <translatorcomment>[OK|CIRCLE]</translatorcomment>
         <translation>[決定|○]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="513"/>
+        <location filename="Data.cpp" line="468"/>
         <source>[ANNULER|CROIX]</source>
         <translatorcomment>[CANCEL|CROSS]</translatorcomment>
         <translation>[キャンセル|×]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="513"/>
+        <location filename="Data.cpp" line="468"/>
         <source>[CHANGER|CARRE]</source>
         <translatorcomment>[SWITCH|SQUARE]</translatorcomment>
         <translation>[ＥＸＴ|□]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="514"/>
+        <location filename="Data.cpp" line="469"/>
         <source>[ASSISTER|SELECT]</source>
         <translatorcomment>[ヘルプ|ASSIST|SELECT]</translatorcomment>
         <translation>[SELECT]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="515"/>
+        <location filename="Data.cpp" line="470"/>
         <source>[DEMARRER|START]</source>
         <translatorcomment>[START]</translatorcomment>
         <translation>[START]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="516"/>
+        <location filename="Data.cpp" line="471"/>
         <source>[HAUT]</source>
         <translatorcomment>[UP]</translatorcomment>
         <translation>[↑]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="516"/>
+        <location filename="Data.cpp" line="471"/>
         <source>[DROITE]</source>
         <translatorcomment>[RIGHT]</translatorcomment>
         <translation>[→]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="517"/>
+        <location filename="Data.cpp" line="472"/>
         <source>[BAS]</source>
         <translatorcomment>[LEFT]</translatorcomment>
         <translation>[↓]ボタン</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="517"/>
+        <location filename="Data.cpp" line="472"/>
         <source>[GAUCHE]</source>
         <translatorcomment>[LEFT]</translatorcomment>
         <translation>[←]ボタン</translation>
     </message>
     <message>
-        <location filename="core/field/TutFileStandard.cpp" line="123"/>
+        <location filename="core/field/TutFileStandard.cpp" line="127"/>
         <location filename="main.cpp" line="47"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="core/field/TutFileStandard.cpp" line="127"/>
+        <location filename="core/field/TutFileStandard.cpp" line="131"/>
         <source>totalLength=%1
 id=%2
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/TutFileStandard.cpp" line="134"/>
+        <location filename="core/field/TutFileStandard.cpp" line="138"/>
         <source>length=%1
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/TutFileStandard.cpp" line="141"/>
+        <location filename="core/field/TutFileStandard.cpp" line="145"/>
         <source>nbCanaux=%1
 </source>
         <translation type="unfinished"></translation>
@@ -3959,6 +3958,12 @@ Make sure it is valid or delete it.</translatorcomment>
     <message>
         <location filename="core/field/Script.cpp" line="878"/>
         <source>Script trop grand, il ne doit pas dépasser les 65535 octets. Taille actuelle : %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core/IsoArchiveFF7.cpp" line="442"/>
+        <source>Impossible de mettre à jour les binaires du jeu.</source>
+        <oldsource>Impossible de mettre � jour les binaires du jeu.</oldsource>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6805,25 +6810,25 @@ Are you sure you want to continue?</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="142"/>
+        <location filename="widgets/TutWidget.cpp" line="143"/>
         <source>ID musique :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="190"/>
+        <location filename="widgets/TutWidget.cpp" line="191"/>
         <source>Tuto %1</source>
         <translatorcomment>Tuto %1</translatorcomment>
         <translation>説明 %1</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="314"/>
-        <location filename="widgets/TutWidget.cpp" line="341"/>
+        <location filename="widgets/TutWidget.cpp" line="319"/>
+        <location filename="widgets/TutWidget.cpp" line="346"/>
         <source>Tutoriel utilisé dans les script</source>
         <translatorcomment>Tutorial used in scripts</translatorcomment>
         <translation>スクリプト内の解説</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="314"/>
+        <location filename="widgets/TutWidget.cpp" line="319"/>
         <source>Insérer un tutoriel ici va décaler les identifiants des tutoriels qui suit, cela risque de poser problème.
 Êtes-vous sûr de vouloir continuer ?</source>
         <translatorcomment>Insert a tutorial here will shift the IDs of the tutorials that follows, this may be a problem.
@@ -6832,7 +6837,7 @@ Are you sure you want to continue?</translatorcomment>
 挿入を実行してもかまいませんか？</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="341"/>
+        <location filename="widgets/TutWidget.cpp" line="346"/>
         <source>Ce tutoriel est peut-être utilisé par un ou plusieurs scripts de cet écran.
 Le supprimer peut provoquer des erreurs.
 Êtes-vous sûr de vouloir continuer ?</source>
@@ -6844,7 +6849,7 @@ Are you sure you want to continue?</translatorcomment>
 それでも削除しますか？</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="341"/>
+        <location filename="widgets/TutWidget.cpp" line="346"/>
         <source>Ce tutoriel est utilisé par un ou plusieurs scripts de cet écran.
 Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui suit.
 Êtes-vous sûr de vouloir continuer ?</source>
@@ -6856,15 +6861,15 @@ Are you sure you want to continue?</translatorcomment>
 それでも削除しますか？</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="455"/>
+        <location filename="widgets/TutWidget.cpp" line="460"/>
         <source>Exporter</source>
         <translatorcomment>Export</translatorcomment>
         <translation>エクスポート</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="307"/>
-        <location filename="widgets/TutWidget.cpp" line="451"/>
-        <location filename="widgets/TutWidget.cpp" line="489"/>
+        <location filename="widgets/TutWidget.cpp" line="312"/>
+        <location filename="widgets/TutWidget.cpp" line="456"/>
+        <location filename="widgets/TutWidget.cpp" line="494"/>
         <source>son_%1.akao</source>
         <translatorcomment>sound_%1.akao</translatorcomment>
         <translation>sound_%1.akao</translation>
@@ -6875,63 +6880,63 @@ Are you sure you want to continue?</translatorcomment>
         <translation>削除</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="191"/>
+        <location filename="widgets/TutWidget.cpp" line="192"/>
         <source>Musique %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="289"/>
+        <location filename="widgets/TutWidget.cpp" line="294"/>
         <source>Tutoriel</source>
         <translation type="unfinished">解説</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="290"/>
+        <location filename="widgets/TutWidget.cpp" line="295"/>
         <source>Musique</source>
         <translation type="unfinished">BGM</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="307"/>
-        <location filename="widgets/TutWidget.cpp" line="452"/>
-        <location filename="widgets/TutWidget.cpp" line="490"/>
+        <location filename="widgets/TutWidget.cpp" line="312"/>
+        <location filename="widgets/TutWidget.cpp" line="457"/>
+        <location filename="widgets/TutWidget.cpp" line="495"/>
         <source>Son Final Fantasy (*.akao)</source>
         <translation type="unfinished">Final Fantasy Sound (*.akao)</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="448"/>
-        <location filename="widgets/TutWidget.cpp" line="486"/>
+        <location filename="widgets/TutWidget.cpp" line="453"/>
+        <location filename="widgets/TutWidget.cpp" line="491"/>
         <source>tuto_%1.tutps</source>
         <translation>tuto_%1.tutps</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="449"/>
-        <location filename="widgets/TutWidget.cpp" line="487"/>
+        <location filename="widgets/TutWidget.cpp" line="454"/>
+        <location filename="widgets/TutWidget.cpp" line="492"/>
         <source>Tuto Final Fantasy VII PS (*.tutps)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="465"/>
-        <location filename="widgets/TutWidget.cpp" line="503"/>
+        <location filename="widgets/TutWidget.cpp" line="470"/>
+        <location filename="widgets/TutWidget.cpp" line="508"/>
         <source>Erreur d&apos;ouverture du fichier</source>
         <translatorcomment>Opening error</translatorcomment>
         <translation>オープン エラー</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="508"/>
+        <location filename="widgets/TutWidget.cpp" line="513"/>
         <source>Fichier trop gros</source>
         <translatorcomment>File too large</translatorcomment>
         <translation>ファイルが大きすぎます</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="465"/>
-        <location filename="widgets/TutWidget.cpp" line="503"/>
+        <location filename="widgets/TutWidget.cpp" line="470"/>
         <location filename="widgets/TutWidget.cpp" line="508"/>
+        <location filename="widgets/TutWidget.cpp" line="513"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="307"/>
-        <location filename="widgets/TutWidget.cpp" line="493"/>
+        <location filename="widgets/TutWidget.cpp" line="312"/>
+        <location filename="widgets/TutWidget.cpp" line="498"/>
         <source>Importer</source>
         <translatorcomment>Import</translatorcomment>
         <translation>インポート</translation>
@@ -7460,328 +7465,328 @@ Are you sure you want to continue?</translatorcomment>
 <context>
     <name>Window</name>
     <message>
-        <location filename="Window.cpp" line="64"/>
+        <location filename="Window.cpp" line="65"/>
         <source>&amp;Fichier</source>
         <translatorcomment>&amp;File</translatorcomment>
         <translation>ファイル(&amp;F)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="85"/>
+        <location filename="Window.cpp" line="86"/>
         <source>&amp;Outils</source>
         <translatorcomment>T&amp;ools</translatorcomment>
         <translation>ツール(&amp;O)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="66"/>
+        <location filename="Window.cpp" line="67"/>
         <source>&amp;Ouvrir...</source>
         <translatorcomment>&amp;Open...</translatorcomment>
         <translation>開く(&amp;O)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="68"/>
+        <location filename="Window.cpp" line="69"/>
         <source>Enregi&amp;strer</source>
         <translatorcomment>&amp;Save</translatorcomment>
         <translation>保存(&amp;S)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="69"/>
+        <location filename="Window.cpp" line="70"/>
         <source>Enre&amp;gistrer Sous...</source>
         <translatorcomment>Save &amp;As...</translatorcomment>
         <translation>名前を付けて保存(&amp;A)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="81"/>
+        <location filename="Window.cpp" line="82"/>
         <source>Fe&amp;rmer</source>
         <translatorcomment>C&amp;lose</translatorcomment>
         <translation>閉じる(&amp;L)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="82"/>
+        <location filename="Window.cpp" line="83"/>
         <source>&amp;Quitter</source>
         <translatorcomment>E&amp;xit</translatorcomment>
         <translation>終了(&amp;X)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="94"/>
+        <location filename="Window.cpp" line="95"/>
         <source>&amp;Gestionnaire de variables...</source>
         <translatorcomment>Variable Mana&amp;ger...</translatorcomment>
         <translation>変数マネージャー(&amp;G)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="95"/>
+        <location filename="Window.cpp" line="96"/>
         <source>Rec&amp;hercher...</source>
         <translatorcomment>F&amp;ind...</translatorcomment>
         <translation>検索(&amp;F)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="127"/>
+        <location filename="Window.cpp" line="128"/>
         <source>Barre d&apos;outils &amp;principale</source>
         <translatorcomment>Main &amp;toolbar</translatorcomment>
         <translation>メイン ツールバー(&amp;T)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="564"/>
+        <location filename="Window.cpp" line="565"/>
         <source>Annuler</source>
         <translation type="unfinished">アンドゥ</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="76"/>
+        <location filename="Window.cpp" line="77"/>
         <source>Lancer FF7</source>
         <translation>FF7 を実行</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="151"/>
+        <location filename="Window.cpp" line="152"/>
         <source>Id</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="151"/>
+        <location filename="Window.cpp" line="152"/>
         <source>Fichier</source>
         <translatorcomment>File</translatorcomment>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="294"/>
+        <location filename="Window.cpp" line="295"/>
         <source>&amp;Affichage</source>
         <translatorcomment>&amp;View</translatorcomment>
         <translation>表示(&amp;V)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="371"/>
+        <location filename="Window.cpp" line="372"/>
         <source>Sauvegarder</source>
         <translatorcomment>Save</translatorcomment>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="132"/>
-        <location filename="Window.cpp" line="476"/>
+        <location filename="Window.cpp" line="133"/>
+        <location filename="Window.cpp" line="477"/>
         <source>Ouvrir un fichier</source>
         <translatorcomment>Open a file</translatorcomment>
         <translation>ファイルを開く</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="632"/>
-        <location filename="Window.cpp" line="1076"/>
-        <location filename="Window.cpp" line="1187"/>
-        <location filename="Window.cpp" line="1219"/>
-        <location filename="Window.cpp" line="1247"/>
-        <location filename="Window.cpp" line="1315"/>
-        <location filename="Window.cpp" line="1340"/>
+        <location filename="Window.cpp" line="633"/>
+        <location filename="Window.cpp" line="1084"/>
+        <location filename="Window.cpp" line="1195"/>
+        <location filename="Window.cpp" line="1227"/>
+        <location filename="Window.cpp" line="1255"/>
+        <location filename="Window.cpp" line="1323"/>
+        <location filename="Window.cpp" line="1348"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="833"/>
-        <location filename="Window.cpp" line="1503"/>
+        <location filename="Window.cpp" line="841"/>
+        <location filename="Window.cpp" line="1511"/>
         <source>Auteur : %1</source>
         <translatorcomment>Author: %1</translatorcomment>
         <translation>作者: %1</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1182"/>
+        <location filename="Window.cpp" line="1190"/>
         <source>L&apos;archive Lgp est inaccessible</source>
         <translatorcomment>lgp archive is inaccessible</translatorcomment>
         <translation>lgp アーカイブにアクセスできません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="613"/>
-        <location filename="Window.cpp" line="1058"/>
+        <location filename="Window.cpp" line="614"/>
+        <location filename="Window.cpp" line="1066"/>
         <source>Impossible de créer un fichier temporaire</source>
         <translatorcomment>Can not create temporary file</translatorcomment>
         <translation>一時ファイルが作成できません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="67"/>
+        <location filename="Window.cpp" line="68"/>
         <source>Ouvrir un &amp;dossier...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="70"/>
+        <location filename="Window.cpp" line="71"/>
         <source>&amp;Exporter l&apos;écran courant...</source>
         <translation type="unfinished">現在のファイルをエクスポート...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="71"/>
+        <location filename="Window.cpp" line="72"/>
         <source>Exporter en &amp;masse...</source>
         <oldsource>&amp;Exporter en masse...</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="72"/>
+        <location filename="Window.cpp" line="73"/>
         <source>&amp;Importer dans l&apos;écran courant...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="74"/>
+        <location filename="Window.cpp" line="75"/>
         <source>Ges&amp;tionnaire d&apos;archive...</source>
         <oldsource>&amp;Gestionnaire d&apos;archive...</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="86"/>
+        <location filename="Window.cpp" line="87"/>
         <source>&amp;Textes...</source>
         <translatorcomment>&amp;Texts...</translatorcomment>
         <translation>テキスト(&amp;T)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="87"/>
+        <location filename="Window.cpp" line="88"/>
         <source>&amp;Modèles 3D...</source>
         <translatorcomment>Field &amp;Models...</translatorcomment>
         <translation>3Dモデル(&amp;M)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="88"/>
+        <location filename="Window.cpp" line="89"/>
         <source>&amp;Rencontres aléatoires...</source>
         <translatorcomment>Encounte&amp;rs...</translatorcomment>
         <translation>エンカウント(&amp;E)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="89"/>
+        <location filename="Window.cpp" line="90"/>
         <source>T&amp;utoriels/Musiques...</source>
         <oldsource>&amp;Tutoriels/Musiques...</oldsource>
         <translatorcomment>&amp;Tutorials/Sounds...</translatorcomment>
         <translation type="unfinished">解説/サウンド(&amp;S)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="90"/>
+        <location filename="Window.cpp" line="91"/>
         <source>&amp;Zones...</source>
         <translatorcomment>&amp;Walkmesh...</translatorcomment>
         <translation>ウォーク メッシュ(&amp;W)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="91"/>
+        <location filename="Window.cpp" line="92"/>
         <source>&amp;Background...</source>
         <translatorcomment>&amp;Background...</translatorcomment>
         <translation>背景(&amp;B)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="92"/>
+        <location filename="Window.cpp" line="93"/>
         <source>&amp;Divers...</source>
         <translatorcomment>M&amp;iscellaneous...</translatorcomment>
         <translation>各種情報(&amp;I)...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="96"/>
+        <location filename="Window.cpp" line="97"/>
         <source>Opér&amp;ations diverses...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="99"/>
+        <location filename="Window.cpp" line="100"/>
         <source>&amp;Paramètres</source>
         <translatorcomment>&amp;Settings</translatorcomment>
         <translation>設定(&amp;S)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="101"/>
+        <location filename="Window.cpp" line="102"/>
         <source>Caractères &amp;japonais</source>
         <oldsource>Caractères japonais</oldsource>
         <translatorcomment>Japanese Characters</translatorcomment>
         <translation type="unfinished">日本語版文字コードを使用</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="105"/>
+        <location filename="Window.cpp" line="106"/>
         <source>&amp;Langues</source>
         <translatorcomment>&amp;Language</translatorcomment>
         <translation>言語(&amp;L)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="108"/>
+        <location filename="Window.cpp" line="109"/>
         <source>Français (défaut)</source>
         <translatorcomment>French (default)</translatorcomment>
         <translation>Français (デフォルト)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="117"/>
+        <location filename="Window.cpp" line="118"/>
         <source>Français</source>
         <translatorcomment>English</translatorcomment>
         <translation>Japanese (日本語)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="125"/>
+        <location filename="Window.cpp" line="126"/>
         <source>&amp;Configuration...</source>
         <oldsource>Configuration...</oldsource>
         <translation type="unfinished">構成設定...</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="134"/>
+        <location filename="Window.cpp" line="135"/>
         <source>Enregistrer</source>
         <translatorcomment>Save</translatorcomment>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="137"/>
+        <location filename="Window.cpp" line="138"/>
         <source>Rechercher</source>
         <translatorcomment>Find</translatorcomment>
         <translation>検索</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="146"/>
+        <location filename="Window.cpp" line="147"/>
         <source>Recherche rapide</source>
         <translatorcomment>Quick search</translatorcomment>
         <translation>クイック検索</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="147"/>
+        <location filename="Window.cpp" line="148"/>
         <source>Rechercher...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="336"/>
+        <location filename="Window.cpp" line="337"/>
         <source>Paramètres modifiés</source>
         <translatorcomment>Settings changed</translatorcomment>
         <translation>設定の変更</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="337"/>
+        <location filename="Window.cpp" line="338"/>
         <source>Relancez le programme pour que les paramètres prennent effet.</source>
         <translatorcomment>Restart the program for the settings to take effect.</translatorcomment>
         <translation>プログラムを再起動して設定の変更を適用してください。</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="369"/>
+        <location filename="Window.cpp" line="370"/>
         <source>
 
 Fichiers modifiés :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="371"/>
+        <location filename="Window.cpp" line="372"/>
         <source>Voulez-vous enregistrer les changements de %1 ?%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="468"/>
+        <location filename="Window.cpp" line="469"/>
         <source>Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="469"/>
+        <location filename="Window.cpp" line="470"/>
         <source>Fichiers Lgp (*.lgp)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="471"/>
+        <location filename="Window.cpp" line="472"/>
         <source>Fichier Field PC (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="472"/>
+        <location filename="Window.cpp" line="473"/>
         <source>Image disque (*.bin *.iso *.img)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="515"/>
+        <location filename="Window.cpp" line="516"/>
         <source>Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="523"/>
+        <location filename="Window.cpp" line="524"/>
         <source>Type de fichiers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="524"/>
+        <location filename="Window.cpp" line="525"/>
         <source>Quel type de fichiers voulez-vous chercher ?
  - Les fichiers field PlayStation (&quot;EXEMPLE.DAT&quot;)
  - Les fichiers field PC (&quot;exemple&quot;)
@@ -7789,229 +7794,228 @@ Fichiers modifiés :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="528"/>
+        <location filename="Window.cpp" line="529"/>
         <source>PS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="529"/>
+        <location filename="Window.cpp" line="530"/>
         <source>PC</source>
         <translation type="unfinished">PC</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="587"/>
+        <location filename="Window.cpp" line="588"/>
         <source>Ouverture...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="610"/>
-        <location filename="Window.cpp" line="1055"/>
+        <location filename="Window.cpp" line="611"/>
+        <location filename="Window.cpp" line="1063"/>
         <source>Le fichier est inaccessible</source>
         <oldsource>Le fichier est inaccessible.</oldsource>
         <translatorcomment>The file is inaccessible</translatorcomment>
         <translation>ファイルにアクセスできません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="616"/>
+        <location filename="Window.cpp" line="617"/>
         <source>Impossible de supprimer le fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="619"/>
+        <location filename="Window.cpp" line="620"/>
         <source>Impossible de renommer le fichier.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="622"/>
+        <location filename="Window.cpp" line="623"/>
         <source>Impossible de copier le fichier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="938"/>
+        <location filename="Window.cpp" line="946"/>
         <source>Erreur ligne %1 : %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1000"/>
+        <location filename="Window.cpp" line="1008"/>
         <source>Erreur de compilation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1000"/>
+        <location filename="Window.cpp" line="1008"/>
         <source>Erreur de compilation des scripts :
 écran %1 (%2), groupe %3 (%4), script %5, ligne %6 : %7</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1016"/>
+        <location filename="Window.cpp" line="1024"/>
         <source>Enregistrer dossier sous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1025"/>
+        <location filename="Window.cpp" line="1033"/>
         <source>Fichier Iso (*.iso *.bin *.img)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1029"/>
+        <location filename="Window.cpp" line="1037"/>
         <source>Enregistrer sous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1034"/>
+        <location filename="Window.cpp" line="1042"/>
         <source>Enregistrement...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1061"/>
+        <location filename="Window.cpp" line="1069"/>
         <source>Impossible de supprimer le fichier, vérifiez les droits d&apos;écriture.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1064"/>
+        <location filename="Window.cpp" line="1072"/>
         <source>Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1067"/>
+        <location filename="Window.cpp" line="1075"/>
         <source>Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1070"/>
+        <location filename="Window.cpp" line="1078"/>
         <source>L&apos;archive est invalide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1291"/>
+        <location filename="Window.cpp" line="1081"/>
+        <source>Cette fonctionnalité n&apos;est pas terminée</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Window.cpp" line="1299"/>
         <source>Attention</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1291"/>
+        <location filename="Window.cpp" line="1299"/>
         <source>L&apos;algorithme d&apos;importation des décors donne de mauvais résultats en jeu, vous êtes prévenus !</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1531"/>
+        <location filename="Window.cpp" line="1539"/>
         <source>Application en cours...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1595"/>
-        <source>Par myst6re&lt;br/&gt;&lt;a href=&quot;https://sourceforge.net/projects/makoureactor/&quot;&gt;sourceforge.net/projects/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Merci à :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Window.cpp" line="628"/>
-        <location filename="Window.cpp" line="1073"/>
+        <location filename="Window.cpp" line="629"/>
         <source>Cette erreur ne devrais pas s&apos;afficher, merci de le signaler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="625"/>
-        <location filename="Window.cpp" line="1313"/>
+        <location filename="Window.cpp" line="626"/>
+        <location filename="Window.cpp" line="1321"/>
         <source>Le fichier est invalide</source>
         <oldsource>Le fichier est invalide.</oldsource>
         <translatorcomment>Invalid file</translatorcomment>
         <translation>無効なファイル</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="606"/>
-        <location filename="Window.cpp" line="1052"/>
+        <location filename="Window.cpp" line="607"/>
+        <location filename="Window.cpp" line="1060"/>
         <source>Rien trouvé !</source>
         <translatorcomment>Nothing found!</translatorcomment>
         <translation>見つかりませんでした！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1021"/>
+        <location filename="Window.cpp" line="1029"/>
         <source>Fichier Lgp (*.lgp)</source>
         <translatorcomment>Lgp File (*.lgp)</translatorcomment>
         <translation>Lgp ファイル (*.lgp)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="470"/>
-        <location filename="Window.cpp" line="1023"/>
-        <location filename="Window.cpp" line="1156"/>
-        <location filename="Window.cpp" line="1262"/>
+        <location filename="Window.cpp" line="471"/>
+        <location filename="Window.cpp" line="1031"/>
+        <location filename="Window.cpp" line="1164"/>
+        <location filename="Window.cpp" line="1270"/>
         <source>Fichier DAT (*.DAT)</source>
         <translatorcomment>DAT File (*.DAT)</translatorcomment>
         <translation>DAT ファイル (*.DAT)</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1169"/>
+        <location filename="Window.cpp" line="1177"/>
         <source>Exporter le fichier courant</source>
         <translatorcomment>Export the current file</translatorcomment>
         <translation>現在のファイルをエクスポート</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1185"/>
+        <location filename="Window.cpp" line="1193"/>
         <source>Pas encore implémenté !</source>
         <translation>まだ実装されていません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1184"/>
+        <location filename="Window.cpp" line="1192"/>
         <source>Impossible de créer le nouveau fichier</source>
         <translatorcomment>Unable to create the new file</translatorcomment>
         <translation>新規ファイルを作成できません</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="564"/>
+        <location filename="Window.cpp" line="565"/>
         <source>Arrêter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1155"/>
-        <location filename="Window.cpp" line="1263"/>
+        <location filename="Window.cpp" line="1163"/>
+        <location filename="Window.cpp" line="1271"/>
         <source>Écran PC (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1157"/>
-        <location filename="Window.cpp" line="1265"/>
+        <location filename="Window.cpp" line="1165"/>
+        <location filename="Window.cpp" line="1273"/>
         <source>Écran PC décompressé (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1201"/>
+        <location filename="Window.cpp" line="1209"/>
         <source>Exportation...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1219"/>
+        <location filename="Window.cpp" line="1227"/>
         <source>Une erreur s&apos;est produite lors de l&apos;exportation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1238"/>
+        <location filename="Window.cpp" line="1246"/>
         <source>Importation...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1247"/>
+        <location filename="Window.cpp" line="1255"/>
         <source>Une erreur s&apos;est produite lors de l&apos;importation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1264"/>
+        <location filename="Window.cpp" line="1272"/>
         <source>Fichier DAT décompressé (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1272"/>
+        <location filename="Window.cpp" line="1280"/>
         <source>Importer un fichier</source>
         <translatorcomment>Import a file</translatorcomment>
         <translation>ファイルのインポート</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1183"/>
-        <location filename="Window.cpp" line="1312"/>
+        <location filename="Window.cpp" line="1191"/>
+        <location filename="Window.cpp" line="1320"/>
         <source>Erreur lors de l&apos;ouverture du fichier</source>
         <translatorcomment>Error reopening file</translatorcomment>
         <translation>ファイルの再読み込みに失敗</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1340"/>
+        <location filename="Window.cpp" line="1348"/>
         <source>Final Fantasy VII n&apos;a pas pu être lancé.
 %1</source>
         <translatorcomment>Final Fantasy VII couldn&apos;t be launched
@@ -8020,26 +8024,31 @@ Fichiers modifiés :</source>
 %1</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1431"/>
-        <location filename="Window.cpp" line="1507"/>
+        <location filename="Window.cpp" line="1439"/>
+        <location filename="Window.cpp" line="1515"/>
         <source>Erreur d&apos;ouverture</source>
         <translatorcomment>Opening error　●</translatorcomment>
         <translation>オープン エラー</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1431"/>
+        <location filename="Window.cpp" line="1439"/>
         <source>Impossible d&apos;ouvrir les combats aléatoires !</source>
         <translatorcomment>Can not open encounters!　●</translatorcomment>
         <translation>エンカウントが開けません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1507"/>
+        <location filename="Window.cpp" line="1515"/>
         <source>Impossible d&apos;ouvrir les infos diverses !</source>
         <translatorcomment>Can not open miscellaneous informations! ●</translatorcomment>
         <translation>各種情報が開けません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1602"/>
+        <location filename="Window.cpp" line="1603"/>
+        <source>Par myst6re&lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Merci à :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="Window.cpp" line="1610"/>
         <source>Fermer</source>
         <translatorcomment>Close</translatorcomment>
         <translation>閉じる</translation>
