@@ -273,6 +273,10 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 
 FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, ArchiveObserver *observer)
 {
+	if (iso.isDemo()) {
+		return NotImplemented;
+	}
+
 	QString path = path0.isNull() ? iso.fileName() : path0;
 
 	bool saveAs = QFileInfo(path) != QFileInfo(iso.io());
