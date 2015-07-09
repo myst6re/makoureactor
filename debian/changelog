@@ -1,4 +1,4 @@
-makoureactor (1.6.2) precise; urgency=low
+makoureactor (1.6.4) precise; urgency=low
 
   * Some fixes for a better modified ISO
   * Experimental feature: Makou Reactor knows how to open the FF7 demo disc
