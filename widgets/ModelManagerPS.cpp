@@ -22,8 +22,6 @@
 ModelManagerPS::ModelManagerPS(const QGLWidget *shareWidget, QWidget *parent) :
 	ModelManager(shareWidget, parent)
 {
-	models->setColumnCount(1);
-
 	modelScaleWidget->setReadOnly(true);
 	modelColorDisplay->setReadOnly(true);
 
@@ -49,11 +47,6 @@ ModelManagerPS::ModelManagerPS(const QGLWidget *shareWidget, QWidget *parent) :
 	adjustSize();
 }
 
-void ModelManagerPS::fill2()
-{
-	ModelManager::fill2();
-}
-
 QList<QStringList> ModelManagerPS::modelNames() const
 {
 	QList<QStringList> ret;
@@ -63,11 +56,13 @@ QList<QStringList> ModelManagerPS::modelNames() const
 	return ret;
 }
 
-QList<QStringList> ModelManagerPS::animNames(int row) const
+QList<QTreeWidgetItem *> ModelManagerPS::animItems(int modelID) const
 {
-	QList<QStringList> ret;
-	for(int animId=0 ; animId<modelLoader()->animCount(row) ; ++animId) {
-		ret.append(QStringList(QString("Animation %1").arg(animId)));
+	QList<QTreeWidgetItem *> ret;
+	for(int animId=0 ; animId<modelLoader()->animCount(modelID) ; ++animId) {
+		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QString("Animation %1").arg(animId)));
+		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		ret.append(item);
 	}
 	return ret;
 }
