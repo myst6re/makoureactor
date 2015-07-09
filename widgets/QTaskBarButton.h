@@ -20,7 +20,7 @@
 
 #include <QtGui>
 
-#if defined(Q_OS_WIN) && !defined(NO_TASKBAR_BUTTON)
+#if defined(Q_OS_WIN) && defined(TASKBAR_BUTTON)
 #include <shobjidl.h>
 #endif
 

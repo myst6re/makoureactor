@@ -283,10 +283,10 @@ macx {
 win32 {
     RC_FILE = Makou_Reactor.rc
 
-    !NO_TASKBAR_BUTTON {
+    TASKBAR_BUTTON {
         LIBS += -lole32
-    } else {
-        DEFINES += NO_TASKBAR_BUTTON
+        INCLUDEPATH += include
+        DEFINES += TASKBAR_BUTTON
     }
     INCLUDEPATH += zlib-1.2.7
     # LIBS += -lz
