@@ -518,7 +518,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 		}
 		else if(charId>=0xf6 && charId<=0xf9)
 		{
-			painter->drawPixmap(x, y, getIconImage(charId-0xf6));
+			painter->drawPixmap(x, y - 2, getIconImage(charId-0xf6));
 			x += 17;
 		}
 		else

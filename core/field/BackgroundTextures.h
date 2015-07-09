@@ -24,6 +24,8 @@
 #include "BackgroundTiles.h"
 #include "Palette.h"
 
+#define BACKGROUND_TEXTURE_PC_MAX_COUNT	42
+
 struct BackgroundTexturesPCInfos
 {
 	quint32 pos;

@@ -49,6 +49,7 @@ Window::Window() :
 
 	authorLbl = new QLabel();
 	authorLbl->setMargin(2);
+	authorLbl->setWordWrap(true);
 
 	QWidget *toolBarRight = new QWidget();
 	QHBoxLayout *toolBarRightLayout = new QHBoxLayout(toolBarRight);
@@ -685,7 +686,14 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	actionClose->setEnabled(true);
 
 #ifdef DEBUG_FUNCTIONS
-	// fieldArchive->validateAsk();
+	//FieldArchivePC otherArch("C:/Users/Jérôme/Documents/neo_midgar_build/livraison-acro-2015-04-10/fflevel_compare_annexe.lgp", FieldArchiveIO::Lgp);
+	//fieldArchive->compareTexts(&otherArch);
+	fieldArchive->printTexts("field-texts.txt");
+	fieldArchive->printAkaos("field-akaos.txt");
+	fieldArchive->printModelLoaders("field-model-loaders-generic.txt");
+	fieldArchive->printModelLoaders("field-model-loaders.txt", false);
+	fieldArchive->printScripts("field-scripts.txt");
+	//fieldArchive->searchAll();
 #endif
 }
 
@@ -1070,7 +1078,7 @@ void Window::saveAs(bool currentPath)
 		out = tr("L'archive est invalide");
 		break;
 	case FieldArchiveIO::NotImplemented:
-		out = tr("Cette erreur ne devrais pas s'afficher, merci de le signaler");
+		out = tr("Cette fonctionnalité n'est pas terminée");
 		break;
 	}
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
@@ -1592,7 +1600,7 @@ void Window::about()
 
 	font.setPointSize(8);
 
-	QLabel desc2(tr("Par myst6re<br/><a href=\"https://sourceforge.net/projects/makoureactor/\">sourceforge.net/projects/makoureactor</a><br/><br/>Merci à :<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), &about);
+	QLabel desc2(tr("Par myst6re<br/><a href=\"https://github.com/myst6re/makoureactor/\">github.com/myst6re/makoureactor</a><br/><br/>Merci à :<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), &about);
 	desc2.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc2.setTextFormat(Qt::RichText);
 	desc2.setOpenExternalLinks(true);

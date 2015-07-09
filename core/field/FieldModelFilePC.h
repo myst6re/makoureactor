@@ -21,30 +21,21 @@
 #include <QtGui>
 #include "FieldModelFile.h"
 
-typedef struct {
-	quint32 version;
-	quint32 frames_count;
-	quint32 bones_count;
-	quint8 rotation_order[3];
-	quint8 unused;
-	quint32 runtime_data[5];
-} a_header;
+class CharArchive;
 
 class FieldModelFilePC : public FieldModelFile
 {
 public:
 	FieldModelFilePC();
-	void clear();
 	inline bool translateAfter() const { return true; }
-	quint8 load(const QString &hrc, const QString &a, bool animate=true);
+	quint8 load(const QString &hrc, const QString &a, bool animate = true);
 private:
-	QMultiMap<int, QList<int> > _tex_files;
-	QList<QString> tex2id;
-
-	bool openHrc(QIODevice *hrc_file, QMultiMap<int, QStringList> &rsd_files);
-	bool openA(QIODevice *a_file, bool animate=false);
-	QString openRsd(QIODevice *, int);
-	static QImage openTex(QIODevice *);
+	bool openSkeleton(const QString &hrcFileName, QMultiMap<int, QStringList> &rsdFiles);
+	bool openAnimation(const QString &aFileName, bool animate = false);
+	bool openMesh(QMultiMap<int, QStringList> &rsdFiles, QStringList &textureFiles);
+	bool openPart(const QString &rsdFileName, int boneID, QStringList &textureFiles);
+	QImage openTexture(const QString &texFileName);
+	CharArchive *_charLgp;
 };
 
 #endif // FIELDMODELFILEPC_H

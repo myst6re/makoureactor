@@ -18,34 +18,8 @@
 #include "BackgroundTexturesIO.h"
 
 BackgroundTexturesIO::BackgroundTexturesIO(QIODevice *device) :
-	_device(device)
+	IO(device)
 {
-}
-
-BackgroundTexturesIO::~BackgroundTexturesIO()
-{
-}
-
-bool BackgroundTexturesIO::canRead() const
-{
-	if(_device) {
-		if(!_device->isOpen()) {
-			return _device->open(QIODevice::ReadOnly);
-		}
-		return _device->isReadable();
-	}
-	return false;
-}
-
-bool BackgroundTexturesIO::canWrite() const
-{
-	if(_device) {
-		if(!_device->isOpen()) {
-			return _device->open(QIODevice::WriteOnly);
-		}
-		return _device->isWritable();
-	}
-	return false;
 }
 
 BackgroundTexturesIOPC::BackgroundTexturesIOPC(QIODevice *device) :
@@ -62,7 +36,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures)
 	textures->clear();
 	qint64 initPos = device()->pos();
 
-	for(quint8 texID=0 ; texID<42 ; ++texID) {
+	for(quint8 texID=0 ; texID<BACKGROUND_TEXTURE_PC_MAX_COUNT ; ++texID) {
 
 		quint16 exists;
 
@@ -108,7 +82,7 @@ bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures)
 		return false;
 	}
 
-	for(quint8 texID=0 ; texID<42 ; ++texID) {
+	for(quint8 texID=0 ; texID<BACKGROUND_TEXTURE_PC_MAX_COUNT ; ++texID) {
 
 		quint16 exists = textures->hasTex(texID);
 

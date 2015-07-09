@@ -137,6 +137,7 @@ QWidget *TutWidget::buildSoundPage()
 	akaoDesc = new QLabel(ret);
 	akaoDesc->setTextFormat(Qt::PlainText);
 	akaoDesc->setWordWrap(true);
+	akaoDesc->hide();
 
 	QGridLayout *layout = new QGridLayout(ret);
 	layout->addWidget(new QLabel(tr("ID musique :")), 0, 0);
@@ -214,6 +215,16 @@ QList<int> TutWidget::selectedRows() const
 	return ret;
 }
 
+void TutWidget::updateAkaoID(quint16 akaoID)
+{
+	int index = akaoIDList->findData(akaoID);
+	if(index != -1) {
+		akaoIDList->setCurrentIndex(index);
+	} else {
+		akaoIDList->setEditText(QString::number(akaoID));
+	}
+}
+
 void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 {
 	if(item == NULL)	return;
@@ -231,14 +242,8 @@ void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 	} else {
 		stackedWidget->setCurrentIndex(1);
 		akaoDesc->setText(currentTut->parseScripts(id));
-		quint16 akaoID = tut->akaoID(id);
 		akaoIDList->setEnabled(true);
-		int index = akaoIDList->findData(akaoID);
-		if(index != -1) {
-			akaoIDList->setCurrentIndex(index);
-		} else {
-			akaoIDList->setEditText(QString::number(akaoID));
-		}
+		updateAkaoID(tut->akaoID(id));
 	}
 
 	textEdit->setReadOnly(!isTut);
@@ -515,6 +520,12 @@ void TutWidget::importation()
 
 	isTut = currentTut->isTut(row);
 
+	// Must be called before setPlainText
+	if (!isTut) {
+		updateAkaoID(tut->akaoID(row));
+	}
+
 	textEdit->setPlainText(currentTut->parseScripts(row));
 	textEdit->setReadOnly(!isTut);
+	akaoIDList->setEnabled(!isTut);
 }

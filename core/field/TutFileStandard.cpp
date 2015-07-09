@@ -37,19 +37,23 @@ QList<quint32> TutFileStandard::openPositions(const QByteArray &data) const
 {
 	const char *constData = data.constData();
 	QList<quint32> positions;
-	quint32 dataSize = data.size();
-	quint32 posAKAO, posAKAOList;
-	quint16 nbAKAO;
+	quint32 dataSize = data.size(), posAKAO, posAKAOList;
+	quint16 version, nbAKAO;
 	quint8 nbEntity;
+	bool isDemo;
 
 	if(dataSize <= 8) {
 		return positions;
 	}
 
+	memcpy(&version, constData, 2);
+
+	isDemo = version == 0x0301; // Check version format
+
 	nbEntity = constData[2];
 	memcpy(&nbAKAO, constData + 6, 2);
 
-	posAKAOList = 32+nbEntity*8;
+	posAKAOList = (isDemo ? 24 : 32) + nbEntity*8;
 
 	if(dataSize <= posAKAOList+nbAKAO*4) {
 		return positions;

@@ -40,6 +40,7 @@ public:
 	QImage openBackground();
 	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
 	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
+	bool layerExists(int num);
 
 	inline const BackgroundTiles &tiles() const {
 		return _tiles;

@@ -35,8 +35,12 @@ public:
 	static const QByteArray &decompress(const char *data, int fileSize, int max);
 	static const QByteArray &decompressAll(const QByteArray &data);
 	static const QByteArray &decompressAll(const char *data, int fileSize);
+	static const QByteArray &decompressAllWithHeader(const QByteArray &data);
+	static const QByteArray &decompressAllWithHeader(const char *data, int size);
 	static const QByteArray &compress(const QByteArray &fileData);
 	static const QByteArray &compress(const char *data, int sizeData);
+	static const QByteArray &compressWithHeader(const QByteArray &fileData);
+	static const QByteArray &compressWithHeader(const char *data, int sizeData);
 	static void clear();
 private:
 	static void InsertNode(qint32 r);

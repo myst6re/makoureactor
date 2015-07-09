@@ -40,8 +40,6 @@ public:
 	bool open();
 	bool open(const QByteArray &data);
 	QByteArray save() const;
-	quint16 globalScale() const;
-	void setGlobalScale(quint16 scale);
 	int modelCount() const;
 	bool insertModel(int modelID, const QString &hrcName);
 	void removeModel(int modelID);

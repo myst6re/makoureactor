@@ -46,6 +46,10 @@ protected:
 	QByteArray saveFooter() const;
 	FieldPart *createPart(FieldSection part);
 	int sectionId(FieldSection part) const;
+	inline QString sectionFile(FieldSection part) const {
+		Q_UNUSED(part)
+		return QString();
+	}
 	quint32 sectionPosition(int idPart) const;
 	inline int sectionCount() const {	return 9; }
 	inline int paddingBetweenSections() const { return 4; }

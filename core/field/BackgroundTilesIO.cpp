@@ -18,34 +18,8 @@
 #include "BackgroundTilesIO.h"
 
 BackgroundTilesIO::BackgroundTilesIO(QIODevice *device) :
-	_device(device)
+	IO(device)
 {
-}
-
-BackgroundTilesIO::~BackgroundTilesIO()
-{
-}
-
-bool BackgroundTilesIO::canRead() const
-{
-	if(_device) {
-		if(!_device->isOpen()) {
-			return _device->open(QIODevice::ReadOnly);
-		}
-		return _device->isReadable();
-	}
-	return false;
-}
-
-bool BackgroundTilesIO::canWrite() const
-{
-	if(_device) {
-		if(!_device->isOpen()) {
-			return _device->open(QIODevice::WriteOnly);
-		}
-		return _device->isWritable();
-	}
-	return false;
 }
 
 bool BackgroundTilesIO::read(BackgroundTiles &tiles) const
@@ -72,6 +46,10 @@ BackgroundTilesIOPC::BackgroundTilesIOPC(QIODevice *device) :
 	BackgroundTilesIO(device)
 {
 }
+
+#ifdef BG_ID_RESEARCH
+QMultiMap<int, quint32> BackgroundTilesIOPC::IDs;
+#endif
 
 bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 {
@@ -111,6 +89,11 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 
 			if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 				tiles.insert(1, tilePC2Tile(tile, 0, i));
+#ifdef BG_ID_RESEARCH
+//				quint32 zBig;
+//				memcpy(&zBig, data.constData() + i*52 + 36, 4);
+//				IDs.insert(tile.ID, zBig);
+#endif
 			} else {
 				qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
 			}
@@ -160,7 +143,14 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				memcpy(&tile, data.constData() + i*52, 36);
 
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
-					tiles.insert(4096-tile.ID, tilePC2Tile(tile, 1, i));
+					Tile t = tilePC2Tile(tile, 1, i);
+#ifdef BG_ID_RESEARCH
+					quint32 zBig;
+					memcpy(&zBig, data.constData() + i*52 + 36, 4);
+					IDs.insert(tile.ID, zBig);
+					t.IDBig = zBig;
+#endif
+					tiles.insert(4096-tile.ID, t);
 				} else {
 					qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
 				}
@@ -212,6 +202,11 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					tiles.insert(0, tilePC2Tile(tile, 2, i));
+#ifdef BG_ID_RESEARCH
+//					quint32 zBig;
+//					memcpy(&zBig, data.constData() + i*52 + 36, 4);
+//					IDs.insert(tile.ID, zBig);
+#endif
 				} else {
 					qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
 				}
@@ -264,6 +259,11 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					tiles.insert(4096, tilePC2Tile(tile, 3, i));
+#ifdef BG_ID_RESEARCH
+//					quint32 zBig;
+//					memcpy(&zBig, data.constData() + i*52 + 36, 4);
+//					IDs.insert(tile.ID, zBig);
+#endif
 				} else {
 					qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
 				}
@@ -279,19 +279,40 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 	return true;
 }
 
-bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
+bool BackgroundTilesIOPC::writeTile(const Tile &tile, quint32 unique) const
 {
 	float srcZBig;
 	quint32 srcXBig, srcYBig;
-	quint16 minW, minH, nbTiles, depth = 1;
+
+	device()->write("\0\0", 2);
+	TilePC tilePC = tile2TilePC(tile);
+	device()->write((char *)&tilePC, 36);
+	if (tile.layerID == 1) {
+		srcZBig = (tilePC.ID / 4096.0f) * 10000000 + unique;
+	} else {
+		srcZBig = 0;
+	}
+	device()->write((char *)&srcZBig, 4);
+	srcXBig = tilePC.srcX / 16 * 625000;
+	srcYBig = tilePC.srcY / 16 * 625000;
+	device()->write((char *)&srcXBig, 4);
+	device()->write((char *)&srcYBig, 4);
+	device()->write("\0\0", 2);
+
+	return true;
+}
+
+bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
+{
+	quint16 nbTiles, depth = 1;
 	int w, h;
 
 	// Layer 1
 
-	tiles.area(minW, minH, w, h);
+	QSize area = tiles.area();
 
-	w += 16;
-	h += 16;
+	w = area.width() + 16;
+	h = area.height() + 16;
 
 	BackgroundTiles tiles1 = tiles.tiles(0, true);
 	nbTiles = tiles1.size();
@@ -303,15 +324,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 	device()->write("\0\0", 2);
 
 	foreach(const Tile &tile, tiles1) {
-		device()->write("\0\0", 2);
-		TilePC tilePC = tile2TilePC(tile);
-		device()->write((char *)&tilePC, 36);
-		device()->write("\0\0\0\0", 4);
-		srcXBig = tilePC.srcX / 16 * 625000;
-		srcYBig = tilePC.srcY / 16 * 625000;
-		device()->write((char *)&srcXBig, 4);
-		device()->write((char *)&srcYBig, 4);
-		device()->write("\0\0", 2);
+		writeTile(tile);
 	}
 
 	device()->write("\0\0", 2);
@@ -335,16 +348,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 
 		quint32 unique = 1;
 		foreach(const Tile &tile, tiles2) {
-			device()->write("\0\0", 2);
-			TilePC tilePC = tile2TilePC(tile);
-			device()->write((char *)&tilePC, 36);
-			srcZBig = (tilePC.ID / 4096.0f) * 10000000 + unique++;
-			device()->write((char *)&srcZBig, 4);
-			srcXBig = tilePC.srcX / 16 * 625000;
-			srcYBig = tilePC.srcY / 16 * 625000;
-			device()->write((char *)&srcXBig, 4);
-			device()->write((char *)&srcYBig, 4);
-			device()->write("\0\0", 2);
+			writeTile(tile, unique++);
 		}
 
 		device()->write("\0\0", 2);
@@ -367,15 +371,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 		device()->write("\0\0", 2);
 
 		foreach(const Tile &tile, tiles3) {
-			device()->write("\0\0", 2);
-			TilePC tilePC = tile2TilePC(tile);
-			device()->write((char *)&tilePC, 36);
-			device()->write("\0\0\0\0", 4);
-			srcXBig = tilePC.srcX / 16 * 625000;
-			srcYBig = tilePC.srcY / 16 * 625000;
-			device()->write((char *)&srcXBig, 4);
-			device()->write((char *)&srcYBig, 4);
-			device()->write("\0\0", 2);
+			writeTile(tile);
 		}
 
 		device()->write("\0\0", 2);
@@ -398,15 +394,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 		device()->write("\0\0", 2);
 
 		foreach(const Tile &tile, tiles4) {
-			device()->write("\0\0", 2);
-			TilePC tilePC = tile2TilePC(tile);
-			device()->write((char *)&tilePC, 36);
-			device()->write("\0\0\0\0", 4);
-			srcXBig = tilePC.srcX / 16 * 625000;
-			srcYBig = tilePC.srcY / 16 * 625000;
-			device()->write((char *)&srcXBig, 4);
-			device()->write((char *)&srcYBig, 4);
-			device()->write("\0\0", 2);
+			writeTile(tile);
 		}
 
 		device()->write("\0\0", 2);
@@ -493,6 +481,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	quint32 datDataSize = datDataDec.size();
 	quint32 start1, start2, start3, start4;
 	qint64 i;
+	bool isDemoFormat = false;
 
 	if(datDataSize < 16) {
 		return false;
@@ -503,13 +492,28 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	memcpy(&start3, constDatData + 8, 4);
 	memcpy(&start4, constDatData + 12, 4);
 
+	if (start2 < start1
+			|| start3 < start2
+			|| start4 < start3
+			|| datDataSize < start4) {
+		isDemoFormat = start2 >= start1
+					   && start3 >= start2
+					   && datDataSize >= start3;
+		if (!isDemoFormat) {
+			qWarning() << "BackgroundTilesIOPS::readData invalid header"
+					   << start1 << start2 << start3 << start4 << datDataSize;
+			return false;
+		}
+		start4 = datDataSize;
+	}
+
 	quint16 tilePos=0, tileCount=0;
 	QList<quint32> nbTilesTex, nbTilesLayer;
 	quint8 layerID=0;
 
-	i = 16;
-	while(i<start1) {
-		if(datDataSize < i+2) {
+	i = isDemoFormat ? 12 : 16;
+	while(i < start1) {
+		if(start1 < i+2) {
 			return false;
 		}
 
@@ -520,8 +524,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 		if(type == 0x7FFF) {
 			nbTilesLayer.append(tilePos+tileCount);
 			++layerID;
-		}
-		else {
+		} else {
 			if(type == 0x7FFE) {
 				if(i - 4 < 16) {
 					qWarning() << "BackgroundTilesIOPS::readData 0x7FFE positionned too early";
@@ -533,7 +536,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 				nbTilesTex.append(tilePos+tileCount);
 			} else {
-				if(datDataSize < i+6) {
+				if(start1 < i+6) {
 					return false;
 				}
 
@@ -556,10 +559,6 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 	size = (start3-start2)/2;
 
-	if(datDataSize < start2+size*2) {
-		return false;
-	}
-
 	if ((start3-start2) % 2 != 0) {
 		qWarning() << "BackgroundTilesIOPS::open padding after (1)" << ((start3-start2) % 2);
 	}
@@ -575,10 +574,6 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	}
 
 	size = (start2-start1)/8;
-
-	if(datDataSize < start1+size*8) {
-		return false;
-	}
 
 	if ((start2-start1) % 8 != 0) {
 		qWarning() << "BackgroundTilesIOPS::open padding after (2)" << ((start2-start1) % 8);
@@ -617,10 +612,6 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	}
 
 	size = (start4-start3)/14;
-
-	if(datDataSize < start3+size*14) {
-		return false;
-	}
 
 	if ((start4-start3) % 14 != 0) {
 		qWarning() << "BackgroundTilesIOPS::open padding after (3)" << ((start4-start3) % 14);
@@ -663,11 +654,10 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 	size = (datDataSize-start4)/10;
 
-	if(datDataSize < start4+size*10) {
-		return false;
-	}
-
 	// Possible padding (2) at the end
+	if ((datDataSize-start4) % 10 != 0) {
+		qWarning() << "BackgroundTilesIOPS::open padding after (4)" << ((datDataSize-start4) % 10);
+	}
 
 	quint32 j=0;
 

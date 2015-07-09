@@ -17,7 +17,9 @@
  ****************************************************************************/
 #include "FieldModelFilePS.h"
 #include "FieldArchiveIO.h"
+#include "FieldModelPartIOPS.h"
 #include "FieldModelPartPS.h"
+#include "FieldModelAnimationIOPS.h"
 #include "FieldModelLoaderPS.h"
 #include "TdbFile.h"
 #include "../PsColor.h"
@@ -143,7 +145,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 
 	curOff = openMesh(constData, curOff, BSX_data.size(), model.num_parts);
 
-	if(_frames.isEmpty()) { // if there is no animation opened from BCX
+	if(_animation.isEmpty()) { // if there is no animation opened from BCX
 		if(animation_id >= model.num_animations) {
 			qWarning() << "No animation called" << animation_id;
 			return false;
@@ -258,7 +260,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 //						qDebug() << (texInfo.type == 0 ? "EYE" : "MOUTH") << texID;
 						texIds.append(texID);
 						texAlreadyLoaded.insert(texInfo, texID);
-						_loaded_tex.insert(texID++, tdb.texture(faceID, texInfo.type == 0 ? TdbFile::Eye : TdbFile::MouthClosed));
+						_loadedTex.insert(texID++, tdb.texture(faceID, texInfo.type == 0 ? TdbFile::Eye : TdbFile::MouthClosed));
 					} else {
 //						qDebug() << "OTHER" << texID;
 
@@ -278,7 +280,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 							lastTexHeight += imgHeader.height;
 							texIds.append(texID);
 							texAlreadyLoaded.insert(texInfo, texID);
-							_loaded_tex.insert(texID++, openTexture(constData, BSX_data.size(), imgHeader, palHeader, texInfo.bpp));
+							_loadedTex.insert(texID++, openTexture(constData, BSX_data.size(), imgHeader, palHeader, texInfo.bpp));
 						} else {
 							qWarning() << "Tex not found!";
 						}
@@ -292,7 +294,7 @@ quint8 FieldModelFilePS::load(FieldPS *currentField, int model_id, int animation
 				foreach(FieldModelGroup *group, part->groups()) {
 					if(group->textureNumber() != -1) {
 						group->setTextureNumber(texIds.at(group->textureNumber()));
-						const QImage currentTex = _loaded_tex.value(group->textureNumber());
+						const QImage currentTex = _loadedTex.value(group->textureNumber());
 						int texWidth=currentTex.width(), texHeight=currentTex.height();
 
 						foreach(Poly *poly, group->polygons()) {
@@ -313,12 +315,12 @@ int FieldModelFilePS::openSkeleton(const char *constData, int curOff, quint8 num
 {
 	for(quint32 i=0 ; i<numBones ; ++i) {
 		BonePS bonePS;
-		Bone bone;
+		FieldModelBone bone;
 		memcpy(&bonePS, constData + curOff, sizeof(BonePS));
 //		qDebug() << "bone" << i << bonePS.length << bonePS.parent << bonePS.unknown;
 		bone.size = bonePS.length / MODEL_SCALE_PS;
 		bone.parent = bonePS.parent;
-		_bones.append(bone);
+		_skeleton.addBone(bone);
 
 		curOff += sizeof(BonePS);
 	}
@@ -328,10 +330,19 @@ int FieldModelFilePS::openSkeleton(const char *constData, int curOff, quint8 num
 
 int FieldModelFilePS::openMesh(const char *constData, int curOff, int size, quint8 numParts)
 {
+	QBuffer io;
+	io.setData(constData, size);
+	if (!io.open(QIODevice::ReadOnly)) {
+		qWarning() << "FieldModelFilePS::openMesh device not opened" << io.errorString();
+		return curOff + numParts * sizeof(Part);
+	}
+	FieldModelPartIOPS partIO(&io);
+
 	for(quint32 i=0 ; i<numParts ; ++i) {
 		FieldModelPartPS *part = new FieldModelPartPS();
 //		qDebug() << "==== PART" << i << "====" << curOff;
-		if(part->open(constData, curOff, size)) {
+		partIO.device()->seek(curOff);
+		if(partIO.read(part)) {
 			_parts.insert(part->boneID(), part);
 
 //			QFile textOut(QString("fieldModelPartPS%1.txt").arg(i));
@@ -351,163 +362,16 @@ int FieldModelFilePS::openMesh(const char *constData, int curOff, int size, quin
 
 bool FieldModelFilePS::openAnimation(const char *constData, int curOff, int animation_id, int size, bool animate)
 {
-	Animation a;
-	memcpy(&a, constData + curOff + sizeof(Animation)*animation_id, sizeof(Animation));
-
-	a.offset_data -= 0x80000000;
-
-//	qDebug() << "==== ANIMATION" << animation_id << "====" << (curOff + sizeof(Animation)*animation_id);
-//	qDebug() << "numFrames" << a.num_frames << "numBones" << a.num_bones;
-//	qDebug() << "numFramesTrans" << a.num_frames_translation << "numFramesStaticTrans" << a.num_static_translation << "numFramesRot" << a.num_frames_rotation;
-//	qDebug() << "offsetFramesTrans" << (a.offset_data + a.offset_frames_translation) << "offsetFramesStaticTrans" << (a.offset_data + a.offset_static_translation) << "offsetFramesRot" << (a.offset_data + a.offset_frames_rotation);
-//	qDebug() << "offsetData" << a.offset_data;
-
-	quint32 offsetFrameRotation = a.offset_data + a.offset_frames_rotation;
-	quint32 offsetFrameStatic = a.offset_data + a.offset_static_translation;
-	quint32 offsetFrameTranslation = a.offset_data + a.offset_frames_translation;
-
-	if(a.offset_data + 4 + a.num_bones * 8 >= (quint32)size) {
-		qWarning() << "invalid size animation" << (a.offset_data + 4 + a.num_bones * 8) << size;
+	QBuffer io;
+	io.setData(constData, size);
+	if (!io.open(QIODevice::ReadOnly)) {
+		qWarning() << "FieldModelFilePS::openAnimation device not opened" << io.errorString();
 		return false;
 	}
+	FieldModelAnimationIOPS animIO(&io);
+	animIO.device()->seek(curOff + sizeof(Animation) * animation_id);
 
-//	quint32 unknown;
-//	memcpy(&unknown, constData + a.offset_data, 4);
-
-//	qDebug() << "Unknown" << unknown << QString::number(unknown, 16);
-
-	this->a_bones_count = qMin((int)a.num_bones, _bones.size());
-
-	quint16 numFrames2 = animate ? a.num_frames : qMin((quint16)1, a.num_frames);
-
-	for(int frame=0 ; frame<numFrames2 ; ++frame) {
-		QList<PolyVertex> rotation_coords, rotation_coordsTrans;
-
-		for(int bone=0 ; bone<a.num_bones ; ++bone) {
-			FrameTranslation frameTrans;
-			PolyVertex rot, trans;
-
-			memcpy(&frameTrans, constData + a.offset_data + 4 + bone*8, sizeof(FrameTranslation));
-
-			// Rotation
-
-			if(frameTrans.flag & 0x01) {
-				quint32 offsetToRotation = offsetFrameRotation + frameTrans.rx * a.num_frames + frame;
-
-				if(offsetToRotation >= (quint32)size) {
-					qWarning() << "OffsetToRotation too large" << offsetToRotation << size;
-					continue;
-				}
-
-				rot.x = 360.0f * (quint8)constData[offsetToRotation] / 255.0f;
-			} else {
-				rot.x = 360.0f * frameTrans.rx / 255.0f;
-			}
-
-			if(frameTrans.flag & 0x02) {
-				quint32 offsetToRotation = offsetFrameRotation + frameTrans.ry * a.num_frames + frame;
-
-				if(offsetToRotation >= (quint32)size) {
-					qWarning() << "OffsetToRotation too large" << offsetToRotation << size;
-					continue;
-				}
-
-				rot.y = 360.0f * (quint8)constData[offsetToRotation] / 255.0f;
-			} else {
-				rot.y = 360.0f * frameTrans.ry / 255.0f;
-			}
-
-			if(frameTrans.flag & 0x04) {
-				quint32 offsetToRotation = offsetFrameRotation + frameTrans.rz * a.num_frames + frame;
-
-				if(offsetToRotation >= (quint32)size) {
-					qWarning() << "OffsetToRotation too large" << offsetToRotation << size;
-					continue;
-				}
-
-				rot.z = 360.0f * (quint8)constData[offsetToRotation] / 255.0f;
-			} else {
-				rot.z = 360.0f * frameTrans.rz / 255.0f;
-			}
-
-			// (translation)
-
-			qint16 translation=0;
-
-			if(frameTrans.flag & 0x10) {
-				quint32 offsetToTranslation = offsetFrameTranslation + frameTrans.tx * a.num_frames * 2 + frame * 2;
-
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
-
-				memcpy(&translation, constData + offsetToTranslation, 2);
-			} else if(frameTrans.tx != 0xFF) {
-				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.tx * 2;
-
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
-
-				memcpy(&translation, constData + offsetToTranslation, 2);
-			}
-			trans.x = -translation / MODEL_SCALE_PS;
-			translation=0;
-
-			if(frameTrans.flag & 0x20) {
-				quint32 offsetToTranslation = offsetFrameTranslation + frameTrans.ty * a.num_frames * 2 + frame * 2;
-
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
-
-				memcpy(&translation, constData + offsetToTranslation, 2);
-			} else if(frameTrans.tx != 0xFF) {
-				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.ty * 2;
-
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
-
-				memcpy(&translation, constData + offsetToTranslation, 2);
-			}
-			trans.y = -translation / MODEL_SCALE_PS;
-			translation=0;
-
-			if(frameTrans.flag & 0x40) {
-				quint32 offsetToTranslation = offsetFrameTranslation + frameTrans.tz * a.num_frames * 2 + frame * 2;
-
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
-
-				memcpy(&translation, constData + offsetToTranslation, 2);
-			} else if(frameTrans.tx != 0xFF) {
-				quint32 offsetToTranslation = offsetFrameStatic + frameTrans.tz * 2;
-
-				if(offsetToTranslation >= (quint32)size) {
-					qWarning() << "offsetToTranslation too large" << offsetToTranslation << size;
-					continue;
-				}
-
-				memcpy(&translation, constData + offsetToTranslation, 2);
-			}
-			trans.z = -translation / MODEL_SCALE_PS;
-
-			rotation_coords.append(rot);
-			rotation_coordsTrans.append(trans);
-		}
-
-		_frames.insert(frame, rotation_coords);
-		_framesTrans.insert(frame, rotation_coordsTrans);
-	}
-
-	return true;
+	return animIO.read(_animation, animate ? -1 : 1);
 }
 
 QImage FieldModelFilePS::openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp)

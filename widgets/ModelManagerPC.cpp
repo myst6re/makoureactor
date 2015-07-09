@@ -17,14 +17,11 @@
  ****************************************************************************/
 #include "ModelManagerPC.h"
 #include "core/Config.h"
-#include "Data.h"
+#include "core/field/CharArchive.h"
 
 ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	ModelManager(shareWidget, parent), copied(false)
 {
-	globalScale = new QSpinBox();
-	globalScale->setRange(0, 65535);
-
 	QToolBar *toolBar1 = new QToolBar();
 	toolBar1->setIconSize(QSize(14, 14));
 	toolBar1->addAction(QIcon(":/images/plus.png"), QString(), this, SLOT(addModel()));
@@ -32,7 +29,6 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	toolBar1->addAction(QIcon(":/images/up.png"), QString(), this, SLOT(upModel()));
 	toolBar1->addAction(QIcon(":/images/down.png"), QString(), this, SLOT(downModel()));
 
-	models->setColumnCount(1);
 	models->setContextMenuPolicy(Qt::ActionsContextMenu);
 	models->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	cutModelAction = new QAction(QIcon(":/images/cut.png"), tr("Couper"), models);
@@ -75,19 +71,15 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(toolBar1, 0, 0);
-	layout->addWidget(new QLabel(tr("Taille modèles (non utilisé)")), 0, 1);
-	layout->addWidget(globalScale, 0, 2);
 	layout->addWidget(models, 1, 0);
-	layout->addWidget(modelFrame, 1, 1, 1, 4);
+	layout->addWidget(modelFrame, 0, 1, 2, 4);
 
 	adjustSize();
-
-	connect(globalScale, SIGNAL(valueChanged(int)), SLOT(setGlobalScale(int)));
 
 	connect(models, SIGNAL(doubleClicked(QModelIndex)), models, SLOT(edit(QModelIndex)));
 	connect(models, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOKModel(QTreeWidgetItem *)));
 
-	connect(modelAnims, SIGNAL(doubleClicked(QModelIndex)), modelAnims, SLOT(edit(QModelIndex)));
+	connect(modelAnims, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(editAnim(QTreeWidgetItem*,int)));
 	connect(modelAnims, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOKAnim(QTreeWidgetItem *, int)));
 
 	connect(modelName, SIGNAL(textEdited(QString)), SLOT(setModelName(QString)));
@@ -100,15 +92,6 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	connect(modelAnims, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(updateActionsState()));
 }
 
-void ModelManagerPC::fill2()
-{
-	globalScale->blockSignals(true);
-	globalScale->setValue(modelLoader()->globalScale());
-	globalScale->blockSignals(false);
-
-	ModelManager::fill2();
-}
-
 QList<QStringList> ModelManagerPC::modelNames() const
 {
 	QList<QStringList> ret;
@@ -118,21 +101,18 @@ QList<QStringList> ModelManagerPC::modelNames() const
 	return ret;
 }
 
-QList<QStringList> ModelManagerPC::animNames(int row) const
+QList<QTreeWidgetItem *> ModelManagerPC::animItems(int modelID) const
 {
-	QList<QStringList> ret;
+	QList<QTreeWidgetItem *> ret;
 	int numA=0;
-	foreach(const QString &name, modelLoader()->ANames(row)) {
-		ret.append(QStringList() << QString::number(numA) << name << QString::number(modelLoader()->animUnknown(row, numA)));
+	foreach(const QString &name, modelLoader()->ANames(modelID)) {
+		QStringList cols = QStringList() << QString::number(numA) << name << QString::number(modelLoader()->animUnknown(modelID, numA));
+		QTreeWidgetItem *item = new QTreeWidgetItem(cols);
+		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 		++numA;
+		ret.append(item);
 	}
 	return ret;
-}
-
-void ModelManagerPC::setGlobalScale(int value)
-{
-	modelLoader()->setGlobalScale(value);
-	emit modified();
 }
 
 void ModelManagerPC::showModelInfos2(int row)
@@ -160,21 +140,16 @@ void ModelManagerPC::addModel()
 
 	QString hrc("    .HRC");
 	QTreeWidgetItem *item = models->currentItem(), *newItem;
+	CharArchive *charLgp = CharArchive::instance();
 
-	if(Data::charlgp_loadListPos()) {
+	if(charLgp->isOpen()) {
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
 		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
 
 		QComboBox list(&dialog);
 		list.setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
 		list.setEditable(true);
-		QStringList files;
-
-		foreach(const QString &file, Data::charLgp.fileList()) {
-			if(file.endsWith(".hrc", Qt::CaseInsensitive)) {
-				files.append(file);
-			}
-		}
+		QStringList files = charLgp->hrcFiles();
 
 		qSort(files);
 		list.addItems(files);
@@ -229,8 +204,9 @@ void ModelManagerPC::addModel()
 
 	models->setCurrentItem(newItem);
 
-	if(!Data::charLgp.isOpen())
+	if(!charLgp->isOpen()) {
 		models->editItem(newItem);
+	}
 }
 
 void ModelManagerPC::delModel()
@@ -382,7 +358,9 @@ void ModelManagerPC::addAnim()
 
 	QTreeWidgetItem *item = modelAnims->currentItem(), *newItem;
 	QString a;
-	if(Data::charlgp_loadListPos()) {
+	CharArchive *charLgp = CharArchive::instance();
+
+	if(charLgp->isOpen()) {
 		toolBar2->setEnabled(false);
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
 		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
@@ -391,18 +369,10 @@ void ModelManagerPC::addAnim()
 		list.setEditable(true);
 		list.setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
 
-		Data::charlgp_loadAnimBoneCount();
-
-		QStringList files;
-
 		int boneCount = modelPreview ? modelPreview->boneCount() : 0;
-
-		foreach(const QString &file, Data::charLgp.fileList()) {
-			QCoreApplication::processEvents();
-			if(file.endsWith(".a", Qt::CaseInsensitive)) {
-				if(boneCount == 0 || Data::charlgp_animBoneCount.value(file.toLower()) == boneCount)
-					files.append(file.left(file.size()-2).toUpper());
-			}
+		QStringList files = charLgp->aFiles(boneCount);
+		if(boneCount != 0) {
+			files.append(charLgp->aFiles(0)); // Animations without bones work too
 		}
 
 		qSort(files);
@@ -470,8 +440,9 @@ void ModelManagerPC::addAnim()
 
 	newItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 	modelAnims->setCurrentItem(newItem);
-	if(!Data::charLgp.isOpen())
+	if(!charLgp->isOpen()) {
 		modelAnims->editItem(newItem);
+	}
 }
 
 void ModelManagerPC::modifyAnimation(const QString &a)
@@ -560,6 +531,14 @@ void ModelManagerPC::downAnim()
 	modelAnims->setCurrentItem(itemBelow);
 
 	emit modified();
+}
+
+// Filter to not edit column 0
+void ModelManagerPC::editAnim(QTreeWidgetItem *item, int column)
+{
+	if (column != 0) {
+		modelAnims->editItem(item, column);
+	}
 }
 
 void ModelManagerPC::renameOKAnim(QTreeWidgetItem *item, int column)

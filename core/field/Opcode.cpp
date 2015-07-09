@@ -1924,34 +1924,34 @@ OpcodeNFADE::OpcodeNFADE(const char *params, int size)
 void OpcodeNFADE::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
-	unknown1 = params[2];
+	type = params[2];
 	r = params[3]; // bank 1
 	g = params[4]; // bank 2
 	b = params[5]; // bank 3
-	unknown2 = params[6]; // bank 4
-	unknown3 = params[7]; // Unused?
+	speed = params[6]; // bank 4
+	unused = params[7];
 }
 
 QString OpcodeNFADE::toString(Field *) const
 {
-	return QObject::tr("Voiler l'écran avec la couleur RVB(%2, %3, %4) (u1=%1, u2=%5)")
-			.arg(unknown1)
+	return QObject::tr("Voiler l'écran avec la couleur RVB(%2, %3, %4) (vitesse=%5, type=%1)")
+			.arg(type)
 			.arg(_var(r, B1(banks[0])))
 			.arg(_var(g, B2(banks[0])))
 			.arg(_var(b, B1(banks[1])))
-			.arg(_var(unknown2, B2(banks[1])));
+			.arg(_var(speed, B2(banks[1])));
 }
 
 QByteArray OpcodeNFADE::params() const
 {
 	return QByteArray()
 			.append((char *)&banks, 2)
-			.append((char)unknown1)
+			.append((char)type)
 			.append((char)r)
 			.append((char)g)
 			.append((char)b)
-			.append((char)unknown2)
-			.append((char)unknown3);
+			.append((char)speed)
+			.append((char)unused);
 }
 
 void OpcodeNFADE::getVariables(QList<FF7Var> &vars) const
@@ -1963,7 +1963,7 @@ void OpcodeNFADE::getVariables(QList<FF7Var> &vars) const
 	if(B1(banks[1]) != 0)
 		vars.append(FF7Var(B1(banks[1]), b & 0xFF, FF7Var::Byte));
 	if(B2(banks[1]) != 0)
-		vars.append(FF7Var(B2(banks[1]), unknown2 & 0xFF, FF7Var::Byte)); // FIXME: byte?
+		vars.append(FF7Var(B2(banks[1]), speed & 0xFF, FF7Var::Byte));
 }
 
 OpcodeBLINK::OpcodeBLINK(const char *params, int size)
@@ -2672,7 +2672,7 @@ void OpcodePTURA::setParams(const char *params, int)
 
 QString OpcodePTURA::toString(Field *) const
 {
-	return QObject::tr("Tourner l'objet 3D vers le membre de l'équipe n°%1 (Vitesse=%2, SensRotation=%3)")
+	return QObject::tr("Tourner l'objet 3D vers le membre de l'équipe n°%1 (vitesse=%2, sens de rotation=%3)")
 			.arg(partyID)
 			.arg(speed)
 			.arg(_sensRotation(directionRotation));
@@ -5922,7 +5922,7 @@ void OpcodeTURA::setParams(const char *params, int)
 
 QString OpcodeTURA::toString(Field *field) const
 {
-	return QObject::tr("Rotation de l'objet 3D vers le groupe %1 (vitesse=%2, SensRotation=%3)")
+	return QObject::tr("Rotation de l'objet 3D vers le groupe %1 (vitesse=%3, sens de rotation=%2)")
 			.arg(_script(groupID, field->scriptsAndTexts()))
 			.arg(_sensRotation(directionRotation))
 			.arg(speed);

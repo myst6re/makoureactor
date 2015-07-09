@@ -18,7 +18,7 @@
 #include "FieldModelFile.h"
 
 FieldModelFile::FieldModelFile() :
-	a_bones_count(0), dataLoaded(false)
+	dataLoaded(false)
 {
 }
 
@@ -33,8 +33,8 @@ void FieldModelFile::clear()
 	dataLoaded = false;
 	qDeleteAll(_parts);
 	_parts.clear();
-	_bones.clear();
-	_frames.clear();
+	_skeleton.clear();
+	_animation.clear();
 }
 
 bool FieldModelFile::isOpen() const
@@ -42,19 +42,14 @@ bool FieldModelFile::isOpen() const
 	return dataLoaded;
 }
 
-const Bone &FieldModelFile::bone(int index) const
+const FieldModelBone &FieldModelFile::bone(int index) const
 {
-	return _bones.at(index);
+	return _skeleton.bone(index);
 }
 
 int FieldModelFile::boneCount() const
 {
-	return _bones.size();
-}
-
-int FieldModelFile::animBoneCount() const
-{
-	return a_bones_count;
+	return _skeleton.boneCount();
 }
 
 QList<FieldModelPart *> FieldModelFile::parts(int boneID) const
@@ -64,41 +59,25 @@ QList<FieldModelPart *> FieldModelFile::parts(int boneID) const
 
 int FieldModelFile::loadedTextureCount() const
 {
-	return _loaded_tex.size();
+	return _loadedTex.size();
 }
 
 QImage FieldModelFile::loadedTexture(int texID) const
 {
-	return _loaded_tex.value(texID);
+	return _loadedTex.value(texID);
 }
 
 QList<PolyVertex> FieldModelFile::rotations(int frameID) const
 {
-	return _frames.value(frameID);
+	return _animation.rotations(frameID);
 }
 
 QList<PolyVertex> FieldModelFile::translations(int frameID) const
 {
-	return _framesTrans.value(frameID);
+	return _animation.translations(frameID);
 }
 
 int FieldModelFile::frameCount() const
 {
-	return _frames.size();
-}
-
-QString FieldModelFile::toStringBones() const
-{
-	QString ret;
-	int boneID=0;
-
-	foreach(const Bone &bone, _bones) {
-		ret.append(QString("Bone %1: parent= %2 size= %3\n")
-				   .arg(boneID)
-				   .arg(bone.parent)
-				   .arg(bone.size));
-		++boneID;
-	}
-
-	return ret;
+	return _animation.frameCount();
 }

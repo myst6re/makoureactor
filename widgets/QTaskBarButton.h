@@ -20,8 +20,9 @@
 
 #include <QtGui>
 
-#if defined(Q_OS_WIN) && !defined(NO_TASKBAR_BUTTON)
+#if defined(Q_OS_WIN) && defined(TASKBAR_BUTTON)
 #include <shobjidl.h>
+#define QTASKBAR_WIN
 #endif
 
 class QTaskBarButton : public QObject
@@ -49,7 +50,7 @@ public slots:
 	void setRange(int minimum, int maximum);
 	void setValue(int value);
 private:
-#ifdef __ITaskbarList3_INTERFACE_DEFINED__
+#ifdef QTASKBAR_WIN
 	WId _winId;
 	ITaskbarList3 *pITask;
 #endif // Q_OS_WIN

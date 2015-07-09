@@ -19,25 +19,14 @@
 #define PALETTEIO_H
 
 #include <QtCore>
+#include "../IO.h"
 #include "Palette.h"
 
-class PaletteIO
+class PaletteIO : public IO
 {
 public:
-	PaletteIO();
 	explicit PaletteIO(QIODevice *device);
-	virtual ~PaletteIO();
-
-	inline void setDevice(QIODevice *device) {
-		_device = device;
-	}
-
-	inline QIODevice *device() const {
-		return _device;
-	}
-
-	bool canRead() const;
-	bool canWrite() const;
+	virtual ~PaletteIO() {}
 
 	bool read(Palettes &palettes) const;
 	bool write(const Palettes &palettes) const;
@@ -51,8 +40,6 @@ protected:
 		Q_UNUSED(palettes)
 		return true;
 	}
-private:
-	QIODevice *_device;
 };
 
 class PaletteIOPC : public PaletteIO

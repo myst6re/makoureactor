@@ -29,9 +29,8 @@ class ModelManagerPC : public ModelManager
 public:
 	ModelManagerPC(const QGLWidget *shareWidget=0, QWidget *parent=0);
 protected:
-	void fill2();
 	QList<QStringList> modelNames() const;
-	QList<QStringList> animNames(int row) const;
+	QList<QTreeWidgetItem *> animItems(int modelID) const;
 	void showModelInfos2(int row);
 	FieldModelFile *modelData(QTreeWidgetItem *item);
 	FieldModelLoaderPC *modelLoader() const;
@@ -43,14 +42,12 @@ private:
 	void cutModels(const QList<int> &modelIDs);
 	void pasteModels(int modelID);
 
-	QSpinBox *globalScale;
 	QLineEdit *modelName;
 	QToolBar *toolBar2;
 	QAction *copyModelAction, *cutModelAction, *pasteModelAction;
 	QList<FieldModelInfosPC> _copiedModels;
 	bool copied;
 private slots:
-	void setGlobalScale(int value);
 	void modifyHRC(const QString &hrc);
 	void modifyAnimation(const QString &a);
 	void addModel();
@@ -65,6 +62,7 @@ private slots:
 	void delAnim();
 	void upAnim();
 	void downAnim();
+	void editAnim(QTreeWidgetItem *item, int column);
 	void renameOKAnim(QTreeWidgetItem *item, int column);
 	void copyCurrentModel();
 	void cutCurrentModel();

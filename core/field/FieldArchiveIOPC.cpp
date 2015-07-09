@@ -46,8 +46,9 @@ Archive *FieldArchiveIOPCLgp::device()
 	return &_lgp;
 }
 
-QByteArray FieldArchiveIOPCLgp::fieldData2(Field *field, bool unlzs)
+QByteArray FieldArchiveIOPCLgp::fieldData2(Field *field, const QString &extension, bool unlzs)
 {
+	Q_UNUSED(extension);
 	return fileData(field->name(), unlzs);
 }
 
@@ -187,9 +188,10 @@ Archive *FieldArchiveIOPCFile::device()
 	return NULL;
 }
 
-QByteArray FieldArchiveIOPCFile::fieldData2(Field *field, bool unlzs)
+QByteArray FieldArchiveIOPCFile::fieldData2(Field *field, const QString &extension, bool unlzs)
 {
 	Q_UNUSED(field)
+	Q_UNUSED(extension)
 	return fileData(QString(), unlzs);
 }
 
@@ -253,8 +255,9 @@ Archive *FieldArchiveIOPCDir::device()
 	return NULL;
 }
 
-QByteArray FieldArchiveIOPCDir::fieldData2(Field *field, bool unlzs)
+QByteArray FieldArchiveIOPCDir::fieldData2(Field *field, const QString &extension, bool unlzs)
 {
+	Q_UNUSED(extension)
 	return fileData(field->name(), unlzs);
 }
 

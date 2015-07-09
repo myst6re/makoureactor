@@ -24,29 +24,10 @@
 #define COLORRGB_2_QRGB(c)		qRgb(c.red, c.green, c.blue)
 
 typedef struct {
-	quint16 num_frames;					// Number of frames
-	quint8 num_bones;					// Number of bones
-	quint8 num_frames_translation;		// Number of translation frames
-	quint8 num_static_translation;		// Number of static translation frames
-	quint8 num_frames_rotation;			// Number of rotation frames
-	quint16 offset_frames_translation;	// Relative offset to translation frames
-	quint16 offset_static_translation;	// Relative offset to statis translation frames
-	quint16 offset_frames_rotation;		// Relative offset to rotation frames
-	quint32 offset_data;				// Offset to animation data section
-} Animation;
-
-typedef struct {
 	quint16 width, height;
 	quint16 vramX, vramY;
 	quint32 offset_data;
 } TexHeader;
-
-typedef struct {
-	quint8 flag;
-	quint8 rx, ry, rz;
-	quint8 tx, ty, tz;
-	quint8 padding;
-} FrameTranslation;
 
 typedef struct {
 	quint32 size;

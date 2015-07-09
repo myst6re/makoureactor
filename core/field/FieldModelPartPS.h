@@ -126,12 +126,21 @@ class FieldModelPartPS : public FieldModelPart
 {
 public:
 	FieldModelPartPS();
-	bool open(const char *data, quint32 offset, quint32 size);
-	qint8 boneID() const;
-	const QList<TextureInfo> &textures() const;
-private:
+	inline qint8 boneID() const {
+		return _boneID;
+	}
+	inline void setBoneID(qint8 boneID) {
+		_boneID = boneID;
+	}
+	inline const QList<TextureInfo> &textures() const {
+		return _textures;
+	}
+	inline void setTextures(const QList<TextureInfo> &textures) {
+		_textures = textures;
+	}
 	void addTexturedPolygon(quint8 control, Poly *polygon);
 	void addPolygon(Poly *polygon);
+private:
 	qint8 _boneID;
 	QList<TextureInfo> _textures;
 };

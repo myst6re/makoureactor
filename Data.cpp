@@ -47,8 +47,6 @@ QString Data::ff7DataPath_cache;
 QString Data::ff7AppPath_cache;
 QString Data::ff7RereleasePath_cache;
 bool Data::ff7RereleaseAlreadySearched = false;
-Lgp Data::charLgp;
-QHash<QString, int> Data::charlgp_animBoneCount;
 WindowBinFile Data::windowBin;
 
 void Data::refreshFF7Paths()
@@ -98,7 +96,7 @@ const QString &Data::searchRereleasedFF7Path()
 		LONG error;
 
 		// direct
-		ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(regValue("Microsoft/Windows/CurrentVersion/Uninstall/{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", "InstallLocation")));
+		ff7RereleasePath_cache = regValuePath("Microsoft/Windows/CurrentVersion/Uninstall/{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", "InstallLocation");
 		if(!ff7RereleasePath_cache.isEmpty()) {
 			return ff7RereleasePath_cache;
 		}
@@ -153,11 +151,7 @@ const QString &Data::searchRereleasedFF7Path()
 
 QString Data::searchSteamFF7Path()
 {
-	QString steamPath = QDir::cleanPath(QDir::fromNativeSeparators(regValue("Valve/Steam", "InstallPath")));
-	if(!steamPath.isEmpty()) {
-		return steamPath.append("/SteamApps/common/FINAL FANTASY VII");
-	}
-	return QString();
+	return regValuePath("Microsoft/Windows/CurrentVersion/Uninstall/Steam App 39140", "InstallLocation");
 }
 
 QString Data::searchFF7Exe(FF7Version version)
@@ -166,7 +160,7 @@ QString Data::searchFF7Exe(FF7Version version)
 
 	switch(version) {
 	case Standard:
-		ff7Path = QDir::cleanPath(QDir::fromNativeSeparators(regValue(FF7_WIN_REGISTER_PATH, "AppPath")));
+		ff7Path = regValuePath(FF7_WIN_REGISTER_PATH, "AppPath");
 		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/ff7.exe")) {
 			return ff7Path + "/ff7.exe";
 		}
@@ -179,8 +173,8 @@ QString Data::searchFF7Exe(FF7Version version)
 		return QString();
 	case Steam:
 		ff7Path = searchSteamFF7Path();
-		if(QFile::exists(ff7Path + "/launchff7.exe")) {
-			return ff7Path + "/launchff7.exe";
+		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/FF7_Launcher.exe")) {
+			return ff7Path + "/FF7_Launcher.exe";
 		}
 		return QString();
 	case Custom:
@@ -188,7 +182,7 @@ QString Data::searchFF7Exe(FF7Version version)
 	}
 
 	/*
-	QString ff7MusicPath = QDir::cleanPath(QDir::fromNativeSeparators(regValue("FF7Music", "InstDir")));
+	QString ff7MusicPath = regValuePath("FF7Music", "InstDir");
 	if(!ff7MusicPath.isEmpty() && QFile::exists(ff7MusicPath + "/launchff7.exe")) {
 		return ff7MusicPath + "/launchff7.exe";
 	}
@@ -202,7 +196,7 @@ QString Data::searchFF7DataPath(FF7Version version)
 
 	switch(version) {
 	case Standard:
-		dataPath = QDir::cleanPath(QDir::fromNativeSeparators(regValue(FF7_WIN_REGISTER_PATH, "DataPath")));
+		dataPath = regValuePath(FF7_WIN_REGISTER_PATH, "DataPath");
 		if(!dataPath.isEmpty() && QFile::exists(dataPath)) {
 			return dataPath;
 		}
@@ -322,45 +316,6 @@ QString Data::charlgp_path()
 	}
 
 	return charPath;
-}
-
-bool Data::charlgp_loadListPos()
-{
-	if(!charLgp.isOpen()) {
-		QString charPath = Data::charlgp_path();
-		if(charPath.isEmpty())	return false;
-
-		charLgp.setFileName(charPath);
-		if(!charLgp.open()) {
-			return false;
-		}
-	}
-	return true;
-}
-
-void Data::charlgp_loadAnimBoneCount()
-{
-	if(charlgp_animBoneCount.isEmpty() && charlgp_loadListPos()) {
-		quint32 boneCount;
-
-		LgpIterator it = charLgp.iterator();
-
-		while(it.hasNext()) {
-			it.next();
-			const QString &fileName = it.fileName();
-			if(fileName.endsWith(".a", Qt::CaseInsensitive)) {
-				QCoreApplication::processEvents();
-				QIODevice *aFile = it.file();
-				if(aFile && aFile->open(QIODevice::ReadOnly)) {
-					if(!aFile->seek(8) ||
-							aFile->read((char *)&boneCount, 4) != 4)	break;
-					charlgp_animBoneCount.insert(fileName.toLower(), boneCount);
-				} else {
-					break;
-				}
-			}
-		}
-	}
 }
 
 int Data::loadKernel2Bin()
@@ -633,7 +588,7 @@ const char *Data::movieList[106] = {
 	"ending1", "ending3", "fcar", "white2", "ending2"
 };
 
-const char *Data::mapList[787] = {
+const char *Data::mapList[788] = {
 	"dummy", "wm0", "wm1", "wm2", "wm3", "wm4", "wm5", "wm6",
 	"wm7", "wm8", "wm9", "wm10", "wm11", "wm12", "wm13", "wm14",
 	"wm15", "wm16", "wm17", "wm18", "wm19", "wm20", "wm21", "wm22",
@@ -744,14 +699,14 @@ const char *Data::mapList[787] = {
 	"las2_2", "las2_3", "las2_4", "las3_1", "las3_2", "las3_3", "las4_0", "las4_1",
 	"las4_2", "las4_3", "las4_4", "lastmap", "fallp", "m_endo", "hill2", "bonevil2",
 	"junone22", "rckt32", "jtemplc", "fship_26", "las4_42", "tunnel_6", "md8_52", "sininb34",
-	"mds7st33", "midgal", "sininb35", "nivgate4", "sininb36", "ztruck"
+	"mds7st33", "midgal", "sininb35", "nivgate4", "sininb36", "ztruck", "frcyo2"
 };
 
 // Standard mapList
 void Data::openMaplist(bool PC)
 {
 	field_names.clear();
-	for(int i=0 ; i<787 ; ++i) {
+	for(int i=0 ; i<788 ; ++i) {
 		field_names.append(mapList[i]);
 	}
 

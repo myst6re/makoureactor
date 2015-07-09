@@ -236,7 +236,7 @@ void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int curre
 	GLuint texture_id = -1;
 	int lastTexID = -1;
 
-	if(data->animBoneCount() <= 1) {
+	if(data->boneCount() <= 1) {
 		drawP(glWidget, data, scale, 0, texture_id, lastTexID);
 		if(texture_id != (GLuint)-1) {
 			glWidget->deleteTexture(texture_id);
@@ -246,12 +246,10 @@ void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int curre
 	}
 
 	QList<PolyVertex> rot = data->rotations(currentFrame);
-	if(rot.isEmpty()) return;
 	parent.push(-1);
 
-	for(i=0 ; i<data->animBoneCount() ; ++i) {
-		const PolyVertex &rotation = rot.at(i);
-		const Bone &bone = data->bone(i);
+	for(i = 0 ; i < data->boneCount() ; ++i) {
+		const FieldModelBone &bone = data->bone(i);
 
 		while(!parent.isEmpty() && parent.top() != bone.parent) {
 			parent.pop();
@@ -264,9 +262,13 @@ void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int curre
 			glTranslatef(0.0, 0.0, bone.size / scale);
 		}
 
-		glRotatef(rotation.y, 0.0, 1.0, 0.0);
-		glRotatef(rotation.x, 1.0, 0.0, 0.0);
-		glRotatef(rotation.z, 0.0, 0.0, 1.0);
+		if (i < rot.size()) {
+			const PolyVertex &rotation = rot.at(i);
+			glRotatef(rotation.y, 0.0, 1.0, 0.0);
+			glRotatef(rotation.x, 1.0, 0.0, 0.0);
+			glRotatef(rotation.z, 0.0, 0.0, 1.0);
+		}
+
 		drawP(glWidget, data, scale, i, texture_id, lastTexID);
 
 		if(data->translateAfter()) {

@@ -43,7 +43,7 @@ void FieldPC::openHeader(const QByteArray &fileData)
 int FieldPC::sectionId(FieldSection part) const
 {
 	switch(part) {
-	case Scripts:		return 0;
+	case Scripts:
 	case Akaos:			return 0;
 	case Camera:		return 1;
 	case ModelLoader:	return 2;
