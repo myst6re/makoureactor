@@ -80,7 +80,7 @@ int FieldModel::boneCount() const
 int FieldModel::frameCount() const
 {
 	return data && animationID < data->animationCount()
-			? data->animation(animationID).boneCount()
+			? data->animation(animationID).frameCount()
 			: 0;
 }
 
