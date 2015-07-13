@@ -15,25 +15,14 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "FieldModelPartIOPC.h"
+#include "PFile.h"
 
-FieldModelPartIOPC::FieldModelPartIOPC(QIODevice *ioRsd) :
-	FieldModelPartIO(0), _deviceRsd(ioRsd)
+PFile::PFile(QIODevice *io) :
+	IO(io)
 {
 }
 
-bool FieldModelPartIOPC::canReadRsd() const
-{
-	if(_deviceRsd) {
-		if(!_deviceRsd->isOpen()) {
-			return _deviceRsd->open(QIODevice::ReadOnly);
-		}
-		return _deviceRsd->isReadable();
-	}
-	return false;
-}
-
-bool FieldModelPartIOPC::read(FieldModelPart *part, const QList<int> &texIds) const
+bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 {
 	if(!canRead()) {
 		return false;
@@ -164,67 +153,10 @@ bool FieldModelPartIOPC::read(FieldModelPart *part, const QList<int> &texIds) co
 	return true;
 }
 
-bool FieldModelPartIOPC::readRsd(Rsd &rsd, QStringList &textureNames) const
-{
-	if (!canReadRsd()) {
-		return false;
-	}
-
-	QString pname;
-	QList<int> texIds;
-	quint32 nTex = 0;
-	int index;
-	bool ok;
-
-	while(deviceRsd()->canReadLine()) {
-		QString line = QString(deviceRsd()->readLine()).trimmed();
-		if(pname.isNull() && (line.startsWith(QString("PLY="))
-							  || line.startsWith(QString("MAT="))
-							  || line.startsWith(QString("GRP=")))) {
-			index = line.lastIndexOf('.');
-			if(index != -1) {
-				line.truncate(index);
-			}
-			pname = line.mid(4).toLower();
-		} else if(!pname.isNull() && nTex == 0
-				  && line.startsWith(QString("NTEX="))) {
-			nTex = line.mid(5).toUInt(&ok);
-			if(!ok) {
-				return false;
-			}
-
-			for(quint32 i = 0 ; i < nTex && deviceRsd()->canReadLine() ; ++i) {
-				line = QString(deviceRsd()->readLine()).trimmed();
-				if(!line.startsWith(QString("TEX[%1]=").arg(i))) {
-					return false;
-				}
-
-				index = line.lastIndexOf('.');
-				if(index != -1) {
-					line.truncate(index);
-				}
-				QString tex = line.mid(line.indexOf('=') + 1).toLower();
-
-				index = textureNames.indexOf(tex);
-				if(index > -1) {
-					texIds.append(index);
-				} else {
-					texIds.append(textureNames.size());
-					textureNames.append(tex);
-				}
-			}
-		}
-	}
-
-	rsd.pName = pname;
-	rsd.texIds = texIds;
-
-	return true;
-}
-
-bool FieldModelPartIOPC::write(const FieldModelPart *part) const
+bool PFile::write(const FieldModelPart *part, const QList<int> &texIds) const
 {
 	Q_UNUSED(part)
+	Q_UNUSED(texIds)
 	// TODO
 	return false;
 }

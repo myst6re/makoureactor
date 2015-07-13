@@ -15,10 +15,24 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "FieldModelPartIO.h"
+#ifndef HRCFILE_H
+#define HRCFILE_H
 
-FieldModelPartIO::FieldModelPartIO(QIODevice *io) :
-	IO(io)
+#include "../IO.h"
+#include "FieldModelSkeleton.h"
+
+class HrcFile : public IO
 {
-}
+public:
+	explicit HrcFile(QIODevice *io);
+	virtual ~HrcFile() {}
 
+	bool read(FieldModelSkeleton &skeleton) const {
+		QMultiMap<int, QStringList> rsdFiles;
+		return read(skeleton, rsdFiles);
+	}
+	bool read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rsdFiles) const;
+	bool write(const FieldModelSkeleton &skeleton) const;
+};
+
+#endif // HRCFILE_H

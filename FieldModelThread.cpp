@@ -90,7 +90,7 @@ void FieldModelThread::run()
 			return;
 		}
 		FieldModelFile *fieldModel = field->fieldModel(modelId, animationId, animate);
-		if(!_canceled && fieldModel->isOpen()) {
+		if(!_canceled && !fieldModel->isEmpty()) {
 			emit modelLoaded(field, fieldModel, modelId, animationId, animate);
 		}
 	}

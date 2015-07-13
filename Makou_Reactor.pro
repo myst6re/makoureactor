@@ -130,15 +130,13 @@ HEADERS += \
     core/field/FieldPSDemo.h \
     core/IO.h \
     core/field/FieldModelAnimation.h \
-    core/field/FieldModelPartIO.h \
-    core/field/FieldModelPartIOPC.h \
-    core/field/FieldModelPartIOPS.h \
-    core/field/FieldModelAnimationIO.h \
-    core/field/FieldModelAnimationIOPC.h \
-    core/field/FieldModelAnimationIOPS.h \
     core/field/FieldModelSkeleton.h \
-    core/field/FieldModelSkeletonIO.h \
-    core/field/FieldModelSkeletonIOPC.h
+    core/field/BcxFile.h \
+    core/field/BsxFile.h \
+    core/field/HrcFile.h \
+    core/field/AFile.h \
+    core/field/PFile.h \
+    core/field/RsdFile.h
 
 SOURCES += \
     Window.cpp \
@@ -262,15 +260,13 @@ SOURCES += \
     core/field/FieldPSDemo.cpp \
     core/IO.cpp \
     core/field/FieldModelAnimation.cpp \
-    core/field/FieldModelPartIO.cpp \
-    core/field/FieldModelPartIOPC.cpp \
-    core/field/FieldModelPartIOPS.cpp \
-    core/field/FieldModelAnimationIO.cpp \
-    core/field/FieldModelAnimationIOPC.cpp \
-    core/field/FieldModelAnimationIOPS.cpp \
     core/field/FieldModelSkeleton.cpp \
-    core/field/FieldModelSkeletonIO.cpp \
-    core/field/FieldModelSkeletonIOPC.cpp
+    core/field/BcxFile.cpp \
+    core/field/BsxFile.cpp \
+    core/field/HrcFile.cpp \
+    core/field/AFile.cpp \
+    core/field/PFile.cpp \
+    core/field/RsdFile.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

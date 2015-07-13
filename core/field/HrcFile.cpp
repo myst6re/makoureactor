@@ -15,15 +15,15 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "FieldModelSkeletonIOPC.h"
-#include "FieldModelPartIOPC.h"
+#include "HrcFile.h"
+#include "PFile.h"
 
-FieldModelSkeletonIOPC::FieldModelSkeletonIOPC(QIODevice *io) :
-	FieldModelSkeletonIO(io)
+HrcFile::HrcFile(QIODevice *io) :
+	IO(io)
 {
 }
 
-bool FieldModelSkeletonIOPC::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rsdFiles) const
+bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rsdFiles) const
 {
 	if (!canRead()) {
 		return false;
@@ -35,7 +35,7 @@ bool FieldModelSkeletonIOPC::read(FieldModelSkeleton &skeleton, QMultiMap<int, Q
 
 	do {
 		line = QString(device()->readLine()).trimmed();
-		if (line.startsWith(QString(":BONES "))) {
+		if (line.startsWith(":BONES ")) {
 			boneCount = line.mid(7).toUInt(&ok);
 			if (!ok) {
 				return false;
@@ -53,15 +53,14 @@ bool FieldModelSkeletonIOPC::read(FieldModelSkeleton &skeleton, QMultiMap<int, Q
 
 	int nbP, lineType = 0;
 	quint32 boneID = 0;
-	FieldModelBone bone;
-	bone.parent = 0;
+	FieldModelBone bone(0, 0);
 	QMap<QString, int> nameToId;
 	QStringList rsdlist;
 	nameToId.insert("root", -1);
 
 	while (device()->canReadLine() && boneID < boneCount) {
 		line = QString(device()->readLine()).trimmed();
-		if (line.isEmpty() || line.startsWith(QChar('#'))) {
+		if (line.isEmpty() || line.startsWith('#')) {
 			continue;
 		}
 
@@ -70,10 +69,10 @@ bool FieldModelSkeletonIOPC::read(FieldModelSkeleton &skeleton, QMultiMap<int, Q
 			nameToId.insert(line, boneID);
 			break;
 		case 1: // Parent
-			bone.parent = nameToId.value(line, -1);
+			bone.setParent(nameToId.value(line, -1));
 			break;
 		case 2: // Length
-			bone.size = -line.toFloat(&ok) / MODEL_SCALE_PC;
+			bone.setSize(-line.toFloat(&ok) / MODEL_SCALE_PC);
 			if (!ok) {
 				return false;
 			}
@@ -100,8 +99,8 @@ bool FieldModelSkeletonIOPC::read(FieldModelSkeleton &skeleton, QMultiMap<int, Q
 	return boneID == boneCount;
 }
 
-bool FieldModelSkeletonIOPC::write(const FieldModelSkeleton &part) const
+bool HrcFile::write(const FieldModelSkeleton &skeleton) const
 {
-	Q_UNUSED(part)
+	Q_UNUSED(skeleton)
 	return false; // TODO
 }

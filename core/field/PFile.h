@@ -15,11 +15,13 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELPARTIOPC_H
-#define FIELDMODELPARTIOPC_H
+#ifndef PFILE_H
+#define PFILE_H
 
 #include <QtCore>
-#include "FieldModelPartIO.h"
+#include "../IO.h"
+#include "FieldModelPart.h"
+#include "IdFile.h"
 
 #define MODEL_SCALE_PC				132.0f // 1.0f
 
@@ -70,37 +72,14 @@ struct Group {
 	quint32 textureNumber;
 };
 
-class Rsd {
-	friend class FieldModelPartIOPC;
-	QString pName;
-	QList<int> texIds;
-public:
-	inline const QString &pFile() const {
-		return pName;
-	}
-	inline const QList<int> &textureIds() const {
-		return texIds;
-	}
-};
-
-class FieldModelPartIOPC : public FieldModelPartIO
+class PFile : public IO
 {
 public:
-	explicit FieldModelPartIOPC(QIODevice *ioRsd);
-	bool readRsd(Rsd &rsd, QStringList &textureNames) const;
-	bool read(FieldModelPart *part, const QList<int> &texIds) const;
-	bool write(const FieldModelPart *part) const;
-private:
-	bool read(FieldModelPart *part) const {
-		Q_UNUSED(part)
-		return false;
-	}
-	inline QIODevice *deviceRsd() const {
-		return _deviceRsd;
-	}
-	bool canReadRsd() const;
+	explicit PFile(QIODevice *io);
+	virtual ~PFile() {}
 
-	QIODevice *_deviceRsd;
+	bool read(FieldModelPart *part, const QList<int> &texIds) const;
+	bool write(const FieldModelPart *part, const QList<int> &texIds) const;
 };
 
-#endif // FIELDMODELPARTIOPC_H
+#endif // PFILE_H

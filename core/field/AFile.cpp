@@ -15,14 +15,14 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "FieldModelAnimationIOPC.h"
+#include "AFile.h"
 
-FieldModelAnimationIOPC::FieldModelAnimationIOPC(QIODevice *device) :
-	FieldModelAnimationIO(device)
+AFile::AFile(QIODevice *device) :
+	IO(device)
 {
 }
 
-bool FieldModelAnimationIOPC::read(FieldModelAnimation &animation, int maxFrames) const
+bool AFile::read(FieldModelAnimation &animation, int maxFrames) const
 {
 	if (!canRead()) {
 		return false;
@@ -67,7 +67,7 @@ bool FieldModelAnimationIOPC::read(FieldModelAnimation &animation, int maxFrames
 	return true;
 }
 
-bool FieldModelAnimationIOPC::write(const FieldModelAnimation &animation) const
+bool AFile::write(const FieldModelAnimation &animation) const
 {
 	Q_UNUSED(animation)
 	// TODO

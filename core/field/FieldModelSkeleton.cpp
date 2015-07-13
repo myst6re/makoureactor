@@ -17,6 +17,12 @@
  ****************************************************************************/
 #include "FieldModelSkeleton.h"
 
+FieldModelBone::FieldModelBone(float size, int parent,
+							   const QList<FieldModelPart *> &parts) :
+	_size(size), _parent(parent), _parts(parts)
+{
+}
+
 FieldModelSkeleton::FieldModelSkeleton()
 {
 }
@@ -34,8 +40,8 @@ QString FieldModelSkeleton::toString() const
 	foreach(const FieldModelBone &bone, _bones) {
 		ret.append(QString("Bone %1: parent= %2 size= %3\n")
 				   .arg(boneID)
-				   .arg(bone.parent)
-				   .arg(bone.size));
+				   .arg(bone.parent())
+				   .arg(bone.size()));
 		++boneID;
 	}
 

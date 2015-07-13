@@ -15,10 +15,30 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "FieldModelAnimationIO.h"
+#ifndef AFILE_H
+#define AFILE_H
 
-FieldModelAnimationIO::FieldModelAnimationIO(QIODevice *io) :
-	IO(io)
+#include "../IO.h"
+#include "PFile.h"
+#include "FieldModelAnimation.h"
+
+struct AHeader {
+	quint32 version;
+	quint32 framesCount;
+	quint32 boneCount;
+	quint8 rotationOrder[3];
+	quint8 unused;
+	quint32 runtimeData[5];
+};
+
+class AFile : public IO
 {
-}
+public:
+	explicit AFile(QIODevice *device);
+	virtual ~AFile() {}
 
+	bool read(FieldModelAnimation &animation, int maxFrames = -1) const;
+	bool write(const FieldModelAnimation &animation) const;
+};
+
+#endif // AFILE_H

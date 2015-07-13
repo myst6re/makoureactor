@@ -36,8 +36,8 @@ public:
 	qint8 importer(const QByteArray &data, bool isPSField, FieldSections part);
 
 	FieldModelLoaderPC *fieldModelLoader(bool open=true);
-	FieldModelFilePC *fieldModel(int modelID, int animationID=0, bool animate=true, bool open=true);
-	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate=true);
+	FieldModelFilePC *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
+	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate = true);
 	FieldArchiveIOPC *io() const;
 protected:
 	inline int headerSize() const { return 42; }

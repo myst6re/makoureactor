@@ -33,7 +33,7 @@ public:
 	inline bool isPC() const { return false; }
 
 	FieldModelLoaderPS *fieldModelLoader(bool open=true);
-	FieldModelFilePS *fieldModel(int modelID, int animationID=0, bool animate=true, bool open=true);
+	FieldModelFilePS *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
 	FieldArchiveIOPS *io() const;
 protected:
 	inline virtual int headerSize() const { return 28; }

@@ -19,10 +19,45 @@
 #define FIELDMODELSKELETON_H
 
 #include <QtGui>
+#include "FieldModelPart.h"
 
-struct FieldModelBone {
-	float size;
-	int parent;
+class FieldModelBone
+{
+public:
+	FieldModelBone(float size, int parent,
+				   const QList<FieldModelPart *> &parts = QList<FieldModelPart *>());
+
+	inline float size() const {
+		return _size;
+	}
+
+	inline void setSize(float size) {
+		_size = size;
+	}
+
+	inline int parent() const {
+		return _parent;
+	}
+
+	inline void setParent(int parent) {
+		_parent = parent;
+	}
+
+	inline const QList<FieldModelPart *> &parts() const {
+		return _parts;
+	}
+
+	inline void setParts(const QList<FieldModelPart *> &parts) {
+		_parts = parts;
+	}
+
+	inline void addPart(FieldModelPart *part) {
+		_parts.append(part);
+	}
+private:
+	float _size;
+	int _parent;
+	QList<FieldModelPart *> _parts;
 };
 
 class FieldModelSkeleton
@@ -51,6 +86,12 @@ public:
 	}
 	inline bool isEmpty() const {
 		return _bones.isEmpty();
+	}
+	inline const FieldModelBone &operator[](uint i) const {
+		return _bones[i];
+	}
+	inline FieldModelBone &operator[](uint i) {
+		return _bones[i];
 	}
 	QString toString() const;
 private:

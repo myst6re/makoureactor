@@ -17,8 +17,7 @@
  ****************************************************************************/
 #include "FieldModelPartPS.h"
 
-FieldModelPartPS::FieldModelPartPS() :
-	_boneID(-1)
+FieldModelPartPS::FieldModelPartPS()
 {
 }
 

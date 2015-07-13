@@ -17,9 +17,10 @@
  ****************************************************************************/
 #include "FieldModelFilePC.h"
 #include "CharArchive.h"
-#include "FieldModelSkeletonIOPC.h"
-#include "FieldModelPartIOPC.h"
-#include "FieldModelAnimationIOPC.h"
+#include "HrcFile.h"
+#include "RsdFile.h"
+#include "PFile.h"
+#include "AFile.h"
 #include "../TexFile.h"
 
 FieldModelFilePC::FieldModelFilePC() :
@@ -67,52 +68,59 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 					++texID;
 				}
 
-				dataLoaded = true;
+				return true;
 			}
 		}
 	}
 
-	return dataLoaded;
+	return false;
 }
 
 bool FieldModelFilePC::openSkeleton(const QString &hrcFileName, QMultiMap<int, QStringList> &rsdFiles)
 {
-	FieldModelSkeletonIOPC io(_charLgp->fileIO(hrcFileName));
+	HrcFile io(_charLgp->fileIO(hrcFileName));
 	return io.read(_skeleton, rsdFiles);
 }
 
 bool FieldModelFilePC::openAnimation(const QString &aFileName, bool animate)
 {
-	FieldModelAnimationIOPC io(_charLgp->fileIO(aFileName));
-	return io.read(_animation, animate ? -1 : 1);
+	FieldModelAnimation animation;
+	AFile io(_charLgp->fileIO(aFileName));
+	if (io.read(animation, animate ? -1 : 1)) {
+		_animations.append(animation);
+		return true;
+	}
+	return false;
 }
 
 bool FieldModelFilePC::openMesh(QMultiMap<int, QStringList> &rsdFiles, QStringList &textureFiles)
 {
+	bool onePartOpened = false;
 	QMapIterator<int, QStringList> itRsd(rsdFiles);
 	while (itRsd.hasNext()) {
 		itRsd.next();
 		int boneID = itRsd.key();
 
 		foreach (const QString &rsd, itRsd.value()) {
-			openPart(rsd.toLower() % ".rsd", boneID, textureFiles);
+			if (openPart(rsd.toLower() % ".rsd", boneID, textureFiles)) {
+				onePartOpened = true;
+			}
 		}
 	}
 
-	return !_parts.isEmpty();
+	return onePartOpened;
 }
 
 bool FieldModelFilePC::openPart(const QString &rsdFileName, int boneID, QStringList &textureFiles)
 {
-	FieldModelPartIOPC partIO(_charLgp->fileIO(rsdFileName));
+	RsdFile rsdIO(_charLgp->fileIO(rsdFileName));
 	Rsd rsd;
-	if (partIO.readRsd(rsd, textureFiles)) {
-		QIODevice *pFile = _charLgp->fileIO(rsd.pFile() % ".p");
-		partIO.setDevice(pFile);
+	if (rsdIO.read(rsd, textureFiles)) {
+		PFile partIO(_charLgp->fileIO(rsd.pFile() % ".p"));
 
 		FieldModelPart *part = new FieldModelPart();
 		if (partIO.read(part, rsd.textureIds())) {
-			_parts.insert(boneID, part);
+			_skeleton[boneID].addPart(part);
 			return true;
 		} else {
 			delete part;

@@ -28,24 +28,52 @@ class FieldModelFile
 public:
 	FieldModelFile();
 	virtual ~FieldModelFile();
-	bool isOpen() const;
+
+	inline bool isEmpty() const {
+		return _skeleton.isEmpty();
+	}
 	virtual void clear();
 	virtual bool translateAfter() const=0;
 
-	const FieldModelBone &bone(int index) const;
-	int boneCount() const;
-	QList<FieldModelPart *> parts(int boneID) const;
-	int loadedTextureCount() const;
-	QImage loadedTexture(int texID) const;
-	QList<PolyVertex> rotations(int frameID) const;
-	QList<PolyVertex> translations(int frameID) const;
-	int frameCount() const;
+	inline const FieldModelSkeleton &skeleton() const {
+		return _skeleton;
+	}
+	inline void setSkeleton(const FieldModelSkeleton &skeleton) {
+		_skeleton = skeleton;
+	}
+	inline const FieldModelBone &bone(int boneID) const {
+		return _skeleton.bone(boneID);
+	}
+	inline int boneCount() const {
+		return _skeleton.boneCount();
+	}
+	inline int loadedTextureCount() const {
+		return _loadedTex.size();
+	}
+	inline QImage loadedTexture(int texID) const {
+		return _loadedTex.value(texID);
+	}
+	inline void setLoadedTextures(const QHash<int, QImage> &loadedTex) {
+		_loadedTex = loadedTex;
+	}
+	inline const QList<FieldModelAnimation> &animations() const {
+		return _animations;
+	}
+	inline void setAnimations(const QList<FieldModelAnimation> &animations) {
+		_animations = animations;
+	}
+	inline int animationCount() const {
+		return _animations.size();
+	}
+	inline const FieldModelAnimation &animation(int animationID) const {
+		return _animations.at(animationID);
+	}
+private:
+	Q_DISABLE_COPY(FieldModelFile)
 protected:
-	QMultiMap<int, FieldModelPart *> _parts;
 	QHash<int, QImage> _loadedTex;
 	FieldModelSkeleton _skeleton;
-	FieldModelAnimation _animation;
-	bool dataLoaded;
+	QList<FieldModelAnimation> _animations;
 };
 
 #endif // FIELDMODELFILE_H

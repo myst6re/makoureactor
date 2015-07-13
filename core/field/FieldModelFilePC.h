@@ -30,6 +30,7 @@ public:
 	inline bool translateAfter() const { return true; }
 	quint8 load(const QString &hrc, const QString &a, bool animate = true);
 private:
+	Q_DISABLE_COPY(FieldModelFilePC)
 	bool openSkeleton(const QString &hrcFileName, QMultiMap<int, QStringList> &rsdFiles);
 	bool openAnimation(const QString &aFileName, bool animate = false);
 	bool openMesh(QMultiMap<int, QStringList> &rsdFiles, QStringList &textureFiles);

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2015 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -15,23 +15,33 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELSKELETONIOPC_H
-#define FIELDMODELSKELETONIOPC_H
+#ifndef RSDFILE_H
+#define RSDFILE_H
 
-#include "FieldModelSkeletonIO.h"
+#include <QtCore>
+#include "../IO.h"
 
-class FieldModelSkeletonIOPC : public FieldModelSkeletonIO
-{
+class Rsd {
+	friend class RsdFile;
+	QString pName;
+	QList<int> texIds;
 public:
-	explicit FieldModelSkeletonIOPC(QIODevice *io);
-	virtual ~FieldModelSkeletonIOPC() {}
-
-	bool read(FieldModelSkeleton &skeleton) const {
-		QMultiMap<int, QStringList> rsdFiles;
-		return read(skeleton, rsdFiles);
+	inline const QString &pFile() const {
+		return pName;
 	}
-	bool read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rsdFiles) const;
-	bool write(const FieldModelSkeleton &skeleton) const;
+	inline const QList<int> &textureIds() const {
+		return texIds;
+	}
 };
 
-#endif // FIELDMODELSKELETONIOPC_H
+class RsdFile : public IO
+{
+public:
+	explicit RsdFile(QIODevice *io);
+	virtual ~RsdFile() {}
+
+	bool read(Rsd &rsd, QStringList &textureNames) const;
+	bool write(const Rsd &rsd, const QStringList &textureNames) const;
+};
+
+#endif // RSDFILE_H

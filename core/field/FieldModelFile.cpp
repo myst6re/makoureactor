@@ -17,67 +17,20 @@
  ****************************************************************************/
 #include "FieldModelFile.h"
 
-FieldModelFile::FieldModelFile() :
-	dataLoaded(false)
+FieldModelFile::FieldModelFile()
 {
 }
 
 FieldModelFile::~FieldModelFile()
 {
-	dataLoaded = false;
-	qDeleteAll(_parts);
+	foreach (const FieldModelBone &bone, _skeleton.bones()) {
+		qDeleteAll(bone.parts());
+	}
 }
 
 void FieldModelFile::clear()
 {
-	dataLoaded = false;
-	qDeleteAll(_parts);
-	_parts.clear();
 	_skeleton.clear();
-	_animation.clear();
-}
-
-bool FieldModelFile::isOpen() const
-{
-	return dataLoaded;
-}
-
-const FieldModelBone &FieldModelFile::bone(int index) const
-{
-	return _skeleton.bone(index);
-}
-
-int FieldModelFile::boneCount() const
-{
-	return _skeleton.boneCount();
-}
-
-QList<FieldModelPart *> FieldModelFile::parts(int boneID) const
-{
-	return _parts.values(boneID);
-}
-
-int FieldModelFile::loadedTextureCount() const
-{
-	return _loadedTex.size();
-}
-
-QImage FieldModelFile::loadedTexture(int texID) const
-{
-	return _loadedTex.value(texID);
-}
-
-QList<PolyVertex> FieldModelFile::rotations(int frameID) const
-{
-	return _animation.rotations(frameID);
-}
-
-QList<PolyVertex> FieldModelFile::translations(int frameID) const
-{
-	return _animation.translations(frameID);
-}
-
-int FieldModelFile::frameCount() const
-{
-	return _animation.frameCount();
+	_animations.clear();
+	_loadedTex.clear();
 }
