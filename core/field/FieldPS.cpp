@@ -81,14 +81,12 @@ FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 
 FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate, bool open)
 {
-	Q_UNUSED(animationID)
 	Q_UNUSED(animate)
 	FieldModelFilePS *fieldModel = (FieldModelFilePS *)fieldModelPtr(modelID);
 	if(!fieldModel) 	addFieldModel(modelID, fieldModel = new FieldModelFilePS());
 	if(open) {
 		quint8 modelGlobalId = 0;
 		FieldModelFilePS modelBcx;
-		qDebug() << "fieldModel" << modelID << animationID;
 
 		if (fieldModelLoader()->isOpen() && modelID < fieldModelLoader()->modelCount()) {
 			modelGlobalId = fieldModelLoader()->model(modelID).modelID;
@@ -122,7 +120,6 @@ FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate
 		}
 
 		QByteArray BSXData = io()->modelData(this);
-		qDebug() << "fieldModel bsx" << BSXData.size();
 		QBuffer ioBsx;
 		ioBsx.setData(BSXData);
 		if (!ioBsx.open(QIODevice::ReadOnly)) {
@@ -132,20 +129,26 @@ FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate
 
 		BsxFile bsx(&ioBsx);
 		if (!bsx.seek(modelID)) {
-			qDebug() << "fieldModel bsx 2";
 			return fieldModel;
 		}
 		if (!bsx.read(fieldModel)) {
-			qDebug() << "fieldModel bsx 3";
 			return fieldModel;
 		}
 
 		if (!modelBcx.isEmpty()) {
 			if (!fieldModel->skeleton().isEmpty()) {
 				qWarning() << "FieldPS::fieldModel bsx present, but bcx skeleton not empty";
+				foreach (const FieldModelBone &bone, fieldModel->skeleton().bones()) {
+					qDeleteAll(bone.parts());
+				}
 			}
 			fieldModel->setSkeleton(modelBcx.skeleton());
 			fieldModel->setAnimations(modelBcx.animations() + fieldModel->animations());
+			modelBcx.setSkeleton(FieldModelSkeleton());
+		}
+		// FIXME: only selected animation -> not optimal
+		if (animationID < fieldModel->animationCount()) {
+			fieldModel->setAnimations(QList<FieldModelAnimation>() << fieldModel->animation(animationID));
 		}
 	}
 	return fieldModel;

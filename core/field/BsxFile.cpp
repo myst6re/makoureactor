@@ -83,6 +83,7 @@ bool BsxFile::read(QList<FieldModelFilePS *> &models)
 bool BsxFile::read(FieldModelFilePS *model)
 {
 	BsxModelHeader modelHeader;
+	qint64 pos = device()->pos();
 
 	if (sizeof(BsxModelHeader) != device()->read((char *)&modelHeader, sizeof(BsxModelHeader))) {
 		qWarning() << "BsxFile::read model error 1";
@@ -99,9 +100,8 @@ bool BsxFile::read(FieldModelFilePS *model)
 	model->setLightColors(colors);
 	model->setScale(modelHeader.scale);
 
-	qDebug() << "seek" << _offsetModels << modelHeader.offsetSkeleton << modelHeader.modelId << modelHeader.numBones << modelHeader.scale;
-
-	if (!device()->seek(_offsetModels + modelHeader.offsetSkeleton)) {
+	// Relative to model header
+	if (!device()->seek(pos + modelHeader.offsetSkeleton)) {
 		qWarning() << "BsxFile::read model error 2";
 		return false;
 	}
@@ -122,8 +122,6 @@ bool BsxFile::readModel(quint8 numBones, quint8 numParts, quint8 numAnimations, 
 	if (!readSkeleton(numBones, skeleton)) {
 		return false;
 	}
-
-	qDebug() << skeleton.toString();
 
 	if (!readPartsHeaders(numParts, partsHeaders)) {
 		return false;
@@ -166,7 +164,6 @@ bool BsxFile::seek(quint32 modelId)
 		qWarning() << "BsxFile::seek" << modelId << "error";
 		return false;
 	}
-	qDebug() << _offsetModels;
 
 	return device()->seek(_offsetModels + sizeof(BsxModelsHeader) + modelId * sizeof(BsxModelHeader));
 }

@@ -30,6 +30,9 @@ FieldModelFile::~FieldModelFile()
 
 void FieldModelFile::clear()
 {
+	foreach (const FieldModelBone &bone, _skeleton.bones()) {
+		qDeleteAll(bone.parts());
+	}
 	_skeleton.clear();
 	_animations.clear();
 	_loadedTex.clear();
