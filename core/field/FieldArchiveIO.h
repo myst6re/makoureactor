@@ -45,6 +45,7 @@ public:
 
 	QByteArray fieldData(Field *field, const QString &extension, bool unlzs=true);
 	QByteArray fileData(const QString &fileName, bool unlzs=true, bool isLzsFile=true);
+	int exportFieldData(Field *field, const QString &extension, const QString &path, bool unlzs=true);
 
 	bool fieldDataIsCached(Field *field, const QString &fileType) const;
 	virtual void clearCachedData();
