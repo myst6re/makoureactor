@@ -99,30 +99,28 @@ void FieldModel::initializeGL()
 //	gluPerspective(70, (double)width()/(double)height(), 0.001, 1000.0);
 }
 
-void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale,
-					   const FieldModelBone &bone, GLuint &texture_id, int &lastTexID)
+void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, const FieldModelBone &bone,
+					   GLuint &texture_id, quint64 &lastTexID)
 {
-	if(!data || data->isEmpty() || scale == 0.0f)	return;
+	if (scale == 0.0f) {
+		return;
+	}
 
 	foreach(FieldModelPart *p, bone.parts()) {
 
 		foreach(FieldModelGroup *g, p->groups()) {
-			bool hasTexture = g->textureNumber() > -1
-					&& (int)g->textureNumber() < data->loadedTextureCount();
-
-			if(hasTexture && lastTexID != g->textureNumber()) {
+			if(g->hasTexture()) {
 				if(texture_id != (GLuint)-1) {
 					glWidget->deleteTexture(texture_id);
 				} else {
 					glEnable(GL_TEXTURE_2D);
 				}
-				texture_id = glWidget->bindTexture(data->loadedTexture(g->textureNumber()), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
-				lastTexID = g->textureNumber();
-			} else if(!hasTexture && texture_id != (GLuint)-1) {
+				texture_id = glWidget->bindTexture(data->loadedTexture(g), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
+			} else if(!g->hasTexture() && texture_id != (GLuint)-1) {
 				glWidget->deleteTexture(texture_id);
 				glDisable(GL_TEXTURE_2D);
 				texture_id = -1;
-				lastTexID = -1;
+				lastTexID = quint64(-1);
 			}
 
 			int curPolyType = 0;
@@ -152,7 +150,7 @@ void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale,
 						glColor3ub(qRed(color), qGreen(color), qBlue(color));
 					}
 
-					if(hasTexture && p->hasTexture()) {
+					if(g->hasTexture() && p->hasTexture()) {
 						TexCoord coord = p->texCoord(j);
 						glTexCoord2d(coord.x, coord.y);
 					}
@@ -253,7 +251,7 @@ void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int anima
 	QStack<int> parent;
 	int i;
 	GLuint texture_id = -1;
-	int lastTexID = -1;
+	quint64 lastTexID = quint64(-1);
 
 	if(data->boneCount() <= 1) {
 		drawP(glWidget, data, scale, data->bone(0), texture_id, lastTexID);

@@ -125,39 +125,29 @@ TrianglePoly::TrianglePoly(const QList<PolyVertex> &vertices, const QRgb &color,
 }
 
 FieldModelGroup::FieldModelGroup() :
-	_textureNumber(-1)
+	_textureRef(0)
 {
 }
 
-FieldModelGroup::FieldModelGroup(int texNumber) :
-	_textureNumber(texNumber)
+FieldModelGroup::FieldModelGroup(FieldModelTextureRef *texRef) :
+	_textureRef(texRef)
 {
 }
 
 FieldModelGroup::~FieldModelGroup()
 {
 	qDeleteAll(_polys);
+	if (_textureRef) {
+		delete _textureRef;
+	}
 }
 
-const QList<Poly *> &FieldModelGroup::polygons() const
+void FieldModelGroup::setTextureRef(FieldModelTextureRef *texRef)
 {
-	return _polys;
-}
-
-int FieldModelGroup::textureNumber() const
-{
-	return _textureNumber;
-}
-
-void FieldModelGroup::setTextureNumber(int texNumber)
-{
-	_textureNumber = texNumber;
-}
-
-
-void FieldModelGroup::addPolygon(Poly *polygon)
-{
-	_polys.append(polygon);
+	if (_textureRef) {
+		delete _textureRef;
+	}
+	_textureRef = texRef;
 }
 
 FieldModelPart::FieldModelPart()
@@ -175,7 +165,7 @@ QString FieldModelPart::toString() const
 	int groupID=0, ID;
 
 	foreach(FieldModelGroup *group, _groups) {
-		ret.append(QString("==== GROUP %1 ==== texNumber: %2\n").arg(groupID).arg(group->textureNumber()));
+		ret.append(QString("==== GROUP %1 ==== texNumber: %2\n").arg(groupID).arg(group->textureRef()->textureIdentifier()));
 
 		ID = 0;
 		foreach(Poly *poly, group->polygons()) {

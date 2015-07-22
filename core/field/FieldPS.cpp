@@ -17,8 +17,6 @@
  ****************************************************************************/
 #include "FieldPS.h"
 #include "BackgroundFilePS.h"
-#include "BcxFile.h"
-#include "BsxFile.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
 	Field(name, io)
@@ -81,75 +79,10 @@ FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 
 FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate, bool open)
 {
-	Q_UNUSED(animate)
 	FieldModelFilePS *fieldModel = (FieldModelFilePS *)fieldModelPtr(modelID);
 	if(!fieldModel) 	addFieldModel(modelID, fieldModel = new FieldModelFilePS());
 	if(open) {
-		quint8 modelGlobalId = 0;
-		FieldModelFilePS modelBcx;
-
-		if (fieldModelLoader()->isOpen() && modelID < fieldModelLoader()->modelCount()) {
-			modelGlobalId = fieldModelLoader()->model(modelID).modelID;
-
-			if (modelGlobalId >= 1 && modelGlobalId <= 9) {
-				QString fileName;
-				switch (modelGlobalId) {
-				case 1:    fileName = "CLOUD";      break;
-				case 2:    fileName = "EARITH";     break;
-				case 3:    fileName = "BALLET";     break;
-				case 4:    fileName = "TIFA";       break;
-				case 5:    fileName = "RED";        break;
-				case 6:    fileName = "CID";        break;
-				case 7:    fileName = "YUFI";       break;
-				case 8:    fileName = "KETCY";      break;
-				case 9:    fileName = "VINCENT";    break;
-				}
-
-				QBuffer ioBcx;
-				ioBcx.setData(io()->fileData(fileName + ".BCX"));
-				if (!ioBcx.open(QIODevice::ReadOnly)) {
-					qWarning() << "FieldModelFilePS::load cannot open bcx buffer" << ioBcx.errorString();
-					return fieldModel;
-				}
-
-				BcxFile bcx(&ioBcx);
-				if (!bcx.read(modelBcx)) {
-					return fieldModel;
-				}
-			}
-		}
-
-		QByteArray BSXData = io()->modelData(this);
-		QBuffer ioBsx;
-		ioBsx.setData(BSXData);
-		if (!ioBsx.open(QIODevice::ReadOnly)) {
-			qWarning() << "FieldModelFilePS::load cannot open bsx buffer" << ioBsx.errorString();
-			return fieldModel;
-		}
-
-		BsxFile bsx(&ioBsx);
-		if (!bsx.seek(modelID)) {
-			return fieldModel;
-		}
-		if (!bsx.read(fieldModel)) {
-			return fieldModel;
-		}
-
-		if (!modelBcx.isEmpty()) {
-			if (!fieldModel->skeleton().isEmpty()) {
-				qWarning() << "FieldPS::fieldModel bsx present, but bcx skeleton not empty";
-				foreach (const FieldModelBone &bone, fieldModel->skeleton().bones()) {
-					qDeleteAll(bone.parts());
-				}
-			}
-			fieldModel->setSkeleton(modelBcx.skeleton());
-			fieldModel->setAnimations(modelBcx.animations() + fieldModel->animations());
-			modelBcx.setSkeleton(FieldModelSkeleton());
-		}
-		// FIXME: only selected animation -> not optimal
-		if (animationID < fieldModel->animationCount()) {
-			fieldModel->setAnimations(QList<FieldModelAnimation>() << fieldModel->animation(animationID));
-		}
+		fieldModel->load(this, modelID, animationID, animate);
 	}
 	return fieldModel;
 }

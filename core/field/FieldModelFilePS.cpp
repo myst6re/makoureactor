@@ -20,215 +20,184 @@
 #include "TdbFile.h"
 #include "../PsColor.h"
 #include "FieldPS.h"
+#include "BcxFile.h"
+#include "BsxFile.h"
 
 FieldModelFilePS::FieldModelFilePS() :
 	FieldModelFile()
 {
 }
 
-quint8 FieldModelFilePS::load(FieldPS *currentField, int modelId, int animationId, bool animate)
+bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID, bool animate)
 {
-	/*** Open textures header ***/
+	Q_UNUSED(animate)
+	quint8 modelGlobalId = 0;
+	bool modelIdIsValid = currentField->fieldModelLoader()->isOpen() && modelID < currentField->fieldModelLoader()->modelCount();
+	FieldModelFilePS modelBcx;
 
-	/* quint32 offsetTexHeader = header.offset_models + model_header.texture_pointer;
+	_currentField = currentField;
+	_currentModelID = modelID;
 
-	if(offsetTexHeader + 8 > (quint32)BSX_data.size()) {
-		qWarning() << BSX_data.size() << "error tex header";
-		return 2;
-	}
+	if (modelIdIsValid) {
+		modelGlobalId = currentField->fieldModelLoader()->model(modelID).modelID;
 
-	quint32 unknownTex, unknownTex2;
-	memcpy(&unknownTex, constData + offsetTexHeader, 4);
-	memcpy(&unknownTex2, constData + offsetTexHeader+4, 4);
-	quint8 texCount = unknownTex2 & 0xFF; */
+		if (modelGlobalId >= 1 && modelGlobalId <= 9) {
+			QString fileName;
+			switch (modelGlobalId) {
+			case 1:    fileName = "CLOUD";      break;
+			case 2:    fileName = "EARITH";     break;
+			case 3:    fileName = "BALLET";     break;
+			case 4:    fileName = "TIFA";       break;
+			case 5:    fileName = "RED";        break;
+			case 6:    fileName = "CID";        break;
+			case 7:    fileName = "YUFI";       break;
+			case 8:    fileName = "KETCY";      break;
+			case 9:    fileName = "VINCENT";    break;
+			}
 
-//	qDebug() << "==== TEXTURES HEADER ====" << offsetTexHeader;
-//	qDebug() << "texCount" << texCount << "unknown1" << unknownTex << "unknown2" << (unknownTex2 & 0xFFFFFF00);
+			QBuffer ioBcx;
+			ioBcx.setData(currentField->io()->fileData(fileName + ".BCX"));
+			if (!ioBcx.open(QIODevice::ReadOnly)) {
+				qWarning() << "FieldModelFilePS::load cannot open bcx buffer" << ioBcx.errorString();
+				return false;
+			}
 
-	/*** Open texture Headers ***/
-
-	/* if(offsetTexHeader + 8 + texCount*sizeof(TexHeader) > (quint32)BSX_data.size()) {
-		qWarning() << BSX_data.size() << "error tex data";
-		return 2;
-	}
-
-	QList<TexHeader> texHeaders;
-
-	for(int tex=0 ; tex<texCount ; ++tex) {
-		TexHeader texHeader;
-		memcpy(&texHeader, constData + offsetTexHeader + 8 + tex*sizeof(TexHeader), sizeof(TexHeader));
-
-		texHeader.offset_data += offsetTexHeader;
-
-//		qDebug() << "==== TEXTURE HEADER" << tex << "====" << (offsetTexHeader + 8 + tex*sizeof(TexHeader));
-//		qDebug() << "width" << texHeader.width << "height" << texHeader.height << "x" << texHeader.vramX << "y" << texHeader.vramY;
-//		qDebug() << "offsetData" << texHeader.offset_data << "endData" << (texHeader.offset_data + texHeader.width * 2 * texHeader.height);
-
-		texHeaders.append(texHeader);
-	} */
-
-	/*
-	// DEBUG
-	for(int tex=0 ; tex<texHeaders.size() ; ++tex) {
-		if(tex==1)	continue;
-		openTexture(constData, 0, texHeaders.at(tex), texHeaders.at(1), 1).save(QString("Makou-Texture%1.png").arg(tex));
-	}*/
-
-	/* if(model_id < modelLoader->modelCount()) {
-		TdbFile tdb;
-		quint8 faceID = modelLoader->model(model_id).faceID;
-		QMap<TextureInfo, int> texAlreadyLoaded;
-
-		if(faceID < 0x21) {
-			tdb.open(currentField->io()->fileData("FIELD.TDB"));
+			BcxFile bcx(&ioBcx);
+			if (!bcx.read(modelBcx)) {
+				return false;
+			}
 		}
+	}
 
-		int texID=0;
+	QByteArray BSXData = currentField->io()->modelData(currentField);
+	QBuffer ioBsx;
+	ioBsx.setData(BSXData);
+	if (!ioBsx.open(QIODevice::ReadOnly)) {
+		qWarning() << "FieldModelFilePS::load cannot open bsx buffer" << ioBsx.errorString();
+		return false;
+	}
 
-		foreach(const FieldModelBone &bone, _skeleton.bones()) {
-			foreach(FieldModelPart *part, bone.parts()) {
-				QList<int> texIds;
-				QList<TextureInfo> texAlreadyLoadedInPart;
-				int lastTexHeight=0;
+	BsxFile bsx(&ioBsx);
+	if (!bsx.seek(modelID)) {
+		return false;
+	}
+	if (!bsx.read(this)) {
+		return false;
+	}
+	if (!bsx.seekTextures()) {
+		return false;
+	}
+	if (!bsx.readTextures(&_textures)) {
+		return false;
+	}
 
-				foreach(TextureInfo texInfo, ((FieldModelPartPS *)part)->textures()) {
-					bool contains2 = false;
-					foreach(const TextureInfo &texInfo2, texAlreadyLoadedInPart) {
-						if(texInfo2 == texInfo) {
-							contains2 = true;
+	const QList<QRect> &texturesRects = _textures.rects();
+	foreach (QRect rect, texturesRects) {
+		qDebug() << "texture rect" << rect << "after this rect" << QRect(rect.left(), rect.top() + rect.height(), 0, 0);
+	}
+
+//	qDebug() << texturesRects;
+
+	foreach (const FieldModelBone &bone, _skeleton.bones()) {
+		qDebug() << "bone";
+		foreach (FieldModelPart *part, bone.parts()) {
+			qDebug() << "part";
+			QHash<int, int> imgY;
+
+			foreach (FieldModelGroup *group, part->groups()) {
+				if (group->hasTexture()) {
+					FieldModelTextureRefPS *textureRef = (FieldModelTextureRefPS *)group->textureRef();
+
+					if (textureRef->type() > 1) {
+						qDebug() << "textureRef" << textureRef->imgPos();
+						textureRef->setImgY(textureRef->imgY() + imgY.value(textureRef->imgX()));
+						qDebug() << "textureRef updated" << textureRef->imgPos();
+
+						int rectId = 0;
+						foreach (const QRect &rect, texturesRects) {
+							if (rect.topLeft() == textureRef->imgPos()) {
+								break;
+							}
+							rectId++;
+						}
+
+						if (rectId >= texturesRects.size()) {
+							qWarning() << "FieldModelFilePS::load adjust texture pos error 1";
 							break;
 						}
-					}
-					if(!contains2) {
-						texAlreadyLoadedInPart.append(texInfo);
-					}
-					if(contains2 && (faceID >= 0x21 || (texInfo.type != 0 && texInfo.type != 1))) {
-						texInfo.imgY += lastTexHeight;
-					}
 
-	//				qDebug() << "TEXTUREINFO";
-	//				qDebug() << "type" << texInfo.type << "bpp" << texInfo.bpp;
-	//				qDebug() << "imgX" << texInfo.imgX << "imgY" << texInfo.imgY;
-	//				qDebug() << "palX" << texInfo.palX << "palY" << texInfo.palY;
-
-					QMapIterator<TextureInfo, int> it(texAlreadyLoaded);
-					bool contains = false;
-					while(it.hasNext()) {
-						it.next();
-						if(it.key() == texInfo) {
-							contains = true;
-							break;
-						}
-					}
-
-					if(contains) {
-						texIds.append(texAlreadyLoaded.value(texInfo));
-					} else {
-						if(faceID < 0x21 && (texInfo.type == 0 || texInfo.type == 1)) { // Eye and Mouth
-	//						qDebug() << (texInfo.type == 0 ? "EYE" : "MOUTH") << texID;
-							texIds.append(texID);
-							texAlreadyLoaded.insert(texInfo, texID);
-							_loadedTex.insert(texID++, tdb.texture(faceID, texInfo.type == 0 ? TdbFile::Eye : TdbFile::MouthClosed));
-						} else {
-	//						qDebug() << "OTHER" << texID;
-
-							TexHeader imgHeader=TexHeader(), palHeader=TexHeader();
-							bool imgFound=false, palFound=false;
-							foreach(const TexHeader &texHeader, texHeaders) {
-								if(!imgFound && texInfo.imgX == texHeader.vramX && texInfo.imgY == texHeader.vramY) {
-									imgHeader = texHeader;
-									imgFound = true;
-								} else if(!palFound && texInfo.palX == texHeader.vramX && texInfo.palY == texHeader.vramY) {
-									palHeader = texHeader;
-									palFound = true;
-								}
-								if(imgFound && palFound)	break;
-							}
-							if(imgFound && palFound) {
-								lastTexHeight += imgHeader.height;
-								texIds.append(texID);
-								texAlreadyLoaded.insert(texInfo, texID);
-								_loadedTex.insert(texID++, openTexture(constData, BSX_data.size(), imgHeader, palHeader, texInfo.bpp));
-							} else {
-								qWarning() << "Tex not found!";
-							}
-						}
-					}
-				}
-
-	//			qDebug() << "texIds" << ((FieldModelPartPS *)part)->boneID() << texIds;
-
-				if(!texIds.isEmpty()) {
-					foreach(FieldModelGroup *group, part->groups()) {
-						if(group->textureNumber() != -1) {
-							group->setTextureNumber(texIds.at(group->textureNumber()));
-							const QImage currentTex = _loadedTex.value(group->textureNumber());
-							int texWidth=currentTex.width(), texHeight=currentTex.height();
-
-							foreach(Poly *poly, group->polygons()) {
-								poly->divTexCoords(texWidth, texHeight);
-							}
-						}
+						QRect rect = texturesRects.at(rectId);
+						imgY.insert(textureRef->imgX(), imgY.value(textureRef->imgX()) + rect.height());
 					}
 				}
 			}
 		}
 	}
 
-	dataLoaded = true; */
+	if (!modelBcx.isEmpty()) {
+		if (!skeleton().isEmpty()) {
+			qWarning() << "FieldPS::fieldModel bsx present, but bcx skeleton not empty";
+			foreach (const FieldModelBone &bone, skeleton().bones()) {
+				qDeleteAll(bone.parts());
+			}
+		}
+		setSkeleton(modelBcx.skeleton());
+		setAnimations(modelBcx.animations() + animations());
+		modelBcx.setSkeleton(FieldModelSkeleton());
+	}
+	// FIXME: only selected animation -> not optimal
+	if (animationID < animationCount()) {
+		setAnimations(QList<FieldModelAnimation>() << animation(animationID));
+	}
+
+	vramImage().save("vram.png");
 
 	return true;
 }
 
-QImage FieldModelFilePS::openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp)
+QImage FieldModelFilePS::loadedTexture(FieldModelGroup *group)
 {
-	if(imgHeader.offset_data + imgHeader.height * 2 > (quint32)size) {
-		qWarning() << "Offset texture too large" << (imgHeader.offset_data + imgHeader.height * 2);
-		return QImage();
+	if (_loadedTex.contains(group)) {
+		return _loadedTex.value(group);
 	}
 
-	int width = imgHeader.width;
-	if(bpp == 1) {
-		width *= 2;
-	} else if(bpp == 0) {
-		width *= 4;
+	const FieldModelTextureRefPS * const texRefPS = (const FieldModelTextureRefPS * const)group->textureRef();
+	QImage tex;
+
+	if (texRefPS->type() == 0 || texRefPS->type() == 1) { // Eye and Mouth
+		quint8 faceID = _currentField->fieldModelLoader()->model(_currentModelID).faceID;
+		TdbFile tdb;
+		bool useTdb = faceID < 0x21;
+
+		if (useTdb && tdb.open(_currentField->io()->fileData("FIELD.TDB"))) {
+			tex = tdb.texture(faceID, texRefPS->type() == 0 ? TdbFile::Eye : TdbFile::MouthClosed);
+		} else {
+			qWarning() << "FieldModelFilePS::loadedTexture error";
+			return QImage();
+		}
+	} else {
+		tex = _textures.toImage(texRefPS->imgX(), texRefPS->imgY(),
+								texRefPS->palX(), texRefPS->palY(),
+								texRefPS->bpp() == 0 ? FieldModelTexturesPS::Bpp4
+													 : FieldModelTexturesPS::Bpp8);
 	}
 
-	QImage img(width, imgHeader.height, QImage::Format_ARGB32);
-	QRgb *px = (QRgb *)img.bits();
-	int i=0;
-	for(int y=0 ; y<imgHeader.height ; ++y) {
-		for(int x=0 ; x<imgHeader.width*2 ; ++x) {
-			quint8 index = constData[imgHeader.offset_data + i];
-			quint16 color;
+	// Fix tex coords according to tex size
+	foreach (Poly *poly, group->polygons()) {
+		poly->divTexCoords(tex.width(), tex.height());
+	}
 
-			if(bpp == 1) {
-				if(palHeader.offset_data + index*2 + 2 > (quint32)size) {
-					qWarning() << "Offset palette too large";
-					continue;
-				}
-				memcpy(&color, constData + palHeader.offset_data + index*2, 2);
+	_loadedTex.insert(group, tex);
 
-				px[i] = PsColor::fromPsColor(color, true);
-			} else if(bpp == 0) {
-				if(palHeader.offset_data + (index & 0xF)*2 + 2 > (quint32)size) {
-					qWarning() << "Offset palette too large";
-					continue;
-				}
-				memcpy(&color, constData + palHeader.offset_data + (index & 0xF)*2, 2);
+	return tex;
+}
 
-				px[i*2] = PsColor::fromPsColor(color, true);
-
-				if(palHeader.offset_data + (index >> 4)*2 + 2 > (quint32)size) {
-					qWarning() << "Offset palette too large";
-					continue;
-				}
-				memcpy(&color, constData + palHeader.offset_data + (index >> 4)*2, 2);
-
-				px[i*2 + 1] = PsColor::fromPsColor(color, true);
-			}
-			++i;
+QImage FieldModelFilePS::vramImage() const
+{
+	foreach (const QRect &rect, _textures.rects()) {
+		if (rect.height() == 1) {
+			return _textures.toImage(rect.topLeft(), FieldModelTexturesPS::Bpp8);
 		}
 	}
-	return img;
+	return QImage();
 }

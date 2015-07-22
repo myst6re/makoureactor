@@ -47,15 +47,6 @@ public:
 	inline int boneCount() const {
 		return _skeleton.boneCount();
 	}
-	inline int loadedTextureCount() const {
-		return _loadedTex.size();
-	}
-	inline QImage loadedTexture(int texID) const {
-		return _loadedTex.value(texID);
-	}
-	inline void setLoadedTextures(const QHash<int, QImage> &loadedTex) {
-		_loadedTex = loadedTex;
-	}
 	inline const QList<FieldModelAnimation> &animations() const {
 		return _animations;
 	}
@@ -68,10 +59,10 @@ public:
 	inline const FieldModelAnimation &animation(int animationID) const {
 		return _animations.at(animationID);
 	}
+	virtual QImage loadedTexture(FieldModelGroup *group)=0;
 private:
 	Q_DISABLE_COPY(FieldModelFile)
 protected:
-	QHash<int, QImage> _loadedTex;
 	FieldModelSkeleton _skeleton;
 	QList<FieldModelAnimation> _animations;
 };

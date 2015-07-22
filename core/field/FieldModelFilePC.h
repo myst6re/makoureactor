@@ -20,6 +20,7 @@
 
 #include <QtGui>
 #include "FieldModelFile.h"
+#include "FieldModelPartPC.h"
 
 class CharArchive;
 
@@ -28,7 +29,14 @@ class FieldModelFilePC : public FieldModelFile
 public:
 	FieldModelFilePC();
 	inline bool translateAfter() const { return true; }
+	void clear();
 	quint8 load(const QString &hrc, const QString &a, bool animate = true);
+	inline int loadedTextureCount() const {
+		return _loadedTex.size();
+	}
+	inline QImage loadedTexture(FieldModelGroup *group) {
+		return _loadedTex.value(((FieldModelTextureRefPC *)group->textureRef())->id());
+	}
 private:
 	Q_DISABLE_COPY(FieldModelFilePC)
 	bool openSkeleton(const QString &hrcFileName, QMultiMap<int, QStringList> &rsdFiles);
@@ -37,6 +45,7 @@ private:
 	bool openPart(const QString &rsdFileName, int boneID, QStringList &textureFiles);
 	QImage openTexture(const QString &texFileName);
 	CharArchive *_charLgp;
+	QHash<int, QImage> _loadedTex;
 };
 
 #endif // FIELDMODELFILEPC_H

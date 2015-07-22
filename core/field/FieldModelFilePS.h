@@ -18,14 +18,10 @@
 #ifndef FIELDMODELFILEPS_H
 #define FIELDMODELFILEPS_H
 
-#include <QtGui>
+#include <QtCore>
+#include <QImage>
 #include "FieldModelFile.h"
-
-typedef struct {
-	quint16 width, height;
-	quint16 vramX, vramY;
-	quint32 offset_data;
-} TexHeader;
+#include "FieldModelPartPS.h"
 
 class FieldPS;
 
@@ -46,12 +42,17 @@ public:
 	inline void setScale(quint16 scale) {
 		_scale = scale;
 	}
-	quint8 load(FieldPS *currentField, int modelId, int animationId, bool animate);
+	bool load(FieldPS *currentField, int modelID, int animationID, bool animate);
+	QImage loadedTexture(FieldModelGroup *group);
+	QImage vramImage() const;
 private:
 	Q_DISABLE_COPY(FieldModelFilePS)
-	QImage openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp);
 	QList<QRgb> _colors;
 	quint16 _scale;
+	FieldPS *_currentField;
+	int _currentModelID;
+	QHash<FieldModelGroup *, QImage> _loadedTex;
+	FieldModelTexturesPS _textures;
 };
 
 #endif // FIELDMODELFILEPS_H

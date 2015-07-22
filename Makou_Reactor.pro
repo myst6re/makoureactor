@@ -136,7 +136,8 @@ HEADERS += \
     core/field/HrcFile.h \
     core/field/AFile.h \
     core/field/PFile.h \
-    core/field/RsdFile.h
+    core/field/RsdFile.h \
+    core/field/FieldModelPartPC.h
 
 SOURCES += \
     Window.cpp \
@@ -266,7 +267,8 @@ SOURCES += \
     core/field/HrcFile.cpp \
     core/field/AFile.cpp \
     core/field/PFile.cpp \
-    core/field/RsdFile.cpp
+    core/field/RsdFile.cpp \
+    core/field/FieldModelPartPC.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

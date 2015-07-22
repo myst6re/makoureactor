@@ -35,5 +35,4 @@ void FieldModelFile::clear()
 	}
 	_skeleton.clear();
 	_animations.clear();
-	_loadedTex.clear();
 }

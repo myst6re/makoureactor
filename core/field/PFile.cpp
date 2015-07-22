@@ -94,7 +94,7 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 		if(g.areTexturesUsed) {
 			if (g.textureNumber < quint32(texIds.size())) {
 				// Convert relative group tex IDs to absolute tex IDs
-				grp->setTextureNumber(texIds.at(g.textureNumber));
+				grp->setTextureRef(new FieldModelTextureRefPC(texIds.at(g.textureNumber)));
 			}
 		}
 
@@ -103,42 +103,30 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 			QList<PolyVertex> polyVertices;
 			QList<QRgb> polyColors;
 			QList<TexCoord> polyTexCoords;
+
 			for(quint8 j=0 ; j<3 ; ++j) {
-				if(g.areTexturesUsed) {
-					int vertexIndex = g.verticesStartIndex + poly.VertexIndex[j];
-					int texCoordIndex = g.texCoordStartIndex + poly.VertexIndex[j];
+				int vertexIndex = g.verticesStartIndex + poly.VertexIndex[j];
 
-					if(vertexIndex < vertices.size() &&
-							vertexIndex < vertexColors.size() &&
-							texCoordIndex < texCs.size()) {
-						// vertex
-						vertex = vertices.at(vertexIndex);
-						polyVertex.x = vertex.x;
-						polyVertex.y = vertex.y;
-						polyVertex.z = vertex.z;
-						polyVertices.append(polyVertex);
-						// color
-						vertexColor = vertexColors.at(vertexIndex);
-						color = qRgb(vertexColor.red, vertexColor.green, vertexColor.blue);
-						polyColors.append(color);
-						// tex coord
-						polyTexCoords.append(texCs.at(texCoordIndex));
-					}
-				} else {
-					int vertexIndex = g.verticesStartIndex + poly.VertexIndex[j];
+				if(vertexIndex < vertices.size() &&
+						vertexIndex < vertexColors.size()) {
+					// vertex
+					vertex = vertices.at(vertexIndex);
+					polyVertex.x = vertex.x;
+					polyVertex.y = vertex.y;
+					polyVertex.z = vertex.z;
+					polyVertices.append(polyVertex);
+					// color
+					vertexColor = vertexColors.at(vertexIndex);
+					color = qRgb(vertexColor.red, vertexColor.green, vertexColor.blue);
+					polyColors.append(color);
 
-					if(vertexIndex < vertices.size() &&
-							vertexIndex < vertexColors.size()) {
-						// vertex
-						vertex = vertices.at(vertexIndex);
-						polyVertex.x = vertex.x;
-						polyVertex.y = vertex.y;
-						polyVertex.z = vertex.z;
-						polyVertices.append(polyVertex);
-						// color
-						vertexColor = vertexColors.at(vertexIndex);
-						color = qRgb(vertexColor.red, vertexColor.green, vertexColor.blue);
-						polyColors.append(color);
+					if(g.areTexturesUsed) {
+						int texCoordIndex = g.texCoordStartIndex + poly.VertexIndex[j];
+
+						if(texCoordIndex < texCs.size()) {
+							// tex coord
+							polyTexCoords.append(texCs.at(texCoordIndex));
+						}
 					}
 				}
 			}

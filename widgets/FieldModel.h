@@ -47,8 +47,8 @@ private slots:
 private:
 	void updateTimer();
 	inline void paintModel() { paintModel(this, data, animationID, currentFrame); }
-	static void drawP(QGLWidget *glWidget, FieldModelFile *data, float scale,
-					  const FieldModelBone &bone, GLuint &texture_id, int &lastTexID);
+	static void drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, const FieldModelBone &bone,
+					  GLuint &texture_id, quint64 &lastTexID);
 	void setXRotation(int angle);
 	void setYRotation(int angle);
 	void setZRotation(int angle);

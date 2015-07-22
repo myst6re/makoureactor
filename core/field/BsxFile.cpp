@@ -18,28 +18,24 @@
 #include "BsxFile.h"
 
 BsxFile::BsxFile(QIODevice *io) :
-	IO(io), _offsetModels(-1)
+	IO(io), _offsetModels(0),
+	_offsetTextures(0)
 {
 }
 
 bool BsxFile::read(QList<FieldModelFilePS *> &models)
 {
+	// Implicit seek
 	if (!readHeader()) {
 		return false;
 	}
 
-	if (!seekModels()) {
+	// Implicit seek
+	if (!readModelsHeader()) {
 		return false;
 	}
 
-	BsxModelsHeader modelsHeader;
-
-	if (sizeof(BsxModelsHeader) != device()->read((char *)&modelsHeader, sizeof(BsxModelsHeader))) {
-		qWarning() << "BsxFile::read error 1";
-		return false;
-	}
-
-	for (quint64 modelID = 0; modelID < modelsHeader.numModels; ++modelID) {
+	for (quint64 modelID = 0; modelID < _numModels; ++modelID) {
 		if (!seek(modelID)) {
 			return false;
 		}
@@ -54,28 +50,12 @@ bool BsxFile::read(QList<FieldModelFilePS *> &models)
 	}
 
 	// Textures
-
-	if (!device()->seek(_offsetModels + modelsHeader.texturePointer)) {
+	if (!seekTextures()) {
 		qWarning() << "BsxFile::read error 2";
 		return false;
 	}
 
-	BsxTexturesHeader texturesHeader;
 
-	if (sizeof(BsxTexturesHeader) != device()->read((char *)&texturesHeader, sizeof(BsxTexturesHeader))) {
-		qWarning() << "BsxFile::read error 3";
-		return false;
-	}
-
-	QList<BsxTextureHeader> headers;
-
-	if (!readTexturesHeaders(texturesHeader.numTextures, headers)) {
-		return false;
-	}
-
-/*	if (!readTexturesData(texturesHeader.numTextures)) {
-		return false;
-	}*/
 
 	return true;
 }
@@ -147,9 +127,47 @@ bool BsxFile::readModel(quint8 numBones, quint8 numParts, quint8 numAnimations, 
 	return true;
 }
 
+bool BsxFile::readTextures(FieldModelTexturesPS *textures)
+{
+	BsxTexturesHeader texturesHeader;
+
+	if (sizeof(BsxTexturesHeader) != device()->read((char *)&texturesHeader, sizeof(BsxTexturesHeader))) {
+		qWarning() << "BsxFile::read error 3";
+		return false;
+	}
+
+	if (texturesHeader.textureSectionSize != device()->size() - device()->pos() + sizeof(BsxTexturesHeader)) {
+		qWarning() << "BsxFile::readTextures textures header inconsistency" << texturesHeader.textureSectionSize << device()->pos() << device()->size();
+	}
+
+	QList<BsxTextureHeader> headers;
+
+	if (!readTexturesHeaders(texturesHeader.numTextures, headers)) {
+		return false;
+	}
+
+	QList<QByteArray> dataList;
+
+	if (!readTexturesData(headers, dataList)) {
+		return false;
+	}
+
+	QList<QRect> rects;
+
+	foreach (const BsxTextureHeader &h, headers) {
+		rects.append(QRect(h.vramX, h.vramY,
+						   h.width, h.height));
+	}
+
+	textures->setRects(rects);
+	textures->setData(dataList);
+
+	return true;
+}
+
 bool BsxFile::seekModels()
 {
-	// Get offset models
+	// Get offset models (Implicit seek)
 	if (!readHeader()) {
 		return false;
 	}
@@ -157,11 +175,20 @@ bool BsxFile::seekModels()
 	return device()->seek(_offsetModels);
 }
 
+bool BsxFile::seekTextures()
+{
+	// Get offset textures (Implicit seek)
+	if (!readModelsHeader()) {
+		return false;
+	}
+
+	return device()->seek(_offsetModels + _offsetTextures);
+}
+
 bool BsxFile::seek(quint32 modelId)
 {
 	// Get offset models
 	if (!readHeader()) {
-		qWarning() << "BsxFile::seek" << modelId << "error";
 		return false;
 	}
 
@@ -170,7 +197,7 @@ bool BsxFile::seek(quint32 modelId)
 
 bool BsxFile::readHeader()
 {
-	if (_offsetModels >= 0) {
+	if (_offsetModels > 0) {
 		return true;
 	}
 
@@ -178,12 +205,33 @@ bool BsxFile::readHeader()
 		qWarning() << "BsxFile::readHeader error 1";
 		return false;
 	}
-	quint32 offsetModels; // Temp var (32-bit)
-	if (4 != device()->read((char *)&offsetModels, 4)) {
+	if (4 != device()->read((char *)&_offsetModels, 4)) {
 		qWarning() << "BsxFile::readHeader error 2";
 		return false;
 	}
-	_offsetModels = offsetModels;
+
+	return true;
+}
+
+bool BsxFile::readModelsHeader()
+{
+	if (_offsetTextures > 0) {
+		return true;
+	}
+
+	if (!seekModels()) {
+		return false;
+	}
+
+	BsxModelsHeader modelsHeader;
+
+	if (sizeof(BsxModelsHeader) != device()->read((char *)&modelsHeader, sizeof(BsxModelsHeader))) {
+		qWarning() << "BsxFile::readModelsHeader error";
+		return false;
+	}
+
+	_numModels = modelsHeader.numModels;
+	_offsetTextures = modelsHeader.texturePointer;
 
 	return true;
 }
@@ -237,7 +285,7 @@ bool BsxFile::readAnimationsHeaders(quint8 numAnimations, QList<FieldModelAnimat
 bool BsxFile::readMesh(const QList<FieldModelPartPSHeader> &partsHeaders, FieldModelSkeleton &skeleton)
 {
 	foreach (const FieldModelPartPSHeader &header, partsHeaders) {
-		FieldModelPartPS *part = new FieldModelPartPS();
+		FieldModelPart *part = new FieldModelPart();
 
 		if (!readPart(header, part)) {
 			return false;
@@ -249,12 +297,19 @@ bool BsxFile::readMesh(const QList<FieldModelPartPSHeader> &partsHeaders, FieldM
 	return true;
 }
 
-bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartPS *part)
+bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPart *part)
 {
 	QList<FieldModelGroup *> groups;
-	QList<TextureInfo> textures;
 	QList<PolyVertex> vertices;
 	QList<TexCoord> texCoords;
+
+	if (partHeader.numControl != partHeader.numQuadColorTex
+			+ partHeader.numQuadMonoTex
+			+ partHeader.numTriColorTex
+			+ partHeader.numTriMonoTex) {
+		qWarning() << "BsxFile::readPart num control error" << partHeader.numControl << partHeader.numQuadColorTex << partHeader.numQuadMonoTex << partHeader.numTriColorTex << partHeader.numTriMonoTex;
+		return false;
+	}
 
 	// Vertices
 	quint32 offsetToVertex = partHeader.offsetVertex & 0x7FFFFFFF;
@@ -282,6 +337,37 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartP
 		vertices.append(vertex);
 	}
 
+	// Texture informations
+	quint32 offsetToTexInfos = offsetToVertex + partHeader.offsetFlags;
+
+	if (!device()->seek(offsetToTexInfos)) {
+		qWarning() << "BsxFile::readPart error 6";
+		return false;
+	}
+
+	groups.append(new FieldModelGroup()); // group without textured polygons
+
+	for (quint16 i = 0; i < partHeader.numFlags; ++i) {
+		quint32 flag;
+		if (4 != device()->read((char *)&flag, 4)) {
+			qWarning() << "BsxFile::readPart error 7" << i;
+			return false;
+		}
+
+		FieldModelTextureRefPS *texRef = new FieldModelTextureRefPS();
+
+		texRef->setType(flag & 0x3F);                           // 0000 0000 0000 0000 0000 0000 0011 1111
+		texRef->setBpp((flag >> 6) & 0x03);                     // 0000 0000 0000 0000 0000 0000 1100 0000
+		texRef->setImgX(/*512 + */((flag >> 8) & 0x0f) * 64);   // 0000 0000 0000 0000 0000 1111 0000 0000
+		texRef->setImgY(/*256 + */((flag >> 12) & 0x01) * 256); // 0000 0000 0000 0000 0001 0000 0000 0000
+//		quint8 u1 = ((flag >> 13) & 0x07);
+		texRef->setPalX(/*512 + */((flag >> 16) & 0x3F) * 16);  // 0000 0000 0011 1111 0000 0000 0000 0000
+		texRef->setPalY(/*256 + */((flag >> 22) & 0x01FF));     // 0111 1111 1100 0000 0000 0000 0000 0000
+//		quint8 u2 = ((flag >> 31) & 0x01);
+
+		groups.append(new FieldModelGroup(texRef));
+	}
+
 	// Texture coordinates
 	quint32 offsetToTexCoords = offsetToVertex + partHeader.offsetTexcoord;
 
@@ -307,41 +393,6 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartP
 
 		texCoords.append(texCoord);
 	}
-
-	// Texture informations
-	quint32 offsetToTexInfos = offsetToVertex + partHeader.offsetFlags;
-
-	if (!device()->seek(offsetToTexInfos)) {
-		qWarning() << "BsxFile::readPart error 6";
-		return false;
-	}
-
-	groups.append(new FieldModelGroup()); // group with no textured polygons
-
-	for (quint16 i = 0; i < partHeader.numFlags; ++i) {
-		quint32 flag;
-		if (4 != device()->read((char *)&flag, 4)) {
-			qWarning() << "BsxFile::readPart error 7" << i;
-			return false;
-		}
-
-		TextureInfo texInfo;
-
-		texInfo.type	= flag & 0x3F;							// 0000 0000 0000 0000 0000 0000 0011 1111
-		texInfo.bpp		= (flag >> 6) & 0x03;					// 0000 0000 0000 0000 0000 0000 1100 0000
-		texInfo.imgX	= /*512 + */((flag >> 8) & 0x0f) * 64;		// 0000 0000 0000 0000 0000 1111 0000 0000
-		texInfo.imgY	= /*256 + */((flag >> 12) & 0x01) * 256;	// 0000 0000 0000 0000 0001 0000 0000 0000
-//		quint8 u1		= ((flag >> 13) & 0x07);
-		texInfo.palX	= /*512 + */((flag >> 16) & 0x3F) * 16;		// 0000 0000 0011 1111 0000 0000 0000 0000
-		texInfo.palY	= /*256 + */((flag >> 22) & 0x01FF);		// 0111 1111 1100 0000 0000 0000 0000 0000
-//		quint8 u2		= ((flag >> 31) & 0x01);
-
-		textures.append(texInfo);
-		groups.append(new FieldModelGroup(i));
-	}
-
-	part->setGroups(groups);
-	part->setTextures(textures);
 
 	// Polygons
 	const quint32 offsetToPoly = offsetToVertex + partHeader.offsetPoly;
@@ -395,11 +446,11 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartP
 		}
 
 		if (!notAdd) {
-			if (offsetControl >= controlData.size()) {
-				qWarning() << "BsxFile::readPart error 12" << i;
+			QuadPoly *poly = new QuadPoly(polyVertices, polyColors, polyTexCoords);
+			if (!addTexturedPolygonToGroup(controlData.at(offsetControl++), poly, groups)) {
+				delete poly;
 				return false;
 			}
-			part->addTexturedPolygon(controlData[offsetControl++], new QuadPoly(polyVertices, polyColors, polyTexCoords));
 		}
 	}
 
@@ -433,11 +484,11 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartP
 		}
 
 		if (!notAdd) {
-			if (offsetControl >= controlData.size()) {
-				qWarning() << "BsxFile::readPart error 14" << i;
+			TrianglePoly *poly = new TrianglePoly(polyVertices, polyColors, polyTexCoords);
+			if (!addTexturedPolygonToGroup(controlData.at(offsetControl++), poly, groups)) {
+				delete poly;
 				return false;
 			}
-			part->addTexturedPolygon(controlData[offsetControl++], new TrianglePoly(polyVertices, polyColors, polyTexCoords));
 		}
 	}
 
@@ -470,11 +521,11 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartP
 		}
 
 		if (!notAdd) {
-			if (offsetControl >= controlData.size()) {
-				qWarning() << "BsxFile::readPart error 16" << i;
+			QuadPoly *poly = new QuadPoly(polyVertices, polyColor, polyTexCoords);
+			if (!addTexturedPolygonToGroup(controlData.at(offsetControl++), poly, groups)) {
+				delete poly;
 				return false;
 			}
-			part->addTexturedPolygon(controlData[offsetControl++], new QuadPoly(polyVertices, polyColor, polyTexCoords));
 		}
 	}
 
@@ -507,11 +558,11 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartP
 		}
 
 		if (!notAdd) {
-			if (offsetControl >= controlData.size()) {
-				qWarning() << "BsxFile::readPart error 18" << i;
+			TrianglePoly *poly = new TrianglePoly(polyVertices, polyColor, polyTexCoords);
+			if (!addTexturedPolygonToGroup(controlData.at(offsetControl++), poly, groups)) {
+				delete poly;
 				return false;
 			}
-			part->addTexturedPolygon(controlData[offsetControl++], new TrianglePoly(polyVertices, polyColor, polyTexCoords));
 		}
 	}
 
@@ -541,7 +592,7 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartP
 		}
 
 		if (!notAdd) {
-			part->addPolygon(new TrianglePoly(polyVertices, polyColor));
+			groups.first()->addPolygon(new TrianglePoly(polyVertices, polyColor));
 		}
 	}
 
@@ -571,7 +622,7 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartP
 		}
 
 		if (!notAdd) {
-			part->addPolygon(new QuadPoly(polyVertices, polyColor));
+			groups.first()->addPolygon(new QuadPoly(polyVertices, polyColor));
 		}
 	}
 
@@ -602,7 +653,7 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartP
 		}
 
 		if (!notAdd) {
-			part->addPolygon(new TrianglePoly(polyVertices, polyColors));
+			groups.first()->addPolygon(new TrianglePoly(polyVertices, polyColors));
 		}
 	}
 
@@ -633,9 +684,28 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartP
 		}
 
 		if (!notAdd) {
-			part->addPolygon(new QuadPoly(polyVertices, polyColors));
+			groups.first()->addPolygon(new QuadPoly(polyVertices, polyColors));
 		}
 	}
+
+	part->setGroups(groups);
+
+	return true;
+}
+
+bool BsxFile::addTexturedPolygonToGroup(quint8 control, Poly *polygon, QList<FieldModelGroup *> &groups)
+{
+	quint8 blend = (control >> 4) & 0x03,
+			flagID = control & 0x0F;
+
+	if (flagID >= groups.size()) {
+		qWarning() << "BsxFile::addTexturedPolygonToGroup error 2" << flagID << groups.size();
+		return false;
+	}
+
+	FieldModelGroup *group = groups.at(flagID + 1);
+	group->setBlendMode(blend);
+	group->addPolygon(polygon);
 
 	return true;
 }
@@ -838,6 +908,35 @@ bool BsxFile::readTexturesHeaders(quint8 numTextures, QList<BsxTextureHeader> &h
 		}
 		headers.append(header);
 	}
+	return true;
+}
+
+bool BsxFile::readTexturesData(const QList<BsxTextureHeader> &headers,
+							   QList<QByteArray> &dataList)
+{
+	qint64 offsetTextures = _offsetModels + _offsetTextures;
+
+	foreach (const BsxTextureHeader &header, headers) {
+		if (device()->pos() != offsetTextures + header.offsetData) {
+			qWarning() << "BsxFile::readTexturesData error pos" << _offsetModels << _offsetTextures << header.offsetData << device()->pos();
+			return false;
+		}
+
+		int size = header.width * header.height * 2;
+		QByteArray data = device()->read(size);
+
+		if (data.size() != size) {
+			qWarning() << "BsxFile::readTexturesData error read";
+			return false;
+		}
+
+		dataList.append(data);
+	}
+
+	if (device()->pos() != device()->size()) {
+		qWarning() << "BsxFile::readTexturesData not at the end" << device()->pos() << device()->size();
+	}
+
 	return true;
 }
 

@@ -115,7 +115,7 @@ struct FieldModelBonePS {
 
 struct FieldModelVertexPS {
 	Vertex_s v;
-	quint16 unknown;
+	quint16 padding;
 };
 
 struct ColorRGBA {
@@ -173,11 +173,8 @@ struct ColorQuad {
 };
 
 struct BsxTexturesHeader {
-	quint32 unknown1;
-	quint8 numTextures;
-	quint8 unknown2;
-	quint8 unknown3;
-	quint8 unknown4;
+	quint32 textureSectionSize;
+	quint32 numTextures;
 };
 
 struct BsxTextureHeader {
@@ -194,22 +191,28 @@ public:
 
 	virtual bool read(QList<FieldModelFilePS *> &models);
 	virtual bool read(FieldModelFilePS *model);
+	virtual bool readTextures(FieldModelTexturesPS *textures);
 	virtual bool seek(quint32 modelId);
 	virtual bool seekModels();
+	virtual bool seekTextures();
 	virtual bool write(const QList<FieldModelFilePS> &models);
 protected:
 	bool readHeader();
+	bool readModelsHeader();
 	bool readModel(quint8 numBones, quint8 numParts, quint8 numAnimations, FieldModelFilePS *model);
 	bool readSkeleton(quint8 numBones, FieldModelSkeleton &skeleton);
 	bool readPartsHeaders(quint8 numParts, QList<FieldModelPartPSHeader> &partsHeaders);
 	bool readAnimationsHeaders(quint8 numAnimations, QList<FieldModelAnimationPSHeader> &animationsHeaders);
 	bool readMesh(const QList<FieldModelPartPSHeader> &partsHeaders, FieldModelSkeleton &skeleton);
-	bool readPart(const FieldModelPartPSHeader &partHeader, FieldModelPartPS *part);
+	bool readPart(const FieldModelPartPSHeader &partHeader, FieldModelPart *part);
+	static bool addTexturedPolygonToGroup(quint8 control, Poly *polygon, QList<FieldModelGroup *> &groups);
 	bool readAnimations(const QList<FieldModelAnimationPSHeader> &animationHeaders, QList<FieldModelAnimation> &animations);
 	bool readAnimation(const FieldModelAnimationPSHeader &header, FieldModelAnimation &animation);
 	bool readTexturesHeaders(quint8 numTextures, QList<BsxTextureHeader> &headers);
+	bool readTexturesData(const QList<BsxTextureHeader> &headers, QList<QByteArray> &dataList);
 private:
 	qint64 _offsetModels;
+	quint32 _numModels, _offsetTextures;
 };
 
 #endif // BSXFILE_H

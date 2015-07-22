@@ -28,6 +28,11 @@ FieldModelFilePC::FieldModelFilePC() :
 {
 }
 
+void FieldModelFilePC::clear()
+{
+	_loadedTex.clear();
+}
+
 quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate)
 {
 	if (hrc.isEmpty() || a.isEmpty()) {
