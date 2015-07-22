@@ -1177,8 +1177,13 @@ void Window::exporter()
 	path = QFileDialog::getSaveFileName(this, tr("Exporter le fichier courant"), path+name, types, &selectedFilter);
 	if(path.isNull())		return;
 	qint8 error=4;
+	bool compressed = selectedFilter != fieldDec;
 	
-	error = field->save(path, selectedFilter != fieldDec);
+	if (field->isModified()) {
+		error = field->save(path, compressed);
+	} else {
+		error = fieldArchive->io()->exportFieldData(field, QString(), path, compressed);
+	}
 	
 	QString out;
 	switch(error)

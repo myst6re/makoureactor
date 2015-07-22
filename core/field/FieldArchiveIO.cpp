@@ -111,6 +111,24 @@ QByteArray FieldArchiveIO::fileData(const QString &fileName, bool unlzs, bool is
 	}
 }
 
+int FieldArchiveIO::exportFieldData(Field *field, const QString &extension, const QString &path, bool unlzs)
+{
+	QByteArray newData = fieldData(field, extension, unlzs);
+
+	if(!newData.isEmpty()) {
+		QFile fic(path);
+		if(!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			return 2;
+		}
+		fic.write(newData);
+		fic.close();
+	} else {
+		return 1;
+	}
+
+	return 0;
+}
+
 bool FieldArchiveIO::fieldDataIsCached(Field *field, const QString &fileType) const
 {
 	return fieldCache && fieldCache == field && fieldExtensionCache == fileType;
