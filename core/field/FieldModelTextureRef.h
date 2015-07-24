@@ -15,31 +15,17 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELPARTPC_H
-#define FIELDMODELPARTPC_H
+#ifndef FIELDMODELTEXTUREREF_H
+#define FIELDMODELTEXTUREREF_H
 
-#include <QImage>
-#include "FieldModelPart.h"
+#include <QtCore>
 
-class FieldModelTextureRefPC : public FieldModelTextureRef
+class FieldModelTextureRef
 {
 public:
-	FieldModelTextureRefPC(quint32 id) : _id(id) {}
-	virtual ~FieldModelTextureRefPC() {}
-
-	inline quint32 id() const {
-		return _id;
-	}
-
-	inline void setId(quint32 id) {
-		_id = id;
-	}
-
-	inline quint64 textureIdentifier() const {
-		return id();
-	}
-private:
-	quint32 _id;
+	FieldModelTextureRef() {}
+	virtual ~FieldModelTextureRef() {}
+	virtual quint64 textureIdentifier() const=0;
 };
 
-#endif // FIELDMODELPARTPC_H
+#endif // FIELDMODELTEXTUREREF_H

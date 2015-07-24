@@ -21,7 +21,7 @@
 #include <QtCore>
 #include "../IO.h"
 #include "FieldModelFilePS.h"
-#include "FieldModelPartPS.h"
+#include "FieldModelTextureRefPS.h"
 #include "CaFile.h"
 
 #define MODEL_SCALE_PS			4096.0f //31.0f

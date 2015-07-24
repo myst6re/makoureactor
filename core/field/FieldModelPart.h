@@ -20,14 +20,15 @@
 
 #include <QtCore>
 #include <QRgb>
+#include "FieldModelTextureRef.h"
 
-typedef struct {
+struct PolyVertex {
 	float x, y, z;
-} PolyVertex;
+};
 
-typedef struct {
+struct TexCoord {
 	float x, y;
-} TexCoord;
+};
 
 class Poly
 {
@@ -66,14 +67,6 @@ class TrianglePoly : public Poly
 public:
 	TrianglePoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	TrianglePoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
-};
-
-class FieldModelTextureRef
-{
-public:
-	FieldModelTextureRef() {}
-	virtual ~FieldModelTextureRef() {}
-	virtual quint64 textureIdentifier() const=0;
 };
 
 class FieldModelFile;

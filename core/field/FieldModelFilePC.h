@@ -20,7 +20,7 @@
 
 #include <QtGui>
 #include "FieldModelFile.h"
-#include "FieldModelPartPC.h"
+#include "FieldModelTextureRefPC.h"
 
 class CharArchive;
 

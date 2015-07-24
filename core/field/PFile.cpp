@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "PFile.h"
+#include "FieldModelTextureRefPC.h"
 
 PFile::PFile(QIODevice *io) :
 	IO(io)

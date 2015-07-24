@@ -1,6 +1,6 @@
 /****************************************************************************
- ** NÃ©o-Midgar Final Fantasy VII French Retranslation
- ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -15,38 +15,31 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "BcxFile.h"
-#include "FieldModelTextureRefPS.h"
+#ifndef FIELDMODELTEXTUREREFPC_H
+#define FIELDMODELTEXTUREREFPC_H
 
-BcxFile::BcxFile(QIODevice *io) :
-	BsxFile(io)
-{
-}
+#include <QImage>
+#include "FieldModelTextureRef.h"
 
-bool BcxFile::read(FieldModelFilePS &model)
+class FieldModelTextureRefPC : public FieldModelTextureRef
 {
-	if (!readHeader()) {
-		return false;
+public:
+	FieldModelTextureRefPC(quint32 id) : _id(id) {}
+	virtual ~FieldModelTextureRefPC() {}
+
+	inline quint32 id() const {
+		return _id;
 	}
 
-	if (!seekModels()) {
-		return false;
+	inline void setId(quint32 id) {
+		_id = id;
 	}
 
-	BcxModelHeader modelHeader;
-
-	if (sizeof(BcxModelHeader) != device()->read((char *)&modelHeader, sizeof(BcxModelHeader))) {
-		return false;
+	inline quint64 textureIdentifier() const {
+		return id();
 	}
+private:
+	quint32 _id;
+};
 
-	return readModel(modelHeader.numBones,
-					 modelHeader.numParts,
-					 modelHeader.numAnimations,
-					 &model);
-}
-
-bool BcxFile::write(const FieldModelFilePS &model)
-{
-	Q_UNUSED(model)
-	return false;
-}
+#endif // FIELDMODELTEXTUREREFPC_H

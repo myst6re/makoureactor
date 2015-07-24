@@ -21,7 +21,7 @@
 #include <QtCore>
 #include <QImage>
 #include "FieldModelFile.h"
-#include "FieldModelPartPS.h"
+#include "FieldModelTextureRefPS.h"
 
 class FieldPS;
 

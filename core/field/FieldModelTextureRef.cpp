@@ -1,6 +1,6 @@
 /****************************************************************************
- ** NÃ©o-Midgar Final Fantasy VII French Retranslation
- ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -15,38 +15,4 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "BcxFile.h"
-#include "FieldModelTextureRefPS.h"
-
-BcxFile::BcxFile(QIODevice *io) :
-	BsxFile(io)
-{
-}
-
-bool BcxFile::read(FieldModelFilePS &model)
-{
-	if (!readHeader()) {
-		return false;
-	}
-
-	if (!seekModels()) {
-		return false;
-	}
-
-	BcxModelHeader modelHeader;
-
-	if (sizeof(BcxModelHeader) != device()->read((char *)&modelHeader, sizeof(BcxModelHeader))) {
-		return false;
-	}
-
-	return readModel(modelHeader.numBones,
-					 modelHeader.numParts,
-					 modelHeader.numAnimations,
-					 &model);
-}
-
-bool BcxFile::write(const FieldModelFilePS &model)
-{
-	Q_UNUSED(model)
-	return false;
-}
+#include "FieldModelTextureRef.h"
