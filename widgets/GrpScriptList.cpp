@@ -104,6 +104,8 @@ GrpScriptList::GrpScriptList(QWidget *parent)
 	down_A->setStatusTip(tr("Descendre un groupe"));
 	
 	enableActions(false);
+
+	setMinimumWidth(_toolBar->sizeHint().width());
 }
 
 GrpScriptList::~GrpScriptList()

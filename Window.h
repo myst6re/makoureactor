@@ -150,8 +150,7 @@ private:
 
 //	FieldModelThread *modelThread;
 protected:
-	void showEvent(QShowEvent *);
-	void closeEvent(QCloseEvent *);
+	void closeEvent(QCloseEvent *event);
 	QMenu *createPopupMenu();
 };
 

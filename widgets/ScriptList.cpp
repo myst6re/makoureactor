@@ -20,7 +20,6 @@
 ScriptList::ScriptList(QWidget *parent)
 	: QListWidget(parent)
 {
-	setFixedWidth(88);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setContextMenuPolicy(Qt::ActionsContextMenu);
 }

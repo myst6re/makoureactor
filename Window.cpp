@@ -37,8 +37,7 @@ Window::Window() :
 	_backgroundManager(0)
 {
 	setWindowTitle();
-	setMinimumSize(700, 600);
-	resize(900, 700);
+	setWindowState(Qt::WindowMaximized);
 
 	taskBarButton = new QTaskBarButton(this);
 	taskBarButton->setMinimum(0);
@@ -151,6 +150,7 @@ Window::Window() :
 	fieldList->setColumnCount(2);
 	fieldList->setHeaderLabels(QStringList() << tr("Fichier") << tr("Id"));
 	fieldList->setFixedWidth(120);
+	fieldList->setMinimumHeight(120);
 	fieldList->setIndentation(0);
 	fieldList->setItemsExpandable(false);
 	fieldList->setSortingEnabled(true);
@@ -163,10 +163,13 @@ Window::Window() :
 
 	groupScriptList = new GrpScriptList(this);
 	groupScriptList->setFixedWidth(176);
+	groupScriptList->setMinimumHeight(176);
 	groupScriptList->setFont(font);
 	connect(groupScriptList, SIGNAL(changed()), SLOT(setModified()));
 
 	scriptList = new ScriptList(this);
+	scriptList->setFixedWidth(88);
+	scriptList->setMinimumHeight(88);
 	scriptList->setFont(font);
 	
 	opcodeList = new OpcodeList(this);
@@ -265,17 +268,6 @@ Window::~Window()
 {
 	Config::flush();
 	if(fieldArchive)	fieldArchive->close();
-}
-
-void Window::showEvent(QShowEvent *)
-{
-	if(firstShow) {
-		if(!windowState().testFlag(Qt::WindowMaximized)) {
-			QPoint screenCenter = QApplication::desktop()->screenGeometry(this).center();
-			move(screenCenter.x() - width()/2, screenCenter.y() - height()/2);
-		}
-	}
-	firstShow = false;
 }
 
 void Window::closeEvent(QCloseEvent *event)
