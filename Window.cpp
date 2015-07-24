@@ -150,6 +150,7 @@ Window::Window() :
 	fieldList->setColumnCount(2);
 	fieldList->setHeaderLabels(QStringList() << tr("Fichier") << tr("Id"));
 	fieldList->setFixedWidth(120);
+	fieldList->setMinimumHeight(120);
 	fieldList->setIndentation(0);
 	fieldList->setItemsExpandable(false);
 	fieldList->setSortingEnabled(true);
@@ -162,10 +163,13 @@ Window::Window() :
 
 	groupScriptList = new GrpScriptList(this);
 	groupScriptList->setFixedWidth(176);
+	groupScriptList->setMinimumHeight(176);
 	groupScriptList->setFont(font);
 	connect(groupScriptList, SIGNAL(changed()), SLOT(setModified()));
 
 	scriptList = new ScriptList(this);
+	scriptList->setFixedWidth(88);
+	scriptList->setMinimumHeight(88);
 	scriptList->setFont(font);
 	
 	opcodeList = new OpcodeList(this);
