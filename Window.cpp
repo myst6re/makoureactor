@@ -37,8 +37,7 @@ Window::Window() :
 	_backgroundManager(0)
 {
 	setWindowTitle();
-	setMinimumSize(700, 600);
-	resize(900, 700);
+	setWindowState(Qt::WindowMaximized);
 
 	taskBarButton = new QTaskBarButton(this);
 	taskBarButton->setMinimum(0);
@@ -265,17 +264,6 @@ Window::~Window()
 {
 	Config::flush();
 	if(fieldArchive)	fieldArchive->close();
-}
-
-void Window::showEvent(QShowEvent *)
-{
-	if(firstShow) {
-		if(!windowState().testFlag(Qt::WindowMaximized)) {
-			QPoint screenCenter = QApplication::desktop()->screenGeometry(this).center();
-			move(screenCenter.x() - width()/2, screenCenter.y() - height()/2);
-		}
-	}
-	firstShow = false;
 }
 
 void Window::closeEvent(QCloseEvent *event)
