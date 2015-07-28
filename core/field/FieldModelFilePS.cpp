@@ -150,8 +150,6 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 		setAnimations(QList<FieldModelAnimation>() << animation(animationID));
 	}
 
-	vramImage().save("vram.png");
-
 	return true;
 }
 
@@ -161,7 +159,7 @@ QImage FieldModelFilePS::loadedTexture(FieldModelGroup *group)
 		return _loadedTex.value(group);
 	}
 
-	const FieldModelTextureRefPS * const texRefPS = (const FieldModelTextureRefPS * const)group->textureRef();
+	FieldModelTextureRefPS *texRefPS = (FieldModelTextureRefPS *)group->textureRef();
 	QImage tex;
 
 	if (texRefPS->type() == 0 || texRefPS->type() == 1) { // Eye and Mouth
@@ -183,9 +181,7 @@ QImage FieldModelFilePS::loadedTexture(FieldModelGroup *group)
 	}
 
 	// Fix tex coords according to tex size
-	foreach (Poly *poly, group->polygons()) {
-		poly->divTexCoords(tex.width(), tex.height());
-	}
+	group->removeSpriting(tex.width(), tex.height());
 
 	_loadedTex.insert(group, tex);
 

@@ -38,7 +38,6 @@ public:
 	virtual ~Poly();
 	void setVertices(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	void setVertices(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
-	void divTexCoords(float texWidth, float texHeight);
 	inline int count() const {
 		return _count;
 	}
@@ -46,6 +45,7 @@ public:
 	const QRgb &color() const;
 	QRgb color(quint8 id) const;
 	const TexCoord &texCoord(quint8 id) const;
+	void setTexCoord(quint8 id, const TexCoord &texCoord);
 	bool isMonochrome() const;
 	bool hasTexture() const;
 protected:
@@ -93,6 +93,7 @@ public:
 	inline void setBlendMode(quint8 blend) {
 		_blendMode = blend;
 	}
+	void removeSpriting(float texWidth, float texHeight);
 private:
 	FieldModelTextureRef *_textureRef;
 	QList<Poly *> _polys;
