@@ -384,12 +384,12 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPart 
 			qWarning() << "BsxFile::readPart error 4" << i;
 			return false;
 		}
-		texCoord.x = c;
+		texCoord.x = uchar(c);
 		if (!device()->getChar(&c)) {
 			qWarning() << "BsxFile::readPart error 5" << i;
 			return false;
 		}
-		texCoord.y = c;
+		texCoord.y = uchar(c);
 
 		texCoords.append(texCoord);
 	}
