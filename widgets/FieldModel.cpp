@@ -106,9 +106,9 @@ void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, c
 		return;
 	}
 
-	foreach(FieldModelPart *p, bone.parts()) {
+	foreach(FieldModelPart *part, bone.parts()) {
 
-		foreach(FieldModelGroup *g, p->groups()) {
+		foreach(FieldModelGroup *g, part->groups()) {
 			if(g->hasTexture()) {
 				if(texture_id != (GLuint)-1) {
 					glWidget->deleteTexture(texture_id);
@@ -144,18 +144,18 @@ void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, c
 					glColor3ub(qRed(color), qGreen(color), qBlue(color));
 				}
 
-				for(quint32 j=0 ; j<(quint8)p->count() ; ++j) {
+				for(quint16 j=0 ; j<(quint8)p->count() ; ++j) {
 					if(!p->isMonochrome()) {
 						QRgb color = p->color(j);
 						glColor3ub(qRed(color), qGreen(color), qBlue(color));
 					}
 
 					if(g->hasTexture() && p->hasTexture()) {
-						TexCoord coord = p->texCoord(j);
+						const TexCoord &coord = p->texCoord(j);
 						glTexCoord2d(coord.x, coord.y);
 					}
 
-					PolyVertex vertex = p->vertex(j);
+					const PolyVertex &vertex = p->vertex(j);
 					glVertex3f(vertex.x/scale, vertex.y/scale, vertex.z/scale);
 				}
 			}
