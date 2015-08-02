@@ -186,10 +186,14 @@ void FieldModelGroup::removeSpriting(float texWidth, float texHeight)
 		for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
 			TexCoord texCoord = poly->texCoord(i);
 
-//			texCoord.x -= minX;
+			texCoord.x -= minX;
 			texCoord.y -= minY;
-			texCoord.x /= texWidth;
-			texCoord.y /= texHeight;
+			if (texWidth != 0) {
+				texCoord.x /= texWidth;
+			}
+			if (texHeight != 0) {
+				texCoord.y /= texHeight;
+			}
 
 			poly->setTexCoord(i, texCoord);
 		}
