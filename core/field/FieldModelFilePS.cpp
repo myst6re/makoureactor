@@ -92,42 +92,36 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 	}
 
 	const QList<QRect> &texturesRects = _textures.rects();
-	foreach (QRect rect, texturesRects) {
-		qDebug() << "texture rect" << rect << "after this rect" << QRect(rect.left(), rect.top() + rect.height(), 0, 0);
-	}
 
-//	qDebug() << texturesRects;
+	if (!texturesRects.isEmpty()) {
+		foreach (const FieldModelBone &bone, _skeleton.bones()) {
 
-	foreach (const FieldModelBone &bone, _skeleton.bones()) {
-		qDebug() << "bone";
-		foreach (FieldModelPart *part, bone.parts()) {
-			qDebug() << "part";
-			QHash<int, int> imgY;
+			foreach (FieldModelPart *part, bone.parts()) {
+				QHash<int, int> imgY;
 
-			foreach (FieldModelGroup *group, part->groups()) {
-				if (group->hasTexture()) {
-					FieldModelTextureRefPS *textureRef = (FieldModelTextureRefPS *)group->textureRef();
+				foreach (FieldModelGroup *group, part->groups()) {
+					if (group->hasTexture()) {
+						FieldModelTextureRefPS *textureRef = (FieldModelTextureRefPS *)group->textureRef();
 
-					if (textureRef->type() > 1) {
-						qDebug() << "textureRef" << textureRef->imgPos();
-						textureRef->setImgY(textureRef->imgY() + imgY.value(textureRef->imgX()));
-						qDebug() << "textureRef updated" << textureRef->imgPos();
-
-						int rectId = 0;
-						foreach (const QRect &rect, texturesRects) {
-							if (rect.topLeft() == textureRef->imgPos()) {
-								break;
+						if (textureRef->type() > 1) {
+							QPoint newPos = textureRef->imgPos() + QPoint(0, imgY.value(textureRef->imgX()));
+							int rectId = 0;
+							foreach (const QRect &rect, texturesRects) {
+								if (rect.topLeft() == newPos) {
+									break;
+								}
+								rectId++;
 							}
-							rectId++;
-						}
 
-						if (rectId >= texturesRects.size()) {
-							qWarning() << "FieldModelFilePS::load adjust texture pos error 1";
-							break;
+							if (rectId >= texturesRects.size()) {
+								qWarning() << "FieldModelFilePS::load adjust texture pos error 1";
+								imgY.clear();
+							} else {
+								textureRef->setImgY(newPos.y());
+								const QRect &rect = texturesRects.at(rectId);
+								imgY.insert(textureRef->imgX(), imgY.value(textureRef->imgX()) + rect.height());
+							}
 						}
-
-						QRect rect = texturesRects.at(rectId);
-						imgY.insert(textureRef->imgX(), imgY.value(textureRef->imgX()) + rect.height());
 					}
 				}
 			}
