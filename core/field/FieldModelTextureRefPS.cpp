@@ -42,7 +42,9 @@ QImage FieldModelTexturesPS::toImage(const QPoint &palPos, Bpp bpp) const
 	QPainter p(&image);
 
 	foreach (const QRect &rect, rects()) {
-		p.drawImage(rect.topLeft(), toImage(rect.topLeft(), palPos, bpp));
+		if (rect.height() != 1) {
+			p.drawImage(rect.topLeft(), toImage(rect.topLeft(), palPos, bpp));
+		}
 	}
 
 	return image.toImage();
