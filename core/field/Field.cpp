@@ -124,8 +124,9 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 		dontOptimize = true;
 	}
 
+	QByteArray data;
 	if(dontOptimize || _io->fieldDataIsCached(this, fileType)) {
-		return _io->fieldData(this, fileType).mid(position, size);
+		data = _io->fieldData(this, fileType);
 	} else {
 		QByteArray lzsData = _io->fieldData(this, fileType, false);
 
@@ -141,9 +142,16 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 			return QByteArray();
 		}
 
-		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1))
-				.mid(position, size);
+		data = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1));
 	}
+
+	if(size < 0) {
+		QByteArray footer = saveFooter();
+		if (!footer.isEmpty() && data.right(footer.size()) == footer) {
+			return data.mid(position, data.size() - position - footer.size());
+		}
+	}
+	return data.mid(position, size);
 }
 
 FieldArchiveIO *Field::io() const
@@ -337,7 +345,7 @@ bool Field::save(QByteArray &newData, bool compress)
 	}
 
 	// Footer
-//	newData.append(saveFooter()); // For PC footer: Already present in the background data
+	newData.append(saveFooter());
 
 	// Header prepended to the section data
 	newData.prepend(toc);

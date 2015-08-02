@@ -1174,7 +1174,7 @@ void Window::exporter()
 	if (field->isModified()) {
 		error = field->save(path, compressed);
 	} else {
-		error = fieldArchive->io()->exportFieldData(field, QString(), path, compressed);
+		error = fieldArchive->io()->exportFieldData(field, QString(), path, !compressed);
 	}
 	
 	QString out;

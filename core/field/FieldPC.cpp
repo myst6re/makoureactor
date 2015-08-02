@@ -49,6 +49,7 @@ int FieldPC::sectionId(FieldSection part) const
 	case ModelLoader:	return 2;
 	case PalettePC:		return 3;
 	case Walkmesh:		return 4;
+	case Unused:		return 5;
 	case Encounter:		return 6;
 	case Inf:			return 7;
 	case Background:	return 8;
