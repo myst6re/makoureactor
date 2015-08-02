@@ -1,3 +1,11 @@
+makoureactor (1.6.5) precise; urgency=low
+
+  * Main window layout changes
+  * Fixing PC field format bug on save/export
+  * Refactor 3D models code
+  
+ -- myst6re <myst6re@gmail.com>  Sun, 2 Aug 2015 15:20:54 +0200
+
 makoureactor (1.6.4) precise; urgency=low
 
   * Some fixes for a better modified ISO
