@@ -138,7 +138,9 @@ HEADERS += \
     core/field/RsdFile.h \
     core/field/FieldModelTextureRef.h \
     core/field/FieldModelTextureRefPC.h \
-    core/field/FieldModelTextureRefPS.h
+    core/field/FieldModelTextureRefPS.h \
+    core/field/DatFile.h \
+    core/field/PCFieldFile.h
 
 SOURCES += \
     Window.cpp \
@@ -270,7 +272,9 @@ SOURCES += \
     core/field/RsdFile.cpp \
     core/field/FieldModelTextureRef.cpp \
     core/field/FieldModelTextureRefPC.cpp \
-    core/field/FieldModelTextureRefPS.cpp
+    core/field/FieldModelTextureRefPS.cpp \
+    core/field/DatFile.cpp \
+    core/field/PCFieldFile.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts
