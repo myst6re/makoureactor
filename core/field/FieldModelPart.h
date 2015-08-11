@@ -94,6 +94,7 @@ public:
 		_blendMode = blend;
 	}
 	void removeSpriting(float texWidth, float texHeight);
+	void setFloatCoords(float texWidth, float texHeight);
 private:
 	FieldModelTextureRef *_textureRef;
 	QList<Poly *> _polys;

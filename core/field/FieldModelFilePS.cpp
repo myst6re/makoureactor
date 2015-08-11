@@ -174,15 +174,16 @@ QImage FieldModelFilePS::loadedTexture(FieldModelGroup *group)
 			qWarning() << "FieldModelFilePS::loadedTexture error";
 			return QImage();
 		}
+		group->setFloatCoords(tex.width(), tex.height());
 	} else {
 		tex = _textures.toImage(texRefPS->imgX(), texRefPS->imgY(),
 								texRefPS->palX(), texRefPS->palY(),
 								texRefPS->bpp() == 0 ? FieldModelTexturesPS::Bpp4
 													 : FieldModelTexturesPS::Bpp8);
-	}
 
-	// Fix tex coords according to tex size
-	group->removeSpriting(tex.width(), tex.height());
+		// Fix tex coords according to tex size (implies setFloatCoords)
+		group->removeSpriting(tex.width(), tex.height());
+	}
 
 	_loadedTex.insert(group, tex);
 

@@ -183,19 +183,41 @@ void FieldModelGroup::removeSpriting(float texWidth, float texHeight)
 	}
 
 	foreach (Poly *poly, polygons()) {
-		for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
-			TexCoord texCoord = poly->texCoord(i);
+		if (poly->hasTexture()) {
+			for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
+				TexCoord texCoord = poly->texCoord(i);
 
-			texCoord.x -= minX;
-			texCoord.y -= minY;
-			if (texWidth != 0) {
-				texCoord.x /= texWidth;
-			}
-			if (texHeight != 0) {
-				texCoord.y /= texHeight;
-			}
+				texCoord.x -= minX;
+				texCoord.y -= minY;
+				if (texWidth != 0) {
+					texCoord.x /= texWidth;
+				}
+				if (texHeight != 0) {
+					texCoord.y /= texHeight;
+				}
 
-			poly->setTexCoord(i, texCoord);
+				poly->setTexCoord(i, texCoord);
+			}
+		}
+	}
+}
+
+void FieldModelGroup::setFloatCoords(float texWidth, float texHeight)
+{
+	foreach (Poly *poly, polygons()) {
+		if (poly->hasTexture()) {
+			for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
+				TexCoord texCoord = poly->texCoord(i);
+
+				if (texWidth != 0) {
+					texCoord.x /= texWidth;
+				}
+				if (texHeight != 0) {
+					texCoord.y /= texHeight;
+				}
+
+				poly->setTexCoord(i, texCoord);
+			}
 		}
 	}
 }
