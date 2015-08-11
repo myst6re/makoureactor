@@ -31,6 +31,7 @@ FieldModelFilePC::FieldModelFilePC() :
 void FieldModelFilePC::clear()
 {
 	_loadedTex.clear();
+	FieldModelFile::clear();
 }
 
 quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate)

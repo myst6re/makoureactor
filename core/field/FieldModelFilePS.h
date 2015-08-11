@@ -29,6 +29,7 @@ class FieldModelFilePS : public FieldModelFile
 {
 public:
 	FieldModelFilePS();
+	void clear();
 	inline bool translateAfter() const { return false; }
 	inline const QList<QRgb> &lightColors() const {
 		return _colors;

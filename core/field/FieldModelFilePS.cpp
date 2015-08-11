@@ -28,6 +28,13 @@ FieldModelFilePS::FieldModelFilePS() :
 {
 }
 
+void FieldModelFilePS::clear()
+{
+	_loadedTex.clear();
+	_textures = FieldModelTexturesPS();
+	FieldModelFile::clear();
+}
+
 bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID, bool animate)
 {
 	Q_UNUSED(animate)
