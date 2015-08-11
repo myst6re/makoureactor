@@ -41,7 +41,7 @@ public:
 	int frameCount() const;
 	static void paintModel(QGLWidget *glWidget, FieldModelFile *data, int animationID, int currentFrame=0, float scale=1.0f);
 public slots:
-	void setFieldModelFile(FieldModelFile *fieldModel);
+	void setFieldModelFile(FieldModelFile *fieldModel, int animationID = 0);
 private slots:
 	void animate();
 private:

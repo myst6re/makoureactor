@@ -38,10 +38,11 @@ void FieldModel::clear()
 	updateGL();
 }
 
-void FieldModel::setFieldModelFile(FieldModelFile *fieldModel)
+void FieldModel::setFieldModelFile(FieldModelFile *fieldModel, int animID)
 {
 	currentFrame = 0;
 	data = fieldModel;
+	animationID = animID;
 	if(!data->isEmpty()) {
 		updateGL();
 		updateTimer();
