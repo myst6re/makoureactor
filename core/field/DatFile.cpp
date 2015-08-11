@@ -17,62 +17,102 @@
  ****************************************************************************/
 #include "DatFile.h"
 
-DatFile::DatFile() :
-	_shift(0)
+DatFile::DatFile()
 {
 }
 
-const QByteArray &DatFile::data()
+bool DatFile::save(QByteArray &data)
+{
+
+	return false;
+}
+
+void DatFile::saveStart()
+{
+	if (!_io.isOpen()) {
+		qWarning() << "DatFile::saveStart io closed";
+		return;
+	}
+
+	_data = _io.readAll();
+}
+
+void DatFile::saveClear()
+{
+	_data.clear();
+}
+
+bool DatFile::saveFlush(QByteArray &data)
 {
 	writePositions();
-	return _data;
+	data = _data; // Apply
+	saveClear();
+
+	return true;
 }
 
-bool DatFile::setData(const QByteArray &data)
+bool DatFile::open(const QByteArray &data)
 {
-	if (data.size() < DAT_FILE_HEADER_SIZE) {
-		qWarning() << "DatFile::setData file too short:" << data.size();
+	if (!_data.isEmpty()) {
+		qWarning() << "DatFile::open cannot open at saving state";
 		return false;
 	}
 
-	memcpy(_sectionPositions, data.constData(), DAT_FILE_HEADER_SIZE);
+	_io = LzsRandomAccess(data);
+	if (!_io.open(QIODevice::ReadOnly)) {
+		qWarning() << "DatFile::setData cannot open io" << _io.errorString();
+		return false;
+	}
 
-	_sectionPositions[DAT_FILE_SECTION_COUNT] = data.size();
+	if (_io.read((char *)_sectionPositions, DAT_FILE_HEADER_SIZE) != DAT_FILE_HEADER_SIZE) {
+		qWarning() << "DatFile::setData file too short" << _io.errorString();
+		return false;
+	}
 
 	_shift = _sectionPositions[0] - DAT_FILE_HEADER_SIZE;
 
-	for (int i=0; i<DAT_FILE_SECTION_COUNT; ++i) {
+	for (quint8 i = 0; i < DAT_FILE_SECTION_COUNT; ++i) {
 		_sectionPositions[i] -= _shift;
 	}
 
-	for (quint8 i=0; i<DAT_FILE_SECTION_COUNT; ++i) {
+	for (quint8 i = 0; i < DAT_FILE_SECTION_COUNT - 1; ++i) {
 		if (_sectionPositions[i + 1] < _sectionPositions[i]) {
 			qWarning() << "DatFile::setData Wrong order:" << i << _sectionPositions[i] << _sectionPositions[i + 1];
 			return false;
 		}
 	}
 
-	_data = data;
-
 	return true;
+}
+
+int DatFile::sectionSize(int id) const
+{
+	if (id + 1 >= DAT_FILE_SECTION_COUNT) {
+		return -1;
+	}
+	return sectionPos(id + 1) - sectionPos(id);
 }
 
 QByteArray DatFile::sectionData(Section id) const
 {
-	Q_ASSERT(id >= 0 && id < DAT_FILE_SECTION_COUNT);
-	return _data.mid(sectionPos(id), sectionSize(id));
-}
-
-const char *DatFile::sectionConstData(Section id, int &size) const
-{
-	Q_ASSERT(id >= 0 && id < DAT_FILE_SECTION_COUNT);
-	size = sectionSize(id);
-	return _data.constData() + sectionPos(id);
+	if (_io.seek(sectionPos(id))) {
+		int size = sectionSize(id);
+		if (size < 0) {
+			return _io.readAll();
+		}
+		return _io.read(size);
+	}
+	qWarning() << "DatFile::sectionData cannot seek to" << id;
+	return QByteArray();
 }
 
 void DatFile::setSectionData(Section id, const QByteArray &data)
 {
-	Q_ASSERT(id >= 0 && id < DAT_FILE_SECTION_COUNT);
+	if (_data.isEmpty()) {
+		qWarning() << "DatFile::setSectionData not saving state, please use saveStart() before";
+		return;
+	}
+
 	int oldSize = sectionSize(id),
 			newSize = data.size();
 

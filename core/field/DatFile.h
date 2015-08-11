@@ -19,6 +19,7 @@
 #define DATFILE_H
 
 #include <QtCore>
+#include "../LzsIO.h"
 
 #define DAT_FILE_SECTION_COUNT		7
 #define DAT_FILE_HEADER_SIZE		28 // DAT_FILE_SECTION_COUNT * 4
@@ -37,25 +38,26 @@ public:
 	};
 
 	DatFile();
-	const QByteArray &data();
-	inline bool setData(const char *data, int size) {
-		return setData(QByteArray(data, size));
+	inline bool open(const char *data, int size) {
+		return open(QByteArray(data, size));
 	}
-	bool setData(const QByteArray &data);
+	bool open(const QByteArray &data);
+	void saveStart();
+	void saveClear();
+	bool saveFlush(QByteArray &data);
 	QByteArray sectionData(Section id) const;
-	const char *sectionConstData(Section id, int &size) const;
 	void setSectionData(Section id, const QByteArray &data);
 private:
-	inline int sectionSize(int id) const {
-		return sectionPos(id + 1) - sectionPos(id);
-	}
+	int sectionSize(int id) const;
 	inline int sectionPos(int id) const {
+		Q_ASSERT(id >= 0 && id < DAT_FILE_SECTION_COUNT);
 		return _sectionPositions[id];
 	}
 	void shiftPositionsAfter(int id, int shift);
 	void writePositions();
-	quint32 _sectionPositions[8];
+	quint32 _sectionPositions[DAT_FILE_SECTION_COUNT];
 	quint32 _shift;
+	LzsRandomAccess _io;
 	QByteArray _data;
 };
 

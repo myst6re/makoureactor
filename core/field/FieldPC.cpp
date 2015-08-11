@@ -35,9 +35,9 @@ FieldPC::~FieldPC()
 	}
 }
 
-void FieldPC::openHeader(const QByteArray &fileData)
+bool FieldPC::open(const QByteArray &fileData)
 {
-	memcpy(sectionPositions, fileData.constData() + 6, 9 * 4); // header
+	return _file->setData(fileData);
 }
 
 int FieldPC::sectionId(FieldSection part) const
@@ -55,11 +55,6 @@ int FieldPC::sectionId(FieldSection part) const
 	case Background:	return 8;
 	default:			return -1;
 	}
-}
-
-quint32 FieldPC::sectionPosition(int idPart) const
-{
-	return sectionPositions[idPart] + paddingBetweenSections();
 }
 
 FieldArchiveIOPC *FieldPC::io() const

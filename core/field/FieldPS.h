@@ -20,6 +20,7 @@
 
 #include <QtCore>
 #include "Field.h"
+#include "DatFile.h"
 #include "FieldModelLoaderPS.h"
 #include "FieldModelFilePS.h"
 #include "FieldArchiveIOPS.h"
@@ -37,7 +38,7 @@ public:
 	FieldArchiveIOPS *io() const;
 protected:
 	inline virtual int headerSize() const { return 28; }
-	virtual void openHeader(const QByteArray &fileData);
+	virtual bool open(const QByteArray &fileData);
 	virtual QByteArray saveHeader() const;
 	virtual QByteArray saveFooter() const;
 	virtual FieldPart *createPart(FieldSection part);
@@ -46,7 +47,6 @@ protected:
 		Q_UNUSED(part)
 		return "DAT";
 	}
-	virtual quint32 sectionPosition(int idPart) const;
 	inline virtual int sectionCount() const {	return 7; }
 	inline virtual int paddingBetweenSections() const { return 0; }
 	inline virtual int alignment() const { return 4; } // Aligned
@@ -54,6 +54,7 @@ protected:
 	inline virtual quint32 diffSectionPos() const { return vramDiff; }
 	inline virtual bool hasSectionHeader() const { return false; }
 private:
+	DatFile *_file;
 	quint32 sectionPositions[7];
 	qint32 vramDiff;
 };

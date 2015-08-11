@@ -28,14 +28,9 @@ FieldPS::FieldPS(const Field &field) :
 {
 }
 
-void FieldPS::openHeader(const QByteArray &fileData)
+bool FieldPS::open(const QByteArray &fileData)
 {
-	memcpy(sectionPositions, fileData.constData(), headerSize()); // header
-	vramDiff = sectionPositions[0] - headerSize();// vram section1 pos - real section 1 pos
-
-	for(int i=0 ; i<7 ; ++i) {
-		sectionPositions[i] -= vramDiff;
-	}
+	return _file->setData(fileData);
 }
 
 int FieldPS::sectionId(FieldSection part) const
@@ -51,11 +46,6 @@ int FieldPS::sectionId(FieldSection part) const
 	case ModelLoader:	return 6;
 	default:			return -1;
 	}
-}
-
-quint32 FieldPS::sectionPosition(int idPart) const
-{
-	return sectionPositions[idPart];
 }
 
 FieldArchiveIOPS *FieldPS::io() const

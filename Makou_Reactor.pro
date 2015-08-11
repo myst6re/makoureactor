@@ -140,7 +140,8 @@ HEADERS += \
     core/field/FieldModelTextureRefPC.h \
     core/field/FieldModelTextureRefPS.h \
     core/field/DatFile.h \
-    core/field/PCFieldFile.h
+    core/field/PCFieldFile.h \
+    core/LzsIO.h
 
 SOURCES += \
     Window.cpp \
@@ -274,7 +275,8 @@ SOURCES += \
     core/field/FieldModelTextureRefPC.cpp \
     core/field/FieldModelTextureRefPS.cpp \
     core/field/DatFile.cpp \
-    core/field/PCFieldFile.cpp
+    core/field/PCFieldFile.cpp \
+    core/LzsIO.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

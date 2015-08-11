@@ -89,7 +89,9 @@ bool Field::open(bool dontOptimize)
 
 		if(fileData.size() < headerSize())	return false;
 
-		openHeader(fileData);
+		if(!open(fileData)) {
+			return false;
+		}
 	}
 
 	_isOpen = true;

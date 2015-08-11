@@ -86,14 +86,13 @@ public:
 	void setRemoveUnusedSection(bool remove);// FIXME: only in PC version, ugly hack detected!
 protected:
 	virtual int headerSize() const=0;
-	virtual void openHeader(const QByteArray &fileData)=0;
+	virtual bool open(const QByteArray &fileData)=0;
 	virtual QByteArray saveHeader() const=0;
 	virtual QByteArray saveFooter() const=0;
 	virtual FieldPart *createPart(FieldSection part);
 	FieldPart *part(FieldSection section) const;
 	virtual int sectionId(FieldSection part) const=0;
 	virtual QString sectionFile(FieldSection part) const=0;
-	virtual quint32 sectionPosition(int idPart) const=0;
 	virtual int sectionCount() const=0;
 	virtual int paddingBetweenSections() const=0;
 	virtual int alignment() const=0;

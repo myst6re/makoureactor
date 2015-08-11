@@ -20,6 +20,7 @@
 
 #include <QtCore>
 #include "Field.h"
+#include "PCFieldFile.h"
 #include "FieldModelLoaderPC.h"
 #include "FieldModelFilePC.h"
 #include "FieldArchiveIOPC.h"
@@ -41,7 +42,7 @@ public:
 	FieldArchiveIOPC *io() const;
 protected:
 	inline int headerSize() const { return 42; }
-	void openHeader(const QByteArray &fileData);
+	bool open(const QByteArray &fileData);
 	QByteArray saveHeader() const;
 	QByteArray saveFooter() const;
 	FieldPart *createPart(FieldSection part);
@@ -50,7 +51,6 @@ protected:
 		Q_UNUSED(part)
 		return QString();
 	}
-	quint32 sectionPosition(int idPart) const;
 	inline int sectionCount() const {	return 9; }
 	inline int paddingBetweenSections() const { return 4; }
 	inline int alignment() const { return 0; } // Not aligned
@@ -58,7 +58,7 @@ protected:
 	inline quint32 diffSectionPos() const { return 0; }
 	inline bool hasSectionHeader() const { return true; }
 private:
-	quint32 sectionPositions[9];
+	PCFieldFile *_file;
 	FieldModelFilePC *_model;
 	QMap<QString, int> modelNameToId;
 };
