@@ -19,12 +19,12 @@
 #define DATFILE_H
 
 #include <QtCore>
-#include "../LzsIO.h"
+#include "../LzsSectionFile.h"
 
 #define DAT_FILE_SECTION_COUNT		7
 #define DAT_FILE_HEADER_SIZE		28 // DAT_FILE_SECTION_COUNT * 4
 
-class DatFile
+class DatFile : public LzsSectionFile
 {
 public:
 	enum Section {
@@ -38,27 +38,25 @@ public:
 	};
 
 	DatFile();
-	inline bool open(const char *data, int size) {
-		return open(QByteArray(data, size));
+	inline virtual ~DatFile() {}
+
+	inline QByteArray sectionData(Section id) const {
+		return sectionData(quint8(id));
 	}
-	bool open(const QByteArray &data);
-	void saveStart();
-	void saveClear();
-	bool saveFlush(QByteArray &data);
-	QByteArray sectionData(Section id) const;
-	void setSectionData(Section id, const QByteArray &data);
+	inline void setSectionData(Section id, const QByteArray &data) {
+		setSectionData(quint8(id), data);
+	}
+	inline quint8 sectionCount() const {
+		return DAT_FILE_SECTION_COUNT;
+	}
 private:
-	int sectionSize(int id) const;
-	inline int sectionPos(int id) const {
-		Q_ASSERT(id >= 0 && id < DAT_FILE_SECTION_COUNT);
-		return _sectionPositions[id];
-	}
-	void shiftPositionsAfter(int id, int shift);
-	void writePositions();
-	quint32 _sectionPositions[DAT_FILE_SECTION_COUNT];
+	bool openHeader();
+	int setSectionData(quint32 pos, quint32 oldSize,
+					   const QByteArray &section,
+					   QByteArray &out);
+	bool writePositions(QByteArray &data);
+
 	quint32 _shift;
-	LzsRandomAccess _io;
-	QByteArray _data;
 };
 
 #endif // DATFILE_H

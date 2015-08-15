@@ -21,74 +21,45 @@ PCFieldFile::PCFieldFile()
 {
 }
 
-const QByteArray &PCFieldFile::data()
+bool PCFieldFile::openHeader()
 {
-	writePositions();
-	return _data;
-}
-
-bool PCFieldFile::setData(const QByteArray &data)
-{
-	if (data.size() < 46) {
-		qWarning() << "PCFieldFile::setData file too short:" << data.size();
+	if (!io()->seek(6)) {
+		qWarning() << "PCFieldFile::openHeader cannot seek" << io()->errorString();
 		return false;
 	}
 
-	memcpy(_sectionPositions, data.constData() + 6, PC_FIELD_FILE_SECTION_COUNT * 4);
+	if (io()->read((char *)_sectionPositions, PC_FIELD_FILE_SECTION_COUNT * 4) != PC_FIELD_FILE_SECTION_COUNT * 4) {
+		qWarning() << "PCFieldFile::openHeader file too short:" << io()->errorString();
+		return false;
+	}
 
 	if (_sectionPositions[0] != 42) {
-		qWarning() << "PCFieldFile::setData first position must be 42:" << _sectionPositions[0];
+		qWarning() << "PCFieldFile::openHeader first position must be 42:" << _sectionPositions[0];
 		return false;
 	}
-
-	_sectionPositions[PC_FIELD_FILE_SECTION_COUNT] = data.size();
-
-	for (int i = 0; i < PC_FIELD_FILE_SECTION_COUNT; ++i) {
-		if (_sectionPositions[i + 1] < _sectionPositions[i]) {
-			qWarning() << "PCFieldFile::setData Wrong order:" << _sectionPositions[i] << _sectionPositions[i + 1];
-			return false;
-		}
-	}
-
-	_data = data;
 
 	return true;
 }
 
-QByteArray PCFieldFile::sectionData(Section id) const
+int PCFieldFile::setSectionData(quint32 pos, quint32 oldSize,
+								const QByteArray &section,
+								QByteArray &out)
 {
-	Q_ASSERT(id >= 0 && id < PC_FIELD_FILE_SECTION_COUNT);
-	return _data.mid(sectionPos(id) + 4, sectionSize(id) - 4);
+	int newSize = data.size();
+
+	oldSize -= 4;
+
+	out.replace(pos, 4, (char *)&newSize, 4);
+	out.replace(pos + 4, oldSize, section);
+
+	return newSize - oldSize;
 }
 
-const char *PCFieldFile::sectionConstData(Section id, int &size) const
+bool PCFieldFile::writePositions(QByteArray &data)
 {
-	Q_ASSERT(id >= 0 && id < PC_FIELD_FILE_SECTION_COUNT);
-	size = sectionSize(id) - 4;
-	return _data.constData() + sectionPos(id) + 4;
-}
+	const int size = PC_FIELD_FILE_SECTION_COUNT * 4;
 
-void PCFieldFile::setSectionData(Section id, const QByteArray &data)
-{
-	Q_ASSERT(id >= 0 && id < PC_FIELD_FILE_SECTION_COUNT);
-	int pos = sectionPos(id),
-			oldSize = sectionSize(id) - 4,
-			newSize = data.size();
+	data.replace(6, size, (char *)_sectionPositions, size);
 
-	_data.replace(pos, 4, (char *)&newSize, 4);
-	_data.replace(pos + 4, oldSize, data);
-	shiftPositionsAfter(id, newSize - oldSize);
-}
-
-void PCFieldFile::shiftPositionsAfter(int id, int shift)
-{
-	for (int i = id + 1; i < PC_FIELD_FILE_SECTION_COUNT + 1; ++i) {
-		_sectionPositions[i] += shift;
-	}
-}
-
-void PCFieldFile::writePositions()
-{
-	int size = PC_FIELD_FILE_SECTION_COUNT * 4;
-	_data.replace(6, size, (char *)_sectionPositions, size);
+	return true;
 }

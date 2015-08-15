@@ -19,9 +19,11 @@
 #define PCFIELDFILE_H
 
 #include <QtCore>
+#include "../LzsSectionFile.h"
+
 #define PC_FIELD_FILE_SECTION_COUNT		9
 
-class PCFieldFile
+class PCFieldFile : public LzsSectionFile
 {
 public:
 	enum Section {
@@ -38,25 +40,21 @@ public:
 
 	PCFieldFile();
 
-	const QByteArray &data();
-	inline bool setData(const char *data, int size) {
-		return setData(QByteArray(data, size));
+	inline QByteArray sectionData(Section id) const {
+		return sectionData(quint8(id));
 	}
-	bool setData(const QByteArray &data);
-	QByteArray sectionData(Section id) const;
-	const char *sectionConstData(Section id, int &size) const;
-	void setSectionData(Section id, const QByteArray &data);
+	inline void setSectionData(Section id, const QByteArray &data) {
+		setSectionData(quint8(id), data);
+	}
+	inline quint8 sectionCount() const {
+		return PC_FIELD_FILE_SECTION_COUNT;
+	}
 private:
-	inline int sectionSize(int id) const {
-		return sectionPos(id + 1) - sectionPos(id);
-	}
-	inline int sectionPos(int id) const {
-		return _sectionPositions[id];
-	}
-	void shiftPositionsAfter(int id, int shift);
-	void writePositions();
-	quint32 _sectionPositions[10];
-	QByteArray _data;
+	bool openHeader();
+	int setSectionData(quint32 pos, quint32 oldSize,
+					   const QByteArray &section,
+					   QByteArray &out);
+	bool writePositions(QByteArray &data);
 };
 
 #endif // PCFIELDFILE_H
