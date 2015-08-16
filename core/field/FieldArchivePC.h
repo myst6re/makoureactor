@@ -34,7 +34,7 @@ public:
 	void clear();
 
 	const FieldPC *field(quint32 id) const;
-	FieldPC *field(quint32 id, bool open=true, bool dontOptimize=false);
+	FieldPC *field(quint32 id, bool open=true);
 
 	TutFilePC *tut(const QString &name);
 	const QMap<QString, TutFilePC *> &tuts() const;

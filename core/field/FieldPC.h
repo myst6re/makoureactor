@@ -39,24 +39,15 @@ public:
 	FieldModelLoaderPC *fieldModelLoader(bool open=true);
 	FieldModelFilePC *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
 	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate = true);
-	FieldArchiveIOPC *io() const;
-protected:
-	inline int headerSize() const { return 42; }
-	bool open(const QByteArray &fileData);
-	QByteArray saveHeader() const;
-	QByteArray saveFooter() const;
-	FieldPart *createPart(FieldSection part);
-	int sectionId(FieldSection part) const;
-	inline QString sectionFile(FieldSection part) const {
-		Q_UNUSED(part)
-		return QString();
+	inline FieldArchiveIOPC *io() const {
+		return (FieldArchiveIOPC *)Field::io();
 	}
-	inline int sectionCount() const {	return 9; }
-	inline int paddingBetweenSections() const { return 4; }
-	inline int alignment() const { return 0; } // Not aligned
-	QList<Field::FieldSection> orderOfSections() const;
-	inline quint32 diffSectionPos() const { return 0; }
-	inline bool hasSectionHeader() const { return true; }
+	int sectionSize(FieldSection part) const;
+	QByteArray sectionData(FieldSection part);
+protected:
+	virtual bool open2();
+	virtual bool save() { return false; }
+	virtual FieldPart *createPart(FieldSection part);
 private:
 	PCFieldFile *_file;
 	FieldModelFilePC *_model;

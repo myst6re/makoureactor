@@ -28,29 +28,11 @@ FieldPS::FieldPS(const Field &field) :
 {
 }
 
-bool FieldPS::open(const QByteArray &fileData)
+bool FieldPS::open2()
 {
-	return _file->setData(fileData);
-}
+	QByteArray lzsData = io()->fieldData(this, "DAT", false);
 
-int FieldPS::sectionId(FieldSection part) const
-{
-	switch(part) {
-	case Scripts:
-	case Akaos:			return 0;
-	case Walkmesh:		return 1;
-	case Background:	return 2;
-	case Camera:		return 3;
-	case Inf:			return 4;
-	case Encounter:		return 5;
-	case ModelLoader:	return 6;
-	default:			return -1;
-	}
-}
-
-FieldArchiveIOPS *FieldPS::io() const
-{
-	return (FieldArchiveIOPS *)Field::io();
+	return _file->open(lzsData);
 }
 
 FieldPart *FieldPS::createPart(FieldSection part)
@@ -59,6 +41,40 @@ FieldPart *FieldPS::createPart(FieldSection part)
 	case ModelLoader:	return new FieldModelLoaderPS(this);
 	case Background:	return new BackgroundFilePS(this);
 	default:			return Field::createPart(part);
+	}
+}
+
+int FieldPS::sectionSize(FieldSection part) const
+{
+	switch(part) {
+	case Scripts:
+	case Akaos:       return _file->sectionSize(DatFile::TextsAndScripts);
+	case Camera:      return _file->sectionSize(DatFile::Camera);
+	case Walkmesh:    return _file->sectionSize(DatFile::Walkmesh);
+	case ModelLoader: return _file->sectionSize(DatFile::ModelLoader);
+	case Encounter:   return _file->sectionSize(DatFile::Encounter);
+	case Inf:         return _file->sectionSize(DatFile::Triggers);
+	case Background:  return _file->sectionSize(DatFile::TileMap);
+	case PalettePC:
+	case Unused:
+	default:          return -1;
+	}
+}
+
+QByteArray FieldPS::sectionData(FieldSection part)
+{
+	switch(part) {
+	case Scripts:
+	case Akaos:       return _file->sectionData(DatFile::TextsAndScripts);
+	case Camera:      return _file->sectionData(DatFile::Camera);
+	case Walkmesh:    return _file->sectionData(DatFile::Walkmesh);
+	case ModelLoader: return _file->sectionData(DatFile::ModelLoader);
+	case Encounter:   return _file->sectionData(DatFile::Encounter);
+	case Inf:         return _file->sectionData(DatFile::Triggers);
+	case Background:  return _file->sectionData(DatFile::TileMap);
+	case PalettePC:
+	case Unused:
+	default:          return QByteArray();
 	}
 }
 
@@ -75,21 +91,4 @@ FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate
 		fieldModel->load(this, modelID, animationID, animate);
 	}
 	return fieldModel;
-}
-
-QByteArray FieldPS::saveHeader() const
-{
-	// No header
-	return QByteArray();
-}
-
-QByteArray FieldPS::saveFooter() const
-{
-	// No footer
-	return QByteArray();
-}
-
-QList<Field::FieldSection> FieldPS::orderOfSections() const
-{
-	return QList<FieldSection>() << Scripts << Walkmesh << Background << Camera << Inf << Encounter << ModelLoader;
 }

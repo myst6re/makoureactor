@@ -784,7 +784,7 @@ void Window::openField(bool reload)
 	}
 
 	// Get and set field
-	field = fieldArchive->field(fieldId, true, true);
+	field = fieldArchive->field(fieldId, true);
 	if(field == NULL) {
 		zoneImage->clear();
 		groupScriptList->setEnabled(false);

@@ -25,30 +25,30 @@ FieldArchiveIterator::FieldArchiveIterator(const FieldArchive &archive) :
 {
 }
 
-Field *FieldArchiveIterator::next(bool open, bool dontOptimize)
+Field *FieldArchiveIterator::next(bool open)
 {
-	return openField(QListIterator<Field *>::next(), open, dontOptimize);
+	return openField(QListIterator<Field *>::next(), open);
 }
 
-Field *FieldArchiveIterator::peekNext(bool open, bool dontOptimize) const
+Field *FieldArchiveIterator::peekNext(bool open) const
 {
-	return openField(QListIterator<Field *>::peekNext(), open, dontOptimize);
+	return openField(QListIterator<Field *>::peekNext(), open);
 }
 
-Field *FieldArchiveIterator::peekPrevious(bool open, bool dontOptimize) const
+Field *FieldArchiveIterator::peekPrevious(bool open) const
 {
-	return openField(QListIterator<Field *>::peekPrevious(), open, dontOptimize);
+	return openField(QListIterator<Field *>::peekPrevious(), open);
 }
 
-Field *FieldArchiveIterator::previous(bool open, bool dontOptimize)
+Field *FieldArchiveIterator::previous(bool open)
 {
-	return openField(QListIterator<Field *>::previous(), open, dontOptimize);
+	return openField(QListIterator<Field *>::previous(), open);
 }
 
-Field *FieldArchiveIterator::openField(Field *field, bool open, bool dontOptimize) const
+Field *FieldArchiveIterator::openField(Field *field, bool open) const
 {
 	if(field != NULL && open && !field->isOpen()) {
-		field->open(dontOptimize);
+		field->open();
 	}
 	return field;
 }
@@ -136,10 +136,10 @@ void FieldArchive::setIO(FieldArchiveIO *io)
 	_io = io;
 }
 
-bool FieldArchive::openField(Field *field, bool dontOptimize)
+bool FieldArchive::openField(Field *field)
 {
 	if(!field->isOpen()) {
-		return field->open(dontOptimize);
+		return field->open();
 	}
 	return true;
 }
@@ -154,10 +154,10 @@ const Field *FieldArchive::field(quint32 id) const
 	return fileList.value(id, NULL);
 }
 
-Field *FieldArchive::field(quint32 id, bool open, bool dontOptimize)
+Field *FieldArchive::field(quint32 id, bool open)
 {
 	Field *field = fileList.value(id, NULL);
-	if(field!=NULL && open && !openField(field, dontOptimize)) {
+	if(field!=NULL && open && !openField(field)) {
 		return NULL;
 	}
 	return field;
@@ -168,9 +168,9 @@ const Field *FieldArchive::field(const QString &name) const
 	return field(indexOfField(name));
 }
 
-Field *FieldArchive::field(const QString &name, bool open, bool dontOptimize)
+Field *FieldArchive::field(const QString &name, bool open)
 {
-	return field(indexOfField(name), open, dontOptimize);
+	return field(indexOfField(name), open);
 }
 
 void FieldArchive::updateFieldLists(Field *field, int fieldID)

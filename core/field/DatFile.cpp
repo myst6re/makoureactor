@@ -17,7 +17,8 @@
  ****************************************************************************/
 #include "DatFile.h"
 
-DatFile::DatFile()
+DatFile::DatFile() :
+	LzsSectionFile()
 {
 }
 

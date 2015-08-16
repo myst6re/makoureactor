@@ -1,9 +1,10 @@
 #include "LzsSectionFile.h"
+#include "Config.h"
 
 LzsSectionFile::LzsSectionFile() :
-	_sectionPositions(0)
+	_sectionPositions(0), _io(0)
 {
-	
+	qDebug() << "instanciate LzsSectionFile";
 }
 
 LzsSectionFile::~LzsSectionFile()
@@ -11,15 +12,44 @@ LzsSectionFile::~LzsSectionFile()
 	if (_sectionPositions) {
 		delete _sectionPositions;
 	}
+	if (_io) {
+		delete _io;
+	}
 }
 
-bool LzsSectionFile::open(const QByteArray &data)
+bool LzsSectionFile::open(const QByteArray &lzsData)
 {
-	_io = LzsRandomAccess(data);
-	if (!_io.open(QIODevice::ReadOnly)) {
-		qWarning() << "LzsSectionFile::setData cannot open io" << _io.errorString();
+	if(lzsData.size() < 4) {
+		qWarning() << "LzsSectionFile::open lzsData too short" << lzsData.size();
 		return false;
 	}
+
+	const char *lzsDataConst = lzsData.constData();
+	quint32 lzsSize;
+	memcpy(&lzsSize, lzsDataConst, 4);
+
+	if(!Config::value("lzsNotCheck").toBool()
+			&& (quint32)lzsData.size() != lzsSize + 4) {
+		return false;
+	}
+	qDebug() << "ok lzs";
+
+	QByteArray lzsDataCpy = lzsData.mid(4);
+	qDebug() << "mid";
+	qDebug() << "mid" << qint64(_io);
+
+	if (_io) {
+		qDebug() << "delete io";
+		delete _io;
+	}
+	qDebug() << "LzsRandomAccess";
+	_io = new LzsRandomAccess(lzsDataCpy);
+	qDebug() << "ok setData";
+	if (!_io->open(QIODevice::ReadOnly)) {
+		qWarning() << "LzsSectionFile::open cannot open io" << _io->errorString();
+		return false;
+	}
+	qDebug() << "ok lzs 2";
 
 	if (!_sectionPositions) {
 		_sectionPositions = new quint32[sectionCount()];
@@ -28,7 +58,7 @@ bool LzsSectionFile::open(const QByteArray &data)
 	if (openHeader()) {
 		for (quint8 i = 0; i < sectionCount() - 1; ++i) {
 			if (_sectionPositions[i + 1] < _sectionPositions[i]) {
-				qWarning() << "DatFile::openHeader Wrong order:" << i << _sectionPositions[i] << _sectionPositions[i + 1];
+				qWarning() << "LzsSectionFile::open wrong order:" << i << _sectionPositions[i] << _sectionPositions[i + 1];
 				return false;
 			}
 		}
@@ -37,9 +67,9 @@ bool LzsSectionFile::open(const QByteArray &data)
 	return true;
 }
 
-bool LzsSectionFile::saveStart()
+void LzsSectionFile::saveStart()
 {
-	_data = _io.readAll();
+	_data = _io->readAll();
 }
 
 bool LzsSectionFile::save(QByteArray &data)
@@ -57,7 +87,7 @@ bool LzsSectionFile::save(QByteArray &data)
 	return true;
 }
 
-bool LzsSectionFile::saveEnd()
+void LzsSectionFile::saveEnd()
 {
 	_data.clear();
 }
@@ -69,7 +99,7 @@ void LzsSectionFile::clear()
 		_sectionPositions = 0;
 	}
 	_data.clear();
-	_io.close();
+	_io->close();
 }
 
 int LzsSectionFile::sectionSize(quint8 id) const
@@ -80,14 +110,14 @@ int LzsSectionFile::sectionSize(quint8 id) const
 	return sectionPos(id + 1) - sectionPos(id);
 }
 
-QByteArray LzsSectionFile::sectionData(quint8 id) const
+QByteArray LzsSectionFile::sectionData(quint8 id)
 {
-	if (_io.seek(sectionPos(id))) {
+	if (_io->seek(sectionPos(id))) {
 		int size = sectionSize(id);
 		if (size < 0) {
-			return _io.readAll();
+			return _io->readAll();
 		}
-		return _io.read(size);
+		return _io->read(size);
 	}
 	qWarning() << "LzsSectionFile::sectionData cannot seek to" << id;
 	return QByteArray();

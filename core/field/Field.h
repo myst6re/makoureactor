@@ -58,7 +58,7 @@ public:
 	virtual bool isPC() const=0;
 	inline bool isPS() const { return !isPC(); }
 
-	bool open(bool dontOptimize=false);
+	bool open();
 
 	void setSaved();
 	bool save(QByteArray &newData, bool compress);
@@ -80,25 +80,15 @@ public:
 	const QString &name() const;
 	void setName(const QString &name);
 	virtual FieldArchiveIO *io() const;
-	int sectionSize(FieldSection part) const;
-	QByteArray sectionData(FieldSection part, bool dontOptimize=false);
+	virtual int sectionSize(FieldSection part) const=0;
+	virtual QByteArray sectionData(FieldSection part)=0;
 
 	void setRemoveUnusedSection(bool remove);// FIXME: only in PC version, ugly hack detected!
 protected:
-	virtual int headerSize() const=0;
-	virtual bool open(const QByteArray &fileData)=0;
-	virtual QByteArray saveHeader() const=0;
-	virtual QByteArray saveFooter() const=0;
+	virtual bool open2()=0;
+	virtual bool save()=0;
 	virtual FieldPart *createPart(FieldSection part);
 	FieldPart *part(FieldSection section) const;
-	virtual int sectionId(FieldSection part) const=0;
-	virtual QString sectionFile(FieldSection part) const=0;
-	virtual int sectionCount() const=0;
-	virtual int paddingBetweenSections() const=0;
-	virtual int alignment() const=0;
-	virtual QList<Field::FieldSection> orderOfSections() const=0;
-	virtual quint32 diffSectionPos() const=0;
-	virtual bool hasSectionHeader() const=0;
 	FieldModelFile *fieldModelPtr(int modelID) const;
 	void addFieldModel(int modelID, FieldModelFile *fieldModel);
 private:

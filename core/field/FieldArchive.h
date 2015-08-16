@@ -114,12 +114,12 @@ class FieldArchiveIterator : public QListIterator<Field *>
 	friend class FieldArchive;
 public:
 	FieldArchiveIterator(const FieldArchive &archive);
-	Field *next(bool open=true, bool dontOptimize=false);
-	Field *peekNext(bool open=true, bool dontOptimize=false) const;
-	Field *peekPrevious(bool open=true, bool dontOptimize=false) const;
-	Field *previous(bool open=true, bool dontOptimize=false);
+	Field *next(bool open=true);
+	Field *peekNext(bool open=true) const;
+	Field *peekPrevious(bool open=true) const;
+	Field *previous(bool open=true);
 private:
-	Field *openField(Field *field, bool open=true, bool dontOptimize=false) const;
+	Field *openField(Field *field, bool open=true) const;
 };
 
 class FieldArchive
@@ -155,9 +155,9 @@ public:
 	}
 	int indexOfField(const QString &name) const;
 	const Field *field(quint32 id) const;
-	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
+	Field *field(quint32 id, bool open=true);
 	const Field *field(const QString &name) const;
-	Field *field(const QString &name, bool open=true, bool dontOptimize=false);
+	Field *field(const QString &name, bool open=true);
 	void appendField(Field *field);
 	void addField(Field *field);
 	void removeField(quint32 id);
@@ -225,7 +225,7 @@ private:
 	void updateFieldLists(Field *field, int fieldID);
 	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting, SearchScope scope) const;
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting, SearchScope scope) const;
-	bool openField(Field *field, bool dontOptimize=false);
+	bool openField(Field *field);
 
 	QList<Field *> fileList;
 	QMultiMap<QString, int> fieldsSortByName;

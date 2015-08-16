@@ -64,96 +64,15 @@ void Field::setModified(bool modified)
 	if(section1)	section1->setModified(modified);
 }
 
-bool Field::open(bool dontOptimize)
+bool Field::open()
 {
-	QByteArray fileData;
-
-	if(headerSize() > 0) {
-		QString fileType = sectionFile(Scripts);
-		if(!dontOptimize && !_io->fieldDataIsCached(this, fileType)) {
-			QByteArray lzsData = _io->fieldData(this, fileType, false);
-
-			if(lzsData.size() < 4)	return false;
-
-			const char *lzsDataConst = lzsData.constData();
-			quint32 lzsSize;
-			memcpy(&lzsSize, lzsDataConst, 4);
-
-			if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
-				return false;
-
-			fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize());//partial decompression
-		} else {
-			fileData = _io->fieldData(this, fileType);
-		}
-
-		if(fileData.size() < headerSize())	return false;
-
-		if(!open(fileData)) {
-			return false;
-		}
+	if(!open2()) {
+		return false;
 	}
 
 	_isOpen = true;
 
 	return true;
-}
-
-int Field::sectionSize(FieldSection part) const
-{
-	int idPart = sectionId(part);
-
-	if(idPart < sectionCount() - 1) {
-		return sectionPosition(idPart+1) - paddingBetweenSections() - sectionPosition(idPart);
-	}
-	return -1;
-}
-
-QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
-{
-	if(!_isOpen) {
-		open();
-	}
-
-	if(!_isOpen)	return QByteArray();
-
-	int idPart = sectionId(part),
-			position = sectionPosition(idPart),
-			size = sectionSize(part);
-	QString fileType = sectionFile(part);
-
-	if(size < 0) {
-		dontOptimize = true;
-	}
-
-	QByteArray data;
-	if(dontOptimize || _io->fieldDataIsCached(this, fileType)) {
-		data = _io->fieldData(this, fileType);
-	} else {
-		QByteArray lzsData = _io->fieldData(this, fileType, false);
-
-		if(lzsData.size() < 4) {
-			return QByteArray();
-		}
-
-		const char *lzsDataConst = lzsData.constData();
-		quint32 lzsSize;
-		memcpy(&lzsSize, lzsDataConst, 4);
-
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4) {
-			return QByteArray();
-		}
-
-		data = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1));
-	}
-
-	if(size < 0) {
-		QByteArray footer = saveFooter();
-		if (!footer.isEmpty() && data.right(footer.size()) == footer) {
-			return data.mid(position, data.size() - position - footer.size());
-		}
-	}
-	return data.mid(position, size);
 }
 
 FieldArchiveIO *Field::io() const
@@ -293,7 +212,7 @@ void Field::setSaved()
 
 bool Field::save(QByteArray &newData, bool compress)
 {
-	newData = QByteArray();
+	/* newData = QByteArray();
 
 	if(!isOpen()) {
 		return false;
@@ -358,7 +277,8 @@ bool Field::save(QByteArray &newData, bool compress)
 		newData = QByteArray((char *)&lzsSize, 4).append(compresse);
 	}
 
-	return true;
+	return true; */
+	return save();
 }
 
 qint8 Field::save(const QString &path, bool compress)

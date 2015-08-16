@@ -35,28 +35,17 @@ public:
 
 	FieldModelLoaderPS *fieldModelLoader(bool open=true);
 	FieldModelFilePS *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
-	FieldArchiveIOPS *io() const;
-protected:
-	inline virtual int headerSize() const { return 28; }
-	virtual bool open(const QByteArray &fileData);
-	virtual QByteArray saveHeader() const;
-	virtual QByteArray saveFooter() const;
-	virtual FieldPart *createPart(FieldSection part);
-	virtual int sectionId(FieldSection part) const;
-	inline QString sectionFile(FieldSection part) const {
-		Q_UNUSED(part)
-		return "DAT";
+	inline FieldArchiveIOPS *io() const {
+		return (FieldArchiveIOPS *)Field::io();
 	}
-	inline virtual int sectionCount() const {	return 7; }
-	inline virtual int paddingBetweenSections() const { return 0; }
-	inline virtual int alignment() const { return 4; } // Aligned
-	virtual QList<Field::FieldSection> orderOfSections() const;
-	inline virtual quint32 diffSectionPos() const { return vramDiff; }
-	inline virtual bool hasSectionHeader() const { return false; }
+	int sectionSize(FieldSection part) const;
+	QByteArray sectionData(FieldSection part);
+protected:
+	virtual bool open2();
+	virtual bool save() { return false; }
+	virtual FieldPart *createPart(FieldSection part);
 private:
 	DatFile *_file;
-	quint32 sectionPositions[7];
-	qint32 vramDiff;
 };
 
 #endif // DEF_FIELDPS

@@ -17,16 +17,21 @@
  ****************************************************************************/
 #include "PCFieldFile.h"
 
-PCFieldFile::PCFieldFile()
+PCFieldFile::PCFieldFile() :
+	LzsSectionFile()
 {
 }
 
 bool PCFieldFile::openHeader()
 {
+	qDebug() << "PCFieldFile::openHeader";
+
 	if (!io()->seek(6)) {
 		qWarning() << "PCFieldFile::openHeader cannot seek" << io()->errorString();
 		return false;
 	}
+
+	qDebug() << "PCFieldFile::read" << PC_FIELD_FILE_SECTION_COUNT * 4;
 
 	if (io()->read((char *)_sectionPositions, PC_FIELD_FILE_SECTION_COUNT * 4) != PC_FIELD_FILE_SECTION_COUNT * 4) {
 		qWarning() << "PCFieldFile::openHeader file too short:" << io()->errorString();
@@ -45,7 +50,7 @@ int PCFieldFile::setSectionData(quint32 pos, quint32 oldSize,
 								const QByteArray &section,
 								QByteArray &out)
 {
-	int newSize = data.size();
+	int newSize = section.size();
 
 	oldSize -= 4;
 

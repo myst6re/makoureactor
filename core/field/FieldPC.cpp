@@ -19,47 +19,29 @@
 #include "BackgroundFilePC.h"
 
 FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
-	Field(name, io), _model(0)
+	Field(name, io), _file(new PCFieldFile()), _model(0)
 {
 }
 
 FieldPC::FieldPC(const Field &field) :
-	Field(field), _model(0)
+	Field(field), _file(new PCFieldFile()), _model(0)
 {
 }
 
 FieldPC::~FieldPC()
 {
+	delete _file;
 	if(_model) {
 		delete _model;
 	}
 }
 
-bool FieldPC::open(const QByteArray &fileData)
+bool FieldPC::open2()
 {
-	return _file->setData(fileData);
-}
+	QByteArray lzsData = io()->fieldData(this, QString(), false);
+	qDebug() << "open2" << lzsData.size();
 
-int FieldPC::sectionId(FieldSection part) const
-{
-	switch(part) {
-	case Scripts:
-	case Akaos:			return 0;
-	case Camera:		return 1;
-	case ModelLoader:	return 2;
-	case PalettePC:		return 3;
-	case Walkmesh:		return 4;
-	case Unused:		return 5;
-	case Encounter:		return 6;
-	case Inf:			return 7;
-	case Background:	return 8;
-	default:			return -1;
-	}
-}
-
-FieldArchiveIOPC *FieldPC::io() const
-{
-	return (FieldArchiveIOPC *)Field::io();
+	return _file->open(lzsData);
 }
 
 FieldPart *FieldPC::createPart(FieldSection part)
@@ -68,6 +50,40 @@ FieldPart *FieldPC::createPart(FieldSection part)
 	case ModelLoader:	return new FieldModelLoaderPC(this);
 	case Background:	return new BackgroundFilePC(this);
 	default:			return Field::createPart(part);
+	}
+}
+
+int FieldPC::sectionSize(FieldSection part) const
+{
+	switch(part) {
+	case Scripts:
+	case Akaos:       return _file->sectionSize(PCFieldFile::TextsAndScripts);
+	case Camera:      return _file->sectionSize(PCFieldFile::Camera);
+	case Walkmesh:    return _file->sectionSize(PCFieldFile::Walkmesh);
+	case ModelLoader: return _file->sectionSize(PCFieldFile::ModelLoader);
+	case Encounter:   return _file->sectionSize(PCFieldFile::Encounter);
+	case Inf:         return _file->sectionSize(PCFieldFile::Triggers);
+	case Background:  return _file->sectionSize(PCFieldFile::Background);
+	case PalettePC:   return _file->sectionSize(PCFieldFile::Palette);
+	case Unused:      return _file->sectionSize(PCFieldFile::_TileMap);
+	default:          return -1;
+	}
+}
+
+QByteArray FieldPC::sectionData(FieldSection part)
+{
+	switch(part) {
+	case Scripts:
+	case Akaos:       return _file->sectionData(PCFieldFile::TextsAndScripts);
+	case Camera:      return _file->sectionData(PCFieldFile::Camera);
+	case Walkmesh:    return _file->sectionData(PCFieldFile::Walkmesh);
+	case ModelLoader: return _file->sectionData(PCFieldFile::ModelLoader);
+	case Encounter:   return _file->sectionData(PCFieldFile::Encounter);
+	case Inf:         return _file->sectionData(PCFieldFile::Triggers);
+	case Background:  return _file->sectionData(PCFieldFile::Background);
+	case PalettePC:   return _file->sectionData(PCFieldFile::Palette);
+	case Unused:      return _file->sectionData(PCFieldFile::_TileMap);
+	default:          return QByteArray();
 	}
 }
 
@@ -107,24 +123,6 @@ FieldModelFilePC *FieldPC::fieldModel(const QString &hrc, const QString &a, bool
 	if(!_model)	_model = new FieldModelFilePC();
 	_model->load(hrc, a, animate);
 	return _model;
-}
-
-QByteArray FieldPC::saveHeader() const
-{
-	QByteArray header;
-	header.append("\x00\x00", 2); // Padding?
-	header.append("\x09\x00\x00\x00", 4); // section count (=9)
-	return header;
-}
-
-QByteArray FieldPC::saveFooter() const
-{
-	return QByteArray("FINAL FANTASY7", 14);
-}
-
-QList<Field::FieldSection> FieldPC::orderOfSections() const
-{
-	return QList<FieldSection>() << Scripts << Camera << ModelLoader << PalettePC << Walkmesh << Unused << Encounter << Inf << Background;
 }
 
 qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldSections part)

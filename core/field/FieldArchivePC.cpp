@@ -63,9 +63,9 @@ const FieldPC *FieldArchivePC::field(quint32 id) const
 	return (const FieldPC *)FieldArchive::field(id);
 }
 
-FieldPC *FieldArchivePC::field(quint32 id, bool open, bool dontOptimize)
+FieldPC *FieldArchivePC::field(quint32 id, bool open)
 {
-	return (FieldPC *)FieldArchive::field(id, open, dontOptimize);
+	return (FieldPC *)FieldArchive::field(id, open);
 }
 
 TutFilePC *FieldArchivePC::tut(const QString &name)

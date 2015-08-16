@@ -40,14 +40,17 @@ public:
 	DatFile();
 	inline virtual ~DatFile() {}
 
-	inline QByteArray sectionData(Section id) const {
-		return sectionData(quint8(id));
+	inline QByteArray sectionData(Section id) {
+		return LzsSectionFile::sectionData(quint8(id));
 	}
 	inline void setSectionData(Section id, const QByteArray &data) {
-		setSectionData(quint8(id), data);
+		LzsSectionFile::setSectionData(quint8(id), data);
 	}
 	inline quint8 sectionCount() const {
 		return DAT_FILE_SECTION_COUNT;
+	}
+	inline int sectionSize(Section id) const {
+		return LzsSectionFile::sectionSize(quint8(id));
 	}
 private:
 	bool openHeader();
