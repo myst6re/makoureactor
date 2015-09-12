@@ -4,7 +4,6 @@
 LzsSectionFile::LzsSectionFile() :
 	_sectionPositions(0), _io(0)
 {
-	qDebug() << "instanciate LzsSectionFile";
 }
 
 LzsSectionFile::~LzsSectionFile()
@@ -32,24 +31,17 @@ bool LzsSectionFile::open(const QByteArray &lzsData)
 			&& (quint32)lzsData.size() != lzsSize + 4) {
 		return false;
 	}
-	qDebug() << "ok lzs";
-
-	QByteArray lzsDataCpy = lzsData.mid(4);
-	qDebug() << "mid";
-	qDebug() << "mid" << qint64(_io);
 
 	if (_io) {
-		qDebug() << "delete io";
 		delete _io;
 	}
-	qDebug() << "LzsRandomAccess";
-	_io = new LzsRandomAccess(lzsDataCpy);
-	qDebug() << "ok setData";
+
+	_io = new LzsRandomAccess(lzsData.mid(4));
+
 	if (!_io->open(QIODevice::ReadOnly)) {
 		qWarning() << "LzsSectionFile::open cannot open io" << _io->errorString();
 		return false;
 	}
-	qDebug() << "ok lzs 2";
 
 	if (!_sectionPositions) {
 		_sectionPositions = new quint32[sectionCount()];

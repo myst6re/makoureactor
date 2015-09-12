@@ -17,7 +17,7 @@ public:
 	bool save(QByteArray &data);
 	void saveEnd();
 	void clear();
-	QByteArray sectionData(quint8 id);
+	virtual QByteArray sectionData(quint8 id);
 	void setSectionData(quint8 id, const QByteArray &data);
 	int sectionSize(quint8 id) const;
 	virtual quint8 sectionCount() const=0;
@@ -30,12 +30,12 @@ protected:
 	virtual int setSectionData(quint32 pos, quint32 oldSize,
 							   const QByteArray &section,
 							   QByteArray &out)=0;
-	quint32 *_sectionPositions;
-private:
-	inline int sectionPos(quint8 id) const {
+	inline virtual int sectionPos(quint8 id) const {
 		Q_ASSERT(id >= 0 && id < sectionCount());
 		return _sectionPositions[id];
 	}
+	quint32 *_sectionPositions;
+private:
 	void shiftPositionsAfter(quint8 id, int shift);
 
 	LzsRandomAccess *_io;

@@ -41,13 +41,14 @@ qint64 LzsIO::readData(char *data, qint64 maxSize)
 			++curResult;
 
 			if (curResult >= maxSize) {
+				_address = i;
 				return curResult; // Done
 			}
 		}
 	}
 
 	forever {
-		if (((_firstByte >>= 1) & 256) == 0) {
+		if (((_firstByte >>= 1) & 0x100) == 0) {
 			_firstByte = *_fileData++ | 0xFF00; // On récupère le premier octet puis on avance d'un octet
 		}
 
@@ -61,6 +62,7 @@ qint64 LzsIO::readData(char *data, qint64 maxSize)
 			++curResult;
 
 			if (curResult >= maxSize) {
+				_address = 0xFFFF;
 				return curResult; // Done
 			}
 		} else {
@@ -75,6 +77,7 @@ qint64 LzsIO::readData(char *data, qint64 maxSize)
 				++curResult;
 
 				if (curResult >= maxSize) {
+					_address = i;
 					return curResult; // Done
 				}
 			}
@@ -101,6 +104,9 @@ LzsRandomAccess::~LzsRandomAccess()
 
 bool LzsRandomAccess::open(OpenMode mode)
 {
+	int sizeAlloc = _io->size() * 3; // Estimation
+	_out.reserve(sizeAlloc);
+
 	mode |= QIODevice::Unbuffered;
 	return _io->open(mode) && QIODevice::open(mode);
 }
@@ -109,6 +115,7 @@ void LzsRandomAccess::close()
 {
 	_io->close();
 	_out.clear();
+	_endReached = false;
 	QIODevice::close();
 }
 
@@ -124,7 +131,6 @@ qint64 LzsRandomAccess::readData(char *data, qint64 maxSize)
 		if (size < 0) {
 			return size;
 		}
-		qDebug() << "LzsRandomAccess::readData" << maxSize << toRead << size;
 
 		if (size < toRead) {
 			_endReached = true;
@@ -132,13 +138,10 @@ qint64 LzsRandomAccess::readData(char *data, qint64 maxSize)
 		}
 
 		_out.append(readData);
-	} else {
-		qDebug() << "LzsRandomAccess::readData mid data";
 	}
 
-	if (_endReached) {
+	if (startPos + maxSize > _out.size()) {
 		maxSize = qMin(maxSize, qint64(_out.size()) - startPos);
-		qDebug() << "LzsRandomAccess::readData endReached" << maxSize << startPos << _out.size();
 	}
 
 	memcpy(data, _out.constData() + startPos, maxSize);

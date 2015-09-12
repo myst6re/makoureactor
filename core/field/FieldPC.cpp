@@ -38,10 +38,7 @@ FieldPC::~FieldPC()
 
 bool FieldPC::open2()
 {
-	QByteArray lzsData = io()->fieldData(this, QString(), false);
-	qDebug() << "open2" << lzsData.size();
-
-	return _file->open(lzsData);
+	return _file->open(io()->fieldData(this, QString(), false));
 }
 
 FieldPart *FieldPC::createPart(FieldSection part)

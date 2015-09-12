@@ -24,16 +24,12 @@ PCFieldFile::PCFieldFile() :
 
 bool PCFieldFile::openHeader()
 {
-	qDebug() << "PCFieldFile::openHeader";
-
 	if (!io()->seek(6)) {
 		qWarning() << "PCFieldFile::openHeader cannot seek" << io()->errorString();
 		return false;
 	}
 
-	qDebug() << "PCFieldFile::read" << PC_FIELD_FILE_SECTION_COUNT * 4;
-
-	if (io()->read((char *)_sectionPositions, PC_FIELD_FILE_SECTION_COUNT * 4) != PC_FIELD_FILE_SECTION_COUNT * 4) {
+	if (io()->read((char *)_sectionPositions, sectionCount() * 4) != sectionCount() * 4) {
 		qWarning() << "PCFieldFile::openHeader file too short:" << io()->errorString();
 		return false;
 	}
@@ -67,4 +63,9 @@ bool PCFieldFile::writePositions(QByteArray &data)
 	data.replace(6, size, (char *)_sectionPositions, size);
 
 	return true;
+}
+
+int PCFieldFile::sectionPos(quint8 id) const
+{
+	return LzsSectionFile::sectionPos(id) + 4;
 }

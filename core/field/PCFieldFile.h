@@ -58,6 +58,7 @@ private:
 					   const QByteArray &section,
 					   QByteArray &out);
 	bool writePositions(QByteArray &data);
+	int sectionPos(quint8 id) const;
 };
 
 #endif // PCFIELDFILE_H
