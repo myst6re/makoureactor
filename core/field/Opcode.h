@@ -764,7 +764,7 @@ public:
 	void getVariables(QList<FF7Var> &vars) const;
 	quint8 banks[2];
 	quint8 r, g, b;
-	quint8 unknown1, unknown2, unknown3;
+	quint8 type, speed, unused;
 };
 
 class OpcodeBLINK : public Opcode {

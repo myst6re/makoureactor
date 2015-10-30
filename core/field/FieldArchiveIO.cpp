@@ -23,6 +23,7 @@
 
 QByteArray FieldArchiveIO::fieldDataCache;
 Field *FieldArchiveIO::fieldCache=0;
+QString FieldArchiveIO::fieldExtensionCache;
 
 FieldArchiveIO::FieldArchiveIO(FieldArchive *fieldArchive) :
 	_fieldArchive(fieldArchive)
@@ -65,22 +66,23 @@ QString FieldArchiveIO::directory() const
 	return filePath.left(filePath.lastIndexOf('/') + 1);
 }
 
-QByteArray FieldArchiveIO::fieldData(Field *field, bool unlzs)
+QByteArray FieldArchiveIO::fieldData(Field *field, const QString &extension, bool unlzs)
 {
 	// use data from the cache
-	if(unlzs && fieldDataIsCached(field)) {
+	if(unlzs && fieldDataIsCached(field, extension)) {
 //		qDebug() << "FieldArchive use field data from cache" << field->name();
 		return fieldDataCache;
 	} /*else {
 		qDebug() << "FieldArchive don't use field data from cache" << field->name() << unlzs;
 	}*/
 
-	QByteArray data = fieldData2(field, unlzs);
+	QByteArray data = fieldData2(field, extension, unlzs);
 
 	// put decompressed data in the cache
 	if(unlzs && !data.isEmpty()) {
 		fieldCache = field;
 		fieldDataCache = data;
+		fieldExtensionCache = extension;
 	}
 	return data;
 }
@@ -109,9 +111,27 @@ QByteArray FieldArchiveIO::fileData(const QString &fileName, bool unlzs, bool is
 	}
 }
 
-bool FieldArchiveIO::fieldDataIsCached(Field *field) const
+int FieldArchiveIO::exportFieldData(Field *field, const QString &extension, const QString &path, bool unlzs)
 {
-	return fieldCache && fieldCache == field;
+	QByteArray newData = fieldData(field, extension, unlzs);
+
+	if(!newData.isEmpty()) {
+		QFile fic(path);
+		if(!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			return 2;
+		}
+		fic.write(newData);
+		fic.close();
+	} else {
+		return 1;
+	}
+
+	return 0;
+}
+
+bool FieldArchiveIO::fieldDataIsCached(Field *field, const QString &fileType) const
+{
+	return fieldCache && fieldCache == field && fieldExtensionCache == fileType;
 }
 
 void FieldArchiveIO::clearCachedData()

@@ -27,8 +27,6 @@ MiscWidget::MiscWidget(InfFile *data, Field *field, QWidget *parent) :
 	mapName->setMaxLength(8);
 	mapAuthor = new QLineEdit(this);
 	mapAuthor->setMaxLength(7);
-	mapScale = new QSpinBox(this);
-	mapScale->setRange(0, 65535);
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 
@@ -37,8 +35,6 @@ MiscWidget::MiscWidget(InfFile *data, Field *field, QWidget *parent) :
 	layout->addWidget(mapName, 0, 1);
 	layout->addWidget(new QLabel(tr("Auteur :")), 1, 0);
 	layout->addWidget(mapAuthor, 1, 1);
-	layout->addWidget(new QLabel(tr("Zoom écran :")), 2, 0);
-	layout->addWidget(mapScale, 2, 1);
 	layout->addWidget(buttonBox, 3, 0, 1, 2);
 
 	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
@@ -52,7 +48,6 @@ void MiscWidget::fill()
 	mapName->setText(data->mapName());
 	Section1File *scriptsAndTexts = field->scriptsAndTexts();
 	mapAuthor->setText(scriptsAndTexts->author());
-	mapScale->setValue(scriptsAndTexts->scale());
 }
 
 void MiscWidget::accept()
@@ -60,7 +55,6 @@ void MiscWidget::accept()
 	data->setMapName(mapName->text());
 	Section1File *scriptsAndTexts = field->scriptsAndTexts();
 	scriptsAndTexts->setAuthor(mapAuthor->text());
-	scriptsAndTexts->setScale(mapScale->value());
 
 	QDialog::accept();
 }

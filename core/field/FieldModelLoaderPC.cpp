@@ -73,7 +73,9 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 	clear();
 
 	memcpy(&nb, constData + 2, 2);
-	memcpy(&typeHRC, constData + 4, 2);
+
+	quint16 fieldScale = field()->scriptsAndTexts()->scale();
+
 	quint32 curPos = 6;
 	for(i=0 ; i<nb ; ++i) {
 		if((quint32)data.size() < curPos+2) {
@@ -94,7 +96,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 		model_nameHRC.append(QString(data.mid(curPos+4+len,8)));
 		bool ok;
 		int typeHRC_value = QString(data.mid(curPos+12+len,4)).toInt(&ok);
-		if(!ok)	typeHRC_value = typeHRC;
+		if(!ok)	typeHRC_value = fieldScale;
 		model_typeHRC.append(typeHRC_value);
 
 		memcpy(&nbAnim, constData + curPos+16+len, 2);
@@ -145,8 +147,7 @@ QByteArray FieldModelLoaderPC::save() const
 	QString modelName;
 	QRgb color;
 
-	for(i=0 ; i<nbHRC ; ++i)
-	{
+	for(i=0 ; i<nbHRC ; ++i) {
 		modelName = this->model_nameChar.at(i);
 		nameSize = modelName.size();
 		HRCs.append((char *)&nameSize, 2); //model name size
@@ -156,15 +157,15 @@ QByteArray FieldModelLoaderPC::save() const
 		HRCs.append(QString::number(this->model_typeHRC.at(i)).leftJustified(4, '\x00', true)); //scale (512 )
 		nbAnim = this->model_anims.at(i).size();
 		HRCs.append((char *)&nbAnim, 2); //Nb Anims
-		for(j=0 ; j<10 ; ++j) //Colors
-		{
+
+		for(j=0 ; j<10 ; ++j) { //Colors
 			color = this->colors.at(i).at(j);
 			HRCs.append((char)qRed(color));
 			HRCs.append((char)qGreen(color));
 			HRCs.append((char)qBlue(color));
 		}
-		for(j=0 ; j<nbAnim ; ++j) //Animations
-		{
+
+		for(j=0 ; j<nbAnim ; ++j) { //Animations
 			nameSize = this->model_anims.at(i).at(j).size();
 			HRCs.append((char *)&nameSize, 2); //Animation name size
 			HRCs.append(this->model_anims.at(i).at(j)); //Animation name
@@ -172,23 +173,12 @@ QByteArray FieldModelLoaderPC::save() const
 		}
 	}
 
-	return QByteArray("\x00\x00", 2) //0
-			.append((char *)&nbHRC, 2) //NbHRC
-			.append((char *)&this->typeHRC, 2) //TypeHRC
+	quint16 fieldScale = field()->scriptsAndTexts()->scale();
+
+	return QByteArray("\x00\x00", 2)
+			.append((char *)&nbHRC, 2)
+			.append((char *)&fieldScale, 2)
 			.append(HRCs);
-}
-
-quint16 FieldModelLoaderPC::globalScale() const
-{
-	return typeHRC;
-}
-
-void FieldModelLoaderPC::setGlobalScale(quint16 scale)
-{
-	if(typeHRC != scale) {
-		typeHRC = scale;
-		setModified(true);
-	}
 }
 
 int FieldModelLoaderPC::modelCount() const
@@ -206,7 +196,7 @@ bool FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
 		model_unknown.insert(modelID, (quint16)0);
 		model_nameChar.insert(modelID, QString());
 		model_nameHRC.insert(modelID, hrcName);
-		model_typeHRC.insert(modelID, typeHRC);
+		model_typeHRC.insert(modelID, field()->scriptsAndTexts()->scale());
 		colors.insert(modelID, color);
 
 		model_anims.insert(modelID, QStringList());

@@ -18,96 +18,10 @@
 #ifndef FIELDMODELFILEPS_H
 #define FIELDMODELFILEPS_H
 
-#include <QtGui>
+#include <QtCore>
+#include <QImage>
 #include "FieldModelFile.h"
-
-#define COLORRGB_2_QRGB(c)		qRgb(c.red, c.green, c.blue)
-
-typedef struct {
-	quint16 num_frames;					// Number of frames
-	quint8 num_bones;					// Number of bones
-	quint8 num_frames_translation;		// Number of translation frames
-	quint8 num_static_translation;		// Number of static translation frames
-	quint8 num_frames_rotation;			// Number of rotation frames
-	quint16 offset_frames_translation;	// Relative offset to translation frames
-	quint16 offset_static_translation;	// Relative offset to statis translation frames
-	quint16 offset_frames_rotation;		// Relative offset to rotation frames
-	quint32 offset_data;				// Offset to animation data section
-} Animation;
-
-typedef struct {
-	quint16 width, height;
-	quint16 vramX, vramY;
-	quint32 offset_data;
-} TexHeader;
-
-typedef struct {
-	quint8 flag;
-	quint8 rx, ry, rz;
-	quint8 tx, ty, tz;
-	quint8 padding;
-} FrameTranslation;
-
-typedef struct {
-	quint32 size;
-	quint32 offset_models;
-} BSX_header;
-
-typedef struct {
-	quint32 psx_memory;
-	quint32 num_models;
-	quint32 texture_pointer;
-	quint32 unknown_pointer;
-} Model_header;
-
-typedef struct {
-	quint8 red, green, blue;
-} ColorRGB;
-
-typedef struct {
-	quint16 model_id;        // ID of the model
-	quint16 scale;
-	quint32 offset_skeleton; // Offset to the parts, bones and animations of the model
-	ColorRGB color1;
-	quint8 unknown;
-	ColorRGB color2;
-	ColorRGB color3;
-	quint8 index_bones_start;
-	quint8 index_bones_end;
-	ColorRGB color4;
-	quint8 num_bones;      // Number of bones in the model's skeleton
-	ColorRGB color5;
-	ColorRGB color6;
-	quint8 index_parts_start;
-	quint8 index_parts_end;
-	ColorRGB color7;
-	quint8 num_parts;      // Number of parts in the model's skeleton
-	ColorRGB color8;
-	ColorRGB color9;
-	quint8 index_animations_start;
-	quint8 index_animations_end;
-	ColorRGB color10;
-	quint8 num_animations; // Number of animations
-} Model;
-
-typedef struct {
-	quint16 unknown;
-	quint8 num_bones;
-	quint8 num_parts;
-	quint8 num_animations;
-	quint8 blank1[17];
-	quint16 scale;
-	quint16 offset_parts; // relative to the end of this structure
-	quint16 offset_animations; // relative to the end of this structure
-	quint32 offset_skeleton;
-	quint32 blank2;
-} BCXModel;
-
-typedef struct {
-	qint16 length;
-	qint8 parent;
-	quint8 unknown;
-} BonePS;
+#include "FieldModelTextureRefPS.h"
 
 class FieldPS;
 
@@ -115,18 +29,31 @@ class FieldModelFilePS : public FieldModelFile
 {
 public:
 	FieldModelFilePS();
+	void clear();
 	inline bool translateAfter() const { return false; }
-	quint8 load(FieldPS *currentField, int model_id, int animation_id, bool animate=false);
-	const QList<QRgb> &lightColors() const;
-	quint16 scale() const;
+	inline const QList<QRgb> &lightColors() const {
+		return _colors;
+	}
+	inline void setLightColors(const QList<QRgb> &colors) {
+		_colors = colors;
+	}
+	inline quint16 scale() const {
+		return _scale;
+	}
+	inline void setScale(quint16 scale) {
+		_scale = scale;
+	}
+	bool load(FieldPS *currentField, int modelID, int animationID, bool animate);
+	QImage loadedTexture(FieldModelGroup *group);
+	QImage vramImage() const;
 private:
-	int openSkeleton(const char *constData, int curOff, quint8 numBones);
-	int openMesh(const char *constData, int curOff, int size, quint8 numParts);
-	bool openAnimation(const char *constData, int curOff, int animation_id, int size, bool animate=false);
-	QImage openTexture(const char *constData, int size, const TexHeader &imgHeader, const TexHeader &palHeader, quint8 bpp);
-	bool openBCX(const QByteArray &BCX, int animationID, bool animation=false, int *numAnimations=0);
-	QList<QRgb> _currentColors;
-	quint16 _currentScale;
+	Q_DISABLE_COPY(FieldModelFilePS)
+	QList<QRgb> _colors;
+	quint16 _scale;
+	FieldPS *_currentField;
+	int _currentModelID;
+	QHash<FieldModelGroup *, QImage> _loadedTex;
+	FieldModelTexturesPS _textures;
 };
 
 #endif // FIELDMODELFILEPS_H

@@ -68,26 +68,29 @@ bool Field::open(bool dontOptimize)
 {
 	QByteArray fileData;
 
-	if(!dontOptimize && !_io->fieldDataIsCached(this)) {
-		QByteArray lzsData = _io->fieldData(this, false);
+	if(headerSize() > 0) {
+		QString fileType = sectionFile(Scripts);
+		if(!dontOptimize && !_io->fieldDataIsCached(this, fileType)) {
+			QByteArray lzsData = _io->fieldData(this, fileType, false);
 
-		if(lzsData.size() < 4)	return false;
+			if(lzsData.size() < 4)	return false;
 
-		const char *lzsDataConst = lzsData.constData();
-		quint32 lzsSize;
-		memcpy(&lzsSize, lzsDataConst, 4);
+			const char *lzsDataConst = lzsData.constData();
+			quint32 lzsSize;
+			memcpy(&lzsSize, lzsDataConst, 4);
 
-		if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
-			return false;
+			if(!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
+				return false;
 
-		fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize());//partial decompression
-	} else {
-		fileData = _io->fieldData(this);
+			fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize());//partial decompression
+		} else {
+			fileData = _io->fieldData(this, fileType);
+		}
+
+		if(fileData.size() < headerSize())	return false;
+
+		openHeader(fileData);
 	}
-
-	if(fileData.size() < headerSize())	return false;
-
-	openHeader(fileData);
 
 	_isOpen = true;
 
@@ -112,18 +115,20 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 
 	if(!_isOpen)	return QByteArray();
 
-	int idPart = sectionId(part);
-	int position = sectionPosition(idPart);
-	int size = sectionSize(part);
+	int idPart = sectionId(part),
+			position = sectionPosition(idPart),
+			size = sectionSize(part);
+	QString fileType = sectionFile(part);
 
 	if(size < 0) {
 		dontOptimize = true;
 	}
 
-	if(dontOptimize || _io->fieldDataIsCached(this)) {
-		return _io->fieldData(this).mid(position, size);
+	QByteArray data;
+	if(dontOptimize || _io->fieldDataIsCached(this, fileType)) {
+		data = _io->fieldData(this, fileType);
 	} else {
-		QByteArray lzsData = _io->fieldData(this, false);
+		QByteArray lzsData = _io->fieldData(this, fileType, false);
 
 		if(lzsData.size() < 4) {
 			return QByteArray();
@@ -137,9 +142,16 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 			return QByteArray();
 		}
 
-		return LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1))
-				.mid(position, size);
+		data = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1));
 	}
+
+	if(size < 0) {
+		QByteArray footer = saveFooter();
+		if (!footer.isEmpty() && data.right(footer.size()) == footer) {
+			return data.mid(position, data.size() - position - footer.size());
+		}
+	}
+	return data.mid(position, size);
 }
 
 FieldArchiveIO *Field::io() const
@@ -333,7 +345,7 @@ bool Field::save(QByteArray &newData, bool compress)
 	}
 
 	// Footer
-//	newData.append(saveFooter()); // For PC footer: Already present in the background data
+	newData.append(saveFooter());
 
 	// Header prepended to the section data
 	newData.prepend(toc);

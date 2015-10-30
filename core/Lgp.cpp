@@ -447,11 +447,6 @@ bool Lgp::openHeader()
 		return false;
 	}
 
-	if(sizeToc < 0) {
-		setError(InvalidError);
-		return false;
-	}
-
 	const char *headerConstData = headerData.constData();
 	QList<LgpHeaderEntry *> tocEntries;
 	QList<quint16> headerConflict;

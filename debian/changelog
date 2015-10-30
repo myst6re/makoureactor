@@ -1,3 +1,41 @@
+makoureactor (1.6.5) precise; urgency=low
+
+  * Main window layout changes
+  * Fixing PC field format bug on save/export
+  * Refactor 3D models code
+  
+ -- myst6re <myst6re@gmail.com>  Sun, 2 Aug 2015 15:20:54 +0200
+
+makoureactor (1.6.4) precise; urgency=low
+
+  * Some fixes for a better modified ISO
+  * Experimental feature: Makou Reactor knows how to open the FF7 demo disc
+  * Text changes for opcodes SPTYE and NFADE
+  * Hiding models scale field in field models editor (moved in walkmesh editor -> "Field scale")
+  * Adding frcyo2 to the list of maps (PS FR version)
+  * Text preview: Fixing key icons alignment
+  * Music/tutos editor: Hiding akao infos
+  
+ -- myst6re <myst6re@gmail.com>  Thu, 9 Jul 2015 22:50:23 +0200
+
+makoureactor (1.6.3) precise; urgency=low
+
+  * "Find all" feature
+  * Text editor: Some modifications about autosize feature + configuration of margins and character names.
+  * Window opcode editor: Fixing crash and bug (when changing current displayed text).
+  * Window opcode editor: Adding buttons to align the window vertically and horizontally.
+  * Text preview: can change page with the wheel.
+  * Splitting movie list in three lists: one for each disc.
+  * Search var: Fixing regression when searching without value, adding "all" operation to search every occurrences of var.
+  * Text editor: renaming {VAR1}, {VAR2} and {VAR3} tags into {VARDEC}, {VARHEX} and {VARDECR}.
+  * Var Manager: Adding some infos about vars (r/w, size).
+  * Var Manager: Merging related banks (1/2, 3/4, 5/6, 11/12, 13/14 and 15/7) hidding unusable banks (8, 9, 10).
+  * ISO: fixing FIELD.BIN update bug. (need tests)
+  * Fixing bug: window.bin not opened if kernel.bin is not opened.
+  * Fixing CMUSC opcode length.
+
+ -- Chris Rizzitello <sithlord48@gmail.com>  Fri, 06 Feb 2015 21:36:00 -0400
+
 makoureactor (1.6.2) precise; urgency=low
 
   * Adding new features to find a variable.

@@ -92,6 +92,7 @@ protected:
 	virtual FieldPart *createPart(FieldSection part);
 	FieldPart *part(FieldSection section) const;
 	virtual int sectionId(FieldSection part) const=0;
+	virtual QString sectionFile(FieldSection part) const=0;
 	virtual quint32 sectionPosition(int idPart) const=0;
 	virtual int sectionCount() const=0;
 	virtual int paddingBetweenSections() const=0;

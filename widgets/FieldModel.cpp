@@ -19,7 +19,7 @@
 
 FieldModel::FieldModel(QWidget *parent, const QGLWidget *shareWidget) :
 	QGLWidget(parent, shareWidget), blockAll(false), distance(-0.25/*-35*/),
-	currentFrame(0), animated(true), data(0),
+	animationID(0), currentFrame(0), animated(true), data(0),
 	xRot(270*16), yRot(90*16), zRot(0)
 {
 	connect(&timer, SIGNAL(timeout()), SLOT(animate()));
@@ -38,11 +38,12 @@ void FieldModel::clear()
 	updateGL();
 }
 
-void FieldModel::setFieldModelFile(FieldModelFile *fieldModel)
+void FieldModel::setFieldModelFile(FieldModelFile *fieldModel, int animID)
 {
 	currentFrame = 0;
 	data = fieldModel;
-	if(data->isOpen()) {
+	animationID = animID;
+	if(!data->isEmpty()) {
 		updateGL();
 		updateTimer();
 	}
@@ -54,9 +55,18 @@ void FieldModel::setIsAnimated(bool animate)
 	updateTimer();
 }
 
+void FieldModel::setAnimationID(int animID)
+{
+	if (animationID != animID) {
+		animationID = animID;
+		updateGL();
+		updateTimer();
+	}
+}
+
 void FieldModel::updateTimer()
 {
-	if(animated && data && data->frameCount() > 1) {
+	if(animated && data && frameCount() > 1) {
 		timer.start(30);
 	} else {
 		timer.stop();
@@ -66,6 +76,13 @@ void FieldModel::updateTimer()
 int FieldModel::boneCount() const
 {
 	return data ? data->boneCount() : 0;
+}
+
+int FieldModel::frameCount() const
+{
+	return data && animationID < data->animationCount()
+			? data->animation(animationID).frameCount()
+			: 0;
 }
 
 void FieldModel::initializeGL()
@@ -83,29 +100,28 @@ void FieldModel::initializeGL()
 //	gluPerspective(70, (double)width()/(double)height(), 0.001, 1000.0);
 }
 
-void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, int boneID, GLuint &texture_id, int &lastTexID)
+void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, const FieldModelBone &bone,
+					   GLuint &texture_id, quint64 &lastTexID)
 {
-	if(!data || !data->isOpen() || scale == 0.0f)	return;
+	if (scale == 0.0f) {
+		return;
+	}
 
-	foreach(FieldModelPart *p, data->parts(boneID)) {
+	foreach(FieldModelPart *part, bone.parts()) {
 
-		foreach(FieldModelGroup *g, p->groups()) {
-			bool hasTexture = g->textureNumber() > -1
-					&& (int)g->textureNumber() < data->loadedTextureCount();
-
-			if(hasTexture && lastTexID != g->textureNumber()) {
+		foreach(FieldModelGroup *g, part->groups()) {
+			if(g->hasTexture()) {
 				if(texture_id != (GLuint)-1) {
 					glWidget->deleteTexture(texture_id);
 				} else {
 					glEnable(GL_TEXTURE_2D);
 				}
-				texture_id = glWidget->bindTexture(data->loadedTexture(g->textureNumber()), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
-				lastTexID = g->textureNumber();
-			} else if(!hasTexture && texture_id != (GLuint)-1) {
+				texture_id = glWidget->bindTexture(data->loadedTexture(g), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
+			} else if(!g->hasTexture() && texture_id != (GLuint)-1) {
 				glWidget->deleteTexture(texture_id);
 				glDisable(GL_TEXTURE_2D);
 				texture_id = -1;
-				lastTexID = -1;
+				lastTexID = quint64(-1);
 			}
 
 			int curPolyType = 0;
@@ -129,18 +145,18 @@ void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, i
 					glColor3ub(qRed(color), qGreen(color), qBlue(color));
 				}
 
-				for(quint32 j=0 ; j<(quint8)p->count() ; ++j) {
+				for(quint16 j=0 ; j<(quint8)p->count() ; ++j) {
 					if(!p->isMonochrome()) {
 						QRgb color = p->color(j);
 						glColor3ub(qRed(color), qGreen(color), qBlue(color));
 					}
 
-					if(hasTexture && p->hasTexture()) {
-						TexCoord coord = p->texCoord(j);
+					if(g->hasTexture() && p->hasTexture()) {
+						const TexCoord &coord = p->texCoord(j);
 						glTexCoord2d(coord.x, coord.y);
 					}
 
-					PolyVertex vertex = p->vertex(j);
+					const PolyVertex &vertex = p->vertex(j);
 					glVertex3f(vertex.x/scale, vertex.y/scale, vertex.z/scale);
 				}
 			}
@@ -227,17 +243,19 @@ void FieldModel::resizeGL(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int currentFrame, float scale)
+void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int animationID, int currentFrame, float scale)
 {
-	if(!data || !data->isOpen() || scale == 0.0f)	return;
+	if(!data || data->isEmpty() || scale == 0.0f) {
+		return;
+	}
 
 	QStack<int> parent;
 	int i;
 	GLuint texture_id = -1;
-	int lastTexID = -1;
+	quint64 lastTexID = quint64(-1);
 
-	if(data->animBoneCount() <= 1) {
-		drawP(glWidget, data, scale, 0, texture_id, lastTexID);
+	if(data->boneCount() <= 1) {
+		drawP(glWidget, data, scale, data->bone(0), texture_id, lastTexID);
 		if(texture_id != (GLuint)-1) {
 			glWidget->deleteTexture(texture_id);
 			glDisable(GL_TEXTURE_2D);
@@ -245,15 +263,17 @@ void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int curre
 		return;
 	}
 
-	QList<PolyVertex> rot = data->rotations(currentFrame);
-	if(rot.isEmpty()) return;
+	if (animationID >= data->animationCount()) {
+		return;
+	}
+
+	QList<PolyVertex> rot = data->animation(animationID).rotations(currentFrame);
 	parent.push(-1);
 
-	for(i=0 ; i<data->animBoneCount() ; ++i) {
-		const PolyVertex &rotation = rot.at(i);
-		const Bone &bone = data->bone(i);
+	for(i = 0 ; i < data->boneCount() ; ++i) {
+		const FieldModelBone &bone = data->bone(i);
 
-		while(!parent.isEmpty() && parent.top() != bone.parent) {
+		while(!parent.isEmpty() && parent.top() != bone.parent()) {
 			parent.pop();
 			glPopMatrix();
 		}
@@ -261,16 +281,20 @@ void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int curre
 		glPushMatrix();
 
 		if(!data->translateAfter()) {
-			glTranslatef(0.0, 0.0, bone.size / scale);
+			glTranslatef(0.0, 0.0, bone.size() / scale);
 		}
 
-		glRotatef(rotation.y, 0.0, 1.0, 0.0);
-		glRotatef(rotation.x, 1.0, 0.0, 0.0);
-		glRotatef(rotation.z, 0.0, 0.0, 1.0);
-		drawP(glWidget, data, scale, i, texture_id, lastTexID);
+		if (i < rot.size()) {
+			const PolyVertex &rotation = rot.at(i);
+			glRotatef(rotation.y, 0.0, 1.0, 0.0);
+			glRotatef(rotation.x, 1.0, 0.0, 0.0);
+			glRotatef(rotation.z, 0.0, 0.0, 1.0);
+		}
+
+		drawP(glWidget, data, scale, bone, texture_id, lastTexID);
 
 		if(data->translateAfter()) {
-			glTranslatef(0.0, 0.0, bone.size / scale);
+			glTranslatef(0.0, 0.0, bone.size() / scale);
 		}
 	}
 
@@ -291,7 +315,7 @@ void FieldModel::paintGL()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	if(!data || !data->isOpen())	return;
+	if(!data || data->isEmpty())	return;
 
 	resizeGL(width(), height()); // hack (?)
 
@@ -347,8 +371,8 @@ void FieldModel::mousePressEvent(QMouseEvent *event)
 
 void FieldModel::animate()
 {
-	if(data && data->isOpen() && isVisible()) {
-		currentFrame = (currentFrame + 1) % data->frameCount();
+	if(data && !data->isEmpty() && isVisible()) {
+		currentFrame = (currentFrame + 1) % frameCount();
 		updateGL();
 	}
 }

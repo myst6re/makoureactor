@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "FieldArchiveIOPS.h"
 #include "FieldPS.h"
+#include "FieldPSDemo.h"
 #include "FieldArchivePS.h"
 #include "../GZIP.h"
 #include "Data.h"
@@ -104,9 +105,10 @@ Archive *FieldArchiveIOPSFile::device()
 	return NULL;
 }
 
-QByteArray FieldArchiveIOPSFile::fieldData2(Field *field, bool unlzs)
+QByteArray FieldArchiveIOPSFile::fieldData2(Field *field, const QString &extension, bool unlzs)
 {
 	Q_UNUSED(field)
+	Q_UNUSED(extension)
 	return fileData(QString(), unlzs);
 }
 
@@ -184,9 +186,12 @@ Archive *FieldArchiveIOPSIso::device()
 	return NULL;
 }
 
-QByteArray FieldArchiveIOPSIso::fieldData2(Field *field, bool unlzs)
+QByteArray FieldArchiveIOPSIso::fieldData2(Field *field, const QString &extension, bool unlzs)
 {
-	return fileData(field->name().toUpper() + ".DAT", unlzs);
+	if (extension.isEmpty()) {
+		return QByteArray();
+	}
+	return fileData(QString("%1.%2").arg(field->name().toUpper(), extension.toUpper()), unlzs);
 }
 
 QByteArray FieldArchiveIOPSIso::mimData2(Field *field, bool unlzs)
@@ -201,21 +206,38 @@ QByteArray FieldArchiveIOPSIso::modelData2(Field *field, bool unlzs)
 
 QByteArray FieldArchiveIOPSIso::fileData2(const QString &fileName)
 {
-	return iso.file(isoFieldDirectory->file(fileName.toUpper()));
+	IsoFile *file = isoFieldDirectory->file(fileName.toUpper());
+	if(file) {
+		return file->data();
+	}
+	return QByteArray();
 }
 
-FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
+FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::openIso()
 {
 	if(!iso.isOpen() && !iso.open(QIODevice::ReadOnly)) {
 		return ErrorOpening;
 	}
 
-	isoFieldDirectory = iso.rootDirectory()->directory("FIELD");
-	if(isoFieldDirectory == NULL)	return FieldNotFound;
+	isoFieldDirectory = iso.fieldDirectory();
+	if(isoFieldDirectory == NULL) {
+		return FieldNotFound;
+	}
+
+	return Ok;
+}
+
+FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
+{
+	ErrorCode error = openIso();
+	if (error != Ok) {
+		return error;
+	}
 
 	QList<IsoFile *> files = isoFieldDirectory->files();
 
 	if(observer)	observer->setObserverMaximum(files.size());
+	bool isDemo = iso.isDemo();
 
 	// QTime t;t.start();
 
@@ -228,7 +250,12 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 			observer->setObserverValue(i);
 		}
 
-		if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
+		if(isDemo) {
+			if(file->name().endsWith(".ATE")) {
+				QString name = file->name().mid(file->name().lastIndexOf('/')+1);
+				fieldArchive()->appendField(new FieldPSDemo(name.left(name.lastIndexOf('.')), this));
+			}
+		} else if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
 			QString name = file->name().mid(file->name().lastIndexOf('/')+1);
 			fieldArchive()->appendField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 		}
@@ -237,7 +264,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 
 	Data::windowBin = WindowBinFile();
 
-	if(!Data::windowBin.open(iso.file("INIT/WINDOW.BIN"))) {
+	if(!Data::windowBin.open(iso.windowBinData())) {
 		qWarning() << "Cannot open window.bin";
 	}
 
@@ -246,23 +273,19 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 
 FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, ArchiveObserver *observer)
 {
-	QString path = path0.isNull() ? iso.fileName() : path0;
-
-	bool saveAs = QFileInfo(path) != QFileInfo(iso);
-
-	IsoArchive isoTemp(path%".makoutemp");
-	if(!isoTemp.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
-		return ErrorOpening;
+	if (iso.isDemo()) {
+		return NotImplemented;
 	}
 
+	QString path = path0.isNull() ? iso.fileName() : path0;
+
+	bool saveAs = QFileInfo(path) != QFileInfo(iso.io());
+
 	if(observer)	observer->setObserverMaximum(100);
-	// Reset IsoControl
-	baseEstimation = 0;
-	estimation = 100;
 
 	// FIELD/*.DAT
 
-	for(int fieldID=0 ; fieldID<fieldArchive()->size() ; ++fieldID) {
+	for(int fieldID = 0 ; fieldID < fieldArchive()->size() ; ++fieldID) {
 		if(observer && observer->observerWasCanceled()) {
 			return Aborted;
 		}
@@ -276,122 +299,52 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 			QByteArray newData;
 
 			if(field->save(newData, true)) {
-				isoField->setData(newData);
+				isoField->setModifiedFile(newData);
 			} else {
 				return Invalid;
 			}
 		}
 	}
 
-	// FIELD/FIELD.BIN
-
-	IsoFile *isoFieldBin = isoFieldDirectory->file("FIELD.BIN");
-	if(isoFieldBin == NULL) {
-		return Invalid;
+	IsoArchive isoTemp(path % ".makoutemp");
+	if(!isoTemp.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
+		return ErrorOpening;
 	}
 
-	QByteArray data = updateFieldBin(iso.file(isoFieldBin), isoFieldDirectory);
-	if(data.isEmpty()) {
-		return Invalid;
-	}
-	isoFieldBin->setData(data);
-
-//		qDebug() << "start";
-
-	this->observer = observer;
-	if(!iso.pack(&isoTemp, this, isoFieldDirectory)) {
-		if(wasCanceled()) {
+	if(!iso.pack(&isoTemp, observer, isoFieldDirectory)) {
+		if(observer && observer->observerWasCanceled()) {
 			return Aborted;
 		}
-		this->observer = 0;
 		return Invalid;
 	}
-	this->observer = 0;
 
 	// End
 
+	iso.close();
+	isoTemp.close();
+
 	// Remove or close the old file
 	if(!saveAs) {
-		if(!iso.remove())	return ErrorRemoving;
+		if(!QFile::remove(iso.fileName())) {
+			return ErrorRemoving;
+		}
 	} else {
-		iso.close();
 		iso.setFileName(path);
 	}
 	// Move the temporary file
-	if(QFile::exists(path) && !QFile::remove(path))		return ErrorRemoving;
-	isoTemp.rename(path);
+	if(QFile::exists(path) && !QFile::remove(path)) {
+		return ErrorRemoving;
+	}
+	if(!QFile::rename(isoTemp.fileName(), path)) {
+		return ErrorRenaming;
+	}
 
-	iso.open(QIODevice::ReadOnly);
-
-	// Clear "isModified" state
-	iso.applyModifications(isoFieldDirectory);
+	ErrorCode error = openIso();
+	if (error != Ok) {
+		return error;
+	}
 
 	return Ok;
-}
-
-QByteArray FieldArchiveIOPSIso::updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory)
-{
-	QByteArray header = data.left(8), ungzip;
-	quint32 oldSectorStart, newSectorStart, oldSize, newSize;
-	QMap<QByteArray, QByteArray> changesFieldBin;
-	QMap<QByteArray, QString> files;//debug
-
-	foreach(IsoFile *file, fieldDirectory->files()) {
-		if(file->isModified() && !file->name().endsWith(".X") && file->name()!="FIELD.BIN") {
-			oldSectorStart = file->location();
-			oldSize = file->size();
-			newSectorStart = file->newLocation();
-			newSize = file->newSize();
-
-			QByteArray tempBA = QByteArray((char *)&oldSectorStart, 4).append((char *)&oldSize, 4);
-			changesFieldBin.insert(tempBA, QByteArray((char *)&newSectorStart, 4).append((char *)&newSize, 4));
-			files.insert(tempBA, file->name());
-		}
-	}
-
-	/**
-	 *	HEADER :
-	 *	 4 : ungzipped size
-	 *	 4 : ungzipped size - 51588
-	 */
-	// décompression gzip
-	quint32 decSize;
-	memcpy(&decSize, data.constData(), 4);
-	ungzip = GZIP::decompress(data.mid(8), decSize);
-	if(ungzip.isEmpty())	return QByteArray();
-
-//	qDebug() << "header field.bin" << header.toHex() << QString::number(data.size()-8,16) << decSize << ungzip.size();
-
-	// mise à jour
-
-	int indicativePosition=0x30000, count;
-	QByteArray copy = ungzip;
-	QMapIterator<QByteArray, QByteArray> i(changesFieldBin);
-	while(i.hasNext()) {
-		i.next();
-		count = copy.count(i.key());
-		if(count == 0) {
-			qWarning() << "Error not found!" << files.value(i.key());
-			return QByteArray();
-		} else if(count == 1) {
-			indicativePosition = copy.indexOf(i.key());
-			ungzip.replace(i.key(), i.value());
-		} else {
-			qWarning() << "error multiple occurrences 1" << files.value(i.key());
-			if(copy.mid(indicativePosition).count(i.key())==1) {
-				ungzip.replace(copy.indexOf(i.key(), indicativePosition), 8, i.value());
-			} else {
-				qWarning() << "error multiple occurrences 2" << files.value(i.key());
-				return QByteArray();
-			}
-		}
-	}
-
-	copy = GZIP::compress(ungzip);
-
-	if(copy.isEmpty())	return QByteArray();
-
-	return header.append(copy);
 }
 
 FieldArchiveIOPSDir::FieldArchiveIOPSDir(const QString &path, FieldArchivePS *fieldArchive) :
@@ -409,9 +362,12 @@ Archive *FieldArchiveIOPSDir::device()
 	return NULL;
 }
 
-QByteArray FieldArchiveIOPSDir::fieldData2(Field *field, bool unlzs)
+QByteArray FieldArchiveIOPSDir::fieldData2(Field *field, const QString &extension, bool unlzs)
 {
-	return fileData(field->name().toUpper() + ".DAT", unlzs);
+	if (extension.isEmpty()) {
+		return QByteArray();
+	}
+	return fileData(QString("%1.%2").arg(field->name().toUpper(), extension.toUpper()), unlzs);
 }
 
 QByteArray FieldArchiveIOPSDir::mimData2(Field *field, bool unlzs)

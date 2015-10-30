@@ -43,12 +43,13 @@ void FieldPC::openHeader(const QByteArray &fileData)
 int FieldPC::sectionId(FieldSection part) const
 {
 	switch(part) {
-	case Scripts:		return 0;
+	case Scripts:
 	case Akaos:			return 0;
 	case Camera:		return 1;
 	case ModelLoader:	return 2;
 	case PalettePC:		return 3;
 	case Walkmesh:		return 4;
+	case Unused:		return 5;
 	case Encounter:		return 6;
 	case Inf:			return 7;
 	case Background:	return 8;
@@ -100,7 +101,7 @@ FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate
 
 	FieldModelFilePC *fieldModel = (FieldModelFilePC *)fieldModelPtr(localModelID);
 	if(!fieldModel)		addFieldModel(localModelID, fieldModel = new FieldModelFilePC());
-	if(open && !fieldModel->isOpen()) {
+	if(open && fieldModel->isEmpty()) {
 		fieldModel->load(hrc, a, animate);
 	}
 	return fieldModel;

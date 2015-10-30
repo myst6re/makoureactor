@@ -60,7 +60,7 @@ public:
 		return observer && observer->observerWasCanceled();
 	}
 private:
-	QByteArray fieldData2(Field *field, bool unlzs);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
 	ErrorCode open2(ArchiveObserver *observer);
@@ -82,7 +82,7 @@ public:
 
 	Archive *device();
 private:
-	QByteArray fieldData2(Field *field, bool unlzs);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
 	ErrorCode open2(ArchiveObserver *observer);
@@ -102,7 +102,7 @@ public:
 
 	Archive *device();
 private:
-	QByteArray fieldData2(Field *field, bool unlzs);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
 	ErrorCode open2(ArchiveObserver *observer);

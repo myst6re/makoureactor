@@ -33,9 +33,8 @@ public:
 signals:
 	void modified();
 protected:
-	virtual void fill2();
 	virtual QList<QStringList> modelNames() const=0;
-	virtual QList<QStringList> animNames(int row) const=0;
+	virtual QList<QTreeWidgetItem *> animItems(int modelID) const=0;
 	virtual void showModelInfos2(int row);
 	virtual FieldModelFile *modelData(QTreeWidgetItem *item)=0;
 	virtual FieldModelLoader *modelLoader() const;

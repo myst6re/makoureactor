@@ -20,7 +20,7 @@
 
 #include "FieldArchiveIO.h"
 #include "../QLockedFile.h"
-#include "../IsoArchive.h"
+#include "../IsoArchiveFF7.h"
 
 class FieldArchivePS;
 
@@ -58,7 +58,7 @@ public:
 
 	Archive *device();
 private:
-	QByteArray fieldData2(Field *field, bool unlzs);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
 	QByteArray mimData2(Field *field, bool unlzs);
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
@@ -69,7 +69,7 @@ private:
 	QLockedFile fic;
 };
 
-class FieldArchiveIOPSIso : public FieldArchiveIOPS, IsoControl
+class FieldArchiveIOPSIso : public FieldArchiveIOPS
 {
 public:
 	FieldArchiveIOPSIso(const QString &path, FieldArchivePS *fieldArchive);
@@ -78,27 +78,18 @@ public:
 	QString path() const;
 
 	Archive *device();
-
-	void setIsoOut(int value) {
-		if(observer)	observer->setObserverValue(value);
-	}
-	bool wasCanceled() {
-		return observer && observer->observerWasCanceled();
-	}
 private:
-	QByteArray fieldData2(Field *field, bool unlzs);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
 	QByteArray mimData2(Field *field, bool unlzs);
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);
 
+	ErrorCode openIso();
 	ErrorCode open2(ArchiveObserver *observer);
 	ErrorCode save2(const QString &path, ArchiveObserver *observer);
 
-	static QByteArray updateFieldBin(const QByteArray &data, IsoDirectory *fieldDirectory);
-
-	IsoArchive iso;
+	IsoArchiveFF7 iso;
 	IsoDirectory *isoFieldDirectory;
-	ArchiveObserver *observer;
 };
 
 class FieldArchiveIOPSDir : public FieldArchiveIOPS
@@ -112,7 +103,7 @@ public:
 
 	Archive *device();
 private:
-	QByteArray fieldData2(Field *field, bool unlzs);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
 	QByteArray mimData2(Field *field, bool unlzs);
 	QByteArray modelData2(Field *field, bool unlzs);
 	QByteArray fileData2(const QString &fileName);

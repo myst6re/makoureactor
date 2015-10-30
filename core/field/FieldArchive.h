@@ -156,6 +156,8 @@ public:
 	int indexOfField(const QString &name) const;
 	const Field *field(quint32 id) const;
 	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
+	const Field *field(const QString &name) const;
+	Field *field(const QString &name, bool open=true, bool dontOptimize=false);
 	void appendField(Field *field);
 	void addField(Field *field);
 	void removeField(quint32 id);
@@ -166,10 +168,16 @@ public:
 #ifdef DEBUG_FUNCTIONS
 	void validateAsk();
 	void validateOneLineSize();
-	void printAkaos();
-	void printModelLoaders();
-	void printScripts();
+	void printAkaos(const QString &filename);
+	void printModelLoaders(const QString &filename, bool generic = true);
+	void printTexts(const QString &filename);
+	void compareTexts(FieldArchive *other);
+	void printScripts(const QString &filename);
+	void printScriptsDirs(const QString &filename);
 	void diffScripts();
+#ifdef BG_ID_RESEARCH
+	void searchBackgroundZ();
+#endif
 	void searchAll();// research & debug function
 #endif
 	bool find(bool (*predicate)(Field *, SearchQuery *, SearchIn *),

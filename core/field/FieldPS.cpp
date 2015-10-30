@@ -41,7 +41,7 @@ void FieldPS::openHeader(const QByteArray &fileData)
 int FieldPS::sectionId(FieldSection part) const
 {
 	switch(part) {
-	case Scripts:		return 0;
+	case Scripts:
 	case Akaos:			return 0;
 	case Walkmesh:		return 1;
 	case Background:	return 2;

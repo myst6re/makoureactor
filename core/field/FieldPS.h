@@ -33,22 +33,26 @@ public:
 	inline bool isPC() const { return false; }
 
 	FieldModelLoaderPS *fieldModelLoader(bool open=true);
-	FieldModelFilePS *fieldModel(int modelID, int animationID=0, bool animate=true, bool open=true);
+	FieldModelFilePS *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
 	FieldArchiveIOPS *io() const;
 protected:
-	inline int headerSize() const { return 28; }
-	void openHeader(const QByteArray &fileData);
-	QByteArray saveHeader() const;
-	QByteArray saveFooter() const;
-	FieldPart *createPart(FieldSection part);
-	int sectionId(FieldSection part) const;
-	quint32 sectionPosition(int idPart) const;
-	inline int sectionCount() const {	return 7; }
-	inline int paddingBetweenSections() const { return 0; }
-	inline int alignment() const { return 4; } // Aligned
-	QList<Field::FieldSection> orderOfSections() const;
-	inline quint32 diffSectionPos() const { return vramDiff; }
-	inline bool hasSectionHeader() const { return false; }
+	inline virtual int headerSize() const { return 28; }
+	virtual void openHeader(const QByteArray &fileData);
+	virtual QByteArray saveHeader() const;
+	virtual QByteArray saveFooter() const;
+	virtual FieldPart *createPart(FieldSection part);
+	virtual int sectionId(FieldSection part) const;
+	inline QString sectionFile(FieldSection part) const {
+		Q_UNUSED(part)
+		return "DAT";
+	}
+	virtual quint32 sectionPosition(int idPart) const;
+	inline virtual int sectionCount() const {	return 7; }
+	inline virtual int paddingBetweenSections() const { return 0; }
+	inline virtual int alignment() const { return 4; } // Aligned
+	virtual QList<Field::FieldSection> orderOfSections() const;
+	inline virtual quint32 diffSectionPos() const { return vramDiff; }
+	inline virtual bool hasSectionHeader() const { return false; }
 private:
 	quint32 sectionPositions[7];
 	qint32 vramDiff;

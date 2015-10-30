@@ -35,17 +35,20 @@ public:
 	FieldModel(QWidget *parent=0, const QGLWidget *shareWidget=0);
 	virtual ~FieldModel();
 	void setIsAnimated(bool animate);
+	void setAnimationID(int animID);
 	void clear();
 	int boneCount() const;
-	static void paintModel(QGLWidget *glWidget, FieldModelFile *data, int currentFrame=0, float scale=1.0f);
+	int frameCount() const;
+	static void paintModel(QGLWidget *glWidget, FieldModelFile *data, int animationID, int currentFrame=0, float scale=1.0f);
 public slots:
-	void setFieldModelFile(FieldModelFile *fieldModel);
+	void setFieldModelFile(FieldModelFile *fieldModel, int animationID = 0);
 private slots:
 	void animate();
 private:
 	void updateTimer();
-	inline void paintModel() { paintModel(this, data, currentFrame); }
-	static void drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, int boneID, GLuint &texture_id, int &lastTexID);
+	inline void paintModel() { paintModel(this, data, animationID, currentFrame); }
+	static void drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, const FieldModelBone &bone,
+					  GLuint &texture_id, quint64 &lastTexID);
 	void setXRotation(int angle);
 	void setYRotation(int angle);
 	void setZRotation(int angle);
@@ -53,6 +56,7 @@ private:
 
 	bool blockAll;
 	double distance;
+	int animationID;
 	int currentFrame;
 	bool animated;
 

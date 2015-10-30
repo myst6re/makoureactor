@@ -150,6 +150,9 @@ OpcodeList::OpcodeList(QWidget *parent) :
 
 	enableActions(false);
 
+	setMinimumWidth(_toolBar->sizeHint().width());
+	setMinimumHeight(_toolBar->sizeHint().width());
+
 	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(scriptEditor()));
 	connect(this, SIGNAL(itemSelectionChanged()), SLOT(itemSelected()));
 	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(evidence(QTreeWidgetItem*,QTreeWidgetItem*)));

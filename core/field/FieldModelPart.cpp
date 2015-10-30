@@ -48,14 +48,6 @@ void Poly::setVertices(const QList<PolyVertex> &vertices, const QRgb &color, con
 	_texCoords = texCoords;
 }
 
-void Poly::divTexCoords(float texWidth, float texHeight)
-{
-	for(int i=0 ; i<_texCoords.size() ; ++i) {
-		_texCoords[i].x /= texWidth;
-		_texCoords[i].y /= texHeight;
-	}
-}
-
 const PolyVertex &Poly::vertex(quint8 id) const
 {
 	return _vertices.at(id);
@@ -74,6 +66,11 @@ QRgb Poly::color(quint8 id) const
 const TexCoord &Poly::texCoord(quint8 id) const
 {
 	return _texCoords.at(id);
+}
+
+void Poly::setTexCoord(quint8 id, const TexCoord &texCoord)
+{
+	_texCoords.replace(id, texCoord);
 }
 
 bool Poly::isMonochrome() const
@@ -125,39 +122,104 @@ TrianglePoly::TrianglePoly(const QList<PolyVertex> &vertices, const QRgb &color,
 }
 
 FieldModelGroup::FieldModelGroup() :
-	_textureNumber(-1)
+	_textureRef(0)
 {
 }
 
-FieldModelGroup::FieldModelGroup(int texNumber) :
-	_textureNumber(texNumber)
+FieldModelGroup::FieldModelGroup(FieldModelTextureRef *texRef) :
+	_textureRef(texRef)
 {
 }
 
 FieldModelGroup::~FieldModelGroup()
 {
 	qDeleteAll(_polys);
+	if (_textureRef) {
+		delete _textureRef;
+	}
 }
 
-const QList<Poly *> &FieldModelGroup::polygons() const
+void FieldModelGroup::setTextureRef(FieldModelTextureRef *texRef)
 {
-	return _polys;
+	if (_textureRef) {
+		delete _textureRef;
+	}
+	_textureRef = texRef;
 }
 
-int FieldModelGroup::textureNumber() const
+void FieldModelGroup::removeSpriting(float texWidth, float texHeight)
 {
-	return _textureNumber;
+	float minX = -1,
+			minY = -1;
+
+	foreach (Poly *poly, polygons()) {
+		if (poly->hasTexture() && poly->count() > 0) {
+			for (quint16 i = 0 ; i < (quint8)poly->count(); ++i) {
+				const TexCoord &texCoord = poly->texCoord(i);
+				if (minX < 0) {
+					minX = texCoord.x;
+				}
+				if (minY < 0) {
+					minY = texCoord.y;
+				}
+				minX = qMin(texCoord.x, minX);
+				minY = qMin(texCoord.y, minY);
+				if (minX == 0 && minY == 0) {
+					break;
+				}
+			}
+
+			if (minX == 0 && minY == 0) {
+				break;
+			}
+		}
+	}
+
+	if (minX < 0) {
+		minX = 0;
+	}
+	if (minY < 0) {
+		minY = 0;
+	}
+
+	foreach (Poly *poly, polygons()) {
+		if (poly->hasTexture()) {
+			for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
+				TexCoord texCoord = poly->texCoord(i);
+
+				texCoord.x -= minX;
+				texCoord.y -= minY;
+				if (texWidth != 0) {
+					texCoord.x /= texWidth;
+				}
+				if (texHeight != 0) {
+					texCoord.y /= texHeight;
+				}
+
+				poly->setTexCoord(i, texCoord);
+			}
+		}
+	}
 }
 
-void FieldModelGroup::setTextureNumber(int texNumber)
+void FieldModelGroup::setFloatCoords(float texWidth, float texHeight)
 {
-	_textureNumber = texNumber;
-}
+	foreach (Poly *poly, polygons()) {
+		if (poly->hasTexture()) {
+			for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
+				TexCoord texCoord = poly->texCoord(i);
 
+				if (texWidth != 0) {
+					texCoord.x /= texWidth;
+				}
+				if (texHeight != 0) {
+					texCoord.y /= texHeight;
+				}
 
-void FieldModelGroup::addPolygon(Poly *polygon)
-{
-	_polys.append(polygon);
+				poly->setTexCoord(i, texCoord);
+			}
+		}
+	}
 }
 
 FieldModelPart::FieldModelPart()
@@ -169,18 +231,13 @@ FieldModelPart::~FieldModelPart()
 	qDeleteAll(_groups);
 }
 
-const QList<FieldModelGroup *> &FieldModelPart::groups() const
-{
-	return _groups;
-}
-
 QString FieldModelPart::toString() const
 {
 	QString ret;
 	int groupID=0, ID;
 
 	foreach(FieldModelGroup *group, _groups) {
-		ret.append(QString("==== GROUP %1 ==== texNumber: %2\n").arg(groupID).arg(group->textureNumber()));
+		ret.append(QString("==== GROUP %1 ==== texNumber: %2\n").arg(groupID).arg(group->textureRef()->textureIdentifier()));
 
 		ID = 0;
 		foreach(Poly *poly, group->polygons()) {

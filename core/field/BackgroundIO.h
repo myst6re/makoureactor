@@ -19,31 +19,19 @@
 #define BACKGROUNDIO_H
 
 #include <QtCore>
+#include "../IO.h"
 #include "BackgroundFile.h"
 #include "BackgroundFilePS.h"
 #include "BackgroundFilePC.h"
 
-class BackgroundIO
+class BackgroundIO : public IO
 {
 public:
 	explicit BackgroundIO(QIODevice *device);
-	virtual ~BackgroundIO();
-
-	inline void setDevice(QIODevice *device) {
-		_device = device;
-	}
-
-	inline QIODevice *device() const {
-		return _device;
-	}
-
-	bool canRead() const;
-	bool canWrite() const;
+	virtual ~BackgroundIO() {}
 
 	virtual bool read(BackgroundFile &background) const=0;
 	virtual bool write(const BackgroundFile &background) const=0;
-private:
-	QIODevice *_device;
 };
 
 class BackgroundIOPC : public BackgroundIO

@@ -43,10 +43,11 @@ public:
 	virtual bool isPS() const=0;
 	inline bool isPC() const { return !isPS(); }
 
-	QByteArray fieldData(Field *field, bool unlzs=true);
+	QByteArray fieldData(Field *field, const QString &extension, bool unlzs=true);
 	QByteArray fileData(const QString &fileName, bool unlzs=true, bool isLzsFile=true);
+	int exportFieldData(Field *field, const QString &extension, const QString &path, bool unlzs=true);
 
-	bool fieldDataIsCached(Field *field) const;
+	bool fieldDataIsCached(Field *field, const QString &fileType) const;
 	virtual void clearCachedData();
 
 	virtual void close();
@@ -62,7 +63,7 @@ public:
 
 	virtual Archive *device()=0;
 protected:
-	virtual QByteArray fieldData2(Field *field, bool unlzs)=0;
+	virtual QByteArray fieldData2(Field *field, const QString &extension, bool unlzs)=0;
 	virtual QByteArray fileData2(const QString &fileName)=0;
 
 	virtual ErrorCode open2(ArchiveObserver *observer)=0;
@@ -72,6 +73,7 @@ private:
 	FieldArchive *_fieldArchive;
 	static QByteArray fieldDataCache, mimDataCache, modelDataCache;
 	static Field *fieldCache, *mimCache, *modelCache;
+	static QString fieldExtensionCache;
 };
 
 #endif // FIELDARCHIVEIO_H

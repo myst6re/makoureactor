@@ -23,10 +23,22 @@
 class GZIP
 {
 public:
-	static QByteArray decompress(const QByteArray &data, int decSize);
-	static QByteArray compress(const QByteArray &ungzip);
-	static QByteArray decompress(const char *data, int size, int decSize);
-	static QByteArray compress(const char *ungzip, int size);
+	enum Strategy {
+		StrategyDefault,
+		StrategyFiltered,
+		StrategyHuffmanOnly,
+		StrategyRle,
+		StrategyFixed
+	};
+
+	static QByteArray decompress(const QByteArray &data, int decSize, Strategy strategy = StrategyDefault);
+	static QByteArray compress(const QByteArray &ungzip, int level = -1, Strategy strategy = StrategyDefault);
+	static QByteArray decompress(const char *data, int size, int decSize, Strategy strategy = StrategyDefault);
+	static QByteArray compress(const char *ungzip, int size, int level = -1, Strategy strategy = StrategyDefault);
+	static QByteArray decompress(const QString &path, int decSize, Strategy strategy = StrategyDefault);
+private:
+	static char strategyToChar(Strategy strategy);
+	static QString gzMode(const char *mode, int level = -1, Strategy strategy = StrategyDefault);
 };
 
 #endif // GZIP_H

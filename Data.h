@@ -21,6 +21,7 @@
 #include <QtCore>
 #include "core/Lgp.h"
 #include "core/WindowBinFile.h"
+#include "core/field/CharArchive.h"
 
 #define FF7_WIN_REGISTER_PATH "Square Soft, Inc./Final Fantasy VII"
 
@@ -38,10 +39,6 @@ public:
 	static QMap<FF7Version, QString> ff7DataPathList();
 	static QString ff7KernelPath();
 	static QString charlgp_path();
-	static bool charlgp_loadListPos();
-	static void charlgp_loadAnimBoneCount();
-	static Lgp charLgp;
-	static QHash<QString, int> charlgp_animBoneCount;
 	static WindowBinFile windowBin;
 	static int loadKernel2Bin();
 	static int loadWindowBin();
@@ -64,6 +61,9 @@ public:
 	static QStringList music_names;
 	static QStringList music_desc;
 	static QString regValue(const QString &regPath, const QString &regKey);
+	static inline QString regValuePath(const QString &regPath, const QString &regKey) {
+		return QDir::fromNativeSeparators(QDir::cleanPath(regValue(regPath, regKey)));
+	}
 private:
 	static const QString &searchRereleasedFF7Path();
 	static QString searchSteamFF7Path();
@@ -77,7 +77,7 @@ private:
 	static QString ff7RereleasePath_cache;
 	static bool ff7RereleaseAlreadySearched;
 	static const char *movieList[106];
-	static const char *mapList[787];
+	static const char *mapList[788];
 	static const char *musicList[100];
 	static const char *musicList2[100];
 

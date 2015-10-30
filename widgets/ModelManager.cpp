@@ -31,6 +31,7 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	models->setIndentation(0);
 	models->setHeaderLabel(tr("Modèles 3D"));
 	models->setFixedWidth(120);
+	models->setColumnCount(1);
 
 	modelFrame = new QFrame();
 	modelFrame->setFrameShape(QFrame::StyledPanel);
@@ -51,7 +52,8 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 
 	modelAnims = new QTreeWidget();
 	modelAnims->setIndentation(0);
-	modelAnims->setFixedWidth(120);
+	modelAnims->setFixedWidth(140);
+	modelAnims->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	if(Config::value("OpenGL", true).toBool()) {
 		modelPreview = new FieldModel(0, shareWidget);
@@ -94,11 +96,6 @@ void ModelManager::fill(Field *field, bool reload)
 	fieldModelLoader = field->fieldModelLoader();
 	_field = field;
 
-	fill2();
-}
-
-void ModelManager::fill2()
-{
 	fillModelList();
 
 	QTreeWidgetItem *currentItem = models->topLevelItem(Data::currentModelID);
@@ -157,24 +154,20 @@ void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *)
 		return;
 	}
 	modelFrame->setEnabled(true);
-	int row = currentModelID(item);
+	int modelID = currentModelID(item);
 	modelAnims->clear();
 
-	if(row < 0 || row >= fieldModelLoader->modelCount())	return;
-
-	int numA=0;
-	foreach(const QStringList &animName, animNames(row)) {
-		item = new QTreeWidgetItem(animName);
-		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
-		modelAnims->addTopLevelItem(item);
-		++numA;
+	if(modelID < 0 || modelID >= fieldModelLoader->modelCount()) {
+		return;
 	}
+
+	modelAnims->addTopLevelItems(animItems(modelID));
 
 	for(int i=0 ; i<modelAnims->columnCount() ; ++i) {
 		modelAnims->resizeColumnToContents(i);
 	}
 
-	showModelInfos2(row);
+	showModelInfos2(modelID);
 
 	if(modelAnims->topLevelItemCount() > 0)
 		modelAnims->setCurrentItem(modelAnims->topLevelItem(0));
@@ -206,7 +199,7 @@ void ModelManager::setModelColorLabel(int colorId)
 
 	modelColorLabel->setText(QString("#%1")
 							 .arg(lightColors(modelID)
-								  .value(colorId) & 0xFFFFFF, 6, 16)
+								  .value(colorId) & 0xFFFFFF, 6, 16, QChar('0'))
 							 .toUpper());
 }
 

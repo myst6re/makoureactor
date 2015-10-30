@@ -36,8 +36,8 @@ public:
 	qint8 importer(const QByteArray &data, bool isPSField, FieldSections part);
 
 	FieldModelLoaderPC *fieldModelLoader(bool open=true);
-	FieldModelFilePC *fieldModel(int modelID, int animationID=0, bool animate=true, bool open=true);
-	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate=true);
+	FieldModelFilePC *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
+	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate = true);
 	FieldArchiveIOPC *io() const;
 protected:
 	inline int headerSize() const { return 42; }
@@ -46,6 +46,10 @@ protected:
 	QByteArray saveFooter() const;
 	FieldPart *createPart(FieldSection part);
 	int sectionId(FieldSection part) const;
+	inline QString sectionFile(FieldSection part) const {
+		Q_UNUSED(part)
+		return QString();
+	}
 	quint32 sectionPosition(int idPart) const;
 	inline int sectionCount() const {	return 9; }
 	inline int paddingBetweenSections() const { return 4; }

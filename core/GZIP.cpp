@@ -16,51 +16,36 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "GZIP.h"
-#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-#include "zlib-1.2.7/zlib.h"
-#else
 #include <zlib.h>
-#endif
+#undef compress // conflict with GZIP::compress
 
-QByteArray GZIP::decompress(const QByteArray &data, int decSize)
+QByteArray GZIP::decompress(const QByteArray &data, int decSize, Strategy strategy)
 {
-	return decompress(data.constData(), data.size(), decSize);
+	return decompress(data.constData(), data.size(), decSize, strategy);
 }
 
-QByteArray GZIP::compress(const QByteArray &ungzip)
+QByteArray GZIP::compress(const QByteArray &ungzip, int level, Strategy strategy)
 {
-	return compress(ungzip.constData(), ungzip.size());
+	return compress(ungzip.constData(), ungzip.size(), level, strategy);
 }
 
-QByteArray GZIP::decompress(const char *data, int size, int/* decSize*/)
+QByteArray GZIP::decompress(const char *data, int size, int decSize, Strategy strategy)
 {
-	QByteArray ungzip;
-
 	QTemporaryFile temp;
 	if(!temp.open()) {
 		return QByteArray();
 	}
 	temp.write(data, size);
 	temp.close();
-	gzFile file = gzopen(temp.fileName().toLatin1(), "rb");
-	if(!file) {
-		return QByteArray();
-	}
-	char buffer[10000];
-	int r;
-	while((r = gzread(file, buffer, 10000)) > 0) {
-		ungzip.append(buffer, r);
-	}
-	gzclose(file);
 
-	return ungzip;
+	return decompress(temp.fileName(), decSize, strategy);
 }
 
-QByteArray GZIP::compress(const char *ungzip, int size)
+QByteArray GZIP::compress(const char *ungzip, int size, int level, Strategy strategy)
 {
-	QString tempPath = QDir::tempPath()+"/qt_temp.gz";
+	QString tempPath = QDir::tempPath() + "/qt_temp.gz";
 
-	gzFile file2 = gzopen(tempPath.toLatin1(), "wb9");
+	gzFile file2 = gzopen(tempPath.toLatin1(), gzMode("w", level, strategy).toLatin1());
 	if(!file2) {
 		return QByteArray();
 	}
@@ -75,4 +60,48 @@ QByteArray GZIP::compress(const char *ungzip, int size)
 	finalFile.remove();
 
 	return data;
+}
+
+QByteArray GZIP::decompress(const QString &path, int decSize, Strategy strategy)
+{
+	Q_UNUSED(decSize);
+	QByteArray ungzip;
+
+	gzFile file = gzopen(path.toLatin1(), gzMode("r", -1, strategy).toLatin1());
+	if(!file) {
+		return QByteArray();
+	}
+	char buffer[10000];
+	int r;
+	while((r = gzread(file, buffer, 10000)) > 0) {
+		ungzip.append(buffer, r);
+	}
+	gzclose(file);
+
+	return ungzip;
+}
+
+char GZIP::strategyToChar(Strategy strategy)
+{
+	switch (strategy) {
+	case StrategyDefault:     return '*';
+	case StrategyFiltered:    return 'f';
+	case StrategyHuffmanOnly: return 'h';
+	case StrategyRle:         return 'R';
+	case StrategyFixed:       return 'F';
+	}
+	return '*';
+}
+
+QString GZIP::gzMode(const char *mode, int level, Strategy strategy)
+{
+	QString m(mode);
+	if (level >= 0 && level <= 9) {
+		m.append(QString::number(level));
+	}
+	char s = strategyToChar(strategy);
+	if (s != '*') {
+		m.append(s);
+	}
+	return m;
 }

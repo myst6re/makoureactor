@@ -181,3 +181,22 @@ QString Archive::errorString() const
 			? QLatin1String(QT_TRANSLATE_NOOP(Archive, ("Unknown error")))
 			: _errorString;
 }
+
+/*!
+ * Returns the last error status.
+ * \sa unsetError(), errorString()
+ */
+Archive::ArchiveError Archive::error() const
+{
+	return _error;
+}
+
+/*!
+ * Sets the file's error type and text.
+ * \sa error(), errorString()
+ */
+void Archive::setError(ArchiveError error, const QString &errorString)
+{
+	_error = error;
+	setErrorString(errorString);
+}

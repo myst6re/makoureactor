@@ -19,19 +19,26 @@
 #define ISOARCHIVE_H
 
 #include <QtCore>
+#include "Archive.h"
 
 #define MAX_ISO_READ			10000
 #define MAX_FILENAME_LENGTH		207
 #define SEPARATOR_1				'\x2E' // .
 #define SEPARATOR_2				'\x3B' // ;
 #define SECTOR_SIZE				2352
+#define SECTOR_SIZE_HEADER		24
 #define SECTOR_SIZE_DATA		2048
-#define READ_MAX				10002432
+#define SECTOR_SIZE_FOOTER		280
+
+//#define ISOARCHIVE_DEBUG
 
 //d-characters : [\w ]
 //a-characters : [!"%&'\(\)*+,\-\./\w:;<=>? ] (+ SP)
 
-typedef struct{
+class IsoArchiveIO;
+class IsoFileIO;
+
+struct IsoTime {
 	char year[4];
 	char month[2];
 	char day[2];
@@ -40,18 +47,18 @@ typedef struct{
 	char second[2];
 	char millis[2];
 	qint8 GMT;
-} IsoTime;
+};
 
-typedef struct pathTbl{
+struct PathTable {
 	quint8 length_di;
 	quint8 extended_attr_record_length;
 	quint32 location_extent;
 	quint16 parent_directory_number;
 	QString name;
 	quint32 position;
-} PathTable;
+};
 
-typedef struct{
+struct DirectoryRecordHead {
 	quint32 location_extent;// little endian //first sector in the directory
 	quint32 location_extent2;// big endian
 	quint32 data_length;// little endian
@@ -69,18 +76,18 @@ typedef struct{
 	quint16 volume_sequence_number;// little endian
 	quint16 volume_sequence_number2;// big endian
 	quint8 length_fi;
-} DirectoryRecordHead;
+};
 
-typedef struct dirRec{
+struct DirectoryRecord {
 	quint8 length_dr;
 	quint8 extended_attr_record_length;
 	DirectoryRecordHead drh;
 	QString name;
 	QString version;
 	// padding;
-} DirectoryRecord;
+};
 
-typedef struct{
+struct VolumeDescriptor1 {
 	quint8 type;// 0x01 or 0xff
 	quint8 id[5];// CD001
 	quint8 version;// 1 = international standard
@@ -103,9 +110,9 @@ typedef struct{
 	quint32 opt_type_path_table;// little endian
 	quint32 type_path_table2;// big endian
 	quint32 opt_type_path_table2;// big endian
-} VolumeDescriptor1;
+};
 
-typedef struct{
+struct VolumeDescriptor2 {
 	quint8 volume_set_id[128];
 	quint8 publisher_id[128];
 	quint8 preparer_id[128];
@@ -121,13 +128,13 @@ typedef struct{
 	quint8 unused4;
 	quint8 application_data[512];
 	quint8 unused5[653];
-} VolumeDescriptor2;
+};
 
-typedef struct{
+struct VolumeDescriptor {
 	VolumeDescriptor1 vd1;
 	DirectoryRecord dr;
 	VolumeDescriptor2 vd2;
-} VolumeDescriptor;
+};
 
 class IsoFileOrDirectory
 {
@@ -135,6 +142,7 @@ public:
 	virtual ~IsoFileOrDirectory();
 	const QString &name() const;
 	quint32 location() const;
+	quint32 locationAfter() const;
 	quint32 size() const;
 	quint32 sectorCount() const;
 	quint32 newLocation() const;
@@ -142,7 +150,6 @@ public:
 	quint32 newSectorCount() const;
 	void setName(const QString &name);
 	void setLocation(quint32 location);
-	void setSize(quint32 size);
 	virtual bool isDirectory() const=0;
 	bool isFile() const;
 	virtual bool isModified() const;
@@ -152,6 +159,7 @@ public:
 	void setPaddingAfter(quint8 after);
 	quint8 paddingAfter() const;
 protected:
+	Q_DISABLE_COPY(IsoFileOrDirectory)
 	IsoFileOrDirectory(const QString &name, quint32 location, quint32 size, qint64 structPosition);
 	QString _name;
 	quint32 _location, _size;
@@ -162,15 +170,24 @@ protected:
 class IsoFile : public IsoFileOrDirectory
 {
 public:
-	IsoFile(const QString &name, quint32 location, quint32 size, qint64 structPosition);
+	IsoFile(const QString &name, quint32 location, quint32 size, qint64 structPosition, IsoArchiveIO *io);
+	virtual ~IsoFile();
 	bool isDirectory() const;
-	const QByteArray &newData() const;
-	void setData(const QByteArray &data);
+	QByteArray data(quint32 maxSize=0) const;
+	QByteArray modifiedData(quint32 maxSize=0) const;
+	bool extract(const QString &destination, quint32 maxSize=0) const;
+	QIODevice *file() const;
+	QIODevice *modifiedFile() const;
+	bool setModifiedFile(QIODevice *io);
+	bool setModifiedFile(const QByteArray &data);
 	bool isModified() const;
 	void applyModifications();
 private:
-	QByteArray _newData;
-	bool dataChanged;
+	Q_DISABLE_COPY(IsoFile)
+	void setFile(QIODevice *io);
+	void cleanNewIO();
+	QIODevice *_io, *_newIO;
+	bool dataChanged, _newIOMustBeRemoved;
 };
 
 class IsoDirectory : public IsoFileOrDirectory
@@ -187,23 +204,16 @@ public:
 	IsoDirectory *directory(const QString &path) const;
 	void add(IsoFileOrDirectory *fileOrDirectory);
 private:
+	Q_DISABLE_COPY(IsoDirectory)
 	QMap<QString, IsoFileOrDirectory *> _filesAndDirectories;
-};
-
-class IsoControl
-{
-public:
-	IsoControl() : baseEstimation(0), estimation(100) {}
-	virtual void setIsoOut(int)=0;
-	virtual bool wasCanceled() { return false; }
-	int baseEstimation;
-	double estimation;
 };
 
 class IsoArchiveIO : public QFile
 {
+	friend class IsoArchive;
 public:
-	IsoArchiveIO(const QString &name);
+	IsoArchiveIO();
+	explicit IsoArchiveIO(const QString &name);
 	virtual ~IsoArchiveIO();
 
 	bool open(QIODevice::OpenMode mode);
@@ -241,7 +251,16 @@ public:
 	static inline QByteArray buildFooter(quint32 sector) {
 		Q_UNUSED(sector)
 		//TODO (if possible): Checksum EDC/ECC (Error Detection Code & Error Correction Code)
-		return QByteArray(280, '\x00');
+		return QByteArray(SECTOR_SIZE_FOOTER, '\x00');
+	}
+	static inline void headerInfos(const QByteArray &header, quint8 *type, quint8 *mode = NULL) {
+		Q_ASSERT(header.size() != SECTOR_SIZE_HEADER);
+		if (type) {
+			*type = header.at(18);
+		}
+		if (mode) {
+			*mode = header.at(15);
+		}
 	}
 
 	QByteArray sector(quint32 num, quint16 maxSize=SECTOR_SIZE_DATA);
@@ -251,11 +270,9 @@ public:
 	quint32 sectorCount() const;
 	static quint32 sectorCountData(quint32 dataSize);
 	bool seekToSector(quint32 num);
-protected:
-	qint64 writeSectors(const QByteArray &data, QIODevice *out, quint32 secteur, IsoControl *control, quint32 sectorCount=false);
-	int copyBytes(QIODevice *out, int size, int last_esti, IsoControl *control);
+	bool writeSector(const QByteArray &data, quint8 type, quint8 mode=2);
 private:
-	virtual bool _open()=0;
+	Q_DISABLE_COPY(IsoArchiveIO)
 	static qint64 isoPos(qint64 pos);
 	static qint64 filePos(qint64 pos);
 
@@ -267,59 +284,104 @@ private:
 	}
 };
 
-class IsoArchive : public IsoArchiveIO
+class IsoFileIO : public QIODevice
 {
 public:
-	IsoArchive(const QString &name);
+	IsoFileIO(IsoArchiveIO *io, const IsoFile *infos, QObject *parent=0);
+	bool open(OpenMode mode);
+	qint64 size() const;
+	bool canReadLine() const;
+protected:
+	qint64 readData(char *data, qint64 maxSize);
+	qint64 writeData(const char *data, qint64 maxSize);
+private:
+	Q_DISABLE_COPY(IsoFileIO)
+	IsoArchiveIO *_io;
+	const IsoFile *_infos;
+};
+
+class IsoArchive
+{
+public:
+	IsoArchive();
+	explicit IsoArchive(const QString &name);
 	virtual ~IsoArchive();
 
-	bool pack(IsoArchive *destination, IsoControl *control, IsoDirectory *directory=NULL);
+	virtual bool open(QIODevice::OpenMode mode);
+	inline virtual bool isOpen() const {
+		return _io.isOpen() && _rootDirectory;
+	}
+	virtual void close();
+	inline QString fileName() const {
+		return _io.fileName();
+	}
+	inline void setFileName(const QString &fileName) {
+		_io.setFileName(fileName);
+	}
+	inline QString errorString() const {
+		return _io.errorString();
+	}
+	inline const IsoArchiveIO &io() const {
+		return _io;
+	}
+
+	bool pack(IsoArchive *destination, ArchiveObserver *control = NULL, IsoDirectory *directory = NULL);
 	void applyModifications(IsoDirectory *directory);
 
-	QByteArray file(const QString &path, quint32 maxSize=0);
-	QByteArray file(IsoFile *isoFile, quint32 maxSize=0);
-	bool extract(const QString &path, const QString &destination, quint32 maxSize=0);
-	bool extract(IsoFile *isoFile, const QString &destination, quint32 maxSize=0);
-	void extractAll(const QString &destination);
-	bool seekToFile(const QString &path);
-	bool seekToFile(IsoFileOrDirectory *isoFile);
+	QByteArray file(const QString &path, quint32 maxSize=0) const;
+	QIODevice *fileDevice(const QString &path) const;
+	QByteArray modifiedFile(const QString &path, quint32 maxSize=0) const;
+	QIODevice *modifiedFileDevice(const QString &path) const;
+	bool extract(const QString &path, const QString &destination, quint32 maxSize=0) const;
+	bool extractDir(const QString &path, const QString &destination) const;
+	void extractAll(const QString &destination) const;
 	qint32 diffCountSectors(const QString &path, quint32 newSize) const;
-	
+
 	IsoDirectory *rootDirectory() const;
 //	const QList<PathTable> &getPathTables1a() const;
 //	const QList<PathTable> &getPathTables1b() const;
 //	const QList<PathTable> &getPathTables2a() const;
 //	const QList<PathTable> &getPathTables2b() const;
+	Archive::ArchiveError error() const;
+protected:
+	virtual bool reorganizeModifiedFilesAfter(QMap<quint32, const IsoFile *> &writeToTheMain, QList<const IsoFile *> &writeToTheEnd);
+	void setError(Archive::ArchiveError error, const QString &errorString = QString());
 private:
 	Q_DISABLE_COPY(IsoArchive)
-	bool _open();
 	bool openVolumeDescriptor(quint8 num=0);
 	bool openRootDirectory(quint32 sector, quint32 dataSize=SECTOR_SIZE_DATA);
 	IsoDirectory *_openDirectoryRecord(IsoDirectory *directories, QList<quint32> &dirVisisted);
 	QList<PathTable> pathTable(quint32 sector, quint32 dataSize=SECTOR_SIZE_DATA);
 
-	// Returns index of file in "orderedFileList" who have paddingAfter >= minSectorCount
-	int findPadding(const QList<IsoFileOrDirectory *> &orderedFileList, quint32 minSectorCount);
+	// Returns index of file in "filesWithPadding" who have paddingAfter >= minSectorCount
+	int findPadding(const QList<IsoFileOrDirectory *> &filesWithPadding, quint32 minSectorCount);
 	// Returns files with padding after
-	QList<IsoFileOrDirectory *> getIntegrity() const;
+	QList<IsoFileOrDirectory *> getIntegrity();
+	bool getIntegritySetPaddingAfter(IsoFileOrDirectory *prevFile, quint32 fileLocation);
 
-	static QString isoTimeToString(const IsoTime &time);
-	static QString volumeDescriptorToString(const VolumeDescriptor &vd);
-	static QString directoryRecordToString(const DirectoryRecord &dr);
-	static QString pathTableToString(const PathTable &pathTable, bool bigEndian=false);
-	
-	void _extractAll(const QString &destination, IsoDirectory *directories, QString currentInternalDir=QString());
+	void _extractAll(const QString &destination, IsoDirectory *directories, QString currentInternalDir=QString()) const;
 	void _getIntegrity(QMap<quint32, IsoFileOrDirectory *> &files, IsoDirectory *directory) const;
 	QMap<quint32, IsoFile *> getModifiedFiles(IsoDirectory *directory) const;
 	void getModifiedFiles(QMap<quint32, IsoFile *> &files, IsoDirectory *directory) const;
 	static void repairLocationSectors(IsoDirectory *directory, IsoArchive *newIso);
 
+	bool writeFile(QIODevice *in, quint32 sectorCount = 0, ArchiveObserver *control = NULL);
+	bool copySectors(IsoArchiveIO *out, qint64 size, ArchiveObserver *control = NULL, bool repair = false);
+
+	IsoArchiveIO _io;
 	VolumeDescriptor volume;
 	IsoDirectory *_rootDirectory;
+	Archive::ArchiveError _error;
 //	QList<PathTable> pathTables1a;
 //	QList<PathTable> pathTables1b;
 //	QList<PathTable> pathTables2a;
 //	QList<PathTable> pathTables2b;
+#ifdef ISOARCHIVE_DEBUG
+	static QString isoTimeToString(const IsoTime &time);
+	static QString volumeDescriptorToString(const VolumeDescriptor &vd);
+	static QString directoryRecordToString(const DirectoryRecord &dr);
+	static QString pathTableToString(const PathTable &pathTable, bool bigEndian=false);
+#endif
 };
 
 #endif // ISOARCHIVE_H

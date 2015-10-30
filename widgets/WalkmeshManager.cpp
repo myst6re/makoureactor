@@ -21,7 +21,7 @@
 
 WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) :
 	QDialog(parent, Qt::Tool),
-	idFile(0), caFile(0), infFile(0)
+	idFile(0), caFile(0), infFile(0), scriptsAndTexts(0)
 {
 	setWindowTitle(tr("Zones"));
 
@@ -462,6 +462,9 @@ QWidget *WalkmeshManager::buildMiscPage()
 
 	unknown = new HexLineEdit(ret);
 
+	mapScale = new QSpinBox(this);
+	mapScale->setRange(0, 65535);
+
 	QGridLayout *layout = new QGridLayout(ret);
 	layout->addWidget(new QLabel(tr("Orientation des mouvements :")), 0, 0);
 	layout->addWidget(navigation, 0, 1);
@@ -470,12 +473,15 @@ QWidget *WalkmeshManager::buildMiscPage()
 	layout->addWidget(cameraFocusHeight, 1, 1, 1, 2);
 	layout->addWidget(new QLabel(tr("Inconnu :")), 2, 0);
 	layout->addWidget(unknown, 2, 1, 1, 2);
-	layout->setRowStretch(3, 1);
+	layout->addWidget(new QLabel(tr("Zoom écran :")), 3, 0);
+	layout->addWidget(mapScale, 3, 1, 1, 2);
+	layout->setRowStretch(4, 1);
 
 	connect(navigation, SIGNAL(valueEdited(int)), navigation2, SLOT(setValue(int)));
 	connect(navigation2, SIGNAL(valueChanged(int)), SLOT(editNavigation(int)));
 	connect(cameraFocusHeight, SIGNAL(valueChanged(int)), SLOT(editCameraFocusHeight(int)));
 	connect(unknown, SIGNAL(dataEdited(QByteArray)), SLOT(editUnknown(QByteArray)));
+	connect(mapScale, SIGNAL(valueChanged(int)), SLOT(editMapScale(int)));
 
 	return ret;
 }
@@ -487,6 +493,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 	infFile = field->inf();
 	idFile = field->walkmesh();
 	caFile = field->camera();
+	scriptsAndTexts = field->scriptsAndTexts();
 
 	if(!idFile->isOpen() || !caFile->isOpen() || !infFile->isOpen()) {
 		QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Erreur d'ouverture du walkmesh"));
@@ -594,11 +601,21 @@ void WalkmeshManager::fill(Field *field, bool reload)
 		cameraFocusHeight->setValue(infFile->cameraFocusHeight());
 		unknown->setData(infFile->unknown());
 	}
+	navigation->setEnabled(infFile->isOpen());
+	navigation2->setEnabled(infFile->isOpen());
+	cameraFocusHeight->setEnabled(infFile->isOpen());
+	unknown->setEnabled(infFile->isOpen());
+
+	if(scriptsAndTexts->isOpen()) {
+		mapScale->setValue(scriptsAndTexts->scale());
+	}
+	mapScale->setEnabled(scriptsAndTexts->isOpen());
+
 	tabWidget->widget(2)->setEnabled(infFile->isOpen());
 	tabWidget->widget(3)->setEnabled(infFile->isOpen());
 	tabWidget->widget(4)->setEnabled(infFile->isOpen() && !infFile->isJap());
 	tabWidget->widget(5)->setEnabled(infFile->isOpen());
-	tabWidget->widget(6)->setEnabled(infFile->isOpen());
+	tabWidget->widget(6)->setEnabled(infFile->isOpen() || scriptsAndTexts->isOpen());
 }
 
 void WalkmeshManager::clear()
@@ -606,6 +623,7 @@ void WalkmeshManager::clear()
 	infFile = 0;
 	idFile = 0;
 	caFile = 0;
+	scriptsAndTexts = 0;
 
 	if(walkmesh) {
 		walkmesh->clear();
@@ -1407,6 +1425,17 @@ void WalkmeshManager::editUnknown(const QByteArray &data)
 		QByteArray old = infFile->unknown();
 		if(old != data) {
 			infFile->setUnknown(data);
+			emit modified();
+		}
+	}
+}
+
+void WalkmeshManager::editMapScale(int scale)
+{
+	if(scriptsAndTexts->isOpen()) {
+		int old = scriptsAndTexts->scale();
+		if(old != scale) {
+			scriptsAndTexts->setScale(scale);
 			emit modified();
 		}
 	}

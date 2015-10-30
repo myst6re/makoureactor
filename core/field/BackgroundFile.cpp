@@ -104,7 +104,6 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 				}
 				continue;
 			}
-
 			palette = _palettes.at(tile.paletteID);
 		} else if(depth != 2) {
 			if(!warned) {
@@ -119,7 +118,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 		quint16 baseX = minWidth + tile.dstX;
 
 		foreach(uint indexOrColor, indexOrColorList) {
-			if(depth == 2) {
+			if(!palette) {
 				if(indexOrColor != 0) {
 					pixels[baseX + right + top] = indexOrColor;
 				}
@@ -153,6 +152,22 @@ bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerEx
 	usedParams = tiles().usedParams(layerExists);
 
 	return true;
+}
+
+bool BackgroundFile::layerExists(int num)
+{
+	if(num == 0) {
+		return true;
+	}
+
+	if(!isOpen() && !open()) {
+		return false;
+	}
+
+	bool le[3];
+	tiles().usedParams(le);
+
+	return le[num - 1];
 }
 
 QRgb BackgroundFile::blendColor(quint8 type, QRgb color0, QRgb color1)

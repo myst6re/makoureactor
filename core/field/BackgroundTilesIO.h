@@ -19,6 +19,7 @@
 #define BACKGROUNDTILESIO_H
 
 #include <QtCore>
+#include "../IO.h"
 #include "BackgroundTiles.h"
 
 #define MAX_TILE_DST	1024
@@ -77,40 +78,31 @@ typedef struct {
 	quint8 state;
 } paramTile;
 
-class BackgroundTilesIO
+class BackgroundTilesIO : public IO
 {
 public:
 	explicit BackgroundTilesIO(QIODevice *device);
-	virtual ~BackgroundTilesIO();
-
-	inline void setDevice(QIODevice *device) {
-		_device = device;
-	}
-
-	inline QIODevice *device() const {
-		return _device;
-	}
-
-	bool canRead() const;
-	bool canWrite() const;
+	virtual ~BackgroundTilesIO() {}
 
 	bool read(BackgroundTiles &tiles) const;
 	bool write(const BackgroundTiles &tiles) const;
 protected:
 	virtual bool readData(BackgroundTiles &tiles) const=0;
 	virtual bool writeData(const BackgroundTiles &tiles) const=0;
-private:
-	QIODevice *_device;
 };
 
 class BackgroundTilesIOPC : public BackgroundTilesIO
 {
 public:
 	explicit BackgroundTilesIOPC(QIODevice *device);
+#ifdef BG_ID_RESEARCH
+	static QMultiMap<int, quint32> IDs;
+#endif
 protected:
 	bool readData(BackgroundTiles &tiles) const;
 	bool writeData(const BackgroundTiles &tiles) const;
 private:
+	bool writeTile(const Tile &tile, quint32 unique = 0) const;
 	static Tile tilePC2Tile(const TilePC &tile, quint8 layerID, quint16 tileID);
 	static TilePC tile2TilePC(const Tile &tile);
 };

@@ -19,24 +19,14 @@
 #define BACKGROUNDTEXTURESIO_H
 
 #include <QtCore>
+#include "../IO.h"
 #include "BackgroundTextures.h"
 
-class BackgroundTexturesIO
+class BackgroundTexturesIO : public IO
 {
 public:
 	explicit BackgroundTexturesIO(QIODevice *device);
-	virtual ~BackgroundTexturesIO();
-
-	inline void setDevice(QIODevice *device) {
-		_device = device;
-	}
-
-	inline QIODevice *device() const {
-		return _device;
-	}
-
-	bool canRead() const;
-	bool canWrite() const;
+	virtual ~BackgroundTexturesIO() {}
 
 	virtual bool read(BackgroundTextures *textures) {
 		Q_UNUSED(textures)
@@ -46,8 +36,6 @@ public:
 		Q_UNUSED(textures)
 		return false;
 	}
-private:
-	QIODevice *_device;
 };
 
 class BackgroundTexturesIOPC : public BackgroundTexturesIO

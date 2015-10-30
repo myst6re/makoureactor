@@ -29,9 +29,8 @@ class ModelManagerPS : public ModelManager
 public:
 	ModelManagerPS(const QGLWidget *shareWidget=0, QWidget *parent=0);
 protected:
-	void fill2();
 	QList<QStringList> modelNames() const;
-	QList<QStringList> animNames(int row) const;
+	QList<QTreeWidgetItem *> animItems(int modelID) const;
 	void showModelInfos2(int row);
 	FieldModelFile *modelData(QTreeWidgetItem *item);
 	FieldModelLoaderPS *modelLoader() const;

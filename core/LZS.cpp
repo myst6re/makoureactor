@@ -164,6 +164,29 @@ const QByteArray &LZS::decompressAll(const char *data, int fileSize)
 	}
 }
 
+const QByteArray &LZS::decompressAllWithHeader(const QByteArray &data)
+{
+	return decompressAllWithHeader(data.constData(), data.size());
+}
+
+const QByteArray &LZS::decompressAllWithHeader(const char *data, int size)
+{
+	if (size < 4) {
+		result.clear();
+		return result;
+	}
+
+	qint32 lzsSize;
+	memcpy(&lzsSize, data, 4);
+
+	if (lzsSize != size - 4) {
+		result.clear();
+		return result;
+	}
+
+	return LZS::decompressAll(data + 4, lzsSize);
+}
+
 void LZS::InsertNode(qint32 r)
 {
 	/* Inserts string of length 18, text_buf[r..r+18-1], into one of the trees (text_buf[r]'th tree) and returns the longest-match position and length via the global variables match_position and match_length.
@@ -282,6 +305,19 @@ void LZS::DeleteNode(qint32 p)//deletes node p from tree
 		lson[dad[p]] = q;
 	}
 	dad[p] = 4096;
+}
+
+const QByteArray &LZS::compressWithHeader(const QByteArray &fileData)
+{
+	return compressWithHeader(fileData.constData(), fileData.size());
+}
+
+const QByteArray &LZS::compressWithHeader(const char *data, int sizeData)
+{
+	compress(data, sizeData);
+	quint32 lzsSize = result.size();
+	result.prepend((char *)&lzsSize, 4);
+	return result;
 }
 
 const QByteArray &LZS::compress(const QByteArray &fileData)

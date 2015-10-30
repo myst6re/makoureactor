@@ -20,14 +20,15 @@
 
 #include <QtCore>
 #include <QRgb>
+#include "FieldModelTextureRef.h"
 
-typedef struct {
+struct PolyVertex {
 	float x, y, z;
-} PolyVertex;
+};
 
-typedef struct {
+struct TexCoord {
 	float x, y;
-} TexCoord;
+};
 
 class Poly
 {
@@ -37,7 +38,6 @@ public:
 	virtual ~Poly();
 	void setVertices(const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords=QList<TexCoord>());
 	void setVertices(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
-	void divTexCoords(float texWidth, float texHeight);
 	inline int count() const {
 		return _count;
 	}
@@ -45,6 +45,7 @@ public:
 	const QRgb &color() const;
 	QRgb color(quint8 id) const;
 	const TexCoord &texCoord(quint8 id) const;
+	void setTexCoord(quint8 id, const TexCoord &texCoord);
 	bool isMonochrome() const;
 	bool hasTexture() const;
 protected:
@@ -68,19 +69,36 @@ public:
 	TrianglePoly(const QList<PolyVertex> &vertices, const QRgb &color, const QList<TexCoord> &texCoords=QList<TexCoord>());
 };
 
+class FieldModelFile;
+
 class FieldModelGroup
 {
 public:
 	FieldModelGroup();
-	FieldModelGroup(int texNumber);
+	FieldModelGroup(FieldModelTextureRef *texRef);
 	virtual ~FieldModelGroup();
-	const QList<Poly *> &polygons() const;
-	void addPolygon(Poly *polygon);
-	int textureNumber() const;
-	void setTextureNumber(int texNumber);
+	inline const QList<Poly *> &polygons() const {
+		return _polys;
+	}
+	inline void addPolygon(Poly *polygon) {
+		_polys.append(polygon);
+	}
+	inline bool hasTexture() const {
+		return _textureRef;
+	}
+	void setTextureRef(FieldModelTextureRef *texRef);
+	virtual inline FieldModelTextureRef *textureRef() const {
+		return _textureRef;
+	}
+	inline void setBlendMode(quint8 blend) {
+		_blendMode = blend;
+	}
+	void removeSpriting(float texWidth, float texHeight);
+	void setFloatCoords(float texWidth, float texHeight);
 private:
-	int _textureNumber;
+	FieldModelTextureRef *_textureRef;
 	QList<Poly *> _polys;
+	quint8 _blendMode;
 };
 
 class FieldModelPart
@@ -88,7 +106,12 @@ class FieldModelPart
 public:
 	FieldModelPart();
 	virtual ~FieldModelPart();
-	const QList<FieldModelGroup *> &groups() const;
+	inline const QList<FieldModelGroup *> &groups() const {
+		return _groups;
+	}
+	inline void setGroups(const QList<FieldModelGroup *> &groups) {
+		_groups = groups;
+	}
 	QString toString() const;
 protected:
 	QList<FieldModelGroup *> _groups;
