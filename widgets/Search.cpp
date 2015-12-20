@@ -25,7 +25,7 @@ Search::Search(Window *mainWindow) :
 	atTheEnd(false), atTheBeginning(false),
 	fieldArchive(0),
 	clef(0), text(QString()),
-	bank(0), adress(0), e_script(0), e_group(0)
+	bank(0), address(0), e_script(0), e_group(0)
 {
 	setWindowTitle(tr("Rechercher"));
 	
@@ -146,13 +146,13 @@ QWidget *Search::scriptPageWidget()
 	variableLayout->setContentsMargins(QMargins());
 	variableLayout->addWidget(new QLabel(tr("Var")), 0, 0);
 	variableLayout->addWidget(champBank = new QSpinBox(variable), 0, 1);
-	variableLayout->addWidget(champAdress = new QSpinBox(variable), 0, 2);
+	variableLayout->addWidget(champAddress = new QSpinBox(variable), 0, 2);
 	variableLayout->addWidget(champOp = new QComboBox(variable), 0, 3);
 	variableLayout->addWidget(champValue = new QLineEdit(variable), 0, 4);
 	variableLayout->addWidget(comboVarName = new QComboBox(variable), 1, 0, 1, 5);
 	variableLayout->setRowStretch(1, 1);
 	champBank->setRange(1,15);
-	champAdress->setRange(0,255);
+	champAddress->setRange(-1, 255); // -1 is an extra value to keep this field empty and search for every addresses
 	for(int i=0 ; i<256 ; ++i) {
 		comboVarName->addItem(QString());
 	}
@@ -165,7 +165,7 @@ QWidget *Search::scriptPageWidget()
 
 	// set config values
 	champBank->setValue(Config::value("SearchedVarBank").toInt());
-	champAdress->setValue(Config::value("SearchedVarAdress").toInt());
+	champAddress->setValue(Config::value("SearchedVarAdress").toInt());
 	comboVarName->setCurrentIndex(Config::value("SearchedVarAdress").toInt());
 	champOp->setCurrentIndex(Config::value("SearchedVarOperation").toInt());
 	int searchedVarValue = Config::value("SearchedVarValue", 65536).toInt();
@@ -240,7 +240,7 @@ QWidget *Search::scriptPageWidget()
 	connect(liste, SIGNAL(currentIndexChanged(int)), stack, SLOT(setCurrentIndex(int)));
 	connect(liste, SIGNAL(currentIndexChanged(int)), SLOT(saveCurrentScriptTab(int)));
 	connect(champBank, SIGNAL(valueChanged(int)), SLOT(updateComboVarName()));
-	connect(champAdress, SIGNAL(valueChanged(int)), comboVarName, SLOT(setCurrentIndex(int)));
+	connect(champAddress, SIGNAL(valueChanged(int)), comboVarName, SLOT(setCurrentIndex(int)));
 	connect(comboVarName, SIGNAL(currentIndexChanged(int)), SLOT(updateChampAdress()));
 	connect(champOp, SIGNAL(currentIndexChanged(int)), SLOT(updateSearchVarPlaceholder(int)));
 
@@ -400,9 +400,9 @@ void Search::updateComboVarName()
 
 void Search::updateChampAdress()
 {
-	champAdress->blockSignals(true);
-	champAdress->setValue(comboVarName->currentIndex());
-	champAdress->blockSignals(false);
+	champAddress->blockSignals(true);
+	champAddress->setValue(comboVarName->currentIndex());
+	champAddress->blockSignals(false);
 }
 
 void Search::updateSearchVarPlaceholder(int opIndex)
@@ -542,7 +542,7 @@ bool Search::findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchS
 												 scriptID, opcodeID,
 												 sorting, scope);
 	case 1:
-		return fieldArchive->searchVar(bank, adress, op, value,
+		return fieldArchive->searchVar(bank, address, op, value,
 									   fieldID, grpScriptID,
 									   scriptID, opcodeID,
 									   sorting, scope);
@@ -625,7 +625,7 @@ void Search::findPrev()
 			}
 			break;
 		case 1:
-			if(fieldArchive->searchVarP(bank, adress, op, value,
+			if(fieldArchive->searchVarP(bank, address, op, value,
 										fieldID, grpScriptID,
 										scriptID, opcodeID,
 										sorting, scope)) {
@@ -776,12 +776,12 @@ void Search::setSearchValues()
 			break;
 		case 1:
 			bank = champBank->value();
-			adress = champAdress->value();
+			address = champAddress->value();
 			op = Opcode::Operation(champOp->currentIndex());
 			value = champValue->text().toInt(&ok);
 			if(!ok)	value = 0x10000;
 			Config::setValue("SearchedVarBank", bank);
-			Config::setValue("SearchedVarAdress", adress);
+			Config::setValue("SearchedVarAdress", address);
 			Config::setValue("SearchedVarOperation", champOp->currentIndex());
 			Config::setValue("SearchedVarValue", value);
 			break;

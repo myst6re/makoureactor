@@ -31,14 +31,14 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	
 	bank = new QSpinBox(this);
 	bank->setRange(1,15);
-	adress = new QSpinBox(this);
-	adress->setRange(0,255);
+	address = new QSpinBox(this);
+	address->setRange(0,255);
 	name = new QLineEdit(this);
 	name->setMaxLength(50);
 	rename = new QPushButton(tr("Renommer"), this);
 	
 	layout1->addWidget(bank);
-	layout1->addWidget(adress);
+	layout1->addWidget(address);
 	layout1->addWidget(name);
 	layout1->addWidget(rename);
 	
@@ -85,7 +85,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	fillForm();
 	
 	connect(bank, SIGNAL(valueChanged(int)), SLOT(scrollToList1(int)));
-	connect(adress, SIGNAL(valueChanged(int)), SLOT(scrollToList2(int)));
+	connect(address, SIGNAL(valueChanged(int)), SLOT(scrollToList2(int)));
 	connect(liste1, SIGNAL(currentRowChanged(int)), SLOT(changeBank(int)));
 	connect(liste2, SIGNAL(itemSelectionChanged()), SLOT(fillForm()));
 	connect(name, SIGNAL(returnPressed()), SLOT(renameVar()));
@@ -234,14 +234,14 @@ void VarManager::fillForm()
 {
 	if(liste2->selectedItems().isEmpty())	return;
 	QTreeWidgetItem *item = liste2->selectedItems().first();
-	adress->setValue(itemAddress(item));
+	address->setValue(itemAddress(item));
 	name->setText(item->text(1));
 }
 
 void VarManager::renameVar()
 {
 	if(liste2->selectedItems().isEmpty())	return;
-	local_var_names.insert(adress->value() | (bank->value() << 8), name->text());
+	local_var_names.insert(address->value() | (bank->value() << 8), name->text());
 	liste2->selectedItems().first()->setText(1, name->text());
 	ok->setEnabled(true);
 }
@@ -265,8 +265,8 @@ void VarManager::search()
 	allVars = fieldArchive->searchAllVars(_fieldNames);
 	int b = bank->value();
 
-	for(int adress=0 ; adress<256 ; ++adress) {
-		colorizeItem(liste2->topLevelItem(adress), FF7Var(b, adress));
+	for(int address=0 ; address<256 ; ++address) {
+		colorizeItem(liste2->topLevelItem(address), FF7Var(b, address));
 	}
 }
 
@@ -295,8 +295,8 @@ void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
 	bool foundR = false, foundW = false;
 	QSet<FF7Var::VarSize> varSize;
 
-	findVar(FF7Var(banks.first,  var.adress), foundR, foundW, varSize);
-	findVar(FF7Var(banks.second, var.adress), foundR, foundW, varSize);
+	findVar(FF7Var(banks.first,  var.address), foundR, foundW, varSize);
+	findVar(FF7Var(banks.second, var.address), foundR, foundW, varSize);
 
 	QString rwText;
 	QStringList sizeText;

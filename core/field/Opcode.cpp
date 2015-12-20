@@ -55,10 +55,11 @@ int Opcode::subParam(int cur, int paramSize) const
 	return (value >> ((sizeBA*8-cur%8)-paramSize)) & ((int)pow(2, paramSize)-1);
 }
 
-bool Opcode::searchVar(quint8 bank, quint8 adress, Operation op, int value) const
+bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) const
 {
 	// TODO: compare var with var
-	const bool noValue = value > 0xFFFF;
+	const bool noValue = value > 0xFFFF,
+			noAddress = address > 0xFF;
 	QList<FF7Var> vars;
 
 	getVariables(vars);
@@ -69,20 +70,20 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, Operation op, int value) cons
 		if(!noValue) {
 			if(id() == SETBYTE) {
 				OpcodeSETBYTE *setbyte = (OpcodeSETBYTE *)this;
-				if(B1(setbyte->banks) == bank && setbyte->var == adress
+				if(B1(setbyte->banks) == bank && (noAddress || setbyte->var == address)
 						&& B2(setbyte->banks) == 0 && setbyte->value == value)
 					return true;
 			}
 			if(id() == SETWORD) {
 				OpcodeSETWORD *setword = (OpcodeSETWORD *)this;
-				if(B1(setword->banks) == bank && setword->var == adress
+				if(B1(setword->banks) == bank && (noAddress || setword->var == address)
 						&& B2(setword->banks) == 0 && setword->value == (quint16)value)
 					return true;
 			}
 		} else {
 			// Every write vars
 			foreach(const FF7Var &var, vars) {
-				if(var.bank == bank && var.adress == adress
+				if(var.bank == bank && (noAddress || var.address == address)
 						&& var.write == true && var.size != FF7Var::Bit) {
 					return true;
 				}
@@ -94,7 +95,7 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, Operation op, int value) cons
 				|| id() == BITOFF
 				|| id() == BITXOR) {
 			OpcodeBitOperation *bitOperation = (OpcodeBitOperation *)this;
-			if(B1(bitOperation->banks) == bank && bitOperation->var == adress
+			if(B1(bitOperation->banks) == bank && (noAddress || bitOperation->var == address)
 					&& (noValue || (B2(bitOperation->banks) == 0 && bitOperation->position == value))) {
 				return true;
 			}
@@ -111,7 +112,7 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, Operation op, int value) cons
 			OpcodeIf *opcodeIf = (OpcodeIf *)this;
 			if(((op == Compare && opcodeIf->oper < quint8(BitAnd))
 				|| (op == BitCompare && opcodeIf->oper >= quint8(BitAnd)))
-					&& B1(opcodeIf->banks) == bank && opcodeIf->value1 == adress
+					&& B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
 					&& (noValue || (B2(opcodeIf->banks) == 0 && opcodeIf->value2 == value))) {
 				return true;
 			}
@@ -119,7 +120,7 @@ bool Opcode::searchVar(quint8 bank, quint8 adress, Operation op, int value) cons
 		return false;
 	default:
 		foreach(const FF7Var &var, vars) {
-			if(var.bank == bank && var.adress == adress)
+			if(var.bank == bank && (noAddress || var.address == address))
 				return true;
 		}
 		return false;
@@ -417,15 +418,15 @@ QString Opcode::_akao(quint8 akaoOp)
 	}
 }
 
-QString Opcode::_bank(quint8 adress, quint8 bank)
+QString Opcode::_bank(quint8 address, quint8 bank)
 {
-	if(!Var::name(bank, adress).isEmpty()) {
-		return Var::name(bank, adress);
+	if(!Var::name(bank, address).isEmpty()) {
+		return Var::name(bank, address);
 	}
 	if(bank == 0) {
 		return QString("?");
 	}
-	return QString("Var[%1][%2]").arg(bank).arg(adress);
+	return QString("Var[%1][%2]").arg(bank).arg(address);
 }
 
 QString Opcode::_var(int value, quint8 bank)

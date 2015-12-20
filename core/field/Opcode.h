@@ -44,20 +44,20 @@ struct FF7Var {
 	};
 
 	FF7Var(quint8 b, quint8 a, VarSize size = Byte, bool w = false)
-		: bank(b), adress(a), size(size), write(w) {}
+		: bank(b), address(a), size(size), write(w) {}
 	quint8 bank;
-	quint8 adress;
+	quint8 address;
 	VarSize size;
 	bool write;
 };
 
 inline bool operator==(const FF7Var &v1, const FF7Var &v2) {
-	return v1.bank == v2.bank && v1.adress == v2.adress;
+	return v1.bank == v2.bank && v1.address == v2.address;
 }
 
 inline bool operator<(const FF7Var &v1, const FF7Var &v2) {
 	if(v1.bank == v2.bank) {
-		return v1.adress < v2.adress;
+		return v1.address < v2.address;
 	}
 	return v1.bank < v2.bank;
 }
@@ -181,7 +181,7 @@ public:
 
 	inline virtual bool isVoid() const { return false; }
 
-	bool searchVar(quint8 bank, quint8 adress, Operation op = None, int value=65536) const;
+	bool searchVar(quint8 bank, quint16 address, Operation op = None, int value=65536) const;
 
 	inline virtual int getGroupID() const { return -1; }
 	inline virtual void setGroupID(quint8 groupID) { Q_UNUSED(groupID) }
@@ -223,7 +223,7 @@ protected:
 	// static QString _objet3D(quint8 objet3D_ID);
 	static QString _akao(quint8 akaoOp);
 
-	static QString _bank(quint8 adress, quint8 bank);
+	static QString _bank(quint8 address, quint8 bank);
 	static QString _var(int value, quint8 bank);
 	static QString _var(int value, quint8 bank1, quint8 bank2);
 	static QString _var(int value, quint8 bank1, quint8 bank2, quint8 bank3);

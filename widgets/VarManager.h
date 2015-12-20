@@ -51,7 +51,7 @@ private:
 	QMap<quint16, QString> local_var_names;
 
 	QSpinBox *bank;
-	QSpinBox *adress;
+	QSpinBox *address;
 	QLineEdit *name;
 	QPushButton *rename;
 
