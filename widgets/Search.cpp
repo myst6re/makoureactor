@@ -781,7 +781,7 @@ void Search::setSearchValues()
 			value = champValue->text().toInt(&ok);
 			if(!ok)	value = 0x10000;
 			Config::setValue("SearchedVarBank", bank);
-			Config::setValue("SearchedVarAdress", address);
+			Config::setValue("SearchedVarAdress", qint16(address));
 			Config::setValue("SearchedVarOperation", champOp->currentIndex());
 			Config::setValue("SearchedVarValue", value);
 			break;
