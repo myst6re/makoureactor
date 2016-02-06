@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -56,11 +56,11 @@ GrpScriptList::GrpScriptList(QWidget *parent)
 	paste_A->setShortcut(QKeySequence("Ctrl+V"));
 	paste_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	paste_A->setEnabled(false);
-	QAction *up_A = new QAction(QIcon(":/images/up.png"), tr("DÃ©placer vers le haut"), this);
+	QAction *up_A = new QAction(QIcon(":/images/up.png"), tr("Déplacer vers le haut"), this);
 	up_A->setShortcut(QKeySequence("Shift+Up"));
 	up_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	up_A->setEnabled(false);
-	QAction *down_A = new QAction(QIcon(":/images/down.png"), tr("DÃ©placer vers le bas"), this);
+	QAction *down_A = new QAction(QIcon(":/images/down.png"), tr("Déplacer vers le bas"), this);
 	down_A->setShortcut(QKeySequence("Shift+Down"));
 	down_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	down_A->setEnabled(false);
@@ -92,7 +92,7 @@ GrpScriptList::GrpScriptList(QWidget *parent)
 	this->addAction(up_A);
 	this->addAction(down_A);
 	
-	_toolBar = new QToolBar(tr("Ã‰dition des &groupes"));
+	_toolBar = new QToolBar(tr("Édition des &groupes"));
 	_toolBar->setIconSize(QSize(14*scale,14*scale));
 	_toolBar->addAction(add_A);
 	add_A->setStatusTip(tr("Ajouter un groupe"));
@@ -269,7 +269,13 @@ void GrpScriptList::del(bool totalDel)
 	if(selectedIDs.isEmpty())	return;
 	
 	if(totalDel && QMessageBox::warning(this, tr("Suppression"), tr("Voulez-vous vraiment supprimer %1 ?\n"
-																	"Certains scripts peuvent y faire rÃ©fÃ©rence !").arg(selectedIDs.size()==1 ? tr("le groupe sÃ©lectionnÃ©") : tr("les groupes sÃ©lectionnÃ©s")), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel)		return;
+																	"Certains scripts peuvent y faire référence !")
+	                                    .arg(selectedIDs.size()==1 ?
+	                                         tr("le groupe sélectionné") :
+	                                         tr("les groupes sélectionnés")),
+	                                    QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel) {
+		return;
+	}
 	
 	qSort(selectedIDs);
 	for(int i=selectedIDs.size()-1 ; i>=0 ; --i)

@@ -1,5 +1,3 @@
-/*---------- UTF-8 !!! ------------*/
-
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
  ** Copyright (C) 2011 Arzel Jérôme <myst6re@gmail.com>

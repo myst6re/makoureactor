@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 
 	QApplication app(argc, argv);
 	app.setWindowIcon(QIcon(":/images/logo-shinra.png"));
+	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
 	Config::set();
 
