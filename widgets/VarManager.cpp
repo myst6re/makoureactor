@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	
 	liste2 = new QTreeWidget(this);
 	liste2->setColumnCount(4);
-	liste2->setHeaderLabels(QStringList() << tr("Adresse") << tr("Surnom") << tr("Opération") << tr("Taille"));
+	liste2->setHeaderLabels(QStringList() << tr("Adresse") << tr("Surnom") << tr("OpÃ©ration") << tr("Taille"));
 	liste2->setIndentation(0);
 	liste2->setItemsExpandable(false);
 	liste2->setSortingEnabled(true);
@@ -61,7 +61,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	
 	QHBoxLayout *layout3 = new QHBoxLayout();
 	
-	searchButton = new QPushButton(tr("Adresses utilisées"), this);
+	searchButton = new QPushButton(tr("Adresses utilisÃ©es"), this);
 	ok = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Enregistrer"), this);
 	ok->setEnabled(false);
 	
@@ -249,7 +249,7 @@ void VarManager::renameVar()
 void VarManager::save()
 {
 	if(!Var::save(local_var_names)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Fichier vars.cfg inaccessible.\nÉchec de l'enregistrement."));
+		QMessageBox::warning(this, tr("Erreur"), tr("Fichier vars.cfg inaccessible.\nÃ‰chec de l'enregistrement."));
 	} else {
 		ok->setEnabled(false);
 	}
@@ -327,7 +327,7 @@ void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
 			sizeText.append(tr("2 octets"));
 		}
 		if(varSize.contains(FF7Var::SignedWord)) {
-			sizeText.append(tr("2 octets signés"));
+			sizeText.append(tr("2 octets signÃ©s"));
 		}
 	} else {
 		item->setBackground(0, palette().base().color());

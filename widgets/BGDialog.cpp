@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 BGDialog::BGDialog(QWidget *parent) :
 	QDialog(parent, Qt::Tool), field(0)
 {
-	setWindowTitle(tr("Décor"));
+	setWindowTitle(tr("DÃ©cor"));
 
 	QScrollArea *scrollArea = new QScrollArea(this);
 	scrollArea->setWidgetResizable(true);
@@ -118,7 +118,7 @@ void BGDialog::fillWidgets()
 	if(field->background()->usedParams(usedParams, layerExists)) {
 
 		foreach(const quint8 &param, usedParams.keys()) {
-			parametersWidget->addItem(tr("Paramètre %1").arg(param), param);
+			parametersWidget->addItem(tr("ParamÃ¨tre %1").arg(param), param);
 		}
 		parametersWidget->setEnabled(parametersWidget->count());
 
@@ -165,7 +165,7 @@ void BGDialog::parameterChanged(int index)
 	statesWidget->clear();
 	for(int i=0 ; i<8 ; ++i) {
 		if((states >> i) & 1) {
-			item = new QListWidgetItem(tr("État %1").arg(i));
+			item = new QListWidgetItem(tr("Ã‰tat %1").arg(i));
 			item->setData(Qt::UserRole, 1 << i);
 			item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
 			item->setCheckState((params.value(parameter) >> i) & 1 ? Qt::Checked : Qt::Unchecked);

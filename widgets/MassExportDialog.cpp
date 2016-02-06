@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -40,10 +40,10 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	listLayout->setContentsMargins(QMargins());
 
 	exports.insert(Fields,
-				   new FormatSelectionWidget(tr("Exporter les écrans"),
+				   new FormatSelectionWidget(tr("Exporter les Ã©crans"),
 											 QStringList(), this));
 	exports.insert(Backgrounds,
-				   new FormatSelectionWidget(tr("Exporter les décors"),
+				   new FormatSelectionWidget(tr("Exporter les dÃ©cors"),
 											 QStringList() <<
 											 tr("Image PNG") + ";;png" <<
 											 tr("Image JPG") + ";;jpg" <<
@@ -64,7 +64,7 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	dirPath->setText(Config::value("exportDirectory").toString());
 	changeDir = new QPushButton(tr("Choisir..."), this);
 
-	overwriteIfExists = new QCheckBox(tr("Écraser les fichiers existants"), this);
+	overwriteIfExists = new QCheckBox(tr("Ã‰craser les fichiers existants"), this);
 	overwriteIfExists->setChecked(Config::value("overwriteOnExport", true).toBool());
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal, this);
@@ -100,7 +100,7 @@ void MassExportDialog::fill(const FieldArchive *fieldArchive, int currentField)
 	QString fieldType = _fieldArchive->isPC() ? tr("PC") : tr("PS");
 	QStringList formats;
 	formats.append(tr("Fichier FIELD %1").arg(fieldType) + (_fieldArchive->isPC() ? "" : ";;dat"));
-	formats.append(tr("Fichier décompressé FIELD %1").arg(fieldType) + ";;dec");
+	formats.append(tr("Fichier dÃ©compressÃ© FIELD %1").arg(fieldType) + ";;dec");
 
 	exports.value(Fields)->setFormats(formats);
 

@@ -1,6 +1,6 @@
 /****************************************************************************
- ** Néo-Midgar Final Fantasy VII French Retranslation
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** NÃ©o-Midgar Final Fantasy VII French Retranslation
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by

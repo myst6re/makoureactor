@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -25,12 +25,12 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 {
 	setWindowTitle(tr("Configuration"));
 
-	QGroupBox *dependances = new QGroupBox(tr("Dépendances"), this);
+	QGroupBox *dependances = new QGroupBox(tr("DÃ©pendances"), this);
 
 	listFF7 = new QTreeWidget(dependances);
 	listFF7->setColumnCount(1);
 	listFF7->setUniformRowHeights(true);
-	listFF7->setHeaderLabels(QStringList(tr("Final Fantasy VII installés")));
+	listFF7->setHeaderLabels(QStringList(tr("Final Fantasy VII installÃ©s")));
 	listFF7->setFixedHeight(80);
 
 	ff7ButtonMod = new QPushButton(dependances);
@@ -66,7 +66,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 
 	QGroupBox *openGL = new QGroupBox(tr("OpenGL"), this);
 
-	disableOGL = new QCheckBox(tr("Désactiver OpenGL"), openGL);
+	disableOGL = new QCheckBox(tr("DÃ©sactiver OpenGL"), openGL);
 
 	QGridLayout *OGLLayout = new QGridLayout(openGL);
 	OGLLayout->addWidget(disableOGL, 0, 0);
@@ -78,12 +78,12 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	windowColor3 = new QPushButton(textEditor);
 	windowColor4 = new QPushButton(textEditor);
 	windowPreview = new QLabel(textEditor);
-	windowColorReset = new QPushButton(tr("Valeurs par défaut"), textEditor);
+	windowColorReset = new QPushButton(tr("Valeurs par dÃ©faut"), textEditor);
 
 	optiText = new QCheckBox(trUtf8("Optimiser automatiquement les duos de caract\xc3\xa8res \xc2\xab .  \xc2\xbb, \xc2\xab .\" \xc2\xbb et \xc2\xab \xe2\x80\xa6\" \xc2\xbb."));
 	optiText->hide();//TODO
 
-	japEnc = new QCheckBox(tr("Caractères japonais"), textEditor);
+	japEnc = new QCheckBox(tr("CaractÃ¨res japonais"), textEditor);
 
 	listCharNames = new QComboBox(textEditor);
 	for(int i=0 ; i<9 ; ++i) {
@@ -114,7 +114,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	textEditorLayout->addLayout(windowPreviewLayout, 1, 0, 4, 2, Qt::AlignTop);
 	textEditorLayout->addWidget(listCharNames, 0, 2, 1, 2, Qt::AlignTop);
 	textEditorLayout->addWidget(charNameEdit, 1, 2, 1, 2, Qt::AlignTop);
-	textEditorLayout->addWidget(new QLabel(tr("Taille auto. : marge à droite")), 3, 2, Qt::AlignBottom);
+	textEditorLayout->addWidget(new QLabel(tr("Taille auto. : marge Ã  droite")), 3, 2, Qt::AlignBottom);
 	textEditorLayout->addWidget(autoSizeMarginEdit, 3, 3, Qt::AlignBottom);
 	textEditorLayout->addWidget(new QLabel(tr("Largeur {SPACED CHARACTERS}")), 4, 2, Qt::AlignBottom);
 	textEditorLayout->addWidget(spacedCharactersWidthEdit, 4, 3, Qt::AlignBottom);
@@ -122,7 +122,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 
 	QGroupBox *scriptEditor = new QGroupBox(tr("Editeur de script"), this);
 
-	expandedByDefault = new QCheckBox(tr("Lignes expansées par défaut"), scriptEditor);
+	expandedByDefault = new QCheckBox(tr("Lignes expansÃ©es par dÃ©faut"), scriptEditor);
 
 	QVBoxLayout *scriptEditorLayout = new QVBoxLayout(scriptEditor);
 	scriptEditorLayout->addWidget(expandedByDefault);
@@ -130,7 +130,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 
 	QGroupBox *misc = new QGroupBox(tr("Divers"), this);
 
-	lzsNotCheck = new QCheckBox(tr("Ne pas vérifier strictement le format des fichiers"), misc);
+	lzsNotCheck = new QCheckBox(tr("Ne pas vÃ©rifier strictement le format des fichiers"), misc);
 
 	QVBoxLayout *miscLayout = new QVBoxLayout(misc);
 	miscLayout->addWidget(lzsNotCheck);
@@ -451,7 +451,7 @@ void ConfigWindow::accept()
 	Config::setValue("charPath", charAuto->isChecked() ? QDir::fromNativeSeparators(charPath->text()) : QString());
 	if(!disableOGL->isChecked() != Config::value("OpenGL", true).toBool()) {
 		Config::setValue("OpenGL", !disableOGL->isChecked());
-		QMessageBox::information(this, tr("Information"), tr("Vous devez redémarrer Makou Reactor pour appliquer tous les changements."));
+		QMessageBox::information(this, tr("Information"), tr("Vous devez redÃ©marrer Makou Reactor pour appliquer tous les changements."));
 	}
 	Config::setValue("windowColorTopLeft", windowColorTopLeft);
 	Config::setValue("windowColorTopRight", windowColorTopRight);

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -806,7 +806,7 @@ void FieldArchive::diffScripts()
 				if(deb.size() == 0) {
 					deb.remove();
 				}
-				qDebug() << screens.size() << "écrans";
+				qDebug() << screens.size() << "Ã©crans";
 			}
 		}
 	}
@@ -908,7 +908,7 @@ void FieldArchive::searchAll()
 		return;
 	}
 
-	/*FieldArchivePS ps("C:/Users/Jérôme/Games/Final Fantasy VII-PSX-PAL-FR-CD1.bin", FieldArchiveIO::Iso);
+	/*FieldArchivePS ps("C:/Users/JÃ©rÃ´me/Games/Final Fantasy VII-PSX-PAL-FR-CD1.bin", FieldArchiveIO::Iso);
 	if(ps.open() != FieldArchiveIO::Ok) {
 		qWarning() << "error opening ps iso";
 		return;
@@ -1038,7 +1038,7 @@ void FieldArchive::searchAll()
 					next_group:;
 					grpScriptID++;
 				}
-				qDebug() << screens.size() << "écrans";
+				qDebug() << screens.size() << "Ã©crans";
 				/*QString fieldDir = QString("%1-%2").arg(Data::field_names.indexOf(field->name()), 3, 10, QChar('0')).arg(field->name());
 				if(!tmp.mkdir(fieldDir)) {
 					qWarning() << "cannot create dir" << tmp.absoluteFilePath(fieldDir);

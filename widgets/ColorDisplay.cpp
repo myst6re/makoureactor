@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -20,8 +20,9 @@
 ColorDisplay::ColorDisplay(QWidget *parent) :
 	QWidget(parent), _ro(false)
 {
-	setFixedSize((COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH) * 10 + COLOR_DISPLAY_BORDER_WIDTH,
-				 COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH * 2);
+	scale = qApp->desktop()->logicalDpiX()/96;
+	setFixedSize((COLOR_DISPLAY_CELL_SIZE*scale + COLOR_DISPLAY_BORDER_WIDTH) * 10 + COLOR_DISPLAY_BORDER_WIDTH,
+				 COLOR_DISPLAY_CELL_SIZE*scale + COLOR_DISPLAY_BORDER_WIDTH * 2);
 	setMouseTracking(true);
 }
 
@@ -54,15 +55,15 @@ void ColorDisplay::paintEvent(QPaintEvent *)
 	int size = colors.size(), x;
 	// Colors
 	painter.setPen(QColor(0, 0, 0));
-	const int cellFullWidth = COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH;
+	const int cellFullWidth = COLOR_DISPLAY_CELL_SIZE*scale + COLOR_DISPLAY_BORDER_WIDTH;
 	for(int i=0 ; i<size ; ++i) {
 		x = i * cellFullWidth;
 		painter.drawRect(x, 0, cellFullWidth, cellFullWidth);
 		gray = qGray(colors.at(i));
 		painter.fillRect(x+COLOR_DISPLAY_BORDER_WIDTH,
 						 COLOR_DISPLAY_BORDER_WIDTH,
-						 COLOR_DISPLAY_CELL_SIZE,
-						 COLOR_DISPLAY_CELL_SIZE,
+						 COLOR_DISPLAY_CELL_SIZE*scale,
+						 COLOR_DISPLAY_CELL_SIZE*scale,
 						 isEnabled() ? QColor(colors.at(i)) : QColor(gray, gray, gray));
 	}
 	// Red frame
@@ -77,7 +78,7 @@ void ColorDisplay::paintEvent(QPaintEvent *)
 
 int ColorDisplay::colorId(const QPoint &pos) const
 {
-	return qMin(pos.x()/(COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH), colors.size() - 1);
+	return qMin(pos.x()/(COLOR_DISPLAY_CELL_SIZE *scale + COLOR_DISPLAY_BORDER_WIDTH), colors.size() - 1);
 }
 
 void ColorDisplay::enterEvent(QMouseEvent *event)

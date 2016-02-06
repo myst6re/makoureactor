@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -129,7 +129,7 @@ QMap<quint16, QString> Var::var_names;
 
 QString Var::name(quint8 bank, quint8 adress)
 {
-	return var_names.value(adress | (bank << 8), QString());//Retourne le nom de la variable s'il est listé, retourne "" sinon
+	return var_names.value(adress | (bank << 8), QString());//Retourne le nom de la variable s'il est listÃ©, retourne "" sinon
 }
 
 const QMap<quint16, QString> &Var::get()

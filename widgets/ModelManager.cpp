@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -22,15 +22,16 @@
 ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	QDialog(parent, Qt::Tool), _field(0), fieldModelLoader(0)
 {
-	setWindowTitle(tr("Modèles 3D"));
+	qreal scale = qApp->desktop()->logicalDpiX()/96;
+	setWindowTitle(tr("ModÃ¨les 3D"));
 
 	QFont font;
 	font.setPointSize(8);
 
 	models = new QTreeWidget();
 	models->setIndentation(0);
-	models->setHeaderLabel(tr("Modèles 3D"));
-	models->setFixedWidth(120);
+	models->setHeaderLabel(tr("ModÃ¨les 3D"));
+	models->setFixedWidth(120*scale);
 	models->setColumnCount(1);
 
 	modelFrame = new QFrame();
@@ -43,6 +44,7 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	modelScaleWidget->setRange(0, 4096);
 	modelColorDisplay = new ColorDisplay();
 	modelColorLabel = new QLabel();
+
 	QPalette modelColorLabelPalette = modelColorLabel->palette();
 	modelColorLabelPalette.setColor(QPalette::Active, QPalette::WindowText,
 									modelColorLabelPalette.color(QPalette::Disabled, QPalette::WindowText));
@@ -52,13 +54,13 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 
 	modelAnims = new QTreeWidget();
 	modelAnims->setIndentation(0);
-	modelAnims->setFixedWidth(140);
+	modelAnims->setFixedWidth(140*scale);
 	modelAnims->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	if(Config::value("OpenGL", true).toBool()) {
 		modelPreview = new FieldModel(0, shareWidget);
 		modelWidget = modelPreview;
-		modelPreview->setFixedSize(304, 214);
+		modelPreview->setFixedSize(304*scale, 214*scale);
 	} else {
 		modelPreview = 0;
 		modelWidget = new QWidget(this);
