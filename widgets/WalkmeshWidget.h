@@ -75,6 +75,7 @@ private:
 	QPoint moveStart;
 //	QPixmap arrow;
 	bool modelsVisible;
+	QList<GLuint> _picked;
 protected:
 	virtual void initializeGL();
 	virtual void resizeGL(int w, int h);

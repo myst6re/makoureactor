@@ -281,21 +281,29 @@ void WalkmeshWidget::paintGL()
 
 		glColor3ub(0xFF, 0xFF, 0xFF);
 
-		glBegin(GL_LINES);
+//		glInitNames();
+//		glLoadName(0);
 
 		int i=0;
 
 		foreach(const Triangle &triangle, walkmesh->triangles()) {
 			const Access &access = walkmesh->access(i);
 
+//			glPushName(i);
+//			glPushMatrix();
+			glBegin(GL_LINES);
 			drawIdLine(i, triangle.vertices[0], triangle.vertices[1], access.a[0]);
 			drawIdLine(i, triangle.vertices[1], triangle.vertices[2], access.a[1]);
 			drawIdLine(i, triangle.vertices[2], triangle.vertices[0], access.a[2]);
+			glEnd();
+//			glPopMatrix();
+//			glPopName();
 
 			++i;
 		}
 
 		if(infFile && infFile->isOpen()) {
+			glBegin(GL_LINES);
 			glColor3ub(0xFF, 0x00, 0x00);
 //			glEnable(GL_TEXTURE_2D);
 //			GLuint texID = bindTexture(arrow);
@@ -330,9 +338,9 @@ void WalkmeshWidget::paintGL()
 					glVertex3f(vertex.x/4096.0f, vertex.y/4096.0f, vertex.z/4096.0f);
 				}
 			}
-		}
 
-		glEnd();
+			glEnd();
+		}
 
 		glPointSize(7.0);
 
@@ -475,7 +483,9 @@ void WalkmeshWidget::paintGL()
 
 void WalkmeshWidget::drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access)
 {
-	if(triangleID == _selectedTriangle) {
+	if(_picked.contains(triangleID)) {
+		glColor3ub(0xCC, 0x90, 0xFF);
+	} else if(triangleID == _selectedTriangle) {
 		glColor3ub(0xFF, 0x90, 0x00);
 	} else if(access == -1) {
 		glColor3ub(0x66, 0x99, 0xCC);
@@ -504,6 +514,77 @@ void WalkmeshWidget::mousePressEvent(QMouseEvent *event)
 	else if(event->button() == Qt::LeftButton)
 	{
 		moveStart = event->pos();
+
+		GLuint _selectBuffer[4096];
+
+		glSelectBuffer(4096, _selectBuffer);
+		_picked.clear();
+
+		GLint viewport[4];
+		glGetIntegerv(GL_VIEWPORT, viewport);
+
+		qDebug() << viewport[2] << viewport[3];
+
+		glRenderMode(GL_SELECT);
+
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		gluPickMatrix(GLdouble(event->x()), GLdouble(viewport[3] - event->y()), 5.0, 5.0, viewport);
+
+		glTranslatef(xTrans, yTrans, distance);
+
+		glRotatef(xRot, 1.0, 0.0, 0.0);
+		glRotatef(yRot, 0.0, 1.0, 0.0);
+		glRotatef(zRot, 0.0, 0.0, 1.0);
+
+
+		glColor3ub(0xFF, 0xFF, 0xFF);
+
+		glInitNames();
+		glLoadName(0);
+
+		int i=0;
+
+		foreach(const Triangle &triangle, walkmesh->triangles()) {
+			const Access &access = walkmesh->access(i);
+
+			glPushName(i);
+			glPushMatrix();
+			glBegin(GL_LINES);
+			drawIdLine(i, triangle.vertices[0], triangle.vertices[1], access.a[0]);
+			drawIdLine(i, triangle.vertices[1], triangle.vertices[2], access.a[1]);
+			drawIdLine(i, triangle.vertices[2], triangle.vertices[0], access.a[2]);
+			glEnd();
+			glPopMatrix();
+			glPopName();
+
+			++i;
+		}
+
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glFlush();
+
+		GLint hits = glRenderMode(GL_RENDER);
+
+		qDebug() << "hits" << hits;
+		GLuint *ptr = _selectBuffer;
+		for (GLint i = 0; i < hits; ++i) {
+			GLuint nameCount = *ptr;
+			GLuint z1 = *(ptr + 1);
+			GLuint z2 = *(ptr + 2);
+			qDebug() << "nameCount" << nameCount << "z1" << z1 << "z2" << z2;
+			ptr += 3;
+			for (GLuint j = 0; j < nameCount; ++j) {
+				GLuint name = *ptr;
+				ptr++;
+				qDebug() << "name" << name;
+				_picked << name;
+			}
+		}
+
+		updateGL();
 	}
 }
 
