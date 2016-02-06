@@ -1,4 +1,5 @@
 TEMPLATE = app
+TARGET = makoureactor
 
 QT += core gui opengl
 QMAKE_CXXFLAGS += -std=c++0x
@@ -296,7 +297,7 @@ DISTFILES += Makou_Reactor.desktop
 unix:!macx:!symbian {
     LIBS += -lglut -lGLU
     system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
-    TARGET = makoureactor
+
     target.path = /usr/bin
 
     langfiles.files= *.qm
