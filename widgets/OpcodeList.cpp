@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -57,15 +57,15 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	paste_A->setShortcut(QKeySequence("Ctrl+V"));
 	paste_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	paste_A->setEnabled(false);
-	up_A = new QAction(QIcon(":/images/up.png"), tr("Déplacer vers le haut"), this);
+	up_A = new QAction(QIcon(":/images/up.png"), tr("DÃ©placer vers le haut"), this);
 	up_A->setShortcut(QKeySequence("Shift+Up"));
 	up_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	up_A->setEnabled(false);
-	down_A = new QAction(QIcon(":/images/down.png"), tr("Déplacer vers le bas"), this);
+	down_A = new QAction(QIcon(":/images/down.png"), tr("DÃ©placer vers le bas"), this);
 	down_A->setShortcut(QKeySequence("Shift+Down"));
 	down_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	down_A->setEnabled(false);
-	expand_A = new QAction(tr("Étendre l'arbre"), this);
+	expand_A = new QAction(tr("Ã‰tendre l'arbre"), this);
 	undo_A = new QAction(QIcon(":/images/undo.png"), tr("Annuler"), this);
 	undo_A->setShortcut(QKeySequence::Undo);
 	undo_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
@@ -123,7 +123,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	helpLayout->addWidget(_help);
 	helpLayout->setContentsMargins(QMargins());
 	
-	_toolBar = new QToolBar(tr("Édition du &script"));
+	_toolBar = new QToolBar(tr("Ã‰dition du &script"));
 	_toolBar->setIconSize(QSize(14,14));
 	_toolBar->setFloatable(false);
 	_toolBar->setAllowedAreas(Qt::NoToolBarArea);
@@ -384,7 +384,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 			++opcodeID;
 		}
 	} else {
-		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList(tr("Si ce script est exécuté,\n considérez que c'est le dernier script non vide qui est exécuté")));
+		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList(tr("Si ce script est exÃ©cutÃ©,\n considÃ©rez que c'est le dernier script non vide qui est exÃ©cutÃ©")));
 		item->setIcon(0, QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation));
 		item->setFlags(Qt::NoItemFlags);
 		item->setData(0, Qt::UserRole, -2);
@@ -672,7 +672,7 @@ void OpcodeList::del(bool totalDel)
 	if(selectedIDs.isEmpty())	return;
 	QList<Opcode *> oldVersions;
 
-	if(totalDel && QMessageBox::warning(this, tr("Suppression"), tr("Voulez-vous vraiment supprimer %1 ?").arg(selectedIDs.size()==1 ? tr("la commande sélectionnée") : tr("les commandes sélectionnées")), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel)
+	if(totalDel && QMessageBox::warning(this, tr("Suppression"), tr("Voulez-vous vraiment supprimer %1 ?").arg(selectedIDs.size()==1 ? tr("la commande sÃ©lectionnÃ©e") : tr("les commandes sÃ©lectionnÃ©es")), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel)
 		return;
 
 	saveExpandedItems();

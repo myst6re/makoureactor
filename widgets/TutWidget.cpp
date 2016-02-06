@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel JÈrÙme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel J√©r√¥me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -316,7 +316,7 @@ void TutWidget::add()
 	}
 
 	if(addTut && row < currentTut->size() && currentTut == tutPC) {
-		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutoriel utilisÈ dans les script"), tr("InsÈrer un tutoriel ici va dÈcaler les identifiants des tutoriels qui suit, cela risque de poser problËme.\n tes-vous s˚r de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutoriel utilis√© dans les script"), tr("Ins√©rer un tutoriel ici va d√©caler les identifiants des tutoriels qui suit, cela risque de poser probl√®me.\n√ätes-vous s√ªr de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if(rep == QMessageBox::Cancel) 	return;
 	}
 
@@ -343,7 +343,7 @@ void TutWidget::del()
 	}
 
 	if((tutPC == NULL || currentTut == tutPC) && usedTuts.contains(row)) {
-		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutoriel utilisÈ dans les script"), currentTut == tutPC ? tr("Ce tutoriel est peut-Ítre utilisÈ par un ou plusieurs scripts de cet Ècran.\nLe supprimer peut provoquer des erreurs.\n tes-vous s˚r de vouloir continuer ?") : tr("Ce tutoriel est utilisÈ par un ou plusieurs scripts de cet Ècran.\nLe supprimer remplacera les appels ‡ ce tutoriel par des appels au tutoriel qui suit.\n tes-vous s˚r de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutoriel utilis√© dans les script"), currentTut == tutPC ? tr("Ce tutoriel est peut-√™tre utilis√© par un ou plusieurs scripts de cet √©cran.\nLe supprimer peut provoquer des erreurs.\n√ätes-vous s√ªr de vouloir continuer ?") : tr("Ce tutoriel est utilis√© par un ou plusieurs scripts de cet √©cran.\nLe supprimer remplacera les appels √† ce tutoriel par des appels au tutoriel qui suit.\n√ätes-vous s√ªr de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if(rep == QMessageBox::Cancel) 	return;
 	}
 

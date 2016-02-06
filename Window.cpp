@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ Window::Window() :
 	_textDialog(0), _modelManager(0), _tutManager(0), _walkmeshManager(0),
 	_backgroundManager(0)
 {
+	qreal scale= qApp->desktop()->logicalDpiX()/96;
 	setWindowTitle();
 	setWindowState(Qt::WindowMaximized);
 
@@ -67,9 +68,9 @@ Window::Window() :
 	menu->addAction(tr("Ouvrir un &dossier..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
 	actionSave = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Enregi&strer"), this, SLOT(save()), QKeySequence("Ctrl+S"));
 	actionSaveAs = menu->addAction(tr("Enre&gistrer Sous..."), this, SLOT(saveAs()), QKeySequence("Shift+Ctrl+S"));
-	actionExport = menu->addAction(tr("&Exporter l'écran courant..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
+	actionExport = menu->addAction(tr("&Exporter l'Ã©cran courant..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
 	actionMassExport = menu->addAction(tr("Exporter en &masse..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
-	actionImport = menu->addAction(tr("&Importer dans l'écran courant..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
+	actionImport = menu->addAction(tr("&Importer dans l'Ã©cran courant..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
 //	actionMassImport = menu->addAction(tr("Importer en m&asse..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
 	actionArchive = menu->addAction(tr("Ges&tionnaire d'archive..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
 	menu->addSeparator();
@@ -84,8 +85,8 @@ Window::Window() :
 	/* Menu 'Outils' */
 	menu = menuBar->addMenu(tr("&Outils"));
 	menu->addAction(tr("&Textes..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
-	actionModels = menu->addAction(tr("&Modèles 3D..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
-	actionEncounter = menu->addAction(tr("&Rencontres aléatoires..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
+	actionModels = menu->addAction(tr("&ModÃ¨les 3D..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
+	actionEncounter = menu->addAction(tr("&Rencontres alÃ©atoires..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
 	menu->addAction(tr("T&utoriels/Musiques..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
 	menu->addAction(tr("&Zones..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
 	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
@@ -93,19 +94,19 @@ Window::Window() :
 	menu->addSeparator();
 	menu->addAction(tr("&Gestionnaire de variables..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
 	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("Rec&hercher..."), this, SLOT(searchManager()), QKeySequence::Find);
-	actionMiscOperations = menu->addAction(tr("Opér&ations diverses..."), this, SLOT(miscOperations()));
-	//menu->addAction(tr("&Police de caractères..."), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
+	actionMiscOperations = menu->addAction(tr("OpÃ©r&ations diverses..."), this, SLOT(miscOperations()));
+	//menu->addAction(tr("&Police de caractÃ¨res..."), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
 
-	menu = menuBar->addMenu(tr("&Paramètres"));
+	menu = menuBar->addMenu(tr("&ParamÃ¨tres"));
 
-	actionJp_txt = menu->addAction(tr("Caractères &japonais"), this, SLOT(jpText(bool)));
+	actionJp_txt = menu->addAction(tr("CaractÃ¨res &japonais"), this, SLOT(jpText(bool)));
 	actionJp_txt->setCheckable(true);
 	actionJp_txt->setChecked(Config::value("jp_txt", false).toBool());
 
 	menuLang = menu->addMenu(tr("&Langues"));
 	QDir dir(Config::programResourceDir());
 	QStringList stringList = dir.entryList(QStringList("Makou_Reactor_*.qm"), QDir::Files, QDir::Name);
-	action = menuLang->addAction(tr("Français (défaut)"));
+	action = menuLang->addAction(tr("FranÃ§ais (dÃ©faut)"));
 	action->setData("fr");
 	action->setCheckable(true);
 	action->setChecked(Config::value("lang").toString()=="fr");
@@ -114,7 +115,7 @@ Window::Window() :
 	QTranslator translator;
 	foreach(const QString &str, stringList) {
 		translator.load(Config::programResourceDir()+"/"+str);
-		action = menuLang->addAction(translator.translate("Window", "Français"));
+		action = menuLang->addAction(translator.translate("Window", "FranÃ§ais"));
 		QString lang = str.mid(14, 2);
 		action->setData(lang);
 		action->setCheckable(true);
@@ -126,7 +127,7 @@ Window::Window() :
 
 	toolBar = new QToolBar(tr("Barre d'outils &principale"));
 	toolBar->setObjectName("toolbar");
-	toolBar->setIconSize(QSize(16, 16));
+	toolBar->setIconSize(QSize(16*scale, 16*scale));
 	addToolBar(toolBar);
 	toolBar->addAction(actionOpen);
 	actionOpen->setStatusTip(tr("Ouvrir un fichier"));
@@ -142,19 +143,19 @@ Window::Window() :
 	font.setPointSize(8);
 
 	lineSearch = new QLineEdit(this);
-	lineSearch->setFixedWidth(120);
+	lineSearch->setFixedWidth(120*scale);
 	lineSearch->setStatusTip(tr("Recherche rapide"));
 	lineSearch->setPlaceholderText(tr("Rechercher..."));
 	
 	fieldList = new QTreeWidget(this);
 	fieldList->setColumnCount(2);
 	fieldList->setHeaderLabels(QStringList() << tr("Fichier") << tr("Id"));
-	fieldList->setFixedWidth(120);
-	fieldList->setMinimumHeight(120);
+	fieldList->setFixedWidth(120*scale);
+	fieldList->setMinimumHeight(120*scale);
 	fieldList->setIndentation(0);
 	fieldList->setItemsExpandable(false);
 	fieldList->setSortingEnabled(true);
-	fieldList->setColumnWidth(1,28);
+	fieldList->setColumnWidth(1,28*scale);
 	fieldList->setAutoScroll(false);
 	fieldList->resizeColumnToContents(0);
 	fieldList->setFont(font);
@@ -162,14 +163,14 @@ Window::Window() :
 	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
 
 	groupScriptList = new GrpScriptList(this);
-	groupScriptList->setFixedWidth(176);
-	groupScriptList->setMinimumHeight(176);
+	groupScriptList->setFixedWidth(176*scale);
+	groupScriptList->setMinimumHeight(176*scale);
 	groupScriptList->setFont(font);
 	connect(groupScriptList, SIGNAL(changed()), SLOT(setModified()));
 
 	scriptList = new ScriptList(this);
-	scriptList->setFixedWidth(88);
-	scriptList->setMinimumHeight(88);
+	scriptList->setFixedWidth(88*scale);
+	scriptList->setMinimumHeight(88*scale);
 	scriptList->setFont(font);
 	
 	opcodeList = new OpcodeList(this);
@@ -189,10 +190,10 @@ Window::Window() :
 	connect(opcodeList, SIGNAL(changed()), SLOT(compile()));
 
 	zoneImage = new ApercuBG();
-	zoneImage->setFixedSize(300, 225);
+	zoneImage->setFixedSize(300*scale, 225*scale);
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
-		fieldModel->setFixedSize(300, 225);
+		fieldModel->setFixedSize(300*scale, 225*scale);
 //		modelThread = new FieldModelThread(this);
 
 //		connect(modelThread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(showModel(Field*,FieldModelFile*)));
@@ -202,7 +203,7 @@ Window::Window() :
 
 	zonePreview = new QStackedWidget(this);
 	zonePreview->setContentsMargins(QMargins());
-	zonePreview->setFixedSize(300, 225);
+	zonePreview->setFixedSize(300*scale, 225*scale);
 	zonePreview->addWidget(zoneImage);
 	if(fieldModel)
 		zonePreview->addWidget(fieldModel);
@@ -326,12 +327,12 @@ void Window::restartNow()
 	QString str_title, str_text;
 	QTranslator translator;
 	if(translator.load(qApp->applicationDirPath()+"/"+QString("Makou_Reactor_")+Config::value("lang").toString())) {
-		str_title = translator.translate("Window", "Paramètres modifiés");
-		str_text = translator.translate("Window", "Relancez le programme pour que les paramètres prennent effet.");
+		str_title = translator.translate("Window", "ParamÃ¨tres modifiÃ©s");
+		str_text = translator.translate("Window", "Relancez le programme pour que les paramÃ¨tres prennent effet.");
 	}
 	else {
-		str_title = "Paramètres modifiés";
-		str_text = "Relancez le programme pour que les paramètres prennent effet.";
+		str_title = "ParamÃ¨tres modifiÃ©s";
+		str_text = "Relancez le programme pour que les paramÃ¨tres prennent effet.";
 	}
 	QMessageBox::information(this, str_title, str_text);
 }
@@ -359,7 +360,7 @@ int Window::closeFile(bool quit)
 			}
 		}
 		if(!fileChangedList.isEmpty()) {
-			fileChangedList.prepend(tr("\n\nFichiers modifiés :"));
+			fileChangedList.prepend(tr("\n\nFichiers modifiÃ©s :"));
 		}
 		int reponse = QMessageBox::warning(this, tr("Sauvegarder"), tr("Voulez-vous enregistrer les changements de %1 ?%2").arg(fieldArchive->io()->name()).arg(fileChangedList), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 		if(reponse == QMessageBox::Yes)				save();
@@ -505,7 +506,7 @@ void Window::openFile(const QString &path)
 void Window::openDir()
 {
 	QString filePath = QFileDialog::getExistingDirectory(this,
-														  tr("Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII"),
+														  tr("SÃ©lectionnez un dossier contenant des fichiers field issus de Final Fantasy VII"),
 														  Config::value("open_dir_path").toString());
 	if(filePath.isNull())	{
 		return;
@@ -554,7 +555,7 @@ void Window::showProgression(const QString &message, bool canBeCanceled)
 	setObserverValue(0);
 	taskBarButton->setState(QTaskBarButton::Normal);
 	progressDialog->setLabelText(message);
-	progressDialog->setCancelButtonText(canBeCanceled ? tr("Annuler") : tr("Arrêter"));
+	progressDialog->setCancelButtonText(canBeCanceled ? tr("Annuler") : tr("ArrÃªter"));
 	progressDialog->show();
 }
 
@@ -596,14 +597,14 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 			archiveManager();
 			return;
 		} else {
-			out = tr("Rien trouvé !");
+			out = tr("Rien trouvÃ© !");
 		}
 		break;
 	case FieldArchiveIO::ErrorOpening:
 		out = tr("Le fichier est inaccessible");
 		break;
 	case FieldArchiveIO::ErrorOpeningTemp:
-		out = tr("Impossible de créer un fichier temporaire");
+		out = tr("Impossible de crÃ©er un fichier temporaire");
 		break;
 	case FieldArchiveIO::ErrorRemoving:
 		out = tr("Impossible de supprimer le fichier");
@@ -678,7 +679,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	actionClose->setEnabled(true);
 
 #ifdef DEBUG_FUNCTIONS
-	//FieldArchivePC otherArch("C:/Users/Jérôme/Documents/neo_midgar_build/livraison-acro-2015-04-10/fflevel_compare_annexe.lgp", FieldArchiveIO::Lgp);
+	//FieldArchivePC otherArch("C:/Users/JÃ©rÃ´me/Documents/neo_midgar_build/livraison-acro-2015-04-10/fflevel_compare_annexe.lgp", FieldArchiveIO::Lgp);
 	//fieldArchive->compareTexts(&otherArch);
 	fieldArchive->printTexts("field-texts.txt");
 	fieldArchive->printAkaos("field-akaos.txt");
@@ -998,7 +999,7 @@ void Window::saveAs(bool currentPath)
 
 	if(!compiled) {
 		QMessageBox::warning(this, tr("Erreur de compilation"), tr("Erreur de compilation des scripts :\n"
-																   "écran %1 (%2), groupe %3 (%4), script %5, ligne %6 : %7")
+																   "Ã©cran %1 (%2), groupe %3 (%4), script %5, ligne %6 : %7")
 							 .arg(fieldArchive->field(fieldID)->name())
 							 .arg(fieldID)
 							 .arg(fieldArchive->field(fieldID)->scriptsAndTexts()->grpScript(groupID)->name())
@@ -1049,28 +1050,28 @@ void Window::saveAs(bool currentPath)
 	case FieldArchiveIO::Aborted:
 		break;
 	case FieldArchiveIO::FieldNotFound:
-		out = tr("Rien trouvé !");
+		out = tr("Rien trouvÃ© !");
 		break;
 	case FieldArchiveIO::ErrorOpening:
 		out = tr("Le fichier est inaccessible");
 		break;
 	case FieldArchiveIO::ErrorOpeningTemp:
-		out = tr("Impossible de créer un fichier temporaire");
+		out = tr("Impossible de crÃ©er un fichier temporaire");
 		break;
 	case FieldArchiveIO::ErrorRemoving:
-		out = tr("Impossible de supprimer le fichier, vérifiez les droits d'écriture.");
+		out = tr("Impossible de supprimer le fichier, vÃ©rifiez les droits d'Ã©criture.");
 		break;
 	case FieldArchiveIO::ErrorRenaming:
-		out = tr("Impossible de renommer le fichier, vérifiez les droits d'écriture.");
+		out = tr("Impossible de renommer le fichier, vÃ©rifiez les droits d'Ã©criture.");
 		break;
 	case FieldArchiveIO::ErrorCopying:
-		out = tr("Impossible de copier le fichier, vérifiez les droits d'écriture.");
+		out = tr("Impossible de copier le fichier, vÃ©rifiez les droits d'Ã©criture.");
 		break;
 	case FieldArchiveIO::Invalid:
 		out = tr("L'archive est invalide");
 		break;
 	case FieldArchiveIO::NotImplemented:
-		out = tr("Cette fonctionnalité n'est pas terminée");
+		out = tr("Cette fonctionnalitÃ© n'est pas terminÃ©e");
 		break;
 	}
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
@@ -1119,11 +1120,11 @@ void Window::gotoText(int fieldID, int textID, int from, int size)
 /* void Window::notifyFileChanged(const QString &path)
 {
 	if(!QFile::exists(path)) {
-		QMessageBox::warning(this, tr("Fichier supprimé"), tr("Le fichier '%1' a été supprimé par un programme externe !").arg(path));
+		QMessageBox::warning(this, tr("Fichier supprimÃ©"), tr("Le fichier '%1' a Ã©tÃ© supprimÃ© par un programme externe !").arg(path));
 	}
 	else
 	{
-		int reponse = QMessageBox::warning(this, tr("Fichier modifié"), tr("Le fichier '%1' a été modifié par un programme externe.\nVoulez-vous recharger ce fichier ?").arg(path)
+		int reponse = QMessageBox::warning(this, tr("Fichier modifiÃ©"), tr("Le fichier '%1' a Ã©tÃ© modifiÃ© par un programme externe.\nVoulez-vous recharger ce fichier ?").arg(path)
 			, QMessageBox::Yes | QMessageBox::No);
 		if(reponse == QMessageBox::Yes) {
 			open(path);
@@ -1134,11 +1135,11 @@ void Window::gotoText(int fieldID, int textID, int from, int size)
 void Window::notifyDirectoryChanged(const QString &path)
 {
 	if(!QFile::exists(path)) {
-		QMessageBox::warning(this, tr("Dossier supprimé"), tr("Le dossier '%1' a été supprimé par un programme externe !").arg(path));
+		QMessageBox::warning(this, tr("Dossier supprimÃ©"), tr("Le dossier '%1' a Ã©tÃ© supprimÃ© par un programme externe !").arg(path));
 	}
 	else
 	{
-		int reponse = QMessageBox::warning(this, tr("Dossier modifié"), tr("Le dossier '%1' a été modifié par un programme externe.\nVoulez-vous recharger ce dossier ?").arg(path)
+		int reponse = QMessageBox::warning(this, tr("Dossier modifiÃ©"), tr("Le dossier '%1' a Ã©tÃ© modifiÃ© par un programme externe.\nVoulez-vous recharger ce dossier ?").arg(path)
 			, QMessageBox::Yes | QMessageBox::No);
 		if(reponse == QMessageBox::Yes) {
 			open(path, true);
@@ -1152,9 +1153,9 @@ void Window::exporter()
 
 	int index;
 	QString types, name, selectedFilter,
-			fieldLzs = tr("Écran PC (*)"),
+			fieldLzs = tr("Ã‰cran PC (*)"),
 			dat = tr("Fichier DAT (*.DAT)"),
-			fieldDec = tr("Écran PC décompressé (*)");
+			fieldDec = tr("Ã‰cran PC dÃ©compressÃ© (*)");
 
 	name = fieldList->selectedItems().first()->text(0);
 
@@ -1186,8 +1187,8 @@ void Window::exporter()
 		break;
 	case 1:	out = tr("L'archive Lgp est inaccessible");break;
 	case 2:	out = tr("Erreur lors de l'ouverture du fichier");break;
-	case 3:	out = tr("Impossible de créer le nouveau fichier");break;
-	case 4:	out = tr("Pas encore implémenté !");break;
+	case 3:	out = tr("Impossible de crÃ©er le nouveau fichier");break;
+	case 4:	out = tr("Pas encore implÃ©mentÃ© !");break;
 	}
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
 }
@@ -1265,9 +1266,9 @@ void Window::importer()
 	QString name, selectedFilter;
 	QStringList filter;
 	filter << tr("Fichier DAT (*.DAT)")
-		   << tr("Écran PC (*)")
-		   << tr("Fichier DAT décompressé (*)")
-		   << tr("Écran PC décompressé (*)");
+		   << tr("Ã‰cran PC (*)")
+		   << tr("Fichier DAT dÃ©compressÃ© (*)")
+		   << tr("Ã‰cran PC dÃ©compressÃ© (*)");
 
 	name = fieldList->selectedItems().first()->text(0);
 	if(fieldArchive->io()->isPS())
@@ -1293,9 +1294,9 @@ void Window::importer()
 	}
 
 	if(parts.testFlag(Field::Background)) {
-		QMessageBox::StandardButton button = QMessageBox::warning(this, tr("Attention"), tr("L'algorithme d'importation des décors "
-													   "donne de mauvais résultats en jeu, "
-													   "vous êtes prévenus !"), QMessageBox::Ok | QMessageBox::Cancel);
+		QMessageBox::StandardButton button = QMessageBox::warning(this, tr("Attention"), tr("L'algorithme d'importation des dÃ©cors "
+													   "donne de mauvais rÃ©sultats en jeu, "
+													   "vous Ãªtes prÃ©venus !"), QMessageBox::Ok | QMessageBox::Cancel);
 		if(button != QMessageBox::Ok) {
 			return;
 		}
@@ -1342,7 +1343,7 @@ void Window::runFF7()
 #endif
 
 	if(!QProcess::startDetached(FF7Exe, args, FF7ExeDir)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Final Fantasy VII n'a pas pu être lancé.\n%1")
+		QMessageBox::warning(this, tr("Erreur"), tr("Final Fantasy VII n'a pas pu Ãªtre lancÃ©.\n%1")
 							 .arg(QDir::toNativeSeparators(FF7Exe)));
 	}
 }
@@ -1433,7 +1434,7 @@ void Window::encounterManager()
 					setModified();
 			}
 		} else {
-			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les combats aléatoires !"));
+			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les combats alÃ©atoires !"));
 		}
 	}
 }
@@ -1580,15 +1581,18 @@ void Window::config()
 
 void Window::about()
 {
+	qreal scale = qApp->desktop()->logicalDpiX()/96;
+
 	QDialog about(this, Qt::Dialog | Qt::CustomizeWindowHint);
-	about.setFixedSize(200, 270);
+	about.setFixedSize(200*scale, 270*scale);
 
 	QFont font;
 	font.setPointSize(12);
 
 	QLabel image(&about);
+	image.setScaledContents(true);
 	image.setPixmap(QPixmap(":/images/reactor.png"));
-	image.move(82, about.height() - 150);
+	image.move(82*scale, about.height() - 150*scale);
 	
 	QLabel desc1(PROG_FULLNAME, &about);
 	desc1.setFont(font);
@@ -1597,22 +1601,22 @@ void Window::about()
 
 	font.setPointSize(8);
 
-	QLabel desc2(tr("Par myst6re<br/><a href=\"https://github.com/myst6re/makoureactor/\">github.com/myst6re/makoureactor</a><br/><br/>Merci à :<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), &about);
+	QLabel desc2(tr("Par myst6re<br/><a href=\"https://github.com/myst6re/makoureactor/\">github.com/myst6re/makoureactor</a><br/><br/>Merci Ã  :<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), &about);
 	desc2.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc2.setTextFormat(Qt::RichText);
 	desc2.setOpenExternalLinks(true);
-	desc2.move(9, 40);
+	desc2.move(9*scale, 40*scale);
 	desc2.setFont(font);
 
 	QPushButton button(tr("Fermer"), &about);
-	button.move(8, about.height()-8-button.sizeHint().height());
+	button.move(8*scale, about.height()-8*scale-button.sizeHint().height());
 	connect(&button, SIGNAL(released()), &about, SLOT(close()));
 
 	QLabel desc4(QString("Qt %1").arg(QT_VERSION_STR), &about);
 	QPalette pal = desc4.palette();
 	pal.setColor(QPalette::WindowText, QColor(0xAA,0xAA,0xAA));
 	desc4.setPalette(pal);
-	desc4.move(9, about.height()-16-desc4.sizeHint().height()-button.sizeHint().height());
+	desc4.move(9*scale, about.height()-16*scale-desc4.sizeHint().height()-button.sizeHint().height());
 	desc4.setFont(font);
 
 	about.exec();

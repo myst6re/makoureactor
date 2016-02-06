@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
 OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
 {
-	setWindowTitle(tr("Opérations diverses"));
+	setWindowTitle(tr("OpÃ©rations diverses"));
 
-	addOperation(CleanUnusedTexts, tr("Effacer tous les textes inutilisés"));
-	addOperation(RemoveTexts, tr("Désactiver tous les textes du jeu"));
-	addOperation(RemoveBattles, tr("Désactiver tous combats du jeu"));
+	addOperation(CleanUnusedTexts, tr("Effacer tous les textes inutilisÃ©s"));
+	addOperation(RemoveTexts, tr("DÃ©sactiver tous les textes du jeu"));
+	addOperation(RemoveBattles, tr("DÃ©sactiver tous combats du jeu"));
 	if(isPC) {
-		addOperation(CleanModelLoaderPC, tr("Supprimer les données inutiles des listes des modèles 3D"));
-		addOperation(RemoveUnusedSectionPC, tr("Supprimer les données inutilisées pour les décors"));
+		addOperation(CleanModelLoaderPC, tr("Supprimer les donnÃ©es inutiles des listes des modÃ¨les 3D"));
+		addOperation(RemoveUnusedSectionPC, tr("Supprimer les donnÃ©es inutilisÃ©es pour les dÃ©cors"));
 	}
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox;

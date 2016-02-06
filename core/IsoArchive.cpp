@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -405,7 +405,7 @@ qint64 IsoArchiveIO::readIso(char *data, qint64 maxSize)
 		readTotal += read;
 		seqLen = qMin((qint64)SECTOR_SIZE_DATA, maxSize);
 //		qDebug() << "seqLen" << seqLen << maxSize << pos();
-		// Si on est à la fin du secteur
+		// Si on est Ã  la fin du secteur
 		if(pos() % SECTOR_SIZE >= SECTOR_SIZE_HEADER + SECTOR_SIZE_DATA) {
 			if(!seek(pos() + SECTOR_SIZE_HEADER + SECTOR_SIZE_FOOTER))	break;
 //			qDebug() << "seek >> 304" << pos();
@@ -442,7 +442,7 @@ qint64 IsoArchiveIO::writeIso(const char *data, qint64 maxSize)
 		writeTotal += write;
 		seqLen = qMin((qint64)2048, maxSize);
 //		qDebug() << "seqLen" << seqLen << maxSize << pos();
-		// Si on est à la fin du secteur
+		// Si on est Ã  la fin du secteur
 		if(pos() % SECTOR_SIZE >= SECTOR_SIZE_HEADER + SECTOR_SIZE_DATA) {
 			if(!seek(pos() + SECTOR_SIZE_HEADER + SECTOR_SIZE_FOOTER))	break;
 //			qDebug() << "seek >> 304" << pos();
@@ -688,7 +688,7 @@ bool IsoArchive::pack(IsoArchive *destination, ArchiveObserver *control, IsoDire
 	}
 
 	foreach(IsoFile *isoFile, getModifiedFiles(directory)) {
-		// Est-ce que les nouvelles données sont plus grandes que les anciennes ? Est-ce qu'on est pas à la fin de l'archive ?
+		// Est-ce que les nouvelles donnÃ©es sont plus grandes que les anciennes ? Est-ce qu'on est pas Ã  la fin de l'archive ?
 		if(isoFile->newSectorCount() > isoFile->sectorCount() + isoFile->paddingAfter()
 				&& isoFile->location() + isoFile->sectorCount() < _io.sectorCount()) {
 //#ifdef ISOARCHIVE_DEBUG
@@ -741,7 +741,7 @@ bool IsoArchive::pack(IsoArchive *destination, ArchiveObserver *control, IsoDire
 
 		quint32 fileLocation = isoFile->newLocation();
 
-		// Données avant le fichier
+		// DonnÃ©es avant le fichier
 		if(!copySectors(destinationIO, qint64(fileLocation) - qint64(_io.currentSector()), control)) {
 			return false;
 		}
@@ -752,7 +752,7 @@ bool IsoArchive::pack(IsoArchive *destination, ArchiveObserver *control, IsoDire
 		if(destinationIO->pos() != _io.pos())                 qWarning() << "destination error 1c" << destinationIO->pos() << _io.pos() << isoFile->name();
 #endif
 
-		// On écrit le même nombre de secteurs que le fichier d'origine
+		// On Ã©crit le mÃªme nombre de secteurs que le fichier d'origine
 		if(!destination->writeFile(isoFile->modifiedFile(), isoFile->sectorCount() + isoFile->paddingAfter(), control)) {
 			return false;
 		}
@@ -764,11 +764,11 @@ bool IsoArchive::pack(IsoArchive *destination, ArchiveObserver *control, IsoDire
 		if(destinationIO->pos() != _io.pos())                        qWarning() << "destination error 2c" << destinationIO->pos() << _io.pos() << isoFile->name();
 #endif
 
-		// Envoi de la position courante à l'output
+		// Envoi de la position courante Ã  l'output
 		if(control) control->setObserverValue(destinationIO->currentSector());
 	}
 
-	// Données après les fichiers patchés
+	// DonnÃ©es aprÃ¨s les fichiers patchÃ©s
 	if(!copySectors(destinationIO, endOfFilledIso - _io.currentSector(), control)) {
 		return false;
 	}
@@ -779,7 +779,7 @@ bool IsoArchive::pack(IsoArchive *destination, ArchiveObserver *control, IsoDire
 	if(destinationIO->pos() != _io.pos())                      qWarning() << "destination error 3c" << destinationIO->pos() << _io.pos();
 #endif
 
-	// Fichiers trop gros mis à la fin de l'ISO
+	// Fichiers trop gros mis Ã  la fin de l'ISO
 	foreach(const IsoFile *isoFile, writeToTheEnd) {
 		if(control && control->observerWasCanceled()) {
 			setError(Archive::AbortError);
@@ -797,7 +797,7 @@ bool IsoArchive::pack(IsoArchive *destination, ArchiveObserver *control, IsoDire
 		if(destinationIO->pos() % SECTOR_SIZE != 0)      qWarning() << "destination error 3a" << (destinationIO->pos() % SECTOR_SIZE) << isoFile->name();
 #endif
 
-		// Envoi de la position courante à l'output
+		// Envoi de la position courante Ã  l'output
 		if(control) control->setObserverValue(destinationIO->currentSector());
 	}
 
@@ -805,7 +805,7 @@ bool IsoArchive::pack(IsoArchive *destination, ArchiveObserver *control, IsoDire
 		return false;
 	}
 
-	// Modifications données
+	// Modifications donnÃ©es
 
 	if(destinationIO->size() != _io.size()) {
 #ifdef ISOARCHIVE_DEBUG
@@ -881,7 +881,7 @@ bool IsoArchive::copySectors(IsoArchiveIO *out, qint64 sectorCount, ArchiveObser
 			}
 		}
 
-		// Envoi de la position courante à l'output
+		// Envoi de la position courante Ã  l'output
 		if(control) control->setObserverValue(out->currentSector());
 	}
 

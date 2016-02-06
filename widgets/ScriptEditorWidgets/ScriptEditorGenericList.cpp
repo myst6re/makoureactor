@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ void ScriptEditorGenericList::build()
 	buttonLayout->setContentsMargins(QMargins());
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
-	layout->addWidget(new QLabel(tr("Paramètres :"), this));
+	layout->addWidget(new QLabel(tr("ParamÃ¨tres :"), this));
 	layout->addWidget(tableView);
 	layout->addStretch();
 	layout->addLayout(buttonLayout);
@@ -640,11 +640,11 @@ QString ScriptEditorGenericList::paramName(int type)
 	switch(type)
 	{
 	case word:				return tr("Entier long");
-	case sword:				return tr("Entier long signé");
-	case coord_x:			return tr("Coordonnée X");
-	case coord_y:			return tr("Coordonnée Y");
-	case coord_z:			return tr("Coordonnée Z");
-	case field_id:			return tr("Écran");
+	case sword:				return tr("Entier long signÃ©");
+	case coord_x:			return tr("CoordonnÃ©e X");
+	case coord_y:			return tr("CoordonnÃ©e Y");
+	case coord_z:			return tr("CoordonnÃ©e Z");
+	case field_id:			return tr("Ã‰cran");
 	case tuto_id:			return tr("Tutoriel");
 	case personnage_id:		return tr("Personnage");
 	case cd_id:				return tr("Disque");
@@ -656,19 +656,19 @@ QString ScriptEditorGenericList::paramName(int type)
 	case polygone_id:		return tr("Triangle");
 	case group_id:			return tr("Groupe");
 	case script_id:			return tr("Script");
-	case party_id:			return tr("Équipier");
+	case party_id:			return tr("Ã‰quipier");
 	case bank:				return tr("Bank");
 	case adress:			return tr("Adresse");
-	case priorite:			return tr("Priorité");
+	case priorite:			return tr("PrioritÃ©");
 	case bit: 				return tr("Flag");
 	case jump: 				return tr("Saut court");
 	case jump_l: 			return tr("Saut long");
-	case operateur: 		return tr("Opérateur");
-	case boolean: 			return tr("Booléen");
+	case operateur: 		return tr("OpÃ©rateur");
+	case boolean: 			return tr("BoolÃ©en");
 	case layer_id: 			return tr("Couche");
-	case parametre_id: 		return tr("Paramètre");
-	case state_id: 			return tr("État");
-	case window_id: 		return tr("Fenêtre");
+	case parametre_id: 		return tr("ParamÃ¨tre");
+	case state_id: 			return tr("Ã‰tat");
+	case window_id: 		return tr("FenÃªtre");
 	case window_w: 			return tr("Largeur");
 	case window_h: 			return tr("Hauteur");
 	case window_var: 		return tr("Variable");
@@ -677,15 +677,15 @@ QString ScriptEditorGenericList::paramName(int type)
 	case window_num: 		return tr("Type d'affichage");
 	case text_id: 			return tr("Texte");
 	case menu: 				return tr("Menu");
-	case window_type: 		return tr("Type de fenêtre");
+	case window_type: 		return tr("Type de fenÃªtre");
 	case item_id: 			return tr("Objet");
-	case materia_id: 		return tr("Matéria");
-	case quantity: 			return tr("Quantité");
+	case materia_id: 		return tr("MatÃ©ria");
+	case quantity: 			return tr("QuantitÃ©");
 	case color: 			return tr("Couleur");
 	case animation_id: 		return tr("Animation");
 	case music_id: 			return tr("Musique");
 	case sound_id: 			return tr("Son");
-	case movie_id: 			return tr("Vidéo");
+	case movie_id: 			return tr("VidÃ©o");
 	case label:				return tr("Label");
 	}
 	return tr("???");

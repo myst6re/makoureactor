@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -20,15 +20,15 @@
 EncounterWidget::EncounterWidget(EncounterFile *data, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), data(data)
 {
-	setWindowTitle(tr("Rencontres aléatoires"));
+	setWindowTitle(tr("Rencontres alÃ©atoires"));
 
 	group1 = new EncounterTableWidget(tr("Rencontres 1"), this);
 	group2 = new EncounterTableWidget(tr("Rencontres 2"), this);
 
 	QLabel *helpIcon = new QLabel(this);
 	helpIcon->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation).pixmap(32));
-	QLabel *help = new QLabel(tr("<b>Les rencontres :</b> Il y a deux groupes de rencontres aléatoires indépendants, par défaut c'est le groupe 1 qui est actif, mais la commande BTLTB (dans les scripts) permet de passer au groupe 2.<br/>"
-								 "<b>Fréquence des combats :</b> Plus la valeur est basse, plus les combats seront fréquents."), this);
+	QLabel *help = new QLabel(tr("<b>Les rencontres :</b> Il y a deux groupes de rencontres alÃ©atoires indÃ©pendants, par dÃ©faut c'est le groupe 1 qui est actif, mais la commande BTLTB (dans les scripts) permet de passer au groupe 2.<br/>"
+								 "<b>FrÃ©quence des combats :</b> Plus la valeur est basse, plus les combats seront frÃ©quents."), this);
 	help->setTextFormat(Qt::RichText);
 	help->setWordWrap(true);
 	QHBoxLayout *helpLayout = new QHBoxLayout;

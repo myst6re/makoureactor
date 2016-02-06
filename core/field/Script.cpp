@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -728,8 +728,8 @@ OpcodeJump *Script::convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok)
 			return new OpcodeJMPBL(*opcodeJump);
 		} else {
 			if(ok)	*ok = false;
-			qWarning() << "Le label doit se trouver après la commande.";
-//			lastError = QObject::tr("Le label doit se trouver après la commande.");
+			qWarning() << "Le label doit se trouver aprÃ¨s la commande.";
+//			lastError = QObject::tr("Le label doit se trouver aprÃ¨s la commande.");
 		}
 	} else if(jump - opcodeJump->jumpPosData() > 0) {
 		if(opcodeJump->id() == Opcode::JMPB) {
@@ -779,12 +779,12 @@ bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) co
 ////				qDebug() << "convert" << opcodeJump->name() << "to IFUW because" << jump << "<=" << 65535;
 ////				return new OpcodeIFUWL(*(OpcodeIf *)opcodeJump);
 //			default:
-//				qWarning() << "\"Aller à\" trop grand, le label est inaccessible.";
-//				errorStr = QObject::tr("\"Aller à\" trop grand, le label est inaccessible.");
+//				qWarning() << "\"Aller Ã \" trop grand, le label est inaccessible.";
+//				errorStr = QObject::tr("\"Aller Ã \" trop grand, le label est inaccessible.");
 //				break;
 //			}
 //		} else {
-			qWarning() << "\"Aller à\" trop grand, le label est inaccessible.";
+			qWarning() << "\"Aller Ã \" trop grand, le label est inaccessible.";
 			errorStr = QObject::tr("Le label %1 est inaccessible, veuillez utiliser un saut long.").arg(opcodeJump->label());
 			return false;
 		//}
@@ -830,7 +830,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 			if(!labelPositions.contains(((OpcodeLabel *)opcode)->label())) {
 				labelPositions.insert(((OpcodeLabel *)opcode)->label(), pos);
 			} else {
-				errorStr = QObject::tr("Le label %1 est déclaré plusieurs fois.").arg(((OpcodeLabel *)opcode)->label());
+				errorStr = QObject::tr("Le label %1 est dÃ©clarÃ© plusieurs fois.").arg(((OpcodeLabel *)opcode)->label());
 				return false;
 			}
 		} else {
@@ -857,7 +857,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 					return false;
 				}
 				if(opcodeJump->isLongJump() && quint32(qAbs(jump)) > opcodeJump->maxJump()) {
-					errorStr = QObject::tr("Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.").arg(opcodeJump->label());
+					errorStr = QObject::tr("Le label %1 est inaccessible car votre script dÃ©passe 65535 octets, veuillez rÃ©duire la taille du script.").arg(opcodeJump->label());
 					return false;
 				}
 				if(opcodeJump->id() != Opcode::JMPF
@@ -875,7 +875,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 	}
 
 	if(pos > 65535) {
-		errorStr = QObject::tr("Script trop grand, il ne doit pas dépasser les 65535 octets. Taille actuelle : %1.").arg(pos);
+		errorStr = QObject::tr("Script trop grand, il ne doit pas dÃ©passer les 65535 octets. Taille actuelle : %1.").arg(pos);
 		return false;
 	}
 

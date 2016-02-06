@@ -1,9 +1,4 @@
 TEMPLATE = app
-win32 {
-    TARGET = Makou_Reactor
-} else {
-    TARGET = makoureactor
-}
 
 QT += core gui opengl
 QMAKE_CXXFLAGS += -std=c++0x
@@ -282,7 +277,7 @@ macx {
 
 win32 {
     RC_FILE = Makou_Reactor.rc
-
+    TARGET = Makou_Reactor
     TASKBAR_BUTTON {
         LIBS += -lole32
         INCLUDEPATH += include
@@ -301,4 +296,17 @@ DISTFILES += Makou_Reactor.desktop
 unix:!macx:!symbian {
     LIBS += -lglut -lGLU
     system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
+    TARGET = makoureactor
+    target.path = /usr/bin
+
+    langfiles.files= *.qm
+    langfiles.path= /usr/share/makoureactor
+
+    icon.files = images/logo-shinra.png
+    icon.path = /usr/share/pixmaps
+
+    desktop.files =Makou_Reactor.desktop
+    desktop.path = /usr/share/applications
+
+    INSTALLS += target langfiles icon desktop
 }
