@@ -18,7 +18,7 @@
 #ifndef BGDIALOG_H
 #define BGDIALOG_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "ApercuBGLabel.h"
 #include "core/field/Field.h"
 

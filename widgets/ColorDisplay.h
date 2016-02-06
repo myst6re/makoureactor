@@ -18,7 +18,7 @@
 #ifndef COLORDISPLAY_H
 #define COLORDISPLAY_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 #define COLOR_DISPLAY_CELL_SIZE		9
 #define COLOR_DISPLAY_BORDER_WIDTH	1

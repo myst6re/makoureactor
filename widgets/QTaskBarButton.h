@@ -18,7 +18,7 @@
 #ifndef QTASKBARBUTTON_H
 #define QTASKBARBUTTON_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 #if defined(Q_OS_WIN) && defined(TASKBAR_BUTTON)
 #include <shobjidl.h>

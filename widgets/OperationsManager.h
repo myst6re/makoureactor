@@ -18,7 +18,7 @@
 #ifndef OPERATIONSMANAGER_H
 #define OPERATIONSMANAGER_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldArchive.h"
 
 class OperationsManager : public QDialog

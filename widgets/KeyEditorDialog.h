@@ -18,7 +18,7 @@
 #ifndef DEF_KEYDIALOG
 #define DEF_KEYDIALOG
 
-#include <QtGui>
+#include <QtWidgets>
 
 class KeyEditorDialog : public QDialog
 {

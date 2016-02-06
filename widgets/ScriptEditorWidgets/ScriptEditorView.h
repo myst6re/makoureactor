@@ -18,7 +18,7 @@
 #ifndef DEF_SCRIPTEDITORVIEW
 #define DEF_SCRIPTEDITORVIEW
 
-#include <QtGui>
+#include <QtWidgets>
 #include "../VarOrValueWidget.h"
 #include "core/field/Field.h"
 

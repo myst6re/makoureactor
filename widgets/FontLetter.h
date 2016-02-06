@@ -18,7 +18,7 @@
 #ifndef FONTLETTER_H
 #define FONTLETTER_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "FontDisplay.h"
 #include "FontGrid.h"
 

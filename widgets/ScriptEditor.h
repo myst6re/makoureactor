@@ -18,7 +18,7 @@
 #ifndef DEF_SE
 #define DEF_SE
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/GrpScript.h"
 #include "ScriptEditorWidgets/ScriptEditorView.h"
 

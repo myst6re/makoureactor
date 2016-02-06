@@ -18,7 +18,7 @@
 #ifndef DEF_WINDOW
 #define DEF_WINDOW
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldArchive.h"
 #include "widgets/VarManager.h"
 #include "widgets/TextManager.h"

@@ -18,7 +18,7 @@
 #ifndef TEXTPREVIEW_H
 #define TEXTPREVIEW_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/Opcode.h"
 
 #define NOWIN		255

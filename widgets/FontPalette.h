@@ -18,7 +18,7 @@
 #ifndef FONTPALETTE_H
 #define FONTPALETTE_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/WindowBinFile.h"
 
 #define CELL_SIZE		16

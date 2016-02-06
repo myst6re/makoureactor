@@ -18,7 +18,7 @@
 #ifndef LISTWIDGET_H
 #define LISTWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class ListWidget : public QWidget
 {

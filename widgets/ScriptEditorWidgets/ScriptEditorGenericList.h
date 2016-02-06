@@ -18,7 +18,7 @@
 #ifndef DEF_SCRIPTEDITORGENERICLIST
 #define DEF_SCRIPTEDITORGENERICLIST
 
-#include <QtGui>
+#include <QtWidgets>
 #include "ScriptEditorView.h"
 
 class ScriptEditorGenericList : public ScriptEditorView

@@ -18,7 +18,7 @@
 #ifndef LGPDIALOG_H
 #define LGPDIALOG_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/Lgp.h"
 
 class IconThread : public QThread

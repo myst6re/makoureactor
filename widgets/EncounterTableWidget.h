@@ -18,7 +18,7 @@
 #ifndef ENCOUNTERTABLEWIDGET_H
 #define ENCOUNTERTABLEWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class EncounterTableWidget : public QGroupBox
 {

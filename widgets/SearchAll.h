@@ -1,7 +1,7 @@
 #ifndef SEARCHALL_H
 #define SEARCHALL_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class Window;
 class FieldArchive;

@@ -18,7 +18,7 @@
 #ifndef TEXTHIGHLIGHTER_H
 #define TEXTHIGHLIGHTER_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class TextHighlighter : public QSyntaxHighlighter
 {

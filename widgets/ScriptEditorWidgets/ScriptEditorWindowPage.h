@@ -18,7 +18,7 @@
 #ifndef DEF_SCRIPTEDITORWINDOWPAGE
 #define DEF_SCRIPTEDITORWINDOWPAGE
 
-#include <QtGui>
+#include <QtWidgets>
 #include "ScriptEditorView.h"
 #include "../TextPreview.h"
 

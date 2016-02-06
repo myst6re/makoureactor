@@ -18,7 +18,7 @@
 #ifndef APERCUBGLABEL_H
 #define APERCUBGLABEL_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class ApercuBGLabel : public QLabel
 {

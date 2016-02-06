@@ -2,6 +2,12 @@ TEMPLATE = app
 TARGET = makoureactor
 
 QT += core gui opengl
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+}
+lessThan(QT_MAJOR_VERSION, 5) {
+    INCLUDEPATH += compat
+}
 QMAKE_CXXFLAGS += -std=c++0x
 
 # Input
@@ -293,7 +299,9 @@ win32 {
     LIBS += -lz
 }
 
-OTHER_FILES += Makou_Reactor.rc
+OTHER_FILES += Makou_Reactor.rc \
+    deploy.bat \
+    compat/QtWidgets
 DISTFILES += Makou_Reactor.desktop
 
 #all other *nix (except for symbian)

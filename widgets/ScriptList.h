@@ -18,7 +18,7 @@
 #ifndef DEF_SCRIPTLIST
 #define DEF_SCRIPTLIST
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/GrpScript.h"
 
 class ScriptList : public QListWidget
