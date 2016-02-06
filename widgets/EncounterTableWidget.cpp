@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel JÈrÙme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel J√©r√¥me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ EncounterTableWidget::EncounterTableWidget(const QString &title, QWidget *parent
 	layout->addWidget(rateLabel, 0, 0, 1, 3, Qt::AlignLeft);
 	layout->addLayout(rateLayout, 1, 0, 1, 3, Qt::AlignLeft);
 	layout->addWidget(new QLabel(tr("ID Combat"), this), 2, 1);
-	layout->addWidget(new QLabel(tr("ProbabilitÈ"), this), 2, 2);
+	layout->addWidget(new QLabel(tr("Probabilit√©"), this), 2, 2);
 	QStringList specialBattleNames;
-	specialBattleNames << tr("Attaque par l'arriËre 1") << tr("Attaque par l'arriËre 2") << tr("Attaque de cÙtÈ") << tr("Attaque des deux cÙtÈs");
+	specialBattleNames << tr("Attaque par l'arri√®re 1") << tr("Attaque par l'arri√®re 2") << tr("Attaque de c√¥t√©") << tr("Attaque des deux c√¥t√©s");
 	QSpinBox *spinBox;
 	int row=3;
 	for(int i=0 ; i<10 ; ++i) {
@@ -119,7 +119,7 @@ void EncounterTableWidget::setRateValue(int value)
 
 void EncounterTableWidget::changePercent()
 {
-	rateLabel->setText(tr("FrÈquence des combats : %1/255").arg(rateValue()));
+	rateLabel->setText(tr("Fr√©quence des combats : %1/255").arg(rateValue()));
 }
 
 void EncounterTableWidget::setProbaLabelColor(QLabel *label, qint16 points)
@@ -139,7 +139,7 @@ void EncounterTableWidget::changeProbaCount()
 	}
 
 	setProbaLabelColor(probaLabel, points);
-	probaLabel->setText(tr("Points de probabilitÈ restants : %1").arg(points));
+	probaLabel->setText(tr("Points de probabilit√© restants : %1").arg(points));
 
 	points = 64;
 	for(quint8 i=6 ; i<10 ; ++i) {
@@ -147,5 +147,5 @@ void EncounterTableWidget::changeProbaCount()
 	}
 
 	setProbaLabelColor(probaLabel2, points);
-	probaLabel2->setText(tr("Points de probabilitÈ restants : %1").arg(points));
+	probaLabel2->setText(tr("Points de probabilit√© restants : %1").arg(points));
 }

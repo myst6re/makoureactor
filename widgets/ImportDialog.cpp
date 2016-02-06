@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -25,11 +25,11 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 	QGroupBox *group = new QGroupBox(tr("Importer"));
 	scripts = new QCheckBox(tr("Scripts/Textes"));
 	akaos = new QCheckBox(tr("Musiques/Tutoriels"));
-	ca = new QCheckBox(tr("Caméra"));
+	ca = new QCheckBox(tr("CamÃ©ra"));
 	id = new QCheckBox(tr("Walkmesh"));
-	encounter = new QCheckBox(tr("Combats aléatoires"));
-	inf = new QCheckBox(tr("Déclencheurs/Liens entre les écrans"));
-	model = new QCheckBox(tr("Liste des modèles 3D"));
+	encounter = new QCheckBox(tr("Combats alÃ©atoires"));
+	inf = new QCheckBox(tr("DÃ©clencheurs/Liens entre les Ã©crans"));
+	model = new QCheckBox(tr("Liste des modÃ¨les 3D"));
 	mim = new QCheckBox(tr("Background"));
 
 	model->setEnabled(sourceSameTypeAsTarget);
@@ -116,7 +116,7 @@ QString ImportDialog::additionalPath() const
 
 void ImportDialog::setAdditionalPathByUser()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Sélectionner le fichier MIM associé"), pathEdit->text(), tr("Fichier MIM (*.MIM);;Tous les fichiers (*)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("SÃ©lectionner le fichier MIM associÃ©"), pathEdit->text(), tr("Fichier MIM (*.MIM);;Tous les fichiers (*)"));
 	if(path.isNull()) {
 		return;
 	}

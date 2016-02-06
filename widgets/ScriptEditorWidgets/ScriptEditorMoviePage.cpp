@@ -17,7 +17,7 @@ void ScriptEditorMoviePage::build()
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Disque")), 0, 0);
 	layout->addWidget(discList, 0, 1);
-	layout->addWidget(new QLabel(tr("Vidéo")), 1, 0);
+	layout->addWidget(new QLabel(tr("VidÃ©o")), 1, 0);
 	layout->addWidget(movieList, 1, 1);
 	layout->setRowStretch(2, 1);
 	layout->setColumnStretch(2, 1);

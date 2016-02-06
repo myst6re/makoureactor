@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -175,7 +175,7 @@ void GrpScript::setType()
 		case Opcode::PC://Definition du personnage
 			_character = ((OpcodePC *)opcode)->charID;
 			return;
-		case Opcode::CHAR://Definition du modèle 3D
+		case Opcode::CHAR://Definition du modÃ¨le 3D
 			_character = 0xFF;
 			break;
 		case Opcode::LINE://definition d'une zone
@@ -183,7 +183,7 @@ void GrpScript::setType()
 			return;
 		case Opcode::BGPDH:case Opcode::BGSCR:case Opcode::BGON:
 		case Opcode::BGOFF:case Opcode::BGROL:case Opcode::BGROL2:
-		case Opcode::BGCLR://bg paramètres
+		case Opcode::BGCLR://bg paramÃ¨tres
 			if(_character==-1)	animation = true;
 			return;
 		case Opcode::MPNAM://mapname

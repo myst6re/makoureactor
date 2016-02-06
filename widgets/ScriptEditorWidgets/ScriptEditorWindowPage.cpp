@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ void ScriptEditorWindowPage::build()
 	h->setRange(0, 65535);
 
 	previewText = new QComboBox(this);
-	previewText->addItem(tr("[Laisser la fenêtre vide]"));
+	previewText->addItem(tr("[Laisser la fenÃªtre vide]"));
 	bool jp = Config::value("jp_txt", false).toBool();
 	foreach(const FF7Text &t, field()->scriptsAndTexts()->texts())
 		previewText->addItem(t.text(jp, true).simplified());
@@ -53,7 +53,7 @@ void ScriptEditorWindowPage::build()
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(textPreview, 0, 0, 8, 2);
-	layout->addWidget(new QLabel(tr("Fenêtre ID")), 0, 2);
+	layout->addWidget(new QLabel(tr("FenÃªtre ID")), 0, 2);
 	layout->addWidget(winID, 0, 3);
 	layout->addWidget(xLabel = new QLabel(tr("X")), 1, 2);
 	layout->addWidget(x, 1, 3);
@@ -63,7 +63,7 @@ void ScriptEditorWindowPage::build()
 	layout->addWidget(w, 3, 3);
 	layout->addWidget(hLabel = new QLabel(), 4, 2);
 	layout->addWidget(h, 4, 3);
-	layout->addWidget(new QLabel(tr("Texte en aperçu :")), 8, 0);
+	layout->addWidget(new QLabel(tr("Texte en aperÃ§u :")), 8, 0);
 	layout->addWidget(previewText, 8, 1);
 	layout->addWidget(hAlign, 6, 2, 1, 2);
 	layout->addWidget(vAlign, 7, 2, 1, 2);
@@ -265,11 +265,11 @@ void ScriptEditorWindowModePage::build()
 
 	winClose = new QComboBox(this);
 	winClose->addItem(tr("Autoriser"));
-	winClose->addItem(tr("Empêcher"));
+	winClose->addItem(tr("EmpÃªcher"));
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(textPreview, 0, 0, 4, 1);
-	layout->addWidget(new QLabel(tr("Fenêtre ID")), 0, 1);
+	layout->addWidget(new QLabel(tr("FenÃªtre ID")), 0, 1);
 	layout->addWidget(winID, 0, 2);
 	layout->addWidget(new QLabel(tr("Type")), 1, 1);
 	layout->addWidget(winType, 1, 2);
@@ -343,7 +343,7 @@ void ScriptEditorWindowMovePage::build()
 	y->setRange(-32768, 32767);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Fenêtre ID")), 0, 0);
+	layout->addWidget(new QLabel(tr("FenÃªtre ID")), 0, 0);
 	layout->addWidget(winID, 0, 1);
 	layout->addWidget(new QLabel(tr("X relatif")), 1, 0);
 	layout->addWidget(x, 1, 1);

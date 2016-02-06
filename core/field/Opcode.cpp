@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -279,8 +279,8 @@ void Opcode::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 QString Opcode::_script(quint8 param, Section1File *scriptsAndTexts)
 {
 	if(param < scriptsAndTexts->grpScriptCount())
-		return scriptsAndTexts->grpScript(param)->name() + QObject::tr(" (n°%1)").arg(param);
-	return QObject::tr("? (n°%1)").arg(param);
+		return scriptsAndTexts->grpScript(param)->name() + QObject::tr(" (nÂ°%1)").arg(param);
+	return QObject::tr("? (nÂ°%1)").arg(param);
 }
 
 QString Opcode::_text(quint8 textID, Section1File *scriptsAndTexts)
@@ -297,7 +297,7 @@ QString Opcode::_text(quint8 textID, Section1File *scriptsAndTexts)
 QString Opcode::_item(quint16 itemID, quint8 bank)
 {
 	if(bank > 0) {
-		return QObject::tr("n°%1").arg(_bank(itemID & 0xFF, bank));
+		return QObject::tr("nÂ°%1").arg(_bank(itemID & 0xFF, bank));
 	}
 
 	if(itemID < 128) {
@@ -313,33 +313,33 @@ QString Opcode::_item(quint16 itemID, quint8 bank)
 		if(!Data::accessory_names.isEmpty() && itemID-288 < Data::accessory_names.size())
 			return Data::accessory_names.at(itemID-288);
 	}
-	return QObject::tr("n°%1").arg(itemID);
+	return QObject::tr("nÂ°%1").arg(itemID);
 }
 
 QString Opcode::_materia(quint8 materiaID, quint8 bank)
 {
 	if(bank > 0) {
-		return QObject::tr("n°%1").arg(_bank(materiaID, bank));
+		return QObject::tr("nÂ°%1").arg(_bank(materiaID, bank));
 	}
 
 	if(materiaID < Data::materia_names.size())
 		return Data::materia_names.at(materiaID);
-	return QObject::tr("n°%1").arg(materiaID);
+	return QObject::tr("nÂ°%1").arg(materiaID);
 }
 
 QString Opcode::_field(quint16 fieldID)
 {
 	if(fieldID < Data::field_names.size())
-		return QObject::tr("%1 (n°%2)")
+		return QObject::tr("%1 (nÂ°%2)")
 				.arg(Data::field_names.at(fieldID))
 				.arg(fieldID);
-	return QObject::tr("n°%1").arg(fieldID);
+	return QObject::tr("nÂ°%1").arg(fieldID);
 }
 
 QString Opcode::_movie(quint8 movieID)
 {
 	// Movie names are different according to the current disc
-	QString dflt = QObject::tr("n°%1").arg(movieID);
+	QString dflt = QObject::tr("nÂ°%1").arg(movieID);
 	QStringList cds;
 	cds << Data::movie_names_cd1.value(movieID, dflt)
 		<< Data::movie_names_cd2.value(movieID, dflt)
@@ -357,7 +357,7 @@ QString Opcode::_movie(quint8 movieID)
 {
 	if(objet3D_ID < Data::currentCharNames.size())
 		return QString("%1 (%2)").arg(Data::currentCharNames.at(objet3D_ID), Data::currentHrcNames.at(objet3D_ID));
-	return QObject::tr("n°%1").arg(objet3D_ID);
+	return QObject::tr("nÂ°%1").arg(objet3D_ID);
 } */
 
 QString Opcode::_akao(quint8 akaoOp)
@@ -373,35 +373,35 @@ QString Opcode::_akao(quint8 akaoOp)
 	case 0x9B:	return QObject::tr("Mettre en pause uniquement la musique");
 	case 0x9C:	return QObject::tr("Reprendre uniquement les effets sonores");
 	case 0x9D:	return QObject::tr("Mettre en pause uniquement les effets sonores");
-	case 0xA0:	return QObject::tr("Contrôle du volume (canal 1)");
-	case 0xA1:	return QObject::tr("Contrôle du volume (canal 2)");
-	case 0xA2:	return QObject::tr("Contrôle du volume (canal 3)");
-	case 0xA3:	return QObject::tr("Contrôle du volume (canal 4)");
+	case 0xA0:	return QObject::tr("ContrÃ´le du volume (canal 1)");
+	case 0xA1:	return QObject::tr("ContrÃ´le du volume (canal 2)");
+	case 0xA2:	return QObject::tr("ContrÃ´le du volume (canal 3)");
+	case 0xA3:	return QObject::tr("ContrÃ´le du volume (canal 4)");
 	case 0xA4:	return QObject::tr("Volume transitions (canal 1)");
 	case 0xA5:	return QObject::tr("Volume transitions (canal 2)");
 	case 0xA6:	return QObject::tr("Volume transitions (canal 3)");
 	case 0xA7:	return QObject::tr("Volume transitions (canal 4)");
-	case 0xA8:	return QObject::tr("Contrôle spatial (canal 1)");
-	case 0xA9:	return QObject::tr("Contrôle spatial (canal 2)");
-	case 0xAA:	return QObject::tr("Contrôle spatial (canal 3)");
-	case 0xAB:	return QObject::tr("Contrôle spatial (canal 4)");
+	case 0xA8:	return QObject::tr("ContrÃ´le spatial (canal 1)");
+	case 0xA9:	return QObject::tr("ContrÃ´le spatial (canal 2)");
+	case 0xAA:	return QObject::tr("ContrÃ´le spatial (canal 3)");
+	case 0xAB:	return QObject::tr("ContrÃ´le spatial (canal 4)");
 	case 0xAC:	return QObject::tr("Transitions spatiales (canal 1)");
 	case 0xAD:	return QObject::tr("Transitions spatiales (canal 2)");
 	case 0xAE:	return QObject::tr("Transitions spatiales (canal 3)");
 	case 0xAF:	return QObject::tr("Transitions spatiales (canal 4)");
-	case 0xB0:	return QObject::tr("Contrôle du tempo (canal 1)");
-	case 0xB1:	return QObject::tr("Contrôle du tempo (canal 2)");
-	case 0xB2:	return QObject::tr("Contrôle du tempo (canal 3)");
-	case 0xB3:	return QObject::tr("Contrôle du tempo (canal 4)");
+	case 0xB0:	return QObject::tr("ContrÃ´le du tempo (canal 1)");
+	case 0xB1:	return QObject::tr("ContrÃ´le du tempo (canal 2)");
+	case 0xB2:	return QObject::tr("ContrÃ´le du tempo (canal 3)");
+	case 0xB3:	return QObject::tr("ContrÃ´le du tempo (canal 4)");
 	case 0xB4:	return QObject::tr("Tempo transitions (canal 1)");
 	case 0xB5:	return QObject::tr("Tempo transitions (canal 2)");
 	case 0xB6:	return QObject::tr("Tempo transitions (canal 3)");
 	case 0xB7:	return QObject::tr("Tempo transitions (canal 4)");
-	case 0xB8:	return QObject::tr("Contrôle du volume sur tous les canaux");
+	case 0xB8:	return QObject::tr("ContrÃ´le du volume sur tous les canaux");
 	case 0xB9:	return QObject::tr("Volume transitions sur tous les canaux");
-	case 0xBA:	return QObject::tr("Contrôle spatial sur tous les canaux");
+	case 0xBA:	return QObject::tr("ContrÃ´le spatial sur tous les canaux");
 	case 0xBB:	return QObject::tr("Transitions spatiales sur tous les canaux");
-	case 0xBC:	return QObject::tr("Contrôle du tempo sur tous les canaux");
+	case 0xBC:	return QObject::tr("ContrÃ´le du tempo sur tous les canaux");
 	case 0xBD:	return QObject::tr("Tempo transitions sur tous les canaux");
 	case 0xC0:	return QObject::tr("Modifier le volume de la musique");
 	case 0xC1:	return QObject::tr("Transition sur le volume de la musique");
@@ -412,8 +412,8 @@ QString Opcode::_akao(quint8 akaoOp)
 	case 0xD0:	return QObject::tr("Modifier le tempo de la musique");
 	case 0xD1:	return QObject::tr("Transition sur le tempo de la musique");
 	case 0xD2:	return QObject::tr("Attenuation du tempo de la musique");
-	case 0xF0:	return QObject::tr("Arrêter la musique");
-	case 0xF1:	return QObject::tr("Arrêter les effets sonores");
+	case 0xF0:	return QObject::tr("ArrÃªter la musique");
+	case 0xF1:	return QObject::tr("ArrÃªter les effets sonores");
 	default:	return QObject::tr("AKAO : %1?").arg(akaoOp);
 	}
 }
@@ -575,7 +575,7 @@ OpcodeREQ::OpcodeREQ(const OpcodeExec &op) :
 
 QString OpcodeREQ::toString(Field *field) const
 {
-	return QObject::tr("Exécuter le script n°%3 du groupe externe %1 (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
+	return QObject::tr("ExÃ©cuter le script nÂ°%3 du groupe externe %1 (prioritÃ© %2/6) - Seulement si le script n'est pas dÃ©jÃ  en cours d'exÃ©cution")
 			.arg(_script(groupID, field->scriptsAndTexts()))
 			.arg(priority)
 			.arg(scriptID);
@@ -593,7 +593,7 @@ OpcodeREQSW::OpcodeREQSW(const OpcodeExec &op) :
 
 QString OpcodeREQSW::toString(Field *field) const
 {
-	return QObject::tr("Exécuter le script n°%3 du groupe externe %1 (priorité %2/6)")
+	return QObject::tr("ExÃ©cuter le script nÂ°%3 du groupe externe %1 (prioritÃ© %2/6)")
 			.arg(_script(groupID, field->scriptsAndTexts()))
 			.arg(priority)
 			.arg(scriptID);
@@ -611,7 +611,7 @@ OpcodeREQEW::OpcodeREQEW(const OpcodeExec &op) :
 
 QString OpcodeREQEW::toString(Field *field) const
 {
-	return QObject::tr("Exécuter le script n°%3 du groupe %1 (priorité %2/6) - Attend la fin de l'exécution pour continuer")
+	return QObject::tr("ExÃ©cuter le script nÂ°%3 du groupe %1 (prioritÃ© %2/6) - Attend la fin de l'exÃ©cution pour continuer")
 			.arg(_script(groupID, field->scriptsAndTexts()))
 			.arg(priority)
 			.arg(scriptID);
@@ -648,7 +648,7 @@ OpcodePREQ::OpcodePREQ(const OpcodeExecChar &op) :
 
 QString OpcodePREQ::toString(Field *) const
 {
-	return QObject::tr("Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l'équipe (priorité %2/6) - Seulement si le script n'est pas déjà en cours d'exécution")
+	return QObject::tr("ExÃ©cuter le script nÂ°%3 du groupe externe liÃ© au personnage nÂ°%1 de l'Ã©quipe (prioritÃ© %2/6) - Seulement si le script n'est pas dÃ©jÃ  en cours d'exÃ©cution")
 			.arg(partyID)
 			.arg(priority)
 			.arg(scriptID);
@@ -666,7 +666,7 @@ OpcodePRQSW::OpcodePRQSW(const OpcodeExecChar &op) :
 
 QString OpcodePRQSW::toString(Field *) const
 {
-	return QObject::tr("Exécuter le script n°%3 du groupe externe lié au personnage n°%1 de l'équipe (priorité %2/6)")
+	return QObject::tr("ExÃ©cuter le script nÂ°%3 du groupe externe liÃ© au personnage nÂ°%1 de l'Ã©quipe (prioritÃ© %2/6)")
 			.arg(partyID)
 			.arg(priority)
 			.arg(scriptID);
@@ -684,7 +684,7 @@ OpcodePRQEW::OpcodePRQEW(const OpcodeExecChar &op) :
 
 QString OpcodePRQEW::toString(Field *) const
 {
-	return QObject::tr("Exécuter le script n°%3 du groupe lié au personnage n°%1 de l'équipe (priorité %2/6) - Attend la fin de l'exécution pour continuer")
+	return QObject::tr("ExÃ©cuter le script nÂ°%3 du groupe liÃ© au personnage nÂ°%1 de l'Ã©quipe (prioritÃ© %2/6) - Attend la fin de l'exÃ©cution pour continuer")
 			.arg(partyID)
 			.arg(priority)
 			.arg(scriptID);
@@ -703,7 +703,7 @@ void OpcodeRETTO::setParams(const char *params, int)
 
 QString OpcodeRETTO::toString(Field *) const
 {
-	return QObject::tr("Retourner et exécuter le script n°%2 du groupe appelant (priorité %1/6)")
+	return QObject::tr("Retourner et exÃ©cuter le script nÂ°%2 du groupe appelant (prioritÃ© %1/6)")
 			.arg(priority)
 			.arg(scriptID);
 }
@@ -726,7 +726,7 @@ void OpcodeJOIN::setParams(const char *params, int)
 
 QString OpcodeJOIN::toString(Field *) const
 {
-	return QObject::tr("Rassembler les membres de l'équipe dans le personnage jouable (vitesse=%1)")
+	return QObject::tr("Rassembler les membres de l'Ã©quipe dans le personnage jouable (vitesse=%1)")
 			.arg(speed);
 }
 
@@ -756,7 +756,7 @@ void OpcodeSPLIT::setParams(const char *params, int)
 
 QString OpcodeSPLIT::toString(Field *) const
 {
-	return QObject::tr("Faire sortir les membres de l'équipe à partir du personnage jouable (perso 1 : X=%1, Y=%2, dir=%3 ; perso 2 : X=%4, Y=%5, dir=%6) (vitesse %7)")
+	return QObject::tr("Faire sortir les membres de l'Ã©quipe Ã  partir du personnage jouable (perso 1 : X=%1, Y=%2, dir=%3 ; perso 2 : X=%4, Y=%5, dir=%6) (vitesse %7)")
 			.arg(_var(targetX1, B1(banks[0])))
 			.arg(_var(targetY1, B2(banks[0])))
 			.arg(_var(direction1, B1(banks[1])))
@@ -840,7 +840,7 @@ OpcodeSPTYE::OpcodeSPTYE(const OpcodePartyE &op) :
 
 QString OpcodeSPTYE::toString(Field *) const
 {
-	return QObject::tr("Affecter les membres de l'équipe : %1 | %2 | %3")
+	return QObject::tr("Affecter les membres de l'Ã©quipe : %1 | %2 | %3")
 			.arg(_var(party1, B1(banks[0])))
 			.arg(_var(party2, B2(banks[0])))
 			.arg(_var(party3, B1(banks[1])));
@@ -858,7 +858,7 @@ OpcodeGTPYE::OpcodeGTPYE(const OpcodePartyE &op) :
 
 QString OpcodeGTPYE::toString(Field *) const
 {
-	return QObject::tr("Récupérer les membres de l'équipe : %1 | %2 | %3")
+	return QObject::tr("RÃ©cupÃ©rer les membres de l'Ã©quipe : %1 | %2 | %3")
 			.arg(_var(party1, B1(banks[0])))
 			.arg(_var(party2, B2(banks[0])))
 			.arg(_var(party3, B1(banks[1])));
@@ -939,7 +939,7 @@ void OpcodeSPECIALPNAME::setParams(const char *params, int size)
 
 QString OpcodeSPECIALPNAME::toString(Field *) const
 {
-	return QObject::tr("PNAME - Désactiver le menu de droite (%1)")
+	return QObject::tr("PNAME - DÃ©sactiver le menu de droite (%1)")
 			.arg(unknown);
 }
 
@@ -1015,7 +1015,7 @@ quint8 OpcodeSPECIALFLMAT::size() const
 
 QString OpcodeSPECIALFLMAT::toString(Field *) const
 {
-	return QObject::tr("Remplir le menu matéria de toutes les matérias en quantité maximum");
+	return QObject::tr("Remplir le menu matÃ©ria de toutes les matÃ©rias en quantitÃ© maximum");
 }
 
 OpcodeSPECIALFLITM::OpcodeSPECIALFLITM()
@@ -1029,7 +1029,7 @@ quint8 OpcodeSPECIALFLITM::size() const
 
 QString OpcodeSPECIALFLITM::toString(Field *) const
 {
-	return QObject::tr("Remplir l'inventaire par tous les objets en quantité maximum");
+	return QObject::tr("Remplir l'inventaire par tous les objets en quantitÃ© maximum");
 }
 
 
@@ -1051,7 +1051,7 @@ void OpcodeSPECIALBTLCK::setParams(const char *params, int)
 QString OpcodeSPECIALBTLCK::toString(Field *) const
 {
 	return QObject::tr("%1 les combats")
-			.arg(lock == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+			.arg(lock == 0 ? QObject::tr("Activer") : QObject::tr("DÃ©sactiver"));
 }
 
 QByteArray OpcodeSPECIALBTLCK::params() const
@@ -1076,8 +1076,8 @@ void OpcodeSPECIALMVLCK::setParams(const char *params, int)
 
 QString OpcodeSPECIALMVLCK::toString(Field *) const
 {
-	return QObject::tr("%1 les cinématiques")
-			.arg(lock == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+	return QObject::tr("%1 les cinÃ©matiques")
+			.arg(lock == 0 ? QObject::tr("Activer") : QObject::tr("DÃ©sactiver"));
 }
 
 QByteArray OpcodeSPECIALMVLCK::params() const
@@ -1136,7 +1136,7 @@ quint8 OpcodeSPECIALRSGLB::size() const
 
 QString OpcodeSPECIALRSGLB::toString(Field *) const
 {
-	return QObject::tr("Met le temps à 0, débloque le menu \"PHS\" et \"Sauvegarder\". Nouvelle équipe : Clad | (Vide) | (Vide)");
+	return QObject::tr("Met le temps Ã  0, dÃ©bloque le menu \"PHS\" et \"Sauvegarder\". Nouvelle Ã©quipe : Clad | (Vide) | (Vide)");
 }
 
 OpcodeSPECIALCLITM::OpcodeSPECIALCLITM()
@@ -1766,17 +1766,17 @@ QString OpcodeMINIGAME::toString(Field *) const
 	QString miniGame;
 	switch(minigameID)
 	{
-	case 0x00:		miniGame = QObject::tr("Course de moto (paramètre %1)").arg(minigameParam);break;
-	case 0x01:		miniGame = QObject::tr("Course de chocobo (paramètre %1)").arg(minigameParam);break;
-	case 0x02:		miniGame = QObject::tr("Descente en snowboard -mode normal- (paramètre %1)").arg(minigameParam);break;
-	case 0x03:		miniGame = QObject::tr("Fort Condor (paramètre %1)").arg(minigameParam);break;
-	case 0x04:		miniGame = QObject::tr("Sous-marin (paramètre %1)").arg(minigameParam);break;
-	case 0x05:		miniGame = QObject::tr("Speed Square (paramètre %1)").arg(minigameParam);break;
-	case 0x06:		miniGame = QObject::tr("Descente en snowboard -mode Gold Saucer- (paramètre %1)").arg(minigameParam);break;
-	default:		miniGame = QObject::tr("%1? (paramètre %2)").arg(minigameID).arg(minigameParam);break;
+	case 0x00:		miniGame = QObject::tr("Course de moto (paramÃ¨tre %1)").arg(minigameParam);break;
+	case 0x01:		miniGame = QObject::tr("Course de chocobo (paramÃ¨tre %1)").arg(minigameParam);break;
+	case 0x02:		miniGame = QObject::tr("Descente en snowboard -mode normal- (paramÃ¨tre %1)").arg(minigameParam);break;
+	case 0x03:		miniGame = QObject::tr("Fort Condor (paramÃ¨tre %1)").arg(minigameParam);break;
+	case 0x04:		miniGame = QObject::tr("Sous-marin (paramÃ¨tre %1)").arg(minigameParam);break;
+	case 0x05:		miniGame = QObject::tr("Speed Square (paramÃ¨tre %1)").arg(minigameParam);break;
+	case 0x06:		miniGame = QObject::tr("Descente en snowboard -mode Gold Saucer- (paramÃ¨tre %1)").arg(minigameParam);break;
+	default:		miniGame = QObject::tr("%1? (paramÃ¨tre %2)").arg(minigameID).arg(minigameParam);break;
 	}
 
-	return QObject::tr("Lancer un mini-jeu : %5 (Après le jeu aller à l'écran %1 (X=%2, Y=%3, triangle id=%4))")
+	return QObject::tr("Lancer un mini-jeu : %5 (AprÃ¨s le jeu aller Ã  l'Ã©cran %1 (X=%2, Y=%3, triangle id=%4))")
 			.arg(_field(fieldID))
 			.arg(targetX)
 			.arg(targetY)
@@ -1807,7 +1807,7 @@ void OpcodeTUTOR::setParams(const char *params, int)
 
 QString OpcodeTUTOR::toString(Field *) const
 {
-	return QObject::tr("Lancer le tutoriel n°%1")
+	return QObject::tr("Lancer le tutoriel nÂ°%1")
 			.arg(tutoID);
 }
 
@@ -1845,14 +1845,14 @@ QString OpcodeBTMD2::toString(Field *) const
 		{
 			switch(i)
 			{
-			case 1:		modes.append(QObject::tr("Compte à rebours"));											break;
-			case 2:		modes.append(QObject::tr("Attaque préventive"));										break;
+			case 1:		modes.append(QObject::tr("Compte Ã  rebours"));											break;
+			case 2:		modes.append(QObject::tr("Attaque prÃ©ventive"));										break;
 			case 3:		modes.append(QObject::tr("Impossible de fuir"));										break;
 			case 5:		modes.append(QObject::tr("Ne pas jouer Fanfare"));										break;
-			case 6:		modes.append(QObject::tr("Active l'arène de combat du Gold Saucer"));									break;
-			case 7:		modes.append(QObject::tr("Ne pas afficher d'écran de récompense"));						break;
+			case 6:		modes.append(QObject::tr("Active l'arÃ¨ne de combat du Gold Saucer"));									break;
+			case 7:		modes.append(QObject::tr("Ne pas afficher d'Ã©cran de rÃ©compense"));						break;
 			case 8:		modes.append(QObject::tr("Les personnages ne font pas leur animation de victoire"));	break;
-			case 16:	modes.append(QObject::tr("Désactiver Game Over"));										break;
+			case 16:	modes.append(QObject::tr("DÃ©sactiver Game Over"));										break;
 			default:	modes.append(QString("%1?").arg(i));													break;
 			}
 		}
@@ -1879,7 +1879,7 @@ void OpcodeBTRLD::setParams(const char *params, int)
 
 QString OpcodeBTRLD::toString(Field *) const
 {
-	return QObject::tr("Stocker le résultat du dernier combat dans %1")
+	return QObject::tr("Stocker le rÃ©sultat du dernier combat dans %1")
 			.arg(_bank(var, B2(banks)));
 }
 
@@ -1935,7 +1935,7 @@ void OpcodeNFADE::setParams(const char *params, int)
 
 QString OpcodeNFADE::toString(Field *) const
 {
-	return QObject::tr("Voiler l'écran avec la couleur RVB(%2, %3, %4) (vitesse=%5, type=%1)")
+	return QObject::tr("Voiler l'Ã©cran avec la couleur RVB(%2, %3, %4) (vitesse=%5, type=%1)")
 			.arg(type)
 			.arg(_var(r, B1(banks[0])))
 			.arg(_var(g, B2(banks[0])))
@@ -2030,7 +2030,7 @@ void OpcodeKAWAIEYETX::setParams(const char *params, int size)
 
 QString OpcodeKAWAIEYETX::toString(Field *) const
 {
-	return QObject::tr("Changer l'état de la texture des yeux ou de la bouche (oeil 1=%1, oeil 2=%2, bouche=%3, ID objet 3D=%4)")
+	return QObject::tr("Changer l'Ã©tat de la texture des yeux ou de la bouche (oeil 1=%1, oeil 2=%2, bouche=%3, ID objet 3D=%4)")
 			.arg(eyeID1)
 			.arg(eyeID2)
 			.arg(mouthID)
@@ -2066,7 +2066,7 @@ void OpcodeKAWAITRNSP::setParams(const char *params, int size)
 QString OpcodeKAWAITRNSP::toString(Field *) const
 {
 	return QObject::tr("%1 transparence")
-			.arg(enableTransparency == 0 ? QObject::tr("Désactiver") : QObject::tr("Activer"));
+			.arg(enableTransparency == 0 ? QObject::tr("DÃ©sactiver") : QObject::tr("Activer"));
 }
 
 QByteArray OpcodeKAWAITRNSP::params() const
@@ -2100,7 +2100,7 @@ void OpcodeKAWAIAMBNT::setParams(const char *params, int size)
 
 QString OpcodeKAWAIAMBNT::toString(Field *) const
 {
-	return QObject::tr("Change la couleur ambiante du modèle : RVB(%1, %2, %3) RVB(%4, %5, %6) (flags=%7)")
+	return QObject::tr("Change la couleur ambiante du modÃ¨le : RVB(%1, %2, %3) RVB(%4, %5, %6) (flags=%7)")
 			.arg(r1)
 			.arg(g1)
 			.arg(b1)
@@ -2305,7 +2305,7 @@ OpcodeKAWIW::OpcodeKAWIW()
 
 QString OpcodeKAWIW::toString(Field *) const
 {
-	return QObject::tr("Attendre la fin de l'exécution du filtre graphique");
+	return QObject::tr("Attendre la fin de l'exÃ©cution du filtre graphique");
 }
 
 OpcodePMOVA::OpcodePMOVA(const char *params, int size)
@@ -2320,7 +2320,7 @@ void OpcodePMOVA::setParams(const char *params, int)
 
 QString OpcodePMOVA::toString(Field *) const
 {
-	return QObject::tr("Déplacer l'objet 3D vers le membre n°%1 de l'équipe")
+	return QObject::tr("DÃ©placer l'objet 3D vers le membre nÂ°%1 de l'Ã©quipe")
 			.arg(partyID);
 }
 
@@ -2364,7 +2364,7 @@ void OpcodeBGPDH::setParams(const char *params, int)
 
 QString OpcodeBGPDH::toString(Field *) const
 {
-	return QObject::tr("Déplacer la couche %1 du décor (Z=%2)")
+	return QObject::tr("DÃ©placer la couche %1 du dÃ©cor (Z=%2)")
 			.arg(layerID)
 			.arg(_var(targetZ, B2(banks)));
 }
@@ -2398,7 +2398,7 @@ void OpcodeBGSCR::setParams(const char *params, int)
 
 QString OpcodeBGSCR::toString(Field *) const
 {
-	return QObject::tr("Animer la couche %1 du décor (horizontalement=%2, verticalement=%3)")
+	return QObject::tr("Animer la couche %1 du dÃ©cor (horizontalement=%2, verticalement=%3)")
 			.arg(layerID)
 			.arg(_var(targetX, B1(banks)))
 			.arg(_var(targetY, B2(banks)));
@@ -2433,7 +2433,7 @@ void OpcodeWCLS::setParams(const char *params, int)
 
 QString OpcodeWCLS::toString(Field *) const
 {
-	return QObject::tr("Fermer la fenêtre n°%1")
+	return QObject::tr("Fermer la fenÃªtre nÂ°%1")
 			.arg(windowID);
 }
 
@@ -2515,7 +2515,7 @@ OpcodeWSIZW::OpcodeWSIZW(const OpcodeWindow &op) :
 
 QString OpcodeWSIZW::toString(Field *) const
 {
-	return QObject::tr("Redimensionner fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)")
+	return QObject::tr("Redimensionner fenÃªtre nÂ°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)")
 			.arg(windowID)
 			.arg(targetX)
 			.arg(targetY)
@@ -2610,7 +2610,7 @@ OpcodeIFKEYOFF::OpcodeIFKEYOFF(const OpcodeIfKey &op) :
 
 QString OpcodeIFKEYOFF::toString(Field *) const
 {
-	return QObject::tr("Si relache la touche %1 pour la première fois (%2)")
+	return QObject::tr("Si relache la touche %1 pour la premiÃ¨re fois (%2)")
 			.arg(keyString())
 			.arg(_badJump
 				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
@@ -2629,8 +2629,8 @@ void OpcodeUC::setParams(const char *params, int)
 
 QString OpcodeUC::toString(Field *) const
 {
-	return QObject::tr("%1 les déplacements du personnage jouable")
-			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+	return QObject::tr("%1 les dÃ©placements du personnage jouable")
+			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("DÃ©sactiver"));
 }
 
 QByteArray OpcodeUC::params() const
@@ -2650,7 +2650,7 @@ void OpcodePDIRA::setParams(const char *params, int)
 
 QString OpcodePDIRA::toString(Field *) const
 {
-	return QObject::tr("Tourner instantanément l'objet 3D vers le membre de l'équipe n°%1")
+	return QObject::tr("Tourner instantanÃ©ment l'objet 3D vers le membre de l'Ã©quipe nÂ°%1")
 			.arg(partyID);
 }
 
@@ -2673,7 +2673,7 @@ void OpcodePTURA::setParams(const char *params, int)
 
 QString OpcodePTURA::toString(Field *) const
 {
-	return QObject::tr("Tourner l'objet 3D vers le membre de l'équipe n°%1 (vitesse=%2, sens de rotation=%3)")
+	return QObject::tr("Tourner l'objet 3D vers le membre de l'Ã©quipe nÂ°%1 (vitesse=%2, sens de rotation=%3)")
 			.arg(partyID)
 			.arg(speed)
 			.arg(_sensRotation(directionRotation));
@@ -2707,11 +2707,11 @@ QString OpcodeWSPCL::toString(Field *) const
 	{
 	case 0x00:		windowNum = QObject::tr("(vide)");					break;
 	case 0x01:		windowNum = QObject::tr("Horloge");					break;
-	case 0x02:		windowNum = QObject::tr("Affichage numérique");		break;
+	case 0x02:		windowNum = QObject::tr("Affichage numÃ©rique");		break;
 	default:		windowNum = QString("%1?").arg(displayType);		break;
 	}
 
-	return QObject::tr("%2 dans fenêtre n°%1 (gauche=%3, haut=%4)")
+	return QObject::tr("%2 dans fenÃªtre nÂ°%1 (gauche=%3, haut=%4)")
 			.arg(windowID)
 			.arg(windowNum)
 			.arg(marginLeft)
@@ -2752,7 +2752,7 @@ void OpcodeWNUMB::setParams(const char *params, int)
 
 QString OpcodeWNUMB::toString(Field *) const
 {
-	return QObject::tr("Affecter %2 dans la fenêtre n°%1 et afficher %3 chiffres")
+	return QObject::tr("Affecter %2 dans la fenÃªtre nÂ°%1 et afficher %3 chiffres")
 			.arg(windowID)
 			.arg(_var(value, B1(banks), B2(banks)))
 			.arg(digitCount);
@@ -2801,7 +2801,7 @@ void OpcodeSTTIM::setParams(const char *params, int)
 
 QString OpcodeSTTIM::toString(Field *) const
 {
-	return QObject::tr("Affecter une valeur au compte à rebours (H=%1, M=%2, S=%3)")
+	return QObject::tr("Affecter une valeur au compte Ã  rebours (H=%1, M=%2, S=%3)")
 			.arg(_var(h, B1(banks[0])))
 			.arg(_var(m, B2(banks[0])))
 			.arg(_var(s, B1(banks[1])));
@@ -2864,7 +2864,7 @@ OpcodeGOLDu::OpcodeGOLDu(const OpcodeGOLD &op) :
 
 QString OpcodeGOLDu::toString(Field *) const
 {
-	return QObject::tr("Ajouter %1 gils à l'équipe")
+	return QObject::tr("Ajouter %1 gils Ã  l'Ã©quipe")
 			.arg(_var(value, B1(banks), B2(banks)));
 }
 
@@ -2880,7 +2880,7 @@ OpcodeGOLDd::OpcodeGOLDd(const OpcodeGOLD &op) :
 
 QString OpcodeGOLDd::toString(Field *) const
 {
-	return QObject::tr("Retirer %1 gils à l'équipe")
+	return QObject::tr("Retirer %1 gils Ã  l'Ã©quipe")
 			.arg(_var(value, B1(banks), B2(banks)));
 }
 
@@ -2925,7 +2925,7 @@ OpcodeHMPMAX1::OpcodeHMPMAX1()
 
 QString OpcodeHMPMAX1::toString(Field *) const
 {
-	return QObject::tr("Redonne les HP/MP aux membres de l'équipe");
+	return QObject::tr("Redonne les HP/MP aux membres de l'Ã©quipe");
 }
 
 OpcodeHMPMAX2::OpcodeHMPMAX2()
@@ -2934,7 +2934,7 @@ OpcodeHMPMAX2::OpcodeHMPMAX2()
 
 QString OpcodeHMPMAX2::toString(Field *) const
 {
-	return QObject::tr("Redonne les HP/MP aux membres de l'équipe");
+	return QObject::tr("Redonne les HP/MP aux membres de l'Ã©quipe");
 }
 
 OpcodeMHMMX::OpcodeMHMMX()
@@ -2943,7 +2943,7 @@ OpcodeMHMMX::OpcodeMHMMX()
 
 QString OpcodeMHMMX::toString(Field *) const
 {
-	return QObject::tr("Redonne les HP/MP à tous et soigne les troubles de statut");
+	return QObject::tr("Redonne les HP/MP Ã  tous et soigne les troubles de statut");
 }
 
 OpcodeHMPMAX3::OpcodeHMPMAX3()
@@ -2952,7 +2952,7 @@ OpcodeHMPMAX3::OpcodeHMPMAX3()
 
 QString OpcodeHMPMAX3::toString(Field *) const
 {
-	return QObject::tr("Redonne les HP/MP aux membres de l'équipe");
+	return QObject::tr("Redonne les HP/MP aux membres de l'Ã©quipe");
 }
 
 OpcodeMESSAGE::OpcodeMESSAGE(const char *params, int size)
@@ -2968,7 +2968,7 @@ void OpcodeMESSAGE::setParams(const char *params, int)
 
 QString OpcodeMESSAGE::toString(Field *field) const
 {
-	return QObject::tr("Afficher message %2 dans la fenêtre n°%1")
+	return QObject::tr("Afficher message %2 dans la fenÃªtre nÂ°%1")
 			.arg(windowID)
 			.arg(_text(textID, field->scriptsAndTexts()));
 }
@@ -3015,7 +3015,7 @@ void OpcodeMPARA::setParams(const char *params, int)
 
 QString OpcodeMPARA::toString(Field *) const
 {
-	return QObject::tr("Affecter %3 à la variable n°%2 dans la fenêtre n°%1")
+	return QObject::tr("Affecter %3 Ã  la variable nÂ°%2 dans la fenÃªtre nÂ°%1")
 			.arg(windowID)
 			.arg(windowVarID)
 			.arg(_var(value, B2(banks)));
@@ -3061,7 +3061,7 @@ void OpcodeMPRA2::setParams(const char *params, int)
 
 QString OpcodeMPRA2::toString(Field *) const
 {
-	return QObject::tr("Affecter %3 à la variable n°%2 dans la fenêtre n°%1")
+	return QObject::tr("Affecter %3 Ã  la variable nÂ°%2 dans la fenÃªtre nÂ°%1")
 			.arg(windowID)
 			.arg(windowVarID)
 			.arg(_var(value, B2(banks)));
@@ -3162,7 +3162,7 @@ OpcodeMPu::OpcodeMPu(const OpcodeHPMP &op) :
 
 QString OpcodeMPu::toString(Field *) const
 {
-	return QObject::tr("Augmenter de %2 MPs le membre n°%1 de l'équipe")
+	return QObject::tr("Augmenter de %2 MPs le membre nÂ°%1 de l'Ã©quipe")
 			.arg(partyID)
 			.arg(_var(value, B2(banks)));
 }
@@ -3179,7 +3179,7 @@ OpcodeMPd::OpcodeMPd(const OpcodeHPMP &op) :
 
 QString OpcodeMPd::toString(Field *) const
 {
-	return QObject::tr("Diminuer de %2 MPs le membre n°%1 de l'équipe")
+	return QObject::tr("Diminuer de %2 MPs le membre nÂ°%1 de l'Ã©quipe")
 			.arg(partyID)
 			.arg(_var(value, B2(banks)));
 }
@@ -3201,7 +3201,7 @@ void OpcodeASK::setParams(const char *params, int)
 
 QString OpcodeASK::toString(Field *field) const
 {
-	return QObject::tr("Poser question %2 dans la fenêtre n°%1 (et mettre la réponse sélectionnée dans %5) première ligne=%3, dernière ligne=%4")
+	return QObject::tr("Poser question %2 dans la fenÃªtre nÂ°%1 (et mettre la rÃ©ponse sÃ©lectionnÃ©e dans %5) premiÃ¨re ligne=%3, derniÃ¨re ligne=%4")
 			.arg(windowID)
 			.arg(_text(textID, field->scriptsAndTexts()))
 			.arg(firstLine)
@@ -3262,27 +3262,27 @@ QString OpcodeMENU::menu(const QString &param) const
 {
 	switch(menuID)
 	{
-	case 1:		return QObject::tr("Fermer le programme (paramètre %1)").arg(param);
-	case 2:		return QObject::tr("Encount Error (paramètre %1)").arg(param);
-	case 5:		return QObject::tr("Crédits de ff7 (paramètre %1)").arg(param);
+	case 1:		return QObject::tr("Fermer le programme (paramÃ¨tre %1)").arg(param);
+	case 2:		return QObject::tr("Encount Error (paramÃ¨tre %1)").arg(param);
+	case 5:		return QObject::tr("CrÃ©dits de ff7 (paramÃ¨tre %1)").arg(param);
 	case 6:		return QObject::tr("Changer nom de %1").arg(character(this->param));//Parameter: char id
-	case 7:		return QObject::tr("Changer l'équipe (paramètre %1)").arg(param);
-	case 8:		return QObject::tr("magasin n°%1").arg(param);//Parameter: shop id
-	case 9:		return QObject::tr("principal (paramètre %1)").arg(param);
-	case 12:	return QObject::tr("course de moto (paramètre %1)").arg(param);
-	case 14:	return QObject::tr("Sauvegarde (paramètre %1)").arg(param);
-	case 15:	return QObject::tr("Effacer toutes les matérias (paramètre %1)").arg(param);
-	case 16:	return QObject::tr("Rétablir toutes les matérias (paramètre %1)").arg(param);
-	case 17:	return QObject::tr("Effacer la matéria de %1").arg(character(this->param));//Parameter: char id
-	case 18:	return QObject::tr("Effacer les matérias de Clad (paramètre %1)").arg(param);
-	case 19:	return QObject::tr("Rétablir les matérias de Clad (paramètre %1)").arg(param);
-	case 20:	return QObject::tr("? (paramètre %1)").arg(param);// TODO
-	case 21:	return QObject::tr("HPs à 1 (paramètre %1)").arg(param);
-	case 22:	return QObject::tr("? (paramètre %1)").arg(param);// TODO
-	case 23:	return QObject::tr("maitre ? (paramètre %1)").arg(param);
-	case 24:	return QObject::tr("? (paramètre %1)").arg(param);
-	case 25:	return QObject::tr("? (paramètre %1)").arg(param);
-	default:	return QObject::tr("%1? (paramètre %2)").arg(menuID).arg(param);
+	case 7:		return QObject::tr("Changer l'Ã©quipe (paramÃ¨tre %1)").arg(param);
+	case 8:		return QObject::tr("magasin nÂ°%1").arg(param);//Parameter: shop id
+	case 9:		return QObject::tr("principal (paramÃ¨tre %1)").arg(param);
+	case 12:	return QObject::tr("course de moto (paramÃ¨tre %1)").arg(param);
+	case 14:	return QObject::tr("Sauvegarde (paramÃ¨tre %1)").arg(param);
+	case 15:	return QObject::tr("Effacer toutes les matÃ©rias (paramÃ¨tre %1)").arg(param);
+	case 16:	return QObject::tr("RÃ©tablir toutes les matÃ©rias (paramÃ¨tre %1)").arg(param);
+	case 17:	return QObject::tr("Effacer la matÃ©ria de %1").arg(character(this->param));//Parameter: char id
+	case 18:	return QObject::tr("Effacer les matÃ©rias de Clad (paramÃ¨tre %1)").arg(param);
+	case 19:	return QObject::tr("RÃ©tablir les matÃ©rias de Clad (paramÃ¨tre %1)").arg(param);
+	case 20:	return QObject::tr("? (paramÃ¨tre %1)").arg(param);// TODO
+	case 21:	return QObject::tr("HPs Ã  1 (paramÃ¨tre %1)").arg(param);
+	case 22:	return QObject::tr("? (paramÃ¨tre %1)").arg(param);// TODO
+	case 23:	return QObject::tr("maitre ? (paramÃ¨tre %1)").arg(param);
+	case 24:	return QObject::tr("? (paramÃ¨tre %1)").arg(param);
+	case 25:	return QObject::tr("? (paramÃ¨tre %1)").arg(param);
+	default:	return QObject::tr("%1? (paramÃ¨tre %2)").arg(menuID).arg(param);
 	}
 }
 
@@ -3318,7 +3318,7 @@ void OpcodeMENU2::setParams(const char *params, int)
 
 QString OpcodeMENU2::toString(Field *) const
 {
-	return QObject::tr("%1 l'accès aux menus")
+	return QObject::tr("%1 l'accÃ¨s aux menus")
 			.arg(disabled == 0 ? QObject::tr("Permettre") : QObject::tr("Interdire"));
 }
 
@@ -3360,7 +3360,7 @@ OpcodeHPu::OpcodeHPu(const OpcodeHPMP &op) :
 
 QString OpcodeHPu::toString(Field *) const
 {
-	return QObject::tr("Augmenter de %2 HPs le membre n°%1 de l'équipe")
+	return QObject::tr("Augmenter de %2 HPs le membre nÂ°%1 de l'Ã©quipe")
 			.arg(partyID)
 			.arg(_var(value, B2(banks)));
 }
@@ -3377,7 +3377,7 @@ OpcodeHPd::OpcodeHPd(const OpcodeHPMP &op) :
 
 QString OpcodeHPd::toString(Field *) const
 {
-	return QObject::tr("Diminuer de %2 HPs le membre n°%1 de l'équipe")
+	return QObject::tr("Diminuer de %2 HPs le membre nÂ°%1 de l'Ã©quipe")
 			.arg(partyID)
 			.arg(_var(value, B2(banks)));
 }
@@ -3394,7 +3394,7 @@ OpcodeWINDOW::OpcodeWINDOW(const OpcodeWindow &op) :
 
 QString OpcodeWINDOW::toString(Field *) const
 {
-	return QObject::tr("Créer la fenêtre n°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)")
+	return QObject::tr("CrÃ©er la fenÃªtre nÂ°%1 (X=%2, Y=%3, largeur=%4, hauteur=%5)")
 			.arg(windowID)
 			.arg(targetX)
 			.arg(targetY)
@@ -3416,7 +3416,7 @@ void OpcodeWMOVE::setParams(const char *params, int)
 
 QString OpcodeWMOVE::toString(Field *) const
 {
-	return QObject::tr("Déplacer la fenêtre n°%1 (déplacement : X=%2, Y=%3)")
+	return QObject::tr("DÃ©placer la fenÃªtre nÂ°%1 (dÃ©placement : X=%2, Y=%3)")
 			.arg(windowID)
 			.arg(relativeX)
 			.arg(relativeY);
@@ -3463,10 +3463,10 @@ QString OpcodeWMODE::toString(Field *) const
 	default:		typeStr = QString("%1?").arg(mode);
 	}
 
-	return QObject::tr("Décoration de la fenêtre n°%1 : %2 (%3 la fermeture de la fenêtre par le joueur)")
+	return QObject::tr("DÃ©coration de la fenÃªtre nÂ°%1 : %2 (%3 la fermeture de la fenÃªtre par le joueur)")
 			.arg(windowID)
 			.arg(typeStr)
-			.arg(preventClose == 0 ? QObject::tr("autoriser") : QObject::tr("empêcher"));
+			.arg(preventClose == 0 ? QObject::tr("autoriser") : QObject::tr("empÃªcher"));
 }
 
 QByteArray OpcodeWMODE::params() const
@@ -3499,7 +3499,7 @@ void OpcodeWREST::setParams(const char *params, int)
 
 QString OpcodeWREST::toString(Field *) const
 {
-	return QObject::tr("Remettre la fenêtre n°%1 à zéro")
+	return QObject::tr("Remettre la fenÃªtre nÂ°%1 Ã  zÃ©ro")
 			.arg(windowID);
 }
 
@@ -3543,7 +3543,7 @@ void OpcodeWCLSE::setParams(const char *params, int)
 
 QString OpcodeWCLSE::toString(Field *) const
 {
-	return QObject::tr("Fermer la fenêtre n°%1 (plus fort)")
+	return QObject::tr("Fermer la fenÃªtre nÂ°%1 (plus fort)")
 			.arg(windowID);
 }
 
@@ -3575,7 +3575,7 @@ void OpcodeWROW::setParams(const char *params, int)
 
 QString OpcodeWROW::toString(Field *) const
 {
-	return QObject::tr("Configurer le nombre de lignes de texte à %2 dans la fenêtre n°%1")
+	return QObject::tr("Configurer le nombre de lignes de texte Ã  %2 dans la fenÃªtre nÂ°%1")
 			.arg(windowID)
 			.arg(rowCount);
 }
@@ -3634,7 +3634,7 @@ OpcodeGWCOL::OpcodeGWCOL(const OpcodeWCOL &op) :
 
 QString OpcodeGWCOL::toString(Field *) const
 {
-	return QObject::tr("Obtenir la couleur du côté %1 des fenêtres et en stocker les composantes dans %2 (R), %3 (V) et %4 (B)")
+	return QObject::tr("Obtenir la couleur du cÃ´tÃ© %1 des fenÃªtres et en stocker les composantes dans %2 (R), %3 (V) et %4 (B)")
 			.arg(_windowCorner(corner, B1(banks[0])))
 			.arg(_bank(r, B2(banks[0])))
 			.arg(_bank(g, B1(banks[1])))
@@ -3666,7 +3666,7 @@ OpcodeSWCOL::OpcodeSWCOL(const OpcodeWCOL &op) :
 
 QString OpcodeSWCOL::toString(Field *) const
 {
-	return QObject::tr("Changer la couleur du côté %1 des fenêtres : RVB(%2, %3, %4)")
+	return QObject::tr("Changer la couleur du cÃ´tÃ© %1 des fenÃªtres : RVB(%2, %3, %4)")
 			.arg(_windowCorner(corner, B1(banks[0])))
 			.arg(_var(r, B2(banks[0])))
 			.arg(_var(g, B1(banks[1])))
@@ -3760,7 +3760,7 @@ OpcodeCKITM::OpcodeCKITM(const OpcodeItem &op) :
 
 QString OpcodeCKITM::toString(Field *) const
 {
-	return QObject::tr("%2 = quantité d'objets %1 dans l'inventaire")
+	return QObject::tr("%2 = quantitÃ© d'objets %1 dans l'inventaire")
 			.arg(_item(itemID, B1(banks)))
 			.arg(_bank(quantity, B2(banks)));
 }
@@ -3789,7 +3789,7 @@ void OpcodeSMTRA::setParams(const char *params, int)
 
 QString OpcodeSMTRA::toString(Field *) const
 {
-	return QObject::tr("Ajouter la matéria %1 dans l'inventaire (AP=%2)")
+	return QObject::tr("Ajouter la matÃ©ria %1 dans l'inventaire (AP=%2)")
 			.arg(_materia(materiaID, B1(banks[0])))
 			.arg(_var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])));
 }
@@ -3831,7 +3831,7 @@ void OpcodeDMTRA::setParams(const char *params, int)
 
 QString OpcodeDMTRA::toString(Field *) const
 {
-	return QObject::tr("Supprimer %3 matéria(s) %1 dans l'inventaire (AP=%2)")
+	return QObject::tr("Supprimer %3 matÃ©ria(s) %1 dans l'inventaire (AP=%2)")
 			.arg(_materia(materiaID, B1(banks[0])))
 			.arg(_var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])))
 			.arg(quantity);
@@ -3877,7 +3877,7 @@ void OpcodeCMTRA::setParams(const char *params, int)
 
 QString OpcodeCMTRA::toString(Field *) const
 {
-	return QObject::tr("%4 = quantité de matéria %1 dans l'inventaire (AP=%2, ?=%3)")
+	return QObject::tr("%4 = quantitÃ© de matÃ©ria %1 dans l'inventaire (AP=%2, ?=%3)")
 			.arg(_materia(materiaID, B1(banks[0])))
 			.arg(_var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])))
 			.arg(unknown)
@@ -3926,7 +3926,7 @@ void OpcodeSHAKE::setParams(const char *params, int)
 
 QString OpcodeSHAKE::toString(Field *) const
 {
-	return QObject::tr("Secouer l'écran (nbOscillations=%1, Amplitude=%2, vitesse=%3)")
+	return QObject::tr("Secouer l'Ã©cran (nbOscillations=%1, Amplitude=%2, vitesse=%3)")
 			.arg(shakeCount)
 			.arg(amplitude)
 			.arg(speed);
@@ -3969,7 +3969,7 @@ void OpcodeMAPJUMP::setParams(const char *params, int)
 
 QString OpcodeMAPJUMP::toString(Field *) const
 {
-	return QObject::tr("Aller à l'écran %1 (X=%2, Y=%3, triangle id=%4, direction=%5)")
+	return QObject::tr("Aller Ã  l'Ã©cran %1 (X=%2, Y=%3, triangle id=%4, direction=%5)")
 			.arg(_field(fieldID))
 			.arg(targetX)
 			.arg(targetY)
@@ -4278,7 +4278,7 @@ void OpcodeFADE::setParams(const char *params, int)
 
 QString OpcodeFADE::toString(Field *) const
 {
-	return QObject::tr("Voiler l'écran avec la couleur RVB(%1, %2, %3) (vitesse=%4, type=%5, adjust=%6)")
+	return QObject::tr("Voiler l'Ã©cran avec la couleur RVB(%1, %2, %3) (vitesse=%4, type=%5, adjust=%6)")
 			.arg(_var(r, B1(banks[0])))
 			.arg(_var(g, B2(banks[0])))
 			.arg(_var(b, B2(banks[1])))
@@ -4315,7 +4315,7 @@ OpcodeFADEW::OpcodeFADEW()
 
 QString OpcodeFADEW::toString(Field *) const
 {
-	return QObject::tr("Attendre la fin du voilage de l'écran pour continuer");
+	return QObject::tr("Attendre la fin du voilage de l'Ã©cran pour continuer");
 }
 
 OpcodeIDLCK::OpcodeIDLCK(const char *params, int size)
@@ -4331,9 +4331,9 @@ void OpcodeIDLCK::setParams(const char *params, int)
 
 QString OpcodeIDLCK::toString(Field *) const
 {
-	return QObject::tr("%2 le triangle n°%1")
+	return QObject::tr("%2 le triangle nÂ°%1")
 			.arg(triangleID)
-			.arg(locked == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+			.arg(locked == 0 ? QObject::tr("Activer") : QObject::tr("DÃ©sactiver"));
 }
 
 QByteArray OpcodeIDLCK::params() const
@@ -4356,7 +4356,7 @@ void OpcodeLSTMP::setParams(const char *params, int)
 
 QString OpcodeLSTMP::toString(Field *) const
 {
-	return QObject::tr("Stocker l'id de l'écran précédent dans %1")
+	return QObject::tr("Stocker l'id de l'Ã©cran prÃ©cÃ©dent dans %1")
 			.arg(_bank(var, B2(banks)));
 }
 
@@ -4388,7 +4388,7 @@ void OpcodeSCRLP::setParams(const char *params, int)
 
 QString OpcodeSCRLP::toString(Field *) const
 {
-	return QObject::tr("Centrer sur le personnage n°%2 de l'équipe actuelle (vitesse=%1 img, type=%3)")
+	return QObject::tr("Centrer sur le personnage nÂ°%2 de l'Ã©quipe actuelle (vitesse=%1 img, type=%3)")
 			.arg(_var(speed, B2(banks)))
 			.arg(partyID)
 			.arg(scrollType);
@@ -4422,7 +4422,7 @@ void OpcodeBATTLE::setParams(const char *params, int)
 
 QString OpcodeBATTLE::toString(Field *) const
 {
-	return QObject::tr("Commencer le combat n°%1")
+	return QObject::tr("Commencer le combat nÂ°%1")
 			.arg(_var(battleID, B2(banks)));
 }
 
@@ -4451,8 +4451,8 @@ void OpcodeBTLON::setParams(const char *params, int)
 
 QString OpcodeBTLON::toString(Field *) const
 {
-	return QObject::tr("%1 les combats aléatoires")
-			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+	return QObject::tr("%1 les combats alÃ©atoires")
+			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("DÃ©sactiver"));
 }
 
 QByteArray OpcodeBTLON::params() const
@@ -4479,13 +4479,13 @@ QString OpcodeBTLMD::toString(Field *) const
 		{
 			switch(i)
 			{
-			case 1:		modes.append(QObject::tr("Compte à rebours"));							break;
-			case 2:		modes.append(QObject::tr("Attaque préventive"));						break;
+			case 1:		modes.append(QObject::tr("Compte Ã  rebours"));							break;
+			case 2:		modes.append(QObject::tr("Attaque prÃ©ventive"));						break;
 			case 3:		modes.append(QObject::tr("Impossible de fuir"));						break;
 			case 5:		modes.append(QObject::tr("Ne pas jouer Fanfare"));						break;
-			case 6:		modes.append(QObject::tr("Active l'arène de combat du Gold Saucer"));	break;
-			case 7:		modes.append(QObject::tr("Ne pas afficher d'écran de récompense"));		break;
-			case 8:		modes.append(QObject::tr("Désactiver Game Over"));						break;
+			case 6:		modes.append(QObject::tr("Active l'arÃ¨ne de combat du Gold Saucer"));	break;
+			case 7:		modes.append(QObject::tr("Ne pas afficher d'Ã©cran de rÃ©compense"));		break;
+			case 8:		modes.append(QObject::tr("DÃ©sactiver Game Over"));						break;
 			default:	modes.append(QString("%1?").arg(i));									break;
 			}
 		}
@@ -4513,7 +4513,7 @@ void OpcodePGTDR::setParams(const char *params, int)
 
 QString OpcodePGTDR::toString(Field *) const
 {
-	return QObject::tr("Obtenir la direction du personnage n°%1 de l'équipe actuelle et la stocker dans %2")
+	return QObject::tr("Obtenir la direction du personnage nÂ°%1 de l'Ã©quipe actuelle et la stocker dans %2")
 			.arg(partyID)
 			.arg(_bank(varDir, B2(banks)));
 }
@@ -4546,7 +4546,7 @@ void OpcodeGETPC::setParams(const char *params, int)
 
 QString OpcodeGETPC::toString(Field *) const
 {
-	return QObject::tr("Obtenir l'id du personnage n°%1 de l'équipe actuelle et le stocker dans %2")
+	return QObject::tr("Obtenir l'id du personnage nÂ°%1 de l'Ã©quipe actuelle et le stocker dans %2")
 			.arg(partyID)
 			.arg(_bank(varPC, B2(banks)));
 }
@@ -4583,7 +4583,7 @@ void OpcodePXYZI::setParams(const char *params, int)
 
 QString OpcodePXYZI::toString(Field *) const
 {
-	return QObject::tr("Obtenir les coordonnées du personnage n°%1 de l'équipe actuelle (stocker : X dans %2, Y dans %3, Z dans %4 et l'id dans %5)")
+	return QObject::tr("Obtenir les coordonnÃ©es du personnage nÂ°%1 de l'Ã©quipe actuelle (stocker : X dans %2, Y dans %3, Z dans %4 et l'id dans %5)")
 			.arg(partyID)
 			.arg(_bank(varX, B1(banks[0])))
 			.arg(_bank(varY, B2(banks[0])))
@@ -4870,8 +4870,8 @@ void OpcodeTLKON::setParams(const char *params, int)
 
 QString OpcodeTLKON::toString(Field *) const
 {
-	return QObject::tr("%1 la possibilité de parler à l'objet 3D")
-			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+	return QObject::tr("%1 la possibilitÃ© de parler Ã  l'objet 3D")
+			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("DÃ©sactiver"));
 }
 
 QByteArray OpcodeTLKON::params() const
@@ -4977,7 +4977,7 @@ OpcodeBITON::OpcodeBITON(const OpcodeBitOperation &op) :
 
 QString OpcodeBITON::toString(Field *) const
 {
-	return QObject::tr("Mettre le bit %2 à 1 dans %1")
+	return QObject::tr("Mettre le bit %2 Ã  1 dans %1")
 			.arg(_bank(var, B1(banks)))
 			.arg(_var(position, B2(banks)));
 }
@@ -4994,7 +4994,7 @@ OpcodeBITOFF::OpcodeBITOFF(const OpcodeBitOperation &op) :
 
 QString OpcodeBITOFF::toString(Field *) const
 {
-	return QObject::tr("Mettre le bit %2 à 0 dans %1")
+	return QObject::tr("Mettre le bit %2 Ã  0 dans %1")
 			.arg(_bank(var, B1(banks)))
 			.arg(_var(position, B2(banks)));
 }
@@ -5364,7 +5364,7 @@ OpcodeRANDOM::OpcodeRANDOM(const OpcodeUnaryOperation &op) :
 
 QString OpcodeRANDOM::toString(Field *) const
 {
-	return QObject::tr("Affecter une valeur aléatoire à %1 (8 bits)")
+	return QObject::tr("Affecter une valeur alÃ©atoire Ã  %1 (8 bits)")
 			.arg(_bank(var, B2(banks)));
 }
 
@@ -5502,7 +5502,7 @@ void OpcodeSEARCHX::setParams(const char *params, int)
 
 QString OpcodeSEARCHX::toString(Field *) const
 {
-	return QObject::tr("Rechercher la valeur %5 dans la mémoire (bank=%1, début=%2+%3, fin=%2+%4) et mettre la position dans %6")
+	return QObject::tr("Rechercher la valeur %5 dans la mÃ©moire (bank=%1, dÃ©but=%2+%3, fin=%2+%4) et mettre la position dans %6")
 			.arg(B1(banks[0]))
 			.arg(searchStart)
 			.arg(_var(start, B2(banks[0])))
@@ -5624,7 +5624,7 @@ void OpcodeANIME1::setParams(const char *params, int)
 
 QString OpcodeANIME1::toString(Field *) const
 {
-	return QObject::tr("Joue l'animation %1 de l'objet 3D et retourne à l'état précédent (vitesse=%2)")
+	return QObject::tr("Joue l'animation %1 de l'objet 3D et retourne Ã  l'Ã©tat prÃ©cÃ©dent (vitesse=%2)")
 			.arg(animID)
 			.arg(speed);
 }
@@ -5831,7 +5831,7 @@ void OpcodeMOVE::setParams(const char *params, int)
 
 QString OpcodeMOVE::toString(Field *) const
 {
-	return QObject::tr("Déplace l'objet 3D (X=%1, Y=%2)")
+	return QObject::tr("DÃ©place l'objet 3D (X=%1, Y=%2)")
 			.arg(_var(targetX, B1(banks)))
 			.arg(_var(targetY, B2(banks)));
 }
@@ -5866,7 +5866,7 @@ void OpcodeCMOVE::setParams(const char *params, int)
 
 QString OpcodeCMOVE::toString(Field *) const
 {
-	return QObject::tr("Déplace l'objet 3D sans animation (X=%1, Y=%2)")
+	return QObject::tr("DÃ©place l'objet 3D sans animation (X=%1, Y=%2)")
 			.arg(_var(targetX, B1(banks)))
 			.arg(_var(targetY, B2(banks)));
 }
@@ -5899,7 +5899,7 @@ void OpcodeMOVA::setParams(const char *params, int)
 
 QString OpcodeMOVA::toString(Field *field) const
 {
-	return QObject::tr("Déplace l'objet 3D vers le groupe %1")
+	return QObject::tr("DÃ©place l'objet 3D vers le groupe %1")
 			.arg(_script(groupID, field->scriptsAndTexts()));
 }
 
@@ -5943,7 +5943,7 @@ OpcodeANIMW::OpcodeANIMW()
 
 QString OpcodeANIMW::toString(Field *) const
 {
-	return QObject::tr("Attendre que l'animation soit terminée pour continuer");
+	return QObject::tr("Attendre que l'animation soit terminÃ©e pour continuer");
 }
 
 OpcodeFMOVE::OpcodeFMOVE(const char *params, int size)
@@ -5960,7 +5960,7 @@ void OpcodeFMOVE::setParams(const char *params, int)
 
 QString OpcodeFMOVE::toString(Field *) const
 {
-	return QObject::tr("Déplace l'objet 3D sans animation (X=%1, Y=%2)")
+	return QObject::tr("DÃ©place l'objet 3D sans animation (X=%1, Y=%2)")
 			.arg(_var(targetX, B1(banks)))
 			.arg(_var(targetY, B2(banks)));
 }
@@ -5994,7 +5994,7 @@ void OpcodeANIME2::setParams(const char *params, int)
 
 QString OpcodeANIME2::toString(Field *) const
 {
-	return QObject::tr("Joue l'animation %1 de l'objet 3D et retourne à l'état précédent (vitesse=%2)")
+	return QObject::tr("Joue l'animation %1 de l'objet 3D et retourne Ã  l'Ã©tat prÃ©cÃ©dent (vitesse=%2)")
 			.arg(animID)
 			.arg(speed);
 }
@@ -6046,7 +6046,7 @@ void OpcodeCANIM1::setParams(const char *params, int)
 
 QString OpcodeCANIM1::toString(Field *) const
 {
-	return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D et retourne à l'état précédent (première img=%2, dernière img=%3, vitesse=%4)")
+	return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D et retourne Ã  l'Ã©tat prÃ©cÃ©dent (premiÃ¨re img=%2, derniÃ¨re img=%3, vitesse=%4)")
 			.arg(animID)
 			.arg(firstFrame)
 			.arg(lastFrame)
@@ -6077,7 +6077,7 @@ void OpcodeCANMX1::setParams(const char *params, int)
 
 QString OpcodeCANMX1::toString(Field *) const
 {
-	return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D (première img=%2, dernière img=%3, vitesse=%4)")
+	return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D (premiÃ¨re img=%2, derniÃ¨re img=%3, vitesse=%4)")
 			.arg(animID)
 			.arg(firstFrame)
 			.arg(lastFrame)
@@ -6106,7 +6106,7 @@ void OpcodeMSPED::setParams(const char *params, int)
 
 QString OpcodeMSPED::toString(Field *) const
 {
-	return QObject::tr("Configurer la vitesse des déplacements de l'objet 3D : %1")
+	return QObject::tr("Configurer la vitesse des dÃ©placements de l'objet 3D : %1")
 			.arg(_var(speed, B2(banks)));
 }
 
@@ -6208,7 +6208,7 @@ void OpcodeTURN::setParams(const char *params, int)
 
 QString OpcodeTURN::toString(Field *) const
 {
-	return QObject::tr("Rotation inversée (direction=%1, nbTours=%2, vitesse=%3, ?=%4)")
+	return QObject::tr("Rotation inversÃ©e (direction=%1, nbTours=%2, vitesse=%3, ?=%4)")
 			.arg(_var(direction, B2(banks)))
 			.arg(turnCount)
 			.arg(speed)
@@ -6397,7 +6397,7 @@ void OpcodeCANIM2::setParams(const char *params, int)
 
 QString OpcodeCANIM2::toString(Field *) const
 {
-	return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D et retourne à l'état précédent (première img=%2, dernière img=%3, vitesse=%4)")
+	return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D et retourne Ã  l'Ã©tat prÃ©cÃ©dent (premiÃ¨re img=%2, derniÃ¨re img=%3, vitesse=%4)")
 			.arg(animID)
 			.arg(firstFrame)
 			.arg(lastFrame)
@@ -6428,7 +6428,7 @@ void OpcodeCANMX2::setParams(const char *params, int)
 
 QString OpcodeCANMX2::toString(Field *) const
 {
-	return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D (première img=%2, dernière img=%3, vitesse=%4)")
+	return QObject::tr("Joue partiellement l'animation %1 de l'objet 3D (premiÃ¨re img=%2, derniÃ¨re img=%3, vitesse=%4)")
 			.arg(animID)
 			.arg(firstFrame)
 			.arg(lastFrame)
@@ -6486,7 +6486,7 @@ void OpcodeCC::setParams(const char *params, int)
 
 QString OpcodeCC::toString(Field *field) const
 {
-	return QObject::tr("Prendre le contrôle du groupe %1")
+	return QObject::tr("Prendre le contrÃ´le du groupe %1")
 			.arg(_script(groupID, field->scriptsAndTexts()));
 }
 
@@ -6609,7 +6609,7 @@ void OpcodeLADER::setParams(const char *params, int)
 
 QString OpcodeLADER::toString(Field *) const
 {
-	return QObject::tr("Monter une échelle avec l'animation %6 (X=%1, Y=%2, Z=%3, triangle id=%4, sens=%5, direction=%7, vitesse=%8)")
+	return QObject::tr("Monter une Ã©chelle avec l'animation %6 (X=%1, Y=%2, Z=%3, triangle id=%4, sens=%5, direction=%7, vitesse=%8)")
 			.arg(_var(targetX, B1(banks[0])))
 			.arg(_var(targetY, B2(banks[0])))
 			.arg(_var(targetZ, B1(banks[1])))
@@ -6700,7 +6700,7 @@ OpcodeOFSTW::OpcodeOFSTW()
 
 QString OpcodeOFSTW::toString(Field *) const
 {
-	return QObject::tr("Attendre la fin de l'exécution de l'Offset Object pour continuer");
+	return QObject::tr("Attendre la fin de l'exÃ©cution de l'Offset Object pour continuer");
 }
 
 OpcodeTALKR::OpcodeTALKR(const char *params, int size)
@@ -6716,7 +6716,7 @@ void OpcodeTALKR::setParams(const char *params, int)
 
 QString OpcodeTALKR::toString(Field *) const
 {
-	return QObject::tr("Modifier la distance nécessaire pour parler avec l'objet 3D : %1")
+	return QObject::tr("Modifier la distance nÃ©cessaire pour parler avec l'objet 3D : %1")
 			.arg(_var(distance, B2(banks)));
 }
 
@@ -6746,7 +6746,7 @@ void OpcodeSLIDR::setParams(const char *params, int)
 
 QString OpcodeSLIDR::toString(Field *) const
 {
-	return QObject::tr("Modifier la distance nécessaire pour toucher l'objet 3D : %1")
+	return QObject::tr("Modifier la distance nÃ©cessaire pour toucher l'objet 3D : %1")
 			.arg(_var(distance, B2(banks)));
 }
 
@@ -6775,8 +6775,8 @@ void OpcodeSOLID::setParams(const char *params, int)
 
 QString OpcodeSOLID::toString(Field *) const
 {
-	return QObject::tr("%1 la possibilité de toucher l'objet 3D")
-			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+	return QObject::tr("%1 la possibilitÃ© de toucher l'objet 3D")
+			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("DÃ©sactiver"));
 }
 
 QByteArray OpcodeSOLID::params() const
@@ -6796,7 +6796,7 @@ void OpcodePRTYP::setParams(const char *params, int)
 
 QString OpcodePRTYP::toString(Field *) const
 {
-	return QObject::tr("Ajouter %1 à l'équipe actuelle")
+	return QObject::tr("Ajouter %1 Ã  l'Ã©quipe actuelle")
 			.arg(character(charID));
 }
 
@@ -6817,7 +6817,7 @@ void OpcodePRTYM::setParams(const char *params, int)
 
 QString OpcodePRTYM::toString(Field *) const
 {
-	return QObject::tr("Retirer %1 de l'équipe actuelle")
+	return QObject::tr("Retirer %1 de l'Ã©quipe actuelle")
 			.arg(character(charID));
 }
 
@@ -6838,7 +6838,7 @@ void OpcodePRTYE::setParams(const char *params, int)
 
 QString OpcodePRTYE::toString(Field *) const
 {
-	return QObject::tr("Nouvelle équipe : %1 | %2 | %3")
+	return QObject::tr("Nouvelle Ã©quipe : %1 | %2 | %3")
 			.arg(character(charID[0]))
 			.arg(character(charID[1]))
 			.arg(character(charID[2]));
@@ -6875,7 +6875,7 @@ OpcodeIFPRTYQ::OpcodeIFPRTYQ(const char *params, int size) :
 
 QString OpcodeIFPRTYQ::toString(Field *) const
 {
-	return QObject::tr("Si %1 est dans l'équipe actuelle (%2)")
+	return QObject::tr("Si %1 est dans l'Ã©quipe actuelle (%2)")
 			.arg(character(charID))
 			.arg(_badJump
 				 ? QObject::tr("avancer de %n octet(s) sinon", "With plural", _jump)
@@ -6954,7 +6954,7 @@ void OpcodeMMBUK::setParams(const char *params, int)
 
 QString OpcodeMMBUK::toString(Field *) const
 {
-	return QObject::tr("Débloque %1 dans le menu PHS")
+	return QObject::tr("DÃ©bloque %1 dans le menu PHS")
 			.arg(character(charID));
 }
 
@@ -6980,7 +6980,7 @@ void OpcodeLINE::setParams(const char *params, int)
 
 QString OpcodeLINE::toString(Field *) const
 {
-	return QObject::tr("Définit la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
+	return QObject::tr("DÃ©finit la zone (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
 			.arg(targetX1)
 			.arg(targetY1)
 			.arg(targetZ1)
@@ -7049,8 +7049,8 @@ void OpcodeMPJPO::setParams(const char *params, int)
 
 QString OpcodeMPJPO::toString(Field *) const
 {
-	return QObject::tr("%1 les changements de décor par le joueur")
-			.arg(prevent == 0 ? QObject::tr("Autoriser") : QObject::tr("Empêcher"));
+	return QObject::tr("%1 les changements de dÃ©cor par le joueur")
+			.arg(prevent == 0 ? QObject::tr("Autoriser") : QObject::tr("EmpÃªcher"));
 }
 
 QByteArray OpcodeMPJPO::params() const
@@ -7216,7 +7216,7 @@ void OpcodeTLKR2::setParams(const char *params, int)
 
 QString OpcodeTLKR2::toString(Field *) const
 {
-	return QObject::tr("Modifier la distance nécessaire pour parler avec l'objet 3D : %1")
+	return QObject::tr("Modifier la distance nÃ©cessaire pour parler avec l'objet 3D : %1")
 			.arg(_var(distance, B2(banks)));
 }
 
@@ -7246,7 +7246,7 @@ void OpcodeSLDR2::setParams(const char *params, int)
 
 QString OpcodeSLDR2::toString(Field *) const
 {
-	return QObject::tr("Modifier la distance nécessaire pour toucher l'objet 3D : %1")
+	return QObject::tr("Modifier la distance nÃ©cessaire pour toucher l'objet 3D : %1")
 			.arg(_var(distance, B2(banks)));
 }
 
@@ -7275,7 +7275,7 @@ void OpcodePMJMP::setParams(const char *params, int)
 
 QString OpcodePMJMP::toString(Field *) const
 {
-	return QObject::tr("Commencer à charger l'écran %1")
+	return QObject::tr("Commencer Ã  charger l'Ã©cran %1")
 			.arg(_field(fieldID));
 }
 
@@ -7359,7 +7359,7 @@ void OpcodeFCFIX::setParams(const char *params, int)
 QString OpcodeFCFIX::toString(Field *) const
 {
 	return QObject::tr("%1 rotation")
-			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("Désactiver"));
+			.arg(disabled == 0 ? QObject::tr("Activer") : QObject::tr("DÃ©sactiver"));
 }
 
 QByteArray OpcodeFCFIX::params() const
@@ -7381,7 +7381,7 @@ void OpcodeCCANM::setParams(const char *params, int)
 
 QString OpcodeCCANM::toString(Field *) const
 {
-	return QObject::tr("Jouer animation n°%1 pour '%3' (vitesse=%2)")
+	return QObject::tr("Jouer animation nÂ°%1 pour '%3' (vitesse=%2)")
 			.arg(animID)
 			.arg(speed)
 			.arg(standWalkRun == 0 ? QObject::tr("rester immobile")
@@ -7412,7 +7412,7 @@ OpcodeTURNW::OpcodeTURNW()
 
 QString OpcodeTURNW::toString(Field *) const
 {
-	return QObject::tr("Attendre que la rotation soit terminée pour continuer");
+	return QObject::tr("Attendre que la rotation soit terminÃ©e pour continuer");
 }
 
 OpcodeMPPAL::OpcodeMPPAL(const char *params, int size)
@@ -7434,7 +7434,7 @@ void OpcodeMPPAL::setParams(const char *params, int)
 
 QString OpcodeMPPAL::toString(Field *) const
 {
-	return QObject::tr("Multiplier RVB(%6, %5, %4) sur les couleurs d'une palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%7+1)")
+	return QObject::tr("Multiplier RVB(%6, %5, %4) sur les couleurs d'une palette (sourcePal=%1, ciblePal=%2, premiÃ¨re couleur=%3, nombre de couleurs=%7+1)")
 			.arg(posSrc)
 			.arg(posDst)
 			.arg(_var(start, B1(banks[0])))
@@ -7485,7 +7485,7 @@ void OpcodeBGON::setParams(const char *params, int)
 
 QString OpcodeBGON::toString(Field *) const
 {
-	return QObject::tr("Afficher l'état n°%2 du paramètre n°%1")
+	return QObject::tr("Afficher l'Ã©tat nÂ°%2 du paramÃ¨tre nÂ°%1")
 			.arg(_var(paramID, B1(banks)))
 			.arg(_var(stateID, B2(banks)));
 }
@@ -7520,7 +7520,7 @@ void OpcodeBGOFF::setParams(const char *params, int)
 
 QString OpcodeBGOFF::toString(Field *) const
 {
-	return QObject::tr("Cacher l'état n°%2 du paramètre n°%1")
+	return QObject::tr("Cacher l'Ã©tat nÂ°%2 du paramÃ¨tre nÂ°%1")
 			.arg(_var(paramID, B1(banks)))
 			.arg(_var(stateID, B2(banks)));
 }
@@ -7554,7 +7554,7 @@ void OpcodeBGROL::setParams(const char *params, int)
 
 QString OpcodeBGROL::toString(Field *) const
 {
-	return QObject::tr("Afficher l'état suivant du paramètre n°%1")
+	return QObject::tr("Afficher l'Ã©tat suivant du paramÃ¨tre nÂ°%1")
 			.arg(_var(paramID, B2(banks)));
 }
 
@@ -7584,7 +7584,7 @@ void OpcodeBGROL2::setParams(const char *params, int)
 
 QString OpcodeBGROL2::toString(Field *) const
 {
-	return QObject::tr("Afficher l'état précédent du paramètre n°%1")
+	return QObject::tr("Afficher l'Ã©tat prÃ©cÃ©dent du paramÃ¨tre nÂ°%1")
 			.arg(_var(paramID, B2(banks)));
 }
 
@@ -7614,7 +7614,7 @@ void OpcodeBGCLR::setParams(const char *params, int)
 
 QString OpcodeBGCLR::toString(Field *) const
 {
-	return QObject::tr("Cacher paramètre n°%1")
+	return QObject::tr("Cacher paramÃ¨tre nÂ°%1")
 			.arg(_var(paramID, B2(banks)));
 }
 
@@ -7646,7 +7646,7 @@ void OpcodeSTPAL::setParams(const char *params, int)
 
 QString OpcodeSTPAL::toString(Field *) const
 {
-	return QObject::tr("Charger la palette n°%1 à la position %2 (nombre de couleurs=%3)")
+	return QObject::tr("Charger la palette nÂ°%1 Ã  la position %2 (nombre de couleurs=%3)")
 			.arg(_var(palID, B1(banks)))
 			.arg(_var(position, B2(banks)))
 			.arg(colorCount+1);
@@ -7684,7 +7684,7 @@ void OpcodeLDPAL::setParams(const char *params, int)
 
 QString OpcodeLDPAL::toString(Field *) const
 {
-	return QObject::tr("Charger la position %1 dans la palette n°%2 (nombre de couleurs=%3)")
+	return QObject::tr("Charger la position %1 dans la palette nÂ°%2 (nombre de couleurs=%3)")
 			.arg(_var(position, B1(banks)))
 			.arg(_var(palID, B2(banks)))
 			.arg(colorCount+1);
@@ -7761,7 +7761,7 @@ void OpcodeRTPAL::setParams(const char *params, int)
 
 QString OpcodeRTPAL::toString(Field *) const
 {
-	return QObject::tr("Copier un morceau de palette (sourcePal=%1, ciblePal=%2, première couleur=%3, nombre de couleurs=%4)")
+	return QObject::tr("Copier un morceau de palette (sourcePal=%1, ciblePal=%2, premiÃ¨re couleur=%3, nombre de couleurs=%4)")
 			.arg(_var(posSrc, B1(banks[0])))
 			.arg(_var(posDst, B2(banks[0])))
 			.arg(_var(start, B2(banks[1])))
@@ -7909,7 +7909,7 @@ void OpcodeSTPLS::setParams(const char *params, int)
 
 QString OpcodeSTPLS::toString(Field *) const
 {
-	return QObject::tr("Charger la palette n°%1 à la position %2 (première couleur=%3, nombre de couleurs=%4)")
+	return QObject::tr("Charger la palette nÂ°%1 Ã  la position %2 (premiÃ¨re couleur=%3, nombre de couleurs=%4)")
 			.arg(palID)
 			.arg(posSrc)
 			.arg(start)
@@ -7940,7 +7940,7 @@ void OpcodeLDPLS::setParams(const char *params, int)
 
 QString OpcodeLDPLS::toString(Field *) const
 {
-	return QObject::tr("Charger la position %1 dans la palette n°%2 (première couleur=%3, nombre de couleurs=%4)")
+	return QObject::tr("Charger la position %1 dans la palette nÂ°%2 (premiÃ¨re couleur=%3, nombre de couleurs=%4)")
 			.arg(posSrc)
 			.arg(palID)
 			.arg(start)
@@ -8031,7 +8031,7 @@ void OpcodeMUSIC::setParams(const char *params, int)
 
 QString OpcodeMUSIC::toString(Field *) const
 {
-	return QObject::tr("Jouer musique n°%1")
+	return QObject::tr("Jouer musique nÂ°%1")
 			.arg(musicID);
 }
 
@@ -8054,7 +8054,7 @@ void OpcodeSOUND::setParams(const char *params, int)
 
 QString OpcodeSOUND::toString(Field *) const
 {
-	return QObject::tr("Jouer son n°%1 (position=%2/127)")
+	return QObject::tr("Jouer son nÂ°%1 (position=%2/127)")
 			.arg(_var(soundID, B1(banks)))
 			.arg(_var(position, B2(banks)));
 }
@@ -8140,7 +8140,7 @@ void OpcodeMUSVT::setParams(const char *params, int)
 
 QString OpcodeMUSVT::toString(Field *) const
 {
-	return QObject::tr("MUSVT (musique n°%1)")
+	return QObject::tr("MUSVT (musique nÂ°%1)")
 			.arg(musicID);
 }
 
@@ -8161,7 +8161,7 @@ void OpcodeMUSVM::setParams(const char *params, int)
 
 QString OpcodeMUSVM::toString(Field *) const
 {
-	return QObject::tr("MUSVM (musique n°%1)")
+	return QObject::tr("MUSVM (musique nÂ°%1)")
 			.arg(musicID);
 }
 
@@ -8183,7 +8183,7 @@ void OpcodeMULCK::setParams(const char *params, int)
 QString OpcodeMULCK::toString(Field *) const
 {
 	return QObject::tr("%1 musique")
-			.arg(locked == 0 ? QObject::tr("Déverrouiller") : QObject::tr("Verrouiller", "test"));
+			.arg(locked == 0 ? QObject::tr("DÃ©verrouiller") : QObject::tr("Verrouiller", "test"));
 }
 
 QByteArray OpcodeMULCK::params() const
@@ -8203,7 +8203,7 @@ void OpcodeBMUSC::setParams(const char *params, int)
 
 QString OpcodeBMUSC::toString(Field *) const
 {
-	return QObject::tr("Choisir musique n°%1 comme musique de combat")
+	return QObject::tr("Choisir musique nÂ°%1 comme musique de combat")
 			.arg(musicID);
 }
 
@@ -8259,7 +8259,7 @@ void OpcodePMVIE::setParams(const char *params, int)
 
 QString OpcodePMVIE::toString(Field *) const
 {
-	return QObject::tr("Choisir prochaine cinématique : %1")
+	return QObject::tr("Choisir prochaine cinÃ©matique : %1")
 			.arg(_movie(movieID));
 }
 
@@ -8274,7 +8274,7 @@ OpcodeMOVIE::OpcodeMOVIE()
 
 QString OpcodeMOVIE::toString(Field *) const
 {
-	return QObject::tr("Jouer la cinématique choisie");
+	return QObject::tr("Jouer la cinÃ©matique choisie");
 }
 
 OpcodeMVIEF::OpcodeMVIEF(const char *params, int size)
@@ -8367,7 +8367,7 @@ void OpcodeCMUSC::setParams(const char *params, int)
 
 QString OpcodeCMUSC::toString(Field *) const
 {
-	return QObject::tr("CMUSC (musique n°%1, inconnu1=%2, inconnu2=%3, inconnu2=%4, inconnu4=%5, inconnu5=%6, inconnu6=%7)")
+	return QObject::tr("CMUSC (musique nÂ°%1, inconnu1=%2, inconnu2=%3, inconnu2=%4, inconnu4=%5, inconnu5=%6, inconnu6=%7)")
 			.arg(musicID)
 			.arg(unknown2)
 			.arg(unknown3)
@@ -8402,7 +8402,7 @@ void OpcodeCHMST::setParams(const char *params, int)
 
 QString OpcodeCHMST::toString(Field *) const
 {
-	return QObject::tr("Si la musique est jouée mettre %1 à 1")
+	return QObject::tr("Si la musique est jouÃ©e mettre %1 Ã  1")
 			.arg(_bank(var, B2(banks)));
 }
 

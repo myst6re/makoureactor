@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -24,20 +24,21 @@
 TextManager::TextManager(QWidget *parent) :
 	QDialog(parent, Qt::Tool), scriptsAndTexts(0)
 {
+	qreal scale = qApp->desktop()->logicalDpiX()/96;
 	setWindowTitle(tr("Textes"));
 
-	dispUnusedText = new QCheckBox(tr("Afficher les textes non utilisés"), this);
+	dispUnusedText = new QCheckBox(tr("Afficher les textes non utilisÃ©s"), this);
 	dispUnusedText->setChecked(Config::value("dispUnusedText", true).toBool());
 
 	ListWidget *listWidget = new ListWidget(this);
-	listWidget->setFixedWidth(100);
+	listWidget->setFixedWidth(100*scale);
 	listWidget->addAction(ListWidget::Add, tr("Ajouter texte"), this, SLOT(addText()));
 	listWidget->addAction(ListWidget::Rem, tr("Supprimer texte"), this, SLOT(delText()));
 	liste1 = listWidget->listWidget();
 
 	QAction *action;
 	toolBar = new QToolBar(this);
-	toolBar->setIconSize(QSize(16, 16));
+	toolBar->setIconSize(QSize(16*scale, 16*scale));
 	action = toolBar->addAction(QIcon(":/images/icon-char-0.png"), Data::char_names.at(0));
 	action->setData("{CLOUD}");
 	action = toolBar->addAction(QIcon(":/images/icon-char-1.png"), Data::char_names.at(1));
@@ -70,7 +71,7 @@ TextManager::TextManager(QWidget *parent) :
 	action->setData("\n{CHOICE}\n");
 
 	toolBar2 = new QToolBar(this);
-	toolBar2->setIconSize(QSize(16, 16));
+	toolBar2->setIconSize(QSize(16*scale, 16*scale));
 	action = toolBar2->addAction(QIcon(":/images/icon-grey.png"), tr("Gris"));
 	action->setData("{GREY}");
 	action = toolBar2->addAction(QIcon(":/images/icon-blue.png"), tr("Bleu"));
@@ -136,7 +137,7 @@ TextManager::TextManager(QWidget *parent) :
 	action->setData("{CIRCLE}");
 	action = menuKeys->addAction(tr("Triangle"));
 	action->setData("{TRIANGLE}");
-	action = menuKeys->addAction(tr("Carré"));
+	action = menuKeys->addAction(tr("CarrÃ©"));
 	action->setData("{SQUARE}");
 	action = menuKeys->addAction(tr("Croix"));
 	action->setData("{CROSS}");
@@ -147,11 +148,11 @@ TextManager::TextManager(QWidget *parent) :
 	menu2 = new QMenu(this);
 	action = menu2->addAction(tr("Scrolling"));
 	action->setData("{SCROLLING}");
-	action = menu2->addAction(tr("Caractères espacés"));
+	action = menu2->addAction(tr("CaractÃ¨res espacÃ©s"));
 	action->setData("{SPACED CHARACTERS}");
-	action = menu2->addAction(tr("Accès mémoire"));
+	action = menu2->addAction(tr("AccÃ¨s mÃ©moire"));
 	action->setData("{MEMORY:var[1][0];size=1}");
-	action = menu2->addAction(tr("Nouvelle page²"));
+	action = menu2->addAction(tr("Nouvelle pageÂ²"));
 	action->setData("{NEW PAGE 2}");
 	action = toolBar2->addAction(tr("Autres"));
 	action->setMenu(menu2);
@@ -429,7 +430,7 @@ void TextManager::delText()
 	if(!item) return;
 	int row=item->data(Qt::UserRole).toInt();
 	if(usedTexts.contains(row)) {
-		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Texte utilisé dans les script"), tr("Ce texte est utilisé par un ou plusieurs scripts de cet écran.\nLe supprimer remplacera les appels à ce texte par des appels au texte qui suit.\nÊtes-vous sûr de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Texte utilisÃ© dans les script"), tr("Ce texte est utilisÃ© par un ou plusieurs scripts de cet Ã©cran.\nLe supprimer remplacera les appels Ã  ce texte par des appels au texte qui suit.\nÃŠtes-vous sÃ»r de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if(rep == QMessageBox::Cancel) {
 			return;
 		}
@@ -482,7 +483,7 @@ void TextManager::changeTextPreviewWin()
 {
 //	int currentWin = textPreview->currentWin(), nbWin = textPreview->winCount();
 
-//	textWin->setText(tr("Fenêtre %1/%2").arg(currentWin).arg(nbWin));
+//	textWin->setText(tr("FenÃªtre %1/%2").arg(currentWin).arg(nbWin));
 //	prevWin->setEnabled(currentWin > 1);
 //	nextWin->setEnabled(currentWin < nbWin);
 //	textWin->setEnabled(nbWin > 0);

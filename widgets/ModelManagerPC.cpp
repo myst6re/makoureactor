@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -55,13 +55,13 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	modelAnims->setHeaderLabels(QStringList() << tr("Id") << tr("Animations") << tr("?"));
 
 	QGridLayout *frameLayout = new QGridLayout(modelFrame);
-	frameLayout->addWidget(new QLabel(tr("Nom (non utilisé)")), 0, 0);
+	frameLayout->addWidget(new QLabel(tr("Nom (non utilisÃ©)")), 0, 0);
 	frameLayout->addWidget(modelName, 0, 1);
 	frameLayout->addWidget(new QLabel(tr("Inconnu")), 1, 0);
 	frameLayout->addWidget(modelUnknown, 1, 1);
-	frameLayout->addWidget(new QLabel(tr("Taille modèle")), 2, 0);
+	frameLayout->addWidget(new QLabel(tr("Taille modÃ¨le")), 2, 0);
 	frameLayout->addWidget(modelScaleWidget, 2, 1);
-	frameLayout->addWidget(new QLabel(tr("Lumière")), 3, 0);
+	frameLayout->addWidget(new QLabel(tr("LumiÃ¨re")), 3, 0);
 	frameLayout->addWidget(modelColorDisplay, 3, 1);
 	frameLayout->addWidget(modelColorLabel, 4, 1);
 	frameLayout->addWidget(toolBar2, 0, 2);
@@ -144,7 +144,7 @@ void ModelManagerPC::addModel()
 
 	if(charLgp->isOpen()) {
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
+		dialog.setWindowTitle(tr("Ajouter un modÃ¨le 3D"));
 
 		QComboBox list(&dialog);
 		list.setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
@@ -363,7 +363,7 @@ void ModelManagerPC::addAnim()
 	if(charLgp->isOpen()) {
 		toolBar2->setEnabled(false);
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
+		dialog.setWindowTitle(tr("Ajouter un modÃ¨le 3D"));
 
 		QComboBox list(&dialog);
 		list.setEditable(true);

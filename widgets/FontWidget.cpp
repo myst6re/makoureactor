@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -34,9 +34,9 @@ FontWidget::FontWidget(QWidget *parent) :
 
 	selectTable = new QComboBox(this);
 
-	fromImage1 = new QPushButton(tr("À partir d'une image..."), this);
+	fromImage1 = new QPushButton(tr("Ã€ partir d'une image..."), this);
 	fromImage1->setVisible(false);//TODO
-	fromImage2 = new QPushButton(tr("À partir d'une image..."), this);
+	fromImage2 = new QPushButton(tr("Ã€ partir d'une image..."), this);
 	fromImage2->setVisible(false);//TODO
 //	QPushButton *resetButton1 = new QPushButton(tr("Annuler les modifications"), this);//TODO
 	textLetter = new QLineEdit(this);
@@ -174,7 +174,7 @@ void FontWidget::exportFont()
 		filter.append(txtF = tr("Fichier traduction %1 (*.txt)").arg(PROG_NAME));
 	QString selectedFilter;
 
-	QString path = QFileDialog::getSaveFileName(this, tr("Exporter police de caractère"), "sysfnt", filter.join(";;"), &selectedFilter);
+	QString path = QFileDialog::getSaveFileName(this, tr("Exporter police de caractÃ¨re"), "sysfnt", filter.join(";;"), &selectedFilter);
 	if(path.isNull())		return;
 
 	if(selectedFilter == binF) {
@@ -240,7 +240,7 @@ void FontWidget::importFont()
 	}
 	QString selectedFilter;
 
-	QString path = QFileDialog::getOpenFileName(this, tr("Importer police de caractère"), "sysfnt", filter.join(";;"), &selectedFilter);
+	QString path = QFileDialog::getOpenFileName(this, tr("Importer police de caractÃ¨re"), "sysfnt", filter.join(";;"), &selectedFilter);
 	if(path.isNull())		return;
 
 	if(selectedFilter == tdwF) {

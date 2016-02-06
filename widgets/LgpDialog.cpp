@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -591,10 +591,10 @@ void LgpDialog::renameCurrent()
 			}
 
 			if(!lgp->isNameValid(newFilePath)) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Le nom '%1' est invalide, ne mettez pas de caractères spéciaux.")
+				QMessageBox::warning(this, tr("Erreur"), tr("Le nom '%1' est invalide, ne mettez pas de caractÃ¨res spÃ©ciaux.")
 									 .arg(newFilePath));
 			} else if(lgp->fileExists(newFilePath)) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Un fichier nommé '%1' existe déjà, veuillez choisir un autre nom.")
+				QMessageBox::warning(this, tr("Erreur"), tr("Un fichier nommÃ© '%1' existe dÃ©jÃ , veuillez choisir un autre nom.")
 									 .arg(newFilePath));
 			} else if(!treeView->model()->setData(index, newFilePath)) {
 				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de renommer le fichier"));
@@ -679,7 +679,7 @@ void LgpDialog::extractCurrent()
 						file.write(io->read(4096));
 					}
 					if(file.error() != QFile::NoError) {
-						QMessageBox::warning(this, tr("Erreur d'écriture"), tr("Impossible d'écrire dans le fichier (message : %1).")
+						QMessageBox::warning(this, tr("Erreur d'Ã©criture"), tr("Impossible d'Ã©crire dans le fichier (message : %1).")
 											 .arg(file.errorString()));
 					}
 					file.close();
@@ -729,10 +729,10 @@ void LgpDialog::add()
 	}
 
 	if(!lgp->isNameValid(filePath)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Le nom '%1' est invalide, ne mettez pas de caractères spéciaux.")
+		QMessageBox::warning(this, tr("Erreur"), tr("Le nom '%1' est invalide, ne mettez pas de caractÃ¨res spÃ©ciaux.")
 							 .arg(filePath));
 	} else if(lgp->fileExists(filePath)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Un fichier nommé '%1' existe déjà, veuillez choisir un autre nom.")
+		QMessageBox::warning(this, tr("Erreur"), tr("Un fichier nommÃ© '%1' existe dÃ©jÃ , veuillez choisir un autre nom.")
 							 .arg(filePath));
 	} else if(!lgp->addFile(filePath, new QFile(path))) {
 		QMessageBox::warning(this, tr("Erreur"), tr("Impossible d'ajouter le fichier"));
@@ -749,7 +749,7 @@ void LgpDialog::removeCurrent()
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
 		QMessageBox::StandardButton button = QMessageBox::question(this, tr("Supprimer ?"),
-							  tr("Êtes-vous sûr de vouloir supprimer ce fichier de l'archive ?"),
+							  tr("ÃŠtes-vous sÃ»r de vouloir supprimer ce fichier de l'archive ?"),
 							  QMessageBox::Yes | QMessageBox::Cancel);
 		if(button != QMessageBox::Yes) {
 			return;
@@ -777,7 +777,7 @@ void LgpDialog::pack()
 
 //	QFileInfo info1(path), info2(lgp->fileName());
 //	if(info1 == info2) {
-//		QMessageBox::warning(this, tr("Action impossible"), tr("Merci de sélectionner un autre fichier que celui actuellement ouvert par le logiciel."));
+//		QMessageBox::warning(this, tr("Action impossible"), tr("Merci de sÃ©lectionner un autre fichier que celui actuellement ouvert par le logiciel."));
 //		return;
 //	}
 
@@ -793,7 +793,7 @@ void LgpDialog::pack()
 
 	if(!ok) {
 		if(lgp->error() != Lgp::AbortError) {
-			QMessageBox::warning(this, tr("Erreur"), tr("Impossible de créer l'archive (message : %1).")
+			QMessageBox::warning(this, tr("Erreur"), tr("Impossible de crÃ©er l'archive (message : %1).")
 								 .arg(lgp->errorString()));
 		}
 	} else {

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 	setWindowTitle(tr("Importer en masse"));
 
 	imports.insert(Fields,
-				   new FormatSelectionWidget(tr("Importer des écrans"),
+				   new FormatSelectionWidget(tr("Importer des Ã©crans"),
 											 QStringList(), this));
 	imports.insert(Akaos,
 				   new FormatSelectionWidget(tr("Importer les sons"),
@@ -88,7 +88,7 @@ void MassImportDialog::fill(const FieldArchive *fieldArchive, int currentField)
 	QString fieldType = _fieldArchive->isPC() ? tr("PC") : tr("PS");
 	QStringList formats;
 	formats.append(tr("Fichier FIELD %1").arg(fieldType) + (_fieldArchive->isPC() ? "" : ";;dat"));
-	formats.append(tr("Fichier décompressé FIELD %1").arg(fieldType) + ";;dec");
+	formats.append(tr("Fichier dÃ©compressÃ© FIELD %1").arg(fieldType) + ";;dec");
 
 	imports.value(Fields)->setFormats(formats);
 

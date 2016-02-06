@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ void ScriptEditorReturnToPage::build()
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Script")), 0, 0);
 	layout->addWidget(scriptList, 0, 1);
-	layout->addWidget(new QLabel(tr("Priorité")), 1, 0);
+	layout->addWidget(new QLabel(tr("PrioritÃ©")), 1, 0);
 	layout->addWidget(priority, 1, 1);
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
@@ -102,7 +102,7 @@ void ScriptEditorExecPage::build()
 	layout->addWidget(groupList, 0, 1);
 	layout->addWidget(new QLabel(tr("Script")), 1, 0);
 	layout->addWidget(scriptList, 1, 1);
-	layout->addWidget(new QLabel(tr("Priorité")), 2, 0);
+	layout->addWidget(new QLabel(tr("PrioritÃ©")), 2, 0);
 	layout->addWidget(priority, 2, 1);
 	layout->addWidget(new QLabel(tr("Type")), 3, 0);
 	layout->addWidget(execType, 3, 1);
@@ -235,11 +235,11 @@ void ScriptEditorExecCharPage::build()
 	execType->addItem(tr("Synchrone, attend"));
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Équipier")), 0, 0);
+	layout->addWidget(new QLabel(tr("Ã‰quipier")), 0, 0);
 	layout->addWidget(partyID, 0, 1);
 	layout->addWidget(new QLabel(tr("Script")), 1, 0);
 	layout->addWidget(scriptList, 1, 1);
-	layout->addWidget(new QLabel(tr("Priorité")), 2, 0);
+	layout->addWidget(new QLabel(tr("PrioritÃ©")), 2, 0);
 	layout->addWidget(priority, 2, 1);
 	layout->addWidget(new QLabel(tr("Type")), 3, 0);
 	layout->addWidget(execType, 3, 1);
@@ -556,9 +556,9 @@ void ScriptEditorIfPage::build()
 	}
 
 	rangeTest = new QComboBox();
-	rangeTest->addItem(tr("Sur 8 bits non signés"));
-	rangeTest->addItem(tr("Sur 16 bits signés"));
-	rangeTest->addItem(tr("Sur 16 bits non signés"));
+	rangeTest->addItem(tr("Sur 8 bits non signÃ©s"));
+	rangeTest->addItem(tr("Sur 16 bits signÃ©s"));
+	rangeTest->addItem(tr("Sur 16 bits non signÃ©s"));
 
 	label = new QComboBox(this);
 
@@ -567,7 +567,7 @@ void ScriptEditorIfPage::build()
 	rangeJump->addItem(tr("Long (16 bits)"));
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Test à effectuer")), 0, 0);
+	layout->addWidget(new QLabel(tr("Test Ã  effectuer")), 0, 0);
 	layout->addWidget(varOrValue1, 0, 1);
 	layout->addWidget(operatorList, 0, 2);
 	layout->addWidget(varOrValue2, 0, 3);
@@ -827,9 +827,9 @@ void ScriptEditorIfKeyPage::build()
 
 	label = new QComboBox(this);
 	typeList = new QComboBox(this);
-	typeList->addItem(tr("Touche pressée"));
-	typeList->addItem(tr("Touche pressée une fois"));
-	typeList->addItem(tr("Touche lâchée une fois"));
+	typeList->addItem(tr("Touche pressÃ©e"));
+	typeList->addItem(tr("Touche pressÃ©e une fois"));
+	typeList->addItem(tr("Touche lÃ¢chÃ©e une fois"));
 
 	layout->addWidget(new QLabel(tr("Type")), row, column);
 	layout->addWidget(typeList, row, column+1, 1, 3);

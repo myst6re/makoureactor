@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ Search::Search(Window *mainWindow) :
 
 	QList<QPushButton *> buttons;
 	buttons.append(buttonNext = new QPushButton(tr("Chercher le suivant"), this));
-	buttons.append(buttonPrev = new QPushButton(tr("Chercher le précédent"), this));
+	buttons.append(buttonPrev = new QPushButton(tr("Chercher le prÃ©cÃ©dent"), this));
 	buttons.append(buttonAll = new QPushButton(tr("Chercher tout"), this));
 
 	QMap<int, QPushButton *> buttonWidths;
@@ -107,7 +107,7 @@ QWidget *Search::scriptPageWidget()
 	liste->addItem(tr("Variable"));
 	liste->addItem(tr("Opcode"));
 	liste->addItem(tr("Exec"));
-	liste->addItem(tr("Saut d'écran"));
+	liste->addItem(tr("Saut d'Ã©cran"));
 
 	QWidget *text = new QWidget(ret);
 
@@ -118,8 +118,8 @@ QWidget *Search::scriptPageWidget()
 	champ->lineEdit()->completer()->setCompletionMode(QCompleter::PopupCompletion);
 	champ->lineEdit()->setPlaceholderText(tr("Rechercher"));
 
-	caseSens = new QCheckBox(tr("Sensible à la casse"), text);
-	useRegexp = new QCheckBox(tr("Utiliser les expressions régulières"), text);
+	caseSens = new QCheckBox(tr("Sensible Ã  la casse"), text);
+	useRegexp = new QCheckBox(tr("Utiliser les expressions rÃ©guliÃ¨res"), text);
 	useRegexp->setChecked(Config::value("findWithRegExp").toBool());
 
 	QGridLayout *textLayout = new QGridLayout(text);
@@ -208,8 +208,8 @@ QWidget *Search::scriptPageWidget()
 	stack->addWidget(jump);
 
 	QGroupBox *contextGroupBox = new QGroupBox(tr("Contexte"), this);
-	QRadioButton *globalCheckBox = new QRadioButton(tr("Sur tous les écrans"));
-	currentFieldCheckBox = new QRadioButton(tr("Uniquement l'écran courant"));
+	QRadioButton *globalCheckBox = new QRadioButton(tr("Sur tous les Ã©crans"));
+	currentFieldCheckBox = new QRadioButton(tr("Uniquement l'Ã©cran courant"));
 	currentGrpScriptCheckBox = new QRadioButton(tr("Uniquement le groupe courant"));
 	currentScriptCheckBox = new QRadioButton(tr("Uniquement le script courant"));
 
@@ -271,13 +271,13 @@ QWidget *Search::textPageWidget()
 	replaceCurrentButton = new QPushButton(tr("Remplacer"), this);
 	replaceAllButton = new QPushButton(tr("Remplacer tout"), this);
 
-	caseSens2 = new QCheckBox(tr("Sensible à la casse"), ret);
-	useRegexp2 = new QCheckBox(tr("Utiliser les expressions régulières"), ret);
+	caseSens2 = new QCheckBox(tr("Sensible Ã  la casse"), ret);
+	useRegexp2 = new QCheckBox(tr("Utiliser les expressions rÃ©guliÃ¨res"), ret);
 	useRegexp2->setChecked(Config::value("findWithRegExp").toBool());
 
 	QGroupBox *contextGroupBox = new QGroupBox(tr("Contexte"), this);
-	QRadioButton *globalCheckBox = new QRadioButton(tr("Sur tous les écrans"));
-	currentFieldCheckBox2 = new QRadioButton(tr("Uniquement l'écran courant"));
+	QRadioButton *globalCheckBox = new QRadioButton(tr("Sur tous les Ã©crans"));
+	currentFieldCheckBox2 = new QRadioButton(tr("Uniquement l'Ã©cran courant"));
 	currentTextCheckBox = new QRadioButton(tr("Uniquement le texte courant"));
 
 	FieldArchive::SearchScope searchScope = FieldArchive::SearchScope(Config::value("searchScope").toInt());
@@ -447,10 +447,10 @@ FieldArchive::SearchScope Search::searchScope() const
 QString Search::lastMessage() const
 {
 	switch(searchScope()) {
-	case FieldArchive::GlobalScope:		return tr("Dernier écran");
+	case FieldArchive::GlobalScope:		return tr("Dernier Ã©cran");
 	case FieldArchive::FieldScope:		return tr("Dernier groupe");
 	case FieldArchive::GrpScriptScope:	return tr("Dernier script");
-	case FieldArchive::ScriptScope:		return tr("Dernière instruction");
+	case FieldArchive::ScriptScope:		return tr("DerniÃ¨re instruction");
 	case FieldArchive::TextScope:		return tr("Dernier texte");
 	}
 	return QString();
@@ -459,10 +459,10 @@ QString Search::lastMessage() const
 QString Search::firstMessage() const
 {
 	switch(searchScope()) {
-	case FieldArchive::GlobalScope:		return tr("Premier écran");
+	case FieldArchive::GlobalScope:		return tr("Premier Ã©cran");
 	case FieldArchive::FieldScope:		return tr("Premier groupe");
 	case FieldArchive::GrpScriptScope:	return tr("Premier script");
-	case FieldArchive::ScriptScope:		return tr("Première instruction");
+	case FieldArchive::ScriptScope:		return tr("PremiÃ¨re instruction");
 	case FieldArchive::TextScope:		return tr("Premier texte");
 	}
 	return QString();
@@ -521,7 +521,7 @@ void Search::findNext()
 		}
 	}
 
-	returnToBegin->setText(tr("%1,\npoursuite au début.")
+	returnToBegin->setText(tr("%1,\npoursuite au dÃ©but.")
 						   .arg(lastMessage()));
 	returnToBegin->show();
 
@@ -669,7 +669,7 @@ void Search::findPrev()
 		}
 	}
 
-	returnToBegin->setText(tr("%1,\npoursuite à la fin.")
+	returnToBegin->setText(tr("%1,\npoursuite Ã  la fin.")
 						   .arg(firstMessage()));
 	returnToBegin->show();
 

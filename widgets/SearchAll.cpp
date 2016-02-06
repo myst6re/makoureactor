@@ -53,7 +53,7 @@ void SearchAll::setTextSearch()
 {
 	clear();
 	_resultList->setColumnCount(2);
-	_resultList->setHeaderLabels(QStringList() << tr("Texte n°") << tr("Texte"));
+	_resultList->setHeaderLabels(QStringList() << tr("Texte nÂ°") << tr("Texte"));
 	_searchMode = TextSearch;
 }
 

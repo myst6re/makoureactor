@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -204,7 +204,7 @@ bool Section1File::open(const QByteArray &data)
 			emptyGrps--;
 		} else {
 
-			//Listage des positions de départ
+			//Listage des positions de dÃ©part
 			memcpy(positions, constData + posScripts + scriptCount * 2 * i, scriptCount * 2);
 
 			//Ajout de la position de fin
