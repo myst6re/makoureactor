@@ -271,6 +271,9 @@ SOURCES += \
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts
 
+CODECFORTR = UTF-8
+CODECFORSRC = UTF-8
+
 RESOURCES += Makou_Reactor.qrc
 macx {
     ICON = images/Makou_Reactor.icns

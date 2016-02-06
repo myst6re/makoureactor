@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja_JP">
+<TS version="2.0" language="ja_JP">
+<defaultcodec>UTF-8</defaultcodec>
 <context>
     <name>AnimEditorDialog</name>
     <message>
@@ -534,49 +535,18 @@
     </message>
     <message>
         <location filename="widgets/GrpScriptList.cpp" line="59"/>
-        <source>DÃ©placer vers le haut</source>
-        <translation type="unfinished"></translation>
+        <source>Déplacer vers le haut</source>
+        <translation type="unfinished">上に</translation>
     </message>
     <message>
         <location filename="widgets/GrpScriptList.cpp" line="63"/>
-        <source>DÃ©placer vers le bas</source>
-        <translation type="unfinished"></translation>
+        <source>Déplacer vers le bas</source>
+        <translation type="unfinished">下に</translation>
     </message>
     <message>
         <location filename="widgets/GrpScriptList.cpp" line="95"/>
-        <source>Ã‰dition des &amp;groupes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/GrpScriptList.cpp" line="271"/>
-        <source>Voulez-vous vraiment supprimer %1 ?
-Certains scripts peuvent y faire rÃ©fÃ©rence !</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/GrpScriptList.cpp" line="272"/>
-        <source>le groupe sÃ©lectionnÃ©</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/GrpScriptList.cpp" line="272"/>
-        <source>les groupes sÃ©lectionnÃ©s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Déplacer vers le haut</source>
-        <translatorcomment>Up</translatorcomment>
-        <translation type="vanished">上に</translation>
-    </message>
-    <message>
-        <source>Déplacer vers le bas</source>
-        <translatorcomment>Down</translatorcomment>
-        <translation type="vanished">下に</translation>
-    </message>
-    <message>
         <source>Édition des &amp;groupes</source>
-        <translatorcomment>&amp;Group editor</translatorcomment>
-        <translation type="vanished">グループ エディター(&amp;G)</translation>
+        <translation type="unfinished">グループ エディター(&amp;G)</translation>
     </message>
     <message>
         <location filename="widgets/GrpScriptList.cpp" line="98"/>
@@ -609,14 +579,22 @@ Certains scripts peuvent y faire rÃ©fÃ©rence !</source>
         <translation>削除</translation>
     </message>
     <message>
-        <source>le groupe sélectionné</source>
-        <translatorcomment>the group selected</translatorcomment>
-        <translation type="vanished">選択グループ</translation>
+        <location filename="widgets/GrpScriptList.cpp" line="271"/>
+        <source>Voulez-vous vraiment supprimer %1 ?
+Certains scripts peuvent y faire référence !</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="widgets/GrpScriptList.cpp" line="274"/>
+        <source>le groupe sélectionné</source>
+        <translatorcomment>the group selected</translatorcomment>
+        <translation>選択グループ</translation>
+    </message>
+    <message>
+        <location filename="widgets/GrpScriptList.cpp" line="275"/>
         <source>les groupes sélectionnés</source>
         <translatorcomment>the selected groups</translatorcomment>
-        <translation type="vanished">選択グループ</translation>
+        <translation>選択グループ</translation>
     </message>
 </context>
 <context>
@@ -3922,7 +3900,7 @@ Certains scripts peuvent y faire rÃ©fÃ©rence !</source>
     </message>
     <message>
         <location filename="core/field/TutFileStandard.cpp" line="127"/>
-        <location filename="main.cpp" line="47"/>
+        <location filename="main.cpp" line="48"/>
         <source>Erreur</source>
         <translatorcomment>Error</translatorcomment>
         <translation>エラー</translation>
@@ -3947,7 +3925,7 @@ id=%2
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.cpp" line="47"/>
+        <location filename="main.cpp" line="48"/>
         <source>Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
 Vérifiez que ce fichier est valide ou supprimez-le.</source>
         <translatorcomment>The file &apos;var.cfg&apos; could not be loaded.
