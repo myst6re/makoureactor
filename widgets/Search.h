@@ -79,7 +79,7 @@ private:
 	QComboBox *opcode;
 	QCheckBox *caseSens, *useRegexp, *caseSens2, *useRegexp2;
 	QSpinBox *champBank;
-	QSpinBox *champAdress;
+	QSpinBox *champAddress;
 	QLineEdit *champValue;
 	QComboBox *champOp;
 	QComboBox *comboVarName;
@@ -99,7 +99,7 @@ private:
 	int clef;
 	QRegExp text;
 	quint8 bank;
-	quint8 adress;
+	quint16 address;
 	Opcode::Operation op;
 	int value;
 	quint8 e_script, e_group;

@@ -83,13 +83,13 @@ public:
 
 	void searchAllVars(QList<FF7Var> &vars) const;
 	bool searchOpcode(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
-	bool searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchMapJump(quint16 field, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchTextInScripts(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchText(const QRegExp &text, int &textID, int &from, int &size) const;
 	bool searchOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
-	bool searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchMapJumpP(quint16 mapJump, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchTextInScriptsP(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const;

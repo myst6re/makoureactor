@@ -1176,15 +1176,15 @@ bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scr
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
-	SearchVarQuery query(bank, adress, op, value);
+	SearchVarQuery query(bank, address, op, value);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchVarQuery *query = (SearchVarQuery *)_query;
 		SearchInScript *searchIn = (SearchInScript *)_searchIn;
-		return f->scriptsAndTexts()->searchVar(query->bank, query->adress, query->op, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
+		return f->scriptsAndTexts()->searchVar(query->bank, query->address, query->op, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
@@ -1277,15 +1277,15 @@ bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &sc
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
-	SearchVarQuery query(bank, adress, op, value);
+	SearchVarQuery query(bank, address, op, value);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchVarQuery *query = (SearchVarQuery *)_query;
 		SearchInScript *searchIn = (SearchInScript *)_searchIn;
-		return f->scriptsAndTexts()->searchVarP(query->bank, query->adress, query->op, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
+		return f->scriptsAndTexts()->searchVarP(query->bank, query->address, query->op, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
