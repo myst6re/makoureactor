@@ -299,7 +299,7 @@ unix:!macx:!symbian {
     TARGET = makoureactor
     target.path = /usr/bin
 
-    langfiles.files= lang/*.qm
+    langfiles.files= *.qm
     langfiles.path= /usr/share/makoureactor
 
     icon.files = images/logo-shinra.png
