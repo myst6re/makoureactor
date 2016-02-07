@@ -46,6 +46,7 @@ Window::Window() :
 	progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
 	progressDialog->setWindowModality(Qt::WindowModal);
 	progressDialog->setAutoClose(false);
+	progressDialog->hide();
 
 	authorLbl = new QLabel();
 	authorLbl->setMargin(2);
