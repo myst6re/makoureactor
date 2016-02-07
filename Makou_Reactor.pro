@@ -304,10 +304,16 @@ win32 {
     LIBS += -ladvapi32 -lshell32
     # OpenGL features
     LIBS += -lopengl32 -lGlU32
-    TASKBAR_BUTTON {
-        LIBS += -lole32
-        INCLUDEPATH += include
-        DEFINES += TASKBAR_BUTTON
+    # QTaskbarButton
+    greaterThan(QT_MAJOR_VERSION, 4):qtHaveModule(winextras) {
+        QT += winextras
+        DEFINES += TASKBAR_BUTTON QTASKBAR_WIN_QT5
+    } else {
+        TASKBAR_BUTTON {
+            DEFINES += TASKBAR_BUTTON
+            LIBS += -lole32
+            INCLUDEPATH += include
+        }
     }
 }
 
