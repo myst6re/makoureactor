@@ -20,9 +20,9 @@
 #include "core/LZS.h"
 #include "core/FF7Text.h"
 #ifdef Q_OS_WIN
-#include <windef.h>
+#include <windows.h>
 #include <winbase.h>
-#include <winerror.h>
+// #include <winerror.h>
 #include <winreg.h>
 #endif
 

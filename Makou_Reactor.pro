@@ -285,18 +285,28 @@ macx {
     ICON = images/Makou_Reactor.icns
 }
 
+# include zlib
+!win32 {
+    LIBS += -lz
+} else {
+    exists($$[QT_INSTALL_PREFIX]/include/QtZlib) {
+        INCLUDEPATH += $$[QT_INSTALL_PREFIX]/include/QtZlib
+    } else {
+        INCLUDEPATH += zlib-1.2.7
+        # LIBS += -lz
+    }
+}
+
 win32 {
     RC_FILE = Makou_Reactor.rc
     TARGET = Makou_Reactor
+    # Regedit features
+    LIBS += -ladvapi32 -lshell32
     TASKBAR_BUTTON {
         LIBS += -lole32
         INCLUDEPATH += include
         DEFINES += TASKBAR_BUTTON
     }
-    INCLUDEPATH += zlib-1.2.7
-    # LIBS += -lz
-} else {
-    LIBS += -lz
 }
 
 OTHER_FILES += Makou_Reactor.rc \
