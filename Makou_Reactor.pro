@@ -7,8 +7,8 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 lessThan(QT_MAJOR_VERSION, 5) {
     INCLUDEPATH += compat
+    QMAKE_CXXFLAGS += -std=c++0x
 }
-QMAKE_CXXFLAGS += -std=c++0x
 
 # Input
 HEADERS += \
@@ -302,6 +302,8 @@ win32 {
     TARGET = Makou_Reactor
     # Regedit features
     LIBS += -ladvapi32 -lshell32
+    # OpenGL features
+    LIBS += -lopengl32 -lGlU32
     TASKBAR_BUTTON {
         LIBS += -lole32
         INCLUDEPATH += include
