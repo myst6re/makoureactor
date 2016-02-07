@@ -109,6 +109,7 @@ private:
 	void restartNow();
 	void showProgression(const QString &message, bool canBeCanceled);
 	void hideProgression();
+	QProgressDialog *progressDialog();
 
 	QLineEdit *lineSearch;
 	QTreeWidget *fieldList;
@@ -144,7 +145,7 @@ private:
 	BGDialog *_backgroundManager;
 
 	QTaskBarButton *taskBarButton;
-	QProgressDialog *progressDialog;
+	QProgressDialog *_progressDialog;
 	QAction *authorAction;
 	QLabel *authorLbl;
 

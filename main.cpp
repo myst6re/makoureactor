@@ -52,11 +52,11 @@ int main(int argc, char *argv[])
 	if(!Data::load()) {
 		qWarning() << "Error loading data!";
 	}
-	
-	Window window;
-	window.show();
+
+	Window *window = new Window;
+	window->show();
 	if(argc > 1) {
-		window.openFile(argv[1]);
+		window->openFile(argv[1]);
 	}
 
 	return app.exec();

@@ -34,19 +34,14 @@
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
 	_textDialog(0), _modelManager(0), _tutManager(0), _walkmeshManager(0),
-	_backgroundManager(0)
+	_backgroundManager(0), _progressDialog(0)
 {
-	qreal scale= qApp->desktop()->logicalDpiX()/96;
+	qreal scale = qApp->desktop()->logicalDpiX()/96;
 	setWindowTitle();
 	setWindowState(Qt::WindowMaximized);
 
 	taskBarButton = new QTaskBarButton(this);
 	taskBarButton->setMinimum(0);
-
-	progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-	progressDialog->setWindowModality(Qt::WindowModal);
-	progressDialog->setAutoClose(false);
-	progressDialog->hide();
 
 	authorLbl = new QLabel();
 	authorLbl->setMargin(2);
@@ -270,6 +265,17 @@ Window::~Window()
 {
 	Config::flush();
 	if(fieldArchive)	fieldArchive->close();
+}
+
+QProgressDialog *Window::progressDialog()
+{
+	if (!_progressDialog) {
+		_progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
+		_progressDialog->setWindowModality(Qt::WindowModal);
+		_progressDialog->setAutoClose(false);
+		_progressDialog->hide();
+	}
+	return _progressDialog;
 }
 
 void Window::closeEvent(QCloseEvent *event)
@@ -534,13 +540,13 @@ void Window::openDir()
 
 bool Window::observerWasCanceled() const
 {
-	return progressDialog->wasCanceled();
+	return _progressDialog && _progressDialog->wasCanceled();
 }
 
 void Window::setObserverMaximum(unsigned int max)
 {
 	taskBarButton->setMaximum(max);
-	progressDialog->setMaximum(max);
+	progressDialog()->setMaximum(max);
 }
 
 void Window::setObserverValue(int value)
@@ -548,23 +554,23 @@ void Window::setObserverValue(int value)
 	QApplication::processEvents();
 
 	taskBarButton->setValue(value);
-	progressDialog->setValue(value);
+	progressDialog()->setValue(value);
 }
 
 void Window::showProgression(const QString &message, bool canBeCanceled)
 {
 	setObserverValue(0);
 	taskBarButton->setState(QTaskBarButton::Normal);
-	progressDialog->setLabelText(message);
-	progressDialog->setCancelButtonText(canBeCanceled ? tr("Annuler") : tr("Arrêter"));
-	progressDialog->show();
+	progressDialog()->setLabelText(message);
+	progressDialog()->setCancelButtonText(canBeCanceled ? tr("Annuler") : tr("Arrêter"));
+	progressDialog()->show();
 }
 
 void Window::hideProgression()
 {
 	taskBarButton->setState(QTaskBarButton::Invisible);
-	progressDialog->hide();
-	progressDialog->reset();
+	progressDialog()->hide();
+	progressDialog()->reset();
 }
 
 void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
