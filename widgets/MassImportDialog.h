@@ -18,7 +18,7 @@
 #ifndef MASSIMPORTDIALOG_H
 #define MASSIMPORTDIALOG_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldArchive.h"
 #include "FormatSelectionWidget.h"
 

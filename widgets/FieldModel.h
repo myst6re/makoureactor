@@ -18,7 +18,7 @@
 #ifndef FIELDMODEL_H
 #define FIELDMODEL_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QGLWidget>
 #ifdef Q_OS_MAC
 #include <OpenGL/glu.h>

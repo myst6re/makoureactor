@@ -535,7 +535,7 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	treeView = new QTreeView(this);
 	treeView->setModel(model);
 	treeView->setUniformRowHeights(true);
-	treeView->header()->setResizeMode(0, QHeaderView::Stretch);
+	treeView->header()->setSectionResizeMode(0, QHeaderView::Stretch);
 	treeView->header()->setStretchLastSection(false);
 
 	renameButton = new QPushButton(tr("Renommer"), this);

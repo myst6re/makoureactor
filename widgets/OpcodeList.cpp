@@ -29,7 +29,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	setIconSize(QSize(32,11));
 	setAlternatingRowColors(true);
 	header()->setStretchLastSection(false);
-	header()->setResizeMode(0, QHeaderView::ResizeToContents);
+	header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
 	setExpandsOnDoubleClick(false);
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	setSelectionMode(QAbstractItemView::ExtendedSelection);

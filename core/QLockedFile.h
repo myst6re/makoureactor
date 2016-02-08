@@ -20,7 +20,7 @@
 
 #include <QtCore>
 #ifdef Q_OS_WIN
-#include <windef.h>
+#include <windows.h>
 #include <winbase.h>
 #else
 #include <sys/stat.h>

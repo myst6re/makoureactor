@@ -18,7 +18,7 @@
 #ifndef FONTGRID_H
 #define FONTGRID_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "FontDisplay.h"
 
 class FontGrid : public FontDisplay

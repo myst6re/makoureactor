@@ -2,7 +2,13 @@ TEMPLATE = app
 TARGET = makoureactor
 
 QT += core gui opengl
-QMAKE_CXXFLAGS += -std=c++0x
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+}
+lessThan(QT_MAJOR_VERSION, 5) {
+    INCLUDEPATH += compat
+    QMAKE_CXXFLAGS += -std=c++0x
+}
 
 # Input
 HEADERS += \
@@ -271,26 +277,49 @@ SOURCES += \
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts
 
+CODECFORTR = UTF-8
+CODECFORSRC = UTF-8
+
 RESOURCES += Makou_Reactor.qrc
 macx {
     ICON = images/Makou_Reactor.icns
 }
 
+# include zlib
+!win32 {
+    LIBS += -lz
+} else {
+    exists($$[QT_INSTALL_PREFIX]/include/QtZlib) {
+        INCLUDEPATH += $$[QT_INSTALL_PREFIX]/include/QtZlib
+    } else {
+        INCLUDEPATH += zlib-1.2.7
+        # LIBS += -lz
+    }
+}
+
 win32 {
     RC_FILE = Makou_Reactor.rc
     TARGET = Makou_Reactor
-    TASKBAR_BUTTON {
-        LIBS += -lole32
-        INCLUDEPATH += include
-        DEFINES += TASKBAR_BUTTON
+    # Regedit features
+    LIBS += -ladvapi32 -lshell32
+    # OpenGL features
+    LIBS += -lopengl32 -lGlU32
+    # QTaskbarButton
+    greaterThan(QT_MAJOR_VERSION, 4):qtHaveModule(winextras) {
+        QT += winextras
+        DEFINES += TASKBAR_BUTTON QTASKBAR_WIN_QT5
+    } else {
+        TASKBAR_BUTTON {
+            DEFINES += TASKBAR_BUTTON
+            LIBS += -lole32
+            INCLUDEPATH += include
+        }
     }
-    INCLUDEPATH += zlib-1.2.7
-    # LIBS += -lz
-} else {
-    LIBS += -lz
 }
 
-OTHER_FILES += Makou_Reactor.rc
+OTHER_FILES += Makou_Reactor.rc \
+    deploy.bat \
+    compat/QtWidgets
 DISTFILES += Makou_Reactor.desktop
 
 #all other *nix (except for symbian)

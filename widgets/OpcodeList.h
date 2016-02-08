@@ -18,7 +18,7 @@
 #ifndef DEF_OPCODELIST
 #define DEF_OPCODELIST
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/Field.h"
 #include "core/field/Opcode.h"
 

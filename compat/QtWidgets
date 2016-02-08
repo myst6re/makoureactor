@@ -1,0 +1,4 @@
+// Compatibility layer for Qt 4
+#include <QtGui>
+// QHeaderView changes (incompatibility with Qt 5)
+#define setSectionResizeMode setResizeMode

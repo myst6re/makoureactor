@@ -1,7 +1,7 @@
 #ifndef SCRIPTEDITORMOVIEPAGE_H
 #define SCRIPTEDITORMOVIEPAGE_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "ScriptEditorView.h"
 
 class ScriptEditorMoviePage : public ScriptEditorView

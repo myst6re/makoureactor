@@ -18,7 +18,7 @@
 #ifndef FONTWIDGET_H
 #define FONTWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "FontGrid.h"
 #include "FontLetter.h"
 #include "FontPalette.h"

@@ -18,7 +18,7 @@
 #ifndef FONTDISPLAY_H
 #define FONTDISPLAY_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/WindowBinFile.h"
 
 class FontDisplay : public QWidget

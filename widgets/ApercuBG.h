@@ -18,7 +18,7 @@
 #ifndef DEF_APERCUBG
 #define DEF_APERCUBG
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/Field.h"
 
 class ApercuBG : public QLabel

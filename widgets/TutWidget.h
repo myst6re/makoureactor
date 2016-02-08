@@ -18,7 +18,7 @@
 #ifndef TUTWIDGET_H
 #define TUTWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "widgets/Listwidget.h"
 #include "core/field/Field.h"
 #include "core/field/TutFileStandard.h"

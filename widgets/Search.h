@@ -18,7 +18,7 @@
 #ifndef DEF_SEARCH
 #define DEF_SEARCH
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldArchive.h"
 #include "SearchAll.h"
 

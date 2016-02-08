@@ -98,15 +98,21 @@ void OrientationWidget::paintEvent(QPaintEvent *)
 	}
 }
 
-void OrientationWidget::mousePressEvent(QMouseEvent *e)
+void OrientationWidget::mouseEvent(QMouseEvent *e)
 {
 	if(_readOnly) {
 		e->ignore();
 		return;
 	}
 
-	if(isInCircle(e->posF())) {
-		moveCursor(e->posF());
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+	const QPointF &relativePos = e->posF();
+#else
+	const QPointF &relativePos = e->localPos();
+#endif
+
+	if(isInCircle(relativePos)) {
+		moveCursor(relativePos);
 	}
 }
 
@@ -160,16 +166,4 @@ void OrientationWidget::moveCursor(const QPointF &pos)
 	quint8 value = degree2byte();
 	setValue(value);
 	emit valueEdited(value);
-}
-
-void OrientationWidget::mouseMoveEvent(QMouseEvent *e)
-{
-	if(_readOnly) {
-		e->ignore();
-		return;
-	}
-
-	if(isInCircle(e->posF())) {
-		moveCursor(e->posF());
-	}
 }

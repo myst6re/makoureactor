@@ -18,7 +18,7 @@
 #ifndef VARORVALUEWIDGET_H
 #define VARORVALUEWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class VarOrValueWidget : public QWidget
 {

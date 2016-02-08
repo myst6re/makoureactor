@@ -18,7 +18,7 @@
 #ifndef CONFIGWINDOW_H
 #define CONFIGWINDOW_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class ConfigWindow : public QDialog
 {

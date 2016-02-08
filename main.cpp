@@ -27,6 +27,9 @@ int main(int argc, char *argv[])
 
 	QApplication app(argc, argv);
 	app.setWindowIcon(QIcon(":/images/logo-shinra.png"));
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 
 	Config::set();
 
@@ -49,11 +52,11 @@ int main(int argc, char *argv[])
 	if(!Data::load()) {
 		qWarning() << "Error loading data!";
 	}
-	
-	Window window;
-	window.show();
+
+	Window *window = new Window;
+	window->show();
 	if(argc > 1) {
-		window.openFile(argv[1]);
+		window->openFile(argv[1]);
 	}
 
 	return app.exec();

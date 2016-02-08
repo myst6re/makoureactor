@@ -18,7 +18,7 @@
 #ifndef WALKMESHWIDGET_H
 #define WALKMESHWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QGLWidget>
 #ifdef Q_OS_MAC
 #include <OpenGL/glu.h>

@@ -18,7 +18,7 @@
 #ifndef HEXLINEEDIT_H
 #define HEXLINEEDIT_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class HexLineEdit : public QLineEdit
 {

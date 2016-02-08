@@ -18,7 +18,7 @@
 #ifndef IMPORTDIALOG_H
 #define IMPORTDIALOG_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/Field.h"
 
 class ImportDialog : public QDialog

@@ -18,7 +18,7 @@
 #ifndef DEF_SCRIPTEDITORSTRUCTPAGE
 #define DEF_SCRIPTEDITORSTRUCTPAGE
 
-#include <QtGui>
+#include <QtWidgets>
 #include "ScriptEditorView.h"
 
 class ScriptEditorReturnToPage : public ScriptEditorView

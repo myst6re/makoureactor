@@ -97,6 +97,70 @@ void QTaskBarButton::setValue(int value)
 		emit valueChanged(value);
 	}
 }
+
+#elif defined(QTASKBAR_WIN_QT5)
+
+QTaskBarButton::QTaskBarButton(QWidget *mainWindow) :
+	_taskbarButton(mainWindow)
+{
+	_taskbarButton.setWindow(mainWindow->windowHandle());
+	QWinTaskbarProgress *progress = _taskbarButton.progress();
+	connect(progress, SIGNAL(valueChanged(int)), SIGNAL(valueChanged(int)));
+}
+
+QTaskBarButton::~QTaskBarButton()
+{
+}
+
+void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
+{
+	_taskbarButton.setOverlayIcon(pixmap);
+	_taskbarButton.setOverlayAccessibleDescription(text);
+}
+
+void QTaskBarButton::setState(State state)
+{
+	QWinTaskbarProgress *progress = _taskbarButton.progress();
+
+	switch(state) {
+	case Invisible:
+		progress->hide();
+		break;
+	case Indeterminate:
+		progress->show();
+		progress->setRange(0, 0);
+		progress->resume();
+		break;
+	case Paused:
+		progress->show();
+		progress->setRange(minimum(), maximum());
+		progress->pause();
+		break;
+	case Error:
+		progress->show();
+		progress->setRange(minimum(), maximum());
+		progress->stop();
+		break;
+	default:
+		progress->show();
+		progress->setRange(minimum(), maximum());
+		progress->resume();
+		break;
+	}
+}
+
+void QTaskBarButton::setValue(int value)
+{
+	QWinTaskbarProgress *progress = _taskbarButton.progress();
+	if (progress->minimum() != minimum()) {
+		progress->setMinimum(minimum());
+	}
+	if (progress->maximum() != maximum()) {
+		progress->setMaximum(maximum());
+	}
+	_taskbarButton.progress()->setValue(value);
+}
+
 #else
 
 QTaskBarButton::QTaskBarButton(QWidget *parent) :
@@ -128,12 +192,12 @@ void QTaskBarButton::setValue(int value)
 
 int QTaskBarButton::maximum() const
 {
-	return _minimum;
+	return _maximum;
 }
 
 int QTaskBarButton::minimum() const
 {
-	return _maximum;
+	return _minimum;
 }
 
 QTaskBarButton::State QTaskBarButton::state() const

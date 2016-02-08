@@ -18,7 +18,7 @@
 #ifndef DEF_WINDOW
 #define DEF_WINDOW
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldArchive.h"
 #include "widgets/VarManager.h"
 #include "widgets/TextManager.h"
@@ -109,6 +109,7 @@ private:
 	void restartNow();
 	void showProgression(const QString &message, bool canBeCanceled);
 	void hideProgression();
+	QProgressDialog *progressDialog();
 
 	QLineEdit *lineSearch;
 	QTreeWidget *fieldList;
@@ -144,7 +145,7 @@ private:
 	BGDialog *_backgroundManager;
 
 	QTaskBarButton *taskBarButton;
-	QProgressDialog *progressDialog;
+	QProgressDialog *_progressDialog;
 	QAction *authorAction;
 	QLabel *authorLbl;
 

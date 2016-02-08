@@ -18,7 +18,7 @@
 #ifndef DEF_GRPSCRIPTLIST
 #define DEF_GRPSCRIPTLIST
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/Section1File.h"
 
 class GrpScriptList : public QTreeWidget

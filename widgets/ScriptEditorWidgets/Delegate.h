@@ -59,7 +59,7 @@
 #ifndef DELEGATE_H
 #define DELEGATE_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/Field.h"
 
 class SpinBoxDelegate : public QItemDelegate

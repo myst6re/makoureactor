@@ -18,7 +18,7 @@
 #ifndef MODELMANAGERPS_H
 #define MODELMANAGERPS_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldPS.h"
 #include "ColorDisplay.h"
 #include "ModelManager.h"

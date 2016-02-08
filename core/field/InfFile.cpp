@@ -249,7 +249,7 @@ bool InfFile::arrowIsDisplayed(quint8 id)
 
 void InfFile::setArrowDiplay(quint8 id, bool display)
 {
-	data.display_arrow[id] = (data.display_arrow[id] & 0xFE) | display;
+	data.display_arrow[id] = (data.display_arrow[id] & 0xFE) | quint8(display);
 	setModified(true);
 }
 

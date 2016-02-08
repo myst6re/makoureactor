@@ -18,7 +18,7 @@
 #ifndef MISCWIDGET_H
 #define MISCWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/InfFile.h"
 #include "core/field/Field.h"
 

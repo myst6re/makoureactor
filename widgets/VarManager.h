@@ -18,7 +18,7 @@
 #ifndef DEF_VARMANAGER
 #define DEF_VARMANAGER
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldArchive.h"
 #include "core/Var.h"
 

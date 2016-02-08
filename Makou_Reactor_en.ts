@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<TS version="2.0" language="en_US">
+<defaultcodec>UTF-8</defaultcodec>
 <context>
     <name>AnimEditorDialog</name>
     <message>
@@ -497,46 +498,18 @@
     </message>
     <message>
         <location filename="widgets/GrpScriptList.cpp" line="59"/>
-        <source>DÃ©placer vers le haut</source>
-        <translation type="unfinished"></translation>
+        <source>Déplacer vers le haut</source>
+        <translation type="unfinished">Up</translation>
     </message>
     <message>
         <location filename="widgets/GrpScriptList.cpp" line="63"/>
-        <source>DÃ©placer vers le bas</source>
-        <translation type="unfinished"></translation>
+        <source>Déplacer vers le bas</source>
+        <translation type="unfinished">Down</translation>
     </message>
     <message>
         <location filename="widgets/GrpScriptList.cpp" line="95"/>
-        <source>Ã‰dition des &amp;groupes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/GrpScriptList.cpp" line="271"/>
-        <source>Voulez-vous vraiment supprimer %1 ?
-Certains scripts peuvent y faire rÃ©fÃ©rence !</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/GrpScriptList.cpp" line="272"/>
-        <source>le groupe sÃ©lectionnÃ©</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/GrpScriptList.cpp" line="272"/>
-        <source>les groupes sÃ©lectionnÃ©s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Déplacer vers le haut</source>
-        <translation type="vanished">Up</translation>
-    </message>
-    <message>
-        <source>Déplacer vers le bas</source>
-        <translation type="vanished">Down</translation>
-    </message>
-    <message>
         <source>Édition des &amp;groupes</source>
-        <translation type="vanished">&amp;Group editor</translation>
+        <translation type="unfinished">&amp;Group editor</translation>
     </message>
     <message>
         <location filename="widgets/GrpScriptList.cpp" line="98"/>
@@ -564,18 +537,21 @@ Certains scripts peuvent y faire rÃ©fÃ©rence !</source>
         <translation>Delete</translation>
     </message>
     <message>
+        <location filename="widgets/GrpScriptList.cpp" line="271"/>
         <source>Voulez-vous vraiment supprimer %1 ?
 Certains scripts peuvent y faire référence !</source>
-        <translation type="vanished">Are you sure you want to remove %1?
+        <translation>Are you sure you want to remove %1?
 Some scripts can refer to it!</translation>
     </message>
     <message>
+        <location filename="widgets/GrpScriptList.cpp" line="274"/>
         <source>le groupe sélectionné</source>
-        <translation type="vanished">the group selected</translation>
+        <translation>the group selected</translation>
     </message>
     <message>
+        <location filename="widgets/GrpScriptList.cpp" line="275"/>
         <source>les groupes sélectionnés</source>
-        <translation type="vanished">the selected groups</translation>
+        <translation>the selected groups</translation>
     </message>
 </context>
 <context>
@@ -3603,7 +3579,7 @@ Some scripts can refer to it!</translation>
     </message>
     <message>
         <location filename="core/field/TutFileStandard.cpp" line="127"/>
-        <location filename="main.cpp" line="47"/>
+        <location filename="main.cpp" line="48"/>
         <source>Erreur</source>
         <translation>Error</translation>
     </message>
@@ -3631,7 +3607,7 @@ id=%2
 </translation>
     </message>
     <message>
-        <location filename="main.cpp" line="47"/>
+        <location filename="main.cpp" line="48"/>
         <source>Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
 Vérifiez que ce fichier est valide ou supprimez-le.</source>
         <translation>The file &apos;var.cfg&apos; could not be loaded.

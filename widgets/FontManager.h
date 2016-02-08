@@ -18,7 +18,7 @@
 #ifndef FONTMANAGER_H
 #define FONTMANAGER_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "FontWidget.h"
 
 class FontManager : public QDialog

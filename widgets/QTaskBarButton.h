@@ -18,11 +18,16 @@
 #ifndef QTASKBARBUTTON_H
 #define QTASKBARBUTTON_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 #if defined(Q_OS_WIN) && defined(TASKBAR_BUTTON)
-#include <shobjidl.h>
-#define QTASKBAR_WIN
+#	ifdef QTASKBAR_WIN_QT5
+#		include <QWinTaskbarButton>
+#		include <QWinTaskbarProgress>
+#	else
+#		include <shobjidl.h>
+#		define QTASKBAR_WIN
+#	endif
 #endif
 
 class QTaskBarButton : public QObject
@@ -53,6 +58,8 @@ private:
 #ifdef QTASKBAR_WIN
 	WId _winId;
 	ITaskbarList3 *pITask;
+#elif defined(QTASKBAR_WIN_QT5)
+	QWinTaskbarButton _taskbarButton;
 #endif // Q_OS_WIN
 	int _minimum, _maximum, _value;
 	State _state;

@@ -18,7 +18,7 @@
 #ifndef DEF_SCRIPTEDITORMATHPAGE
 #define DEF_SCRIPTEDITORMATHPAGE
 
-#include <QtGui>
+#include <QtWidgets>
 #include "ScriptEditorView.h"
 
 class ScriptEditorBinaryOpPage : public ScriptEditorView

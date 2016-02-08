@@ -18,7 +18,7 @@
 #ifndef MODELMANAGER_H
 #define MODELMANAGER_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldPC.h"
 #include "ColorDisplay.h"
 #include "FieldModel.h"
