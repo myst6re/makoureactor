@@ -317,7 +317,7 @@ void FieldModel::paintGL()
 
 	if(!data || data->isEmpty())	return;
 
-	resizeGL(width(), height()); // hack (?)
+	resizeGL(width()*qApp->desktop()->physicalDpiX()/72, height()*qApp->desktop()->physicalDpiY()/72); // hack (?)
 
 	gluLookAt(distance,0,0,0,0,0,0,0,1);
 //	glTranslatef(distance, 0.0f, 0.0f);

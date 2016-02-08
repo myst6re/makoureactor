@@ -20,7 +20,7 @@
 ColorDisplay::ColorDisplay(QWidget *parent) :
 	QWidget(parent), _ro(false)
 {
-	scale = qApp->desktop()->logicalDpiX()/96;
+	scale = qApp->desktop()->physicalDpiX()/96;
 	setFixedSize((COLOR_DISPLAY_CELL_SIZE*scale + COLOR_DISPLAY_BORDER_WIDTH) * 10 + COLOR_DISPLAY_BORDER_WIDTH,
 				 COLOR_DISPLAY_CELL_SIZE*scale + COLOR_DISPLAY_BORDER_WIDTH * 2);
 	setMouseTracking(true);

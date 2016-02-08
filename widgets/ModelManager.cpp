@@ -22,7 +22,7 @@
 ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	QDialog(parent, Qt::Tool), _field(0), fieldModelLoader(0)
 {
-	qreal scale = qApp->desktop()->logicalDpiX()/96;
+	//qreal scale = qApp->desktop()->logicalDpiX()/96;
 	setWindowTitle(tr("Modèles 3D"));
 
 	QFont font;
@@ -31,7 +31,7 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	models = new QTreeWidget();
 	models->setIndentation(0);
 	models->setHeaderLabel(tr("Modèles 3D"));
-	models->setFixedWidth(120*scale);
+	models->setFixedWidth(120);
 	models->setColumnCount(1);
 
 	modelFrame = new QFrame();
@@ -54,13 +54,13 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 
 	modelAnims = new QTreeWidget();
 	modelAnims->setIndentation(0);
-	modelAnims->setFixedWidth(140*scale);
+	modelAnims->setFixedWidth(142);
 	modelAnims->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	if(Config::value("OpenGL", true).toBool()) {
 		modelPreview = new FieldModel(0, shareWidget);
 		modelWidget = modelPreview;
-		modelPreview->setFixedSize(304*scale, 214*scale);
+		modelPreview->setFixedSize(304, 214);
 	} else {
 		modelPreview = 0;
 		modelWidget = new QWidget(this);
