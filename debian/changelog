@@ -1,4 +1,4 @@
-makoureactor (1.6.5) precise; urgency=low
+makoureactor (1.6.5) trusty; urgency=low
 
   * Main window layout changes
   * Fixing PC field format bug on save/export
