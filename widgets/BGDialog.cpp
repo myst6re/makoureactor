@@ -21,20 +21,21 @@ BGDialog::BGDialog(QWidget *parent) :
 	QDialog(parent, Qt::Tool), field(0)
 {
 	setWindowTitle(tr("Décor"));
+	imageFrame = new QFrame();
+	imageFrame->setMinimumSize(320, 240);
 
-	QScrollArea *scrollArea = new QScrollArea(this);
-	scrollArea->setWidgetResizable(true);
-	scrollArea->setMinimumSize(320, 240);
-
-	QPalette pal = scrollArea->palette();
+	QPalette pal = imageFrame->palette();
 	pal.setColor(QPalette::Active, QPalette::Window, Qt::black);
 	pal.setColor(QPalette::Inactive, QPalette::Window, Qt::black);
 	pal.setColor(QPalette::Disabled, QPalette::Window, .60*Qt::black);
-	scrollArea->setPalette(pal);
+	imageFrame->setPalette(pal);
+
 
 	image = new ApercuBGLabel();
 	image->setAlignment(Qt::AlignCenter);
-	scrollArea->setWidget(image);
+	QVBoxLayout * imageLayout = new QVBoxLayout();
+	imageLayout->addWidget(image);
+	imageFrame->setLayout(imageLayout);
 
 	parametersWidget = new QComboBox(this);
 	parametersWidget->setFixedWidth(150);
@@ -51,7 +52,7 @@ BGDialog::BGDialog(QWidget *parent) :
 	hLayout->addWidget(zWidget, 1);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(scrollArea, 0, 0, 4, 1);
+	layout->addWidget(imageFrame, 0, 0, 4, 1);
 	layout->addWidget(parametersWidget, 0, 1, Qt::AlignRight);
 	layout->addWidget(statesWidget, 1, 1, Qt::AlignRight);
 	layout->addWidget(layersWidget, 2, 1, Qt::AlignRight);
@@ -234,5 +235,9 @@ void BGDialog::changeZ(int value)
 void BGDialog::updateBG()
 {
 	if(!field)	return;
-	image->setPixmap(QPixmap::fromImage(field->background()->openBackground(params, z, layers)));
+	image->setPixmap(QPixmap::fromImage(field->background()->openBackground(params, z, layers)).scaled(image->width(),image->height(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
+}
+void BGDialog::resizeEvent(QResizeEvent *event)
+{
+	if(event->type()==QEvent::Resize){updateBG();}
 }
