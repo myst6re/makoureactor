@@ -56,7 +56,7 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 	tabWidget->addTab(buildArrowPage(), tr("Flèches"));
 	tabWidget->addTab(buildCameraRangePage(), tr("Limites caméra"));
 	tabWidget->addTab(buildMiscPage(), tr("Divers"));
-	tabWidget->setFixedHeight(250);
+	tabWidget->setFixedHeight(275);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(walkmeshWidget, 0, 0, 4, 1);
@@ -392,7 +392,6 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 		bgFlagEdit[i] = new QSpinBox(group3);
 		bgFlagEdit[i]->setRange(0, 255);
 	}
-
 	QGridLayout *layout1 = new QGridLayout(group1);
 	layout1->addWidget(new QLabel(tr("Haut")), 0, 0);
 	layout1->addWidget(rangeEdit[0], 0, 1);
@@ -437,7 +436,7 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 	layout->addWidget(group1);
 	layout->addWidget(group2);
 	layout->addWidget(group3);
-	layout->addStretch();
+	//layout->addStretch();
 
 	for(int i=0 ; i<4 ; ++i) {
 		connect(rangeEdit[i], SIGNAL(valueChanged(int)), SLOT(editRange(int)));
