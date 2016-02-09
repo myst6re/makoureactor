@@ -22,7 +22,6 @@
 ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	QDialog(parent, Qt::Tool), _field(0), fieldModelLoader(0)
 {
-	//qreal scale = qApp->desktop()->logicalDpiX()/96;
 	setWindowTitle(tr("Modèles 3D"));
 
 	QFont font;

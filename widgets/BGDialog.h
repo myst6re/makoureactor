@@ -51,7 +51,7 @@ private:
 	qint16 x[3], y[3], z[3];
 	QFrame *imageFrame;
 protected:
- void resizeEvent(QResizeEvent*);
+	void resizeEvent(QResizeEvent*);
 };
 
 #endif // BGDIALOG_H

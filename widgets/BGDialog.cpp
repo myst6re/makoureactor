@@ -33,7 +33,7 @@ BGDialog::BGDialog(QWidget *parent) :
 
 	image = new ApercuBGLabel();
 	image->setAlignment(Qt::AlignCenter);
-	QVBoxLayout * imageLayout = new QVBoxLayout();
+	QVBoxLayout *imageLayout = new QVBoxLayout();
 	imageLayout->addWidget(image);
 	imageFrame->setLayout(imageLayout);
 
@@ -235,9 +235,13 @@ void BGDialog::changeZ(int value)
 void BGDialog::updateBG()
 {
 	if(!field)	return;
-	image->setPixmap(QPixmap::fromImage(field->background()->openBackground(params, z, layers)).scaled(image->width(),image->height(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
+	image->setPixmap(QPixmap::fromImage(field->background()->openBackground(params, z, layers)) \
+		.scaled(image->width(), image->height() ,Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 void BGDialog::resizeEvent(QResizeEvent *event)
 {
-	if(event->type()==QEvent::Resize){updateBG();}
+	if(event->type()==QEvent::Resize)
+	{
+		updateBG();
+	}
 }
