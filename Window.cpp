@@ -36,7 +36,6 @@ Window::Window() :
 	_textDialog(0), _modelManager(0), _tutManager(0), _walkmeshManager(0),
 	_backgroundManager(0), _progressDialog(0)
 {
-	qreal scale = qApp->desktop()->logicalDpiX()/96;
 	setWindowTitle();
 	setWindowState(Qt::WindowMaximized);
 
@@ -123,7 +122,7 @@ Window::Window() :
 
 	toolBar = new QToolBar(tr("Barre d'outils &principale"));
 	toolBar->setObjectName("toolbar");
-	toolBar->setIconSize(QSize(16*scale, 16*scale));
+	toolBar->setIconSize(QSize(16, 16));
 	addToolBar(toolBar);
 	toolBar->addAction(actionOpen);
 	actionOpen->setStatusTip(tr("Ouvrir un fichier"));
@@ -139,19 +138,19 @@ Window::Window() :
 	font.setPointSize(8);
 
 	lineSearch = new QLineEdit(this);
-	lineSearch->setFixedWidth(120*scale);
+	lineSearch->setFixedWidth(120);
 	lineSearch->setStatusTip(tr("Recherche rapide"));
 	lineSearch->setPlaceholderText(tr("Rechercher..."));
 	
 	fieldList = new QTreeWidget(this);
 	fieldList->setColumnCount(2);
 	fieldList->setHeaderLabels(QStringList() << tr("Fichier") << tr("Id"));
-	fieldList->setFixedWidth(120*scale);
-	fieldList->setMinimumHeight(120*scale);
+	fieldList->setFixedWidth(120);
+	fieldList->setMinimumHeight(120);
 	fieldList->setIndentation(0);
 	fieldList->setItemsExpandable(false);
 	fieldList->setSortingEnabled(true);
-	fieldList->setColumnWidth(1,28*scale);
+	fieldList->setColumnWidth(1,28);
 	fieldList->setAutoScroll(false);
 	fieldList->resizeColumnToContents(0);
 	fieldList->setFont(font);
@@ -159,14 +158,14 @@ Window::Window() :
 	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
 
 	groupScriptList = new GrpScriptList(this);
-	groupScriptList->setFixedWidth(176*scale);
-	groupScriptList->setMinimumHeight(176*scale);
+	groupScriptList->setFixedWidth(176);
+	groupScriptList->setMinimumHeight(176);
 	groupScriptList->setFont(font);
 	connect(groupScriptList, SIGNAL(changed()), SLOT(setModified()));
 
 	scriptList = new ScriptList(this);
-	scriptList->setFixedWidth(88*scale);
-	scriptList->setMinimumHeight(88*scale);
+	scriptList->setFixedWidth(88);
+	scriptList->setMinimumHeight(88);
 	scriptList->setFont(font);
 	
 	opcodeList = new OpcodeList(this);
@@ -186,10 +185,10 @@ Window::Window() :
 	connect(opcodeList, SIGNAL(changed()), SLOT(compile()));
 
 	zoneImage = new ApercuBG();
-	zoneImage->setFixedSize(300*scale, 225*scale);
+	zoneImage->setFixedSize(300, 225);
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
-		fieldModel->setFixedSize(300*scale, 225*scale);
+		fieldModel->setFixedSize(300, 225);
 //		modelThread = new FieldModelThread(this);
 
 //		connect(modelThread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(showModel(Field*,FieldModelFile*)));
@@ -199,7 +198,7 @@ Window::Window() :
 
 	zonePreview = new QStackedWidget(this);
 	zonePreview->setContentsMargins(QMargins());
-	zonePreview->setFixedSize(300*scale, 225*scale);
+	zonePreview->setFixedSize(300, 225);
 	zonePreview->addWidget(zoneImage);
 	if(fieldModel)
 		zonePreview->addWidget(fieldModel);
@@ -1588,10 +1587,8 @@ void Window::config()
 
 void Window::about()
 {
-	qreal scale = qApp->desktop()->logicalDpiX()/96;
-
 	QDialog about(this, Qt::Dialog | Qt::CustomizeWindowHint);
-	about.setFixedSize(200*scale, 270*scale);
+	about.setFixedSize(200, 270);
 
 	QFont font;
 	font.setPointSize(12);
@@ -1599,7 +1596,7 @@ void Window::about()
 	QLabel image(&about);
 	image.setScaledContents(true);
 	image.setPixmap(QPixmap(":/images/reactor.png"));
-	image.move(82*scale, about.height() - 150*scale);
+	image.move(82, about.height() - 150);
 	
 	QLabel desc1(PROG_FULLNAME, &about);
 	desc1.setFont(font);
@@ -1612,18 +1609,18 @@ void Window::about()
 	desc2.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc2.setTextFormat(Qt::RichText);
 	desc2.setOpenExternalLinks(true);
-	desc2.move(9*scale, 40*scale);
+	desc2.move(9, 40);
 	desc2.setFont(font);
 
 	QPushButton button(tr("Fermer"), &about);
-	button.move(8*scale, about.height()-8*scale-button.sizeHint().height());
+	button.move(8, about.height()-8-button.sizeHint().height());
 	connect(&button, SIGNAL(released()), &about, SLOT(close()));
 
 	QLabel desc4(QString("Qt %1").arg(QT_VERSION_STR), &about);
 	QPalette pal = desc4.palette();
 	pal.setColor(QPalette::WindowText, QColor(0xAA,0xAA,0xAA));
 	desc4.setPalette(pal);
-	desc4.move(9*scale, about.height()-16*scale-desc4.sizeHint().height()-button.sizeHint().height());
+	desc4.move(9, about.height()-16-desc4.sizeHint().height()-button.sizeHint().height());
 	desc4.setFont(font);
 
 	about.exec();
