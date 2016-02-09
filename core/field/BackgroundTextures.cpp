@@ -444,9 +444,10 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		default:	depthKey = 2;   break;
 		}
 
-		quint16 key = (tile.blending << 3) |
-				(tile.size == 32) |
-				(depthKey << 1);
+		quint16 key = (tile.typeTrans << 4) |
+		              (tile.blending << 3) |
+		              (depthKey << 1) |
+		              (tile.size == 32);
 
 		QVector<uint> tileData = this->tile(tile); // Retrieve tile data
 
@@ -469,7 +470,13 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 	}
 
 	QMutableMapIterator<quint16, QList<BackgroundConversionTexture> > it(groupedTextures);
-	quint8 curTexID = 0, curTexID2 = 15; // blending works only if textureID >= 15
+	// blending works only if textureID >= 15, and textureID >= 26 for depth = 2
+	const quint8 startTexID = 0, startTexID2 = 15,
+	        startTexID3 = 16, startTexID4 = 24,
+	        startTexID5 = 26;
+	quint8 curTexID = startTexID, curTexID2 = startTexID2,
+	        curTexID3 = startTexID3, curTexID4 = startTexID4,
+	        curTexID5 = startTexID5; 
 	BackgroundTiles pcTiles2;
 	BackgroundTexturesPC ret;
 
@@ -484,12 +491,17 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		info.size = representativeTile.size == 32; // 0 = 16, 1 = 32
 
 		if(info.depth < 2) {
+
 			/* On PC version, only the first palette color can be transparent
 			 * So we need to change all indexes to a transparent color to 0
 			 * And relocate when index=0 */
 			for(int texConvId=0 ; texConvId < texture.size() ; ++texConvId) {
 				BackgroundConversionTexture &tileConversion = texture[texConvId];
+				if (tileConversion.tile.depth >= 2) {
+					continue; // No palette here
+				}
 				PalettePC *palette = (PalettePC *)palettesPC.value(tileConversion.tile.paletteID);
+
 				if(palette && palette->transparency()) {
 
 					const QList<bool> &areZero = palette->areZero();
@@ -522,14 +534,40 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		quint16 tilesPerTexture = representativeTile.size == 16 ? 256 : 64;
 		quint8 textureCount = texture.size() / tilesPerTexture
 				+ (texture.size() % tilesPerTexture != 0);
+		QSet<quint8> usedTextures;
+		usedTextures.reserve(BACKGROUND_TEXTURE_PC_MAX_COUNT);
 
 		for(int i=0 ; i<textureCount ; ++i) {
 
-			if(representativeTile.blending || curTexID >= 15) {
-				texID = curTexID2++;
+			if(representativeTile.depth == 2) {
+				texID = curTexID5++;
+			} else if(representativeTile.blending) {
+				if(representativeTile.layerID == 3) {
+					texID = curTexID3++;
+				} else if(representativeTile.typeTrans == 0
+				          || representativeTile.typeTrans == 2) {
+					texID = curTexID4++;
+				} else {
+					texID = curTexID2++;
+				}
 			} else {
 				texID = curTexID++;
 			}
+			if(usedTextures.contains(texID)) {
+				for(int j=0 ; j<BACKGROUND_TEXTURE_PC_MAX_COUNT; ++j) {
+					int newTexID = (texID + j) % BACKGROUND_TEXTURE_PC_MAX_COUNT;
+					if(!usedTextures.contains(newTexID)) {
+						texID = newTexID;
+						break;
+					}
+				}
+				if(usedTextures.contains(texID)) {
+					qWarning() << "BackgroundTexturesPS::toPC no more texture ID available!";
+					break;
+				}
+			}
+			usedTextures.insert(texID);
+
 			QList<uint> flatten;
 
 			for(quint8 tileY=0 ; tileY<tileCount ; ++tileY) {
