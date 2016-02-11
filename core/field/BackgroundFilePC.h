@@ -41,6 +41,7 @@ public:
 	QByteArray savePal() const;
 	virtual inline bool canSave() const { return true; }
 	BackgroundFilePS toPS(FieldPS *field) const;
+	bool repair();
 };
 
 #endif // BACKGROUNDFILEPC_H

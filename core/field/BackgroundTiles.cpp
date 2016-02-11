@@ -125,6 +125,19 @@ QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists) const
 	return ret;
 }
 
+QSet<quint8> BackgroundTiles::usedPalettes() const
+{
+	QSet<quint8> ret;
+
+	foreach(const Tile &tile, *this) {
+		if (tile.depth < 2) {
+			ret.insert(tile.paletteID);
+		}
+	}
+
+	return ret;
+}
+
 void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
 						   int &width, int &height) const
 {

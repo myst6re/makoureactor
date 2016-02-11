@@ -20,6 +20,7 @@
 #include "PaletteIO.h"
 #include "../PsColor.h"
 #include "FieldPC.h"
+#include <algorithm>
 
 BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
 	BackgroundFile(field)
@@ -102,4 +103,51 @@ BackgroundFilePS BackgroundFilePC::toPS(FieldPS *field) const
 	filePS.setOpen(true);
 
 	return filePS;
+}
+
+bool BackgroundFilePC::repair()
+{
+	int paletteCount = palettes().size();
+	bool modified = false;
+
+	QSet<quint8> usedPalettes = this->tiles().usedPalettes();
+	QList<quint8> unusedPalettes;
+
+	// List unused palettes
+	for(int palID = 0; palID < paletteCount; ++palID) {
+		if(!usedPalettes.contains(palID)) {
+			unusedPalettes.append(palID);
+		}
+	}
+
+	std::sort(unusedPalettes.begin(), unusedPalettes.end(), qLess<quint8>());
+
+	QMap<quint16, Tile> &tiles = (QMap<quint16, Tile> &)tilesRef();
+	QMap<quint8, quint8> texToPalette;
+	QMutableMapIterator<quint16, Tile> it(tiles);
+	while(it.hasNext()) {
+		it.next();
+		Tile &tile = it.value();
+		if (tile.depth < 2 && tile.blending && tile.typeTrans != 2 && tile.paletteID >= paletteCount) {
+			tile.typeTrans = 2; // Modification in place
+			if(texToPalette.contains(tile.textureID)) {
+				tile.paletteID = texToPalette.value(tile.textureID);
+				modified = true;
+			} else if (!unusedPalettes.isEmpty()) {
+				tile.paletteID = unusedPalettes.first();
+				unusedPalettes.removeFirst();
+				texToPalette.insert(tile.textureID, tile.paletteID);
+				modified = true;
+			} else {
+				qWarning() << "BackgroundFilePC::repair cannot detect palette ID to use";
+			}
+		}
+	}
+
+	if (modified) {
+		setModified(true);
+		return true;
+	}
+
+	return false;
 }

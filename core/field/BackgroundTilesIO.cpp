@@ -47,10 +47,6 @@ BackgroundTilesIOPC::BackgroundTilesIOPC(QIODevice *device) :
 {
 }
 
-#ifdef BG_ID_RESEARCH
-QMultiMap<int, quint32> BackgroundTilesIOPC::IDs;
-#endif
-
 bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 {
 	qint64 cur;
@@ -59,6 +55,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 	TilePC tile;
 	QByteArray data;
 	char exists;
+	const quint8 sizeofTile = sizeof(TilePC);
 
 	if(!device()->seek(44)) {
 		qWarning() << "BackgroundTilesIOPC::readData device size too short";
@@ -76,26 +73,21 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 	}
 
 	if(nbTiles1 > 0) {
-		data = device()->read(nbTiles1 * 52 - 52 + 36);
+		data = device()->read(nbTiles1 * 52 - 52 + sizeofTile);
 
-		if(data.size() != nbTiles1 * 52 - 52 + 36) {
+		if(data.size() != nbTiles1 * 52 - 52 + sizeofTile) {
 			qWarning() << "BackgroundTilesIOPC::readData cannot read tiles data (1)";
 			return false;
 		}
 
 		// BG 0
 		for(i=0 ; i<nbTiles1 ; ++i) {
-			memcpy(&tile, data.constData() + i*52, 36);
+			memcpy(&tile, data.constData() + i*52, sizeofTile);
 
 			if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 				tiles.insert(1, tilePC2Tile(tile, 0, i));
-#ifdef BG_ID_RESEARCH
-//				quint32 zBig;
-//				memcpy(&zBig, data.constData() + i*52 + 36, 4);
-//				IDs.insert(tile.ID, zBig);
-#endif
 			} else {
-				qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
+				qWarning() << "Tile destination overflow 0" << tile.dstX << tile.dstY;
 			}
 		}
 
@@ -132,27 +124,20 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				return false;
 			}
 
-			data = device()->read(nbTiles2 * 52 - 52 + 36);
+			data = device()->read(nbTiles2 * 52 - 52 + sizeofTile);
 
-			if(data.size() != nbTiles2 * 52 - 52 + 36) {
+			if(data.size() != nbTiles2 * 52 - 52 + sizeofTile) {
 				qWarning() << "BackgroundTilesIOPC::readData cannot read tiles data (2)";
 				return false;
 			}
 
 			for(i=0 ; i<nbTiles2 ; ++i) {
-				memcpy(&tile, data.constData() + i*52, 36);
+				memcpy(&tile, data.constData() + i*52, sizeofTile);
 
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
-					Tile t = tilePC2Tile(tile, 1, i);
-#ifdef BG_ID_RESEARCH
-					quint32 zBig;
-					memcpy(&zBig, data.constData() + i*52 + 36, 4);
-					IDs.insert(tile.ID, zBig);
-					t.IDBig = zBig;
-#endif
-					tiles.insert(4096-tile.ID, t);
+					tiles.insert(4096 - tile.ID, tilePC2Tile(tile, 1, i));
 				} else {
-					qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
+					qWarning() << "Tile destination overflow 1" << tile.dstX << tile.dstY;
 				}
 			}
 		}
@@ -161,9 +146,9 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 			qWarning() << "BackgroundTilesIOPC::readData cannot seek (5)";
 			return false;
 		}
-
-		cur = device()->pos();
 	}
+
+	cur = device()->pos();
 
 	if(!device()->getChar(&exists)) {
 		qWarning() << "BackgroundTilesIOPC::readData cannot read exists3";
@@ -190,25 +175,20 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				return false;
 			}
 
-			data = device()->read(nbTiles3 * 52 - 52 + 36);
+			data = device()->read(nbTiles3 * 52 - 52 + sizeofTile);
 
-			if(data.size() != nbTiles3 * 52 - 52 + 36) {
+			if(data.size() != nbTiles3 * 52 - 52 + sizeofTile) {
 				qWarning() << "BackgroundTilesIOPC::readData cannot read tiles data (3)";
 				return false;
 			}
 
 			for(i=0 ; i<nbTiles3 ; ++i) {
-				memcpy(&tile, data.constData() + i*52, 36);
+				memcpy(&tile, data.constData() + i*52, sizeofTile);
 
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					tiles.insert(0, tilePC2Tile(tile, 2, i));
-#ifdef BG_ID_RESEARCH
-//					quint32 zBig;
-//					memcpy(&zBig, data.constData() + i*52 + 36, 4);
-//					IDs.insert(tile.ID, zBig);
-#endif
 				} else {
-					qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
+					qWarning() << "Tile destination overflow 2" << tile.dstX << tile.dstY;
 				}
 			}
 
@@ -218,9 +198,9 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 			qWarning() << "BackgroundTilesIOPC::readData cannot seek (8)";
 			return false;
 		}
-
-		cur = device()->pos();
 	}
+
+	cur = device()->pos();
 
 	if(!device()->getChar(&exists)) {
 		qWarning() << "BackgroundTilesIOPC::readData cannot read exists4";
@@ -247,25 +227,20 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				return false;
 			}
 
-			data = device()->read(nbTiles4 * 52 - 52 + 36);
+			data = device()->read(nbTiles4 * 52 - 52 + sizeofTile);
 
-			if(data.size() != nbTiles4 * 52 - 52 + 36) {
+			if(data.size() != nbTiles4 * 52 - 52 + sizeofTile) {
 				qWarning() << "BackgroundTilesIOPC::readData cannot read tiles data (4)";
 				return false;
 			}
 
 			for(i=0 ; i<nbTiles4 ; ++i) {
-				memcpy(&tile, data.constData() + i*52, 36);
+				memcpy(&tile, data.constData() + i*52, sizeofTile);
 
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					tiles.insert(4096, tilePC2Tile(tile, 3, i));
-#ifdef BG_ID_RESEARCH
-//					quint32 zBig;
-//					memcpy(&zBig, data.constData() + i*52 + 36, 4);
-//					IDs.insert(tile.ID, zBig);
-#endif
 				} else {
-					qWarning() << "Tile destination overflow" << tile.dstX << tile.dstY;
+					qWarning() << "Tile destination overflow 3" << tile.dstX << tile.dstY;
 				}
 			}
 		}
@@ -279,20 +254,13 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 	return true;
 }
 
-bool BackgroundTilesIOPC::writeTile(const Tile &tile, quint32 unique) const
+bool BackgroundTilesIOPC::writeTile(const Tile &tile) const
 {
-	float srcZBig;
 	quint32 srcXBig, srcYBig;
 
 	device()->write("\0\0", 2);
 	TilePC tilePC = tile2TilePC(tile);
-	device()->write((char *)&tilePC, 36);
-	if (tile.layerID == 1) {
-		srcZBig = (tilePC.ID / 4096.0f) * 10000000 + unique;
-	} else {
-		srcZBig = 0;
-	}
-	device()->write((char *)&srcZBig, 4);
+	device()->write((char *)&tilePC, sizeof(TilePC));
 	srcXBig = tilePC.srcX / 16 * 625000;
 	srcYBig = tilePC.srcY / 16 * 625000;
 	device()->write((char *)&srcXBig, 4);
@@ -346,9 +314,8 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 		device()->write(QByteArray(16, '\0')); // Unknown but unused
 		device()->write("\0\0", 2);
 
-		quint32 unique = 1;
 		foreach(const Tile &tile, tiles2) {
-			writeTile(tile, unique++);
+			writeTile(tile);
 		}
 
 		device()->write("\0\0", 2);
@@ -440,6 +407,7 @@ Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint1
 	ret.size = layerID > 1 ? 32 : 16;
 	ret.layerID = layerID;
 	ret.tileID = tileID;
+	ret.IDBig = tile.IDBig;
 
 	return ret;
 }
@@ -465,6 +433,7 @@ TilePC BackgroundTilesIOPC::tile2TilePC(const Tile &tile)
 	ret.textureID = tile.textureID2 > 0 ? 0 : tile.textureID;
 	ret.textureID2 = tile.textureID2;
 	ret.depth = tile.depth;
+	ret.IDBig = tile.IDBig;
 
 	return ret;
 }
@@ -603,10 +572,11 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.size = 16;
 			tile.layerID = 0;
 			tile.tileID = i;
+			tile.IDBig = 0;
 
 			tiles.insert(1, tile);
 		} else {
-			qWarning() << "Tile destination overflow" << tile1.dstX << tile1.dstY;
+			qWarning() << "Tile destination overflow 0" << tile1.dstX << tile1.dstY;
 		}
 		++tileID;
 	}
@@ -642,10 +612,20 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.size = 16;
 			tile.layerID = 1;
 			tile.tileID = i;
+			// Used for conversion to PC format // FIXME: approximation
+			if (tile.blending) {
+				if (tile.ID == 0) {
+					tile.IDBig = 999;
+				} else {
+					tile.IDBig = 10000 * tile.ID;
+				}
+			} else {
+				tile.IDBig = quint32((float(tile.ID) / 4096.0f) * 10000000.0f + i);
+			}
 
 			tiles.insert(4096 - tile.ID, tile);
 		} else {
-			qWarning() << "Tile destination overflow" << tile1.dstX << tile1.dstY;
+			qWarning() << "Tile destination overflow 1" << tile1.dstX << tile1.dstY;
 		}
 		++tileID;
 	}
@@ -695,10 +675,11 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.size = 32;
 			tile.layerID = layerID;
 			tile.tileID = j;
+			tile.IDBig = 0;
 
 			tiles.insert(4096 - tile.ID, tile);
 		} else {
-			qWarning() << "Tile destination overflow" << tile1.dstX << tile1.dstY;
+			qWarning() << "Tile destination overflow 2/3" << tile1.dstX << tile1.dstY;
 		}
 		++tileID;
 		++j;

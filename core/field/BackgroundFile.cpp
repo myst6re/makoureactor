@@ -48,25 +48,26 @@ void BackgroundFile::clear()
 	_tiles.clear();
 }
 
-QImage BackgroundFile::openBackground()
+QImage BackgroundFile::openBackground(bool *warning)
 {
 	// Search default background params
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
 	field()->scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
-	return openBackground(paramActifs, z);
+	return openBackground(paramActifs, z, warning);
 }
 
-QImage BackgroundFile::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+QImage BackgroundFile::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z,
+                                      const bool *layers, bool *warning)
 {
 	if(!isOpen() && !open()) {
 		return QImage();
 	}
 
-	return drawBackground(tiles().filter(paramActifs, z, layers));
+	return drawBackground(tiles().filter(paramActifs, z, layers), warning);
 }
 
-QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
+QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warning) const
 {
 	if(tiles.isEmpty() || !_textures) {
 		return QImage();
@@ -126,7 +127,8 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 				if(palette->notZero(indexOrColor)) {
 					if(tile.blending) {
 						pixels[baseX + right + top] = blendColor(tile.typeTrans,
-																 pixels[baseX + right + top], palette->color(indexOrColor));
+						                                         pixels[baseX + right + top],
+						                                         palette->color(indexOrColor));
 					} else {
 						pixels[baseX + right + top] = palette->color(indexOrColor);
 					}
@@ -138,6 +140,10 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 				top += width;
 			}
 		}
+	}
+
+	if (warning) {
+		*warning = warned;
 	}
 
 	return image;
