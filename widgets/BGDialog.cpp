@@ -21,7 +21,9 @@ BGDialog::BGDialog(QWidget *parent) :
 	QDialog(parent, Qt::Tool), field(0)
 {
 	setWindowTitle(tr("Décor"));
+	zoomFactor=1;
 	imageFrame = new QFrame();
+	imageFrame->setAutoFillBackground(true);
 	imageFrame->setMinimumSize(320, 240);
 
 	QPalette pal = imageFrame->palette();
@@ -30,11 +32,20 @@ BGDialog::BGDialog(QWidget *parent) :
 	pal.setColor(QPalette::Disabled, QPalette::Window, .60*Qt::black);
 	imageFrame->setPalette(pal);
 
-
 	image = new ApercuBGLabel();
+
 	image->setAlignment(Qt::AlignCenter);
+
+	imageBox = new QScrollArea;
+	imageBox->installEventFilter(this);
+	imageBox->setMinimumSize(320,240);
+	imageBox->setPalette(pal);
+	imageBox->setWidget(image);
+	imageBox->setWidgetResizable(true);
+
 	QVBoxLayout *imageLayout = new QVBoxLayout();
-	imageLayout->addWidget(image);
+	imageLayout->addWidget(imageBox);
+	imageLayout->setContentsMargins(0,0,0,0);
 	imageFrame->setLayout(imageLayout);
 
 	parametersWidget = new QComboBox(this);
@@ -111,6 +122,7 @@ void BGDialog::fillWidgets()
 
 	parametersWidget->clear();
 	layersWidget->clear();
+
 	layers[0] = true;
 	layers[3] = layers[2] = layers[1] = false;
 	allparams.clear();
@@ -162,7 +174,7 @@ void BGDialog::parameterChanged(int index)
 	int parameter = parametersWidget->itemData(index).toInt();
 	quint8 states = allparams.value(parameter);
 	QListWidgetItem *item;
-
+	zoomFactor = 1;
 	statesWidget->clear();
 	for(int i=0 ; i<8 ; ++i) {
 		if((states >> i) & 1) {
@@ -235,8 +247,17 @@ void BGDialog::changeZ(int value)
 void BGDialog::updateBG()
 {
 	if(!field)	return;
-	image->setPixmap(QPixmap::fromImage(field->background()->openBackground(params, z, layers)) \
-		.scaled(image->width(), image->height() ,Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	if(field->background()->openBackground(params, z, layers).isNull())
+	{
+		image->setPixmap(QPixmap::fromImage(field->background()->openBackground(params, z, layers)));
+		return;
+	}
+
+	else
+	{
+		image->setPixmap(QPixmap::fromImage(field->background()->openBackground(params, z, layers)) \
+			.scaled(imageFrame->width() * zoomFactor, (imageFrame->height()-4) * zoomFactor ,Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	}
 }
 void BGDialog::resizeEvent(QResizeEvent *event)
 {
@@ -244,4 +265,48 @@ void BGDialog::resizeEvent(QResizeEvent *event)
 	{
 		updateBG();
 	}
+}
+
+bool BGDialog::eventFilter(QObject *obj, QEvent *event)
+{
+	if(event->type() == QEvent::Wheel && obj == imageBox)
+	{
+		QWheelEvent *wheelEvent = static_cast<QWheelEvent *>(event);
+		if(wheelEvent->modifiers()==Qt::CTRL)
+		{
+			if(wheelEvent->delta() > 0)
+			{
+				if(zoomFactor==0)
+				{
+					zoomFactor=0.25;
+				}
+				else if (zoomFactor==4){return false;}/*cap zoom in at 400%*/
+				else
+				{
+					zoomFactor+=0.25;
+				}
+			}
+			else if(wheelEvent->delta() < 0)
+			{
+				if(zoomFactor==0)
+				{
+					zoomFactor= 0.25;
+				}
+				else if(zoomFactor == 0.25){return false;}/*cap zoom out at 25% */
+				else
+				{
+					zoomFactor+= -0.25;
+				}
+			}
+			else{return false;}/* A delta of 0 should never happen */
+			updateBG();
+			event->accept();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	return false;
 }
