@@ -176,9 +176,8 @@ public:
 	void printScripts(const QString &filename);
 	void printScriptsDirs(const QString &filename);
 	void diffScripts();
-#ifdef BG_ID_RESEARCH
+	bool printBackgroundTiles(Field *field, const QString &filename, bool uniformize = false);
 	void searchBackgroundZ();
-#endif
 	void searchAll();// research & debug function
 #endif
 	bool find(bool (*predicate)(Field *, SearchQuery *, SearchIn *),

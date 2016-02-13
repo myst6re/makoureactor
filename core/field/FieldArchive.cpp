@@ -737,10 +737,10 @@ void FieldArchive::diffScripts()
 				deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 
 				int grpScriptID = 0, scriptID;
-				foreach(GrpScript *grp2, scriptsAndTextsOriginal->grpScripts()) {
+				foreach(GrpScript *group2, scriptsAndTextsOriginal->grpScripts()) {
 					GrpScript *grp = scriptsAndTexts->grpScript(grpScriptID);
 
-					while(grp2->name() != grp->name()) {
+					while(group2->name() != grp->name()) {
 						grpScriptID++;
 						if(grpScriptID >= scriptsAndTexts->grpScriptCount()) {
 							qWarning() << "ALERT end grpScript reached";
@@ -749,13 +749,13 @@ void FieldArchive::diffScripts()
 						grp = scriptsAndTexts->grpScript(grpScriptID);
 					}
 
-					if(grp->size() != grp2->size()) {
-						qWarning() << "ALERT wrong group size" << grp->size() << grp2->size();
+					if(grp->size() != group2->size()) {
+						qWarning() << "ALERT wrong group size" << grp->size() << group2->size();
 						break;
 					}
 
 					scriptID = 0;
-					foreach(Script *script2, grp2->scripts()) {
+					foreach(Script *script2, group2->scripts()) {
 						Script *script = grp->script(scriptID);
 
 						int opcodeID = 0;
@@ -812,33 +812,122 @@ void FieldArchive::diffScripts()
 	}
 }
 
-#ifdef BG_ID_RESEARCH
+bool FieldArchive::printBackgroundTiles(Field *field, const QString &filename, bool uniformize)
+{
+	QFile f(filename);
+	if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+		qWarning() << "FieldArchive::printBackgroundTiles" << f.errorString();
+		return false;
+	}
+
+	BackgroundFile *bgFile = field->background();
+	if (!bgFile || !bgFile->isOpen()) {
+		qWarning() << "FieldArchive::printBackgroundTiles no bg for this field" << field->name();
+		return false;
+	}
+
+	BackgroundTiles tiles;
+	if (uniformize && field->isPS()) { // Convert PS to PC to have the same output whenever the source
+		BackgroundFilePS *bgFilePS = (BackgroundFilePS *)bgFile;
+		PalettesPC palettesPC = ((PalettesPS *)&(bgFilePS->palettes()))->toPC();
+		((BackgroundTexturesPS *)bgFilePS->textures())
+		        ->toPC(bgFilePS->tiles(), tiles, palettesPC);
+	} else {
+		tiles = bgFile->tiles();
+	}
+
+	foreach (const Tile &tile, tiles.sortedTiles()) {
+		f.write(QString("tileID=%1, layer=%2, param=%3, state=%4\n")
+		        .arg(tile.tileID)
+		        .arg(tile.layerID)
+		        .arg(tile.param)
+		        .arg(tile.state).toUtf8());
+		f.write(QString("srcX=%1, srcY=%2, textureID1=%3, textureID2=%4\n")
+		        .arg(tile.srcX)
+		        .arg(tile.srcY)
+		        .arg(tile.textureID)
+		        .arg(tile.textureID2).toUtf8());
+		f.write(QString("dstX=%1, dstY=%2, dstZ=%3, size=%4\n")
+		        .arg(tile.dstX)
+		        .arg(tile.dstY)
+		        .arg(tile.ID)
+		        .arg(tile.size).toUtf8());
+		f.write(QString("palID=%1, depth=%2, blending=%3, typeTrans=%4\n")
+		        .arg(tile.paletteID)
+		        .arg(tile.depth)
+		        .arg(tile.blending)
+		        .arg(tile.typeTrans).toUtf8());
+		f.write(QString("dstZBig=%1\n")
+		        .arg(tile.IDBig).toUtf8());
+		f.write("\n");
+	}
+
+	return true;
+}
+
 void FieldArchive::searchBackgroundZ()
 {
+	QMultiMap<int, quint32> ids;
 	FieldArchiveIterator it(*this);
 	while (it.hasNext()) {
 		Field *field = it.next();
-		if (field && field->isOpen()/* && field->scriptsAndTexts()->scale() == 512*/) {
-			field->inf();
-//			BackgroundFile *bg = field->background();
-//			if (bg->isOpen()) {
-//				bg->openBackground();
+		if (field && field->isOpen()) {
+			BackgroundFile *bg = field->background();
+			if (bg->isOpen()) {
+				bool function1 = false;
+				foreach (const Tile &tile, bg->tiles()) {
+					float ratio = float(tile.ID) / float(tile.IDBig);
+					if (tile.layerID == 1 && tile.ID * 10000 != tile.IDBig) {
+						if (ratio > 4.5e-5 && tile.IDBig < 9000000) {
+							ids.insert(tile.ID, tile.IDBig);
+							function1 = true;
+						} else {
+							if (function1) {
+								qDebug() << "Function2 in function 1 ?";
+							}
+						}
+					}
+					if (tile.layerID == 1 && tile.ID == 324 && tile.IDBig < 9000000) {
+						qDebug() << field->name();
+						qDebug() << QString("tileID=%1, layer=%2, param=%3, state=%4\n")
+						            .arg(tile.tileID)
+						            .arg(tile.layerID)
+						            .arg(tile.param)
+						            .arg(tile.state).toUtf8();
+						qDebug() << QString("srcX=%1, srcY=%2, textureID1=%3, textureID2=%4\n")
+						            .arg(tile.srcX)
+						            .arg(tile.srcY)
+						            .arg(tile.textureID)
+						            .arg(tile.textureID2).toUtf8();
+						qDebug() << QString("dstX=%1, dstY=%2, dstZ=%3, size=%4\n")
+						            .arg(tile.dstX)
+						            .arg(tile.dstY)
+						            .arg(tile.ID)
+						            .arg(tile.size).toUtf8();
+						qDebug() << QString("palID=%1, depth=%2, blending=%3, typeTrans=%4\n")
+						            .arg(tile.paletteID)
+						            .arg(tile.depth)
+						            .arg(tile.blending)
+						            .arg(tile.typeTrans).toUtf8();
+						qDebug() << QString("dstZBig=%1\n")
+						            .arg(tile.IDBig).toUtf8();
+					}
+				}
+
 //				qDebug() << field->name() << field->scriptsAndTexts()->scale();
-//			}
+			}
 		}
 	}
-/*
-	foreach (int ID, BackgroundTilesIOPC::IDs.uniqueKeys()) {
-		QList<quint32> zBigs = BackgroundTilesIOPC::IDs.values(ID);
+
+	foreach (int ID, ids.uniqueKeys()) {
+		QList<quint32> zBigs = ids.values(ID);
 		QList<quint32> zBigsUnique = zBigs.toSet().toList();
 		qSort(zBigsUnique);
 		foreach (quint32 zBig, zBigsUnique) {
-			qDebug() << ID << zBig << zBigs.count(zBig);
+			qDebug() << qPrintable(QString("%1\t%2\t%3\t%4").arg(ID).arg(zBig).arg(zBigs.count(zBig)).arg(float(ID) / float(zBig)));
 		}
-//		qDebug() << zBigs;
-	}*/
+	}
 }
-#endif
 
 void FieldArchive::searchAll()
 {
@@ -973,10 +1062,10 @@ void FieldArchive::searchAll()
 				}
 
 				int grpScriptID = 0, scriptID;
-				foreach(GrpScript *grp2, scriptsAndTextsOriginal->grpScripts()) {
+				foreach(GrpScript *group2, scriptsAndTextsOriginal->grpScripts()) {
 					GrpScript *grp = scriptsAndTexts->grpScript(grpScriptID);
 
-					while(grp2->name() != grp->name()) {
+					while(group2->name() != grp->name()) {
 						grpScriptID++;
 						if(grpScriptID >= scriptsAndTexts->grpScriptCount()) {
 							qWarning() << "ALERT end grpScript reached";
@@ -985,13 +1074,13 @@ void FieldArchive::searchAll()
 						grp = scriptsAndTexts->grpScript(grpScriptID);
 					}
 
-					if(grp->size() != grp2->size()) {
-						qWarning() << "ALERT wrong group size" << grp->size() << grp2->size();
+					if(grp->size() != group2->size()) {
+						qWarning() << "ALERT wrong group size" << grp->size() << group2->size();
 						break;
 					}
 
 					scriptID = 0;
-					foreach(Script *script2, grp2->scripts()) {
+					foreach(Script *script2, group2->scripts()) {
 						Script *script = grp->script(scriptID);
 
 						int opcodeID = 0;
