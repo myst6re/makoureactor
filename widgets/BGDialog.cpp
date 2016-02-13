@@ -21,7 +21,8 @@ BGDialog::BGDialog(QWidget *parent) :
 	QDialog(parent, Qt::Tool), field(0)
 {
 	setWindowTitle(tr("Décor"));
-	QWidget *imageFrame = new QWidget(this);
+	zoomFactor = 1;
+	imageFrame = new QFrame(this);
 	imageFrame->setMinimumSize(320, 240);
 	imageFrame->setAutoFillBackground(true);
 
@@ -33,8 +34,16 @@ BGDialog::BGDialog(QWidget *parent) :
 
 	image = new ApercuBGLabel();
 	image->setAlignment(Qt::AlignCenter);
+	imageBox = new QScrollArea;
+	imageBox->viewport()->installEventFilter(this);
+	imageBox->setMinimumSize(320,240);
+	imageBox->setPalette(pal);
+	imageBox->setWidget(image);
+	imageBox->setWidgetResizable(true);
+
 	QVBoxLayout *imageLayout = new QVBoxLayout();
-	imageLayout->addWidget(image);
+	imageLayout->addWidget(imageBox);
+	imageLayout->setContentsMargins(QMargins());
 	imageFrame->setLayout(imageLayout);
 
 	parametersWidget = new QComboBox(this);
@@ -212,7 +221,7 @@ void BGDialog::parameterChanged(int index)
 	int parameter = parametersWidget->itemData(index).toInt();
 	quint8 states = allparams.value(parameter);
 	QListWidgetItem *item;
-
+	zoomFactor = 1;
 	statesWidget->clear();
 	for(int i=0 ; i<8 ; ++i) {
 		if((states >> i) & 1) {
@@ -344,8 +353,8 @@ void BGDialog::updateBG()
 		bgWarning = false;
 	} else {
 		image->setPixmap(QPixmap::fromImage(img)
-		                 .scaled(image->width(), image->height(),
-		                         Qt::KeepAspectRatio, Qt::SmoothTransformation));
+			.scaled(imageFrame->width() * zoomFactor, (imageFrame->height() -4) * zoomFactor,
+			Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 
 	buttonRepair->setVisible(bgWarning);
@@ -358,3 +367,47 @@ void BGDialog::resizeEvent(QResizeEvent *event)
 		updateBG();
 	}
 }
+
+bool BGDialog::eventFilter(QObject *obj, QEvent *event)
+{
+	if(event->type() == QEvent::Wheel && obj == imageBox->viewport())
+	{
+		QWheelEvent *wheelEvent = static_cast<QWheelEvent *>(event);
+		if(wheelEvent->modifiers()==Qt::CTRL)
+		{
+			if(wheelEvent->delta() > 0)
+			{
+				if(zoomFactor==0)
+				{
+					zoomFactor = 0.25;
+				}
+				else if (zoomFactor==4){return false;}/*cap zoom in at 400%*/
+				else
+				{
+					zoomFactor += 0.25;
+				}
+			}
+			else if(wheelEvent->delta() < 0)
+			{
+				if(zoomFactor==0)
+				{
+					zoomFactor = 0.25;
+				}
+				else if (zoomFactor == 0.25){return false;}/*cap zoom out at 25% */
+				else
+				{
+					zoomFactor += -0.25;
+				}
+			}
+			else{return false;}/* A delta of 0 should never happen */
+			updateBG();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	return false;
+}
+
