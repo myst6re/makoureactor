@@ -21,10 +21,8 @@ BGDialog::BGDialog(QWidget *parent) :
 	QDialog(parent, Qt::Tool), field(0)
 {
 	setWindowTitle(tr("Décor"));
-	zoomFactor=1;
-	imageFrame = new QFrame(this);
+	imageFrame = new QFrame();
 	imageFrame->setMinimumSize(320, 240);
-	imageFrame->setAutoFillBackground(true);
 
 	QPalette pal = imageFrame->palette();
 	pal.setColor(QPalette::Active, QPalette::Window, Qt::black);
@@ -32,26 +30,20 @@ BGDialog::BGDialog(QWidget *parent) :
 	pal.setColor(QPalette::Disabled, QPalette::Window, .60*Qt::black);
 	imageFrame->setPalette(pal);
 
+
 	image = new ApercuBGLabel();
 	image->setAlignment(Qt::AlignCenter);
-	imageBox = new QScrollArea;
-	imageBox->viewport()->installEventFilter(this);
-	imageBox->setMinimumSize(320,240);
-	imageBox->setPalette(pal);
-	imageBox->setWidget(image);
-	imageBox->setWidgetResizable(true);
-
 	QVBoxLayout *imageLayout = new QVBoxLayout();
-	imageLayout->addWidget(imageBox);
-	imageLayout->setContentsMargins(0,0,0,0);
+	imageLayout->addWidget(image);
 	imageFrame->setLayout(imageLayout);
 
 	parametersWidget = new QComboBox(this);
+	parametersWidget->setFixedWidth(150);
 	parametersWidget->setEnabled(false);
 	statesWidget = new QListWidget(this);
+	statesWidget->setFixedWidth(150);
 	layersWidget = new QListWidget(this);
-	sectionsWidget = new QListWidget(this);
-	sectionsWidget->hide();
+	layersWidget->setFixedWidth(150);
 	zWidget = new QSpinBox(this);
 	zWidget->setRange(0, 4096);
 
@@ -59,38 +51,19 @@ BGDialog::BGDialog(QWidget *parent) :
 	hLayout->addWidget(new QLabel(tr("Z :")));
 	hLayout->addWidget(zWidget, 1);
 
-	QVBoxLayout *page1Layout = new QVBoxLayout;
-	page1Layout->addWidget(layersWidget);
-	page1Layout->addWidget(sectionsWidget);
-	page1Layout->addLayout(hLayout);
-
-	tabBar = new QTabBar(this);
-	tabBar->addTab(tr("Couches"));
-	tabBar->addTab(tr("Sections (couche 1)"));
-
-	buttonRepair = new QPushButton(tr("Réparer"), this);
-	buttonRepair->hide();
-
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(imageFrame, 0, 0, 5, 1);
-	layout->addWidget(parametersWidget, 0, 1);
-	layout->addWidget(statesWidget, 1, 1);
-	layout->addWidget(tabBar, 2, 1);
-	layout->addLayout(page1Layout, 3, 1);
-	layout->addWidget(buttonRepair, 4, 1);
-	layout->setColumnStretch(0, 2);
-	layout->setColumnStretch(1, 1);
+	layout->addWidget(imageFrame, 0, 0, 4, 1);
+	layout->addWidget(parametersWidget, 0, 1, Qt::AlignRight);
+	layout->addWidget(statesWidget, 1, 1, Qt::AlignRight);
+	layout->addWidget(layersWidget, 2, 1, Qt::AlignRight);
+	layout->addLayout(hLayout, 3, 1, Qt::AlignRight);
+	layout->setColumnStretch(0, 1);
 
 	connect(parametersWidget, SIGNAL(currentIndexChanged(int)), SLOT(parameterChanged(int)));
 	connect(layersWidget, SIGNAL(itemSelectionChanged()), SLOT(layerChanged()));
-	connect(sectionsWidget, SIGNAL(itemSelectionChanged()), SLOT(sectionChanged()));
 	connect(statesWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(enableState(QListWidgetItem*)));
 	connect(layersWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(enableLayer(QListWidgetItem*)));
-	connect(sectionsWidget, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(enableSection(QListWidgetItem*)));
 	connect(zWidget, SIGNAL(valueChanged(int)), SLOT(changeZ(int)));
-	connect(buttonRepair, SIGNAL(released()), SLOT(tryToRepairBG()));
-	connect(tabBar, SIGNAL(currentChanged(int)), SLOT(updateBG()));
-	connect(tabBar, SIGNAL(currentChanged(int)), SLOT(showLayersPage(int)));
 }
 
 void BGDialog::fill(Field *field, bool reload)
@@ -121,7 +94,6 @@ void BGDialog::clear()
 	parametersWidget->clear();
 	statesWidget->clear();
 	layersWidget->clear();
-	sectionsWidget->clear();
 	zWidget->clear();
 
 	parametersWidget->blockSignals(false);
@@ -136,40 +108,22 @@ void BGDialog::fillWidgets()
 
 	QHash<quint8, quint8> usedParams;
 	bool layerExists[] = {false, false, false};
-	QSet<quint16> usedIDs;
 
 	parametersWidget->clear();
 	layersWidget->clear();
-	sectionsWidget->clear();
 	layers[0] = true;
 	layers[3] = layers[2] = layers[1] = false;
 	allparams.clear();
 	params.clear();
-	sections.clear();
 
-	if(field->background()->usedParams(usedParams, layerExists, &usedIDs)) {
+	if(field->background()->usedParams(usedParams, layerExists)) {
 
-		QList<quint8> usedParamsList = usedParams.keys();
-		qSort(usedParamsList);
-		foreach(const quint8 param, usedParamsList) {
+		foreach(const quint8 &param, usedParams.keys()) {
 			parametersWidget->addItem(tr("Paramètre %1").arg(param), param);
 		}
 		parametersWidget->setEnabled(parametersWidget->count());
 
 		QListWidgetItem *item;
-
-		QList<quint16> usedIDsList = usedIDs.toList();
-		qSort(usedIDsList);
-		int sectionID = 0;
-		foreach(const quint16 ID, usedIDsList) {
-			item = new QListWidgetItem(tr("Section %1").arg(sectionID++));
-			item->setData(Qt::UserRole, ID);
-			item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-			item->setCheckState(Qt::Checked);
-			sectionsWidget->addItem(item);
-		}
-
-		sections = usedIDs;
 
 		layers[0] = true;
 		layers[1] = layerExists[0];
@@ -203,25 +157,12 @@ void BGDialog::fillWidgets()
 	}
 }
 
-void BGDialog::showLayersPage(int index)
-{
-	bool page1 = index <= 0;
-
-	layersWidget->setVisible(page1);
-	sectionsWidget->setVisible(!page1);
-	if(page1) {
-		layerChanged();
-	} else {
-		sectionChanged();
-	}
-}
-
 void BGDialog::parameterChanged(int index)
 {
 	int parameter = parametersWidget->itemData(index).toInt();
 	quint8 states = allparams.value(parameter);
 	QListWidgetItem *item;
-	zoomFactor = 1;
+
 	statesWidget->clear();
 	for(int i=0 ; i<8 ; ++i) {
 		if((states >> i) & 1) {
@@ -243,7 +184,6 @@ void BGDialog::layerChanged()
 		return;
 	}
 	zWidget->setEnabled(true);
-	zWidget->setReadOnly(false);
 	int layer = items.first()->data(Qt::UserRole).toInt();
 	int zValue = z[layer-2];
 	if(zValue == -1) {
@@ -258,20 +198,6 @@ void BGDialog::layerChanged()
 	}
 
 	zWidget->setValue(zValue);
-}
-
-void BGDialog::sectionChanged()
-{
-	QList<QListWidgetItem *> items = sectionsWidget->selectedItems();
-	if(items.isEmpty()) {
-		zWidget->setValue(0);
-		zWidget->setEnabled(false);
-		return;
-	}
-	zWidget->setEnabled(true);
-	zWidget->setReadOnly(true);
-	int ID = items.first()->data(Qt::UserRole).toInt();
-	zWidget->setValue(ID);
 }
 
 void BGDialog::enableState(QListWidgetItem *item)
@@ -297,25 +223,8 @@ void BGDialog::enableLayer(QListWidgetItem *item)
 	updateBG();
 }
 
-void BGDialog::enableSection(QListWidgetItem *item)
-{
-	bool enabled = item->data(Qt::CheckStateRole).toBool();
-	int ID = item->data(Qt::UserRole).toInt();
-
-	if (enabled) {
-		sections.insert(ID);
-	} else {
-		sections.remove(ID);
-	}
-
-	updateBG();
-}
-
 void BGDialog::changeZ(int value)
 {
-	if(tabBar->currentIndex() != 0) {
-		return;
-	}
 	QList<QListWidgetItem *> items = layersWidget->selectedItems();
 	if(items.isEmpty()) return;
 	z[items.first()->data(Qt::UserRole).toInt()-2] = value;// z[layer - 2]
@@ -323,43 +232,12 @@ void BGDialog::changeZ(int value)
 	updateBG();
 }
 
-void BGDialog::tryToRepairBG()
-{
-	if (field->background()->repair()) {
-		QMessageBox::information(this, tr("Décor réparé"), tr("Des erreurs ont été trouvées et réparées, sauvegardez l'écran pour appliquer les changements."));
-		emit modified();
-		updateBG();
-	} else {
-		QMessageBox::warning(this, tr("Réparation impossible"), tr("Les erreurs n'ont pas été corrigées."));
-	}
-}
-
 void BGDialog::updateBG()
 {
 	if(!field)	return;
-
-	QImage img;
-	bool bgWarning;
-
-	if(tabBar->currentIndex() == 0) {
-		img = field->background()->openBackground(params, z, layers, NULL, &bgWarning);
-	} else {
-		bool layers[4] = { false, true, false, false };
-		img = field->background()->openBackground(params, z, layers, &sections, &bgWarning);
-	}
-
-	if(img.isNull()) {
-		image->setPixmap(QPixmap::fromImage(img));
-		bgWarning = false;
-	} else {
-		image->setPixmap(QPixmap::fromImage(img)
-						 .scaled(imageFrame->width() * zoomFactor, (imageFrame->height() -4) * zoomFactor,
-		                         Qt::KeepAspectRatio, Qt::SmoothTransformation));
-	}
-
-	buttonRepair->setVisible(bgWarning);
+	image->setPixmap(QPixmap::fromImage(field->background()->openBackground(params, z, layers)) \
+		.scaled(image->width(), image->height() ,Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
-
 void BGDialog::resizeEvent(QResizeEvent *event)
 {
 	if(event->type()==QEvent::Resize)
@@ -367,47 +245,3 @@ void BGDialog::resizeEvent(QResizeEvent *event)
 		updateBG();
 	}
 }
-
-bool BGDialog::eventFilter(QObject *obj, QEvent *event)
-{
-	if(event->type() == QEvent::Wheel && obj == imageBox->viewport())
-	{
-		QWheelEvent *wheelEvent = static_cast<QWheelEvent *>(event);
-		if(wheelEvent->modifiers()==Qt::CTRL)
-		{
-			if(wheelEvent->delta() > 0)
-			{
-				if(zoomFactor==0)
-				{
-					zoomFactor=0.25;
-				}
-				else if (zoomFactor==4){return false;}/*cap zoom in at 400%*/
-				else
-				{
-					zoomFactor+=0.25;
-				}
-			}
-			else if(wheelEvent->delta() < 0)
-			{
-				if(zoomFactor==0)
-				{
-					zoomFactor= 0.25;
-				}
-				else if (zoomFactor == 0.25){return false;}/*cap zoom out at 25% */
-				else
-				{
-					zoomFactor+= -0.25;
-				}
-			}
-			else{return false;}/* A delta of 0 should never happen */
-			updateBG();
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	return false;
-}
-
