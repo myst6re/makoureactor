@@ -353,8 +353,8 @@ void BGDialog::updateBG()
 		bgWarning = false;
 	} else {
 		image->setPixmap(QPixmap::fromImage(img)
-						 .scaled(imageFrame->width() * zoomFactor, (imageFrame->height() -4) * zoomFactor,
-		                         Qt::KeepAspectRatio, Qt::SmoothTransformation));
+			.scaled(imageFrame->width() * zoomFactor, (imageFrame->height() -4) * zoomFactor,
+			Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 
 	buttonRepair->setVisible(bgWarning);
