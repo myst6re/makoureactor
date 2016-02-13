@@ -66,19 +66,33 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 
 	switch (op) {
 	case Assign:
+	case AssignNotEqual:
+	case AssignLessThan:
+	case AssignLessThanEqual:
+	case AssignGreaterThan:
+	case AssignGreaterThanEqual:
 		// Compare value if provided
 		if(!noValue) {
-			if(id() == SETBYTE) {
-				OpcodeSETBYTE *setbyte = (OpcodeSETBYTE *)this;
-				if(B1(setbyte->banks) == bank && (noAddress || setbyte->var == address)
-						&& B2(setbyte->banks) == 0 && setbyte->value == value)
-					return true;
-			}
-			if(id() == SETWORD) {
-				OpcodeSETWORD *setword = (OpcodeSETWORD *)this;
-				if(B1(setword->banks) == bank && (noAddress || setword->var == address)
-						&& B2(setword->banks) == 0 && setword->value == (quint16)value)
-					return true;
+			if(id() == SETBYTE || id() == SETWORD) {
+				OpcodeBinaryOperation *binaryOp = (OpcodeBinaryOperation *)this;
+
+				if(B1(binaryOp->banks) == bank && (noAddress || binaryOp->var == address)
+				        && B2(binaryOp->banks) == 0) {
+					switch (op) {
+					case Assign:
+						return binaryOp->value == value;
+					case AssignNotEqual:
+						return binaryOp->value != value;
+					case AssignLessThan:
+						return binaryOp->value < value;
+					case AssignLessThanEqual:
+						return binaryOp->value <= value;
+					case AssignGreaterThan:
+						return binaryOp->value > value;
+					case AssignGreaterThanEqual:
+						return binaryOp->value >= value;
+					}
+				}
 			}
 		} else {
 			// Every write vars
