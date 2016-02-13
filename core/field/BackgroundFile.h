@@ -37,9 +37,13 @@ public:
 	virtual QByteArray save() const { return QByteArray(); }
 	virtual inline bool canSave() const { return false; }
 	void clear();
-	QImage openBackground();
-	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
-	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
+	QImage openBackground(bool *warning = NULL);
+	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2],
+	                      const bool *layers = NULL, const QSet<quint16> *IDs = NULL,
+	                      bool *warning = NULL);
+	// Draw background tiles with ID
+	QImage backgroundPart(quint16 ID, bool *warning = NULL);
+	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs);
 	bool layerExists(int num);
 
 	inline const BackgroundTiles &tiles() const {
@@ -67,9 +71,16 @@ public:
 		_textures = textures;
 	}
 
+	virtual inline bool repair() {
+		return false;
+	}
+
 protected:
-	QImage drawBackground(const BackgroundTiles &tiles) const;
+	QImage drawBackground(const BackgroundTiles &tiles, bool *warning = NULL) const;
 	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
+	inline BackgroundTiles &tilesRef() {
+		return _tiles;
+	}
 
 private:
 	BackgroundTiles _tiles;

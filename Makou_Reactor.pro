@@ -7,7 +7,11 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 lessThan(QT_MAJOR_VERSION, 5) {
     INCLUDEPATH += compat
-    QMAKE_CXXFLAGS += -std=c++0x
+}
+
+contains(QMAKE_COMPILER, gcc) {
+    # Enabling c++11 and fixing bad behavior with Q_PACKED
+    QMAKE_CXXFLAGS += -std=c++0x -mno-ms-bitfields
 }
 
 # Input

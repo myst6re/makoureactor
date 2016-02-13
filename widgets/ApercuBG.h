@@ -30,6 +30,8 @@ public:
 	void clear();
 signals:
 	void clicked();
+public slots:
+	void drawBackground();
 private:
 	static QPixmap errorPixmap(int w, int h);
 	Field *field;

@@ -687,11 +687,36 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 #ifdef DEBUG_FUNCTIONS
 	//FieldArchivePC otherArch("C:/Users/Jérôme/Documents/neo_midgar_build/livraison-acro-2015-04-10/fflevel_compare_annexe.lgp", FieldArchiveIO::Lgp);
 	//fieldArchive->compareTexts(&otherArch);
-	fieldArchive->printTexts("field-texts.txt");
-	fieldArchive->printAkaos("field-akaos.txt");
-	fieldArchive->printModelLoaders("field-model-loaders-generic.txt");
-	fieldArchive->printModelLoaders("field-model-loaders.txt", false);
-	fieldArchive->printScripts("field-scripts.txt");
+	//fieldArchive->searchBackgroundZ();
+	/* const QStringList &fieldNames = Data::field_names;
+	QStringList fieldNamesPC = fieldNames;
+	Data::toPCMaplist(fieldNamesPC);
+	FieldArchiveIterator it(*fieldArchive);
+	while (it.hasNext()) {
+		Field *f = it.next();
+		if (f && f->isOpen()) {
+			QString name = fieldNamesPC.value(fieldNames.indexOf(f->name()), f->name());
+			fieldArchive->printBackgroundTiles(f, QString("field-background-tiles-%1/field-background-tiles-%2.txt")
+			                                   .arg(fieldArchive->isPC() ? "PC" : "PS")
+			                                   .arg(name));
+		}
+	}
+	if (fieldArchive->isPS()) {
+		it.toFront();
+		while (it.hasNext()) {
+			Field *f = it.next();
+			if (f && f->isOpen()) {
+				QString name = fieldNamesPC.value(fieldNames.indexOf(f->name()), f->name());
+				fieldArchive->printBackgroundTiles(f, QString("field-background-tiles-ps-from-pc/field-background-tiles-%2.txt")
+				                                   .arg(name), true);
+			}
+		}
+	} */
+	//fieldArchive->printTexts("field-texts.txt");
+	//fieldArchive->printAkaos("field-akaos.txt");
+	//fieldArchive->printModelLoaders("field-model-loaders-generic.txt");
+	//fieldArchive->printModelLoaders("field-model-loaders.txt", false);
+	//fieldArchive->printScripts("field-scripts.txt");
 	//fieldArchive->searchAll();
 #endif
 }
@@ -1489,6 +1514,8 @@ void Window::backgroundManager()
 {
 	if(!_backgroundManager) {
 		_backgroundManager = new BGDialog(this);
+		connect(_backgroundManager, SIGNAL(modified()), SLOT(setModified()));
+		connect(_backgroundManager, SIGNAL(modified()), zoneImage, SLOT(drawBackground()));
 	}
 
 	if(field) {

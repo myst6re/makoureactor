@@ -32,21 +32,23 @@ struct Tile {
 	quint8 depth;
 	quint8 layerID;
 	quint16 tileID;
-#ifdef BG_ID_RESEARCH
-	quint32 IDBig;
-#endif
+	quint32 IDBig; // Only on PC
 };
 
 class BackgroundTiles : public QMultiMap<qint16, Tile>
 {
 public:
 	BackgroundTiles();
+	BackgroundTiles(const QList<Tile> &tiles);
 	BackgroundTiles(const QMultiMap<qint16, Tile> &tiles);
 
-	BackgroundTiles filter(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const;
-	BackgroundTiles tiles(quint8 layerID, bool orderedForSaving) const;
+	BackgroundTiles filter(const QHash<quint8, quint8> &paramActifs, const qint16 *z,
+	                       const bool *layers, const QSet<quint16> *IDs) const;
+	BackgroundTiles tiles(quint8 layerID, bool orderedForSaving = false) const;
+	BackgroundTiles tilesByID(quint16 ID, bool orderedForSaving = false) const;
 	QMap<qint32, Tile> sortedTiles() const;
-	QHash<quint8, quint8> usedParams(bool *layerExists) const;
+	QHash<quint8, quint8> usedParams(bool *layerExists, QSet<quint16> *usedIDs = NULL) const;
+	QSet<quint8> usedPalettes() const;
 	void area(quint16 &minWidth, quint16 &minHeight,
 			  int &width, int &height) const;
 	QSize area() const;

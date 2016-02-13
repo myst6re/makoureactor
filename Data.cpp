@@ -711,23 +711,28 @@ void Data::openMaplist(bool PC)
 	}
 
 	if(PC) {
-		field_names[88] = "qa";
-		field_names[89] = "qb";
-		field_names[90] = "qc";
-		field_names[91] = "qd";
-		field_names[92] = "qe";
-		field_names[153] = "min71";
-		field_names[164] = "sbwy4_1";
-		field_names[165] = "sbwy4_2";
-		field_names[166] = "sbwy4_3";
-		field_names[167] = "sbwy4_4";
-		field_names[168] = "sbwy4_5";
-		field_names[169] = "sbwy4_6";
-		field_names[174] = "min51_1";
-		field_names[175] = "min51_2";
-		field_names[586] = "tower5";
-		field_names[735] = "sbwy4_22";
+		toPCMaplist(field_names);
 	}
+}
+
+void Data::toPCMaplist(QStringList &field_names)
+{
+	field_names[88] = "qa";
+	field_names[89] = "qb";
+	field_names[90] = "qc";
+	field_names[91] = "qd";
+	field_names[92] = "qe";
+	field_names[153] = "min71";
+	field_names[164] = "sbwy4_1";
+	field_names[165] = "sbwy4_2";
+	field_names[166] = "sbwy4_3";
+	field_names[167] = "sbwy4_4";
+	field_names[168] = "sbwy4_5";
+	field_names[169] = "sbwy4_6";
+	field_names[174] = "min51_1";
+	field_names[175] = "min51_2";
+	field_names[586] = "tower5";
+	field_names[735] = "sbwy4_22";
 }
 
 const char *Data::musicList[100] =
