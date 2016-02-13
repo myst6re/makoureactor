@@ -318,10 +318,10 @@ void FieldModel::paintGL()
 	if(!data || data->isEmpty())	return;
 
 	//scale the view port if the window manager is scaling
-	int scale=1;
-	if(qApp->desktop()->physicalDpiX() >140){scale =2;}
+	int scale = 1;
+	if(qApp->desktop()->physicalDpiX() > 140){scale = 2;}
 
-	resizeGL(width()*scale,height()*scale); // hack (?)
+	resizeGL(width() * scale, height() * scale); // hack (?)
 
 	gluLookAt(distance,0,0,0,0,0,0,0,1);
 //	glTranslatef(distance, 0.0f, 0.0f);
