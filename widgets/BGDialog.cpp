@@ -34,9 +34,9 @@ BGDialog::BGDialog(QWidget *parent) :
 
 	image = new ApercuBGLabel();
 	image->setAlignment(Qt::AlignCenter);
-	imageBox = new QScrollArea;
+	imageBox = new QScrollArea(this);
 	imageBox->viewport()->installEventFilter(this);
-	imageBox->setMinimumSize(320,240);
+	imageBox->setMinimumSize(320, 240);
 	imageBox->setPalette(pal);
 	imageBox->setWidget(image);
 	imageBox->setWidgetResizable(true);
@@ -362,52 +362,43 @@ void BGDialog::updateBG()
 
 void BGDialog::resizeEvent(QResizeEvent *event)
 {
-	if(event->type()==QEvent::Resize)
-	{
+	if(event->type() == QEvent::Resize) {
 		updateBG();
 	}
 }
 
 bool BGDialog::eventFilter(QObject *obj, QEvent *event)
 {
-	if(event->type() == QEvent::Wheel && obj == imageBox->viewport())
-	{
+	if(event->type() == QEvent::Wheel && obj == imageBox->viewport()) {
 		QWheelEvent *wheelEvent = static_cast<QWheelEvent *>(event);
-		if(wheelEvent->modifiers()==Qt::CTRL)
-		{
-			if(wheelEvent->delta() > 0)
-			{
-				if(zoomFactor==0)
-				{
-					zoomFactor = 0.25;
+		if(wheelEvent->modifiers() == Qt::CTRL) {
+			const float step = 0.25;
+			if(zoomFactor == 0) {
+				zoomFactor = 0.25;
+			} else if(wheelEvent->delta() > 0) {
+				if(zoomFactor >= 4){
+					return false; // cap zoom in at 400%
+				} else {
+					zoomFactor += step;
 				}
-				else if (zoomFactor==4){return false;}/*cap zoom in at 400%*/
-				else
-				{
-					zoomFactor += 0.25;
+			} else if(wheelEvent->delta() < 0) {
+				if (zoomFactor <= 0.25){
+					return false; // cap zoom in at 25%
+				} else {
+					zoomFactor -= step;
 				}
+			} else {
+				return false; // A delta of 0 should never happen
 			}
-			else if(wheelEvent->delta() < 0)
-			{
-				if(zoomFactor==0)
-				{
-					zoomFactor = 0.25;
-				}
-				else if (zoomFactor == 0.25){return false;}/*cap zoom out at 25% */
-				else
-				{
-					zoomFactor += -0.25;
-				}
-			}
-			else{return false;}/* A delta of 0 should never happen */
+
 			updateBG();
+
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
+
 	return false;
 }
 

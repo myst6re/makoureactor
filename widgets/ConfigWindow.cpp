@@ -38,15 +38,12 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 
 	kernelAuto = new QCheckBox(tr("kernel2.bin"), dependances);
 	kernelPath = new QLabel(dependances);
-	kernelPath->setFixedWidth(500);
 	kernelButton = new QPushButton(tr("Changer"), dependances);
 	windowAuto = new QCheckBox(tr("window.bin"), dependances);
 	windowPath = new QLabel(dependances);
-	windowPath->setFixedWidth(500);
 	windowButton = new QPushButton(tr("Changer"), dependances);
 	charAuto = new QCheckBox(tr("char.lgp"), dependances);
 	charPath = new QLabel(dependances);
-	charPath->setFixedWidth(500);
 	charButton = new QPushButton(tr("Changer"), dependances);
 
 	QGridLayout *dependLayout = new QGridLayout(dependances);
@@ -63,6 +60,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	dependLayout->addWidget(charAuto, 5, 0);
 	dependLayout->addWidget(charPath, 5, 1);
 	dependLayout->addWidget(charButton, 5, 2);
+	dependLayout->setColumnStretch(1, 1);
 
 	QGroupBox *openGL = new QGroupBox(tr("OpenGL"), this);
 
@@ -111,13 +109,13 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	QGridLayout *textEditorLayout = new QGridLayout(textEditor);
 	textEditorLayout->addWidget(japEnc, 0, 0, 1, 2);
 	// windowPreviewLayout->addWidget(optiText, 1, 0, 1, 2);
-	textEditorLayout->addLayout(windowPreviewLayout, 1, 0, 4, 2, Qt::AlignTop);
-	textEditorLayout->addWidget(listCharNames, 0, 2, 1, 2, Qt::AlignTop);
-	textEditorLayout->addWidget(charNameEdit, 1, 2, 1, 2, Qt::AlignTop);
-	textEditorLayout->addWidget(new QLabel(tr("Taille auto. : marge à droite")), 3, 2, Qt::AlignBottom);
-	textEditorLayout->addWidget(autoSizeMarginEdit, 3, 3, Qt::AlignBottom);
-	textEditorLayout->addWidget(new QLabel(tr("Largeur {SPACED CHARACTERS}")), 4, 2, Qt::AlignBottom);
-	textEditorLayout->addWidget(spacedCharactersWidthEdit, 4, 3, Qt::AlignBottom);
+	textEditorLayout->addLayout(windowPreviewLayout, 1, 0, 4, 2);
+	textEditorLayout->addWidget(listCharNames, 0, 2, 1, 2);
+	textEditorLayout->addWidget(charNameEdit, 1, 2, 1, 2);
+	textEditorLayout->addWidget(new QLabel(tr("Taille auto. : marge à droite")), 3, 2);
+	textEditorLayout->addWidget(autoSizeMarginEdit, 3, 3);
+	textEditorLayout->addWidget(new QLabel(tr("Largeur {SPACED CHARACTERS}")), 4, 2);
+	textEditorLayout->addWidget(spacedCharactersWidthEdit, 4, 3);
 	textEditorLayout->setRowStretch(2, 1);
 
 	QGroupBox *scriptEditor = new QGroupBox(tr("Editeur de script"), this);

@@ -319,7 +319,9 @@ void FieldModel::paintGL()
 
 	//scale the view port if the window manager is scaling
 	int scale = 1;
-	if(qApp->desktop()->physicalDpiX() > 140){scale = 2;}
+	if(qApp->desktop()->physicalDpiX() > 140) {
+		scale = 2;
+	}
 
 	resizeGL(width() * scale, height() * scale); // hack (?)
 

@@ -43,7 +43,6 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 
 	fieldList = new QListWidget(this);
 	fieldList->setUniformItemSizes(true);
-	fieldList->setFixedWidth(200);
 	fieldList->setSelectionMode(QAbstractItemView::MultiSelection);
 
 	QToolBar *toolBar = new QToolBar(this);
@@ -54,7 +53,6 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 	QVBoxLayout *listLayout = new QVBoxLayout;
 	listLayout->addWidget(toolBar);
 	listLayout->addWidget(fieldList, 1);
-	listLayout->setContentsMargins(QMargins());
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal, this);
 	buttonBox->addButton(tr("Importer"), QDialogButtonBox::AcceptRole);
@@ -71,7 +69,6 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 	layout->addWidget(changeDir, row + 1, 2);
 	layout->addWidget(buttonBox, row + 3, 0, 1, 3);
 	layout->setRowStretch(row + 2, 1);
-	layout->setColumnStretch(1, 1);
 
 	connect(changeDir, SIGNAL(clicked()),  SLOT(chooseImportDirectory()));
 	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));

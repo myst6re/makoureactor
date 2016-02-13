@@ -26,7 +26,6 @@ TutWidget::TutWidget(QWidget *parent) :
 	setWindowTitle(tr("Tutoriels/Musiques"));
 
 	ListWidget *_list = new ListWidget(this);
-	_list->setFixedWidth(70);
 	_list->addAction(ListWidget::Add, tr("Ajouter"), this, SLOT(add()));
 	_list->addAction(ListWidget::Rem, tr("Supprimer"), this, SLOT(del()));
 //	_list->addSeparator(true);

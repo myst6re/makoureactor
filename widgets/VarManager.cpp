@@ -45,7 +45,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	QHBoxLayout *layout2 = new QHBoxLayout();
 	
 	liste1 = new QListWidget(this);
-	liste1->setFixedWidth(fontMetrics().width(QString(" 77-77 "))+ contentsMargins().left() + contentsMargins().right());
+	liste1->setFixedWidth(fontMetrics().width(QString(" WW-WW ")) + contentsMargins().left() + contentsMargins().right());
 	liste1->setFont(font);
 	
 	liste2 = new QTreeWidget(this);
