@@ -21,10 +21,10 @@
 #include <QtCore>
 #include "FieldModelLoader.h"
 
-typedef struct {
+struct FieldModelLoaderStruct {
 	quint8 faceID, bonesCount, partsCount, animationCount;
 	quint8 unknown1, unknown2, unknown3, modelID;
-} FieldModelLoaderStruct;
+};
 
 class FieldModelLoaderPS : public FieldModelLoader
 {

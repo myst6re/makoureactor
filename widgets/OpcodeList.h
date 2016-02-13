@@ -30,11 +30,11 @@ public:
 		Add, Remove, Modify, ModifyAndAddLabel, Up, Down
 	};
 
-	typedef struct{
+	struct Historic {
 		HistoricType type;
 		QList<int> opcodeIDs;
 		QList<Opcode *> data;
-	} Historic;
+	};
 
 	OpcodeList(QWidget *parent=0);
 	virtual ~OpcodeList();

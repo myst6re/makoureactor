@@ -533,7 +533,12 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	}
 
 	for(i=0 ; i<size ; ++i) {
-		memcpy(&tile2, constDatData + start2+i*2, 2);
+		quint16 tile2data; // Note: we can't use bitfields directly
+		memcpy(&tile2data, constDatData + start2+i*2, 2);
+		tile2.page_x = tile2data & 0xF;
+		tile2.page_y = (tile2data >> 4) & 0x1;
+		tile2.typeTrans = (tile2data >> 5) & 0x3;
+		tile2.depth = (tile2data >> 7) & 0x3;
 		tiles2.append(tile2);
 	}
 
@@ -555,7 +560,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.dstY = tile1.dstY;
 			tile.srcX = tile1.srcX;
 			tile.srcY = tile1.srcY;
-			tile.paletteID = tile1.palID;
+			tile.paletteID = (tile1.palID >> 6) & 0xF;
 
 			if(texID+1<tiles2.size() && texID+1<nbTilesTex.size() && tileID>=nbTilesTex.at(texID)) {
 				++texID;
@@ -594,19 +599,20 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.dstY = tile1.dstY;
 			tile.srcX = tile1.srcX;
 			tile.srcY = tile1.srcY;
-			tile.paletteID = tile1.palID;
+			tile.paletteID = (tile1.palID >> 6) & 0xF;
 
-			memcpy(&tile2, constDatData + start3+i*14+8, 2);
+			quint16 tile2data;
+			memcpy(&tile2data, constDatData + start3+i*14+8, 2);
 			memcpy(&tile3, constDatData + start3+i*14+10, 4);
 
-			tile.param = tile3.param;
+			tile.param = tile3.param & 0x7F;
 			tile.state = tile3.state;
-			tile.textureID = tile2.page_x;
-			tile.textureID2 = tile2.page_y;
-			tile.depth = tile2.depth;
-			tile.typeTrans = tile2.typeTrans;
+			tile.textureID = tile2data & 0xF;
+			tile.textureID2 = (tile2data >> 4) & 0x1;
+			tile.depth = (tile2data >> 7) & 0x3;
+			tile.typeTrans = (tile2data >> 5) & 0x3;
 
-			tile.blending = tile3.blending;
+			tile.blending = (tile3.param >> 7) & 0x1;
 			tile.ID = tile3.ID;
 
 			tile.size = 16;
@@ -647,11 +653,11 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 			tile.dstY = tile1.dstY;
 			tile.srcX = tile1.srcX;
 			tile.srcY = tile1.srcY;
-			tile.paletteID = tile1.palID;
+			tile.paletteID = (tile1.palID >> 6) & 0xF;
 
 			memcpy(&tile4, constDatData + start4+i*10+8, 2);
 
-			tile.param = tile4.param;
+			tile.param = tile4.param & 0x7F;
 			tile.state = tile4.state;
 
 			if(texID+1<tiles2.size() && texID+1<nbTilesTex.size() && tileID>=nbTilesTex.at(texID)) {
@@ -664,7 +670,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 				j = 0;
 			}
 
-			tile.blending = tile4.blending;
+			tile.blending = (tile4.param >> 7) & 0x1;
 			tile.textureID = tile2.page_x;
 			tile.textureID2 = tile2.page_y;
 			tile.depth = tile2.depth;

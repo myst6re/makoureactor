@@ -22,17 +22,17 @@
 #include "FieldPart.h"
 #include "CaFile.h"
 
-typedef struct {
+struct Vertex_sr {
 	qint16 x, y, z, res;// res = Triangle[0].z (padding)
-} Vertex_sr;
+};
 
-typedef struct {
+struct Triangle {
 	Vertex_sr vertices[3];
-} Triangle;
+};
 
-typedef struct {
+struct Access {
 	qint16 a[3];
-} Access;
+};
 
 class IdFile : public FieldPart
 {
