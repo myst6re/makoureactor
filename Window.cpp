@@ -251,6 +251,8 @@ Window::Window() :
 	connect(lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap()));
 	connect(lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
 
+	fieldList->sortItems(Config::value("fieldListSortColumn").toInt(),
+	                     Qt::SortOrder(Config::value("fieldListSortOrder").toBool()));
 	groupScriptList->toolBar()->setVisible(Config::value("grpToolbarVisible", true).toBool());
 	opcodeList->toolBar()->setVisible(Config::value("scriptToolbarVisible", true).toBool());
 
@@ -285,6 +287,8 @@ void Window::closeEvent(QCloseEvent *event)
 		Config::setValue("windowGeometry", saveGeometry());
 		Config::setValue("grpToolbarVisible", !groupScriptList->toolBar()->isHidden());
 		Config::setValue("scriptToolbarVisible", !opcodeList->toolBar()->isHidden());
+		Config::setValue("fieldListSortColumn", fieldList->sortColumn());
+		Config::setValue("fieldListSortOrder", int(fieldList->header()->sortIndicatorOrder()));
 		event->accept();
 	}
 }
