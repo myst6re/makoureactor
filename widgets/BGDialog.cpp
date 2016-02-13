@@ -319,6 +319,7 @@ void BGDialog::tryToRepairBG()
 	if (field->background()->repair()) {
 		QMessageBox::information(this, tr("Décor réparé"), tr("Des erreurs ont été trouvées et réparées, sauvegardez l'écran pour appliquer les changements."));
 		emit modified();
+		updateBG();
 	} else {
 		QMessageBox::warning(this, tr("Réparation impossible"), tr("Les erreurs n'ont pas été corrigées."));
 	}

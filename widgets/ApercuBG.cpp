@@ -35,6 +35,11 @@ void ApercuBG::fill(Field *field, bool reload)
 
 	this->field = field;
 
+	drawBackground();
+}
+
+void ApercuBG::drawBackground()
+{
 	QPixmap background = QPixmap::fromImage(field->background()->openBackground());
 
 	QPixmap newBg;

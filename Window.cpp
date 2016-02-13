@@ -1515,6 +1515,7 @@ void Window::backgroundManager()
 	if(!_backgroundManager) {
 		_backgroundManager = new BGDialog(this);
 		connect(_backgroundManager, SIGNAL(modified()), SLOT(setModified()));
+		connect(_backgroundManager, SIGNAL(modified()), zoneImage, SLOT(drawBackground()));
 	}
 
 	if(field) {
