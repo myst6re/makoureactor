@@ -584,9 +584,9 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	return use_timer;
 }
 
-void TextPreview::paintEvent(QPaintEvent */* event */)
+void TextPreview::paintEvent(QPaintEvent *event)
 {
-//	qDebug() << "TextPreview::paintEvent()";
+	Q_UNUSED(event);
 
 	bool use_timer = false;
 	QPixmap pix(width(), height());
