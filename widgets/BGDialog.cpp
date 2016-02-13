@@ -35,7 +35,7 @@ BGDialog::BGDialog(QWidget *parent) :
 	image = new ApercuBGLabel();
 	image->setAlignment(Qt::AlignCenter);
 	imageBox = new QScrollArea;
-	imageBox->installEventFilter(this);
+	imageBox->viewport()->installEventFilter(this);
 	imageBox->setMinimumSize(320,240);
 	imageBox->setPalette(pal);
 	imageBox->setWidget(image);
@@ -370,7 +370,7 @@ void BGDialog::resizeEvent(QResizeEvent *event)
 
 bool BGDialog::eventFilter(QObject *obj, QEvent *event)
 {
-	if(event->type() == QEvent::Wheel && obj == imageBox)
+	if(event->type() == QEvent::Wheel && obj == imageBox->viewport())
 	{
 		QWheelEvent *wheelEvent = static_cast<QWheelEvent *>(event);
 		if(wheelEvent->modifiers()==Qt::CTRL)
@@ -401,7 +401,6 @@ bool BGDialog::eventFilter(QObject *obj, QEvent *event)
 			}
 			else{return false;}/* A delta of 0 should never happen */
 			updateBG();
-			event->accept();
 			return true;
 		}
 		else
