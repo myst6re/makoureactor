@@ -29,27 +29,35 @@ public:
 	explicit BGDialog(QWidget *parent);
 	void fill(Field *field, bool reload=false);
 	void clear();
+signals:
+	void modified();
 private slots:
+	void showLayersPage(int index);
 	void parameterChanged(int index);
 	void layerChanged();
+	void sectionChanged();
 	void enableState(QListWidgetItem *item);
 	void enableLayer(QListWidgetItem *item);
+	void enableSection(QListWidgetItem *item);
 	void changeZ(int value);
+	void tryToRepairBG();
+	void updateBG();
 private:
 	void fillWidgets();
-	void updateBG();
 
 	Field *field;
 	ApercuBGLabel *image;
 	QComboBox *parametersWidget;
-	QListWidget *statesWidget, *layersWidget;
+	QListWidget *statesWidget, *layersWidget, *sectionsWidget;
 	QSpinBox *zWidget;
+	QPushButton *buttonRepair;
+	QTabBar *tabBar;
 
 	QHash<quint8, quint8> allparams;
 	QHash<quint8, quint8> params;
 	bool layers[4];
+	QSet<quint16> sections;
 	qint16 x[3], y[3], z[3];
-	QFrame *imageFrame;
 protected:
 	void resizeEvent(QResizeEvent*);
 };
