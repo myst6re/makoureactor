@@ -54,22 +54,41 @@ QImage BackgroundFile::openBackground(bool *warning)
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
 	field()->scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
-	return openBackground(paramActifs, z, warning);
+	return openBackground(paramActifs, z, NULL, NULL, warning);
 }
 
 QImage BackgroundFile::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z,
-                                      const bool *layers, bool *warning)
+                                      const bool *layers, const QSet<quint16> *IDs,
+                                      bool *warning)
 {
 	if(!isOpen() && !open()) {
+		if(warning) {
+			*warning = false;
+		}
 		return QImage();
 	}
 
-	return drawBackground(tiles().filter(paramActifs, z, layers), warning);
+	return drawBackground(tiles().filter(paramActifs, z, layers, IDs), warning);
+}
+
+QImage BackgroundFile::backgroundPart(quint16 ID, bool *warning)
+{
+	if(!isOpen() && !open()) {
+		if(warning) {
+			*warning = false;
+		}
+		return QImage();
+	}
+
+	return drawBackground(tiles().tilesByID(ID, false), warning);
 }
 
 QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warning) const
 {
 	if(tiles.isEmpty() || !_textures) {
+		if(warning) {
+			*warning = false;
+		}
 		return QImage();
 	}
 
@@ -149,13 +168,13 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 	return image;
 }
 
-bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
+bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs)
 {
 	if(!isOpen() && !open()) {
 		return false;
 	}
 
-	usedParams = tiles().usedParams(layerExists);
+	usedParams = tiles().usedParams(layerExists, usedIDs);
 
 	return true;
 }

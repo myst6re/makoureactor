@@ -39,8 +39,11 @@ public:
 	void clear();
 	QImage openBackground(bool *warning = NULL);
 	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2],
-	                      const bool *layers = NULL, bool *warning = NULL);
-	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
+	                      const bool *layers = NULL, const QSet<quint16> *IDs = NULL,
+	                      bool *warning = NULL);
+	// Draw background tiles with ID
+	QImage backgroundPart(quint16 ID, bool *warning = NULL);
+	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs);
 	bool layerExists(int num);
 
 	inline const BackgroundTiles &tiles() const {
