@@ -22,21 +22,21 @@
 #include "FieldPart.h"
 #include "IdFile.h"
 
-typedef struct {
+struct Range {
 	qint16 left;
 	qint16 top;
 	qint16 right;
 	qint16 bottom;
-} Range;
+};
 
-typedef struct {
+struct Exit {
 	Vertex_s exit_line[2];
 	Vertex_s destination;
 	quint16 fieldID;
 	quint8 dir, dir_copy1, dir_copy2, dir_copy3;
-} Exit;
+};
 
-typedef struct {
+struct Trigger {
 	Vertex_s trigger_line[2];
 	quint8 background_parameter;
 	quint8 background_state;
@@ -49,16 +49,16 @@ typedef struct {
 	 * 5 - OnTrigger - OFF, AwayFromTriggerOnPlusSide - ON
 	 */
 	quint8 soundID;
-} Trigger;
+};
 
-typedef struct {
+struct Arrow {
 	qint32 positionX;
 	qint32 positionZ;
 	qint32 positionY;
 	quint32 type;// 0 - Invisible, 1 - Red, 2 - Green
-} Arrow;
+};
 
-typedef struct {
+struct InfData {
 	char name[9];
 	quint8 control;
 	qint16 cameraFocusHeight;
@@ -77,7 +77,7 @@ typedef struct {
 	// Only in occidental/international version
 	quint8 display_arrow[12];
 	Arrow arrows[12];// 16 * 12 bytes
-} InfData;
+};
 
 class InfFile : public FieldPart
 {

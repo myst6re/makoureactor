@@ -50,9 +50,7 @@ struct TilePC {
 struct layer1Tile {
 	qint16 dstX, dstY;
 	quint8 srcX, srcY;
-	unsigned ZZ1:6; // Always 0
-	unsigned palID:4;
-	unsigned ZZ2:6; // Always 30
+	qint16 palID; // 6 bits = Always 30 | 4 bits = PaletteID | 6 bits = Always 0
 };
 
 //Sizeof : 2
@@ -66,16 +64,14 @@ struct layer2Tile {
 
 //Sizeof : 2
 struct layer3Tile {
-	unsigned param:7;
-	unsigned blending:1;
+	quint8 param; // 1 bit = blending | 7 bits = param
 	quint8 state;
 };
 
 //Sizeof : 4
 struct paramTile {
 	quint16 ID;
-	unsigned param:7;
-	unsigned blending:1;
+	quint8 param; // 1 bit = blending | 7 bits = param
 	quint8 state;
 };
 

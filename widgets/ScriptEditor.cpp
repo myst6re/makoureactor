@@ -71,7 +71,10 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	
 	textEdit = new QPlainTextEdit(this);
 	textEdit->setReadOnly(true);
-	textEdit->setFixedHeight(38);
+	// 2 Lines
+	const int textEditHMargins = textEdit->contentsMargins().top() + textEdit->contentsMargins().bottom()
+	                             + textEdit->document()->documentMargin() * 2;
+	textEdit->setFixedHeight(2 * textEdit->fontMetrics().height() + textEditHMargins);
 	
 	editorLayout = new QStackedWidget;
 	editorLayout->addWidget(editorWidget = new ScriptEditorGenericList(field, grpScript, script, opcodeID, this));

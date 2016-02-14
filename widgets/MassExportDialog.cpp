@@ -26,7 +26,6 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 
 	fieldList = new QListWidget(this);
 	fieldList->setUniformItemSizes(true);
-	fieldList->setFixedWidth(200);
 	fieldList->setSelectionMode(QAbstractItemView::MultiSelection);
 
 	QToolBar *toolBar = new QToolBar(this);
@@ -37,7 +36,6 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	QVBoxLayout *listLayout = new QVBoxLayout;
 	listLayout->addWidget(toolBar);
 	listLayout->addWidget(fieldList, 1);
-	listLayout->setContentsMargins(QMargins());
 
 	exports.insert(Fields,
 				   new FormatSelectionWidget(tr("Exporter les écrans"),
@@ -83,7 +81,6 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	layout->addWidget(overwriteIfExists, row + 2, 1, 1, 2);
 	layout->addWidget(buttonBox, row + 4, 0, 1, 3);
 	layout->setRowStretch(row + 3, 1);
-	layout->setColumnStretch(1, 1);
 
 	connect(changeDir, SIGNAL(clicked()),  SLOT(chooseExportDirectory()));
 	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));

@@ -31,7 +31,6 @@ TextManager::TextManager(QWidget *parent) :
 	dispUnusedText->setChecked(Config::value("dispUnusedText", true).toBool());
 
 	ListWidget *listWidget = new ListWidget(this);
-	listWidget->setFixedWidth(100*scale);
 	listWidget->addAction(ListWidget::Add, tr("Ajouter texte"), this, SLOT(addText()));
 	listWidget->addAction(ListWidget::Rem, tr("Supprimer texte"), this, SLOT(delText()));
 	liste1 = listWidget->listWidget();

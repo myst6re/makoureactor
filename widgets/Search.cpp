@@ -162,6 +162,11 @@ QWidget *Search::scriptPageWidget()
 	champOp->addItem(tr("Affectation Bit"));
 	champOp->addItem(tr("Test"));
 	champOp->addItem(tr("Test bit"));
+	champOp->addItem(tr("Affectation ≠"));
+	champOp->addItem(tr("Affectation <"));
+	champOp->addItem(tr("Affectation ≤"));
+	champOp->addItem(tr("Affectation >"));
+	champOp->addItem(tr("Affectation ≥"));
 
 	// set config values
 	champBank->setValue(Config::value("SearchedVarBank").toInt());

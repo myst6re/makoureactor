@@ -56,7 +56,6 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 	tabWidget->addTab(buildArrowPage(), tr("Flèches"));
 	tabWidget->addTab(buildCameraRangePage(), tr("Limites caméra"));
 	tabWidget->addTab(buildMiscPage(), tr("Divers"));
-	tabWidget->setFixedHeight(275);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(walkmeshWidget, 0, 0, 4, 1);

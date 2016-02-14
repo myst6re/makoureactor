@@ -33,11 +33,11 @@ struct BackgroundTexturesPCInfos
 };
 
 //Sizeof : 12
-typedef struct {
+struct MIM {
 	quint32 size;// = 12 + w*2*h
 	quint16 x, y;
 	quint16 w, h;
-} MIM;
+};
 
 struct BackgroundConversionTexture
 {

@@ -21,13 +21,13 @@
 #include <QtCore>
 #include <QImage>
 
-typedef struct {
+struct TdbHeader {
 	quint32 size;
 	quint16 imageCount;
 	quint16 paletteCount;
 	quint32 imageOffset;
 	quint32 paletteOffset;
-} TdbHeader;
+};
 
 class TdbFile
 {

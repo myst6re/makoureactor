@@ -34,9 +34,9 @@ struct BsxModelsHeader {
 	quint32 bufferSize;
 };
 
-typedef struct {
+struct ColorRGB {
 	quint8 red, green, blue;
-} ColorRGB;
+};
 
 struct BsxModelHeader {
 	quint16 modelId;        // ID of the model

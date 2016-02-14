@@ -152,7 +152,13 @@ public:
 	};
 
 	enum Operation {
-		None, Assign, BitAssign, Compare, BitCompare
+		None, Assign, BitAssign, Compare, BitCompare,
+		AssignNotEqual,
+		AssignLessThan, AssignLessThanEqual,
+		AssignGreaterThan, AssignGreaterThanEqual,
+		CompareNotEqual,
+		CompareLessThan, CompareLessThanEqual,
+		CompareGreaterThan, CompareGreaterThanEqual
 	};
 
 	enum Operator {

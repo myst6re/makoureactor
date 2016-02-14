@@ -463,7 +463,7 @@ void WalkmeshWidget::paintGL()
 //							glTranslatef(trans.first().x/5.0f, trans.first().y/5.0f, trans.first().z/5.0f);
 //						}
 
-						FieldModel::paintModel(this, fieldModel, 0, 8.0f);
+						FieldModel::paintModel(this, fieldModel, 0, 0, 8.0f);
 
 						glPopMatrix();
 					}
