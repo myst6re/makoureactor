@@ -1370,9 +1370,12 @@ void Window::runFF7()
 	QString FF7ExeDir = FF7Exe.left(FF7Exe.lastIndexOf('/'));
 	QStringList args;
 
-#ifndef Q_OS_WIN // For others systems like Linux, we try to launch ff7 with WINE
+#ifdef Q_OS_LINUX // For others systems like Linux, we try to launch ff7 with WINE
 	args.append(FF7Exe);
 	FF7Exe = "wine";
+#ifdef Q_OS_MAC // For mac os run with open -a so user can point to the App bundle directly
+	args.append(FF7Exe);
+	FF7Exe = "open -a"
 #else
 	FF7Exe = "\"" % FF7Exe % "\"";
 #endif
