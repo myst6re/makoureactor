@@ -138,19 +138,16 @@ Window::Window() :
 	font.setPointSize(8);
 
 	lineSearch = new QLineEdit(this);
-	lineSearch->setFixedWidth(120);
 	lineSearch->setStatusTip(tr("Recherche rapide"));
 	lineSearch->setPlaceholderText(tr("Rechercher..."));
 	
 	fieldList = new QTreeWidget(this);
 	fieldList->setColumnCount(2);
 	fieldList->setHeaderLabels(QStringList() << tr("Fichier") << tr("Id"));
-	fieldList->setFixedWidth(120);
 	fieldList->setMinimumHeight(120);
 	fieldList->setIndentation(0);
 	fieldList->setItemsExpandable(false);
 	fieldList->setSortingEnabled(true);
-	fieldList->setColumnWidth(1,28);
 	fieldList->setAutoScroll(false);
 	fieldList->resizeColumnToContents(0);
 	fieldList->setFont(font);
@@ -158,16 +155,15 @@ Window::Window() :
 	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
 
 	groupScriptList = new GrpScriptList(this);
-	groupScriptList->setFixedWidth(176);
 	groupScriptList->setMinimumHeight(176);
 	groupScriptList->setFont(font);
 	connect(groupScriptList, SIGNAL(changed()), SLOT(setModified()));
 
 	scriptList = new ScriptList(this);
-	scriptList->setFixedWidth(88);
+	scriptList->setMaximumWidth(QFontMetrics(font).width(QString(20, 'M')));
 	scriptList->setMinimumHeight(88);
 	scriptList->setFont(font);
-	
+
 	opcodeList = new OpcodeList(this);
 	connect(opcodeList, SIGNAL(changed()), SLOT(setModified()));
 	connect(opcodeList, SIGNAL(changed()), SLOT(refresh()));
@@ -185,10 +181,8 @@ Window::Window() :
 	connect(opcodeList, SIGNAL(changed()), SLOT(compile()));
 
 	zoneImage = new ApercuBG();
-	zoneImage->setFixedSize(300, 225);
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
-		fieldModel->setFixedSize(300, 225);
 //		modelThread = new FieldModelThread(this);
 
 //		connect(modelThread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(showModel(Field*,FieldModelFile*)));
@@ -198,51 +192,53 @@ Window::Window() :
 
 	zonePreview = new QStackedWidget(this);
 	zonePreview->setContentsMargins(QMargins());
-	zonePreview->setFixedSize(300, 225);
 	zonePreview->addWidget(zoneImage);
 	if(fieldModel)
 		zonePreview->addWidget(fieldModel);
 
-	gridLayout = new QGridLayout;
-
-	gridLayout->addWidget(fieldList, 0, 0);
-	gridLayout->addWidget(lineSearch, 1, 0);
-	gridLayout->addWidget(zonePreview, 2, 0, 1, 2);
-	
-	QVBoxLayout *layout2 = new QVBoxLayout;
-	layout2->addWidget(groupScriptList->toolBar());
-	layout2->addWidget(groupScriptList);
-	layout2->setSpacing(2);
-	layout2->setContentsMargins(QMargins());
-	gridLayout->addLayout(layout2, 0, 1, 2, 1);
-	
-	gridLayout->addWidget(scriptList, 0, 2, 3, 1);
+	QVBoxLayout *layoutGroupScript = new QVBoxLayout;
+	layoutGroupScript->addWidget(groupScriptList->toolBar());
+	layoutGroupScript->addWidget(groupScriptList);
+	layoutGroupScript->setSpacing(2);
+	layoutGroupScript->setContentsMargins(QMargins());
 
 	QHBoxLayout *compileLayout = new QHBoxLayout;
 	compileLayout->addWidget(compileScriptIcon);
 	compileLayout->addWidget(compileScriptLabel, 1);
 	compileLayout->setContentsMargins(QMargins());
 
-	layout2 = new QVBoxLayout;
-	layout2->addWidget(opcodeList->toolBar());
-	layout2->addWidget(opcodeList);
-	layout2->addLayout(compileLayout);
-	layout2->setSpacing(2);
-	layout2->setContentsMargins(QMargins());
-	gridLayout->addLayout(layout2, 0, 3, 3, 1);
+	QVBoxLayout *layoutScript = new QVBoxLayout;
+	layoutScript->addWidget(opcodeList->toolBar());
+	layoutScript->addWidget(opcodeList);
+	layoutScript->addLayout(compileLayout);
+	layoutScript->setSpacing(2);
+	layoutScript->setContentsMargins(QMargins());
 
-	gridLayout->setHorizontalSpacing(4);
-	gridLayout->setVerticalSpacing(2);
-	gridLayout->setContentsMargins(QMargins(4,4,4,4));
-	
+	QGridLayout *contentLayout = new QGridLayout;
+	contentLayout->addLayout(layoutGroupScript, 0, 0);
+	contentLayout->addWidget(scriptList, 0, 1);
+	contentLayout->addLayout(layoutScript, 0, 2);
+	contentLayout->setColumnStretch(0, 2);
+	contentLayout->setColumnStretch(1, 1);
+	contentLayout->setColumnStretch(2, 9);
+
 	QWidget *widget = new QWidget(this);
-	widget->setLayout(gridLayout);
-	this->setCentralWidget(widget);
-	
+	QGridLayout *gridLayout = new QGridLayout(widget);
+	gridLayout->addWidget(fieldList, 0, 0);
+	gridLayout->addWidget(lineSearch, 1, 0);
+	gridLayout->addWidget(zonePreview, 2, 0);
+	gridLayout->addLayout(contentLayout, 0, 1, 3, 1);
+	gridLayout->setColumnStretch(0, 2);
+	gridLayout->setColumnStretch(1, 10);
+	gridLayout->setRowStretch(0, 3);
+	gridLayout->setRowStretch(2, 1);
+
+	setCentralWidget(widget);
+
 	searchDialog = new Search(this);
 	menuBar->addMenu(createPopupMenu());
 	menuBar->addAction("&?", this, SLOT(about()))->setMenuRole(QAction::AboutRole);
-	
+
 	setMenuBar(menuBar);
 
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
@@ -644,20 +640,20 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		Field *f = fieldArchive->field(fieldID, false);
 		if(f) {
 			const QString &name = f->name();
+			QString id;
+			int index = Data::field_names.indexOf(name);
+			if(index != -1) {
+				id = QString("%1").arg(index, 3);
+			} else {
+				id = "~";
+			}
 
-			QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << "");
+			QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << id);
 			item->setData(0, Qt::UserRole, fieldID);
 			items.append(item);
-
-			int index;
-			if((index = Data::field_names.indexOf(name)) != -1) {
-				item->setText(1, QString("%1").arg(index, 3));
-			} else {
-				item->setText(1, "~");
-			}
 		}
 	}
-	
+
 	fieldList->addTopLevelItems(items);
 
 	QString previousSessionField = Config::value("currentField").toString();

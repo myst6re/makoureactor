@@ -120,7 +120,6 @@ private:
 	QStackedWidget *zonePreview;
 	ApercuBG *zoneImage;
 	FieldModel *fieldModel;
-	QGridLayout *gridLayout;
 
 	QToolBar *toolBar;
 
