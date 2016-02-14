@@ -51,14 +51,14 @@ Window::Window() :
 	toolBarRightLayout->addStretch();
 	toolBarRightLayout->addWidget(authorLbl, 0, Qt::AlignRight);
 	toolBarRightLayout->setContentsMargins(QMargins());
-	
+
 	QMenu *menu;
 	QAction *actionOpen, *actionFind, *action;
 	QMenuBar *menuBar = new QMenuBar(0);
-	
-	/* Menu 'Fichier' */
+
+	/* "File" Menu */
 	menu = menuBar->addMenu(tr("&Fichier"));
-	
+
 	actionOpen = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Ouvrir..."), this, SLOT(openFile()), QKeySequence("Ctrl+O"));
 	menu->addAction(tr("Ouvrir un &dossier..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
 	actionSave = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Enregi&strer"), this, SLOT(save()), QKeySequence("Ctrl+S"));
@@ -76,8 +76,8 @@ Window::Window() :
 	menu->addSeparator();
 	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("Fe&rmer"), this, SLOT(closeFile()));
 	menu->addAction(tr("&Quitter"), this, SLOT(close()), QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
-	
-	/* Menu 'Outils' */
+
+	/* "Tools" Menu */
 	menu = menuBar->addMenu(tr("&Outils"));
 	menu->addAction(tr("&Textes..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
 	actionModels = menu->addAction(tr("&Modèles 3D..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
@@ -92,6 +92,7 @@ Window::Window() :
 	actionMiscOperations = menu->addAction(tr("Opér&ations diverses..."), this, SLOT(miscOperations()));
 	//menu->addAction(tr("&Police de caractères..."), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
 
+	/* "Settings" Menu */
 	menu = menuBar->addMenu(tr("&Paramètres"));
 
 	actionJp_txt = menu->addAction(tr("Caractères &japonais"), this, SLOT(jpText(bool)));
@@ -120,6 +121,7 @@ Window::Window() :
 
 	menu->addAction(tr("&Configuration..."), this, SLOT(config()))->setMenuRole(QAction::PreferencesRole);
 
+	/* Toolbar */
 	toolBar = new QToolBar(tr("Barre d'outils &principale"));
 	toolBar->setObjectName("toolbar");
 	toolBar->setIconSize(QSize(16, 16));
@@ -138,57 +140,25 @@ Window::Window() :
 	font.setPointSize(8);
 
 	lineSearch = new QLineEdit(this);
-	lineSearch->setFixedWidth(120);
 	lineSearch->setStatusTip(tr("Recherche rapide"));
 	lineSearch->setPlaceholderText(tr("Rechercher..."));
 	
 	fieldList = new QTreeWidget(this);
 	fieldList->setColumnCount(2);
 	fieldList->setHeaderLabels(QStringList() << tr("Fichier") << tr("Id"));
-	fieldList->setFixedWidth(120);
 	fieldList->setMinimumHeight(120);
 	fieldList->setIndentation(0);
 	fieldList->setItemsExpandable(false);
 	fieldList->setSortingEnabled(true);
-	fieldList->setColumnWidth(1,28);
 	fieldList->setAutoScroll(false);
 	fieldList->resizeColumnToContents(0);
 	fieldList->setFont(font);
 	fieldList->sortByColumn(1, Qt::AscendingOrder);
 	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
 
-	groupScriptList = new GrpScriptList(this);
-	groupScriptList->setFixedWidth(176);
-	groupScriptList->setMinimumHeight(176);
-	groupScriptList->setFont(font);
-	connect(groupScriptList, SIGNAL(changed()), SLOT(setModified()));
-
-	scriptList = new ScriptList(this);
-	scriptList->setFixedWidth(88);
-	scriptList->setMinimumHeight(88);
-	scriptList->setFont(font);
-	
-	opcodeList = new OpcodeList(this);
-	connect(opcodeList, SIGNAL(changed()), SLOT(setModified()));
-	connect(opcodeList, SIGNAL(changed()), SLOT(refresh()));
-	connect(opcodeList, SIGNAL(editText(int)), SLOT(textManager(int)));
-
-	compileScriptLabel = new QLabel(this);
-	compileScriptLabel->hide();
-	QPalette pal = compileScriptLabel->palette();
-	pal.setColor(QPalette::Active, QPalette::WindowText, Qt::red);
-	pal.setColor(QPalette::Inactive, QPalette::WindowText, Qt::red);
-	compileScriptLabel->setPalette(pal);
-	compileScriptIcon = new QLabel(this);
-	compileScriptIcon->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxCritical).pixmap(16));
-	compileScriptIcon->hide();
-	connect(opcodeList, SIGNAL(changed()), SLOT(compile()));
-
 	zoneImage = new ApercuBG();
-	zoneImage->setFixedSize(300, 225);
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
-		fieldModel->setFixedSize(300, 225);
 //		modelThread = new FieldModelThread(this);
 
 //		connect(modelThread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(showModel(Field*,FieldModelFile*)));
@@ -198,51 +168,30 @@ Window::Window() :
 
 	zonePreview = new QStackedWidget(this);
 	zonePreview->setContentsMargins(QMargins());
-	zonePreview->setFixedSize(300, 225);
 	zonePreview->addWidget(zoneImage);
-	if(fieldModel)
+	if(fieldModel) {
 		zonePreview->addWidget(fieldModel);
+	}
 
-	gridLayout = new QGridLayout;
+	_scriptManager = new ScriptManager(this);
 
+	QWidget *widget = new QWidget(this);
+	QGridLayout *gridLayout = new QGridLayout(widget);
 	gridLayout->addWidget(fieldList, 0, 0);
 	gridLayout->addWidget(lineSearch, 1, 0);
-	gridLayout->addWidget(zonePreview, 2, 0, 1, 2);
-	
-	QVBoxLayout *layout2 = new QVBoxLayout;
-	layout2->addWidget(groupScriptList->toolBar());
-	layout2->addWidget(groupScriptList);
-	layout2->setSpacing(2);
-	layout2->setContentsMargins(QMargins());
-	gridLayout->addLayout(layout2, 0, 1, 2, 1);
-	
-	gridLayout->addWidget(scriptList, 0, 2, 3, 1);
+	gridLayout->addWidget(zonePreview, 2, 0);
+	gridLayout->addWidget(_scriptManager, 0, 1, 3, 1);
+	gridLayout->setColumnStretch(0, 2);
+	gridLayout->setColumnStretch(1, 10);
+	gridLayout->setRowStretch(0, 3);
+	gridLayout->setRowStretch(2, 1);
 
-	QHBoxLayout *compileLayout = new QHBoxLayout;
-	compileLayout->addWidget(compileScriptIcon);
-	compileLayout->addWidget(compileScriptLabel, 1);
-	compileLayout->setContentsMargins(QMargins());
+	setCentralWidget(widget);
 
-	layout2 = new QVBoxLayout;
-	layout2->addWidget(opcodeList->toolBar());
-	layout2->addWidget(opcodeList);
-	layout2->addLayout(compileLayout);
-	layout2->setSpacing(2);
-	layout2->setContentsMargins(QMargins());
-	gridLayout->addLayout(layout2, 0, 3, 3, 1);
-
-	gridLayout->setHorizontalSpacing(4);
-	gridLayout->setVerticalSpacing(2);
-	gridLayout->setContentsMargins(QMargins(4,4,4,4));
-	
-	QWidget *widget = new QWidget(this);
-	widget->setLayout(gridLayout);
-	this->setCentralWidget(widget);
-	
 	searchDialog = new Search(this);
 	menuBar->addMenu(createPopupMenu());
 	menuBar->addAction("&?", this, SLOT(about()))->setMenuRole(QAction::AboutRole);
-	
+
 	setMenuBar(menuBar);
 
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
@@ -250,11 +199,12 @@ Window::Window() :
 	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
 	connect(lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap()));
 	connect(lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
+	connect(_scriptManager, SIGNAL(groupScriptCurrentChanged(int)), SLOT(showModel(int)));
+	connect(_scriptManager, SIGNAL(editText(int)), SLOT(textManager(int)));
+	connect(_scriptManager, SIGNAL(changed()), SLOT(setModified()));
 
 	fieldList->sortItems(Config::value("fieldListSortColumn").toInt(),
 	                     Qt::SortOrder(Config::value("fieldListSortOrder").toBool()));
-	groupScriptList->toolBar()->setVisible(Config::value("grpToolbarVisible", true).toBool());
-	opcodeList->toolBar()->setVisible(Config::value("scriptToolbarVisible", true).toBool());
 
 	restoreState(Config::value("windowState").toByteArray());
 	restoreGeometry(Config::value("windowGeometry").toByteArray());
@@ -265,7 +215,9 @@ Window::Window() :
 Window::~Window()
 {
 	Config::flush();
-	if(fieldArchive)	fieldArchive->close();
+	if(fieldArchive) {
+		fieldArchive->close();
+	}
 }
 
 QProgressDialog *Window::progressDialog()
@@ -281,14 +233,14 @@ QProgressDialog *Window::progressDialog()
 
 void Window::closeEvent(QCloseEvent *event)
 {
-	if(!isEnabled() || closeFile(true)==QMessageBox::Cancel)	event->ignore();
-	else {
+	if(!isEnabled() || closeFile(true) == QMessageBox::Cancel) {
+		event->ignore();
+	} else {
 		Config::setValue("windowState", saveState());
 		Config::setValue("windowGeometry", saveGeometry());
-		Config::setValue("grpToolbarVisible", !groupScriptList->toolBar()->isHidden());
-		Config::setValue("scriptToolbarVisible", !opcodeList->toolBar()->isHidden());
 		Config::setValue("fieldListSortColumn", fieldList->sortColumn());
 		Config::setValue("fieldListSortOrder", int(fieldList->header()->sortIndicatorOrder()));
+		_scriptManager->saveConfig();
 		event->accept();
 	}
 }
@@ -298,8 +250,9 @@ QMenu *Window::createPopupMenu()
 	QMenu *menu = new QMenu(tr("&Affichage"), this);
 	menu->addAction(toolBar->toggleViewAction());
 	menu->addSeparator();
-	menu->addAction(groupScriptList->toolBar()->toggleViewAction());
-	menu->addAction(opcodeList->toolBar()->toggleViewAction());
+	foreach(QAction *action, _scriptManager->actions()) {
+		menu->addAction(action);
+	}
 	return menu;
 }
 
@@ -319,7 +272,7 @@ void Window::jpText(bool enabled)
 	if(_textDialog) {
 		_textDialog->updateText();
 	}
-	showScripts();
+	_scriptManager->fillOpcodes();
 }
 
 void Window::changeLanguage(QAction *action)
@@ -349,8 +302,9 @@ void Window::restartNow()
 
 int Window::closeFile(bool quit)
 {
-	if(fieldList->currentItem() != NULL)
+	if(fieldList->currentItem() != NULL) {
 		Config::setValue("currentField", fieldList->currentItem()->text(0));
+	}
 
 	if(actionSave->isEnabled() && fieldArchive!=NULL)
 	{
@@ -390,20 +344,12 @@ int Window::closeFile(bool quit)
 		field = NULL;
 
 		fieldList->blockSignals(true);
-		groupScriptList->blockSignals(true);
-		scriptList->blockSignals(true);
-		opcodeList->blockSignals(true);
+		_scriptManager->clear();
+		_scriptManager->setEnabled(false);
 		fieldList->clear();
-		groupScriptList->clear();
-		groupScriptList->clearCopiedGroups();
-		groupScriptList->enableActions(false);
-		scriptList->clear();
-		opcodeList->clear();
-		opcodeList->clearCopiedOpcodes();
+		fieldList->setEnabled(false);
 		fieldList->blockSignals(false);
-		groupScriptList->blockSignals(false);
-		scriptList->blockSignals(false);
-		opcodeList->blockSignals(false);
+		lineSearch->setEnabled(false);
 		zoneImage->clear();
 		if(fieldModel) {
 			fieldModel->clear();
@@ -413,6 +359,7 @@ int Window::closeFile(bool quit)
 //			}
 		}
 		zonePreview->setCurrentIndex(0);
+		zonePreview->setEnabled(false);
 
 		authorAction->setVisible(false);
 		setWindowModified(false);
@@ -529,8 +476,8 @@ void Window::openDir()
 							" - Les fichiers field PlayStation (\"EXEMPLE.DAT\")\n"
 							" - Les fichiers field PC (\"exemple\")\n"),
 						 QMessageBox::NoButton, this);
-	QAbstractButton *psButton = question.addButton(tr("PS"), QMessageBox::AcceptRole);
-	QAbstractButton *pcButton = question.addButton(tr("PC"), QMessageBox::AcceptRole);
+	QAbstractButton *psButton = question.addButton(tr("PS"), QMessageBox::AcceptRole),
+	                *pcButton = question.addButton(tr("PC"), QMessageBox::AcceptRole);
 	question.addButton(QMessageBox::Cancel);
 	question.exec();
 	if(question.clickedButton() != psButton
@@ -644,21 +591,24 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		Field *f = fieldArchive->field(fieldID, false);
 		if(f) {
 			const QString &name = f->name();
+			QString id;
+			int index = Data::field_names.indexOf(name);
+			if(index != -1) {
+				id = QString("%1").arg(index, 3);
+			} else {
+				id = "~";
+			}
 
-			QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << "");
+			QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << id);
 			item->setData(0, Qt::UserRole, fieldID);
 			items.append(item);
-
-			int index;
-			if((index = Data::field_names.indexOf(name)) != -1) {
-				item->setText(1, QString("%1").arg(index, 3));
-			} else {
-				item->setText(1, "~");
-			}
 		}
 	}
-	
+
 	fieldList->addTopLevelItems(items);
+	fieldList->setEnabled(true);
+	lineSearch->setEnabled(true);
+	zonePreview->setEnabled(true);
 
 	QString previousSessionField = Config::value("currentField").toString();
 	if(!previousSessionField.isEmpty()) {
@@ -767,35 +717,20 @@ int Window::currentFieldId() const
 	return selectedItems.first()->data(0, Qt::UserRole).toInt();
 }
 
-int Window::currentGrpScriptId() const
-{
-	return groupScriptList->selectedID();
-}
-
-int Window::currentScriptId() const
-{
-	return scriptList->selectedID();
-}
-
-int Window::currentOpcodeId() const
-{
-	return opcodeList->selectedID();
-}
-
 void Window::openField(bool reload)
 {
-	if(!fieldArchive) return;
+	if(!fieldArchive) {
+		return;
+	}
 
-	disconnect(groupScriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showGrpScripts()));
-	disconnect(scriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showScripts()));
-	
 	// Clear lists
-	groupScriptList->clear();
-	scriptList->clear();
-	opcodeList->clear();
-	
+	_scriptManager->clear();
+
 	int fieldId = currentFieldId();
-	if(fieldId < 0)	return;
+	if(fieldId < 0) {
+		_scriptManager->setEnabled(false);
+		return;
+	}
 	fieldList->scrollToItem(fieldList->selectedItems().first());
 
 //	Data::currentCharNames.clear();
@@ -821,13 +756,9 @@ void Window::openField(bool reload)
 
 	// Get and set field
 	field = fieldArchive->field(fieldId, true, true);
-	if(field == NULL) {
+	if(!field) {
 		zoneImage->clear();
-		groupScriptList->setEnabled(false);
-		scriptList->clear();
-		scriptList->setEnabled(false);
-		opcodeList->clear();
-		opcodeList->setEnabled(false);
+		_scriptManager->setEnabled(false);
 		return;
 	}
 //	if(fieldModel && fieldArchive->io()->isPC()) {
@@ -870,67 +801,35 @@ void Window::openField(bool reload)
 		authorAction->setVisible(true);
 
 		// Fill group script list
-		groupScriptList->setEnabled(true);
-		groupScriptList->fill(scriptsAndTexts);
+		_scriptManager->fill(field);
+		_scriptManager->setEnabled(true);
 	} else {
-		groupScriptList->setEnabled(false);
+		_scriptManager->setEnabled(false);
 	}
 
 	searchDialog->updateRunSearch();
-
-	connect(groupScriptList, SIGNAL(itemSelectionChanged()), SLOT(showGrpScripts()));
 }
 
-void Window::showGrpScripts()
+void Window::showModel(int grpScriptID)
 {
-	if(field == NULL) {
-		scriptList->clear();
-		scriptList->setEnabled(false);
-		opcodeList->clear();
-		opcodeList->setEnabled(false);
-		return;
+	int modelID = -1;
+
+	if(grpScriptID >= 0) {
+		modelID = field->scriptsAndTexts()->modelID(grpScriptID);
+		Data::currentModelID = modelID;
+		if(fieldModel && modelID > -1) {
+			// if(fieldArchive->io()->isPC()) {
+			//	modelThread->cancel();
+			//	modelThread->wait();
+			//	modelThread->setModel(modelID);
+			//	modelThread->start();
+			// } else {
+				showModel(field, field->fieldModel(modelID));
+			// }
+			return;
+		}
 	}
-
-	scriptList->setEnabled(true);
-	opcodeList->setEnabled(true);
-
-	disconnect(scriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showScripts()));
-	
-	scriptList->blockSignals(true);
-	opcodeList->blockSignals(true);
-	scriptList->clear();
-	opcodeList->clear();
-	scriptList->blockSignals(false);
-	opcodeList->blockSignals(false);
-
-	if(groupScriptList->selectedItems().isEmpty())
-	{
-		zonePreview->setCurrentIndex(0);
-		return;
-	}
-
-	GrpScript *currentGrpScript = groupScriptList->currentGrpScript();
-	if(currentGrpScript==NULL)	return;
-
-	scriptList->fill(currentGrpScript);
-
-	connect(scriptList, SIGNAL(itemSelectionChanged()), SLOT(showScripts()));
-	scriptList->setCurrentRow(0);
-
-	int modelID = field->scriptsAndTexts()->modelID(groupScriptList->selectedID());
-	Data::currentModelID = modelID;
-	if(fieldModel && modelID != -1) {
-//		if(fieldArchive->io()->isPC()) {
-//			modelThread->cancel();
-//			modelThread->wait();
-//			modelThread->setModel(modelID);
-//			modelThread->start();
-//		} else {
-			showModel(field, field->fieldModel(modelID));
-//		}
-	} else {
-		zonePreview->setCurrentIndex(0);
-	}
+	zonePreview->setCurrentIndex(0);
 }
 
 void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
@@ -941,59 +840,12 @@ void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 	zonePreview->setCurrentIndex(int(fieldModel && !fieldModelFile->isEmpty()));
 }
 
-void Window::showScripts()
-{
-	if(field == NULL) {
-		opcodeList->clear();
-		opcodeList->setEnabled(false);
-		return;
-	}
-
-	opcodeList->setEnabled(true);
-
-	opcodeList->clear();
-	
-	if(scriptList->selectedItems().isEmpty())	return;
-	
-	Script *currentScript = scriptList->currentScript();
-	if(currentScript==NULL)	return;
-	opcodeList->fill(field, groupScriptList->currentGrpScript(), currentScript);
-	opcodeList->setIsInit(scriptList->selectedID()==0);
-	opcodeList->scroll(0, false);
-}
-
-void Window::compile()
-{
-	Script *currentScript = scriptList->currentScript();
-	if(currentScript==NULL)	return;
-
-	int opcodeID;
-	QString errorStr;
-
-	if(!currentScript->compile(opcodeID, errorStr)) {
-		compileScriptLabel->setText(tr("Erreur ligne %1 : %2").arg(opcodeID+1).arg(errorStr));
-		compileScriptLabel->show();
-		compileScriptIcon->show();
-		opcodeList->setErrorLine(opcodeID);
-	} else {
-		compileScriptLabel->hide();
-		compileScriptIcon->hide();
-		opcodeList->setErrorLine(-1);
-	}
-}
-
 void Window::filterMap()
 {
 	QList<QTreeWidgetItem *> items = fieldList->findItems(lineSearch->text(), Qt::MatchStartsWith);
 	if(!items.isEmpty()) {
 		fieldList->scrollToItem(items.first(), QAbstractItemView::PositionAtTop);
 	}
-}
-
-void Window::refresh()
-{
-	groupScriptList->localeRefresh();
-	scriptList->localeRefresh();
 }
 
 void Window::setModified(bool enabled)
@@ -1041,7 +893,7 @@ void Window::saveAs(bool currentPath)
 							 .arg(groupID).arg(scriptID)
 							 .arg(opcodeID+1).arg(errorStr));
 		gotoOpcode(fieldID, groupID, scriptID, opcodeID);
-		opcodeList->setErrorLine(opcodeID);
+		_scriptManager->opcodeList()->setErrorLine(opcodeID);
 		return;
 	}
 
@@ -1131,11 +983,9 @@ bool Window::gotoField(int fieldID)
 void Window::gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID)
 {
 	if(gotoField(fieldID)) {
-		blockSignals(true);
-		groupScriptList->scroll(grpScriptID, false);
-		scriptList->scroll(scriptID, false);
-		opcodeList->scroll(opcodeID);
-		blockSignals(false);
+		_scriptManager->blockSignals(true);
+		_scriptManager->gotoOpcode(grpScriptID, scriptID, opcodeID);
+		_scriptManager->blockSignals(false);
 	}
 }
 
@@ -1394,8 +1244,9 @@ void Window::searchManager()
 			searchDialog->setText(selectedText);
 		}
 	}
-	searchDialog->setOpcode(opcodeList->selectedOpcode());
-	searchDialog->setScriptExec(groupScriptList->selectedID(), scriptList->selectedID()-1);
+	searchDialog->setOpcode(_scriptManager->currentOpcodeId());
+	searchDialog->setScriptExec(_scriptManager->currentGrpScriptId(),
+	                            _scriptManager->currentScriptId() - 1);
 	searchDialog->show();
 	searchDialog->activateWindow();
 	searchDialog->raise();
@@ -1615,7 +1466,7 @@ void Window::config()
 			_textDialog->updateText();
 		}
 		actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
-		showScripts();
+		_scriptManager->fillOpcodes();
 	}
 }
 
