@@ -10,7 +10,7 @@ class ScriptManager : public QWidget
 {
 	Q_OBJECT
 public:
-	ScriptManager(QWidget *parent = 0);
+	explicit ScriptManager(QWidget *parent = 0);
 	void saveConfig();
 	void clear();
 	inline GrpScriptList *groupScriptList() const {

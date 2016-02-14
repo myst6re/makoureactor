@@ -136,25 +136,7 @@ Window::Window() :
 	toolBar->addAction(actionRun);
 	authorAction = toolBar->addWidget(toolBarRight);
 
-	QFont font;
-	font.setPointSize(8);
-
-	lineSearch = new QLineEdit(this);
-	lineSearch->setStatusTip(tr("Recherche rapide"));
-	lineSearch->setPlaceholderText(tr("Rechercher..."));
-	
-	fieldList = new QTreeWidget(this);
-	fieldList->setColumnCount(2);
-	fieldList->setHeaderLabels(QStringList() << tr("Fichier") << tr("Id"));
-	fieldList->setMinimumHeight(120);
-	fieldList->setIndentation(0);
-	fieldList->setItemsExpandable(false);
-	fieldList->setSortingEnabled(true);
-	fieldList->setAutoScroll(false);
-	fieldList->resizeColumnToContents(0);
-	fieldList->setFont(font);
-	fieldList->sortByColumn(1, Qt::AscendingOrder);
-	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
+	fieldList = new FieldList(this);
 
 	zoneImage = new ApercuBG();
 	if(Config::value("OpenGL", true).toBool()) {
@@ -178,7 +160,7 @@ Window::Window() :
 	QWidget *widget = new QWidget(this);
 	QGridLayout *gridLayout = new QGridLayout(widget);
 	gridLayout->addWidget(fieldList, 0, 0);
-	gridLayout->addWidget(lineSearch, 1, 0);
+	gridLayout->addWidget(fieldList->lineSearch(), 1, 0);
 	gridLayout->addWidget(zonePreview, 2, 0);
 	gridLayout->addWidget(_scriptManager, 0, 1, 3, 1);
 	gridLayout->setColumnStretch(0, 2);
@@ -194,11 +176,10 @@ Window::Window() :
 
 	setMenuBar(menuBar);
 
+	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
 	connect(searchDialog, SIGNAL(found(int,int,int,int)), SLOT(gotoOpcode(int,int,int,int)));
 	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
-	connect(lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap()));
-	connect(lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
 	connect(_scriptManager, SIGNAL(groupScriptCurrentChanged(int)), SLOT(showModel(int)));
 	connect(_scriptManager, SIGNAL(editText(int)), SLOT(textManager(int)));
 	connect(_scriptManager, SIGNAL(changed()), SLOT(setModified()));
@@ -208,7 +189,6 @@ Window::Window() :
 
 	restoreState(Config::value("windowState").toByteArray());
 	restoreGeometry(Config::value("windowGeometry").toByteArray());
-	fieldList->setFocus();
 	closeFile();
 }
 
@@ -258,12 +238,7 @@ QMenu *Window::createPopupMenu()
 
 FieldArchive::Sorting Window::getFieldSorting()
 {
-	switch(fieldList->sortColumn()) {
-	case 0:
-		return FieldArchive::SortByName;
-	default:
-		return FieldArchive::SortByMapId;
-	}
+	return fieldList->getFieldSorting();
 }
 
 void Window::jpText(bool enabled)
@@ -349,7 +324,6 @@ int Window::closeFile(bool quit)
 		fieldList->clear();
 		fieldList->setEnabled(false);
 		fieldList->blockSignals(false);
-		lineSearch->setEnabled(false);
 		zoneImage->clear();
 		if(fieldModel) {
 			fieldModel->clear();
@@ -585,38 +559,22 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		return;
 	}
 
-	QList<QTreeWidgetItem *> items;
-
-	for(int fieldID=0 ; fieldID<fieldArchive->size() ; ++fieldID) {
-		Field *f = fieldArchive->field(fieldID, false);
-		if(f) {
-			const QString &name = f->name();
-			QString id;
-			int index = Data::field_names.indexOf(name);
-			if(index != -1) {
-				id = QString("%1").arg(index, 3);
-			} else {
-				id = "~";
-			}
-
-			QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << id);
-			item->setData(0, Qt::UserRole, fieldID);
-			items.append(item);
-		}
-	}
-
-	fieldList->addTopLevelItems(items);
+	fieldList->fill(fieldArchive);
 	fieldList->setEnabled(true);
-	lineSearch->setEnabled(true);
 	zonePreview->setEnabled(true);
 
+	// Select memorized entry
 	QString previousSessionField = Config::value("currentField").toString();
 	if(!previousSessionField.isEmpty()) {
-		items = fieldList->findItems(previousSessionField, Qt::MatchExactly);
-		if(!items.isEmpty())	fieldList->setCurrentItem(items.first());
-		else if(fieldList->topLevelItemCount() > 0)		fieldList->setCurrentItem(fieldList->topLevelItem(0));
+		QList<QTreeWidgetItem *> items = fieldList->findItems(previousSessionField, Qt::MatchExactly);
+		if(!items.isEmpty()) {
+			fieldList->setCurrentItem(items.first());
+		}
 	}
-	else if(fieldList->topLevelItemCount() > 0)			fieldList->setCurrentItem(fieldList->topLevelItem(0));
+	// Select first entry
+	if(!fieldList->currentItem() && fieldList->topLevelItemCount() > 0) {
+		fieldList->setCurrentItem(fieldList->topLevelItem(0));
+	}
 
 	fieldList->setFocus();
 
@@ -711,10 +669,7 @@ void Window::setWindowTitle()
 
 int Window::currentFieldId() const
 {
-	QList<QTreeWidgetItem *> selectedItems = fieldList->selectedItems();
-	if(selectedItems.isEmpty())	return -1;
-
-	return selectedItems.first()->data(0, Qt::UserRole).toInt();
+	return fieldList->currentFieldId();
 }
 
 void Window::openField(bool reload)
@@ -838,14 +793,6 @@ void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 		fieldModel->setFieldModelFile(fieldModelFile);
 	}
 	zonePreview->setCurrentIndex(int(fieldModel && !fieldModelFile->isEmpty()));
-}
-
-void Window::filterMap()
-{
-	QList<QTreeWidgetItem *> items = fieldList->findItems(lineSearch->text(), Qt::MatchStartsWith);
-	if(!items.isEmpty()) {
-		fieldList->scrollToItem(items.first(), QAbstractItemView::PositionAtTop);
-	}
 }
 
 void Window::setModified(bool enabled)
