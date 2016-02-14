@@ -145,7 +145,8 @@ HEADERS += \
     core/field/FieldModelTextureRef.h \
     core/field/FieldModelTextureRefPC.h \
     core/field/FieldModelTextureRefPS.h \
-    widgets/ScriptManager.h
+    widgets/ScriptManager.h \
+    widgets/FieldList.h
 
 SOURCES += \
     Window.cpp \
@@ -278,7 +279,8 @@ SOURCES += \
     core/field/FieldModelTextureRef.cpp \
     core/field/FieldModelTextureRefPC.cpp \
     core/field/FieldModelTextureRefPS.cpp \
-    widgets/ScriptManager.cpp
+    widgets/ScriptManager.cpp \
+    widgets/FieldList.cpp
 
 TRANSLATIONS += Makou_Reactor_en.ts \
     Makou_Reactor_ja.ts

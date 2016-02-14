@@ -20,6 +20,7 @@
 
 #include <QtWidgets>
 #include "core/field/FieldArchive.h"
+#include "widgets/FieldList.h"
 #include "widgets/ScriptManager.h"
 #include "widgets/VarManager.h"
 #include "widgets/TextManager.h"
@@ -96,7 +97,6 @@ private slots:
 	void openField(bool reload=false);
 	void showModel(int grpScriptID);
 	void showModel(Field *field, FieldModelFile *fieldModelFile);
-	void filterMap();
 	void changeLanguage(QAction *);
 	void config();
 private:
@@ -107,7 +107,7 @@ private:
 	QProgressDialog *progressDialog();
 
 	QLineEdit *lineSearch;
-	QTreeWidget *fieldList;
+	FieldList *fieldList;
 	QStackedWidget *zonePreview;
 	ApercuBG *zoneImage;
 	FieldModel *fieldModel;
