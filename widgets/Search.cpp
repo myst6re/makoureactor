@@ -494,20 +494,20 @@ void Search::findNext()
 
 	if(atTheEnd) {
 		fieldID = scope == FieldArchive::FieldScope ? mainWindow()->currentFieldId() : -1;
-		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->currentGrpScriptId() : -1;
-		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->currentScriptId() : -1;
+		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->scriptWidget()->currentGrpScriptId() : -1;
+		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->scriptWidget()->currentScriptId() : -1;
 		opcodeID = -1;
-		textID = scope == FieldArchive::TextScope && mainWindow()->textDialog() ? mainWindow()->textDialog()->currentTextId() : -1;
+		textID = scope == FieldArchive::TextScope && mainWindow()->textWidget() ? mainWindow()->textWidget()->currentTextId() : -1;
 		from = 0;
 		atTheEnd = false;
 	} else {
 		fieldID = mainWindow()->currentFieldId();
-		grpScriptID = mainWindow()->currentGrpScriptId();
-		scriptID = mainWindow()->currentScriptId();
-		opcodeID = mainWindow()->currentOpcodeId();
-		textID = mainWindow()->textDialog() ? mainWindow()->textDialog()->currentTextId() : -1;
-		from = mainWindow()->textDialog() ? qMax(mainWindow()->textDialog()->currentTextPosition(),
-												 mainWindow()->textDialog()->currentAnchorPosition())
+		grpScriptID = mainWindow()->scriptWidget()->currentGrpScriptId();
+		scriptID = mainWindow()->scriptWidget()->currentScriptId();
+		opcodeID = mainWindow()->scriptWidget()->currentOpcodeId();
+		textID = mainWindow()->textWidget() ? mainWindow()->textWidget()->currentTextId() : -1;
+		from = mainWindow()->textWidget() ? qMax(mainWindow()->textWidget()->currentTextPosition(),
+												 mainWindow()->textWidget()->currentAnchorPosition())
 										  : 0;
 	}
 
@@ -596,20 +596,20 @@ void Search::findPrev()
 
 	if(atTheBeginning) {
 		fieldID = scope == FieldArchive::FieldScope ? mainWindow()->currentFieldId() : 2147483647;
-		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->currentGrpScriptId() : 2147483647;
-		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->currentScriptId() : 2147483647;
+		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->scriptWidget()->currentGrpScriptId() : 2147483647;
+		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->scriptWidget()->currentScriptId() : 2147483647;
 		opcodeID = 2147483647;
-		textID = scope == FieldArchive::TextScope && mainWindow()->textDialog() ? mainWindow()->textDialog()->currentTextId() : 2147483647;
+		textID = scope == FieldArchive::TextScope && mainWindow()->textWidget() ? mainWindow()->textWidget()->currentTextId() : 2147483647;
 		from = -1;
 		atTheBeginning = false;
 	} else {
 		fieldID = mainWindow()->currentFieldId();
-		grpScriptID = mainWindow()->currentGrpScriptId();
-		scriptID = mainWindow()->currentScriptId();
-		opcodeID = mainWindow()->currentOpcodeId();
-		textID = mainWindow()->textDialog() ? mainWindow()->textDialog()->currentTextId() : -1;
-		from = mainWindow()->textDialog() ? qMin(mainWindow()->textDialog()->currentTextPosition(),
-												 mainWindow()->textDialog()->currentAnchorPosition())
+		grpScriptID = mainWindow()->scriptWidget()->currentGrpScriptId();
+		scriptID = mainWindow()->scriptWidget()->currentScriptId();
+		opcodeID = mainWindow()->scriptWidget()->currentOpcodeId();
+		textID = mainWindow()->textWidget() ? mainWindow()->textWidget()->currentTextId() : -1;
+		from = mainWindow()->textWidget() ? qMin(mainWindow()->textWidget()->currentTextPosition(),
+												 mainWindow()->textWidget()->currentAnchorPosition())
 										  : -1;
 		if(from <= 0) {
 			textID--;
@@ -705,10 +705,10 @@ void Search::findAll()
 		int grpScriptID = -1, scriptID = -1, opcodeID = -1;
 
 		if(scope == FieldArchive::GrpScriptScope) {
-			grpScriptID = mainWindow()->currentGrpScriptId();
+			grpScriptID = mainWindow()->scriptWidget()->currentGrpScriptId();
 		}
 		if(scope == FieldArchive::ScriptScope) {
-			scriptID = mainWindow()->currentScriptId();
+			scriptID = mainWindow()->scriptWidget()->currentScriptId();
 		}
 
 		searchAllDialog->setScriptSearch();
@@ -724,8 +724,8 @@ void Search::findAll()
 	} else { // texts page
 		int textID = -1, from = -1;
 
-		if(scope == FieldArchive::TextScope && mainWindow()->textDialog()) {
-			textID = mainWindow()->textDialog()->currentTextId();
+		if(scope == FieldArchive::TextScope && mainWindow()->textWidget()) {
+			textID = mainWindow()->textWidget()->currentTextId();
 		}
 
 		searchAllDialog->setTextSearch();
@@ -830,7 +830,7 @@ void Search::setSearchValues()
 
 void Search::replaceCurrent()
 {
-	if(!fieldArchive || !mainWindow()->textDialog()) {
+	if(!fieldArchive || !mainWindow()->textWidget()) {
 		return;
 	}
 
@@ -838,11 +838,11 @@ void Search::replaceCurrent()
 
 	if(fieldArchive->replaceText(text, replace2->lineEdit()->text(),
 								 mainWindow()->currentFieldId(),
-								 mainWindow()->textDialog()->currentTextId(),
-								 qMin(mainWindow()->textDialog()->currentTextPosition(),
-									  mainWindow()->textDialog()->currentAnchorPosition()))) {
+								 mainWindow()->textWidget()->currentTextId(),
+								 qMin(mainWindow()->textWidget()->currentTextPosition(),
+									  mainWindow()->textWidget()->currentAnchorPosition()))) {
 		// Update view
-		mainWindow()->textDialog()->updateText();
+		mainWindow()->textWidget()->updateText();
 		mainWindow()->setModified();
 	}
 }
@@ -864,8 +864,8 @@ void Search::replaceAll()
 	if(scope == FieldArchive::FieldScope) {
 		fieldID = mainWindow()->currentFieldId();
 	} else if(scope == FieldArchive::TextScope) {
-		if(mainWindow()->textDialog()) {
-			textID = mainWindow()->textDialog()->currentTextId();
+		if(mainWindow()->textWidget()) {
+			textID = mainWindow()->textWidget()->currentTextId();
 		}
 	}
 
@@ -882,8 +882,8 @@ void Search::replaceAll()
 	if(modified) {
 
 		// Update view
-		if(mainWindow()->textDialog()) {
-			mainWindow()->textDialog()->updateText();
+		if(mainWindow()->textWidget()) {
+			mainWindow()->textWidget()->updateText();
 		}
 		mainWindow()->setModified();
 	}

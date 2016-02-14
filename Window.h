@@ -20,14 +20,12 @@
 
 #include <QtWidgets>
 #include "core/field/FieldArchive.h"
+#include "widgets/ScriptManager.h"
 #include "widgets/VarManager.h"
 #include "widgets/TextManager.h"
 #include "widgets/BGDialog.h"
 #include "widgets/ApercuBG.h"
 #include "widgets/Search.h"
-#include "widgets/GrpScriptList.h"
-#include "widgets/ScriptList.h"
-#include "widgets/OpcodeList.h"
 #include "widgets/FieldModel.h"
 #include "widgets/ModelManagerPC.h"
 #include "widgets/ModelManagerPS.h"
@@ -52,17 +50,16 @@ public:
 	void setObserverValue(int value);
 
 	int currentFieldId() const;
-	int currentGrpScriptId() const;
-	int currentScriptId() const;
-	int currentOpcodeId() const;
-	inline TextManager *textDialog() const {
+	inline TextManager *textWidget() const {
 		return _textDialog;
+	}
+	inline ScriptManager *scriptWidget() const {
+		return _scriptManager;
 	}
 
 public slots:
 	void openFile(const QString &path=QString());
 	void openDir();
-	void refresh();
 
 	void setModified(bool enabled=true);
 	void saveAs(bool currentPath=false);
@@ -97,10 +94,8 @@ public slots:
 	void about();
 private slots:
 	void openField(bool reload=false);
-	void showGrpScripts();
+	void showModel(int grpScriptID);
 	void showModel(Field *field, FieldModelFile *fieldModelFile);
-	void showScripts();
-	void compile();
 	void filterMap();
 	void changeLanguage(QAction *);
 	void config();
@@ -113,10 +108,6 @@ private:
 
 	QLineEdit *lineSearch;
 	QTreeWidget *fieldList;
-	GrpScriptList *groupScriptList;
-	ScriptList *scriptList;
-	OpcodeList *opcodeList;
-	QLabel *compileScriptIcon, *compileScriptLabel;
 	QStackedWidget *zonePreview;
 	ApercuBG *zoneImage;
 	FieldModel *fieldModel;
@@ -137,6 +128,7 @@ private:
 	QAction *actionMisc, *actionMiscOperations, *actionJp_txt;
 	QMenu *menuLang;
 
+	ScriptManager *_scriptManager;
 	TextManager *_textDialog;
 	ModelManager *_modelManager;
 	TutWidget *_tutManager;
