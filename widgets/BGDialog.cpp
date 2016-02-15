@@ -20,7 +20,7 @@
 BGDialog::BGDialog(QWidget *parent) :
 	QDialog(parent, Qt::Tool), field(0)
 {
-	setWindowTitle(tr("Décor"));
+	setWindowTitle(tr("Background"));
 	zoomFactor = 1;
 	imageFrame = new QFrame(this);
 	imageFrame->setMinimumSize(320, 240);
@@ -65,10 +65,10 @@ BGDialog::BGDialog(QWidget *parent) :
 	page1Layout->addLayout(hLayout);
 
 	tabBar = new QTabBar(this);
-	tabBar->addTab(tr("Couches"));
-	tabBar->addTab(tr("Sections (couche 1)"));
+	tabBar->addTab(tr("Layers"));
+	tabBar->addTab(tr("Sections (layer 1)"));
 
-	buttonRepair = new QPushButton(tr("Réparer"), this);
+	buttonRepair = new QPushButton(tr("Repair"), this);
 	buttonRepair->hide();
 
 	QGridLayout *layout = new QGridLayout(this);
@@ -152,7 +152,7 @@ void BGDialog::fillWidgets()
 		QList<quint8> usedParamsList = usedParams.keys();
 		qSort(usedParamsList);
 		foreach(const quint8 param, usedParamsList) {
-			parametersWidget->addItem(tr("Paramètre %1").arg(param), param);
+			parametersWidget->addItem(tr("Parameter %1").arg(param), param);
 		}
 		parametersWidget->setEnabled(parametersWidget->count());
 
@@ -178,7 +178,7 @@ void BGDialog::fillWidgets()
 
 		for(quint8 layerID = 0 ; layerID < 4 ; ++layerID) {
 			if (layers[layerID]) {
-				item = new QListWidgetItem(tr("Couche %1").arg(layerID));
+				item = new QListWidgetItem(tr("Layer %1").arg(layerID));
 				item->setData(Qt::UserRole, layerID);
 				Qt::ItemFlags flags = Qt::ItemIsUserCheckable | Qt::ItemIsEnabled;
 				if (layerID > 1) {
@@ -225,7 +225,7 @@ void BGDialog::parameterChanged(int index)
 	statesWidget->clear();
 	for(int i=0 ; i<8 ; ++i) {
 		if((states >> i) & 1) {
-			item = new QListWidgetItem(tr("État %1").arg(i));
+			item = new QListWidgetItem(tr("State %1").arg(i));
 			item->setData(Qt::UserRole, 1 << i);
 			item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
 			item->setCheckState((params.value(parameter) >> i) & 1 ? Qt::Checked : Qt::Unchecked);
@@ -326,11 +326,11 @@ void BGDialog::changeZ(int value)
 void BGDialog::tryToRepairBG()
 {
 	if (field->background()->repair()) {
-		QMessageBox::information(this, tr("Décor réparé"), tr("Des erreurs ont été trouvées et réparées, sauvegardez l'écran pour appliquer les changements."));
+		QMessageBox::information(this, tr("Background Repaired"), tr("Errors were found and repaired, save to apply the changes."));
 		emit modified();
 		updateBG();
 	} else {
-		QMessageBox::warning(this, tr("Réparation impossible"), tr("Les erreurs n'ont pas été corrigées."));
+		QMessageBox::warning(this, tr("Repair Failed"), tr("The errors were not corrected."));
 	}
 }
 

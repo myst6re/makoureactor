@@ -21,7 +21,7 @@
 KeyEditorDialog::KeyEditorDialog(quint16 value, QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
 {
-	setWindowTitle(tr("Touches"));
+	setWindowTitle(tr("Keys"));
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	QCheckBox *checkBox;

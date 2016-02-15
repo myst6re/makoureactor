@@ -213,7 +213,7 @@ void GrpScript::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 
 QString GrpScript::name() const
 {
-	return _name.isEmpty() ? QObject::tr("Sans nom") : _name;
+	return _name.isEmpty() ? QObject::tr("Untitled") : _name;
 }
 
 QByteArray GrpScript::toByteArray(quint8 scriptID) const
@@ -244,9 +244,9 @@ QString GrpScript::type()
 	switch(typeID())
 	{
 	case Model:
-		if(_character == 0xFF)	return QObject::tr("Objet 3D");
+		if(_character == 0xFF)	return QObject::tr("Field model");
 		return QString("%1").arg(Opcode::character(_character));
-	case Location:	return QObject::tr("Zone");
+	case Location:	return QObject::tr("Location");
 	case Animation:	return QObject::tr("Animation");
 	case Director:	return QObject::tr("Main");
 	default:		return QString();
@@ -274,24 +274,24 @@ QString GrpScript::scriptName(quint8 scriptID)
 	case 0:	return QObject::tr("S0 - Init");
 	case 1:	return QObject::tr("S0 - Main");
 	case 2:
-		if(type == Model)		return QObject::tr("S1 - Parler");
+		if(type == Model)		return QObject::tr("S1 - Talk");
 		if(type == Location)	return QObject::tr("S1 - [OK]");
 		break;
 	case 3:
-		if(type == Model)		return QObject::tr("S2 - Toucher");
-		if(type == Location)	return QObject::tr("S2 - Bouger");
+		if(type == Model)		return QObject::tr("S2 - Contact");
+		if(type == Location)	return QObject::tr("S2 - Move");
 		break;
 	case 4:
-		if(type == Location)	return QObject::tr("S3 - Bouger");
+		if(type == Location)	return QObject::tr("S3 - Move");
 		break;
 	case 5:
-		if(type == Location)	return QObject::tr("S4 - Aller");
+		if(type == Location)	return QObject::tr("S4 - Go");
 		break;
 	case 6:
-		if(type == Location)	return QObject::tr("S5 - Aller 1x");
+		if(type == Location)	return QObject::tr("S5 - Go 1x");
 		break;
 	case 7:
-		if(type == Location)	return QObject::tr("S6 - Partir");
+		if(type == Location)	return QObject::tr("S6 - Go away");
 		break;
 	}
 	
@@ -520,7 +520,7 @@ bool GrpScript::removeTexts()
 
 QString GrpScript::toString(Field *field) const
 {
-	QString ret(QObject::tr("Groupe '%1' :").arg(name()));
+	QString ret(QObject::tr("Group '%1':").arg(name()));
 	int scriptID = 0;
 
 	ret.append("\n");

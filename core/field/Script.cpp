@@ -785,7 +785,7 @@ bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) co
 //			}
 //		} else {
 			qWarning() << "\"Aller à\" trop grand, le label est inaccessible.";
-			errorStr = QObject::tr("Le label %1 est inaccessible, veuillez utiliser un saut long.").arg(opcodeJump->label());
+			errorStr = QObject::tr("Label %1 is unreachable, please use a long jump.").arg(opcodeJump->label());
 			return false;
 		//}
 	}
@@ -830,7 +830,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 			if(!labelPositions.contains(((OpcodeLabel *)opcode)->label())) {
 				labelPositions.insert(((OpcodeLabel *)opcode)->label(), pos);
 			} else {
-				errorStr = QObject::tr("Le label %1 est déclaré plusieurs fois.").arg(((OpcodeLabel *)opcode)->label());
+				errorStr = QObject::tr("Label %1 is declared several times.").arg(((OpcodeLabel *)opcode)->label());
 				return false;
 			}
 		} else {
@@ -853,11 +853,11 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 				opcodeJump->setJump(jump);
 
 				if(!opcodeJump->isLongJump() && quint32(qAbs(jump)) > opcodeJump->maxJump()) {
-					errorStr = QObject::tr("Le label %1 est inaccessible, veuillez utiliser un saut long.").arg(opcodeJump->label());
+					errorStr = QObject::tr("Label %1 is unreachable, please use a long jump.").arg(opcodeJump->label());
 					return false;
 				}
 				if(opcodeJump->isLongJump() && quint32(qAbs(jump)) > opcodeJump->maxJump()) {
-					errorStr = QObject::tr("Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.").arg(opcodeJump->label());
+					errorStr = QObject::tr("Label %1 is unreachable because your script exceeds 65535 bytes, please reduce the size of the script.").arg(opcodeJump->label());
 					return false;
 				}
 				if(opcodeJump->id() != Opcode::JMPF
@@ -865,7 +865,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 						&& opcodeJump->id() != Opcode::JMPB
 						&& opcodeJump->id() != Opcode::JMPBL
 						&& jump - opcodeJump->jumpPosData() < 0) {
-					errorStr = QObject::tr("Le label %1 est inaccessible car il se trouve avant la commande.").arg(opcodeJump->label());
+					errorStr = QObject::tr("The label %1 is unreachable because it is located before the opcode.").arg(opcodeJump->label());
 					return false;
 				}
 			}
@@ -875,7 +875,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 	}
 
 	if(pos > 65535) {
-		errorStr = QObject::tr("Script trop grand, il ne doit pas dépasser les 65535 octets. Taille actuelle : %1.").arg(pos);
+		errorStr = QObject::tr("Script too big, it should not exceed 65535 bytes. Actual size: %1.").arg(pos);
 		return false;
 	}
 

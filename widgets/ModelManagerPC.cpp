@@ -31,9 +31,9 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 
 	models->setContextMenuPolicy(Qt::ActionsContextMenu);
 	models->setSelectionMode(QAbstractItemView::ExtendedSelection);
-	cutModelAction = new QAction(QIcon(":/images/cut.png"), tr("Couper"), models);
-	copyModelAction = new QAction(QIcon(":/images/copy.png"), tr("Copier"), models);
-	pasteModelAction = new QAction(QIcon(":/images/paste.png"), tr("Coller"), models);
+	cutModelAction = new QAction(QIcon(":/images/cut.png"), tr("Cut"), models);
+	copyModelAction = new QAction(QIcon(":/images/copy.png"), tr("Copy"), models);
+	pasteModelAction = new QAction(QIcon(":/images/paste.png"), tr("Paste"), models);
 	models->addAction(cutModelAction);
 	models->addAction(copyModelAction);
 	models->addAction(pasteModelAction);
@@ -52,16 +52,16 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	toolBar2->addAction(QIcon(":/images/down.png"), QString(), this, SLOT(downAnim()));
 
 	modelAnims->setColumnCount(3);
-	modelAnims->setHeaderLabels(QStringList() << tr("Id") << tr("Animations") << tr("?"));
+	modelAnims->setHeaderLabels(QStringList() << tr("Id") << tr("Animation") << tr("?"));
 
 	QGridLayout *frameLayout = new QGridLayout(modelFrame);
-	frameLayout->addWidget(new QLabel(tr("Nom (non utilisé)")), 0, 0);
+	frameLayout->addWidget(new QLabel(tr("Name (unused)")), 0, 0);
 	frameLayout->addWidget(modelName, 0, 1);
-	frameLayout->addWidget(new QLabel(tr("Inconnu")), 1, 0);
+	frameLayout->addWidget(new QLabel(tr("Unknown")), 1, 0);
 	frameLayout->addWidget(modelUnknown, 1, 1);
-	frameLayout->addWidget(new QLabel(tr("Taille modèle")), 2, 0);
+	frameLayout->addWidget(new QLabel(tr("Model size")), 2, 0);
 	frameLayout->addWidget(modelScaleWidget, 2, 1);
-	frameLayout->addWidget(new QLabel(tr("Lumière")), 3, 0);
+	frameLayout->addWidget(new QLabel(tr("Light")), 3, 0);
 	frameLayout->addWidget(modelColorDisplay, 3, 1);
 	frameLayout->addWidget(modelColorLabel, 4, 1);
 	frameLayout->addWidget(toolBar2, 0, 2);
@@ -144,7 +144,7 @@ void ModelManagerPC::addModel()
 
 	if(charLgp->isOpen()) {
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
+		dialog.setWindowTitle(tr("Add a field model"));
 
 		QComboBox list(&dialog);
 		list.setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
@@ -363,7 +363,7 @@ void ModelManagerPC::addAnim()
 	if(charLgp->isOpen()) {
 		toolBar2->setEnabled(false);
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
+		dialog.setWindowTitle(tr("Add a field model"));
 
 		QComboBox list(&dialog);
 		list.setEditable(true);

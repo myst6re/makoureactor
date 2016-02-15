@@ -23,7 +23,7 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 	QDialog(parent, Qt::Tool),
 	idFile(0), caFile(0), infFile(0), scriptsAndTexts(0)
 {
-	setWindowTitle(tr("Zones"));
+	setWindowTitle(tr("Walkmesh"));
 
 	walkmesh = Config::value("OpenGL", true).toBool() ? new WalkmeshWidget(0, shareWidget) : 0;
 	QWidget *walkmeshWidget = walkmesh ? walkmesh : new QWidget(this);
@@ -40,22 +40,22 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 	slider2->setValue(0);
 	slider3->setValue(0);
 
-	QLabel *keyInfos = new QLabel(tr("Utilisez les touches directionnelles pour déplacer la caméra."));
+	QLabel *keyInfos = new QLabel(tr("Use the arrow keys to move the camera."));
 	keyInfos->setTextFormat(Qt::PlainText);
 	keyInfos->setWordWrap(true);
 
-	QPushButton *resetCamera = new QPushButton(tr("Remettre à 0"));
+	QPushButton *resetCamera = new QPushButton(tr("Reset"));
 
-	QCheckBox *showModels = new QCheckBox(tr("Afficher modèles"));
+	QCheckBox *showModels = new QCheckBox(tr("Show 3D models"));
 
 	tabWidget = new QTabWidget(this);
-	tabWidget->addTab(buildCameraPage(), tr("Caméra"));
+	tabWidget->addTab(buildCameraPage(), tr("Camera"));
 	tabWidget->addTab(buildWalkmeshPage(), tr("Walkmesh"));
-	tabWidget->addTab(buildGatewaysPage(), tr("Sorties"));
-	tabWidget->addTab(buildDoorsPage(), tr("Portes"));
-	tabWidget->addTab(buildArrowPage(), tr("Flèches"));
-	tabWidget->addTab(buildCameraRangePage(), tr("Limites caméra"));
-	tabWidget->addTab(buildMiscPage(), tr("Divers"));
+	tabWidget->addTab(buildGatewaysPage(), tr("Gateways"));
+	tabWidget->addTab(buildDoorsPage(), tr("Doors"));
+	tabWidget->addTab(buildArrowPage(), tr("Arrows"));
+	tabWidget->addTab(buildCameraRangePage(), tr("Camera range"));
+	tabWidget->addTab(buildMiscPage(), tr("Miscellaneous"));
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(walkmeshWidget, 0, 0, 4, 1);
@@ -102,8 +102,8 @@ QWidget *WalkmeshManager::buildCameraPage()
 	QWidget *ret = new QWidget(this);
 
 	ListWidget *listWidget = new ListWidget(ret);
-	listWidget->addAction(ListWidget::Add, tr("Ajouter caméra"), this, SLOT(addCamera()));
-	listWidget->addAction(ListWidget::Rem, tr("Supprimer caméra"), this, SLOT(removeCamera()));
+	listWidget->addAction(ListWidget::Add, tr("Add camera"), this, SLOT(addCamera()));
+	listWidget->addAction(ListWidget::Rem, tr("Remove camera"), this, SLOT(removeCamera()));
 
 	caToolbar = listWidget->toolBar();
 	camList = listWidget->listWidget();
@@ -128,13 +128,13 @@ QWidget *WalkmeshManager::buildCameraPage()
 
 	QGridLayout *caLayout = new QGridLayout(ret);
 	caLayout->addWidget(listWidget, 0, 0, 8, 1);
-	caLayout->addWidget(new QLabel(tr("Distance (zoom) :")), 0, 1, 1, 3);
+	caLayout->addWidget(new QLabel(tr("Zoom:")), 0, 1, 1, 3);
 	caLayout->addWidget(caZoomEdit, 0, 4, 1, 2);
-	caLayout->addWidget(new QLabel(tr("Axes de la caméra :")), 1, 1, 1, 6);
+	caLayout->addWidget(new QLabel(tr("Camera axis:")), 1, 1, 1, 6);
 	caLayout->addWidget(caVectorXEdit, 2, 1, 1, 6);
 	caLayout->addWidget(caVectorYEdit, 3, 1, 1, 6);
 	caLayout->addWidget(caVectorZEdit, 4, 1, 1, 6);
-	caLayout->addWidget(new QLabel(tr("Position de la caméra :")), 5, 1, 1, 6);
+	caLayout->addWidget(new QLabel(tr("Camera position:")), 5, 1, 1, 6);
 	caLayout->addWidget(new QLabel(tr("X")), 6, 1);
 	caLayout->addWidget(caSpaceXEdit, 6, 2);
 	caLayout->addWidget(new QLabel(tr("Y")), 6, 3);
@@ -166,8 +166,8 @@ QWidget *WalkmeshManager::buildWalkmeshPage()
 	QWidget *ret = new QWidget(this);
 
 	ListWidget *listWidget = new ListWidget(ret);
-	listWidget->addAction(ListWidget::Add, tr("Ajouter triangle"), this, SLOT(addTriangle()));
-	listWidget->addAction(ListWidget::Rem, tr("Supprimer triangle"), this, SLOT(removeTriangle()));
+	listWidget->addAction(ListWidget::Add, tr("Add triangle"), this, SLOT(addTriangle()));
+	listWidget->addAction(ListWidget::Rem, tr("Remove triangle"), this, SLOT(removeTriangle()));
 
 	idToolbar = listWidget->toolBar();
 	idList = listWidget->listWidget();
@@ -185,15 +185,15 @@ QWidget *WalkmeshManager::buildWalkmeshPage()
 	idAccess[2]->setRange(-32768, 32767);
 
 	QHBoxLayout *accessLayout0 = new QHBoxLayout;
-	accessLayout0->addWidget(new QLabel(tr("Triangle accessible via la ligne 1-2 :")));
+	accessLayout0->addWidget(new QLabel(tr("Triangle accessible via the line 1-2 :")));
 	accessLayout0->addWidget(idAccess[0]);
 
 	QHBoxLayout *accessLayout1 = new QHBoxLayout;
-	accessLayout1->addWidget(new QLabel(tr("Triangle accessible via la ligne 2-3 :")));
+	accessLayout1->addWidget(new QLabel(tr("Triangle accessible via the line 2-3 :")));
 	accessLayout1->addWidget(idAccess[1]);
 
 	QHBoxLayout *accessLayout2 = new QHBoxLayout;
-	accessLayout2->addWidget(new QLabel(tr("Triangle accessible via la ligne 3-1 :")));
+	accessLayout2->addWidget(new QLabel(tr("Triangle accessible via the line 3-1 :")));
 	accessLayout2->addWidget(idAccess[2]);
 
 	QGridLayout *layout = new QGridLayout(ret);
@@ -227,7 +227,7 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	gateList = new QListWidget(ret);
 	gateList->setFixedWidth(125);
 
-	gateEnabled = new QCheckBox(tr("Activer"), ret);
+	gateEnabled = new QCheckBox(tr("Enable"), ret);
 
 	exitPoints[0] = new VertexWidget(ret);
 	exitPoints[1] = new VertexWidget(ret);
@@ -239,20 +239,20 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 	exitDirection = new QSpinBox(ret);
 	exitDirection->setRange(0, 255);
 
-	arrowDisplay = new QCheckBox(tr("Afficher une flèche"), ret);
+	arrowDisplay = new QCheckBox(tr("Show an arrow"), ret);
 	arrowDisplay->setIcon(QIcon(":/images/field-arrow-red.png"));
 
 	QGridLayout *layout = new QGridLayout(ret);
 	layout->addWidget(gateList, 0, 0, 8, 1, Qt::AlignLeft);
 	layout->addWidget(gateEnabled, 0, 1, 1, 2);
-	layout->addWidget(new QLabel(tr("Ligne de sortie :")), 1, 1);
+	layout->addWidget(new QLabel(tr("Exit line:")), 1, 1);
 	layout->addWidget(exitPoints[0], 1, 2);
 	layout->addWidget(exitPoints[1], 2, 2);
-	layout->addWidget(new QLabel(tr("Point de destination :")), 3, 1);
+	layout->addWidget(new QLabel(tr("Destination point:")), 3, 1);
 	layout->addWidget(entryPoint, 3, 2);
-	layout->addWidget(new QLabel(tr("Orientation du perso. :")), 4, 1);
+	layout->addWidget(new QLabel(tr("Character orientation:")), 4, 1);
 	layout->addWidget(exitDirection, 4, 2);
-	layout->addWidget(new QLabel(tr("Id écran :")), 5, 1);
+	layout->addWidget(new QLabel(tr("Field ID:")), 5, 1);
 	layout->addWidget(fieldId, 5, 2);
 	layout->addWidget(arrowDisplay, 6, 1, 1, 2);
 	layout->setRowStretch(7, 1);
@@ -276,7 +276,7 @@ QWidget *WalkmeshManager::buildDoorsPage()
 	doorList = new QListWidget(ret);
 	doorList->setFixedWidth(125);
 
-	doorEnabled = new QCheckBox(tr("Activer"), ret);
+	doorEnabled = new QCheckBox(tr("Enable"), ret);
 
 	doorPosition[0] = new VertexWidget(ret);
 	doorPosition[1] = new VertexWidget(ret);
@@ -294,19 +294,19 @@ QWidget *WalkmeshManager::buildDoorsPage()
 	doorSoundId->setRange(0, 255);
 
 	QGridLayout *idsLayout = new QGridLayout;
-	idsLayout->addWidget(new QLabel(tr("Id parametre décor :")), 0, 0);
+	idsLayout->addWidget(new QLabel(tr("Background parameter ID:")), 0, 0);
 	idsLayout->addWidget(bgParamId, 0, 1);
-	idsLayout->addWidget(new QLabel(tr("Id état décor :")), 1, 0);
+	idsLayout->addWidget(new QLabel(tr("Background state ID:")), 1, 0);
 	idsLayout->addWidget(bgStateId, 1, 1);
-	idsLayout->addWidget(new QLabel(tr("Comportement :")), 2, 0);
+	idsLayout->addWidget(new QLabel(tr("Behavior:")), 2, 0);
 	idsLayout->addWidget(doorBehavior, 2, 1);
-	idsLayout->addWidget(new QLabel(tr("Id son :")), 3, 0);
+	idsLayout->addWidget(new QLabel(tr("Sound ID:")), 3, 0);
 	idsLayout->addWidget(doorSoundId, 3, 1);
 
 	QGridLayout *layout = new QGridLayout(ret);
 	layout->addWidget(doorList, 0, 0, 5, 1, Qt::AlignLeft);
 	layout->addWidget(doorEnabled, 0, 1, 1, 2);
-	layout->addWidget(new QLabel(tr("Ligne déclench. porte :")), 1, 1);
+	layout->addWidget(new QLabel(tr("Trigger Line Door:")), 1, 1);
 	layout->addWidget(doorPosition[0], 1, 2);
 	layout->addWidget(doorPosition[1], 2, 2);
 	layout->addLayout(idsLayout, 3, 1, 1, 2);
@@ -345,8 +345,8 @@ QWidget *WalkmeshManager::buildArrowPage()
 
 	arrowType = new QComboBox(ret);
 	arrowType->addItem(tr("Invisible"), 0);
-	arrowType->addItem(QIcon(":/images/field-arrow-red.png"), tr("Rouge"), 1);
-	arrowType->addItem(QIcon(":/images/field-arrow-green.png"), tr("Vert"), 2);
+	arrowType->addItem(QIcon(":/images/field-arrow-red.png"), tr("Red"), 1);
+	arrowType->addItem(QIcon(":/images/field-arrow-green.png"), tr("Green"), 2);
 
 	QHBoxLayout *posLayout = new QHBoxLayout;
 	posLayout->addWidget(new QLabel(tr("X")));
@@ -360,7 +360,7 @@ QWidget *WalkmeshManager::buildArrowPage()
 	QGridLayout *layout = new QGridLayout(ret);
 	layout->addWidget(arrowList, 0, 0, 3, 1, Qt::AlignLeft);
 	layout->addWidget(new QLabel(tr("Position :")), 0, 1);
-	layout->addWidget(new QLabel(tr("Type :")), 1, 1);
+	layout->addWidget(new QLabel(tr("Type:")), 1, 1);
 	layout->addLayout(posLayout, 0, 2);
 	layout->addWidget(arrowType, 1, 2);
 	layout->setRowStretch(2, 1);
@@ -379,9 +379,9 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 {
 	QWidget *ret = new QWidget(this);
 
-	QGroupBox *group1 = new QGroupBox(tr("Limites caméra"), ret);
-	QGroupBox *group2 = new QGroupBox(tr("Tailles des couches (pour les animations de couche)"), ret);
-	QGroupBox *group3 = new QGroupBox(tr("Flags couches"), ret);
+	QGroupBox *group1 = new QGroupBox(tr("Camera range"), ret);
+	QGroupBox *group2 = new QGroupBox(tr("Layer sizes (for layer animations)"), ret);
+	QGroupBox *group3 = new QGroupBox(tr("Layer flags"), ret);
 
 	for(int i=0 ; i<4 ; ++i) {
 		rangeEdit[i] = new QSpinBox(group1);
@@ -392,13 +392,13 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 		bgFlagEdit[i]->setRange(0, 255);
 	}
 	QGridLayout *layout1 = new QGridLayout(group1);
-	layout1->addWidget(new QLabel(tr("Haut")), 0, 0);
+	layout1->addWidget(new QLabel(tr("Up")), 0, 0);
 	layout1->addWidget(rangeEdit[0], 0, 1);
-	layout1->addWidget(new QLabel(tr("Bas")), 0, 2);
+	layout1->addWidget(new QLabel(tr("Down")), 0, 2);
 	layout1->addWidget(rangeEdit[1], 0, 3);
-	layout1->addWidget(new QLabel(tr("Droite")), 1, 0);
+	layout1->addWidget(new QLabel(tr("Right")), 1, 0);
 	layout1->addWidget(rangeEdit[2], 1, 1);
-	layout1->addWidget(new QLabel(tr("Gauche")), 1, 2);
+	layout1->addWidget(new QLabel(tr("Left")), 1, 2);
 	layout1->addWidget(rangeEdit[3], 1, 3);
 	layout1->setColumnStretch(0, 1);
 	layout1->setColumnStretch(1, 1);
@@ -406,13 +406,13 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 	layout1->setColumnStretch(3, 1);
 
 	QGridLayout *layout2 = new QGridLayout(group2);
-	layout2->addWidget(new QLabel(tr("Largeur couche 3 décor")), 0, 0);
+	layout2->addWidget(new QLabel(tr("Background layer 3 width")), 0, 0);
 	layout2->addWidget(bgSizeEdit[0], 0, 1);
-	layout2->addWidget(new QLabel(tr("Hauteur couche 3 décor")), 0, 2);
+	layout2->addWidget(new QLabel(tr("Background layer 3 height")), 0, 2);
 	layout2->addWidget(bgSizeEdit[1], 0, 3);
-	layout2->addWidget(new QLabel(tr("Largeur couche 4 décor")), 1, 0);
+	layout2->addWidget(new QLabel(tr("Background layer 4 width")), 1, 0);
 	layout2->addWidget(bgSizeEdit[2], 1, 1);
-	layout2->addWidget(new QLabel(tr("Hauteur couche 4 décor")), 1, 2);
+	layout2->addWidget(new QLabel(tr("Background layer 4 height")), 1, 2);
 	layout2->addWidget(bgSizeEdit[3], 1, 3);
 	layout2->setRowStretch(2, 1);
 	layout2->setColumnStretch(0, 1);
@@ -421,13 +421,13 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 	layout2->setColumnStretch(3, 1);
 
 	QGridLayout *layout3 = new QGridLayout(group3);
-	layout3->addWidget(new QLabel(tr("Couche 1")), 0, 0);
+	layout3->addWidget(new QLabel(tr("Layer 1")), 0, 0);
 	layout3->addWidget(bgFlagEdit[0], 0, 1);
-	layout3->addWidget(new QLabel(tr("Couche 2")), 0, 2);
+	layout3->addWidget(new QLabel(tr("Layer 2")), 0, 2);
 	layout3->addWidget(bgFlagEdit[1], 0, 3);
-	layout3->addWidget(new QLabel(tr("Couche 3")), 0, 4);
+	layout3->addWidget(new QLabel(tr("Layer 3")), 0, 4);
 	layout3->addWidget(bgFlagEdit[2], 0, 5);
-	layout3->addWidget(new QLabel(tr("Couche 4")), 0, 6);
+	layout3->addWidget(new QLabel(tr("Layer 4")), 0, 6);
 	layout3->addWidget(bgFlagEdit[3], 0, 7);
 	layout3->setRowStretch(1, 1);
 
@@ -464,14 +464,14 @@ QWidget *WalkmeshManager::buildMiscPage()
 	mapScale->setRange(0, 65535);
 
 	QGridLayout *layout = new QGridLayout(ret);
-	layout->addWidget(new QLabel(tr("Orientation des mouvements :")), 0, 0);
+	layout->addWidget(new QLabel(tr("Movements orientation:")), 0, 0);
 	layout->addWidget(navigation, 0, 1);
 	layout->addWidget(navigation2, 0, 2);
-	layout->addWidget(new QLabel(tr("Hauteur focus caméra sur le personnage :")), 1, 0);
+	layout->addWidget(new QLabel(tr("Camera Focus Height on the playable character:")), 1, 0);
 	layout->addWidget(cameraFocusHeight, 1, 1, 1, 2);
-	layout->addWidget(new QLabel(tr("Inconnu :")), 2, 0);
+	layout->addWidget(new QLabel(tr("Unknown:")), 2, 0);
 	layout->addWidget(unknown, 2, 1, 1, 2);
-	layout->addWidget(new QLabel(tr("Zoom écran :")), 3, 0);
+	layout->addWidget(new QLabel(tr("Field scale:")), 3, 0);
 	layout->addWidget(mapScale, 3, 1, 1, 2);
 	layout->setRowStretch(4, 1);
 
@@ -494,7 +494,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 	scriptsAndTexts = field->scriptsAndTexts();
 
 	if(!idFile->isOpen() || !caFile->isOpen() || !infFile->isOpen()) {
-		QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Erreur d'ouverture du walkmesh"));
+		QMessageBox::warning(this, tr("Opening error"), tr("Error opening walkmesh"));
 	}
 
 	int camCount = 0;
@@ -510,7 +510,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 			camList->blockSignals(true);
 			camList->clear();
 			for(int i=0 ; i<camCount ; ++i) {
-				camList->addItem(tr("Caméra %1").arg(i));
+				camList->addItem(tr("Camera %1").arg(i));
 			}
 			camList->blockSignals(false);
 		}
@@ -541,7 +541,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 			if(gateway.fieldID != 0x7FFF) {
 				gateList->addItem(QString("%1 (%2)").arg(Data::field_names.value(gateway.fieldID)).arg(gateway.fieldID));
 			} else {
-				gateList->addItem(tr("Inutilisé"));
+				gateList->addItem(tr("Unused"));
 			}
 		}
 		gateList->setCurrentRow(0);
@@ -551,9 +551,9 @@ void WalkmeshManager::fill(Field *field, bool reload)
 		int doorID = 0;
 		foreach(const Trigger &trigger, infFile->triggers()) {
 			if(trigger.background_parameter != 0xFF) {
-				doorList->addItem(tr("Porte %1").arg(doorID));
+				doorList->addItem(tr("Door %1").arg(doorID));
 			} else {
-				doorList->addItem(tr("Inutilisé"));
+				doorList->addItem(tr("Unused"));
 			}
 			++doorID;
 		}
@@ -565,9 +565,9 @@ void WalkmeshManager::fill(Field *field, bool reload)
 			int arrowID = 0;
 			foreach(const Arrow &arrow, infFile->arrows()) {
 				if(arrow.type != 0) {
-					arrowList->addItem(tr("Flèche %1").arg(arrowID));
+					arrowList->addItem(tr("Arrow %1").arg(arrowID));
 				} else {
-					arrowList->addItem(tr("Inutilisé"));
+					arrowList->addItem(tr("Unused"));
 				}
 				++arrowID;
 			}
@@ -1126,7 +1126,7 @@ void WalkmeshManager::editFieldId(int v)
 			if(v != 0x7FFF) {
 				gateList->currentItem()->setText(QString("%1 (%2)").arg(Data::field_names.value(v)).arg(v));
 			} else {
-				gateList->currentItem()->setText(tr("Inutilisé"));
+				gateList->currentItem()->setText(tr("Unused"));
 			}
 
 			emit modified();
@@ -1180,9 +1180,9 @@ void WalkmeshManager::editParamId(int v)
 			old.background_parameter = v;
 			infFile->setTrigger(gateId, old);
 			if(v != 0xFF) {
-				doorList->currentItem()->setText(tr("Porte %1").arg(gateId));
+				doorList->currentItem()->setText(tr("Door %1").arg(gateId));
 			} else {
-				doorList->currentItem()->setText(tr("Inutilisé"));
+				doorList->currentItem()->setText(tr("Unused"));
 			}
 
 			if(walkmesh)	walkmesh->updateGL();
@@ -1288,9 +1288,9 @@ void WalkmeshManager::editArrowType(int index)
 			old.type = index;
 			infFile->setArrow(arrowId, old);
 			if(index != 0) {
-				arrowList->currentItem()->setText(tr("Flèche %1").arg(arrowId));
+				arrowList->currentItem()->setText(tr("Arrow %1").arg(arrowId));
 			} else {
-				arrowList->currentItem()->setText(tr("Inutilisé"));
+				arrowList->currentItem()->setText(tr("Unused"));
 			}
 
 			emit modified();

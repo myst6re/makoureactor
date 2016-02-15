@@ -454,22 +454,22 @@ bool Data::load()
 {
 	if(char_names.isEmpty()) {
 		char_names
-				<< QObject::tr("Clad") << QObject::tr("Barret") << QObject::tr("Tifa")
-				<< QObject::tr("Aeris") << QObject::tr("Red XIII") << QObject::tr("Youfie")
+				<< QObject::tr("Cloud") << QObject::tr("Barret") << QObject::tr("Tifa")
+				<< QObject::tr("Aeris") << QObject::tr("Red XIII") << QObject::tr("Yuffie")
 				<< QObject::tr("Cait Sith") << QObject::tr("Vincent") << QObject::tr("Cid")
-				<< QObject::tr("Jeune Clad") << QObject::tr("Sephiroth") << QObject::tr("Chocobo");
+				<< QObject::tr("Yound Cloud") << QObject::tr("Sephiroth") << QObject::tr("Chocobo");
 	}
 
 	if(key_names.isEmpty()) {
 		key_names
-				<< QObject::tr("[CAMERA|L2]") << QObject::tr("[CIBLE|R2]")
-				<< QObject::tr("[PAGE HAUT|L1]") << QObject::tr("[PAGE BAS|R1]")
-				<< QObject::tr("[MENU|TRIANGLE]") << QObject::tr("[OK|ROND]")
-				<< QObject::tr("[ANNULER|CROIX]") << QObject::tr("[CHANGER|CARRE]")
-				<< QObject::tr("[ASSISTER|SELECT]") << QString("[???]")
-				<< QString("[???]") << QObject::tr("[DEMARRER|START]")
-				<< QObject::tr("[HAUT]") << QObject::tr("[DROITE]")
-				<< QObject::tr("[BAS]") << QObject::tr("[GAUCHE]");
+				<< QObject::tr("[CAMERA|L2]") << QObject::tr("[TARGET|R2]")
+				<< QObject::tr("[PAGE UP|L1]") << QObject::tr("[PAGE DOWN|R1]")
+				<< QObject::tr("[MENU|TRIANGLE]") << QObject::tr("[OK|CIRCLE]")
+				<< QObject::tr("[CANCEL|CROSS]") << QObject::tr("[SWITCH|SQUARE]")
+				<< QObject::tr("[ASSIST|SELECT]") << QString("[???]")
+				<< QString("[???]") << QObject::tr("[START]")
+				<< QObject::tr("[UP]") << QObject::tr("[RIGHT]")
+				<< QObject::tr("[DOWN]") << QObject::tr("[LEFT]");
 	}
 
 	if(movie_names_cd1.isEmpty()) {

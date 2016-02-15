@@ -20,16 +20,16 @@
 ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QString &path, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
 {
-	setWindowTitle(tr("Importer"));
+	setWindowTitle(tr("Import"));
 
-	QGroupBox *group = new QGroupBox(tr("Importer"));
-	scripts = new QCheckBox(tr("Scripts/Textes"));
-	akaos = new QCheckBox(tr("Musiques/Tutoriels"));
-	ca = new QCheckBox(tr("Caméra"));
+	QGroupBox *group = new QGroupBox(tr("Import"));
+	scripts = new QCheckBox(tr("Scripts/Texts"));
+	akaos = new QCheckBox(tr("Sounds/Tutorials"));
+	ca = new QCheckBox(tr("Camera"));
 	id = new QCheckBox(tr("Walkmesh"));
-	encounter = new QCheckBox(tr("Combats aléatoires"));
-	inf = new QCheckBox(tr("Déclencheurs/Liens entre les écrans"));
-	model = new QCheckBox(tr("Liste des modèles 3D"));
+	encounter = new QCheckBox(tr("Encounters"));
+	inf = new QCheckBox(tr("Triggers/gateways"));
+	model = new QCheckBox(tr("Model loader"));
 	mim = new QCheckBox(tr("Background"));
 
 	model->setEnabled(sourceSameTypeAsTarget);
@@ -50,11 +50,11 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 	}
 
 	pathEdit = new QLineEdit;
-	QPushButton *changePathButton = new QPushButton(tr("Changer"));
+	QPushButton *changePathButton = new QPushButton(tr("Change"));
 
 	pathWidget = new QWidget;
 	QHBoxLayout *layoutPath = new QHBoxLayout(pathWidget);
-	layoutPath->addWidget(new QLabel(tr("Fichier MIM :")));
+	layoutPath->addWidget(new QLabel(tr("MIM file:")));
 	layoutPath->addWidget(pathEdit);
 	layoutPath->addWidget(changePathButton);
 	layoutPath->setContentsMargins(QMargins());
@@ -116,7 +116,7 @@ QString ImportDialog::additionalPath() const
 
 void ImportDialog::setAdditionalPathByUser()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Sélectionner le fichier MIM associé"), pathEdit->text(), tr("Fichier MIM (*.MIM);;Tous les fichiers (*)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Select the associated MIM file"), pathEdit->text(), tr("MIM File (*.MIM);;All Files(*)"));
 	if(path.isNull()) {
 		return;
 	}

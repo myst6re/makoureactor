@@ -25,14 +25,14 @@ TextManager::TextManager(QWidget *parent) :
 	QDialog(parent, Qt::Tool), scriptsAndTexts(0)
 {
 	qreal scale = qApp->desktop()->logicalDpiX()/96;
-	setWindowTitle(tr("Textes"));
+	setWindowTitle(tr("Texts"));
 
-	dispUnusedText = new QCheckBox(tr("Afficher les textes non utilisés"), this);
+	dispUnusedText = new QCheckBox(tr("Show unused texts"), this);
 	dispUnusedText->setChecked(Config::value("dispUnusedText", true).toBool());
 
 	ListWidget *listWidget = new ListWidget(this);
-	listWidget->addAction(ListWidget::Add, tr("Ajouter texte"), this, SLOT(addText()));
-	listWidget->addAction(ListWidget::Rem, tr("Supprimer texte"), this, SLOT(delText()));
+	listWidget->addAction(ListWidget::Add, tr("Add text"), this, SLOT(addText()));
+	listWidget->addAction(ListWidget::Rem, tr("Remove text"), this, SLOT(delText()));
 	liste1 = listWidget->listWidget();
 
 	QAction *action;
@@ -57,39 +57,39 @@ TextManager::TextManager(QWidget *parent) :
 	action = toolBar->addAction(QIcon(":/images/icon-char-8.png"), Data::char_names.at(8));
 	action->setData("{CID}");
 	toolBar->addSeparator();
-	action = toolBar->addAction(QIcon(":/images/icon-member_1.png"), tr("Membre 1"));
+	action = toolBar->addAction(QIcon(":/images/icon-member_1.png"), tr("Member 1"));
 	action->setData("{MEMBER 1}");
-	action = toolBar->addAction(QIcon(":/images/icon-member_2.png"), tr("Membre 2"));
+	action = toolBar->addAction(QIcon(":/images/icon-member_2.png"), tr("Member 2"));
 	action->setData("{MEMBER 2}");
-	action = toolBar->addAction(QIcon(":/images/icon-member_3.png"), tr("Membre 3"));
+	action = toolBar->addAction(QIcon(":/images/icon-member_3.png"), tr("Member 3"));
 	action->setData("{MEMBER 3}");
 	toolBar->addSeparator();
-	action = toolBar->addAction(tr("Nouvelle page"));
+	action = toolBar->addAction(tr("New Page"));
 	action->setData("\n{NEW PAGE}\n");
-	action = toolBar->addAction(tr("Choix"));
+	action = toolBar->addAction(tr("Choice"));
 	action->setData("\n{CHOICE}\n");
 
 	toolBar2 = new QToolBar(this);
 	toolBar2->setIconSize(QSize(16*scale, 16*scale));
-	action = toolBar2->addAction(QIcon(":/images/icon-grey.png"), tr("Gris"));
+	action = toolBar2->addAction(QIcon(":/images/icon-grey.png"), tr("Grey"));
 	action->setData("{GREY}");
-	action = toolBar2->addAction(QIcon(":/images/icon-blue.png"), tr("Bleu"));
+	action = toolBar2->addAction(QIcon(":/images/icon-blue.png"), tr("Blue"));
 	action->setData("{BLUE}");
-	action = toolBar2->addAction(QIcon(":/images/icon-red.png"), tr("Rouge"));
+	action = toolBar2->addAction(QIcon(":/images/icon-red.png"), tr("Red"));
 	action->setData("{RED}");
-	action = toolBar2->addAction(QIcon(":/images/icon-purple.png"), tr("Violet"));
+	action = toolBar2->addAction(QIcon(":/images/icon-purple.png"), tr("Purple"));
 	action->setData("{PURPLE}");
-	action = toolBar2->addAction(QIcon(":/images/icon-green.png"), tr("Vert"));
+	action = toolBar2->addAction(QIcon(":/images/icon-green.png"), tr("Green"));
 	action->setData("{GREEN}");
 	action = toolBar2->addAction(QIcon(":/images/icon-cyan.png"), tr("Cyan"));
 	action->setData("{CYAN}");
-	action = toolBar2->addAction(QIcon(":/images/icon-yellow.png"), tr("Jaune"));
+	action = toolBar2->addAction(QIcon(":/images/icon-yellow.png"), tr("Yellow"));
 	action->setData("{YELLOW}");
-	action = toolBar2->addAction(QIcon(":/images/icon-white.png"), tr("Blanc"));
+	action = toolBar2->addAction(QIcon(":/images/icon-white.png"), tr("White"));
 	action->setData("{WHITE}");
-	action = toolBar2->addAction(QIcon(":/images/icon-blink.png"), tr("Clignotant"));
+	action = toolBar2->addAction(QIcon(":/images/icon-blink.png"), tr("Blink"));
 	action->setData("{BLINK}");
-	action = toolBar2->addAction(QIcon(":/images/icon-multicolour.png"), tr("Multicolore"));
+	action = toolBar2->addAction(QIcon(":/images/icon-multicolour.png"), tr("Multicolor"));
 	action->setData("{MULTICOLOUR}");
 	toolBar2->addSeparator();
 
@@ -124,7 +124,7 @@ TextManager::TextManager(QWidget *parent) :
 	action->setData("{VARDEC}");
 	action = menuVars->addAction(tr("Var16"));
 	action->setData("{VARHEX}");
-	action = menuVars->addAction(tr("Var10d"));
+	action = menuVars->addAction(tr("Var10r"));
 	action->setData("{VARDECR}");
 	action = toolBar2->addAction(tr("Vars"));
 	action->setData("{VARDEC}");
@@ -132,28 +132,28 @@ TextManager::TextManager(QWidget *parent) :
 	toolBar2->addSeparator();
 
 	menuKeys = new QMenu(this);
-	action = menuKeys->addAction(tr("Cercle"));
+	action = menuKeys->addAction(tr("Circle"));
 	action->setData("{CIRCLE}");
 	action = menuKeys->addAction(tr("Triangle"));
 	action->setData("{TRIANGLE}");
-	action = menuKeys->addAction(tr("Carré"));
+	action = menuKeys->addAction(tr("Square"));
 	action->setData("{SQUARE}");
-	action = menuKeys->addAction(tr("Croix"));
+	action = menuKeys->addAction(tr("Cross"));
 	action->setData("{CROSS}");
-	action = toolBar2->addAction(tr("Touches"));
+	action = toolBar2->addAction(tr("Keys"));
 	action->setMenu(menuKeys);
 	toolBar2->addSeparator();
 
 	menu2 = new QMenu(this);
 	action = menu2->addAction(tr("Scrolling"));
 	action->setData("{SCROLLING}");
-	action = menu2->addAction(tr("Caractères espacés"));
+	action = menu2->addAction(tr("Spaced characters"));
 	action->setData("{SPACED CHARACTERS}");
-	action = menu2->addAction(tr("Accès mémoire"));
+	action = menu2->addAction(tr("Memory access"));
 	action->setData("{MEMORY:var[1][0];size=1}");
-	action = menu2->addAction(tr("Nouvelle page²"));
+	action = menu2->addAction(tr("New Page²"));
 	action->setData("{NEW PAGE 2}");
-	action = toolBar2->addAction(tr("Autres"));
+	action = toolBar2->addAction(tr("Others"));
 	action->setMenu(menu2);
 
 	textEdit = new QPlainTextEdit(this);
@@ -346,7 +346,7 @@ void TextManager::showList()
 	{
 		if(!show && !usedTexts.contains(i))	continue;
 
-		QListWidgetItem *item = new QListWidgetItem(tr("Texte %1").arg(i));
+		QListWidgetItem *item = new QListWidgetItem(tr("Text %1").arg(i));
 		item->setData(Qt::UserRole, i);
 		liste1->addItem(item);
 		if(!usedTexts.contains(i)) {
@@ -429,7 +429,7 @@ void TextManager::delText()
 	if(!item) return;
 	int row=item->data(Qt::UserRole).toInt();
 	if(usedTexts.contains(row)) {
-		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Texte utilisé dans les script"), tr("Ce texte est utilisé par un ou plusieurs scripts de cet écran.\nLe supprimer remplacera les appels à ce texte par des appels au texte qui suit.\nÊtes-vous sûr de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Text used in scripts"), tr("This text is used by one or more scripts on this field..\nRemove will replace calls to this text with calls to the text that follows.\nAre you sure you want to continue?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if(rep == QMessageBox::Cancel) {
 			return;
 		}

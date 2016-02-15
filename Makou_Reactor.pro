@@ -282,7 +282,7 @@ SOURCES += \
     widgets/ScriptManager.cpp \
     widgets/FieldList.cpp
 
-TRANSLATIONS += Makou_Reactor_en.ts \
+TRANSLATIONS += Makou_Reactor_fr.ts  \
     Makou_Reactor_ja.ts
 
 CODECFORTR = UTF-8

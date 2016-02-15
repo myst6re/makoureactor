@@ -20,15 +20,15 @@
 EncounterWidget::EncounterWidget(EncounterFile *data, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), data(data)
 {
-	setWindowTitle(tr("Rencontres aléatoires"));
+	setWindowTitle(tr("Encounters"));
 
-	group1 = new EncounterTableWidget(tr("Rencontres 1"), this);
-	group2 = new EncounterTableWidget(tr("Rencontres 2"), this);
+	group1 = new EncounterTableWidget(tr("Encounters 1"), this);
+	group2 = new EncounterTableWidget(tr("Encounters 2"), this);
 
 	QLabel *helpIcon = new QLabel(this);
 	helpIcon->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation).pixmap(32));
-	QLabel *help = new QLabel(tr("<b>Les rencontres :</b> Il y a deux groupes de rencontres aléatoires indépendants, par défaut c'est le groupe 1 qui est actif, mais la commande BTLTB (dans les scripts) permet de passer au groupe 2.<br/>"
-								 "<b>Fréquence des combats :</b> Plus la valeur est basse, plus les combats seront fréquents."), this);
+	QLabel *help = new QLabel(tr("<b>Encounters:</b> There are two groups of independent encounters, by default it is the group 1 that is active, but the opcode BTLTB (in scripts) can modify to the group 2.<br/>"
+								 "<b>Battle Rate:</b> The lower the percentage, the higher the fighting will be frequent."), this);
 	help->setTextFormat(Qt::RichText);
 	help->setWordWrap(true);
 	QHBoxLayout *helpLayout = new QHBoxLayout;

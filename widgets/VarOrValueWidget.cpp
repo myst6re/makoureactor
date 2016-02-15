@@ -21,7 +21,7 @@ VarOrValueWidget::VarOrValueWidget(QWidget *parent) :
 	QWidget(parent), _longValueType(true), _signedValueType(true)
 {
 	typeSelect = new QComboBox(this);
-	typeSelect->addItem(tr("Valeur"));
+	typeSelect->addItem(tr("Value"));
 	typeSelect->addItem(tr("Variable"));
 
 	_value = new QSpinBox(this);

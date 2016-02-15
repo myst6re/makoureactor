@@ -112,8 +112,8 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		for(int i=100 ; i<254 ; i++)
 			comboBox->addItem(Data::char_names.last());
 
-		comboBox->addItem(tr("(Vide)"));
-		comboBox->addItem(tr("(Vide)"));
+		comboBox->addItem(tr("(Empty)"));
+		comboBox->addItem(tr("(Empty)"));
 		return comboBox;
 	}
 	else if(type == text_id && _field->scriptsAndTexts()->textCount() > 0)
@@ -214,7 +214,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		editor->setMinimum(index.data(Qt::UserRole).toInt());
 		editor->setMaximum(index.data(Qt::UserRole+1).toInt());
 		QColor color = qRgb(value & 0xFF, (value >> 8) & 0xFF, value >> 16);
-		color = QColorDialog::getColor(color, parent, tr("Choisir une nouvelle couleur"));
+		color = QColorDialog::getColor(color, parent, tr("Choose a new color"));
 		if(color.isValid()) {
 			QRgb rgb = color.rgb();
 			editor->setValue((qBlue(rgb) << 16) | (qGreen(rgb) << 8) | qRed(rgb));

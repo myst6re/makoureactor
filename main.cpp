@@ -43,11 +43,11 @@ int main(int argc, char *argv[])
 		app.installTranslator(&translator2);
 		Config::setValue("lang", lang);
 	} else {
-		Config::setValue("lang", "fr");
+		Config::setValue("lang", "en");
 	}
 
 	if(!Var::load()) {
-		QMessageBox::warning(0, QObject::tr("Erreur"), QObject::tr("Le fichier 'var.cfg' n'a pas pu être chargé.\nVérifiez que ce fichier est valide ou supprimez-le."));
+		QMessageBox::warning(0, QObject::tr("Error"), QObject::tr("The file 'var.cfg' could not be loaded.\nMake sure it is valid or delete it."));
 	}
 	if(!Data::load()) {
 		qWarning() << "Error loading data!";

@@ -22,8 +22,7 @@
 AnimEditorDialog::AnimEditorDialog(int animID, const QGLWidget *shareWidget, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
 {
-	setWindowTitle(tr("Sélection d'une animation"));
-
+	setWindowTitle(tr("Animation Selector"));
 	QWidget *modelWidget;
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel(0, shareWidget);
