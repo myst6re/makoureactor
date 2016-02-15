@@ -6653,11 +6653,10 @@ poursuite à la fin.</translation>
         <translation>Autres</translation>
     </message>
     <message>
-        <location filename="widgets/TextManager.cpp" line="432"/>
         <source>This text is used by one or more scripts on this field..
 Remove will replace calls to this text with calls to the text that follows.
 Are you sure you want to continue?</source>
-        <translation>Ce texte est utilisé par un ou plusieurs scripts de cet écran.
+        <translation type="vanished">Ce texte est utilisé par un ou plusieurs scripts de cet écran.
 Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
 Êtes-vous sûr de vouloir continuer ?</translation>
     </message>
@@ -6701,6 +6700,15 @@ Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
         <source>Text used in scripts</source>
         <oldsource>Texte utilisé dans les script</oldsource>
         <translation>Texte utilisé dans les script</translation>
+    </message>
+    <message>
+        <location filename="widgets/TextManager.cpp" line="432"/>
+        <source>This text is used by one or more scripts on this field.
+Removing this text may break scripts that reference it.
+Are you sure you want to continue?</source>
+        <translation>Ce texte est utilisé par un ou plusieurs scripts de cet écran.
+Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
+Êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
         <location filename="widgets/TextManager.cpp" line="463"/>
@@ -7764,7 +7772,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     <message>
         <location filename="Window.cpp" line="835"/>
         <source>Compilation Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur de compilation</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="851"/>
@@ -7825,7 +7833,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     <message>
         <location filename="Window.cpp" line="1129"/>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Attention</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="1129"/>
