@@ -1017,7 +1017,7 @@ void Window::exporter()
 		index = path.lastIndexOf('/');
 		Config::setValue("exportPath", index == -1 ? path : path.left(index));
 		break;
-	case 1:	out = tr("lgp archive is inaccessible");break;
+	case 1:	out = tr("Lgp archive is inaccessible");break;
 	case 2:	out = tr("Error reopening file");break;
 	case 3:	out = tr("Unable to create the new file");break;
 	case 4:	out = tr("Not yet implemented!");break;
@@ -1436,7 +1436,7 @@ void Window::about()
 
 	font.setPointSize(8);
 
-	QLabel desc2(tr("By myst6re<br/><a href=\"https://github.com/myst6re/makoureactor/\">github.com/myst6re/makoureactor</a><br/><br/>Thanks to :<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), &about);
+	QLabel desc2(tr("By myst6re<br/><a href=\"https://github.com/myst6re/makoureactor/\">github.com/myst6re/makoureactor</a><br/><br/>Thanks to:<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), &about);
 	desc2.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc2.setTextFormat(Qt::RichText);
 	desc2.setOpenExternalLinks(true);

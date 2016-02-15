@@ -7779,7 +7779,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     <message>
         <location filename="Window.cpp" line="869"/>
         <source>Saving...</source>
-        <translation type="unfinished">Sauvegarde...</translation>
+        <translation>Sauvegarde...</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="896"/>
@@ -7862,7 +7862,8 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     </message>
     <message>
         <location filename="Window.cpp" line="1439"/>
-        <source>By myst6re&lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Thanks to :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</source>
+        <source>By myst6re&lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</source>
+        <oldsource>By myst6re&lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Thanks to :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</oldsource>
         <translation>Par myst6re&lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Merci à :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
     <message>
@@ -7889,7 +7890,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <location filename="Window.cpp" line="1150"/>
         <source>Invalid file</source>
         <oldsource>Le fichier est invalide</oldsource>
-        <translation type="unfinished">Fichier invalide</translation>
+        <translation>Fichier invalide</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="557"/>
@@ -7901,7 +7902,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <location filename="Window.cpp" line="1180"/>
         <source>Error</source>
         <oldsource>Erreur</oldsource>
-        <translation type="unfinished">Erreur</translation>
+        <translation>Erreur</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="755"/>
@@ -7914,7 +7915,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <location filename="Window.cpp" line="856"/>
         <source>Lgp File (*.lgp)</source>
         <oldsource>Fichier Lgp (*.lgp)</oldsource>
-        <translation type="unfinished">Fichier Lgp (*.lgp)</translation>
+        <translation>Fichier Lgp (*.lgp)</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="860"/>
@@ -7950,8 +7951,8 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     </message>
     <message>
         <location filename="Window.cpp" line="1020"/>
-        <source>lgp archive is inaccessible</source>
-        <oldsource>L&apos;archive Lgp est inaccessible</oldsource>
+        <source>Lgp archive is inaccessible</source>
+        <oldsource>lgp archive is inaccessible</oldsource>
         <translation>L&apos;archive Lgp est inaccessible</translation>
     </message>
     <message>
