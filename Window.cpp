@@ -202,7 +202,7 @@ Window::Window() :
 
 	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
-	connect(_tabBar, SIGNAL(currentChanged(int)), _stackedLayout, SLOT(setCurrentIndex(int)));
+	connect(_tabBar, SIGNAL(currentChanged(int)), SLOT(setCurrentPage(int)));
 	connect(searchDialog, SIGNAL(found(int,int,int,int)), SLOT(gotoOpcode(int,int,int,int)));
 	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
 	connect(_scriptManager, SIGNAL(groupScriptCurrentChanged(int)), SLOT(showModel(int)));
@@ -1221,14 +1221,17 @@ void Window::runFF7()
 
 void Window::setCurrentPage(int index)
 {
-	//qDebug() << QString("MainWindow::setCurrentPage(%1)").arg(index);
+	// FIXME
+	if(index == 1) {
+		textManager();
+	}
 
+	_stackedLayout->setCurrentIndex(index);
 	_tabBar->blockSignals(true);
 	if(_tabBar->currentIndex() != index) {
 		_tabBar->setCurrentIndex(index);
 	}
 	_tabBar->blockSignals(false);
-
 }
 
 void Window::searchManager()
