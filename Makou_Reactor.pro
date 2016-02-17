@@ -146,7 +146,8 @@ HEADERS += \
     core/field/FieldModelTextureRefPC.h \
     core/field/FieldModelTextureRefPS.h \
     widgets/ScriptManager.h \
-    widgets/FieldList.h
+    widgets/FieldList.h \
+    widgets/DetachableStackedLayout.h
 
 SOURCES += \
     Window.cpp \
@@ -280,7 +281,8 @@ SOURCES += \
     core/field/FieldModelTextureRefPC.cpp \
     core/field/FieldModelTextureRefPS.cpp \
     widgets/ScriptManager.cpp \
-    widgets/FieldList.cpp
+    widgets/FieldList.cpp \
+    widgets/DetachableStackedLayout.cpp
 
 TRANSLATIONS += Makou_Reactor_fr.ts  \
     Makou_Reactor_ja.ts
