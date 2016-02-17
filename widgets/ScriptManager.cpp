@@ -2,7 +2,7 @@
 #include "core/Config.h"
 
 ScriptManager::ScriptManager(QWidget *parent) :
-    QWidget(parent), _field(0)
+    QDialog(parent), _field(0)
 {
 	QFont font;
 	font.setPointSize(8);

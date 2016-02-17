@@ -20,6 +20,7 @@
 
 #include <QtWidgets>
 #include "core/field/FieldArchive.h"
+#include "widgets/DetachableStackedLayout.h"
 #include "widgets/FieldList.h"
 #include "widgets/ScriptManager.h"
 #include "widgets/VarManager.h"
@@ -81,6 +82,7 @@ public slots:
 	void importer();
 	void varManager();
 	void runFF7();
+	void setCurrentPage(int index);
 	void textManager(int textID=-1, int from=0, int size=0, bool activate=true);
 	void modelManager();
 	void encounterManager();
@@ -93,6 +95,8 @@ public slots:
 	void miscOperations();
 	void fontManager();
 	void about();
+	void detachCurrentView();
+	void dialogClosed();
 private slots:
 	void openField(bool reload=false);
 	void showModel(int grpScriptID);
@@ -128,6 +132,9 @@ private:
 	QAction *actionMisc, *actionMiscOperations, *actionJp_txt;
 	QMenu *menuLang;
 
+	QMdiArea *_mdiArea;
+	QTabBar *_tabBar;
+	DetachableStackedLayout *_stackedLayout;
 	ScriptManager *_scriptManager;
 	TextManager *_textDialog;
 	ModelManager *_modelManager;
@@ -139,6 +146,8 @@ private:
 	QProgressDialog *_progressDialog;
 	QAction *authorAction;
 	QLabel *authorLbl;
+
+	QList<QDockWidget *> _dockWidgets;
 
 //	FieldModelThread *modelThread;
 protected:

@@ -155,14 +155,38 @@ Window::Window() :
 		zonePreview->addWidget(fieldModel);
 	}
 
+	_tabBar = new QTabBar();
+	_tabBar->addTab(tr("Scripts"));
+	_tabBar->addTab(tr("Textes"));
+	_tabBar->setDrawBase(false);
+
+	_stackedLayout = new DetachableStackedLayout();
+
 	_scriptManager = new ScriptManager(this);
+	_scriptManager->setWindowFlags(Qt::Widget);
+	_stackedLayout->addWidget(_scriptManager);
+	connect(_scriptManager, SIGNAL(finished(int)), SLOT(dialogClosed()));
+
+	QPushButton *_toggle = new QPushButton(tr("toggle"), this);
+	connect(_toggle, SIGNAL(released()), SLOT(detachCurrentView()));
+
+	connect(_tabBar, SIGNAL(currentChanged(int)), _stackedLayout, SLOT(setCurrentIndex(int)));
+
+	QWidget *tabBarWidget = new QWidget();
+	QHBoxLayout *tabBarLayout = new QHBoxLayout(tabBarWidget);
+	tabBarLayout->addStretch();
+	tabBarLayout->addWidget(_tabBar);
+	tabBarLayout->addWidget(_toggle);
+	tabBarLayout->setContentsMargins(QMargins());
+	toolBar->addSeparator();
+	toolBar->addWidget(tabBarWidget);
 
 	QWidget *widget = new QWidget(this);
 	QGridLayout *gridLayout = new QGridLayout(widget);
 	gridLayout->addWidget(fieldList, 0, 0);
 	gridLayout->addWidget(fieldList->lineSearch(), 1, 0);
 	gridLayout->addWidget(zonePreview, 2, 0);
-	gridLayout->addWidget(_scriptManager, 0, 1, 3, 1);
+	gridLayout->addLayout(_stackedLayout, 0, 1, 3, 1);
 	gridLayout->setColumnStretch(0, 2);
 	gridLayout->setColumnStretch(1, 10);
 	gridLayout->setRowStretch(0, 3);
@@ -178,6 +202,7 @@ Window::Window() :
 
 	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
+	connect(_tabBar, SIGNAL(currentChanged(int)), _stackedLayout, SLOT(setCurrentIndex(int)));
 	connect(searchDialog, SIGNAL(found(int,int,int,int)), SLOT(gotoOpcode(int,int,int,int)));
 	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
 	connect(_scriptManager, SIGNAL(groupScriptCurrentChanged(int)), SLOT(showModel(int)));
@@ -197,6 +222,18 @@ Window::~Window()
 	Config::flush();
 	if(fieldArchive) {
 		fieldArchive->close();
+	}
+}
+
+void Window::detachCurrentView()
+{
+	_stackedLayout->detachCurrentWidget();
+}
+
+void Window::dialogClosed()
+{
+	if(sender()) {
+		_stackedLayout->attachWidget((QWidget *)sender());
 	}
 }
 
@@ -1182,6 +1219,18 @@ void Window::runFF7()
 	}
 }
 
+void Window::setCurrentPage(int index)
+{
+	//qDebug() << QString("MainWindow::setCurrentPage(%1)").arg(index);
+
+	_tabBar->blockSignals(true);
+	if(_tabBar->currentIndex() != index) {
+		_tabBar->setCurrentIndex(index);
+	}
+	_tabBar->blockSignals(false);
+
+}
+
 void Window::searchManager()
 {
 	if(_textDialog && _textDialog->isVisible()) {
@@ -1202,6 +1251,9 @@ void Window::textManager(int textID, int from, int size, bool activate)
 {
 	if(!_textDialog) {
 		_textDialog = new TextManager(this);
+		_textDialog->setWindowFlags(Qt::Widget);
+		_stackedLayout->addWidget(_textDialog);
+		connect(_textDialog, SIGNAL(finished(int)), SLOT(dialogClosed()));
 		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
 	}
 

@@ -6,7 +6,7 @@
 #include "widgets/ScriptList.h"
 #include "widgets/OpcodeList.h"
 
-class ScriptManager : public QWidget
+class ScriptManager : public QDialog
 {
 	Q_OBJECT
 public:
