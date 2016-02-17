@@ -662,7 +662,7 @@ QString ScriptEditorGenericList::paramName(int type)
 	case priorite:			return tr("Priority");
 	case bit: 				return tr("Flag");
 	case jump: 				return tr("Jump (short)");
-	case jump_l: 			return tr("Jumb (long)");
+	case jump_l: 			return tr("Jump (long)");
 	case operateur: 		return tr("Operator");
 	case boolean: 			return tr("Boolean");
 	case layer_id: 			return tr("Layer");

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR">
+<TS version="2.0" language="fr_FR">
 <context>
     <name>AnimEditorDialog</name>
     <message>
@@ -5649,7 +5649,8 @@ id=%2
     </message>
     <message>
         <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="665"/>
-        <source>Jumb (long)</source>
+        <source>Jump (long)</source>
+        <oldsource>Jumb (long)</oldsource>
         <translation>Saut long</translation>
     </message>
     <message>
@@ -6656,7 +6657,7 @@ poursuite à la fin.</translation>
         <source>This text is used by one or more scripts on this field..
 Remove will replace calls to this text with calls to the text that follows.
 Are you sure you want to continue?</source>
-        <translation type="vanished">Ce texte est utilisé par un ou plusieurs scripts de cet écran.
+        <translation>Ce texte est utilisé par un ou plusieurs scripts de cet écran.
 Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
 Êtes-vous sûr de vouloir continuer ?</translation>
     </message>
