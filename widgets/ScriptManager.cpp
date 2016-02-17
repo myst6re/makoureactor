@@ -161,7 +161,7 @@ void ScriptManager::compile()
 	QString errorStr;
 
 	if(!currentScript->compile(opcodeID, errorStr)) {
-		_compileScriptLabel->setText(tr("Erreur ligne %1 : %2")
+		_compileScriptLabel->setText(tr("Error on line %1 : %2")
 		                             .arg(opcodeID + 1)
 		                             .arg(errorStr));
 		_compileScriptLabel->show();

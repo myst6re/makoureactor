@@ -21,7 +21,7 @@
 FontManager::FontManager(QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
 {
-	setWindowTitle(tr("Gestionnaire de polices de caractères"));
+	setWindowTitle(tr("Font Manager"));
 
 	fontWidget = new FontWidget(this);
 	fontWidget->setWindowBinFile(&Data::windowBin);

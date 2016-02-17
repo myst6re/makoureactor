@@ -23,15 +23,15 @@
 TutWidget::TutWidget(QWidget *parent) :
 	QDialog(parent, Qt::Tool), copied(false)
 {
-	setWindowTitle(tr("Tutoriels/Musiques"));
+	setWindowTitle(tr("Tutorials/Sounds"));
 
 	ListWidget *_list = new ListWidget(this);
-	_list->addAction(ListWidget::Add, tr("Ajouter"), this, SLOT(add()));
-	_list->addAction(ListWidget::Rem, tr("Supprimer"), this, SLOT(del()));
+	_list->addAction(ListWidget::Add, tr("Add"), this, SLOT(add()));
+	_list->addAction(ListWidget::Rem, tr("Remove"), this, SLOT(del()));
 //	_list->addSeparator(true);
-//	_list->addAction(ListWidget::Cut, tr("Couper"), this, SLOT(cutCurrent()), true);
-//	_list->addAction(ListWidget::Copy, tr("Copier"), this, SLOT(copyCurrent()), true);
-//	_list->addAction(ListWidget::Paste, tr("Coller"), this, SLOT(pasteOnCurrent()), true);
+//	_list->addAction(ListWidget::Cut, tr("Cut"), this, SLOT(cutCurrent()), true);
+//	_list->addAction(ListWidget::Copy, tr("Copy"), this, SLOT(copyCurrent()), true);
+//	_list->addAction(ListWidget::Paste, tr("Paste"), this, SLOT(pasteOnCurrent()), true);
 	list = _list->listWidget();
 //	list->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
@@ -40,8 +40,8 @@ TutWidget::TutWidget(QWidget *parent) :
 	stackedWidget->addWidget(buildSoundPage());
 	stackedWidget->setCurrentIndex(0);
 
-	exportButton = new QPushButton(tr("Exporter..."));
-	importButton = new QPushButton(tr("Importer..."));
+	exportButton = new QPushButton(tr("Export..."));
+	importButton = new QPushButton(tr("Import..."));
 	exportButton->setEnabled(false);
 	importButton->setEnabled(false);
 
@@ -139,7 +139,7 @@ QWidget *TutWidget::buildSoundPage()
 	akaoDesc->hide();
 
 	QGridLayout *layout = new QGridLayout(ret);
-	layout->addWidget(new QLabel(tr("ID musique :")), 0, 0);
+	layout->addWidget(new QLabel(tr("Music ID:")), 0, 0);
 	layout->addWidget(akaoIDList, 0, 1);
 	layout->addWidget(akaoDesc, 1, 0, 1, 2);
 	layout->setRowStretch(2, 1);
@@ -188,7 +188,7 @@ QListWidgetItem *TutWidget::createListItem(int id) const
 {
 	return new QListWidgetItem((currentTut->isTut(id)
 								? tr("Tuto %1")
-								: tr("Musique %1"))
+								: tr("Music %1"))
 							   .arg(id));
 }
 
@@ -290,8 +290,8 @@ void TutWidget::add()
 	bool addTut = true;
 	if(currentTut == tut) {
 		QDialog chooseType(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-		QRadioButton *tutType = new QRadioButton(tr("Tutoriel"), &chooseType);
-		QRadioButton *akaoType = new QRadioButton(tr("Musique"), &chooseType);
+		QRadioButton *tutType = new QRadioButton(tr("Tutorial"), &chooseType);
+		QRadioButton *akaoType = new QRadioButton(tr("Music"), &chooseType);
 		tutType->setChecked(true);
 		QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &chooseType);
 		QGridLayout *chooseLayout = new QGridLayout(&chooseType);
@@ -308,14 +308,14 @@ void TutWidget::add()
 
 		if(!addTut) {
 			akaoPath = QDir::fromNativeSeparators(QDir::cleanPath(Config::value("akaoImportExportPath").toString()));
-			akaoPath = QFileDialog::getOpenFileName(this, tr("Importer"), akaoPath + "/" + tr("son_%1.akao").arg(row), tr("Son Final Fantasy (*.akao)"));
+			akaoPath = QFileDialog::getOpenFileName(this, tr("Import"), akaoPath + "/" + tr("sound_%1.akao").arg(row), tr("Final Fantasy Sound (*.akao)"));
 			if(akaoPath.isNull())	return;
 			Config::setValue("akaoImportExportPath", akaoPath.left(akaoPath.lastIndexOf('/')));
 		}
 	}
 
 	if(addTut && row < currentTut->size() && currentTut == tutPC) {
-		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutoriel utilisé dans les script"), tr("Insérer un tutoriel ici va décaler les identifiants des tutoriels qui suit, cela risque de poser problème.\nÊtes-vous sûr de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutorial used in scripts"), tr("Insert a tutorial here will shift the IDs of the tutorials that follows, this may be a problem.\nAre you sure you want to continue?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if(rep == QMessageBox::Cancel) 	return;
 	}
 
@@ -342,7 +342,7 @@ void TutWidget::del()
 	}
 
 	if((tutPC == NULL || currentTut == tutPC) && usedTuts.contains(row)) {
-		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutoriel utilisé dans les script"), currentTut == tutPC ? tr("Ce tutoriel est peut-être utilisé par un ou plusieurs scripts de cet écran.\nLe supprimer peut provoquer des erreurs.\nÊtes-vous sûr de vouloir continuer ?") : tr("Ce tutoriel est utilisé par un ou plusieurs scripts de cet écran.\nLe supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui suit.\nÊtes-vous sûr de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutorial used in scripts"), currentTut == tutPC ? tr("This tutorial may be used by one or more scripts on this field.\nDelete can cause errors.\nAre you sure you want to continue?") : tr("This tutorial is used by one or more scripts on this field.\nRemove will replace calls to this tutorial with calls to the tutorial that follows.\nAre you sure you want to continue?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if(rep == QMessageBox::Cancel) 	return;
 	}
 
@@ -452,11 +452,11 @@ void TutWidget::exportation()
 		filename = tr("tuto_%1.tutps").arg(row);
 		filter = tr("Tuto Final Fantasy VII PS (*.tutps)");
 	} else {
-		filename = tr("son_%1.akao").arg(row);
-		filter = tr("Son Final Fantasy (*.akao)");
+		filename = tr("sound_%1.akao").arg(row);
+		filter = tr("Final Fantasy Sound (*.akao)");
 	}
 
-	path = QFileDialog::getSaveFileName(this, tr("Exporter"), path + "/" + filename, filter);
+	path = QFileDialog::getSaveFileName(this, tr("Export"), path + "/" + filename, filter);
 
 	if(path.isNull()) {
 		return;
@@ -466,7 +466,7 @@ void TutWidget::exportation()
 
 	QFile akao(path);
 	if(!akao.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Erreur d'ouverture du fichier"));
+		QMessageBox::warning(this, tr("Error"), tr("Opening error file"));
 		return;
 	}
 
@@ -490,11 +490,11 @@ void TutWidget::importation()
 		filename = tr("tuto_%1.tutps").arg(row);
 		filter = tr("Tuto Final Fantasy VII PS (*.tutps)");
 	} else {
-		filename = tr("son_%1.akao").arg(row);
-		filter = tr("Son Final Fantasy (*.akao)");
+		filename = tr("sound_%1.akao").arg(row);
+		filter = tr("Final Fantasy Sound (*.akao)");
 	}
 
-	path = QFileDialog::getOpenFileName(this, tr("Importer"), path + "/" + filename, filter);
+	path = QFileDialog::getOpenFileName(this, tr("Import"), path + "/" + filename, filter);
 
 	if(path.isNull()) {
 		return;
@@ -504,12 +504,12 @@ void TutWidget::importation()
 
 	QFile akao(path);
 	if(!akao.open(QIODevice::ReadOnly)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Erreur d'ouverture du fichier"));
+		QMessageBox::warning(this, tr("Error"), tr("Opening Error File"));
 		return;
 	}
 
 	if(akao.size() > 1000000) { // FIXME: remove fixed limitation
-		QMessageBox::warning(this, tr("Erreur"), tr("Fichier trop gros"));
+		QMessageBox::warning(this, tr("Error"), tr("File too large"));
 		return;
 	}
 

@@ -22,14 +22,14 @@
 ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	QDialog(parent, Qt::Tool), _field(0), fieldModelLoader(0)
 {
-	setWindowTitle(tr("Modèles 3D"));
+	setWindowTitle(tr("Field Models"));
 
 	QFont font;
 	font.setPointSize(8);
 
 	models = new QTreeWidget();
 	models->setIndentation(0);
-	models->setHeaderLabel(tr("Modèles 3D"));
+	models->setHeaderLabel(tr("Field Models"));
 	models->setFixedWidth(120);
 	models->setColumnCount(1);
 

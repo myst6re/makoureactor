@@ -40,30 +40,30 @@ void ScriptEditorWindowPage::build()
 	h->setRange(0, 65535);
 
 	previewText = new QComboBox(this);
-	previewText->addItem(tr("[Laisser la fenêtre vide]"));
+	previewText->addItem(tr("[Keep empty window]"));
 	bool jp = Config::value("jp_txt", false).toBool();
 	foreach(const FF7Text &t, field()->scriptsAndTexts()->texts())
 		previewText->addItem(t.text(jp, true).simplified());
 	previewText->setMaximumWidth(textPreview->width()/2);
 
-	hAlign = new QPushButton(tr("Aligner horizontalement"), this);
-	vAlign = new QPushButton(tr("Aligner verticalement"), this);
-	autoSize = new QPushButton(tr("Taille automatique"), this);
+	hAlign = new QPushButton(tr("Align horizontally"), this);
+	vAlign = new QPushButton(tr("Align vertically"), this);
+	autoSize = new QPushButton(tr("Autosize"), this);
 	autoSize->setEnabled(false);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(textPreview, 0, 0, 8, 2);
-	layout->addWidget(new QLabel(tr("Fenêtre ID")), 0, 2);
+	layout->addWidget(new QLabel(tr("Window ID")), 0, 2);
 	layout->addWidget(winID, 0, 3);
 	layout->addWidget(xLabel = new QLabel(tr("X")), 1, 2);
 	layout->addWidget(x, 1, 3);
 	layout->addWidget(yLabel = new QLabel(tr("Y")), 2, 2);
 	layout->addWidget(y, 2, 3);
-	layout->addWidget(wLabel = new QLabel(tr("L")), 3, 2);
+	layout->addWidget(wLabel = new QLabel(tr("W")), 3, 2);
 	layout->addWidget(w, 3, 3);
 	layout->addWidget(hLabel = new QLabel(), 4, 2);
 	layout->addWidget(h, 4, 3);
-	layout->addWidget(new QLabel(tr("Texte en aperçu :")), 8, 0);
+	layout->addWidget(new QLabel(tr("Text in preview:")), 8, 0);
 	layout->addWidget(previewText, 8, 1);
 	layout->addWidget(hAlign, 6, 2, 1, 2);
 	layout->addWidget(vAlign, 7, 2, 1, 2);
@@ -119,7 +119,7 @@ void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 		y->hide();
 		wLabel->hide();
 		w->hide();
-		hLabel->setText(tr("Lignes"));
+		hLabel->setText(tr("Lines"));
 		h->setRange(0, 255);
 		OpcodeWROW *opcodeWROW = (OpcodeWROW *)opcode;
 		FF7Window ff7Win = FF7Window();
@@ -260,20 +260,20 @@ void ScriptEditorWindowModePage::build()
 
 	winType = new QComboBox(this);
 	winType->addItem(tr("Normal"));
-	winType->addItem(tr("Sans bords"));
-	winType->addItem(tr("Transparent"));
+	winType->addItem(tr("Without frame"));
+	winType->addItem(tr("Transparency"));
 
 	winClose = new QComboBox(this);
-	winClose->addItem(tr("Autoriser"));
-	winClose->addItem(tr("Empêcher"));
+	winClose->addItem(tr("Allow"));
+	winClose->addItem(tr("Prevent"));
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(textPreview, 0, 0, 4, 1);
-	layout->addWidget(new QLabel(tr("Fenêtre ID")), 0, 1);
+	layout->addWidget(new QLabel(tr("Window ID")), 0, 1);
 	layout->addWidget(winID, 0, 2);
 	layout->addWidget(new QLabel(tr("Type")), 1, 1);
 	layout->addWidget(winType, 1, 2);
-	layout->addWidget(new QLabel(tr("Fermeture")), 2, 1);
+	layout->addWidget(new QLabel(tr("Closing")), 2, 1);
 	layout->addWidget(winClose, 2, 2);
 	layout->setRowStretch(3, 1);
 	layout->setRowStretch(4, 1);
@@ -343,11 +343,11 @@ void ScriptEditorWindowMovePage::build()
 	y->setRange(-32768, 32767);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Fenêtre ID")), 0, 0);
+	layout->addWidget(new QLabel(tr("Window ID")), 0, 0);
 	layout->addWidget(winID, 0, 1);
-	layout->addWidget(new QLabel(tr("X relatif")), 1, 0);
+	layout->addWidget(new QLabel(tr("Relative X")), 1, 0);
 	layout->addWidget(x, 1, 1);
-	layout->addWidget(new QLabel(tr("Y relatif")), 2, 0);
+	layout->addWidget(new QLabel(tr("Relative Y")), 2, 0);
 	layout->addWidget(y, 2, 1);
 	layout->setRowStretch(3, 1);
 	layout->setColumnStretch(2, 1);

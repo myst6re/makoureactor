@@ -34,49 +34,49 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	setSelectionMode(QAbstractItemView::ExtendedSelection);
 	
-	edit_A = new QAction(tr("Modifier"), this);
+	edit_A = new QAction(tr("Edit"), this);
 	edit_A->setShortcut(QKeySequence(Qt::Key_Return));
 	edit_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	edit_A->setEnabled(false);
-	add_A = new QAction(QIcon(":/images/plus.png"), tr("Ajouter"), this);
+	add_A = new QAction(QIcon(":/images/plus.png"), tr("Add"), this);
 	add_A->setShortcut(QKeySequence("Ctrl++"));
 	add_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
-	del_A = new QAction(QIcon(":/images/minus.png"), tr("Supprimer"), this);
+	del_A = new QAction(QIcon(":/images/minus.png"), tr("Delete"), this);
 	del_A->setShortcut(QKeySequence(Qt::Key_Delete));
 	del_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	del_A->setEnabled(false);
-	cut_A = new QAction(QIcon(":/images/cut.png"), tr("Couper"), this);
+	cut_A = new QAction(QIcon(":/images/cut.png"), tr("Cut"), this);
 	cut_A->setShortcut(QKeySequence("Ctrl+X"));
 	cut_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	cut_A->setEnabled(false);
-	copy_A = new QAction(QIcon(":/images/copy.png"), tr("Copier"), this);
+	copy_A = new QAction(QIcon(":/images/copy.png"), tr("Copy"), this);
 	copy_A->setShortcut(QKeySequence("Ctrl+C"));
 	copy_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	copy_A->setEnabled(false);
-	paste_A = new QAction(QIcon(":/images/paste.png"), tr("Coller"), this);
+	paste_A = new QAction(QIcon(":/images/paste.png"), tr("Paste"), this);
 	paste_A->setShortcut(QKeySequence("Ctrl+V"));
 	paste_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	paste_A->setEnabled(false);
-	up_A = new QAction(QIcon(":/images/up.png"), tr("Déplacer vers le haut"), this);
+	up_A = new QAction(QIcon(":/images/up.png"), tr("Up"), this);
 	up_A->setShortcut(QKeySequence("Shift+Up"));
 	up_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	up_A->setEnabled(false);
-	down_A = new QAction(QIcon(":/images/down.png"), tr("Déplacer vers le bas"), this);
+	down_A = new QAction(QIcon(":/images/down.png"), tr("Down"), this);
 	down_A->setShortcut(QKeySequence("Shift+Down"));
 	down_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	down_A->setEnabled(false);
-	expand_A = new QAction(tr("Étendre l'arbre"), this);
-	undo_A = new QAction(QIcon(":/images/undo.png"), tr("Annuler"), this);
+	expand_A = new QAction(tr("Expand the tree"), this);
+	undo_A = new QAction(QIcon(":/images/undo.png"), tr("Undo"), this);
 	undo_A->setShortcut(QKeySequence::Undo);
 	undo_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	undo_A->setEnabled(false);
-	redo_A = new QAction(QIcon(":/images/redo.png"), tr("Refaire"), this);
+	redo_A = new QAction(QIcon(":/images/redo.png"), tr("Redo"), this);
 	redo_A->setShortcut(QKeySequence::Redo);
 	redo_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	redo_A->setEnabled(false);
-	text_A = new QAction(tr("Modifier texte"), this);
+	text_A = new QAction(tr("Edit text"), this);
 	text_A->setVisible(false);
-	goto_A = new QAction(tr("Aller au label"), this);
+	goto_A = new QAction(tr("Goto label"), this);
 	goto_A->setVisible(false);
 
 	connect(edit_A, SIGNAL(triggered()), SLOT(scriptEditor()));
@@ -116,27 +116,27 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	addAction(redo_A);
 
 	QWidget *help = new QWidget;
-	_help = new QLabel(tr("Alt + clic pour aller au label"));
+	_help = new QLabel(tr("Alt + Click to go to the label"));
 	_help->hide();
 	QHBoxLayout *helpLayout = new QHBoxLayout(help);
 	helpLayout->addStretch();
 	helpLayout->addWidget(_help);
 	helpLayout->setContentsMargins(QMargins());
 	
-	_toolBar = new QToolBar(tr("Édition du &script"));
+	_toolBar = new QToolBar(tr("&Script editor"));
 	_toolBar->setIconSize(QSize(14,14));
 	_toolBar->setFloatable(false);
 	_toolBar->setAllowedAreas(Qt::NoToolBarArea);
 	_toolBar->setMovable(false);
 	_toolBar->addAction(add_A);
-	add_A->setStatusTip(tr("Ajouter une commande"));
+	add_A->setStatusTip(tr("Add line"));
 	_toolBar->addAction(del_A);
-	del_A->setStatusTip(tr("Supprimer une commande"));
+	del_A->setStatusTip(tr("Remove line"));
 	_toolBar->addSeparator();
 	_toolBar->addAction(up_A);
-	up_A->setStatusTip(tr("Monter une commande"));
+	up_A->setStatusTip(tr("Move up"));
 	_toolBar->addAction(down_A);
-	down_A->setStatusTip(tr("Descendre une commande"));
+	down_A->setStatusTip(tr("Move down"));
 	_toolBar->addSeparator();
 	_toolBar->addAction(expand_A);
 	_toolBar->addAction(text_A);
@@ -384,7 +384,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 			++opcodeID;
 		}
 	} else {
-		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList(tr("Si ce script est exécuté,\n considérez que c'est le dernier script non vide qui est exécuté")));
+		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList(tr("If this script is run,\n assume that the last non-empty script that runs")));
 		item->setIcon(0, QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation));
 		item->setFlags(Qt::NoItemFlags);
 		item->setData(0, Qt::UserRole, -2);
@@ -672,7 +672,7 @@ void OpcodeList::del(bool totalDel)
 	if(selectedIDs.isEmpty())	return;
 	QList<Opcode *> oldVersions;
 
-	if(totalDel && QMessageBox::warning(this, tr("Suppression"), tr("Voulez-vous vraiment supprimer %1 ?").arg(selectedIDs.size()==1 ? tr("la commande sélectionnée") : tr("les commandes sélectionnées")), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel)
+	if(totalDel && QMessageBox::warning(this, tr("Delete"), tr("Are you sure you want to delete %1?").arg(selectedIDs.size()==1 ? tr("the selected command") : tr("the selected commands")), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel)
 		return;
 
 	saveExpandedItems();

@@ -8,7 +8,7 @@ FieldList::FieldList(QWidget *parent) :
 	font.setPointSize(8);
 
 	setColumnCount(2);
-	setHeaderLabels(QStringList() << tr("Fichier") << tr("Id"));
+	setHeaderLabels(QStringList() << tr("File") << tr("Id"));
 	setMinimumHeight(120);
 	setIndentation(0);
 	setItemsExpandable(false);
@@ -19,8 +19,8 @@ FieldList::FieldList(QWidget *parent) :
 	sortByColumn(1, Qt::AscendingOrder);
 
 	_lineSearch = new QLineEdit(parent);
-	_lineSearch->setStatusTip(tr("Recherche rapide"));
-	_lineSearch->setPlaceholderText(tr("Rechercher..."));
+	_lineSearch->setStatusTip(tr("Quick search"));
+	_lineSearch->setPlaceholderText(tr("Search..."));
 
 	connect(_lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap(QString)));
 	connect(_lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
