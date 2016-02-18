@@ -503,8 +503,8 @@ QVariant LgpItemModel::headerData(int section, Qt::Orientation orientation, int 
 		return QAbstractItemModel::headerData(section, orientation, role);
 
 	switch(section) {
-	case 0:		return tr("Nom");
-	case 1:		return tr("Taille");
+	case 0:		return tr("Name");
+	case 1:		return tr("Size");
 	default:	return QVariant();
 	}
 }
@@ -528,7 +528,7 @@ bool LgpItemModel::removeRows(int row, int count, const QModelIndex &parent)
 LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), lgp(lgp)
 {
-	setWindowTitle(tr("Gestionnaire d'archive LGP"));
+	setWindowTitle(tr("LGP archive manager"));
 	resize(800, 600);
 
 	LgpItemModel *model = new LgpItemModel(lgp);
@@ -538,18 +538,18 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	treeView->header()->setSectionResizeMode(0, QHeaderView::Stretch);
 	treeView->header()->setStretchLastSection(false);
 
-	renameButton = new QPushButton(tr("Renommer"), this);
+	renameButton = new QPushButton(tr("Rename"), this);
 	renameButton->setShortcut(Qt::Key_F2);
-	replaceButton = new QPushButton(tr("Remplacer"), this);
+	replaceButton = new QPushButton(tr("Replace"), this);
 	replaceButton->setShortcut(QKeySequence("Ctrl+R"));
-	extractButton = new QPushButton(tr("Extraire"), this);
+	extractButton = new QPushButton(tr("Extract"), this);
 	extractButton->setShortcut(QKeySequence("Ctrl+E"));
-	addButton = new QPushButton(QIcon(":/images/plus.png"), tr("Ajouter"), this);
+	addButton = new QPushButton(QIcon(":/images/plus.png"), tr("Add"), this);
 	addButton->setShortcut(QKeySequence::New);
-	removeButton = new QPushButton(QIcon(":/images/minus.png"), tr("Supprimer"), this);
+	removeButton = new QPushButton(QIcon(":/images/minus.png"), tr("Delete"), this);
 	removeButton->setShortcut(QKeySequence::Delete);
 	packButton = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton),
-								 tr("Sauvegarder"), this);
+								 tr("Save"), this);
 	packButton->setEnabled(false);
 
 	QHBoxLayout *barLayout = new QHBoxLayout;
@@ -584,20 +584,20 @@ void LgpDialog::renameCurrent()
 		if(item && !item->isDirectory()) {
 			bool ok;
 			QString oldFilePath = item->path(),
-					newFilePath = QInputDialog::getText(this, tr("Renommer"), tr("Nouveau nom :"), QLineEdit::Normal,
+					newFilePath = QInputDialog::getText(this, tr("Rename"), tr("New Name:"), QLineEdit::Normal,
 														oldFilePath, &ok, Qt::Dialog | Qt::WindowCloseButtonHint);
 			if(!ok || newFilePath == oldFilePath) {
 				return;
 			}
 
 			if(!lgp->isNameValid(newFilePath)) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Le nom '%1' est invalide, ne mettez pas de caractères spéciaux.")
+				QMessageBox::warning(this, tr("Error"), tr("The name '%1' is invalid, don't put special characters.")
 									 .arg(newFilePath));
 			} else if(lgp->fileExists(newFilePath)) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Un fichier nommé '%1' existe déjà, veuillez choisir un autre nom.")
+				QMessageBox::warning(this, tr("Error"), tr("A file named '%1' already exists, please choose another name.")
 									 .arg(newFilePath));
 			} else if(!treeView->model()->setData(index, newFilePath)) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de renommer le fichier"));
+				QMessageBox::warning(this, tr("Error"), tr("Can not Rename the file"));
 			} else {
 				treeView->scrollTo(index);
 //				emit modified();
@@ -618,16 +618,16 @@ void LgpDialog::replaceCurrent()
 			QString extension = indexOf==-1 ? QString() : filename.mid(indexOf + 1);
 			QStringList filter;
 			if(!extension.isEmpty()) {
-				filter << tr("Fichier %1 (*.%1)").arg(extension);
+				filter << tr("%1 file (*.%1)").arg(extension);
 			}
-			filter << tr("Tous les fichiers (*)");
+			filter << tr("All files (*)");
 
 			QString lastDir = Config::value("lgpDialogOpenDirectory").toString();
 			if(!lastDir.isEmpty()) {
 				filename = lastDir + "/" + filename;
 			}
 
-			QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), filename, filter.join(";;"));
+			QString path = QFileDialog::getOpenFileName(this, tr("New File"), filename, filter.join(";;"));
 			if(path.isNull()) {
 				return;
 			}
@@ -635,7 +635,7 @@ void LgpDialog::replaceCurrent()
 			Config::setValue("lgpDialogOpenDirectory", path.left(path.lastIndexOf('/')));
 
 			if(!((LgpFileItem *)item)->setFile(new QFile(path))) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de modifier l'archive !"));
+				QMessageBox::warning(this, tr("Error"), tr("Can not modify the archive!"));
 			} else {
 //				emit modified();
 				packButton->setEnabled(true);
@@ -655,16 +655,16 @@ void LgpDialog::extractCurrent()
 			QString extension = index==-1 ? QString() : filename.mid(index + 1);
 			QStringList filter;
 			if(!extension.isEmpty()) {
-				filter << tr("Fichier %1 (*.%1)").arg(extension);
+				filter << tr("%1 file (*.%1)").arg(extension);
 			}
-			filter << tr("Tous les fichiers (*)");
+			filter << tr("All files (*)");
 
 			QString lastDir = Config::value("lgpDialogSaveDirectory").toString();
 			if(!lastDir.isEmpty()) {
 				filename = lastDir + "/" + filename;
 			}
 
-			QString path = QFileDialog::getSaveFileName(this, tr("Nouveau fichier"), filename, filter.join(";;"));
+			QString path = QFileDialog::getSaveFileName(this, tr("New File"), filename, filter.join(";;"));
 			if(path.isNull()) {
 				return;
 			}
@@ -679,12 +679,12 @@ void LgpDialog::extractCurrent()
 						file.write(io->read(4096));
 					}
 					if(file.error() != QFile::NoError) {
-						QMessageBox::warning(this, tr("Erreur d'écriture"), tr("Impossible d'écrire dans le fichier (message : %1).")
+						QMessageBox::warning(this, tr("Write error"), tr("Can not write to file (message: %1).")
 											 .arg(file.errorString()));
 					}
 					file.close();
 				} else {
-					QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir le fichier (message : %1).")
+					QMessageBox::warning(this, tr("Opening error"), tr("Can not open the file (message: %1).")
 										 .arg(file.errorString()));
 				}
 				io->close();
@@ -707,8 +707,8 @@ void LgpDialog::add()
 	QString lastDir = Config::value("lgpDialogOpenDirectory").toString();
 
 	QStringList filter;
-	filter << tr("Tous les fichiers (*)");
-	QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), lastDir, filter.join(";;"));
+	filter << tr("All files (*)");
+	QString path = QFileDialog::getOpenFileName(this, tr("New File"), lastDir, filter.join(";;"));
 	if(path.isNull()) {
 		return;
 	}
@@ -722,20 +722,20 @@ void LgpDialog::add()
 	}
 
 	bool ok;
-	QString filePath = QInputDialog::getText(this, tr("Renommer"), tr("Nouveau nom :"), QLineEdit::Normal,
+	QString filePath = QInputDialog::getText(this, tr("Rename"), tr("New Name:"), QLineEdit::Normal,
 												name, &ok, Qt::Dialog | Qt::WindowCloseButtonHint);
 	if(!ok) {
 		return;
 	}
 
 	if(!lgp->isNameValid(filePath)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Le nom '%1' est invalide, ne mettez pas de caractères spéciaux.")
+		QMessageBox::warning(this, tr("Error"), tr("The name '%1' is invalid, don't put special characters.")
 							 .arg(filePath));
 	} else if(lgp->fileExists(filePath)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Un fichier nommé '%1' existe déjà, veuillez choisir un autre nom.")
+		QMessageBox::warning(this, tr("Error"), tr("A file named '%1' already exists, please choose another name.")
 							 .arg(filePath));
 	} else if(!lgp->addFile(filePath, new QFile(path))) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Impossible d'ajouter le fichier"));
+		QMessageBox::warning(this, tr("Error"), tr("Can not add the file"));
 	} else {
 		treeView->model()->insertRow(treeView->model()->rowCount());
 		treeView->scrollTo(treeView->model()->index(treeView->model()->rowCount() - 1, 0));
@@ -748,8 +748,8 @@ void LgpDialog::removeCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		QMessageBox::StandardButton button = QMessageBox::question(this, tr("Supprimer ?"),
-							  tr("Êtes-vous sûr de vouloir supprimer ce fichier de l'archive ?"),
+		QMessageBox::StandardButton button = QMessageBox::question(this, tr("Delete ?"),
+							  tr("Are you sure you want to delete this file from the archive?"),
 							  QMessageBox::Yes | QMessageBox::Cancel);
 		if(button != QMessageBox::Yes) {
 			return;
@@ -758,7 +758,7 @@ void LgpDialog::removeCurrent()
 		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
 		if(item && !item->isDirectory()) {
 			if(!lgp->removeFile(item->path())) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de supprimer le fichier !"));
+				QMessageBox::warning(this, tr("Error"), tr("Cannot delete the file!"));
 			} else {
 				treeView->model()->removeRow(index.row());
 //				emit modified();
@@ -770,7 +770,7 @@ void LgpDialog::removeCurrent()
 
 void LgpDialog::pack()
 {
-	QString path = QFileDialog::getSaveFileName(this, tr("Enregistrer sous"), lgp->fileName(), tr("Fichier Lgp (*.lgp)"));
+	QString path = QFileDialog::getSaveFileName(this, tr("Save as"), lgp->fileName(), tr("Lgp File (*.lgp)"));
 	if(path.isNull()) {
 		return;
 	}
@@ -781,7 +781,7 @@ void LgpDialog::pack()
 //		return;
 //	}
 
-	progressDialog = new QProgressDialog(tr("Sauvegarde..."), tr("Annuler"), 0, 0, this, Qt::Dialog | Qt::WindowCloseButtonHint);
+	progressDialog = new QProgressDialog(tr("Saving..."), tr("Cancel"), 0, 0, this, Qt::Dialog | Qt::WindowCloseButtonHint);
 	progressDialog->setWindowModality(Qt::WindowModal);
 	progressDialog->setAutoClose(false);
 	progressDialog->show();
@@ -793,7 +793,7 @@ void LgpDialog::pack()
 
 	if(!ok) {
 		if(lgp->error() != Lgp::AbortError) {
-			QMessageBox::warning(this, tr("Erreur"), tr("Impossible de créer l'archive (message : %1).")
+			QMessageBox::warning(this, tr("Error"), tr("Cannot create the archive (message: %1).")
 								 .arg(lgp->errorString()));
 		}
 	} else {

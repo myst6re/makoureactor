@@ -26,14 +26,14 @@ ModelManagerPS::ModelManagerPS(const QGLWidget *shareWidget, QWidget *parent) :
 	modelColorDisplay->setReadOnly(true);
 
 	modelAnims->setColumnCount(1);
-	modelAnims->setHeaderLabels(QStringList() << tr("Animations"));
+	modelAnims->setHeaderLabels(QStringList() << tr("Animation"));
 
 	QGridLayout *frameLayout = new QGridLayout(modelFrame);
-	frameLayout->addWidget(new QLabel(tr("Inconnu")), 0, 0);
+	frameLayout->addWidget(new QLabel(tr("Unknown")), 0, 0);
 	frameLayout->addWidget(modelUnknown, 0, 1);
-	frameLayout->addWidget(new QLabel(tr("Taille modèle")), 1, 0);
+	frameLayout->addWidget(new QLabel(tr("Model size")), 1, 0);
 	frameLayout->addWidget(modelScaleWidget, 1, 1);
-	frameLayout->addWidget(new QLabel(tr("Lumière")), 2, 0);
+	frameLayout->addWidget(new QLabel(tr("Light")), 2, 0);
 	frameLayout->addWidget(modelColorDisplay, 2, 1);
 	frameLayout->addWidget(modelColorLabel, 3, 1);
 	frameLayout->addWidget(modelAnims, 0, 2, 5, 1);
@@ -51,7 +51,7 @@ QList<QStringList> ModelManagerPS::modelNames() const
 {
 	QList<QStringList> ret;
 	for(int modelId=0 ; modelId<modelLoader()->modelCount() ; ++modelId) {
-		ret.append(QStringList(QString("Modèle %1").arg(modelId)));
+		ret.append(QStringList(QString("Model %1").arg(modelId)));
 	}
 	return ret;
 }

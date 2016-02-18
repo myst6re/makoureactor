@@ -23,7 +23,7 @@ GrpScriptList::GrpScriptList(QWidget *parent)
 {
 	qreal scale = qApp->desktop()->logicalDpiX()/96;
 	setColumnCount(3);
-	setHeaderLabels(QStringList() << tr("Id") << tr("Groupe") << tr("Type"));
+	setHeaderLabels(QStringList() << tr("Id") << tr("Group") << tr("Type"));
 	setIndentation(0);
 	setItemsExpandable(false);
 	setSortingEnabled(true);
@@ -34,33 +34,33 @@ GrpScriptList::GrpScriptList(QWidget *parent)
 	setSelectionMode(QAbstractItemView::ExtendedSelection);
 	sortByColumn(0, Qt::AscendingOrder);
 	
-	QAction *rename_A = new QAction(tr("Renommer groupe"), this);
+	QAction *rename_A = new QAction(tr("Rename group"), this);
 	rename_A->setShortcut(QKeySequence("F2"));
 	rename_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
-	QAction *add_A = new QAction(QIcon(":/images/plus.png"), tr("Ajouter groupe"), this);
+	QAction *add_A = new QAction(QIcon(":/images/plus.png"), tr("Add group"), this);
 	add_A->setShortcut(QKeySequence("Ctrl++"));
 	add_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
-	QAction *del_A = new QAction(QIcon(":/images/minus.png"), tr("Supprimer groupe"), this);
+	QAction *del_A = new QAction(QIcon(":/images/minus.png"), tr("Delete group"), this);
 	del_A->setShortcut(QKeySequence(Qt::Key_Delete));
 	del_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	del_A->setEnabled(false);
-	QAction *cut_A = new QAction(QIcon(":/images/cut.png"), tr("Couper groupe"), this);
+	QAction *cut_A = new QAction(QIcon(":/images/cut.png"), tr("Cut group"), this);
 	cut_A->setShortcut(QKeySequence("Ctrl+X"));
 	cut_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	cut_A->setEnabled(false);
-	QAction *copy_A = new QAction(QIcon(":/images/copy.png"), tr("Copier groupe"), this);
+	QAction *copy_A = new QAction(QIcon(":/images/copy.png"), tr("Copy group"), this);
 	copy_A->setShortcut(QKeySequence("Ctrl+C"));
 	copy_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	copy_A->setEnabled(false);
-	QAction *paste_A = new QAction(QIcon(":/images/paste.png"), tr("Coller groupe"), this);
+	QAction *paste_A = new QAction(QIcon(":/images/paste.png"), tr("Paste group"), this);
 	paste_A->setShortcut(QKeySequence("Ctrl+V"));
 	paste_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	paste_A->setEnabled(false);
-	QAction *up_A = new QAction(QIcon(":/images/up.png"), tr("Déplacer vers le haut"), this);
+	QAction *up_A = new QAction(QIcon(":/images/up.png"), tr("Move up"), this);
 	up_A->setShortcut(QKeySequence("Shift+Up"));
 	up_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	up_A->setEnabled(false);
-	QAction *down_A = new QAction(QIcon(":/images/down.png"), tr("Déplacer vers le bas"), this);
+	QAction *down_A = new QAction(QIcon(":/images/down.png"), tr("Move down"), this);
 	down_A->setShortcut(QKeySequence("Shift+Down"));
 	down_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	down_A->setEnabled(false);
@@ -92,17 +92,17 @@ GrpScriptList::GrpScriptList(QWidget *parent)
 	this->addAction(up_A);
 	this->addAction(down_A);
 	
-	_toolBar = new QToolBar(tr("Édition des &groupes"));
+	_toolBar = new QToolBar(tr("&Group Editor"));
 	_toolBar->setIconSize(QSize(14*scale,14*scale));
 	_toolBar->addAction(add_A);
-	add_A->setStatusTip(tr("Ajouter un groupe"));
+	add_A->setStatusTip(tr("Add a group"));
 	_toolBar->addAction(del_A);
-	del_A->setStatusTip(tr("Supprimer un groupe"));
+	del_A->setStatusTip(tr("Remove a group"));
 	_toolBar->addSeparator();
 	_toolBar->addAction(up_A);
-	up_A->setStatusTip(tr("Monter un groupe"));
+	up_A->setStatusTip(tr("Up"));
 	_toolBar->addAction(down_A);
-	down_A->setStatusTip(tr("Descendre un groupe"));
+	down_A->setStatusTip(tr("Down"));
 	
 	enableActions(false);
 
@@ -268,11 +268,11 @@ void GrpScriptList::del(bool totalDel)
 	QList<int> selectedIDs = this->selectedIDs();
 	if(selectedIDs.isEmpty())	return;
 	
-	if(totalDel && QMessageBox::warning(this, tr("Suppression"), tr("Voulez-vous vraiment supprimer %1 ?\n"
-																	"Certains scripts peuvent y faire référence !")
+	if(totalDel && QMessageBox::warning(this, tr("Delete"), tr("Are you sure you want to remove %1?\n"
+																	"Some scripts can refer to it!")
 	                                    .arg(selectedIDs.size()==1 ?
-	                                         tr("le groupe sélectionné") :
-	                                         tr("les groupes sélectionnés")),
+											 tr("the group selected") :
+											 tr("the selected groups")),
 	                                    QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel) {
 		return;
 	}

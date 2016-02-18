@@ -67,7 +67,7 @@ QPixmap ApercuBG::errorPixmap(int w, int h)
 	errorPix.fill(Qt::black);
 	QFont font;
 	font.setPixelSize(44);
-	QString text = tr("Erreur");
+	QString text = tr("Error");
 	int textWidth = QFontMetrics(font).width(text);
 	int textHeight = QFontMetrics(font).height();
 

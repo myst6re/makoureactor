@@ -27,17 +27,17 @@ Search::Search(Window *mainWindow) :
 	clef(0), text(QString()),
 	bank(0), address(0), e_script(0), e_group(0)
 {
-	setWindowTitle(tr("Rechercher"));
+	setWindowTitle(tr("Find"));
 	
 	tabWidget = new QTabWidget(this);
 	tabWidget->addTab(scriptPageWidget(), tr("Scripts"));
-	tabWidget->addTab(textPageWidget(), tr("Textes"));
+	tabWidget->addTab(textPageWidget(), tr("Texts"));
 	tabWidget->setCurrentIndex(Config::value("searchDialogCurrentModule").toInt());
 
 	QList<QPushButton *> buttons;
-	buttons.append(buttonNext = new QPushButton(tr("Chercher le suivant"), this));
-	buttons.append(buttonPrev = new QPushButton(tr("Chercher le précédent"), this));
-	buttons.append(buttonAll = new QPushButton(tr("Chercher tout"), this));
+	buttons.append(buttonNext = new QPushButton(tr("Find next"), this));
+	buttons.append(buttonPrev = new QPushButton(tr("Find previous"), this));
+	buttons.append(buttonAll = new QPushButton(tr("Find all"), this));
 
 	QMap<int, QPushButton *> buttonWidths;
 	foreach (QPushButton *button, buttons) {
@@ -103,11 +103,11 @@ QWidget *Search::scriptPageWidget()
 	QWidget *ret = new QWidget(this);
 
 	liste = new QComboBox(ret);
-	liste->addItem(tr("Texte"));
+	liste->addItem(tr("Text"));
 	liste->addItem(tr("Variable"));
 	liste->addItem(tr("Opcode"));
-	liste->addItem(tr("Exec"));
-	liste->addItem(tr("Saut d'écran"));
+	liste->addItem(tr("Run"));
+	liste->addItem(tr("Map jump"));
 
 	QWidget *text = new QWidget(ret);
 
@@ -116,10 +116,10 @@ QWidget *Search::scriptPageWidget()
 	champ->setMaximumWidth(400);
 	champ->addItems(Config::value("recentSearch").toStringList());
 	champ->lineEdit()->completer()->setCompletionMode(QCompleter::PopupCompletion);
-	champ->lineEdit()->setPlaceholderText(tr("Rechercher"));
+	champ->lineEdit()->setPlaceholderText(tr("Find"));
 
-	caseSens = new QCheckBox(tr("Sensible à la casse"), text);
-	useRegexp = new QCheckBox(tr("Utiliser les expressions régulières"), text);
+	caseSens = new QCheckBox(tr("Match case"), text);
+	useRegexp = new QCheckBox(tr("Regular expression"), text);
 	useRegexp->setChecked(Config::value("findWithRegExp").toBool());
 
 	QGridLayout *textLayout = new QGridLayout(text);
@@ -156,17 +156,17 @@ QWidget *Search::scriptPageWidget()
 	for(int i=0 ; i<256 ; ++i) {
 		comboVarName->addItem(QString());
 	}
-	champValue->setPlaceholderText(tr("Valeur"));
-	champOp->addItem(tr("Tout"));
-	champOp->addItem(tr("Affectation"));
-	champOp->addItem(tr("Affectation Bit"));
+	champValue->setPlaceholderText(tr("Value"));
+	champOp->addItem(tr("All"));
+	champOp->addItem(tr("Assignment"));
+	champOp->addItem(tr("Bit Assignment"));
 	champOp->addItem(tr("Test"));
-	champOp->addItem(tr("Test bit"));
-	champOp->addItem(tr("Affectation ≠"));
-	champOp->addItem(tr("Affectation <"));
-	champOp->addItem(tr("Affectation ≤"));
-	champOp->addItem(tr("Affectation >"));
-	champOp->addItem(tr("Affectation ≥"));
+	champOp->addItem(tr("Bit test"));
+	champOp->addItem(tr("Assignment ≠"));
+	champOp->addItem(tr("Assignment <"));
+	champOp->addItem(tr("Assignment ≤"));
+	champOp->addItem(tr("Assignment >"));
+	champOp->addItem(tr("Assignment ≥"));
 
 	// set config values
 	champBank->setValue(Config::value("SearchedVarBank").toInt());
@@ -193,7 +193,7 @@ QWidget *Search::scriptPageWidget()
 	executionLayout->setContentsMargins(QMargins());
 	executionLayout->addWidget(new QLabel(tr("Script")), 0, 0);
 	executionLayout->addWidget(executionScript, 0, 1);
-	executionLayout->addWidget(new QLabel(tr("Groupe")), 1, 0);
+	executionLayout->addWidget(new QLabel(tr("Group")), 1, 0);
 	executionLayout->addWidget(executionGroup, 1, 1);
 	executionLayout->setColumnStretch(1, 1);
 
@@ -212,11 +212,11 @@ QWidget *Search::scriptPageWidget()
 	stack->addWidget(execution);
 	stack->addWidget(jump);
 
-	QGroupBox *contextGroupBox = new QGroupBox(tr("Contexte"), this);
-	QRadioButton *globalCheckBox = new QRadioButton(tr("Sur tous les écrans"));
-	currentFieldCheckBox = new QRadioButton(tr("Uniquement l'écran courant"));
-	currentGrpScriptCheckBox = new QRadioButton(tr("Uniquement le groupe courant"));
-	currentScriptCheckBox = new QRadioButton(tr("Uniquement le script courant"));
+	QGroupBox *contextGroupBox = new QGroupBox(tr("Scope"), this);
+	QRadioButton *globalCheckBox = new QRadioButton(tr("All fields"));
+	currentFieldCheckBox = new QRadioButton(tr("Current field"));
+	currentGrpScriptCheckBox = new QRadioButton(tr("Current group script"));
+	currentScriptCheckBox = new QRadioButton(tr("Current script"));
 
 	FieldArchive::SearchScope searchScope = FieldArchive::SearchScope(Config::value("searchScope").toInt());
 	switch(searchScope) {
@@ -267,23 +267,23 @@ QWidget *Search::textPageWidget()
 	champ2->setEditable(true);
 	champ2->addItems(Config::value("recentSearch").toStringList());
 	champ2->lineEdit()->completer()->setCompletionMode(QCompleter::PopupCompletion);
-	champ2->lineEdit()->setPlaceholderText(tr("Rechercher"));
+	champ2->lineEdit()->setPlaceholderText(tr("Find"));
 
 	replace2 = new QComboBox(ret);
 	replace2->setEditable(true);
 	replace2->addItems(Config::value("recentReplace").toStringList());
-	replace2->lineEdit()->setPlaceholderText(tr("Remplacer"));
-	replaceCurrentButton = new QPushButton(tr("Remplacer"), this);
-	replaceAllButton = new QPushButton(tr("Remplacer tout"), this);
+	replace2->lineEdit()->setPlaceholderText(tr("Replace"));
+	replaceCurrentButton = new QPushButton(tr("Replace"), this);
+	replaceAllButton = new QPushButton(tr("Replace all"), this);
 
-	caseSens2 = new QCheckBox(tr("Sensible à la casse"), ret);
-	useRegexp2 = new QCheckBox(tr("Utiliser les expressions régulières"), ret);
+	caseSens2 = new QCheckBox(tr("Match case"), ret);
+	useRegexp2 = new QCheckBox(tr("Regular expression"), ret);
 	useRegexp2->setChecked(Config::value("findWithRegExp").toBool());
 
-	QGroupBox *contextGroupBox = new QGroupBox(tr("Contexte"), this);
-	QRadioButton *globalCheckBox = new QRadioButton(tr("Sur tous les écrans"));
-	currentFieldCheckBox2 = new QRadioButton(tr("Uniquement l'écran courant"));
-	currentTextCheckBox = new QRadioButton(tr("Uniquement le texte courant"));
+	QGroupBox *contextGroupBox = new QGroupBox(tr("Scope"), this);
+	QRadioButton *globalCheckBox = new QRadioButton(tr("All fields"));
+	currentFieldCheckBox2 = new QRadioButton(tr("Current field"));
+	currentTextCheckBox = new QRadioButton(tr("Current text"));
 
 	FieldArchive::SearchScope searchScope = FieldArchive::SearchScope(Config::value("searchScope").toInt());
 	switch(searchScope) {
@@ -415,7 +415,7 @@ void Search::updateSearchVarPlaceholder(int opIndex)
 	if (opIndex == Opcode::None) {
 		champValue->setEnabled(false);
 	} else {
-		champValue->setPlaceholderText(opIndex == Opcode::Assign || opIndex == Opcode::Compare ? tr("Valeur") : tr("Position"));
+		champValue->setPlaceholderText(opIndex == Opcode::Assign || opIndex == Opcode::Compare ? tr("Value") : tr("Position"));
 		champValue->setEnabled(true);
 	}
 }
@@ -452,11 +452,11 @@ FieldArchive::SearchScope Search::searchScope() const
 QString Search::lastMessage() const
 {
 	switch(searchScope()) {
-	case FieldArchive::GlobalScope:		return tr("Dernier écran");
-	case FieldArchive::FieldScope:		return tr("Dernier groupe");
-	case FieldArchive::GrpScriptScope:	return tr("Dernier script");
-	case FieldArchive::ScriptScope:		return tr("Dernière instruction");
-	case FieldArchive::TextScope:		return tr("Dernier texte");
+	case FieldArchive::GlobalScope:		return tr("Last field");
+	case FieldArchive::FieldScope:		return tr("Last group");
+	case FieldArchive::GrpScriptScope:	return tr("Last script");
+	case FieldArchive::ScriptScope:		return tr("Last opcode");
+	case FieldArchive::TextScope:		return tr("Last text");
 	}
 	return QString();
 }
@@ -464,11 +464,11 @@ QString Search::lastMessage() const
 QString Search::firstMessage() const
 {
 	switch(searchScope()) {
-	case FieldArchive::GlobalScope:		return tr("Premier écran");
-	case FieldArchive::FieldScope:		return tr("Premier groupe");
-	case FieldArchive::GrpScriptScope:	return tr("Premier script");
-	case FieldArchive::ScriptScope:		return tr("Première instruction");
-	case FieldArchive::TextScope:		return tr("Premier texte");
+	case FieldArchive::GlobalScope:		return tr("First field");
+	case FieldArchive::FieldScope:		return tr("First group");
+	case FieldArchive::GrpScriptScope:	return tr("First script");
+	case FieldArchive::ScriptScope:		return tr("First opcode");
+	case FieldArchive::TextScope:		return tr("First text");
 	}
 	return QString();
 }
@@ -526,7 +526,7 @@ void Search::findNext()
 		}
 	}
 
-	returnToBegin->setText(tr("%1,\npoursuite au début.")
+	returnToBegin->setText(tr("%1,\ncontinued from top.")
 						   .arg(lastMessage()));
 	returnToBegin->show();
 
@@ -674,7 +674,7 @@ void Search::findPrev()
 		}
 	}
 
-	returnToBegin->setText(tr("%1,\npoursuite à la fin.")
+	returnToBegin->setText(tr("%1,\nchase at the end.")
 						   .arg(firstMessage()));
 	returnToBegin->show();
 

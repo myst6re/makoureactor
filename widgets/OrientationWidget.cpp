@@ -92,9 +92,9 @@ void OrientationWidget::paintEvent(QPaintEvent *)
 
 	if(_value >= 90 && _value < 270) {
 		p.rotate(180);
-		p.drawText(QRectF(0.0, 0.0, radius-4, radius-4), tr("Droite"), QTextOption(Qt::AlignRight));
+		p.drawText(QRectF(0.0, 0.0, radius-4, radius-4), tr("Right"), QTextOption(Qt::AlignRight));
 	} else {
-		p.drawText(QPointF(-radius+4, -4), tr("Droite"));
+		p.drawText(QPointF(-radius+4, -4), tr("Right"));
 	}
 }
 

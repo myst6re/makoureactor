@@ -53,9 +53,9 @@ void TextPreview::fillNames()
 			dataNames.replace(i, customName);
 		}
 	}
-	dataNames.replace(9, tr("Membre 1"));
-	dataNames.replace(10, tr("Membre 2"));
-	dataNames.replace(11, tr("Membre 3"));
+	dataNames.replace(9, tr("Member 1"));
+	dataNames.replace(10, tr("Member 2"));
+	dataNames.replace(11, tr("Member 3"));
 //	bool jp = Config::value("jp_txt", false).toBool();
 //	Config::setValue("jp_txt", false);
 

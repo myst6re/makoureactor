@@ -21,7 +21,7 @@
 VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	: QWidget(parent, Qt::Tool)
 {
-	setWindowTitle(tr("Gestionnaire de variables"));
+	setWindowTitle(tr("Variable manager"));
 	QFont font;
 	font.setPointSize(8);
 	
@@ -35,7 +35,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	address->setRange(0,255);
 	name = new QLineEdit(this);
 	name->setMaxLength(50);
-	rename = new QPushButton(tr("Renommer"), this);
+	rename = new QPushButton(tr("Rename"), this);
 	
 	layout1->addWidget(bank);
 	layout1->addWidget(address);
@@ -50,7 +50,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	
 	liste2 = new QTreeWidget(this);
 	liste2->setColumnCount(4);
-	liste2->setHeaderLabels(QStringList() << tr("Adresse") << tr("Surnom") << tr("Opération") << tr("Taille"));
+	liste2->setHeaderLabels(QStringList() << tr("Address") << tr("Nickname") << tr("Operation") << tr("Size"));
 	liste2->setIndentation(0);
 	liste2->setItemsExpandable(false);
 	liste2->setSortingEnabled(true);
@@ -61,8 +61,8 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	
 	QHBoxLayout *layout3 = new QHBoxLayout();
 	
-	searchButton = new QPushButton(tr("Adresses utilisées"), this);
-	ok = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Enregistrer"), this);
+	searchButton = new QPushButton(tr("Addresses Used"), this);
+	ok = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save"), this);
 	ok->setEnabled(false);
 	
 	layout3->addWidget(searchButton);
@@ -249,7 +249,7 @@ void VarManager::renameVar()
 void VarManager::save()
 {
 	if(!Var::save(local_var_names)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Fichier vars.cfg inaccessible.\nÉchec de l'enregistrement."));
+		QMessageBox::warning(this, tr("Error"), tr("Save Failed"));
 	} else {
 		ok->setEnabled(false);
 	}
@@ -257,7 +257,7 @@ void VarManager::save()
 
 void VarManager::search()
 {
-	QMessageBox mess(QMessageBox::Information, tr("Recherche"), tr("Recherche des variables en cours, cela peut prendre une minute..."));
+	QMessageBox mess(QMessageBox::Information, tr("Searching"), tr("Searching, it may take a minute..."));
 	mess.setWindowModality(Qt::ApplicationModal);
 	mess.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
 	mess.setStandardButtons(QMessageBox::NoButton);
@@ -318,16 +318,16 @@ void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
 			rwText = tr("w");
 		}
 		if(varSize.contains(FF7Var::Bit)) {
-			sizeText.append(tr("bits"));
+			sizeText.append(tr("bitfield"));
 		}
 		if(varSize.contains(FF7Var::Byte)) {
-			sizeText.append(tr("1 octet"));
+			sizeText.append(tr("1 Byte"));
 		}
 		if(varSize.contains(FF7Var::Word)) {
-			sizeText.append(tr("2 octets"));
+			sizeText.append(tr("2 Bytes"));
 		}
 		if(varSize.contains(FF7Var::SignedWord)) {
-			sizeText.append(tr("2 octets signés"));
+			sizeText.append(tr("2 Signed Bytes"));
 		}
 	} else {
 		item->setBackground(0, palette().base().color());

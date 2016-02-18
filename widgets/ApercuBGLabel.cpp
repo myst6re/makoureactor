@@ -71,7 +71,7 @@ void ApercuBGLabel::savePixmap()
 	if(!path.isEmpty()) {
 		path.append("/");
 	}
-	path = QFileDialog::getSaveFileName(this, tr("Enregistrer le background"), path + _name + ".png", tr("Image PNG (*.png);;Image JPG (*.jpg);;Image BMP (*.bmp);;Portable Pixmap (*.ppm)"));
+	path = QFileDialog::getSaveFileName(this, tr("Save Background"), path + _name + ".png", tr("PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)"));
 	if(path.isNull())	return;
 
 	pixmap()->save(path);
