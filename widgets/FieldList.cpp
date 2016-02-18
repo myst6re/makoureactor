@@ -54,7 +54,10 @@ void FieldList::fill(FieldArchive *fieldArchive)
 		}
 	}
 
-	addTopLevelItems(items);
+	if(!items.isEmpty()) {
+		addTopLevelItems(items);
+		resizeColumnToContents(0);
+	}
 }
 
 int FieldList::currentFieldId() const
