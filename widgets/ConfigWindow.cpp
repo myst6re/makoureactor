@@ -224,7 +224,7 @@ void ConfigWindow::fillConfig()
 	windowColorBottomLeft = Config::value("windowColorBottomLeft", qRgb(0,0,128)).toInt();
 	windowColorBottomRight = Config::value("windowColorBottomRight", qRgb(0,0,32)).toInt();
 
-	optiText->setChecked(!Config::value("dontOptimizeTexts", false).toBool());
+	//optiText->setChecked(!Config::value("dontOptimizeTexts", false).toBool());
 	japEnc->setChecked(Config::value("jp_txt", false).toBool());
 	expandedByDefault->setChecked(Config::value("scriptItemExpandedByDefault", false).toBool());
 	lzsNotCheck->setChecked(Config::value("lzsNotCheck", false).toBool());
@@ -455,7 +455,7 @@ void ConfigWindow::accept()
 	Config::setValue("windowColorTopRight", windowColorTopRight);
 	Config::setValue("windowColorBottomLeft", windowColorBottomLeft);
 	Config::setValue("windowColorBottomRight", windowColorBottomRight);
-	Config::setValue("dontOptimizeTexts", !optiText->isChecked());
+	//Config::setValue("dontOptimizeTexts", !optiText->isChecked());
 	Config::setValue("jp_txt", japEnc->isChecked());
 	Config::setValue("scriptItemExpandedByDefault", expandedByDefault->isChecked());
 	Config::setValue("lzsNotCheck", lzsNotCheck->isChecked());
