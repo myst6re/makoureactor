@@ -262,17 +262,19 @@ void Window::changeLanguage(QAction *action)
 
 void Window::restartNow()
 {
-	QString str_title, str_text;
+	QString title, text;
 	QTranslator translator;
-	if(translator.load(qApp->applicationDirPath()+"/"+QString("Makou_Reactor_")+Config::value("lang").toString())) {
-		str_title = translator.translate("Window", "Settings changed");
-		str_text = translator.translate("Window", "Restart the program for the settings to take effect.");
+	if(translator.load(QString("Makou_Reactor_%1")
+	                   .arg(Config::value("lang").toString()),
+	                   qApp->applicationDirPath())) {
+		title = translator.translate("Window", "Settings changed");
+		text = translator.translate("Window", "Restart the program for the settings to take effect.");
 	}
 	else {
-		str_title = "Settings changed";
-		str_text = "Restart the program for the settings to take effect.";
+		title = "Settings changed";
+		text = "Restart the program for the settings to take effect.";
 	}
-	QMessageBox::information(this, str_title, str_text);
+	QMessageBox::information(this, title, text);
 }
 
 int Window::closeFile(bool quit)
