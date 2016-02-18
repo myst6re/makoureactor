@@ -359,7 +359,7 @@ QWidget *WalkmeshManager::buildArrowPage()
 
 	QGridLayout *layout = new QGridLayout(ret);
 	layout->addWidget(arrowList, 0, 0, 3, 1, Qt::AlignLeft);
-	layout->addWidget(new QLabel(tr("Position :")), 0, 1);
+	layout->addWidget(new QLabel(tr("Position:")), 0, 1);
 	layout->addWidget(new QLabel(tr("Type:")), 1, 1);
 	layout->addLayout(posLayout, 0, 2);
 	layout->addWidget(arrowType, 1, 2);
