@@ -173,7 +173,7 @@ void GrpScriptList::fill(Section1File *scripts)
 		item->setToolTip(0, grpScript->type());
 		QIcon icon;
 
-		if(grpScript->character() < 9) {
+		if(grpScript->character() >= 0 && grpScript->character() < 9) {
 			icon = QIcon(QString(":/images/icon-char-%1.png").arg(grpScript->character()));
 		} else {
 			switch(grpScript->typeID()) {
