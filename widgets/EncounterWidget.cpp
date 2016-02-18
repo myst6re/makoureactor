@@ -72,7 +72,7 @@ void EncounterWidget::fillGroup(EncounterTableWidget *group, const EncounterTabl
 
 EncounterTable EncounterWidget::saveGroup(EncounterTableWidget *group, EncounterTable encounterTable)
 {
-	encounterTable.enabled = (encounterTable.enabled & 0xFE) | group->isChecked();
+	encounterTable.enabled = (encounterTable.enabled & 0xFE) | quint8(group->isChecked());
 	encounterTable.rate = group->rateValue();
 
 	QList<int> battleProbas = group->battleProbasValues(), battleIds = group->battleIdsValues();
