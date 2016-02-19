@@ -548,13 +548,13 @@ void ModelManagerPC::renameOKAnim(QTreeWidgetItem *item, int column)
 	int animID = currentAnimID(item);
 	if(animID < 0)		return;
 
-	if(column == 0) {
+	if(column == 1) {
 		QString text = item->text(1).left(256);
 		item->setText(1, text);
 
 		modelLoader()->setAName(modelID, animID, text);
 		emit modified();
-	} else if(column == 1) {
+	} else if(column == 2) {
 		bool ok;
 		int value = item->text(2).toInt(&ok);
 		if(ok) {
