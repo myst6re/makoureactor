@@ -363,6 +363,22 @@ void TextManager::updateText()
 	textPreview->calcSize();
 }
 
+void TextManager::updateFromScripts()
+{
+	usedTexts = scriptsAndTexts->listUsedTexts();
+
+	for(int row = 0 ; row < liste1->count(); ++row) {
+		QListWidgetItem *item = liste1->item(row);
+		int textID = item->data(Qt::UserRole);
+		if(!usedTexts.contains(textID)) {
+			item->setForeground(Qt::darkGray);
+		} else {
+			// Default foreground
+			item->setForeground(QListWidgetItem().foreground());
+		}
+	}
+}
+
 void TextManager::gotoText(int textID, int from, int size)
 {
 	for(int i=0 ; i<liste1->count() ; ++i) {

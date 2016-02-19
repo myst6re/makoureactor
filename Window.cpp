@@ -1205,6 +1205,8 @@ void Window::textManager(int textID, int from, int size, bool activate)
 	if(!_textDialog) {
 		_textDialog = new TextManager(this);
 		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
+		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
+		connect(_scriptManager, SIGNAL(changed()), _textDialog, SLOT(updateFromScripts()));
 	}
 
 	if(field && field->scriptsAndTexts()->isOpen()) {

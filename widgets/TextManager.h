@@ -38,6 +38,8 @@ public:
 	int currentAnchorPosition() const;
 signals:
 	void modified();
+public slots:
+	void updateFromScripts();
 private slots:
 	void selectText(QListWidgetItem *, QListWidgetItem *previous=0);
 	void showList();
