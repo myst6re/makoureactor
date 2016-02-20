@@ -369,7 +369,7 @@ void TextManager::updateFromScripts()
 
 	for(int row = 0 ; row < liste1->count(); ++row) {
 		QListWidgetItem *item = liste1->item(row);
-		int textID = item->data(Qt::UserRole);
+		int textID = item->data(Qt::UserRole).toInt();
 		if(!usedTexts.contains(textID)) {
 			item->setForeground(Qt::darkGray);
 		} else {
