@@ -24,11 +24,9 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	setWindowTitle(tr("Variable manager"));
 	QFont font;
 	font.setPointSize(8);
-	
-	QGridLayout *globalLayout = new QGridLayout(this);
-	
+
 	QHBoxLayout *layout1 = new QHBoxLayout();
-	
+
 	bank = new QSpinBox(this);
 	bank->setRange(1,15);
 	address = new QSpinBox(this);
@@ -36,18 +34,18 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	name = new QLineEdit(this);
 	name->setMaxLength(50);
 	rename = new QPushButton(tr("Rename"), this);
-	
+
 	layout1->addWidget(bank);
 	layout1->addWidget(address);
 	layout1->addWidget(name);
 	layout1->addWidget(rename);
-	
+
 	QHBoxLayout *layout2 = new QHBoxLayout();
-	
+
 	liste1 = new QListWidget(this);
 	liste1->setFixedWidth(fontMetrics().width(QString(" WW-WW ")) + contentsMargins().left() + contentsMargins().right());
 	liste1->setFont(font);
-	
+
 	liste2 = new QTreeWidget(this);
 	liste2->setColumnCount(4);
 	liste2->setHeaderLabels(QStringList() << tr("Address") << tr("Nickname") << tr("Operation") << tr("Size"));
@@ -55,35 +53,50 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	liste2->setItemsExpandable(false);
 	liste2->setSortingEnabled(true);
 	liste2->setFont(font);
-	
+
 	layout2->addWidget(liste1);
 	layout2->addWidget(liste2);
-	
+
+	QLabel *helpIcon = new QLabel(this);
+	helpIcon->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation).pixmap(32));
+	QLabel *help = new QLabel(tr("Var banks 08, 09 and 10 are temporary and do not appear in the game save. "
+	                             "<br/>Other banks are stored in pair: for example 01-02 is in the same memory location, "
+	                             "but the first is used to store 8-bit values and "
+	                             "the second is used to store 16-bit values."),
+	                          this);
+	help->setTextFormat(Qt::RichText);
+	help->setWordWrap(true);
+	QHBoxLayout *helpLayout = new QHBoxLayout;
+	helpLayout->addWidget(helpIcon);
+	helpLayout->addWidget(help, 1);
+
 	QHBoxLayout *layout3 = new QHBoxLayout();
-	
+
 	searchButton = new QPushButton(tr("Addresses Used"), this);
 	ok = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save"), this);
 	ok->setEnabled(false);
-	
+
 	layout3->addWidget(searchButton);
 	layout3->addStretch();
 	layout3->addWidget(ok);
-	
-	globalLayout->addLayout(layout1, 0, 0);
-	globalLayout->addLayout(layout2, 1, 0);
-	globalLayout->addLayout(layout3, 2, 0);
+
+	QVBoxLayout *globalLayout = new QVBoxLayout(this);
+	globalLayout->addLayout(layout1);
+	globalLayout->addLayout(layout2);
+	globalLayout->addLayout(helpLayout);
+	globalLayout->addLayout(layout3);
 
 	setFieldArchive(fieldArchive);
-	
+
 	local_var_names = Var::get();
-	
+
 	fillList1();
 	fillList2();
 	liste1->setCurrentRow(0);
 	liste2->setCurrentItem(liste2->topLevelItem(0));
 	changeBank(0);
 	fillForm();
-	
+
 	connect(bank, SIGNAL(valueChanged(int)), SLOT(scrollToList1(int)));
 	connect(address, SIGNAL(valueChanged(int)), SLOT(scrollToList2(int)));
 	connect(liste1, SIGNAL(currentRowChanged(int)), SLOT(changeBank(int)));
@@ -92,7 +105,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	connect(rename, SIGNAL(released()), SLOT(renameVar()));
 	connect(ok, SIGNAL(released()), SLOT(save()));
 	connect(searchButton, SIGNAL(released()), SLOT(search()));
-	
+
 	adjustSize();
 }
 
@@ -198,7 +211,7 @@ void VarManager::changeBank(int row)
 		++it;
 	}
 	fillForm();
-	
+
 	liste2->blockSignals(false);
 }
 
