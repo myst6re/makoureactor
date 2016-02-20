@@ -6419,12 +6419,12 @@ chase at the end.</source>
         <translation type="unfinished">テキスト %1</translation>
     </message>
     <message>
-        <location filename="widgets/TextManager.cpp" line="432"/>
+        <location filename="widgets/TextManager.cpp" line="448"/>
         <source>Text used in scripts</source>
         <translation type="unfinished">スクリプトのテキスト</translation>
     </message>
     <message>
-        <location filename="widgets/TextManager.cpp" line="432"/>
+        <location filename="widgets/TextManager.cpp" line="448"/>
         <source>This text is used by one or more scripts on this field.
 Removing this text may break scripts that reference it.
 Are you sure you want to continue?</source>
@@ -6477,7 +6477,7 @@ Are you sure you want to continue?</source>
         <translation type="unfinished">テキストの追加</translation>
     </message>
     <message>
-        <location filename="widgets/TextManager.cpp" line="463"/>
+        <location filename="widgets/TextManager.cpp" line="479"/>
         <source>Page %1/%2</source>
         <translatorcomment>Page %1/%2</translatorcomment>
         <translation>ページ %1/%2</translation>
@@ -6566,50 +6566,50 @@ Are you sure you want to continue?</source>
         <translation type="unfinished">BGM %1</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="293"/>
+        <location filename="widgets/TutWidget.cpp" line="297"/>
         <source>Tutorial</source>
         <translation>解説解説</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="294"/>
+        <location filename="widgets/TutWidget.cpp" line="298"/>
         <source>Music</source>
         <translation type="unfinished">BGM</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="311"/>
-        <location filename="widgets/TutWidget.cpp" line="497"/>
+        <location filename="widgets/TutWidget.cpp" line="315"/>
+        <location filename="widgets/TutWidget.cpp" line="501"/>
         <source>Import</source>
         <translation type="unfinished">インポート</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="311"/>
-        <location filename="widgets/TutWidget.cpp" line="455"/>
-        <location filename="widgets/TutWidget.cpp" line="493"/>
+        <location filename="widgets/TutWidget.cpp" line="315"/>
+        <location filename="widgets/TutWidget.cpp" line="459"/>
+        <location filename="widgets/TutWidget.cpp" line="497"/>
         <source>sound_%1.akao</source>
         <translation>sound_%1.akao</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="311"/>
-        <location filename="widgets/TutWidget.cpp" line="456"/>
-        <location filename="widgets/TutWidget.cpp" line="494"/>
+        <location filename="widgets/TutWidget.cpp" line="315"/>
+        <location filename="widgets/TutWidget.cpp" line="460"/>
+        <location filename="widgets/TutWidget.cpp" line="498"/>
         <source>Final Fantasy Sound (*.akao)</source>
         <translation>Final Fantasy Sound (*.akao)</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="318"/>
-        <location filename="widgets/TutWidget.cpp" line="345"/>
+        <location filename="widgets/TutWidget.cpp" line="322"/>
+        <location filename="widgets/TutWidget.cpp" line="349"/>
         <source>Tutorial used in scripts</source>
         <translation>スクリプト内の解説</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="318"/>
+        <location filename="widgets/TutWidget.cpp" line="322"/>
         <source>Insert a tutorial here will shift the IDs of the tutorials that follows, this may be a problem.
 Are you sure you want to continue?</source>
         <translation>ここに解説を挿入すると以降の解説の ID がずれるためトラブルの原因になるかもしれません。
 挿入を実行してもかまいませんか？</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="345"/>
+        <location filename="widgets/TutWidget.cpp" line="349"/>
         <source>This tutorial may be used by one or more scripts on this field.
 Delete can cause errors.
 Are you sure you want to continue?</source>
@@ -6618,7 +6618,7 @@ Are you sure you want to continue?</source>
 それでも削除しますか？</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="345"/>
+        <location filename="widgets/TutWidget.cpp" line="349"/>
         <source>This tutorial is used by one or more scripts on this field.
 Remove will replace calls to this tutorial with calls to the tutorial that follows.
 Are you sure you want to continue?</source>
@@ -6627,29 +6627,29 @@ Are you sure you want to continue?</source>
 それでも削除しますか？</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="459"/>
+        <location filename="widgets/TutWidget.cpp" line="463"/>
         <source>Export</source>
         <translation type="unfinished">エクスポート</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="469"/>
-        <location filename="widgets/TutWidget.cpp" line="507"/>
-        <location filename="widgets/TutWidget.cpp" line="512"/>
+        <location filename="widgets/TutWidget.cpp" line="473"/>
+        <location filename="widgets/TutWidget.cpp" line="511"/>
+        <location filename="widgets/TutWidget.cpp" line="516"/>
         <source>Error</source>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="469"/>
+        <location filename="widgets/TutWidget.cpp" line="473"/>
         <source>Opening error file</source>
         <translation type="unfinished">オープン エラー</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="507"/>
+        <location filename="widgets/TutWidget.cpp" line="511"/>
         <source>Opening Error File</source>
         <translation type="unfinished">オープン エラー</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="512"/>
+        <location filename="widgets/TutWidget.cpp" line="516"/>
         <source>File too large</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6660,14 +6660,14 @@ Are you sure you want to continue?</source>
         <translation>説明 %1</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="452"/>
-        <location filename="widgets/TutWidget.cpp" line="490"/>
+        <location filename="widgets/TutWidget.cpp" line="456"/>
+        <location filename="widgets/TutWidget.cpp" line="494"/>
         <source>tuto_%1.tutps</source>
         <translation>tuto_%1.tutps</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="453"/>
-        <location filename="widgets/TutWidget.cpp" line="491"/>
+        <location filename="widgets/TutWidget.cpp" line="457"/>
+        <location filename="widgets/TutWidget.cpp" line="495"/>
         <source>Tuto Final Fantasy VII PS (*.tutps)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6682,105 +6682,110 @@ Are you sure you want to continue?</source>
         <translation type="unfinished">変数マネージャー</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="38"/>
+        <location filename="widgets/VarManager.cpp" line="36"/>
         <source>Rename</source>
         <oldsource>Renommer</oldsource>
         <translatorcomment>Rename</translatorcomment>
         <translation type="unfinished">リネーム</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="53"/>
+        <location filename="widgets/VarManager.cpp" line="51"/>
         <source>Address</source>
         <oldsource>Adresse</oldsource>
         <translatorcomment>Adress</translatorcomment>
         <translation type="unfinished">アドレス</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="64"/>
+        <location filename="widgets/VarManager.cpp" line="75"/>
         <source>Addresses Used</source>
         <oldsource>Adresses utilisées</oldsource>
         <translatorcomment>Adresses used</translatorcomment>
         <translation type="unfinished">アドレスに適用</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="252"/>
+        <location filename="widgets/VarManager.cpp" line="265"/>
         <source>Error</source>
         <oldsource>Erreur</oldsource>
         <translatorcomment>Error</translatorcomment>
         <translation type="unfinished">エラー</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="260"/>
+        <location filename="widgets/VarManager.cpp" line="273"/>
         <source>Searching</source>
         <oldsource>Recherche</oldsource>
         <translatorcomment>Searching</translatorcomment>
         <translation type="unfinished">検索中</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="53"/>
+        <location filename="widgets/VarManager.cpp" line="51"/>
         <source>Nickname</source>
         <translation type="unfinished">ニックネーム</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="53"/>
+        <location filename="widgets/VarManager.cpp" line="51"/>
         <source>Operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="53"/>
+        <location filename="widgets/VarManager.cpp" line="51"/>
         <source>Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="65"/>
+        <location filename="widgets/VarManager.cpp" line="62"/>
+        <source>Var banks 08, 09 and 10 are temporary and do not appear in the game save. &lt;br/&gt;Other banks are stored in pair: for example 01-02 is in the same memory location, but the first is used to store 8-bit values and the second is used to store 16-bit values.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/VarManager.cpp" line="76"/>
         <source>Save</source>
         <translation type="unfinished">保存</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="252"/>
+        <location filename="widgets/VarManager.cpp" line="265"/>
         <source>Save Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="260"/>
+        <location filename="widgets/VarManager.cpp" line="273"/>
         <source>Searching, it may take a minute...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="314"/>
+        <location filename="widgets/VarManager.cpp" line="327"/>
         <source>rw</source>
         <translation>rw</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="316"/>
+        <location filename="widgets/VarManager.cpp" line="329"/>
         <source>r</source>
         <translation>r</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="318"/>
+        <location filename="widgets/VarManager.cpp" line="331"/>
         <source>w</source>
         <translation>w</translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="321"/>
+        <location filename="widgets/VarManager.cpp" line="334"/>
         <source>bitfield</source>
         <oldsource>bits</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="324"/>
+        <location filename="widgets/VarManager.cpp" line="337"/>
         <source>1 Byte</source>
         <oldsource>1 octet</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="327"/>
+        <location filename="widgets/VarManager.cpp" line="340"/>
         <source>2 Bytes</source>
         <oldsource>2 octets</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/VarManager.cpp" line="330"/>
+        <location filename="widgets/VarManager.cpp" line="343"/>
         <source>2 Signed Bytes</source>
         <oldsource>2 octets signés</oldsource>
         <translation type="unfinished"></translation>
@@ -7149,44 +7154,44 @@ Are you sure you want to continue?</source>
     </message>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="529"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="838"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="840"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="858"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="844"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="846"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="864"/>
         <source>Triangle %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="513"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="707"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="709"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="729"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="713"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="715"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="735"/>
         <source>Camera %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="544"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="556"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="570"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1129"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1185"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1293"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="558"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="574"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1140"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1200"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1312"/>
         <source>Unused</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="554"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1183"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="556"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1196"/>
         <source>Door %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="568"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1291"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="572"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1308"/>
         <source>Arrow %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="1006"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1012"/>
         <source>?</source>
         <translation>?</translation>
     </message>
@@ -7520,7 +7525,7 @@ Edited files:</source>
     </message>
     <message>
         <location filename="Window.cpp" line="757"/>
-        <location filename="Window.cpp" line="1348"/>
+        <location filename="Window.cpp" line="1350"/>
         <source>Author: %1</source>
         <translation type="unfinished">作者: %1</translation>
     </message>
@@ -7672,34 +7677,34 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
 %1</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1274"/>
-        <location filename="Window.cpp" line="1352"/>
+        <location filename="Window.cpp" line="1276"/>
+        <location filename="Window.cpp" line="1354"/>
         <source>Opening error</source>
         <translation type="unfinished">オープン エラー</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1274"/>
+        <location filename="Window.cpp" line="1276"/>
         <source>Can not open encounters!</source>
         <translation type="unfinished">エンカウントが開けません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1352"/>
+        <location filename="Window.cpp" line="1354"/>
         <source>Can not open miscellaneous informations!</source>
         <translation type="unfinished">各種情報が開けません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1376"/>
+        <location filename="Window.cpp" line="1378"/>
         <source>Applying...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1441"/>
+        <location filename="Window.cpp" line="1443"/>
         <source>By myst6re&lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</source>
         <oldsource>By myst6re&lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;Thanks to :&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;/ul&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1448"/>
+        <location filename="Window.cpp" line="1450"/>
         <source>Close</source>
         <translation type="unfinished">閉じる</translation>
     </message>
