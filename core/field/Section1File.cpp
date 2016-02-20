@@ -451,7 +451,7 @@ bool Section1File::importer(QIODevice *device, ExportFormat format)
 	Q_UNUSED(format)
 	//TODO
 	// bool jp = Config::value("jp_txt", false).toBool();
-	bool start, field, texts;
+	bool start = false, field, texts;
 
 	QXmlStreamReader stream(device);
 
