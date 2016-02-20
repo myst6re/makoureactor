@@ -368,7 +368,7 @@
         <location filename="widgets/EncounterWidget.cpp" line="26"/>
         <source>Encounters 2</source>
         <oldsource>Rencontres 2</oldsource>
-        <translation>Rencontres 1\2</translation>
+        <translation>Rencontres 2</translation>
     </message>
     <message>
         <location filename="widgets/EncounterWidget.cpp" line="30"/>
