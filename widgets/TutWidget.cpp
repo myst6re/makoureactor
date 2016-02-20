@@ -226,7 +226,11 @@ void TutWidget::updateAkaoID(quint16 akaoID)
 
 void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 {
-	if(item == NULL)	return;
+	if(item == NULL) {
+		exportButton->setEnabled(false);
+		importButton->setEnabled(false);
+		return;
+	}
 
 	if(lastItem != NULL) {
 		saveText(lastItem);
