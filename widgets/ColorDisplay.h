@@ -20,8 +20,8 @@
 
 #include <QtWidgets>
 
-#define COLOR_DISPLAY_CELL_SIZE		9
-#define COLOR_DISPLAY_BORDER_WIDTH	1
+#define COLOR_DISPLAY_CELL_SIZE       9
+#define COLOR_DISPLAY_BORDER_WIDTH    1
 
 class ColorDisplay : public QWidget
 {
