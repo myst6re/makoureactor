@@ -102,6 +102,9 @@ void ColorDisplay::mouseReleaseEvent(QMouseEvent *event)
 {
 	if(isReadOnly())	return;
 	int colorIndex = colorId(event->pos());
+	if(colorIndex >= colors.size()) {
+		return;
+	}
 	QColor color = QColorDialog::getColor(colors.at(colorIndex), this, tr("Choose a new color"));
 	if(color.isValid()) {
 		colors.replace(colorIndex, color.rgb());

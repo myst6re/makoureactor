@@ -190,8 +190,11 @@ bool FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
 {
 	if(modelCount() < maxModelCount()) {
 		QList<QRgb> color;
-		if(!colors.isEmpty())
+		if(!colors.isEmpty()) {
 			color = colors.first();
+		} else {
+			color = QVector<QRgb>(10, Qt::black).toList();
+		}
 
 		model_unknown.insert(modelID, (quint16)0);
 		model_nameChar.insert(modelID, QString());
