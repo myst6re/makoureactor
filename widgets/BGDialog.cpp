@@ -37,7 +37,7 @@ BGDialog::BGDialog(QWidget *parent) :
 	QPalette pal = imageBox->palette();
 	pal.setColor(QPalette::Active, QPalette::Dark, Qt::black);
 	pal.setColor(QPalette::Inactive, QPalette::Dark, Qt::black);
-	pal.setColor(QPalette::Disabled, QPalette::Dark, .60 * Qt::black);
+	pal.setColor(QPalette::Disabled, QPalette::Dark, pal.color(QPalette::Disabled, QPalette::Text));
 	imageBox->setPalette(pal);
 
 	parametersWidget = new QComboBox(this);
