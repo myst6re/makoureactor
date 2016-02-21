@@ -18,63 +18,74 @@
 #include "ApercuBG.h"
 
 ApercuBG::ApercuBG(QWidget *parent) :
-	QLabel(parent), field(0), error(false)
+	QLabel(parent), _field(0), _error(false)
 {
 	setAutoFillBackground(true);
 	setAlignment(Qt::AlignCenter);
+	setBackgroundRole(QPalette::Dark);
+
 	QPalette pal = palette();
-	pal.setColor(QPalette::Active, QPalette::Window, Qt::black);
-	pal.setColor(QPalette::Inactive, QPalette::Window, Qt::black);
-	pal.setColor(QPalette::Disabled, QPalette::Window, pal.color(QPalette::Disabled, QPalette::Text));
+	pal.setColor(QPalette::Active, QPalette::Dark, Qt::black);
+	pal.setColor(QPalette::Inactive, QPalette::Dark, Qt::black);
+	pal.setColor(QPalette::Disabled, QPalette::Dark, pal.color(QPalette::Disabled, QPalette::Text));
 	setPalette(pal);
 }
 
 void ApercuBG::fill(Field *field, bool reload)
 {
-	if(!reload && this->field == field)		return;
+	if(!reload && _field == field) {
+		return;
+	}
 
-	this->field = field;
+	_field = field;
+	QImage image = _field->background()->openBackground();
+
+	if(image.isNull()) {
+		_background = errorPixmap(contentsRect().size());
+		setCursor(Qt::ArrowCursor);
+		_error = true;
+	} else {
+		_background = QPixmap::fromImage(image);
+		setCursor(Qt::PointingHandCursor);
+		_error = false;
+	}
 
 	drawBackground();
 }
 
 void ApercuBG::drawBackground()
 {
-	QPixmap background = QPixmap::fromImage(field->background()->openBackground());
-
-	QPixmap newBg;
-	int w=width()-2, h=height()-2;
-
-	if(background.isNull()) {
-		newBg = errorPixmap(w, h);
-		setCursor(Qt::ArrowCursor);
-		error = true;
-	} else {
-		newBg = background;
-		setCursor(Qt::PointingHandCursor);
-		error = false;
+	if(!_field) {
+		return;
 	}
 
-	if(newBg.width()>w || newBg.height()>h)
-		setPixmap(newBg.scaled(w, h, Qt::KeepAspectRatio));
-	else
-		setPixmap(newBg);
+	QRect contents = contentsRect();
+	int w = contents.width(), h = contents.height();
+
+	if(_background.width() > w ||
+	        _background.height() > h) {
+		setPixmap(_background.scaled(w, h, Qt::KeepAspectRatio));
+	} else {
+		setPixmap(_background);
+	}
 }
 
-QPixmap ApercuBG::errorPixmap(int w, int h)
+QPixmap ApercuBG::errorPixmap(const QSize &size)
 {
-	QPixmap errorPix(w, h);
+	QPixmap errorPix(size);
 	errorPix.fill(Qt::black);
 	QFont font;
 	font.setPixelSize(44);
 	QString text = tr("Error");
-	int textWidth = QFontMetrics(font).width(text);
-	int textHeight = QFontMetrics(font).height();
+	int textWidth = QFontMetrics(font).width(text),
+	    textHeight = QFontMetrics(font).height();
 
 	QPainter p(&errorPix);
 	p.setPen(Qt::white);
 	p.setFont(font);
-	p.drawStaticText((w-textWidth)/2, (h-textHeight)/2, QStaticText(text));
+	p.drawStaticText((size.width() - textWidth) / 2,
+	                 (size.height() - textHeight) / 2,
+	                 QStaticText(text));
 	p.end();
 
 	return errorPix;
@@ -84,14 +95,25 @@ void ApercuBG::clear()
 {
 	QLabel::clear();
 	setCursor(Qt::ArrowCursor);
-	field = 0;
-	error = false;
+	_field = 0;
+	_background = QPixmap();
+	_error = false;
 }
 
-void ApercuBG::mouseReleaseEvent(QMouseEvent *event)
+void ApercuBG::mouseReleaseEvent(QMouseEvent *e)
 {
-	if(event->button() == Qt::LeftButton && !error)
-	{
+	QLabel::mouseReleaseEvent(e);
+
+	if(e->button() == Qt::LeftButton && !_error) {
 		emit clicked();
 	}
+}
+
+void ApercuBG::paintEvent(QPaintEvent *e)
+{
+	if(!_background.isNull() &&
+	        (!pixmap() || pixmap()->size() != _background.size())) {
+		drawBackground();
+	}
+	QLabel::paintEvent(e);
 }
