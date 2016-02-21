@@ -16,35 +16,29 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "BGDialog.h"
+#include "core/Config.h"
 
 BGDialog::BGDialog(QWidget *parent) :
-	QDialog(parent, Qt::Tool), field(0)
+	QDialog(parent, Qt::Tool), field(0), zoomFactor(1.0f)
 {
 	setWindowTitle(tr("Background"));
-	zoomFactor = 1;
-	imageFrame = new QFrame(this);
-	imageFrame->setMinimumSize(320, 240);
-	imageFrame->setAutoFillBackground(true);
-
-	QPalette pal = imageFrame->palette();
-	pal.setColor(QPalette::Active, QPalette::Window, Qt::black);
-	pal.setColor(QPalette::Inactive, QPalette::Window, Qt::black);
-	pal.setColor(QPalette::Disabled, QPalette::Window, .60*Qt::black);
-	imageFrame->setPalette(pal);
 
 	image = new ApercuBGLabel();
 	image->setAlignment(Qt::AlignCenter);
+
 	imageBox = new QScrollArea(this);
+	imageBox->setAlignment(Qt::AlignCenter);
 	imageBox->viewport()->installEventFilter(this);
 	imageBox->setMinimumSize(320, 240);
-	imageBox->setPalette(pal);
 	imageBox->setWidget(image);
 	imageBox->setWidgetResizable(true);
+	imageBox->setBackgroundRole(QPalette::Dark);
 
-	QVBoxLayout *imageLayout = new QVBoxLayout();
-	imageLayout->addWidget(imageBox);
-	imageLayout->setContentsMargins(QMargins());
-	imageFrame->setLayout(imageLayout);
+	QPalette pal = imageBox->palette();
+	pal.setColor(QPalette::Active, QPalette::Dark, Qt::black);
+	pal.setColor(QPalette::Inactive, QPalette::Dark, Qt::black);
+	pal.setColor(QPalette::Disabled, QPalette::Dark, .60 * Qt::black);
+	imageBox->setPalette(pal);
 
 	parametersWidget = new QComboBox(this);
 	parametersWidget->setEnabled(false);
@@ -72,7 +66,7 @@ BGDialog::BGDialog(QWidget *parent) :
 	buttonRepair->hide();
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(imageFrame, 0, 0, 5, 1);
+	layout->addWidget(imageBox, 0, 0, 5, 1);
 	layout->addWidget(parametersWidget, 0, 1);
 	layout->addWidget(statesWidget, 1, 1);
 	layout->addWidget(tabBar, 2, 1);
@@ -81,6 +75,7 @@ BGDialog::BGDialog(QWidget *parent) :
 	layout->setColumnStretch(0, 2);
 	layout->setColumnStretch(1, 1);
 
+	connect(image, SIGNAL(saveRequested()), SLOT(saveImage()));
 	connect(parametersWidget, SIGNAL(currentIndexChanged(int)), SLOT(parameterChanged(int)));
 	connect(layersWidget, SIGNAL(itemSelectionChanged()), SLOT(layerChanged()));
 	connect(sectionsWidget, SIGNAL(itemSelectionChanged()), SLOT(sectionChanged()));
@@ -103,7 +98,6 @@ void BGDialog::fill(Field *field, bool reload)
 
 	parameterChanged(0);
 	layerChanged();
-	image->setName(field->name());
 	updateBG();
 }
 
@@ -221,7 +215,6 @@ void BGDialog::parameterChanged(int index)
 	int parameter = parametersWidget->itemData(index).toInt();
 	quint8 states = allparams.value(parameter);
 	QListWidgetItem *item;
-	zoomFactor = 1;
 	statesWidget->clear();
 	for(int i=0 ; i<8 ; ++i) {
 		if((states >> i) & 1) {
@@ -323,6 +316,23 @@ void BGDialog::changeZ(int value)
 	updateBG();
 }
 
+void BGDialog::saveImage()
+{
+	QString path = Config::value("saveBGPath").toString();
+	if(!path.isEmpty()) {
+		path.append("/");
+	}
+	path = QFileDialog::getSaveFileName(this, tr("Save Background"),
+	                                    path + field->name() + ".png",
+	                                    tr("PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)"));
+	if(path.isNull())	return;
+
+	background().save(path);
+
+	int index = path.lastIndexOf('/');
+	Config::setValue("saveBGPath", index == -1 ? path : path.left(index));
+}
+
 void BGDialog::tryToRepairBG()
 {
 	if (field->background()->repair()) {
@@ -334,12 +344,22 @@ void BGDialog::tryToRepairBG()
 	}
 }
 
+QImage BGDialog::background(bool *bgWarning)
+{
+	if(tabBar->currentIndex() == 0) {
+		return field->background()->openBackground(params, z, layers, NULL, bgWarning);
+	} else {
+		bool layers[4] = { false, true, false, false };
+		return field->background()->openBackground(params, z, layers, &sections, bgWarning);
+	}
+}
+
 void BGDialog::updateBG()
 {
 	if(!field)	return;
 
-	QImage img;
 	bool bgWarning;
+	QImage img = background(&bgWarning);
 
 	if(tabBar->currentIndex() == 0) {
 		img = field->background()->openBackground(params, z, layers, NULL, &bgWarning);
@@ -353,7 +373,7 @@ void BGDialog::updateBG()
 		bgWarning = false;
 	} else {
 		image->setPixmap(QPixmap::fromImage(img)
-			.scaled(imageFrame->width() * zoomFactor, (imageFrame->height() -4) * zoomFactor,
+			.scaled(imageBox->contentsRect().width() * zoomFactor, imageBox->contentsRect().height() * zoomFactor,
 			Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 
