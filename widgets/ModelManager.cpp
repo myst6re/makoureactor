@@ -148,8 +148,9 @@ int ModelManager::currentAnimID(QTreeWidgetItem *item) const
 	return modelAnims->indexOfTopLevelItem(item);
 }
 
-void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *)
+void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous)
 {
+	Q_UNUSED(previous);
 	if(item == NULL) {
 		modelFrame->setEnabled(false);
 		return;
@@ -211,7 +212,6 @@ void ModelManager::showModel(QTreeWidgetItem *item)
 			modelPreview->clear();
 			return;
 		}
-//		qDebug() << "showModel()" << item->text(0);
 		modelPreview->setFieldModelFile(modelData(item));
 	}
 }

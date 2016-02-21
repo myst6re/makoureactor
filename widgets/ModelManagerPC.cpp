@@ -218,7 +218,15 @@ void ModelManagerPC::delModel()
 
 	modelLoader()->removeModel(row);
 
-	delete item;
+	/* Delete a row will trigger currentItemChanged signal
+	 * before the list was really updated */
+	models->blockSignals(true);
+	delete models->takeTopLevelItem(row);
+	models->blockSignals(false);
+
+	models->setCurrentItem(models->topLevelItem(row));
+	// Trigger currentItemChanged manually
+	showModelInfos();
 
 	emit modified();
 }
