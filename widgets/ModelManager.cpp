@@ -106,6 +106,8 @@ void ModelManager::fill(Field *field, bool reload)
 		models->setCurrentItem(models->topLevelItem(0));
 	}
 	models->setFocus();
+
+	modelFrame->setEnabled(models->topLevelItemCount() != 0);
 }
 
 void ModelManager::fillModelList()
