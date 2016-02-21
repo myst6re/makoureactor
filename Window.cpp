@@ -139,6 +139,7 @@ Window::Window() :
 	fieldList = new FieldList(this);
 
 	zoneImage = new ApercuBG();
+	zoneImage->setMinimumSize(320, 240);
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
 //		modelThread = new FieldModelThread(this);
@@ -149,26 +150,35 @@ Window::Window() :
 	}
 
 	zonePreview = new QStackedWidget(this);
-	zonePreview->setContentsMargins(QMargins());
 	zonePreview->addWidget(zoneImage);
 	if(fieldModel) {
 		zonePreview->addWidget(fieldModel);
 	}
 
+	QWidget *fullFieldList = new QWidget(this);
+	QVBoxLayout *fieldListLayout = new QVBoxLayout(fullFieldList);
+	fieldListLayout->addWidget(fieldList, 1);
+	fieldListLayout->addWidget(fieldList->lineSearch());
+	zonePreview->setContentsMargins(fieldListLayout->contentsMargins());
+
+	QSplitter *leftColumn = new QSplitter(Qt::Vertical, this);
+	leftColumn->addWidget(fullFieldList);
+	leftColumn->addWidget(zonePreview);
+	leftColumn->setStretchFactor(0, 10);
+	leftColumn->setStretchFactor(1, 2);
+	leftColumn->setCollapsible(0, false);
+
 	_scriptManager = new ScriptManager(this);
 
-	QWidget *widget = new QWidget(this);
-	QGridLayout *gridLayout = new QGridLayout(widget);
-	gridLayout->addWidget(fieldList, 0, 0);
-	gridLayout->addWidget(fieldList->lineSearch(), 1, 0);
-	gridLayout->addWidget(zonePreview, 2, 0);
-	gridLayout->addWidget(_scriptManager, 0, 1, 3, 1);
-	gridLayout->setColumnStretch(0, 2);
-	gridLayout->setColumnStretch(1, 10);
-	gridLayout->setRowStretch(0, 3);
-	gridLayout->setRowStretch(2, 1);
+	QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
+	splitter->addWidget(leftColumn);
+	splitter->addWidget(_scriptManager);
+	splitter->setStretchFactor(0, 2);
+	splitter->setStretchFactor(1, 10);
+	splitter->setCollapsible(0, false);
+	splitter->setCollapsible(1, false);
 
-	setCentralWidget(widget);
+	setCentralWidget(splitter);
 
 	searchDialog = new Search(this);
 	menuBar->addMenu(createPopupMenu());

@@ -59,12 +59,10 @@ void ApercuBG::drawBackground()
 		return;
 	}
 
-	QRect contents = contentsRect();
-	int w = contents.width(), h = contents.height();
+	QSize contentsSize = contentsRect().size();
 
-	if(_background.width() > w ||
-	        _background.height() > h) {
-		setPixmap(_background.scaled(w, h, Qt::KeepAspectRatio));
+	if(_background.size() != contentsSize) {
+		setPixmap(_background.scaled(contentsSize, Qt::KeepAspectRatio));
 	} else {
 		setPixmap(_background);
 	}
@@ -109,11 +107,16 @@ void ApercuBG::mouseReleaseEvent(QMouseEvent *e)
 	}
 }
 
-void ApercuBG::paintEvent(QPaintEvent *e)
+void ApercuBG::resizeEvent(QResizeEvent *e)
 {
+	Q_UNUSED(e);
+
 	if(!_background.isNull() &&
-	        (!pixmap() || pixmap()->size() != _background.size())) {
-		drawBackground();
+	        (!pixmap() || contentsRect().size() != pixmap()->size())) {
+		setUpdatesEnabled(false);
+		drawBackground(); // Call setPixmap() -> update() which must be prevented
+		setUpdatesEnabled(true);
 	}
-	QLabel::paintEvent(e);
+
+	QLabel::resizeEvent(e);
 }

@@ -53,7 +53,6 @@ ScriptManager::ScriptManager(QWidget *parent) :
 	contentLayout->setColumnStretch(0, 2);
 	contentLayout->setColumnStretch(1, 1);
 	contentLayout->setColumnStretch(2, 9);
-	contentLayout->setContentsMargins(QMargins());
 
 	connect(_groupScriptList, SIGNAL(changed()), SIGNAL(changed()));
 	connect(_groupScriptList, SIGNAL(itemSelectionChanged()), SLOT(fillScripts()));

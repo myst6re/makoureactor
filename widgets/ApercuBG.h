@@ -28,6 +28,9 @@ public:
 	explicit ApercuBG(QWidget *parent = 0);
 	void fill(Field *field, bool reload = false);
 	void clear();
+	inline QSize minimumSizeHint() const {
+		return QSize(0, 0);
+	}
 signals:
 	void clicked();
 public slots:
@@ -36,10 +39,11 @@ private:
 	static QPixmap errorPixmap(const QSize &size);
 	Field *_field;
 	QPixmap _background;
+	QSize _backgroundSize;
 	bool _error;
 protected:
 	void mouseReleaseEvent(QMouseEvent *e);
-	void paintEvent(QPaintEvent *e);
+	void resizeEvent(QResizeEvent *e);
 };
 
 #endif
