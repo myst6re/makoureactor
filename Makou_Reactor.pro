@@ -4,6 +4,7 @@ TARGET = makoureactor
 QT += core gui opengl
 greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets
+    CONFIG += c++11
 }
 lessThan(QT_MAJOR_VERSION, 5) {
     INCLUDEPATH += compat
@@ -330,20 +331,21 @@ OTHER_FILES += Makou_Reactor.rc \
     compat/QtWidgets
 DISTFILES += Makou_Reactor.desktop
 
+system(lrelease Makou_Reactor.pro) # call lrelease to make the qm files.
+
 #all other *nix (except for symbian)
 unix:!macx:!symbian {
     LIBS += -lglut -lGLU
-    system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
 
     target.path = /usr/bin
 
-    langfiles.files= *.qm
-    langfiles.path= /usr/share/makoureactor
+    langfiles.files = *.qm
+    langfiles.path = /usr/share/makoureactor
 
     icon.files = images/logo-shinra.png
     icon.path = /usr/share/pixmaps
 
-    desktop.files =Makou_Reactor.desktop
+    desktop.files = Makou_Reactor.desktop
     desktop.path = /usr/share/applications
 
     INSTALLS += target langfiles icon desktop
