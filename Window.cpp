@@ -321,47 +321,19 @@ int Window::closeFile(bool quit)
 		field = NULL;
 
 		fieldList->blockSignals(true);
-		_scriptManager->clear();
-		_scriptManager->setEnabled(false);
 		fieldList->clear();
 		fieldList->setEnabled(false);
 		fieldList->blockSignals(false);
-		zoneImage->clear();
-		if(fieldModel) {
-			fieldModel->clear();
-//			if(fieldArchive && fieldArchive->io()->isPC()) {
-//				modelThread->cancel();
-//				modelThread->wait();
-//			}
-		}
-		zonePreview->setCurrentIndex(0);
-		zonePreview->setEnabled(false);
 
-		authorAction->setVisible(false);
-		setWindowModified(false);
-		setWindowTitle();
-		searchDialog->setFieldArchive(NULL);
-		if(_textDialog) {
-			_textDialog->clear();
-			_textDialog->setEnabled(false);
-		}
+		disableEditors();
 		if(_modelManager) {
 			_modelManager->close();
 			_modelManager->deleteLater();
 			_modelManager = 0;
 		}
-		if(_tutManager) {
-			_tutManager->clear();
-			_tutManager->setEnabled(false);
-		}
-		if(_walkmeshManager) {
-			_walkmeshManager->clear();
-			_walkmeshManager->setEnabled(false);
-		}
-		if(_backgroundManager) {
-			_backgroundManager->clear();
-			_backgroundManager->setEnabled(false);
-		}
+		setWindowModified(false);
+		setWindowTitle();
+		searchDialog->setFieldArchive(NULL);
 		
 		actionSave->setEnabled(false);
 		actionSaveAs->setEnabled(false);
@@ -674,18 +646,54 @@ int Window::currentFieldId() const
 	return fieldList->currentFieldId();
 }
 
+void Window::disableEditors()
+{
+	zoneImage->clear();
+	if(fieldModel) {
+		fieldModel->clear();
+//		if(fieldArchive && fieldArchive->io()->isPC()) {
+//			modelThread->cancel();
+//			modelThread->wait();
+//		}
+	}
+	zonePreview->setCurrentIndex(0);
+	zonePreview->setEnabled(false);
+
+	_scriptManager->clear();
+	_scriptManager->setEnabled(false);
+
+	authorAction->setVisible(false);
+	if(_textDialog) {
+		_textDialog->clear();
+		_textDialog->setEnabled(false);
+	}
+	if(_modelManager) {
+		_modelManager->clear();
+		_modelManager->setEnabled(false);
+	}
+	if(_tutManager) {
+		_tutManager->clear();
+		_tutManager->setEnabled(false);
+	}
+	if(_walkmeshManager) {
+		_walkmeshManager->clear();
+		_walkmeshManager->setEnabled(false);
+	}
+	if(_backgroundManager) {
+		_backgroundManager->clear();
+		_backgroundManager->setEnabled(false);
+	}
+}
+
 void Window::openField(bool reload)
 {
 	if(!fieldArchive) {
 		return;
 	}
 
-	// Clear lists
-	_scriptManager->clear();
-
 	int fieldId = currentFieldId();
 	if(fieldId < 0) {
-		_scriptManager->setEnabled(false);
+		disableEditors();
 		return;
 	}
 	fieldList->scrollToItem(fieldList->selectedItems().first());
@@ -714,8 +722,7 @@ void Window::openField(bool reload)
 	// Get and set field
 	field = fieldArchive->field(fieldId, true, true);
 	if(!field) {
-		zoneImage->clear();
-		_scriptManager->setEnabled(false);
+		disableEditors();
 		return;
 	}
 //	if(fieldModel && fieldArchive->io()->isPC()) {
@@ -749,6 +756,7 @@ void Window::openField(bool reload)
 	// Show background preview
 	zoneImage->fill(field, reload);
 	zonePreview->setCurrentIndex(0);
+	zonePreview->setEnabled(true);
 
 	Section1File *scriptsAndTexts = field->scriptsAndTexts();
 
@@ -761,6 +769,7 @@ void Window::openField(bool reload)
 		_scriptManager->fill(field);
 		_scriptManager->setEnabled(true);
 	} else {
+		_scriptManager->clear();
 		_scriptManager->setEnabled(false);
 	}
 

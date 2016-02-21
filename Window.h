@@ -94,6 +94,7 @@ public slots:
 	void fontManager();
 	void about();
 private slots:
+	void disableEditors();
 	void openField(bool reload=false);
 	void showModel(int grpScriptID);
 	void showModel(Field *field, FieldModelFile *fieldModelFile);
