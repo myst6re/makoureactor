@@ -112,6 +112,7 @@ private:
 	QStackedWidget *zonePreview;
 	ApercuBG *zoneImage;
 	FieldModel *fieldModel;
+	QSplitter *horizontalSplitter, *verticalSplitter;
 
 	QToolBar *toolBar;
 

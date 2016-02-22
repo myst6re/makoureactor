@@ -139,7 +139,7 @@ Window::Window() :
 	fieldList = new FieldList(this);
 
 	zoneImage = new ApercuBG();
-	zoneImage->setMinimumSize(320, 240);
+	zoneImage->setMinimumSize(300, 225);
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
 //		modelThread = new FieldModelThread(this);
@@ -161,24 +161,23 @@ Window::Window() :
 	fieldListLayout->addWidget(fieldList->lineSearch());
 	zonePreview->setContentsMargins(fieldListLayout->contentsMargins());
 
-	QSplitter *leftColumn = new QSplitter(Qt::Vertical, this);
-	leftColumn->addWidget(fullFieldList);
-	leftColumn->addWidget(zonePreview);
-	leftColumn->setStretchFactor(0, 10);
-	leftColumn->setStretchFactor(1, 2);
-	leftColumn->setCollapsible(0, false);
+	horizontalSplitter = new QSplitter(Qt::Vertical, this);
+	horizontalSplitter->addWidget(fullFieldList);
+	horizontalSplitter->addWidget(zonePreview);
+	horizontalSplitter->setStretchFactor(0, 10);
+	horizontalSplitter->setStretchFactor(1, 2);
+	horizontalSplitter->setCollapsible(0, false);
 
 	_scriptManager = new ScriptManager(this);
 
-	QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
-	splitter->addWidget(leftColumn);
-	splitter->addWidget(_scriptManager);
-	splitter->setStretchFactor(0, 2);
-	splitter->setStretchFactor(1, 10);
-	splitter->setCollapsible(0, false);
-	splitter->setCollapsible(1, false);
+	verticalSplitter = new QSplitter(Qt::Horizontal, this);
+	verticalSplitter->addWidget(horizontalSplitter);
+	verticalSplitter->addWidget(_scriptManager);
+	verticalSplitter->setStretchFactor(0, 2);
+	verticalSplitter->setStretchFactor(1, 10);
+	verticalSplitter->setCollapsible(1, false);
 
-	setCentralWidget(splitter);
+	setCentralWidget(verticalSplitter);
 
 	searchDialog = new Search(this);
 	menuBar->addMenu(createPopupMenu());
@@ -199,6 +198,8 @@ Window::Window() :
 
 	restoreState(Config::value("windowState").toByteArray());
 	restoreGeometry(Config::value("windowGeometry").toByteArray());
+	horizontalSplitter->restoreState(Config::value("horizontalSplitterState").toByteArray());
+	verticalSplitter->restoreState(Config::value("verticalSplitterState").toByteArray());
 	closeFile();
 }
 
@@ -228,6 +229,8 @@ void Window::closeEvent(QCloseEvent *event)
 	} else {
 		Config::setValue("windowState", saveState());
 		Config::setValue("windowGeometry", saveGeometry());
+		Config::setValue("horizontalSplitterState", horizontalSplitter->saveState());
+		Config::setValue("verticalSplitterState", verticalSplitter->saveState());
 		Config::setValue("fieldListSortColumn", fieldList->sortColumn());
 		Config::setValue("fieldListSortOrder", int(fieldList->header()->sortIndicatorOrder()));
 		_scriptManager->saveConfig();
