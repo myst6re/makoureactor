@@ -161,7 +161,7 @@ Window::Window() :
 	fieldListLayout->addWidget(fieldList->lineSearch());
 	zonePreview->setContentsMargins(fieldListLayout->contentsMargins());
 
-	horizontalSplitter = new QSplitter(Qt::Vertical, this);
+	horizontalSplitter = new Splitter(Qt::Vertical, this);
 	horizontalSplitter->addWidget(fullFieldList);
 	horizontalSplitter->addWidget(zonePreview);
 	horizontalSplitter->setStretchFactor(0, 10);
@@ -170,7 +170,7 @@ Window::Window() :
 
 	_scriptManager = new ScriptManager(this);
 
-	verticalSplitter = new QSplitter(Qt::Horizontal, this);
+	verticalSplitter = new Splitter(Qt::Horizontal, this);
 	verticalSplitter->addWidget(horizontalSplitter);
 	verticalSplitter->addWidget(_scriptManager);
 	verticalSplitter->setStretchFactor(0, 2);
@@ -242,11 +242,28 @@ QMenu *Window::createPopupMenu()
 {
 	QMenu *menu = new QMenu(tr("&View"), this);
 	menu->addAction(toolBar->toggleViewAction());
+	QAction *action;
+	action = menu->addAction(tr("Field List"), this, SLOT(toggleFieldList()));
+	action->setCheckable(true);
+	action->setChecked(verticalSplitter->isCollapsed(0));
+	action = menu->addAction(tr("Background Preview"), this, SLOT(toggleBackgroundPreview()));
+	action->setCheckable(true);
+	action->setChecked(horizontalSplitter->isCollapsed(1));
 	menu->addSeparator();
 	foreach(QAction *action, _scriptManager->actions()) {
 		menu->addAction(action);
 	}
 	return menu;
+}
+
+void Window::toggleFieldList()
+{
+	verticalSplitter->toggleCollapsed(0);
+}
+
+void Window::toggleBackgroundPreview()
+{
+	horizontalSplitter->toggleCollapsed(1);
 }
 
 FieldArchive::Sorting Window::getFieldSorting()

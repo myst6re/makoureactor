@@ -34,6 +34,7 @@
 #include "widgets/WalkmeshManager.h"
 #include "widgets/QTaskBarButton.h"
 #include "widgets/LgpDialog.h"
+#include "widgets/Splitter.h"
 //#include "FieldModelThread.h"
 
 class Window : public QMainWindow, ArchiveObserver
@@ -99,6 +100,8 @@ private slots:
 	void showModel(int grpScriptID);
 	void showModel(Field *field, FieldModelFile *fieldModelFile);
 	void changeLanguage(QAction *);
+	void toggleFieldList();
+	void toggleBackgroundPreview();
 	void config();
 private:
 	void setWindowTitle();
@@ -112,7 +115,7 @@ private:
 	QStackedWidget *zonePreview;
 	ApercuBG *zoneImage;
 	FieldModel *fieldModel;
-	QSplitter *horizontalSplitter, *verticalSplitter;
+	Splitter *horizontalSplitter, *verticalSplitter;
 
 	QToolBar *toolBar;
 
