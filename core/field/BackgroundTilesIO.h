@@ -104,10 +104,12 @@ private:
 class BackgroundTilesIOPS : public BackgroundTilesIO
 {
 public:
-	explicit BackgroundTilesIOPS(QIODevice *device);
+	explicit BackgroundTilesIOPS(QIODevice *device, bool demo = false);
 protected:
 	bool readData(BackgroundTiles &tiles) const;
 	bool writeData(const BackgroundTiles &tiles) const;
+private:
+	bool _demo;
 };
 
 #endif // BACKGROUNDTILESIO_H

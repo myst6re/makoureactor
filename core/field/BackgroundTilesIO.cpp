@@ -438,8 +438,8 @@ TilePC BackgroundTilesIOPC::tile2TilePC(const Tile &tile)
 	return ret;
 }
 
-BackgroundTilesIOPS::BackgroundTilesIOPS(QIODevice *device) :
-	BackgroundTilesIO(device)
+BackgroundTilesIOPS::BackgroundTilesIOPS(QIODevice *device, bool demo) :
+	BackgroundTilesIO(device), _demo(demo)
 {
 }
 
@@ -450,7 +450,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	quint32 datDataSize = datDataDec.size();
 	quint32 start1, start2, start3, start4;
 	qint64 i;
-	bool isDemoFormat = false;
+	bool isDemoFormat = _demo;
 
 	if(datDataSize < 16) {
 		return false;
@@ -480,6 +480,8 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	QList<quint32> nbTilesTex, nbTilesLayer;
 	quint8 layerID=0;
 
+	qDebug() << "open";
+
 	i = isDemoFormat ? 12 : 16;
 	while(i < start1) {
 		if(start1 < i+2) {
@@ -489,6 +491,16 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 		qint16 type;
 
 		memcpy(&type, constDatData + i, 2);
+
+		if(start1 < i+6) {
+			return false;
+		}
+
+		memcpy(&tilePos, constDatData + i+2, 2);
+		memcpy(&tileCount, constDatData + i+4, 2);
+
+		qDebug() << "type" << type
+		         << "pos" << tilePos << "count" << tileCount << "layer" << layerID;
 
 		if(type == 0x7FFF) {
 			nbTilesLayer.append(tilePos+tileCount);
@@ -543,9 +555,7 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	}
 
 	bool hasTiles2 = !tiles2.isEmpty();
-	if(hasTiles2) {
-		tile2 = tiles2.first();
-	}
+	tile2 = tiles2.value(0);
 
 	size = (start2-start1)/8;
 
@@ -695,7 +705,135 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 {
-	Q_UNUSED(tiles)
+	device()->seek(_demo ? 12 : 16);
+
+	QMultiMap< quint8, QMultiMap< qint16, QMultiMap<qint16, Tile> > > tilesByDst;
+
+	foreach(const Tile &tile, tiles) {
+		QMultiMap< qint16, QMultiMap<qint16, Tile> > tilesByDstY = tilesByDst.value(tile.layerID);
+		QMultiMap<qint16, Tile> tilesByDstX = tilesByDstY.value(tile.dstY);
+		tilesByDstX.insert(tile.dstX, tile);
+		tilesByDstY.replace(tile.dstY, tilesByDstX);
+		tilesByDst.replace(tile.layerID, tilesByDstY);
+	}
+
+	quint32 pos = 0;
+	qint16 currentLayer = -1;
+	QMapIterator<quint8, QMultiMap< qint16, QMultiMap<qint16, Tile> > > itLayer(tilesByDst);
+	while(itLayer.hasNext()) {
+		itLayer.next();
+		quint8 layerID = itLayer.key();
+		const QMultiMap<qint16, QMultiMap<qint16, Tile> > &tilesByDstY = itLayer.value();
+		quint16 line = 0;
+
+		QMapIterator< qint16, QMultiMap<qint16, Tile> > itDstY(tilesByDstY);
+		while(itDstY.hasNext()) {
+			itDstY.next();
+			const QMultiMap<qint16, Tile> &tilesByDstX = itDstY.value();
+
+			foreach(qint16 dstX, tilesByDstX.keys()) {
+				int count = tilesByDstX.count(dstX);
+
+				if(pos > 65535) {
+					qWarning() << "BackgroundTilesIOPS::writeData Tile pos overflow" << pos;
+					return false;
+				}
+				if(count > 65535 || count < 0) {
+					qWarning() << "BackgroundTilesIOPS::writeData Tile count overflow" << count;
+					return false;
+				}
+
+				// Separation between layers
+				if(currentLayer >= 0 && layerID != currentLayer) {
+					quint16 flag = 0x7FFF;
+					device()->write((char *)&flag, 2);
+					// Infos about the next tile
+					device()->write((char *)&dstX, 2);
+					device()->write((char *)&pos, 2);
+				}
+
+				device()->write((char *)&dstX, 2);
+				device()->write((char *)&pos, 2);
+				device()->write((char *)&count, 2);
+
+				pos += count;
+			}
+
+			// Separation between Y (only when several lines)
+			if(tilesByDstY.keys().size() > 1) {
+				quint16 flag = 0x7FFE;
+				device()->write((char *)&flag, 2);
+				device()->write((char *)&line, 2);
+				device()->write("\0\0", 2);
+				line += 1;
+			}
+		}
+
+		currentLayer = layerID;
+	}
+
+	// End of layer, no more after
+	quint16 flag = 0x7FFF;
+	device()->write((char *)&flag, 2);
+	device()->write((char *)&flag, 2);
+	device()->write((char *)&flag, 2);
+
+	QVector<quint32> positions(_demo ? 3 : 4);
+
+	positions[0] = device()->pos();
+
+	QList<layer2Tile> tiles2;
+	layer2Tile tile2;
+	bool firstTurn = true;
+	foreach (const Tile &tile, tiles.tiles(0, true)) {
+		layer1Tile tile1;
+
+		tile1.dstX = tile.dstX;
+		tile1.dstY = tile.dstY;
+		tile1.srcX = tile.srcX;
+		tile1.srcY = tile.srcY;
+		tile1.palID = (30 << 10) | (tile.paletteID << 6);
+
+		if(firstTurn
+		        || (tile.textureID != tile2.page_x
+		        || tile.textureID2 != tile2.page_y)) {
+			tile2.page_x = tile.textureID;
+			tile2.page_y = tile.textureID2;
+			tile2.depth = tile.depth;
+			tile2.typeTrans = tile.typeTrans;
+
+			tiles2.append(tile2);
+			firstTurn = false;
+		}
+
+		device()->write((char *)&tile1, 8);
+	}
+
+	positions[1] = device()->pos();
+
+	foreach (const layer2Tile &tile2, tiles2) {
+		// Note: we can't use bitfields directly
+		quint16 tile2data = (tile2.page_x & 0xF) |
+		                    ((tile2.page_y << 4) & 0x1) |
+		                    ((tile2.typeTrans << 5) & 0x3) |
+		                    ((tile2.depth << 7) & 0x3);
+		device()->write((char *)&tile2data, 2);
+	}
+
+	positions[2] = device()->pos();
+
 	// TODO
+
+	if(!_demo) {
+		positions[3] = device()->pos();
+
+		// TODO
+	}
+
+	device()->reset();
+	foreach(quint32 pos, positions) {
+		device()->write((char *)&pos, 4);
+	}
+
 	return false;
 }
