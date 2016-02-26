@@ -1,5 +1,7 @@
 # Makou Reactor
 
+[![Build Status](https://travis-ci.org/myst6re/makoureactor.svg?branch=master)](https://travis-ci.org/myst6re/makoureactor)
+
 ## Building
 
 ### Requirements
