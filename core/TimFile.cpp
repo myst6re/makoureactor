@@ -226,7 +226,7 @@ bool TimFile::save(QByteArray &data)
 	data.append((char *)&flag, 4);
 
 	if(hasPal) {
-		quint8 colorPerPal = bpp == 0 ? 16 : 256;
+		quint16 colorPerPal = bpp == 0 ? 16 : 256;
 		quint32 sizePalSection = 12 + _colorTables.size() * colorPerPal * 2;
 
 		data.append((char *)&sizePalSection, 4);
