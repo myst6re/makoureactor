@@ -14,7 +14,7 @@ On Windows, you can either use mingw32 (g++) or msvc to compile.
 
 ### With Qt Creator
 
-Open Makou_Reactor.pro with Qt Creator IDE.
+Open `Makou_Reactor.pro` with Qt Creator IDE.
 Please refer to the official documentation of Qt Creator
 if you have troubles to compile and run Makou Reactor.
 
@@ -23,12 +23,12 @@ if you have troubles to compile and run Makou Reactor.
 #### Windows
 
 Use the command prompt given in your Qt installation
-to set your environment (%QTDIR%/bin/qtvars.bat for Qt 4
-and %QTDIR%/%compiler%/bin/qtenv2.bat for Qt 5).
+to set your environment (`%QTDIR%/bin/qtvars.bat` for Qt 4
+and `%QTDIR%/%compiler%/bin/qtenv2.bat` for Qt 5).
 
 Then run:
 
-~~~
+~~~sh
 mkdir build
 cd build
 qmake /path/to/Makou_Reactor.pro
@@ -42,13 +42,13 @@ jom
 
 Set your environment:
 
- - [Qt 4 only] QTDIR must contains the directory of your Qt installation
- - PATH should contains the path to the bin directory of your Qt installation ($QTDIR/bin)
- - [Qt 4 only] Your compiler should be in the PATH
+ - [Qt 4 only] `QTDIR` must contains the directory of your Qt installation
+ - `PATH` should contains the path to the bin directory of your Qt installation (`$QTDIR/bin`)
+ - [Qt 4 only] Your compiler should be in the `PATH`
 
 Then run:
 
-~~~
+~~~sh
 mkdir build
 cd build
 qmake /path/to/Makou_Reactor.pro
