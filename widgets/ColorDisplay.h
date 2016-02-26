@@ -42,8 +42,8 @@ private:
 	bool _ro;
 protected:
 	void paintEvent(QPaintEvent *event);
-	void enterEvent(QMouseEvent *event);
-	void leaveEvent(QMouseEvent *event);
+	void enterEvent(QEvent *event);
+	void leaveEvent(QEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 };

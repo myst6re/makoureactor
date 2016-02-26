@@ -1212,7 +1212,7 @@ void Window::runFF7()
 	FF7Exe = "wine";
 #elif defined(Q_OS_MAC) // For mac os run with open -a so user can point to the App bundle directly
 	args.append(FF7Exe);
-	FF7Exe = "open -a"
+	FF7Exe = "open -a";
 #else
 	FF7Exe = "\"" % FF7Exe % "\"";
 #endif

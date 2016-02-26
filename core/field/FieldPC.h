@@ -33,6 +33,7 @@ public:
 
 	inline bool isPC() const { return true; }
 
+	using Field::importer;
 	qint8 importer(const QByteArray &data, bool isPSField, FieldSections part);
 
 	FieldModelLoaderPC *fieldModelLoader(bool open=true);

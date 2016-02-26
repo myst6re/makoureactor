@@ -85,14 +85,15 @@ int ColorDisplay::colorId(const QPoint &pos) const
 	return qMin(pos.x()/(COLOR_DISPLAY_CELL_SIZE *scale + COLOR_DISPLAY_BORDER_WIDTH), colors.size() - 1);
 }
 
-void ColorDisplay::enterEvent(QMouseEvent *event)
+void ColorDisplay::enterEvent(QEvent *event)
 {
+	Q_UNUSED(event);
 	update();
-	emit colorHovered(colorId(event->pos()));
 }
 
-void ColorDisplay::leaveEvent(QMouseEvent *)
+void ColorDisplay::leaveEvent(QEvent *event)
 {
+	Q_UNUSED(event);
 	update();
 }
 
