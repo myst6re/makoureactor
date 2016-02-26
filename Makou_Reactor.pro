@@ -330,8 +330,10 @@ win32 {
 
 OTHER_FILES += Makou_Reactor.rc \
     deploy.bat \
-    compat/QtWidgets
-DISTFILES += Makou_Reactor.desktop
+    compat/QtWidgets \
+    .travis.yml
+DISTFILES += Makou_Reactor.desktop \
+    README.md
 
 system(lrelease Makou_Reactor.pro) # call lrelease to make the qm files.
 
