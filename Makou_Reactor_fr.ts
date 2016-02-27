@@ -117,7 +117,7 @@
 <context>
     <name>ColorDisplay</name>
     <message>
-        <location filename="widgets/ColorDisplay.cpp" line="112"/>
+        <location filename="widgets/ColorDisplay.cpp" line="113"/>
         <source>Choose a new color</source>
         <translation>Choisir une nouvelle couleur</translation>
     </message>

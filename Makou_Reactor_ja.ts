@@ -119,7 +119,7 @@
         <translation type="obsolete">変更する色の選択</translation>
     </message>
     <message>
-        <location filename="widgets/ColorDisplay.cpp" line="112"/>
+        <location filename="widgets/ColorDisplay.cpp" line="113"/>
         <source>Choose a new color</source>
         <translation>変更する色の選択</translation>
     </message>
