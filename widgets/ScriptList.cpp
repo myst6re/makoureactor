@@ -17,19 +17,19 @@
  ****************************************************************************/
 #include "ScriptList.h"
 
-ScriptList::ScriptList(QWidget *parent)
-	: QListWidget(parent)
+ScriptList::ScriptList(QWidget *parent) :
+    QListWidget(parent), grpScript(0)
 {
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
-/* ScriptList::~ScriptList()
-{
-} */
-
 Script *ScriptList::currentScript()
 {
+	if(!grpScript) {
+		return NULL;
+	}
+
 	int scriptID = selectedID();
 	if(scriptID != -1)
 		return grpScript->script(scriptID);
@@ -38,37 +38,51 @@ Script *ScriptList::currentScript()
 
 void ScriptList::fill(GrpScript *_grpScript)
 {
-	if(_grpScript != NULL)	grpScript = _grpScript;
-	
 	clear();
+
+	if(_grpScript) {
+		grpScript = _grpScript;
+	}
+
 	int i=0;
-	
-	foreach(Script *script, grpScript->scripts())
-	{
+
+	foreach(Script *script, grpScript->scripts()) {
 		QListWidgetItem *item = new QListWidgetItem(grpScript->scriptName(i), this);
-		if(script->isEmpty())			item->setForeground(QColor(0xCC,0xCC,0xCC));
-		else if(script->isVoid())		item->setForeground(QColor(0x66,0x66,0x66));
+		if(script->isEmpty()) {
+			item->setForeground(QColor(0xCC,0xCC,0xCC));
+		} else if(script->isVoid()) {
+			item->setForeground(QColor(0x66,0x66,0x66));
+		}
 		++i;
 	}
 }
 
 void ScriptList::localeRefresh()
 {
-	int i=0;
-	foreach(Script *script, grpScript->scripts())
-	{
+	if(!grpScript) {
+		return;
+	}
+
+	int i = 0;
+	foreach(Script *script, grpScript->scripts()) {
 		QListWidgetItem *itm = item(i);
 		itm->setText(grpScript->scriptName(i));
-		if(script->isEmpty())			itm->setForeground(QColor(0xCC,0xCC,0xCC));
-		else if(script->isVoid())		itm->setForeground(QColor(0x66,0x66,0x66));
-		else							itm->setForeground(QBrush());
+		if(script->isEmpty()) {
+			itm->setForeground(QColor(0xCC,0xCC,0xCC));
+		} else if(script->isVoid()) {
+			itm->setForeground(QColor(0x66,0x66,0x66));
+		} else {
+			itm->setForeground(QBrush());
+		}
 		++i;
 	}
 }
 
 int ScriptList::selectedID()
 {
-	if(currentItem()==NULL)	return -1;
+	if(!currentItem()) {
+		return -1;
+	}
 	return row(currentItem());
 }
 
@@ -76,5 +90,7 @@ void ScriptList::scroll(int id, bool focus)
 {
 	setCurrentItem(item(id));
 	scrollToItem(item(id), QAbstractItemView::PositionAtTop);
-	if(focus)	setFocus();
+	if(focus) {
+		setFocus();
+	}
 }

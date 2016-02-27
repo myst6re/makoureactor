@@ -44,7 +44,9 @@ public:
 	void setIsInit(bool);
 	void saveExpandedItems();
 
-	QToolBar *toolBar();
+	inline QToolBar *toolBar() {
+		return _toolBar;
+	}
 	void clear();
 	void setEnabled(bool enabled);
 	void clearCopiedOpcodes();

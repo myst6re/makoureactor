@@ -31,7 +31,9 @@ public:
 	GrpScript *currentGrpScript();
 	int selectedID();
 
-	QToolBar *toolBar();
+	inline QToolBar *toolBar() {
+		return _toolBar;
+	}
 	void clearCopiedGroups();
 	void setEnabled(bool);
 
@@ -41,16 +43,22 @@ public:
 	void enableActions(bool);
 
 private slots:
-	void rename();
-	void rename(QTreeWidgetItem *, int);
-	void renameOK(QTreeWidgetItem *, int);
+	inline void rename() {
+		rename(currentItem(), 1);
+	}
+	void rename(QTreeWidgetItem *item, int column);
+	void renameOK(QTreeWidgetItem *item, int column);
 	void add();
 	void del(bool totalDel=true);
 	void cut();
 	void copy();
 	void paste();
-	void up();
-	void down();
+	inline void up() {
+		move(false);
+	}
+	inline void down() {
+		move(true);
+	}
 	void upDownEnabled();
 
 signals:

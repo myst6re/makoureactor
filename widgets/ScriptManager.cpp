@@ -99,6 +99,8 @@ void ScriptManager::clear()
 
 void ScriptManager::fill(Field *field)
 {
+	clear();
+
 	_field = field;
 	if(!_field) {
 		return;
