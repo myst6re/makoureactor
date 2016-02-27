@@ -2,6 +2,13 @@
 
 [![Build Status](https://travis-ci.org/myst6re/makoureactor.svg?branch=develop)](https://travis-ci.org/myst6re/makoureactor)
 
+## Installing
+
+**Windows**: Download the last release on [GitHub](https://github.com/myst6re/makoureactor/releases).
+**Debian/Ubuntu**: Use ppa:sithlord48/ff7-daily ppa and install makoureactor package.
+**ArchLinux**: Use makoureactor-git package.
+**MacOSX**: We not provide binaries for now, but you can compile Makou Reactor on OSX.
+
 ## Building
 
 ### Requirements
