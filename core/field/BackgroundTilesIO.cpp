@@ -480,8 +480,6 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 	QList<quint32> nbTilesTex, nbTilesLayer;
 	quint8 layerID=0;
 
-	qDebug() << "open";
-
 	i = isDemoFormat ? 12 : 16;
 	while(i < start1) {
 		if(start1 < i+2) {
@@ -491,16 +489,6 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 		qint16 type;
 
 		memcpy(&type, constDatData + i, 2);
-
-		if(start1 < i+6) {
-			return false;
-		}
-
-		memcpy(&tilePos, constDatData + i+2, 2);
-		memcpy(&tileCount, constDatData + i+4, 2);
-
-		qDebug() << "type" << type
-		         << "pos" << tilePos << "count" << tileCount << "layer" << layerID;
 
 		if(type == 0x7FFF) {
 			nbTilesLayer.append(tilePos+tileCount);
