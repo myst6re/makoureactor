@@ -14,9 +14,7 @@ install:
       && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:beineri/opt-qt551
       && sudo apt-get -qq update
-      && sudo apt-get -qq install g++-4.8 libc6-i386 freeglut3-dev qt55tools qt55base qt55translations qt55imageformats
-      && export CXX="g++-4.8"
-      && export CC="gcc-4.8"
+      && sudo apt-get -qq install -y g++-4.8 libc6-i386 freeglut3-dev qt55tools qt55base qt55translations qt55imageformats
       ;
     else
          brew update > /dev/null
