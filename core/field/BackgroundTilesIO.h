@@ -109,6 +109,10 @@ protected:
 	bool readData(BackgroundTiles &tiles) const;
 	bool writeData(const BackgroundTiles &tiles) const;
 private:
+	bool writeTileBase(const Tile &tile) const;
+	bool writeTileTex(const Tile &tile) const;
+	bool writeTileID(const Tile &tile) const;
+	bool writeTileParam(const Tile &tile) const;
 	bool _demo;
 };
 

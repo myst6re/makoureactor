@@ -208,12 +208,7 @@ bool BackgroundIOPS::openPalettes(PalettesPS &palettes) const
 		return false;
 	}
 
-	PaletteIOPS io(device());
-	if(!io.read(palettes)) {
-		return false;
-	}
-
-	return true;
+	return PaletteIOPS(device()).read(palettes);
 }
 
 bool BackgroundIOPS::openTiles(BackgroundTiles &tiles) const
@@ -222,12 +217,7 @@ bool BackgroundIOPS::openTiles(BackgroundTiles &tiles) const
 		return false;
 	}
 
-	BackgroundTilesIOPS io(deviceTiles());
-	if(!io.read(tiles)) {
-		return false;
-	}
-
-	return true;
+	return BackgroundTilesIOPS(deviceTiles()).read(tiles);
 }
 
 bool BackgroundIOPS::openTextures(BackgroundTexturesPS &textures) const
@@ -236,12 +226,34 @@ bool BackgroundIOPS::openTextures(BackgroundTexturesPS &textures) const
 		return false;
 	}
 
-	BackgroundTexturesIOPS io(device());
-	if(!io.read(&textures)) {
+	return BackgroundTexturesIOPS(device()).read(&textures);
+}
+
+bool BackgroundIOPS::savePalettes(const Palettes &palettes) const
+{
+	if(!device()->reset()) {
 		return false;
 	}
 
-	return true;
+	return PaletteIOPS(device()).write(Palettes(palettes));
+}
+
+bool BackgroundIOPS::saveTiles(const BackgroundTiles &tiles) const
+{
+	if(!deviceTiles()->reset()) {
+		return false;
+	}
+
+	return BackgroundTilesIOPS(deviceTiles()).write(tiles);
+}
+
+bool BackgroundIOPS::saveTextures(const BackgroundTexturesPS *textures) const
+{
+	if(!device()->reset()) {
+		return false;
+	}
+
+	return BackgroundTexturesIOPS(device()).write(textures);
 }
 
 bool BackgroundIOPS::read(BackgroundFile &background) const
@@ -274,12 +286,13 @@ bool BackgroundIOPS::read(BackgroundFile &background) const
 
 bool BackgroundIOPS::write(const BackgroundFile &background) const
 {
-	Q_UNUSED(background) //TODO
-
 	if(!canWrite()
 			|| !canWriteTiles()) {
 		return false;
 	}
 
-	return false;
+	// FIXME
+	return savePalettes(background.palettes())
+	        && saveTiles(background.tiles())
+	        && saveTextures((const BackgroundTexturesPS *)background.textures());
 }
