@@ -4,6 +4,10 @@ os:
   - linux
   - osx
 
+compiler:
+  - gcc
+  - clang
+
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          lsb_release -a
@@ -33,6 +37,3 @@ script:
   - cd build
   - qmake ..
   - make -j2
-
-notifications:
-  email: []
