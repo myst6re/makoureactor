@@ -44,6 +44,9 @@ public:
 	explicit BackgroundTexturesIOPC(QIODevice *device);
 	bool read(BackgroundTexturesPC *textures);
 	bool write(const BackgroundTexturesPC *textures);
+private:
+	using BackgroundTexturesIO::read; // Hide parent read()
+	using BackgroundTexturesIO::write; // Hide parent write()
 };
 
 class BackgroundTexturesIOPS : public BackgroundTexturesIO
@@ -52,6 +55,9 @@ public:
 	explicit BackgroundTexturesIOPS(QIODevice *device);
 	bool read(BackgroundTexturesPS *textures);
 	bool write(const BackgroundTexturesPS *textures);
+private:
+	using BackgroundTexturesIO::read; // Hide parent read()
+	using BackgroundTexturesIO::write; // Hide parent write()
 };
 
 #endif // BACKGROUNDTEXTURESIO_H

@@ -37,6 +37,9 @@ public:
 
 	bool open();
 	bool open(const QByteArray &mimData, const QByteArray &tilesData);
+	inline QByteArray save() const {
+		return QByteArray();
+	}
 	BackgroundFilePC toPC(FieldPC *field) const;
 };
 
