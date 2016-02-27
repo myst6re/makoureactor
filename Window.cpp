@@ -755,9 +755,13 @@ void Window::openField(bool reload)
 		disableEditors();
 		return;
 	}
-//	if(fieldModel && fieldArchive->io()->isPC()) {
-//		modelThread->setField(field);
-//	}
+
+	if(fieldModel) {
+		fieldModel->clear();
+		//if(fieldArchive->io()->isPC()) {
+		//	modelThread->setField(field);
+		//}
+	}
 	if(_textDialog && (reload || _textDialog->isVisible())) {
 		_textDialog->setField(field, reload);
 		_textDialog->setEnabled(true);
