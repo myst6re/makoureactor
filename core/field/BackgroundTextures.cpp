@@ -314,14 +314,14 @@ BackgroundTexturesPS BackgroundTexturesPC::toPS(const BackgroundTiles &pcTiles,
 }
 
 BackgroundTexturesPS::BackgroundTexturesPS() :
-	BackgroundTextures(), _dataPos(0),
+	BackgroundTextures(),
 	_headerImg(MIM()), _headerEffect(MIM())
 {
 }
 
 quint32 BackgroundTexturesPS::pageDataPos(quint8 pageID) const
 {
-	return _dataPos + (pageID ? _headerImg.size : 0);
+	return 12 + (pageID ? _headerImg.size : 0);
 }
 
 quint16 BackgroundTexturesPS::pageTexPos(quint8 pageID) const
@@ -332,11 +332,6 @@ quint16 BackgroundTexturesPS::pageTexPos(quint8 pageID) const
 quint16 BackgroundTexturesPS::pageTexWidth(quint8 pageID) const
 {
 	return pageID ? _headerEffect.w : _headerImg.w;
-}
-
-void BackgroundTexturesPS::setDataPos(quint32 dataPos)
-{
-	_dataPos = dataPos + 12;
 }
 
 void BackgroundTexturesPS::setHeaderImg(const MIM &headerImg)

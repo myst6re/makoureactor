@@ -65,6 +65,18 @@ bool BackgroundFilePS::open(const QByteArray &mimData, const QByteArray &tilesDa
 	return true;
 }
 
+QByteArray BackgroundFilePS::save() const
+{
+	QBuffer buff, tilesBuff;
+
+	BackgroundIOPS io(&buff, &tilesBuff);
+	if(!io.write(*this)) {
+		return QByteArray();
+	}
+
+	return buff.data();
+}
+
 BackgroundFilePC BackgroundFilePS::toPC(FieldPC *field) const
 {
 	PalettesPC palettesPC = ((PalettesPS *)&palettes())->toPC();

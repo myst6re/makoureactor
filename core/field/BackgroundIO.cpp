@@ -249,10 +249,7 @@ bool BackgroundIOPS::saveTiles(const BackgroundTiles &tiles) const
 
 bool BackgroundIOPS::saveTextures(const BackgroundTexturesPS *textures) const
 {
-	if(!device()->reset()) {
-		return false;
-	}
-
+	// Assume device pos is after palette section
 	return BackgroundTexturesIOPS(device()).write(textures);
 }
 
@@ -291,8 +288,7 @@ bool BackgroundIOPS::write(const BackgroundFile &background) const
 		return false;
 	}
 
-	// FIXME
-	return savePalettes(background.palettes())
-	        && saveTiles(background.tiles())
+	return saveTiles(background.tiles())
+	        && savePalettes(background.palettes())
 	        && saveTextures((const BackgroundTexturesPS *)background.textures());
 }
