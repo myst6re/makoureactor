@@ -99,8 +99,7 @@ FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate
 		modelNameToId.insert(hrc.toLower(), localModelID);
 	}
 
-	FieldModelFilePC *fieldModel = static_cast<FieldModelFilePC *>(fieldModelPtr(localModelID));
-	if(!fieldModel)		addFieldModel(localModelID, fieldModel = new FieldModelFilePC());
+	FieldModelFilePC *fieldModel = new FieldModelFilePC();
 	if(open && fieldModel->isEmpty()) {
 		fieldModel->load(hrc, a, animate);
 	}

@@ -34,11 +34,6 @@ Field::~Field()
 	foreach(FieldPart *part, _parts) {
 		if(part)	delete part;
 	}
-
-	if(currentFieldForFieldModels != this) {
-		qDeleteAll(_fieldModels);
-		_fieldModels.clear();
-	}
 }
 
 bool Field::isOpen() const
@@ -234,28 +229,6 @@ FieldModelLoader *Field::fieldModelLoader(bool open)
 BackgroundFile *Field::background(bool open)
 {
 	return static_cast<BackgroundFile *>(part(Background, open));
-}
-
-Field *Field::currentFieldForFieldModels = 0;
-QMap<int, FieldModelFile *> Field::_fieldModels;
-
-FieldModelFile *Field::fieldModelPtr(int modelID) const
-{
-	if(currentFieldForFieldModels == this) {
-		return _fieldModels.value(modelID, 0);
-	}
-	return 0;
-}
-
-void Field::addFieldModel(int modelID, FieldModelFile *fieldModel)
-{
-	if(currentFieldForFieldModels != this) {
-		qDeleteAll(_fieldModels);
-		_fieldModels.clear();
-		currentFieldForFieldModels = this;
-	}
-
-	_fieldModels.insert(modelID, fieldModel);
 }
 
 QMap<int, FieldModelFile *> Field::fieldModels(bool animate, bool open)

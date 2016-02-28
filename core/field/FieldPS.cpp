@@ -79,8 +79,7 @@ FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 
 FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate, bool open)
 {
-	FieldModelFilePS *fieldModel = static_cast<FieldModelFilePS *>(fieldModelPtr(modelID));
-	if(!fieldModel) 	addFieldModel(modelID, fieldModel = new FieldModelFilePS());
+	FieldModelFilePS *fieldModel = new FieldModelFilePS();
 	if(open) {
 		fieldModel->load(this, modelID, animationID, animate);
 	}
