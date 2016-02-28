@@ -31,6 +31,7 @@ class WalkmeshManager : public QDialog
 	Q_OBJECT
 public:
 	explicit WalkmeshManager(QWidget *parent=0, const QGLWidget *shareWidget=0);
+	void saveConfig();
 	void fill(Field *field, bool reload=false);
 	void clear();
 	int currentCamera() const;
@@ -102,6 +103,7 @@ private:
 	CaFile *caFile;
 	InfFile *infFile;
 	WalkmeshWidget *walkmesh;
+	QCheckBox *showModels;
 	Section1File *scriptsAndTexts;
 	QSlider *slider1, *slider2, *slider3;
 	QTabWidget *tabWidget;

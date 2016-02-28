@@ -58,7 +58,7 @@ private:
 	float xRot, yRot, zRot;
 	float xTrans, yTrans, transStep;
 	int lastKeyPressed;
-	int camID;
+	int _camID;
 	int _selectedTriangle;
 	int _selectedDoor;
 	int _selectedGate;

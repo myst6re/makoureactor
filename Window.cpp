@@ -238,6 +238,9 @@ void Window::closeEvent(QCloseEvent *event)
 		Config::setValue("fieldListSortColumn", fieldList->sortColumn());
 		Config::setValue("fieldListSortOrder", int(fieldList->header()->sortIndicatorOrder()));
 		_scriptManager->saveConfig();
+		if(_walkmeshManager) {
+			_walkmeshManager->saveConfig();
+		}
 		event->accept();
 	}
 }

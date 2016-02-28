@@ -46,7 +46,8 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 
 	QPushButton *resetCamera = new QPushButton(tr("Reset"));
 
-	QCheckBox *showModels = new QCheckBox(tr("Show 3D models"));
+	showModels = new QCheckBox(tr("Show 3D models"));
+	showModels->setChecked(Config::value("fieldModelsVisible", true).toBool());
 
 	tabWidget = new QTabWidget(this);
 	tabWidget->addTab(buildCameraPage(), tr("Camera"));
@@ -73,8 +74,6 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 		connect(slider3, SIGNAL(valueChanged(int)), walkmesh, SLOT(setZRotation(int)));
 		connect(resetCamera, SIGNAL(clicked()), SLOT(resetCamera()));
 		connect(showModels, SIGNAL(toggled(bool)), SLOT(setModelsVisible(bool)));
-
-		showModels->setChecked(true);
 	}
 }
 
@@ -484,6 +483,11 @@ QWidget *WalkmeshManager::buildMiscPage()
 	return ret;
 }
 
+void WalkmeshManager::saveConfig()
+{
+	Config::setValue("fieldModelsVisible", showModels->isChecked());
+}
+
 void WalkmeshManager::fill(Field *field, bool reload)
 {
 	if(!field || (!reload && field->inf() == infFile))	return;
@@ -492,6 +496,8 @@ void WalkmeshManager::fill(Field *field, bool reload)
 	idFile = field->walkmesh();
 	caFile = field->camera();
 	scriptsAndTexts = field->scriptsAndTexts();
+
+	walkmesh->setModelsVisible(showModels->isChecked());
 
 	if(!idFile->isOpen() || !caFile->isOpen() || !infFile->isOpen()) {
 		QMessageBox::warning(this, tr("Opening error"), tr("Error opening walkmesh"));

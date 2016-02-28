@@ -22,7 +22,7 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
 	QGLWidget(/*QGLFormat(QGL::SampleBuffers),*/ parent, shareWidget),
 	distance(0.0f), xRot(0.0f), yRot(0.0f), zRot(0.0f),
 	xTrans(0.0f), yTrans(0.0f), transStep(360.0f), lastKeyPressed(-1),
-	camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
+	_camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
 	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0),
 	bgFile(0), scripts(0), field(0), modelsVisible(true)/*, thread(0)*/
 {
@@ -97,8 +97,8 @@ void WalkmeshWidget::computeFov()
 {
 	if(camera && camera->isOpen()
 			&& camera->hasCamera()
-			&& camID < camera->cameraCount()) {
-		const Camera &cam = camera->camera(camID);
+			&& _camID < camera->cameraCount()) {
+		const Camera &cam = camera->camera(_camID);
 		fovy = (2 * atan(240.0/(2.0 * cam.camera_zoom))) * 57.29577951;
 	} else {
 		fovy = 70.0;
@@ -194,8 +194,8 @@ void WalkmeshWidget::paintGL()
 		glDisable(GL_TEXTURE_2D);
 	}*/
 
-	if(camera->isOpen() && camera->hasCamera() && camID < camera->cameraCount()) {
-		const Camera &cam = camera->camera(camID);
+	if(camera->isOpen() && camera->hasCamera() && _camID < camera->cameraCount()) {
+		const Camera &cam = camera->camera(_camID);
 
 		double camAxisXx = cam.camera_axis[0].x/4096.0;
 		double camAxisXy = cam.camera_axis[0].y/4096.0;
@@ -616,39 +616,51 @@ void WalkmeshWidget::resetCamera()
 
 void WalkmeshWidget::setModelsVisible(bool show)
 {
-	modelsVisible = show;
-	if(modelsVisible) {
-		openModels();
+	if(modelsVisible != show) {
+		modelsVisible = show;
+		if(modelsVisible) {
+			openModels();
+		}
+		updateGL();
 	}
-	updateGL();
 }
 
 void WalkmeshWidget::setCurrentFieldCamera(int camID)
 {
-	this->camID = camID;
-	updatePerspective();
+	if(_camID != camID) {
+		_camID = camID;
+		updatePerspective();
+	}
 }
 
 void WalkmeshWidget::setSelectedTriangle(int triangle)
 {
-	_selectedTriangle = triangle;
-	updateGL();
+	if(_selectedTriangle != triangle) {
+		_selectedTriangle = triangle;
+		updateGL();
+	}
 }
 
 void WalkmeshWidget::setSelectedDoor(int door)
 {
-	_selectedDoor = door;
-	updateGL();
+	if(_selectedDoor != door) {
+		_selectedDoor = door;
+		updateGL();
+	}
 }
 
 void WalkmeshWidget::setSelectedGate(int gate)
 {
-	_selectedGate = gate;
-	updateGL();
+	if(_selectedGate != gate) {
+		_selectedGate = gate;
+		updateGL();
+	}
 }
 
 void WalkmeshWidget::setSelectedArrow(int arrow)
 {
-	_selectedArrow = arrow;
-	updateGL();
+	if(_selectedArrow != arrow) {
+		_selectedArrow = arrow;
+		updateGL();
+	}
 }
