@@ -60,12 +60,12 @@ void FieldArchivePC::clear()
 
 const FieldPC *FieldArchivePC::field(quint32 id) const
 {
-	return (const FieldPC *)FieldArchive::field(id);
+	return static_cast<const FieldPC *>(FieldArchive::field(id));
 }
 
 FieldPC *FieldArchivePC::field(quint32 id, bool open, bool dontOptimize)
 {
-	return (FieldPC *)FieldArchive::field(id, open, dontOptimize);
+	return static_cast<FieldPC *>(FieldArchive::field(id, open, dontOptimize));
 }
 
 TutFilePC *FieldArchivePC::tut(const QString &name)
@@ -83,7 +83,7 @@ TutFilePC *FieldArchivePC::tut(const QString &name)
 				QByteArray data = io()->fileData(tutName + ".tut", false, false);
 				if(!data.isEmpty()) {
 					tutFile = new TutFilePC();
-					if(!((TutFile *)tutFile)->open(data)) {
+					if(!static_cast<TutFile *>(tutFile)->open(data)) {
 						delete tutFile;
 						return NULL;
 					}
@@ -124,7 +124,7 @@ void FieldArchivePC::setSaved()
 
 FieldArchiveIOPC *FieldArchivePC::io() const
 {
-	return (FieldArchiveIOPC *)FieldArchive::io();
+	return static_cast<FieldArchiveIOPC *>(FieldArchive::io());
 }
 
 void FieldArchivePC::cleanModelLoader()

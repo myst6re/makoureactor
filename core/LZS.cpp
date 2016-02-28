@@ -327,7 +327,7 @@ const QByteArray &LZS::compress(const QByteArray &fileData)
 
 const QByteArray &LZS::compress(const char *data, int sizeData)
 {
-	int i, c, len, r, s, last_match_length, code_buf_ptr,
+	int i, c, len, r, s, code_buf_ptr,
 			curResult = 0, sizeAlloc = sizeData / 2;
 	unsigned char code_buf[17], mask;
 	const char *dataEnd = data + sizeData;
@@ -398,7 +398,7 @@ const QByteArray &LZS::compress(const char *data, int sizeData)
 			code_buf_ptr = mask = 1;
 		}
 		
-		last_match_length = match_length;
+		int last_match_length = match_length;
 		for(i=0 ; i < last_match_length && data<dataEnd ; ++i)
 		{
 			c = *data++;

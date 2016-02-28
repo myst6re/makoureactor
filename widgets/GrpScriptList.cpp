@@ -161,12 +161,11 @@ void GrpScriptList::fill(Section1File *scripts)
 	if(scripts) {
 		this->scripts = scripts;
 	}
-	QTreeWidgetItem *item;
 	clear();
 
 	int i=0;
 	foreach(GrpScript *grpScript, this->scripts->grpScripts()) {
-		item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->name() << grpScript->type());
+		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->name() << grpScript->type());
 		item->setForeground(2, QBrush(grpScript->typeColor()));
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 		item->setToolTip(0, grpScript->type());

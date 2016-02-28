@@ -64,7 +64,7 @@ quint32 FieldPC::sectionPosition(int idPart) const
 
 FieldArchiveIOPC *FieldPC::io() const
 {
-	return (FieldArchiveIOPC *)Field::io();
+	return static_cast<FieldArchiveIOPC *>(Field::io());
 }
 
 FieldPart *FieldPC::createPart(FieldSection part)
@@ -83,7 +83,7 @@ FieldModelLoaderPC *FieldPC::fieldModelLoader(bool open)
 	//	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
 	//	Data::currentAnimNames = &fieldModelLoader->model_anims;
 	//}
-	return (FieldModelLoaderPC *)Field::fieldModelLoader(open);
+	return static_cast<FieldModelLoaderPC *>(Field::fieldModelLoader(open));
 }
 
 FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate, bool open)
@@ -99,7 +99,7 @@ FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate
 		modelNameToId.insert(hrc.toLower(), localModelID);
 	}
 
-	FieldModelFilePC *fieldModel = (FieldModelFilePC *)fieldModelPtr(localModelID);
+	FieldModelFilePC *fieldModel = static_cast<FieldModelFilePC *>(fieldModelPtr(localModelID));
 	if(!fieldModel)		addFieldModel(localModelID, fieldModel = new FieldModelFilePC());
 	if(open && fieldModel->isEmpty()) {
 		fieldModel->load(hrc, a, animate);

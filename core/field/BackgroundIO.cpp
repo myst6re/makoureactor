@@ -160,7 +160,7 @@ bool BackgroundIOPC::write(const BackgroundFile &background) const
 
 	BackgroundTexturesIOPC backgroundTextures(device());
 
-	if(!backgroundTextures.write((BackgroundTexturesPC *)background.textures())) {
+	if(!backgroundTextures.write(static_cast<BackgroundTexturesPC *>(background.textures()))) {
 		return false;
 	}
 
@@ -290,5 +290,5 @@ bool BackgroundIOPS::write(const BackgroundFile &background) const
 
 	return saveTiles(background.tiles())
 	        && savePalettes(background.palettes())
-	        && saveTextures((const BackgroundTexturesPS *)background.textures());
+	        && saveTextures(static_cast<const BackgroundTexturesPS *>(background.textures()));
 }

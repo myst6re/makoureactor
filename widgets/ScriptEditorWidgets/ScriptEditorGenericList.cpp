@@ -18,8 +18,9 @@
 #include "ScriptEditorGenericList.h"
 #include "Delegate.h"
 
-ScriptEditorGenericList::ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent)
-	: ScriptEditorView(field, grpScript, script, opcodeID, parent)
+ScriptEditorGenericList::ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+    ScriptEditorView(field, grpScript, script, opcodeID, parent),
+    addButton(0), delButton(0), tableView(0), model(0)
 {
 }
 
@@ -96,21 +97,18 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 
 	QByteArray newOpcode;
 	quint8 byte, length, start;
-	
+
 	*isLabel = opcodePtr()->isLabel();
 	byte = opcodePtr()->id() & 0xFF;
-	// qDebug() << "byte= " << byte;
 	newOpcode.append((char)byte);
-	//Calcul longueur opcode
+	// Compute opcode length
 	length = 0;
 	start = 1;
 	
-	if(byte == 0x0F)//SPECIAL
-	{
+	if(byte == 0x0F) { // SPECIAL
 		quint8 byte2 = ((OpcodeSPECIAL *)opcodePtr())->opcode->id();
 		newOpcode.append((char)byte2);
-		switch(byte2)
-		{
+		switch(byte2) {
 		case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
 				length = 1;
 			break;
@@ -119,88 +117,54 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 			break;
 		}
 		start = 2;
-	}
-	else if(byte == 0x28)//KAWAI
-	{
+	} else if(byte == 0x28) { // KAWAI
 		quint8 byte3 = ((OpcodeKAWAI *)opcodePtr())->opcode->id();
-		// qDebug() << "byte3= " << byte3;
 		length = model->rowCount()+3;
-		// qDebug() << "length = " << length;
 		newOpcode.append((char)length);
 		newOpcode.append((char)byte3);
-		// qDebug() << "newOpcode= " << newOpcode.toHex();
-		for(quint8 i=0 ; i<length-3 ; ++i)
+		for(quint8 i=0 ; i<length-3 ; ++i) {
 			newOpcode.append(model->item(i, 1)->text().toUInt());
-		// qDebug() << "newOpcode= " << newOpcode.toHex();
+		}
 		return newOpcode;
 	}
-	
-	// qDebug() << "byte= " << byte;
+
 	length += Opcode::length[opcodePtr()->id()];
-	// qDebug() << "length= " << length;
 	newOpcode.append(QByteArray(length-start, '\x0'));
-	// qDebug() << "newOpcode= " << newOpcode.toHex();
-	int paramSize, paramType, cur = 8, departBA, tailleBA, departLocal;
 	QList<int> paramTypes = this->paramTypes(opcodePtr()->id());
-	int value;
-	
-	if(!paramTypes.isEmpty())
-	{
-		for(quint8 i=0 ; i<paramTypes.size() ; ++i)
-		{
-			// qDebug() << "i= " << i;
-			paramType = paramTypes.at(i);
-			// qDebug() << "paramType= " << paramName(paramType);
-			value = model->data(model->index(i, 1), Qt::EditRole).toInt();
-			// qDebug() << "value= " << value;
-			// qDebug() << "data(Qt::DisplayRole)= " << model->data(model->index(i, 1), Qt::DisplayRole);
-			// qDebug() << "data(Qt::EditRole)= " << model->data(model->index(i, 1), Qt::EditRole);
-			// qDebug() << "data(Qt::UserRole)= " << model->data(model->index(i, 1), Qt::UserRole);
-			// qDebug() << "data(Qt::UserRole+1)= " << model->data(model->index(i, 1), Qt::UserRole+1);
-			// qDebug() << "data(Qt::UserRole+2)= " << model->data(model->index(i, 1), Qt::UserRole+2);
-			
-			paramSize = this->paramSize(paramType);
-			// qDebug() << "paramSize= " << paramSize;
-			departBA = cur/8;
-			// qDebug() << "departBA= " << departBA;
-			if(paramSize%8 !=0)
-				tailleBA = paramSize/8+1;
-			else
-				tailleBA = paramSize/8;
-			// qDebug() << "tailleBA= " << tailleBA;
-			
-			if(paramSize < 8)
-			{
-				departLocal = cur%8;
-				// qDebug() << "departLocal= " << departLocal;
-				newOpcode[departBA] = (char)((quint8)newOpcode.at(departBA) | (value << (8-paramSize-departLocal)));
-				// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
+
+	if(!paramTypes.isEmpty()) {
+		int cur = 8;
+		for(quint8 i=0 ; i<paramTypes.size() ; ++i) {
+			int paramType = paramTypes.at(i),
+			    value = model->data(model->index(i, 1), Qt::EditRole).toInt();
+
+			int paramSize = this->paramSize(paramType);
+			int startBA = cur / 8, sizeBA;
+			if(paramSize % 8 != 0) {
+				sizeBA = paramSize / 8 + 1;
+			} else {
+				sizeBA = paramSize / 8;
 			}
-			else if(paramSize == 8)
-			{
-				newOpcode[departBA] = (char)(value & 0xFF);
-				// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
-			}
-			else
-			{
-				for(int j=0 ; j<tailleBA ; j++)
-				{
-					newOpcode[departBA+j] = (char)((value>>(j*8)) & 0xFF);
-					// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
+
+			if(paramSize < 8) {
+				int startLocal = cur % 8;
+				newOpcode[startBA] = (char)((quint8)newOpcode.at(startBA) | (value << (8-paramSize-startLocal)));
+			} else if(paramSize == 8) {
+				newOpcode[startBA] = (char)(value & 0xFF);
+			} else {
+				for(int j=0 ; j<sizeBA ; j++) {
+					newOpcode[startBA+j] = (char)((value>>(j*8)) & 0xFF);
 				}
 			}
-			// qDebug() << "newOpcode= " << newOpcode.toHex();
-			
+
 			cur += paramSize;
-			// qDebug() << "cur= " << cur;
+		}
+	} else {
+		for(quint8 i=start ; i<length ; ++i) {
+			newOpcode[i] = model->item(i-start, 1)->text().toUInt();
 		}
 	}
-	else
-	{
-		for(quint8 i=start ; i<length ; ++i)
-			newOpcode[i] = model->item(i-start, 1)->text().toUInt();
-	}
-	
+
 	return newOpcode;
 }
 

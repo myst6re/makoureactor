@@ -66,7 +66,7 @@ class SpinBoxDelegate : public QItemDelegate
 {
 	Q_OBJECT
 public:
-	SpinBoxDelegate(QObject *parent = 0);
+	explicit SpinBoxDelegate(QObject *parent = 0);
 
 	enum paramType {
 		/*0*/inconnu, field_id, tuto_id, group_id, script_id, /*5*/personnage_id, party_id, cd_id, minijeu_id, polygone_id,
@@ -77,15 +77,19 @@ public:
 	};
 
 	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-						  const QModelIndex &index) const;
+	                      const QModelIndex &index) const;
 
 	void setEditorData(QWidget *editor, const QModelIndex &index) const;
 	void setModelData(QWidget *editor, QAbstractItemModel *model,
-					  const QModelIndex &index) const;
+	                  const QModelIndex &index) const;
 
 	void updateEditorGeometry(QWidget *editor,
-							  const QStyleOptionViewItem &option, const QModelIndex &index) const;
-	void setField(Field *field);
+	                          const QStyleOptionViewItem &option,
+	                          const QModelIndex &index) const;
+	inline void setField(Field *field) {
+		_field = field;
+	}
+
 private:
 	Field *_field;
 };

@@ -27,7 +27,7 @@ BackgroundTexturesIOPC::BackgroundTexturesIOPC(QIODevice *device) :
 {
 }
 
-bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures)
+bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 {
 	if(!canRead()) {
 		return false;
@@ -76,7 +76,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures)
 	return true;
 }
 
-bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures)
+bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures) const
 {
 	if(!canWrite()) {
 		return false;
@@ -115,7 +115,7 @@ BackgroundTexturesIOPS::BackgroundTexturesIOPS(QIODevice *device) :
 {
 }
 
-bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures)
+bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures) const
 {
 	if(!canRead()) {
 		return false;
@@ -154,7 +154,7 @@ bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures)
 	return true;
 }
 
-bool BackgroundTexturesIOPS::write(const BackgroundTexturesPS *textures)
+bool BackgroundTexturesIOPS::write(const BackgroundTexturesPS *textures) const
 {
 	if(!canWrite()) {
 		return false;

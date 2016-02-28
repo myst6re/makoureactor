@@ -60,7 +60,7 @@ private:
 	QString lastMessage() const;
 	QString firstMessage() const;
 	inline Window *mainWindow() const {
-		return (Window *)parentWidget();
+		return reinterpret_cast<Window *>(parentWidget());
 	}
 	void setActionsEnabled(bool enable);
 	bool findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,

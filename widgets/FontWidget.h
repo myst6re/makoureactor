@@ -28,7 +28,7 @@ class FontWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	FontWidget(QWidget *parent=0);
+	explicit FontWidget(QWidget *parent=0);
 	void clear();
 	void setFF7Font(FF7Font *ff7Font);
 	void setWindowBinFile(WindowBinFile *windowBinFile);

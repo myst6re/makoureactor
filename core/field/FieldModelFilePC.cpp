@@ -24,7 +24,7 @@
 #include "../TexFile.h"
 
 FieldModelFilePC::FieldModelFilePC() :
-	FieldModelFile()
+	FieldModelFile(), _charLgp(0)
 {
 }
 

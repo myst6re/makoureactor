@@ -55,7 +55,6 @@ void ColorDisplay::paintEvent(QPaintEvent *)
 {
 	QPainter painter(this);
 
-	int gray;
 	int size = colors.size(), x;
 	// Colors
 	painter.setPen(QColor(0, 0, 0));
@@ -63,7 +62,7 @@ void ColorDisplay::paintEvent(QPaintEvent *)
 	for(int i=0 ; i<size ; ++i) {
 		x = i * cellFullWidth;
 		painter.drawRect(x, 0, cellFullWidth, cellFullWidth);
-		gray = qGray(colors.at(i));
+		int gray = qGray(colors.at(i));
 		painter.fillRect(x+COLOR_DISPLAY_BORDER_WIDTH,
 						 COLOR_DISPLAY_BORDER_WIDTH,
 						 COLOR_DISPLAY_CELL_SIZE*scale,

@@ -43,11 +43,11 @@ EncounterTableWidget::EncounterTableWidget(const QString &title, QWidget *parent
 	layout->addWidget(new QLabel(tr("Probability"), this), 2, 2);
 	QStringList specialBattleNames;
 	specialBattleNames << tr("Back Attack 1") << tr("Back Attack 2") << tr("Side Attack") << tr("Attack From Both Sides");
-	QSpinBox *spinBox;
+
 	int row=3;
 	for(int i=0 ; i<10 ; ++i) {
 		layout->addWidget(new QLabel(i>=6 ? specialBattleNames.at(i-6) : tr("Battle %1").arg(i+1), this), row, 0);
-		spinBox = new QSpinBox(this);
+		QSpinBox *spinBox = new QSpinBox(this);
 		spinBox->setRange(0, 1023);
 		battleIds.append(spinBox);
 		layout->addWidget(spinBox, row, 1);

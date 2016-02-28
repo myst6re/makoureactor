@@ -38,7 +38,7 @@ public:
 		Lgp, File, Iso, Dir
 	};
 
-	FieldArchiveIO(FieldArchive *fieldArchive);
+	explicit FieldArchiveIO(FieldArchive *fieldArchive);
 	virtual ~FieldArchiveIO();
 	virtual bool isPS() const=0;
 	inline bool isPC() const { return !isPS(); }
@@ -47,7 +47,7 @@ public:
 	QByteArray fileData(const QString &fileName, bool unlzs=true, bool isLzsFile=true);
 	int exportFieldData(Field *field, const QString &extension, const QString &path, bool unlzs=true);
 
-	bool fieldDataIsCached(Field *field, const QString &fileType) const;
+	static bool fieldDataIsCached(Field *field, const QString &fileType);
 	virtual void clearCachedData();
 
 	virtual void close();

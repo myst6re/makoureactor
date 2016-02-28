@@ -19,13 +19,25 @@
 #include "PsColor.h"
 
 TimFile::TimFile(const QByteArray &data) :
-	TextureFile(), palX(0), palY(0), palW(0), palH(0), imgX(0), imgY(0)
+    TextureFile(),
+    bpp(0),
+    palX(0), palY(0),
+    palW(0), palH(0),
+    imgX(0), imgY(0)
 {
 	open(data);
 }
 
-TimFile::TimFile(const TextureFile &texture, quint8 bpp, quint16 palX, quint16 palY, quint16 palW, quint16 palH, quint16 imgX, quint16 imgY) :
-	TextureFile(texture), bpp(bpp), palX(palX), palY(palY), palW(palW), palH(palH), imgX(imgX), imgY(imgY)
+TimFile::TimFile(const TextureFile &texture,
+                 quint8 bpp,
+                 quint16 palX, quint16 palY,
+                 quint16 palW, quint16 palH,
+                 quint16 imgX, quint16 imgY) :
+    TextureFile(texture),
+    bpp(bpp),
+    palX(palX), palY(palY),
+    palW(palW), palH(palH),
+    imgX(imgX), imgY(imgY)
 {
 }
 
@@ -39,7 +51,9 @@ bool TimFile::open(const QByteArray &data)
 	bool hasPal;
 	int dataSize = data.size();
 
-	if(!data.startsWith(QByteArray("\x10\x00\x00\x00", 4)) || dataSize < 8)		return false;
+	if(!data.startsWith(QByteArray("\x10\x00\x00\x00", 4)) || dataSize < 8) {
+		return false;
+	}
 
 //	quint8 tag = (quint8)data.at(0);
 //	quint8 version = (quint8)data.at(1);

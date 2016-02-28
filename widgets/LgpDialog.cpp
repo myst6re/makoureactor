@@ -90,7 +90,7 @@ LgpDirectoryItem *LgpItem::root()
 	while(current->parent()) {
 		current = current->parent();
 	}
-	return (LgpDirectoryItem *)current;
+	return static_cast<LgpDirectoryItem *>(current);
 }
 
 QString LgpItem::path() const
@@ -338,7 +338,7 @@ void LgpItemModel::setIcon(const QString &path, const QIcon &icon)
 		return;
 	}
 
-	((LgpFileItem *)item)->setIcon(icon);
+	static_cast<LgpFileItem *>(item)->setIcon(icon);
 
 	emit layoutChanged();
 }
@@ -349,7 +349,7 @@ QModelIndex LgpItemModel::index(int row, int column, const QModelIndex &parent) 
 		return QModelIndex();
 	}
 
-	LgpDirectoryItem *parentItem = (LgpDirectoryItem *)getItem(parent);
+	LgpDirectoryItem *parentItem = static_cast<LgpDirectoryItem *>(getItem(parent));
 	if(!parentItem) {
 		parentItem = root;
 	}
@@ -397,7 +397,7 @@ int LgpItemModel::rowCount(const QModelIndex &parent) const
 	}
 
 	if(parentItem->isDirectory()) {
-		return ((LgpDirectoryItem *)parentItem)->childCount();
+		return static_cast<LgpDirectoryItem *>(parentItem)->childCount();
 	}
 	return 0;
 }
@@ -428,7 +428,7 @@ QVariant LgpItemModel::data(const QModelIndex &index, int role) const
 			if(lgpItem->isDirectory()) {
 				return QString();
 			} else {
-				qint64 fileSize = ((LgpFileItem *)lgpItem)->fileSize();
+				qint64 fileSize = static_cast<LgpFileItem *>(lgpItem)->fileSize();
 				return fileSize < 0 ? tr("?") : QString::number(fileSize);
 			}
 		default:	break;
@@ -439,10 +439,10 @@ QVariant LgpItemModel::data(const QModelIndex &index, int role) const
 			if(lgpItem->isDirectory()) {
 				return directoryIcon;
 			} else {
-				if(((LgpFileItem *)lgpItem)->icon().isNull()) {
+				if(static_cast<LgpFileItem *>(lgpItem)->icon().isNull()) {
 					return fileIcon;
 				} else {
-					return ((LgpFileItem *)lgpItem)->icon();
+					return static_cast<LgpFileItem *>(lgpItem)->icon();
 				}
 			}
 		}
@@ -475,7 +475,7 @@ bool LgpItemModel::setData(const QModelIndex &index, const QVariant &value, int 
 		return false;
 	}
 
-	bool ok = ((LgpFileItem *)lgpItem)->move(newFilename);
+	bool ok = static_cast<LgpFileItem *>(lgpItem)->move(newFilename);
 
 	if(ok) {
 		emit dataChanged(index, index);
@@ -580,7 +580,7 @@ void LgpDialog::renameCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
+		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
 		if(item && !item->isDirectory()) {
 			bool ok;
 			QString oldFilePath = item->path(),
@@ -611,7 +611,7 @@ void LgpDialog::replaceCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
+		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
 		if(item && !item->isDirectory()) {
 			QString filename = item->name();
 			int indexOf = filename.lastIndexOf('.');
@@ -634,7 +634,7 @@ void LgpDialog::replaceCurrent()
 
 			Config::setValue("lgpDialogOpenDirectory", path.left(path.lastIndexOf('/')));
 
-			if(!((LgpFileItem *)item)->setFile(new QFile(path))) {
+			if(!static_cast<LgpFileItem *>(item)->setFile(new QFile(path))) {
 				QMessageBox::warning(this, tr("Error"), tr("Can not modify the archive!"));
 			} else {
 //				emit modified();
@@ -648,7 +648,7 @@ void LgpDialog::extractCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
+		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
 		if(item && !item->isDirectory()) {
 			QString filename = item->name();
 			int index = filename.lastIndexOf('.');
@@ -671,7 +671,7 @@ void LgpDialog::extractCurrent()
 
 			Config::setValue("lgpDialogSaveDirectory", path.left(path.lastIndexOf('/')));
 
-			QIODevice *io = ((LgpFileItem *)item)->file();
+			QIODevice *io = static_cast<LgpFileItem *>(item)->file();
 			if(io && io->open(QIODevice::ReadOnly)) {
 				QFile file(path);
 				if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -698,7 +698,7 @@ void LgpDialog::add()
 	QString dirName;
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
+		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
 		if(item) {
 			dirName = item->isDirectory() ? item->path() : item->dirName();
 		}
@@ -755,7 +755,7 @@ void LgpDialog::removeCurrent()
 			return;
 		}
 
-		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
+		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
 		if(item && !item->isDirectory()) {
 			if(!lgp->removeFile(item->path())) {
 				QMessageBox::warning(this, tr("Error"), tr("Cannot delete the file!"));
@@ -824,7 +824,7 @@ void LgpDialog::setButtonsState()
 {
 	QModelIndexList modelIndexList = treeView->selectionModel()->selectedRows();
 	bool enabled = !modelIndexList.isEmpty() &&
-			!((LgpItemModel *)treeView->model())->getItem(modelIndexList.first())->isDirectory();
+			!static_cast<LgpItemModel *>(treeView->model())->getItem(modelIndexList.first())->isDirectory();
 
 	renameButton->setEnabled(enabled);
 	replaceButton->setEnabled(enabled);

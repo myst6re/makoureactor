@@ -86,7 +86,7 @@ class ScriptEditorJumpPageInterface : public ScriptEditorView
 	Q_OBJECT
 public:
 	ScriptEditorJumpPageInterface(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0) :
-		ScriptEditorView(field, grpScript, script, opcodeID, parent) {}
+		ScriptEditorView(field, grpScript, script, opcodeID, parent), label(0) {}
 	virtual bool needsLabel() const=0;
 protected:
 	void fillLabelList(bool jumpBack=false);

@@ -45,7 +45,7 @@ Field *FieldArchiveIterator::previous(bool open, bool dontOptimize)
 	return openField(QListIterator<Field *>::previous(), open, dontOptimize);
 }
 
-Field *FieldArchiveIterator::openField(Field *field, bool open, bool dontOptimize) const
+Field *FieldArchiveIterator::openField(Field *field, bool open, bool dontOptimize)
 {
 	if(field != NULL && open && !field->isOpen()) {
 		field->open(dontOptimize);
@@ -275,7 +275,7 @@ void FieldArchive::validateAsk()
 					int opcodeID = 0;
 					foreach(Opcode *opcode, script->opcodes()) {
 						if(opcode->id() == Opcode::ASK) {
-							OpcodeASK *opcodeASK = (OpcodeASK *)opcode;
+							OpcodeASK *opcodeASK = static_cast<OpcodeASK *>(opcode);
 							quint8 textID = opcodeASK->textID,
 									firstLine = opcodeASK->firstLine,
 									lastLine = opcodeASK->lastLine;
@@ -361,7 +361,7 @@ void FieldArchive::validateOneLineSize()
 					foreach(Opcode *opcode, script->opcodes()) {
 						if(opcode->id() == Opcode::WSIZW
 								|| opcode->id() == Opcode::WINDOW) {
-							opcodeWindow = (OpcodeWindow *)opcode;
+							opcodeWindow = static_cast<OpcodeWindow *>(opcode);
 						} else if(opcode->getTextID() >= 0 && opcodeWindow) {
 							FF7Window window;
 							opcodeWindow->getWindow(window);
@@ -450,11 +450,11 @@ void FieldArchive::printModelLoaders(const QString &filename, bool generic)
 				QList<QRgb> colors;
 				int boneCount = fieldModel->boneCount();
 				if (f->isPC()) {
-					FieldModelLoaderPC *modelLoaderPC = (FieldModelLoaderPC *)modelLoader;
+					FieldModelLoaderPC *modelLoaderPC = static_cast<FieldModelLoaderPC *>(modelLoader);
 					scale = modelLoaderPC->scale(modelId);
 					colors = modelLoaderPC->lightColors(modelId);
 				} else {
-					FieldModelFilePS *fieldModelPS = (FieldModelFilePS *)fieldModel;
+					FieldModelFilePS *fieldModelPS = static_cast<FieldModelFilePS *>(fieldModel);
 					scale = fieldModelPS->scale();
 					colors = fieldModelPS->lightColors();
 					boneCount -= 1;
@@ -483,7 +483,7 @@ void FieldArchive::printModelLoaders(const QString &filename, bool generic)
 				}*/
 			}
 		} else if(f->isPC()) {
-			FieldModelLoaderPC *modelLoaderPC = (FieldModelLoaderPC *)modelLoader;
+			FieldModelLoaderPC *modelLoaderPC = static_cast<FieldModelLoaderPC *>(modelLoader);
 
 			int modelID = 0;
 			foreach(const QString &hrc, modelLoaderPC->HRCNames()) {
@@ -828,9 +828,9 @@ bool FieldArchive::printBackgroundTiles(Field *field, const QString &filename, b
 
 	BackgroundTiles tiles;
 	if (uniformize && field->isPS()) { // Convert PS to PC to have the same output whenever the source
-		BackgroundFilePS *bgFilePS = (BackgroundFilePS *)bgFile;
+		BackgroundFilePS *bgFilePS = static_cast<BackgroundFilePS *>(bgFile);
 		PalettesPC palettesPC = ((PalettesPS *)&(bgFilePS->palettes()))->toPC();
-		((BackgroundTexturesPS *)bgFilePS->textures())
+		static_cast<BackgroundTexturesPS *>(bgFilePS->textures())
 		        ->toPC(bgFilePS->tiles(), tiles, palettesPC);
 	} else {
 		tiles = bgFile->tiles();
@@ -1259,8 +1259,8 @@ bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scr
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchOpcodeQuery *query = (SearchOpcodeQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchOpcodeQuery *query = static_cast<SearchOpcodeQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchOpcode(query->opcode, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1271,8 +1271,8 @@ bool FieldArchive::searchVar(quint8 bank, quint16 address, Opcode::Operation op,
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchVarQuery *query = (SearchVarQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchVarQuery *query = static_cast<SearchVarQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchVar(query->bank, query->address, query->op, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1283,8 +1283,8 @@ bool FieldArchive::searchExec(quint8 group, quint8 script, int &fieldID, int &gr
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchExecQuery *query = (SearchExecQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchExecQuery *query = static_cast<SearchExecQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchExec(query->group, query->script, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1295,8 +1295,8 @@ bool FieldArchive::searchMapJump(quint16 _field, int &fieldID, int &groupID, int
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchFieldQuery *query = (SearchFieldQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchFieldQuery *query = static_cast<SearchFieldQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchMapJump(query->fieldID, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1307,8 +1307,8 @@ bool FieldArchive::searchTextInScripts(const QRegExp &text, int &fieldID, int &g
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchTextQuery *query = (SearchTextQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchTextQuery *query = static_cast<SearchTextQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchTextInScripts(query->text, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1320,8 +1320,8 @@ bool FieldArchive::searchText(const QRegExp &text, int &fieldID, int &textID, in
 	SearchInText searchIn(textID, from, size, empty);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchTextQuery *query = (SearchTextQuery *)_query;
-		SearchInText *searchIn = (SearchInText *)_searchIn;
+		SearchTextQuery *query = static_cast<SearchTextQuery *>(_query);
+		SearchInText *searchIn = static_cast<SearchInText *>(_searchIn);
 		return f->scriptsAndTexts()->searchText(query->text, searchIn->textID, searchIn->from, searchIn->size);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1360,8 +1360,8 @@ bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &sc
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchOpcodeQuery *query = (SearchOpcodeQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchOpcodeQuery *query = static_cast<SearchOpcodeQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchOpcodeP(query->opcode, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1372,8 +1372,8 @@ bool FieldArchive::searchVarP(quint8 bank, quint16 address, Opcode::Operation op
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchVarQuery *query = (SearchVarQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchVarQuery *query = static_cast<SearchVarQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchVarP(query->bank, query->address, query->op, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1384,8 +1384,8 @@ bool FieldArchive::searchExecP(quint8 group, quint8 script, int &fieldID, int &g
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchExecQuery *query = (SearchExecQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchExecQuery *query = static_cast<SearchExecQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchExecP(query->group, query->script, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1396,8 +1396,8 @@ bool FieldArchive::searchMapJumpP(quint16 _field, int &fieldID, int &groupID, in
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchFieldQuery *query = (SearchFieldQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchFieldQuery *query = static_cast<SearchFieldQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchMapJumpP(query->fieldID, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1408,8 +1408,8 @@ bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &fieldID, int &
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchTextQuery *query = (SearchTextQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchTextQuery *query = static_cast<SearchTextQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchTextInScriptsP(query->text, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1420,8 +1420,8 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 	SearchInText searchIn(textID, from, size, index);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchTextQuery *query = (SearchTextQuery *)_query;
-		SearchInText *searchIn = (SearchInText *)_searchIn;
+		SearchTextQuery *query = static_cast<SearchTextQuery *>(_query);
+		SearchInText *searchIn = static_cast<SearchInText *>(_searchIn);
 		return f->scriptsAndTexts()->searchTextP(query->text, searchIn->textID, searchIn->from, searchIn->index, searchIn->size);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }

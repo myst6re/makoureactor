@@ -24,7 +24,7 @@ class TextureFile
 {
 public:
 	TextureFile();
-	TextureFile(const QImage &image);
+	explicit TextureFile(const QImage &image);
 	TextureFile(const QImage &image, const QList< QVector<QRgb> > &colorTables);
 	bool isValid() const;
 	void clear();

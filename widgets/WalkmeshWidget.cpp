@@ -397,7 +397,7 @@ void WalkmeshWidget::paintGL()
 				glVertex3f(pos[0].x/4096.0f, pos[0].y/4096.0f, pos[0].z/4096.0f);
 				glVertex3f(pos[1].x/4096.0f, pos[1].y/4096.0f, pos[1].z/4096.0f);
 
-				delete pos;
+				delete[] pos;
 			}
 
 			glEnd();

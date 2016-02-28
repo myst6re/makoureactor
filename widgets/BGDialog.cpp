@@ -221,7 +221,7 @@ void BGDialog::parameterChanged(int index)
 			item = new QListWidgetItem(tr("State %1").arg(i));
 			item->setData(Qt::UserRole, 1 << i);
 			item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-			item->setCheckState((params.value(parameter) >> i) & 1 ? Qt::Checked : Qt::Unchecked);
+			item->setCheckState(((params.value(parameter) >> i) & 1) ? Qt::Checked : Qt::Unchecked);
 			statesWidget->addItem(item);
 		}
 	}

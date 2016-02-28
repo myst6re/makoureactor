@@ -25,11 +25,11 @@ class Var
 public:
 	static bool load();
 	static bool save(const QMap<quint16, QString> &);
-	static QString name(quint8 bank, quint8 adress);
+	static QString name(quint8 bank, quint8 address);
 	static const QMap<quint16, QString> &get();
-	static void set(quint8 bank, quint8 adress, const QString &name);
-	static void del(quint8 bank, quint8 adress);
-	static bool exists(quint8 bank, quint8 adress);
+	static void set(quint8 bank, quint8 address, const QString &name);
+	static void del(quint8 bank, quint8 address);
+	static bool exists(quint8 bank, quint8 address);
 
 private:
 	static QMap<quint16, QString> var_names;

@@ -36,7 +36,7 @@ public:
 		QList<Opcode *> data;
 	};
 
-	OpcodeList(QWidget *parent=0);
+	explicit OpcodeList(QWidget *parent=0);
 	virtual ~OpcodeList();
 
 	int selectedID();

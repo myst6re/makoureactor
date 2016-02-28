@@ -132,7 +132,7 @@ bool PaletteIOPC::readAfter(Palettes &palettes) const
 			break;
 		}
 
-		((PalettePC *)palette)->setTransparency(palFlags.at(palId));
+		static_cast<PalettePC *>(palette)->setTransparency(palFlags.at(palId));
 
 		++palId;
 	}
@@ -153,7 +153,7 @@ bool PaletteIOPC::writeAfter(const Palettes &palettes) const
 			break;
 		}
 
-		quint8 trans = ((PalettePC *)palette)->transparency();
+		quint8 trans = static_cast<const PalettePC *>(palette)->transparency();
 		if(deviceAlpha()->write((char *)&trans, 1) != 1) {
 			return false;
 		}

@@ -25,7 +25,7 @@ class GrpScriptList : public QTreeWidget
 {
     Q_OBJECT
 public:
-	GrpScriptList(QWidget *parent=0);
+	explicit GrpScriptList(QWidget *parent=0);
 	virtual ~GrpScriptList();
 
 	GrpScript *currentGrpScript();

@@ -447,7 +447,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		QVector<uint> tileData = this->tile(tile); // Retrieve tile data
 
 		if(tile.depth < 2) {
-			PalettePC *palette = (PalettePC *)palettesPC.value(tile.paletteID);
+			PalettePC *palette = static_cast<PalettePC *>(palettesPC.value(tile.paletteID));
 			if(palette && !palette->transparency()) {
 
 				// Detection of transparency PC flag: true if one of used indexes is transparent
@@ -495,14 +495,15 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 				if (tileConversion.tile.depth >= 2) {
 					continue; // No palette here
 				}
-				PalettePC *palette = (PalettePC *)palettesPC.value(tileConversion.tile.paletteID);
+				PalettePC *palette = static_cast<PalettePC *>(palettesPC.value(tileConversion.tile.paletteID));
 
 				if(palette && palette->transparency()) {
 
 					const QList<bool> &areZero = palette->areZero();
 					bool firstIsZero = areZero.first();
-					int i=0, indexOfFirstZero = areZero.indexOf(true, 1);
+					int indexOfFirstZero = areZero.indexOf(true, 1);
 					if(firstIsZero || indexOfFirstZero > -1) {
+						int i = 0;
 						foreach(uint index, tileConversion.data) {
 							if(index > 0 && areZero.at(index)) {
 								// When the index refer to a transparent color, change this index to 0

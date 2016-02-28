@@ -42,5 +42,5 @@ FieldArchivePS::FieldArchivePS(const QString &path, FieldArchiveIO::Type type) :
 
 FieldArchiveIOPS *FieldArchivePS::io() const
 {
-	return (FieldArchiveIOPS *)FieldArchive::io();
+	return static_cast<FieldArchiveIOPS *>(FieldArchive::io());
 }

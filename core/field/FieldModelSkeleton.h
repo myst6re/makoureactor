@@ -64,7 +64,7 @@ class FieldModelSkeleton
 {
 public:
 	FieldModelSkeleton();
-	FieldModelSkeleton(const QList<FieldModelBone> &bones);
+	explicit FieldModelSkeleton(const QList<FieldModelBone> &bones);
 
 	inline const QList<FieldModelBone> &bones() const {
 		return _bones;

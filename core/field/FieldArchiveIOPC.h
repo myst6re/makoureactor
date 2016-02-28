@@ -27,7 +27,7 @@ class FieldArchivePC;
 class FieldArchiveIOPC : public FieldArchiveIO
 {
 public:
-	FieldArchiveIOPC(FieldArchivePC *fieldArchive);
+	explicit FieldArchiveIOPC(FieldArchivePC *fieldArchive);
 	inline bool isPS() const { return false; }
 
 	// Removing virtual

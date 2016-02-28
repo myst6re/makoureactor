@@ -87,10 +87,10 @@ public:
 	bool open(const QByteArray &data);
 	QByteArray save() const;
 	void clear();
-	bool isJap();
+	bool isJap() const;
 	QString mapName();
 	void setMapName(const QString &name);
-	quint8 control();
+	quint8 control() const;
 	void setControl(quint8 control);
 	qint16 cameraFocusHeight() const;
 	void setCameraFocusHeight(qint16 cameraFocusHeight);
@@ -113,12 +113,12 @@ public:
 	qint16 bgLayer4Height() const;
 	void setBgLayer4Height(qint16 height);
 	QList<Exit> exitLines() const;
-	Exit exitLine(quint8 id);
+	Exit exitLine(quint8 id) const;
 	void setExitLine(quint8 id, const Exit &line);
 	QList<Trigger> triggers() const;
 	const Trigger &trigger(quint8 id) const;
 	void setTrigger(quint8 id, const Trigger &trigger);
-	bool arrowIsDisplayed(quint8 id);
+	bool arrowIsDisplayed(quint8 id) const;
 	void setArrowDiplay(quint8 id, bool display);
 	QList<Arrow> arrows() const;
 	const Arrow &arrow(quint8 id) const;

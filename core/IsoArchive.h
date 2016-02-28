@@ -351,10 +351,10 @@ private:
 	bool openVolumeDescriptor(quint8 num=0);
 	bool openRootDirectory(quint32 sector, quint32 dataSize=SECTOR_SIZE_DATA);
 	IsoDirectory *_openDirectoryRecord(IsoDirectory *directories, QList<quint32> &dirVisisted);
-	QList<PathTable> pathTable(quint32 sector, quint32 dataSize=SECTOR_SIZE_DATA);
+//	QList<PathTable> pathTable(quint32 sector, quint32 dataSize=SECTOR_SIZE_DATA);
 
 	// Returns index of file in "filesWithPadding" who have paddingAfter >= minSectorCount
-	int findPadding(const QList<IsoFileOrDirectory *> &filesWithPadding, quint32 minSectorCount);
+	static int findPadding(const QList<IsoFileOrDirectory *> &filesWithPadding, quint32 minSectorCount);
 	// Returns files with padding after
 	QList<IsoFileOrDirectory *> getIntegrity();
 	bool getIntegritySetPaddingAfter(IsoFileOrDirectory *prevFile, quint32 fileLocation);

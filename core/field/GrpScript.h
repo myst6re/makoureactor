@@ -25,7 +25,7 @@
 class ScriptsIterator : public QListIterator<Script *>
 {
 public:
-	inline ScriptsIterator(const QList<Script *> &list)
+	inline explicit ScriptsIterator(const QList<Script *> &list)
 		: QListIterator<Script *>(list), _opcodesIt(0) {}
 	ScriptsIterator(const ScriptsIterator &other);
 	virtual ~ScriptsIterator();

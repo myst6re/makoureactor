@@ -74,7 +74,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 		// Compare value if provided
 		if(!noValue) {
 			if(id() == SETBYTE || id() == SETWORD) {
-				OpcodeBinaryOperation *binaryOp = (OpcodeBinaryOperation *)this;
+				const OpcodeBinaryOperation *binaryOp = static_cast<const OpcodeBinaryOperation *>(this);
 
 				if(B1(binaryOp->banks) == bank && (noAddress || binaryOp->var == address)
 				        && B2(binaryOp->banks) == 0) {
@@ -108,7 +108,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 		if(id() == BITON
 				|| id() == BITOFF
 				|| id() == BITXOR) {
-			OpcodeBitOperation *bitOperation = (OpcodeBitOperation *)this;
+			const OpcodeBitOperation *bitOperation = static_cast<const OpcodeBitOperation *>(this);
 			if(B1(bitOperation->banks) == bank && (noAddress || bitOperation->var == address)
 					&& (noValue || (B2(bitOperation->banks) == 0 && bitOperation->position == value))) {
 				return true;
@@ -123,7 +123,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 				|| id() == IFSWL
 				|| id() == IFUW
 				|| id() == IFUWL) {
-			OpcodeIf *opcodeIf = (OpcodeIf *)this;
+			const OpcodeIf *opcodeIf = static_cast<const OpcodeIf *>(this);
 			if(((op == Compare && opcodeIf->oper < quint8(BitAnd))
 				|| (op == BitCompare && opcodeIf->oper >= quint8(BitAnd)))
 					&& B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
@@ -144,7 +144,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 bool Opcode::searchExec(quint8 group, quint8 script) const
 {
 	if(id() == REQ || id() == REQSW || id() == REQEW) {
-		OpcodeExec *exec = (OpcodeExec *)this;
+		const OpcodeExec *exec = static_cast<const OpcodeExec *>(this);
 		return exec->groupID == group && exec->scriptID == script;
 	}
 	return false;
@@ -153,10 +153,10 @@ bool Opcode::searchExec(quint8 group, quint8 script) const
 bool Opcode::searchMapJump(quint16 fieldID) const
 {
 	if(id() == MAPJUMP) {
-		return ((OpcodeMAPJUMP *)this)->fieldID == fieldID;
+		return static_cast<const OpcodeMAPJUMP *>(this)->fieldID == fieldID;
 	}
 	if(id() == MINIGAME) {
-		return ((OpcodeMINIGAME *)this)->fieldID == fieldID;
+		return static_cast<const OpcodeMINIGAME *>(this)->fieldID == fieldID;
 	}
 	return false;
 }
@@ -254,7 +254,7 @@ void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 	quint8 param, state;
 
 	if(id() == BGON) { //show bg parameter
-		OpcodeBGON *bgon = (OpcodeBGON *)this;
+		const OpcodeBGON *bgon = static_cast<const OpcodeBGON *>(this);
 		if(bgon->banks == 0) {
 			param = bgon->paramID;
 			state = 1 << bgon->stateID;
@@ -263,7 +263,7 @@ void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 			enabledParams.insert(param, state);
 		}
 	}/*else if(id() == BGOFF) { //hide bg parameter
-		OpcodeBGOFF *bgoff = (OpcodeBGOFF *)this;
+		const OpcodeBGOFF *bgoff = static_cast<const OpcodeBGOFF *>(this);
 		if(bgoff->banks == 0) {
 			param = bgoff->paramID;
 			state = 1 << bgoff->stateID;
@@ -277,12 +277,12 @@ void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 void Opcode::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 {
 	if(id() == BGPDH) { //Move Background Z
-		OpcodeBGPDH *bgpdh = (OpcodeBGPDH *)this;
+		const OpcodeBGPDH *bgpdh = static_cast<const OpcodeBGPDH *>(this);
 		if(bgpdh->banks==0 && bgpdh->layerID>1 && bgpdh->layerID<4) { //No var
 			z[bgpdh->layerID-2] = bgpdh->targetZ;
 		}
 	} else if(x && y && id() == BGSCR) { // Animate Background X Y
-		OpcodeBGSCR *bgscr = (OpcodeBGSCR *)this;
+		const OpcodeBGSCR *bgscr = static_cast<const OpcodeBGSCR *>(this);
 		if(bgscr->banks==0 && bgscr->layerID>1 && bgscr->layerID<4) { //No var
 			x[bgscr->layerID-2] = bgscr->targetX;
 			y[bgscr->layerID-2] = bgscr->targetY;
@@ -2543,7 +2543,7 @@ OpcodeIfKey::OpcodeIfKey(const char *params, int size)
 }
 
 OpcodeIfKey::OpcodeIfKey(const OpcodeJump &op) :
-	OpcodeJump(op)
+	OpcodeJump(op), keys(0)
 {
 }
 
@@ -4628,7 +4628,8 @@ void OpcodePXYZI::getVariables(QList<FF7Var> &vars) const
 		vars.append(FF7Var(B2(banks[1]), varI, FF7Var::Word, true));
 }
 
-OpcodeBinaryOperation::OpcodeBinaryOperation()
+OpcodeBinaryOperation::OpcodeBinaryOperation() :
+    banks(0), var(0), value(0)
 {
 }
 

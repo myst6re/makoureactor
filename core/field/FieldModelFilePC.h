@@ -35,7 +35,7 @@ public:
 		return _loadedTex.size();
 	}
 	inline QImage loadedTexture(FieldModelGroup *group) {
-		return _loadedTex.value(((FieldModelTextureRefPC *)group->textureRef())->id());
+		return _loadedTex.value(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id());
 	}
 private:
 	Q_DISABLE_COPY(FieldModelFilePC)

@@ -129,7 +129,7 @@ int FieldArchiveIO::exportFieldData(Field *field, const QString &extension, cons
 	return 0;
 }
 
-bool FieldArchiveIO::fieldDataIsCached(Field *field, const QString &fileType) const
+bool FieldArchiveIO::fieldDataIsCached(Field *field, const QString &fileType)
 {
 	return fieldCache && fieldCache == field && fieldExtensionCache == fileType;
 }

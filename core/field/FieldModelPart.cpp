@@ -122,12 +122,12 @@ TrianglePoly::TrianglePoly(const QList<PolyVertex> &vertices, const QRgb &color,
 }
 
 FieldModelGroup::FieldModelGroup() :
-	_textureRef(0)
+	_textureRef(0), _blendMode(0)
 {
 }
 
 FieldModelGroup::FieldModelGroup(FieldModelTextureRef *texRef) :
-	_textureRef(texRef)
+	_textureRef(texRef), _blendMode(0)
 {
 }
 
@@ -147,7 +147,7 @@ void FieldModelGroup::setTextureRef(FieldModelTextureRef *texRef)
 	_textureRef = texRef;
 }
 
-void FieldModelGroup::removeSpriting(float texWidth, float texHeight)
+void FieldModelGroup::removeSpriting(float texWidth, float texHeight) const
 {
 	float minX = -1,
 			minY = -1;
@@ -202,7 +202,7 @@ void FieldModelGroup::removeSpriting(float texWidth, float texHeight)
 	}
 }
 
-void FieldModelGroup::setFloatCoords(float texWidth, float texHeight)
+void FieldModelGroup::setFloatCoords(float texWidth, float texHeight) const
 {
 	foreach (Poly *poly, polygons()) {
 		if (poly->hasTexture()) {
@@ -234,23 +234,30 @@ FieldModelPart::~FieldModelPart()
 QString FieldModelPart::toString() const
 {
 	QString ret;
-	int groupID=0, ID;
 
+	int groupID = 0;
 	foreach(FieldModelGroup *group, _groups) {
-		ret.append(QString("==== GROUP %1 ==== texNumber: %2\n").arg(groupID).arg(group->textureRef()->textureIdentifier()));
+		ret.append(QString("==== GROUP %1 ==== texNumber: %2\n")
+		           .arg(groupID)
+		           .arg(group->textureRef()->textureIdentifier()));
 
-		ID = 0;
+		int ID = 0;
 		foreach(Poly *poly, group->polygons()) {
 			ret.append(QString("==== poly %1 ====\n").arg(ID));
 
 			for(int i=0 ; i<poly->count() ; ++i) {
 				ret.append(QString("%1: vertex(%2, %3, %4) color(%5, %6, %7)")
 						   .arg(i)
-						   .arg(poly->vertex(i).x).arg(poly->vertex(i).y).arg(poly->vertex(i).z)
-						   .arg(qRed(poly->color(i))).arg(qGreen(poly->color(i))).arg(qBlue(poly->color(i))));
+						   .arg(poly->vertex(i).x)
+				           .arg(poly->vertex(i).y)
+				           .arg(poly->vertex(i).z)
+						   .arg(qRed(poly->color(i)))
+				           .arg(qGreen(poly->color(i)))
+				           .arg(qBlue(poly->color(i))));
 				if(poly->hasTexture()) {
 					ret.append(QString(" texCoord(%1, %2)")
-							   .arg(poly->texCoord(i).x).arg(poly->texCoord(i).y));
+							   .arg(poly->texCoord(i).x)
+					           .arg(poly->texCoord(i).y));
 				}
 				ret.append("\n");
 			}

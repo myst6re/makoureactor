@@ -134,7 +134,7 @@ QList<IsoFile *> IsoDirectory::files() const
 
 	foreach(IsoFileOrDirectory *fOrD, _filesAndDirectories) {
 		if(fOrD->isFile()) {
-			fs.append((IsoFile *)fOrD);
+			fs.append(static_cast<IsoFile *>(fOrD));
 		}
 	}
 
@@ -147,7 +147,7 @@ QList<IsoDirectory *> IsoDirectory::directories() const
 
 	foreach(IsoFileOrDirectory *fOrD, _filesAndDirectories) {
 		if(fOrD->isDirectory()) {
-			ds.append((IsoDirectory *)fOrD);
+			ds.append(static_cast<IsoDirectory *>(fOrD));
 		}
 	}
 
@@ -164,7 +164,7 @@ IsoFileOrDirectory *IsoDirectory::fileOrDirectory(const QString &path) const
 		if(fOrD == NULL)	return NULL;
 
 		if(fOrD->isDirectory()) {
-			return ((IsoDirectory *)fOrD)->fileOrDirectory(path.mid(index+1));
+			return static_cast<IsoDirectory *>(fOrD)->fileOrDirectory(path.mid(index+1));
 		} else {
 			return NULL;
 		}
@@ -184,7 +184,7 @@ IsoFile *IsoDirectory::file(const QString &path) const
 		return NULL;
 	}
 
-	return (IsoFile *)fOrD;
+	return static_cast<IsoFile *>(fOrD);
 }
 
 IsoDirectory *IsoDirectory::directory(const QString &path) const
@@ -197,7 +197,7 @@ IsoDirectory *IsoDirectory::directory(const QString &path) const
 		return NULL;
 	}
 
-	return (IsoDirectory *)fOrD;
+	return static_cast<IsoDirectory *>(fOrD);
 }
 
 void IsoDirectory::add(IsoFileOrDirectory *fileOrDirectory)
@@ -421,7 +421,7 @@ QByteArray IsoArchiveIO::readIso(qint64 maxSize)
 
 	QByteArray baData(data, readIso(data, maxSize));
 
-	delete data;
+	delete[] data;
 
 	return baData;
 }
@@ -561,12 +561,12 @@ bool IsoFileIO::canReadLine() const
 }
 
 IsoArchive::IsoArchive() :
-	_rootDirectory(NULL)
+	_rootDirectory(NULL), _error(Archive::NoError)
 {
 }
 
 IsoArchive::IsoArchive(const QString &name) :
-	_io(name), _rootDirectory(NULL)
+	_io(name), _rootDirectory(NULL), _error(Archive::NoError)
 {
 }
 
@@ -980,7 +980,7 @@ void IsoArchive::repairLocationSectors(IsoDirectory *directory, IsoArchive *newI
 		}
 
 		if(fileOrDir->isDirectory()) {
-			dirs.append((IsoDirectory *)fileOrDir);
+			dirs.append(static_cast<IsoDirectory *>(fileOrDir));
 		}
 	}
 
@@ -1153,7 +1153,7 @@ _openDirectoryRecordError:
 	return NULL;
 }
 
-QList<PathTable> IsoArchive::pathTable(quint32 sector, quint32 dataSize)
+/*QList<PathTable> IsoArchive::pathTable(quint32 sector, quint32 dataSize)
 {
 	QList<PathTable> pathTables;
 
@@ -1183,7 +1183,7 @@ QList<PathTable> IsoArchive::pathTable(quint32 sector, quint32 dataSize)
 	}
 
 	return pathTables;
-}
+}*/
 
 QByteArray IsoArchive::file(const QString &path, quint32 maxSize) const
 {
@@ -1288,7 +1288,7 @@ void IsoArchive::_extractAll(const QString &destination, IsoDirectory *directori
 		{
 			if(!fileOrDir->isSpecial()) {
 				dir.mkdir(fileOrDir->name());
-				_extractAll(currentPath + fileOrDir->name(), (IsoDirectory *)fileOrDir, currentInternalDir.isEmpty() ? fileOrDir->name() : currentInternalDir + '/' + fileOrDir->name());
+				_extractAll(currentPath + fileOrDir->name(), static_cast<IsoDirectory *>(fileOrDir), currentInternalDir.isEmpty() ? fileOrDir->name() : currentInternalDir + '/' + fileOrDir->name());
 			}
 		}
 		else
@@ -1404,7 +1404,7 @@ void IsoArchive::_getIntegrity(QMap<quint32, IsoFileOrDirectory *> &files, IsoDi
 			files.insert(fileOrDir->location(), fileOrDir);
 
 			if(fileOrDir->isDirectory()) {
-				_getIntegrity(files, (IsoDirectory *)fileOrDir);
+				_getIntegrity(files, static_cast<IsoDirectory *>(fileOrDir));
 			}
 		}
 	}
@@ -1421,9 +1421,9 @@ void IsoArchive::getModifiedFiles(QMap<quint32, IsoFile *> &files, IsoDirectory 
 {
 	foreach(IsoFileOrDirectory *fileOrDir, directory->filesAndDirectories()) {
 		if(fileOrDir->isDirectory()) {
-			getModifiedFiles(files, (IsoDirectory *)fileOrDir);
-		} else if(((IsoFile *)fileOrDir)->isModified()) {
-			files.insert(fileOrDir->newLocation(), (IsoFile *)fileOrDir);
+			getModifiedFiles(files, static_cast<IsoDirectory *>(fileOrDir));
+		} else if(static_cast<IsoFile *>(fileOrDir)->isModified()) {
+			files.insert(fileOrDir->newLocation(), static_cast<IsoFile *>(fileOrDir));
 		}
 	}
 }
@@ -1432,7 +1432,7 @@ void IsoArchive::applyModifications(IsoDirectory *directory)
 {
 	foreach(IsoFileOrDirectory *fileOrDir, directory->filesAndDirectories()) {
 		if(fileOrDir->isDirectory()) {
-			applyModifications((IsoDirectory *)fileOrDir);
+			applyModifications(static_cast<IsoDirectory *>(fileOrDir));
 		}
 		if(fileOrDir->isModified()) {
 			fileOrDir->applyModifications();

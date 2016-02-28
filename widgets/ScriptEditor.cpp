@@ -132,8 +132,9 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	connect(ok, SIGNAL(released()), SLOT(accept()));
 	connect(cancel, SIGNAL(released()), SLOT(close()));
 	connect(comboBox0, SIGNAL(currentIndexChanged(int)), SLOT(buildList(int)));
-	for(int i=0 ; i<editorLayout->count() ; ++i)
-		connect((ScriptEditorView *)editorLayout->widget(i), SIGNAL(opcodeChanged()), SLOT(refreshTextEdit()));
+	for(int i=0 ; i<editorLayout->count() ; ++i) {
+		connect(static_cast<ScriptEditorView *>(editorLayout->widget(i)), SIGNAL(opcodeChanged()), SLOT(refreshTextEdit()));
+	}
 	connect(comboBox, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
 }
 
@@ -230,7 +231,7 @@ void ScriptEditor::fillEditor()
 		index = 0;
 	}
 
-	editorWidget = (ScriptEditorView *)editorLayout->widget(index);
+	editorWidget = static_cast<ScriptEditorView *>(editorLayout->widget(index));
 	bool hasParams = opcode->hasParams() || opcode->isLabel();
 	editorLayout->setVisible(hasParams);
 	editorLayout->setCurrentWidget(editorWidget);
@@ -274,7 +275,7 @@ bool ScriptEditor::needslabel() const
 			|| editorLayout->currentIndex() == IF_PAGE
 			|| editorLayout->currentIndex() == IFKEY_PAGE
 			|| editorLayout->currentIndex() == IFQ_PAGE)
-			&& ((ScriptEditorJumpPageInterface *)editorWidget)->needsLabel();
+			&& static_cast<ScriptEditorJumpPageInterface *>(editorWidget)->needsLabel();
 }
 
 void ScriptEditor::refreshTextEdit()
@@ -344,11 +345,10 @@ void ScriptEditor::changeCurrentOpcode(int index)
 
 void ScriptEditor::setCurrentMenu(int id)
 {
-	int index, i, j;
-	for(i=0 ; i<comboBox0->count() ; ++i) {
+	for(int i=0 ; i<comboBox0->count() ; ++i) {
 		buildList(i);
-		index = -1;
-		for(j=0 ; j<comboBox->count() && index==-1 ; ++j) {
+		int index = -1;
+		for(int j=0 ; j<comboBox->count() && index==-1 ; ++j) {
 			QList<QVariant> dataList = comboBox->itemData(j).toList();
 			foreach(const QVariant &v, dataList) {
 				if(v.toInt() == id) {

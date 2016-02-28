@@ -773,7 +773,7 @@ void Window::openField(bool reload)
 	if(_tutManager && (reload || _tutManager->isVisible())) {
 		TutFilePC *tutPC = NULL;
 		if(fieldArchive->isPC()) {
-			tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
+			tutPC = static_cast<FieldArchivePC *>(fieldArchive)->tut(field->name());
 		}
 		_tutManager->fill(field, tutPC, reload);
 		_tutManager->setEnabled(true);
@@ -812,10 +812,8 @@ void Window::openField(bool reload)
 
 void Window::showModel(int grpScriptID)
 {
-	int modelID = -1;
-
 	if(grpScriptID >= 0) {
-		modelID = field->scriptsAndTexts()->modelID(grpScriptID);
+		int modelID = field->scriptsAndTexts()->modelID(grpScriptID);
 		Data::currentModelID = modelID;
 		if(fieldModel && modelID > -1) {
 			// if(fieldArchive->io()->isPC()) {
@@ -1331,7 +1329,7 @@ void Window::tutManager()
 	if(field && field->tutosAndSounds()->isOpen()) {
 		TutFilePC *tutPC = NULL;
 		if(fieldArchive->isPC()) {
-			tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
+			tutPC = static_cast<FieldArchivePC *>(fieldArchive)->tut(field->name());
 		}
 		_tutManager->fill(field, tutPC);
 		_tutManager->setEnabled(true);
@@ -1402,7 +1400,7 @@ void Window::miscManager()
 void Window::archiveManager()
 {
 	if(fieldArchive && fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
-		LgpDialog dialog((Lgp *)fieldArchive->io()->device(), this);
+		LgpDialog dialog(static_cast<Lgp *>(fieldArchive->io()->device()), this);
 		connect(&dialog, SIGNAL(modified()), SLOT(setModified()));
 		dialog.exec();
 	}
@@ -1430,10 +1428,10 @@ void Window::miscOperations()
 			fieldArchive->removeBattles();
 		}
 		if(!observerWasCanceled() && fieldArchive->isPC() && operations.testFlag(OperationsManager::CleanModelLoaderPC)) {
-			((FieldArchivePC *)fieldArchive)->cleanModelLoader();
+			static_cast<FieldArchivePC *>(fieldArchive)->cleanModelLoader();
 		}
 		if(!observerWasCanceled() && fieldArchive->isPC() && operations.testFlag(OperationsManager::RemoveUnusedSectionPC)) {
-			((FieldArchivePC *)fieldArchive)->removeUnusedSections();
+			static_cast<FieldArchivePC *>(fieldArchive)->removeUnusedSections();
 		}
 
 		hideProgression();

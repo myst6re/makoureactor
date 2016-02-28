@@ -25,7 +25,7 @@ class IconThread : public QThread
 {
 	Q_OBJECT
 public:
-	IconThread(QObject *parent = 0);
+	explicit IconThread(QObject *parent = 0);
 	~IconThread();
 
 	void clear();
@@ -111,7 +111,7 @@ private:
 class LgpDirectoryItem : public LgpItem
 {
 public:
-	LgpDirectoryItem(const QString &name, LgpDirectoryItem *parent = 0) :
+	explicit LgpDirectoryItem(const QString &name, LgpDirectoryItem *parent = 0) :
 		LgpItem(name, parent) {
 	}
 	~LgpDirectoryItem();
@@ -149,7 +149,7 @@ class LgpItemModel : public QAbstractItemModel
 {
 	Q_OBJECT
 public:
-	LgpItemModel(Lgp *lgp, QObject *parent=0);
+	explicit LgpItemModel(Lgp *lgp, QObject *parent=0);
 	~LgpItemModel();
 	QModelIndex index(int row, int column, const QModelIndex &parent=QModelIndex()) const;
 	QModelIndex parent(const QModelIndex &index) const;
@@ -174,7 +174,7 @@ class LgpDialog : public QDialog, ArchiveObserver
 {
 	Q_OBJECT
 public:
-	LgpDialog(Lgp *lgp, QWidget *parent=0);
+	explicit LgpDialog(Lgp *lgp, QWidget *parent=0);
 
 	bool observerWasCanceled() const;
 	void setObserverMaximum(unsigned int max);

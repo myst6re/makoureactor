@@ -28,11 +28,11 @@ public:
 	explicit BackgroundTexturesIO(QIODevice *device);
 	virtual ~BackgroundTexturesIO() {}
 
-	virtual bool read(BackgroundTextures *textures) {
+	virtual bool read(BackgroundTextures *textures) const {
 		Q_UNUSED(textures)
 		return false;
 	}
-	virtual bool write(const BackgroundTextures *textures) {
+	virtual bool write(const BackgroundTextures *textures) const {
 		Q_UNUSED(textures)
 		return false;
 	}
@@ -42,8 +42,8 @@ class BackgroundTexturesIOPC : public BackgroundTexturesIO
 {
 public:
 	explicit BackgroundTexturesIOPC(QIODevice *device);
-	bool read(BackgroundTexturesPC *textures);
-	bool write(const BackgroundTexturesPC *textures);
+	bool read(BackgroundTexturesPC *textures) const;
+	bool write(const BackgroundTexturesPC *textures) const;
 private:
 	using BackgroundTexturesIO::read; // Hide parent read()
 	using BackgroundTexturesIO::write; // Hide parent write()
@@ -53,8 +53,8 @@ class BackgroundTexturesIOPS : public BackgroundTexturesIO
 {
 public:
 	explicit BackgroundTexturesIOPS(QIODevice *device);
-	bool read(BackgroundTexturesPS *textures);
-	bool write(const BackgroundTexturesPS *textures);
+	bool read(BackgroundTexturesPS *textures) const;
+	bool write(const BackgroundTexturesPS *textures) const;
 private:
 	using BackgroundTexturesIO::read; // Hide parent read()
 	using BackgroundTexturesIO::write; // Hide parent write()

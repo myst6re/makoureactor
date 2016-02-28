@@ -8,7 +8,7 @@ class FieldPSDemo : public FieldPS
 {
 public:
 	FieldPSDemo(const QString &name, FieldArchiveIO *io);
-	FieldPSDemo(const Field &field);
+	explicit FieldPSDemo(const Field &field);
 
 protected:
 	inline int headerSize() const { return 0; }

@@ -105,11 +105,11 @@ QString TutFile::parseScripts(int tutID) const
 	QString ret;
 	QByteArray textData;
 	bool jp = Config::value("jp_txt", false).toBool();
-	quint8 key;
 	int i=0, size = tuto.size(), endOfText;
 
 	while(i < size) {
-		switch(key = tuto.at(i++)) {
+		quint8 key = tuto.at(i++);
+		switch(key) {
 		case 0x00:
 			if(i + 2 > size) {
 				ret.append(parseScriptsUnknownString(key));

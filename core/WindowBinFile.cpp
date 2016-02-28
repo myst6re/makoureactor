@@ -153,7 +153,7 @@ const QImage &WindowBinFile::image(FontColor color)
 	return _font.image();
 }
 
-QRect WindowBinFile::letterRect(int charId) const
+QRect WindowBinFile::letterRect(int charId)
 {
 	QSize size = QSize(12, 12);
 	QPoint point = QPoint((charId%21)*size.width(), (charId/21)*size.height());

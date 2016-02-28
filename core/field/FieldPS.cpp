@@ -19,12 +19,12 @@
 #include "BackgroundFilePS.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
-	Field(name, io)
+	Field(name, io), vramDiff(0)
 {
 }
 
 FieldPS::FieldPS(const Field &field) :
-	Field(field)
+	Field(field), vramDiff(0)
 {
 }
 
@@ -60,7 +60,7 @@ quint32 FieldPS::sectionPosition(int idPart) const
 
 FieldArchiveIOPS *FieldPS::io() const
 {
-	return (FieldArchiveIOPS *)Field::io();
+	return static_cast<FieldArchiveIOPS *>(Field::io());
 }
 
 FieldPart *FieldPS::createPart(FieldSection part)
@@ -74,12 +74,12 @@ FieldPart *FieldPS::createPart(FieldSection part)
 
 FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 {
-	return (FieldModelLoaderPS *)Field::fieldModelLoader(open);
+	return static_cast<FieldModelLoaderPS *>(Field::fieldModelLoader(open));
 }
 
 FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate, bool open)
 {
-	FieldModelFilePS *fieldModel = (FieldModelFilePS *)fieldModelPtr(modelID);
+	FieldModelFilePS *fieldModel = static_cast<FieldModelFilePS *>(fieldModelPtr(modelID));
 	if(!fieldModel) 	addFieldModel(modelID, fieldModel = new FieldModelFilePS());
 	if(open) {
 		fieldModel->load(this, modelID, animationID, animate);

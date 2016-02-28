@@ -64,8 +64,8 @@ void FontGrid::paintEvent(QPaintEvent *)
 	p.drawLines(linesV, lineCountV);
 	p.drawLines(linesH, lineCountH);
 
-	delete linesV;
-	delete linesH;
+	delete[] linesV;
+	delete[] linesH;
 
 	if(_windowBinFile) {
 		int charCount=_windowBinFile->tableSize(_currentTable);

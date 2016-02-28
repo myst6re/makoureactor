@@ -323,7 +323,6 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 		QList<quint16> indent;
 		QList<QTreeWidgetItem *> items;
 		QTreeWidgetItem *parentItem = 0;
-		int id;
 		quint16 opcodeID = 0;
 		QPixmap fontPixmap(":/images/chiffres.png");
 
@@ -339,7 +338,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 				}
 			}
 
-			id = curOpcode->id();
+			int id = curOpcode->id();
 
 			QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList(curOpcode->toString(field)));
 			item->setData(0, Qt::UserRole, opcodeID);

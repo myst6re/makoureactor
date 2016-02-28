@@ -28,7 +28,7 @@ class FieldPC : public Field
 {
 public:
 	FieldPC(const QString &name, FieldArchiveIO *io);
-	FieldPC(const Field &field);
+	explicit FieldPC(const Field &field);
 	virtual ~FieldPC();
 
 	inline bool isPC() const { return true; }

@@ -75,7 +75,7 @@ class FieldModelGroup
 {
 public:
 	FieldModelGroup();
-	FieldModelGroup(FieldModelTextureRef *texRef);
+	explicit FieldModelGroup(FieldModelTextureRef *texRef);
 	virtual ~FieldModelGroup();
 	inline const QList<Poly *> &polygons() const {
 		return _polys;
@@ -93,8 +93,8 @@ public:
 	inline void setBlendMode(quint8 blend) {
 		_blendMode = blend;
 	}
-	void removeSpriting(float texWidth, float texHeight);
-	void setFloatCoords(float texWidth, float texHeight);
+	void removeSpriting(float texWidth, float texHeight) const;
+	void setFloatCoords(float texWidth, float texHeight) const;
 private:
 	FieldModelTextureRef *_textureRef;
 	QList<Poly *> _polys;

@@ -113,10 +113,8 @@ void ModelManager::fill(Field *field, bool reload)
 void ModelManager::fillModelList()
 {
 	models->blockSignals(true);
-	QTreeWidgetItem *item;
-	foreach(const QStringList &name, modelNames())
-	{
-		item = new QTreeWidgetItem(name);
+	foreach(const QStringList &name, modelNames()) {
+		QTreeWidgetItem *item = new QTreeWidgetItem(name);
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 		models->addTopLevelItem(item);
 	}

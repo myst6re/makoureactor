@@ -259,9 +259,9 @@ void TextManager::focusInEvent(QFocusEvent *)
 
 void TextManager::setField(Field *field, bool reload)
 {
-	if((!reload && this->scriptsAndTexts == field->scriptsAndTexts())
-			|| !field
-			|| !field->scriptsAndTexts()->isOpen()) {
+	if(!field
+	        || (!reload && this->scriptsAndTexts == field->scriptsAndTexts())
+	        || !field->scriptsAndTexts()->isOpen()) {
 		return;
 	}
 
