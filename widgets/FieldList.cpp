@@ -14,7 +14,7 @@ FieldList::FieldList(QWidget *parent) :
 	setItemsExpandable(false);
 	setSortingEnabled(true);
 	setAutoScroll(false);
-	resizeColumnToContents(0);
+	setColumnWidth(1, 0);
 	setFont(font);
 	sortByColumn(1, Qt::AscendingOrder);
 
@@ -57,6 +57,9 @@ void FieldList::fill(FieldArchive *fieldArchive)
 	if(!items.isEmpty()) {
 		addTopLevelItems(items);
 		resizeColumnToContents(0);
+
+		setMinimumWidth(columnWidth(0) +
+		                columnWidth(1));
 	}
 }
 

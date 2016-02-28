@@ -18,7 +18,7 @@ bool Splitter::isCollapsed(int index)
 	}
 
 	QList<int> s = sizes();
-	return s[index] == 0;
+	return s.at(index) == 0;
 }
 
 void Splitter::setCollapsed(int index, bool collapsed)
@@ -29,6 +29,14 @@ void Splitter::setCollapsed(int index, bool collapsed)
 	}
 
 	QList<int> s = sizes();
-	s[index] = int(!collapsed);
+	if ((s.at(index) == 0) == collapsed) {
+		return; // Already in the right state
+	}
+	if (collapsed) {
+		_lastSizes.insert(index, s.at(index));
+		s[index] = 0;
+	} else {
+		s[index] = _lastSizes.value(index, 1);
+	}
 	setSizes(s);
 }

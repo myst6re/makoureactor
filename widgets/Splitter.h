@@ -2,6 +2,7 @@
 #define SPLITTER_H
 
 #include <QSplitter>
+#include <QMap>
 
 class Splitter : public QSplitter
 {
@@ -15,6 +16,8 @@ public slots:
 	inline void toggleCollapsed(int index) {
 		setCollapsed(index, !isCollapsed(index));
 	}
+private:
+	QMap<int, int> _lastSizes;
 };
 
 #endif // SPLITTER_H

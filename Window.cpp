@@ -139,7 +139,6 @@ Window::Window() :
 	fieldList = new FieldList(this);
 
 	zoneImage = new ApercuBG();
-	zoneImage->setMinimumSize(300, 225);
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
 //		modelThread = new FieldModelThread(this);
@@ -167,15 +166,19 @@ Window::Window() :
 	horizontalSplitter->setStretchFactor(0, 10);
 	horizontalSplitter->setStretchFactor(1, 2);
 	horizontalSplitter->setCollapsible(0, false);
+	horizontalSplitter->restoreState(Config::value("horizontalSplitterState").toByteArray());
+	horizontalSplitter->setCollapsed(1, !Config::value("backgroundVisible", true).toBool());
 
 	_scriptManager = new ScriptManager(this);
 
 	verticalSplitter = new Splitter(Qt::Horizontal, this);
 	verticalSplitter->addWidget(horizontalSplitter);
 	verticalSplitter->addWidget(_scriptManager);
-	verticalSplitter->setStretchFactor(0, 2);
-	verticalSplitter->setStretchFactor(1, 10);
+	verticalSplitter->setStretchFactor(0, 3);
+	verticalSplitter->setStretchFactor(1, 9);
 	verticalSplitter->setCollapsible(1, false);
+	verticalSplitter->restoreState(Config::value("verticalSplitterState").toByteArray());
+	verticalSplitter->setCollapsed(0, !Config::value("fieldListVisible", true).toBool());
 
 	setCentralWidget(verticalSplitter);
 
@@ -198,8 +201,7 @@ Window::Window() :
 
 	restoreState(Config::value("windowState").toByteArray());
 	restoreGeometry(Config::value("windowGeometry").toByteArray());
-	horizontalSplitter->restoreState(Config::value("horizontalSplitterState").toByteArray());
-	verticalSplitter->restoreState(Config::value("verticalSplitterState").toByteArray());
+
 	closeFile();
 }
 
@@ -231,6 +233,8 @@ void Window::closeEvent(QCloseEvent *event)
 		Config::setValue("windowGeometry", saveGeometry());
 		Config::setValue("horizontalSplitterState", horizontalSplitter->saveState());
 		Config::setValue("verticalSplitterState", verticalSplitter->saveState());
+		Config::setValue("fieldListVisible", !verticalSplitter->isCollapsed(0));
+		Config::setValue("backgroundVisible", !horizontalSplitter->isCollapsed(1));
 		Config::setValue("fieldListSortColumn", fieldList->sortColumn());
 		Config::setValue("fieldListSortOrder", int(fieldList->header()->sortIndicatorOrder()));
 		_scriptManager->saveConfig();
@@ -245,10 +249,10 @@ QMenu *Window::createPopupMenu()
 	QAction *action;
 	action = menu->addAction(tr("Field List"), this, SLOT(toggleFieldList()));
 	action->setCheckable(true);
-	action->setChecked(verticalSplitter->isCollapsed(0));
+	action->setChecked(!verticalSplitter->isCollapsed(0));
 	action = menu->addAction(tr("Background Preview"), this, SLOT(toggleBackgroundPreview()));
 	action->setCheckable(true);
-	action->setChecked(horizontalSplitter->isCollapsed(1));
+	action->setChecked(!horizontalSplitter->isCollapsed(1));
 	menu->addSeparator();
 	foreach(QAction *action, _scriptManager->actions()) {
 		menu->addAction(action);
@@ -313,17 +317,14 @@ int Window::closeFile(bool quit)
 		Config::setValue("currentField", fieldList->currentItem()->text(0));
 	}
 
-	if(actionSave->isEnabled() && fieldArchive!=NULL)
-	{
+	if(actionSave->isEnabled() && fieldArchive != NULL) {
 		QString fileChangedList;
-		int i=0;
-		for(int j=0 ; j<fieldArchive->size() ; ++j) {
+		int i = 0;
+		for(int j = 0 ; j < fieldArchive->size() ; ++j) {
 			Field *curField = fieldArchive->field(j, false);
-			if(curField && curField->isOpen() && curField->isModified())
-			{
+			if(curField && curField->isOpen() && curField->isModified()) {
 				fileChangedList += "\n - " + curField->name();
-				if(i>10)
-				{
+				if(i > 10) {
 					fileChangedList += "\n...";
 					break;
 				}
@@ -334,17 +335,22 @@ int Window::closeFile(bool quit)
 			fileChangedList.prepend(tr("\n\nEdited files:"));
 		}
 		int reponse = QMessageBox::warning(this, tr("Save"), tr("Would you like to save changes of %1?%2").arg(fieldArchive->io()->name()).arg(fileChangedList), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-		if(reponse == QMessageBox::Yes)				save();
-		else if(reponse == QMessageBox::Cancel)		return reponse;
-		if(quit)	return reponse;
+		if(reponse == QMessageBox::Yes) {
+			save();
+		} else if(reponse == QMessageBox::Cancel) {
+			return reponse;
+		}
+		if(quit) {
+			return reponse;
+		}
 	}
-	
-	if(!quit)
-	{
-		if(varDialog)	varDialog->setFieldArchive(NULL);
 
-		if(fieldArchive!=NULL)
-		{
+	if(!quit) {
+		if(varDialog) {
+			varDialog->setFieldArchive(NULL);
+		}
+
+		if(fieldArchive != NULL) {
 			delete fieldArchive;
 			fieldArchive = NULL;
 		}
@@ -364,7 +370,7 @@ int Window::closeFile(bool quit)
 		setWindowModified(false);
 		setWindowTitle();
 		searchDialog->setFieldArchive(NULL);
-		
+
 		actionSave->setEnabled(false);
 		actionSaveAs->setEnabled(false);
 		actionExport->setEnabled(false);
@@ -378,7 +384,7 @@ int Window::closeFile(bool quit)
 		actionMisc->setEnabled(false);
 		actionMiscOperations->setEnabled(false);
 	}
-	
+
 	return QMessageBox::Yes;
 }
 

@@ -31,6 +31,9 @@ public:
 	inline QSize minimumSizeHint() const {
 		return QSize(0, 0);
 	}
+	inline QSize sizeHint() const {
+		return QSize(300, 225);
+	}
 signals:
 	void clicked();
 public slots:

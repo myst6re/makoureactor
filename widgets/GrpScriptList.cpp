@@ -203,6 +203,10 @@ void GrpScriptList::fill(Section1File *scripts)
 	resizeColumnToContents(0);
 	resizeColumnToContents(1);
 
+	setMinimumWidth(columnWidth(0) +
+	                columnWidth(1) +
+	                fontMetrics().width("WWWWWWWW"));
+
 	actions().at(0)->setEnabled(true);
 	actions().at(1)->setEnabled(topLevelItemCount() < 256);
 	// actions().at(2)->setEnabled(topLevelItemCount() > 0);
