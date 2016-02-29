@@ -1242,7 +1242,7 @@ void Window::searchManager()
 			searchDialog->setText(selectedText);
 		}
 	}
-	searchDialog->setOpcode(_scriptManager->currentOpcodeId());
+	searchDialog->setOpcode(_scriptManager->selectedOpcode());
 	searchDialog->setScriptExec(_scriptManager->currentGrpScriptId(),
 	                            _scriptManager->currentScriptId() - 1);
 	searchDialog->show();
