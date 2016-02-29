@@ -230,7 +230,7 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 
 	exitPoints[0] = new VertexWidget(ret);
 	exitPoints[1] = new VertexWidget(ret);
-	entryPoint = new VertexWidget(QString(), QString(), tr("ID"), ret);
+	entryPoint = new VertexWidget(QString(), QString(), tr("T"), ret);
 
 	fieldId = new QSpinBox(ret);
 	fieldId->setRange(-32768, 32766);
