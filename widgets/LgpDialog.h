@@ -111,6 +111,11 @@ private:
 class LgpDirectoryItem : public LgpItem
 {
 public:
+	enum SortType {
+		ByName,
+		BySize
+	};
+
 	explicit LgpDirectoryItem(const QString &name, LgpDirectoryItem *parent = 0) :
 		LgpItem(name, parent) {
 	}
@@ -132,6 +137,7 @@ public:
 		return _childs.size();
 	}
 
+	void sort(SortType type, Qt::SortOrder order);
 	bool unrefChild(LgpItem *child);
 	void renameChild(LgpItem *child, const QString &destination);
 	void removeChild(LgpItem *child);
@@ -158,7 +164,10 @@ public:
 	QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
 	bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
 	QVariant headerData(int section, Qt::Orientation orientation, int role=Qt::DisplayRole) const;
+	void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
+	bool insertRow(const QString &name, QIODevice *io, const QModelIndex &parent=QModelIndex());
 	bool insertRows(int row, int count, const QModelIndex &parent=QModelIndex());
+	bool removeRow(const QModelIndex &index);
 	bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex());
 	void update(const QModelIndex &index);
 	LgpItem *getItem(const QModelIndex &index) const;
@@ -168,6 +177,7 @@ private:
 //	IconThread iconThread;
 	QIcon fileIcon, directoryIcon;
 	LgpDirectoryItem *root;
+	Lgp *_lgp;
 };
 
 class LgpDialog : public QDialog, ArchiveObserver
