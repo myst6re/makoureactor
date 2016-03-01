@@ -24,10 +24,6 @@ ScriptEditorGenericList::ScriptEditorGenericList(Field *field, GrpScript *grpScr
 {
 }
 
-ScriptEditorGenericList::~ScriptEditorGenericList()
-{
-}
-
 void ScriptEditorGenericList::build()
 {
 	model = new QStandardItemModel(this);
@@ -71,8 +67,9 @@ Opcode *ScriptEditorGenericList::opcode()
 {
 	bool isLabel;
 	QByteArray newOpcode = parseModel(&isLabel);
-	if(newOpcode.isEmpty())
+	if(newOpcode.isEmpty()) {
 		return opcodePtr();
+	}
 
 	if(isLabel) {
 		quint32 label;
@@ -170,8 +167,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 
 void ScriptEditorGenericList::addParam()
 {
-	if(model->rowCount()<252)
-	{
+	if(model->rowCount() < 252) {
 		addRow(0, 0, 255, inconnu);
 		emit opcodeChanged();
 	}
@@ -189,13 +185,13 @@ void ScriptEditorGenericList::addRow(int value, int minValue, int maxValue, int 
 	QStandardItem *standardItem;
 	standardItem = new QStandardItem(paramName(type));
 	standardItem->setEditable(false);
-	items << standardItem;
+	items.append(standardItem);
 	
 	standardItem = new QStandardItem(QString("%1").arg(value));
 	standardItem->setData(minValue, Qt::UserRole);
 	standardItem->setData(maxValue, Qt::UserRole+1);
 	standardItem->setData(type, Qt::UserRole+2);
-	items << standardItem;
+	items.append(standardItem);
 	model->appendRow(items);
 }
 
@@ -210,26 +206,22 @@ void ScriptEditorGenericList::fillModel()
 	
 	if(opcodePtr()->isLabel()) {
 		addRow(((OpcodeLabel *)opcodePtr())->label(), 0, (int)pow(2, 31)-1, label);
-	}
-	else if(paramTypes.isEmpty())
-	{
+	} else if(paramTypes.isEmpty()) {
 		int start = 0;
-		if(opcodePtr()->id() == 0x0F)//SPECIAL
+		if(opcodePtr()->id() == 0x0F) { //SPECIAL
 			start = 1;
-		if(opcodePtr()->id() == 0x28)//KAWAI
-		{
+		}
+		if(opcodePtr()->id() == 0x28) { //KAWAI
 			start = 2;
 			addButton->show();
 			delButton->show();
 		}
 		const QByteArray params = opcodePtr()->params();
-		for(int i=start ; i<params.size() ; ++i)
+		for(int i=start ; i<params.size() ; ++i) {
 			addRow((quint8)params.at(i), 0, 255, inconnu);
-	}
-	else
-	{
-		for(quint8 i=0 ; i<paramTypes.size() ; ++i)
-		{
+		}
+	} else {
+		for(quint8 i=0 ; i<paramTypes.size() ; ++i) {
 			paramType = paramTypes.at(i);
 			paramSize = this->paramSize(paramType);
 			value = opcodePtr()->subParam(cur, paramSize);
@@ -237,11 +229,10 @@ void ScriptEditorGenericList::fillModel()
 			if(paramIsSigned(paramType)) {
 				maxValue = (int)pow(2, paramSize-1)-1;
 				minValue = -maxValue-1;
-				if(value>maxValue)
+				if(value>maxValue) {
 					value -= (int)pow(2, paramSize);
-			}
-			else
-			{
+				}
+			} else {
 				maxValue = (int)pow(2, paramSize)-1;
 				minValue = 0;
 			}			
@@ -254,8 +245,7 @@ void ScriptEditorGenericList::fillModel()
 QList<int> ScriptEditorGenericList::paramTypes(int id)
 {
 	QList<int> paramTypes;
-	switch(id)
-	{
+	switch(id) {
 	//case 0x00:break;
 	case 0x01:case 0x02:case 0x03:
 		paramTypes<<group_id<<priorite<<script_id;break;
@@ -508,7 +498,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<field_id;break;
 	//case 0xD9:break;
 	case 0xDA:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<word<<word<<word<<word<<word;break;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<akao<<word<<word<<word<<word<<word;break;
 	case 0xDB:
 		paramTypes<<boolean;break;
 	case 0xDC:
@@ -536,7 +526,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case 0xF1:
 		paramTypes<<bank<<bank<<sound_id<<byte;break;
 	case 0xF2:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<word<<word<<word<<word;break;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<akao<<byte<<word<<word<<word<<word;break;
 	case 0xF5:
 		paramTypes<<boolean;break;
 	//case 0xF7://TODO
@@ -561,8 +551,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 
 int ScriptEditorGenericList::paramSize(int type)
 {
-	switch(type)
-	{
+	switch(type) {
 	case label:				return 32;
 	case color:				return 24;
 	case word:
@@ -589,8 +578,7 @@ int ScriptEditorGenericList::paramSize(int type)
 
 bool ScriptEditorGenericList::paramIsSigned(int type)
 {
-	switch(type)
-	{
+	switch(type) {
 	case sword:
 	case coord_x:
 	case coord_y:
@@ -601,8 +589,7 @@ bool ScriptEditorGenericList::paramIsSigned(int type)
 
 QString ScriptEditorGenericList::paramName(int type)
 {
-	switch(type)
-	{
+	switch(type) {
 	case word:				return tr("Long");
 	case sword:				return tr("Signed long");
 	case coord_x:			return tr("X coordinate");
@@ -651,6 +638,7 @@ QString ScriptEditorGenericList::paramName(int type)
 	case sound_id: 			return tr("Sound");
 	case movie_id: 			return tr("Video");
 	case label:				return tr("Label");
+	case akao:				return tr("Sound operation");
 	}
 	return tr("???");
 }

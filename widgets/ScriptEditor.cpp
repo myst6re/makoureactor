@@ -596,8 +596,8 @@ void ScriptEditor::buildList(int id)
 		return;
 	case 8:
 		comboBox->addItem(tr("Play sound"), QList<QVariant>() << 0xF1);
-		comboBox->addItem(tr("AKAO"), QList<QVariant>() << 0xF2);
-		comboBox->addItem(tr("AKAO2"), QList<QVariant>() << 0xDA);
+		comboBox->addItem(tr("Alter sound (8-bit)"), QList<QVariant>() << 0xF2);
+		comboBox->addItem(tr("Alter sound (16-bit)"), QList<QVariant>() << 0xDA);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Play music"), QList<QVariant>() << 0xF0);
 		comboBox->addItem(tr("MUSVT"), QList<QVariant>() << 0xF3);

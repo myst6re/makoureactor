@@ -57,10 +57,10 @@
  ****************************************************************************/
 
 /*
-     delegate.cpp
-
-     A delegate that allows the user to change integer values from the model
-     using a spin box widget.
+	 delegate.cpp
+	 
+	 A delegate that allows the user to change integer values from the model
+	 using a spin box widget.
  */
 
 #include "Delegate.h"
@@ -79,19 +79,21 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
                                        const QModelIndex &index) const
 {
 	Q_UNUSED(option);
-
+	
 	int type = index.data(Qt::UserRole+2).toInt();
 	int value = index.data(Qt::EditRole).toInt();
-	if(type == field_id && !Data::field_names.isEmpty()) {
+	if(type == ScriptEditorGenericList::field_id
+	        && !Data::field_names.isEmpty()) {
 		QComboBox *comboBox = new QComboBox(parent);
 		comboBox->addItems(Data::field_names);
 		return comboBox;
-	} else if(type == group_id && _field->scriptsAndTexts()->grpScriptCount() > 0) {
+	} else if(type == ScriptEditorGenericList::group_id
+	          && _field->scriptsAndTexts()->grpScriptCount() > 0) {
 		QComboBox *comboBox = new QComboBox(parent);
 		foreach(const GrpScript *grp, _field->scriptsAndTexts()->grpScripts())
 			comboBox->addItem(grp->name());
 		return comboBox;
-	} else if(type == personnage_id) {
+	} else if(type == ScriptEditorGenericList::personnage_id) {
 		QComboBox *comboBox = new QComboBox(parent);
 		comboBox->addItems(Data::char_names);
 		int nbItems = comboBox->count();
@@ -99,51 +101,61 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 			comboBox->addItem(QString("%1").arg(i));
 		for(int i=100 ; i<254 ; i++)
 			comboBox->addItem(Data::char_names.last());
-
+		
 		comboBox->addItem(tr("(Empty)"));
 		comboBox->addItem(tr("(Empty)"));
 		return comboBox;
-	} else if(type == text_id && _field->scriptsAndTexts()->textCount() > 0) {
+	} else if(type == ScriptEditorGenericList::text_id
+	          && _field->scriptsAndTexts()->textCount() > 0) {
 		QComboBox *comboBox = new QComboBox(parent);
 		bool jp = Config::value("jp_txt", false).toBool();
 		foreach(const FF7Text &t, _field->scriptsAndTexts()->texts())
 			comboBox->addItem(t.text(jp, true).simplified());
 		return comboBox;
-	} else if(type == item_id && !Data::item_names.isEmpty()) {
+	} else if(type == ScriptEditorGenericList::item_id
+	          && !Data::item_names.isEmpty()) {
 		QComboBox *comboBox = new QComboBox(parent);
 		comboBox->addItems(Data::item_names);
 		
 		int nbItems = comboBox->count();
-		for(int i=nbItems ; i<128 ; ++i)
-			comboBox->addItem(QString("%1").arg(i), i);
-
+		for(int i=nbItems ; i<128 ; ++i) {
+			comboBox->addItem(QString::number(i), i);
+		}
+		
 		comboBox->addItems(Data::weapon_names);
 		
 		nbItems = comboBox->count();
-		for(int i=nbItems ; i<256 ; ++i)
-			comboBox->addItem(QString("%1").arg(i), i);
-
+		for(int i=nbItems ; i<256 ; ++i) {
+			comboBox->addItem(QString::number(i), i);
+		}
+		
 		comboBox->addItems(Data::armor_names);
 		
 		nbItems = comboBox->count();
-		for(int i=nbItems ; i<288 ; ++i)
-			comboBox->addItem(QString("%1").arg(i), i);
-
+		for(int i=nbItems ; i<288 ; ++i) {
+			comboBox->addItem(QString::number(i), i);
+		}
+		
 		comboBox->addItems(Data::accessory_names);
 		
 		nbItems = comboBox->count();
-		for(int i=nbItems ; i<512 ; ++i)
-			comboBox->addItem(QString("%1").arg(i), i);
+		for(int i=nbItems ; i<512 ; ++i) {
+			comboBox->addItem(QString::number(i), i);
+		}
 		
 		return comboBox;
-	} else if(type == materia_id && !Data::materia_names.isEmpty()) {
+	} else if(type == ScriptEditorGenericList::materia_id
+	          && !Data::materia_names.isEmpty()) {
 		QComboBox *comboBox = new QComboBox(parent);
 		comboBox->addItems(Data::materia_names);
 		int nbItems = comboBox->count();
-		for(int i=nbItems ; i<256 ; ++i)
-			comboBox->addItem(QString("%1").arg(i), i);
+		for(int i=nbItems ; i<256 ; ++i) {
+			comboBox->addItem(QString::number(i), i);
+		}
 		return comboBox;
-	} else if(type == animation_id && Data::currentModelID!=-1 && Data::currentHrcNames && Data::currentAnimNames) {
+	} else if(type == ScriptEditorGenericList::animation_id
+	          && Data::currentModelID!=-1 && Data::currentHrcNames
+	          && Data::currentAnimNames) {
 		AnimEditorDialog dialog(value, 0, parent);
 		QComboBox *editor = new QComboBox(parent);
 		editor->addItems(Data::currentAnimNames->value(Data::currentModelID));
@@ -153,7 +165,8 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 			editor->setCurrentIndex(value);
 		}
 		return editor;
-	} else if(type == movie_id && !Data::movie_names_cd1.isEmpty()) {
+	} else if(type == ScriptEditorGenericList::movie_id
+	          && !Data::movie_names_cd1.isEmpty()) {
 		QComboBox *comboBox = new QComboBox(parent);
 		comboBox->addItems(Data::movie_names_cd1);
 		int nbItems = comboBox->count();
@@ -161,16 +174,34 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 			comboBox->addItem(QString::number(i), i);
 		}
 		return comboBox;
-	} else if(type == operateur) {
+	} else if(type == ScriptEditorGenericList::operateur) {
 		QComboBox *comboBox = new QComboBox(parent);
 		for(int i=0 ; i<OPERATORS_SIZE; ++i) {
 			comboBox->addItem(Opcode::operators[i], i);
 		}
 		for(int i=OPERATORS_SIZE ; i<256 ; ++i) {
-			comboBox->addItem(QString("%1").arg(i), i);
+			comboBox->addItem(QString::number(i), i);
 		}
 		return comboBox;
-	} else if(type == keys && !Data::key_names.isEmpty()) {
+	} else if(type == ScriptEditorGenericList::akao) {
+		QComboBox *comboBox = new QComboBox(parent);
+		QList<quint8> unknownItems;
+		for(quint16 i=0 ; i<256; ++i) {
+			bool ok;
+			QString str = Opcode::akao(i, &ok);
+			if(ok) {
+				comboBox->addItem(str, i);
+			} else {
+				unknownItems.append(i);
+			}
+		}
+		foreach (quint8 i, unknownItems) {
+			comboBox->addItem(QString::number(i), i);
+		}
+
+		return comboBox;
+	} else if(type == ScriptEditorGenericList::keys
+	          && !Data::key_names.isEmpty()) {
 		KeyEditorDialog dialog(value, parent);
 		QSpinBox *editor = new QSpinBox(parent);
 		editor->setMinimum(index.data(Qt::UserRole).toInt());
@@ -181,7 +212,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 			editor->setValue(value);
 		}
 		return editor;
-	} else if(type == color) {
+	} else if(type == ScriptEditorGenericList::color) {
 		QSpinBox *editor = new QSpinBox(parent);
 		editor->setMinimum(index.data(Qt::UserRole).toInt());
 		editor->setMaximum(index.data(Qt::UserRole+1).toInt());
@@ -206,19 +237,29 @@ void SpinBoxDelegate::setEditorData(QWidget *editor,
 {
 	int value = index.model()->data(index, Qt::EditRole).toInt();
 	int type = index.data(Qt::UserRole + 2).toInt();
-	if((type == field_id && !Data::field_names.isEmpty())
-			|| (type == group_id && _field->scriptsAndTexts()->grpScriptCount() > 0)
-			|| type == personnage_id
-			|| (type == text_id && _field->scriptsAndTexts()->textCount() > 0)
-			|| (type == item_id && !Data::item_names.isEmpty())
-			|| (type == materia_id && !Data::materia_names.isEmpty())
-			|| (type == movie_id && !Data::movie_names_cd1.isEmpty())
-			|| type == operateur) {
+	if((type == ScriptEditorGenericList::field_id
+	    && !Data::field_names.isEmpty())
+	        || (type == ScriptEditorGenericList::group_id
+	            && _field->scriptsAndTexts()->grpScriptCount() > 0)
+	        || type == ScriptEditorGenericList::personnage_id
+	        || (type == ScriptEditorGenericList::text_id
+	            && _field->scriptsAndTexts()->textCount() > 0)
+	        || (type == ScriptEditorGenericList::item_id
+	            && !Data::item_names.isEmpty())
+	        || (type == ScriptEditorGenericList::materia_id
+	            && !Data::materia_names.isEmpty())
+	        || (type == ScriptEditorGenericList::movie_id
+	            && !Data::movie_names_cd1.isEmpty())
+	        || type == ScriptEditorGenericList::akao
+	        || type == ScriptEditorGenericList::operateur) {
 		QComboBox *comboBox = static_cast<QComboBox*>(editor);
 		comboBox->setCurrentIndex(value);
-	} else if((type == keys && !Data::key_names.isEmpty())
-			|| type == color
-			|| (type == animation_id && Data::currentModelID!=-1 && Data::currentHrcNames && Data::currentAnimNames)) {
+	} else if((type == ScriptEditorGenericList::keys
+	           && !Data::key_names.isEmpty())
+	          || type == ScriptEditorGenericList::color
+	          || (type == ScriptEditorGenericList::animation_id
+	              && Data::currentModelID!=-1 && Data::currentHrcNames
+	              && Data::currentAnimNames)) {
 		return;
 	} else {
 		QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
@@ -227,19 +268,28 @@ void SpinBoxDelegate::setEditorData(QWidget *editor,
 }
 
 void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
-								   const QModelIndex &index) const
+                                   const QModelIndex &index) const
 {
 	int value;
 	int type = index.data(Qt::UserRole+2).toInt();
-	if((type == field_id && !Data::field_names.isEmpty())
-			|| (type == group_id && _field->scriptsAndTexts()->grpScriptCount() > 0)
-			|| type == personnage_id
-			|| (type == text_id && _field->scriptsAndTexts()->textCount() > 0)
-			|| (type == item_id && !Data::item_names.isEmpty())
-			|| (type == materia_id && !Data::materia_names.isEmpty())
-			|| (type == animation_id && Data::currentModelID!=-1 && Data::currentHrcNames && Data::currentAnimNames)
-			|| (type == movie_id && !Data::movie_names_cd1.isEmpty())
-			|| type == operateur) {
+	if((type == ScriptEditorGenericList::field_id
+	    && !Data::field_names.isEmpty())
+	        || (type == ScriptEditorGenericList::group_id
+	            && _field->scriptsAndTexts()->grpScriptCount() > 0)
+	        || type == ScriptEditorGenericList::personnage_id
+	        || (type == ScriptEditorGenericList::text_id
+	            && _field->scriptsAndTexts()->textCount() > 0)
+	        || (type == ScriptEditorGenericList::item_id
+	            && !Data::item_names.isEmpty())
+	        || (type == ScriptEditorGenericList::materia_id
+	            && !Data::materia_names.isEmpty())
+	        || (type == ScriptEditorGenericList::animation_id
+	            && Data::currentModelID!=-1 && Data::currentHrcNames
+	            && Data::currentAnimNames)
+	        || (type == ScriptEditorGenericList::movie_id
+	            && !Data::movie_names_cd1.isEmpty())
+	        || type == ScriptEditorGenericList::akao
+	        || type == ScriptEditorGenericList::operateur) {
 		QComboBox *comboBox = static_cast<QComboBox*>(editor);
 		value = comboBox->currentIndex();
 	} else {
@@ -251,7 +301,7 @@ void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 }
 
 void SpinBoxDelegate::updateEditorGeometry(QWidget *editor,
-										   const QStyleOptionViewItem &option, const QModelIndex &/* index */) const
+                                           const QStyleOptionViewItem &option, const QModelIndex &/* index */) const
 {
 	editor->setGeometry(option.rect);
 }

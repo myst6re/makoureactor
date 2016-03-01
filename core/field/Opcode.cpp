@@ -374,9 +374,15 @@ QString Opcode::_movie(quint8 movieID)
 	return QObject::tr("No%1").arg(objet3D_ID);
 } */
 
-QString Opcode::_akao(quint8 akaoOp)
+QString Opcode::akao(quint8 akaoOp, bool *ok)
 {
+	if(ok) {
+		*ok = true;
+	}
+
 	switch(akaoOp) {
+	// case 0x20 // TODO: unknown
+	// case 0x23 // TODO: unknown
 	case 0x28:	return QObject::tr("Play a sound effect on channel #1");
 	case 0x29:	return QObject::tr("Play a sound effect on channel #2");
 	case 0x2A:	return QObject::tr("Play a sound effect on channel #3");
@@ -428,7 +434,11 @@ QString Opcode::_akao(quint8 akaoOp)
 	case 0xD2:	return QObject::tr("Music tempo fade");
 	case 0xF0:	return QObject::tr("Stop music");
 	case 0xF1:	return QObject::tr("Stop sound effects");
-	default:	return QObject::tr("AKAO: %1?").arg(akaoOp);
+	default:
+		if(ok) {
+			*ok = false;
+		}
+		return QObject::tr("AKAO: %1?").arg(akaoOp);
 	}
 }
 
@@ -7327,7 +7337,7 @@ void OpcodeAKAO2::setParams(const char *params, int)
 QString OpcodeAKAO2::toString(Field *) const
 {
 	return QObject::tr("%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)")
-			.arg(_akao(opcode))
+			.arg(akao(opcode))
 			.arg(_var(param1, B1(banks[0])))
 			.arg(_var(param2, B2(banks[0])))
 			.arg(_var(param3, B1(banks[1])))
@@ -8108,8 +8118,8 @@ void OpcodeAKAO::setParams(const char *params, int)
 
 QString OpcodeAKAO::toString(Field *) const
 {
-	return QObject::tr("%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)")
-			.arg(_akao(opcode))
+	return QObject::tr("%1 (param1 (8-bit)=%2, param2=%3, param3=%4, param4=%5, param5=%6)")
+			.arg(akao(opcode))
 			.arg(_var(param1, B1(banks[0])))
 			.arg(_var(param2, B2(banks[0])))
 			.arg(_var(param3, B1(banks[1])))
