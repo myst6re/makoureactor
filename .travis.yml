@@ -29,7 +29,21 @@ script:
       QTDIR="/usr/local/opt/qt5";
     fi
   - PATH="$QTDIR/bin:$PATH"
-  - mkdir build
+  - mkdir -p build
   - cd build
   - qmake ..
   - make -j2
+
+env:
+  global:
+   # COVERITY_SCAN_TOKEN
+   - secure: "lk7jEPh62LhXOWyT5UyGAKPxiskVyIBbHEtbnfKZZil2iJLec1f3+df1ADPajl1Ij2Yp4ZgWWcJsuN/+XkQJjXvgWyW2bi0K9ntrRCU4t3h8blodblaXvpssbz5fj4TzI8HnfBet4NXfLLdAUHBcLOLU01xb+LWaY/4rX2PlKBY="
+
+addons:
+  coverity_scan:
+    project:
+      name: "myst6re/makoureactor"
+      description: "Final Fantasy VII field archive editor"
+    build_command_prepend: "mkdir -p build && cd build && qmake .."
+    build_command: "make -j2"
+    branch_pattern: coverity_scan
