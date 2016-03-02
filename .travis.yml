@@ -22,15 +22,17 @@ install:
       ;
     fi
 
-script:
+before_script:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
       QTDIR="/opt/qt55";
     else
       QTDIR="/usr/local/opt/qt5";
     fi
-  - PATH="$QTDIR/bin:$PATH"
+  - export PATH="$QTDIR/bin:$PATH"
   - mkdir -p build
   - cd build
+
+script:
   - qmake ..
   - make -j2
 
@@ -45,6 +47,6 @@ addons:
       name: "myst6re/makoureactor"
       description: "Final Fantasy VII field archive editor"
     notification_email: myst6re@gmail.com
-    build_command_prepend: "if [ \"${TRAVIS_OS_NAME}\" = \"linux\" ]; then QTDIR=\"/opt/qt55\"; else QTDIR=\"/usr/local/opt/qt5\"; fi; PATH=\"$QTDIR/bin:$PATH\"; mkdir -p build; cd build; qmake .."
+    build_command_prepend: "qmake .."
     build_command: "make -j2"
     branch_pattern: coverity_scan
