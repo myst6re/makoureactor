@@ -39,19 +39,12 @@ env:
     # COVERITY_SCAN_TOKEN
     - secure: "lk7jEPh62LhXOWyT5UyGAKPxiskVyIBbHEtbnfKZZil2iJLec1f3+df1ADPajl1Ij2Yp4ZgWWcJsuN/+XkQJjXvgWyW2bi0K9ntrRCU4t3h8blodblaXvpssbz5fj4TzI8HnfBet4NXfLLdAUHBcLOLU01xb+LWaY/4rX2PlKBY="
 
-matrix:
-  exclude:
-    # Coverity only on osx (starts earlier)
-    - os: linux
-      env: COVERITY=1
-      env: COVERAGE=1
-
 addons:
   coverity_scan:
     project:
       name: "myst6re/makoureactor"
       description: "Final Fantasy VII field archive editor"
     notification_email: myst6re@gmail.com
-    build_command_prepend: "if [ "${TRAVIS_OS_NAME}" = "linux" ]; then QTDIR="/opt/qt55"; else QTDIR="/usr/local/opt/qt5"; fi; PATH="$QTDIR/bin:$PATH"; mkdir -p build; cd build; qmake .."
+    build_command_prepend: "if [ \"${TRAVIS_OS_NAME}\" = \"linux\" ]; then QTDIR=\"/opt/qt55\"; else QTDIR=\"/usr/local/opt/qt5\"; fi; PATH=\"$QTDIR/bin:$PATH\"; mkdir -p build; cd build; qmake .."
     build_command: "make -j2"
     branch_pattern: coverity_scan
