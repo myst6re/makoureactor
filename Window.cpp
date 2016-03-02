@@ -61,6 +61,10 @@ Window::Window() :
 
 	actionOpen = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Open..."), this, SLOT(openFile()), QKeySequence("Ctrl+O"));
 	menu->addAction(tr("Open &Directory..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
+	_recentMenu = new QMenu(tr("&Recent files"), this);
+	fillRecentMenu();
+	connect(_recentMenu, SIGNAL(triggered(QAction*)), SLOT(openRecentFile(QAction*)));
+	menu->addMenu(_recentMenu);
 	actionSave = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("&Save"), this, SLOT(save()), QKeySequence("Ctrl+S"));
 	actionSaveAs = menu->addAction(tr("Save &As..."), this, SLOT(saveAs()), QKeySequence("Shift+Ctrl+S"));
 	actionExport = menu->addAction(tr("&Export the current field..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
@@ -69,7 +73,7 @@ Window::Window() :
 //	actionMassImport = menu->addAction(tr("Importer en m&asse..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
 	actionArchive = menu->addAction(tr("Archive Mana&ger..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
 	menu->addSeparator();
-	actionRun = menu->addAction(QIcon(":/images/ff7.png"), tr("Run FF7"), this, SLOT(runFF7()));
+	actionRun = menu->addAction(QIcon(":/images/ff7.png"), tr("R&un FF7"), this, SLOT(runFF7()));
 	actionRun->setShortcut(Qt::Key_F8);
 	actionRun->setShortcutContext(Qt::ApplicationShortcut);
 	actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
@@ -263,6 +267,19 @@ QMenu *Window::createPopupMenu()
 	return menu;
 }
 
+void Window::fillRecentMenu()
+{
+	_recentMenu->clear();
+
+	foreach(const QString &recentFile, Config::value("recentFiles").toStringList()) {
+		_recentMenu->addAction(QDir::toNativeSeparators(recentFile));
+	}
+
+	if(_recentMenu->actions().isEmpty()) {
+		_recentMenu->setDisabled(true);
+	}
+}
+
 void Window::toggleFieldList()
 {
 	verticalSplitter->toggleCollapsed(0);
@@ -391,6 +408,11 @@ int Window::closeFile(bool quit)
 	return QMessageBox::Yes;
 }
 
+void Window::openRecentFile(QAction *action)
+{
+	openFile(QDir::fromNativeSeparators(action->text()));
+}
+
 void Window::openFile(const QString &path)
 {
 	QString filePath;
@@ -412,7 +434,7 @@ void Window::openFile(const QString &path)
 		QString selectedFilter = filter.value(Config::value("open_path_selected_filter").toInt(), filter.first());
 
 		filePath = QFileDialog::getOpenFileName(this, tr("Open a file"), filePath, filter.join(";;"), &selectedFilter);
-		if(filePath.isNull())	{
+		if(filePath.isNull()) {
 			return;
 		}
 
@@ -420,6 +442,15 @@ void Window::openFile(const QString &path)
 		if(index == -1)	index = filePath.size();
 		Config::setValue("open_path", filePath.left(index));
 		Config::setValue("open_path_selected_filter", filter.indexOf(selectedFilter));
+		QStringList recentFiles = Config::value("recentFiles").toStringList();
+		if(!recentFiles.contains(filePath)) {
+			recentFiles.prepend(filePath);
+			if(recentFiles.size() > 20) {
+				recentFiles.removeLast();
+			}
+			Config::setValue("recentFiles", recentFiles);
+			fillRecentMenu();
+		}
 	} else {
 		filePath = path;
 	}

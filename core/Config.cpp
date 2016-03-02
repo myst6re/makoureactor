@@ -54,6 +54,13 @@ void Config::setValue(const QString &key, const QVariant &value)
 	settings->setValue(key, value);
 }
 
+void Config::append(const QString &key, const QVariant &value)
+{
+	QList<QVariant> list = settings->value(key).toList();
+	list.append(value);
+	settings->setValue(key, list);
+}
+
 void Config::remove(const QString &key)
 {
 	settings->remove(key);

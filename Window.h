@@ -95,6 +95,7 @@ public slots:
 	void fontManager();
 	void about();
 private slots:
+	void openRecentFile(QAction *action);
 	void disableEditors();
 	void openField(bool reload=false);
 	void showModel(int grpScriptID);
@@ -109,6 +110,7 @@ private:
 	void showProgression(const QString &message, bool canBeCanceled);
 	void hideProgression();
 	QProgressDialog *progressDialog();
+	void fillRecentMenu();
 
 	QLineEdit *lineSearch;
 	FieldList *fieldList;
@@ -126,6 +128,7 @@ private:
 	Search *searchDialog;
 	VarManager *varDialog;
 
+	QMenu *_recentMenu;
 	QAction *actionSave, *actionSaveAs, *actionExport;
 	QAction *actionMassExport, *actionImport, *actionMassImport, *actionClose;
 	QAction *actionRun, *actionModels, *actionArchive;
