@@ -32,9 +32,8 @@ public:
 	BackgroundFile(const BackgroundFile &other);
 	virtual ~BackgroundFile();
 
-	virtual bool open()=0;
-	bool open(const QByteArray &) { return true; }
-	virtual QByteArray save() const { return QByteArray(); }
+	using FieldPart::open;
+	using FieldPart::save;
 	virtual inline bool canSave() const { return false; }
 	void clear();
 	QImage openBackground(bool *warning = NULL);
@@ -83,6 +82,10 @@ protected:
 	}
 
 private:
+	bool open(const QByteArray &data) {
+		Q_UNUSED(data);
+		return false;
+	}
 	BackgroundTiles _tiles;
 	Palettes _palettes;
 	BackgroundTextures *_textures;

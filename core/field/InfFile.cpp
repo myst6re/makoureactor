@@ -64,7 +64,7 @@ void InfFile::clear()
 {
 }
 
-bool InfFile::isJap()
+bool InfFile::isJap() const
 {
 	return field()->sectionSize(Field::Inf) == 536;
 }
@@ -81,7 +81,7 @@ void InfFile::setMapName(const QString &name)
 	setModified(true);
 }
 
-quint8 InfFile::control()
+quint8 InfFile::control() const
 {
 	return data.control;
 }
@@ -211,7 +211,7 @@ QList<Exit> InfFile::exitLines() const
 	return exit;
 }
 
-Exit InfFile::exitLine(quint8 id)
+Exit InfFile::exitLine(quint8 id) const
 {
 	return data.doors[id];
 }
@@ -242,7 +242,7 @@ void InfFile::setTrigger(quint8 id, const Trigger &trigger)
 	setModified(true);
 }
 
-bool InfFile::arrowIsDisplayed(quint8 id)
+bool InfFile::arrowIsDisplayed(quint8 id) const
 {
 	return data.display_arrow[id] & 1;
 }

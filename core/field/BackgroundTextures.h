@@ -112,7 +112,6 @@ class BackgroundTexturesPS : public BackgroundTextures
 {
 public:
 	BackgroundTexturesPS();
-	void setDataPos(quint32 dataPos);
 	void setHeaderImg(const MIM &headerImg);
 	void setHeaderEffect(const MIM &headerEffect);
 	QList<uint> tex(quint8 x, quint8 y, quint8 depth) const;
@@ -129,7 +128,6 @@ private:
 	quint16 pageTexPos(quint8 pageID) const;
 	quint16 pageTexWidth(quint8 pageID) const;
 	quint32 texturePos(quint8 x, quint8 y) const;
-	quint32 _dataPos;
 	MIM _headerImg, _headerEffect;
 };
 

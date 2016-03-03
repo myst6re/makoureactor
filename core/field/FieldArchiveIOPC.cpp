@@ -28,11 +28,11 @@ FieldArchiveIOPC::FieldArchiveIOPC(FieldArchivePC *fieldArchive) :
 
 FieldArchivePC *FieldArchiveIOPC::fieldArchive()
 {
-	return (FieldArchivePC *)FieldArchiveIO::fieldArchive();
+	return static_cast<FieldArchivePC *>(FieldArchiveIO::fieldArchive());
 }
 
 FieldArchiveIOPCLgp::FieldArchiveIOPCLgp(const QString &path, FieldArchivePC *fieldArchive) :
-	FieldArchiveIOPC(fieldArchive), _lgp(path)
+	FieldArchiveIOPC(fieldArchive), _lgp(path), observer(0)
 {
 }
 
@@ -327,9 +327,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, Archiv
 		}
 		Field *field = fieldArchive()->field(fieldID, false);
 		if(field) {
-			QString fileName = field->name();
-			QString filePath = dir.filePath(fileName);
-			if(field && field->isOpen() && field->isModified()) {
+			QString fileName = field->name(),
+			        filePath = dir.filePath(fileName);
+			if(field->isOpen() && field->isModified()) {
 				qint8 err = field->save(filePath, true);
 				if(err == 2)	return ErrorOpening;
 				if(err == 1)	return Invalid;

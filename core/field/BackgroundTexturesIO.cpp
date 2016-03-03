@@ -27,7 +27,7 @@ BackgroundTexturesIOPC::BackgroundTexturesIOPC(QIODevice *device) :
 {
 }
 
-bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures)
+bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 {
 	if(!canRead()) {
 		return false;
@@ -76,7 +76,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures)
 	return true;
 }
 
-bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures)
+bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures) const
 {
 	if(!canWrite()) {
 		return false;
@@ -115,7 +115,7 @@ BackgroundTexturesIOPS::BackgroundTexturesIOPS(QIODevice *device) :
 {
 }
 
-bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures)
+bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures) const
 {
 	if(!canRead()) {
 		return false;
@@ -143,10 +143,9 @@ bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures)
 		headerEffect.size = 4;
 	}
 
-	textures->setDataPos(headerPalSize);
 	textures->setHeaderImg(headerImg);
 	textures->setHeaderEffect(headerEffect);
-	textures->setData(mimDataDec);
+	textures->setData(mimDataDec.mid(headerPalSize));
 
 	if (quint32(mimDataDec.size()) != headerPalSize + headerImg.size + headerEffect.size) {
 		qWarning() << "BackgroundTexturesIOPS::open padding after" << (mimDataDec.size() - int(headerPalSize + headerImg.size + headerEffect.size));
@@ -155,15 +154,12 @@ bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures)
 	return true;
 }
 
-bool BackgroundTexturesIOPS::write(const BackgroundTexturesPS *textures)
+bool BackgroundTexturesIOPS::write(const BackgroundTexturesPS *textures) const
 {
 	if(!canWrite()) {
 		return false;
 	}
 
-	if(device()->write(textures->data()) != textures->data().size()) {
-		return false;
-	}
-
-	return true;
+	// Assume device position is correct (after palette section)
+	return device()->write(textures->data()) == textures->data().size();
 }

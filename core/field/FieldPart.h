@@ -25,7 +25,7 @@ class Field;
 class FieldPart
 {
 public:
-	FieldPart(Field *field);
+	explicit FieldPart(Field *field);
 	virtual ~FieldPart();
 
 	virtual bool open()=0;

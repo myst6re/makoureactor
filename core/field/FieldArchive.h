@@ -31,7 +31,7 @@ struct SearchQuery
 struct SearchOpcodeQuery : public SearchQuery
 {
 	int opcode;
-	SearchOpcodeQuery(int opcode) :
+	explicit SearchOpcodeQuery(int opcode) :
 		opcode(opcode) {}
 };
 
@@ -55,14 +55,14 @@ struct SearchExecQuery : public SearchQuery
 struct SearchFieldQuery : public SearchQuery
 {
 	quint16 fieldID;
-	SearchFieldQuery(quint16 fieldID) :
+	explicit SearchFieldQuery(quint16 fieldID) :
 		fieldID(fieldID) {}
 };
 
 struct SearchTextQuery : public SearchQuery
 {
 	QRegExp text;
-	SearchTextQuery(QRegExp text) :
+	explicit SearchTextQuery(QRegExp text) :
 		text(text) {}
 };
 
@@ -114,13 +114,13 @@ class FieldArchiveIterator : public QListIterator<Field *>
 {
 	friend class FieldArchive;
 public:
-	FieldArchiveIterator(const FieldArchive &archive);
+	explicit FieldArchiveIterator(const FieldArchive &archive);
 	Field *next(bool open=true, bool dontOptimize=false);
 	Field *peekNext(bool open=true, bool dontOptimize=false) const;
 	Field *peekPrevious(bool open=true, bool dontOptimize=false) const;
 	Field *previous(bool open=true, bool dontOptimize=false);
 private:
-	Field *openField(Field *field, bool open=true, bool dontOptimize=false) const;
+	static Field *openField(Field *field, bool open=true, bool dontOptimize=false);
 };
 
 class FieldArchive
@@ -144,7 +144,7 @@ public:
 	explicit FieldArchive(FieldArchiveIO *io);
 	virtual ~FieldArchive();
 	virtual bool isPC() const=0;
-	inline bool isPS() { return !isPC(); }
+	inline bool isPS() const { return !isPC(); }
 
 	FieldArchiveIO::ErrorCode open();
 	FieldArchiveIO::ErrorCode save(const QString &path=QString());
@@ -176,7 +176,7 @@ public:
 	void printScripts(const QString &filename);
 	void printScriptsDirs(const QString &filename);
 	void diffScripts();
-	bool printBackgroundTiles(Field *field, const QString &filename, bool uniformize = false);
+	static bool printBackgroundTiles(Field *field, const QString &filename, bool uniformize = false);
 	void searchBackgroundZ();
 	void searchAll();// research & debug function
 #endif
@@ -225,7 +225,7 @@ private:
 	void updateFieldLists(Field *field, int fieldID);
 	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting, SearchScope scope) const;
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting, SearchScope scope) const;
-	bool openField(Field *field, bool dontOptimize=false);
+	static bool openField(Field *field, bool dontOptimize=false);
 
 	QList<Field *> fileList;
 	QMultiMap<QString, int> fieldsSortByName;

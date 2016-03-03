@@ -28,7 +28,7 @@ class FieldPS : public Field
 {
 public:
 	FieldPS(const QString &name, FieldArchiveIO *io);
-	FieldPS(const Field &field);
+	explicit FieldPS(const Field &field);
 
 	inline bool isPC() const { return false; }
 

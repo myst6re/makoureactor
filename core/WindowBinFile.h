@@ -58,7 +58,7 @@ public:
 private:
 	QImage letter(int id, FontColor color);
 	int palette(FontColor color, quint8 table) const;
-	QRect letterRect(int charId) const;
+	static QRect letterRect(int charId);
 	bool openFont(const QByteArray &data);
 	bool openFont2(const QByteArray &data);
 	bool openFontSize(const QByteArray &data);

@@ -18,12 +18,12 @@
 #include "OrientationWidget.h"
 
 OrientationWidget::OrientationWidget(QWidget *parent) :
-	QWidget(parent), _readOnly(false)
+	QWidget(parent), _value(0), _readOnly(false)
 {
 }
 
 OrientationWidget::OrientationWidget(quint8 value, QWidget *parent) :
-	QWidget(parent), _readOnly(false)
+	QWidget(parent), _value(0), _readOnly(false)
 {
 	byte2degree(value);
 }

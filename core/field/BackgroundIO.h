@@ -81,6 +81,9 @@ private:
 	bool openPalettes(PalettesPS &palettes) const;
 	bool openTiles(BackgroundTiles &tiles) const;
 	bool openTextures(BackgroundTexturesPS &textures) const;
+	bool savePalettes(const Palettes &palettes) const;
+	bool saveTiles(const BackgroundTiles &tiles) const;
+	bool saveTextures(const BackgroundTexturesPS *textures) const;
 	QIODevice *_deviceTiles;
 };
 

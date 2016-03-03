@@ -34,11 +34,6 @@ Field::~Field()
 	foreach(FieldPart *part, _parts) {
 		if(part)	delete part;
 	}
-
-	if(currentFieldForFieldModels != this) {
-		qDeleteAll(_fieldModels);
-		_fieldModels.clear();
-	}
 }
 
 bool Field::isOpen() const
@@ -196,66 +191,44 @@ FieldPart *Field::part(FieldSection section, bool open)
 
 Section1File *Field::scriptsAndTexts(bool open)
 {
-	return (Section1File *)part(Scripts, open);
+	return static_cast<Section1File *>(part(Scripts, open));
 }
 
 EncounterFile *Field::encounter(bool open)
 {
-	return (EncounterFile *)part(Encounter, open);
+	return static_cast<EncounterFile *>(part(Encounter, open));
 }
 
 TutFileStandard *Field::tutosAndSounds(bool open)
 {
-	TutFileStandard *tut = (TutFileStandard *)part(Akaos, open);
+	TutFileStandard *tut = static_cast<TutFileStandard *>(part(Akaos, open));
 	scriptsAndTexts(false)->setTut(tut);
 	return tut;
 }
 
 IdFile *Field::walkmesh(bool open)
 {
-	return (IdFile *)part(Walkmesh, open);
+	return static_cast<IdFile *>(part(Walkmesh, open));
 }
 
 CaFile *Field::camera(bool open)
 {
-	return (CaFile *)part(Camera, open);
+	return static_cast<CaFile *>(part(Camera, open));
 }
 
 InfFile *Field::inf(bool open)
 {
-	return (InfFile *)part(Inf, open);
+	return static_cast<InfFile *>(part(Inf, open));
 }
 
 FieldModelLoader *Field::fieldModelLoader(bool open)
 {
-	return (FieldModelLoader *)part(ModelLoader, open);
+	return static_cast<FieldModelLoader *>(part(ModelLoader, open));
 }
 
 BackgroundFile *Field::background(bool open)
 {
-	return (BackgroundFile *)part(Background, open);
-}
-
-Field *Field::currentFieldForFieldModels = 0;
-QMap<int, FieldModelFile *> Field::_fieldModels;
-
-FieldModelFile *Field::fieldModelPtr(int modelID) const
-{
-	if(currentFieldForFieldModels == this) {
-		return _fieldModels.value(modelID, 0);
-	}
-	return 0;
-}
-
-void Field::addFieldModel(int modelID, FieldModelFile *fieldModel)
-{
-	if(currentFieldForFieldModels != this) {
-		qDeleteAll(_fieldModels);
-		_fieldModels.clear();
-		currentFieldForFieldModels = this;
-	}
-
-	_fieldModels.insert(modelID, fieldModel);
+	return static_cast<BackgroundFile *>(part(Background, open));
 }
 
 QMap<int, FieldModelFile *> Field::fieldModels(bool animate, bool open)
@@ -321,7 +294,7 @@ bool Field::save(QByteArray &newData, bool compress)
 			if(fieldPart && fieldPart->canSave() &&
 					fieldPart->isOpen() && fieldPart->isModified()) {
 				if(fieldSection == Field::PalettePC) { // FIXME: EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
-					section = ((BackgroundFilePC *)fieldPart)->savePal();
+					section = static_cast<BackgroundFilePC *>(fieldPart)->savePal();
 				} else {
 					section = fieldPart->save();
 				}
@@ -467,7 +440,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 			BackgroundFilePS *bg;
 
 			if(isPS()) {
-				bg = (BackgroundFilePS *)background(false);
+				bg = static_cast<BackgroundFilePS *>(background(false));
 			} else {
 				bg = new BackgroundFilePS(0);
 			}
@@ -479,7 +452,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 				return 2;
 			}
 			if(isPC()) {
-				_parts.insert(Background, new BackgroundFilePC(bg->toPC((FieldPC *)this)));
+				_parts.insert(Background, new BackgroundFilePC(bg->toPC(static_cast<FieldPC *>(this))));
 				delete bg;
 			}
 
@@ -528,7 +501,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 			BackgroundFilePC *bg;
 
 			if(isPC()) {
-				bg = (BackgroundFilePC *)background(false);
+				bg = static_cast<BackgroundFilePC *>(background(false));
 			} else {
 				bg = new BackgroundFilePC(0);
 			}
@@ -540,7 +513,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 				return 2;
 			}
 			if(isPS()) {
-				_parts.insert(Background, new BackgroundFilePS(bg->toPS((FieldPS *)this)));
+				_parts.insert(Background, new BackgroundFilePS(bg->toPS(static_cast<FieldPS *>(this))));
 				delete bg;
 			}
 

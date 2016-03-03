@@ -173,7 +173,7 @@ void GrpScript::setType()
 	foreach(Opcode *opcode, firstScript->opcodes()) {
 		switch((Opcode::Keys)opcode->id()) {
 		case Opcode::PC://Definition du personnage
-			_character = ((OpcodePC *)opcode)->charID;
+			_character = static_cast<OpcodePC *>(opcode)->charID;
 			return;
 		case Opcode::CHAR://Definition du modèle 3D
 			_character = 0xFF;

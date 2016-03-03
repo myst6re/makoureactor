@@ -30,7 +30,7 @@ BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
 BackgroundFilePC::BackgroundFilePC(const BackgroundFilePC &other) :
 	BackgroundFile(other)
 {
-	setTextures(new BackgroundTexturesPC(*(BackgroundTexturesPC *)other.textures()));
+	setTextures(new BackgroundTexturesPC(*static_cast<BackgroundTexturesPC *>(other.textures())));
 	PalettesPC palettes;
 	foreach(Palette *pal, other.palettes()) {
 		palettes.append(new PalettePC(*pal));
@@ -94,7 +94,7 @@ BackgroundFilePS BackgroundFilePC::toPS(FieldPS *field) const
 {
 	PalettesPS palettesPS = ((PalettesPC *)&palettes())->toPS();
 	BackgroundTiles tilesPS;
-	BackgroundTexturesPS texturesPS = ((BackgroundTexturesPC *)textures())->toPS(tiles(), tilesPS, palettesPS);
+	BackgroundTexturesPS texturesPS = (static_cast<BackgroundTexturesPC *>(textures()))->toPS(tiles(), tilesPS, palettesPS);
 
 	BackgroundFilePS filePS(field);
 	filePS.setPalettes(palettesPS);

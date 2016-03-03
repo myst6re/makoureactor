@@ -314,14 +314,14 @@ BackgroundTexturesPS BackgroundTexturesPC::toPS(const BackgroundTiles &pcTiles,
 }
 
 BackgroundTexturesPS::BackgroundTexturesPS() :
-	BackgroundTextures(), _dataPos(0),
+	BackgroundTextures(),
 	_headerImg(MIM()), _headerEffect(MIM())
 {
 }
 
 quint32 BackgroundTexturesPS::pageDataPos(quint8 pageID) const
 {
-	return _dataPos + (pageID ? _headerImg.size : 0);
+	return 12 + (pageID ? _headerImg.size : 0);
 }
 
 quint16 BackgroundTexturesPS::pageTexPos(quint8 pageID) const
@@ -332,11 +332,6 @@ quint16 BackgroundTexturesPS::pageTexPos(quint8 pageID) const
 quint16 BackgroundTexturesPS::pageTexWidth(quint8 pageID) const
 {
 	return pageID ? _headerEffect.w : _headerImg.w;
-}
-
-void BackgroundTexturesPS::setDataPos(quint32 dataPos)
-{
-	_dataPos = dataPos + 12;
 }
 
 void BackgroundTexturesPS::setHeaderImg(const MIM &headerImg)
@@ -452,7 +447,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		QVector<uint> tileData = this->tile(tile); // Retrieve tile data
 
 		if(tile.depth < 2) {
-			PalettePC *palette = (PalettePC *)palettesPC.value(tile.paletteID);
+			PalettePC *palette = static_cast<PalettePC *>(palettesPC.value(tile.paletteID));
 			if(palette && !palette->transparency()) {
 
 				// Detection of transparency PC flag: true if one of used indexes is transparent
@@ -500,14 +495,15 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 				if (tileConversion.tile.depth >= 2) {
 					continue; // No palette here
 				}
-				PalettePC *palette = (PalettePC *)palettesPC.value(tileConversion.tile.paletteID);
+				PalettePC *palette = static_cast<PalettePC *>(palettesPC.value(tileConversion.tile.paletteID));
 
 				if(palette && palette->transparency()) {
 
 					const QList<bool> &areZero = palette->areZero();
 					bool firstIsZero = areZero.first();
-					int i=0, indexOfFirstZero = areZero.indexOf(true, 1);
+					int indexOfFirstZero = areZero.indexOf(true, 1);
 					if(firstIsZero || indexOfFirstZero > -1) {
+						int i = 0;
 						foreach(uint index, tileConversion.data) {
 							if(index > 0 && areZero.at(index)) {
 								// When the index refer to a transparent color, change this index to 0

@@ -28,7 +28,7 @@ class TutWidget : public QDialog
 {
 	Q_OBJECT
 public:
-	TutWidget(QWidget *parent=0);
+	explicit TutWidget(QWidget *parent=0);
 	void fill(Field *field, TutFilePC *tutPC, bool reload=false);
 	void clear();
 signals:

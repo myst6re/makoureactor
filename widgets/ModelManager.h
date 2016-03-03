@@ -33,6 +33,9 @@ public:
 signals:
 	void modified();
 protected:
+	void showModelInfos() {
+		showModelInfos(models->currentItem());
+	}
 	virtual QList<QStringList> modelNames() const=0;
 	virtual QList<QTreeWidgetItem *> animItems(int modelID) const=0;
 	virtual void showModelInfos2(int row);
@@ -60,7 +63,7 @@ private:
 	Field *_field;
 	FieldModelLoader *fieldModelLoader;
 private slots:
-	void showModelInfos(QTreeWidgetItem *, QTreeWidgetItem *);
+	void showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous = 0);
 	void setModelUnknown(int unknown);
 	void showModel(QTreeWidgetItem *item);
 	void setModelColorLabel(int colorId);

@@ -40,9 +40,11 @@ private slots:
 	void enableLayer(QListWidgetItem *item);
 	void enableSection(QListWidgetItem *item);
 	void changeZ(int value);
+	void saveImage();
 	void tryToRepairBG();
 	void updateBG();
 private:
+	QImage background(bool *bgWarning = NULL);
 	void fillWidgets();
 
 	Field *field;
@@ -58,7 +60,6 @@ private:
 	bool layers[4];
 	QSet<quint16> sections;
 	qint16 x[3], y[3], z[3];
-	QFrame *imageFrame;
 	QScrollArea *imageBox;
 	float zoomFactor;
 protected:

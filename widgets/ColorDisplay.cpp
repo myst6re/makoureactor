@@ -20,7 +20,11 @@
 ColorDisplay::ColorDisplay(QWidget *parent) :
 	QWidget(parent), _ro(false)
 {
-	scale = qApp->desktop()->physicalDpiX()/96;
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+	scale = 1;
+#else
+	scale = devicePixelRatio();
+#endif
 	setFixedSize((COLOR_DISPLAY_CELL_SIZE*scale + COLOR_DISPLAY_BORDER_WIDTH) * 10 + COLOR_DISPLAY_BORDER_WIDTH,
 				 COLOR_DISPLAY_CELL_SIZE*scale + COLOR_DISPLAY_BORDER_WIDTH * 2);
 	setMouseTracking(true);
@@ -51,7 +55,6 @@ void ColorDisplay::paintEvent(QPaintEvent *)
 {
 	QPainter painter(this);
 
-	int gray;
 	int size = colors.size(), x;
 	// Colors
 	painter.setPen(QColor(0, 0, 0));
@@ -59,7 +62,7 @@ void ColorDisplay::paintEvent(QPaintEvent *)
 	for(int i=0 ; i<size ; ++i) {
 		x = i * cellFullWidth;
 		painter.drawRect(x, 0, cellFullWidth, cellFullWidth);
-		gray = qGray(colors.at(i));
+		int gray = qGray(colors.at(i));
 		painter.fillRect(x+COLOR_DISPLAY_BORDER_WIDTH,
 						 COLOR_DISPLAY_BORDER_WIDTH,
 						 COLOR_DISPLAY_CELL_SIZE*scale,
@@ -81,14 +84,15 @@ int ColorDisplay::colorId(const QPoint &pos) const
 	return qMin(pos.x()/(COLOR_DISPLAY_CELL_SIZE *scale + COLOR_DISPLAY_BORDER_WIDTH), colors.size() - 1);
 }
 
-void ColorDisplay::enterEvent(QMouseEvent *event)
+void ColorDisplay::enterEvent(QEvent *event)
 {
+	Q_UNUSED(event);
 	update();
-	emit colorHovered(colorId(event->pos()));
 }
 
-void ColorDisplay::leaveEvent(QMouseEvent *)
+void ColorDisplay::leaveEvent(QEvent *event)
 {
+	Q_UNUSED(event);
 	update();
 }
 
@@ -102,6 +106,9 @@ void ColorDisplay::mouseReleaseEvent(QMouseEvent *event)
 {
 	if(isReadOnly())	return;
 	int colorIndex = colorId(event->pos());
+	if(colorIndex >= colors.size()) {
+		return;
+	}
 	QColor color = QColorDialog::getColor(colors.at(colorIndex), this, tr("Choose a new color"));
 	if(color.isValid()) {
 		colors.replace(colorIndex, color.rgb());

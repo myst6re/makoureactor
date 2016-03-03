@@ -39,8 +39,8 @@ class BackgroundTiles : public QMultiMap<qint16, Tile>
 {
 public:
 	BackgroundTiles();
-	BackgroundTiles(const QList<Tile> &tiles);
-	BackgroundTiles(const QMultiMap<qint16, Tile> &tiles);
+	explicit BackgroundTiles(const QList<Tile> &tiles);
+	explicit BackgroundTiles(const QMultiMap<qint16, Tile> &tiles);
 
 	BackgroundTiles filter(const QHash<quint8, quint8> &paramActifs, const qint16 *z,
 	                       const bool *layers, const QSet<quint16> *IDs) const;

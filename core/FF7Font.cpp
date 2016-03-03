@@ -186,6 +186,7 @@ QString FF7Font::saveTxt()
 	return data;
 }
 
+/*
 void FF7Font::print()
 {
 	int tid=1;
@@ -199,7 +200,7 @@ void FF7Font::print()
 			qDebug() << buf.toLatin1().data();
 		}
 	}
-}
+} */
 
 QMap<QString, FF7Font *> FF7Font::fonts;
 QString FF7Font::font_dirPath;
@@ -247,7 +248,6 @@ QStringList FF7Font::fontList()
 
 FF7Font *FF7Font::openFont(const QString &windowBinFilePath, const QString &txtPath)
 {
-	FF7Font *ff7Font = NULL;
 	WindowBinFile *windowBinFile = NULL;
 	QFile f(windowBinFilePath);
 	if(f.open(QIODevice::ReadOnly)) {
@@ -263,6 +263,7 @@ FF7Font *FF7Font::openFont(const QString &windowBinFilePath, const QString &txtP
 	if(!windowBinFile) {
 		return NULL;
 	} else {
+		FF7Font *ff7Font;
 		QFile f2(txtPath);
 		if(f2.open(QIODevice::ReadOnly)) {
 			ff7Font = new FF7Font(windowBinFile, f2.readAll());

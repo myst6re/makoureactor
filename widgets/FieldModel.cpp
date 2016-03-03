@@ -33,7 +33,7 @@ void FieldModel::clear()
 {
 	currentFrame = 0;
 	data = 0;
-	updateTimer();
+	timer.stop();
 //	glClearColor(0.0,0.0,0.0,0.0);
 	updateGL();
 }
@@ -43,7 +43,7 @@ void FieldModel::setFieldModelFile(FieldModelFile *fieldModel, int animID)
 	currentFrame = 0;
 	data = fieldModel;
 	animationID = animID;
-	if(!data->isEmpty()) {
+	if(data && !data->isEmpty()) {
 		updateGL();
 		updateTimer();
 	}

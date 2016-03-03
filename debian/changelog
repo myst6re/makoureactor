@@ -1,3 +1,26 @@
+makoureactor (1.7.0) trusty; urgency=low
+
+  * Main layout changes: allow dynamic resizing of the field list and the background preview.
+  * Script Editor: Some group script icons was missing for a few versions, there are back.
+  * Text and Script Editors: Update used texts when scripts have changed.
+  * Script var search: Search by bank when setting the address value to -1.
+  * Script var search: new search operators (thanks to Œil de Nuit).
+  * New feature: broken backgrounds can be repaired on the background viewer (PC version: lastmap and fr_e partially).
+  * Model loader Editor: Changing animation names has no effect (reported by DLPB).
+  * Model loader Editor: Fixing display error when removing a model.
+  * Background Viewer: Adding Layer 1 sections tab.
+  * Background Viewer: Zooming feature (CTRL + wheel) and background autosizing (thanks to Sithlord48).
+  * Walkmesh Editor: Fixing 3D Model display & orientation bug.
+  * Some changes for HiDPI devices (thanks to Sithlord48).
+  * Configuration: autosave sorting order for field list (proposed by DLPB).
+  * Background PS -> PC: Fixing a crash.
+  * Disabled doors/gateways/arrows are now displayed in grey in lists.
+  * Adding help message to understand bank mechanism.
+  * Makou Reactor can be compiled with Qt 5 and MSVC.
+  * Many changes for the open source community. (Translating source code strings to English -thanks Sithlord48-, adding Travis and a README file)
+  
+ -- myst6re <myst6re@gmail.com>  Sat, 27 Feb 2016 13:24:28 +0100
+
 makoureactor (1.6.5) trusty; urgency=low
 
   * Main window layout changes

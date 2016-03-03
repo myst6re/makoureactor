@@ -216,6 +216,7 @@ public:
 	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
 	static QString character(quint8 persoID);
+	static QString akao(quint8 akaoOp, bool *ok = NULL);
 
 	static const quint8 length[257];
 	static const QString names[257];
@@ -227,7 +228,6 @@ protected:
 	static QString _field(quint16 fieldID);
 	static QString _movie(quint8 movieID);
 	// static QString _objet3D(quint8 objet3D_ID);
-	static QString _akao(quint8 akaoOp);
 
 	static QString _bank(quint8 address, quint8 bank);
 	static QString _var(int value, quint8 bank);

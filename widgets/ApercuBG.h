@@ -25,19 +25,28 @@ class ApercuBG : public QLabel
 {
 	Q_OBJECT
 public:
-	explicit ApercuBG(QWidget *parent=0);
-	void fill(Field *field, bool reload=false);
+	explicit ApercuBG(QWidget *parent = 0);
+	void fill(Field *field, bool reload = false);
 	void clear();
+	inline QSize minimumSizeHint() const {
+		return QSize(0, 0);
+	}
+	inline QSize sizeHint() const {
+		return QSize(300, 225);
+	}
 signals:
 	void clicked();
 public slots:
 	void drawBackground();
 private:
-	static QPixmap errorPixmap(int w, int h);
-	Field *field;
-	bool error;
+	static QPixmap errorPixmap(const QSize &size);
+	Field *_field;
+	QPixmap _background;
+	QSize _backgroundSize;
+	bool _error;
 protected:
-	void mouseReleaseEvent(QMouseEvent *);
+	void mouseReleaseEvent(QMouseEvent *e);
+	void resizeEvent(QResizeEvent *e);
 };
 
 #endif

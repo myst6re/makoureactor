@@ -44,12 +44,12 @@ bool IsoArchiveFF7::open(QIODevice::OpenMode mode)
 	return ok;
 }
 
-const QByteArray &IsoArchiveFF7::fileLzs(const QString &path, quint32 maxSize)
+const QByteArray &IsoArchiveFF7::fileLzs(const QString &path, quint32 maxSize) const
 {
 	return LZS::decompressAllWithHeader(file(path, maxSize));
 }
 
-const QByteArray &IsoArchiveFF7::modifiedFileLzs(const QString &path, quint32 maxSize)
+const QByteArray &IsoArchiveFF7::modifiedFileLzs(const QString &path, quint32 maxSize) const
 {
 	return LZS::decompressAllWithHeader(modifiedFile(path, maxSize));
 }
@@ -249,12 +249,11 @@ bool IsoArchiveFF7::updateBin(IsoFile *isoBin, const QList<IsoFile *> &filesRefB
 
 	// Update
 
-	int count;
 	QByteArray copy = ungzip;
 	QMapIterator<QByteArray, QByteArray> i(changesFieldBin);
 	while(i.hasNext()) {
 		i.next();
-		count = copy.count(i.key());
+		int count = copy.count(i.key());
 		if(count == 0) {
 			qWarning() << "IsoArchiveFF7::updateBin" << isoBin->name() << "Error not found!" << i.key().toHex();
 #ifdef ISOARCHIVE_DEBUG

@@ -73,7 +73,7 @@ TutWidget::TutWidget(QWidget *parent) :
 
 void TutWidget::fill(Field *field, TutFilePC *tutPC, bool reload)
 {
-	if((!reload && this->tut == field->tutosAndSounds()) || !field)	return;
+	if(!field || (!reload && this->tut == field->tutosAndSounds()))	return;
 	clear();
 	tut = field->tutosAndSounds();
 	this->tutPC = tutPC;
@@ -226,7 +226,11 @@ void TutWidget::updateAkaoID(quint16 akaoID)
 
 void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 {
-	if(item == NULL)	return;
+	if(item == NULL) {
+		exportButton->setEnabled(false);
+		importButton->setEnabled(false);
+		return;
+	}
 
 	if(lastItem != NULL) {
 		saveText(lastItem);
@@ -261,13 +265,11 @@ void TutWidget::saveText(QListWidgetItem *item)
 			emit modified();
 		}
 	} else {
-		quint16 akaoID;
-
 		QString userText = akaoIDList->lineEdit()->text();
 		QRegExp regExp("\\d+");
 		if(regExp.indexIn(userText) != -1) {
 			userText = regExp.capturedTexts().first();
-			akaoID = userText.toInt();
+			quint16 akaoID = userText.toInt();
 
 			if(tut->akaoID(id) != akaoID) {
 				tut->setAkaoID(id, akaoID);

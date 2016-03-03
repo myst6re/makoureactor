@@ -20,8 +20,8 @@
 
 #include <QtWidgets>
 
-#define COLOR_DISPLAY_CELL_SIZE		9
-#define COLOR_DISPLAY_BORDER_WIDTH	1
+#define COLOR_DISPLAY_CELL_SIZE       9
+#define COLOR_DISPLAY_BORDER_WIDTH    1
 
 class ColorDisplay : public QWidget
 {
@@ -42,8 +42,8 @@ private:
 	bool _ro;
 protected:
 	void paintEvent(QPaintEvent *event);
-	void enterEvent(QMouseEvent *event);
-	void leaveEvent(QMouseEvent *event);
+	void enterEvent(QEvent *event);
+	void leaveEvent(QEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 };

@@ -46,7 +46,8 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 
 	QPushButton *resetCamera = new QPushButton(tr("Reset"));
 
-	QCheckBox *showModels = new QCheckBox(tr("Show 3D models"));
+	showModels = new QCheckBox(tr("Show 3D models"));
+	showModels->setChecked(Config::value("fieldModelsVisible", true).toBool());
 
 	tabWidget = new QTabWidget(this);
 	tabWidget->addTab(buildCameraPage(), tr("Camera"));
@@ -73,8 +74,6 @@ WalkmeshManager::WalkmeshManager(QWidget *parent, const QGLWidget *shareWidget) 
 		connect(slider3, SIGNAL(valueChanged(int)), walkmesh, SLOT(setZRotation(int)));
 		connect(resetCamera, SIGNAL(clicked()), SLOT(resetCamera()));
 		connect(showModels, SIGNAL(toggled(bool)), SLOT(setModelsVisible(bool)));
-
-		showModels->setChecked(true);
 	}
 }
 
@@ -231,7 +230,7 @@ QWidget *WalkmeshManager::buildGatewaysPage()
 
 	exitPoints[0] = new VertexWidget(ret);
 	exitPoints[1] = new VertexWidget(ret);
-	entryPoint = new VertexWidget(QString(), QString(), tr("ID"), ret);
+	entryPoint = new VertexWidget(QString(), QString(), tr("T"), ret);
 
 	fieldId = new QSpinBox(ret);
 	fieldId->setRange(-32768, 32766);
@@ -359,7 +358,7 @@ QWidget *WalkmeshManager::buildArrowPage()
 
 	QGridLayout *layout = new QGridLayout(ret);
 	layout->addWidget(arrowList, 0, 0, 3, 1, Qt::AlignLeft);
-	layout->addWidget(new QLabel(tr("Position :")), 0, 1);
+	layout->addWidget(new QLabel(tr("Position:")), 0, 1);
 	layout->addWidget(new QLabel(tr("Type:")), 1, 1);
 	layout->addLayout(posLayout, 0, 2);
 	layout->addWidget(arrowType, 1, 2);
@@ -484,14 +483,21 @@ QWidget *WalkmeshManager::buildMiscPage()
 	return ret;
 }
 
+void WalkmeshManager::saveConfig()
+{
+	Config::setValue("fieldModelsVisible", showModels->isChecked());
+}
+
 void WalkmeshManager::fill(Field *field, bool reload)
 {
-	if((!reload && field->inf() == infFile) || !field)	return;
+	if(!field || (!reload && field->inf() == infFile))	return;
 
 	infFile = field->inf();
 	idFile = field->walkmesh();
 	caFile = field->camera();
 	scriptsAndTexts = field->scriptsAndTexts();
+
+	walkmesh->setModelsVisible(showModels->isChecked());
 
 	if(!idFile->isOpen() || !caFile->isOpen() || !infFile->isOpen()) {
 		QMessageBox::warning(this, tr("Opening error"), tr("Error opening walkmesh"));
@@ -541,7 +547,9 @@ void WalkmeshManager::fill(Field *field, bool reload)
 			if(gateway.fieldID != 0x7FFF) {
 				gateList->addItem(QString("%1 (%2)").arg(Data::field_names.value(gateway.fieldID)).arg(gateway.fieldID));
 			} else {
-				gateList->addItem(tr("Unused"));
+				QListWidgetItem *item = new QListWidgetItem(tr("Unused"));
+				item->setForeground(Qt::darkGray);
+				gateList->addItem(item);
 			}
 		}
 		gateList->setCurrentRow(0);
@@ -553,7 +561,9 @@ void WalkmeshManager::fill(Field *field, bool reload)
 			if(trigger.background_parameter != 0xFF) {
 				doorList->addItem(tr("Door %1").arg(doorID));
 			} else {
-				doorList->addItem(tr("Unused"));
+				QListWidgetItem *item = new QListWidgetItem(tr("Unused"));
+				item->setForeground(Qt::darkGray);
+				doorList->addItem(item);
 			}
 			++doorID;
 		}
@@ -567,7 +577,9 @@ void WalkmeshManager::fill(Field *field, bool reload)
 				if(arrow.type != 0) {
 					arrowList->addItem(tr("Arrow %1").arg(arrowID));
 				} else {
-					arrowList->addItem(tr("Unused"));
+					QListWidgetItem *item = new QListWidgetItem(tr("Unused"));
+					item->setForeground(Qt::darkGray);
+					arrowList->addItem(item);
 				}
 				++arrowID;
 			}
@@ -1123,10 +1135,16 @@ void WalkmeshManager::editFieldId(int v)
 		if(old.fieldID != v) {
 			old.fieldID = v;
 			infFile->setExitLine(gateId, old);
+			QListWidgetItem *item = gateList->currentItem();
 			if(v != 0x7FFF) {
-				gateList->currentItem()->setText(QString("%1 (%2)").arg(Data::field_names.value(v)).arg(v));
+				item->setText(QString("%1 (%2)")
+				              .arg(Data::field_names.value(v))
+				              .arg(v));
+				// Default foreground
+				item->setForeground(QListWidgetItem().foreground());
 			} else {
-				gateList->currentItem()->setText(tr("Unused"));
+				item->setText(tr("Unused"));
+				item->setForeground(Qt::darkGray);
 			}
 
 			emit modified();
@@ -1179,10 +1197,14 @@ void WalkmeshManager::editParamId(int v)
 		if(old.background_parameter != v) {
 			old.background_parameter = v;
 			infFile->setTrigger(gateId, old);
+			QListWidgetItem *item = doorList->currentItem();
 			if(v != 0xFF) {
-				doorList->currentItem()->setText(tr("Door %1").arg(gateId));
+				item->setText(tr("Door %1").arg(gateId));
+				// Default foreground
+				item->setForeground(QListWidgetItem().foreground());
 			} else {
-				doorList->currentItem()->setText(tr("Unused"));
+				item->setText(tr("Unused"));
+				item->setForeground(Qt::darkGray);
 			}
 
 			if(walkmesh)	walkmesh->updateGL();
@@ -1287,10 +1309,14 @@ void WalkmeshManager::editArrowType(int index)
 		if(old.type != value) {
 			old.type = index;
 			infFile->setArrow(arrowId, old);
+			QListWidgetItem *item = arrowList->currentItem();
 			if(index != 0) {
-				arrowList->currentItem()->setText(tr("Arrow %1").arg(arrowId));
+				item->setText(tr("Arrow %1").arg(arrowId));
+				// Default foreground
+				item->setForeground(QListWidgetItem().foreground());
 			} else {
-				arrowList->currentItem()->setText(tr("Unused"));
+				item->setText(tr("Unused"));
+				item->setForeground(Qt::darkGray);
 			}
 
 			emit modified();

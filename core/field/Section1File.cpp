@@ -117,7 +117,7 @@ Opcode *GrpScriptsIterator::previousOpcode()
 }
 
 Section1File::Section1File(Field *field) :
-	FieldPart(field), _tut(0)
+	FieldPart(field), _scale(0), _tut(0)
 {
 }
 
@@ -174,8 +174,6 @@ bool Section1File::open(const QByteArray &data)
 	quint16 nbAKAO, posScripts, pos;
 	quint8 emptyGrps = 0, nbScripts = (quint8)data.at(2);
 
-	GrpScript *grpScript;
-
 	//this->nbObjets3D = (quint8)data.at(3);
 	memcpy(&nbAKAO, constData + 6, 2); // nbAKAO
 
@@ -197,41 +195,40 @@ bool Section1File::open(const QByteArray &data)
 	quint16 positions[33];
 	const int scriptCount = isDemo ? 16 : 32;
 
-	for(quint8 i=0 ; i<nbScripts ; ++i)
-	{
-		grpScript = new GrpScript(QString(data.mid(cur + 8*i, 8)));
+	for(quint8 i=0 ; i<nbScripts ; ++i) {
+		GrpScript *grpScript = new GrpScript(QString(data.mid(cur + 8*i, 8)));
 		if(emptyGrps > 1) {
 			emptyGrps--;
 		} else {
 
-			//Listage des positions de départ
+			// Listing start offsets
 			memcpy(positions, constData + posScripts + scriptCount * 2 * i, scriptCount * 2);
 
-			//Ajout de la position de fin
-			if(i==nbScripts-1)	positions[scriptCount] = posTexts;
-			else
-			{
+			// Add offset at the end
+			if(i == nbScripts - 1) {
+				positions[scriptCount] = posTexts;
+			} else {
 				memcpy(&pos, constData + posScripts + scriptCount * 2 * (i + 1), 2);
 
-				if(pos > positions[scriptCount - 1])	positions[scriptCount] = pos;
-				else
-				{
+				if(pos > positions[scriptCount - 1]) {
+					positions[scriptCount] = pos;
+				} else {
 					emptyGrps = 1;
-					while(pos <= positions[scriptCount - 1] && i+emptyGrps<nbScripts-1)
-					{
+					while(pos <= positions[scriptCount - 1] && i+emptyGrps<nbScripts-1) {
 						memcpy(&pos, constData + posScripts + scriptCount * 2 * (i + emptyGrps + 1), 2);
 						emptyGrps++;
 					}
-					if(i+emptyGrps==nbScripts)	positions[scriptCount] = posTexts;
-					else	positions[scriptCount] = pos;
+					if(i + emptyGrps == nbScripts) {
+						positions[scriptCount] = posTexts;
+					} else {
+						positions[scriptCount] = pos;
+					}
 				}
 			}
 
 			quint8 scriptID = 0;
-			for(quint8 j=0 ; j<scriptCount ; ++j)
-			{
-				if(positions[j+1] > positions[j])
-				{
+			for(quint8 j=0 ; j<scriptCount ; ++j) {
+				if(positions[j+1] > positions[j]) {
 					if (scriptID == 0) {
 						Script *script0 = new Script(data.mid(positions[j], positions[j+1]-positions[j]));
 						if(!script0->isValid()) {
@@ -250,8 +247,7 @@ bool Section1File::open(const QByteArray &data)
 		_grpScripts.append(grpScript);
 	}
 
-	if(nbAKAO>0)
-	{
+	if(nbAKAO>0) {
 		//INTERGRITY TEST
 //		QString out;
 //		bool pasok = false;
@@ -267,23 +263,19 @@ bool Section1File::open(const QByteArray &data)
 //		}
 
 		memcpy(&posAKAO, constData + cur + 8*nbScripts, 4); // posAKAO
-	}
-	else
-	{
+	} else {
 		posAKAO = dataSize;
 	}
 
 	/* ---------- TEXTS ---------- */
 
-	if((posAKAO -= posTexts) > 4)//If there are texts
-	{
+	if((posAKAO -= posTexts) > 4) { //If there are texts
 		quint16 posDeb, posFin, nbTextes;
 		if(dataSize < posTexts+2)	return false;
 		memcpy(&posDeb, constData + posTexts + 2, 2);
 		nbTextes = posDeb/2 - 1;
 
-		for(quint32 i=1 ; i<nbTextes ; ++i)
-		{
+		for(quint32 i=1 ; i<nbTextes ; ++i) {
 			memcpy(&posFin, constData + posTexts + 2 + i*2, 2);
 
 			if(dataSize < posTexts+posFin)	return false;
@@ -451,7 +443,7 @@ bool Section1File::importer(QIODevice *device, ExportFormat format)
 	Q_UNUSED(format)
 	//TODO
 	// bool jp = Config::value("jp_txt", false).toBool();
-	bool start, field, texts;
+	bool start = false, field, texts;
 
 	QXmlStreamReader stream(device);
 

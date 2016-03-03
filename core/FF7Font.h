@@ -50,7 +50,7 @@ public:
 	static const QString &fontDirPath();
 private:
 	void openTxt(const QString &data);
-	void print();
+	// void print();
 	WindowBinFile *_windowBinFile;
 	QString _name;
 	QString _txtPath, _windowBinFilePath;

@@ -70,7 +70,6 @@ public:
 	void setModelInfos(int modelID, const FieldModelInfosPC &modelInfos);
 	void insertModelInfos(int modelID, const FieldModelInfosPC &modelInfos);
 private:
-	quint16 typeHRC;
 	QStringList model_nameChar;
 	QStringList model_nameHRC;
 	QList<QStringList> model_anims;

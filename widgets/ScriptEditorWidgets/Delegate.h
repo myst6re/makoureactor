@@ -61,31 +61,28 @@
 
 #include <QtWidgets>
 #include "core/field/Field.h"
+#include "widgets/ScriptEditorWidgets/ScriptEditorGenericList.h"
 
 class SpinBoxDelegate : public QItemDelegate
 {
 	Q_OBJECT
 public:
-	SpinBoxDelegate(QObject *parent = 0);
-
-	enum paramType {
-		/*0*/inconnu, field_id, tuto_id, group_id, script_id, /*5*/personnage_id, party_id, cd_id, minijeu_id, polygone_id,
-		/*10*/layer_id, parametre_id, state_id, window_id, text_id, /*15*/item_id, materia_id, animation_id, music_id, sound_id, /*20*/movie_id,
-		operateur, keys, color, coord_x, coord_y, coord_z, window_w, window_h, window_num, window_type, window_var, direction, vitesse, vitesse2,
-		priorite, menu, jump, jump_l, rotation, quantity,
-		bank, adress, byte, word, sword, bit, boolean
-	};
+	explicit SpinBoxDelegate(QObject *parent = 0);
 
 	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-						  const QModelIndex &index) const;
+	                      const QModelIndex &index) const;
 
 	void setEditorData(QWidget *editor, const QModelIndex &index) const;
 	void setModelData(QWidget *editor, QAbstractItemModel *model,
-					  const QModelIndex &index) const;
+	                  const QModelIndex &index) const;
 
 	void updateEditorGeometry(QWidget *editor,
-							  const QStyleOptionViewItem &option, const QModelIndex &index) const;
-	void setField(Field *field);
+	                          const QStyleOptionViewItem &option,
+	                          const QModelIndex &index) const;
+	inline void setField(Field *field) {
+		_field = field;
+	}
+
 private:
 	Field *_field;
 };

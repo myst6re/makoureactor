@@ -106,15 +106,15 @@ void ModelManager::fill(Field *field, bool reload)
 		models->setCurrentItem(models->topLevelItem(0));
 	}
 	models->setFocus();
+
+	modelFrame->setEnabled(models->topLevelItemCount() != 0);
 }
 
 void ModelManager::fillModelList()
 {
 	models->blockSignals(true);
-	QTreeWidgetItem *item;
-	foreach(const QStringList &name, modelNames())
-	{
-		item = new QTreeWidgetItem(name);
+	foreach(const QStringList &name, modelNames()) {
+		QTreeWidgetItem *item = new QTreeWidgetItem(name);
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 		models->addTopLevelItem(item);
 	}
@@ -148,8 +148,9 @@ int ModelManager::currentAnimID(QTreeWidgetItem *item) const
 	return modelAnims->indexOfTopLevelItem(item);
 }
 
-void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *)
+void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous)
 {
+	Q_UNUSED(previous);
 	if(item == NULL) {
 		modelFrame->setEnabled(false);
 		return;
@@ -211,7 +212,6 @@ void ModelManager::showModel(QTreeWidgetItem *item)
 			modelPreview->clear();
 			return;
 		}
-//		qDebug() << "showModel()" << item->text(0);
 		modelPreview->setFieldModelFile(modelData(item));
 	}
 }

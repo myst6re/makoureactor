@@ -74,7 +74,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 		// Compare value if provided
 		if(!noValue) {
 			if(id() == SETBYTE || id() == SETWORD) {
-				OpcodeBinaryOperation *binaryOp = (OpcodeBinaryOperation *)this;
+				const OpcodeBinaryOperation *binaryOp = static_cast<const OpcodeBinaryOperation *>(this);
 
 				if(B1(binaryOp->banks) == bank && (noAddress || binaryOp->var == address)
 				        && B2(binaryOp->banks) == 0) {
@@ -108,7 +108,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 		if(id() == BITON
 				|| id() == BITOFF
 				|| id() == BITXOR) {
-			OpcodeBitOperation *bitOperation = (OpcodeBitOperation *)this;
+			const OpcodeBitOperation *bitOperation = static_cast<const OpcodeBitOperation *>(this);
 			if(B1(bitOperation->banks) == bank && (noAddress || bitOperation->var == address)
 					&& (noValue || (B2(bitOperation->banks) == 0 && bitOperation->position == value))) {
 				return true;
@@ -123,7 +123,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 				|| id() == IFSWL
 				|| id() == IFUW
 				|| id() == IFUWL) {
-			OpcodeIf *opcodeIf = (OpcodeIf *)this;
+			const OpcodeIf *opcodeIf = static_cast<const OpcodeIf *>(this);
 			if(((op == Compare && opcodeIf->oper < quint8(BitAnd))
 				|| (op == BitCompare && opcodeIf->oper >= quint8(BitAnd)))
 					&& B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
@@ -144,7 +144,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 bool Opcode::searchExec(quint8 group, quint8 script) const
 {
 	if(id() == REQ || id() == REQSW || id() == REQEW) {
-		OpcodeExec *exec = (OpcodeExec *)this;
+		const OpcodeExec *exec = static_cast<const OpcodeExec *>(this);
 		return exec->groupID == group && exec->scriptID == script;
 	}
 	return false;
@@ -153,10 +153,10 @@ bool Opcode::searchExec(quint8 group, quint8 script) const
 bool Opcode::searchMapJump(quint16 fieldID) const
 {
 	if(id() == MAPJUMP) {
-		return ((OpcodeMAPJUMP *)this)->fieldID == fieldID;
+		return static_cast<const OpcodeMAPJUMP *>(this)->fieldID == fieldID;
 	}
 	if(id() == MINIGAME) {
-		return ((OpcodeMINIGAME *)this)->fieldID == fieldID;
+		return static_cast<const OpcodeMINIGAME *>(this)->fieldID == fieldID;
 	}
 	return false;
 }
@@ -254,7 +254,7 @@ void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 	quint8 param, state;
 
 	if(id() == BGON) { //show bg parameter
-		OpcodeBGON *bgon = (OpcodeBGON *)this;
+		const OpcodeBGON *bgon = static_cast<const OpcodeBGON *>(this);
 		if(bgon->banks == 0) {
 			param = bgon->paramID;
 			state = 1 << bgon->stateID;
@@ -263,7 +263,7 @@ void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 			enabledParams.insert(param, state);
 		}
 	}/*else if(id() == BGOFF) { //hide bg parameter
-		OpcodeBGOFF *bgoff = (OpcodeBGOFF *)this;
+		const OpcodeBGOFF *bgoff = static_cast<const OpcodeBGOFF *>(this);
 		if(bgoff->banks == 0) {
 			param = bgoff->paramID;
 			state = 1 << bgoff->stateID;
@@ -277,12 +277,12 @@ void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 void Opcode::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 {
 	if(id() == BGPDH) { //Move Background Z
-		OpcodeBGPDH *bgpdh = (OpcodeBGPDH *)this;
+		const OpcodeBGPDH *bgpdh = static_cast<const OpcodeBGPDH *>(this);
 		if(bgpdh->banks==0 && bgpdh->layerID>1 && bgpdh->layerID<4) { //No var
 			z[bgpdh->layerID-2] = bgpdh->targetZ;
 		}
 	} else if(x && y && id() == BGSCR) { // Animate Background X Y
-		OpcodeBGSCR *bgscr = (OpcodeBGSCR *)this;
+		const OpcodeBGSCR *bgscr = static_cast<const OpcodeBGSCR *>(this);
 		if(bgscr->banks==0 && bgscr->layerID>1 && bgscr->layerID<4) { //No var
 			x[bgscr->layerID-2] = bgscr->targetX;
 			y[bgscr->layerID-2] = bgscr->targetY;
@@ -374,9 +374,15 @@ QString Opcode::_movie(quint8 movieID)
 	return QObject::tr("No%1").arg(objet3D_ID);
 } */
 
-QString Opcode::_akao(quint8 akaoOp)
+QString Opcode::akao(quint8 akaoOp, bool *ok)
 {
+	if(ok) {
+		*ok = true;
+	}
+
 	switch(akaoOp) {
+	// case 0x20 // TODO: unknown
+	// case 0x23 // TODO: unknown
 	case 0x28:	return QObject::tr("Play a sound effect on channel #1");
 	case 0x29:	return QObject::tr("Play a sound effect on channel #2");
 	case 0x2A:	return QObject::tr("Play a sound effect on channel #3");
@@ -428,7 +434,11 @@ QString Opcode::_akao(quint8 akaoOp)
 	case 0xD2:	return QObject::tr("Music tempo fade");
 	case 0xF0:	return QObject::tr("Stop music");
 	case 0xF1:	return QObject::tr("Stop sound effects");
-	default:	return QObject::tr("AKAO: %1?").arg(akaoOp);
+	default:
+		if(ok) {
+			*ok = false;
+		}
+		return QObject::tr("AKAO: %1?").arg(akaoOp);
 	}
 }
 
@@ -2543,7 +2553,7 @@ OpcodeIfKey::OpcodeIfKey(const char *params, int size)
 }
 
 OpcodeIfKey::OpcodeIfKey(const OpcodeJump &op) :
-	OpcodeJump(op)
+	OpcodeJump(op), keys(0)
 {
 }
 
@@ -4628,7 +4638,8 @@ void OpcodePXYZI::getVariables(QList<FF7Var> &vars) const
 		vars.append(FF7Var(B2(banks[1]), varI, FF7Var::Word, true));
 }
 
-OpcodeBinaryOperation::OpcodeBinaryOperation()
+OpcodeBinaryOperation::OpcodeBinaryOperation() :
+    banks(0), var(0), value(0)
 {
 }
 
@@ -7326,7 +7337,7 @@ void OpcodeAKAO2::setParams(const char *params, int)
 QString OpcodeAKAO2::toString(Field *) const
 {
 	return QObject::tr("%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)")
-			.arg(_akao(opcode))
+			.arg(akao(opcode))
 			.arg(_var(param1, B1(banks[0])))
 			.arg(_var(param2, B2(banks[0])))
 			.arg(_var(param3, B1(banks[1])))
@@ -8107,8 +8118,8 @@ void OpcodeAKAO::setParams(const char *params, int)
 
 QString OpcodeAKAO::toString(Field *) const
 {
-	return QObject::tr("%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)")
-			.arg(_akao(opcode))
+	return QObject::tr("%1 (param1 (8-bit)=%2, param2=%3, param3=%4, param4=%5, param5=%6)")
+			.arg(akao(opcode))
 			.arg(_var(param1, B1(banks[0])))
 			.arg(_var(param2, B2(banks[0])))
 			.arg(_var(param3, B1(banks[1])))

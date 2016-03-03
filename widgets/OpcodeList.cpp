@@ -28,12 +28,10 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	setAutoScroll(false);
 	setIconSize(QSize(32,11));
 	setAlternatingRowColors(true);
-	header()->setStretchLastSection(false);
-	header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
 	setExpandsOnDoubleClick(false);
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	setSelectionMode(QAbstractItemView::ExtendedSelection);
-	
+
 	edit_A = new QAction(tr("Edit"), this);
 	edit_A->setShortcut(QKeySequence(Qt::Key_Return));
 	edit_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
@@ -165,7 +163,6 @@ OpcodeList::~OpcodeList()
 
 void OpcodeList::clear()
 {
-	saveExpandedItems();
 	enableActions(false);
 	QTreeWidget::clear();
 	clearHist();
@@ -177,8 +174,6 @@ void OpcodeList::setEnabled(bool enabled)
 	QTreeWidget::setEnabled(enabled);
 	enableActions(enabled);
 }
-
-QToolBar *OpcodeList::toolBar() { return _toolBar; }
 
 void OpcodeList::enableActions(bool enabled)
 {
@@ -328,7 +323,6 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 		QList<quint16> indent;
 		QList<QTreeWidgetItem *> items;
 		QTreeWidgetItem *parentItem = 0;
-		int id;
 		quint16 opcodeID = 0;
 		QPixmap fontPixmap(":/images/chiffres.png");
 
@@ -344,7 +338,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 				}
 			}
 
-			id = curOpcode->id();
+			int id = curOpcode->id();
 
 			QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList(curOpcode->toString(field)));
 			item->setData(0, Qt::UserRole, opcodeID);

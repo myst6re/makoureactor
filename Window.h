@@ -34,6 +34,7 @@
 #include "widgets/WalkmeshManager.h"
 #include "widgets/QTaskBarButton.h"
 #include "widgets/LgpDialog.h"
+#include "widgets/Splitter.h"
 //#include "FieldModelThread.h"
 
 class Window : public QMainWindow, ArchiveObserver
@@ -94,10 +95,14 @@ public slots:
 	void fontManager();
 	void about();
 private slots:
+	void openRecentFile(QAction *action);
+	void disableEditors();
 	void openField(bool reload=false);
 	void showModel(int grpScriptID);
 	void showModel(Field *field, FieldModelFile *fieldModelFile);
 	void changeLanguage(QAction *);
+	void toggleFieldList();
+	void toggleBackgroundPreview();
 	void config();
 private:
 	void setWindowTitle();
@@ -105,12 +110,14 @@ private:
 	void showProgression(const QString &message, bool canBeCanceled);
 	void hideProgression();
 	QProgressDialog *progressDialog();
+	void fillRecentMenu();
 
 	QLineEdit *lineSearch;
 	FieldList *fieldList;
 	QStackedWidget *zonePreview;
 	ApercuBG *zoneImage;
 	FieldModel *fieldModel;
+	Splitter *horizontalSplitter, *verticalSplitter;
 
 	QToolBar *toolBar;
 
@@ -121,6 +128,7 @@ private:
 	Search *searchDialog;
 	VarManager *varDialog;
 
+	QMenu *_recentMenu;
 	QAction *actionSave, *actionSaveAs, *actionExport;
 	QAction *actionMassExport, *actionImport, *actionMassImport, *actionClose;
 	QAction *actionRun, *actionModels, *actionArchive;

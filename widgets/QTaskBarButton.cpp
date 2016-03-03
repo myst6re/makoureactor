@@ -101,7 +101,8 @@ void QTaskBarButton::setValue(int value)
 #elif defined(QTASKBAR_WIN_QT5)
 
 QTaskBarButton::QTaskBarButton(QWidget *mainWindow) :
-	_taskbarButton(mainWindow)
+	_taskbarButton(mainWindow), _minimum(0), _maximum(100),
+    _value(0), _state(Invisible)
 {
 	_taskbarButton.setWindow(mainWindow->windowHandle());
 	QWinTaskbarProgress *progress = _taskbarButton.progress();
@@ -164,7 +165,8 @@ void QTaskBarButton::setValue(int value)
 #else
 
 QTaskBarButton::QTaskBarButton(QWidget *parent) :
-	QObject(parent)
+	QObject(parent), _minimum(0), _maximum(100),
+    _value(0), _state(Invisible)
 {
 }
 

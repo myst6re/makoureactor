@@ -31,12 +31,12 @@ public:
 		NoCountry, Jp, Us, Uk, Fr, De, Es
 	};
 
-	IsoArchiveFF7(const QString &name);
+	explicit IsoArchiveFF7(const QString &name);
 	virtual ~IsoArchiveFF7();
 
 	bool open(QIODevice::OpenMode mode);
-	const QByteArray &fileLzs(const QString &path, quint32 maxSize=0);
-	const QByteArray &modifiedFileLzs(const QString &path, quint32 maxSize=0);
+	const QByteArray &fileLzs(const QString &path, quint32 maxSize=0) const;
+	const QByteArray &modifiedFileLzs(const QString &path, quint32 maxSize=0) const;
 	Country country() const;
 	IsoFile *exe() const;
 	bool isDisc(int num) const;

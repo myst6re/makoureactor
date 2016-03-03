@@ -31,6 +31,9 @@ public:
 	inline int currentOpcodeId() const {
 		return _opcodeList->selectedID();
 	}
+	inline int selectedOpcode() const {
+		return _opcodeList->selectedOpcode();
+	}
 signals:
 	void changed();
 	void editText(int);

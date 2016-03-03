@@ -24,7 +24,8 @@
 #include "BsxFile.h"
 
 FieldModelFilePS::FieldModelFilePS() :
-	FieldModelFile()
+	FieldModelFile(), _scale(0),
+    _currentField(0), _currentModelID(-1)
 {
 }
 
@@ -108,7 +109,7 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 
 				foreach (FieldModelGroup *group, part->groups()) {
 					if (group->hasTexture()) {
-						FieldModelTextureRefPS *textureRef = (FieldModelTextureRefPS *)group->textureRef();
+						FieldModelTextureRefPS *textureRef = static_cast<FieldModelTextureRefPS *>(group->textureRef());
 
 						if (textureRef->type() > 1) {
 							QPoint newPos = textureRef->imgPos() + QPoint(0, imgY.value(textureRef->imgX()));
@@ -160,10 +161,14 @@ QImage FieldModelFilePS::loadedTexture(FieldModelGroup *group)
 		return _loadedTex.value(group);
 	}
 
-	FieldModelTextureRefPS *texRefPS = (FieldModelTextureRefPS *)group->textureRef();
+	FieldModelTextureRefPS *texRefPS = static_cast<FieldModelTextureRefPS *>(group->textureRef());
 	QImage tex;
 
 	if (texRefPS->type() == 0 || texRefPS->type() == 1) { // Eye and Mouth
+		if (!_currentField) {
+			qWarning() << "FieldModelFilePS::loadedTexture currentField not set";
+			return QImage();
+		}
 		quint8 faceID = _currentField->fieldModelLoader()->model(_currentModelID).faceID;
 		TdbFile tdb;
 		bool useTdb = faceID < 0x21;

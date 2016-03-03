@@ -259,9 +259,9 @@ void TextManager::focusInEvent(QFocusEvent *)
 
 void TextManager::setField(Field *field, bool reload)
 {
-	if((!reload && this->scriptsAndTexts == field->scriptsAndTexts())
-			|| !field
-			|| !field->scriptsAndTexts()->isOpen()) {
+	if(!field
+	        || (!reload && this->scriptsAndTexts == field->scriptsAndTexts())
+	        || !field->scriptsAndTexts()->isOpen()) {
 		return;
 	}
 
@@ -361,6 +361,22 @@ void TextManager::updateText()
 {
 	selectText(liste1->currentItem());
 	textPreview->calcSize();
+}
+
+void TextManager::updateFromScripts()
+{
+	usedTexts = scriptsAndTexts->listUsedTexts();
+
+	for(int row = 0 ; row < liste1->count(); ++row) {
+		QListWidgetItem *item = liste1->item(row);
+		int textID = item->data(Qt::UserRole).toInt();
+		if(!usedTexts.contains(textID)) {
+			item->setForeground(Qt::darkGray);
+		} else {
+			// Default foreground
+			item->setForeground(QListWidgetItem().foreground());
+		}
+	}
 }
 
 void TextManager::gotoText(int textID, int from, int size)

@@ -25,6 +25,7 @@ class TutFilePC : public TutFile
 {
 public:
 	TutFilePC();
+	using TutFile::open; // open(QByteArray)
 	bool open();
 	QByteArray save() const;
 	inline int maxTutCount() const { return 9; }

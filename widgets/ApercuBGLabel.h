@@ -24,18 +24,16 @@ class ApercuBGLabel : public QLabel
 {
 	Q_OBJECT
 public:
-	explicit ApercuBGLabel(QWidget *parent=0);
-	explicit ApercuBGLabel(const QString &name, QWidget *parent=0);
-	void setName(const QString &name);
+	explicit ApercuBGLabel(QWidget *parent = 0);
+signals:
+	void saveRequested();
 private:
-	void savePixmap();
-	QString _name;
-	bool showSave;
+	bool _showSave;
 protected:
-	void paintEvent(QPaintEvent *);
-	void enterEvent(QEvent *);
-	void leaveEvent(QEvent *);
-	void mousePressEvent(QMouseEvent *);
+	void paintEvent(QPaintEvent *e);
+	void enterEvent(QEvent *e);
+	void leaveEvent(QEvent *e);
+	void mousePressEvent(QMouseEvent *e);
 };
 
 #endif // APERCUBGDIALOG_H

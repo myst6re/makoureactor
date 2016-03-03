@@ -16,66 +16,46 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "ApercuBGLabel.h"
-#include "core/Config.h"
 
 ApercuBGLabel::ApercuBGLabel(QWidget *parent)
-	: QLabel(parent), showSave(false)
+	: QLabel(parent), _showSave(false)
 {
-}
-
-ApercuBGLabel::ApercuBGLabel(const QString &name, QWidget *parent)
-	: QLabel(parent), _name(name), showSave(false)
-{
-}
-
-void ApercuBGLabel::setName(const QString &name)
-{
-	_name = name;
 }
 
 void ApercuBGLabel::paintEvent(QPaintEvent *e)
 {
 	QLabel::paintEvent(e);
 
-	if(isEnabled() && showSave) {
+	if(isEnabled() && _showSave) {
 		QPainter painter(this);
 		painter.drawPixmap(0, 0, QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton).pixmap(32));
 		painter.end();
 	}
 }
 
-void ApercuBGLabel::enterEvent(QEvent *)
+void ApercuBGLabel::enterEvent(QEvent *e)
 {
-	showSave = true;
+	QLabel::enterEvent(e);
+
+	_showSave = true;
 	update(0, 0, 32, 32);
 }
 
-void ApercuBGLabel::leaveEvent(QEvent *)
+void ApercuBGLabel::leaveEvent(QEvent *e)
 {
-	showSave = false;
+	QLabel::leaveEvent(e);
+
+	_showSave = false;
 	update(0, 0, 32, 32);
 }
 
-void ApercuBGLabel::mousePressEvent(QMouseEvent *event)
+void ApercuBGLabel::mousePressEvent(QMouseEvent *e)
 {
-	if(event->button() != Qt::LeftButton)	return;
+	QLabel::mousePressEvent(e);
 
-	if(event->x()>=0 && event->x()<32 && event->y()>=0 && event->y()<32) {
-		savePixmap();
+	if(e->button() == Qt::LeftButton &&
+	        e->x() >= 0 && e->x() < 32 &&
+	        e->y() >= 0 && e->y() < 32) {
+		emit saveRequested();
 	}
-}
-
-void ApercuBGLabel::savePixmap()
-{
-	QString path = Config::value("saveBGPath").toString();
-	if(!path.isEmpty()) {
-		path.append("/");
-	}
-	path = QFileDialog::getSaveFileName(this, tr("Save Background"), path + _name + ".png", tr("PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)"));
-	if(path.isNull())	return;
-
-	pixmap()->save(path);
-
-	int index = path.lastIndexOf('/');
-	Config::setValue("saveBGPath", index == -1 ? path : path.left(index));
 }

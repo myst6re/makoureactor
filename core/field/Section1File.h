@@ -27,7 +27,7 @@
 class GrpScriptsIterator : public QListIterator<GrpScript *>
 {
 public:
-	inline GrpScriptsIterator(const QList<GrpScript *> &list)
+	inline explicit GrpScriptsIterator(const QList<GrpScript *> &list)
 		: QListIterator<GrpScript *>(list), _scriptsIt(0) {}
 	GrpScriptsIterator(const GrpScriptsIterator &other);
 	virtual ~GrpScriptsIterator();

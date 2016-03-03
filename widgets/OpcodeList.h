@@ -36,7 +36,7 @@ public:
 		QList<Opcode *> data;
 	};
 
-	OpcodeList(QWidget *parent=0);
+	explicit OpcodeList(QWidget *parent=0);
 	virtual ~OpcodeList();
 
 	int selectedID();
@@ -44,7 +44,9 @@ public:
 	void setIsInit(bool);
 	void saveExpandedItems();
 
-	QToolBar *toolBar();
+	inline QToolBar *toolBar() {
+		return _toolBar;
+	}
 	void clear();
 	void setEnabled(bool enabled);
 	void clearCopiedOpcodes();

@@ -25,7 +25,7 @@ class VertexWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	VertexWidget(QWidget *parent);
+	explicit VertexWidget(QWidget *parent);
 	VertexWidget(const QString &xLabel=QString(),
 				 const QString &yLabel=QString(),
 				 const QString &zLabel=QString(),

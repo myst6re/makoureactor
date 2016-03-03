@@ -36,15 +36,14 @@ const QByteArray &FF7Text::data() const
 
 QString FF7Text::text(bool jp, bool simplified) const
 {
-	QString trad, character;
-	quint8 index;
+	QString trad;
 //	bool jp = Config::value("jp_txt", false).toBool();
 	int size = _data.size();
 
-	for(quint16 i=0 ; i<size ; ++i)
-	{
-		index = (quint8)_data.at(i);
+	for(quint16 i=0 ; i<size ; ++i) {
+		quint8 index = (quint8)_data.at(i);
 		if(index == 0xFF)	break;
+		QString character;
 		switch(index) {
 		case 0xFA:
 			++i;

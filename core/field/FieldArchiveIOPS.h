@@ -27,14 +27,14 @@ class FieldArchivePS;
 class FieldArchiveIOPS : public FieldArchiveIO
 {
 public:
-	FieldArchiveIOPS(FieldArchivePS *fieldArchive);
+	explicit FieldArchiveIOPS(FieldArchivePS *fieldArchive);
 	inline bool isPS() const { return true; }
 
 	QByteArray mimData(Field *field, bool unlzs=true);
 	QByteArray modelData(Field *field, bool unlzs=true);
 
-	bool mimDataIsCached(Field *field) const;
-	bool modelDataIsCached(Field *field) const;
+	static bool mimDataIsCached(Field *field);
+	static bool modelDataIsCached(Field *field);
 	void clearCachedData();
 protected:
 	virtual QByteArray mimData2(Field *field, bool unlzs)=0;
