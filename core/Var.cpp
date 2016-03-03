@@ -91,7 +91,7 @@ bool Var::load()
 			
 			line = liste.at(2);
 			if(line.isEmpty())			return false;
-			if(line.size()>50)			line = line.left(50);
+			if(line.size()>255)			line = line.left(255);
 			
 			set(bank, address, line.simplified());
 		}
