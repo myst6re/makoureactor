@@ -32,7 +32,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	address = new QSpinBox(this);
 	address->setRange(0,255);
 	name = new QLineEdit(this);
-	name->setMaxLength(50);
+	name->setMaxLength(255);
 	rename = new QPushButton(tr("Rename"), this);
 
 	layout1->addWidget(bank);
