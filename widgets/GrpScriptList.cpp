@@ -21,7 +21,7 @@
 GrpScriptList::GrpScriptList(QWidget *parent) :
     QTreeWidget(parent)
 {
-	qreal scale = qApp->desktop()->logicalDpiX()/96;
+	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
 	setColumnCount(3);
 	setHeaderLabels(QStringList() << tr("Id") << tr("Group") << tr("Type"));
 	setIndentation(0);
