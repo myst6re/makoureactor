@@ -31,9 +31,9 @@ before_script:
   - export PATH="$QTDIR/bin:$PATH"
   - mkdir -p build
   - cd build
+  - qmake ..
 
 script:
-  - qmake ..
   - make -j2
 
 env:
@@ -47,6 +47,5 @@ addons:
       name: "myst6re/makoureactor"
       description: "Final Fantasy VII field archive editor"
     notification_email: myst6re@gmail.com
-    build_command_prepend: "qmake .."
     build_command: "make -j2"
     branch_pattern: coverity_scan
