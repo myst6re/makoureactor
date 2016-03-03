@@ -332,9 +332,11 @@ int Data::loadKernel2Bin()
 	QFile fic(path);
 	if(fic.open(QIODevice::ReadOnly)) {
 		quint32 fileSize;
-		fic.read((char *)&fileSize, 4);
+		if(fic.read((char *)&fileSize, 4) != 4) {
+			return 2;
+		}
 
-		if(fileSize+4 != fic.size()) {
+		if(fileSize + 4 != fic.size()) {
 			return 2;
 		}
 
