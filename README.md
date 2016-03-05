@@ -1,7 +1,7 @@
 # Makou Reactor
 
 [![Build Status](https://travis-ci.org/myst6re/makoureactor.svg?branch=develop)](https://travis-ci.org/myst6re/makoureactor)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/myst6re-makoureactor)](https://img.shields.io/coverity/scan/8102.svg)
+[![Coverity Scan Build Status](https://img.shields.io/coverity/scan/8102.svg)](https://scan.coverity.com/projects/myst6re-makoureactor)
 
 ## Installing
 
