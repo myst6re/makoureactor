@@ -7,12 +7,10 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     CONFIG += c++11
 }
 lessThan(QT_MAJOR_VERSION, 5) {
+    # Compatibility layer
     INCLUDEPATH += compat
-
-    contains(QMAKE_COMPILER, gcc) {
-        # Enabling c++11
-        QMAKE_CXXFLAGS += -std=c++0x
-    }
+    # Enabling c++11
+    QMAKE_CXXFLAGS += -std=c++0x
 }
 
 # Input
