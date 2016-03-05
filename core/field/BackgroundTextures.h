@@ -41,7 +41,7 @@ struct MIM {
 
 struct BackgroundConversionTexture
 {
-	BackgroundConversionTexture() {}
+	BackgroundConversionTexture() : tile(Tile()) {}
 	BackgroundConversionTexture(const QVector<uint> &data, const Tile &tile) :
 		data(data), tile(tile) {}
 	QVector<uint> data;

@@ -170,12 +170,15 @@ void FontWidget::exportFont()
 		filter.append(bmpF = tr("Image File (*.bmp)"));
 	}
 
-	if(ff7Font)
+	if(ff7Font) {
 		filter.append(txtF = tr("Translation file %1 (*.txt)").arg(PROG_NAME));
+	}
 	QString selectedFilter;
 
 	QString path = QFileDialog::getSaveFileName(this, tr("Export font"), "sysfnt", filter.join(";;"), &selectedFilter);
-	if(path.isNull())		return;
+	if(path.isNull()) {
+		return;
+	}
 
 	if(selectedFilter == binF) {
 		/*QByteArray data;
@@ -214,9 +217,10 @@ void FontWidget::exportFont()
 		} else {
 			QMessageBox::warning(this, tr("Error"), tr("Error opening file (%1)").arg(f.errorString()));
 		}
-	} else if(selectedFilter == pngF ||
-			  selectedFilter == jpgF ||
-			  selectedFilter == bmpF) {
+	} else if(windowBinFile &&
+	          (selectedFilter == pngF ||
+	           selectedFilter == jpgF ||
+	           selectedFilter == bmpF)) {
 		char *format;
 		if(selectedFilter == pngF) {
 			format = (char *)"PNG";
@@ -250,6 +254,7 @@ void FontWidget::importFont()
 			if(newWindowBinFile.open(f.readAll())) {
 				newWindowBinFile.setModified(true);
 				*windowBinFile = newWindowBinFile;
+				// FIXME: Update Data::windowBin?
 				setWindowBinFile(windowBinFile);// update
 				emit letterEdited();
 			} else {
