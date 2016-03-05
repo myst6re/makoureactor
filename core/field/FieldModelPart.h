@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ class FieldModelGroup
 {
 public:
 	FieldModelGroup();
-	FieldModelGroup(FieldModelTextureRef *texRef);
+	explicit FieldModelGroup(FieldModelTextureRef *texRef);
 	virtual ~FieldModelGroup();
 	inline const QList<Poly *> &polygons() const {
 		return _polys;
@@ -93,7 +93,8 @@ public:
 	inline void setBlendMode(quint8 blend) {
 		_blendMode = blend;
 	}
-	void removeSpriting(float texWidth, float texHeight);
+	void removeSpriting(float texWidth, float texHeight) const;
+	void setFloatCoords(float texWidth, float texHeight) const;
 private:
 	FieldModelTextureRef *_textureRef;
 	QList<Poly *> _polys;

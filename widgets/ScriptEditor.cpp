@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -48,21 +48,21 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 					<< Opcode::CANMX2 << Opcode::JUMP << Opcode::LADER;
 	}
 
-	setWindowTitle(tr("Éditeur de script%1").arg(isInit ? tr(" (init mode)") : ""));
+	setWindowTitle(tr("Script Editor%1").arg(isInit ? tr(" (init mode)") : ""));
 	setMinimumSize(500, 400);
 	
 	QStringList liste0;
-	liste0 << tr("Structures de contrôle") <<
-			  tr("Opérations mathématiques") <<
-			  tr("Fenêtres et messages") <<
-			  tr("Équipe et inventaire") <<
-			  tr("Objets 3D et animations") <<
-			  tr("Zones") <<
+	liste0 << tr("Control Structures") <<
+			  tr("Mathematics") <<
+			  tr("Windowing and messages") <<
+			  tr("Party and inventory") <<
+			  tr("Field Models and animations") <<
+			  tr("Walkmesh and locations") <<
 			  tr("Background") <<
-			  tr("Transitions et caméra") <<
-			  tr("Audio et vidéo") <<
+			  tr("Fade and camera") <<
+			  tr("Audio and video") <<
 			  tr("Modules") <<
-			  tr("Inconnu");
+			  tr("Unknown");
 	
 	comboBox0 = new QComboBox(this);
 	comboBox0->addItems(liste0);
@@ -71,7 +71,10 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	
 	textEdit = new QPlainTextEdit(this);
 	textEdit->setReadOnly(true);
-	textEdit->setFixedHeight(38);
+	// 2 Lines
+	const int textEditHMargins = textEdit->contentsMargins().top() + textEdit->contentsMargins().bottom()
+	                             + textEdit->document()->documentMargin() * 2;
+	textEdit->setFixedHeight(2 * textEdit->fontMetrics().height() + textEditHMargins);
 	
 	editorLayout = new QStackedWidget;
 	editorLayout->addWidget(editorWidget = new ScriptEditorGenericList(field, grpScript, script, opcodeID, this));
@@ -94,7 +97,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 
 	ok = new QPushButton(tr("OK"),this);
 	ok->setDefault(true);
-	QPushButton *cancel = new QPushButton(tr("Annuler"),this);
+	QPushButton *cancel = new QPushButton(tr("Cancel"),this);
 	
 	QHBoxLayout *buttonLayout = new QHBoxLayout();
 	buttonLayout->addStretch();
@@ -129,8 +132,9 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	connect(ok, SIGNAL(released()), SLOT(accept()));
 	connect(cancel, SIGNAL(released()), SLOT(close()));
 	connect(comboBox0, SIGNAL(currentIndexChanged(int)), SLOT(buildList(int)));
-	for(int i=0 ; i<editorLayout->count() ; ++i)
-		connect((ScriptEditorView *)editorLayout->widget(i), SIGNAL(opcodeChanged()), SLOT(refreshTextEdit()));
+	for(int i=0 ; i<editorLayout->count() ; ++i) {
+		connect(static_cast<ScriptEditorView *>(editorLayout->widget(i)), SIGNAL(opcodeChanged()), SLOT(refreshTextEdit()));
+	}
 	connect(comboBox, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
 }
 
@@ -227,7 +231,7 @@ void ScriptEditor::fillEditor()
 		index = 0;
 	}
 
-	editorWidget = (ScriptEditorView *)editorLayout->widget(index);
+	editorWidget = static_cast<ScriptEditorView *>(editorLayout->widget(index));
 	bool hasParams = opcode->hasParams() || opcode->isLabel();
 	editorLayout->setVisible(hasParams);
 	editorLayout->setCurrentWidget(editorWidget);
@@ -271,7 +275,7 @@ bool ScriptEditor::needslabel() const
 			|| editorLayout->currentIndex() == IF_PAGE
 			|| editorLayout->currentIndex() == IFKEY_PAGE
 			|| editorLayout->currentIndex() == IFQ_PAGE)
-			&& ((ScriptEditorJumpPageInterface *)editorWidget)->needsLabel();
+			&& static_cast<ScriptEditorJumpPageInterface *>(editorWidget)->needsLabel();
 }
 
 void ScriptEditor::refreshTextEdit()
@@ -341,11 +345,10 @@ void ScriptEditor::changeCurrentOpcode(int index)
 
 void ScriptEditor::setCurrentMenu(int id)
 {
-	int index, i, j;
-	for(i=0 ; i<comboBox0->count() ; ++i) {
+	for(int i=0 ; i<comboBox0->count() ; ++i) {
 		buildList(i);
-		index = -1;
-		for(j=0 ; j<comboBox->count() && index==-1 ; ++j) {
+		int index = -1;
+		for(int j=0 ; j<comboBox->count() && index==-1 ; ++j) {
 			QList<QVariant> dataList = comboBox->itemData(j).toList();
 			foreach(const QVariant &v, dataList) {
 				if(v.toInt() == id) {
@@ -371,193 +374,193 @@ void ScriptEditor::buildList(int id)
 	comboBox->clear();
 	switch(id) {
 	case 0:
-		comboBox->addItem(tr("Retourner"), QList<QVariant>() << 0x00);
-		comboBox->addItem(tr("Retourner à"), QList<QVariant>() << 0x07);
+		comboBox->addItem(tr("Return"), QList<QVariant>() << 0x00);
+		comboBox->addItem(tr("Return to"), QList<QVariant>() << 0x07);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Exécuter un script"), QList<QVariant>()
+		comboBox->addItem(tr("Execute a script"), QList<QVariant>()
 						  << 0x01 << 0x02 << 0x03);
-		comboBox->addItem(tr("Exécuter un script d'un équipier"), QList<QVariant>()
+		comboBox->addItem(tr("Execute a script from a party member"), QList<QVariant>()
 						  << 0x04 << 0x05 << 0x06);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Label"), QList<QVariant>() << 0x100);
-		comboBox->addItem(tr("Aller au label"), QList<QVariant>() << 0x10 << 0x11 << 0x12 << 0x13);
+		comboBox->addItem(tr("Goto label"), QList<QVariant>() << 0x10 << 0x11 << 0x12 << 0x13);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Si...alors"), QList<QVariant>()
+		comboBox->addItem(tr("If...then"), QList<QVariant>()
 						  << 0x14 << 0x15 << 0x16 << 0x17 << 0x18 << 0x19);
-		comboBox->addItem(tr("Si touche pressée"), QList<QVariant>() << 0x30 << 0x31 << 0x32);
-		comboBox->addItem(tr("Si personnage membre de l'équipe"), QList<QVariant>() << 0xCB);
-		comboBox->addItem(tr("Si personnage existe"), QList<QVariant>() << 0xCC);
+		comboBox->addItem(tr("If key pressed"), QList<QVariant>() << 0x30 << 0x31 << 0x32);
+		comboBox->addItem(tr("If Party Member"), QList<QVariant>() << 0xCB);
+		comboBox->addItem(tr("If character exsists"), QList<QVariant>() << 0xCC);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Attendre"), QList<QVariant>() << 0x24);
-		comboBox->addItem(tr("Ne rien faire"), QList<QVariant>() << 0x5F);
+		comboBox->addItem(tr("Wait"), QList<QVariant>() << 0x24);
+		comboBox->addItem(tr("No Operation"), QList<QVariant>() << 0x5F);
 		return;
 	case 1:
-		comboBox->addItem(tr("Opération binaire"), QList<QVariant>()
+		comboBox->addItem(tr("Binary operation"), QList<QVariant>()
 						  << 0x80 << 0x81 << 0x76 << 0x85 << 0x77 << 0x86 << 0x78
 						  << 0x87 << 0x79 << 0x88 << 0x89 << 0x8A << 0x8B << 0x8C
 						  << 0x8D << 0x8E << 0x8F << 0x90 << 0x91 << 0x92 << 0x93
 						  << 0x94 << 0x9A << 0x9B);
-		comboBox->addItem(tr("Opération unaire"), QList<QVariant>()
+		comboBox->addItem(tr("Unary operation"), QList<QVariant>()
 						  << 0x95 << 0x96 << 0x7A << 0x7B << 0x97 << 0x98
 						  << 0x7C << 0x7D << 0x99);
-		comboBox->addItem(tr("Opération bit à bit"), QList<QVariant>()
+		comboBox->addItem(tr("Bitwise operation"), QList<QVariant>()
 						  << 0x82 << 0x83 << 0x84);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Seed Random Generator"), QList<QVariant>() << 0x7F);
-		comboBox->addItem(tr("Créer un mot de deux octets"), QList<QVariant>() << 0x9C);
+		comboBox->addItem(tr("Two Byte from two one-byte"), QList<QVariant>() << 0x9C);
 		comboBox->addItem(tr("Sinus"), QList<QVariant>() << 0xD4);
 		comboBox->addItem(tr("Cosinus"), QList<QVariant>() << 0xD5);
 		return;
 	case 2:
-		comboBox->addItem(tr("Créer une fenêtre"), QList<QVariant>() << 0x50);
-		comboBox->addItem(tr("Redimensionner une fenêtre"), QList<QVariant>() << 0x2F);
-		comboBox->addItem(tr("Modifier le nombre de lignes dans fenêtre"), QList<QVariant>() << 0x55);
-		comboBox->addItem(tr("Déplacer une fenêtre"), QList<QVariant>() << 0x51);
-		comboBox->addItem(tr("Modifier type de fenêtre"), QList<QVariant>() << 0x52);
-		comboBox->addItem(tr("Remettre une fenêtre à zéro"), QList<QVariant>() << 0x53);
-		comboBox->addItem(tr("Fermer une fenêtre (1)"), QList<QVariant>() << 0x2E);
-		comboBox->addItem(tr("Fermer une fenêtre (2)"), QList<QVariant>() << 0x54);
+		comboBox->addItem(tr("Window creation"), QList<QVariant>() << 0x50);
+		comboBox->addItem(tr("Resizes/Repositions a window"), QList<QVariant>() << 0x2F);
+		comboBox->addItem(tr("Set line count in window"), QList<QVariant>() << 0x55);
+		comboBox->addItem(tr("Move a window"), QList<QVariant>() << 0x51);
+		comboBox->addItem(tr("Set window type"), QList<QVariant>() << 0x52);
+		comboBox->addItem(tr("Reset a window"), QList<QVariant>() << 0x53);
+		comboBox->addItem(tr("Close a window (1)"), QList<QVariant>() << 0x2E);
+		comboBox->addItem(tr("Close a window (2)"), QList<QVariant>() << 0x54);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Mettre un compteur dans fenêtre"), QList<QVariant>() << 0x36);
-		comboBox->addItem(tr("Modifier valeur du compteur dans fenêtre"), QList<QVariant>() << 0x37);
-		comboBox->addItem(tr("Compte à rebours"), QList<QVariant>() << 0x38);
-		comboBox->addItem(tr("Modifier variable dans fenêtre (8 bits)"), QList<QVariant>() << 0x41);
-		comboBox->addItem(tr("Modifier variable dans fenêtre (16 bits)"), QList<QVariant>() << 0x42);
+		comboBox->addItem(tr("Numerical Display"), QList<QVariant>() << 0x36);
+		comboBox->addItem(tr("Set window variable (16-bit)"), QList<QVariant>() << 0x37);
+		comboBox->addItem(tr("Countdown"), QList<QVariant>() << 0x38);
+		comboBox->addItem(tr("Set window variable (8-bit)"), QList<QVariant>() << 0x41);
+		comboBox->addItem(tr("Set window variable (16-bit)"), QList<QVariant>() << 0x42);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Afficher texte"), QList<QVariant>() << 0x40);
-		comboBox->addItem(tr("Poser une question"), QList<QVariant>() << 0x48);
+		comboBox->addItem(tr("Set window Text"), QList<QVariant>() << 0x40);
+		comboBox->addItem(tr("Ask Question"), QList<QVariant>() << 0x48);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Modifier le nom du lieu"), QList<QVariant>() << 0x43);
-		comboBox->addItem(tr("Activer/Désactiver menu"), QList<QVariant>() << 0x4A);
-		comboBox->addItem(tr("Obtenir la couleur d'une fenêtre"), QList<QVariant>() << 0x56);
-		comboBox->addItem(tr("Changer la couleur d'une fenêtre"), QList<QVariant>() << 0x57);
+		comboBox->addItem(tr("Set map name"), QList<QVariant>() << 0x43);
+		comboBox->addItem(tr("Enable/Disable menu"), QList<QVariant>() << 0x4A);
+		comboBox->addItem(tr("Get window color"), QList<QVariant>() << 0x56);
+		comboBox->addItem(tr("Set window color"), QList<QVariant>() << 0x57);
 		return;
 	case 3:
-		comboBox->addItem(tr("HP/MP restaurés (1)"), QList<QVariant>() << 0x3C);
-		comboBox->addItem(tr("HP/MP restaurés (2)"), QList<QVariant>() << 0x3D);
-		comboBox->addItem(tr("HP/MP/statut restaurés"), QList<QVariant>() << 0x3E);
-		comboBox->addItem(tr("HP/MP restaurés (3)"), QList<QVariant>() << 0x3F);
+		comboBox->addItem(tr("HP/MP Maximum (1)"), QList<QVariant>() << 0x3C);
+		comboBox->addItem(tr("HP/MP Maximum (2)"), QList<QVariant>() << 0x3D);
+		comboBox->addItem(tr("HP/MP Maximum with Status Clear"), QList<QVariant>() << 0x3E);
+		comboBox->addItem(tr("HP/MP Maximum (3)"), QList<QVariant>() << 0x3F);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Augmenter les MPs"), QList<QVariant>() << 0x45);
-		comboBox->addItem(tr("Diminuer les MPs"), QList<QVariant>() << 0x47);
-		comboBox->addItem(tr("Augmenter les HPs"), QList<QVariant>() << 0x4D);
-		comboBox->addItem(tr("Diminuer les HPs"), QList<QVariant>() << 0x4F);
-		comboBox->addItem(tr("Ajouter des gils"), QList<QVariant>() << 0x39);
-		comboBox->addItem(tr("Retirer des gils"), QList<QVariant>() << 0x3A);
-		comboBox->addItem(tr("Quantité d'argent"), QList<QVariant>() << 0x3B);
-		comboBox->addItem(tr("Ajouter objet"), QList<QVariant>() << 0x58);
-		comboBox->addItem(tr("Retirer objet"), QList<QVariant>() << 0x59);
-		comboBox->addItem(tr("Quantité d'objets"), QList<QVariant>() << 0x5A);
-		comboBox->addItem(tr("Ajouter Matéria"), QList<QVariant>() << 0x5B);
-		comboBox->addItem(tr("Retirer Matéria"), QList<QVariant>() << 0x5C);
-		comboBox->addItem(tr("Quantité de Matérias"), QList<QVariant>() << 0x5D);
+		comboBox->addItem(tr("Increase MP"), QList<QVariant>() << 0x45);
+		comboBox->addItem(tr("Decrease MP"), QList<QVariant>() << 0x47);
+		comboBox->addItem(tr("Increase HP"), QList<QVariant>() << 0x4D);
+		comboBox->addItem(tr("Decrease HP"), QList<QVariant>() << 0x4F);
+		comboBox->addItem(tr("Add gil"), QList<QVariant>() << 0x39);
+		comboBox->addItem(tr("Remove gil"), QList<QVariant>() << 0x3A);
+		comboBox->addItem(tr("Amount of gil"), QList<QVariant>() << 0x3B);
+		comboBox->addItem(tr("Add Item"), QList<QVariant>() << 0x58);
+		comboBox->addItem(tr("Remove item"), QList<QVariant>() << 0x59);
+		comboBox->addItem(tr("Amount of item"), QList<QVariant>() << 0x5A);
+		comboBox->addItem(tr("Add Materia"), QList<QVariant>() << 0x5B);
+		comboBox->addItem(tr("Remove Materia"), QList<QVariant>() << 0x5C);
+		comboBox->addItem(tr("Amount of Materia"), QList<QVariant>() << 0x5D);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Nouvelle équipe"), QList<QVariant>() << 0xCA);
-		comboBox->addItem(tr("Ajouter un personnage"), QList<QVariant>() << 0xC8);
-		comboBox->addItem(tr("Retirer un personnage"), QList<QVariant>() << 0xC9);
-		comboBox->addItem(tr("Sauvegarder l'équipe"), QList<QVariant>() << 0x0A);
-		comboBox->addItem(tr("Restaurer l'équipe"), QList<QVariant>() << 0x0B);
-		comboBox->addItem(tr("Créer/effacer personnage"), QList<QVariant>() << 0xCD);
-		comboBox->addItem(tr("Bloquer personnage"), QList<QVariant>() << 0xCE);
-		comboBox->addItem(tr("Débloquer personnage"), QList<QVariant>() << 0xCF);
+		comboBox->addItem(tr("Party Change"), QList<QVariant>() << 0xCA);
+		comboBox->addItem(tr("Add Character to the party"), QList<QVariant>() << 0xC8);
+		comboBox->addItem(tr("Remove Character from the party"), QList<QVariant>() << 0xC9);
+		comboBox->addItem(tr("Save party"), QList<QVariant>() << 0x0A);
+		comboBox->addItem(tr("Load party"), QList<QVariant>() << 0x0B);
+		comboBox->addItem(tr("Create/Delete character"), QList<QVariant>() << 0xCD);
+		comboBox->addItem(tr("Lock character"), QList<QVariant>() << 0xCE);
+		comboBox->addItem(tr("Unlock character"), QList<QVariant>() << 0xCF);
 		return;
 	case 4:
-		comboBox->addItem(tr("Définir objet 3D"), QList<QVariant>() << 0xA1);
-		comboBox->addItem(tr("Affecter personnage à objet 3D"), QList<QVariant>() << 0xA0);
-		comboBox->addItem(tr("Prendre le contrôle d'un groupe"), QList<QVariant>() << 0xBF);
+		comboBox->addItem(tr("Set Field Model"), QList<QVariant>() << 0xA1);
+		comboBox->addItem(tr("Set character to Field Model"), QList<QVariant>() << 0xA0);
+		comboBox->addItem(tr("Group control"), QList<QVariant>() << 0xBF);
 		comboBox->insertSeparator(comboBox->count());//Get
-		comboBox->addItem(tr("Obtenir la direction d'un groupe (Dir)"), QList<QVariant>() << 0xB7);
-		comboBox->addItem(tr("Obtenir la direction d'un équipier (Dir)"), QList<QVariant>() << 0x73);
-		comboBox->addItem(tr("Obtenir le triangle id d'un groupe (I)"), QList<QVariant>() << 0xB9);
-		comboBox->addItem(tr("Obtenir le triangle id d'un équipier (I)"), QList<QVariant>() << 0x74);
-		comboBox->addItem(tr("Obtenir les coordonnées d'un groupe (X,Y)"), QList<QVariant>() << 0xB8);
-		comboBox->addItem(tr("Obtenir les coordonnées d'un groupe (X,Y,Z,I)"), QList<QVariant>() << 0xC1);
-		comboBox->addItem(tr("Obtenir les coordonnées d'un équipier (X,Y,Z,I)"), QList<QVariant>() << 0x75);
-		comboBox->insertSeparator(comboBox->count());//placer
-		comboBox->addItem(tr("Placer (X,Y,Z)"), QList<QVariant>() << 0xA7);
-		comboBox->addItem(tr("Placer (X,Y,I)"), QList<QVariant>() << 0xA6);
-		comboBox->addItem(tr("Placer (X,Y,Z,I)"), QList<QVariant>() << 0xA5);
-		comboBox->addItem(tr("Placer (Dir)"), QList<QVariant>() << 0xB3);
-		comboBox->insertSeparator(comboBox->count());//déplacer
-		comboBox->addItem(tr("Déplacer"), QList<QVariant>() << 0xA8);
-		comboBox->addItem(tr("Déplacer sans animation"), QList<QVariant>() << 0xAD);
-		comboBox->addItem(tr("Déplacer sans animation ni rotation"), QList<QVariant>() << 0xA9);
-		comboBox->addItem(tr("Déplacer vers un groupe"), QList<QVariant>() << 0xAA);
-		comboBox->addItem(tr("Déplacer vers un équipier"), QList<QVariant>() << 0x2A);
+		comboBox->addItem(tr("Get Group Direction (Dir)"), QList<QVariant>() << 0xB7);
+		comboBox->addItem(tr("Get Party Member Direction (Dir)"), QList<QVariant>() << 0x73);
+		comboBox->addItem(tr("Get Group Triangle ID (I)"), QList<QVariant>() << 0xB9);
+		comboBox->addItem(tr("Get Party Member Triangle ID (I)"), QList<QVariant>() << 0x74);
+		comboBox->addItem(tr("Get Group coordinates (X,Y)"), QList<QVariant>() << 0xB8);
+		comboBox->addItem(tr("Get Group coordinates (X,Y,Z,I)"), QList<QVariant>() << 0xC1);
+		comboBox->addItem(tr("Get Party coordinates (X,Y,Z,I)"), QList<QVariant>() << 0x75);
+		comboBox->insertSeparator(comboBox->count());//Place
+		comboBox->addItem(tr("Place (X,Y,Z)"), QList<QVariant>() << 0xA7);
+		comboBox->addItem(tr("Place (X,Y,I)"), QList<QVariant>() << 0xA6);
+		comboBox->addItem(tr("Place (X,Y,Z,I)"), QList<QVariant>() << 0xA5);
+		comboBox->addItem(tr("Place (Dir)"), QList<QVariant>() << 0xB3);
+		comboBox->insertSeparator(comboBox->count());//Move
+		comboBox->addItem(tr("Move"), QList<QVariant>() << 0xA8);
+		comboBox->addItem(tr("Move without animation"), QList<QVariant>() << 0xAD);
+		comboBox->addItem(tr("Move without animation or rotation"), QList<QVariant>() << 0xA9);
+		comboBox->addItem(tr("Move to Group"), QList<QVariant>() << 0xAA);
+		comboBox->addItem(tr("Move to Party Member"), QList<QVariant>() << 0x2A);
 		comboBox->insertSeparator(comboBox->count());//rotation
-		comboBox->addItem(tr("Rotation"), QList<QVariant>() << 0xB4);
-		comboBox->addItem(tr("Rotation vers un groupe"), QList<QVariant>() << 0xB6);
-		comboBox->addItem(tr("Rotation vers un équipier"), QList<QVariant>() << 0x34);
-		comboBox->addItem(tr("Rotation inversée"), QList<QVariant>() << 0xB5);
-		comboBox->addItem(tr("Rotation inversée vers un groupe"), QList<QVariant>() << 0xAB);
-		comboBox->addItem(tr("Rotation inversée vers un équipier"), QList<QVariant>() << 0x35);
-		comboBox->addItem(tr("Attendre fin rotation"), QList<QVariant>() << 0xDE);
+		comboBox->addItem(tr("Turn"), QList<QVariant>() << 0xB4);
+		comboBox->addItem(tr("Direction to Group"), QList<QVariant>() << 0xB6);
+		comboBox->addItem(tr("Direction to Party Member"), QList<QVariant>() << 0x34);
+		comboBox->addItem(tr("Inversed Turn"), QList<QVariant>() << 0xB5);
+		comboBox->addItem(tr("Direction (inversed) to Group"), QList<QVariant>() << 0xAB);
+		comboBox->addItem(tr("Direction (inversed) to Party Member"), QList<QVariant>() << 0x35);
+		comboBox->addItem(tr("Wait for Turn"), QList<QVariant>() << 0xDE);
 		comboBox->insertSeparator(comboBox->count());//Animation
-		comboBox->addItem(tr("Jouer animation en boucle"), QList<QVariant>() << 0xA2);
-		comboBox->addItem(tr("Jouer animation (1)"), QList<QVariant>() << 0xAF);
-		comboBox->addItem(tr("Jouer animation (2)"), QList<QVariant>() << 0xBA);
-		comboBox->addItem(tr("Jouer animation et revenir (1)"), QList<QVariant>() << 0xA3);
-		comboBox->addItem(tr("Jouer animation et revenir (2)"), QList<QVariant>() << 0xAE);
-		comboBox->addItem(tr("Jouer partiellement animation (1)"), QList<QVariant>() << 0xB1);
-		comboBox->addItem(tr("Jouer partiellement animation (2)"), QList<QVariant>() << 0xBC);
-		comboBox->addItem(tr("Jouer partiellement animation et revenir (1)"), QList<QVariant>() << 0xB0);
-		comboBox->addItem(tr("Jouer partiellement animation et revenir (2)"), QList<QVariant>() << 0xBB);
-		comboBox->addItem(tr("Jouer animation Stand/Walk/Run"), QList<QVariant>() << 0xDC);
-		comboBox->addItem(tr("Jouer animation du saut"), QList<QVariant>() << 0xC0);
-		comboBox->addItem(tr("Jouer animation de l'échelle"), QList<QVariant>() << 0xC2);
-		comboBox->addItem(tr("Rejoindre le leader"), QList<QVariant>() << 0x08);
-		comboBox->addItem(tr("Séparer les membres de l'équipe"), QList<QVariant>() << 0x09);
-		comboBox->addItem(tr("Arrêter animation"), QList<QVariant>() << 0xDD);
-		comboBox->addItem(tr("Attendre fin animation"), QList<QVariant>() << 0xAC);
-		comboBox->insertSeparator(comboBox->count());//Filtre graphique KAWAI
-		comboBox->addItem(tr("Filtre graphique - OEil ouvert/fermé"), QList<QVariant>() << 0x0028);
-		comboBox->addItem(tr("Filtre graphique - Activer/Désactiver transparence"), QList<QVariant>() << 0x0128);
-		comboBox->addItem(tr("Filtre graphique - AMBNT"), QList<QVariant>() << 0x0228);
-		comboBox->addItem(tr("Filtre graphique - ??? (1)"), QList<QVariant>() << 0x0328);
-		comboBox->addItem(tr("Filtre graphique - ??? (2)"), QList<QVariant>() << 0x0428);
-		comboBox->addItem(tr("Filtre graphique - ??? (3)"), QList<QVariant>() << 0x0528);
-		comboBox->addItem(tr("Filtre graphique - LIGHT"), QList<QVariant>() << 0x0628);
-		comboBox->addItem(tr("Filtre graphique - ??? (4)"), QList<QVariant>() << 0x0728);
-		comboBox->addItem(tr("Filtre graphique - ??? (5)"), QList<QVariant>() << 0x0828);
-		comboBox->addItem(tr("Filtre graphique - ??? (6)"), QList<QVariant>() << 0x0928);
-		comboBox->addItem(tr("Filtre graphique - SBOBJ"), QList<QVariant>() << 0x0A28);
-		comboBox->addItem(tr("Filtre graphique - ??? (7)"), QList<QVariant>() << 0x0B28);
-		comboBox->addItem(tr("Filtre graphique - ??? (8)"), QList<QVariant>() << 0x0C28);
-		comboBox->addItem(tr("Filtre graphique - SHINE"), QList<QVariant>() << 0x0D28);
-		comboBox->addItem(tr("Filtre graphique - RESET"), QList<QVariant>() << 0xFF28);
-		comboBox->addItem(tr("Attendre fin filtre graphique"), QList<QVariant>() << 0x29);
+		comboBox->addItem(tr("Play animation (loop)"), QList<QVariant>() << 0xA2);
+		comboBox->addItem(tr("Play animation (1)"), QList<QVariant>() << 0xAF);
+		comboBox->addItem(tr("Play animation (2)"), QList<QVariant>() << 0xBA);
+		comboBox->addItem(tr("Play animation and return (1)"), QList<QVariant>() << 0xA3);
+		comboBox->addItem(tr("Play animation and return (2)"), QList<QVariant>() << 0xAE);
+		comboBox->addItem(tr("Play partial animation (1)"), QList<QVariant>() << 0xB1);
+		comboBox->addItem(tr("Play partial animation (2)"), QList<QVariant>() << 0xBC);
+		comboBox->addItem(tr("Play partial animation and return (1)"), QList<QVariant>() << 0xB0);
+		comboBox->addItem(tr("Play partial animation and return (2)"), QList<QVariant>() << 0xBB);
+		comboBox->addItem(tr("Play Stand/Walk/Run animation"), QList<QVariant>() << 0xDC);
+		comboBox->addItem(tr("Play jump animation"), QList<QVariant>() << 0xC0);
+		comboBox->addItem(tr("Play climb animation"), QList<QVariant>() << 0xC2);
+		comboBox->addItem(tr("Party field join"), QList<QVariant>() << 0x08);
+		comboBox->addItem(tr("Party field split"), QList<QVariant>() << 0x09);
+		comboBox->addItem(tr("Stop animation"), QList<QVariant>() << 0xDD);
+		comboBox->addItem(tr("Wait for animation"), QList<QVariant>() << 0xAC);
+		comboBox->insertSeparator(comboBox->count());//Character Graphics KAWAI
+		comboBox->addItem(tr("Character Graphics - Eye open/close"), QList<QVariant>() << 0x0028);
+		comboBox->addItem(tr("Character Graphics - Activate/Deactivate blending"), QList<QVariant>() << 0x0128);
+		comboBox->addItem(tr("Character Graphics - ??? - AMBNT"), QList<QVariant>() << 0x0228);
+		comboBox->addItem(tr("Character Graphics - ??? (1)"), QList<QVariant>() << 0x0328);
+		comboBox->addItem(tr("Character Graphics - ??? (2)"), QList<QVariant>() << 0x0428);
+		comboBox->addItem(tr("Character Graphics - ??? (3)"), QList<QVariant>() << 0x0528);
+		comboBox->addItem(tr("Character Graphics - LIGHT"), QList<QVariant>() << 0x0628);
+		comboBox->addItem(tr("Character Graphics - ??? (4)"), QList<QVariant>() << 0x0728);
+		comboBox->addItem(tr("Character Graphics - ??? (5)"), QList<QVariant>() << 0x0828);
+		comboBox->addItem(tr("Character Graphics - ??? (6)"), QList<QVariant>() << 0x0928);
+		comboBox->addItem(tr("Character Graphics - SBOBJ"), QList<QVariant>() << 0x0A28);
+		comboBox->addItem(tr("Character Graphics - ??? (7)"), QList<QVariant>() << 0x0B28);
+		comboBox->addItem(tr("Character Graphics - ??? (8)"), QList<QVariant>() << 0x0C28);
+		comboBox->addItem(tr("Character Graphics - SHINE"), QList<QVariant>() << 0x0D28);
+		comboBox->addItem(tr("Character Graphics - RESET"), QList<QVariant>() << 0xFF28);
+		comboBox->addItem(tr("Wait For Character Graphics"), QList<QVariant>() << 0x29);
 		comboBox->insertSeparator(comboBox->count());//offset Object
 		comboBox->addItem(tr("OFST"), QList<QVariant>() << 0xC3);
 		comboBox->addItem(tr("OFSTW"), QList<QVariant>() << 0xC4);
-		comboBox->insertSeparator(comboBox->count());//paramètres
-		comboBox->addItem(tr("Vitesse déplacements"), QList<QVariant>() << 0xB2);
-		comboBox->addItem(tr("Vitesse animations"),QList<QVariant>() <<  0xBD);
-		comboBox->addItem(tr("Cacher/Afficher objet 3D"), QList<QVariant>() << 0xA4);
-		comboBox->addItem(tr("Activer/Désactiver rotation"), QList<QVariant>() << 0xDB);
-		comboBox->addItem(tr("Cligner des yeux"), QList<QVariant>() << 0x26);
-		comboBox->addItem(tr("Activer/désactiver parler"), QList<QVariant>() << 0x7E);
-		comboBox->addItem(tr("Activer/désactiver toucher"), QList<QVariant>() << 0xC7);
-		comboBox->addItem(tr("Distance pour parler (8 bits)"), QList<QVariant>() << 0xC5);
-		comboBox->addItem(tr("Distance pour toucher (8 bits)"), QList<QVariant>() << 0xC6);
-		comboBox->addItem(tr("Distance pour parler (16 bits)"), QList<QVariant>() << 0xD6);
-		comboBox->addItem(tr("Distance pour toucher (16 bits)"), QList<QVariant>() << 0xD7);
+		comboBox->insertSeparator(comboBox->count());//paramÃ¨tres
+		comboBox->addItem(tr("Movement Speed"), QList<QVariant>() << 0xB2);
+		comboBox->addItem(tr("Animation Speed"),QList<QVariant>() <<  0xBD);
+		comboBox->addItem(tr("Hide/Display Field Model"), QList<QVariant>() << 0xA4);
+		comboBox->addItem(tr("Enable/Disable rotation"), QList<QVariant>() << 0xDB);
+		comboBox->addItem(tr("Character Blink"), QList<QVariant>() << 0x26);
+		comboBox->addItem(tr("Talk On/Off"), QList<QVariant>() << 0x7E);
+		comboBox->addItem(tr("Contact On/Off"), QList<QVariant>() << 0xC7);
+		comboBox->addItem(tr("Talk Range (8-bit)"), QList<QVariant>() << 0xC5);
+		comboBox->addItem(tr("Contact range (8-bit)"), QList<QVariant>() << 0xC6);
+		comboBox->addItem(tr("Talk Range (16-bit)"), QList<QVariant>() << 0xD6);
+		comboBox->addItem(tr("Contact range (16-bit)"), QList<QVariant>() << 0xD7);
 		return;
 	case 5:
-		comboBox->addItem(tr("Créer zone"), QList<QVariant>() << 0xD0);
-		comboBox->addItem(tr("Modifier zone"), QList<QVariant>() << 0xD3);
-		comboBox->addItem(tr("Activer/Désactiver zone"), QList<QVariant>() << 0xD1);
-		comboBox->addItem(tr("Activer/Désactiver triangle"), QList<QVariant>() << 0x6D);
+		comboBox->addItem(tr("Create location"), QList<QVariant>() << 0xD0);
+		comboBox->addItem(tr("Set location"), QList<QVariant>() << 0xD3);
+		comboBox->addItem(tr("Location On/Off"), QList<QVariant>() << 0xD1);
+		comboBox->addItem(tr("Triangle On/Off"), QList<QVariant>() << 0x6D);
 		comboBox->insertSeparator(comboBox->count());//???
 		comboBox->addItem(tr("SLIP"), QList<QVariant>() << 0x2B);
 		return;
 	case 6:
-		comboBox->addItem(tr("Déplacer une couche du décor (Z)"), QList<QVariant>() << 0x2C);
-		comboBox->addItem(tr("Animer une couche du décor"), QList<QVariant>() << 0x2D);
-		comboBox->addItem(tr("Afficher un état d'un paramètre"), QList<QVariant>() << 0xE0);
-		comboBox->addItem(tr("Cacher un état d'un paramètre"), QList<QVariant>() << 0xE1);
-		comboBox->addItem(tr("Afficher l'état suivant d'un paramètre"), QList<QVariant>() << 0xE2);
-		comboBox->addItem(tr("Afficher l'état précédent d'un paramètre"), QList<QVariant>() << 0xE3);
-		comboBox->addItem(tr("Cacher un paramètre"), QList<QVariant>() << 0xE4);
+		comboBox->addItem(tr("Move background Z layer"), QList<QVariant>() << 0x2C);
+		comboBox->addItem(tr("Animate background layer"), QList<QVariant>() << 0x2D);
+		comboBox->addItem(tr("Show a background state"), QList<QVariant>() << 0xE0);
+		comboBox->addItem(tr("Hide background state"), QList<QVariant>() << 0xE1);
+		comboBox->addItem(tr("Show next background state"), QList<QVariant>() << 0xE2);
+		comboBox->addItem(tr("Show previous background state"), QList<QVariant>() << 0xE3);
+		comboBox->addItem(tr("Hide background parameters"), QList<QVariant>() << 0xE4);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Store Palette"), QList<QVariant>() << 0xE5);
 		comboBox->addItem(tr("Store Palette (S)"), QList<QVariant>() << 0xEB);
@@ -567,24 +570,24 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Copy Palette (2)"), QList<QVariant>() << 0xED);
 		comboBox->addItem(tr("Partial Copy Palette"), QList<QVariant>() << 0xE8);
 		comboBox->addItem(tr("Partial Copy Palette (2)"), QList<QVariant>() << 0xEE);
-		comboBox->addItem(tr("Multiplier Palette"), QList<QVariant>() << 0xDF);
-		comboBox->addItem(tr("Multiplier Palette (2)"), QList<QVariant>() << 0xEA);
-		comboBox->addItem(tr("Additionner Palette"), QList<QVariant>() << 0xE9);
-		comboBox->addItem(tr("Additionner Palette (2)"), QList<QVariant>() << 0xEF);
+		comboBox->addItem(tr("Multiply Palette"), QList<QVariant>() << 0xDF);
+		comboBox->addItem(tr("Multiply Palette (2)"), QList<QVariant>() << 0xEA);
+		comboBox->addItem(tr("Add Palette"), QList<QVariant>() << 0xE9);
+		comboBox->addItem(tr("Add Palette (2)"), QList<QVariant>() << 0xEF);
 		return;
 	case 7:
-		comboBox->addItem(tr("Centrer sur le personnage jouable"), QList<QVariant>() << 0x65);
-		comboBox->addItem(tr("Centrer sur personnage"), QList<QVariant>() << 0x6F);
-		comboBox->addItem(tr("Centrer sur groupe"), QList<QVariant>() << 0x63);
+		comboBox->addItem(tr("Scroll to playable character"), QList<QVariant>() << 0x65);
+		comboBox->addItem(tr("Scroll to party member"), QList<QVariant>() << 0x6F);
+		comboBox->addItem(tr("Scroll to group"), QList<QVariant>() << 0x63);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Centrer (X,Y)"), QList<QVariant>() << 0x64);
-		comboBox->addItem(tr("Centrer (X,Y,Vitesse amortie)"), QList<QVariant>() << 0x66);
-		comboBox->addItem(tr("Centrer (X,Y,Vitesse linéaire)"), QList<QVariant>() << 0x68);
+		comboBox->addItem(tr("Scroll (X,Y)"), QList<QVariant>() << 0x64);
+		comboBox->addItem(tr("Scroll (X,Y,Smooth)"), QList<QVariant>() << 0x66);
+		comboBox->addItem(tr("Scroll (X,Y,Linear)"), QList<QVariant>() << 0x68);
 		comboBox->addItem(tr("SCRLO"), QList<QVariant>() << 0x61);
 		comboBox->addItem(tr("SCRLC"), QList<QVariant>() << 0x62);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Secouer l'écran"), QList<QVariant>() << 0x5E);
-		comboBox->addItem(tr("Attendre fin centrage"), QList<QVariant>() << 0x67);
+		comboBox->addItem(tr("Shake"), QList<QVariant>() << 0x5E);
+		comboBox->addItem(tr("Wait for scroll"), QList<QVariant>() << 0x67);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("VWOFT"), QList<QVariant>() << 0x6A);
 		comboBox->addItem(tr("FADE"), QList<QVariant>() << 0x6B);
@@ -592,53 +595,53 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("NFADE"), QList<QVariant>() << 0x25);
 		return;
 	case 8:
-		comboBox->addItem(tr("Jouer son"), QList<QVariant>() << 0xF1);
-		comboBox->addItem(tr("AKAO"), QList<QVariant>() << 0xF2);
-		comboBox->addItem(tr("AKAO2"), QList<QVariant>() << 0xDA);
+		comboBox->addItem(tr("Play sound"), QList<QVariant>() << 0xF1);
+		comboBox->addItem(tr("Alter sound (8-bit)"), QList<QVariant>() << 0xF2);
+		comboBox->addItem(tr("Alter sound (16-bit)"), QList<QVariant>() << 0xDA);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Jouer musique"), QList<QVariant>() << 0xF0);
+		comboBox->addItem(tr("Play music"), QList<QVariant>() << 0xF0);
 		comboBox->addItem(tr("MUSVT"), QList<QVariant>() << 0xF3);
 		comboBox->addItem(tr("MUSVM"), QList<QVariant>() << 0xF4);
-		comboBox->addItem(tr("Activer/Désactiver musique"), QList<QVariant>() << 0xF5);
-		comboBox->addItem(tr("Musique de combat"), QList<QVariant>() << 0xF6);
+		comboBox->addItem(tr("Music On/Off"), QList<QVariant>() << 0xF5);
+		comboBox->addItem(tr("Battle music"), QList<QVariant>() << 0xF6);
 		comboBox->addItem(tr("CHMPH"), QList<QVariant>() << 0xF7);
 		comboBox->addItem(tr("CHMST"), QList<QVariant>() << 0xFE);
 		comboBox->addItem(tr("FMUSC"), QList<QVariant>() << 0xFC);
 		comboBox->addItem(tr("CMUSC"), QList<QVariant>() << 0xFD);
 		comboBox->insertSeparator(comboBox->count());
-		comboBox->addItem(tr("Prochaine cinématique"), QList<QVariant>() << 0xF8);
-		comboBox->addItem(tr("Jouer cinématique"), QList<QVariant>() << 0xF9);
+		comboBox->addItem(tr("Set next movie"), QList<QVariant>() << 0xF8);
+		comboBox->addItem(tr("Play movie"), QList<QVariant>() << 0xF9);
 		comboBox->addItem(tr("MVIEF"), QList<QVariant>() << 0xFA);
 		comboBox->addItem(tr("MVCAM"), QList<QVariant>() << 0xFB);
 		comboBox->addItem(tr("BGMOVIE"), QList<QVariant>() << 0x27);
 		return;
 	case 9:
-		comboBox->addItem(tr("Lancer un tutoriel"), QList<QVariant>() << 0x21);
-		comboBox->addItem(tr("Afficher menu"), QList<QVariant>() << 0x49);
-		comboBox->addItem(tr("Changer de disque"), QList<QVariant>() << 0x0E);
-		comboBox->addItem(tr("Mini-jeu"), QList<QVariant>() << 0x20);
-		comboBox->addItem(tr("Résultat du dernier combat"), QList<QVariant>() << 0x23);
-		comboBox->addItem(tr("Table de combat"), QList<QVariant>() << 0x4B);
-		comboBox->addItem(tr("Changer d'écran"), QList<QVariant>() << 0x60);
-		comboBox->addItem(tr("ID de l'écran précédent"), QList<QVariant>() << 0x6E);
-		comboBox->addItem(tr("Combattre"), QList<QVariant>() << 0x70);
-		comboBox->addItem(tr("Activer/désactiver les combats"), QList<QVariant>() << 0x71);
-		comboBox->addItem(tr("Mode de combat"), QList<QVariant>() << 0x72);
-		comboBox->addItem(tr("Mode de combat (2)"), QList<QVariant>() << 0x22);
-		comboBox->addItem(tr("Activer/désactiver les changements d'écran"), QList<QVariant>() << 0xD2);
-		comboBox->addItem(tr("Activer/Désactiver déplacements"), QList<QVariant>() << 0x33);
-		comboBox->addItem(tr("Précharger un écran"), QList<QVariant>() << 0xD8);
+		comboBox->addItem(tr("Play tutorial"), QList<QVariant>() << 0x21);
+		comboBox->addItem(tr("Display a menu"), QList<QVariant>() << 0x49);
+		comboBox->addItem(tr("Disc change screen"), QList<QVariant>() << 0x0E);
+		comboBox->addItem(tr("Minigame"), QList<QVariant>() << 0x20);
+		comboBox->addItem(tr("Battle result load"), QList<QVariant>() << 0x23);
+		comboBox->addItem(tr("Battle Table"), QList<QVariant>() << 0x4B);
+		comboBox->addItem(tr("Change Field"), QList<QVariant>() << 0x60);
+		comboBox->addItem(tr("Last Map ID"), QList<QVariant>() << 0x6E);
+		comboBox->addItem(tr("Start Battle"), QList<QVariant>() << 0x70);
+		comboBox->addItem(tr("Battle On/Off"), QList<QVariant>() << 0x71);
+		comboBox->addItem(tr("Battle mode"), QList<QVariant>() << 0x72);
+		comboBox->addItem(tr("Battle mode (2)"), QList<QVariant>() << 0x22);
+		comboBox->addItem(tr("Map Jump On/Off"), QList<QVariant>() << 0xD2);
+		comboBox->addItem(tr("Character movability On/Off"), QList<QVariant>() << 0x33);
+		comboBox->addItem(tr("Preload field Map"), QList<QVariant>() << 0xD8);
 		comboBox->addItem(tr("PMJMP2"), QList<QVariant>() << 0xD9);
 		comboBox->addItem(tr("Game Over"), QList<QVariant>() << 0xFF);
-		comboBox->addItem(tr("SPECIAL - Activer/Désactiver curseur"), QList<QVariant>() << 0xF50F);
+		comboBox->addItem(tr("SPECIAL - Cursor On/Off"), QList<QVariant>() << 0xF50F);
 		comboBox->addItem(tr("SPECIAL - PNAME"), QList<QVariant>() << 0xF60F);
-		comboBox->addItem(tr("SPECIAL - Vitesse du jeu"), QList<QVariant>() << 0xF70F);
-		comboBox->addItem(tr("SPECIAL - Vitesse des message"), QList<QVariant>() << 0xF80F);
+		comboBox->addItem(tr("SPECIAL - Game Speed"), QList<QVariant>() << 0xF70F);
+		comboBox->addItem(tr("SPECIAL - Messages Speed"), QList<QVariant>() << 0xF80F);
 		comboBox->addItem(tr("SPECIAL - Full Materia"), QList<QVariant>() << 0xF90F);
 		comboBox->addItem(tr("SPECIAL - Full Item"), QList<QVariant>() << 0xFA0F);
-		comboBox->addItem(tr("SPECIAL - Activer/Désactiver combats"), QList<QVariant>() << 0xFB0F);
-		comboBox->addItem(tr("SPECIAL - Activer/Désactiver mouvements"), QList<QVariant>() << 0xFC0F);
-		comboBox->addItem(tr("SPECIAL - Renommer personnage"), QList<QVariant>() << 0xFD0F);
+		comboBox->addItem(tr("SPECIAL - Battle On/Off"), QList<QVariant>() << 0xFB0F);
+		comboBox->addItem(tr("SPECIAL - Character movability On/Off"), QList<QVariant>() << 0xFC0F);
+		comboBox->addItem(tr("SPECIAL - Rename character"), QList<QVariant>() << 0xFD0F);
 		comboBox->addItem(tr("SPECIAL - Clear Game"), QList<QVariant>() << 0xFE0F);
 		comboBox->addItem(tr("SPECIAL - Clear Items"), QList<QVariant>() << 0xFF0F);
 		return;

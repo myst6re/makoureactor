@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -190,8 +190,11 @@ bool FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
 {
 	if(modelCount() < maxModelCount()) {
 		QList<QRgb> color;
-		if(!colors.isEmpty())
+		if(!colors.isEmpty()) {
 			color = colors.first();
+		} else {
+			color = QVector<QRgb>(10, Qt::black).toList();
+		}
 
 		model_unknown.insert(modelID, (quint16)0);
 		model_nameChar.insert(modelID, QString());

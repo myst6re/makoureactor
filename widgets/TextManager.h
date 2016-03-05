@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -38,6 +38,8 @@ public:
 	int currentAnchorPosition() const;
 signals:
 	void modified();
+public slots:
+	void updateFromScripts();
 private slots:
 	void selectText(QListWidgetItem *, QListWidgetItem *previous=0);
 	void showList();

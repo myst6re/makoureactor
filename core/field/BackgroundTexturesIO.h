@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -28,11 +28,11 @@ public:
 	explicit BackgroundTexturesIO(QIODevice *device);
 	virtual ~BackgroundTexturesIO() {}
 
-	virtual bool read(BackgroundTextures *textures) {
+	virtual bool read(BackgroundTextures *textures) const {
 		Q_UNUSED(textures)
 		return false;
 	}
-	virtual bool write(const BackgroundTextures *textures) {
+	virtual bool write(const BackgroundTextures *textures) const {
 		Q_UNUSED(textures)
 		return false;
 	}
@@ -42,16 +42,22 @@ class BackgroundTexturesIOPC : public BackgroundTexturesIO
 {
 public:
 	explicit BackgroundTexturesIOPC(QIODevice *device);
-	bool read(BackgroundTexturesPC *textures);
-	bool write(const BackgroundTexturesPC *textures);
+	bool read(BackgroundTexturesPC *textures) const;
+	bool write(const BackgroundTexturesPC *textures) const;
+private:
+	using BackgroundTexturesIO::read; // Hide parent read()
+	using BackgroundTexturesIO::write; // Hide parent write()
 };
 
 class BackgroundTexturesIOPS : public BackgroundTexturesIO
 {
 public:
 	explicit BackgroundTexturesIOPS(QIODevice *device);
-	bool read(BackgroundTexturesPS *textures);
-	bool write(const BackgroundTexturesPS *textures);
+	bool read(BackgroundTexturesPS *textures) const;
+	bool write(const BackgroundTexturesPS *textures) const;
+private:
+	using BackgroundTexturesIO::read; // Hide parent read()
+	using BackgroundTexturesIO::write; // Hide parent write()
 };
 
 #endif // BACKGROUNDTEXTURESIO_H

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ bool Var::load()
 		QString line;
 		QStringList liste;
 		bool ok;
-		int bank, adress;
+		int address;
 		forever
 		{
 			line = QString(fic.readLine());
@@ -81,19 +81,19 @@ bool Var::load()
 			liste = line.split(QChar('|'));
 			if(liste.size() != 3)		return false;
 			
-			bank = liste.at(0).toInt(&ok);
+			int bank = liste.at(0).toInt(&ok);
 			if(!ok)						return false;
 			if(bank<1 || bank>15)		continue;
 			
-			adress = liste.at(1).toInt(&ok);
+			address = liste.at(1).toInt(&ok);
 			if(!ok)						return false;
-			if(adress<0 || adress>255)	continue;
+			if(address<0 || address>255)	continue;
 			
 			line = liste.at(2);
 			if(line.isEmpty())			return false;
-			if(line.size()>50)			line = line.left(50);
+			if(line.size()>255)			line = line.left(255);
 			
-			set(bank, adress, line.simplified());
+			set(bank, address, line.simplified());
 		}
 		fic.close();
 
@@ -127,9 +127,9 @@ bool Var::save(const QMap<quint16, QString> &new_var_names)
 
 QMap<quint16, QString> Var::var_names;
 
-QString Var::name(quint8 bank, quint8 adress)
+QString Var::name(quint8 bank, quint8 address)
 {
-	return var_names.value(adress | (bank << 8), QString());//Retourne le nom de la variable s'il est listé, retourne "" sinon
+	return var_names.value(address | (bank << 8));
 }
 
 const QMap<quint16, QString> &Var::get()
@@ -137,17 +137,17 @@ const QMap<quint16, QString> &Var::get()
 	return var_names;
 }
 
-void Var::set(quint8 bank, quint8 adress, const QString &name)
+void Var::set(quint8 bank, quint8 address, const QString &name)
 {
-	var_names.insert(adress | (bank << 8), name);
+	var_names.insert(address | (bank << 8), name);
 }
 
-void Var::del(quint8 bank, quint8 adress)
+void Var::del(quint8 bank, quint8 address)
 {
-	var_names.remove(adress | (bank << 8));
+	var_names.remove(address | (bank << 8));
 }
 
-bool Var::exists(quint8 bank, quint8 adress)
+bool Var::exists(quint8 bank, quint8 address)
 {
-	return var_names.contains(adress | (bank << 8));
+	return var_names.contains(address | (bank << 8));
 }

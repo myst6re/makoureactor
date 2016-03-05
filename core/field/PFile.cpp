@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -43,46 +43,66 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 	Group group;
 	quint32 i;
 
-	if(device()->read((char *)&header, 128)!=128
-		|| header.version!=1 || header.off04!=1 || header.vertexType!=1)
+	if(device()->read((char *)&header, 128) != 128
+	        || header.version != 1 || header.off04 != 1
+	        || header.vertexType != 1) {
 		return false;
+	}
 
-	for(i=0 ; i<header.numVertices ; ++i) {
-		if(device()->read((char *)&vertex, 12)!=12)	return false;
+	for(i = 0 ; i < header.numVertices ; ++i) {
+		if(device()->read((char *)&vertex, 12) != 12) {
+			return false;
+		}
 		vertex.x = vertex.x / MODEL_SCALE_PC;
 		vertex.y = vertex.y / MODEL_SCALE_PC;
 		vertex.z = vertex.z / MODEL_SCALE_PC;
 		vertices.append(vertex);
 	}
 
-//	for(i=0 ; i<header.numNormals ; ++i) {
-//		if(device()->read((char *)&vertex, 12)!=12)	return false;
+//	for(i = 0 ; i < header.numNormals ; ++i) {
+//		if(device()->read((char *)&vertex, 12) != 12) {
+//			return false;
+//		}
 //		normals.append(vertex);
 //	}
 
-	device()->seek(device()->pos() + header.numNormals*12 + header.numUnknown1*12);
+	if(!device()->seek(device()->pos() + header.numNormals * 12 + header.numUnknown1 * 12)) {
+		return false;
+	}
 
-	for(i=0 ; i<header.numTexCs ; ++i) {
-		if(device()->read((char *)&texC, 8)!=8)	return false;
+	for(i = 0 ; i < header.numTexCs ; ++i) {
+		if(device()->read((char *)&texC, 8) != 8) {
+			return false;
+		}
 		texCs.append(texC);
 	}
 
-	for(i=0 ; i<header.numVertexColors ; ++i) {
-		if(device()->read((char *)&vertexColor, 4)!=4)	return false;
+	for(i = 0 ; i < header.numVertexColors ; ++i) {
+		if(device()->read((char *)&vertexColor, 4) != 4) {
+			return false;
+		}
 		vertexColors.append(vertexColor);
 	}
 
-	device()->seek(device()->pos()+(header.numPolys+header.numEdges)*4);
+	if(!device()->seek(device()->pos() + (header.numPolys + header.numEdges) * 4)) {
+		return false;
+	}
 
-	for(i=0 ; i<header.numPolys ; ++i) {
-		if(device()->read((char *)&poly, 24)!=24)	return false;
+	for(i = 0 ; i < header.numPolys ; ++i) {
+		if(device()->read((char *)&poly, 24) != 24) {
+			return false;
+		}
 		polys.append(poly);
 	}
 
-	device()->seek(device()->pos()+header.numHundreds*100);
+	if(!device()->seek(device()->pos() + header.numHundreds * 100)) {
+		return false;
+	}
 
-	for(i=0 ; i<header.numGroups ; ++i) {
-		if(device()->read((char *)&group, 56)!=56)	return false;
+	for(i = 0 ; i < header.numGroups ; ++i) {
+		if(device()->read((char *)&group, 56) != 56) {
+			return false;
+		}
 		groups.append(group);
 	}
 
@@ -93,19 +113,19 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 		FieldModelGroup *grp = new FieldModelGroup();
 
 		if(g.areTexturesUsed) {
-			if (g.textureNumber < quint32(texIds.size())) {
+			if(g.textureNumber < quint32(texIds.size())) {
 				// Convert relative group tex IDs to absolute tex IDs
 				grp->setTextureRef(new FieldModelTextureRefPC(texIds.at(g.textureNumber)));
 			}
 		}
 
-		for(quint32 polyID=0 ; polyID<g.numPolygons && g.polygonStartIndex + polyID < (quint32)polys.size() ; ++polyID) {
+		for(quint32 polyID = 0 ; polyID < g.numPolygons && g.polygonStartIndex + polyID < (quint32)polys.size() ; ++polyID) {
 			const PolygonP &poly = polys.at(g.polygonStartIndex + polyID);
 			QList<PolyVertex> polyVertices;
 			QList<QRgb> polyColors;
 			QList<TexCoord> polyTexCoords;
 
-			for(quint8 j=0 ; j<3 ; ++j) {
+			for(quint8 j = 0 ; j < 3 ; ++j) {
 				int vertexIndex = g.verticesStartIndex + poly.VertexIndex[j];
 
 				if(vertexIndex < vertices.size() &&

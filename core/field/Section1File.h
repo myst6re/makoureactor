@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 class GrpScriptsIterator : public QListIterator<GrpScript *>
 {
 public:
-	inline GrpScriptsIterator(const QList<GrpScript *> &list)
+	inline explicit GrpScriptsIterator(const QList<GrpScript *> &list)
 		: QListIterator<GrpScript *>(list), _scriptsIt(0) {}
 	GrpScriptsIterator(const GrpScriptsIterator &other);
 	virtual ~GrpScriptsIterator();
@@ -83,13 +83,13 @@ public:
 
 	void searchAllVars(QList<FF7Var> &vars) const;
 	bool searchOpcode(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
-	bool searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchMapJump(quint16 field, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchTextInScripts(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchText(const QRegExp &text, int &textID, int &from, int &size) const;
 	bool searchOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
-	bool searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchMapJumpP(quint16 mapJump, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchTextInScriptsP(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const;

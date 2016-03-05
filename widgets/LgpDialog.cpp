@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ LgpDirectoryItem *LgpItem::root()
 	while(current->parent()) {
 		current = current->parent();
 	}
-	return (LgpDirectoryItem *)current;
+	return static_cast<LgpDirectoryItem *>(current);
 }
 
 QString LgpItem::path() const
@@ -224,6 +224,76 @@ void LgpDirectoryItem::addChild(const QString &name, LgpFileItem *item)
 	}
 }
 
+void LgpDirectoryItem::sort(SortType type, Qt::SortOrder order)
+{
+	switch(type) {
+	case ByName:
+		switch(order) {
+		case Qt::AscendingOrder:
+			std::sort(_childs.begin(), _childs.end(), [](LgpItem *i1, LgpItem *i2) {
+				if(i1->isDirectory()) {
+					return true;
+				}
+				if(i2->isDirectory()) {
+					return false;
+				}
+				return i1->name() > i2->name();
+			});
+			break;
+		case Qt::DescendingOrder:
+			std::sort(_childs.begin(), _childs.end(), [](LgpItem *i1, LgpItem *i2) {
+				if(i1->isDirectory()) {
+					return false;
+				}
+				if(i2->isDirectory()) {
+					return true;
+				}
+				return i1->name() < i2->name();
+			});
+			break;
+		}
+
+		break;
+	case BySize:
+		switch(order) {
+		case Qt::AscendingOrder:
+			std::sort(_childs.begin(), _childs.end(), [](LgpItem *i1, LgpItem *i2) {
+				if(i1->isDirectory() && i2->isDirectory()) {
+					return i1->name() > i2->name();
+				}
+				if(i1->isDirectory()) {
+					return true;
+				}
+				if(i2->isDirectory()) {
+					return false;
+				}
+				LgpFileItem *i1f = static_cast<LgpFileItem *>(i1),
+				            *i2f = static_cast<LgpFileItem *>(i2);
+				return i1f->fileSize() > i2f->fileSize();
+			});
+			break;
+		case Qt::DescendingOrder:
+			std::sort(_childs.begin(), _childs.end(), [](LgpItem *i1, LgpItem *i2) {
+				if(i1->isDirectory() && i2->isDirectory()) {
+					return i1->name() < i2->name();
+				}
+				if(i1->isDirectory()) {
+					return false;
+				}
+				if(i2->isDirectory()) {
+					return true;
+				}
+				LgpFileItem *i1f = static_cast<LgpFileItem *>(i1),
+				            *i2f = static_cast<LgpFileItem *>(i2);
+				return i1f->fileSize() < i2f->fileSize();
+			});
+			break;
+		}
+
+		break;
+	}
+}
+
 bool LgpDirectoryItem::unrefChild(LgpItem *child)
 {
 	bool ok;
@@ -308,7 +378,7 @@ void LgpDirectoryItem::debug() const
 }
 
 LgpItemModel::LgpItemModel(Lgp *lgp, QObject *parent) :
-	QAbstractItemModel(parent)/*, iconThread(this)*/
+	QAbstractItemModel(parent), _lgp(lgp)/*, iconThread(this)*/
 {
 	root = new LgpDirectoryItem("");
 	foreach(const QString &path, lgp->fileList()) {
@@ -338,7 +408,7 @@ void LgpItemModel::setIcon(const QString &path, const QIcon &icon)
 		return;
 	}
 
-	((LgpFileItem *)item)->setIcon(icon);
+	static_cast<LgpFileItem *>(item)->setIcon(icon);
 
 	emit layoutChanged();
 }
@@ -349,7 +419,7 @@ QModelIndex LgpItemModel::index(int row, int column, const QModelIndex &parent) 
 		return QModelIndex();
 	}
 
-	LgpDirectoryItem *parentItem = (LgpDirectoryItem *)getItem(parent);
+	LgpDirectoryItem *parentItem = static_cast<LgpDirectoryItem *>(getItem(parent));
 	if(!parentItem) {
 		parentItem = root;
 	}
@@ -375,6 +445,9 @@ QModelIndex LgpItemModel::parent(const QModelIndex &index) const
 	}
 
 	LgpItem *childItem = getItem(index);
+	if(!childItem) {
+		return QModelIndex();
+	}
 	LgpItem *parentItem = childItem->parent();
 
 	if(parentItem == root || !parentItem) {
@@ -397,7 +470,7 @@ int LgpItemModel::rowCount(const QModelIndex &parent) const
 	}
 
 	if(parentItem->isDirectory()) {
-		return ((LgpDirectoryItem *)parentItem)->childCount();
+		return static_cast<LgpDirectoryItem *>(parentItem)->childCount();
 	}
 	return 0;
 }
@@ -428,7 +501,7 @@ QVariant LgpItemModel::data(const QModelIndex &index, int role) const
 			if(lgpItem->isDirectory()) {
 				return QString();
 			} else {
-				qint64 fileSize = ((LgpFileItem *)lgpItem)->fileSize();
+				qint64 fileSize = static_cast<LgpFileItem *>(lgpItem)->fileSize();
 				return fileSize < 0 ? tr("?") : QString::number(fileSize);
 			}
 		default:	break;
@@ -439,10 +512,10 @@ QVariant LgpItemModel::data(const QModelIndex &index, int role) const
 			if(lgpItem->isDirectory()) {
 				return directoryIcon;
 			} else {
-				if(((LgpFileItem *)lgpItem)->icon().isNull()) {
+				if(static_cast<LgpFileItem *>(lgpItem)->icon().isNull()) {
 					return fileIcon;
 				} else {
-					return ((LgpFileItem *)lgpItem)->icon();
+					return static_cast<LgpFileItem *>(lgpItem)->icon();
 				}
 			}
 		}
@@ -475,7 +548,7 @@ bool LgpItemModel::setData(const QModelIndex &index, const QVariant &value, int 
 		return false;
 	}
 
-	bool ok = ((LgpFileItem *)lgpItem)->move(newFilename);
+	bool ok = static_cast<LgpFileItem *>(lgpItem)->move(newFilename);
 
 	if(ok) {
 		emit dataChanged(index, index);
@@ -499,14 +572,66 @@ QVariant LgpItemModel::headerData(int section, Qt::Orientation orientation, int 
 		return Qt::AlignLeft;
 	}
 
-	if(orientation != Qt::Horizontal || role != Qt::DisplayRole)
+	if(orientation != Qt::Horizontal || role != Qt::DisplayRole) {
 		return QAbstractItemModel::headerData(section, orientation, role);
+	}
 
 	switch(section) {
-	case 0:		return tr("Nom");
-	case 1:		return tr("Taille");
+	case 0:		return tr("Name");
+	case 1:		return tr("Size");
 	default:	return QVariant();
 	}
+}
+
+void LgpItemModel::sort(int column, Qt::SortOrder order)
+{
+	return QAbstractItemModel::sort(column, order);
+
+	// FIXME: TODO
+	/* switch(column) {
+	case 0:
+		root->sort(LgpDirectoryItem::ByName, order);
+		break;
+	case 1:
+		root->sort(LgpDirectoryItem::BySize, order);
+		break;
+	default:
+		break;
+	} */
+}
+
+bool LgpItemModel::insertRow(const QString &name, QIODevice *io,
+                             const QModelIndex &parent)
+{
+	LgpItem *lgpItem = getItem(parent);
+
+	// Parent must be a directory
+	if(lgpItem && !lgpItem->isDirectory()) {
+		return false;
+	}
+
+	if(!lgpItem) {
+		lgpItem = root;
+	}
+
+	LgpDirectoryItem *dir = static_cast<LgpDirectoryItem *>(lgpItem);
+	QString path;
+
+	if(dir == root) {
+		path = name;
+	} else {
+		path = dir->path() + "/" + name;
+	}
+
+	if(_lgp->addFile(path, io)) {
+		int row = rowCount();
+		beginInsertRows(parent, row, row);
+		dir->addChild(path, _lgp);
+		endInsertRows();
+		return true;
+	}
+
+	return false;
 }
 
 bool LgpItemModel::insertRows(int row, int count, const QModelIndex &parent)
@@ -515,6 +640,21 @@ bool LgpItemModel::insertRows(int row, int count, const QModelIndex &parent)
 	endInsertRows();
 
 	return true;
+}
+
+bool LgpItemModel::removeRow(const QModelIndex &index)
+{
+	LgpItem *item = getItem(index);
+	if(item && !item->isDirectory()
+	        && _lgp->removeFile(item->path())) {
+		int row = index.row();
+		beginRemoveRows(parent(index), row, row);
+		item->parent()->removeChild(item);
+		endRemoveRows();
+		return true;
+	}
+
+	return false;
 }
 
 bool LgpItemModel::removeRows(int row, int count, const QModelIndex &parent)
@@ -526,30 +666,32 @@ bool LgpItemModel::removeRows(int row, int count, const QModelIndex &parent)
 }
 
 LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
-	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), lgp(lgp)
+    QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
+    lgp(lgp), progressDialog(0)
 {
-	setWindowTitle(tr("Gestionnaire d'archive LGP"));
+	setWindowTitle(tr("LGP archive manager"));
 	resize(800, 600);
 
 	LgpItemModel *model = new LgpItemModel(lgp);
 	treeView = new QTreeView(this);
 	treeView->setModel(model);
 	treeView->setUniformRowHeights(true);
-	treeView->header()->setResizeMode(0, QHeaderView::Stretch);
+	treeView->header()->setSectionResizeMode(0, QHeaderView::Stretch);
 	treeView->header()->setStretchLastSection(false);
+	treeView->setSortingEnabled(false); // TODO
 
-	renameButton = new QPushButton(tr("Renommer"), this);
+	renameButton = new QPushButton(tr("Rename"), this);
 	renameButton->setShortcut(Qt::Key_F2);
-	replaceButton = new QPushButton(tr("Remplacer"), this);
+	replaceButton = new QPushButton(tr("Replace"), this);
 	replaceButton->setShortcut(QKeySequence("Ctrl+R"));
-	extractButton = new QPushButton(tr("Extraire"), this);
+	extractButton = new QPushButton(tr("Extract"), this);
 	extractButton->setShortcut(QKeySequence("Ctrl+E"));
-	addButton = new QPushButton(QIcon(":/images/plus.png"), tr("Ajouter"), this);
+	addButton = new QPushButton(QIcon(":/images/plus.png"), tr("Add"), this);
 	addButton->setShortcut(QKeySequence::New);
-	removeButton = new QPushButton(QIcon(":/images/minus.png"), tr("Supprimer"), this);
+	removeButton = new QPushButton(QIcon(":/images/minus.png"), tr("Delete"), this);
 	removeButton->setShortcut(QKeySequence::Delete);
 	packButton = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton),
-								 tr("Sauvegarder"), this);
+								 tr("Save"), this);
 	packButton->setEnabled(false);
 
 	QHBoxLayout *barLayout = new QHBoxLayout;
@@ -580,24 +722,24 @@ void LgpDialog::renameCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
+		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
 		if(item && !item->isDirectory()) {
 			bool ok;
 			QString oldFilePath = item->path(),
-					newFilePath = QInputDialog::getText(this, tr("Renommer"), tr("Nouveau nom :"), QLineEdit::Normal,
+					newFilePath = QInputDialog::getText(this, tr("Rename"), tr("New Name:"), QLineEdit::Normal,
 														oldFilePath, &ok, Qt::Dialog | Qt::WindowCloseButtonHint);
 			if(!ok || newFilePath == oldFilePath) {
 				return;
 			}
 
 			if(!lgp->isNameValid(newFilePath)) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Le nom '%1' est invalide, ne mettez pas de caractères spéciaux.")
+				QMessageBox::warning(this, tr("Error"), tr("The name '%1' is invalid, don't put special characters.")
 									 .arg(newFilePath));
 			} else if(lgp->fileExists(newFilePath)) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Un fichier nommé '%1' existe déjà, veuillez choisir un autre nom.")
+				QMessageBox::warning(this, tr("Error"), tr("A file named '%1' already exists, please choose another name.")
 									 .arg(newFilePath));
 			} else if(!treeView->model()->setData(index, newFilePath)) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de renommer le fichier"));
+				QMessageBox::warning(this, tr("Error"), tr("Can not Rename the file"));
 			} else {
 				treeView->scrollTo(index);
 //				emit modified();
@@ -611,31 +753,31 @@ void LgpDialog::replaceCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
+		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
 		if(item && !item->isDirectory()) {
 			QString filename = item->name();
 			int indexOf = filename.lastIndexOf('.');
 			QString extension = indexOf==-1 ? QString() : filename.mid(indexOf + 1);
 			QStringList filter;
 			if(!extension.isEmpty()) {
-				filter << tr("Fichier %1 (*.%1)").arg(extension);
+				filter << tr("%1 file (*.%1)").arg(extension);
 			}
-			filter << tr("Tous les fichiers (*)");
+			filter << tr("All files (*)");
 
 			QString lastDir = Config::value("lgpDialogOpenDirectory").toString();
 			if(!lastDir.isEmpty()) {
 				filename = lastDir + "/" + filename;
 			}
 
-			QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), filename, filter.join(";;"));
+			QString path = QFileDialog::getOpenFileName(this, tr("New File"), filename, filter.join(";;"));
 			if(path.isNull()) {
 				return;
 			}
 
 			Config::setValue("lgpDialogOpenDirectory", path.left(path.lastIndexOf('/')));
 
-			if(!((LgpFileItem *)item)->setFile(new QFile(path))) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de modifier l'archive !"));
+			if(!static_cast<LgpFileItem *>(item)->setFile(new QFile(path))) {
+				QMessageBox::warning(this, tr("Error"), tr("Can not modify the archive!"));
 			} else {
 //				emit modified();
 				packButton->setEnabled(true);
@@ -648,30 +790,30 @@ void LgpDialog::extractCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
+		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
 		if(item && !item->isDirectory()) {
 			QString filename = item->name();
 			int index = filename.lastIndexOf('.');
 			QString extension = index==-1 ? QString() : filename.mid(index + 1);
 			QStringList filter;
 			if(!extension.isEmpty()) {
-				filter << tr("Fichier %1 (*.%1)").arg(extension);
+				filter.append(tr("%1 file (*.%1)").arg(extension));
 			}
-			filter << tr("Tous les fichiers (*)");
+			filter.append(tr("All files (*)"));
 
 			QString lastDir = Config::value("lgpDialogSaveDirectory").toString();
 			if(!lastDir.isEmpty()) {
 				filename = lastDir + "/" + filename;
 			}
 
-			QString path = QFileDialog::getSaveFileName(this, tr("Nouveau fichier"), filename, filter.join(";;"));
+			QString path = QFileDialog::getSaveFileName(this, tr("New File"), filename, filter.join(";;"));
 			if(path.isNull()) {
 				return;
 			}
 
 			Config::setValue("lgpDialogSaveDirectory", path.left(path.lastIndexOf('/')));
 
-			QIODevice *io = ((LgpFileItem *)item)->file();
+			QIODevice *io = static_cast<LgpFileItem *>(item)->file();
 			if(io && io->open(QIODevice::ReadOnly)) {
 				QFile file(path);
 				if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -679,12 +821,12 @@ void LgpDialog::extractCurrent()
 						file.write(io->read(4096));
 					}
 					if(file.error() != QFile::NoError) {
-						QMessageBox::warning(this, tr("Erreur d'écriture"), tr("Impossible d'écrire dans le fichier (message : %1).")
+						QMessageBox::warning(this, tr("Write error"), tr("Can not write to file (message: %1).")
 											 .arg(file.errorString()));
 					}
 					file.close();
 				} else {
-					QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir le fichier (message : %1).")
+					QMessageBox::warning(this, tr("Opening error"), tr("Can not open the file (message: %1).")
 										 .arg(file.errorString()));
 				}
 				io->close();
@@ -698,7 +840,7 @@ void LgpDialog::add()
 	QString dirName;
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
+		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
 		if(item) {
 			dirName = item->isDirectory() ? item->path() : item->dirName();
 		}
@@ -707,40 +849,61 @@ void LgpDialog::add()
 	QString lastDir = Config::value("lgpDialogOpenDirectory").toString();
 
 	QStringList filter;
-	filter << tr("Tous les fichiers (*)");
-	QString path = QFileDialog::getOpenFileName(this, tr("Nouveau fichier"), lastDir, filter.join(";;"));
-	if(path.isNull()) {
+	filter.append(tr("All files (*)"));
+	QStringList paths = QFileDialog::getOpenFileNames(this, tr("New File"), lastDir, filter.join(";;"));
+	if(paths.isEmpty()) {
 		return;
 	}
 
-	Config::setValue("lgpDialogOpenDirectory", path.left(path.lastIndexOf('/')));
+	QString path = paths.first(),
+	        directory = path.left(path.lastIndexOf('/'));
+	Config::setValue("lgpDialogOpenDirectory", directory);
 
-	QString name = path.mid(path.lastIndexOf('/') + 1);
+	foreach(const QString &path, paths) {
+		QString filePath = path.mid(path.lastIndexOf('/') + 1);
 
-	if(!dirName.isEmpty()) {
-		name = dirName + "/" + name;
-	}
+		if(!dirName.isEmpty()) {
+			filePath = dirName + "/" + filePath;
+		}
 
-	bool ok;
-	QString filePath = QInputDialog::getText(this, tr("Renommer"), tr("Nouveau nom :"), QLineEdit::Normal,
-												name, &ok, Qt::Dialog | Qt::WindowCloseButtonHint);
-	if(!ok) {
-		return;
-	}
+		bool rename = false;
+		
+		do {
+			if(!lgp->isNameValid(filePath)) {
+				QMessageBox::warning(this, tr("Error"),
+									 tr("The name '%1' is invalid, don't put special characters.")
+									 .arg(filePath));
+				rename = true;
+			} else if(lgp->fileExists(filePath)) {
+				QMessageBox::warning(this, tr("Error"),
+									 tr("A file named '%1' already exists, please choose another name.")
+									 .arg(filePath));
+				rename = true;
+			} else {
+				rename = false;
+			}
 
-	if(!lgp->isNameValid(filePath)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Le nom '%1' est invalide, ne mettez pas de caractères spéciaux.")
-							 .arg(filePath));
-	} else if(lgp->fileExists(filePath)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Un fichier nommé '%1' existe déjà, veuillez choisir un autre nom.")
-							 .arg(filePath));
-	} else if(!lgp->addFile(filePath, new QFile(path))) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Impossible d'ajouter le fichier"));
-	} else {
-		treeView->model()->insertRow(treeView->model()->rowCount());
-		treeView->scrollTo(treeView->model()->index(treeView->model()->rowCount() - 1, 0));
-//		emit modified();
-		packButton->setEnabled(true);
+			if(rename) {
+				bool ok;
+				filePath = QInputDialog::getText(this, tr("Rename"),
+												 tr("New Name:"), QLineEdit::Normal,
+												 filePath, &ok,
+												 Qt::Dialog | Qt::WindowCloseButtonHint);
+				if(!ok) {
+					return;
+				}
+			}
+		} while(rename);
+
+		if(!static_cast<LgpItemModel *>(treeView->model())->insertRow(filePath, new QFile(path))) {
+			QMessageBox::critical(this, tr("Error"),
+			                      tr("Can not add the file '%1'")
+			                      .arg(path));
+		} else {
+			treeView->scrollTo(treeView->model()->index(treeView->model()->rowCount() - 1, 0));
+	//		emit modified();
+			packButton->setEnabled(true);
+		}
 	}
 }
 
@@ -748,40 +911,36 @@ void LgpDialog::removeCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		QMessageBox::StandardButton button = QMessageBox::question(this, tr("Supprimer ?"),
-							  tr("Êtes-vous sûr de vouloir supprimer ce fichier de l'archive ?"),
+		QMessageBox::StandardButton button = QMessageBox::question(this, tr("Delete ?"),
+							  tr("Are you sure you want to delete this file from the archive?"),
 							  QMessageBox::Yes | QMessageBox::Cancel);
 		if(button != QMessageBox::Yes) {
 			return;
 		}
 
-		LgpItem *item = ((LgpItemModel *)treeView->model())->getItem(index);
-		if(item && !item->isDirectory()) {
-			if(!lgp->removeFile(item->path())) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Impossible de supprimer le fichier !"));
-			} else {
-				treeView->model()->removeRow(index.row());
-//				emit modified();
-				packButton->setEnabled(true);
-			}
+		if(static_cast<LgpItemModel *>(treeView->model())->removeRow(index)) {
+			// emit modified();
+			packButton->setEnabled(true);
+		} else {
+			QMessageBox::warning(this, tr("Error"), tr("Cannot delete the file!"));
 		}
 	}
 }
 
 void LgpDialog::pack()
 {
-	QString path = QFileDialog::getSaveFileName(this, tr("Enregistrer sous"), lgp->fileName(), tr("Fichier Lgp (*.lgp)"));
+	QString path = QFileDialog::getSaveFileName(this, tr("Save as"), lgp->fileName(), tr("Lgp File (*.lgp)"));
 	if(path.isNull()) {
 		return;
 	}
 
 //	QFileInfo info1(path), info2(lgp->fileName());
 //	if(info1 == info2) {
-//		QMessageBox::warning(this, tr("Action impossible"), tr("Merci de sélectionner un autre fichier que celui actuellement ouvert par le logiciel."));
+//		QMessageBox::warning(this, tr("Action impossible"), tr("Merci de sÃ©lectionner un autre fichier que celui actuellement ouvert par le logiciel."));
 //		return;
 //	}
 
-	progressDialog = new QProgressDialog(tr("Sauvegarde..."), tr("Annuler"), 0, 0, this, Qt::Dialog | Qt::WindowCloseButtonHint);
+	progressDialog = new QProgressDialog(tr("Saving..."), tr("Cancel"), 0, 0, this, Qt::Dialog | Qt::WindowCloseButtonHint);
 	progressDialog->setWindowModality(Qt::WindowModal);
 	progressDialog->setAutoClose(false);
 	progressDialog->show();
@@ -790,10 +949,11 @@ void LgpDialog::pack()
 
 	progressDialog->hide();
 	progressDialog->deleteLater();
+	progressDialog = 0;
 
 	if(!ok) {
 		if(lgp->error() != Lgp::AbortError) {
-			QMessageBox::warning(this, tr("Erreur"), tr("Impossible de créer l'archive (message : %1).")
+			QMessageBox::warning(this, tr("Error"), tr("Cannot create the archive (message: %1).")
 								 .arg(lgp->errorString()));
 		}
 	} else {
@@ -805,26 +965,37 @@ void LgpDialog::pack()
 
 bool LgpDialog::observerWasCanceled() const
 {
-	return progressDialog->wasCanceled();
+	return progressDialog && progressDialog->wasCanceled();
 }
 
 void LgpDialog::setObserverMaximum(unsigned int max)
 {
-	progressDialog->setMaximum(max);
+	if(progressDialog) {
+		progressDialog->setMaximum(max);
+	}
 }
 
 void LgpDialog::setObserverValue(int value)
 {
 	QApplication::processEvents();
 
-	progressDialog->setValue(value);
+	if(progressDialog) {
+		progressDialog->setValue(value);
+	}
 }
 
 void LgpDialog::setButtonsState()
 {
 	QModelIndexList modelIndexList = treeView->selectionModel()->selectedRows();
+	LgpItem *item;
+	if(!modelIndexList.isEmpty()) {
+		item = static_cast<LgpItemModel *>(treeView->model())->getItem(modelIndexList.first());
+	} else {
+		item = 0;
+	}
 	bool enabled = !modelIndexList.isEmpty() &&
-			!((LgpItemModel *)treeView->model())->getItem(modelIndexList.first())->isDirectory();
+	               item &&
+	               !item->isDirectory();
 
 	renameButton->setEnabled(enabled);
 	replaceButton->setEnabled(enabled);

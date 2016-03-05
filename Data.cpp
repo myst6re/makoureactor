@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
 #include "core/LZS.h"
 #include "core/FF7Text.h"
 #ifdef Q_OS_WIN
-#include <windef.h>
+#include <windows.h>
 #include <winbase.h>
-#include <winerror.h>
+// #include <winerror.h>
 #include <winreg.h>
 #endif
 
@@ -332,9 +332,11 @@ int Data::loadKernel2Bin()
 	QFile fic(path);
 	if(fic.open(QIODevice::ReadOnly)) {
 		quint32 fileSize;
-		fic.read((char *)&fileSize, 4);
+		if(fic.read((char *)&fileSize, 4) != 4) {
+			return 2;
+		}
 
-		if(fileSize+4 != fic.size()) {
+		if(fileSize + 4 != fic.size()) {
 			return 2;
 		}
 
@@ -454,22 +456,22 @@ bool Data::load()
 {
 	if(char_names.isEmpty()) {
 		char_names
-				<< QObject::tr("Clad") << QObject::tr("Barret") << QObject::tr("Tifa")
-				<< QObject::tr("Aeris") << QObject::tr("Red XIII") << QObject::tr("Youfie")
+				<< QObject::tr("Cloud") << QObject::tr("Barret") << QObject::tr("Tifa")
+				<< QObject::tr("Aeris") << QObject::tr("Red XIII") << QObject::tr("Yuffie")
 				<< QObject::tr("Cait Sith") << QObject::tr("Vincent") << QObject::tr("Cid")
-				<< QObject::tr("Jeune Clad") << QObject::tr("Sephiroth") << QObject::tr("Chocobo");
+				<< QObject::tr("Yound Cloud") << QObject::tr("Sephiroth") << QObject::tr("Chocobo");
 	}
 
 	if(key_names.isEmpty()) {
 		key_names
-				<< QObject::tr("[CAMERA|L2]") << QObject::tr("[CIBLE|R2]")
-				<< QObject::tr("[PAGE HAUT|L1]") << QObject::tr("[PAGE BAS|R1]")
-				<< QObject::tr("[MENU|TRIANGLE]") << QObject::tr("[OK|ROND]")
-				<< QObject::tr("[ANNULER|CROIX]") << QObject::tr("[CHANGER|CARRE]")
-				<< QObject::tr("[ASSISTER|SELECT]") << QString("[???]")
-				<< QString("[???]") << QObject::tr("[DEMARRER|START]")
-				<< QObject::tr("[HAUT]") << QObject::tr("[DROITE]")
-				<< QObject::tr("[BAS]") << QObject::tr("[GAUCHE]");
+				<< QObject::tr("[CAMERA|L2]") << QObject::tr("[TARGET|R2]")
+				<< QObject::tr("[PAGE UP|L1]") << QObject::tr("[PAGE DOWN|R1]")
+				<< QObject::tr("[MENU|TRIANGLE]") << QObject::tr("[OK|CIRCLE]")
+				<< QObject::tr("[CANCEL|CROSS]") << QObject::tr("[SWITCH|SQUARE]")
+				<< QObject::tr("[ASSIST|SELECT]") << QString("[???]")
+				<< QString("[???]") << QObject::tr("[START]")
+				<< QObject::tr("[UP]") << QObject::tr("[RIGHT]")
+				<< QObject::tr("[DOWN]") << QObject::tr("[LEFT]");
 	}
 
 	if(movie_names_cd1.isEmpty()) {
@@ -711,23 +713,28 @@ void Data::openMaplist(bool PC)
 	}
 
 	if(PC) {
-		field_names[88] = "qa";
-		field_names[89] = "qb";
-		field_names[90] = "qc";
-		field_names[91] = "qd";
-		field_names[92] = "qe";
-		field_names[153] = "min71";
-		field_names[164] = "sbwy4_1";
-		field_names[165] = "sbwy4_2";
-		field_names[166] = "sbwy4_3";
-		field_names[167] = "sbwy4_4";
-		field_names[168] = "sbwy4_5";
-		field_names[169] = "sbwy4_6";
-		field_names[174] = "min51_1";
-		field_names[175] = "min51_2";
-		field_names[586] = "tower5";
-		field_names[735] = "sbwy4_22";
+		toPCMaplist(field_names);
 	}
+}
+
+void Data::toPCMaplist(QStringList &field_names)
+{
+	field_names[88] = "qa";
+	field_names[89] = "qb";
+	field_names[90] = "qc";
+	field_names[91] = "qd";
+	field_names[92] = "qe";
+	field_names[153] = "min71";
+	field_names[164] = "sbwy4_1";
+	field_names[165] = "sbwy4_2";
+	field_names[166] = "sbwy4_3";
+	field_names[167] = "sbwy4_4";
+	field_names[168] = "sbwy4_5";
+	field_names[169] = "sbwy4_6";
+	field_names[174] = "min51_1";
+	field_names[175] = "min51_2";
+	field_names[586] = "tower5";
+	field_names[735] = "sbwy4_22";
 }
 
 const char *Data::musicList[100] =

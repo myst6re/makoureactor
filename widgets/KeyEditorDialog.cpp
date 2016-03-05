@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -21,13 +21,13 @@
 KeyEditorDialog::KeyEditorDialog(quint16 value, QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
 {
-	setWindowTitle(tr("Touches"));
+	setWindowTitle(tr("Keys"));
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 	QVBoxLayout *layout = new QVBoxLayout(this);
-	QCheckBox *checkBox;
+
 	for(int i=0 ; i<Data::key_names.size() ; ++i) {
-		checkBox = new QCheckBox(Data::key_names.at(i), this);
-		checkBox->setCheckState((value >> i) & 1 ? Qt::Checked : Qt::Unchecked);
+		QCheckBox *checkBox = new QCheckBox(Data::key_names.at(i), this);
+		checkBox->setCheckState(((value >> i) & 1) ? Qt::Checked : Qt::Unchecked);
 		layout->addWidget(checkBox);
 	}
 	layout->addWidget(buttonBox);

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,14 +18,14 @@
 #ifndef LGPDIALOG_H
 #define LGPDIALOG_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/Lgp.h"
 
 class IconThread : public QThread
 {
 	Q_OBJECT
 public:
-	IconThread(QObject *parent = 0);
+	explicit IconThread(QObject *parent = 0);
 	~IconThread();
 
 	void clear();
@@ -111,7 +111,12 @@ private:
 class LgpDirectoryItem : public LgpItem
 {
 public:
-	LgpDirectoryItem(const QString &name, LgpDirectoryItem *parent = 0) :
+	enum SortType {
+		ByName,
+		BySize
+	};
+
+	explicit LgpDirectoryItem(const QString &name, LgpDirectoryItem *parent = 0) :
 		LgpItem(name, parent) {
 	}
 	~LgpDirectoryItem();
@@ -132,6 +137,7 @@ public:
 		return _childs.size();
 	}
 
+	void sort(SortType type, Qt::SortOrder order);
 	bool unrefChild(LgpItem *child);
 	void renameChild(LgpItem *child, const QString &destination);
 	void removeChild(LgpItem *child);
@@ -149,7 +155,7 @@ class LgpItemModel : public QAbstractItemModel
 {
 	Q_OBJECT
 public:
-	LgpItemModel(Lgp *lgp, QObject *parent=0);
+	explicit LgpItemModel(Lgp *lgp, QObject *parent=0);
 	~LgpItemModel();
 	QModelIndex index(int row, int column, const QModelIndex &parent=QModelIndex()) const;
 	QModelIndex parent(const QModelIndex &index) const;
@@ -158,7 +164,10 @@ public:
 	QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
 	bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
 	QVariant headerData(int section, Qt::Orientation orientation, int role=Qt::DisplayRole) const;
+	void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
+	bool insertRow(const QString &name, QIODevice *io, const QModelIndex &parent=QModelIndex());
 	bool insertRows(int row, int count, const QModelIndex &parent=QModelIndex());
+	bool removeRow(const QModelIndex &index);
 	bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex());
 	void update(const QModelIndex &index);
 	LgpItem *getItem(const QModelIndex &index) const;
@@ -168,13 +177,14 @@ private:
 //	IconThread iconThread;
 	QIcon fileIcon, directoryIcon;
 	LgpDirectoryItem *root;
+	Lgp *_lgp;
 };
 
 class LgpDialog : public QDialog, ArchiveObserver
 {
 	Q_OBJECT
 public:
-	LgpDialog(Lgp *lgp, QWidget *parent=0);
+	explicit LgpDialog(Lgp *lgp, QWidget *parent=0);
 
 	bool observerWasCanceled() const;
 	void setObserverMaximum(unsigned int max);

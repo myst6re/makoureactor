@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -24,13 +24,14 @@
 #include "../TexFile.h"
 
 FieldModelFilePC::FieldModelFilePC() :
-	FieldModelFile()
+	FieldModelFile(), _charLgp(0)
 {
 }
 
 void FieldModelFilePC::clear()
 {
 	_loadedTex.clear();
+	FieldModelFile::clear();
 }
 
 quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate)

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -100,8 +100,6 @@ protected:
 	virtual QList<Field::FieldSection> orderOfSections() const=0;
 	virtual quint32 diffSectionPos() const=0;
 	virtual bool hasSectionHeader() const=0;
-	FieldModelFile *fieldModelPtr(int modelID) const;
-	void addFieldModel(int modelID, FieldModelFile *fieldModel);
 private:
 	FieldPart *part(FieldSection section, bool open);
 
@@ -109,8 +107,6 @@ private:
 	FieldArchiveIO *_io;
 	bool _isOpen, _isModified;
 	QString _name;
-	static Field *currentFieldForFieldModels;
-	static QMap<int, FieldModelFile *> _fieldModels;
 	bool _removeUnusedSection;
 };
 

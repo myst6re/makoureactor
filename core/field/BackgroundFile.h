@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -32,14 +32,17 @@ public:
 	BackgroundFile(const BackgroundFile &other);
 	virtual ~BackgroundFile();
 
-	virtual bool open()=0;
-	bool open(const QByteArray &) { return true; }
-	virtual QByteArray save() const { return QByteArray(); }
+	using FieldPart::open;
+	using FieldPart::save;
 	virtual inline bool canSave() const { return false; }
 	void clear();
-	QImage openBackground();
-	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2], const bool *layers=NULL);
-	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists);
+	QImage openBackground(bool *warning = NULL);
+	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2],
+	                      const bool *layers = NULL, const QSet<quint16> *IDs = NULL,
+	                      bool *warning = NULL);
+	// Draw background tiles with ID
+	QImage backgroundPart(quint16 ID, bool *warning = NULL);
+	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs);
 	bool layerExists(int num);
 
 	inline const BackgroundTiles &tiles() const {
@@ -67,11 +70,22 @@ public:
 		_textures = textures;
 	}
 
+	virtual inline bool repair() {
+		return false;
+	}
+
 protected:
-	QImage drawBackground(const BackgroundTiles &tiles) const;
+	QImage drawBackground(const BackgroundTiles &tiles, bool *warning = NULL) const;
 	static QRgb blendColor(quint8 type, QRgb color0, QRgb color1);
+	inline BackgroundTiles &tilesRef() {
+		return _tiles;
+	}
 
 private:
+	bool open(const QByteArray &data) {
+		Q_UNUSED(data);
+		return false;
+	}
 	BackgroundTiles _tiles;
 	Palettes _palettes;
 	BackgroundTextures *_textures;

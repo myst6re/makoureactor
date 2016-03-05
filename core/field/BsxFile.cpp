@@ -19,7 +19,7 @@
 
 BsxFile::BsxFile(QIODevice *io) :
 	IO(io), _offsetModels(0),
-	_offsetTextures(0)
+	_numModels(0), _offsetTextures(0)
 {
 }
 
@@ -60,7 +60,7 @@ bool BsxFile::read(QList<FieldModelFilePS *> &models)
 	return true;
 }
 
-bool BsxFile::read(FieldModelFilePS *model)
+bool BsxFile::read(FieldModelFilePS *model) const
 {
 	BsxModelHeader modelHeader;
 	qint64 pos = device()->pos();
@@ -92,7 +92,7 @@ bool BsxFile::read(FieldModelFilePS *model)
 					 model);
 }
 
-bool BsxFile::readModel(quint8 numBones, quint8 numParts, quint8 numAnimations, FieldModelFilePS *model)
+bool BsxFile::readModel(quint8 numBones, quint8 numParts, quint8 numAnimations, FieldModelFilePS *model) const
 {
 	FieldModelSkeleton skeleton;
 	QList<FieldModelPartPSHeader> partsHeaders;
@@ -127,7 +127,7 @@ bool BsxFile::readModel(quint8 numBones, quint8 numParts, quint8 numAnimations, 
 	return true;
 }
 
-bool BsxFile::readTextures(FieldModelTexturesPS *textures)
+bool BsxFile::readTextures(FieldModelTexturesPS *textures) const
 {
 	BsxTexturesHeader texturesHeader;
 
@@ -236,7 +236,7 @@ bool BsxFile::readModelsHeader()
 	return true;
 }
 
-bool BsxFile::readSkeleton(quint8 numBones, FieldModelSkeleton &skeleton)
+bool BsxFile::readSkeleton(quint8 numBones, FieldModelSkeleton &skeleton) const
 {
 	for (quint16 i = 0; i < numBones; ++i) {
 		FieldModelBonePS bone;
@@ -254,7 +254,7 @@ bool BsxFile::readSkeleton(quint8 numBones, FieldModelSkeleton &skeleton)
 	return true;
 }
 
-bool BsxFile::readPartsHeaders(quint8 numParts, QList<FieldModelPartPSHeader> &partsHeaders)
+bool BsxFile::readPartsHeaders(quint8 numParts, QList<FieldModelPartPSHeader> &partsHeaders) const
 {
 	for (quint16 i = 0; i < numParts; ++i) {
 		FieldModelPartPSHeader partHeader;
@@ -268,7 +268,7 @@ bool BsxFile::readPartsHeaders(quint8 numParts, QList<FieldModelPartPSHeader> &p
 	return true;
 }
 
-bool BsxFile::readAnimationsHeaders(quint8 numAnimations, QList<FieldModelAnimationPSHeader> &animationsHeaders)
+bool BsxFile::readAnimationsHeaders(quint8 numAnimations, QList<FieldModelAnimationPSHeader> &animationsHeaders) const
 {
 	for (quint16 i = 0; i < numAnimations; ++i) {
 		FieldModelAnimationPSHeader animationHeader;
@@ -282,12 +282,13 @@ bool BsxFile::readAnimationsHeaders(quint8 numAnimations, QList<FieldModelAnimat
 	return true;
 }
 
-bool BsxFile::readMesh(const QList<FieldModelPartPSHeader> &partsHeaders, FieldModelSkeleton &skeleton)
+bool BsxFile::readMesh(const QList<FieldModelPartPSHeader> &partsHeaders, FieldModelSkeleton &skeleton) const
 {
 	foreach (const FieldModelPartPSHeader &header, partsHeaders) {
 		FieldModelPart *part = new FieldModelPart();
 
 		if (!readPart(header, part)) {
+			delete part;
 			return false;
 		}
 
@@ -297,7 +298,7 @@ bool BsxFile::readMesh(const QList<FieldModelPartPSHeader> &partsHeaders, FieldM
 	return true;
 }
 
-bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPart *part)
+bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPart *part) const
 {
 	QList<FieldModelGroup *> groups;
 	QList<PolyVertex> vertices;
@@ -711,7 +712,7 @@ bool BsxFile::addTexturedPolygonToGroup(quint8 control, Poly *polygon, QList<Fie
 }
 
 bool BsxFile::readAnimations(const QList<FieldModelAnimationPSHeader> &animationHeaders,
-							 QList<FieldModelAnimation> &animations)
+							 QList<FieldModelAnimation> &animations) const
 {
 	foreach (const FieldModelAnimationPSHeader &header, animationHeaders) {
 		FieldModelAnimation animation;
@@ -725,7 +726,7 @@ bool BsxFile::readAnimations(const QList<FieldModelAnimationPSHeader> &animation
 	return true;
 }
 
-bool BsxFile::readAnimation(const FieldModelAnimationPSHeader &header, FieldModelAnimation &animation)
+bool BsxFile::readAnimation(const FieldModelAnimationPSHeader &header, FieldModelAnimation &animation) const
 {
 	quint32 offsetToAnimation = header.offsetData & 0x7FFFFFFF,
 			offsetFrameRotation = offsetToAnimation + header.offsetFramesRotation,
@@ -898,7 +899,7 @@ bool BsxFile::readAnimation(const FieldModelAnimationPSHeader &header, FieldMode
 	return true;
 }
 
-bool BsxFile::readTexturesHeaders(quint8 numTextures, QList<BsxTextureHeader> &headers)
+bool BsxFile::readTexturesHeaders(quint8 numTextures, QList<BsxTextureHeader> &headers) const
 {
 	for (quint16 texId = 0; texId < numTextures; ++texId) {
 		BsxTextureHeader header;
@@ -912,7 +913,7 @@ bool BsxFile::readTexturesHeaders(quint8 numTextures, QList<BsxTextureHeader> &h
 }
 
 bool BsxFile::readTexturesData(const QList<BsxTextureHeader> &headers,
-							   QList<QByteArray> &dataList)
+							   QList<QByteArray> &dataList) const
 {
 	qint64 offsetTextures = _offsetModels + _offsetTextures;
 
@@ -940,7 +941,7 @@ bool BsxFile::readTexturesData(const QList<BsxTextureHeader> &headers,
 	return true;
 }
 
-bool BsxFile::write(const QList<FieldModelFilePS> &models)
+bool BsxFile::write(const QList<FieldModelFilePS> &models) const
 {
 	Q_UNUSED(models)
 	return false;

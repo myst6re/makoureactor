@@ -1,6 +1,6 @@
 /****************************************************************************
- ** Néo-Midgar Final Fantasy VII French Retranslation
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** NÃ©o-Midgar Final Fantasy VII French Retranslation
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -44,12 +44,12 @@ bool IsoArchiveFF7::open(QIODevice::OpenMode mode)
 	return ok;
 }
 
-const QByteArray &IsoArchiveFF7::fileLzs(const QString &path, quint32 maxSize)
+const QByteArray &IsoArchiveFF7::fileLzs(const QString &path, quint32 maxSize) const
 {
 	return LZS::decompressAllWithHeader(file(path, maxSize));
 }
 
-const QByteArray &IsoArchiveFF7::modifiedFileLzs(const QString &path, quint32 maxSize)
+const QByteArray &IsoArchiveFF7::modifiedFileLzs(const QString &path, quint32 maxSize) const
 {
 	return LZS::decompressAllWithHeader(modifiedFile(path, maxSize));
 }
@@ -249,12 +249,11 @@ bool IsoArchiveFF7::updateBin(IsoFile *isoBin, const QList<IsoFile *> &filesRefB
 
 	// Update
 
-	int count;
 	QByteArray copy = ungzip;
 	QMapIterator<QByteArray, QByteArray> i(changesFieldBin);
 	while(i.hasNext()) {
 		i.next();
-		count = copy.count(i.key());
+		int count = copy.count(i.key());
 		if(count == 0) {
 			qWarning() << "IsoArchiveFF7::updateBin" << isoBin->name() << "Error not found!" << i.key().toHex();
 #ifdef ISOARCHIVE_DEBUG
@@ -297,7 +296,7 @@ bool IsoArchiveFF7::updateBin(IsoFile *isoBin, const QList<IsoFile *> &filesRefB
 	buffer->setData(copy);
 	_devicesToDelete << buffer;
 	isoBin->setModifiedFile(buffer);
-	if (isoBin->sectorCount() + isoBin->paddingAfter() < isoBin->newSectorCount()) {
+	if(isoBin->sectorCount() + isoBin->paddingAfter() < isoBin->newSectorCount()) {
 		qWarning() << "IsoArchiveFF7::updateBin" << isoBin->name() << "sector count error" << isoBin->sectorCount() << isoBin->paddingAfter() << isoBin->newSectorCount();
 		return false;
 	}
@@ -305,69 +304,75 @@ bool IsoArchiveFF7::updateBin(IsoFile *isoBin, const QList<IsoFile *> &filesRefB
 	return true;
 }
 
-bool IsoArchiveFF7::updateFieldBin()
+IsoFile *IsoArchiveFF7::updateFieldBin()
 {
 	IsoDirectory *fieldDirectory = rootDirectory()->directory("FIELD");
 	if(!fieldDirectory) {
 		qWarning() << "IsoArchiveFF7::updateFieldBin field directory not found";
-		return false;
+		return NULL;
 	}
 	IsoFile *isoFieldBin = fieldDirectory->file("FIELD.BIN");
 	if(isoFieldBin == NULL) {
 		qWarning() << "IsoArchiveFF7::updateFieldBin field.bin not found";
-		return false;
+		return NULL;
 	}
 
 	QList<IsoFile *> files;
 	foreach(IsoFile *file, fieldDirectory->files()) {
 		if(!file->name().endsWith(".X")
 				&& file->name() != "FIELD.BIN") {
-			files << file;
+			files.append(file);
 		}
 	}
 
-	return updateBin(isoFieldBin, files, 0x30000);
+	if(updateBin(isoFieldBin, files, 0x30000)) {
+		return isoFieldBin;
+	}
+	return NULL;
 }
 
-bool IsoArchiveFF7::updateWorldBin()
+IsoFile *IsoArchiveFF7::updateWorldBin()
 {
 	IsoDirectory *worldDirectory = rootDirectory()->directory("WORLD");
 	if(!worldDirectory) {
 		qWarning() << "IsoArchiveFF7::updateWorldBin world directory not found";
-		return false;
+		return NULL;
 	}
 	IsoFile *isoWorldBin = worldDirectory->file("WORLD.BIN");
 	if(isoWorldBin == NULL) {
 		qWarning() << "IsoArchiveFF7::updateFieldBin world.bin not found";
-		return false;
+		return NULL;
 	}
 
 	QList<IsoFile *> files;
 	foreach(IsoFile *file, worldDirectory->files()) {
 		if(file->name() != "WORLD.BIN") {
-			files << file;
+			files.append(file);
 		}
 	}
 
-	return updateBin(isoWorldBin, files, 0x27000);
+	if(updateBin(isoWorldBin, files, 0x27000)) {
+		return isoWorldBin;
+	}
+	return NULL;
 }
 
-bool IsoArchiveFF7::updateYamadaBin()
+IsoFile *IsoArchiveFF7::updateYamadaBin()
 {
 	IsoDirectory *initDirectory = this->initDirectory();
 	if(!initDirectory) {
 		qWarning() << "IsoArchiveFF7::updateYamadaBin INIT directory not found";
-		return false;
+		return NULL;
 	}
 	IsoFile *isoYamadaBin = initDirectory->file("YAMADA.BIN");
 	if(!isoYamadaBin) {
 		qWarning() << "IsoArchiveFF7::updateYamadaBin YAMADA.BIN file not found";
-		return false;
+		return NULL;
 	}
 
 	if(isoYamadaBin->size() != 80) {
 		qWarning() << "IsoArchiveFF7::updateYamadaBin YAMADA.BIN file wrong size" << isoYamadaBin->size();
-		return false;
+		return NULL;
 	}
 
 	QByteArray yamadaData = isoYamadaBin->modifiedData();
@@ -386,7 +391,7 @@ bool IsoArchiveFF7::updateYamadaBin()
 		IsoFile *isoFile = rootDirectory()->file(filename);
 		if(!isoFile) {
 			qWarning() << "IsoArchiveFF7::updateYamadaBin" << filename << "file not found";
-			return false;
+			return NULL;
 		}
 
 		quint32 pos = data[i * 2],
@@ -396,7 +401,7 @@ bool IsoArchiveFF7::updateYamadaBin()
 				|| isoFile->size() != size) {
 			qWarning() << "IsoArchiveFF7::updateYamadaBin" << filename << "wrong pos or size" << isoFile->location() << pos << "/" << isoFile->size() << size;
 			if(isoFile->location() != pos) {
-				return false;
+				return NULL;
 			}
 		}
 
@@ -422,7 +427,7 @@ bool IsoArchiveFF7::updateYamadaBin()
 	_devicesToDelete << buffer;
 	isoYamadaBin->setModifiedFile(buffer);
 
-	return true;
+	return isoYamadaBin;
 }
 
 bool IsoArchiveFF7::reorganizeModifiedFilesAfter(QMap<quint32, const IsoFile *> &writeToTheMain, QList<const IsoFile *> &writeToTheEnd)
@@ -430,15 +435,15 @@ bool IsoArchiveFF7::reorganizeModifiedFilesAfter(QMap<quint32, const IsoFile *> 
 	Q_UNUSED(writeToTheEnd)
 	qDeleteAll(_devicesToDelete);
 	_devicesToDelete.clear();
-	if(updateFieldBin() && updateWorldBin() && updateYamadaBin()) {
-		IsoFile *isoFieldBin = fieldDirectory()->file("FIELD.BIN"),
-		        *isoWorldBin = rootDirectory()->file("WORLD/WORLD.BIN"),
-				*isoYamadaBin = initDirectory()->file("YAMADA.BIN");
+	IsoFile *isoFieldBin = updateFieldBin(),
+	        *isoWorldBin = updateWorldBin(),
+	        *isoYamadaBin = updateYamadaBin();
+	if(isoFieldBin && isoWorldBin && isoYamadaBin) {
 		writeToTheMain.insert(isoFieldBin->newLocation(), isoFieldBin);
 		writeToTheMain.insert(isoWorldBin->newLocation(), isoWorldBin);
 		writeToTheMain.insert(isoYamadaBin->newLocation(), isoYamadaBin);
 		return true;
 	}
-	setError(Archive::InvalidError, QObject::tr("Impossible de mettre à jour les binaires du jeu."));
+	setError(Archive::InvalidError, QObject::tr("Cannot update game binaries."));
 	return false;
 }

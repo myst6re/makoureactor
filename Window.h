@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,16 +18,15 @@
 #ifndef DEF_WINDOW
 #define DEF_WINDOW
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldArchive.h"
+#include "widgets/FieldList.h"
+#include "widgets/ScriptManager.h"
 #include "widgets/VarManager.h"
 #include "widgets/TextManager.h"
 #include "widgets/BGDialog.h"
 #include "widgets/ApercuBG.h"
 #include "widgets/Search.h"
-#include "widgets/GrpScriptList.h"
-#include "widgets/ScriptList.h"
-#include "widgets/OpcodeList.h"
 #include "widgets/FieldModel.h"
 #include "widgets/ModelManagerPC.h"
 #include "widgets/ModelManagerPS.h"
@@ -35,6 +34,7 @@
 #include "widgets/WalkmeshManager.h"
 #include "widgets/QTaskBarButton.h"
 #include "widgets/LgpDialog.h"
+#include "widgets/Splitter.h"
 //#include "FieldModelThread.h"
 
 class Window : public QMainWindow, ArchiveObserver
@@ -52,17 +52,16 @@ public:
 	void setObserverValue(int value);
 
 	int currentFieldId() const;
-	int currentGrpScriptId() const;
-	int currentScriptId() const;
-	int currentOpcodeId() const;
-	inline TextManager *textDialog() const {
+	inline TextManager *textWidget() const {
 		return _textDialog;
+	}
+	inline ScriptManager *scriptWidget() const {
+		return _scriptManager;
 	}
 
 public slots:
 	void openFile(const QString &path=QString());
 	void openDir();
-	void refresh();
 
 	void setModified(bool enabled=true);
 	void saveAs(bool currentPath=false);
@@ -96,30 +95,29 @@ public slots:
 	void fontManager();
 	void about();
 private slots:
+	void openRecentFile(QAction *action);
+	void disableEditors();
 	void openField(bool reload=false);
-	void showGrpScripts();
+	void showModel(int grpScriptID);
 	void showModel(Field *field, FieldModelFile *fieldModelFile);
-	void showScripts();
-	void compile();
-	void filterMap();
 	void changeLanguage(QAction *);
+	void toggleFieldList();
+	void toggleBackgroundPreview();
 	void config();
 private:
 	void setWindowTitle();
 	void restartNow();
 	void showProgression(const QString &message, bool canBeCanceled);
 	void hideProgression();
+	QProgressDialog *progressDialog();
+	void fillRecentMenu();
 
 	QLineEdit *lineSearch;
-	QTreeWidget *fieldList;
-	GrpScriptList *groupScriptList;
-	ScriptList *scriptList;
-	OpcodeList *opcodeList;
-	QLabel *compileScriptIcon, *compileScriptLabel;
+	FieldList *fieldList;
 	QStackedWidget *zonePreview;
 	ApercuBG *zoneImage;
 	FieldModel *fieldModel;
-	QGridLayout *gridLayout;
+	Splitter *horizontalSplitter, *verticalSplitter;
 
 	QToolBar *toolBar;
 
@@ -130,6 +128,7 @@ private:
 	Search *searchDialog;
 	VarManager *varDialog;
 
+	QMenu *_recentMenu;
 	QAction *actionSave, *actionSaveAs, *actionExport;
 	QAction *actionMassExport, *actionImport, *actionMassImport, *actionClose;
 	QAction *actionRun, *actionModels, *actionArchive;
@@ -137,6 +136,7 @@ private:
 	QAction *actionMisc, *actionMiscOperations, *actionJp_txt;
 	QMenu *menuLang;
 
+	ScriptManager *_scriptManager;
 	TextManager *_textDialog;
 	ModelManager *_modelManager;
 	TutWidget *_tutManager;
@@ -144,7 +144,7 @@ private:
 	BGDialog *_backgroundManager;
 
 	QTaskBarButton *taskBarButton;
-	QProgressDialog *progressDialog;
+	QProgressDialog *_progressDialog;
 	QAction *authorAction;
 	QLabel *authorLbl;
 

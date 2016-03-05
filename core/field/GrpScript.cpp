@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -173,9 +173,9 @@ void GrpScript::setType()
 	foreach(Opcode *opcode, firstScript->opcodes()) {
 		switch((Opcode::Keys)opcode->id()) {
 		case Opcode::PC://Definition du personnage
-			_character = ((OpcodePC *)opcode)->charID;
+			_character = static_cast<OpcodePC *>(opcode)->charID;
 			return;
-		case Opcode::CHAR://Definition du modèle 3D
+		case Opcode::CHAR://Definition du modÃ¨le 3D
 			_character = 0xFF;
 			break;
 		case Opcode::LINE://definition d'une zone
@@ -183,7 +183,7 @@ void GrpScript::setType()
 			return;
 		case Opcode::BGPDH:case Opcode::BGSCR:case Opcode::BGON:
 		case Opcode::BGOFF:case Opcode::BGROL:case Opcode::BGROL2:
-		case Opcode::BGCLR://bg paramètres
+		case Opcode::BGCLR://bg paramÃ¨tres
 			if(_character==-1)	animation = true;
 			return;
 		case Opcode::MPNAM://mapname
@@ -213,7 +213,7 @@ void GrpScript::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 
 QString GrpScript::name() const
 {
-	return _name.isEmpty() ? QObject::tr("Sans nom") : _name;
+	return _name.isEmpty() ? QObject::tr("Untitled") : _name;
 }
 
 QByteArray GrpScript::toByteArray(quint8 scriptID) const
@@ -244,9 +244,9 @@ QString GrpScript::type()
 	switch(typeID())
 	{
 	case Model:
-		if(_character == 0xFF)	return QObject::tr("Objet 3D");
+		if(_character == 0xFF)	return QObject::tr("Field model");
 		return QString("%1").arg(Opcode::character(_character));
-	case Location:	return QObject::tr("Zone");
+	case Location:	return QObject::tr("Location");
 	case Animation:	return QObject::tr("Animation");
 	case Director:	return QObject::tr("Main");
 	default:		return QString();
@@ -274,24 +274,24 @@ QString GrpScript::scriptName(quint8 scriptID)
 	case 0:	return QObject::tr("S0 - Init");
 	case 1:	return QObject::tr("S0 - Main");
 	case 2:
-		if(type == Model)		return QObject::tr("S1 - Parler");
+		if(type == Model)		return QObject::tr("S1 - Talk");
 		if(type == Location)	return QObject::tr("S1 - [OK]");
 		break;
 	case 3:
-		if(type == Model)		return QObject::tr("S2 - Toucher");
-		if(type == Location)	return QObject::tr("S2 - Bouger");
+		if(type == Model)		return QObject::tr("S2 - Contact");
+		if(type == Location)	return QObject::tr("S2 - Move");
 		break;
 	case 4:
-		if(type == Location)	return QObject::tr("S3 - Bouger");
+		if(type == Location)	return QObject::tr("S3 - Move");
 		break;
 	case 5:
-		if(type == Location)	return QObject::tr("S4 - Aller");
+		if(type == Location)	return QObject::tr("S4 - Go");
 		break;
 	case 6:
-		if(type == Location)	return QObject::tr("S5 - Aller 1x");
+		if(type == Location)	return QObject::tr("S5 - Go 1x");
 		break;
 	case 7:
-		if(type == Location)	return QObject::tr("S6 - Partir");
+		if(type == Location)	return QObject::tr("S6 - Go away");
 		break;
 	}
 	
@@ -317,14 +317,14 @@ bool GrpScript::searchOpcode(int opcode, int &scriptID, int &opcodeID) const
 	return searchOpcode(opcode, ++scriptID, opcodeID = 0);
 }
 
-bool GrpScript::searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &scriptID, int &opcodeID) const
+bool GrpScript::searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &scriptID, int &opcodeID) const
 {
 	if(!search(scriptID, opcodeID))
 		return false;
-	if(_scripts.at(scriptID)->searchVar(bank, adress, op, value, opcodeID))
+	if(_scripts.at(scriptID)->searchVar(bank, address, op, value, opcodeID))
 		return true;
 
-	return searchVar(bank, adress, op, value, ++scriptID, opcodeID = 0);
+	return searchVar(bank, address, op, value, ++scriptID, opcodeID = 0);
 }
 
 void GrpScript::searchAllVars(QList<FF7Var> &vars) const
@@ -387,14 +387,14 @@ bool GrpScript::searchOpcodeP(int opcode, int &scriptID, int &opcodeID) const
 	return searchOpcodeP(opcode, --scriptID, opcodeID = 2147483647);
 }
 
-bool GrpScript::searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &scriptID, int &opcodeID) const
+bool GrpScript::searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &scriptID, int &opcodeID) const
 {
 	if(!searchP(scriptID, opcodeID))
 		return false;
-	if(_scripts.at(scriptID)->searchVarP(bank, adress, op, value, opcodeID))
+	if(_scripts.at(scriptID)->searchVarP(bank, address, op, value, opcodeID))
 		return true;
 
-	return searchVarP(bank, adress, op, value, --scriptID, opcodeID = 2147483647);
+	return searchVarP(bank, address, op, value, --scriptID, opcodeID = 2147483647);
 }
 
 bool GrpScript::searchExecP(quint8 group, quint8 script, int &scriptID, int &opcodeID) const
@@ -520,7 +520,7 @@ bool GrpScript::removeTexts()
 
 QString GrpScript::toString(Field *field) const
 {
-	QString ret(QObject::tr("Groupe '%1' :").arg(name()));
+	QString ret(QObject::tr("Group '%1':").arg(name()));
 	int scriptID = 0;
 
 	ret.append("\n");

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ public:
 private:
 	QImage letter(int id, FontColor color);
 	int palette(FontColor color, quint8 table) const;
-	QRect letterRect(int charId) const;
+	static QRect letterRect(int charId);
 	bool openFont(const QByteArray &data);
 	bool openFont2(const QByteArray &data);
 	bool openFontSize(const QByteArray &data);

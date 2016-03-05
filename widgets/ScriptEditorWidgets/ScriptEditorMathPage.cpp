@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -28,23 +28,23 @@ void ScriptEditorBinaryOpPage::build()
 	var->setOnlyVar(true);
 
 	operationList = new QComboBox(this);
-	operationList->addItem(tr("Affectation"));
-	operationList->addItem(tr("Addition (cyclique)"));
-	operationList->addItem(tr("Addition (plafonnée)"));
-	operationList->addItem(tr("Soustraction (cyclique)"));
-	operationList->addItem(tr("Soustraction (avec plancher à 0)"));
+	operationList->addItem(tr("Assignment"));
+	operationList->addItem(tr("Addition (wrapped)"));
+	operationList->addItem(tr("Addition (capped)"));
+	operationList->addItem(tr("Subtraction (wrapped)"));
+	operationList->addItem(tr("Subtraction (capped)"));
 	operationList->addItem(tr("Multiplication"));
 	operationList->addItem(tr("Division"));
-	operationList->addItem(tr("Modulo"));
-	operationList->addItem(tr("Et"));
-	operationList->addItem(tr("Ou"));
-	operationList->addItem(tr("Ou exclusif"));
-	operationList->addItem(tr("Octet de poids faible"));
-	operationList->addItem(tr("Octet de poids fort"));
+	operationList->addItem(tr("Modulas"));
+	operationList->addItem(tr("And"));
+	operationList->addItem(tr("Or"));
+	operationList->addItem(tr("Exclusive or"));
+	operationList->addItem(tr("Low-byte"));
+	operationList->addItem(tr("High-byte"));
 
 	QWidget *typeGroup = new QWidget(this);
-	type1 = new QRadioButton(tr("8 bits"), typeGroup);
-	type2 = new QRadioButton(tr("16 bits"), typeGroup);
+	type1 = new QRadioButton(tr("8-bit"), typeGroup);
+	type2 = new QRadioButton(tr("16-bit"), typeGroup);
 	QHBoxLayout *typeLayout = new QHBoxLayout(typeGroup);
 	typeLayout->addWidget(type1);
 	typeLayout->addWidget(type2);
@@ -362,15 +362,15 @@ void ScriptEditorUnaryOpPage::build()
 	var->setOnlyVar(true);
 
 	operationList = new QComboBox(this);
-	operationList->addItem(tr("Incrémentation (cyclique)"));
-	operationList->addItem(tr("Incrémentation (plafonnée)"));
-	operationList->addItem(tr("Décrémentation (cyclique)"));
-	operationList->addItem(tr("Décrémentation (avec plancher à 0)"));
-	operationList->addItem(tr("Aléatoire"));
+	operationList->addItem(tr("Increment (wrapped)"));
+	operationList->addItem(tr("Increment (capped)"));
+	operationList->addItem(tr("Decrement (wrapped)"));
+	operationList->addItem(tr("Decrement (capped)"));
+	operationList->addItem(tr("Random"));
 
 	QWidget *typeGroup = new QWidget(this);
-	type1 = new QRadioButton(tr("8 bits"), typeGroup);
-	type2 = new QRadioButton(tr("16 bits"), typeGroup);
+	type1 = new QRadioButton(tr("8-bit"), typeGroup);
+	type2 = new QRadioButton(tr("16-bit"), typeGroup);
 	QHBoxLayout *typeLayout = new QHBoxLayout(typeGroup);
 	typeLayout->addWidget(type1);
 	typeLayout->addWidget(type2);
@@ -568,16 +568,16 @@ void ScriptEditorBitOpPage::build()
 	position->setSignedValueType(false);
 
 	operationList = new QComboBox(this);
-	operationList->addItem(tr("Mettre un bit à 1"));
-	operationList->addItem(tr("Mettre un bit à 0"));
-	operationList->addItem(tr("Inverser la valeur d'un bit"));
+	operationList->addItem(tr("Set a bit to 1"));
+	operationList->addItem(tr("Set a bit to 0"));
+	operationList->addItem(tr("Toggles a bit"));
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Variable")), 0, 0);
 	layout->addWidget(var, 0, 1);
 	layout->addWidget(new QLabel(tr("Position")), 1, 0);
 	layout->addWidget(position, 1, 1);
-	layout->addWidget(new QLabel(tr("Opération")), 2, 0);
+	layout->addWidget(new QLabel(tr("Operation")), 2, 0);
 	layout->addWidget(operationList, 2, 1);
 	layout->setRowStretch(3, 1);
 	layout->setContentsMargins(QMargins());

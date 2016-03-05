@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -34,17 +34,13 @@
 Window::Window() :
 	fieldArchive(0), field(0), firstShow(true), varDialog(0),
 	_textDialog(0), _modelManager(0), _tutManager(0), _walkmeshManager(0),
-	_backgroundManager(0)
+	_backgroundManager(0), _progressDialog(0)
 {
 	setWindowTitle();
 	setWindowState(Qt::WindowMaximized);
 
 	taskBarButton = new QTaskBarButton(this);
 	taskBarButton->setMinimum(0);
-
-	progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-	progressDialog->setWindowModality(Qt::WindowModal);
-	progressDialog->setAutoClose(false);
 
 	authorLbl = new QLabel();
 	authorLbl->setMargin(2);
@@ -55,66 +51,71 @@ Window::Window() :
 	toolBarRightLayout->addStretch();
 	toolBarRightLayout->addWidget(authorLbl, 0, Qt::AlignRight);
 	toolBarRightLayout->setContentsMargins(QMargins());
-	
+
 	QMenu *menu;
 	QAction *actionOpen, *actionFind, *action;
 	QMenuBar *menuBar = new QMenuBar(0);
-	
-	/* Menu 'Fichier' */
-	menu = menuBar->addMenu(tr("&Fichier"));
-	
-	actionOpen = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Ouvrir..."), this, SLOT(openFile()), QKeySequence("Ctrl+O"));
-	menu->addAction(tr("Ouvrir un &dossier..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
-	actionSave = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Enregi&strer"), this, SLOT(save()), QKeySequence("Ctrl+S"));
-	actionSaveAs = menu->addAction(tr("Enre&gistrer Sous..."), this, SLOT(saveAs()), QKeySequence("Shift+Ctrl+S"));
-	actionExport = menu->addAction(tr("&Exporter l'écran courant..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
-	actionMassExport = menu->addAction(tr("Exporter en &masse..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
-	actionImport = menu->addAction(tr("&Importer dans l'écran courant..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
+
+	/* "File" Menu */
+	menu = menuBar->addMenu(tr("&File"));
+
+	actionOpen = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Open..."), this, SLOT(openFile()), QKeySequence("Ctrl+O"));
+	menu->addAction(tr("Open &Directory..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
+	_recentMenu = new QMenu(tr("&Recent files"), this);
+	fillRecentMenu();
+	connect(_recentMenu, SIGNAL(triggered(QAction*)), SLOT(openRecentFile(QAction*)));
+	menu->addMenu(_recentMenu);
+	actionSave = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("&Save"), this, SLOT(save()), QKeySequence("Ctrl+S"));
+	actionSaveAs = menu->addAction(tr("Save &As..."), this, SLOT(saveAs()), QKeySequence("Shift+Ctrl+S"));
+	actionExport = menu->addAction(tr("&Export the current field..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
+	actionMassExport = menu->addAction(tr("&Mass Export..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
+	actionImport = menu->addAction(tr("&Import the current field..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
 //	actionMassImport = menu->addAction(tr("Importer en m&asse..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
-	actionArchive = menu->addAction(tr("Ges&tionnaire d'archive..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
+	actionArchive = menu->addAction(tr("Archive Mana&ger..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
 	menu->addSeparator();
-	actionRun = menu->addAction(QIcon(":/images/ff7.png"), tr("Lancer FF7"), this, SLOT(runFF7()));
+	actionRun = menu->addAction(QIcon(":/images/ff7.png"), tr("R&un FF7"), this, SLOT(runFF7()));
 	actionRun->setShortcut(Qt::Key_F8);
 	actionRun->setShortcutContext(Qt::ApplicationShortcut);
 	actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
 	menu->addSeparator();
-	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("Fe&rmer"), this, SLOT(closeFile()));
-	menu->addAction(tr("&Quitter"), this, SLOT(close()), QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
-	
-	/* Menu 'Outils' */
-	menu = menuBar->addMenu(tr("&Outils"));
-	menu->addAction(tr("&Textes..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
-	actionModels = menu->addAction(tr("&Modèles 3D..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
-	actionEncounter = menu->addAction(tr("&Rencontres aléatoires..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
-	menu->addAction(tr("T&utoriels/Musiques..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
-	menu->addAction(tr("&Zones..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
+	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("C&lose"), this, SLOT(closeFile()));
+	menu->addAction(tr("E&xit"), this, SLOT(close()), QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
+
+	/* "Tools" Menu */
+	menu = menuBar->addMenu(tr("T&ools"));
+	menu->addAction(tr("&Texts..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
+	actionModels = menu->addAction(tr("Field &Models..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
+	actionEncounter = menu->addAction(tr("Encounte&rs..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
+	menu->addAction(tr("Tutorials/&Sounds..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
+	menu->addAction(tr("&Walkmesh..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
 	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
-	actionMisc = menu->addAction(tr("&Divers..."), this, SLOT(miscManager()));
+	actionMisc = menu->addAction(tr("M&iscellaneous..."), this, SLOT(miscManager()));
 	menu->addSeparator();
-	menu->addAction(tr("&Gestionnaire de variables..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
-	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("Rec&hercher..."), this, SLOT(searchManager()), QKeySequence::Find);
-	actionMiscOperations = menu->addAction(tr("Opér&ations diverses..."), this, SLOT(miscOperations()));
-	//menu->addAction(tr("&Police de caractères..."), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
+	menu->addAction(tr("Variable Mana&ger..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
+	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("&Find..."), this, SLOT(searchManager()), QKeySequence::Find);
+	actionMiscOperations = menu->addAction(tr("Miscellaneous Oper&ations..."), this, SLOT(miscOperations()));
+	//menu->addAction(tr("&Police de caractÃ¨res..."), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
 
-	menu = menuBar->addMenu(tr("&Paramètres"));
+	/* "Settings" Menu */
+	menu = menuBar->addMenu(tr("&Settings"));
 
-	actionJp_txt = menu->addAction(tr("Caractères &japonais"), this, SLOT(jpText(bool)));
+	actionJp_txt = menu->addAction(tr("&Japanese Characters"), this, SLOT(jpText(bool)));
 	actionJp_txt->setCheckable(true);
 	actionJp_txt->setChecked(Config::value("jp_txt", false).toBool());
 
-	menuLang = menu->addMenu(tr("&Langues"));
+	menuLang = menu->addMenu(tr("&Language"));
 	QDir dir(Config::programResourceDir());
 	QStringList stringList = dir.entryList(QStringList("Makou_Reactor_*.qm"), QDir::Files, QDir::Name);
-	action = menuLang->addAction(tr("Français (défaut)"));
-	action->setData("fr");
+	action = menuLang->addAction(tr("English (default)"));
+	action->setData("en");
 	action->setCheckable(true);
-	action->setChecked(Config::value("lang").toString()=="fr");
+	action->setChecked(Config::value("lang").toString()=="en");
 
 	menuLang->addSeparator();
 	QTranslator translator;
 	foreach(const QString &str, stringList) {
 		translator.load(Config::programResourceDir()+"/"+str);
-		action = menuLang->addAction(translator.translate("Window", "Français"));
+		action = menuLang->addAction(translator.translate("Window", "English"));
 		QString lang = str.mid(14, 2);
 		action->setData(lang);
 		action->setCheckable(true);
@@ -124,75 +125,26 @@ Window::Window() :
 
 	menu->addAction(tr("&Configuration..."), this, SLOT(config()))->setMenuRole(QAction::PreferencesRole);
 
-	toolBar = new QToolBar(tr("Barre d'outils &principale"));
+	/* Toolbar */
+	toolBar = new QToolBar(tr("Main &toolbar"));
 	toolBar->setObjectName("toolbar");
 	toolBar->setIconSize(QSize(16, 16));
 	addToolBar(toolBar);
 	toolBar->addAction(actionOpen);
-	actionOpen->setStatusTip(tr("Ouvrir un fichier"));
+	actionOpen->setStatusTip(tr("Open a file"));
 	toolBar->addAction(actionSave);
-	actionSave->setStatusTip(tr("Enregistrer"));
+	actionSave->setStatusTip(tr("Save"));
 	toolBar->addSeparator();
 	toolBar->addAction(actionFind);
-	actionFind->setStatusTip(tr("Rechercher"));
+	actionFind->setStatusTip(tr("Find"));
 	toolBar->addAction(actionRun);
 	authorAction = toolBar->addWidget(toolBarRight);
 
-	QFont font;
-	font.setPointSize(8);
-
-	lineSearch = new QLineEdit(this);
-	lineSearch->setFixedWidth(120);
-	lineSearch->setStatusTip(tr("Recherche rapide"));
-	lineSearch->setPlaceholderText(tr("Rechercher..."));
-	
-	fieldList = new QTreeWidget(this);
-	fieldList->setColumnCount(2);
-	fieldList->setHeaderLabels(QStringList() << tr("Fichier") << tr("Id"));
-	fieldList->setFixedWidth(120);
-	fieldList->setMinimumHeight(120);
-	fieldList->setIndentation(0);
-	fieldList->setItemsExpandable(false);
-	fieldList->setSortingEnabled(true);
-	fieldList->setColumnWidth(1,28);
-	fieldList->setAutoScroll(false);
-	fieldList->resizeColumnToContents(0);
-	fieldList->setFont(font);
-	fieldList->sortByColumn(1, Qt::AscendingOrder);
-	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
-
-	groupScriptList = new GrpScriptList(this);
-	groupScriptList->setFixedWidth(176);
-	groupScriptList->setMinimumHeight(176);
-	groupScriptList->setFont(font);
-	connect(groupScriptList, SIGNAL(changed()), SLOT(setModified()));
-
-	scriptList = new ScriptList(this);
-	scriptList->setFixedWidth(88);
-	scriptList->setMinimumHeight(88);
-	scriptList->setFont(font);
-	
-	opcodeList = new OpcodeList(this);
-	connect(opcodeList, SIGNAL(changed()), SLOT(setModified()));
-	connect(opcodeList, SIGNAL(changed()), SLOT(refresh()));
-	connect(opcodeList, SIGNAL(editText(int)), SLOT(textManager(int)));
-
-	compileScriptLabel = new QLabel(this);
-	compileScriptLabel->hide();
-	QPalette pal = compileScriptLabel->palette();
-	pal.setColor(QPalette::Active, QPalette::WindowText, Qt::red);
-	pal.setColor(QPalette::Inactive, QPalette::WindowText, Qt::red);
-	compileScriptLabel->setPalette(pal);
-	compileScriptIcon = new QLabel(this);
-	compileScriptIcon->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxCritical).pixmap(16));
-	compileScriptIcon->hide();
-	connect(opcodeList, SIGNAL(changed()), SLOT(compile()));
+	fieldList = new FieldList(this);
 
 	zoneImage = new ApercuBG();
-	zoneImage->setFixedSize(300, 225);
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
-		fieldModel->setFixedSize(300, 225);
 //		modelThread = new FieldModelThread(this);
 
 //		connect(modelThread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(showModel(Field*,FieldModelFile*)));
@@ -201,105 +153,146 @@ Window::Window() :
 	}
 
 	zonePreview = new QStackedWidget(this);
-	zonePreview->setContentsMargins(QMargins());
-	zonePreview->setFixedSize(300, 225);
 	zonePreview->addWidget(zoneImage);
-	if(fieldModel)
+	if(fieldModel) {
 		zonePreview->addWidget(fieldModel);
+	}
 
-	gridLayout = new QGridLayout;
+	QWidget *fullFieldList = new QWidget(this);
+	QVBoxLayout *fieldListLayout = new QVBoxLayout(fullFieldList);
+	fieldListLayout->addWidget(fieldList, 1);
+	fieldListLayout->addWidget(fieldList->lineSearch());
+	zonePreview->setContentsMargins(fieldListLayout->contentsMargins());
 
-	gridLayout->addWidget(fieldList, 0, 0);
-	gridLayout->addWidget(lineSearch, 1, 0);
-	gridLayout->addWidget(zonePreview, 2, 0, 1, 2);
-	
-	QVBoxLayout *layout2 = new QVBoxLayout;
-	layout2->addWidget(groupScriptList->toolBar());
-	layout2->addWidget(groupScriptList);
-	layout2->setSpacing(2);
-	layout2->setContentsMargins(QMargins());
-	gridLayout->addLayout(layout2, 0, 1, 2, 1);
-	
-	gridLayout->addWidget(scriptList, 0, 2, 3, 1);
+	horizontalSplitter = new Splitter(Qt::Vertical, this);
+	horizontalSplitter->addWidget(fullFieldList);
+	horizontalSplitter->addWidget(zonePreview);
+	horizontalSplitter->setStretchFactor(0, 10);
+	horizontalSplitter->setStretchFactor(1, 2);
+	horizontalSplitter->setCollapsible(0, false);
+	horizontalSplitter->restoreState(Config::value("horizontalSplitterState").toByteArray());
+	horizontalSplitter->setCollapsed(1, !Config::value("backgroundVisible", true).toBool());
 
-	QHBoxLayout *compileLayout = new QHBoxLayout;
-	compileLayout->addWidget(compileScriptIcon);
-	compileLayout->addWidget(compileScriptLabel, 1);
-	compileLayout->setContentsMargins(QMargins());
+	_scriptManager = new ScriptManager(this);
 
-	layout2 = new QVBoxLayout;
-	layout2->addWidget(opcodeList->toolBar());
-	layout2->addWidget(opcodeList);
-	layout2->addLayout(compileLayout);
-	layout2->setSpacing(2);
-	layout2->setContentsMargins(QMargins());
-	gridLayout->addLayout(layout2, 0, 3, 3, 1);
+	verticalSplitter = new Splitter(Qt::Horizontal, this);
+	verticalSplitter->addWidget(horizontalSplitter);
+	verticalSplitter->addWidget(_scriptManager);
+	verticalSplitter->setStretchFactor(0, 3);
+	verticalSplitter->setStretchFactor(1, 9);
+	verticalSplitter->setCollapsible(1, false);
+	verticalSplitter->restoreState(Config::value("verticalSplitterState").toByteArray());
+	verticalSplitter->setCollapsed(0, !Config::value("fieldListVisible", true).toBool());
 
-	gridLayout->setHorizontalSpacing(4);
-	gridLayout->setVerticalSpacing(2);
-	gridLayout->setContentsMargins(QMargins(4,4,4,4));
-	
-	QWidget *widget = new QWidget(this);
-	widget->setLayout(gridLayout);
-	this->setCentralWidget(widget);
-	
+	setCentralWidget(verticalSplitter);
+
 	searchDialog = new Search(this);
 	menuBar->addMenu(createPopupMenu());
 	menuBar->addAction("&?", this, SLOT(about()))->setMenuRole(QAction::AboutRole);
-	
+
 	setMenuBar(menuBar);
 
+	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
 	connect(searchDialog, SIGNAL(found(int,int,int,int)), SLOT(gotoOpcode(int,int,int,int)));
 	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
-	connect(lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap()));
-	connect(lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
+	connect(_scriptManager, SIGNAL(groupScriptCurrentChanged(int)), SLOT(showModel(int)));
+	connect(_scriptManager, SIGNAL(editText(int)), SLOT(textManager(int)));
+	connect(_scriptManager, SIGNAL(changed()), SLOT(setModified()));
 
-	groupScriptList->toolBar()->setVisible(Config::value("grpToolbarVisible", true).toBool());
-	opcodeList->toolBar()->setVisible(Config::value("scriptToolbarVisible", true).toBool());
+	fieldList->sortItems(Config::value("fieldListSortColumn").toInt(),
+	                     Qt::SortOrder(Config::value("fieldListSortOrder").toBool()));
 
 	restoreState(Config::value("windowState").toByteArray());
 	restoreGeometry(Config::value("windowGeometry").toByteArray());
-	fieldList->setFocus();
+
 	closeFile();
 }
 
 Window::~Window()
 {
 	Config::flush();
-	if(fieldArchive)	fieldArchive->close();
+	if(fieldArchive) {
+		fieldArchive->close();
+	}
+}
+
+QProgressDialog *Window::progressDialog()
+{
+	if (!_progressDialog) {
+		_progressDialog = new QProgressDialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
+		_progressDialog->setWindowModality(Qt::WindowModal);
+		_progressDialog->setAutoClose(false);
+		_progressDialog->hide();
+	}
+	return _progressDialog;
 }
 
 void Window::closeEvent(QCloseEvent *event)
 {
-	if(!isEnabled() || closeFile(true)==QMessageBox::Cancel)	event->ignore();
-	else {
+	if(!isEnabled() || closeFile(true) == QMessageBox::Cancel) {
+		event->ignore();
+	} else {
 		Config::setValue("windowState", saveState());
 		Config::setValue("windowGeometry", saveGeometry());
-		Config::setValue("grpToolbarVisible", !groupScriptList->toolBar()->isHidden());
-		Config::setValue("scriptToolbarVisible", !opcodeList->toolBar()->isHidden());
+		Config::setValue("horizontalSplitterState", horizontalSplitter->saveState());
+		Config::setValue("verticalSplitterState", verticalSplitter->saveState());
+		Config::setValue("fieldListVisible", !verticalSplitter->isCollapsed(0));
+		Config::setValue("backgroundVisible", !horizontalSplitter->isCollapsed(1));
+		Config::setValue("fieldListSortColumn", fieldList->sortColumn());
+		Config::setValue("fieldListSortOrder", int(fieldList->header()->sortIndicatorOrder()));
+		_scriptManager->saveConfig();
+		if(_walkmeshManager) {
+			_walkmeshManager->saveConfig();
+		}
 		event->accept();
 	}
 }
 
 QMenu *Window::createPopupMenu()
 {
-	QMenu *menu = new QMenu(tr("&Affichage"), this);
+	QMenu *menu = new QMenu(tr("&View"), this);
 	menu->addAction(toolBar->toggleViewAction());
+	QAction *action;
+	action = menu->addAction(tr("Field List"), this, SLOT(toggleFieldList()));
+	action->setCheckable(true);
+	action->setChecked(!verticalSplitter->isCollapsed(0));
+	action = menu->addAction(tr("Background Preview"), this, SLOT(toggleBackgroundPreview()));
+	action->setCheckable(true);
+	action->setChecked(!horizontalSplitter->isCollapsed(1));
 	menu->addSeparator();
-	menu->addAction(groupScriptList->toolBar()->toggleViewAction());
-	menu->addAction(opcodeList->toolBar()->toggleViewAction());
+	foreach(QAction *action, _scriptManager->actions()) {
+		menu->addAction(action);
+	}
 	return menu;
+}
+
+void Window::fillRecentMenu()
+{
+	_recentMenu->clear();
+
+	foreach(const QString &recentFile, Config::value("recentFiles").toStringList()) {
+		_recentMenu->addAction(QDir::toNativeSeparators(recentFile));
+	}
+
+	if(_recentMenu->actions().isEmpty()) {
+		_recentMenu->setDisabled(true);
+	}
+}
+
+void Window::toggleFieldList()
+{
+	verticalSplitter->toggleCollapsed(0);
+}
+
+void Window::toggleBackgroundPreview()
+{
+	horizontalSplitter->toggleCollapsed(1);
 }
 
 FieldArchive::Sorting Window::getFieldSorting()
 {
-	switch(fieldList->sortColumn()) {
-	case 0:
-		return FieldArchive::SortByName;
-	default:
-		return FieldArchive::SortByMapId;
-	}
+	return fieldList->getFieldSorting();
 }
 
 void Window::jpText(bool enabled)
@@ -308,7 +301,7 @@ void Window::jpText(bool enabled)
 	if(_textDialog) {
 		_textDialog->updateText();
 	}
-	showScripts();
+	_scriptManager->fillOpcodes();
 }
 
 void Window::changeLanguage(QAction *action)
@@ -323,35 +316,35 @@ void Window::changeLanguage(QAction *action)
 
 void Window::restartNow()
 {
-	QString str_title, str_text;
+	QString title, text;
 	QTranslator translator;
-	if(translator.load(qApp->applicationDirPath()+"/"+QString("Makou_Reactor_")+Config::value("lang").toString())) {
-		str_title = translator.translate("Window", "Paramètres modifiés");
-		str_text = translator.translate("Window", "Relancez le programme pour que les paramètres prennent effet.");
+	if(translator.load(QString("Makou_Reactor_%1")
+	                   .arg(Config::value("lang").toString()),
+	                   qApp->applicationDirPath())) {
+		title = translator.translate("Window", "Settings changed");
+		text = translator.translate("Window", "Restart the program for the settings to take effect.");
 	}
 	else {
-		str_title = "Paramètres modifiés";
-		str_text = "Relancez le programme pour que les paramètres prennent effet.";
+		title = "Settings changed";
+		text = "Restart the program for the settings to take effect.";
 	}
-	QMessageBox::information(this, str_title, str_text);
+	QMessageBox::information(this, title, text);
 }
 
 int Window::closeFile(bool quit)
 {
-	if(fieldList->currentItem() != NULL)
+	if(fieldList->currentItem() != NULL) {
 		Config::setValue("currentField", fieldList->currentItem()->text(0));
+	}
 
-	if(actionSave->isEnabled() && fieldArchive!=NULL)
-	{
+	if(actionSave->isEnabled() && fieldArchive != NULL) {
 		QString fileChangedList;
-		int i=0;
-		for(int j=0 ; j<fieldArchive->size() ; ++j) {
+		int i = 0;
+		for(int j = 0 ; j < fieldArchive->size() ; ++j) {
 			Field *curField = fieldArchive->field(j, false);
-			if(curField && curField->isOpen() && curField->isModified())
-			{
+			if(curField && curField->isOpen() && curField->isModified()) {
 				fileChangedList += "\n - " + curField->name();
-				if(i>10)
-				{
+				if(i > 10) {
 					fileChangedList += "\n...";
 					break;
 				}
@@ -359,76 +352,45 @@ int Window::closeFile(bool quit)
 			}
 		}
 		if(!fileChangedList.isEmpty()) {
-			fileChangedList.prepend(tr("\n\nFichiers modifiés :"));
+			fileChangedList.prepend(tr("\n\nEdited files:"));
 		}
-		int reponse = QMessageBox::warning(this, tr("Sauvegarder"), tr("Voulez-vous enregistrer les changements de %1 ?%2").arg(fieldArchive->io()->name()).arg(fileChangedList), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-		if(reponse == QMessageBox::Yes)				save();
-		else if(reponse == QMessageBox::Cancel)		return reponse;
-		if(quit)	return reponse;
+		int reponse = QMessageBox::warning(this, tr("Save"), tr("Would you like to save changes of %1?%2").arg(fieldArchive->io()->name()).arg(fileChangedList), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+		if(reponse == QMessageBox::Yes) {
+			save();
+		} else if(reponse == QMessageBox::Cancel) {
+			return reponse;
+		}
+		if(quit) {
+			return reponse;
+		}
 	}
-	
-	if(!quit)
-	{
-		if(varDialog)	varDialog->setFieldArchive(NULL);
 
-		if(fieldArchive!=NULL)
-		{
+	if(!quit) {
+		if(varDialog) {
+			varDialog->setFieldArchive(NULL);
+		}
+
+		if(fieldArchive != NULL) {
 			delete fieldArchive;
 			fieldArchive = NULL;
 		}
 		field = NULL;
 
 		fieldList->blockSignals(true);
-		groupScriptList->blockSignals(true);
-		scriptList->blockSignals(true);
-		opcodeList->blockSignals(true);
 		fieldList->clear();
-		groupScriptList->clear();
-		groupScriptList->clearCopiedGroups();
-		groupScriptList->enableActions(false);
-		scriptList->clear();
-		opcodeList->clear();
-		opcodeList->clearCopiedOpcodes();
+		fieldList->setEnabled(false);
 		fieldList->blockSignals(false);
-		groupScriptList->blockSignals(false);
-		scriptList->blockSignals(false);
-		opcodeList->blockSignals(false);
-		zoneImage->clear();
-		if(fieldModel) {
-			fieldModel->clear();
-//			if(fieldArchive && fieldArchive->io()->isPC()) {
-//				modelThread->cancel();
-//				modelThread->wait();
-//			}
-		}
-		zonePreview->setCurrentIndex(0);
 
-		authorAction->setVisible(false);
-		setWindowModified(false);
-		setWindowTitle();
-		searchDialog->setFieldArchive(NULL);
-		if(_textDialog) {
-			_textDialog->clear();
-			_textDialog->setEnabled(false);
-		}
+		disableEditors();
 		if(_modelManager) {
 			_modelManager->close();
 			_modelManager->deleteLater();
 			_modelManager = 0;
 		}
-		if(_tutManager) {
-			_tutManager->clear();
-			_tutManager->setEnabled(false);
-		}
-		if(_walkmeshManager) {
-			_walkmeshManager->clear();
-			_walkmeshManager->setEnabled(false);
-		}
-		if(_backgroundManager) {
-			_backgroundManager->clear();
-			_backgroundManager->setEnabled(false);
-		}
-		
+		setWindowModified(false);
+		setWindowTitle();
+		searchDialog->setFieldArchive(NULL);
+
 		actionSave->setEnabled(false);
 		actionSaveAs->setEnabled(false);
 		actionExport->setEnabled(false);
@@ -442,8 +404,13 @@ int Window::closeFile(bool quit)
 		actionMisc->setEnabled(false);
 		actionMiscOperations->setEnabled(false);
 	}
-	
+
 	return QMessageBox::Yes;
+}
+
+void Window::openRecentFile(QAction *action)
+{
+	openFile(QDir::fromNativeSeparators(action->text()));
 }
 
 void Window::openFile(const QString &path)
@@ -458,16 +425,16 @@ void Window::openFile(const QString &path)
 				filePath.append("/field");
 		}
 		QStringList filter;
-		filter.append(tr("Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)"));
-		filter.append(tr("Fichiers Lgp (*.lgp)"));
-		filter.append(tr("Fichier DAT (*.DAT)"));
-		filter.append(tr("Fichier Field PC (*)"));
-		filter.append(tr("Image disque (*.bin *.iso *.img)"));
+		filter.append(tr("Compatible Files (*.lgp *.DAT *.bin *.iso *.img)"));
+		filter.append(tr("Lgp Files (*.lgp)"));
+		filter.append(tr("DAT File (*.DAT)"));
+		filter.append(tr("PC Field File (*)"));
+		filter.append(tr("Disc Image (*.bin *.iso *.img)"));
 
 		QString selectedFilter = filter.value(Config::value("open_path_selected_filter").toInt(), filter.first());
 
-		filePath = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"), filePath, filter.join(";;"), &selectedFilter);
-		if(filePath.isNull())	{
+		filePath = QFileDialog::getOpenFileName(this, tr("Open a file"), filePath, filter.join(";;"), &selectedFilter);
+		if(filePath.isNull()) {
 			return;
 		}
 
@@ -475,6 +442,15 @@ void Window::openFile(const QString &path)
 		if(index == -1)	index = filePath.size();
 		Config::setValue("open_path", filePath.left(index));
 		Config::setValue("open_path_selected_filter", filter.indexOf(selectedFilter));
+		QStringList recentFiles = Config::value("recentFiles").toStringList();
+		if(!recentFiles.contains(filePath)) {
+			recentFiles.prepend(filePath);
+			if(recentFiles.size() > 20) {
+				recentFiles.removeLast();
+			}
+			Config::setValue("recentFiles", recentFiles);
+			fillRecentMenu();
+		}
 	} else {
 		filePath = path;
 	}
@@ -505,7 +481,7 @@ void Window::openFile(const QString &path)
 void Window::openDir()
 {
 	QString filePath = QFileDialog::getExistingDirectory(this,
-														  tr("Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII"),
+														  tr("Select a folder containing the Final Fantasy VII field files"),
 														  Config::value("open_dir_path").toString());
 	if(filePath.isNull())	{
 		return;
@@ -513,13 +489,13 @@ void Window::openDir()
 
 	Config::setValue("open_dir_path", filePath);
 
-	QMessageBox question(QMessageBox::Question, tr("Type de fichiers"),
-						 tr("Quel type de fichiers voulez-vous chercher ?\n"
-							" - Les fichiers field PlayStation (\"EXEMPLE.DAT\")\n"
-							" - Les fichiers field PC (\"exemple\")\n"),
+	QMessageBox question(QMessageBox::Question, tr("File Type"),
+						 tr("What type of file to look for?\n"
+							" - Playstation field files (\"EXAMPLE.DAT\")\n"
+							" - PC Field File (\"example\")\n"),
 						 QMessageBox::NoButton, this);
-	QAbstractButton *psButton = question.addButton(tr("PS"), QMessageBox::AcceptRole);
-	QAbstractButton *pcButton = question.addButton(tr("PC"), QMessageBox::AcceptRole);
+	QAbstractButton *psButton = question.addButton(tr("PS"), QMessageBox::AcceptRole),
+	                *pcButton = question.addButton(tr("PC"), QMessageBox::AcceptRole);
 	question.addButton(QMessageBox::Cancel);
 	question.exec();
 	if(question.clickedButton() != psButton
@@ -532,13 +508,13 @@ void Window::openDir()
 
 bool Window::observerWasCanceled() const
 {
-	return progressDialog->wasCanceled();
+	return _progressDialog && _progressDialog->wasCanceled();
 }
 
 void Window::setObserverMaximum(unsigned int max)
 {
 	taskBarButton->setMaximum(max);
-	progressDialog->setMaximum(max);
+	progressDialog()->setMaximum(max);
 }
 
 void Window::setObserverValue(int value)
@@ -546,23 +522,23 @@ void Window::setObserverValue(int value)
 	QApplication::processEvents();
 
 	taskBarButton->setValue(value);
-	progressDialog->setValue(value);
+	progressDialog()->setValue(value);
 }
 
 void Window::showProgression(const QString &message, bool canBeCanceled)
 {
 	setObserverValue(0);
 	taskBarButton->setState(QTaskBarButton::Normal);
-	progressDialog->setLabelText(message);
-	progressDialog->setCancelButtonText(canBeCanceled ? tr("Annuler") : tr("Arrêter"));
-	progressDialog->show();
+	progressDialog()->setLabelText(message);
+	progressDialog()->setCancelButtonText(canBeCanceled ? tr("Cancel") : tr("Stop"));
+	progressDialog()->show();
 }
 
 void Window::hideProgression()
 {
 	taskBarButton->setState(QTaskBarButton::Invisible);
-	progressDialog->hide();
-	progressDialog->reset();
+	progressDialog()->hide();
+	progressDialog()->reset();
 }
 
 void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
@@ -577,7 +553,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 
 	fieldArchive->setObserver(this);
 
-	showProgression(tr("Ouverture..."), false);
+	showProgression(tr("Opening..."), false);
 
 	FieldArchiveIO::ErrorCode error = fieldArchive->open();
 
@@ -596,66 +572,53 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 			archiveManager();
 			return;
 		} else {
-			out = tr("Rien trouvé !");
+			out = tr("Nothing found!");
 		}
 		break;
 	case FieldArchiveIO::ErrorOpening:
-		out = tr("Le fichier est inaccessible");
+		out = tr("The file is inaccessible");
 		break;
 	case FieldArchiveIO::ErrorOpeningTemp:
-		out = tr("Impossible de créer un fichier temporaire");
+		out = tr("Can not create temporary file");
 		break;
 	case FieldArchiveIO::ErrorRemoving:
-		out = tr("Impossible de supprimer le fichier");
+		out = tr("Unable to remove the file");
 		break;
 	case FieldArchiveIO::ErrorRenaming:
-		out = tr("Impossible de renommer le fichier.");
+		out = tr("Failed to rename file.");
 		break;
 	case FieldArchiveIO::ErrorCopying:
-		out = tr("Impossible de copier le fichier");
+		out = tr("Failed to copy file");
 		break;
 	case FieldArchiveIO::Invalid:
-		out = tr("Le fichier est invalide");
+		out = tr("Invalid file");
 		break;
 	case FieldArchiveIO::NotImplemented:
-		out = tr("Cette erreur ne devrais pas s'afficher, merci de le signaler");
+		out = tr("This error should not appear, thank you for reporting it");
 		break;
 	}
 	if(!out.isEmpty()) {
-		QMessageBox::warning(this, tr("Erreur"), out);
+		QMessageBox::warning(this, tr("Error"), out);
 		fieldArchive->close();
 		return;
 	}
 
-	QList<QTreeWidgetItem *> items;
+	fieldList->fill(fieldArchive);
+	fieldList->setEnabled(true);
+	zonePreview->setEnabled(true);
 
-	for(int fieldID=0 ; fieldID<fieldArchive->size() ; ++fieldID) {
-		Field *f = fieldArchive->field(fieldID, false);
-		if(f) {
-			const QString &name = f->name();
-
-			QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << "");
-			item->setData(0, Qt::UserRole, fieldID);
-			items.append(item);
-
-			int index;
-			if((index = Data::field_names.indexOf(name)) != -1) {
-				item->setText(1, QString("%1").arg(index, 3));
-			} else {
-				item->setText(1, "~");
-			}
-		}
-	}
-	
-	fieldList->addTopLevelItems(items);
-
+	// Select memorized entry
 	QString previousSessionField = Config::value("currentField").toString();
 	if(!previousSessionField.isEmpty()) {
-		items = fieldList->findItems(previousSessionField, Qt::MatchExactly);
-		if(!items.isEmpty())	fieldList->setCurrentItem(items.first());
-		else if(fieldList->topLevelItemCount() > 0)		fieldList->setCurrentItem(fieldList->topLevelItem(0));
+		QList<QTreeWidgetItem *> items = fieldList->findItems(previousSessionField, Qt::MatchExactly);
+		if(!items.isEmpty()) {
+			fieldList->setCurrentItem(items.first());
+		}
 	}
-	else if(fieldList->topLevelItemCount() > 0)			fieldList->setCurrentItem(fieldList->topLevelItem(0));
+	// Select first entry
+	if(!fieldList->currentItem() && fieldList->topLevelItemCount() > 0) {
+		fieldList->setCurrentItem(fieldList->topLevelItem(0));
+	}
 
 	fieldList->setFocus();
 
@@ -678,13 +641,38 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	actionClose->setEnabled(true);
 
 #ifdef DEBUG_FUNCTIONS
-	//FieldArchivePC otherArch("C:/Users/Jérôme/Documents/neo_midgar_build/livraison-acro-2015-04-10/fflevel_compare_annexe.lgp", FieldArchiveIO::Lgp);
+	//FieldArchivePC otherArch("C:/Users/JÃ©rÃ´me/Documents/neo_midgar_build/livraison-acro-2015-04-10/fflevel_compare_annexe.lgp", FieldArchiveIO::Lgp);
 	//fieldArchive->compareTexts(&otherArch);
-	fieldArchive->printTexts("field-texts.txt");
-	fieldArchive->printAkaos("field-akaos.txt");
-	fieldArchive->printModelLoaders("field-model-loaders-generic.txt");
-	fieldArchive->printModelLoaders("field-model-loaders.txt", false);
-	fieldArchive->printScripts("field-scripts.txt");
+	//fieldArchive->searchBackgroundZ();
+	/* const QStringList &fieldNames = Data::field_names;
+	QStringList fieldNamesPC = fieldNames;
+	Data::toPCMaplist(fieldNamesPC);
+	FieldArchiveIterator it(*fieldArchive);
+	while (it.hasNext()) {
+		Field *f = it.next();
+		if (f && f->isOpen()) {
+			QString name = fieldNamesPC.value(fieldNames.indexOf(f->name()), f->name());
+			fieldArchive->printBackgroundTiles(f, QString("field-background-tiles-%1/field-background-tiles-%2.txt")
+			                                   .arg(fieldArchive->isPC() ? "PC" : "PS")
+			                                   .arg(name));
+		}
+	}
+	if (fieldArchive->isPS()) {
+		it.toFront();
+		while (it.hasNext()) {
+			Field *f = it.next();
+			if (f && f->isOpen()) {
+				QString name = fieldNamesPC.value(fieldNames.indexOf(f->name()), f->name());
+				fieldArchive->printBackgroundTiles(f, QString("field-background-tiles-ps-from-pc/field-background-tiles-%2.txt")
+				                                   .arg(name), true);
+			}
+		}
+	} */
+	//fieldArchive->printTexts("field-texts.txt");
+	//fieldArchive->printAkaos("field-akaos.txt");
+	//fieldArchive->printModelLoaders("field-model-loaders-generic.txt");
+	//fieldArchive->printModelLoaders("field-model-loaders.txt", false);
+	//fieldArchive->printScripts("field-scripts.txt");
 	//fieldArchive->searchAll();
 #endif
 }
@@ -725,41 +713,59 @@ void Window::setWindowTitle()
 
 int Window::currentFieldId() const
 {
-	QList<QTreeWidgetItem *> selectedItems = fieldList->selectedItems();
-	if(selectedItems.isEmpty())	return -1;
-
-	return selectedItems.first()->data(0, Qt::UserRole).toInt();
+	return fieldList->currentFieldId();
 }
 
-int Window::currentGrpScriptId() const
+void Window::disableEditors()
 {
-	return groupScriptList->selectedID();
-}
+	zoneImage->clear();
+	if(fieldModel) {
+		fieldModel->clear();
+//		if(fieldArchive && fieldArchive->io()->isPC()) {
+//			modelThread->cancel();
+//			modelThread->wait();
+//		}
+	}
+	zonePreview->setCurrentIndex(0);
+	zonePreview->setEnabled(false);
 
-int Window::currentScriptId() const
-{
-	return scriptList->selectedID();
-}
+	_scriptManager->clear();
+	_scriptManager->setEnabled(false);
 
-int Window::currentOpcodeId() const
-{
-	return opcodeList->selectedID();
+	authorAction->setVisible(false);
+	if(_textDialog) {
+		_textDialog->clear();
+		_textDialog->setEnabled(false);
+	}
+	if(_modelManager) {
+		_modelManager->clear();
+		_modelManager->setEnabled(false);
+	}
+	if(_tutManager) {
+		_tutManager->clear();
+		_tutManager->setEnabled(false);
+	}
+	if(_walkmeshManager) {
+		_walkmeshManager->clear();
+		_walkmeshManager->setEnabled(false);
+	}
+	if(_backgroundManager) {
+		_backgroundManager->clear();
+		_backgroundManager->setEnabled(false);
+	}
 }
 
 void Window::openField(bool reload)
 {
-	if(!fieldArchive) return;
+	if(!fieldArchive) {
+		return;
+	}
 
-	disconnect(groupScriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showGrpScripts()));
-	disconnect(scriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showScripts()));
-	
-	// Clear lists
-	groupScriptList->clear();
-	scriptList->clear();
-	opcodeList->clear();
-	
 	int fieldId = currentFieldId();
-	if(fieldId < 0)	return;
+	if(fieldId < 0) {
+		disableEditors();
+		return;
+	}
 	fieldList->scrollToItem(fieldList->selectedItems().first());
 
 //	Data::currentCharNames.clear();
@@ -785,18 +791,17 @@ void Window::openField(bool reload)
 
 	// Get and set field
 	field = fieldArchive->field(fieldId, true, true);
-	if(field == NULL) {
-		zoneImage->clear();
-		groupScriptList->setEnabled(false);
-		scriptList->clear();
-		scriptList->setEnabled(false);
-		opcodeList->clear();
-		opcodeList->setEnabled(false);
+	if(!field) {
+		disableEditors();
 		return;
 	}
-//	if(fieldModel && fieldArchive->io()->isPC()) {
-//		modelThread->setField(field);
-//	}
+
+	if(fieldModel) {
+		fieldModel->clear();
+		//if(fieldArchive->io()->isPC()) {
+		//	modelThread->setField(field);
+		//}
+	}
 	if(_textDialog && (reload || _textDialog->isVisible())) {
 		_textDialog->setField(field, reload);
 		_textDialog->setEnabled(true);
@@ -808,7 +813,7 @@ void Window::openField(bool reload)
 	if(_tutManager && (reload || _tutManager->isVisible())) {
 		TutFilePC *tutPC = NULL;
 		if(fieldArchive->isPC()) {
-			tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
+			tutPC = static_cast<FieldArchivePC *>(fieldArchive)->tut(field->name());
 		}
 		_tutManager->fill(field, tutPC, reload);
 		_tutManager->setEnabled(true);
@@ -825,76 +830,44 @@ void Window::openField(bool reload)
 	// Show background preview
 	zoneImage->fill(field, reload);
 	zonePreview->setCurrentIndex(0);
+	zonePreview->setEnabled(true);
 
 	Section1File *scriptsAndTexts = field->scriptsAndTexts();
 
 	if (scriptsAndTexts->isOpen()) {
 		// Show author
-		authorLbl->setText(tr("Auteur : %1").arg(scriptsAndTexts->author()));
+		authorLbl->setText(tr("Author: %1").arg(scriptsAndTexts->author()));
 		authorAction->setVisible(true);
 
 		// Fill group script list
-		groupScriptList->setEnabled(true);
-		groupScriptList->fill(scriptsAndTexts);
+		_scriptManager->fill(field);
+		_scriptManager->setEnabled(true);
 	} else {
-		groupScriptList->setEnabled(false);
+		_scriptManager->clear();
+		_scriptManager->setEnabled(false);
 	}
 
 	searchDialog->updateRunSearch();
-
-	connect(groupScriptList, SIGNAL(itemSelectionChanged()), SLOT(showGrpScripts()));
 }
 
-void Window::showGrpScripts()
+void Window::showModel(int grpScriptID)
 {
-	if(field == NULL) {
-		scriptList->clear();
-		scriptList->setEnabled(false);
-		opcodeList->clear();
-		opcodeList->setEnabled(false);
-		return;
+	if(grpScriptID >= 0) {
+		int modelID = field->scriptsAndTexts()->modelID(grpScriptID);
+		Data::currentModelID = modelID;
+		if(fieldModel && modelID > -1) {
+			// if(fieldArchive->io()->isPC()) {
+			//	modelThread->cancel();
+			//	modelThread->wait();
+			//	modelThread->setModel(modelID);
+			//	modelThread->start();
+			// } else {
+				showModel(field, field->fieldModel(modelID));
+			// }
+			return;
+		}
 	}
-
-	scriptList->setEnabled(true);
-	opcodeList->setEnabled(true);
-
-	disconnect(scriptList, SIGNAL(itemSelectionChanged()), this, SLOT(showScripts()));
-	
-	scriptList->blockSignals(true);
-	opcodeList->blockSignals(true);
-	scriptList->clear();
-	opcodeList->clear();
-	scriptList->blockSignals(false);
-	opcodeList->blockSignals(false);
-
-	if(groupScriptList->selectedItems().isEmpty())
-	{
-		zonePreview->setCurrentIndex(0);
-		return;
-	}
-
-	GrpScript *currentGrpScript = groupScriptList->currentGrpScript();
-	if(currentGrpScript==NULL)	return;
-
-	scriptList->fill(currentGrpScript);
-
-	connect(scriptList, SIGNAL(itemSelectionChanged()), SLOT(showScripts()));
-	scriptList->setCurrentRow(0);
-
-	int modelID = field->scriptsAndTexts()->modelID(groupScriptList->selectedID());
-	Data::currentModelID = modelID;
-	if(fieldModel && modelID != -1) {
-//		if(fieldArchive->io()->isPC()) {
-//			modelThread->cancel();
-//			modelThread->wait();
-//			modelThread->setModel(modelID);
-//			modelThread->start();
-//		} else {
-			showModel(field, field->fieldModel(modelID));
-//		}
-	} else {
-		zonePreview->setCurrentIndex(0);
-	}
+	zonePreview->setCurrentIndex(0);
 }
 
 void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
@@ -903,61 +876,6 @@ void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 		fieldModel->setFieldModelFile(fieldModelFile);
 	}
 	zonePreview->setCurrentIndex(int(fieldModel && !fieldModelFile->isEmpty()));
-}
-
-void Window::showScripts()
-{
-	if(field == NULL) {
-		opcodeList->clear();
-		opcodeList->setEnabled(false);
-		return;
-	}
-
-	opcodeList->setEnabled(true);
-
-	opcodeList->clear();
-	
-	if(scriptList->selectedItems().isEmpty())	return;
-	
-	Script *currentScript = scriptList->currentScript();
-	if(currentScript==NULL)	return;
-	opcodeList->fill(field, groupScriptList->currentGrpScript(), currentScript);
-	opcodeList->setIsInit(scriptList->selectedID()==0);
-	opcodeList->scroll(0, false);
-}
-
-void Window::compile()
-{
-	Script *currentScript = scriptList->currentScript();
-	if(currentScript==NULL)	return;
-
-	int opcodeID;
-	QString errorStr;
-
-	if(!currentScript->compile(opcodeID, errorStr)) {
-		compileScriptLabel->setText(tr("Erreur ligne %1 : %2").arg(opcodeID+1).arg(errorStr));
-		compileScriptLabel->show();
-		compileScriptIcon->show();
-		opcodeList->setErrorLine(opcodeID);
-	} else {
-		compileScriptLabel->hide();
-		compileScriptIcon->hide();
-		opcodeList->setErrorLine(-1);
-	}
-}
-
-void Window::filterMap()
-{
-	QList<QTreeWidgetItem *> items = fieldList->findItems(lineSearch->text(), Qt::MatchStartsWith);
-	if(!items.isEmpty()) {
-		fieldList->scrollToItem(items.first(), QAbstractItemView::PositionAtTop);
-	}
-}
-
-void Window::refresh()
-{
-	groupScriptList->localeRefresh();
-	scriptList->localeRefresh();
 }
 
 void Window::setModified(bool enabled)
@@ -997,15 +915,15 @@ void Window::saveAs(bool currentPath)
 	setEnabled(true);
 
 	if(!compiled) {
-		QMessageBox::warning(this, tr("Erreur de compilation"), tr("Erreur de compilation des scripts :\n"
-																   "écran %1 (%2), groupe %3 (%4), script %5, ligne %6 : %7")
+		QMessageBox::warning(this, tr("Compilation Error"), tr("Error Compiling Scripts:\n"
+																   "scene %1 (%2), group %3 (%4), script %5, line %6: %7")
 							 .arg(fieldArchive->field(fieldID)->name())
 							 .arg(fieldID)
 							 .arg(fieldArchive->field(fieldID)->scriptsAndTexts()->grpScript(groupID)->name())
 							 .arg(groupID).arg(scriptID)
 							 .arg(opcodeID+1).arg(errorStr));
 		gotoOpcode(fieldID, groupID, scriptID, opcodeID);
-		opcodeList->setErrorLine(opcodeID);
+		_scriptManager->opcodeList()->setErrorLine(opcodeID);
 		return;
 	}
 
@@ -1013,25 +931,25 @@ void Window::saveAs(bool currentPath)
 	if(!currentPath)
 	{
 		if(fieldArchive->io()->type() == FieldArchiveIO::Dir) {
-			path = QFileDialog::getExistingDirectory(this, tr("Enregistrer dossier sous"), fieldArchive->io()->path());
+			path = QFileDialog::getExistingDirectory(this, tr("Save Directory As"), fieldArchive->io()->path());
 			if(path.isNull())		return;
 		} else {
 			QString filter;
 			if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
-				filter = tr("Fichier Lgp (*.lgp)");
+				filter = tr("Lgp File (*.lgp)");
 			} else if(fieldArchive->io()->type() == FieldArchiveIO::File) {
-				filter = tr("Fichier DAT (*.DAT)");
+				filter = tr("DAT File (*.DAT)");
 			} else if(fieldArchive->io()->type() == FieldArchiveIO::Iso) {
-				filter = tr("Fichier Iso (*.iso *.bin *.img)");
+				filter = tr("Iso File (*.iso *.bin *.img)");
 			} else {
 				return;
 			}
-			path = QFileDialog::getSaveFileName(this, tr("Enregistrer sous"), fieldArchive->io()->path(), filter);
+			path = QFileDialog::getSaveFileName(this, tr("Save As"), fieldArchive->io()->path(), filter);
 			if(path.isNull())		return;
 		}
 	}
 
-	showProgression(tr("Enregistrement..."), fieldArchive->io()->type() == FieldArchiveIO::Lgp);
+	showProgression(tr("Saving..."), fieldArchive->io()->type() == FieldArchiveIO::Lgp);
 	quint8 error = 0;
 	
 	// QTime t;t.start();
@@ -1049,31 +967,31 @@ void Window::saveAs(bool currentPath)
 	case FieldArchiveIO::Aborted:
 		break;
 	case FieldArchiveIO::FieldNotFound:
-		out = tr("Rien trouvé !");
+		out = tr("Nothing found!");
 		break;
 	case FieldArchiveIO::ErrorOpening:
-		out = tr("Le fichier est inaccessible");
+		out = tr("The file is inaccessible");
 		break;
 	case FieldArchiveIO::ErrorOpeningTemp:
-		out = tr("Impossible de créer un fichier temporaire");
+		out = tr("Can not create temporary file");
 		break;
 	case FieldArchiveIO::ErrorRemoving:
-		out = tr("Impossible de supprimer le fichier, vérifiez les droits d'écriture.");
+		out = tr("Unable to remove the file, check write permissions.");
 		break;
 	case FieldArchiveIO::ErrorRenaming:
-		out = tr("Impossible de renommer le fichier, vérifiez les droits d'écriture.");
+		out = tr("Unable to rename the file, check write permissions.");
 		break;
 	case FieldArchiveIO::ErrorCopying:
-		out = tr("Impossible de copier le fichier, vérifiez les droits d'écriture.");
+		out = tr("Unable to copy the file, check write permissions.");
 		break;
 	case FieldArchiveIO::Invalid:
-		out = tr("L'archive est invalide");
+		out = tr("Invalid archive");
 		break;
 	case FieldArchiveIO::NotImplemented:
-		out = tr("Cette fonctionnalité n'est pas terminée");
+		out = tr("This feature is not complete");
 		break;
 	}
-	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
+	if(!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
 }
 
 bool Window::gotoField(int fieldID)
@@ -1095,11 +1013,9 @@ bool Window::gotoField(int fieldID)
 void Window::gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID)
 {
 	if(gotoField(fieldID)) {
-		blockSignals(true);
-		groupScriptList->scroll(grpScriptID, false);
-		scriptList->scroll(scriptID, false);
-		opcodeList->scroll(opcodeID);
-		blockSignals(false);
+		_scriptManager->blockSignals(true);
+		_scriptManager->gotoOpcode(grpScriptID, scriptID, opcodeID);
+		_scriptManager->blockSignals(false);
 	}
 }
 
@@ -1119,11 +1035,11 @@ void Window::gotoText(int fieldID, int textID, int from, int size)
 /* void Window::notifyFileChanged(const QString &path)
 {
 	if(!QFile::exists(path)) {
-		QMessageBox::warning(this, tr("Fichier supprimé"), tr("Le fichier '%1' a été supprimé par un programme externe !").arg(path));
+		QMessageBox::warning(this, tr("Fichier supprimÃ©"), tr("Le fichier '%1' a Ã©tÃ© supprimÃ© par un programme externe !").arg(path));
 	}
 	else
 	{
-		int reponse = QMessageBox::warning(this, tr("Fichier modifié"), tr("Le fichier '%1' a été modifié par un programme externe.\nVoulez-vous recharger ce fichier ?").arg(path)
+		int reponse = QMessageBox::warning(this, tr("Fichier modifiÃ©"), tr("Le fichier '%1' a Ã©tÃ© modifiÃ© par un programme externe.\nVoulez-vous recharger ce fichier ?").arg(path)
 			, QMessageBox::Yes | QMessageBox::No);
 		if(reponse == QMessageBox::Yes) {
 			open(path);
@@ -1134,11 +1050,11 @@ void Window::gotoText(int fieldID, int textID, int from, int size)
 void Window::notifyDirectoryChanged(const QString &path)
 {
 	if(!QFile::exists(path)) {
-		QMessageBox::warning(this, tr("Dossier supprimé"), tr("Le dossier '%1' a été supprimé par un programme externe !").arg(path));
+		QMessageBox::warning(this, tr("Dossier supprimÃ©"), tr("Le dossier '%1' a Ã©tÃ© supprimÃ© par un programme externe !").arg(path));
 	}
 	else
 	{
-		int reponse = QMessageBox::warning(this, tr("Dossier modifié"), tr("Le dossier '%1' a été modifié par un programme externe.\nVoulez-vous recharger ce dossier ?").arg(path)
+		int reponse = QMessageBox::warning(this, tr("Dossier modifiÃ©"), tr("Le dossier '%1' a Ã©tÃ© modifiÃ© par un programme externe.\nVoulez-vous recharger ce dossier ?").arg(path)
 			, QMessageBox::Yes | QMessageBox::No);
 		if(reponse == QMessageBox::Yes) {
 			open(path, true);
@@ -1152,9 +1068,9 @@ void Window::exporter()
 
 	int index;
 	QString types, name, selectedFilter,
-			fieldLzs = tr("Écran PC (*)"),
-			dat = tr("Fichier DAT (*.DAT)"),
-			fieldDec = tr("Écran PC décompressé (*)");
+			fieldLzs = tr("PC Field (*)"),
+			dat = tr("DAT File (*.DAT)"),
+			fieldDec = tr("Uncompressed PC Field (*)");
 
 	name = fieldList->selectedItems().first()->text(0);
 
@@ -1166,7 +1082,7 @@ void Window::exporter()
 	}
 
 	QString path = Config::value("exportPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("exportPath").toString()+"/";
-	path = QFileDialog::getSaveFileName(this, tr("Exporter le fichier courant"), path+name, types, &selectedFilter);
+	path = QFileDialog::getSaveFileName(this, tr("Export the current file"), path+name, types, &selectedFilter);
 	if(path.isNull())		return;
 	qint8 error=4;
 	bool compressed = selectedFilter != fieldDec;
@@ -1184,12 +1100,12 @@ void Window::exporter()
 		index = path.lastIndexOf('/');
 		Config::setValue("exportPath", index == -1 ? path : path.left(index));
 		break;
-	case 1:	out = tr("L'archive Lgp est inaccessible");break;
-	case 2:	out = tr("Erreur lors de l'ouverture du fichier");break;
-	case 3:	out = tr("Impossible de créer le nouveau fichier");break;
-	case 4:	out = tr("Pas encore implémenté !");break;
+	case 1:	out = tr("Lgp archive is inaccessible");break;
+	case 2:	out = tr("Error reopening file");break;
+	case 3:	out = tr("Unable to create the new file");break;
+	case 4:	out = tr("Not yet implemented!");break;
 	}
-	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
+	if(!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
 }
 
 void Window::massExport()
@@ -1203,7 +1119,7 @@ void Window::massExport()
 		if(!selectedFields.isEmpty()) {
 			QMap<FieldArchive::ExportType, QString> toExport;
 
-			showProgression(tr("Exportation..."), false);
+			showProgression(tr("Export..."), false);
 
 			if(massExportDialog->exportModule(MassExportDialog::Fields)) {
 				toExport.insert(FieldArchive::Fields, massExportDialog->moduleFormat(MassExportDialog::Fields));
@@ -1221,7 +1137,7 @@ void Window::massExport()
 			if(!fieldArchive->exportation(selectedFields, massExportDialog->directory(),
 									  massExportDialog->overwrite(), toExport)
 					&& !observerWasCanceled()) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Une erreur s'est produite lors de l'exportation"));
+				QMessageBox::warning(this, tr("Error"), tr("An error occured when exporting"));
 			}
 
 			hideProgression();
@@ -1240,7 +1156,7 @@ void Window::massImport()
 		if(!selectedFields.isEmpty()) {
 			QMap<Field::FieldSection, QString> toImport;
 
-			showProgression(tr("Importation..."), false);
+			showProgression(tr("Import..."), false);
 
 			if(massImportDialog->importModule(MassImportDialog::Texts)) {
 				toImport.insert(Field::Scripts, massImportDialog->moduleFormat(MassImportDialog::Texts));
@@ -1249,7 +1165,7 @@ void Window::massImport()
 			if(!fieldArchive->importation(selectedFields, massImportDialog->directory(),
 									  toImport)
 					&& !observerWasCanceled()) {
-				QMessageBox::warning(this, tr("Erreur"), tr("Une erreur s'est produite lors de l'importation"));
+				QMessageBox::warning(this, tr("Error"), tr("An error occurred when importing"));
 			}
 
 			hideProgression();
@@ -1264,17 +1180,17 @@ void Window::importer()
 	int index;
 	QString name, selectedFilter;
 	QStringList filter;
-	filter << tr("Fichier DAT (*.DAT)")
-		   << tr("Écran PC (*)")
-		   << tr("Fichier DAT décompressé (*)")
-		   << tr("Écran PC décompressé (*)");
+	filter << tr("DAT File (*.DAT)")
+		   << tr("PC Field (*)")
+		   << tr("Uncompressed DAT File (*)")
+		   << tr("Uncompressed PC Field (*)");
 
 	name = fieldList->selectedItems().first()->text(0);
 	if(fieldArchive->io()->isPS())
 		name = name.toUpper();
 
 	QString path = Config::value("importPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("importPath").toString()+"/";
-	path = QFileDialog::getOpenFileName(this, tr("Importer un fichier"), path+name, filter.join(";;"), &selectedFilter);
+	path = QFileDialog::getOpenFileName(this, tr("Import a file"), path+name, filter.join(";;"), &selectedFilter);
 	if(path.isNull())		return;
 
 	bool isDat = selectedFilter == filter.at(0) || selectedFilter == filter.at(2);
@@ -1293,9 +1209,8 @@ void Window::importer()
 	}
 
 	if(parts.testFlag(Field::Background)) {
-		QMessageBox::StandardButton button = QMessageBox::warning(this, tr("Attention"), tr("L'algorithme d'importation des décors "
-													   "donne de mauvais résultats en jeu, "
-													   "vous êtes prévenus !"), QMessageBox::Ok | QMessageBox::Cancel);
+		QMessageBox::StandardButton button = QMessageBox::warning(this, tr("Warning"), tr("The background importation algorithm give bad results in-game, you have been warned!")
+				, QMessageBox::Ok | QMessageBox::Cancel);
 		if(button != QMessageBox::Ok) {
 			return;
 		}
@@ -1314,10 +1229,10 @@ void Window::importer()
 		Config::setValue("importPath", index == -1 ? path : path.left(index));
 		openField(true);
 		break;
-	case 1:	out = tr("Erreur lors de l'ouverture du fichier");	break;
-	case 2:	out = tr("Le fichier est invalide");				break;
+	case 1:	out = tr("Error reopening file");	break;
+	case 2:	out = tr("Invalid file");				break;
 	}
-	if(!out.isEmpty())	QMessageBox::warning(this, tr("Erreur"), out);
+	if(!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
 }
 
 void Window::varManager()
@@ -1334,15 +1249,18 @@ void Window::runFF7()
 	QString FF7ExeDir = FF7Exe.left(FF7Exe.lastIndexOf('/'));
 	QStringList args;
 
-#ifndef Q_OS_WIN // For others systems like Linux, we try to launch ff7 with WINE
+#ifdef Q_OS_LINUX // For others systems like Linux, we try to launch ff7 with WINE
 	args.append(FF7Exe);
 	FF7Exe = "wine";
+#elif defined(Q_OS_MAC) // For mac os run with open -a so user can point to the App bundle directly
+	args.append(FF7Exe);
+	FF7Exe = "open -a";
 #else
 	FF7Exe = "\"" % FF7Exe % "\"";
 #endif
 
 	if(!QProcess::startDetached(FF7Exe, args, FF7ExeDir)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Final Fantasy VII n'a pas pu être lancé.\n%1")
+		QMessageBox::warning(this, tr("Error"), tr("Final Fantasy VII couldn't be launched\n%1")
 							 .arg(QDir::toNativeSeparators(FF7Exe)));
 	}
 }
@@ -1355,8 +1273,9 @@ void Window::searchManager()
 			searchDialog->setText(selectedText);
 		}
 	}
-	searchDialog->setOpcode(opcodeList->selectedOpcode());
-	searchDialog->setScriptExec(groupScriptList->selectedID(), scriptList->selectedID()-1);
+	searchDialog->setOpcode(_scriptManager->selectedOpcode());
+	searchDialog->setScriptExec(_scriptManager->currentGrpScriptId(),
+	                            _scriptManager->currentScriptId() - 1);
 	searchDialog->show();
 	searchDialog->activateWindow();
 	searchDialog->raise();
@@ -1367,6 +1286,8 @@ void Window::textManager(int textID, int from, int size, bool activate)
 	if(!_textDialog) {
 		_textDialog = new TextManager(this);
 		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
+		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
+		connect(_scriptManager, SIGNAL(changed()), _textDialog, SLOT(updateFromScripts()));
 	}
 
 	if(field && field->scriptsAndTexts()->isOpen()) {
@@ -1433,7 +1354,7 @@ void Window::encounterManager()
 					setModified();
 			}
 		} else {
-			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les combats aléatoires !"));
+			QMessageBox::warning(this, tr("Opening error"), tr("Can not open encounters!"));
 		}
 	}
 }
@@ -1448,7 +1369,7 @@ void Window::tutManager()
 	if(field && field->tutosAndSounds()->isOpen()) {
 		TutFilePC *tutPC = NULL;
 		if(fieldArchive->isPC()) {
-			tutPC = ((FieldArchivePC *)fieldArchive)->tut(field->name());
+			tutPC = static_cast<FieldArchivePC *>(fieldArchive)->tut(field->name());
 		}
 		_tutManager->fill(field, tutPC);
 		_tutManager->setEnabled(true);
@@ -1482,6 +1403,8 @@ void Window::backgroundManager()
 {
 	if(!_backgroundManager) {
 		_backgroundManager = new BGDialog(this);
+		connect(_backgroundManager, SIGNAL(modified()), SLOT(setModified()));
+		connect(_backgroundManager, SIGNAL(modified()), zoneImage, SLOT(drawBackground()));
 	}
 
 	if(field) {
@@ -1505,11 +1428,11 @@ void Window::miscManager()
 			{
 				if(inf->isModified() || field->isModified()) {
 					setModified();
-					authorLbl->setText(tr("Auteur : %1").arg(field->scriptsAndTexts()->author()));
+					authorLbl->setText(tr("Author: %1").arg(field->scriptsAndTexts()->author()));
 				}
 			}
 		} else {
-			QMessageBox::warning(this, tr("Erreur d'ouverture"), tr("Impossible d'ouvrir les infos diverses !"));
+			QMessageBox::warning(this, tr("Opening error"), tr("Can not open miscellaneous informations!"));
 		}
 	}
 }
@@ -1517,7 +1440,7 @@ void Window::miscManager()
 void Window::archiveManager()
 {
 	if(fieldArchive && fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
-		LgpDialog dialog((Lgp *)fieldArchive->io()->device(), this);
+		LgpDialog dialog(static_cast<Lgp *>(fieldArchive->io()->device()), this);
 		connect(&dialog, SIGNAL(modified()), SLOT(setModified()));
 		dialog.exec();
 	}
@@ -1533,7 +1456,7 @@ void Window::miscOperations()
 	if(dialog.exec() == QDialog::Accepted) {
 		OperationsManager::Operations operations = dialog.selectedOperations();
 
-		showProgression(tr("Application en cours..."), false);
+		showProgression(tr("Applying..."), false);
 
 		if(operations.testFlag(OperationsManager::CleanUnusedTexts)) {
 			fieldArchive->cleanTexts();
@@ -1545,10 +1468,10 @@ void Window::miscOperations()
 			fieldArchive->removeBattles();
 		}
 		if(!observerWasCanceled() && fieldArchive->isPC() && operations.testFlag(OperationsManager::CleanModelLoaderPC)) {
-			((FieldArchivePC *)fieldArchive)->cleanModelLoader();
+			static_cast<FieldArchivePC *>(fieldArchive)->cleanModelLoader();
 		}
 		if(!observerWasCanceled() && fieldArchive->isPC() && operations.testFlag(OperationsManager::RemoveUnusedSectionPC)) {
-			((FieldArchivePC *)fieldArchive)->removeUnusedSections();
+			static_cast<FieldArchivePC *>(fieldArchive)->removeUnusedSections();
 		}
 
 		hideProgression();
@@ -1574,7 +1497,7 @@ void Window::config()
 			_textDialog->updateText();
 		}
 		actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
-		showScripts();
+		_scriptManager->fillOpcodes();
 	}
 }
 
@@ -1587,6 +1510,7 @@ void Window::about()
 	font.setPointSize(12);
 
 	QLabel image(&about);
+	image.setScaledContents(true);
 	image.setPixmap(QPixmap(":/images/reactor.png"));
 	image.move(82, about.height() - 150);
 	
@@ -1597,14 +1521,14 @@ void Window::about()
 
 	font.setPointSize(8);
 
-	QLabel desc2(tr("Par myst6re<br/><a href=\"https://github.com/myst6re/makoureactor/\">github.com/myst6re/makoureactor</a><br/><br/>Merci à :<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), &about);
+	QLabel desc2(tr("By myst6re<br/><a href=\"https://github.com/myst6re/makoureactor/\">github.com/myst6re/makoureactor</a><br/><br/>Thanks to:<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), &about);
 	desc2.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc2.setTextFormat(Qt::RichText);
 	desc2.setOpenExternalLinks(true);
 	desc2.move(9, 40);
 	desc2.setFont(font);
 
-	QPushButton button(tr("Fermer"), &about);
+	QPushButton button(tr("Close"), &about);
 	button.move(8, about.height()-8-button.sizeHint().height());
 	connect(&button, SIGNAL(released()), &about, SLOT(close()));
 

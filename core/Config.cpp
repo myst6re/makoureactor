@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -52,6 +52,13 @@ QVariant Config::value(const QString &key, const QVariant &defaultValue)
 void Config::setValue(const QString &key, const QVariant &value)
 {
 	settings->setValue(key, value);
+}
+
+void Config::append(const QString &key, const QVariant &value)
+{
+	QList<QVariant> list = settings->value(key).toList();
+	list.append(value);
+	settings->setValue(key, list);
 }
 
 void Config::remove(const QString &key)

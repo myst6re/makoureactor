@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #ifndef WALKMESHMANAGER_H
 #define WALKMESHMANAGER_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/Field.h"
 #include "WalkmeshWidget.h"
 #include "VertexWidget.h"
@@ -31,6 +31,7 @@ class WalkmeshManager : public QDialog
 	Q_OBJECT
 public:
 	explicit WalkmeshManager(QWidget *parent=0, const QGLWidget *shareWidget=0);
+	void saveConfig();
 	void fill(Field *field, bool reload=false);
 	void clear();
 	int currentCamera() const;
@@ -102,6 +103,7 @@ private:
 	CaFile *caFile;
 	InfFile *infFile;
 	WalkmeshWidget *walkmesh;
+	QCheckBox *showModels;
 	Section1File *scriptsAndTexts;
 	QSlider *slider1, *slider2, *slider3;
 	QTabWidget *tabWidget;

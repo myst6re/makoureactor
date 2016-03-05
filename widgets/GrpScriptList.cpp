@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,55 +18,56 @@
 #include "GrpScriptList.h"
 #include "Data.h"
 
-GrpScriptList::GrpScriptList(QWidget *parent)
-	: QTreeWidget(parent)
+GrpScriptList::GrpScriptList(QWidget *parent) :
+    QTreeWidget(parent)
 {
+	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
 	setColumnCount(3);
-	setHeaderLabels(QStringList() << tr("Id") << tr("Groupe") << tr("Type"));
+	setHeaderLabels(QStringList() << tr("Id") << tr("Group") << tr("Type"));
 	setIndentation(0);
 	setItemsExpandable(false);
 	setSortingEnabled(true);
-//	setColumnWidth(0, 25);
-	setColumnWidth(1, 62);
-	resizeColumnToContents(2);
+	setColumnWidth(0, fontMetrics().width("8888"));
+	setColumnWidth(1, fontMetrics().width("WWWWWWWW"));
+	setColumnWidth(2, 0);
 	setContextMenuPolicy(Qt::ActionsContextMenu);
 	setSelectionMode(QAbstractItemView::ExtendedSelection);
 	sortByColumn(0, Qt::AscendingOrder);
-	
-	QAction *rename_A = new QAction(tr("Renommer groupe"), this);
+
+	QAction *rename_A = new QAction(tr("Rename group"), this);
 	rename_A->setShortcut(QKeySequence("F2"));
 	rename_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
-	QAction *add_A = new QAction(QIcon(":/images/plus.png"), tr("Ajouter groupe"), this);
+	QAction *add_A = new QAction(QIcon(":/images/plus.png"), tr("Add group"), this);
 	add_A->setShortcut(QKeySequence("Ctrl++"));
 	add_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
-	QAction *del_A = new QAction(QIcon(":/images/minus.png"), tr("Supprimer groupe"), this);
+	QAction *del_A = new QAction(QIcon(":/images/minus.png"), tr("Delete group"), this);
 	del_A->setShortcut(QKeySequence(Qt::Key_Delete));
 	del_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	del_A->setEnabled(false);
-	QAction *cut_A = new QAction(QIcon(":/images/cut.png"), tr("Couper groupe"), this);
+	QAction *cut_A = new QAction(QIcon(":/images/cut.png"), tr("Cut group"), this);
 	cut_A->setShortcut(QKeySequence("Ctrl+X"));
 	cut_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	cut_A->setEnabled(false);
-	QAction *copy_A = new QAction(QIcon(":/images/copy.png"), tr("Copier groupe"), this);
+	QAction *copy_A = new QAction(QIcon(":/images/copy.png"), tr("Copy group"), this);
 	copy_A->setShortcut(QKeySequence("Ctrl+C"));
 	copy_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	copy_A->setEnabled(false);
-	QAction *paste_A = new QAction(QIcon(":/images/paste.png"), tr("Coller groupe"), this);
+	QAction *paste_A = new QAction(QIcon(":/images/paste.png"), tr("Paste group"), this);
 	paste_A->setShortcut(QKeySequence("Ctrl+V"));
 	paste_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	paste_A->setEnabled(false);
-	QAction *up_A = new QAction(QIcon(":/images/up.png"), tr("Déplacer vers le haut"), this);
+	QAction *up_A = new QAction(QIcon(":/images/up.png"), tr("Move up"), this);
 	up_A->setShortcut(QKeySequence("Shift+Up"));
 	up_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	up_A->setEnabled(false);
-	QAction *down_A = new QAction(QIcon(":/images/down.png"), tr("Déplacer vers le bas"), this);
+	QAction *down_A = new QAction(QIcon(":/images/down.png"), tr("Move down"), this);
 	down_A->setShortcut(QKeySequence("Shift+Down"));
 	down_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	down_A->setEnabled(false);
-	
+
 	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), SLOT(rename(QTreeWidgetItem *, int)));
 	connect(this, SIGNAL(itemSelectionChanged()), SLOT(upDownEnabled()));
-	
+
 	connect(rename_A, SIGNAL(triggered()), SLOT(rename()));
 	connect(add_A, SIGNAL(triggered()), SLOT(add()));
 	connect(del_A, SIGNAL(triggered()), SLOT(del()));
@@ -75,7 +76,7 @@ GrpScriptList::GrpScriptList(QWidget *parent)
 	connect(paste_A, SIGNAL(triggered()), SLOT(paste()));
 	connect(up_A, SIGNAL(triggered()), SLOT(up()));
 	connect(down_A, SIGNAL(triggered()), SLOT(down()));
-	
+
 	this->addAction(rename_A);
 	this->addAction(add_A);
 	this->addAction(del_A);
@@ -90,19 +91,19 @@ GrpScriptList::GrpScriptList(QWidget *parent)
 	this->addAction(separator2);
 	this->addAction(up_A);
 	this->addAction(down_A);
-	
-	_toolBar = new QToolBar(tr("Édition des &groupes"));
-	_toolBar->setIconSize(QSize(14,14));
+
+	_toolBar = new QToolBar(tr("&Group Editor"));
+	_toolBar->setIconSize(QSize(14*scale,14*scale));
 	_toolBar->addAction(add_A);
-	add_A->setStatusTip(tr("Ajouter un groupe"));
+	add_A->setStatusTip(tr("Add a group"));
 	_toolBar->addAction(del_A);
-	del_A->setStatusTip(tr("Supprimer un groupe"));
+	del_A->setStatusTip(tr("Remove a group"));
 	_toolBar->addSeparator();
 	_toolBar->addAction(up_A);
-	up_A->setStatusTip(tr("Monter un groupe"));
+	up_A->setStatusTip(tr("Up"));
 	_toolBar->addAction(down_A);
-	down_A->setStatusTip(tr("Descendre un groupe"));
-	
+	down_A->setStatusTip(tr("Down"));
+
 	enableActions(false);
 
 	setMinimumWidth(_toolBar->sizeHint().width());
@@ -123,33 +124,30 @@ void GrpScriptList::setEnabled(bool enabled)
 GrpScript *GrpScriptList::currentGrpScript()
 {
 	int grpScriptID = selectedID();
-	if(grpScriptID != -1)
+	if(grpScriptID != -1) {
 		return scripts->grpScript(grpScriptID);
+	}
 	return NULL;
 }
-
-QToolBar *GrpScriptList::toolBar() { return _toolBar; }
 
 void GrpScriptList::enableActions(bool enabled)
 {
 	_toolBar->setEnabled(enabled);
-	foreach(QAction *action, actions())
+	foreach(QAction *action, actions()) {
 		action->setEnabled(enabled);
+	}
 	setContextMenuPolicy(enabled ? Qt::ActionsContextMenu : Qt::NoContextMenu);
 }
 
 void GrpScriptList::upDownEnabled()
 {
-	if(selectedItems().isEmpty())
-	{
+	if(selectedItems().isEmpty()) {
 		actions().at(2)->setEnabled(false);
 		actions().at(4)->setEnabled(false);
 		actions().at(5)->setEnabled(false);
 		actions().at(8)->setEnabled(false);
 		actions().at(9)->setEnabled(false);
-	}
-	else
-	{
+	} else {
 		actions().at(2)->setEnabled(topLevelItemCount() > 0);
 		actions().at(4)->setEnabled(true);
 		actions().at(5)->setEnabled(true);
@@ -160,19 +158,20 @@ void GrpScriptList::upDownEnabled()
 
 void GrpScriptList::fill(Section1File *scripts)
 {
-	if(scripts)		this->scripts = scripts;
-	QTreeWidgetItem *item;
+	if(scripts) {
+		this->scripts = scripts;
+	}
 	clear();
 
 	int i=0;
 	foreach(GrpScript *grpScript, this->scripts->grpScripts()) {
-		item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->name() << grpScript->type());
+		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->name() << grpScript->type());
 		item->setForeground(2, QBrush(grpScript->typeColor()));
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 		item->setToolTip(0, grpScript->type());
 		QIcon icon;
 
-		if(grpScript->character() < 9) {
+		if(grpScript->character() >= 0 && grpScript->character() < 9) {
 			icon = QIcon(QString(":/images/icon-char-%1.png").arg(grpScript->character()));
 		} else {
 			switch(grpScript->typeID()) {
@@ -202,7 +201,12 @@ void GrpScriptList::fill(Section1File *scripts)
 	}
 
 	resizeColumnToContents(0);
-	
+	resizeColumnToContents(1);
+
+	setMinimumWidth(columnWidth(0) +
+	                columnWidth(1) +
+	                fontMetrics().width("WWWWWWWW"));
+
 	actions().at(0)->setEnabled(true);
 	actions().at(1)->setEnabled(topLevelItemCount() < 256);
 	// actions().at(2)->setEnabled(topLevelItemCount() > 0);
@@ -216,22 +220,18 @@ void GrpScriptList::localeRefresh()
 {
 	int grpScriptID = selectedID();
 	QTreeWidgetItem *currentItem = this->currentItem();
-	if(grpScriptID != -1 && currentItem != NULL)
-	{
+	if(grpScriptID != -1 && currentItem != NULL) {
 		GrpScript *currentGrpScript = scripts->grpScript(grpScriptID);
 		currentItem->setText(2, currentGrpScript->type());
 		currentItem->setForeground(2, currentGrpScript->typeColor());
 	}
 }
 
-void GrpScriptList::rename()
-{
-	rename(currentItem(), 1);
-}
-
 void GrpScriptList::rename(QTreeWidgetItem *item, int column)
 {
-	if(item==NULL || column != 1)	return;
+	if(item==NULL || column != 1) {
+		return;
+	}
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 	editItem(item, 1);
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
@@ -240,7 +240,9 @@ void GrpScriptList::rename(QTreeWidgetItem *item, int column)
 
 void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 {
-	if(column != 1)	return;
+	if(column != 1) {
+		return;
+	}
 	disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(renameOK(QTreeWidgetItem *, int)));
 	QString newName = item->text(1).left(8);
 	item->setText(1, newName);
@@ -250,8 +252,10 @@ void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 
 void GrpScriptList::add()
 {
-	if(topLevelItemCount() > scripts->maxGrpScriptCount())		return;
-	
+	if(topLevelItemCount() > scripts->maxGrpScriptCount()) {
+		return;
+	}
+
 	int grpScriptID = selectedID()+1;
 
 	scripts->insertGrpScript(grpScriptID);
@@ -263,16 +267,27 @@ void GrpScriptList::add()
 
 void GrpScriptList::del(bool totalDel)
 {
-	if(topLevelItemCount() == 0)	return;
+	if(topLevelItemCount() == 0) {
+		return;
+	}
 	QList<int> selectedIDs = this->selectedIDs();
-	if(selectedIDs.isEmpty())	return;
-	
-	if(totalDel && QMessageBox::warning(this, tr("Suppression"), tr("Voulez-vous vraiment supprimer %1 ?\n"
-																	"Certains scripts peuvent y faire référence !").arg(selectedIDs.size()==1 ? tr("le groupe sélectionné") : tr("les groupes sélectionnés")), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel)		return;
-	
+	if(selectedIDs.isEmpty()) {
+		return;
+	}
+
+	if(totalDel && QMessageBox::warning(this, tr("Delete"), tr("Are you sure you want to remove %1?\n"
+	                                                           "Some scripts can refer to it!")
+	                                    .arg(selectedIDs.size()==1 ?
+	                                         tr("the group selected") :
+	                                         tr("the selected groups")),
+	                                    QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel) {
+		return;
+	}
+
 	qSort(selectedIDs);
-	for(int i=selectedIDs.size()-1 ; i>=0 ; --i)
+	for(int i = selectedIDs.size()-1 ; i >= 0 ; --i) {
 		totalDel ? scripts->deleteGrpScript(selectedIDs.at(i)) : scripts->removeGrpScript(selectedIDs.at(i));
+	}
 
 	blockSignals(true);
 	fill();
@@ -280,10 +295,12 @@ void GrpScriptList::del(bool totalDel)
 
 	emit changed();
 
-	if(topLevelItemCount() != 0)
-	{
-		if(selectedIDs.at(0) >= topLevelItemCount() && selectedIDs.at(0) > 0)	scroll(selectedIDs.at(0)-1);
-		else if(selectedIDs.at(0) < topLevelItemCount())	scroll(selectedIDs.at(0));
+	if(topLevelItemCount() != 0) {
+		if(selectedIDs.at(0) >= topLevelItemCount() && selectedIDs.at(0) > 0) {
+			scroll(selectedIDs.at(0)-1);
+		} else if(selectedIDs.at(0) < topLevelItemCount()) {
+			scroll(selectedIDs.at(0));
+		}
 	}
 }
 
@@ -296,11 +313,14 @@ void GrpScriptList::cut()
 void GrpScriptList::copy()
 {
 	QList<int> selectedIDs = this->selectedIDs();
-	if(selectedIDs.isEmpty())	return;
+	if(selectedIDs.isEmpty()) {
+		return;
+	}
 
 	clearCopiedGroups();
-	foreach(const int &id, selectedIDs)
+	foreach(const int &id, selectedIDs) {
 		grpScriptCopied.append(new GrpScript(*scripts->grpScript(id)));
+	}
 
 	actions().at(6)->setEnabled(true);
 }
@@ -309,8 +329,9 @@ void GrpScriptList::paste()
 {
 	int grpScriptID = selectedID()+1, scrollID = grpScriptID;
 	if(grpScriptID == 0)	return;
-	foreach(GrpScript *GScopied, grpScriptCopied)
+	foreach(GrpScript *GScopied, grpScriptCopied) {
 		scripts->insertGrpScript(grpScriptID++, new GrpScript(*GScopied));
+	}
 
 	fill();
 	scroll(scrollID);
@@ -323,50 +344,58 @@ void GrpScriptList::clearCopiedGroups()
 	grpScriptCopied.clear();
 }
 
-void GrpScriptList::up() { move(false); }
-void GrpScriptList::down() { move(true); }
-
 void GrpScriptList::move(bool direction)
 {
 	int grpScriptID = selectedID();
-	if(grpScriptID == -1)	return;
-	if(scripts->moveGrpScript(grpScriptID, direction))
-	{
+	if(grpScriptID == -1) {
+		return;
+	}
+	if(scripts->moveGrpScript(grpScriptID, direction)) {
 		fill();
 		scroll(direction ? grpScriptID+1 : grpScriptID-1);
 		emit changed();
+	} else {
+		setFocus();
 	}
-	else	setFocus();	
 }
 
 void GrpScriptList::scroll(int id, bool focus)
 {
 	QTreeWidgetItem *item = findItem(id);
-	if(item==NULL)	return;
+	if(!item) {
+		return;
+	}
 	setCurrentItem(item);
 	scrollToItem(item, QAbstractItemView::PositionAtTop);
-	if(focus)	setFocus();
+	if(focus) {
+		setFocus();
+	}
 }
 
 QTreeWidgetItem *GrpScriptList::findItem(int id)
 {
-	QList<QTreeWidgetItem *> items = this->findItems(QString("%1").arg(id, 3), Qt::MatchExactly);
-	if(items.isEmpty())	return NULL;
-	return items.at(0);
+	QList<QTreeWidgetItem *> items = findItems(QString("%1").arg(id, 3), Qt::MatchExactly);
+	if(items.isEmpty()) {
+		return NULL;
+	}
+	return items.first();
 }
 
 int GrpScriptList::selectedID()
 {
-	if(currentItem()==NULL || currentItem()->text(0)=="")	return -1;
+	if(!currentItem() || currentItem()->text(0).isEmpty()) {
+		return -1;
+	}
 	return currentItem()->text(0).toInt();
 }
 
 QList<int> GrpScriptList::selectedIDs()
 {
-	QList<int> liste;
-	QList<QTreeWidgetItem *> items = this->selectedItems();
-	foreach(QTreeWidgetItem *item, items)
-		liste << item->text(0).toInt();
-	
-	return liste;
+	QList<int> list;
+
+	foreach(QTreeWidgetItem *item, selectedItems()) {
+		list.append(item->text(0).toInt());
+	}
+
+	return list;
 }

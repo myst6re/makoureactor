@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -22,42 +22,40 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
 	_fieldArchive(0), _currentField(-1)
 {
-	setWindowTitle(tr("Importer en masse"));
+	setWindowTitle(tr("Mass Import"));
 
 	imports.insert(Fields,
-				   new FormatSelectionWidget(tr("Importer des écrans"),
+				   new FormatSelectionWidget(tr("Import fields"),
 											 QStringList(), this));
 	imports.insert(Akaos,
-				   new FormatSelectionWidget(tr("Importer les sons"),
+				   new FormatSelectionWidget(tr("Import sounds"),
 											 QStringList() <<
-											 tr("Son AKAO") + ";;akao", this));
+											 tr("AKAO sound") + ";;akao", this));
 	imports.insert(Texts,
-				   new FormatSelectionWidget(tr("Importer les textes"),
+				   new FormatSelectionWidget(tr("Import text"),
 											 QStringList() <<
-											 tr("Texte XML") + ";;xml" <<
-											 tr("Texte simple TXT") + ";;txt", this));
+											 tr("XML Text") + ";;xml" <<
+											 tr("Simple text TXT") + ";;txt", this));
 
 	dirPath = new QLineEdit(this);
 	dirPath->setText(Config::value("importDirectory").toString());
-	changeDir = new QPushButton(tr("Choisir..."), this);
+	changeDir = new QPushButton(tr("Choose..."), this);
 
 	fieldList = new QListWidget(this);
 	fieldList->setUniformItemSizes(true);
-	fieldList->setFixedWidth(200);
 	fieldList->setSelectionMode(QAbstractItemView::MultiSelection);
 
 	QToolBar *toolBar = new QToolBar(this);
-	toolBar->addAction(tr("Courant"), this, SLOT(selectCurrentField()));
+	toolBar->addAction(tr("Current"), this, SLOT(selectCurrentField()));
 	toolBar->addAction(tr("+"), fieldList, SLOT(selectAll()));
 	toolBar->addAction(tr("-"), fieldList, SLOT(clearSelection()));
 
 	QVBoxLayout *listLayout = new QVBoxLayout;
 	listLayout->addWidget(toolBar);
 	listLayout->addWidget(fieldList, 1);
-	listLayout->setContentsMargins(QMargins());
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal, this);
-	buttonBox->addButton(tr("Importer"), QDialogButtonBox::AcceptRole);
+	buttonBox->addButton(tr("Import"), QDialogButtonBox::AcceptRole);
 	buttonBox->addButton(QDialogButtonBox::Cancel);
 
 	QGridLayout *layout = new QGridLayout(this);
@@ -66,12 +64,11 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 	foreach(FormatSelectionWidget *formatSelection, imports) {
 		layout->addWidget(formatSelection, row++, 1, 1, 2);
 	}
-	layout->addWidget(new QLabel(tr("Emplacement de la source :")), row, 1, 1, 2);
+	layout->addWidget(new QLabel(tr("Source directory:")), row, 1, 1, 2);
 	layout->addWidget(dirPath, row + 1, 1);
 	layout->addWidget(changeDir, row + 1, 2);
 	layout->addWidget(buttonBox, row + 3, 0, 1, 3);
 	layout->setRowStretch(row + 2, 1);
-	layout->setColumnStretch(1, 1);
 
 	connect(changeDir, SIGNAL(clicked()),  SLOT(chooseImportDirectory()));
 	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
@@ -87,8 +84,8 @@ void MassImportDialog::fill(const FieldArchive *fieldArchive, int currentField)
 
 	QString fieldType = _fieldArchive->isPC() ? tr("PC") : tr("PS");
 	QStringList formats;
-	formats.append(tr("Fichier FIELD %1").arg(fieldType) + (_fieldArchive->isPC() ? "" : ";;dat"));
-	formats.append(tr("Fichier décompressé FIELD %1").arg(fieldType) + ";;dec");
+	formats.append(tr("FIELD File %1").arg(fieldType) + (_fieldArchive->isPC() ? "" : ";;dat"));
+	formats.append(tr("Uncompressed FIELD %1").arg(fieldType) + ";;dec");
 
 	imports.value(Fields)->setFormats(formats);
 
@@ -106,7 +103,7 @@ void MassImportDialog::fill(const FieldArchive *fieldArchive, int currentField)
 
 void MassImportDialog::chooseImportDirectory()
 {
-	QString dir = QFileDialog::getExistingDirectory(this, tr("Choisir un dossier"), directory());
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Choose a directory"), directory());
 	if(dir.isNull())	return;
 
 	dirPath->setText(dir);
@@ -150,7 +147,7 @@ bool MassImportDialog::importModule(ImportType type) const
 
 const QString &MassImportDialog::moduleFormat(ImportType type) const
 {
-	return imports.value(type)->currentFormat();
+	return imports[type]->currentFormat();
 }
 
 QString MassImportDialog::directory() const

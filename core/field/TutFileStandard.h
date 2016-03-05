@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ class TutFileStandard : public TutFile
 public:
 	explicit TutFileStandard(Field *field);
 	explicit TutFileStandard(const QList<QByteArray> &tutos);
+	using TutFile::open; // open(QByteArray)
 	bool open();
 	QByteArray save(QByteArray &toc, quint32 firstPos) const;
 	QByteArray save() const;

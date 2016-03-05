@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -21,18 +21,18 @@
 #include <QtCore>
 #include "FieldPart.h"
 
-typedef struct {
+struct Vertex_s {
 	qint16 x, y, z;
-} Vertex_s;
+};
 
-typedef struct {
+struct Camera {
 	Vertex_s camera_axis[3];
 	qint16 camera_axis2z;// copy (padding)
 	qint32 camera_position[3];
 	qint32 blank;
 	quint16 camera_zoom;
 	quint16 unknown;// seems to be undefined
-} Camera;
+};
 
 class CaFile : public FieldPart
 {

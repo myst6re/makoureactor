@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #ifndef MODELMANAGER_H
 #define MODELMANAGER_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldPC.h"
 #include "ColorDisplay.h"
 #include "FieldModel.h"
@@ -33,6 +33,9 @@ public:
 signals:
 	void modified();
 protected:
+	void showModelInfos() {
+		showModelInfos(models->currentItem());
+	}
 	virtual QList<QStringList> modelNames() const=0;
 	virtual QList<QTreeWidgetItem *> animItems(int modelID) const=0;
 	virtual void showModelInfos2(int row);
@@ -60,7 +63,7 @@ private:
 	Field *_field;
 	FieldModelLoader *fieldModelLoader;
 private slots:
-	void showModelInfos(QTreeWidgetItem *, QTreeWidgetItem *);
+	void showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous = 0);
 	void setModelUnknown(int unknown);
 	void showModel(QTreeWidgetItem *item);
 	void setModelColorLabel(int colorId);

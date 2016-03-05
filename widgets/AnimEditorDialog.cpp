@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -22,8 +22,7 @@
 AnimEditorDialog::AnimEditorDialog(int animID, const QGLWidget *shareWidget, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
 {
-	setWindowTitle(tr("Sélection d'une animation"));
-
+	setWindowTitle(tr("Animation Selector"));
 	QWidget *modelWidget;
 	if(Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel(0, shareWidget);

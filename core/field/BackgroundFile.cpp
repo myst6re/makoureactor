@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -48,27 +48,47 @@ void BackgroundFile::clear()
 	_tiles.clear();
 }
 
-QImage BackgroundFile::openBackground()
+QImage BackgroundFile::openBackground(bool *warning)
 {
 	// Search default background params
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
 	field()->scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
-	return openBackground(paramActifs, z);
+	return openBackground(paramActifs, z, NULL, NULL, warning);
 }
 
-QImage BackgroundFile::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers)
+QImage BackgroundFile::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z,
+                                      const bool *layers, const QSet<quint16> *IDs,
+                                      bool *warning)
 {
 	if(!isOpen() && !open()) {
+		if(warning) {
+			*warning = false;
+		}
 		return QImage();
 	}
 
-	return drawBackground(tiles().filter(paramActifs, z, layers));
+	return drawBackground(tiles().filter(paramActifs, z, layers, IDs), warning);
 }
 
-QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
+QImage BackgroundFile::backgroundPart(quint16 ID, bool *warning)
+{
+	if(!isOpen() && !open()) {
+		if(warning) {
+			*warning = false;
+		}
+		return QImage();
+	}
+
+	return drawBackground(tiles().tilesByID(ID, false), warning);
+}
+
+QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warning) const
 {
 	if(tiles.isEmpty() || !_textures) {
+		if(warning) {
+			*warning = false;
+		}
 		return QImage();
 	}
 
@@ -126,7 +146,8 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 				if(palette->notZero(indexOrColor)) {
 					if(tile.blending) {
 						pixels[baseX + right + top] = blendColor(tile.typeTrans,
-																 pixels[baseX + right + top], palette->color(indexOrColor));
+						                                         pixels[baseX + right + top],
+						                                         palette->color(indexOrColor));
 					} else {
 						pixels[baseX + right + top] = palette->color(indexOrColor);
 					}
@@ -140,16 +161,20 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles) const
 		}
 	}
 
+	if (warning) {
+		*warning = warned;
+	}
+
 	return image;
 }
 
-bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists)
+bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs)
 {
 	if(!isOpen() && !open()) {
 		return false;
 	}
 
-	usedParams = tiles().usedParams(layerExists);
+	usedParams = tiles().usedParams(layerExists, usedIDs);
 
 	return true;
 }

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,10 +18,10 @@
 #ifndef COLORDISPLAY_H
 #define COLORDISPLAY_H
 
-#include <QtGui>
+#include <QtWidgets>
 
-#define COLOR_DISPLAY_CELL_SIZE		9
-#define COLOR_DISPLAY_BORDER_WIDTH	1
+#define COLOR_DISPLAY_CELL_SIZE       9
+#define COLOR_DISPLAY_BORDER_WIDTH    1
 
 class ColorDisplay : public QWidget
 {
@@ -38,11 +38,12 @@ signals:
 private:
 	int colorId(const QPoint &pos) const;
 	QList<QRgb> colors;
+	qint8 scale;
 	bool _ro;
 protected:
 	void paintEvent(QPaintEvent *event);
-	void enterEvent(QMouseEvent *event);
-	void leaveEvent(QMouseEvent *event);
+	void enterEvent(QEvent *event);
+	void leaveEvent(QEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 };

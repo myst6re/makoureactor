@@ -1,7 +1,7 @@
 #ifndef SEARCHALL_H
 #define SEARCHALL_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class Window;
 class FieldArchive;
@@ -10,7 +10,7 @@ class SearchAll : public QDialog
 {
 	Q_OBJECT
 public:
-	SearchAll(Window *parent);
+	explicit SearchAll(Window *parent);
 	void setScriptSearch();
 	void setTextSearch();
 	void setFieldArchive(FieldArchive *fieldArchive);
@@ -27,7 +27,7 @@ private:
 	};
 
 	inline Window *mainWindow() const {
-		return (Window *)parentWidget();
+		return reinterpret_cast<Window *>(parentWidget());
 	}
 	void addResult(int fieldID, QTreeWidgetItem *item);
 	QTreeWidgetItem *createItemField(int fieldID) const;

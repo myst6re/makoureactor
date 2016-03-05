@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -100,11 +100,10 @@ int TextureFile::colorTableCount() const
 void TextureFile::debug() const
 {
 	QImage img(4*16, 4*16*colorTableCount(), QImage::Format_RGB32);
-	int x, y;
 
-	y = 0;
+	int y = 0;
 	foreach(const QVector<QRgb> &colorTable, _colorTables) {
-		x = 0;
+		int x = 0;
 		foreach(const QRgb &color, colorTable) {
 			img.setPixel(x*4+0, y*4+0, color);
 			img.setPixel(x*4+0, y*4+1, color);

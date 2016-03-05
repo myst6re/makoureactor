@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 #define MAX_TILE_DST	1024
 
 //Sizeof : 36
-typedef struct {
+struct TilePC {
 	qint16 dstX, dstY;
 	quint32 unused1;
 	quint8 srcX, unused2;
@@ -43,40 +43,37 @@ typedef struct {
 	quint8 textureID, unused9;
 	quint8 textureID2, unused10;
 	quint8 depth, unused11;//Normaly unused
-} TilePC;
+	quint32 IDBig;
+};
 
 //Sizeof : 8
-typedef struct {
+struct layer1Tile {
 	qint16 dstX, dstY;
 	quint8 srcX, srcY;
-	unsigned ZZ1:6; // Always 0
-	unsigned palID:4;
-	unsigned ZZ2:6; // Always 30
-} layer1Tile;
+	qint16 palID; // 6 bits = Always 30 | 4 bits = PaletteID | 6 bits = Always 0
+};
 
 //Sizeof : 2
-typedef struct {
+struct layer2Tile {
 	unsigned page_x:4;
 	unsigned page_y:1;
 	unsigned typeTrans:2;
 	unsigned depth:2;
 	unsigned ZZZ:7; // Always 0
-} layer2Tile;
+};
 
 //Sizeof : 2
-typedef struct {
-	unsigned param:7;
-	unsigned blending:1;
+struct layer3Tile {
+	quint8 param; // 1 bit = blending | 7 bits = param
 	quint8 state;
-} layer3Tile;
+};
 
 //Sizeof : 4
-typedef struct {
+struct paramTile {
 	quint16 ID;
-	unsigned param:7;
-	unsigned blending:1;
+	quint8 param; // 1 bit = blending | 7 bits = param
 	quint8 state;
-} paramTile;
+};
 
 class BackgroundTilesIO : public IO
 {
@@ -95,14 +92,11 @@ class BackgroundTilesIOPC : public BackgroundTilesIO
 {
 public:
 	explicit BackgroundTilesIOPC(QIODevice *device);
-#ifdef BG_ID_RESEARCH
-	static QMultiMap<int, quint32> IDs;
-#endif
 protected:
 	bool readData(BackgroundTiles &tiles) const;
 	bool writeData(const BackgroundTiles &tiles) const;
 private:
-	bool writeTile(const Tile &tile, quint32 unique = 0) const;
+	bool writeTile(const Tile &tile) const;
 	static Tile tilePC2Tile(const TilePC &tile, quint8 layerID, quint16 tileID);
 	static TilePC tile2TilePC(const Tile &tile);
 };
@@ -110,10 +104,16 @@ private:
 class BackgroundTilesIOPS : public BackgroundTilesIO
 {
 public:
-	explicit BackgroundTilesIOPS(QIODevice *device);
+	explicit BackgroundTilesIOPS(QIODevice *device, bool demo = false);
 protected:
 	bool readData(BackgroundTiles &tiles) const;
 	bool writeData(const BackgroundTiles &tiles) const;
+private:
+	bool writeTileBase(const Tile &tile) const;
+	bool writeTileTex(const Tile &tile) const;
+	bool writeTileID(const Tile &tile) const;
+	bool writeTileParam(const Tile &tile) const;
+	bool _demo;
 };
 
 #endif // BACKGROUNDTILESIO_H

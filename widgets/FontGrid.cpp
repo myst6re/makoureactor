@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -41,8 +41,8 @@ void FontGrid::paintEvent(QPaintEvent *)
 {
 	const int lineCountV=_letterCountH + 1, lineCountH=_letterCountV + 1,
 			charaSize=12, padding=1, cellSize=charaSize+1+padding*2;
-	QLine linesV[lineCountV];
-	QLine linesH[lineCountH];
+	QLine *linesV = new QLine[lineCountV],
+	      *linesH = new QLine[lineCountH];
 
 	for(int i=0 ; i<lineCountV ; ++i) {
 		linesV[i].setPoints(QPoint(i*cellSize, 0), QPoint(i*cellSize, height()));
@@ -63,6 +63,9 @@ void FontGrid::paintEvent(QPaintEvent *)
 
 	p.drawLines(linesV, lineCountV);
 	p.drawLines(linesH, lineCountH);
+
+	delete[] linesV;
+	delete[] linesH;
 
 	if(_windowBinFile) {
 		int charCount=_windowBinFile->tableSize(_currentTable);

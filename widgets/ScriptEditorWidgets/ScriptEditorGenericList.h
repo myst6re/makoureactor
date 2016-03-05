@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #ifndef DEF_SCRIPTEDITORGENERICLIST
 #define DEF_SCRIPTEDITORGENERICLIST
 
-#include <QtGui>
+#include <QtWidgets>
 #include "ScriptEditorView.h"
 
 class ScriptEditorGenericList : public ScriptEditorView
@@ -31,11 +31,11 @@ public:
 		/*10*/layer_id, parametre_id, state_id, window_id, text_id, /*15*/item_id, materia_id, animation_id, music_id, sound_id, /*20*/movie_id,
 		operateur, keys, color, coord_x, coord_y, coord_z, window_w, window_h, window_num, window_type, window_var, direction, vitesse, vitesse2,
 		priorite, menu, jump, jump_l, rotation, quantity,
-		bank, adress, byte, word, sword, bit, boolean, label
+		bank, adress, byte, word, sword, bit, boolean, label, akao
 	};
 
 	ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent=0);
-	virtual ~ScriptEditorGenericList();
+	virtual ~ScriptEditorGenericList() {}
 
 	virtual Opcode *opcode();
 public slots:

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -21,78 +21,91 @@
 VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	: QWidget(parent, Qt::Tool)
 {
-	setWindowTitle(tr("Gestionnaire de variables"));
+	setWindowTitle(tr("Variable manager"));
 	QFont font;
 	font.setPointSize(8);
-	
-	QGridLayout *globalLayout = new QGridLayout(this);
-	
+
 	QHBoxLayout *layout1 = new QHBoxLayout();
-	
+
 	bank = new QSpinBox(this);
 	bank->setRange(1,15);
-	adress = new QSpinBox(this);
-	adress->setRange(0,255);
+	address = new QSpinBox(this);
+	address->setRange(0,255);
 	name = new QLineEdit(this);
-	name->setMaxLength(50);
-	rename = new QPushButton(tr("Renommer"), this);
-	
+	name->setMaxLength(255);
+	rename = new QPushButton(tr("Rename"), this);
+
 	layout1->addWidget(bank);
-	layout1->addWidget(adress);
+	layout1->addWidget(address);
 	layout1->addWidget(name);
 	layout1->addWidget(rename);
-	
+
 	QHBoxLayout *layout2 = new QHBoxLayout();
-	
+
 	liste1 = new QListWidget(this);
-	liste1->setFixedWidth(40);
+	liste1->setFixedWidth(fontMetrics().width(QString(" WW-WW ")) + contentsMargins().left() + contentsMargins().right());
 	liste1->setFont(font);
-	
+
 	liste2 = new QTreeWidget(this);
 	liste2->setColumnCount(4);
-	liste2->setHeaderLabels(QStringList() << tr("Adresse") << tr("Surnom") << tr("Opération") << tr("Taille"));
+	liste2->setHeaderLabels(QStringList() << tr("Address") << tr("Nickname") << tr("Operation") << tr("Size"));
 	liste2->setIndentation(0);
 	liste2->setItemsExpandable(false);
 	liste2->setSortingEnabled(true);
 	liste2->setFont(font);
-	
+
 	layout2->addWidget(liste1);
 	layout2->addWidget(liste2);
-	
+
+	QLabel *helpIcon = new QLabel(this);
+	helpIcon->setPixmap(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation).pixmap(32));
+	QLabel *help = new QLabel(tr("Var banks 08, 09 and 10 are temporary and do not appear in the game save. "
+	                             "<br/>Other banks are stored in pair: for example 01-02 is in the same memory location, "
+	                             "but the first is used to store 8-bit values and "
+	                             "the second is used to store 16-bit values."),
+	                          this);
+	help->setTextFormat(Qt::RichText);
+	help->setWordWrap(true);
+	QHBoxLayout *helpLayout = new QHBoxLayout;
+	helpLayout->addWidget(helpIcon);
+	helpLayout->addWidget(help, 1);
+
 	QHBoxLayout *layout3 = new QHBoxLayout();
-	
-	searchButton = new QPushButton(tr("Adresses utilisées"), this);
-	ok = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Enregistrer"), this);
+
+	searchButton = new QPushButton(tr("Addresses Used"), this);
+	ok = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save"), this);
 	ok->setEnabled(false);
-	
+
 	layout3->addWidget(searchButton);
 	layout3->addStretch();
 	layout3->addWidget(ok);
-	
-	globalLayout->addLayout(layout1, 0, 0);
-	globalLayout->addLayout(layout2, 1, 0);
-	globalLayout->addLayout(layout3, 2, 0);
+
+	QVBoxLayout *globalLayout = new QVBoxLayout(this);
+	globalLayout->addLayout(layout1);
+	globalLayout->addLayout(layout2);
+	globalLayout->addLayout(helpLayout);
+	globalLayout->addLayout(layout3);
 
 	setFieldArchive(fieldArchive);
-	
+
 	local_var_names = Var::get();
-	
+
 	fillList1();
 	fillList2();
 	liste1->setCurrentRow(0);
 	liste2->setCurrentItem(liste2->topLevelItem(0));
 	changeBank(0);
 	fillForm();
-	
+
 	connect(bank, SIGNAL(valueChanged(int)), SLOT(scrollToList1(int)));
-	connect(adress, SIGNAL(valueChanged(int)), SLOT(scrollToList2(int)));
+	connect(address, SIGNAL(valueChanged(int)), SLOT(scrollToList2(int)));
 	connect(liste1, SIGNAL(currentRowChanged(int)), SLOT(changeBank(int)));
 	connect(liste2, SIGNAL(itemSelectionChanged()), SLOT(fillForm()));
 	connect(name, SIGNAL(returnPressed()), SLOT(renameVar()));
 	connect(rename, SIGNAL(released()), SLOT(renameVar()));
 	connect(ok, SIGNAL(released()), SLOT(save()));
 	connect(searchButton, SIGNAL(released()), SLOT(search()));
-	
+
 	adjustSize();
 }
 
@@ -198,7 +211,7 @@ void VarManager::changeBank(int row)
 		++it;
 	}
 	fillForm();
-	
+
 	liste2->blockSignals(false);
 }
 
@@ -234,14 +247,14 @@ void VarManager::fillForm()
 {
 	if(liste2->selectedItems().isEmpty())	return;
 	QTreeWidgetItem *item = liste2->selectedItems().first();
-	adress->setValue(itemAddress(item));
+	address->setValue(itemAddress(item));
 	name->setText(item->text(1));
 }
 
 void VarManager::renameVar()
 {
 	if(liste2->selectedItems().isEmpty())	return;
-	local_var_names.insert(adress->value() | (bank->value() << 8), name->text());
+	local_var_names.insert(address->value() | (bank->value() << 8), name->text());
 	liste2->selectedItems().first()->setText(1, name->text());
 	ok->setEnabled(true);
 }
@@ -249,7 +262,7 @@ void VarManager::renameVar()
 void VarManager::save()
 {
 	if(!Var::save(local_var_names)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Fichier vars.cfg inaccessible.\nÉchec de l'enregistrement."));
+		QMessageBox::warning(this, tr("Error"), tr("Save Failed"));
 	} else {
 		ok->setEnabled(false);
 	}
@@ -257,7 +270,7 @@ void VarManager::save()
 
 void VarManager::search()
 {
-	QMessageBox mess(QMessageBox::Information, tr("Recherche"), tr("Recherche des variables en cours, cela peut prendre une minute..."));
+	QMessageBox mess(QMessageBox::Information, tr("Searching"), tr("Searching, it may take a minute..."));
 	mess.setWindowModality(Qt::ApplicationModal);
 	mess.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
 	mess.setStandardButtons(QMessageBox::NoButton);
@@ -265,8 +278,8 @@ void VarManager::search()
 	allVars = fieldArchive->searchAllVars(_fieldNames);
 	int b = bank->value();
 
-	for(int adress=0 ; adress<256 ; ++adress) {
-		colorizeItem(liste2->topLevelItem(adress), FF7Var(b, adress));
+	for(int address=0 ; address<256 ; ++address) {
+		colorizeItem(liste2->topLevelItem(address), FF7Var(b, address));
 	}
 }
 
@@ -295,8 +308,8 @@ void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
 	bool foundR = false, foundW = false;
 	QSet<FF7Var::VarSize> varSize;
 
-	findVar(FF7Var(banks.first,  var.adress), foundR, foundW, varSize);
-	findVar(FF7Var(banks.second, var.adress), foundR, foundW, varSize);
+	findVar(FF7Var(banks.first,  var.address), foundR, foundW, varSize);
+	findVar(FF7Var(banks.second, var.address), foundR, foundW, varSize);
 
 	QString rwText;
 	QStringList sizeText;
@@ -318,16 +331,16 @@ void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
 			rwText = tr("w");
 		}
 		if(varSize.contains(FF7Var::Bit)) {
-			sizeText.append(tr("bits"));
+			sizeText.append(tr("bitfield"));
 		}
 		if(varSize.contains(FF7Var::Byte)) {
-			sizeText.append(tr("1 octet"));
+			sizeText.append(tr("1 Byte"));
 		}
 		if(varSize.contains(FF7Var::Word)) {
-			sizeText.append(tr("2 octets"));
+			sizeText.append(tr("2 Bytes"));
 		}
 		if(varSize.contains(FF7Var::SignedWord)) {
-			sizeText.append(tr("2 octets signés"));
+			sizeText.append(tr("2 Signed Bytes"));
 		}
 	} else {
 		item->setBackground(0, palette().base().color());

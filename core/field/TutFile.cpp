@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -105,11 +105,11 @@ QString TutFile::parseScripts(int tutID) const
 	QString ret;
 	QByteArray textData;
 	bool jp = Config::value("jp_txt", false).toBool();
-	quint8 key;
 	int i=0, size = tuto.size(), endOfText;
 
 	while(i < size) {
-		switch(key = tuto.at(i++)) {
+		quint8 key = tuto.at(i++);
+		switch(key) {
 		case 0x00:
 			if(i + 2 > size) {
 				ret.append(parseScriptsUnknownString(key));

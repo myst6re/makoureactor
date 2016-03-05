@@ -1,12 +1,17 @@
 TEMPLATE = app
-win32 {
-    TARGET = Makou_Reactor
-} else {
-    TARGET = makoureactor
-}
+TARGET = makoureactor
 
 QT += core gui opengl
-QMAKE_CXXFLAGS += -std=c++0x
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+    CONFIG += c++11
+}
+lessThan(QT_MAJOR_VERSION, 5) {
+    # Compatibility layer
+    INCLUDEPATH += compat
+    # Enabling c++11
+    QMAKE_CXXFLAGS += -std=c++0x
+}
 
 # Input
 HEADERS += \
@@ -138,7 +143,10 @@ HEADERS += \
     core/field/RsdFile.h \
     core/field/FieldModelTextureRef.h \
     core/field/FieldModelTextureRefPC.h \
-    core/field/FieldModelTextureRefPS.h
+    core/field/FieldModelTextureRefPS.h \
+    widgets/ScriptManager.h \
+    widgets/FieldList.h \
+    widgets/Splitter.h
 
 SOURCES += \
     Window.cpp \
@@ -270,35 +278,77 @@ SOURCES += \
     core/field/RsdFile.cpp \
     core/field/FieldModelTextureRef.cpp \
     core/field/FieldModelTextureRefPC.cpp \
-    core/field/FieldModelTextureRefPS.cpp
+    core/field/FieldModelTextureRefPS.cpp \
+    widgets/ScriptManager.cpp \
+    widgets/FieldList.cpp \
+    widgets/Splitter.cpp
 
-TRANSLATIONS += Makou_Reactor_en.ts \
+TRANSLATIONS += Makou_Reactor_fr.ts  \
     Makou_Reactor_ja.ts
+
+CODECFORTR = UTF-8
+CODECFORSRC = UTF-8
 
 RESOURCES += Makou_Reactor.qrc
 macx {
     ICON = images/Makou_Reactor.icns
 }
 
-win32 {
-    RC_FILE = Makou_Reactor.rc
-
-    TASKBAR_BUTTON {
-        LIBS += -lole32
-        INCLUDEPATH += include
-        DEFINES += TASKBAR_BUTTON
-    }
-    INCLUDEPATH += zlib-1.2.7
-    # LIBS += -lz
-} else {
+# include zlib
+!win32 {
     LIBS += -lz
+} else {
+    exists($$[QT_INSTALL_PREFIX]/include/QtZlib) {
+        INCLUDEPATH += $$[QT_INSTALL_PREFIX]/include/QtZlib
+    } else {
+        INCLUDEPATH += zlib-1.2.7
+        # LIBS += -lz
+    }
 }
 
-OTHER_FILES += Makou_Reactor.rc
-DISTFILES += Makou_Reactor.desktop
+win32 {
+    RC_FILE = Makou_Reactor.rc
+    TARGET = Makou_Reactor
+    # Regedit features
+    LIBS += -ladvapi32 -lshell32
+    # OpenGL features
+    LIBS += -lopengl32 -lGlU32
+    # QTaskbarButton
+    greaterThan(QT_MAJOR_VERSION, 4):qtHaveModule(winextras) {
+        QT += winextras
+        DEFINES += TASKBAR_BUTTON QTASKBAR_WIN_QT5
+    } else {
+        TASKBAR_BUTTON {
+            DEFINES += TASKBAR_BUTTON
+            LIBS += -lole32
+            INCLUDEPATH += include
+        }
+    }
+}
+
+OTHER_FILES += Makou_Reactor.rc \
+    deploy.bat \
+    compat/QtWidgets \
+    .travis.yml
+DISTFILES += Makou_Reactor.desktop \
+    README.md
+
+system(lrelease Makou_Reactor.pro) # call lrelease to make the qm files.
 
 #all other *nix (except for symbian)
 unix:!macx:!symbian {
     LIBS += -lglut -lGLU
-    system(lrelease Makou_Reactor.pro) #call lrelease to make the qm files.
+
+    target.path = /usr/bin
+
+    langfiles.files = *.qm
+    langfiles.path = /usr/share/makoureactor
+
+    icon.files = images/logo-shinra.png
+    icon.path = /usr/share/pixmaps
+
+    desktop.files = Makou_Reactor.desktop
+    desktop.path = /usr/share/applications
+
+    INSTALLS += target langfiles icon desktop
 }

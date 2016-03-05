@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -33,11 +33,21 @@
 
 #define MAX_CONFLICTS 4096
 
+#ifdef _MSC_VER
+#	define PACK(structure)			\
+		__pragma(pack(push, 1))		\
+		structure					\
+		__pragma(pack(pop))
+#else
+#	define PACK(structure) structure Q_PACKED
+#endif
+
+PACK(
 struct LgpLookupTableEntry
 {
 	quint16 tocOffset;
 	quint16 fileCount;
-} Q_PACKED;
+});
 
 struct LgpConflictEntry
 {

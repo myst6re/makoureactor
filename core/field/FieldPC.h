@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII FieldPC Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -28,11 +28,12 @@ class FieldPC : public Field
 {
 public:
 	FieldPC(const QString &name, FieldArchiveIO *io);
-	FieldPC(const Field &field);
+	explicit FieldPC(const Field &field);
 	virtual ~FieldPC();
 
 	inline bool isPC() const { return true; }
 
+	using Field::importer;
 	qint8 importer(const QByteArray &data, bool isPSField, FieldSections part);
 
 	FieldModelLoaderPC *fieldModelLoader(bool open=true);

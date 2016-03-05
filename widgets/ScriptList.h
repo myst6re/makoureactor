@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,19 +18,18 @@
 #ifndef DEF_SCRIPTLIST
 #define DEF_SCRIPTLIST
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/GrpScript.h"
 
 class ScriptList : public QListWidget
 {
 public:
-	explicit ScriptList(QWidget *parent=0);
-	//virtual ~ScriptList();
+	explicit ScriptList(QWidget *parent = 0);
 
 	Script *currentScript();
 	int selectedID();
 
-	void fill(GrpScript *grpScript=NULL);
+	void fill(GrpScript *grpScript = 0);
 	void localeRefresh();
 	void scroll(int, bool focus=true);
 

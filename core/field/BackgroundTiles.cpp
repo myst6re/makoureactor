@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -22,38 +22,59 @@ BackgroundTiles::BackgroundTiles() :
 {
 }
 
+BackgroundTiles::BackgroundTiles(const QList<Tile> &tiles)
+{
+	foreach (const Tile &tile, tiles) {
+		switch(tile.layerID) {
+		case 0:
+			insert(1, tile);
+			break;
+		case 1:
+			insert(4096 - tile.ID, tile);
+			break;
+		case 2:
+			insert(0, tile);
+			break;
+		case 3:
+			insert(4096, tile);
+			break;
+		}
+	}
+}
+
 BackgroundTiles::BackgroundTiles(const QMultiMap<qint16, Tile> &tiles) :
 	QMultiMap<qint16, Tile>(tiles)
 {
 }
 
-BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> &paramActifs, const qint16 *z, const bool *layers) const
+BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> &paramActifs, const qint16 *z,
+                                        const bool *layers, const QSet<quint16> *IDs) const
 {
 	BackgroundTiles ret;
 
 	foreach(const Tile &tile, *this) {
 		switch(tile.layerID) {
 		case 0:
-			if(layers==NULL || layers[0]) {
+			if((layers == NULL || layers[0]) && (IDs == NULL || IDs->contains(1))) {
 				ret.insert(1, tile);
 			}
 			break;
 		case 1:
-			if((tile.state==0 || paramActifs.value(tile.param, 0) & tile.state)
-					&& (layers==NULL || layers[1])) {
+			if((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
+					&& (layers == NULL || layers[1]) && (IDs == NULL || IDs->contains(tile.ID))) {
 				ret.insert(4096 - tile.ID, tile);
 			}
 			break;
 		case 2:
-			if((tile.state==0 || paramActifs.value(tile.param, 0) & tile.state)
-					&& (layers==NULL || layers[2])) {
-				ret.insert(4096 - (z[0]!=-1 ? z[0] : tile.ID), tile);
+			if((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
+					&& (layers == NULL || layers[2]) && (IDs == NULL || IDs->contains(tile.ID))) {
+				ret.insert(4096 - ((z && z[0] != -1) ? z[0] : tile.ID), tile);
 			}
 			break;
 		case 3:
-			if((tile.state==0 || paramActifs.value(tile.param, 0) & tile.state)
-					&& (layers==NULL || layers[3])) {
-				ret.insert(4096 - (z[1]!=-1 ? z[1] : tile.ID), tile);
+			if((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
+					&& (layers == NULL || layers[3]) && (IDs == NULL || IDs->contains(tile.ID))) {
+				ret.insert(4096 - ((z && z[1] != -1) ? z[1] : tile.ID), tile);
 			}
 			break;
 		}
@@ -78,6 +99,22 @@ BackgroundTiles BackgroundTiles::tiles(quint8 layerID, bool orderedForSaving) co
 	return ret;
 }
 
+BackgroundTiles BackgroundTiles::tilesByID(quint16 ID, bool orderedForSaving) const
+{
+	BackgroundTiles ret;
+
+	foreach(const Tile &tile, *this) {
+		if(tile.ID == ID) {
+			ret.insert(orderedForSaving
+					   ? tile.tileID
+					   : 4096 - tile.ID,
+					   tile);
+		}
+	}
+
+	return ret;
+}
+
 QMap<qint32, Tile> BackgroundTiles::sortedTiles() const
 {
 	QMap<qint32, Tile> ret;
@@ -92,7 +129,7 @@ QMap<qint32, Tile> BackgroundTiles::sortedTiles() const
 	return ret;
 }
 
-QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists) const
+QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<quint16> *usedIDs) const
 {
 	QHash<quint8, quint8> ret;
 	layerExists[0] = layerExists[1] = layerExists[2] = false;
@@ -105,6 +142,9 @@ QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists) const
 			layerExists[0] = true;
 			if(tile.param) {
 				ret.insert(tile.param, ret.value(tile.param) | tile.state);
+			}
+			if(usedIDs) {
+				usedIDs->insert(tile.ID);
 			}
 			break;
 		case 2:
@@ -119,6 +159,19 @@ QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists) const
 				ret.insert(tile.param, ret.value(tile.param) | tile.state);
 			}
 			break;
+		}
+	}
+
+	return ret;
+}
+
+QSet<quint8> BackgroundTiles::usedPalettes() const
+{
+	QSet<quint8> ret;
+
+	foreach(const Tile &tile, *this) {
+		if (tile.depth < 2) {
+			ret.insert(tile.paletteID);
 		}
 	}
 

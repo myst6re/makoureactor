@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -33,15 +33,15 @@ struct BackgroundTexturesPCInfos
 };
 
 //Sizeof : 12
-typedef struct {
+struct MIM {
 	quint32 size;// = 12 + w*2*h
 	quint16 x, y;
 	quint16 w, h;
-} MIM;
+};
 
 struct BackgroundConversionTexture
 {
-	BackgroundConversionTexture() {}
+	BackgroundConversionTexture() : tile(Tile()) {}
 	BackgroundConversionTexture(const QVector<uint> &data, const Tile &tile) :
 		data(data), tile(tile) {}
 	QVector<uint> data;
@@ -112,7 +112,6 @@ class BackgroundTexturesPS : public BackgroundTextures
 {
 public:
 	BackgroundTexturesPS();
-	void setDataPos(quint32 dataPos);
 	void setHeaderImg(const MIM &headerImg);
 	void setHeaderEffect(const MIM &headerEffect);
 	QList<uint> tex(quint8 x, quint8 y, quint8 depth) const;
@@ -129,7 +128,6 @@ private:
 	quint16 pageTexPos(quint8 pageID) const;
 	quint16 pageTexWidth(quint8 pageID) const;
 	quint32 texturePos(quint8 x, quint8 y) const;
-	quint32 _dataPos;
 	MIM _headerImg, _headerEffect;
 };
 

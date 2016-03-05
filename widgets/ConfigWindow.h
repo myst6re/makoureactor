@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,13 +18,13 @@
 #ifndef CONFIGWINDOW_H
 #define CONFIGWINDOW_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class ConfigWindow : public QDialog
 {
 	Q_OBJECT
 public:
-	ConfigWindow(QWidget *parent=0);
+	explicit ConfigWindow(QWidget *parent=0);
 private:
 	void fillConfig();
 	static void setWindowColorIcon(QAbstractButton *widget, QRgb color);
@@ -40,7 +40,7 @@ private:
 	QCheckBox *disableOGL;
 	QPushButton *windowColor1, *windowColor2, *windowColor3, *windowColor4, *windowColorReset;
 	QLabel *windowPreview;
-	QCheckBox *optiText, *japEnc, *expandedByDefault, *lzsNotCheck;
+	QCheckBox *japEnc, *expandedByDefault, *lzsNotCheck;
 	QRgb windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight;
 	QStringList customNames;
 private slots:

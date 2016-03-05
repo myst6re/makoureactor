@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -132,7 +132,7 @@ bool PaletteIOPC::readAfter(Palettes &palettes) const
 			break;
 		}
 
-		((PalettePC *)palette)->setTransparency(palFlags.at(palId));
+		static_cast<PalettePC *>(palette)->setTransparency(palFlags.at(palId));
 
 		++palId;
 	}
@@ -153,7 +153,7 @@ bool PaletteIOPC::writeAfter(const Palettes &palettes) const
 			break;
 		}
 
-		quint8 trans = ((PalettePC *)palette)->transparency();
+		quint8 trans = static_cast<const PalettePC *>(palette)->transparency();
 		if(deviceAlpha()->write((char *)&trans, 1) != 1) {
 			return false;
 		}

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
 #include "OrientationWidget.h"
 
 OrientationWidget::OrientationWidget(QWidget *parent) :
-	QWidget(parent), _readOnly(false)
+	QWidget(parent), _value(0), _readOnly(false)
 {
 }
 
 OrientationWidget::OrientationWidget(quint8 value, QWidget *parent) :
-	QWidget(parent), _readOnly(false)
+	QWidget(parent), _value(0), _readOnly(false)
 {
 	byte2degree(value);
 }
@@ -92,21 +92,27 @@ void OrientationWidget::paintEvent(QPaintEvent *)
 
 	if(_value >= 90 && _value < 270) {
 		p.rotate(180);
-		p.drawText(QRectF(0.0, 0.0, radius-4, radius-4), tr("Droite"), QTextOption(Qt::AlignRight));
+		p.drawText(QRectF(0.0, 0.0, radius-4, radius-4), tr("Right"), QTextOption(Qt::AlignRight));
 	} else {
-		p.drawText(QPointF(-radius+4, -4), tr("Droite"));
+		p.drawText(QPointF(-radius+4, -4), tr("Right"));
 	}
 }
 
-void OrientationWidget::mousePressEvent(QMouseEvent *e)
+void OrientationWidget::mouseEvent(QMouseEvent *e)
 {
 	if(_readOnly) {
 		e->ignore();
 		return;
 	}
 
-	if(isInCircle(e->posF())) {
-		moveCursor(e->posF());
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+	const QPointF &relativePos = e->posF();
+#else
+	const QPointF &relativePos = e->localPos();
+#endif
+
+	if(isInCircle(relativePos)) {
+		moveCursor(relativePos);
 	}
 }
 
@@ -160,16 +166,4 @@ void OrientationWidget::moveCursor(const QPointF &pos)
 	quint8 value = degree2byte();
 	setValue(value);
 	emit valueEdited(value);
-}
-
-void OrientationWidget::mouseMoveEvent(QMouseEvent *e)
-{
-	if(_readOnly) {
-		e->ignore();
-		return;
-	}
-
-	if(isInCircle(e->posF())) {
-		moveCursor(e->posF());
-	}
 }

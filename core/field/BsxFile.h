@@ -34,9 +34,9 @@ struct BsxModelsHeader {
 	quint32 bufferSize;
 };
 
-typedef struct {
+struct ColorRGB {
 	quint8 red, green, blue;
-} ColorRGB;
+};
 
 struct BsxModelHeader {
 	quint16 modelId;        // ID of the model
@@ -190,26 +190,26 @@ public:
 	virtual ~BsxFile() {}
 
 	virtual bool read(QList<FieldModelFilePS *> &models);
-	virtual bool read(FieldModelFilePS *model);
-	virtual bool readTextures(FieldModelTexturesPS *textures);
+	virtual bool read(FieldModelFilePS *model) const;
+	virtual bool readTextures(FieldModelTexturesPS *textures) const;
 	virtual bool seek(quint32 modelId);
 	virtual bool seekModels();
 	virtual bool seekTextures();
-	virtual bool write(const QList<FieldModelFilePS> &models);
+	virtual bool write(const QList<FieldModelFilePS> &models) const;
 protected:
 	bool readHeader();
 	bool readModelsHeader();
-	bool readModel(quint8 numBones, quint8 numParts, quint8 numAnimations, FieldModelFilePS *model);
-	bool readSkeleton(quint8 numBones, FieldModelSkeleton &skeleton);
-	bool readPartsHeaders(quint8 numParts, QList<FieldModelPartPSHeader> &partsHeaders);
-	bool readAnimationsHeaders(quint8 numAnimations, QList<FieldModelAnimationPSHeader> &animationsHeaders);
-	bool readMesh(const QList<FieldModelPartPSHeader> &partsHeaders, FieldModelSkeleton &skeleton);
-	bool readPart(const FieldModelPartPSHeader &partHeader, FieldModelPart *part);
+	bool readModel(quint8 numBones, quint8 numParts, quint8 numAnimations, FieldModelFilePS *model) const;
+	bool readSkeleton(quint8 numBones, FieldModelSkeleton &skeleton) const;
+	bool readPartsHeaders(quint8 numParts, QList<FieldModelPartPSHeader> &partsHeaders) const;
+	bool readAnimationsHeaders(quint8 numAnimations, QList<FieldModelAnimationPSHeader> &animationsHeaders) const;
+	bool readMesh(const QList<FieldModelPartPSHeader> &partsHeaders, FieldModelSkeleton &skeleton) const;
+	bool readPart(const FieldModelPartPSHeader &partHeader, FieldModelPart *part) const;
 	static bool addTexturedPolygonToGroup(quint8 control, Poly *polygon, QList<FieldModelGroup *> &groups);
-	bool readAnimations(const QList<FieldModelAnimationPSHeader> &animationHeaders, QList<FieldModelAnimation> &animations);
-	bool readAnimation(const FieldModelAnimationPSHeader &header, FieldModelAnimation &animation);
-	bool readTexturesHeaders(quint8 numTextures, QList<BsxTextureHeader> &headers);
-	bool readTexturesData(const QList<BsxTextureHeader> &headers, QList<QByteArray> &dataList);
+	bool readAnimations(const QList<FieldModelAnimationPSHeader> &animationHeaders, QList<FieldModelAnimation> &animations) const;
+	bool readAnimation(const FieldModelAnimationPSHeader &header, FieldModelAnimation &animation) const;
+	bool readTexturesHeaders(quint8 numTextures, QList<BsxTextureHeader> &headers) const;
+	bool readTexturesData(const QList<BsxTextureHeader> &headers, QList<QByteArray> &dataList) const;
 private:
 	qint64 _offsetModels;
 	quint32 _numModels, _offsetTextures;

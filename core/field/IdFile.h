@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -22,17 +22,17 @@
 #include "FieldPart.h"
 #include "CaFile.h"
 
-typedef struct {
+struct Vertex_sr {
 	qint16 x, y, z, res;// res = Triangle[0].z (padding)
-} Vertex_sr;
+};
 
-typedef struct {
+struct Triangle {
 	Vertex_sr vertices[3];
-} Triangle;
+};
 
-typedef struct {
+struct Access {
 	qint16 a[3];
-} Access;
+};
 
 class IdFile : public FieldPart
 {

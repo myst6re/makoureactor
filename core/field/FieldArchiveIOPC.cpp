@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -28,11 +28,11 @@ FieldArchiveIOPC::FieldArchiveIOPC(FieldArchivePC *fieldArchive) :
 
 FieldArchivePC *FieldArchiveIOPC::fieldArchive()
 {
-	return (FieldArchivePC *)FieldArchiveIO::fieldArchive();
+	return static_cast<FieldArchivePC *>(FieldArchiveIO::fieldArchive());
 }
 
 FieldArchiveIOPCLgp::FieldArchiveIOPCLgp(const QString &path, FieldArchivePC *fieldArchive) :
-	FieldArchiveIOPC(fieldArchive), _lgp(path)
+	FieldArchiveIOPC(fieldArchive), _lgp(path), observer(0)
 {
 }
 
@@ -327,9 +327,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, Archiv
 		}
 		Field *field = fieldArchive()->field(fieldID, false);
 		if(field) {
-			QString fileName = field->name();
-			QString filePath = dir.filePath(fileName);
-			if(field && field->isOpen() && field->isModified()) {
+			QString fileName = field->name(),
+			        filePath = dir.filePath(fileName);
+			if(field->isOpen() && field->isModified()) {
 				qint8 err = field->save(filePath, true);
 				if(err == 2)	return ErrorOpening;
 				if(err == 1)	return Invalid;

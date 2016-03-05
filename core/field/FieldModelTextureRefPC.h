@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 class FieldModelTextureRefPC : public FieldModelTextureRef
 {
 public:
-	FieldModelTextureRefPC(quint32 id) : _id(id) {}
+	explicit FieldModelTextureRefPC(quint32 id) : _id(id) {}
 	virtual ~FieldModelTextureRefPC() {}
 
 	inline quint32 id() const {

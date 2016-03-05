@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -66,12 +66,12 @@ QByteArray FieldArchiveIOPS::modelData(Field *field, bool unlzs)
 	return data;
 }
 
-bool FieldArchiveIOPS::mimDataIsCached(Field *field) const
+bool FieldArchiveIOPS::mimDataIsCached(Field *field)
 {
 	return mimCache && mimCache == field;
 }
 
-bool FieldArchiveIOPS::modelDataIsCached(Field *field) const
+bool FieldArchiveIOPS::modelDataIsCached(Field *field)
 {
 	return modelCache && modelCache == field;
 }
@@ -87,7 +87,7 @@ void FieldArchiveIOPS::clearCachedData()
 
 FieldArchivePS *FieldArchiveIOPS::fieldArchive()
 {
-	return (FieldArchivePS *)FieldArchiveIO::fieldArchive();
+	return static_cast<FieldArchivePS *>(FieldArchiveIO::fieldArchive());
 }
 
 FieldArchiveIOPSFile::FieldArchiveIOPSFile(const QString &path, FieldArchivePS *fieldArchive) :
@@ -172,7 +172,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::save2(const QString &path0, Arch
 }
 
 FieldArchiveIOPSIso::FieldArchiveIOPSIso(const QString &path, FieldArchivePS *fieldArchive) :
-	FieldArchiveIOPS(fieldArchive), iso(path)
+	FieldArchiveIOPS(fieldArchive), iso(path), isoFieldDirectory(0)
 {
 }
 
@@ -206,9 +206,11 @@ QByteArray FieldArchiveIOPSIso::modelData2(Field *field, bool unlzs)
 
 QByteArray FieldArchiveIOPSIso::fileData2(const QString &fileName)
 {
-	IsoFile *file = isoFieldDirectory->file(fileName.toUpper());
-	if(file) {
-		return file->data();
+	if(isoFieldDirectory) {
+		IsoFile *file = isoFieldDirectory->file(fileName.toUpper());
+		if(file) {
+			return file->data();
+		}
 	}
 	return QByteArray();
 }
@@ -439,10 +441,10 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, Archiv
 			return Aborted;
 		}
 		Field *field = fieldArchive()->field(fieldID, false);
-		QString datName = field->name().toUpper() + ".DAT";
-		QString datPath = dir.filePath(datName);
+		QString datName = field->name().toUpper() + ".DAT",
+		        datPath = dir.filePath(datName);
 		if(field) {
-			if(field && field->isOpen() && field->isModified()) {
+			if(field->isOpen() && field->isModified()) {
 				qint8 err = field->save(datPath, true);
 				if(err == 2)	return ErrorOpening;
 				if(err == 1)	return Invalid;

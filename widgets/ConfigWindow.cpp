@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -25,29 +25,26 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 {
 	setWindowTitle(tr("Configuration"));
 
-	QGroupBox *dependances = new QGroupBox(tr("Dépendances"), this);
+	QGroupBox *dependances = new QGroupBox(tr("Dependencies"), this);
 
 	listFF7 = new QTreeWidget(dependances);
 	listFF7->setColumnCount(1);
 	listFF7->setUniformRowHeights(true);
-	listFF7->setHeaderLabels(QStringList(tr("Final Fantasy VII installés")));
+	listFF7->setHeaderLabels(QStringList(tr("Final Fantasy VII Installs")));
 	listFF7->setFixedHeight(80);
 
 	ff7ButtonMod = new QPushButton(dependances);
-	ff7ButtonRem = new QPushButton(tr("Supprimer"), dependances);
+	ff7ButtonRem = new QPushButton(tr("Delete"), dependances);
 
 	kernelAuto = new QCheckBox(tr("kernel2.bin"), dependances);
 	kernelPath = new QLabel(dependances);
-	kernelPath->setFixedWidth(500);
-	kernelButton = new QPushButton(tr("Changer"), dependances);
+	kernelButton = new QPushButton(tr("Change"), dependances);
 	windowAuto = new QCheckBox(tr("window.bin"), dependances);
 	windowPath = new QLabel(dependances);
-	windowPath->setFixedWidth(500);
-	windowButton = new QPushButton(tr("Changer"), dependances);
+	windowButton = new QPushButton(tr("Change"), dependances);
 	charAuto = new QCheckBox(tr("char.lgp"), dependances);
 	charPath = new QLabel(dependances);
-	charPath->setFixedWidth(500);
-	charButton = new QPushButton(tr("Changer"), dependances);
+	charButton = new QPushButton(tr("Change"), dependances);
 
 	QGridLayout *dependLayout = new QGridLayout(dependances);
 	dependLayout->addWidget(listFF7, 0, 0, 3, 2);
@@ -63,27 +60,28 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	dependLayout->addWidget(charAuto, 5, 0);
 	dependLayout->addWidget(charPath, 5, 1);
 	dependLayout->addWidget(charButton, 5, 2);
+	dependLayout->setColumnStretch(1, 1);
 
 	QGroupBox *openGL = new QGroupBox(tr("OpenGL"), this);
 
-	disableOGL = new QCheckBox(tr("Désactiver OpenGL"), openGL);
+	disableOGL = new QCheckBox(tr("Disable OpenGL"), openGL);
 
 	QGridLayout *OGLLayout = new QGridLayout(openGL);
 	OGLLayout->addWidget(disableOGL, 0, 0);
 
-	QGroupBox *textEditor = new QGroupBox(tr("Editeur de texte"), this);
+	QGroupBox *textEditor = new QGroupBox(tr("Text Editor"), this);
 
 	windowColor1 = new QPushButton(textEditor);
 	windowColor2 = new QPushButton(textEditor);
 	windowColor3 = new QPushButton(textEditor);
 	windowColor4 = new QPushButton(textEditor);
 	windowPreview = new QLabel(textEditor);
-	windowColorReset = new QPushButton(tr("Valeurs par défaut"), textEditor);
+	windowColorReset = new QPushButton(tr("Defaults"), textEditor);
 
-	optiText = new QCheckBox(trUtf8("Optimiser automatiquement les duos de caract\xc3\xa8res \xc2\xab .  \xc2\xbb, \xc2\xab .\" \xc2\xbb et \xc2\xab \xe2\x80\xa6\" \xc2\xbb."));
-	optiText->hide();//TODO
+	//optiText = new QCheckBox(trUtf8("Optimiser automatiquement les duos de caract\xc3\xa8res \xc2\xab .  \xc2\xbb, \xc2\xab .\" \xc2\xbb et \xc2\xab \xe2\x80\xa6\" \xc2\xbb."));
+	//optiText->hide();//TODO
 
-	japEnc = new QCheckBox(tr("Caractères japonais"), textEditor);
+	japEnc = new QCheckBox(tr("Japanese Characters"), textEditor);
 
 	listCharNames = new QComboBox(textEditor);
 	for(int i=0 ; i<9 ; ++i) {
@@ -111,26 +109,26 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	QGridLayout *textEditorLayout = new QGridLayout(textEditor);
 	textEditorLayout->addWidget(japEnc, 0, 0, 1, 2);
 	// windowPreviewLayout->addWidget(optiText, 1, 0, 1, 2);
-	textEditorLayout->addLayout(windowPreviewLayout, 1, 0, 4, 2, Qt::AlignTop);
-	textEditorLayout->addWidget(listCharNames, 0, 2, 1, 2, Qt::AlignTop);
-	textEditorLayout->addWidget(charNameEdit, 1, 2, 1, 2, Qt::AlignTop);
-	textEditorLayout->addWidget(new QLabel(tr("Taille auto. : marge à droite")), 3, 2, Qt::AlignBottom);
-	textEditorLayout->addWidget(autoSizeMarginEdit, 3, 3, Qt::AlignBottom);
-	textEditorLayout->addWidget(new QLabel(tr("Largeur {SPACED CHARACTERS}")), 4, 2, Qt::AlignBottom);
-	textEditorLayout->addWidget(spacedCharactersWidthEdit, 4, 3, Qt::AlignBottom);
+	textEditorLayout->addLayout(windowPreviewLayout, 1, 0, 4, 2);
+	textEditorLayout->addWidget(listCharNames, 0, 2, 1, 2);
+	textEditorLayout->addWidget(charNameEdit, 1, 2, 1, 2);
+	textEditorLayout->addWidget(new QLabel(tr("Autosize: margin right")), 3, 2);
+	textEditorLayout->addWidget(autoSizeMarginEdit, 3, 3);
+	textEditorLayout->addWidget(new QLabel(tr("{SPACED CHARACTERS} width")), 4, 2);
+	textEditorLayout->addWidget(spacedCharactersWidthEdit, 4, 3);
 	textEditorLayout->setRowStretch(2, 1);
 
-	QGroupBox *scriptEditor = new QGroupBox(tr("Editeur de script"), this);
+	QGroupBox *scriptEditor = new QGroupBox(tr("Script Editor"), this);
 
-	expandedByDefault = new QCheckBox(tr("Lignes expansées par défaut"), scriptEditor);
+	expandedByDefault = new QCheckBox(tr("Expand lines by default"), scriptEditor);
 
 	QVBoxLayout *scriptEditorLayout = new QVBoxLayout(scriptEditor);
 	scriptEditorLayout->addWidget(expandedByDefault);
 	scriptEditorLayout->addStretch();
 
-	QGroupBox *misc = new QGroupBox(tr("Divers"), this);
+	QGroupBox *misc = new QGroupBox(tr("Miscellaneous"), this);
 
-	lzsNotCheck = new QCheckBox(tr("Ne pas vérifier strictement le format des fichiers"), misc);
+	lzsNotCheck = new QCheckBox(tr("Don't strictly verify the file format"), misc);
 
 	QVBoxLayout *miscLayout = new QVBoxLayout(misc);
 	miscLayout->addWidget(lzsNotCheck);
@@ -226,7 +224,7 @@ void ConfigWindow::fillConfig()
 	windowColorBottomLeft = Config::value("windowColorBottomLeft", qRgb(0,0,128)).toInt();
 	windowColorBottomRight = Config::value("windowColorBottomRight", qRgb(0,0,32)).toInt();
 
-	optiText->setChecked(!Config::value("dontOptimizeTexts", false).toBool());
+	//optiText->setChecked(!Config::value("dontOptimizeTexts", false).toBool());
 	japEnc->setChecked(Config::value("jp_txt", false).toBool());
 	expandedByDefault->setChecked(Config::value("scriptItemExpandedByDefault", false).toBool());
 	lzsNotCheck->setChecked(Config::value("lzsNotCheck", false).toBool());
@@ -257,14 +255,14 @@ void ConfigWindow::changeFF7ListButtonsState()
 		Data::FF7Version id = Data::FF7Version(item->data(0, Qt::UserRole).toInt());
 		if(id == Data::Custom) {
 			ff7ButtonRem->setEnabled(true);
-			ff7ButtonMod->setText(tr("Modifier"));
+			ff7ButtonMod->setText(tr("Edit"));
 		} else {
 			ff7ButtonRem->setEnabled(false);
-			ff7ButtonMod->setText(tr("Ajouter"));
+			ff7ButtonMod->setText(tr("Add"));
 		}
 	} else {
 		ff7ButtonRem->setEnabled(false);
-		ff7ButtonMod->setText(tr("Ajouter"));
+		ff7ButtonMod->setText(tr("Add"));
 	}
 
 	for(int i=0 ; i<listFF7->topLevelItemCount() ; ++i) {
@@ -284,7 +282,7 @@ void ConfigWindow::modifyCustomFF7Path()
 		Data::FF7Version id = Data::FF7Version(item->data(0, Qt::UserRole).toInt());
 		if(id == Data::Custom) {
 			// Modify
-			QString path = QFileDialog::getOpenFileName(this, tr("Chercher ff7.exe"), item->text(0), tr("Fichiers EXE (*.exe)"));
+			QString path = QFileDialog::getOpenFileName(this, tr("Find ff7.exe"), item->text(0), tr("EXE files (*.exe)"));
 			if(!path.isNull()) {
 				Config::setValue("customFF7Path", path);
 				item->setText(0, QDir::toNativeSeparators(path));
@@ -294,7 +292,7 @@ void ConfigWindow::modifyCustomFF7Path()
 		currentPath = item->text(0);
 	}
 	// Add
-	QString path = QFileDialog::getOpenFileName(this, tr("Chercher ff7.exe"), currentPath, tr("Fichiers EXE (*.exe)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Find ff7.exe"), currentPath, tr("EXE files (*.exe)"));
 	if(!path.isNull()) {
 		Config::setValue("customFF7Path", path);
 		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(path)));
@@ -339,21 +337,21 @@ void ConfigWindow::charAutoChange(bool checked)
 
 void ConfigWindow::changeKernelPath()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Chercher kernel2.bin"), QDir::fromNativeSeparators(kernelPath->text()), tr("Fichiers BIN (*.bin);;Tous les fichiers (*)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Find kernel2.bin"), QDir::fromNativeSeparators(kernelPath->text()), tr("Bin Files (*.bin);;All Files (*)"));
 	if(!path.isNull())
 		kernelPath->setText(QDir::toNativeSeparators(path));
 }
 
 void ConfigWindow::changeWindowPath()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Chercher window.bin"), QDir::fromNativeSeparators(windowPath->text()), tr("Fichiers BIN (*.bin);;Tous les fichiers (*)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Find window.bin"), QDir::fromNativeSeparators(windowPath->text()), tr("Bin Files (*.bin);;All Files (*)"));
 	if(!path.isNull())
 		windowPath->setText(QDir::toNativeSeparators(path));
 }
 
 void ConfigWindow::changeCharPath()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Chercher char.lgp"), QDir::fromNativeSeparators(charPath->text()), tr("Archives LGP (*.lgp);;Tous les fichiers (*)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Find char.lgp"), QDir::fromNativeSeparators(charPath->text()), tr("Lgp Archives (*.lgp);;All Files(*)"));
 	if(!path.isNull())
 		charPath->setText(QDir::toNativeSeparators(path));
 }
@@ -451,13 +449,13 @@ void ConfigWindow::accept()
 	Config::setValue("charPath", charAuto->isChecked() ? QDir::fromNativeSeparators(charPath->text()) : QString());
 	if(!disableOGL->isChecked() != Config::value("OpenGL", true).toBool()) {
 		Config::setValue("OpenGL", !disableOGL->isChecked());
-		QMessageBox::information(this, tr("Information"), tr("Vous devez redémarrer Makou Reactor pour appliquer tous les changements."));
+		QMessageBox::information(this, tr("Information"), tr("You must restart Makou Reactor to apply all changes."));
 	}
 	Config::setValue("windowColorTopLeft", windowColorTopLeft);
 	Config::setValue("windowColorTopRight", windowColorTopRight);
 	Config::setValue("windowColorBottomLeft", windowColorBottomLeft);
 	Config::setValue("windowColorBottomRight", windowColorBottomRight);
-	Config::setValue("dontOptimizeTexts", !optiText->isChecked());
+	//Config::setValue("dontOptimizeTexts", !optiText->isChecked());
 	Config::setValue("jp_txt", japEnc->isChecked());
 	Config::setValue("scriptItemExpandedByDefault", expandedByDefault->isChecked());
 	Config::setValue("lzsNotCheck", lzsNotCheck->isChecked());
