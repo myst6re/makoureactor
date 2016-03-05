@@ -855,9 +855,9 @@ bool BackgroundTilesIOPS::writeTileTex(const Tile &tile) const
 {
 	// Note: we can't use bitfields directly
 	quint16 tile2data = (tile.textureID & 0xF) |
-	                    ((tile.textureID2 << 4) & 0x1) |
-	                    ((tile.typeTrans << 5) & 0x3) |
-	                    ((tile.depth << 7) & 0x3);
+	                    ((tile.textureID2 & 0x1) << 4) |
+	                    ((tile.typeTrans & 0x3) << 5) |
+	                    ((tile.depth & 0x3) << 7);
 
 	return device()->write((char *)&tile2data, 2) == 2;
 }
