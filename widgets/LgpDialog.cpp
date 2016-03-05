@@ -678,7 +678,7 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	treeView->setUniformRowHeights(true);
 	treeView->header()->setSectionResizeMode(0, QHeaderView::Stretch);
 	treeView->header()->setStretchLastSection(false);
-	treeView->setSortingEnabled(true);
+	treeView->setSortingEnabled(false); // TODO
 
 	renameButton = new QPushButton(tr("Rename"), this);
 	renameButton->setShortcut(Qt::Key_F2);
