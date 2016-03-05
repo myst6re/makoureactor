@@ -41,6 +41,13 @@ env:
     # COVERITY_SCAN_TOKEN
     - secure: "lk7jEPh62LhXOWyT5UyGAKPxiskVyIBbHEtbnfKZZil2iJLec1f3+df1ADPajl1Ij2Yp4ZgWWcJsuN/+XkQJjXvgWyW2bi0K9ntrRCU4t3h8blodblaXvpssbz5fj4TzI8HnfBet4NXfLLdAUHBcLOLU01xb+LWaY/4rX2PlKBY="
 
+matrix:
+  exclude:
+    # Coverity start earlier on OSX
+    - os: linux
+      env: COVERITY=1
+      env: COVERAGE=1
+
 addons:
   coverity_scan:
     project:
