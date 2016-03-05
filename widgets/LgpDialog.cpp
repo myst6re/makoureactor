@@ -231,11 +231,23 @@ void LgpDirectoryItem::sort(SortType type, Qt::SortOrder order)
 		switch(order) {
 		case Qt::AscendingOrder:
 			std::sort(_childs.begin(), _childs.end(), [](LgpItem *i1, LgpItem *i2) {
+				if(i1->isDirectory()) {
+					return true;
+				}
+				if(i2->isDirectory()) {
+					return false;
+				}
 				return i1->name() > i2->name();
 			});
 			break;
 		case Qt::DescendingOrder:
 			std::sort(_childs.begin(), _childs.end(), [](LgpItem *i1, LgpItem *i2) {
+				if(i1->isDirectory()) {
+					return false;
+				}
+				if(i2->isDirectory()) {
+					return true;
+				}
 				return i1->name() < i2->name();
 			});
 			break;
@@ -433,6 +445,9 @@ QModelIndex LgpItemModel::parent(const QModelIndex &index) const
 	}
 
 	LgpItem *childItem = getItem(index);
+	if(!childItem) {
+		return QModelIndex();
+	}
 	LgpItem *parentItem = childItem->parent();
 
 	if(parentItem == root || !parentItem) {
@@ -570,7 +585,10 @@ QVariant LgpItemModel::headerData(int section, Qt::Orientation orientation, int 
 
 void LgpItemModel::sort(int column, Qt::SortOrder order)
 {
-	switch(column) {
+	return QAbstractItemModel::sort(column, order);
+
+	// FIXME: TODO
+	/* switch(column) {
 	case 0:
 		root->sort(LgpDirectoryItem::ByName, order);
 		break;
@@ -579,7 +597,7 @@ void LgpItemModel::sort(int column, Qt::SortOrder order)
 		break;
 	default:
 		break;
-	}
+	} */
 }
 
 bool LgpItemModel::insertRow(const QString &name, QIODevice *io,
@@ -648,7 +666,8 @@ bool LgpItemModel::removeRows(int row, int count, const QModelIndex &parent)
 }
 
 LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
-	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), lgp(lgp)
+    QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
+    lgp(lgp), progressDialog(0)
 {
 	setWindowTitle(tr("LGP archive manager"));
 	resize(800, 600);
@@ -930,6 +949,7 @@ void LgpDialog::pack()
 
 	progressDialog->hide();
 	progressDialog->deleteLater();
+	progressDialog = 0;
 
 	if(!ok) {
 		if(lgp->error() != Lgp::AbortError) {
@@ -945,26 +965,37 @@ void LgpDialog::pack()
 
 bool LgpDialog::observerWasCanceled() const
 {
-	return progressDialog->wasCanceled();
+	return progressDialog && progressDialog->wasCanceled();
 }
 
 void LgpDialog::setObserverMaximum(unsigned int max)
 {
-	progressDialog->setMaximum(max);
+	if(progressDialog) {
+		progressDialog->setMaximum(max);
+	}
 }
 
 void LgpDialog::setObserverValue(int value)
 {
 	QApplication::processEvents();
 
-	progressDialog->setValue(value);
+	if(progressDialog) {
+		progressDialog->setValue(value);
+	}
 }
 
 void LgpDialog::setButtonsState()
 {
 	QModelIndexList modelIndexList = treeView->selectionModel()->selectedRows();
+	LgpItem *item;
+	if(!modelIndexList.isEmpty()) {
+		item = static_cast<LgpItemModel *>(treeView->model())->getItem(modelIndexList.first());
+	} else {
+		item = 0;
+	}
 	bool enabled = !modelIndexList.isEmpty() &&
-			!static_cast<LgpItemModel *>(treeView->model())->getItem(modelIndexList.first())->isDirectory();
+	               item &&
+	               !item->isDirectory();
 
 	renameButton->setEnabled(enabled);
 	replaceButton->setEnabled(enabled);
