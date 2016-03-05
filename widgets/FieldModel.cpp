@@ -378,7 +378,10 @@ void FieldModel::mousePressEvent(QMouseEvent *event)
 void FieldModel::animate()
 {
 	if(data && !data->isEmpty() && isVisible()) {
-		currentFrame = (currentFrame + 1) % frameCount();
-		updateGL();
+		int count = frameCount();
+		if(count > 0) {
+			currentFrame = (currentFrame + 1) % count;
+			updateGL();
+		}
 	}
 }
