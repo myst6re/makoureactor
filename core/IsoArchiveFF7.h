@@ -47,9 +47,9 @@ public:
 private:
 	Q_DISABLE_COPY(IsoArchiveFF7)
 	bool updateBin(IsoFile *isoBin, const QList<IsoFile *> &filesRefByBin, int startOffset = 0);
-	bool updateFieldBin();
-	bool updateWorldBin();
-	bool updateYamadaBin();
+	IsoFile *updateFieldBin();
+	IsoFile *updateWorldBin();
+	IsoFile *updateYamadaBin();
 	bool reorganizeModifiedFilesAfter(QMap<quint32, const IsoFile *> &writeToTheMain, QList<const IsoFile *> &writeToTheEnd);
 	IsoFile *searchExe() const;
 	Country searchCountry() const;
