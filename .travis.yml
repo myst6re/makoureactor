@@ -5,6 +5,7 @@ os:
   - osx
 
 install:
+  - env # Show env (REMOVE ME)
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          lsb_release -a
       && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
@@ -36,6 +37,24 @@ before_script:
 script:
   - make -j2
 
+before_deploy:
+  - DEPLOY_DIR="makoureactor-$(git describe --tags)-${TRAVIS_OS_NAME}"
+  - export DEPLOY_ARCHIVE="$DEPLOY_DIR.tar.gz"
+  - mkdir -p "$DEPLOY_DIR"
+  - pwd
+  - cp makoureactor "$DEPLOY_DIR"
+  - cp ../*.qm "$DEPLOY_DIR"
+  - tar -czf "$DEPLOY_ARCHIVE" "$DEPLOY_DIR"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "g4SNxnp5gaEg3KPXOsgEiAW1t1ObzDr+Nm9ZkQBvqpDwM6K5skfUL1FGiBpQeWRiaVYymbY1ukn+rIFH36vJWl1+MK+6YYS4EvLY6o+pgHXzqeiM/NeC4qd2HRzQxDo4T5Ox5tVzTavrDR+fOuo/iMolx/IfnQaJ+m/csTYYdm0="
+  file: "$DEPLOY_ARCHIVE"
+  skip_cleanup: true
+  on:
+    tags: true
+
 env:
   global:
     # COVERITY_SCAN_TOKEN
@@ -51,8 +70,8 @@ matrix:
 addons:
   coverity_scan:
     project:
-      name: "myst6re/makoureactor"
-      description: "Final Fantasy VII field archive editor"
+      name: myst6re/makoureactor
+      description: Final Fantasy VII field archive editor
     notification_email: myst6re@gmail.com
-    build_command: "make -j2"
+    build_command: make -j2
     branch_pattern: coverity_scan
