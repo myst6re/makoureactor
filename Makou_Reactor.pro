@@ -328,6 +328,7 @@ win32 {
 
 OTHER_FILES += Makou_Reactor.rc \
     deploy.bat \
+    vars.cfg \
     compat/QtWidgets \
     .travis.yml
 DISTFILES += Makou_Reactor.desktop \
