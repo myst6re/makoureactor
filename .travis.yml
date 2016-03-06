@@ -40,16 +40,16 @@ before_deploy:
   - DEPLOY_DIR="makoureactor-$(git describe --tags)-${TRAVIS_OS_NAME}64"
   - export DEPLOY_ARCHIVE="$DEPLOY_DIR.tar.gz"
   - mkdir -p "$DEPLOY_DIR"
-  - pwd
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      DEPLOY_BINARY="makoureactor";
-    else
-      DEPLOY_BINARY="makoureactor.app";
-    fi
-  - cp -r "$DEPLOY_BINARY" "$DEPLOY_DIR"
-  - cp ../*.qm "$DEPLOY_DIR"
   - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
-      "$QTDIR/bin/macdeployqt" "$DEPLOY_DIR/$DEPLOY_BINARY";
+         DEPLOY_BINARY="makoureactor.app"
+      && cp -r "$DEPLOY_BINARY" "$DEPLOY_DIR"
+      && cp ../*.qm "$DEPLOY_DIR/$DEPLOY_BINARY/Contents/MacOS"
+      && "$QTDIR/bin/macdeployqt" "$DEPLOY_DIR/$DEPLOY_BINARY"
+      ;
+    else
+         cp makoureactor "$DEPLOY_DIR"
+      && cp ../*.qm "$DEPLOY_DIR"
+      ;
     fi
   - tar -czf "$DEPLOY_ARCHIVE" "$DEPLOY_DIR"
 
