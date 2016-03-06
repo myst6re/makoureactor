@@ -34,8 +34,11 @@ void Config::set() {
 	if(!settings) {
 #ifdef Q_OS_WIN
 	settings = new QSettings(qApp->applicationDirPath()+"/Makou_Reactor.ini", QSettings::IniFormat);
+	settings->setValue("varFile",qApp->applicationDirPath().append("/vars.cfg"));
 #else
-	settings = new QSettings("Makou_Reactor");
+	settings = new QSettings("makoureactor/settings");
+	settings->setValue("varFile",QDir::homePath().append("/.config/makoureactor/vars.cfg"));
+
 #endif
 	}
 }
