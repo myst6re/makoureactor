@@ -33,13 +33,15 @@ QString Config::programResourceDir()
 void Config::set() {
 	if(!settings) {
 #ifdef Q_OS_WIN
-	settings = new QSettings(qApp->applicationDirPath()+"/Makou_Reactor.ini", QSettings::IniFormat);
-	settings->setValue("varFile", qApp->applicationDirPath().append("/vars.cfg"));
+		settings = new QSettings(qApp->applicationDirPath()
+								 .append("/Makou_Reactor.ini"),
+								 QSettings::IniFormat);
 #else
-	settings = new QSettings("makoureactor/settings");
-	settings->setValue("varFile", QDir::homePath().append("/.config/makoureactor/vars.cfg"));
-
+		settings = new QSettings("makoureactor/settings");
 #endif
+		settings->setValue("varFile",
+		                   QFileInfo(settings->fileName())
+		                   .path().append("/vars.cfg"));
 	}
 }
 
