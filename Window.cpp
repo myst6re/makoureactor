@@ -114,7 +114,7 @@ Window::Window() :
 	menuLang->addSeparator();
 	QTranslator translator;
 	foreach(const QString &str, stringList) {
-		translator.load(Config::programResourceDir()+"/"+str);
+		translator.load(dir.filePath(str));
 		action = menuLang->addAction(translator.translate("Window", "English"));
 		QString lang = str.mid(14, 2);
 		action->setData(lang);
