@@ -600,7 +600,7 @@
         <location filename="widgets/GrpScriptList.cpp" line="51"/>
         <source>Copy group</source>
         <oldsource>Copier groupe</oldsource>
-        <translation>Coller groupe</translation>
+        <translation>Copier groupe</translation>
     </message>
     <message>
         <location filename="widgets/GrpScriptList.cpp" line="55"/>
