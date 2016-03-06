@@ -24,7 +24,7 @@
 TextManager::TextManager(QWidget *parent) :
 	QDialog(parent, Qt::Tool), scriptsAndTexts(0)
 {
-	qreal scale = qApp->desktop()->logicalDpiX()/96;
+	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
 	setWindowTitle(tr("Texts"));
 
 	dispUnusedText = new QCheckBox(tr("Show unused texts"), this);

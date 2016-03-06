@@ -40,7 +40,7 @@ private:
 	QCheckBox *disableOGL;
 	QPushButton *windowColor1, *windowColor2, *windowColor3, *windowColor4, *windowColorReset;
 	QLabel *windowPreview;
-	QCheckBox *optiText, *japEnc, *expandedByDefault, *lzsNotCheck;
+	QCheckBox *japEnc, *expandedByDefault, *lzsNotCheck;
 	QRgb windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight;
 	QStringList customNames;
 private slots:

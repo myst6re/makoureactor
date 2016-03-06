@@ -31,10 +31,37 @@ before_script:
   - export PATH="$QTDIR/bin:$PATH"
   - mkdir -p build
   - cd build
+  - qmake -config release ..
 
 script:
-  - qmake ..
   - make -j2
+
+before_deploy:
+  - DEPLOY_DIR="makoureactor-$(git describe --tags)-${TRAVIS_OS_NAME}64"
+  - export DEPLOY_ARCHIVE="$DEPLOY_DIR.tar.gz"
+  - mkdir -p "$DEPLOY_DIR"
+  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+         DEPLOY_BINARY="makoureactor.app"
+      && cp -r "$DEPLOY_BINARY" "$DEPLOY_DIR"
+      && cp ../*.qm "$DEPLOY_DIR/$DEPLOY_BINARY/Contents/MacOS"
+      && cp ../vars.cfg "$DEPLOY_DIR/$DEPLOY_BINARY/Contents/MacOS"
+      && "$QTDIR/bin/macdeployqt" "$DEPLOY_DIR/$DEPLOY_BINARY"
+      ;
+    else
+         cp makoureactor "$DEPLOY_DIR"
+      && cp ../*.qm "$DEPLOY_DIR"
+      ;
+    fi
+  - tar -czf "$DEPLOY_ARCHIVE" "$DEPLOY_DIR"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "g4SNxnp5gaEg3KPXOsgEiAW1t1ObzDr+Nm9ZkQBvqpDwM6K5skfUL1FGiBpQeWRiaVYymbY1ukn+rIFH36vJWl1+MK+6YYS4EvLY6o+pgHXzqeiM/NeC4qd2HRzQxDo4T5Ox5tVzTavrDR+fOuo/iMolx/IfnQaJ+m/csTYYdm0="
+  file: "$DEPLOY_ARCHIVE"
+  skip_cleanup: true
+  on:
+    tags: true
 
 env:
   global:
@@ -44,9 +71,8 @@ env:
 addons:
   coverity_scan:
     project:
-      name: "myst6re/makoureactor"
-      description: "Final Fantasy VII field archive editor"
+      name: myst6re/makoureactor
+      description: Final Fantasy VII field archive editor
     notification_email: myst6re@gmail.com
-    build_command_prepend: "qmake .."
-    build_command: "make -j2"
+    build_command: make -j2
     branch_pattern: coverity_scan

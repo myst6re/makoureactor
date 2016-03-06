@@ -147,7 +147,7 @@ bool MassImportDialog::importModule(ImportType type) const
 
 const QString &MassImportDialog::moduleFormat(ImportType type) const
 {
-	return imports.value(type)->currentFormat();
+	return imports[type]->currentFormat();
 }
 
 QString MassImportDialog::directory() const

@@ -671,7 +671,7 @@ bool IsoArchive::pack(IsoArchive *destination, ArchiveObserver *control, IsoDire
 	        lastPadding = lastFileWithPadding ? lastFileWithPadding->paddingAfter() : 0,
 	        endOfFilledIso, endOfFilledIsoAfter;
 
-	if (sectorCountAtTheEnd == lastPadding) {
+	if (lastFileWithPadding && sectorCountAtTheEnd == lastPadding) {
 		endOfFilledIso = lastFileWithPadding->locationAfter();
 		lastFileWithPadding->setPaddingAfter(0);
 	} else {
@@ -728,7 +728,9 @@ bool IsoArchive::pack(IsoArchive *destination, ArchiveObserver *control, IsoDire
 		return false;
 	}
 
-	control->setObserverMaximum(endOfIso);
+	if(control) {
+		control->setObserverMaximum(endOfIso);
+	}
 
 	destinationIO->reset();
 	_io.reset();
@@ -1255,7 +1257,7 @@ bool IsoArchive::extractDir(const QString &path, const QString &destination) con
 		return false;
 	}
 	QDir destDir(destination);
-	bool error;
+	bool error = false;
 
 	foreach (IsoFile *file, dir->files()) {
 		if (!file->extract(destDir.filePath(file->name()))) {

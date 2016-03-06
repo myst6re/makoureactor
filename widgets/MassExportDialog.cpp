@@ -159,7 +159,7 @@ bool MassExportDialog::exportModule(ExportType type) const
 
 const QString &MassExportDialog::moduleFormat(ExportType type) const
 {
-	return exports.value(type)->currentFormat();
+	return exports[type]->currentFormat();
 }
 
 QString MassExportDialog::directory() const

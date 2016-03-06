@@ -13,6 +13,7 @@ makoureactor (1.7.0) trusty; urgency=low
   * Walkmesh Editor: Fixing 3D Model display & orientation bug.
   * Some changes for HiDPI devices (thanks to Sithlord48).
   * Configuration: autosave sorting order for field list (proposed by DLPB).
+  * New recent files menu.
   * Background PS -> PC: Fixing a crash.
   * Disabled doors/gateways/arrows are now displayed in grey in lists.
   * Adding help message to understand bank mechanism.

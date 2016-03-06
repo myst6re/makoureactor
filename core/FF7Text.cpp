@@ -107,14 +107,18 @@ QString FF7Text::text(bool jp, bool simplified) const
 					if(i+4 < size && (quint8)_data.at(i+4)==0 && (quint8)_data.at(i+2) <= 4) {
 						quint8 bank;
 						switch((quint8)_data.at(i+2)) {
-						case 0:		bank = 1;	break;// 1 & 2
-						case 1:		bank = 3;	break;// 3 & 4
-						case 2:		bank = 11;	break;// 11 & 12
-						case 3:		bank = 13;	break;// 13 & 14
-						case 4:		bank = 15;	break;// 7 & 15
+						case 0:     bank = 1;	break; // 1 & 2
+						case 1:     bank = 3;	break; // 3 & 4
+						case 2:     bank = 11;	break; // 11 & 12
+						case 3:     bank = 13;	break; // 13 & 14
+						case 4:     bank = 15;	break; // 7 & 15
+						default:    bank = 0;	break; // Error
 						}
 
-						trad.append(QString("{MEMORY:var[%2][%1];size=%3}").arg((quint8)_data.at(i+1)).arg(bank).arg((quint8)_data.at(i+3)));
+						trad.append(QString("{MEMORY:var[%2][%1];size=%3}")
+						            .arg((quint8)_data.at(i+1))
+						            .arg(bank)
+						            .arg((quint8)_data.at(i+3)));
 						i+=4;
 					} else {
 						trad.append("{xfe}{xe2}");

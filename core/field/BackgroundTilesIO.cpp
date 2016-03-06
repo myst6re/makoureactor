@@ -693,7 +693,11 @@ bool BackgroundTilesIOPS::readData(BackgroundTiles &tiles) const
 
 bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 {
-	device()->seek(_demo ? 12 : 16);
+	qint64 beginPos = device()->pos();
+
+	if(!device()->seek(beginPos + _demo ? 12 : 16)) {
+		return false;
+	}
 
 	QMultiMap< quint8, QMultiMap< qint16, QMultiMap<qint16, Tile> > > tilesByDst;
 
@@ -782,6 +786,7 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 		if(firstTurn || tile.dstY != dstY) {
 			tiles2.append(tile);
 			dstY = tile.dstY;
+			firstTurn = false;
 		}
 	}
 
@@ -792,6 +797,7 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 			if(firstTurn || tile.dstY != dstY) {
 				tiles2.append(tile);
 				dstY = tile.dstY;
+				firstTurn = false;
 			}
 		}
 	}
@@ -821,7 +827,10 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 	}
 
 	// Write pointers to sections
-	device()->reset();
+	if(!device()->seek(beginPos)) {
+		return false;
+	}
+
 	foreach(quint32 pos, positions) {
 		device()->write((char *)&pos, 4);
 	}
@@ -846,9 +855,9 @@ bool BackgroundTilesIOPS::writeTileTex(const Tile &tile) const
 {
 	// Note: we can't use bitfields directly
 	quint16 tile2data = (tile.textureID & 0xF) |
-	                    ((tile.textureID2 << 4) & 0x1) |
-	                    ((tile.typeTrans << 5) & 0x3) |
-	                    ((tile.depth << 7) & 0x3);
+	                    ((tile.textureID2 & 0x1) << 4) |
+	                    ((tile.typeTrans & 0x3) << 5) |
+	                    ((tile.depth & 0x3) << 7);
 
 	return device()->write((char *)&tile2data, 2) == 2;
 }

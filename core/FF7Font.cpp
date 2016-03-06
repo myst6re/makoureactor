@@ -207,6 +207,7 @@ QString FF7Font::font_dirPath;
 
 bool FF7Font::listFonts()
 {
+	qDeleteAll(fonts);
 	fonts.clear();
 
 #ifdef Q_OS_WIN
@@ -225,7 +226,11 @@ bool FF7Font::listFonts()
 	FF7Font *latinFont = openFont(":/fonts/sysfnt.windowBinFile", ":/fonts/sysfnt.txt");
 	FF7Font *jpFont = openFont(":/fonts/sysfnt_jp.windowBinFile", ":/fonts/sysfnt_jp.txt");
 
-	if(!latinFont || !jpFont)	return false;
+	if(!latinFont || !jpFont) {
+		if (latinFont) delete latinFont;
+		if (jpFont)    delete jpFont;
+		return false;
+	}
 
 	latinFont->setReadOnly(true);
 	jpFont->setReadOnly(true);
@@ -262,18 +267,18 @@ FF7Font *FF7Font::openFont(const QString &windowBinFilePath, const QString &txtP
 
 	if(!windowBinFile) {
 		return NULL;
-	} else {
-		FF7Font *ff7Font;
-		QFile f2(txtPath);
-		if(f2.open(QIODevice::ReadOnly)) {
-			ff7Font = new FF7Font(windowBinFile, f2.readAll());
-			f2.close();
-		} else {
-			ff7Font = new FF7Font(windowBinFile, QByteArray());
-		}
-		ff7Font->setPaths(txtPath, windowBinFilePath);
-		return ff7Font;
 	}
+
+	FF7Font *ff7Font;
+	QFile f2(txtPath);
+	if(f2.open(QIODevice::ReadOnly)) {
+		ff7Font = new FF7Font(windowBinFile, f2.readAll());
+		f2.close();
+	} else {
+		ff7Font = new FF7Font(windowBinFile, QByteArray());
+	}
+	ff7Font->setPaths(txtPath, windowBinFilePath);
+	return ff7Font;
 }
 
 FF7Font *FF7Font::font(QString name)

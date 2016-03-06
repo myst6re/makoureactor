@@ -288,6 +288,7 @@ bool BsxFile::readMesh(const QList<FieldModelPartPSHeader> &partsHeaders, FieldM
 		FieldModelPart *part = new FieldModelPart();
 
 		if (!readPart(header, part)) {
+			delete part;
 			return false;
 		}
 

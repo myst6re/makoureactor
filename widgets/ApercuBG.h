@@ -29,7 +29,7 @@ public:
 	void fill(Field *field, bool reload = false);
 	void clear();
 	inline QSize minimumSizeHint() const {
-		return QSize(0, 0);
+		return QSize(100, 100);
 	}
 	inline QSize sizeHint() const {
 		return QSize(300, 225);

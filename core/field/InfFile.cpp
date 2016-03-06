@@ -76,8 +76,8 @@ QString InfFile::mapName()
 
 void InfFile::setMapName(const QString &name)
 {
-	strcpy(data.name, name.toLatin1().constData());
-	data.name[8] = '\x00';
+	memcpy(data.name, name.toLatin1().leftJustified(9, '\0', true).constData(), 9);
+	data.name[8] = '\0';
 	setModified(true);
 }
 
