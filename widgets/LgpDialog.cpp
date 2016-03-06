@@ -419,7 +419,7 @@ QModelIndex LgpItemModel::index(int row, int column, const QModelIndex &parent) 
 		return QModelIndex();
 	}
 
-	LgpDirectoryItem *parentItem = static_cast<LgpDirectoryItem *>(getItem(parent));
+	LgpDirectoryItem *parentItem = static_cast<LgpDirectoryItem *>(item(parent));
 	if(!parentItem) {
 		parentItem = root;
 	}
@@ -427,7 +427,7 @@ QModelIndex LgpItemModel::index(int row, int column, const QModelIndex &parent) 
 	return createIndex(row, column, parentItem->child(row));
 }
 
-LgpItem *LgpItemModel::getItem(const QModelIndex &index) const
+LgpItem *LgpItemModel::item(const QModelIndex &index) const
 {
 	if(index.isValid()) {
 		LgpItem *item = static_cast<LgpItem *>(index.internalPointer());
@@ -444,7 +444,7 @@ QModelIndex LgpItemModel::parent(const QModelIndex &index) const
 		return QModelIndex();
 	}
 
-	LgpItem *childItem = getItem(index);
+	LgpItem *childItem = item(index);
 	if(!childItem) {
 		return QModelIndex();
 	}
@@ -464,7 +464,7 @@ QModelIndex LgpItemModel::parent(const QModelIndex &index) const
 
 int LgpItemModel::rowCount(const QModelIndex &parent) const
 {
-	LgpItem *parentItem = getItem(parent);
+	LgpItem *parentItem = item(parent);
 	if(!parentItem) {
 		parentItem = root;
 	}
@@ -487,7 +487,7 @@ QVariant LgpItemModel::data(const QModelIndex &index, int role) const
 		return QVariant();
 	}
 
-	LgpItem *lgpItem = getItem(index);
+	LgpItem *lgpItem = item(index);
 	if(!lgpItem) {
 		return QVariant();
 	}
@@ -537,7 +537,7 @@ bool LgpItemModel::setData(const QModelIndex &index, const QVariant &value, int 
 		return false;
 	}
 
-	LgpItem *lgpItem = getItem(index);
+	LgpItem *lgpItem = item(index);
 
 	if(!lgpItem || lgpItem->isDirectory()) {
 		return false;
@@ -603,7 +603,7 @@ void LgpItemModel::sort(int column, Qt::SortOrder order)
 bool LgpItemModel::insertRow(const QString &name, QIODevice *io,
                              const QModelIndex &parent)
 {
-	LgpItem *lgpItem = getItem(parent);
+	LgpItem *lgpItem = item(parent);
 
 	// Parent must be a directory
 	if(lgpItem && !lgpItem->isDirectory()) {
@@ -644,7 +644,7 @@ bool LgpItemModel::insertRows(int row, int count, const QModelIndex &parent)
 
 bool LgpItemModel::removeRow(const QModelIndex &index)
 {
-	LgpItem *item = getItem(index);
+	LgpItem *item = this->item(index);
 	if(item && !item->isDirectory()
 	        && _lgp->removeFile(item->path())) {
 		int row = index.row();
@@ -722,7 +722,7 @@ void LgpDialog::renameCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = _model->getItem(index);
+		LgpItem *item = _model->item(index);
 		if(item && !item->isDirectory()) {
 			bool ok;
 			QString oldFilePath = item->path(),
@@ -753,7 +753,7 @@ void LgpDialog::replaceCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = _model->getItem(index);
+		LgpItem *item = _model->item(index);
 		if(item && !item->isDirectory()) {
 			QString filename = item->name();
 			int indexOf = filename.lastIndexOf('.');
@@ -790,7 +790,7 @@ void LgpDialog::extractCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = _model->getItem(index);
+		LgpItem *item = _model->item(index);
 		if(item && !item->isDirectory()) {
 			QString filename = item->name();
 			int index = filename.lastIndexOf('.');
@@ -840,7 +840,7 @@ void LgpDialog::add()
 	QString dirName;
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = _model->getItem(index);
+		LgpItem *item = _model->item(index);
 		if(item) {
 			dirName = item->isDirectory() ? item->path() : item->dirName();
 		}
@@ -989,7 +989,7 @@ void LgpDialog::setButtonsState()
 	QModelIndexList modelIndexList = treeView->selectionModel()->selectedRows();
 	LgpItem *item;
 	if(!modelIndexList.isEmpty()) {
-		item = _model->getItem(modelIndexList.first());
+		item = _model->item(modelIndexList.first());
 	} else {
 		item = 0;
 	}

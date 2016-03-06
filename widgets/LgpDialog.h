@@ -170,7 +170,7 @@ public:
 	bool removeRow(const QModelIndex &index);
 	bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex());
 	void update(const QModelIndex &index);
-	LgpItem *getItem(const QModelIndex &index) const;
+	LgpItem *item(const QModelIndex &index) const;
 private slots:
 	void setIcon(const QString &path, const QIcon &icon);
 private:
