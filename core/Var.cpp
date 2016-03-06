@@ -21,7 +21,7 @@
 bool Var::load()
 {
 	// Loading file into Var::_varNames
-	QFile fic(Config::programResourceDir() + "/vars.cfg");
+	QFile fic(Config::value("varFile").toString());
 	if(!fic.exists()) {
 		fic.setFileName(":/vars.cfg"); // Get default values
 	}
@@ -79,7 +79,7 @@ bool Var::load()
 bool Var::save(const QMap<quint16, QString> &varNames)
 {
 	// Saving varNames in the file
-	QFile fic(Config::programResourceDir() + "/vars.cfg");
+	QFile fic(Config::value("varFile").toString());
 	if(fic.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
 		_varNames = varNames;
 		QMapIterator<quint16, QString> i(_varNames);
