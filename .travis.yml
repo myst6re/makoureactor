@@ -5,7 +5,6 @@ os:
   - osx
 
 install:
-  - env # Show env (REMOVE ME)
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          lsb_release -a
       && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
@@ -47,7 +46,7 @@ before_deploy:
     else
       DEPLOY_BINARY="makoureactor.app";
     fi
-  - cp "$DEPLOY_BINARY" "$DEPLOY_DIR"
+  - cp -r "$DEPLOY_BINARY" "$DEPLOY_DIR"
   - cp ../*.qm "$DEPLOY_DIR"
   - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
       "$QTDIR/bin/macdeployqt" "$DEPLOY_DIR/$DEPLOY_BINARY";
@@ -67,13 +66,6 @@ env:
   global:
     # COVERITY_SCAN_TOKEN
     - secure: "lk7jEPh62LhXOWyT5UyGAKPxiskVyIBbHEtbnfKZZil2iJLec1f3+df1ADPajl1Ij2Yp4ZgWWcJsuN/+XkQJjXvgWyW2bi0K9ntrRCU4t3h8blodblaXvpssbz5fj4TzI8HnfBet4NXfLLdAUHBcLOLU01xb+LWaY/4rX2PlKBY="
-
-matrix:
-  exclude:
-    # Coverity start earlier on OSX
-    - os: linux
-      env: COVERITY=1
-      env: COVERAGE=1
 
 addons:
   coverity_scan:
