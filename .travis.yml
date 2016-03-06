@@ -32,18 +32,26 @@ before_script:
   - export PATH="$QTDIR/bin:$PATH"
   - mkdir -p build
   - cd build
-  - qmake ..
+  - qmake -config release ..
 
 script:
   - make -j2
 
 before_deploy:
-  - DEPLOY_DIR="makoureactor-$(git describe --tags)-${TRAVIS_OS_NAME}"
+  - DEPLOY_DIR="makoureactor-$(git describe --tags)-${TRAVIS_OS_NAME}64"
   - export DEPLOY_ARCHIVE="$DEPLOY_DIR.tar.gz"
   - mkdir -p "$DEPLOY_DIR"
   - pwd
-  - cp makoureactor "$DEPLOY_DIR"
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+      DEPLOY_BINARY="makoureactor";
+    else
+      DEPLOY_BINARY="makoureactor.app";
+    fi
+  - cp "$DEPLOY_BINARY" "$DEPLOY_DIR"
   - cp ../*.qm "$DEPLOY_DIR"
+  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+      "$QTDIR/bin/macdeployqt" "$DEPLOY_DIR/$DEPLOY_BINARY";
+    fi
   - tar -czf "$DEPLOY_ARCHIVE" "$DEPLOY_DIR"
 
 deploy:
