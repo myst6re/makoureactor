@@ -203,9 +203,10 @@ private:
 	Lgp *lgp;
 	QTreeView *treeView;
 	QPushButton *extractButton, *renameButton,
-	*replaceButton, *addButton,
-	*removeButton, *packButton;
+	            *replaceButton, *addButton,
+	            *removeButton, *packButton;
 	QProgressDialog *progressDialog;
+	LgpItemModel *_model;
 };
 
 #endif // LGPDIALOG_H

@@ -672,9 +672,9 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	setWindowTitle(tr("LGP archive manager"));
 	resize(800, 600);
 
-	LgpItemModel *model = new LgpItemModel(lgp);
+	_model = new LgpItemModel(lgp);
 	treeView = new QTreeView(this);
-	treeView->setModel(model);
+	treeView->setModel(_model);
 	treeView->setUniformRowHeights(true);
 	treeView->header()->setSectionResizeMode(0, QHeaderView::Stretch);
 	treeView->header()->setStretchLastSection(false);
@@ -722,7 +722,7 @@ void LgpDialog::renameCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
+		LgpItem *item = _model->getItem(index);
 		if(item && !item->isDirectory()) {
 			bool ok;
 			QString oldFilePath = item->path(),
@@ -738,7 +738,7 @@ void LgpDialog::renameCurrent()
 			} else if(lgp->fileExists(newFilePath)) {
 				QMessageBox::warning(this, tr("Error"), tr("A file named '%1' already exists, please choose another name.")
 									 .arg(newFilePath));
-			} else if(!treeView->model()->setData(index, newFilePath)) {
+			} else if(!_model->setData(index, newFilePath)) {
 				QMessageBox::warning(this, tr("Error"), tr("Can not Rename the file"));
 			} else {
 				treeView->scrollTo(index);
@@ -753,7 +753,7 @@ void LgpDialog::replaceCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
+		LgpItem *item = _model->getItem(index);
 		if(item && !item->isDirectory()) {
 			QString filename = item->name();
 			int indexOf = filename.lastIndexOf('.');
@@ -790,7 +790,7 @@ void LgpDialog::extractCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
+		LgpItem *item = _model->getItem(index);
 		if(item && !item->isDirectory()) {
 			QString filename = item->name();
 			int index = filename.lastIndexOf('.');
@@ -840,7 +840,7 @@ void LgpDialog::add()
 	QString dirName;
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
-		LgpItem *item = static_cast<LgpItemModel *>(treeView->model())->getItem(index);
+		LgpItem *item = _model->getItem(index);
 		if(item) {
 			dirName = item->isDirectory() ? item->path() : item->dirName();
 		}
@@ -895,12 +895,12 @@ void LgpDialog::add()
 			}
 		} while(rename);
 
-		if(!static_cast<LgpItemModel *>(treeView->model())->insertRow(filePath, new QFile(path))) {
+		if(!_model->insertRow(filePath, new QFile(path))) {
 			QMessageBox::critical(this, tr("Error"),
 			                      tr("Can not add the file '%1'")
 			                      .arg(path));
 		} else {
-			treeView->scrollTo(treeView->model()->index(treeView->model()->rowCount() - 1, 0));
+			treeView->scrollTo(_model->index(_model->rowCount() - 1, 0));
 	//		emit modified();
 			packButton->setEnabled(true);
 		}
@@ -918,7 +918,7 @@ void LgpDialog::removeCurrent()
 			return;
 		}
 
-		if(static_cast<LgpItemModel *>(treeView->model())->removeRow(index)) {
+		if(_model->removeRow(index)) {
 			// emit modified();
 			packButton->setEnabled(true);
 		} else {
@@ -989,7 +989,7 @@ void LgpDialog::setButtonsState()
 	QModelIndexList modelIndexList = treeView->selectionModel()->selectedRows();
 	LgpItem *item;
 	if(!modelIndexList.isEmpty()) {
-		item = static_cast<LgpItemModel *>(treeView->model())->getItem(modelIndexList.first());
+		item = _model->getItem(modelIndexList.first());
 	} else {
 		item = 0;
 	}
