@@ -295,9 +295,11 @@ bool LgpToc::removeEntry(const QString &filePath)
 		return false; // file not found
 	}
 
+	bool ok = _header.remove(v, e) > 0;
+
 	delete e;
 
-	return _header.remove(v, e) > 0;
+	return ok;
 }
 
 bool LgpToc::isNameValid(const QString &filePath)
