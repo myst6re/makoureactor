@@ -188,7 +188,7 @@ void LgpFileItem::debug() const
 
 LgpDirectoryItem::~LgpDirectoryItem()
 {
-	qDeleteAll(_childs);
+	qDeleteAll(_childItems);
 }
 
 void LgpDirectoryItem::addChild(const QString &name, Lgp *lgp)
@@ -207,7 +207,7 @@ void LgpDirectoryItem::addChild(const QString &name, LgpFileItem *item)
 			item->setParent(this);
 			item->setName(name);
 			_fileChilds.insert(name, item);
-			_childs.append(item);
+			_childItems.append(item);
 		}
 	} else {
 		QString dirName = name.left(index);
@@ -217,7 +217,7 @@ void LgpDirectoryItem::addChild(const QString &name, LgpFileItem *item)
 		} else {
 			dirItem = new LgpDirectoryItem(dirName, this);
 			_dirChilds.insert(dirName, dirItem);
-			_childs.append(dirItem);
+			_childItems.append(dirItem);
 		}
 
 		dirItem->addChild(name.mid(index + 1), item);
@@ -230,7 +230,7 @@ void LgpDirectoryItem::sort(SortType type, Qt::SortOrder order)
 	case ByName:
 		switch(order) {
 		case Qt::AscendingOrder:
-			std::sort(_childs.begin(), _childs.end(), [](LgpItem *i1, LgpItem *i2) {
+			std::sort(_childItems.begin(), _childItems.end(), [](LgpItem *i1, LgpItem *i2) {
 				if(i1->isDirectory()) {
 					return true;
 				}
@@ -241,7 +241,7 @@ void LgpDirectoryItem::sort(SortType type, Qt::SortOrder order)
 			});
 			break;
 		case Qt::DescendingOrder:
-			std::sort(_childs.begin(), _childs.end(), [](LgpItem *i1, LgpItem *i2) {
+			std::sort(_childItems.begin(), _childItems.end(), [](LgpItem *i1, LgpItem *i2) {
 				if(i1->isDirectory()) {
 					return false;
 				}
@@ -257,7 +257,7 @@ void LgpDirectoryItem::sort(SortType type, Qt::SortOrder order)
 	case BySize:
 		switch(order) {
 		case Qt::AscendingOrder:
-			std::sort(_childs.begin(), _childs.end(), [](LgpItem *i1, LgpItem *i2) {
+			std::sort(_childItems.begin(), _childItems.end(), [](LgpItem *i1, LgpItem *i2) {
 				if(i1->isDirectory() && i2->isDirectory()) {
 					return i1->name() > i2->name();
 				}
@@ -273,7 +273,7 @@ void LgpDirectoryItem::sort(SortType type, Qt::SortOrder order)
 			});
 			break;
 		case Qt::DescendingOrder:
-			std::sort(_childs.begin(), _childs.end(), [](LgpItem *i1, LgpItem *i2) {
+			std::sort(_childItems.begin(), _childItems.end(), [](LgpItem *i1, LgpItem *i2) {
 				if(i1->isDirectory() && i2->isDirectory()) {
 					return i1->name() < i2->name();
 				}
@@ -308,7 +308,7 @@ bool LgpDirectoryItem::unrefChild(LgpItem *child)
 		qWarning() << "LgpDirectoryItem::unrefChild: child not found in hash tables!" << child->isDirectory() << child->name();
 	}
 
-	return ok && _childs.removeOne(child);
+	return ok && _childItems.removeOne(child);
 }
 
 void LgpDirectoryItem::renameChild(LgpItem *child, const QString &destination)
@@ -328,15 +328,28 @@ void LgpDirectoryItem::renameChild(LgpItem *child, const QString &destination)
 	}
 }
 
-void LgpDirectoryItem::removeChild(LgpItem *child)
+bool LgpDirectoryItem::removeChild(LgpItem *child)
 {
-	if(child->isDirectory()) {
-		_dirChilds.remove(child->name());
-	} else {
-		_fileChilds.remove(child->name());
+	return removeChildren(child->id(), 1);
+}
+
+bool LgpDirectoryItem::removeChildren(int position, int count)
+{
+	if (position < 0 || position + count > _childItems.size()) {
+		return false;
 	}
 
-	delete _childs.takeAt(child->id());
+	for (int row = 0; row < count; ++row) {
+		LgpItem *item = _childItems.takeAt(position);
+		if(item->isDirectory()) {
+			_dirChilds.remove(item->name());
+		} else {
+			_fileChilds.remove(item->name());
+		}
+		delete item;
+	}
+
+	return true;
 }
 
 LgpItem *LgpItem::find(const QString &path)
@@ -357,22 +370,14 @@ LgpItem *LgpDirectoryItem::find(const QString &path)
 		name = path;
 	}
 
-	if(_fileChilds.contains(name)) {
-		return _fileChilds.value(name);
-	}
-	if(_dirChilds.contains(name)) {
-		if(!rest.isEmpty()) {
-			return _dirChilds.value(name)->find(rest);
-		}
-
-	}
+	//TODO
 	return NULL;
 }
 
 void LgpDirectoryItem::debug() const
 {
 	qDebug() << "Directory" << path();
-	foreach(LgpItem *item, _childs) {
+	foreach(LgpItem *item, _childItems) {
 		item->debug();
 	}
 }
