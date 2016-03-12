@@ -73,6 +73,7 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	layout->addWidget(toolBar1, 0, 0);
 	layout->addWidget(models, 1, 0);
 	layout->addWidget(modelFrame, 0, 1, 2, 4);
+	layout->setColumnStretch(1, 1);
 
 	adjustSize();
 
