@@ -336,7 +336,8 @@ OTHER_FILES += Makou_Reactor.rc \
     compat/QtWidgets \
     .travis.yml
 DISTFILES += Makou_Reactor.desktop \
-    README.md
+    README.md \
+    .clang-format
 
 system(lrelease Makou_Reactor.pro) # call lrelease to make the qm files.
 
