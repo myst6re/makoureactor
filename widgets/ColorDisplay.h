@@ -20,7 +20,7 @@
 
 #include <QtWidgets>
 
-#define COLOR_DISPLAY_CELL_SIZE       9
+#define COLOR_DISPLAY_MIN_CELL_SIZE   9
 #define COLOR_DISPLAY_BORDER_WIDTH    1
 
 class ColorDisplay : public QWidget
@@ -29,16 +29,25 @@ class ColorDisplay : public QWidget
 public:
 	explicit ColorDisplay(QWidget *parent=0);
 	void setColors(const QList<QRgb> &colors);
-	const QList<QRgb> &getColors() const;
+	const QList<QRgb> &colors() const;
 	bool isReadOnly() const;
 	void setReadOnly(bool ro);
+	QSize sizeHint() const;
+	QSize minimumSizeHint() const;
+	int heightForWidth(int w) const;
+	bool hasHeightForWidth() const {
+		return true;
+	}
+	inline int cellSize() const {
+		return cellSize(width());
+	}
 signals:
 	void colorEdited(int id, QRgb value);
 	void colorHovered(int id);
 private:
 	int colorId(const QPoint &pos) const;
-	QList<QRgb> colors;
-	qint8 scale;
+	int cellSize(int w) const;
+	QList<QRgb> _colors;
 	bool _ro;
 protected:
 	void paintEvent(QPaintEvent *event);
