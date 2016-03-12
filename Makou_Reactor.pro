@@ -146,7 +146,9 @@ HEADERS += \
     core/field/FieldModelTextureRefPS.h \
     widgets/ScriptManager.h \
     widgets/FieldList.h \
-    widgets/Splitter.h
+    widgets/Splitter.h \
+    core/AkaoIO.h \
+    core/Akao.h
 
 SOURCES += \
     Window.cpp \
@@ -281,7 +283,9 @@ SOURCES += \
     core/field/FieldModelTextureRefPS.cpp \
     widgets/ScriptManager.cpp \
     widgets/FieldList.cpp \
-    widgets/Splitter.cpp
+    widgets/Splitter.cpp \
+    core/AkaoIO.cpp \
+    core/Akao.cpp
 
 TRANSLATIONS += Makou_Reactor_fr.ts  \
     Makou_Reactor_ja.ts
