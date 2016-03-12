@@ -528,7 +528,7 @@ bool Lgp::openHeader()
 
 	int headerEntryID = 0;
 
-	_files->clear();
+	_files->clear(); // This will delete entries
 
 	foreach(LgpHeaderEntry *entry, tocEntries) {
 		if(!_files->addEntry(entry)) {
