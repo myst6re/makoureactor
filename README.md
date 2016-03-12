@@ -6,9 +6,11 @@
 ## Installing
 
  - **Windows**: Download the last release on [GitHub](https://github.com/myst6re/makoureactor/releases).
- - **Debian/Ubuntu**: Use ppa:sithlord48/ff7-daily ppa and install makoureactor package.
- - **ArchLinux**: Use makoureactor-git package.
- - **MacOSX**: We not provide binaries for now, but you can compile Makou Reactor on OSX.
+ - **MacOSX**: Download the latest release on [GitHub](https://github.com/myst6re/makoureactor/releases)
+ - **Debian/Ubuntu**: Add sithlord48's [Stable Release](https://launchpad.net/~sithlord48/+archive/ubuntu/ff7) or [Daily Builds](https://launchpad.net/~sithlord48/+archive/ubuntu/ff7-daily) ppa to install the makoureactor package
+ - **ArchLinux**: Use packages from the [AUR](https://aur.archlinux.org/packages/?O=0&SeB=nd&K=makoureactor&outdated=&SB=n&SO=a&PP=50&do_Search=Go).
+ - **Other Linux**: Download the latest release on [GitHub](https://github.com/myst6re/makoureactor/releases)
+
 
 ## Building
 
