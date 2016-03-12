@@ -1,6 +1,7 @@
 #include "AkaoIO.h"
 
-AkaoIO::AkaoIO()
+AkaoIO::AkaoIO(QIODevice *device) :
+    IO(device)
 {
 	
 }
@@ -12,7 +13,7 @@ bool AkaoIO::read(Akao &akao) const
 	return false;
 }
 
-bool write(const Akao &akao) const
+bool AkaoIO::write(const Akao &akao) const
 {
 	Q_UNUSED(akao)
 	// TODO

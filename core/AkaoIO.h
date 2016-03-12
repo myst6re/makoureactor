@@ -7,7 +7,8 @@
 class AkaoIO : public IO
 {
 public:
-	AkaoIO();
+	explicit AkaoIO(QIODevice *device);
+	virtual ~AkaoIO() {}
 	bool read(Akao &akao) const;
 	bool write(const Akao &akao) const;
 };
