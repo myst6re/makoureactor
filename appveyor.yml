@@ -11,7 +11,7 @@ before_build:
   - qmake -config release Makou_Reactor.pro
 
 build_script:
-  - jom /j 2
+  - jom
 
 after_build:
   - DIR
