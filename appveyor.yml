@@ -3,11 +3,7 @@ environment:
 
 install:
   - set PATH=%QTDIR%\bin;C:\Qt\Tools\QtCreator\bin;%PATH%
-  - dir "C:\Program Files"
-  - dir "C:\Program Files (x86)"
-  - dir "C:\Program Files (x86)\Microsoft Visual Studio 15.0"
-  - dir "C:\Program Files (x86)\Microsoft Visual Studio 15.0\VC"
-  - '"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"'
+  - '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"'
 
 before_build:
   - qmake Makou_Reactor.pro
