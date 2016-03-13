@@ -1,0 +1,11 @@
+environment:
+  QTDIR: C:\Qt\5.5\msvc2013
+
+install:
+  - set PATH=%QTDIR%\bin;%PATH%
+
+before_build:
+  - qmake Makou_Reactor.pro
+
+build_script:
+  - jom -j 2

@@ -337,7 +337,8 @@ OTHER_FILES += Makou_Reactor.rc \
     .travis.yml
 DISTFILES += Makou_Reactor.desktop \
     README.md \
-    .clang-format
+    .clang-format \
+    appveyor.yml
 
 system(lrelease Makou_Reactor.pro) # call lrelease to make the qm files.
 
