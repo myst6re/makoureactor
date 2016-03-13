@@ -26,5 +26,3 @@ xcopy /y %EXE_PATH% %OUTPUT_DIR%
 
 rem Compress Exe and DLLs. Note: DLLs in platforms/ directory should not be compressed.
 upx %OUTPUT_DIR%\*.dll %OUTPUT_DIR%\*.exe
-
-exit 0
