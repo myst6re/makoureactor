@@ -11,9 +11,9 @@ before_build:
   - qmake -config release Makou_Reactor.pro
 
 build_script:
-  - jom -j 2
+  - jom /j 2
 
-before_package:
+after_build:
   - DIR
   - FOR /F %i IN ('git describe --tags') DO SET GIT_TAG_OR_BRANCH=%i
   - DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32"
