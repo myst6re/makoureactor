@@ -2,7 +2,8 @@ environment:
   QTDIR: C:\Qt\5.5\msvc2013
 
 install:
-  - set PATH=%QTDIR%\bin;%PATH%
+  - set PATH=%QTDIR%\bin;C:\Qt\Tools\QtCreator\bin;%PATH%
+  - dir C:\Qt\Tools
 
 before_build:
   - qmake Makou_Reactor.pro
