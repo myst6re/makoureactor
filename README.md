@@ -1,6 +1,7 @@
 # Makou Reactor
 
-[![Build Status](https://travis-ci.org/myst6re/makoureactor.svg?branch=develop)](https://travis-ci.org/myst6re/makoureactor)
+[![Build Status Linux/OSX](https://travis-ci.org/myst6re/makoureactor.svg?branch=develop)](https://travis-ci.org/myst6re/makoureactor)
+[![Build status Win32](https://ci.appveyor.com/api/projects/status/lwiophf2d6cklg95/branch/develop?svg=true)](https://ci.appveyor.com/project/myst6re/makoureactor/branch/develop)
 [![Coverity Scan Build Status](https://img.shields.io/coverity/scan/8102.svg)](https://scan.coverity.com/projects/myst6re-makoureactor)
 
 ## Installing
