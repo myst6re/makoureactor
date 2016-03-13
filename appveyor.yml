@@ -14,9 +14,9 @@ build_script:
   - jom
 
 after_build:
-  - DIR
-  - FOR /F %i IN ('git describe --tags') DO SET GIT_TAG_OR_BRANCH=%i
+  - FOR /F %%i IN ('git describe --tags') DO SET GIT_TAG_OR_BRANCH=%%i
   - DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32"
+  - echo "%DEPLOY_DIR%"
   - deploy.bat
   - MOVE *.qm deploy
   - DIR deploy
