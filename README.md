@@ -4,6 +4,10 @@
 [![Build status Win32](https://ci.appveyor.com/api/projects/status/lwiophf2d6cklg95/branch/develop?svg=true)](https://ci.appveyor.com/project/myst6re/makoureactor/branch/develop)
 [![Coverity Scan Build Status](https://img.shields.io/coverity/scan/8102.svg)](https://scan.coverity.com/projects/myst6re-makoureactor)
 
+![Makou Reactor](images/logo-shinra.png)
+
+Final Fantasy VII field archive editor.
+
 ## Installing
 
  - **Windows**: Download the last release on [GitHub](https://github.com/myst6re/makoureactor/releases).
@@ -36,6 +40,9 @@ if you have troubles to compile and run Makou Reactor.
 Use the command prompt given in your Qt installation
 to set your environment (`%QTDIR%/bin/qtvars.bat` for Qt 4
 and `%QTDIR%/%compiler%/bin/qtenv2.bat` for Qt 5).
+If you want to compile with msvc, run `vcvarsall.bat`
+from your Microsoft Visual Studio installation
+(eg: `C:\Program Files\Microsoft Visual Studio 11.0\VC\vcvarsall.bat`.
 
 Then run:
 

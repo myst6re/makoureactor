@@ -306,7 +306,9 @@ macx {
         INCLUDEPATH += $$[QT_INSTALL_PREFIX]/include/QtZlib
     } else {
         INCLUDEPATH += zlib-1.2.7
-        # LIBS += -lz
+        greaterThan(QT_MAJOR_VERSION, 4) {
+            LIBS += -lz
+        }
     }
 }
 
@@ -334,15 +336,16 @@ OTHER_FILES += Makou_Reactor.rc \
     deploy.bat \
     vars.cfg \
     compat/QtWidgets \
-    .travis.yml
-DISTFILES += Makou_Reactor.desktop \
+    .travis.yml \
     README.md \
     .clang-format \
     appveyor.yml
+DISTFILES += Makou_Reactor.desktop
 
-system(lrelease Makou_Reactor.pro) # call lrelease to make the qm files.
+# call lrelease to make the qm files.
+system(lrelease Makou_Reactor.pro)
 
-#all other *nix (except for symbian)
+# all other *nix (except for symbian)
 unix:!macx:!symbian {
     LIBS += -lglut -lGLU
 

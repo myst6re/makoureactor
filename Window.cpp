@@ -323,8 +323,7 @@ void Window::restartNow()
 	                   qApp->applicationDirPath())) {
 		title = translator.translate("Window", "Settings changed");
 		text = translator.translate("Window", "Restart the program for the settings to take effect.");
-	}
-	else {
+	} else {
 		title = "Settings changed";
 		text = "Restart the program for the settings to take effect.";
 	}
