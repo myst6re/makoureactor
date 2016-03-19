@@ -75,8 +75,14 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 				}
 
 				return true;
+			} else {
+				qWarning() << "FieldModelFilePC::load error animation" << hrcFilename << aFilename;
 			}
+		} else {
+			qWarning() << "FieldModelFilePC::load error mesh" << hrcFilename;
 		}
+	} else {
+		qWarning() << "FieldModelFilePC::load error skeleton" << hrcFilename;
 	}
 
 	return false;
