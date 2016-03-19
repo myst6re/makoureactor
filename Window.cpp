@@ -874,7 +874,7 @@ void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 	if(fieldModel && this->field == field) {
 		fieldModel->setFieldModelFile(fieldModelFile);
 	}
-	zonePreview->setCurrentIndex(int(fieldModel && !fieldModelFile->isEmpty()));
+	zonePreview->setCurrentIndex(int(fieldModel && fieldModelFile->isValid()));
 }
 
 void Window::setModified(bool enabled)

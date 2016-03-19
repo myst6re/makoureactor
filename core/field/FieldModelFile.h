@@ -29,10 +29,8 @@ public:
 	FieldModelFile();
 	virtual ~FieldModelFile();
 
-	inline bool isEmpty() const {
-		return _skeleton.isEmpty();
-	}
 	virtual void clear();
+	virtual bool isValid() const;
 	virtual bool translateAfter() const=0;
 
 	inline const FieldModelSkeleton &skeleton() const {
