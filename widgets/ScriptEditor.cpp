@@ -602,7 +602,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Play music"), QList<QVariant>() << 0xF0);
 		comboBox->addItem(tr("MUSVT"), QList<QVariant>() << 0xF3);
 		comboBox->addItem(tr("MUSVM"), QList<QVariant>() << 0xF4);
-		comboBox->addItem(tr("Music On/Off"), QList<QVariant>() << 0xF5);
+		comboBox->addItem(tr("Music Unlock/Lock"), QList<QVariant>() << 0xF5);
 		comboBox->addItem(tr("Battle music"), QList<QVariant>() << 0xF6);
 		comboBox->addItem(tr("CHMPH"), QList<QVariant>() << 0xF7);
 		comboBox->addItem(tr("CHMST"), QList<QVariant>() << 0xFE);
