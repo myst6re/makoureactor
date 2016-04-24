@@ -600,7 +600,7 @@ void TutWidget::replaceByEmptyTuto()
 		return;
 	}
 
-	currentTut->setData(row, QByteArray());
+	currentTut->setData(row, QByteArray("\x11", 1));
 	list->currentItem()->setText(listItemText(row));
 	showText(list->currentItem(), list->currentItem());
 	emit modified();
