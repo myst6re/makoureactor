@@ -36,9 +36,12 @@ public:
 	bool hasTut() const;
 	bool isTut(int tutID) const;
 	bool isAkao(int tutID) const;
+	bool isBroken(int tutID) const;
+	bool canBeRepaired(int tutID) const;
+	bool repair(int tutID);
 	int akaoID(int tutID) const;
 	void setAkaoID(int tutID, quint16 akaoID);
-	QString parseScripts(int tutID) const;
+	QString parseScripts(int tutID, bool *warnings = NULL) const;
 protected:
 	QList<quint32> openPositions(const QByteArray &data) const;
 	QByteArray save2(QByteArray &toc, quint32 firstPos) const;

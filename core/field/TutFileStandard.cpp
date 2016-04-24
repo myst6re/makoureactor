@@ -114,7 +114,40 @@ bool TutFileStandard::isAkao(int tutID) const
 	return data(tutID).startsWith("AKAO")/* || !field()->scriptsAndTexts()->listUsedTuts().contains(tutID) */;
 }
 
-QString TutFileStandard::parseScripts(int tutID) const
+bool TutFileStandard::isBroken(int tutID) const
+{
+	if(isAkao(tutID)) {
+		return false;
+	}
+	const QByteArray &d = data(tutID);
+	if(!d.isEmpty()) {
+		quint8 firstChar = d.at(0);
+		return firstChar > 0x12 && firstChar < 0xFF;
+	}
+	return false;
+}
+
+bool TutFileStandard::canBeRepaired(int tutID) const
+{
+	const QByteArray &d = data(tutID);
+	return d.startsWith("KAO") || d.startsWith("AO");
+}
+
+bool TutFileStandard::repair(int tutID)
+{
+	const QByteArray &d = data(tutID);
+	if (d.startsWith("KAO")) {
+		setData(tutID, QByteArray("A", 1).append(d));
+		return true;
+	}
+	if (d.startsWith("AO")) {
+		setData(tutID, QByteArray("AK", 2).append(d));
+		return true;
+	}
+	return false;
+}
+
+QString TutFileStandard::parseScripts(int tutID, bool *warnings) const
 {
 	QString ret;
 
@@ -124,6 +157,9 @@ QString TutFileStandard::parseScripts(int tutID) const
 
 		quint16 id, length, firstPos;
 		if(tuto.size() < 6) {
+			if(warnings) {
+				*warnings = true;
+			}
 			return QObject::tr("Error");
 		}
 		memcpy(&id, constTuto + 4, 2);
@@ -148,7 +184,7 @@ QString TutFileStandard::parseScripts(int tutID) const
 		ret.append(tuto.mid(16, 4).toHex());
 		ret.append("\n");
 	} else {
-		ret = TutFile::parseScripts(tutID);
+		ret = TutFile::parseScripts(tutID, warnings);
 	}
 
 	return ret;

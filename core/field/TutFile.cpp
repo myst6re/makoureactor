@@ -43,12 +43,8 @@ bool TutFile::open(const QByteArray &data)
 	tutos.clear();
 	for(int i=0 ; i<positions.size()-1 ; ++i) {
 		if(positions.at(i) < dataSize && positions.at(i) < positions.at(i+1)) {
-			QByteArray t = data.mid(positions.at(i), positions.at(i+1)-positions.at(i));
-//			if(t.startsWith("KAO")) {
-//				t.prepend('A'); // PC bug
-//			}
-//			qDebug() << i << t.left(16).toHex();
-			tutos.append(t);
+			tutos.append(data.mid(positions.at(i),
+			                      positions.at(i+1) - positions.at(i)));
 		}
 	}
 
@@ -98,7 +94,7 @@ bool TutFile::insertData(int tutID, const QString &path)
 	return false;
 }
 
-QString TutFile::parseScripts(int tutID) const
+QString TutFile::parseScripts(int tutID, bool *warnings) const
 {
 	const QByteArray &tuto = data(tutID);
 	const char *constTuto = tuto.constData();
@@ -106,6 +102,10 @@ QString TutFile::parseScripts(int tutID) const
 	QByteArray textData;
 	bool jp = Config::value("jp_txt", false).toBool();
 	int i=0, size = tuto.size(), endOfText;
+
+	if(warnings) {
+		*warnings = false;
+	}
 
 	while(i < size) {
 		quint8 key = tuto.at(i++);
@@ -117,6 +117,9 @@ QString TutFile::parseScripts(int tutID) const
 				if(i < size) {
 					ret.append(parseScriptsUnknownString(tuto.at(i)));
 					ret.append("\n");
+				}
+				if(warnings) {
+					*warnings = true;
 				}
 				return ret;
 			}
@@ -177,6 +180,9 @@ QString TutFile::parseScripts(int tutID) const
 						}
 					}
 				}
+				if(warnings) {
+					*warnings = true;
+				}
 				return ret;
 			}
 			quint16 x, y;
@@ -189,6 +195,9 @@ QString TutFile::parseScripts(int tutID) const
 			ret.append("{NOP}");
 			break;
 		default:
+			if(warnings) {
+				*warnings = true;
+			}
 			ret.append(parseScriptsUnknownString(key));
 			break;
 		}

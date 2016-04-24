@@ -44,11 +44,15 @@ private slots:
 	void pasteOnCurrent();
 	void exportation();
 	void importation();
+	void repairBroken();
+	void replaceByEmptyAkao();
+	void replaceByEmptyTuto();
 private:
 	QWidget *buildTutPage();
 	QWidget *buildSoundPage();
+	QWidget *buildBrokenPage();
 	void fillList();
-	QListWidgetItem *createListItem(int id) const;
+	QString listItemText(int id) const;
 	void updateAkaoID(quint16 akaoID);
 	void saveText(QListWidgetItem *item);
 	int currentRow(QListWidgetItem *item=0) const;
@@ -60,7 +64,9 @@ private:
 	QStackedWidget *stackedWidget;
 	QRadioButton *versionPS, *versionPC;
 	QListWidget *list;
-	QPushButton *exportButton, *importButton;
+	QPushButton *exportButton, *importButton,
+	            *repairButton, *createNewAkaoButton,
+	            *createNewTutoButton;
 	QPlainTextEdit *textEdit;
 	QLabel *akaoDesc;
 	QComboBox *akaoIDList;
