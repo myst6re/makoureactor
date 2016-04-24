@@ -12,6 +12,7 @@ class ScriptManager : public QWidget
 public:
 	explicit ScriptManager(QWidget *parent = 0);
 	void saveConfig();
+	void removeCopiedReferences();
 	void clear();
 	inline GrpScriptList *groupScriptList() const {
 		return _groupScriptList;

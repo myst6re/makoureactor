@@ -133,26 +133,23 @@ GrpScript *GrpScriptList::currentGrpScript()
 void GrpScriptList::enableActions(bool enabled)
 {
 	_toolBar->setEnabled(enabled);
-	foreach(QAction *action, actions()) {
-		action->setEnabled(enabled);
-	}
 	setContextMenuPolicy(enabled ? Qt::ActionsContextMenu : Qt::NoContextMenu);
 }
 
 void GrpScriptList::upDownEnabled()
 {
 	if(selectedItems().isEmpty()) {
-		actions().at(2)->setEnabled(false);
-		actions().at(4)->setEnabled(false);
-		actions().at(5)->setEnabled(false);
-		actions().at(8)->setEnabled(false);
-		actions().at(9)->setEnabled(false);
+		actions().at(DelAction)->setEnabled(false);
+		actions().at(CutAction)->setEnabled(false);
+		actions().at(CopyAction)->setEnabled(false);
+		actions().at(UpAction)->setEnabled(false);
+		actions().at(DownAction)->setEnabled(false);
 	} else {
-		actions().at(2)->setEnabled(topLevelItemCount() > 0);
-		actions().at(4)->setEnabled(true);
-		actions().at(5)->setEnabled(true);
-		actions().at(8)->setEnabled(topLevelItemCount() > 1 && currentItem() != topLevelItem(0));
-		actions().at(9)->setEnabled(topLevelItemCount() > 1 && currentItem() != topLevelItem(topLevelItemCount()-1));
+		actions().at(DelAction)->setEnabled(topLevelItemCount() > 0);
+		actions().at(CutAction)->setEnabled(true);
+		actions().at(CopyAction)->setEnabled(true);
+		actions().at(UpAction)->setEnabled(topLevelItemCount() > 1 && currentItem() != topLevelItem(0));
+		actions().at(DownAction)->setEnabled(topLevelItemCount() > 1 && currentItem() != topLevelItem(topLevelItemCount()-1));
 	}
 }
 
@@ -207,12 +204,8 @@ void GrpScriptList::fill(Section1File *scripts)
 	                columnWidth(1) +
 	                fontMetrics().width("WWWWWWWW"));
 
-	actions().at(0)->setEnabled(true);
-	actions().at(1)->setEnabled(topLevelItemCount() < 256);
-	// actions().at(2)->setEnabled(topLevelItemCount() > 0);
-	// actions().at(4)->setEnabled(true);
-	// actions().at(5)->setEnabled(true);
-	actions().at(6)->setEnabled(!grpScriptCopied.isEmpty());
+	actions().at(RenameAction)->setEnabled(true);
+	actions().at(AddAction)->setEnabled(topLevelItemCount() < 256);
 	upDownEnabled();
 }
 
@@ -322,24 +315,31 @@ void GrpScriptList::copy()
 		grpScriptCopied.append(new GrpScript(*scripts->grpScript(id)));
 	}
 
-	actions().at(6)->setEnabled(true);
+	actions().at(PasteAction)->setEnabled(true);
 }
 
 void GrpScriptList::paste()
 {
-	int grpScriptID = selectedID()+1, scrollID = grpScriptID;
-	if(grpScriptID == 0)	return;
+	if(grpScriptCopied.isEmpty()) {
+		return;
+	}
+	int grpScriptID = selectedID() + 1;
+	if(grpScriptID == 0) {
+		grpScriptID = topLevelItemCount(); // Last position
+	}
+	int i = grpScriptID;
 	foreach(GrpScript *GScopied, grpScriptCopied) {
-		scripts->insertGrpScript(grpScriptID++, new GrpScript(*GScopied));
+		scripts->insertGrpScript(i++, new GrpScript(*GScopied));
 	}
 
 	fill();
-	scroll(scrollID);
+	scroll(grpScriptID);
 	emit changed();
 }
 
 void GrpScriptList::clearCopiedGroups()
 {
+	actions().at(PasteAction)->setEnabled(false);
 	qDeleteAll(grpScriptCopied);
 	grpScriptCopied.clear();
 }

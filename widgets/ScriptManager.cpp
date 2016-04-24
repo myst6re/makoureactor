@@ -78,6 +78,12 @@ void ScriptManager::saveConfig()
 	Config::setValue("scriptToolbarVisible", !_opcodeList->toolBar()->isHidden());
 }
 
+void ScriptManager::removeCopiedReferences()
+{
+	_groupScriptList->clearCopiedGroups();
+	_opcodeList->clearCopiedOpcodes();
+}
+
 void ScriptManager::clear()
 {
 	_groupScriptList->blockSignals(true);
@@ -85,11 +91,9 @@ void ScriptManager::clear()
 	_opcodeList->blockSignals(true);
 
 	_groupScriptList->clear();
-	_groupScriptList->clearCopiedGroups();
 	_groupScriptList->enableActions(false);
 	_scriptList->clear();
 	_opcodeList->clear();
-	_opcodeList->clearCopiedOpcodes();
 	_field = 0;
 
 	_groupScriptList->blockSignals(false);

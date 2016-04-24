@@ -381,6 +381,7 @@ int Window::closeFile(bool quit)
 		fieldList->blockSignals(false);
 
 		disableEditors();
+		_scriptManager->removeCopiedReferences();
 		if(_modelManager) {
 			_modelManager->close();
 			_modelManager->deleteLater();
