@@ -5624,7 +5624,7 @@ void OpcodeDFANM::setParams(const char *params, int)
 
 QString OpcodeDFANM::toString(Field *) const
 {
-	return QObject::tr("Play animation #%1 of the field model (speed=%2)")
+	return QObject::tr("Play loop animation #%1 of the field model (speed=%2)")
 			.arg(animID)
 			.arg(speed);
 }
@@ -6044,7 +6044,7 @@ void OpcodeANIMX1::setParams(const char *params, int)
 
 QString OpcodeANIMX1::toString(Field *) const
 {
-	return QObject::tr("Play animation #%1 of the field model (speed=%2)")
+	return QObject::tr("Play animation #%1 of the field model (speed=%2, type=1)")
 			.arg(animID)
 			.arg(speed);
 }
@@ -6395,7 +6395,7 @@ void OpcodeANIMX2::setParams(const char *params, int)
 
 QString OpcodeANIMX2::toString(Field *) const
 {
-	return QObject::tr("Play animation #%1 of the field model (speed=%2)")
+	return QObject::tr("Play animation #%1 of the field model (speed=%2, type=2)")
 			.arg(animID)
 			.arg(speed);
 }
