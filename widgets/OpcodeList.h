@@ -65,8 +65,8 @@ private slots:
 	void cut();
 	void copy();
 	void paste();
-	void up();
-	void down();
+	inline void up()   { move(Script::Up);   }
+	inline void down() { move(Script::Down); }
 	void itemSelected();
 	void evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void undo();
@@ -76,6 +76,8 @@ private slots:
 signals:
 	void changed();
 	void editText(int textID);
+	void gotoScript(int groupID, int scriptID);
+	void gotoField(int fieldID);
 protected:
 	void mouseReleaseEvent(QMouseEvent *event);
 private:
@@ -94,7 +96,7 @@ private:
 	bool hasCut, isInit;
 
 	QToolBar *_toolBar;
-	QWidget *_help;
+	QLabel *_help;
 
 	Field *field;
 	GrpScript *grpScript;

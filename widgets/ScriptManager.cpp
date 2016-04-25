@@ -63,6 +63,8 @@ ScriptManager::ScriptManager(QWidget *parent) :
 	connect(_opcodeList, SIGNAL(changed()), SLOT(refresh()));
 	connect(_opcodeList, SIGNAL(editText(int)), SIGNAL(editText(int)));
 	connect(_opcodeList, SIGNAL(changed()), SLOT(compile()));
+	connect(_opcodeList, SIGNAL(gotoScript(int,int)), SLOT(gotoScript(int,int)));
+	connect(_opcodeList, SIGNAL(gotoField(int)), SIGNAL(gotoField(int)));
 
 	_groupScriptList->toolBar()->setVisible(Config::value("grpToolbarVisible", true).toBool());
 	_opcodeList->toolBar()->setVisible(Config::value("scriptToolbarVisible", true).toBool());
@@ -185,9 +187,14 @@ void ScriptManager::refresh()
 	_scriptList->localeRefresh();
 }
 
-void ScriptManager::gotoOpcode(int grpScriptID, int scriptID, int opcodeID)
+void ScriptManager::gotoScript(int grpScriptID, int scriptID)
 {
 	_groupScriptList->scroll(grpScriptID, false);
 	_scriptList->scroll(scriptID, false);
+}
+
+void ScriptManager::gotoOpcode(int grpScriptID, int scriptID, int opcodeID)
+{
+	gotoScript(grpScriptID, scriptID);
 	_opcodeList->scroll(opcodeID);
 }

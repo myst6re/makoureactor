@@ -74,7 +74,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	redo_A->setEnabled(false);
 	text_A = new QAction(tr("Edit text"), this);
 	text_A->setVisible(false);
-	goto_A = new QAction(tr("Goto label"), this);
+	goto_A = new QAction(this);
 	goto_A->setVisible(false);
 
 	connect(edit_A, SIGNAL(triggered()), SLOT(scriptEditor()));
@@ -114,7 +114,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	addAction(redo_A);
 
 	QWidget *help = new QWidget;
-	_help = new QLabel(tr("Alt + Click to go to the label"));
+	_help = new QLabel;
 	_help->hide();
 	QHBoxLayout *helpLayout = new QHBoxLayout(help);
 	helpLayout->addStretch();
@@ -230,8 +230,18 @@ void OpcodeList::itemSelected()
 		break;
 	}
 
-	goto_A->setVisible(opcode->isJump());
-	_help->setVisible(opcode->isJump());
+	bool visible = true;
+	if(opcode->isJump()) {
+		goto_A->setText(tr("Goto label"));
+		_help->setText(tr("Alt + Click to go to the label"));
+	} else if(opcode->isExec()) {
+		goto_A->setText(tr("Goto script"));
+		_help->setText(tr("Alt + Click to go to the script"));
+	} else {
+		visible = false;
+	}
+	goto_A->setVisible(visible);
+	_help->setVisible(visible);
 }
 
 void OpcodeList::upDownEnabled()
@@ -504,7 +514,9 @@ void OpcodeList::clearHist()
 
 void OpcodeList::undo()
 {
-	if(hists.isEmpty())		return;
+	if(hists.isEmpty()) {
+		return;
+	}
 
 	Historic hist = hists.pop();
 	undo_A->setEnabled(!hists.isEmpty());
@@ -565,7 +577,9 @@ void OpcodeList::undo()
 
 void OpcodeList::redo()
 {
-	if(restoreHists.isEmpty())		return;
+	if(restoreHists.isEmpty()) {
+		return;
+	}
 
 	Historic hist = restoreHists.pop();
 	redo_A->setEnabled(!restoreHists.isEmpty());
@@ -619,10 +633,12 @@ void OpcodeList::redo()
 
 void OpcodeList::scriptEditor(bool modify)
 {
-	if(!script)		return;
+	if(!script) {
+		return;
+	}
 
 	int opcodeID = selectedID();
-	if(opcodeID==-1) {
+	if(opcodeID == -1) {
 		modify = false;
 	}
 
@@ -630,15 +646,15 @@ void OpcodeList::scriptEditor(bool modify)
 
 	saveExpandedItems();
 
-	if(modify)
+	if(modify) {
 		oldVersion = Script::copyOpcode(script->opcode(opcodeID));
-	else
+	} else {
 		++opcodeID;
+	}
 
 	ScriptEditor editor(field, grpScript, script, opcodeID, modify, isInit, this);
-	
-	if(editor.exec()==QDialog::Accepted)
-	{
+
+	if(editor.exec() == QDialog::Accepted) {
 		fill();
 		scroll(opcodeID);
 		if(modify) {
@@ -661,13 +677,25 @@ void OpcodeList::scriptEditor(bool modify)
 
 void OpcodeList::del(bool totalDel)
 {
-	if(topLevelItemCount() == 0)	return;
+	if(topLevelItemCount() == 0) {
+		return;
+	}
 	QList<int> selectedIDs = this->selectedIDs();
-	if(selectedIDs.isEmpty())	return;
+	if(selectedIDs.isEmpty()) {
+		return;
+	}
 	QList<Opcode *> oldVersions;
 
-	if(totalDel && QMessageBox::warning(this, tr("Delete"), tr("Are you sure you want to delete %1?").arg(selectedIDs.size()==1 ? tr("the selected command") : tr("the selected commands")), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel)
+	if(totalDel &&
+	        QMessageBox::warning(this, tr("Delete"),
+	                             tr("Are you sure you want to delete %1?")
+	                             .arg(selectedIDs.size()==1
+	                                  ? tr("the selected command")
+	                                  : tr("the selected commands")),
+	                             QMessageBox::Yes | QMessageBox::Cancel)
+	        == QMessageBox::Cancel) {
 		return;
+	}
 
 	saveExpandedItems();
 	
@@ -701,21 +729,23 @@ void OpcodeList::cut()
 void OpcodeList::copy()
 {
 	QList<int> selectedIDs = this->selectedIDs();
-	if(selectedIDs.isEmpty())	return;
+	if(selectedIDs.isEmpty()) {
+		return;
+	}
 
 	QMap<int, QTreeWidgetItem *> listeitems;
-	foreach(QTreeWidgetItem *item, selectedItems())
+	foreach(QTreeWidgetItem *item, selectedItems()) {
 		listeitems.insert(item->data(0, Qt::UserRole).toInt(), item);
+	}
 
 	QString copiedText;
 	QTreeWidgetItem *lastitem=NULL, *parentitem;
 	QStack<QTreeWidgetItem *> parentitems;
-	int indent=0;
-	foreach(QTreeWidgetItem *item, listeitems)
-	{
-		if(lastitem!=NULL) {
+	int indent = 0;
+	foreach(QTreeWidgetItem *item, listeitems) {
+		if(lastitem != NULL) {
 			parentitem = item->parent();
-			if(parentitem==lastitem) {
+			if(parentitem == lastitem) {
 				indent++;
 				parentitems.push(parentitem);
 			}
@@ -726,8 +756,9 @@ void OpcodeList::copy()
 				}
 			}
 
-			for(int i=0 ; i<indent ; ++i)
+			for(int i=0 ; i<indent ; ++i) {
 				copiedText.append('\t');
+			}
 		}
 
 		copiedText.append(item->text(0)).append('\n');
@@ -760,25 +791,25 @@ void OpcodeList::paste()
 	changeHist(Add, IDs, QList<Opcode *>());
 }
 
-void OpcodeList::up()	{	move(Script::Up);		}
-void OpcodeList::down() {	move(Script::Down);		}
-
 void OpcodeList::move(Script::MoveDirection direction)
 {
 	int opcodeID = selectedID();
-	if(opcodeID == -1)	return;
+	if(opcodeID == -1) {
+		return;
+	}
 	saveExpandedItems();
-	if(script->moveOpcode(opcodeID, direction))
-	{
+	if(script->moveOpcode(opcodeID, direction)) {
 		fill();
 		scroll(direction == Script::Down ? opcodeID+1 : opcodeID-1);
 		emit changed();
-		if(direction == Script::Down)
+		if(direction == Script::Down) {
 			changeHist(Down, opcodeID);
-		else
+		} else {
 			changeHist(Up, opcodeID);
+		}
+	} else {
+		setFocus();
 	}
-	else	setFocus();
 }
 
 void OpcodeList::clearCopiedOpcodes()
@@ -790,10 +821,14 @@ void OpcodeList::clearCopiedOpcodes()
 void OpcodeList::scroll(int id, bool focus)
 {
 	QTreeWidgetItem *item = findItem(id);
-	if(item==NULL)	return;
+	if(item == NULL) {
+		return;
+	}
 	setCurrentItem(item);
 	scrollToItem(item, QAbstractItemView::PositionAtTop);
-	if(focus)	setFocus();
+	if(focus) {
+		setFocus();
+	}
 }
 
 QTreeWidgetItem *OpcodeList::findItem(int id)
@@ -811,17 +846,20 @@ QTreeWidgetItem *OpcodeList::findItem(int id)
 
 int OpcodeList::selectedID()
 {
-	if(currentItem()==NULL)	return -1;
+	if(currentItem() == NULL) {
+		return -1;
+	}
 	return currentItem()->data(0, Qt::UserRole).toInt();
 }
 
 QList<int> OpcodeList::selectedIDs()
 {
-	QList<int> liste;
-	foreach(QTreeWidgetItem *item, selectedItems())
-		liste.append(item->data(0, Qt::UserRole).toInt());
-	qSort(liste);
-	return liste;
+	QList<int> list;
+	foreach(QTreeWidgetItem *item, selectedItems()) {
+		list.append(item->data(0, Qt::UserRole).toInt());
+	}
+	qSort(list);
+	return list;
 }
 
 int OpcodeList::selectedOpcode()
@@ -862,7 +900,7 @@ void OpcodeList::gotoLabel(QTreeWidgetItem *item)
 	Opcode *op = script->opcode(opcodeID);
 
 	if(op->isJump()) {
-		OpcodeJump *opJ = (OpcodeJump *)op;
+		OpcodeJump *opJ = static_cast<OpcodeJump *>(op);
 
 		if(!opJ->isBadJump()) {
 			int opcodeID = 0;
@@ -875,7 +913,15 @@ void OpcodeList::gotoLabel(QTreeWidgetItem *item)
 				++opcodeID;
 			}
 		}
-	}
+	} else if(op->isExec()) {
+		OpcodeExec *opE = static_cast<OpcodeExec *>(op);
+
+		emit gotoScript(opE->groupID, opE->scriptID + 1);
+	} /* else if(op->id() == Opcode::MAPJUMP) {
+		OpcodeMAPJUMP *opMJ = static_cast<OpcodeMAPJUMP *>(op);
+
+		emit gotoField(opMJ->fieldID); // FIXME: fieldID is not the same in the field list
+	} */
 }
 
 void OpcodeList::mouseReleaseEvent(QMouseEvent *event)
