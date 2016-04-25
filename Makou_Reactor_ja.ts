@@ -1596,6 +1596,21 @@ Some scripts can refer to it!</source>
         <translation>エンカウント エラー (パラメータ %1)</translation>
     </message>
     <message>
+        <location filename="core/field/Opcode.cpp" line="7056"/>
+        <source>%1 line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core/field/Opcode.cpp" line="7057"/>
+        <source>Enable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="core/field/Opcode.cpp" line="7057"/>
+        <source>Disable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="core/field/Opcode.cpp" line="7996"/>
         <source>CPPAL2 %1</source>
         <translation type="unfinished">CPPAL2 %1</translation>
@@ -3317,19 +3332,16 @@ Some scripts can refer to it!</source>
         <translation>エリアをセット (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7056"/>
         <source>%1 the location</source>
-        <translation>エリアを %1</translation>
+        <translation type="vanished">エリアを %1</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7057"/>
         <source>Clear</source>
-        <translation>クリア</translation>
+        <translation type="vanished">クリア</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7057"/>
         <source>Trace</source>
-        <translation>トレース</translation>
+        <translation type="vanished">トレース</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="7077"/>

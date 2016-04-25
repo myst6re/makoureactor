@@ -7053,8 +7053,8 @@ void OpcodeLINON::setParams(const char *params, int)
 
 QString OpcodeLINON::toString(Field *) const
 {
-	return QObject::tr("%1 the location")
-			.arg(enabled == 0 ? QObject::tr("Clear") : QObject::tr("Trace"));
+	return QObject::tr("%1 line")
+			.arg(enabled == 0 ? QObject::tr("Enable") : QObject::tr("Disable"));
 }
 
 QByteArray OpcodeLINON::params() const

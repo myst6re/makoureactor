@@ -2235,9 +2235,8 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>existe</translation>
     </message>
     <message>
-        <location filename="core/field/Opcode.cpp" line="7057"/>
         <source>Clear</source>
-        <translation>Effacer</translation>
+        <translation type="vanished">Effacer</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="7077"/>
@@ -3735,14 +3734,27 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="7056"/>
-        <source>%1 the location</source>
-        <oldsource>%1 la zone</oldsource>
+        <source>%1 line</source>
         <translation>%1 la zone</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="7057"/>
+        <source>Enable</source>
+        <translation>Activer</translation>
+    </message>
+    <message>
+        <location filename="core/field/Opcode.cpp" line="7057"/>
+        <source>Disable</source>
+        <translation>Désactiver</translation>
+    </message>
+    <message>
+        <source>%1 the location</source>
+        <oldsource>%1 la zone</oldsource>
+        <translation type="vanished">%1 la zone</translation>
+    </message>
+    <message>
         <source>Trace</source>
-        <translation>Tracer</translation>
+        <translation type="vanished">Tracer</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="7104"/>
