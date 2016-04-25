@@ -235,9 +235,13 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 void SpinBoxDelegate::setEditorData(QWidget *editor,
                                     const QModelIndex &index) const
 {
-	int value = index.model()->data(index, Qt::EditRole).toInt();
-	int type = index.data(Qt::UserRole + 2).toInt();
-	if((type == ScriptEditorGenericList::field_id
+	int value = index.model()->data(index, Qt::EditRole).toInt(),
+	    type = index.data(Qt::UserRole + 2).toInt();
+
+	if(type == ScriptEditorGenericList::akao) {
+		QComboBox *comboBox = static_cast<QComboBox*>(editor);
+		comboBox->setCurrentIndex(comboBox->findData(value));
+	} else if((type == ScriptEditorGenericList::field_id
 	    && !Data::field_names.isEmpty())
 	        || (type == ScriptEditorGenericList::group_id
 	            && _field->scriptsAndTexts()->grpScriptCount() > 0)
@@ -250,7 +254,6 @@ void SpinBoxDelegate::setEditorData(QWidget *editor,
 	            && !Data::materia_names.isEmpty())
 	        || (type == ScriptEditorGenericList::movie_id
 	            && !Data::movie_names_cd1.isEmpty())
-	        || type == ScriptEditorGenericList::akao
 	        || type == ScriptEditorGenericList::operateur) {
 		QComboBox *comboBox = static_cast<QComboBox*>(editor);
 		comboBox->setCurrentIndex(value);
@@ -270,9 +273,13 @@ void SpinBoxDelegate::setEditorData(QWidget *editor,
 void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
                                    const QModelIndex &index) const
 {
-	int value;
-	int type = index.data(Qt::UserRole+2).toInt();
-	if((type == ScriptEditorGenericList::field_id
+	int value,
+	    type = index.data(Qt::UserRole+2).toInt();
+
+	if(type == ScriptEditorGenericList::akao) {
+		QComboBox *comboBox = static_cast<QComboBox*>(editor);
+		value = comboBox->currentData().toInt();
+	} else if((type == ScriptEditorGenericList::field_id
 	    && !Data::field_names.isEmpty())
 	        || (type == ScriptEditorGenericList::group_id
 	            && _field->scriptsAndTexts()->grpScriptCount() > 0)
@@ -288,7 +295,6 @@ void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	            && Data::currentAnimNames)
 	        || (type == ScriptEditorGenericList::movie_id
 	            && !Data::movie_names_cd1.isEmpty())
-	        || type == ScriptEditorGenericList::akao
 	        || type == ScriptEditorGenericList::operateur) {
 		QComboBox *comboBox = static_cast<QComboBox*>(editor);
 		value = comboBox->currentIndex();
