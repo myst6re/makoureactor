@@ -117,7 +117,7 @@
 <context>
     <name>ColorDisplay</name>
     <message>
-        <location filename="widgets/ColorDisplay.cpp" line="112"/>
+        <location filename="widgets/ColorDisplay.cpp" line="145"/>
         <source>Choose a new color</source>
         <translation>Choisir une nouvelle couleur</translation>
     </message>
@@ -496,7 +496,7 @@
     </message>
     <message>
         <location filename="widgets/FontWidget.cpp" line="167"/>
-        <location filename="widgets/FontWidget.cpp" line="239"/>
+        <location filename="widgets/FontWidget.cpp" line="243"/>
         <source>FF8 font file (*.tdw)</source>
         <oldsource>Fichier police FF8 (*.tdw)</oldsource>
         <translation>Fichier police FF8 (*.tdw)</translation>
@@ -526,30 +526,30 @@
         <translation>Fichier traduction %1 (*.txt)</translation>
     </message>
     <message>
-        <location filename="widgets/FontWidget.cpp" line="177"/>
+        <location filename="widgets/FontWidget.cpp" line="178"/>
         <source>Export font</source>
         <translation>Exporter police de caractère</translation>
     </message>
     <message>
-        <location filename="widgets/FontWidget.cpp" line="215"/>
-        <location filename="widgets/FontWidget.cpp" line="260"/>
+        <location filename="widgets/FontWidget.cpp" line="218"/>
+        <location filename="widgets/FontWidget.cpp" line="265"/>
         <source>Error opening file (%1)</source>
         <translation>Erreur d&apos;ouverture du fichier. (%1)</translation>
     </message>
     <message>
-        <location filename="widgets/FontWidget.cpp" line="243"/>
+        <location filename="widgets/FontWidget.cpp" line="247"/>
         <source>Import font</source>
         <translation>Importer police de caractère</translation>
     </message>
     <message>
-        <location filename="widgets/FontWidget.cpp" line="256"/>
+        <location filename="widgets/FontWidget.cpp" line="261"/>
         <source>Invalid file</source>
         <translation>Fichier invalide</translation>
     </message>
     <message>
-        <location filename="widgets/FontWidget.cpp" line="215"/>
-        <location filename="widgets/FontWidget.cpp" line="256"/>
-        <location filename="widgets/FontWidget.cpp" line="260"/>
+        <location filename="widgets/FontWidget.cpp" line="218"/>
+        <location filename="widgets/FontWidget.cpp" line="261"/>
+        <location filename="widgets/FontWidget.cpp" line="265"/>
         <source>Error</source>
         <oldsource>Erreur</oldsource>
         <translation>Erreur</translation>
@@ -630,12 +630,12 @@
         <translation>Supprimer un groupe</translation>
     </message>
     <message>
-        <location filename="widgets/GrpScriptList.cpp" line="278"/>
+        <location filename="widgets/GrpScriptList.cpp" line="271"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="widgets/GrpScriptList.cpp" line="278"/>
+        <location filename="widgets/GrpScriptList.cpp" line="271"/>
         <source>Are you sure you want to remove %1?
 Some scripts can refer to it!</source>
         <translation>Voulez-vous vraiment supprimer %1 ?
@@ -659,13 +659,13 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>Ajouter un groupe</translation>
     </message>
     <message>
-        <location filename="widgets/GrpScriptList.cpp" line="281"/>
+        <location filename="widgets/GrpScriptList.cpp" line="274"/>
         <source>the group selected</source>
         <oldsource>le groupe sélectionné</oldsource>
         <translation>le groupe sélectionné</translation>
     </message>
     <message>
-        <location filename="widgets/GrpScriptList.cpp" line="282"/>
+        <location filename="widgets/GrpScriptList.cpp" line="275"/>
         <source>the selected groups</source>
         <oldsource>les groupes sélectionnés</oldsource>
         <translation>les groupes sélectionnés</translation>
@@ -759,127 +759,127 @@ Certains scripts peuvent y faire référence !</translation>
 <context>
     <name>LgpDialog</name>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="653"/>
+        <location filename="widgets/LgpDialog.cpp" line="677"/>
         <source>LGP archive manager</source>
         <oldsource>Gestionnaire d&apos;archive LGP</oldsource>
         <translation>Gestionnaire d&apos;archive LGP</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="664"/>
-        <location filename="widgets/LgpDialog.cpp" line="710"/>
-        <location filename="widgets/LgpDialog.cpp" line="869"/>
+        <location filename="widgets/LgpDialog.cpp" line="688"/>
+        <location filename="widgets/LgpDialog.cpp" line="734"/>
+        <location filename="widgets/LgpDialog.cpp" line="893"/>
         <source>Rename</source>
         <oldsource>Renommer</oldsource>
         <translation>Renommer</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="666"/>
+        <location filename="widgets/LgpDialog.cpp" line="690"/>
         <source>Replace</source>
         <oldsource>Remplacer</oldsource>
         <translation>Remplacer</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="668"/>
+        <location filename="widgets/LgpDialog.cpp" line="692"/>
         <source>Extract</source>
         <oldsource>Extraire</oldsource>
         <translation>Extraire</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="717"/>
-        <location filename="widgets/LgpDialog.cpp" line="720"/>
-        <location filename="widgets/LgpDialog.cpp" line="723"/>
-        <location filename="widgets/LgpDialog.cpp" line="761"/>
-        <location filename="widgets/LgpDialog.cpp" line="854"/>
-        <location filename="widgets/LgpDialog.cpp" line="859"/>
-        <location filename="widgets/LgpDialog.cpp" line="880"/>
-        <location filename="widgets/LgpDialog.cpp" line="906"/>
-        <location filename="widgets/LgpDialog.cpp" line="936"/>
+        <location filename="widgets/LgpDialog.cpp" line="741"/>
+        <location filename="widgets/LgpDialog.cpp" line="744"/>
+        <location filename="widgets/LgpDialog.cpp" line="747"/>
+        <location filename="widgets/LgpDialog.cpp" line="785"/>
+        <location filename="widgets/LgpDialog.cpp" line="878"/>
+        <location filename="widgets/LgpDialog.cpp" line="883"/>
+        <location filename="widgets/LgpDialog.cpp" line="904"/>
+        <location filename="widgets/LgpDialog.cpp" line="930"/>
+        <location filename="widgets/LgpDialog.cpp" line="961"/>
         <source>Error</source>
         <oldsource>Erreur</oldsource>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="744"/>
-        <location filename="widgets/LgpDialog.cpp" line="781"/>
+        <location filename="widgets/LgpDialog.cpp" line="768"/>
+        <location filename="widgets/LgpDialog.cpp" line="805"/>
         <source>%1 file (*.%1)</source>
         <oldsource>Fichier %1 (*.%1)</oldsource>
         <translation>Fichier %1 (*.%1)</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="746"/>
-        <location filename="widgets/LgpDialog.cpp" line="783"/>
-        <location filename="widgets/LgpDialog.cpp" line="833"/>
+        <location filename="widgets/LgpDialog.cpp" line="770"/>
+        <location filename="widgets/LgpDialog.cpp" line="807"/>
+        <location filename="widgets/LgpDialog.cpp" line="857"/>
         <source>All files (*)</source>
         <oldsource>Tous les fichiers (*)</oldsource>
         <translation>Tous les fichiers (*)</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="670"/>
+        <location filename="widgets/LgpDialog.cpp" line="694"/>
         <source>Add</source>
         <translation>Ajouter</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="672"/>
+        <location filename="widgets/LgpDialog.cpp" line="696"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="675"/>
+        <location filename="widgets/LgpDialog.cpp" line="699"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="710"/>
-        <location filename="widgets/LgpDialog.cpp" line="870"/>
+        <location filename="widgets/LgpDialog.cpp" line="734"/>
+        <location filename="widgets/LgpDialog.cpp" line="894"/>
         <source>New Name:</source>
         <translation>Nouveau nom :</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="717"/>
-        <location filename="widgets/LgpDialog.cpp" line="855"/>
+        <location filename="widgets/LgpDialog.cpp" line="741"/>
+        <location filename="widgets/LgpDialog.cpp" line="879"/>
         <source>The name &apos;%1&apos; is invalid, don&apos;t put special characters.</source>
         <translation>Le nom &apos;%1&apos; est invalide, ne mettez pas de caractères spéciaux.</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="720"/>
-        <location filename="widgets/LgpDialog.cpp" line="860"/>
+        <location filename="widgets/LgpDialog.cpp" line="744"/>
+        <location filename="widgets/LgpDialog.cpp" line="884"/>
         <source>A file named &apos;%1&apos; already exists, please choose another name.</source>
         <translation>Un fichier nommé &apos;%1&apos; existe déjà, veuillez choisir un autre nom.</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="723"/>
+        <location filename="widgets/LgpDialog.cpp" line="747"/>
         <source>Can not Rename the file</source>
         <translation>Impossible de renommer le fichier</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="753"/>
-        <location filename="widgets/LgpDialog.cpp" line="790"/>
-        <location filename="widgets/LgpDialog.cpp" line="834"/>
+        <location filename="widgets/LgpDialog.cpp" line="777"/>
+        <location filename="widgets/LgpDialog.cpp" line="814"/>
+        <location filename="widgets/LgpDialog.cpp" line="858"/>
         <source>New File</source>
         <translation>Nouveau fichier</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="761"/>
+        <location filename="widgets/LgpDialog.cpp" line="785"/>
         <source>Can not modify the archive!</source>
         <translation>Impossible de modifier l&apos;archive !</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="805"/>
+        <location filename="widgets/LgpDialog.cpp" line="829"/>
         <source>Can not write to file (message: %1).</source>
         <translation>Impossible d&apos;écrire dans le fichier (message : %1).</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="805"/>
+        <location filename="widgets/LgpDialog.cpp" line="829"/>
         <source>Write error</source>
         <translation>Erreur d&apos;écriture</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="810"/>
+        <location filename="widgets/LgpDialog.cpp" line="834"/>
         <source>Opening error</source>
         <translation>Erreur d&apos;ouverture</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="810"/>
+        <location filename="widgets/LgpDialog.cpp" line="834"/>
         <source>Can not open the file (message: %1).</source>
         <translation>Impossible d&apos;ouvrir le fichier (message : %1).</translation>
     </message>
@@ -888,48 +888,48 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Impossible d&apos;ajouter le fichier</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="906"/>
+        <location filename="widgets/LgpDialog.cpp" line="930"/>
         <source>Cannot delete the file!</source>
         <translation>Impossible de supprimer le fichier !</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="913"/>
+        <location filename="widgets/LgpDialog.cpp" line="937"/>
         <source>Save as</source>
         <translation>Enregistrer sous</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="913"/>
+        <location filename="widgets/LgpDialog.cpp" line="937"/>
         <source>Lgp File (*.lgp)</source>
         <translation>Fichier Lgp (*.lgp)</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="924"/>
+        <location filename="widgets/LgpDialog.cpp" line="948"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="936"/>
+        <location filename="widgets/LgpDialog.cpp" line="961"/>
         <source>Cannot create the archive (message: %1).</source>
         <translation>Impossible de créer l&apos;archive (message : %1).</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="895"/>
+        <location filename="widgets/LgpDialog.cpp" line="919"/>
         <source>Delete ?</source>
         <translation>Supprimer ?</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="881"/>
+        <location filename="widgets/LgpDialog.cpp" line="905"/>
         <source>Can not add the file &apos;%1&apos;</source>
         <translation>Impossible d&apos;ajouter le fichier &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="896"/>
+        <location filename="widgets/LgpDialog.cpp" line="920"/>
         <source>Are you sure you want to delete this file from the archive?</source>
         <oldsource>Êtes-vous sûr de vouloir Delete ce fichier de l&apos;archive ?</oldsource>
         <translation>Êtes-vous sûr de vouloir supprimer ce fichier de l&apos;archive ?</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="924"/>
+        <location filename="widgets/LgpDialog.cpp" line="948"/>
         <source>Saving...</source>
         <translation>Sauvegarde...</translation>
     </message>
@@ -937,18 +937,18 @@ Certains scripts peuvent y faire référence !</translation>
 <context>
     <name>LgpItemModel</name>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="490"/>
+        <location filename="widgets/LgpDialog.cpp" line="510"/>
         <source>?</source>
         <translation>?</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="565"/>
+        <location filename="widgets/LgpDialog.cpp" line="585"/>
         <source>Name</source>
         <oldsource>Nom</oldsource>
         <translation>Nom</translation>
     </message>
     <message>
-        <location filename="widgets/LgpDialog.cpp" line="566"/>
+        <location filename="widgets/LgpDialog.cpp" line="586"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
@@ -1266,8 +1266,8 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>Lumière</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="147"/>
-        <location filename="widgets/ModelManagerPC.cpp" line="374"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="148"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="375"/>
         <source>Add a field model</source>
         <translation>Ajouter un modèle 3D</translation>
     </message>
@@ -1282,8 +1282,8 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>?</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="157"/>
-        <location filename="widgets/ModelManagerPC.cpp" line="399"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="158"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="400"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -1379,16 +1379,16 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>Modifier texte</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="77"/>
+        <location filename="widgets/OpcodeList.cpp" line="235"/>
         <source>Goto label</source>
         <oldsource>Aller au label</oldsource>
         <translation>Aller au label</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="117"/>
+        <location filename="widgets/OpcodeList.cpp" line="236"/>
         <source>Alt + Click to go to the label</source>
         <oldsource>Alt + clic pour aller au label</oldsource>
-        <translation>Alt + clic pour Goto label</translation>
+        <translation>Alt + clic pour aller au label</translation>
     </message>
     <message>
         <location filename="widgets/OpcodeList.cpp" line="124"/>
@@ -1417,7 +1417,17 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>Descendre une commande</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="381"/>
+        <location filename="widgets/OpcodeList.cpp" line="238"/>
+        <source>Goto script</source>
+        <translation>Aller au script</translation>
+    </message>
+    <message>
+        <location filename="widgets/OpcodeList.cpp" line="239"/>
+        <source>Alt + Click to go to the script</source>
+        <translation>Alt + clic pour aller au script</translation>
+    </message>
+    <message>
+        <location filename="widgets/OpcodeList.cpp" line="391"/>
         <source>If this script is run,
  assume that the last non-empty script that runs</source>
         <translation>Si ce script est exécuté,
@@ -1425,22 +1435,22 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <location filename="widgets/OpcodeList.cpp" line="42"/>
-        <location filename="widgets/OpcodeList.cpp" line="669"/>
+        <location filename="widgets/OpcodeList.cpp" line="690"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="669"/>
+        <location filename="widgets/OpcodeList.cpp" line="691"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Voulez-vous vraiment supprimer %1 ?</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="669"/>
+        <location filename="widgets/OpcodeList.cpp" line="693"/>
         <source>the selected command</source>
         <translation>the selected command</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="669"/>
+        <location filename="widgets/OpcodeList.cpp" line="694"/>
         <source>the selected commands</source>
         <translation>les commandes sélectionnées</translation>
     </message>
@@ -1497,135 +1507,135 @@ Certains scripts peuvent y faire référence !</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="Data.cpp" line="457"/>
+        <location filename="Data.cpp" line="459"/>
         <source>Cloud</source>
         <oldsource>Clad</oldsource>
         <translation>Clad</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="457"/>
+        <location filename="Data.cpp" line="459"/>
         <source>Barret</source>
         <translation>Barret</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="457"/>
+        <location filename="Data.cpp" line="459"/>
         <source>Tifa</source>
         <translation>Tifa</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="458"/>
+        <location filename="Data.cpp" line="460"/>
         <source>Aeris</source>
         <translation>Aeris</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="458"/>
+        <location filename="Data.cpp" line="460"/>
         <source>Red XIII</source>
         <translation>Red XIII</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="458"/>
+        <location filename="Data.cpp" line="460"/>
         <source>Yuffie</source>
         <translation>Youfie</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="459"/>
+        <location filename="Data.cpp" line="461"/>
         <source>Cait Sith</source>
         <translation>Cait Sith</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="459"/>
+        <location filename="Data.cpp" line="461"/>
         <source>Vincent</source>
         <translation>Vincent</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="459"/>
+        <location filename="Data.cpp" line="461"/>
         <source>Cid</source>
         <translation>Cid</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="460"/>
+        <location filename="Data.cpp" line="462"/>
         <source>Yound Cloud</source>
         <oldsource>Jeune Clad</oldsource>
         <translation>Jeune Clad</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="460"/>
+        <location filename="Data.cpp" line="462"/>
         <source>Sephiroth</source>
         <translation>Sephiroth</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="460"/>
+        <location filename="Data.cpp" line="462"/>
         <source>Chocobo</source>
         <translation>Chocobo</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="465"/>
+        <location filename="Data.cpp" line="467"/>
         <source>[CAMERA|L2]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="465"/>
+        <location filename="Data.cpp" line="467"/>
         <source>[TARGET|R2]</source>
         <translation>[CIBLE|R2]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="466"/>
+        <location filename="Data.cpp" line="468"/>
         <source>[PAGE UP|L1]</source>
         <oldsource>[PAGE HAUT|L1]</oldsource>
         <translation>[PAGE HAUT|L1]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="466"/>
+        <location filename="Data.cpp" line="468"/>
         <source>[PAGE DOWN|R1]</source>
         <translation>[PAGE BAS|R1]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="467"/>
+        <location filename="Data.cpp" line="469"/>
         <source>[MENU|TRIANGLE]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="467"/>
+        <location filename="Data.cpp" line="469"/>
         <source>[OK|CIRCLE]</source>
         <translation>[OK|ROND]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="468"/>
+        <location filename="Data.cpp" line="470"/>
         <source>[CANCEL|CROSS]</source>
         <translation>[ANNULER|CROIX]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="468"/>
+        <location filename="Data.cpp" line="470"/>
         <source>[SWITCH|SQUARE]</source>
         <translation>[CHANGER|CARRE]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="469"/>
+        <location filename="Data.cpp" line="471"/>
         <source>[ASSIST|SELECT]</source>
         <translation>[ASSISTER|SELECT]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="470"/>
+        <location filename="Data.cpp" line="472"/>
         <source>[START]</source>
         <translation>[DEMARRER|START]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="471"/>
+        <location filename="Data.cpp" line="473"/>
         <source>[UP]</source>
         <translation>[HAUT]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="471"/>
+        <location filename="Data.cpp" line="473"/>
         <source>[RIGHT]</source>
         <translation>[DROITE]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="472"/>
+        <location filename="Data.cpp" line="474"/>
         <source>[DOWN]</source>
         <translation>[BAS]</translation>
     </message>
     <message>
-        <location filename="Data.cpp" line="472"/>
+        <location filename="Data.cpp" line="474"/>
         <source>[LEFT]</source>
         <translation>[GAUCHE]</translation>
     </message>
@@ -3525,11 +3535,9 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="5627"/>
-        <location filename="core/field/Opcode.cpp" line="6047"/>
-        <location filename="core/field/Opcode.cpp" line="6398"/>
-        <source>Play animation #%1 of the field model (speed=%2)</source>
-        <oldsource>Joue l&apos;animation %1 de l&apos;objet 3D (vitesse=%2)</oldsource>
-        <translation>Joue l&apos;animation %1 de l&apos;objet 3D (vitesse=%2)</translation>
+        <source>Play loop animation #%1 of the field model (speed=%2)</source>
+        <oldsource>Play animation #%1 of the field model (speed=%2)</oldsource>
+        <translation>Joue l&apos;animation %1 de l&apos;objet 3D en boucle (vitesse=%2)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="5652"/>
@@ -3580,6 +3588,11 @@ Certains scripts peuvent y faire référence !</translation>
         <source>Rotation of the field model to group %1 (Speed=%3, Rotation=%2)</source>
         <oldsource>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%3, sens de rotation=%2)</oldsource>
         <translation>Rotation de l&apos;objet 3D vers le groupe %1 (vitesse=%3, sens de rotation=%2)</translation>
+    </message>
+    <message>
+        <location filename="core/field/Opcode.cpp" line="6047"/>
+        <source>Play animation #%1 of the field model (speed=%2, type=1)</source>
+        <translation>Joue l&apos;animation %1 de l&apos;objet 3D (vitesse=%2, type=1)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="6074"/>
@@ -3636,6 +3649,11 @@ Certains scripts peuvent y faire référence !</translation>
         <source>Store triangle ID of the group %1 in %2</source>
         <oldsource>Stocker dans %2 le triangle id du groupe %1</oldsource>
         <translation>Stocker dans %2 le triangle id du groupe %1</translation>
+    </message>
+    <message>
+        <location filename="core/field/Opcode.cpp" line="6398"/>
+        <source>Play animation #%1 of the field model (speed=%2, type=2)</source>
+        <translation>Joue l&apos;animation %1 de l&apos;objet 3D (vitesse=%2, type=2)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="6485"/>
@@ -3940,7 +3958,7 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>Script too big, it should not exceed 65535 bytes. Actual size: %1.</translation>
     </message>
     <message>
-        <location filename="core/field/TutFileStandard.cpp" line="127"/>
+        <location filename="core/field/TutFileStandard.cpp" line="163"/>
         <location filename="main.cpp" line="50"/>
         <source>Error</source>
         <oldsource>Erreur</oldsource>
@@ -3954,28 +3972,28 @@ Make sure it is valid or delete it.</source>
 Vérifiez que ce fichier est valide ou supprimez-le.</translation>
     </message>
     <message>
-        <location filename="core/field/TutFileStandard.cpp" line="131"/>
+        <location filename="core/field/TutFileStandard.cpp" line="167"/>
         <source>totalLength=%1
 id=%2
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="core/field/TutFileStandard.cpp" line="138"/>
+        <location filename="core/field/TutFileStandard.cpp" line="174"/>
         <source>length=%1
 </source>
         <translation>length=%1
 </translation>
     </message>
     <message>
-        <location filename="core/field/TutFileStandard.cpp" line="145"/>
+        <location filename="core/field/TutFileStandard.cpp" line="181"/>
         <source>ChannelCount=%1
 </source>
         <translation>nbCanaux=%1
 </translation>
     </message>
     <message>
-        <location filename="core/IsoArchiveFF7.cpp" line="441"/>
+        <location filename="core/IsoArchiveFF7.cpp" line="447"/>
         <source>Cannot update game binaries.</source>
         <translation>Impossible de mettre à jour les binaires du jeu.</translation>
     </message>
@@ -4877,8 +4895,9 @@ id=%2
     </message>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="605"/>
-        <source>Music On/Off</source>
-        <translation>Activer/Désactiver musique</translation>
+        <source>Music Unlock/Lock</source>
+        <oldsource>Music On/Off</oldsource>
+        <translation>Déverrouiller/Verrouiller musique</translation>
     </message>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="612"/>
@@ -6142,7 +6161,7 @@ id=%2
 <context>
     <name>ScriptManager</name>
     <message>
-        <location filename="widgets/ScriptManager.cpp" line="165"/>
+        <location filename="widgets/ScriptManager.cpp" line="171"/>
         <source>Error on line %1 : %2</source>
         <oldsource>Erreur ligne %1 : %2</oldsource>
         <translation>Erreur ligne %1 : %2</translation>
@@ -6788,91 +6807,116 @@ Le supprimer remplacera les appels à ce texte par des appels au texte qui suit.
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="43"/>
+        <location filename="widgets/TutWidget.cpp" line="44"/>
         <source>Export...</source>
         <oldsource>Exporter...</oldsource>
         <translation>Exporter...</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="44"/>
+        <location filename="widgets/TutWidget.cpp" line="45"/>
         <source>Import...</source>
         <oldsource>Importer...</oldsource>
         <translation>Importer...</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="51"/>
+        <location filename="widgets/TutWidget.cpp" line="52"/>
         <source>PlayStation</source>
         <translation>PlayStation</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="52"/>
+        <location filename="widgets/TutWidget.cpp" line="53"/>
         <source>PC</source>
         <translation>PC</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="129"/>
+        <location filename="widgets/TutWidget.cpp" line="130"/>
         <source>%1 - %2 : %3</source>
         <translation>%1 - %2 : %3</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="142"/>
+        <location filename="widgets/TutWidget.cpp" line="143"/>
         <source>Music ID:</source>
         <oldsource>ID musique :</oldsource>
         <translation>ID musique :</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="190"/>
+        <location filename="widgets/TutWidget.cpp" line="156"/>
+        <source>Repair</source>
+        <translation>Réparer</translation>
+    </message>
+    <message>
+        <location filename="widgets/TutWidget.cpp" line="157"/>
+        <source>Replace by empty AKAO</source>
+        <translation>Remplacer par un AKAO vide</translation>
+    </message>
+    <message>
+        <location filename="widgets/TutWidget.cpp" line="158"/>
+        <source>Replace by empty tuto</source>
+        <translation>Remplacer par un tuto vide</translation>
+    </message>
+    <message>
+        <location filename="widgets/TutWidget.cpp" line="161"/>
+        <source>There is an error</source>
+        <translation>Quelque chose ne tourne pas rond</translation>
+    </message>
+    <message>
+        <location filename="widgets/TutWidget.cpp" line="215"/>
+        <source>Broken %1</source>
+        <translation>Cassé %1</translation>
+    </message>
+    <message>
+        <location filename="widgets/TutWidget.cpp" line="217"/>
         <source>Tuto %1</source>
         <translation>Tuto %1</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="191"/>
+        <location filename="widgets/TutWidget.cpp" line="219"/>
         <source>Music %1</source>
         <oldsource>Musique %1</oldsource>
         <translation>Musique %1</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="295"/>
+        <location filename="widgets/TutWidget.cpp" line="330"/>
         <source>Tutorial</source>
         <oldsource>Tutoriel</oldsource>
         <translation>Tutoriel</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="296"/>
+        <location filename="widgets/TutWidget.cpp" line="331"/>
         <source>Music</source>
         <oldsource>Musique</oldsource>
         <translation>Musique</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="313"/>
-        <location filename="widgets/TutWidget.cpp" line="499"/>
+        <location filename="widgets/TutWidget.cpp" line="348"/>
+        <location filename="widgets/TutWidget.cpp" line="534"/>
         <source>Import</source>
         <oldsource>Importer</oldsource>
         <translation>Importer</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="313"/>
-        <location filename="widgets/TutWidget.cpp" line="457"/>
-        <location filename="widgets/TutWidget.cpp" line="495"/>
+        <location filename="widgets/TutWidget.cpp" line="348"/>
+        <location filename="widgets/TutWidget.cpp" line="492"/>
+        <location filename="widgets/TutWidget.cpp" line="530"/>
         <source>sound_%1.akao</source>
         <translation>son_%1.akao</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="313"/>
-        <location filename="widgets/TutWidget.cpp" line="458"/>
-        <location filename="widgets/TutWidget.cpp" line="496"/>
+        <location filename="widgets/TutWidget.cpp" line="348"/>
+        <location filename="widgets/TutWidget.cpp" line="493"/>
+        <location filename="widgets/TutWidget.cpp" line="531"/>
         <source>Final Fantasy Sound (*.akao)</source>
         <translation>Son Final Fantasy (*.akao)</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="320"/>
+        <location filename="widgets/TutWidget.cpp" line="355"/>
         <source>Insert a tutorial here will shift the IDs of the tutorials that follows, this may be a problem.
 Are you sure you want to continue?</source>
         <translation>Insérer un tutoriel ici va décaler les identifiants des tutoriels qui suit, cela risque de poser problème.
 Êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="347"/>
+        <location filename="widgets/TutWidget.cpp" line="382"/>
         <source>This tutorial may be used by one or more scripts on this field.
 Delete can cause errors.
 Are you sure you want to continue?</source>
@@ -6881,7 +6925,7 @@ Le supprimer peut provoquer des erreurs.
 Êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="347"/>
+        <location filename="widgets/TutWidget.cpp" line="382"/>
         <source>This tutorial is used by one or more scripts on this field.
 Remove will replace calls to this tutorial with calls to the tutorial that follows.
 Are you sure you want to continue?</source>
@@ -6890,49 +6934,49 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
 Êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="471"/>
-        <location filename="widgets/TutWidget.cpp" line="509"/>
-        <location filename="widgets/TutWidget.cpp" line="514"/>
+        <location filename="widgets/TutWidget.cpp" line="506"/>
+        <location filename="widgets/TutWidget.cpp" line="544"/>
+        <location filename="widgets/TutWidget.cpp" line="549"/>
         <source>Error</source>
         <oldsource>Opening error</oldsource>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="471"/>
+        <location filename="widgets/TutWidget.cpp" line="506"/>
         <source>Opening error file</source>
         <translation>Erreur d&apos;ouverture du fichier</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="509"/>
+        <location filename="widgets/TutWidget.cpp" line="544"/>
         <source>Opening Error File</source>
         <translation>Erreur d&apos;ouverture du fichier</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="514"/>
+        <location filename="widgets/TutWidget.cpp" line="549"/>
         <source>File too large</source>
         <translation>Fichier trop gros</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="320"/>
-        <location filename="widgets/TutWidget.cpp" line="347"/>
+        <location filename="widgets/TutWidget.cpp" line="355"/>
+        <location filename="widgets/TutWidget.cpp" line="382"/>
         <source>Tutorial used in scripts</source>
         <oldsource>Tutoriel utilisé dans les script</oldsource>
         <translation>Tutoriel utilisé dans les script</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="454"/>
-        <location filename="widgets/TutWidget.cpp" line="492"/>
+        <location filename="widgets/TutWidget.cpp" line="489"/>
+        <location filename="widgets/TutWidget.cpp" line="527"/>
         <source>tuto_%1.tutps</source>
         <translation>tuto_%1.tutps</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="455"/>
-        <location filename="widgets/TutWidget.cpp" line="493"/>
+        <location filename="widgets/TutWidget.cpp" line="490"/>
+        <location filename="widgets/TutWidget.cpp" line="528"/>
         <source>Tuto Final Fantasy VII PS (*.tutps)</source>
         <translation>Tuto Final Fantasy VII PS (*.tutps)</translation>
     </message>
     <message>
-        <location filename="widgets/TutWidget.cpp" line="461"/>
+        <location filename="widgets/TutWidget.cpp" line="496"/>
         <source>Export</source>
         <oldsource>Exporter</oldsource>
         <translation>Exporter</translation>
@@ -7662,7 +7706,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <location filename="Window.cpp" line="136"/>
-        <location filename="Window.cpp" line="357"/>
+        <location filename="Window.cpp" line="356"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
@@ -7692,7 +7736,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation>Paramètres modifiés</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="355"/>
+        <location filename="Window.cpp" line="354"/>
         <source>
 
 Edited files:</source>
@@ -7701,7 +7745,7 @@ Edited files:</source>
 Fichiers modifiés :</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="357"/>
+        <location filename="Window.cpp" line="356"/>
         <source>Would you like to save changes of %1?%2</source>
         <translation>Voulez-vous enregistrer les changements de %1 ?%2</translation>
     </message>
