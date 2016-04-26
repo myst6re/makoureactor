@@ -91,4 +91,7 @@ private:
 	bool valid;
 };
 
+QDataStream &operator<<(QDataStream &stream, const QList<Opcode *> &script);
+QDataStream &operator>>(QDataStream &stream, QList<Opcode *> &script);
+
 #endif

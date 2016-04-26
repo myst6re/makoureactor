@@ -83,7 +83,6 @@ void ScriptManager::saveConfig()
 void ScriptManager::removeCopiedReferences()
 {
 	_groupScriptList->clearCopiedGroups();
-	_opcodeList->clearCopiedOpcodes();
 }
 
 void ScriptManager::clear()

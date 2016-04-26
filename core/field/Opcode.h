@@ -181,6 +181,9 @@ public:
 	inline bool hasParams() const { return size() > 1; }
 	inline const QString &name() const { return Opcode::names[id()]; }
 	virtual QByteArray toByteArray() const;
+	// Unserializable byte array (include OpcodeLABEL case)
+	virtual QByteArray serialize() const;
+	static Opcode *unserialize(const QByteArray &data);
 	inline virtual bool isExec() const { return false; }
 	inline virtual bool isJump() const { return false; }
 	inline virtual bool isLabel() const { return false; }
@@ -555,6 +558,7 @@ public:
 	explicit OpcodeLabel(quint32 label);
 	inline int id() const { return 0x100; } // fake id
 	QByteArray toByteArray() const { return QByteArray(); }
+	QByteArray serialize() const;
 	QString toString(Field *field) const;
 	inline bool isLabel() const  { return true; }
 	inline bool isVoid() const { return true; }

@@ -51,6 +51,10 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	copy_A->setShortcut(QKeySequence("Ctrl+C"));
 	copy_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	copy_A->setEnabled(false);
+	copyText_A = new QAction(QIcon(":/images/copy.png"), tr("Copy text"), this);
+	copyText_A->setShortcut(QKeySequence("Ctrl+Shift+C"));
+	copyText_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+	copyText_A->setEnabled(false);
 	paste_A = new QAction(QIcon(":/images/paste.png"), tr("Paste"), this);
 	paste_A->setShortcut(QKeySequence("Ctrl+V"));
 	paste_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
@@ -82,6 +86,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	connect(del_A, SIGNAL(triggered()), SLOT(del()));
 	connect(cut_A, SIGNAL(triggered()), SLOT(cut()));
 	connect(copy_A, SIGNAL(triggered()), SLOT(copy()));
+	connect(copyText_A, SIGNAL(triggered()), SLOT(copyText()));
 	connect(paste_A, SIGNAL(triggered()), SLOT(paste()));
 	connect(up_A, SIGNAL(triggered()), SLOT(up()));
 	connect(down_A, SIGNAL(triggered()), SLOT(down()));
@@ -101,6 +106,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	addAction(separator);
 	addAction(cut_A);
 	addAction(copy_A);
+	addAction(copyText_A);
 	addAction(paste_A);
 	separator = new QAction(this);
 	separator->setSeparator(true);
@@ -154,11 +160,13 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(scriptEditor()));
 	connect(this, SIGNAL(itemSelectionChanged()), SLOT(itemSelected()));
 	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(evidence(QTreeWidgetItem*,QTreeWidgetItem*)));
+	connect(QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)), SLOT(adjustPasteAction()));
 }
 
-OpcodeList::~OpcodeList()
+void OpcodeList::adjustPasteAction()
 {
-	qDeleteAll(opcodeCopied);
+	paste_A->setEnabled(QApplication::clipboard()->mimeData()->
+	                    hasFormat("application/x-makoureactor-ff7-opcode"));
 }
 
 void OpcodeList::clear()
@@ -252,6 +260,7 @@ void OpcodeList::upDownEnabled()
 		del_A->setEnabled(false);
 		cut_A->setEnabled(false);
 		copy_A->setEnabled(false);
+		copyText_A->setEnabled(false);
 		up_A->setEnabled(false);
 		down_A->setEnabled(false);
 	}
@@ -261,6 +270,7 @@ void OpcodeList::upDownEnabled()
 		del_A->setEnabled(script && !script->isEmpty());
 		cut_A->setEnabled(true);
 		copy_A->setEnabled(true);
+		copyText_A->setEnabled(true);
 		up_A->setEnabled(/* topLevelItemCount() > 1 && */ currentItem() != topLevelItem(0));
 		down_A->setEnabled(true/*  topLevelItemCount() > 1 && currentItem() != topLevelItem(topLevelItemCount()-1) */);
 	}
@@ -407,7 +417,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 	// del_A->setEnabled(!script->isEmpty());
 	// cut_A->setEnabled(true);
 	// copy_A->setEnabled(true);
-	paste_A->setEnabled(!opcodeCopied.isEmpty());
+	adjustPasteAction();
 	itemSelected();
 }
 
@@ -728,11 +738,25 @@ void OpcodeList::cut()
 
 void OpcodeList::copy()
 {
-	QList<int> selectedIDs = this->selectedIDs();
-	if(selectedIDs.isEmpty()) {
-		return;
+	QList<Opcode *> opcodeCopied;
+	foreach(int id, selectedIDs()) {
+		opcodeCopied.append(script->opcode(id));
 	}
 
+	if(!opcodeCopied.isEmpty()) {
+		qDebug() << "Copy";
+		QByteArray data;
+		QDataStream stream(&data, QIODevice::WriteOnly);
+		stream << opcodeCopied;
+		QMimeData *mimeData = new QMimeData();
+		mimeData->setData("application/x-makoureactor-ff7-opcode", data);
+		QApplication::clipboard()->setMimeData(mimeData);
+		paste_A->setEnabled(true);
+	}
+}
+
+void OpcodeList::copyText()
+{
 	QMap<int, QTreeWidgetItem *> listeitems;
 	foreach(QTreeWidgetItem *item, selectedItems()) {
 		listeitems.insert(item->data(0, Qt::UserRole).toInt(), item);
@@ -764,31 +788,39 @@ void OpcodeList::copy()
 		copiedText.append(item->text(0)).append('\n');
 		lastitem = item;
 	}
-	QApplication::clipboard()->setText(copiedText);
-
-	clearCopiedOpcodes();
-	foreach(const int &id, selectedIDs) {
-		opcodeCopied.append(Script::copyOpcode(script->opcode(id)));
+	if(!copiedText.isEmpty()) {
+		QApplication::clipboard()->setText(copiedText);
 	}
-
-	paste_A->setEnabled(true);
 }
 
 void OpcodeList::paste()
 {
-	saveExpandedItems();
-	QList<int> IDs;
-	int opcodeID = selectedID()+1, scrollID = opcodeID;
-	foreach(Opcode *Ocopied, opcodeCopied) {
-		IDs.append(opcodeID);
-		// TODO: label duplication case
-		script->insertOpcode(opcodeID++, Script::copyOpcode(Ocopied));
-	}
+	const QMimeData *mimeData = QApplication::clipboard()->mimeData();
+	if(mimeData && mimeData->hasFormat("application/x-makoureactor-ff7-opcode")) {
+		QByteArray data = mimeData->data("application/x-makoureactor-ff7-opcode");
+		QDataStream stream(data);
+		QList<Opcode *> pastedOpcodes;
+		stream >> pastedOpcodes;
 
-	fill();
-	scroll(scrollID);
-	emit changed();
-	changeHist(Add, IDs, QList<Opcode *>());
+		if(!pastedOpcodes.isEmpty()) {
+			saveExpandedItems();
+
+			QList<int> IDs;
+			int opcodeID = selectedID() + 1, i = opcodeID;
+
+			foreach (Opcode *opcode, pastedOpcodes) {
+				IDs.append(i);
+				// TODO: label duplication case
+				script->insertOpcode(i, opcode);
+				++i;
+			}
+
+			fill();
+			scroll(opcodeID);
+			emit changed();
+			changeHist(Add, IDs, QList<Opcode *>());
+		}
+	}
 }
 
 void OpcodeList::move(Script::MoveDirection direction)
@@ -810,12 +842,6 @@ void OpcodeList::move(Script::MoveDirection direction)
 	} else {
 		setFocus();
 	}
-}
-
-void OpcodeList::clearCopiedOpcodes()
-{
-	qDeleteAll(opcodeCopied);
-	opcodeCopied.clear();
 }
 
 void OpcodeList::scroll(int id, bool focus)

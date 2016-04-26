@@ -1186,3 +1186,32 @@ QString Script::toString(Field *field) const
 
 	return ret;
 }
+
+QDataStream &operator<<(QDataStream &stream, const QList<Opcode *> &script)
+{
+	stream << script.size();
+
+	foreach(Opcode *opcode, script) {
+		stream << opcode->serialize();
+	}
+
+	return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, QList<Opcode *> &script)
+{
+	int size;
+	stream >> size;
+
+	for(int i = 0 ; i < size ; ++i) {
+		QByteArray data;
+		stream >> data;
+
+		Opcode *op = Opcode::unserialize(data);
+		if(op) {
+			script.append(op);
+		}
+	}
+
+	return stream;
+}
