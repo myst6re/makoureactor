@@ -29,7 +29,12 @@ Script::Script(const QList<Opcode *> &opcodes) :
 
 Script::Script(const QByteArray &script)
 {
-	valid = openScript(script);
+	valid = openScript(script, 0, script.size());
+}
+
+Script::Script(const QByteArray &script, int pos, int size)
+{
+	valid = openScript(script, pos, size);
 }
 
 Script::Script(const Script &other) :
@@ -45,14 +50,14 @@ Script::~Script()
 	qDeleteAll(_opcodes);
 }
 
-bool Script::openScript(const QByteArray &script)
+bool Script::openScript(const QByteArray &script, const int initPos, const int size)
 {
-	int pos = 0, scriptSize = script.size(), opcodeID=1;
+	int pos = 0, scriptSize = qMin(script.size() - initPos, size), opcodeID=1;
 	QList<int> positions;
 	QMultiMap<int, OpcodeJump *> indents;
 
 	while(pos < scriptSize) {
-		Opcode *op = createOpcode(script, pos);
+		Opcode *op = createOpcode(script, initPos + pos);
 		_opcodes.append(op);
 		positions.append(pos);
 		if(op->isJump()) {
@@ -99,8 +104,6 @@ bool Script::openScript(const QByteArray &script)
 //				qDebug() << "repair label" << (i+1);
 			}*/
 		}
-
-
 	}
 
 	return true;

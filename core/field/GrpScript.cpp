@@ -151,9 +151,9 @@ bool GrpScript::addScript(const QByteArray &script, bool explodeInit)
 	return true;
 }
 
-bool GrpScript::setScript(int row, const QByteArray &script)
+bool GrpScript::setScript(int row, const QByteArray &script, int pos, int size)
 {
-	Script *s = new Script(script);
+	Script *s = new Script(script, pos, size);
 	if(!s->isValid()) {
 		delete s;
 		return false;

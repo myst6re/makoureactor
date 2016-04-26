@@ -33,10 +33,11 @@ public:
 	Script();
 	explicit Script(const QList<Opcode *> &opcodes);
 	explicit Script(const QByteArray &script);
+	Script(const QByteArray &script, int pos, int size);
 	Script(const Script &other);
 	virtual ~Script();
 
-	bool openScript(const QByteArray &script);
+	bool openScript(const QByteArray &script, const int initPos, const int size);
 	int size() const;
 	bool isEmpty() const;
 	bool isValid() const;
