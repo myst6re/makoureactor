@@ -181,6 +181,10 @@ public:
 	inline bool hasParams() const { return size() > 1; }
 	inline const QString &name() const { return Opcode::names[id()]; }
 	virtual QByteArray toByteArray() const;
+	// Unserializable byte array (include OpcodeLABEL case)
+	virtual QByteArray serialize() const;
+	static Opcode *unserialize(const QByteArray &data);
+	inline virtual bool isExec() const { return false; }
 	inline virtual bool isJump() const { return false; }
 	inline virtual bool isLabel() const { return false; }
 	int subParam(int cur, int paramSize) const;
@@ -265,6 +269,7 @@ public:
 	explicit OpcodeExec(const char *params, int size);
 	void setParams(const char *params, int size);
 	QByteArray params() const;
+	inline bool isExec() const { return true; }
 	inline virtual int getGroupID() const { return groupID; }
 	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 groupID;
@@ -553,6 +558,7 @@ public:
 	explicit OpcodeLabel(quint32 label);
 	inline int id() const { return 0x100; } // fake id
 	QByteArray toByteArray() const { return QByteArray(); }
+	QByteArray serialize() const;
 	QString toString(Field *field) const;
 	inline bool isLabel() const  { return true; }
 	inline bool isVoid() const { return true; }

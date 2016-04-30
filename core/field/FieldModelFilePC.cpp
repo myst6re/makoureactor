@@ -70,13 +70,21 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 					QImage tex = openTexture(texName % ".tex");
 					if (!tex.isNull()) {
 						_loadedTex.insert(texID, tex);
+					} else {
+						qWarning() << "FieldModelFilePC::load error texture" << hrcFilename << texName;
 					}
 					++texID;
 				}
 
 				return true;
+			} else {
+				qWarning() << "FieldModelFilePC::load error animation" << hrcFilename << aFilename;
 			}
+		} else {
+			qWarning() << "FieldModelFilePC::load error mesh" << hrcFilename;
 		}
+	} else {
+		qWarning() << "FieldModelFilePC::load error skeleton" << hrcFilename;
 	}
 
 	return false;
@@ -110,6 +118,8 @@ bool FieldModelFilePC::openMesh(QMultiMap<int, QStringList> &rsdFiles, QStringLi
 		foreach (const QString &rsd, itRsd.value()) {
 			if (openPart(rsd.toLower() % ".rsd", boneID, textureFiles)) {
 				onePartOpened = true;
+			} else {
+				qWarning() << "FieldModelFilePC::openMesh cannot open part" << rsd;
 			}
 		}
 	}
@@ -129,6 +139,7 @@ bool FieldModelFilePC::openPart(const QString &rsdFileName, int boneID, QStringL
 			_skeleton[boneID].addPart(part);
 			return true;
 		} else {
+			qWarning() << "FieldModelFilePC::openPart part error" << rsdFileName << rsd.pFile();
 			delete part;
 		}
 	}

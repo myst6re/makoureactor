@@ -44,5 +44,6 @@
         <file>images/icon-char-6.png</file>
         <file>images/icon-char-7.png</file>
         <file>images/icon-char-8.png</file>
+        <file>vars.cfg</file>
     </qresource>
 </RCC>

@@ -1,0 +1,43 @@
+environment:
+  matrix:
+    - USE_MSVC: 1
+      QTDIR: C:\Qt\5.6\msvc2013
+    - USE_MINGW: 1
+      QTDIR: C:\Qt\5.6\mingw49_32
+
+install:
+  - if "%USE_MINGW%"=="1" set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw492_32\bin;%PATH%
+  - if "%USE_MSVC%"=="1" set PATH=%QTDIR%\bin;C:\Qt\Tools\QtCreator\bin;%PATH%
+  - '"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"'
+  - curl -L -o upx.zip http://upx.sourceforge.net/download/upx391w.zip &&
+    7z e upx.zip *.exe -r
+
+before_build:
+  - qmake -config release Makou_Reactor.pro
+
+build_script:
+  - if "%USE_MSVC%"=="1" jom
+  - if "%USE_MINGW%"=="1" mingw32-make
+
+after_build:
+  - FOR /F %%i IN ('git describe --tags') DO SET GIT_TAG_OR_BRANCH=%%i
+  - if "%USE_MSVC%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32"
+  - if "%USE_MINGW%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32-xp"
+  - echo "%DEPLOY_DIR%"
+  - deploy.bat
+  - MOVE *.qm deploy
+  - DIR deploy
+  - MOVE deploy "%DEPLOY_DIR%"
+  - 7z a "%DEPLOY_DIR%.zip" "%DEPLOY_DIR%"
+
+artifacts:
+  - path: makoureactor-*.zip
+
+deploy:
+  description: Description # Mandatory
+  provider: GitHub
+  auth_token:
+    secure: hC7ZT9txiEAgKU9m2PzmUNe/eDYz1dNPT2DketUKF+8CwuDiXQgNzKSx33Rek2CF
+  artifact: /makoureactor-.*\.zip/
+  on:
+    appveyor_repo_tag: true # deploy on tag push only

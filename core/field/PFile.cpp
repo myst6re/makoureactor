@@ -45,7 +45,7 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 
 	if(device()->read((char *)&header, 128) != 128
 	        || header.version != 1 || header.off04 != 1
-	        || header.vertexType != 1) {
+	        || header.vertexType > 1) {
 		return false;
 	}
 

@@ -230,14 +230,14 @@ bool Section1File::open(const QByteArray &data)
 			for(quint8 j=0 ; j<scriptCount ; ++j) {
 				if(positions[j+1] > positions[j]) {
 					if (scriptID == 0) {
-						Script *script0 = new Script(data.mid(positions[j], positions[j+1]-positions[j]));
+						Script *script0 = new Script(data, positions[j], positions[j+1]-positions[j]);
 						if(!script0->isValid()) {
 							delete script0;
 							return false;
 						}
 						grpScript->setScript(0, script0); // S0 - Init
 						grpScript->setScript(1, script0->splitScriptAtReturn()); // S0 - Main
-					} else if (!grpScript->setScript(scriptID + 1, data.mid(positions[j], positions[j+1]-positions[j]))) {
+					} else if (!grpScript->setScript(scriptID + 1, data, positions[j], positions[j+1]-positions[j])) {
 						return false;
 					}
 					scriptID=j+1;

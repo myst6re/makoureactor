@@ -33,10 +33,11 @@ public:
 	Script();
 	explicit Script(const QList<Opcode *> &opcodes);
 	explicit Script(const QByteArray &script);
+	Script(const QByteArray &script, int pos, int size);
 	Script(const Script &other);
 	virtual ~Script();
 
-	bool openScript(const QByteArray &script);
+	bool openScript(const QByteArray &script, const int initPos, const int size);
 	int size() const;
 	bool isEmpty() const;
 	bool isValid() const;
@@ -45,6 +46,9 @@ public:
 	bool isVoid() const;
 	bool compile(int &opcodeID, QString &errorStr);
 	QByteArray toByteArray() const;
+	inline QByteArray serialize() const {
+		return toByteArray();
+	}
 	void setOpcode(quint16 opcodeID, Opcode *opcode);
 	void delOpcode(quint16 opcodeID);
 	Opcode *removeOpcode(quint16 opcodeID);
@@ -90,5 +94,8 @@ private:
 
 	bool valid;
 };
+
+QDataStream &operator<<(QDataStream &stream, const QList<Opcode *> &script);
+QDataStream &operator>>(QDataStream &stream, QList<Opcode *> &script);
 
 #endif

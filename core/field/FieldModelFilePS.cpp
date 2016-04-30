@@ -136,7 +136,7 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 		}
 	}
 
-	if (!modelBcx.isEmpty()) {
+	if (modelBcx.isValid()) {
 		if (!skeleton().isEmpty()) {
 			qWarning() << "FieldPS::fieldModel bsx present, but bcx skeleton not empty";
 			foreach (const FieldModelBone &bone, skeleton().bones()) {

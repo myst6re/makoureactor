@@ -36,3 +36,8 @@ void FieldModelFile::clear()
 	_skeleton.clear();
 	_animations.clear();
 }
+
+bool FieldModelFile::isValid() const
+{
+	return !_animations.isEmpty() && !_skeleton.isEmpty();
+}

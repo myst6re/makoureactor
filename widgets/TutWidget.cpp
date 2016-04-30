@@ -38,6 +38,7 @@ TutWidget::TutWidget(QWidget *parent) :
 	stackedWidget = new QStackedWidget();
 	stackedWidget->addWidget(buildTutPage());
 	stackedWidget->addWidget(buildSoundPage());
+	stackedWidget->addWidget(buildBrokenPage());
 	stackedWidget->setCurrentIndex(0);
 
 	exportButton = new QPushButton(tr("Export..."));
@@ -148,6 +149,29 @@ QWidget *TutWidget::buildSoundPage()
 	return ret;
 }
 
+QWidget *TutWidget::buildBrokenPage()
+{
+	QWidget *ret = new QWidget(this);
+
+	repairButton = new QPushButton(tr("Repair"), ret);
+	createNewAkaoButton = new QPushButton(tr("Replace by empty AKAO"), ret);
+	createNewTutoButton = new QPushButton(tr("Replace by empty tuto"), ret);
+
+	QVBoxLayout *layout = new QVBoxLayout(ret);
+	layout->addWidget(new QLabel(tr("There is an error")));
+	layout->addWidget(repairButton);
+	layout->addWidget(createNewAkaoButton);
+	layout->addWidget(createNewTutoButton);
+	layout->addStretch();
+	layout->setContentsMargins(QMargins());
+
+	connect(repairButton, SIGNAL(released()), SLOT(repairBroken()));
+	connect(createNewAkaoButton, SIGNAL(released()), SLOT(replaceByEmptyAkao()));
+	connect(createNewTutoButton, SIGNAL(released()), SLOT(replaceByEmptyTuto()));
+
+	return ret;
+}
+
 void TutWidget::changeVersion(bool isPS)
 {
 	saveText(list->currentItem());
@@ -179,17 +203,22 @@ void TutWidget::fillList()
 	int size = currentTut->size();
 
 	for(int i=0 ; i<size ; ++i) {
-		list->addItem(createListItem(i));
+		list->addItem(new QListWidgetItem(listItemText(i)));
 	}
 	list->blockSignals(false);
 }
 
-QListWidgetItem *TutWidget::createListItem(int id) const
+QString TutWidget::listItemText(int id) const
 {
-	return new QListWidgetItem((currentTut->isTut(id)
-								? tr("Tuto %1")
-								: tr("Music %1"))
-							   .arg(id));
+	QString text;
+	if(currentTut->isBroken(id)) {
+		text = tr("Broken %1");
+	} else if(currentTut->isTut(id)) {
+		text = tr("Tuto %1");
+	} else {
+		text = tr("Music %1");
+	}
+	return text.arg(id);
 }
 
 int TutWidget::currentRow(QListWidgetItem *item) const
@@ -237,9 +266,13 @@ void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 	}
 
 	int id = currentRow(item);
-	bool isTut = currentTut->isTut(id);
+	bool isTut = currentTut->isTut(id),
+	        isBroken = currentTut->isBroken(id);
 
-	if(isTut) {
+	if(isBroken) {
+		stackedWidget->setCurrentIndex(2);
+		repairButton->setVisible(currentTut->canBeRepaired(id));
+	} else if(isTut) {
 		stackedWidget->setCurrentIndex(0);
 		textEdit->setPlainText(currentTut->parseScripts(id));
 	} else {
@@ -259,7 +292,9 @@ void TutWidget::saveText(QListWidgetItem *item)
 	if(item == NULL)	return;
 
 	int id = currentRow(item);
-	if(currentTut->isTut(id)) {
+	if(currentTut->isBroken(id)) {
+		// Do nothing
+	} else if(currentTut->isTut(id)) {
 		currentTut->parseText(id, textEdit->toPlainText());
 		if(currentTut->isModified()) {
 			emit modified();
@@ -529,4 +564,44 @@ void TutWidget::importation()
 	textEdit->setPlainText(currentTut->parseScripts(row));
 	textEdit->setReadOnly(!isTut);
 	akaoIDList->setEnabled(!isTut);
+}
+
+void TutWidget::repairBroken()
+{
+	int row = currentRow();
+	if(row < 0 || !currentTut->canBeRepaired(row)) {
+		return;
+	}
+
+	if(currentTut->repair(row)) {
+		list->currentItem()->setText(listItemText(row));
+		showText(list->currentItem(), list->currentItem());
+		emit modified();
+	}
+}
+
+void TutWidget::replaceByEmptyAkao()
+{
+	int row = currentRow();
+	if(row < 0) {
+		return;
+	}
+
+	currentTut->setData(row, QByteArray("AKAO\0\0", 6));
+	list->currentItem()->setText(listItemText(row));
+	showText(list->currentItem(), list->currentItem());
+	emit modified();
+}
+
+void TutWidget::replaceByEmptyTuto()
+{
+	int row = currentRow();
+	if(row < 0) {
+		return;
+	}
+
+	currentTut->setData(row, QByteArray("\x11", 1));
+	list->currentItem()->setText(listItemText(row));
+	showText(list->currentItem(), list->currentItem());
+	emit modified();
 }

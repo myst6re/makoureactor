@@ -146,7 +146,10 @@ HEADERS += \
     core/field/FieldModelTextureRefPS.h \
     widgets/ScriptManager.h \
     widgets/FieldList.h \
-    widgets/Splitter.h
+    widgets/Splitter.h \
+    core/AkaoIO.h \
+    core/Akao.h \
+    core/Clipboard.h
 
 SOURCES += \
     Window.cpp \
@@ -281,7 +284,10 @@ SOURCES += \
     core/field/FieldModelTextureRefPS.cpp \
     widgets/ScriptManager.cpp \
     widgets/FieldList.cpp \
-    widgets/Splitter.cpp
+    widgets/Splitter.cpp \
+    core/AkaoIO.cpp \
+    core/Akao.cpp \
+    core/Clipboard.cpp
 
 TRANSLATIONS += Makou_Reactor_fr.ts  \
     Makou_Reactor_ja.ts
@@ -302,7 +308,9 @@ macx {
         INCLUDEPATH += $$[QT_INSTALL_PREFIX]/include/QtZlib
     } else {
         INCLUDEPATH += zlib-1.2.7
-        # LIBS += -lz
+        greaterThan(QT_MAJOR_VERSION, 4) {
+            LIBS += -lz
+        }
     }
 }
 
@@ -328,14 +336,18 @@ win32 {
 
 OTHER_FILES += Makou_Reactor.rc \
     deploy.bat \
+    vars.cfg \
     compat/QtWidgets \
-    .travis.yml
-DISTFILES += Makou_Reactor.desktop \
-    README.md
+    .travis.yml \
+    README.md \
+    .clang-format \
+    appveyor.yml
+DISTFILES += Makou_Reactor.desktop
 
-system(lrelease Makou_Reactor.pro) # call lrelease to make the qm files.
+# call lrelease to make the qm files.
+system(lrelease Makou_Reactor.pro)
 
-#all other *nix (except for symbian)
+# all other *nix (except for symbian)
 unix:!macx:!symbian {
     LIBS += -lglut -lGLU
 

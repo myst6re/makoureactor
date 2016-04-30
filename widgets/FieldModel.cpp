@@ -43,7 +43,7 @@ void FieldModel::setFieldModelFile(FieldModelFile *fieldModel, int animID)
 	currentFrame = 0;
 	data = fieldModel;
 	animationID = animID;
-	if(data && !data->isEmpty()) {
+	if(data && data->isValid()) {
 		updateGL();
 		updateTimer();
 	}
@@ -245,7 +245,7 @@ void FieldModel::resizeGL(int width, int height)
 
 void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int animationID, int currentFrame, float scale)
 {
-	if(!data || data->isEmpty() || scale == 0.0f) {
+	if(!data || !data->isValid() || scale == 0.0f) {
 		return;
 	}
 
@@ -315,7 +315,7 @@ void FieldModel::paintGL()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	if(!data || data->isEmpty())	return;
+	if(!data || !data->isValid())	return;
 
 	//scale the view port if the window manager is scaling
 	int scale = 1;
@@ -377,7 +377,7 @@ void FieldModel::mousePressEvent(QMouseEvent *event)
 
 void FieldModel::animate()
 {
-	if(data && !data->isEmpty() && isVisible()) {
+	if(data && data->isValid() && isVisible()) {
 		int count = frameCount();
 		if(count > 0) {
 			currentFrame = (currentFrame + 1) % count;

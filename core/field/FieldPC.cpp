@@ -100,7 +100,7 @@ FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate
 	}
 
 	FieldModelFilePC *fieldModel = new FieldModelFilePC();
-	if(open && fieldModel->isEmpty()) {
+	if(open) {
 		fieldModel->load(hrc, a, animate);
 	}
 	return fieldModel;

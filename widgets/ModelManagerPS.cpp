@@ -43,6 +43,7 @@ ModelManagerPS::ModelManagerPS(const QGLWidget *shareWidget, QWidget *parent) :
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(models, 0, 0);
 	layout->addWidget(modelFrame, 0, 1);
+	layout->setColumnStretch(1, 1);
 
 	adjustSize();
 }

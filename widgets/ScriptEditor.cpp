@@ -546,9 +546,9 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Contact range (16-bit)"), QList<QVariant>() << 0xD7);
 		return;
 	case 5:
-		comboBox->addItem(tr("Create location"), QList<QVariant>() << 0xD0);
-		comboBox->addItem(tr("Set location"), QList<QVariant>() << 0xD3);
-		comboBox->addItem(tr("Location On/Off"), QList<QVariant>() << 0xD1);
+		comboBox->addItem(tr("Create line"), QList<QVariant>() << 0xD0);
+		comboBox->addItem(tr("Set line"), QList<QVariant>() << 0xD3);
+		comboBox->addItem(tr("Line On/Off"), QList<QVariant>() << 0xD1);
 		comboBox->addItem(tr("Triangle On/Off"), QList<QVariant>() << 0x6D);
 		comboBox->insertSeparator(comboBox->count());//???
 		comboBox->addItem(tr("SLIP"), QList<QVariant>() << 0x2B);
@@ -602,7 +602,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Play music"), QList<QVariant>() << 0xF0);
 		comboBox->addItem(tr("MUSVT"), QList<QVariant>() << 0xF3);
 		comboBox->addItem(tr("MUSVM"), QList<QVariant>() << 0xF4);
-		comboBox->addItem(tr("Music On/Off"), QList<QVariant>() << 0xF5);
+		comboBox->addItem(tr("Music Unlock/Lock"), QList<QVariant>() << 0xF5);
 		comboBox->addItem(tr("Battle music"), QList<QVariant>() << 0xF6);
 		comboBox->addItem(tr("CHMPH"), QList<QVariant>() << 0xF7);
 		comboBox->addItem(tr("CHMST"), QList<QVariant>() << 0xFE);

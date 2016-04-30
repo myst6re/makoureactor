@@ -37,7 +37,7 @@ public:
 	};
 
 	explicit OpcodeList(QWidget *parent=0);
-	virtual ~OpcodeList();
+	virtual ~OpcodeList() {}
 
 	int selectedID();
 	int selectedOpcode();
@@ -49,7 +49,6 @@ public:
 	}
 	void clear();
 	void setEnabled(bool enabled);
-	void clearCopiedOpcodes();
 	void fill(Field *_field=0, GrpScript *_grpScript=0, Script *_script=0);
 	void scroll(int, bool focus=true);
 	void enableActions(bool);
@@ -59,14 +58,16 @@ public:
 	void setExpandedItems(const QList<const Opcode *> &expandedItems);
 
 private slots:
+	void adjustPasteAction();
 	void add();
 	void scriptEditor(bool modify=true);
 	void del(bool totalDel=true);
 	void cut();
 	void copy();
+	void copyText();
 	void paste();
-	void up();
-	void down();
+	inline void up()   { move(Script::Up);   }
+	inline void down() { move(Script::Down); }
 	void itemSelected();
 	void evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void undo();
@@ -76,6 +77,8 @@ private slots:
 signals:
 	void changed();
 	void editText(int textID);
+	void gotoScript(int groupID, int scriptID);
+	void gotoField(int fieldID);
 protected:
 	void mouseReleaseEvent(QMouseEvent *event);
 private:
@@ -94,19 +97,18 @@ private:
 	bool hasCut, isInit;
 
 	QToolBar *_toolBar;
-	QWidget *_help;
+	QLabel *_help;
 
 	Field *field;
 	GrpScript *grpScript;
 	Script *script;
-	QList<Opcode *> opcodeCopied;
 	QHash<const Script *, QList<const Opcode *> > expandedItems;
 
 	QBrush previousBG, previousErrorBg;
 	int errorLine;
 
 	QAction *edit_A, *add_A, *del_A;
-	QAction *cut_A, *copy_A, *paste_A;
+	QAction *cut_A, *copy_A, *copyText_A, *paste_A;
 	QAction *up_A, *down_A, *expand_A;
 	QAction *undo_A, *redo_A, *text_A, *goto_A;
 

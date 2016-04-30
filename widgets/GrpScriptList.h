@@ -65,6 +65,17 @@ signals:
 	void changed();
 
 private:
+	enum Actions {
+		RenameAction = 0,
+		AddAction = 1,
+		DelAction = 2,
+		CutAction = 4,
+		CopyAction = 5,
+		PasteAction = 6,
+		UpAction = 8,
+		DownAction = 9
+	};
+
 	void move(bool direction);
 	QTreeWidgetItem *findItem(int id);
 	QList<int> selectedIDs();

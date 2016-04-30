@@ -114,7 +114,7 @@ Window::Window() :
 	menuLang->addSeparator();
 	QTranslator translator;
 	foreach(const QString &str, stringList) {
-		translator.load(Config::programResourceDir()+"/"+str);
+		translator.load(dir.filePath(str));
 		action = menuLang->addAction(translator.translate("Window", "English"));
 		QString lang = str.mid(14, 2);
 		action->setData(lang);
@@ -323,8 +323,7 @@ void Window::restartNow()
 	                   qApp->applicationDirPath())) {
 		title = translator.translate("Window", "Settings changed");
 		text = translator.translate("Window", "Restart the program for the settings to take effect.");
-	}
-	else {
+	} else {
 		title = "Settings changed";
 		text = "Restart the program for the settings to take effect.";
 	}
@@ -382,6 +381,7 @@ int Window::closeFile(bool quit)
 		fieldList->blockSignals(false);
 
 		disableEditors();
+		_scriptManager->removeCopiedReferences();
 		if(_modelManager) {
 			_modelManager->close();
 			_modelManager->deleteLater();
@@ -875,7 +875,7 @@ void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 	if(fieldModel && this->field == field) {
 		fieldModel->setFieldModelFile(fieldModelFile);
 	}
-	zonePreview->setCurrentIndex(int(fieldModel && !fieldModelFile->isEmpty()));
+	zonePreview->setCurrentIndex(int(fieldModel && fieldModelFile->isValid()));
 }
 
 void Window::setModified(bool enabled)

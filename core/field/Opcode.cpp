@@ -21,6 +21,7 @@
 #include "Data.h"
 #include "core/Config.h"
 #include "Field.h"
+#include "Script.h"
 
 const char *Opcode::operators[OPERATORS_SIZE] = {
 	"==", "!=", ">", "<", ">=", "<=", "&", "^", "|", "bitON", "bitOFF"
@@ -39,6 +40,38 @@ QByteArray Opcode::toByteArray() const
 	return QByteArray()
 			.append((char)id())
 			.append(params());
+}
+
+QByteArray Opcode::serialize() const
+{
+	quint16 identifier = id();
+
+	return QByteArray((char *)&identifier, 2)
+			.append(params());
+}
+
+Opcode *Opcode::unserialize(const QByteArray &data)
+{
+	if(data.size() < 2) {
+		return NULL;
+	}
+
+	quint16 identifier;
+	memcpy(&identifier, data.constData(), 2);
+
+	if(identifier <= 0xFF) {
+		return Script::createOpcode(QByteArray()
+		                            .append(quint8(identifier))
+		                            .append(data.mid(2)));
+	}
+
+	if(data.size() < 6) {
+		return NULL;
+	}
+	quint32 label;
+	memcpy(&label, data.constData() + 2, 4);
+
+	return new OpcodeLabel(label);
 }
 
 int Opcode::subParam(int cur, int paramSize) const
@@ -1303,6 +1336,11 @@ quint32 OpcodeJump::maxJump() const
 OpcodeLabel::OpcodeLabel(quint32 label) :
 	_label(label)
 {
+}
+
+QByteArray OpcodeLabel::serialize() const
+{
+	return Opcode::serialize().append((char *)&_label, 4);
 }
 
 QString OpcodeLabel::toString(Field *) const
@@ -5624,7 +5662,7 @@ void OpcodeDFANM::setParams(const char *params, int)
 
 QString OpcodeDFANM::toString(Field *) const
 {
-	return QObject::tr("Play animation #%1 of the field model (speed=%2)")
+	return QObject::tr("Play loop animation #%1 of the field model (speed=%2)")
 			.arg(animID)
 			.arg(speed);
 }
@@ -6044,7 +6082,7 @@ void OpcodeANIMX1::setParams(const char *params, int)
 
 QString OpcodeANIMX1::toString(Field *) const
 {
-	return QObject::tr("Play animation #%1 of the field model (speed=%2)")
+	return QObject::tr("Play animation #%1 of the field model (speed=%2, type=1)")
 			.arg(animID)
 			.arg(speed);
 }
@@ -6395,7 +6433,7 @@ void OpcodeANIMX2::setParams(const char *params, int)
 
 QString OpcodeANIMX2::toString(Field *) const
 {
-	return QObject::tr("Play animation #%1 of the field model (speed=%2)")
+	return QObject::tr("Play animation #%1 of the field model (speed=%2, type=2)")
 			.arg(animID)
 			.arg(speed);
 }
@@ -7005,7 +7043,7 @@ void OpcodeLINE::setParams(const char *params, int)
 
 QString OpcodeLINE::toString(Field *) const
 {
-	return QObject::tr("Set location (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
+	return QObject::tr("Create line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
 			.arg(targetX1)
 			.arg(targetY1)
 			.arg(targetZ1)
@@ -7053,8 +7091,8 @@ void OpcodeLINON::setParams(const char *params, int)
 
 QString OpcodeLINON::toString(Field *) const
 {
-	return QObject::tr("%1 the location")
-			.arg(enabled == 0 ? QObject::tr("Clear") : QObject::tr("Trace"));
+	return QObject::tr("%1 line")
+			.arg(enabled != 0 ? QObject::tr("Enable") : QObject::tr("Disable"));
 }
 
 QByteArray OpcodeLINON::params() const
@@ -7101,7 +7139,7 @@ void OpcodeSLINE::setParams(const char *params, int)
 
 QString OpcodeSLINE::toString(Field *) const
 {
-	return QObject::tr("Resize location (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
+	return QObject::tr("Set line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
 			.arg(_var(targetX1, B1(banks[0])))
 			.arg(_var(targetY1, B2(banks[0])))
 			.arg(_var(targetZ1, B1(banks[1])))

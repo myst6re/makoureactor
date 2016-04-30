@@ -1,3 +1,19 @@
+makoureactor (1.7.1) trusty; urgency=low
+
+  * Do not show model view if the model is invalid
+  * Accept model p files with vertex type = 0 (used in Kaldarasha's models)
+  * Adding "Invalid akao" view in tuto/sound dialog with a button to repairs it if possible
+  * Fixing bug with copy/paste scripts across fields
+  * Copy/paste opcodes between instances
+  * In script editor: impossible to change akao type with the dropdown
+  * Renaming DFANM, ANIMX1 and ANIMX2 descriptions
+  * In script editor: "Music On/Off" replaced by "Music Unlock/Lock"
+  * "Location" group script type replaced by "Line" and "Trace/clear location" replaced by "Enable/Disable line"
+  * Feature: Go to the called script by pressing ALT + clic
+  * Performance improvements on opening scripts
+
+ -- myst6re <myst6re@gmail.com>  Sat, 30 Apr 2016 15:40:56 +0200
+
 makoureactor (1.7.0) trusty; urgency=low
 
   * Main layout changes: allow dynamic resizing of the field list and the background preview.

@@ -12,6 +12,7 @@ class ScriptManager : public QWidget
 public:
 	explicit ScriptManager(QWidget *parent = 0);
 	void saveConfig();
+	void removeCopiedReferences();
 	void clear();
 	inline GrpScriptList *groupScriptList() const {
 		return _groupScriptList;
@@ -36,14 +37,16 @@ public:
 	}
 signals:
 	void changed();
-	void editText(int);
-	void groupScriptCurrentChanged(int);
+	void editText(int textID);
+	void groupScriptCurrentChanged(int groupID);
+	void gotoField(int fieldID);
 public slots:
 	void fill(Field *field);
 	void fillScripts();
 	void fillOpcodes();
 	void compile();
 	void refresh();
+	void gotoScript(int grpScriptID, int scriptID);
 	void gotoOpcode(int grpScriptID, int scriptID, int opcodeID);
 private:
 	GrpScriptList *_groupScriptList;
