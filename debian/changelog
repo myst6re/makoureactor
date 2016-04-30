@@ -10,6 +10,7 @@ makoureactor (1.7.1) trusty; urgency=low
   * In script editor: "Music On/Off" replaced by "Music Unlock/Lock"
   * "Location" group script type replaced by "Line" and "Trace/clear location" replaced by "Enable/Disable line"
   * Feature: Go to the called script by pressing ALT + clic
+  * Performance improvements on opening scripts
 
  -- myst6re <myst6re@gmail.com>  Sat, 30 Apr 2016 15:40:56 +0200
 
