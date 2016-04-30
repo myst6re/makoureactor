@@ -148,7 +148,8 @@ HEADERS += \
     widgets/FieldList.h \
     widgets/Splitter.h \
     core/AkaoIO.h \
-    core/Akao.h
+    core/Akao.h \
+    core/Clipboard.h
 
 SOURCES += \
     Window.cpp \
@@ -285,7 +286,8 @@ SOURCES += \
     widgets/FieldList.cpp \
     widgets/Splitter.cpp \
     core/AkaoIO.cpp \
-    core/Akao.cpp
+    core/Akao.cpp \
+    core/Clipboard.cpp
 
 TRANSLATIONS += Makou_Reactor_fr.ts  \
     Makou_Reactor_ja.ts

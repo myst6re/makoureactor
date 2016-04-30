@@ -46,6 +46,9 @@ public:
 	bool isVoid() const;
 	bool compile(int &opcodeID, QString &errorStr);
 	QByteArray toByteArray() const;
+	inline QByteArray serialize() const {
+		return toByteArray();
+	}
 	void setOpcode(quint16 opcodeID, Opcode *opcode);
 	void delOpcode(quint16 opcodeID);
 	Opcode *removeOpcode(quint16 opcodeID);

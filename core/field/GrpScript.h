@@ -51,6 +51,7 @@ public:
 
 	GrpScript();
 	explicit GrpScript(const QString &name);
+	GrpScript(const QString &name, QList<Script *> scripts);
 	GrpScript(const GrpScript &other);
 	virtual ~GrpScript();
 
@@ -132,5 +133,10 @@ private:
 	bool director;
 	
 };
+
+QDataStream &operator<<(QDataStream &stream, const QList<GrpScript *> &scripts);
+QDataStream &operator>>(QDataStream &stream, QList<GrpScript *> &scripts);
+QDataStream &operator<<(QDataStream &stream, const QList<Script *> &scripts);
+QDataStream &operator>>(QDataStream &stream, QList<Script *> &scripts);
 
 #endif

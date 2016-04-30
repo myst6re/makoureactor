@@ -18,6 +18,7 @@
 #include "OpcodeList.h"
 #include "ScriptEditor.h"
 #include "core/Config.h"
+#include "core/Clipboard.h"
 
 OpcodeList::OpcodeList(QWidget *parent) :
 	QTreeWidget(parent), isInit(false),
@@ -165,8 +166,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 
 void OpcodeList::adjustPasteAction()
 {
-	paste_A->setEnabled(QApplication::clipboard()->mimeData()->
-	                    hasFormat("application/x-makoureactor-ff7-opcode"));
+	paste_A->setEnabled(Clipboard::instance()->hasFf7FieldScriptOpcodes());
 }
 
 void OpcodeList::clear()
@@ -744,13 +744,7 @@ void OpcodeList::copy()
 	}
 
 	if(!opcodeCopied.isEmpty()) {
-		qDebug() << "Copy";
-		QByteArray data;
-		QDataStream stream(&data, QIODevice::WriteOnly);
-		stream << opcodeCopied;
-		QMimeData *mimeData = new QMimeData();
-		mimeData->setData("application/x-makoureactor-ff7-opcode", data);
-		QApplication::clipboard()->setMimeData(mimeData);
+		Clipboard::instance()->setFF7FieldScriptOpcodes(opcodeCopied);
 		paste_A->setEnabled(true);
 	}
 }
@@ -795,31 +789,24 @@ void OpcodeList::copyText()
 
 void OpcodeList::paste()
 {
-	const QMimeData *mimeData = QApplication::clipboard()->mimeData();
-	if(mimeData && mimeData->hasFormat("application/x-makoureactor-ff7-opcode")) {
-		QByteArray data = mimeData->data("application/x-makoureactor-ff7-opcode");
-		QDataStream stream(data);
-		QList<Opcode *> pastedOpcodes;
-		stream >> pastedOpcodes;
+	QList<Opcode *> pastedOpcodes = Clipboard::instance()->ff7FieldScriptOpcodes();
+	if(!pastedOpcodes.isEmpty()) {
+		saveExpandedItems();
 
-		if(!pastedOpcodes.isEmpty()) {
-			saveExpandedItems();
+		QList<int> IDs;
+		int opcodeID = selectedID() + 1, i = opcodeID;
 
-			QList<int> IDs;
-			int opcodeID = selectedID() + 1, i = opcodeID;
-
-			foreach (Opcode *opcode, pastedOpcodes) {
-				IDs.append(i);
-				// TODO: label duplication case
-				script->insertOpcode(i, opcode);
-				++i;
-			}
-
-			fill();
-			scroll(opcodeID);
-			emit changed();
-			changeHist(Add, IDs, QList<Opcode *>());
+		foreach (Opcode *opcode, pastedOpcodes) {
+			IDs.append(i);
+			// TODO: label duplication case
+			script->insertOpcode(i, opcode);
+			++i;
 		}
+
+		fill();
+		scroll(opcodeID);
+		emit changed();
+		changeHist(Add, IDs, QList<Opcode *>());
 	}
 }
 
