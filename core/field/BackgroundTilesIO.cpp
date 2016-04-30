@@ -695,7 +695,7 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 {
 	qint64 beginPos = device()->pos();
 
-	if(!device()->seek(beginPos + _demo ? 12 : 16)) {
+	if(!device()->seek(beginPos + (_demo ? 12 : 16))) {
 		return false;
 	}
 
