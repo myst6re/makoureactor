@@ -546,9 +546,9 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Contact range (16-bit)"), QList<QVariant>() << 0xD7);
 		return;
 	case 5:
-		comboBox->addItem(tr("Create location"), QList<QVariant>() << 0xD0);
-		comboBox->addItem(tr("Set location"), QList<QVariant>() << 0xD3);
-		comboBox->addItem(tr("Location On/Off"), QList<QVariant>() << 0xD1);
+		comboBox->addItem(tr("Create line"), QList<QVariant>() << 0xD0);
+		comboBox->addItem(tr("Set line"), QList<QVariant>() << 0xD3);
+		comboBox->addItem(tr("Line On/Off"), QList<QVariant>() << 0xD1);
 		comboBox->addItem(tr("Triangle On/Off"), QList<QVariant>() << 0x6D);
 		comboBox->insertSeparator(comboBox->count());//???
 		comboBox->addItem(tr("SLIP"), QList<QVariant>() << 0x2B);

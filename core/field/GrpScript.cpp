@@ -253,7 +253,7 @@ QString GrpScript::type()
 	case Model:
 		if(_character == 0xFF)	return QObject::tr("Field model");
 		return QString("%1").arg(Opcode::character(_character));
-	case Location:	return QObject::tr("Location");
+	case Location:	return QObject::tr("Line");
 	case Animation:	return QObject::tr("Animation");
 	case Director:	return QObject::tr("Main");
 	default:		return QString();

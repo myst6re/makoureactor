@@ -7043,7 +7043,7 @@ void OpcodeLINE::setParams(const char *params, int)
 
 QString OpcodeLINE::toString(Field *) const
 {
-	return QObject::tr("Set location (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
+	return QObject::tr("Create line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
 			.arg(targetX1)
 			.arg(targetY1)
 			.arg(targetZ1)
@@ -7092,7 +7092,7 @@ void OpcodeLINON::setParams(const char *params, int)
 QString OpcodeLINON::toString(Field *) const
 {
 	return QObject::tr("%1 line")
-			.arg(enabled == 0 ? QObject::tr("Enable") : QObject::tr("Disable"));
+			.arg(enabled != 0 ? QObject::tr("Enable") : QObject::tr("Disable"));
 }
 
 QByteArray OpcodeLINON::params() const
@@ -7139,7 +7139,7 @@ void OpcodeSLINE::setParams(const char *params, int)
 
 QString OpcodeSLINE::toString(Field *) const
 {
-	return QObject::tr("Resize location (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
+	return QObject::tr("Set line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
 			.arg(_var(targetX1, B1(banks[0])))
 			.arg(_var(targetY1, B2(banks[0])))
 			.arg(_var(targetZ1, B1(banks[1])))
