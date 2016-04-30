@@ -32,6 +32,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	setExpandsOnDoubleClick(false);
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	setSelectionMode(QAbstractItemView::ExtendedSelection);
+	setTextElideMode(Qt::ElideNone);
 
 	edit_A = new QAction(tr("Edit"), this);
 	edit_A->setShortcut(QKeySequence(Qt::Key_Return));
@@ -404,14 +405,16 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 		item->setData(0, Qt::UserRole, -2);
 	}
 
+	// Adjust items size
+	resizeColumnToContents(0);
+	if(header()->sectionSize(0) < viewport()->width()) {
+		header()->setMinimumSectionSize(viewport()->width());
+	}
+
 	scrollToTop();
 
 	enableActions(true);
 
-	if(header()->sectionSize(0) < width()) {
-		header()->setMinimumSectionSize(width() - 2);
-	}
-	
 	// edit_A->setEnabled(true);
 	add_A->setEnabled(true);
 	// del_A->setEnabled(!script->isEmpty());
