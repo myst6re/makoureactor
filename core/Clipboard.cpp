@@ -31,6 +31,7 @@ QByteArray Clipboard::data(const QString &mimeType)
 	if(mimeData && mimeData->hasFormat(mimeType)) {
 		return mimeData->data(mimeType);
 	}
+	return QByteArray();
 }
 
 void Clipboard::setData(const QString &mimeType, const QByteArray &data)
