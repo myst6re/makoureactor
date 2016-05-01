@@ -71,6 +71,9 @@ env:
   matrix:
     - WITH_QT4=0
     - WITH_QT4=1
+  exclude:
+    - os: osx
+      env: WITH_QT4=1
 
 addons:
   coverity_scan:
