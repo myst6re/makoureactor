@@ -24,7 +24,9 @@ install:
 
 before_script:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      QTDIR="/opt/qt55";
+      if [ "${WITH_QT4}" != "1" ]; then
+        QTDIR="/opt/qt56";
+      fi
     else
       QTDIR="/usr/local/opt/qt5";
     fi
@@ -66,6 +68,9 @@ env:
   global:
     # COVERITY_SCAN_TOKEN
     - secure: "lk7jEPh62LhXOWyT5UyGAKPxiskVyIBbHEtbnfKZZil2iJLec1f3+df1ADPajl1Ij2Yp4ZgWWcJsuN/+XkQJjXvgWyW2bi0K9ntrRCU4t3h8blodblaXvpssbz5fj4TzI8HnfBet4NXfLLdAUHBcLOLU01xb+LWaY/4rX2PlKBY="
+  matrix:
+    - WITH_QT4=0
+    - WITH_QT4=1
 
 addons:
   coverity_scan:
