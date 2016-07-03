@@ -30,7 +30,7 @@ QSize ColorDisplay::sizeHint() const
 
 QSize ColorDisplay::minimumSizeHint() const
 {
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+#if (QT_VERSION < QT_VERSION_CHECK(5, 5, 0))
 	const int scale = 1;
 #else
 	const int scale = devicePixelRatio();
