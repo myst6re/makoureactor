@@ -290,7 +290,8 @@ SOURCES += \
     core/Clipboard.cpp
 
 TRANSLATIONS += Makou_Reactor_fr.ts  \
-    Makou_Reactor_ja.ts
+    Makou_Reactor_ja.ts \
+    Makou_Reactor_es.ts
 
 CODECFORTR = UTF-8
 CODECFORSRC = UTF-8
