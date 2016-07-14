@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -114,7 +114,40 @@ bool TutFileStandard::isAkao(int tutID) const
 	return data(tutID).startsWith("AKAO")/* || !field()->scriptsAndTexts()->listUsedTuts().contains(tutID) */;
 }
 
-QString TutFileStandard::parseScripts(int tutID) const
+bool TutFileStandard::isBroken(int tutID) const
+{
+	if(isAkao(tutID)) {
+		return false;
+	}
+	const QByteArray &d = data(tutID);
+	if(!d.isEmpty()) {
+		quint8 firstChar = d.at(0);
+		return firstChar > 0x12 && firstChar < 0xFF;
+	}
+	return false;
+}
+
+bool TutFileStandard::canBeRepaired(int tutID) const
+{
+	const QByteArray &d = data(tutID);
+	return d.startsWith("KAO") || d.startsWith("AO");
+}
+
+bool TutFileStandard::repair(int tutID)
+{
+	const QByteArray &d = data(tutID);
+	if (d.startsWith("KAO")) {
+		setData(tutID, QByteArray("A", 1).append(d));
+		return true;
+	}
+	if (d.startsWith("AO")) {
+		setData(tutID, QByteArray("AK", 2).append(d));
+		return true;
+	}
+	return false;
+}
+
+QString TutFileStandard::parseScripts(int tutID, bool *warnings) const
 {
 	QString ret;
 
@@ -124,7 +157,10 @@ QString TutFileStandard::parseScripts(int tutID) const
 
 		quint16 id, length, firstPos;
 		if(tuto.size() < 6) {
-			return QObject::tr("Erreur");
+			if(warnings) {
+				*warnings = true;
+			}
+			return QObject::tr("Error");
 		}
 		memcpy(&id, constTuto + 4, 2);
 
@@ -142,13 +178,13 @@ QString TutFileStandard::parseScripts(int tutID) const
 		}
 		memcpy(&firstPos, constTuto + 20, 2);
 
-		ret.append(QObject::tr("nbCanaux=%1\n").arg(firstPos/2 + 1));
+		ret.append(QObject::tr("ChannelCount=%1\n").arg(firstPos/2 + 1));
 		ret.append(tuto.mid(8, 8).toHex());
 		ret.append("\n");
 		ret.append(tuto.mid(16, 4).toHex());
 		ret.append("\n");
 	} else {
-		ret = TutFile::parseScripts(tutID);
+		ret = TutFile::parseScripts(tutID, warnings);
 	}
 
 	return ret;

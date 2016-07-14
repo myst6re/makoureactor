@@ -1,4 +1,0 @@
-#!/bin/sh
-#DEBHELPER#
-#make it so everyone can read/write to vars.cfg
-chmod 666 /usr/share/makoureactor/vars.cfg

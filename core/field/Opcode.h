@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -44,20 +44,20 @@ struct FF7Var {
 	};
 
 	FF7Var(quint8 b, quint8 a, VarSize size = Byte, bool w = false)
-		: bank(b), adress(a), size(size), write(w) {}
+		: bank(b), address(a), size(size), write(w) {}
 	quint8 bank;
-	quint8 adress;
+	quint8 address;
 	VarSize size;
 	bool write;
 };
 
 inline bool operator==(const FF7Var &v1, const FF7Var &v2) {
-	return v1.bank == v2.bank && v1.adress == v2.adress;
+	return v1.bank == v2.bank && v1.address == v2.address;
 }
 
 inline bool operator<(const FF7Var &v1, const FF7Var &v2) {
 	if(v1.bank == v2.bank) {
-		return v1.adress < v2.adress;
+		return v1.address < v2.address;
 	}
 	return v1.bank < v2.bank;
 }
@@ -152,7 +152,13 @@ public:
 	};
 
 	enum Operation {
-		None, Assign, BitAssign, Compare, BitCompare
+		None, Assign, BitAssign, Compare, BitCompare,
+		AssignNotEqual,
+		AssignLessThan, AssignLessThanEqual,
+		AssignGreaterThan, AssignGreaterThanEqual,
+		CompareNotEqual,
+		CompareLessThan, CompareLessThanEqual,
+		CompareGreaterThan, CompareGreaterThanEqual
 	};
 
 	enum Operator {
@@ -175,13 +181,17 @@ public:
 	inline bool hasParams() const { return size() > 1; }
 	inline const QString &name() const { return Opcode::names[id()]; }
 	virtual QByteArray toByteArray() const;
+	// Unserializable byte array (include OpcodeLABEL case)
+	virtual QByteArray serialize() const;
+	static Opcode *unserialize(const QByteArray &data);
+	inline virtual bool isExec() const { return false; }
 	inline virtual bool isJump() const { return false; }
 	inline virtual bool isLabel() const { return false; }
 	int subParam(int cur, int paramSize) const;
 
 	inline virtual bool isVoid() const { return false; }
 
-	bool searchVar(quint8 bank, quint8 adress, Operation op = None, int value=65536) const;
+	bool searchVar(quint8 bank, quint16 address, Operation op = None, int value=65536) const;
 
 	inline virtual int getGroupID() const { return -1; }
 	inline virtual void setGroupID(quint8 groupID) { Q_UNUSED(groupID) }
@@ -210,6 +220,7 @@ public:
 	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
 	static QString character(quint8 persoID);
+	static QString akao(quint8 akaoOp, bool *ok = NULL);
 
 	static const quint8 length[257];
 	static const QString names[257];
@@ -221,9 +232,8 @@ protected:
 	static QString _field(quint16 fieldID);
 	static QString _movie(quint8 movieID);
 	// static QString _objet3D(quint8 objet3D_ID);
-	static QString _akao(quint8 akaoOp);
 
-	static QString _bank(quint8 adress, quint8 bank);
+	static QString _bank(quint8 address, quint8 bank);
 	static QString _var(int value, quint8 bank);
 	static QString _var(int value, quint8 bank1, quint8 bank2);
 	static QString _var(int value, quint8 bank1, quint8 bank2, quint8 bank3);
@@ -259,6 +269,7 @@ public:
 	explicit OpcodeExec(const char *params, int size);
 	void setParams(const char *params, int size);
 	QByteArray params() const;
+	inline bool isExec() const { return true; }
 	inline virtual int getGroupID() const { return groupID; }
 	inline virtual void setGroupID(quint8 groupID) { this->groupID = groupID; }
 	quint8 groupID;
@@ -547,6 +558,7 @@ public:
 	explicit OpcodeLabel(quint32 label);
 	inline int id() const { return 0x100; } // fake id
 	QByteArray toByteArray() const { return QByteArray(); }
+	QByteArray serialize() const;
 	QString toString(Field *field) const;
 	inline bool isLabel() const  { return true; }
 	inline bool isVoid() const { return true; }

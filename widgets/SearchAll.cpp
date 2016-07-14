@@ -6,7 +6,7 @@
 SearchAll::SearchAll(Window *parent) :
 	QDialog(parent, Qt::Tool), _fieldArchive(0)
 {
-	setWindowTitle(tr("Rechercher tout"));
+	setWindowTitle(tr("Find All"));
 
 	resize(parent->width(), 400);
 	_resultList = new QTreeWidget(this);
@@ -25,7 +25,7 @@ SearchAll::SearchAll(Window *parent) :
 
 	connect(_resultList, SIGNAL(itemActivated(QTreeWidgetItem*,int)), SLOT(gotoResult(QTreeWidgetItem*)));
 
-	QAction *copy = new QAction(QIcon(":/images/copy.png"), tr("Copier"), this);
+	QAction *copy = new QAction(QIcon(":/images/copy.png"), tr("Copy"), this);
 	copy->setShortcut(QKeySequence("Ctrl+C"));
 	copy->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	connect(copy, SIGNAL(triggered()), SLOT(copySelected()));
@@ -45,7 +45,7 @@ void SearchAll::setScriptSearch()
 {
 	clear();
 	_resultList->setColumnCount(4);
-	_resultList->setHeaderLabels(QStringList() << tr("Groupe") << tr("Script") << tr("Ligne") << tr("Commande"));
+	_resultList->setHeaderLabels(QStringList() << tr("Group") << tr("Script") << tr("Lines") << tr("Instruction"));
 	_searchMode = ScriptSearch;
 }
 
@@ -53,7 +53,7 @@ void SearchAll::setTextSearch()
 {
 	clear();
 	_resultList->setColumnCount(2);
-	_resultList->setHeaderLabels(QStringList() << tr("Texte n°") << tr("Texte"));
+	_resultList->setHeaderLabels(QStringList() << tr("Text #") << tr("Text"));
 	_searchMode = TextSearch;
 }
 

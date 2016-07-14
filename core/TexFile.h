@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #include <QImage>
 #include "TextureFile.h"
 
-typedef struct {
+struct TexStruct {
 	// Header
 	quint32 version; // 1=FF7 | 2=FF8
 	quint32 unknown1; // 0
@@ -86,7 +86,7 @@ typedef struct {
 	quint32 unknown9;
 	quint32 unknown10;
 	quint32 unknown11; // only on ff8!
-} TexStruct;
+};
 
 class TexFile : public TextureFile
 {

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,24 +18,22 @@
 #ifndef APERCUBGLABEL_H
 #define APERCUBGLABEL_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class ApercuBGLabel : public QLabel
 {
 	Q_OBJECT
 public:
-	explicit ApercuBGLabel(QWidget *parent=0);
-	explicit ApercuBGLabel(const QString &name, QWidget *parent=0);
-	void setName(const QString &name);
+	explicit ApercuBGLabel(QWidget *parent = 0);
+signals:
+	void saveRequested();
 private:
-	void savePixmap();
-	QString _name;
-	bool showSave;
+	bool _showSave;
 protected:
-	void paintEvent(QPaintEvent *);
-	void enterEvent(QEvent *);
-	void leaveEvent(QEvent *);
-	void mousePressEvent(QMouseEvent *);
+	void paintEvent(QPaintEvent *e);
+	void enterEvent(QEvent *e);
+	void leaveEvent(QEvent *e);
+	void mousePressEvent(QMouseEvent *e);
 };
 
 #endif // APERCUBGDIALOG_H

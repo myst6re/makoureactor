@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,24 +18,35 @@
 #ifndef DEF_APERCUBG
 #define DEF_APERCUBG
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/Field.h"
 
 class ApercuBG : public QLabel
 {
 	Q_OBJECT
 public:
-	explicit ApercuBG(QWidget *parent=0);
-	void fill(Field *field, bool reload=false);
+	explicit ApercuBG(QWidget *parent = 0);
+	void fill(Field *field, bool reload = false);
 	void clear();
+	inline QSize minimumSizeHint() const {
+		return QSize(100, 100);
+	}
+	inline QSize sizeHint() const {
+		return QSize(300, 225);
+	}
 signals:
 	void clicked();
+public slots:
+	void drawBackground();
 private:
-	static QPixmap errorPixmap(int w, int h);
-	Field *field;
-	bool error;
+	static QPixmap errorPixmap(const QSize &size);
+	Field *_field;
+	QPixmap _background;
+	QSize _backgroundSize;
+	bool _error;
 protected:
-	void mouseReleaseEvent(QMouseEvent *);
+	void mouseReleaseEvent(QMouseEvent *e);
+	void resizeEvent(QResizeEvent *e);
 };
 
 #endif

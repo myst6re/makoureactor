@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -295,9 +295,11 @@ bool LgpToc::removeEntry(const QString &filePath)
 		return false; // file not found
 	}
 
+	bool ok = _header.remove(v, e) > 0;
+
 	delete e;
 
-	return _header.remove(v, e) > 0;
+	return ok;
 }
 
 bool LgpToc::isNameValid(const QString &filePath)

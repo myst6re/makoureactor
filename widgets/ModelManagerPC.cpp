@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -31,9 +31,9 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 
 	models->setContextMenuPolicy(Qt::ActionsContextMenu);
 	models->setSelectionMode(QAbstractItemView::ExtendedSelection);
-	cutModelAction = new QAction(QIcon(":/images/cut.png"), tr("Couper"), models);
-	copyModelAction = new QAction(QIcon(":/images/copy.png"), tr("Copier"), models);
-	pasteModelAction = new QAction(QIcon(":/images/paste.png"), tr("Coller"), models);
+	cutModelAction = new QAction(QIcon(":/images/cut.png"), tr("Cut"), models);
+	copyModelAction = new QAction(QIcon(":/images/copy.png"), tr("Copy"), models);
+	pasteModelAction = new QAction(QIcon(":/images/paste.png"), tr("Paste"), models);
 	models->addAction(cutModelAction);
 	models->addAction(copyModelAction);
 	models->addAction(pasteModelAction);
@@ -52,16 +52,16 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	toolBar2->addAction(QIcon(":/images/down.png"), QString(), this, SLOT(downAnim()));
 
 	modelAnims->setColumnCount(3);
-	modelAnims->setHeaderLabels(QStringList() << tr("Id") << tr("Animations") << tr("?"));
+	modelAnims->setHeaderLabels(QStringList() << tr("Id") << tr("Animation") << tr("?"));
 
 	QGridLayout *frameLayout = new QGridLayout(modelFrame);
-	frameLayout->addWidget(new QLabel(tr("Nom (non utilisé)")), 0, 0);
+	frameLayout->addWidget(new QLabel(tr("Name (unused)")), 0, 0);
 	frameLayout->addWidget(modelName, 0, 1);
-	frameLayout->addWidget(new QLabel(tr("Inconnu")), 1, 0);
+	frameLayout->addWidget(new QLabel(tr("Unknown")), 1, 0);
 	frameLayout->addWidget(modelUnknown, 1, 1);
-	frameLayout->addWidget(new QLabel(tr("Taille modèle")), 2, 0);
+	frameLayout->addWidget(new QLabel(tr("Model size")), 2, 0);
 	frameLayout->addWidget(modelScaleWidget, 2, 1);
-	frameLayout->addWidget(new QLabel(tr("Lumière")), 3, 0);
+	frameLayout->addWidget(new QLabel(tr("Light")), 3, 0);
 	frameLayout->addWidget(modelColorDisplay, 3, 1);
 	frameLayout->addWidget(modelColorLabel, 4, 1);
 	frameLayout->addWidget(toolBar2, 0, 2);
@@ -73,6 +73,7 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	layout->addWidget(toolBar1, 0, 0);
 	layout->addWidget(models, 1, 0);
 	layout->addWidget(modelFrame, 0, 1, 2, 4);
+	layout->setColumnStretch(1, 1);
 
 	adjustSize();
 
@@ -144,7 +145,7 @@ void ModelManagerPC::addModel()
 
 	if(charLgp->isOpen()) {
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
+		dialog.setWindowTitle(tr("Add a field model"));
 
 		QComboBox list(&dialog);
 		list.setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
@@ -218,7 +219,15 @@ void ModelManagerPC::delModel()
 
 	modelLoader()->removeModel(row);
 
-	delete item;
+	/* Delete a row will trigger currentItemChanged signal
+	 * before the list was really updated */
+	models->blockSignals(true);
+	delete models->takeTopLevelItem(row);
+	models->blockSignals(false);
+
+	models->setCurrentItem(models->topLevelItem(row));
+	// Trigger currentItemChanged manually
+	showModelInfos();
 
 	emit modified();
 }
@@ -363,7 +372,7 @@ void ModelManagerPC::addAnim()
 	if(charLgp->isOpen()) {
 		toolBar2->setEnabled(false);
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-		dialog.setWindowTitle(tr("Ajouter un modèle 3D"));
+		dialog.setWindowTitle(tr("Add a field model"));
 
 		QComboBox list(&dialog);
 		list.setEditable(true);
@@ -548,13 +557,13 @@ void ModelManagerPC::renameOKAnim(QTreeWidgetItem *item, int column)
 	int animID = currentAnimID(item);
 	if(animID < 0)		return;
 
-	if(column == 0) {
+	if(column == 1) {
 		QString text = item->text(1).left(256);
 		item->setText(1, text);
 
 		modelLoader()->setAName(modelID, animID, text);
 		emit modified();
-	} else if(column == 1) {
+	} else if(column == 2) {
 		bool ok;
 		int value = item->text(2).toInt(&ok);
 		if(ok) {

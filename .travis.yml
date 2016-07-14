@@ -1,0 +1,89 @@
+language: cpp
+
+os:
+  - linux
+  - osx
+
+install:
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         lsb_release -a
+      && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
+      && sudo apt-add-repository -y ppa:canonical-qt5-edgers/ubuntu1204-qt5
+      && sudo apt-get -qq update
+      && sudo apt-get -qq install -y g++-4.9 libc6-i386 freeglut3-dev qtbase5-dev
+      && export CXX="g++-4.9"
+      ;
+    else
+         brew update > /dev/null
+      && brew install homebrew/x11/freeglut
+      && brew install qt5
+      && chmod -R 755 /usr/local/opt/qt5/*
+      ;
+    fi
+
+before_script:
+  - if [ "${TRAVIS_OS_NAME}" != "linux" ]; then
+         QTDIR="/usr/local/opt/qt5"
+      && export PATH="$QTDIR/bin:$PATH"
+      ;
+    fi
+  - mkdir -p build
+  - cd build
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${WITH_QT4}" != "1" ]; then
+        qmake -qt=qt5 -config release ..
+        ;
+    else
+        qmake -config release ..
+        ;
+    fi
+
+script:
+  - make -j2
+
+before_deploy:
+  - DEPLOY_DIR="makoureactor-$(git describe --tags)-${TRAVIS_OS_NAME}64"
+  - export DEPLOY_ARCHIVE="$DEPLOY_DIR.tar.gz"
+  - mkdir -p "$DEPLOY_DIR"
+  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+         DEPLOY_BINARY="makoureactor.app"
+      && cp -r "$DEPLOY_BINARY" "$DEPLOY_DIR"
+      && cp ../*.qm "$DEPLOY_DIR/$DEPLOY_BINARY/Contents/MacOS"
+      && "$QTDIR/bin/macdeployqt" "$DEPLOY_DIR/$DEPLOY_BINARY"
+      ;
+    else
+         cp makoureactor "$DEPLOY_DIR"
+      && cp ../*.qm "$DEPLOY_DIR"
+      ;
+    fi
+  - tar -czf "$DEPLOY_ARCHIVE" "$DEPLOY_DIR"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "g4SNxnp5gaEg3KPXOsgEiAW1t1ObzDr+Nm9ZkQBvqpDwM6K5skfUL1FGiBpQeWRiaVYymbY1ukn+rIFH36vJWl1+MK+6YYS4EvLY6o+pgHXzqeiM/NeC4qd2HRzQxDo4T5Ox5tVzTavrDR+fOuo/iMolx/IfnQaJ+m/csTYYdm0="
+  file: "$DEPLOY_ARCHIVE"
+  skip_cleanup: true
+  on:
+    tags: true
+
+env:
+  global:
+    # COVERITY_SCAN_TOKEN
+    - secure: "lk7jEPh62LhXOWyT5UyGAKPxiskVyIBbHEtbnfKZZil2iJLec1f3+df1ADPajl1Ij2Yp4ZgWWcJsuN/+XkQJjXvgWyW2bi0K9ntrRCU4t3h8blodblaXvpssbz5fj4TzI8HnfBet4NXfLLdAUHBcLOLU01xb+LWaY/4rX2PlKBY="
+  matrix:
+    - WITH_QT4=0
+    - WITH_QT4=1
+
+matrix:
+  exclude:
+    - os: osx
+      env: WITH_QT4=1
+
+addons:
+  coverity_scan:
+    project:
+      name: myst6re/makoureactor
+      description: Final Fantasy VII field archive editor
+    notification_email: myst6re@gmail.com
+    build_command: make -j2
+    branch_pattern: coverity_scan

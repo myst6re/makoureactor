@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ FieldModelLoaderPC *FieldPC::fieldModelLoader(bool open)
 	//	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
 	//	Data::currentAnimNames = &fieldModelLoader->model_anims;
 	//}
-	return (FieldModelLoaderPC *)Field::fieldModelLoader(open);
+	return static_cast<FieldModelLoaderPC *>(Field::fieldModelLoader(open));
 }
 
 FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate, bool open)
@@ -107,9 +107,8 @@ FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate
 		modelNameToId.insert(hrc.toLower(), localModelID);
 	}
 
-	FieldModelFilePC *fieldModel = (FieldModelFilePC *)fieldModelPtr(localModelID);
-	if(!fieldModel)		addFieldModel(localModelID, fieldModel = new FieldModelFilePC());
-	if(open && fieldModel->isEmpty()) {
+	FieldModelFilePC *fieldModel = new FieldModelFilePC();
+	if(open) {
 		fieldModel->load(hrc, a, animate);
 	}
 	return fieldModel;

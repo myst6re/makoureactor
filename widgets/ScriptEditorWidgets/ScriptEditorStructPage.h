@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #ifndef DEF_SCRIPTEDITORSTRUCTPAGE
 #define DEF_SCRIPTEDITORSTRUCTPAGE
 
-#include <QtGui>
+#include <QtWidgets>
 #include "ScriptEditorView.h"
 
 class ScriptEditorReturnToPage : public ScriptEditorView
@@ -86,7 +86,7 @@ class ScriptEditorJumpPageInterface : public ScriptEditorView
 	Q_OBJECT
 public:
 	ScriptEditorJumpPageInterface(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0) :
-		ScriptEditorView(field, grpScript, script, opcodeID, parent) {}
+		ScriptEditorView(field, grpScript, script, opcodeID, parent), label(0) {}
 	virtual bool needsLabel() const=0;
 protected:
 	void fillLabelList(bool jumpBack=false);

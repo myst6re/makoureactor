@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -53,9 +53,9 @@ void TextPreview::fillNames()
 			dataNames.replace(i, customName);
 		}
 	}
-	dataNames.replace(9, tr("Membre 1"));
-	dataNames.replace(10, tr("Membre 2"));
-	dataNames.replace(11, tr("Membre 3"));
+	dataNames.replace(9, tr("Member 1"));
+	dataNames.replace(10, tr("Member 2"));
+	dataNames.replace(11, tr("Member 3"));
 //	bool jp = Config::value("jp_txt", false).toBool();
 //	Config::setValue("jp_txt", false);
 
@@ -222,12 +222,11 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 	int line=0, width=baseWidth - 3, height=25, size=ff7Text.size(), maxW=0, maxH=0;
 	pagesPos.clear();
 	pagesPos.append(0);
-	quint8 caract;
 	bool jp = Config::value("jp_txt", false).toBool(), spaced_characters=false;
 	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt();
 
 	for(int i=0 ; i<size ; ++i) {
-		caract = (quint8)ff7Text.at(i);
+		quint8 caract = (quint8)ff7Text.at(i);
 		if(caract==0xff) break;
 		switch(caract) {
 		case 0xe8: // New Page
@@ -453,7 +452,8 @@ void TextPreview::drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTo
 
 bool TextPreview::drawTextArea(QPainter *painter)
 {
-	bool blink = false, use_timer = false, jp = Config::value("jp_txt", false).toBool();
+	bool blink = false, useTimer = false,
+	     jp = Config::value("jp_txt", false).toBool();
 	FF7Window ff7Window = getWindow();
 	spaced_characters = false;
 	multicolor = -1;
@@ -478,24 +478,20 @@ bool TextPreview::drawTextArea(QPainter *painter)
 
 	setFontColor(WHITE);
 
-	int charId, charId2, line=0, x = 8, y = 6;
+	int line = 0, x = 8, y = 6;
 	int start = pagesPos.value(_currentPage, 0), size = ff7Text.size();
 
-	for(int i=start ; i<size ; ++i)
-	{
-		charId = (quint8)ff7Text.at(i);
+	for(int i=start ; i<size ; ++i) {
+		int charId = (quint8)ff7Text.at(i);
 
-		if(charId==0xff || charId==0xe8 || charId==0xe9)//end | NewPage | NewPage2
+		if(charId==0xff || charId==0xe8 || charId==0xe9) { //end | NewPage | NewPage2
 			break;
-		else if(charId==0xe7)//\n
-		{
+		} else if(charId==0xe7) { //\n
 			++line;
 			x = 8;
 			y += 16;
 			if(y > maxH-16)	break;
-		}
-		else if(charId<0xe7)
-		{
+		} else if(charId<0xe7) {
 			if(!jp) {
 				if(charId==0xe0)//{CHOICE}
 					x += spaced_characters ? spacedCharsW * 10 : 30;
@@ -511,21 +507,15 @@ bool TextPreview::drawTextArea(QPainter *painter)
 			} else {
 				letter(&x, &y, charId, painter, 1);
 			}
-		}
-		else if(charId>=0xea && charId<=0xf5)
-		{
+		} else if(charId>=0xea && charId<=0xf5) {
 			word(&x, &y, names.at(charId-0xea), painter);
-		}
-		else if(charId>=0xf6 && charId<=0xf9)
-		{
+		} else if(charId>=0xf6 && charId<=0xf9) {
 			painter->drawPixmap(x, y - 2, getIconImage(charId-0xf6));
 			x += 17;
-		}
-		else
-		{
+		} else {
 			++i;
 			if(i >= size)	break;
-			charId2 = (quint8)ff7Text.at(i);
+			int charId2 = (quint8)ff7Text.at(i);
 
 			switch(charId) {
 			case 0xfa:
@@ -545,11 +535,11 @@ bool TextPreview::drawTextArea(QPainter *painter)
 				if(charId2 >= 0xd2 && charId2 <= 0xd9) {
 					setFontColor(charId2-0xd2, blink && !curFrame);
 				} else if(charId2 == 0xda) {
-					use_timer = true;
+					useTimer = true;
 					blink = !blink;
 					setFontColor(fontColor, blink && !curFrame);
 				} else if(charId2 == 0xdb) {
-					use_timer = true;
+					useTimer = true;
 					if(multicolor == -1) {
 						savFontColor = fontColor;
 						multicolor = startMulticolor;
@@ -581,14 +571,13 @@ bool TextPreview::drawTextArea(QPainter *painter)
 //		painter->drawPixmap(10, 11+16*ff7Window.ask_first, QPixmap(":/images/cursor.png"));
 //	}
 
-	return use_timer;
+	return useTimer;
 }
 
-void TextPreview::paintEvent(QPaintEvent */* event */)
+void TextPreview::paintEvent(QPaintEvent *event)
 {
-//	qDebug() << "TextPreview::paintEvent()";
+	Q_UNUSED(event);
 
-	bool use_timer = false;
 	QPixmap pix(width(), height());
 	QPainter painter(&pix);
 
@@ -597,7 +586,7 @@ void TextPreview::paintEvent(QPaintEvent */* event */)
 	painter.setBrush(Qt::black);
 	painter.drawRect(0, 0, width(), height());
 
-	use_timer = drawTextArea(&painter);
+	bool useTimer = drawTextArea(&painter);
 
 	painter.end();
 
@@ -615,10 +604,10 @@ void TextPreview::paintEvent(QPaintEvent */* event */)
 	painter2.end();
 
 	if(!timer.isActive()) {
-		if(use_timer)	timer.start(100);
+		if(useTimer)	timer.start(100);
 	}
 	else {
-		if(!use_timer)	timer.stop();
+		if(!useTimer)	timer.stop();
 	}
 }
 

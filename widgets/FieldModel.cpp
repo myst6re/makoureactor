@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -33,16 +33,17 @@ void FieldModel::clear()
 {
 	currentFrame = 0;
 	data = 0;
-	updateTimer();
+	timer.stop();
 //	glClearColor(0.0,0.0,0.0,0.0);
 	updateGL();
 }
 
-void FieldModel::setFieldModelFile(FieldModelFile *fieldModel)
+void FieldModel::setFieldModelFile(FieldModelFile *fieldModel, int animID)
 {
 	currentFrame = 0;
 	data = fieldModel;
-	if(!data->isEmpty()) {
+	animationID = animID;
+	if(data && data->isValid()) {
 		updateGL();
 		updateTimer();
 	}
@@ -244,7 +245,7 @@ void FieldModel::resizeGL(int width, int height)
 
 void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int animationID, int currentFrame, float scale)
 {
-	if(!data || data->isEmpty() || scale == 0.0f) {
+	if(!data || !data->isValid() || scale == 0.0f) {
 		return;
 	}
 
@@ -314,9 +315,15 @@ void FieldModel::paintGL()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	if(!data || data->isEmpty())	return;
+	if(!data || !data->isValid())	return;
 
-	resizeGL(width(), height()); // hack (?)
+	//scale the view port if the window manager is scaling
+	int scale = 1;
+	if(qApp->desktop()->physicalDpiX() > 140) {
+		scale = 2;
+	}
+
+	resizeGL(width() * scale, height() * scale); // hack (?)
 
 	gluLookAt(distance,0,0,0,0,0,0,0,1);
 //	glTranslatef(distance, 0.0f, 0.0f);
@@ -370,8 +377,11 @@ void FieldModel::mousePressEvent(QMouseEvent *event)
 
 void FieldModel::animate()
 {
-	if(data && !data->isEmpty() && isVisible()) {
-		currentFrame = (currentFrame + 1) % frameCount();
-		updateGL();
+	if(data && data->isValid() && isVisible()) {
+		int count = frameCount();
+		if(count > 0) {
+			currentFrame = (currentFrame + 1) % count;
+			updateGL();
+		}
 	}
 }

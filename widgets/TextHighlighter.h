@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #ifndef TEXTHIGHLIGHTER_H
 #define TEXTHIGHLIGHTER_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class TextHighlighter : public QSyntaxHighlighter
 {
@@ -29,8 +29,7 @@ protected:
 	void highlightBlock(const QString &text);
 
 private:
-	struct HighlightingRule
-	{
+	struct HighlightingRule {
 		QRegExp pattern;
 		QColor color;
 	};

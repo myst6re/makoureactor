@@ -15,9 +15,9 @@ void ScriptEditorMoviePage::build()
 	buildMovieList(0);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Disque")), 0, 0);
+	layout->addWidget(new QLabel(tr("Disc")), 0, 0);
 	layout->addWidget(discList, 0, 1);
-	layout->addWidget(new QLabel(tr("Vidéo")), 1, 0);
+	layout->addWidget(new QLabel(tr("Video")), 1, 0);
 	layout->addWidget(movieList, 1, 1);
 	layout->setRowStretch(2, 1);
 	layout->setColumnStretch(2, 1);
@@ -29,7 +29,7 @@ void ScriptEditorMoviePage::build()
 void ScriptEditorMoviePage::buildDiscList()
 {
 	for(int discID = 1 ; discID <= 3 ; ++discID) {
-		discList->addItem(tr("Disque %1").arg(discID));
+		discList->addItem(tr("Disc %1").arg(discID));
 	}
 }
 

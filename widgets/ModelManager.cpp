@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -22,14 +22,14 @@
 ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	QDialog(parent, Qt::Tool), _field(0), fieldModelLoader(0)
 {
-	setWindowTitle(tr("Modèles 3D"));
+	setWindowTitle(tr("Field Models"));
 
 	QFont font;
 	font.setPointSize(8);
 
 	models = new QTreeWidget();
 	models->setIndentation(0);
-	models->setHeaderLabel(tr("Modèles 3D"));
+	models->setHeaderLabel(tr("Field Models"));
 	models->setFixedWidth(120);
 	models->setColumnCount(1);
 
@@ -43,6 +43,7 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	modelScaleWidget->setRange(0, 4096);
 	modelColorDisplay = new ColorDisplay();
 	modelColorLabel = new QLabel();
+
 	QPalette modelColorLabelPalette = modelColorLabel->palette();
 	modelColorLabelPalette.setColor(QPalette::Active, QPalette::WindowText,
 									modelColorLabelPalette.color(QPalette::Disabled, QPalette::WindowText));
@@ -52,7 +53,7 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 
 	modelAnims = new QTreeWidget();
 	modelAnims->setIndentation(0);
-	modelAnims->setFixedWidth(140);
+	modelAnims->setFixedWidth(142);
 	modelAnims->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	if(Config::value("OpenGL", true).toBool()) {
@@ -105,15 +106,15 @@ void ModelManager::fill(Field *field, bool reload)
 		models->setCurrentItem(models->topLevelItem(0));
 	}
 	models->setFocus();
+
+	modelFrame->setEnabled(models->topLevelItemCount() != 0);
 }
 
 void ModelManager::fillModelList()
 {
 	models->blockSignals(true);
-	QTreeWidgetItem *item;
-	foreach(const QStringList &name, modelNames())
-	{
-		item = new QTreeWidgetItem(name);
+	foreach(const QStringList &name, modelNames()) {
+		QTreeWidgetItem *item = new QTreeWidgetItem(name);
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 		models->addTopLevelItem(item);
 	}
@@ -147,8 +148,9 @@ int ModelManager::currentAnimID(QTreeWidgetItem *item) const
 	return modelAnims->indexOfTopLevelItem(item);
 }
 
-void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *)
+void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous)
 {
+	Q_UNUSED(previous);
 	if(item == NULL) {
 		modelFrame->setEnabled(false);
 		return;
@@ -210,7 +212,6 @@ void ModelManager::showModel(QTreeWidgetItem *item)
 			modelPreview->clear();
 			return;
 		}
-//		qDebug() << "showModel()" << item->text(0);
 		modelPreview->setFieldModelFile(modelData(item));
 	}
 }

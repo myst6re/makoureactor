@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 #include "OpcodeList.h"
 #include "ScriptEditor.h"
 #include "core/Config.h"
+#include "core/Clipboard.h"
 
 OpcodeList::OpcodeList(QWidget *parent) :
 	QTreeWidget(parent), isInit(false),
@@ -28,55 +29,58 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	setAutoScroll(false);
 	setIconSize(QSize(32,11));
 	setAlternatingRowColors(true);
-	header()->setStretchLastSection(false);
-	header()->setResizeMode(0, QHeaderView::ResizeToContents);
 	setExpandsOnDoubleClick(false);
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	setSelectionMode(QAbstractItemView::ExtendedSelection);
-	
-	edit_A = new QAction(tr("Modifier"), this);
+	setTextElideMode(Qt::ElideNone);
+
+	edit_A = new QAction(tr("Edit"), this);
 	edit_A->setShortcut(QKeySequence(Qt::Key_Return));
 	edit_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	edit_A->setEnabled(false);
-	add_A = new QAction(QIcon(":/images/plus.png"), tr("Ajouter"), this);
+	add_A = new QAction(QIcon(":/images/plus.png"), tr("Add"), this);
 	add_A->setShortcut(QKeySequence("Ctrl++"));
 	add_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
-	del_A = new QAction(QIcon(":/images/minus.png"), tr("Supprimer"), this);
+	del_A = new QAction(QIcon(":/images/minus.png"), tr("Delete"), this);
 	del_A->setShortcut(QKeySequence(Qt::Key_Delete));
 	del_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	del_A->setEnabled(false);
-	cut_A = new QAction(QIcon(":/images/cut.png"), tr("Couper"), this);
+	cut_A = new QAction(QIcon(":/images/cut.png"), tr("Cut"), this);
 	cut_A->setShortcut(QKeySequence("Ctrl+X"));
 	cut_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	cut_A->setEnabled(false);
-	copy_A = new QAction(QIcon(":/images/copy.png"), tr("Copier"), this);
+	copy_A = new QAction(QIcon(":/images/copy.png"), tr("Copy"), this);
 	copy_A->setShortcut(QKeySequence("Ctrl+C"));
 	copy_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	copy_A->setEnabled(false);
-	paste_A = new QAction(QIcon(":/images/paste.png"), tr("Coller"), this);
+	copyText_A = new QAction(QIcon(":/images/copy.png"), tr("Copy text"), this);
+	copyText_A->setShortcut(QKeySequence("Ctrl+Shift+C"));
+	copyText_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+	copyText_A->setEnabled(false);
+	paste_A = new QAction(QIcon(":/images/paste.png"), tr("Paste"), this);
 	paste_A->setShortcut(QKeySequence("Ctrl+V"));
 	paste_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	paste_A->setEnabled(false);
-	up_A = new QAction(QIcon(":/images/up.png"), tr("Déplacer vers le haut"), this);
+	up_A = new QAction(QIcon(":/images/up.png"), tr("Up"), this);
 	up_A->setShortcut(QKeySequence("Shift+Up"));
 	up_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	up_A->setEnabled(false);
-	down_A = new QAction(QIcon(":/images/down.png"), tr("Déplacer vers le bas"), this);
+	down_A = new QAction(QIcon(":/images/down.png"), tr("Down"), this);
 	down_A->setShortcut(QKeySequence("Shift+Down"));
 	down_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	down_A->setEnabled(false);
-	expand_A = new QAction(tr("Étendre l'arbre"), this);
-	undo_A = new QAction(QIcon(":/images/undo.png"), tr("Annuler"), this);
+	expand_A = new QAction(tr("Expand the tree"), this);
+	undo_A = new QAction(QIcon(":/images/undo.png"), tr("Undo"), this);
 	undo_A->setShortcut(QKeySequence::Undo);
 	undo_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	undo_A->setEnabled(false);
-	redo_A = new QAction(QIcon(":/images/redo.png"), tr("Refaire"), this);
+	redo_A = new QAction(QIcon(":/images/redo.png"), tr("Redo"), this);
 	redo_A->setShortcut(QKeySequence::Redo);
 	redo_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	redo_A->setEnabled(false);
-	text_A = new QAction(tr("Modifier texte"), this);
+	text_A = new QAction(tr("Edit text"), this);
 	text_A->setVisible(false);
-	goto_A = new QAction(tr("Aller au label"), this);
+	goto_A = new QAction(this);
 	goto_A->setVisible(false);
 
 	connect(edit_A, SIGNAL(triggered()), SLOT(scriptEditor()));
@@ -84,6 +88,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	connect(del_A, SIGNAL(triggered()), SLOT(del()));
 	connect(cut_A, SIGNAL(triggered()), SLOT(cut()));
 	connect(copy_A, SIGNAL(triggered()), SLOT(copy()));
+	connect(copyText_A, SIGNAL(triggered()), SLOT(copyText()));
 	connect(paste_A, SIGNAL(triggered()), SLOT(paste()));
 	connect(up_A, SIGNAL(triggered()), SLOT(up()));
 	connect(down_A, SIGNAL(triggered()), SLOT(down()));
@@ -103,6 +108,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	addAction(separator);
 	addAction(cut_A);
 	addAction(copy_A);
+	addAction(copyText_A);
 	addAction(paste_A);
 	separator = new QAction(this);
 	separator->setSeparator(true);
@@ -116,27 +122,27 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	addAction(redo_A);
 
 	QWidget *help = new QWidget;
-	_help = new QLabel(tr("Alt + clic pour aller au label"));
+	_help = new QLabel;
 	_help->hide();
 	QHBoxLayout *helpLayout = new QHBoxLayout(help);
 	helpLayout->addStretch();
 	helpLayout->addWidget(_help);
 	helpLayout->setContentsMargins(QMargins());
 	
-	_toolBar = new QToolBar(tr("Édition du &script"));
+	_toolBar = new QToolBar(tr("&Script editor"));
 	_toolBar->setIconSize(QSize(14,14));
 	_toolBar->setFloatable(false);
 	_toolBar->setAllowedAreas(Qt::NoToolBarArea);
 	_toolBar->setMovable(false);
 	_toolBar->addAction(add_A);
-	add_A->setStatusTip(tr("Ajouter une commande"));
+	add_A->setStatusTip(tr("Add line"));
 	_toolBar->addAction(del_A);
-	del_A->setStatusTip(tr("Supprimer une commande"));
+	del_A->setStatusTip(tr("Remove line"));
 	_toolBar->addSeparator();
 	_toolBar->addAction(up_A);
-	up_A->setStatusTip(tr("Monter une commande"));
+	up_A->setStatusTip(tr("Move up"));
 	_toolBar->addAction(down_A);
-	down_A->setStatusTip(tr("Descendre une commande"));
+	down_A->setStatusTip(tr("Move down"));
 	_toolBar->addSeparator();
 	_toolBar->addAction(expand_A);
 	_toolBar->addAction(text_A);
@@ -156,16 +162,16 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(scriptEditor()));
 	connect(this, SIGNAL(itemSelectionChanged()), SLOT(itemSelected()));
 	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(evidence(QTreeWidgetItem*,QTreeWidgetItem*)));
+	connect(QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)), SLOT(adjustPasteAction()));
 }
 
-OpcodeList::~OpcodeList()
+void OpcodeList::adjustPasteAction()
 {
-	qDeleteAll(opcodeCopied);
+	paste_A->setEnabled(Clipboard::instance()->hasFf7FieldScriptOpcodes());
 }
 
 void OpcodeList::clear()
 {
-	saveExpandedItems();
 	enableActions(false);
 	QTreeWidget::clear();
 	clearHist();
@@ -177,8 +183,6 @@ void OpcodeList::setEnabled(bool enabled)
 	QTreeWidget::setEnabled(enabled);
 	enableActions(enabled);
 }
-
-QToolBar *OpcodeList::toolBar() { return _toolBar; }
 
 void OpcodeList::enableActions(bool enabled)
 {
@@ -235,8 +239,18 @@ void OpcodeList::itemSelected()
 		break;
 	}
 
-	goto_A->setVisible(opcode->isJump());
-	_help->setVisible(opcode->isJump());
+	bool visible = true;
+	if(opcode->isJump()) {
+		goto_A->setText(tr("Goto label"));
+		_help->setText(tr("Alt + Click to go to the label"));
+	} else if(opcode->isExec()) {
+		goto_A->setText(tr("Goto script"));
+		_help->setText(tr("Alt + Click to go to the script"));
+	} else {
+		visible = false;
+	}
+	goto_A->setVisible(visible);
+	_help->setVisible(visible);
 }
 
 void OpcodeList::upDownEnabled()
@@ -247,6 +261,7 @@ void OpcodeList::upDownEnabled()
 		del_A->setEnabled(false);
 		cut_A->setEnabled(false);
 		copy_A->setEnabled(false);
+		copyText_A->setEnabled(false);
 		up_A->setEnabled(false);
 		down_A->setEnabled(false);
 	}
@@ -256,6 +271,7 @@ void OpcodeList::upDownEnabled()
 		del_A->setEnabled(script && !script->isEmpty());
 		cut_A->setEnabled(true);
 		copy_A->setEnabled(true);
+		copyText_A->setEnabled(true);
 		up_A->setEnabled(/* topLevelItemCount() > 1 && */ currentItem() != topLevelItem(0));
 		down_A->setEnabled(true/*  topLevelItemCount() > 1 && currentItem() != topLevelItem(topLevelItemCount()-1) */);
 	}
@@ -328,7 +344,6 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 		QList<quint16> indent;
 		QList<QTreeWidgetItem *> items;
 		QTreeWidgetItem *parentItem = 0;
-		int id;
 		quint16 opcodeID = 0;
 		QPixmap fontPixmap(":/images/chiffres.png");
 
@@ -344,7 +359,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 				}
 			}
 
-			id = curOpcode->id();
+			int id = curOpcode->id();
 
 			QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList(curOpcode->toString(field)));
 			item->setData(0, Qt::UserRole, opcodeID);
@@ -384,26 +399,28 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 			++opcodeID;
 		}
 	} else {
-		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList(tr("Si ce script est exécuté,\n considérez que c'est le dernier script non vide qui est exécuté")));
+		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList(tr("If this script is run,\n assume that the last non-empty script that runs")));
 		item->setIcon(0, QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation));
 		item->setFlags(Qt::NoItemFlags);
 		item->setData(0, Qt::UserRole, -2);
+	}
+
+	// Adjust items size
+	resizeColumnToContents(0);
+	if(header()->sectionSize(0) < viewport()->width()) {
+		header()->setMinimumSectionSize(viewport()->width());
 	}
 
 	scrollToTop();
 
 	enableActions(true);
 
-	if(header()->sectionSize(0) < width()) {
-		header()->setMinimumSectionSize(width() - 2);
-	}
-	
 	// edit_A->setEnabled(true);
 	add_A->setEnabled(true);
 	// del_A->setEnabled(!script->isEmpty());
 	// cut_A->setEnabled(true);
 	// copy_A->setEnabled(true);
-	paste_A->setEnabled(!opcodeCopied.isEmpty());
+	adjustPasteAction();
 	itemSelected();
 }
 
@@ -510,7 +527,9 @@ void OpcodeList::clearHist()
 
 void OpcodeList::undo()
 {
-	if(hists.isEmpty())		return;
+	if(hists.isEmpty()) {
+		return;
+	}
 
 	Historic hist = hists.pop();
 	undo_A->setEnabled(!hists.isEmpty());
@@ -571,7 +590,9 @@ void OpcodeList::undo()
 
 void OpcodeList::redo()
 {
-	if(restoreHists.isEmpty())		return;
+	if(restoreHists.isEmpty()) {
+		return;
+	}
 
 	Historic hist = restoreHists.pop();
 	redo_A->setEnabled(!restoreHists.isEmpty());
@@ -625,10 +646,12 @@ void OpcodeList::redo()
 
 void OpcodeList::scriptEditor(bool modify)
 {
-	if(!script)		return;
+	if(!script) {
+		return;
+	}
 
 	int opcodeID = selectedID();
-	if(opcodeID==-1) {
+	if(opcodeID == -1) {
 		modify = false;
 	}
 
@@ -636,15 +659,15 @@ void OpcodeList::scriptEditor(bool modify)
 
 	saveExpandedItems();
 
-	if(modify)
+	if(modify) {
 		oldVersion = Script::copyOpcode(script->opcode(opcodeID));
-	else
+	} else {
 		++opcodeID;
+	}
 
 	ScriptEditor editor(field, grpScript, script, opcodeID, modify, isInit, this);
-	
-	if(editor.exec()==QDialog::Accepted)
-	{
+
+	if(editor.exec() == QDialog::Accepted) {
 		fill();
 		scroll(opcodeID);
 		if(modify) {
@@ -667,13 +690,25 @@ void OpcodeList::scriptEditor(bool modify)
 
 void OpcodeList::del(bool totalDel)
 {
-	if(topLevelItemCount() == 0)	return;
+	if(topLevelItemCount() == 0) {
+		return;
+	}
 	QList<int> selectedIDs = this->selectedIDs();
-	if(selectedIDs.isEmpty())	return;
+	if(selectedIDs.isEmpty()) {
+		return;
+	}
 	QList<Opcode *> oldVersions;
 
-	if(totalDel && QMessageBox::warning(this, tr("Suppression"), tr("Voulez-vous vraiment supprimer %1 ?").arg(selectedIDs.size()==1 ? tr("la commande sélectionnée") : tr("les commandes sélectionnées")), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Cancel)
+	if(totalDel &&
+	        QMessageBox::warning(this, tr("Delete"),
+	                             tr("Are you sure you want to delete %1?")
+	                             .arg(selectedIDs.size()==1
+	                                  ? tr("the selected command")
+	                                  : tr("the selected commands")),
+	                             QMessageBox::Yes | QMessageBox::Cancel)
+	        == QMessageBox::Cancel) {
 		return;
+	}
 
 	saveExpandedItems();
 	
@@ -706,22 +741,32 @@ void OpcodeList::cut()
 
 void OpcodeList::copy()
 {
-	QList<int> selectedIDs = this->selectedIDs();
-	if(selectedIDs.isEmpty())	return;
+	QList<Opcode *> opcodeCopied;
+	foreach(int id, selectedIDs()) {
+		opcodeCopied.append(script->opcode(id));
+	}
 
+	if(!opcodeCopied.isEmpty()) {
+		Clipboard::instance()->setFF7FieldScriptOpcodes(opcodeCopied);
+		paste_A->setEnabled(true);
+	}
+}
+
+void OpcodeList::copyText()
+{
 	QMap<int, QTreeWidgetItem *> listeitems;
-	foreach(QTreeWidgetItem *item, selectedItems())
+	foreach(QTreeWidgetItem *item, selectedItems()) {
 		listeitems.insert(item->data(0, Qt::UserRole).toInt(), item);
+	}
 
 	QString copiedText;
 	QTreeWidgetItem *lastitem=NULL, *parentitem;
 	QStack<QTreeWidgetItem *> parentitems;
-	int indent=0;
-	foreach(QTreeWidgetItem *item, listeitems)
-	{
-		if(lastitem!=NULL) {
+	int indent = 0;
+	foreach(QTreeWidgetItem *item, listeitems) {
+		if(lastitem != NULL) {
 			parentitem = item->parent();
-			if(parentitem==lastitem) {
+			if(parentitem == lastitem) {
 				indent++;
 				parentitems.push(parentitem);
 			}
@@ -732,74 +777,74 @@ void OpcodeList::copy()
 				}
 			}
 
-			for(int i=0 ; i<indent ; ++i)
+			for(int i=0 ; i<indent ; ++i) {
 				copiedText.append('\t');
+			}
 		}
 
 		copiedText.append(item->text(0)).append('\n');
 		lastitem = item;
 	}
-	QApplication::clipboard()->setText(copiedText);
-
-	clearCopiedOpcodes();
-	foreach(const int &id, selectedIDs) {
-		opcodeCopied.append(Script::copyOpcode(script->opcode(id)));
+	if(!copiedText.isEmpty()) {
+		QApplication::clipboard()->setText(copiedText);
 	}
-
-	paste_A->setEnabled(true);
 }
 
 void OpcodeList::paste()
 {
-	saveExpandedItems();
-	QList<int> IDs;
-	int opcodeID = selectedID()+1, scrollID = opcodeID;
-	foreach(Opcode *Ocopied, opcodeCopied) {
-		IDs.append(opcodeID);
-		// TODO: label duplication case
-		script->insertOpcode(opcodeID++, Script::copyOpcode(Ocopied));
+	QList<Opcode *> pastedOpcodes = Clipboard::instance()->ff7FieldScriptOpcodes();
+	if(!pastedOpcodes.isEmpty()) {
+		saveExpandedItems();
+
+		QList<int> IDs;
+		int opcodeID = selectedID() + 1, i = opcodeID;
+
+		foreach (Opcode *opcode, pastedOpcodes) {
+			IDs.append(i);
+			// TODO: label duplication case
+			script->insertOpcode(i, opcode);
+			++i;
+		}
+
+		fill();
+		scroll(opcodeID);
+		emit changed();
+		changeHist(Add, IDs, QList<Opcode *>());
 	}
-
-	fill();
-	scroll(scrollID);
-	emit changed();
-	changeHist(Add, IDs, QList<Opcode *>());
 }
-
-void OpcodeList::up()	{	move(Script::Up);		}
-void OpcodeList::down() {	move(Script::Down);		}
 
 void OpcodeList::move(Script::MoveDirection direction)
 {
 	int opcodeID = selectedID();
-	if(opcodeID == -1)	return;
+	if(opcodeID == -1) {
+		return;
+	}
 	saveExpandedItems();
-	if(script->moveOpcode(opcodeID, direction))
-	{
+	if(script->moveOpcode(opcodeID, direction)) {
 		fill();
 		scroll(direction == Script::Down ? opcodeID+1 : opcodeID-1);
 		emit changed();
-		if(direction == Script::Down)
+		if(direction == Script::Down) {
 			changeHist(Down, opcodeID);
-		else
+		} else {
 			changeHist(Up, opcodeID);
+		}
+	} else {
+		setFocus();
 	}
-	else	setFocus();
-}
-
-void OpcodeList::clearCopiedOpcodes()
-{
-	qDeleteAll(opcodeCopied);
-	opcodeCopied.clear();
 }
 
 void OpcodeList::scroll(int id, bool focus)
 {
 	QTreeWidgetItem *item = findItem(id);
-	if(item==NULL)	return;
+	if(item == NULL) {
+		return;
+	}
 	setCurrentItem(item);
 	scrollToItem(item, QAbstractItemView::PositionAtTop);
-	if(focus)	setFocus();
+	if(focus) {
+		setFocus();
+	}
 }
 
 QTreeWidgetItem *OpcodeList::findItem(int id)
@@ -817,17 +862,20 @@ QTreeWidgetItem *OpcodeList::findItem(int id)
 
 int OpcodeList::selectedID()
 {
-	if(currentItem()==NULL)	return -1;
+	if(currentItem() == NULL) {
+		return -1;
+	}
 	return currentItem()->data(0, Qt::UserRole).toInt();
 }
 
 QList<int> OpcodeList::selectedIDs()
 {
-	QList<int> liste;
-	foreach(QTreeWidgetItem *item, selectedItems())
-		liste.append(item->data(0, Qt::UserRole).toInt());
-	qSort(liste);
-	return liste;
+	QList<int> list;
+	foreach(QTreeWidgetItem *item, selectedItems()) {
+		list.append(item->data(0, Qt::UserRole).toInt());
+	}
+	qSort(list);
+	return list;
 }
 
 int OpcodeList::selectedOpcode()
@@ -868,7 +916,7 @@ void OpcodeList::gotoLabel(QTreeWidgetItem *item)
 	Opcode *op = script->opcode(opcodeID);
 
 	if(op->isJump()) {
-		OpcodeJump *opJ = (OpcodeJump *)op;
+		OpcodeJump *opJ = static_cast<OpcodeJump *>(op);
 
 		if(!opJ->isBadJump()) {
 			int opcodeID = 0;
@@ -881,7 +929,15 @@ void OpcodeList::gotoLabel(QTreeWidgetItem *item)
 				++opcodeID;
 			}
 		}
-	}
+	} else if(op->isExec()) {
+		OpcodeExec *opE = static_cast<OpcodeExec *>(op);
+
+		emit gotoScript(opE->groupID, opE->scriptID + 1);
+	} /* else if(op->id() == Opcode::MAPJUMP) {
+		OpcodeMAPJUMP *opMJ = static_cast<OpcodeMAPJUMP *>(op);
+
+		emit gotoField(opMJ->fieldID); // FIXME: fieldID is not the same in the field list
+	} */
 }
 
 void OpcodeList::mouseReleaseEvent(QMouseEvent *event)

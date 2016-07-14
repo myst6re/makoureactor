@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,12 +18,9 @@
 #include "ScriptEditorGenericList.h"
 #include "Delegate.h"
 
-ScriptEditorGenericList::ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent)
-	: ScriptEditorView(field, grpScript, script, opcodeID, parent)
-{
-}
-
-ScriptEditorGenericList::~ScriptEditorGenericList()
+ScriptEditorGenericList::ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+    ScriptEditorView(field, grpScript, script, opcodeID, parent),
+    addButton(0), delButton(0), tableView(0), model(0)
 {
 }
 
@@ -43,9 +40,9 @@ void ScriptEditorGenericList::build()
 	tableView->setItemDelegate(delegate);
 	tableView->horizontalHeader()->setStretchLastSection(true);
 
-	addButton = new QPushButton(tr("Ajouter une ligne"),this);
+	addButton = new QPushButton(tr("Add a line"),this);
 	addButton->hide();
-	delButton = new QPushButton(tr("Effacer une ligne"),this);
+	delButton = new QPushButton(tr("Delete a line"),this);
 	delButton->hide();
 
 	QHBoxLayout *buttonLayout = new QHBoxLayout();
@@ -55,7 +52,7 @@ void ScriptEditorGenericList::build()
 	buttonLayout->setContentsMargins(QMargins());
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
-	layout->addWidget(new QLabel(tr("Paramètres :"), this));
+	layout->addWidget(new QLabel(tr("Arguments:"), this));
 	layout->addWidget(tableView);
 	layout->addStretch();
 	layout->addLayout(buttonLayout);
@@ -70,8 +67,9 @@ Opcode *ScriptEditorGenericList::opcode()
 {
 	bool isLabel;
 	QByteArray newOpcode = parseModel(&isLabel);
-	if(newOpcode.isEmpty())
+	if(newOpcode.isEmpty()) {
 		return opcodePtr();
+	}
 
 	if(isLabel) {
 		quint32 label;
@@ -96,21 +94,18 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 
 	QByteArray newOpcode;
 	quint8 byte, length, start;
-	
+
 	*isLabel = opcodePtr()->isLabel();
 	byte = opcodePtr()->id() & 0xFF;
-	// qDebug() << "byte= " << byte;
 	newOpcode.append((char)byte);
-	//Calcul longueur opcode
+	// Compute opcode length
 	length = 0;
 	start = 1;
 	
-	if(byte == 0x0F)//SPECIAL
-	{
+	if(byte == 0x0F) { // SPECIAL
 		quint8 byte2 = ((OpcodeSPECIAL *)opcodePtr())->opcode->id();
 		newOpcode.append((char)byte2);
-		switch(byte2)
-		{
+		switch(byte2) {
 		case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
 				length = 1;
 			break;
@@ -119,95 +114,60 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 			break;
 		}
 		start = 2;
-	}
-	else if(byte == 0x28)//KAWAI
-	{
+	} else if(byte == 0x28) { // KAWAI
 		quint8 byte3 = ((OpcodeKAWAI *)opcodePtr())->opcode->id();
-		// qDebug() << "byte3= " << byte3;
 		length = model->rowCount()+3;
-		// qDebug() << "length = " << length;
 		newOpcode.append((char)length);
 		newOpcode.append((char)byte3);
-		// qDebug() << "newOpcode= " << newOpcode.toHex();
-		for(quint8 i=0 ; i<length-3 ; ++i)
+		for(quint8 i=0 ; i<length-3 ; ++i) {
 			newOpcode.append(model->item(i, 1)->text().toUInt());
-		// qDebug() << "newOpcode= " << newOpcode.toHex();
+		}
 		return newOpcode;
 	}
-	
-	// qDebug() << "byte= " << byte;
+
 	length += Opcode::length[opcodePtr()->id()];
-	// qDebug() << "length= " << length;
 	newOpcode.append(QByteArray(length-start, '\x0'));
-	// qDebug() << "newOpcode= " << newOpcode.toHex();
-	int paramSize, paramType, cur = 8, departBA, tailleBA, departLocal;
 	QList<int> paramTypes = this->paramTypes(opcodePtr()->id());
-	int value;
-	
-	if(!paramTypes.isEmpty())
-	{
-		for(quint8 i=0 ; i<paramTypes.size() ; ++i)
-		{
-			// qDebug() << "i= " << i;
-			paramType = paramTypes.at(i);
-			// qDebug() << "paramType= " << paramName(paramType);
-			value = model->data(model->index(i, 1), Qt::EditRole).toInt();
-			// qDebug() << "value= " << value;
-			// qDebug() << "data(Qt::DisplayRole)= " << model->data(model->index(i, 1), Qt::DisplayRole);
-			// qDebug() << "data(Qt::EditRole)= " << model->data(model->index(i, 1), Qt::EditRole);
-			// qDebug() << "data(Qt::UserRole)= " << model->data(model->index(i, 1), Qt::UserRole);
-			// qDebug() << "data(Qt::UserRole+1)= " << model->data(model->index(i, 1), Qt::UserRole+1);
-			// qDebug() << "data(Qt::UserRole+2)= " << model->data(model->index(i, 1), Qt::UserRole+2);
-			
-			paramSize = this->paramSize(paramType);
-			// qDebug() << "paramSize= " << paramSize;
-			departBA = cur/8;
-			// qDebug() << "departBA= " << departBA;
-			if(paramSize%8 !=0)
-				tailleBA = paramSize/8+1;
-			else
-				tailleBA = paramSize/8;
-			// qDebug() << "tailleBA= " << tailleBA;
-			
-			if(paramSize < 8)
-			{
-				departLocal = cur%8;
-				// qDebug() << "departLocal= " << departLocal;
-				newOpcode[departBA] = (char)((quint8)newOpcode.at(departBA) | (value << (8-paramSize-departLocal)));
-				// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
+
+	if(!paramTypes.isEmpty()) {
+		int cur = 8;
+		for(quint8 i=0 ; i<paramTypes.size() ; ++i) {
+			int paramType = paramTypes.at(i),
+			    value = model->data(model->index(i, 1), Qt::EditRole).toInt();
+
+			int paramSize = this->paramSize(paramType);
+			int startBA = cur / 8, sizeBA;
+			if(paramSize % 8 != 0) {
+				sizeBA = paramSize / 8 + 1;
+			} else {
+				sizeBA = paramSize / 8;
 			}
-			else if(paramSize == 8)
-			{
-				newOpcode[departBA] = (char)(value & 0xFF);
-				// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
-			}
-			else
-			{
-				for(int j=0 ; j<tailleBA ; j++)
-				{
-					newOpcode[departBA+j] = (char)((value>>(j*8)) & 0xFF);
-					// qDebug() << "newOpcode[" << departBA << "]=" << QString("%1").arg((quint8)newOpcode[departBA],8,2,QChar('0'));
+
+			if(paramSize < 8) {
+				int startLocal = cur % 8;
+				newOpcode[startBA] = (char)((quint8)newOpcode.at(startBA) | (value << (8-paramSize-startLocal)));
+			} else if(paramSize == 8) {
+				newOpcode[startBA] = (char)(value & 0xFF);
+			} else {
+				for(int j=0 ; j<sizeBA ; j++) {
+					newOpcode[startBA+j] = (char)((value>>(j*8)) & 0xFF);
 				}
 			}
-			// qDebug() << "newOpcode= " << newOpcode.toHex();
-			
+
 			cur += paramSize;
-			// qDebug() << "cur= " << cur;
+		}
+	} else {
+		for(quint8 i=start ; i<length ; ++i) {
+			newOpcode[i] = model->item(i-start, 1)->text().toUInt();
 		}
 	}
-	else
-	{
-		for(quint8 i=start ; i<length ; ++i)
-			newOpcode[i] = model->item(i-start, 1)->text().toUInt();
-	}
-	
+
 	return newOpcode;
 }
 
 void ScriptEditorGenericList::addParam()
 {
-	if(model->rowCount()<252)
-	{
+	if(model->rowCount() < 252) {
 		addRow(0, 0, 255, inconnu);
 		emit opcodeChanged();
 	}
@@ -225,13 +185,13 @@ void ScriptEditorGenericList::addRow(int value, int minValue, int maxValue, int 
 	QStandardItem *standardItem;
 	standardItem = new QStandardItem(paramName(type));
 	standardItem->setEditable(false);
-	items << standardItem;
+	items.append(standardItem);
 	
 	standardItem = new QStandardItem(QString("%1").arg(value));
 	standardItem->setData(minValue, Qt::UserRole);
 	standardItem->setData(maxValue, Qt::UserRole+1);
 	standardItem->setData(type, Qt::UserRole+2);
-	items << standardItem;
+	items.append(standardItem);
 	model->appendRow(items);
 }
 
@@ -246,26 +206,22 @@ void ScriptEditorGenericList::fillModel()
 	
 	if(opcodePtr()->isLabel()) {
 		addRow(((OpcodeLabel *)opcodePtr())->label(), 0, (int)pow(2, 31)-1, label);
-	}
-	else if(paramTypes.isEmpty())
-	{
+	} else if(paramTypes.isEmpty()) {
 		int start = 0;
-		if(opcodePtr()->id() == 0x0F)//SPECIAL
+		if(opcodePtr()->id() == 0x0F) { //SPECIAL
 			start = 1;
-		if(opcodePtr()->id() == 0x28)//KAWAI
-		{
+		}
+		if(opcodePtr()->id() == 0x28) { //KAWAI
 			start = 2;
 			addButton->show();
 			delButton->show();
 		}
 		const QByteArray params = opcodePtr()->params();
-		for(int i=start ; i<params.size() ; ++i)
+		for(int i=start ; i<params.size() ; ++i) {
 			addRow((quint8)params.at(i), 0, 255, inconnu);
-	}
-	else
-	{
-		for(quint8 i=0 ; i<paramTypes.size() ; ++i)
-		{
+		}
+	} else {
+		for(quint8 i=0 ; i<paramTypes.size() ; ++i) {
 			paramType = paramTypes.at(i);
 			paramSize = this->paramSize(paramType);
 			value = opcodePtr()->subParam(cur, paramSize);
@@ -273,11 +229,10 @@ void ScriptEditorGenericList::fillModel()
 			if(paramIsSigned(paramType)) {
 				maxValue = (int)pow(2, paramSize-1)-1;
 				minValue = -maxValue-1;
-				if(value>maxValue)
+				if(value>maxValue) {
 					value -= (int)pow(2, paramSize);
-			}
-			else
-			{
+				}
+			} else {
 				maxValue = (int)pow(2, paramSize)-1;
 				minValue = 0;
 			}			
@@ -290,8 +245,7 @@ void ScriptEditorGenericList::fillModel()
 QList<int> ScriptEditorGenericList::paramTypes(int id)
 {
 	QList<int> paramTypes;
-	switch(id)
-	{
+	switch(id) {
 	//case 0x00:break;
 	case 0x01:case 0x02:case 0x03:
 		paramTypes<<group_id<<priorite<<script_id;break;
@@ -544,7 +498,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<field_id;break;
 	//case 0xD9:break;
 	case 0xDA:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<word<<word<<word<<word<<word;break;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<akao<<word<<word<<word<<word<<word;break;
 	case 0xDB:
 		paramTypes<<boolean;break;
 	case 0xDC:
@@ -572,7 +526,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 	case 0xF1:
 		paramTypes<<bank<<bank<<sound_id<<byte;break;
 	case 0xF2:
-		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<byte<<byte<<word<<word<<word<<word;break;
+		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<akao<<byte<<word<<word<<word<<word;break;
 	case 0xF5:
 		paramTypes<<boolean;break;
 	//case 0xF7://TODO
@@ -597,8 +551,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 
 int ScriptEditorGenericList::paramSize(int type)
 {
-	switch(type)
-	{
+	switch(type) {
 	case label:				return 32;
 	case color:				return 24;
 	case word:
@@ -625,8 +578,7 @@ int ScriptEditorGenericList::paramSize(int type)
 
 bool ScriptEditorGenericList::paramIsSigned(int type)
 {
-	switch(type)
-	{
+	switch(type) {
 	case sword:
 	case coord_x:
 	case coord_y:
@@ -637,56 +589,56 @@ bool ScriptEditorGenericList::paramIsSigned(int type)
 
 QString ScriptEditorGenericList::paramName(int type)
 {
-	switch(type)
-	{
-	case word:				return tr("Entier long");
-	case sword:				return tr("Entier long signé");
-	case coord_x:			return tr("Coordonnée X");
-	case coord_y:			return tr("Coordonnée Y");
-	case coord_z:			return tr("Coordonnée Z");
-	case field_id:			return tr("Écran");
-	case tuto_id:			return tr("Tutoriel");
-	case personnage_id:		return tr("Personnage");
-	case cd_id:				return tr("Disque");
-	case minijeu_id:		return tr("Mini-jeu");
-	case byte:				return tr("Entier court");
-	case vitesse:			return tr("Vitesse (8 bits)");
-	case vitesse2:			return tr("Vitesse (16 bits)");
+	switch(type) {
+	case word:				return tr("Long");
+	case sword:				return tr("Signed long");
+	case coord_x:			return tr("X coordinate");
+	case coord_y:			return tr("Y coordinate");
+	case coord_z:			return tr("Z coordinate");
+	case field_id:			return tr("Map");
+	case tuto_id:			return tr("Tutorial");
+	case personnage_id:		return tr("Character");
+	case cd_id:				return tr("Disc");
+	case minijeu_id:		return tr("Minigame");
+	case byte:				return tr("Short");
+	case vitesse:			return tr("Speed (8-bit)");
+	case vitesse2:			return tr("Speed (16-bit)");
 	case direction:			return tr("Direction");
 	case polygone_id:		return tr("Triangle");
-	case group_id:			return tr("Groupe");
+	case group_id:			return tr("Group");
 	case script_id:			return tr("Script");
-	case party_id:			return tr("Équipier");
+	case party_id:			return tr("Team member");
 	case bank:				return tr("Bank");
-	case adress:			return tr("Adresse");
-	case priorite:			return tr("Priorité");
+	case adress:			return tr("Address");
+	case priorite:			return tr("Priority");
 	case bit: 				return tr("Flag");
-	case jump: 				return tr("Saut court");
-	case jump_l: 			return tr("Saut long");
-	case operateur: 		return tr("Opérateur");
-	case boolean: 			return tr("Booléen");
-	case layer_id: 			return tr("Couche");
-	case parametre_id: 		return tr("Paramètre");
-	case state_id: 			return tr("État");
-	case window_id: 		return tr("Fenêtre");
-	case window_w: 			return tr("Largeur");
-	case window_h: 			return tr("Hauteur");
+	case jump: 				return tr("Jump (short)");
+	case jump_l: 			return tr("Jump (long)");
+	case operateur: 		return tr("Operator");
+	case boolean: 			return tr("Boolean");
+	case layer_id: 			return tr("Layer");
+	case parametre_id: 		return tr("Parameter");
+	case state_id: 			return tr("State");
+	case window_id: 		return tr("Window");
+	case window_w: 			return tr("Width");
+	case window_h: 			return tr("Height");
 	case window_var: 		return tr("Variable");
-	case keys: 				return tr("Touche(s)");
-	case rotation: 			return tr("Sens de rotation");
-	case window_num: 		return tr("Type d'affichage");
-	case text_id: 			return tr("Texte");
+	case keys: 				return tr("Key(s)");
+	case rotation: 			return tr("Rotation");
+	case window_num: 		return tr("Display Type");
+	case text_id: 			return tr("Text");
 	case menu: 				return tr("Menu");
-	case window_type: 		return tr("Type de fenêtre");
-	case item_id: 			return tr("Objet");
-	case materia_id: 		return tr("Matéria");
-	case quantity: 			return tr("Quantité");
-	case color: 			return tr("Couleur");
+	case window_type: 		return tr("Window Type");
+	case item_id: 			return tr("Item");
+	case materia_id: 		return tr("Materia");
+	case quantity: 			return tr("Quantity");
+	case color: 			return tr("Color");
 	case animation_id: 		return tr("Animation");
-	case music_id: 			return tr("Musique");
-	case sound_id: 			return tr("Son");
-	case movie_id: 			return tr("Vidéo");
+	case music_id: 			return tr("Music");
+	case sound_id: 			return tr("Sound");
+	case movie_id: 			return tr("Video");
 	case label:				return tr("Label");
+	case akao:				return tr("Sound operation");
 	}
 	return tr("???");
 }

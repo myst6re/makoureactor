@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -25,19 +25,19 @@ Search::Search(Window *mainWindow) :
 	atTheEnd(false), atTheBeginning(false),
 	fieldArchive(0),
 	clef(0), text(QString()),
-	bank(0), adress(0), e_script(0), e_group(0)
+	bank(0), address(0), e_script(0), e_group(0)
 {
-	setWindowTitle(tr("Rechercher"));
+	setWindowTitle(tr("Find"));
 	
 	tabWidget = new QTabWidget(this);
 	tabWidget->addTab(scriptPageWidget(), tr("Scripts"));
-	tabWidget->addTab(textPageWidget(), tr("Textes"));
+	tabWidget->addTab(textPageWidget(), tr("Texts"));
 	tabWidget->setCurrentIndex(Config::value("searchDialogCurrentModule").toInt());
 
 	QList<QPushButton *> buttons;
-	buttons.append(buttonNext = new QPushButton(tr("Chercher le suivant"), this));
-	buttons.append(buttonPrev = new QPushButton(tr("Chercher le précédent"), this));
-	buttons.append(buttonAll = new QPushButton(tr("Chercher tout"), this));
+	buttons.append(buttonNext = new QPushButton(tr("Find next"), this));
+	buttons.append(buttonPrev = new QPushButton(tr("Find previous"), this));
+	buttons.append(buttonAll = new QPushButton(tr("Find all"), this));
 
 	QMap<int, QPushButton *> buttonWidths;
 	foreach (QPushButton *button, buttons) {
@@ -103,11 +103,11 @@ QWidget *Search::scriptPageWidget()
 	QWidget *ret = new QWidget(this);
 
 	liste = new QComboBox(ret);
-	liste->addItem(tr("Texte"));
+	liste->addItem(tr("Text"));
 	liste->addItem(tr("Variable"));
 	liste->addItem(tr("Opcode"));
-	liste->addItem(tr("Exec"));
-	liste->addItem(tr("Saut d'écran"));
+	liste->addItem(tr("Run"));
+	liste->addItem(tr("Map jump"));
 
 	QWidget *text = new QWidget(ret);
 
@@ -116,10 +116,10 @@ QWidget *Search::scriptPageWidget()
 	champ->setMaximumWidth(400);
 	champ->addItems(Config::value("recentSearch").toStringList());
 	champ->lineEdit()->completer()->setCompletionMode(QCompleter::PopupCompletion);
-	champ->lineEdit()->setPlaceholderText(tr("Rechercher"));
+	champ->lineEdit()->setPlaceholderText(tr("Find"));
 
-	caseSens = new QCheckBox(tr("Sensible à la casse"), text);
-	useRegexp = new QCheckBox(tr("Utiliser les expressions régulières"), text);
+	caseSens = new QCheckBox(tr("Match case"), text);
+	useRegexp = new QCheckBox(tr("Regular expression"), text);
 	useRegexp->setChecked(Config::value("findWithRegExp").toBool());
 
 	QGridLayout *textLayout = new QGridLayout(text);
@@ -146,26 +146,31 @@ QWidget *Search::scriptPageWidget()
 	variableLayout->setContentsMargins(QMargins());
 	variableLayout->addWidget(new QLabel(tr("Var")), 0, 0);
 	variableLayout->addWidget(champBank = new QSpinBox(variable), 0, 1);
-	variableLayout->addWidget(champAdress = new QSpinBox(variable), 0, 2);
+	variableLayout->addWidget(champAddress = new QSpinBox(variable), 0, 2);
 	variableLayout->addWidget(champOp = new QComboBox(variable), 0, 3);
 	variableLayout->addWidget(champValue = new QLineEdit(variable), 0, 4);
 	variableLayout->addWidget(comboVarName = new QComboBox(variable), 1, 0, 1, 5);
 	variableLayout->setRowStretch(1, 1);
 	champBank->setRange(1,15);
-	champAdress->setRange(0,255);
+	champAddress->setRange(-1, 255); // -1 is an extra value to keep this field empty and search for every addresses
 	for(int i=0 ; i<256 ; ++i) {
 		comboVarName->addItem(QString());
 	}
-	champValue->setPlaceholderText(tr("Valeur"));
-	champOp->addItem(tr("Tout"));
-	champOp->addItem(tr("Affectation"));
-	champOp->addItem(tr("Affectation Bit"));
+	champValue->setPlaceholderText(tr("Value"));
+	champOp->addItem(tr("All"));
+	champOp->addItem(tr("Assignment"));
+	champOp->addItem(tr("Bit Assignment"));
 	champOp->addItem(tr("Test"));
-	champOp->addItem(tr("Test bit"));
+	champOp->addItem(tr("Bit test"));
+	champOp->addItem(tr("Assignment â‰ "));
+	champOp->addItem(tr("Assignment <"));
+	champOp->addItem(tr("Assignment â‰¤"));
+	champOp->addItem(tr("Assignment >"));
+	champOp->addItem(tr("Assignment â‰¥"));
 
 	// set config values
 	champBank->setValue(Config::value("SearchedVarBank").toInt());
-	champAdress->setValue(Config::value("SearchedVarAdress").toInt());
+	champAddress->setValue(Config::value("SearchedVarAdress").toInt());
 	comboVarName->setCurrentIndex(Config::value("SearchedVarAdress").toInt());
 	champOp->setCurrentIndex(Config::value("SearchedVarOperation").toInt());
 	int searchedVarValue = Config::value("SearchedVarValue", 65536).toInt();
@@ -188,7 +193,7 @@ QWidget *Search::scriptPageWidget()
 	executionLayout->setContentsMargins(QMargins());
 	executionLayout->addWidget(new QLabel(tr("Script")), 0, 0);
 	executionLayout->addWidget(executionScript, 0, 1);
-	executionLayout->addWidget(new QLabel(tr("Groupe")), 1, 0);
+	executionLayout->addWidget(new QLabel(tr("Group")), 1, 0);
 	executionLayout->addWidget(executionGroup, 1, 1);
 	executionLayout->setColumnStretch(1, 1);
 
@@ -207,11 +212,11 @@ QWidget *Search::scriptPageWidget()
 	stack->addWidget(execution);
 	stack->addWidget(jump);
 
-	QGroupBox *contextGroupBox = new QGroupBox(tr("Contexte"), this);
-	QRadioButton *globalCheckBox = new QRadioButton(tr("Sur tous les écrans"));
-	currentFieldCheckBox = new QRadioButton(tr("Uniquement l'écran courant"));
-	currentGrpScriptCheckBox = new QRadioButton(tr("Uniquement le groupe courant"));
-	currentScriptCheckBox = new QRadioButton(tr("Uniquement le script courant"));
+	QGroupBox *contextGroupBox = new QGroupBox(tr("Scope"), this);
+	QRadioButton *globalCheckBox = new QRadioButton(tr("All fields"));
+	currentFieldCheckBox = new QRadioButton(tr("Current field"));
+	currentGrpScriptCheckBox = new QRadioButton(tr("Current group script"));
+	currentScriptCheckBox = new QRadioButton(tr("Current script"));
 
 	FieldArchive::SearchScope searchScope = FieldArchive::SearchScope(Config::value("searchScope").toInt());
 	switch(searchScope) {
@@ -240,7 +245,7 @@ QWidget *Search::scriptPageWidget()
 	connect(liste, SIGNAL(currentIndexChanged(int)), stack, SLOT(setCurrentIndex(int)));
 	connect(liste, SIGNAL(currentIndexChanged(int)), SLOT(saveCurrentScriptTab(int)));
 	connect(champBank, SIGNAL(valueChanged(int)), SLOT(updateComboVarName()));
-	connect(champAdress, SIGNAL(valueChanged(int)), comboVarName, SLOT(setCurrentIndex(int)));
+	connect(champAddress, SIGNAL(valueChanged(int)), comboVarName, SLOT(setCurrentIndex(int)));
 	connect(comboVarName, SIGNAL(currentIndexChanged(int)), SLOT(updateChampAdress()));
 	connect(champOp, SIGNAL(currentIndexChanged(int)), SLOT(updateSearchVarPlaceholder(int)));
 
@@ -262,23 +267,23 @@ QWidget *Search::textPageWidget()
 	champ2->setEditable(true);
 	champ2->addItems(Config::value("recentSearch").toStringList());
 	champ2->lineEdit()->completer()->setCompletionMode(QCompleter::PopupCompletion);
-	champ2->lineEdit()->setPlaceholderText(tr("Rechercher"));
+	champ2->lineEdit()->setPlaceholderText(tr("Find"));
 
 	replace2 = new QComboBox(ret);
 	replace2->setEditable(true);
 	replace2->addItems(Config::value("recentReplace").toStringList());
-	replace2->lineEdit()->setPlaceholderText(tr("Remplacer"));
-	replaceCurrentButton = new QPushButton(tr("Remplacer"), this);
-	replaceAllButton = new QPushButton(tr("Remplacer tout"), this);
+	replace2->lineEdit()->setPlaceholderText(tr("Replace"));
+	replaceCurrentButton = new QPushButton(tr("Replace"), this);
+	replaceAllButton = new QPushButton(tr("Replace all"), this);
 
-	caseSens2 = new QCheckBox(tr("Sensible à la casse"), ret);
-	useRegexp2 = new QCheckBox(tr("Utiliser les expressions régulières"), ret);
+	caseSens2 = new QCheckBox(tr("Match case"), ret);
+	useRegexp2 = new QCheckBox(tr("Regular expression"), ret);
 	useRegexp2->setChecked(Config::value("findWithRegExp").toBool());
 
-	QGroupBox *contextGroupBox = new QGroupBox(tr("Contexte"), this);
-	QRadioButton *globalCheckBox = new QRadioButton(tr("Sur tous les écrans"));
-	currentFieldCheckBox2 = new QRadioButton(tr("Uniquement l'écran courant"));
-	currentTextCheckBox = new QRadioButton(tr("Uniquement le texte courant"));
+	QGroupBox *contextGroupBox = new QGroupBox(tr("Scope"), this);
+	QRadioButton *globalCheckBox = new QRadioButton(tr("All fields"));
+	currentFieldCheckBox2 = new QRadioButton(tr("Current field"));
+	currentTextCheckBox = new QRadioButton(tr("Current text"));
 
 	FieldArchive::SearchScope searchScope = FieldArchive::SearchScope(Config::value("searchScope").toInt());
 	switch(searchScope) {
@@ -400,9 +405,9 @@ void Search::updateComboVarName()
 
 void Search::updateChampAdress()
 {
-	champAdress->blockSignals(true);
-	champAdress->setValue(comboVarName->currentIndex());
-	champAdress->blockSignals(false);
+	champAddress->blockSignals(true);
+	champAddress->setValue(comboVarName->currentIndex());
+	champAddress->blockSignals(false);
 }
 
 void Search::updateSearchVarPlaceholder(int opIndex)
@@ -410,7 +415,7 @@ void Search::updateSearchVarPlaceholder(int opIndex)
 	if (opIndex == Opcode::None) {
 		champValue->setEnabled(false);
 	} else {
-		champValue->setPlaceholderText(opIndex == Opcode::Assign || opIndex == Opcode::Compare ? tr("Valeur") : tr("Position"));
+		champValue->setPlaceholderText(opIndex == Opcode::Assign || opIndex == Opcode::Compare ? tr("Value") : tr("Position"));
 		champValue->setEnabled(true);
 	}
 }
@@ -447,11 +452,11 @@ FieldArchive::SearchScope Search::searchScope() const
 QString Search::lastMessage() const
 {
 	switch(searchScope()) {
-	case FieldArchive::GlobalScope:		return tr("Dernier écran");
-	case FieldArchive::FieldScope:		return tr("Dernier groupe");
-	case FieldArchive::GrpScriptScope:	return tr("Dernier script");
-	case FieldArchive::ScriptScope:		return tr("Dernière instruction");
-	case FieldArchive::TextScope:		return tr("Dernier texte");
+	case FieldArchive::GlobalScope:		return tr("Last field");
+	case FieldArchive::FieldScope:		return tr("Last group");
+	case FieldArchive::GrpScriptScope:	return tr("Last script");
+	case FieldArchive::ScriptScope:		return tr("Last opcode");
+	case FieldArchive::TextScope:		return tr("Last text");
 	}
 	return QString();
 }
@@ -459,11 +464,11 @@ QString Search::lastMessage() const
 QString Search::firstMessage() const
 {
 	switch(searchScope()) {
-	case FieldArchive::GlobalScope:		return tr("Premier écran");
-	case FieldArchive::FieldScope:		return tr("Premier groupe");
-	case FieldArchive::GrpScriptScope:	return tr("Premier script");
-	case FieldArchive::ScriptScope:		return tr("Première instruction");
-	case FieldArchive::TextScope:		return tr("Premier texte");
+	case FieldArchive::GlobalScope:		return tr("First field");
+	case FieldArchive::FieldScope:		return tr("First group");
+	case FieldArchive::GrpScriptScope:	return tr("First script");
+	case FieldArchive::ScriptScope:		return tr("First opcode");
+	case FieldArchive::TextScope:		return tr("First text");
 	}
 	return QString();
 }
@@ -489,20 +494,20 @@ void Search::findNext()
 
 	if(atTheEnd) {
 		fieldID = scope == FieldArchive::FieldScope ? mainWindow()->currentFieldId() : -1;
-		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->currentGrpScriptId() : -1;
-		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->currentScriptId() : -1;
+		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->scriptWidget()->currentGrpScriptId() : -1;
+		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->scriptWidget()->currentScriptId() : -1;
 		opcodeID = -1;
-		textID = scope == FieldArchive::TextScope && mainWindow()->textDialog() ? mainWindow()->textDialog()->currentTextId() : -1;
+		textID = scope == FieldArchive::TextScope && mainWindow()->textWidget() ? mainWindow()->textWidget()->currentTextId() : -1;
 		from = 0;
 		atTheEnd = false;
 	} else {
 		fieldID = mainWindow()->currentFieldId();
-		grpScriptID = mainWindow()->currentGrpScriptId();
-		scriptID = mainWindow()->currentScriptId();
-		opcodeID = mainWindow()->currentOpcodeId();
-		textID = mainWindow()->textDialog() ? mainWindow()->textDialog()->currentTextId() : -1;
-		from = mainWindow()->textDialog() ? qMax(mainWindow()->textDialog()->currentTextPosition(),
-												 mainWindow()->textDialog()->currentAnchorPosition())
+		grpScriptID = mainWindow()->scriptWidget()->currentGrpScriptId();
+		scriptID = mainWindow()->scriptWidget()->currentScriptId();
+		opcodeID = mainWindow()->scriptWidget()->currentOpcodeId();
+		textID = mainWindow()->textWidget() ? mainWindow()->textWidget()->currentTextId() : -1;
+		from = mainWindow()->textWidget() ? qMax(mainWindow()->textWidget()->currentTextPosition(),
+												 mainWindow()->textWidget()->currentAnchorPosition())
 										  : 0;
 	}
 
@@ -521,7 +526,7 @@ void Search::findNext()
 		}
 	}
 
-	returnToBegin->setText(tr("%1,\npoursuite au début.")
+	returnToBegin->setText(tr("%1,\ncontinued from top.")
 						   .arg(lastMessage()));
 	returnToBegin->show();
 
@@ -542,7 +547,7 @@ bool Search::findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchS
 												 scriptID, opcodeID,
 												 sorting, scope);
 	case 1:
-		return fieldArchive->searchVar(bank, adress, op, value,
+		return fieldArchive->searchVar(bank, address, op, value,
 									   fieldID, grpScriptID,
 									   scriptID, opcodeID,
 									   sorting, scope);
@@ -591,20 +596,20 @@ void Search::findPrev()
 
 	if(atTheBeginning) {
 		fieldID = scope == FieldArchive::FieldScope ? mainWindow()->currentFieldId() : 2147483647;
-		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->currentGrpScriptId() : 2147483647;
-		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->currentScriptId() : 2147483647;
+		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->scriptWidget()->currentGrpScriptId() : 2147483647;
+		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->scriptWidget()->currentScriptId() : 2147483647;
 		opcodeID = 2147483647;
-		textID = scope == FieldArchive::TextScope && mainWindow()->textDialog() ? mainWindow()->textDialog()->currentTextId() : 2147483647;
+		textID = scope == FieldArchive::TextScope && mainWindow()->textWidget() ? mainWindow()->textWidget()->currentTextId() : 2147483647;
 		from = -1;
 		atTheBeginning = false;
 	} else {
 		fieldID = mainWindow()->currentFieldId();
-		grpScriptID = mainWindow()->currentGrpScriptId();
-		scriptID = mainWindow()->currentScriptId();
-		opcodeID = mainWindow()->currentOpcodeId();
-		textID = mainWindow()->textDialog() ? mainWindow()->textDialog()->currentTextId() : -1;
-		from = mainWindow()->textDialog() ? qMin(mainWindow()->textDialog()->currentTextPosition(),
-												 mainWindow()->textDialog()->currentAnchorPosition())
+		grpScriptID = mainWindow()->scriptWidget()->currentGrpScriptId();
+		scriptID = mainWindow()->scriptWidget()->currentScriptId();
+		opcodeID = mainWindow()->scriptWidget()->currentOpcodeId();
+		textID = mainWindow()->textWidget() ? mainWindow()->textWidget()->currentTextId() : -1;
+		from = mainWindow()->textWidget() ? qMin(mainWindow()->textWidget()->currentTextPosition(),
+												 mainWindow()->textWidget()->currentAnchorPosition())
 										  : -1;
 		if(from <= 0) {
 			textID--;
@@ -625,7 +630,7 @@ void Search::findPrev()
 			}
 			break;
 		case 1:
-			if(fieldArchive->searchVarP(bank, adress, op, value,
+			if(fieldArchive->searchVarP(bank, address, op, value,
 										fieldID, grpScriptID,
 										scriptID, opcodeID,
 										sorting, scope)) {
@@ -669,7 +674,7 @@ void Search::findPrev()
 		}
 	}
 
-	returnToBegin->setText(tr("%1,\npoursuite à la fin.")
+	returnToBegin->setText(tr("%1,\nchase at the end.")
 						   .arg(firstMessage()));
 	returnToBegin->show();
 
@@ -700,10 +705,10 @@ void Search::findAll()
 		int grpScriptID = -1, scriptID = -1, opcodeID = -1;
 
 		if(scope == FieldArchive::GrpScriptScope) {
-			grpScriptID = mainWindow()->currentGrpScriptId();
+			grpScriptID = mainWindow()->scriptWidget()->currentGrpScriptId();
 		}
 		if(scope == FieldArchive::ScriptScope) {
-			scriptID = mainWindow()->currentScriptId();
+			scriptID = mainWindow()->scriptWidget()->currentScriptId();
 		}
 
 		searchAllDialog->setScriptSearch();
@@ -719,8 +724,8 @@ void Search::findAll()
 	} else { // texts page
 		int textID = -1, from = -1;
 
-		if(scope == FieldArchive::TextScope && mainWindow()->textDialog()) {
-			textID = mainWindow()->textDialog()->currentTextId();
+		if(scope == FieldArchive::TextScope && mainWindow()->textWidget()) {
+			textID = mainWindow()->textWidget()->currentTextId();
 		}
 
 		searchAllDialog->setTextSearch();
@@ -776,12 +781,12 @@ void Search::setSearchValues()
 			break;
 		case 1:
 			bank = champBank->value();
-			adress = champAdress->value();
+			address = champAddress->value();
 			op = Opcode::Operation(champOp->currentIndex());
 			value = champValue->text().toInt(&ok);
 			if(!ok)	value = 0x10000;
 			Config::setValue("SearchedVarBank", bank);
-			Config::setValue("SearchedVarAdress", adress);
+			Config::setValue("SearchedVarAdress", qint16(address));
 			Config::setValue("SearchedVarOperation", champOp->currentIndex());
 			Config::setValue("SearchedVarValue", value);
 			break;
@@ -825,7 +830,7 @@ void Search::setSearchValues()
 
 void Search::replaceCurrent()
 {
-	if(!fieldArchive || !mainWindow()->textDialog()) {
+	if(!fieldArchive || !mainWindow()->textWidget()) {
 		return;
 	}
 
@@ -833,11 +838,11 @@ void Search::replaceCurrent()
 
 	if(fieldArchive->replaceText(text, replace2->lineEdit()->text(),
 								 mainWindow()->currentFieldId(),
-								 mainWindow()->textDialog()->currentTextId(),
-								 qMin(mainWindow()->textDialog()->currentTextPosition(),
-									  mainWindow()->textDialog()->currentAnchorPosition()))) {
+								 mainWindow()->textWidget()->currentTextId(),
+								 qMin(mainWindow()->textWidget()->currentTextPosition(),
+									  mainWindow()->textWidget()->currentAnchorPosition()))) {
 		// Update view
-		mainWindow()->textDialog()->updateText();
+		mainWindow()->textWidget()->updateText();
 		mainWindow()->setModified();
 	}
 }
@@ -859,8 +864,8 @@ void Search::replaceAll()
 	if(scope == FieldArchive::FieldScope) {
 		fieldID = mainWindow()->currentFieldId();
 	} else if(scope == FieldArchive::TextScope) {
-		if(mainWindow()->textDialog()) {
-			textID = mainWindow()->textDialog()->currentTextId();
+		if(mainWindow()->textWidget()) {
+			textID = mainWindow()->textWidget()->currentTextId();
 		}
 	}
 
@@ -877,8 +882,8 @@ void Search::replaceAll()
 	if(modified) {
 
 		// Update view
-		if(mainWindow()->textDialog()) {
-			mainWindow()->textDialog()->updateText();
+		if(mainWindow()->textWidget()) {
+			mainWindow()->textWidget()->updateText();
 		}
 		mainWindow()->setModified();
 	}

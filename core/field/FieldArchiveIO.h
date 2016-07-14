@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ public:
 		Lgp, File, Iso, Dir
 	};
 
-	FieldArchiveIO(FieldArchive *fieldArchive);
+	explicit FieldArchiveIO(FieldArchive *fieldArchive);
 	virtual ~FieldArchiveIO();
 	virtual bool isPS() const=0;
 	inline bool isPC() const { return !isPS(); }
@@ -47,7 +47,7 @@ public:
 	QByteArray fileData(const QString &fileName, bool unlzs=true, bool isLzsFile=true);
 	int exportFieldData(Field *field, const QString &extension, const QString &path, bool unlzs=true);
 
-	bool fieldDataIsCached(Field *field, const QString &fileType) const;
+	static bool fieldDataIsCached(Field *field, const QString &fileType);
 	virtual void clearCachedData();
 
 	virtual void close();

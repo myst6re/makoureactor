@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 class TimFile : public TextureFile
 {
 public:
-	TimFile() : TextureFile() {}
+	TimFile() : TextureFile(), bpp(0), palX(0), palY(0), palW(0), palH(0), imgX(0), imgY(0) {}
 	explicit TimFile(const QByteArray &data);
 	TimFile(const TextureFile &texture, quint8 bpp, quint16 palX, quint16 palY, quint16 palW, quint16 palH, quint16 imgX, quint16 imgY);
 	bool open(const QByteArray &data);

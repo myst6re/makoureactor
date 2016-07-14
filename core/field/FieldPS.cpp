@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -80,13 +80,12 @@ QByteArray FieldPS::sectionData(FieldSection part)
 
 FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 {
-	return (FieldModelLoaderPS *)Field::fieldModelLoader(open);
+	return static_cast<FieldModelLoaderPS *>(Field::fieldModelLoader(open));
 }
 
 FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate, bool open)
 {
-	FieldModelFilePS *fieldModel = (FieldModelFilePS *)fieldModelPtr(modelID);
-	if(!fieldModel) 	addFieldModel(modelID, fieldModel = new FieldModelFilePS());
+	FieldModelFilePS *fieldModel = new FieldModelFilePS();
 	if(open) {
 		fieldModel->load(this, modelID, animationID, animate);
 	}

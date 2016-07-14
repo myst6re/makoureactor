@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ Field *FieldArchiveIterator::previous(bool open)
 	return openField(QListIterator<Field *>::previous(), open);
 }
 
-Field *FieldArchiveIterator::openField(Field *field, bool open) const
+Field *FieldArchiveIterator::openField(Field *field, bool open)
 {
 	if(field != NULL && open && !field->isOpen()) {
 		field->open();
@@ -275,7 +275,7 @@ void FieldArchive::validateAsk()
 					int opcodeID = 0;
 					foreach(Opcode *opcode, script->opcodes()) {
 						if(opcode->id() == Opcode::ASK) {
-							OpcodeASK *opcodeASK = (OpcodeASK *)opcode;
+							OpcodeASK *opcodeASK = static_cast<OpcodeASK *>(opcode);
 							quint8 textID = opcodeASK->textID,
 									firstLine = opcodeASK->firstLine,
 									lastLine = opcodeASK->lastLine;
@@ -361,7 +361,7 @@ void FieldArchive::validateOneLineSize()
 					foreach(Opcode *opcode, script->opcodes()) {
 						if(opcode->id() == Opcode::WSIZW
 								|| opcode->id() == Opcode::WINDOW) {
-							opcodeWindow = (OpcodeWindow *)opcode;
+							opcodeWindow = static_cast<OpcodeWindow *>(opcode);
 						} else if(opcode->getTextID() >= 0 && opcodeWindow) {
 							FF7Window window;
 							opcodeWindow->getWindow(window);
@@ -450,11 +450,11 @@ void FieldArchive::printModelLoaders(const QString &filename, bool generic)
 				QList<QRgb> colors;
 				int boneCount = fieldModel->boneCount();
 				if (f->isPC()) {
-					FieldModelLoaderPC *modelLoaderPC = (FieldModelLoaderPC *)modelLoader;
+					FieldModelLoaderPC *modelLoaderPC = static_cast<FieldModelLoaderPC *>(modelLoader);
 					scale = modelLoaderPC->scale(modelId);
 					colors = modelLoaderPC->lightColors(modelId);
 				} else {
-					FieldModelFilePS *fieldModelPS = (FieldModelFilePS *)fieldModel;
+					FieldModelFilePS *fieldModelPS = static_cast<FieldModelFilePS *>(fieldModel);
 					scale = fieldModelPS->scale();
 					colors = fieldModelPS->lightColors();
 					boneCount -= 1;
@@ -483,7 +483,7 @@ void FieldArchive::printModelLoaders(const QString &filename, bool generic)
 				}*/
 			}
 		} else if(f->isPC()) {
-			FieldModelLoaderPC *modelLoaderPC = (FieldModelLoaderPC *)modelLoader;
+			FieldModelLoaderPC *modelLoaderPC = static_cast<FieldModelLoaderPC *>(modelLoader);
 
 			int modelID = 0;
 			foreach(const QString &hrc, modelLoaderPC->HRCNames()) {
@@ -648,6 +648,9 @@ void FieldArchive::printScripts(const QString &filename)
 void FieldArchive::printScriptsDirs(const QString &filename)
 {
 	QDir dir(filename);
+	if(!dir.exists()) {
+		dir.mkdir(".");
+	}
 
 	foreach(int i, fieldsSortByMapId) {
 		Field *f = field(i, true);
@@ -656,20 +659,20 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 			continue;
 		}
 
-		if (f->name() != "convil_1") {
-			continue;
-		}
-
 		Section1File *scriptsAndTexts = f->scriptsAndTexts();
 		if(scriptsAndTexts->isOpen()) {
 			qWarning() << f->inf()->mapName();
 
+			QString dirname = f->inf()->mapName();
+			dir.mkdir(dirname);
+			dir.cd(dirname);
+
 			int grpScriptID = 0;
 			foreach(GrpScript *grp, scriptsAndTexts->grpScripts()) {
 
-				QString dirname = QString("%1-%2")
-								  .arg(grpScriptID, 2, 10, QChar('0'))
-								  .arg(grp->name());
+				dirname = QString("%1-%2")
+				          .arg(grpScriptID, 2, 10, QChar('0'))
+				          .arg(grp->name());
 				dir.mkdir(dirname);
 				dir.cd(dirname);
 
@@ -684,15 +687,15 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 
 					int opcodeID = 0;
 					foreach(Opcode *opcode, script->opcodes()) {
-						FF7Window win;
+						// FF7Window win;
 						/* if(opcode->getWindow(win)) {
 							deb.write(QString("%1 > %2 > %3: %4 %5\n")
 									  .arg(f->name(), grp->name())
 									  .arg(scriptID)
 									  .arg(win.x).arg(win.y).toLatin1());
 						} else if (opcode->getTextID() < 0) { */
-							deb.write(QString("%1\n")
-									  .arg(opcode->toString(f)).toUtf8());
+							deb.write(opcode->toString(f).toUtf8());
+							deb.write("\n");
 						// }
 						opcodeID++;
 					}
@@ -701,6 +704,8 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 				dir.cdUp();
 				grpScriptID++;
 			}
+
+			dir.cdUp();
 		}
 	}
 }
@@ -737,10 +742,10 @@ void FieldArchive::diffScripts()
 				deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 
 				int grpScriptID = 0, scriptID;
-				foreach(GrpScript *grp2, scriptsAndTextsOriginal->grpScripts()) {
+				foreach(GrpScript *group2, scriptsAndTextsOriginal->grpScripts()) {
 					GrpScript *grp = scriptsAndTexts->grpScript(grpScriptID);
 
-					while(grp2->name() != grp->name()) {
+					while(group2->name() != grp->name()) {
 						grpScriptID++;
 						if(grpScriptID >= scriptsAndTexts->grpScriptCount()) {
 							qWarning() << "ALERT end grpScript reached";
@@ -749,13 +754,13 @@ void FieldArchive::diffScripts()
 						grp = scriptsAndTexts->grpScript(grpScriptID);
 					}
 
-					if(grp->size() != grp2->size()) {
-						qWarning() << "ALERT wrong group size" << grp->size() << grp2->size();
+					if(grp->size() != group2->size()) {
+						qWarning() << "ALERT wrong group size" << grp->size() << group2->size();
 						break;
 					}
 
 					scriptID = 0;
-					foreach(Script *script2, grp2->scripts()) {
+					foreach(Script *script2, group2->scripts()) {
 						Script *script = grp->script(scriptID);
 
 						int opcodeID = 0;
@@ -806,39 +811,128 @@ void FieldArchive::diffScripts()
 				if(deb.size() == 0) {
 					deb.remove();
 				}
-				qDebug() << screens.size() << "écrans";
+				qDebug() << screens.size() << "Ã©crans";
 			}
 		}
 	}
 }
 
-#ifdef BG_ID_RESEARCH
+bool FieldArchive::printBackgroundTiles(Field *field, const QString &filename, bool uniformize)
+{
+	QFile f(filename);
+	if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+		qWarning() << "FieldArchive::printBackgroundTiles" << f.errorString();
+		return false;
+	}
+
+	BackgroundFile *bgFile = field->background();
+	if (!bgFile || !bgFile->isOpen()) {
+		qWarning() << "FieldArchive::printBackgroundTiles no bg for this field" << field->name();
+		return false;
+	}
+
+	BackgroundTiles tiles;
+	if (uniformize && field->isPS()) { // Convert PS to PC to have the same output whenever the source
+		BackgroundFilePS *bgFilePS = static_cast<BackgroundFilePS *>(bgFile);
+		PalettesPC palettesPC = ((PalettesPS *)&(bgFilePS->palettes()))->toPC();
+		static_cast<BackgroundTexturesPS *>(bgFilePS->textures())
+		        ->toPC(bgFilePS->tiles(), tiles, palettesPC);
+	} else {
+		tiles = bgFile->tiles();
+	}
+
+	foreach (const Tile &tile, tiles.sortedTiles()) {
+		f.write(QString("tileID=%1, layer=%2, param=%3, state=%4\n")
+		        .arg(tile.tileID)
+		        .arg(tile.layerID)
+		        .arg(tile.param)
+		        .arg(tile.state).toUtf8());
+		f.write(QString("srcX=%1, srcY=%2, textureID1=%3, textureID2=%4\n")
+		        .arg(tile.srcX)
+		        .arg(tile.srcY)
+		        .arg(tile.textureID)
+		        .arg(tile.textureID2).toUtf8());
+		f.write(QString("dstX=%1, dstY=%2, dstZ=%3, size=%4\n")
+		        .arg(tile.dstX)
+		        .arg(tile.dstY)
+		        .arg(tile.ID)
+		        .arg(tile.size).toUtf8());
+		f.write(QString("palID=%1, depth=%2, blending=%3, typeTrans=%4\n")
+		        .arg(tile.paletteID)
+		        .arg(tile.depth)
+		        .arg(tile.blending)
+		        .arg(tile.typeTrans).toUtf8());
+		f.write(QString("dstZBig=%1\n")
+		        .arg(tile.IDBig).toUtf8());
+		f.write("\n");
+	}
+
+	return true;
+}
+
 void FieldArchive::searchBackgroundZ()
 {
+	QMultiMap<int, quint32> ids;
 	FieldArchiveIterator it(*this);
 	while (it.hasNext()) {
 		Field *field = it.next();
-		if (field && field->isOpen()/* && field->scriptsAndTexts()->scale() == 512*/) {
-			field->inf();
-//			BackgroundFile *bg = field->background();
-//			if (bg->isOpen()) {
-//				bg->openBackground();
+		if (field && field->isOpen()) {
+			BackgroundFile *bg = field->background();
+			if (bg->isOpen()) {
+				bool function1 = false;
+				foreach (const Tile &tile, bg->tiles()) {
+					float ratio = float(tile.ID) / float(tile.IDBig);
+					if (tile.layerID == 1 && tile.ID * 10000 != tile.IDBig) {
+						if (ratio > 4.5e-5 && tile.IDBig < 9000000) {
+							ids.insert(tile.ID, tile.IDBig);
+							function1 = true;
+						} else {
+							if (function1) {
+								qDebug() << "Function2 in function 1 ?";
+							}
+						}
+					}
+					if (tile.layerID == 1 && tile.ID == 324 && tile.IDBig < 9000000) {
+						qDebug() << field->name();
+						qDebug() << QString("tileID=%1, layer=%2, param=%3, state=%4\n")
+						            .arg(tile.tileID)
+						            .arg(tile.layerID)
+						            .arg(tile.param)
+						            .arg(tile.state).toUtf8();
+						qDebug() << QString("srcX=%1, srcY=%2, textureID1=%3, textureID2=%4\n")
+						            .arg(tile.srcX)
+						            .arg(tile.srcY)
+						            .arg(tile.textureID)
+						            .arg(tile.textureID2).toUtf8();
+						qDebug() << QString("dstX=%1, dstY=%2, dstZ=%3, size=%4\n")
+						            .arg(tile.dstX)
+						            .arg(tile.dstY)
+						            .arg(tile.ID)
+						            .arg(tile.size).toUtf8();
+						qDebug() << QString("palID=%1, depth=%2, blending=%3, typeTrans=%4\n")
+						            .arg(tile.paletteID)
+						            .arg(tile.depth)
+						            .arg(tile.blending)
+						            .arg(tile.typeTrans).toUtf8();
+						qDebug() << QString("dstZBig=%1\n")
+						            .arg(tile.IDBig).toUtf8();
+					}
+				}
+
 //				qDebug() << field->name() << field->scriptsAndTexts()->scale();
-//			}
+			}
 		}
 	}
-/*
-	foreach (int ID, BackgroundTilesIOPC::IDs.uniqueKeys()) {
-		QList<quint32> zBigs = BackgroundTilesIOPC::IDs.values(ID);
+
+	foreach (int ID, ids.uniqueKeys()) {
+		QList<quint32> zBigs = ids.values(ID);
 		QList<quint32> zBigsUnique = zBigs.toSet().toList();
 		qSort(zBigsUnique);
 		foreach (quint32 zBig, zBigsUnique) {
-			qDebug() << ID << zBig << zBigs.count(zBig);
+			qDebug() << qPrintable(QString("%1\t%2\t%3\t%4").arg(ID).arg(zBig).arg(zBigs.count(zBig)).arg(float(ID) / float(zBig)));
 		}
-//		qDebug() << zBigs;
-	}*/
+	}
 }
-#endif
 
 void FieldArchive::searchAll()
 {
@@ -908,7 +1002,7 @@ void FieldArchive::searchAll()
 		return;
 	}
 
-	/*FieldArchivePS ps("C:/Users/Jérôme/Games/Final Fantasy VII-PSX-PAL-FR-CD1.bin", FieldArchiveIO::Iso);
+	/*FieldArchivePS ps("C:/Users/JÃ©rÃ´me/Games/Final Fantasy VII-PSX-PAL-FR-CD1.bin", FieldArchiveIO::Iso);
 	if(ps.open() != FieldArchiveIO::Ok) {
 		qWarning() << "error opening ps iso";
 		return;
@@ -946,12 +1040,6 @@ void FieldArchive::searchAll()
 		}
 	}*/
 
-	/*QString dest = "scripts-PC-acro-v09-03-2014";
-	QDir tmp;
-	if(!QFile::exists(tmp.absoluteFilePath(dest))) {
-		tmp.mkdir(dest);
-	}
-	tmp.cd(dest);*/
 	QSet<QString> screens;
 //	for(int i=0 ; i<size ; ++i) {
 	foreach(int i, fieldsSortByMapId) {
@@ -973,10 +1061,10 @@ void FieldArchive::searchAll()
 				}
 
 				int grpScriptID = 0, scriptID;
-				foreach(GrpScript *grp2, scriptsAndTextsOriginal->grpScripts()) {
+				foreach(GrpScript *group2, scriptsAndTextsOriginal->grpScripts()) {
 					GrpScript *grp = scriptsAndTexts->grpScript(grpScriptID);
 
-					while(grp2->name() != grp->name()) {
+					while(group2->name() != grp->name()) {
 						grpScriptID++;
 						if(grpScriptID >= scriptsAndTexts->grpScriptCount()) {
 							qWarning() << "ALERT end grpScript reached";
@@ -985,13 +1073,13 @@ void FieldArchive::searchAll()
 						grp = scriptsAndTexts->grpScript(grpScriptID);
 					}
 
-					if(grp->size() != grp2->size()) {
-						qWarning() << "ALERT wrong group size" << grp->size() << grp2->size();
+					if(grp->size() != group2->size()) {
+						qWarning() << "ALERT wrong group size" << grp->size() << group2->size();
 						break;
 					}
 
 					scriptID = 0;
-					foreach(Script *script2, grp2->scripts()) {
+					foreach(Script *script2, group2->scripts()) {
 						Script *script = grp->script(scriptID);
 
 						int opcodeID = 0;
@@ -1038,7 +1126,7 @@ void FieldArchive::searchAll()
 					next_group:;
 					grpScriptID++;
 				}
-				qDebug() << screens.size() << "écrans";
+				qDebug() << screens.size() << "Ã©crans";
 				/*QString fieldDir = QString("%1-%2").arg(Data::field_names.indexOf(field->name()), 3, 10, QChar('0')).arg(field->name());
 				if(!tmp.mkdir(fieldDir)) {
 					qWarning() << "cannot create dir" << tmp.absoluteFilePath(fieldDir);
@@ -1170,21 +1258,21 @@ bool FieldArchive::searchOpcode(int opcode, int &fieldID, int &groupID, int &scr
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchOpcodeQuery *query = (SearchOpcodeQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchOpcodeQuery *query = static_cast<SearchOpcodeQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchOpcode(query->opcode, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
-	SearchVarQuery query(bank, adress, op, value);
+	SearchVarQuery query(bank, address, op, value);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchVarQuery *query = (SearchVarQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
-		return f->scriptsAndTexts()->searchVar(query->bank, query->adress, query->op, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
+		SearchVarQuery *query = static_cast<SearchVarQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
+		return f->scriptsAndTexts()->searchVar(query->bank, query->address, query->op, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
@@ -1194,8 +1282,8 @@ bool FieldArchive::searchExec(quint8 group, quint8 script, int &fieldID, int &gr
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchExecQuery *query = (SearchExecQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchExecQuery *query = static_cast<SearchExecQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchExec(query->group, query->script, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1206,8 +1294,8 @@ bool FieldArchive::searchMapJump(quint16 _field, int &fieldID, int &groupID, int
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchFieldQuery *query = (SearchFieldQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchFieldQuery *query = static_cast<SearchFieldQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchMapJump(query->fieldID, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1218,8 +1306,8 @@ bool FieldArchive::searchTextInScripts(const QRegExp &text, int &fieldID, int &g
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchTextQuery *query = (SearchTextQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchTextQuery *query = static_cast<SearchTextQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchTextInScripts(query->text, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1231,8 +1319,8 @@ bool FieldArchive::searchText(const QRegExp &text, int &fieldID, int &textID, in
 	SearchInText searchIn(textID, from, size, empty);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchTextQuery *query = (SearchTextQuery *)_query;
-		SearchInText *searchIn = (SearchInText *)_searchIn;
+		SearchTextQuery *query = static_cast<SearchTextQuery *>(_query);
+		SearchInText *searchIn = static_cast<SearchInText *>(_searchIn);
 		return f->scriptsAndTexts()->searchText(query->text, searchIn->textID, searchIn->from, searchIn->size);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1271,21 +1359,21 @@ bool FieldArchive::searchOpcodeP(int opcode, int &fieldID, int &groupID, int &sc
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchOpcodeQuery *query = (SearchOpcodeQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchOpcodeQuery *query = static_cast<SearchOpcodeQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchOpcodeP(query->opcode, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
-	SearchVarQuery query(bank, adress, op, value);
+	SearchVarQuery query(bank, address, op, value);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchVarQuery *query = (SearchVarQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
-		return f->scriptsAndTexts()->searchVarP(query->bank, query->adress, query->op, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
+		SearchVarQuery *query = static_cast<SearchVarQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
+		return f->scriptsAndTexts()->searchVarP(query->bank, query->address, query->op, query->value, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
 
@@ -1295,8 +1383,8 @@ bool FieldArchive::searchExecP(quint8 group, quint8 script, int &fieldID, int &g
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchExecQuery *query = (SearchExecQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchExecQuery *query = static_cast<SearchExecQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchExecP(query->group, query->script, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1307,8 +1395,8 @@ bool FieldArchive::searchMapJumpP(quint16 _field, int &fieldID, int &groupID, in
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchFieldQuery *query = (SearchFieldQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchFieldQuery *query = static_cast<SearchFieldQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchMapJumpP(query->fieldID, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1319,8 +1407,8 @@ bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &fieldID, int &
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchTextQuery *query = (SearchTextQuery *)_query;
-		SearchInScript *searchIn = (SearchInScript *)_searchIn;
+		SearchTextQuery *query = static_cast<SearchTextQuery *>(_query);
+		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
 		return f->scriptsAndTexts()->searchTextInScriptsP(query->text, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }
@@ -1331,8 +1419,8 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &fieldID, int &textID, i
 	SearchInText searchIn(textID, from, size, index);
 
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
-		SearchTextQuery *query = (SearchTextQuery *)_query;
-		SearchInText *searchIn = (SearchInText *)_searchIn;
+		SearchTextQuery *query = static_cast<SearchTextQuery *>(_query);
+		SearchInText *searchIn = static_cast<SearchInText *>(_searchIn);
 		return f->scriptsAndTexts()->searchTextP(query->text, searchIn->textID, searchIn->from, searchIn->index, searchIn->size);
 	}, &query, fieldID, &searchIn, sorting, scope);
 }

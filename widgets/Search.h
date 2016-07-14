@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #ifndef DEF_SEARCH
 #define DEF_SEARCH
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldArchive.h"
 #include "SearchAll.h"
 
@@ -60,7 +60,7 @@ private:
 	QString lastMessage() const;
 	QString firstMessage() const;
 	inline Window *mainWindow() const {
-		return (Window *)parentWidget();
+		return reinterpret_cast<Window *>(parentWidget());
 	}
 	void setActionsEnabled(bool enable);
 	bool findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
@@ -79,7 +79,7 @@ private:
 	QComboBox *opcode;
 	QCheckBox *caseSens, *useRegexp, *caseSens2, *useRegexp2;
 	QSpinBox *champBank;
-	QSpinBox *champAdress;
+	QSpinBox *champAddress;
 	QLineEdit *champValue;
 	QComboBox *champOp;
 	QComboBox *comboVarName;
@@ -99,7 +99,7 @@ private:
 	int clef;
 	QRegExp text;
 	quint8 bank;
-	quint8 adress;
+	quint16 address;
 	Opcode::Operation op;
 	int value;
 	quint8 e_script, e_group;

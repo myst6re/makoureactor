@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,11 +18,16 @@
 #ifndef QTASKBARBUTTON_H
 #define QTASKBARBUTTON_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 #if defined(Q_OS_WIN) && defined(TASKBAR_BUTTON)
-#include <shobjidl.h>
-#define QTASKBAR_WIN
+#	ifdef QTASKBAR_WIN_QT5
+#		include <QWinTaskbarButton>
+#		include <QWinTaskbarProgress>
+#	else
+#		include <shobjidl.h>
+#		define QTASKBAR_WIN
+#	endif
 #endif
 
 class QTaskBarButton : public QObject
@@ -53,6 +58,8 @@ private:
 #ifdef QTASKBAR_WIN
 	WId _winId;
 	ITaskbarList3 *pITask;
+#elif defined(QTASKBAR_WIN_QT5)
+	QWinTaskbarButton _taskbarButton;
 #endif // Q_OS_WIN
 	int _minimum, _maximum, _value;
 	State _state;

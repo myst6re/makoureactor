@@ -1,11 +1,11 @@
 [Desktop Entry]
 Type=Application
-Version=1.6.5
+Version=1.7.1
 Name=Makou Reactor
 GenericName=FF7 Field Script Editor
-GenericName[fr]=Éditeur d'écrans FF7
+GenericName[fr]=Ã‰diteur d'Ã©crans FF7
 Comment=Can edit field from Final Fantasy VII (PS & PC)
-Comment[fr]=Permet de modifier les écrans de Final Fantasy VII (PS et PC)
+Comment[fr]=Permet de modifier les Ã©crans de Final Fantasy VII (PS et PC)
 Icon=logo-shinra.png
 Exec=/usr/bin/makoureactor
 Path=

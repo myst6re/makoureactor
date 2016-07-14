@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2015 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2015 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ class FieldModelSkeleton
 {
 public:
 	FieldModelSkeleton();
-	FieldModelSkeleton(const QList<FieldModelBone> &bones);
+	explicit FieldModelSkeleton(const QList<FieldModelBone> &bones);
 
 	inline const QList<FieldModelBone> &bones() const {
 		return _bones;

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
  * Constructs a new empty archive.
  */
 Archive::Archive() :
-	_archiveIO(new QFile())
+	_error(NoError), _archiveIO(new QFile())
 {
 }
 
@@ -38,7 +38,7 @@ Archive::Archive() :
  * Constructs a new archive object to represent the archive with the given \a filename.
  */
 Archive::Archive(const QString &filename) :
-	_archiveIO(new QFile(filename))
+	_error(NoError), _archiveIO(new QFile(filename))
 {
 }
 
@@ -46,7 +46,7 @@ Archive::Archive(const QString &filename) :
  * Constructs a new archive object to represent the archive with the given \a device.
  */
 Archive::Archive(QFile *device) :
-	_archiveIO(device)
+	_error(NoError), _archiveIO(device)
 {
 }
 

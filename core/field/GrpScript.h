@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 class ScriptsIterator : public QListIterator<Script *>
 {
 public:
-	inline ScriptsIterator(const QList<Script *> &list)
+	inline explicit ScriptsIterator(const QList<Script *> &list)
 		: QListIterator<Script *>(list), _opcodesIt(0) {}
 	ScriptsIterator(const ScriptsIterator &other);
 	virtual ~ScriptsIterator();
@@ -51,12 +51,16 @@ public:
 
 	GrpScript();
 	explicit GrpScript(const QString &name);
+	GrpScript(const QString &name, QList<Script *> scripts);
 	GrpScript(const GrpScript &other);
 	virtual ~GrpScript();
 
 	static GrpScript *createGroupModel(quint8 modelID, int charID = -1);
 
-	bool setScript(int row, const QByteArray &script);
+	inline bool setScript(int row, const QByteArray &script) {
+		return setScript(row, script, 0, script.size());
+	}
+	bool setScript(int row, const QByteArray &script, int pos, int size);
 	inline void setScript(int row, Script *script) {
 		_scripts.replace(row, script);
 	}
@@ -89,14 +93,14 @@ public:
 	QString scriptName(quint8 scriptID);
 
 	bool searchOpcode(int opcode, int &scriptID, int &opcodeID) const;
-	bool searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &scriptID, int &opcodeID) const;
+	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &scriptID, int &opcodeID) const;
 	void searchAllVars(QList<FF7Var> &vars) const;
 	bool searchExec(quint8 group, quint8 script, int &scriptID, int &opcodeID) const;
 	bool searchMapJump(quint16 mapJump, int &scriptID, int &opcodeID) const;
 	bool searchTextInScripts(const QRegExp &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const;
 	bool searchP(int &scriptID, int &opcodeID) const;
 	bool searchOpcodeP(int opCode, int &scriptID, int &opcodeID) const;
-	bool searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &scriptID, int &opcodeID) const;
+	bool searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &scriptID, int &opcodeID) const;
 	bool searchExecP(quint8 group, quint8 script, int &scriptID, int &opcodeID) const;
 	bool searchMapJumpP(quint16 field, int &scriptID, int &opcodeID) const;
 	bool searchTextInScriptsP(const QRegExp &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const;
@@ -129,5 +133,10 @@ private:
 	bool director;
 	
 };
+
+QDataStream &operator<<(QDataStream &stream, const QList<GrpScript *> &scripts);
+QDataStream &operator>>(QDataStream &stream, QList<GrpScript *> &scripts);
+QDataStream &operator<<(QDataStream &stream, const QList<Script *> &scripts);
+QDataStream &operator>>(QDataStream &stream, QList<Script *> &scripts);
 
 #endif

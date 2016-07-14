@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #ifndef DEF_VARMANAGER
 #define DEF_VARMANAGER
 
-#include <QtGui>
+#include <QtWidgets>
 #include "core/field/FieldArchive.h"
 #include "core/Var.h"
 
@@ -51,7 +51,7 @@ private:
 	QMap<quint16, QString> local_var_names;
 
 	QSpinBox *bank;
-	QSpinBox *adress;
+	QSpinBox *address;
 	QLineEdit *name;
 	QPushButton *rename;
 

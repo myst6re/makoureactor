@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ void ScriptEditorReturnToPage::build()
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Script")), 0, 0);
 	layout->addWidget(scriptList, 0, 1);
-	layout->addWidget(new QLabel(tr("Priorité")), 1, 0);
+	layout->addWidget(new QLabel(tr("Priority")), 1, 0);
 	layout->addWidget(priority, 1, 1);
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
@@ -93,16 +93,16 @@ void ScriptEditorExecPage::build()
 	priority->setRange(0, 7);
 
 	execType = new QComboBox(this);
-	execType->addItem(tr("Asynchrone, n'attend pas"));
-	execType->addItem(tr("Asynchrone, attend"));
-	execType->addItem(tr("Synchrone, attend"));
+	execType->addItem(tr("Asynchronous, no wait"));
+	execType->addItem(tr("Asynchronous, wait"));
+	execType->addItem(tr("Synchronous, wait"));
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Groupe")), 0, 0);
+	layout->addWidget(new QLabel(tr("Group")), 0, 0);
 	layout->addWidget(groupList, 0, 1);
 	layout->addWidget(new QLabel(tr("Script")), 1, 0);
 	layout->addWidget(scriptList, 1, 1);
-	layout->addWidget(new QLabel(tr("Priorité")), 2, 0);
+	layout->addWidget(new QLabel(tr("Priority")), 2, 0);
 	layout->addWidget(priority, 2, 1);
 	layout->addWidget(new QLabel(tr("Type")), 3, 0);
 	layout->addWidget(execType, 3, 1);
@@ -230,16 +230,16 @@ void ScriptEditorExecCharPage::build()
 	priority->setRange(0, 7);
 
 	execType = new QComboBox(this);
-	execType->addItem(tr("Asynchrone, n'attend pas"));
-	execType->addItem(tr("Asynchrone, attend"));
-	execType->addItem(tr("Synchrone, attend"));
+	execType->addItem(tr("Asynchronous, no wait"));
+	execType->addItem(tr("Asynchronous, wait"));
+	execType->addItem(tr("Synchronous, wait"));
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Équipier")), 0, 0);
+	layout->addWidget(new QLabel(tr("Team member")), 0, 0);
 	layout->addWidget(partyID, 0, 1);
 	layout->addWidget(new QLabel(tr("Script")), 1, 0);
 	layout->addWidget(scriptList, 1, 1);
-	layout->addWidget(new QLabel(tr("Priorité")), 2, 0);
+	layout->addWidget(new QLabel(tr("Priority")), 2, 0);
 	layout->addWidget(priority, 2, 1);
 	layout->addWidget(new QLabel(tr("Type")), 3, 0);
 	layout->addWidget(execType, 3, 1);
@@ -401,7 +401,7 @@ void ScriptEditorJumpPageInterface::fillLabelList(bool jumpBack)
 		++i;
 	}
 
-	label->addItem(tr("Nouveau label"), greaterLabel);
+	label->addItem(tr("New label"), greaterLabel);
 
 	int index = label->findData(opcodeJump->label());
 	if(index < 0)		index = 0;
@@ -420,8 +420,8 @@ void ScriptEditorJumpPage::build()
 	label = new QComboBox(this);
 
 	range = new QComboBox();
-	range->addItem(tr("Court (8 bits)"));
-	range->addItem(tr("Long (16 bits)"));
+	range->addItem(tr("Short (8-bit)"));
+	range->addItem(tr("Long (16-bit)"));
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Label")), 0, 0);
@@ -556,26 +556,26 @@ void ScriptEditorIfPage::build()
 	}
 
 	rangeTest = new QComboBox();
-	rangeTest->addItem(tr("Sur 8 bits non signés"));
-	rangeTest->addItem(tr("Sur 16 bits signés"));
-	rangeTest->addItem(tr("Sur 16 bits non signés"));
+	rangeTest->addItem(tr("8-bit unsigned"));
+	rangeTest->addItem(tr("16-bit signed"));
+	rangeTest->addItem(tr("16-bit unsigned"));
 
 	label = new QComboBox(this);
 
 	rangeJump = new QComboBox();
-	rangeJump->addItem(tr("Court (8 bits)"));
-	rangeJump->addItem(tr("Long (16 bits)"));
+	rangeJump->addItem(tr("Short (8-bit)"));
+	rangeJump->addItem(tr("Long (16-bit)"));
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Test à effectuer")), 0, 0);
+	layout->addWidget(new QLabel(tr("Test to be performed")), 0, 0);
 	layout->addWidget(varOrValue1, 0, 1);
 	layout->addWidget(operatorList, 0, 2);
 	layout->addWidget(varOrValue2, 0, 3);
-	layout->addWidget(new QLabel(tr("Type de comparaison")), 1, 0);
+	layout->addWidget(new QLabel(tr("Compare type")), 1, 0);
 	layout->addWidget(rangeTest, 1, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Label")), 2, 0);
 	layout->addWidget(label, 2, 1, 1, 3);
-	layout->addWidget(new QLabel(tr("Type de saut")), 3, 0);
+	layout->addWidget(new QLabel(tr("Jump type")), 3, 0);
 	layout->addWidget(rangeJump, 3, 1, 1, 3);
 	layout->setRowStretch(4, 1);
 	layout->setContentsMargins(QMargins());
@@ -802,7 +802,7 @@ ScriptEditorIfKeyPage::ScriptEditorIfKeyPage(Field *field, GrpScript *grpScript,
 void ScriptEditorIfKeyPage::build()
 {
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Touches")), 0, 0, 1, 4);
+	layout->addWidget(new QLabel(tr("Keys")), 0, 0, 1, 4);
 
 	int row=1, column=0;
 
@@ -827,9 +827,9 @@ void ScriptEditorIfKeyPage::build()
 
 	label = new QComboBox(this);
 	typeList = new QComboBox(this);
-	typeList->addItem(tr("Touche pressée"));
-	typeList->addItem(tr("Touche pressée une fois"));
-	typeList->addItem(tr("Touche lâchée une fois"));
+	typeList->addItem(tr("Key pressed"));
+	typeList->addItem(tr("Key pressed once"));
+	typeList->addItem(tr("Key released once"));
 
 	layout->addWidget(new QLabel(tr("Type")), row, column);
 	layout->addWidget(typeList, row, column+1, 1, 3);
@@ -940,13 +940,13 @@ void ScriptEditorIfQPage::build()
 	for(int i=100 ; i<254 ; i++)
 		charList->addItem(Data::char_names.last());
 
-	charList->addItem(tr("(Vide)"));
-	charList->addItem(tr("(Vide)"));
+	charList->addItem(tr("(Empty)"));
+	charList->addItem(tr("(Empty)"));
 
 	label = new QComboBox(this);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Personnage")), 0, 0);
+	layout->addWidget(new QLabel(tr("Character")), 0, 0);
 	layout->addWidget(charList, 0, 1);
 	layout->addWidget(new QLabel(tr("Label")), 1, 0);
 	layout->addWidget(label, 1, 1);

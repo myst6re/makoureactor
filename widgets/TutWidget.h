@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #ifndef TUTWIDGET_H
 #define TUTWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "widgets/Listwidget.h"
 #include "core/field/Field.h"
 #include "core/field/TutFileStandard.h"
@@ -28,7 +28,7 @@ class TutWidget : public QDialog
 {
 	Q_OBJECT
 public:
-	TutWidget(QWidget *parent=0);
+	explicit TutWidget(QWidget *parent=0);
 	void fill(Field *field, TutFilePC *tutPC, bool reload=false);
 	void clear();
 signals:
@@ -44,11 +44,15 @@ private slots:
 	void pasteOnCurrent();
 	void exportation();
 	void importation();
+	void repairBroken();
+	void replaceByEmptyAkao();
+	void replaceByEmptyTuto();
 private:
 	QWidget *buildTutPage();
 	QWidget *buildSoundPage();
+	QWidget *buildBrokenPage();
 	void fillList();
-	QListWidgetItem *createListItem(int id) const;
+	QString listItemText(int id) const;
 	void updateAkaoID(quint16 akaoID);
 	void saveText(QListWidgetItem *item);
 	int currentRow(QListWidgetItem *item=0) const;
@@ -60,7 +64,9 @@ private:
 	QStackedWidget *stackedWidget;
 	QRadioButton *versionPS, *versionPC;
 	QListWidget *list;
-	QPushButton *exportButton, *importButton;
+	QPushButton *exportButton, *importButton,
+	            *repairButton, *createNewAkaoButton,
+	            *createNewTutoButton;
 	QPlainTextEdit *textEdit;
 	QLabel *akaoDesc;
 	QComboBox *akaoIDList;

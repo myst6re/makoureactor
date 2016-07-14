@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ void InfFile::clear()
 {
 }
 
-bool InfFile::isJap()
+bool InfFile::isJap() const
 {
 	return field()->sectionSize(Field::Inf) == 536;
 }
@@ -76,12 +76,12 @@ QString InfFile::mapName()
 
 void InfFile::setMapName(const QString &name)
 {
-	strcpy(data.name, name.toLatin1().constData());
-	data.name[8] = '\x00';
+	memcpy(data.name, name.toLatin1().leftJustified(9, '\0', true).constData(), 9);
+	data.name[8] = '\0';
 	setModified(true);
 }
 
-quint8 InfFile::control()
+quint8 InfFile::control() const
 {
 	return data.control;
 }
@@ -211,7 +211,7 @@ QList<Exit> InfFile::exitLines() const
 	return exit;
 }
 
-Exit InfFile::exitLine(quint8 id)
+Exit InfFile::exitLine(quint8 id) const
 {
 	return data.doors[id];
 }
@@ -242,14 +242,14 @@ void InfFile::setTrigger(quint8 id, const Trigger &trigger)
 	setModified(true);
 }
 
-bool InfFile::arrowIsDisplayed(quint8 id)
+bool InfFile::arrowIsDisplayed(quint8 id) const
 {
 	return data.display_arrow[id] & 1;
 }
 
 void InfFile::setArrowDiplay(quint8 id, bool display)
 {
-	data.display_arrow[id] = (data.display_arrow[id] & 0xFE) | display;
+	data.display_arrow[id] = (data.display_arrow[id] & 0xFE) | quint8(display);
 	setModified(true);
 }
 

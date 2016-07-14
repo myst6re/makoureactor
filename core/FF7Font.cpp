@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -186,6 +186,7 @@ QString FF7Font::saveTxt()
 	return data;
 }
 
+/*
 void FF7Font::print()
 {
 	int tid=1;
@@ -199,13 +200,14 @@ void FF7Font::print()
 			qDebug() << buf.toLatin1().data();
 		}
 	}
-}
+} */
 
 QMap<QString, FF7Font *> FF7Font::fonts;
 QString FF7Font::font_dirPath;
 
 bool FF7Font::listFonts()
 {
+	qDeleteAll(fonts);
 	fonts.clear();
 
 #ifdef Q_OS_WIN
@@ -224,7 +226,11 @@ bool FF7Font::listFonts()
 	FF7Font *latinFont = openFont(":/fonts/sysfnt.windowBinFile", ":/fonts/sysfnt.txt");
 	FF7Font *jpFont = openFont(":/fonts/sysfnt_jp.windowBinFile", ":/fonts/sysfnt_jp.txt");
 
-	if(!latinFont || !jpFont)	return false;
+	if(!latinFont || !jpFont) {
+		if (latinFont) delete latinFont;
+		if (jpFont)    delete jpFont;
+		return false;
+	}
 
 	latinFont->setReadOnly(true);
 	jpFont->setReadOnly(true);
@@ -247,7 +253,6 @@ QStringList FF7Font::fontList()
 
 FF7Font *FF7Font::openFont(const QString &windowBinFilePath, const QString &txtPath)
 {
-	FF7Font *ff7Font = NULL;
 	WindowBinFile *windowBinFile = NULL;
 	QFile f(windowBinFilePath);
 	if(f.open(QIODevice::ReadOnly)) {
@@ -262,17 +267,18 @@ FF7Font *FF7Font::openFont(const QString &windowBinFilePath, const QString &txtP
 
 	if(!windowBinFile) {
 		return NULL;
-	} else {
-		QFile f2(txtPath);
-		if(f2.open(QIODevice::ReadOnly)) {
-			ff7Font = new FF7Font(windowBinFile, f2.readAll());
-			f2.close();
-		} else {
-			ff7Font = new FF7Font(windowBinFile, QByteArray());
-		}
-		ff7Font->setPaths(txtPath, windowBinFilePath);
-		return ff7Font;
 	}
+
+	FF7Font *ff7Font;
+	QFile f2(txtPath);
+	if(f2.open(QIODevice::ReadOnly)) {
+		ff7Font = new FF7Font(windowBinFile, f2.readAll());
+		f2.close();
+	} else {
+		ff7Font = new FF7Font(windowBinFile, QByteArray());
+	}
+	ff7Font->setPaths(txtPath, windowBinFilePath);
+	return ff7Font;
 }
 
 FF7Font *FF7Font::font(QString name)

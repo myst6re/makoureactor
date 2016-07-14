@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -28,21 +28,21 @@ FontWidget::FontWidget(QWidget *parent) :
 	fontPalette = new FontPalette(this);
 	selectPal = new QComboBox(this);
 	QStringList colors;
-	colors << tr("Gris") << tr("Bleu") << tr("Rouge") << tr("Violet") << tr("Vert") << tr("Cyan") << tr("Jaune") << tr("Blanc");
+	colors << tr("Grey") << tr("Blue") << tr("Red") << tr("Violet") << tr("Green") << tr("Cyan") << tr("Yellow") << tr("White");
 	selectPal->addItems(colors);
 	selectPal->setCurrentIndex(selectPal->count() - 1);
 
 	selectTable = new QComboBox(this);
 
-	fromImage1 = new QPushButton(tr("À partir d'une image..."), this);
+	fromImage1 = new QPushButton(tr("From Image..."), this);
 	fromImage1->setVisible(false);//TODO
-	fromImage2 = new QPushButton(tr("À partir d'une image..."), this);
+	fromImage2 = new QPushButton(tr("From Image..."), this);
 	fromImage2->setVisible(false);//TODO
-//	QPushButton *resetButton1 = new QPushButton(tr("Annuler les modifications"), this);//TODO
+//	QPushButton *resetButton1 = new QPushButton(tr("Cancel Changes"), this);//TODO
 	textLetter = new QLineEdit(this);
-	exportButton = new QPushButton(tr("Exporter..."), this);
-	importButton = new QPushButton(tr("Importer..."), this);
-	resetButton2 = new QPushButton(tr("Annuler les modifications"), this);
+	exportButton = new QPushButton(tr("Export..."), this);
+	importButton = new QPushButton(tr("Import..."), this);
+	resetButton2 = new QPushButton(tr("Cancel Changes"), this);
 	resetButton2->setEnabled(false);
 
 	QGridLayout *layout = new QGridLayout(this);
@@ -163,19 +163,22 @@ void FontWidget::exportFont()
 	QString binF, tdwF, txtF, pngF, jpgF, bmpF;
 	QStringList filter;
 	if(windowBinFile) {
-		filter.append(binF = tr("Fichier police FF7 (*.bin)"));
-		filter.append(tdwF = tr("Fichier police FF8 (*.tdw)"));
-		filter.append(pngF = tr("Fichier image PNG (*.png)"));
-		filter.append(jpgF = tr("Fichier image JPG (*.jpg)"));
-		filter.append(bmpF = tr("Fichier image BMP (*.bmp)"));
+		filter.append(binF = tr("FF7 font file (*.bin)"));
+		filter.append(tdwF = tr("FF8 font file (*.tdw)"));
+		filter.append(pngF = tr("Image File (*.png)"));
+		filter.append(jpgF = tr("Image File (*.jpg))"));
+		filter.append(bmpF = tr("Image File (*.bmp)"));
 	}
 
-	if(ff7Font)
-		filter.append(txtF = tr("Fichier traduction %1 (*.txt)").arg(PROG_NAME));
+	if(ff7Font) {
+		filter.append(txtF = tr("Translation file %1 (*.txt)").arg(PROG_NAME));
+	}
 	QString selectedFilter;
 
-	QString path = QFileDialog::getSaveFileName(this, tr("Exporter police de caractère"), "sysfnt", filter.join(";;"), &selectedFilter);
-	if(path.isNull())		return;
+	QString path = QFileDialog::getSaveFileName(this, tr("Export font"), "sysfnt", filter.join(";;"), &selectedFilter);
+	if(path.isNull()) {
+		return;
+	}
 
 	if(selectedFilter == binF) {
 		/*QByteArray data;
@@ -212,11 +215,12 @@ void FontWidget::exportFont()
 			f.write(data.toUtf8());
 			f.close();
 		} else {
-			QMessageBox::warning(this, tr("Erreur"), tr("Erreur d'ouverture du fichier. (%1)").arg(f.errorString()));
+			QMessageBox::warning(this, tr("Error"), tr("Error opening file (%1)").arg(f.errorString()));
 		}
-	} else if(selectedFilter == pngF ||
-			  selectedFilter == jpgF ||
-			  selectedFilter == bmpF) {
+	} else if(windowBinFile &&
+	          (selectedFilter == pngF ||
+	           selectedFilter == jpgF ||
+	           selectedFilter == bmpF)) {
 		char *format;
 		if(selectedFilter == pngF) {
 			format = (char *)"PNG";
@@ -236,11 +240,11 @@ void FontWidget::importFont()
 	QString tdwF;
 	QStringList filter;
 	if(windowBinFile) {
-		filter.append(tdwF = tr("Fichier police FF8 (*.tdw)"));
+		filter.append(tdwF = tr("FF8 font file (*.tdw)"));
 	}
 	QString selectedFilter;
 
-	QString path = QFileDialog::getOpenFileName(this, tr("Importer police de caractère"), "sysfnt", filter.join(";;"), &selectedFilter);
+	QString path = QFileDialog::getOpenFileName(this, tr("Import font"), "sysfnt", filter.join(";;"), &selectedFilter);
 	if(path.isNull())		return;
 
 	if(selectedFilter == tdwF) {
@@ -250,14 +254,15 @@ void FontWidget::importFont()
 			if(newWindowBinFile.open(f.readAll())) {
 				newWindowBinFile.setModified(true);
 				*windowBinFile = newWindowBinFile;
+				// FIXME: Update Data::windowBin?
 				setWindowBinFile(windowBinFile);// update
 				emit letterEdited();
 			} else {
-				QMessageBox::warning(this, tr("Erreur"), tr("Fichier invalide"));
+				QMessageBox::warning(this, tr("Error"), tr("Invalid file"));
 			}
 			f.close();
 		} else {
-			QMessageBox::warning(this, tr("Erreur"), tr("Erreur d'ouverture du fichier. (%1)").arg(f.errorString()));
+			QMessageBox::warning(this, tr("Error"), tr("Error opening file (%1)").arg(f.errorString()));
 		}
 	}
 }

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -60,12 +60,12 @@ void FieldArchivePC::clear()
 
 const FieldPC *FieldArchivePC::field(quint32 id) const
 {
-	return (const FieldPC *)FieldArchive::field(id);
+	return static_cast<const FieldPC *>(FieldArchive::field(id));
 }
 
 FieldPC *FieldArchivePC::field(quint32 id, bool open)
 {
-	return (FieldPC *)FieldArchive::field(id, open);
+	return static_cast<FieldPC *>(FieldArchive::field(id, open));
 }
 
 TutFilePC *FieldArchivePC::tut(const QString &name)
@@ -83,7 +83,7 @@ TutFilePC *FieldArchivePC::tut(const QString &name)
 				QByteArray data = io()->fileData(tutName + ".tut", false, false);
 				if(!data.isEmpty()) {
 					tutFile = new TutFilePC();
-					if(!((TutFile *)tutFile)->open(data)) {
+					if(!static_cast<TutFile *>(tutFile)->open(data)) {
 						delete tutFile;
 						return NULL;
 					}
@@ -124,7 +124,7 @@ void FieldArchivePC::setSaved()
 
 FieldArchiveIOPC *FieldArchivePC::io() const
 {
-	return (FieldArchiveIOPC *)FieldArchive::io();
+	return static_cast<FieldArchiveIOPC *>(FieldArchive::io());
 }
 
 void FieldArchivePC::cleanModelLoader()

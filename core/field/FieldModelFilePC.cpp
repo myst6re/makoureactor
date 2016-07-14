@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -24,13 +24,14 @@
 #include "../TexFile.h"
 
 FieldModelFilePC::FieldModelFilePC() :
-	FieldModelFile()
+	FieldModelFile(), _charLgp(0)
 {
 }
 
 void FieldModelFilePC::clear()
 {
 	_loadedTex.clear();
+	FieldModelFile::clear();
 }
 
 quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate)
@@ -69,13 +70,21 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 					QImage tex = openTexture(texName % ".tex");
 					if (!tex.isNull()) {
 						_loadedTex.insert(texID, tex);
+					} else {
+						qWarning() << "FieldModelFilePC::load error texture" << hrcFilename << texName;
 					}
 					++texID;
 				}
 
 				return true;
+			} else {
+				qWarning() << "FieldModelFilePC::load error animation" << hrcFilename << aFilename;
 			}
+		} else {
+			qWarning() << "FieldModelFilePC::load error mesh" << hrcFilename;
 		}
+	} else {
+		qWarning() << "FieldModelFilePC::load error skeleton" << hrcFilename;
 	}
 
 	return false;
@@ -109,6 +118,8 @@ bool FieldModelFilePC::openMesh(QMultiMap<int, QStringList> &rsdFiles, QStringLi
 		foreach (const QString &rsd, itRsd.value()) {
 			if (openPart(rsd.toLower() % ".rsd", boneID, textureFiles)) {
 				onePartOpened = true;
+			} else {
+				qWarning() << "FieldModelFilePC::openMesh cannot open part" << rsd;
 			}
 		}
 	}
@@ -128,6 +139,7 @@ bool FieldModelFilePC::openPart(const QString &rsdFileName, int boneID, QStringL
 			_skeleton[boneID].addPart(part);
 			return true;
 		} else {
+			qWarning() << "FieldModelFilePC::openPart part error" << rsdFileName << rsd.pFile();
 			delete part;
 		}
 	}

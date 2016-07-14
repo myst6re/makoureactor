@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -42,5 +42,5 @@ FieldArchivePS::FieldArchivePS(const QString &path, FieldArchiveIO::Type type) :
 
 FieldArchiveIOPS *FieldArchivePS::io() const
 {
-	return (FieldArchiveIOPS *)FieldArchive::io();
+	return static_cast<FieldArchiveIOPS *>(FieldArchive::io());
 }

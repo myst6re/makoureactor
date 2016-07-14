@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -49,7 +49,18 @@ public:
 		Q_UNUSED(tutID)
 		return true;
 	}
-	virtual QString parseScripts(int tutID) const;
+	virtual inline bool isBroken(int tutID) const {
+		Q_UNUSED(tutID)
+		return false;
+	}
+	virtual inline bool canBeRepaired(int tutID) const {
+		Q_UNUSED(tutID)
+		return false;
+	}
+	virtual inline bool repair(int tutID) {
+		return !isBroken(tutID);
+	}
+	virtual QString parseScripts(int tutID, bool *warnings = NULL) const;
 	virtual bool parseText(int tutID, const QString &tuto);
 	static void testParsing();
 protected:

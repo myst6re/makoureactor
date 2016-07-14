@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -20,20 +20,40 @@
 ColorDisplay::ColorDisplay(QWidget *parent) :
 	QWidget(parent), _ro(false)
 {
-	setFixedSize((COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH) * 10 + COLOR_DISPLAY_BORDER_WIDTH,
-				 COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH * 2);
 	setMouseTracking(true);
+}
+
+QSize ColorDisplay::sizeHint() const
+{
+	return minimumSizeHint();
+}
+
+QSize ColorDisplay::minimumSizeHint() const
+{
+#if (QT_VERSION < QT_VERSION_CHECK(5, 5, 0))
+	const int scale = 1;
+#else
+	const int scale = devicePixelRatio();
+#endif
+	return QSize((COLOR_DISPLAY_MIN_CELL_SIZE * scale + COLOR_DISPLAY_BORDER_WIDTH) * _colors.size() + COLOR_DISPLAY_BORDER_WIDTH,
+	             COLOR_DISPLAY_MIN_CELL_SIZE * scale + COLOR_DISPLAY_BORDER_WIDTH * 2);
+}
+
+int ColorDisplay::heightForWidth(int w) const
+{
+	return cellSize(w) + COLOR_DISPLAY_BORDER_WIDTH * 2;
 }
 
 void ColorDisplay::setColors(const QList<QRgb> &colors)
 {
-	this->colors = colors;
+	_colors = colors;
+	setFixedSize(minimumSizeHint());
 	update();
 }
 
-const QList<QRgb> &ColorDisplay::getColors() const
+const QList<QRgb> &ColorDisplay::colors() const
 {
-	return colors;
+	return _colors;
 }
 
 bool ColorDisplay::isReadOnly() const
@@ -46,48 +66,63 @@ void ColorDisplay::setReadOnly(bool ro)
 	_ro = ro;
 }
 
-void ColorDisplay::paintEvent(QPaintEvent *)
+int ColorDisplay::cellSize(int width) const
 {
-	QPainter painter(this);
+	if(_colors.isEmpty()) {
+		return COLOR_DISPLAY_MIN_CELL_SIZE;
+	}
+	QSize minSize = minimumSizeHint();
+	int w = qMax(width, minSize.width()); // Ensure current widget width respect minimum size hint
 
-	int gray;
-	int size = colors.size(), x;
+	return (w - (_colors.size() + 1) * COLOR_DISPLAY_BORDER_WIDTH) / _colors.size();
+}
+
+void ColorDisplay::paintEvent(QPaintEvent *event)
+{
+	Q_UNUSED(event)
+
+	QPainter painter(this);
+	painter.setPen(Qt::black);
+
 	// Colors
-	painter.setPen(QColor(0, 0, 0));
-	const int cellFullWidth = COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH;
-	for(int i=0 ; i<size ; ++i) {
-		x = i * cellFullWidth;
+	const int size = _colors.size(),
+	          cellWidth = cellSize(),
+	          cellFullWidth = cellWidth + COLOR_DISPLAY_BORDER_WIDTH;
+
+	for(int i = 0 ; i < size ; ++i) {
+		const int x = i * cellFullWidth;
 		painter.drawRect(x, 0, cellFullWidth, cellFullWidth);
-		gray = qGray(colors.at(i));
-		painter.fillRect(x+COLOR_DISPLAY_BORDER_WIDTH,
-						 COLOR_DISPLAY_BORDER_WIDTH,
-						 COLOR_DISPLAY_CELL_SIZE,
-						 COLOR_DISPLAY_CELL_SIZE,
-						 isEnabled() ? QColor(colors.at(i)) : QColor(gray, gray, gray));
+		const int gray = qGray(_colors.at(i));
+		painter.fillRect(x + COLOR_DISPLAY_BORDER_WIDTH,
+		                 COLOR_DISPLAY_BORDER_WIDTH,
+		                 cellWidth, cellWidth,
+		                 isEnabled() ? QColor(_colors.at(i))
+		                             : QColor(gray, gray, gray));
 	}
+
 	// Red frame
-	if(isEnabled()) {
-		painter.setPen(QColor(0xFF, 0, 0));
-		QPoint cursor_position = this->mapFromGlobal(this->cursor().pos());
-		x = colorId(cursor_position) * cellFullWidth;
+	if(isEnabled() && !isReadOnly()) {
+		painter.setPen(Qt::red);
+		const QPoint cursorPos = mapFromGlobal(cursor().pos());
+		const int x = colorId(cursorPos) * cellFullWidth;
 		painter.drawRect(x, 0, cellFullWidth, cellFullWidth);
 	}
-	painter.end();
 }
 
 int ColorDisplay::colorId(const QPoint &pos) const
 {
-	return qMin(pos.x()/(COLOR_DISPLAY_CELL_SIZE + COLOR_DISPLAY_BORDER_WIDTH), colors.size() - 1);
+	return qMin(pos.x() / (cellSize() + COLOR_DISPLAY_BORDER_WIDTH), _colors.size() - 1);
 }
 
-void ColorDisplay::enterEvent(QMouseEvent *event)
+void ColorDisplay::enterEvent(QEvent *event)
 {
+	Q_UNUSED(event);
 	update();
-	emit colorHovered(colorId(event->pos()));
 }
 
-void ColorDisplay::leaveEvent(QMouseEvent *)
+void ColorDisplay::leaveEvent(QEvent *event)
 {
+	Q_UNUSED(event);
 	update();
 }
 
@@ -99,11 +134,17 @@ void ColorDisplay::mouseMoveEvent(QMouseEvent *event)
 
 void ColorDisplay::mouseReleaseEvent(QMouseEvent *event)
 {
-	if(isReadOnly())	return;
-	int colorIndex = colorId(event->pos());
-	QColor color = QColorDialog::getColor(colors.at(colorIndex), this, tr("Choisir une nouvelle couleur"));
+	if(isReadOnly()) {
+		return;
+	}
+
+	const int colorIndex = colorId(event->pos());
+	if(colorIndex >= _colors.size()) {
+		return;
+	}
+	QColor color = QColorDialog::getColor(_colors.at(colorIndex), this, tr("Choose a new color"));
 	if(color.isValid()) {
-		colors.replace(colorIndex, color.rgb());
+		_colors.replace(colorIndex, color.rgb());
 		emit colorEdited(colorIndex, color.rgb());
 	}
 	update();

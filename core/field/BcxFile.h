@@ -44,7 +44,8 @@ public:
 	bool read(FieldModelFilePS &model);
 	bool write(const FieldModelFilePS &model);
 private:
-	bool write(const QList<FieldModelFilePS> &models) { Q_UNUSED(models); return false; }
+	using BsxFile::read;
+	using BsxFile::write;
 };
 
 #endif // BCXFILE_H

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -23,26 +23,26 @@
 TutWidget::TutWidget(QWidget *parent) :
 	QDialog(parent, Qt::Tool), copied(false)
 {
-	setWindowTitle(tr("Tutoriels/Musiques"));
+	setWindowTitle(tr("Tutorials/Sounds"));
 
 	ListWidget *_list = new ListWidget(this);
-	_list->setFixedWidth(70);
-	_list->addAction(ListWidget::Add, tr("Ajouter"), this, SLOT(add()));
-	_list->addAction(ListWidget::Rem, tr("Supprimer"), this, SLOT(del()));
+	_list->addAction(ListWidget::Add, tr("Add"), this, SLOT(add()));
+	_list->addAction(ListWidget::Rem, tr("Remove"), this, SLOT(del()));
 //	_list->addSeparator(true);
-//	_list->addAction(ListWidget::Cut, tr("Couper"), this, SLOT(cutCurrent()), true);
-//	_list->addAction(ListWidget::Copy, tr("Copier"), this, SLOT(copyCurrent()), true);
-//	_list->addAction(ListWidget::Paste, tr("Coller"), this, SLOT(pasteOnCurrent()), true);
+//	_list->addAction(ListWidget::Cut, tr("Cut"), this, SLOT(cutCurrent()), true);
+//	_list->addAction(ListWidget::Copy, tr("Copy"), this, SLOT(copyCurrent()), true);
+//	_list->addAction(ListWidget::Paste, tr("Paste"), this, SLOT(pasteOnCurrent()), true);
 	list = _list->listWidget();
 //	list->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
 	stackedWidget = new QStackedWidget();
 	stackedWidget->addWidget(buildTutPage());
 	stackedWidget->addWidget(buildSoundPage());
+	stackedWidget->addWidget(buildBrokenPage());
 	stackedWidget->setCurrentIndex(0);
 
-	exportButton = new QPushButton(tr("Exporter..."));
-	importButton = new QPushButton(tr("Importer..."));
+	exportButton = new QPushButton(tr("Export..."));
+	importButton = new QPushButton(tr("Import..."));
 	exportButton->setEnabled(false);
 	importButton->setEnabled(false);
 
@@ -74,7 +74,7 @@ TutWidget::TutWidget(QWidget *parent) :
 
 void TutWidget::fill(Field *field, TutFilePC *tutPC, bool reload)
 {
-	if((!reload && this->tut == field->tutosAndSounds()) || !field)	return;
+	if(!field || (!reload && this->tut == field->tutosAndSounds()))	return;
 	clear();
 	tut = field->tutosAndSounds();
 	this->tutPC = tutPC;
@@ -140,11 +140,34 @@ QWidget *TutWidget::buildSoundPage()
 	akaoDesc->hide();
 
 	QGridLayout *layout = new QGridLayout(ret);
-	layout->addWidget(new QLabel(tr("ID musique :")), 0, 0);
+	layout->addWidget(new QLabel(tr("Music ID:")), 0, 0);
 	layout->addWidget(akaoIDList, 0, 1);
 	layout->addWidget(akaoDesc, 1, 0, 1, 2);
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
+
+	return ret;
+}
+
+QWidget *TutWidget::buildBrokenPage()
+{
+	QWidget *ret = new QWidget(this);
+
+	repairButton = new QPushButton(tr("Repair"), ret);
+	createNewAkaoButton = new QPushButton(tr("Replace by empty AKAO"), ret);
+	createNewTutoButton = new QPushButton(tr("Replace by empty tuto"), ret);
+
+	QVBoxLayout *layout = new QVBoxLayout(ret);
+	layout->addWidget(new QLabel(tr("There is an error")));
+	layout->addWidget(repairButton);
+	layout->addWidget(createNewAkaoButton);
+	layout->addWidget(createNewTutoButton);
+	layout->addStretch();
+	layout->setContentsMargins(QMargins());
+
+	connect(repairButton, SIGNAL(released()), SLOT(repairBroken()));
+	connect(createNewAkaoButton, SIGNAL(released()), SLOT(replaceByEmptyAkao()));
+	connect(createNewTutoButton, SIGNAL(released()), SLOT(replaceByEmptyTuto()));
 
 	return ret;
 }
@@ -180,17 +203,22 @@ void TutWidget::fillList()
 	int size = currentTut->size();
 
 	for(int i=0 ; i<size ; ++i) {
-		list->addItem(createListItem(i));
+		list->addItem(new QListWidgetItem(listItemText(i)));
 	}
 	list->blockSignals(false);
 }
 
-QListWidgetItem *TutWidget::createListItem(int id) const
+QString TutWidget::listItemText(int id) const
 {
-	return new QListWidgetItem((currentTut->isTut(id)
-								? tr("Tuto %1")
-								: tr("Musique %1"))
-							   .arg(id));
+	QString text;
+	if(currentTut->isBroken(id)) {
+		text = tr("Broken %1");
+	} else if(currentTut->isTut(id)) {
+		text = tr("Tuto %1");
+	} else {
+		text = tr("Music %1");
+	}
+	return text.arg(id);
 }
 
 int TutWidget::currentRow(QListWidgetItem *item) const
@@ -227,16 +255,24 @@ void TutWidget::updateAkaoID(quint16 akaoID)
 
 void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 {
-	if(item == NULL)	return;
+	if(item == NULL) {
+		exportButton->setEnabled(false);
+		importButton->setEnabled(false);
+		return;
+	}
 
 	if(lastItem != NULL) {
 		saveText(lastItem);
 	}
 
 	int id = currentRow(item);
-	bool isTut = currentTut->isTut(id);
+	bool isTut = currentTut->isTut(id),
+	        isBroken = currentTut->isBroken(id);
 
-	if(isTut) {
+	if(isBroken) {
+		stackedWidget->setCurrentIndex(2);
+		repairButton->setVisible(currentTut->canBeRepaired(id));
+	} else if(isTut) {
 		stackedWidget->setCurrentIndex(0);
 		textEdit->setPlainText(currentTut->parseScripts(id));
 	} else {
@@ -256,19 +292,19 @@ void TutWidget::saveText(QListWidgetItem *item)
 	if(item == NULL)	return;
 
 	int id = currentRow(item);
-	if(currentTut->isTut(id)) {
+	if(currentTut->isBroken(id)) {
+		// Do nothing
+	} else if(currentTut->isTut(id)) {
 		currentTut->parseText(id, textEdit->toPlainText());
 		if(currentTut->isModified()) {
 			emit modified();
 		}
 	} else {
-		quint16 akaoID;
-
 		QString userText = akaoIDList->lineEdit()->text();
 		QRegExp regExp("\\d+");
 		if(regExp.indexIn(userText) != -1) {
 			userText = regExp.capturedTexts().first();
-			akaoID = userText.toInt();
+			quint16 akaoID = userText.toInt();
 
 			if(tut->akaoID(id) != akaoID) {
 				tut->setAkaoID(id, akaoID);
@@ -291,8 +327,8 @@ void TutWidget::add()
 	bool addTut = true;
 	if(currentTut == tut) {
 		QDialog chooseType(this, Qt::Dialog | Qt::WindowCloseButtonHint);
-		QRadioButton *tutType = new QRadioButton(tr("Tutoriel"), &chooseType);
-		QRadioButton *akaoType = new QRadioButton(tr("Musique"), &chooseType);
+		QRadioButton *tutType = new QRadioButton(tr("Tutorial"), &chooseType);
+		QRadioButton *akaoType = new QRadioButton(tr("Music"), &chooseType);
 		tutType->setChecked(true);
 		QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &chooseType);
 		QGridLayout *chooseLayout = new QGridLayout(&chooseType);
@@ -309,14 +345,14 @@ void TutWidget::add()
 
 		if(!addTut) {
 			akaoPath = QDir::fromNativeSeparators(QDir::cleanPath(Config::value("akaoImportExportPath").toString()));
-			akaoPath = QFileDialog::getOpenFileName(this, tr("Importer"), akaoPath + "/" + tr("son_%1.akao").arg(row), tr("Son Final Fantasy (*.akao)"));
+			akaoPath = QFileDialog::getOpenFileName(this, tr("Import"), akaoPath + "/" + tr("sound_%1.akao").arg(row), tr("Final Fantasy Sound (*.akao)"));
 			if(akaoPath.isNull())	return;
 			Config::setValue("akaoImportExportPath", akaoPath.left(akaoPath.lastIndexOf('/')));
 		}
 	}
 
 	if(addTut && row < currentTut->size() && currentTut == tutPC) {
-		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutoriel utilisé dans les script"), tr("Insérer un tutoriel ici va décaler les identifiants des tutoriels qui suit, cela risque de poser problème.\nÊtes-vous sûr de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutorial used in scripts"), tr("Insert a tutorial here will shift the IDs of the tutorials that follows, this may be a problem.\nAre you sure you want to continue?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if(rep == QMessageBox::Cancel) 	return;
 	}
 
@@ -343,7 +379,7 @@ void TutWidget::del()
 	}
 
 	if((tutPC == NULL || currentTut == tutPC) && usedTuts.contains(row)) {
-		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutoriel utilisé dans les script"), currentTut == tutPC ? tr("Ce tutoriel est peut-être utilisé par un ou plusieurs scripts de cet écran.\nLe supprimer peut provoquer des erreurs.\nÊtes-vous sûr de vouloir continuer ?") : tr("Ce tutoriel est utilisé par un ou plusieurs scripts de cet écran.\nLe supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui suit.\nÊtes-vous sûr de vouloir continuer ?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutorial used in scripts"), currentTut == tutPC ? tr("This tutorial may be used by one or more scripts on this field.\nDelete can cause errors.\nAre you sure you want to continue?") : tr("This tutorial is used by one or more scripts on this field.\nRemove will replace calls to this tutorial with calls to the tutorial that follows.\nAre you sure you want to continue?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if(rep == QMessageBox::Cancel) 	return;
 	}
 
@@ -453,11 +489,11 @@ void TutWidget::exportation()
 		filename = tr("tuto_%1.tutps").arg(row);
 		filter = tr("Tuto Final Fantasy VII PS (*.tutps)");
 	} else {
-		filename = tr("son_%1.akao").arg(row);
-		filter = tr("Son Final Fantasy (*.akao)");
+		filename = tr("sound_%1.akao").arg(row);
+		filter = tr("Final Fantasy Sound (*.akao)");
 	}
 
-	path = QFileDialog::getSaveFileName(this, tr("Exporter"), path + "/" + filename, filter);
+	path = QFileDialog::getSaveFileName(this, tr("Export"), path + "/" + filename, filter);
 
 	if(path.isNull()) {
 		return;
@@ -467,7 +503,7 @@ void TutWidget::exportation()
 
 	QFile akao(path);
 	if(!akao.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Erreur d'ouverture du fichier"));
+		QMessageBox::warning(this, tr("Error"), tr("Opening error file"));
 		return;
 	}
 
@@ -491,11 +527,11 @@ void TutWidget::importation()
 		filename = tr("tuto_%1.tutps").arg(row);
 		filter = tr("Tuto Final Fantasy VII PS (*.tutps)");
 	} else {
-		filename = tr("son_%1.akao").arg(row);
-		filter = tr("Son Final Fantasy (*.akao)");
+		filename = tr("sound_%1.akao").arg(row);
+		filter = tr("Final Fantasy Sound (*.akao)");
 	}
 
-	path = QFileDialog::getOpenFileName(this, tr("Importer"), path + "/" + filename, filter);
+	path = QFileDialog::getOpenFileName(this, tr("Import"), path + "/" + filename, filter);
 
 	if(path.isNull()) {
 		return;
@@ -505,12 +541,12 @@ void TutWidget::importation()
 
 	QFile akao(path);
 	if(!akao.open(QIODevice::ReadOnly)) {
-		QMessageBox::warning(this, tr("Erreur"), tr("Erreur d'ouverture du fichier"));
+		QMessageBox::warning(this, tr("Error"), tr("Opening Error File"));
 		return;
 	}
 
 	if(akao.size() > 1000000) { // FIXME: remove fixed limitation
-		QMessageBox::warning(this, tr("Erreur"), tr("Fichier trop gros"));
+		QMessageBox::warning(this, tr("Error"), tr("File too large"));
 		return;
 	}
 
@@ -528,4 +564,44 @@ void TutWidget::importation()
 	textEdit->setPlainText(currentTut->parseScripts(row));
 	textEdit->setReadOnly(!isTut);
 	akaoIDList->setEnabled(!isTut);
+}
+
+void TutWidget::repairBroken()
+{
+	int row = currentRow();
+	if(row < 0 || !currentTut->canBeRepaired(row)) {
+		return;
+	}
+
+	if(currentTut->repair(row)) {
+		list->currentItem()->setText(listItemText(row));
+		showText(list->currentItem(), list->currentItem());
+		emit modified();
+	}
+}
+
+void TutWidget::replaceByEmptyAkao()
+{
+	int row = currentRow();
+	if(row < 0) {
+		return;
+	}
+
+	currentTut->setData(row, QByteArray("AKAO\0\0", 6));
+	list->currentItem()->setText(listItemText(row));
+	showText(list->currentItem(), list->currentItem());
+	emit modified();
+}
+
+void TutWidget::replaceByEmptyTuto()
+{
+	int row = currentRow();
+	if(row < 0) {
+		return;
+	}
+
+	currentTut->setData(row, QByteArray("\x11", 1));
+	list->currentItem()->setText(listItemText(row));
+	showText(list->currentItem(), list->currentItem());
+	emit modified();
 }

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -33,10 +33,15 @@ QString Config::programResourceDir()
 void Config::set() {
 	if(!settings) {
 #ifdef Q_OS_WIN
-	settings = new QSettings(qApp->applicationDirPath()+"/Makou_Reactor.ini", QSettings::IniFormat);
+		settings = new QSettings(qApp->applicationDirPath()
+								 .append("/Makou_Reactor.ini"),
+								 QSettings::IniFormat);
 #else
-	settings = new QSettings("Makou_Reactor");
+		settings = new QSettings("makoureactor/settings");
 #endif
+		settings->setValue("varFile",
+		                   QFileInfo(settings->fileName())
+		                   .path().append("/vars.cfg"));
 	}
 }
 
@@ -52,6 +57,13 @@ QVariant Config::value(const QString &key, const QVariant &defaultValue)
 void Config::setValue(const QString &key, const QVariant &value)
 {
 	settings->setValue(key, value);
+}
+
+void Config::append(const QString &key, const QVariant &value)
+{
+	QList<QVariant> list = settings->value(key).toList();
+	list.append(value);
+	settings->setValue(key, list);
 }
 
 void Config::remove(const QString &key)

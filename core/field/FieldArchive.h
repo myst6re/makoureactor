@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -31,17 +31,18 @@ struct SearchQuery
 struct SearchOpcodeQuery : public SearchQuery
 {
 	int opcode;
-	SearchOpcodeQuery(int opcode) :
+	explicit SearchOpcodeQuery(int opcode) :
 		opcode(opcode) {}
 };
 
 struct SearchVarQuery : public SearchQuery
 {
-	quint8 bank, adress;
+	quint8 bank;
+	quint16 address;
 	Opcode::Operation op;
 	int value;
-	SearchVarQuery(quint8 bank, quint8 adress, Opcode::Operation op, int value) :
-		bank(bank), adress(adress), op(op), value(value) {}
+	SearchVarQuery(quint8 bank, quint16 address, Opcode::Operation op, int value) :
+		bank(bank), address(address), op(op), value(value) {}
 };
 
 struct SearchExecQuery : public SearchQuery
@@ -54,14 +55,14 @@ struct SearchExecQuery : public SearchQuery
 struct SearchFieldQuery : public SearchQuery
 {
 	quint16 fieldID;
-	SearchFieldQuery(quint16 fieldID) :
+	explicit SearchFieldQuery(quint16 fieldID) :
 		fieldID(fieldID) {}
 };
 
 struct SearchTextQuery : public SearchQuery
 {
 	QRegExp text;
-	SearchTextQuery(QRegExp text) :
+	explicit SearchTextQuery(QRegExp text) :
 		text(text) {}
 };
 
@@ -113,13 +114,13 @@ class FieldArchiveIterator : public QListIterator<Field *>
 {
 	friend class FieldArchive;
 public:
-	FieldArchiveIterator(const FieldArchive &archive);
+	explicit FieldArchiveIterator(const FieldArchive &archive);
 	Field *next(bool open=true);
 	Field *peekNext(bool open=true) const;
 	Field *peekPrevious(bool open=true) const;
 	Field *previous(bool open=true);
 private:
-	Field *openField(Field *field, bool open=true) const;
+	static Field *openField(Field *field, bool open=true);
 };
 
 class FieldArchive
@@ -143,7 +144,7 @@ public:
 	explicit FieldArchive(FieldArchiveIO *io);
 	virtual ~FieldArchive();
 	virtual bool isPC() const=0;
-	inline bool isPS() { return !isPC(); }
+	inline bool isPS() const { return !isPC(); }
 
 	FieldArchiveIO::ErrorCode open();
 	FieldArchiveIO::ErrorCode save(const QString &path=QString());
@@ -175,9 +176,8 @@ public:
 	void printScripts(const QString &filename);
 	void printScriptsDirs(const QString &filename);
 	void diffScripts();
-#ifdef BG_ID_RESEARCH
+	static bool printBackgroundTiles(Field *field, const QString &filename, bool uniformize = false);
 	void searchBackgroundZ();
-#endif
 	void searchAll();// research & debug function
 #endif
 	bool find(bool (*predicate)(Field *, SearchQuery *, SearchIn *),
@@ -187,13 +187,13 @@ public:
 				  SearchQuery *toSearch, int &fieldID, SearchIn *searchIn,
 				  Sorting sorting, SearchScope scope);
 	bool searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchMapJump(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchTextInScripts(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchText(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting, SearchScope scope);
 	bool searchOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchMapJumpP(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
@@ -225,7 +225,7 @@ private:
 	void updateFieldLists(Field *field, int fieldID);
 	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting, SearchScope scope) const;
 	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting, SearchScope scope) const;
-	bool openField(Field *field);
+	static bool openField(Field *field);
 
 	QList<Field *> fileList;
 	QMultiMap<QString, int> fieldsSortByName;

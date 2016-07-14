@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,10 +18,10 @@
 #ifndef COLORDISPLAY_H
 #define COLORDISPLAY_H
 
-#include <QtGui>
+#include <QtWidgets>
 
-#define COLOR_DISPLAY_CELL_SIZE		9
-#define COLOR_DISPLAY_BORDER_WIDTH	1
+#define COLOR_DISPLAY_MIN_CELL_SIZE   9
+#define COLOR_DISPLAY_BORDER_WIDTH    1
 
 class ColorDisplay : public QWidget
 {
@@ -29,20 +29,30 @@ class ColorDisplay : public QWidget
 public:
 	explicit ColorDisplay(QWidget *parent=0);
 	void setColors(const QList<QRgb> &colors);
-	const QList<QRgb> &getColors() const;
+	const QList<QRgb> &colors() const;
 	bool isReadOnly() const;
 	void setReadOnly(bool ro);
+	QSize sizeHint() const;
+	QSize minimumSizeHint() const;
+	int heightForWidth(int w) const;
+	bool hasHeightForWidth() const {
+		return true;
+	}
+	inline int cellSize() const {
+		return cellSize(width());
+	}
 signals:
 	void colorEdited(int id, QRgb value);
 	void colorHovered(int id);
 private:
 	int colorId(const QPoint &pos) const;
-	QList<QRgb> colors;
+	int cellSize(int w) const;
+	QList<QRgb> _colors;
 	bool _ro;
 protected:
 	void paintEvent(QPaintEvent *event);
-	void enterEvent(QMouseEvent *event);
-	void leaveEvent(QMouseEvent *event);
+	void enterEvent(QEvent *event);
+	void leaveEvent(QEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 };

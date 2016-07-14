@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ MiscWidget::MiscWidget(InfFile *data, Field *field, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
 	data(data), field(field)
 {
-	setWindowTitle(tr("Divers"));
+	setWindowTitle(tr("Miscellaneous"));
 
 	mapName = new QLineEdit(this);
 	mapName->setMaxLength(8);
@@ -31,9 +31,9 @@ MiscWidget::MiscWidget(InfFile *data, Field *field, QWidget *parent) :
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(new QLabel(tr("Nom écran :")), 0, 0);
+	layout->addWidget(new QLabel(tr("Field name:")), 0, 0);
 	layout->addWidget(mapName, 0, 1);
-	layout->addWidget(new QLabel(tr("Auteur :")), 1, 0);
+	layout->addWidget(new QLabel(tr("Author:")), 1, 0);
 	layout->addWidget(mapAuthor, 1, 1);
 	layout->addWidget(buttonBox, 3, 0, 1, 2);
 

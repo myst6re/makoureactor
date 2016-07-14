@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -21,10 +21,10 @@
 #include <QtCore>
 #include "FieldModelLoader.h"
 
-typedef struct {
+struct FieldModelLoaderStruct {
 	quint8 faceID, bonesCount, partsCount, animationCount;
 	quint8 unknown1, unknown2, unknown3, modelID;
-} FieldModelLoaderStruct;
+};
 
 class FieldModelLoaderPS : public FieldModelLoader
 {

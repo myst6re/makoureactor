@@ -1,6 +1,6 @@
 /****************************************************************************
- ** Néo-Midgar Final Fantasy VII French Retranslation
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** NÃ©o-Midgar Final Fantasy VII French Retranslation
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -31,12 +31,12 @@ public:
 		NoCountry, Jp, Us, Uk, Fr, De, Es
 	};
 
-	IsoArchiveFF7(const QString &name);
+	explicit IsoArchiveFF7(const QString &name);
 	virtual ~IsoArchiveFF7();
 
 	bool open(QIODevice::OpenMode mode);
-	const QByteArray &fileLzs(const QString &path, quint32 maxSize=0);
-	const QByteArray &modifiedFileLzs(const QString &path, quint32 maxSize=0);
+	const QByteArray &fileLzs(const QString &path, quint32 maxSize=0) const;
+	const QByteArray &modifiedFileLzs(const QString &path, quint32 maxSize=0) const;
 	Country country() const;
 	IsoFile *exe() const;
 	bool isDisc(int num) const;
@@ -47,9 +47,9 @@ public:
 private:
 	Q_DISABLE_COPY(IsoArchiveFF7)
 	bool updateBin(IsoFile *isoBin, const QList<IsoFile *> &filesRefByBin, int startOffset = 0);
-	bool updateFieldBin();
-	bool updateWorldBin();
-	bool updateYamadaBin();
+	IsoFile *updateFieldBin();
+	IsoFile *updateWorldBin();
+	IsoFile *updateYamadaBin();
 	bool reorganizeModifiedFilesAfter(QMap<quint32, const IsoFile *> &writeToTheMain, QList<const IsoFile *> &writeToTheEnd);
 	IsoFile *searchExe() const;
 	Country searchCountry() const;

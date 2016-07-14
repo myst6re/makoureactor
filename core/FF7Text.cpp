@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -36,71 +36,70 @@ const QByteArray &FF7Text::data() const
 
 QString FF7Text::text(bool jp, bool simplified) const
 {
-	QString trad, character;
-	quint8 index;
+	QString trad;
 //	bool jp = Config::value("jp_txt", false).toBool();
 	int size = _data.size();
 
-	for(quint16 i=0 ; i<size ; ++i)
-	{
-		index = (quint8)_data.at(i);
+	for(quint16 i=0 ; i<size ; ++i) {
+		quint8 index = (quint8)_data.at(i);
 		if(index == 0xFF)	break;
+		QString character;
 		switch(index) {
 		case 0xFA:
 			++i;
-			if(size<=i)	return trad.append(simplified ? "¶" : "{xfa}");
+			if(size<=i)	return trad.append(simplified ? "Â¶" : "{xfa}");
 			if(jp) {
 				character = getCaract(_data.at(i), 3);
 				if(character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfa}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
+					character = simplified ? "Â¶" : QString("{xfa}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfa}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "Â¶" : QString("{xfa}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFB:
 			++i;
-			if(size<=i)	return trad.append(simplified ? "¶" : "{xfb}");
+			if(size<=i)	return trad.append(simplified ? "Â¶" : "{xfb}");
 			if(jp) {
 				character = getCaract(_data.at(i), 4);
 				if(character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfb}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
+					character = simplified ? "Â¶" : QString("{xfb}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfb}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "Â¶" : QString("{xfb}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFC:
 			++i;
-			if(size<=i)	return trad.append(simplified ? "¶" : "{xfc}");
+			if(size<=i)	return trad.append(simplified ? "Â¶" : "{xfc}");
 			if(jp) {
 				character = getCaract(_data.at(i), 5);
 				if(character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfc}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
+					character = simplified ? "Â¶" : QString("{xfc}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfc}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "Â¶" : QString("{xfc}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFD:
 			++i;
-			if(size<=i)	return trad.append(simplified ? "¶" : "{xfd}");
+			if(size<=i)	return trad.append(simplified ? "Â¶" : "{xfd}");
 			if(jp) {
 				character = getCaract(_data.at(i), 6);
 				if(character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfd}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
+					character = simplified ? "Â¶" : QString("{xfd}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfd}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "Â¶" : QString("{xfd}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFE:
 			++i;
-			if(size<=i) 	return trad.append(simplified ? "¶" : "{xfe}");;
+			if(size<=i) 	return trad.append(simplified ? "Â¶" : "{xfe}");;
 			index = (quint8)_data.at(i);
 
 			if(index == 0xE2) {
@@ -108,14 +107,18 @@ QString FF7Text::text(bool jp, bool simplified) const
 					if(i+4 < size && (quint8)_data.at(i+4)==0 && (quint8)_data.at(i+2) <= 4) {
 						quint8 bank;
 						switch((quint8)_data.at(i+2)) {
-						case 0:		bank = 1;	break;// 1 & 2
-						case 1:		bank = 3;	break;// 3 & 4
-						case 2:		bank = 11;	break;// 11 & 12
-						case 3:		bank = 13;	break;// 13 & 14
-						case 4:		bank = 15;	break;// 7 & 15
+						case 0:     bank = 1;	break; // 1 & 2
+						case 1:     bank = 3;	break; // 3 & 4
+						case 2:     bank = 11;	break; // 11 & 12
+						case 3:     bank = 13;	break; // 13 & 14
+						case 4:     bank = 15;	break; // 7 & 15
+						default:    bank = 0;	break; // Error
 						}
 
-						trad.append(QString("{MEMORY:var[%2][%1];size=%3}").arg((quint8)_data.at(i+1)).arg(bank).arg((quint8)_data.at(i+3)));
+						trad.append(QString("{MEMORY:var[%2][%1];size=%3}")
+						            .arg((quint8)_data.at(i+1))
+						            .arg(bank)
+						            .arg((quint8)_data.at(i+3)));
 						i+=4;
 					} else {
 						trad.append("{xfe}{xe2}");
@@ -139,9 +142,9 @@ QString FF7Text::text(bool jp, bool simplified) const
 				if(jp) {
 					character = getCaract(index, 7);
 					if(index >= 0xd2 && simplified) {
-						character = "¶";
+						character = "Â¶";
 					} else if(character.isEmpty()) {
-						character = simplified ? "¶" : QString("{xfe}{x%1}").arg(index, 2, 16, QChar('0'));
+						character = simplified ? "Â¶" : QString("{xfe}{x%1}").arg(index, 2, 16, QChar('0'));
 					}
 					trad.append(character);
 				} else {
@@ -150,7 +153,7 @@ QString FF7Text::text(bool jp, bool simplified) const
 						character = getCaract(index, 7);
 					}
 					if(character.isEmpty()) {
-						character = simplified ? "¶" : QString("{xfe}{x%1}").arg(index, 2, 16, QChar('0'));
+						character = simplified ? "Â¶" : QString("{xfe}{x%1}").arg(index, 2, 16, QChar('0'));
 					}
 					trad.append(character);
 				}
@@ -162,7 +165,7 @@ QString FF7Text::text(bool jp, bool simplified) const
 				character = " ";
 			}
 			else if(character.isEmpty()) {
-				character = simplified ? "¶" : QString("{x%1}").arg(index, 2, 16, QChar('0'));
+				character = simplified ? "Â¶" : QString("{x%1}").arg(index, 2, 16, QChar('0'));
 			}
 			trad.append(character);
 		break;

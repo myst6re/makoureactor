@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2013 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2013 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ void FieldModelThread::run()
 			return;
 		}
 		FieldModelFile *fieldModel = field->fieldModel(modelId, animationId, animate);
-		if(!_canceled && !fieldModel->isEmpty()) {
+		if(!_canceled && fieldModel->isValid()) {
 			emit modelLoaded(field, fieldModel, modelId, animationId, animate);
 		}
 	}

@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -24,8 +24,16 @@
 #include "BsxFile.h"
 
 FieldModelFilePS::FieldModelFilePS() :
-	FieldModelFile()
+	FieldModelFile(), _scale(0),
+    _currentField(0), _currentModelID(-1)
 {
+}
+
+void FieldModelFilePS::clear()
+{
+	_loadedTex.clear();
+	_textures = FieldModelTexturesPS();
+	FieldModelFile::clear();
 }
 
 bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID, bool animate)
@@ -101,7 +109,7 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 
 				foreach (FieldModelGroup *group, part->groups()) {
 					if (group->hasTexture()) {
-						FieldModelTextureRefPS *textureRef = (FieldModelTextureRefPS *)group->textureRef();
+						FieldModelTextureRefPS *textureRef = static_cast<FieldModelTextureRefPS *>(group->textureRef());
 
 						if (textureRef->type() > 1) {
 							QPoint newPos = textureRef->imgPos() + QPoint(0, imgY.value(textureRef->imgX()));
@@ -128,7 +136,7 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 		}
 	}
 
-	if (!modelBcx.isEmpty()) {
+	if (modelBcx.isValid()) {
 		if (!skeleton().isEmpty()) {
 			qWarning() << "FieldPS::fieldModel bsx present, but bcx skeleton not empty";
 			foreach (const FieldModelBone &bone, skeleton().bones()) {
@@ -153,10 +161,14 @@ QImage FieldModelFilePS::loadedTexture(FieldModelGroup *group)
 		return _loadedTex.value(group);
 	}
 
-	FieldModelTextureRefPS *texRefPS = (FieldModelTextureRefPS *)group->textureRef();
+	FieldModelTextureRefPS *texRefPS = static_cast<FieldModelTextureRefPS *>(group->textureRef());
 	QImage tex;
 
 	if (texRefPS->type() == 0 || texRefPS->type() == 1) { // Eye and Mouth
+		if (!_currentField) {
+			qWarning() << "FieldModelFilePS::loadedTexture currentField not set";
+			return QImage();
+		}
 		quint8 faceID = _currentField->fieldModelLoader()->model(_currentModelID).faceID;
 		TdbFile tdb;
 		bool useTdb = faceID < 0x21;
@@ -167,15 +179,16 @@ QImage FieldModelFilePS::loadedTexture(FieldModelGroup *group)
 			qWarning() << "FieldModelFilePS::loadedTexture error";
 			return QImage();
 		}
+		group->setFloatCoords(tex.width(), tex.height());
 	} else {
 		tex = _textures.toImage(texRefPS->imgX(), texRefPS->imgY(),
 								texRefPS->palX(), texRefPS->palY(),
 								texRefPS->bpp() == 0 ? FieldModelTexturesPS::Bpp4
 													 : FieldModelTexturesPS::Bpp8);
-	}
 
-	// Fix tex coords according to tex size
-	group->removeSpriting(tex.width(), tex.height());
+		// Fix tex coords according to tex size (implies setFloatCoords)
+		group->removeSpriting(tex.width(), tex.height());
+	}
 
 	_loadedTex.insert(group, tex);
 

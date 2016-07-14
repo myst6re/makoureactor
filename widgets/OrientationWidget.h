@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 #ifndef ORIENTATIONWIDGET_H
 #define ORIENTATIONWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class OrientationWidget : public QWidget
 {
@@ -43,12 +43,17 @@ private:
 	double radiusCircle() const;
 	bool isInCircle(const QPointF &pos);
 	void moveCursor(const QPointF &pos);
+	void mouseEvent(QMouseEvent *e);
 	int _value;
 	bool _readOnly;
 protected:
 	virtual void paintEvent(QPaintEvent *e);
-	virtual void mousePressEvent(QMouseEvent *e);
-	virtual void mouseMoveEvent(QMouseEvent *e);
+	virtual inline void mousePressEvent(QMouseEvent *e) {
+		mouseEvent(e);
+	}
+	virtual inline void mouseMoveEvent(QMouseEvent *e) {
+		mouseEvent(e);
+	}
 };
 
 #endif // ORIENTATIONWIDGET_H

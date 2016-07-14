@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ Opcode *GrpScriptsIterator::previousOpcode()
 }
 
 Section1File::Section1File(Field *field) :
-	FieldPart(field), _tut(0)
+	FieldPart(field), _scale(0), _tut(0)
 {
 }
 
@@ -174,8 +174,6 @@ bool Section1File::open(const QByteArray &data)
 	quint16 nbAKAO, posScripts, pos;
 	quint8 emptyGrps = 0, nbScripts = (quint8)data.at(2);
 
-	GrpScript *grpScript;
-
 	//this->nbObjets3D = (quint8)data.at(3);
 	memcpy(&nbAKAO, constData + 6, 2); // nbAKAO
 
@@ -197,50 +195,49 @@ bool Section1File::open(const QByteArray &data)
 	quint16 positions[33];
 	const int scriptCount = isDemo ? 16 : 32;
 
-	for(quint8 i=0 ; i<nbScripts ; ++i)
-	{
-		grpScript = new GrpScript(QString(data.mid(cur + 8*i, 8)));
+	for(quint8 i=0 ; i<nbScripts ; ++i) {
+		GrpScript *grpScript = new GrpScript(QString(data.mid(cur + 8*i, 8)));
 		if(emptyGrps > 1) {
 			emptyGrps--;
 		} else {
 
-			//Listage des positions de départ
+			// Listing start offsets
 			memcpy(positions, constData + posScripts + scriptCount * 2 * i, scriptCount * 2);
 
-			//Ajout de la position de fin
-			if(i==nbScripts-1)	positions[scriptCount] = posTexts;
-			else
-			{
+			// Add offset at the end
+			if(i == nbScripts - 1) {
+				positions[scriptCount] = posTexts;
+			} else {
 				memcpy(&pos, constData + posScripts + scriptCount * 2 * (i + 1), 2);
 
-				if(pos > positions[scriptCount - 1])	positions[scriptCount] = pos;
-				else
-				{
+				if(pos > positions[scriptCount - 1]) {
+					positions[scriptCount] = pos;
+				} else {
 					emptyGrps = 1;
-					while(pos <= positions[scriptCount - 1] && i+emptyGrps<nbScripts-1)
-					{
+					while(pos <= positions[scriptCount - 1] && i+emptyGrps<nbScripts-1) {
 						memcpy(&pos, constData + posScripts + scriptCount * 2 * (i + emptyGrps + 1), 2);
 						emptyGrps++;
 					}
-					if(i+emptyGrps==nbScripts)	positions[scriptCount] = posTexts;
-					else	positions[scriptCount] = pos;
+					if(i + emptyGrps == nbScripts) {
+						positions[scriptCount] = posTexts;
+					} else {
+						positions[scriptCount] = pos;
+					}
 				}
 			}
 
 			quint8 scriptID = 0;
-			for(quint8 j=0 ; j<scriptCount ; ++j)
-			{
-				if(positions[j+1] > positions[j])
-				{
+			for(quint8 j=0 ; j<scriptCount ; ++j) {
+				if(positions[j+1] > positions[j]) {
 					if (scriptID == 0) {
-						Script *script0 = new Script(data.mid(positions[j], positions[j+1]-positions[j]));
+						Script *script0 = new Script(data, positions[j], positions[j+1]-positions[j]);
 						if(!script0->isValid()) {
 							delete script0;
 							return false;
 						}
 						grpScript->setScript(0, script0); // S0 - Init
 						grpScript->setScript(1, script0->splitScriptAtReturn()); // S0 - Main
-					} else if (!grpScript->setScript(scriptID + 1, data.mid(positions[j], positions[j+1]-positions[j]))) {
+					} else if (!grpScript->setScript(scriptID + 1, data, positions[j], positions[j+1]-positions[j])) {
 						return false;
 					}
 					scriptID=j+1;
@@ -250,8 +247,7 @@ bool Section1File::open(const QByteArray &data)
 		_grpScripts.append(grpScript);
 	}
 
-	if(nbAKAO>0)
-	{
+	if(nbAKAO>0) {
 		//INTERGRITY TEST
 //		QString out;
 //		bool pasok = false;
@@ -267,23 +263,19 @@ bool Section1File::open(const QByteArray &data)
 //		}
 
 		memcpy(&posAKAO, constData + cur + 8*nbScripts, 4); // posAKAO
-	}
-	else
-	{
+	} else {
 		posAKAO = dataSize;
 	}
 
 	/* ---------- TEXTS ---------- */
 
-	if((posAKAO -= posTexts) > 4)//If there are texts
-	{
+	if((posAKAO -= posTexts) > 4) { //If there are texts
 		quint16 posDeb, posFin, nbTextes;
 		if(dataSize < posTexts+2)	return false;
 		memcpy(&posDeb, constData + posTexts + 2, 2);
 		nbTextes = posDeb/2 - 1;
 
-		for(quint32 i=1 ; i<nbTextes ; ++i)
-		{
+		for(quint32 i=1 ; i<nbTextes ; ++i) {
 			memcpy(&posFin, constData + posTexts + 2 + i*2, 2);
 
 			if(dataSize < posTexts+posFin)	return false;
@@ -451,7 +443,7 @@ bool Section1File::importer(QIODevice *device, ExportFormat format)
 	Q_UNUSED(format)
 	//TODO
 	// bool jp = Config::value("jp_txt", false).toBool();
-	bool start, field, texts;
+	bool start = false, field = false, texts = false;
 
 	QXmlStreamReader stream(device);
 
@@ -595,16 +587,16 @@ bool Section1File::searchOpcode(int opcode, int &groupID, int &scriptID, int &op
 	return searchOpcode(opcode, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
-bool Section1File::searchVar(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const
+bool Section1File::searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID < 0)
 		groupID = scriptID = opcodeID = 0;
 	if(groupID >= _grpScripts.size())
 		return false;
-	if(_grpScripts.at(groupID)->searchVar(bank, adress, op, value, scriptID, opcodeID))
+	if(_grpScripts.at(groupID)->searchVar(bank, address, op, value, scriptID, opcodeID))
 		return true;
 
-	return searchVar(bank, adress, op, value, ++groupID, scriptID = 0, opcodeID = 0);
+	return searchVar(bank, address, op, value, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
 bool Section1File::searchExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const
@@ -670,7 +662,7 @@ bool Section1File::searchOpcodeP(int opcode, int &groupID, int &scriptID, int &o
 	return searchOpcodeP(opcode, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
-bool Section1File::searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const
+bool Section1File::searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if(groupID >= _grpScripts.size()) {
 		groupID = _grpScripts.size()-1;
@@ -678,10 +670,10 @@ bool Section1File::searchVarP(quint8 bank, quint8 adress, Opcode::Operation op, 
 	}
 	if(groupID < 0)
 		return false;
-	if(_grpScripts.at(groupID)->searchVarP(bank, adress, op, value, scriptID, opcodeID))
+	if(_grpScripts.at(groupID)->searchVarP(bank, address, op, value, scriptID, opcodeID))
 		return true;
 
-	return searchVarP(bank, adress, op, value, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
+	return searchVarP(bank, address, op, value, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
 bool Section1File::searchExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const

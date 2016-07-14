@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -22,21 +22,21 @@
 #include "FieldPart.h"
 #include "IdFile.h"
 
-typedef struct {
+struct Range {
 	qint16 left;
 	qint16 top;
 	qint16 right;
 	qint16 bottom;
-} Range;
+};
 
-typedef struct {
+struct Exit {
 	Vertex_s exit_line[2];
 	Vertex_s destination;
 	quint16 fieldID;
 	quint8 dir, dir_copy1, dir_copy2, dir_copy3;
-} Exit;
+};
 
-typedef struct {
+struct Trigger {
 	Vertex_s trigger_line[2];
 	quint8 background_parameter;
 	quint8 background_state;
@@ -49,16 +49,16 @@ typedef struct {
 	 * 5 - OnTrigger - OFF, AwayFromTriggerOnPlusSide - ON
 	 */
 	quint8 soundID;
-} Trigger;
+};
 
-typedef struct {
+struct Arrow {
 	qint32 positionX;
 	qint32 positionZ;
 	qint32 positionY;
 	quint32 type;// 0 - Invisible, 1 - Red, 2 - Green
-} Arrow;
+};
 
-typedef struct {
+struct InfData {
 	char name[9];
 	quint8 control;
 	qint16 cameraFocusHeight;
@@ -77,7 +77,7 @@ typedef struct {
 	// Only in occidental/international version
 	quint8 display_arrow[12];
 	Arrow arrows[12];// 16 * 12 bytes
-} InfData;
+};
 
 class InfFile : public FieldPart
 {
@@ -87,10 +87,10 @@ public:
 	bool open(const QByteArray &data);
 	QByteArray save() const;
 	void clear();
-	bool isJap();
+	bool isJap() const;
 	QString mapName();
 	void setMapName(const QString &name);
-	quint8 control();
+	quint8 control() const;
 	void setControl(quint8 control);
 	qint16 cameraFocusHeight() const;
 	void setCameraFocusHeight(qint16 cameraFocusHeight);
@@ -113,12 +113,12 @@ public:
 	qint16 bgLayer4Height() const;
 	void setBgLayer4Height(qint16 height);
 	QList<Exit> exitLines() const;
-	Exit exitLine(quint8 id);
+	Exit exitLine(quint8 id) const;
 	void setExitLine(quint8 id, const Exit &line);
 	QList<Trigger> triggers() const;
 	const Trigger &trigger(quint8 id) const;
 	void setTrigger(quint8 id, const Trigger &trigger);
-	bool arrowIsDisplayed(quint8 id);
+	bool arrowIsDisplayed(quint8 id) const;
 	void setArrowDiplay(quint8 id, bool display);
 	QList<Arrow> arrows() const;
 	const Arrow &arrow(quint8 id) const;

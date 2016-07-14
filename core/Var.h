@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -24,15 +24,17 @@ class Var
 {
 public:
 	static bool load();
-	static bool save(const QMap<quint16, QString> &);
-	static QString name(quint8 bank, quint8 adress);
-	static const QMap<quint16, QString> &get();
-	static void set(quint8 bank, quint8 adress, const QString &name);
-	static void del(quint8 bank, quint8 adress);
-	static bool exists(quint8 bank, quint8 adress);
+	static bool save(const QMap<quint16, QString> &varNames);
+	static QString name(quint8 bank, quint8 address);
+	static inline const QMap<quint16, QString> &get() {
+		return _varNames;
+	}
+	static void set(quint8 bank, quint8 address, const QString &name);
+	static void del(quint8 bank, quint8 address);
+	static bool exists(quint8 bank, quint8 address);
 
 private:
-	static QMap<quint16, QString> var_names;
+	static QMap<quint16, QString> _varNames;
 };
 
 #endif

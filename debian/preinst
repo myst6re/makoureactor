@@ -6,3 +6,6 @@ fi
 if [ -f /usr/share/makoureactor/makoureactor ];then
  rm /usr/share/makoureactor/makoureactor
 fi
+if [ -f /usr/share/makoureactor/vars.cfg ];then
+ rm /usr/share/makoureactor/vars.cfg
+fi
