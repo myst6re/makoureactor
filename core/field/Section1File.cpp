@@ -147,7 +147,7 @@ void Section1File::clear()
 
 bool Section1File::open()
 {
-	return open(field()->sectionData(Field::Scripts));
+	return open(field()->sectionData(Field::_ScriptsTextsAkaos));
 }
 
 bool Section1File::open(const QByteArray &data)
@@ -296,7 +296,7 @@ bool Section1File::open(const QByteArray &data)
 
 QByteArray Section1File::save() const
 {
-	QByteArray data = field()->sectionData(Field::Scripts);
+	QByteArray data = field()->sectionData(Field::_ScriptsTextsAkaos);
 	QByteArray grpScriptNames, positionsScripts, positionsAKAO, allScripts, realScript, positionsTexts, allTexts, allAKAOs;
 	quint32 posAKAO, posAKAOs, newPosAKAOs;
 	quint16 posTocAKAOs, posTexts, newPosScripts, newPosTexts, newNbAKAO, pos;

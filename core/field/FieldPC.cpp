@@ -41,30 +41,87 @@ bool FieldPC::open2()
 	return _file->open(io()->fieldData(this, QString(), false));
 }
 
+bool FieldPC::save2(QByteArray &data)
+{
+	_file->saveStart();
+
+	QHashIterator<FieldSection, FieldPart *> it(parts());
+	while (it.hasNext()) {
+		it.next();
+		FieldPart *part = it.value();
+		if (part && part->isOpen() && part->isModified()) {
+			if (!setSectionData(it.key(), part)) {
+				return false;
+			}
+		}
+	}
+
+	bool ok = _file->save(data);
+
+	_file->saveEnd();
+
+	return ok;
+}
+
 FieldPart *FieldPC::createPart(FieldSection part)
 {
 	switch(part) {
-	case ModelLoader:	return new FieldModelLoaderPC(this);
-	case Background:	return new BackgroundFilePC(this);
-	default:			return Field::createPart(part);
+	case ModelLoader: return new FieldModelLoaderPC(this);
+	case Background:  return new BackgroundFilePC(this);
+	case Scripts:
+	case Akaos:
+	case Camera:
+	case Walkmesh:
+	case Encounter:
+	case Inf:         return Field::createPart(part);
 	}
+	return 0;
 }
 
-QByteArray FieldPC::sectionData(FieldSection part)
+QByteArray FieldPC::sectionData(CommonSection part)
 {
 	switch(part) {
-	case Scripts:
-	case Akaos:       return _file->sectionData(PCFieldFile::TextsAndScripts);
-	case Camera:      return _file->sectionData(PCFieldFile::Camera);
-	case Walkmesh:    return _file->sectionData(PCFieldFile::Walkmesh);
-	case ModelLoader: return _file->sectionData(PCFieldFile::ModelLoader);
-	case Encounter:   return _file->sectionData(PCFieldFile::Encounter);
-	case Inf:         return _file->sectionData(PCFieldFile::Triggers);
-	case Background:  return _file->sectionData(PCFieldFile::Background);
-	case PalettePC:   return _file->sectionData(PCFieldFile::Palette);
-	case Unused:      return _file->sectionData(PCFieldFile::_TileMap);
-	default:          return QByteArray();
+	case _ScriptsTextsAkaos:
+		return _file->sectionData(PCFieldFile::TextsAndScripts);
+	case _Camera:
+		return _file->sectionData(PCFieldFile::Camera);
+	case _Walkmesh:
+		return _file->sectionData(PCFieldFile::Walkmesh);
+	case _Encounter:
+		return _file->sectionData(PCFieldFile::Encounter);
+	case _Inf:
+		return _file->sectionData(PCFieldFile::Triggers);
 	}
+	return QByteArray();
+}
+
+bool FieldPC::setSectionData(FieldSection section, FieldPart *part)
+{
+	switch(section) {
+	case Scripts:
+	case Akaos:
+		_file->setSectionData(PCFieldFile::TextsAndScripts, part->save());
+		return true;
+	case Camera:
+		_file->setSectionData(PCFieldFile::Camera, part->save());
+		return true;
+	case Walkmesh:
+		_file->setSectionData(PCFieldFile::Walkmesh, part->save());
+		return true;
+	case ModelLoader:
+		_file->setSectionData(PCFieldFile::ModelLoader, part->save());
+		return true;
+	case Encounter:
+		_file->setSectionData(PCFieldFile::Encounter, part->save());
+		return true;
+	case Inf:
+		_file->setSectionData(PCFieldFile::Triggers, part->save());
+		return true;
+	case Background:
+		_file->setSectionData(PCFieldFile::Background, part->save());
+		return true;
+	}
+	return false;
 }
 
 FieldModelLoaderPC *FieldPC::fieldModelLoader(bool open)

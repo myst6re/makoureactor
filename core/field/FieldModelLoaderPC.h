@@ -22,6 +22,8 @@
 #include <QRgb>
 #include "FieldModelLoader.h"
 
+class FieldPC;
+
 struct FieldModelInfosPC
 {
 	QString nameChar, nameHRC;
@@ -37,6 +39,7 @@ public:
 	explicit FieldModelLoaderPC(Field *field);
 	void clear();
 	void clean();
+	FieldPC *field() const;
 	bool open();
 	bool open(const QByteArray &data);
 	QByteArray save() const;

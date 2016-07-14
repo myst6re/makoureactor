@@ -40,6 +40,7 @@ public:
 	QByteArray save() const;
 	QByteArray savePal() const;
 	virtual inline bool canSave() const { return true; }
+	FieldPC *field() const;
 	BackgroundFilePS toPS(FieldPS *field) const;
 	bool repair();
 };

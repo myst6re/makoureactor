@@ -38,11 +38,15 @@ public:
 	inline FieldArchiveIOPS *io() const {
 		return static_cast<FieldArchiveIOPS *>(Field::io());
 	}
-	QByteArray sectionData(FieldSection part);
+	inline DatFile *datFile() const {
+		return _file;
+	}
+	QByteArray sectionData(CommonSection part);
 protected:
 	virtual bool open2();
-	virtual bool save() { return false; }
+	virtual bool save2(QByteArray &data);
 	virtual FieldPart *createPart(FieldSection part);
+	bool setSectionData(FieldSection section, FieldPart *part);
 private:
 	DatFile *_file;
 };

@@ -43,11 +43,15 @@ public:
 	inline FieldArchiveIOPC *io() const {
 		return static_cast<FieldArchiveIOPC *>(Field::io());
 	}
-	QByteArray sectionData(FieldSection part);
+	inline PCFieldFile *pcFieldFile() const {
+		return _file;
+	}
+	QByteArray sectionData(CommonSection part);
 protected:
 	virtual bool open2();
-	virtual bool save() { return false; }
+	virtual bool save2(QByteArray &data);
 	virtual FieldPart *createPart(FieldSection part);
+	bool setSectionData(FieldSection section, FieldPart *part);
 private:
 	PCFieldFile *_file;
 	FieldModelFilePC *_model;

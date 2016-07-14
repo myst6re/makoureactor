@@ -25,7 +25,7 @@ IdFile::IdFile(Field *field) :
 
 bool IdFile::open()
 {
-	return open(field()->sectionData(Field::Walkmesh));
+	return open(field()->sectionData(Field::_Walkmesh));
 }
 
 bool IdFile::open(const QByteArray &data)

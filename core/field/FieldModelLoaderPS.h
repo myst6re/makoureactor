@@ -21,6 +21,8 @@
 #include <QtCore>
 #include "FieldModelLoader.h"
 
+class FieldPS;
+
 struct FieldModelLoaderStruct {
 	quint8 faceID, bonesCount, partsCount, animationCount;
 	quint8 unknown1, unknown2, unknown3, modelID;
@@ -31,6 +33,7 @@ class FieldModelLoaderPS : public FieldModelLoader
 public:
 	explicit FieldModelLoaderPS(Field *field);
 	void clear();
+	FieldPS *field() const;
 	bool open();
 	bool open(const QByteArray &data);
 	QByteArray save() const;

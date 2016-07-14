@@ -16,7 +16,8 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModelLoaderPC.h"
-#include "Field.h"
+#include "FieldPC.h"
+#include "PCFieldFile.h"
 
 FieldModelLoaderPC::FieldModelLoaderPC(Field *field) :
 	FieldModelLoader(field)
@@ -54,9 +55,14 @@ void FieldModelLoaderPC::clean()
 	}
 }
 
+FieldPC *FieldModelLoaderPC::field() const
+{
+	return static_cast<FieldPC *>(FieldPart::field());
+}
+
 bool FieldModelLoaderPC::open()
 {
-	return open(field()->sectionData(Field::ModelLoader));
+	return open(field()->pcFieldFile()->sectionData(PCFieldFile::ModelLoader));
 }
 
 bool FieldModelLoaderPC::open(const QByteArray &data)

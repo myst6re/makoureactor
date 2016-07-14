@@ -20,6 +20,7 @@
 #include "PaletteIO.h"
 #include "../PsColor.h"
 #include "FieldPC.h"
+#include "PCFieldFile.h"
 #include <algorithm>
 
 BackgroundFilePC::BackgroundFilePC(FieldPC *field) :
@@ -38,6 +39,11 @@ BackgroundFilePC::BackgroundFilePC(const BackgroundFilePC &other) :
 	setPalettes(palettes);
 }
 
+FieldPC *BackgroundFilePC::field() const
+{
+	return static_cast<FieldPC *>(FieldPart::field());
+}
+
 bool BackgroundFilePC::open()
 {
 	if(isOpen() || isModified()) {
@@ -45,8 +51,9 @@ bool BackgroundFilePC::open()
 		return true;
 	}
 
-	return open(field()->sectionData(Field::Background),
-				field()->sectionData(Field::PalettePC));
+	PCFieldFile *pcFieldFile = field()->pcFieldFile();
+	return open(pcFieldFile->sectionData(PCFieldFile::Background),
+				pcFieldFile->sectionData(PCFieldFile::Palette));
 }
 
 bool BackgroundFilePC::open(const QByteArray &data, const QByteArray &palData)

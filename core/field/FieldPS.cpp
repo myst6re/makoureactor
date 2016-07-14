@@ -35,6 +35,28 @@ bool FieldPS::open2()
 	return _file->open(lzsData);
 }
 
+bool FieldPS::save2(QByteArray &data)
+{
+	_file->saveStart();
+
+	QHashIterator<FieldSection, FieldPart *> it(parts());
+	while (it.hasNext()) {
+		it.next();
+		FieldPart *part = it.value();
+		if (part && part->isOpen() && part->isModified()) {
+			if (!setSectionData(it.key(), part)) {
+				return false;
+			}
+		}
+	}
+
+	bool ok = _file->save(data);
+
+	_file->saveEnd();
+
+	return ok;
+}
+
 FieldPart *FieldPS::createPart(FieldSection part)
 {
 	switch(part) {
@@ -45,28 +67,52 @@ FieldPart *FieldPS::createPart(FieldSection part)
 	case Camera:
 	case Walkmesh:
 	case Encounter:
-	case Inf:
-	case PalettePC:
-	case Unused:      return Field::createPart(part);
+	case Inf:         return Field::createPart(part);
 	}
-	return Field::createPart(part);
+	return 0;
 }
 
-QByteArray FieldPS::sectionData(FieldSection part)
+QByteArray FieldPS::sectionData(CommonSection part)
 {
 	switch(part) {
-	case Scripts:
-	case Akaos:       return _file->sectionData(DatFile::TextsAndScripts);
-	case Camera:      return _file->sectionData(DatFile::Camera);
-	case Walkmesh:    return _file->sectionData(DatFile::Walkmesh);
-	case ModelLoader: return _file->sectionData(DatFile::ModelLoader);
-	case Encounter:   return _file->sectionData(DatFile::Encounter);
-	case Inf:         return _file->sectionData(DatFile::Triggers);
-	case Background:  return _file->sectionData(DatFile::TileMap);
-	case PalettePC:
-	case Unused:      return QByteArray();
+	case _ScriptsTextsAkaos:
+		return _file->sectionData(DatFile::TextsAndScripts);
+	case _Camera:
+		return _file->sectionData(DatFile::Camera);
+	case _Walkmesh:
+		return _file->sectionData(DatFile::Walkmesh);
+	case _Encounter:
+		return _file->sectionData(DatFile::Encounter);
+	case _Inf:
+		return _file->sectionData(DatFile::Triggers);
 	}
 	return QByteArray();
+}
+
+bool FieldPS::setSectionData(FieldSection section, FieldPart *part)
+{
+	switch(section) {
+	case Scripts:
+	case Akaos:
+		_file->setSectionData(DatFile::TextsAndScripts, part->save());
+		return true;
+	case Camera:
+		_file->setSectionData(DatFile::Camera, part->save());
+		return true;
+	case Walkmesh:
+		_file->setSectionData(DatFile::Walkmesh, part->save());
+		return true;
+	case ModelLoader:
+		_file->setSectionData(DatFile::ModelLoader, part->save());
+		return true;
+	case Encounter:
+		_file->setSectionData(DatFile::Encounter, part->save());
+		return true;
+	case Inf:
+		_file->setSectionData(DatFile::Triggers, part->save());
+		return true;
+	}
+	return false;
 }
 
 FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)

@@ -25,7 +25,7 @@ InfFile::InfFile(Field *field) :
 
 bool InfFile::open()
 {
-	return open(field()->sectionData(Field::Inf));
+	return open(field()->sectionData(Field::_Inf));
 }
 
 bool InfFile::open(const QByteArray &data)

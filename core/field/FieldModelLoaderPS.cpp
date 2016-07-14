@@ -16,7 +16,8 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModelLoaderPS.h"
-#include "Field.h"
+#include "FieldPS.h"
+#include "DatFile.h"
 
 FieldModelLoaderPS::FieldModelLoaderPS(Field *field) :
 	FieldModelLoader(field)
@@ -28,9 +29,14 @@ void FieldModelLoaderPS::clear()
 	_modelLoaders.clear();
 }
 
+FieldPS *FieldModelLoaderPS::field() const
+{
+	return static_cast<FieldPS *>(FieldPart::field());
+}
+
 bool FieldModelLoaderPS::open()
 {
-	return open(field()->sectionData(Field::ModelLoader));
+	return open(field()->datFile()->sectionData(DatFile::ModelLoader));
 }
 
 bool FieldModelLoaderPS::open(const QByteArray &data)

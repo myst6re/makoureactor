@@ -42,11 +42,17 @@ public:
 		ModelLoader = 0x10,
 		Encounter = 0x20,
 		Inf = 0x40,
-		Background = 0x80,
-		PalettePC = 0x100,
-		Unused = 0x200
+		Background = 0x80
 	};
 	Q_DECLARE_FLAGS(FieldSections, FieldSection)
+
+	enum CommonSection {
+		_ScriptsTextsAkaos,
+		_Camera,
+		_Walkmesh,
+		_Encounter,
+		_Inf
+	};
 
 	Field(const QString &name, FieldArchiveIO *io);
 	virtual ~Field();
@@ -80,14 +86,18 @@ public:
 	const QString &name() const;
 	void setName(const QString &name);
 	virtual FieldArchiveIO *io() const;
-	virtual QByteArray sectionData(FieldSection part)=0;
+	virtual QByteArray sectionData(CommonSection part)=0;
 
 	void setRemoveUnusedSection(bool remove);// FIXME: only in PC version, ugly hack detected!
 protected:
 	virtual bool open2()=0;
-	virtual bool save()=0;
+	virtual bool save2(QByteArray &data)=0;
+	FieldPart *getOrCreatePart(FieldSection part);
 	virtual FieldPart *createPart(FieldSection part);
 	FieldPart *part(FieldSection section) const;
+	inline const QHash<FieldSection, FieldPart *> &parts() const {
+		return _parts;
+	}
 	FieldModelFile *fieldModelPtr(int modelID) const;
 	void addFieldModel(int modelID, FieldModelFile *fieldModel);
 private:

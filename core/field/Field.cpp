@@ -81,12 +81,16 @@ FieldPart *Field::createPart(FieldSection section)
 	case Scripts:		return new Section1File(this);
 	case Akaos:			return new TutFileStandard(this);
 	case Camera:		return new CaFile(this);
-//	case PalettePC:		return ;
 	case Walkmesh:		return new IdFile(this);
 	case Encounter:		return new EncounterFile(this);
 	case Inf:			return new InfFile(this);
-	default:			return 0;
+	case ModelLoader:
+	case Background:
+		qWarning() << "Field::createPart section" << int(section) << "cannot be created";
+		Q_ASSERT(false);
+		return 0;
 	}
+	return 0;
 }
 
 FieldPart *Field::part(FieldSection section) const
@@ -94,7 +98,7 @@ FieldPart *Field::part(FieldSection section) const
 	return _parts.value(section);
 }
 
-FieldPart *Field::part(FieldSection section, bool open)
+FieldPart *Field::getOrCreatePart(FieldSection section)
 {
 	FieldPart *p = part(section);
 
@@ -102,6 +106,13 @@ FieldPart *Field::part(FieldSection section, bool open)
 		p = createPart(section);
 		_parts.insert(section, p);
 	}
+
+	return p;
+}
+
+FieldPart *Field::part(FieldSection section, bool open)
+{
+	FieldPart *p = getOrCreatePart(section);
 
 	if(open && !p->isOpen()) {
 		p->open();
@@ -251,7 +262,7 @@ bool Field::save(QByteArray &newData, bool compress)
 	}
 
 	return true; */
-	return save();
+	return save2(newData);
 }
 
 qint8 Field::save(const QString &path, bool compress)
@@ -282,8 +293,12 @@ qint8 Field::importer(const QString &path, bool isDat, bool compressed, FieldSec
 
 	if(compressed) { // compressed field
 		quint32 fileSize=0;
-		if(fic.read((char *)&fileSize, 4) != 4)	return 2;
-		if(fileSize+4 != fic.size()) return 2;
+		if(fic.read(reinterpret_cast<char *>(&fileSize), 4) != 4) {
+			return 2;
+		}
+		if(fileSize+4 != fic.size()) {
+			return 2;
+		}
 
 		data = LZS::decompressAll(fic.readAll());
 	} else { // uncompressed field
@@ -301,7 +316,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 
 		if(data.size() < headerSize)	return 2;
 		memcpy(sectionPositions, data.constData(), headerSize); // header
-		qint32 vramDiff = sectionPositions[0] - headerSize;// vram section1 pos - real section 1 pos
+		qint32 vramDiff = qint32(sectionPositions[0] - headerSize); // vram section1 pos - real section 1 pos
 
 		for(int i=0 ; i<7 ; ++i) {
 			sectionPositions[i] -= vramDiff;

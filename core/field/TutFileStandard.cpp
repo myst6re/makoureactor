@@ -30,7 +30,7 @@ TutFileStandard::TutFileStandard(const QList<QByteArray> &tutos) :
 
 bool TutFileStandard::open()
 {
-	return TutFile::open(field()->sectionData(Field::Scripts));
+	return TutFile::open(field()->sectionData(Field::_ScriptsTextsAkaos));
 }
 
 QList<quint32> TutFileStandard::openPositions(const QByteArray &data) const

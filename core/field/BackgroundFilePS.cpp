@@ -37,6 +37,11 @@ BackgroundFilePS::BackgroundFilePS(const BackgroundFilePS &other) :
 	setPalettes(palettes);
 }
 
+FieldPS *BackgroundFilePS::field() const
+{
+	return static_cast<FieldPS *>(FieldPart::field());
+}
+
 bool BackgroundFilePS::open()
 {
 	if(isOpen() || isModified()) {
@@ -44,8 +49,8 @@ bool BackgroundFilePS::open()
 		return true;
 	}
 
-	return open(static_cast<FieldPS *>(field())->io()->mimData(field()),
-				field()->sectionData(Field::Background));
+	return open(field()->io()->mimData(field()),
+				field()->datFile()->sectionData(DatFile::TileMap));
 }
 
 bool BackgroundFilePS::open(const QByteArray &mimData, const QByteArray &tilesData)

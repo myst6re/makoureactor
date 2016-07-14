@@ -25,7 +25,7 @@ CaFile::CaFile(Field *field) :
 
 bool CaFile::open()
 {
-	return open(field()->sectionData(Field::Camera));
+	return open(field()->sectionData(Field::_Camera));
 }
 
 bool CaFile::open(const QByteArray &data)

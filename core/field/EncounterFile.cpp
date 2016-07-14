@@ -25,7 +25,7 @@ EncounterFile::EncounterFile(Field *field) :
 
 bool EncounterFile::open()
 {
-	return open(field()->sectionData(Field::Encounter));
+	return open(field()->sectionData(Field::_Encounter));
 }
 
 bool EncounterFile::open(const QByteArray &data)
