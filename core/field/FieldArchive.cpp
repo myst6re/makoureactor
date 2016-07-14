@@ -648,6 +648,9 @@ void FieldArchive::printScripts(const QString &filename)
 void FieldArchive::printScriptsDirs(const QString &filename)
 {
 	QDir dir(filename);
+	if(!dir.exists()) {
+		dir.mkdir(".");
+	}
 
 	foreach(int i, fieldsSortByMapId) {
 		Field *f = field(i, true);
@@ -656,20 +659,20 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 			continue;
 		}
 
-		if (f->name() != "convil_1") {
-			continue;
-		}
-
 		Section1File *scriptsAndTexts = f->scriptsAndTexts();
 		if(scriptsAndTexts->isOpen()) {
 			qWarning() << f->inf()->mapName();
 
+			QString dirname = f->inf()->mapName();
+			dir.mkdir(dirname);
+			dir.cd(dirname);
+
 			int grpScriptID = 0;
 			foreach(GrpScript *grp, scriptsAndTexts->grpScripts()) {
 
-				QString dirname = QString("%1-%2")
-								  .arg(grpScriptID, 2, 10, QChar('0'))
-								  .arg(grp->name());
+				dirname = QString("%1-%2")
+				          .arg(grpScriptID, 2, 10, QChar('0'))
+				          .arg(grp->name());
 				dir.mkdir(dirname);
 				dir.cd(dirname);
 
@@ -684,15 +687,15 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 
 					int opcodeID = 0;
 					foreach(Opcode *opcode, script->opcodes()) {
-						FF7Window win;
+						// FF7Window win;
 						/* if(opcode->getWindow(win)) {
 							deb.write(QString("%1 > %2 > %3: %4 %5\n")
 									  .arg(f->name(), grp->name())
 									  .arg(scriptID)
 									  .arg(win.x).arg(win.y).toLatin1());
 						} else if (opcode->getTextID() < 0) { */
-							deb.write(QString("%1\n")
-									  .arg(opcode->toString(f)).toUtf8());
+							deb.write(opcode->toString(f).toUtf8());
+							deb.write("\n");
 						// }
 						opcodeID++;
 					}
@@ -701,6 +704,8 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 				dir.cdUp();
 				grpScriptID++;
 			}
+
+			dir.cdUp();
 		}
 	}
 }
@@ -1035,12 +1040,6 @@ void FieldArchive::searchAll()
 		}
 	}*/
 
-	/*QString dest = "scripts-PC-acro-v09-03-2014";
-	QDir tmp;
-	if(!QFile::exists(tmp.absoluteFilePath(dest))) {
-		tmp.mkdir(dest);
-	}
-	tmp.cd(dest);*/
 	QSet<QString> screens;
 //	for(int i=0 ; i<size ; ++i) {
 	foreach(int i, fieldsSortByMapId) {

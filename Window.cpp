@@ -641,7 +641,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	actionClose->setEnabled(true);
 
 #ifdef DEBUG_FUNCTIONS
-	//FieldArchivePC otherArch("C:/Users/Jérôme/Documents/neo_midgar_build/livraison-acro-2015-04-10/fflevel_compare_annexe.lgp", FieldArchiveIO::Lgp);
+	//FieldArchivePC otherArch("", FieldArchiveIO::Lgp);
 	//fieldArchive->compareTexts(&otherArch);
 	//fieldArchive->searchBackgroundZ();
 	/* const QStringList &fieldNames = Data::field_names;
@@ -797,7 +797,8 @@ void Window::openField(bool reload)
 	}
 
 	if(fieldModel) {
-		fieldModel->clear();
+		fieldModel->clearFieldModelFile();
+		fieldModel->setFieldModelLoader(field->fieldModelLoader());
 		//if(fieldArchive->io()->isPC()) {
 		//	modelThread->setField(field);
 		//}
