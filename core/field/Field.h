@@ -80,7 +80,6 @@ public:
 	const QString &name() const;
 	void setName(const QString &name);
 	virtual FieldArchiveIO *io() const;
-	virtual int sectionSize(FieldSection part) const=0;
 	virtual QByteArray sectionData(FieldSection part)=0;
 
 	void setRemoveUnusedSection(bool remove);// FIXME: only in PC version, ugly hack detected!

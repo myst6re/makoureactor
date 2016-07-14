@@ -1,8 +1,16 @@
 #include "LzsIO.h"
 
 LzsIO::LzsIO(const QByteArray &data, QObject *parent) :
-	QIODevice(parent), _data(data), _fileData((const quint8 *)_data.constData()),
-	_endFileData((const quint8 *)(_data.constData() + _data.size()))
+	QIODevice(parent), _data(data),
+    _fileData(reinterpret_cast<const quint8 *>(_data.constData())),
+	_endFileData(reinterpret_cast<const quint8 *>(_data.constData() + _data.size()))
+{
+}
+
+LzsIO::LzsIO(const QByteArray &data, int start, int size, QObject *parent) :
+	QIODevice(parent), _data(data),
+    _fileData(reinterpret_cast<const quint8 *>(_data.constData() + start)),
+	_endFileData(reinterpret_cast<const quint8 *>(_data.constData() + start + size))
 {
 }
 
@@ -11,7 +19,7 @@ bool LzsIO::open(OpenMode mode)
 	_firstByte = 0;
 	_address = 0xFFFF;
 	_curBuff = LZS_BUFFER_START;
-	memset(_buffer, 0, LZS_BUFFER_START); // Le buffer de 4096 octets est initialisé à 0
+	memset(_buffer, 0, LZS_BUFFER_START); // Le buffer de 4096 octets est initialisÃ© Ã  0
 
 	return QIODevice::open(mode | QIODevice::Unbuffered);
 }
@@ -36,7 +44,7 @@ qint64 LzsIO::readData(char *data, qint64 maxSize)
 
 	if (_address != 0xFFFF) {
 		for (quint16 i = _address + 1; i <= _length; ++i) {
-			data[curResult] = _buffer[_curBuff] = _buffer[i & LZS_BUFFER_MASK]; // On va chercher l'octet (qui est décompressé) dans le buffer à l'address indiquée puis on le sauvegarde dans la chaine finale et le buffer.
+			data[curResult] = _buffer[_curBuff] = _buffer[i & LZS_BUFFER_MASK]; // On va chercher l'octet (qui est dÃ©compressÃ©) dans le buffer Ã  l'address indiquÃ©e puis on le sauvegarde dans la chaine finale et le buffer.
 			_curBuff = (_curBuff + 1) & LZS_BUFFER_MASK;
 			++curResult;
 
@@ -49,7 +57,7 @@ qint64 LzsIO::readData(char *data, qint64 maxSize)
 
 	forever {
 		if (((_firstByte >>= 1) & 0x100) == 0) {
-			_firstByte = *_fileData++ | 0xFF00; // On récupère le premier octet puis on avance d'un octet
+			_firstByte = *_fileData++ | 0xFF00; // On rÃ©cupÃ¨re le premier octet puis on avance d'un octet
 		}
 
 		if (_fileData >= _endFileData) {
@@ -57,8 +65,8 @@ qint64 LzsIO::readData(char *data, qint64 maxSize)
 		}
 
 		if (_firstByte & 1) {
-			data[curResult] = _buffer[_curBuff] = *_fileData++; // On récupère l'octet (qui n'est pas compressé) et on le sauvegarde dans la chaine finale (result) et dans le buffer. Et bien sûr on fait avancer les curseurs d'un octet.
-			_curBuff = (_curBuff + 1) & LZS_BUFFER_MASK; // Le curseur du buffer doit toujours être entre 0 et 4095
+			data[curResult] = _buffer[_curBuff] = *_fileData++; // On rÃ©cupÃ¨re l'octet (qui n'est pas compressÃ©) et on le sauvegarde dans la chaine finale (result) et dans le buffer. Et bien sÃ»r on fait avancer les curseurs d'un octet.
+			_curBuff = (_curBuff + 1) & LZS_BUFFER_MASK; // Le curseur du buffer doit toujours Ãªtre entre 0 et 4095
 			++curResult;
 
 			if (curResult >= maxSize) {
@@ -68,11 +76,11 @@ qint64 LzsIO::readData(char *data, qint64 maxSize)
 		} else {
 			_address = *_fileData++;
 			_length = *_fileData++;
-			_address |= (_length & 0xF0) << 4; // On récupère l'address dans les deux octets (qui sont "compressés")
+			_address |= (_length & 0xF0) << 4; // On rÃ©cupÃ¨re l'address dans les deux octets (qui sont "compressÃ©s")
 			_length = (_length & 0xF) + 2 + _address;
 
 			for (quint16 i = _address; i <= _length; ++i) {
-				data[curResult] = _buffer[_curBuff] = _buffer[i & LZS_BUFFER_MASK]; // On va chercher l'octet (qui est décompressé) dans le buffer à l'address indiquée puis on le sauvegarde dans la chaine finale et le buffer.
+				data[curResult] = _buffer[_curBuff] = _buffer[i & LZS_BUFFER_MASK]; // On va chercher l'octet (qui est dÃ©compressÃ©) dans le buffer Ã  l'address indiquÃ©e puis on le sauvegarde dans la chaine finale et le buffer.
 				_curBuff = (_curBuff + 1) & LZS_BUFFER_MASK;
 				++curResult;
 
@@ -94,6 +102,13 @@ qint64 LzsIO::writeData(const char *data, qint64 maxSize)
 
 LzsRandomAccess::LzsRandomAccess(const QByteArray &data, QObject *parent) :
 	QIODevice(parent), _io(new LzsIO(data, parent)), _endReached(false)
+{
+}
+
+LzsRandomAccess::LzsRandomAccess(const QByteArray &data, int start, int size,
+                                 QObject *parent) :
+	QIODevice(parent), _io(new LzsIO(data, start, size, parent)),
+    _endReached(false)
 {
 }
 

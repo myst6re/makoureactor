@@ -36,9 +36,8 @@ public:
 	FieldModelLoaderPS *fieldModelLoader(bool open=true);
 	FieldModelFilePS *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
 	inline FieldArchiveIOPS *io() const {
-		return (FieldArchiveIOPS *)Field::io();
+		return static_cast<FieldArchiveIOPS *>(Field::io());
 	}
-	int sectionSize(FieldSection part) const;
 	QByteArray sectionData(FieldSection part);
 protected:
 	virtual bool open2();

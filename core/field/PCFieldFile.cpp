@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ bool PCFieldFile::openHeader()
 		return false;
 	}
 
-	if (io()->read((char *)_sectionPositions, sectionCount() * 4) != sectionCount() * 4) {
+	if (io()->read(reinterpret_cast<char *>(_sectionPositions), sectionCount() * 4) != sectionCount() * 4) {
 		qWarning() << "PCFieldFile::openHeader file too short:" << io()->errorString();
 		return false;
 	}
@@ -42,7 +42,7 @@ bool PCFieldFile::openHeader()
 	return true;
 }
 
-int PCFieldFile::setSectionData(quint32 pos, quint32 oldSize,
+int PCFieldFile::setSectionData(int pos, int oldSize,
 								const QByteArray &section,
 								QByteArray &out)
 {
@@ -50,7 +50,7 @@ int PCFieldFile::setSectionData(quint32 pos, quint32 oldSize,
 
 	oldSize -= 4;
 
-	out.replace(pos, 4, (char *)&newSize, 4);
+	out.replace(pos, 4, reinterpret_cast<char *>(&newSize), 4);
 	out.replace(pos + 4, oldSize, section);
 
 	return newSize - oldSize;
@@ -60,12 +60,12 @@ bool PCFieldFile::writePositions(QByteArray &data)
 {
 	const int size = PC_FIELD_FILE_SECTION_COUNT * 4;
 
-	data.replace(6, size, (char *)_sectionPositions, size);
+	data.replace(6, size, reinterpret_cast<char *>(_sectionPositions), size);
 
 	return true;
 }
 
-int PCFieldFile::sectionPos(quint8 id) const
+quint32 PCFieldFile::sectionPos(quint8 id) const
 {
 	return LzsSectionFile::sectionPos(id) + 4;
 }

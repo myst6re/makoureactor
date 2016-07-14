@@ -41,9 +41,8 @@ public:
 	FieldModelFilePC *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
 	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate = true);
 	inline FieldArchiveIOPC *io() const {
-		return (FieldArchiveIOPC *)Field::io();
+		return static_cast<FieldArchiveIOPC *>(Field::io());
 	}
-	int sectionSize(FieldSection part) const;
 	QByteArray sectionData(FieldSection part);
 protected:
 	virtual bool open2();

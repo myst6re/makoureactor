@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel J�r�me <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel Jï¿½rï¿½me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -49,12 +49,12 @@ public:
 	inline quint8 sectionCount() const {
 		return DAT_FILE_SECTION_COUNT;
 	}
-	inline int sectionSize(Section id) const {
-		return LzsSectionFile::sectionSize(quint8(id));
+	inline quint32 sectionSize(Section id, bool &eof) const {
+		return LzsSectionFile::sectionSize(quint8(id), eof);
 	}
 private:
 	bool openHeader();
-	int setSectionData(quint32 pos, quint32 oldSize,
+	int setSectionData(int pos, int oldSize,
 					   const QByteArray &section,
 					   QByteArray &out);
 	bool writePositions(QByteArray &data);

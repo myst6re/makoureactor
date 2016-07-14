@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2012 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -24,7 +24,8 @@ DatFile::DatFile() :
 
 bool DatFile::openHeader()
 {
-	if (io()->read((char *)_sectionPositions, DAT_FILE_HEADER_SIZE) != DAT_FILE_HEADER_SIZE) {
+	if (io()->read(reinterpret_cast<char *>(_sectionPositions),
+	               DAT_FILE_HEADER_SIZE) != DAT_FILE_HEADER_SIZE) {
 		qWarning() << "DatFile::openHeader file too short" << io()->errorString();
 		return false;
 	}
@@ -38,7 +39,7 @@ bool DatFile::openHeader()
 	return true;
 }
 
-int DatFile::setSectionData(quint32 pos, quint32 oldSize,
+int DatFile::setSectionData(int pos, int oldSize,
 								const QByteArray &section,
 								QByteArray &out)
 {
@@ -62,7 +63,8 @@ bool DatFile::writePositions(QByteArray &data)
 		sectionPositions[i] = _sectionPositions[i] + _shift;
 	}
 
-	data.replace(0, DAT_FILE_HEADER_SIZE, (char *)sectionPositions, DAT_FILE_HEADER_SIZE);
+	data.replace(0, DAT_FILE_HEADER_SIZE, reinterpret_cast<char *>(sectionPositions),
+	             DAT_FILE_HEADER_SIZE);
 
 	return true;
 }

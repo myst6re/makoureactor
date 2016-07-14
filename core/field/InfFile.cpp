@@ -19,7 +19,7 @@
 #include "Field.h"
 
 InfFile::InfFile(Field *field) :
-	FieldPart(field)
+	FieldPart(field), _size(0)
 {
 }
 
@@ -49,6 +49,7 @@ bool InfFile::open(const QByteArray &data)
 	this->data = InfData();
 	memcpy(&this->data, data.constData(), size);
 	this->data.name[8] = '\x00';
+	_size = size;
 
 	setOpen(true);
 
@@ -57,7 +58,7 @@ bool InfFile::open(const QByteArray &data)
 
 QByteArray InfFile::save() const
 {
-	return QByteArray((char *)&data, field()->sectionSize(Field::Inf));
+	return QByteArray((char *)&data, _size);
 }
 
 void InfFile::clear()
@@ -66,7 +67,7 @@ void InfFile::clear()
 
 bool InfFile::isJap() const
 {
-	return field()->sectionSize(Field::Inf) == 536;
+	return _size == 536;
 }
 
 QString InfFile::mapName()

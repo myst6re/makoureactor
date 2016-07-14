@@ -19,7 +19,7 @@ public:
 	void clear();
 	virtual QByteArray sectionData(quint8 id);
 	void setSectionData(quint8 id, const QByteArray &data);
-	int sectionSize(quint8 id) const;
+	quint32 sectionSize(quint8 id, bool &eof) const;
 	virtual quint8 sectionCount() const=0;
 protected:
 	inline LzsRandomAccess *io() {
@@ -27,10 +27,10 @@ protected:
 	}
 	virtual bool openHeader()=0;
 	virtual bool writePositions(QByteArray &data)=0;
-	virtual int setSectionData(quint32 pos, quint32 oldSize,
+	virtual int setSectionData(int pos, int oldSize,
 							   const QByteArray &section,
 							   QByteArray &out)=0;
-	inline virtual int sectionPos(quint8 id) const {
+	inline virtual quint32 sectionPos(quint8 id) const {
 		Q_ASSERT(id >= 0 && id < sectionCount());
 		return _sectionPositions[id];
 	}

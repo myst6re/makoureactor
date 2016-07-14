@@ -50,23 +50,6 @@ FieldPart *FieldPC::createPart(FieldSection part)
 	}
 }
 
-int FieldPC::sectionSize(FieldSection part) const
-{
-	switch(part) {
-	case Scripts:
-	case Akaos:       return _file->sectionSize(PCFieldFile::TextsAndScripts);
-	case Camera:      return _file->sectionSize(PCFieldFile::Camera);
-	case Walkmesh:    return _file->sectionSize(PCFieldFile::Walkmesh);
-	case ModelLoader: return _file->sectionSize(PCFieldFile::ModelLoader);
-	case Encounter:   return _file->sectionSize(PCFieldFile::Encounter);
-	case Inf:         return _file->sectionSize(PCFieldFile::Triggers);
-	case Background:  return _file->sectionSize(PCFieldFile::Background);
-	case PalettePC:   return _file->sectionSize(PCFieldFile::Palette);
-	case Unused:      return _file->sectionSize(PCFieldFile::_TileMap);
-	default:          return -1;
-	}
-}
-
 QByteArray FieldPC::sectionData(FieldSection part)
 {
 	switch(part) {

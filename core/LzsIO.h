@@ -12,7 +12,8 @@
 class LzsIO : public QIODevice
 {
 public:
-	LzsIO(const QByteArray &data, QObject *parent = 0);
+	explicit LzsIO(const QByteArray &data, QObject *parent = 0);
+	LzsIO(const QByteArray &data, int start, int size, QObject *parent = 0);
 	inline virtual ~LzsIO() {}
 	virtual bool open(OpenMode mode);
 	virtual void close();
@@ -37,6 +38,8 @@ class LzsRandomAccess : public QIODevice
 {
 public:
 	explicit LzsRandomAccess(const QByteArray &data, QObject *parent = 0);
+	LzsRandomAccess(const QByteArray &data,
+	                int start, int size, QObject *parent = 0);
 	virtual ~LzsRandomAccess();
 	virtual bool open(OpenMode mode);
 	virtual void close();

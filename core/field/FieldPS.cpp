@@ -19,12 +19,12 @@
 #include "BackgroundFilePS.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
-	Field(name, io)
+	Field(name, io), _file(new DatFile())
 {
 }
 
 FieldPS::FieldPS(const Field &field) :
-	Field(field)
+	Field(field), _file(new DatFile())
 {
 }
 
@@ -38,27 +38,18 @@ bool FieldPS::open2()
 FieldPart *FieldPS::createPart(FieldSection part)
 {
 	switch(part) {
-	case ModelLoader:	return new FieldModelLoaderPS(this);
-	case Background:	return new BackgroundFilePS(this);
-	default:			return Field::createPart(part);
-	}
-}
-
-int FieldPS::sectionSize(FieldSection part) const
-{
-	switch(part) {
+	case ModelLoader: return new FieldModelLoaderPS(this);
+	case Background:  return new BackgroundFilePS(this);
 	case Scripts:
-	case Akaos:       return _file->sectionSize(DatFile::TextsAndScripts);
-	case Camera:      return _file->sectionSize(DatFile::Camera);
-	case Walkmesh:    return _file->sectionSize(DatFile::Walkmesh);
-	case ModelLoader: return _file->sectionSize(DatFile::ModelLoader);
-	case Encounter:   return _file->sectionSize(DatFile::Encounter);
-	case Inf:         return _file->sectionSize(DatFile::Triggers);
-	case Background:  return _file->sectionSize(DatFile::TileMap);
+	case Akaos:
+	case Camera:
+	case Walkmesh:
+	case Encounter:
+	case Inf:
 	case PalettePC:
-	case Unused:
-	default:          return -1;
+	case Unused:      return Field::createPart(part);
 	}
+	return Field::createPart(part);
 }
 
 QByteArray FieldPS::sectionData(FieldSection part)
@@ -73,9 +64,9 @@ QByteArray FieldPS::sectionData(FieldSection part)
 	case Inf:         return _file->sectionData(DatFile::Triggers);
 	case Background:  return _file->sectionData(DatFile::TileMap);
 	case PalettePC:
-	case Unused:
-	default:          return QByteArray();
+	case Unused:      return QByteArray();
 	}
+	return QByteArray();
 }
 
 FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)

@@ -28,7 +28,7 @@ bool LzsSectionFile::open(const QByteArray &lzsData)
 	memcpy(&lzsSize, lzsDataConst, 4);
 
 	if(!Config::value("lzsNotCheck").toBool()
-			&& (quint32)lzsData.size() != lzsSize + 4) {
+			&& quint32(lzsData.size()) != lzsSize + 4) {
 		return false;
 	}
 
@@ -36,7 +36,7 @@ bool LzsSectionFile::open(const QByteArray &lzsData)
 		delete _io;
 	}
 
-	_io = new LzsRandomAccess(lzsData.mid(4));
+	_io = new LzsRandomAccess(lzsData, 4, lzsData.size() - 4);
 
 	if (!_io->open(QIODevice::ReadOnly)) {
 		qWarning() << "LzsSectionFile::open cannot open io" << _io->errorString();
@@ -94,19 +94,22 @@ void LzsSectionFile::clear()
 	_io->close();
 }
 
-int LzsSectionFile::sectionSize(quint8 id) const
+quint32 LzsSectionFile::sectionSize(quint8 id, bool &eof) const
 {
 	if (id + 1 >= sectionCount()) {
-		return -1;
+		eof = true;
+		return 0;
 	}
+	eof = false;
 	return sectionPos(id + 1) - sectionPos(id);
 }
 
 QByteArray LzsSectionFile::sectionData(quint8 id)
 {
 	if (_io->seek(sectionPos(id))) {
-		int size = sectionSize(id);
-		if (size < 0) {
+		bool eof;
+		quint32 size = sectionSize(id, eof);
+		if (eof) {
 			return _io->readAll();
 		}
 		return _io->read(size);
@@ -122,7 +125,14 @@ void LzsSectionFile::setSectionData(quint8 id, const QByteArray &data)
 		return;
 	}
 
-	shiftPositionsAfter(id, setSectionData(sectionPos(id), sectionSize(id), data, _data));
+	bool eof;
+	quint32 pos = sectionPos(id),
+	        size = sectionSize(id, eof);
+	if (eof) {
+		size = qMax(quint32(0), quint32(_data.size()) - pos);
+	}
+
+	shiftPositionsAfter(id, setSectionData(int(pos), int(size), data, _data));
 }
 
 void LzsSectionFile::shiftPositionsAfter(quint8 id, int shift)
@@ -132,6 +142,6 @@ void LzsSectionFile::shiftPositionsAfter(quint8 id, int shift)
 	}
 
 	for (quint16 i = id + 1; i < sectionCount(); ++i) {
-		_sectionPositions[i] += shift;
+		_sectionPositions[i] = quint32(int(_sectionPositions[i]) + shift);
 	}
 }
