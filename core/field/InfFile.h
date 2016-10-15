@@ -85,6 +85,7 @@ public:
 	explicit InfFile(Field *field);
 	bool open();
 	bool open(const QByteArray &data);
+	bool saveToField() const;
 	QByteArray save() const;
 	void clear();
 	bool isJap() const;

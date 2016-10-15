@@ -41,31 +41,27 @@ bool FieldPC::open2()
 	return _file->open(io()->fieldData(this, QString(), false));
 }
 
-bool FieldPC::save2(QByteArray &data)
+void FieldPC::saveStart()
 {
 	_file->saveStart();
-
-	QHashIterator<FieldSection, FieldPart *> it(parts());
-	while (it.hasNext()) {
-		it.next();
-		FieldPart *part = it.value();
-		if (part && part->isOpen() && part->isModified()) {
-			if (!setSectionData(it.key(), part)) {
-				return false;
-			}
-		}
-	}
-
-	bool ok = _file->save(data);
-
-	_file->saveEnd();
-
-	return ok;
 }
 
-FieldPart *FieldPC::createPart(FieldSection part)
+bool FieldPC::save2(QByteArray &data, bool compress, bool removeUnusedSection)
 {
-	switch(part) {
+	if (removeUnusedSection) {
+		_file->setSectionData(PCFieldFile::_TileMap, QByteArray());
+	}
+	return _file->save(data, compress);
+}
+
+void FieldPC::saveEnd()
+{
+	_file->saveEnd();
+}
+
+FieldPart *FieldPC::createPart(FieldSection section)
+{
+	switch(section) {
 	case ModelLoader: return new FieldModelLoaderPC(this);
 	case Background:  return new BackgroundFilePC(this);
 	case Scripts:
@@ -73,14 +69,14 @@ FieldPart *FieldPC::createPart(FieldSection part)
 	case Camera:
 	case Walkmesh:
 	case Encounter:
-	case Inf:         return Field::createPart(part);
+	case Inf:         return Field::createPart(section);
 	}
 	return 0;
 }
 
-QByteArray FieldPC::sectionData(CommonSection part)
+QByteArray FieldPC::sectionData(CommonSection section)
 {
-	switch(part) {
+	switch(section) {
 	case _ScriptsTextsAkaos:
 		return _file->sectionData(PCFieldFile::TextsAndScripts);
 	case _Camera:
@@ -95,30 +91,23 @@ QByteArray FieldPC::sectionData(CommonSection part)
 	return QByteArray();
 }
 
-bool FieldPC::setSectionData(FieldSection section, FieldPart *part)
+bool FieldPC::setSectionData(CommonSection section, const QByteArray &data)
 {
 	switch(section) {
-	case Scripts:
-	case Akaos:
-		_file->setSectionData(PCFieldFile::TextsAndScripts, part->save());
+	case _ScriptsTextsAkaos:
+		_file->setSectionData(PCFieldFile::TextsAndScripts, data);
 		return true;
-	case Camera:
-		_file->setSectionData(PCFieldFile::Camera, part->save());
+	case _Camera:
+		_file->setSectionData(PCFieldFile::Camera, data);
 		return true;
-	case Walkmesh:
-		_file->setSectionData(PCFieldFile::Walkmesh, part->save());
+	case _Walkmesh:
+		_file->setSectionData(PCFieldFile::Walkmesh, data);
 		return true;
-	case ModelLoader:
-		_file->setSectionData(PCFieldFile::ModelLoader, part->save());
+	case _Encounter:
+		_file->setSectionData(PCFieldFile::Encounter, data);
 		return true;
-	case Encounter:
-		_file->setSectionData(PCFieldFile::Encounter, part->save());
-		return true;
-	case Inf:
-		_file->setSectionData(PCFieldFile::Triggers, part->save());
-		return true;
-	case Background:
-		_file->setSectionData(PCFieldFile::Background, part->save());
+	case _Inf:
+		_file->setSectionData(PCFieldFile::Triggers, data);
 		return true;
 	}
 	return false;

@@ -47,6 +47,18 @@ bool EncounterFile::open(const QByteArray &data)
 	return true;
 }
 
+bool EncounterFile::saveToField() const
+{
+	QByteArray data = save();
+	if(data.isEmpty()) {
+		return false;
+	}
+
+	field()->setSectionData(Field::_Encounter, data);
+
+	return true;
+}
+
 QByteArray EncounterFile::save() const
 {
 	return QByteArray((char *)&tables, sizeof(EncounterTable) * 2);

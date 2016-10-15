@@ -63,6 +63,7 @@ public:
 	void clear();
 	bool open();
 	bool open(const QByteArray &data);
+	bool saveToField() const;
 	QByteArray save() const;
 	bool exporter(QIODevice *device, ExportFormat format);
 	bool importer(QIODevice *device, ExportFormat format);

@@ -1,5 +1,6 @@
 #include "LzsSectionFile.h"
 #include "Config.h"
+#include "LZS.h"
 
 LzsSectionFile::LzsSectionFile() :
 	_sectionPositions(0), _io(0)
@@ -64,7 +65,7 @@ void LzsSectionFile::saveStart()
 	_data = _io->readAll();
 }
 
-bool LzsSectionFile::save(QByteArray &data)
+bool LzsSectionFile::save(QByteArray &data, bool compressed)
 {
 	if (_data.isEmpty()) {
 		qWarning() << "LzsSectionFile::save call saveStart() before save()";
@@ -74,7 +75,12 @@ bool LzsSectionFile::save(QByteArray &data)
 	if (!writePositions(_data)) {
 		return false;
 	}
-	data = _data;
+
+	if (compressed) {
+		data = LZS::compressWithHeader(_data);
+	} else {
+		data = _data;
+	}
 
 	return true;
 }

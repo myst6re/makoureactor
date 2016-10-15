@@ -82,6 +82,18 @@ bool FieldModelLoaderPS::open(const QByteArray &data)
 	return true;
 }
 
+bool FieldModelLoaderPS::saveToField() const
+{
+	QByteArray data = save();
+	if(data.isEmpty()) {
+		return false;
+	}
+
+	field()->datFile()->setSectionData(DatFile::ModelLoader, data);
+
+	return true;
+}
+
 QByteArray FieldModelLoaderPS::save() const
 {
 	QByteArray ret;

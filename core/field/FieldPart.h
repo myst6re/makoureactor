@@ -30,6 +30,7 @@ public:
 
 	virtual bool open()=0;
 	virtual bool open(const QByteArray &data)=0;
+	virtual bool saveToField() const=0;
 	virtual QByteArray save() const=0;
 	virtual bool canSave() const;
 	virtual void close();

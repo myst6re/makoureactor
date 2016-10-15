@@ -31,7 +31,9 @@ public:
 	using TutFile::open; // open(QByteArray)
 	bool open();
 	QByteArray save(QByteArray &toc, quint32 firstPos) const;
-	QByteArray save() const;
+	inline QByteArray save() const {
+		return QByteArray();
+	}
 	inline int maxTutCount() const { return 255; }
 	bool hasTut() const;
 	bool isTut(int tutID) const;

@@ -90,11 +90,6 @@ QByteArray TutFileStandard::save(QByteArray &toc, quint32 firstPos) const
 	return ret;
 }
 
-QByteArray TutFileStandard::save() const
-{
-	return QByteArray();
-}
-
 bool TutFileStandard::hasTut() const
 {
 	int size = this->size();

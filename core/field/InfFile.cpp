@@ -56,6 +56,18 @@ bool InfFile::open(const QByteArray &data)
 	return true;
 }
 
+bool InfFile::saveToField() const
+{
+	QByteArray data = save();
+	if(data.isEmpty()) {
+		return false;
+	}
+
+	field()->setSectionData(Field::_Inf, data);
+
+	return true;
+}
+
 QByteArray InfFile::save() const
 {
 	return QByteArray((char *)&data, _size);

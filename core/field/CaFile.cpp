@@ -81,6 +81,18 @@ bool CaFile::open(const QByteArray &data)
 	return true;
 }
 
+bool CaFile::saveToField() const
+{
+	QByteArray data = save();
+	if(data.isEmpty()) {
+		return false;
+	}
+
+	field()->setSectionData(Field::_Camera, data);
+
+	return true;
+}
+
 QByteArray CaFile::save() const
 {
 	QByteArray ca;

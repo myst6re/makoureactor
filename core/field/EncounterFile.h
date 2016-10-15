@@ -42,6 +42,7 @@ public:
 	explicit EncounterFile(Field *field);
 	bool open();
 	bool open(const QByteArray &data);
+	bool saveToField() const;
 	QByteArray save() const;
 	void clear();
 	const EncounterTable &encounterTable(Table tableID) const;

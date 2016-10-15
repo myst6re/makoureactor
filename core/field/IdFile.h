@@ -40,6 +40,7 @@ public:
 	explicit IdFile(Field *field);
 	bool open();
 	bool open(const QByteArray &data);
+	bool saveToField() const;
 	QByteArray save() const;
 	void clear();
 	bool hasTriangle() const;

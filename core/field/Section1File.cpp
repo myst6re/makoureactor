@@ -294,6 +294,18 @@ bool Section1File::open(const QByteArray &data)
 	return true;
 }
 
+bool Section1File::saveToField() const
+{
+	QByteArray data = save();
+	if(data.isEmpty()) {
+		return false;
+	}
+
+	field()->setSectionData(Field::_ScriptsTextsAkaos, data);
+
+	return true;
+}
+
 QByteArray Section1File::save() const
 {
 	QByteArray data = field()->sectionData(Field::_ScriptsTextsAkaos);

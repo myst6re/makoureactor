@@ -40,6 +40,7 @@ public:
 	explicit CaFile(Field *field);
 	bool open();
 	bool open(const QByteArray &data);
+	bool saveToField() const;
 	QByteArray save() const;
 	void clear();
 	bool hasCamera() const;

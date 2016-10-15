@@ -146,6 +146,18 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 	return true;
 }
 
+bool FieldModelLoaderPC::saveToField() const
+{
+	QByteArray data = save();
+	if(data.isEmpty()) {
+		return false;
+	}
+
+	field()->pcFieldFile()->setSectionData(PCFieldFile::ModelLoader, data);
+
+	return true;
+}
+
 QByteArray FieldModelLoaderPC::save() const
 {
 	quint16 nbHRC = this->model_nameHRC.size(), nbAnim, nameSize, i, j;

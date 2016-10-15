@@ -36,6 +36,7 @@ public:
 	FieldPS *field() const;
 	bool open();
 	bool open(const QByteArray &data);
+	bool saveToField() const;
 	QByteArray save() const;
 	int modelCount() const;
 	int animCount(int modelID) const;

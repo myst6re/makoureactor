@@ -14,7 +14,7 @@ public:
 	}
 	bool open(const QByteArray &data);
 	void saveStart();
-	bool save(QByteArray &data);
+	bool save(QByteArray &data, bool compressed);
 	void saveEnd();
 	void clear();
 	virtual QByteArray sectionData(quint8 id);

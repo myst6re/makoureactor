@@ -42,6 +42,7 @@ public:
 	FieldPC *field() const;
 	bool open();
 	bool open(const QByteArray &data);
+	bool saveToField() const;
 	QByteArray save() const;
 	int modelCount() const;
 	bool insertModel(int modelID, const QString &hrcName);

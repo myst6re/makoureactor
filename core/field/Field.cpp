@@ -262,7 +262,25 @@ bool Field::save(QByteArray &newData, bool compress)
 	}
 
 	return true; */
-	return save2(newData);
+
+	saveStart();
+
+	QHashIterator<FieldSection, FieldPart *> it(parts());
+	while (it.hasNext()) {
+		it.next();
+		FieldPart *part = it.value();
+		if (part && part->isOpen() && part->isModified()) {
+			if (!part->saveToField()) {
+				return false;
+			}
+		}
+	}
+
+	bool ok = save2(newData, compress, _removeUnusedSection);
+
+	saveEnd();
+
+	return ok;
 }
 
 qint8 Field::save(const QString &path, bool compress)

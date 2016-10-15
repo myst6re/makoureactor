@@ -71,6 +71,18 @@ bool IdFile::open(const QByteArray &data)
 	return true;
 }
 
+bool IdFile::saveToField() const
+{
+	QByteArray data = save();
+	if(data.isEmpty()) {
+		return false;
+	}
+
+	field()->setSectionData(Field::_Walkmesh, data);
+
+	return true;
+}
+
 QByteArray IdFile::save() const
 {
 	QByteArray id;

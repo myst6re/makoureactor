@@ -42,11 +42,13 @@ public:
 		return _file;
 	}
 	QByteArray sectionData(CommonSection part);
+	bool setSectionData(CommonSection section, const QByteArray &data);
 protected:
 	virtual bool open2();
-	virtual bool save2(QByteArray &data);
+	virtual bool save2(QByteArray &data, bool compress, bool removeUnusedSection);
+	virtual void saveStart();
+	virtual void saveEnd();
 	virtual FieldPart *createPart(FieldSection part);
-	bool setSectionData(FieldSection section, FieldPart *part);
 private:
 	DatFile *_file;
 };

@@ -27,6 +27,9 @@ public:
 	explicit TutFile(Field *field = 0);
 	explicit TutFile(const QList<QByteArray> &tutos);
 	bool open(const QByteArray &data);
+	inline bool saveToField() const {
+		return false;
+	}
 	inline void clear() {
 		tutos.clear();
 	}

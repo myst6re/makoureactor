@@ -46,12 +46,14 @@ public:
 	inline PCFieldFile *pcFieldFile() const {
 		return _file;
 	}
-	QByteArray sectionData(CommonSection part);
+	QByteArray sectionData(CommonSection section);
+	bool setSectionData(CommonSection section, const QByteArray &data);
 protected:
 	virtual bool open2();
-	virtual bool save2(QByteArray &data);
-	virtual FieldPart *createPart(FieldSection part);
-	bool setSectionData(FieldSection section, FieldPart *part);
+	virtual bool save2(QByteArray &data, bool compress, bool removeUnusedSection);
+	virtual void saveStart();
+	virtual void saveEnd();
+	virtual FieldPart *createPart(FieldSection section);
 private:
 	PCFieldFile *_file;
 	FieldModelFilePC *_model;

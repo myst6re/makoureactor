@@ -73,6 +73,27 @@ bool BackgroundFilePC::open(const QByteArray &data, const QByteArray &palData)
 	return true;
 }
 
+bool BackgroundFilePC::saveToField() const
+{
+	QByteArray dataBg = save();
+
+	if(dataBg.isEmpty()) {
+		return false;
+	}
+
+	QByteArray dataPal = savePal();
+
+	if(dataPal.isEmpty()) {
+		return false;
+	}
+
+	PCFieldFile *pcFieldFile = field()->pcFieldFile();
+	pcFieldFile->setSectionData(PCFieldFile::Background, dataBg);
+	pcFieldFile->setSectionData(PCFieldFile::Palette, dataPal);
+
+	return true;
+}
+
 QByteArray BackgroundFilePC::save() const
 {
 	QBuffer buff, palBuff;

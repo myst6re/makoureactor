@@ -37,6 +37,7 @@ public:
 
 	bool open();
 	bool open(const QByteArray &data, const QByteArray &palData);
+	bool saveToField() const;
 	QByteArray save() const;
 	QByteArray savePal() const;
 	virtual inline bool canSave() const { return true; }

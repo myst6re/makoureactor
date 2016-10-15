@@ -70,7 +70,22 @@ bool BackgroundFilePS::open(const QByteArray &mimData, const QByteArray &tilesDa
 	return true;
 }
 
-QByteArray BackgroundFilePS::save() const
+bool BackgroundFilePS::saveToField() const
+{
+	QByteArray mimData, tilesData;
+	mimData = save(tilesData);
+
+	if(mimData.isEmpty() || tilesData.isEmpty()) {
+		return false;
+	}
+
+	field()->datFile()->setSectionData(DatFile::TileMap, tilesData);
+	// field()->io()->setMimData(mimData); // TODO
+
+	return false; // FIXME
+}
+
+QByteArray BackgroundFilePS::save(QByteArray &tilesData) const
 {
 	QBuffer buff, tilesBuff;
 
@@ -78,6 +93,8 @@ QByteArray BackgroundFilePS::save() const
 	if(!io.write(*this)) {
 		return QByteArray();
 	}
+
+	tilesData = tilesBuff.data();
 
 	return buff.data();
 }
