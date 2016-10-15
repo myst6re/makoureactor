@@ -797,8 +797,7 @@ void Window::openField(bool reload)
 	}
 
 	if(fieldModel) {
-		fieldModel->clearFieldModelFile();
-		fieldModel->setFieldModelLoader(field->fieldModelLoader());
+		fieldModel->clear();
 		//if(fieldArchive->io()->isPC()) {
 		//	modelThread->setField(field);
 		//}
