@@ -186,14 +186,14 @@ void FieldArchive::updateFieldLists(Field *field, int fieldID)
 	fieldsSortByMapId.insert(mapId, fieldID);
 }
 
-void FieldArchive::addField(Field *field/*, bool referenceToMaplist*/)
+int FieldArchive::addField(Field *field)
 {
 	int fieldId = fileList.size();
 	appendField(field);
+	// FIXME: choose another name? Multiple fields with the same name
+	Data::field_names.append(field->name());
 	updateFieldLists(field, fieldId);
-//	if(referenceToMaplist) {
-		//TODO
-//	}
+	return fieldId;
 }
 
 void FieldArchive::appendField(Field *field)
