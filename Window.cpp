@@ -160,8 +160,10 @@ Window::Window() :
 
 	QWidget *fullFieldList = new QWidget(this);
 	QVBoxLayout *fieldListLayout = new QVBoxLayout(fullFieldList);
+	fieldListLayout->addWidget(fieldList->toolBar());
 	fieldListLayout->addWidget(fieldList, 1);
 	fieldListLayout->addWidget(fieldList->lineSearch());
+	fieldListLayout->setSpacing(2);
 	zonePreview->setContentsMargins(fieldListLayout->contentsMargins());
 
 	horizontalSplitter = new Splitter(Qt::Vertical, this);

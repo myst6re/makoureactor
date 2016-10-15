@@ -126,8 +126,28 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 		}
 		Field *field = fieldArchive()->field(fieldID, false);
 		if(field && field->isOpen() && field->isModified()) {
-			if(!_lgp.setFile(field->name(), new FieldSaveIO(field))) {
-				return FieldNotFound;
+			if(_lgp.fileExists(field->name())) {
+				if(!_lgp.setFile(field->name(), new FieldSaveIO(field))) {
+					return ErrorOpening;
+				}
+			} else {
+				if(!_lgp.addFile(field->name(), new FieldSaveIO(field))) {
+					return ErrorOpening;
+				}
+			}
+		}
+	}
+
+	if(_lgp.fileExists("maplist")) {
+		QStringList fieldNamesCopy = Data::field_names;
+		// Check if the list was correctly opened before // FIXME
+		if(Data::openMaplist(_lgp.fileData("maplist"))) {
+			Data::field_names = fieldNamesCopy;
+			QByteArray mapListData;
+			if(Data::saveMaplist(mapListData)){
+				_lgp.setFileData("maplist", mapListData);
+			} else {
+				return Invalid;
 			}
 		}
 	}

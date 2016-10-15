@@ -60,6 +60,9 @@ public:
 
 	bool open(bool dontOptimize=false);
 
+	qint8 open(const QString &path, bool isDat, bool compressed, QIODevice *device2=0);
+	qint8 open(const QByteArray &data, bool isPSField, QIODevice *device2=0);
+
 	void setSaved();
 	bool save(QByteArray &newData, bool compress);
 	qint8 save(const QString &path, bool compress);

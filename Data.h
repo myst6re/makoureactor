@@ -45,6 +45,7 @@ public:
 	static bool load();
 	static bool openMaplist(const QByteArray &data);
 	static void openMaplist(bool PC=false);
+	static bool saveMaplist(QByteArray &data);
 	static void toPCMaplist(QStringList &field_names);
 	static QStringList char_names;
 	static QStringList key_names;
