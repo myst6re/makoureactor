@@ -28,7 +28,7 @@
 class FieldPS : public Field
 {
 public:
-	FieldPS(const QString &name, FieldArchiveIO *io);
+	FieldPS(const QString &name, FieldArchiveIOPS *io);
 	explicit FieldPS(const Field &field);
 
 	inline bool isPC() const { return false; }
@@ -38,19 +38,19 @@ public:
 	inline FieldArchiveIOPS *io() const {
 		return static_cast<FieldArchiveIOPS *>(Field::io());
 	}
-	inline DatFile *datFile() const {
-		return _file;
+	inline DatFile *datFile() {
+		return &_file;
 	}
 	QByteArray sectionData(CommonSection part);
 	bool setSectionData(CommonSection section, const QByteArray &data);
 protected:
 	virtual bool open2();
-	virtual bool save2(QByteArray &data, bool compress, bool removeUnusedSection);
+	virtual bool save2(QByteArray &data, bool compress);
 	virtual void saveStart();
 	virtual void saveEnd();
 	virtual FieldPart *createPart(FieldSection part);
 private:
-	DatFile *_file;
+	DatFile _file;
 };
 
 #endif // DEF_FIELDPS

@@ -70,9 +70,27 @@ bool Field::open()
 	return true;
 }
 
-FieldArchiveIO *Field::io() const
+qint8 Field::open(const QString &path, bool isDat, bool compressed,
+                 QIODevice *device2)
 {
-	return _io;
+	qint8 ret = importer(path, isDat, compressed,
+	                     Field::FieldSection(0xFFFF), // Everything
+	                     device2);
+	if(ret == 0) {
+		_isOpen = true;
+	}
+	return ret;
+}
+
+qint8 Field::open(const QByteArray &data, bool isPSField, QIODevice *device2)
+{
+	qint8 ret = importer(data, isPSField,
+	                     Field::FieldSection(0xFFFF), // Everything
+	                     device2);
+	if(ret == 0) {
+		_isOpen = true;
+	}
+	return ret;
 }
 
 FieldPart *Field::createPart(FieldSection section)
@@ -276,7 +294,7 @@ bool Field::save(QByteArray &newData, bool compress)
 		}
 	}
 
-	bool ok = save2(newData, compress, _removeUnusedSection);
+	bool ok = save2(newData, compress);
 
 	saveEnd();
 

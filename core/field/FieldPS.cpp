@@ -18,38 +18,34 @@
 #include "FieldPS.h"
 #include "BackgroundFilePS.h"
 
-FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
-	Field(name, io), _file(new DatFile())
+FieldPS::FieldPS(const QString &name, FieldArchiveIOPS *io) :
+	Field(name, io)
 {
 }
 
 FieldPS::FieldPS(const Field &field) :
-	Field(field), _file(new DatFile())
+	Field(field)
 {
 }
 
 bool FieldPS::open2()
 {
-	QByteArray lzsData = io()->fieldData(this, "DAT", false);
-
-	return _file->open(lzsData);
+	return _file.open(io()->fieldData(this, "DAT", false));
 }
 
 void FieldPS::saveStart()
 {
-	_file->saveStart();
+	_file.saveStart();
 }
 
-bool FieldPS::save2(QByteArray &data, bool compress, bool removeUnusedSection)
+bool FieldPS::save2(QByteArray &data, bool compress)
 {
-	Q_UNUSED(removeUnusedSection);
-
-	return _file->save(data, compress);
+	return _file.save(data, compress);
 }
 
 void FieldPS::saveEnd()
 {
-	_file->saveEnd();
+	_file.saveEnd();
 }
 
 FieldPart *FieldPS::createPart(FieldSection section)
@@ -71,15 +67,15 @@ QByteArray FieldPS::sectionData(CommonSection section)
 {
 	switch(section) {
 	case _ScriptsTextsAkaos:
-		return _file->sectionData(DatFile::TextsAndScripts);
+		return _file.sectionData(DatFile::TextsAndScripts);
 	case _Camera:
-		return _file->sectionData(DatFile::Camera);
+		return _file.sectionData(DatFile::Camera);
 	case _Walkmesh:
-		return _file->sectionData(DatFile::Walkmesh);
+		return _file.sectionData(DatFile::Walkmesh);
 	case _Encounter:
-		return _file->sectionData(DatFile::Encounter);
+		return _file.sectionData(DatFile::Encounter);
 	case _Inf:
-		return _file->sectionData(DatFile::Triggers);
+		return _file.sectionData(DatFile::Triggers);
 	}
 	return QByteArray();
 }
@@ -88,19 +84,19 @@ bool FieldPS::setSectionData(CommonSection section, const QByteArray &data)
 {
 	switch(section) {
 	case _ScriptsTextsAkaos:
-		_file->setSectionData(DatFile::TextsAndScripts, data);
+		_file.setSectionData(DatFile::TextsAndScripts, data);
 		return true;
 	case _Camera:
-		_file->setSectionData(DatFile::Camera, data);
+		_file.setSectionData(DatFile::Camera, data);
 		return true;
 	case _Walkmesh:
-		_file->setSectionData(DatFile::Walkmesh, data);
+		_file.setSectionData(DatFile::Walkmesh, data);
 		return true;
 	case _Encounter:
-		_file->setSectionData(DatFile::Encounter, data);
+		_file.setSectionData(DatFile::Encounter, data);
 		return true;
 	case _Inf:
-		_file->setSectionData(DatFile::Triggers, data);
+		_file.setSectionData(DatFile::Triggers, data);
 		return true;
 	}
 	return false;

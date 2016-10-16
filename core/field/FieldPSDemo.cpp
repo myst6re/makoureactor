@@ -1,7 +1,7 @@
 #include "FieldPSDemo.h"
 #include "BackgroundFilePS.h"
 
-FieldPSDemo::FieldPSDemo(const QString &name, FieldArchiveIO *io) :
+FieldPSDemo::FieldPSDemo(const QString &name, FieldArchiveIOPS *io) :
 	FieldPS(name, io)
 {
 }

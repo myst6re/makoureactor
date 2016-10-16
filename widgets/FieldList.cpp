@@ -1,6 +1,7 @@
 #include "FieldList.h"
 #include "Data.h"
 #include "core/field/FieldPC.h"
+#include "core/field/FieldArchivePC.h"
 
 FieldList::FieldList(QWidget *parent) :
     QTreeWidget(parent), _fieldArchive(0)
@@ -152,7 +153,8 @@ void FieldList::add()
 	}
 
 	if(_fieldArchive->isPC()) {
-		FieldPC *field = new FieldPC("", _fieldArchive->io());
+		FieldPC *field = new FieldPC("",
+		                    static_cast<FieldArchivePC *>(_fieldArchive)->io());
 		if(field->open(filePath, false, true) == 0) {
 			InfFile *inf = field->inf();
 			QString newName;

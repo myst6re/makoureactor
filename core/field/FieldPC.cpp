@@ -18,19 +18,18 @@
 #include "FieldPC.h"
 #include "BackgroundFilePC.h"
 
-FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
-	Field(name, io), _file(new PCFieldFile()), _model(0)
+FieldPC::FieldPC(const QString &name, FieldArchiveIOPC *io) :
+	Field(name, io), _model(0)
 {
 }
 
 FieldPC::FieldPC(const Field &field) :
-	Field(field), _file(new PCFieldFile()), _model(0)
+	Field(field), _model(0)
 {
 }
 
 FieldPC::~FieldPC()
 {
-	delete _file;
 	if(_model) {
 		delete _model;
 	}
@@ -38,25 +37,25 @@ FieldPC::~FieldPC()
 
 bool FieldPC::open2()
 {
-	return _file->open(io()->fieldData(this, QString(), false));
+	return _file.open(io()->fieldData(this, QString(), false));
 }
 
 void FieldPC::saveStart()
 {
-	_file->saveStart();
+	_file.saveStart();
 }
 
-bool FieldPC::save2(QByteArray &data, bool compress, bool removeUnusedSection)
+bool FieldPC::save2(QByteArray &data, bool compress)
 {
-	if (removeUnusedSection) {
-		_file->setSectionData(PCFieldFile::_TileMap, QByteArray());
+	if (removeUnusedSection()) {
+		_file.setSectionData(PCFieldFile::_TileMap, QByteArray());
 	}
-	return _file->save(data, compress);
+	return _file.save(data, compress);
 }
 
 void FieldPC::saveEnd()
 {
-	_file->saveEnd();
+	_file.saveEnd();
 }
 
 FieldPart *FieldPC::createPart(FieldSection section)
@@ -78,15 +77,15 @@ QByteArray FieldPC::sectionData(CommonSection section)
 {
 	switch(section) {
 	case _ScriptsTextsAkaos:
-		return _file->sectionData(PCFieldFile::TextsAndScripts);
+		return _file.sectionData(PCFieldFile::TextsAndScripts);
 	case _Camera:
-		return _file->sectionData(PCFieldFile::Camera);
+		return _file.sectionData(PCFieldFile::Camera);
 	case _Walkmesh:
-		return _file->sectionData(PCFieldFile::Walkmesh);
+		return _file.sectionData(PCFieldFile::Walkmesh);
 	case _Encounter:
-		return _file->sectionData(PCFieldFile::Encounter);
+		return _file.sectionData(PCFieldFile::Encounter);
 	case _Inf:
-		return _file->sectionData(PCFieldFile::Triggers);
+		return _file.sectionData(PCFieldFile::Triggers);
 	}
 	return QByteArray();
 }
@@ -95,19 +94,19 @@ bool FieldPC::setSectionData(CommonSection section, const QByteArray &data)
 {
 	switch(section) {
 	case _ScriptsTextsAkaos:
-		_file->setSectionData(PCFieldFile::TextsAndScripts, data);
+		_file.setSectionData(PCFieldFile::TextsAndScripts, data);
 		return true;
 	case _Camera:
-		_file->setSectionData(PCFieldFile::Camera, data);
+		_file.setSectionData(PCFieldFile::Camera, data);
 		return true;
 	case _Walkmesh:
-		_file->setSectionData(PCFieldFile::Walkmesh, data);
+		_file.setSectionData(PCFieldFile::Walkmesh, data);
 		return true;
 	case _Encounter:
-		_file->setSectionData(PCFieldFile::Encounter, data);
+		_file.setSectionData(PCFieldFile::Encounter, data);
 		return true;
 	case _Inf:
-		_file->setSectionData(PCFieldFile::Triggers, data);
+		_file.setSectionData(PCFieldFile::Triggers, data);
 		return true;
 	}
 	return false;

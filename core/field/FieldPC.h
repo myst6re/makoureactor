@@ -28,7 +28,7 @@
 class FieldPC : public Field
 {
 public:
-	FieldPC(const QString &name, FieldArchiveIO *io);
+	FieldPC(const QString &name, FieldArchiveIOPC *io);
 	explicit FieldPC(const Field &field);
 	virtual ~FieldPC();
 
@@ -43,19 +43,19 @@ public:
 	inline FieldArchiveIOPC *io() const {
 		return static_cast<FieldArchiveIOPC *>(Field::io());
 	}
-	inline PCFieldFile *pcFieldFile() const {
-		return _file;
+	inline PCFieldFile *pcFieldFile() {
+		return &_file;
 	}
 	QByteArray sectionData(CommonSection section);
 	bool setSectionData(CommonSection section, const QByteArray &data);
 protected:
 	virtual bool open2();
-	virtual bool save2(QByteArray &data, bool compress, bool removeUnusedSection);
+	virtual bool save2(QByteArray &data, bool compress);
 	virtual void saveStart();
 	virtual void saveEnd();
 	virtual FieldPart *createPart(FieldSection section);
 private:
-	PCFieldFile *_file;
+	PCFieldFile _file;
 	FieldModelFilePC *_model;
 	QMap<QString, int> modelNameToId;
 };

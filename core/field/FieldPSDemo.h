@@ -7,7 +7,7 @@
 class FieldPSDemo : public FieldPS
 {
 public:
-	FieldPSDemo(const QString &name, FieldArchiveIO *io);
+	FieldPSDemo(const QString &name, FieldArchiveIOPS *io);
 	explicit FieldPSDemo(const Field &field);
 
 protected:

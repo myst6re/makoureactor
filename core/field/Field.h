@@ -88,14 +88,16 @@ public:
 
 	const QString &name() const;
 	void setName(const QString &name);
-	virtual FieldArchiveIO *io() const;
+	virtual inline FieldArchiveIO *io() const {
+		return _io;
+	}
 	virtual QByteArray sectionData(CommonSection part)=0;
 	virtual bool setSectionData(CommonSection part, const QByteArray &data)=0;
 
 	void setRemoveUnusedSection(bool remove);// FIXME: only in PC version, ugly hack detected!
 protected:
 	virtual bool open2()=0;
-	virtual bool save2(QByteArray &data, bool compress, bool removeUnusedSection)=0;
+	virtual bool save2(QByteArray &data, bool compress)=0;
 	virtual void saveStart()=0;
 	virtual void saveEnd()=0;
 	FieldPart *getOrCreatePart(FieldSection part);
@@ -106,6 +108,9 @@ protected:
 	}
 	FieldModelFile *fieldModelPtr(int modelID) const;
 	void addFieldModel(int modelID, FieldModelFile *fieldModel);
+	inline bool removeUnusedSection() const {
+		return _removeUnusedSection;
+	}
 private:
 	FieldPart *part(FieldSection section, bool open);
 
