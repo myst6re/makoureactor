@@ -414,26 +414,46 @@ QString Opcode::akao(quint8 akaoOp, bool *ok)
 	}
 
 	switch(akaoOp) {
-	// case 0x20 // TODO: unknown
-	// case 0x23 // TODO: unknown
-	case 0x28:	return QObject::tr("Play a sound effect on channel #1");
-	case 0x29:	return QObject::tr("Play a sound effect on channel #2");
-	case 0x2A:	return QObject::tr("Play a sound effect on channel #3");
-	case 0x2B:	return QObject::tr("Play a sound effect on channel #4");
+	case 0x10:
+	case 0x14:	return QObject::tr("Play music [param1: music ID, 0-based]");
+	// case 0x15: // TODO: unknown
+	case 0x18:
+	case 0x19:	return QObject::tr("Play music and resume from last position [param1: music ID, 0-based]");
+	case 0x24:
+	case 0x20:	return QObject::tr("Play a sound effect (will be terminated if "
+		                           "another effect is played on channel) "
+		                           "[param1: panning, param2: effect ID]");
+	case 0x25:
+	case 0x21:	return QObject::tr("Play a sound effect (will be terminated if "
+		                           "another effect is played on channel) "
+		                           "[param1: panning, param2: effect ID, param3: ?]");
+	case 0x26:
+	case 0x22:	return QObject::tr("Play a sound effect (will be terminated if "
+		                           "another effect is played on channel) "
+		                           "[param1: panning, param2: effect ID, param3: ?, param4: ?]");
+	case 0x27:
+	case 0x23:	return QObject::tr("Play a sound effect (will be terminated if "
+		                           "another effect is played on channel) "
+		                           "[param1: panning, param2: effect ID, param3: ?, param4: ?, param5: ?]");
+	case 0x28:	return QObject::tr("Play a sound effect on channel #1 [param1: panning, param2: effect ID]");
+	case 0x29:	return QObject::tr("Play a sound effect on channel #2 [param1: panning, param2: effect ID]");
+	case 0x2A:	return QObject::tr("Play a sound effect on channel #3 [param1: panning, param2: effect ID]");
+	case 0x2B:	return QObject::tr("Play a sound effect on channel #4 [param1: panning, param2: effect ID]");
+	case 0x30:	return QObject::tr("Play a sound effect (cannot be stopped) [param1: effect ID]");
 	case 0x98:	return QObject::tr("Resumes music and sound effects");
 	case 0x99:	return QObject::tr("Pauses music and sound effects");
 	case 0x9A:	return QObject::tr("Resumes only the music");
 	case 0x9B:	return QObject::tr("Pauses only the music");
 	case 0x9C:	return QObject::tr("Resumes only sound effects");
 	case 0x9D:	return QObject::tr("Pauses only sound effects");
-	case 0xA0:	return QObject::tr("Volume control (channel #1)");
-	case 0xA1:	return QObject::tr("Volume control (channel #2)");
-	case 0xA2:	return QObject::tr("Volume control (channel #3)");
-	case 0xA3:	return QObject::tr("Volume control (channel #4)");
-	case 0xA4:	return QObject::tr("Volume transitions (channel #1)");
-	case 0xA5:	return QObject::tr("Volume transitions (channel #2)");
-	case 0xA6:	return QObject::tr("Volume transitions (channel #3)");
-	case 0xA7:	return QObject::tr("Volume transitions (channel #4)");
+	case 0xA0:	return QObject::tr("Volume control (channel #1) [param1: volume]");
+	case 0xA1:	return QObject::tr("Volume control (channel #2) [param1: volume]");
+	case 0xA2:	return QObject::tr("Volume control (channel #3) [param1: volume]");
+	case 0xA3:	return QObject::tr("Volume control (channel #4) [param1: volume]");
+	case 0xA4:	return QObject::tr("Volume transitions (channel #1) [param1: transition time, param2: target volume]");
+	case 0xA5:	return QObject::tr("Volume transitions (channel #2) [param1: transition time, param2: target volume]");
+	case 0xA6:	return QObject::tr("Volume transitions (channel #3) [param1: transition time, param2: target volume]");
+	case 0xA7:	return QObject::tr("Volume transitions (channel #4) [param1: transition time, param2: target volume]");
 	case 0xA8:	return QObject::tr("Pan control (channel #1)");
 	case 0xA9:	return QObject::tr("Pan control (channel #2)");
 	case 0xAA:	return QObject::tr("Pan control (channel #3)");
@@ -450,19 +470,19 @@ QString Opcode::akao(quint8 akaoOp, bool *ok)
 	case 0xB5:	return QObject::tr("Tempo transitions (channel #2)");
 	case 0xB6:	return QObject::tr("Tempo transitions (channel #3)");
 	case 0xB7:	return QObject::tr("Tempo transitions (channel #4)");
-	case 0xB8:	return QObject::tr("Volume control for all channels");
-	case 0xB9:	return QObject::tr("Volume transitions for all channels");
+	case 0xB8:	return QObject::tr("Volume control for all channels [param1: volume]");
+	case 0xB9:	return QObject::tr("Volume transitions for all channels [param1: transition time, param2: target volume]");
 	case 0xBA:	return QObject::tr("Pan control for all channels");
 	case 0xBB:	return QObject::tr("Pan transitions for all channels");
 	case 0xBC:	return QObject::tr("Tempo control for all channels");
 	case 0xBD:	return QObject::tr("Tempo transitions for all channels");
-	case 0xC0:	return QObject::tr("Set music volume");
-	case 0xC1:	return QObject::tr("Music volume transition");
+	case 0xC0:	return QObject::tr("Set music volume [param1: volume]");
+	case 0xC1:	return QObject::tr("Music volume transition [param1: transition time, param2: target volume]");
 	case 0xC2:	return QObject::tr("Fade music volume");
-	case 0xC8:	return QObject::tr("Set music pan");
-	case 0xC9:	return QObject::tr("Music pan transition");
-	case 0xCA:	return QObject::tr("Music pan fade");
-	case 0xD0:	return QObject::tr("Set music tempo");
+	case 0xC8:	return QObject::tr("Set music pan (noop in PC version)");
+	case 0xC9:	return QObject::tr("Music pan transition (noop in PC version)");
+	case 0xCA:	return QObject::tr("Music pan fade (noop in PC version)");
+	case 0xD0:	return QObject::tr("Set music tempo [param1: tempo, 0x20 is normal]");
 	case 0xD1:	return QObject::tr("Music tempo transition");
 	case 0xD2:	return QObject::tr("Music tempo fade");
 	case 0xF0:	return QObject::tr("Stop music");
@@ -3320,6 +3340,30 @@ void OpcodeMENU::setParams(const char *params, int)
 	param = params[2]; // bank 2
 }
 
+QString OpcodeMENU::menu22(const QString &param)
+{
+	switch(param.toInt())
+	{
+	case 0: return QObject::tr("all magic materias are present and mastered");
+	case 1: return QObject::tr("all summon materias are present and mastered");
+	case 2: return QObject::tr("necessary command materias are present and mastered");
+	case 3: return QObject::tr("Bahamut and Neo Bahamut materias are present");
+	default: return QObject::tr("22? (parameter %1)").arg(param);
+	}
+}
+
+QString OpcodeMENU::menu23(const QString &param)
+{
+	switch(param.toInt())
+	{
+	case 0: return QObject::tr("Remove mastered magic materias and add Master Magic");
+	case 1: return QObject::tr("Remove mastered summon materias and add Master Summon");
+	case 2: return QObject::tr("Remove mastered meaning command materias and add Master Command");
+	case 3: return QObject::tr("Add Bahamut Zero to the inventory");
+	default: return QObject::tr("23? (parameter %1)").arg(param);
+	}
+}
+
 QString OpcodeMENU::menu(const QString &param) const
 {
 	switch(menuID)
@@ -3340,8 +3384,9 @@ QString OpcodeMENU::menu(const QString &param) const
 	case 19:	return QObject::tr("Restore Cloud's materias (parameter %1)").arg(param);
 	case 20:	return QObject::tr("? (parameter %1)").arg(param);// TODO
 	case 21:	return QObject::tr("HP to 1 (parameter %1)").arg(param);
-	case 22:	return QObject::tr("? (parameter %1)").arg(param);// TODO
-	case 23:	return QObject::tr("master ? (parameter %1)").arg(param);
+	case 22:	return QObject::tr("Check if %1 and store the result in var[15][111]")
+						.arg(menu22(param));
+	case 23:	return menu23(param);
 	case 24:	return QObject::tr("? (parameter %1)").arg(param);
 	case 25:	return QObject::tr("? (parameter %1)").arg(param);
 	default:	return QObject::tr("%1? (parameter %2)").arg(menuID).arg(param);

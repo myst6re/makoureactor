@@ -36,6 +36,15 @@ FieldArchiveIOPCLgp::FieldArchiveIOPCLgp(const QString &path, FieldArchivePC *fi
 {
 }
 
+FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::addField(const QString &fileName,
+                                                        const QString &name)
+{
+	if(_lgp.addFile(name, new QFile(fileName))) {
+		return FieldArchiveIO::Ok;
+	}
+	return FieldArchiveIO::FieldExists;
+}
+
 QString FieldArchiveIOPCLgp::path() const
 {
 	return _lgp.fileName();
@@ -55,7 +64,11 @@ QByteArray FieldArchiveIOPCLgp::fieldData2(Field *field, const QString &extensio
 QByteArray FieldArchiveIOPCLgp::fileData2(const QString &fileName)
 {
 	if(!_lgp.isOpen() && !_lgp.open()) return QByteArray();
-	return _lgp.fileData(fileName);
+	QByteArray data = _lgp.fileData(fileName);
+	if(data.isEmpty()) {
+		return _lgp.modifiedFileData(fileName);
+	}
+	return data;
 }
 
 void FieldArchiveIOPCLgp::close()
@@ -126,8 +139,28 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 		}
 		Field *field = fieldArchive()->field(fieldID, false);
 		if(field && field->isOpen() && field->isModified()) {
-			if(!_lgp.setFile(field->name(), new FieldSaveIO(field))) {
-				return FieldNotFound;
+			if(_lgp.fileExists(field->name())) {
+				if(!_lgp.setFile(field->name(), new FieldSaveIO(field))) {
+					return ErrorOpening;
+				}
+			} else {
+				if(!_lgp.addFile(field->name(), new FieldSaveIO(field))) {
+					return ErrorOpening;
+				}
+			}
+		}
+	}
+
+	if(_lgp.fileExists("maplist")) {
+		QStringList fieldNamesCopy = Data::field_names;
+		// Check if the list was correctly opened before // FIXME
+		if(Data::openMaplist(_lgp.fileData("maplist"))) {
+			Data::field_names = fieldNamesCopy;
+			QByteArray mapListData;
+			if(Data::saveMaplist(mapListData)){
+				_lgp.setFileData("maplist", mapListData);
+			} else {
+				return Invalid;
 			}
 		}
 	}
