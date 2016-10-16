@@ -161,3 +161,11 @@ FieldArchiveIO::ErrorCode FieldArchiveIO::save(const QString &path, ArchiveObser
 	}
 	return error;
 }
+
+FieldArchiveIO::ErrorCode FieldArchiveIO::addField(const QString &fileName,
+                                                   const QString &name)
+{
+	Q_UNUSED(fileName);
+	Q_UNUSED(name);
+	return NotImplemented;
+}
