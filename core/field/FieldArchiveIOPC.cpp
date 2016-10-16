@@ -36,6 +36,15 @@ FieldArchiveIOPCLgp::FieldArchiveIOPCLgp(const QString &path, FieldArchivePC *fi
 {
 }
 
+FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::addField(const QString &fileName,
+                                                        const QString &name)
+{
+	if(_lgp.addFile(name, new QFile(fileName))) {
+		return FieldArchiveIO::Ok;
+	}
+	return FieldArchiveIO::FieldExists;
+}
+
 QString FieldArchiveIOPCLgp::path() const
 {
 	return _lgp.fileName();
@@ -55,7 +64,11 @@ QByteArray FieldArchiveIOPCLgp::fieldData2(Field *field, const QString &extensio
 QByteArray FieldArchiveIOPCLgp::fileData2(const QString &fileName)
 {
 	if(!_lgp.isOpen() && !_lgp.open()) return QByteArray();
-	return _lgp.fileData(fileName);
+	QByteArray data = _lgp.fileData(fileName);
+	if(data.isEmpty()) {
+		return _lgp.modifiedFileData(fileName);
+	}
+	return data;
 }
 
 void FieldArchiveIOPCLgp::close()

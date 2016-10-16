@@ -32,7 +32,7 @@ public:
 		ErrorOpeningTemp, ErrorRemoving,
 		ErrorRenaming, ErrorCopying,
 		Invalid, NotImplemented,
-		Aborted
+		Aborted, FieldExists
 	};
 	enum Type {
 		Lgp, File, Iso, Dir
@@ -53,6 +53,8 @@ public:
 	virtual void close();
 	ErrorCode open(ArchiveObserver *observer=0);
 	ErrorCode save(const QString &path=QString(), ArchiveObserver *observer=0);
+
+	virtual ErrorCode addField(const QString &fileName, const QString &name);
 
 	virtual QString path() const=0;
 	QString directory() const;

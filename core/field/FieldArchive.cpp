@@ -186,14 +186,20 @@ void FieldArchive::updateFieldLists(Field *field, int fieldID)
 	fieldsSortByMapId.insert(mapId, fieldID);
 }
 
-int FieldArchive::addField(Field *field)
+FieldArchiveIO::ErrorCode FieldArchive::addField(Field *field,
+                                                 const QString &fileName,
+                                                 int &fieldId)
 {
-	int fieldId = fileList.size();
+	fieldId = fileList.size();
+	/* FieldArchiveIO::ErrorCode err = _io->addField(fileName, field->name());
+	if(err != FieldArchiveIO::Ok) {
+		return err;
+	}*/
 	appendField(field);
 	// FIXME: choose another name? Multiple fields with the same name
 	Data::field_names.append(field->name());
 	updateFieldLists(field, fieldId);
-	return fieldId;
+	return FieldArchiveIO::Ok;
 }
 
 void FieldArchive::appendField(Field *field)

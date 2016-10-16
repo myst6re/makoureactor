@@ -182,7 +182,24 @@ void FieldList::add()
 			}
 
 			field->setName(newName);
-			int fieldID = _fieldArchive->addField(field);
+			int fieldID;
+			FieldArchiveIO::ErrorCode err = _fieldArchive->addField(field,
+			                                                        filePath,
+			                                                        fieldID); // ref
+			switch(err){
+			case FieldArchiveIO::NotImplemented:
+				QMessageBox::warning(this, tr("Error"), tr("Not implemented."));
+				break;
+			case FieldArchiveIO::FieldExists:
+				QMessageBox::warning(this, tr("Error"), tr("Field with this name already exist."));
+				break;
+			case FieldArchiveIO::Ok:
+				break;
+			default:
+				QMessageBox::warning(this, tr("Error"), tr("Unknown error."));
+				break;
+			}
+
 			addTopLevelItem(createItem(field, fieldID));
 			adjustWidth();
 		} else {

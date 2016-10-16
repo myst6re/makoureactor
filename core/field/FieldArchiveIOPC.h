@@ -45,6 +45,7 @@ public:
 	inline Type type() const { return Lgp; }
 
 	void close();
+	ErrorCode addField(const QString &fileName, const QString &name);
 
 	QString path() const;
 
