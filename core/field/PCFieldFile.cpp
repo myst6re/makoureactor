@@ -48,8 +48,8 @@ int PCFieldFile::setSectionData(int pos, int oldSize,
 {
 	int newSize = section.size();
 
-	out.replace(pos, 4, reinterpret_cast<char *>(&newSize), 4);
-	out.replace(pos + 4, oldSize, section);
+	out.replace(pos - 4, 4, reinterpret_cast<char *>(&newSize), 4);
+	out.replace(pos, oldSize, section);
 
 	return newSize - oldSize;
 }

@@ -23,7 +23,7 @@ public:
 	bool save(QByteArray &data, bool compressed);
 	void saveEnd();
 	void clear();
-	virtual QByteArray sectionData(quint8 id);
+	QByteArray sectionData(quint8 id);
 	void setSectionData(quint8 id, const QByteArray &data);
 	virtual quint32 sectionSize(quint8 id, bool &eof) const;
 	virtual quint8 sectionCount() const=0;
