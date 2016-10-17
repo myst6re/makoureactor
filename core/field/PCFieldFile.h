@@ -50,7 +50,7 @@ public:
 		return PC_FIELD_FILE_SECTION_COUNT;
 	}
 	inline quint32 sectionSize(Section id, bool &eof) const {
-		return LzsSectionFile::sectionSize(quint8(id), eof);
+		return PCFieldFile::sectionSize(quint8(id), eof);
 	}
 private:
 	bool openHeader();
@@ -59,6 +59,7 @@ private:
 					   QByteArray &out);
 	bool writePositions(QByteArray &data);
 	quint32 sectionPos(quint8 id) const;
+	quint32 sectionSize(quint8 id, bool &eof) const;
 };
 
 #endif // PCFIELDFILE_H

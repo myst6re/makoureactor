@@ -37,7 +37,7 @@ FieldPC::~FieldPC()
 
 bool FieldPC::open2()
 {
-	return _file.open(io()->fieldData(this, QString(), false));
+	return _file.openLzs(io()->fieldData(this, QString(), false));
 }
 
 void FieldPC::saveStart()

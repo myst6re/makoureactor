@@ -30,7 +30,7 @@ bool DatFile::openHeader()
 		return false;
 	}
 
-	_shift = _sectionPositions[0] - DAT_FILE_HEADER_SIZE;
+	_shift = sectionPos(0) - DAT_FILE_HEADER_SIZE;
 
 	for (quint8 i = 0; i < DAT_FILE_SECTION_COUNT; ++i) {
 		_sectionPositions[i] -= _shift;
@@ -60,7 +60,7 @@ bool DatFile::writePositions(QByteArray &data)
 {
 	quint32 sectionPositions[DAT_FILE_SECTION_COUNT];
 	for (quint8 i = 0; i < DAT_FILE_SECTION_COUNT; ++i) {
-		sectionPositions[i] = _sectionPositions[i] + _shift;
+		sectionPositions[i] = sectionPos(i) + _shift;
 	}
 
 	data.replace(0, DAT_FILE_HEADER_SIZE, reinterpret_cast<char *>(sectionPositions),

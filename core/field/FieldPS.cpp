@@ -30,7 +30,7 @@ FieldPS::FieldPS(const Field &field) :
 
 bool FieldPS::open2()
 {
-	return _file.open(io()->fieldData(this, "DAT", false));
+	return _file.openLzs(io()->fieldData(this, "DAT", false));
 }
 
 void FieldPS::saveStart()

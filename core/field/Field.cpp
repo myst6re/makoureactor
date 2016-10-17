@@ -347,45 +347,51 @@ qint8 Field::importer(const QString &path, bool isDat, bool compressed, FieldSec
 qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *device2)
 {
 	if(isPSField) {
-		quint32 sectionPositions[7];
-		const int headerSize = 28;
-
-		if(data.size() < headerSize)	return 2;
-		memcpy(sectionPositions, data.constData(), headerSize); // header
-		qint32 vramDiff = qint32(sectionPositions[0] - headerSize); // vram section1 pos - real section 1 pos
-
-		for(int i=0 ; i<7 ; ++i) {
-			sectionPositions[i] -= vramDiff;
+		DatFile dat;
+		if(!dat.openData(data)) {
+			return 3;
 		}
 
 		if(part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
-			if(!section1->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))	return 2;
+			if(!section1->open(dat.sectionData(DatFile::TextsAndScripts))) {
+				return 2;
+			}
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {
 			TutFile *_tut = tutosAndSounds(false);
-			if(!_tut->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))		return 2;
+			if(!_tut->open(dat.sectionData(DatFile::TextsAndScripts))) {
+				return 2;
+			}
 			_tut->setModified(true);
 		}
 		if(part.testFlag(Encounter)) {
 			EncounterFile *enc = encounter(false);
-			if(!enc->open(data.mid(sectionPositions[5], sectionPositions[6]-sectionPositions[5])))		return 2;
+			if(!enc->open(dat.sectionData(DatFile::Encounter))) {
+				return 2;
+			}
 			enc->setModified(true);
 		}
 		if(part.testFlag(Walkmesh)) {
 			IdFile *walk = walkmesh(false);
-			if(!walk->open(data.mid(sectionPositions[1], sectionPositions[2]-sectionPositions[1])))		return 2;
+			if(!walk->open(dat.sectionData(DatFile::Walkmesh))) {
+				return 2;
+			}
 			walk->setModified(true);
 		}
 		if(part.testFlag(Camera)) {
 			CaFile *ca = camera(false);
-			if(!ca->open(data.mid(sectionPositions[3], sectionPositions[4]-sectionPositions[3])))		return 2;
+			if(!ca->open(dat.sectionData(DatFile::Camera))) {
+				return 2;
+			}
 			ca->setModified(true);
 		}
 		if(part.testFlag(Inf)) {
 			InfFile *inf = this->inf(false);
-			if(!inf->open(data.mid(sectionPositions[4], sectionPositions[5]-sectionPositions[4])))	return 2;
+			if(!inf->open(dat.sectionData(DatFile::Triggers))) {
+				return 2;
+			}
 			inf->setModified(true);
 		}
 		if(part.testFlag(Background)) {
@@ -408,7 +414,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 			}
 
 			QByteArray mimData = LZS::decompressAll(device2->readAll()),
-					tilesData = data.mid(sectionPositions[2], sectionPositions[3]-sectionPositions[2]);
+					tilesData = dat.sectionData(DatFile::TileMap);
 
 			BackgroundFilePS *bg;
 
@@ -432,44 +438,48 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 			background(false)->setModified(true);
 		}
 	} else {
-		quint32 sectionPositions[9];
-
-		if(data.size() < 6 + 9 * 4)	return 3;
-		memcpy(sectionPositions, data.constData() + 6, 9 * 4); // header
+		PCFieldFile fieldPC;
+		if(!fieldPC.openData(data)) {
+			return 3;
+		}
 
 		if(part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
-			if(!section1->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))	return 2;
+			if(!section1->open(fieldPC.sectionData(PCFieldFile::TextsAndScripts))) {
+				return 2;
+			}
 			section1->setModified(true);
 		}
 		if(part.testFlag(Akaos)) {
 			TutFile *_tut = tutosAndSounds(false);
-			if(!_tut->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))		return 2;
+			if(!_tut->open(fieldPC.sectionData(PCFieldFile::TextsAndScripts))) {
+				return 2;
+			}
 			_tut->setModified(true);
 		}
 		if(part.testFlag(Encounter)) {
 			EncounterFile *enc = encounter(false);
-			if(!enc->open(data.mid(sectionPositions[6]+4, sectionPositions[7]-sectionPositions[6]-4)))		return 2;
+			if(!enc->open(fieldPC.sectionData(PCFieldFile::Encounter)))		return 2;
 			enc->setModified(true);
 		}
 		if(part.testFlag(Walkmesh)) {
 			IdFile *walk = walkmesh(false);
-			if(!walk->open(data.mid(sectionPositions[4]+4, sectionPositions[5]-sectionPositions[4]-4)))		return 2;
+			if(!walk->open(fieldPC.sectionData(PCFieldFile::Walkmesh)))		return 2;
 			walk->setModified(true);
 		}
 		if(part.testFlag(Camera)) {
 			CaFile *ca = camera(false);
-			if(!ca->open(data.mid(sectionPositions[1]+4, sectionPositions[2]-sectionPositions[1]-4)))		return 2;
+			if(!ca->open(fieldPC.sectionData(PCFieldFile::Camera)))		return 2;
 			ca->setModified(true);
 		}
 		if(part.testFlag(Inf)) {
 			InfFile *inf = this->inf(false);
-			if(!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4)))	return 2;
+			if(!inf->open(fieldPC.sectionData(PCFieldFile::Triggers)))	return 2;
 			inf->setModified(true);
 		}
 		if(part.testFlag(Background)) {
-			QByteArray mimData = data.mid(sectionPositions[8]+4),
-					palData = data.mid(sectionPositions[3]+4, sectionPositions[4]-sectionPositions[3]-4);
+			QByteArray mimData = fieldPC.sectionData(PCFieldFile::Background),
+					palData = fieldPC.sectionData(PCFieldFile::Palette);
 
 			BackgroundFilePC *bg;
 

@@ -3,21 +3,18 @@
 #include "LZS.h"
 
 LzsSectionFile::LzsSectionFile() :
-	_sectionPositions(0), _io(0)
+	_io(0)
 {
 }
 
 LzsSectionFile::~LzsSectionFile()
 {
-	if (_sectionPositions) {
-		delete _sectionPositions;
-	}
 	if (_io) {
 		delete _io;
 	}
 }
 
-bool LzsSectionFile::open(const QByteArray &lzsData)
+bool LzsSectionFile::openLzs(const QByteArray &lzsData)
 {
 	if(lzsData.size() < 4) {
 		qWarning() << "LzsSectionFile::open lzsData too short" << lzsData.size();
@@ -39,13 +36,32 @@ bool LzsSectionFile::open(const QByteArray &lzsData)
 
 	_io = new LzsRandomAccess(lzsData, 4, lzsData.size() - 4);
 
+	return open();
+}
+
+bool LzsSectionFile::openData(const QByteArray &data)
+{
+	QBuffer *io = new QBuffer();
+	io->setData(data);
+
+	if (_io) {
+		delete _io;
+	}
+
+	_io = io;
+
+	return open();
+}
+
+bool LzsSectionFile::open()
+{
+	if (sectionCount() > SECTION_FILE_MAX_POSITIONS) {
+		qFatal("LzsSectionFile::open sectionCount too short");
+	}
+
 	if (!_io->open(QIODevice::ReadOnly)) {
 		qWarning() << "LzsSectionFile::open cannot open io" << _io->errorString();
 		return false;
-	}
-
-	if (!_sectionPositions) {
-		_sectionPositions = new quint32[sectionCount()];
 	}
 
 	if (openHeader()) {
@@ -92,10 +108,6 @@ void LzsSectionFile::saveEnd()
 
 void LzsSectionFile::clear()
 {
-	if (_sectionPositions) {
-		delete _sectionPositions;
-		_sectionPositions = 0;
-	}
 	_data.clear();
 	_io->close();
 }

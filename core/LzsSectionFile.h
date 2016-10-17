@@ -4,25 +4,31 @@
 #include <QtCore>
 #include "LzsIO.h"
 
+#define SECTION_FILE_MAX_POSITIONS 9
+
 class LzsSectionFile
 {
 public:
 	LzsSectionFile();
 	virtual ~LzsSectionFile();
-	inline bool open(const char *data, int size) {
-		return open(QByteArray(data, size));
+	inline bool openLzs(const char *data, int size) {
+		return openLzs(QByteArray(data, size));
 	}
-	bool open(const QByteArray &data);
+	bool openLzs(const QByteArray &data);
+	inline bool openData(const char *data, int size) {
+		return openData(QByteArray(data, size));
+	}
+	bool openData(const QByteArray &data);
 	void saveStart();
 	bool save(QByteArray &data, bool compressed);
 	void saveEnd();
 	void clear();
 	virtual QByteArray sectionData(quint8 id);
 	void setSectionData(quint8 id, const QByteArray &data);
-	quint32 sectionSize(quint8 id, bool &eof) const;
+	virtual quint32 sectionSize(quint8 id, bool &eof) const;
 	virtual quint8 sectionCount() const=0;
 protected:
-	inline LzsRandomAccess *io() {
+	inline QIODevice *io() {
 		return _io;
 	}
 	virtual bool openHeader()=0;
@@ -31,14 +37,14 @@ protected:
 							   const QByteArray &section,
 							   QByteArray &out)=0;
 	inline virtual quint32 sectionPos(quint8 id) const {
-		Q_ASSERT(id >= 0 && id < sectionCount());
 		return _sectionPositions[id];
 	}
-	quint32 *_sectionPositions;
+	quint32 _sectionPositions[SECTION_FILE_MAX_POSITIONS];
 private:
+	bool open();
 	void shiftPositionsAfter(quint8 id, int shift);
 
-	LzsRandomAccess *_io;
+	QIODevice *_io;
 	QByteArray _data;
 };
 

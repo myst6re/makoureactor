@@ -34,7 +34,7 @@ bool PCFieldFile::openHeader()
 		return false;
 	}
 
-	if (_sectionPositions[0] != 42) {
+	if (LzsSectionFile::sectionPos(0) != 42) {
 		qWarning() << "PCFieldFile::openHeader first position must be 42:" << _sectionPositions[0];
 		return false;
 	}
@@ -47,8 +47,6 @@ int PCFieldFile::setSectionData(int pos, int oldSize,
 								QByteArray &out)
 {
 	int newSize = section.size();
-
-	oldSize -= 4;
 
 	out.replace(pos, 4, reinterpret_cast<char *>(&newSize), 4);
 	out.replace(pos + 4, oldSize, section);
@@ -68,4 +66,13 @@ bool PCFieldFile::writePositions(QByteArray &data)
 quint32 PCFieldFile::sectionPos(quint8 id) const
 {
 	return LzsSectionFile::sectionPos(id) + 4;
+}
+
+quint32 PCFieldFile::sectionSize(quint8 id, bool &eof) const
+{
+	quint32 size = LzsSectionFile::sectionSize(id, eof);
+	if (!eof) {
+		return size - 4;
+	}
+	return size;
 }
