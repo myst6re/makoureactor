@@ -147,13 +147,13 @@ HEADERS += \
     core/field/DatFile.h \
     core/field/PCFieldFile.h \
     core/LzsIO.h \
-    core/LzsSectionFile.h \
     widgets/ScriptManager.h \
     widgets/FieldList.h \
     widgets/Splitter.h \
     core/AkaoIO.h \
     core/Akao.h \
-    core/Clipboard.h
+    core/Clipboard.h \
+    core/SectionFile.h
 
 SOURCES += \
     Window.cpp \
@@ -289,13 +289,13 @@ SOURCES += \
     core/field/DatFile.cpp \
     core/field/PCFieldFile.cpp \
     core/LzsIO.cpp \
-    core/LzsSectionFile.cpp \
     widgets/ScriptManager.cpp \
     widgets/FieldList.cpp \
     widgets/Splitter.cpp \
     core/AkaoIO.cpp \
     core/Akao.cpp \
-    core/Clipboard.cpp
+    core/Clipboard.cpp \
+    core/SectionFile.cpp
 
 TRANSLATIONS += Makou_Reactor_fr.ts  \
     Makou_Reactor_ja.ts

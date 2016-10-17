@@ -19,11 +19,11 @@
 #define PCFIELDFILE_H
 
 #include <QtCore>
-#include "../LzsSectionFile.h"
+#include "../SectionFile.h"
 
 #define PC_FIELD_FILE_SECTION_COUNT		9
 
-class PCFieldFile : public LzsSectionFile
+class PCFieldFile : public SectionFile
 {
 public:
 	enum Section {
@@ -41,10 +41,10 @@ public:
 	PCFieldFile();
 
 	inline QByteArray sectionData(Section id) {
-		return LzsSectionFile::sectionData(quint8(id));
+		return SectionFile::sectionData(quint8(id));
 	}
 	inline void setSectionData(Section id, const QByteArray &data) {
-		LzsSectionFile::setSectionData(quint8(id), data);
+		SectionFile::setSectionData(quint8(id), data);
 	}
 	inline quint8 sectionCount() const {
 		return PC_FIELD_FILE_SECTION_COUNT;

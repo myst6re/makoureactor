@@ -18,7 +18,7 @@
 #include "PCFieldFile.h"
 
 PCFieldFile::PCFieldFile() :
-	LzsSectionFile()
+	SectionFile()
 {
 }
 
@@ -34,7 +34,7 @@ bool PCFieldFile::openHeader()
 		return false;
 	}
 
-	if (LzsSectionFile::sectionPos(0) != 42) {
+	if (SectionFile::sectionPos(0) != 42) {
 		qWarning() << "PCFieldFile::openHeader first position must be 42:" << _sectionPositions[0];
 		return false;
 	}
@@ -65,12 +65,12 @@ bool PCFieldFile::writePositions(QByteArray &data)
 
 quint32 PCFieldFile::sectionPos(quint8 id) const
 {
-	return LzsSectionFile::sectionPos(id) + 4;
+	return SectionFile::sectionPos(id) + 4;
 }
 
 quint32 PCFieldFile::sectionSize(quint8 id, bool &eof) const
 {
-	quint32 size = LzsSectionFile::sectionSize(id, eof);
+	quint32 size = SectionFile::sectionSize(id, eof);
 	if (!eof) {
 		return size - 4;
 	}

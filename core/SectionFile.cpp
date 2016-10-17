@@ -1,23 +1,23 @@
-#include "LzsSectionFile.h"
+#include "SectionFile.h"
 #include "Config.h"
 #include "LZS.h"
 
-LzsSectionFile::LzsSectionFile() :
+SectionFile::SectionFile() :
 	_io(0)
 {
 }
 
-LzsSectionFile::~LzsSectionFile()
+SectionFile::~SectionFile()
 {
 	if (_io) {
 		delete _io;
 	}
 }
 
-bool LzsSectionFile::openLzs(const QByteArray &lzsData)
+bool SectionFile::openLzs(const QByteArray &lzsData)
 {
 	if(lzsData.size() < 4) {
-		qWarning() << "LzsSectionFile::open lzsData too short" << lzsData.size();
+		qWarning() << "SectionFile::open lzsData too short" << lzsData.size();
 		return false;
 	}
 
@@ -39,7 +39,7 @@ bool LzsSectionFile::openLzs(const QByteArray &lzsData)
 	return open();
 }
 
-bool LzsSectionFile::openData(const QByteArray &data)
+bool SectionFile::openData(const QByteArray &data)
 {
 	QBuffer *io = new QBuffer();
 	io->setData(data);
@@ -53,21 +53,21 @@ bool LzsSectionFile::openData(const QByteArray &data)
 	return open();
 }
 
-bool LzsSectionFile::open()
+bool SectionFile::open()
 {
 	if (sectionCount() > SECTION_FILE_MAX_POSITIONS) {
-		qFatal("LzsSectionFile::open sectionCount too short");
+		qFatal("SectionFile::open sectionCount too short");
 	}
 
 	if (!_io->open(QIODevice::ReadOnly)) {
-		qWarning() << "LzsSectionFile::open cannot open io" << _io->errorString();
+		qWarning() << "SectionFile::open cannot open io" << _io->errorString();
 		return false;
 	}
 
 	if (openHeader()) {
 		for (quint8 i = 0; i < sectionCount() - 1; ++i) {
 			if (_sectionPositions[i + 1] < _sectionPositions[i]) {
-				qWarning() << "LzsSectionFile::open wrong order:" << i << _sectionPositions[i] << _sectionPositions[i + 1];
+				qWarning() << "SectionFile::open wrong order:" << i << _sectionPositions[i] << _sectionPositions[i + 1];
 				return false;
 			}
 		}
@@ -76,15 +76,15 @@ bool LzsSectionFile::open()
 	return true;
 }
 
-void LzsSectionFile::saveStart()
+void SectionFile::saveStart()
 {
 	_data = _io->readAll();
 }
 
-bool LzsSectionFile::save(QByteArray &data, bool compressed)
+bool SectionFile::save(QByteArray &data, bool compressed)
 {
 	if (_data.isEmpty()) {
-		qWarning() << "LzsSectionFile::save call saveStart() before save()";
+		qWarning() << "SectionFile::save call saveStart() before save()";
 		return false;
 	}
 
@@ -101,18 +101,18 @@ bool LzsSectionFile::save(QByteArray &data, bool compressed)
 	return true;
 }
 
-void LzsSectionFile::saveEnd()
+void SectionFile::saveEnd()
 {
 	_data.clear();
 }
 
-void LzsSectionFile::clear()
+void SectionFile::clear()
 {
 	_data.clear();
 	_io->close();
 }
 
-quint32 LzsSectionFile::sectionSize(quint8 id, bool &eof) const
+quint32 SectionFile::sectionSize(quint8 id, bool &eof) const
 {
 	if (id + 1 >= sectionCount()) {
 		eof = true;
@@ -122,7 +122,7 @@ quint32 LzsSectionFile::sectionSize(quint8 id, bool &eof) const
 	return sectionPos(id + 1) - sectionPos(id);
 }
 
-QByteArray LzsSectionFile::sectionData(quint8 id)
+QByteArray SectionFile::sectionData(quint8 id)
 {
 	if (_io->seek(sectionPos(id))) {
 		bool eof;
@@ -132,14 +132,14 @@ QByteArray LzsSectionFile::sectionData(quint8 id)
 		}
 		return _io->read(size);
 	}
-	qWarning() << "LzsSectionFile::sectionData cannot seek to" << id;
+	qWarning() << "SectionFile::sectionData cannot seek to" << id;
 	return QByteArray();
 }
 
-void LzsSectionFile::setSectionData(quint8 id, const QByteArray &data)
+void SectionFile::setSectionData(quint8 id, const QByteArray &data)
 {
 	if (_data.isEmpty()) {
-		qWarning() << "LzsSectionFile::setSectionData call saveStart() before setSectionData()";
+		qWarning() << "SectionFile::setSectionData call saveStart() before setSectionData()";
 		return;
 	}
 
@@ -153,7 +153,7 @@ void LzsSectionFile::setSectionData(quint8 id, const QByteArray &data)
 	shiftPositionsAfter(id, setSectionData(int(pos), int(size), data, _data));
 }
 
-void LzsSectionFile::shiftPositionsAfter(quint8 id, int shift)
+void SectionFile::shiftPositionsAfter(quint8 id, int shift)
 {
 	if (shift == 0) {
 		return;

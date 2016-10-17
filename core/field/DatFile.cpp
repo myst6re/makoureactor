@@ -18,7 +18,7 @@
 #include "DatFile.h"
 
 DatFile::DatFile() :
-	LzsSectionFile()
+	SectionFile()
 {
 }
 

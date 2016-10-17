@@ -19,12 +19,12 @@
 #define DATFILE_H
 
 #include <QtCore>
-#include "../LzsSectionFile.h"
+#include "../SectionFile.h"
 
 #define DAT_FILE_SECTION_COUNT		7
 #define DAT_FILE_HEADER_SIZE		28 // DAT_FILE_SECTION_COUNT * 4
 
-class DatFile : public LzsSectionFile
+class DatFile : public SectionFile
 {
 public:
 	enum Section {
@@ -41,16 +41,16 @@ public:
 	inline virtual ~DatFile() {}
 
 	inline QByteArray sectionData(Section id) {
-		return LzsSectionFile::sectionData(quint8(id));
+		return SectionFile::sectionData(quint8(id));
 	}
 	inline void setSectionData(Section id, const QByteArray &data) {
-		LzsSectionFile::setSectionData(quint8(id), data);
+		SectionFile::setSectionData(quint8(id), data);
 	}
 	inline quint8 sectionCount() const {
 		return DAT_FILE_SECTION_COUNT;
 	}
 	inline quint32 sectionSize(Section id, bool &eof) const {
-		return LzsSectionFile::sectionSize(quint8(id), eof);
+		return SectionFile::sectionSize(quint8(id), eof);
 	}
 private:
 	bool openHeader();

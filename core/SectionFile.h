@@ -1,16 +1,16 @@
-#ifndef LZSSECTIONFILE_H
-#define LZSSECTIONFILE_H
+#ifndef SECTIONFILE_H
+#define SECTIONFILE_H
 
 #include <QtCore>
 #include "LzsIO.h"
 
 #define SECTION_FILE_MAX_POSITIONS 9
 
-class LzsSectionFile
+class SectionFile
 {
 public:
-	LzsSectionFile();
-	virtual ~LzsSectionFile();
+	SectionFile();
+	virtual ~SectionFile();
 	inline bool openLzs(const char *data, int size) {
 		return openLzs(QByteArray(data, size));
 	}
@@ -48,4 +48,4 @@ private:
 	QByteArray _data;
 };
 
-#endif // LZSSECTIONFILE_H
+#endif // SECTIONFILE_H
