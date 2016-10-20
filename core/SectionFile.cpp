@@ -78,6 +78,7 @@ bool SectionFile::open()
 
 void SectionFile::saveStart()
 {
+	_io->reset();
 	_data = _io->readAll();
 }
 
