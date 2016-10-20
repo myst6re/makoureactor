@@ -25,7 +25,7 @@
 
 Field::Field(const QString &name, FieldArchiveIO *io) :
 	_io(io), _isOpen(false), _isModified(false),
-	_name(name.toLower()), _removeUnusedSection(false)
+	_name(name.toLower())
 {
 }
 
@@ -214,13 +214,11 @@ void Field::setSaved()
 
 bool Field::save(QByteArray &newData, bool compress)
 {
-	/* newData = QByteArray();
-
 	if(!isOpen()) {
 		return false;
 	}
 
-	QByteArray toc;
+	/* QByteArray toc;
 
 	// Header
 	toc.append(saveHeader());
@@ -505,9 +503,4 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 	}
 
 	return 0;
-}
-
-void Field::setRemoveUnusedSection(bool remove)
-{
-	_removeUnusedSection = remove;
 }

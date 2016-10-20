@@ -19,7 +19,7 @@
 #include "BackgroundFilePC.h"
 
 FieldPC::FieldPC(const QString &name, FieldArchiveIOPC *io) :
-	Field(name, io), _model(0)
+	Field(name, io), _model(0), _removeUnusedSection(false)
 {
 }
 

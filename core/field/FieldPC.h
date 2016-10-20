@@ -48,6 +48,13 @@ public:
 	}
 	QByteArray sectionData(CommonSection section);
 	bool setSectionData(CommonSection section, const QByteArray &data);
+
+	inline void setRemoveUnusedSection(bool remove) {
+		_removeUnusedSection = remove;
+	}
+	inline bool removeUnusedSection() const {
+		return _removeUnusedSection;
+	}
 protected:
 	virtual bool open2();
 	virtual bool save2(QByteArray &data, bool compress);
@@ -58,6 +65,7 @@ private:
 	PCFieldFile _file;
 	FieldModelFilePC *_model;
 	QMap<QString, int> modelNameToId;
+	bool _removeUnusedSection;
 };
 
 #endif // DEF_FIELDPC

@@ -93,8 +93,6 @@ public:
 	}
 	virtual QByteArray sectionData(CommonSection part)=0;
 	virtual bool setSectionData(CommonSection part, const QByteArray &data)=0;
-
-	void setRemoveUnusedSection(bool remove);// FIXME: only in PC version, ugly hack detected!
 protected:
 	virtual bool open2()=0;
 	virtual bool save2(QByteArray &data, bool compress)=0;
@@ -108,9 +106,6 @@ protected:
 	}
 	FieldModelFile *fieldModelPtr(int modelID) const;
 	void addFieldModel(int modelID, FieldModelFile *fieldModel);
-	inline bool removeUnusedSection() const {
-		return _removeUnusedSection;
-	}
 private:
 	FieldPart *part(FieldSection section, bool open);
 
@@ -118,7 +113,6 @@ private:
 	FieldArchiveIO *_io;
 	bool _isOpen, _isModified;
 	QString _name;
-	bool _removeUnusedSection;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Field::FieldSections)
