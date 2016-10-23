@@ -218,67 +218,6 @@ bool Field::save(QByteArray &newData, bool compress)
 		return false;
 	}
 
-	/* QByteArray toc;
-
-	// Header
-	toc.append(saveHeader());
-
-	// Sections
-	int id=0;
-	foreach(const FieldSection &fieldSection, orderOfSections()) {
-		// Section position
-		quint32 pos = headerSize() + newData.size() + diffSectionPos();
-		toc.append((char *)&pos, 4);
-
-		QByteArray section;
-
-		if(fieldSection != Unused || !_removeUnusedSection) { // FIXME: ugly hack only for PC version
-
-			// Section data
-			FieldPart *fieldPart = part(fieldSection == Field::PalettePC
-										? Field::Background // FIXME: EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
-										: fieldSection);
-
-			if(fieldPart && fieldPart->canSave() &&
-					fieldPart->isOpen() && fieldPart->isModified()) {
-				if(fieldSection == Field::PalettePC) { // FIXME: EXCEPTION NEEDS TO BE REMOVED IN THE FUTURE
-					section = static_cast<BackgroundFilePC *>(fieldPart)->savePal();
-				} else {
-					section = fieldPart->save();
-				}
-			} else {
-				section = sectionData(fieldSection, true);
-			}
-		}
-
-		if(hasSectionHeader()) {
-			quint32 section_size = section.size();
-			newData.append((char *)&section_size, 4);
-		}
-		newData.append(section);
-
-		// Alignment padding
-		if (alignment() > 0 && newData.size() % alignment() != 0) {
-			newData.append(QByteArray(alignment() - newData.size() % alignment(), '\0'));
-		}
-
-		++id;
-	}
-
-	// Footer
-	newData.append(saveFooter());
-
-	// Header prepended to the section data
-	newData.prepend(toc);
-
-	if(compress) {
-		const QByteArray &compresse = LZS::compress(newData);
-		quint32 lzsSize = compresse.size();
-		newData = QByteArray((char *)&lzsSize, 4).append(compresse);
-	}
-
-	return true; */
-
 	saveStart();
 
 	QHashIterator<FieldSection, FieldPart *> it(parts());
