@@ -1,4 +1,5 @@
 #include "LzsIO.h"
+#include "core/Config.h"
 
 LzsIO::LzsIO(const QByteArray &data, QObject *parent) :
 	QIODevice(parent), _data(data),
@@ -98,6 +99,20 @@ qint64 LzsIO::writeData(const char *data, qint64 maxSize)
 	Q_UNUSED(data)
 	Q_UNUSED(maxSize)
 	return -1; // Not implemented
+}
+
+bool LzsIO::checkHeader(const QByteArray &data)
+{
+	if(data.size() < 4) {
+		qWarning() << "LzsIO::checkHeader data too short" << data.size();
+		return false;
+	}
+
+	quint32 lzsSize;
+	memcpy(&lzsSize, data.constData(), 4);
+
+	return Config::value("lzsNotCheck").toBool() ||
+	       quint32(data.size()) == lzsSize + 4;
 }
 
 LzsRandomAccess::LzsRandomAccess(const QByteArray &data, QObject *parent) :

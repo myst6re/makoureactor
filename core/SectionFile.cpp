@@ -16,17 +16,7 @@ SectionFile::~SectionFile()
 
 bool SectionFile::openLzs(const QByteArray &lzsData)
 {
-	if(lzsData.size() < 4) {
-		qWarning() << "SectionFile::open lzsData too short" << lzsData.size();
-		return false;
-	}
-
-	const char *lzsDataConst = lzsData.constData();
-	quint32 lzsSize;
-	memcpy(&lzsSize, lzsDataConst, 4);
-
-	if(!Config::value("lzsNotCheck").toBool()
-			&& quint32(lzsData.size()) != lzsSize + 4) {
+	if(!LzsIO::checkHeader(lzsData)) {
 		return false;
 	}
 
