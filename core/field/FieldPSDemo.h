@@ -9,21 +9,21 @@ class FieldPSDemo : public FieldPS
 public:
 	FieldPSDemo(const QString &name, FieldArchiveIOPS *io);
 	explicit FieldPSDemo(const Field &field);
+	virtual ~FieldPSDemo();
 
+	QByteArray sectionData(CommonSection part);
+	bool setSectionData(CommonSection section, const QByteArray &data);
 protected:
-	inline int headerSize() const { return 0; }
-	void openHeader(const QByteArray &fileData);
-	FieldPart *createPart(FieldSection part);
-	int sectionId(FieldSection part) const;
-	QString sectionFile(FieldSection part) const;
-	quint32 sectionPosition(int idPart) const;
-	inline int sectionCount() const {	return 0; }
-	inline int paddingBetweenSections() const { return 0; }
-	inline int alignment() const { return 0; }
-	QList<Field::FieldSection> orderOfSections() const;
-	inline quint32 diffSectionPos() const { return 0; }
-	inline bool hasSectionHeader() const { return false; }
+	virtual bool open2();
+	virtual bool save2(QByteArray &data, bool compress);
+	virtual void saveStart();
+	virtual void saveEnd();
 private:
+	LzsRandomAccess *openFileFromIO(const QString &extension);
+	static QByteArray fileData(LzsRandomAccess *io);
+
+	LzsRandomAccess *_dataAte, *_dataMap, *_dataId, *_dataCa;
+	QByteArray _saveAte, _saveId, _saveCa;
 };
 
 #endif // FIELDPSDEMO_H

@@ -41,8 +41,8 @@ public:
 	inline DatFile *datFile() {
 		return &_file;
 	}
-	QByteArray sectionData(CommonSection part);
-	bool setSectionData(CommonSection section, const QByteArray &data);
+	virtual QByteArray sectionData(CommonSection part);
+	virtual bool setSectionData(CommonSection section, const QByteArray &data);
 protected:
 	virtual bool open2();
 	virtual bool save2(QByteArray &data, bool compress);
