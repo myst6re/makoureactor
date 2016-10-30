@@ -50,7 +50,7 @@ bool BackgroundFilePS::open()
 	}
 
 	return open(field()->io()->mimData(field()),
-				field()->datFile()->sectionData(DatFile::TileMap));
+				field()->sectionData(FieldPS::TileMap));
 }
 
 bool BackgroundFilePS::open(const QByteArray &mimData, const QByteArray &tilesData)
@@ -79,7 +79,7 @@ bool BackgroundFilePS::saveToField() const
 		return false;
 	}
 
-	field()->datFile()->setSectionData(DatFile::TileMap, tilesData);
+	field()->setSectionData(FieldPS::TileMap, tilesData);
 	// field()->io()->setMimData(mimData); // TODO
 
 	return false; // FIXME

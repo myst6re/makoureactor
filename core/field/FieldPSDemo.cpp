@@ -64,7 +64,15 @@ void FieldPSDemo::saveEnd()
 
 QByteArray FieldPSDemo::fileData(LzsRandomAccess *io)
 {
-	if(!io || !io->reset()) {
+	if(!io) {
+		return QByteArray();
+	}
+	if(!io->isOpen() && !io->open(QIODevice::ReadOnly)) {
+		qWarning() << "FieldPSDemo::fileData cannot open io"
+				   << io->errorString();
+		return QByteArray();
+	}
+	if(!io->reset()) {
 		return QByteArray();
 	}
 	return io->readAll();
@@ -87,6 +95,17 @@ QByteArray FieldPSDemo::sectionData(CommonSection section)
 	return QByteArray();
 }
 
+QByteArray FieldPSDemo::sectionData(SectionPS section)
+{
+	switch(section) {
+	case TileMap:
+		return fileData(_dataMap);
+	case ModelLoaderPS:
+		return QByteArray(); // TODO
+	}
+	return QByteArray();
+}
+
 bool FieldPSDemo::setSectionData(CommonSection section, const QByteArray &data)
 {
 	switch(section) {
@@ -102,6 +121,18 @@ bool FieldPSDemo::setSectionData(CommonSection section, const QByteArray &data)
 	case _Encounter:
 		return false; // TODO
 	case _Inf:
+		return false; // TODO
+	}
+	return false;
+}
+
+bool FieldPSDemo::setSectionData(SectionPS section, const QByteArray &data)
+{
+	switch(section) {
+	case TileMap:
+		_saveMap = data;
+		return true;
+	case ModelLoaderPS:
 		return false; // TODO
 	}
 	return false;

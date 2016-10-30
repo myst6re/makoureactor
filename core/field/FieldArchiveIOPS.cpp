@@ -275,7 +275,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 
 FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, ArchiveObserver *observer)
 {
-	if (iso.isDemo()) {
+	if (iso.isDemo()) { // TODO: save more than the DAT file
 		return NotImplemented;
 	}
 

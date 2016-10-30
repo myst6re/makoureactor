@@ -28,6 +28,11 @@
 class FieldPS : public Field
 {
 public:
+	enum SectionPS {
+		TileMap,
+		ModelLoaderPS
+	};
+
 	FieldPS(const QString &name, FieldArchiveIOPS *io);
 	explicit FieldPS(const Field &field);
 
@@ -38,11 +43,10 @@ public:
 	inline FieldArchiveIOPS *io() const {
 		return static_cast<FieldArchiveIOPS *>(Field::io());
 	}
-	inline DatFile *datFile() {
-		return &_file;
-	}
-	virtual QByteArray sectionData(CommonSection part);
+	virtual QByteArray sectionData(CommonSection section);
+	virtual QByteArray sectionData(SectionPS section);
 	virtual bool setSectionData(CommonSection section, const QByteArray &data);
+	virtual bool setSectionData(SectionPS section, const QByteArray &data);
 protected:
 	virtual bool open2();
 	virtual bool save2(QByteArray &data, bool compress);

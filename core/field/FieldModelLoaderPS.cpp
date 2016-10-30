@@ -36,7 +36,7 @@ FieldPS *FieldModelLoaderPS::field() const
 
 bool FieldModelLoaderPS::open()
 {
-	return open(field()->datFile()->sectionData(DatFile::ModelLoader));
+	return open(field()->sectionData(FieldPS::ModelLoaderPS));
 }
 
 bool FieldModelLoaderPS::open(const QByteArray &data)
@@ -89,7 +89,7 @@ bool FieldModelLoaderPS::saveToField() const
 		return false;
 	}
 
-	field()->datFile()->setSectionData(DatFile::ModelLoader, data);
+	field()->setSectionData(FieldPS::ModelLoaderPS, data);
 
 	return true;
 }

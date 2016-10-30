@@ -80,6 +80,17 @@ QByteArray FieldPS::sectionData(CommonSection section)
 	return QByteArray();
 }
 
+QByteArray FieldPS::sectionData(SectionPS section)
+{
+	switch(section) {
+	case TileMap:
+		return _file.sectionData(DatFile::TileMap);
+	case ModelLoaderPS:
+		return _file.sectionData(DatFile::ModelLoader);
+	}
+	return QByteArray();
+}
+
 bool FieldPS::setSectionData(CommonSection section, const QByteArray &data)
 {
 	switch(section) {
@@ -97,6 +108,19 @@ bool FieldPS::setSectionData(CommonSection section, const QByteArray &data)
 		return true;
 	case _Inf:
 		_file.setSectionData(DatFile::Triggers, data);
+		return true;
+	}
+	return false;
+}
+
+bool FieldPS::setSectionData(SectionPS section, const QByteArray &data)
+{
+	switch(section) {
+	case TileMap:
+		_file.setSectionData(DatFile::TileMap, data);
+		return true;
+	case ModelLoaderPS:
+		_file.setSectionData(DatFile::ModelLoader, data);
 		return true;
 	}
 	return false;
