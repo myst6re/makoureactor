@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModel.h"
+#include "core/field/FieldModelFilePS.h"
 
 FieldModel::FieldModel(QWidget *parent, const QGLWidget *shareWidget) :
 	QGLWidget(parent, shareWidget), blockAll(false), distance(-0.25/*-35*/),
@@ -87,6 +88,9 @@ int FieldModel::frameCount() const
 
 void FieldModel::initializeGL()
 {
+	// GLfloat ambient[] = {0.8f, 0.8f, 0.8f, 1.0f};
+	// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+
 //	glMatrixMode(GL_PROJECTION);
 //	glLoadIdentity();
 
@@ -100,8 +104,10 @@ void FieldModel::initializeGL()
 //	gluPerspective(70, (double)width()/(double)height(), 0.001, 1000.0);
 }
 
-void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, const FieldModelBone &bone,
-					   GLuint &texture_id, quint64 &lastTexID)
+void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale,
+                       const FieldModelBone &bone,
+                       GLuint &texture_id, quint64 &lastTexID,
+                       float globalColor[3])
 {
 	if (scale == 0.0f) {
 		return;
@@ -116,7 +122,9 @@ void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, c
 				} else {
 					glEnable(GL_TEXTURE_2D);
 				}
-				texture_id = glWidget->bindTexture(data->loadedTexture(g), GL_TEXTURE_2D, GL_RGBA, QGLContext::MipmapBindOption);
+				texture_id = glWidget->bindTexture(data->loadedTexture(g),
+				                                   GL_TEXTURE_2D, GL_RGBA,
+				                                   QGLContext::MipmapBindOption);
 			} else if(!g->hasTexture() && texture_id != (GLuint)-1) {
 				glWidget->deleteTexture(texture_id);
 				glDisable(GL_TEXTURE_2D);
@@ -142,13 +150,26 @@ void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, c
 
 				if(p->isMonochrome()) {
 					const QRgb &color = p->color();
-					glColor3ub(qRed(color), qGreen(color), qBlue(color));
+					glColor3ub(qRed(color) * globalColor[0],
+					           qGreen(color) * globalColor[1],
+					           qBlue(color) * globalColor[2]);
 				}
 
 				for(quint16 j=0 ; j<(quint8)p->count() ; ++j) {
+					const PolyVertex &vertex = p->vertex(j);
+
 					if(!p->isMonochrome()) {
 						QRgb color = p->color(j);
-						glColor3ub(qRed(color), qGreen(color), qBlue(color));
+						// TODO: color projector effect
+						/* float spot = qMax(vertex.x * 0.0f + vertex.y * 0.0f + (1.0 - (vertex.z/scale)) * -1.0f, 0.0f);
+						if (spot >= qCos(180.0)) {
+							spot = 1.0;
+						} else {
+							spot = qPow(spot, 0.0);
+						} */
+						glColor3ub(qRed(color) * globalColor[0],
+						           qGreen(color) * globalColor[1],
+						           qBlue(color) * globalColor[2]);
 					}
 
 					if(g->hasTexture() && p->hasTexture()) {
@@ -156,7 +177,6 @@ void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, c
 						glTexCoord2d(coord.x, coord.y);
 					}
 
-					const PolyVertex &vertex = p->vertex(j);
 					glVertex3f(vertex.x/scale, vertex.y/scale, vertex.z/scale);
 				}
 			}
@@ -243,11 +263,21 @@ void FieldModel::resizeGL(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int animationID, int currentFrame, float scale)
+void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data,
+                            int animationID, int currentFrame, float scale)
 {
 	if(!data || !data->isValid() || scale == 0.0f) {
 		return;
 	}
+
+	float globalColor[] = { 1.0f, 1.0f, 1.0f };
+
+	/* if(!data->translateAfter()) { // TODO: for PC too
+		FieldModelFilePS *filePS = static_cast<FieldModelFilePS *>(data);
+		globalColor[0] = qRed(filePS->globalColor()) / 255.0f;
+		globalColor[1] = qGreen(filePS->globalColor()) / 255.0f;
+		globalColor[2] = qBlue(filePS->globalColor()) / 255.0f;
+	} */
 
 	QStack<int> parent;
 	int i;
@@ -255,7 +285,8 @@ void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int anima
 	quint64 lastTexID = quint64(-1);
 
 	if(data->boneCount() <= 1) {
-		drawP(glWidget, data, scale, data->bone(0), texture_id, lastTexID);
+		drawP(glWidget, data, scale, data->bone(0), texture_id, lastTexID,
+		      globalColor);
 		if(texture_id != (GLuint)-1) {
 			glWidget->deleteTexture(texture_id);
 			glDisable(GL_TEXTURE_2D);
@@ -291,7 +322,8 @@ void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data, int anima
 			glRotatef(rotation.z, 0.0, 0.0, 1.0);
 		}
 
-		drawP(glWidget, data, scale, bone, texture_id, lastTexID);
+		drawP(glWidget, data, scale, bone, texture_id, lastTexID,
+		      globalColor);
 
 		if(data->translateAfter()) {
 			glTranslatef(0.0, 0.0, bone.size() / scale);

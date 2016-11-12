@@ -31,11 +31,11 @@ public:
 protected:
 	QList<QStringList> modelNames() const;
 	QList<QTreeWidgetItem *> animItems(int modelID) const;
-	void showModelInfos2(int row);
 	FieldModelFile *modelData(QTreeWidgetItem *item);
 	FieldModelLoaderPS *modelLoader() const;
 	FieldPS *field() const;
-	QList<QRgb> lightColors(int modelID) const;
+	const QList<FieldModelColorDir> &lightColors(int modelID) const;
+	QRgb globalColor(int modelID) const;
 	quint16 modelScale(int modelID) const;
 private:
 };

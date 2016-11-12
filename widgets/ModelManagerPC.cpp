@@ -61,13 +61,14 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 	frameLayout->addWidget(modelUnknown, 1, 1);
 	frameLayout->addWidget(new QLabel(tr("Model size")), 2, 0);
 	frameLayout->addWidget(modelScaleWidget, 2, 1);
-	frameLayout->addWidget(new QLabel(tr("Light")), 3, 0);
-	frameLayout->addWidget(modelColorDisplay, 3, 1);
-	frameLayout->addWidget(modelColorLabel, 4, 1);
+	frameLayout->addWidget(new QLabel(tr("Global light")), 3, 0);
+	frameLayout->addWidget(modelGlobalColorWidget, 3, 1);
+	frameLayout->addWidget(new QLabel(tr("Directional light")), 4, 0);
+	frameLayout->addLayout(modelColorsLayout, 5, 0, 1, 2);
 	frameLayout->addWidget(toolBar2, 0, 2);
-	frameLayout->addWidget(modelAnims, 1, 2, 5, 1);
-	frameLayout->addWidget(modelWidget, 0, 3, 6, 1);
-	frameLayout->setRowStretch(5, 1);
+	frameLayout->addWidget(modelAnims, 1, 2, 6, 1);
+	frameLayout->addWidget(modelWidget, 0, 3, 7, 1);
+	frameLayout->setRowStretch(6, 1);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(toolBar1, 0, 0);
@@ -85,7 +86,8 @@ ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
 
 	connect(modelName, SIGNAL(textEdited(QString)), SLOT(setModelName(QString)));
 	connect(modelScaleWidget, SIGNAL(valueChanged(int)), SLOT(setModelScale(int)));
-	connect(modelColorDisplay, SIGNAL(colorEdited(int,QRgb)), SLOT(setModelColor(int,QRgb)));
+	connect(modelGlobalColorWidget, SIGNAL(colorEdited(int,QRgb)), SLOT(setModelGlobalColor(int,QRgb)));
+	connect(modelColorsLayout, SIGNAL(colorDirEdited(int,FieldModelColorDir)), SLOT(setModelColor(int,FieldModelColorDir)));
 
 	connect(cutModelAction, SIGNAL(triggered()), SLOT(cutCurrentModel()));
 	connect(copyModelAction, SIGNAL(triggered()), SLOT(copyCurrentModel()));
@@ -119,16 +121,10 @@ QList<QTreeWidgetItem *> ModelManagerPC::animItems(int modelID) const
 void ModelManagerPC::showModelInfos2(int row)
 {
 	modelName->blockSignals(true);
-	modelScaleWidget->blockSignals(true);
-	modelColorDisplay->blockSignals(true);
 
 	modelName->setText(modelLoader()->charName(row));
-	modelScaleWidget->setValue(modelLoader()->scale(row));
-	modelColorDisplay->setColors(modelLoader()->lightColors(row));
 
 	modelName->blockSignals(false);
-	modelScaleWidget->blockSignals(false);
-	modelColorDisplay->blockSignals(false);
 
 	ModelManager::showModelInfos2(row);
 }
@@ -346,7 +342,18 @@ void ModelManagerPC::setModelScale(int scale)
 	emit modified();
 }
 
-void ModelManagerPC::setModelColor(int id, QRgb color)
+void ModelManagerPC::setModelGlobalColor(int id, QRgb color)
+{
+	Q_UNUSED(id);
+	int modelID = currentModelID();
+	if(modelID < 0)	return;
+
+	modelLoader()->setGlobalColor(modelID, color);
+
+	emit modified();
+}
+
+void ModelManagerPC::setModelColor(int id, const FieldModelColorDir &color)
 {
 	int modelID = currentModelID();
 	if(modelID < 0)	return;
@@ -595,9 +602,14 @@ FieldPC *ModelManagerPC::field() const
 	return (FieldPC *)ModelManager::field();
 }
 
-QList<QRgb> ModelManagerPC::lightColors(int modelID) const
+const QList<FieldModelColorDir> &ModelManagerPC::lightColors(int modelID) const
 {
 	return modelLoader()->lightColors(modelID);
+}
+
+QRgb ModelManagerPC::globalColor(int modelID) const
+{
+	return modelLoader()->globalColor(modelID);
 }
 
 quint16 ModelManagerPC::modelScale(int modelID) const

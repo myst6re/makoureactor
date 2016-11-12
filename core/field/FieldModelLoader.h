@@ -19,7 +19,29 @@
 #define FIELDMODELLOADER_H
 
 #include <QtCore>
+#include <QRgb>
 #include "FieldPart.h"
+
+struct FieldModelColorDir
+{
+	FieldModelColorDir() :
+	    dirA(0), dirB(0), dirC(0), color(Qt::black) {}
+	FieldModelColorDir(qint16 dirA, qint16 dirB, qint16 dirC, QRgb color) :
+	    dirA(dirA), dirB(dirB), dirC(dirC), color(color) {}
+
+	qint16 dirA, dirB, dirC;
+	QRgb color;
+
+	inline bool operator ==(const FieldModelColorDir &other) const {
+		return dirA == other.dirA &&
+		        dirB == other.dirB &&
+		        dirC == other.dirC &&
+		        color == other.color;
+	}
+	inline bool operator !=(const FieldModelColorDir &other) const {
+		return !(*this == other);
+	}
+};
 
 class FieldModelLoader : public FieldPart
 {

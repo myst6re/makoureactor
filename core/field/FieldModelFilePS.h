@@ -22,6 +22,7 @@
 #include <QImage>
 #include "FieldModelFile.h"
 #include "FieldModelTextureRefPS.h"
+#include "FieldModelLoader.h"
 
 class FieldPS;
 
@@ -31,11 +32,17 @@ public:
 	FieldModelFilePS();
 	void clear();
 	inline bool translateAfter() const { return false; }
-	inline const QList<QRgb> &lightColors() const {
+	inline const QList<FieldModelColorDir> &lightColors() const {
 		return _colors;
 	}
-	inline void setLightColors(const QList<QRgb> &colors) {
+	inline QRgb globalColor() const {
+		return _globalColor;
+	}
+	inline void setLightColors(const QList<FieldModelColorDir> &colors) {
 		_colors = colors;
+	}
+	inline void setGlobalColor(QRgb color) {
+		_globalColor = color;
 	}
 	inline quint16 scale() const {
 		return _scale;
@@ -48,7 +55,8 @@ public:
 	QImage vramImage() const;
 private:
 	Q_DISABLE_COPY(FieldModelFilePS)
-	QList<QRgb> _colors;
+	QList<FieldModelColorDir> _colors;
+	QRgb _globalColor;
 	quint16 _scale;
 	FieldPS *_currentField;
 	int _currentModelID;
