@@ -145,6 +145,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 					return ErrorOpening;
 				}
 			} else {
+				return FieldNotFound; // TODO
 				if(!_lgp.addFile(field->name(), new FieldSaveIO(field))) {
 					return ErrorOpening;
 				} else {
