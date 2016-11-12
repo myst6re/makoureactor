@@ -18,9 +18,8 @@
 #include "ColorDisplay.h"
 
 ColorDisplay::ColorDisplay(QWidget *parent) :
-	QWidget(parent), _ro(false)
+	QWidget(parent), _ro(false), _hover(false)
 {
-	setMouseTracking(true);
 }
 
 QSize ColorDisplay::sizeHint() const
@@ -35,20 +34,22 @@ QSize ColorDisplay::minimumSizeHint() const
 #else
 	const int scale = devicePixelRatio();
 #endif
-	return QSize((COLOR_DISPLAY_MIN_CELL_SIZE * scale + COLOR_DISPLAY_BORDER_WIDTH) * _colors.size() + COLOR_DISPLAY_BORDER_WIDTH,
-	             COLOR_DISPLAY_MIN_CELL_SIZE * scale + COLOR_DISPLAY_BORDER_WIDTH * 2);
-}
-
-int ColorDisplay::heightForWidth(int w) const
-{
-	return cellSize(w) + COLOR_DISPLAY_BORDER_WIDTH * 2;
+	int colorCount = qMax(1, _colors.size());
+	return QSize((COLOR_DISPLAY_MIN_CELL_SIZE * scale
+	             + COLOR_DISPLAY_BORDER_WIDTH) * colorCount
+	             + COLOR_DISPLAY_BORDER_WIDTH,
+	             COLOR_DISPLAY_MIN_CELL_SIZE * scale
+	             + COLOR_DISPLAY_BORDER_WIDTH * 2);
 }
 
 void ColorDisplay::setColors(const QList<QRgb> &colors)
 {
 	_colors = colors;
-	setFixedSize(minimumSizeHint());
+	setMouseTracking(_colors.size() > 1);
 	update();
+	if(!_colors.isEmpty()) {
+		setToolTip(QColor(_colors.first()).name());
+	}
 }
 
 const QList<QRgb> &ColorDisplay::colors() const
@@ -66,15 +67,34 @@ void ColorDisplay::setReadOnly(bool ro)
 	_ro = ro;
 }
 
-int ColorDisplay::cellSize(int width) const
+int ColorDisplay::cellWidth(int width) const
 {
 	if(_colors.isEmpty()) {
 		return COLOR_DISPLAY_MIN_CELL_SIZE;
 	}
 	QSize minSize = minimumSizeHint();
-	int w = qMax(width, minSize.width()); // Ensure current widget width respect minimum size hint
+	// Ensure current widget width respect minimum size hint
+	int w = qMax(width, minSize.width());
 
-	return (w - (_colors.size() + 1) * COLOR_DISPLAY_BORDER_WIDTH) / _colors.size();
+	return (w - (_colors.size() + 1) * COLOR_DISPLAY_BORDER_WIDTH)
+	        / _colors.size();
+}
+
+int ColorDisplay::cellHeight(int height) const
+{
+	if(_colors.isEmpty()) {
+		return COLOR_DISPLAY_MIN_CELL_SIZE;
+	}
+	QSize minSize = minimumSizeHint();
+	// Ensure current widget width respect minimum size hint
+	int h = qMax(height, minSize.height());
+
+	return h - 2 * COLOR_DISPLAY_BORDER_WIDTH;
+}
+
+QSize ColorDisplay::cellSize() const
+{
+	return QSize(cellWidth(width()), cellHeight(height()));
 }
 
 void ColorDisplay::paintEvent(QPaintEvent *event)
@@ -82,47 +102,57 @@ void ColorDisplay::paintEvent(QPaintEvent *event)
 	Q_UNUSED(event)
 
 	QPainter painter(this);
-	painter.setPen(Qt::black);
+	painter.setPen(palette().color(QPalette::Shadow));
 
 	// Colors
-	const int size = _colors.size(),
-	          cellWidth = cellSize(),
-	          cellFullWidth = cellWidth + COLOR_DISPLAY_BORDER_WIDTH;
+	const QSize cellS = cellSize();
+	const int size = qMax(_colors.size(), 1),
+	          cellFullWidth = cellS.width() + COLOR_DISPLAY_BORDER_WIDTH,
+	          cellFullHeight = cellS.height() + COLOR_DISPLAY_BORDER_WIDTH;
 
 	for(int i = 0 ; i < size ; ++i) {
 		const int x = i * cellFullWidth;
-		painter.drawRect(x, 0, cellFullWidth, cellFullWidth);
-		const int gray = qGray(_colors.at(i));
+		painter.drawRect(x, 0, cellFullWidth, cellFullHeight);
+		QColor color;
+		if(_colors.isEmpty()) {
+			color = Qt::transparent;
+		} else if(isEnabled()) {
+			color = QColor(_colors.at(i));
+		} else {
+			const int gray = qGray(_colors.at(i));
+			color = QColor(gray, gray, gray);
+		}
 		painter.fillRect(x + COLOR_DISPLAY_BORDER_WIDTH,
 		                 COLOR_DISPLAY_BORDER_WIDTH,
-		                 cellWidth, cellWidth,
-		                 isEnabled() ? QColor(_colors.at(i))
-		                             : QColor(gray, gray, gray));
+		                 cellS.width(), cellS.height(), color);
 	}
 
 	// Red frame
-	if(isEnabled() && !isReadOnly()) {
-		painter.setPen(Qt::red);
+	if(isEnabled() && !isReadOnly() && _hover) {
+		painter.setPen(palette().color(QPalette::Mid));
 		const QPoint cursorPos = mapFromGlobal(cursor().pos());
 		const int x = colorId(cursorPos) * cellFullWidth;
-		painter.drawRect(x, 0, cellFullWidth, cellFullWidth);
+		painter.drawRect(x, 0, cellFullWidth, cellFullHeight);
 	}
 }
 
 int ColorDisplay::colorId(const QPoint &pos) const
 {
-	return qMin(pos.x() / (cellSize() + COLOR_DISPLAY_BORDER_WIDTH), _colors.size() - 1);
+	return qMin(pos.x() / (cellWidth() + COLOR_DISPLAY_BORDER_WIDTH),
+	            _colors.size() - 1);
 }
 
 void ColorDisplay::enterEvent(QEvent *event)
 {
 	Q_UNUSED(event);
+	_hover = true;
 	update();
 }
 
 void ColorDisplay::leaveEvent(QEvent *event)
 {
 	Q_UNUSED(event);
+	_hover = false;
 	update();
 }
 
@@ -142,7 +172,8 @@ void ColorDisplay::mouseReleaseEvent(QMouseEvent *event)
 	if(colorIndex >= _colors.size()) {
 		return;
 	}
-	QColor color = QColorDialog::getColor(_colors.at(colorIndex), this, tr("Choose a new color"));
+	QColor color = QColorDialog::getColor(_colors.at(colorIndex), this,
+	                                      tr("Choose a new color"));
 	if(color.isValid()) {
 		_colors.replace(colorIndex, color.rgb());
 		emit colorEdited(colorIndex, color.rgb());

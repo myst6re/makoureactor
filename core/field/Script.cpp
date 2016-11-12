@@ -175,7 +175,6 @@ Opcode *Script::createOpcode(const QByteArray &script, int pos)
 			} else {
 				size = (quint8)script.at(pos+1) - 1;
 				if(pos + 1 + size <= script.size()) {
-					qDebug() << "new OpcodeKAWAI" << size;
 					return new OpcodeKAWAI(data, size);
 				}
 			}
