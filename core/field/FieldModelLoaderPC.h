@@ -30,7 +30,8 @@ struct FieldModelInfosPC
 	QStringList anims;
 	QList<quint16> animsUnknown;
 	quint16 unknown, typeHRC;
-	QList<QRgb> colors;
+	QList<FieldModelColorDir> colors;
+	QRgb globalColor;
 };
 
 class FieldModelLoaderPC : public FieldModelLoader
@@ -58,9 +59,13 @@ public:
 	void setScale(int modelID, quint16 scale);
 	quint16 unknown(int modelID) const;
 	void setUnknown(int modelID, quint16 unknown);
-	const QList<QRgb> &lightColors(int modelID) const;
-	void setLightColors(int modelID, const QList<QRgb> &lightColors);
-	void setLightColor(int modelID, int colorID, QRgb lightColor);
+	const QList<FieldModelColorDir> &lightColors(int modelID) const;
+	void setLightColors(int modelID,
+	                    const QList<FieldModelColorDir> &lightColors);
+	void setLightColor(int modelID, int colorID,
+	                   const FieldModelColorDir &lightColor);
+	QRgb globalColor(int modelID) const;
+	void setGlobalColor(int modelID, QRgb globalColor);
 	int animCount(int modelID) const;
 	bool insertAnim(int modelID, int numA, const QString &name);
 	void removeAnim(int modelID, int numA);
@@ -80,7 +85,8 @@ private:
 	QList< QList<quint16> > model_anims_unknown;
 	QList<quint16> model_unknown;
 	QList<quint16> model_typeHRC;
-	QList< QList<QRgb> > colors;
+	QList< QList<FieldModelColorDir> > colors;
+	QList<QRgb> model_global_color;
 };
 
 #endif // FIELDMODELLOADERPC_H

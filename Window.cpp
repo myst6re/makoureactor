@@ -160,7 +160,7 @@ Window::Window() :
 
 	QWidget *fullFieldList = new QWidget(this);
 	QVBoxLayout *fieldListLayout = new QVBoxLayout(fullFieldList);
-	fieldListLayout->addWidget(fieldList->toolBar());
+	// fieldListLayout->addWidget(fieldList->toolBar());
 	fieldListLayout->addWidget(fieldList, 1);
 	fieldListLayout->addWidget(fieldList->lineSearch());
 	fieldListLayout->setSpacing(2);
@@ -576,6 +576,9 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		} else {
 			out = tr("Nothing found!");
 		}
+		break;
+	case FieldArchiveIO::FieldExists:
+		out = tr("The file already exists");
 		break;
 	case FieldArchiveIO::ErrorOpening:
 		out = tr("The file is inaccessible");

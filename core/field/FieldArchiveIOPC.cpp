@@ -132,6 +132,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 	if(!_lgp.isOpen() && !_lgp.open()) {
 		return ErrorOpening;
 	}
+	bool oneFieldAdded = false;
 
 	for(int fieldID=0 ; fieldID<fieldArchive()->size() ; ++fieldID) {
 		if(observer && observer->observerWasCanceled()) {
@@ -144,14 +145,17 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 					return ErrorOpening;
 				}
 			} else {
+				return FieldNotFound; // TODO
 				if(!_lgp.addFile(field->name(), new FieldSaveIO(field))) {
 					return ErrorOpening;
+				} else {
+					oneFieldAdded = true;
 				}
 			}
 		}
 	}
 
-	if(_lgp.fileExists("maplist")) {
+	if(oneFieldAdded && _lgp.fileExists("maplist")) {
 		QStringList fieldNamesCopy = Data::field_names;
 		// Check if the list was correctly opened before // FIXME
 		if(Data::openMaplist(_lgp.fileData("maplist"))) {

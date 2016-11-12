@@ -42,25 +42,28 @@ struct BsxModelHeader {
 	quint16 modelId;        // ID of the model
 	quint16 scale;
 	quint32 offsetSkeleton; // Offset to the parts, bones and animations of the model
-	ColorRGB color1;
+	ColorRGB globalColor;
 	quint8 unknown;
-	ColorRGB color2;
-	ColorRGB color3;
+	qint16 colorADir1;
+	qint16 colorADir2;
+	qint16 colorADir3;
 	quint8 indexBonesStart;
 	quint8 indexBonesEnd;
-	ColorRGB color4;
+	ColorRGB colorA;
 	quint8 numBones;      // Number of bones in the model's skeleton
-	ColorRGB color5;
-	ColorRGB color6;
+	qint16 colorBDir1;
+	qint16 colorBDir2;
+	qint16 colorBDir3;
 	quint8 indexMeshStart;
 	quint8 indexMeshEnd;
-	ColorRGB color7;
+	ColorRGB colorB;
 	quint8 numParts;      // Number of parts in the model's skeleton
-	ColorRGB color8;
-	ColorRGB color9;
+	qint16 colorCDir1;
+	qint16 colorCDir2;
+	qint16 colorCDir3;
 	quint8 indexAnimationsStart;
 	quint8 indexAnimationsEnd;
-	ColorRGB color10;
+	ColorRGB colorC;
 	quint8 numAnimations; // Number of animations
 };
 

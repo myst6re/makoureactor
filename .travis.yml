@@ -10,7 +10,7 @@ install:
       && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:canonical-qt5-edgers/ubuntu1204-qt5
       && sudo apt-get -qq update
-      && sudo apt-get -qq install -y g++-4.9 libc6-i386 freeglut3-dev qtbase5-dev
+      && sudo apt-get -qq install -y --force-yes g++-4.9 libc6-i386 freeglut3-dev qtbase5-dev
       && export CXX="g++-4.9"
       ;
     else
@@ -29,7 +29,7 @@ before_script:
     fi
   - mkdir -p build
   - cd build
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${WITH_QT4}" != "1" ]; then
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
         qmake -qt=qt5 -config release ..
         ;
     else
@@ -70,14 +70,6 @@ env:
   global:
     # COVERITY_SCAN_TOKEN
     - secure: "lk7jEPh62LhXOWyT5UyGAKPxiskVyIBbHEtbnfKZZil2iJLec1f3+df1ADPajl1Ij2Yp4ZgWWcJsuN/+XkQJjXvgWyW2bi0K9ntrRCU4t3h8blodblaXvpssbz5fj4TzI8HnfBet4NXfLLdAUHBcLOLU01xb+LWaY/4rX2PlKBY="
-  matrix:
-    - WITH_QT4=0
-    - WITH_QT4=1
-
-matrix:
-  exclude:
-    - os: osx
-      env: WITH_QT4=1
 
 addons:
   coverity_scan:

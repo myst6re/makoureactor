@@ -22,6 +22,7 @@
 #include "core/field/FieldPC.h"
 #include "ColorDisplay.h"
 #include "FieldModel.h"
+#include "ModelColorsLayout.h"
 
 class ModelManager : public QDialog
 {
@@ -42,7 +43,8 @@ protected:
 	virtual FieldModelFile *modelData(QTreeWidgetItem *item)=0;
 	virtual FieldModelLoader *modelLoader() const;
 	virtual Field *field() const;
-	virtual QList<QRgb> lightColors(int modelID) const=0;
+	virtual const QList<FieldModelColorDir> &lightColors(int modelID) const=0;
+	virtual QRgb globalColor(int modelID) const=0;
 	virtual quint16 modelScale(int modelID) const=0;
 	int currentModelID(QTreeWidgetItem *item=0) const;
 	QList<int> selectedModelIDs() const;
@@ -52,8 +54,8 @@ protected:
 	QFrame *modelFrame;
 	QSpinBox *modelUnknown;
 	QSpinBox *modelScaleWidget;
-	ColorDisplay *modelColorDisplay;
-	QLabel *modelColorLabel;
+	ColorDisplay *modelGlobalColorWidget;
+	ModelColorsLayout *modelColorsLayout;
 	QTreeWidget *modelAnims;
 	FieldModel *modelPreview;
 	QWidget *modelWidget;
@@ -66,7 +68,6 @@ private slots:
 	void showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous = 0);
 	void setModelUnknown(int unknown);
 	void showModel(QTreeWidgetItem *item);
-	void setModelColorLabel(int colorId);
 };
 
 #endif // MODELMANAGER_H

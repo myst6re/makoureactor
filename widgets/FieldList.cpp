@@ -6,7 +6,7 @@
 FieldList::FieldList(QWidget *parent) :
     QTreeWidget(parent), _fieldArchive(0)
 {
-	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
+	// qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
 	QFont font;
 	font.setPointSize(8);
 
@@ -28,7 +28,7 @@ FieldList::FieldList(QWidget *parent) :
 	connect(_lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap(QString)));
 	connect(_lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
 
-	QAction *add_A = new QAction(QIcon(":/images/plus.png"), tr("Add field"), this);
+	/* QAction *add_A = new QAction(QIcon(":/images/plus.png"), tr("Add field"), this);
 	add_A->setShortcut(QKeySequence("Ctrl++"));
 	add_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	QAction *del_A = new QAction(QIcon(":/images/minus.png"), tr("Delete field"), this);
@@ -41,18 +41,19 @@ FieldList::FieldList(QWidget *parent) :
 	add_A->setStatusTip(tr("Add a field"));
 	_toolBar->addAction(del_A);
 	del_A->setStatusTip(tr("Remove a field"));
+	_toolBar->hide();
 
-	connect(add_A, SIGNAL(triggered()), SLOT(add()));
-	connect(del_A, SIGNAL(triggered()), SLOT(del()));
+	// connect(add_A, SIGNAL(triggered()), SLOT(add()));
+	// connect(del_A, SIGNAL(triggered()), SLOT(del()));
 
-	setMinimumWidth(_toolBar->sizeHint().width());
+	setMinimumWidth(_toolBar->sizeHint().width()); */
 }
 
 void FieldList::setEnabled(bool enabled)
 {
 	QTreeWidget::setEnabled(enabled);
 	_lineSearch->setEnabled(enabled);
-	_toolBar->setEnabled(enabled);
+	// _toolBar->setEnabled(enabled);
 }
 
 QTreeWidgetItem *FieldList::createItem(Field *f, int fieldID)
@@ -93,9 +94,9 @@ void FieldList::fill(FieldArchive *fieldArchive)
 	_fieldArchive = fieldArchive;
 
 	// TODO: not implemented
-	if(_fieldArchive->isPS()) {
+	/* if(_fieldArchive->isPS()) {
 		_toolBar->setEnabled(false);
-	}
+	} */
 
 	if(!items.isEmpty()) {
 		addTopLevelItems(items);

@@ -53,6 +53,9 @@ public:
 	void scroll(int, bool focus=true);
 	void enableActions(bool);
 	void setErrorLine(int opcodeID);
+	inline bool isTreeEnabled() const {
+		return _treeEnabled;
+	}
 
 	bool itemIsExpanded(const Opcode *opcode) const;
 	void setExpandedItems(const QList<const Opcode *> &expandedItems);
@@ -74,6 +77,10 @@ private slots:
 	void redo();
 	void editText();
 	void gotoLabel(QTreeWidgetItem *item = NULL);
+	void setTreeEnabled(bool enabled);
+	inline void toggleTree() {
+		setTreeEnabled(!_treeEnabled);
+	}
 signals:
 	void changed();
 	void editText(int textID);
@@ -94,7 +101,7 @@ private:
 
 	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);
 
-	bool hasCut, isInit;
+	bool hasCut, isInit, _treeEnabled;
 
 	QToolBar *_toolBar;
 	QLabel *_help;
@@ -111,6 +118,7 @@ private:
 	QAction *cut_A, *copy_A, *copyText_A, *paste_A;
 	QAction *up_A, *down_A, *expand_A;
 	QAction *undo_A, *redo_A, *text_A, *goto_A;
+	QAction *disableTree_A;
 
 	QStack<Historic> hists;
 	QStack<Historic> restoreHists;
