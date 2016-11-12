@@ -10,7 +10,7 @@ install:
       && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:canonical-qt5-edgers/ubuntu1204-qt5
       && sudo apt-get -qq update
-      && sudo apt-get -qq install -y --force-yes g++-4.9 libc6-i386 freeglut3-dev qtbase5-dev
+      && sudo apt-get -qq install -y --force-yes g++-4.9 libc6-i386 freeglut3-dev qt5-default qtbase5-dev
       && export CXX="g++-4.9"
       ;
     else
