@@ -1,3 +1,13 @@
+makoureactor (1.7.2) trusty; urgency=low
+
+  * New editor to modify model light positions (preview not ready yet) (thanks to Kaldarasha)
+  * Adding descriptions in MENU opcode (thanks to DLPB)
+  * Adding descriptions in AKAO opcode (thanks to DLPB)
+  * Fixing an error on parsing bad KAWAI opcode
+  * Adding a button "Disable/Enable tree" in the script editor toolbar
+
+ -- myst6re <myst6re@gmail.com>  Sat, 12 Nov 2016 17:43:52 +0100
+
 makoureactor (1.7.1) trusty; urgency=low
 
   * Do not show model view if the model is invalid
