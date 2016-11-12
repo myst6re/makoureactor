@@ -71,13 +71,18 @@ bool BsxFile::read(FieldModelFilePS *model) const
 	}
 
 	// We put colors in the same order that the PC version
-	QList<QRgb> colors;
-	colors << COLORRGB_2_QRGB(modelHeader.color4 ) << COLORRGB_2_QRGB(modelHeader.color2)
-		   << COLORRGB_2_QRGB(modelHeader.color3 ) << COLORRGB_2_QRGB(modelHeader.color7)
-		   << COLORRGB_2_QRGB(modelHeader.color5 ) << COLORRGB_2_QRGB(modelHeader.color6)
-		   << COLORRGB_2_QRGB(modelHeader.color10) << COLORRGB_2_QRGB(modelHeader.color8)
-		   << COLORRGB_2_QRGB(modelHeader.color9 ) << COLORRGB_2_QRGB(modelHeader.color1);
+	QList<FieldModelColorDir> colors;
+	colors << FieldModelColorDir(modelHeader.colorADir1, modelHeader.colorADir2,
+	                             modelHeader.colorADir3,
+	                             COLORRGB_2_QRGB(modelHeader.colorA))
+	       << FieldModelColorDir(modelHeader.colorBDir1, modelHeader.colorBDir2,
+	                             modelHeader.colorBDir3,
+	                             COLORRGB_2_QRGB(modelHeader.colorB))
+	       << FieldModelColorDir(modelHeader.colorCDir1, modelHeader.colorCDir2,
+	                             modelHeader.colorCDir3,
+	                             COLORRGB_2_QRGB(modelHeader.colorC));
 	model->setLightColors(colors);
+	model->setGlobalColor(COLORRGB_2_QRGB(modelHeader.globalColor));
 	model->setScale(modelHeader.scale);
 
 	// Relative to model header

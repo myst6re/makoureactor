@@ -42,7 +42,7 @@ to set your environment (`%QTDIR%/bin/qtvars.bat` for Qt 4
 and `%QTDIR%/%compiler%/bin/qtenv2.bat` for Qt 5).
 If you want to compile with msvc, run `vcvarsall.bat`
 from your Microsoft Visual Studio installation
-(eg: `C:\Program Files\Microsoft Visual Studio 11.0\VC\vcvarsall.bat`.
+(eg: `C:\Program Files\Microsoft Visual Studio 11.0\VC\vcvarsall.bat`).
 
 Then run:
 

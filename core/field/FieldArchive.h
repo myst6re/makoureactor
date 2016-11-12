@@ -160,7 +160,7 @@ public:
 	const Field *field(const QString &name) const;
 	Field *field(const QString &name, bool open=true, bool dontOptimize=false);
 	void appendField(Field *field);
-	void addField(Field *field);
+	FieldArchiveIO::ErrorCode addField(Field *field, const QString &fileName, int &fieldId);
 	void removeField(quint32 id);
 
 	bool isAllOpened() const;

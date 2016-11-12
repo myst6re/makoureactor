@@ -160,8 +160,10 @@ Window::Window() :
 
 	QWidget *fullFieldList = new QWidget(this);
 	QVBoxLayout *fieldListLayout = new QVBoxLayout(fullFieldList);
+	// fieldListLayout->addWidget(fieldList->toolBar());
 	fieldListLayout->addWidget(fieldList, 1);
 	fieldListLayout->addWidget(fieldList->lineSearch());
+	fieldListLayout->setSpacing(2);
 	zonePreview->setContentsMargins(fieldListLayout->contentsMargins());
 
 	horizontalSplitter = new Splitter(Qt::Vertical, this);
@@ -575,6 +577,9 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 			out = tr("Nothing found!");
 		}
 		break;
+	case FieldArchiveIO::FieldExists:
+		out = tr("The file already exists");
+		break;
 	case FieldArchiveIO::ErrorOpening:
 		out = tr("The file is inaccessible");
 		break;
@@ -641,7 +646,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	actionClose->setEnabled(true);
 
 #ifdef DEBUG_FUNCTIONS
-	//FieldArchivePC otherArch("C:/Users/Jérôme/Documents/neo_midgar_build/livraison-acro-2015-04-10/fflevel_compare_annexe.lgp", FieldArchiveIO::Lgp);
+	//FieldArchivePC otherArch("", FieldArchiveIO::Lgp);
 	//fieldArchive->compareTexts(&otherArch);
 	//fieldArchive->searchBackgroundZ();
 	/* const QStringList &fieldNames = Data::field_names;

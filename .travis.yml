@@ -8,11 +8,10 @@ install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          lsb_release -a
       && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
-      && sudo apt-add-repository -y ppa:beineri/opt-qt551
+      && sudo apt-add-repository -y ppa:canonical-qt5-edgers/ubuntu1204-qt5
       && sudo apt-get -qq update
-      && sudo apt-get -qq install -y g++-4.8 libc6-i386 freeglut3-dev qt55tools qt55base qt55translations qt55imageformats
-      && export CXX="g++-4.8"
-      && export CC="gcc-4.8"
+      && sudo apt-get -qq install -y --force-yes g++-4.9 libc6-i386 freeglut3-dev qtbase5-dev
+      && export CXX="g++-4.9"
       ;
     else
          brew update > /dev/null
@@ -23,15 +22,20 @@ install:
     fi
 
 before_script:
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      QTDIR="/opt/qt55";
-    else
-      QTDIR="/usr/local/opt/qt5";
+  - if [ "${TRAVIS_OS_NAME}" != "linux" ]; then
+         QTDIR="/usr/local/opt/qt5"
+      && export PATH="$QTDIR/bin:$PATH"
+      ;
     fi
-  - export PATH="$QTDIR/bin:$PATH"
   - mkdir -p build
   - cd build
-  - qmake -config release ..
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+        qmake -qt=qt5 -config release ..
+        ;
+    else
+        qmake -config release ..
+        ;
+    fi
 
 script:
   - make -j2

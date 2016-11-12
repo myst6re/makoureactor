@@ -572,6 +572,22 @@ bool Data::openMaplist(const QByteArray &data)
 	return true;
 }
 
+bool Data::saveMaplist(QByteArray &data)
+{
+	if(field_names.size() > 65535) {
+		return false;
+	}
+	quint16 nbMap = field_names.size();
+	data.append((char *)&nbMap, 2);
+
+	foreach(const QString &fieldName, field_names) {
+		data.append(fieldName.toLatin1()
+		            .leftJustified(32, '\0', true));
+	}
+
+	return true;
+}
+
 const char *Data::movieList[106] = {
 	"fship2", "fship2n", "d_ropego", "d_ropein", "u_ropein", "u_ropego",
 	"gold2", "gold3", "gold4", "gold6", "gold5",

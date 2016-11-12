@@ -142,7 +142,7 @@ void OrientationWidget::moveCursor(const QPointF &pos)
 	double angle;
 
 	if(sizeX != 0) {
-		angle = atan2(abs(sizeY), abs(sizeX)) * 57.29577951;// rad2deg
+		angle = atan2(qAbs(sizeY), qAbs(sizeX)) * 57.29577951;// rad2deg
 	} else {
 		angle = 0;
 	}

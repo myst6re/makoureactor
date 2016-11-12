@@ -21,7 +21,7 @@
 #include "core/Clipboard.h"
 
 OpcodeList::OpcodeList(QWidget *parent) :
-	QTreeWidget(parent), isInit(false),
+	QTreeWidget(parent), isInit(false), _treeEnabled(true),
 	field(0), grpScript(0), script(0), errorLine(-1)
 {
 	setColumnCount(1);
@@ -32,6 +32,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	setExpandsOnDoubleClick(false);
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	setSelectionMode(QAbstractItemView::ExtendedSelection);
+	setTextElideMode(Qt::ElideNone);
 
 	edit_A = new QAction(tr("Edit"), this);
 	edit_A->setShortcut(QKeySequence(Qt::Key_Return));
@@ -81,6 +82,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	text_A->setVisible(false);
 	goto_A = new QAction(this);
 	goto_A->setVisible(false);
+	disableTree_A = new QAction(tr("Disable tree"), this);
 
 	connect(edit_A, SIGNAL(triggered()), SLOT(scriptEditor()));
 	connect(add_A, SIGNAL(triggered()), SLOT(add()));
@@ -96,12 +98,14 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	connect(undo_A, SIGNAL(triggered()), SLOT(undo()));
 	connect(redo_A, SIGNAL(triggered()), SLOT(redo()));
 	connect(goto_A, SIGNAL(triggered()), SLOT(gotoLabel()));
-	
+	connect(disableTree_A, SIGNAL(triggered()), SLOT(toggleTree()));
+
 	addAction(edit_A);
 	addAction(add_A);
 	addAction(del_A);
 	addAction(text_A);
 	addAction(goto_A);
+	addAction(disableTree_A);
 	QAction *separator = new QAction(this);
 	separator->setSeparator(true);
 	addAction(separator);
@@ -146,6 +150,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	_toolBar->addAction(expand_A);
 	_toolBar->addAction(text_A);
 	_toolBar->addAction(goto_A);
+	_toolBar->addAction(disableTree_A);
 	_toolBar->addSeparator();
 	_toolBar->addAction(undo_A);
 	undo_A->setStatusTip(undo_A->text());
@@ -210,6 +215,19 @@ void OpcodeList::setErrorLine(int opcodeID)
 	}
 
 	errorLine = opcodeID;
+}
+
+void OpcodeList::setTreeEnabled(bool enabled)
+{
+	if(enabled != _treeEnabled) {
+		_treeEnabled = enabled;
+		if(_treeEnabled) {
+			disableTree_A->setText(tr("Disable tree"));
+		} else {
+			disableTree_A->setText(tr("Enable tree"));
+		}
+		fill();
+	}
 }
 
 void OpcodeList::itemSelected()
@@ -374,7 +392,9 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 				if(!((OpcodeJump *)curOpcode)->isBadJump()) {
 					indent.append(((OpcodeJump *)curOpcode)->label());
 				}
-				parentItem = item;
+				if(_treeEnabled) {
+					parentItem = item;
+				}
 			}
 			else if(id >= Opcode::REQ && id <= Opcode::RETTO)
 				item->setForeground(0, QColor(0xcc,0x66,0x00));
@@ -404,14 +424,16 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 		item->setData(0, Qt::UserRole, -2);
 	}
 
+	// Adjust items size
+	resizeColumnToContents(0);
+	if(header()->sectionSize(0) < viewport()->width()) {
+		header()->setMinimumSectionSize(viewport()->width());
+	}
+
 	scrollToTop();
 
 	enableActions(true);
 
-	if(header()->sectionSize(0) < width()) {
-		header()->setMinimumSectionSize(width() - 2);
-	}
-	
 	// edit_A->setEnabled(true);
 	add_A->setEnabled(true);
 	// del_A->setEnabled(!script->isEmpty());

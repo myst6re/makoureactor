@@ -32,6 +32,7 @@ void FieldModelLoaderPC::clear()
 	this->model_unknown.clear();
 	model_anims_unknown.clear();
 	this->colors.clear();
+	model_global_color.clear();
 }
 
 void FieldModelLoaderPC::clean()
@@ -101,14 +102,28 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 		memcpy(&nbAnim, constData + curPos+16+len, 2);
 
-		QList<QRgb> color;
+		QList<FieldModelColorDir> color;
 
-		for(j=0 ; j<10 ; ++j) {
-			color.append(qRgb(data.at(curPos+18+len+j*3), data.at(curPos+19+len+j*3), data.at(curPos+20+len+j*3)));
+		curPos += 18 + len;
+
+		for(j=0 ; j<3 ; ++j) {
+			qint16 dirA, dirB, dirC;
+			memcpy(&dirA, constData + curPos + 3 + j * 9, 2);
+			memcpy(&dirB, constData + curPos + 5 + j * 9, 2);
+			memcpy(&dirC, constData + curPos + 7 + j * 9, 2);
+			color.append(FieldModelColorDir(dirA, dirB, dirC,
+			                                qRgb(data.at(curPos + 0 + j * 9),
+			                                     data.at(curPos + 1 + j * 9),
+			                                     data.at(curPos + 2 + j * 9))));
 		}
+
 		this->colors.append(color);
 
-		curPos += 48+len;
+		model_global_color.append(qRgb(data.at(curPos + 0 + 27),
+		                               data.at(curPos + 1 + 27),
+		                               data.at(curPos + 2 + 27)));
+
+		curPos += 30;
 
 		QStringList anims;
 		QList<quint16> anims_unknown;
@@ -142,30 +157,36 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 QByteArray FieldModelLoaderPC::save() const
 {
-	quint16 nbHRC = this->model_nameHRC.size(), nbAnim, nameSize, i, j;
+	quint16 nbHRC = this->model_nameHRC.size();
 	QByteArray HRCs;
-	QString modelName;
-	QRgb color;
 
-	for(i=0 ; i<nbHRC ; ++i) {
-		modelName = this->model_nameChar.at(i);
-		nameSize = modelName.size();
+	for(int i=0 ; i<nbHRC ; ++i) {
+		const QString &modelName = this->model_nameChar.at(i);
+		quint16 nameSize = modelName.size();
 		HRCs.append((char *)&nameSize, 2); //model name size
 		HRCs.append(modelName.toLocal8Bit()); //model Name (fieldnamename_of_char.char)
 		HRCs.append((char *)&this->model_unknown.at(i), 2); //Unknown
 		HRCs.append(this->model_nameHRC.at(i).leftJustified(8, '\x00', true)); //HRC name (AAAA.HRC)
 		HRCs.append(QString::number(this->model_typeHRC.at(i)).leftJustified(4, '\x00', true)); //scale (512 )
-		nbAnim = this->model_anims.at(i).size();
+		const quint16 &nbAnim = this->model_anims.at(i).size();
 		HRCs.append((char *)&nbAnim, 2); //Nb Anims
 
-		for(j=0 ; j<10 ; ++j) { //Colors
-			color = this->colors.at(i).at(j);
-			HRCs.append((char)qRed(color));
-			HRCs.append((char)qGreen(color));
-			HRCs.append((char)qBlue(color));
+		for(quint8 j=0 ; j<3 ; ++j) { //Colors
+			const FieldModelColorDir &colorDir = this->colors.at(i).at(j);
+			HRCs.append((char)qRed(colorDir.color));
+			HRCs.append((char)qGreen(colorDir.color));
+			HRCs.append((char)qBlue(colorDir.color));
+			HRCs.append((char *)&colorDir.dirA, 2);
+			HRCs.append((char *)&colorDir.dirB, 2);
+			HRCs.append((char *)&colorDir.dirC, 2);
 		}
 
-		for(j=0 ; j<nbAnim ; ++j) { //Animations
+		const QRgb &globalColor = this->model_global_color.at(i);
+		HRCs.append((char)qRed(globalColor));
+		HRCs.append((char)qGreen(globalColor));
+		HRCs.append((char)qBlue(globalColor));
+
+		for(int j=0 ; j<nbAnim ; ++j) { //Animations
 			nameSize = this->model_anims.at(i).at(j).size();
 			HRCs.append((char *)&nameSize, 2); //Animation name size
 			HRCs.append(this->model_anims.at(i).at(j)); //Animation name
@@ -189,11 +210,17 @@ int FieldModelLoaderPC::modelCount() const
 bool FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
 {
 	if(modelCount() < maxModelCount()) {
-		QList<QRgb> color;
+		QList<FieldModelColorDir> color;
 		if(!colors.isEmpty()) {
 			color = colors.first();
 		} else {
-			color = QVector<QRgb>(10, Qt::black).toList();
+			color = QVector<FieldModelColorDir>(10, FieldModelColorDir()).toList();
+		}
+		QRgb globalColor;
+		if(!model_global_color.isEmpty()) {
+			globalColor = model_global_color.first();
+		} else {
+			globalColor = Qt::black;
 		}
 
 		model_unknown.insert(modelID, (quint16)0);
@@ -201,6 +228,7 @@ bool FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
 		model_nameHRC.insert(modelID, hrcName);
 		model_typeHRC.insert(modelID, field()->scriptsAndTexts()->scale());
 		colors.insert(modelID, color);
+		model_global_color.insert(modelID, globalColor);
 
 		model_anims.insert(modelID, QStringList());
 		model_anims_unknown.insert(modelID, QList<quint16>());
@@ -219,6 +247,7 @@ void FieldModelLoaderPC::removeModel(int modelID)
 		model_nameHRC.removeAt(modelID);
 		model_typeHRC.removeAt(modelID);
 		colors.removeAt(modelID);
+		model_global_color.removeAt(modelID);
 
 		model_anims.removeAt(modelID);
 		model_anims_unknown.removeAt(modelID);
@@ -237,6 +266,7 @@ void FieldModelLoaderPC::swapModel(int oldModelID, int newModelID)
 		model_nameHRC.swap(oldModelID, newModelID);
 		model_typeHRC.swap(oldModelID, newModelID);
 		colors.swap(oldModelID, newModelID);
+		model_global_color.swap(oldModelID, newModelID);
 
 		model_anims.swap(oldModelID, newModelID);
 		model_anims_unknown.swap(oldModelID, newModelID);
@@ -311,12 +341,13 @@ void FieldModelLoaderPC::setUnknown(int modelID, quint16 unknown)
 	}
 }
 
-const QList<QRgb> &FieldModelLoaderPC::lightColors(int modelID) const
+const QList<FieldModelColorDir> &FieldModelLoaderPC::lightColors(int modelID) const
 {
 	return colors.at(modelID);
 }
 
-void FieldModelLoaderPC::setLightColors(int modelID, const QList<QRgb> &lightColors)
+void FieldModelLoaderPC::setLightColors(int modelID,
+                                        const QList<FieldModelColorDir> &lightColors)
 {
 	if(modelID >= 0 && modelID < colors.size()
 			&& colors.at(modelID) != lightColors) {
@@ -325,12 +356,27 @@ void FieldModelLoaderPC::setLightColors(int modelID, const QList<QRgb> &lightCol
 	}
 }
 
-void FieldModelLoaderPC::setLightColor(int modelID, int colorID, QRgb lightColor)
+void FieldModelLoaderPC::setLightColor(int modelID, int colorID,
+                                       const FieldModelColorDir &lightColor)
 {
 	if(modelID >= 0 && modelID < colors.size()
 			&& colorID < colors.at(modelID).size()
 			&& colors.at(modelID).at(colorID) != lightColor) {
 		colors[modelID].replace(colorID, lightColor);
+		setModified(true);
+	}
+}
+
+QRgb FieldModelLoaderPC::globalColor(int modelID) const
+{
+	return model_global_color.at(modelID);
+}
+
+void FieldModelLoaderPC::setGlobalColor(int modelID, QRgb globalColor)
+{
+	if(modelID >= 0 && modelID < model_global_color.size()
+			&& model_global_color.at(modelID) != globalColor) {
+		model_global_color.replace(modelID, globalColor);
 		setModified(true);
 	}
 }
@@ -427,10 +473,12 @@ FieldModelInfosPC FieldModelLoaderPC::modelInfos(int modelID) const
 	ret.unknown = model_unknown.at(modelID);
 	ret.typeHRC = model_typeHRC.at(modelID);
 	ret.colors = colors.at(modelID);
+	ret.globalColor = model_global_color.at(modelID);
 	return ret;
 }
 
-void FieldModelLoaderPC::setModelInfos(int modelID, const FieldModelInfosPC &modelInfos)
+void FieldModelLoaderPC::setModelInfos(int modelID,
+                                       const FieldModelInfosPC &modelInfos)
 {
 	model_nameChar.replace(modelID, modelInfos.nameChar);
 	model_nameHRC.replace(modelID, modelInfos.nameHRC);
@@ -439,10 +487,12 @@ void FieldModelLoaderPC::setModelInfos(int modelID, const FieldModelInfosPC &mod
 	model_unknown.replace(modelID, modelInfos.unknown);
 	model_typeHRC.replace(modelID, modelInfos.typeHRC);
 	colors.replace(modelID, modelInfos.colors);
+	model_global_color.replace(modelID, modelInfos.globalColor);
 	setModified(true);
 }
 
-void FieldModelLoaderPC::insertModelInfos(int modelID, const FieldModelInfosPC &modelInfos)
+void FieldModelLoaderPC::insertModelInfos(int modelID,
+                                          const FieldModelInfosPC &modelInfos)
 {
 	model_nameChar.insert(modelID, modelInfos.nameChar);
 	model_nameHRC.insert(modelID, modelInfos.nameHRC);
@@ -451,5 +501,6 @@ void FieldModelLoaderPC::insertModelInfos(int modelID, const FieldModelInfosPC &
 	model_unknown.insert(modelID, modelInfos.unknown);
 	model_typeHRC.insert(modelID, modelInfos.typeHRC);
 	colors.insert(modelID, modelInfos.colors);
+	model_global_color.insert(modelID, modelInfos.globalColor);
 	setModified(true);
 }

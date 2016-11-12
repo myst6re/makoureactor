@@ -1270,6 +1270,8 @@ class OpcodeMENU : public Opcode {
 public:
 	explicit OpcodeMENU(const char *params, int size);
 	inline int id() const { return 0x49; }
+	static QString menu22(const QString &param);
+	static QString menu23(const QString &param);
 	QString menu(const QString &param) const;
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);

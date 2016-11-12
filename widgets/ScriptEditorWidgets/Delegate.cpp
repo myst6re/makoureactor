@@ -278,7 +278,7 @@ void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 
 	if(type == ScriptEditorGenericList::akao) {
 		QComboBox *comboBox = static_cast<QComboBox*>(editor);
-		value = comboBox->currentData().toInt();
+		value = comboBox->itemData(comboBox->currentIndex()).toInt();
 	} else if((type == ScriptEditorGenericList::field_id
 	    && !Data::field_names.isEmpty())
 	        || (type == ScriptEditorGenericList::group_id

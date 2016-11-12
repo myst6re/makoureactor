@@ -149,7 +149,8 @@ HEADERS += \
     widgets/Splitter.h \
     core/AkaoIO.h \
     core/Akao.h \
-    core/Clipboard.h
+    core/Clipboard.h \
+    widgets/ModelColorsLayout.h
 
 SOURCES += \
     Window.cpp \
@@ -287,7 +288,8 @@ SOURCES += \
     widgets/Splitter.cpp \
     core/AkaoIO.cpp \
     core/Akao.cpp \
-    core/Clipboard.cpp
+    core/Clipboard.cpp \
+    widgets/ModelColorsLayout.cpp
 
 TRANSLATIONS += Makou_Reactor_fr.ts  \
     Makou_Reactor_ja.ts

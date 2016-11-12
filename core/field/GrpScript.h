@@ -58,7 +58,7 @@ public:
 	static GrpScript *createGroupModel(quint8 modelID, int charID = -1);
 
 	inline bool setScript(int row, const QByteArray &script) {
-		setScript(row, script, 0, script.size());
+		return setScript(row, script, 0, script.size());
 	}
 	bool setScript(int row, const QByteArray &script, int pos, int size);
 	inline void setScript(int row, Script *script) {

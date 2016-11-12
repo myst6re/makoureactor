@@ -169,9 +169,14 @@ Opcode *Script::createOpcode(const QByteArray &script, int pos)
 	case 0x27:	return new OpcodeBGMOVIE(data, size);
 	case 0x28://KAWAI
 		if(pos + 1 < script.size()) {
-			size = (quint8)script.at(pos+1) - 1;
-			if(pos + 1 + size <= script.size()) {
-				return new OpcodeKAWAI(data, size);
+			if((quint8)script.at(pos+1) == 0) {
+				qWarning() << "unknown opcode KAWAI" << opcode << size << (script.size() - pos - 1);
+				return new OpcodeUnknown(0x28, data, 1);
+			} else {
+				size = (quint8)script.at(pos+1) - 1;
+				if(pos + 1 + size <= script.size()) {
+					return new OpcodeKAWAI(data, size);
+				}
 			}
 		}
 		qWarning() << "unknown opcode KAWAI" << opcode << size << (script.size() - pos - 1);

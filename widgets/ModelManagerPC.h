@@ -35,7 +35,8 @@ protected:
 	FieldModelFile *modelData(QTreeWidgetItem *item);
 	FieldModelLoaderPC *modelLoader() const;
 	FieldPC *field() const;
-	QList<QRgb> lightColors(int modelID) const;
+	const QList<FieldModelColorDir> &lightColors(int modelID) const;
+	QRgb globalColor(int modelID) const;
 	quint16 modelScale(int modelID) const;
 private:
 	void copyModels(const QList<int> &modelIDs);
@@ -57,7 +58,8 @@ private slots:
 	void renameOKModel(QTreeWidgetItem *);
 	void setModelName(const QString &modelName);
 	void setModelScale(int scale);
-	void setModelColor(int id, QRgb color);
+	void setModelGlobalColor(int id, QRgb color);
+	void setModelColor(int id, const FieldModelColorDir &color);
 	void addAnim();
 	void delAnim();
 	void upAnim();

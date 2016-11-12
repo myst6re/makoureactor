@@ -92,6 +92,29 @@ bool Field::open(bool dontOptimize)
 	return true;
 }
 
+qint8 Field::open(const QString &path, bool isDat, bool compressed,
+                 QIODevice *device2)
+{
+	qint8 ret = importer(path, isDat, compressed,
+	                     Field::FieldSection(0xFFFF), // Everything
+	                     device2);
+	if(ret == 0) {
+		_isOpen = true;
+	}
+	return ret;
+}
+
+qint8 Field::open(const QByteArray &data, bool isPSField, QIODevice *device2)
+{
+	qint8 ret = importer(data, isPSField,
+	                     Field::FieldSection(0xFFFF), // Everything
+	                     device2);
+	if(ret == 0) {
+		_isOpen = true;
+	}
+	return ret;
+}
+
 int Field::sectionSize(FieldSection part) const
 {
 	int idPart = sectionId(part);
@@ -494,7 +517,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 			if(!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4)))	return 2;
 			inf->setModified(true);
 		}
-		if(part.testFlag(Background) && isPC()) {
+		if(part.testFlag(Background)) {
 			QByteArray mimData = data.mid(sectionPositions[8]+4),
 					palData = data.mid(sectionPositions[3]+4, sectionPositions[4]-sectionPositions[3]-4);
 

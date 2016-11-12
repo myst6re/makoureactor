@@ -34,21 +34,22 @@ public:
 	void setReadOnly(bool ro);
 	QSize sizeHint() const;
 	QSize minimumSizeHint() const;
-	int heightForWidth(int w) const;
-	bool hasHeightForWidth() const {
-		return true;
+	inline int cellWidth() const {
+		return cellWidth(width());
 	}
-	inline int cellSize() const {
-		return cellSize(width());
+	inline int cellHeight() const {
+		return cellHeight(height());
 	}
 signals:
 	void colorEdited(int id, QRgb value);
 	void colorHovered(int id);
 private:
 	int colorId(const QPoint &pos) const;
-	int cellSize(int w) const;
+	int cellWidth(int w) const;
+	int cellHeight(int h) const;
+	QSize cellSize() const;
 	QList<QRgb> _colors;
-	bool _ro;
+	bool _ro, _hover;
 protected:
 	void paintEvent(QPaintEvent *event);
 	void enterEvent(QEvent *event);
