@@ -26,7 +26,9 @@ class FieldSaveIO : public QIODevice
 {
 public:
 	FieldSaveIO(Field *field, QObject *parent=0);
+	virtual bool open(OpenMode mode);
 	virtual void close();
+	virtual qint64 size() const;
 protected:
 	virtual qint64 readData(char *data, qint64 maxSize);
 private:
