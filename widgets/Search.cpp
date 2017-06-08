@@ -872,6 +872,7 @@ void Search::replaceAll()
 	bool modified = false;
 	while(fieldArchive->searchText(text, fieldID, textID, from, size, sorting, scope)) {
 		if(fieldArchive->replaceText(text, after, fieldID, textID, from)) {
+			fieldArchive->field(fieldID)->setModified(true);
 			modified = true;
 		}
 		from += after.size();

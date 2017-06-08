@@ -895,7 +895,7 @@ void Window::setModified(bool enabled)
 		int fieldId = item->data(0, Qt::UserRole).toInt();
 		if(fieldId >= 0) {
 			Field *curField = fieldArchive->field(fieldId, false);
-			if(curField && curField->isOpen()) {
+			if(curField) {
 				if(enabled && curField->isModified()) {
 					item->setForeground(0, QColor(0xd1,0x1d,0x1d));
 				} else if(!enabled && item->foreground(0).color() == QColor(0xd1,0x1d,0x1d)) {
