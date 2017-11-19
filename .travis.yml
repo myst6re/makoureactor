@@ -36,6 +36,7 @@ before_script:
     QTDIR="/usr/local/opt/qt5";
     export PATH="$QTDIR/bin:$PATH";
   fi
+
 script:
 - mkdir -p build
 - cd build
