@@ -91,6 +91,11 @@ deploy:
   on:
     tags: true
 
+branches:
+  except:
+    - coverity_scan
+    - continuous
+
 env:
   global:
     # COVERITY_SCAN_TOKEN
