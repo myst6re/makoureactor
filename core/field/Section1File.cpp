@@ -298,7 +298,7 @@ QByteArray Section1File::save() const
 {
 	QByteArray data = field()->sectionData(Field::Scripts);
 	QByteArray grpScriptNames, positionsScripts, positionsAKAO, allScripts, realScript, positionsTexts, allTexts, allAKAOs;
-	quint32 posAKAO, posAKAOs, newPosAKAOs;
+	quint32 posAKAO, posAKAOs, newPosAKAOs, pos32, newPosTexts32;
 	quint16 posTocAKAOs, posTexts, newPosScripts, newPosTexts, newNbAKAO, pos;
 	quint8 nbGrpScripts, newNbGrpScripts;
 	const char *constData = data.constData();
@@ -308,13 +308,13 @@ QByteArray Section1File::save() const
 	memcpy(&posTexts, constData + 4, 2);//posTexts (and end of the scripts section)
 
 	if(_tut && _tut->isModified()) {
-		newNbAKAO = _tut->size();
+		newNbAKAO = _tut->size(); // 255 maximum
 	} else {
 		memcpy(&newNbAKAO, constData + 6, 2);//nbAKAO
 	}
 
 	newPosScripts = 32 + newNbGrpScripts * 72 + newNbAKAO * 4;
-	pos = newPosScripts;
+	pos32 = newPosScripts;
 
 	// Creation newPosScripts + scripts
 	quint8 nbObjets3D = 0;
@@ -322,7 +322,12 @@ QByteArray Section1File::save() const
 		grpScriptNames.append( grpScript->realName().leftJustified(8, QChar('\x00'), true) );
 		for(quint8 j=0 ; j<32 ; ++j) {
 			realScript = grpScript->toByteArray(j);
-			if(!realScript.isEmpty())	pos = newPosScripts + allScripts.size();
+			if(!realScript.isEmpty())	pos32 = newPosScripts + allScripts.size();
+			if(pos32 > 65535) {
+				qWarning() << "Section1File::save script size overflow";
+				return QByteArray();
+			}
+			pos = quint16(pos32);
 			positionsScripts.append((char *)&pos, 2);
 			allScripts.append(realScript);
 		}
@@ -330,12 +335,22 @@ QByteArray Section1File::save() const
 	}
 
 	// Creation new positions Texts
-	newPosTexts = newPosScripts + allScripts.size();
+	newPosTexts32 = newPosScripts + allScripts.size();
+	if(newPosTexts32 > 65535) {
+		qWarning() << "Section1File::save script size overflow";
+		return QByteArray();
+	}
+	newPosTexts = quint16(newPosTexts32);
 
 	quint16 newNbText = textCount();
 
 	foreach(const FF7Text &text, texts()) {
-		pos = 2 + newNbText*2 + allTexts.size();
+		pos32 = 2 + newNbText*2 + allTexts.size();
+		if(pos32 > 65535) {
+			qWarning() << "Section1File::save script + text size overflow";
+			return QByteArray();
+		}
+		pos = quint16(pos32);
 		positionsTexts.append((char *)&pos, 2);
 		allTexts.append(text.data());
 		allTexts.append('\xff');// end of text
@@ -359,6 +374,10 @@ QByteArray Section1File::save() const
 		// Creation new positions AKAO
 		for(quint32 i=0 ; i<newNbAKAO ; ++i) {
 			memcpy(&posAKAO, constData + posTocAKAOs + i*4, 4);
+			if(quint64(posAKAO) + diff > ((quint32)-1)) {
+				qWarning() << "Section1File::save script + text + akao size overflow";
+				return QByteArray();
+			}
 			posAKAO += diff;
 			positionsAKAO.append((char *)&posAKAO, 4);
 		}

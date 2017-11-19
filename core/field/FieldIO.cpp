@@ -23,31 +23,39 @@ FieldSaveIO::FieldSaveIO(Field *field, QObject *parent) :
 {
 }
 
+bool FieldSaveIO::open(OpenMode mode)
+{
+	if(!setCache()) {
+		return false;
+	}
+	return QIODevice::open(mode);
+}
+
 void FieldSaveIO::close()
 {
 	_cache.clear();
 	QIODevice::close();
 }
 
+qint64 FieldSaveIO::size() const
+{
+	return _cache.size();
+}
+
 qint64 FieldSaveIO::readData(char *data, qint64 maxSize)
 {
-	if(setCache()) {
-		if(pos() < _cache.size()) {
-			const char *constData = _cache.constData();
-			qint64 r = qMin(maxSize, _cache.size() - pos());
-			if(r > 0) {
-				memcpy(data, constData + pos(), r);
-				return r;
-			} else if(r == 0) {
-				return 0;
-			} else {
-				return -1;
-			}
-		} else {
+	if(pos() < _cache.size()) {
+		const char *constData = _cache.constData();
+		qint64 r = qMin(maxSize, _cache.size() - pos());
+		if(r > 0) {
+			memcpy(data, constData + pos(), r);
+			return r;
+		} else if(r == 0) {
 			return 0;
 		}
+		return -1;
 	}
-	return -1;
+	return 0;
 }
 
 bool FieldSaveIO::setCache()
@@ -55,6 +63,7 @@ bool FieldSaveIO::setCache()
 	if(_cache.isEmpty()) {
 		if(!_field->save(_cache, true)) {
 			_cache.clear();
+			setErrorString(tr("Cannot save field %1").arg(_field->name()));
 			return false;
 		}
 	}

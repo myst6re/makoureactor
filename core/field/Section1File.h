@@ -74,7 +74,7 @@ public:
 	const QList<GrpScript *> &grpScripts() const;
 	GrpScript *grpScript(int groupID) const;
 	int grpScriptCount() const;
-	inline static int maxGrpScriptCount() { return 255; }
+	inline static int maxGrpScriptCount() { return 48; }
 	bool insertGrpScript(int row);
 	bool insertGrpScript(int row, GrpScript *grpScript);
 	void deleteGrpScript(int row);
