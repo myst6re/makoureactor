@@ -1871,7 +1871,7 @@ Opcode1B::Opcode1B(const OpcodeJump &op) :
 
 QString Opcode1B::toString(Field *) const
 {
-	return QObject::tr("If Red XIII is not named Nanaki (%2)")
+	return QObject::tr("If Red XIII is named Nanaki (%2)")
 	        .arg(_badJump
 	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
 	             : QObject::tr("else goto label %1").arg(_label));

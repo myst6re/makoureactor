@@ -396,7 +396,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("If key pressed"), QList<QVariant>() << 0x30 << 0x31 << 0x32);
 		comboBox->addItem(tr("If Party Member"), QList<QVariant>() << 0xCB);
 		comboBox->addItem(tr("If character exsists"), QList<QVariant>() << 0xCC);
-		comboBox->addItem(tr("[Sega Chief's custom opcode] If Red XIII is not named Nanaki"), QList<QVariant>() << 0x1B);
+		comboBox->addItem(tr("[Sega Chief's custom opcode] If Red XIII is named Nanaki"), QList<QVariant>() << 0x1B);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Wait"), QList<QVariant>() << 0x24);
 		comboBox->addItem(tr("No Operation"), QList<QVariant>() << 0x5F);
