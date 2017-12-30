@@ -1828,6 +1828,55 @@ void OpcodeIFUWL::getVariables(QList<FF7Var> &vars) const
 	vars.append(ifVars);
 }
 
+Opcode1A::Opcode1A(const char *params, int size)
+{
+	setParams(params, size);
+}
+
+void Opcode1A::setParams(const char *params, int)
+{
+	memcpy(&from, params, 2);
+	memcpy(&to, params + 2, 2);
+	memcpy(&absValue, params + 4, 4);
+	flag = (quint8)params[8];
+}
+
+QString Opcode1A::toString(Field *) const
+{
+	return QObject::tr("Write/Read entire savemap (from=%1, to=%2, absValue=%3, flag=%4)")
+	        .arg(from)
+	        .arg(to)
+	        .arg(absValue)
+	        .arg(flag);
+}
+
+QByteArray Opcode1A::params() const
+{
+	return QByteArray()
+	        .append((char *)&from, 2)
+	        .append((char *)&to, 2)
+	        .append((char *)&absValue, 4)
+	        .append((char)flag);
+}
+
+Opcode1B::Opcode1B(const char *params, int size) :
+    OpcodeJMPFL(params, size)
+{
+}
+
+Opcode1B::Opcode1B(const OpcodeJump &op) :
+    OpcodeJMPFL(op)
+{
+}
+
+QString Opcode1B::toString(Field *) const
+{
+	return QObject::tr("If Red XIII is not named Nanaki (%2)")
+	        .arg(_badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label));
+}
+
 OpcodeMINIGAME::OpcodeMINIGAME(const char *params, int size)
 {
 	setParams(params, size);
@@ -8565,8 +8614,8 @@ const quint8 Opcode::length[257] =
 /*17*//* IFSWL */		9,
 /*18*//* IFUW */		8,
 /*19*//* IFUWL */		9,
-/*1a*//*  */			1,
-/*1b*//*  */			1,
+/*1a*//*  */			10,
+/*1b*//*  */			3,
 /*1c*//*  */			1,
 /*1d*//*  */			1,
 /*1e*//*  */			1,

@@ -650,6 +650,8 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("SETX"), QList<QVariant>() << 0x9D);
 		comboBox->addItem(tr("GETX"), QList<QVariant>() << 0x9E);
 		comboBox->addItem(tr("SEARCHX"), QList<QVariant>() << 0x9F);
+		comboBox->addItem(tr("Write/Read to entire Savemap"), QList<QVariant>() << 0x1A);
+		comboBox->addItem(tr("If Red XIII is not named Nanaki"), QList<QVariant>() << 0x1B);
 		return;
 	}
 }

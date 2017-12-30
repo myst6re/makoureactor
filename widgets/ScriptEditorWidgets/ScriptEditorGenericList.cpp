@@ -279,7 +279,11 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<bank<<bank<<word<<word<<operateur<<jump;break;
 	case 0x19:
 		paramTypes<<bank<<bank<<word<<word<<operateur<<jump_l;break;
-	//case 0x1A:case 0x1B:case 0x1C:case 0x1D:case 0x1E:case 0x1F:break;
+	case 0x1A:
+		paramTypes<<word<<word<<dword<<byte;break;
+	case 0x1B:
+		paramTypes<<jump_l;break;
+	//case 0x1C:case 0x1D:case 0x1E:case 0x1F:break;
 	case 0x20:
 		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<byte<<minijeu_id;break;
 	case 0x21:
@@ -552,6 +556,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 int ScriptEditorGenericList::paramSize(int type)
 {
 	switch(type) {
+	case dword:
 	case label:				return 32;
 	case color:				return 24;
 	case word:
@@ -590,6 +595,7 @@ bool ScriptEditorGenericList::paramIsSigned(int type)
 QString ScriptEditorGenericList::paramName(int type)
 {
 	switch(type) {
+	case dword:				return tr("Double long");
 	case word:				return tr("Long");
 	case sword:				return tr("Signed long");
 	case coord_x:			return tr("X coordinate");
