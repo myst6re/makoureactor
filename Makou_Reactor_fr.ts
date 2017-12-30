@@ -4721,8 +4721,9 @@ id=%2
     </message>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="399"/>
-        <source>[Sega Chief&apos;s custom opcode] If Red XIII is named Nanaki</source>
-        <translation>[Opcode perso de Sega Chief] Si Rouge XIII est nommé Nanaki</translation>
+        <source>[DLPB&apos;s custom opcode] If Red XIII is named Nanaki</source>
+        <oldsource>[Sega Chief&apos;s custom opcode] If Red XIII is named Nanaki</oldsource>
+        <translation>[Opcode perso de DLPB] Si Rouge XIII est nommé Nanaki</translation>
     </message>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="401"/>
@@ -5538,8 +5539,9 @@ id=%2
     </message>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="643"/>
-        <source>[Sega Chief&apos;s custom opcode] Write/Read to entire Savemap</source>
-        <translation>[Opcode perso de Sega Chief] Ecrire/Lire dans les données sauvegardées</translation>
+        <source>[DLPB&apos;s custom opcode] Write/Read to entire Savemap</source>
+        <oldsource>[Sega Chief&apos;s custom opcode] Write/Read to entire Savemap</oldsource>
+        <translation>[Opcode perso de DLPB] Ecrire/Lire dans les données sauvegardées</translation>
     </message>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="644"/>

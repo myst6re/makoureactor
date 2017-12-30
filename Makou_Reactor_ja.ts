@@ -4291,7 +4291,8 @@ Make sure it is valid or delete it.</source>
     </message>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="399"/>
-        <source>[Sega Chief&apos;s custom opcode] If Red XIII is named Nanaki</source>
+        <source>[DLPB&apos;s custom opcode] If Red XIII is named Nanaki</source>
+        <oldsource>[Sega Chief&apos;s custom opcode] If Red XIII is named Nanaki</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5006,7 +5007,8 @@ Make sure it is valid or delete it.</source>
     </message>
     <message>
         <location filename="widgets/ScriptEditor.cpp" line="643"/>
-        <source>[Sega Chief&apos;s custom opcode] Write/Read to entire Savemap</source>
+        <source>[DLPB&apos;s custom opcode] Write/Read to entire Savemap</source>
+        <oldsource>[Sega Chief&apos;s custom opcode] Write/Read to entire Savemap</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
