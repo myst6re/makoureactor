@@ -26,6 +26,7 @@
 #define IF_PAGE		6
 #define IFKEY_PAGE	7
 #define IFQ_PAGE	8
+#define JUMP_NANAKI_PAGE	17
 
 QList<Opcode::Keys> ScriptEditor::crashIfInit;
 
@@ -94,6 +95,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	editorLayout->addWidget(new ScriptEditorWindowModePage(field, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorWindowMovePage(field, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorMoviePage(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorJumpNanakiPage(field, grpScript, script, opcodeID, this));
 
 	ok = new QPushButton(tr("OK"),this);
 	ok->setDefault(true);
@@ -227,6 +229,9 @@ void ScriptEditor::fillEditor()
 	case Opcode::PMVIE:
 		index = 16;
 		break;
+	case Opcode::Unknown4:
+		index = JUMP_NANAKI_PAGE;
+		break;
 	default:
 		index = 0;
 	}
@@ -274,7 +279,8 @@ bool ScriptEditor::needslabel() const
 	return (editorLayout->currentIndex() == JUMP_PAGE
 			|| editorLayout->currentIndex() == IF_PAGE
 			|| editorLayout->currentIndex() == IFKEY_PAGE
-			|| editorLayout->currentIndex() == IFQ_PAGE)
+	        || editorLayout->currentIndex() == IFQ_PAGE
+	        || editorLayout->currentIndex() == JUMP_NANAKI_PAGE)
 			&& static_cast<ScriptEditorJumpPageInterface *>(editorWidget)->needsLabel();
 }
 
@@ -390,6 +396,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("If key pressed"), QList<QVariant>() << 0x30 << 0x31 << 0x32);
 		comboBox->addItem(tr("If Party Member"), QList<QVariant>() << 0xCB);
 		comboBox->addItem(tr("If character exsists"), QList<QVariant>() << 0xCC);
+		comboBox->addItem(tr("[Sega Chief's custom opcode] If Red XIII is not named Nanaki"), QList<QVariant>() << 0x1B);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Wait"), QList<QVariant>() << 0x24);
 		comboBox->addItem(tr("No Operation"), QList<QVariant>() << 0x5F);
@@ -633,6 +640,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Preload field Map"), QList<QVariant>() << 0xD8);
 		comboBox->addItem(tr("PMJMP2"), QList<QVariant>() << 0xD9);
 		comboBox->addItem(tr("Game Over"), QList<QVariant>() << 0xFF);
+		comboBox->addItem(tr("[Sega Chief's custom opcode] Write/Read to entire Savemap"), QList<QVariant>() << 0x1A);
 		comboBox->addItem(tr("SPECIAL - Cursor On/Off"), QList<QVariant>() << 0xF50F);
 		comboBox->addItem(tr("SPECIAL - PNAME"), QList<QVariant>() << 0xF60F);
 		comboBox->addItem(tr("SPECIAL - Game Speed"), QList<QVariant>() << 0xF70F);
@@ -650,8 +658,6 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("SETX"), QList<QVariant>() << 0x9D);
 		comboBox->addItem(tr("GETX"), QList<QVariant>() << 0x9E);
 		comboBox->addItem(tr("SEARCHX"), QList<QVariant>() << 0x9F);
-		comboBox->addItem(tr("Write/Read to entire Savemap"), QList<QVariant>() << 0x1A);
-		comboBox->addItem(tr("If Red XIII is not named Nanaki"), QList<QVariant>() << 0x1B);
 		return;
 	}
 }
