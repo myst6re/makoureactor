@@ -19,6 +19,7 @@ HEADERS += \
     Parameters.h \
     Data.h \
     widgets/HelpWidget.h \
+    widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.h \
     widgets/WalkmeshWidget.h \
     widgets/WalkmeshManager.h \
     widgets/VertexWidget.h \
@@ -159,6 +160,7 @@ SOURCES += \
     main.cpp \
     Data.cpp \
     widgets/HelpWidget.cpp \
+    widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp \
     widgets/WalkmeshWidget.cpp \
     widgets/WalkmeshManager.cpp \
     widgets/VertexWidget.cpp \

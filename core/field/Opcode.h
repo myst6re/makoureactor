@@ -715,7 +715,6 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
 	QByteArray params() const;
-private:
 	quint16 from, to;
 	quint32 absValue;
 	quint8 flag;

@@ -1843,11 +1843,29 @@ void Opcode1A::setParams(const char *params, int)
 
 QString Opcode1A::toString(Field *) const
 {
-	return QObject::tr("Write/Read entire savemap (from=%1, to=%2, absValue=%3, flag=%4)")
+	QStringList flags;
+
+	switch(flag & 0x7) {
+	case 1:    flags.append(QObject::tr("8 bit"));     break;
+	case 2:    flags.append(QObject::tr("16 bit"));    break;
+	case 3:    flags.append(QObject::tr("24 bit"));    break;
+	case 4:    flags.append(QObject::tr("32 bit"));    break;
+	default:   break;
+	}
+
+	if (flag & 0x10) {
+		flags.append(QObject::tr("From is a pointer"));
+	}
+
+	if (flag & 0x20) {
+		flags.append(QObject::tr("To is a pointer"));
+	}
+
+	return QObject::tr("Write/Read entire savemap (from=%1, to=%2, absValue=%3, flags={%4})")
 	        .arg(from)
 	        .arg(to)
 	        .arg(absValue)
-	        .arg(flag);
+	        .arg(flags.join(", "));
 }
 
 QByteArray Opcode1A::params() const
@@ -1856,7 +1874,7 @@ QByteArray Opcode1A::params() const
 	        .append((char *)&from, 2)
 	        .append((char *)&to, 2)
 	        .append((char *)&absValue, 4)
-	        .append((char)flag);
+	        .append(char(flag));
 }
 
 Opcode1B::Opcode1B(const char *params, int size) :
