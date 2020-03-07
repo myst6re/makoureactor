@@ -35,9 +35,9 @@ void ScriptEditorReturnToPage::build()
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Script")), 0, 0);
-	layout->addWidget(scriptList, 0, 1);
+	layout->addWidget(scriptList, 0, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Priority")), 1, 0);
-	layout->addWidget(priority, 1, 1);
+	layout->addWidget(priority, 1, 1, 1, 3);
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
@@ -99,13 +99,13 @@ void ScriptEditorExecPage::build()
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Group")), 0, 0);
-	layout->addWidget(groupList, 0, 1);
+	layout->addWidget(groupList, 0, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Script")), 1, 0);
-	layout->addWidget(scriptList, 1, 1);
+	layout->addWidget(scriptList, 1, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Priority")), 2, 0);
-	layout->addWidget(priority, 2, 1);
+	layout->addWidget(priority, 2, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Type")), 3, 0);
-	layout->addWidget(execType, 3, 1);
+	layout->addWidget(execType, 3, 1, 1, 3);
 	layout->setRowStretch(4, 1);
 	layout->setContentsMargins(QMargins());
 
@@ -236,13 +236,13 @@ void ScriptEditorExecCharPage::build()
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Team member")), 0, 0);
-	layout->addWidget(partyID, 0, 1);
+	layout->addWidget(partyID, 0, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Script")), 1, 0);
-	layout->addWidget(scriptList, 1, 1);
+	layout->addWidget(scriptList, 1, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Priority")), 2, 0);
-	layout->addWidget(priority, 2, 1);
+	layout->addWidget(priority, 2, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Type")), 3, 0);
-	layout->addWidget(execType, 3, 1);
+	layout->addWidget(execType, 3, 1, 1, 3);
 	layout->setRowStretch(4, 1);
 	layout->setContentsMargins(QMargins());
 
@@ -337,7 +337,7 @@ void ScriptEditorLabelPage::build()
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Label")), 0, 0);
-	layout->addWidget(label, 0, 1);
+	layout->addWidget(label, 0, 1, 1, 3);
 	layout->setRowStretch(1, 1);
 	layout->setContentsMargins(QMargins());
 
@@ -425,9 +425,9 @@ void ScriptEditorJumpPage::build()
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Label")), 0, 0);
-	layout->addWidget(label, 0, 1);
+	layout->addWidget(label, 0, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Type")), 1, 0);
-	layout->addWidget(range, 1, 1);
+	layout->addWidget(range, 1, 1, 1, 3);
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
@@ -994,9 +994,9 @@ void ScriptEditorIfQPage::build()
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Character")), 0, 0);
-	layout->addWidget(charList, 0, 1);
+	layout->addWidget(charList, 0, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Label")), 1, 0);
-	layout->addWidget(label, 1, 1);
+	layout->addWidget(label, 1, 1, 1, 3);
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
