@@ -190,20 +190,27 @@ void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale,
 
 void FieldModel::mouseMoveEvent(QMouseEvent *event)
 {
-	int dx = event->x() - lastPos.x();
-	int dy = event->y() - lastPos.y();
+	int dx = event->x() - lastPos.x(),
+	    dy = event->y() - lastPos.y();
+
+	bool needsUpdate = false;
 
 	if (event->buttons() & Qt::LeftButton) {
-		setXRotation(xRot + 8 * dy);
+		needsUpdate |= setXRotation(xRot + 8 * dx);
 		//setYRotation(yRot + 8 * dx);
 	}
-	else if (event->buttons() & Qt::RightButton) {
+	if (event->buttons() & Qt::RightButton) {
 		//setXRotation(xRot + 8 * dy);
-		setZRotation(zRot + 8 * dx);
+		needsUpdate |= setZRotation(zRot + 8 * dx);
 	}
-	else {
-		setYRotation(yRot + 8 * dx);
+	if (event->buttons() & Qt::MidButton) {
+		needsUpdate |= setYRotation(yRot + 8 * dx);
 	}
+
+	if (needsUpdate) {
+		updateGL();
+	}
+
 	lastPos = event->pos();
 }
 
@@ -215,31 +222,37 @@ static void qNormalizeAngle(int &angle)
 		angle -= 360 * 16;
 }
 
-void FieldModel::setXRotation(int angle)
+bool FieldModel::setXRotation(int angle)
 {
 	qNormalizeAngle(angle);
 	if (angle != xRot) {
 		xRot = angle;
-		updateGL();
+		return true;
 	}
+
+	return false;
 }
 
-void FieldModel::setYRotation(int angle)
+bool FieldModel::setYRotation(int angle)
 {
 	qNormalizeAngle(angle);
 	if (angle != yRot) {
 		yRot = angle;
-		updateGL();
+		return true;
 	}
+
+	return false;
 }
 
-void FieldModel::setZRotation(int angle)
+bool FieldModel::setZRotation(int angle)
 {
 	qNormalizeAngle(angle);
 	if (angle != zRot) {
 		zRot = angle;
-		updateGL();
+		return true;
 	}
+
+	return false;
 }
 
 void FieldModel::resetCamera()
@@ -366,8 +379,6 @@ void FieldModel::paintGL()
 	glRotatef(xRot / 16.0, 1.0, 0.0, 0.0);
 	glRotatef(yRot / 16.0, 0.0, 1.0, 0.0);
 	glRotatef(zRot / 16.0, 0.0, 0.0, 1.0);
-
-//	qDebug() << (xRot / 16.0) << (yRot / 16.0) << (zRot / 16.0);
 
 //	glBegin(GL_LINES);
 //	glColor3f(0.0, 0.0, 1.0);
