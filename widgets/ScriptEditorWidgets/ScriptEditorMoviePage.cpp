@@ -1,3 +1,20 @@
+/****************************************************************************
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2020 Arzel Jérôme <myst6re@gmail.com>
+ **
+ ** This program is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 3 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License
+ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ****************************************************************************/
 #include "ScriptEditorMoviePage.h"
 #include "Data.h"
 
@@ -16,14 +33,14 @@ void ScriptEditorMoviePage::build()
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Disc")), 0, 0);
-	layout->addWidget(discList, 0, 1);
+	layout->addWidget(discList, 0, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Video")), 1, 0);
-	layout->addWidget(movieList, 1, 1);
+	layout->addWidget(movieList, 1, 1, 1, 3);
 	layout->setRowStretch(2, 1);
-	layout->setColumnStretch(2, 1);
 	layout->setContentsMargins(QMargins());
 
 	connect(discList, SIGNAL(currentIndexChanged(int)), SLOT(setMovieListItemTexts(int)));
+	connect(movieList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
 }
 
 void ScriptEditorMoviePage::buildDiscList()
