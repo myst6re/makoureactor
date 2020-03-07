@@ -320,6 +320,10 @@ bool Field::save(QByteArray &newData, bool compress)
 					section = static_cast<BackgroundFilePC *>(fieldPart)->savePal();
 				} else {
 					section = fieldPart->save();
+					if(section.isEmpty()) {
+						qWarning() << "Field::save empty section error";
+						return false;
+					}
 				}
 			} else {
 				section = sectionData(fieldSection, true);

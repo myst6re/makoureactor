@@ -62,11 +62,21 @@ public:
 	static QStringList movie_names_cd1, movie_names_cd2, movie_names_cd3;
 	static QStringList music_names;
 	static QStringList music_desc;
-	static QString regValue(const QString &regPath, const QString &regKey);
-	static inline QString regValuePath(const QString &regPath, const QString &regKey) {
-		return QDir::fromNativeSeparators(QDir::cleanPath(regValue(regPath, regKey)));
-	}
 private:
+	enum RegLocation {
+		LocationUser,
+		LocationMachine
+	};
+	enum RegTarget {
+		TargetNone,
+		Target32,
+		Target64
+	};
+	static QString regValue(const QString &regPath, const QString &regKey, RegLocation loc = LocationMachine);
+	static inline QString regValuePath(const QString &regPath, const QString &regKey, RegLocation loc = LocationMachine) {
+		return QDir::fromNativeSeparators(QDir::cleanPath(regValue(regPath, regKey, loc)));
+	}
+	static QString regValue(const QString &regPath, const QString &regKey, RegTarget target, RegLocation loc);
 	static const QString &searchRereleasedFF7Path();
 	static QString searchSteamFF7Path();
 	static QString searchFF7Exe(FF7Version version);

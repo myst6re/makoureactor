@@ -102,6 +102,7 @@ private:
 	bool openProductName();
 	LgpHeaderEntry *headerEntry(const QString &filePath) const;
 	void setError(LgpError error, const QString &errorString=QString());
+	static QByteArray readAll(QIODevice *d, bool *ok);
 
 	QString _companyName;
 	LgpToc *_files;

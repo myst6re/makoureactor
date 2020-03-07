@@ -20,6 +20,7 @@
 
 #include <QtWidgets>
 #include "core/field/Section1File.h"
+#include "widgets/HelpWidget.h"
 
 class GrpScriptList : public QTreeWidget
 {
@@ -31,8 +32,11 @@ public:
 	GrpScript *currentGrpScript();
 	int selectedID();
 
-	inline QToolBar *toolBar() {
+	inline QToolBar *toolBar() const {
 		return _toolBar;
+	}
+	inline HelpWidget *helpWidget() const {
+		return _helpWidget;
 	}
 	void clearCopiedGroups();
 	void setEnabled(bool);
@@ -76,11 +80,13 @@ private:
 		DownAction = 9
 	};
 
+	void updateHelpWidget();
 	void move(bool direction);
 	QTreeWidgetItem *findItem(int id);
 	QList<int> selectedIDs();
 
 	QToolBar *_toolBar;
+	HelpWidget *_helpWidget;
 
 	Section1File *scripts;
 	QList<GrpScript *> grpScriptCopied;

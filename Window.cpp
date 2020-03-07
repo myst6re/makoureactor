@@ -646,6 +646,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	actionClose->setEnabled(true);
 
 #ifdef DEBUG_FUNCTIONS
+	//fieldArchive->printScriptsDirs("final_parody_scripts");
 	//FieldArchivePC otherArch("", FieldArchiveIO::Lgp);
 	//fieldArchive->compareTexts(&otherArch);
 	//fieldArchive->searchBackgroundZ();
@@ -673,7 +674,8 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 			}
 		}
 	} */
-	//fieldArchive->printTexts("field-texts.txt");
+	fieldArchive->printTextsDir("field-texts", true);
+	//fieldArchive->printTexts("field-texts.txt", true);
 	//fieldArchive->printAkaos("field-akaos.txt");
 	//fieldArchive->printModelLoaders("field-model-loaders-generic.txt");
 	//fieldArchive->printModelLoaders("field-model-loaders.txt", false);
@@ -895,7 +897,7 @@ void Window::setModified(bool enabled)
 		int fieldId = item->data(0, Qt::UserRole).toInt();
 		if(fieldId >= 0) {
 			Field *curField = fieldArchive->field(fieldId, false);
-			if(curField && curField->isOpen()) {
+			if(curField) {
 				if(enabled && curField->isModified()) {
 					item->setForeground(0, QColor(0xd1,0x1d,0x1d));
 				} else if(!enabled && item->foreground(0).color() == QColor(0xd1,0x1d,0x1d)) {

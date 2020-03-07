@@ -54,26 +54,36 @@ void Data::refreshFF7Paths()
 	ff7AppPath_cache = ff7DataPath_cache = QString();
 }
 
-
-QString Data::regValue(const QString &regPath, const QString &regKey)
+QString Data::regValue(const QString &regPath, const QString &regKey,
+                       RegTarget target, RegLocation loc)
 {
 #ifdef Q_OS_WIN
 	HKEY phkResult;
 	LONG error;
 	REGSAM flags = KEY_READ;
+	HKEY hkey = HKEY_LOCAL_MACHINE;
 
+	if (target == Target32) {
 #ifdef KEY_WOW64_32KEY
-	flags |= KEY_WOW64_32KEY; // if you compile in 64-bit, force reg search into 32-bit entries
+		flags |= KEY_WOW64_32KEY; // if you compile in 64-bit, force reg search into 32-bit entries
 #endif
+	} else if (target == Target64) {
+#ifdef KEY_WOW64_64KEY
+		flags |= KEY_WOW64_64KEY;
+#endif
+	}
 
-	// Open regPath relative to HKEY_LOCAL_MACHINE
-	error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, (wchar_t *)QDir::toNativeSeparators("SOFTWARE/" + regPath).utf16(), 0, flags, &phkResult);
+	// Open regPath relative to HKEY_LOCAL_MACHINE or HKEY_CURRENT_USER
+	if (loc == LocationUser) {
+		hkey = HKEY_CURRENT_USER;
+	}
+	error = RegOpenKeyEx(hkey, (wchar_t *)QDir::toNativeSeparators("SOFTWARE/" % regPath).utf16(), 0, flags, &phkResult);
 	if(ERROR_SUCCESS == error) {
 		BYTE value[MAX_PATH];
 		DWORD cValue = MAX_PATH, type;
 
 		// Open regKey which must is a string value (REG_SZ)
-		RegQueryValueEx(phkResult, (wchar_t *)regKey.utf16(), NULL, &type, value, &cValue);
+		RegQueryValueEx(phkResult, (wchar_t *)regKey.utf16(), nullptr, &type, value, &cValue);
 		if(ERROR_SUCCESS == error && type == REG_SZ) {
 			RegCloseKey(phkResult);
 			return QString::fromUtf16((ushort *)value);
@@ -84,7 +94,25 @@ QString Data::regValue(const QString &regPath, const QString &regKey)
 	Q_UNUSED(regPath)
 	Q_UNUSED(regKey)
 #endif
+
 	return QString();
+}
+
+QString Data::regValue(const QString &regPath, const QString &regKey,
+                       RegLocation loc)
+{
+	QString ret;
+
+#if defined(KEY_WOW64_32KEY) || defined(KEY_WOW64_64KEY)
+	ret = regValue(regPath, regKey, Target32, loc);
+	if (ret.isEmpty()) {
+		ret = regValue(regPath, regKey, Target64, loc);
+	}
+#else
+	ret = regValue(regPath, regKey, TargetNone, loc);
+#endif
+
+	return ret;
 }
 
 const QString &Data::searchRereleasedFF7Path()
@@ -94,6 +122,11 @@ const QString &Data::searchRereleasedFF7Path()
 		ff7RereleaseAlreadySearched = true;
 		HKEY phkResult, phkResult2;
 		LONG error;
+		REGSAM flags = KEY_READ;
+
+#ifdef KEY_WOW64_64KEY
+		flags |= KEY_WOW64_64KEY; // if you compile in 64-bit, force reg search into 64-bit entries
+#endif
 
 		// direct
 		ff7RereleasePath_cache = regValuePath("Microsoft/Windows/CurrentVersion/Uninstall/{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", "InstallLocation");
@@ -102,7 +135,7 @@ const QString &Data::searchRereleasedFF7Path()
 		}
 
 		// if another id
-		error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"), 0, KEY_READ, &phkResult);
+		error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"), 0, flags, &phkResult);
 
 		if(ERROR_SUCCESS == error) {
 			DWORD index = 0;
@@ -151,7 +184,13 @@ const QString &Data::searchRereleasedFF7Path()
 
 QString Data::searchSteamFF7Path()
 {
-	return regValuePath("Microsoft/Windows/CurrentVersion/Uninstall/Steam App 39140", "InstallLocation");
+	QString ret = regValuePath("Microsoft/Windows/CurrentVersion/Uninstall/Steam App 39140", "InstallLocation");
+	if (ret.isEmpty() || !QFile::exists(ret)) {
+		QString steamPath = regValue("Valve/Steam", "SteamPath", LocationUser);
+		return steamPath % "/steamapps/common/FINAL FANTASY VII";
+	}
+
+	return ret;
 }
 
 QString Data::searchFF7Exe(FF7Version version)
@@ -297,10 +336,18 @@ QString Data::ff7KernelPath()
 		} else {
 			QString lang = QLocale::system().name().toLower();
 			lang = Config::value("lang", lang.left(lang.indexOf("_"))).toString().toLower();
-			if(lang == "de" || lang == "en" || lang == "es" || lang == "fr")
+			if(QFile::exists(path + QString("/lang-%1/kernel").arg(lang)))
 				path.append(QString("/lang-%1/kernel").arg(lang));
-			else
-				path.append(QString("/lang-fr/kernel"));
+			else {
+				QStringList langs;
+				langs << "de" << "en" << "es" << "fr";
+				foreach(const QString &lang, langs) {
+					if (QFile::exists(path + QString("/lang-%1/kernel").arg(lang))) {
+						path.append(QString("/lang-%1/kernel").arg(lang));
+						break;
+					}
+				}
+			}
 		}
 	}
 
@@ -445,7 +492,7 @@ int Data::loadWindowBin()
 	}
 
 	if(!windowBin.open(path)) {
-		qWarning() << "Cannot open window.bin";
+		qWarning() << "Cannot open" << path;
 		return 2;
 	}
 

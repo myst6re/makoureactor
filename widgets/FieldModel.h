@@ -49,9 +49,9 @@ private:
 	inline void paintModel() { paintModel(this, data, animationID, currentFrame); }
 	static void drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, const FieldModelBone &bone,
 					  GLuint &texture_id, quint64 &lastTexID, float globalColor[3]);
-	void setXRotation(int angle);
-	void setYRotation(int angle);
-	void setZRotation(int angle);
+	bool setXRotation(int angle);
+	bool setYRotation(int angle);
+	bool setZRotation(int angle);
 	void resetCamera();
 
 	bool blockAll;

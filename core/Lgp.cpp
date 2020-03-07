@@ -568,6 +568,34 @@ bool Lgp::openHeader()
 	return true;
 }
 
+QByteArray Lgp::readAll(QIODevice *d, bool *ok)
+{
+	QByteArray result;
+	qint64 readBytes = d->size();
+	if (readBytes < 0) {
+		*ok = false;
+		return result;
+	}
+	// Read it all in one go.
+	// If resize fails, don't read anything.
+	readBytes -= d->pos();
+	result.resize(readBytes);
+	readBytes = d->read(result.data(), readBytes);
+
+	if (readBytes < 0) {
+		if (ok) *ok = false;
+		result.clear();
+	} else {
+		if (ok) *ok = true;
+		if (readBytes == 0) {
+			result.clear();
+		} else {
+			result.resize(int(readBytes));
+		}
+	}
+	return result;
+}
+
 /*!
  * Save the lgp into \a destination (or overwrite the
  * current archive if \a destination is empty).
@@ -746,7 +774,7 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 		}
 		if(!io->open(QIODevice::ReadOnly)) {
 			temp.remove();
-			setError(OpenError, temp.errorString());
+			setError(OpenError, io->errorString());
 			return false;
 		}
 		// File: writes the name
@@ -756,7 +784,12 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 			return false;
 		}
 		// File: writes the size
-		const QByteArray data = io->readAll();
+		bool ok;
+		const QByteArray data = readAll(io, &ok);
+		if(!ok) {
+			setError(ReadError, io->errorString());
+			return false;
+		}
 		io->close();
 		const qint64 size = data.size();
 		if(temp.write((char *)&size, 4) != 4) {

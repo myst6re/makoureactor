@@ -36,6 +36,7 @@ before_script:
     QTDIR="/usr/local/opt/qt5";
     export PATH="$QTDIR/bin:$PATH";
   fi
+
 script:
 - mkdir -p build
 - cd build
@@ -59,7 +60,7 @@ after_success:
 - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
 - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
     find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq ; 
-    bash ./upload.sh *.AppImage*; 
+    bash ./upload.sh Makou*.AppImage*;
   else
     bash ./upload.sh *.dmg*;
   fi
@@ -89,6 +90,11 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+
+branches:
+  except:
+    - coverity_scan
+    - continuous
 
 env:
   global:

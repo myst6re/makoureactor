@@ -58,10 +58,10 @@ EncounterTableWidget::EncounterTableWidget(const QString &title, QWidget *parent
 
 		++row;
 
-		if(row == 8) {
+		if(row == 9) {
 			layout->addWidget(probaLabel, row, 0, 1, 3);
 			++row;
-		} else if(row == 13) {
+		} else if(row == 14) {
 			layout->addWidget(probaLabel2, row, 0, 1, 3);
 			++row;
 		}

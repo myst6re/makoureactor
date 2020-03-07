@@ -171,7 +171,8 @@ public:
 	void validateOneLineSize();
 	void printAkaos(const QString &filename);
 	void printModelLoaders(const QString &filename, bool generic = true);
-	void printTexts(const QString &filename);
+	void printTexts(const QString &filename, bool usedTexts = false);
+	void printTextsDir(const QString &dirname, bool usedTexts = false);
 	void compareTexts(FieldArchive *other);
 	void printScripts(const QString &filename);
 	void printScriptsDirs(const QString &filename);
