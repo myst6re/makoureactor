@@ -1,44 +1,69 @@
 language: cpp
+sudo: required
+dist: trusty
 
 os:
-  - linux
-  - osx
-
-install:
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         lsb_release -a
-      && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
-      && sudo apt-add-repository -y ppa:canonical-qt5-edgers/ubuntu1204-qt5
-      && sudo apt-get -qq update
-      && sudo apt-get -qq install -y --force-yes g++-4.9 libc6-i386 freeglut3-dev qt5-default qtbase5-dev
-      && export CXX="g++-4.9"
-      ;
-    else
-         brew update > /dev/null
-      && brew install homebrew/x11/freeglut
-      && brew install qt5
-      && chmod -R 755 /usr/local/opt/qt5/*
-      ;
-    fi
+ - linux
+ - osx
+matrix:
+ exclude:
+# Only do coverity or coverage build on Linux when the compiler is gcc
+  - os: linux
+    compiler: clang
+    env: COVERITY=1
+    env: COVERAGE=1
+# Don't build with clang on Linux
+  - os: linux
+    compiler: clang
+# Don't build with gcc on OSX
+  - os: osx
+    compiler: gcc
 
 before_script:
-  - if [ "${TRAVIS_OS_NAME}" != "linux" ]; then
-         QTDIR="/usr/local/opt/qt5"
-      && export PATH="$QTDIR/bin:$PATH"
-      ;
-    fi
-  - mkdir -p build
-  - cd build
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-        qmake -qt=qt5 -config release ..
-        ;
-    else
-        qmake -config release ..
-        ;
-    fi
+- if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+    lsb_release -a;
+    sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test;
+    sudo apt-add-repository -y ppa:beineri/opt-qt591-trusty;
+    sudo apt-get -qq update;
+    sudo apt-get -qq install -y g++-4.9 freeglut3-dev qt5-default qt59tools qt59base;
+    export CXX="g++-4.9";
+    source /opt/qt*/bin/qt*-env.sh; 
+  else
+    brew update > /dev/null;
+    brew install homebrew/x11/freeglut;
+    brew install qt5;
+    chmod -R 755 /usr/local/opt/qt5/*;
+    QTDIR="/usr/local/opt/qt5";
+    export PATH="$QTDIR/bin:$PATH";
+  fi
 
 script:
-  - make -j2
+- mkdir -p build
+- cd build
+- qmake -config release ..
+- make -j2
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+    make INSTALL_ROOT=appdir install; find appdir/; 
+    mv appdir/usr/share/makoureactor/*.qm appdir/usr/bin/;
+    rm -rf appdir/usr/share/makoureactor;
+    wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"; 
+    chmod a+x linuxdeployqt*.AppImage; 
+    unset QTDIR; unset QT_PLUGIN_PATH; unset LD_LIBRARY_PATH; 
+    ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs; 
+    ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -appimage;
+  fi
+- if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+    mv ../*.qm makoureactor.app/Contents/MacOS/; 
+    macdeployqt makoureactor.app/ -dmg;  
+  fi
+after_success:
+- wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+- if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+    find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq ; 
+    bash ./upload.sh Makou*.AppImage*;
+  else
+    bash ./upload.sh *.dmg*;
+  fi
 
 before_deploy:
   - DEPLOY_DIR="makoureactor-$(git describe --tags)-${TRAVIS_OS_NAME}64"
@@ -65,6 +90,11 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+
+branches:
+  except:
+    - coverity_scan
+    - continuous
 
 env:
   global:
