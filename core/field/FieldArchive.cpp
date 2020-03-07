@@ -458,11 +458,11 @@ void FieldArchive::printModelLoaders(const QString &filename, bool generic)
 				if (f->isPC()) {
 					FieldModelLoaderPC *modelLoaderPC = static_cast<FieldModelLoaderPC *>(modelLoader);
 					scale = modelLoaderPC->scale(modelId);
-					colors = modelLoaderPC->lightColors(modelId);
+					// colors = modelLoaderPC->lightColors(modelId);
 				} else {
 					FieldModelFilePS *fieldModelPS = static_cast<FieldModelFilePS *>(fieldModel);
 					scale = fieldModelPS->scale();
-					colors = fieldModelPS->lightColors();
+					// colors = fieldModelPS->lightColors();
 					boneCount -= 1;
 					if (boneCount <= 0) {
 						boneCount = 1;
@@ -514,14 +514,14 @@ void FieldArchive::printModelLoaders(const QString &filename, bool generic)
 	}
 }
 
-void FieldArchive::printTexts(const QString &filename)
+void FieldArchive::printTexts(const QString &filename, bool usedTexts)
 {
 	QFile deb(filename);
 	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 
 	foreach(int i, fieldsSortByMapId) {
-		Field *f = field(i, true);
-		if(f == NULL) {
+		Field *f = field(quint32(i), true);
+		if(f == nullptr) {
 			qWarning() << "FieldArchive::printTexts: cannot open field" << i;
 			continue;
 		}
@@ -529,13 +529,52 @@ void FieldArchive::printTexts(const QString &filename)
 		Section1File *scriptsAndTexts = f->scriptsAndTexts();
 		if(scriptsAndTexts->isOpen()) {
 			qWarning() << f->inf()->mapName();
+			QSet<quint8> listUsedTexts = usedTexts ? scriptsAndTexts->listUsedTexts() : QSet<quint8>();
 
-			int textID = 0;
+			deb.write(QString("\n=== %1 ===\n\n")
+			          .arg(f->inf()->mapName()).toUtf8());
+
+			quint8 textID = 0;
 			foreach(const FF7Text &text, scriptsAndTexts->texts()) {
-				deb.write(QString("%1 > %2:\n%3\n\n")
-						  .arg(f->inf()->mapName())
-						  .arg(textID)
-						  .arg(text.text(false)).toUtf8());
+				if((!usedTexts || listUsedTexts.contains(textID)) && !text.data().isEmpty()) {
+					deb.write(QString("%1\n\n")
+					          .arg(text.text(false)).toUtf8());
+				}
+				textID++;
+			}
+		}
+	}
+}
+
+void FieldArchive::printTextsDir(const QString &dirname, bool usedTexts)
+{
+	QDir dir(dirname);
+
+	if (!dir.exists()) {
+		dir.mkpath(dirname);
+	}
+
+	foreach(int i, fieldsSortByMapId) {
+		Field *f = field(quint32(i), true);
+		if(f == nullptr) {
+			qWarning() << "FieldArchive::printTexts: cannot open field" << i;
+			continue;
+		}
+
+		QFile deb(dir.filePath(f->name() + ".txt"));
+		deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+
+		Section1File *scriptsAndTexts = f->scriptsAndTexts();
+		if(scriptsAndTexts->isOpen()) {
+			qWarning() << f->inf()->mapName();
+			QSet<quint8> listUsedTexts = usedTexts ? scriptsAndTexts->listUsedTexts() : QSet<quint8>();
+
+			quint8 textID = 0;
+			foreach(const FF7Text &text, scriptsAndTexts->texts()) {
+				if(!usedTexts || listUsedTexts.contains(textID)) {
+					deb.write(QString("%1\n\n")
+					          .arg(text.text(false)).toUtf8());
+				}
 				textID++;
 			}
 		}
@@ -661,7 +700,10 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 	foreach(int i, fieldsSortByMapId) {
 		Field *f = field(i, true);
 		if(f == NULL) {
-			qWarning() << "FieldArchive::printAkaos: cannot open field" << i;
+			qWarning() << "FieldArchive::printScriptsDirs: cannot open field" << i;
+			continue;
+		}
+		if(!f->name().startsWith("del")) {
 			continue;
 		}
 
@@ -706,6 +748,7 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 						opcodeID++;
 					}
 					scriptID++;
+					deb.close();
 				}
 				dir.cdUp();
 				grpScriptID++;
@@ -943,6 +986,93 @@ void FieldArchive::searchBackgroundZ()
 void FieldArchive::searchAll()
 {
 	QTime t;t.start();
+
+	/* QFile deb1("encounters-scripts.txt");
+	deb1.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+	deb1.write("field name,encounter,group ID,script ID,opcode ID\n"); */
+
+	FieldArchiveIterator it1(*this);
+	while (it1.hasNext()) {
+		Field *field = it1.next(true, true);
+		if (field && field->isOpen()) {
+			/* Section1File *scripts = field->scriptsAndTexts();
+			if (scripts->isOpen()) {
+				int groupID=0, scriptID=0, opcodeID=0;
+				while (scripts->searchOpcode(int(Opcode::BATTLE), groupID, scriptID, opcodeID)) {
+					OpcodeBATTLE *op = (OpcodeBATTLE *)scripts->grpScript(groupID)->script(quint8(scriptID))->opcode(quint16(opcodeID));
+					deb1.write((field->name() % "," % QString::number(op->battleID) % "," % QString::number(groupID) % "," % QString::number(scriptID) % "," % QString::number(opcodeID) % "\n").toLocal8Bit());
+					opcodeID += 1;
+				}
+			} */
+			FieldModelLoader *modelLoader = field->fieldModelLoader();
+			if (modelLoader && modelLoader->isOpen() && field->isPC()) {
+				FieldModelLoaderPC *modelLoaderPc = (FieldModelLoaderPC *)modelLoader;
+				for (int i = 0; i < modelLoaderPc->modelCount(); i++) {
+					FieldModelInfosPC infos = modelLoaderPc->modelInfos(i);
+					if (infos.nameHRC == "AAAA.HRC" && infos.typeHRC >= 1024) {
+						qDebug() << qPrintable(field->name()) << infos.typeHRC;
+					}
+				}
+			}
+			/* EncounterFile *enc = field->encounter();
+			if (enc && enc->isOpen()) {
+				foreach (EncounterFile::Table table, QList<EncounterFile::Table>() << EncounterFile::Table1 << EncounterFile::Table2) {
+					const EncounterTable &ta = enc->encounterTable(table);
+					if (ta.enabled & 1) {
+						for (int i = 0; i < 6; i++) {
+							if (PROBABILITY(ta.enc_standard[i]) >= 32) {
+								qDebug() << qPrintable(field->name()) << PROBABILITY(ta.enc_standard[i]);
+							}
+						}
+						for (int i = 0; i < 4; i++) {
+							if (PROBABILITY(ta.enc_special[i]) >= 32) {
+								qDebug() << qPrintable(field->name()) << PROBABILITY(ta.enc_special[i]);
+							}
+						}
+					}
+				}
+			} */
+		}
+	}
+
+	// deb1.close();
+
+	return;
+
+	/* QFile deb1("encounters.txt");
+	deb1.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+	deb1.write("field name,encounter\n");
+
+	FieldArchiveIterator it1(*this);
+	while (it1.hasNext()) {
+		Field *field = it1.next(true, true);
+		if (field && field->isOpen()) {
+			EncounterFile *enc = field->encounter();
+			if (enc->isOpen()) {
+				foreach (EncounterFile::Table table, QList<EncounterFile::Table>() << EncounterFile::Table1 << EncounterFile::Table2) {
+					const EncounterTable &ta = enc->encounterTable(table);
+					if (ta.enabled & 1) {
+						for (int i = 0; i < 6; i++) {
+							if (BATTLE_ID(ta.enc_standard[i]) > 0 && PROBABILITY(ta.enc_standard[i]) > 0) {
+								deb1.write((field->name() % "," % QString::number(BATTLE_ID(ta.enc_standard[i])) % "\n").toLocal8Bit());
+							}
+						}
+						for (int i = 0; i < 4; i++) {
+							if (BATTLE_ID(ta.enc_special[i]) > 0 && PROBABILITY(ta.enc_special[i]) > 0) {
+								deb1.write((field->name() % "," % QString::number(BATTLE_ID(ta.enc_special[i])) % "\n").toLocal8Bit());
+							}
+						}
+
+					}
+				}
+
+			}
+		}
+	}
+
+	deb1.close();
+
+	return; */
 
 	QFile deb(QString("scripts-unlocked-talk-P%1.txt").arg(isPC() ? "C" : "S"));
 	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
