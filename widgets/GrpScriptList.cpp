@@ -104,6 +104,9 @@ GrpScriptList::GrpScriptList(QWidget *parent) :
 	_toolBar->addAction(down_A);
 	down_A->setStatusTip(tr("Down"));
 
+	_helpWidget = new HelpWidget(32, HelpWidget::IconWarning, this);
+	_helpWidget->hide();
+
 	enableActions(false);
 
 	setMinimumWidth(_toolBar->sizeHint().width());
@@ -200,6 +203,8 @@ void GrpScriptList::fill(Section1File *scripts)
 	resizeColumnToContents(0);
 	resizeColumnToContents(1);
 
+	updateHelpWidget();
+
 	setMinimumWidth(columnWidth(0) +
 	                columnWidth(1) +
 	                fontMetrics().width("WWWWWWWW"));
@@ -217,7 +222,29 @@ void GrpScriptList::localeRefresh()
 		GrpScript *currentGrpScript = scripts->grpScript(grpScriptID);
 		currentItem->setText(2, currentGrpScript->type());
 		currentItem->setForeground(2, currentGrpScript->typeColor());
+
+		updateHelpWidget();
 	}
+}
+
+void GrpScriptList::updateHelpWidget()
+{
+	_helpWidget->hide();
+	QStringList texts;
+
+	if (scripts->modelCount() > 16) {
+		_helpWidget->show();
+		texts.append(tr("You have more than 16 models in this field, "
+		                                  "the game may crash."));
+	}
+
+	if (scripts->grpScriptCount() > 48) {
+		_helpWidget->show();
+		texts.append(tr("You have more than 48 groups in this field, "
+		                                  "the game may crash."));
+	}
+
+	_helpWidget->setText(texts.join("\n"));
 }
 
 void GrpScriptList::rename(QTreeWidgetItem *item, int column)

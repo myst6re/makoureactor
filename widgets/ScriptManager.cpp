@@ -31,6 +31,7 @@ ScriptManager::ScriptManager(QWidget *parent) :
 	QVBoxLayout *layoutGroupScript = new QVBoxLayout;
 	layoutGroupScript->addWidget(_groupScriptList->toolBar());
 	layoutGroupScript->addWidget(_groupScriptList);
+	layoutGroupScript->addWidget(_groupScriptList->helpWidget());
 	layoutGroupScript->setSpacing(2);
 	layoutGroupScript->setContentsMargins(QMargins());
 

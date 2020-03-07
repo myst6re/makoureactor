@@ -18,6 +18,7 @@ HEADERS += \
     Window.h \
     Parameters.h \
     Data.h \
+    widgets/HelpWidget.h \
     widgets/WalkmeshWidget.h \
     widgets/WalkmeshManager.h \
     widgets/VertexWidget.h \
@@ -157,6 +158,7 @@ SOURCES += \
     txt.cpp \
     main.cpp \
     Data.cpp \
+    widgets/HelpWidget.cpp \
     widgets/WalkmeshWidget.cpp \
     widgets/WalkmeshManager.cpp \
     widgets/VertexWidget.cpp \
