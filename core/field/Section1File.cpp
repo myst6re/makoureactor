@@ -319,7 +319,7 @@ QByteArray Section1File::save() const
 	// Creation newPosScripts + scripts
 	quint8 nbObjets3D = 0;
 	foreach(GrpScript *grpScript, _grpScripts) {
-		grpScriptNames.append( grpScript->realName().leftJustified(8, QChar('\x00'), true) );
+		grpScriptNames.append( grpScript->realName().toLatin1().leftJustified(8, '\x00', true) );
 		for(quint8 j=0 ; j<32 ; ++j) {
 			realScript = grpScript->toByteArray(j);
 			if(!realScript.isEmpty())	pos32 = newPosScripts + allScripts.size();
