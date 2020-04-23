@@ -195,6 +195,23 @@ QImage FieldModelFilePS::loadedTexture(FieldModelGroup *group)
 	return tex;
 }
 
+QHash<void *, QImage> FieldModelFilePS::loadedTextures()
+{
+	QHash<void *, QImage> ret;
+
+	foreach (const FieldModelBone &bone, _skeleton.bones()) {
+		foreach (FieldModelPart *part, bone.parts()) {
+			foreach (FieldModelGroup *group, part->groups()) {
+				if (group->hasTexture()) {
+					ret.insert((void *)group, loadedTexture(group));
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
 QImage FieldModelFilePS::vramImage() const
 {
 	foreach (const QRect &rect, _textures.rects()) {

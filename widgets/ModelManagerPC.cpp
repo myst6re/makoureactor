@@ -19,8 +19,8 @@
 #include "core/Config.h"
 #include "core/field/CharArchive.h"
 
-ModelManagerPC::ModelManagerPC(const QGLWidget *shareWidget, QWidget *parent) :
-	ModelManager(shareWidget, parent), copied(false)
+ModelManagerPC::ModelManagerPC(QWidget *parent) :
+    ModelManager(parent), copied(false)
 {
 	QToolBar *toolBar1 = new QToolBar();
 	toolBar1->setIconSize(QSize(14, 14));

@@ -52,6 +52,10 @@ public:
 	}
 	bool load(FieldPS *currentField, int modelID, int animationID, bool animate);
 	QImage loadedTexture(FieldModelGroup *group);
+	inline void *textureIdForGroup(FieldModelGroup *group) const {
+		return (void *)group;
+	}
+	QHash<void *, QImage> loadedTextures();
 	QImage vramImage() const;
 private:
 	Q_DISABLE_COPY(FieldModelFilePS)

@@ -58,6 +58,8 @@ public:
 		return _animations.at(animationID);
 	}
 	virtual QImage loadedTexture(FieldModelGroup *group)=0;
+	virtual void *textureIdForGroup(FieldModelGroup *group) const=0;
+	virtual QHash<void *, QImage> loadedTextures()=0;
 private:
 	Q_DISABLE_COPY(FieldModelFile)
 protected:

@@ -21,7 +21,7 @@ Final Fantasy VII field archive editor.
 
 ### Requirements
 
- - Qt 4.8 or Qt 5
+ - Qt 5.4+
  - GLUT
  - zlib
 

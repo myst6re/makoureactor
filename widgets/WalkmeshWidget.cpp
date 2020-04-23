@@ -16,32 +16,48 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "WalkmeshWidget.h"
+#include "Parameters.h"
 #include "FieldModel.h"
 
-WalkmeshWidget::WalkmeshWidget(QWidget *parent, const QGLWidget *shareWidget) :
-	QGLWidget(/*QGLFormat(QGL::SampleBuffers),*/ parent, shareWidget),
+WalkmeshWidget::WalkmeshWidget(QWidget *parent) :
+    QOpenGLWidget(/*QGLFormat(QGL::SampleBuffers),*/ parent),
 	distance(0.0f), xRot(0.0f), yRot(0.0f), zRot(0.0f),
 	xTrans(0.0f), yTrans(0.0f), transStep(360.0f), lastKeyPressed(-1),
 	_camID(0), _selectedTriangle(-1), _selectedDoor(-1), _selectedGate(-1),
-	_selectedArrow(-1), fovy(70.0), walkmesh(0), camera(0), infFile(0),
-	bgFile(0), scripts(0), field(0), modelsVisible(true)/*, thread(0)*/
+    _selectedArrow(-1), fovy(70.0), walkmesh(nullptr), camera(nullptr), infFile(nullptr),
+    bgFile(nullptr), scripts(nullptr), field(nullptr), modelsVisible(true)/*, thread(0)*/
 {
 	setMinimumSize(320, 240);
 //	setAutoFillBackground(false);
 //	arrow = QPixmap(":/images/field-arrow-red.png");
+
+	QSurfaceFormat format;
+	format.setRenderableType(QSurfaceFormat::OpenGL);
+	// asks for a OpenGL 3.2 debug context using the Core profile
+	format.setVersion(2, 1);
+	format.setProfile(QSurfaceFormat::CoreProfile);
+#ifdef OPENGL_DEBUG
+	format.setOption(QSurfaceFormat::DebugContext);
+#endif
+
+	QOpenGLContext *context = new QOpenGLContext;
+	context->setFormat(format);
+	context->create();
+
+	setFormat(format);
 }
 
 void WalkmeshWidget::clear()
 {
-	walkmesh = 0;
-	camera = 0;
-	infFile = 0;
-	bgFile = 0;
-	scripts = 0;
-	field = 0;
+	walkmesh = nullptr;
+	camera = nullptr;
+	infFile = nullptr;
+	bgFile = nullptr;
+	scripts = nullptr;
+	field = nullptr;
 //	if(thread)	thread->deleteLater();
 	fieldModels.clear();
-	updateGL();
+	update();
 }
 
 void WalkmeshWidget::fill(Field *field)
@@ -89,7 +105,7 @@ void WalkmeshWidget::addModel(Field *field, FieldModelFile *fieldModelFile, int 
 {
 	if(this->field == field) {
 		fieldModels.insert(modelId, fieldModelFile);
-		updateGL();
+		update();
 	}
 }
 
@@ -108,18 +124,21 @@ void WalkmeshWidget::computeFov()
 void WalkmeshWidget::updatePerspective()
 {
 	computeFov();
-	resizeGL(width(), height());
-	updateGL();
+	resize(width(), height());
+	update();
 }
 
 void WalkmeshWidget::initializeGL()
 {
+	initializeOpenGLFunctions();
+
 	glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_COLOR_MATERIAL);
 	glDepthFunc(GL_LEQUAL);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_LIGHTING);
 	glEnable(GL_BLEND);
+	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
@@ -142,6 +161,12 @@ void WalkmeshWidget::paintGL()
 	glLoadIdentity();
 
 	if(!walkmesh)	return;
+
+#ifdef OPENGL_DEBUG
+	QOpenGLContext *ctx = QOpenGLContext::currentContext();
+	QOpenGLDebugLogger *logger = new QOpenGLDebugLogger(this);
+	logger->initialize();
+#endif
 
 	glTranslatef(xTrans, yTrans, distance);
 
@@ -463,7 +488,7 @@ void WalkmeshWidget::paintGL()
 //							glTranslatef(trans.first().x/5.0f, trans.first().y/5.0f, trans.first().z/5.0f);
 //						}
 
-						FieldModel::paintModel(this, fieldModel, 0, 0, 8.0f);
+						FieldModel::paintModel(fieldModel, 0, 0, 8.0f);
 
 						glPopMatrix();
 					}
@@ -471,6 +496,13 @@ void WalkmeshWidget::paintGL()
 			}
 		}
 	}
+
+#ifdef OPENGL_DEBUG
+	const QList<QOpenGLDebugMessage> messages = logger->loggedMessages();
+	for (const QOpenGLDebugMessage &message : messages) {
+		qDebug() << message;
+	}
+#endif
 }
 
 void WalkmeshWidget::drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access)
@@ -491,7 +523,7 @@ void WalkmeshWidget::wheelEvent(QWheelEvent *event)
 {
 	setFocus();
 	distance += event->delta() / 4096.0;
-	updateGL();
+	update();
 }
 
 void WalkmeshWidget::mousePressEvent(QMouseEvent *event)
@@ -512,7 +544,7 @@ void WalkmeshWidget::mouseMoveEvent(QMouseEvent *event)
 	xTrans += (event->pos().x() - moveStart.x()) / 4096.0;
 	yTrans -= (event->pos().y() - moveStart.y()) / 4096.0;
 	moveStart = event->pos();
-	updateGL();
+	update();
 }
 
 void WalkmeshWidget::keyPressEvent(QKeyEvent *event)
@@ -534,19 +566,19 @@ void WalkmeshWidget::keyPressEvent(QKeyEvent *event)
 	{
 	case Qt::Key_Left:
 		xTrans += 1.0f/transStep;
-		updateGL();
+		update();
 		break;
 	case Qt::Key_Right:
 		xTrans -= 1.0f/transStep;
-		updateGL();
+		update();
 		break;
 	case Qt::Key_Down:
 		yTrans += 1.0f/transStep;
-		updateGL();
+		update();
 		break;
 	case Qt::Key_Up:
 		yTrans -= 1.0f/transStep;
-		updateGL();
+		update();
 		break;
 	default:
 		QWidget::keyPressEvent(event);
@@ -579,7 +611,7 @@ void WalkmeshWidget::setXRotation(int angle)
 	qNormalizeAngle(angle);
 	if (angle != xRot) {
 		xRot = angle;
-		updateGL();
+		update();
 	}
 }
 
@@ -588,7 +620,7 @@ void WalkmeshWidget::setYRotation(int angle)
 	qNormalizeAngle(angle);
 	if (angle != yRot) {
 		yRot = angle;
-		updateGL();
+		update();
 	}
 }
 
@@ -597,7 +629,7 @@ void WalkmeshWidget::setZRotation(int angle)
 	qNormalizeAngle(angle);
 	if (angle != zRot) {
 		zRot = angle;
-		updateGL();
+		update();
 	}
 }
 
@@ -611,7 +643,7 @@ void WalkmeshWidget::resetCamera()
 	distance = 0;
 	zRot = yRot = xRot = 0;
 	xTrans = yTrans = 0;
-	updateGL();
+	update();
 }
 
 void WalkmeshWidget::setModelsVisible(bool show)
@@ -621,7 +653,7 @@ void WalkmeshWidget::setModelsVisible(bool show)
 		if(modelsVisible) {
 			openModels();
 		}
-		updateGL();
+		update();
 	}
 }
 
@@ -637,7 +669,7 @@ void WalkmeshWidget::setSelectedTriangle(int triangle)
 {
 	if(_selectedTriangle != triangle) {
 		_selectedTriangle = triangle;
-		updateGL();
+		update();
 	}
 }
 
@@ -645,7 +677,7 @@ void WalkmeshWidget::setSelectedDoor(int door)
 {
 	if(_selectedDoor != door) {
 		_selectedDoor = door;
-		updateGL();
+		update();
 	}
 }
 
@@ -653,7 +685,7 @@ void WalkmeshWidget::setSelectedGate(int gate)
 {
 	if(_selectedGate != gate) {
 		_selectedGate = gate;
-		updateGL();
+		update();
 	}
 }
 
@@ -661,6 +693,6 @@ void WalkmeshWidget::setSelectedArrow(int arrow)
 {
 	if(_selectedArrow != arrow) {
 		_selectedArrow = arrow;
-		updateGL();
+		update();
 	}
 }

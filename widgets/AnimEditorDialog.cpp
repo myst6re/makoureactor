@@ -19,17 +19,17 @@
 #include "core/Config.h"
 #include "Data.h"
 
-AnimEditorDialog::AnimEditorDialog(int animID, const QGLWidget *shareWidget, QWidget *parent) :
+AnimEditorDialog::AnimEditorDialog(int animID, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
 {
 	setWindowTitle(tr("Animation Selector"));
 	QWidget *modelWidget;
 	if(Config::value("OpenGL", true).toBool()) {
-		fieldModel = new FieldModel(0, shareWidget);
+		fieldModel = new FieldModel();
 		fieldModel->setFixedSize(304, 214);
 		modelWidget = fieldModel;
 	} else {
-		fieldModel = 0;
+		fieldModel = nullptr;
 		modelWidget = new QWidget(this);
 	}
 

@@ -19,7 +19,6 @@
 #define FIELDMODEL_H
 
 #include <QtWidgets>
-#include <QGLWidget>
 #ifdef Q_OS_MAC
 #include <OpenGL/glu.h>
 #else
@@ -28,27 +27,29 @@
 #include "core/field/FieldModelFile.h"
 #include "core/field/FieldPC.h"
 
-class FieldModel : public QGLWidget
+class FieldModel : public QOpenGLWidget, protected QOpenGLFunctions
 {
 	Q_OBJECT
 public:
-	FieldModel(QWidget *parent=0, const QGLWidget *shareWidget=0);
+	FieldModel(QWidget *parent=nullptr);
 	virtual ~FieldModel();
 	void setIsAnimated(bool animate);
 	void setAnimationID(int animID);
 	void clear();
 	int boneCount() const;
 	int frameCount() const;
-	static void paintModel(QGLWidget *glWidget, FieldModelFile *data, int animationID, int currentFrame=0, float scale=1.0f);
+	static void paintModel(FieldModelFile *data, int animationID,
+	                       int currentFrame=0, float scale=1.0f);
 public slots:
 	void setFieldModelFile(FieldModelFile *fieldModel, int animationID = 0);
 private slots:
 	void animate();
 private:
 	void updateTimer();
-	inline void paintModel() { paintModel(this, data, animationID, currentFrame); }
-	static void drawP(QGLWidget *glWidget, FieldModelFile *data, float scale, const FieldModelBone &bone,
-					  GLuint &texture_id, quint64 &lastTexID, float globalColor[3]);
+	inline void paintModel() { paintModel(data, animationID, currentFrame); }
+	static void drawP(FieldModelFile *data, float scale, const FieldModelBone &bone,
+	                  const QHash<void *, QOpenGLTexture *> &textures,
+	                  float globalColor[3], QOpenGLTexture *&texture);
 	bool setXRotation(int angle);
 	bool setYRotation(int angle);
 	bool setZRotation(int angle);
@@ -67,6 +68,7 @@ private:
 	int yRot;
 	int zRot;
 	QPoint lastPos;
+	QOpenGLShaderProgram *program;
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);

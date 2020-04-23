@@ -19,7 +19,6 @@
 #define WALKMESHWIDGET_H
 
 #include <QtWidgets>
-#include <QGLWidget>
 #ifdef Q_OS_MAC
 #include <OpenGL/glu.h>
 #else
@@ -28,11 +27,11 @@
 #include "core/field/Field.h"
 //#include "FieldModelThread.h"
 
-class WalkmeshWidget : public QGLWidget
+class WalkmeshWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
 	Q_OBJECT
 public:
-	explicit WalkmeshWidget(QWidget *parent=0, const QGLWidget *shareWidget=0);
+	explicit WalkmeshWidget(QWidget *parent=nullptr);
 	void clear();
 	void fill(Field *field);
 	void updatePerspective();

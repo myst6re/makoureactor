@@ -48,7 +48,7 @@ void Poly::setVertices(const QList<PolyVertex> &vertices, const QRgb &color, con
 	_texCoords = texCoords;
 }
 
-const PolyVertex &Poly::vertex(quint8 id) const
+const PolyVertex &Poly::vertex(int id) const
 {
 	return _vertices.at(id);
 }
@@ -58,17 +58,17 @@ const QRgb &Poly::color() const
 	return _colors.first();
 }
 
-QRgb Poly::color(quint8 id) const
+QRgb Poly::color(int id) const
 {
 	return _colors.value(id, _colors.first());
 }
 
-const TexCoord &Poly::texCoord(quint8 id) const
+const TexCoord &Poly::texCoord(int id) const
 {
 	return _texCoords.at(id);
 }
 
-void Poly::setTexCoord(quint8 id, const TexCoord &texCoord)
+void Poly::setTexCoord(int id, const TexCoord &texCoord)
 {
 	_texCoords.replace(id, texCoord);
 }

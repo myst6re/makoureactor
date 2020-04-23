@@ -23,8 +23,6 @@
 
 int main(int argc, char *argv[])
 {
-	QGLFormat::setDefaultFormat(QGLFormat(QGL::DirectRendering));
-
 	QApplication app(argc, argv);
 	app.setWindowIcon(QIcon(":/images/logo-shinra.png"));
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))

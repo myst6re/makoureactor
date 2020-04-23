@@ -22,3 +22,5 @@
 #define RC_PRODUCT_VERSION			1,7,2,0
 #define RC_FILE_DESCRIPTION_STR		"Makou Reactor FF7 Field Editor"
 #define RC_COMPANY_NAME_STR			"myst6re"
+
+//#define OPENGL_DEBUG 1

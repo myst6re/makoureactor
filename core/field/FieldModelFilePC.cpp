@@ -90,6 +90,19 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 	return false;
 }
 
+QHash<void *, QImage> FieldModelFilePC::loadedTextures()
+{
+	QHash<void *, QImage> ret;
+	QHashIterator<int, QImage> it(_loadedTex);
+
+	while (it.hasNext()) {
+		it.next();
+		ret.insert((void *)it.key(), it.value());
+	}
+
+	return ret;
+}
+
 bool FieldModelFilePC::openSkeleton(const QString &hrcFileName, QMultiMap<int, QStringList> &rsdFiles)
 {
 	HrcFile io(_charLgp->fileIO(hrcFileName));

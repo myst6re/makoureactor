@@ -16,14 +16,30 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModel.h"
+#include "Parameters.h"
 #include "core/field/FieldModelFilePS.h"
 
-FieldModel::FieldModel(QWidget *parent, const QGLWidget *shareWidget) :
-	QGLWidget(parent, shareWidget), blockAll(false), distance(-0.25/*-35*/),
-	animationID(0), currentFrame(0), animated(true), data(0),
+FieldModel::FieldModel(QWidget *parent) :
+    QOpenGLWidget(parent), blockAll(false), distance(-0.25/*-35*/),
+    animationID(0), currentFrame(0), animated(true), data(nullptr),
 	xRot(270*16), yRot(90*16), zRot(0)
 {
 	connect(&timer, SIGNAL(timeout()), SLOT(animate()));
+
+	QSurfaceFormat format;
+	format.setRenderableType(QSurfaceFormat::OpenGL);
+	// asks for a OpenGL 3.2 debug context using the Core profile
+	format.setVersion(2, 1);
+	format.setProfile(QSurfaceFormat::CoreProfile);
+#ifdef OPENGL_DEBUG
+	format.setOption(QSurfaceFormat::DebugContext);
+#endif
+
+	QOpenGLContext *context = new QOpenGLContext;
+	context->setFormat(format);
+	context->create();
+
+	setFormat(format);
 }
 
 FieldModel::~FieldModel()
@@ -33,10 +49,10 @@ FieldModel::~FieldModel()
 void FieldModel::clear()
 {
 	currentFrame = 0;
-	data = 0;
+	data = nullptr;
 	timer.stop();
 //	glClearColor(0.0,0.0,0.0,0.0);
-	updateGL();
+	update();
 }
 
 void FieldModel::setFieldModelFile(FieldModelFile *fieldModel, int animID)
@@ -45,7 +61,7 @@ void FieldModel::setFieldModelFile(FieldModelFile *fieldModel, int animID)
 	data = fieldModel;
 	animationID = animID;
 	if(data && data->isValid()) {
-		updateGL();
+		update();
 		updateTimer();
 	}
 }
@@ -60,7 +76,7 @@ void FieldModel::setAnimationID(int animID)
 {
 	if (animationID != animID) {
 		animationID = animID;
-		updateGL();
+		update();
 		updateTimer();
 	}
 }
@@ -88,6 +104,7 @@ int FieldModel::frameCount() const
 
 void FieldModel::initializeGL()
 {
+	initializeOpenGLFunctions();
 	// GLfloat ambient[] = {0.8f, 0.8f, 0.8f, 1.0f};
 	// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
 
@@ -100,39 +117,40 @@ void FieldModel::initializeGL()
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_LIGHTING);
 	glEnable(GL_BLEND);
+	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 //	gluPerspective(70, (double)width()/(double)height(), 0.001, 1000.0);
 }
 
-void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale,
+void FieldModel::drawP(FieldModelFile *data, float scale,
                        const FieldModelBone &bone,
-                       GLuint &texture_id, quint64 &lastTexID,
-                       float globalColor[3])
+                       const QHash<void *, QOpenGLTexture *> &textures,
+                       float globalColor[3], QOpenGLTexture *&texture)
 {
 	if (scale == 0.0f) {
 		return;
 	}
 
+	int curPolyType = 0;
+
 	foreach(FieldModelPart *part, bone.parts()) {
 
 		foreach(FieldModelGroup *g, part->groups()) {
 			if(g->hasTexture()) {
-				if(texture_id != (GLuint)-1) {
-					glWidget->deleteTexture(texture_id);
-				} else {
-					glEnable(GL_TEXTURE_2D);
+				if(curPolyType != 0) {
+					glEnd();
+					curPolyType = 0;
 				}
-				texture_id = glWidget->bindTexture(data->loadedTexture(g),
-				                                   GL_TEXTURE_2D, GL_RGBA,
-				                                   QGLContext::MipmapBindOption);
-			} else if(!g->hasTexture() && texture_id != (GLuint)-1) {
-				glWidget->deleteTexture(texture_id);
-				glDisable(GL_TEXTURE_2D);
-				texture_id = -1;
-				lastTexID = quint64(-1);
+				QOpenGLTexture *tex = textures.value(data->textureIdForGroup(g));
+				if (texture && tex != texture) {
+					texture->release();
+				}
+				tex->bind();
+				texture = tex;
+			} else if (texture) {
+				texture->release();
+				texture = nullptr;
 			}
-
-			int curPolyType = 0;
 
 			foreach(const Poly *p, g->polygons()) {
 				if(curPolyType != p->count()) {
@@ -155,7 +173,7 @@ void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale,
 					           qBlue(color) * globalColor[2]);
 				}
 
-				for(quint16 j=0 ; j<(quint8)p->count() ; ++j) {
+				for(int j=0 ; j<p->count() ; ++j) {
 					const PolyVertex &vertex = p->vertex(j);
 
 					if(!p->isMonochrome()) {
@@ -180,11 +198,13 @@ void FieldModel::drawP(QGLWidget *glWidget, FieldModelFile *data, float scale,
 					glVertex3f(vertex.x/scale, vertex.y/scale, vertex.z/scale);
 				}
 			}
-
-			if(curPolyType != 0) {
-				glEnd();
-			}
 		}
+	}
+
+
+
+	if(curPolyType != 0) {
+		glEnd();
 	}
 }
 
@@ -208,7 +228,7 @@ void FieldModel::mouseMoveEvent(QMouseEvent *event)
 	}
 
 	if (needsUpdate) {
-		updateGL();
+		update();
 	}
 
 	lastPos = event->pos();
@@ -261,7 +281,7 @@ void FieldModel::resetCamera()
 	xRot = 270*16;
 	yRot = 90*16;
 	zRot = 0;
-	updateGL();
+	update();
 }
 
 void FieldModel::resizeGL(int width, int height)
@@ -276,8 +296,8 @@ void FieldModel::resizeGL(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data,
-                            int animationID, int currentFrame, float scale)
+void FieldModel::paintModel(FieldModelFile *data, int animationID,
+                            int currentFrame, float scale)
 {
 	if(!data || !data->isValid() || scale == 0.0f) {
 		return;
@@ -294,20 +314,28 @@ void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data,
 
 	QStack<int> parent;
 	int i;
-	GLuint texture_id = -1;
-	quint64 lastTexID = quint64(-1);
+	QHash<void *, QOpenGLTexture *> textures;
+	QHashIterator<void *, QImage> it(data->loadedTextures());
+
+	while (it.hasNext()) {
+		it.next();
+		QOpenGLTexture *tex = new QOpenGLTexture(it.value());
+		tex->setMinificationFilter(QOpenGLTexture::NearestMipMapLinear);
+		tex->setMagnificationFilter(QOpenGLTexture::Nearest);
+		textures.insert(it.key(), tex);
+	}
+
+	QOpenGLTexture *texture = nullptr;
 
 	if(data->boneCount() <= 1) {
-		drawP(glWidget, data, scale, data->bone(0), texture_id, lastTexID,
-		      globalColor);
-		if(texture_id != (GLuint)-1) {
-			glWidget->deleteTexture(texture_id);
-			glDisable(GL_TEXTURE_2D);
-		}
+		drawP(data, scale, data->bone(0), textures, globalColor, texture);
+
+		qDeleteAll(textures);
 		return;
 	}
 
 	if (animationID >= data->animationCount()) {
+		qDeleteAll(textures);
 		return;
 	}
 
@@ -335,23 +363,19 @@ void FieldModel::paintModel(QGLWidget *glWidget, FieldModelFile *data,
 			glRotatef(rotation.z, 0.0, 0.0, 1.0);
 		}
 
-		drawP(glWidget, data, scale, bone, texture_id, lastTexID,
-		      globalColor);
+		drawP(data, scale, bone, textures, globalColor, texture);
 
 		if(data->translateAfter()) {
 			glTranslatef(0.0, 0.0, bone.size() / scale);
 		}
 	}
 
-	if(texture_id != (GLuint)-1) {
-		glWidget->deleteTexture(texture_id);
-		glDisable(GL_TEXTURE_2D);
-	}
-
 	while(!parent.isEmpty() && parent.top() != -1) {
 		parent.pop();
 		glPopMatrix();
 	}
+
+	qDeleteAll(textures);
 }
 
 void FieldModel::paintGL()
@@ -362,13 +386,19 @@ void FieldModel::paintGL()
 
 	if(!data || !data->isValid())	return;
 
+#ifdef OPENGL_DEBUG
+	QOpenGLContext *ctx = QOpenGLContext::currentContext();
+	QOpenGLDebugLogger *logger = new QOpenGLDebugLogger(this);
+	logger->initialize();
+#endif
+
 	//scale the view port if the window manager is scaling
 	int scale = 1;
 	if(qApp->desktop()->physicalDpiX() > 140) {
 		scale = 2;
 	}
 
-	resizeGL(width() * scale, height() * scale); // hack (?)
+	resize(width() * scale, height() * scale); // hack (?)
 
 	gluLookAt(distance,0,0,0,0,0,0,0,1);
 //	glTranslatef(distance, 0.0f, 0.0f);
@@ -402,12 +432,19 @@ void FieldModel::paintGL()
 //	glEnd();
 
 	paintModel();
+
+#ifdef OPENGL_DEBUG
+	const QList<QOpenGLDebugMessage> messages = logger->loggedMessages();
+	for (const QOpenGLDebugMessage &message : messages) {
+		qDebug() << message;
+	}
+#endif
 }
 
 void FieldModel::wheelEvent(QWheelEvent *event)
 {
 	distance += double(event->delta())/4096.0;
-	updateGL();
+	update();
 }
 
 void FieldModel::mousePressEvent(QMouseEvent *event)
@@ -424,7 +461,10 @@ void FieldModel::animate()
 		int count = frameCount();
 		if(count > 0) {
 			currentFrame = (currentFrame + 1) % count;
-			updateGL();
+			update();
+		} else if(currentFrame != 0) {
+			currentFrame = 0;
+			update();
 		}
 	}
 }

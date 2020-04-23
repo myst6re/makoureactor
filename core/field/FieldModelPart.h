@@ -41,11 +41,11 @@ public:
 	inline int count() const {
 		return _count;
 	}
-	const PolyVertex &vertex(quint8 id) const;
+	const PolyVertex &vertex(int id) const;
 	const QRgb &color() const;
-	QRgb color(quint8 id) const;
-	const TexCoord &texCoord(quint8 id) const;
-	void setTexCoord(quint8 id, const TexCoord &texCoord);
+	QRgb color(int id) const;
+	const TexCoord &texCoord(int id) const;
+	void setTexCoord(int id, const TexCoord &texCoord);
 	bool isMonochrome() const;
 	bool hasTexture() const;
 protected:

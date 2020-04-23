@@ -19,8 +19,8 @@
 #include "core/Config.h"
 #include "Data.h"
 
-ModelManagerPS::ModelManagerPS(const QGLWidget *shareWidget, QWidget *parent) :
-	ModelManager(shareWidget, parent)
+ModelManagerPS::ModelManagerPS(QWidget *parent) :
+    ModelManager(parent)
 {
 	modelScaleWidget->setReadOnly(true);
 	modelGlobalColorWidget->setReadOnly(true);

@@ -1,17 +1,8 @@
 TEMPLATE = app
 TARGET = makoureactor
 
-QT += core gui opengl
-greaterThan(QT_MAJOR_VERSION, 4) {
-    QT += widgets
-    CONFIG += c++11
-}
-lessThan(QT_MAJOR_VERSION, 5) {
-    # Compatibility layer
-    INCLUDEPATH += compat
-    # Enabling c++11
-    QMAKE_CXXFLAGS += -std=c++0x
-}
+QT += core gui opengl widgets
+CONFIG += c++11
 
 # Input
 HEADERS += \
@@ -341,7 +332,6 @@ win32 {
 OTHER_FILES += Makou_Reactor.rc \
     deploy.bat \
     vars.cfg \
-    compat/QtWidgets \
     .travis.yml \
     README.md \
     .clang-format \

@@ -32,9 +32,9 @@
 #include "widgets/OperationsManager.h"
 
 Window::Window() :
-	fieldArchive(0), field(0), firstShow(true), varDialog(0),
-	_textDialog(0), _modelManager(0), _tutManager(0), _walkmeshManager(0),
-	_backgroundManager(0), _progressDialog(0)
+    fieldArchive(nullptr), field(nullptr), firstShow(true), varDialog(nullptr),
+    _textDialog(nullptr), _modelManager(nullptr), _tutManager(nullptr), _walkmeshManager(nullptr),
+    _backgroundManager(nullptr), _progressDialog(nullptr)
 {
 	setWindowTitle();
 	setWindowState(Qt::WindowMaximized);
@@ -1320,9 +1320,9 @@ void Window::modelManager()
 	if(!_modelManager) {
 		if(!field)	return;
 		if(field->isPC()) {
-			_modelManager = new ModelManagerPC(fieldModel, this);
+			_modelManager = new ModelManagerPC(this);
 		} else {
-			_modelManager = new ModelManagerPS(fieldModel, this);
+			_modelManager = new ModelManagerPS(this);
 		}
 		connect(_modelManager, SIGNAL(modified()), SLOT(setModified()));
 	}

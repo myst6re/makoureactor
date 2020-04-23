@@ -156,7 +156,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	} else if(type == ScriptEditorGenericList::animation_id
 	          && Data::currentModelID!=-1 && Data::currentHrcNames
 	          && Data::currentAnimNames) {
-		AnimEditorDialog dialog(value, 0, parent);
+		AnimEditorDialog dialog(value, parent);
 		QComboBox *editor = new QComboBox(parent);
 		editor->addItems(Data::currentAnimNames->value(Data::currentModelID));
 		if(dialog.exec() == QDialog::Accepted) {

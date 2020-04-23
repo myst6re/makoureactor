@@ -37,6 +37,10 @@ public:
 	inline QImage loadedTexture(FieldModelGroup *group) {
 		return _loadedTex.value(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id());
 	}
+	inline void *textureIdForGroup(FieldModelGroup *group) const {
+		return (void *)(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id());
+	}
+	QHash<void *, QImage> loadedTextures();
 private:
 	Q_DISABLE_COPY(FieldModelFilePC)
 	bool openSkeleton(const QString &hrcFileName, QMultiMap<int, QStringList> &rsdFiles);

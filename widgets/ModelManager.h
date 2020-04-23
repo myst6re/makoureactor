@@ -28,7 +28,7 @@ class ModelManager : public QDialog
 {
 	Q_OBJECT
 public:
-	ModelManager(const QGLWidget *shareWidget=0, QWidget *parent=0);
+	ModelManager(QWidget *parent=nullptr);
 	virtual void clear();
 	void fill(Field *field, bool reload=false);
 signals:

@@ -19,7 +19,7 @@
 #include "core/Config.h"
 #include "Data.h"
 
-ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
+ModelManager::ModelManager(QWidget *parent) :
 	QDialog(parent, Qt::Tool), _field(0), fieldModelLoader(0)
 {
 	setWindowTitle(tr("Field Models"));
@@ -53,7 +53,7 @@ ModelManager::ModelManager(const QGLWidget *shareWidget, QWidget *parent) :
 	modelAnims->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	if(Config::value("OpenGL", true).toBool()) {
-		modelPreview = new FieldModel(0, shareWidget);
+		modelPreview = new FieldModel();
 		modelWidget = modelPreview;
 		modelPreview->setFixedSize(304, 214);
 	} else {
