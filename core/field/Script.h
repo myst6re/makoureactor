@@ -87,7 +87,9 @@ public:
 
 	QString toString(Field *field) const;
 private:
-	OpcodeJump *convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok=0) const;
+	OpcodeJump *convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok=nullptr) const;
+	OpcodeJump *convertOpcodeJumpRangeToLong(OpcodeJump *opcodeJump, bool *ok=nullptr) const;
+	bool canConvertOpcodeJumpRangeToLong(OpcodeJump *opcodeJump) const;
 //	bool verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const;
 	QList<Opcode *> _opcodes;
 	QString lastError;

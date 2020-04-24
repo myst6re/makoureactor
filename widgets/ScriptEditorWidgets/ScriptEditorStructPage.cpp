@@ -426,7 +426,7 @@ void ScriptEditorJumpPage::build()
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Label")), 0, 0);
 	layout->addWidget(label, 0, 1, 1, 3);
-	layout->addWidget(new QLabel(tr("Type")), 1, 0);
+	layout->addWidget(new QLabel(tr("Type (expert)")), 1, 0);
 	layout->addWidget(range, 1, 1, 1, 3);
 	layout->setRowStretch(2, 1);
 	layout->setContentsMargins(QMargins());
@@ -575,7 +575,7 @@ void ScriptEditorIfPage::build()
 	layout->addWidget(rangeTest, 1, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Label")), 2, 0);
 	layout->addWidget(label, 2, 1, 1, 3);
-	layout->addWidget(new QLabel(tr("Jump type")), 3, 0);
+	layout->addWidget(new QLabel(tr("Jump type (expert)")), 3, 0);
 	layout->addWidget(rangeJump, 3, 1, 1, 3);
 	layout->setRowStretch(4, 1);
 	layout->setContentsMargins(QMargins());
