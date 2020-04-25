@@ -9,6 +9,7 @@ HEADERS += \
     Window.h \
     Parameters.h \
     Data.h \
+    widgets/ArchivePreview.h \
     widgets/HelpWidget.h \
     widgets/WalkmeshWidget.h \
     widgets/WalkmeshManager.h \
@@ -149,6 +150,7 @@ SOURCES += \
     txt.cpp \
     main.cpp \
     Data.cpp \
+    widgets/ArchivePreview.cpp \
     widgets/HelpWidget.cpp \
     widgets/WalkmeshWidget.cpp \
     widgets/WalkmeshManager.cpp \

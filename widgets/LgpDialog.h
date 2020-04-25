@@ -20,6 +20,7 @@
 
 #include <QtWidgets>
 #include "core/Lgp.h"
+#include "ArchivePreview.h"
 
 class IconThread : public QThread
 {
@@ -196,6 +197,9 @@ public:
 signals:
 	void modified();
 private slots:
+	void changePreview();
+	void changeImageInPreview(int imageID);
+	void changeImagePaletteInPreview(int palID);
 	void renameCurrent();
 	void replaceCurrent();
 	void extractCurrent();
@@ -204,6 +208,7 @@ private slots:
 	void setButtonsState();
 	void pack();
 private:
+	void generatePreview();
 	Lgp *lgp;
 	QTreeView *treeView;
 	QPushButton *extractButton, *renameButton,
@@ -211,6 +216,8 @@ private:
 	            *removeButton, *packButton;
 	QProgressDialog *progressDialog;
 	LgpItemModel *_model;
+	ArchivePreview *preview;
+	int currentImage, currentPal;
 };
 
 #endif // LGPDIALOG_H

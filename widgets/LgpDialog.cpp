@@ -18,6 +18,8 @@
 #include "LgpDialog.h"
 #include "core/Config.h"
 #include "Parameters.h"
+#include "core/TimFile.h"
+#include "core/TexFile.h"
 
 IconThread::IconThread(QObject *parent) :
 	QThread(parent), abort(false)
@@ -672,7 +674,7 @@ bool LgpItemModel::removeRows(int row, int count, const QModelIndex &parent)
 
 LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
     QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-    lgp(lgp), progressDialog(0)
+    lgp(lgp), progressDialog(0), currentImage(0), currentPal(0)
 {
 	setWindowTitle(tr("LGP archive manager"));
 	resize(800, 600);
@@ -699,6 +701,8 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 								 tr("Save"), this);
 	packButton->setEnabled(false);
 
+	preview = new ArchivePreview(this);
+
 	QHBoxLayout *barLayout = new QHBoxLayout;
 	barLayout->addWidget(renameButton);
 	barLayout->addWidget(replaceButton);
@@ -708,9 +712,10 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	barLayout->addWidget(packButton);
 	barLayout->addStretch();
 
-	QVBoxLayout *layout = new QVBoxLayout(this);
-	layout->addLayout(barLayout);
-	layout->addWidget(treeView, 1);
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addLayout(barLayout, 0, 0, 1, 2);
+	layout->addWidget(treeView, 1, 0);
+	layout->addWidget(preview, 1, 1);
 
 	connect(renameButton, SIGNAL(released()), SLOT(renameCurrent()));
 	connect(replaceButton, SIGNAL(released()), SLOT(replaceCurrent()));
@@ -719,8 +724,99 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	connect(removeButton, SIGNAL(released()), SLOT(removeCurrent()));
 	connect(packButton, SIGNAL(released()), SLOT(pack()));
 	connect(treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(setButtonsState()));
+	connect(treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(changePreview()));
+	connect(preview, SIGNAL(currentImageChanged(int)), SLOT(changeImageInPreview(int)));
+	connect(preview, SIGNAL(currentPaletteChanged(int)), SLOT(changeImagePaletteInPreview(int)));
 
 	setButtonsState();
+}
+
+void LgpDialog::changePreview()
+{
+	currentImage = 0;
+	currentPal = 0;
+	setButtonsState();
+	generatePreview();
+}
+
+void LgpDialog::generatePreview()
+{
+	QModelIndex index = treeView->currentIndex();
+	if(!index.isValid()) {
+		preview->clearPreview();
+		return;
+	}
+
+	LgpItem *item = _model->item(index);
+	if(!item || item->isDirectory()) {
+		preview->clearPreview();
+		return;
+	}
+
+	QString fileName, fileType, filePath;
+
+	fileName = item->path();
+	fileType = fileName.mid(fileName.lastIndexOf('.')+1).toLower();
+
+	if(fileType == "tex")
+	{
+		TexFile texFile(lgp->fileData(fileName));
+		texFile.setCurrentColorTable(currentPal);
+		preview->imagePreview(QPixmap::fromImage(texFile.image()), fileName, currentPal, texFile.colorTableCount());
+	}
+	else if(fileType == "tim")
+	{
+		TimFile timFile(lgp->fileData(fileName));
+		timFile.setCurrentColorTable(currentPal);
+		preview->imagePreview(QPixmap::fromImage(timFile.image()), fileName, currentPal, timFile.colorTableCount());
+	}
+	else if(fileType == "h" || fileType == "c"
+	         || fileType == "sym" || fileType.isEmpty()
+	         || fileType == "bak" || fileType == "dir"
+	         || fileType == "fl" || fileType == "txt")
+	{
+		preview->textPreview(QString(lgp->fileData(fileName)));
+	}
+	else if(fileType == "png" || fileType == "jpg" || fileType == "jpeg")
+	{
+		preview->imagePreview(QPixmap::fromImage(QImage::fromData(lgp->fileData(fileName))), fileName);
+	}
+	else
+	{
+		/* QList<int> indexes = FF8Image::findTims(data);
+		if(!indexes.isEmpty())
+		{
+			TimFile timFile(data.mid(indexes.value(currentImage, indexes.first())));
+			timFile.setCurrentColorTable(currentPal);
+			preview->imagePreview(QPixmap::fromImage(timFile.image()), fileName,
+			                      currentPal, timFile.colorTableCount(),
+			                      currentImage, indexes.size());
+		}
+		else
+		{*/
+			preview->clearPreview();
+		//}
+	}
+}
+
+void LgpDialog::changeImageInPreview(int imageID)
+{
+	if(imageID < 0) {
+		return;
+	}
+
+	currentImage = imageID;
+	generatePreview();
+}
+
+void LgpDialog::changeImagePaletteInPreview(int palID)
+{
+	if(palID < 0) {
+		return;
+	}
+
+	currentPal = palID;
+	generatePreview();
 }
 
 void LgpDialog::renameCurrent()
