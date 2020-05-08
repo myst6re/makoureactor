@@ -45,4 +45,5 @@ deploy:
     secure: Q8v2IrepAs+HGD3atYI/0cI52LrxaYzRZKDBaFMSjsz1NPoUrj+Q4lZaZzFaLa4v
   artifact: /makoureactor-.*\.zip/
   on:
+    branch: develop
     appveyor_repo_tag: true # deploy on tag push only
