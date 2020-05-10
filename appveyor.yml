@@ -37,7 +37,7 @@ deploy:
   description: Description # Mandatory
   provider: GitHub
   auth_token:
-    secure: hC7ZT9txiEAgKU9m2PzmUNe/eDYz1dNPT2DketUKF+8CwuDiXQgNzKSx33Rek2CF
+    secure: Q8v2IrepAs+HGD3atYI/0cI52LrxaYzRZKDBaFMSjsz1NPoUrj+Q4lZaZzFaLa4v
   artifact: /makoureactor-.*\.zip/
   on:
     appveyor_repo_tag: true # deploy on tag push only
