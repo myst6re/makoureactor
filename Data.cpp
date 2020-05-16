@@ -802,7 +802,7 @@ void Data::toPCMaplist(QStringList &field_names)
 
 const char *Data::musicList[100] =
 {
-	"none", "none", "oa", "ob", "dun2", "guitar2", "fanfare", "makoro", "bat",
+	"none", "nothing", "oa", "ob", "dun2", "guitar2", "fanfare", "makoro", "bat",
 	"fiddle", "kurai", "chu", "ketc", "earis", "ta", "tb", "sato",
 	"parade", "comical", "yume", "mati", "sido", "siera", "walz", "corneo",
 	"horror", "canyon", "red", "seto", "ayasi", "sinra", "sinraslo", "dokubo",
@@ -819,12 +819,12 @@ const char *Data::musicList[100] =
 
 const char *Data::musicList2[100] =
 {
-	"none", "none", "Opening - Bombing Mission", "Bombing Mission",
+	"none", "nothing", "Opening - Bombing Mission", "Bombing Mission",
 	"Chasing The Black-Caped Man", "On The Other Side Of The Mountain",
 	"Fanfare (intro)", "Mako Reactor", "Fighting", "Fiddle De Chocobo",
 	"Anxious Heart", "Still More Fighting", "Cait Sith's Theme", "Aerith's Theme",
 	"Final Fantasy VII Main Theme", "Final Fantasy VII Main Theme B", "sato",
-	"Rufus' Welcoming Ceremony", "J-E-N-O-V-A", "Who Are You", "Ahead on Our Way",
+	"Rufus' Welcoming Ceremony", "comical", "Who Are You", "Ahead on Our Way",
 	"It's Difficult to Stand on Both Feet, Isn't It", "If You Open Your Heart",
 	"Waltz de Chocobo", "Don of the Slums", "Trail Of Blood", "Cosmo Canyon",
 	"Red XIII's Theme", "Great Warrior", "Lurking in the Darkness",
@@ -835,7 +835,7 @@ const char *Data::musicList2[100] =
 	"Life Stream", "Electric de Chocobo", "Turk's Theme", "Fanfare",
 	"Highwind Takes To The Skies", "The Makou Cannon Is Fired ~ Shinra Explodes A",
 	"Interrupted By Fireworks", "Those Chosen By The Planet (Intro)", "Cinco de Chocobo",
-	"J-E-N-O-V-A (2)", "Descendant Of Shinobi", "Hurry!", "Gold Saucer",
+	"J-E-N-O-V-A", "Descendant Of Shinobi", "Hurry!", "Gold Saucer",
 	"Parochial Town", "Good Night, Until Tomorrow", "Continue", "A Great Success",
 	"Tango Of Tears", "Racing Chocobo ~ Place Your Bets", "Debut",
 	"Off The Edge Of Despair", "Holding My Thoughts In My Heart", "wind",
