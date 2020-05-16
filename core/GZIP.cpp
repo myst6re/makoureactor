@@ -81,6 +81,56 @@ QByteArray GZIP::decompress(const QString &path, int decSize, Strategy strategy)
 	return ungzip;
 }
 
+QByteArray GZIP::decompressNoHeader(const char *data, int size)
+{
+	int uncompressedSize = size * 2;
+	QByteArray ret;
+	ret.resize(uncompressedSize);
+
+	int err;
+
+	forever {
+		Bytef *buffer = (Bytef *)ret.data();
+		uLongf destLen = ret.size();
+		err = z_uncompress(buffer, &destLen, (const Bytef *)data, size);
+
+		if (Z_MEM_ERROR != err && Z_BUF_ERROR != err) {
+			break;
+		}
+
+		// Retry with bigger buffer
+		uncompressedSize += size;
+		ret.resize(uncompressedSize);
+	}
+
+	if (Z_OK != err) {
+		ret.clear();
+	}
+
+	return ret;
+}
+
+QByteArray GZIP::compressNoHeader(const char *data, int size, int level)
+{
+	QByteArray ret;
+	ret.resize(size * 2);
+	Bytef *buffer = (Bytef *)ret.data();
+	uLongf destLen = ret.size();
+
+	if (Z_OK != z_compress2(buffer, &destLen, (const Bytef *)data, size, level)) {
+		ret.clear();
+	} else {
+		ret.resize(destLen);
+	}
+
+	return ret;
+}
+
+ulong GZIP::crc(const char *data, int size)
+{
+	return z_crc32(z_crc32(0L, nullptr, 0), (const Bytef *)data, size);
+}
+
 char GZIP::strategyToChar(Strategy strategy)
 {
 	switch (strategy) {
