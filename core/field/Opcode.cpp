@@ -60,9 +60,22 @@ Opcode *Opcode::unserialize(const QByteArray &data)
 	memcpy(&identifier, data.constData(), 2);
 
 	if(identifier <= 0xFF) {
-		return Script::createOpcode(QByteArray()
+		Opcode *ret = Script::createOpcode(QByteArray()
 		                            .append(quint8(identifier))
 		                            .append(data.mid(2)));
+
+		quint8 size = 2 + Opcode::length[identifier] - 1;
+
+		if (ret->isJump() && data.size() >= size + 5) {
+			quint32 label;
+			memcpy(&label, data.constData() + size, 4);
+
+			OpcodeJump *jump = static_cast<OpcodeJump *>(ret);
+			jump->setLabel(label);
+			jump->setBadJump(bool(data.at(size + 4)));
+		}
+
+		return ret;
 	}
 
 	if(data.size() < 6) {
@@ -1351,6 +1364,12 @@ quint32 OpcodeJump::maxJump() const
 	} else {
 		return 255 + jumpPosData();
 	}
+}
+
+QByteArray OpcodeJump::serialize() const
+{
+	return Opcode::serialize()
+	    .append((char *)&_label, 4).append(char(_badJump));
 }
 
 OpcodeLabel::OpcodeLabel(quint32 label) :

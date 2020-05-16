@@ -547,6 +547,7 @@ public:
 	inline virtual bool isBackJump() { return false; }
 	quint32 maxJump() const;
 	virtual quint8 jumpPosData() const=0;
+	QByteArray serialize() const;
 protected:
 	qint32 _jump;
 	quint32 _label;
