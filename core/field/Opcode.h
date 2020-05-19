@@ -709,6 +709,26 @@ public:
 	void getVariables(QList<FF7Var> &vars) const;
 };
 
+class Opcode1A : public Opcode {
+public:
+	explicit Opcode1A(const char *params, int size);
+	inline int id() const { return 0x1A; }
+	QString toString(Field *field) const;
+	void setParams(const char *params, int size);
+	QByteArray params() const;
+	quint16 from, to;
+	quint32 absValue;
+	quint8 flag;
+};
+
+class Opcode1B : public OpcodeJMPFL {
+public:
+	explicit Opcode1B(const char *params, int size);
+	explicit Opcode1B(const OpcodeJump &op);
+	inline int id() const { return 0x1B; }
+	QString toString(Field *field) const;
+};
+
 class OpcodeMINIGAME : public Opcode {
 public:
 	explicit OpcodeMINIGAME(const char *params, int size);

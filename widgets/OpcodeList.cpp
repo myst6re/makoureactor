@@ -386,7 +386,10 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 			QPixmap wordPixmap(32,11);
 			item->setIcon(0, QIcon(posNumber(opcodeID+1, fontPixmap, wordPixmap)));
 			item->setToolTip(0, curOpcode->name());
-			if((id>=0x14 && id<=0x19) || (id>=0x30 && id<=0x32) || id==0xcb || id==0xcc)
+			if((id >= Opcode::IFUB && id <= Opcode::IFUWL) ||
+			        (id >= Opcode::IFKEY && id <= Opcode::IFKEYOFF) ||
+			        id == Opcode::IFPRTYQ || id == Opcode::IFMEMBQ ||
+			        id == Opcode::Unknown4)
 			{
 				item->setForeground(0, QColor(0x00,0x66,0xcc));
 				if(!((OpcodeJump *)curOpcode)->isBadJump()) {
@@ -398,7 +401,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 			}
 			else if(id >= Opcode::REQ && id <= Opcode::RETTO)
 				item->setForeground(0, QColor(0xcc,0x66,0x00));
-			else if(id >= Opcode::JMPF && id <= Opcode::JMPBL)
+			else if(curOpcode->isJump())
 				item->setForeground(0, QColor(0x66,0xcc,0x00));
 			else if(id == Opcode::RET)
 				item->setForeground(0, QColor(0x66,0x66,0x66));

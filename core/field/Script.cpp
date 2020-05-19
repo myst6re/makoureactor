@@ -159,6 +159,8 @@ Opcode *Script::createOpcode(const QByteArray &script, int pos)
 	case 0x17:	return new OpcodeIFSWL(data, size);
 	case 0x18:	return new OpcodeIFUW(data, size);
 	case 0x19:	return new OpcodeIFUWL(data, size);
+	case 0x1A:	return new Opcode1A(data, size);
+	case 0x1B:	return new Opcode1B(data, size);
 	case 0x20:	return new OpcodeMINIGAME(data, size);
 	case 0x21:	return new OpcodeTUTOR(data, size);
 	case 0x22:	return new OpcodeBTMD2(data, size);
@@ -430,6 +432,8 @@ Opcode *Script::copyOpcode(Opcode *opcode)
 	case 0x17:	return new OpcodeIFSWL(*static_cast<OpcodeIFSWL *>(opcode));
 	case 0x18:	return new OpcodeIFUW(*static_cast<OpcodeIFUW *>(opcode));
 	case 0x19:	return new OpcodeIFUWL(*static_cast<OpcodeIFUWL *>(opcode));
+	case 0x1A:	return new Opcode1A(*static_cast<Opcode1A *>(opcode));
+	case 0x1B:	return new Opcode1B(*static_cast<Opcode1B *>(opcode));
 	case 0x20:	return new OpcodeMINIGAME(*static_cast<OpcodeMINIGAME *>(opcode));
 	case 0x21:	return new OpcodeTUTOR(*static_cast<OpcodeTUTOR *>(opcode));
 	case 0x22:	return new OpcodeBTMD2(*static_cast<OpcodeBTMD2 *>(opcode));

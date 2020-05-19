@@ -540,6 +540,53 @@ Opcode *ScriptEditorJumpPage::convertOpcode(Opcode::Keys key)
 	return opcodePtr();
 }
 
+
+ScriptEditorJumpNanakiPage::ScriptEditorJumpNanakiPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+    ScriptEditorJumpPageInterface(field, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorJumpNanakiPage::build()
+{
+	label = new QComboBox(this);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Label")), 0, 0);
+	layout->addWidget(label, 0, 1);
+	layout->setRowStretch(1, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(label, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
+}
+
+Opcode *ScriptEditorJumpNanakiPage::opcode()
+{
+	OpcodeJump *opcodeJump = (OpcodeJump *)opcodePtr();
+	opcodeJump->setLabel(label->itemData(label->currentIndex()).toUInt());
+
+	return opcodePtr();
+}
+
+void ScriptEditorJumpNanakiPage::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(true);
+	}
+
+	fillLabelList();
+
+	foreach(QObject *o, children()) {
+		o->blockSignals(false);
+	}
+}
+
+bool ScriptEditorJumpNanakiPage::needsLabel() const
+{
+	return label->currentIndex() == label->count() - 1;
+}
+
 ScriptEditorIfPage::ScriptEditorIfPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
 	ScriptEditorJumpPageInterface(field, grpScript, script, opcodeID, parent), addJump(false)
 {

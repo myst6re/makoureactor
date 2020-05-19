@@ -109,6 +109,18 @@ private:
 	bool addJump;
 };
 
+class ScriptEditorJumpNanakiPage : public ScriptEditorJumpPageInterface
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorJumpNanakiPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+	bool needsLabel() const;
+private:
+	void build();
+};
+
 class ScriptEditorIfPage : public ScriptEditorJumpPageInterface
 {
 	Q_OBJECT
