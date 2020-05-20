@@ -19,6 +19,7 @@
 #include "TextHighlighter.h"
 #include "Data.h"
 #include "core/Config.h"
+#include "core/PsfFile.h"
 
 TutWidget::TutWidget(QWidget *parent) :
 	QDialog(parent, Qt::Tool), copied(false)
@@ -483,17 +484,20 @@ void TutWidget::exportation()
 
 	bool isTut = currentTut->isTut(row);
 	QString path = QDir::fromNativeSeparators(QDir::cleanPath(Config::value("akaoImportExportPath").toString()));
-	QString filename, filter;
+	QString filename, filter, selectedFilter;
+	QString akaoF = tr("Final Fantasy Sound (*.akao)"),
+	        psfF = tr("PSF MIDI file (*.minipsf)");
 
 	if(isTut) {
 		filename = tr("tuto_%1.tutps").arg(row);
 		filter = tr("Tuto Final Fantasy VII PS (*.tutps)");
 	} else {
 		filename = tr("sound_%1.akao").arg(row);
-		filter = tr("Final Fantasy Sound (*.akao)");
+		filter = (QStringList() << akaoF << psfF).join(";;");
 	}
 
-	path = QFileDialog::getSaveFileName(this, tr("Export"), path + "/" + filename, filter);
+	path = QFileDialog::getSaveFileName(this, tr("Export"), path + "/" + filename,
+	                                    filter, &selectedFilter);
 
 	if(path.isNull()) {
 		return;
@@ -507,7 +511,12 @@ void TutWidget::exportation()
 		return;
 	}
 
-	akao.write(currentTut->data(row));
+	if (selectedFilter == psfF) {
+		PsfTags tags("Final Fantasy 7.psflib"); // TODO: tags editor
+		akao.write(PsfFile::fromAkao(currentTut->data(row), tags).save());
+	} else {
+		akao.write(currentTut->data(row));
+	}
 	akao.close();
 }
 

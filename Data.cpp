@@ -340,7 +340,7 @@ QString Data::ff7KernelPath()
 				path.append(QString("/lang-%1/kernel").arg(lang));
 			else {
 				QStringList langs;
-				langs << "de" << "en" << "es" << "fr";
+				langs << "de" << "en" << "es" << "fr" << "ja";
 				foreach(const QString &lang, langs) {
 					if (QFile::exists(path + QString("/lang-%1/kernel").arg(lang))) {
 						path.append(QString("/lang-%1/kernel").arg(lang));
@@ -614,6 +614,10 @@ bool Data::openMaplist(const QByteArray &data)
 	field_names.clear();
 	for(int i=0 ; i<nbMap ; ++i) {
 		field_names.append(QString(data.mid(2+i*32, 32)).simplified());
+	}
+	// Remove empty entries at the end
+	while(!field_names.isEmpty() && field_names.last().isEmpty()) {
+		field_names.removeLast();
 	}
 
 	return true;
