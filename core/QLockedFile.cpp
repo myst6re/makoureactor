@@ -38,7 +38,9 @@ QLockedFile::QLockedFile(const QString &name, QObject *parent) :
 
 QLockedFile::~QLockedFile()
 {
-	close();
+	if (isOpen()) {
+		close();
+	}
 }
 
 void QLockedFile::close()
