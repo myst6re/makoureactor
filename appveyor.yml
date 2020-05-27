@@ -15,7 +15,7 @@ install:
   - DIR %QTDIR%\..
   - DIR %QTTOOLS%
   - set PATH=%QTDIR%\bin;%QTTOOLS%\bin;%PATH%
-  - '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat"'
+  - '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"'
   - curl -L -o upx.zip http://upx.sourceforge.net/download/upx391w.zip &&
       7z e upx.zip *.exe -r
 
