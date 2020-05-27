@@ -87,14 +87,14 @@ PsfFile PsfFile::fromAkao(const QByteArray &akaoData, const PsfTags &tags)
 {
 	QByteArray data;
 
-	data.append("PS-X EXE")
-	    .append(10, '\0')
+	data.append(QString("PS-X EXE"))
+	    .append(QByteArray(10, '\0'))
 	    .append("\x01\x80", 2)
-	    .append(6, '\0')
+	    .append(QByteArray(6, '\0'))
 	    .append("\x1D\x80\x00\x80", 4)
-	    .append(18, '\0')
+	    .append(QByteArray(18, '\0'))
 	    .append("\xF0\xFF\x1F\x80", 4)
-	    .append(0x7CC, '\0')
+	    .append(QByteArray(0x7CC, '\0'))
 	    .append(akaoData);
 
 	return PsfFile(data, tags);

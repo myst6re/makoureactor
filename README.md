@@ -10,6 +10,9 @@ Final Fantasy VII field archive editor.
 
 ## Installing
 
+Makou Reactor can be downloaded as a simple ZIP archive, or via repositories
+when available:
+
  - **Windows**: Download the last release on [GitHub](https://github.com/myst6re/makoureactor/releases).
  - **MacOSX**: Download the latest release on [GitHub](https://github.com/myst6re/makoureactor/releases)
  - **Debian/Ubuntu**: Add sithlord48's [Stable Release](https://launchpad.net/~sithlord48/+archive/ubuntu/ff7) or [Daily Builds](https://launchpad.net/~sithlord48/+archive/ubuntu/ff7-daily) ppa to install the makoureactor package
@@ -17,7 +20,15 @@ Final Fantasy VII field archive editor.
  - **Other Linux**: Download the latest release on [GitHub](https://github.com/myst6re/makoureactor/releases)
 
 
+## Contributing
+
+You are welcome to contribute on this project, feel free to open issues and
+PR on GitHub.
+
 ## Building
+
+If you are a developer and you want to build this software, follow the
+instructions below.
 
 ### Requirements
 

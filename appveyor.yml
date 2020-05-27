@@ -1,14 +1,14 @@
 environment:
   matrix:
     - USE_MSVC: 1
-      QTDIR: C:\Qt\5.6\msvc2013
+      QTDIR: C:\Qt\5.14\msvc2017_64
     - USE_MINGW: 1
-      QTDIR: C:\Qt\5.6\mingw49_32
+      QTDIR: C:\Qt\5.14\mingw73_32
 
 install:
-  - if "%USE_MINGW%"=="1" set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw492_32\bin;%PATH%
+  - if "%USE_MINGW%"=="1" set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw730_32\bin;%PATH%
   - if "%USE_MSVC%"=="1" set PATH=%QTDIR%\bin;C:\Qt\Tools\QtCreator\bin;%PATH%
-  - '"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"'
+  - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"'
   - curl -L -o upx.zip http://upx.sourceforge.net/download/upx391w.zip &&
     7z e upx.zip *.exe -r
 
@@ -21,7 +21,7 @@ build_script:
 
 after_build:
   - FOR /F %%i IN ('git describe --tags') DO SET GIT_TAG_OR_BRANCH=%%i
-  - if "%USE_MSVC%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32"
+  - if "%USE_MSVC%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win64"
   - if "%USE_MINGW%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32-xp"
   - echo "%DEPLOY_DIR%"
   - deploy.bat
