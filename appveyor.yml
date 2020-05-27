@@ -7,6 +7,7 @@ environment:
 
 install:
   - echo %QTDIR%
+  - DIR C:\Qt
   - DIR %QTDIR%
   - DIR %QTDIR%\bin
   - '"%QTDIR%\bin\qtenv2.bat"'
