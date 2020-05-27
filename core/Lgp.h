@@ -61,6 +61,7 @@ public:
 		ReadError,
 		WriteError,
 		OpenError,
+		OpenTempError,
 		AbortError,
 		RemoveError,
 		RenameError,

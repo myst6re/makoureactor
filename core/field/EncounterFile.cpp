@@ -23,6 +23,12 @@ EncounterFile::EncounterFile(Field *field) :
 {
 }
 
+void EncounterFile::initEmpty()
+{
+	tables[0] = EncounterTable();
+	tables[1] = EncounterTable();
+}
+
 bool EncounterFile::open()
 {
 	return open(field()->sectionData(Field::Encounter));

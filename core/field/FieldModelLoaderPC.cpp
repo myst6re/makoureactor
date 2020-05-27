@@ -55,6 +55,67 @@ void FieldModelLoaderPC::clean()
 	}
 }
 
+void FieldModelLoaderPC::initEmpty()
+{
+	model_nameChar.clear();
+	model_nameChar.append("");
+	model_nameChar.append("");
+	model_nameChar.append("");
+
+	model_nameHRC.clear();
+	model_nameHRC.append("AAAA");
+	model_nameHRC.append("AAGB");
+	model_nameHRC.append("ABDA");
+
+	model_anims.clear();
+	model_anims.append(QStringList()
+	                   << "AAFE"
+	                   << "AAFF"
+	                   << "AAGA");
+	model_anims.append(QStringList()
+	                   << "ABCD"
+	                   << "ABCE"
+	                   << "ABCF");
+	model_anims.append(QStringList()
+	                   << "ABIE"
+	                   << "ABIF"
+	                   << "ABJA");
+
+	QList<quint16> animUnknown = QVector<quint16>(3, 1).toList();
+	model_anims_unknown.clear();
+	model_anims_unknown.append(animUnknown);
+	model_anims_unknown.append(animUnknown);
+	model_anims_unknown.append(animUnknown);
+
+	model_unknown.clear();
+	model_unknown.append(0);
+	model_unknown.append(0);
+	model_unknown.append(0);
+
+	model_typeHRC.clear();
+	model_typeHRC.append(512);
+	model_typeHRC.append(512);
+	model_typeHRC.append(512);
+
+	QList<FieldModelColorDir> c;
+	c
+	    << FieldModelColorDir(-659, 411, 4034, qRgb(128, 128, 128))
+	    << FieldModelColorDir(1536, -3349, -1839, qRgb(204, 204, 204))
+	    << FieldModelColorDir(-2920, -1474, -2484, qRgb(77, 77, 77));
+
+	colors.clear();
+	colors.append(c);
+	colors.append(c);
+	colors.append(c);
+
+	QRgb gc = qRgb(64, 64, 64);
+
+	model_global_color.clear();
+	model_global_color.append(gc);
+	model_global_color.append(gc);
+	model_global_color.append(gc);
+}
+
 bool FieldModelLoaderPC::open()
 {
 	return open(field()->sectionData(Field::ModelLoader));

@@ -2558,6 +2558,14 @@ OpcodeWindow::OpcodeWindow(const char *params, int size)
 	setParams(params, size);
 }
 
+OpcodeWindow::OpcodeWindow(quint8 windowID, quint16 targetX,
+                      quint16 targetY, quint16 width,
+                      quint16 height) :
+      windowID(windowID), targetX(targetX), targetY(targetY),
+      width(width), height(height)
+{
+}
+
 void OpcodeWindow::setParams(const char *params, int)
 {
 	windowID = params[0];
@@ -3061,6 +3069,11 @@ OpcodeMESSAGE::OpcodeMESSAGE(const char *params, int size)
 	setParams(params, size);
 }
 
+OpcodeMESSAGE::OpcodeMESSAGE(quint8 windowID, quint8 textID) :
+	windowID(windowID), textID(textID)
+{
+}
+
 void OpcodeMESSAGE::setParams(const char *params, int)
 {
 	windowID = params[0];
@@ -3196,6 +3209,11 @@ void OpcodeMPRA2::getVariables(QList<FF7Var> &vars) const
 OpcodeMPNAM::OpcodeMPNAM(const char *params, int size)
 {
 	setParams(params, size);
+}
+
+OpcodeMPNAM::OpcodeMPNAM(quint8 textID) :
+	textID(textID)
+{
 }
 
 void OpcodeMPNAM::setParams(const char *params, int)
@@ -3510,6 +3528,13 @@ QString OpcodeHPd::toString(Field *) const
 
 OpcodeWINDOW::OpcodeWINDOW(const char *params, int size) :
 	OpcodeWindow(params, size)
+{
+}
+
+OpcodeWINDOW::OpcodeWINDOW(quint8 windowID, quint16 targetX,
+                           quint16 targetY, quint16 width,
+                           quint16 height) :
+      OpcodeWindow(windowID, targetX, targetY, width, height)
 {
 }
 

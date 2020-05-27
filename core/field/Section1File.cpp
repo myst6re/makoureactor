@@ -18,6 +18,7 @@
 #include "Section1File.h"
 #include "Field.h"
 #include "core/Config.h"
+#include "widgets/TextPreview.h"
 
 GrpScriptsIterator::GrpScriptsIterator(const GrpScriptsIterator &other) :
 	QListIterator<GrpScript *>(other), _scriptsIt(0)
@@ -117,13 +118,13 @@ Opcode *GrpScriptsIterator::previousOpcode()
 }
 
 Section1File::Section1File(Field *field) :
-	FieldPart(field), _scale(0), _tut(0)
+	FieldPart(field), _scale(0)
 {
 }
 
 Section1File::Section1File(const Section1File &other) :
 	FieldPart(other.field()), _author(other.author()),
-	_scale(other.scale()), _texts(other.texts()), _tut(other.tut())
+	_scale(other.scale()), _texts(other.texts())
 {
 	foreach(const GrpScript *grpScript, other.grpScripts()) {
 		_grpScripts.append(new GrpScript(*grpScript));
@@ -145,6 +146,72 @@ void Section1File::clear()
 	setOpen(false);
 }
 
+void Section1File::initEmpty()
+{
+	clear();
+
+	_author = "makou";
+	_scale = 512;
+	_version = 0x0502;
+
+	_texts.append(FF7Text(QObject::tr("Map name"), false));
+	_texts.append(FF7Text(QObject::tr("Hello world!"), false));
+
+	QList<Script *> scripts;
+	QList<Opcode *> opcodes;
+
+	opcodes.append(new OpcodeMPNAM(0));
+	opcodes.append(new OpcodeRET());
+	scripts.append(new Script(opcodes));
+
+	QSize s = TextPreview::calcSize(_texts.at(1).data());
+
+	opcodes.clear();
+	opcodes.append(new OpcodeWINDOW(0, 0, 0, s.width(), s.height()));
+	opcodes.append(new OpcodeMESSAGE(quint8(0), quint8(1)));
+	opcodes.append(new OpcodeRET());
+	scripts.append(new Script(opcodes));
+
+	opcodes.clear();
+	opcodes.append(new OpcodeRET());
+	scripts.append(new Script(opcodes));
+
+	_grpScripts.append(new GrpScript("dic", scripts));
+
+	QMap<quint8, QString> chars;
+	chars.insert(0, "cloud");
+	chars.insert(2, "tifa");
+	chars.insert(8, "cid");
+
+	QMapIterator<quint8, QString> it(chars);
+	quint8 modelID = 0;
+
+	while (it.hasNext()) {
+		it.next();
+
+		scripts.clear();
+
+		opcodes.clear();
+		opcodes.append(new OpcodeCHAR(modelID));
+		opcodes.append(new OpcodePC(it.key()));
+		opcodes.append(new OpcodeRET());
+		scripts.append(new Script(opcodes));
+
+		opcodes.clear();
+		opcodes.append(new OpcodeRET());
+		scripts.append(new Script(opcodes));
+
+		opcodes.clear();
+		opcodes.append(new OpcodeRET());
+		scripts.append(new Script(opcodes));
+
+		_grpScripts.append(new GrpScript(it.value(), scripts));
+
+		modelID += 1;
+	}
+
+}
+
 bool Section1File::open()
 {
 	return open(field()->sectionData(Field::Scripts));
@@ -160,6 +227,8 @@ bool Section1File::open(const QByteArray &data)
 	if(dataSize < 32)	return false;
 
 	memcpy(&version, constData, 2);
+
+	_version = version;
 
 	isDemo = version == 0x0301; // Check version format
 
@@ -195,8 +264,32 @@ bool Section1File::open(const QByteArray &data)
 	quint16 positions[33];
 	const int scriptCount = isDemo ? 16 : 32;
 
+	if(nbAKAO > 0) {
+		//INTERGRITY TEST
+		//		QString out;
+		//		bool pasok = false;
+		//		for(int i=0 ; i<nbAKAO ; ++i) {
+		//			memcpy(&posAKAO, &constData[cur+8*nbScripts+i*4], 4);
+		//			out.append(QString("%1 %2 %3 (%4)\n").arg(i).arg(posAKAO).arg(QString(data.mid(posAKAO, 4))).arg(QString(data.mid(posAKAO-4, 8).toHex())));
+		//			if(data.mid(posAKAO, 4) != "AKAO" && data.at(posAKAO) != '\x12') {
+		//				pasok = true;
+		//			}
+		//		}
+		//		if(pasok) {
+		//			qDebug() << out;
+		//		}
+
+		memcpy(&posAKAO, constData + cur + 8*nbScripts, 4); // posAKAO
+	} else {
+		posAKAO = dataSize;
+	}
+
+	// On the Android version, posTexts can be after posAKAO
+	quint32 posAfterScripts = qMin(posAKAO, quint32(posTexts));
+
 	for(quint8 i=0 ; i<nbScripts ; ++i) {
 		GrpScript *grpScript = new GrpScript(QString(data.mid(cur + 8*i, 8)));
+
 		if(emptyGrps > 1) {
 			emptyGrps--;
 		} else {
@@ -206,7 +299,7 @@ bool Section1File::open(const QByteArray &data)
 
 			// Add offset at the end
 			if(i == nbScripts - 1) {
-				positions[scriptCount] = posTexts;
+				positions[scriptCount] = posAfterScripts;
 			} else {
 				memcpy(&pos, constData + posScripts + scriptCount * 2 * (i + 1), 2);
 
@@ -219,7 +312,7 @@ bool Section1File::open(const QByteArray &data)
 						emptyGrps++;
 					}
 					if(i + emptyGrps == nbScripts) {
-						positions[scriptCount] = posTexts;
+						positions[scriptCount] = posAfterScripts;
 					} else {
 						positions[scriptCount] = pos;
 					}
@@ -247,29 +340,16 @@ bool Section1File::open(const QByteArray &data)
 		_grpScripts.append(grpScript);
 	}
 
-	if(nbAKAO>0) {
-		//INTERGRITY TEST
-//		QString out;
-//		bool pasok = false;
-//		for(int i=0 ; i<nbAKAO ; ++i) {
-//			memcpy(&posAKAO, &constData[cur+8*nbScripts+i*4], 4);
-//			out.append(QString("%1 %2 %3 (%4)\n").arg(i).arg(posAKAO).arg(QString(data.mid(posAKAO, 4))).arg(QString(data.mid(posAKAO-4, 8).toHex())));
-//			if(data.mid(posAKAO, 4) != "AKAO" && data.at(posAKAO) != '\x12') {
-//				pasok = true;
-//			}
-//		}
-//		if(pasok) {
-//			qDebug() << out;
-//		}
-
-		memcpy(&posAKAO, constData + cur + 8*nbScripts, 4); // posAKAO
-	} else {
-		posAKAO = dataSize;
-	}
+	quint32 sizeTextSection;
 
 	/* ---------- TEXTS ---------- */
+	if (posAKAO >= posTexts) {
+		sizeTextSection = posAKAO - posTexts;
+	} else {
+		sizeTextSection = dataSize - posTexts;
+	}
 
-	if((posAKAO -= posTexts) > 4) { //If there are texts
+	if(sizeTextSection > 4) { //If there are texts
 		quint16 posDeb, posFin, nbTextes;
 		if(dataSize < posTexts+2)	return false;
 		memcpy(&posDeb, constData + posTexts + 2, 2);
@@ -284,9 +364,9 @@ bool Section1File::open(const QByteArray &data)
 			_texts.append(FF7Text(data.mid(posTexts+posDeb, posFin-posDeb)));
 			posDeb = posFin;
 		}
-		if((quint32)dataSize < posAKAO)	return false;
+		if((quint32)dataSize < sizeTextSection)	return false;
 		// FIXME: possible hidden data between 0xFF and posFin-posDeb
-		_texts.append(FF7Text(data.mid(posTexts+posDeb, posAKAO-posDeb)));
+		_texts.append(FF7Text(data.mid(posTexts+posDeb, sizeTextSection-posDeb)));
 	}
 
 	setOpen(true);
@@ -296,22 +376,17 @@ bool Section1File::open(const QByteArray &data)
 
 QByteArray Section1File::save() const
 {
-	QByteArray data = field()->sectionData(Field::Scripts);
+	TutFileStandard *tut = field()->tutosAndSounds();
 	QByteArray grpScriptNames, positionsScripts, positionsAKAO, allScripts, realScript, positionsTexts, allTexts, allAKAOs;
-	quint32 posAKAO, posAKAOs, newPosAKAOs, pos32, newPosTexts32;
-	quint16 posTocAKAOs, posTexts, newPosScripts, newPosTexts, newNbAKAO, pos;
-	quint8 nbGrpScripts, newNbGrpScripts;
-	const char *constData = data.constData();
+	quint32 newPosAKAOs, pos32, newPosTexts32;
+	quint16 newPosScripts, newPosTexts, newNbAKAO, pos;
+	quint8 newNbGrpScripts;
 
-	nbGrpScripts = (quint8)data.at(2);//nbGrpScripts
+	//nbGrpScripts = (quint8)data.at(2);//nbGrpScripts
 	newNbGrpScripts = _grpScripts.size();
-	memcpy(&posTexts, constData + 4, 2);//posTexts (and end of the scripts section)
+	//memcpy(&posTexts, constData + 4, 2);//posTexts (and end of the scripts section)
 
-	if(_tut && _tut->isModified()) {
-		newNbAKAO = _tut->size(); // 255 maximum
-	} else {
-		memcpy(&newNbAKAO, constData + 6, 2);//nbAKAO
-	}
+	newNbAKAO = tut->size(); // 255 maximum
 
 	newPosScripts = 32 + newNbGrpScripts * 72 + newNbAKAO * 4;
 	pos32 = newPosScripts;
@@ -364,47 +439,31 @@ QByteArray Section1File::save() const
 
 	newPosAKAOs = newPosTexts + (2 + newNbText*2 + allTexts.size());
 
-	if(_tut && _tut->isModified()) {
-		allAKAOs = _tut->save(positionsAKAO, newPosAKAOs);
-	} else if(newNbAKAO > 0) {
-		posTocAKAOs = 32 + nbGrpScripts*8;
-		memcpy(&posAKAOs, constData + posTocAKAOs, 4);
-		qint32 diff = newPosAKAOs - posAKAOs;
+	allAKAOs = tut->save(positionsAKAO, newPosAKAOs);
 
-		// Creation new positions AKAO
-		for(quint32 i=0 ; i<newNbAKAO ; ++i) {
-			memcpy(&posAKAO, constData + posTocAKAOs + i*4, 4);
-			if(quint64(posAKAO) + diff > ((quint32)-1)) {
-				qWarning() << "Section1File::save script + text + akao size overflow";
-				return QByteArray();
-			}
-			posAKAO += diff;
-			positionsAKAO.append((char *)&posAKAO, 4);
-		}
+	QByteArray mapauthor = _author.toLatin1().leftJustified(8, '\0', true);
+	mapauthor[7] = '\0';
+	QByteArray mapname = field()->name().toLatin1().leftJustified(8, '\0', true);
+	mapname[7] = '\0';
 
-		allAKAOs = data.mid(posAKAOs);
-	}
-
-	QByteArray mapauthor = _author.toLatin1().leftJustified(8, '\x00', true);
-	mapauthor[7] = '\x00';
-
-	return data.left(2) // Header
-			.append((char)newNbGrpScripts) // nbGrpScripts
-			.append((char)nbObjets3D) // nb3DObjects
-			.append((char *)&newPosTexts, 2) // PosTexts
-			.append((char *)&newNbAKAO, 2) // AKAO count
-			.append((char *)&_scale, 2)
-			.append(constData + 10, 6) // Empty
-			.append(mapauthor) // mapAuthor
-			.append(constData + 24, 8) // mapName
-			.append(grpScriptNames) // Names of grpScripts
-			.append(positionsAKAO) // PosAKAO
-			.append(positionsScripts) // PosScripts
-			.append(allScripts) // Scripts
-			.append((char *)&newNbText, 2) // nbTexts
-			.append(positionsTexts) // positionsTexts
-			.append(allTexts) // Texts
-			.append(allAKAOs); // AKAO / tutos
+	return QByteArray()
+	    .append((char *)&_version, 2) // Version
+	    .append((char)newNbGrpScripts) // nbGrpScripts
+	    .append((char)nbObjets3D) // nb3DObjects
+	    .append((char *)&newPosTexts, 2) // PosTexts
+	    .append((char *)&newNbAKAO, 2) // AKAO count
+	    .append((char *)&_scale, 2)
+	    .append(_empty.leftJustified(6, '\0', true)) // Empty
+	    .append(mapauthor) // mapAuthor
+	    .append(mapname) // mapName
+	    .append(grpScriptNames) // Names of grpScripts
+	    .append(positionsAKAO) // PosAKAO
+	    .append(positionsScripts) // PosScripts
+	    .append(allScripts) // Scripts
+	    .append((char *)&newNbText, 2) // nbTexts
+	    .append(positionsTexts) // positionsTexts
+	    .append(allTexts) // Texts
+	    .append(allAKAOs); // AKAO / tutos
 }
 
 bool Section1File::exporter(QIODevice *device, ExportFormat format)
@@ -487,7 +546,8 @@ bool Section1File::importer(QIODevice *device, ExportFormat format)
 
 bool Section1File::isModified() const
 {
-	return FieldPart::isModified() || (_tut && _tut->isModified());
+	TutFileStandard *tut = field()->tutosAndSounds();
+	return FieldPart::isModified() || (tut && tut->isModified());
 }
 
 int Section1File::modelID(quint8 grpScriptID) const
@@ -999,18 +1059,9 @@ void Section1File::setScale(quint16 scale)
 	setModified(true);
 }
 
-TutFileStandard *Section1File::tut() const
-{
-	return _tut;
-}
-
-void Section1File::setTut(TutFileStandard *tut)
-{
-	_tut = tut;
-}
-
 int Section1File::availableBytesForScripts() const
 {
-	int AKAOCount = _tut && _tut->isOpen() ? _tut->size() : 0; // TODO: opens tut
+	TutFileStandard *tut = field()->tutosAndSounds();
+	int AKAOCount = tut && tut->isOpen() ? tut->size() : 0; // TODO: opens tut
 	return 65535 - (32 + grpScriptCount() * 72 + AKAOCount * 4);
 }

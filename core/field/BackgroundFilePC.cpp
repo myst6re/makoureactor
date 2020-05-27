@@ -38,6 +38,43 @@ BackgroundFilePC::BackgroundFilePC(const BackgroundFilePC &other) :
 	setPalettes(palettes);
 }
 
+void BackgroundFilePC::initEmpty()
+{
+	BackgroundTexturesPC *textures = new BackgroundTexturesPC();
+	BackgroundTexturesPCInfos infos;
+	infos.pos = 0;
+	infos.size = 0; // 16x16 tiles
+	infos.depth = 2; // No palettes
+	// Black
+	textures->setTex(0, QVector<uint>(256 * 256, qRgb(0, 0, 0)).toList(), infos);
+	setTextures(textures);
+
+	quint16 tileID = 0;
+	QList<Tile> tiles;
+
+	for (qint16 y = 128; y >= -256; y -= 128) {
+		for (qint16 dstY = 0; dstY < 128; dstY += 16) {
+			for (qint16 dstX = -256; dstX < 256; dstX += 16) {
+				Tile t = Tile();
+				t.ID = 4095;
+				// Data optimization: always the same source
+				t.srcX = 0;
+				t.srcY = 0;
+				t.dstX = dstX;
+				t.dstY = y + dstY;
+				t.size = 16;
+				t.depth = 2;
+				t.tileID = tileID++;
+				tiles.append(t);
+			}
+		}
+	}
+
+	setTiles(BackgroundTiles(tiles));
+
+	BackgroundFile::initEmpty();
+}
+
 bool BackgroundFilePC::open()
 {
 	if(isOpen() || isModified()) {

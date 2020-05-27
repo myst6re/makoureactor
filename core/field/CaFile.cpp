@@ -23,6 +23,26 @@ CaFile::CaFile(Field *field) :
 {
 }
 
+void CaFile::initEmpty()
+{
+	cameras.clear();
+	Camera ca = Camera();
+	ca.camera_axis[0].x = 4094;
+	ca.camera_axis[0].y = -101;
+	ca.camera_axis[0].z = -1;
+	ca.camera_axis[1].x = -59;
+	ca.camera_axis[1].y = -2390;
+	ca.camera_axis[1].z = -3327;
+	ca.camera_axis[2].x = 81;
+	ca.camera_axis[2].y = 3325;
+	ca.camera_axis[2].z = -2391;
+	ca.camera_position[0] = -42;
+	ca.camera_position[1] = -255;
+	ca.camera_position[2] = 1476;
+	ca.camera_zoom = 525;
+	cameras.append(ca);
+}
+
 bool CaFile::open()
 {
 	return open(field()->sectionData(Field::Camera));

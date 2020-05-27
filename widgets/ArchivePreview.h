@@ -25,7 +25,7 @@ class ArchivePreview : public QStackedWidget
 {
 	Q_OBJECT
 public:
-	enum Pages { EmptyPage, ImagePage, TextPage };
+	enum Pages { EmptyPage = 0, ImagePage, TextPage };
 	explicit ArchivePreview(QWidget *parent = nullptr);
 	void clearPreview();
 	void imagePreview(const QPixmap &image, const QString &name = QString(),

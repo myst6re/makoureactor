@@ -48,6 +48,11 @@ void BackgroundFile::clear()
 	_tiles.clear();
 }
 
+void BackgroundFile::initEmpty()
+{
+
+}
+
 QImage BackgroundFile::openBackground(bool *warning)
 {
 	// Search default background params

@@ -34,12 +34,14 @@ FontWidget::FontWidget(QWidget *parent) :
 
 	selectTable = new QComboBox(this);
 
-	fromImage1 = new QPushButton(tr("From Image..."), this);
+	/* fromImage1 = new QPushButton(tr("From Image..."), this);
 	fromImage1->setVisible(false);//TODO
 	fromImage2 = new QPushButton(tr("From Image..."), this);
-	fromImage2->setVisible(false);//TODO
+	fromImage2->setVisible(false);//TODO */
 //	QPushButton *resetButton1 = new QPushButton(tr("Cancel Changes"), this);//TODO
 	textLetter = new QLineEdit(this);
+	widthLetter = new QSpinBox(this);
+	widthLetter->setRange(0, 15);
 	exportButton = new QPushButton(tr("Export..."), this);
 	importButton = new QPushButton(tr("Import..."), this);
 	resetButton2 = new QPushButton(tr("Cancel Changes"), this);
@@ -47,19 +49,21 @@ FontWidget::FontWidget(QWidget *parent) :
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(fontGrid, 0, 0, 1, 2, Qt::AlignRight);
-	layout->addWidget(fontLetter, 0, 2, 2, 2, Qt::AlignLeft);
-	layout->addWidget(fromImage1, 1, 0, 1, 2, Qt::AlignLeft);
+	layout->addWidget(fontLetter, 0, 2, 2, 4, Qt::AlignLeft);
+	//layout->addWidget(fromImage1, 1, 0, 1, 2, Qt::AlignLeft);
 	layout->addWidget(selectPal, 2, 0, Qt::AlignRight);
 	layout->addWidget(selectTable, 2, 1, Qt::AlignLeft);
-	layout->addWidget(fontPalette, 2, 2, 1, 2, Qt::AlignLeft);
-	layout->addWidget(textLetter, 3, 2);
-	layout->addWidget(fromImage2, 3, 3, Qt::AlignRight);
+	layout->addWidget(fontPalette, 2, 2, 1, 4, Qt::AlignLeft);
+	layout->addWidget(new QLabel(tr("Text:")), 3, 2);
+	layout->addWidget(textLetter, 3, 3);
+	layout->addWidget(new QLabel(tr("Width:")), 3, 4);
+	layout->addWidget(widthLetter, 3, 5);
+	//layout->addWidget(fromImage2, 3, 3, Qt::AlignRight);
 //	layout->addWidget(resetButton1, 4, 0, 1, 2, Qt::AlignLeft);
 	layout->addWidget(exportButton, 4, 0, Qt::AlignLeft);
 	layout->addWidget(importButton, 4, 1, Qt::AlignLeft);
-	layout->addWidget(resetButton2, 4, 2, 1, 2, Qt::AlignRight);
+	layout->addWidget(resetButton2, 4, 2, 1, 4, Qt::AlignRight);
 	layout->setRowStretch(5, 1);
-	layout->setColumnStretch(3, 1);
 	layout->setContentsMargins(QMargins());
 
 	connect(selectPal, SIGNAL(currentIndexChanged(int)), SLOT(setColor(int)));
@@ -73,6 +77,8 @@ FontWidget::FontWidget(QWidget *parent) :
 	connect(resetButton2, SIGNAL(clicked()), SLOT(resetLetter()));
 	connect(fontPalette, SIGNAL(colorChanged(int)), fontLetter, SLOT(setPixelIndex(int)));
 	connect(textLetter, SIGNAL(textEdited(QString)), SLOT(editLetter(QString)));
+	connect(widthLetter, SIGNAL(valueChanged(int)), SLOT(editWidth(int)));
+	connect(fontLetter, SIGNAL(widthEdited(int)), widthLetter, SLOT(setValue(int)));
 }
 
 void FontWidget::clear()
@@ -110,8 +116,8 @@ void FontWidget::setReadOnly(bool ro)
 	textLetter->setReadOnly(ro);
 	fontLetter->setReadOnly(ro);
 	fontPalette->setReadOnly(ro);
-	fromImage1->setDisabled(ro);
-	fromImage2->setDisabled(ro);
+	/* fromImage1->setDisabled(ro);
+	fromImage2->setDisabled(ro); */
 }
 
 void FontWidget::setColor(int i)
@@ -141,9 +147,18 @@ void FontWidget::setLetter(int i)
 
 	if(fontGrid->currentTable() <= 5) {
 		if(ff7Font) {
-//			textLetter->setText(FF7Text(ba.append((char)i), ff7Font->tables()));//TODO: ff7Font
+			//TODO: ff7Font
+//			textLetter->setText(FF7Text(ba.append((char)i), ff7Font->tables()));
 		} else {
-			textLetter->setText(FF7Text(ba.append((char)i)).text(false));//TODO: jp
+			//TODO: jp
+			textLetter->setText(FF7Text(ba.append((char)i)).text(false));
+		}
+		if(fontLetter->windowBinFile()) {
+			widthLetter->setValue(
+			    fontLetter->windowBinFile()->charWidth(
+			        fontLetter->currentTable(), i
+			    )
+			);
 		}
 	}
 	resetButton2->setEnabled(false);
@@ -152,7 +167,17 @@ void FontWidget::setLetter(int i)
 void FontWidget::editLetter(const QString &letter)
 {
 	if(ff7Font) {
-		ff7Font->setChar(fontGrid->currentTable(), fontGrid->currentLetter(), letter);
+		ff7Font->setChar(
+		    fontGrid->currentTable(), fontGrid->currentLetter(), letter
+		);
+	}
+}
+
+void FontWidget::editWidth(int w)
+{
+	if(fontLetter->windowBinFile() && fontLetter->windowBinFile()->charWidth(fontGrid->currentTable(), fontGrid->currentLetter()) != w) {
+		fontLetter->windowBinFile()->setCharWidth(fontGrid->currentTable(), fontGrid->currentLetter(), w);
+		fontLetter->update();
 	}
 }
 
@@ -160,11 +185,11 @@ void FontWidget::exportFont()
 {
 	WindowBinFile *windowBinFile = fontGrid->windowBinFile();
 
-	QString binF, tdwF, txtF, pngF, jpgF, bmpF;
+	QString binF, txtF, pngF, jpgF, bmpF;
 	QStringList filter;
 	if(windowBinFile) {
 		filter.append(binF = tr("FF7 font file (*.bin)"));
-		filter.append(tdwF = tr("FF8 font file (*.tdw)"));
+		//filter.append(tdwF = tr("FF8 font file (*.tdw)"));
 		filter.append(pngF = tr("Image File (*.png)"));
 		filter.append(jpgF = tr("Image File (*.jpg))"));
 		filter.append(bmpF = tr("Image File (*.bmp)"));
@@ -175,14 +200,13 @@ void FontWidget::exportFont()
 	}
 	QString selectedFilter;
 
-	QString path = QFileDialog::getSaveFileName(this, tr("Export font"), "sysfnt", filter.join(";;"), &selectedFilter);
+	QString path = QFileDialog::getSaveFileName(this, tr("Export font"), "window", filter.join(";;"), &selectedFilter);
 	if(path.isNull()) {
 		return;
 	}
 
 	if(selectedFilter == binF) {
-		/*QByteArray data;
-		//TODO
+		QByteArray data;
 		if(windowBinFile->save(data)) {
 			QFile f(path);
 			if(f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -193,10 +217,10 @@ void FontWidget::exportFont()
 			}
 		} else {
 			QMessageBox::warning(this, tr("Erreur"), tr("Erreur lors de l'enregistrement."));
-		}*/
-	} else if(selectedFilter == tdwF) {
-		/*QByteArray data;
-		//TODO
+		}
+	} /* else if(selectedFilter == tdwF) {
+		// TODO: tdw
+		QByteArray data;
 		if(windowBinFile->save(data)) {
 			QFile f(path);
 			if(f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -207,8 +231,8 @@ void FontWidget::exportFont()
 			}
 		} else {
 			QMessageBox::warning(this, tr("Erreur"), tr("Erreur lors de l'enregistrement."));
-		}*/
-	} else if(selectedFilter == txtF) {
+		}
+	} */ else if(selectedFilter == txtF) {
 		QString data = ff7Font->saveTxt();
 		QFile f(path);
 		if(f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -237,17 +261,17 @@ void FontWidget::importFont()
 {
 	WindowBinFile *windowBinFile = fontGrid->windowBinFile();
 
-	QString tdwF;
+	QString binF;
 	QStringList filter;
 	if(windowBinFile) {
-		filter.append(tdwF = tr("FF8 font file (*.tdw)"));
+		filter.append(binF = tr("FF7 font file (*.bin)"));
 	}
 	QString selectedFilter;
 
-	QString path = QFileDialog::getOpenFileName(this, tr("Import font"), "sysfnt", filter.join(";;"), &selectedFilter);
+	QString path = QFileDialog::getOpenFileName(this, tr("Import font"), "window", filter.join(";;"), &selectedFilter);
 	if(path.isNull())		return;
 
-	if(selectedFilter == tdwF) {
+	if(selectedFilter == binF) {
 		QFile f(path);
 		if(f.open(QIODevice::ReadOnly)) {
 			WindowBinFile newWindowBinFile;

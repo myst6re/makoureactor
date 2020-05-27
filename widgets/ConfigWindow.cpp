@@ -19,6 +19,7 @@
 #include "Data.h"
 #include "core/Config.h"
 #include "TextPreview.h"
+#include "widgets/FontManager.h"
 
 ConfigWindow::ConfigWindow(QWidget *parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
@@ -62,6 +63,13 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	dependLayout->addWidget(charButton, 5, 2);
 	dependLayout->setColumnStretch(1, 1);
 
+	QGroupBox *theme = new QGroupBox(tr("Theme"), this);
+
+	darkMode = new QCheckBox(tr("Dark mode"), theme);
+
+	QGridLayout *themeLayout = new QGridLayout(theme);
+	themeLayout->addWidget(darkMode, 0, 0);
+
 	QGroupBox *openGL = new QGroupBox(tr("OpenGL"), this);
 
 	disableOGL = new QCheckBox(tr("Disable OpenGL"), openGL);
@@ -81,7 +89,11 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	//optiText = new QCheckBox(trUtf8("Optimiser automatiquement les duos de caract\xc3\xa8res \xc2\xab .  \xc2\xbb, \xc2\xab .\" \xc2\xbb et \xc2\xab \xe2\x80\xa6\" \xc2\xbb."));
 	//optiText->hide();//TODO
 
-	japEnc = new QCheckBox(tr("Japanese Characters"), textEditor);
+	encodings = new QComboBox(textEditor);
+	encodings->addItem(tr("Latin"));
+	encodings->addItem(tr("Japanese"));
+
+	QPushButton *encodingEdit = new QPushButton(tr("Edit..."), textEditor);
 
 	listCharNames = new QComboBox(textEditor);
 	for(int i=0 ; i<9 ; ++i) {
@@ -107,15 +119,17 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	windowPreviewLayout->setColumnStretch(3, 1);
 
 	QGridLayout *textEditorLayout = new QGridLayout(textEditor);
-	textEditorLayout->addWidget(japEnc, 0, 0, 1, 2);
+	textEditorLayout->addWidget(new QLabel(tr("Encoding")), 0, 0, 1, 2);
+	textEditorLayout->addWidget(encodings, 0, 2, 1, 2);
+	textEditorLayout->addWidget(encodingEdit, 0, 4, 1, 2);
 	// windowPreviewLayout->addWidget(optiText, 1, 0, 1, 2);
-	textEditorLayout->addLayout(windowPreviewLayout, 1, 0, 4, 2);
-	textEditorLayout->addWidget(listCharNames, 0, 2, 1, 2);
-	textEditorLayout->addWidget(charNameEdit, 1, 2, 1, 2);
-	textEditorLayout->addWidget(new QLabel(tr("Autosize: margin right")), 3, 2);
-	textEditorLayout->addWidget(autoSizeMarginEdit, 3, 3);
-	textEditorLayout->addWidget(new QLabel(tr("{SPACED CHARACTERS} width")), 4, 2);
-	textEditorLayout->addWidget(spacedCharactersWidthEdit, 4, 3);
+	textEditorLayout->addLayout(windowPreviewLayout, 1, 0, 4, 6);
+	textEditorLayout->addWidget(listCharNames, 0, 6, 1, 6);
+	textEditorLayout->addWidget(charNameEdit, 1, 6, 1, 6);
+	textEditorLayout->addWidget(new QLabel(tr("Autosize: margin right")), 3, 6, 1, 3);
+	textEditorLayout->addWidget(autoSizeMarginEdit, 3, 9, 1, 3);
+	textEditorLayout->addWidget(new QLabel(tr("{SPACED CHARACTERS} width")), 4, 6, 1, 3);
+	textEditorLayout->addWidget(spacedCharactersWidthEdit, 4, 9, 1, 3);
 	textEditorLayout->setRowStretch(2, 1);
 
 	QGroupBox *scriptEditor = new QGroupBox(tr("Script Editor"), this);
@@ -138,7 +152,8 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(dependances, 0, 0, 1, 2);
-	layout->addWidget(openGL, 1, 0, 1, 2);
+	layout->addWidget(theme, 1, 0);
+	layout->addWidget(openGL, 1, 1);
 	layout->addWidget(textEditor, 2, 0, 1, 2);
 	layout->addWidget(scriptEditor, 3, 0);
 	layout->addWidget(misc, 3, 1);
@@ -160,6 +175,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	connect(windowColorReset, SIGNAL(released()), SLOT(resetColor()));
 	connect(listCharNames, SIGNAL(currentIndexChanged(int)), SLOT(fillCharNameEdit()));
 	connect(charNameEdit, SIGNAL(textEdited(QString)), SLOT(setCharName(QString)));
+	connect(encodingEdit, SIGNAL(released()), SLOT(editEncoding()));
 	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
 	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
 
@@ -213,6 +229,7 @@ void ConfigWindow::fillConfig()
 		charAuto->setChecked(true);
 	}
 
+	darkMode->setChecked(Config::value("dark_theme", false).toBool());
 	disableOGL->setChecked(!Config::value("OpenGL", true).toBool());
 
 	kernelPath->setText(QDir::toNativeSeparators(QDir::cleanPath(kernel_path)));
@@ -225,7 +242,7 @@ void ConfigWindow::fillConfig()
 	windowColorBottomRight = Config::value("windowColorBottomRight", qRgb(0,0,32)).toInt();
 
 	//optiText->setChecked(!Config::value("dontOptimizeTexts", false).toBool());
-	japEnc->setChecked(Config::value("jp_txt", false).toBool());
+	encodings->setCurrentIndex(Config::value("jp_txt", false).toBool() ? 1 : 0);
 	expandedByDefault->setChecked(Config::value("scriptItemExpandedByDefault", false).toBool());
 	lzsNotCheck->setChecked(Config::value("lzsNotCheck", false).toBool());
 
@@ -434,8 +451,15 @@ void ConfigWindow::setWindowColors()
 	windowPreview->setPixmap(pix);
 }
 
+void ConfigWindow::editEncoding()
+{
+	FontManager dialog(this);
+	dialog.exec();
+}
+
 void ConfigWindow::accept()
 {
+	bool needsRestart = false;
 	QTreeWidgetItem *currentSelectedFF7Path = listFF7->currentItem();
 	int currentFF7Path = 0;
 	if(currentSelectedFF7Path) {
@@ -447,16 +471,20 @@ void ConfigWindow::accept()
 	Config::setValue("kernel2Path", kernelAuto->isChecked() ? QDir::fromNativeSeparators(kernelPath->text()) : QString());
 	Config::setValue("windowBinPath", windowAuto->isChecked() ? QDir::fromNativeSeparators(windowPath->text()) : QString());
 	Config::setValue("charPath", charAuto->isChecked() ? QDir::fromNativeSeparators(charPath->text()) : QString());
+	if(darkMode->isChecked() != Config::value("dark_theme", false).toBool()) {
+		Config::setValue("dark_theme", darkMode->isChecked());
+		needsRestart = true;
+	}
 	if(!disableOGL->isChecked() != Config::value("OpenGL", true).toBool()) {
 		Config::setValue("OpenGL", !disableOGL->isChecked());
-		QMessageBox::information(this, tr("Information"), tr("You must restart Makou Reactor to apply all changes."));
+		needsRestart = true;
 	}
 	Config::setValue("windowColorTopLeft", windowColorTopLeft);
 	Config::setValue("windowColorTopRight", windowColorTopRight);
 	Config::setValue("windowColorBottomLeft", windowColorBottomLeft);
 	Config::setValue("windowColorBottomRight", windowColorBottomRight);
 	//Config::setValue("dontOptimizeTexts", !optiText->isChecked());
-	Config::setValue("jp_txt", japEnc->isChecked());
+	Config::setValue("jp_txt", encodings->currentIndex() == 1);
 	Config::setValue("scriptItemExpandedByDefault", expandedByDefault->isChecked());
 	Config::setValue("lzsNotCheck", lzsNotCheck->isChecked());
 
@@ -471,6 +499,10 @@ void ConfigWindow::accept()
 
 	Config::setValue("autoSizeMarginRight", autoSizeMarginEdit->value());
 	Config::setValue("spacedCharactersWidth", spacedCharactersWidthEdit->value());
+
+	if (needsRestart) {
+		QMessageBox::information(this, tr("Information"), tr("You must restart Makou Reactor to apply all changes."));
+	}
 
 	Data::loadKernel2Bin(); // Reload kernel2.bin data
 	Data::loadWindowBin(); // Reload window.bin data

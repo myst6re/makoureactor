@@ -38,23 +38,24 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	listLayout->addWidget(fieldList, 1);
 
 	exports.insert(Fields,
-				   new FormatSelectionWidget(tr("Export fields"),
-											 QStringList(), this));
+	               new FormatSelectionWidget(tr("Export fields"),
+	                                         QStringList(), this));
 	exports.insert(Backgrounds,
-				   new FormatSelectionWidget(tr("Export backgrounds"),
-											 QStringList() <<
-											 tr("PNG image") + ";;png" <<
-											 tr("JPG image") + ";;jpg" <<
-											 tr("BMP image") + ";;bmp", this));
+	               new FormatSelectionWidget(tr("Export backgrounds"),
+	                                         QStringList() <<
+	                                             tr("PNG image") + ";;png" <<
+	                                             tr("JPG image") + ";;jpg" <<
+	                                             tr("BMP image") + ";;bmp", this));
 	exports.insert(Akaos,
-				   new FormatSelectionWidget(tr("Export sounds"),
-											 QStringList() <<
-											 tr("AKAO sound") + ";;akao", this));
+	               new FormatSelectionWidget(tr("Export musics"),
+	                                         QStringList() <<
+	                                             tr("AKAO music") + ";;akao" <<
+	                                             tr("PSF MIDI") + ";;minipsf", this));
 	exports.insert(Texts,
-				   new FormatSelectionWidget(tr("Export texts"),
-											 QStringList() <<
-											 tr("XML Text") + ";;xml" <<
-											 tr("Simple text TXT") + ";;txt", this));
+	               new FormatSelectionWidget(tr("Export texts"),
+	                                         QStringList() <<
+	                                             tr("XML Text") + ";;xml" <<
+	                                             tr("Simple text TXT") + ";;txt", this));
 
 	exports.value(Backgrounds)->setCurrentFormat(Config::value("exportBackgroundFormat").toString());
 

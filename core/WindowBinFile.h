@@ -42,6 +42,7 @@ public:
 	void clear();
 	bool open(const QString &path);
 	bool open(const QByteArray &data);
+	bool save(QByteArray &data) const;
 	bool isValid() const;
 	bool isModified() const;
 	bool isJp() const;
@@ -50,15 +51,34 @@ public:
 	int tableCount() const;
 	static int tableSize(quint8 table);
 	const QImage &image(FontColor color);
-	QImage letter(quint8 table, quint8 id, FontColor color);
+	QImage letter(quint8 tableId, quint8 charId, FontColor color);
+	bool setLetter(quint8 tableId, quint8 charId, const QImage &image);
+	uint letterPixelIndex(quint8 tableId, quint8 charId, const QPoint &pos) const;
+	bool setLetterPixelIndex(quint8 tableId, quint8 charId, const QPoint &pos, uint pixelIndex);
 	quint8 charWidth(quint8 table, quint8 id) const;
 	quint8 charLeftPadding(quint8 table, quint8 id) const;
 	void setCharWidth(quint8 table, quint8 id, quint8 width);
 	void setCharLeftPadding(quint8 table, quint8 id, quint8 padding);
 private:
-	QImage letter(int id, FontColor color);
+	static void saveSection(const QByteArray &section, QByteArray &data, quint16 type);
+	inline const TimFile &constFont(quint8 tableId) const {
+		if (isJp() && tableId >= 4) {
+			return _font2;
+		}
+		return _font;
+	}
+	inline TimFile &font(quint8 tableId) {
+		if (isJp() && tableId >= 4) {
+			return _font2;
+		}
+		return _font;
+	}
 	int palette(FontColor color, quint8 table) const;
-	static QRect letterRect(int charId);
+	QPoint letterPos(quint8 tableId, quint8 charId) const;
+	inline QSize letterSize() const {
+		return QSize(12, 12);
+	}
+	QRect letterRect(quint8 tableId, quint8 charId) const;
 	bool openFont(const QByteArray &data);
 	bool openFont2(const QByteArray &data);
 	bool openFontSize(const QByteArray &data);
@@ -71,7 +91,7 @@ private:
 	}
 
 	QVector<quint8> _charWidth;
-	TimFile _font, _font2;
+	TimFile _icons, _font, _font2;
 	bool modified;
 };
 

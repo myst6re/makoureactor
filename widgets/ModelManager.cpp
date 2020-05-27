@@ -30,7 +30,8 @@ ModelManager::ModelManager(QWidget *parent) :
 	models = new QTreeWidget();
 	models->setIndentation(0);
 	models->setHeaderLabel(tr("Field Models"));
-	models->setFixedWidth(120);
+	models->setFixedWidth(
+	    models->fontMetrics().boundingRect("WWWWWWWWWWWWWWW").width());
 	models->setColumnCount(1);
 
 	modelFrame = new QFrame();
@@ -49,7 +50,8 @@ ModelManager::ModelManager(QWidget *parent) :
 
 	modelAnims = new QTreeWidget();
 	modelAnims->setIndentation(0);
-	modelAnims->setFixedWidth(142);
+	modelAnims->setFixedWidth(
+	    models->fontMetrics().boundingRect("WWWWWWWWWWWWWWW").width());
 	modelAnims->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 	if(Config::value("OpenGL", true).toBool()) {

@@ -40,6 +40,7 @@ public:
 	};
 
 	explicit EncounterFile(Field *field);
+	void initEmpty();
 	bool open();
 	bool open(const QByteArray &data);
 	QByteArray save() const;

@@ -624,7 +624,7 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 	// Temporary file (same dir as destination)
 	QFile temp(destPath + ".temp");
 	if(!temp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-		setError(OpenError, temp.errorString());
+		setError(OpenTempError, temp.errorString());
 		return false;
 	}
 

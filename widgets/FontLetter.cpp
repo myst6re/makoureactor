@@ -18,7 +18,8 @@
 #include "FontLetter.h"
 
 FontLetter::FontLetter(QWidget *parent) :
-	FontDisplay(parent), _pixelIndex(0), readOnly(false), startDrag(false), startDrag2(false)
+	FontDisplay(parent), _pixelIndex(0), readOnly(false), startDrag(false),
+	startDrag2(false)
 {
 	setFixedSize(sizeHint());
 	setMouseTracking(true);
@@ -68,7 +69,7 @@ void FontLetter::setLetter(int letter)
 void FontLetter::reset()
 {
 	if(copyLetter.isNull() || !_windowBinFile)		return;
-//	_windowBinFile->setLetter(_currentTable, _letter, copyLetter);//TODO: setLetter
+	_windowBinFile->setLetter(_currentTable, _letter, copyLetter);
 	update();
 }
 
@@ -99,16 +100,15 @@ QPoint FontLetter::getPixel(const QPoint &pos)
 
 bool FontLetter::setPixel(const QPoint &pixel)
 {
-	Q_UNUSED(pixel)
-	//TODO: setPixel
-	/*if(!_windowBinFile)	return false;
+	if(!_windowBinFile)	return false;
 
 	if(pixel.x() >= 0 && pixel.y() >= 0 && pixel.x() < 12 && pixel.y() < 12
 			&& _windowBinFile->setLetterPixelIndex(_currentTable, _letter, pixel, _pixelIndex)) {
 		update(QRect(pixel * PIXEL_SIZE, QSize(PIXEL_SIZE, PIXEL_SIZE)));
 		emit imageChanged(QRect(pixel, QSize(1, 1)));
 		return true;
-	}*/
+	}
+
 	return false;
 }
 
@@ -124,6 +124,7 @@ void FontLetter::mouseMoveEvent(QMouseEvent *e)
 		if(linePos / PIXEL_SIZE != newLinePos && newLinePos < 16) {
 			_windowBinFile->setCharWidth(_currentTable, _letter, newLinePos);
 			update();
+			emit widthEdited(newLinePos);
 		}
 	} else if(startDrag2) {
 		setPixel(getPixel(mousePos));

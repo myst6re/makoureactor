@@ -38,6 +38,7 @@ class CaFile : public FieldPart
 {
 public:
 	explicit CaFile(Field *field);
+	void initEmpty();
 	bool open();
 	bool open(const QByteArray &data);
 	QByteArray save() const;

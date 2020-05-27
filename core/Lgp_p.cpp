@@ -251,6 +251,7 @@ LgpHeaderEntry *LgpToc::entry(const QString &filePath) const
 {
 	qint32 v = lookupValue(filePath);
 	if(v < 0) {
+		qDebug() << "LgpToc::entry invalid lookup" << filePath;
 		return NULL; // invalid file name
 	}
 

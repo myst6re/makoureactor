@@ -14,7 +14,9 @@ ModelColorLayout::ModelColorLayout(QWidget *parent) :
 		connect(dirWidget[i], SIGNAL(editingFinished()), SLOT(relayEdition()));
 	}
 
-	colorWidget->setMinimumSize(dirWidget[0]->minimumSizeHint());
+	dirWidget[0]->adjustSize();
+	colorWidget->setMinimumWidth(dirWidget[0]->height());
+	colorWidget->setMinimumHeight(dirWidget[0]->height());
 
 	connect(colorWidget, SIGNAL(colorEdited(int,QRgb)), SLOT(relayEdition()));
 }

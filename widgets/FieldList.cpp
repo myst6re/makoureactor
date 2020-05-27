@@ -3,9 +3,9 @@
 #include "core/field/FieldPC.h"
 
 FieldList::FieldList(QWidget *parent) :
-    QTreeWidget(parent), _fieldArchive(0)
+      QTreeWidget(parent), _fieldArchive(0)
 {
-	// qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
+	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
 	QFont font;
 	font.setPointSize(8);
 
@@ -17,7 +17,7 @@ FieldList::FieldList(QWidget *parent) :
 	setSortingEnabled(true);
 	setAutoScroll(false);
 	setColumnWidth(1, 0);
-	setFont(font);
+	//setFont(font);
 	sortByColumn(1, Qt::AscendingOrder);
 
 	_lineSearch = new QLineEdit(parent);
@@ -27,12 +27,26 @@ FieldList::FieldList(QWidget *parent) :
 	connect(_lineSearch, SIGNAL(textEdited(QString)), SLOT(filterMap(QString)));
 	connect(_lineSearch, SIGNAL(returnPressed()), SLOT(filterMap()));
 
-	/* QAction *add_A = new QAction(QIcon(":/images/plus.png"), tr("Add field"), this);
+	QAction *rename_A = new QAction(tr("Rename field"), this);
+	rename_A->setShortcut(QKeySequence("F2"));
+	rename_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+	QAction *add_A = new QAction(QIcon(":/images/plus.png"), tr("Add field"), this);
 	add_A->setShortcut(QKeySequence("Ctrl++"));
 	add_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	QAction *del_A = new QAction(QIcon(":/images/minus.png"), tr("Delete field"), this);
 	del_A->setShortcut(QKeySequence(Qt::Key_Delete));
 	del_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+
+	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), SLOT(rename(QTreeWidgetItem *, int)));
+	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(evidence(QTreeWidgetItem*,QTreeWidgetItem*)));
+
+	connect(rename_A, SIGNAL(triggered()), SLOT(rename()));
+	connect(add_A, SIGNAL(triggered()), SLOT(add()));
+	connect(del_A, SIGNAL(triggered()), SLOT(del()));
+
+	this->addAction(rename_A);
+	this->addAction(add_A);
+	this->addAction(del_A);
 
 	_toolBar = new QToolBar(tr("&Field List Toolbar"));
 	_toolBar->setIconSize(QSize(14*scale,14*scale));
@@ -40,19 +54,36 @@ FieldList::FieldList(QWidget *parent) :
 	add_A->setStatusTip(tr("Add a field"));
 	_toolBar->addAction(del_A);
 	del_A->setStatusTip(tr("Remove a field"));
-	_toolBar->hide();
 
-	// connect(add_A, SIGNAL(triggered()), SLOT(add()));
-	// connect(del_A, SIGNAL(triggered()), SLOT(del()));
+	enableActions(false);
 
-	setMinimumWidth(_toolBar->sizeHint().width()); */
+	setMinimumWidth(_toolBar->sizeHint().width());
+}
+
+void FieldList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
+{
+	if(current) {
+		current->setBackground(0, QColor(196,196,255));
+		current->setBackground(1, QColor(196,196,255));
+	}
+
+	if(previous) {
+		previous->setBackground(0, QBrush());
+		previous->setBackground(1, QBrush());
+	}
 }
 
 void FieldList::setEnabled(bool enabled)
 {
 	QTreeWidget::setEnabled(enabled);
 	_lineSearch->setEnabled(enabled);
-	// _toolBar->setEnabled(enabled);
+	enableActions(enabled);
+}
+
+void FieldList::enableActions(bool enabled)
+{
+	_toolBar->setEnabled(enabled);
+	setContextMenuPolicy(enabled ? Qt::ActionsContextMenu : Qt::NoContextMenu);
 }
 
 QTreeWidgetItem *FieldList::createItem(Field *f, int fieldID)
@@ -92,10 +123,7 @@ void FieldList::fill(FieldArchive *fieldArchive)
 
 	_fieldArchive = fieldArchive;
 
-	// TODO: not implemented
-	/* if(_fieldArchive->isPS()) {
-		_toolBar->setEnabled(false);
-	} */
+	_toolBar->setEnabled(_fieldArchive->isPC());
 
 	if(!items.isEmpty()) {
 		addTopLevelItems(items);
@@ -132,86 +160,137 @@ void FieldList::filterMap(const QString &name)
 	}
 }
 
+void FieldList::rename(QTreeWidgetItem *item, int column)
+{
+	if(item == nullptr || column != 0) {
+		return;
+	}
+
+	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
+	editItem(item, 0);
+	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+	connect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOK(QTreeWidgetItem *, int)));
+}
+
+void FieldList::renameOK(QTreeWidgetItem *item, int column)
+{
+	if(column != 1) {
+		return;
+	}
+	disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(renameOK(QTreeWidgetItem *, int)));
+	QString newName = item->text(1).left(8);
+	item->setText(1, newName);
+
+	int fieldID = currentFieldId();
+	Field *f = _fieldArchive->field(fieldID, false);
+	if(f) {
+		f->setName(newName);
+		InfFile *inf = f->inf();
+		if (inf != nullptr) {
+			inf->setMapName(newName);
+		}
+	}
+
+	emit changed();
+}
+
 void FieldList::add()
 {
 	if(!_fieldArchive) {
 		return;
 	}
 
-	QStringList filter;
-	if(_fieldArchive->isPC()) {
-		filter.append(tr("PC Field File (*)"));
-	} else {
-		filter.append(tr("DAT File (*.DAT)"));
-	}
-
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Add a field"),
-	                                                QString(),
-	                                                filter.join(";;"));
-	if(filePath.isNull()) {
+	if(!_fieldArchive->isPC()) {
+		QMessageBox::warning(this, tr("Error"), tr("Not implemented for PS."));
 		return;
 	}
 
-	if(_fieldArchive->isPC()) {
-		FieldPC *field = new FieldPC("", _fieldArchive->io());
-		if(field->open(filePath, false, true) == 0) {
-			InfFile *inf = field->inf();
-			QString newName;
-			if(inf && inf->isOpen()) {
-				newName = inf->mapName();
-			} else {
-				newName = QFileInfo(filePath).baseName();
-			}
+	QString newName;
 
-			// Name set by user
-			while(newName.isEmpty() || Data::field_names.contains(newName)){
-				bool ok;
-				newName = QInputDialog::getText(this, tr("Choose a name"),
-				                                tr("Field name:"),
-				                                QLineEdit::Normal, newName,
-				                                &ok);
-				if(!ok) {
-					return;
-				}
-				if(newName.isEmpty()) {
-					QMessageBox::warning(this, tr("Name not filled"),
-					                     tr("Please set a new field name."));
-				} else if(Data::field_names.contains(newName)) {
-					QMessageBox::warning(this, tr("Name already present in archive"),
-					                     tr("Please choose another name."));
-				}
-			}
-
-			field->setName(newName);
-			int fieldID;
-			FieldArchiveIO::ErrorCode err = _fieldArchive->addField(field,
-			                                                        filePath,
-			                                                        fieldID); // ref
-			switch(err){
-			case FieldArchiveIO::NotImplemented:
-				QMessageBox::warning(this, tr("Error"), tr("Not implemented."));
-				break;
-			case FieldArchiveIO::FieldExists:
-				QMessageBox::warning(this, tr("Error"), tr("Field with this name already exist."));
-				break;
-			case FieldArchiveIO::Ok:
-				break;
-			default:
-				QMessageBox::warning(this, tr("Error"), tr("Unknown error."));
-				break;
-			}
-
-			addTopLevelItem(createItem(field, fieldID));
-			adjustWidth();
-		} else {
-			QMessageBox::warning(this, tr("Error"), tr("Cannot open file."));
+	// Name set by user
+	while(newName.isEmpty() || Data::field_names.contains(newName)){
+		bool ok;
+		newName = QInputDialog::getText(this, tr("Choose a name"),
+		                                tr("Field name:"),
+		                                QLineEdit::Normal, newName,
+		                                &ok);
+		if(!ok) {
+			return;
 		}
-	} else {
-		// TODO
+		if(newName.isEmpty()) {
+			QMessageBox::warning(this, tr("Name not filled"),
+			                     tr("Please set a new field name."));
+		} else if(Data::field_names.contains(newName)) {
+			QMessageBox::warning(this,
+			                     tr("Name already present in archive"),
+			                     tr("Please choose another name."));
+		}
 	}
+
+	FieldPC *field = new FieldPC(newName);
+	field->initEmpty();
+	int fieldID; // ref
+	_fieldArchive->addNewField(field, fieldID);
+
+	QTreeWidgetItem *item = createItem(field, fieldID);
+	addTopLevelItem(item);
+	adjustWidth();
+	setCurrentItem(item);
+	scrollToItem(item, QAbstractItemView::PositionAtTop);
+	setFocus();
+	emit changed();
 }
 
 void FieldList::del()
 {
-	
+	if(!_fieldArchive->isPC()) {
+		QMessageBox::warning(this, tr("Error"), tr("Not implemented for PS."));
+		return;
+	}
+
+	if(topLevelItemCount() == 0) {
+		return;
+	}
+
+	QList<QTreeWidgetItem *> selected = selectedItems();
+
+	if(selected.isEmpty()) {
+		return;
+	}
+
+	QString msg = tr("Are you sure you want to remove %1?\n"
+	                 "Other maps can refer to it!")
+	                  .arg(selected.size() == 1
+	                           ? tr("the selected field")
+	                           : tr("the selected fields"));
+	QMessageBox::StandardButton but = QMessageBox::warning(
+	    this, tr("Delete"), msg, QMessageBox::Yes | QMessageBox::Cancel);
+
+	if(but == QMessageBox::Cancel) {
+		return;
+	}
+
+	int lastIndex = -1;
+
+	blockSignals(true);
+
+	foreach(QTreeWidgetItem *item, selected) {
+		int fieldID = item->data(0, Qt::UserRole).toInt();
+		_fieldArchive->delField(fieldID);
+		lastIndex = qMax(lastIndex, indexOfTopLevelItem(item));
+		delete item;
+	}
+
+	blockSignals(false);
+
+	emit fieldDeleted();
+
+	QTreeWidgetItem *itemToFocus = topLevelItem(lastIndex);
+
+	if (itemToFocus != nullptr) {
+		adjustWidth();
+		setCurrentItem(itemToFocus);
+		scrollToItem(itemToFocus, QAbstractItemView::PositionAtTop);
+		setFocus();
+	}
 }

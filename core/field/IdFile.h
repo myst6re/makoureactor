@@ -38,6 +38,7 @@ class IdFile : public FieldPart
 {
 public:
 	explicit IdFile(Field *field);
+	void initEmpty();
 	bool open();
 	bool open(const QByteArray &data);
 	QByteArray save() const;

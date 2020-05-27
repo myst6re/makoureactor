@@ -64,6 +64,7 @@ public slots:
 	void openDir();
 
 	void setModified(bool enabled=true);
+	void setFieldDeleted();
 	void saveAs(bool currentPath=false);
 	void save();
 	int closeFile(bool quit=false);
@@ -92,7 +93,6 @@ public slots:
 	void searchManager();
 	void archiveManager();
 	void miscOperations();
-	void fontManager();
 	void about();
 private slots:
 	void openRecentFile(QAction *action);

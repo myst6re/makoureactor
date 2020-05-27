@@ -23,6 +23,27 @@ InfFile::InfFile(Field *field) :
 {
 }
 
+void InfFile::initEmpty()
+{
+	// Fill with zeroes
+	data = InfData();
+
+	memcpy(data.name, field()->name().toLatin1().left(8), 8);
+	data.control = 128; // Left on the left
+	data.camera_range.left = -256;
+	data.camera_range.right = 256;
+	data.camera_range.top = -256;
+	data.camera_range.bottom = 256;
+	data.bg_layer3_width = 1024;
+	data.bg_layer3_height = 1024;
+	data.bg_layer4_width = 1024;
+	data.bg_layer4_height = 1024;
+	for (int i = 0; i < 12; i++) {
+		data.doors[i].fieldID = 0x7FFF;
+		data.triggers[i].background_parameter = 0xFF;
+	}
+}
+
 bool InfFile::open()
 {
 	return open(field()->sectionData(Field::Inf));
@@ -57,7 +78,11 @@ bool InfFile::open(const QByteArray &data)
 
 QByteArray InfFile::save() const
 {
-	return QByteArray((char *)&data, field()->sectionSize(Field::Inf));
+	quint32 size = field()->sectionSize(Field::Inf);
+	if (size != 740 && size != 536) {
+		size = 740;
+	}
+	return QByteArray((char *)&data, size);
 }
 
 void InfFile::clear()

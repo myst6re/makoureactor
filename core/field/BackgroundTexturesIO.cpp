@@ -78,7 +78,7 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 
 bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures) const
 {
-	if(!canWrite()) {
+	if(!canWrite() || !textures) {
 		return false;
 	}
 

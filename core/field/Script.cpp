@@ -775,10 +775,8 @@ OpcodeJump *Script::convertOpcodeJumpRangeToLong(OpcodeJump *opcodeJump, bool *o
 	}
 
 	if(opcodeJump->id() == Opcode::JMPF) {
-		//			qDebug() << "convert" << opcodeJump->name() << "to JMPB";
 		return new OpcodeJMPFL(*opcodeJump);
 	} else if(opcodeJump->id() == Opcode::JMPB) {
-		//			qDebug() << "convert" << opcodeJump->name() << "to JMPB";
 		return new OpcodeJMPBL(*opcodeJump);
 	} else if(opcodeJump->id() == Opcode::IFUB) {
 		return new OpcodeIFUBL(*(OpcodeIf *)opcodeJump);

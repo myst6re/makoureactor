@@ -24,7 +24,7 @@
 #include "widgets/ImportDialog.h"
 #include "widgets/MassExportDialog.h"
 #include "widgets/MassImportDialog.h"
-#include "widgets/FontManager.h"
+#include "widgets/PsfDialog.h"
 #include "core/Config.h"
 #include "Data.h"
 #include "core/field/FieldArchivePC.h"
@@ -83,18 +83,17 @@ Window::Window() :
 
 	/* "Tools" Menu */
 	menu = menuBar->addMenu(tr("T&ools"));
-	menu->addAction(tr("&Texts..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
-	actionModels = menu->addAction(tr("Field &Models..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
+	QAction *actionText = menu->addAction(QIcon(":/images/text-editor.png"), tr("&Texts..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
+	actionModels = menu->addAction(QIcon(":/images/model.png"), tr("Field &Models..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
 	actionEncounter = menu->addAction(tr("Encounte&rs..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
 	menu->addAction(tr("Tutorials/&Sounds..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
-	menu->addAction(tr("&Walkmesh..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
+	QAction *actionWalkmesh = menu->addAction(QIcon(":/images/location.png"), tr("&Walkmesh..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
 	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("M&iscellaneous..."), this, SLOT(miscManager()));
 	menu->addSeparator();
 	menu->addAction(tr("Variable Mana&ger..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
 	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("&Find..."), this, SLOT(searchManager()), QKeySequence::Find);
 	actionMiscOperations = menu->addAction(tr("Miscellaneous Oper&ations..."), this, SLOT(miscOperations()));
-	//menu->addAction(tr("&Police de caractères..."), this, SLOT(fontManager()), QKeySequence("Ctrl+P"));
 
 	/* "Settings" Menu */
 	menu = menuBar->addMenu(tr("&Settings"));
@@ -138,6 +137,13 @@ Window::Window() :
 	toolBar->addAction(actionFind);
 	actionFind->setStatusTip(tr("Find"));
 	toolBar->addAction(actionRun);
+	toolBar->addSeparator();
+	toolBar->addAction(actionText);
+	actionText->setStatusTip(tr("Text editor"));
+	toolBar->addAction(actionModels);
+	actionModels->setStatusTip(tr("Model loader editor"));
+	toolBar->addAction(actionWalkmesh);
+	actionWalkmesh->setStatusTip(tr("Walkmesh editor"));
 	authorAction = toolBar->addWidget(toolBarRight);
 
 	fieldList = new FieldList(this);
@@ -160,7 +166,7 @@ Window::Window() :
 
 	QWidget *fullFieldList = new QWidget(this);
 	QVBoxLayout *fieldListLayout = new QVBoxLayout(fullFieldList);
-	// fieldListLayout->addWidget(fieldList->toolBar());
+	fieldListLayout->addWidget(fieldList->toolBar());
 	fieldListLayout->addWidget(fieldList, 1);
 	fieldListLayout->addWidget(fieldList->lineSearch());
 	fieldListLayout->setSpacing(2);
@@ -195,6 +201,8 @@ Window::Window() :
 	setMenuBar(menuBar);
 
 	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
+	connect(fieldList, SIGNAL(changed()), SLOT(setModified()));
+	connect(fieldList, SIGNAL(fieldDeleted()), SLOT(setFieldDeleted()));
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
 	connect(searchDialog, SIGNAL(found(int,int,int,int)), SLOT(gotoOpcode(int,int,int,int)));
 	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
@@ -674,7 +682,8 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 			}
 		}
 	} */
-	fieldArchive->printTextsDir("field-texts", true);
+	//fieldArchive->printTextsDir("field-texts", true);
+	fieldArchive->extractAkaos("akaos");
 	//fieldArchive->printTexts("field-texts.txt", true);
 	//fieldArchive->printAkaos("field-akaos.txt");
 	//fieldArchive->printModelLoaders("field-model-loaders-generic.txt");
@@ -906,6 +915,15 @@ void Window::setModified(bool enabled)
 			}
 		}
 	}
+}
+
+void Window::setFieldDeleted()
+{
+	field = NULL;
+	actionSave->setEnabled(true);
+	setWindowModified(true);
+
+	openField();
 }
 
 void Window::save() { saveAs(true); }
@@ -1141,8 +1159,20 @@ void Window::massExport()
 				toExport.insert(FieldArchive::Texts, massExportDialog->moduleFormat(MassExportDialog::Texts));
 			}
 
+			PsfTags tags;
+
+			if (toExport.value(FieldArchive::Akaos) == "minipsf") {
+				PsfDialog psfDialog(this);
+				psfDialog.setNoTitle(true);
+				if (psfDialog.exec() == QDialog::Rejected) {
+					return;
+				}
+
+				tags = psfDialog.tags();
+			}
+
 			if(!fieldArchive->exportation(selectedFields, massExportDialog->directory(),
-									  massExportDialog->overwrite(), toExport)
+									  massExportDialog->overwrite(), toExport, &tags)
 					&& !observerWasCanceled()) {
 				QMessageBox::warning(this, tr("Error"), tr("An error occured when exporting"));
 			}
@@ -1489,12 +1519,6 @@ void Window::miscOperations()
 	}
 }
 
-void Window::fontManager()
-{
-	FontManager dialog(this);
-	dialog.exec();
-}
-
 void Window::config()
 {
 	ConfigWindow configWindow(this);
@@ -1526,14 +1550,11 @@ void Window::about()
 	desc1.setFixedWidth(about.width());
 	desc1.setAlignment(Qt::AlignHCenter);
 
-	font.setPointSize(8);
-
 	QLabel desc2(tr("By myst6re<br/><a href=\"https://github.com/myst6re/makoureactor/\">github.com/myst6re/makoureactor</a><br/><br/>Thanks to:<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), &about);
 	desc2.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc2.setTextFormat(Qt::RichText);
 	desc2.setOpenExternalLinks(true);
 	desc2.move(9, 40);
-	desc2.setFont(font);
 
 	QPushButton button(tr("Close"), &about);
 	button.move(8, about.height()-8-button.sizeHint().height());
@@ -1544,7 +1565,6 @@ void Window::about()
 	pal.setColor(QPalette::WindowText, QColor(0xAA,0xAA,0xAA));
 	desc4.setPalette(pal);
 	desc4.move(9, about.height()-16-desc4.sizeHint().height()-button.sizeHint().height());
-	desc4.setFont(font);
 
 	about.exec();
 }

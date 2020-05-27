@@ -45,7 +45,7 @@ public:
 	static FF7Font *font(QString name);
 	static FF7Font *getCurrentConfigFont();
 	static bool saveFonts();
-	static bool copyFont(const QString &name, const QString &from, const QString &name2);
+	static bool addFont(const QString &name, const QString &from, const QString &displayName);
 	static bool removeFont(const QString &name);
 	static const QString &fontDirPath();
 private:

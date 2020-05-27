@@ -19,6 +19,8 @@
 #include "FieldPS.h"
 #include "FieldPC.h"
 #include "Data.h"
+#include "core/PsfFile.h"
+#include "Parameters.h"
 
 FieldArchiveIterator::FieldArchiveIterator(const FieldArchive &archive) :
 	QListIterator<Field *>(archive.fileList)
@@ -186,30 +188,31 @@ void FieldArchive::updateFieldLists(Field *field, int fieldID)
 	fieldsSortByMapId.insert(mapId, fieldID);
 }
 
-FieldArchiveIO::ErrorCode FieldArchive::addField(Field *field,
-                                                 const QString &fileName,
-                                                 int &fieldId)
+void FieldArchive::addNewField(Field *field, int &fieldId)
 {
 	fieldId = fileList.size();
-	/* FieldArchiveIO::ErrorCode err = _io->addField(fileName, field->name());
-	if(err != FieldArchiveIO::Ok) {
-		return err;
-	}*/
 	appendField(field);
-	// FIXME: choose another name? Multiple fields with the same name
 	Data::field_names.append(field->name());
 	updateFieldLists(field, fieldId);
-	return FieldArchiveIO::Ok;
+}
+
+void FieldArchive::delField(quint32 id)
+{
+	Field *field = fileList.at(id);
+
+	for (int i = 0; i < Data::field_names.size(); ++i) {
+		if (Data::field_names.at(i) == field->name()) {
+			Data::field_names[i] = "";
+		}
+	}
+
+	fileList[id] = nullptr;
+	delete field;
 }
 
 void FieldArchive::appendField(Field *field)
 {
 	fileList.append(field);
-}
-
-void FieldArchive::removeField(quint32 id)
-{
-	fileList.removeAt(id);
 }
 
 bool FieldArchive::isAllOpened() const
@@ -386,6 +389,58 @@ void FieldArchive::validateOneLineSize()
 					scriptID++;
 				}
 				grpScriptID++;
+			}
+		}
+	}
+}
+
+void FieldArchive::extractAkaos(const QString &dirname)
+{
+	QDir d(dirname);
+
+	if (!d.exists()) {
+		d.mkpath(d.absolutePath());
+	}
+
+	foreach(int i, fieldsSortByMapId) {
+		Field *f = field(i, true);
+		if(f == NULL) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << i;
+			continue;
+		}
+
+		QString name = f->inf()->mapName();
+
+		TutFileStandard *tutosAndSounds = f->tutosAndSounds();
+		if(!tutosAndSounds->isOpen()) {
+			qWarning() << "FieldArchive::printAkaos: cannot open tutos and sounds" << name;
+		}
+
+		for(int akaoID=0; akaoID < tutosAndSounds->size(); ++akaoID) {
+			if(!tutosAndSounds->isTut(akaoID)) {
+				QString filename = d.filePath(QString("%1-%2.akao")
+				                                  .arg(tutosAndSounds->akaoID(akaoID))
+				                                  .arg(Data::music_names.at(tutosAndSounds->akaoID(akaoID))));
+				if (QFile::exists(filename)) {
+					QFile r(filename);
+					r.open(QIODevice::ReadOnly);
+					if (tutosAndSounds->data(akaoID) == r.readAll()) {
+						qDebug() << "Already saved";
+						r.close();
+						continue;
+					} else {
+						qDebug() << "variation" << name;
+						filename = QString("%1-%2-%3.akao")
+						               .arg(tutosAndSounds->akaoID(akaoID))
+						               .arg(Data::music_names.at(tutosAndSounds->akaoID(akaoID)))
+						               .arg(name);
+					}
+					r.close();
+				}
+				QFile deb(filename);
+				deb.open(QIODevice::WriteOnly | QIODevice::Truncate);
+				deb.write(tutosAndSounds->data(akaoID));
+				deb.close();
 			}
 		}
 	}
@@ -1654,7 +1709,8 @@ void FieldArchive::cleanTexts()
 }
 
 bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory,
-							   bool overwrite, const QMap<ExportType, QString> &toExport)
+							   bool overwrite, const QMap<ExportType, QString> &toExport,
+                               PsfTags *tags)
 {
 	if(selectedFields.isEmpty() || toExport.isEmpty()) {
 		return true;
@@ -1703,11 +1759,16 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 					for(int i=0 ; i<akaoCount ; ++i) {
 						if(!akaoList->isTut(i)) {
 							extension = toExport.value(Akaos);
-							path = QDir::cleanPath(QString("%1/%2-%3.%4").arg(directory, f->name()).arg(i).arg(extension));
+							path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, Data::music_names.value(akaoList->akaoID(i), f->name()), extension));
 							if(overwrite || !QFile::exists(path)) {
 								QFile tutExport(path);
 								if(tutExport.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-									tutExport.write(akaoList->data(i));
+									if (extension == "minipsf") {
+										tags->setTitle(Data::music_desc.value(akaoList->akaoID(i), f->name()));
+										tutExport.write(PsfFile::fromAkao(akaoList->data(i), *tags).save());
+									} else {
+										tutExport.write(akaoList->data(i));
+									}
 									tutExport.close();
 								}
 							}

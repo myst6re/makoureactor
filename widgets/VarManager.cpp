@@ -22,8 +22,6 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	: QWidget(parent, Qt::Tool)
 {
 	setWindowTitle(tr("Variable manager"));
-	QFont font;
-	font.setPointSize(8);
 
 	QHBoxLayout *layout1 = new QHBoxLayout();
 
@@ -43,8 +41,9 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	QHBoxLayout *layout2 = new QHBoxLayout();
 
 	liste1 = new QListWidget(this);
-	liste1->setFixedWidth(fontMetrics().width(QString(" WW-WW ")) + contentsMargins().left() + contentsMargins().right());
-	liste1->setFont(font);
+	liste1->setFixedWidth(
+	    liste1->fontMetrics().boundingRect(QString(" WW-WW ")).width()
+	    + contentsMargins().left() + contentsMargins().right());
 
 	liste2 = new QTreeWidget(this);
 	liste2->setColumnCount(4);
@@ -52,7 +51,6 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	liste2->setIndentation(0);
 	liste2->setItemsExpandable(false);
 	liste2->setSortingEnabled(true);
-	liste2->setFont(font);
 
 	layout2->addWidget(liste1);
 	layout2->addWidget(liste2);

@@ -32,6 +32,7 @@ public:
 	BackgroundFile(const BackgroundFile &other);
 	virtual ~BackgroundFile();
 
+	virtual void initEmpty();
 	using FieldPart::open;
 	using FieldPart::save;
 	virtual inline bool canSave() const { return false; }

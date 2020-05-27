@@ -9,8 +9,10 @@ HEADERS += \
     Window.h \
     Parameters.h \
     Data.h \
+    core/PsfFile.h \
     widgets/ArchivePreview.h \
     widgets/HelpWidget.h \
+    widgets/PsfDialog.h \
     widgets/WalkmeshWidget.h \
     widgets/WalkmeshManager.h \
     widgets/VertexWidget.h \
@@ -147,11 +149,13 @@ HEADERS += \
 
 SOURCES += \
     Window.cpp \
+    core/PsfFile.cpp \
     txt.cpp \
     main.cpp \
     Data.cpp \
     widgets/ArchivePreview.cpp \
     widgets/HelpWidget.cpp \
+    widgets/PsfDialog.cpp \
     widgets/WalkmeshWidget.cpp \
     widgets/WalkmeshManager.cpp \
     widgets/VertexWidget.cpp \

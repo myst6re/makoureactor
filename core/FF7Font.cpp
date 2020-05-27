@@ -349,9 +349,10 @@ bool FF7Font::saveFonts()
 	return ok;
 }
 
-bool FF7Font::copyFont(const QString &name, const QString &from, const QString &name2)
+bool FF7Font::addFont(const QString &name, const QString &from,
+                      const QString &displayName)
 {
-	if(fonts.contains(name) || !fonts.contains(from)) {
+	if(fonts.contains(name)) {
 		return false;
 	}
 
@@ -397,7 +398,7 @@ bool FF7Font::copyFont(const QString &name, const QString &from, const QString &
 		return false;
 	}
 
-	ff7Font->setName(name2);
+	ff7Font->setName(displayName);
 	ff7Font->setReadOnly(false);
 
 	return true;

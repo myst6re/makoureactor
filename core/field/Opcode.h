@@ -978,6 +978,9 @@ public:
 class OpcodeWindow : public Opcode {
 public:
 	explicit OpcodeWindow(const char *params, int size);
+	explicit OpcodeWindow(quint8 windowID, quint16 targetX,
+	                      quint16 targetY, quint16 width,
+	                      quint16 height);
 	void setParams(const char *params, int size);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -1176,6 +1179,7 @@ public:
 class OpcodeMESSAGE : public Opcode {
 public:
 	explicit OpcodeMESSAGE(const char *params, int size);
+	explicit OpcodeMESSAGE(quint8 windowID, quint8 textID);
 	inline int id() const { return 0x40; }
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
@@ -1217,6 +1221,7 @@ public:
 class OpcodeMPNAM : public Opcode {
 public:
 	explicit OpcodeMPNAM(const char *params, int size);
+	explicit OpcodeMPNAM(quint8 textID);
 	inline int id() const { return 0x43; }
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
@@ -1320,6 +1325,9 @@ public:
 class OpcodeWINDOW : public OpcodeWindow {
 public:
 	explicit OpcodeWINDOW(const char *params, int size);
+	explicit OpcodeWINDOW(quint8 windowID, quint16 targetX,
+	                      quint16 targetY, quint16 width,
+	                      quint16 height);
 	explicit OpcodeWINDOW(const OpcodeWindow &op);
 	inline int id() const { return 0x50; }
 	QString toString(Field *field) const;

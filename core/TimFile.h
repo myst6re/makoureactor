@@ -29,7 +29,7 @@ public:
 	explicit TimFile(const QByteArray &data);
 	TimFile(const TextureFile &texture, quint8 bpp, quint16 palX, quint16 palY, quint16 palW, quint16 palH, quint16 imgX, quint16 imgY);
 	bool open(const QByteArray &data);
-	bool save(QByteArray &data);
+	bool save(QByteArray &data) const;
 private:
 	quint8 bpp;
 	quint16 palX, palY;

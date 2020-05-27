@@ -29,19 +29,28 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 		return false;
 	}
 
-	QList<PolyVertex> vertices/*, normals*/;
+	QList<PolyVertex> vertices, normals;
+	QList<QByteArray> unknown1;
 	QList<TexCoord> texCs;
 	QList<ColorBGRA> vertexColors;
+	QList<QByteArray> polyColors;
+	QList<Edge> edges;
 	QList<PolygonP> polys;
+	QList<Hundred> hundreds;
 	QList<Group> groups;
 	QList<FieldModelGroup *> _groups;
+	QList<BoundingBox> boundingBoxes;
+	QList<quint32> normIndexTable;
 	PHeader header;
 	PolyVertex vertex;
 	TexCoord texC;
 	ColorBGRA vertexColor;
+	Edge edge;
 	PolygonP poly;
+	Hundred hundred;
 	Group group;
-	quint32 i;
+	BoundingBox boundingBox;
+	quint32 i, normIndex;
 
 	if(device()->read((char *)&header, 128) != 128
 	        || header.version != 1 || header.off04 != 1
@@ -59,15 +68,19 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 		vertices.append(vertex);
 	}
 
-//	for(i = 0 ; i < header.numNormals ; ++i) {
-//		if(device()->read((char *)&vertex, 12) != 12) {
-//			return false;
-//		}
-//		normals.append(vertex);
-//	}
+	for(i = 0 ; i < header.numNormals ; ++i) {
+		if(device()->read((char *)&vertex, 12) != 12) {
+			return false;
+		}
+		normals.append(vertex);
+	}
 
-	if(!device()->seek(device()->pos() + header.numNormals * 12 + header.numUnknown1 * 12)) {
-		return false;
+	for(i = 0 ; i < header.numUnknown1 ; ++i) {
+		QByteArray u1 = device()->read(12);
+		if(u1.size() != 12) {
+			return false;
+		}
+		unknown1.append(u1);
 	}
 
 	for(i = 0 ; i < header.numTexCs ; ++i) {
@@ -84,8 +97,19 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 		vertexColors.append(vertexColor);
 	}
 
-	if(!device()->seek(device()->pos() + (header.numPolys + header.numEdges) * 4)) {
-		return false;
+	for(i = 0 ; i < header.numPolys ; ++i) {
+		QByteArray polyColor = device()->read(4);
+		if(polyColor.size() != 4) {
+			return false;
+		}
+		polyColors.append(polyColor);
+	}
+
+	for(i = 0 ; i < header.numEdges ; ++i) {
+		if(device()->read((char *)&edge, 4) != 4) {
+			return false;
+		}
+		edges.append(edge);
 	}
 
 	for(i = 0 ; i < header.numPolys ; ++i) {
@@ -95,8 +119,12 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 		polys.append(poly);
 	}
 
-	if(!device()->seek(device()->pos() + header.numHundreds * 100)) {
-		return false;
+	for(i = 0 ; i < header.numHundreds ; ++i) {
+		if(device()->read((char *)&hundred, 100) != 100) {
+			return false;
+		}
+		hundreds.append(hundred);
+		qDebug() << "hundred" << header.numTexCs << QByteArray((char *)&hundred, 100).toHex();
 	}
 
 	for(i = 0 ; i < header.numGroups ; ++i) {
@@ -105,6 +133,24 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 		}
 		groups.append(group);
 	}
+
+	for(i = 0 ; i < header.numBoundingBoxes ; ++i) {
+		if(device()->read((char *)&boundingBox, sizeof(boundingBox)) != sizeof(boundingBox)) {
+			return false;
+		}
+		boundingBoxes.append(boundingBox);
+	}
+
+	for(i = 0 ; i < header.numVertices ; ++i) {
+		if(device()->read((char *)&normIndex, sizeof(normIndex)) != sizeof(normIndex)) {
+			return false;
+		}
+		normIndexTable.append(normIndex);
+	}
+
+	QByteArray dataAfter = device()->readAll();
+
+	qDebug() << dataAfter.toHex();
 
 	PolyVertex polyVertex;
 	QRgb color;

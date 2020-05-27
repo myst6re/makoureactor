@@ -23,6 +23,7 @@
 #include <QtCore>
 #include "FieldArchiveIO.h"
 #include "Field.h"
+#include "core/PsfFile.h"
 
 struct SearchQuery
 {
@@ -160,8 +161,8 @@ public:
 	const Field *field(const QString &name) const;
 	Field *field(const QString &name, bool open=true, bool dontOptimize=false);
 	void appendField(Field *field);
-	FieldArchiveIO::ErrorCode addField(Field *field, const QString &fileName, int &fieldId);
-	void removeField(quint32 id);
+	void addNewField(Field *field, int &fieldId);
+	void delField(quint32 id);
 
 	bool isAllOpened() const;
 	bool isModified() const;
@@ -169,6 +170,7 @@ public:
 #ifdef DEBUG_FUNCTIONS
 	void validateAsk();
 	void validateOneLineSize();
+	void extractAkaos(const QString &dirname);
 	void printAkaos(const QString &filename);
 	void printModelLoaders(const QString &filename, bool generic = true);
 	void printTexts(const QString &filename, bool usedTexts = false);
@@ -207,7 +209,8 @@ public:
 	void cleanTexts();
 
 	bool exportation(const QList<int> &selectedFields, const QString &directory,
-					 bool overwrite, const QMap<ExportType, QString> &toExport);
+					 bool overwrite, const QMap<ExportType, QString> &toExport,
+	                 PsfTags *tags = nullptr);
 	bool importation(const QList<int> &selectedFields, const QString &directory,
 					 const QMap<Field::FieldSection, QString> &toImport);
 

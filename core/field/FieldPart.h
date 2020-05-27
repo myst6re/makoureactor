@@ -28,6 +28,7 @@ public:
 	explicit FieldPart(Field *field);
 	virtual ~FieldPart();
 
+	virtual void initEmpty() {}
 	virtual bool open()=0;
 	virtual bool open(const QByteArray &data)=0;
 	virtual QByteArray save() const=0;

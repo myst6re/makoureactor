@@ -38,6 +38,7 @@ public:
 	explicit FieldModelLoaderPC(Field *field);
 	void clear();
 	void clean();
+	void initEmpty();
 	bool open();
 	bool open(const QByteArray &data);
 	QByteArray save() const;

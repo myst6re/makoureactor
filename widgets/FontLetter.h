@@ -38,6 +38,7 @@ public slots:
 	void reset();
 signals:
 	void imageChanged(const QRect &rect);
+	void widthEdited(int width);
 protected:
 	virtual QSize sizeHint() const;
 	virtual QSize minimumSizeHint() const;

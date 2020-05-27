@@ -22,6 +22,19 @@ ScriptList::ScriptList(QWidget *parent) :
 {
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setContextMenuPolicy(Qt::ActionsContextMenu);
+	connect(this, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+	        SLOT(evidence(QListWidgetItem*,QListWidgetItem*)));
+}
+
+void ScriptList::evidence(QListWidgetItem *current, QListWidgetItem *previous)
+{
+	if(current) {
+		current->setBackground(QColor(196,196,255));
+	}
+
+	if(previous) {
+		previous->setBackground(QBrush());
+	}
 }
 
 Script *ScriptList::currentScript()

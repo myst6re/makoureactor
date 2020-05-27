@@ -55,6 +55,38 @@ struct PolygonP {
 	quint16 u[2];
 };
 
+struct Edge {
+	quint16 vertex1, vertex2;
+};
+
+struct Hundred {
+	quint32 zz1;
+	quint32 zz2;
+	quint32 zz3;
+	quint32 zz4;
+	quint32 texture_id;
+	quint32 texture_set;
+	quint32 zz7;
+	quint32 zz8;
+	quint32 zz9;
+	quint32 shademode;
+	quint32 lightstate_ambient;
+	quint32 zz12;
+	quint32 lightstate_material_pointer;
+	quint32 srcblend;
+	quint32 destblend;
+	quint32 zz16;
+	quint32 alpharef;
+	quint32 blend_mode;
+	quint32 zsort;
+	quint32 zz20;
+	quint32 zz21;
+	quint32 zz22;
+	quint32 zz23;
+	quint32 vertex_alpha;
+	quint32 zz25;
+};
+
 struct Group {
 	quint32 primitiveType;
 	quint32 polygonStartIndex;
@@ -70,6 +102,16 @@ struct Group {
 	quint32 texCoordStartIndex;
 	quint32 areTexturesUsed;
 	quint32 textureNumber;
+};
+
+struct BoundingBox {
+	quint32 field_0;
+	float max_x;
+	float max_y;
+	float max_z;
+	float min_x;
+	float min_y;
+	float min_z;
 };
 
 class PFile : public IO

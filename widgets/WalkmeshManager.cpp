@@ -44,7 +44,7 @@ WalkmeshManager::WalkmeshManager(QWidget *parent) :
 	keyInfos->setTextFormat(Qt::PlainText);
 	keyInfos->setWordWrap(true);
 
-	QPushButton *resetCamera = new QPushButton(tr("Reset"));
+	QPushButton *resetCamera = new QPushButton(tr("Reset Camera"));
 
 	showModels = new QCheckBox(tr("Show 3D models"));
 	showModels->setChecked(Config::value("fieldModelsVisible", true).toBool());
@@ -391,9 +391,9 @@ QWidget *WalkmeshManager::buildCameraRangePage()
 		bgFlagEdit[i]->setRange(0, 255);
 	}
 	QGridLayout *layout1 = new QGridLayout(group1);
-	layout1->addWidget(new QLabel(tr("Up")), 0, 0);
+	layout1->addWidget(new QLabel(tr("Top")), 0, 0);
 	layout1->addWidget(rangeEdit[0], 0, 1);
-	layout1->addWidget(new QLabel(tr("Down")), 0, 2);
+	layout1->addWidget(new QLabel(tr("Bottom")), 0, 2);
 	layout1->addWidget(rangeEdit[1], 0, 3);
 	layout1->addWidget(new QLabel(tr("Right")), 1, 0);
 	layout1->addWidget(rangeEdit[2], 1, 1);

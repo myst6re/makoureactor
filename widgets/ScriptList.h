@@ -23,6 +23,7 @@
 
 class ScriptList : public QListWidget
 {
+	Q_OBJECT
 public:
 	explicit ScriptList(QWidget *parent = 0);
 
@@ -32,6 +33,9 @@ public:
 	void fill(GrpScript *grpScript = 0);
 	void localeRefresh();
 	void scroll(int, bool focus=true);
+
+private slots:
+	void evidence(QListWidgetItem *current, QListWidgetItem *previous);
 
 private:
 	GrpScript *grpScript;

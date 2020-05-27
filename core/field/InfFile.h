@@ -83,6 +83,7 @@ class InfFile : public FieldPart
 {
 public:
 	explicit InfFile(Field *field);
+	void initEmpty();
 	bool open();
 	bool open(const QByteArray &data);
 	QByteArray save() const;

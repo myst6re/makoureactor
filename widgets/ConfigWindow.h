@@ -37,10 +37,11 @@ private:
 	QCheckBox *kernelAuto, *windowAuto, *charAuto;
 	QLabel *kernelPath, *windowPath, *charPath;
 	QPushButton *ff7ButtonMod, *ff7ButtonRem, *kernelButton, *windowButton, *charButton;
-	QCheckBox *disableOGL;
+	QCheckBox *darkMode, *disableOGL;
 	QPushButton *windowColor1, *windowColor2, *windowColor3, *windowColor4, *windowColorReset;
 	QLabel *windowPreview;
-	QCheckBox *japEnc, *expandedByDefault, *lzsNotCheck;
+	QCheckBox *expandedByDefault, *lzsNotCheck;
+	QComboBox *encodings;
 	QRgb windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight;
 	QStringList customNames;
 private slots:
@@ -57,6 +58,7 @@ private slots:
 	void resetColor();
 	void fillCharNameEdit();
 	void setCharName(const QString &charName);
+	void editEncoding();
 protected:
 	void accept();
 };

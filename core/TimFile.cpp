@@ -230,7 +230,7 @@ bool TimFile::open(const QByteArray &data)
 	return true;
 }
 
-bool TimFile::save(QByteArray &data)
+bool TimFile::save(QByteArray &data) const
 {
 	bool hasPal = bpp <= 1;
 	quint32 flag = (hasPal << 3) | (bpp & 3);

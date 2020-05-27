@@ -61,6 +61,7 @@ public:
 	Section1File(const Section1File &other);
 	virtual ~Section1File();
 	void clear();
+	void initEmpty();
 	bool open();
 	bool open(const QByteArray &data);
 	QByteArray save() const;
@@ -123,18 +124,16 @@ public:
 	quint16 scale() const;
 	void setScale(quint16 scale);
 
-	TutFileStandard *tut() const;
-	void setTut(TutFileStandard *tut);
-
 	int availableBytesForScripts() const;
 private:
 	QString _author;
 	quint16 _scale;
 	// quint8 nbObjets3D;
+	quint16 _version;
+	QByteArray _empty;
 
 	QList<GrpScript *> _grpScripts;
 	QList<FF7Text> _texts;
-	TutFileStandard *_tut;
 };
 
 #endif // SECTION1FILE_H

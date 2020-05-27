@@ -49,10 +49,15 @@ public:
 	Q_DECLARE_FLAGS(FieldSections, FieldSection)
 
 	Field(const QString &name, FieldArchiveIO *io);
+	explicit Field(const QString &name);
 	virtual ~Field();
 
-	bool isOpen() const;
-	bool isModified() const;
+	inline bool isOpen() const {
+		return _isOpen;
+	}
+	inline bool isModified() const {
+		return _isModified;
+	}
 	void setModified(bool modified);
 
 	virtual bool isPC() const=0;
@@ -62,6 +67,8 @@ public:
 
 	qint8 open(const QString &path, bool isDat, bool compressed, QIODevice *device2=0);
 	qint8 open(const QByteArray &data, bool isPSField, QIODevice *device2=0);
+
+	void initEmpty();
 
 	void setSaved();
 	bool save(QByteArray &newData, bool compress);
@@ -80,13 +87,19 @@ public:
 	virtual FieldModelFile *fieldModel(int modelID, int animationID=0, bool animate=true, bool open=true)=0;
 	QMap<int, FieldModelFile *> fieldModels(bool animate=true, bool open=true);
 
-	const QString &name() const;
+	inline const QString &name() const {
+		return _name;
+	}
 	void setName(const QString &name);
-	virtual FieldArchiveIO *io() const;
+	inline virtual FieldArchiveIO *io() const {
+		return _io;
+	}
 	int sectionSize(FieldSection part) const;
 	QByteArray sectionData(FieldSection part, bool dontOptimize=false);
 
-	void setRemoveUnusedSection(bool remove);// FIXME: only in PC version, ugly hack detected!
+	inline void setRemoveUnusedSection(bool remove) { // FIXME: only in PC version, ugly hack detected!
+		_removeUnusedSection = remove;
+	}
 protected:
 	virtual int headerSize() const=0;
 	virtual void openHeader(const QByteArray &fileData)=0;

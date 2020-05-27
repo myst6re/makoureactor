@@ -20,13 +20,23 @@
 
 #include <QtWidgets>
 #include "FontWidget.h"
+#include "Listwidget.h"
 
 class FontManager : public QDialog
 {
 	Q_OBJECT
 public:
 	explicit FontManager(QWidget *parent=0);
+private slots:
+	void setFont(int id);
+	void addFont();
+	void removeFont();
 private:
+	void fillList1();
+	bool newNameDialog(QString &name, QString &nameId);
+	QToolBar *toolbar1;
+	QAction *plusAction, *minusAction;
+	QListWidget *list1;
 	FontWidget *fontWidget;
 };
 

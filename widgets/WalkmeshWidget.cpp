@@ -33,7 +33,7 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent) :
 
 	QSurfaceFormat format;
 	format.setRenderableType(QSurfaceFormat::OpenGL);
-	// asks for a OpenGL 3.2 debug context using the Core profile
+	// asks for a OpenGL 2.1 debug context using the Core profile
 	format.setVersion(2, 1);
 	format.setProfile(QSurfaceFormat::CoreProfile);
 #ifdef OPENGL_DEBUG

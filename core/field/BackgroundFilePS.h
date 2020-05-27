@@ -35,6 +35,7 @@ public:
 	explicit BackgroundFilePS(FieldPS *field);
 	BackgroundFilePS(const BackgroundFilePS &other);
 
+	void initEmpty();
 	bool open();
 	bool open(const QByteArray &mimData, const QByteArray &tilesData);
 	QByteArray save() const;

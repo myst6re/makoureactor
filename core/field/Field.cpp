@@ -29,21 +29,17 @@ Field::Field(const QString &name, FieldArchiveIO *io) :
 {
 }
 
+Field::Field(const QString &name) :
+	Field(name, nullptr)
+{
+
+}
+
 Field::~Field()
 {
 	foreach(FieldPart *part, _parts) {
 		if(part)	delete part;
 	}
-}
-
-bool Field::isOpen() const
-{
-	return _isOpen;
-}
-
-bool Field::isModified() const
-{
-	return _isModified;
 }
 
 void Field::setModified(bool modified)
@@ -63,7 +59,7 @@ bool Field::open(bool dontOptimize)
 {
 	QByteArray fileData;
 
-	if(headerSize() > 0) {
+	if(_io != nullptr && headerSize() > 0) {
 		QString fileType = sectionFile(Scripts);
 		if(!dontOptimize && !_io->fieldDataIsCached(this, fileType)) {
 			QByteArray lzsData = _io->fieldData(this, fileType, false);
@@ -131,7 +127,9 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 		open();
 	}
 
-	if(!_isOpen)	return QByteArray();
+	if(!_isOpen || _io == nullptr) {
+		return QByteArray();
+	}
 
 	int idPart = sectionId(part),
 			position = sectionPosition(idPart),
@@ -172,11 +170,6 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 	return data.mid(position, size);
 }
 
-FieldArchiveIO *Field::io() const
-{
-	return _io;
-}
-
 FieldPart *Field::createPart(FieldSection section)
 {
 	switch(section) {
@@ -212,6 +205,30 @@ FieldPart *Field::part(FieldSection section, bool open)
 	return p;
 }
 
+void Field::initEmpty()
+{
+	foreach(const FieldSection &section, orderOfSections() << Akaos) {
+		FieldPart *p = part(section);
+
+		if(!p) {
+			p = createPart(section);
+			if (p) {
+				_parts.insert(section, p);
+			}
+		}
+
+		if (p) {
+			p->initEmpty();
+			p->setOpen(true);
+			p->setModified(true);
+		}
+	}
+
+	setRemoveUnusedSection(true);
+	_isOpen = true;
+	setModified(true);
+}
+
 Section1File *Field::scriptsAndTexts(bool open)
 {
 	return static_cast<Section1File *>(part(Scripts, open));
@@ -224,9 +241,7 @@ EncounterFile *Field::encounter(bool open)
 
 TutFileStandard *Field::tutosAndSounds(bool open)
 {
-	TutFileStandard *tut = static_cast<TutFileStandard *>(part(Akaos, open));
-	scriptsAndTexts(false)->setTut(tut);
-	return tut;
+	return static_cast<TutFileStandard *>(part(Akaos, open));
 }
 
 IdFile *Field::walkmesh(bool open)
@@ -264,11 +279,6 @@ QMap<int, FieldModelFile *> Field::fieldModels(bool animate, bool open)
 	}
 
 	return ret;
-}
-
-const QString &Field::name() const
-{
-	return _name;
 }
 
 void Field::setName(const QString &name)
@@ -321,7 +331,7 @@ bool Field::save(QByteArray &newData, bool compress)
 				} else {
 					section = fieldPart->save();
 					if(section.isEmpty()) {
-						qWarning() << "Field::save empty section error";
+						qWarning() << "Field::save empty section error" << int(fieldSection);
 						return false;
 					}
 				}
@@ -549,9 +559,4 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 	}
 
 	return 0;
-}
-
-void Field::setRemoveUnusedSection(bool remove)
-{
-	_removeUnusedSection = remove;
 }

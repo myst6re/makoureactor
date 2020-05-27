@@ -23,6 +23,64 @@ IdFile::IdFile(Field *field) :
 {
 }
 
+void IdFile::initEmpty()
+{
+	_triangles.clear();
+	_access.clear();
+
+	const quint8 base = 132;
+	const quint16 w = base * 3;
+	const quint16 offsetX = -(w + base);
+	const quint16 offsetY = -(w * 2);
+
+	for (quint8 y = 3; y > 0; --y) {
+		for (quint8 x = 0; x < 3; ++x) {
+			// Make a square
+			Triangle tr = Triangle();
+			tr.vertices[0].x = offsetX + x * w;
+			tr.vertices[0].y = offsetY + y * w;
+			tr.vertices[1].x = offsetX + (x + 1) * w;
+			tr.vertices[1].y = offsetY + y * w;
+			tr.vertices[2].x = offsetX + x * w;
+			tr.vertices[2].y = offsetY + (y - 1) * w;
+			_triangles.append(tr);
+			tr.vertices[0].x = offsetX + (x + 1) * w;
+			tr.vertices[1].y = offsetY + (y - 1) * w;
+			_triangles.append(tr);
+
+			Access acc1, acc2;
+			acc1.a[0] = -1;
+			// Access to the other triangle
+			acc1.a[1] = _triangles.size() - 1;
+			acc1.a[2] = -1;
+			acc2.a[0] = -1;
+			acc2.a[1] = -1;
+			// Access to the other triangle
+			acc2.a[2] = _triangles.size() - 2;
+
+			if (x < 2) {
+				// Access on the right
+				acc2.a[0] = _triangles.size();
+			}
+			if (x > 0) {
+				// Access on the left
+				acc1.a[2] = _triangles.size() - 3;
+			}
+			if (y < 2) {
+				// Access on the bottom
+				acc2.a[1] = _triangles.size() + 4;
+			}
+			if (y > 0) {
+				// Access on the top
+				acc1.a[0] = _triangles.size() - 7;
+			}
+
+			_access.append(acc1);
+			_access.append(acc2);
+		}
+	}
+}
+
 bool IdFile::open()
 {
 	return open(field()->sectionData(Field::Walkmesh));

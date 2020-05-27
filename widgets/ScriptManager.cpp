@@ -4,17 +4,13 @@
 ScriptManager::ScriptManager(QWidget *parent) :
     QWidget(parent), _field(0)
 {
-	QFont font;
-	font.setPointSize(8);
-
 	_groupScriptList = new GrpScriptList(this);
 	_groupScriptList->setMinimumHeight(176);
-	_groupScriptList->setFont(font);
 
 	_scriptList = new ScriptList(this);
-	_scriptList->setMaximumWidth(QFontMetrics(font).width(QString(20, 'M')));
+	_scriptList->setMaximumWidth(
+	    _scriptList->fontMetrics().boundingRect(QString(20, 'M')).width());
 	_scriptList->setMinimumHeight(88);
-	_scriptList->setFont(font);
 
 	_opcodeList = new OpcodeList(this);
 
@@ -29,7 +25,6 @@ ScriptManager::ScriptManager(QWidget *parent) :
 	_compileScriptIcon->hide();
 	
 	QVBoxLayout *layoutGroupScript = new QVBoxLayout;
-	layoutGroupScript->addWidget(_groupScriptList->toolBar());
 	layoutGroupScript->addWidget(_groupScriptList);
 	layoutGroupScript->addWidget(_groupScriptList->helpWidget());
 	layoutGroupScript->setSpacing(2);
@@ -41,16 +36,17 @@ ScriptManager::ScriptManager(QWidget *parent) :
 	compileLayout->setContentsMargins(QMargins());
 
 	QVBoxLayout *layoutScript = new QVBoxLayout;
-	layoutScript->addWidget(_opcodeList->toolBar());
 	layoutScript->addWidget(_opcodeList);
 	layoutScript->addLayout(compileLayout);
 	layoutScript->setSpacing(2);
 	layoutScript->setContentsMargins(QMargins());
 
 	QGridLayout *contentLayout = new QGridLayout(this);
-	contentLayout->addLayout(layoutGroupScript, 0, 0);
-	contentLayout->addWidget(_scriptList, 0, 1);
-	contentLayout->addLayout(layoutScript, 0, 2);
+	contentLayout->addWidget(_groupScriptList->toolBar(), 0, 0);
+	contentLayout->addLayout(layoutGroupScript, 1, 0);
+	contentLayout->addWidget(_scriptList, 1, 1);
+	contentLayout->addWidget(_opcodeList->toolBar(), 0, 2);
+	contentLayout->addLayout(layoutScript, 1, 2);
 	contentLayout->setColumnStretch(0, 2);
 	contentLayout->setColumnStretch(1, 1);
 	contentLayout->setColumnStretch(2, 9);

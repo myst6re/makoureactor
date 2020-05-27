@@ -18,12 +18,24 @@ public:
 		return _lineSearch;
 	}
 	void setEnabled(bool enabled);
+	void enableActions(bool enabled);
 public slots:
+	inline void rename() {
+		rename(currentItem(), 1);
+	}
+	void rename(QTreeWidgetItem *item, int column);
+	void renameOK(QTreeWidgetItem *item, int column);
 	void fill(FieldArchive *fieldArchive);
 	void filterMap(const QString &name = QString());
 private slots:
+	void evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void add();
 	void del();
+
+signals:
+	void changed();
+	void fieldDeleted();
+
 private:
 	static QTreeWidgetItem *createItem(Field *f, int fieldID);
 	void adjustWidth();

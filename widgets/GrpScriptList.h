@@ -39,14 +39,15 @@ public:
 		return _helpWidget;
 	}
 	void clearCopiedGroups();
-	void setEnabled(bool);
+	void setEnabled(bool enabled);
 
 	void fill(Section1File *scripts=0);
 	void localeRefresh();
 	void scroll(int, bool focus=true);
-	void enableActions(bool);
+	void enableActions(bool enabled);
 
 private slots:
+	void evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	inline void rename() {
 		rename(currentItem(), 1);
 	}

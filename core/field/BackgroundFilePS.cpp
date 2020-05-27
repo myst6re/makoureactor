@@ -37,6 +37,12 @@ BackgroundFilePS::BackgroundFilePS(const BackgroundFilePS &other) :
 	setPalettes(palettes);
 }
 
+void BackgroundFilePS::initEmpty()
+{
+	setTextures(new BackgroundTexturesPS());
+	BackgroundFile::initEmpty();
+}
+
 bool BackgroundFilePS::open()
 {
 	if(isOpen() || isModified()) {

@@ -23,6 +23,11 @@ FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
 {
 }
 
+FieldPC::FieldPC(const QString &name) :
+	Field(name, nullptr), _model(0)
+{
+}
+
 FieldPC::FieldPC(const Field &field) :
 	Field(field), _model(0)
 {
@@ -60,11 +65,6 @@ int FieldPC::sectionId(FieldSection part) const
 quint32 FieldPC::sectionPosition(int idPart) const
 {
 	return sectionPositions[idPart] + paddingBetweenSections();
-}
-
-FieldArchiveIOPC *FieldPC::io() const
-{
-	return static_cast<FieldArchiveIOPC *>(Field::io());
 }
 
 FieldPart *FieldPC::createPart(FieldSection part)
@@ -108,7 +108,9 @@ FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate
 
 FieldModelFilePC *FieldPC::fieldModel(const QString &hrc, const QString &a, bool animate)
 {
-	if(!_model)	_model = new FieldModelFilePC();
+	if(!_model) {
+		_model = new FieldModelFilePC();
+	}
 	_model->load(hrc, a, animate);
 	return _model;
 }

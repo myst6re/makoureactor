@@ -35,6 +35,7 @@ public:
 	explicit BackgroundFilePC(FieldPC *field);
 	BackgroundFilePC(const BackgroundFilePC &other);
 
+	void initEmpty();
 	bool open();
 	bool open(const QByteArray &data, const QByteArray &palData);
 	QByteArray save() const;

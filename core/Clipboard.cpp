@@ -71,6 +71,7 @@ void Clipboard::setFF7FieldScriptOpcodes(const QList<Opcode *> &opcodes)
 	QDataStream stream(&data, QIODevice::WriteOnly);
 	stream << quint16(VERSION_FF7_FIELD_SCRIPT_OPCODES)
 	       << opcodes;
+
 	setData(MIME_FF7_FIELD_SCRIPT_OPCODES, data);
 }
 

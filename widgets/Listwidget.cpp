@@ -26,12 +26,8 @@ ListWidget::ListWidget(QWidget *parent) :
 	_toolBar = new QToolBar(this);
 	_toolBar->setIconSize(QSize(16, 16));
 
-	QFont font;
-	font.setPointSize(8);
-
 	_listWidget = new QListWidget(this);
 	_listWidget->setUniformItemSizes(true);
-	_listWidget->setFont(font);
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	layout->addWidget(_toolBar);

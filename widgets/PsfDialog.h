@@ -1,11 +1,22 @@
 #ifndef PSFDIALOG_H
 #define PSFDIALOG_H
 
+#include <QtWidgets>
+#include "core/PsfFile.h"
 
-class PsfDialog
+class PsfDialog : public QDialog
 {
+	Q_OBJECT
 public:
-	PsfDialog();
+	explicit PsfDialog(const QString &title, QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+	PsfDialog(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags()) :
+	      PsfDialog(QString(), parent, f) {}
+	PsfTags tags() const;
+	void setNoTitle(bool noTitle);
+private:
+	QLineEdit *_psflib, *_title, *_artist, *_game, *_year, *_genre;
+	QLineEdit *_copyright, *_author;
+	QTextEdit *_comment;
 };
 
 #endif // PSFDIALOG_H

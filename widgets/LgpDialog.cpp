@@ -773,7 +773,8 @@ void LgpDialog::generatePreview()
 	else if(fileType == "h" || fileType == "c"
 	         || fileType == "sym" || fileType.isEmpty()
 	         || fileType == "bak" || fileType == "dir"
-	         || fileType == "fl" || fileType == "txt")
+	         || fileType == "fl" || fileType == "txt"
+	         || fileType == "rsd" || fileType == "hrc")
 	{
 		preview->textPreview(QString(lgp->fileData(fileName)));
 	}

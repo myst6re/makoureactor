@@ -18,6 +18,7 @@
 #include "TutWidget.h"
 #include "TextHighlighter.h"
 #include "Data.h"
+#include "PsfDialog.h"
 #include "core/Config.h"
 #include "core/PsfFile.h"
 
@@ -492,7 +493,7 @@ void TutWidget::exportation()
 		filename = tr("tuto_%1.tutps").arg(row);
 		filter = tr("Tuto Final Fantasy VII PS (*.tutps)");
 	} else {
-		filename = tr("sound_%1.akao").arg(row);
+		filename = tr("%1.akao").arg(Data::music_names.value(tut->akaoID(row)));
 		filter = (QStringList() << akaoF << psfF).join(";;");
 	}
 
@@ -512,8 +513,10 @@ void TutWidget::exportation()
 	}
 
 	if (selectedFilter == psfF) {
-		PsfTags tags("Final Fantasy 7.psflib"); // TODO: tags editor
-		akao.write(PsfFile::fromAkao(currentTut->data(row), tags).save());
+		PsfDialog dialog(Data::music_desc.value(tut->akaoID(row)));
+		if (dialog.exec() == QDialog::Accepted) {
+			akao.write(PsfFile::fromAkao(currentTut->data(row), dialog.tags()).save());
+		}
 	} else {
 		akao.write(currentTut->data(row));
 	}

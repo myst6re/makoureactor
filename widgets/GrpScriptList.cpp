@@ -66,6 +66,7 @@ GrpScriptList::GrpScriptList(QWidget *parent) :
 	down_A->setEnabled(false);
 
 	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), SLOT(rename(QTreeWidgetItem *, int)));
+	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(evidence(QTreeWidgetItem*,QTreeWidgetItem*)));
 	connect(this, SIGNAL(itemSelectionChanged()), SLOT(upDownEnabled()));
 
 	connect(rename_A, SIGNAL(triggered()), SLOT(rename()));
@@ -115,6 +116,21 @@ GrpScriptList::GrpScriptList(QWidget *parent) :
 GrpScriptList::~GrpScriptList()
 {
 	qDeleteAll(grpScriptCopied);
+}
+
+void GrpScriptList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
+{
+	if(current) {
+		current->setBackground(0, QColor(196,196,255));
+		current->setBackground(1, QColor(196,196,255));
+		current->setBackground(2, QColor(196,196,255));
+	}
+
+	if(previous) {
+		previous->setBackground(0, QBrush());
+		previous->setBackground(1, QBrush());
+		previous->setBackground(2, QBrush());
+	}
 }
 
 void GrpScriptList::setEnabled(bool enabled)
@@ -207,7 +223,7 @@ void GrpScriptList::fill(Section1File *scripts)
 
 	setMinimumWidth(columnWidth(0) +
 	                columnWidth(1) +
-	                fontMetrics().width("WWWWWWWW"));
+	                fontMetrics().boundingRect("WWWWWWWW").width());
 
 	actions().at(RenameAction)->setEnabled(true);
 	actions().at(AddAction)->setEnabled(topLevelItemCount() < 256);

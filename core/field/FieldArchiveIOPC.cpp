@@ -144,13 +144,10 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 				if(!_lgp.setFile(field->name(), new FieldSaveIO(field))) {
 					return ErrorOpening;
 				}
+			} else if(!_lgp.addFile(field->name(), new FieldSaveIO(field))) {
+				return ErrorOpening;
 			} else {
-				return FieldNotFound; // TODO
-				if(!_lgp.addFile(field->name(), new FieldSaveIO(field))) {
-					return ErrorOpening;
-				} else {
-					oneFieldAdded = true;
-				}
+				oneFieldAdded = true;
 			}
 		}
 	}
@@ -189,6 +186,8 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 
 		switch(_lgp.error()) {
 		case Lgp::OpenError:
+			return ErrorOpening;
+		case Lgp::OpenTempError:
 			return ErrorOpeningTemp;
 		case Lgp::InvalidError:
 			return Invalid;
