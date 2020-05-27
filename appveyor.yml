@@ -7,7 +7,7 @@ environment:
       QTTOOLS: C:\Qt\Tools\QtCreator
     - USE_MINGW: 1
       QTDIR: C:\Qt\5.14\mingw73_32
-      QTTOOLS: C:\Qt\Tools\mingw73_32
+      QTTOOLS: C:\Qt\Tools\mingw730_32
 
 install:
   - DIR C:\Qt
