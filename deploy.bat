@@ -13,7 +13,7 @@ rem Deploy DLLs
 %LIB_DIR%\windeployqt.exe --force --release --dir %OUTPUT_DIR% --no-quick-import --no-translations --no-webkit2 --no-angle --no-svg --no-webkit %EXE_PATH%
 
 rem Removing unused DLLs
-del /q %OUTPUT_DIR%\opengl32sw.dll
+if exist %OUTPUT_DIR%\opengl32sw.dll del /q %OUTPUT_DIR%\opengl32sw.dll
 
 rem Deploy Translations
 for %%l in (%LANGUAGES%) do (
