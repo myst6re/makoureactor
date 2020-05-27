@@ -13,6 +13,7 @@ HEADERS += \
     widgets/ArchivePreview.h \
     widgets/HelpWidget.h \
     widgets/PsfDialog.h \
+    widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.h \
     widgets/WalkmeshWidget.h \
     widgets/WalkmeshManager.h \
     widgets/VertexWidget.h \
@@ -156,6 +157,7 @@ SOURCES += \
     widgets/ArchivePreview.cpp \
     widgets/HelpWidget.cpp \
     widgets/PsfDialog.cpp \
+    widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp \
     widgets/WalkmeshWidget.cpp \
     widgets/WalkmeshManager.cpp \
     widgets/VertexWidget.cpp \
