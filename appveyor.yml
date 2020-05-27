@@ -1,7 +1,9 @@
+image: Visual Studio 2019
+
 environment:
   matrix:
     - USE_MSVC: 1
-      QTDIR: C:\Qt\5.13\msvc2017
+      QTDIR: C:\Qt\5.14\msvc2017_64
       QTTOOLS: C:\Qt\Tools\QtCreator
     - USE_MINGW: 1
       QTDIR: C:\Qt\5.13\mingw73_32
@@ -13,7 +15,7 @@ install:
   - DIR %QTDIR%\..
   - DIR %QTTOOLS%
   - set PATH=%QTDIR%\bin;%QTTOOLS%\bin;%PATH%
-  - '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"'
+  - '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat"'
   - curl -L -o upx.zip http://upx.sourceforge.net/download/upx391w.zip &&
       7z e upx.zip *.exe -r
 
@@ -26,8 +28,8 @@ build_script:
 
 after_build:
   - FOR /F %%i IN ('git describe --tags') DO SET GIT_TAG_OR_BRANCH=%%i
-  - if "%USE_MSVC%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32"
-  - if "%USE_MINGW%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-xp"
+  - if "%USE_MSVC%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win64"
+  - if "%USE_MINGW%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32"
   - echo "%DEPLOY_DIR%"
   - deploy.bat
   - MOVE *.qm deploy
