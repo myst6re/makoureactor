@@ -10,6 +10,7 @@ environment:
 install:
   - DIR C:\Qt
   - DIR C:\Qt\Tools
+  - DIR %QTDIR%\..
   - DIR %QTTOOLS%
   - set PATH=%QTDIR%\bin;%QTTOOLS%\bin;%PATH%
   - '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"'
