@@ -8,7 +8,8 @@ environment:
 install:
   - if "%USE_MINGW%"=="1" set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw730_32\bin;%PATH%
   - if "%USE_MSVC%"=="1" set PATH=%QTDIR%\bin;C:\Qt\Tools\QtCreator\bin;%PATH%
-  - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"'
+  - '"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64'
+  - '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64'
   - curl -L -o upx.zip http://upx.sourceforge.net/download/upx391w.zip &&
     7z e upx.zip *.exe -r
 
@@ -22,7 +23,7 @@ build_script:
 after_build:
   - FOR /F %%i IN ('git describe --tags') DO SET GIT_TAG_OR_BRANCH=%%i
   - if "%USE_MSVC%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win64"
-  - if "%USE_MINGW%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32-xp"
+  - if "%USE_MINGW%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32"
   - echo "%DEPLOY_DIR%"
   - deploy.bat
   - MOVE *.qm deploy
