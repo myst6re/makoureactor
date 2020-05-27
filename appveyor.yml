@@ -6,12 +6,10 @@ environment:
       QTDIR: C:\Qt\5.14\mingw73_32
 
 install:
-  - cmd: |
-    "%QTDIR%\bin\qtenv2.bat"
-    # Include jom.exe
-    set PATH=C:\Qt\Tools\QtCreator\bin;%PATH%
-    "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
-    curl -L -o upx.zip http://upx.sourceforge.net/download/upx391w.zip &&
+  - '"%QTDIR%\bin\qtenv2.bat"'
+  - '"set PATH=C:\Qt\Tools\QtCreator\bin;%PATH%"'
+  - '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64'
+  - curl -L -o upx.zip http://upx.sourceforge.net/download/upx391w.zip &&
       7z e upx.zip *.exe -r
 
 before_build:
