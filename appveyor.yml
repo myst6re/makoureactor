@@ -6,7 +6,7 @@ environment:
       QTDIR: C:\Qt\5.14\mingw73_32
 
 install:
-  - %QTDIR%\bin\qtenv2.bat
+  - '"%QTDIR%\bin\qtenv2.bat"'
   # Include jom.exe
   - set PATH=C:\Qt\Tools\QtCreator\bin;%PATH%
   - '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64'
