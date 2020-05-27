@@ -2,12 +2,17 @@ environment:
   matrix:
     - USE_MSVC: 1
       QTDIR: C:\Qt\5.13\msvc2017
+      QTTOOLS: C:\Qt\Tools\QtCreator
     - USE_MINGW: 1
       QTDIR: C:\Qt\5.13\mingw73_32
+      QTTOOLS: C:\Qt\Tools\mingw73_32
 
 install:
-  - set PATH=%QTDIR%\bin;%PATH%
-  - set PATH=C:\Qt\Tools\QtCreator\bin;%PATH%
+  - DIR C:\Qt
+  - DIR C:\Qt\Tools
+  - DIR %QTDIR%
+  - DIR %QTTOOLS%
+  - set PATH=%QTDIR%\bin;%QTTOOLS%\bin;%PATH%
   - '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"'
   - curl -L -o upx.zip http://upx.sourceforge.net/download/upx391w.zip &&
       7z e upx.zip *.exe -r
