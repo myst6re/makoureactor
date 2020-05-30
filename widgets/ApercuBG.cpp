@@ -18,7 +18,7 @@
 #include "ApercuBG.h"
 
 ApercuBG::ApercuBG(QWidget *parent) :
-	QLabel(parent), _field(0), _error(false)
+	QLabel(parent), _field(nullptr), _error(false)
 {
 	setAutoFillBackground(true);
 	setAlignment(Qt::AlignCenter);
@@ -34,6 +34,11 @@ ApercuBG::ApercuBG(QWidget *parent) :
 void ApercuBG::fill(Field *field, bool reload)
 {
 	if(!reload && _field == field) {
+		return;
+	}
+
+	if (!field->isOpen()) {
+		clear();
 		return;
 	}
 

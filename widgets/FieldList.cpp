@@ -3,7 +3,7 @@
 #include "core/field/FieldPC.h"
 
 FieldList::FieldList(QWidget *parent) :
-      QTreeWidget(parent), _fieldArchive(0)
+      QTreeWidget(parent), _fieldArchive(nullptr)
 {
 	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
 	QFont font;
@@ -90,15 +90,21 @@ QTreeWidgetItem *FieldList::createItem(Field *f, int mapID)
 {
 	const QString &name = f->name();
 	QString id;
-	int index = Data::field_names.indexOf(name);
+	int index = Data::maplist().indexOf(name);
 	if(index != -1) {
 		id = QString("%1").arg(index, 3);
 	} else {
-		id = "~";
+		id = "  ~";
 	}
 
 	QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << id);
 	item->setData(0, Qt::UserRole, mapID);
+
+	if (!f->io() || index == -1) {
+		item->setForeground(0, Qt::darkGray);
+		item->setForeground(1, Qt::darkGray);
+	}
+
 	return item;
 }
 
@@ -113,7 +119,6 @@ void FieldList::adjustWidth()
 void FieldList::fill(FieldArchive *fieldArchive)
 {
 	QList<QTreeWidgetItem *> items;
-
 	FieldArchiveIterator it(*fieldArchive);
 
 	while (it.hasNext()) {
@@ -125,7 +130,8 @@ void FieldList::fill(FieldArchive *fieldArchive)
 
 	_fieldArchive = fieldArchive;
 
-	_toolBar->setEnabled(_fieldArchive->isPC());
+	setEnabled(true);
+	enableActions(_fieldArchive->isPC());
 
 	if(!items.isEmpty()) {
 		addTopLevelItems(items);
@@ -187,7 +193,7 @@ void FieldList::renameOK(QTreeWidgetItem *item, int column)
 		QMessageBox::warning(this, tr("Name not filled"),
 		                     tr("Please set a new field name."));
 		return;
-	} else if(Data::field_names.contains(newName)) {
+	} else if(Data::maplist().contains(newName)) {
 		QMessageBox::warning(this,
 		                     tr("Name already present in archive"),
 		                     tr("Please choose another name."));
@@ -222,7 +228,7 @@ void FieldList::add()
 	QString newName;
 
 	// Name set by user
-	while(newName.isEmpty() || Data::field_names.contains(newName)){
+	while(newName.isEmpty() || Data::maplist().contains(newName)){
 		bool ok;
 		newName = QInputDialog::getText(this, tr("Choose a name"),
 		                                tr("Field name:"),
@@ -234,7 +240,7 @@ void FieldList::add()
 		if(newName.isEmpty()) {
 			QMessageBox::warning(this, tr("Name not filled"),
 			                     tr("Please set a new field name."));
-		} else if(Data::field_names.contains(newName)) {
+		} else if(Data::maplist().contains(newName)) {
 			QMessageBox::warning(this,
 			                     tr("Name already present in archive"),
 			                     tr("Please choose another name."));

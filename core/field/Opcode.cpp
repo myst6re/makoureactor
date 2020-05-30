@@ -389,9 +389,9 @@ QString Opcode::_materia(quint8 materiaID, quint8 bank)
 
 QString Opcode::_field(quint16 fieldID)
 {
-	if(fieldID < Data::field_names.size())
+	if(fieldID < Data::maplist().size())
 		return QObject::tr("%1 (#%2)")
-				.arg(Data::field_names.at(fieldID))
+				.arg(Data::maplist().at(fieldID))
 				.arg(fieldID);
 	return QObject::tr("No%1").arg(fieldID);
 }

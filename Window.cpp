@@ -620,7 +620,6 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	}
 
 	_fieldList->fill(fieldArchive);
-	_fieldList->setEnabled(true);
 	zonePreview->setEnabled(true);
 
 	// Select memorized entry
@@ -1554,7 +1553,10 @@ void Window::about()
 	desc1.setFixedWidth(about.width());
 	desc1.setAlignment(Qt::AlignHCenter);
 
-	QLabel desc2(tr("By myst6re<br/><a href=\"https://github.com/myst6re/makoureactor/\">github.com/myst6re/makoureactor</a><br/><br/>Thanks to:<ul style=\"margin:0\"><li>Squall78</li><li>Synergy Blades</li><li>Akari</li><li>Asa</li><li>Aali</li></ul>"), &about);
+	QLabel desc2(tr("By Jérôme &lt;myst6re&gt; Arzel <br/><a href=\"https://github.com/myst6re/makoureactor/\">"
+	                "github.com/myst6re/makoureactor</a><br/><br/>Thanks to:<ul style=\"margin:0\"><li>Squall78</li>"
+	                "<li>Synergy Blades</li><li>TrueOdin</li><li>Akari</li><li>Asa</li><li>Aali</li>"
+	                "<li>DLPB</li></ul>"), &about);
 	desc2.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc2.setTextFormat(Qt::RichText);
 	desc2.setOpenExternalLinks(true);
@@ -1566,7 +1568,7 @@ void Window::about()
 
 	QLabel desc4(QString("Qt %1").arg(QT_VERSION_STR), &about);
 	QPalette pal = desc4.palette();
-	pal.setColor(QPalette::WindowText, QColor(0xAA,0xAA,0xAA));
+	pal.setColor(QPalette::WindowText, QColor(0x88,0x88,0x88));
 	desc4.setPalette(pal);
 	desc4.move(9, about.height()-16-desc4.sizeHint().height()-button.sizeHint().height());
 

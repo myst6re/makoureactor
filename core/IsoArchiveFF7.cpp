@@ -20,7 +20,7 @@
 #include "core/GZIPPS.h"
 
 IsoArchiveFF7::IsoArchiveFF7(const QString &name) :
-	IsoArchive(name), _exe(NULL), _country(NoCountry)
+	IsoArchive(name), _exe(nullptr), _country(NoCountry)
 {
 }
 
@@ -37,7 +37,7 @@ bool IsoArchiveFF7::open(QIODevice::OpenMode mode)
 		_exe = searchExe();
 		_country = searchCountry();
 	} else {
-		_exe = NULL;
+		_exe = nullptr;
 		_country = NoCountry;
 	}
 
@@ -63,7 +63,7 @@ IsoFile *IsoArchiveFF7::searchExe() const
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 IsoFile *IsoArchiveFF7::exe() const
@@ -203,6 +203,64 @@ bool IsoArchiveFF7::isDemo() const
 	return dir && dir->name() == "NARITA";
 }
 
+QMap<int, QString> IsoArchiveFF7::maplist()
+{
+	IsoDirectory *fieldDirectory = rootDirectory()->directory("FIELD");
+	if(!fieldDirectory) {
+		qWarning() << "IsoArchiveFF7::fieldBin field directory not found";
+		return QMap<int, QString>();
+	}
+
+	IsoFile *isoFieldBin = fieldDirectory->file("FIELD.BIN");
+	if(isoFieldBin == nullptr) {
+		qWarning() << "IsoArchiveFF7::fieldBin field.bin not found";
+		return QMap<int, QString>();
+	}
+
+	QByteArray data = isoFieldBin->modifiedData();
+	// Gzip uncompress
+	QByteArray ungzip = GZIPPS::decompress(data);
+	if(ungzip.isEmpty()) {
+		qWarning() << "IsoArchiveFF7::maplist unable to decompress" << isoFieldBin->name();
+		return QMap<int, QString>();
+	}
+
+	QMap<int, QString> orderedFields, ret;
+	int min = -1;
+
+	foreach (IsoFile *field, fieldDirectory->files()) {
+		if (!field->name().endsWith(".DAT")) {
+			continue;
+		}
+
+		quint32 location = field->location(), size = field->size();
+		QByteArray toSearch = QByteArray((char *)&location, 4).append((char *)&size, 4);
+
+		int index = ungzip.indexOf(toSearch);
+		if (index >= 0) {
+			orderedFields.insert(index, field->name().left(field->name().indexOf('.')).toLower());
+
+			if (min < 0 || index < min) {
+				min = index;
+			}
+		}
+	}
+
+	if (min < 0) {
+		return QMap<int, QString>();
+	}
+
+	QMapIterator<int, QString> it(orderedFields);
+
+	while (it.hasNext()) {
+		it.next();
+
+		ret.insert((it.key() - min) / 8, it.value());
+	}
+
+	return ret;
+}
+
 bool IsoArchiveFF7::updateBin(IsoFile *isoBin, const QList<IsoFile *> &filesRefByBin, int startOffset)
 {
 	QByteArray data = isoBin->modifiedData(),
@@ -309,12 +367,12 @@ IsoFile *IsoArchiveFF7::updateFieldBin()
 	IsoDirectory *fieldDirectory = rootDirectory()->directory("FIELD");
 	if(!fieldDirectory) {
 		qWarning() << "IsoArchiveFF7::updateFieldBin field directory not found";
-		return NULL;
+		return nullptr;
 	}
 	IsoFile *isoFieldBin = fieldDirectory->file("FIELD.BIN");
-	if(isoFieldBin == NULL) {
+	if(isoFieldBin == nullptr) {
 		qWarning() << "IsoArchiveFF7::updateFieldBin field.bin not found";
-		return NULL;
+		return nullptr;
 	}
 
 	QList<IsoFile *> files;
@@ -328,7 +386,7 @@ IsoFile *IsoArchiveFF7::updateFieldBin()
 	if(updateBin(isoFieldBin, files, 0x30000)) {
 		return isoFieldBin;
 	}
-	return NULL;
+	return nullptr;
 }
 
 IsoFile *IsoArchiveFF7::updateWorldBin()
@@ -336,12 +394,12 @@ IsoFile *IsoArchiveFF7::updateWorldBin()
 	IsoDirectory *worldDirectory = rootDirectory()->directory("WORLD");
 	if(!worldDirectory) {
 		qWarning() << "IsoArchiveFF7::updateWorldBin world directory not found";
-		return NULL;
+		return nullptr;
 	}
 	IsoFile *isoWorldBin = worldDirectory->file("WORLD.BIN");
-	if(isoWorldBin == NULL) {
+	if(isoWorldBin == nullptr) {
 		qWarning() << "IsoArchiveFF7::updateFieldBin world.bin not found";
-		return NULL;
+		return nullptr;
 	}
 
 	QList<IsoFile *> files;
@@ -354,7 +412,7 @@ IsoFile *IsoArchiveFF7::updateWorldBin()
 	if(updateBin(isoWorldBin, files, 0x27000)) {
 		return isoWorldBin;
 	}
-	return NULL;
+	return nullptr;
 }
 
 IsoFile *IsoArchiveFF7::updateYamadaBin()
@@ -362,12 +420,12 @@ IsoFile *IsoArchiveFF7::updateYamadaBin()
 	IsoDirectory *initDirectory = this->initDirectory();
 	if(!initDirectory) {
 		qWarning() << "IsoArchiveFF7::updateYamadaBin INIT directory not found";
-		return NULL;
+		return nullptr;
 	}
 	IsoFile *isoYamadaBin = initDirectory->file("YAMADA.BIN");
 	if(!isoYamadaBin) {
 		qWarning() << "IsoArchiveFF7::updateYamadaBin YAMADA.BIN file not found";
-		return NULL;
+		return nullptr;
 	}
 
 	if(isoYamadaBin->size() != 80) {
@@ -391,7 +449,7 @@ IsoFile *IsoArchiveFF7::updateYamadaBin()
 		IsoFile *isoFile = rootDirectory()->file(filename);
 		if(!isoFile) {
 			qWarning() << "IsoArchiveFF7::updateYamadaBin" << filename << "file not found";
-			return NULL;
+			return nullptr;
 		}
 
 		quint32 pos = data[i * 2],
@@ -401,7 +459,7 @@ IsoFile *IsoArchiveFF7::updateYamadaBin()
 				|| isoFile->size() != size) {
 			qWarning() << "IsoArchiveFF7::updateYamadaBin" << filename << "wrong pos or size" << isoFile->location() << pos << "/" << isoFile->size() << size;
 			if(isoFile->location() != pos) {
-				return NULL;
+				return nullptr;
 			}
 		}
 

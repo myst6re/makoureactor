@@ -354,7 +354,7 @@ void Search::setFieldArchive(FieldArchive *fieldArchive)
 	setActionsEnabled(fieldArchive != NULL);
 	if(mapJump->count() <= 0) {
 		int mapID=0;
-		foreach(const QString &fieldName, Data::field_names) {
+		foreach(const QString &fieldName, Data::maplist()) {
 			mapJump->addItem(QString("%1 - %2").arg(mapID++, 3, 10, QChar('0')).arg(fieldName));
 		}
 		// set config values

@@ -545,7 +545,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 		gateList->clear();
 		foreach(const Exit &gateway, infFile->exitLines()) {
 			if(gateway.fieldID != 0x7FFF) {
-				gateList->addItem(QString("%1 (%2)").arg(Data::field_names.value(gateway.fieldID)).arg(gateway.fieldID));
+				gateList->addItem(QString("%1 (%2)").arg(Data::mapName(gateway.fieldID)).arg(gateway.fieldID));
 			} else {
 				QListWidgetItem *item = new QListWidgetItem(tr("Unused"));
 				item->setForeground(Qt::darkGray);
@@ -1138,7 +1138,7 @@ void WalkmeshManager::editFieldId(int v)
 			QListWidgetItem *item = gateList->currentItem();
 			if(v != 0x7FFF) {
 				item->setText(QString("%1 (%2)")
-				              .arg(Data::field_names.value(v))
+				                  .arg(Data::mapName(v))
 				              .arg(v));
 				// Default foreground
 				item->setForeground(QListWidgetItem().foreground());

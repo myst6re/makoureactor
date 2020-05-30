@@ -59,7 +59,11 @@ bool Field::open(bool dontOptimize)
 {
 	QByteArray fileData;
 
-	if(_io != nullptr && headerSize() > 0) {
+	if(_io == nullptr) {
+		return false;
+	}
+
+	if(headerSize() > 0) {
 		QString fileType = sectionFile(Scripts);
 		if(!dontOptimize && !_io->fieldDataIsCached(this, fileType)) {
 			QByteArray lzsData = _io->fieldData(this, fileType, false);
@@ -450,6 +454,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 		if(part.testFlag(Inf)) {
 			InfFile *inf = this->inf(false);
 			if(!inf->open(data.mid(sectionPositions[4], sectionPositions[5]-sectionPositions[4])))	return 2;
+			inf->setMapName(name());
 			inf->setModified(true);
 		}
 		if(part.testFlag(Background)) {
@@ -529,6 +534,7 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 		if(part.testFlag(Inf)) {
 			InfFile *inf = this->inf(false);
 			if(!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4)))	return 2;
+			inf->setMapName(name());
 			inf->setModified(true);
 		}
 		if(part.testFlag(Background)) {

@@ -10,6 +10,7 @@ HEADERS += \
     Parameters.h \
     Data.h \
     core/PsfFile.h \
+    core/field/MaplistFile.h \
     widgets/ArchivePreview.h \
     widgets/HelpWidget.h \
     widgets/PsfDialog.h \
@@ -151,6 +152,7 @@ HEADERS += \
 SOURCES += \
     Window.cpp \
     core/PsfFile.cpp \
+    core/field/MaplistFile.cpp \
     txt.cpp \
     main.cpp \
     Data.cpp \

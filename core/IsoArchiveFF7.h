@@ -44,6 +44,7 @@ public:
 	IsoDirectory *fieldDirectory() const;
 	IsoDirectory *initDirectory() const;
 	bool isDemo() const;
+	QMap<int, QString> maplist();
 private:
 	Q_DISABLE_COPY(IsoArchiveFF7)
 	bool updateBin(IsoFile *isoBin, const QList<IsoFile *> &filesRefByBin, int startOffset = 0);

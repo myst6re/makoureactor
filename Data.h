@@ -47,6 +47,21 @@ public:
 	static void openMaplist(bool PC=false);
 	static bool saveMaplist(QByteArray &data);
 	static void toPCMaplist(QStringList &field_names);
+	inline static QStringList maplist() {
+		return field_names;
+	}
+	inline static void setMaplist(const QStringList &maplist) {
+		field_names = maplist;
+	}
+	inline static void addMap(const QString &map) {
+		field_names.append(map);
+	}
+	inline static void setMap(int i, const QString &map) {
+		field_names[i] = map;
+	}
+	inline static QString mapName(int i) {
+		return field_names.value(i);
+	}
 	static QStringList char_names;
 	static QStringList key_names;
 	static QStringList item_names;
@@ -58,7 +73,6 @@ public:
 	static int currentModelID;
 	static QStringList *currentHrcNames;
 	static QList<QStringList> *currentAnimNames;
-	static QStringList field_names;
 	static QStringList movie_names_cd1, movie_names_cd2, movie_names_cd3;
 	static QStringList music_names;
 	static QStringList music_desc;
@@ -84,12 +98,13 @@ private:
 	static QString ff7Path(const QMap<FF7Version, QString> &pathList);
 	static QMap<Data::FF7Version, QString> ff7PathList(QString (*searchFF7Path)(FF7Version));
 	static void fill(const QByteArray &data, int pos, int dataSize, QStringList &names);
+	static QStringList field_names;
 	static QString ff7DataPath_cache;
 	static QString ff7AppPath_cache;
 	static QString ff7RereleasePath_cache;
 	static bool ff7RereleaseAlreadySearched;
 	static const char *movieList[106];
-	static const char *mapList[788];
+	static const char *_mapList[788];
 	static const char *musicList[100];
 	static const char *musicList2[100];
 

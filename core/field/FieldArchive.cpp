@@ -102,7 +102,7 @@ FieldArchiveIO::ErrorCode FieldArchive::open()
 
 	if(fileList.isEmpty())	return FieldArchiveIO::FieldNotFound;
 
-	if(Data::field_names.isEmpty()) {
+	if(Data::maplist().isEmpty()) {
 		Data::openMaplist(_io->isPC());
 	}
 
@@ -139,7 +139,7 @@ void FieldArchive::clear()
 	qDeleteAll(fileList);
 	fileList.clear();
 	fieldsSortByName.clear();
-	Data::field_names.clear();
+	Data::setMaplist(QStringList());
 }
 
 FieldArchiveIO *FieldArchive::io() const
@@ -197,7 +197,7 @@ void FieldArchive::updateFieldLists(Field *field, int mapId)
 void FieldArchive::addNewField(Field *field, int &mapID)
 {
 	mapID = appendField(field);
-	Data::field_names.append(field->name());
+	Data::addMap(field->name());
 	updateFieldLists(field, mapID);
 }
 
@@ -209,9 +209,11 @@ void FieldArchive::delField(int mapId)
 		return;
 	}
 
-	for (int i = 0; i < Data::field_names.size(); ++i) {
-		if (Data::field_names.at(i) == field->name()) {
-			Data::field_names[i] = "";
+	QStringList maplist = Data::maplist();
+
+	for (int i = 0; i < maplist.size(); ++i) {
+		if (maplist.at(i) == field->name()) {
+			Data::setMap(i, "");
 		}
 	}
 
@@ -221,9 +223,9 @@ void FieldArchive::delField(int mapId)
 
 int FieldArchive::appendField(Field *field)
 {
-	int mapId = Data::field_names.indexOf(field->name());
+	int mapId = Data::maplist().indexOf(field->name());
 	if (mapId < 0) {
-		mapId = fileList.isEmpty() ? 0 : fileList.lastKey() + 1;
+		mapId = 1200 + (fileList.isEmpty() ? 0 : fileList.lastKey() + 1);
 	}
 	fileList.insert(mapId, field);
 	return mapId;

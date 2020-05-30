@@ -230,7 +230,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::openIso()
 	}
 
 	isoFieldDirectory = iso.fieldDirectory();
-	if(isoFieldDirectory == NULL) {
+	if(isoFieldDirectory == nullptr) {
 		return FieldNotFound;
 	}
 
@@ -243,6 +243,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 	if (error != Ok) {
 		return error;
 	}
+
+
+	iso.maplist();
 
 	QList<IsoFile *> files = isoFieldDirectory->files();
 
