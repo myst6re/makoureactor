@@ -51,7 +51,9 @@ public:
 	void setObserverMaximum(unsigned int max);
 	void setObserverValue(int value);
 
-	int currentFieldId() const;
+	inline FieldList *fieldList() const {
+		return _fieldList;
+	}
 	inline TextManager *textWidget() const {
 		return _textDialog;
 	}
@@ -69,9 +71,9 @@ public slots:
 	void save();
 	int closeFile(bool quit=false);
 
-	bool gotoField(int fieldID);
-	void gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID);
-	void gotoText(int fieldID, int textID, int from, int size);
+	bool gotoField(int mapID);
+	void gotoOpcode(int mapID, int grpScriptID, int scriptID, int opcodeID);
+	void gotoText(int mapID, int textID, int from, int size);
 
 	void jpText(bool);
 
@@ -113,7 +115,7 @@ private:
 	void fillRecentMenu();
 
 	QLineEdit *lineSearch;
-	FieldList *fieldList;
+	FieldList *_fieldList;
 	QStackedWidget *zonePreview;
 	ApercuBG *zoneImage;
 	FieldModel *fieldModel;

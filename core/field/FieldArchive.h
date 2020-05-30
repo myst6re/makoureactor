@@ -55,9 +55,9 @@ struct SearchExecQuery : public SearchQuery
 
 struct SearchFieldQuery : public SearchQuery
 {
-	quint16 fieldID;
-	explicit SearchFieldQuery(quint16 fieldID) :
-		fieldID(fieldID) {}
+	int mapID;
+	explicit SearchFieldQuery(int mapID) :
+		mapID(mapID) {}
 };
 
 struct SearchTextQuery : public SearchQuery
@@ -111,17 +111,22 @@ struct SearchInText : public SearchIn
 
 class FieldArchive;
 
-class FieldArchiveIterator : public QListIterator<Field *>
+class FieldArchiveIterator : public QMapIterator<int, Field *>
 {
 	friend class FieldArchive;
 public:
 	explicit FieldArchiveIterator(const FieldArchive &archive);
+	bool seek(int mapId);
 	Field *next(bool open=true, bool dontOptimize=false);
 	Field *peekNext(bool open=true, bool dontOptimize=false) const;
 	Field *peekPrevious(bool open=true, bool dontOptimize=false) const;
 	Field *previous(bool open=true, bool dontOptimize=false);
+	inline int mapId() const {
+		return key();
+	}
 private:
 	static Field *openField(Field *field, bool open=true, bool dontOptimize=false);
+	QMap<int, Field *> mapList;
 };
 
 class FieldArchive
@@ -155,14 +160,13 @@ public:
 	inline int size() const {
 		return fileList.size();
 	}
-	int indexOfField(const QString &name) const;
-	const Field *field(quint32 id) const;
-	Field *field(quint32 id, bool open=true, bool dontOptimize=false);
+	const Field *field(quint32 mapId) const;
+	Field *field(quint32 mapId, bool open=true, bool dontOptimize=false);
 	const Field *field(const QString &name) const;
 	Field *field(const QString &name, bool open=true, bool dontOptimize=false);
-	void appendField(Field *field);
-	void addNewField(Field *field, int &fieldId);
-	void delField(quint32 id);
+	int appendField(Field *field);
+	void addNewField(Field *field, int &mapID);
+	void delField(int id);
 
 	bool isAllOpened() const;
 	bool isModified() const;
@@ -170,7 +174,6 @@ public:
 #ifdef DEBUG_FUNCTIONS
 	void validateAsk();
 	void validateOneLineSize();
-	void extractAkaos(const QString &dirname);
 	void printAkaos(const QString &filename);
 	void printModelLoaders(const QString &filename, bool generic = true);
 	void printTexts(const QString &filename, bool usedTexts = false);
@@ -180,30 +183,30 @@ public:
 	void printScriptsDirs(const QString &filename);
 	void diffScripts();
 	static bool printBackgroundTiles(Field *field, const QString &filename, bool uniformize = false);
-	void searchBackgroundZ();
+	void printBackgroundZ();
 	void searchAll();// research & debug function
 #endif
 	bool find(bool (*predicate)(Field *, SearchQuery *, SearchIn *),
-			  SearchQuery *toSearch, int &fieldID, SearchIn *searchIn,
+			  SearchQuery *toSearch, int &mapID, SearchIn *searchIn,
 			  Sorting sorting, SearchScope scope);
 	bool findLast(bool (*predicate)(Field *, SearchQuery *, SearchIn *),
-				  SearchQuery *toSearch, int &fieldID, SearchIn *searchIn,
+				  SearchQuery *toSearch, int &mapID, SearchIn *searchIn,
 				  Sorting sorting, SearchScope scope);
-	bool searchOpcode(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchExec(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchMapJump(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchTextInScripts(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchText(const QRegExp &text, int &fieldID, int &textID, int &from, int &size, Sorting sorting, SearchScope scope);
-	bool searchOpcodeP(int opcode, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchExecP(quint8 group, quint8 script, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchMapJumpP(quint16 _field, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchTextInScriptsP(const QRegExp &text, int &fieldID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchTextP(const QRegExp &text, int &fieldID, int &textID, int &from, int &index, int &size, Sorting sorting, SearchScope scope);
-	bool replaceText(const QRegExp &search, const QString &after, int fieldID, int textID, int from);
+	bool searchOpcode(int opcode, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchExec(quint8 group, quint8 script, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchMapJump(int _field, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchTextInScripts(const QRegExp &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchText(const QRegExp &text, int &mapID, int &textID, int &from, int &size, Sorting sorting, SearchScope scope);
+	bool searchOpcodeP(int opcode, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchExecP(quint8 group, quint8 script, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchMapJumpP(int _field, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchTextInScriptsP(const QRegExp &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchTextP(const QRegExp &text, int &mapID, int &textID, int &from, int &index, int &size, Sorting sorting, SearchScope scope);
+	bool replaceText(const QRegExp &search, const QString &after, int mapID, int textID, int from);
 
-	bool compileScripts(int &fieldID, int &groupID, int &scriptID, int &opcodeID, QString &errorStr);
+	bool compileScripts(int &mapID, int &groupID, int &scriptID, int &opcodeID, QString &errorStr);
 	void removeBattles();
 	void removeTexts();
 	void cleanTexts();
@@ -226,14 +229,12 @@ protected:
 		return _observer;
 	}
 private:
+	int indexOfField(const QString &name) const;
 	void updateFieldLists(Field *field, int fieldID);
-	bool searchIterators(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting, SearchScope scope) const;
-	bool searchIteratorsP(QMap<QString, int>::const_iterator &i, QMap<QString, int>::const_iterator &end, int fieldID, Sorting sorting, SearchScope scope) const;
 	static bool openField(Field *field, bool dontOptimize=false);
 
-	QList<Field *> fileList;
+	QMap<int, Field *> fileList;
 	QMultiMap<QString, int> fieldsSortByName;
-	QMultiMap<QString, int> fieldsSortByMapId;
 
 	FieldArchiveIO *_io;
 	ArchiveObserver *_observer;

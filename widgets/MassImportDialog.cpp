@@ -20,7 +20,7 @@
 
 MassImportDialog::MassImportDialog(QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-	_fieldArchive(0), _currentField(-1)
+	_fieldArchive(0), _currentMapId(-1)
 {
 	setWindowTitle(tr("Mass Import"));
 
@@ -77,10 +77,10 @@ MassImportDialog::MassImportDialog(QWidget *parent) :
 	fieldList->setFocus();
 }
 
-void MassImportDialog::fill(const FieldArchive *fieldArchive, int currentField)
+void MassImportDialog::fill(const FieldArchive *fieldArchive, int currentMapId)
 {
 	_fieldArchive = fieldArchive;
-	_currentField = currentField;
+	_currentMapId = currentMapId;
 
 	QString fieldType = _fieldArchive->isPC() ? tr("PC") : tr("PS");
 	QStringList formats;
@@ -90,11 +90,12 @@ void MassImportDialog::fill(const FieldArchive *fieldArchive, int currentField)
 	imports.value(Fields)->setFormats(formats);
 
 	fieldList->clear();
-	for(int i=0 ; i<_fieldArchive->size() ; ++i) {
-		const Field *field = _fieldArchive->field(i);
+	FieldArchiveIterator it(*_fieldArchive);
+	while (it.hasNext()) {
+		const Field *field = it.next(false);
 		if(field) {
 			QListWidgetItem *item = new QListWidgetItem(field->name());
-			item->setData(Qt::UserRole, i);
+			item->setData(Qt::UserRole, it.mapId());
 			fieldList->addItem(item);
 		}
 	}
@@ -111,7 +112,7 @@ void MassImportDialog::chooseImportDirectory()
 
 void MassImportDialog::selectCurrentField()
 {
-	if(_currentField < 0) {
+	if(_currentMapId < 0) {
 		return;
 	}
 
@@ -119,8 +120,8 @@ void MassImportDialog::selectCurrentField()
 
 	for(int row=0 ; row<fieldList->count() ; ++row) {
 		QListWidgetItem *item = fieldList->item(row);
-		if(item->data(Qt::UserRole).toInt() == _currentField) {
-			fieldList->setItemSelected(item, true);
+		if(item->data(Qt::UserRole).toInt() == _currentMapId) {
+			item->setSelected(true);
 			fieldList->scrollToItem(item);
 			return;
 		}

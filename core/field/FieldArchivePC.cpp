@@ -43,14 +43,18 @@ FieldArchivePC::FieldArchivePC(const QString &path, FieldArchiveIO::Type type) :
 FieldArchivePC::~FieldArchivePC()
 {
 	foreach(TutFile *tut, _tuts) {
-		if(tut != NULL)	delete tut;
+		if(tut != nullptr) {
+			delete tut;
+		}
 	}
 }
 
 void FieldArchivePC::clear()
 {
 	foreach(TutFile *tut, _tuts) {
-		if(tut != NULL)	delete tut;
+		if(tut != nullptr) {
+			delete tut;
+		}
 	}
 
 	_tuts.clear();
@@ -79,18 +83,18 @@ TutFilePC *FieldArchivePC::tut(const QString &name)
 
 		if(name.startsWith(tutName, Qt::CaseInsensitive)) {
 			TutFilePC *tutFile = it.value();
-			if(tutFile == NULL) {
+			if(tutFile == nullptr) {
 				QByteArray data = io()->fileData(tutName + ".tut", false, false);
 				if(!data.isEmpty()) {
 					tutFile = new TutFilePC();
 					if(!static_cast<TutFile *>(tutFile)->open(data)) {
 						delete tutFile;
-						return NULL;
+						return nullptr;
 					}
 					_tuts.insert(tutName, tutFile);
 					return tutFile;
 				} else {
-					return NULL;
+					return nullptr;
 				}
 			} else {
 				return tutFile;
@@ -98,7 +102,7 @@ TutFilePC *FieldArchivePC::tut(const QString &name)
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 const QMap<QString, TutFilePC *> &FieldArchivePC::tuts() const
@@ -108,13 +112,13 @@ const QMap<QString, TutFilePC *> &FieldArchivePC::tuts() const
 
 void FieldArchivePC::addTut(const QString &name)
 {
-	_tuts.insert(name, NULL);
+	_tuts.insert(name, nullptr);
 }
 
 void FieldArchivePC::setSaved()
 {
 	foreach(TutFile *tut, _tuts) {
-		if(tut != NULL) {
+		if(tut != nullptr) {
 			tut->setModified(false);
 		}
 	}
@@ -129,14 +133,17 @@ FieldArchiveIOPC *FieldArchivePC::io() const
 
 void FieldArchivePC::cleanModelLoader()
 {
+	FieldArchiveIterator it(*this);
+	int i = 0;
+
 	observer()->setObserverMaximum(size());
 
-	for(int fieldID=0 ; fieldID<size() ; ++fieldID) {
+	while (it.hasNext()) {
 		if(observer()->observerWasCanceled()) {
 			return;
 		}
-		FieldPC *field = this->field(fieldID, true);
-		if(field != NULL) {
+		FieldPC *field = static_cast<FieldPC *>(it.next());
+		if(field != nullptr) {
 			FieldModelLoaderPC *modelLoader = field->fieldModelLoader();
 			if(modelLoader->isOpen()) {
 				modelLoader->clean();
@@ -145,23 +152,26 @@ void FieldArchivePC::cleanModelLoader()
 				}
 			}
 		}
-		observer()->setObserverValue(fieldID);
+		observer()->setObserverValue(i++);
 	}
 }
 
 void FieldArchivePC::removeUnusedSections()
 {
+	FieldArchiveIterator it(*this);
+	int i = 0;
+
 	observer()->setObserverMaximum(size());
 
-	for(int fieldID=0 ; fieldID<size() ; ++fieldID) {
+	while (it.hasNext()) {
 		if(observer()->observerWasCanceled()) {
 			return;
 		}
-		FieldPC *field = this->field(fieldID, true);
-		if(field != NULL) {
+		FieldPC *field = static_cast<FieldPC *>(it.next());
+		if(field != nullptr) {
 			field->setRemoveUnusedSection(true);
 			field->setModified(true);
 		}
-		observer()->setObserverValue(fieldID);
+		observer()->setObserverValue(i++);
 	}
 }

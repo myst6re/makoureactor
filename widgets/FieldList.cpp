@@ -86,7 +86,7 @@ void FieldList::enableActions(bool enabled)
 	setContextMenuPolicy(enabled ? Qt::ActionsContextMenu : Qt::NoContextMenu);
 }
 
-QTreeWidgetItem *FieldList::createItem(Field *f, int fieldID)
+QTreeWidgetItem *FieldList::createItem(Field *f, int mapID)
 {
 	const QString &name = f->name();
 	QString id;
@@ -98,7 +98,7 @@ QTreeWidgetItem *FieldList::createItem(Field *f, int fieldID)
 	}
 
 	QTreeWidgetItem *item = new QTreeWidgetItem(QStringList() << name << id);
-	item->setData(0, Qt::UserRole, fieldID);
+	item->setData(0, Qt::UserRole, mapID);
 	return item;
 }
 
@@ -114,10 +114,12 @@ void FieldList::fill(FieldArchive *fieldArchive)
 {
 	QList<QTreeWidgetItem *> items;
 
-	for(int fieldID = 0 ; fieldID < fieldArchive->size() ; ++fieldID) {
-		Field *f = fieldArchive->field(fieldID, false);
+	FieldArchiveIterator it(*fieldArchive);
+
+	while (it.hasNext()) {
+		Field *f = it.next(false);
 		if(f) {
-			items.append(createItem(f, fieldID));
+			items.append(createItem(f, it.mapId()));
 		}
 	}
 
@@ -131,7 +133,7 @@ void FieldList::fill(FieldArchive *fieldArchive)
 	}
 }
 
-int FieldList::currentFieldId() const
+int FieldList::currentMapId() const
 {
 	QList<QTreeWidgetItem *> selectedItems = this->selectedItems();
 	if(selectedItems.isEmpty()) {
@@ -177,12 +179,24 @@ void FieldList::renameOK(QTreeWidgetItem *item, int column)
 	if(column != 1) {
 		return;
 	}
+
 	disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(renameOK(QTreeWidgetItem *, int)));
 	QString newName = item->text(1).left(8);
+
+	if(newName.isEmpty()) {
+		QMessageBox::warning(this, tr("Name not filled"),
+		                     tr("Please set a new field name."));
+		return;
+	} else if(Data::field_names.contains(newName)) {
+		QMessageBox::warning(this,
+		                     tr("Name already present in archive"),
+		                     tr("Please choose another name."));
+		return;
+	}
+
 	item->setText(1, newName);
 
-	int fieldID = currentFieldId();
-	Field *f = _fieldArchive->field(fieldID, false);
+	Field *f = _fieldArchive->field(currentMapId());
 	if(f) {
 		f->setName(newName);
 		InfFile *inf = f->inf();
@@ -229,10 +243,10 @@ void FieldList::add()
 
 	FieldPC *field = new FieldPC(newName);
 	field->initEmpty();
-	int fieldID; // ref
-	_fieldArchive->addNewField(field, fieldID);
+	int mapID; // ref
+	_fieldArchive->addNewField(field, mapID);
 
-	QTreeWidgetItem *item = createItem(field, fieldID);
+	QTreeWidgetItem *item = createItem(field, mapID);
 	addTopLevelItem(item);
 	adjustWidth();
 	setCurrentItem(item);
@@ -275,8 +289,8 @@ void FieldList::del()
 	blockSignals(true);
 
 	foreach(QTreeWidgetItem *item, selected) {
-		int fieldID = item->data(0, Qt::UserRole).toInt();
-		_fieldArchive->delField(fieldID);
+		int mapID = item->data(0, Qt::UserRole).toInt();
+		_fieldArchive->delField(mapID);
 		lastIndex = qMax(lastIndex, indexOfTopLevelItem(item));
 		delete item;
 	}

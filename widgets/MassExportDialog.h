@@ -31,7 +31,7 @@ public:
 	};
 
 	explicit MassExportDialog(QWidget *parent = 0);
-	void fill(const FieldArchive *fieldArchive, int currentField);
+	void fill(const FieldArchive *fieldArchive, int currentMapId);
 	QList<int> selectedFields() const;
 	bool exportModule(ExportType type) const;
 	const QString &moduleFormat(ExportType type) const;
@@ -48,7 +48,7 @@ private:
 	QCheckBox *overwriteIfExists;
 
 	const FieldArchive *_fieldArchive;
-	int _currentField;
+	int _currentMapId;
 protected:
 	void accept();
 };

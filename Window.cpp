@@ -146,7 +146,7 @@ Window::Window() :
 	actionWalkmesh->setStatusTip(tr("Walkmesh editor"));
 	authorAction = toolBar->addWidget(toolBarRight);
 
-	fieldList = new FieldList(this);
+	_fieldList = new FieldList(this);
 
 	zoneImage = new ApercuBG();
 	if(Config::value("OpenGL", true).toBool()) {
@@ -166,9 +166,9 @@ Window::Window() :
 
 	QWidget *fullFieldList = new QWidget(this);
 	QVBoxLayout *fieldListLayout = new QVBoxLayout(fullFieldList);
-	fieldListLayout->addWidget(fieldList->toolBar());
-	fieldListLayout->addWidget(fieldList, 1);
-	fieldListLayout->addWidget(fieldList->lineSearch());
+	fieldListLayout->addWidget(_fieldList->toolBar());
+	fieldListLayout->addWidget(_fieldList, 1);
+	fieldListLayout->addWidget(_fieldList->lineSearch());
 	fieldListLayout->setSpacing(2);
 	zonePreview->setContentsMargins(fieldListLayout->contentsMargins());
 
@@ -200,9 +200,9 @@ Window::Window() :
 
 	setMenuBar(menuBar);
 
-	connect(fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
-	connect(fieldList, SIGNAL(changed()), SLOT(setModified()));
-	connect(fieldList, SIGNAL(fieldDeleted()), SLOT(setFieldDeleted()));
+	connect(_fieldList, SIGNAL(itemSelectionChanged()), SLOT(openField()));
+	connect(_fieldList, SIGNAL(changed()), SLOT(setModified()));
+	connect(_fieldList, SIGNAL(fieldDeleted()), SLOT(setFieldDeleted()));
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
 	connect(searchDialog, SIGNAL(found(int,int,int,int)), SLOT(gotoOpcode(int,int,int,int)));
 	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
@@ -210,7 +210,7 @@ Window::Window() :
 	connect(_scriptManager, SIGNAL(editText(int)), SLOT(textManager(int)));
 	connect(_scriptManager, SIGNAL(changed()), SLOT(setModified()));
 
-	fieldList->sortItems(Config::value("fieldListSortColumn").toInt(),
+	_fieldList->sortItems(Config::value("fieldListSortColumn").toInt(),
 	                     Qt::SortOrder(Config::value("fieldListSortOrder").toBool()));
 
 	restoreState(Config::value("windowState").toByteArray());
@@ -249,8 +249,8 @@ void Window::closeEvent(QCloseEvent *event)
 		Config::setValue("verticalSplitterState", verticalSplitter->saveState());
 		Config::setValue("fieldListVisible", !verticalSplitter->isCollapsed(0));
 		Config::setValue("backgroundVisible", !horizontalSplitter->isCollapsed(1));
-		Config::setValue("fieldListSortColumn", fieldList->sortColumn());
-		Config::setValue("fieldListSortOrder", int(fieldList->header()->sortIndicatorOrder()));
+		Config::setValue("fieldListSortColumn", _fieldList->sortColumn());
+		Config::setValue("fieldListSortOrder", int(_fieldList->header()->sortIndicatorOrder()));
 		_scriptManager->saveConfig();
 		if(_walkmeshManager) {
 			_walkmeshManager->saveConfig();
@@ -302,7 +302,7 @@ void Window::toggleBackgroundPreview()
 
 FieldArchive::Sorting Window::getFieldSorting()
 {
-	return fieldList->getFieldSorting();
+	return _fieldList->getFieldSorting();
 }
 
 void Window::jpText(bool enabled)
@@ -342,15 +342,17 @@ void Window::restartNow()
 
 int Window::closeFile(bool quit)
 {
-	if(fieldList->currentItem() != NULL) {
-		Config::setValue("currentField", fieldList->currentItem()->text(0));
+	if(_fieldList->currentItem() != NULL) {
+		Config::setValue("currentField", _fieldList->currentItem()->text(0));
 	}
 
 	if(actionSave->isEnabled() && fieldArchive != NULL) {
 		QString fileChangedList;
+		FieldArchiveIterator it(*fieldArchive);
+
 		int i = 0;
-		for(int j = 0 ; j < fieldArchive->size() ; ++j) {
-			Field *curField = fieldArchive->field(j, false);
+		while (it.hasNext()) {
+			Field *curField = it.next(false);
 			if(curField && curField->isOpen() && curField->isModified()) {
 				fileChangedList += "\n - " + curField->name();
 				if(i > 10) {
@@ -360,6 +362,7 @@ int Window::closeFile(bool quit)
 				i++;
 			}
 		}
+
 		if(!fileChangedList.isEmpty()) {
 			fileChangedList.prepend(tr("\n\nEdited files:"));
 		}
@@ -385,10 +388,10 @@ int Window::closeFile(bool quit)
 		}
 		field = NULL;
 
-		fieldList->blockSignals(true);
-		fieldList->clear();
-		fieldList->setEnabled(false);
-		fieldList->blockSignals(false);
+		_fieldList->blockSignals(true);
+		_fieldList->clear();
+		_fieldList->setEnabled(false);
+		_fieldList->blockSignals(false);
 
 		disableEditors();
 		_scriptManager->removeCopiedReferences();
@@ -616,24 +619,24 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		return;
 	}
 
-	fieldList->fill(fieldArchive);
-	fieldList->setEnabled(true);
+	_fieldList->fill(fieldArchive);
+	_fieldList->setEnabled(true);
 	zonePreview->setEnabled(true);
 
 	// Select memorized entry
 	QString previousSessionField = Config::value("currentField").toString();
 	if(!previousSessionField.isEmpty()) {
-		QList<QTreeWidgetItem *> items = fieldList->findItems(previousSessionField, Qt::MatchExactly);
+		QList<QTreeWidgetItem *> items = _fieldList->findItems(previousSessionField, Qt::MatchExactly);
 		if(!items.isEmpty()) {
-			fieldList->setCurrentItem(items.first());
+			_fieldList->setCurrentItem(items.first());
 		}
 	}
 	// Select first entry
-	if(!fieldList->currentItem() && fieldList->topLevelItemCount() > 0) {
-		fieldList->setCurrentItem(fieldList->topLevelItem(0));
+	if(!_fieldList->currentItem() && _fieldList->topLevelItemCount() > 0) {
+		_fieldList->setCurrentItem(_fieldList->topLevelItem(0));
 	}
 
-	fieldList->setFocus();
+	_fieldList->setFocus();
 
 	if(fieldArchive->size() > 0) {
 		if(varDialog)	varDialog->setFieldArchive(fieldArchive);
@@ -657,7 +660,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	//fieldArchive->printScriptsDirs("final_parody_scripts");
 	//FieldArchivePC otherArch("", FieldArchiveIO::Lgp);
 	//fieldArchive->compareTexts(&otherArch);
-	//fieldArchive->searchBackgroundZ();
+	fieldArchive->printBackgroundZ();
 	/* const QStringList &fieldNames = Data::field_names;
 	QStringList fieldNamesPC = fieldNames;
 	Data::toPCMaplist(fieldNamesPC);
@@ -683,7 +686,6 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		}
 	} */
 	//fieldArchive->printTextsDir("field-texts", true);
-	fieldArchive->extractAkaos("akaos");
 	//fieldArchive->printTexts("field-texts.txt", true);
 	//fieldArchive->printAkaos("field-akaos.txt");
 	//fieldArchive->printModelLoaders("field-model-loaders-generic.txt");
@@ -697,7 +699,7 @@ void Window::setWindowTitle()
 {
 	QString windowTitle;
 	if(fieldArchive) {
-		QList<QTreeWidgetItem *> selectedItems = fieldList->selectedItems();
+		QList<QTreeWidgetItem *> selectedItems = _fieldList->selectedItems();
 		QString current;
 		if(!selectedItems.isEmpty()) {
 			current = selectedItems.first()->text(0);
@@ -725,11 +727,6 @@ void Window::setWindowTitle()
 	}
 
 	QWidget::setWindowTitle(windowTitle.append(PROG_FULLNAME));
-}
-
-int Window::currentFieldId() const
-{
-	return fieldList->currentFieldId();
 }
 
 void Window::disableEditors()
@@ -777,12 +774,12 @@ void Window::openField(bool reload)
 		return;
 	}
 
-	int fieldId = currentFieldId();
-	if(fieldId < 0) {
+	int mapId = _fieldList->currentMapId();
+	if(mapId < 0) {
 		disableEditors();
 		return;
 	}
-	fieldList->scrollToItem(fieldList->selectedItems().first());
+	_fieldList->scrollToItem(_fieldList->selectedItems().first());
 
 //	Data::currentCharNames.clear();
 	Data::currentHrcNames = 0;
@@ -806,7 +803,7 @@ void Window::openField(bool reload)
 	}
 
 	// Get and set field
-	field = fieldArchive->field(fieldId, true, true);
+	field = fieldArchive->field(mapId, true, true);
 	if(!field) {
 		disableEditors();
 		return;
@@ -900,12 +897,12 @@ void Window::setModified(bool enabled)
 	actionSave->setEnabled(enabled);
 	setWindowModified(enabled);
 
-	int size=fieldList->topLevelItemCount();
+	int size=_fieldList->topLevelItemCount();
 	for(int i=0 ; i<size ; ++i) {
-		QTreeWidgetItem *item = fieldList->topLevelItem(i);
-		int fieldId = item->data(0, Qt::UserRole).toInt();
-		if(fieldId >= 0) {
-			Field *curField = fieldArchive->field(fieldId, false);
+		QTreeWidgetItem *item = _fieldList->topLevelItem(i);
+		int mapId = item->data(0, Qt::UserRole).toInt();
+		if(mapId >= 0) {
+			Field *curField = fieldArchive->field(mapId, false);
 			if(curField) {
 				if(enabled && curField->isModified()) {
 					item->setForeground(0, QColor(0xd1,0x1d,0x1d));
@@ -932,22 +929,22 @@ void Window::saveAs(bool currentPath)
 {
 	if(!fieldArchive) return;
 
-	int fieldID, groupID, scriptID, opcodeID;
+	int mapID, groupID, scriptID, opcodeID;
 	QString errorStr;
 
 	setEnabled(false);
-	bool compiled = fieldArchive->compileScripts(fieldID, groupID, scriptID, opcodeID, errorStr);
+	bool compiled = fieldArchive->compileScripts(mapID, groupID, scriptID, opcodeID, errorStr);
 	setEnabled(true);
 
 	if(!compiled) {
 		QMessageBox::warning(this, tr("Compilation Error"), tr("Error Compiling Scripts:\n"
 																   "scene %1 (%2), group %3 (%4), script %5, line %6: %7")
-							 .arg(fieldArchive->field(fieldID)->name())
-							 .arg(fieldID)
-							 .arg(fieldArchive->field(fieldID)->scriptsAndTexts()->grpScript(groupID)->name())
+							 .arg(fieldArchive->field(mapID)->name())
+							 .arg(mapID)
+							 .arg(fieldArchive->field(mapID)->scriptsAndTexts()->grpScript(groupID)->name())
 							 .arg(groupID).arg(scriptID)
 							 .arg(opcodeID+1).arg(errorStr));
-		gotoOpcode(fieldID, groupID, scriptID, opcodeID);
+		gotoOpcode(mapID, groupID, scriptID, opcodeID);
 		_scriptManager->opcodeList()->setErrorLine(opcodeID);
 		return;
 	}
@@ -1019,15 +1016,15 @@ void Window::saveAs(bool currentPath)
 	if(!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
 }
 
-bool Window::gotoField(int fieldID)
+bool Window::gotoField(int mapID)
 {
-	int i, size=fieldList->topLevelItemCount();
+	int i, size=_fieldList->topLevelItemCount();
 	for(i=0 ; i<size ; ++i) {
-		QTreeWidgetItem *item = fieldList->topLevelItem(i);
-		if(item->data(0, Qt::UserRole).toInt() == fieldID) {
+		QTreeWidgetItem *item = _fieldList->topLevelItem(i);
+		if(item->data(0, Qt::UserRole).toInt() == mapID) {
 			blockSignals(true);
-			fieldList->setCurrentItem(item);
-			fieldList->scrollToItem(item);
+			_fieldList->setCurrentItem(item);
+			_fieldList->scrollToItem(item);
 			blockSignals(false);
 			return true;
 		}
@@ -1035,21 +1032,21 @@ bool Window::gotoField(int fieldID)
 	return false;
 }
 
-void Window::gotoOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID)
+void Window::gotoOpcode(int mapID, int grpScriptID, int scriptID, int opcodeID)
 {
-	if(gotoField(fieldID)) {
+	if(gotoField(mapID)) {
 		_scriptManager->blockSignals(true);
 		_scriptManager->gotoOpcode(grpScriptID, scriptID, opcodeID);
 		_scriptManager->blockSignals(false);
 	}
 }
 
-void Window::gotoText(int fieldID, int textID, int from, int size)
+void Window::gotoText(int mapID, int textID, int from, int size)
 {
 	if(_textDialog) {
 		_textDialog->blockSignals(true);
 	}
-	if(gotoField(fieldID)) {
+	if(gotoField(mapID)) {
 		textManager(textID, from, size, false); // show texts dialog
 	}
 	if(_textDialog) {
@@ -1094,15 +1091,16 @@ void Window::exporter()
 	int index;
 	QString types, name, selectedFilter,
 			fieldLzs = tr("PC Field (*)"),
-			dat = tr("DAT File (*.DAT)"),
+			dat = tr("Data DAT File (*.DAT)"),
+			mim = tr("Textures MIM File (*.MIM)"),
 			fieldDec = tr("Uncompressed PC Field (*)");
 
-	name = fieldList->selectedItems().first()->text(0);
+	name = _fieldList->selectedItems().first()->text(0);
 
 	if(fieldArchive->io()->isPC()) {
 		types = fieldLzs+";;"+fieldDec;
 	} else {
-		types = dat;
+		types = dat+";;"+mim;
 		name = name.toUpper();
 	}
 
@@ -1115,7 +1113,13 @@ void Window::exporter()
 	if (field->isModified()) {
 		error = field->save(path, compressed);
 	} else {
-		error = fieldArchive->io()->exportFieldData(field, QString(), path, !compressed);
+		QString extension;
+		if (selectedFilter == dat) {
+			extension = "DAT";
+		} else if (selectedFilter == mim) {
+			extension = "MIM";
+		}
+		error = fieldArchive->io()->exportFieldData(field, extension, path, !compressed);
 	}
 	
 	QString out;
@@ -1125,7 +1129,7 @@ void Window::exporter()
 		index = path.lastIndexOf('/');
 		Config::setValue("exportPath", index == -1 ? path : path.left(index));
 		break;
-	case 1:	out = tr("Lgp archive is inaccessible");break;
+	case 1:	out = tr("Archive is inaccessible");break;
 	case 2:	out = tr("Error reopening file");break;
 	case 3:	out = tr("Unable to create the new file");break;
 	case 4:	out = tr("Not yet implemented!");break;
@@ -1138,7 +1142,7 @@ void Window::massExport()
 	if(!fieldArchive) return;
 
 	MassExportDialog *massExportDialog = new MassExportDialog(this);
-	massExportDialog->fill(fieldArchive, currentFieldId());
+	massExportDialog->fill(fieldArchive, _fieldList->currentMapId());
 	if(massExportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massExportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {
@@ -1187,7 +1191,7 @@ void Window::massImport()
 	if(!fieldArchive) return;
 
 	MassImportDialog *massImportDialog = new MassImportDialog(this);
-	massImportDialog->fill(fieldArchive, currentFieldId());
+	massImportDialog->fill(fieldArchive, _fieldList->currentMapId());
 	if(massImportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massImportDialog->selectedFields();
 		if(!selectedFields.isEmpty()) {
@@ -1222,7 +1226,7 @@ void Window::importer()
 		   << tr("Uncompressed DAT File (*)")
 		   << tr("Uncompressed PC Field (*)");
 
-	name = fieldList->selectedItems().first()->text(0);
+	name = _fieldList->selectedItems().first()->text(0);
 	if(fieldArchive->io()->isPS())
 		name = name.toUpper();
 

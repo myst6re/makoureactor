@@ -31,7 +31,7 @@ public:
 	};
 
 	explicit MassImportDialog(QWidget *parent = 0);
-	void fill(const FieldArchive *fieldArchive, int currentField);
+	void fill(const FieldArchive *fieldArchive, int currentMapId);
 	QList<int> selectedFields() const;
 	bool importModule(ImportType type) const;
 	const QString &moduleFormat(ImportType type) const;
@@ -46,7 +46,7 @@ private:
 	QPushButton *changeDir;
 
 	const FieldArchive *_fieldArchive;
-	int _currentField;
+	int _currentMapId;
 protected:
 	void accept();
 };

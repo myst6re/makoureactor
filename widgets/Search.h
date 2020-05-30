@@ -64,10 +64,10 @@ private:
 	}
 	void setActionsEnabled(bool enable);
 	bool findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
-				  int &fieldID, int &grpScriptID,
+				  int &mapID, int &grpScriptID,
 				  int &scriptID, int &opcodeID);
 	bool findNextText(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
-				  int &fieldID, int &textID, int &from, int &size);
+				  int &mapID, int &textID, int &from, int &size);
 
 	bool atTheEnd, atTheBeginning;
 

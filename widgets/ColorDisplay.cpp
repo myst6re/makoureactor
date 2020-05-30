@@ -35,11 +35,6 @@ QSize ColorDisplay::minimumSizeHint() const
 	const int scale = devicePixelRatio();
 #endif
 	int colorCount = qMax(1, _colors.size());
-	qDebug() << scale << colorCount << QSize((COLOR_DISPLAY_MIN_CELL_SIZE * scale
-	                                          + COLOR_DISPLAY_BORDER_WIDTH) * colorCount
-	                                             + COLOR_DISPLAY_BORDER_WIDTH,
-	                                         COLOR_DISPLAY_MIN_CELL_SIZE * scale
-	                                             + COLOR_DISPLAY_BORDER_WIDTH * 2);
 	return QSize((COLOR_DISPLAY_MIN_CELL_SIZE * scale
 	             + COLOR_DISPLAY_BORDER_WIDTH) * colorCount
 	             + COLOR_DISPLAY_BORDER_WIDTH,

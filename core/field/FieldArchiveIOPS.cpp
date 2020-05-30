@@ -150,7 +150,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::open2(ArchiveObserver *observer)
 	QString name = this->name();
 	fieldArchive()->appendField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 
-	Field *field = fieldArchive()->field(0);
+	// Open field
+	FieldArchiveIterator it(*(fieldArchive()));
+	Field *field = it.next();
 
 	return field && field->isOpen() ? Ok : Invalid;
 }
@@ -160,7 +162,13 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::save2(const QString &path0, Arch
 	Q_UNUSED(observer)
 	QString path = path0.isNull() ? fic.fileName() : path0;
 
-	Field *field = fieldArchive()->field(0, false);
+	FieldArchiveIterator it(*(fieldArchive()));
+
+	if (!it.hasNext()) {
+		return FieldNotFound;
+	}
+
+	Field *field = it.next(false);
 	if(field && field->isOpen() && field->isModified()) {
 		qint8 err = field->save(path, true);
 		if(err == 2)	return ErrorOpening;
@@ -287,11 +295,12 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 
 	// FIELD/*.DAT
 
-	for(int fieldID = 0 ; fieldID < fieldArchive()->size() ; ++fieldID) {
+	FieldArchiveIterator it(*(fieldArchive()));
+	while (it.hasNext()) {
 		if(observer && observer->observerWasCanceled()) {
 			return Aborted;
 		}
-		Field *field = fieldArchive()->field(fieldID, false);
+		Field *field = it.next(false);
 		if(field && field->isOpen() && field->isModified()) {
 			IsoFile *isoField = isoFieldDirectory->file(field->name().toUpper() + ".DAT");
 			if(isoField == NULL) {
@@ -433,14 +442,18 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, Archiv
 		saveAs = false;
 	}
 
-	quint32 nbFiles = fieldArchive()->size();
-	if(observer)	observer->setObserverMaximum(nbFiles);
+	FieldArchiveIterator it(*(fieldArchive()));
+	quint32 i = 0;
 
-	for(quint32 fieldID=0 ; fieldID<nbFiles ; ++fieldID) {
+	if(observer) {
+		observer->setObserverMaximum(fieldArchive()->size());
+	}
+
+	while (it.hasNext()) {
 		if(observer && observer->observerWasCanceled()) {
 			return Aborted;
 		}
-		Field *field = fieldArchive()->field(fieldID, false);
+		Field *field = it.next(false);
 		QString datName = field->name().toUpper() + ".DAT",
 		        datPath = dir.filePath(datName);
 		if(field) {
@@ -456,7 +469,9 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, Archiv
 				}
 			}
 		}
-		if(observer)	observer->setObserverValue(fieldID);
+		if(observer) {
+			observer->setObserverValue(i++);
+		}
 	}
 
 	return Ok;

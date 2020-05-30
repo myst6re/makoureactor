@@ -10,6 +10,8 @@ ScriptManager::ScriptManager(QWidget *parent) :
 	_scriptList = new ScriptList(this);
 	_scriptList->setMaximumWidth(
 	    _scriptList->fontMetrics().boundingRect(QString(20, 'M')).width());
+	_scriptList->setMinimumWidth(
+	    _scriptList->fontMetrics().boundingRect(QString(10, 'M')).width());
 	_scriptList->setMinimumHeight(88);
 
 	_opcodeList = new OpcodeList(this);

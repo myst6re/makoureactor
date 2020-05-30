@@ -8,7 +8,7 @@ SearchAll::SearchAll(Window *parent) :
 {
 	setWindowTitle(tr("Find All"));
 
-	resize(parent->width(), 400);
+	resize(800, 600);
 	_resultList = new QTreeWidget(this);
 	_resultList->setAlternatingRowColors(true);
 	_resultList->setItemsExpandable(true);
@@ -38,7 +38,7 @@ SearchAll::SearchAll(Window *parent) :
 void SearchAll::clear()
 {
 	_resultList->clear();
-	itemByFieldID.clear();
+	itemByMapID.clear();
 }
 
 void SearchAll::setScriptSearch()
@@ -66,39 +66,41 @@ void SearchAll::setFieldArchive(FieldArchive *fieldArchive)
 	}
 }
 
-void SearchAll::addResultOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID)
+void SearchAll::addResultOpcode(int mapID, int grpScriptID, int scriptID, int opcodeID)
 {
-	addResult(fieldID, createItemOpcode(fieldID, grpScriptID, scriptID, opcodeID));
+	addResult(mapID, createItemOpcode(mapID, grpScriptID, scriptID, opcodeID));
 }
 
-void SearchAll::addResultText(int fieldID, int textID, int index, int size)
+void SearchAll::addResultText(int mapID, int textID, int index, int size)
 {
-	addResult(fieldID, createItemText(fieldID, textID, index, size));
+	addResult(mapID, createItemText(mapID, textID, index, size));
 }
 
-void SearchAll::addResult(int fieldID, QTreeWidgetItem *item)
+void SearchAll::addResult(int mapID, QTreeWidgetItem *item)
 {
-	QTreeWidgetItem *itemToAdd = itemByFieldID.value(fieldID);
+	QTreeWidgetItem *itemToAdd = itemByMapID.value(mapID);
 	if (!itemToAdd) {
-		itemToAdd = createItemField(fieldID);
-		itemByFieldID.insert(fieldID, itemToAdd);
+		itemToAdd = createItemField(mapID);
+		itemByMapID.insert(mapID, itemToAdd);
 		_resultList->addTopLevelItem(itemToAdd);
 		itemToAdd->setExpanded(true);
 	}
 	itemToAdd->addChild(item);
 }
 
-QTreeWidgetItem *SearchAll::createItemField(int fieldID) const
+QTreeWidgetItem *SearchAll::createItemField(int mapID) const
 {
 	QTreeWidgetItem *item = new QTreeWidgetItem(
 								QStringList()
-								<< QString("%1").arg(fieldID, 3));
+								<< QString("%1").arg(mapID, 3));
 
-	item->setData(0, Qt::UserRole, fieldID);
+	item->setData(0, Qt::UserRole, mapID);
 	if(_fieldArchive) {
-		Field *f = _fieldArchive->field(fieldID);
+		Field *f = _fieldArchive->field(mapID);
 		if(f) {
-			item->setText(0, QString("%1 : %2").arg(fieldID, 3).arg(f->name()));
+			item->setText(0, QString("%1 : %2")
+			                     .arg(mapID, 3)
+			                     .arg(f->name()));
 		}
 	}
 
@@ -110,7 +112,7 @@ QTreeWidgetItem *SearchAll::createItemField(int fieldID) const
 	return item;
 }
 
-QTreeWidgetItem *SearchAll::createItemOpcode(int fieldID, int grpScriptID, int scriptID, int opcodeID) const
+QTreeWidgetItem *SearchAll::createItemOpcode(int mapID, int grpScriptID, int scriptID, int opcodeID) const
 {
 	QTreeWidgetItem *item = new QTreeWidgetItem(
 								QStringList()
@@ -118,13 +120,13 @@ QTreeWidgetItem *SearchAll::createItemOpcode(int fieldID, int grpScriptID, int s
 								<< QString("%1").arg(scriptID, 2)
 								<< QString("%1").arg(opcodeID + 1, 5));
 
-	item->setData(0, Qt::UserRole, fieldID);
+	item->setData(0, Qt::UserRole, mapID);
 	item->setData(1, Qt::UserRole, grpScriptID);
 	item->setData(2, Qt::UserRole, scriptID);
 	item->setData(3, Qt::UserRole, opcodeID);
 
 	if(_fieldArchive) {
-		Field *f = _fieldArchive->field(fieldID);
+		Field *f = _fieldArchive->field(mapID);
 		if(f) {
 			GrpScript *grp = f->scriptsAndTexts()->grpScripts().value(grpScriptID);
 			if(grp) {
@@ -138,7 +140,7 @@ QTreeWidgetItem *SearchAll::createItemOpcode(int fieldID, int grpScriptID, int s
 	return item;
 }
 
-QTreeWidgetItem *SearchAll::createItemText(int fieldID, int textID, int index, int size) const
+QTreeWidgetItem *SearchAll::createItemText(int mapID, int textID, int index, int size) const
 {
 	Q_UNUSED(size)
 	QTreeWidgetItem *item = new QTreeWidgetItem(
@@ -146,12 +148,12 @@ QTreeWidgetItem *SearchAll::createItemText(int fieldID, int textID, int index, i
 								<< QString("%1").arg(textID, 3)
 								<< QString("%1").arg(index, 3));
 
-	item->setData(0, Qt::UserRole, fieldID);
+	item->setData(0, Qt::UserRole, mapID);
 	item->setData(1, Qt::UserRole, textID);
 	item->setData(2, Qt::UserRole, index);
 
 	if(_fieldArchive) {
-		Field *f = _fieldArchive->field(fieldID);
+		Field *f = _fieldArchive->field(mapID);
 		if(f) {
 			const FF7Text &text = f->scriptsAndTexts()->text(textID);
 			item->setText(1, text.text(Config::value("jp_txt", false).toBool(), true));
@@ -163,19 +165,19 @@ QTreeWidgetItem *SearchAll::createItemText(int fieldID, int textID, int index, i
 
 void SearchAll::gotoResult(QTreeWidgetItem *item)
 {
-	int fieldID = item->data(0, Qt::UserRole).toInt();
+	int mapID = item->data(0, Qt::UserRole).toInt();
 
 	if (_searchMode == ScriptSearch) {
 		int grpScriptID = item->data(1, Qt::UserRole).toInt(),
 				scriptID = item->data(2, Qt::UserRole).toInt(),
 				opcodeID = item->data(3, Qt::UserRole).toInt();
-		mainWindow()->gotoOpcode(fieldID, grpScriptID, scriptID, opcodeID);
+		mainWindow()->gotoOpcode(mapID, grpScriptID, scriptID, opcodeID);
 
 	} else {
 		int textID = item->data(1, Qt::UserRole).toInt(),
 				index = item->data(2, Qt::UserRole).toInt(),
 				size = item->data(3, Qt::UserRole).toInt();
-		mainWindow()->gotoText(fieldID, textID, index, size);
+		mainWindow()->gotoText(mapID, textID, index, size);
 	}
 }
 

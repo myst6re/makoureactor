@@ -9,7 +9,7 @@ class FieldList : public QTreeWidget
 	Q_OBJECT
 public:
 	explicit FieldList(QWidget *parent = 0);
-	int currentFieldId() const;
+	int currentMapId() const;
 	inline QToolBar *toolBar() {
 		return _toolBar;
 	}
@@ -37,7 +37,7 @@ signals:
 	void fieldDeleted();
 
 private:
-	static QTreeWidgetItem *createItem(Field *f, int fieldID);
+	static QTreeWidgetItem *createItem(Field *f, int mapID);
 	void adjustWidth();
 
 	QLineEdit *_lineSearch;

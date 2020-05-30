@@ -387,7 +387,7 @@ void Search::updateRunSearch()
 {
 	executionGroup->clear();
 	if(fieldArchive) {
-		Field *f = fieldArchive->field(mainWindow()->currentFieldId());
+		Field *f = fieldArchive->field(mainWindow()->fieldList()->currentMapId());
 		if(f) {
 			int i=0;
 			foreach(const GrpScript *grp, f->scriptsAndTexts()->grpScripts())
@@ -485,7 +485,7 @@ void Search::findNext()
 
 	setSearchValues();
 
-	int fieldID, grpScriptID, scriptID, opcodeID,
+	int mapID, grpScriptID, scriptID, opcodeID,
 			textID, from;
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
 	FieldArchive::SearchScope scope = searchScope();
@@ -493,7 +493,7 @@ void Search::findNext()
 	atTheBeginning = false;
 
 	if(atTheEnd) {
-		fieldID = scope == FieldArchive::FieldScope ? mainWindow()->currentFieldId() : -1;
+		mapID = scope == FieldArchive::FieldScope ? mainWindow()->fieldList()->currentMapId() : -1;
 		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->scriptWidget()->currentGrpScriptId() : -1;
 		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->scriptWidget()->currentScriptId() : -1;
 		opcodeID = -1;
@@ -501,7 +501,7 @@ void Search::findNext()
 		from = 0;
 		atTheEnd = false;
 	} else {
-		fieldID = mainWindow()->currentFieldId();
+		mapID = mainWindow()->fieldList()->currentMapId();
 		grpScriptID = mainWindow()->scriptWidget()->currentGrpScriptId();
 		scriptID = mainWindow()->scriptWidget()->currentScriptId();
 		opcodeID = mainWindow()->scriptWidget()->currentOpcodeId();
@@ -513,15 +513,15 @@ void Search::findNext()
 
 	if(tabWidget->currentIndex() == 0) { // scripts page
 		if (findNextScript(sorting, scope,
-						   fieldID, grpScriptID, scriptID, opcodeID)) {
-			emit found(fieldID, grpScriptID, scriptID, opcodeID);
+						   mapID, grpScriptID, scriptID, opcodeID)) {
+			emit found(mapID, grpScriptID, scriptID, opcodeID);
 			goto after;
 		}
 	} else { // texts page
 		int size;
 		if (findNextText(sorting, scope,
-						 fieldID, textID, from, size)) {
-			emit foundText(fieldID, textID, from, size);
+						 mapID, textID, from, size)) {
+			emit foundText(mapID, textID, from, size);
 			goto after;
 		}
 	}
@@ -537,30 +537,30 @@ after:
 }
 
 bool Search::findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
-					  int &fieldID, int &grpScriptID, int &scriptID, int &opcodeID)
+					  int &mapID, int &grpScriptID, int &scriptID, int &opcodeID)
 {
 	++opcodeID;
 
 	switch(liste->currentIndex()) {
 	case 0:
-		return fieldArchive->searchTextInScripts(text, fieldID, grpScriptID,
+		return fieldArchive->searchTextInScripts(text, mapID, grpScriptID,
 												 scriptID, opcodeID,
 												 sorting, scope);
 	case 1:
 		return fieldArchive->searchVar(bank, address, op, value,
-									   fieldID, grpScriptID,
+									   mapID, grpScriptID,
 									   scriptID, opcodeID,
 									   sorting, scope);
 	case 2:
-		return fieldArchive->searchOpcode(clef, fieldID, grpScriptID,
+		return fieldArchive->searchOpcode(clef, mapID, grpScriptID,
 										  scriptID, opcodeID,
 										  sorting, scope);
 	case 4:
-		return fieldArchive->searchMapJump(field, fieldID, grpScriptID,
+		return fieldArchive->searchMapJump(field, mapID, grpScriptID,
 										   scriptID, opcodeID,
 										   sorting, scope);
 	case 3:
-		return fieldArchive->searchExec(e_group, e_script, fieldID,
+		return fieldArchive->searchExec(e_group, e_script, mapID,
 										grpScriptID, scriptID, opcodeID,
 										sorting, scope);
 	}
@@ -569,9 +569,9 @@ bool Search::findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchS
 }
 
 bool Search::findNextText(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
-					  int &fieldID, int &textID, int &from, int &size)
+					  int &mapID, int &textID, int &from, int &size)
 {
-	return fieldArchive->searchText(text, fieldID, textID, from,
+	return fieldArchive->searchText(text, mapID, textID, from,
 									size, sorting, scope);
 }
 
@@ -585,7 +585,7 @@ void Search::findPrev()
 	buttonPrev->setDefault(true);
 	returnToBegin->hide();
 
-	int fieldID, grpScriptID, scriptID, opcodeID,
+	int mapID, grpScriptID, scriptID, opcodeID,
 			textID, from;
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
 	FieldArchive::SearchScope scope = searchScope();
@@ -595,7 +595,7 @@ void Search::findPrev()
 	atTheEnd = false;
 
 	if(atTheBeginning) {
-		fieldID = scope == FieldArchive::FieldScope ? mainWindow()->currentFieldId() : 2147483647;
+		mapID = scope == FieldArchive::FieldScope ? mainWindow()->fieldList()->currentMapId() : 2147483647;
 		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->scriptWidget()->currentGrpScriptId() : 2147483647;
 		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->scriptWidget()->currentScriptId() : 2147483647;
 		opcodeID = 2147483647;
@@ -603,7 +603,7 @@ void Search::findPrev()
 		from = -1;
 		atTheBeginning = false;
 	} else {
-		fieldID = mainWindow()->currentFieldId();
+		mapID = mainWindow()->fieldList()->currentMapId();
 		grpScriptID = mainWindow()->scriptWidget()->currentGrpScriptId();
 		scriptID = mainWindow()->scriptWidget()->currentScriptId();
 		opcodeID = mainWindow()->scriptWidget()->currentOpcodeId();
@@ -622,43 +622,43 @@ void Search::findPrev()
 		switch(liste->currentIndex())
 		{
 		case 0:
-			if(fieldArchive->searchTextInScriptsP(text, fieldID, grpScriptID,
+			if(fieldArchive->searchTextInScriptsP(text, mapID, grpScriptID,
 												  scriptID, opcodeID,
 												  sorting, scope)) {
-				emit found(fieldID, grpScriptID, scriptID, opcodeID);
+				emit found(mapID, grpScriptID, scriptID, opcodeID);
 				goto after;
 			}
 			break;
 		case 1:
 			if(fieldArchive->searchVarP(bank, address, op, value,
-										fieldID, grpScriptID,
+										mapID, grpScriptID,
 										scriptID, opcodeID,
 										sorting, scope)) {
-				emit found(fieldID, grpScriptID, scriptID, opcodeID);
+				emit found(mapID, grpScriptID, scriptID, opcodeID);
 				goto after;
 			}
 			break;
 		case 2:
-			if(fieldArchive->searchOpcodeP(clef, fieldID, grpScriptID,
+			if(fieldArchive->searchOpcodeP(clef, mapID, grpScriptID,
 										   scriptID, opcodeID,
 										   sorting, scope)) {
-				emit found(fieldID, grpScriptID, scriptID, opcodeID);
+				emit found(mapID, grpScriptID, scriptID, opcodeID);
 				goto after;
 			}
 			break;
 		case 4:
-			if(fieldArchive->searchMapJumpP(field, fieldID, grpScriptID,
+			if(fieldArchive->searchMapJumpP(field, mapID, grpScriptID,
 											scriptID, opcodeID,
 											sorting, scope)) {
-				emit found(fieldID, grpScriptID, scriptID, opcodeID);
+				emit found(mapID, grpScriptID, scriptID, opcodeID);
 				goto after;
 			}
 			break;
 		case 3:
-			if(fieldArchive->searchExecP(e_group, e_script, fieldID,
+			if(fieldArchive->searchExecP(e_group, e_script, mapID,
 										 grpScriptID, scriptID,
 										 opcodeID, sorting, scope)) {
-				emit found(fieldID, grpScriptID, scriptID, opcodeID);
+				emit found(mapID, grpScriptID, scriptID, opcodeID);
 				goto after;
 			}
 			break;
@@ -666,10 +666,10 @@ void Search::findPrev()
 	} else { // texts page
 		--from;
 		int index, size;
-		if(fieldArchive->searchTextP(text, fieldID, textID,
+		if(fieldArchive->searchTextP(text, mapID, textID,
 									 from, index, size,
 									 sorting, scope)) {
-			emit foundText(fieldID, textID, index, size);
+			emit foundText(mapID, textID, index, size);
 			goto after;
 		}
 	}
@@ -693,12 +693,12 @@ void Search::findAll()
 	mainWindow()->setEnabled(false);
 	setEnabled(false);
 	setSearchValues();
-	int fieldID = -1;
+	int mapID = -1;
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
 	FieldArchive::SearchScope scope = searchScope();
 
 	if(scope == FieldArchive::FieldScope) {
-		fieldID = mainWindow()->currentFieldId();
+		mapID = mainWindow()->fieldList()->currentMapId();
 	}
 
 	if(tabWidget->currentIndex() == 0) { // scripts page
@@ -713,13 +713,13 @@ void Search::findAll()
 
 		searchAllDialog->setScriptSearch();
 		while (findNextScript(sorting, scope,
-						   fieldID, grpScriptID, scriptID, opcodeID)) {
+						   mapID, grpScriptID, scriptID, opcodeID)) {
 			QCoreApplication::processEvents();
 			// Cancelled
 			if (searchAllDialog->isHidden()) {
 				break;
 			}
-			searchAllDialog->addResultOpcode(fieldID, grpScriptID, scriptID, opcodeID);
+			searchAllDialog->addResultOpcode(mapID, grpScriptID, scriptID, opcodeID);
 		}
 	} else { // texts page
 		int textID = -1, from = -1;
@@ -731,13 +731,13 @@ void Search::findAll()
 		searchAllDialog->setTextSearch();
 		int size;
 		while (findNextText(sorting, scope,
-						 fieldID, textID, ++from, size)) {
+						 mapID, textID, ++from, size)) {
 			QCoreApplication::processEvents();
 			// Cancelled
 			if (searchAllDialog->isHidden()) {
 				break;
 			}
-			searchAllDialog->addResultText(fieldID, textID, from, size);
+			searchAllDialog->addResultText(mapID, textID, from, size);
 		}
 	}
 
@@ -837,7 +837,7 @@ void Search::replaceCurrent()
 	setSearchValues();
 
 	if(fieldArchive->replaceText(text, replace2->lineEdit()->text(),
-								 mainWindow()->currentFieldId(),
+								 mainWindow()->fieldList()->currentMapId(),
 								 mainWindow()->textWidget()->currentTextId(),
 								 qMin(mainWindow()->textWidget()->currentTextPosition(),
 									  mainWindow()->textWidget()->currentAnchorPosition()))) {
@@ -859,10 +859,10 @@ void Search::replaceAll()
 	setSearchValues();
 
 	QString after = replace2->lineEdit()->text();
-	int fieldID = 0, textID = 0, from = 0, size;
+	int mapID = 0, textID = 0, from = 0, size;
 
 	if(scope == FieldArchive::FieldScope) {
-		fieldID = mainWindow()->currentFieldId();
+		mapID = mainWindow()->fieldList()->currentMapId();
 	} else if(scope == FieldArchive::TextScope) {
 		if(mainWindow()->textWidget()) {
 			textID = mainWindow()->textWidget()->currentTextId();
@@ -870,9 +870,9 @@ void Search::replaceAll()
 	}
 
 	bool modified = false;
-	while(fieldArchive->searchText(text, fieldID, textID, from, size, sorting, scope)) {
-		if(fieldArchive->replaceText(text, after, fieldID, textID, from)) {
-			fieldArchive->field(fieldID)->setModified(true);
+	while(fieldArchive->searchText(text, mapID, textID, from, size, sorting, scope)) {
+		if(fieldArchive->replaceText(text, after, mapID, textID, from)) {
+			fieldArchive->field(mapID)->setModified(true);
 			modified = true;
 		}
 		from += after.size();

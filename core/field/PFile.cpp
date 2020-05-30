@@ -124,7 +124,7 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 			return false;
 		}
 		hundreds.append(hundred);
-		qDebug() << "hundred" << header.numTexCs << QByteArray((char *)&hundred, 100).toHex();
+		//qDebug() << "hundred" << header.numTexCs << QByteArray((char *)&hundred, 100).toHex();
 	}
 
 	for(i = 0 ; i < header.numGroups ; ++i) {
@@ -150,7 +150,7 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 
 	QByteArray dataAfter = device()->readAll();
 
-	qDebug() << dataAfter.toHex();
+	//qDebug() << dataAfter.toHex();
 
 	PolyVertex polyVertex;
 	QRgb color;
