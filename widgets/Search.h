@@ -32,7 +32,7 @@ public:
 	explicit Search(Window *mainWindow);
 
 	void setFieldArchive(FieldArchive *fieldArchive);
-	void setOpcode(int opcode);
+	void setOpcode(int opcode, bool show = false);
 	void setText(const QString &text);
 	void setScriptExec(int groupID, int scriptID);
 	void updateRunSearch();

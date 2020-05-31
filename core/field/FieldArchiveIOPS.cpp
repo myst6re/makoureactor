@@ -102,33 +102,46 @@ QString FieldArchiveIOPSFile::path() const
 
 Archive *FieldArchiveIOPSFile::device()
 {
-	return NULL;
+	return nullptr;
 }
 
 QByteArray FieldArchiveIOPSFile::fieldData2(Field *field, const QString &extension, bool unlzs)
 {
 	Q_UNUSED(field)
-	Q_UNUSED(extension)
-	return fileData(QString(), unlzs);
+	QString path;
+
+	if (extension != "DAT") {
+		path = fic.fileName().left(fic.fileName().lastIndexOf('.')) + "." + extension;
+	}
+
+	return fileData(path, unlzs);
 }
 
 QByteArray FieldArchiveIOPSFile::mimData2(Field *field, bool unlzs)
 {
 	Q_UNUSED(field)
-	Q_UNUSED(unlzs)
-	return QByteArray();
+	return fileData(fic.fileName().left(fic.fileName().lastIndexOf('.')) + ".MIM", unlzs);
 }
 
 QByteArray FieldArchiveIOPSFile::modelData2(Field *field, bool unlzs)
 {
 	Q_UNUSED(field)
-	Q_UNUSED(unlzs)
-	return QByteArray();
+	return fileData(fic.fileName().left(fic.fileName().lastIndexOf('.')) + ".BSX", unlzs);
 }
 
 QByteArray FieldArchiveIOPSFile::fileData2(const QString &fileName)
 {
-	Q_UNUSED(fileName)
+	if (!fileName.isEmpty() && fileName != fic.fileName()) {
+		QFile f(fileName);
+		if (!f.open(QIODevice::ReadOnly)) {
+			return QByteArray();
+		}
+		QByteArray d = f.readAll();
+		f.close();
+
+		return d;
+	}
+
 	if(!fic.isOpen() && !fic.open(QIODevice::ReadOnly))		return QByteArray();
 	fic.reset();
 	QByteArray data = fic.readAll();
@@ -191,7 +204,7 @@ QString FieldArchiveIOPSIso::path() const
 
 Archive *FieldArchiveIOPSIso::device()
 {
-	return NULL;
+	return nullptr;
 }
 
 QByteArray FieldArchiveIOPSIso::fieldData2(Field *field, const QString &extension, bool unlzs)
@@ -306,7 +319,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 		Field *field = it.next(false);
 		if(field && field->isOpen() && field->isModified()) {
 			IsoFile *isoField = isoFieldDirectory->file(field->name().toUpper() + ".DAT");
-			if(isoField == NULL) {
+			if(isoField == nullptr) {
 				continue;
 			}
 
@@ -373,7 +386,7 @@ QString FieldArchiveIOPSDir::path() const
 
 Archive *FieldArchiveIOPSDir::device()
 {
-	return NULL;
+	return nullptr;
 }
 
 QByteArray FieldArchiveIOPSDir::fieldData2(Field *field, const QString &extension, bool unlzs)

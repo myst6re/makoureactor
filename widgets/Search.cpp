@@ -362,10 +362,15 @@ void Search::setFieldArchive(FieldArchive *fieldArchive)
 	}
 }
 
-void Search::setOpcode(int opcode)
+void Search::setOpcode(int opcode, bool show)
 {
 	if(opcode >= 0 && opcode < this->opcode->count()) {
 		this->opcode->setCurrentIndex(opcode);
+	}
+
+	if (show) {
+		tabWidget->setCurrentIndex(0); // Script
+		liste->setCurrentIndex(2); // Opcode
 	}
 }
 

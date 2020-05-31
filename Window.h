@@ -106,6 +106,8 @@ private slots:
 	void toggleFieldList();
 	void toggleBackgroundPreview();
 	void config();
+	void searchOpcode(int opcodeID);
+	void createCurrentMap();
 private:
 	void setWindowTitle();
 	void restartNow();
@@ -144,6 +146,8 @@ private:
 	TutWidget *_tutManager;
 	WalkmeshManager *_walkmeshManager;
 	BGDialog *_backgroundManager;
+
+	QStackedWidget *_stackedWidget;
 
 	QTaskBarButton *taskBarButton;
 	QProgressDialog *_progressDialog;

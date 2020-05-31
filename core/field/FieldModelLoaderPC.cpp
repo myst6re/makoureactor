@@ -63,9 +63,9 @@ void FieldModelLoaderPC::initEmpty()
 	model_nameChar.append("");
 
 	model_nameHRC.clear();
-	model_nameHRC.append("AAAA");
-	model_nameHRC.append("AAGB");
-	model_nameHRC.append("ABDA");
+	model_nameHRC.append("AAAA.HRC");
+	model_nameHRC.append("AAGB.HRC");
+	model_nameHRC.append("ABDA.HRC");
 
 	model_anims.clear();
 	model_anims.append(QStringList()

@@ -83,6 +83,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	goto_A = new QAction(this);
 	goto_A->setVisible(false);
 	disableTree_A = new QAction(tr("Disable tree"), this);
+	search_A = new QAction(tr("Search opcode..."), this);
 
 	connect(edit_A, SIGNAL(triggered()), SLOT(scriptEditor()));
 	connect(add_A, SIGNAL(triggered()), SLOT(add()));
@@ -99,6 +100,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	connect(redo_A, SIGNAL(triggered()), SLOT(redo()));
 	connect(goto_A, SIGNAL(triggered()), SLOT(gotoLabel()));
 	connect(disableTree_A, SIGNAL(triggered()), SLOT(toggleTree()));
+	connect(search_A, SIGNAL(triggered()), SLOT(searchOpcode()));
 
 	addAction(edit_A);
 	addAction(add_A);
@@ -106,6 +108,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	addAction(text_A);
 	addAction(goto_A);
 	addAction(disableTree_A);
+	addAction(search_A);
 	QAction *separator = new QAction(this);
 	separator->setSeparator(true);
 	addAction(separator);
@@ -172,6 +175,19 @@ OpcodeList::OpcodeList(QWidget *parent) :
 void OpcodeList::adjustPasteAction()
 {
 	paste_A->setEnabled(Clipboard::instance()->hasFf7FieldScriptOpcodes());
+}
+
+void OpcodeList::searchOpcode()
+{
+	int opcodeID = selectedID();
+
+	if(opcodeID <= -1 || opcodeID >= script->size()) {
+		return;
+	}
+
+	Opcode *opcode = script->opcode(opcodeID);
+
+	emit searchOpcode(opcode->id());
 }
 
 void OpcodeList::clear()

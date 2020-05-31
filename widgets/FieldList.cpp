@@ -56,8 +56,6 @@ FieldList::FieldList(QWidget *parent) :
 	del_A->setStatusTip(tr("Remove a field"));
 
 	enableActions(false);
-
-	setMinimumWidth(_toolBar->sizeHint().width());
 }
 
 void FieldList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
@@ -111,9 +109,6 @@ QTreeWidgetItem *FieldList::createItem(Field *f, int mapID)
 void FieldList::adjustWidth()
 {
 	resizeColumnToContents(0);
-
-	setMinimumWidth(columnWidth(0) +
-	                columnWidth(1));
 }
 
 void FieldList::fill(FieldArchive *fieldArchive)

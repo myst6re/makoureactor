@@ -81,11 +81,13 @@ private slots:
 	inline void toggleTree() {
 		setTreeEnabled(!_treeEnabled);
 	}
+	void searchOpcode();
 signals:
 	void changed();
 	void editText(int textID);
 	void gotoScript(int groupID, int scriptID);
 	void gotoField(int fieldID);
+	void searchOpcode(int opcodeID);
 protected:
 	void mouseReleaseEvent(QMouseEvent *event);
 private:
@@ -118,7 +120,7 @@ private:
 	QAction *cut_A, *copy_A, *copyText_A, *paste_A;
 	QAction *up_A, *down_A, *expand_A;
 	QAction *undo_A, *redo_A, *text_A, *goto_A;
-	QAction *disableTree_A;
+	QAction *disableTree_A, *search_A;
 
 	QStack<Historic> hists;
 	QStack<Historic> restoreHists;

@@ -40,6 +40,7 @@ signals:
 	void editText(int textID);
 	void groupScriptCurrentChanged(int groupID);
 	void gotoField(int fieldID);
+	void searchOpcode(int opcodeID);
 public slots:
 	void fill(Field *field);
 	void fillScripts();

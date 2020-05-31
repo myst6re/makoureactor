@@ -181,11 +181,18 @@ Window::Window() :
 	horizontalSplitter->restoreState(Config::value("horizontalSplitterState").toByteArray());
 	horizontalSplitter->setCollapsed(1, !Config::value("backgroundVisible", true).toBool());
 
+	_stackedWidget = new QStackedWidget(this);
+	_stackedWidget->setContentsMargins(QMargins());
+
 	_scriptManager = new ScriptManager(this);
+	QPushButton *createNewMapButton = new QPushButton("Create new map");
+
+	_stackedWidget->addWidget(_scriptManager);
+	_stackedWidget->addWidget(createNewMapButton);
 
 	verticalSplitter = new Splitter(Qt::Horizontal, this);
 	verticalSplitter->addWidget(horizontalSplitter);
-	verticalSplitter->addWidget(_scriptManager);
+	verticalSplitter->addWidget(_stackedWidget);
 	verticalSplitter->setStretchFactor(0, 3);
 	verticalSplitter->setStretchFactor(1, 9);
 	verticalSplitter->setCollapsible(1, false);
@@ -209,6 +216,8 @@ Window::Window() :
 	connect(_scriptManager, SIGNAL(groupScriptCurrentChanged(int)), SLOT(showModel(int)));
 	connect(_scriptManager, SIGNAL(editText(int)), SLOT(textManager(int)));
 	connect(_scriptManager, SIGNAL(changed()), SLOT(setModified()));
+	connect(_scriptManager, SIGNAL(searchOpcode(int)), SLOT(searchOpcode(int)));
+	connect(createNewMapButton, SIGNAL(released()), SLOT(createCurrentMap()));
 
 	_fieldList->sortItems(Config::value("fieldListSortColumn").toInt(),
 	                     Qt::SortOrder(Config::value("fieldListSortOrder").toBool()));
@@ -342,11 +351,11 @@ void Window::restartNow()
 
 int Window::closeFile(bool quit)
 {
-	if(_fieldList->currentItem() != NULL) {
+	if(_fieldList->currentItem() != nullptr) {
 		Config::setValue("currentField", _fieldList->currentItem()->text(0));
 	}
 
-	if(actionSave->isEnabled() && fieldArchive != NULL) {
+	if(actionSave->isEnabled() && fieldArchive != nullptr) {
 		QString fileChangedList;
 		FieldArchiveIterator it(*fieldArchive);
 
@@ -379,14 +388,14 @@ int Window::closeFile(bool quit)
 
 	if(!quit) {
 		if(varDialog) {
-			varDialog->setFieldArchive(NULL);
+			varDialog->setFieldArchive(nullptr);
 		}
 
-		if(fieldArchive != NULL) {
+		if(fieldArchive != nullptr) {
 			delete fieldArchive;
-			fieldArchive = NULL;
+			fieldArchive = nullptr;
 		}
-		field = NULL;
+		field = nullptr;
 
 		_fieldList->blockSignals(true);
 		_fieldList->clear();
@@ -402,7 +411,7 @@ int Window::closeFile(bool quit)
 		}
 		setWindowModified(false);
 		setWindowTitle();
-		searchDialog->setFieldArchive(NULL);
+		searchDialog->setFieldArchive(nullptr);
 
 		actionSave->setEnabled(false);
 		actionSaveAs->setEnabled(false);
@@ -769,6 +778,8 @@ void Window::disableEditors()
 
 void Window::openField(bool reload)
 {
+	_stackedWidget->setCurrentIndex(0);
+
 	if(!fieldArchive) {
 		return;
 	}
@@ -804,6 +815,9 @@ void Window::openField(bool reload)
 	// Get and set field
 	field = fieldArchive->field(mapId, true, true);
 	if(!field) {
+		if (fieldArchive->isPC()) {
+			_stackedWidget->setCurrentIndex(1);
+		}
 		disableEditors();
 		return;
 	}
@@ -823,7 +837,7 @@ void Window::openField(bool reload)
 		_modelManager->setEnabled(true);
 	}
 	if(_tutManager && (reload || _tutManager->isVisible())) {
-		TutFilePC *tutPC = NULL;
+		TutFilePC *tutPC = nullptr;
 		if(fieldArchive->isPC()) {
 			tutPC = static_cast<FieldArchivePC *>(fieldArchive)->tut(field->name());
 		}
@@ -892,7 +906,7 @@ void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 
 void Window::setModified(bool enabled)
 {
-	if(field != NULL)		field->setModified(enabled);
+	if(field != nullptr)		field->setModified(enabled);
 	actionSave->setEnabled(enabled);
 	setWindowModified(enabled);
 
@@ -915,7 +929,7 @@ void Window::setModified(bool enabled)
 
 void Window::setFieldDeleted()
 {
-	field = NULL;
+	field = nullptr;
 	actionSave->setEnabled(true);
 	setWindowModified(true);
 
@@ -1321,6 +1335,28 @@ void Window::searchManager()
 	searchDialog->raise();
 }
 
+void Window::searchOpcode(int opcodeID)
+{
+	searchManager();
+	searchDialog->setOpcode(opcodeID, true);
+}
+
+void Window::createCurrentMap()
+{
+	int mapId = _fieldList->currentMapId();
+
+	if (mapId < 0 || fieldArchive == nullptr) {
+		return;
+	}
+
+	Field *field = fieldArchive->field(mapId, false);
+	if (field != nullptr) {
+		field->initEmpty();
+		openField(true);
+		setModified(true);
+	}
+}
+
 void Window::textManager(int textID, int from, int size, bool activate)
 {
 	if(!_textDialog) {
@@ -1407,7 +1443,7 @@ void Window::tutManager()
 	}
 
 	if(field && field->tutosAndSounds()->isOpen()) {
-		TutFilePC *tutPC = NULL;
+		TutFilePC *tutPC = nullptr;
 		if(fieldArchive->isPC()) {
 			tutPC = static_cast<FieldArchivePC *>(fieldArchive)->tut(field->name());
 		}

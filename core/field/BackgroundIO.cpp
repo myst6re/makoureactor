@@ -264,19 +264,19 @@ bool BackgroundIOPS::read(BackgroundFile &background) const
 
 	PalettesPS palettes;
 	BackgroundTiles tiles;
-	BackgroundTexturesPS textures;
+	BackgroundTexturesPS *textures = new BackgroundTexturesPS();
 
 	if(!openPalettes(palettes)
 			|| !openTiles(tiles)
-			|| !openTextures(textures)) {
+			|| !openTextures(*textures)) {
 		qDeleteAll(palettes);
+		delete textures;
 		return false;
 	}
 
 	background.setPalettes(palettes);
 	background.setTiles(tiles);
-	BackgroundTexturesPS *texPtr = new BackgroundTexturesPS(textures);
-	background.setTextures(texPtr);
+	background.setTextures(textures);
 
 	return true;
 }

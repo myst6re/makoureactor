@@ -64,6 +64,7 @@ ScriptManager::ScriptManager(QWidget *parent) :
 	connect(_opcodeList, SIGNAL(changed()), SLOT(compile()));
 	connect(_opcodeList, SIGNAL(gotoScript(int,int)), SLOT(gotoScript(int,int)));
 	connect(_opcodeList, SIGNAL(gotoField(int)), SIGNAL(gotoField(int)));
+	connect(_opcodeList, SIGNAL(searchOpcode(int)), SIGNAL(searchOpcode(int)));
 
 	_groupScriptList->toolBar()->setVisible(Config::value("grpToolbarVisible", true).toBool());
 	_opcodeList->toolBar()->setVisible(Config::value("scriptToolbarVisible", true).toBool());
