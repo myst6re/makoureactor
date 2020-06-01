@@ -5,20 +5,26 @@
 #include "ColorDisplay.h"
 #include "core/field/FieldModelLoader.h"
 
-class ModelColorLayout : public QHBoxLayout
+class ModelColorWidget : public QObject
 {
 	Q_OBJECT
 public:
-	explicit ModelColorLayout(QWidget *parent = 0);
+	explicit ModelColorWidget(QWidget *parent = 0);
 	void setModelColorDir(const FieldModelColorDir &dir);
 	void setReadOnly(bool ro);
+	inline ColorDisplay *colorWidget() const {
+		return _colorWidget;
+	}
+	inline QSpinBox *dirWidget(int id) const {
+		return _dirWidget[id];
+	}
 signals:
 	void colorDirEdited(const FieldModelColorDir &colorDir);
 private slots:
 	void relayEdition();
 private:
-	ColorDisplay *colorWidget;
-	QSpinBox *dirWidget[3];
+	ColorDisplay *_colorWidget;
+	QSpinBox *_dirWidget[3];
 };
 
 class ModelColorsLayout : public QGridLayout
@@ -42,7 +48,7 @@ private slots:
 	}
 
 private:
-	ModelColorLayout *modelColorLayout[3];
+	ModelColorWidget *modelColorWidget[3];
 };
 
 #endif // MODELCOLORSLAYOUT_H

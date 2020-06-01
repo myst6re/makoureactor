@@ -1,48 +1,46 @@
 #include "ModelColorsLayout.h"
 
-ModelColorLayout::ModelColorLayout(QWidget *parent) :
-    QHBoxLayout(parent)
+ModelColorWidget::ModelColorWidget(QWidget *parent) :
+      QObject(parent)
 {
-	colorWidget = new ColorDisplay(parent);
-	colorWidget->setColors(QList<QRgb>() << Qt::black);
-	addWidget(colorWidget);
+	_colorWidget = new ColorDisplay(parent);
+	_colorWidget->setColors(QList<QRgb>() << Qt::black);
 
 	for(quint8 i = 0; i < 3; ++i) {
-		dirWidget[i] = new QSpinBox(parent);
-		dirWidget[i]->setRange(-32768, 32767);
-		addWidget(dirWidget[i]);
-		connect(dirWidget[i], SIGNAL(editingFinished()), SLOT(relayEdition()));
+		_dirWidget[i] = new QSpinBox(parent);
+		_dirWidget[i]->setRange(-32768, 32767);
+		connect(_dirWidget[i], SIGNAL(editingFinished()), SLOT(relayEdition()));
 	}
 
-	dirWidget[0]->adjustSize();
-	colorWidget->setMinimumWidth(dirWidget[0]->height());
-	colorWidget->setMinimumHeight(dirWidget[0]->height());
+	_dirWidget[0]->adjustSize();
+	_colorWidget->setMinimumWidth(_dirWidget[0]->height());
+	_colorWidget->setMinimumHeight(_dirWidget[0]->height());
 
-	connect(colorWidget, SIGNAL(colorEdited(int,QRgb)), SLOT(relayEdition()));
+	connect(_colorWidget, SIGNAL(colorEdited(int,QRgb)), SLOT(relayEdition()));
 }
 
-void ModelColorLayout::relayEdition()
+void ModelColorWidget::relayEdition()
 {
 	emit colorDirEdited(FieldModelColorDir(
-	                        dirWidget[0]->value(),
-	                        dirWidget[1]->value(),
-	                        dirWidget[2]->value(),
-	                        colorWidget->colors().first()));
+	                        _dirWidget[0]->value(),
+	                        _dirWidget[1]->value(),
+	                        _dirWidget[2]->value(),
+	                        _colorWidget->colors().first()));
 }
 
-void ModelColorLayout::setModelColorDir(const FieldModelColorDir &dir)
+void ModelColorWidget::setModelColorDir(const FieldModelColorDir &dir)
 {
-	colorWidget->setColors(QList<QRgb>() << dir.color);
-	dirWidget[0]->setValue(dir.dirA);
-	dirWidget[1]->setValue(dir.dirB);
-	dirWidget[2]->setValue(dir.dirC);
+	_colorWidget->setColors(QList<QRgb>() << dir.color);
+	_dirWidget[0]->setValue(dir.dirA);
+	_dirWidget[1]->setValue(dir.dirB);
+	_dirWidget[2]->setValue(dir.dirC);
 }
 
-void ModelColorLayout::setReadOnly(bool ro)
+void ModelColorWidget::setReadOnly(bool ro)
 {
-	colorWidget->setReadOnly(ro);
+	_colorWidget->setReadOnly(ro);
 	for(quint8 i = 0; i < 3; ++i) {
-		dirWidget[i]->setReadOnly(ro);
+		_dirWidget[i]->setReadOnly(ro);
 	}
 }
 
@@ -55,28 +53,31 @@ ModelColorsLayout::ModelColorsLayout(QWidget *parent) :
 	addWidget(new QLabel(tr("Z")), 0, 3);
 
 	for(quint8 i = 0; i < 3; ++i) {
-		modelColorLayout[i] = new ModelColorLayout(parent);
-		addLayout(modelColorLayout[i], i + 1, 0, 1, 4);
+		modelColorWidget[i] = new ModelColorWidget(parent);
+		addWidget(modelColorWidget[i]->colorWidget(), i + 1, 0);
+		addWidget(modelColorWidget[i]->dirWidget(0), i + 1, 1);
+		addWidget(modelColorWidget[i]->dirWidget(1), i + 1, 2);
+		addWidget(modelColorWidget[i]->dirWidget(2), i + 1, 3);
 	}
 
-	connect(modelColorLayout[0], SIGNAL(colorDirEdited(FieldModelColorDir)),
+	connect(modelColorWidget[0], SIGNAL(colorDirEdited(FieldModelColorDir)),
 	        SLOT(relayColorDirEdited0(FieldModelColorDir)));
-	connect(modelColorLayout[1], SIGNAL(colorDirEdited(FieldModelColorDir)),
+	connect(modelColorWidget[1], SIGNAL(colorDirEdited(FieldModelColorDir)),
 	        SLOT(relayColorDirEdited1(FieldModelColorDir)));
-	connect(modelColorLayout[2], SIGNAL(colorDirEdited(FieldModelColorDir)),
+	connect(modelColorWidget[2], SIGNAL(colorDirEdited(FieldModelColorDir)),
 	        SLOT(relayColorDirEdited2(FieldModelColorDir)));
 }
 
 void ModelColorsLayout::setModelColorDirs(const QList<FieldModelColorDir> &dirs)
 {
 	for(quint8 i = 0; i < 3; ++i) {
-		modelColorLayout[i]->setModelColorDir(dirs.at(i));
+		modelColorWidget[i]->setModelColorDir(dirs.at(i));
 	}
 }
 
 void ModelColorsLayout::setReadOnly(bool ro)
 {
 	for(quint8 i = 0; i < 3; ++i) {
-		modelColorLayout[i]->setReadOnly(ro);
+		modelColorWidget[i]->setReadOnly(ro);
 	}
 }
