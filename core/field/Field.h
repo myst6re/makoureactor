@@ -73,8 +73,10 @@ public:
 	void setSaved();
 	bool save(QByteArray &newData, bool compress);
 	qint8 save(const QString &path, bool compress);
-	qint8 importer(const QString &path, bool isDat, bool compressed, FieldSections part, QIODevice *device2=0);
-	virtual qint8 importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *device2=0);
+	qint8 importer(const QString &path, bool isDat, bool compressed, FieldSections part, QIODevice *bsxDevice = nullptr,
+	               QIODevice *mimDevice = nullptr);
+	qint8 importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *bsxDevice = nullptr,
+	               QIODevice *mimDevice = nullptr);
 
 	Section1File *scriptsAndTexts(bool open=true);
 	EncounterFile *encounter(bool open=true);
@@ -116,6 +118,7 @@ protected:
 	virtual QList<Field::FieldSection> orderOfSections() const=0;
 	virtual quint32 diffSectionPos() const=0;
 	virtual bool hasSectionHeader() const=0;
+	virtual bool importModelLoader(const QByteArray &sectionData, bool isPSField, QIODevice *bsxDevice);
 private:
 	FieldPart *part(FieldSection section, bool open);
 

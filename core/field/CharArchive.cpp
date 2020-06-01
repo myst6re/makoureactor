@@ -1,4 +1,5 @@
 #include "CharArchive.h"
+#include "AFile.h"
 #include "Data.h"
 
 CharArchive::CharArchive()
@@ -82,13 +83,15 @@ bool CharArchive::openAnimBoneCount()
 			QCoreApplication::processEvents();
 			QIODevice *aFile = it.file();
 			if(aFile && aFile->open(QIODevice::ReadOnly)) {
-				quint32 boneCount;
-				if(!aFile->seek(8) ||
-						aFile->read((char *)&boneCount, 4) != 4) {
+				AFile a(aFile);
+				AHeader header;
+
+				if(!a.readHeader(header)) {
 					qWarning() << "CharArchive::openAnimBoneCount" << "animation error" << fileName;
 					continue;
 				}
-				_animBoneCount.insert(boneCount, fileName.left(fileName.size()-2).toUpper());
+
+				_animBoneCount.insert(header.boneCount, fileName.left(fileName.size()-2).toUpper());
 			} else {
 				return false;
 			}

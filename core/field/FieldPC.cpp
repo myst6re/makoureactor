@@ -17,6 +17,8 @@
  ****************************************************************************/
 #include "FieldPC.h"
 #include "BackgroundFilePC.h"
+#include "FieldModelLoaderPS.h"
+#include "core/LZS.h"
 
 FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
 	Field(name, io), _model(0)
@@ -133,22 +135,40 @@ QList<Field::FieldSection> FieldPC::orderOfSections() const
 	return QList<FieldSection>() << Scripts << Camera << ModelLoader << PalettePC << Walkmesh << Unused << Encounter << Inf << Background;
 }
 
-qint8 FieldPC::importer(const QByteArray &data, bool isPSField, FieldSections part)
+bool FieldPC::importModelLoader(const QByteArray &sectionData, bool isPSField, QIODevice *bsxDevice)
 {
-	if(!isPSField) {
-		quint32 sectionPositions[9];
+	FieldModelLoaderPC *modelLoader = fieldModelLoader(false);
 
-		if(data.size() < 6 + 9 * 4)	return 3;
-		memcpy(sectionPositions, data.constData() + 6, 9 * 4); // header
+	if(isPSField) {
+		FieldModelLoaderPS modelLoaderPS(this);
+		if(!modelLoaderPS.open(sectionData)) {
+			return false;
+		}
+		if(!bsxDevice->open(QIODevice::ReadOnly)) {
+			return false;
+		}
 
-		if(part.testFlag(ModelLoader)) {
-			FieldModelLoaderPC *modelLoader = fieldModelLoader(false);
-			if(!modelLoader->open(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4))) {
-				return 2;
-			}
-			modelLoader->setModified(true);
+		QByteArray decompressedBsx = LZS::decompressAllWithHeader(bsxDevice->readAll());
+		QBuffer bsxDeviceDec;
+		bsxDeviceDec.setData(decompressedBsx);
+		bsxDeviceDec.open(QIODevice::ReadOnly);
+
+		BsxFile bsx(&bsxDeviceDec);
+		bool ok;
+		*modelLoader = modelLoaderPS.toPC(&bsx, &ok);
+
+		if (!ok) {
+			return false;
+		}
+	} else {
+		FieldModelLoaderPC *modelLoader = fieldModelLoader(false);
+		if(!modelLoader->open(sectionData)) {
+			return false;
 		}
 	}
 
-	return Field::importer(data, isPSField, part);
+	modelLoader->setModified(true);
+	modelLoader->setOpen(true);
+
+	return true;
 }

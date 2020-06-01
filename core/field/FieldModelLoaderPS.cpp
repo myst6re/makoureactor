@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModelLoaderPS.h"
+#include "AFile.h"
 #include "Field.h"
 
 FieldModelLoaderPS::FieldModelLoaderPS(Field *field) :
@@ -135,4 +136,61 @@ void FieldModelLoaderPS::setModel(int modelID, const FieldModelLoaderStruct &mod
 		_modelLoaders.replace(modelID, modelLoader);
 		setModified(true);
 	}
+}
+
+FieldModelLoaderPC FieldModelLoaderPS::toPC(BsxFile *bsx, bool *ok) const
+{
+	FieldModelLoaderPC ret(field());
+
+	int i = 0;
+	*ok = true;
+
+	foreach (const FieldModelLoaderStruct &psLoader, _modelLoaders) {
+		FieldModelFilePS modelFile;
+
+		if (!bsx->seek(psLoader.modelID)) {
+			*ok = false;
+			return ret;
+		}
+
+		if (!bsx->read(&modelFile)) {
+			*ok = false;
+			return ret;
+		}
+
+		QString fileName;
+
+		switch (psLoader.modelID) {
+		case 1:    fileName = "AAAA";    break; // Cloud
+		case 2:    fileName = "AUFF";    break; // Aerith
+		case 3:    fileName = "ACGD";    break; // Barret
+		case 4:    fileName = "AAGB";    break; // Tifa
+		case 5:    fileName = "ADDA";    break; // Red XIII
+		case 6:    fileName = "ABDA";    break; // Cid
+		case 7:    fileName = "ABJB";    break; // Yuffie
+		case 8:    fileName = "AEBC";    break; // Cait Sith
+		case 9:    fileName = "AEHD";    break; // Vincent
+		default:
+			// FIXME: not the same model
+			fileName = "AAAA";
+			break;
+		}
+
+		ret.insertModel(i, fileName + ".HRC");
+
+		for (int j = 0; j < psLoader.animationCount; ++j) {
+			ret.insertAnim(i, j, "ACFE");
+			ret.setAnimUnknown(i, j, 1);
+		}
+
+		ret.setScale(i, modelFile.scale());
+		ret.setUnknown(i, psLoader.unknown2);
+		ret.setGlobalColor(i, modelFile.globalColor());
+		ret.setLightColors(i, modelFile.lightColors());
+
+		i += 1;
+	}
+
+
+	return ret;
 }

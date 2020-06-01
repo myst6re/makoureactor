@@ -44,7 +44,7 @@ Field::~Field()
 
 void Field::setModified(bool modified)
 {
-	if(!_isOpen) {
+	if(!_isOpen && _io != nullptr) {
 		if(!open()) {
 			qWarning() << "Unable to reopen!";
 			return;
@@ -293,7 +293,9 @@ void Field::setName(const QString &name)
 
 void Field::setSaved()
 {
-	_isOpen = false; // Force reopen to refresh positions automatically
+	if (_io != nullptr) {
+		_isOpen = false; // Force reopen to refresh positions automatically
+	}
 	foreach(FieldPart *part, _parts) {
 		part->setModified(false);
 	}
@@ -391,7 +393,8 @@ qint8 Field::save(const QString &path, bool compress)
 	return 0;
 }
 
-qint8 Field::importer(const QString &path, bool isDat, bool compressed, FieldSections part, QIODevice *device2)
+qint8 Field::importer(const QString &path, bool isDat, bool compressed, FieldSections part, QIODevice *bsxDevice,
+                      QIODevice *mimDevice)
 {
 	QFile fic(path);
 	if(!fic.open(QIODevice::ReadOnly))	return 1;
@@ -409,10 +412,19 @@ qint8 Field::importer(const QString &path, bool isDat, bool compressed, FieldSec
 		data = fic.readAll();
 	}
 	
-	return importer(data, isDat, part, device2);
+	return importer(data, isDat, part, bsxDevice, mimDevice);
 }
 
-qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *device2)
+bool Field::importModelLoader(const QByteArray &sectionData, bool isPSField, QIODevice *bsxDevice)
+{
+	Q_UNUSED(sectionData);
+	Q_UNUSED(isPSField);
+	Q_UNUSED(bsxDevice);
+	return false;
+}
+
+qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *bsxDevice,
+                      QIODevice *mimDevice)
 {
 	if(isPSField) {
 		quint32 sectionPositions[7];
@@ -457,26 +469,21 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 			inf->setMapName(name());
 			inf->setModified(true);
 		}
+		if(part.testFlag(ModelLoader)) {
+			if(!importModelLoader(data.mid(sectionPositions[6]), isPSField, bsxDevice)) {
+				return 2;
+			}
+		}
 		if(part.testFlag(Background)) {
-			if(!device2) {
+			if(!mimDevice) {
 				qWarning() << "Field::importer Additional device need to be initialized";
 				return 2;
 			}
-			if(!device2->open(QIODevice::ReadOnly)) {
+			if(!mimDevice->open(QIODevice::ReadOnly)) {
 				return 1;
 			}
 
-			quint32 lzsSize;
-
-			if(device2->read((char *)&lzsSize, 4) != 4) {
-				return 2;
-			}
-
-			if(lzsSize + 4 != device2->size()) {
-				return 2;
-			}
-
-			QByteArray mimData = LZS::decompressAll(device2->readAll()),
+			QByteArray mimData = LZS::decompressAllWithHeader(mimDevice->readAll()),
 					tilesData = data.mid(sectionPositions[2], sectionPositions[3]-sectionPositions[2]);
 
 			BackgroundFilePS *bg;
@@ -515,6 +522,12 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 			TutFile *_tut = tutosAndSounds(false);
 			if(!_tut->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))		return 2;
 			_tut->setModified(true);
+		}
+		if(part.testFlag(ModelLoader)) {
+			if(!importModelLoader(data.mid(sectionPositions[1]+4, sectionPositions[2]-sectionPositions[1]-4),
+			                       isPSField, bsxDevice)) {
+				return 2;
+			}
 		}
 		if(part.testFlag(Encounter)) {
 			EncounterFile *enc = encounter(false);

@@ -34,9 +34,6 @@ public:
 
 	inline bool isPC() const { return true; }
 
-	using Field::importer;
-	qint8 importer(const QByteArray &data, bool isPSField, FieldSections part);
-
 	FieldModelLoaderPC *fieldModelLoader(bool open=true);
 	FieldModelFilePC *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
 	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate = true);
@@ -58,6 +55,7 @@ protected:
 	QList<Field::FieldSection> orderOfSections() const;
 	inline quint32 diffSectionPos() const { return 0; }
 	inline bool hasSectionHeader() const { return true; }
+	bool importModelLoader(const QByteArray &sectionData, bool isPSField, QIODevice *bsxDevice);
 private:
 	quint32 sectionPositions[9];
 	FieldModelFilePC *_model;

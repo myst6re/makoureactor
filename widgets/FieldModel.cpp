@@ -210,8 +210,8 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 
 void FieldModel::mouseMoveEvent(QMouseEvent *event)
 {
-	int dx = event->x() - lastPos.x(),
-	    dy = event->y() - lastPos.y();
+	int dx = event->x() - lastPos.x();
+	    //dy = event->y() - lastPos.y();
 
 	bool needsUpdate = false;
 

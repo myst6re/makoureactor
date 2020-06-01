@@ -20,6 +20,8 @@
 
 #include <QtCore>
 #include "FieldModelLoader.h"
+#include "FieldModelLoaderPC.h"
+#include "BsxFile.h"
 
 struct FieldModelLoaderStruct {
 	quint8 faceID, bonesCount, partsCount, animationCount;
@@ -40,6 +42,7 @@ public:
 	void setUnknown(int modelID, quint16 unknown);
 	const FieldModelLoaderStruct &model(int modelID) const;
 	void setModel(int modelID, const FieldModelLoaderStruct &modelLoader);
+	FieldModelLoaderPC toPC(BsxFile *bsx, bool *ok) const;
 private:
 	QList<FieldModelLoaderStruct> _modelLoaders;
 };

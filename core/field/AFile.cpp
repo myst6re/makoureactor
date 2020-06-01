@@ -22,6 +22,21 @@ AFile::AFile(QIODevice *device) :
 {
 }
 
+bool AFile::readHeader(AHeader &header) const
+{
+	if (!canRead()) {
+		return false;
+	}
+
+	if (device()->read((char *)&header, 36) != 36
+	    || header.framesCount == 0
+	    || device()->pos() + header.framesCount * (24 + 12 * header.boneCount) > device()->size()) {
+		return false;
+	}
+
+	return true;
+}
+
 bool AFile::read(FieldModelAnimation &animation, int maxFrames) const
 {
 	if (!canRead()) {
@@ -31,9 +46,7 @@ bool AFile::read(FieldModelAnimation &animation, int maxFrames) const
 	AHeader header;
 	PolyVertex rot, trans;
 
-	if (device()->read((char *)&header, 36) != 36
-			|| header.framesCount == 0
-			|| device()->pos() + header.framesCount * (24 + 12 * header.boneCount) > device()->size()) {
+	if (!readHeader(header)) {
 		return false;
 	}
 

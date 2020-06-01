@@ -32,7 +32,8 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 	model = new QCheckBox(tr("Model loader"));
 	mim = new QCheckBox(tr("Background"));
 
-	model->setEnabled(sourceSameTypeAsTarget);
+	model->setEnabled((isDat && !sourceSameTypeAsTarget) ||
+	                  (!isDat && sourceSameTypeAsTarget));
 	mim->setEnabled((isDat && !sourceSameTypeAsTarget) ||
 					(!isDat && sourceSameTypeAsTarget));
 
@@ -46,26 +47,45 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 	mim->setChecked(mim->isEnabled());
 
 	if(isDat) {
-		model->setVisible(false);
+		if (sourceSameTypeAsTarget) {
+			model->setVisible(false);
+		} else {
+			model->setText(model->text() + tr(" (partial: models and animations are not linked properly)"));
+			mim->setText(mim->text() + tr(" (partial: Z-depth might be a little broken)"));
+		}
 	}
 
-	pathEdit = new QLineEdit;
-	QPushButton *changePathButton = new QPushButton(tr("Change"));
+	pathEditMim = new QLineEdit;
+	QPushButton *changePathButtonMim = new QPushButton(tr("Change"));
 
-	pathWidget = new QWidget;
-	QHBoxLayout *layoutPath = new QHBoxLayout(pathWidget);
+	pathWidgetMim = new QWidget;
+	QHBoxLayout *layoutPath = new QHBoxLayout(pathWidgetMim);
 	layoutPath->addWidget(new QLabel(tr("MIM file:")));
-	layoutPath->addWidget(pathEdit);
-	layoutPath->addWidget(changePathButton);
+	layoutPath->addWidget(pathEditMim);
+	layoutPath->addWidget(changePathButtonMim);
 	layoutPath->setContentsMargins(QMargins());
 
+	pathEditBsx = new QLineEdit;
+	QPushButton *changePathButtonBsx = new QPushButton(tr("Change"));
+
+	pathWidgetBsx = new QWidget;
+	QHBoxLayout *layoutPathBsx = new QHBoxLayout(pathWidgetBsx);
+	layoutPathBsx->addWidget(new QLabel(tr("BSX file:")));
+	layoutPathBsx->addWidget(pathEditBsx);
+	layoutPathBsx->addWidget(changePathButtonBsx);
+	layoutPathBsx->setContentsMargins(QMargins());
+
 	if(isDat) {
-		pathWidget->setEnabled(mim->isChecked());
+		pathWidgetMim->setEnabled(mim->isChecked());
+		pathWidgetBsx->setEnabled(model->isChecked());
 		int index = path.lastIndexOf(".");
-		pathEdit->setText(index > -1 ? (path.left(index + 1) + "MIM")
-									 : path);
+		pathEditMim->setText(index > -1 ? (path.left(index + 1) + "MIM")
+		                             : path);
+		pathEditBsx->setText(index > -1 ? (path.left(index + 1) + "BSX")
+		                                : path);
 	} else {
-		pathWidget->hide();
+		pathWidgetMim->hide();
+		pathWidgetBsx->hide();
 	}
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
@@ -78,8 +98,9 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 	layout->addWidget(encounter);
 	layout->addWidget(inf);
 	layout->addWidget(model);
+	layout->addWidget(pathWidgetBsx);
 	layout->addWidget(mim);
-	layout->addWidget(pathWidget);
+	layout->addWidget(pathWidgetMim);
 	layout->addStretch();
 
 	layout = new QVBoxLayout(this);
@@ -89,8 +110,10 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 
 	connect(buttonBox, SIGNAL(accepted()), SLOT(accept()));
 	connect(buttonBox, SIGNAL(rejected()), SLOT(reject()));
-	connect(changePathButton, SIGNAL(clicked()), SLOT(setAdditionalPathByUser()));
-	connect(mim, SIGNAL(toggled(bool)), pathWidget, SLOT(setEnabled(bool)));
+	connect(changePathButtonMim, SIGNAL(clicked()), SLOT(setMimPathByUser()));
+	connect(changePathButtonBsx, SIGNAL(clicked()), SLOT(setBsxPathByUser()));
+	connect(mim, SIGNAL(toggled(bool)), pathWidgetMim, SLOT(setEnabled(bool)));
+	connect(model, SIGNAL(toggled(bool)), pathWidgetBsx, SLOT(setEnabled(bool)));
 }
 
 Field::FieldSections ImportDialog::parts() const
@@ -109,17 +132,34 @@ Field::FieldSections ImportDialog::parts() const
 	return parts;
 }
 
-QString ImportDialog::additionalPath() const
+QString ImportDialog::bsxPath() const
 {
-	return pathEdit->text();
+	return pathEditBsx->text();
 }
 
-void ImportDialog::setAdditionalPathByUser()
+QString ImportDialog::mimPath() const
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Select the associated MIM file"), pathEdit->text(), tr("MIM File (*.MIM);;All Files(*)"));
+	return pathEditMim->text();
+}
+
+void ImportDialog::setBsxPathByUser()
+{
+	QString path = QFileDialog::getOpenFileName(this, tr("Select the associated BSX file"), pathEditBsx->text(),
+	                                            tr("BSX File (*.BSX);;All Files(*)"));
 	if(path.isNull()) {
 		return;
 	}
 
-	pathEdit->setText(path);
+	pathEditBsx->setText(path);
+}
+
+void ImportDialog::setMimPathByUser()
+{
+	QString path = QFileDialog::getOpenFileName(this, tr("Select the associated MIM file"), pathEditMim->text(),
+	                                            tr("MIM File (*.MIM);;All Files(*)"));
+	if(path.isNull()) {
+		return;
+	}
+
+	pathEditMim->setText(path);
 }

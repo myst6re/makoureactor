@@ -37,6 +37,7 @@ public:
 	explicit AFile(QIODevice *device);
 	virtual ~AFile() {}
 
+	bool readHeader(AHeader &header) const;
 	bool read(FieldModelAnimation &animation, int maxFrames = -1) const;
 	bool write(const FieldModelAnimation &animation) const;
 };

@@ -1229,7 +1229,19 @@ void Window::massImport()
 
 void Window::importer()
 {
-	if(!field) return;
+	int mapId = _fieldList->currentMapId();
+	if(mapId < 0) {
+		return;
+	}
+
+	Field *field = fieldArchive->field(mapId, false);
+	if(nullptr == field) {
+		return;
+	}
+
+	if (!field->isOpen()) {
+		field->initEmpty();
+	}
 
 	int index;
 	QString name, selectedFilter;
@@ -1270,9 +1282,9 @@ void Window::importer()
 		}
 	}
 
-	QFile addDevice(dialog.additionalPath());
+	QFile bsxDevice(dialog.bsxPath()), mimDevice(dialog.mimPath());
 	
-	qint8 error = field->importer(path, isDat, isCompressed, parts, &addDevice);
+	qint8 error = field->importer(path, isDat, isCompressed, parts, &bsxDevice, &mimDevice);
 
 	QString out;
 	switch(error)
