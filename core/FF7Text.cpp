@@ -211,6 +211,13 @@ void FF7Text::setText(const QString &string, bool jp)
 				}
 			}
 
+			// Keep the old typo for compatibility
+			if (rest.startsWith("{AERIS}", Qt::CaseInsensitive)) {
+				_data.append((char)(0xed));
+				c += getCaract(0xed).size()-1;
+				goto end;
+			}
+
 			for(i=0 ; i<11 ; ++i) {
 				if(rest.startsWith(getCaract(0xd2 + i, 7), Qt::CaseInsensitive)) {//{Colors},{PAUSE}
 					_data.append('\xfe').append((char)(0xd2 + i));

@@ -33,7 +33,7 @@ const char *FF7Text::caract[256] =
 	"–","—","“","”","‘","’","÷","◊","ÿ","Ÿ","","¤","‹","›","ﬁ","ﬂ",
 	"■","▪","‚","„","‰","Â","Ê","Á","Ë","È","Í","Î","Ï","Ì","Ó","Ô",
 	"","Ò","Ù","Û","","","","","","","","","","","","",
-	"{CHOICE}","\t","{, }","{.\"}","{…\"}","","","\n","\n{NEW PAGE}\n","\n{NEW PAGE 2}\n","{CLOUD}","{BARRET}","{TIFA}","{AERIS}","{RED XIII}","{YUFFIE}",
+	"{CHOICE}","\t","{, }","{.\"}","{…\"}","","","\n","\n{NEW PAGE}\n","\n{NEW PAGE 2}\n","{CLOUD}","{BARRET}","{TIFA}","{AERITH}","{RED XIII}","{YUFFIE}",
 	"{CAIT SITH}","{VINCENT}","{CID}","{MEMBER 1}","{MEMBER 2}","{MEMBER 3}","{CIRCLE}","{TRIANGLE}","{SQUARE}","{CROSS}",""/*jp_fa*/,""/*jp_fb*/,""/*jp_fc*/,""/*jp_fd*/,""/*jp_fe*/,""/*end*/
 };
 
@@ -53,7 +53,7 @@ const char *FF7Text::caract_jp[256]=
 	"『","』","．","＋","Ａ","Ｂ","Ｃ","Ｄ","Ｅ","Ｆ","Ｇ","Ｈ","Ｉ","Ｊ","Ｋ","Ｌ",
 	"Ｍ","Ｎ","Ｏ","Ｐ","Ｑ","Ｒ","Ｓ","Ｔ","Ｕ","Ｖ","Ｗ","Ｘ","Ｙ","Ｚ","・","＊",
 	"ー","～","…","％","／","：","＆","【","】","♥","→","α","β","「","」","（",
-	"）","－","＝","","","","⑬","\n","\n{NEW PAGE}\n","\n{NEW PAGE 2}\n","{CLOUD}","{BARRET}","{TIFA}","{AERIS}","{RED XIII}","{YUFFIE}",
+	"）","－","＝","","","","⑬","\n","\n{NEW PAGE}\n","\n{NEW PAGE 2}\n","{CLOUD}","{BARRET}","{TIFA}","{AERITH}","{RED XIII}","{YUFFIE}",
 	"{CAIT SITH}","{VINCENT}","{CID}","{MEMBER 1}","{MEMBER 2}","{MEMBER 3}","{CIRCLE}","{TRIANGLE}","{SQUARE}","{CROSS}","","","","","",""
 };
 

@@ -45,7 +45,7 @@ TextManager::TextManager(QWidget *parent) :
 	action = toolBar->addAction(QIcon(":/images/icon-char-2.png"), Data::char_names.at(2));
 	action->setData("{TIFA}");
 	action = toolBar->addAction(QIcon(":/images/icon-char-3.png"), Data::char_names.at(3));
-	action->setData("{AERIS}");
+	action->setData("{AERITH}");
 	action = toolBar->addAction(QIcon(":/images/icon-char-4.png"), Data::char_names.at(4));
 	action->setData("{RED XIII}");
 	action = toolBar->addAction(QIcon(":/images/icon-char-5.png"), Data::char_names.at(5));

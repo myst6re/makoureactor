@@ -148,7 +148,7 @@ int ModelManager::currentAnimID(QTreeWidgetItem *item) const
 void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous)
 {
 	Q_UNUSED(previous);
-	if(item == NULL) {
+	if(item == nullptr) {
 		modelFrame->setEnabled(false);
 		return;
 	}
@@ -205,7 +205,7 @@ void ModelManager::setModelUnknown(int unknown)
 void ModelManager::showModel(QTreeWidgetItem *item)
 {
 	if(modelPreview) {
-		if(item == NULL) {
+		if(item == nullptr) {
 			modelPreview->clear();
 			return;
 		}

@@ -504,7 +504,7 @@ bool Data::load()
 	if(char_names.isEmpty()) {
 		char_names
 				<< QObject::tr("Cloud") << QObject::tr("Barret") << QObject::tr("Tifa")
-				<< QObject::tr("Aeris") << QObject::tr("Red XIII") << QObject::tr("Yuffie")
+				<< QObject::tr("Aerith") << QObject::tr("Red XIII") << QObject::tr("Yuffie")
 				<< QObject::tr("Cait Sith") << QObject::tr("Vincent") << QObject::tr("Cid")
 				<< QObject::tr("Yound Cloud") << QObject::tr("Sephiroth") << QObject::tr("Chocobo");
 	}
