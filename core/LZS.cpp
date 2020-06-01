@@ -109,14 +109,17 @@ const QByteArray &LZS::decompressAll(const QByteArray &data)
 
 const QByteArray &LZS::decompressAll(const char *data, int fileSize)
 {
-	int curResult=0, sizeAlloc=fileSize*5;
-	quint16 curBuff=4078, adresse, premOctet=0, i, length;
+	int sizeAlloc=fileSize*5;
+	quint16 curBuff=4078, offset, premOctet=0, i, length;
 	const quint8 *fileData = (const quint8 *)data;
 	const quint8 *endFileData = fileData + fileSize;
 
-	if(result.size() < sizeAlloc) {
+	// Internal buffer is still allocated using this method instead of clear
+	result.resize(0);
+
+	if(result.capacity() < sizeAlloc) {
 		try {
-			result.resize(sizeAlloc);
+			result.reserve(sizeAlloc);
 		} catch(std::bad_alloc) {
 			result.clear();
 			return result;
@@ -132,33 +135,30 @@ const QByteArray &LZS::decompressAll(const char *data, int fileSize)
 		}
 
 		if(fileData >= endFileData) {
-			result.truncate(curResult);
-			return result;//Fini !
+			return result; // Done
 		}
 
 		if(premOctet & 1)
 		{
-			result[curResult] = text_buf[curBuff] = *fileData++;//On récupère l'octet (qui n'est pas compressé) et on le sauvegarde dans la chaine finale (result) et dans le buffer. Et bien sûr on fait avancer les curseurs d'un octet.
+			result.append(text_buf[curBuff] = *fileData++);//On récupère l'octet (qui n'est pas compressé) et on le sauvegarde dans la chaine finale (result) et dans le buffer. Et bien sûr on fait avancer les curseurs d'un octet.
 			curBuff = (curBuff + 1) & 4095;//Le curseur du buffer doit toujours être entre 0 et 4095
-			++curResult;
 		}
 		else
 		{
 //			quint16 twoBytes = *((const quint16 *)fileData);
-//			adresse = (twoBytes & 0x00FF) | ((twoBytes & 0xF000) >> 4);
-//			length = ((twoBytes & 0x0F00) >> 8) + 2 + adresse;
+//			offset = (twoBytes & 0x00FF) | ((twoBytes & 0xF000) >> 4);
+//			length = ((twoBytes & 0x0F00) >> 8) + 2 + offset;
 //			fileData += 2;
 
-			adresse = *fileData++;
+			offset = *fileData++;
 			length = *fileData++;
-			adresse |= (length & 0xF0) << 4;//on récupère l'adresse dans les deux octets (qui sont "compressés")
-			length = (length & 0xF) + 2 + adresse;
+			offset |= (length & 0xF0) << 4;//on récupère l'offset dans les deux octets (qui sont "compressés")
+			length = (length & 0xF) + 2 + offset;
 
-			for(i=adresse ; i<=length ; ++i)
+			for(i=offset ; i<=length ; ++i)
 			{
-				result[curResult] = text_buf[curBuff] = text_buf[i & 4095];//On va chercher l'octet (qui est décompressé) dans le buffer à l'adresse indiquée puis on le sauvegarde dans la chaine finale et le buffer.
+				result.append(text_buf[curBuff] = text_buf[i & 4095]);//On va chercher l'octet (qui est décompressé) dans le buffer à l'adresse indiquée puis on le sauvegarde dans la chaine finale et le buffer.
 				curBuff = (curBuff + 1) & 4095;
-				++curResult;
 			}
 		}
 	}
