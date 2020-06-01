@@ -25,8 +25,17 @@
 class PsColor
 {
 public:
-	static quint16 toPsColor(const QRgb &color);
-	static QRgb fromPsColor(quint16 color, bool useAlpha=false);
+	static inline quint16 toPsColor(const QRgb &color) {
+		return (qRound(qRed(color)/COEFF_COLOR) & 31) | ((qRound(qGreen(color)/COEFF_COLOR) & 31) << 5)
+		       | ((qRound(qBlue(color)/COEFF_COLOR) & 31) << 10) | ((qAlpha(color)==255) << 15);
+	}
+	static inline QRgb fromPsColor(quint16 color, bool useAlpha=false) {
+		quint8 r = color & 31,
+		       g = (color >> 5) & 31,
+		       b = (color >> 10) & 31;
+
+		return qRgba((r << 3) + (r >> 2), (g << 3) + (g >> 2), (b << 3) + (b >> 2), color == 0 && useAlpha ? 0 : 255);
+	}
 };
 
 #endif // DEF_PSCOLOR
