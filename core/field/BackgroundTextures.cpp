@@ -218,10 +218,12 @@ quint32 BackgroundTexturesPC::originInData(const Tile &tile) const
 
 QRgb BackgroundTexturesPC::directColor(quint16 color) const
 {
-	return qRgba(qRound(COEFF_COLOR * (color >> 11)),
-				qRound(COEFF_COLOR * (color >> 6 & 31)),
-				qRound(COEFF_COLOR * (color & 31)),
-				 color == 0 ? 0 : 255); // special PC RGB16 color
+	quint8 b = color & 31,
+	       g = (color >> 6) & 31,
+	       r = color >> 11;
+
+	// special PC RGB16 color
+	return qRgba((r << 3) + (r >> 2), (g << 3) + (g >> 2), (b << 3) + (b >> 2), color == 0 ? 0 : 255);
 }
 
 quint16 BackgroundTexturesPC::toPcColor(const QRgb &color)

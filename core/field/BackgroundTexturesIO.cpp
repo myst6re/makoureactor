@@ -100,8 +100,9 @@ bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures) const
 				return false;
 			}
 
-			if(device()->write(textures->data().mid(infos.pos, infos.depth * 65536))
-					!= infos.depth * 65536) {
+			int dataSize = infos.depth == 0 ? 32768 : infos.depth * 65536;
+
+			if(device()->write(textures->data().mid(infos.pos, dataSize)) != dataSize) {
 				return false;
 			}
 		}

@@ -61,7 +61,7 @@ public:
 		_palettes = palettes;
 	}
 
-	inline BackgroundTextures *textures() const {
+	inline virtual BackgroundTextures *textures() const {
 		return _textures;
 	}
 	inline void setTextures(BackgroundTextures *textures) {

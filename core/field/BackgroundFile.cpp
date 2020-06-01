@@ -59,7 +59,7 @@ QImage BackgroundFile::openBackground(bool *warning)
 	QHash<quint8, quint8> paramActifs;
 	qint16 z[] = {-1, -1};
 	field()->scriptsAndTexts()->bgParamAndBgMove(paramActifs, z);
-	return openBackground(paramActifs, z, NULL, NULL, warning);
+	return openBackground(paramActifs, z, nullptr, nullptr, warning);
 }
 
 QImage BackgroundFile::openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 *z,

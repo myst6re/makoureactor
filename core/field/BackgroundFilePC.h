@@ -41,6 +41,9 @@ public:
 	QByteArray save() const;
 	QByteArray savePal() const;
 	virtual inline bool canSave() const { return true; }
+	inline virtual BackgroundTexturesPC *textures() const {
+		return static_cast<BackgroundTexturesPC *>(BackgroundFile::textures());
+	}
 	BackgroundFilePS toPS(FieldPS *field) const;
 	bool repair();
 };
