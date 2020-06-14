@@ -146,39 +146,60 @@ BackgroundFilePS BackgroundFilePC::toPS(FieldPS *field) const
 
 bool BackgroundFilePC::repair()
 {
-	int paletteCount = palettes().size();
+	// PC field file contains PS tiles format
+	// Altough it is unused by the game, we can use it to repair the PC format
+	BackgroundTilesFile *psTiles = field()->tiles();
+	QMap<quint16, Tile> &tiles = (QMap<quint16, Tile> &)tilesRef();
+	QMutableMapIterator<quint16, Tile> it(tiles);
 	bool modified = false;
 
-	QSet<quint8> usedPalettes = this->tiles().usedPalettes();
-	QList<quint8> unusedPalettes;
+	if (psTiles && psTiles->isOpen()) {
+		const QMap<qint32, Tile> &psTilesList = psTiles->tiles().sortedTiles();
 
-	// List unused palettes
-	for(int palID = 0; palID < paletteCount; ++palID) {
-		if(!usedPalettes.contains(palID)) {
-			unusedPalettes.append(palID);
+		while(it.hasNext()) {
+			it.next();
+			Tile &tile = it.value();
+			const Tile tilePs = psTilesList.value((tile.layerID << 16) | tile.tileID);
+
+			if (tile.depth < 2 && tile.paletteID != tilePs.paletteID) {
+				tile.paletteID = tilePs.paletteID;
+				tile.typeTrans = tilePs.typeTrans;
+				modified = true;
+			}
 		}
-	}
+	} else { // By hand
+		int paletteCount = palettes().size();
+		QSet<quint8> usedPalettes = this->tiles().usedPalettes();
+		QList<quint8> unusedPalettes;
 
-	std::sort(unusedPalettes.begin(), unusedPalettes.end(), qLess<quint8>());
+		// List unused palettes
+		for(int palID = 0; palID < paletteCount; ++palID) {
+			if(!usedPalettes.contains(palID)) {
+				unusedPalettes.append(palID);
+			}
+		}
 
-	QMap<quint16, Tile> &tiles = (QMap<quint16, Tile> &)tilesRef();
-	QMap<quint8, quint8> texToPalette;
-	QMutableMapIterator<quint16, Tile> it(tiles);
-	while(it.hasNext()) {
-		it.next();
-		Tile &tile = it.value();
-		if (tile.depth < 2 && tile.blending && tile.typeTrans != 2 && tile.paletteID >= paletteCount) {
-			tile.typeTrans = 2; // Modification in place
-			if(texToPalette.contains(tile.textureID)) {
-				tile.paletteID = texToPalette.value(tile.textureID);
-				modified = true;
-			} else if (!unusedPalettes.isEmpty()) {
-				tile.paletteID = unusedPalettes.first();
-				unusedPalettes.removeFirst();
-				texToPalette.insert(tile.textureID, tile.paletteID);
-				modified = true;
-			} else {
-				qWarning() << "BackgroundFilePC::repair cannot detect palette ID to use";
+		std::sort(unusedPalettes.begin(), unusedPalettes.end(), std::less<quint8>());
+
+		QMap<quint8, quint8> texToPalette;
+
+		while(it.hasNext()) {
+			it.next();
+			Tile &tile = it.value();
+
+			if (tile.depth < 2 && tile.blending && tile.typeTrans != 2 && tile.paletteID >= paletteCount) {
+				tile.typeTrans = 2; // Modification in place
+				if(texToPalette.contains(tile.textureID)) {
+					tile.paletteID = texToPalette.value(tile.textureID);
+					modified = true;
+				} else if (!unusedPalettes.isEmpty()) {
+					tile.paletteID = unusedPalettes.first();
+					unusedPalettes.removeFirst();
+					texToPalette.insert(tile.textureID, tile.paletteID);
+					modified = true;
+				} else {
+					qWarning() << "BackgroundFilePC::repair cannot detect palette ID to use";
+				}
 			}
 		}
 	}

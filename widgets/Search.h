@@ -43,6 +43,7 @@ private slots:
 	void updateComboVarName();
 	void updateChampAdress();
 	void updateSearchVarPlaceholder(int opIndex);
+	void updateOpcode2(int opIndex);
 	void cancelSearching();
 	void findNext();
 	void findPrev();
@@ -76,7 +77,7 @@ private:
 	FieldArchive *fieldArchive;
 	QComboBox *champ, *champ2, *replace2;
 	QComboBox *liste;
-	QComboBox *opcode;
+	QComboBox *opcode, *opcode2;
 	QCheckBox *caseSens, *useRegexp, *caseSens2, *useRegexp2;
 	QSpinBox *champBank;
 	QSpinBox *champAddress;

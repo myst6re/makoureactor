@@ -857,16 +857,38 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 	if(QFile::exists(destPath)) {
 		QFile destFile(destPath);
 		if(!destFile.remove()) {
-			temp.remove();
-			setError(RemoveError, destFile.errorString());
-			return false;
+			bool removed = false;
+
+			while (observer->observerRetry(QObject::tr("Cannot remove destination archive"))) {
+				if (destFile.remove()) {
+					removed = true;
+					break;
+				}
+			}
+
+			if (!removed) {
+				temp.remove();
+				setError(RemoveError, destFile.errorString());
+				return false;
+			}
 		}
 	}
 	// Move temp file to destination
 	if(!temp.rename(destPath)) {
-		temp.remove();
-		setError(RenameError, temp.errorString());
-		return false;
+		bool renamed = false;
+
+		while (observer->observerRetry(QObject::tr("Cannot rename temporary file to destination path"))) {
+			if (temp.rename(destPath)) {
+				renamed = true;
+				break;
+			}
+		}
+
+		if (!renamed) {
+			temp.remove();
+			setError(RenameError, temp.errorString());
+			return false;
+		}
 	}
 
 	// Now the archive is located in "destination"

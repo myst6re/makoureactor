@@ -347,7 +347,7 @@ void BGDialog::tryToRepairBG()
 QImage BGDialog::background(bool *bgWarning)
 {
 	if(tabBar->currentIndex() == 0) {
-		return field->background()->openBackground(params, z, layers, NULL, bgWarning);
+		return field->background()->openBackground(params, z, layers, nullptr, bgWarning);
 	} else {
 		bool layers[4] = { false, true, false, false };
 		return field->background()->openBackground(params, z, layers, &sections, bgWarning);
@@ -362,7 +362,7 @@ void BGDialog::updateBG()
 	QImage img = background(&bgWarning);
 
 	if(tabBar->currentIndex() == 0) {
-		img = field->background()->openBackground(params, z, layers, NULL, &bgWarning);
+		img = field->background()->openBackground(params, z, layers, nullptr, &bgWarning);
 	} else {
 		bool layers[4] = { false, true, false, false };
 		img = field->background()->openBackground(params, z, layers, &sections, &bgWarning);
@@ -395,13 +395,13 @@ bool BGDialog::eventFilter(QObject *obj, QEvent *event)
 			const float step = 0.25;
 			if(zoomFactor == 0) {
 				zoomFactor = 0.25;
-			} else if(wheelEvent->delta() > 0) {
+			} else if(wheelEvent->angleDelta().y() > 0) {
 				if(zoomFactor >= 4){
 					return false; // cap zoom in at 400%
 				} else {
 					zoomFactor += step;
 				}
-			} else if(wheelEvent->delta() < 0) {
+			} else if(wheelEvent->angleDelta().y() < 0) {
 				if (zoomFactor <= 0.25){
 					return false; // cap zoom in at 25%
 				} else {

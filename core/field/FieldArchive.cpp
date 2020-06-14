@@ -31,6 +31,10 @@ bool FieldArchiveIterator::seek(int mapId)
 {
 	toFront();
 
+	if (mapId < 0) {
+		return true;
+	}
+
 	Field *f = mapList.value(mapId);
 	if (nullptr != f && findNext(f)) {
 		previous();
@@ -64,7 +68,7 @@ Field *FieldArchiveIterator::previous(bool open, bool dontOptimize)
 
 Field *FieldArchiveIterator::openField(Field *field, bool open, bool dontOptimize)
 {
-	if(field != NULL && open && !field->isOpen()) {
+	if(field != nullptr && open && !field->isOpen()) {
 		field->open(dontOptimize);
 	}
 	return field;
@@ -288,17 +292,20 @@ QList<FF7Var> FieldArchive::searchAllVars(QMap<FF7Var, QSet<QString> > &fieldNam
 
 void FieldArchive::validateAsk()
 {
-	foreach(int i, fieldsSortByMapId) {
-		Field *f = field(i, true);
-		QString name = Data::field_names.value(fieldsSortByMapId.key(i).toInt());
-		if(f == NULL) {
-			qWarning() << "FieldArchive::printAkaos: cannot open field" << i << name;
+	FieldArchiveIterator it(*this);
+
+	while (it.hasNext()) {
+		Field *f = it.next();
+
+		if(f == nullptr) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << it.mapId();
 			continue;
 		}
 
+		QString name = f->name();
+
 		Section1File *scriptsAndTexts = f->scriptsAndTexts();
 		if(scriptsAndTexts->isOpen()) {
-			//qWarning() << f->name();
 
 			int grpScriptID = 0;
 			foreach(GrpScript *grp, scriptsAndTexts->grpScripts()) {
@@ -341,13 +348,13 @@ void FieldArchive::validateAsk()
 
 									if (autoFirstLine == -1) {
 										qWarning() << QString("%1 > %2 > %3 > %4: No {CHOICE} here (textID: %9)")
-													  .arg(f->name(), grp->name(), grp->scriptName(scriptID))
+													  .arg(name, grp->name(), grp->scriptName(scriptID))
 													  .arg(opcodeID + 1)
 													  .arg(textID).toLatin1().data();
 									} else if (autoFirstLine != firstLine
 											|| autoLastLine != lastLine) {
 										qWarning() << QString("%1 > %2 > %3 > %4: %5 should be %6, %7 should be %8 (textID: %9)")
-													  .arg(f->name(), grp->name(), grp->scriptName(scriptID))
+													  .arg(name, grp->name(), grp->scriptName(scriptID))
 													  .arg(opcodeID + 1)
 													  .arg(firstLine).arg(autoFirstLine)
 													  .arg(lastLine).arg(autoLastLine)
@@ -371,14 +378,17 @@ void FieldArchive::validateAsk()
 void FieldArchive::validateOneLineSize()
 {
 	TextPreview tp; // Init textpreview to use autodim algo
+	FieldArchiveIterator it(*this);
 
-	foreach(int i, fieldsSortByMapId) {
-		Field *f = field(i, true);
-		QString name = Data::field_names.value(fieldsSortByMapId.key(i).toInt());
-		if(f == NULL) {
-			qWarning() << "FieldArchive::printAkaos: cannot open field" << i << name;
+	while (it.hasNext()) {
+		Field *f = it.next();
+
+		if(f == nullptr) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << it.mapId();
 			continue;
 		}
+
+		QString name = f->name();
 
 		Section1File *scriptsAndTexts = f->scriptsAndTexts();
 		if(scriptsAndTexts->isOpen()) {
@@ -421,11 +431,12 @@ void FieldArchive::printAkaos(const QString &filename)
 {
 	QFile deb(filename);
 	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+	FieldArchiveIterator it(*this);
 
-	foreach(int i, fieldsSortByMapId) {
-		Field *f = field(i, true);
-		if(f == NULL) {
-			qWarning() << "FieldArchive::printAkaos: cannot open field" << i;
+	while (it.hasNext()) {
+		Field *f = it.next();
+		if(f == nullptr) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << it.mapId();
 			continue;
 		}
 		QString name = f->inf()->mapName();
@@ -456,11 +467,12 @@ void FieldArchive::printModelLoaders(const QString &filename, bool generic)
 {
 	QFile deb(filename);
 	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+	FieldArchiveIterator it(*this);
 
-	foreach(int i, fieldsSortByMapId) {
-		Field *f = field(i, true);
-		if(f == NULL) {
-			qWarning() << "FieldArchive::printModelLoaders: cannot open field" << i;
+	while (it.hasNext()) {
+		Field *f = it.next();
+		if(f == nullptr) {
+			qWarning() << "FieldArchive::printModelLoaders: cannot open field" << it.mapId();
 			continue;
 		}
 		if (!f->inf()->isOpen()) {
@@ -544,11 +556,12 @@ void FieldArchive::printTexts(const QString &filename, bool usedTexts)
 {
 	QFile deb(filename);
 	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+	FieldArchiveIterator it(*this);
 
-	foreach(int i, fieldsSortByMapId) {
-		Field *f = field(quint32(i), true);
+	while (it.hasNext()) {
+		Field *f = it.next();
 		if(f == nullptr) {
-			qWarning() << "FieldArchive::printTexts: cannot open field" << i;
+			qWarning() << "FieldArchive::printTexts: cannot open field" << it.mapId();
 			continue;
 		}
 
@@ -580,10 +593,13 @@ void FieldArchive::printTextsDir(const QString &dirname, bool usedTexts)
 		dir.mkpath(dirname);
 	}
 
-	foreach(int i, fieldsSortByMapId) {
-		Field *f = field(quint32(i), true);
+	FieldArchiveIterator it(*this);
+
+	while (it.hasNext()) {
+		Field *f = it.next();
+
 		if(f == nullptr) {
-			qWarning() << "FieldArchive::printTexts: cannot open field" << i;
+			qWarning() << "FieldArchive::printTexts: cannot open field" << it.mapId();
 			continue;
 		}
 
@@ -623,12 +639,12 @@ void FieldArchive::compareTexts(FieldArchive *other)
 	FieldArchiveIterator it(*this);
 	while (it.hasNext()) {
 		Field *f1 = it.next();
-		if(f1 == NULL) {
+		if(f1 == nullptr) {
 			qWarning() << "FieldArchive::compareTexts: cannot open field";
 			continue;
 		}
 		Field *f2 = other->field(f1->name());
-		if(f2 == NULL) {
+		if(f2 == nullptr) {
 			qWarning() << "FieldArchive::compareTexts: cannot find field2" << f1->name();
 			continue;
 		}
@@ -677,10 +693,12 @@ void FieldArchive::printScripts(const QString &filename)
 	QFile deb(filename);
 	deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 
-	foreach(int i, fieldsSortByMapId) {
-		Field *f = field(i, true);
-		if(f == NULL) {
-			qWarning() << "FieldArchive::printAkaos: cannot open field" << i;
+	FieldArchiveIterator it(*this);
+
+	while (it.hasNext()) {
+		Field *f = it.next();
+		if(f == nullptr) {
+			qWarning() << "FieldArchive::printAkaos: cannot open field" << it.mapId();
 			continue;
 		}
 
@@ -723,10 +741,13 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 		dir.mkdir(".");
 	}
 
-	foreach(int i, fieldsSortByMapId) {
-		Field *f = field(i, true);
-		if(f == NULL) {
-			qWarning() << "FieldArchive::printScriptsDirs: cannot open field" << i;
+	FieldArchiveIterator it(*this);
+
+	while (it.hasNext()) {
+		Field *f = it.next();
+
+		if(f == nullptr) {
+			qWarning() << "FieldArchive::printScriptsDirs: cannot open field" << it.mapId();
 			continue;
 		}
 		if(!f->name().startsWith("del")) {
@@ -794,15 +815,16 @@ void FieldArchive::diffScripts()
 	}
 
 	QSet<QString> screens;
+	FieldArchiveIterator it(*this);
 
-	foreach(int i, fieldsSortByMapId) {
-		Field *field = this->field(i, true);
+	while (it.hasNext()) {
+		Field *field = it.next();
 		Field *fieldOriginal = original.field(original.indexOfField(field->name()));
-		if(fieldOriginal == NULL) {
+		if(fieldOriginal == nullptr) {
 			qWarning() << "ALERT field not found" << field->name();
 			break;
 		}
-		if(field != NULL) {
+		if(field != nullptr) {
 			Section1File *scriptsAndTexts = field->scriptsAndTexts();
 			Section1File *scriptsAndTextsOriginal = fieldOriginal->scriptsAndTexts();
 			if(scriptsAndTexts->isOpen() && scriptsAndTextsOriginal->isOpen()) {
@@ -892,54 +914,74 @@ void FieldArchive::diffScripts()
 	}
 }
 
-bool FieldArchive::printBackgroundTiles(Field *field, const QString &filename, bool uniformize)
+bool FieldArchive::printBackgroundTiles(bool uniformize, bool fromUnusedPCSection)
 {
-	QFile f(filename);
-	if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-		qWarning() << "FieldArchive::printBackgroundTiles" << f.errorString();
-		return false;
-	}
+	FieldArchiveIterator it(*this);
+	QDir dir(QString("background-tiles-%1").arg(isPC() ? "pc" : "ps"));
+	dir.mkpath(".");
 
-	BackgroundFile *bgFile = field->background();
-	if (!bgFile || !bgFile->isOpen()) {
-		qWarning() << "FieldArchive::printBackgroundTiles no bg for this field" << field->name();
-		return false;
-	}
+	while (it.hasNext()) {
+		Field *field = it.next();
+		if (!field || !field->isOpen()) {
+			continue;
+		}
 
-	BackgroundTiles tiles;
-	if (uniformize && field->isPS()) { // Convert PS to PC to have the same output whenever the source
-		BackgroundFilePS *bgFilePS = static_cast<BackgroundFilePS *>(bgFile);
-		PalettesPC palettesPC = ((PalettesPS *)&(bgFilePS->palettes()))->toPC();
-		static_cast<BackgroundTexturesPS *>(bgFilePS->textures())
-		        ->toPC(bgFilePS->tiles(), tiles, palettesPC);
-	} else {
-		tiles = bgFile->tiles();
-	}
+		InfFile *inf = field->inf();
+		if (!inf || !inf->isOpen()) {
+			continue;
+		}
 
-	foreach (const Tile &tile, tiles.sortedTiles()) {
-		f.write(QString("tileID=%1, layer=%2, param=%3, state=%4\n")
-		        .arg(tile.tileID)
-		        .arg(tile.layerID)
-		        .arg(tile.param)
-		        .arg(tile.state).toUtf8());
-		f.write(QString("srcX=%1, srcY=%2, textureID1=%3, textureID2=%4\n")
-		        .arg(tile.srcX)
-		        .arg(tile.srcY)
-		        .arg(tile.textureID)
-		        .arg(tile.textureID2).toUtf8());
-		f.write(QString("dstX=%1, dstY=%2, dstZ=%3, size=%4\n")
-		        .arg(tile.dstX)
-		        .arg(tile.dstY)
-		        .arg(tile.ID)
-		        .arg(tile.size).toUtf8());
-		f.write(QString("palID=%1, depth=%2, blending=%3, typeTrans=%4\n")
-		        .arg(tile.paletteID)
-		        .arg(tile.depth)
-		        .arg(tile.blending)
-		        .arg(tile.typeTrans).toUtf8());
-		f.write(QString("dstZBig=%1\n")
-		        .arg(tile.IDBig).toUtf8());
-		f.write("\n");
+		QFile f(dir.filePath("field-" + inf->mapName() + ".txt"));
+		if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			qWarning() << "FieldArchive::printBackgroundTiles" << f.errorString() << f.fileName();
+			return false;
+		}
+
+		BackgroundFile *bgFile = field->background();
+		if (!bgFile || !bgFile->isOpen()) {
+			qWarning() << "FieldArchive::printBackgroundTiles no bg for this field" << field->name();
+			continue;
+		}
+
+		BackgroundTiles tiles;
+		if (fromUnusedPCSection) {
+			BackgroundTilesFile *tilesFile = field->tiles();
+			tiles = tilesFile->tiles();
+		}
+		else if (uniformize && field->isPS()) { // Convert PS to PC to have the same output whenever the source
+			BackgroundFilePS *bgFilePS = static_cast<BackgroundFilePS *>(bgFile);
+			PalettesPC palettesPC = ((PalettesPS *)&(bgFilePS->palettes()))->toPC();
+			static_cast<BackgroundTexturesPS *>(bgFilePS->textures())
+					->toPC(bgFilePS->tiles(), tiles, palettesPC);
+		} else {
+			tiles = bgFile->tiles();
+		}
+
+		foreach (const Tile &tile, tiles.sortedTiles()) {
+			f.write(QString("tileID=%1, layer=%2, param=%3, state=%4\n")
+					.arg(tile.tileID)
+					.arg(tile.layerID)
+					.arg(tile.param)
+					.arg(tile.state).toUtf8());
+			/* f.write(QString("srcX=%1, srcY=%2, textureID1=%3, textureID2=%4\n")
+					.arg(tile.srcX)
+					.arg(tile.srcY)
+					.arg(tile.textureID)
+					.arg(tile.textureID2).toUtf8()); */
+			f.write(QString("dstX=%1, dstY=%2, dstZ=%3, size=%4\n")
+					.arg(tile.dstX)
+					.arg(tile.dstY)
+					.arg(tile.ID)
+					.arg(tile.size).toUtf8());
+			f.write(QString("palID=%1, depth=%2, blending=%3, typeTrans=%4\n")
+					.arg(tile.paletteID)
+					.arg(tile.depth)
+					.arg(tile.blending)
+					.arg(tile.typeTrans).toUtf8());
+			//f.write(QString("dstZBig=%1\n")
+			//        .arg(tile.IDBig).toUtf8());
+			f.write("\n");
+		}
 	}
 
 	return true;
@@ -1229,14 +1271,15 @@ void FieldArchive::searchAll()
 
 	QSet<QString> screens;
 //	for(int i=0 ; i<size ; ++i) {
-	foreach(int i, fieldsSortByMapId) {
-		Field *field = this->field(i, true);
+	FieldArchiveIterator it2(*this);
+	while (it2.hasNext()) {
+		Field *field = it2.next();
 		Field *fieldOriginal = original.field(original.indexOfField(field->name()));
-		if(fieldOriginal == NULL) {
+		if(fieldOriginal == nullptr) {
 			qWarning() << "ALERT field not found" << field->name();
 			break;
 		}
-		if(field != NULL) {
+		if(field != nullptr) {
 			Section1File *scriptsAndTexts = field->scriptsAndTexts();
 			Section1File *scriptsAndTextsOriginal = fieldOriginal->scriptsAndTexts();
 			if(scriptsAndTexts->isOpen() && scriptsAndTextsOriginal->isOpen()) {
@@ -1429,6 +1472,8 @@ bool FieldArchive::searchOpcode(int opcode, int &mapID, int &groupID, int &scrip
 {
 	SearchOpcodeQuery query(opcode);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
+
+	qDebug() << "searchOpcode" << opcode << mapID << groupID << scriptID << opcodeID;
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchOpcodeQuery *query = static_cast<SearchOpcodeQuery *>(_query);

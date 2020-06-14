@@ -30,6 +30,8 @@ public:
 	FieldModelFilePC();
 	inline bool translateAfter() const { return true; }
 	void clear();
+	quint8 load(CharArchive *charLgp, const QString &hrc, const QString &a, bool animate = true);
+	quint8 loadPart(CharArchive *charLgp, const QString &rsd);
 	quint8 load(const QString &hrc, const QString &a, bool animate = true);
 	inline int loadedTextureCount() const {
 		return _loadedTex.size();
@@ -47,6 +49,7 @@ private:
 	bool openAnimation(const QString &aFileName, bool animate = false);
 	bool openMesh(QMultiMap<int, QStringList> &rsdFiles, QStringList &textureFiles);
 	bool openPart(const QString &rsdFileName, int boneID, QStringList &textureFiles);
+	void openTextures(const QStringList &textureFiles);
 	QImage openTexture(const QString &texFileName);
 	CharArchive *_charLgp;
 	QHash<int, QImage> _loadedTex;

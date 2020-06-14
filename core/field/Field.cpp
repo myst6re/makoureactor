@@ -184,6 +184,7 @@ FieldPart *Field::createPart(FieldSection section)
 	case Walkmesh:		return new IdFile(this);
 	case Encounter:		return new EncounterFile(this);
 	case Inf:			return new InfFile(this);
+	case Tiles:			return new BackgroundTilesFile(this);
 	default:			return 0;
 	}
 }
@@ -268,6 +269,11 @@ FieldModelLoader *Field::fieldModelLoader(bool open)
 	return static_cast<FieldModelLoader *>(part(ModelLoader, open));
 }
 
+BackgroundTilesFile *Field::tiles(bool open)
+{
+	return static_cast<BackgroundTilesFile *>(part(Tiles, open));
+}
+
 BackgroundFile *Field::background(bool open)
 {
 	return static_cast<BackgroundFile *>(part(Background, open));
@@ -323,7 +329,7 @@ bool Field::save(QByteArray &newData, bool compress)
 
 		QByteArray section;
 
-		if(fieldSection != Unused || !_removeUnusedSection) { // FIXME: ugly hack only for PC version
+		if(fieldSection != Tiles || !_removeUnusedSection) { // FIXME: ugly hack only for PC version
 
 			// Section data
 			FieldPart *fieldPart = part(fieldSection == Field::PalettePC

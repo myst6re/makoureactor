@@ -40,7 +40,7 @@ const QByteArray &LZS::decompress(const QByteArray &data, int max)
 
 const QByteArray &LZS::decompress(const char *data, int fileSize, int max)
 {
-	int curResult=0, sizeAlloc=max+10;
+	int sizeAlloc=max+10;
 	quint16 curBuff=4078, adresse, premOctet=0, i, length;
 	const quint8 *fileData = (const quint8 *)data;
 	const quint8 *endFileData = fileData + fileSize;
@@ -52,9 +52,12 @@ const QByteArray &LZS::decompress(const char *data, int fileSize, int max)
 		return result;
 	}
 
-	if(result.size() < sizeAlloc) {
+	// Internal buffer is still allocated using this method instead of clear
+	result.resize(0);
+
+	if(result.capacity() < sizeAlloc) {
 		try {
-			result.resize(sizeAlloc);
+			result.reserve(sizeAlloc);
 		} catch(std::bad_alloc) {
 			result.clear();
 			return result;
@@ -69,16 +72,14 @@ const QByteArray &LZS::decompress(const char *data, int fileSize, int max)
 			premOctet = *fileData++ | 0xff00;//On récupère le premier octet puis on avance d'un octet
 		}
 
-		if(fileData >= endFileData || curResult >= max) {
-			result.truncate(curResult);
-			return result;//Fini !
+		if(fileData >= endFileData || result.size() >= max) {
+			return result; // Done
 		}
 
 		if(premOctet & 1)
 		{
-			result[curResult] = text_buf[curBuff] = *fileData++;//On récupère l'octet (qui n'est pas compressé) et on le sauvegarde dans la chaine finale (result) et dans le buffer. Et bien sûr on fait avancer les curseurs d'un octet.
+			result.append(text_buf[curBuff] = *fileData++);//On récupère l'octet (qui n'est pas compressé) et on le sauvegarde dans la chaine finale (result) et dans le buffer. Et bien sûr on fait avancer les curseurs d'un octet.
 			curBuff = (curBuff + 1) & 4095;//Le curseur du buffer doit toujours être entre 0 et 4095
-			++curResult;
 		}
 		else
 		{
@@ -94,9 +95,8 @@ const QByteArray &LZS::decompress(const char *data, int fileSize, int max)
 
 			for(i=adresse ; i<=length ; ++i)
 			{
-				result[curResult] = text_buf[curBuff] = text_buf[i & 4095];//On va chercher l'octet (qui est décompressé) dans le buffer à l'adresse indiquée puis on le sauvegarde dans la chaine finale et le buffer.
+				result.append(text_buf[curBuff] = text_buf[i & 4095]);//On va chercher l'octet (qui est décompressé) dans le buffer à l'adresse indiquée puis on le sauvegarde dans la chaine finale et le buffer.
 				curBuff = (curBuff + 1) & 4095;
-				++curResult;
 			}
 		}
 	}

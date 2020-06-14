@@ -20,18 +20,20 @@
 
 #include <QtWidgets>
 #include "ApercuBGLabel.h"
+#include "FieldModel.h"
 
 class ArchivePreview : public QStackedWidget
 {
 	Q_OBJECT
 public:
-	enum Pages { EmptyPage = 0, ImagePage, TextPage };
+	enum Pages { EmptyPage = 0, ImagePage, TextPage, ModelPage };
 	explicit ArchivePreview(QWidget *parent = nullptr);
 	void clearPreview();
 	void imagePreview(const QPixmap &image, const QString &name = QString(),
 	                  int palID = 0, int palCount = 0, int imageID = 0,
 	                  int imageCount = 0);
 	void textPreview(const QString &text);
+	void modelPreview(FieldModelFile *fieldModel);
 signals:
 	void currentImageChanged(int);
 	void currentPaletteChanged(int);
@@ -40,6 +42,7 @@ public slots:
 private:
 	QWidget *imageWidget();
 	QWidget *textWidget();
+	QWidget *modelWidget();
 	QScrollArea *scrollArea;
 	QComboBox *imageSelect, *palSelect;
 	ApercuBGLabel *_lbl;

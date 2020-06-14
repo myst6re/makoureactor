@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "FieldPC.h"
 #include "BackgroundFilePC.h"
+#include "BackgroundTiles.h"
 #include "FieldModelLoaderPS.h"
 #include "core/LZS.h"
 
@@ -56,7 +57,7 @@ int FieldPC::sectionId(FieldSection part) const
 	case ModelLoader:	return 2;
 	case PalettePC:		return 3;
 	case Walkmesh:		return 4;
-	case Unused:		return 5;
+	case Tiles:			return 5;
 	case Encounter:		return 6;
 	case Inf:			return 7;
 	case Background:	return 8;
@@ -132,7 +133,7 @@ QByteArray FieldPC::saveFooter() const
 
 QList<Field::FieldSection> FieldPC::orderOfSections() const
 {
-	return QList<FieldSection>() << Scripts << Camera << ModelLoader << PalettePC << Walkmesh << Unused << Encounter << Inf << Background;
+	return QList<FieldSection>() << Scripts << Camera << ModelLoader << PalettePC << Walkmesh << Tiles << Encounter << Inf << Background;
 }
 
 bool FieldPC::importModelLoader(const QByteArray &sectionData, bool isPSField, QIODevice *bsxDevice)

@@ -6,7 +6,7 @@
 
 ![Makou Reactor](images/logo-shinra.png)
 
-Final Fantasy VII field archive editor.
+Final Fantasy VII field archive editor ([Forum](http://forums.qhimm.com/index.php?topic=9658.0)).
 
 ## Installing
 
@@ -23,7 +23,9 @@ when available:
 ## Contributing
 
 You are welcome to contribute on this project, feel free to open issues and
-PR on GitHub.
+PR on [GitHub](https://github.com/myst6re/makoureactor).
+Ensure that you have commited in `develop` branch, otherwise I will not accept your
+request.
 
 ## Building
 
@@ -83,9 +85,3 @@ cd build
 qmake /path/to/Makou_Reactor.pro
 make
 ~~~
-
-## How to contribute
-
-Pull requests are welcome on [GitHub](https://github.com/myst6re/makoureactor).
-Ensure that you have commited in `develop` branch, otherwise I will not accept your
-request.

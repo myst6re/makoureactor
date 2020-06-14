@@ -56,6 +56,10 @@ const QByteArray &IsoArchiveFF7::modifiedFileLzs(const QString &path, quint32 ma
 
 IsoFile *IsoArchiveFF7::searchExe() const
 {
+	if (!rootDirectory()) {
+		return nullptr;
+	}
+
 	QRegExp exeName("[A-Z]{4}_\\d{3}\\.\\d{2}");
 	foreach(IsoFile *isoFile, rootDirectory()->files()) {
 		if(exeName.exactMatch(isoFile->name())) {
@@ -181,6 +185,9 @@ IsoArchiveFF7::Country IsoArchiveFF7::country() const
 
 IsoDirectory *IsoArchiveFF7::fieldDirectory() const
 {
+	if (!rootDirectory()) {
+		return nullptr;
+	}
 	IsoDirectory *dir = rootDirectory()->directory("FIELD");
 	if(!dir) {
 		dir = rootDirectory()->directory("NARITA"); // Demo
@@ -190,6 +197,9 @@ IsoDirectory *IsoArchiveFF7::fieldDirectory() const
 
 IsoDirectory *IsoArchiveFF7::initDirectory() const
 {
+	if (!rootDirectory()) {
+		return nullptr;
+	}
 	IsoDirectory *dir = rootDirectory()->directory("INIT");
 	if(!dir) {
 		dir = rootDirectory()->directory("BATTLE"); // Demo
@@ -205,7 +215,10 @@ bool IsoArchiveFF7::isDemo() const
 
 QMap<int, QString> IsoArchiveFF7::maplist()
 {
-	IsoDirectory *fieldDirectory = rootDirectory()->directory("FIELD");
+	if (!rootDirectory()) {
+		return QMap<int, QString>();
+	}
+	IsoDirectory *fieldDirectory = this->fieldDirectory();
 	if(!fieldDirectory) {
 		qWarning() << "IsoArchiveFF7::fieldBin field directory not found";
 		return QMap<int, QString>();
@@ -364,7 +377,7 @@ bool IsoArchiveFF7::updateBin(IsoFile *isoBin, const QList<IsoFile *> &filesRefB
 
 IsoFile *IsoArchiveFF7::updateFieldBin()
 {
-	IsoDirectory *fieldDirectory = rootDirectory()->directory("FIELD");
+	IsoDirectory *fieldDirectory = this->fieldDirectory();
 	if(!fieldDirectory) {
 		qWarning() << "IsoArchiveFF7::updateFieldBin field directory not found";
 		return nullptr;
@@ -391,6 +404,9 @@ IsoFile *IsoArchiveFF7::updateFieldBin()
 
 IsoFile *IsoArchiveFF7::updateWorldBin()
 {
+	if (!rootDirectory()) {
+		return nullptr;
+	}
 	IsoDirectory *worldDirectory = rootDirectory()->directory("WORLD");
 	if(!worldDirectory) {
 		qWarning() << "IsoArchiveFF7::updateWorldBin world directory not found";
@@ -430,7 +446,7 @@ IsoFile *IsoArchiveFF7::updateYamadaBin()
 
 	if(isoYamadaBin->size() != 80) {
 		qWarning() << "IsoArchiveFF7::updateYamadaBin YAMADA.BIN file wrong size" << isoYamadaBin->size();
-		return NULL;
+		return nullptr;
 	}
 
 	QByteArray yamadaData = isoYamadaBin->modifiedData();
@@ -443,6 +459,10 @@ IsoFile *IsoArchiveFF7::updateYamadaBin()
 			  << "BATTLE/TITLE.BIN" << "BATTLE/BATTLE.X"
 			  << "BATTLE/BATINI.X" << "BATTLE/SCENE.BIN"
 			  << "BATTLE/BATRES.X" << "BATTLE/CO.BIN";
+
+	if (!rootDirectory()) {
+		return nullptr;
+	}
 
 	int i = 1;
 	foreach(const QString &filename, filenames) {

@@ -18,7 +18,7 @@
 #ifndef DEF_FIELDARCHIVE
 #define DEF_FIELDARCHIVE
 
-//#define DEBUG_FUNCTIONS
+#define DEBUG_FUNCTIONS
 
 #include <QtCore>
 #include "FieldArchiveIO.h"
@@ -182,7 +182,7 @@ public:
 	void printScripts(const QString &filename);
 	void printScriptsDirs(const QString &filename);
 	void diffScripts();
-	static bool printBackgroundTiles(Field *field, const QString &filename, bool uniformize = false);
+	bool printBackgroundTiles(bool uniformize = false, bool fromUnusedPCSection = false);
 	void printBackgroundZ();
 	void searchAll();// research & debug function
 #endif

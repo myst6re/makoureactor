@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldArchivePC.h"
+#include "BackgroundFilePC.h"
 
 FieldArchivePC::FieldArchivePC() :
 	FieldArchive()
@@ -171,6 +172,28 @@ void FieldArchivePC::removeUnusedSections()
 		if(field != nullptr) {
 			field->setRemoveUnusedSection(true);
 			field->setModified(true);
+		}
+		observer()->setObserverValue(i++);
+	}
+}
+
+void FieldArchivePC::repairBackgroundsPC()
+{
+	FieldArchiveIterator it(*this);
+	int i = 0;
+
+	observer()->setObserverMaximum(size());
+
+	while (it.hasNext()) {
+		if(observer()->observerWasCanceled()) {
+			return;
+		}
+		FieldPC *field = static_cast<FieldPC *>(it.next());
+		if(field != nullptr && (field->name().toLower() == "lastmap" || field->name().toLower() == "fr_e")) {
+			BackgroundFilePC *bg = static_cast<BackgroundFilePC *>(field->background());
+			if(bg->isOpen() && bg->repair()) {
+				field->setModified(true);
+			}
 		}
 		observer()->setObserverValue(i++);
 	}

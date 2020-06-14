@@ -187,6 +187,11 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 	}
 }
 
+bool Opcode::searchOpcode(int opcode) const
+{
+	return (opcode & 0xFFFF) == id();
+}
+
 bool Opcode::searchExec(quint8 group, quint8 script) const
 {
 	if(id() == REQ || id() == REQSW || id() == REQEW) {
@@ -498,6 +503,7 @@ QString Opcode::akao(quint8 akaoOp, bool *ok)
 	case 0xD0:	return QObject::tr("Set music tempo [param1: tempo, 0x20 is normal]");
 	case 0xD1:	return QObject::tr("Music tempo transition");
 	case 0xD2:	return QObject::tr("Music tempo fade");
+	case 0xDA:	return QObject::tr("Stop music-like (noop in PC version)");
 	case 0xF0:	return QObject::tr("Stop music");
 	case 0xF1:	return QObject::tr("Stop sound effects");
 	default:
@@ -7565,6 +7571,23 @@ void OpcodeAKAO2::getVariables(QList<FF7Var> &vars) const
 		vars.append(FF7Var(B2(banks[2]), param5 & 0xFF, FF7Var::Word));
 }
 
+bool OpcodeAKAO2::searchOpcode(int opcode) const
+{
+	int op = opcode & 0xFFFF, subOp = (opcode >> 16) - 1;
+
+	if(op == id()) {
+		if (subOp >= 0) {
+			if (subOp == this->opcode) {
+				return true;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 OpcodeFCFIX::OpcodeFCFIX(const char *params, int size)
 {
 	setParams(params, size);
@@ -8345,6 +8368,23 @@ void OpcodeAKAO::getVariables(QList<FF7Var> &vars) const
 		vars.append(FF7Var(B2(banks[1]), param4 & 0xFF, FF7Var::Word));
 	if(B2(banks[2]) != 0)
 		vars.append(FF7Var(B2(banks[2]), param5 & 0xFF, FF7Var::Word));
+}
+
+bool OpcodeAKAO::searchOpcode(int opcode) const
+{
+	int op = opcode & 0xFFFF, subOp = (opcode >> 16) - 1;
+
+	if(op == id()) {
+		if (subOp >= 0) {
+			if (subOp == this->opcode) {
+				return true;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 OpcodeMUSVT::OpcodeMUSVT(const char *params, int size)

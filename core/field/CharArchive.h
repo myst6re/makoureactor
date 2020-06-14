@@ -7,22 +7,24 @@ class CharArchive
 {
 public:
 	CharArchive();
+	explicit CharArchive(Lgp *io);
 	explicit CharArchive(const QString &filename);
+	virtual ~CharArchive();
 
 	static CharArchive *instance();
 
 	inline bool isOpen() const {
-		return _io.isOpen();
+		return _io->isOpen();
 	}
 	inline bool open() {
-		return _io.open();
+		return _io->open();
 	}
 	void close();
 	inline QString filename() const {
-		return _io.fileName();
+		return _io->fileName();
 	}
 	inline void setFilename(const QString &filename) {
-		_io.setFileName(filename);
+		_io->setFileName(filename);
 	}
 	QStringList hrcFiles() const;
 	QStringList aFiles(int boneCount = -1);
@@ -30,8 +32,9 @@ public:
 
 private:
 	bool openAnimBoneCount();
-	Lgp _io;
+	Lgp *_io;
 	QMultiHash<int, QString> _animBoneCount;
+	bool _delete;
 	static CharArchive *_instance;
 };
 

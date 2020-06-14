@@ -60,6 +60,9 @@ public:
 	bool observerWasCanceled() const {
 		return observer && observer->observerWasCanceled();
 	}
+	bool observerRetry(const QString &message) {
+		return observer && observer->observerRetry(message);
+	}
 private:
 	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
 	QByteArray fileData2(const QString &fileName);

@@ -46,6 +46,7 @@ public:
 
 	void cleanModelLoader();
 	void removeUnusedSections();
+	void repairBackgroundsPC();
 private:
 	QMap<QString, TutFilePC *> _tuts;
 };

@@ -470,7 +470,7 @@ QWidget *WalkmeshManager::buildMiscPage()
 	layout->addWidget(cameraFocusHeight, 1, 1, 1, 2);
 	layout->addWidget(new QLabel(tr("Unknown:")), 2, 0);
 	layout->addWidget(unknown, 2, 1, 1, 2);
-	layout->addWidget(new QLabel(tr("Field scale:")), 3, 0);
+	layout->addWidget(new QLabel(tr("Field map scale:")), 3, 0);
 	layout->addWidget(mapScale, 3, 1, 1, 2);
 	layout->setRowStretch(4, 1);
 

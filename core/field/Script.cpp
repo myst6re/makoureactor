@@ -1028,9 +1028,17 @@ bool Script::moveOpcode(quint16 opcodeID, MoveDirection direction)
 
 bool Script::searchOpcode(int opcode, int &opcodeID) const
 {
-	if(opcodeID < 0) 	opcodeID = 0;
-	if(opcodeID >= _opcodes.size())				return false;
-	if(opcode == _opcodes.at(opcodeID)->id())	return true;
+	if(opcodeID < 0) {
+		opcodeID = 0;
+	}
+
+	if(opcodeID >= _opcodes.size()) {
+		return false;
+	}
+
+	if(_opcodes.at(opcodeID)->searchOpcode(opcode)) {
+		return true;
+	}
 
 	return searchOpcode(opcode, ++opcodeID);
 }
@@ -1080,9 +1088,17 @@ bool Script::searchTextInScripts(const QRegExp &text, int &opcodeID, const Secti
 
 bool Script::searchOpcodeP(int opcode, int &opcodeID) const
 {
-	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
-	if(opcodeID < 0)							return false;
-	if(opcode == _opcodes.at(opcodeID)->id())	return true;
+	if(opcodeID >= _opcodes.size()) {
+		opcodeID = _opcodes.size() - 1;
+	}
+
+	if(opcodeID < 0) {
+		return false;
+	}
+
+	if(_opcodes.at(opcodeID)->searchOpcode(opcode)) {
+		return true;
+	}
 
 	return searchOpcodeP(opcode, --opcodeID);
 }

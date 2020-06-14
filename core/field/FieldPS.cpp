@@ -44,7 +44,8 @@ int FieldPS::sectionId(FieldSection part) const
 	case Scripts:
 	case Akaos:			return 0;
 	case Walkmesh:		return 1;
-	case Background:	return 2;
+	case Background:
+	case Tiles:			return 2;
 	case Camera:		return 3;
 	case Inf:			return 4;
 	case Encounter:		return 5;

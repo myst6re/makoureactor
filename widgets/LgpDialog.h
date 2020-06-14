@@ -194,6 +194,7 @@ public:
 	bool observerWasCanceled() const;
 	void setObserverMaximum(unsigned int max);
 	void setObserverValue(int value);
+	bool observerRetry(const QString &message);
 signals:
 	void modified();
 private slots:
@@ -217,6 +218,7 @@ private:
 	QProgressDialog *progressDialog;
 	LgpItemModel *_model;
 	ArchivePreview *preview;
+	FieldModelFilePC fieldModelFile;
 	int currentImage, currentPal;
 };
 

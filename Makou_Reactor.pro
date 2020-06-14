@@ -10,8 +10,10 @@ HEADERS += \
     Parameters.h \
     Data.h \
     core/PsfFile.h \
+    core/field/BackgroundTilesFile.h \
     core/field/MaplistFile.h \
     widgets/ArchivePreview.h \
+    widgets/EmptyFieldWidget.h \
     widgets/HelpWidget.h \
     widgets/PsfDialog.h \
     widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.h \
@@ -152,11 +154,13 @@ HEADERS += \
 SOURCES += \
     Window.cpp \
     core/PsfFile.cpp \
+    core/field/BackgroundTilesFile.cpp \
     core/field/MaplistFile.cpp \
     txt.cpp \
     main.cpp \
     Data.cpp \
     widgets/ArchivePreview.cpp \
+    widgets/EmptyFieldWidget.cpp \
     widgets/HelpWidget.cpp \
     widgets/PsfDialog.cpp \
     widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp \

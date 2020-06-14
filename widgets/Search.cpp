@@ -131,14 +131,18 @@ QWidget *Search::scriptPageWidget()
 	QWidget *opc = new QWidget(ret);
 	opcode = new QComboBox(opc);
 	for(quint16 i=0 ; i<256 ; ++i)
-		opcode->addItem(QString("%1 - %2").arg(i,2,16,QChar('0')).arg(Opcode::names[i]));
+		opcode->addItem(QString("%1 - %2").arg(i, 2, 16, QChar('0')).arg(Opcode::names[i]).toUpper());
 	opcode->addItem(QString("100 - %1").arg(Opcode::names[0x100]));
 	// set config values
-	opcode->setCurrentIndex(Config::value("SearchedOpcode").toInt());
+	opcode->setCurrentIndex(Config::value("SearchedOpcode").toInt() & 0xFFFF);
+
+	opcode2 = new QComboBox(opc);
+	updateOpcode2(opcode->currentIndex());
 
 	QVBoxLayout *opcodeLayout = new QVBoxLayout(opc);
 	opcodeLayout->setContentsMargins(QMargins());
 	opcodeLayout->addWidget(opcode);
+	opcodeLayout->addWidget(opcode2);
 	opcodeLayout->addStretch();
 
 	QWidget *variable = new QWidget(ret);
@@ -248,6 +252,7 @@ QWidget *Search::scriptPageWidget()
 	connect(champAddress, SIGNAL(valueChanged(int)), comboVarName, SLOT(setCurrentIndex(int)));
 	connect(comboVarName, SIGNAL(currentIndexChanged(int)), SLOT(updateChampAdress()));
 	connect(champOp, SIGNAL(currentIndexChanged(int)), SLOT(updateSearchVarPlaceholder(int)));
+	connect(opcode, SIGNAL(currentIndexChanged(int)), SLOT(updateOpcode2(int)));
 
 	liste->setCurrentIndex(Config::value("searchDialogScriptCurrentModule").toInt());
 
@@ -422,6 +427,30 @@ void Search::updateSearchVarPlaceholder(int opIndex)
 	} else {
 		champValue->setPlaceholderText(opIndex == Opcode::Assign || opIndex == Opcode::Compare ? tr("Value") : tr("Position"));
 		champValue->setEnabled(true);
+	}
+}
+
+void Search::updateOpcode2(int opIndex)
+{
+	if (opIndex == Opcode::AKAO || opIndex == Opcode::AKAO2) {
+		opcode2->clear();
+		QList<quint8> unknownItems;
+		for(quint16 i=0 ; i<256; ++i) {
+			bool ok;
+			QString str = Opcode::akao(i, &ok);
+			if(ok) {
+				opcode2->addItem(QString("%1 - %2").arg(i, 2, 16, QChar('0')).toUpper()
+				                     .arg(str.remove(QRegExp("\\[.*$"))), i);
+			} else {
+				unknownItems.append(i);
+			}
+		}
+		foreach (quint8 i, unknownItems) {
+			opcode2->addItem(QString("%1").arg(i, 2, 16, QChar('0')).toUpper(), i);
+		}
+		opcode2->show();
+	} else {
+		opcode2->hide();
 	}
 }
 
@@ -797,6 +826,9 @@ void Search::setSearchValues()
 			break;
 		case 2:
 			clef = opcode->currentIndex();
+			if (opcode2->isVisible()) {
+				clef |= (opcode2->currentData().toInt() + 1) << 16;
+			}
 			Config::setValue("SearchedOpcode", clef);
 			break;
 		case 3:

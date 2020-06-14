@@ -265,7 +265,7 @@ QColor GrpScript::typeColor()
 	switch(typeID())
 	{
 	case Model:		return QColor(0x00,0x66,0xcc);
-	case Location:	return QColor(0x00,0xcc,0x66);
+	case Location:	return QColor(0x00,0xb3,0x00);
 	case Animation:	return QColor(0xcc,0x66,0x00);
 	case Director:	return QColor(0x66,0x00,0xcc);
 	default:		return QColor();

@@ -350,20 +350,39 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 	iso.close();
 	isoTemp.close();
 
-	// Remove or close the old file
-	if(!saveAs) {
-		if(!QFile::remove(iso.fileName())) {
-			return ErrorRemoving;
-		}
-	} else {
+	if(saveAs) {
 		iso.setFileName(path);
 	}
 	// Move the temporary file
 	if(QFile::exists(path) && !QFile::remove(path)) {
-		return ErrorRemoving;
+		bool removed = false;
+
+		while (observer->observerRetry(QObject::tr("Cannot remove destination archive"))) {
+			if (QFile::remove(path)) {
+				removed = true;
+				break;
+			}
+		}
+
+		if (!removed) {
+			QFile::remove(isoTemp.fileName());
+			openIso(); // Reopen
+			return ErrorRemoving;
+		}
 	}
 	if(!QFile::rename(isoTemp.fileName(), path)) {
-		return ErrorRenaming;
+		bool renamed = false;
+
+		while (observer->observerRetry(QObject::tr("Cannot rename temporary file to destination path"))) {
+			if (QFile::rename(isoTemp.fileName(), path)) {
+				renamed = true;
+				break;
+			}
+		}
+
+		if (!renamed) {
+			return ErrorRenaming;
+		}
 	}
 
 	ErrorCode error = openIso();

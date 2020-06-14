@@ -87,7 +87,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 			if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 				tiles.insert(1, tilePC2Tile(tile, 0, i));
 			} else {
-				qWarning() << "Tile destination overflow 0" << tile.dstX << tile.dstY;
+				qWarning() << "Tile destination overflow 0" << i << tile.dstX << tile.dstY;
 			}
 		}
 
@@ -137,7 +137,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					tiles.insert(4096 - tile.ID, tilePC2Tile(tile, 1, i));
 				} else {
-					qWarning() << "Tile destination overflow 1" << tile.dstX << tile.dstY;
+					qWarning() << "Tile destination overflow 1" << i << tile.dstX << tile.dstY;
 				}
 			}
 		}
@@ -188,7 +188,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					tiles.insert(0, tilePC2Tile(tile, 2, i));
 				} else {
-					qWarning() << "Tile destination overflow 2" << tile.dstX << tile.dstY;
+					qWarning() << "Tile destination overflow 2" << i << tile.dstX << tile.dstY;
 				}
 			}
 
@@ -240,7 +240,7 @@ bool BackgroundTilesIOPC::readData(BackgroundTiles &tiles) const
 				if(qAbs(tile.dstX) < MAX_TILE_DST && qAbs(tile.dstY) < MAX_TILE_DST) {
 					tiles.insert(4096, tilePC2Tile(tile, 3, i));
 				} else {
-					qWarning() << "Tile destination overflow 3" << tile.dstX << tile.dstY;
+					qWarning() << "Tile destination overflow 3" << i << tile.dstX << tile.dstY;
 				}
 			}
 		}

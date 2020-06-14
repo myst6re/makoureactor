@@ -204,6 +204,7 @@ public:
 	inline virtual bool getWindow(FF7Window &window) const { Q_UNUSED(window) return false; }
 	inline virtual void setWindow(const FF7Window &window) { Q_UNUSED(window) }
 	inline virtual void getVariables(QList<FF7Var> &vars) const { Q_UNUSED(vars) }
+	virtual bool searchOpcode(int opcode) const;
 	bool searchExec(quint8 group, quint8 script) const;
 	bool searchMapJump(quint16 fieldID) const;
 	bool searchTextInScripts(const QRegExp &text, const Section1File *scriptsAndTexts) const;
@@ -2834,6 +2835,7 @@ public:
 	void setParams(const char *params, int size);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
+	bool searchOpcode(int opcode) const;
 	quint8 banks[3], opcode;
 	quint16 param1, param2, param3, param4, param5;
 };
@@ -3087,6 +3089,7 @@ public:
 	void setParams(const char *params, int size);
 	QByteArray params() const;
 	void getVariables(QList<FF7Var> &vars) const;
+	bool searchOpcode(int opcode) const;
 	quint8 banks[3], opcode, param1;
 	quint16 param2, param3, param4, param5;
 };

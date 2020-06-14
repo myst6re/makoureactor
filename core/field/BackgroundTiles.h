@@ -47,12 +47,14 @@ public:
 	BackgroundTiles tiles(quint8 layerID, bool orderedForSaving = false) const;
 	BackgroundTiles tilesByID(quint16 ID, bool orderedForSaving = false) const;
 	QMap<qint32, Tile> sortedTiles() const;
-	QHash<quint8, quint8> usedParams(bool *layerExists, QSet<quint16> *usedIDs = NULL) const;
+	QHash<quint8, quint8> usedParams(bool *layerExists, QSet<quint16> *usedIDs = nullptr) const;
 	QSet<quint8> usedPalettes() const;
 	void area(quint16 &minWidth, quint16 &minHeight,
 			  int &width, int &height) const;
 	QSize area() const;
 	Tile search(quint8 textureID1, quint8 textureID2, quint8 srcX, quint8 srcY) const;
 };
+
+int operator==(const Tile &tile, const Tile &other);
 
 #endif // BACKGROUNDTILES_H

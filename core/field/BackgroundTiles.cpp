@@ -55,25 +55,25 @@ BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> &paramActifs
 	foreach(const Tile &tile, *this) {
 		switch(tile.layerID) {
 		case 0:
-			if((layers == NULL || layers[0]) && (IDs == NULL || IDs->contains(1))) {
+			if((layers == nullptr || layers[0]) && (IDs == nullptr || IDs->contains(1))) {
 				ret.insert(1, tile);
 			}
 			break;
 		case 1:
 			if((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
-					&& (layers == NULL || layers[1]) && (IDs == NULL || IDs->contains(tile.ID))) {
+					&& (layers == nullptr || layers[1]) && (IDs == nullptr || IDs->contains(tile.ID))) {
 				ret.insert(4096 - tile.ID, tile);
 			}
 			break;
 		case 2:
 			if((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
-					&& (layers == NULL || layers[2]) && (IDs == NULL || IDs->contains(tile.ID))) {
+					&& (layers == nullptr || layers[2]) && (IDs == nullptr || IDs->contains(tile.ID))) {
 				ret.insert(4096 - ((z && z[0] != -1) ? z[0] : tile.ID), tile);
 			}
 			break;
 		case 3:
 			if((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
-					&& (layers == NULL || layers[3]) && (IDs == NULL || IDs->contains(tile.ID))) {
+					&& (layers == nullptr || layers[3]) && (IDs == nullptr || IDs->contains(tile.ID))) {
 				ret.insert(4096 - ((z && z[1] != -1) ? z[1] : tile.ID), tile);
 			}
 			break;
@@ -225,4 +225,9 @@ Tile BackgroundTiles::search(quint8 textureID1, quint8 textureID2,
 	Tile nullTile = Tile();
 	nullTile.tileID = quint16(-1);
 	return nullTile;
+}
+
+int operator==(const Tile &tile, const Tile &other)
+{
+	return memcmp(&tile, &other, sizeof(tile) - 4);
 }

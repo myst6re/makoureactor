@@ -30,6 +30,7 @@
 #include "core/field/FieldArchivePC.h"
 #include "core/field/FieldArchivePS.h"
 #include "widgets/OperationsManager.h"
+#include "widgets/EmptyFieldWidget.h"
 
 Window::Window() :
     fieldArchive(nullptr), field(nullptr), firstShow(true), varDialog(nullptr),
@@ -67,10 +68,10 @@ Window::Window() :
 	menu->addMenu(_recentMenu);
 	actionSave = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("&Save"), this, SLOT(save()), QKeySequence("Ctrl+S"));
 	actionSaveAs = menu->addAction(tr("Save &As..."), this, SLOT(saveAs()), QKeySequence("Shift+Ctrl+S"));
-	actionExport = menu->addAction(tr("&Export the current field..."), this, SLOT(exporter()), QKeySequence("Ctrl+E"));
+	actionExport = menu->addAction(tr("&Export the current map..."), this, SLOT(exportCurrentMap()), QKeySequence("Ctrl+E"));
 	actionMassExport = menu->addAction(tr("&Mass Export..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
-	actionImport = menu->addAction(tr("&Import the current field..."), this, SLOT(importer()), QKeySequence("Ctrl+I"));
-//	actionMassImport = menu->addAction(tr("Importer en m&asse..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
+	actionImport = menu->addAction(tr("&Import to current map..."), this, SLOT(importToCurrentMap()), QKeySequence("Ctrl+I"));
+//	actionMassImport = menu->addAction(tr("Mass &import..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
 	actionArchive = menu->addAction(tr("Archive Mana&ger..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
 	menu->addSeparator();
 	actionRun = menu->addAction(QIcon(":/images/ff7.png"), tr("R&un FF7"), this, SLOT(runFF7()));
@@ -84,7 +85,7 @@ Window::Window() :
 	/* "Tools" Menu */
 	menu = menuBar->addMenu(tr("T&ools"));
 	QAction *actionText = menu->addAction(QIcon(":/images/text-editor.png"), tr("&Texts..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
-	actionModels = menu->addAction(QIcon(":/images/model.png"), tr("Field &Models..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
+	actionModels = menu->addAction(QIcon(":/images/model.png"), tr("Map &Models..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
 	actionEncounter = menu->addAction(tr("Encounte&rs..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
 	menu->addAction(tr("Tutorials/&Sounds..."), this, SLOT(tutManager()), QKeySequence("Ctrl+Q"));
 	QAction *actionWalkmesh = menu->addAction(QIcon(":/images/location.png"), tr("&Walkmesh..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
@@ -93,7 +94,7 @@ Window::Window() :
 	menu->addSeparator();
 	menu->addAction(tr("Variable Mana&ger..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
 	actionFind = menu->addAction(QIcon(":/images/find.png"), tr("&Find..."), this, SLOT(searchManager()), QKeySequence::Find);
-	actionMiscOperations = menu->addAction(tr("Miscellaneous Oper&ations..."), this, SLOT(miscOperations()));
+	actionMiscOperations = menu->addAction(tr("B&atch processing..."), this, SLOT(miscOperations()));
 
 	/* "Settings" Menu */
 	menu = menuBar->addMenu(tr("&Settings"));
@@ -185,10 +186,10 @@ Window::Window() :
 	_stackedWidget->setContentsMargins(QMargins());
 
 	_scriptManager = new ScriptManager(this);
-	QPushButton *createNewMapButton = new QPushButton("Create new map");
+	EmptyFieldWidget *emptyFieldWidget = new EmptyFieldWidget();
 
 	_stackedWidget->addWidget(_scriptManager);
-	_stackedWidget->addWidget(createNewMapButton);
+	_stackedWidget->addWidget(emptyFieldWidget);
 
 	verticalSplitter = new Splitter(Qt::Horizontal, this);
 	verticalSplitter->addWidget(horizontalSplitter);
@@ -217,9 +218,10 @@ Window::Window() :
 	connect(_scriptManager, SIGNAL(editText(int)), SLOT(textManager(int)));
 	connect(_scriptManager, SIGNAL(changed()), SLOT(setModified()));
 	connect(_scriptManager, SIGNAL(searchOpcode(int)), SLOT(searchOpcode(int)));
-	connect(createNewMapButton, SIGNAL(released()), SLOT(createCurrentMap()));
+	connect(emptyFieldWidget, SIGNAL(createMapClicked()), SLOT(createCurrentMap()));
+	connect(emptyFieldWidget, SIGNAL(importMapClicked()), SLOT(importToCurrentMap()));
 
-	_fieldList->sortItems(Config::value("fieldListSortColumn").toInt(),
+	_fieldList->sortItems(Config::value("fieldListSortColumn", 1).toInt(),
 	                     Qt::SortOrder(Config::value("fieldListSortOrder").toBool()));
 
 	restoreState(Config::value("windowState").toByteArray());
@@ -273,7 +275,7 @@ QMenu *Window::createPopupMenu()
 	QMenu *menu = new QMenu(tr("&View"), this);
 	menu->addAction(toolBar->toggleViewAction());
 	QAction *action;
-	action = menu->addAction(tr("Field List"), this, SLOT(toggleFieldList()));
+	action = menu->addAction(tr("Map List"), this, SLOT(toggleFieldList()));
 	action->setCheckable(true);
 	action->setChecked(!verticalSplitter->isCollapsed(0));
 	action = menu->addAction(tr("Background Preview"), this, SLOT(toggleBackgroundPreview()));
@@ -450,7 +452,7 @@ void Window::openFile(const QString &path)
 		filter.append(tr("Compatible Files (*.lgp *.DAT *.bin *.iso *.img)"));
 		filter.append(tr("Lgp Files (*.lgp)"));
 		filter.append(tr("DAT File (*.DAT)"));
-		filter.append(tr("PC Field File (*)"));
+		filter.append(tr("PC field File (*)"));
 		filter.append(tr("Disc Image (*.bin *.iso *.img)"));
 
 		QString selectedFilter = filter.value(Config::value("open_path_selected_filter").toInt(), filter.first());
@@ -539,6 +541,12 @@ void Window::setObserverMaximum(unsigned int max)
 	progressDialog()->setMaximum(max);
 }
 
+bool Window::observerRetry(const QString &message)
+{
+	return QMessageBox::Retry == QMessageBox::question(this, tr("Error"), message,
+	                                                   QMessageBox::Retry | QMessageBox::Cancel, QMessageBox::Retry);
+}
+
 void Window::setObserverValue(int value)
 {
 	QApplication::processEvents();
@@ -607,13 +615,13 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		out = tr("Can not create temporary file");
 		break;
 	case FieldArchiveIO::ErrorRemoving:
-		out = tr("Unable to remove the file");
+		out = tr("Unable to remove the file, check write permissions.");
 		break;
 	case FieldArchiveIO::ErrorRenaming:
-		out = tr("Failed to rename file.");
+		out = tr("Failed to rename the file, check write permissions.");
 		break;
 	case FieldArchiveIO::ErrorCopying:
-		out = tr("Failed to copy file");
+		out = tr("Failed to copy the file, check write permissions.");
 		break;
 	case FieldArchiveIO::Invalid:
 		out = tr("Invalid file");
@@ -652,7 +660,6 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		actionEncounter->setEnabled(true);
 		actionMisc->setEnabled(true);
 		actionMiscOperations->setEnabled(true);
-		actionExport->setEnabled(true);
 		actionMassExport->setEnabled(true);
 //		actionMassImport->setEnabled(true);
 		actionImport->setEnabled(true);
@@ -668,7 +675,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	//fieldArchive->printScriptsDirs("final_parody_scripts");
 	//FieldArchivePC otherArch("", FieldArchiveIO::Lgp);
 	//fieldArchive->compareTexts(&otherArch);
-	fieldArchive->printBackgroundZ();
+	//fieldArchive->printBackgroundTiles(true, false);
 	/* const QStringList &fieldNames = Data::field_names;
 	QStringList fieldNamesPC = fieldNames;
 	Data::toPCMaplist(fieldNamesPC);
@@ -779,6 +786,7 @@ void Window::disableEditors()
 void Window::openField(bool reload)
 {
 	_stackedWidget->setCurrentIndex(0);
+	actionExport->setEnabled(false);
 
 	if(!fieldArchive) {
 		return;
@@ -821,6 +829,8 @@ void Window::openField(bool reload)
 		disableEditors();
 		return;
 	}
+
+	actionExport->setEnabled(true);
 
 	if(fieldModel) {
 		fieldModel->clear();
@@ -920,7 +930,7 @@ void Window::setModified(bool enabled)
 				if(enabled && curField->isModified()) {
 					item->setForeground(0, QColor(0xd1,0x1d,0x1d));
 				} else if(!enabled && item->foreground(0).color() == QColor(0xd1,0x1d,0x1d)) {
-					item->setForeground(0, QColor(0x1d,0xd1,0x1d));
+					item->setForeground(0, QColor(0x00,0xb3,0x00));
 				}
 			}
 		}
@@ -1002,7 +1012,7 @@ void Window::saveAs(bool currentPath)
 	case FieldArchiveIO::Aborted:
 		break;
 	case FieldArchiveIO::FieldNotFound:
-		out = tr("Nothing found!");
+		out = tr("No maps found");
 		break;
 	case FieldArchiveIO::ErrorOpening:
 		out = tr("The file is inaccessible");
@@ -1097,16 +1107,16 @@ void Window::notifyDirectoryChanged(const QString &path)
 	}
 } */
 
-void Window::exporter()
+void Window::exportCurrentMap()
 {
 	if(!field || !fieldArchive) return;
 
 	int index;
 	QString types, name, selectedFilter,
-			fieldLzs = tr("PC Field (*)"),
+			fieldLzs = tr("PC Field Map (*)"),
 			dat = tr("Data DAT File (*.DAT)"),
 			mim = tr("Textures MIM File (*.MIM)"),
-			fieldDec = tr("Uncompressed PC Field (*)");
+			fieldDec = tr("Uncompressed PC Field Map (*)");
 
 	name = _fieldList->selectedItems().first()->text(0);
 
@@ -1227,7 +1237,7 @@ void Window::massImport()
 	}
 }
 
-void Window::importer()
+void Window::importToCurrentMap()
 {
 	int mapId = _fieldList->currentMapId();
 	if(mapId < 0) {
@@ -1244,12 +1254,13 @@ void Window::importer()
 	}
 
 	int index;
-	QString name, selectedFilter;
+	QString name, selectedFilter,
+	    pc = tr("PC Field Map (*)"),
+	    dat = tr("DAT File (*.DAT)"),
+	    decPc = tr("Uncompressed PC Field Map (*)"),
+	    decDat = tr("Uncompressed DAT File (*)");
 	QStringList filter;
-	filter << tr("DAT File (*.DAT)")
-		   << tr("PC Field (*)")
-		   << tr("Uncompressed DAT File (*)")
-		   << tr("Uncompressed PC Field (*)");
+	filter << pc << dat << decPc << decDat;
 
 	name = _fieldList->selectedItems().first()->text(0);
 	if(fieldArchive->io()->isPS())
@@ -1259,8 +1270,8 @@ void Window::importer()
 	path = QFileDialog::getOpenFileName(this, tr("Import a file"), path+name, filter.join(";;"), &selectedFilter);
 	if(path.isNull())		return;
 
-	bool isDat = selectedFilter == filter.at(0) || selectedFilter == filter.at(2);
-	bool isCompressed = selectedFilter == filter.at(0) || selectedFilter == filter.at(1);
+	bool isDat = selectedFilter == dat || selectedFilter == decDat;
+	bool isCompressed = selectedFilter == pc || selectedFilter == decPc;
 
 	ImportDialog dialog((isDat && fieldArchive->io()->isPS())
 						|| (!isDat && fieldArchive->io()->isPC()),
@@ -1272,14 +1283,6 @@ void Window::importer()
 	Field::FieldSections parts = dialog.parts();
 	if(parts == 0) {
 		return;
-	}
-
-	if(parts.testFlag(Field::Background)) {
-		QMessageBox::StandardButton button = QMessageBox::warning(this, tr("Warning"), tr("The background importation algorithm give bad results in-game, you have been warned!")
-				, QMessageBox::Ok | QMessageBox::Cancel);
-		if(button != QMessageBox::Ok) {
-			return;
-		}
 	}
 
 	QFile bsxDevice(dialog.bsxPath()), mimDevice(dialog.mimPath());
@@ -1549,17 +1552,24 @@ void Window::miscOperations()
 		if(operations.testFlag(OperationsManager::CleanUnusedTexts)) {
 			fieldArchive->cleanTexts();
 		}
-		if(!observerWasCanceled() && operations.testFlag(OperationsManager::RemoveTexts)) {
-			fieldArchive->removeTexts();
-		}
-		if(!observerWasCanceled() && operations.testFlag(OperationsManager::RemoveBattles)) {
-			fieldArchive->removeBattles();
-		}
-		if(!observerWasCanceled() && fieldArchive->isPC() && operations.testFlag(OperationsManager::CleanModelLoaderPC)) {
-			static_cast<FieldArchivePC *>(fieldArchive)->cleanModelLoader();
-		}
-		if(!observerWasCanceled() && fieldArchive->isPC() && operations.testFlag(OperationsManager::RemoveUnusedSectionPC)) {
-			static_cast<FieldArchivePC *>(fieldArchive)->removeUnusedSections();
+		if(!observerWasCanceled()) {
+			if(operations.testFlag(OperationsManager::RemoveTexts)) {
+				fieldArchive->removeTexts();
+			}
+			if(operations.testFlag(OperationsManager::RemoveBattles)) {
+				fieldArchive->removeBattles();
+			}
+			if(fieldArchive->isPC()) {
+				if(operations.testFlag(OperationsManager::CleanModelLoaderPC)) {
+					static_cast<FieldArchivePC *>(fieldArchive)->cleanModelLoader();
+				}
+				if(operations.testFlag(OperationsManager::RemoveUnusedSectionPC)) {
+					static_cast<FieldArchivePC *>(fieldArchive)->removeUnusedSections();
+				}
+				if(operations.testFlag(OperationsManager::RepairBackgroundsPC)) {
+					static_cast<FieldArchivePC *>(fieldArchive)->repairBackgroundsPC();
+				}
+			}
 		}
 
 		hideProgression();

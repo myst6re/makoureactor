@@ -20,9 +20,10 @@
 #include "Parameters.h"
 #include "core/TimFile.h"
 #include "core/TexFile.h"
+#include "core/field/CharArchive.h"
 
 IconThread::IconThread(QObject *parent) :
-	QThread(parent), abort(false)
+      QThread(parent), abort(false)
 {
 }
 
@@ -674,7 +675,7 @@ bool LgpItemModel::removeRows(int row, int count, const QModelIndex &parent)
 
 LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
     QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-    lgp(lgp), progressDialog(0), currentImage(0), currentPal(0)
+    lgp(lgp), progressDialog(nullptr), currentImage(0), currentPal(0)
 {
 	setWindowTitle(tr("LGP archive manager"));
 	resize(800, 600);
@@ -774,13 +775,20 @@ void LgpDialog::generatePreview()
 	         || fileType == "sym" || fileType.isEmpty()
 	         || fileType == "bak" || fileType == "dir"
 	         || fileType == "fl" || fileType == "txt"
-	         || fileType == "rsd" || fileType == "hrc")
+	         || fileType == "hrc")
 	{
 		preview->textPreview(QString(lgp->fileData(fileName)));
 	}
 	else if(fileType == "png" || fileType == "jpg" || fileType == "jpeg")
 	{
 		preview->imagePreview(QPixmap::fromImage(QImage::fromData(lgp->fileData(fileName))), fileName);
+	}
+	else if(fileType == "rsd")
+	{
+		CharArchive charArchive(lgp);
+		fieldModelFile.clear();
+		fieldModelFile.loadPart(&charArchive, fileName);
+		preview->modelPreview(&fieldModelFile);
 	}
 	else
 	{
@@ -1084,6 +1092,12 @@ void LgpDialog::setObserverValue(int value)
 	if(progressDialog) {
 		progressDialog->setValue(value);
 	}
+}
+
+bool LgpDialog::observerRetry(const QString &message)
+{
+	return QMessageBox::Retry == QMessageBox::question(this, tr("Error"), message,
+	                                                   QMessageBox::Retry | QMessageBox::Cancel, QMessageBox::Retry);
 }
 
 void LgpDialog::setButtonsState()

@@ -634,7 +634,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("Minigame"), QList<QVariant>() << 0x20);
 		comboBox->addItem(tr("Battle result load"), QList<QVariant>() << 0x23);
 		comboBox->addItem(tr("Battle Table"), QList<QVariant>() << 0x4B);
-		comboBox->addItem(tr("Change Field"), QList<QVariant>() << 0x60);
+		comboBox->addItem(tr("Change Map"), QList<QVariant>() << 0x60);
 		comboBox->addItem(tr("Last Map ID"), QList<QVariant>() << 0x6E);
 		comboBox->addItem(tr("Start Battle"), QList<QVariant>() << 0x70);
 		comboBox->addItem(tr("Battle On/Off"), QList<QVariant>() << 0x71);

@@ -34,14 +34,24 @@ void FieldModelFilePC::clear()
 	FieldModelFile::clear();
 }
 
-quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate)
+void FieldModelFilePC::openTextures(const QStringList &textureFiles)
 {
-	if (hrc.isEmpty() || a.isEmpty()) {
-		return 2;
+	// Open all loaded tex
+	int texID = 0;
+	foreach(const QString &texName, textureFiles) {
+		QImage tex = openTexture(texName % ".tex");
+		if (!tex.isNull()) {
+			_loadedTex.insert(texID, tex);
+		} else {
+			qWarning() << "FieldModelFilePC::load error texture" << texName;
+		}
+		++texID;
 	}
+}
 
-	CharArchive *charLgp = CharArchive::instance();
-	if (!charLgp->isOpen()) {
+quint8 FieldModelFilePC::load(CharArchive *charLgp, const QString &hrc, const QString &a, bool animate)
+{
+	if (hrc.isEmpty() || a.isEmpty() || !charLgp->isOpen()) {
 		return 2;
 	}
 	_charLgp = charLgp;
@@ -63,18 +73,8 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 
 		if (openMesh(rsdFiles, textureFiles)) {
 
-			if (openAnimation(aFilename % ".a", animate)) {
-				// Open all loaded tex
-				int texID = 0;
-				foreach(const QString &texName, textureFiles) {
-					QImage tex = openTexture(texName % ".tex");
-					if (!tex.isNull()) {
-						_loadedTex.insert(texID, tex);
-					} else {
-						qWarning() << "FieldModelFilePC::load error texture" << hrcFilename << texName;
-					}
-					++texID;
-				}
+			if (openAnimation(aFilename % ".a", animate) || _skeleton.boneCount() == 1) {
+				openTextures(textureFiles);
 
 				return true;
 			} else {
@@ -88,6 +88,31 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 	}
 
 	return false;
+}
+
+quint8 FieldModelFilePC::loadPart(CharArchive *charLgp, const QString &rsd)
+{
+	if (rsd.isEmpty() || !charLgp->isOpen()) {
+		return 2;
+	}
+	_charLgp = charLgp;
+	_skeleton.addBone(FieldModelBone(0.0, -1));
+
+	QStringList textureFiles;
+	if (openPart(rsd.toLower(), 0, textureFiles)) {
+		openTextures(textureFiles);
+
+		return 0;
+	}
+
+	qWarning() << "FieldModelFilePC::openMesh cannot open part" << rsd;
+
+	return 1;
+}
+
+quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate)
+{
+	return load(CharArchive::instance(), hrc, a, animate);
 }
 
 QHash<void *, QImage> FieldModelFilePC::loadedTextures()

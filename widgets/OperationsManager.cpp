@@ -20,14 +20,15 @@
 OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint)
 {
-	setWindowTitle(tr("Miscellaneous operations"));
+	setWindowTitle(tr("Batch processing"));
 
 	addOperation(CleanUnusedTexts, tr("Clean all unused texts"));
 	addOperation(RemoveTexts, tr("Disable all texts in the game"));
 	addOperation(RemoveBattles, tr("Disable all battles in the game"));
 	if(isPC) {
-		addOperation(CleanModelLoaderPC, tr("Remove unused data in field model loaders"));
-		addOperation(RemoveUnusedSectionPC, tr("Remove all unused data for field backgrounds"));
+		addOperation(CleanModelLoaderPC, tr("Clean unused data in field model loaders"));
+		addOperation(RemoveUnusedSectionPC, tr("Clean unused data for field backgrounds"));
+		addOperation(RepairBackgroundsPC, tr("Repair broken backgrounds (lastmap, fr_e)"));
 	}
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox;

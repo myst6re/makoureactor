@@ -28,6 +28,7 @@
 #include "FieldModelLoader.h"
 #include "FieldModelFile.h"
 #include "BackgroundFile.h"
+#include "BackgroundTilesFile.h"
 
 class FieldArchiveIO;
 
@@ -44,7 +45,7 @@ public:
 		Inf = 0x40,
 		Background = 0x80,
 		PalettePC = 0x100,
-		Unused = 0x200
+		Tiles = 0x200
 	};
 	Q_DECLARE_FLAGS(FieldSections, FieldSection)
 
@@ -84,6 +85,7 @@ public:
 	IdFile *walkmesh(bool open=true);
 	CaFile *camera(bool open=true);
 	InfFile *inf(bool open=true);
+	BackgroundTilesFile *tiles(bool open=true);
 	BackgroundFile *background(bool open=true);
 	virtual FieldModelLoader *fieldModelLoader(bool open=true);
 	virtual FieldModelFile *fieldModel(int modelID, int animationID=0, bool animate=true, bool open=true)=0;

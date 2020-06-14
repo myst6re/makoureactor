@@ -2,13 +2,26 @@
 #include "AFile.h"
 #include "Data.h"
 
-CharArchive::CharArchive()
+CharArchive::CharArchive() :
+    _io(new Lgp()), _delete(true)
+{
+}
+
+CharArchive::CharArchive(Lgp *io) :
+      _io(io), _delete(false)
 {
 }
 
 CharArchive::CharArchive(const QString &filename) :
-	_io(filename)
+      _io(new Lgp(filename)), _delete(true)
 {
+}
+
+CharArchive::~CharArchive()
+{
+	if (_delete) {
+		delete _io;
+	}
 }
 
 CharArchive *CharArchive::_instance = 0;
@@ -26,8 +39,8 @@ CharArchive *CharArchive::instance()
 
 void CharArchive::close()
 {
-	_io.clear();
-	_io.close();
+	_io->clear();
+	_io->close();
 	_animBoneCount.clear();
 }
 
@@ -35,7 +48,7 @@ QStringList CharArchive::hrcFiles() const
 {
 	QStringList files;
 
-	foreach(const QString &file, _io.fileList()) {
+	foreach(const QString &file, _io->fileList()) {
 		if(file.endsWith(".hrc", Qt::CaseInsensitive)) {
 			files.append(file.toUpper());
 		}
@@ -52,7 +65,7 @@ QStringList CharArchive::aFiles(int boneCount)
 
 	QStringList files;
 
-	foreach(const QString &file, _io.fileList()) {
+	foreach(const QString &file, _io->fileList()) {
 		if(file.endsWith(".a", Qt::CaseInsensitive)) {
 			files.append(file.left(file.size()-2).toUpper());
 		}
@@ -63,7 +76,7 @@ QStringList CharArchive::aFiles(int boneCount)
 
 QIODevice *CharArchive::fileIO(const QString &filename)
 {
-	return _io.file(filename.toLower());
+	return _io->file(filename.toLower());
 }
 
 bool CharArchive::openAnimBoneCount()
@@ -75,7 +88,7 @@ bool CharArchive::openAnimBoneCount()
 
 	_animBoneCount.clear();
 
-	LgpIterator it = _io.iterator();
+	LgpIterator it = _io->iterator();
 	while(it.hasNext()) {
 		it.next();
 		const QString &fileName = it.fileName();

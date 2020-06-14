@@ -50,6 +50,7 @@ public:
 	bool observerWasCanceled() const;
 	void setObserverMaximum(unsigned int max);
 	void setObserverValue(int value);
+	bool observerRetry(const QString &message);
 
 	inline FieldList *fieldList() const {
 		return _fieldList;
@@ -79,10 +80,10 @@ public slots:
 
 	//	void notifyFileChanged(const QString &path);
 	//	void notifyDirectoryChanged(const QString &path);
-	void exporter();
+	void exportCurrentMap();
 	void massExport();
 	void massImport();
-	void importer();
+	void importToCurrentMap();
 	void varManager();
 	void runFF7();
 	void textManager(int textID=-1, int from=0, int size=0, bool activate=true);

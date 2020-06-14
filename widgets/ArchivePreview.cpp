@@ -33,6 +33,7 @@ ArchivePreview::ArchivePreview(QWidget *parent) :
 	addWidget(new QWidget(this));
 	addWidget(imageWidget());
 	addWidget(textWidget());
+	addWidget(modelWidget());
 
 	clearPreview();
 }
@@ -66,6 +67,14 @@ QWidget *ArchivePreview::textWidget()
 	textEdit->setReadOnly(true);
 	textEdit->setFrameShape(QFrame::NoFrame);
 	return textEdit;
+}
+
+QWidget *ArchivePreview::modelWidget()
+{
+	if(Config::value("OpenGL", true).toBool()) {
+		return new FieldModel(this);
+	}
+	return new QWidget(this);
 }
 
 void ArchivePreview::clearPreview()
@@ -134,4 +143,12 @@ void ArchivePreview::textPreview(const QString &text)
 {
 	setCurrentIndex(TextPage);
 	((QPlainTextEdit *)currentWidget())->setPlainText(text);
+}
+
+void ArchivePreview::modelPreview(FieldModelFile *fieldModel)
+{
+	if(Config::value("OpenGL", true).toBool()) {
+		setCurrentIndex(ModelPage);
+		((FieldModel *)currentWidget())->setFieldModelFile(fieldModel);
+	}
 }

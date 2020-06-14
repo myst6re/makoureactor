@@ -39,5 +39,5 @@ void FieldModelFile::clear()
 
 bool FieldModelFile::isValid() const
 {
-	return !_animations.isEmpty() && !_skeleton.isEmpty();
+	return _skeleton.boneCount() == 1 || (!_animations.isEmpty() && !_skeleton.isEmpty());
 }
