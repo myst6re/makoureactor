@@ -134,21 +134,17 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 	int curPolyType = 0;
 
 	foreach(FieldModelPart *part, bone.parts()) {
-
 		foreach(FieldModelGroup *g, part->groups()) {
 			if(g->hasTexture()) {
-				if(curPolyType != 0) {
-					glEnd();
-					curPolyType = 0;
-				}
 				QOpenGLTexture *tex = textures.value(data->textureIdForGroup(g));
+
 				if (texture && tex != texture) {
-					texture->release();
+					texture->release(0);
 				}
-				tex->bind();
+				tex->bind(0);
 				texture = tex;
 			} else if (texture) {
-				texture->release();
+				texture->release(0);
 				texture = nullptr;
 			}
 
@@ -198,13 +194,12 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 					glVertex3f(vertex.x/scale, vertex.y/scale, vertex.z/scale);
 				}
 			}
+
+			if(curPolyType != 0) {
+				glEnd();
+				curPolyType = 0;
+			}
 		}
-	}
-
-
-
-	if(curPolyType != 0) {
-		glEnd();
 	}
 }
 
@@ -443,7 +438,7 @@ void FieldModel::paintGL()
 
 void FieldModel::wheelEvent(QWheelEvent *event)
 {
-	distance += double(event->delta())/4096.0;
+	distance += double(event->angleDelta().y())/4096.0;
 	update();
 }
 
