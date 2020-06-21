@@ -138,11 +138,13 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 			if(g->hasTexture()) {
 				QOpenGLTexture *tex = textures.value(data->textureIdForGroup(g));
 
-				if (texture && tex != texture) {
-					texture->release(0);
+				if (tex) {
+					if (texture && tex != texture) {
+						texture->release(0);
+					}
+					tex->bind(0);
+					texture = tex;
 				}
-				tex->bind(0);
-				texture = tex;
 			} else if (texture) {
 				texture->release(0);
 				texture = nullptr;

@@ -144,6 +144,8 @@ Window::Window() :
 	toolBar->addAction(actionModels);
 	actionModels->setStatusTip(tr("Model loader editor"));
 	toolBar->addAction(actionWalkmesh);
+	toolBar->addSeparator();
+	toolBar->addAction(actionArchive);
 	actionWalkmesh->setStatusTip(tr("Walkmesh editor"));
 	authorAction = toolBar->addWidget(toolBarRight);
 

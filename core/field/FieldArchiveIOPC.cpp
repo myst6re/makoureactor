@@ -94,9 +94,13 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(ArchiveObserver *observer)
 	quint32 i, freq = archiveList.size()>50 ? archiveList.size()/50 : 1;
 	QString maplistName = "maplist";
 
-	if (_lgp.fileExists(maplistName) && !Data::openMaplist(_lgp.fileData(maplistName))) {
+	if(!_lgp.fileExists(maplistName)) {
+		return FieldNotFound;
+	}
+
+	if (!Data::openMaplist(_lgp.fileData(maplistName))) {
 		qWarning() << "Cannot open" << maplistName;
-		return Invalid;
+		return FieldNotFound;
 	}
 
 	QStringList maplist = Data::maplist();
