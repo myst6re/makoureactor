@@ -35,7 +35,7 @@
 Window::Window() :
     fieldArchive(nullptr), field(nullptr), firstShow(true), varDialog(nullptr),
     _textDialog(nullptr), _modelManager(nullptr), _tutManager(nullptr), _walkmeshManager(nullptr),
-    _backgroundManager(nullptr), _progressDialog(nullptr)
+    _backgroundManager(nullptr), _lgpWidget(nullptr), _progressDialog(nullptr)
 {
 	setWindowTitle();
 	setWindowState(Qt::WindowMaximized);
@@ -184,25 +184,29 @@ Window::Window() :
 	horizontalSplitter->restoreState(Config::value("horizontalSplitterState").toByteArray());
 	horizontalSplitter->setCollapsed(1, !Config::value("backgroundVisible", true).toBool());
 
-	_stackedWidget = new QStackedWidget(this);
-	_stackedWidget->setContentsMargins(QMargins());
+	_fieldStackedWidget = new QStackedWidget(this);
+	_fieldStackedWidget->setContentsMargins(QMargins());
 
 	_scriptManager = new ScriptManager(this);
 	EmptyFieldWidget *emptyFieldWidget = new EmptyFieldWidget();
 
-	_stackedWidget->addWidget(_scriptManager);
-	_stackedWidget->addWidget(emptyFieldWidget);
+	_fieldStackedWidget->addWidget(_scriptManager);
+	_fieldStackedWidget->addWidget(emptyFieldWidget);
 
 	verticalSplitter = new Splitter(Qt::Horizontal, this);
 	verticalSplitter->addWidget(horizontalSplitter);
-	verticalSplitter->addWidget(_stackedWidget);
+	verticalSplitter->addWidget(_fieldStackedWidget);
 	verticalSplitter->setStretchFactor(0, 3);
 	verticalSplitter->setStretchFactor(1, 9);
 	verticalSplitter->setCollapsible(1, false);
 	verticalSplitter->restoreState(Config::value("verticalSplitterState").toByteArray());
 	verticalSplitter->setCollapsed(0, !Config::value("fieldListVisible", true).toBool());
 
-	setCentralWidget(verticalSplitter);
+	_mainStackedWidget = new QStackedWidget(this);
+	_mainStackedWidget->addWidget(verticalSplitter);
+	_mainStackedWidget->setContentsMargins(QMargins());
+
+	setCentralWidget(_mainStackedWidget);
 
 	searchDialog = new Search(this);
 	menuBar->addMenu(createPopupMenu());
@@ -393,6 +397,12 @@ int Window::closeFile(bool quit)
 	if(!quit) {
 		if(varDialog) {
 			varDialog->setFieldArchive(nullptr);
+		}
+
+		if (_lgpWidget != nullptr) {
+			_mainStackedWidget->removeWidget(_lgpWidget);
+			delete _lgpWidget;
+			_lgpWidget = nullptr;
 		}
 
 		if(fieldArchive != nullptr) {
@@ -787,7 +797,7 @@ void Window::disableEditors()
 
 void Window::openField(bool reload)
 {
-	_stackedWidget->setCurrentIndex(0);
+	_fieldStackedWidget->setCurrentIndex(0);
 	actionExport->setEnabled(false);
 
 	if(!fieldArchive) {
@@ -826,7 +836,7 @@ void Window::openField(bool reload)
 	field = fieldArchive->field(mapId, true, true);
 	if(!field) {
 		if (fieldArchive->isPC()) {
-			_stackedWidget->setCurrentIndex(1);
+			_fieldStackedWidget->setCurrentIndex(1);
 		}
 		disableEditors();
 		return;
@@ -1532,10 +1542,17 @@ void Window::miscManager()
 
 void Window::archiveManager()
 {
-	if(fieldArchive && fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
-		LgpDialog dialog(static_cast<Lgp *>(fieldArchive->io()->device()), this);
-		connect(&dialog, SIGNAL(modified()), SLOT(setModified()));
-		dialog.exec();
+	if (_lgpWidget != nullptr && _mainStackedWidget->currentWidget() == _lgpWidget) {
+		actionArchive->setText(tr("Archive Mana&ger..."));
+		_mainStackedWidget->setCurrentIndex(0); // Back to standard view
+	} else if(fieldArchive && fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
+		actionArchive->setText(tr("Go back to field map editor..."));
+		if (_lgpWidget == nullptr) {
+			_lgpWidget = new LgpWidget(static_cast<Lgp *>(fieldArchive->io()->device()), this);
+			connect(_lgpWidget, SIGNAL(modified()), SLOT(setModified()));
+			_mainStackedWidget->addWidget(_lgpWidget);
+		}
+		_mainStackedWidget->setCurrentWidget(_lgpWidget);
 	}
 }
 

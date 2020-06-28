@@ -15,7 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "LgpDialog.h"
+#include "LgpWidget.h"
 #include "core/Config.h"
 #include "Parameters.h"
 #include "core/TimFile.h"
@@ -673,8 +673,8 @@ bool LgpItemModel::removeRows(int row, int count, const QModelIndex &parent)
 	return true;
 }
 
-LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
-    QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
+LgpWidget::LgpWidget(Lgp *lgp, QWidget *parent) :
+    QWidget(parent),
     lgp(lgp), progressDialog(nullptr), currentImage(0), currentPal(0)
 {
 	setWindowTitle(tr("LGP archive manager"));
@@ -732,7 +732,7 @@ LgpDialog::LgpDialog(Lgp *lgp, QWidget *parent) :
 	setButtonsState();
 }
 
-void LgpDialog::changePreview()
+void LgpWidget::changePreview()
 {
 	currentImage = 0;
 	currentPal = 0;
@@ -740,7 +740,7 @@ void LgpDialog::changePreview()
 	generatePreview();
 }
 
-void LgpDialog::generatePreview()
+void LgpWidget::generatePreview()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(!index.isValid()) {
@@ -808,7 +808,7 @@ void LgpDialog::generatePreview()
 	}
 }
 
-void LgpDialog::changeImageInPreview(int imageID)
+void LgpWidget::changeImageInPreview(int imageID)
 {
 	if(imageID < 0) {
 		return;
@@ -818,7 +818,7 @@ void LgpDialog::changeImageInPreview(int imageID)
 	generatePreview();
 }
 
-void LgpDialog::changeImagePaletteInPreview(int palID)
+void LgpWidget::changeImagePaletteInPreview(int palID)
 {
 	if(palID < 0) {
 		return;
@@ -828,7 +828,7 @@ void LgpDialog::changeImagePaletteInPreview(int palID)
 	generatePreview();
 }
 
-void LgpDialog::renameCurrent()
+void LgpWidget::renameCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
@@ -859,7 +859,7 @@ void LgpDialog::renameCurrent()
 	}
 }
 
-void LgpDialog::replaceCurrent()
+void LgpWidget::replaceCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
@@ -896,7 +896,7 @@ void LgpDialog::replaceCurrent()
 	}
 }
 
-void LgpDialog::extractCurrent()
+void LgpWidget::extractCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
@@ -945,7 +945,7 @@ void LgpDialog::extractCurrent()
 	}
 }
 
-void LgpDialog::add()
+void LgpWidget::add()
 {
 	QString dirName;
 	QModelIndex index = treeView->currentIndex();
@@ -1017,7 +1017,7 @@ void LgpDialog::add()
 	}
 }
 
-void LgpDialog::removeCurrent()
+void LgpWidget::removeCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if(index.isValid()) {
@@ -1037,7 +1037,7 @@ void LgpDialog::removeCurrent()
 	}
 }
 
-void LgpDialog::pack()
+void LgpWidget::pack()
 {
 	QString path = QFileDialog::getSaveFileName(this, tr("Save as"), lgp->fileName(), tr("Lgp File (*.lgp)"));
 	if(path.isNull()) {
@@ -1073,19 +1073,19 @@ void LgpDialog::pack()
 	}
 }
 
-bool LgpDialog::observerWasCanceled() const
+bool LgpWidget::observerWasCanceled() const
 {
 	return progressDialog && progressDialog->wasCanceled();
 }
 
-void LgpDialog::setObserverMaximum(unsigned int max)
+void LgpWidget::setObserverMaximum(unsigned int max)
 {
 	if(progressDialog) {
 		progressDialog->setMaximum(max);
 	}
 }
 
-void LgpDialog::setObserverValue(int value)
+void LgpWidget::setObserverValue(int value)
 {
 	QApplication::processEvents();
 
@@ -1094,13 +1094,13 @@ void LgpDialog::setObserverValue(int value)
 	}
 }
 
-bool LgpDialog::observerRetry(const QString &message)
+bool LgpWidget::observerRetry(const QString &message)
 {
 	return QMessageBox::Retry == QMessageBox::question(this, tr("Error"), message,
 	                                                   QMessageBox::Retry | QMessageBox::Cancel, QMessageBox::Retry);
 }
 
-void LgpDialog::setButtonsState()
+void LgpWidget::setButtonsState()
 {
 	QModelIndexList modelIndexList = treeView->selectionModel()->selectedRows();
 	LgpItem *item;

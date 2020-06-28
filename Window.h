@@ -33,7 +33,7 @@
 #include "widgets/TutWidget.h"
 #include "widgets/WalkmeshManager.h"
 #include "widgets/QTaskBarButton.h"
-#include "widgets/LgpDialog.h"
+#include "widgets/LgpWidget.h"
 #include "widgets/Splitter.h"
 //#include "FieldModelThread.h"
 
@@ -148,7 +148,8 @@ private:
 	WalkmeshManager *_walkmeshManager;
 	BGDialog *_backgroundManager;
 
-	QStackedWidget *_stackedWidget;
+	QStackedWidget *_mainStackedWidget, *_fieldStackedWidget;
+	LgpWidget *_lgpWidget;
 
 	QTaskBarButton *taskBarButton;
 	QProgressDialog *_progressDialog;

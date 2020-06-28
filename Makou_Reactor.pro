@@ -15,6 +15,7 @@ HEADERS += \
     widgets/ArchivePreview.h \
     widgets/EmptyFieldWidget.h \
     widgets/HelpWidget.h \
+    widgets/LgpWidget.h \
     widgets/PsfDialog.h \
     widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.h \
     widgets/WalkmeshWidget.h \
@@ -37,7 +38,6 @@ HEADERS += \
     widgets/MassImportDialog.h \
     widgets/MassExportDialog.h \
     widgets/Listwidget.h \
-    widgets/LgpDialog.h \
     widgets/KeyEditorDialog.h \
     widgets/ImportDialog.h \
     widgets/HexLineEdit.h \
@@ -162,6 +162,7 @@ SOURCES += \
     widgets/ArchivePreview.cpp \
     widgets/EmptyFieldWidget.cpp \
     widgets/HelpWidget.cpp \
+    widgets/LgpWidget.cpp \
     widgets/PsfDialog.cpp \
     widgets/ScriptEditorWidgets/ScriptEditorSpecialPage.cpp \
     widgets/WalkmeshWidget.cpp \
@@ -184,7 +185,6 @@ SOURCES += \
     widgets/MassImportDialog.cpp \
     widgets/MassExportDialog.cpp \
     widgets/Listwidget.cpp \
-    widgets/LgpDialog.cpp \
     widgets/KeyEditorDialog.cpp \
     widgets/ImportDialog.cpp \
     widgets/HexLineEdit.cpp \

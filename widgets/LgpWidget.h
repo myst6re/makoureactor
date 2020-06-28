@@ -185,11 +185,11 @@ private:
 	Lgp *_lgp;
 };
 
-class LgpDialog : public QDialog, ArchiveObserver
+class LgpWidget : public QWidget, ArchiveObserver
 {
 	Q_OBJECT
 public:
-	explicit LgpDialog(Lgp *lgp, QWidget *parent=0);
+	explicit LgpWidget(Lgp *lgp, QWidget *parent = nullptr);
 
 	bool observerWasCanceled() const;
 	void setObserverMaximum(unsigned int max);
