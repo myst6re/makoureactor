@@ -257,10 +257,14 @@ void ConfigWindow::fillConfig()
 	autoSizeMarginEdit->setValue(Config::value("autoSizeMarginRight", 14).toInt());
 	spacedCharactersWidthEdit->setValue(Config::value("spacedCharactersWidth", 13).toInt());
 
+	QTimer::singleShot(0, this, SLOT(showIcons()));
+}
+
+void ConfigWindow::showIcons()
+{
 	for(int j=0 ; j<listFF7->topLevelItemCount() ; ++j) {
-		QCoreApplication::processEvents();
 		QTreeWidgetItem *item = listFF7->topLevelItem(j);
-		if(item == NULL)	break;
+		if(item == nullptr)	break;
 		item->setIcon(0, QFileIconProvider().icon(QFileInfo(item->text(0))));
 	}
 }

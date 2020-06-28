@@ -37,6 +37,7 @@ private slots:
 	void renameVar();
 	void save();
 	void search();
+	void processEvents() const;
 
 private:
 	QTreeWidgetItem *findList2Item(int);

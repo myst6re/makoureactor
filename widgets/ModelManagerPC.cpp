@@ -166,7 +166,7 @@ void ModelManagerPC::addModel()
 		else {
 			if(modelPreview) {
 				newItem = modelAnims->currentItem();
-				if(item!=NULL && newItem!=NULL) {
+				if(item!=nullptr && newItem!=nullptr) {
 					modelPreview->setIsAnimated(true);
 					modelPreview->setFieldModelFile(field()->fieldModel(item->text(0), newItem->text(1)));
 				} else
@@ -182,7 +182,7 @@ void ModelManagerPC::addModel()
 
 	newItem = new QTreeWidgetItem(QStringList(hrc));
 
-	if(item == NULL) {
+	if(item == nullptr) {
 		models->addTopLevelItem(newItem);
 
 		modelLoader()->insertModel(models->topLevelItemCount(), hrc);
@@ -209,7 +209,7 @@ void ModelManagerPC::addModel()
 void ModelManagerPC::delModel()
 {
 	QTreeWidgetItem *item = models->currentItem();
-	if(item == NULL) return;
+	if(item == nullptr) return;
 	int row = currentModelID(item);
 	if(row < 0)		return;
 
@@ -231,7 +231,7 @@ void ModelManagerPC::delModel()
 void ModelManagerPC::upModel()
 {
 	QTreeWidgetItem *item = models->currentItem();
-	if(item == NULL) return;
+	if(item == nullptr) return;
 	int row = currentModelID(item);
 	if(row <= 0)	return;
 
@@ -255,7 +255,7 @@ void ModelManagerPC::upModel()
 void ModelManagerPC::downModel()
 {
 	QTreeWidgetItem *item = models->currentItem();
-	if(item == NULL) return;
+	if(item == nullptr) return;
 	int row = currentModelID(item);
 	if(row < 0 || row >= models->topLevelItemCount()-1)	return;
 
@@ -385,16 +385,22 @@ void ModelManagerPC::addAnim()
 		list.setEditable(true);
 		list.setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
 
+		QTimer t(this);
+		connect(&t, SIGNAL(timeout()), SLOT(processEvents()));
+		t.start(700);
+
 		int boneCount = modelPreview ? modelPreview->boneCount() : 0;
 		QStringList files = charLgp->aFiles(boneCount);
 		if(boneCount != 0) {
 			files.append(charLgp->aFiles(0)); // Animations without bones work too
 		}
 
+		t.stop();
+
 		qSort(files);
 		list.addItems(files);
 
-		if(item!=NULL) {
+		if(item!=nullptr) {
 			QString text = item->text(1).toLower();
 			int index = text.lastIndexOf('.');
 			if(index != -1)
@@ -419,7 +425,7 @@ void ModelManagerPC::addAnim()
 		}
 		else {
 			if(modelPreview) {
-				if(item!=NULL) {
+				if(item != nullptr) {
 					modelPreview->setIsAnimated(true);
 					modelPreview->setFieldModelFile(field()->fieldModel(models->currentItem()->text(0), item->text(1)));
 				} else
@@ -433,7 +439,7 @@ void ModelManagerPC::addAnim()
 
 	newItem = new QTreeWidgetItem(QStringList() << "" << a << "1");
 
-	if(item == NULL) {
+	if(item == nullptr) {
 		modelAnims->addTopLevelItem(newItem);
 
 		modelLoader()->insertAnim(modelID, modelAnims->topLevelItemCount(), a);
@@ -461,6 +467,11 @@ void ModelManagerPC::addAnim()
 	}
 }
 
+void ModelManagerPC::processEvents() const
+{
+	QCoreApplication::processEvents();
+}
+
 void ModelManagerPC::modifyAnimation(const QString &a)
 {
 	if(modelPreview) {
@@ -474,7 +485,7 @@ void ModelManagerPC::delAnim()
 	int modelID = currentModelID();
 	if(modelID < 0)		return;
 	QTreeWidgetItem *item = modelAnims->currentItem();
-	if(item == NULL) return;
+	if(item == nullptr) return;
 	int animID = currentAnimID(item);
 	if(animID < 0)	return;
 
@@ -496,7 +507,7 @@ void ModelManagerPC::upAnim()
 	int modelID = currentModelID();
 	if(modelID < 0)		return;
 	QTreeWidgetItem *item = modelAnims->currentItem();
-	if(item == NULL) return;
+	if(item == nullptr) return;
 	int animID = currentAnimID(item);
 	if(animID <= 0)	return;
 
@@ -525,7 +536,7 @@ void ModelManagerPC::downAnim()
 	int modelID = currentModelID();
 	if(modelID < 0)		return;
 	QTreeWidgetItem *item = modelAnims->currentItem();
-	if(item == NULL) return;
+	if(item == nullptr) return;
 	int animID = currentAnimID(item);
 	if(animID < 0 || animID >= modelAnims->topLevelItemCount()-1)	return;
 

@@ -109,6 +109,7 @@ private slots:
 	void config();
 	void searchOpcode(int opcodeID);
 	void createCurrentMap();
+	void processEvents() const;
 private:
 	void setWindowTitle();
 	void restartNow();
@@ -155,6 +156,7 @@ private:
 	QProgressDialog *_progressDialog;
 	QAction *authorAction;
 	QLabel *authorLbl;
+	QTimer timer;
 
 //	FieldModelThread *modelThread;
 protected:

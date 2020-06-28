@@ -27,7 +27,7 @@ class ModelManagerPC : public ModelManager
 {
 	Q_OBJECT
 public:
-	ModelManagerPC(QWidget *parent=nullptr);
+	ModelManagerPC(QWidget *parent = nullptr);
 protected:
 	QList<QStringList> modelNames() const;
 	QList<QTreeWidgetItem *> animItems(int modelID) const;
@@ -70,6 +70,7 @@ private slots:
 	void cutCurrentModel();
 	void pasteOnCurrentModel();
 	void updateActionsState();
+	void processEvents() const;
 };
 
 #endif // MODELMANAGERPC_H

@@ -51,6 +51,7 @@ private slots:
 	void replaceCurrent();
 	void replaceAll();
 	void updateCaseSensitivity(bool cs);
+	void processEvents() const;
 
 private:
 	QWidget *scriptPageWidget();
@@ -69,6 +70,10 @@ private:
 				  int &scriptID, int &opcodeID);
 	bool findNextText(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
 				  int &mapID, int &textID, int &from, int &size);
+	bool findPrevScript(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
+	                    int &mapID, int &grpScriptID, int &scriptID, int &opcodeID);
+	bool findPrevText(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
+	                  int &mapID, int &textID, int &index, int &from, int &size);
 
 	bool atTheEnd, atTheBeginning;
 

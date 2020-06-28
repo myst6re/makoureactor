@@ -93,16 +93,20 @@ void ScriptList::localeRefresh()
 
 int ScriptList::selectedID()
 {
-	if(!currentItem()) {
+	QListWidgetItem *itm = currentItem();
+	if(!itm) {
 		return -1;
 	}
-	return row(currentItem());
+	return row(itm);
 }
 
 void ScriptList::scroll(int id, bool focus)
 {
-	setCurrentItem(item(id));
-	scrollToItem(item(id), QAbstractItemView::PositionAtTop);
+	if (selectedID() != id) {
+		QListWidgetItem *itm = item(id);
+		setCurrentItem(itm);
+		scrollToItem(itm, QAbstractItemView::PositionAtTop);
+	}
 	if(focus) {
 		setFocus();
 	}

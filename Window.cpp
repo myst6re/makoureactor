@@ -35,7 +35,7 @@
 Window::Window() :
     fieldArchive(nullptr), field(nullptr), firstShow(true), varDialog(nullptr),
     _textDialog(nullptr), _modelManager(nullptr), _tutManager(nullptr), _walkmeshManager(nullptr),
-    _backgroundManager(nullptr), _lgpWidget(nullptr), _progressDialog(nullptr)
+    _backgroundManager(nullptr), _lgpWidget(nullptr), _progressDialog(nullptr), timer(this)
 {
 	setWindowTitle();
 	setWindowState(Qt::WindowMaximized);
@@ -226,6 +226,8 @@ Window::Window() :
 	connect(_scriptManager, SIGNAL(searchOpcode(int)), SLOT(searchOpcode(int)));
 	connect(emptyFieldWidget, SIGNAL(createMapClicked()), SLOT(createCurrentMap()));
 	connect(emptyFieldWidget, SIGNAL(importMapClicked()), SLOT(importToCurrentMap()));
+
+	connect(&timer, SIGNAL(timeout()), SLOT(processEvents()));
 
 	_fieldList->sortItems(Config::value("fieldListSortColumn", 1).toInt(),
 	                     Qt::SortOrder(Config::value("fieldListSortOrder").toBool()));
@@ -441,6 +443,8 @@ int Window::closeFile(bool quit)
 		actionMiscOperations->setEnabled(false);
 	}
 
+	timer.stop();
+
 	return QMessageBox::Yes;
 }
 
@@ -451,6 +455,8 @@ void Window::openRecentFile(QAction *action)
 
 void Window::openFile(const QString &path)
 {
+	timer.stop();
+
 	QString filePath;
 
 	if(path.isEmpty()) {
@@ -571,6 +577,7 @@ void Window::showProgression(const QString &message, bool canBeCanceled)
 {
 	setObserverValue(0);
 	taskBarButton->setState(QTaskBarButton::Normal);
+	timer.start(100);
 	progressDialog()->setLabelText(message);
 	progressDialog()->setCancelButtonText(canBeCanceled ? tr("Cancel") : tr("Stop"));
 	progressDialog()->show();
@@ -579,8 +586,14 @@ void Window::showProgression(const QString &message, bool canBeCanceled)
 void Window::hideProgression()
 {
 	taskBarButton->setState(QTaskBarButton::Invisible);
+	timer.stop();
 	progressDialog()->hide();
 	progressDialog()->reset();
+}
+
+void Window::processEvents() const
+{
+	QCoreApplication::processEvents();
 }
 
 void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
@@ -1053,6 +1066,10 @@ void Window::saveAs(bool currentPath)
 
 bool Window::gotoField(int mapID)
 {
+	if (_fieldList->currentMapId() == mapID) {
+		return true;
+	}
+
 	int i, size=_fieldList->topLevelItemCount();
 	for(i=0 ; i<size ; ++i) {
 		QTreeWidgetItem *item = _fieldList->topLevelItem(i);

@@ -273,12 +273,22 @@ void VarManager::search()
 	mess.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
 	mess.setStandardButtons(QMessageBox::NoButton);
 	mess.show();
+	QTimer t(this);
+	connect(&t, SIGNAL(timeout()), SLOT(processEvents()));
+	t.start(700);
 	allVars = fieldArchive->searchAllVars(_fieldNames);
 	int b = bank->value();
 
 	for(int address=0 ; address<256 ; ++address) {
 		colorizeItem(liste2->topLevelItem(address), FF7Var(b, address));
 	}
+
+	t.stop();
+}
+
+void VarManager::processEvents() const
+{
+	QCoreApplication::processEvents();
 }
 
 void VarManager::findVar(const FF7Var &var, bool &foundR, bool &foundW, QSet<FF7Var::VarSize> &varSize)

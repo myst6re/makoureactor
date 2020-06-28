@@ -263,7 +263,6 @@ QList<FF7Var> FieldArchive::searchAllVars(QMap<FF7Var, QSet<QString> > &fieldNam
 	FieldArchiveIterator it(*this);
 
 	while (it.hasNext()) {
-		QCoreApplication::processEvents();
 		Field *field = it.next();
 
 		if(field != nullptr) {
@@ -1428,7 +1427,6 @@ bool FieldArchive::find(bool (*predicate)(Field *, SearchQuery *, SearchIn *),
 	}
 
 	while (it.hasNext()) {
-		QCoreApplication::processEvents();
 		Field *f = it.next();
 		mapID = it.mapId();
 		if(f != nullptr && (*predicate)(f, toSearch, searchIn)) {
@@ -1453,7 +1451,6 @@ bool FieldArchive::findLast(bool (*predicate)(Field *, SearchQuery *, SearchIn *
 	}
 
 	while (it.hasPrevious()) {
-		QCoreApplication::processEvents();
 		Field *f = it.previous();
 		mapID = it.key();
 		if(f != nullptr && (*predicate)(f, toSearch, searchIn)) {
@@ -1472,8 +1469,6 @@ bool FieldArchive::searchOpcode(int opcode, int &mapID, int &groupID, int &scrip
 {
 	SearchOpcodeQuery query(opcode);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
-
-	qDebug() << "searchOpcode" << opcode << mapID << groupID << scriptID << opcodeID;
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchOpcodeQuery *query = static_cast<SearchOpcodeQuery *>(_query);

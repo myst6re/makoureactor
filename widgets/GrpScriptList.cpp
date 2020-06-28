@@ -404,12 +404,15 @@ void GrpScriptList::move(bool direction)
 
 void GrpScriptList::scroll(int id, bool focus)
 {
-	QTreeWidgetItem *item = findItem(id);
-	if(!item) {
-		return;
+	if (selectedID() != id) {
+		QTreeWidgetItem *item = findItem(id);
+		if(!item) {
+			return;
+		}
+		setCurrentItem(item);
+		scrollToItem(item, QAbstractItemView::PositionAtTop);
 	}
-	setCurrentItem(item);
-	scrollToItem(item, QAbstractItemView::PositionAtTop);
+
 	if(focus) {
 		setFocus();
 	}

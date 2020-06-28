@@ -93,7 +93,6 @@ bool CharArchive::openAnimBoneCount()
 		it.next();
 		const QString &fileName = it.fileName();
 		if(fileName.endsWith(".a", Qt::CaseInsensitive)) {
-			QCoreApplication::processEvents();
 			QIODevice *aFile = it.file();
 			if(aFile && aFile->open(QIODevice::ReadOnly)) {
 				AFile a(aFile);

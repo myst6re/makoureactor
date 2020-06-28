@@ -59,6 +59,7 @@ private slots:
 	void fillCharNameEdit();
 	void setCharName(const QString &charName);
 	void editEncoding();
+	void showIcons();
 protected:
 	void accept();
 };
