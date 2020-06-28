@@ -694,6 +694,8 @@ LgpWidget::LgpWidget(Lgp *lgp, QWidget *parent) :
 	replaceButton->setShortcut(QKeySequence("Ctrl+R"));
 	extractButton = new QPushButton(tr("Extract"), this);
 	extractButton->setShortcut(QKeySequence("Ctrl+E"));
+	extractAllButton = new QPushButton(tr("Extract All"), this);
+	extractAllButton->setShortcut(QKeySequence("Ctrl+A"));
 	addButton = new QPushButton(QIcon(":/images/plus.png"), tr("Add"), this);
 	addButton->setShortcut(QKeySequence::New);
 	removeButton = new QPushButton(QIcon(":/images/minus.png"), tr("Delete"), this);
@@ -708,6 +710,7 @@ LgpWidget::LgpWidget(Lgp *lgp, QWidget *parent) :
 	barLayout->addWidget(renameButton);
 	barLayout->addWidget(replaceButton);
 	barLayout->addWidget(extractButton);
+	barLayout->addWidget(extractAllButton);
 	barLayout->addWidget(addButton);
 	barLayout->addWidget(removeButton);
 	barLayout->addWidget(packButton);
@@ -721,6 +724,7 @@ LgpWidget::LgpWidget(Lgp *lgp, QWidget *parent) :
 	connect(renameButton, SIGNAL(released()), SLOT(renameCurrent()));
 	connect(replaceButton, SIGNAL(released()), SLOT(replaceCurrent()));
 	connect(extractButton, SIGNAL(released()), SLOT(extractCurrent()));
+	connect(extractAllButton, SIGNAL(released()), SLOT(extractAll()));
 	connect(addButton, SIGNAL(released()), SLOT(add()));
 	connect(removeButton, SIGNAL(released()), SLOT(removeCurrent()));
 	connect(packButton, SIGNAL(released()), SLOT(pack()));
@@ -916,7 +920,7 @@ void LgpWidget::extractCurrent()
 				filename = lastDir + "/" + filename;
 			}
 
-			QString path = QFileDialog::getSaveFileName(this, tr("New File"), filename, filter.join(";;"));
+			QString path = QFileDialog::getSaveFileName(this, tr("Extract file"), filename, filter.join(";;"));
 			if(path.isNull()) {
 				return;
 			}
@@ -942,6 +946,67 @@ void LgpWidget::extractCurrent()
 				io->close();
 			}
 		}
+	}
+}
+
+void LgpWidget::extractAll()
+{
+	QString lastDir = Config::value("lgpDialogSaveDirectory").toString();
+
+	QString path = QFileDialog::getExistingDirectory(this, tr("Extract all"), lastDir);
+	if(path.isNull()) {
+		return;
+	}
+
+	Config::setValue("lgpDialogSaveDirectory", path);
+
+	progressDialog = new QProgressDialog(tr("Extracting..."), tr("Cancel"), 0, 0, this,
+	                                     Qt::Dialog | Qt::WindowCloseButtonHint);
+	progressDialog->setWindowModality(Qt::WindowModal);
+	progressDialog->setAutoClose(false);
+	progressDialog->show();
+
+	QDir dir(path);
+	QString error;
+
+	setObserverMaximum(lgp->fileCount());
+	int i = 0;
+
+	foreach (const QString &fileName, lgp->fileList()) {
+		if (observerWasCanceled()) {
+			break;
+		}
+
+		QIODevice *io = lgp->file(fileName);
+		if(io && io->open(QIODevice::ReadOnly)) {
+			int index = fileName.lastIndexOf('/');
+			if (index > 0) {
+				dir.mkpath(fileName.left(index));
+			}
+			QFile file(dir.filePath(fileName));
+			if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+				while(io->bytesAvailable()) {
+					file.write(io->read(4096));
+				}
+				if(file.error() != QFile::NoError) {
+					error = file.errorString();
+				}
+				file.close();
+			} else {
+				error = file.errorString();
+			}
+			io->close();
+		}
+
+		setObserverValue(i++);
+	}
+
+	progressDialog->hide();
+	progressDialog->deleteLater();
+	progressDialog = 0;
+
+	if (!error.isEmpty()) {
+		QMessageBox::warning(this, tr("Error"), error);
 	}
 }
 

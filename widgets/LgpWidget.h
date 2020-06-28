@@ -204,6 +204,7 @@ private slots:
 	void renameCurrent();
 	void replaceCurrent();
 	void extractCurrent();
+	void extractAll();
 	void add();
 	void removeCurrent();
 	void setButtonsState();
@@ -212,7 +213,7 @@ private:
 	void generatePreview();
 	Lgp *lgp;
 	QTreeView *treeView;
-	QPushButton *extractButton, *renameButton,
+	QPushButton *extractButton, *extractAllButton, *renameButton,
 	            *replaceButton, *addButton,
 	            *removeButton, *packButton;
 	QProgressDialog *progressDialog;
