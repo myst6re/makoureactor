@@ -141,20 +141,20 @@ const QString &Data::searchRereleasedFF7Path()
 			DWORD index = 0;
 			WCHAR subKeyName[MAX_PATH];
 			DWORD subKeyCName = MAX_PATH;
-			while(ERROR_NO_MORE_ITEMS != (error = RegEnumKeyEx(phkResult, index, subKeyName, &subKeyCName, NULL, NULL, NULL, NULL))) {
+			while(ERROR_NO_MORE_ITEMS != (error = RegEnumKeyEx(phkResult, index, subKeyName, &subKeyCName, nullptr, nullptr, nullptr, nullptr))) {
 				QString subKeyNameStr = QString::fromUtf16((ushort *)subKeyName);
 				if(subKeyNameStr.endsWith("_is1")) {
 					error = RegOpenKeyEx(phkResult, (LPCWSTR)QString("%1\\").arg(subKeyNameStr).utf16(), 0, KEY_READ, &phkResult2);
 					if(ERROR_SUCCESS == error) {
 						BYTE value[MAX_PATH];
 						DWORD cValue = MAX_PATH, type;
-						error = RegQueryValueEx(phkResult2, TEXT("DisplayName"), NULL, &type, value, &cValue);
+						error = RegQueryValueEx(phkResult2, TEXT("DisplayName"), nullptr, &type, value, &cValue);
 						if(ERROR_SUCCESS == error) {
 							if(type == REG_SZ) {
 								QString softwareNameStr = QString::fromUtf16((ushort *)value);
 								if(softwareNameStr.compare("FINAL FANTASY VII", Qt::CaseInsensitive) == 0) {
 									cValue = MAX_PATH;
-									error = RegQueryValueEx(phkResult2, TEXT("InstallLocation"), NULL, &type, value, &cValue);
+									error = RegQueryValueEx(phkResult2, TEXT("InstallLocation"), nullptr, &type, value, &cValue);
 									if(ERROR_SUCCESS == error) {
 										if(type == REG_SZ) {
 											RegCloseKey(phkResult2);
@@ -855,3 +855,30 @@ const char *Data::musicList2[100] =
 	"The Makou Cannon Is Fired ~ Shinra Explodes C", "Highwind Takes to the Skies",
 	"The Prelude", "World Crisis", "heart", "Staff Roll"
 };
+
+QColor Data::color(Color color)
+{
+	bool darkTheme = Config::value("dark_theme", false).toBool();
+
+	switch (color) {
+	case ColorEvidence:
+		return darkTheme ? qRgb(67, 67, 211) : qRgb(196, 196, 255);
+	case ColorRedForeground:
+		return darkTheme ? qRgb(0xF0, 0x90, 0x90) : qRgb(0xb0, 0x18, 0x18);
+	case ColorGreenForeground:
+		return darkTheme ? qRgb(0x00, 0xc6, 0x00) : qRgb(0x00, 0x68, 0x00);
+	case ColorBlueForeground:
+		return darkTheme ? qRgb(0x5E, 0xAF, 0xFF) : qRgb(0x00, 0x57, 0xAF);
+	case ColorPurpleForeground:
+		return darkTheme ? qRgb(0xC9, 0x92, 0xFF) : qRgb(0x66, 0x00, 0xCC);
+	case ColorOrangeForeground:
+		return darkTheme ? qRgb(0xFF, 0x8D, 0x1A) : qRgb(0x8C, 0x46, 0x00);
+	case ColorGreyForeground:
+		return darkTheme ? qRgb(0xCC, 0xCC, 0xCC) : qRgb(0x59, 0x59, 0x59);
+	case ColorDisabledForeground:
+		return darkTheme ? qRgb(0xAA, 0xAA, 0xAA) : qRgb(0xCC, 0xCC, 0xCC);
+	case ColorRedBackground:
+		return darkTheme ? qRgb(0xB6, 0x00, 0x00) : qRgb(0xFF, 0xCC, 0xCC);
+	}
+	return QColor();
+}

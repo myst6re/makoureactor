@@ -53,7 +53,7 @@ QByteArray Opcode::serialize() const
 Opcode *Opcode::unserialize(const QByteArray &data)
 {
 	if(data.size() < 2) {
-		return NULL;
+		return nullptr;
 	}
 
 	quint16 identifier;
@@ -79,7 +79,7 @@ Opcode *Opcode::unserialize(const QByteArray &data)
 	}
 
 	if(data.size() < 6) {
-		return NULL;
+		return nullptr;
 	}
 	quint32 label;
 	memcpy(&label, data.constData() + 2, 4);

@@ -290,7 +290,7 @@ void TextManager::setTextChanged()
 	if(!scriptsAndTexts)	return;
 
 	QListWidgetItem *item = liste1->currentItem();
-	if(item == NULL)	return;
+	if(item == nullptr)	return;
 
 	QString newText = textEdit->toPlainText();
 	int textId = item->data(Qt::UserRole).toInt();
@@ -520,7 +520,7 @@ void TextManager::changeRect(QRect rect)
 
 void TextManager::changeXCoord(int /*x*/)
 {
-	/*if(!scriptsAndTexts || textPreview->winCount()<=0 || liste1->currentItem()==NULL)	return;
+	/*if(!scriptsAndTexts || textPreview->winCount()<=0 || liste1->currentItem()==nullptr)	return;
 
 	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
 	int winID = textPreview->currentWin()-1;
@@ -541,7 +541,7 @@ void TextManager::changeXCoord(int /*x*/)
 
 void TextManager::changeYCoord(int /*y*/)
 {
-	/*if(!scriptsAndTexts || textPreview->winCount()<=0 || liste1->currentItem()==NULL)	return;
+	/*if(!scriptsAndTexts || textPreview->winCount()<=0 || liste1->currentItem()==nullptr)	return;
 
 	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
 	int winID = textPreview->currentWin()-1;

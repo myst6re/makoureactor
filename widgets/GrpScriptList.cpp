@@ -121,9 +121,11 @@ GrpScriptList::~GrpScriptList()
 void GrpScriptList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
 	if(current) {
-		current->setBackground(0, QColor(196,196,255));
-		current->setBackground(1, QColor(196,196,255));
-		current->setBackground(2, QColor(196,196,255));
+		QColor color = Data::color(Data::ColorEvidence);
+		qDebug() << color;
+		current->setBackground(0, color);
+		current->setBackground(1, color);
+		current->setBackground(2, color);
 	}
 
 	if(previous) {
@@ -146,7 +148,7 @@ GrpScript *GrpScriptList::currentGrpScript()
 	if(grpScriptID != -1) {
 		return scripts->grpScript(grpScriptID);
 	}
-	return NULL;
+	return nullptr;
 }
 
 void GrpScriptList::enableActions(bool enabled)
@@ -234,7 +236,7 @@ void GrpScriptList::localeRefresh()
 {
 	int grpScriptID = selectedID();
 	QTreeWidgetItem *currentItem = this->currentItem();
-	if(grpScriptID != -1 && currentItem != NULL) {
+	if(grpScriptID != -1 && currentItem != nullptr) {
 		GrpScript *currentGrpScript = scripts->grpScript(grpScriptID);
 		currentItem->setText(2, currentGrpScript->type());
 		currentItem->setForeground(2, currentGrpScript->typeColor());
@@ -265,7 +267,7 @@ void GrpScriptList::updateHelpWidget()
 
 void GrpScriptList::rename(QTreeWidgetItem *item, int column)
 {
-	if(item==NULL || column != 1) {
+	if(item==nullptr || column != 1) {
 		return;
 	}
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
@@ -422,7 +424,7 @@ QTreeWidgetItem *GrpScriptList::findItem(int id)
 {
 	QList<QTreeWidgetItem *> items = findItems(QString("%1").arg(id, 3), Qt::MatchExactly);
 	if(items.isEmpty()) {
-		return NULL;
+		return nullptr;
 	}
 	return items.first();
 }

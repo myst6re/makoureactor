@@ -76,7 +76,7 @@ private slots:
 	void undo();
 	void redo();
 	void editText();
-	void gotoLabel(QTreeWidgetItem *item = NULL);
+	void gotoLabel(QTreeWidgetItem *item = nullptr);
 	void setTreeEnabled(bool enabled);
 	inline void toggleTree() {
 		setTreeEnabled(!_treeEnabled);

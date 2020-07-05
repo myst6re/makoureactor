@@ -66,10 +66,10 @@ bool QLockedFile::open(OpenMode mode)
 	handle = CreateFileA(QDir::toNativeSeparators(fileName()).toLatin1().data(),
 						 GENERIC_READ,
 						 FILE_SHARE_READ,
-						 NULL,
+						 nullptr,
 						 OPEN_EXISTING,
 						 FILE_ATTRIBUTE_NORMAL,
-						 NULL);
+						 nullptr);
 	if(handle == INVALID_HANDLE_VALUE) {
 		qWarning() << "QLockedFile::open error lock";
 		return false;

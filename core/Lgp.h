@@ -93,7 +93,7 @@ public:
 	void setCompanyName(const QString &companyName);
 	const QString &productName();
 	void setProductName(const QString &productName);
-	bool pack(const QString &destination=QString(), ArchiveObserver *observer=NULL);
+	bool pack(const QString &destination=QString(), ArchiveObserver *observer=nullptr);
 	LgpError error() const;
 	void unsetError();
 private:

@@ -225,7 +225,7 @@ LgpIterator Lgp::iterator()
  */
 bool Lgp::fileExists(const QString &filePath) const
 {
-	return headerEntry(filePath) != NULL;// need to open the header
+	return headerEntry(filePath) != nullptr;// need to open the header
 }
 
 /*!
@@ -235,7 +235,7 @@ bool Lgp::fileExists(const QString &filePath) const
 QIODevice *Lgp::file(const QString &filePath)
 {
 	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
-	if(entry == NULL) return NULL;
+	if(entry == nullptr) return nullptr;
 
 	return entry->file(archiveIO());
 }
@@ -247,7 +247,7 @@ QIODevice *Lgp::file(const QString &filePath)
 QIODevice *Lgp::modifiedFile(const QString &filePath)
 {
 	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
-	if(entry == NULL) return NULL;
+	if(entry == nullptr) return nullptr;
 
 	return entry->modifiedFile(archiveIO());
 }
@@ -261,7 +261,7 @@ QIODevice *Lgp::modifiedFile(const QString &filePath)
 bool Lgp::setFile(const QString &filePath, QIODevice *data)
 {
 	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
-	if(entry == NULL) return false;
+	if(entry == nullptr) return false;
 
 	entry->setModifiedFile(data);
 
@@ -277,7 +277,7 @@ bool Lgp::setFile(const QString &filePath, QIODevice *data)
 bool Lgp::addFile(const QString &filePath, QIODevice *data)
 {
 	LgpHeaderEntry *entry = headerEntry(filePath);// need to open the header
-	if(entry != NULL) return false;
+	if(entry != nullptr) return false;
 
 	entry = new LgpHeaderEntry(filePath, archiveIO()->size());
 	entry->setModifiedFile(data);
@@ -601,7 +601,7 @@ QByteArray Lgp::readAll(QIODevice *d, bool *ok)
  * current archive if \a destination is empty).
  * The archive is closed after this operation.
  * \a observer is used to notify the progression of the save.
- * It can be NULL.
+ * It can be nullptr.
  */
 bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 {
@@ -766,7 +766,7 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 
 		// Writes the file
 		QIODevice *io = modifiedFile(path);
-		if(io == NULL) {
+		if(io == nullptr) {
 			temp.remove();
 			setError(FileNotFoundError, QT_TRANSLATE_NOOP(Lgp, QString("File '%1' not found")
 														  .arg(path).toLatin1().data()));

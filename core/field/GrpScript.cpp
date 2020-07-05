@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "GrpScript.h"
 #include "../FF7Text.h"
+#include "../../Data.h"
 
 ScriptsIterator::ScriptsIterator(const ScriptsIterator &other) :
 	QListIterator<Script *>(other), _opcodesIt(0)
@@ -63,7 +64,7 @@ Opcode *ScriptsIterator::nextOpcode()
 		next();
 		return nextOpcode();
 	}
-	return NULL;
+	return nullptr;
 }
 
 Opcode *ScriptsIterator::previousOpcode()
@@ -76,7 +77,7 @@ Opcode *ScriptsIterator::previousOpcode()
 		previous();
 		return previousOpcode();
 	}
-	return NULL;
+	return nullptr;
 }
 
 GrpScript::GrpScript() :
@@ -264,10 +265,10 @@ QColor GrpScript::typeColor()
 {
 	switch(typeID())
 	{
-	case Model:		return QColor(0x00,0x66,0xcc);
-	case Location:	return QColor(0x00,0xb3,0x00);
-	case Animation:	return QColor(0xcc,0x66,0x00);
-	case Director:	return QColor(0x66,0x00,0xcc);
+	case Model:		return Data::color(Data::ColorBlueForeground);
+	case Location:	return Data::color(Data::ColorGreenForeground);
+	case Animation:	return Data::color(Data::ColorRedForeground);
+	case Director:	return Data::color(Data::ColorPurpleForeground);
 	default:		return QColor();
 	}
 }

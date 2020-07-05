@@ -221,7 +221,7 @@ public:
 	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
 
 	static QString character(quint8 persoID);
-	static QString akao(quint8 akaoOp, bool *ok = NULL);
+	static QString akao(quint8 akaoOp, bool *ok = nullptr);
 
 	static const quint8 length[257];
 	static const QString names[257];

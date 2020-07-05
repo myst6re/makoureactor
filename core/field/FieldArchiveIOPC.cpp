@@ -189,7 +189,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 		itTut.next();
 		TutFile *tut = itTut.value();
 
-		if(tut != NULL && tut->isModified()) {
+		if(tut != nullptr && tut->isModified()) {
 			if(!_lgp.setFileData(itTut.key() + ".tut", tut->save())) {
 				return FieldNotFound;
 			}
@@ -238,7 +238,7 @@ QString FieldArchiveIOPCFile::path() const
 
 Archive *FieldArchiveIOPCFile::device()
 {
-	return NULL;
+	return nullptr;
 }
 
 QByteArray FieldArchiveIOPCFile::fieldData2(Field *field, const QString &extension, bool unlzs)
@@ -309,7 +309,7 @@ QString FieldArchiveIOPCDir::path() const
 
 Archive *FieldArchiveIOPCDir::device()
 {
-	return NULL;
+	return nullptr;
 }
 
 QByteArray FieldArchiveIOPCDir::fieldData2(Field *field, const QString &extension, bool unlzs)
@@ -413,7 +413,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, Archiv
 		itTut.next();
 		TutFile *tut = itTut.value();
 
-		if(tut != NULL && tut->isModified()) {
+		if(tut != nullptr && tut->isModified()) {
 			QFile tutFile(dir.filePath(itTut.key() + ".tut"));
 			if(tutFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 				tutFile.write(tut->save());

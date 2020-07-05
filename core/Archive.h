@@ -72,7 +72,7 @@ public:
 	virtual void close();
 	QString fileName() const;
 	void setFileName(const QString &fileName);
-	virtual bool pack(const QString &destination=QString(), ArchiveObserver *observer=NULL)=0;
+	virtual bool pack(const QString &destination=QString(), ArchiveObserver *observer=nullptr)=0;
 	ArchiveError error() const;
 	QString errorString() const;
 protected:

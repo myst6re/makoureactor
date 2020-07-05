@@ -25,9 +25,9 @@ QTaskBarButton::QTaskBarButton(QWidget *mainWindow) :
 {
 	_winId = mainWindow->window()->winId();
 
-	CoInitialize(NULL);
+	CoInitialize(nullptr);
 	HRESULT hRes = CoCreateInstance(CLSID_TaskbarList,
-									NULL, CLSCTX_INPROC_SERVER,
+									nullptr, CLSCTX_INPROC_SERVER,
 									IID_ITaskbarList3, (LPVOID*)&pITask);
 	if(FAILED(hRes)) {
 		pITask = 0;
@@ -42,7 +42,7 @@ QTaskBarButton::~QTaskBarButton()
 {
 	if(pITask) {
 		pITask->Release();
-		pITask = NULL;
+		pITask = nullptr;
 		CoUninitialize();
 	}
 }
@@ -52,7 +52,7 @@ void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
 	if(!pITask)	return;
 
 	if(pixmap.isNull()) {
-		pITask->SetOverlayIcon(_winId, NULL, NULL);
+		pITask->SetOverlayIcon(_winId, nullptr, nullptr);
 	} else {
 		const HICON icon = pixmap.toWinHICON();
 		pITask->SetOverlayIcon(_winId, icon, (wchar_t *)text.utf16());

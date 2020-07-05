@@ -44,7 +44,7 @@ private slots:
 	void tryToRepairBG();
 	void updateBG();
 private:
-	QImage background(bool *bgWarning = NULL);
+	QImage background(bool *bgWarning = nullptr);
 	void fillWidgets();
 
 	Field *field;

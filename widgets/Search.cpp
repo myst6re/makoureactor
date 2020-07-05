@@ -356,7 +356,7 @@ void Search::setFieldArchive(FieldArchive *fieldArchive)
 	this->fieldArchive = fieldArchive;
 	searchAllDialog->setFieldArchive(fieldArchive);
 	updateRunSearch();
-	setActionsEnabled(fieldArchive != NULL);
+	setActionsEnabled(fieldArchive != nullptr);
 	if(mapJump->count() <= 0) {
 		int mapID=0;
 		foreach(const QString &fieldName, Data::maplist()) {

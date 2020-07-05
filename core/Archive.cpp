@@ -65,7 +65,7 @@ Archive::~Archive()
 QByteArray Archive::fileData(const QString &filePath)
 {
 	QIODevice *io = file(filePath);
-	if(io == NULL || !io->open(QIODevice::ReadOnly)) {
+	if(io == nullptr || !io->open(QIODevice::ReadOnly)) {
 		qWarning() << "Archive::fileData error"
 		           << filePath << (io ? io->errorString() : "null");
 		return QByteArray();
@@ -82,7 +82,7 @@ QByteArray Archive::fileData(const QString &filePath)
 QByteArray Archive::modifiedFileData(const QString &filePath)
 {
 	QIODevice *io = modifiedFile(filePath);
-	if(io == NULL || !io->open(QIODevice::ReadOnly)) {
+	if(io == nullptr || !io->open(QIODevice::ReadOnly)) {
 		qWarning() << "Archive::modifiedFileData error"
 		           << filePath << (io ? io->errorString() : "null");
 		return QByteArray();

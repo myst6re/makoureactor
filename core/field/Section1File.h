@@ -36,13 +36,13 @@ public:
 	GrpScript * const &previous();
 
 	/* There is no hasNextScript() function
-	 * nextScript() can return NULL
+	 * nextScript() can return nullptr
 	 */
 	Script *nextScript();
 	Script *previousScript();
 
 	/* There is no hasNextOpcode() function
-	 * nextOpcode() can return NULL
+	 * nextOpcode() can return nullptr
 	 */
 	Opcode *nextOpcode();
 	Opcode *previousOpcode();

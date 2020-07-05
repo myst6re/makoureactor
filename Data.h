@@ -31,6 +31,17 @@ public:
 	enum FF7Version {
 		Standard, Rerelease, Steam, Custom
 	};
+	enum Color {
+		ColorEvidence,
+		ColorRedForeground,
+		ColorGreenForeground,
+		ColorBlueForeground,
+		ColorPurpleForeground,
+		ColorOrangeForeground,
+		ColorGreyForeground,
+		ColorDisabledForeground,
+		ColorRedBackground
+	};
 
 	static void refreshFF7Paths();
 	static const QString &ff7DataPath();
@@ -47,6 +58,7 @@ public:
 	static void openMaplist(bool PC=false);
 	static bool saveMaplist(QByteArray &data);
 	static void toPCMaplist(QStringList &field_names);
+	static QColor color(Color color);
 	inline static QStringList maplist() {
 		return field_names;
 	}

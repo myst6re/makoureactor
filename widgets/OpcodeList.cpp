@@ -19,6 +19,7 @@
 #include "ScriptEditor.h"
 #include "core/Config.h"
 #include "core/Clipboard.h"
+#include "Data.h"
 
 OpcodeList::OpcodeList(QWidget *parent) :
 	QTreeWidget(parent), isInit(false), _treeEnabled(true),
@@ -220,14 +221,14 @@ void OpcodeList::setErrorLine(int opcodeID)
 	QTreeWidgetItem *item;
 
 	item = findItem(errorLine);
-	if(item != NULL) {
+	if(item != nullptr) {
 		item->setBackground(0, previousErrorBg);
 	}
 
 	item = findItem(opcodeID);
-	if(item != NULL) {
+	if(item != nullptr) {
 		previousErrorBg = item->background(0);
-		item->setBackground(0, QColor(0xFF,0xCC,0xCC));// red
+		item->setBackground(0, Data::color(Data::ColorRedBackground));
 	}
 
 	errorLine = opcodeID;
@@ -379,6 +380,11 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 		QTreeWidgetItem *parentItem = 0;
 		quint16 opcodeID = 0;
 		QPixmap fontPixmap(":/images/chiffres.png");
+		QColor blue = Data::color(Data::ColorBlueForeground),
+		       orange = Data::color(Data::ColorOrangeForeground),
+		       green = Data::color(Data::ColorGreenForeground),
+		       grey = Data::color(Data::ColorGreyForeground),
+		       red = Data::color(Data::ColorRedForeground);
 
 		foreach(Opcode *curOpcode, script->opcodes()) {
 
@@ -387,8 +393,9 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 					  ((OpcodeLabel *)curOpcode)->label() == indent.last())
 				{
 					indent.removeLast();
-					if(parentItem != 0)
+					if(parentItem != 0) {
 						parentItem = parentItem->parent();
+					}
 				}
 			}
 
@@ -407,7 +414,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 			        id == Opcode::IFPRTYQ || id == Opcode::IFMEMBQ ||
 			        id == Opcode::Unknown4)
 			{
-				item->setForeground(0, QColor(0x00,0x66,0xcc));
+				item->setForeground(0, blue);
 				if(!((OpcodeJump *)curOpcode)->isBadJump()) {
 					indent.append(((OpcodeJump *)curOpcode)->label());
 				}
@@ -415,14 +422,15 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 					parentItem = item;
 				}
 			}
-			else if(id >= Opcode::REQ && id <= Opcode::RETTO)
-				item->setForeground(0, QColor(0xcc,0x66,0x00));
-			else if(curOpcode->isJump())
-				item->setForeground(0, QColor(0x66,0xcc,0x00));
-			else if(id == Opcode::RET)
-				item->setForeground(0, QColor(0x66,0x66,0x66));
-			else if(curOpcode->isLabel())
-				item->setForeground(0, QColor(0xcc,0x00,0x00));
+			else if(id >= Opcode::REQ && id <= Opcode::RETTO) {
+				item->setForeground(0, orange);
+			} else if(curOpcode->isJump()) {
+				item->setForeground(0, green);
+			} else if(id == Opcode::RET) {
+				item->setForeground(0, grey);
+			} else if(curOpcode->isLabel()) {
+				item->setForeground(0, red);
+			}
 
 			++opcodeID;
 		}
@@ -469,7 +477,7 @@ void OpcodeList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 	if(current && errorItem != current)
 	{
 		previousBG = current->background(0);
-		current->setBackground(0, QColor(196,196,255));
+		current->setBackground(0, Data::color(Data::ColorEvidence));
 	}
 	if(previous && errorItem != previous) {
 		previous->setBackground(0, previousBG);
@@ -798,11 +806,11 @@ void OpcodeList::copyText()
 	}
 
 	QString copiedText;
-	QTreeWidgetItem *lastitem=NULL, *parentitem;
+	QTreeWidgetItem *lastitem=nullptr, *parentitem;
 	QStack<QTreeWidgetItem *> parentitems;
 	int indent = 0;
 	foreach(QTreeWidgetItem *item, listeitems) {
-		if(lastitem != NULL) {
+		if(lastitem != nullptr) {
 			parentitem = item->parent();
 			if(parentitem == lastitem) {
 				indent++;
@@ -875,7 +883,7 @@ void OpcodeList::move(Script::MoveDirection direction)
 void OpcodeList::scroll(int id, bool focus)
 {
 	QTreeWidgetItem *item = findItem(id);
-	if(item == NULL) {
+	if(item == nullptr) {
 		return;
 	}
 	setCurrentItem(item);
@@ -895,12 +903,12 @@ QTreeWidgetItem *OpcodeList::findItem(int id)
 		++it;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 int OpcodeList::selectedID()
 {
-	if(currentItem() == NULL) {
+	if(currentItem() == nullptr) {
 		return -1;
 	}
 	return currentItem()->data(0, Qt::UserRole).toInt();
@@ -947,7 +955,7 @@ QPixmap &OpcodeList::posNumber(int num, const QPixmap &fontPixmap, QPixmap &word
 
 void OpcodeList::gotoLabel(QTreeWidgetItem *item)
 {
-	if(item == NULL) {
+	if(item == nullptr) {
 		item = currentItem();
 	}
 	int opcodeID = item->data(0, Qt::UserRole).toInt();
@@ -984,7 +992,7 @@ void OpcodeList::mouseReleaseEvent(QMouseEvent *event)
 	if(event->button() == Qt::LeftButton &&
 			event->modifiers().testFlag(Qt::AltModifier)) {
 		QTreeWidgetItem *item = itemAt(event->pos());
-		if(item == NULL) {
+		if(item == nullptr) {
 			return;
 		}
 

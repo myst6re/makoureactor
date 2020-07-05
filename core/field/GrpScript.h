@@ -34,7 +34,7 @@ public:
 	Script * const &previous();
 
 	/* There is no hasNextOpcode() function
-	 * nextOpcode() can return NULL
+	 * nextOpcode() can return nullptr
 	 */
 	Opcode *nextOpcode();
 	Opcode *previousOpcode();

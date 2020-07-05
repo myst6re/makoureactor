@@ -358,7 +358,7 @@ bool LgpDirectoryItem::removeChildren(int position, int count)
 LgpItem *LgpItem::find(const QString &path)
 {
 	Q_UNUSED(path) //TODO
-	return NULL;
+	return nullptr;
 }
 
 LgpItem *LgpDirectoryItem::find(const QString &path)
@@ -374,7 +374,7 @@ LgpItem *LgpDirectoryItem::find(const QString &path)
 	}
 
 	//TODO
-	return NULL;
+	return nullptr;
 }
 
 void LgpDirectoryItem::debug() const

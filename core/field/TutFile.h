@@ -60,7 +60,7 @@ public:
 	virtual inline bool repair(int tutID) {
 		return !isBroken(tutID);
 	}
-	virtual QString parseScripts(int tutID, bool *warnings = NULL) const;
+	virtual QString parseScripts(int tutID, bool *warnings = nullptr) const;
 	virtual bool parseText(int tutID, const QString &tuto);
 	static void testParsing();
 protected:

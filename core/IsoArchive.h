@@ -253,7 +253,7 @@ public:
 		//TODO (if possible): Checksum EDC/ECC (Error Detection Code & Error Correction Code)
 		return QByteArray(SECTOR_SIZE_FOOTER, '\x00');
 	}
-	static inline void headerInfos(const QByteArray &header, quint8 *type, quint8 *mode = NULL) {
+	static inline void headerInfos(const QByteArray &header, quint8 *type, quint8 *mode = nullptr) {
 		Q_ASSERT(header.size() != SECTOR_SIZE_HEADER);
 		if (type) {
 			*type = header.at(18);
@@ -325,7 +325,7 @@ public:
 		return _io;
 	}
 
-	bool pack(IsoArchive *destination, ArchiveObserver *control = NULL, IsoDirectory *directory = NULL);
+	bool pack(IsoArchive *destination, ArchiveObserver *control = nullptr, IsoDirectory *directory = nullptr);
 	void applyModifications(IsoDirectory *directory);
 
 	QByteArray file(const QString &path, quint32 maxSize=0) const;
@@ -365,8 +365,8 @@ private:
 	void getModifiedFiles(QMap<quint32, IsoFile *> &files, IsoDirectory *directory) const;
 	static void repairLocationSectors(IsoDirectory *directory, IsoArchive *newIso);
 
-	bool writeFile(QIODevice *in, quint32 sectorCount = 0, ArchiveObserver *control = NULL);
-	bool copySectors(IsoArchiveIO *out, qint64 size, ArchiveObserver *control = NULL, bool repair = false);
+	bool writeFile(QIODevice *in, quint32 sectorCount = 0, ArchiveObserver *control = nullptr);
+	bool copySectors(IsoArchiveIO *out, qint64 size, ArchiveObserver *control = nullptr, bool repair = false);
 
 	IsoArchiveIO _io;
 	VolumeDescriptor volume;

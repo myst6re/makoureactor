@@ -64,7 +64,7 @@ Script *GrpScriptsIterator::nextScript()
 		next();
 		return nextScript();
 	}
-	return NULL;
+	return nullptr;
 }
 
 Script *GrpScriptsIterator::previousScript()
@@ -76,7 +76,7 @@ Script *GrpScriptsIterator::previousScript()
 		previous();
 		return previousScript();
 	}
-	return NULL;
+	return nullptr;
 }
 
 Opcode *GrpScriptsIterator::nextOpcode()
@@ -95,7 +95,7 @@ Opcode *GrpScriptsIterator::nextOpcode()
 		return nextOpcode();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 Opcode *GrpScriptsIterator::previousOpcode()
@@ -114,7 +114,7 @@ Opcode *GrpScriptsIterator::previousOpcode()
 		return previousOpcode();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 Section1File::Section1File(Field *field) :

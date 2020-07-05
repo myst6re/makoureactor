@@ -84,7 +84,7 @@ void TutWidget::fill(Field *field, TutFilePC *tutPC, bool reload)
 	usedTuts = field->scriptsAndTexts()->listUsedTuts();
 	currentTut = tut;
 
-	if(tutPC != NULL && tut->hasTut()) {
+	if(tutPC != nullptr && tut->hasTut()) {
 		versionPS->setVisible(true);
 		versionPC->setVisible(true);
 		versionPS->setChecked(true);
@@ -257,13 +257,13 @@ void TutWidget::updateAkaoID(quint16 akaoID)
 
 void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 {
-	if(item == NULL) {
+	if(item == nullptr) {
 		exportButton->setEnabled(false);
 		importButton->setEnabled(false);
 		return;
 	}
 
-	if(lastItem != NULL) {
+	if(lastItem != nullptr) {
 		saveText(lastItem);
 	}
 
@@ -291,7 +291,7 @@ void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 
 void TutWidget::saveText(QListWidgetItem *item)
 {
-	if(item == NULL)	return;
+	if(item == nullptr)	return;
 
 	int id = currentRow(item);
 	if(currentTut->isBroken(id)) {
@@ -361,7 +361,7 @@ void TutWidget::add()
 	if(addTut) {
 		currentTut->insertTut(row);
 		Section1File *scriptsAndTexts = field->scriptsAndTexts();
-		if(tutPC == NULL)
+		if(tutPC == nullptr)
 			scriptsAndTexts->shiftTutIds(row-1, +1);
 		usedTuts = scriptsAndTexts->listUsedTuts();
 	} else {
@@ -380,7 +380,7 @@ void TutWidget::del()
 		return;
 	}
 
-	if((tutPC == NULL || currentTut == tutPC) && usedTuts.contains(row)) {
+	if((tutPC == nullptr || currentTut == tutPC) && usedTuts.contains(row)) {
 		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutorial used in scripts"), currentTut == tutPC ? tr("This tutorial may be used by one or more scripts on this field.\nDelete can cause errors.\nAre you sure you want to continue?") : tr("This tutorial is used by one or more scripts on this field.\nRemove will replace calls to this tutorial with calls to the tutorial that follows.\nAre you sure you want to continue?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if(rep == QMessageBox::Cancel) 	return;
 	}
@@ -388,7 +388,7 @@ void TutWidget::del()
 	currentTut->removeTut(row);
 	emit modified();
 	Section1File *scriptsAndTexts = field->scriptsAndTexts();
-	if(tutPC == NULL)
+	if(tutPC == nullptr)
 		scriptsAndTexts->shiftTutIds(row, -1);
 	usedTuts = scriptsAndTexts->listUsedTuts();
 	fillList();
@@ -433,7 +433,7 @@ void TutWidget::cut(const QList<int> &rows)
 	for(int i=sortedRows.size()-1 ; i>=0 ; --i) {
 		int row = sortedRows.at(i);
 		currentTut->removeTut(row);
-		if(tutPC == NULL)
+		if(tutPC == nullptr)
 			scriptsAndTexts->shiftTutIds(row, -1);
 	}
 

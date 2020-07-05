@@ -240,7 +240,7 @@ bool FF7Font::listFonts()
 
 	foreach(const QString &str, stringList) {
 		int index = str.lastIndexOf('.');
-		fonts.insert(str.left(index), NULL);
+		fonts.insert(str.left(index), nullptr);
 	}
 
 	return true;
@@ -253,20 +253,20 @@ QStringList FF7Font::fontList()
 
 FF7Font *FF7Font::openFont(const QString &windowBinFilePath, const QString &txtPath)
 {
-	WindowBinFile *windowBinFile = NULL;
+	WindowBinFile *windowBinFile = nullptr;
 	QFile f(windowBinFilePath);
 	if(f.open(QIODevice::ReadOnly)) {
 		windowBinFile = new WindowBinFile();
 		if(!windowBinFile->open(f.readAll())) {
 			qWarning() << "Cannot open windowBinFile file!" << f.fileName();
 			delete windowBinFile;
-			windowBinFile = NULL;
+			windowBinFile = nullptr;
 		}
 		f.close();
 	}
 
 	if(!windowBinFile) {
-		return NULL;
+		return nullptr;
 	}
 
 	FF7Font *ff7Font;
@@ -300,7 +300,7 @@ FF7Font *FF7Font::font(QString name)
 		return ff7Font;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 FF7Font *FF7Font::getCurrentConfigFont()
@@ -391,7 +391,7 @@ bool FF7Font::addFont(const QString &name, const QString &from,
 	ftdw.close();
 	ftdw2.close();
 
-	fonts.insert(name, NULL);
+	fonts.insert(name, nullptr);
 
 	ff7Font = font(name);
 	if(!ff7Font) {

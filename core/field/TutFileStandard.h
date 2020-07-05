@@ -41,7 +41,7 @@ public:
 	bool repair(int tutID);
 	int akaoID(int tutID) const;
 	void setAkaoID(int tutID, quint16 akaoID);
-	QString parseScripts(int tutID, bool *warnings = NULL) const;
+	QString parseScripts(int tutID, bool *warnings = nullptr) const;
 protected:
 	QList<quint32> openPositions(const QByteArray &data) const;
 	QByteArray save2(QByteArray &toc, quint32 firstPos) const;

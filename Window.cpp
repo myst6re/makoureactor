@@ -945,6 +945,8 @@ void Window::setModified(bool enabled)
 	actionSave->setEnabled(enabled);
 	setWindowModified(enabled);
 
+	QColor red = Data::color(Data::ColorRedForeground),
+	       green = Data::color(Data::ColorGreenForeground);
 	int size=_fieldList->topLevelItemCount();
 	for(int i=0 ; i<size ; ++i) {
 		QTreeWidgetItem *item = _fieldList->topLevelItem(i);
@@ -953,9 +955,9 @@ void Window::setModified(bool enabled)
 			Field *curField = fieldArchive->field(mapId, false);
 			if(curField) {
 				if(enabled && curField->isModified()) {
-					item->setForeground(0, QColor(0xd1,0x1d,0x1d));
-				} else if(!enabled && item->foreground(0).color() == QColor(0xd1,0x1d,0x1d)) {
-					item->setForeground(0, QColor(0x00,0xb3,0x00));
+					item->setForeground(0, red);
+				} else if(!enabled && item->foreground(0).color() == red) {
+					item->setForeground(0, green);
 				}
 			}
 		}
@@ -1662,7 +1664,7 @@ void Window::about()
 
 	QLabel desc4(QString("Qt %1").arg(QT_VERSION_STR), &about);
 	QPalette pal = desc4.palette();
-	pal.setColor(QPalette::WindowText, QColor(0x88,0x88,0x88));
+	pal.setColor(QPalette::WindowText, Data::color(Data::ColorGreyForeground));
 	desc4.setPalette(pal);
 	desc4.move(9, about.height()-16-desc4.sizeHint().height()-button.sizeHint().height());
 

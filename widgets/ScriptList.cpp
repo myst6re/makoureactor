@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "ScriptList.h"
+#include "Data.h"
 
 ScriptList::ScriptList(QWidget *parent) :
     QListWidget(parent), grpScript(0)
@@ -29,7 +30,7 @@ ScriptList::ScriptList(QWidget *parent) :
 void ScriptList::evidence(QListWidgetItem *current, QListWidgetItem *previous)
 {
 	if(current) {
-		current->setBackground(QColor(196,196,255));
+		current->setBackground(Data::color(Data::ColorEvidence));
 	}
 
 	if(previous) {
@@ -40,13 +41,13 @@ void ScriptList::evidence(QListWidgetItem *current, QListWidgetItem *previous)
 Script *ScriptList::currentScript()
 {
 	if(!grpScript) {
-		return NULL;
+		return nullptr;
 	}
 
 	int scriptID = selectedID();
 	if(scriptID != -1)
 		return grpScript->script(scriptID);
-	return NULL;
+	return nullptr;
 }
 
 void ScriptList::fill(GrpScript *_grpScript)
@@ -62,9 +63,9 @@ void ScriptList::fill(GrpScript *_grpScript)
 	foreach(Script *script, grpScript->scripts()) {
 		QListWidgetItem *item = new QListWidgetItem(grpScript->scriptName(i), this);
 		if(script->isEmpty()) {
-			item->setForeground(QColor(0xCC,0xCC,0xCC));
+			item->setForeground(Data::color(Data::ColorDisabledForeground));
 		} else if(script->isVoid()) {
-			item->setForeground(QColor(0x66,0x66,0x66));
+			item->setForeground(Data::color(Data::ColorGreyForeground));
 		}
 		++i;
 	}
@@ -81,9 +82,9 @@ void ScriptList::localeRefresh()
 		QListWidgetItem *itm = item(i);
 		itm->setText(grpScript->scriptName(i));
 		if(script->isEmpty()) {
-			itm->setForeground(QColor(0xCC,0xCC,0xCC));
+			itm->setForeground(Data::color(Data::ColorDisabledForeground));
 		} else if(script->isVoid()) {
-			itm->setForeground(QColor(0x66,0x66,0x66));
+			itm->setForeground(Data::color(Data::ColorGreyForeground));
 		} else {
 			itm->setForeground(QBrush());
 		}

@@ -24,16 +24,16 @@
 
 LgpHeaderEntry::LgpHeaderEntry(const QString &fileName, quint32 filePosition) :
 	_fileName(fileName), _filePosition(filePosition),
-	_hasFileSize(false), _io(NULL), _newIO(NULL)
+	_hasFileSize(false), _io(nullptr), _newIO(nullptr)
 {
 }
 
 LgpHeaderEntry::~LgpHeaderEntry()
 {
-	if(_io != NULL) {
+	if(_io != nullptr) {
 		_io->deleteLater();
 	}
-	if(_newIO != NULL) {
+	if(_newIO != nullptr) {
 		_newIO->deleteLater();
 	}
 }
@@ -142,20 +142,20 @@ void LgpHeaderEntry::setModifiedFile(QIODevice *io)
 QIODevice *LgpHeaderEntry::createFile(QIODevice *lgp)
 {
 	if(!lgp->seek(filePosition())) {
-		return NULL;
+		return nullptr;
 	}
 	QByteArray name = lgp->read(20);
 	if(name.size() != 20) {
-		return NULL;
+		return nullptr;
 	}
 	if(QString(name).compare(fileName(), Qt::CaseInsensitive) != 0) {
 		qWarning() << "different name";
-		return NULL;
+		return nullptr;
 	}
 
 	quint32 size;
 	if(lgp->read((char *)&size, 4) != 4) {
-		return NULL;
+		return nullptr;
 	}
 
 	setFileSize(size);
@@ -252,7 +252,7 @@ LgpHeaderEntry *LgpToc::entry(const QString &filePath) const
 	qint32 v = lookupValue(filePath);
 	if(v < 0) {
 		qDebug() << "LgpToc::entry invalid lookup" << filePath;
-		return NULL; // invalid file name
+		return nullptr; // invalid file name
 	}
 
 	return entry(filePath, v);
@@ -281,7 +281,7 @@ LgpHeaderEntry *LgpToc::entry(const QString &filePath, quint16 id) const
 		}
 	}
 
-	return NULL; // file not found
+	return nullptr; // file not found
 }
 
 bool LgpToc::removeEntry(const QString &filePath)
@@ -292,7 +292,7 @@ bool LgpToc::removeEntry(const QString &filePath)
 	}
 
 	LgpHeaderEntry *e = entry(filePath);
-	if(e == NULL) {
+	if(e == nullptr) {
 		return false; // file not found
 	}
 
@@ -319,7 +319,7 @@ bool LgpToc::renameEntry(const QString &filePath, const QString &newFilePath)
 	}
 
 	LgpHeaderEntry *e = entry(filePath, v);
-	if(e == NULL) {
+	if(e == nullptr) {
 		qWarning() << "LgpToc::renameEntry file not found" << filePath;
 		return false; // file not found
 	}
@@ -332,7 +332,7 @@ bool LgpToc::renameEntry(const QString &filePath, const QString &newFilePath)
 		return false; // invalid file name
 	}
 
-	if(entry(newFilePath, newV) != NULL) {
+	if(entry(newFilePath, newV) != nullptr) {
 		qWarning() << "LgpToc::renameEntry new file exists" << newFilePath;
 		return false; // file found
 	}
@@ -352,7 +352,7 @@ bool LgpToc::renameEntry(const QString &filePath, const QString &newFilePath)
 
 bool LgpToc::contains(const QString &filePath) const
 {
-	return entry(filePath) != NULL;
+	return entry(filePath) != nullptr;
 }
 
 void LgpToc::clear()

@@ -61,8 +61,9 @@ FieldList::FieldList(QWidget *parent) :
 void FieldList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
 	if(current) {
-		current->setBackground(0, QColor(196,196,255));
-		current->setBackground(1, QColor(196,196,255));
+		QColor color = Data::color(Data::ColorEvidence);
+		current->setBackground(0, color);
+		current->setBackground(1, color);
 	}
 
 	if(previous) {

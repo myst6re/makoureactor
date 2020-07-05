@@ -1045,9 +1045,17 @@ bool Script::searchOpcode(int opcode, int &opcodeID) const
 
 bool Script::searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &opcodeID) const
 {
-	if(opcodeID < 0) 	opcodeID = 0;
-	if(opcodeID >= _opcodes.size())								return false;
-	if(_opcodes.at(opcodeID)->searchVar(bank, address, op, value))	return true;
+	if(opcodeID < 0) {
+		opcodeID = 0;
+	}
+
+	if(opcodeID >= _opcodes.size()) {
+		return false;
+	}
+
+	if(_opcodes.at(opcodeID)->searchVar(bank, address, op, value)) {
+		return true;
+	}
 
 	return searchVar(bank, address, op, value, ++opcodeID);
 }
@@ -1061,27 +1069,51 @@ void Script::searchAllVars(QList<FF7Var> &vars) const
 
 bool Script::searchExec(quint8 group, quint8 script, int &opcodeID) const
 {
-	if(opcodeID < 0) 	opcodeID = 0;
-	if(opcodeID >= _opcodes.size())						return false;
-	if(_opcodes.at(opcodeID)->searchExec(group, script))	return true;
+	if(opcodeID < 0) {
+		opcodeID = 0;
+	}
+
+	if(opcodeID >= _opcodes.size()) {
+		return false;
+	}
+
+	if(_opcodes.at(opcodeID)->searchExec(group, script)) {
+		return true;
+	}
 
 	return searchExec(group, script, ++opcodeID);
 }
 
 bool Script::searchMapJump(quint16 field, int &opcodeID) const
 {
-	if(opcodeID < 0) 	opcodeID = 0;
-	if(opcodeID >= _opcodes.size())					return false;
-	if(_opcodes.at(opcodeID)->searchMapJump(field))	return true;
+	if(opcodeID < 0) {
+		opcodeID = 0;
+	}
+
+	if(opcodeID >= _opcodes.size()) {
+		return false;
+	}
+
+	if(_opcodes.at(opcodeID)->searchMapJump(field)) {
+		return true;
+	}
 
 	return searchMapJump(field, ++opcodeID);
 }
 
 bool Script::searchTextInScripts(const QRegExp &text, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
-	if(opcodeID < 0) 	opcodeID = 0;
-	if(opcodeID >= _opcodes.size())					return false;
-	if(_opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts))		return true;
+	if(opcodeID < 0) {
+		opcodeID = 0;
+	}
+
+	if(opcodeID >= _opcodes.size()) {
+		return false;
+	}
+
+	if(_opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts)) {
+		return true;
+	}
 
 	return searchTextInScripts(text, ++opcodeID, scriptsAndTexts);
 }
@@ -1105,36 +1137,68 @@ bool Script::searchOpcodeP(int opcode, int &opcodeID) const
 
 bool Script::searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &opcodeID) const
 {
-	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
-	if(opcodeID < 0)											return false;
-	if(_opcodes.at(opcodeID)->searchVar(bank, address, op, value))	return true;
+	if(opcodeID >= _opcodes.size()) {
+		opcodeID = _opcodes.size()-1;
+	}
+
+	if(opcodeID < 0) {
+		return false;
+	}
+
+	if(_opcodes.at(opcodeID)->searchVar(bank, address, op, value)) {
+		return true;
+	}
 
 	return searchVarP(bank, address, op, value, --opcodeID);
 }
 
 bool Script::searchExecP(quint8 group, quint8 script, int &opcodeID) const
 {
-	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
-	if(opcodeID < 0)										return false;
-	if(_opcodes.at(opcodeID)->searchExec(group, script))	return true;
+	if(opcodeID >= _opcodes.size()) {
+		opcodeID = _opcodes.size()-1;
+	}
+
+	if(opcodeID < 0) {
+		return false;
+	}
+
+	if(_opcodes.at(opcodeID)->searchExec(group, script)) {
+		return true;
+	}
 
 	return searchExecP(group, script, --opcodeID);
 }
 
 bool Script::searchMapJumpP(quint16 field, int &opcodeID) const
 {
-	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
-	if(opcodeID < 0)								return false;
-	if(_opcodes.at(opcodeID)->searchMapJump(field))	return true;
+	if(opcodeID >= _opcodes.size()) {
+		opcodeID = _opcodes.size()-1;
+	}
+
+	if(opcodeID < 0) {
+		return false;
+	}
+
+	if(_opcodes.at(opcodeID)->searchMapJump(field)) {
+		return true;
+	}
 
 	return searchMapJumpP(field, --opcodeID);
 }
 
 bool Script::searchTextInScriptsP(const QRegExp &text, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
-	if(opcodeID >= _opcodes.size()) opcodeID = _opcodes.size()-1;
-	if(opcodeID < 0)								return false;
-	if(_opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts))		return true;
+	if(opcodeID >= _opcodes.size()) {
+		opcodeID = _opcodes.size()-1;
+	}
+
+	if(opcodeID < 0) {
+		return false;
+	}
+
+	if(_opcodes.at(opcodeID)->searchTextInScripts(text, scriptsAndTexts)) {
+		return true;
+	}
 
 	return searchTextInScriptsP(text, --opcodeID, scriptsAndTexts);
 }
@@ -1198,14 +1262,16 @@ int Script::opcodePositionInBytes(quint16 opcodeID)
 void Script::listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const
 {
 	int opcodeID=0;
-	foreach(Opcode *opcode, _opcodes)
+	foreach(Opcode *opcode, _opcodes) {
 		opcode->listWindows(groupID, scriptID, opcodeID++, windows, text2win);
+	}
 }
 
 void Script::listModelPositions(QList<FF7Position> &positions) const
 {
-	foreach(Opcode *opcode, _opcodes)
+	foreach(Opcode *opcode, _opcodes) {
 		opcode->listModelPositions(positions);
+	}
 }
 
 bool Script::linePosition(FF7Position position[2]) const
@@ -1227,14 +1293,16 @@ bool Script::linePosition(FF7Position position[2]) const
 
 void Script::backgroundParams(QHash<quint8, quint8> &paramActifs) const
 {
-	foreach(Opcode *opcode, _opcodes)
+	foreach(Opcode *opcode, _opcodes) {
 		opcode->backgroundParams(paramActifs);
+	}
 }
 
 void Script::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 {
-	foreach(Opcode *opcode, _opcodes)
+	foreach(Opcode *opcode, _opcodes) {
 		opcode->backgroundMove(z, x, y);
+	}
 }
 
 bool Script::removeTexts()

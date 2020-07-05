@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "VarManager.h"
 #include "core/field/FieldArchive.h"
+#include "../Data.h"
 
 VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 	: QWidget(parent, Qt::Tool)
@@ -237,7 +238,7 @@ void VarManager::scrollToList2(int adressID)
 QTreeWidgetItem *VarManager::findList2Item(int adressID)
 {
 	QList<QTreeWidgetItem *> items = liste2->findItems(QString("%1").arg(adressID, 3), Qt::MatchExactly);
-	if(items.isEmpty())	return NULL;
+	if(items.isEmpty())	return nullptr;
 	return items.first();
 }
 
@@ -323,14 +324,11 @@ void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
 	QStringList sizeText;
 
 	if(foundR || foundW) {
-		item->setBackground(0, QColor(0xff,0xe5,0x99));
-		item->setBackground(1, QColor(0xff,0xe5,0x99));
-		item->setBackground(2, QColor(0xff,0xe5,0x99));
-		item->setBackground(3, QColor(0xff,0xe5,0x99));
-		item->setForeground(0, QColor(Qt::black));
-		item->setForeground(1, QColor(Qt::black));
-		item->setForeground(2, QColor(Qt::black));
-		item->setForeground(3, QColor(Qt::black));
+		QColor color = Data::color(Data::ColorEvidence);
+		item->setBackground(0, color);
+		item->setBackground(1, color);
+		item->setBackground(2, color);
+		item->setBackground(3, color);
 		if(foundR && foundW) {
 			rwText = tr("rw");
 		} else if(foundR) {
