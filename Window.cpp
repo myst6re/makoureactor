@@ -402,6 +402,7 @@ int Window::closeFile(bool quit)
 		}
 
 		if (_lgpWidget != nullptr) {
+			actionArchive->setText(tr("Archive Mana&ger..."));
 			_mainStackedWidget->removeWidget(_lgpWidget);
 			delete _lgpWidget;
 			_lgpWidget = nullptr;
