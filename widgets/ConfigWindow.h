@@ -44,6 +44,7 @@ private:
 	QComboBox *encodings;
 	QRgb windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight;
 	QStringList customNames;
+	QPushButton *encodingEdit;
 private slots:
 	void changeFF7ListButtonsState();
 	void modifyCustomFF7Path();

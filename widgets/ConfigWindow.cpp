@@ -47,20 +47,24 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	charPath = new QLabel(dependances);
 	charButton = new QPushButton(tr("Change"), dependances);
 
+	encodingEdit = new QPushButton(tr("Edit..."), dependances);
+	encodingEdit->setEnabled(false);
+
 	QGridLayout *dependLayout = new QGridLayout(dependances);
-	dependLayout->addWidget(listFF7, 0, 0, 3, 2);
-	dependLayout->addWidget(ff7ButtonMod, 0, 2);
-	dependLayout->addWidget(ff7ButtonRem, 1, 2);
+	dependLayout->addWidget(listFF7, 0, 0, 3, 3);
+	dependLayout->addWidget(ff7ButtonMod, 0, 3);
+	dependLayout->addWidget(ff7ButtonRem, 1, 3);
 	dependLayout->setRowStretch(2, 1);
 	dependLayout->addWidget(kernelAuto, 3, 0);
-	dependLayout->addWidget(kernelPath, 3, 1);
-	dependLayout->addWidget(kernelButton, 3, 2);
+	dependLayout->addWidget(kernelPath, 3, 1, 1, 2);
+	dependLayout->addWidget(kernelButton, 3, 3);
 	dependLayout->addWidget(windowAuto, 4, 0);
 	dependLayout->addWidget(windowPath, 4, 1);
-	dependLayout->addWidget(windowButton, 4, 2);
+	dependLayout->addWidget(encodingEdit, 4, 2, Qt::AlignRight);
+	dependLayout->addWidget(windowButton, 4, 3);
 	dependLayout->addWidget(charAuto, 5, 0);
-	dependLayout->addWidget(charPath, 5, 1);
-	dependLayout->addWidget(charButton, 5, 2);
+	dependLayout->addWidget(charPath, 5, 1, 1, 2);
+	dependLayout->addWidget(charButton, 5, 3);
 	dependLayout->setColumnStretch(1, 1);
 
 	QGroupBox *theme = new QGroupBox(tr("Theme"), this);
@@ -93,8 +97,6 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	encodings->addItem(tr("Latin"));
 	encodings->addItem(tr("Japanese"));
 
-	QPushButton *encodingEdit = new QPushButton(tr("Edit..."), textEditor);
-
 	listCharNames = new QComboBox(textEditor);
 	for(int i=0 ; i<9 ; ++i) {
 		listCharNames->addItem(QIcon(QString(":/images/icon-char-%1.png").arg(i)), Data::char_names.at(i));
@@ -119,9 +121,9 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	windowPreviewLayout->setColumnStretch(3, 1);
 
 	QGridLayout *textEditorLayout = new QGridLayout(textEditor);
-	textEditorLayout->addWidget(new QLabel(tr("Encoding")), 0, 0, 1, 2);
-	textEditorLayout->addWidget(encodings, 0, 2, 1, 2);
-	textEditorLayout->addWidget(encodingEdit, 0, 4, 1, 2);
+	textEditorLayout->addWidget(new QLabel(tr("Encoding")), 0, 0, 1, 3);
+	textEditorLayout->addWidget(encodings, 0, 3, 1, 3);
+	//textEditorLayout->addWidget(encodingEdit, 0, 4, 1, 2);
 	// windowPreviewLayout->addWidget(optiText, 1, 0, 1, 2);
 	textEditorLayout->addLayout(windowPreviewLayout, 1, 0, 4, 6);
 	textEditorLayout->addWidget(listCharNames, 0, 6, 1, 6);
@@ -235,6 +237,8 @@ void ConfigWindow::fillConfig()
 	kernelPath->setText(QDir::toNativeSeparators(QDir::cleanPath(kernel_path)));
 	windowPath->setText(QDir::toNativeSeparators(QDir::cleanPath(window_path)));
 	charPath->setText(QDir::toNativeSeparators(QDir::cleanPath(char_path)));
+
+	encodingEdit->setDisabled(window_path.isEmpty());
 
 	windowColorTopLeft = Config::value("windowColorTopLeft", qRgb(0,88,176)).toInt();
 	windowColorTopRight = Config::value("windowColorTopRight", qRgb(0,0,80)).toInt();
@@ -366,8 +370,10 @@ void ConfigWindow::changeKernelPath()
 void ConfigWindow::changeWindowPath()
 {
 	QString path = QFileDialog::getOpenFileName(this, tr("Find window.bin"), QDir::fromNativeSeparators(windowPath->text()), tr("Bin Files (*.bin);;All Files (*)"));
-	if(!path.isNull())
+	if(!path.isNull()) {
 		windowPath->setText(QDir::toNativeSeparators(path));
+		encodingEdit->setDisabled(path.isEmpty());
+	}
 }
 
 void ConfigWindow::changeCharPath()

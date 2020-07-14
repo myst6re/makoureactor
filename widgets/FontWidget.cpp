@@ -191,7 +191,7 @@ void FontWidget::exportFont()
 		filter.append(binF = tr("FF7 font file (*.bin)"));
 		//filter.append(tdwF = tr("FF8 font file (*.tdw)"));
 		filter.append(pngF = tr("Image File (*.png)"));
-		filter.append(jpgF = tr("Image File (*.jpg))"));
+		filter.append(jpgF = tr("Image File (*.jpg)"));
 		filter.append(bmpF = tr("Image File (*.bmp)"));
 	}
 

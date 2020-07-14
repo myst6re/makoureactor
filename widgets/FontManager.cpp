@@ -25,23 +25,23 @@ FontManager::FontManager(QWidget *parent) :
 	setWindowTitle(tr("Font Manager"));
 	setSizeGripEnabled(true);
 
-	ListWidget *listWidget = new ListWidget(this);
+	/* ListWidget *listWidget = new ListWidget(this);
 	plusAction = listWidget->addAction(ListWidget::Add, tr("Add"), this, SLOT(addFont()));
 	minusAction = listWidget->addAction(ListWidget::Rem, tr("Remove"), this, SLOT(removeFont()));
 	toolbar1 = listWidget->toolBar();
-	list1 = listWidget->listWidget();
+	list1 = listWidget->listWidget(); */
 
 	fontWidget = new FontWidget(this);
 	fontWidget->setWindowBinFile(&Data::windowBin);
 
 	QHBoxLayout *layout = new QHBoxLayout(this);
-	layout->addWidget(listWidget);
+	//layout->addWidget(listWidget);
 	layout->addWidget(fontWidget, 1);
 
-	fillList1();
-	setFont(list1->currentRow());
+	//fillList1();
+	//setFont(list1->currentRow());
 
-	connect(list1, SIGNAL(currentRowChanged(int)), SLOT(setFont(int)));
+	//connect(list1, SIGNAL(currentRowChanged(int)), SLOT(setFont(int)));
 }
 
 void FontManager::fillList1()
