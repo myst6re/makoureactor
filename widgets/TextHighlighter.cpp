@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TextHighlighter.h"
+#include "../Data.h"
 
 TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 	: QSyntaxHighlighter(parent)
@@ -24,12 +25,12 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 
 	if(tut) {
 		rule.pattern = QRegExp("^TEXT\\(\"(.*)\"\\)$", Qt::CaseInsensitive);
-		rule.color = Qt::darkGreen;
+		rule.color = Data::color(Data::ColorGreenForeground);
 		highlightingRules.append(rule);
 	}
 
 	rule.pattern = QRegExp("\\{x[\\da-fA-F]{2}\\}");
-	rule.color = Qt::darkRed;
+	rule.color = Data::color(Data::ColorRedForeground);
 	highlightingRules.append(rule);
 
 	QStringList names;
@@ -38,7 +39,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 
 	foreach(const QString &name, names) {
 		rule.pattern = QRegExp(name, Qt::CaseInsensitive);
-		rule.color = Qt::darkGreen;
+		rule.color = Data::color(Data::ColorGreenForeground);
 		highlightingRules.append(rule);
 	}
 
@@ -50,7 +51,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 
 	foreach(const QString &s, syst) {
 		rule.pattern = QRegExp(s, Qt::CaseInsensitive);
-		rule.color = Qt::darkBlue;
+		rule.color = Data::color(Data::ColorBlueForeground);
 		highlightingRules.append(rule);
 	}
 
@@ -59,7 +60,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 
 	foreach(const QString &s, dchar) {
 		rule.pattern = QRegExp(s);
-		rule.color = Qt::darkMagenta;
+		rule.color = Data::color(Data::ColorGreyForeground);
 		highlightingRules.append(rule);
 	}
 
@@ -70,7 +71,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 
 		foreach(const QString &s, keys) {
 			rule.pattern = QRegExp(s, Qt::CaseInsensitive);
-			rule.color = QColor(0xe6,0x00,0xe6);
+			rule.color = Data::color(Data::ColorPurpleForeground);
 			highlightingRules.append(rule);
 		}
 
@@ -79,7 +80,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 
 		foreach(const QString &s, op) {
 			rule.pattern = QRegExp(s, Qt::CaseInsensitive);
-			rule.color = Qt::darkGreen;
+			rule.color = Data::color(Data::ColorGreenForeground);
 			highlightingRules.append(rule);
 		}
 	}
