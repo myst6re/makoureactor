@@ -59,7 +59,8 @@ public:
 
 	bool itemIsExpanded(const Opcode *opcode) const;
 	void setExpandedItems(const QList<const Opcode *> &expandedItems);
-
+public slots:
+	void refreshOpcode(int opcodeID);
 private slots:
 	void adjustPasteAction();
 	void add();

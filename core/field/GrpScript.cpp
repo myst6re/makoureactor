@@ -480,9 +480,18 @@ void GrpScript::setWindow(const FF7Window &win)
 
 void GrpScript::listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const
 {
-	int scriptID=0;
-	for (Script *script : _scripts)
+	int scriptID = 0;
+	for (Script *script : _scripts) {
 		script->listWindows(groupID, scriptID++, windows, text2win);
+	}
+}
+
+void GrpScript::listWindows(int groupID, int textID, QList<FF7Window> &windows) const
+{
+	int scriptID = 0;
+	for (Script *script : _scripts) {
+		script->listWindows(groupID, scriptID++, textID, windows);
+	}
 }
 
 void GrpScript::listModelPositions(QList<FF7Position> &positions) const

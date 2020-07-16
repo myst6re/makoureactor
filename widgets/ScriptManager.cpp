@@ -138,6 +138,19 @@ void ScriptManager::fillScripts()
 	emit groupScriptCurrentChanged(_groupScriptList->selectedID());
 }
 
+void ScriptManager::refreshOpcode(int groupID, int scriptID, int opcodeID)
+{
+	if (!_field || groupID != _groupScriptList->selectedID()
+	    || scriptID != _scriptList->selectedID()) {
+		return;
+	}
+
+	Script *currentScript = _scriptList->currentScript();
+	if (currentScript) {
+		_opcodeList->refreshOpcode(opcodeID);
+	}
+}
+
 void ScriptManager::fillOpcodes()
 {
 	if (!_field) {

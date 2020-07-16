@@ -186,6 +186,7 @@ public:
 	static Opcode *unserialize(const QByteArray &data);
 	inline virtual bool isExec() const { return false; }
 	inline virtual bool isJump() const { return false; }
+	inline virtual bool isIf() const { return false; }
 	inline virtual bool isLabel() const { return false; }
 	int subParam(int cur, int paramSize) const;
 
@@ -629,6 +630,7 @@ public:
 	explicit OpcodeIf();
 	explicit OpcodeIf(const OpcodeJump &op);
 	virtual void getVariables(QList<FF7Var> &vars) const;
+	inline virtual bool isIf() const { return true; }
 	quint8 banks;
 	qint32 value1, value2;
 	quint8 oper;
@@ -1030,6 +1032,7 @@ public:
 	QString keyString() const;
 	inline bool isLongJump() const { return false; }
 	inline quint8 jumpPosData() const { return 3; }
+	inline virtual bool isIf() const { return true; }
 	quint16 keys;
 };
 
@@ -2668,6 +2671,7 @@ public:
 	QByteArray params() const;
 	inline bool isLongJump() const { return false; }
 	inline quint8 jumpPosData() const { return 2; }
+	inline virtual bool isIf() const { return true; }
 	quint8 charID;
 };
 

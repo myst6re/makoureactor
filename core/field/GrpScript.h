@@ -112,6 +112,7 @@ public:
 	void swapGroupIds(int groupId1, int groupId2);
 	void setWindow(const FF7Window &win);
 	void listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
+	void listWindows(int groupID, int textID, QList<FF7Window> &windows) const;
 	void listModelPositions(QList<FF7Position> &positions) const;
 	bool linePosition(FF7Position position[2]) const;
 	bool compile(int &scriptID, int &opcodeID, QString &errorStr);

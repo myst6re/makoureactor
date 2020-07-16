@@ -1409,7 +1409,7 @@ void Window::textManager(int textID, int from, int size, bool activate)
 	if (!_textDialog) {
 		_textDialog = new TextManager(this);
 		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
-		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
+		connect(_textDialog, SIGNAL(opcodeModified(int,int,int)), _scriptManager, SLOT(refreshOpcode(int,int,int)));
 		connect(_scriptManager, SIGNAL(changed()), _textDialog, SLOT(updateFromScripts()));
 	}
 

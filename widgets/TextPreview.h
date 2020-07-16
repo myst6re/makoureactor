@@ -47,6 +47,7 @@ public:
 	void resetCurrentWin();
 	int currentWin() const;
 	FF7Window getWindow() const;
+	bool setWindow(const FF7Window &win);
 	int winCount() const;
 	void nextWin();
 	void prevWin();

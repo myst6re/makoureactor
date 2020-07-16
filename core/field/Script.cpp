@@ -1261,9 +1261,36 @@ int Script::opcodePositionInBytes(quint16 opcodeID)
 
 void Script::listWindows(int groupID, int scriptID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const
 {
-	int opcodeID=0;
+	int opcodeID = 0;
 	for (Opcode *opcode : _opcodes) {
 		opcode->listWindows(groupID, scriptID, opcodeID++, windows, text2win);
+	}
+}
+
+void Script::listWindows(int groupID, int scriptID, int textID, QList<FF7Window> &windows) const
+{
+	int opcodeID = 0;
+	QMap<int, FF7Window> lastWinPerWindowID;
+	for (Opcode *opcode : _opcodes) {
+		if (opcode->isJump() || opcode->id() <= Opcode::RETTO) {
+			lastWinPerWindowID.clear();
+		} else {
+			FF7Window win = FF7Window();
+			win.groupID = groupID;
+			win.scriptID = scriptID;
+			win.opcodeID = opcodeID;
+			if (opcode->getWindow(win)) {
+				win.type = opcode->id();
+				lastWinPerWindowID.insert(opcode->getWindowID(), win);
+			} else if (opcode->getTextID() == textID
+			           && lastWinPerWindowID.contains(opcode->getWindowID())) {
+				windows.append(
+				    lastWinPerWindowID.value(opcode->getWindowID())
+				);
+			}
+		}
+
+		opcodeID += 1;
 	}
 }
 

@@ -42,6 +42,7 @@ signals:
 	void gotoField(int fieldID);
 	void searchOpcode(int opcodeID);
 public slots:
+	void refreshOpcode(int groupID, int scriptID, int opcodeID);
 	void fill(Field *field);
 	void fillScripts();
 	void fillOpcodes();

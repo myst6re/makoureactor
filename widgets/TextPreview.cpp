@@ -125,13 +125,25 @@ int TextPreview::currentWin() const
 
 FF7Window TextPreview::getWindow() const
 {
-	if (!ff7Windows.isEmpty())
+	if (!ff7Windows.isEmpty()) {
 		return ff7Windows.at(_currentWin);
-	else {
-		FF7Window ff7Window = FF7Window();
-		ff7Window.type = NOWIN;
-		return ff7Window;
 	}
+
+	FF7Window ff7Window = FF7Window();
+	ff7Window.type = NOWIN;
+
+	return ff7Window;
+}
+
+bool TextPreview::setWindow(const FF7Window &win)
+{
+	if (!ff7Windows.isEmpty()) {
+		ff7Windows[_currentWin] = win;
+
+		return true;
+	}
+
+	return false;
 }
 
 int TextPreview::winCount() const

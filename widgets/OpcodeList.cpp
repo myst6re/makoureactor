@@ -358,6 +358,21 @@ void OpcodeList::setExpandedItems(const QList<const Opcode *> &expandedItems)
 	}
 }
 
+void OpcodeList::refreshOpcode(int opcodeID)
+{
+	if (field == nullptr) {
+		return;
+	}
+
+	QTreeWidgetItem *item = findItem(opcodeID);
+
+	if (item == nullptr || opcodeID >= script->size()) {
+		return;
+	}
+
+	item->setText(0, script->opcode(opcodeID)->toString(field));
+}
+
 void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 {
 	if (_script) {
@@ -409,11 +424,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 			QPixmap wordPixmap(32,11);
 			item->setIcon(0, QIcon(posNumber(opcodeID+1, fontPixmap, wordPixmap)));
 			item->setToolTip(0, curOpcode->name());
-			if ((id >= Opcode::IFUB && id <= Opcode::IFUWL) ||
-			        (id >= Opcode::IFKEY && id <= Opcode::IFKEYOFF) ||
-			        id == Opcode::IFPRTYQ || id == Opcode::IFMEMBQ ||
-			        id == Opcode::Unknown4)
-			{
+			if (curOpcode->isIf()) {
 				item->setForeground(0, blue);
 				if (!((OpcodeJump *)curOpcode)->isBadJump()) {
 					indent.append(((OpcodeJump *)curOpcode)->label());

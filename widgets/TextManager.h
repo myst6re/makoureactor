@@ -38,6 +38,7 @@ public:
 	int currentAnchorPosition() const;
 signals:
 	void modified();
+	void opcodeModified(int groupID, int scriptID, int opcodeID);
 public slots:
 	void updateFromScripts();
 private slots:
@@ -53,12 +54,14 @@ private slots:
 	void prevTextPreviewWin();
 	void nextTextPreviewWin();
 	void changeTextPreviewWin();
-	void changeRect(QRect rect);
+	void changePosition(const QPoint &point);
 	void changeXCoord(int);
 	void changeYCoord(int);
+	void changeWSize(int);
+	void changeHSize(int);
 private:
 	void updateWindowCoord();
-//	QList<FF7Window> getWindows(quint8 textID) const;
+	QList<FF7Window> getWindows(quint8 textID) const;
 
 	QCheckBox *dispUnusedText;
 	QListWidget *liste1;
@@ -73,8 +76,6 @@ private:
 	QSpinBox *wSize, *hSize;
 
 	Section1File *scriptsAndTexts;
-//	QMultiMap<quint64, FF7Window> _windows;
-//	QMultiMap<quint8, quint64> _text2win;
 	QSet<quint8> usedTexts;
 protected:
 	virtual void focusInEvent(QFocusEvent *e);
