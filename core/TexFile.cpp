@@ -35,16 +35,16 @@ bool TexFile::open(const QByteArray &data)
     const char *constData = data.constData();
 	quint32 w, h, headerSize, paletteSectionSize, imageSectionSize, colorKeySectionSize;
 
-	if((quint32)data.size() < sizeof(TexStruct)) {
+	if ((quint32)data.size() < sizeof(TexStruct)) {
 		qWarning() << "tex size too short!";
 		return false;
 	}
 
 	memcpy(&header, constData, sizeof(TexStruct));
 
-	if(header.version == 1) {
+	if (header.version == 1) {
 		headerSize = sizeof(TexStruct) - 4;
-	} else if(header.version == 2) {
+	} else if (header.version == 2) {
 		headerSize = sizeof(TexStruct);
 	} else {
 		qWarning() << "unknown tex version!";
@@ -57,24 +57,24 @@ bool TexFile::open(const QByteArray &data)
 	imageSectionSize = w * h * header.bytesPerPixel;
 	colorKeySectionSize = header.hasColorKeyArray ? header.nbPalettes : 0;
 
-	if((quint32)data.size() != headerSize + paletteSectionSize + imageSectionSize + colorKeySectionSize) {
+	if ((quint32)data.size() != headerSize + paletteSectionSize + imageSectionSize + colorKeySectionSize) {
 		qWarning() << "tex invalid size!";
 		return false;
 	}
 
 	quint32 i;
 
-	if(header.nbPalettes > 0)
+	if (header.nbPalettes > 0)
 	{
 		quint32 index, imageStart = headerSize + paletteSectionSize;
 
-		for(quint32 palID=0 ; palID < header.nbPalettes ; ++palID) {
+		for (quint32 palID=0; palID < header.nbPalettes; ++palID) {
 			quint32 paletteStart = headerSize+header.nbColorsPerPalette1*4*palID;
 
 			_image = QImage(w, h, QImage::Format_Indexed8);
 			QVector<QRgb> colors;
 
-			for(i=0 ; i<header.nbColorsPerPalette1 ; ++i)
+			for (i=0; i<header.nbColorsPerPalette1; ++i)
 			{
 				index = paletteStart + i*4;
 				colors.append(qRgba(data.at(index+2), data.at(index+1), data.at(index), data.at(index+3)));
@@ -85,15 +85,15 @@ bool TexFile::open(const QByteArray &data)
 
 		_image.setColorTable(_colorTables.first());
 
-		for(i=0 ; i<imageSectionSize ; ++i)
+		for (i=0; i<imageSectionSize; ++i)
 		{
 			_image.setPixel(i % w, i / w, (quint8)data.at(imageStart+i));
 		}
 
-		if(header.hasColorKeyArray) {
+		if (header.hasColorKeyArray) {
 			quint32 colorKeyStart = imageStart + imageSectionSize;
 
-			for(quint32 j=0 ; j<header.nbPalettes ; ++j) {
+			for (quint32 j=0; j<header.nbPalettes; ++j) {
 				colorKeyArray.append(data.at(colorKeyStart+j));
 			}
 		}
@@ -104,11 +104,11 @@ bool TexFile::open(const QByteArray &data)
 		_image = QImage(w, h, QImage::Format_ARGB32);
 		QRgb *pixels = (QRgb *)_image.bits();
 
-		for(i=0 ; i<imageSectionSize ; i+=header.bytesPerPixel) {
-			if(header.bytesPerPixel == 2) {
+		for (i=0; i<imageSectionSize; i+=header.bytesPerPixel) {
+			if (header.bytesPerPixel == 2) {
 				memcpy(&color, &constData[headerSize+i], 2);
 				pixels[i/2] = PsColor::fromPsColor(color);
-			} else if(header.bytesPerPixel == 3) {
+			} else if (header.bytesPerPixel == 3) {
 				pixels[i/3] = qRgb(constData[headerSize+i], constData[headerSize+i+1], constData[headerSize+i+2]);
 			}
         }
@@ -121,34 +121,34 @@ bool TexFile::save(QByteArray &data)
 {
 	data.append((char *)&header, header.version==2 ? sizeof(TexStruct) : sizeof(TexStruct) - 4);
 
-	if(isPaletted()) {
+	if (isPaletted()) {
 		quint32 palID;
 
-		for(palID=0 ; palID < header.nbPalettes && palID < (quint32)_colorTables.size() ; ++palID) {
+		for (palID=0; palID < header.nbPalettes && palID < (quint32)_colorTables.size(); ++palID) {
 			const QVector<QRgb> &palette = _colorTables.at(palID);
 			quint32 colorID;
-			for(colorID=0 ; colorID < header.nbColorsPerPalette1 && colorID < (quint32)palette.size() ; ++colorID) {
+			for (colorID=0; colorID < header.nbColorsPerPalette1 && colorID < (quint32)palette.size(); ++colorID) {
 				const QRgb &color = palette.at(colorID);
 				data.append((char)qBlue(color));
 				data.append((char)qGreen(color));
 				data.append((char)qRed(color));
 				data.append((char)qAlpha(color));
 			}
-			for( ; colorID < header.nbColorsPerPalette1 ; ++colorID) {
+			for ( ; colorID < header.nbColorsPerPalette1; ++colorID) {
 				const QRgb color = qRgba(0, 0, 0, 0);
 				data.append((char *)&color, 4);
 			}
 		}
 
-		for( ; palID < header.nbPalettes ; ++palID) {
-			for(quint32 colorID=0 ; colorID < header.nbColorsPerPalette1 ; ++colorID) {
+		for ( ; palID < header.nbPalettes; ++palID) {
+			for (quint32 colorID=0; colorID < header.nbColorsPerPalette1; ++colorID) {
 				const QRgb color = qRgba(0, 0, 0, 0);
 				data.append((char *)&color, 4);
 			}
 		}
 
-		for(int y=0 ; y<_image.height() ; ++y) {
-			for(int x=0 ; x<_image.width() ; ++x) {
+		for (int y=0; y<_image.height(); ++y) {
+			for (int x=0; x<_image.width(); ++x) {
 				data.append((char)_image.pixelIndex(x, y));
 			}
 		}
@@ -156,7 +156,7 @@ bool TexFile::save(QByteArray &data)
 		data.append((char *)colorKeyArray.data(), colorKeyArray.size());
 	} else {
 		QRgb *pixels = (QRgb *)_image.bits();
-		for(int i=0 ; i<_image.width()*_image.height() ; ++i) {
+		for (int i=0; i<_image.width()*_image.height(); ++i) {
 			quint16 color = PsColor::toPsColor(pixels[i]);
 			data.append((char *)&color, 2);
 		}

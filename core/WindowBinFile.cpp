@@ -34,10 +34,10 @@ void WindowBinFile::clear()
 bool WindowBinFile::open(const QString &path)
 {
 	QFile windowFile(path);
-	if(windowFile.open(QIODevice::ReadOnly)) {
+	if (windowFile.open(QIODevice::ReadOnly)) {
 		QByteArray windowData = windowFile.readAll();
 		windowFile.close();
-		if(!open(windowData)) {
+		if (!open(windowData)) {
 			return false;
 		}
 	} else {
@@ -56,7 +56,7 @@ bool WindowBinFile::open(const QByteArray &data)
 	quint16 size;
 	QList<quint16> positions, sizes;
 
-	while(cur + 2 < data.size()) {
+	while (cur + 2 < data.size()) {
 		positions.append(cur);
 
 		memcpy(&size, constData + cur, 2);
@@ -66,26 +66,26 @@ bool WindowBinFile::open(const QByteArray &data)
 		cur += 6 + size;
 	}
 
-	if(positions.size() < 3 || positions.size() > 4) {
+	if (positions.size() < 3 || positions.size() > 4) {
 		return false;
 	}
 
 	_icons = TimFile(GZIP::decompress(constData + positions.first() + 6, sizes.first(), 0));
 
-	if(!_icons.isValid()) {
+	if (!_icons.isValid()) {
 		return false;
 	}
 
-	if(!openFont(GZIP::decompress(constData + positions.at(1) + 6, sizes.at(1), 0))) {
+	if (!openFont(GZIP::decompress(constData + positions.at(1) + 6, sizes.at(1), 0))) {
 		return false;
 	}
 
 	// jp version
-	if(positions.size() == 4 && !openFont2(GZIP::decompress(constData + positions.at(2) + 6, sizes.at(2), 0))) {
+	if (positions.size() == 4 && !openFont2(GZIP::decompress(constData + positions.at(2) + 6, sizes.at(2), 0))) {
 		return false;
 	}
 
-	if(!openFontSize(GZIP::decompress(constData + positions.last() + 6, sizes.last(), 0))) {
+	if (!openFontSize(GZIP::decompress(constData + positions.last() + 6, sizes.last(), 0))) {
 		return false;
 	}
 
@@ -106,22 +106,22 @@ void WindowBinFile::saveSection(const QByteArray &section, QByteArray &data, qui
 bool WindowBinFile::save(QByteArray &data) const
 {
 	QByteArray sectionData, compressedData;
-	if(!_icons.save(sectionData)) {
+	if (!_icons.save(sectionData)) {
 		return false;
 	}
 
 	saveSection(sectionData, data, 0);
 
 	sectionData.clear();
-	if(!_font.save(sectionData)) {
+	if (!_font.save(sectionData)) {
 		return false;
 	}
 
 	saveSection(sectionData, data, 0);
 
-	if(isJp()) {
+	if (isJp()) {
 		sectionData.clear();
-		if(!_font2.save(sectionData)) {
+		if (!_font2.save(sectionData)) {
 			return false;
 		}
 
@@ -184,7 +184,7 @@ bool WindowBinFile::openFont2(const QByteArray &data)
 
 bool WindowBinFile::openFontSize(const QByteArray &data)
 {
-	if(data.size() != 1302) {
+	if (data.size() != 1302) {
 		return false;
 	}
 
@@ -204,7 +204,7 @@ const QImage &WindowBinFile::image(FontColor color)
 QPoint WindowBinFile::letterPos(quint8 tableId, quint8 charId) const
 {
 	int id = charId;
-	if(tableId >= 4) {
+	if (tableId >= 4) {
 		if (!isJp()) {
 			return QPoint();
 		}
@@ -219,7 +219,7 @@ QPoint WindowBinFile::letterPos(quint8 tableId, quint8 charId) const
 QRect WindowBinFile::letterRect(quint8 tableId, quint8 charId) const
 {
 	QPoint pos = letterPos(tableId, charId);
-	if(pos.isNull()) {
+	if (pos.isNull()) {
 		return QRect();
 	}
 	return QRect(pos, letterSize());
@@ -240,16 +240,16 @@ bool WindowBinFile::setLetter(quint8 tableId, quint8 charId, const QImage &image
 {
 	QRect rect = letterRect(tableId, charId);
 
-	if(image.size() != rect.size()) {
+	if (image.size() != rect.size()) {
 		return false;
 	}
 
 	int x2, y2 = rect.y();
 
-	for(int y=0 ; y<image.height() ; ++y) {
+	for (int y=0; y<image.height(); ++y) {
 		x2 = rect.x();
 
-		for(int x=0 ; x<image.width() ; ++x) {
+		for (int x=0; x<image.width(); ++x) {
 			font(tableId).imagePtr()->setPixel(x2, y2, image.pixelIndex(x, y));
 			++x2;
 		}
@@ -284,7 +284,7 @@ int WindowBinFile::palette(FontColor color, quint8 table) const
 int WindowBinFile::absoluteId(quint8 table, quint8 id)
 {
 	int absId = id;
-	for(int i=0 ; i<table ; ++i) {
+	for (int i=0; i<table; ++i) {
 		absId += tableSize(i);
 	}
 	return absId;

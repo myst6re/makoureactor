@@ -48,8 +48,8 @@ QStringList CharArchive::hrcFiles() const
 {
 	QStringList files;
 
-	foreach(const QString &file, _io->fileList()) {
-		if(file.endsWith(".hrc", Qt::CaseInsensitive)) {
+	for (const QString &file : _io->fileList()) {
+		if (file.endsWith(".hrc", Qt::CaseInsensitive)) {
 			files.append(file.toUpper());
 		}
 	}
@@ -59,14 +59,14 @@ QStringList CharArchive::hrcFiles() const
 
 QStringList CharArchive::aFiles(int boneCount)
 {
-	if(boneCount >= 0 && openAnimBoneCount()) {
+	if (boneCount >= 0 && openAnimBoneCount()) {
 		return _animBoneCount.values(boneCount);
 	}
 
 	QStringList files;
 
-	foreach(const QString &file, _io->fileList()) {
-		if(file.endsWith(".a", Qt::CaseInsensitive)) {
+	for (const QString &file : _io->fileList()) {
+		if (file.endsWith(".a", Qt::CaseInsensitive)) {
 			files.append(file.left(file.size()-2).toUpper());
 		}
 	}
@@ -89,16 +89,16 @@ bool CharArchive::openAnimBoneCount()
 	_animBoneCount.clear();
 
 	LgpIterator it = _io->iterator();
-	while(it.hasNext()) {
+	while (it.hasNext()) {
 		it.next();
 		const QString &fileName = it.fileName();
-		if(fileName.endsWith(".a", Qt::CaseInsensitive)) {
+		if (fileName.endsWith(".a", Qt::CaseInsensitive)) {
 			QIODevice *aFile = it.file();
-			if(aFile && aFile->open(QIODevice::ReadOnly)) {
+			if (aFile && aFile->open(QIODevice::ReadOnly)) {
 				AFile a(aFile);
 				AHeader header;
 
-				if(!a.readHeader(header)) {
+				if (!a.readHeader(header)) {
 					qWarning() << "CharArchive::openAnimBoneCount" << "animation error" << fileName;
 					continue;
 				}

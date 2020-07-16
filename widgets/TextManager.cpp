@@ -259,7 +259,7 @@ void TextManager::focusInEvent(QFocusEvent *)
 
 void TextManager::setField(Field *field, bool reload)
 {
-	if(!field
+	if (!field
 	        || (!reload && this->scriptsAndTexts == field->scriptsAndTexts())
 	        || !field->scriptsAndTexts()->isOpen()) {
 		return;
@@ -287,16 +287,16 @@ void TextManager::clear()
 
 void TextManager::setTextChanged()
 {
-	if(!scriptsAndTexts)	return;
+	if (!scriptsAndTexts)	return;
 
 	QListWidgetItem *item = liste1->currentItem();
-	if(item == nullptr)	return;
+	if (item == nullptr)	return;
 
 	QString newText = textEdit->toPlainText();
 	int textId = item->data(Qt::UserRole).toInt();
 	const FF7Text &t = scriptsAndTexts->text(textId);
 	bool jp = Config::value("jp_txt", false).toBool();
-	if(newText != t.text(jp)) {
+	if (newText != t.text(jp)) {
 		scriptsAndTexts->setText(textId, FF7Text(newText, jp));
 		textPreview->setText(t.data());
 		changeTextPreviewPage();
@@ -310,8 +310,8 @@ void TextManager::setTextChanged()
 	QList<quint64> winIDs = _text2win.values(textID);
 	QList<quint64> sawAlready;
 	QList<FF7Window> windows;
-	foreach(const quint64 &winID, winIDs) {
-		if(!sawAlready.contains(winID)) {
+	for (const quint64 &winID : winIDs) {
+		if (!sawAlready.contains(winID)) {
 			windows.append(_windows.values(winID));
 			sawAlready.append(winID);
 		}
@@ -321,7 +321,7 @@ void TextManager::setTextChanged()
 
 void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 {
-	if(!item || !scriptsAndTexts)	return;
+	if (!item || !scriptsAndTexts)	return;
 	int textID = item->data(Qt::UserRole).toInt();
 	const FF7Text &t = scriptsAndTexts->text(textID);
 //	textPreview->resetCurrentWin();
@@ -334,7 +334,7 @@ void TextManager::selectText(QListWidgetItem *item, QListWidgetItem *)
 
 void TextManager::showList()
 {
-	if(!scriptsAndTexts)	return;
+	if (!scriptsAndTexts)	return;
 	bool show = dispUnusedText->isChecked();
 	liste1->blockSignals(true);
 	int nbTexts = scriptsAndTexts->textCount();
@@ -342,14 +342,14 @@ void TextManager::showList()
 
 	Config::setValue("dispUnusedText", show);
 
-	for(int i=0 ; i<nbTexts ; ++i)
+	for (int i=0; i<nbTexts; ++i)
 	{
-		if(!show && !usedTexts.contains(i))	continue;
+		if (!show && !usedTexts.contains(i))	continue;
 
 		QListWidgetItem *item = new QListWidgetItem(tr("Text %1").arg(i));
 		item->setData(Qt::UserRole, i);
 		liste1->addItem(item);
-		if(!usedTexts.contains(i)) {
+		if (!usedTexts.contains(i)) {
 			item->setForeground(Qt::darkGray);
 		}
 	}
@@ -367,10 +367,10 @@ void TextManager::updateFromScripts()
 {
 	usedTexts = scriptsAndTexts->listUsedTexts();
 
-	for(int row = 0 ; row < liste1->count(); ++row) {
+	for (int row = 0; row < liste1->count(); ++row) {
 		QListWidgetItem *item = liste1->item(row);
 		int textID = item->data(Qt::UserRole).toInt();
-		if(!usedTexts.contains(textID)) {
+		if (!usedTexts.contains(textID)) {
 			item->setForeground(Qt::darkGray);
 		} else {
 			// Default foreground
@@ -381,8 +381,8 @@ void TextManager::updateFromScripts()
 
 void TextManager::gotoText(int textID, int from, int size)
 {
-	for(int i=0 ; i<liste1->count() ; ++i) {
-		if(textID == liste1->item(i)->data(Qt::UserRole).toInt()) {
+	for (int i=0; i<liste1->count(); ++i) {
+		if (textID == liste1->item(i)->data(Qt::UserRole).toInt()) {
 			blockSignals(true);
 			textEdit->blockSignals(true);
 			liste1->setCurrentItem(liste1->item(i));
@@ -407,7 +407,7 @@ QString TextManager::selectedText() const
 int TextManager::currentTextId() const
 {
 	QListWidgetItem *currentItem = liste1->currentItem();
-	if(currentItem) {
+	if (currentItem) {
 		return currentItem->data(Qt::UserRole).toInt();
 	}
 	return -1;
@@ -425,7 +425,7 @@ int TextManager::currentAnchorPosition() const
 
 void TextManager::addText()
 {
-	if(!scriptsAndTexts || scriptsAndTexts->textCount() >= scriptsAndTexts->maxTextCount())	return;
+	if (!scriptsAndTexts || scriptsAndTexts->textCount() >= scriptsAndTexts->maxTextCount())	return;
 	QListWidgetItem *item = liste1->currentItem();
 	int row = !item ? scriptsAndTexts->textCount() : item->data(Qt::UserRole).toInt()+1;
 	liste1->blockSignals(true);
@@ -440,13 +440,13 @@ void TextManager::addText()
 
 void TextManager::delText()
 {
-	if(!scriptsAndTexts)	return;
+	if (!scriptsAndTexts)	return;
 	QListWidgetItem *item = liste1->currentItem();
-	if(!item) return;
+	if (!item) return;
 	int row=item->data(Qt::UserRole).toInt();
-	if(usedTexts.contains(row)) {
+	if (usedTexts.contains(row)) {
 		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Text used in scripts"), tr("This text is used by one or more scripts on this field.\nRemoving this text may break scripts that reference it.\nAre you sure you want to continue?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
-		if(rep == QMessageBox::Cancel) {
+		if (rep == QMessageBox::Cancel) {
 			return;
 		}
 	}
@@ -520,12 +520,12 @@ void TextManager::changeRect(QRect rect)
 
 void TextManager::changeXCoord(int /*x*/)
 {
-	/*if(!scriptsAndTexts || textPreview->winCount()<=0 || liste1->currentItem()==nullptr)	return;
+	/*if (!scriptsAndTexts || textPreview->winCount()<=0 || liste1->currentItem()==nullptr)	return;
 
 	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
 	int winID = textPreview->currentWin()-1;
 	FF7Window ff7Window = textPreview->getWindow();
-	if(ff7Window.x != x) {
+	if (ff7Window.x != x) {
 		ff7Window.x = x;
 
 //		qDebug() << "changeXCoord()" << x << textID << winID;
@@ -541,12 +541,12 @@ void TextManager::changeXCoord(int /*x*/)
 
 void TextManager::changeYCoord(int /*y*/)
 {
-	/*if(!scriptsAndTexts || textPreview->winCount()<=0 || liste1->currentItem()==nullptr)	return;
+	/*if (!scriptsAndTexts || textPreview->winCount()<=0 || liste1->currentItem()==nullptr)	return;
 
 	int textID = liste1->currentItem()->data(Qt::UserRole).toInt();
 	int winID = textPreview->currentWin()-1;
 	FF7Window ff7Window = textPreview->getWindow();
-	if(ff7Window.y != y) {
+	if (ff7Window.y != y) {
 		ff7Window.y = y;
 
 //		qDebug() << "changeYCoord()" << y << textID << winID;
@@ -571,7 +571,7 @@ void TextManager::updateWindowCoord()
 
 void TextManager::insertTag(QAction *action)
 {
-	if(sender() != action->parentWidget())	return;// toolBar/Menu signals hack
+	if (sender() != action->parentWidget())	return;// toolBar/Menu signals hack
 	textEdit->insertPlainText(action->data().toString());
 	textEdit->setFocus();
 }

@@ -56,12 +56,12 @@ void EncounterWidget::fillGroup(EncounterTableWidget *group, const EncounterTabl
 	group->setRateValue(encounterTable.rate);
 
 	QList<int> probas, ids;
-	for(int i=0 ; i<6 ; ++i) {
+	for (int i=0; i<6; ++i) {
 		probas.append(PROBABILITY(encounterTable.enc_standard[i]));
 		ids.append(BATTLE_ID(encounterTable.enc_standard[i]));
 	}
 
-	for(int i=0 ; i<4 ; ++i) {
+	for (int i=0; i<4; ++i) {
 		probas.append(PROBABILITY(encounterTable.enc_special[i]));
 		ids.append(BATTLE_ID(encounterTable.enc_special[i]));
 	}
@@ -77,11 +77,11 @@ EncounterTable EncounterWidget::saveGroup(EncounterTableWidget *group, Encounter
 
 	QList<int> battleProbas = group->battleProbasValues(), battleIds = group->battleIdsValues();
 
-	for(int i=0 ; i<6 ; ++i) {
+	for (int i=0; i<6; ++i) {
 		encounterTable.enc_standard[i] = (battleProbas.at(i) << 10) | battleIds.at(i);
 	}
 
-	for(int i=0 ; i<4 ; ++i) {
+	for (int i=0; i<4; ++i) {
 		encounterTable.enc_special[i] = (battleProbas.at(6+i) << 10) | battleIds.at(6+i);
 	}
 

@@ -41,7 +41,7 @@ QImage FieldModelTexturesPS::toImage(const QPoint &palPos, Bpp bpp) const
 	QPixmap image(720, 512);
 	QPainter p(&image);
 
-	foreach (const QRect &rect, rects()) {
+	for (const QRect &rect : rects()) {
 		if (rect.height() != 1) {
 			p.drawImage(rect.topLeft(), toImage(rect.topLeft(), palPos, bpp));
 		}
@@ -56,7 +56,7 @@ QPair<int, int> FieldModelTexturesPS::resolve(const QPoint &imgPos, const QPoint
 			palId = -1,
 			i = 0;
 
-	foreach (const QRect &rect, _rects) {
+	for (const QRect &rect : _rects) {
 		if (imgId < 0 && rect.topLeft() == imgPos) {
 			imgId = i;
 		} else if (palId < 0 && rect.topLeft() == palPos) {

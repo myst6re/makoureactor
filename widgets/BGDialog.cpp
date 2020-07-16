@@ -90,7 +90,7 @@ BGDialog::BGDialog(QWidget *parent) :
 
 void BGDialog::fill(Field *field, bool reload)
 {
-	if((!reload && this->field == field) || !field)	return;
+	if ((!reload && this->field == field) || !field)	return;
 
 	this->field = field;
 
@@ -126,7 +126,7 @@ void BGDialog::clear()
 
 void BGDialog::fillWidgets()
 {
-	if(!field)	return;
+	if (!field)	return;
 
 	QHash<quint8, quint8> usedParams;
 	bool layerExists[] = {false, false, false};
@@ -141,11 +141,11 @@ void BGDialog::fillWidgets()
 	params.clear();
 	sections.clear();
 
-	if(field->background()->usedParams(usedParams, layerExists, &usedIDs)) {
+	if (field->background()->usedParams(usedParams, layerExists, &usedIDs)) {
 
 		QList<quint8> usedParamsList = usedParams.keys();
 		qSort(usedParamsList);
-		foreach(const quint8 param, usedParamsList) {
+		for (const quint8 param : usedParamsList) {
 			parametersWidget->addItem(tr("Parameter %1").arg(param), param);
 		}
 		parametersWidget->setEnabled(parametersWidget->count());
@@ -155,7 +155,7 @@ void BGDialog::fillWidgets()
 		QList<quint16> usedIDsList = usedIDs.toList();
 		qSort(usedIDsList);
 		int sectionID = 0;
-		foreach(const quint16 ID, usedIDsList) {
+		for (const quint16 ID : usedIDsList) {
 			item = new QListWidgetItem(tr("Section %1").arg(sectionID++));
 			item->setData(Qt::UserRole, ID);
 			item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
@@ -170,7 +170,7 @@ void BGDialog::fillWidgets()
 		layers[2] = layerExists[1];
 		layers[3] = layerExists[2];
 
-		for(quint8 layerID = 0 ; layerID < 4 ; ++layerID) {
+		for (quint8 layerID = 0; layerID < 4; ++layerID) {
 			if (layers[layerID]) {
 				item = new QListWidgetItem(tr("Layer %1").arg(layerID));
 				item->setData(Qt::UserRole, layerID);
@@ -203,7 +203,7 @@ void BGDialog::showLayersPage(int index)
 
 	layersWidget->setVisible(page1);
 	sectionsWidget->setVisible(!page1);
-	if(page1) {
+	if (page1) {
 		layerChanged();
 	} else {
 		sectionChanged();
@@ -216,8 +216,8 @@ void BGDialog::parameterChanged(int index)
 	quint8 states = allparams.value(parameter);
 	QListWidgetItem *item;
 	statesWidget->clear();
-	for(int i=0 ; i<8 ; ++i) {
-		if((states >> i) & 1) {
+	for (int i=0; i<8; ++i) {
+		if ((states >> i) & 1) {
 			item = new QListWidgetItem(tr("State %1").arg(i));
 			item->setData(Qt::UserRole, 1 << i);
 			item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
@@ -230,7 +230,7 @@ void BGDialog::parameterChanged(int index)
 void BGDialog::layerChanged()
 {
 	QList<QListWidgetItem *> items = layersWidget->selectedItems();
-	if(items.isEmpty()) {
+	if (items.isEmpty()) {
 		zWidget->setValue(0);
 		zWidget->setEnabled(false);
 		return;
@@ -239,7 +239,7 @@ void BGDialog::layerChanged()
 	zWidget->setReadOnly(false);
 	int layer = items.first()->data(Qt::UserRole).toInt();
 	int zValue = z[layer-2];
-	if(zValue == -1) {
+	if (zValue == -1) {
 		switch(layer) {
 		case 2:
 			zValue = 4096;
@@ -256,7 +256,7 @@ void BGDialog::layerChanged()
 void BGDialog::sectionChanged()
 {
 	QList<QListWidgetItem *> items = sectionsWidget->selectedItems();
-	if(items.isEmpty()) {
+	if (items.isEmpty()) {
 		zWidget->setValue(0);
 		zWidget->setEnabled(false);
 		return;
@@ -272,7 +272,7 @@ void BGDialog::enableState(QListWidgetItem *item)
 	bool enabled = item->data(Qt::CheckStateRole).toBool();
 	int parameter = parametersWidget->itemData(parametersWidget->currentIndex()).toInt(), state = item->data(Qt::UserRole).toInt();
 
-	if(enabled)
+	if (enabled)
 		params.insert(parameter, params.value(parameter) | state);
 	else
 		params.insert(parameter, params.value(parameter) & ~state);
@@ -306,11 +306,11 @@ void BGDialog::enableSection(QListWidgetItem *item)
 
 void BGDialog::changeZ(int value)
 {
-	if(tabBar->currentIndex() != 0) {
+	if (tabBar->currentIndex() != 0) {
 		return;
 	}
 	QList<QListWidgetItem *> items = layersWidget->selectedItems();
-	if(items.isEmpty()) return;
+	if (items.isEmpty()) return;
 	z[items.first()->data(Qt::UserRole).toInt()-2] = value;// z[layer - 2]
 
 	updateBG();
@@ -319,13 +319,13 @@ void BGDialog::changeZ(int value)
 void BGDialog::saveImage()
 {
 	QString path = Config::value("saveBGPath").toString();
-	if(!path.isEmpty()) {
+	if (!path.isEmpty()) {
 		path.append("/");
 	}
 	path = QFileDialog::getSaveFileName(this, tr("Save Background"),
 	                                    path + field->name() + ".png",
 	                                    tr("PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)"));
-	if(path.isNull())	return;
+	if (path.isNull())	return;
 
 	background().save(path);
 
@@ -346,7 +346,7 @@ void BGDialog::tryToRepairBG()
 
 QImage BGDialog::background(bool *bgWarning)
 {
-	if(tabBar->currentIndex() == 0) {
+	if (tabBar->currentIndex() == 0) {
 		return field->background()->openBackground(params, z, layers, nullptr, bgWarning);
 	} else {
 		bool layers[4] = { false, true, false, false };
@@ -356,19 +356,19 @@ QImage BGDialog::background(bool *bgWarning)
 
 void BGDialog::updateBG()
 {
-	if(!field)	return;
+	if (!field)	return;
 
 	bool bgWarning;
 	QImage img = background(&bgWarning);
 
-	if(tabBar->currentIndex() == 0) {
+	if (tabBar->currentIndex() == 0) {
 		img = field->background()->openBackground(params, z, layers, nullptr, &bgWarning);
 	} else {
 		bool layers[4] = { false, true, false, false };
 		img = field->background()->openBackground(params, z, layers, &sections, &bgWarning);
 	}
 
-	if(img.isNull()) {
+	if (img.isNull()) {
 		image->setPixmap(QPixmap::fromImage(img));
 		bgWarning = false;
 	} else {
@@ -382,26 +382,26 @@ void BGDialog::updateBG()
 
 void BGDialog::resizeEvent(QResizeEvent *event)
 {
-	if(event->type() == QEvent::Resize) {
+	if (event->type() == QEvent::Resize) {
 		updateBG();
 	}
 }
 
 bool BGDialog::eventFilter(QObject *obj, QEvent *event)
 {
-	if(event->type() == QEvent::Wheel && obj == imageBox->viewport()) {
+	if (event->type() == QEvent::Wheel && obj == imageBox->viewport()) {
 		QWheelEvent *wheelEvent = static_cast<QWheelEvent *>(event);
-		if(wheelEvent->modifiers() == Qt::CTRL) {
+		if (wheelEvent->modifiers() == Qt::CTRL) {
 			const float step = 0.25;
-			if(zoomFactor == 0) {
+			if (zoomFactor == 0) {
 				zoomFactor = 0.25;
-			} else if(wheelEvent->angleDelta().y() > 0) {
-				if(zoomFactor >= 4){
+			} else if (wheelEvent->angleDelta().y() > 0) {
+				if (zoomFactor >= 4){
 					return false; // cap zoom in at 400%
 				} else {
 					zoomFactor += step;
 				}
-			} else if(wheelEvent->angleDelta().y() < 0) {
+			} else if (wheelEvent->angleDelta().y() < 0) {
 				if (zoomFactor <= 0.25){
 					return false; // cap zoom in at 25%
 				} else {

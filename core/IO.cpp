@@ -11,8 +11,8 @@ IO::~IO()
 
 bool IO::canRead() const
 {
-	if(_device) {
-		if(!_device->isOpen()) {
+	if (_device) {
+		if (!_device->isOpen()) {
 			return _device->open(QIODevice::ReadOnly);
 		}
 		return _device->isReadable();
@@ -22,8 +22,8 @@ bool IO::canRead() const
 
 bool IO::canWrite() const
 {
-	if(_device) {
-		if(!_device->isOpen()) {
+	if (_device) {
+		if (!_device->isOpen()) {
 			return _device->open(QIODevice::WriteOnly);
 		}
 		return _device->isWritable();

@@ -162,7 +162,7 @@ int VarManager::rowFromBank(quint8 bank)
 
 void VarManager::fillList1()
 {
-	for(quint8 row=0 ; row<6 ; ++row) {
+	for (quint8 row=0; row<6; ++row) {
 		QPair<quint8, quint8> pair = banksFromRow(row);
 		liste1->addItem(QString("%1-%2")
 						.arg(pair.first, 2, 10, QChar('0'))
@@ -172,7 +172,7 @@ void VarManager::fillList1()
 
 void VarManager::fillList2()
 {
-	for(quint16 adressID=0 ; adressID<256 ; ++adressID) {
+	for (quint16 adressID=0; adressID<256; ++adressID) {
 		new QTreeWidgetItem(liste2, QStringList() << QString("%1").arg(adressID, 3));
 	}
 
@@ -190,7 +190,7 @@ void VarManager::changeBank(int row)
 	liste2->blockSignals(true);
 
 	QTreeWidgetItemIterator it(liste2);
-	while(*it) {
+	while (*it) {
 		QTreeWidgetItem *item = *it;
 		quint16 addressID = itemAddress(item);
 		QString varName1 = local_var_names.value(addressID | (b << 8)),
@@ -229,7 +229,7 @@ void VarManager::scrollToList1(int bankID)
 void VarManager::scrollToList2(int adressID)
 {
 	QTreeWidgetItem *item = findList2Item(adressID);
-	if(item) {
+	if (item) {
 		liste2->setCurrentItem(item);
 		liste2->scrollToItem(item);
 	}
@@ -238,13 +238,13 @@ void VarManager::scrollToList2(int adressID)
 QTreeWidgetItem *VarManager::findList2Item(int adressID)
 {
 	QList<QTreeWidgetItem *> items = liste2->findItems(QString("%1").arg(adressID, 3), Qt::MatchExactly);
-	if(items.isEmpty())	return nullptr;
+	if (items.isEmpty())	return nullptr;
 	return items.first();
 }
 
 void VarManager::fillForm()
 {
-	if(liste2->selectedItems().isEmpty())	return;
+	if (liste2->selectedItems().isEmpty())	return;
 	QTreeWidgetItem *item = liste2->selectedItems().first();
 	address->setValue(itemAddress(item));
 	name->setText(item->text(1));
@@ -252,7 +252,7 @@ void VarManager::fillForm()
 
 void VarManager::renameVar()
 {
-	if(liste2->selectedItems().isEmpty())	return;
+	if (liste2->selectedItems().isEmpty())	return;
 	local_var_names.insert(address->value() | (bank->value() << 8), name->text());
 	liste2->selectedItems().first()->setText(1, name->text());
 	ok->setEnabled(true);
@@ -260,7 +260,7 @@ void VarManager::renameVar()
 
 void VarManager::save()
 {
-	if(!Var::save(local_var_names)) {
+	if (!Var::save(local_var_names)) {
 		QMessageBox::warning(this, tr("Error"), tr("Save Failed"));
 	} else {
 		ok->setEnabled(false);
@@ -280,7 +280,7 @@ void VarManager::search()
 	allVars = fieldArchive->searchAllVars(_fieldNames);
 	int b = bank->value();
 
-	for(int address=0 ; address<256 ; ++address) {
+	for (int address=0; address<256; ++address) {
 		colorizeItem(liste2->topLevelItem(address), FF7Var(b, address));
 	}
 
@@ -323,29 +323,29 @@ void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
 	QString rwText;
 	QStringList sizeText;
 
-	if(foundR || foundW) {
+	if (foundR || foundW) {
 		QColor color = Data::color(Data::ColorEvidence);
 		item->setBackground(0, color);
 		item->setBackground(1, color);
 		item->setBackground(2, color);
 		item->setBackground(3, color);
-		if(foundR && foundW) {
+		if (foundR && foundW) {
 			rwText = tr("rw");
-		} else if(foundR) {
+		} else if (foundR) {
 			rwText = tr("r");
 		} else {
 			rwText = tr("w");
 		}
-		if(varSize.contains(FF7Var::Bit)) {
+		if (varSize.contains(FF7Var::Bit)) {
 			sizeText.append(tr("bitfield"));
 		}
-		if(varSize.contains(FF7Var::Byte)) {
+		if (varSize.contains(FF7Var::Byte)) {
 			sizeText.append(tr("1 Byte"));
 		}
-		if(varSize.contains(FF7Var::Word)) {
+		if (varSize.contains(FF7Var::Word)) {
 			sizeText.append(tr("2 Bytes"));
 		}
-		if(varSize.contains(FF7Var::SignedWord)) {
+		if (varSize.contains(FF7Var::SignedWord)) {
 			sizeText.append(tr("2 Signed Bytes"));
 		}
 	} else {

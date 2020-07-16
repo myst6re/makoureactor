@@ -37,17 +37,17 @@ void FieldModelLoaderPC::clear()
 
 void FieldModelLoaderPC::clean()
 {
-	for(int modelID=0 ; modelID<model_anims.size() ; ++modelID) {
-		if(!model_nameChar.at(modelID).isEmpty()) {
+	for (int modelID=0; modelID<model_anims.size(); ++modelID) {
+		if (!model_nameChar.at(modelID).isEmpty()) {
 			setModified(true);
 			model_nameChar[modelID].clear();
 		}
 
 		const QStringList &animNames = model_anims.at(modelID);
-		for(int animID=0 ; animID<animNames.size() ; ++animID) {
+		for (int animID=0; animID<animNames.size(); ++animID) {
 			const QString &animName = animNames.at(animID);
 			int index = animName.lastIndexOf('.');
-			if(index != -1) {
+			if (index != -1) {
 				model_anims[modelID][animID] = animName.left(index);
 				setModified(true);
 			}
@@ -125,7 +125,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 {
 	const char *constData = data.constData();
 
-	if((quint32)data.size() < 6)	return false;
+	if ((quint32)data.size() < 6)	return false;
 
 	quint32 i, j;
 	quint16 nb;
@@ -139,15 +139,15 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 	quint16 fieldScale = field()->scriptsAndTexts()->scale();
 
 	quint32 curPos = 6;
-	for(i=0 ; i<nb ; ++i) {
-		if((quint32)data.size() < curPos+2) {
+	for (i=0; i<nb; ++i) {
+		if ((quint32)data.size() < curPos+2) {
 			clear();
 			return false;
 		}
 
 		memcpy(&len, constData + curPos, 2); // model name len
 
-		if((quint32)data.size() < curPos+48+len) {
+		if ((quint32)data.size() < curPos+48+len) {
 			clear();
 			return false;
 		}
@@ -158,7 +158,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 		model_nameHRC.append(QString(data.mid(curPos+4+len,8)));
 		bool ok;
 		int typeHRC_value = QString(data.mid(curPos+12+len,4)).toInt(&ok);
-		if(!ok)	typeHRC_value = fieldScale;
+		if (!ok)	typeHRC_value = fieldScale;
 		model_typeHRC.append(typeHRC_value);
 
 		memcpy(&nbAnim, constData + curPos+16+len, 2);
@@ -167,7 +167,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 		curPos += 18 + len;
 
-		for(j=0 ; j<3 ; ++j) {
+		for (j=0; j<3; ++j) {
 			qint16 dirA, dirB, dirC;
 			memcpy(&dirA, constData + curPos + 3 + j * 9, 2);
 			memcpy(&dirB, constData + curPos + 5 + j * 9, 2);
@@ -188,15 +188,15 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 		QStringList anims;
 		QList<quint16> anims_unknown;
-		for(j=0 ; j<nbAnim ; ++j) {
-			if((quint32)data.size() < curPos+2) {
+		for (j=0; j<nbAnim; ++j) {
+			if ((quint32)data.size() < curPos+2) {
 				clear();
 				return false;
 			}
 
 			memcpy(&len, constData + curPos, 2); // animation name len
 
-			if((quint32)data.size() < curPos+4+len) {
+			if ((quint32)data.size() < curPos+4+len) {
 				clear();
 				return false;
 			}
@@ -221,7 +221,7 @@ QByteArray FieldModelLoaderPC::save() const
 	quint16 nbHRC = this->model_nameHRC.size();
 	QByteArray HRCs;
 
-	for(int i=0 ; i<nbHRC ; ++i) {
+	for (int i=0; i<nbHRC; ++i) {
 		const QString &modelName = this->model_nameChar.at(i);
 		quint16 nameSize = modelName.size();
 		HRCs.append((char *)&nameSize, 2); //model name size
@@ -232,7 +232,7 @@ QByteArray FieldModelLoaderPC::save() const
 		const quint16 &nbAnim = this->model_anims.at(i).size();
 		HRCs.append((char *)&nbAnim, 2); //Nb Anims
 
-		for(quint8 j=0 ; j<3 ; ++j) { //Colors
+		for (quint8 j=0; j<3; ++j) { //Colors
 			const FieldModelColorDir &colorDir = this->colors.at(i).at(j);
 			HRCs.append((char)qRed(colorDir.color));
 			HRCs.append((char)qGreen(colorDir.color));
@@ -247,7 +247,7 @@ QByteArray FieldModelLoaderPC::save() const
 		HRCs.append((char)qGreen(globalColor));
 		HRCs.append((char)qBlue(globalColor));
 
-		for(int j=0 ; j<nbAnim ; ++j) { //Animations
+		for (int j=0; j<nbAnim; ++j) { //Animations
 			nameSize = this->model_anims.at(i).at(j).size();
 			HRCs.append((char *)&nameSize, 2); //Animation name size
 			HRCs.append(this->model_anims.at(i).at(j)); //Animation name
@@ -270,15 +270,15 @@ int FieldModelLoaderPC::modelCount() const
 
 bool FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
 {
-	if(modelCount() < maxModelCount()) {
+	if (modelCount() < maxModelCount()) {
 		QList<FieldModelColorDir> color;
-		if(!colors.isEmpty()) {
+		if (!colors.isEmpty()) {
 			color = colors.first();
 		} else {
 			color = QVector<FieldModelColorDir>(10, FieldModelColorDir()).toList();
 		}
 		QRgb globalColor;
-		if(!model_global_color.isEmpty()) {
+		if (!model_global_color.isEmpty()) {
 			globalColor = model_global_color.first();
 		} else {
 			globalColor = Qt::black;
@@ -302,7 +302,7 @@ bool FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
 
 void FieldModelLoaderPC::removeModel(int modelID)
 {
-	if(modelID >= 0 && modelID < modelCount()) {
+	if (modelID >= 0 && modelID < modelCount()) {
 		model_unknown.removeAt(modelID);
 		model_nameChar.removeAt(modelID);
 		model_nameHRC.removeAt(modelID);
@@ -319,7 +319,7 @@ void FieldModelLoaderPC::removeModel(int modelID)
 
 void FieldModelLoaderPC::swapModel(int oldModelID, int newModelID)
 {
-	if(oldModelID != newModelID
+	if (oldModelID != newModelID
 			&& oldModelID >= 0 && oldModelID < modelCount()
 			&& newModelID >= 0 && newModelID < modelCount()) {
 		model_unknown.swap(oldModelID, newModelID);
@@ -348,7 +348,7 @@ QString FieldModelLoaderPC::HRCName(int modelID) const
 
 void FieldModelLoaderPC::setHRCName(int modelID, const QString &HRCName)
 {
-	if(modelID >= 0 && modelID < model_nameHRC.size()
+	if (modelID >= 0 && modelID < model_nameHRC.size()
 			&& model_nameHRC.at(modelID) != HRCName) {
 		model_nameHRC.replace(modelID, HRCName);
 		setModified(true);
@@ -367,7 +367,7 @@ QString FieldModelLoaderPC::charName(int modelID) const
 
 void FieldModelLoaderPC::setCharName(int modelID, const QString &charName)
 {
-	if(modelID >= 0 && modelID < model_nameChar.size()
+	if (modelID >= 0 && modelID < model_nameChar.size()
 			&& model_nameChar.at(modelID) != charName) {
 		model_nameChar.replace(modelID, charName);
 		setModified(true);
@@ -381,7 +381,7 @@ quint16 FieldModelLoaderPC::scale(int modelID) const
 
 void FieldModelLoaderPC::setScale(int modelID, quint16 scale)
 {
-	if(modelID >= 0 && modelID < model_typeHRC.size()
+	if (modelID >= 0 && modelID < model_typeHRC.size()
 			&& model_typeHRC.at(modelID) != scale) {
 		model_typeHRC.replace(modelID, scale);
 		setModified(true);
@@ -395,7 +395,7 @@ quint16 FieldModelLoaderPC::unknown(int modelID) const
 
 void FieldModelLoaderPC::setUnknown(int modelID, quint16 unknown)
 {
-	if(modelID >= 0 && modelID < model_unknown.size()
+	if (modelID >= 0 && modelID < model_unknown.size()
 			&& model_unknown.at(modelID) != unknown) {
 		model_unknown.replace(modelID, unknown);
 		setModified(true);
@@ -410,7 +410,7 @@ const QList<FieldModelColorDir> &FieldModelLoaderPC::lightColors(int modelID) co
 void FieldModelLoaderPC::setLightColors(int modelID,
                                         const QList<FieldModelColorDir> &lightColors)
 {
-	if(modelID >= 0 && modelID < colors.size()
+	if (modelID >= 0 && modelID < colors.size()
 			&& colors.at(modelID) != lightColors) {
 		colors.replace(modelID, lightColors);
 		setModified(true);
@@ -420,7 +420,7 @@ void FieldModelLoaderPC::setLightColors(int modelID,
 void FieldModelLoaderPC::setLightColor(int modelID, int colorID,
                                        const FieldModelColorDir &lightColor)
 {
-	if(modelID >= 0 && modelID < colors.size()
+	if (modelID >= 0 && modelID < colors.size()
 			&& colorID < colors.at(modelID).size()
 			&& colors.at(modelID).at(colorID) != lightColor) {
 		colors[modelID].replace(colorID, lightColor);
@@ -435,7 +435,7 @@ QRgb FieldModelLoaderPC::globalColor(int modelID) const
 
 void FieldModelLoaderPC::setGlobalColor(int modelID, QRgb globalColor)
 {
-	if(modelID >= 0 && modelID < model_global_color.size()
+	if (modelID >= 0 && modelID < model_global_color.size()
 			&& model_global_color.at(modelID) != globalColor) {
 		model_global_color.replace(modelID, globalColor);
 		setModified(true);
@@ -444,14 +444,14 @@ void FieldModelLoaderPC::setGlobalColor(int modelID, QRgb globalColor)
 
 int FieldModelLoaderPC::animCount(int modelID) const
 {
-	if(modelID >= 0 && modelID < model_anims.size())
+	if (modelID >= 0 && modelID < model_anims.size())
 		return model_anims.at(modelID).size();
 	return 0;
 }
 
 bool FieldModelLoaderPC::insertAnim(int modelID, int numA, const QString &name)
 {
-	if(modelID >= 0 && modelID < modelCount() && animCount(modelID) < maxAnimCount()) {
+	if (modelID >= 0 && modelID < modelCount() && animCount(modelID) < maxAnimCount()) {
 		model_anims[modelID].insert(numA, name);
 		model_anims_unknown[modelID].insert(numA, 1);
 		setModified(true);
@@ -462,7 +462,7 @@ bool FieldModelLoaderPC::insertAnim(int modelID, int numA, const QString &name)
 
 void FieldModelLoaderPC::removeAnim(int modelID, int numA)
 {
-	if(modelID >= 0 && modelID < modelCount()
+	if (modelID >= 0 && modelID < modelCount()
 			&& numA >= 0 && numA < animCount(modelID)) {
 		model_anims[modelID].removeAt(numA);
 		model_anims_unknown[modelID].removeAt(numA);
@@ -472,7 +472,7 @@ void FieldModelLoaderPC::removeAnim(int modelID, int numA)
 
 void FieldModelLoaderPC::swapAnim(int modelID, int oldNumA, int newNumA)
 {
-	if(modelID >= 0 && modelID < modelCount()
+	if (modelID >= 0 && modelID < modelCount()
 			&& oldNumA != newNumA
 			&& oldNumA >= 0 && oldNumA < animCount(modelID)
 			&& newNumA >= 0 && newNumA < animCount(modelID)) {
@@ -494,9 +494,9 @@ QString FieldModelLoaderPC::AName(int modelID, int numA) const
 
 void FieldModelLoaderPC::setAName(int modelID, int numA, const QString &animName)
 {
-	if(modelID >= 0 && modelID < model_anims.size()) {
+	if (modelID >= 0 && modelID < model_anims.size()) {
 		QStringList &animNames = model_anims[modelID];
-		if(numA >= 0 && numA < animNames.size()
+		if (numA >= 0 && numA < animNames.size()
 				&& animNames.at(numA) != animName) {
 			animNames.replace(numA, animName);
 			setModified(true);
@@ -506,7 +506,7 @@ void FieldModelLoaderPC::setAName(int modelID, int numA, const QString &animName
 
 quint16 FieldModelLoaderPC::animUnknown(int modelID, int numA) const
 {
-	if(modelID < model_anims_unknown.size())
+	if (modelID < model_anims_unknown.size())
 		return model_anims_unknown.at(modelID).value(numA);
 	else
 		return 0;
@@ -514,9 +514,9 @@ quint16 FieldModelLoaderPC::animUnknown(int modelID, int numA) const
 
 void FieldModelLoaderPC::setAnimUnknown(int modelID, int numA, quint16 unknown)
 {
-	if(modelID >= 0 && modelID < model_anims_unknown.size()) {
+	if (modelID >= 0 && modelID < model_anims_unknown.size()) {
 		QList<quint16> &animUnknown = model_anims_unknown[modelID];
-		if(numA >= 0 && numA < animUnknown.size()
+		if (numA >= 0 && numA < animUnknown.size()
 				&& animUnknown.at(numA) != unknown) {
 			animUnknown.replace(numA, unknown);
 			setModified(true);

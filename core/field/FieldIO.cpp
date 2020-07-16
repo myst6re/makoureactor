@@ -25,7 +25,7 @@ FieldSaveIO::FieldSaveIO(Field *field, QObject *parent) :
 
 bool FieldSaveIO::open(OpenMode mode)
 {
-	if(!setCache()) {
+	if (!setCache()) {
 		return false;
 	}
 	return QIODevice::open(mode);
@@ -44,13 +44,13 @@ qint64 FieldSaveIO::size() const
 
 qint64 FieldSaveIO::readData(char *data, qint64 maxSize)
 {
-	if(pos() < _cache.size()) {
+	if (pos() < _cache.size()) {
 		const char *constData = _cache.constData();
 		qint64 r = qMin(maxSize, _cache.size() - pos());
-		if(r > 0) {
+		if (r > 0) {
 			memcpy(data, constData + pos(), r);
 			return r;
-		} else if(r == 0) {
+		} else if (r == 0) {
 			return 0;
 		}
 		return -1;
@@ -60,8 +60,8 @@ qint64 FieldSaveIO::readData(char *data, qint64 maxSize)
 
 bool FieldSaveIO::setCache()
 {
-	if(_cache.isEmpty()) {
-		if(!_field->save(_cache, true)) {
+	if (_cache.isEmpty()) {
+		if (!_field->save(_cache, true)) {
 			_cache.clear();
 			setErrorString(tr("Cannot save field map %1").arg(_field->name()));
 			return false;

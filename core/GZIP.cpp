@@ -32,7 +32,7 @@ QByteArray GZIP::compress(const QByteArray &ungzip, int level, Strategy strategy
 QByteArray GZIP::decompress(const char *data, int size, int decSize, Strategy strategy)
 {
 	QTemporaryFile temp;
-	if(!temp.open()) {
+	if (!temp.open()) {
 		return QByteArray();
 	}
 	temp.write(data, size);
@@ -46,13 +46,13 @@ QByteArray GZIP::compress(const char *ungzip, int size, int level, Strategy stra
 	QString tempPath = QDir::tempPath() + "/qt_temp.gz";
 
 	gzFile file2 = gzopen(tempPath.toLatin1(), gzMode("w", level, strategy).toLatin1());
-	if(!file2) {
+	if (!file2) {
 		return QByteArray();
 	}
 	gzwrite(file2, ungzip, size);
 	gzclose(file2);
 	QFile finalFile(tempPath);
-	if(!finalFile.open(QIODevice::ReadOnly)) {
+	if (!finalFile.open(QIODevice::ReadOnly)) {
 		return QByteArray();
 	}
 
@@ -68,12 +68,12 @@ QByteArray GZIP::decompress(const QString &path, int decSize, Strategy strategy)
 	QByteArray ungzip;
 
 	gzFile file = gzopen(path.toLatin1(), gzMode("r", -1, strategy).toLatin1());
-	if(!file) {
+	if (!file) {
 		return QByteArray();
 	}
 	char buffer[10000];
 	int r;
-	while((r = gzread(file, buffer, 10000)) > 0) {
+	while ((r = gzread(file, buffer, 10000)) > 0) {
 		ungzip.append(buffer, r);
 	}
 	gzclose(file);

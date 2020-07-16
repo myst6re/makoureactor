@@ -102,19 +102,19 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 	const QList<QRect> &texturesRects = _textures.rects();
 
 	if (!texturesRects.isEmpty()) {
-		foreach (const FieldModelBone &bone, _skeleton.bones()) {
+		for (const FieldModelBone &bone : _skeleton.bones()) {
 
-			foreach (FieldModelPart *part, bone.parts()) {
+			for (FieldModelPart *part : bone.parts()) {
 				QHash<int, int> imgY;
 
-				foreach (FieldModelGroup *group, part->groups()) {
+				for (FieldModelGroup *group : part->groups()) {
 					if (group->hasTexture()) {
 						FieldModelTextureRefPS *textureRef = static_cast<FieldModelTextureRefPS *>(group->textureRef());
 
 						if (textureRef->type() > 1) {
 							QPoint newPos = textureRef->imgPos() + QPoint(0, imgY.value(textureRef->imgX()));
 							int rectId = 0;
-							foreach (const QRect &rect, texturesRects) {
+							for (const QRect &rect : texturesRects) {
 								if (rect.topLeft() == newPos) {
 									break;
 								}
@@ -139,7 +139,7 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 	if (modelBcx.isValid()) {
 		if (!skeleton().isEmpty()) {
 			qWarning() << "FieldPS::fieldModel bsx present, but bcx skeleton not empty";
-			foreach (const FieldModelBone &bone, skeleton().bones()) {
+			for (const FieldModelBone &bone : skeleton().bones()) {
 				qDeleteAll(bone.parts());
 			}
 		}
@@ -199,9 +199,9 @@ QHash<void *, QImage> FieldModelFilePS::loadedTextures()
 {
 	QHash<void *, QImage> ret;
 
-	foreach (const FieldModelBone &bone, _skeleton.bones()) {
-		foreach (FieldModelPart *part, bone.parts()) {
-			foreach (FieldModelGroup *group, part->groups()) {
+	for (const FieldModelBone &bone : _skeleton.bones()) {
+		for (FieldModelPart *part : bone.parts()) {
+			for (FieldModelGroup *group : part->groups()) {
 				if (group->hasTexture()) {
 					ret.insert((void *)group, loadedTexture(group));
 				}
@@ -214,7 +214,7 @@ QHash<void *, QImage> FieldModelFilePS::loadedTextures()
 
 QImage FieldModelFilePS::vramImage() const
 {
-	foreach (const QRect &rect, _textures.rects()) {
+	for (const QRect &rect : _textures.rects()) {
 		if (rect.height() == 1) {
 			return _textures.toImage(rect.topLeft(), FieldModelTexturesPS::Bpp8);
 		}

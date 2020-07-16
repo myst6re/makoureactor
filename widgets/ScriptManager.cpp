@@ -107,7 +107,7 @@ void ScriptManager::fill(Field *field)
 	clear();
 
 	_field = field;
-	if(!_field) {
+	if (!_field) {
 		return;
 	}
 
@@ -123,7 +123,7 @@ void ScriptManager::fill(Field *field)
 
 void ScriptManager::fillScripts()
 {
-	if(!_field) {
+	if (!_field) {
 		return;
 	}
 
@@ -140,7 +140,7 @@ void ScriptManager::fillScripts()
 
 void ScriptManager::fillOpcodes()
 {
-	if(!_field) {
+	if (!_field) {
 		return;
 	}
 
@@ -159,14 +159,14 @@ void ScriptManager::fillOpcodes()
 void ScriptManager::compile()
 {
 	Script *currentScript = _scriptList->currentScript();
-	if(!currentScript) {
+	if (!currentScript) {
 		return;
 	}
 
 	int opcodeID;
 	QString errorStr;
 
-	if(!currentScript->compile(opcodeID, errorStr)) {
+	if (!currentScript->compile(opcodeID, errorStr)) {
 		_compileScriptLabel->setText(tr("Error on line %1 : %2")
 		                             .arg(opcodeID + 1)
 		                             .arg(errorStr));

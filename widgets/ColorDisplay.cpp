@@ -47,7 +47,7 @@ void ColorDisplay::setColors(const QList<QRgb> &colors)
 	_colors = colors;
 	setMouseTracking(_colors.size() > 1);
 	update();
-	if(!_colors.isEmpty()) {
+	if (!_colors.isEmpty()) {
 		setToolTip(QColor(_colors.first()).name());
 	}
 }
@@ -69,7 +69,7 @@ void ColorDisplay::setReadOnly(bool ro)
 
 int ColorDisplay::cellWidth(int width) const
 {
-	if(_colors.isEmpty()) {
+	if (_colors.isEmpty()) {
 		return COLOR_DISPLAY_MIN_CELL_SIZE;
 	}
 	QSize minSize = minimumSizeHint();
@@ -82,7 +82,7 @@ int ColorDisplay::cellWidth(int width) const
 
 int ColorDisplay::cellHeight(int height) const
 {
-	if(_colors.isEmpty()) {
+	if (_colors.isEmpty()) {
 		return COLOR_DISPLAY_MIN_CELL_SIZE;
 	}
 	QSize minSize = minimumSizeHint();
@@ -110,13 +110,13 @@ void ColorDisplay::paintEvent(QPaintEvent *event)
 	          cellFullWidth = cellS.width() + COLOR_DISPLAY_BORDER_WIDTH,
 	          cellFullHeight = cellS.height() + COLOR_DISPLAY_BORDER_WIDTH;
 
-	for(int i = 0 ; i < size ; ++i) {
+	for (int i = 0; i < size; ++i) {
 		const int x = i * cellFullWidth;
 		painter.drawRect(x, 0, cellFullWidth, cellFullHeight);
 		QColor color;
-		if(_colors.isEmpty()) {
+		if (_colors.isEmpty()) {
 			color = Qt::transparent;
-		} else if(isEnabled()) {
+		} else if (isEnabled()) {
 			color = QColor(_colors.at(i));
 		} else {
 			const int gray = qGray(_colors.at(i));
@@ -128,7 +128,7 @@ void ColorDisplay::paintEvent(QPaintEvent *event)
 	}
 
 	// Red frame
-	if(isEnabled() && !isReadOnly() && _hover) {
+	if (isEnabled() && !isReadOnly() && _hover) {
 		painter.setPen(palette().color(QPalette::Mid));
 		const QPoint cursorPos = mapFromGlobal(cursor().pos());
 		const int x = colorId(cursorPos) * cellFullWidth;
@@ -164,17 +164,17 @@ void ColorDisplay::mouseMoveEvent(QMouseEvent *event)
 
 void ColorDisplay::mouseReleaseEvent(QMouseEvent *event)
 {
-	if(isReadOnly()) {
+	if (isReadOnly()) {
 		return;
 	}
 
 	const int colorIndex = colorId(event->pos());
-	if(colorIndex >= _colors.size()) {
+	if (colorIndex >= _colors.size()) {
 		return;
 	}
 	QColor color = QColorDialog::getColor(_colors.at(colorIndex), this,
 	                                      tr("Choose a new color"));
-	if(color.isValid()) {
+	if (color.isValid()) {
 		_colors.replace(colorIndex, color.rgb());
 		emit colorEdited(colorIndex, color.rgb());
 	}

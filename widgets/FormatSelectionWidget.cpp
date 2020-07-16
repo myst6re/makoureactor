@@ -39,7 +39,7 @@ const QString &FormatSelectionWidget::currentFormat() const
 void FormatSelectionWidget::setCurrentFormat(const QString &f)
 {
 	int index = extensions.indexOf(f);
-	if(index != -1) {
+	if (index != -1) {
 		format->setCurrentIndex(index);
 	}
 }
@@ -56,19 +56,19 @@ void FormatSelectionWidget::setFormats(const QStringList &formats)
 	int size = qMin(formats.size(), format->count());
 	QString ext;
 
-	for(int i=0 ; i<size ; ++i) {
+	for (int i=0; i<size; ++i) {
 		const QString &f = formats.at(i);
 		format->setItemText(i, splitFormatString(f, ext));
 		extensions.replace(i, ext);
 	}
 
-	if(formats.size() < format->count()) {
-		for(int i=format->count()-1 ; i>=formats.size() ; --i) {
+	if (formats.size() < format->count()) {
+		for (int i=format->count()-1; i>=formats.size(); --i) {
 			format->removeItem(i);
 			extensions.removeAt(i);
 		}
-	} else if(formats.size() > format->count()) {
-		for(int i=format->count() ; i<formats.size() ; ++i) {
+	} else if (formats.size() > format->count()) {
+		for (int i=format->count(); i<formats.size(); ++i) {
 			const QString &f = formats.at(i);
 			format->addItem(splitFormatString(f, ext));
 			extensions.append(ext);
@@ -82,7 +82,7 @@ QStringList FormatSelectionWidget::formats() const
 {
 	QStringList formats;
 
-	for(int i=0 ; i<format->count() ; ++i) {
+	for (int i=0; i<format->count(); ++i) {
 		formats.append(format->itemText(i));
 	}
 

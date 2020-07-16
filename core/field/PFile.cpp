@@ -25,7 +25,7 @@ PFile::PFile(QIODevice *io) :
 
 bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 {
-	if(!canRead()) {
+	if (!canRead()) {
 		return false;
 	}
 
@@ -52,14 +52,14 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 	BoundingBox boundingBox;
 	quint32 i, normIndex;
 
-	if(device()->read((char *)&header, 128) != 128
+	if (device()->read((char *)&header, 128) != 128
 	        || header.version != 1 || header.off04 != 1
 	        || header.vertexType > 1) {
 		return false;
 	}
 
-	for(i = 0 ; i < header.numVertices ; ++i) {
-		if(device()->read((char *)&vertex, 12) != 12) {
+	for (i = 0; i < header.numVertices; ++i) {
+		if (device()->read((char *)&vertex, 12) != 12) {
 			return false;
 		}
 		vertex.x = vertex.x / MODEL_SCALE_PC;
@@ -68,81 +68,81 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 		vertices.append(vertex);
 	}
 
-	for(i = 0 ; i < header.numNormals ; ++i) {
-		if(device()->read((char *)&vertex, 12) != 12) {
+	for (i = 0; i < header.numNormals; ++i) {
+		if (device()->read((char *)&vertex, 12) != 12) {
 			return false;
 		}
 		normals.append(vertex);
 	}
 
-	for(i = 0 ; i < header.numUnknown1 ; ++i) {
+	for (i = 0; i < header.numUnknown1; ++i) {
 		QByteArray u1 = device()->read(12);
-		if(u1.size() != 12) {
+		if (u1.size() != 12) {
 			return false;
 		}
 		unknown1.append(u1);
 	}
 
-	for(i = 0 ; i < header.numTexCs ; ++i) {
-		if(device()->read((char *)&texC, 8) != 8) {
+	for (i = 0; i < header.numTexCs; ++i) {
+		if (device()->read((char *)&texC, 8) != 8) {
 			return false;
 		}
 		texCs.append(texC);
 	}
 
-	for(i = 0 ; i < header.numVertexColors ; ++i) {
-		if(device()->read((char *)&vertexColor, 4) != 4) {
+	for (i = 0; i < header.numVertexColors; ++i) {
+		if (device()->read((char *)&vertexColor, 4) != 4) {
 			return false;
 		}
 		vertexColors.append(vertexColor);
 	}
 
-	for(i = 0 ; i < header.numPolys ; ++i) {
+	for (i = 0; i < header.numPolys; ++i) {
 		QByteArray polyColor = device()->read(4);
-		if(polyColor.size() != 4) {
+		if (polyColor.size() != 4) {
 			return false;
 		}
 		polyColors.append(polyColor);
 	}
 
-	for(i = 0 ; i < header.numEdges ; ++i) {
-		if(device()->read((char *)&edge, 4) != 4) {
+	for (i = 0; i < header.numEdges; ++i) {
+		if (device()->read((char *)&edge, 4) != 4) {
 			return false;
 		}
 		edges.append(edge);
 	}
 
-	for(i = 0 ; i < header.numPolys ; ++i) {
-		if(device()->read((char *)&poly, 24) != 24) {
+	for (i = 0; i < header.numPolys; ++i) {
+		if (device()->read((char *)&poly, 24) != 24) {
 			return false;
 		}
 		polys.append(poly);
 	}
 
-	for(i = 0 ; i < header.numHundreds ; ++i) {
-		if(device()->read((char *)&hundred, 100) != 100) {
+	for (i = 0; i < header.numHundreds; ++i) {
+		if (device()->read((char *)&hundred, 100) != 100) {
 			return false;
 		}
 		hundreds.append(hundred);
 		//qDebug() << "hundred" << header.numTexCs << QByteArray((char *)&hundred, 100).toHex();
 	}
 
-	for(i = 0 ; i < header.numGroups ; ++i) {
-		if(device()->read((char *)&group, 56) != 56) {
+	for (i = 0; i < header.numGroups; ++i) {
+		if (device()->read((char *)&group, 56) != 56) {
 			return false;
 		}
 		groups.append(group);
 	}
 
-	for(i = 0 ; i < header.numBoundingBoxes ; ++i) {
-		if(device()->read((char *)&boundingBox, sizeof(boundingBox)) != sizeof(boundingBox)) {
+	for (i = 0; i < header.numBoundingBoxes; ++i) {
+		if (device()->read((char *)&boundingBox, sizeof(boundingBox)) != sizeof(boundingBox)) {
 			return false;
 		}
 		boundingBoxes.append(boundingBox);
 	}
 
-	for(i = 0 ; i < header.numVertices ; ++i) {
-		if(device()->read((char *)&normIndex, sizeof(normIndex)) != sizeof(normIndex)) {
+	for (i = 0; i < header.numVertices; ++i) {
+		if (device()->read((char *)&normIndex, sizeof(normIndex)) != sizeof(normIndex)) {
 			return false;
 		}
 		normIndexTable.append(normIndex);
@@ -155,26 +155,26 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 	PolyVertex polyVertex;
 	QRgb color;
 
-	foreach(const Group &g, groups) {
+	for (const Group &g : groups) {
 		FieldModelGroup *grp = new FieldModelGroup();
 
-		if(g.areTexturesUsed) {
-			if(g.textureNumber < quint32(texIds.size())) {
+		if (g.areTexturesUsed) {
+			if (g.textureNumber < quint32(texIds.size())) {
 				// Convert relative group tex IDs to absolute tex IDs
 				grp->setTextureRef(new FieldModelTextureRefPC(texIds.at(g.textureNumber)));
 			}
 		}
 
-		for(quint32 polyID = 0 ; polyID < g.numPolygons && g.polygonStartIndex + polyID < (quint32)polys.size() ; ++polyID) {
+		for (quint32 polyID = 0; polyID < g.numPolygons && g.polygonStartIndex + polyID < (quint32)polys.size(); ++polyID) {
 			const PolygonP &poly = polys.at(g.polygonStartIndex + polyID);
 			QList<PolyVertex> polyVertices;
 			QList<QRgb> polyColors;
 			QList<TexCoord> polyTexCoords;
 
-			for(quint8 j = 0 ; j < 3 ; ++j) {
+			for (quint8 j = 0; j < 3; ++j) {
 				int vertexIndex = g.verticesStartIndex + poly.VertexIndex[j];
 
-				if(vertexIndex < vertices.size() &&
+				if (vertexIndex < vertices.size() &&
 						vertexIndex < vertexColors.size()) {
 					// vertex
 					vertex = vertices.at(vertexIndex);
@@ -187,10 +187,10 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 					color = qRgb(vertexColor.red, vertexColor.green, vertexColor.blue);
 					polyColors.append(color);
 
-					if(g.areTexturesUsed) {
+					if (g.areTexturesUsed) {
 						int texCoordIndex = g.texCoordStartIndex + poly.VertexIndex[j];
 
-						if(texCoordIndex < texCs.size()) {
+						if (texCoordIndex < texCs.size()) {
 							// tex coord
 							polyTexCoords.append(texCs.at(texCoordIndex));
 						}

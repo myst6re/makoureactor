@@ -46,7 +46,7 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 	model->setChecked(model->isEnabled());
 	mim->setChecked(mim->isEnabled());
 
-	if(isDat) {
+	if (isDat) {
 		if (sourceSameTypeAsTarget) {
 			model->setVisible(false);
 		} else {
@@ -75,7 +75,7 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 	layoutPathBsx->addWidget(changePathButtonBsx);
 	layoutPathBsx->setContentsMargins(QMargins());
 
-	if(isDat) {
+	if (isDat) {
 		pathWidgetMim->setEnabled(mim->isChecked());
 		pathWidgetBsx->setEnabled(model->isChecked());
 		int index = path.lastIndexOf(".");
@@ -120,14 +120,14 @@ Field::FieldSections ImportDialog::parts() const
 {
 	Field::FieldSections parts;
 
-	if(scripts->isChecked())	parts |= Field::Scripts;
-	if(akaos->isChecked())		parts |= Field::Akaos;
-	if(ca->isChecked())			parts |= Field::Camera;
-	if(id->isChecked())			parts |= Field::Walkmesh;
-	if(encounter->isChecked())	parts |= Field::Encounter;
-	if(inf->isChecked())		parts |= Field::Inf;
-	if(model->isChecked())		parts |= Field::ModelLoader;
-	if(mim->isChecked())		parts |= Field::Background;
+	if (scripts->isChecked())	parts |= Field::Scripts;
+	if (akaos->isChecked())		parts |= Field::Akaos;
+	if (ca->isChecked())			parts |= Field::Camera;
+	if (id->isChecked())			parts |= Field::Walkmesh;
+	if (encounter->isChecked())	parts |= Field::Encounter;
+	if (inf->isChecked())		parts |= Field::Inf;
+	if (model->isChecked())		parts |= Field::ModelLoader;
+	if (mim->isChecked())		parts |= Field::Background;
 
 	return parts;
 }
@@ -146,7 +146,7 @@ void ImportDialog::setBsxPathByUser()
 {
 	QString path = QFileDialog::getOpenFileName(this, tr("Select the associated BSX file"), pathEditBsx->text(),
 	                                            tr("BSX File (*.BSX);;All Files(*)"));
-	if(path.isNull()) {
+	if (path.isNull()) {
 		return;
 	}
 
@@ -157,7 +157,7 @@ void ImportDialog::setMimPathByUser()
 {
 	QString path = QFileDialog::getOpenFileName(this, tr("Select the associated MIM file"), pathEditMim->text(),
 	                                            tr("MIM File (*.MIM);;All Files(*)"));
-	if(path.isNull()) {
+	if (path.isNull()) {
 		return;
 	}
 

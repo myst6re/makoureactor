@@ -30,10 +30,10 @@ LgpHeaderEntry::LgpHeaderEntry(const QString &fileName, quint32 filePosition) :
 
 LgpHeaderEntry::~LgpHeaderEntry()
 {
-	if(_io != nullptr) {
+	if (_io != nullptr) {
 		_io->deleteLater();
 	}
-	if(_newIO != nullptr) {
+	if (_newIO != nullptr) {
 		_newIO->deleteLater();
 	}
 }
@@ -62,7 +62,7 @@ quint32 LgpHeaderEntry::filePosition() const
 
 qint64 LgpHeaderEntry::fileSize() const
 {
-	if(_hasFileSize) {
+	if (_hasFileSize) {
 		return _fileSize;
 	}
 	return -1;
@@ -70,7 +70,7 @@ qint64 LgpHeaderEntry::fileSize() const
 
 void LgpHeaderEntry::setFileName(const QString &fileName)
 {
-	if(fileName.size() > 20) {
+	if (fileName.size() > 20) {
 		_fileName = fileName.left(20);
 	} else {
 		_fileName = fileName;
@@ -79,7 +79,7 @@ void LgpHeaderEntry::setFileName(const QString &fileName)
 
 void LgpHeaderEntry::setFileDir(const QString &fileDir)
 {
-	if(fileDir.size() > 128) {
+	if (fileDir.size() > 128) {
 		_fileDir = fileDir.left(128);
 	} else {
 		_fileDir = fileDir;
@@ -90,7 +90,7 @@ void LgpHeaderEntry::setFilePath(const QString &filePath)
 {
 	int index = filePath.lastIndexOf('/');
 
-	if(index < 0) {
+	if (index < 0) {
 		setFileName(filePath);
 	} else {
 		setFileDir(filePath.left(index));
@@ -111,7 +111,7 @@ void LgpHeaderEntry::setFileSize(quint32 fileSize)
 
 QIODevice *LgpHeaderEntry::file(QIODevice *lgp)
 {
-	if(_io) {
+	if (_io) {
 		_io->close();
 		return _io;
 	} else {
@@ -121,7 +121,7 @@ QIODevice *LgpHeaderEntry::file(QIODevice *lgp)
 
 QIODevice *LgpHeaderEntry::modifiedFile(QIODevice *lgp)
 {
-	if(_newIO) {
+	if (_newIO) {
 		_newIO->close();
 		return _newIO;
 	} else {
@@ -141,20 +141,20 @@ void LgpHeaderEntry::setModifiedFile(QIODevice *io)
 
 QIODevice *LgpHeaderEntry::createFile(QIODevice *lgp)
 {
-	if(!lgp->seek(filePosition())) {
+	if (!lgp->seek(filePosition())) {
 		return nullptr;
 	}
 	QByteArray name = lgp->read(20);
-	if(name.size() != 20) {
+	if (name.size() != 20) {
 		return nullptr;
 	}
-	if(QString(name).compare(fileName(), Qt::CaseInsensitive) != 0) {
+	if (QString(name).compare(fileName(), Qt::CaseInsensitive) != 0) {
 		qWarning() << "different name";
 		return nullptr;
 	}
 
 	quint32 size;
-	if(lgp->read((char *)&size, 4) != 4) {
+	if (lgp->read((char *)&size, 4) != 4) {
 		return nullptr;
 	}
 
@@ -171,7 +171,7 @@ LgpIO::LgpIO(QIODevice *lgp, const LgpHeaderEntry *header, QObject *parent) :
 }
 
 bool LgpIO::open(OpenMode mode) {
-	if(mode.testFlag(QIODevice::Append)
+	if (mode.testFlag(QIODevice::Append)
 			|| mode.testFlag(QIODevice::Truncate)) {
 		return false;
 	}
@@ -185,9 +185,9 @@ qint64 LgpIO::size() const
 
 qint64 LgpIO::readData(char *data, qint64 maxSize)
 {
-	if(_lgp->seek(_header->filePosition() + 24 + pos())) {
+	if (_lgp->seek(_header->filePosition() + 24 + pos())) {
 		qint64 size = this->size();
-		if(size < 0) {
+		if (size < 0) {
 			return -1;
 		}
 		return _lgp->read(data, qMin(maxSize, size - pos()));
@@ -200,9 +200,9 @@ qint64 LgpIO::readData(char *data, qint64 maxSize)
  */
 qint64 LgpIO::writeData(const char *data, qint64 maxSize)
 {
-	if(_lgp->seek(_header->filePosition() + 24 + pos())) {
+	if (_lgp->seek(_header->filePosition() + 24 + pos())) {
 		qint64 size = this->size();
-		if(size < 0) {
+		if (size < 0) {
 			return -1;
 		}
 		return _lgp->write(data, qMin(maxSize, size - pos()));
@@ -221,7 +221,7 @@ LgpToc::LgpToc()
 
 LgpToc::LgpToc(const LgpToc &other)
 {
-	foreach(LgpHeaderEntry *headerEntry, other.table()) {
+	for (LgpHeaderEntry *headerEntry : other.table()) {
 		addEntry(new LgpHeaderEntry(*headerEntry));
 	}
 }
@@ -234,11 +234,11 @@ LgpToc::~LgpToc()
 bool LgpToc::addEntry(LgpHeaderEntry *entry)
 {
 	qint32 v = lookupValue(entry->fileName());
-	if(v < 0) {
+	if (v < 0) {
 		return false;
 	}
 
-	if(contains(entry->fileName())) {
+	if (contains(entry->fileName())) {
 		return false;
 	}
 
@@ -250,7 +250,7 @@ bool LgpToc::addEntry(LgpHeaderEntry *entry)
 LgpHeaderEntry *LgpToc::entry(const QString &filePath) const
 {
 	qint32 v = lookupValue(filePath);
-	if(v < 0) {
+	if (v < 0) {
 		qDebug() << "LgpToc::entry invalid lookup" << filePath;
 		return nullptr; // invalid file name
 	}
@@ -275,8 +275,8 @@ bool LgpToc::hasEntries(quint16 id) const
 
 LgpHeaderEntry *LgpToc::entry(const QString &filePath, quint16 id) const
 {
-	foreach(LgpHeaderEntry *entry, entries(id)) {
-		if(filePath.compare(entry->filePath(), Qt::CaseInsensitive) == 0) {
+	for (LgpHeaderEntry *entry : entries(id)) {
+		if (filePath.compare(entry->filePath(), Qt::CaseInsensitive) == 0) {
 			return entry;
 		}
 	}
@@ -287,12 +287,12 @@ LgpHeaderEntry *LgpToc::entry(const QString &filePath, quint16 id) const
 bool LgpToc::removeEntry(const QString &filePath)
 {
 	qint32 v = lookupValue(filePath);
-	if(v < 0) {
+	if (v < 0) {
 		return false; // invalid file name
 	}
 
 	LgpHeaderEntry *e = entry(filePath);
-	if(e == nullptr) {
+	if (e == nullptr) {
 		return false; // file not found
 	}
 
@@ -313,13 +313,13 @@ bool LgpToc::renameEntry(const QString &filePath, const QString &newFilePath)
 	// Get file
 
 	qint32 v = lookupValue(filePath);
-	if(v < 0) {
+	if (v < 0) {
 		qWarning() << "LgpToc::renameEntry invalid filename" << filePath;
 		return false; // invalid file name
 	}
 
 	LgpHeaderEntry *e = entry(filePath, v);
-	if(e == nullptr) {
+	if (e == nullptr) {
 		qWarning() << "LgpToc::renameEntry file not found" << filePath;
 		return false; // file not found
 	}
@@ -327,19 +327,19 @@ bool LgpToc::renameEntry(const QString &filePath, const QString &newFilePath)
 	// Get new file
 
 	qint32 newV = lookupValue(newFilePath);
-	if(newV < 0) {
+	if (newV < 0) {
 		qWarning() << "LgpToc::renameEntry invalid new filename" << newFilePath;
 		return false; // invalid file name
 	}
 
-	if(entry(newFilePath, newV) != nullptr) {
+	if (entry(newFilePath, newV) != nullptr) {
 		qWarning() << "LgpToc::renameEntry new file exists" << newFilePath;
 		return false; // file found
 	}
 
 	// Move file
 
-	if(_header.remove(v, e) <= 0) {
+	if (_header.remove(v, e) <= 0) {
 		qWarning() << "LgpToc::renameEntry cannot remove entry";
 		return false;
 	}
@@ -376,7 +376,7 @@ QList<const LgpHeaderEntry *> LgpToc::filesSortedByPosition() const
 {
 	QMultiMap<quint32, const LgpHeaderEntry *> ret;
 
-	foreach(const LgpHeaderEntry *entry, _header) {
+	for (const LgpHeaderEntry *entry : _header) {
 		ret.insert(entry->filePosition(), entry);
 	}
 
@@ -385,9 +385,9 @@ QList<const LgpHeaderEntry *> LgpToc::filesSortedByPosition() const
 
 LgpToc &LgpToc::operator=(const LgpToc &other)
 {
-	if(this != &other) {
+	if (this != &other) {
 		clear();
-		foreach(LgpHeaderEntry *headerEntry, other.table()) {
+		for (LgpHeaderEntry *headerEntry : other.table()) {
 			addEntry(new LgpHeaderEntry(*headerEntry));
 		}
 	}
@@ -399,25 +399,25 @@ qint32 LgpToc::lookupValue(const QString &filePath)
 {
 	int index = filePath.lastIndexOf('/');
 
-	if(index != -1) {
+	if (index != -1) {
 		index++;
 	} else {
 		index = 0;
 	}
 
-	if(filePath.size() < index + 2) {
+	if (filePath.size() < index + 2) {
 		return -1;
 	}
 
 	char c1 = lookupValue(filePath.at(index));
 
-	if(c1 > LOOKUP_VALUE_MAX) {
+	if (c1 > LOOKUP_VALUE_MAX) {
 		return -1;
 	}
 
 	char c2 = lookupValue(filePath.at(index + 1));
 
-	if(c2 > LOOKUP_VALUE_MAX) {
+	if (c2 > LOOKUP_VALUE_MAX) {
 		return -1;
 	}
 
@@ -428,16 +428,16 @@ quint8 LgpToc::lookupValue(const QChar &qc)
 {
 	char c = qc.toLower().toLatin1();
 
-	if(c == '.') {
+	if (c == '.') {
 		return 255;
 	}
 
-	if(c >= '0' && c <= '9') {
+	if (c >= '0' && c <= '9') {
 		c += 'a' - '0';
 	}
 
-	if(c == '_') c = 'k';
-	if(c == '-') c = 'l';
+	if (c == '_') c = 'k';
+	if (c == '-') c = 'l';
 
 	return c - 'a';
 }

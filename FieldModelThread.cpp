@@ -24,7 +24,7 @@ FieldModelThread::FieldModelThread(QObject *parent) :
 	_field(0), _animationId(0),
 	_animate(true)
 {
-	if(mutexField == 0) {
+	if (mutexField == 0) {
 		mutexField = new QMutex();
 	}
 }
@@ -70,7 +70,7 @@ void FieldModelThread::cancel()
 
 void FieldModelThread::run()
 {
-	if(!_field) {
+	if (!_field) {
 		qWarning() << "FieldModelThread::run() -> No field provided!";
 		return;
 	}
@@ -84,13 +84,13 @@ void FieldModelThread::run()
 
 	mutexField->lock();
 	Field *field = _field;
-	foreach(int modelId, modelIds) {
-		if(_canceled) {
+	for (int modelId : modelIds) {
+		if (_canceled) {
 			mutexField->unlock();
 			return;
 		}
 		FieldModelFile *fieldModel = field->fieldModel(modelId, animationId, animate);
-		if(!_canceled && fieldModel->isValid()) {
+		if (!_canceled && fieldModel->isValid()) {
 			emit modelLoaded(field, fieldModel, modelId, animationId, animate);
 		}
 	}

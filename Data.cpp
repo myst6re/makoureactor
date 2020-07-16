@@ -78,13 +78,13 @@ QString Data::regValue(const QString &regPath, const QString &regKey,
 		hkey = HKEY_CURRENT_USER;
 	}
 	error = RegOpenKeyEx(hkey, (wchar_t *)QDir::toNativeSeparators("SOFTWARE/" % regPath).utf16(), 0, flags, &phkResult);
-	if(ERROR_SUCCESS == error) {
+	if (ERROR_SUCCESS == error) {
 		BYTE value[MAX_PATH];
 		DWORD cValue = MAX_PATH, type;
 
 		// Open regKey which must is a string value (REG_SZ)
 		RegQueryValueEx(phkResult, (wchar_t *)regKey.utf16(), nullptr, &type, value, &cValue);
-		if(ERROR_SUCCESS == error && type == REG_SZ) {
+		if (ERROR_SUCCESS == error && type == REG_SZ) {
 			RegCloseKey(phkResult);
 			return QString::fromUtf16((ushort *)value);
 		}
@@ -118,7 +118,7 @@ QString Data::regValue(const QString &regPath, const QString &regKey,
 const QString &Data::searchRereleasedFF7Path()
 {
 #ifdef Q_OS_WIN
-	if(ff7RereleasePath_cache.isNull() && !ff7RereleaseAlreadySearched) {
+	if (ff7RereleasePath_cache.isNull() && !ff7RereleaseAlreadySearched) {
 		ff7RereleaseAlreadySearched = true;
 		HKEY phkResult, phkResult2;
 		LONG error;
@@ -130,33 +130,33 @@ const QString &Data::searchRereleasedFF7Path()
 
 		// direct
 		ff7RereleasePath_cache = regValuePath("Microsoft/Windows/CurrentVersion/Uninstall/{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1", "InstallLocation");
-		if(!ff7RereleasePath_cache.isEmpty()) {
+		if (!ff7RereleasePath_cache.isEmpty()) {
 			return ff7RereleasePath_cache;
 		}
 
 		// if another id
 		error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"), 0, flags, &phkResult);
 
-		if(ERROR_SUCCESS == error) {
+		if (ERROR_SUCCESS == error) {
 			DWORD index = 0;
 			WCHAR subKeyName[MAX_PATH];
 			DWORD subKeyCName = MAX_PATH;
-			while(ERROR_NO_MORE_ITEMS != (error = RegEnumKeyEx(phkResult, index, subKeyName, &subKeyCName, nullptr, nullptr, nullptr, nullptr))) {
+			while (ERROR_NO_MORE_ITEMS != (error = RegEnumKeyEx(phkResult, index, subKeyName, &subKeyCName, nullptr, nullptr, nullptr, nullptr))) {
 				QString subKeyNameStr = QString::fromUtf16((ushort *)subKeyName);
-				if(subKeyNameStr.endsWith("_is1")) {
+				if (subKeyNameStr.endsWith("_is1")) {
 					error = RegOpenKeyEx(phkResult, (LPCWSTR)QString("%1\\").arg(subKeyNameStr).utf16(), 0, KEY_READ, &phkResult2);
-					if(ERROR_SUCCESS == error) {
+					if (ERROR_SUCCESS == error) {
 						BYTE value[MAX_PATH];
 						DWORD cValue = MAX_PATH, type;
 						error = RegQueryValueEx(phkResult2, TEXT("DisplayName"), nullptr, &type, value, &cValue);
-						if(ERROR_SUCCESS == error) {
-							if(type == REG_SZ) {
+						if (ERROR_SUCCESS == error) {
+							if (type == REG_SZ) {
 								QString softwareNameStr = QString::fromUtf16((ushort *)value);
-								if(softwareNameStr.compare("FINAL FANTASY VII", Qt::CaseInsensitive) == 0) {
+								if (softwareNameStr.compare("FINAL FANTASY VII", Qt::CaseInsensitive) == 0) {
 									cValue = MAX_PATH;
 									error = RegQueryValueEx(phkResult2, TEXT("InstallLocation"), nullptr, &type, value, &cValue);
-									if(ERROR_SUCCESS == error) {
-										if(type == REG_SZ) {
+									if (ERROR_SUCCESS == error) {
+										if (type == REG_SZ) {
 											RegCloseKey(phkResult2);
 											RegCloseKey(phkResult);
 											ff7RereleasePath_cache = QDir::fromNativeSeparators(QDir::cleanPath(QString::fromUtf16((ushort *)value)));
@@ -200,19 +200,19 @@ QString Data::searchFF7Exe(FF7Version version)
 	switch(version) {
 	case Standard:
 		ff7Path = regValuePath(FF7_WIN_REGISTER_PATH, "AppPath");
-		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/ff7.exe")) {
+		if (!ff7Path.isEmpty() && QFile::exists(ff7Path + "/ff7.exe")) {
 			return ff7Path + "/ff7.exe";
 		}
 		return QString();
 	case Rerelease:
 		ff7Path = searchRereleasedFF7Path();
-		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/FF7_Launcher.exe")) {
+		if (!ff7Path.isEmpty() && QFile::exists(ff7Path + "/FF7_Launcher.exe")) {
 			return ff7Path + "/FF7_Launcher.exe";
 		}
 		return QString();
 	case Steam:
 		ff7Path = searchSteamFF7Path();
-		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/FF7_Launcher.exe")) {
+		if (!ff7Path.isEmpty() && QFile::exists(ff7Path + "/FF7_Launcher.exe")) {
 			return ff7Path + "/FF7_Launcher.exe";
 		}
 		return QString();
@@ -222,7 +222,7 @@ QString Data::searchFF7Exe(FF7Version version)
 
 	/*
 	QString ff7MusicPath = regValuePath("FF7Music", "InstDir");
-	if(!ff7MusicPath.isEmpty() && QFile::exists(ff7MusicPath + "/launchff7.exe")) {
+	if (!ff7MusicPath.isEmpty() && QFile::exists(ff7MusicPath + "/launchff7.exe")) {
 		return ff7MusicPath + "/launchff7.exe";
 	}
 	*/
@@ -236,26 +236,26 @@ QString Data::searchFF7DataPath(FF7Version version)
 	switch(version) {
 	case Standard:
 		dataPath = regValuePath(FF7_WIN_REGISTER_PATH, "DataPath");
-		if(!dataPath.isEmpty() && QFile::exists(dataPath)) {
+		if (!dataPath.isEmpty() && QFile::exists(dataPath)) {
 			return dataPath;
 		}
 		return QString();
 	case Rerelease:
 		ff7Path = searchRereleasedFF7Path();
-		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/data")) {
+		if (!ff7Path.isEmpty() && QFile::exists(ff7Path + "/data")) {
 			return ff7Path + "/data";
 		}
 		return QString();
 	case Steam:
 		ff7Path = searchSteamFF7Path();
-		if(!ff7Path.isEmpty() && QFile::exists(ff7Path + "/data")) {
+		if (!ff7Path.isEmpty() && QFile::exists(ff7Path + "/data")) {
 			return ff7Path + "/data";
 		}
 		return QString();
 	case Custom:
 		ff7Path = Config::value("customFF7Path").toString();
 		ff7Path = ff7Path.left(ff7Path.lastIndexOf('/'));
-		if(QFile::exists(ff7Path + "/data")) {
+		if (QFile::exists(ff7Path + "/data")) {
 			return ff7Path + "/data";
 		}
 	}
@@ -270,7 +270,7 @@ QMap<Data::FF7Version, QString> Data::ff7PathList(QString (*searchFF7Path)(FF7Ve
 	foreach(FF7Version version,
 			QList<FF7Version>() << Standard << Rerelease << Steam << Custom) {
 		QString dataPath = (*searchFF7Path)(version);
-		if(!dataPath.isEmpty()) {
+		if (!dataPath.isEmpty()) {
 			ff7List.insert(version, dataPath);
 		}
 	}
@@ -292,8 +292,8 @@ QString Data::ff7Path(const QMap<FF7Version, QString> &pathList)
 {
 	FF7Version version = FF7Version(Config::value("FF7ExePathToUse", 0).toInt());
 
-	if(!pathList.contains(version)) {
-		foreach(const QString &appPath, pathList) {
+	if (!pathList.contains(version)) {
+		for (const QString &appPath : pathList) {
 			return appPath;
 		}
 	} else {
@@ -305,10 +305,10 @@ QString Data::ff7Path(const QMap<FF7Version, QString> &pathList)
 
 const QString &Data::ff7AppPath()
 {
-	if(ff7AppPath_cache.isNull()) {
+	if (ff7AppPath_cache.isNull()) {
 		QString appPath = ff7Path(ff7AppPathList());
 
-		if(!appPath.isEmpty()) {
+		if (!appPath.isEmpty()) {
 			ff7AppPath_cache = appPath;
 		}
 	}
@@ -317,10 +317,10 @@ const QString &Data::ff7AppPath()
 
 const QString &Data::ff7DataPath()
 {
-	if(ff7DataPath_cache.isNull()) {
+	if (ff7DataPath_cache.isNull()) {
 		QString appPath = ff7Path(ff7DataPathList());
 
-		if(!appPath.isEmpty()) {
+		if (!appPath.isEmpty()) {
 			ff7DataPath_cache = appPath;
 		}
 	}
@@ -330,18 +330,18 @@ const QString &Data::ff7DataPath()
 QString Data::ff7KernelPath()
 {
 	QString path = ff7DataPath();
-	if(!path.isEmpty()) {
-		if(QFile::exists(path + "/kernel/KERNEL.BIN")) {
+	if (!path.isEmpty()) {
+		if (QFile::exists(path + "/kernel/KERNEL.BIN")) {
 			path.append("/kernel");
 		} else {
 			QString lang = QLocale::system().name().toLower();
 			lang = Config::value("lang", lang.left(lang.indexOf("_"))).toString().toLower();
-			if(QFile::exists(path + QString("/lang-%1/kernel").arg(lang)))
+			if (QFile::exists(path + QString("/lang-%1/kernel").arg(lang)))
 				path.append(QString("/lang-%1/kernel").arg(lang));
 			else {
 				QStringList langs;
 				langs << "de" << "en" << "es" << "fr" << "ja";
-				foreach(const QString &lang, langs) {
+				for (const QString &lang : langs) {
 					if (QFile::exists(path + QString("/lang-%1/kernel").arg(lang))) {
 						path.append(QString("/lang-%1/kernel").arg(lang));
 						break;
@@ -357,8 +357,8 @@ QString Data::ff7KernelPath()
 QString Data::charlgp_path()
 {
 	QString charPath = Config::value("charPath").toString();
-	if(charPath.isEmpty()) {
-		if(Data::ff7DataPath().isEmpty())	return QString();
+	if (charPath.isEmpty()) {
+		if (Data::ff7DataPath().isEmpty())	return QString();
 		charPath = Data::ff7DataPath()%"/field/char.lgp";
 	}
 
@@ -368,22 +368,22 @@ QString Data::charlgp_path()
 int Data::loadKernel2Bin()
 {
 	QString path = Config::value("kernel2Path").toString();
-	if(path.isEmpty()) {
+	if (path.isEmpty()) {
 		path = ff7KernelPath();
-		if(path.isEmpty()) {
+		if (path.isEmpty()) {
 			return 2;
 		}
 		path.append("/kernel2.bin");
 	}
 
 	QFile fic(path);
-	if(fic.open(QIODevice::ReadOnly)) {
+	if (fic.open(QIODevice::ReadOnly)) {
 		quint32 fileSize;
-		if(fic.read((char *)&fileSize, 4) != 4) {
+		if (fic.read((char *)&fileSize, 4) != 4) {
 			return 2;
 		}
 
-		if(fileSize + 4 != fic.size()) {
+		if (fileSize + 4 != fic.size()) {
 			return 2;
 		}
 
@@ -393,8 +393,8 @@ int Data::loadKernel2Bin()
 
 		fic.close();
 
-		for(int i=0 ; i<10 ; ++i) {
-			if(pos + 4 >= dataSize) {
+		for (int i=0; i<10; ++i) {
+			if (pos + 4 >= dataSize) {
 				return 1;
 			}
 
@@ -402,14 +402,14 @@ int Data::loadKernel2Bin()
 			pos += fileSize + 4;
 		}
 
-		if(pos + 4 >= dataSize) {
+		if (pos + 4 >= dataSize) {
 			return 1;
 		}
 
 		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
-		if(pos + (int)fileSize > dataSize) {
+		if (pos + (int)fileSize > dataSize) {
 			return 1;
 		}
 
@@ -417,14 +417,14 @@ int Data::loadKernel2Bin()
 		fill(data, pos, fileSize, item_names);
 		pos += fileSize;
 
-		if(pos + 4 > dataSize) {
+		if (pos + 4 > dataSize) {
 			return 1;
 		}
 
 		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
-		if(pos + (int)fileSize > dataSize) {
+		if (pos + (int)fileSize > dataSize) {
 			return 1;
 		}
 
@@ -432,14 +432,14 @@ int Data::loadKernel2Bin()
 		fill(data, pos, fileSize, weapon_names);
 		pos += fileSize;
 
-		if(pos + 4 > dataSize) {
+		if (pos + 4 > dataSize) {
 			return 1;
 		}
 
 		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
-		if(pos + (int)fileSize > dataSize) {
+		if (pos + (int)fileSize > dataSize) {
 			return 1;
 		}
 
@@ -447,14 +447,14 @@ int Data::loadKernel2Bin()
 		fill(data, pos, fileSize, armor_names);
 		pos += fileSize;
 
-		if(pos + 4 > dataSize) {
+		if (pos + 4 > dataSize) {
 			return 1;
 		}
 
 		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
-		if(pos + (int)fileSize > dataSize) {
+		if (pos + (int)fileSize > dataSize) {
 			return 1;
 		}
 
@@ -462,14 +462,14 @@ int Data::loadKernel2Bin()
 		fill(data, pos, fileSize, accessory_names);
 		pos += fileSize;
 
-		if(pos + 4 > dataSize) {
+		if (pos + 4 > dataSize) {
 			return 1;
 		}
 
 		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
-		if(pos + (int)fileSize > dataSize) {
+		if (pos + (int)fileSize > dataSize) {
 			return 1;
 		}
 
@@ -483,15 +483,15 @@ int Data::loadKernel2Bin()
 int Data::loadWindowBin()
 {
 	QString path = Config::value("windowBinPath").toString();
-	if(path.isEmpty()) {
+	if (path.isEmpty()) {
 		path = ff7KernelPath();
-		if(path.isEmpty()) {
+		if (path.isEmpty()) {
 			return 1;
 		}
 		path.append("/window.bin");
 	}
 
-	if(!windowBin.open(path)) {
+	if (!windowBin.open(path)) {
 		qWarning() << "Cannot open" << path;
 		return 2;
 	}
@@ -501,7 +501,7 @@ int Data::loadWindowBin()
 
 bool Data::load()
 {
-	if(char_names.isEmpty()) {
+	if (char_names.isEmpty()) {
 		char_names
 				<< QObject::tr("Cloud") << QObject::tr("Barret") << QObject::tr("Tifa")
 				<< QObject::tr("Aerith") << QObject::tr("Red XIII") << QObject::tr("Yuffie")
@@ -509,7 +509,7 @@ bool Data::load()
 				<< QObject::tr("Yound Cloud") << QObject::tr("Sephiroth") << QObject::tr("Chocobo");
 	}
 
-	if(key_names.isEmpty()) {
+	if (key_names.isEmpty()) {
 		key_names
 				<< QObject::tr("[CAMERA|L2]") << QObject::tr("[TARGET|R2]")
 				<< QObject::tr("[PAGE UP|L1]") << QObject::tr("[PAGE DOWN|R1]")
@@ -521,28 +521,28 @@ bool Data::load()
 				<< QObject::tr("[DOWN]") << QObject::tr("[LEFT]");
 	}
 
-	if(movie_names_cd1.isEmpty()) {
+	if (movie_names_cd1.isEmpty()) {
 		QStringList movie_names_common;
-		for(int i=0 ; i<20 ; ++i) {
+		for (int i=0; i<20; ++i) {
 			movie_names_common.append(movieList[i]);
 		}
 
 		movie_names_cd1.append(movie_names_common);
 		movie_names_cd2.append(movie_names_common);
 		movie_names_cd3.append(movie_names_common);
-		for(int i=20 ; i<54 ; ++i) {
+		for (int i=20; i<54; ++i) {
 			movie_names_cd1.append(movieList[i]);
 		}
-		for(int i=54 ; i<96 ; ++i) {
+		for (int i=54; i<96; ++i) {
 			movie_names_cd2.append(movieList[i]);
 		}
-		for(int i=96 ; i<106 ; ++i) {
+		for (int i=96; i<106; ++i) {
 			movie_names_cd3.append(movieList[i]);
 		}
 	}
 
-	if(music_names.isEmpty()) {
-		for(int i=0 ; i<100 ; ++i) {
+	if (music_names.isEmpty()) {
+		for (int i=0; i<100; ++i) {
 			music_names.append(musicList[i]);
 			music_desc.append(musicList2[i]);
 		}
@@ -568,7 +568,7 @@ void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &name
 	const char *constData = data.constData();
 	QList<quint16> positions;
 
-	if(dataSize < 2) {
+	if (dataSize < 2) {
 		return;
 	}
 
@@ -576,13 +576,13 @@ void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &name
 
 	count = position / 2;
 
-	if(dataSize < position) {
+	if (dataSize < position) {
 		return;
 	}
 
-	for(i=0 ; i<count ; ++i) {
+	for (i=0; i<count; ++i) {
 		memcpy(&position, constData + pos + i*2, 2);
-		if(position >= dataSize || lastPosition > position) {
+		if (position >= dataSize || lastPosition > position) {
 			return;
 		}
 		positions.append(position);
@@ -591,32 +591,32 @@ void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &name
 	positions.append(dataSize);
 
 	i=0;
-	foreach(position, positions) {
+	for (quint16 position : positions) {
 		names.append(FF7Text(data.mid(pos + position, positions.at(i+1) - position)).text(false, true));
 		++i;
-		if(i == count)	break;
+		if (i == count)	break;
 	}
 }
 
 bool Data::openMaplist(const QByteArray &data)
 {
-	if(data.size() < 2) {
+	if (data.size() < 2) {
 		return false;
 	}
 
 	quint16 nbMap;
 	memcpy(&nbMap, data.constData(), 2);
 
-	if(data.size() != 2+nbMap*32) {
+	if (data.size() != 2+nbMap*32) {
 		return false;
 	}
 
 	field_names.clear();
-	for(int i=0 ; i<nbMap ; ++i) {
+	for (int i=0; i<nbMap; ++i) {
 		field_names.append(QString(data.mid(2+i*32, 32)).simplified());
 	}
 	// Remove empty entries at the end
-	while(!field_names.isEmpty() && field_names.last().isEmpty()) {
+	while (!field_names.isEmpty() && field_names.last().isEmpty()) {
 		field_names.removeLast();
 	}
 
@@ -625,13 +625,13 @@ bool Data::openMaplist(const QByteArray &data)
 
 bool Data::saveMaplist(QByteArray &data)
 {
-	if(field_names.size() > 65535) {
+	if (field_names.size() > 65535) {
 		return false;
 	}
 	quint16 nbMap = field_names.size();
 	data.append((char *)&nbMap, 2);
 
-	foreach(const QString &fieldName, field_names) {
+	for (const QString &fieldName : field_names) {
 		data.append(fieldName.toLatin1()
 		            .leftJustified(32, '\0', true));
 	}
@@ -775,11 +775,11 @@ const char *Data::_mapList[788] = {
 void Data::openMaplist(bool PC)
 {
 	field_names.clear();
-	for(int i=0 ; i<788 ; ++i) {
+	for (int i=0; i<788; ++i) {
 		field_names.append(_mapList[i]);
 	}
 
-	if(PC) {
+	if (PC) {
 		toPCMaplist(field_names);
 	}
 }

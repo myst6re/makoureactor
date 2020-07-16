@@ -54,14 +54,14 @@ bool CaFile::open(const QByteArray &data)
 	int caSize = data.size();
 	bool isPC;
 
-	if(sizeof(Camera) != 40) {
+	if (sizeof(Camera) != 40) {
 		qWarning() << "sizeof ca struct error" << sizeof(Camera);
 		return false;
 	}
 
-	if(caSize == 40 || ((caSize - 38) > 0 && (caSize - 38) % 18 == 0)) {
+	if (caSize == 40 || ((caSize - 38) > 0 && (caSize - 38) % 18 == 0)) {
 		isPC = false;
-	} else if(caSize == 38 || caSize % 38 == 0) {
+	} else if (caSize == 38 || caSize % 38 == 0) {
 		isPC = true;
 	} else {
 		qWarning() << "invalid ca size" << caSize;
@@ -76,20 +76,20 @@ bool CaFile::open(const QByteArray &data)
 	memcpy(&camera, constData, caSize != 40 ? 38 : 40);
 	cameras.append(camera);
 
-	if(caSize > 40) {
+	if (caSize > 40) {
 		/* The structure can be partially filled
 		 * In that case, values of the first camera
 		 * are implicitly used to complete. */
 		quint32 caCount;
-		if(isPC) {
+		if (isPC) {
 			caCount = caSize/38;
-			for(quint32 i=1 ; i<caCount ; ++i) {
+			for (quint32 i=1; i<caCount; ++i) {
 				memcpy(&camera, constData + i * 38, 38);
 				cameras.append(camera);
 			}
 		} else {
 			caCount = (caSize - 38) / 18;
-			for(quint32 i=0 ; i<caCount ; ++i) {
+			for (quint32 i=0; i<caCount; ++i) {
 				memcpy(&camera, constData + 38 + i * 18, 18);
 				cameras.append(camera);
 			}
@@ -107,9 +107,9 @@ QByteArray CaFile::save() const
 
 	// Camera(s)
 	int camId = 0;
-	foreach(Camera camera, cameras) {
+	for (Camera camera : cameras) {
 
-		if(field()->isPS() && camId > 0) {
+		if (field()->isPS() && camId > 0) {
 			ca.append((char *)&camera, 18);
 		} else {
 			camera.camera_axis2z = camera.camera_axis[2].z;
@@ -156,7 +156,7 @@ void CaFile::insertCamera(int camID, const Camera &cam)
 
 bool CaFile::removeCamera(int camID)
 {
-	if(cameras.size() > 1) {
+	if (cameras.size() > 1) {
 		cameras.removeAt(camID);
 		setModified(true);
 		return true;

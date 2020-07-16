@@ -32,7 +32,7 @@ BackgroundFile::BackgroundFile(const BackgroundFile &other) :
 BackgroundFile::~BackgroundFile()
 {
 	qDeleteAll(_palettes);
-	if(_textures) {
+	if (_textures) {
 		delete _textures;
 	}
 }
@@ -41,7 +41,7 @@ void BackgroundFile::clear()
 {
 	qDeleteAll(_palettes);
 	_palettes.clear();
-	if(_textures) {
+	if (_textures) {
 		delete _textures;
 		_textures = 0;
 	}
@@ -66,8 +66,8 @@ QImage BackgroundFile::openBackground(const QHash<quint8, quint8> &paramActifs, 
                                       const bool *layers, const QSet<quint16> *IDs,
                                       bool *warning)
 {
-	if(!isOpen() && !open()) {
-		if(warning) {
+	if (!isOpen() && !open()) {
+		if (warning) {
 			*warning = false;
 		}
 		return QImage();
@@ -78,8 +78,8 @@ QImage BackgroundFile::openBackground(const QHash<quint8, quint8> &paramActifs, 
 
 QImage BackgroundFile::backgroundPart(quint16 ID, bool *warning)
 {
-	if(!isOpen() && !open()) {
-		if(warning) {
+	if (!isOpen() && !open()) {
+		if (warning) {
 			*warning = false;
 		}
 		return QImage();
@@ -90,8 +90,8 @@ QImage BackgroundFile::backgroundPart(quint16 ID, bool *warning)
 
 QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warning) const
 {
-	if(tiles.isEmpty() || !_textures) {
-		if(warning) {
+	if (tiles.isEmpty() || !_textures) {
+		if (warning) {
 			*warning = false;
 		}
 		return QImage();
@@ -107,11 +107,11 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 	QRgb *pixels = (QRgb *)image.bits();
 	bool warned = false; // To prevent verbosity of warnings
 
-	foreach(const Tile &tile, tiles) {
+	for (const Tile &tile : tiles) {
 		QVector<uint> indexOrColorList = _textures->tile(tile);
 
-		if(indexOrColorList.isEmpty()) {
-			if(!warned) {
+		if (indexOrColorList.isEmpty()) {
+			if (!warned) {
 				qWarning() << "Texture ID overflow" << tile.textureID << tile.textureID2;
 				warned = true;
 			}
@@ -121,17 +121,17 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 		quint8 depth = _textures->depth(tile);
 		Palette *palette = 0;
 
-		if(depth <= 1) {
-			if(tile.paletteID >= _palettes.size()) {
-				if(!warned) {
+		if (depth <= 1) {
+			if (tile.paletteID >= _palettes.size()) {
+				if (!warned) {
 					qWarning() << "Palette ID overflow" << tile.paletteID << _palettes.size();
 					warned = true;
 				}
 				continue;
 			}
 			palette = _palettes.at(tile.paletteID);
-		} else if(depth != 2) {
-			if(!warned) {
+		} else if (depth != 2) {
+			if (!warned) {
 				qWarning() << "Unknown depth" << _textures->depth(tile);
 				warned = true;
 			}
@@ -142,14 +142,14 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 		quint32 top = (minHeight + tile.dstY) * width;
 		quint16 baseX = minWidth + tile.dstX;
 
-		foreach(uint indexOrColor, indexOrColorList) {
-			if(!palette) {
-				if(indexOrColor != 0) {
+		for (uint indexOrColor : indexOrColorList) {
+			if (!palette) {
+				if (indexOrColor != 0) {
 					pixels[baseX + right + top] = indexOrColor;
 				}
 			} else {
-				if(palette->notZero(indexOrColor)) {
-					if(tile.blending) {
+				if (palette->notZero(indexOrColor)) {
+					if (tile.blending) {
 						pixels[baseX + right + top] = blendColor(tile.typeTrans,
 						                                         pixels[baseX + right + top],
 						                                         palette->color(indexOrColor));
@@ -159,7 +159,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 				}
 			}
 
-			if(++right == tile.size) {
+			if (++right == tile.size) {
 				right = 0;
 				top += width;
 			}
@@ -175,7 +175,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 
 bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs)
 {
-	if(!isOpen() && !open()) {
+	if (!isOpen() && !open()) {
 		return false;
 	}
 
@@ -186,11 +186,11 @@ bool BackgroundFile::usedParams(QHash<quint8, quint8> &usedParams, bool *layerEx
 
 bool BackgroundFile::layerExists(int num)
 {
-	if(num == 0) {
+	if (num == 0) {
 		return true;
 	}
 
-	if(!isOpen() && !open()) {
+	if (!isOpen() && !open()) {
 		return false;
 	}
 
@@ -207,27 +207,27 @@ QRgb BackgroundFile::blendColor(quint8 type, QRgb color0, QRgb color1)
 	switch(type) {
 	case 1:
 		r = qRed(color0) + qRed(color1);
-		if(r>255)	r = 255;
+		if (r>255)	r = 255;
 		g = qGreen(color0) + qGreen(color1);
-		if(g>255)	g = 255;
+		if (g>255)	g = 255;
 		b = qBlue(color0) + qBlue(color1);
-		if(b>255)	b = 255;
+		if (b>255)	b = 255;
 		break;
 	case 2:
 		r = qRed(color0) - qRed(color1);
-		if(r<0)	r = 0;
+		if (r<0)	r = 0;
 		g = qGreen(color0) - qGreen(color1);
-		if(g<0)	g = 0;
+		if (g<0)	g = 0;
 		b = qBlue(color0) - qBlue(color1);
-		if(b<0)	b = 0;
+		if (b<0)	b = 0;
 		break;
 	case 3:
 		r = qRed(color0) + 0.25*qRed(color1);
-		if(r>255)	r = 255;
+		if (r>255)	r = 255;
 		g = qGreen(color0) + 0.25*qGreen(color1);
-		if(g>255)	g = 255;
+		if (g>255)	g = 255;
 		b = qBlue(color0) + 0.25*qBlue(color1);
-		if(b>255)	b = 255;
+		if (b>255)	b = 255;
 		break;
 	default://0
 		r = (qRed(color0) + qRed(color1))/2;

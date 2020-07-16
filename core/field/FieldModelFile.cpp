@@ -23,14 +23,14 @@ FieldModelFile::FieldModelFile()
 
 FieldModelFile::~FieldModelFile()
 {
-	foreach (const FieldModelBone &bone, _skeleton.bones()) {
+	for (const FieldModelBone &bone : _skeleton.bones()) {
 		qDeleteAll(bone.parts());
 	}
 }
 
 void FieldModelFile::clear()
 {
-	foreach (const FieldModelBone &bone, _skeleton.bones()) {
+	for (const FieldModelBone &bone : _skeleton.bones()) {
 		qDeleteAll(bone.parts());
 	}
 	_skeleton.clear();

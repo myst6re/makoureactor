@@ -102,9 +102,9 @@ void FontWidget::setWindowBinFile(WindowBinFile *windowBinFile)
 	fontPalette->setWindowBinFile(windowBinFile);
 	setLetter(0);
 
-	if(selectTable->count() != windowBinFile->tableCount()) {
+	if (selectTable->count() != windowBinFile->tableCount()) {
 		selectTable->clear();
-		for(int i=1 ; i<=windowBinFile->tableCount() ; ++i) {
+		for (int i=1; i<=windowBinFile->tableCount(); ++i) {
 			selectTable->addItem(tr("Table %1").arg(i));
 		}
 		selectTable->setEnabled(selectTable->count() > 1);
@@ -141,19 +141,19 @@ void FontWidget::setLetter(int i)
 
 	QByteArray ba;
 
-	if(fontGrid->currentTable() >= 1 && fontGrid->currentTable() <= 5) {
+	if (fontGrid->currentTable() >= 1 && fontGrid->currentTable() <= 5) {
 		ba.append(char(0xF9 + fontGrid->currentTable()));
 	}
 
-	if(fontGrid->currentTable() <= 5) {
-		if(ff7Font) {
+	if (fontGrid->currentTable() <= 5) {
+		if (ff7Font) {
 			//TODO: ff7Font
 //			textLetter->setText(FF7Text(ba.append((char)i), ff7Font->tables()));
 		} else {
 			//TODO: jp
 			textLetter->setText(FF7Text(ba.append((char)i)).text(false));
 		}
-		if(fontLetter->windowBinFile()) {
+		if (fontLetter->windowBinFile()) {
 			widthLetter->setValue(
 			    fontLetter->windowBinFile()->charWidth(
 			        fontLetter->currentTable(), i
@@ -166,7 +166,7 @@ void FontWidget::setLetter(int i)
 
 void FontWidget::editLetter(const QString &letter)
 {
-	if(ff7Font) {
+	if (ff7Font) {
 		ff7Font->setChar(
 		    fontGrid->currentTable(), fontGrid->currentLetter(), letter
 		);
@@ -175,7 +175,7 @@ void FontWidget::editLetter(const QString &letter)
 
 void FontWidget::editWidth(int w)
 {
-	if(fontLetter->windowBinFile() && fontLetter->windowBinFile()->charWidth(fontGrid->currentTable(), fontGrid->currentLetter()) != w) {
+	if (fontLetter->windowBinFile() && fontLetter->windowBinFile()->charWidth(fontGrid->currentTable(), fontGrid->currentLetter()) != w) {
 		fontLetter->windowBinFile()->setCharWidth(fontGrid->currentTable(), fontGrid->currentLetter(), w);
 		fontLetter->update();
 	}
@@ -187,7 +187,7 @@ void FontWidget::exportFont()
 
 	QString binF, txtF, pngF, jpgF, bmpF;
 	QStringList filter;
-	if(windowBinFile) {
+	if (windowBinFile) {
 		filter.append(binF = tr("FF7 font file (*.bin)"));
 		//filter.append(tdwF = tr("FF8 font file (*.tdw)"));
 		filter.append(pngF = tr("Image File (*.png)"));
@@ -195,21 +195,21 @@ void FontWidget::exportFont()
 		filter.append(bmpF = tr("Image File (*.bmp)"));
 	}
 
-	if(ff7Font) {
+	if (ff7Font) {
 		filter.append(txtF = tr("Translation file %1 (*.txt)").arg(PROG_NAME));
 	}
 	QString selectedFilter;
 
 	QString path = QFileDialog::getSaveFileName(this, tr("Export font"), "window", filter.join(";;"), &selectedFilter);
-	if(path.isNull()) {
+	if (path.isNull()) {
 		return;
 	}
 
-	if(selectedFilter == binF) {
+	if (selectedFilter == binF) {
 		QByteArray data;
-		if(windowBinFile->save(data)) {
+		if (windowBinFile->save(data)) {
 			QFile f(path);
-			if(f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 				f.write(data);
 				f.close();
 			} else {
@@ -218,12 +218,12 @@ void FontWidget::exportFont()
 		} else {
 			QMessageBox::warning(this, tr("Erreur"), tr("Erreur lors de l'enregistrement."));
 		}
-	} /* else if(selectedFilter == tdwF) {
+	} /* else if (selectedFilter == tdwF) {
 		// TODO: tdw
 		QByteArray data;
-		if(windowBinFile->save(data)) {
+		if (windowBinFile->save(data)) {
 			QFile f(path);
-			if(f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 				f.write(data);
 				f.close();
 			} else {
@@ -232,23 +232,23 @@ void FontWidget::exportFont()
 		} else {
 			QMessageBox::warning(this, tr("Erreur"), tr("Erreur lors de l'enregistrement."));
 		}
-	} */ else if(selectedFilter == txtF) {
+	} */ else if (selectedFilter == txtF) {
 		QString data = ff7Font->saveTxt();
 		QFile f(path);
-		if(f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+		if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 			f.write(data.toUtf8());
 			f.close();
 		} else {
 			QMessageBox::warning(this, tr("Error"), tr("Error opening file (%1)").arg(f.errorString()));
 		}
-	} else if(windowBinFile &&
+	} else if (windowBinFile &&
 	          (selectedFilter == pngF ||
 	           selectedFilter == jpgF ||
 	           selectedFilter == bmpF)) {
 		char *format;
-		if(selectedFilter == pngF) {
+		if (selectedFilter == pngF) {
 			format = (char *)"PNG";
-		} else if(selectedFilter == jpgF) {
+		} else if (selectedFilter == jpgF) {
 			format = (char *)"JPG";
 		} else {
 			format = (char *)"BMP";
@@ -263,19 +263,19 @@ void FontWidget::importFont()
 
 	QString binF;
 	QStringList filter;
-	if(windowBinFile) {
+	if (windowBinFile) {
 		filter.append(binF = tr("FF7 font file (*.bin)"));
 	}
 	QString selectedFilter;
 
 	QString path = QFileDialog::getOpenFileName(this, tr("Import font"), "window", filter.join(";;"), &selectedFilter);
-	if(path.isNull())		return;
+	if (path.isNull())		return;
 
-	if(selectedFilter == binF) {
+	if (selectedFilter == binF) {
 		QFile f(path);
-		if(f.open(QIODevice::ReadOnly)) {
+		if (f.open(QIODevice::ReadOnly)) {
 			WindowBinFile newWindowBinFile;
-			if(newWindowBinFile.open(f.readAll())) {
+			if (newWindowBinFile.open(f.readAll())) {
 				newWindowBinFile.setModified(true);
 				*windowBinFile = newWindowBinFile;
 				// FIXME: Update Data::windowBin?

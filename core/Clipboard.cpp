@@ -12,7 +12,7 @@ Clipboard *Clipboard::_instance = 0;
 
 Clipboard *Clipboard::instance()
 {
-	if(!_instance) {
+	if (!_instance) {
 		_instance = new Clipboard();
 	}
 
@@ -28,7 +28,7 @@ bool Clipboard::hasData(const QString &mimeType)
 QByteArray Clipboard::data(const QString &mimeType)
 {
 	const QMimeData *mimeData = QApplication::clipboard()->mimeData();
-	if(mimeData && mimeData->hasFormat(mimeType)) {
+	if (mimeData && mimeData->hasFormat(mimeType)) {
 		return mimeData->data(mimeType);
 	}
 	return QByteArray();
@@ -51,12 +51,12 @@ QList<Opcode *> Clipboard::ff7FieldScriptOpcodes() const
 	QList<Opcode *> opcodes;
 
 	QByteArray data = Clipboard::data(MIME_FF7_FIELD_SCRIPT_OPCODES);
-	if(!data.isEmpty()) {
+	if (!data.isEmpty()) {
 		QDataStream stream(data);
 		quint16 version;
 		stream >> version;
 		// Check version
-		if(version != VERSION_FF7_FIELD_SCRIPT_OPCODES) {
+		if (version != VERSION_FF7_FIELD_SCRIPT_OPCODES) {
 			return opcodes;
 		}
 		stream >> opcodes;
@@ -85,12 +85,12 @@ QList<GrpScript *> Clipboard::ff7FieldScriptGroups() const
 	QList<GrpScript *> groups;
 
 	QByteArray data = Clipboard::data(MIME_FF7_FIELD_SCRIPT_GROUPS);
-	if(!data.isEmpty()) {
+	if (!data.isEmpty()) {
 		QDataStream stream(data);
 		quint16 version;
 		stream >> version;
 		// Check version
-		if(version != VERSION_FF7_FIELD_SCRIPT_GROUPS) {
+		if (version != VERSION_FF7_FIELD_SCRIPT_GROUPS) {
 			return groups;
 		}
 		stream >> groups;

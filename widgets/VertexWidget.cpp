@@ -73,7 +73,7 @@ void VertexWidget::setValues(const Vertex_s &v)
 
 void VertexWidget::emitValuesChanged()
 {
-	if(!dontEmit) {
+	if (!dontEmit) {
 		emit valuesChanged(values());
 	}
 }

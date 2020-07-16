@@ -104,7 +104,7 @@ QTreeWidgetItem *SearchAll::createItemField(int mapID) const
 		}
 	}
 
-	for(int col = 0 ; col < _resultList->columnCount() ; ++col) {
+	for (int col = 0; col < _resultList->columnCount(); ++col) {
 		item->setBackground(col, Qt::gray);
 		item->setForeground(col, Qt::white);
 	}
@@ -187,10 +187,10 @@ void SearchAll::copySelected() const
 
 	QString str;
 	QTreeWidgetItemIterator it(_resultList);
-	while(*it) {
+	while (*it) {
 		if(selectedItems.contains(*it)) {
 			QStringList cols;
-			for (int col = 0 ; col < (*it)->columnCount() ; ++col) {
+			for (int col = 0; col < (*it)->columnCount(); ++col) {
 				cols.append((*it)->text(col).trimmed());
 			}
 			str.append(cols.join("\t").trimmed() + "\n");

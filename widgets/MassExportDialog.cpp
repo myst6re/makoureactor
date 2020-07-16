@@ -73,7 +73,7 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addLayout(listLayout, 0, 0, 3 + exports.size(), 1);
 	int row = 0;
-	foreach(FormatSelectionWidget *formatSelection, exports) {
+	for (FormatSelectionWidget *formatSelection : exports) {
 		layout->addWidget(formatSelection, row++, 1, 1, 2);
 	}
 	layout->addWidget(new QLabel(tr("Export directory:")), row, 1, 1, 2);
@@ -106,7 +106,7 @@ void MassExportDialog::fill(const FieldArchive *fieldArchive, int currentMapId)
 	FieldArchiveIterator it(*_fieldArchive);
 	while (it.hasNext()) {
 		const Field *field = it.next(false);
-		if(field != nullptr) {
+		if (field != nullptr) {
 			QListWidgetItem *item = new QListWidgetItem(field->name());
 			item->setData(Qt::UserRole, it.mapId());
 			fieldList->addItem(item);
@@ -118,22 +118,22 @@ void MassExportDialog::fill(const FieldArchive *fieldArchive, int currentMapId)
 void MassExportDialog::chooseExportDirectory()
 {
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Choose a directory"), directory());
-	if(dir.isNull())	return;
+	if (dir.isNull())	return;
 
 	dirPath->setText(dir);
 }
 
 void MassExportDialog::selectCurrentField()
 {
-	if(_currentMapId < 0) {
+	if (_currentMapId < 0) {
 		return;
 	}
 
 	fieldList->clearSelection();
 
-	for(int row=0 ; row<fieldList->count() ; ++row) {
+	for (int row=0; row<fieldList->count(); ++row) {
 		QListWidgetItem *item = fieldList->item(row);
-		if(item->data(Qt::UserRole).toInt() == _currentMapId) {
+		if (item->data(Qt::UserRole).toInt() == _currentMapId) {
 			item->setSelected(true);
 			fieldList->scrollToItem(item);
 			return;
@@ -147,7 +147,7 @@ QList<int> MassExportDialog::selectedFields() const
 
 	QList<QListWidgetItem *> items = fieldList->selectedItems();
 
-	foreach(QListWidgetItem *item, items) {
+	for (QListWidgetItem *item : items) {
 		ids.append(item->data(Qt::UserRole).toInt());
 	}
 

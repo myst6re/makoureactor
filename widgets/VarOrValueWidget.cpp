@@ -115,14 +115,14 @@ void VarOrValueWidget::setSignedValueType(bool signedValueType)
 
 void VarOrValueWidget::updateValueRange()
 {
-	if(isSignedValueType()) {
-		if(isLongValueType()) {
+	if (isSignedValueType()) {
+		if (isLongValueType()) {
 			_value->setRange(-32768, 32767);
 		} else {
 			_value->setRange(-128, 127);
 		}
 	} else {
-		if(isLongValueType()) {
+		if (isLongValueType()) {
 			_value->setRange(0, 65535);
 		} else {
 			_value->setRange(0, 255);

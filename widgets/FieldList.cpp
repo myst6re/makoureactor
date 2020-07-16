@@ -60,13 +60,13 @@ FieldList::FieldList(QWidget *parent) :
 
 void FieldList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
-	if(current) {
+	if (current) {
 		QColor color = Data::color(Data::ColorEvidence);
 		current->setBackground(0, color);
 		current->setBackground(1, color);
 	}
 
-	if(previous) {
+	if (previous) {
 		previous->setBackground(0, QBrush());
 		previous->setBackground(1, QBrush());
 	}
@@ -90,7 +90,7 @@ QTreeWidgetItem *FieldList::createItem(Field *f, int mapID)
 	const QString &name = f->name();
 	QString id;
 	int index = Data::maplist().indexOf(name);
-	if(index != -1) {
+	if (index != -1) {
 		id = QString("%1").arg(index, 3);
 	} else {
 		id = "  ~";
@@ -119,7 +119,7 @@ void FieldList::fill(FieldArchive *fieldArchive)
 
 	while (it.hasNext()) {
 		Field *f = it.next(false);
-		if(f) {
+		if (f) {
 			items.append(createItem(f, it.mapId()));
 		}
 	}
@@ -129,7 +129,7 @@ void FieldList::fill(FieldArchive *fieldArchive)
 	setEnabled(true);
 	enableActions(_fieldArchive->isPC());
 
-	if(!items.isEmpty()) {
+	if (!items.isEmpty()) {
 		addTopLevelItems(items);
 		adjustWidth();
 	}
@@ -138,7 +138,7 @@ void FieldList::fill(FieldArchive *fieldArchive)
 int FieldList::currentMapId() const
 {
 	QList<QTreeWidgetItem *> selectedItems = this->selectedItems();
-	if(selectedItems.isEmpty()) {
+	if (selectedItems.isEmpty()) {
 		return -1;
 	}
 
@@ -159,14 +159,14 @@ void FieldList::filterMap(const QString &name)
 {
 	QList<QTreeWidgetItem *> items = findItems(name.isNull() ? _lineSearch->text() : name,
 	                                           Qt::MatchStartsWith);
-	if(!items.isEmpty()) {
+	if (!items.isEmpty()) {
 		scrollToItem(items.first(), QAbstractItemView::PositionAtTop);
 	}
 }
 
 void FieldList::rename(QTreeWidgetItem *item, int column)
 {
-	if(item == nullptr || column != 0) {
+	if (item == nullptr || column != 0) {
 		return;
 	}
 
@@ -178,18 +178,18 @@ void FieldList::rename(QTreeWidgetItem *item, int column)
 
 void FieldList::renameOK(QTreeWidgetItem *item, int column)
 {
-	if(column != 1) {
+	if (column != 1) {
 		return;
 	}
 
 	disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(renameOK(QTreeWidgetItem *, int)));
 	QString newName = item->text(1).left(8);
 
-	if(newName.isEmpty()) {
+	if (newName.isEmpty()) {
 		QMessageBox::warning(this, tr("Name not filled"),
 		                     tr("Please set a new field name."));
 		return;
-	} else if(Data::maplist().contains(newName)) {
+	} else if (Data::maplist().contains(newName)) {
 		QMessageBox::warning(this,
 		                     tr("Name already present in archive"),
 		                     tr("Please choose another name."));
@@ -199,7 +199,7 @@ void FieldList::renameOK(QTreeWidgetItem *item, int column)
 	item->setText(1, newName);
 
 	Field *f = _fieldArchive->field(currentMapId());
-	if(f) {
+	if (f) {
 		f->setName(newName);
 		InfFile *inf = f->inf();
 		if (inf != nullptr) {
@@ -212,11 +212,11 @@ void FieldList::renameOK(QTreeWidgetItem *item, int column)
 
 void FieldList::add()
 {
-	if(!_fieldArchive) {
+	if (!_fieldArchive) {
 		return;
 	}
 
-	if(!_fieldArchive->isPC()) {
+	if (!_fieldArchive->isPC()) {
 		QMessageBox::warning(this, tr("Error"), tr("Not implemented for PS."));
 		return;
 	}
@@ -224,19 +224,19 @@ void FieldList::add()
 	QString newName;
 
 	// Name set by user
-	while(newName.isEmpty() || Data::maplist().contains(newName)){
+	while (newName.isEmpty() || Data::maplist().contains(newName)){
 		bool ok;
 		newName = QInputDialog::getText(this, tr("Choose a name"),
 		                                tr("Field name:"),
 		                                QLineEdit::Normal, newName,
 		                                &ok);
-		if(!ok) {
+		if (!ok) {
 			return;
 		}
-		if(newName.isEmpty()) {
+		if (newName.isEmpty()) {
 			QMessageBox::warning(this, tr("Name not filled"),
 			                     tr("Please set a new field name."));
-		} else if(Data::maplist().contains(newName)) {
+		} else if (Data::maplist().contains(newName)) {
 			QMessageBox::warning(this,
 			                     tr("Name already present in archive"),
 			                     tr("Please choose another name."));
@@ -259,18 +259,18 @@ void FieldList::add()
 
 void FieldList::del()
 {
-	if(!_fieldArchive->isPC()) {
+	if (!_fieldArchive->isPC()) {
 		QMessageBox::warning(this, tr("Error"), tr("Not implemented for PS."));
 		return;
 	}
 
-	if(topLevelItemCount() == 0) {
+	if (topLevelItemCount() == 0) {
 		return;
 	}
 
 	QList<QTreeWidgetItem *> selected = selectedItems();
 
-	if(selected.isEmpty()) {
+	if (selected.isEmpty()) {
 		return;
 	}
 
@@ -282,7 +282,7 @@ void FieldList::del()
 	QMessageBox::StandardButton but = QMessageBox::warning(
 	    this, tr("Delete"), msg, QMessageBox::Yes | QMessageBox::Cancel);
 
-	if(but == QMessageBox::Cancel) {
+	if (but == QMessageBox::Cancel) {
 		return;
 	}
 
@@ -290,7 +290,7 @@ void FieldList::del()
 
 	blockSignals(true);
 
-	foreach(QTreeWidgetItem *item, selected) {
+	for (QTreeWidgetItem *item : selected) {
 		int mapID = item->data(0, Qt::UserRole).toInt();
 		_fieldArchive->delField(mapID);
 		lastIndex = qMax(lastIndex, indexOfTopLevelItem(item));

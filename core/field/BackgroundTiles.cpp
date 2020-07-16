@@ -24,7 +24,7 @@ BackgroundTiles::BackgroundTiles() :
 
 BackgroundTiles::BackgroundTiles(const QList<Tile> &tiles)
 {
-	foreach (const Tile &tile, tiles) {
+	for (const Tile &tile : tiles) {
 		switch(tile.layerID) {
 		case 0:
 			insert(1, tile);
@@ -52,27 +52,27 @@ BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> &paramActifs
 {
 	BackgroundTiles ret;
 
-	foreach(const Tile &tile, *this) {
+	for (const Tile &tile : *this) {
 		switch(tile.layerID) {
 		case 0:
-			if((layers == nullptr || layers[0]) && (IDs == nullptr || IDs->contains(1))) {
+			if ((layers == nullptr || layers[0]) && (IDs == nullptr || IDs->contains(1))) {
 				ret.insert(1, tile);
 			}
 			break;
 		case 1:
-			if((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
+			if ((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
 					&& (layers == nullptr || layers[1]) && (IDs == nullptr || IDs->contains(tile.ID))) {
 				ret.insert(4096 - tile.ID, tile);
 			}
 			break;
 		case 2:
-			if((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
+			if ((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
 					&& (layers == nullptr || layers[2]) && (IDs == nullptr || IDs->contains(tile.ID))) {
 				ret.insert(4096 - ((z && z[0] != -1) ? z[0] : tile.ID), tile);
 			}
 			break;
 		case 3:
-			if((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
+			if ((tile.state == 0 || paramActifs.value(tile.param, 0) & tile.state)
 					&& (layers == nullptr || layers[3]) && (IDs == nullptr || IDs->contains(tile.ID))) {
 				ret.insert(4096 - ((z && z[1] != -1) ? z[1] : tile.ID), tile);
 			}
@@ -87,8 +87,8 @@ BackgroundTiles BackgroundTiles::tiles(quint8 layerID, bool orderedForSaving) co
 {
 	BackgroundTiles ret;
 
-	foreach(const Tile &tile, *this) {
-		if(tile.layerID == layerID) {
+	for (const Tile &tile : *this) {
+		if (tile.layerID == layerID) {
 			ret.insert(orderedForSaving
 					   ? tile.tileID
 					   : 4096 - tile.ID,
@@ -103,8 +103,8 @@ BackgroundTiles BackgroundTiles::tilesByID(quint16 ID, bool orderedForSaving) co
 {
 	BackgroundTiles ret;
 
-	foreach(const Tile &tile, *this) {
-		if(tile.ID == ID) {
+	for (const Tile &tile : *this) {
+		if (tile.ID == ID) {
 			ret.insert(orderedForSaving
 					   ? tile.tileID
 					   : 4096 - tile.ID,
@@ -119,8 +119,8 @@ QMap<qint32, Tile> BackgroundTiles::sortedTiles() const
 {
 	QMap<qint32, Tile> ret;
 
-	foreach(const Tile &tile, *this) {
-		if(ret.contains((tile.layerID << 16) | tile.tileID)) {
+	for (const Tile &tile : *this) {
+		if (ret.contains((tile.layerID << 16) | tile.tileID)) {
 			qWarning() << "BackgroundTiles::sortedTiles() tile not unique!" << tile.layerID << tile.tileID;
 		}
 		ret.insert((tile.layerID << 16) | tile.tileID, tile);
@@ -134,28 +134,28 @@ QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<quint1
 	QHash<quint8, quint8> ret;
 	layerExists[0] = layerExists[1] = layerExists[2] = false;
 
-	foreach(const Tile &tile, *this) {
+	for (const Tile &tile : *this) {
 		switch(tile.layerID) {
 		case 0:
 			break;
 		case 1:
 			layerExists[0] = true;
-			if(tile.param) {
+			if (tile.param) {
 				ret.insert(tile.param, ret.value(tile.param) | tile.state);
 			}
-			if(usedIDs) {
+			if (usedIDs) {
 				usedIDs->insert(tile.ID);
 			}
 			break;
 		case 2:
 			layerExists[1] = true;
-			if(tile.param) {
+			if (tile.param) {
 				ret.insert(tile.param, ret.value(tile.param) | tile.state);
 			}
 			break;
 		case 3:
 			layerExists[2] = true;
-			if(tile.param) {
+			if (tile.param) {
 				ret.insert(tile.param, ret.value(tile.param) | tile.state);
 			}
 			break;
@@ -169,7 +169,7 @@ QSet<quint8> BackgroundTiles::usedPalettes() const
 {
 	QSet<quint8> ret;
 
-	foreach(const Tile &tile, *this) {
+	for (const Tile &tile : *this) {
 		if (tile.depth < 2) {
 			ret.insert(tile.paletteID);
 		}
@@ -184,15 +184,15 @@ void BackgroundTiles::area(quint16 &minWidth, quint16 &minHeight,
 	quint16 maxWidth=0, maxHeight=0;
 	minWidth = minHeight = 0;
 
-	foreach(const Tile &tile, *this) {
+	for (const Tile &tile : *this) {
 		quint8 toAdd = tile.size - 16;
-		if(tile.dstX >= 0 && tile.dstX+toAdd > maxWidth)
+		if (tile.dstX >= 0 && tile.dstX+toAdd > maxWidth)
 			maxWidth = tile.dstX+toAdd;
-		else if(tile.dstX < 0 && -tile.dstX > minWidth)
+		else if (tile.dstX < 0 && -tile.dstX > minWidth)
 			minWidth = -tile.dstX;
-		if(tile.dstY >= 0 && tile.dstY+toAdd > maxHeight)
+		if (tile.dstY >= 0 && tile.dstY+toAdd > maxHeight)
 			maxHeight = tile.dstY+toAdd;
-		else if(tile.dstY < 0 && -tile.dstY > minHeight)
+		else if (tile.dstY < 0 && -tile.dstY > minHeight)
 			minHeight = -tile.dstY;
 	}
 
@@ -213,8 +213,8 @@ QSize BackgroundTiles::area() const
 Tile BackgroundTiles::search(quint8 textureID1, quint8 textureID2,
 							 quint8 srcX, quint8 srcY) const
 {
-	foreach(const Tile &tile, *this) {
-		if(tile.textureID == textureID1 &&
+	for (const Tile &tile : *this) {
+		if (tile.textureID == textureID1 &&
 				(textureID2 == quint8(-1) || tile.textureID2 == textureID2) &&
 				tile.srcX == srcX &&
 				tile.srcY == srcY) {

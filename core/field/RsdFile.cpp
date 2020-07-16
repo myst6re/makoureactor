@@ -34,37 +34,37 @@ bool RsdFile::read(Rsd &rsd, QStringList &textureNames) const
 	int index;
 	bool ok;
 
-	while(device()->canReadLine()) {
+	while (device()->canReadLine()) {
 		QString line = QString(device()->readLine()).trimmed();
-		if(pname.isNull() && (line.startsWith(QString("PLY="))
+		if (pname.isNull() && (line.startsWith(QString("PLY="))
 							  || line.startsWith(QString("MAT="))
 							  || line.startsWith(QString("GRP=")))) {
 			index = line.lastIndexOf('.');
-			if(index != -1) {
+			if (index != -1) {
 				line.truncate(index);
 			}
 			pname = line.mid(4).toLower();
-		} else if(!pname.isNull() && nTex == 0
+		} else if (!pname.isNull() && nTex == 0
 				  && line.startsWith(QString("NTEX="))) {
 			nTex = line.mid(5).toUInt(&ok);
-			if(!ok) {
+			if (!ok) {
 				return false;
 			}
 
-			for(quint32 i = 0 ; i < nTex && device()->canReadLine() ; ++i) {
+			for (quint32 i = 0; i < nTex && device()->canReadLine(); ++i) {
 				line = QString(device()->readLine()).trimmed();
-				if(!line.startsWith(QString("TEX[%1]=").arg(i))) {
+				if (!line.startsWith(QString("TEX[%1]=").arg(i))) {
 					return false;
 				}
 
 				index = line.lastIndexOf('.');
-				if(index != -1) {
+				if (index != -1) {
 					line.truncate(index);
 				}
 				QString tex = line.mid(line.indexOf('=') + 1).toLower();
 
 				index = textureNames.indexOf(tex);
-				if(index > -1) {
+				if (index > -1) {
 					texIds.append(index);
 				} else {
 					texIds.append(textureNames.size());

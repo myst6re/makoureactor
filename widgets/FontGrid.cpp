@@ -44,17 +44,17 @@ void FontGrid::paintEvent(QPaintEvent *)
 	QLine *linesV = new QLine[lineCountV],
 	      *linesH = new QLine[lineCountH];
 
-	for(int i=0 ; i<lineCountV ; ++i) {
+	for (int i=0; i<lineCountV; ++i) {
 		linesV[i].setPoints(QPoint(i*cellSize, 0), QPoint(i*cellSize, height()));
 	}
 
-	for(int i=0 ; i<lineCountH ; ++i) {
+	for (int i=0; i<lineCountH; ++i) {
 		linesH[i].setPoints(QPoint(0, i*cellSize), QPoint(width(), i*cellSize));
 	}
 
 	QPainter p(this);
 
-	if(isEnabled()) {
+	if (isEnabled()) {
 		p.setBrush(Qt::black);
 		p.drawRect(0, 0, width(), height());
 	}
@@ -67,31 +67,31 @@ void FontGrid::paintEvent(QPaintEvent *)
 	delete[] linesV;
 	delete[] linesH;
 
-	if(_windowBinFile) {
+	if (_windowBinFile) {
 		int charCount=_windowBinFile->tableSize(_currentTable);
 
 		// Draw odd characters (optimization to reduce the number of palette change)
-		for(int i=0, x2=0, y2=0 ; i<charCount ; i+=2) {
+		for (int i=0, x2=0, y2=0; i<charCount; i+=2) {
 			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, i, _color));
 			x2+=2;
-			if(x2 == _letterCountH) {
+			if (x2 == _letterCountH) {
 				++y2;
 				x2 = 0;
 			}
 		}
 
 		// Draw even characters
-		for(int i=1, x2=1, y2=0 ; i<charCount ; i+=2) {
+		for (int i=1, x2=1, y2=0; i<charCount; i+=2) {
 			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, i, _color));
 			x2+=2;
-			if(x2 == _letterCountH + 1) {
+			if (x2 == _letterCountH + 1) {
 				++y2;
 				x2 = 1;
 			}
 		}
 	}
 
-	if(isEnabled()) {
+	if (isEnabled()) {
 		// Draw selection frame
 		p.setPen(hasFocus() ? Qt::red : QColor(0xff,0x7f,0x7f));
 
@@ -111,7 +111,7 @@ int FontGrid::getLetter(const QPoint &pos)
 QPoint FontGrid::getPos(int letter)
 {
 	const int cellSize = 15;
-	if(letter > _letterCountH*_letterCountV)		return QPoint();
+	if (letter > _letterCountH*_letterCountV)		return QPoint();
 	return QPoint((letter % _letterCountH) * cellSize, (letter / _letterCountH) * cellSize);
 }
 
@@ -128,7 +128,7 @@ void FontGrid::updateLetter(const QRect &rect)
 void FontGrid::mousePressEvent(QMouseEvent *e)
 {
 	int letter = getLetter(e->pos());
-	if(letter < _letterCountH*_letterCountV) {
+	if (letter < _letterCountH*_letterCountV) {
 		setLetter(letter);
 		emit letterClicked(letter);
 	}
@@ -142,28 +142,28 @@ void FontGrid::keyPressEvent(QKeyEvent *e)
 	switch(e->key()) {
 	case Qt::Key_Left:
 		letter = _letter - 1;
-		if(letter >= 0) {
+		if (letter >= 0) {
 			setLetter(letter);
 			emit letterClicked(letter);
 		}
 		break;
 	case Qt::Key_Right:
 		letter = _letter + 1;
-		if(letter < _letterCountH*_letterCountV) {
+		if (letter < _letterCountH*_letterCountV) {
 			setLetter(letter);
 			emit letterClicked(letter);
 		}
 		break;
 	case Qt::Key_Up:
 		letter = _letter - _letterCountH;
-		if(letter >= 0) {
+		if (letter >= 0) {
 			setLetter(letter);
 			emit letterClicked(letter);
 		}
 		break;
 	case Qt::Key_Down:
 		letter = _letter + _letterCountH;
-		if(letter < _letterCountH*_letterCountV) {
+		if (letter < _letterCountH*_letterCountV) {
 			setLetter(letter);
 			emit letterClicked(letter);
 		}

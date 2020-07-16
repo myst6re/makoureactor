@@ -22,47 +22,47 @@ bool Var::load()
 {
 	// Loading file into Var::_varNames
 	QFile fic(Config::value("varFile").toString());
-	if(!fic.exists()) {
+	if (!fic.exists()) {
 		fic.setFileName(":/vars.cfg"); // Get default values
 	}
 
-	if(fic.open(QIODevice::ReadOnly | QIODevice::Text)) {
+	if (fic.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QString line;
 		QStringList list;
 		bool ok;
 		int address;
 		forever {
 			line = QString(fic.readLine());
-			if(line.isEmpty()) {
+			if (line.isEmpty()) {
 				break;
 			}
 
 			list = line.split(QChar('|'));
-			if(list.size() != 3) {
+			if (list.size() != 3) {
 				return false;
 			}
 
 			int bank = list.first().toInt(&ok);
-			if(!ok) {
+			if (!ok) {
 				return false;
 			}
-			if(bank < 1 || bank > 15) {
+			if (bank < 1 || bank > 15) {
 				continue;
 			}
 
 			address = list.at(1).toInt(&ok);
-			if(!ok) {
+			if (!ok) {
 				return false;
 			}
-			if(address < 0 || address > 255) {
+			if (address < 0 || address > 255) {
 				continue;
 			}
 
 			line = list.at(2);
-			if(line.isEmpty()) {
+			if (line.isEmpty()) {
 				return false;
 			}
-			if(line.size() > 255) {
+			if (line.size() > 255) {
 				line = line.left(255);
 			}
 
@@ -80,10 +80,10 @@ bool Var::save(const QMap<quint16, QString> &varNames)
 {
 	// Saving varNames in the file
 	QFile fic(Config::value("varFile").toString());
-	if(fic.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+	if (fic.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
 		_varNames = varNames;
 		QMapIterator<quint16, QString> i(_varNames);
-		while(i.hasNext()) {
+		while (i.hasNext()) {
 			i.next();
 			fic.write(QString("%1|%2|%3\n")
 			          .arg(i.key() >> 8)

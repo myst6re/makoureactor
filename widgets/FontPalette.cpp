@@ -94,7 +94,7 @@ void FontPalette::clear()
 
 void FontPalette::reset()
 {
-	if(copyPalette.isEmpty())		return;
+	if (copyPalette.isEmpty())		return;
 	palette = copyPalette;
 	update();
 }
@@ -103,14 +103,14 @@ void FontPalette::paintEvent(QPaintEvent *)
 {
 	QPainter p(this);
 
-	if(isEnabled()) {
+	if (isEnabled()) {
 		p.fillRect(0, 0, width(), height(), Qt::black);
 	}
 
 	int id=0;
 
-	foreach(const QRgb &color, palette) {
-		if(!readOnly && id == _currentColor) {
+	for (const QRgb &color : palette) {
+		if (!readOnly && id == _currentColor) {
 			p.fillRect(QRect(id * (CELL_SIZE + BORDER_SIZE), 0, CELL_SIZE + 2 * BORDER_SIZE, CELL_SIZE + 2 * BORDER_SIZE), Qt::red);
 		} else {
 			p.setPen(Qt::black);
@@ -129,7 +129,7 @@ int FontPalette::getColorId(const QPoint &pos)
 
 void FontPalette::mousePressEvent(QMouseEvent *e)
 {
-	if(readOnly || palette.isEmpty())	return;
+	if (readOnly || palette.isEmpty())	return;
 
 	setCurrentColor(getColorId(e->pos()));
 }

@@ -113,7 +113,7 @@ Window::Window() :
 
 	menuLang->addSeparator();
 	QTranslator translator;
-	foreach(const QString &str, stringList) {
+	for (const QString &str : stringList) {
 		translator.load(dir.filePath(str));
 		action = menuLang->addAction(translator.translate("Window", "English"));
 		QString lang = str.mid(14, 2);
@@ -152,7 +152,7 @@ Window::Window() :
 	_fieldList = new FieldList(this);
 
 	zoneImage = new ApercuBG();
-	if(Config::value("OpenGL", true).toBool()) {
+	if (Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
 //		modelThread = new FieldModelThread(this);
 
@@ -163,7 +163,7 @@ Window::Window() :
 
 	zonePreview = new QStackedWidget(this);
 	zonePreview->addWidget(zoneImage);
-	if(fieldModel) {
+	if (fieldModel) {
 		zonePreview->addWidget(fieldModel);
 	}
 
@@ -241,7 +241,7 @@ Window::Window() :
 Window::~Window()
 {
 	Config::flush();
-	if(fieldArchive) {
+	if (fieldArchive) {
 		fieldArchive->close();
 	}
 }
@@ -259,7 +259,7 @@ QProgressDialog *Window::progressDialog()
 
 void Window::closeEvent(QCloseEvent *event)
 {
-	if(!isEnabled() || closeFile(true) == QMessageBox::Cancel) {
+	if (!isEnabled() || closeFile(true) == QMessageBox::Cancel) {
 		event->ignore();
 	} else {
 		Config::setValue("windowState", saveState());
@@ -271,7 +271,7 @@ void Window::closeEvent(QCloseEvent *event)
 		Config::setValue("fieldListSortColumn", _fieldList->sortColumn());
 		Config::setValue("fieldListSortOrder", int(_fieldList->header()->sortIndicatorOrder()));
 		_scriptManager->saveConfig();
-		if(_walkmeshManager) {
+		if (_walkmeshManager) {
 			_walkmeshManager->saveConfig();
 		}
 		event->accept();
@@ -290,7 +290,7 @@ QMenu *Window::createPopupMenu()
 	action->setCheckable(true);
 	action->setChecked(!horizontalSplitter->isCollapsed(1));
 	menu->addSeparator();
-	foreach(QAction *action, _scriptManager->actions()) {
+	for (QAction *action : _scriptManager->actions()) {
 		menu->addAction(action);
 	}
 	return menu;
@@ -300,11 +300,11 @@ void Window::fillRecentMenu()
 {
 	_recentMenu->clear();
 
-	foreach(const QString &recentFile, Config::value("recentFiles").toStringList()) {
+	for (const QString &recentFile : Config::value("recentFiles").toStringList()) {
 		_recentMenu->addAction(QDir::toNativeSeparators(recentFile));
 	}
 
-	if(_recentMenu->actions().isEmpty()) {
+	if (_recentMenu->actions().isEmpty()) {
 		_recentMenu->setDisabled(true);
 	}
 }
@@ -327,7 +327,7 @@ FieldArchive::Sorting Window::getFieldSorting()
 void Window::jpText(bool enabled)
 {
 	Config::setValue("jp_txt", enabled);
-	if(_textDialog) {
+	if (_textDialog) {
 		_textDialog->updateText();
 	}
 	_scriptManager->fillOpcodes();
@@ -336,7 +336,7 @@ void Window::jpText(bool enabled)
 void Window::changeLanguage(QAction *action)
 {
 	Config::setValue("lang", action->data());
-	foreach(QAction *act, menuLang->actions())
+	for (QAction *act : menuLang->actions())
 		act->setChecked(false);
 
 	action->setChecked(true);
@@ -347,7 +347,7 @@ void Window::restartNow()
 {
 	QString title, text;
 	QTranslator translator;
-	if(translator.load(QString("Makou_Reactor_%1")
+	if (translator.load(QString("Makou_Reactor_%1")
 	                   .arg(Config::value("lang").toString()),
 	                   qApp->applicationDirPath())) {
 		title = translator.translate("Window", "Settings changed");
@@ -361,20 +361,20 @@ void Window::restartNow()
 
 int Window::closeFile(bool quit)
 {
-	if(_fieldList->currentItem() != nullptr) {
+	if (_fieldList->currentItem() != nullptr) {
 		Config::setValue("currentField", _fieldList->currentItem()->text(0));
 	}
 
-	if(actionSave->isEnabled() && fieldArchive != nullptr) {
+	if (actionSave->isEnabled() && fieldArchive != nullptr) {
 		QString fileChangedList;
 		FieldArchiveIterator it(*fieldArchive);
 
 		int i = 0;
 		while (it.hasNext()) {
 			Field *curField = it.next(false);
-			if(curField && curField->isOpen() && curField->isModified()) {
+			if (curField && curField->isOpen() && curField->isModified()) {
 				fileChangedList += "\n - " + curField->name();
-				if(i > 10) {
+				if (i > 10) {
 					fileChangedList += "\n...";
 					break;
 				}
@@ -382,22 +382,22 @@ int Window::closeFile(bool quit)
 			}
 		}
 
-		if(!fileChangedList.isEmpty()) {
+		if (!fileChangedList.isEmpty()) {
 			fileChangedList.prepend(tr("\n\nEdited files:"));
 		}
 		int reponse = QMessageBox::warning(this, tr("Save"), tr("Would you like to save changes of %1?%2").arg(fieldArchive->io()->name()).arg(fileChangedList), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-		if(reponse == QMessageBox::Yes) {
+		if (reponse == QMessageBox::Yes) {
 			save();
-		} else if(reponse == QMessageBox::Cancel) {
+		} else if (reponse == QMessageBox::Cancel) {
 			return reponse;
 		}
-		if(quit) {
+		if (quit) {
 			return reponse;
 		}
 	}
 
-	if(!quit) {
-		if(varDialog) {
+	if (!quit) {
+		if (varDialog) {
 			varDialog->setFieldArchive(nullptr);
 		}
 
@@ -408,7 +408,7 @@ int Window::closeFile(bool quit)
 			_lgpWidget = nullptr;
 		}
 
-		if(fieldArchive != nullptr) {
+		if (fieldArchive != nullptr) {
 			delete fieldArchive;
 			fieldArchive = nullptr;
 		}
@@ -421,7 +421,7 @@ int Window::closeFile(bool quit)
 
 		disableEditors();
 		_scriptManager->removeCopiedReferences();
-		if(_modelManager) {
+		if (_modelManager) {
 			_modelManager->close();
 			_modelManager->deleteLater();
 			_modelManager = 0;
@@ -460,11 +460,11 @@ void Window::openFile(const QString &path)
 
 	QString filePath;
 
-	if(path.isEmpty()) {
+	if (path.isEmpty()) {
 		filePath = Config::value("open_path").toString();
-		if(filePath.isEmpty()) {
+		if (filePath.isEmpty()) {
 			filePath = Data::ff7DataPath();
-			if(!filePath.isEmpty())
+			if (!filePath.isEmpty())
 				filePath.append("/field");
 		}
 		QStringList filter;
@@ -477,18 +477,18 @@ void Window::openFile(const QString &path)
 		QString selectedFilter = filter.value(Config::value("open_path_selected_filter").toInt(), filter.first());
 
 		filePath = QFileDialog::getOpenFileName(this, tr("Open a file"), filePath, filter.join(";;"), &selectedFilter);
-		if(filePath.isNull()) {
+		if (filePath.isNull()) {
 			return;
 		}
 
 		int index = filePath.lastIndexOf('/');
-		if(index == -1)	index = filePath.size();
+		if (index == -1)	index = filePath.size();
 		Config::setValue("open_path", filePath.left(index));
 		Config::setValue("open_path_selected_filter", filter.indexOf(selectedFilter));
 		QStringList recentFiles = Config::value("recentFiles").toStringList();
-		if(!recentFiles.contains(filePath)) {
+		if (!recentFiles.contains(filePath)) {
 			recentFiles.prepend(filePath);
-			if(recentFiles.size() > 20) {
+			if (recentFiles.size() > 20) {
 				recentFiles.removeLast();
 			}
 			Config::setValue("recentFiles", recentFiles);
@@ -502,14 +502,14 @@ void Window::openFile(const QString &path)
 	FieldArchiveIO::Type type;
 	QString ext = filePath.mid(filePath.lastIndexOf('.') + 1).toLower();
 
-	if(ext == "iso" || ext == "bin" || ext == "img") {
+	if (ext == "iso" || ext == "bin" || ext == "img") {
 		isPS = true;
 		type = FieldArchiveIO::Iso;
 	} else {
-		if(ext == "dat") {
+		if (ext == "dat") {
 			isPS = true;
 			type = FieldArchiveIO::File;
-		} else if(ext == "lgp") {
+		} else if (ext == "lgp") {
 			isPS = false;
 			type = FieldArchiveIO::Lgp;
 		} else {
@@ -526,7 +526,7 @@ void Window::openDir()
 	QString filePath = QFileDialog::getExistingDirectory(this,
 														  tr("Select a folder containing the Final Fantasy VII field files"),
 														  Config::value("open_dir_path").toString());
-	if(filePath.isNull())	{
+	if (filePath.isNull())	{
 		return;
 	}
 
@@ -541,7 +541,7 @@ void Window::openDir()
 	                *pcButton = question.addButton(tr("PC"), QMessageBox::AcceptRole);
 	question.addButton(QMessageBox::Cancel);
 	question.exec();
-	if(question.clickedButton() != psButton
+	if (question.clickedButton() != psButton
 			&& question.clickedButton() != pcButton) {
 		return;
 	}
@@ -601,7 +601,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 {
 	closeFile();
 
-	if(isPS) {
+	if (isPS) {
 		fieldArchive = new FieldArchivePS(filePath, type);
 	} else {
 		fieldArchive = new FieldArchivePC(filePath, type);
@@ -622,7 +622,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	case FieldArchiveIO::Aborted:
 		break;
 	case FieldArchiveIO::FieldNotFound:
-		if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
+		if (fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 			actionArchive->setEnabled(true);
 			setWindowTitle();
 			archiveManager();
@@ -656,7 +656,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		out = tr("This error should not appear, thank you for reporting it");
 		break;
 	}
-	if(!out.isEmpty()) {
+	if (!out.isEmpty()) {
 		QMessageBox::warning(this, tr("Error"), out);
 		fieldArchive->close();
 		return;
@@ -667,21 +667,21 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 
 	// Select memorized entry
 	QString previousSessionField = Config::value("currentField").toString();
-	if(!previousSessionField.isEmpty()) {
+	if (!previousSessionField.isEmpty()) {
 		QList<QTreeWidgetItem *> items = _fieldList->findItems(previousSessionField, Qt::MatchExactly);
-		if(!items.isEmpty()) {
+		if (!items.isEmpty()) {
 			_fieldList->setCurrentItem(items.first());
 		}
 	}
 	// Select first entry
-	if(!_fieldList->currentItem() && _fieldList->topLevelItemCount() > 0) {
+	if (!_fieldList->currentItem() && _fieldList->topLevelItemCount() > 0) {
 		_fieldList->setCurrentItem(_fieldList->topLevelItem(0));
 	}
 
 	_fieldList->setFocus();
 
-	if(fieldArchive->size() > 0) {
-		if(varDialog)	varDialog->setFieldArchive(fieldArchive);
+	if (fieldArchive->size() > 0) {
+		if (varDialog)	varDialog->setFieldArchive(fieldArchive);
 		searchDialog->setFieldArchive(fieldArchive);
 		actionEncounter->setEnabled(true);
 		actionMisc->setEnabled(true);
@@ -691,7 +691,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 		actionImport->setEnabled(true);
 		actionModels->setEnabled(true);
 	}
-	if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
+	if (fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 		actionArchive->setEnabled(true);
 	}
 	actionSaveAs->setEnabled(true);
@@ -739,27 +739,27 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 void Window::setWindowTitle()
 {
 	QString windowTitle;
-	if(fieldArchive) {
+	if (fieldArchive) {
 		QList<QTreeWidgetItem *> selectedItems = _fieldList->selectedItems();
 		QString current;
-		if(!selectedItems.isEmpty()) {
+		if (!selectedItems.isEmpty()) {
 			current = selectedItems.first()->text(0);
 		}
 
-		if(!fieldArchive->io()->hasName()) { // [*][current - ]PROG_NAME
+		if (!fieldArchive->io()->hasName()) { // [*][current - ]PROG_NAME
 			windowTitle = "[*]";
 
-			if(!current.isEmpty()) {
+			if (!current.isEmpty()) {
 				 windowTitle.append(current).append(" - ");
 			}
 		} else { // [current ](*archive) - PROG_NAME
-			if(!current.isEmpty()) {
+			if (!current.isEmpty()) {
 				 windowTitle.append(current).append(" (");
 			}
 
 			windowTitle.append("[*]").append(fieldArchive->io()->name());
 
-			if(!current.isEmpty()) {
+			if (!current.isEmpty()) {
 				 windowTitle.append(")");
 			}
 
@@ -773,9 +773,9 @@ void Window::setWindowTitle()
 void Window::disableEditors()
 {
 	zoneImage->clear();
-	if(fieldModel) {
+	if (fieldModel) {
 		fieldModel->clear();
-//		if(fieldArchive && fieldArchive->io()->isPC()) {
+//		if (fieldArchive && fieldArchive->io()->isPC()) {
 //			modelThread->cancel();
 //			modelThread->wait();
 //		}
@@ -787,23 +787,23 @@ void Window::disableEditors()
 	_scriptManager->setEnabled(false);
 
 	authorAction->setVisible(false);
-	if(_textDialog) {
+	if (_textDialog) {
 		_textDialog->clear();
 		_textDialog->setEnabled(false);
 	}
-	if(_modelManager) {
+	if (_modelManager) {
 		_modelManager->clear();
 		_modelManager->setEnabled(false);
 	}
-	if(_tutManager) {
+	if (_tutManager) {
 		_tutManager->clear();
 		_tutManager->setEnabled(false);
 	}
-	if(_walkmeshManager) {
+	if (_walkmeshManager) {
 		_walkmeshManager->clear();
 		_walkmeshManager->setEnabled(false);
 	}
-	if(_backgroundManager) {
+	if (_backgroundManager) {
 		_backgroundManager->clear();
 		_backgroundManager->setEnabled(false);
 	}
@@ -814,12 +814,12 @@ void Window::openField(bool reload)
 	_fieldStackedWidget->setCurrentIndex(0);
 	actionExport->setEnabled(false);
 
-	if(!fieldArchive) {
+	if (!fieldArchive) {
 		return;
 	}
 
 	int mapId = _fieldList->currentMapId();
-	if(mapId < 0) {
+	if (mapId < 0) {
 		disableEditors();
 		return;
 	}
@@ -831,16 +831,16 @@ void Window::openField(bool reload)
 
 	setWindowTitle();
 
-//	if(fieldModel && fieldArchive->io()->isPC()) {
+//	if (fieldModel && fieldArchive->io()->isPC()) {
 //		modelThread->cancel();
 //		modelThread->wait();
 
-//		if(_walkmeshManager)	_walkmeshManager->clear();
+//		if (_walkmeshManager)	_walkmeshManager->clear();
 //	}
 
-	if(field) {
+	if (field) {
 		BackgroundFile *bgFile = field->background(false);
-		if(!bgFile->isModified()) {
+		if (!bgFile->isModified()) {
 			bgFile->clear();
 			bgFile->close();
 		}
@@ -848,7 +848,7 @@ void Window::openField(bool reload)
 
 	// Get and set field
 	field = fieldArchive->field(mapId, true, true);
-	if(!field) {
+	if (!field) {
 		if (fieldArchive->isPC()) {
 			_fieldStackedWidget->setCurrentIndex(1);
 		}
@@ -858,33 +858,33 @@ void Window::openField(bool reload)
 
 	actionExport->setEnabled(true);
 
-	if(fieldModel) {
+	if (fieldModel) {
 		fieldModel->clear();
-		//if(fieldArchive->io()->isPC()) {
+		//if (fieldArchive->io()->isPC()) {
 		//	modelThread->setField(field);
 		//}
 	}
-	if(_textDialog && (reload || _textDialog->isVisible())) {
+	if (_textDialog && (reload || _textDialog->isVisible())) {
 		_textDialog->setField(field, reload);
 		_textDialog->setEnabled(true);
 	}
-	if(_modelManager && (reload || _modelManager->isVisible())) {
+	if (_modelManager && (reload || _modelManager->isVisible())) {
 		_modelManager->fill(field, reload);
 		_modelManager->setEnabled(true);
 	}
-	if(_tutManager && (reload || _tutManager->isVisible())) {
+	if (_tutManager && (reload || _tutManager->isVisible())) {
 		TutFilePC *tutPC = nullptr;
-		if(fieldArchive->isPC()) {
+		if (fieldArchive->isPC()) {
 			tutPC = static_cast<FieldArchivePC *>(fieldArchive)->tut(field->name());
 		}
 		_tutManager->fill(field, tutPC, reload);
 		_tutManager->setEnabled(true);
 	}
-	if(_walkmeshManager && (reload || _walkmeshManager->isVisible())) {
+	if (_walkmeshManager && (reload || _walkmeshManager->isVisible())) {
 		_walkmeshManager->fill(field, reload);
 		_walkmeshManager->setEnabled(true);
 	}
-	if(_backgroundManager && (reload || _backgroundManager->isVisible())) {
+	if (_backgroundManager && (reload || _backgroundManager->isVisible())) {
 		_backgroundManager->fill(field, reload);
 		_backgroundManager->setEnabled(true);
 	}
@@ -914,11 +914,11 @@ void Window::openField(bool reload)
 
 void Window::showModel(int grpScriptID)
 {
-	if(grpScriptID >= 0) {
+	if (grpScriptID >= 0) {
 		int modelID = field->scriptsAndTexts()->modelID(grpScriptID);
 		Data::currentModelID = modelID;
-		if(fieldModel && modelID > -1) {
-			// if(fieldArchive->io()->isPC()) {
+		if (fieldModel && modelID > -1) {
+			// if (fieldArchive->io()->isPC()) {
 			//	modelThread->cancel();
 			//	modelThread->wait();
 			//	modelThread->setModel(modelID);
@@ -934,7 +934,7 @@ void Window::showModel(int grpScriptID)
 
 void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 {
-	if(fieldModel && this->field == field) {
+	if (fieldModel && this->field == field) {
 		fieldModel->setFieldModelFile(fieldModelFile);
 	}
 	zonePreview->setCurrentIndex(int(fieldModel && fieldModelFile->isValid()));
@@ -942,22 +942,22 @@ void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 
 void Window::setModified(bool enabled)
 {
-	if(field != nullptr)		field->setModified(enabled);
+	if (field != nullptr)		field->setModified(enabled);
 	actionSave->setEnabled(enabled);
 	setWindowModified(enabled);
 
 	QColor red = Data::color(Data::ColorRedForeground),
 	       green = Data::color(Data::ColorGreenForeground);
 	int size=_fieldList->topLevelItemCount();
-	for(int i=0 ; i<size ; ++i) {
+	for (int i=0; i<size; ++i) {
 		QTreeWidgetItem *item = _fieldList->topLevelItem(i);
 		int mapId = item->data(0, Qt::UserRole).toInt();
-		if(mapId >= 0) {
+		if (mapId >= 0) {
 			Field *curField = fieldArchive->field(mapId, false);
-			if(curField) {
-				if(enabled && curField->isModified()) {
+			if (curField) {
+				if (enabled && curField->isModified()) {
 					item->setForeground(0, red);
-				} else if(!enabled && item->foreground(0).color() == red) {
+				} else if (!enabled && item->foreground(0).color() == red) {
 					item->setForeground(0, green);
 				}
 			}
@@ -978,7 +978,7 @@ void Window::save() { saveAs(true); }
 
 void Window::saveAs(bool currentPath)
 {
-	if(!fieldArchive) return;
+	if (!fieldArchive) return;
 
 	int mapID, groupID, scriptID, opcodeID;
 	QString errorStr;
@@ -987,7 +987,7 @@ void Window::saveAs(bool currentPath)
 	bool compiled = fieldArchive->compileScripts(mapID, groupID, scriptID, opcodeID, errorStr);
 	setEnabled(true);
 
-	if(!compiled) {
+	if (!compiled) {
 		QMessageBox::warning(this, tr("Compilation Error"), tr("Error Compiling Scripts:\n"
 																   "scene %1 (%2), group %3 (%4), script %5, line %6: %7")
 							 .arg(fieldArchive->field(mapID)->name())
@@ -1001,24 +1001,24 @@ void Window::saveAs(bool currentPath)
 	}
 
 	QString path;
-	if(!currentPath)
+	if (!currentPath)
 	{
-		if(fieldArchive->io()->type() == FieldArchiveIO::Dir) {
+		if (fieldArchive->io()->type() == FieldArchiveIO::Dir) {
 			path = QFileDialog::getExistingDirectory(this, tr("Save Directory As"), fieldArchive->io()->path());
-			if(path.isNull())		return;
+			if (path.isNull())		return;
 		} else {
 			QString filter;
-			if(fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
+			if (fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 				filter = tr("Lgp File (*.lgp)");
-			} else if(fieldArchive->io()->type() == FieldArchiveIO::File) {
+			} else if (fieldArchive->io()->type() == FieldArchiveIO::File) {
 				filter = tr("DAT File (*.DAT)");
-			} else if(fieldArchive->io()->type() == FieldArchiveIO::Iso) {
+			} else if (fieldArchive->io()->type() == FieldArchiveIO::Iso) {
 				filter = tr("Iso File (*.iso *.bin *.img)");
 			} else {
 				return;
 			}
 			path = QFileDialog::getSaveFileName(this, tr("Save As"), fieldArchive->io()->path(), filter);
-			if(path.isNull())		return;
+			if (path.isNull())		return;
 		}
 	}
 
@@ -1064,7 +1064,7 @@ void Window::saveAs(bool currentPath)
 		out = tr("This feature is not complete");
 		break;
 	}
-	if(!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
+	if (!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
 }
 
 bool Window::gotoField(int mapID)
@@ -1074,9 +1074,9 @@ bool Window::gotoField(int mapID)
 	}
 
 	int i, size=_fieldList->topLevelItemCount();
-	for(i=0 ; i<size ; ++i) {
+	for (i=0; i<size; ++i) {
 		QTreeWidgetItem *item = _fieldList->topLevelItem(i);
-		if(item->data(0, Qt::UserRole).toInt() == mapID) {
+		if (item->data(0, Qt::UserRole).toInt() == mapID) {
 			blockSignals(true);
 			_fieldList->setCurrentItem(item);
 			_fieldList->scrollToItem(item);
@@ -1089,7 +1089,7 @@ bool Window::gotoField(int mapID)
 
 void Window::gotoOpcode(int mapID, int grpScriptID, int scriptID, int opcodeID)
 {
-	if(gotoField(mapID)) {
+	if (gotoField(mapID)) {
 		_scriptManager->blockSignals(true);
 		_scriptManager->gotoOpcode(grpScriptID, scriptID, opcodeID);
 		_scriptManager->blockSignals(false);
@@ -1098,27 +1098,27 @@ void Window::gotoOpcode(int mapID, int grpScriptID, int scriptID, int opcodeID)
 
 void Window::gotoText(int mapID, int textID, int from, int size)
 {
-	if(_textDialog) {
+	if (_textDialog) {
 		_textDialog->blockSignals(true);
 	}
-	if(gotoField(mapID)) {
+	if (gotoField(mapID)) {
 		textManager(textID, from, size, false); // show texts dialog
 	}
-	if(_textDialog) {
+	if (_textDialog) {
 		_textDialog->blockSignals(false);
 	}
 }
 
 /* void Window::notifyFileChanged(const QString &path)
 {
-	if(!QFile::exists(path)) {
+	if (!QFile::exists(path)) {
 		QMessageBox::warning(this, tr("Fichier supprimé"), tr("Le fichier '%1' a été supprimé par un programme externe !").arg(path));
 	}
 	else
 	{
 		int reponse = QMessageBox::warning(this, tr("Fichier modifié"), tr("Le fichier '%1' a été modifié par un programme externe.\nVoulez-vous recharger ce fichier ?").arg(path)
 			, QMessageBox::Yes | QMessageBox::No);
-		if(reponse == QMessageBox::Yes) {
+		if (reponse == QMessageBox::Yes) {
 			open(path);
 		}
 	}
@@ -1126,14 +1126,14 @@ void Window::gotoText(int mapID, int textID, int from, int size)
 
 void Window::notifyDirectoryChanged(const QString &path)
 {
-	if(!QFile::exists(path)) {
+	if (!QFile::exists(path)) {
 		QMessageBox::warning(this, tr("Dossier supprimé"), tr("Le dossier '%1' a été supprimé par un programme externe !").arg(path));
 	}
 	else
 	{
 		int reponse = QMessageBox::warning(this, tr("Dossier modifié"), tr("Le dossier '%1' a été modifié par un programme externe.\nVoulez-vous recharger ce dossier ?").arg(path)
 			, QMessageBox::Yes | QMessageBox::No);
-		if(reponse == QMessageBox::Yes) {
+		if (reponse == QMessageBox::Yes) {
 			open(path, true);
 		}
 	}
@@ -1141,7 +1141,7 @@ void Window::notifyDirectoryChanged(const QString &path)
 
 void Window::exportCurrentMap()
 {
-	if(!field || !fieldArchive) return;
+	if (!field || !fieldArchive) return;
 
 	int index;
 	QString types, name, selectedFilter,
@@ -1152,7 +1152,7 @@ void Window::exportCurrentMap()
 
 	name = _fieldList->selectedItems().first()->text(0);
 
-	if(fieldArchive->io()->isPC()) {
+	if (fieldArchive->io()->isPC()) {
 		types = fieldLzs+";;"+fieldDec;
 	} else {
 		types = dat+";;"+mim;
@@ -1161,7 +1161,7 @@ void Window::exportCurrentMap()
 
 	QString path = Config::value("exportPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("exportPath").toString()+"/";
 	path = QFileDialog::getSaveFileName(this, tr("Export the current file"), path+name, types, &selectedFilter);
-	if(path.isNull())		return;
+	if (path.isNull())		return;
 	qint8 error=4;
 	bool compressed = selectedFilter != fieldDec;
 	
@@ -1189,32 +1189,32 @@ void Window::exportCurrentMap()
 	case 3:	out = tr("Unable to create the new file");break;
 	case 4:	out = tr("Not yet implemented!");break;
 	}
-	if(!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
+	if (!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
 }
 
 void Window::massExport()
 {
-	if(!fieldArchive) return;
+	if (!fieldArchive) return;
 
 	MassExportDialog *massExportDialog = new MassExportDialog(this);
 	massExportDialog->fill(fieldArchive, _fieldList->currentMapId());
-	if(massExportDialog->exec() == QDialog::Accepted) {
+	if (massExportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massExportDialog->selectedFields();
-		if(!selectedFields.isEmpty()) {
+		if (!selectedFields.isEmpty()) {
 			QMap<FieldArchive::ExportType, QString> toExport;
 
 			showProgression(tr("Export..."), false);
 
-			if(massExportDialog->exportModule(MassExportDialog::Fields)) {
+			if (massExportDialog->exportModule(MassExportDialog::Fields)) {
 				toExport.insert(FieldArchive::Fields, massExportDialog->moduleFormat(MassExportDialog::Fields));
 			}
-			if(massExportDialog->exportModule(MassExportDialog::Backgrounds)) {
+			if (massExportDialog->exportModule(MassExportDialog::Backgrounds)) {
 				toExport.insert(FieldArchive::Backgrounds, massExportDialog->moduleFormat(MassExportDialog::Backgrounds));
 			}
-			if(massExportDialog->exportModule(MassExportDialog::Akaos)) {
+			if (massExportDialog->exportModule(MassExportDialog::Akaos)) {
 				toExport.insert(FieldArchive::Akaos, massExportDialog->moduleFormat(MassExportDialog::Akaos));
 			}
-			if(massExportDialog->exportModule(MassExportDialog::Texts)) {
+			if (massExportDialog->exportModule(MassExportDialog::Texts)) {
 				toExport.insert(FieldArchive::Texts, massExportDialog->moduleFormat(MassExportDialog::Texts));
 			}
 
@@ -1230,7 +1230,7 @@ void Window::massExport()
 				tags = psfDialog.tags();
 			}
 
-			if(!fieldArchive->exportation(selectedFields, massExportDialog->directory(),
+			if (!fieldArchive->exportation(selectedFields, massExportDialog->directory(),
 									  massExportDialog->overwrite(), toExport, &tags)
 					&& !observerWasCanceled()) {
 				QMessageBox::warning(this, tr("Error"), tr("An error occured when exporting"));
@@ -1243,22 +1243,22 @@ void Window::massExport()
 
 void Window::massImport()
 {
-	if(!fieldArchive) return;
+	if (!fieldArchive) return;
 
 	MassImportDialog *massImportDialog = new MassImportDialog(this);
 	massImportDialog->fill(fieldArchive, _fieldList->currentMapId());
-	if(massImportDialog->exec() == QDialog::Accepted) {
+	if (massImportDialog->exec() == QDialog::Accepted) {
 		QList<int> selectedFields = massImportDialog->selectedFields();
-		if(!selectedFields.isEmpty()) {
+		if (!selectedFields.isEmpty()) {
 			QMap<Field::FieldSection, QString> toImport;
 
 			showProgression(tr("Import..."), false);
 
-			if(massImportDialog->importModule(MassImportDialog::Texts)) {
+			if (massImportDialog->importModule(MassImportDialog::Texts)) {
 				toImport.insert(Field::Scripts, massImportDialog->moduleFormat(MassImportDialog::Texts));
 			}
 
-			if(!fieldArchive->importation(selectedFields, massImportDialog->directory(),
+			if (!fieldArchive->importation(selectedFields, massImportDialog->directory(),
 									  toImport)
 					&& !observerWasCanceled()) {
 				QMessageBox::warning(this, tr("Error"), tr("An error occurred when importing"));
@@ -1272,12 +1272,12 @@ void Window::massImport()
 void Window::importToCurrentMap()
 {
 	int mapId = _fieldList->currentMapId();
-	if(mapId < 0) {
+	if (mapId < 0) {
 		return;
 	}
 
 	Field *field = fieldArchive->field(mapId, false);
-	if(nullptr == field) {
+	if (nullptr == field) {
 		return;
 	}
 
@@ -1295,12 +1295,12 @@ void Window::importToCurrentMap()
 	filter << pc << dat << decPc << decDat;
 
 	name = _fieldList->selectedItems().first()->text(0);
-	if(fieldArchive->io()->isPS())
+	if (fieldArchive->io()->isPS())
 		name = name.toUpper();
 
 	QString path = Config::value("importPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("importPath").toString()+"/";
 	path = QFileDialog::getOpenFileName(this, tr("Import a file"), path+name, filter.join(";;"), &selectedFilter);
-	if(path.isNull())		return;
+	if (path.isNull())		return;
 
 	bool isDat = selectedFilter == dat || selectedFilter == decDat;
 	bool isCompressed = selectedFilter == pc || selectedFilter == decPc;
@@ -1308,12 +1308,12 @@ void Window::importToCurrentMap()
 	ImportDialog dialog((isDat && fieldArchive->io()->isPS())
 						|| (!isDat && fieldArchive->io()->isPC()),
 						isDat, path, this);
-	if(dialog.exec() != QDialog::Accepted) {
+	if (dialog.exec() != QDialog::Accepted) {
 		return;
 	}
 
 	Field::FieldSections parts = dialog.parts();
-	if(parts == 0) {
+	if (parts == 0) {
 		return;
 	}
 
@@ -1333,12 +1333,12 @@ void Window::importToCurrentMap()
 	case 1:	out = tr("Error reopening file");	break;
 	case 2:	out = tr("Invalid file");				break;
 	}
-	if(!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
+	if (!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
 }
 
 void Window::varManager()
 {
-	if(!varDialog) {
+	if (!varDialog) {
 		varDialog = new VarManager(fieldArchive, this);
 	}
 	varDialog->show();
@@ -1360,7 +1360,7 @@ void Window::runFF7()
 	FF7Exe = "\"" % FF7Exe % "\"";
 #endif
 
-	if(!QProcess::startDetached(FF7Exe, args, FF7ExeDir)) {
+	if (!QProcess::startDetached(FF7Exe, args, FF7ExeDir)) {
 		QMessageBox::warning(this, tr("Error"), tr("Final Fantasy VII couldn't be launched\n%1")
 							 .arg(QDir::toNativeSeparators(FF7Exe)));
 	}
@@ -1368,9 +1368,9 @@ void Window::runFF7()
 
 void Window::searchManager()
 {
-	if(_textDialog && _textDialog->isVisible()) {
+	if (_textDialog && _textDialog->isVisible()) {
 		QString selectedText = _textDialog->selectedText();
-		if(!selectedText.isEmpty()) {
+		if (!selectedText.isEmpty()) {
 			searchDialog->setText(selectedText);
 		}
 	}
@@ -1406,14 +1406,14 @@ void Window::createCurrentMap()
 
 void Window::textManager(int textID, int from, int size, bool activate)
 {
-	if(!_textDialog) {
+	if (!_textDialog) {
 		_textDialog = new TextManager(this);
 		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
 		connect(_textDialog, SIGNAL(modified()), SLOT(setModified()));
 		connect(_scriptManager, SIGNAL(changed()), _textDialog, SLOT(updateFromScripts()));
 	}
 
-	if(field && field->scriptsAndTexts()->isOpen()) {
+	if (field && field->scriptsAndTexts()->isOpen()) {
 		_textDialog->setField(field);
 		_textDialog->setEnabled(true);
 	} else {
@@ -1421,21 +1421,21 @@ void Window::textManager(int textID, int from, int size, bool activate)
 		_textDialog->setEnabled(false);
 	}
 	_textDialog->show();
-	if(activate) {
+	if (activate) {
 		_textDialog->activateWindow();
 	} else {
 		searchDialog->raise();
 	}
-	if(textID >= 0) {
+	if (textID >= 0) {
 		_textDialog->gotoText(textID, from, size);
 	}
 }
 
 void Window::modelManager()
 {
-	if(!_modelManager) {
-		if(!field)	return;
-		if(field->isPC()) {
+	if (!_modelManager) {
+		if (!field)	return;
+		if (field->isPC()) {
 			_modelManager = new ModelManagerPC(this);
 		} else {
 			_modelManager = new ModelManagerPS(this);
@@ -1443,9 +1443,9 @@ void Window::modelManager()
 		connect(_modelManager, SIGNAL(modified()), SLOT(setModified()));
 	}
 
-	if(field) {
+	if (field) {
 //		zonePreview->setCurrentIndex(0);
-//		if(fieldModel) {
+//		if (fieldModel) {
 //			fieldModel->clear();
 //		}
 
@@ -1453,7 +1453,7 @@ void Window::modelManager()
 		_modelManager->setEnabled(true);
 
 //		bool modelLoaded = false;
-//		if(fieldModel && Data::currentModelID != -1) {
+//		if (fieldModel && Data::currentModelID != -1) {
 //			modelLoaded = fieldModel->load(field, Data::currentModelID);
 //		}
 //		zonePreview->setCurrentIndex((int)modelLoaded);
@@ -1467,13 +1467,13 @@ void Window::modelManager()
 
 void Window::encounterManager()
 {
-	if(field) {
+	if (field) {
 		EncounterFile *encounter = field->encounter();
-		if(encounter->isOpen()) {
+		if (encounter->isOpen()) {
 			EncounterWidget dialog(encounter, this);
-			if(dialog.exec()==QDialog::Accepted)
+			if (dialog.exec()==QDialog::Accepted)
 			{
-				if(encounter->isModified())
+				if (encounter->isModified())
 					setModified();
 			}
 		} else {
@@ -1484,14 +1484,14 @@ void Window::encounterManager()
 
 void Window::tutManager()
 {
-	if(!_tutManager) {
+	if (!_tutManager) {
 		_tutManager = new TutWidget(this);
 		connect(_tutManager, SIGNAL(modified()), SLOT(setModified()));
 	}
 
-	if(field && field->tutosAndSounds()->isOpen()) {
+	if (field && field->tutosAndSounds()->isOpen()) {
 		TutFilePC *tutPC = nullptr;
-		if(fieldArchive->isPC()) {
+		if (fieldArchive->isPC()) {
 			tutPC = static_cast<FieldArchivePC *>(fieldArchive)->tut(field->name());
 		}
 		_tutManager->fill(field, tutPC);
@@ -1506,12 +1506,12 @@ void Window::tutManager()
 
 void Window::walkmeshManager()
 {
-	if(!_walkmeshManager) {
+	if (!_walkmeshManager) {
 		_walkmeshManager = new WalkmeshManager(this);
 		connect(_walkmeshManager, SIGNAL(modified()), SLOT(setModified()));
 	}
 
-	if(field) {
+	if (field) {
 		_walkmeshManager->fill(field);
 		_walkmeshManager->setEnabled(true);
 	} else {
@@ -1524,13 +1524,13 @@ void Window::walkmeshManager()
 
 void Window::backgroundManager()
 {
-	if(!_backgroundManager) {
+	if (!_backgroundManager) {
 		_backgroundManager = new BGDialog(this);
 		connect(_backgroundManager, SIGNAL(modified()), SLOT(setModified()));
 		connect(_backgroundManager, SIGNAL(modified()), zoneImage, SLOT(drawBackground()));
 	}
 
-	if(field) {
+	if (field) {
 		_backgroundManager->fill(field);
 		_backgroundManager->setEnabled(true);
 	} else {
@@ -1543,13 +1543,13 @@ void Window::backgroundManager()
 
 void Window::miscManager()
 {
-	if(field) {
+	if (field) {
 		InfFile *inf = field->inf();
-		if(inf->isOpen()) {
+		if (inf->isOpen()) {
 			MiscWidget dialog(inf, field, this);
-			if(dialog.exec()==QDialog::Accepted)
+			if (dialog.exec()==QDialog::Accepted)
 			{
-				if(inf->isModified() || field->isModified()) {
+				if (inf->isModified() || field->isModified()) {
 					setModified();
 					authorLbl->setText(tr("Author: %1").arg(field->scriptsAndTexts()->author()));
 				}
@@ -1565,7 +1565,7 @@ void Window::archiveManager()
 	if (_lgpWidget != nullptr && _mainStackedWidget->currentWidget() == _lgpWidget) {
 		actionArchive->setText(tr("Archive Mana&ger..."));
 		_mainStackedWidget->setCurrentIndex(0); // Back to standard view
-	} else if(fieldArchive && fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
+	} else if (fieldArchive && fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
 		actionArchive->setText(tr("Go back to field map editor..."));
 		if (_lgpWidget == nullptr) {
 			_lgpWidget = new LgpWidget(static_cast<Lgp *>(fieldArchive->io()->device()), this);
@@ -1578,34 +1578,34 @@ void Window::archiveManager()
 
 void Window::miscOperations()
 {
-	if(!fieldArchive) {
+	if (!fieldArchive) {
 		return;
 	}
 
 	OperationsManager dialog(fieldArchive->isPC(), this);
-	if(dialog.exec() == QDialog::Accepted) {
+	if (dialog.exec() == QDialog::Accepted) {
 		OperationsManager::Operations operations = dialog.selectedOperations();
 
 		showProgression(tr("Applying..."), false);
 
-		if(operations.testFlag(OperationsManager::CleanUnusedTexts)) {
+		if (operations.testFlag(OperationsManager::CleanUnusedTexts)) {
 			fieldArchive->cleanTexts();
 		}
-		if(!observerWasCanceled()) {
-			if(operations.testFlag(OperationsManager::RemoveTexts)) {
+		if (!observerWasCanceled()) {
+			if (operations.testFlag(OperationsManager::RemoveTexts)) {
 				fieldArchive->removeTexts();
 			}
-			if(operations.testFlag(OperationsManager::RemoveBattles)) {
+			if (operations.testFlag(OperationsManager::RemoveBattles)) {
 				fieldArchive->removeBattles();
 			}
-			if(fieldArchive->isPC()) {
-				if(operations.testFlag(OperationsManager::CleanModelLoaderPC)) {
+			if (fieldArchive->isPC()) {
+				if (operations.testFlag(OperationsManager::CleanModelLoaderPC)) {
 					static_cast<FieldArchivePC *>(fieldArchive)->cleanModelLoader();
 				}
-				if(operations.testFlag(OperationsManager::RemoveUnusedSectionPC)) {
+				if (operations.testFlag(OperationsManager::RemoveUnusedSectionPC)) {
 					static_cast<FieldArchivePC *>(fieldArchive)->removeUnusedSections();
 				}
-				if(operations.testFlag(OperationsManager::RepairBackgroundsPC)) {
+				if (operations.testFlag(OperationsManager::RepairBackgroundsPC)) {
 					static_cast<FieldArchivePC *>(fieldArchive)->repairBackgroundsPC();
 				}
 			}
@@ -1613,7 +1613,7 @@ void Window::miscOperations()
 
 		hideProgression();
 
-		if(fieldArchive->isModified()) {
+		if (fieldArchive->isModified()) {
 			setModified();
 		}
 	}
@@ -1622,9 +1622,9 @@ void Window::miscOperations()
 void Window::config()
 {
 	ConfigWindow configWindow(this);
-	if(configWindow.exec() == QDialog::Accepted) {
+	if (configWindow.exec() == QDialog::Accepted) {
 		actionJp_txt->setChecked(Config::value("jp_txt", false).toBool());
-		if(_textDialog) {
+		if (_textDialog) {
 			_textDialog->updateText();
 		}
 		actionRun->setEnabled(!Data::ff7AppPath().isEmpty());

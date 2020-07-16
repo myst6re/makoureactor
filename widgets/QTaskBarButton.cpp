@@ -29,7 +29,7 @@ QTaskBarButton::QTaskBarButton(QWidget *mainWindow) :
 	HRESULT hRes = CoCreateInstance(CLSID_TaskbarList,
 									nullptr, CLSCTX_INPROC_SERVER,
 									IID_ITaskbarList3, (LPVOID*)&pITask);
-	if(FAILED(hRes)) {
+	if (FAILED(hRes)) {
 		pITask = 0;
 		CoUninitialize();
 		return;
@@ -40,7 +40,7 @@ QTaskBarButton::QTaskBarButton(QWidget *mainWindow) :
 
 QTaskBarButton::~QTaskBarButton()
 {
-	if(pITask) {
+	if (pITask) {
 		pITask->Release();
 		pITask = nullptr;
 		CoUninitialize();
@@ -49,9 +49,9 @@ QTaskBarButton::~QTaskBarButton()
 
 void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
 {
-	if(!pITask)	return;
+	if (!pITask)	return;
 
-	if(pixmap.isNull()) {
+	if (pixmap.isNull()) {
 		pITask->SetOverlayIcon(_winId, nullptr, nullptr);
 	} else {
 		const HICON icon = pixmap.toWinHICON();
@@ -62,7 +62,7 @@ void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
 
 void QTaskBarButton::setState(State state)
 {
-	if(!pITask)	return;
+	if (!pITask)	return;
 
 	TBPFLAG flag;
 	switch(state) {
@@ -78,21 +78,21 @@ void QTaskBarButton::setState(State state)
 		break;
 	}
 
-	if(S_OK == pITask->SetProgressState(_winId, flag)) {
+	if (S_OK == pITask->SetProgressState(_winId, flag)) {
 		_state = state;
 	}
 }
 
 void QTaskBarButton::setValue(int value)
 {
-	if(!pITask)	return;
+	if (!pITask)	return;
 
 	int completed = value - _minimum, total = _maximum - _minimum;
-	if(completed < 0 || total <= 0) {
+	if (completed < 0 || total <= 0) {
 		return;
 	}
 
-	if(S_OK == pITask->SetProgressValue(_winId, completed, total)) {
+	if (S_OK == pITask->SetProgressValue(_winId, completed, total)) {
 		_value = value;
 		emit valueChanged(value);
 	}

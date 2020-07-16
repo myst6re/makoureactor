@@ -60,7 +60,7 @@ void FieldModel::setFieldModelFile(FieldModelFile *fieldModel, int animID)
 	currentFrame = 0;
 	data = fieldModel;
 	animationID = animID;
-	if(data && data->isValid()) {
+	if (data && data->isValid()) {
 		update();
 		updateTimer();
 	}
@@ -83,7 +83,7 @@ void FieldModel::setAnimationID(int animID)
 
 void FieldModel::updateTimer()
 {
-	if(animated && data && frameCount() > 1) {
+	if (animated && data && frameCount() > 1) {
 		timer.start(30);
 	} else {
 		timer.stop();
@@ -133,9 +133,9 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 
 	int curPolyType = 0;
 
-	foreach(FieldModelPart *part, bone.parts()) {
-		foreach(FieldModelGroup *g, part->groups()) {
-			if(g->hasTexture()) {
+	for (FieldModelPart *part : bone.parts()) {
+		for (FieldModelGroup *g : part->groups()) {
+			if (g->hasTexture()) {
 				QOpenGLTexture *tex = textures.value(data->textureIdForGroup(g));
 
 				if (tex) {
@@ -150,13 +150,13 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 				texture = nullptr;
 			}
 
-			foreach(const Poly *p, g->polygons()) {
-				if(curPolyType != p->count()) {
-					if(curPolyType != 0) {
+			for (const Poly *p : g->polygons()) {
+				if (curPolyType != p->count()) {
+					if (curPolyType != 0) {
 						glEnd();
 					}
 
-					if(p->count() == 3) {
+					if (p->count() == 3) {
 						glBegin(GL_TRIANGLES);
 					} else {
 						glBegin(GL_QUADS);
@@ -164,17 +164,17 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 					curPolyType = p->count();
 				}
 
-				if(p->isMonochrome()) {
+				if (p->isMonochrome()) {
 					const QRgb &color = p->color();
 					glColor3ub(qRed(color) * globalColor[0],
 					           qGreen(color) * globalColor[1],
 					           qBlue(color) * globalColor[2]);
 				}
 
-				for(int j=0 ; j<p->count() ; ++j) {
+				for (int j=0; j<p->count(); ++j) {
 					const PolyVertex &vertex = p->vertex(j);
 
-					if(!p->isMonochrome()) {
+					if (!p->isMonochrome()) {
 						QRgb color = p->color(j);
 						// TODO: color projector effect
 						/* float spot = qMax(vertex.x * 0.0f + vertex.y * 0.0f + (1.0 - (vertex.z/scale)) * -1.0f, 0.0f);
@@ -188,7 +188,7 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 						           qBlue(color) * globalColor[2]);
 					}
 
-					if(g->hasTexture() && p->hasTexture()) {
+					if (g->hasTexture() && p->hasTexture()) {
 						const TexCoord &coord = p->texCoord(j);
 						glTexCoord2d(coord.x, coord.y);
 					}
@@ -197,7 +197,7 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 				}
 			}
 
-			if(curPolyType != 0) {
+			if (curPolyType != 0) {
 				glEnd();
 				curPolyType = 0;
 			}
@@ -296,13 +296,13 @@ void FieldModel::resizeGL(int width, int height)
 void FieldModel::paintModel(FieldModelFile *data, int animationID,
                             int currentFrame, float scale)
 {
-	if(!data || !data->isValid() || scale == 0.0f) {
+	if (!data || !data->isValid() || scale == 0.0f) {
 		return;
 	}
 
 	float globalColor[] = { 1.0f, 1.0f, 1.0f };
 
-	/* if(!data->translateAfter()) { // TODO: for PC too
+	/* if (!data->translateAfter()) { // TODO: for PC too
 		FieldModelFilePS *filePS = static_cast<FieldModelFilePS *>(data);
 		globalColor[0] = qRed(filePS->globalColor()) / 255.0f;
 		globalColor[1] = qGreen(filePS->globalColor()) / 255.0f;
@@ -324,7 +324,7 @@ void FieldModel::paintModel(FieldModelFile *data, int animationID,
 
 	QOpenGLTexture *texture = nullptr;
 
-	if(data->boneCount() <= 1) {
+	if (data->boneCount() <= 1) {
 		drawP(data, scale, data->bone(0), textures, globalColor, texture);
 
 		qDeleteAll(textures);
@@ -339,17 +339,17 @@ void FieldModel::paintModel(FieldModelFile *data, int animationID,
 	QList<PolyVertex> rot = data->animation(animationID).rotations(currentFrame);
 	parent.push(-1);
 
-	for(i = 0 ; i < data->boneCount() ; ++i) {
+	for (i = 0; i < data->boneCount(); ++i) {
 		const FieldModelBone &bone = data->bone(i);
 
-		while(!parent.isEmpty() && parent.top() != bone.parent()) {
+		while (!parent.isEmpty() && parent.top() != bone.parent()) {
 			parent.pop();
 			glPopMatrix();
 		}
 		parent.push(i);
 		glPushMatrix();
 
-		if(!data->translateAfter()) {
+		if (!data->translateAfter()) {
 			glTranslatef(0.0, 0.0, bone.size() / scale);
 		}
 
@@ -362,12 +362,12 @@ void FieldModel::paintModel(FieldModelFile *data, int animationID,
 
 		drawP(data, scale, bone, textures, globalColor, texture);
 
-		if(data->translateAfter()) {
+		if (data->translateAfter()) {
 			glTranslatef(0.0, 0.0, bone.size() / scale);
 		}
 	}
 
-	while(!parent.isEmpty() && parent.top() != -1) {
+	while (!parent.isEmpty() && parent.top() != -1) {
 		parent.pop();
 		glPopMatrix();
 	}
@@ -381,7 +381,7 @@ void FieldModel::paintGL()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	if(!data || !data->isValid())	return;
+	if (!data || !data->isValid())	return;
 
 #ifdef OPENGL_DEBUG
 	QOpenGLContext *ctx = QOpenGLContext::currentContext();
@@ -391,7 +391,7 @@ void FieldModel::paintGL()
 
 	//scale the view port if the window manager is scaling
 	int scale = 1;
-	if(qApp->desktop()->physicalDpiX() > 140) {
+	if (qApp->desktop()->physicalDpiX() > 140) {
 		scale = 2;
 	}
 
@@ -447,19 +447,19 @@ void FieldModel::wheelEvent(QWheelEvent *event)
 void FieldModel::mousePressEvent(QMouseEvent *event)
 {
 	lastPos = event->pos();
-	if(event->button() == Qt::MidButton) {
+	if (event->button() == Qt::MidButton) {
 		resetCamera();
 	}
 }
 
 void FieldModel::animate()
 {
-	if(data && data->isValid() && isVisible()) {
+	if (data && data->isValid() && isVisible()) {
 		int count = frameCount();
-		if(count > 0) {
+		if (count > 0) {
 			currentFrame = (currentFrame + 1) % count;
 			update();
-		} else if(currentFrame != 0) {
+		} else if (currentFrame != 0) {
 			currentFrame = 0;
 			update();
 		}

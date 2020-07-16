@@ -29,26 +29,26 @@ BackgroundTexturesIOPC::BackgroundTexturesIOPC(QIODevice *device) :
 
 bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 {
-	if(!canRead()) {
+	if (!canRead()) {
 		return false;
 	}
 
 	textures->clear();
 	qint64 initPos = device()->pos();
 
-	for(quint8 texID=0 ; texID<BACKGROUND_TEXTURE_PC_MAX_COUNT ; ++texID) {
+	for (quint8 texID=0; texID<BACKGROUND_TEXTURE_PC_MAX_COUNT; ++texID) {
 
 		quint16 exists;
 
-		if(device()->read((char *)&exists, 2) != 2) {
+		if (device()->read((char *)&exists, 2) != 2) {
 			qWarning() << "BackgroundTexturesIOPC::read cannot read exists" << texID;
 			return false;
 		}
 
-		if(bool(exists)) {
+		if (bool(exists)) {
 			quint16 size, depth;
 
-			if(device()->read((char *)&size, 2) != 2 ||
+			if (device()->read((char *)&size, 2) != 2 ||
 					device()->read((char *)&depth, 2) != 2) {
 				qWarning() << "BackgroundTexturesIOPC::read cannot read size or depth" << texID;
 				return false;
@@ -60,14 +60,14 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 			infos.pos = device()->pos() - initPos;
 			textures->addTexInfos(texID, infos);
 
-			if(!device()->seek(device()->pos() + (depth == 0 ? 32768 : depth * 65536))) {
+			if (!device()->seek(device()->pos() + (depth == 0 ? 32768 : depth * 65536))) {
 				qWarning() << "BackgroundTexturesIOPC::read cannot seek texture" << texID;
 				return false;
 			}
 		}
 	}
 
-	if(!device()->seek(initPos)) {
+	if (!device()->seek(initPos)) {
 		qWarning() << "BackgroundTexturesIOPC::read cannot reset";
 		return false;
 	}
@@ -78,31 +78,31 @@ bool BackgroundTexturesIOPC::read(BackgroundTexturesPC *textures) const
 
 bool BackgroundTexturesIOPC::write(const BackgroundTexturesPC *textures) const
 {
-	if(!canWrite() || !textures) {
+	if (!canWrite() || !textures) {
 		return false;
 	}
 
-	for(quint8 texID=0 ; texID<BACKGROUND_TEXTURE_PC_MAX_COUNT ; ++texID) {
+	for (quint8 texID=0; texID<BACKGROUND_TEXTURE_PC_MAX_COUNT; ++texID) {
 
 		quint16 exists = textures->hasTex(texID);
 
-		if(device()->write((char *)&exists, 2) != 2) {
+		if (device()->write((char *)&exists, 2) != 2) {
 			return false;
 		}
 
-		if(bool(exists)) {
+		if (bool(exists)) {
 			BackgroundTexturesPCInfos infos = textures->texInfos(texID);
 
 			quint16 size = infos.size, depth = infos.depth;
 
-			if(device()->write((char *)&size, 2) != 2 ||
+			if (device()->write((char *)&size, 2) != 2 ||
 					device()->write((char *)&depth, 2) != 2) {
 				return false;
 			}
 
 			int dataSize = infos.depth == 0 ? 32768 : infos.depth * 65536;
 
-			if(device()->write(textures->data().mid(infos.pos, dataSize)) != dataSize) {
+			if (device()->write(textures->data().mid(infos.pos, dataSize)) != dataSize) {
 				return false;
 			}
 		}
@@ -118,7 +118,7 @@ BackgroundTexturesIOPS::BackgroundTexturesIOPS(QIODevice *device) :
 
 bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures) const
 {
-	if(!canRead()) {
+	if (!canRead()) {
 		return false;
 	}
 
@@ -129,7 +129,7 @@ bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures) const
 
 	memcpy(&headerPalSize, constMimData, 4);
 
-	if(mimDataSize < headerPalSize + 12) {
+	if (mimDataSize < headerPalSize + 12) {
 		return false;
 	}
 
@@ -137,7 +137,7 @@ bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures) const
 
 	headerImg.w *= 2;
 
-	if(headerPalSize+headerImg.size+12 <= mimDataSize) {
+	if (headerPalSize+headerImg.size+12 <= mimDataSize) {
 		memcpy(&headerEffect, constMimData + headerPalSize+headerImg.size, 12);
 		headerEffect.w *= 2;
 	} else {
@@ -157,7 +157,7 @@ bool BackgroundTexturesIOPS::read(BackgroundTexturesPS *textures) const
 
 bool BackgroundTexturesIOPS::write(const BackgroundTexturesPS *textures) const
 {
-	if(!canWrite()) {
+	if (!canWrite()) {
 		return false;
 	}
 

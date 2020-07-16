@@ -54,7 +54,7 @@ ModelManager::ModelManager(QWidget *parent) :
 	    models->fontMetrics().boundingRect("WWWWWWWWWWWWWWW").width());
 	modelAnims->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-	if(Config::value("OpenGL", true).toBool()) {
+	if (Config::value("OpenGL", true).toBool()) {
 		modelPreview = new FieldModel();
 		modelWidget = modelPreview;
 		modelPreview->setFixedSize(304, 214);
@@ -75,7 +75,7 @@ void ModelManager::clear()
 
 	models->clear();
 	modelAnims->clear();
-	if(modelPreview)	modelPreview->clear();
+	if (modelPreview)	modelPreview->clear();
 
 	models->blockSignals(false);
 	modelAnims->blockSignals(false);
@@ -83,11 +83,11 @@ void ModelManager::clear()
 
 void ModelManager::fill(Field *field, bool reload)
 {
-	if(!reload && _field == field)	return;
+	if (!reload && _field == field)	return;
 
 	clear();
 
-	if(!field->fieldModelLoader()->isOpen()) {
+	if (!field->fieldModelLoader()->isOpen()) {
 		return;
 	}
 
@@ -97,7 +97,7 @@ void ModelManager::fill(Field *field, bool reload)
 	fillModelList();
 
 	QTreeWidgetItem *currentItem = models->topLevelItem(Data::currentModelID);
-	if(currentItem) {
+	if (currentItem) {
 		models->setCurrentItem(currentItem);
 	} else {
 		models->setCurrentItem(models->topLevelItem(0));
@@ -110,7 +110,7 @@ void ModelManager::fill(Field *field, bool reload)
 void ModelManager::fillModelList()
 {
 	models->blockSignals(true);
-	foreach(const QStringList &name, modelNames()) {
+	for (const QStringList &name : modelNames()) {
 		QTreeWidgetItem *item = new QTreeWidgetItem(name);
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 		models->addTopLevelItem(item);
@@ -120,9 +120,9 @@ void ModelManager::fillModelList()
 
 int ModelManager::currentModelID(QTreeWidgetItem *item) const
 {
-	if(!item) {
+	if (!item) {
 		item = models->currentItem();
-		if(!item)	return -1;
+		if (!item)	return -1;
 	}
 	return models->indexOfTopLevelItem(item);
 }
@@ -130,7 +130,7 @@ int ModelManager::currentModelID(QTreeWidgetItem *item) const
 QList<int> ModelManager::selectedModelIDs() const
 {
 	QList<int> modelIDs;
-	foreach(QTreeWidgetItem *item, models->selectedItems()) {
+	for (QTreeWidgetItem *item : models->selectedItems()) {
 		modelIDs.append(models->indexOfTopLevelItem(item));
 	}
 	return modelIDs;
@@ -138,9 +138,9 @@ QList<int> ModelManager::selectedModelIDs() const
 
 int ModelManager::currentAnimID(QTreeWidgetItem *item) const
 {
-	if(!item) {
+	if (!item) {
 		item = modelAnims->currentItem();
-		if(!item)	return -1;
+		if (!item)	return -1;
 	}
 	return modelAnims->indexOfTopLevelItem(item);
 }
@@ -148,7 +148,7 @@ int ModelManager::currentAnimID(QTreeWidgetItem *item) const
 void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous)
 {
 	Q_UNUSED(previous);
-	if(item == nullptr) {
+	if (item == nullptr) {
 		modelFrame->setEnabled(false);
 		return;
 	}
@@ -156,19 +156,19 @@ void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previo
 	int modelID = currentModelID(item);
 	modelAnims->clear();
 
-	if(modelID < 0 || modelID >= fieldModelLoader->modelCount()) {
+	if (modelID < 0 || modelID >= fieldModelLoader->modelCount()) {
 		return;
 	}
 
 	modelAnims->addTopLevelItems(animItems(modelID));
 
-	for(int i=0 ; i<modelAnims->columnCount() ; ++i) {
+	for (int i=0; i<modelAnims->columnCount(); ++i) {
 		modelAnims->resizeColumnToContents(i);
 	}
 
 	showModelInfos2(modelID);
 
-	if(modelAnims->topLevelItemCount() > 0)
+	if (modelAnims->topLevelItemCount() > 0)
 		modelAnims->setCurrentItem(modelAnims->topLevelItem(0));
 }
 
@@ -195,7 +195,7 @@ void ModelManager::showModelInfos2(int row)
 void ModelManager::setModelUnknown(int unknown)
 {
 	int modelID = currentModelID();
-	if(modelID < 0)	return;
+	if (modelID < 0)	return;
 
 	fieldModelLoader->setUnknown(modelID, unknown);
 
@@ -204,8 +204,8 @@ void ModelManager::setModelUnknown(int unknown)
 
 void ModelManager::showModel(QTreeWidgetItem *item)
 {
-	if(modelPreview) {
-		if(item == nullptr) {
+	if (modelPreview) {
+		if (item == nullptr) {
 			modelPreview->clear();
 			return;
 		}

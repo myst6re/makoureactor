@@ -65,7 +65,7 @@ public:
 		return _textures;
 	}
 	inline void setTextures(BackgroundTextures *textures) {
-		if(_textures) {
+		if (_textures) {
 			delete _textures;
 		}
 		_textures = textures;

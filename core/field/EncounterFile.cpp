@@ -36,12 +36,12 @@ bool EncounterFile::open()
 
 bool EncounterFile::open(const QByteArray &data)
 {
-	if(sizeof(EncounterTable) != 24) {
+	if (sizeof(EncounterTable) != 24) {
 		qWarning() << "Encounter invalid struct size" << sizeof(EncounterTable);
 		Q_ASSERT(false);
 	}
 
-	if(data.size() != 48) {
+	if (data.size() != 48) {
 		qWarning() << "Encounter invalid data size" << data.size();
 		return false;
 	}

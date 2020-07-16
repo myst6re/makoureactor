@@ -38,7 +38,7 @@ FieldPC::FieldPC(const Field &field) :
 
 FieldPC::~FieldPC()
 {
-	if(_model) {
+	if (_model) {
 		delete _model;
 	}
 }
@@ -81,7 +81,7 @@ FieldPart *FieldPC::createPart(FieldSection part)
 
 FieldModelLoaderPC *FieldPC::fieldModelLoader(bool open)
 {
-	//if(open && !modelLoader->isOpen()) {
+	//if (open && !modelLoader->isOpen()) {
 	//	Data::currentCharNames = model_nameChar;
 	//	Data::currentHrcNames = &fieldModelLoader->model_nameHRC;
 	//	Data::currentAnimNames = &fieldModelLoader->model_anims;
@@ -97,13 +97,13 @@ FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate
 
 	// Optimization: Prevent the loading of the same model twice
 	int localModelID = modelNameToId.value(hrc.toLower(), -1);
-	if(localModelID == -1) {
+	if (localModelID == -1) {
 		localModelID = modelID;
 		modelNameToId.insert(hrc.toLower(), localModelID);
 	}
 
 	FieldModelFilePC *fieldModel = new FieldModelFilePC();
-	if(open) {
+	if (open) {
 		fieldModel->load(hrc, a, animate);
 	}
 	return fieldModel;
@@ -111,7 +111,7 @@ FieldModelFilePC *FieldPC::fieldModel(int modelID, int animationID, bool animate
 
 FieldModelFilePC *FieldPC::fieldModel(const QString &hrc, const QString &a, bool animate)
 {
-	if(!_model) {
+	if (!_model) {
 		_model = new FieldModelFilePC();
 	}
 	_model->load(hrc, a, animate);
@@ -140,12 +140,12 @@ bool FieldPC::importModelLoader(const QByteArray &sectionData, bool isPSField, Q
 {
 	FieldModelLoaderPC *modelLoader = fieldModelLoader(false);
 
-	if(isPSField) {
+	if (isPSField) {
 		FieldModelLoaderPS modelLoaderPS(this);
-		if(!modelLoaderPS.open(sectionData)) {
+		if (!modelLoaderPS.open(sectionData)) {
 			return false;
 		}
-		if(!bsxDevice->open(QIODevice::ReadOnly)) {
+		if (!bsxDevice->open(QIODevice::ReadOnly)) {
 			return false;
 		}
 
@@ -163,7 +163,7 @@ bool FieldPC::importModelLoader(const QByteArray &sectionData, bool isPSField, Q
 		}
 	} else {
 		FieldModelLoaderPC *modelLoader = fieldModelLoader(false);
-		if(!modelLoader->open(sectionData)) {
+		if (!modelLoader->open(sectionData)) {
 			return false;
 		}
 	}

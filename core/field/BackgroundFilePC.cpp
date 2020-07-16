@@ -32,7 +32,7 @@ BackgroundFilePC::BackgroundFilePC(const BackgroundFilePC &other) :
 {
 	setTextures(new BackgroundTexturesPC(*other.textures()));
 	PalettesPC palettes;
-	foreach(Palette *pal, other.palettes()) {
+	for (Palette *pal : other.palettes()) {
 		palettes.append(new PalettePC(*pal));
 	}
 	setPalettes(palettes);
@@ -79,7 +79,7 @@ void BackgroundFilePC::initEmpty()
 
 bool BackgroundFilePC::open()
 {
-	if(isOpen() || isModified()) {
+	if (isOpen() || isModified()) {
 		setOpen(true);
 		return true;
 	}
@@ -96,7 +96,7 @@ bool BackgroundFilePC::open(const QByteArray &data, const QByteArray &palData)
 	palBuff.setData(palData);
 
 	BackgroundIOPC io(&buff, &palBuff);
-	if(!io.read(*this)) {
+	if (!io.read(*this)) {
 		return false;
 	}
 
@@ -110,7 +110,7 @@ QByteArray BackgroundFilePC::save() const
 	QBuffer buff, palBuff;
 
 	BackgroundIOPC io(&buff, &palBuff);
-	if(!io.write(*this)) {
+	if (!io.write(*this)) {
 		return QByteArray();
 	}
 
@@ -122,7 +122,7 @@ QByteArray BackgroundFilePC::savePal() const
 	QBuffer buff, palBuff;
 
 	PaletteIOPC io(&palBuff, &buff);
-	if(!io.write(palettes())) {
+	if (!io.write(palettes())) {
 		return QByteArray();
 	}
 
@@ -156,7 +156,7 @@ bool BackgroundFilePC::repair()
 	if (psTiles && psTiles->isOpen()) {
 		const QMap<qint32, Tile> &psTilesList = psTiles->tiles().sortedTiles();
 
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			it.next();
 			Tile &tile = it.value();
 			const Tile tilePs = psTilesList.value((tile.layerID << 16) | tile.tileID);
@@ -173,8 +173,8 @@ bool BackgroundFilePC::repair()
 		QList<quint8> unusedPalettes;
 
 		// List unused palettes
-		for(int palID = 0; palID < paletteCount; ++palID) {
-			if(!usedPalettes.contains(palID)) {
+		for (int palID = 0; palID < paletteCount; ++palID) {
+			if (!usedPalettes.contains(palID)) {
 				unusedPalettes.append(palID);
 			}
 		}
@@ -183,13 +183,13 @@ bool BackgroundFilePC::repair()
 
 		QMap<quint8, quint8> texToPalette;
 
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			it.next();
 			Tile &tile = it.value();
 
 			if (tile.depth < 2 && tile.blending && tile.typeTrans != 2 && tile.paletteID >= paletteCount) {
 				tile.typeTrans = 2; // Modification in place
-				if(texToPalette.contains(tile.textureID)) {
+				if (texToPalette.contains(tile.textureID)) {
 					tile.paletteID = texToPalette.value(tile.textureID);
 					modified = true;
 				} else if (!unusedPalettes.isEmpty()) {

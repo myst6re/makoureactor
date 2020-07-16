@@ -36,13 +36,13 @@ bool TutFile::open(const QByteArray &data)
 	quint32 dataSize = data.size();
 
 	positions = openPositions(data);
-	if(positions.isEmpty()) {
+	if (positions.isEmpty()) {
 		return false;
 	}
 
 	tutos.clear();
-	for(int i=0 ; i<positions.size()-1 ; ++i) {
-		if(positions.at(i) < dataSize && positions.at(i) < positions.at(i+1)) {
+	for (int i=0; i<positions.size()-1; ++i) {
+		if (positions.at(i) < dataSize && positions.at(i) < positions.at(i+1)) {
 			tutos.append(data.mid(positions.at(i),
 			                      positions.at(i+1) - positions.at(i)));
 		}
@@ -66,7 +66,7 @@ bool TutFile::insertTut(int tutID)
 
 void TutFile::setData(int tutID, const QByteArray &data)
 {
-	if(tutos.at(tutID) != data) {
+	if (tutos.at(tutID) != data) {
 		tutos.replace(tutID, data);
 		setModified(true);
 	}
@@ -74,7 +74,7 @@ void TutFile::setData(int tutID, const QByteArray &data)
 
 bool TutFile::insertData(int tutID, const QByteArray &data)
 {
-	if(size() < maxTutCount()) {
+	if (size() < maxTutCount()) {
 		tutos.insert(tutID, data);
 		setModified(true);
 		return true;
@@ -85,7 +85,7 @@ bool TutFile::insertData(int tutID, const QByteArray &data)
 bool TutFile::insertData(int tutID, const QString &path)
 {
 	QFile f(path);
-	if(f.open(QIODevice::ReadOnly)) {
+	if (f.open(QIODevice::ReadOnly)) {
 		insertData(tutID, f.readAll());
 		f.close();
 		return true;
@@ -103,22 +103,22 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 	bool jp = Config::value("jp_txt", false).toBool();
 	int i=0, size = tuto.size(), endOfText;
 
-	if(warnings) {
+	if (warnings) {
 		*warnings = false;
 	}
 
-	while(i < size) {
+	while (i < size) {
 		quint8 key = tuto.at(i++);
 		switch(key) {
 		case 0x00:
-			if(i + 2 > size) {
+			if (i + 2 > size) {
 				ret.append(parseScriptsUnknownString(key));
 				ret.append("\n");
-				if(i < size) {
+				if (i < size) {
 					ret.append(parseScriptsUnknownString(tuto.at(i)));
 					ret.append("\n");
 				}
-				if(warnings) {
+				if (warnings) {
 					*warnings = true;
 				}
 				return ret;
@@ -145,7 +145,7 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 		case 0x10:
 			endOfText = tuto.indexOf('\xff', i);
 
-			if(endOfText != -1) {
+			if (endOfText != -1) {
 				textData = tuto.mid(i, endOfText-i);
 			} else {
 				textData = tuto.mid(i); // FIXME: this can break the bijection
@@ -154,8 +154,8 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 			ret.append(QString("TEXT(\"%1\")")
 					   .arg(FF7Text(textData).text(jp).replace('"', "\\\"")));
 
-			if(endOfText != -1) {
-				if(endOfText + 1 > i) {
+			if (endOfText != -1) {
+				if (endOfText + 1 > i) {
 					i = endOfText + 1;
 				}
 			} else {
@@ -165,22 +165,22 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 			break;
 		case 0x11:	ret.append("{FINISH}");		break;
 		case 0x12:
-			if(i + 4 > size) {
+			if (i + 4 > size) {
 				ret.append(parseScriptsUnknownString(key));
 				ret.append("\n");
-				if(i < size) {
+				if (i < size) {
 					ret.append(parseScriptsUnknownString(tuto.at(i++)));
 					ret.append("\n");
-					if(i < size) {
+					if (i < size) {
 						ret.append(parseScriptsUnknownString(tuto.at(i++)));
 						ret.append("\n");
-						if(i < size) {
+						if (i < size) {
 							ret.append(parseScriptsUnknownString(tuto.at(i)));
 							ret.append("\n");
 						}
 					}
 				}
-				if(warnings) {
+				if (warnings) {
 					*warnings = true;
 				}
 				return ret;
@@ -195,7 +195,7 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 			ret.append("{NOP}");
 			break;
 		default:
-			if(warnings) {
+			if (warnings) {
 				*warnings = true;
 			}
 			ret.append(parseScriptsUnknownString(key));
@@ -209,7 +209,7 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 
 bool TutFile::parseText(int tutID, const QString &tuto)
 {
-	if(!isTut(tutID))	return false;
+	if (!isTut(tutID))	return false;
 
 	QStringList lines = tuto.split('\n', QString::SkipEmptyParts), params;
 	QByteArray ret;
@@ -217,30 +217,30 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 	ushort value;
 	bool jp = Config::value("jp_txt", false).toBool();
 
-	foreach(QString line, lines) {
+	for (QString line : lines) {
 		QString rawLine = line;
 		line = line.trimmed();
-		if(multilineText) {
-			if(rawLine.endsWith("\")") && !rawLine.endsWith("\\\")")) {
+		if (multilineText) {
+			if (rawLine.endsWith("\")") && !rawLine.endsWith("\\\")")) {
 				rawLine.chop(2);// remove '")'
 				multilineText = false;
 			} else {
 				rawLine.append("\n");
 			}
 			ret.append(FF7Text(rawLine, jp).data());
-			if(!multilineText) {
+			if (!multilineText) {
 				ret.append('\xff');
 			}
-		} else if(line.startsWith("MOVE(") && line.endsWith(")")) {
+		} else if (line.startsWith("MOVE(") && line.endsWith(")")) {
 			ret.append('\x12');
 			line.chop(1);// remove ")"
 			params = line.mid(5).split(',');
 
-			if(!params.isEmpty()) {
+			if (!params.isEmpty()) {
 				value = params.first().trimmed().toUShort();
 				ret.append((char *)&value, 2);
 
-				if(params.size() >= 2) {
+				if (params.size() >= 2) {
 					value = params.at(1).trimmed().toUShort();
 					ret.append((char *)&value, 2);
 				} else {
@@ -250,14 +250,14 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 			} else {
 				ret.append("\x00\x00\x00\x00", 4);
 			}
-		} else if(line.startsWith("PAUSE(") && line.endsWith(")")) {
+		} else if (line.startsWith("PAUSE(") && line.endsWith(")")) {
 			ret.append('\x00');
 			line.chop(1);// remove ")"
 
 			value = line.mid(6).trimmed().toUShort();
 			ret.append((char *)&value, 2);
-		} else if(line.startsWith("TEXT(\"")) {
-			if(line.endsWith("\")") && !line.endsWith("\\\")")) {
+		} else if (line.startsWith("TEXT(\"")) {
+			if (line.endsWith("\")") && !line.endsWith("\\\")")) {
 				line.chop(2);// remove '")'
 				multilineText = false;
 			} else {
@@ -268,30 +268,30 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 			ret.append('\x10');
 			ret.append(FF7Text(line.mid(6).replace("\\\"", "\""), jp).data());
 
-			if(!multilineText) {
+			if (!multilineText) {
 				ret.append('\xff');
 			}
 		}
-		else if(line=="{FINISH}") {		ret.append('\x11'); }
-		else if(line=="{NOP}") {		ret.append('\xff'); }
-		else if(line=="[UP]") {			ret.append('\x02'); }
-		else if(line=="[DOWN]") {		ret.append('\x03'); }
-		else if(line=="[LEFT]") {		ret.append('\x04'); }
-		else if(line=="[RIGHT]") {		ret.append('\x05'); }
-		else if(line=="[MENU]") {		ret.append('\x06'); }
-		else if(line=="[CANCEL]") {		ret.append('\x07'); }
-		else if(line=="[CHANGE]") {		ret.append('\x08'); }
-		else if(line=="[OK]") {			ret.append('\x09'); }
-		else if(line=="[R1]") {			ret.append('\x0a'); }
-		else if(line=="[R2]") {			ret.append('\x0b'); }
-		else if(line=="[L1]") {			ret.append('\x0c'); }
-		else if(line=="[L2]") {			ret.append('\x0d'); }
-		else if(line=="[START]") {		ret.append('\x0e'); }
-		else if(line=="[SELECT]") {		ret.append('\x0f'); }
-		else if(line.startsWith("[") && line.endsWith("]")) {
+		else if (line=="{FINISH}") {		ret.append('\x11'); }
+		else if (line=="{NOP}") {		ret.append('\xff'); }
+		else if (line=="[UP]") {			ret.append('\x02'); }
+		else if (line=="[DOWN]") {		ret.append('\x03'); }
+		else if (line=="[LEFT]") {		ret.append('\x04'); }
+		else if (line=="[RIGHT]") {		ret.append('\x05'); }
+		else if (line=="[MENU]") {		ret.append('\x06'); }
+		else if (line=="[CANCEL]") {		ret.append('\x07'); }
+		else if (line=="[CHANGE]") {		ret.append('\x08'); }
+		else if (line=="[OK]") {			ret.append('\x09'); }
+		else if (line=="[R1]") {			ret.append('\x0a'); }
+		else if (line=="[R2]") {			ret.append('\x0b'); }
+		else if (line=="[L1]") {			ret.append('\x0c'); }
+		else if (line=="[L2]") {			ret.append('\x0d'); }
+		else if (line=="[START]") {		ret.append('\x0e'); }
+		else if (line=="[SELECT]") {		ret.append('\x0f'); }
+		else if (line.startsWith("[") && line.endsWith("]")) {
 			value = line.mid(1, line.size() - 2).trimmed().toUShort(&ok, 16);
-			if(ok) {
-				if(value > 255) {
+			if (ok) {
+				if (value > 255) {
 					value = 255;
 				}
 				ret.append((char)value);
@@ -357,16 +357,16 @@ void TutFile::testParsing()
 
 	TutFileStandard tut(tutos);
 	qWarning() << "TutFile::testParsing Data to text tests";
-	for(int i=0 ; i<tut.size() ; ++i) {
-		if(strings.at(i) != tut.parseScripts(i)) {
+	for (int i=0; i<tut.size(); ++i) {
+		if (strings.at(i) != tut.parseScripts(i)) {
 			qWarning() << i << tut.parseScripts(i) << "<>" << strings.at(i) << tutos.at(i).toHex();
 		} else {
 			qWarning() << i << "OK";
 		}
 	}
 	qWarning() << "TutFile::testParsing Text to data tests";
-	for(int i=0 ; i<tut.size() ; ++i) {
-		if(tut.parseText(i, strings.at(i)) && tutos.at(i) != tut.data(i)) {
+	for (int i=0; i<tut.size(); ++i) {
+		if (tut.parseText(i, strings.at(i)) && tutos.at(i) != tut.data(i)) {
 			qWarning() << i << tutos.at(i).toHex() << "<>" << tut.data(i).toHex() << strings.at(i);
 		} else {
 			qWarning() << i << "OK";

@@ -6,7 +6,7 @@ ModelColorWidget::ModelColorWidget(QWidget *parent) :
 	_colorWidget = new ColorDisplay(parent);
 	_colorWidget->setColors(QList<QRgb>() << Qt::black);
 
-	for(quint8 i = 0; i < 3; ++i) {
+	for (quint8 i = 0; i < 3; ++i) {
 		_dirWidget[i] = new QSpinBox(parent);
 		_dirWidget[i]->setRange(-32768, 32767);
 		connect(_dirWidget[i], SIGNAL(editingFinished()), SLOT(relayEdition()));
@@ -39,7 +39,7 @@ void ModelColorWidget::setModelColorDir(const FieldModelColorDir &dir)
 void ModelColorWidget::setReadOnly(bool ro)
 {
 	_colorWidget->setReadOnly(ro);
-	for(quint8 i = 0; i < 3; ++i) {
+	for (quint8 i = 0; i < 3; ++i) {
 		_dirWidget[i]->setReadOnly(ro);
 	}
 }
@@ -52,7 +52,7 @@ ModelColorsLayout::ModelColorsLayout(QWidget *parent) :
 	addWidget(new QLabel(tr("Y")), 0, 2);
 	addWidget(new QLabel(tr("Z")), 0, 3);
 
-	for(quint8 i = 0; i < 3; ++i) {
+	for (quint8 i = 0; i < 3; ++i) {
 		modelColorWidget[i] = new ModelColorWidget(parent);
 		addWidget(modelColorWidget[i]->colorWidget(), i + 1, 0);
 		addWidget(modelColorWidget[i]->dirWidget(0), i + 1, 1);
@@ -70,14 +70,14 @@ ModelColorsLayout::ModelColorsLayout(QWidget *parent) :
 
 void ModelColorsLayout::setModelColorDirs(const QList<FieldModelColorDir> &dirs)
 {
-	for(quint8 i = 0; i < 3; ++i) {
+	for (quint8 i = 0; i < 3; ++i) {
 		modelColorWidget[i]->setModelColorDir(dirs.at(i));
 	}
 }
 
 void ModelColorsLayout::setReadOnly(bool ro)
 {
-	for(quint8 i = 0; i < 3; ++i) {
+	for (quint8 i = 0; i < 3; ++i) {
 		modelColorWidget[i]->setReadOnly(ro);
 	}
 }

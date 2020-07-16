@@ -71,7 +71,7 @@ QWidget *ArchivePreview::textWidget()
 
 QWidget *ArchivePreview::modelWidget()
 {
-	if(Config::value("OpenGL", true).toBool()) {
+	if (Config::value("OpenGL", true).toBool()) {
 		return new FieldModel(this);
 	}
 	return new QWidget(this);
@@ -97,9 +97,9 @@ void ArchivePreview::imagePreview(const QPixmap &image, const QString &name,
 
 	imageSelect->blockSignals(true);
 	imageSelect->clear();
-	if(imageCount > 1) {
+	if (imageCount > 1) {
 		imageSelect->setVisible(true);
-		for(int i=0 ; i<imageCount ; ++i) {
+		for (int i=0; i<imageCount; ++i) {
 			imageSelect->addItem(tr("Image %1").arg(i));
 		}
 		imageSelect->setCurrentIndex(imageID);
@@ -110,9 +110,9 @@ void ArchivePreview::imagePreview(const QPixmap &image, const QString &name,
 
 	palSelect->blockSignals(true);
 	palSelect->clear();
-	if(palCount > 1) {
+	if (palCount > 1) {
 		palSelect->setVisible(true);
-		for(int i=0 ; i<palCount ; ++i) {
+		for (int i=0; i<palCount; ++i) {
 			palSelect->addItem(tr("Palette %1").arg(i));
 		}
 		palSelect->setCurrentIndex(palID);
@@ -125,13 +125,13 @@ void ArchivePreview::imagePreview(const QPixmap &image, const QString &name,
 void ArchivePreview::saveImage()
 {
 	QString path = Config::value("saveBGPath").toString();
-	if(!path.isEmpty()) {
+	if (!path.isEmpty()) {
 		path.append("/");
 	}
 	path = QFileDialog::getSaveFileName(this, tr("Save Background"),
 	                                    path + this->_name + ".png",
 	                                    tr("PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)"));
-	if(path.isNull())	return;
+	if (path.isNull())	return;
 
 	_lbl->pixmap()->save(path);
 
@@ -147,7 +147,7 @@ void ArchivePreview::textPreview(const QString &text)
 
 void ArchivePreview::modelPreview(FieldModelFile *fieldModel)
 {
-	if(Config::value("OpenGL", true).toBool()) {
+	if (Config::value("OpenGL", true).toBool()) {
 		setCurrentIndex(ModelPage);
 		((FieldModel *)currentWidget())->setFieldModelFile(fieldModel);
 	}

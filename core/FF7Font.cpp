@@ -43,7 +43,7 @@ void FF7Font::setTables(const QList<QStringList> &tables)
 
 void FF7Font::setChar(int tableId, int charId, const QString &c)
 {
-	if(tableId < _tables.size() && charId < 224) {
+	if (tableId < _tables.size() && charId < 224) {
 		_tables[tableId][charId] = c;
 		modified = true;
 	}
@@ -80,7 +80,7 @@ void FF7Font::setPaths(const QString &txtPath, const QString &windowBinFilePath)
 {
 	_txtPath = txtPath;
 	_windowBinFilePath = windowBinFilePath;
-	if(_name.isEmpty()) {
+	if (_name.isEmpty()) {
 		_name = txtPath.mid(txtPath.lastIndexOf('/')+1);
 		_name = _name.left(_name.size() - 4);
 	}
@@ -115,28 +115,28 @@ void FF7Font::openTxt(const QString &data)
 	// letterRegExp:	"Foo", "Foo","Foo"
 	QStringList table;
 
-	if(tableCount < 1) {
+	if (tableCount < 1) {
 		qWarning() << "invalid windowBinFile!";
 		return;
 	}
 
-	foreach(const QString &line, lines) {
-		if(line.startsWith("#")) {
-			if(nameRegExp.indexIn(line) != -1) {
+	for (const QString &line : lines) {
+		if (line.startsWith("#")) {
+			if (nameRegExp.indexIn(line) != -1) {
 				QStringList capturedTexts = nameRegExp.capturedTexts();
 				_name = capturedTexts.at(1).trimmed();
 			}
 		}
 		else {
 			int offset=0;
-			while((offset = letterRegExp.indexIn(line, offset)) != -1) {
+			while ((offset = letterRegExp.indexIn(line, offset)) != -1) {
 				QStringList capturedTexts = letterRegExp.capturedTexts();
 				table.append(capturedTexts.at(1));
 				offset += capturedTexts.first().size();
 
-				if(table.size() == 224) {
+				if (table.size() == 224) {
 					_tables.append(table);
-					if(_tables.size() > tableCount) {
+					if (_tables.size() > tableCount) {
 						//print();
 						return;
 					}
@@ -146,9 +146,9 @@ void FF7Font::openTxt(const QString &data)
 		}
 	}
 
-	if(!table.isEmpty()) {
-		if(table.size() < 224) {
-			for(int i=table.size() ; i<224 ; ++i) {
+	if (!table.isEmpty()) {
+		if (table.size() < 224) {
+			for (int i=table.size(); i<224; ++i) {
 				table.append(QString());
 			}
 		}
@@ -163,19 +163,19 @@ QString FF7Font::saveTxt()
 {
 	QString data;
 
-	if(!_name.isEmpty()) {
+	if (!_name.isEmpty()) {
 		data.append("#NAME\t").append(_name).append("\n");
 	}
 
-	foreach(const QStringList &t, _tables) {
-		for(int j=0 ; j<14 ; ++j) {
-			for(int i=0 ; i<16 ; ++i) {
+	for (const QStringList &t : _tables) {
+		for (int j=0; j<14; ++j) {
+			for (int i=0; i<16; ++i) {
 				data.append(QString("\"%1\"").arg(t[j*16 + i]));
-				if(i<15) {
+				if (i<15) {
 					data.append(",");
 				}
 			}
-			if(j<13) {
+			if (j<13) {
 				data.append(",");
 			}
 			data.append("\n");
@@ -190,11 +190,11 @@ QString FF7Font::saveTxt()
 void FF7Font::print()
 {
 	int tid=1;
-	foreach(const QStringList &t, _tables) {
+	for (const QStringList &t : _tables) {
 		qDebug() << QString("table %1").arg(tid++).toLatin1().data();
-		for(int j=0 ; j<14 ; ++j) {
+		for (int j=0; j<14; ++j) {
 			QString buf;
-			for(int i=0 ; i<16 ; ++i) {
+			for (int i=0; i<16; ++i) {
 				buf += QString("\"%1\",").arg(t[j*16 + i]);
 			}
 			qDebug() << buf.toLatin1().data();
@@ -226,7 +226,7 @@ bool FF7Font::listFonts()
 	FF7Font *latinFont = openFont(":/fonts/sysfnt.windowBinFile", ":/fonts/sysfnt.txt");
 	FF7Font *jpFont = openFont(":/fonts/sysfnt_jp.windowBinFile", ":/fonts/sysfnt_jp.txt");
 
-	if(!latinFont || !jpFont) {
+	if (!latinFont || !jpFont) {
 		if (latinFont) delete latinFont;
 		if (jpFont)    delete jpFont;
 		return false;
@@ -238,7 +238,7 @@ bool FF7Font::listFonts()
 	fonts.insert("00", latinFont);
 	fonts.insert("01", jpFont);
 
-	foreach(const QString &str, stringList) {
+	for (const QString &str : stringList) {
 		int index = str.lastIndexOf('.');
 		fonts.insert(str.left(index), nullptr);
 	}
@@ -255,9 +255,9 @@ FF7Font *FF7Font::openFont(const QString &windowBinFilePath, const QString &txtP
 {
 	WindowBinFile *windowBinFile = nullptr;
 	QFile f(windowBinFilePath);
-	if(f.open(QIODevice::ReadOnly)) {
+	if (f.open(QIODevice::ReadOnly)) {
 		windowBinFile = new WindowBinFile();
-		if(!windowBinFile->open(f.readAll())) {
+		if (!windowBinFile->open(f.readAll())) {
 			qWarning() << "Cannot open windowBinFile file!" << f.fileName();
 			delete windowBinFile;
 			windowBinFile = nullptr;
@@ -265,13 +265,13 @@ FF7Font *FF7Font::openFont(const QString &windowBinFilePath, const QString &txtP
 		f.close();
 	}
 
-	if(!windowBinFile) {
+	if (!windowBinFile) {
 		return nullptr;
 	}
 
 	FF7Font *ff7Font;
 	QFile f2(txtPath);
-	if(f2.open(QIODevice::ReadOnly)) {
+	if (f2.open(QIODevice::ReadOnly)) {
 		ff7Font = new FF7Font(windowBinFile, f2.readAll());
 		f2.close();
 	} else {
@@ -283,15 +283,15 @@ FF7Font *FF7Font::openFont(const QString &windowBinFilePath, const QString &txtP
 
 FF7Font *FF7Font::font(QString name)
 {
-	if(name.isEmpty()) {
+	if (name.isEmpty()) {
 		name = "00";
 	}
 
-	if(fonts.contains(name)) {
+	if (fonts.contains(name)) {
 		FF7Font *ff7Font = fonts.value(name);
-		if(!ff7Font) {
+		if (!ff7Font) {
 			ff7Font = openFont(font_dirPath + "/" + name + ".windowBinFile", font_dirPath + "/" + name + ".txt");
-			if(!ff7Font) {
+			if (!ff7Font) {
 				fonts.remove(name);// Bad font, we can remove it
 			} else {
 				fonts.insert(name, ff7Font);
@@ -308,7 +308,7 @@ FF7Font *FF7Font::getCurrentConfigFont()
 	QString fnt = Config::value("encoding", "00").toString();
 
 	QStringList fontL = fontList();
-	if(fontL.contains(fnt)) {
+	if (fontL.contains(fnt)) {
 		return font(fnt);
 	}
 	return font(fontL.first());
@@ -318,20 +318,20 @@ bool FF7Font::saveFonts()
 {
 	bool ok = true;
 
-	foreach(FF7Font *font, fonts) {
-		if(font && !font->isReadOnly() && font->isModified()) {
+	for (FF7Font *font : fonts) {
+		if (font && !font->isReadOnly() && font->isModified()) {
 			QFile f1(font->txtPath());
-			if(f1.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			if (f1.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 				f1.write(font->saveTxt().toUtf8());
 				f1.close();
 			} else {
 				ok = false;
 			}
 			QFile f2(font->windowBinFilePath());
-			if(f2.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			if (f2.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 				//TODO
 				/*QByteArray tdwData;
-				if(font->windowBinFile()->save(tdwData)) {
+				if (font->windowBinFile()->save(tdwData)) {
 					f2.write(tdwData);
 				} else {
 					ok = false;
@@ -340,7 +340,7 @@ bool FF7Font::saveFonts()
 			} else {
 				ok = false;
 			}
-			if(ok) {
+			if (ok) {
 				font->setModified(false);
 			}
 		}
@@ -352,22 +352,22 @@ bool FF7Font::saveFonts()
 bool FF7Font::addFont(const QString &name, const QString &from,
                       const QString &displayName)
 {
-	if(fonts.contains(name)) {
+	if (fonts.contains(name)) {
 		return false;
 	}
 
 	FF7Font *ff7Font = font(from);
-	if(!ff7Font) {
+	if (!ff7Font) {
 		return false;
 	}
 
 	QFile ftxt(font_dirPath + "/" + name + ".txt");
-	if(!ftxt.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+	if (!ftxt.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 		return false;
 	}
 
 	QFile ftxt2(ff7Font->txtPath());
-	if(!ftxt2.open(QIODevice::ReadOnly)) {
+	if (!ftxt2.open(QIODevice::ReadOnly)) {
 		return false;
 	}
 
@@ -377,12 +377,12 @@ bool FF7Font::addFont(const QString &name, const QString &from,
 	ftxt2.close();
 
 	QFile ftdw(font_dirPath + "/" + name + ".windowBinFile");
-	if(!ftdw.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+	if (!ftdw.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 		return false;
 	}
 
 	QFile ftdw2(ff7Font->windowBinFilePath());
-	if(!ftdw2.open(QIODevice::ReadOnly)) {
+	if (!ftdw2.open(QIODevice::ReadOnly)) {
 		return false;
 	}
 
@@ -394,7 +394,7 @@ bool FF7Font::addFont(const QString &name, const QString &from,
 	fonts.insert(name, nullptr);
 
 	ff7Font = font(name);
-	if(!ff7Font) {
+	if (!ff7Font) {
 		return false;
 	}
 
@@ -409,11 +409,11 @@ bool FF7Font::removeFont(const QString &name)
 
 	FF7Font *ff7Font = font(name);
 
-	if(!ff7Font || ff7Font->isReadOnly()) {
+	if (!ff7Font || ff7Font->isReadOnly()) {
 		return false;
 	}
 
-	if(!QFile::remove(ff7Font->txtPath())
+	if (!QFile::remove(ff7Font->txtPath())
 	|| !QFile::remove(ff7Font->windowBinFilePath())) {
 		return false;
 	}

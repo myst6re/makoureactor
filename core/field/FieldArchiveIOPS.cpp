@@ -35,14 +35,14 @@ FieldArchiveIOPS::FieldArchiveIOPS(FieldArchivePS *fieldArchive) :
 QByteArray FieldArchiveIOPS::mimData(Field *field, bool unlzs)
 {
 	// use data from the cache
-	if(unlzs && mimDataIsCached(field)) {
+	if (unlzs && mimDataIsCached(field)) {
 		return mimDataCache;
 	}
 
 	QByteArray data = mimData2(field, unlzs);
 
 	// put decompressed data in the cache
-	if(unlzs && !data.isEmpty()) {
+	if (unlzs && !data.isEmpty()) {
 		mimCache = field;
 		mimDataCache = data;
 	}
@@ -52,14 +52,14 @@ QByteArray FieldArchiveIOPS::mimData(Field *field, bool unlzs)
 QByteArray FieldArchiveIOPS::modelData(Field *field, bool unlzs)
 {
 	// use data from the cache
-	if(unlzs && modelDataIsCached(field)) {
+	if (unlzs && modelDataIsCached(field)) {
 		return modelDataCache;
 	}
 
 	QByteArray data = modelData2(field, unlzs);
 
 	// put decompressed data in the cache
-	if(unlzs && !data.isEmpty()) {
+	if (unlzs && !data.isEmpty()) {
 		modelCache = field;
 		modelDataCache = data;
 	}
@@ -142,7 +142,7 @@ QByteArray FieldArchiveIOPSFile::fileData2(const QString &fileName)
 		return d;
 	}
 
-	if(!fic.isOpen() && !fic.open(QIODevice::ReadOnly))		return QByteArray();
+	if (!fic.isOpen() && !fic.open(QIODevice::ReadOnly))		return QByteArray();
 	fic.reset();
 	QByteArray data = fic.readAll();
 	fic.close();
@@ -182,11 +182,11 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::save2(const QString &path0, Arch
 	}
 
 	Field *field = it.next(false);
-	if(field && field->isOpen() && field->isModified()) {
+	if (field && field->isOpen() && field->isModified()) {
 		qint8 err = field->save(path, true);
-		if(err == 2)	return ErrorOpening;
-		if(err == 1)	return Invalid;
-		if(err != 0)	return NotImplemented;
+		if (err == 2)	return ErrorOpening;
+		if (err == 1)	return Invalid;
+		if (err != 0)	return NotImplemented;
 	}
 
 	return Ok;
@@ -227,9 +227,9 @@ QByteArray FieldArchiveIOPSIso::modelData2(Field *field, bool unlzs)
 
 QByteArray FieldArchiveIOPSIso::fileData2(const QString &fileName)
 {
-	if(isoFieldDirectory) {
+	if (isoFieldDirectory) {
 		IsoFile *file = isoFieldDirectory->file(fileName.toUpper());
-		if(file) {
+		if (file) {
 			return file->data();
 		}
 	}
@@ -238,12 +238,12 @@ QByteArray FieldArchiveIOPSIso::fileData2(const QString &fileName)
 
 FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::openIso()
 {
-	if(!iso.isOpen() && !iso.open(QIODevice::ReadOnly)) {
+	if (!iso.isOpen() && !iso.open(QIODevice::ReadOnly)) {
 		return ErrorOpening;
 	}
 
 	isoFieldDirectory = iso.fieldDirectory();
-	if(isoFieldDirectory == nullptr) {
+	if (isoFieldDirectory == nullptr) {
 		return FieldNotFound;
 	}
 
@@ -262,26 +262,26 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 
 	QList<IsoFile *> files = isoFieldDirectory->files();
 
-	if(observer)	observer->setObserverMaximum(files.size());
+	if (observer)	observer->setObserverMaximum(files.size());
 	bool isDemo = iso.isDemo();
 
 	// QTime t;t.start();
 
 	int i=0;
-	foreach(IsoFile *file, files) {
-		if(observer) {
-			if(observer->observerWasCanceled()) {
+	for (IsoFile *file : files) {
+		if (observer) {
+			if (observer->observerWasCanceled()) {
 				return Aborted;
 			}
 			observer->setObserverValue(i);
 		}
 
-		if(isDemo) {
-			if(file->name().endsWith(".ATE")) {
+		if (isDemo) {
+			if (file->name().endsWith(".ATE")) {
 				QString name = file->name().mid(file->name().lastIndexOf('/')+1);
 				fieldArchive()->appendField(new FieldPSDemo(name.left(name.lastIndexOf('.')), this));
 			}
-		} else if(file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
+		} else if (file->name().endsWith(".DAT") && !file->name().startsWith("WM")) {
 			QString name = file->name().mid(file->name().lastIndexOf('/')+1);
 			fieldArchive()->appendField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 		}
@@ -290,7 +290,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 
 	Data::windowBin = WindowBinFile();
 
-	if(!Data::windowBin.open(iso.windowBinData())) {
+	if (!Data::windowBin.open(iso.windowBinData())) {
 		qWarning() << "Cannot open window.bin";
 	}
 
@@ -307,25 +307,25 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 
 	bool saveAs = QFileInfo(path) != QFileInfo(iso.io());
 
-	if(observer)	observer->setObserverMaximum(100);
+	if (observer)	observer->setObserverMaximum(100);
 
 	// FIELD/*.DAT
 
 	FieldArchiveIterator it(*(fieldArchive()));
 	while (it.hasNext()) {
-		if(observer && observer->observerWasCanceled()) {
+		if (observer && observer->observerWasCanceled()) {
 			return Aborted;
 		}
 		Field *field = it.next(false);
-		if(field && field->isOpen() && field->isModified()) {
+		if (field && field->isOpen() && field->isModified()) {
 			IsoFile *isoField = isoFieldDirectory->file(field->name().toUpper() + ".DAT");
-			if(isoField == nullptr) {
+			if (isoField == nullptr) {
 				continue;
 			}
 
 			QByteArray newData;
 
-			if(field->save(newData, true)) {
+			if (field->save(newData, true)) {
 				isoField->setModifiedFile(newData);
 			} else {
 				return Invalid;
@@ -334,12 +334,12 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 	}
 
 	IsoArchive isoTemp(path % ".makoutemp");
-	if(!isoTemp.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
+	if (!isoTemp.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
 		return ErrorOpening;
 	}
 
-	if(!iso.pack(&isoTemp, observer, isoFieldDirectory)) {
-		if(observer && observer->observerWasCanceled()) {
+	if (!iso.pack(&isoTemp, observer, isoFieldDirectory)) {
+		if (observer && observer->observerWasCanceled()) {
 			return Aborted;
 		}
 		return Invalid;
@@ -350,11 +350,11 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 	iso.close();
 	isoTemp.close();
 
-	if(saveAs) {
+	if (saveAs) {
 		iso.setFileName(path);
 	}
 	// Move the temporary file
-	if(QFile::exists(path) && !QFile::remove(path)) {
+	if (QFile::exists(path) && !QFile::remove(path)) {
 		bool removed = false;
 
 		while (observer->observerRetry(QObject::tr("Cannot remove destination archive"))) {
@@ -370,7 +370,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 			return ErrorRemoving;
 		}
 	}
-	if(!QFile::rename(isoTemp.fileName(), path)) {
+	if (!QFile::rename(isoTemp.fileName(), path)) {
 		bool renamed = false;
 
 		while (observer->observerRetry(QObject::tr("Cannot rename temporary file to destination path"))) {
@@ -431,7 +431,7 @@ QByteArray FieldArchiveIOPSDir::fileData2(const QString &fileName)
 	QByteArray data;
 
 	QFile f(dir.filePath(fileName.toUpper()));
-	if(!f.open(QIODevice::ReadOnly))	return QByteArray();
+	if (!f.open(QIODevice::ReadOnly))	return QByteArray();
 	data = f.readAll();
 	f.close();
 
@@ -444,20 +444,20 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::open2(ArchiveObserver *observer)
 	list.append("*.DAT");
 	list = dir.entryList(list, QDir::Files | QDir::NoSymLinks);
 
-	if(observer)	observer->setObserverMaximum(list.size());
+	if (observer)	observer->setObserverMaximum(list.size());
 
 	// QTime t;t.start();
 
 	int i=0;
-	foreach(const QString &name, list) {
-		if(observer) {
-			if(observer->observerWasCanceled()) {
+	for (const QString &name : list) {
+		if (observer) {
+			if (observer->observerWasCanceled()) {
 				return Aborted;
 			}
 			observer->setObserverValue(i++);
 		}
 
-		if(!name.startsWith("WM", Qt::CaseInsensitive)) {
+		if (!name.startsWith("WM", Qt::CaseInsensitive)) {
 			fieldArchive()->appendField(new FieldPS(name.left(name.lastIndexOf('.')), this));
 		}
 	}
@@ -471,7 +471,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, Archiv
 {
 	bool saveAs;
 
-	if(!path.isEmpty()) {
+	if (!path.isEmpty()) {
 		saveAs = QDir::cleanPath(path) != QDir::cleanPath(dir.path());
 	} else {
 		saveAs = false;
@@ -480,31 +480,31 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, Archiv
 	FieldArchiveIterator it(*(fieldArchive()));
 	quint32 i = 0;
 
-	if(observer) {
+	if (observer) {
 		observer->setObserverMaximum(fieldArchive()->size());
 	}
 
 	while (it.hasNext()) {
-		if(observer && observer->observerWasCanceled()) {
+		if (observer && observer->observerWasCanceled()) {
 			return Aborted;
 		}
 		Field *field = it.next(false);
 		QString datName = field->name().toUpper() + ".DAT",
 		        datPath = dir.filePath(datName);
-		if(field) {
-			if(field->isOpen() && field->isModified()) {
+		if (field) {
+			if (field->isOpen() && field->isModified()) {
 				qint8 err = field->save(datPath, true);
-				if(err == 2)	return ErrorOpening;
-				if(err == 1)	return Invalid;
-				if(err != 0)	return NotImplemented;
-			} else if(saveAs) {
+				if (err == 2)	return ErrorOpening;
+				if (err == 1)	return Invalid;
+				if (err != 0)	return NotImplemented;
+			} else if (saveAs) {
 				QString dstPath = path + "/" + datName;
-				if(!QFile::copy(datPath, dstPath)) {
+				if (!QFile::copy(datPath, dstPath)) {
 					return ErrorCopying;
 				}
 			}
 		}
-		if(observer) {
+		if (observer) {
 			observer->setObserverValue(i++);
 		}
 	}

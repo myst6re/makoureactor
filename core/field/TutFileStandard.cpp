@@ -42,7 +42,7 @@ QList<quint32> TutFileStandard::openPositions(const QByteArray &data) const
 	quint8 nbEntity;
 	bool isDemo;
 
-	if(dataSize <= 8) {
+	if (dataSize <= 8) {
 		return positions;
 	}
 
@@ -55,11 +55,11 @@ QList<quint32> TutFileStandard::openPositions(const QByteArray &data) const
 
 	posAKAOList = (isDemo ? 24 : 32) + nbEntity*8;
 
-	if(dataSize <= posAKAOList+nbAKAO*4) {
+	if (dataSize <= posAKAOList+nbAKAO*4) {
 		return positions;
 	}
 
-	for(int i=0 ; i<nbAKAO ; ++i) {
+	for (int i=0; i<nbAKAO; ++i) {
 		memcpy(&posAKAO, constData + posAKAOList + i*4, 4);
 		positions.append(posAKAO);
 	}
@@ -76,7 +76,7 @@ QByteArray TutFileStandard::save(QByteArray &toc, quint32 firstPos) const
 
 	toc.clear();
 
-	foreach(const QByteArray &tuto, dataList()) {
+	for (const QByteArray &tuto : dataList()) {
 		pos = firstPos + ret.size();
 		toc.append((char *)&pos, 4);
 		ret.append(tuto);
@@ -98,8 +98,8 @@ QByteArray TutFileStandard::save() const
 bool TutFileStandard::hasTut() const
 {
 	int size = this->size();
-	for(int i=0 ; i<size ; ++i) {
-		if(isTut(i))	return true;
+	for (int i=0; i<size; ++i) {
+		if (isTut(i))	return true;
 	}
 	return false;
 }
@@ -116,11 +116,11 @@ bool TutFileStandard::isAkao(int tutID) const
 
 bool TutFileStandard::isBroken(int tutID) const
 {
-	if(isAkao(tutID)) {
+	if (isAkao(tutID)) {
 		return false;
 	}
 	const QByteArray &d = data(tutID);
-	if(!d.isEmpty()) {
+	if (!d.isEmpty()) {
 		quint8 firstChar = d.at(0);
 		return firstChar > 0x12 && firstChar < 0xFF;
 	}
@@ -151,13 +151,13 @@ QString TutFileStandard::parseScripts(int tutID, bool *warnings) const
 {
 	QString ret;
 
-	if(!isTut(tutID)) {
+	if (!isTut(tutID)) {
 		const QByteArray &tuto = data(tutID);
 		const char *constTuto = tuto.constData();
 
 		quint16 id, length, firstPos;
-		if(tuto.size() < 6) {
-			if(warnings) {
+		if (tuto.size() < 6) {
+			if (warnings) {
 				*warnings = true;
 			}
 			return QObject::tr("Error");
@@ -166,14 +166,14 @@ QString TutFileStandard::parseScripts(int tutID, bool *warnings) const
 
 		ret.append(QObject::tr("totalLength=%1\nid=%2\n").arg(tuto.size()).arg(id));
 
-		if(tuto.size() < 8) {
+		if (tuto.size() < 8) {
 			return ret;
 		}
 		memcpy(&length, constTuto + 6, 2);
 
 		ret.append(QObject::tr("length=%1\n").arg(length));
 
-		if(tuto.size() < 22) {
+		if (tuto.size() < 22) {
 			return ret;
 		}
 		memcpy(&firstPos, constTuto + 20, 2);
@@ -192,10 +192,10 @@ QString TutFileStandard::parseScripts(int tutID, bool *warnings) const
 
 int TutFileStandard::akaoID(int tutID) const
 {
-	if(isTut(tutID))	return -1;
+	if (isTut(tutID))	return -1;
 
 	const QByteArray &data = this->data(tutID);
-	if(data.size() < 6)		return -1;
+	if (data.size() < 6)		return -1;
 	quint16 id;
 	memcpy(&id, data.constData() + 4, 2);
 
@@ -204,7 +204,7 @@ int TutFileStandard::akaoID(int tutID) const
 
 void TutFileStandard::setAkaoID(int tutID, quint16 akaoID)
 {
-	if(isTut(tutID))	return;
+	if (isTut(tutID))	return;
 
 	dataRef(tutID).replace(4, 2, (char *)&akaoID, 2);
 	setModified(true);

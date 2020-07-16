@@ -90,11 +90,11 @@ QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors,
 
 	_vertices.swap(2, 3);
 
-	if(colors.size() == 4) {
+	if (colors.size() == 4) {
 		_colors.swap(2, 3);
 	}
 
-	if(!texCoords.isEmpty()) {
+	if (!texCoords.isEmpty()) {
 		_texCoords.swap(2, 3);
 	}
 }
@@ -106,7 +106,7 @@ QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QRgb &color, const Q
 
 	_vertices.swap(2, 3);
 
-	if(!texCoords.isEmpty()) {
+	if (!texCoords.isEmpty()) {
 		_texCoords.swap(2, 3);
 	}
 }
@@ -152,9 +152,9 @@ void FieldModelGroup::removeSpriting(float texWidth, float texHeight) const
 	float minX = -1,
 			minY = -1;
 
-	foreach (Poly *poly, polygons()) {
+	for (Poly *poly : polygons()) {
 		if (poly->hasTexture() && poly->count() > 0) {
-			for (quint16 i = 0 ; i < (quint8)poly->count(); ++i) {
+			for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
 				const TexCoord &texCoord = poly->texCoord(i);
 				if (minX < 0) {
 					minX = texCoord.x;
@@ -182,7 +182,7 @@ void FieldModelGroup::removeSpriting(float texWidth, float texHeight) const
 		minY = 0;
 	}
 
-	foreach (Poly *poly, polygons()) {
+	for (Poly *poly : polygons()) {
 		if (poly->hasTexture()) {
 			for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
 				TexCoord texCoord = poly->texCoord(i);
@@ -204,7 +204,7 @@ void FieldModelGroup::removeSpriting(float texWidth, float texHeight) const
 
 void FieldModelGroup::setFloatCoords(float texWidth, float texHeight) const
 {
-	foreach (Poly *poly, polygons()) {
+	for (Poly *poly : polygons()) {
 		if (poly->hasTexture()) {
 			for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
 				TexCoord texCoord = poly->texCoord(i);
@@ -236,16 +236,16 @@ QString FieldModelPart::toString() const
 	QString ret;
 
 	int groupID = 0;
-	foreach(FieldModelGroup *group, _groups) {
+	for (FieldModelGroup *group : _groups) {
 		ret.append(QString("==== GROUP %1 ==== texNumber: %2\n")
 		           .arg(groupID)
 		           .arg(group->textureRef()->textureIdentifier()));
 
 		int ID = 0;
-		foreach(Poly *poly, group->polygons()) {
+		for (Poly *poly : group->polygons()) {
 			ret.append(QString("==== poly %1 ====\n").arg(ID));
 
-			for(int i=0 ; i<poly->count() ; ++i) {
+			for (int i=0; i<poly->count(); ++i) {
 				ret.append(QString("%1: vertex(%2, %3, %4) color(%5, %6, %7)")
 						   .arg(i)
 						   .arg(poly->vertex(i).x)
@@ -254,7 +254,7 @@ QString FieldModelPart::toString() const
 						   .arg(qRed(poly->color(i)))
 				           .arg(qGreen(poly->color(i)))
 				           .arg(qBlue(poly->color(i))));
-				if(poly->hasTexture()) {
+				if (poly->hasTexture()) {
 					ret.append(QString(" texCoord(%1, %2)")
 							   .arg(poly->texCoord(i).x)
 					           .arg(poly->texCoord(i).y));

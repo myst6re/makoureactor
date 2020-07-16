@@ -53,7 +53,7 @@ ModelManagerPS::ModelManagerPS(QWidget *parent) :
 QList<QStringList> ModelManagerPS::modelNames() const
 {
 	QList<QStringList> ret;
-	for(int modelId=0 ; modelId<modelLoader()->modelCount() ; ++modelId) {
+	for (int modelId=0; modelId<modelLoader()->modelCount(); ++modelId) {
 		ret.append(QStringList(QString("Model %1").arg(modelId)));
 	}
 	return ret;
@@ -62,7 +62,7 @@ QList<QStringList> ModelManagerPS::modelNames() const
 QList<QTreeWidgetItem *> ModelManagerPS::animItems(int modelID) const
 {
 	QList<QTreeWidgetItem *> ret;
-	for(int animId=0 ; animId<modelLoader()->animCount(modelID) ; ++animId) {
+	for (int animId=0; animId<modelLoader()->animCount(modelID); ++animId) {
 		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QString("Animation %1").arg(animId)));
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 		ret.append(item);

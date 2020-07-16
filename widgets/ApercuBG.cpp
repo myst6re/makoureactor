@@ -33,7 +33,7 @@ ApercuBG::ApercuBG(QWidget *parent) :
 
 void ApercuBG::fill(Field *field, bool reload)
 {
-	if(!reload && _field == field) {
+	if (!reload && _field == field) {
 		return;
 	}
 
@@ -45,7 +45,7 @@ void ApercuBG::fill(Field *field, bool reload)
 	_field = field;
 	QImage image = _field->background()->openBackground();
 
-	if(image.isNull()) {
+	if (image.isNull()) {
 		_background = errorPixmap(contentsRect().size());
 		setCursor(Qt::ArrowCursor);
 		_error = true;
@@ -60,13 +60,13 @@ void ApercuBG::fill(Field *field, bool reload)
 
 void ApercuBG::drawBackground()
 {
-	if(!_field) {
+	if (!_field) {
 		return;
 	}
 
 	QSize contentsSize = contentsRect().size();
 
-	if(_background.size() != contentsSize) {
+	if (_background.size() != contentsSize) {
 		setPixmap(_background.scaled(contentsSize, Qt::KeepAspectRatio));
 	} else {
 		setPixmap(_background);
@@ -107,7 +107,7 @@ void ApercuBG::mouseReleaseEvent(QMouseEvent *e)
 {
 	QLabel::mouseReleaseEvent(e);
 
-	if(e->button() == Qt::LeftButton && !_error) {
+	if (e->button() == Qt::LeftButton && !_error) {
 		emit clicked();
 	}
 }
@@ -116,7 +116,7 @@ void ApercuBG::resizeEvent(QResizeEvent *e)
 {
 	Q_UNUSED(e);
 
-	if(!_background.isNull() &&
+	if (!_background.isNull() &&
 	        (!pixmap() || contentsRect().size() != pixmap()->size())) {
 		setUpdatesEnabled(false);
 		drawBackground(); // Call setPixmap() -> update() which must be prevented

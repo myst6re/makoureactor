@@ -46,7 +46,7 @@ void HexLineEdit::setData(const QByteArray &contents)
 
 void HexLineEdit::emitDataEdited()
 {
-	if(_noEmit)		return;
+	if (_noEmit)		return;
 
 	emit dataEdited(data());
 }

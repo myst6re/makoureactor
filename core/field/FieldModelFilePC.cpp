@@ -38,7 +38,7 @@ void FieldModelFilePC::openTextures(const QStringList &textureFiles)
 {
 	// Open all loaded tex
 	int texID = 0;
-	foreach(const QString &texName, textureFiles) {
+	for (const QString &texName : textureFiles) {
 		QImage tex = openTexture(texName % ".tex");
 		if (!tex.isNull()) {
 			_loadedTex.insert(texID, tex);
@@ -153,7 +153,7 @@ bool FieldModelFilePC::openMesh(QMultiMap<int, QStringList> &rsdFiles, QStringLi
 		itRsd.next();
 		int boneID = itRsd.key();
 
-		foreach (const QString &rsd, itRsd.value()) {
+		for (const QString &rsd : itRsd.value()) {
 			if (openPart(rsd.toLower() % ".rsd", boneID, textureFiles)) {
 				onePartOpened = true;
 			} else {
@@ -191,7 +191,7 @@ QImage FieldModelFilePC::openTexture(const QString &texFileName)
 		return QImage();
 	}
 	TexFile tex(texFile->readAll());
-	if(!tex.isValid()) {
+	if (!tex.isValid()) {
 		return QImage();
 	}
 	return tex.image();

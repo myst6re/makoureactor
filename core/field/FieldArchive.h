@@ -18,7 +18,7 @@
 #ifndef DEF_FIELDARCHIVE
 #define DEF_FIELDARCHIVE
 
-#define DEBUG_FUNCTIONS
+//#define DEBUG_FUNCTIONS
 
 #include <QtCore>
 #include "FieldArchiveIO.h"

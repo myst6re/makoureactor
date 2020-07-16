@@ -42,11 +42,11 @@ FieldArchive *FieldArchiveIO::fieldArchive()
 
 QString FieldArchiveIO::name() const
 {
-	if(!hasName())
+	if (!hasName())
 		return QString();
 
 	QString filePath = path();
-	if(filePath.isEmpty()) {
+	if (filePath.isEmpty()) {
 		return filePath;
 	}
 
@@ -55,11 +55,11 @@ QString FieldArchiveIO::name() const
 
 QString FieldArchiveIO::directory() const
 {
-	if(!hasName())
+	if (!hasName())
 		return path() + "/";
 
 	QString filePath = path();
-	if(filePath.isEmpty()) {
+	if (filePath.isEmpty()) {
 		return filePath;
 	}
 
@@ -69,7 +69,7 @@ QString FieldArchiveIO::directory() const
 QByteArray FieldArchiveIO::fieldData(Field *field, const QString &extension, bool unlzs)
 {
 	// use data from the cache
-	if(unlzs && fieldDataIsCached(field, extension)) {
+	if (unlzs && fieldDataIsCached(field, extension)) {
 //		qDebug() << "FieldArchive use field data from cache" << field->name();
 		return fieldDataCache;
 	} /*else {
@@ -79,7 +79,7 @@ QByteArray FieldArchiveIO::fieldData(Field *field, const QString &extension, boo
 	QByteArray data = fieldData2(field, extension, unlzs);
 
 	// put decompressed data in the cache
-	if(unlzs && !data.isEmpty()) {
+	if (unlzs && !data.isEmpty()) {
 		fieldCache = field;
 		fieldDataCache = data;
 		fieldExtensionCache = extension;
@@ -92,14 +92,14 @@ QByteArray FieldArchiveIO::fileData(const QString &fileName, bool unlzs, bool is
 	QByteArray data = fileData2(fileName);
 	bool checkLzsHeader = !Config::value("lzsNotCheck").toBool();
 
-	if(isLzsFile && (unlzs || checkLzsHeader)) {
-		if(data.size() < 4)		return QByteArray();
+	if (isLzsFile && (unlzs || checkLzsHeader)) {
+		if (data.size() < 4)		return QByteArray();
 
 		const char *lzsDataConst = data.constData();
 		quint32 lzsSize;
 		memcpy(&lzsSize, lzsDataConst, 4);
 
-		if(checkLzsHeader && (quint32)data.size() != lzsSize + 4) {
+		if (checkLzsHeader && (quint32)data.size() != lzsSize + 4) {
 			return QByteArray();
 		}
 
@@ -115,9 +115,9 @@ int FieldArchiveIO::exportFieldData(Field *field, const QString &extension, cons
 {
 	QByteArray newData = fieldData(field, extension, unlzs);
 
-	if(!newData.isEmpty()) {
+	if (!newData.isEmpty()) {
 		QFile fic(path);
-		if(!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+		if (!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 			return 2;
 		}
 		fic.write(newData);
@@ -156,7 +156,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIO::open(ArchiveObserver *observer)
 FieldArchiveIO::ErrorCode FieldArchiveIO::save(const QString &path, ArchiveObserver *observer)
 {
 	ErrorCode error = save2(path, observer);
-	if(error == Ok) {
+	if (error == Ok) {
 		clearCachedData(); // Important: the file data will change
 	}
 	return error;

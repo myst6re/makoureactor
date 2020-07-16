@@ -33,7 +33,7 @@ Palette::~Palette()
 
 void Palette::fromData(const char *data)
 {
-	for(quint16 i=0 ; i<256 ; ++i) {
+	for (quint16 i=0; i<256; ++i) {
 		quint16 color;
 		memcpy(&color, data, 2);
 
@@ -49,7 +49,7 @@ QByteArray Palette::toByteArray() const
 	QByteArray data;
 	quint8 colorId = 0;
 
-	foreach(const QRgb color, _colors) {
+	for (const QRgb color : _colors) {
 		quint16 psColor = (PsColor::toPsColor(color) & 0x7FFF)
 				| (_masks.at(colorId) << 15);
 		data.append((char *)&psColor, 2);
@@ -64,8 +64,8 @@ QImage Palette::toImage() const
 	const quint8 size = 16;
 	QImage image(size, size, QImage::Format_ARGB32);
 
-	for(int y=0 ; y<size ; ++y) {
-		for(int x=0 ; x<size ; ++x) {
+	for (int y=0; y<size; ++y) {
+		for (int x=0; x<size; ++x) {
 			image.setPixel(x, y, color(y * size + x));
 		}
 	}
@@ -90,7 +90,7 @@ PalettePC::PalettePC(const char *data, bool transparency) :
 
 QRgb PalettePC::color(int index) const
 {
-	if(Palette::isZero(index)) {
+	if (Palette::isZero(index)) {
 		return Palette::color(0);
 	}
 	return Palette::color(index);
@@ -119,7 +119,7 @@ PalettesPS PalettesPC::toPS() const
 {
 	PalettesPS palettesPS;
 
-	foreach(Palette *palette, *this) {
+	for (Palette *palette : *this) {
 		palettesPS.append(new PalettePS(*palette));
 	}
 
@@ -134,7 +134,7 @@ PalettesPC PalettesPS::toPC() const
 {
 	PalettesPC palettesPC;
 
-	foreach(Palette *palette, *this) {
+	for (Palette *palette : *this) {
 		palettesPC.append(new PalettePC(*palette));
 	}
 

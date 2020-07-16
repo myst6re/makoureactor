@@ -29,23 +29,23 @@ ScriptList::ScriptList(QWidget *parent) :
 
 void ScriptList::evidence(QListWidgetItem *current, QListWidgetItem *previous)
 {
-	if(current) {
+	if (current) {
 		current->setBackground(Data::color(Data::ColorEvidence));
 	}
 
-	if(previous) {
+	if (previous) {
 		previous->setBackground(QBrush());
 	}
 }
 
 Script *ScriptList::currentScript()
 {
-	if(!grpScript) {
+	if (!grpScript) {
 		return nullptr;
 	}
 
 	int scriptID = selectedID();
-	if(scriptID != -1)
+	if (scriptID != -1)
 		return grpScript->script(scriptID);
 	return nullptr;
 }
@@ -54,17 +54,17 @@ void ScriptList::fill(GrpScript *_grpScript)
 {
 	clear();
 
-	if(_grpScript) {
+	if (_grpScript) {
 		grpScript = _grpScript;
 	}
 
 	int i=0;
 
-	foreach(Script *script, grpScript->scripts()) {
+	for (Script *script : grpScript->scripts()) {
 		QListWidgetItem *item = new QListWidgetItem(grpScript->scriptName(i), this);
-		if(script->isEmpty()) {
+		if (script->isEmpty()) {
 			item->setForeground(Data::color(Data::ColorDisabledForeground));
-		} else if(script->isVoid()) {
+		} else if (script->isVoid()) {
 			item->setForeground(Data::color(Data::ColorGreyForeground));
 		}
 		++i;
@@ -73,17 +73,17 @@ void ScriptList::fill(GrpScript *_grpScript)
 
 void ScriptList::localeRefresh()
 {
-	if(!grpScript) {
+	if (!grpScript) {
 		return;
 	}
 
 	int i = 0;
-	foreach(Script *script, grpScript->scripts()) {
+	for (Script *script : grpScript->scripts()) {
 		QListWidgetItem *itm = item(i);
 		itm->setText(grpScript->scriptName(i));
-		if(script->isEmpty()) {
+		if (script->isEmpty()) {
 			itm->setForeground(Data::color(Data::ColorDisabledForeground));
-		} else if(script->isVoid()) {
+		} else if (script->isVoid()) {
 			itm->setForeground(Data::color(Data::ColorGreyForeground));
 		} else {
 			itm->setForeground(QBrush());
@@ -95,7 +95,7 @@ void ScriptList::localeRefresh()
 int ScriptList::selectedID()
 {
 	QListWidgetItem *itm = currentItem();
-	if(!itm) {
+	if (!itm) {
 		return -1;
 	}
 	return row(itm);
@@ -108,7 +108,7 @@ void ScriptList::scroll(int id, bool focus)
 		setCurrentItem(itm);
 		scrollToItem(itm, QAbstractItemView::PositionAtTop);
 	}
-	if(focus) {
+	if (focus) {
 		setFocus();
 	}
 }

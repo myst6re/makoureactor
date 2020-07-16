@@ -45,7 +45,7 @@ EncounterTableWidget::EncounterTableWidget(const QString &title, QWidget *parent
 	specialBattleNames << tr("Back Attack 1") << tr("Back Attack 2") << tr("Side Attack") << tr("Attack From Both Sides");
 
 	int row=3;
-	for(int i=0 ; i<10 ; ++i) {
+	for (int i=0; i<10; ++i) {
 		layout->addWidget(new QLabel(i>=6 ? specialBattleNames.at(i-6) : tr("Battle %1").arg(i+1), this), row, 0);
 		QSpinBox *spinBox = new QSpinBox(this);
 		spinBox->setRange(0, 1023);
@@ -58,17 +58,17 @@ EncounterTableWidget::EncounterTableWidget(const QString &title, QWidget *parent
 
 		++row;
 
-		if(row == 9) {
+		if (row == 9) {
 			layout->addWidget(probaLabel, row, 0, 1, 3);
 			++row;
-		} else if(row == 14) {
+		} else if (row == 14) {
 			layout->addWidget(probaLabel2, row, 0, 1, 3);
 			++row;
 		}
 	}
 
 	connect(mainRate, SIGNAL(valueChanged(int)), SLOT(changePercent()));
-	foreach(QSpinBox *battleProba, battleProbas)
+	for (QSpinBox *battleProba : battleProbas)
 		connect(battleProba, SIGNAL(valueChanged(int)), SLOT(changeProbaCount()));
 
 	changePercent();
@@ -78,7 +78,7 @@ EncounterTableWidget::EncounterTableWidget(const QString &title, QWidget *parent
 QList<int> EncounterTableWidget::battleIdsValues()
 {
 	QList<int> ids;
-	foreach(QSpinBox *battleId, battleIds) {
+	for (QSpinBox *battleId : battleIds) {
 		ids.append(battleId->value());
 	}
 	return ids;
@@ -87,7 +87,7 @@ QList<int> EncounterTableWidget::battleIdsValues()
 QList<int> EncounterTableWidget::battleProbasValues()
 {
 	QList<int> probas;
-	foreach(QSpinBox *battleProba, battleProbas) {
+	for (QSpinBox *battleProba : battleProbas) {
 		probas.append(battleProba->value());
 	}
 	return probas;
@@ -100,14 +100,14 @@ int EncounterTableWidget::rateValue()
 
 void EncounterTableWidget::setBattleIdsValues(const QList<int> &ids)
 {
-	for(int i=0 ; i<10 ; ++i) {
+	for (int i=0; i<10; ++i) {
 		battleIds.at(i)->setValue(ids.at(i));
 	}
 }
 
 void EncounterTableWidget::setBattleProbasValues(const QList<int> &probas)
 {
-	for(int i=0 ; i<10 ; ++i) {
+	for (int i=0; i<10; ++i) {
 		battleProbas.at(i)->setValue(probas.at(i));
 	}
 }
@@ -134,7 +134,7 @@ void EncounterTableWidget::setProbaLabelColor(QLabel *label, qint16 points)
 void EncounterTableWidget::changeProbaCount()
 {
 	qint16 points = 64;
-	for(quint8 i=0 ; i<6 ; ++i) {
+	for (quint8 i=0; i<6; ++i) {
 		points -= battleProbas.at(i)->value();
 	}
 
@@ -142,7 +142,7 @@ void EncounterTableWidget::changeProbaCount()
 	probaLabel->setText(tr("Remaining probability points: %1").arg(points));
 
 	points = 64;
-	for(quint8 i=6 ; i<10 ; ++i) {
+	for (quint8 i=6; i<10; ++i) {
 		points -= battleProbas.at(i)->value();
 	}
 

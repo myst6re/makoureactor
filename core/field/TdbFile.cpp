@@ -25,7 +25,7 @@ TdbFile::TdbFile()
 
 bool TdbFile::open(const QByteArray &data)
 {
-	if(data.size() < int(sizeof(TdbHeader))) {
+	if (data.size() < int(sizeof(TdbHeader))) {
 		qWarning() << "invalid tdb size" << data.size() << sizeof(TdbHeader);
 		return false;
 	}
@@ -34,7 +34,7 @@ bool TdbFile::open(const QByteArray &data)
 
 	memcpy(&header, constData, sizeof(TdbHeader));
 
-	if(header.size != (quint32)data.size()) {
+	if (header.size != (quint32)data.size()) {
 		qWarning() << "invalid tdb size" << header.size << data.size();
 		return false;
 	}
@@ -45,11 +45,11 @@ bool TdbFile::open(const QByteArray &data)
 
 //	quint8 faceID = 0;
 
-//	for(int pal=0 ; pal<header.paletteCount ; ++pal) {
+//	for (int pal=0; pal<header.paletteCount; ++pal) {
 //		quint32 offsetPalette = header.paletteOffset + pal * 32;
 //		QImage palette(64, 4, QImage::Format_RGB32);
 
-//		for(int i=0 ; i<16 ; ++i) {
+//		for (int i=0; i<16; ++i) {
 //			quint16 color;
 //			memcpy(&color, &constData[offsetPalette + i*2], 2);
 //			palette.setPixel(i*4+0, 0, PsColor::fromPsColor(color));
@@ -77,7 +77,7 @@ bool TdbFile::open(const QByteArray &data)
 //		palette.save(QString("TdbPal%1.png").arg(pal));
 //	}
 
-//	for(quint8 faceID=0 ; faceID < 0x21 ; ++faceID) {
+//	for (quint8 faceID=0; faceID < 0x21; ++faceID) {
 //		texture(faceID, Eye).save(QString("TdbTexEye%1.png").arg(faceID));
 ////		texture(faceID, MouthClosed).save(QString("TdbTexMouthClosed%1.png").arg(faceID));
 //	}
@@ -87,7 +87,7 @@ bool TdbFile::open(const QByteArray &data)
 
 QImage TdbFile::texture(quint8 faceID, TextureType type)
 {
-	if(data.isEmpty())	return QImage();
+	if (data.isEmpty())	return QImage();
 
 	const char *constData = data.constData();
 	int imgID = faceIdToImageId(faceID, type);
@@ -100,7 +100,7 @@ QImage TdbFile::texture(quint8 faceID, TextureType type)
 
 	quint32 offsetPalette = header.paletteOffset + pal * 32;
 
-	if(quint32(data.size()) < offsetImage + 512
+	if (quint32(data.size()) < offsetImage + 512
 			|| quint32(data.size()) < offsetPalette + 32) {
 		return QImage();
 	}
@@ -108,7 +108,7 @@ QImage TdbFile::texture(quint8 faceID, TextureType type)
 	QImage img(32, 32, QImage::Format_ARGB32);
 	QRgb *px = (QRgb *)img.bits();
 
-	for(int i=0 ; i<512 ; ++i) {
+	for (int i=0; i<512; ++i) {
 		quint8 index = constData[offsetImage + i];
 		quint16 color;
 		memcpy(&color, constData + offsetPalette + (index & 0x0F)*2, 2);
@@ -123,8 +123,8 @@ QImage TdbFile::texture(quint8 faceID, TextureType type)
 
 int TdbFile::faceIdToImageId(quint8 faceID, TextureType type)
 {
-	if(faceID <= 9) {
-		if(type == Empty)	return 126;
+	if (faceID <= 9) {
+		if (type == Empty)	return 126;
 		return faceID * 8 + (quint8)type;
 	} else {
 		switch(type) {

@@ -53,12 +53,12 @@ bool InfFile::open(const QByteArray &data)
 {
 	quint32 size = data.size();
 
-	if(sizeof(InfData) != 740) {
+	if (sizeof(InfData) != 740) {
 		qWarning() << "Error InfData" << sizeof(InfData) << "must be 740";
 		Q_ASSERT(false);
 	}
 
-	if(size != 740 && size != 536) {
+	if (size != 740 && size != 536) {
 		qWarning() << "Error inf size" << size;
 //		QFile debinf("debugInf.inf");
 //		debinf.open(QIODevice::WriteOnly);
@@ -230,7 +230,7 @@ void InfFile::setBgLayer4Height(qint16 height)
 QList<Exit> InfFile::exitLines() const
 {
 	QList<Exit> exit;
-	for(int i=0 ; i<12 ; ++i) {
+	for (int i=0; i<12; ++i) {
 		exit.append(data.doors[i]);
 	}
 	return exit;
@@ -250,7 +250,7 @@ void InfFile::setExitLine(quint8 id, const Exit &line)
 QList<Trigger> InfFile::triggers() const
 {
 	QList<Trigger> trigger;
-	for(int i=0 ; i<12 ; ++i) {
+	for (int i=0; i<12; ++i) {
 		trigger.append(data.triggers[i]);
 	}
 	return trigger;
@@ -281,7 +281,7 @@ void InfFile::setArrowDiplay(quint8 id, bool display)
 QList<Arrow> InfFile::arrows() const
 {
 	QList<Arrow> arrowList;
-	for(int i=0 ; i<12 ; ++i) {
+	for (int i=0; i<12; ++i) {
 		arrowList.append(data.arrows[i]);
 	}
 	return arrowList;

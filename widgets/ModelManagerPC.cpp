@@ -98,7 +98,7 @@ ModelManagerPC::ModelManagerPC(QWidget *parent) :
 QList<QStringList> ModelManagerPC::modelNames() const
 {
 	QList<QStringList> ret;
-	foreach(const QString &name, modelLoader()->HRCNames()) {
+	for (const QString &name : modelLoader()->HRCNames()) {
 		ret.append(QStringList(name));
 	}
 	return ret;
@@ -108,7 +108,7 @@ QList<QTreeWidgetItem *> ModelManagerPC::animItems(int modelID) const
 {
 	QList<QTreeWidgetItem *> ret;
 	int numA=0;
-	foreach(const QString &name, modelLoader()->ANames(modelID)) {
+	for (const QString &name : modelLoader()->ANames(modelID)) {
 		QStringList cols = QStringList() << QString::number(numA) << name << QString::number(modelLoader()->animUnknown(modelID, numA));
 		QTreeWidgetItem *item = new QTreeWidgetItem(cols);
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
@@ -131,7 +131,7 @@ void ModelManagerPC::showModelInfos2(int row)
 
 void ModelManagerPC::addModel()
 {
-	if(modelLoader()->modelCount() >= modelLoader()->maxModelCount()) {
+	if (modelLoader()->modelCount() >= modelLoader()->maxModelCount()) {
 		return;
 	}
 
@@ -139,7 +139,7 @@ void ModelManagerPC::addModel()
 	QTreeWidgetItem *item = models->currentItem(), *newItem;
 	CharArchive *charLgp = CharArchive::instance();
 
-	if(charLgp->isOpen()) {
+	if (charLgp->isOpen()) {
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
 		dialog.setWindowTitle(tr("Add a field model"));
 
@@ -160,13 +160,13 @@ void ModelManagerPC::addModel()
 		connect(&list, SIGNAL(currentIndexChanged(QString)), SLOT(modifyHRC(QString)));
 		connect(&OKButton, SIGNAL(released()), &dialog, SLOT(accept()));
 
-		if(dialog.exec() == QDialog::Accepted) {
+		if (dialog.exec() == QDialog::Accepted) {
 			hrc = list.currentText().left(8).toUpper();
 		}
 		else {
-			if(modelPreview) {
+			if (modelPreview) {
 				newItem = modelAnims->currentItem();
-				if(item!=nullptr && newItem!=nullptr) {
+				if (item!=nullptr && newItem!=nullptr) {
 					modelPreview->setIsAnimated(true);
 					modelPreview->setFieldModelFile(field()->fieldModel(item->text(0), newItem->text(1)));
 				} else
@@ -176,13 +176,13 @@ void ModelManagerPC::addModel()
 		}
 	}
 
-	if(modelPreview)	modelPreview->clear();
+	if (modelPreview)	modelPreview->clear();
 
 	models->blockSignals(true);
 
 	newItem = new QTreeWidgetItem(QStringList(hrc));
 
-	if(item == nullptr) {
+	if (item == nullptr) {
 		models->addTopLevelItem(newItem);
 
 		modelLoader()->insertModel(models->topLevelItemCount(), hrc);
@@ -201,7 +201,7 @@ void ModelManagerPC::addModel()
 
 	models->setCurrentItem(newItem);
 
-	if(!charLgp->isOpen()) {
+	if (!charLgp->isOpen()) {
 		models->editItem(newItem);
 	}
 }
@@ -209,9 +209,9 @@ void ModelManagerPC::addModel()
 void ModelManagerPC::delModel()
 {
 	QTreeWidgetItem *item = models->currentItem();
-	if(item == nullptr) return;
+	if (item == nullptr) return;
 	int row = currentModelID(item);
-	if(row < 0)		return;
+	if (row < 0)		return;
 
 	modelLoader()->removeModel(row);
 
@@ -231,9 +231,9 @@ void ModelManagerPC::delModel()
 void ModelManagerPC::upModel()
 {
 	QTreeWidgetItem *item = models->currentItem();
-	if(item == nullptr) return;
+	if (item == nullptr) return;
 	int row = currentModelID(item);
-	if(row <= 0)	return;
+	if (row <= 0)	return;
 
 	QTreeWidgetItem *itemAbove = models->itemAbove(item);
 
@@ -255,9 +255,9 @@ void ModelManagerPC::upModel()
 void ModelManagerPC::downModel()
 {
 	QTreeWidgetItem *item = models->currentItem();
-	if(item == nullptr) return;
+	if (item == nullptr) return;
 	int row = currentModelID(item);
-	if(row < 0 || row >= models->topLevelItemCount()-1)	return;
+	if (row < 0 || row >= models->topLevelItemCount()-1)	return;
 
 	QTreeWidgetItem *itemBelow = models->itemBelow(item);
 
@@ -279,7 +279,7 @@ void ModelManagerPC::downModel()
 void ModelManagerPC::renameOKModel(QTreeWidgetItem *item)
 {
 	int modelID = currentModelID();
-	if(modelID < 0)		return;
+	if (modelID < 0)		return;
 
 	QString text = item->text(0).left(8);
 
@@ -291,7 +291,7 @@ void ModelManagerPC::renameOKModel(QTreeWidgetItem *item)
 
 void ModelManagerPC::modifyHRC(const QString &hrc)
 {
-	if(modelPreview) {
+	if (modelPreview) {
 		modelPreview->setIsAnimated(false);
 		modelPreview->setFieldModelFile(field()->fieldModel(hrc, "aafe"));
 		QString a;
@@ -315,7 +315,7 @@ void ModelManagerPC::modifyHRC(const QString &hrc)
 		case 29:	a = "aeae";	break;
 		}
 
-		if(!a.isEmpty()) {
+		if (!a.isEmpty()) {
 			modelPreview->setIsAnimated(false);
 			modelPreview->setFieldModelFile(field()->fieldModel(hrc, a));
 		}
@@ -325,7 +325,7 @@ void ModelManagerPC::modifyHRC(const QString &hrc)
 void ModelManagerPC::setModelName(const QString &modelName)
 {
 	int modelID = currentModelID();
-	if(modelID < 0)	return;
+	if (modelID < 0)	return;
 
 	modelLoader()->setCharName(modelID, modelName);
 
@@ -335,7 +335,7 @@ void ModelManagerPC::setModelName(const QString &modelName)
 void ModelManagerPC::setModelScale(int scale)
 {
 	int modelID = currentModelID();
-	if(modelID < 0)	return;
+	if (modelID < 0)	return;
 
 	modelLoader()->setScale(modelID, scale);
 
@@ -346,7 +346,7 @@ void ModelManagerPC::setModelGlobalColor(int id, QRgb color)
 {
 	Q_UNUSED(id);
 	int modelID = currentModelID();
-	if(modelID < 0)	return;
+	if (modelID < 0)	return;
 
 	modelLoader()->setGlobalColor(modelID, color);
 
@@ -356,7 +356,7 @@ void ModelManagerPC::setModelGlobalColor(int id, QRgb color)
 void ModelManagerPC::setModelColor(int id, const FieldModelColorDir &color)
 {
 	int modelID = currentModelID();
-	if(modelID < 0)	return;
+	if (modelID < 0)	return;
 
 	modelLoader()->setLightColor(modelID, id, color);
 
@@ -367,7 +367,7 @@ void ModelManagerPC::addAnim()
 {
 	int modelID = currentModelID();
 
-	if(modelID < 0 ||
+	if (modelID < 0 ||
 			modelLoader()->animCount(modelID) >= modelLoader()->maxAnimCount()) {
 		return;
 	}
@@ -376,7 +376,7 @@ void ModelManagerPC::addAnim()
 	QString a;
 	CharArchive *charLgp = CharArchive::instance();
 
-	if(charLgp->isOpen()) {
+	if (charLgp->isOpen()) {
 		toolBar2->setEnabled(false);
 		QDialog dialog(this, Qt::Dialog | Qt::WindowCloseButtonHint);
 		dialog.setWindowTitle(tr("Add a field model"));
@@ -391,7 +391,7 @@ void ModelManagerPC::addAnim()
 
 		int boneCount = modelPreview ? modelPreview->boneCount() : 0;
 		QStringList files = charLgp->aFiles(boneCount);
-		if(boneCount != 0) {
+		if (boneCount != 0) {
 			files.append(charLgp->aFiles(0)); // Animations without bones work too
 		}
 
@@ -400,13 +400,13 @@ void ModelManagerPC::addAnim()
 		qSort(files);
 		list.addItems(files);
 
-		if(item!=nullptr) {
+		if (item!=nullptr) {
 			QString text = item->text(1).toLower();
 			int index = text.lastIndexOf('.');
-			if(index != -1)
+			if (index != -1)
 				text.truncate(index);
 			index = list.findText(text);
-			if(index != -1)
+			if (index != -1)
 				list.setCurrentIndex(index);
 		}
 
@@ -420,12 +420,12 @@ void ModelManagerPC::addAnim()
 		connect(&OKButton, SIGNAL(released()), &dialog, SLOT(accept()));
 		toolBar2->setEnabled(true);
 
-		if(dialog.exec() == QDialog::Accepted) {
+		if (dialog.exec() == QDialog::Accepted) {
 			a = list.currentText();
 		}
 		else {
-			if(modelPreview) {
-				if(item != nullptr) {
+			if (modelPreview) {
+				if (item != nullptr) {
 					modelPreview->setIsAnimated(true);
 					modelPreview->setFieldModelFile(field()->fieldModel(models->currentItem()->text(0), item->text(1)));
 				} else
@@ -439,7 +439,7 @@ void ModelManagerPC::addAnim()
 
 	newItem = new QTreeWidgetItem(QStringList() << "" << a << "1");
 
-	if(item == nullptr) {
+	if (item == nullptr) {
 		modelAnims->addTopLevelItem(newItem);
 
 		modelLoader()->insertAnim(modelID, modelAnims->topLevelItemCount(), a);
@@ -452,7 +452,7 @@ void ModelManagerPC::addAnim()
 	}
 
 	// Update animation IDs
-	for(int aID=0 ; aID<modelAnims->topLevelItemCount() ; ++aID) {
+	for (int aID=0; aID<modelAnims->topLevelItemCount(); ++aID) {
 		modelAnims->topLevelItem(aID)->setText(0, QString::number(aID));
 	}
 
@@ -462,7 +462,7 @@ void ModelManagerPC::addAnim()
 
 	newItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 	modelAnims->setCurrentItem(newItem);
-	if(!charLgp->isOpen()) {
+	if (!charLgp->isOpen()) {
 		modelAnims->editItem(newItem);
 	}
 }
@@ -474,7 +474,7 @@ void ModelManagerPC::processEvents() const
 
 void ModelManagerPC::modifyAnimation(const QString &a)
 {
-	if(modelPreview) {
+	if (modelPreview) {
 		modelPreview->setIsAnimated(true);
 		modelPreview->setFieldModelFile(field()->fieldModel(models->currentItem()->text(0), a));
 	}
@@ -483,19 +483,19 @@ void ModelManagerPC::modifyAnimation(const QString &a)
 void ModelManagerPC::delAnim()
 {
 	int modelID = currentModelID();
-	if(modelID < 0)		return;
+	if (modelID < 0)		return;
 	QTreeWidgetItem *item = modelAnims->currentItem();
-	if(item == nullptr) return;
+	if (item == nullptr) return;
 	int animID = currentAnimID(item);
-	if(animID < 0)	return;
+	if (animID < 0)	return;
 
 	modelLoader()->removeAnim(modelID, animID);
-	if(modelPreview)	modelPreview->clear();
+	if (modelPreview)	modelPreview->clear();
 
 	delete item;
 
 	// Update animation IDs
-	for(int aID=0 ; aID<modelAnims->topLevelItemCount() ; ++aID) {
+	for (int aID=0; aID<modelAnims->topLevelItemCount(); ++aID) {
 		modelAnims->topLevelItem(aID)->setText(0, QString::number(aID));
 	}
 
@@ -505,11 +505,11 @@ void ModelManagerPC::delAnim()
 void ModelManagerPC::upAnim()
 {
 	int modelID = currentModelID();
-	if(modelID < 0)		return;
+	if (modelID < 0)		return;
 	QTreeWidgetItem *item = modelAnims->currentItem();
-	if(item == nullptr) return;
+	if (item == nullptr) return;
 	int animID = currentAnimID(item);
-	if(animID <= 0)	return;
+	if (animID <= 0)	return;
 
 	QTreeWidgetItem *itemAbove = modelAnims->itemAbove(item);
 
@@ -534,11 +534,11 @@ void ModelManagerPC::upAnim()
 void ModelManagerPC::downAnim()
 {
 	int modelID = currentModelID();
-	if(modelID < 0)		return;
+	if (modelID < 0)		return;
 	QTreeWidgetItem *item = modelAnims->currentItem();
-	if(item == nullptr) return;
+	if (item == nullptr) return;
 	int animID = currentAnimID(item);
-	if(animID < 0 || animID >= modelAnims->topLevelItemCount()-1)	return;
+	if (animID < 0 || animID >= modelAnims->topLevelItemCount()-1)	return;
 
 	QTreeWidgetItem *itemBelow = modelAnims->itemBelow(item);
 
@@ -571,21 +571,21 @@ void ModelManagerPC::editAnim(QTreeWidgetItem *item, int column)
 void ModelManagerPC::renameOKAnim(QTreeWidgetItem *item, int column)
 {
 	int modelID = currentModelID();
-	if(modelID < 0)		return;
+	if (modelID < 0)		return;
 	int animID = currentAnimID(item);
-	if(animID < 0)		return;
+	if (animID < 0)		return;
 
-	if(column == 1) {
+	if (column == 1) {
 		QString text = item->text(1).left(256);
 		item->setText(1, text);
 
 		modelLoader()->setAName(modelID, animID, text);
 		emit modified();
-	} else if(column == 2) {
+	} else if (column == 2) {
 		bool ok;
 		int value = item->text(2).toInt(&ok);
-		if(ok) {
-			if(value > 65535) {
+		if (ok) {
+			if (value > 65535) {
 				value = 65535;
 				item->setText(2, QString::number(value));
 			}
@@ -630,12 +630,12 @@ quint16 ModelManagerPC::modelScale(int modelID) const
 
 void ModelManagerPC::copyModels(const QList<int> &modelIDs)
 {
-	if(modelIDs.isEmpty()) {
+	if (modelIDs.isEmpty()) {
 		return;
 	}
 
 	_copiedModels.clear();
-	foreach(int modelID, modelIDs) {
+	for (int modelID : modelIDs) {
 		_copiedModels.append(modelLoader()->modelInfos(modelID));
 	}
 	copied = true;
@@ -643,14 +643,14 @@ void ModelManagerPC::copyModels(const QList<int> &modelIDs)
 
 void ModelManagerPC::cutModels(const QList<int> &modelIDs)
 {
-	if(modelIDs.isEmpty()) {
+	if (modelIDs.isEmpty()) {
 		return;
 	}
 
 	copyModels(modelIDs);
 	QList<int> mIDs = modelIDs;
 	qSort(mIDs);
-	for(int i=mIDs.size() - 1 ; i>=0 ; --i) {
+	for (int i=mIDs.size() - 1; i>=0; --i) {
 		int modelID = mIDs.at(i);
 		modelLoader()->removeModel(modelID);
 		delete models->topLevelItem(modelID);
@@ -661,11 +661,11 @@ void ModelManagerPC::cutModels(const QList<int> &modelIDs)
 
 void ModelManagerPC::pasteModels(int modelID)
 {
-	if(!copied) {
+	if (!copied) {
 		return;
 	}
 
-	for(int i=_copiedModels.size() - 1 ; i>=0 ; --i) {
+	for (int i=_copiedModels.size() - 1; i>=0; --i) {
 		const FieldModelInfosPC &modelInfos = _copiedModels.at(i);
 		modelLoader()->insertModelInfos(modelID, modelInfos);
 
@@ -696,7 +696,7 @@ void ModelManagerPC::cutCurrentModel()
 void ModelManagerPC::pasteOnCurrentModel()
 {
 	int modelID = currentModelID();
-	if(modelID < 0) {
+	if (modelID < 0) {
 		modelID = models->topLevelItemCount();
 	} else {
 		modelID += 1;

@@ -35,7 +35,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
 	field(field), script(script), opcodeID(opcodeID), isInit(isInit), modify(modify), change(false)
 {
-	if(crashIfInit.isEmpty()) {
+	if (crashIfInit.isEmpty()) {
 		crashIfInit << Opcode::JOIN << Opcode::SPLIT
 					<< Opcode::DSKCG
 					<< Opcode::MINIGAME << Opcode::TUTOR
@@ -116,13 +116,13 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	layout->addStretch();
 	layout->addLayout(buttonLayout);
 
-	if(modify) {
+	if (modify) {
 		this->opcode = Script::copyOpcode(script->opcode(opcodeID));
 		int id = opcode->id();
 
-		if(id == Opcode::SPECIAL)
+		if (id == Opcode::SPECIAL)
 			id = (((OpcodeSPECIAL *)opcode)->opcode->id() << 8) | id;
-		else if(id == Opcode::KAWAI)
+		else if (id == Opcode::KAWAI)
 			id = (((OpcodeKAWAI *)opcode)->opcode->id() << 8) | id;
 
 		setCurrentMenu(id);
@@ -136,7 +136,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	connect(ok, SIGNAL(released()), SLOT(accept()));
 	connect(cancel, SIGNAL(released()), SLOT(close()));
 	connect(comboBox0, SIGNAL(currentIndexChanged(int)), SLOT(buildList(int)));
-	for(int i=0 ; i<editorLayout->count() ; ++i) {
+	for (int i=0; i<editorLayout->count(); ++i) {
 		connect(static_cast<ScriptEditorView *>(editorLayout->widget(i)), SIGNAL(opcodeChanged()), SLOT(refreshTextEdit()));
 	}
 	connect(comboBox, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
@@ -145,7 +145,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 ScriptEditor::~ScriptEditor()
 {
 	Opcode *op = editorWidget->opcode();
-	if(op) {
+	if (op) {
 		delete op;
 	} else {
 		delete this->opcode;
@@ -263,15 +263,15 @@ void ScriptEditor::fillView()
 
 void ScriptEditor::accept()
 {
-	/* if(!this->change) {
+	/* if (!this->change) {
 		close();
 		return;
 	} */
-	if(needslabel()) {
+	if (needslabel()) {
 		script->insertOpcode(this->opcodeID, new OpcodeLabel(((OpcodeJump *)editorWidget->opcode())->label()));
 	}
 
-	if(modify) {
+	if (modify) {
 		script->setOpcode(this->opcodeID, Script::copyOpcode(editorWidget->opcode()));
 	} else {
 		script->insertOpcode(this->opcodeID, Script::copyOpcode(editorWidget->opcode()));
@@ -307,8 +307,8 @@ void ScriptEditor::changeCurrentOpcode(int index)
 
 	// Create opcode
 
-	if(Opcode::LABEL == itemData) { // LABEL exception
-		if(Opcode::LABEL == opcode->id()) {
+	if (Opcode::LABEL == itemData) { // LABEL exception
+		if (Opcode::LABEL == opcode->id()) {
 			((OpcodeLabel *)opcode)->setLabel(0);
 		} else {
 			delete opcode;
@@ -321,10 +321,10 @@ void ScriptEditor::changeCurrentOpcode(int index)
 
 		// Fill opcode with \x00
 
-		if(Opcode::KAWAI == id) { //KAWAI
+		if (Opcode::KAWAI == id) { //KAWAI
 			newOpcode.append('\x03'); // size
 			newOpcode.append((char)((itemData >> 8) & 0xFF)); // KAWAI ID
-		} else if(Opcode::SPECIAL == id) { //SPECIAL
+		} else if (Opcode::SPECIAL == id) { //SPECIAL
 			quint8 byte2 = (itemData >> 8) & 0xFF;
 			newOpcode.append((char)byte2); // SPECIAL ID
 			switch(byte2)
@@ -338,12 +338,12 @@ void ScriptEditor::changeCurrentOpcode(int index)
 				break;
 			}
 		} else {
-			for(quint8 pos=1 ; pos<Opcode::length[id] ; ++pos) {
+			for (quint8 pos=1; pos<Opcode::length[id]; ++pos) {
 				newOpcode.append('\x00');
 			}
 		}
 
-		if(id == opcode->id()) {
+		if (id == opcode->id()) {
 			opcode->setParams(newOpcode.constData() + 1, newOpcode.size() - 1); // same opcode, just change params
 		} else { // change all
 			delete opcode;
@@ -356,20 +356,20 @@ void ScriptEditor::changeCurrentOpcode(int index)
 
 void ScriptEditor::setCurrentMenu(int id)
 {
-	for(int i=0 ; i<comboBox0->count() ; ++i) {
+	for (int i=0; i<comboBox0->count(); ++i) {
 		buildList(i);
 		int index = -1;
-		for(int j=0 ; j<comboBox->count() && index==-1 ; ++j) {
+		for (int j=0; j<comboBox->count() && index==-1; ++j) {
 			QList<QVariant> dataList = comboBox->itemData(j).toList();
-			foreach(const QVariant &v, dataList) {
-				if(v.toInt() == id) {
+			for (const QVariant &v : dataList) {
+				if (v.toInt() == id) {
 					index = j;
 					break;
 				}
 			}
 		}
 
-		if(index != -1) {
+		if (index != -1) {
 			comboBox0->setCurrentIndex(i);
 			comboBox->setCurrentIndex(index);
 			setEnabled(true);

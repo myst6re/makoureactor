@@ -42,7 +42,7 @@ void ScriptEditorWindowPage::build()
 	previewText = new QComboBox(this);
 	previewText->addItem(tr("[Keep empty window]"));
 	bool jp = Config::value("jp_txt", false).toBool();
-	foreach(const FF7Text &t, field()->scriptsAndTexts()->texts())
+	for (const FF7Text &t : field()->scriptsAndTexts()->texts())
 		previewText->addItem(t.text(jp, true).simplified());
 	previewText->setMaximumWidth(textPreview->width()/2);
 
@@ -109,10 +109,10 @@ void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(true);
 	}
-	if(opcode->id() == Opcode::WROW) {
+	if (opcode->id() == Opcode::WROW) {
 		xLabel->hide();
 		x->hide();
 		yLabel->hide();
@@ -129,7 +129,7 @@ void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 		textPreview->setWins(QList<FF7Window>() << ff7Win);
 		winID->setValue(opcodeWROW->windowID);
 		h->setValue(opcodeWROW->rowCount);
-	} else if(opcode->id() == Opcode::WINDOW || opcode->id() == Opcode::WSIZW) {
+	} else if (opcode->id() == Opcode::WINDOW || opcode->id() == Opcode::WSIZW) {
 		xLabel->show();
 		x->show();
 		yLabel->show();
@@ -148,21 +148,21 @@ void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 		w->setValue(opcodeWindow->width);
 		h->setValue(opcodeWindow->height);
 	}
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(false);
 	}
 
 	// If the current opcode is followed by MESSAGE or ASK, we can put a text in the window preview
-	if(opcodeID() + 1 < script()->size()) {
+	if (opcodeID() + 1 < script()->size()) {
 		Opcode *nextOpcode = script()->opcode(opcodeID() + 1);
-		if(nextOpcode->id() == Opcode::MESSAGE) {
+		if (nextOpcode->id() == Opcode::MESSAGE) {
 			OpcodeMESSAGE *mess = (OpcodeMESSAGE *)nextOpcode;
-			if(mess->windowID == winID->value()) {
+			if (mess->windowID == winID->value()) {
 				previewText->setCurrentIndex(mess->textID + 1);
 			}
-		} else if(nextOpcode->id() == Opcode::ASK) {
+		} else if (nextOpcode->id() == Opcode::ASK) {
 			OpcodeASK *ask = (OpcodeASK *)nextOpcode;
-			if(ask->windowID == winID->value()) {
+			if (ask->windowID == winID->value()) {
 				previewText->setCurrentIndex(ask->textID + 1);
 			}
 		}
@@ -172,7 +172,7 @@ void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 void ScriptEditorWindowPage::updatePreview()
 {
 	FF7Window ff7Win = textPreview->getWindow();
-	if(x->isVisible()) {
+	if (x->isVisible()) {
 		ff7Win.x = x->value();
 		ff7Win.y = y->value();
 		ff7Win.w = w->value();
@@ -198,7 +198,7 @@ void ScriptEditorWindowPage::updateText(int textID)
 
 void ScriptEditorWindowPage::setPositionWindow(const QPoint &point)
 {
-	if(x->isVisible()) {
+	if (x->isVisible()) {
 		x->blockSignals(true);
 		y->blockSignals(true);
 		x->setValue(point.x());
@@ -212,13 +212,13 @@ void ScriptEditorWindowPage::setPositionWindow(const QPoint &point)
 
 void ScriptEditorWindowPage::align(Qt::Alignment alignment)
 {
-	if(x->isVisible()) {
+	if (x->isVisible()) {
 		x->blockSignals(true);
 		y->blockSignals(true);
-		if(alignment.testFlag(Qt::AlignHCenter)) {
+		if (alignment.testFlag(Qt::AlignHCenter)) {
 			x->setValue((textPreview->width() - w->value()) / 2);
 		}
-		if(alignment.testFlag(Qt::AlignVCenter)) {
+		if (alignment.testFlag(Qt::AlignVCenter)) {
 			y->setValue((textPreview->height() - h->value()) / 2);
 		}
 		x->blockSignals(false);
@@ -236,7 +236,7 @@ void ScriptEditorWindowPage::resizeWindow()
 	w->blockSignals(true);
 	h->blockSignals(true);
 	w->setValue(newSize.width());
-	if(x->isVisible()) {
+	if (x->isVisible()) {
 		h->setValue(newSize.height());
 	} else {
 		h->setValue((newSize.height() - 9) / 16);
@@ -298,7 +298,7 @@ Opcode *ScriptEditorWindowModePage::opcode()
 void ScriptEditorWindowModePage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(true);
 	}
 
@@ -313,7 +313,7 @@ void ScriptEditorWindowModePage::setOpcode(Opcode *opcode)
 	winType->setCurrentIndex(opcodeWMODE->mode);
 	winClose->setCurrentIndex(opcodeWMODE->preventClose);
 
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(false);
 	}
 }
@@ -372,7 +372,7 @@ void ScriptEditorWindowMovePage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(true);
 	}
 
@@ -381,7 +381,7 @@ void ScriptEditorWindowMovePage::setOpcode(Opcode *opcode)
 	x->setValue(opcodeWMOVE->relativeX);
 	y->setValue(opcodeWMOVE->relativeY);
 
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(false);
 	}
 }

@@ -26,7 +26,7 @@ TextureFile::TextureFile(const QImage &image) :
 	_image(image), _currentColorTable(0)
 {
 	QVector<QRgb> colorTable = _image.colorTable();
-	if(!colorTable.empty()) {
+	if (!colorTable.empty()) {
 		_colorTables.append(colorTable);
 	}
 }
@@ -80,14 +80,14 @@ QVector<QRgb> TextureFile::colorTable(int id) const
 
 void TextureFile::setCurrentColorTable(int id)
 {
-	if(id < _colorTables.size() && _currentColorTable != id) {
+	if (id < _colorTables.size() && _currentColorTable != id) {
 		_image.setColorTable(_colorTables.at(_currentColorTable = id));
 	}
 }
 
 void TextureFile::setColorTable(int id, const QVector<QRgb> &colorTable)
 {
-	if(id < _colorTables.size()) {
+	if (id < _colorTables.size()) {
 		_colorTables.replace(id, colorTable);
 	}
 }
@@ -102,9 +102,9 @@ void TextureFile::debug() const
 	QImage img(4*16, 4*16*colorTableCount(), QImage::Format_RGB32);
 
 	int y = 0;
-	foreach(const QVector<QRgb> &colorTable, _colorTables) {
+	for (const QVector<QRgb> &colorTable : _colorTables) {
 		int x = 0;
-		foreach(const QRgb &color, colorTable) {
+		for (const QRgb &color : colorTable) {
 			img.setPixel(x*4+0, y*4+0, color);
 			img.setPixel(x*4+0, y*4+1, color);
 			img.setPixel(x*4+0, y*4+2, color);
@@ -125,14 +125,14 @@ void TextureFile::debug() const
 			img.setPixel(x*4+3, y*4+2, color);
 			img.setPixel(x*4+3, y*4+3, color);
 
-			if(x==15) {
+			if (x==15) {
 				x = 0;
 				++y;
 			} else {
 				++x;
 			}
 		}
-		while(y % 16 != 0) {
+		while (y % 16 != 0) {
 			img.setPixel(x*4+0, y*4+0, Qt::black);
 			img.setPixel(x*4+0, y*4+1, Qt::black);
 			img.setPixel(x*4+0, y*4+2, Qt::black);
@@ -153,7 +153,7 @@ void TextureFile::debug() const
 			img.setPixel(x*4+3, y*4+2, Qt::black);
 			img.setPixel(x*4+3, y*4+3, Qt::black);
 
-			if(x==15) {
+			if (x==15) {
 				x = 0;
 				++y;
 			} else {

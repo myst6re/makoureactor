@@ -78,7 +78,7 @@ Opcode *ScriptEditorBinaryOpPage::opcode()
 
 	var->var(bank1, adress1);
 
-	if(varOrValue->isValue()) {
+	if (varOrValue->isValue()) {
 		bank2 = 0;
 		value = varOrValue->value();
 	} else {
@@ -98,7 +98,7 @@ void ScriptEditorBinaryOpPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(true);
 	}
 
@@ -160,14 +160,14 @@ void ScriptEditorBinaryOpPage::setOpcode(Opcode *opcode)
 	varOrValue->setLongValueType(opcodeBinaryOperation->isLong());
 	type1->setChecked(!opcodeBinaryOperation->isLong());
 	type2->setChecked(opcodeBinaryOperation->isLong());
-	if(B2(opcodeBinaryOperation->banks) != 0) {
+	if (B2(opcodeBinaryOperation->banks) != 0) {
 		varOrValue->setVar(B2(opcodeBinaryOperation->banks), opcodeBinaryOperation->value & 0xFF);
 		varOrValue->setIsValue(false);
 	} else {
 		varOrValue->setValue(opcodeBinaryOperation->value);
 		varOrValue->setIsValue(true);
 	}
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(false);
 	}
 }
@@ -177,7 +177,7 @@ void ScriptEditorBinaryOpPage::updateValueRange()
 	varOrValue->setLongValueType(type2->isChecked());
 	Opcode::Keys key = (Opcode::Keys)opcodePtr()->id();
 
-	if(type1->isChecked()) {
+	if (type1->isChecked()) {
 		switch(key) {
 		case Opcode::SETWORD:	key = Opcode::SETBYTE;	break;
 		case Opcode::PLUS2:		key = Opcode::PLUS;		break;
@@ -209,7 +209,7 @@ void ScriptEditorBinaryOpPage::updateValueRange()
 		}
 	}
 
-	if(key != opcodePtr()->id()) {
+	if (key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
@@ -306,7 +306,7 @@ void ScriptEditorBinaryOpPage::changeCurrentOpcode(int index)
 		break;
 	}
 
-	if(key != opcodePtr()->id()) {
+	if (key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
@@ -315,7 +315,7 @@ void ScriptEditorBinaryOpPage::changeCurrentOpcode(int index)
 
 Opcode *ScriptEditorBinaryOpPage::convertOpcode(Opcode::Keys key)
 {
-	if(key == opcodePtr()->id())	return opcodePtr();
+	if (key == opcodePtr()->id())	return opcodePtr();
 
 	OpcodeBinaryOperation *binop = (OpcodeBinaryOperation *)opcodePtr();
 
@@ -408,7 +408,7 @@ void ScriptEditorUnaryOpPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(true);
 	}
 
@@ -444,7 +444,7 @@ void ScriptEditorUnaryOpPage::setOpcode(Opcode *opcode)
 	type1->setChecked(!opcodeUnaryOperation->isLong());
 	type2->setChecked(opcodeUnaryOperation->isLong());
 
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(false);
 	}
 }
@@ -453,7 +453,7 @@ void ScriptEditorUnaryOpPage::updateValueRange()
 {
 	Opcode::Keys key = (Opcode::Keys)opcodePtr()->id();
 
-	if(type1->isChecked()) {
+	if (type1->isChecked()) {
 		switch(key) {
 		case Opcode::INC2X:	key = Opcode::INCX;	break;
 		case Opcode::INC2:	key = Opcode::INC;	break;
@@ -471,7 +471,7 @@ void ScriptEditorUnaryOpPage::updateValueRange()
 		}
 	}
 
-	if(key != opcodePtr()->id()) {
+	if (key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
@@ -516,7 +516,7 @@ void ScriptEditorUnaryOpPage::changeCurrentOpcode(int index)
 		break;
 	}
 
-	if(key != opcodePtr()->id()) {
+	if (key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
@@ -532,7 +532,7 @@ void ScriptEditorUnaryOpPage::changeCurrentOpcode(int index)
 
 Opcode *ScriptEditorUnaryOpPage::convertOpcode(Opcode::Keys key)
 {
-	if(key == opcodePtr()->id())	return opcodePtr();
+	if (key == opcodePtr()->id())	return opcodePtr();
 
 	OpcodeUnaryOperation *unop = (OpcodeUnaryOperation *)opcodePtr();
 
@@ -596,7 +596,7 @@ Opcode *ScriptEditorBitOpPage::opcode()
 
 	var->var(bank1, adress1);
 
-	if(position->isValue()) {
+	if (position->isValue()) {
 		bank2 = 0;
 		value = position->value();
 	} else {
@@ -616,7 +616,7 @@ void ScriptEditorBitOpPage::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(true);
 	}
 
@@ -638,7 +638,7 @@ void ScriptEditorBitOpPage::setOpcode(Opcode *opcode)
 
 	var->setVar(B1(opcodeBitOperation->banks), opcodeBitOperation->var);
 
-	if(B2(opcodeBitOperation->banks) != 0) {
+	if (B2(opcodeBitOperation->banks) != 0) {
 		position->setVar(B2(opcodeBitOperation->banks), opcodeBitOperation->position);
 		position->setIsValue(false);
 	} else {
@@ -646,7 +646,7 @@ void ScriptEditorBitOpPage::setOpcode(Opcode *opcode)
 		position->setIsValue(true);
 	}
 
-	foreach(QObject *o, children()) {
+	for (QObject *o : children()) {
 		o->blockSignals(false);
 	}
 }
@@ -662,7 +662,7 @@ void ScriptEditorBitOpPage::changeCurrentOpcode(int index)
 	default: key = (Opcode::Keys)opcodePtr()->id();	break;
 	}
 
-	if(key != opcodePtr()->id()) {
+	if (key != opcodePtr()->id()) {
 		convertOpcode(key);
 
 		emit(opcodeChanged());
@@ -671,7 +671,7 @@ void ScriptEditorBitOpPage::changeCurrentOpcode(int index)
 
 Opcode *ScriptEditorBitOpPage::convertOpcode(Opcode::Keys key)
 {
-	if(key == opcodePtr()->id())	return opcodePtr();
+	if (key == opcodePtr()->id())	return opcodePtr();
 
 	OpcodeBitOperation *bitop = (OpcodeBitOperation *)opcodePtr();
 

@@ -98,7 +98,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	encodings->addItem(tr("Japanese"));
 
 	listCharNames = new QComboBox(textEditor);
-	for(int i=0 ; i<9 ; ++i) {
+	for (int i=0; i<9; ++i) {
 		listCharNames->addItem(QIcon(QString(":/images/icon-char-%1.png").arg(i)), Data::char_names.at(i));
 	}
 
@@ -196,35 +196,35 @@ void ConfigWindow::fillConfig()
 	QTreeWidgetItem *selectedItem = 0;
 	QMapIterator<Data::FF7Version, QString> it(ff7PathList);
 
-	while(it.hasNext()) {
+	while (it.hasNext()) {
 		it.next();
 
 		const QString &ff7Path = it.value();
 
 		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(ff7Path)));
-		if(ff7Path.compare(Data::ff7AppPath(), Qt::CaseInsensitive) == 0) {
+		if (ff7Path.compare(Data::ff7AppPath(), Qt::CaseInsensitive) == 0) {
 			selectedItem = item;
 		}
 		item->setData(0, Qt::UserRole, int(it.key()));
 		listFF7->addTopLevelItem(item);
 	}
-	if(selectedItem)	listFF7->setCurrentItem(selectedItem);
+	if (selectedItem)	listFF7->setCurrentItem(selectedItem);
 
-	if(kernel_path.isEmpty()) {
+	if (kernel_path.isEmpty()) {
 		kernel_path = Data::ff7KernelPath() % "/kernel2.bin";
 		kernelAutoChange(false);
 	} else {
 		kernelAuto->setChecked(true);
 	}
 
-	if(window_path.isEmpty()) {
+	if (window_path.isEmpty()) {
 		window_path = Data::ff7KernelPath() % "/window.bin";
 		windowAutoChange(false);
 	} else {
 		windowAuto->setChecked(true);
 	}
 
-	if(char_path.isEmpty()) {
+	if (char_path.isEmpty()) {
 		char_path = Data::ff7DataPath() % "/field/char.lgp";
 		charAutoChange(false);
 	} else {
@@ -252,7 +252,7 @@ void ConfigWindow::fillConfig()
 
 	setWindowColors();
 
-	for(int charId=0 ; charId<9; ++charId) {
+	for (int charId=0; charId<9; ++charId) {
 		customNames << Config::value(QString("customCharName%1").arg(charId), Data::char_names.at(charId)).toString();
 	}
 
@@ -266,9 +266,9 @@ void ConfigWindow::fillConfig()
 
 void ConfigWindow::showIcons()
 {
-	for(int j=0 ; j<listFF7->topLevelItemCount() ; ++j) {
+	for (int j=0; j<listFF7->topLevelItemCount(); ++j) {
 		QTreeWidgetItem *item = listFF7->topLevelItem(j);
-		if(item == nullptr)	break;
+		if (item == nullptr)	break;
 		item->setIcon(0, QFileIconProvider().icon(QFileInfo(item->text(0))));
 	}
 }
@@ -276,9 +276,9 @@ void ConfigWindow::showIcons()
 void ConfigWindow::changeFF7ListButtonsState()
 {
 	QTreeWidgetItem *item = listFF7->currentItem();
-	if(item) {
+	if (item) {
 		Data::FF7Version id = Data::FF7Version(item->data(0, Qt::UserRole).toInt());
-		if(id == Data::Custom) {
+		if (id == Data::Custom) {
 			ff7ButtonRem->setEnabled(true);
 			ff7ButtonMod->setText(tr("Edit"));
 		} else {
@@ -290,8 +290,8 @@ void ConfigWindow::changeFF7ListButtonsState()
 		ff7ButtonMod->setText(tr("Add"));
 	}
 
-	for(int i=0 ; i<listFF7->topLevelItemCount() ; ++i) {
-		if(listFF7->topLevelItem(i)->data(0, Qt::UserRole).toInt() == int(Data::Custom)) {
+	for (int i=0; i<listFF7->topLevelItemCount(); ++i) {
+		if (listFF7->topLevelItem(i)->data(0, Qt::UserRole).toInt() == int(Data::Custom)) {
 			ff7ButtonMod->setEnabled(item == listFF7->topLevelItem(i));
 			return;
 		}
@@ -303,12 +303,12 @@ void ConfigWindow::modifyCustomFF7Path()
 {
 	QTreeWidgetItem *item = listFF7->currentItem();
 	QString currentPath;
-	if(item) {
+	if (item) {
 		Data::FF7Version id = Data::FF7Version(item->data(0, Qt::UserRole).toInt());
-		if(id == Data::Custom) {
+		if (id == Data::Custom) {
 			// Modify
 			QString path = QFileDialog::getOpenFileName(this, tr("Find ff7.exe"), item->text(0), tr("EXE files (*.exe)"));
-			if(!path.isNull()) {
+			if (!path.isNull()) {
 				Config::setValue("customFF7Path", path);
 				item->setText(0, QDir::toNativeSeparators(path));
 			}
@@ -318,7 +318,7 @@ void ConfigWindow::modifyCustomFF7Path()
 	}
 	// Add
 	QString path = QFileDialog::getOpenFileName(this, tr("Find ff7.exe"), currentPath, tr("EXE files (*.exe)"));
-	if(!path.isNull()) {
+	if (!path.isNull()) {
 		Config::setValue("customFF7Path", path);
 		QTreeWidgetItem *item = new QTreeWidgetItem(QStringList(QDir::toNativeSeparators(path)));
 		item->setData(0, Qt::UserRole, int(Data::Custom));
@@ -331,9 +331,9 @@ void ConfigWindow::modifyCustomFF7Path()
 void ConfigWindow::removeCustomFF7Path()
 {
 	QTreeWidgetItem *item = listFF7->currentItem();
-	if(item) {
+	if (item) {
 		Data::FF7Version id = Data::FF7Version(item->data(0, Qt::UserRole).toInt());
-		if(id == Data::Custom) {
+		if (id == Data::Custom) {
 			// Remove
 			Config::setValue("customFF7Path", QString());
 			delete item;
@@ -363,14 +363,14 @@ void ConfigWindow::charAutoChange(bool checked)
 void ConfigWindow::changeKernelPath()
 {
 	QString path = QFileDialog::getOpenFileName(this, tr("Find kernel2.bin"), QDir::fromNativeSeparators(kernelPath->text()), tr("Bin Files (*.bin);;All Files (*)"));
-	if(!path.isNull())
+	if (!path.isNull())
 		kernelPath->setText(QDir::toNativeSeparators(path));
 }
 
 void ConfigWindow::changeWindowPath()
 {
 	QString path = QFileDialog::getOpenFileName(this, tr("Find window.bin"), QDir::fromNativeSeparators(windowPath->text()), tr("Bin Files (*.bin);;All Files (*)"));
-	if(!path.isNull()) {
+	if (!path.isNull()) {
 		windowPath->setText(QDir::toNativeSeparators(path));
 		encodingEdit->setDisabled(path.isEmpty());
 	}
@@ -379,7 +379,7 @@ void ConfigWindow::changeWindowPath()
 void ConfigWindow::changeCharPath()
 {
 	QString path = QFileDialog::getOpenFileName(this, tr("Find char.lgp"), QDir::fromNativeSeparators(charPath->text()), tr("Lgp Archives (*.lgp);;All Files(*)"));
-	if(!path.isNull())
+	if (!path.isNull())
 		charPath->setText(QDir::toNativeSeparators(path));
 }
 
@@ -389,20 +389,20 @@ void ConfigWindow::changeColor()
 	QRgb color=0;
 	QObject *send = sender();
 
-	if(send == windowColor1)		color = windowColorTopLeft;
-	else if(send == windowColor2)	color = windowColorTopRight;
-	else if(send == windowColor3)	color = windowColorBottomLeft;
-	else if(send == windowColor4)	color = windowColorBottomRight;
+	if (send == windowColor1)		color = windowColorTopLeft;
+	else if (send == windowColor2)	color = windowColorTopRight;
+	else if (send == windowColor3)	color = windowColorBottomLeft;
+	else if (send == windowColor4)	color = windowColorBottomRight;
 
 	coul = QColorDialog::getColor(color, this);
-	if(!coul.isValid())		return;
+	if (!coul.isValid())		return;
 
 	color = coul.rgb();
 
-	if(send == windowColor1)		windowColorTopLeft = color;
-	else if(send == windowColor2)	windowColorTopRight = color;
-	else if(send == windowColor3)	windowColorBottomLeft = color;
-	else if(send == windowColor4)	windowColorBottomRight = color;
+	if (send == windowColor1)		windowColorTopLeft = color;
+	else if (send == windowColor2)	windowColorTopRight = color;
+	else if (send == windowColor3)	windowColorBottomLeft = color;
+	else if (send == windowColor4)	windowColorBottomRight = color;
 
 	setWindowColors();
 }
@@ -419,7 +419,7 @@ void ConfigWindow::resetColor()
 void ConfigWindow::fillCharNameEdit()
 {
 	int charId = listCharNames->currentIndex();
-	if(charId < 0 || charId > 8) {
+	if (charId < 0 || charId > 8) {
 		return;
 	}
 
@@ -429,7 +429,7 @@ void ConfigWindow::fillCharNameEdit()
 void ConfigWindow::setCharName(const QString &charName)
 {
 	int charId = listCharNames->currentIndex();
-	if(charId < 0 || charId > 8) {
+	if (charId < 0 || charId > 8) {
 		return;
 	}
 
@@ -472,20 +472,20 @@ void ConfigWindow::accept()
 	bool needsRestart = false;
 	QTreeWidgetItem *currentSelectedFF7Path = listFF7->currentItem();
 	int currentFF7Path = 0;
-	if(currentSelectedFF7Path) {
+	if (currentSelectedFF7Path) {
 		currentFF7Path = currentSelectedFF7Path->data(0, Qt::UserRole).toInt();
-	} else if(listFF7->topLevelItemCount() > 0) {
+	} else if (listFF7->topLevelItemCount() > 0) {
 		currentFF7Path = listFF7->topLevelItem(0)->data(0, Qt::UserRole).toInt();
 	}
 	Config::setValue("FF7ExePathToUse", currentFF7Path);
 	Config::setValue("kernel2Path", kernelAuto->isChecked() ? QDir::fromNativeSeparators(kernelPath->text()) : QString());
 	Config::setValue("windowBinPath", windowAuto->isChecked() ? QDir::fromNativeSeparators(windowPath->text()) : QString());
 	Config::setValue("charPath", charAuto->isChecked() ? QDir::fromNativeSeparators(charPath->text()) : QString());
-	if(darkMode->isChecked() != Config::value("dark_theme", false).toBool()) {
+	if (darkMode->isChecked() != Config::value("dark_theme", false).toBool()) {
 		Config::setValue("dark_theme", darkMode->isChecked());
 		needsRestart = true;
 	}
-	if(!disableOGL->isChecked() != Config::value("OpenGL", true).toBool()) {
+	if (!disableOGL->isChecked() != Config::value("OpenGL", true).toBool()) {
 		Config::setValue("OpenGL", !disableOGL->isChecked());
 		needsRestart = true;
 	}
@@ -498,9 +498,9 @@ void ConfigWindow::accept()
 	Config::setValue("scriptItemExpandedByDefault", expandedByDefault->isChecked());
 	Config::setValue("lzsNotCheck", lzsNotCheck->isChecked());
 
-	for(int charId=0 ; charId<9; ++charId) {
+	for (int charId=0; charId<9; ++charId) {
 		const QString &customName = customNames.at(charId);
-		if(!customName.isEmpty() && customName != Data::char_names.at(charId)) {
+		if (!customName.isEmpty() && customName != Data::char_names.at(charId)) {
 			Config::setValue(QString("customCharName%1").arg(charId), customName);
 		} else {
 			Config::remove(QString("customCharName%1").arg(charId));

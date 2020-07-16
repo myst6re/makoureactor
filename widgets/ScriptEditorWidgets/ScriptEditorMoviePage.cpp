@@ -45,14 +45,14 @@ void ScriptEditorMoviePage::build()
 
 void ScriptEditorMoviePage::buildDiscList()
 {
-	for(int discID = 1 ; discID <= 3 ; ++discID) {
+	for (int discID = 1; discID <= 3; ++discID) {
 		discList->addItem(tr("Disc %1").arg(discID));
 	}
 }
 
 void ScriptEditorMoviePage::buildMovieList(int discID)
 {
-	for(int i = 0 ; i < 256 ; ++i) {
+	for (int i = 0; i < 256; ++i) {
 		movieList->addItem(QString());
 	}
 	setMovieListItemTexts(discID);
@@ -62,19 +62,19 @@ void ScriptEditorMoviePage::setMovieListItemTexts(int discID)
 {
 	QStringList *movieNames;
 
-	if(discID == 1) {
+	if (discID == 1) {
 		movieNames = &Data::movie_names_cd2;
-	} else if(discID == 2) {
+	} else if (discID == 2) {
 		movieNames = &Data::movie_names_cd3;
 	} else {
 		movieNames = &Data::movie_names_cd1;
 	}
 
 	int nbItems = movieNames->size();
-	for(int i = 0 ; i < nbItems ; ++i) {
+	for (int i = 0; i < nbItems; ++i) {
 		movieList->setItemText(i, movieNames->at(i));
 	}
-	for(int i = nbItems ; i < 256 ; ++i) {
+	for (int i = nbItems; i < 256; ++i) {
 		movieList->setItemText(i, QString::number(i));
 	}
 }

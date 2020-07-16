@@ -24,7 +24,7 @@ AnimEditorDialog::AnimEditorDialog(int animID, QWidget *parent) :
 {
 	setWindowTitle(tr("Animation Selector"));
 	QWidget *modelWidget;
-	if(Config::value("OpenGL", true).toBool()) {
+	if (Config::value("OpenGL", true).toBool()) {
 		fieldModel = new FieldModel();
 		fieldModel->setFixedSize(304, 214);
 		modelWidget = fieldModel;
@@ -44,7 +44,7 @@ AnimEditorDialog::AnimEditorDialog(int animID, QWidget *parent) :
 	layout->addWidget(modelWidget, 0, 1);
 	layout->addWidget(buttonBox, 1, 0, 1, 2);
 
-	if(Data::currentModelID != -1) {
+	if (Data::currentModelID != -1) {
 		connect(aList, SIGNAL(currentRowChanged(int)), SLOT(changeModelAnimation()));
 	}
 	aList->setCurrentRow(animID);
@@ -54,7 +54,7 @@ AnimEditorDialog::AnimEditorDialog(int animID, QWidget *parent) :
 
 void AnimEditorDialog::changeModelAnimation()
 {
-//	if(fieldModel)
+//	if (fieldModel)
 //		fieldModel->load(Data::currentHrcNames->value(Data::currentModelID), Data::currentAnimNames->value(Data::currentModelID).value(chosenAnimation()), true);
 }
 

@@ -38,7 +38,7 @@ TextPreview::TextPreview(QWidget *parent) :
 	setFixedSize(320, 224);
 	clear();
 
-	if(names.isEmpty()) {
+	if (names.isEmpty()) {
 		fontImage = QImage(":/images/font.png");
 		fillNames();
 	}
@@ -47,9 +47,9 @@ TextPreview::TextPreview(QWidget *parent) :
 void TextPreview::fillNames()
 {
 	QStringList dataNames = Data::char_names;
-	for(int i=0 ; i<9 ; ++i) {
+	for (int i=0; i<9; ++i) {
 		QString customName = Config::value(QString("customCharName%1").arg(i)).toString();
-		if(!customName.isEmpty()) {
+		if (!customName.isEmpty()) {
 			dataNames.replace(i, customName);
 		}
 	}
@@ -59,7 +59,7 @@ void TextPreview::fillNames()
 //	bool jp = Config::value("jp_txt", false).toBool();
 //	Config::setValue("jp_txt", false);
 
-	for(int i=0 ; i<12 ; ++i) {
+	for (int i=0; i<12; ++i) {
 		QByteArray nameData = FF7Text(dataNames.at(i), false).data();
 		names.append(nameData);
 		namesWidth[i] = calcFF7TextWidth(nameData);
@@ -82,8 +82,8 @@ int TextPreview::calcFF7TextWidth(const QByteArray &ff7Text)
 {
 	int width = 0;
 
-	foreach(const quint8 &c, ff7Text) {
-		if(c<0xe0) {
+	for (const quint8 &c : ff7Text) {
+		if (c<0xe0) {
 			width += charFullWidth(0, c);
 		}
 	}
@@ -108,7 +108,7 @@ void TextPreview::setWins(const QList<FF7Window> &windows, bool update)
 {
 //	qDebug() << "TextPreview::setWins()";
 	ff7Windows = windows;
-	if(update)
+	if (update)
 		this->update();
 	//qDebug() << "type" << window.type << "x" << window.x << "y" << window.y << "u1" << window.u1;
 }
@@ -125,7 +125,7 @@ int TextPreview::currentWin() const
 
 FF7Window TextPreview::getWindow() const
 {
-	if(!ff7Windows.isEmpty())
+	if (!ff7Windows.isEmpty())
 		return ff7Windows.at(_currentWin);
 	else {
 		FF7Window ff7Window = FF7Window();
@@ -141,7 +141,7 @@ int TextPreview::winCount() const
 
 void TextPreview::nextWin()
 {
-	if(_currentWin+1 < ff7Windows.size()) {
+	if (_currentWin+1 < ff7Windows.size()) {
 //		qDebug() << "TextPreview::nextWin()";
 		++_currentWin;
 		update();
@@ -150,7 +150,7 @@ void TextPreview::nextWin()
 
 void TextPreview::prevWin()
 {
-	if(_currentWin > 0) {
+	if (_currentWin > 0) {
 //		qDebug() << "TextPreview::prevWin()";
 		--_currentWin;
 		update();
@@ -166,7 +166,7 @@ void TextPreview::setText(const QByteArray &textData, bool reset)
 {
 //	qDebug() << "TextPreview::setText()";
 	ff7Text = textData;
-	if(reset)
+	if (reset)
 		_currentPage = 0;
 	calcSize();
 }
@@ -183,7 +183,7 @@ int TextPreview::pageCount() const
 
 void TextPreview::nextPage()
 {
-	if(_currentPage+1 < pagesPos.size()) {
+	if (_currentPage+1 < pagesPos.size()) {
 //		qDebug() << "TextPreview::nextPage()";
 		++_currentPage;
 		update();
@@ -192,7 +192,7 @@ void TextPreview::nextPage()
 
 void TextPreview::prevPage()
 {
-	if(_currentPage > 0) {
+	if (_currentPage > 0) {
 //		qDebug() << "TextPreview::prevPage()";
 		--_currentPage;
 		update();
@@ -225,23 +225,23 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 	bool jp = Config::value("jp_txt", false).toBool(), spaced_characters=false;
 	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt();
 
-	for(int i=0 ; i<size ; ++i) {
+	for (int i=0; i<size; ++i) {
 		quint8 caract = (quint8)ff7Text.at(i);
-		if(caract==0xff) break;
+		if (caract==0xff) break;
 		switch(caract) {
 		case 0xe8: // New Page
 		case 0xe9: // New Page 2
-			if(line == 0)	width += 3;
-			if(height>maxH)	maxH = height;
-			if(width>maxW)	maxW = width;
+			if (line == 0)	width += 3;
+			if (height>maxH)	maxH = height;
+			if (width>maxW)	maxW = width;
 			++line;
 			width = baseWidth;
 			height = 25;
 			pagesPos.append(i+1);
 			break;
 		case 0xe7: // \n
-			if(line == 0)	width += 3;
-			if(width>maxW)	maxW = width;
+			if (line == 0)	width += 3;
+			if (width>maxW)	maxW = width;
 			++line;
 			width = baseWidth;
 			height += 16;
@@ -249,65 +249,65 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 		case 0xfa: // Jap 1
 			++i;
 			caract = (quint8)ff7Text.at(i);
-			if(jp) {
+			if (jp) {
 				width += spaced_characters ? spacedCharsW : charFullWidth(2, caract);
-			} else if(caract < 0xd2) {
+			} else if (caract < 0xd2) {
 				width += spaced_characters ? spacedCharsW : 1;
 			}
 			break;
 		case 0xfb: // Jap 2
 			++i;
-			if(jp) {
+			if (jp) {
 				caract = (quint8)ff7Text.at(i);
 				width += spaced_characters ? spacedCharsW : charFullWidth(3, caract);
 			}
 			break;
 		case 0xfc: // Jap 3
 			++i;
-			if(jp) {
+			if (jp) {
 				caract = (quint8)ff7Text.at(i);
 				width += spaced_characters ? spacedCharsW : charFullWidth(4, caract);
 			}
 			break;
 		case 0xfd: // Jap 4
 			++i;
-			if(jp) {
+			if (jp) {
 				caract = (quint8)ff7Text.at(i);
 				width += spaced_characters ? spacedCharsW : charFullWidth(5, caract);
 			}
 			break;
 		case 0xfe: // Jap 5 + add
 			++i;
-			if(i >= size)		break;
+			if (i >= size)		break;
 			caract = (quint8)ff7Text.at(i);
-			if(caract == 0xdd)
+			if (caract == 0xdd)
 				++i;
-			else if(caract == 0xde || caract == 0xdf || caract == 0xe1) {
-				if(caract == 0xe1)		width += spaced_characters ? spacedCharsW * 4 : 12;
+			else if (caract == 0xde || caract == 0xdf || caract == 0xe1) {
+				if (caract == 0xe1)		width += spaced_characters ? spacedCharsW * 4 : 12;
 				int zeroId = !jp ? 0x10 : 0x33;
 				width += spaced_characters ? spacedCharsW : charFullWidth(0, zeroId);
-			} else if(caract == 0xe2)
+			} else if (caract == 0xe2)
 				i += 4;
-			else if(caract == 0xe9)
+			else if (caract == 0xe9)
 				spaced_characters = !spaced_characters;
-			else if(caract < 0xd2 && jp)
+			else if (caract < 0xd2 && jp)
 				width += spaced_characters ? spacedCharsW : charFullWidth(6, caract);
 			break;
 		default:
-			if(!jp && caract==0xe0) {// {CHOICE}
+			if (!jp && caract==0xe0) {// {CHOICE}
 				width += spaced_characters ? spacedCharsW * 10 : 30;
-			} else if(!jp && caract==0xe1) {// \t
+			} else if (!jp && caract==0xe1) {// \t
 				width += spaced_characters ? spacedCharsW * 4 : 12;
-			} else if(!jp && caract>=0xe2 && caract<=0xe4) {// duo
+			} else if (!jp && caract>=0xe2 && caract<=0xe4) {// duo
 				const char *duo = optimisedDuo[caract-0xe2];
 				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[0]);
 				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[1]);
-			} else if(caract>=0xea && caract<=0xf5) {// Character names
+			} else if (caract>=0xea && caract<=0xf5) {// Character names
 				width += spaced_characters ? spacedCharsW * names.at(caract-0xea).size() : namesWidth[caract-0xea];
-			} else if(caract>=0xf6 && caract<=0xf9) {// Keys
+			} else if (caract>=0xf6 && caract<=0xf9) {// Keys
 				width += 17;
 			} else {
-				if(jp) {
+				if (jp) {
 					width += spaced_characters ? spacedCharsW : charFullWidth(1, caract);
 				} else {
 					width += spaced_characters ? spacedCharsW : charFullWidth(0, caract);
@@ -317,10 +317,10 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 		}
 	}
 
-	if(height>maxH)	maxH = height;
-	if(width>maxW)	maxW = width;
-	if(maxW>322)	maxW = 322;
-	if(maxH>226)	maxH = 226;
+	if (height>maxH)	maxH = height;
+	if (width>maxW)	maxW = width;
+	if (maxW>322)	maxW = 322;
+	if (maxH>226)	maxH = 226;
 
 	return QSize(maxW, maxH);
 }
@@ -333,18 +333,18 @@ QSize TextPreview::getCalculatedSize() const
 QPoint TextPreview::realPos(const FF7Window &ff7Window)
 {
 //	qDebug() << "TextPreview::realPos()";
-	if(ff7Window.type == NOWIN)	return QPoint();
+	if (ff7Window.type == NOWIN)	return QPoint();
 
 	int windowX=ff7Window.x, windowY=ff7Window.y;
-	if(windowX+ff7Window.w>312) {
+	if (windowX+ff7Window.w>312) {
 		windowX = 312-ff7Window.w;
 	}
-	if(windowY+ff7Window.h>223) {
+	if (windowY+ff7Window.h>223) {
 		windowY = 223-ff7Window.h;
 	}
 
-	if(windowX<8)	windowX = 8;
-	if(windowY<8)	windowY = 8;
+	if (windowX<8)	windowX = 8;
+	if (windowY<8)	windowY = 8;
 
 	return QPoint(windowX, windowY);
 }
@@ -355,7 +355,7 @@ void TextPreview::animate()
 
 	curFrame = !curFrame;
 	--startMulticolor;
-	if(startMulticolor < 0)		startMulticolor = 7;
+	if (startMulticolor < 0)		startMulticolor = 7;
 	repaint();
 }
 
@@ -371,8 +371,8 @@ void TextPreview::drawWindow(QPainter *painter, WindowType type) const
 
 void TextPreview::drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTopLeft, QRgb colorTopRight, QRgb colorBottomLeft, QRgb colorBottomRight, WindowType type)
 {
-	if(type != WithoutFrame) {
-		if(type == Transparent) {
+	if (type != WithoutFrame) {
+		if (type == Transparent) {
 			colorTopLeft = qRgba(qRed(colorTopLeft), qGreen(colorTopLeft), qBlue(colorTopLeft), 127);
 			colorTopRight = qRgba(qRed(colorTopRight), qGreen(colorTopRight), qBlue(colorTopRight), 127);
 			colorBottomLeft = qRgba(qRed(colorBottomLeft), qGreen(colorBottomLeft), qBlue(colorBottomLeft), 127);
@@ -463,7 +463,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 
 	/* Window Background */
 
-	if(ff7Window.type!=NOWIN) {
+	if (ff7Window.type!=NOWIN) {
 		painter->translate(realPos(ff7Window));
 		maxW = ff7Window.w;
 		maxH = ff7Window.h;
@@ -474,30 +474,30 @@ bool TextPreview::drawTextArea(QPainter *painter)
 
 	/* Text */
 
-	if(ff7Text.isEmpty())	return false;
+	if (ff7Text.isEmpty())	return false;
 
 	setFontColor(WHITE);
 
 	int line = 0, x = 8, y = 6;
 	int start = pagesPos.value(_currentPage, 0), size = ff7Text.size();
 
-	for(int i=start ; i<size ; ++i) {
+	for (int i=start; i<size; ++i) {
 		int charId = (quint8)ff7Text.at(i);
 
-		if(charId==0xff || charId==0xe8 || charId==0xe9) { //end | NewPage | NewPage2
+		if (charId==0xff || charId==0xe8 || charId==0xe9) { //end | NewPage | NewPage2
 			break;
-		} else if(charId==0xe7) { //\n
+		} else if (charId==0xe7) { //\n
 			++line;
 			x = 8;
 			y += 16;
-			if(y > maxH-16)	break;
-		} else if(charId<0xe7) {
-			if(!jp) {
-				if(charId==0xe0)//{CHOICE}
+			if (y > maxH-16)	break;
+		} else if (charId<0xe7) {
+			if (!jp) {
+				if (charId==0xe0)//{CHOICE}
 					x += spaced_characters ? spacedCharsW * 10 : 30;
-				else if(charId==0xe1)//\t
+				else if (charId==0xe1)//\t
 					x += spaced_characters ? spacedCharsW * 4 : 12;
-				else if(charId>=0xe2 && charId<=0xe4) {
+				else if (charId>=0xe2 && charId<=0xe4) {
 					const quint8 *opti = (const quint8 *)optimisedDuo[charId-0xe2];
 					letter(&x, &y, opti[0], painter, 0);
 					letter(&x, &y, opti[1], painter, 0);
@@ -507,58 +507,58 @@ bool TextPreview::drawTextArea(QPainter *painter)
 			} else {
 				letter(&x, &y, charId, painter, 1);
 			}
-		} else if(charId>=0xea && charId<=0xf5) {
+		} else if (charId>=0xea && charId<=0xf5) {
 			word(&x, &y, names.at(charId-0xea), painter);
-		} else if(charId>=0xf6 && charId<=0xf9) {
+		} else if (charId>=0xf6 && charId<=0xf9) {
 			painter->drawPixmap(x, y - 2, getIconImage(charId-0xf6));
 			x += 17;
 		} else {
 			++i;
-			if(i >= size)	break;
+			if (i >= size)	break;
 			int charId2 = (quint8)ff7Text.at(i);
 
 			switch(charId) {
 			case 0xfa:
-				if(jp)	letter(&x, &y, charId2, painter, 2);
-				else if(charId2 < 0xd2)		x += spaced_characters ? spacedCharsW : 1;
+				if (jp)	letter(&x, &y, charId2, painter, 2);
+				else if (charId2 < 0xd2)		x += spaced_characters ? spacedCharsW : 1;
 				break;
 			case 0xfb:
-				if(jp)	letter(&x, &y, charId2, painter, 3);
+				if (jp)	letter(&x, &y, charId2, painter, 3);
 				break;
 			case 0xfc:
-				if(jp)	letter(&x, &y, charId2, painter, 4);
+				if (jp)	letter(&x, &y, charId2, painter, 4);
 				break;
 			case 0xfd:
-				if(jp)	letter(&x, &y, charId2, painter, 5);
+				if (jp)	letter(&x, &y, charId2, painter, 5);
 				break;
 			case 0xfe:
-				if(charId2 >= 0xd2 && charId2 <= 0xd9) {
+				if (charId2 >= 0xd2 && charId2 <= 0xd9) {
 					setFontColor(charId2-0xd2, blink && !curFrame);
-				} else if(charId2 == 0xda) {
+				} else if (charId2 == 0xda) {
 					useTimer = true;
 					blink = !blink;
 					setFontColor(fontColor, blink && !curFrame);
-				} else if(charId2 == 0xdb) {
+				} else if (charId2 == 0xdb) {
 					useTimer = true;
-					if(multicolor == -1) {
+					if (multicolor == -1) {
 						savFontColor = fontColor;
 						multicolor = startMulticolor;
 					} else {
 						multicolor = -1;
 						setFontColor(savFontColor, blink && !curFrame);
 					}
-				} else if(charId2 == 0xdd) {
+				} else if (charId2 == 0xdd) {
 					++i;
-				} else if(charId2 == 0xde || charId2 == 0xdf) {
+				} else if (charId2 == 0xde || charId2 == 0xdf) {
 					letter(&x, &y, !jp ? 0x10 : 0x33, painter, jp);// zero
-				} else if(charId2 == 0xe1) {
+				} else if (charId2 == 0xe1) {
 					x += spaced_characters ? spacedCharsW * 4 : 12;// tab
 					letter(&x, &y, !jp ? 0x10 : 0x33, painter, jp);// zero
-				} else if(charId2 == 0xe2) {
+				} else if (charId2 == 0xe2) {
 					i += 4;
-				} else if(charId2 == 0xe9) {
+				} else if (charId2 == 0xe9) {
 					spaced_characters = !spaced_characters;
-				} else if(charId2 < 0xd2 && jp) {
+				} else if (charId2 < 0xd2 && jp) {
 					letter(&x, &y, charId2, painter, 6);
 				}
 				break;
@@ -567,7 +567,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	}
 
 	/* Ask */
-//	if(ff7Window.type==0x48 && ff7Window.ask_last >= ff7Window.ask_first) {
+//	if (ff7Window.type==0x48 && ff7Window.ask_last >= ff7Window.ask_first) {
 //		painter->drawPixmap(10, 11+16*ff7Window.ask_first, QPixmap(":/images/cursor.png"));
 //	}
 
@@ -592,7 +592,7 @@ void TextPreview::paintEvent(QPaintEvent *event)
 
 	QPainter painter2(this);
 
-	if(!isEnabled()) {
+	if (!isEnabled()) {
 		QStyleOption opt;
 		opt.initFrom(this);
 		painter2.drawPixmap(0, 0, QWidget::style()->generatedIconPixmap(QIcon::Disabled, pix, &opt));
@@ -603,25 +603,25 @@ void TextPreview::paintEvent(QPaintEvent *event)
 
 	painter2.end();
 
-	if(!timer.isActive()) {
-		if(useTimer)	timer.start(100);
+	if (!timer.isActive()) {
+		if (useTimer)	timer.start(100);
 	}
 	else {
-		if(!useTimer)	timer.stop();
+		if (!useTimer)	timer.stop();
 	}
 }
 
 void TextPreview::mousePressEvent(QMouseEvent *event)
 {
-	if(event->button() == Qt::LeftButton && !readOnly) {
+	if (event->button() == Qt::LeftButton && !readOnly) {
 		FF7Window ff7Window = getWindow();
-		if(ff7Window.type!=NOWIN) {
+		if (ff7Window.type!=NOWIN) {
 			QPoint real = realPos(ff7Window);
 
 			acceptMove = event->x() >= real.x() && event->x() < real.x()+maxW
 						 && event->y() >= real.y() && event->y() < real.y()+maxH;
 
-			if(acceptMove) {
+			if (acceptMove) {
 				moveStartPosition = event->pos();
 				setCursor(Qt::ClosedHandCursor);
 			}
@@ -633,18 +633,18 @@ void TextPreview::mousePressEvent(QMouseEvent *event)
 
 void TextPreview::mouseMoveEvent(QMouseEvent *event)
 {
-	if(!(event->buttons() & Qt::LeftButton) && !acceptMove)
+	if (!(event->buttons() & Qt::LeftButton) && !acceptMove)
 		return;
 
 	FF7Window ff7Window = getWindow();
 
-	if(ff7Window.type==NOWIN)	return;
+	if (ff7Window.type==NOWIN)	return;
 
 	int x = ff7Window.x + event->x() - moveStartPosition.x();
 	int y = ff7Window.y + event->y() - moveStartPosition.y();
 
-	if(x<0)	x = 0;
-	if(y<0)	y = 0;
+	if (x<0)	x = 0;
+	if (y<0)	y = 0;
 
 	ff7Window.x = x;
 	ff7Window.y = y;
@@ -663,7 +663,7 @@ void TextPreview::mouseMoveEvent(QMouseEvent *event)
 
 void TextPreview::mouseReleaseEvent(QMouseEvent *)
 {
-	if(acceptMove) {
+	if (acceptMove) {
 		unsetCursor();
 	}
 }
@@ -673,12 +673,12 @@ void TextPreview::wheelEvent(QWheelEvent *event)
 	int numDegrees = event->delta() / 8,
 			numSteps = numDegrees / 15;
 
-	if(event->orientation() == Qt::Vertical) {
+	if (event->orientation() == Qt::Vertical) {
 		int oldPage = _currentPage;
 
-		if(numSteps > 0) {
+		if (numSteps > 0) {
 			prevPage();
-		} else if(numSteps < 0) {
+		} else if (numSteps < 0) {
 			nextPage();
 		}
 
@@ -693,24 +693,24 @@ void TextPreview::letter(int *x, int *y, int charId, QPainter *painter, quint8 t
 	int charWidth = charW(tableId, charId);
 	int leftPadd = leftPadding(tableId, charId);
 
-	if(*x + leftPadd + charWidth > maxW) {
+	if (*x + leftPadd + charWidth > maxW) {
 		*x = 8;
 		*y += 16;
 	}
 
-	if(multicolor != -1) {
+	if (multicolor != -1) {
 		setFontColor(multicolor);
 		multicolor = (multicolor + 1) % 8;
 	}
 
-	if(!spaced_characters)	*x += leftPadd;
+	if (!spaced_characters)	*x += leftPadd;
 	painter->drawImage(*x, *y, letterImage(tableId, charId));
 	*x += spaced_characters ? Config::value("spacedCharactersWidth", 13).toInt() : charWidth;
 }
 
 void TextPreview::word(int *x, int *y, const QByteArray &charIds, QPainter *painter, quint8 tableId)
 {
-	foreach(char charId, charIds) {
+	for (char charId : charIds) {
 		letter(x, y, charId, painter, tableId);
 	}
 }
@@ -738,7 +738,7 @@ quint8 TextPreview::charFullWidth(int tableId, int charId)
 
 QImage TextPreview::letterImage(int tableId, int charId)
 {
-	if(Data::windowBin.isValid() &&
+	if (Data::windowBin.isValid() &&
 			(tableId != 0 || !Data::windowBin.isJp())) {
 		return Data::windowBin.letter(tableId == 0 ? 0 : tableId - 1, charId, WindowBinFile::FontColor(fontColor));
 	} else {
@@ -749,7 +749,7 @@ QImage TextPreview::letterImage(int tableId, int charId)
 
 void TextPreview::setFontColor(int id, bool blink)
 {
-	if(!Data::windowBin.isValid()) {
+	if (!Data::windowBin.isValid()) {
 		fontImage.setColorTable(fontPalettes[blink ? DARKGREY : id]);
 	}
 	fontColor = id;

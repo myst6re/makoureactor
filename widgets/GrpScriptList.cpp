@@ -120,7 +120,7 @@ GrpScriptList::~GrpScriptList()
 
 void GrpScriptList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
-	if(current) {
+	if (current) {
 		QColor color = Data::color(Data::ColorEvidence);
 		qDebug() << color;
 		current->setBackground(0, color);
@@ -128,7 +128,7 @@ void GrpScriptList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous
 		current->setBackground(2, color);
 	}
 
-	if(previous) {
+	if (previous) {
 		previous->setBackground(0, QBrush());
 		previous->setBackground(1, QBrush());
 		previous->setBackground(2, QBrush());
@@ -145,7 +145,7 @@ void GrpScriptList::setEnabled(bool enabled)
 GrpScript *GrpScriptList::currentGrpScript()
 {
 	int grpScriptID = selectedID();
-	if(grpScriptID != -1) {
+	if (grpScriptID != -1) {
 		return scripts->grpScript(grpScriptID);
 	}
 	return nullptr;
@@ -159,7 +159,7 @@ void GrpScriptList::enableActions(bool enabled)
 
 void GrpScriptList::upDownEnabled()
 {
-	if(selectedItems().isEmpty()) {
+	if (selectedItems().isEmpty()) {
 		actions().at(DelAction)->setEnabled(false);
 		actions().at(CutAction)->setEnabled(false);
 		actions().at(CopyAction)->setEnabled(false);
@@ -176,20 +176,20 @@ void GrpScriptList::upDownEnabled()
 
 void GrpScriptList::fill(Section1File *scripts)
 {
-	if(scripts) {
+	if (scripts) {
 		this->scripts = scripts;
 	}
 	clear();
 
 	int i=0;
-	foreach(GrpScript *grpScript, this->scripts->grpScripts()) {
+	for (GrpScript *grpScript : this->scripts->grpScripts()) {
 		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->name() << grpScript->type());
 		item->setForeground(2, QBrush(grpScript->typeColor()));
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 		item->setToolTip(0, grpScript->type());
 		QIcon icon;
 
-		if(grpScript->character() >= 0 && grpScript->character() < 9) {
+		if (grpScript->character() >= 0 && grpScript->character() < 9) {
 			icon = QIcon(QString(":/images/icon-char-%1.png").arg(grpScript->character()));
 		} else {
 			switch(grpScript->typeID()) {
@@ -213,7 +213,7 @@ void GrpScriptList::fill(Section1File *scripts)
 			}
 		}
 
-		if(!icon.isNull()) {
+		if (!icon.isNull()) {
 			item->setIcon(0, icon);
 		}
 	}
@@ -236,7 +236,7 @@ void GrpScriptList::localeRefresh()
 {
 	int grpScriptID = selectedID();
 	QTreeWidgetItem *currentItem = this->currentItem();
-	if(grpScriptID != -1 && currentItem != nullptr) {
+	if (grpScriptID != -1 && currentItem != nullptr) {
 		GrpScript *currentGrpScript = scripts->grpScript(grpScriptID);
 		currentItem->setText(2, currentGrpScript->type());
 		currentItem->setForeground(2, currentGrpScript->typeColor());
@@ -267,7 +267,7 @@ void GrpScriptList::updateHelpWidget()
 
 void GrpScriptList::rename(QTreeWidgetItem *item, int column)
 {
-	if(item==nullptr || column != 1) {
+	if (item==nullptr || column != 1) {
 		return;
 	}
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
@@ -278,7 +278,7 @@ void GrpScriptList::rename(QTreeWidgetItem *item, int column)
 
 void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 {
-	if(column != 1) {
+	if (column != 1) {
 		return;
 	}
 	disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(renameOK(QTreeWidgetItem *, int)));
@@ -290,7 +290,7 @@ void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 
 void GrpScriptList::add()
 {
-	if(topLevelItemCount() > scripts->maxGrpScriptCount()) {
+	if (topLevelItemCount() > scripts->maxGrpScriptCount()) {
 		return;
 	}
 
@@ -305,15 +305,15 @@ void GrpScriptList::add()
 
 void GrpScriptList::del(bool totalDel)
 {
-	if(topLevelItemCount() == 0) {
+	if (topLevelItemCount() == 0) {
 		return;
 	}
 	QList<int> selectedIDs = this->selectedIDs();
-	if(selectedIDs.isEmpty()) {
+	if (selectedIDs.isEmpty()) {
 		return;
 	}
 
-	if(totalDel && QMessageBox::warning(this, tr("Delete"), tr("Are you sure you want to remove %1?\n"
+	if (totalDel && QMessageBox::warning(this, tr("Delete"), tr("Are you sure you want to remove %1?\n"
 	                                                           "Some scripts can refer to it!")
 	                                    .arg(selectedIDs.size()==1 ?
 	                                         tr("the group selected") :
@@ -323,7 +323,7 @@ void GrpScriptList::del(bool totalDel)
 	}
 
 	qSort(selectedIDs);
-	for(int i = selectedIDs.size()-1 ; i >= 0 ; --i) {
+	for (int i = selectedIDs.size()-1; i >= 0; --i) {
 		totalDel ? scripts->deleteGrpScript(selectedIDs.at(i)) : scripts->removeGrpScript(selectedIDs.at(i));
 	}
 
@@ -333,10 +333,10 @@ void GrpScriptList::del(bool totalDel)
 
 	emit changed();
 
-	if(topLevelItemCount() != 0) {
-		if(selectedIDs.at(0) >= topLevelItemCount() && selectedIDs.at(0) > 0) {
+	if (topLevelItemCount() != 0) {
+		if (selectedIDs.at(0) >= topLevelItemCount() && selectedIDs.at(0) > 0) {
 			scroll(selectedIDs.at(0)-1);
-		} else if(selectedIDs.at(0) < topLevelItemCount()) {
+		} else if (selectedIDs.at(0) < topLevelItemCount()) {
 			scroll(selectedIDs.at(0));
 		}
 	}
@@ -351,12 +351,12 @@ void GrpScriptList::cut()
 void GrpScriptList::copy()
 {
 	QList<int> selectedIDs = this->selectedIDs();
-	if(selectedIDs.isEmpty()) {
+	if (selectedIDs.isEmpty()) {
 		return;
 	}
 
 	clearCopiedGroups();
-	foreach(const int &id, selectedIDs) {
+	for (const int &id : selectedIDs) {
 		grpScriptCopied.append(new GrpScript(*scripts->grpScript(id)));
 	}
 
@@ -365,15 +365,15 @@ void GrpScriptList::copy()
 
 void GrpScriptList::paste()
 {
-	if(grpScriptCopied.isEmpty()) {
+	if (grpScriptCopied.isEmpty()) {
 		return;
 	}
 	int grpScriptID = selectedID() + 1;
-	if(grpScriptID == 0) {
+	if (grpScriptID == 0) {
 		grpScriptID = topLevelItemCount(); // Last position
 	}
 	int i = grpScriptID;
-	foreach(GrpScript *GScopied, grpScriptCopied) {
+	for (GrpScript *GScopied : grpScriptCopied) {
 		scripts->insertGrpScript(i++, new GrpScript(*GScopied));
 	}
 
@@ -392,10 +392,10 @@ void GrpScriptList::clearCopiedGroups()
 void GrpScriptList::move(bool direction)
 {
 	int grpScriptID = selectedID();
-	if(grpScriptID == -1) {
+	if (grpScriptID == -1) {
 		return;
 	}
-	if(scripts->moveGrpScript(grpScriptID, direction)) {
+	if (scripts->moveGrpScript(grpScriptID, direction)) {
 		fill();
 		scroll(direction ? grpScriptID+1 : grpScriptID-1);
 		emit changed();
@@ -408,14 +408,14 @@ void GrpScriptList::scroll(int id, bool focus)
 {
 	if (selectedID() != id) {
 		QTreeWidgetItem *item = findItem(id);
-		if(!item) {
+		if (!item) {
 			return;
 		}
 		setCurrentItem(item);
 		scrollToItem(item, QAbstractItemView::PositionAtTop);
 	}
 
-	if(focus) {
+	if (focus) {
 		setFocus();
 	}
 }
@@ -423,7 +423,7 @@ void GrpScriptList::scroll(int id, bool focus)
 QTreeWidgetItem *GrpScriptList::findItem(int id)
 {
 	QList<QTreeWidgetItem *> items = findItems(QString("%1").arg(id, 3), Qt::MatchExactly);
-	if(items.isEmpty()) {
+	if (items.isEmpty()) {
 		return nullptr;
 	}
 	return items.first();
@@ -431,7 +431,7 @@ QTreeWidgetItem *GrpScriptList::findItem(int id)
 
 int GrpScriptList::selectedID()
 {
-	if(!currentItem() || currentItem()->text(0).isEmpty()) {
+	if (!currentItem() || currentItem()->text(0).isEmpty()) {
 		return -1;
 	}
 	return currentItem()->text(0).toInt();
@@ -441,7 +441,7 @@ QList<int> GrpScriptList::selectedIDs()
 {
 	QList<int> list;
 
-	foreach(QTreeWidgetItem *item, selectedItems()) {
+	for (QTreeWidgetItem *item : selectedItems()) {
 		list.append(item->text(0).toInt());
 	}
 

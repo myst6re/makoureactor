@@ -25,7 +25,7 @@ OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 	addOperation(CleanUnusedTexts, tr("Clean all unused texts"));
 	addOperation(RemoveTexts, tr("Disable all texts in the game"));
 	addOperation(RemoveBattles, tr("Disable all battles in the game"));
-	if(isPC) {
+	if (isPC) {
 		addOperation(CleanModelLoaderPC, tr("Clean unused data in field model loaders"));
 		addOperation(RemoveUnusedSectionPC, tr("Clean unused data for field backgrounds"));
 		addOperation(RepairBackgroundsPC, tr("Repair broken backgrounds (lastmap, fr_e)"));
@@ -36,13 +36,13 @@ OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 	buttonBox->addButton(QDialogButtonBox::Cancel);
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
-	foreach(QCheckBox *operation, _operations) {
+	for (QCheckBox *operation : _operations) {
 		layout->addWidget(operation);
 	}
 	layout->addStretch();
 	layout->addWidget(buttonBox);
 
-	foreach(QCheckBox *checkBox, _operations) {
+	for (QCheckBox *checkBox : _operations) {
 		connect(checkBox, SIGNAL(toggled(bool)), SLOT(updateApplyButton()));
 	}
 
@@ -62,10 +62,10 @@ OperationsManager::Operations OperationsManager::selectedOperations() const
 	QMapIterator<Operation, QCheckBox *> it(_operations);
 	Operations ret = Operations();
 
-	while(it.hasNext()) {
+	while (it.hasNext()) {
 		it.next();
 
-		if(it.value()->isChecked()) {
+		if (it.value()->isChecked()) {
 			ret |= it.key();
 		}
 	}
@@ -77,8 +77,8 @@ void OperationsManager::updateApplyButton()
 {
 	bool enabled = false;
 
-	foreach(QCheckBox *checkBox, _operations) {
-		if(checkBox->isChecked()) {
+	for (QCheckBox *checkBox : _operations) {
+		if (checkBox->isChecked()) {
 			enabled = true;
 			break;
 		}

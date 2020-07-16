@@ -31,7 +31,7 @@ QString Config::programResourceDir()
 }
 
 void Config::set() {
-	if(!settings) {
+	if (!settings) {
 #ifdef Q_OS_WIN
 		settings = new QSettings(qApp->applicationDirPath()
 								 .append("/Makou_Reactor.ini"),
@@ -46,7 +46,7 @@ void Config::set() {
 }
 
 void Config::remove() {
-	if(settings)	delete settings;
+	if (settings)	delete settings;
 }
 
 QVariant Config::value(const QString &key, const QVariant &defaultValue)

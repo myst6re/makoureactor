@@ -52,7 +52,7 @@ void FontLetter::setPixelIndex(int index)
 
 void FontLetter::setWindowBinFile(WindowBinFile *windowBinFile)
 {
-	if(windowBinFile) {
+	if (windowBinFile) {
 		copyLetter = windowBinFile->letter(_currentTable, _letter, _color);
 	}
 	FontDisplay::setWindowBinFile(windowBinFile);
@@ -60,7 +60,7 @@ void FontLetter::setWindowBinFile(WindowBinFile *windowBinFile)
 
 void FontLetter::setLetter(int letter)
 {
-	if(_windowBinFile) {
+	if (_windowBinFile) {
 		copyLetter = _windowBinFile->letter(_currentTable, letter, _color);
 	}
 	FontDisplay::setLetter(letter);
@@ -68,7 +68,7 @@ void FontLetter::setLetter(int letter)
 
 void FontLetter::reset()
 {
-	if(copyLetter.isNull() || !_windowBinFile)		return;
+	if (copyLetter.isNull() || !_windowBinFile)		return;
 	_windowBinFile->setLetter(_currentTable, _letter, copyLetter);
 	update();
 }
@@ -77,14 +77,14 @@ void FontLetter::paintEvent(QPaintEvent *)
 {
 	QPainter p(this);
 
-	if(isEnabled()) {
+	if (isEnabled()) {
 		p.setBrush(Qt::black);
 		p.drawRect(0, 0, width(), height());
 	}
 
-	if(_windowBinFile) {
+	if (_windowBinFile) {
 		QImage letter = _windowBinFile->letter(_currentTable, _letter, _color);
-		if(!letter.isNull()) {
+		if (!letter.isNull()) {
 			p.drawImage(QPoint(0, 0), letter.scaled(QSize(12*PIXEL_SIZE, 12*PIXEL_SIZE), Qt::KeepAspectRatio));
 			int linePos = _windowBinFile->charWidth(_currentTable, _letter) * PIXEL_SIZE;
 			p.setPen(Qt::red);
@@ -100,9 +100,9 @@ QPoint FontLetter::getPixel(const QPoint &pos)
 
 bool FontLetter::setPixel(const QPoint &pixel)
 {
-	if(!_windowBinFile)	return false;
+	if (!_windowBinFile)	return false;
 
-	if(pixel.x() >= 0 && pixel.y() >= 0 && pixel.x() < 12 && pixel.y() < 12
+	if (pixel.x() >= 0 && pixel.y() >= 0 && pixel.x() < 12 && pixel.y() < 12
 			&& _windowBinFile->setLetterPixelIndex(_currentTable, _letter, pixel, _pixelIndex)) {
 		update(QRect(pixel * PIXEL_SIZE, QSize(PIXEL_SIZE, PIXEL_SIZE)));
 		emit imageChanged(QRect(pixel, QSize(1, 1)));
@@ -114,31 +114,31 @@ bool FontLetter::setPixel(const QPoint &pixel)
 
 void FontLetter::mouseMoveEvent(QMouseEvent *e)
 {
-	if(readOnly || !_windowBinFile)	return;
+	if (readOnly || !_windowBinFile)	return;
 
 	const QPoint &mousePos = e->pos();
 	int linePos = _windowBinFile->charWidth(_currentTable, _letter) * PIXEL_SIZE;
 
-	if(startDrag) {
+	if (startDrag) {
 		int newLinePos = mousePos.x() / PIXEL_SIZE;
-		if(linePos / PIXEL_SIZE != newLinePos && newLinePos < 16) {
+		if (linePos / PIXEL_SIZE != newLinePos && newLinePos < 16) {
 			_windowBinFile->setCharWidth(_currentTable, _letter, newLinePos);
 			update();
 			emit widthEdited(newLinePos);
 		}
-	} else if(startDrag2) {
+	} else if (startDrag2) {
 		setPixel(getPixel(mousePos));
 	} else {
-		if(mousePos.x() >= linePos - 1 && mousePos.x() <= linePos + 1) {
-			if(cursor().shape() != Qt::SplitHCursor) {
+		if (mousePos.x() >= linePos - 1 && mousePos.x() <= linePos + 1) {
+			if (cursor().shape() != Qt::SplitHCursor) {
 				setCursor(Qt::SplitHCursor);
 			}
 		} else {
-			if(mousePos.x() < 12 * PIXEL_SIZE && mousePos.y() < 12 * PIXEL_SIZE) {
-				if(cursor().shape() != Qt::PointingHandCursor) {
+			if (mousePos.x() < 12 * PIXEL_SIZE && mousePos.y() < 12 * PIXEL_SIZE) {
+				if (cursor().shape() != Qt::PointingHandCursor) {
 					setCursor(Qt::PointingHandCursor);
 				}
-			} else if(cursor().shape() != Qt::ArrowCursor) {
+			} else if (cursor().shape() != Qt::ArrowCursor) {
 				setCursor(Qt::ArrowCursor);
 			}
 		}
@@ -147,22 +147,22 @@ void FontLetter::mouseMoveEvent(QMouseEvent *e)
 
 void FontLetter::mousePressEvent(QMouseEvent *e)
 {
-	if(readOnly || !_windowBinFile)	return;
+	if (readOnly || !_windowBinFile)	return;
 
 	QPoint pixel = getPixel(e->pos());
 
 	int linePos = _windowBinFile->charWidth(_currentTable, _letter) * PIXEL_SIZE;
 
-	if(e->pos().x() >= linePos - 1 && e->pos().x() <= linePos + 1) {
+	if (e->pos().x() >= linePos - 1 && e->pos().x() <= linePos + 1) {
 		startDrag = true;
-	} else if(setPixel(pixel)) {
+	} else if (setPixel(pixel)) {
 		startDrag2 = true;
 	}
 }
 
 void FontLetter::mouseReleaseEvent(QMouseEvent *)
 {
-	if(readOnly)	return;
+	if (readOnly)	return;
 
 	startDrag = startDrag2 = false;
 }

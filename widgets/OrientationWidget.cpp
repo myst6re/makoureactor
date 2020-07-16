@@ -90,7 +90,7 @@ void OrientationWidget::paintEvent(QPaintEvent *)
 				<< QLineF(QPointF(-radius, 0), QPointF(radius, 0))
 				<< QLineF(QPointF(0, -radius), QPointF(0, radius)));
 
-	if(_value >= 90 && _value < 270) {
+	if (_value >= 90 && _value < 270) {
 		p.rotate(180);
 		p.drawText(QRectF(0.0, 0.0, radius-4, radius-4), tr("Right"), QTextOption(Qt::AlignRight));
 	} else {
@@ -100,7 +100,7 @@ void OrientationWidget::paintEvent(QPaintEvent *)
 
 void OrientationWidget::mouseEvent(QMouseEvent *e)
 {
-	if(_readOnly) {
+	if (_readOnly) {
 		e->ignore();
 		return;
 	}
@@ -111,7 +111,7 @@ void OrientationWidget::mouseEvent(QMouseEvent *e)
 	const QPointF &relativePos = e->localPos();
 #endif
 
-	if(isInCircle(relativePos)) {
+	if (isInCircle(relativePos)) {
 		moveCursor(relativePos);
 	}
 }
@@ -141,25 +141,25 @@ void OrientationWidget::moveCursor(const QPointF &pos)
 	qreal sizeX=pos.x() - centerCircle.x(), sizeY=pos.y() - centerCircle.y();
 	double angle;
 
-	if(sizeX != 0) {
+	if (sizeX != 0) {
 		angle = atan2(qAbs(sizeY), qAbs(sizeX)) * 57.29577951;// rad2deg
 	} else {
 		angle = 0;
 	}
 
-	if(sizeX == 0 && sizeY == 0) {
+	if (sizeX == 0 && sizeY == 0) {
 		return;
-	} else if(sizeX < 0 && sizeY <= 0) {
+	} else if (sizeX < 0 && sizeY <= 0) {
 		_value = 0 + angle;
-	} else if(sizeX == 0 && sizeY < 0) {
+	} else if (sizeX == 0 && sizeY < 0) {
 		_value = 90;
-	} else if(sizeX > 0 && sizeY < 0) {
+	} else if (sizeX > 0 && sizeY < 0) {
 		_value = 180 - angle;
-	} else if(sizeX == 0 && sizeY > 0) {
+	} else if (sizeX == 0 && sizeY > 0) {
 		_value = 270;
-	} else if(sizeX < 0 && sizeY > 0) {
+	} else if (sizeX < 0 && sizeY > 0) {
 		_value = 360 - angle;
-	} else if(sizeX > 0 && sizeY >= 0) {
+	} else if (sizeX > 0 && sizeY >= 0) {
 		_value = 180 + angle;
 	}
 

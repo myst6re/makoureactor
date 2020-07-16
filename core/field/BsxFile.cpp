@@ -159,7 +159,7 @@ bool BsxFile::readTextures(FieldModelTexturesPS *textures) const
 
 	QList<QRect> rects;
 
-	foreach (const BsxTextureHeader &h, headers) {
+	for (const BsxTextureHeader &h : headers) {
 		rects.append(QRect(h.vramX, h.vramY,
 						   h.width, h.height));
 	}
@@ -289,7 +289,7 @@ bool BsxFile::readAnimationsHeaders(quint8 numAnimations, QList<FieldModelAnimat
 
 bool BsxFile::readMesh(const QList<FieldModelPartPSHeader> &partsHeaders, FieldModelSkeleton &skeleton) const
 {
-	foreach (const FieldModelPartPSHeader &header, partsHeaders) {
+	for (const FieldModelPartPSHeader &header : partsHeaders) {
 		FieldModelPart *part = new FieldModelPart();
 
 		if (!readPart(header, part)) {
@@ -516,7 +516,7 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPart 
 		for (quint8 j = 0; j < 4; ++j) {
 			quint8 vertexIndex = monochromeTexturedQuad.vertexIndex[j];
 			quint8 texCoordIndex = monochromeTexturedQuad.texCoordId[j];
-			if(vertexIndex < vertices.size() && texCoordIndex < texCoords.size()) {
+			if (vertexIndex < vertices.size() && texCoordIndex < texCoords.size()) {
 				polyVertices.append(vertices.at(vertexIndex));
 				polyTexCoords.append(texCoords.at(texCoordIndex));
 			} else {
@@ -678,7 +678,7 @@ bool BsxFile::readPart(const FieldModelPartPSHeader &partHeader, FieldModelPart 
 
 		for (quint8 j = 0; j < 4; ++j) {
 			quint8 vertexIndex = colorQuad.vertexIndex[j];
-			if(vertexIndex < vertices.size()) {
+			if (vertexIndex < vertices.size()) {
 				polyVertices.append(vertices.at(vertexIndex));
 				const ColorRGBA &color = colorQuad.color[j];
 				polyColors.append(qRgb(color.red, color.green, color.blue));
@@ -719,7 +719,7 @@ bool BsxFile::addTexturedPolygonToGroup(quint8 control, Poly *polygon, QList<Fie
 bool BsxFile::readAnimations(const QList<FieldModelAnimationPSHeader> &animationHeaders,
 							 QList<FieldModelAnimation> &animations) const
 {
-	foreach (const FieldModelAnimationPSHeader &header, animationHeaders) {
+	for (const FieldModelAnimationPSHeader &header : animationHeaders) {
 		FieldModelAnimation animation;
 
 		if (!readAnimation(header, animation)) {
@@ -922,7 +922,7 @@ bool BsxFile::readTexturesData(const QList<BsxTextureHeader> &headers,
 {
 	qint64 offsetTextures = _offsetModels + _offsetTextures;
 
-	foreach (const BsxTextureHeader &header, headers) {
+	for (const BsxTextureHeader &header : headers) {
 		if (device()->pos() != offsetTextures + header.offsetData) {
 			qWarning() << "BsxFile::readTexturesData error pos" << _offsetModels << _offsetTextures << header.offsetData << device()->pos();
 			return false;

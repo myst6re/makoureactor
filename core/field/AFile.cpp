@@ -69,7 +69,7 @@ bool AFile::read(FieldModelAnimation &animation, int maxFrames) const
 		QList<PolyVertex> rotationCoords;
 
 		for (quint32 j = 0; j < header.boneCount; ++j) {
-			if(device()->read((char *)&rot, 12) != 12) {
+			if (device()->read((char *)&rot, 12) != 12) {
 				return false;
 			}
 			rotationCoords.append(rot);

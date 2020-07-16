@@ -31,7 +31,7 @@ BackgroundFilePS::BackgroundFilePS(const BackgroundFilePS &other) :
 {
 	setTextures(new BackgroundTexturesPS(*other.textures()));
 	PalettesPS palettes;
-	foreach(Palette *pal, other.palettes()) {
+	for (Palette *pal : other.palettes()) {
 		palettes.append(new PalettePS(*pal));
 	}
 	setPalettes(palettes);
@@ -46,7 +46,7 @@ void BackgroundFilePS::initEmpty()
 
 bool BackgroundFilePS::open()
 {
-	if(isOpen() || isModified()) {
+	if (isOpen() || isModified()) {
 		setOpen(true);
 		return true;
 	}
@@ -63,7 +63,7 @@ bool BackgroundFilePS::open(const QByteArray &mimData, const QByteArray &tilesDa
 	tilesBuff.setData(tilesData);
 
 	BackgroundIOPS io(&mimBuff, &tilesBuff);
-	if(!io.read(*this)) {
+	if (!io.read(*this)) {
 		return false;
 	}
 
@@ -77,7 +77,7 @@ QByteArray BackgroundFilePS::save() const
 	QBuffer buff, tilesBuff;
 
 	BackgroundIOPS io(&buff, &tilesBuff);
-	if(!io.write(*this)) {
+	if (!io.write(*this)) {
 		return QByteArray();
 	}
 

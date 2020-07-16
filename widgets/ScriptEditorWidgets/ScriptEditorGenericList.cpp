@@ -67,11 +67,11 @@ Opcode *ScriptEditorGenericList::opcode()
 {
 	bool isLabel;
 	QByteArray newOpcode = parseModel(&isLabel);
-	if(newOpcode.isEmpty()) {
+	if (newOpcode.isEmpty()) {
 		return opcodePtr();
 	}
 
-	if(isLabel) {
+	if (isLabel) {
 		quint32 label;
 		memcpy(&label, newOpcode.constData() + 1, 4);
 		ScriptEditorView::setOpcode(new OpcodeLabel(label));
@@ -102,7 +102,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 	length = 0;
 	start = 1;
 	
-	if(byte == 0x0F) { // SPECIAL
+	if (byte == 0x0F) { // SPECIAL
 		quint8 byte2 = ((OpcodeSPECIAL *)opcodePtr())->opcode->id();
 		newOpcode.append((char)byte2);
 		switch(byte2) {
@@ -114,12 +114,12 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 			break;
 		}
 		start = 2;
-	} else if(byte == 0x28) { // KAWAI
+	} else if (byte == 0x28) { // KAWAI
 		quint8 byte3 = ((OpcodeKAWAI *)opcodePtr())->opcode->id();
 		length = model->rowCount()+3;
 		newOpcode.append((char)length);
 		newOpcode.append((char)byte3);
-		for(quint8 i=0 ; i<length-3 ; ++i) {
+		for (quint8 i=0; i<length-3; ++i) {
 			newOpcode.append(model->item(i, 1)->text().toUInt());
 		}
 		return newOpcode;
@@ -129,27 +129,27 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 	newOpcode.append(QByteArray(length-start, '\x0'));
 	QList<int> paramTypes = this->paramTypes(opcodePtr()->id());
 
-	if(!paramTypes.isEmpty()) {
+	if (!paramTypes.isEmpty()) {
 		int cur = 8;
-		for(quint8 i=0 ; i<paramTypes.size() ; ++i) {
+		for (quint8 i=0; i<paramTypes.size(); ++i) {
 			int paramType = paramTypes.at(i),
 			    value = model->data(model->index(i, 1), Qt::EditRole).toInt();
 
 			int paramSize = this->paramSize(paramType);
 			int startBA = cur / 8, sizeBA;
-			if(paramSize % 8 != 0) {
+			if (paramSize % 8 != 0) {
 				sizeBA = paramSize / 8 + 1;
 			} else {
 				sizeBA = paramSize / 8;
 			}
 
-			if(paramSize < 8) {
+			if (paramSize < 8) {
 				int startLocal = cur % 8;
 				newOpcode[startBA] = (char)((quint8)newOpcode.at(startBA) | (value << (8-paramSize-startLocal)));
-			} else if(paramSize == 8) {
+			} else if (paramSize == 8) {
 				newOpcode[startBA] = (char)(value & 0xFF);
 			} else {
-				for(int j=0 ; j<sizeBA ; j++) {
+				for (int j=0; j<sizeBA; j++) {
 					newOpcode[startBA+j] = (char)((value>>(j*8)) & 0xFF);
 				}
 			}
@@ -157,7 +157,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 			cur += paramSize;
 		}
 	} else {
-		for(quint8 i=start ; i<length ; ++i) {
+		for (quint8 i=start; i<length; ++i) {
 			newOpcode[i] = model->item(i-start, 1)->text().toUInt();
 		}
 	}
@@ -167,7 +167,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 
 void ScriptEditorGenericList::addParam()
 {
-	if(model->rowCount() < 252) {
+	if (model->rowCount() < 252) {
 		addRow(0, 0, 255, inconnu);
 		emit opcodeChanged();
 	}
@@ -204,32 +204,32 @@ void ScriptEditorGenericList::fillModel()
 	int paramSize, paramType, cur = 0, maxValue, minValue, value=0;
 	QList<int> paramTypes = this->paramTypes(opcodePtr()->id());
 	
-	if(opcodePtr()->isLabel()) {
+	if (opcodePtr()->isLabel()) {
 		addRow(((OpcodeLabel *)opcodePtr())->label(), 0, (int)pow(2, 31)-1, label);
-	} else if(paramTypes.isEmpty()) {
+	} else if (paramTypes.isEmpty()) {
 		int start = 0;
-		if(opcodePtr()->id() == 0x0F) { //SPECIAL
+		if (opcodePtr()->id() == 0x0F) { //SPECIAL
 			start = 1;
 		}
-		if(opcodePtr()->id() == 0x28) { //KAWAI
+		if (opcodePtr()->id() == 0x28) { //KAWAI
 			start = 2;
 			addButton->show();
 			delButton->show();
 		}
 		const QByteArray params = opcodePtr()->params();
-		for(int i=start ; i<params.size() ; ++i) {
+		for (int i=start; i<params.size(); ++i) {
 			addRow((quint8)params.at(i), 0, 255, inconnu);
 		}
 	} else {
-		for(quint8 i=0 ; i<paramTypes.size() ; ++i) {
+		for (quint8 i=0; i<paramTypes.size(); ++i) {
 			paramType = paramTypes.at(i);
 			paramSize = this->paramSize(paramType);
 			value = opcodePtr()->subParam(cur, paramSize);
 			// qDebug() << value;
-			if(paramIsSigned(paramType)) {
+			if (paramIsSigned(paramType)) {
 				maxValue = (int)pow(2, paramSize-1)-1;
 				minValue = -maxValue-1;
-				if(value>maxValue) {
+				if (value>maxValue) {
 					value -= (int)pow(2, paramSize);
 				}
 			} else {

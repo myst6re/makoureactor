@@ -43,8 +43,8 @@ FieldArchivePC::FieldArchivePC(const QString &path, FieldArchiveIO::Type type) :
 
 FieldArchivePC::~FieldArchivePC()
 {
-	foreach(TutFile *tut, _tuts) {
-		if(tut != nullptr) {
+	for (TutFile *tut : _tuts) {
+		if (tut != nullptr) {
 			delete tut;
 		}
 	}
@@ -52,8 +52,8 @@ FieldArchivePC::~FieldArchivePC()
 
 void FieldArchivePC::clear()
 {
-	foreach(TutFile *tut, _tuts) {
-		if(tut != nullptr) {
+	for (TutFile *tut : _tuts) {
+		if (tut != nullptr) {
 			delete tut;
 		}
 	}
@@ -77,18 +77,18 @@ TutFilePC *FieldArchivePC::tut(const QString &name)
 {
 	QMapIterator<QString, TutFilePC *> it(_tuts);
 
-	while(it.hasNext()) {
+	while (it.hasNext()) {
 		it.next();
 
 		const QString &tutName = it.key();
 
-		if(name.startsWith(tutName, Qt::CaseInsensitive)) {
+		if (name.startsWith(tutName, Qt::CaseInsensitive)) {
 			TutFilePC *tutFile = it.value();
-			if(tutFile == nullptr) {
+			if (tutFile == nullptr) {
 				QByteArray data = io()->fileData(tutName + ".tut", false, false);
-				if(!data.isEmpty()) {
+				if (!data.isEmpty()) {
 					tutFile = new TutFilePC();
-					if(!static_cast<TutFile *>(tutFile)->open(data)) {
+					if (!static_cast<TutFile *>(tutFile)->open(data)) {
 						delete tutFile;
 						return nullptr;
 					}
@@ -118,8 +118,8 @@ void FieldArchivePC::addTut(const QString &name)
 
 void FieldArchivePC::setSaved()
 {
-	foreach(TutFile *tut, _tuts) {
-		if(tut != nullptr) {
+	for (TutFile *tut : _tuts) {
+		if (tut != nullptr) {
 			tut->setModified(false);
 		}
 	}
@@ -140,15 +140,15 @@ void FieldArchivePC::cleanModelLoader()
 	observer()->setObserverMaximum(size());
 
 	while (it.hasNext()) {
-		if(observer()->observerWasCanceled()) {
+		if (observer()->observerWasCanceled()) {
 			return;
 		}
 		FieldPC *field = static_cast<FieldPC *>(it.next());
-		if(field != nullptr) {
+		if (field != nullptr) {
 			FieldModelLoaderPC *modelLoader = field->fieldModelLoader();
-			if(modelLoader->isOpen()) {
+			if (modelLoader->isOpen()) {
 				modelLoader->clean();
-				if(modelLoader->isModified() && !field->isModified()) {
+				if (modelLoader->isModified() && !field->isModified()) {
 					field->setModified(true);
 				}
 			}
@@ -165,11 +165,11 @@ void FieldArchivePC::removeUnusedSections()
 	observer()->setObserverMaximum(size());
 
 	while (it.hasNext()) {
-		if(observer()->observerWasCanceled()) {
+		if (observer()->observerWasCanceled()) {
 			return;
 		}
 		FieldPC *field = static_cast<FieldPC *>(it.next());
-		if(field != nullptr) {
+		if (field != nullptr) {
 			field->setRemoveUnusedSection(true);
 			field->setModified(true);
 		}
@@ -185,13 +185,13 @@ void FieldArchivePC::repairBackgroundsPC()
 	observer()->setObserverMaximum(size());
 
 	while (it.hasNext()) {
-		if(observer()->observerWasCanceled()) {
+		if (observer()->observerWasCanceled()) {
 			return;
 		}
 		FieldPC *field = static_cast<FieldPC *>(it.next());
-		if(field != nullptr && (field->name().toLower() == "lastmap" || field->name().toLower() == "fr_e")) {
+		if (field != nullptr && (field->name().toLower() == "lastmap" || field->name().toLower() == "fr_e")) {
 			BackgroundFilePC *bg = static_cast<BackgroundFilePC *>(field->background());
-			if(bg->isOpen() && bg->repair()) {
+			if (bg->isOpen() && bg->repair()) {
 				field->setModified(true);
 			}
 		}

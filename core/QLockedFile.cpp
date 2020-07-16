@@ -56,7 +56,7 @@ void QLockedFile::close()
 
 bool QLockedFile::open(OpenMode mode)
 {
-	if(!mode.testFlag(QIODevice::ReadOnly)) {
+	if (!mode.testFlag(QIODevice::ReadOnly)) {
 		qWarning() << "QLockedFile::open must be opened in ReadOnly mode";
 		return false;
 	}
@@ -70,7 +70,7 @@ bool QLockedFile::open(OpenMode mode)
 						 OPEN_EXISTING,
 						 FILE_ATTRIBUTE_NORMAL,
 						 nullptr);
-	if(handle == INVALID_HANDLE_VALUE) {
+	if (handle == INVALID_HANDLE_VALUE) {
 		qWarning() << "QLockedFile::open error lock";
 		return false;
 	}
@@ -79,7 +79,7 @@ bool QLockedFile::open(OpenMode mode)
 #else
 	bool isOpen = QFile::open(mode);
 
-	if(isOpen && ::flock(handle(), LOCK_SH) < 0) {
+	if (isOpen && ::flock(handle(), LOCK_SH) < 0) {
 		qWarning() << "QLockedFile::open error flock";
 		return false;
 	}

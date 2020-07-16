@@ -56,7 +56,7 @@ inline bool operator==(const FF7Var &v1, const FF7Var &v2) {
 }
 
 inline bool operator<(const FF7Var &v1, const FF7Var &v2) {
-	if(v1.bank == v2.bank) {
+	if (v1.bank == v2.bank) {
 		return v1.address < v2.address;
 	}
 	return v1.bank < v2.bank;

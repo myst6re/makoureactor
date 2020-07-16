@@ -24,13 +24,13 @@ PaletteIO::PaletteIO(QIODevice *device) :
 
 bool PaletteIO::read(Palettes &palettes) const
 {
-	if(!canRead()) {
+	if (!canRead()) {
 		return false;
 	}
 
 	QByteArray palData = device()->read(12);
 
-	if(palData.size() != 12) {
+	if (palData.size() != 12) {
 		qWarning() << "PaletteIO::read Pal size too short";
 		return false;
 	}
@@ -41,12 +41,12 @@ bool PaletteIO::read(Palettes &palettes) const
 
 	palData = device()->read(palH * 512);
 
-	if(palData.size() != palH * 512) {
+	if (palData.size() != palH * 512) {
 		qWarning() << "PaletteIO::read Pal size too short 2";
 		return false;
 	}
 
-	for(quint32 i=0 ; i<palH ; ++i) {
+	for (quint32 i=0; i<palH; ++i) {
 		palettes.append(createPalette(palData.constData() + i*512));
 	}
 
@@ -55,7 +55,7 @@ bool PaletteIO::read(Palettes &palettes) const
 
 bool PaletteIO::write(const Palettes &palettes) const
 {
-	if(!canWrite()) {
+	if (!canWrite()) {
 		return false;
 	}
 
@@ -69,7 +69,7 @@ bool PaletteIO::write(const Palettes &palettes) const
 	device()->write((char *)&palW, 2);
 	device()->write((char *)&palH, 2);
 
-	foreach(const Palette *pal, palettes) {
+	for (const Palette *pal : palettes) {
 		device()->write(pal->toByteArray());
 	}
 
@@ -93,8 +93,8 @@ QIODevice *PaletteIOPC::deviceAlpha() const
 
 bool PaletteIOPC::canReadAlpha() const
 {
-	if(_deviceAlpha) {
-		if(!_deviceAlpha->isOpen()) {
+	if (_deviceAlpha) {
+		if (!_deviceAlpha->isOpen()) {
 			return _deviceAlpha->open(QIODevice::ReadOnly);
 		}
 		return _deviceAlpha->isReadable();
@@ -104,8 +104,8 @@ bool PaletteIOPC::canReadAlpha() const
 
 bool PaletteIOPC::canWriteAlpha() const
 {
-	if(_deviceAlpha) {
-		if(!_deviceAlpha->isOpen()) {
+	if (_deviceAlpha) {
+		if (!_deviceAlpha->isOpen()) {
 			return _deviceAlpha->open(QIODevice::WriteOnly);
 		}
 		return _deviceAlpha->isWritable();
@@ -115,20 +115,20 @@ bool PaletteIOPC::canWriteAlpha() const
 
 bool PaletteIOPC::readAfter(Palettes &palettes) const
 {
-	if(!canReadAlpha()) {
+	if (!canReadAlpha()) {
 		return false;
 	}
 
 	QByteArray palFlags = deviceAlpha()->read(16);
 
-	if(palFlags.size() < 16) {
+	if (palFlags.size() < 16) {
 		return false;
 	}
 
 	quint8 palId=0;
 
-	foreach(Palette *palette, palettes) {
-		if(palId >= 16) {
+	for (Palette *palette : palettes) {
+		if (palId >= 16) {
 			break;
 		}
 
@@ -142,26 +142,26 @@ bool PaletteIOPC::readAfter(Palettes &palettes) const
 
 bool PaletteIOPC::writeAfter(const Palettes &palettes) const
 {
-	if(!canWriteAlpha()) {
+	if (!canWriteAlpha()) {
 		return false;
 	}
 
 	quint8 palId=0;
 
-	foreach(const Palette *palette, palettes) {
-		if(palId >= 16) {
+	for (const Palette *palette : palettes) {
+		if (palId >= 16) {
 			break;
 		}
 
 		quint8 trans = static_cast<const PalettePC *>(palette)->transparency();
-		if(deviceAlpha()->write((char *)&trans, 1) != 1) {
+		if (deviceAlpha()->write((char *)&trans, 1) != 1) {
 			return false;
 		}
 
 		++palId;
 	}
 
-	if(deviceAlpha()->write(QByteArray(24 - palId, '\0')) != 24 - palId) {
+	if (deviceAlpha()->write(QByteArray(24 - palId, '\0')) != 24 - palId) {
 		return false;
 	}
 

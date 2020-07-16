@@ -32,8 +32,8 @@ BackgroundIOPC::BackgroundIOPC(QIODevice *device, QIODevice *devicePal) :
 
 bool BackgroundIOPC::canReadPal() const
 {
-	if(_devicePal) {
-		if(!_devicePal->isOpen()) {
+	if (_devicePal) {
+		if (!_devicePal->isOpen()) {
 			return _devicePal->open(QIODevice::ReadOnly);
 		}
 		return _devicePal->isReadable();
@@ -43,8 +43,8 @@ bool BackgroundIOPC::canReadPal() const
 
 bool BackgroundIOPC::canWritePal() const
 {
-	if(_devicePal) {
-		if(!_devicePal->isOpen()) {
+	if (_devicePal) {
+		if (!_devicePal->isOpen()) {
 			return _devicePal->open(QIODevice::WriteOnly);
 		}
 		return _devicePal->isWritable();
@@ -54,13 +54,13 @@ bool BackgroundIOPC::canWritePal() const
 
 bool BackgroundIOPC::openPalettes(PalettesPC &palettes) const
 {
-	if(!_devicePal->reset() ||
+	if (!_devicePal->reset() ||
 			!device()->seek(12)) {
 		return false;
 	}
 
 	PaletteIOPC io(_devicePal, device());
-	if(!io.read(palettes)) {
+	if (!io.read(palettes)) {
 		return false;
 	}
 
@@ -69,12 +69,12 @@ bool BackgroundIOPC::openPalettes(PalettesPC &palettes) const
 
 bool BackgroundIOPC::openTiles(BackgroundTiles &tiles) const
 {
-	if(!device()->reset()) {
+	if (!device()->reset()) {
 		return false;
 	}
 
 	BackgroundTilesIOPC io(device());
-	if(!io.read(tiles)) {
+	if (!io.read(tiles)) {
 		return false;
 	}
 
@@ -83,12 +83,12 @@ bool BackgroundIOPC::openTiles(BackgroundTiles &tiles) const
 
 bool BackgroundIOPC::openTextures(BackgroundTexturesPC &textures) const
 {
-	if(!device()->seek(device()->pos() + 7)) {
+	if (!device()->seek(device()->pos() + 7)) {
 		return false;
 	}
 
 	BackgroundTexturesIOPC io(device());
-	if(!io.read(&textures)) {
+	if (!io.read(&textures)) {
 		return false;
 	}
 
@@ -97,7 +97,7 @@ bool BackgroundIOPC::openTextures(BackgroundTexturesPC &textures) const
 
 bool BackgroundIOPC::read(BackgroundFile &background) const
 {
-	if(!canRead()
+	if (!canRead()
 			|| !canReadPal()) {
 		return false;
 	}
@@ -108,7 +108,7 @@ bool BackgroundIOPC::read(BackgroundFile &background) const
 	BackgroundTiles tiles;
 	BackgroundTexturesPC textures;
 
-	if(!openPalettes(palettes)
+	if (!openPalettes(palettes)
 			|| !openTiles(tiles)
 			|| !openTextures(textures)) {
 		qDeleteAll(palettes);
@@ -124,7 +124,7 @@ bool BackgroundIOPC::read(BackgroundFile &background) const
 
 bool BackgroundIOPC::write(const BackgroundFile &background) const
 {
-	if(!canWrite()
+	if (!canWrite()
 			|| !canWritePal()) {
 		return false;
 	}
@@ -132,7 +132,7 @@ bool BackgroundIOPC::write(const BackgroundFile &background) const
 	quint16 unknown1 = 0, depth = 1;
 	quint8 unknown2 = 1;
 
-	if(device()->write((char *)&unknown1, 2) != 2
+	if (device()->write((char *)&unknown1, 2) != 2
 			|| device()->write((char *)&depth, 2) != 2
 			|| device()->write((char *)&unknown2, 1) != 1
 			|| device()->write("PALETTE", 7) != 7) {
@@ -140,35 +140,35 @@ bool BackgroundIOPC::write(const BackgroundFile &background) const
 	}
 
 	PaletteIOPC paletteIO(devicePal(), device());
-	if(!paletteIO.write(background.palettes())) {
+	if (!paletteIO.write(background.palettes())) {
 		return false;
 	}
 
-	if(device()->write("BACK", 4) != 4) {
+	if (device()->write("BACK", 4) != 4) {
 		return false;
 	}
 
 	BackgroundTilesIOPC backgroundTiles(device());
 
-	if(!backgroundTiles.write(background.tiles())) {
+	if (!backgroundTiles.write(background.tiles())) {
 		return false;
 	}
 
-	if(device()->write("TEXTURE", 7) != 7) {
+	if (device()->write("TEXTURE", 7) != 7) {
 		return false;
 	}
 
 	BackgroundTexturesIOPC backgroundTextures(device());
 
-	if(!backgroundTextures.write(static_cast<BackgroundTexturesPC *>(background.textures()))) {
+	if (!backgroundTextures.write(static_cast<BackgroundTexturesPC *>(background.textures()))) {
 		return false;
 	}
 
-	if(device()->write("END", 3) != 3) {
+	if (device()->write("END", 3) != 3) {
 		return false;
 	}
 
-	if(device()->write("FINAL FANTASY7", 14) != 14) {
+	if (device()->write("FINAL FANTASY7", 14) != 14) {
 		return false;
 	}
 
@@ -182,8 +182,8 @@ BackgroundIOPS::BackgroundIOPS(QIODevice *device, QIODevice *deviceTiles) :
 
 bool BackgroundIOPS::canReadTiles() const
 {
-	if(_deviceTiles) {
-		if(!_deviceTiles->isOpen()) {
+	if (_deviceTiles) {
+		if (!_deviceTiles->isOpen()) {
 			return _deviceTiles->open(QIODevice::ReadOnly);
 		}
 		return _deviceTiles->isReadable();
@@ -193,8 +193,8 @@ bool BackgroundIOPS::canReadTiles() const
 
 bool BackgroundIOPS::canWriteTiles() const
 {
-	if(_deviceTiles) {
-		if(!_deviceTiles->isOpen()) {
+	if (_deviceTiles) {
+		if (!_deviceTiles->isOpen()) {
 			return _deviceTiles->open(QIODevice::WriteOnly);
 		}
 		return _deviceTiles->isWritable();
@@ -204,7 +204,7 @@ bool BackgroundIOPS::canWriteTiles() const
 
 bool BackgroundIOPS::openPalettes(PalettesPS &palettes) const
 {
-	if(!device()->reset()) {
+	if (!device()->reset()) {
 		return false;
 	}
 
@@ -213,7 +213,7 @@ bool BackgroundIOPS::openPalettes(PalettesPS &palettes) const
 
 bool BackgroundIOPS::openTiles(BackgroundTiles &tiles) const
 {
-	if(!deviceTiles()->reset()) {
+	if (!deviceTiles()->reset()) {
 		return false;
 	}
 
@@ -222,7 +222,7 @@ bool BackgroundIOPS::openTiles(BackgroundTiles &tiles) const
 
 bool BackgroundIOPS::openTextures(BackgroundTexturesPS &textures) const
 {
-	if(!device()->reset()) {
+	if (!device()->reset()) {
 		return false;
 	}
 
@@ -231,7 +231,7 @@ bool BackgroundIOPS::openTextures(BackgroundTexturesPS &textures) const
 
 bool BackgroundIOPS::savePalettes(const Palettes &palettes) const
 {
-	if(!device()->reset()) {
+	if (!device()->reset()) {
 		return false;
 	}
 
@@ -240,7 +240,7 @@ bool BackgroundIOPS::savePalettes(const Palettes &palettes) const
 
 bool BackgroundIOPS::saveTiles(const BackgroundTiles &tiles) const
 {
-	if(!deviceTiles()->reset()) {
+	if (!deviceTiles()->reset()) {
 		return false;
 	}
 
@@ -255,7 +255,7 @@ bool BackgroundIOPS::saveTextures(const BackgroundTexturesPS *textures) const
 
 bool BackgroundIOPS::read(BackgroundFile &background) const
 {
-	if(!canRead()
+	if (!canRead()
 			|| !canReadTiles()) {
 		return false;
 	}
@@ -266,7 +266,7 @@ bool BackgroundIOPS::read(BackgroundFile &background) const
 	BackgroundTiles tiles;
 	BackgroundTexturesPS *textures = new BackgroundTexturesPS();
 
-	if(!openPalettes(palettes)
+	if (!openPalettes(palettes)
 			|| !openTiles(tiles)
 			|| !openTextures(*textures)) {
 		qDeleteAll(palettes);
@@ -283,7 +283,7 @@ bool BackgroundIOPS::read(BackgroundFile &background) const
 
 bool BackgroundIOPS::write(const BackgroundFile &background) const
 {
-	if(!canWrite()
+	if (!canWrite()
 			|| !canWriteTiles()) {
 		return false;
 	}

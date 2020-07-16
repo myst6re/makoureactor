@@ -48,16 +48,16 @@ void FontManager::fillList1()
 {
 	QString currentEncoding = Config::value("encoding", "00").toString();
 
-	foreach(const QString &fontName, FF7Font::fontList()) {
+	for (const QString &fontName : FF7Font::fontList()) {
 		QListWidgetItem *item;
 
-		if(fontName == "00" || fontName == "01") {
+		if (fontName == "00" || fontName == "01") {
 			item = new QListWidgetItem(fontName == "00" ? tr("Latin") : tr("Japonais"));
 			item->setData(Qt::UserRole, fontName);
 			list1->addItem(item);
 		} else {
 			FF7Font *font = FF7Font::font(fontName);
-			if(font) {
+			if (font) {
 				item = new QListWidgetItem(font->name());
 				item->setData(Qt::UserRole, fontName);
 				list1->addItem(item);
@@ -66,7 +66,7 @@ void FontManager::fillList1()
 			}
 		}
 
-		if(currentEncoding == fontName) {
+		if (currentEncoding == fontName) {
 			list1->setCurrentItem(item);
 		}
 	}
@@ -76,12 +76,12 @@ void FontManager::setFont(int id)
 {
 	QListWidgetItem *item = list1->item(id);
 
-	if(!item)	return;
+	if (!item)	return;
 
 	QString fontName = item->data(Qt::UserRole).toString();
 
 	FF7Font *font = FF7Font::font(fontName);
-	if(font) {
+	if (font) {
 		fontWidget->setFF7Font(font);
 	}
 
@@ -92,8 +92,8 @@ void FontManager::addFont()
 {
 	QString name, nameId;
 
-	if(newNameDialog(name, nameId)) {
-		if(FF7Font::addFont(nameId, "TODO", name)) {
+	if (newNameDialog(name, nameId)) {
+		if (FF7Font::addFont(nameId, "TODO", name)) {
 			QListWidgetItem *item = new QListWidgetItem(name);
 			item->setData(Qt::UserRole, nameId);
 			list1->addItem(item);
@@ -121,12 +121,12 @@ bool FontManager::newNameDialog(QString &name, QString &nameId)
 
 	connect(ok, SIGNAL(clicked()), &dialog, SLOT(accept()));
 
-	if(dialog.exec() == QDialog::Accepted) {
+	if (dialog.exec() == QDialog::Accepted) {
 		QString name1 = nameEdit->text();
 		QString name2 = QDir::cleanPath(fileNameEdit->text());
 
 		QStringList fontList = FF7Font::fontList();
-		if(name1.isEmpty() || name2.isEmpty()
+		if (name1.isEmpty() || name2.isEmpty()
 		    || fontList.contains(name1)
 		    || QFile::exists(FF7Font::fontDirPath()+"/"+name2)) {
 			QMessageBox::warning(this, tr("Choisissez un autre nom"), tr("Ce nom existe déjà ou est invalide, veuillez en choisir un autre."));
@@ -143,15 +143,15 @@ bool FontManager::newNameDialog(QString &name, QString &nameId)
 void FontManager::removeFont()
 {
 	QList<QListWidgetItem *> items = list1->selectedItems();
-	if(items.isEmpty())		return;
+	if (items.isEmpty())		return;
 
-	if(QMessageBox::Yes != QMessageBox::question(this, tr("Supprimer une police"), tr("Voulez-vous vraiment supprimer la police sélectionnée ?"), QMessageBox::Yes | QMessageBox::Cancel)) {
+	if (QMessageBox::Yes != QMessageBox::question(this, tr("Supprimer une police"), tr("Voulez-vous vraiment supprimer la police sélectionnée ?"), QMessageBox::Yes | QMessageBox::Cancel)) {
 		return;
 	}
 
 	QListWidgetItem *item = items.first();
 
-	if(FF7Font::removeFont(item->data(Qt::UserRole).toString())) {
+	if (FF7Font::removeFont(item->data(Qt::UserRole).toString())) {
 		delete item;
 	}
 }

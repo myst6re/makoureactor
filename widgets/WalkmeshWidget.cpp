@@ -55,7 +55,7 @@ void WalkmeshWidget::clear()
 	bgFile = nullptr;
 	scripts = nullptr;
 	field = nullptr;
-//	if(thread)	thread->deleteLater();
+//	if (thread)	thread->deleteLater();
 	fieldModels.clear();
 	update();
 }
@@ -69,7 +69,7 @@ void WalkmeshWidget::fill(Field *field)
 	this->scripts = field->scriptsAndTexts();
 	this->field = field;
 	this->fieldModels.clear();
-	if(modelsVisible) {
+	if (modelsVisible) {
 		openModels();
 	}
 
@@ -79,23 +79,23 @@ void WalkmeshWidget::fill(Field *field)
 
 void WalkmeshWidget::openModels()
 {
-//	if(thread)	thread->deleteLater();
-	if(!this->fieldModels.isEmpty() || !field || !scripts) {
+//	if (thread)	thread->deleteLater();
+	if (!this->fieldModels.isEmpty() || !field || !scripts) {
 		return;
 	}
 	int modelCount = scripts->modelCount();
 	QList<int> modelIds;
-	for(int modelId=0 ; modelId<modelCount ; ++modelId) {
+	for (int modelId=0; modelId<modelCount; ++modelId) {
 		modelIds.append(modelId);
 	}
-//	if(field->isPC()) {
+//	if (field->isPC()) {
 //		thread = new FieldModelThread(this);
 //		thread->setField(field);
 //		connect(thread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(addModel(Field*,FieldModelFile*,int)));
 //		thread->setModels(modelIds);
 //		thread->start();
 //	} else {
-		foreach(int modelId, modelIds) {
+		for (int modelId : modelIds) {
 			addModel(field, field->fieldModel(modelId), modelId);
 		}
 //	}
@@ -103,7 +103,7 @@ void WalkmeshWidget::openModels()
 
 void WalkmeshWidget::addModel(Field *field, FieldModelFile *fieldModelFile, int modelId)
 {
-	if(this->field == field) {
+	if (this->field == field) {
 		fieldModels.insert(modelId, fieldModelFile);
 		update();
 	}
@@ -111,7 +111,7 @@ void WalkmeshWidget::addModel(Field *field, FieldModelFile *fieldModelFile, int 
 
 void WalkmeshWidget::computeFov()
 {
-	if(camera && camera->isOpen()
+	if (camera && camera->isOpen()
 			&& camera->hasCamera()
 			&& _camID < camera->cameraCount()) {
 		const Camera &cam = camera->camera(_camID);
@@ -160,7 +160,7 @@ void WalkmeshWidget::paintGL()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	if(!walkmesh)	return;
+	if (!walkmesh)	return;
 
 #ifdef OPENGL_DEBUG
 	QOpenGLContext *ctx = QOpenGLContext::currentContext();
@@ -174,7 +174,7 @@ void WalkmeshWidget::paintGL()
 //	painter.begin(this);
 //	painter.setRenderHint(QPainter::Antialiasing);
 //	int arrowW, arrowH;
-//	if(width() < height()) {
+//	if (width() < height()) {
 //		arrowW = width() * 9 / 320;
 //		arrowH = width() * 6 / 320;
 //	} else {
@@ -189,7 +189,7 @@ void WalkmeshWidget::paintGL()
 	glRotatef(yRot, 0.0, 1.0, 0.0);
 	glRotatef(zRot, 0.0, 0.0, 1.0);
 
-	/*if(bgFile) {
+	/*if (bgFile) {
 		glColor3ub(255, 255, 255);
 		QPixmap pix = bgFile->openBackground();
 		glEnable(GL_TEXTURE_2D);
@@ -219,7 +219,7 @@ void WalkmeshWidget::paintGL()
 		glDisable(GL_TEXTURE_2D);
 	}*/
 
-	if(camera->isOpen() && camera->hasCamera() && _camID < camera->cameraCount()) {
+	if (camera->isOpen() && camera->hasCamera() && _camID < camera->cameraCount()) {
 		const Camera &cam = camera->camera(_camID);
 
 		double camAxisXx = cam.camera_axis[0].x/4096.0;
@@ -246,14 +246,14 @@ void WalkmeshWidget::paintGL()
 		gluLookAt(tx, ty, tz, tx + camAxisZx, ty + camAxisZy, tz + camAxisZz, camAxisYx, camAxisYy, camAxisYz);
 	}
 
-	if(walkmesh->isOpen()) {
+	if (walkmesh->isOpen()) {
 
-//		if(infFile && infFile->isOpen()) {
+//		if (infFile && infFile->isOpen()) {
 //			glBegin(GL_QUADS);
 //			glColor3ub(255, 0, 0);
 
 //			float arrowW, arrowH;
-//			if(width() < height()) {
+//			if (width() < height()) {
 //				arrowW = width() * 9.0f / 320.0f;
 //				arrowH = width() * 6.0f / 320.0f;
 //			} else {
@@ -262,8 +262,8 @@ void WalkmeshWidget::paintGL()
 //			}
 
 //			int gateID=0;
-//			foreach(const Exit &gate, infFile->exitLines()) {
-//				if(gate.fieldID != 0x7FFF && infFile->arrowIsDisplayed(gateID)) {
+//			for (const Exit &gate : infFile->exitLines()) {
+//				if (gate.fieldID != 0x7FFF && infFile->arrowIsDisplayed(gateID)) {
 //					Vertex_s vertex1, vertex2, vertex3;
 //					vertex1 = gate.exit_line[0];
 //					vertex2 = gate.exit_line[1];
@@ -310,7 +310,7 @@ void WalkmeshWidget::paintGL()
 
 		int i=0;
 
-		foreach(const Triangle &triangle, walkmesh->triangles()) {
+		for (const Triangle &triangle : walkmesh->triangles()) {
 			const Access &access = walkmesh->access(i);
 
 			drawIdLine(i, triangle.vertices[0], triangle.vertices[1], access.a[0]);
@@ -320,20 +320,20 @@ void WalkmeshWidget::paintGL()
 			++i;
 		}
 
-		if(infFile && infFile->isOpen()) {
+		if (infFile && infFile->isOpen()) {
 			glColor3ub(0xFF, 0x00, 0x00);
 //			glEnable(GL_TEXTURE_2D);
 //			GLuint texID = bindTexture(arrow);
 
 			int gateID=0;
-			foreach(const Exit &gate, infFile->exitLines()) {
-				if(gate.fieldID != 0x7FFF) {
+			for (const Exit &gate : infFile->exitLines()) {
+				if (gate.fieldID != 0x7FFF) {
 					Vertex_s vertex;
 					vertex = gate.exit_line[0];
 					glVertex3f(vertex.x/4096.0f, vertex.y/4096.0f, vertex.z/4096.0f);
 					vertex = gate.exit_line[1];
 					glVertex3f(vertex.x/4096.0f, vertex.y/4096.0f, vertex.z/4096.0f);
-					if(infFile->arrowIsDisplayed(gateID)) {
+					if (infFile->arrowIsDisplayed(gateID)) {
 //						glTexCoord2d(0.0, 1.0);
 //						glTexCoord2d(1.0, 0.0);
 					}
@@ -346,8 +346,8 @@ void WalkmeshWidget::paintGL()
 
 			glColor3ub(0x00, 0xFF, 0x00);
 
-			foreach(const Trigger &trigger, infFile->triggers()) {
-				if(trigger.background_parameter != 0xFF) {
+			for (const Trigger &trigger : infFile->triggers()) {
+				if (trigger.background_parameter != 0xFF) {
 					Vertex_s vertex;
 					vertex = trigger.trigger_line[0];
 					glVertex3f(vertex.x/4096.0f, vertex.y/4096.0f, vertex.z/4096.0f);
@@ -365,7 +365,7 @@ void WalkmeshWidget::paintGL()
 
 		glColor3ub(0xFF, 0x90, 0x00);
 
-		if(_selectedTriangle >= 0 && _selectedTriangle < walkmesh->triangleCount()) {
+		if (_selectedTriangle >= 0 && _selectedTriangle < walkmesh->triangleCount()) {
 			const Triangle &triangle = walkmesh->triangle(_selectedTriangle);
 			const Vertex_sr &vertex1 = triangle.vertices[0];
 			glVertex3f(vertex1.x/4096.0f, vertex1.y/4096.0f, vertex1.z/4096.0f);
@@ -375,12 +375,12 @@ void WalkmeshWidget::paintGL()
 			glVertex3f(vertex3.x/4096.0f, vertex3.y/4096.0f, vertex3.z/4096.0f);
 		}
 
-		if(infFile && infFile->isOpen()) {
+		if (infFile && infFile->isOpen()) {
 			glColor3ub(0xFF, 0x00, 0x00);
 
-			if(_selectedGate >= 0 && _selectedGate < 12) {
+			if (_selectedGate >= 0 && _selectedGate < 12) {
 				const Exit &gate = infFile->exitLine(_selectedGate);
-				if(gate.fieldID != 0x7FFF) {
+				if (gate.fieldID != 0x7FFF) {
 					const Vertex_s &vertex1 = gate.exit_line[0];
 					glVertex3f(vertex1.x/4096.0f, vertex1.y/4096.0f, vertex1.z/4096.0f);
 					const Vertex_s &vertex2 = gate.exit_line[1];
@@ -390,9 +390,9 @@ void WalkmeshWidget::paintGL()
 
 			glColor3ub(0x00, 0xFF, 0x00);
 
-			if(_selectedDoor >= 0 && _selectedDoor < 12) {
+			if (_selectedDoor >= 0 && _selectedDoor < 12) {
 				const Trigger &trigger = infFile->trigger(_selectedDoor);
-				if(trigger.background_parameter != 0xFF) {
+				if (trigger.background_parameter != 0xFF) {
 					const Vertex_s &vertex1 = trigger.trigger_line[0];
 					glVertex3f(vertex1.x/4096.0f, vertex1.y/4096.0f, vertex1.z/4096.0f);
 					const Vertex_s &vertex2 = trigger.trigger_line[1];
@@ -404,18 +404,18 @@ void WalkmeshWidget::paintGL()
 		glEnd();
 	}
 
-	if(scripts && scripts->isOpen()) {
+	if (scripts && scripts->isOpen()) {
 		QMap<int, FF7Position *> positions;
 		scripts->linePosition(positions);
 
-		if(!positions.isEmpty()) {
+		if (!positions.isEmpty()) {
 
 			glBegin(GL_LINES);
 
 			glColor3ub(0x90, 0xFF, 0x00);
 
 			QMapIterator<int, FF7Position *> i(positions);
-			while(i.hasNext()) {
+			while (i.hasNext()) {
 				i.next();
 				FF7Position *pos = i.value();
 
@@ -429,20 +429,20 @@ void WalkmeshWidget::paintGL()
 
 		}
 
-		if(modelsVisible && !fieldModels.isEmpty()) {
+		if (modelsVisible && !fieldModels.isEmpty()) {
 
 			QMultiMap<int, FF7Position> modelPositions;
 			scripts->listModelPositions(modelPositions);
 
 			QMap<int, int> modelDirection;
 			int modelID = 0;
-			foreach(GrpScript *group, scripts->grpScripts()) {
-				if(group->typeID() == GrpScript::Model) {
-					if(!group->scripts().isEmpty()) {
-						foreach(Opcode *op, group->script(0)->opcodes()) {
-							if(op->id() == Opcode::DIR) {
+			for (GrpScript *group : scripts->grpScripts()) {
+				if (group->typeID() == GrpScript::Model) {
+					if (!group->scripts().isEmpty()) {
+						for (Opcode *op : group->script(0)->opcodes()) {
+							if (op->id() == Opcode::DIR) {
 								OpcodeDIR *opDir = (OpcodeDIR *)op;
-								if(opDir->banks == 0) {
+								if (opDir->banks == 0) {
 									modelDirection.insert(modelID, opDir->direction);
 									break;
 								}
@@ -453,38 +453,38 @@ void WalkmeshWidget::paintGL()
 				}
 			}
 
-			if(!modelPositions.isEmpty()) {
+			if (!modelPositions.isEmpty()) {
 				int previousModelId = -1;
 				QMapIterator<int, FF7Position> i(modelPositions);
-				while(i.hasNext()) {
+				while (i.hasNext()) {
 					i.next();
 					const int modelId = i.key();
-					if(previousModelId == modelId) {
+					if (previousModelId == modelId) {
 						continue;
 					}
 					previousModelId = modelId;
 					FF7Position position = i.value();
 
-					if(!position.hasZ && position.hasId && position.id < walkmesh->triangleCount()) {
+					if (!position.hasZ && position.hasId && position.id < walkmesh->triangleCount()) {
 						position.z = walkmesh->triangle(position.id).vertices[0].z;
-					} else if(!position.hasZ) {
+					} else if (!position.hasZ) {
 						continue;
 					}
 
 					FieldModelFile *fieldModel = fieldModels.value(modelId);
-					if(fieldModel) {
+					if (fieldModel) {
 
 						glPushMatrix();
 
 						glTranslatef(position.x/4096.0f, position.y/4096.0f, position.z/4096.0f);
 						glRotatef(270.0f, 1.0, 0.0, 0.0);
 						int direction = modelDirection.value(modelId, -1);
-						if(direction != -1) {
+						if (direction != -1) {
 							glRotatef(-360.0f * direction / 256.0f, 0.0, 1.0, 0.0);
 						}
 
 //						QList<PolyVertex> trans = fieldModel->translations(0);
-//						if(!trans.isEmpty()) {
+//						if (!trans.isEmpty()) {
 //							glTranslatef(trans.first().x/5.0f, trans.first().y/5.0f, trans.first().z/5.0f);
 //						}
 
@@ -507,9 +507,9 @@ void WalkmeshWidget::paintGL()
 
 void WalkmeshWidget::drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access)
 {
-	if(triangleID == _selectedTriangle) {
+	if (triangleID == _selectedTriangle) {
 		glColor3ub(0xFF, 0x90, 0x00);
-	} else if(access == -1) {
+	} else if (access == -1) {
 		glColor3ub(0x66, 0x99, 0xCC);
 	} else {
 		glColor3ub(0xFF, 0xFF, 0xFF);
@@ -529,11 +529,11 @@ void WalkmeshWidget::wheelEvent(QWheelEvent *event)
 void WalkmeshWidget::mousePressEvent(QMouseEvent *event)
 {
 	setFocus();
-	if(event->button() == Qt::MidButton)
+	if (event->button() == Qt::MidButton)
 	{
 		resetCamera();
 	}
-	else if(event->button() == Qt::LeftButton)
+	else if (event->button() == Qt::LeftButton)
 	{
 		moveStart = event->pos();
 	}
@@ -549,12 +549,12 @@ void WalkmeshWidget::mouseMoveEvent(QMouseEvent *event)
 
 void WalkmeshWidget::keyPressEvent(QKeyEvent *event)
 {
-	if(lastKeyPressed == event->key()
+	if (lastKeyPressed == event->key()
 			&& (event->key() == Qt::Key_Left
 				|| event->key() == Qt::Key_Right
 				|| event->key() == Qt::Key_Down
 				|| event->key() == Qt::Key_Up)) {
-		if(transStep > 100.0f) {
+		if (transStep > 100.0f) {
 			transStep *= 0.90f; // accelerator
 		}
 	} else {
@@ -648,9 +648,9 @@ void WalkmeshWidget::resetCamera()
 
 void WalkmeshWidget::setModelsVisible(bool show)
 {
-	if(modelsVisible != show) {
+	if (modelsVisible != show) {
 		modelsVisible = show;
-		if(modelsVisible) {
+		if (modelsVisible) {
 			openModels();
 		}
 		update();
@@ -659,7 +659,7 @@ void WalkmeshWidget::setModelsVisible(bool show)
 
 void WalkmeshWidget::setCurrentFieldCamera(int camID)
 {
-	if(_camID != camID) {
+	if (_camID != camID) {
 		_camID = camID;
 		updatePerspective();
 	}
@@ -667,7 +667,7 @@ void WalkmeshWidget::setCurrentFieldCamera(int camID)
 
 void WalkmeshWidget::setSelectedTriangle(int triangle)
 {
-	if(_selectedTriangle != triangle) {
+	if (_selectedTriangle != triangle) {
 		_selectedTriangle = triangle;
 		update();
 	}
@@ -675,7 +675,7 @@ void WalkmeshWidget::setSelectedTriangle(int triangle)
 
 void WalkmeshWidget::setSelectedDoor(int door)
 {
-	if(_selectedDoor != door) {
+	if (_selectedDoor != door) {
 		_selectedDoor = door;
 		update();
 	}
@@ -683,7 +683,7 @@ void WalkmeshWidget::setSelectedDoor(int door)
 
 void WalkmeshWidget::setSelectedGate(int gate)
 {
-	if(_selectedGate != gate) {
+	if (_selectedGate != gate) {
 		_selectedGate = gate;
 		update();
 	}
@@ -691,7 +691,7 @@ void WalkmeshWidget::setSelectedGate(int gate)
 
 void WalkmeshWidget::setSelectedArrow(int arrow)
 {
-	if(_selectedArrow != arrow) {
+	if (_selectedArrow != arrow) {
 		_selectedArrow = arrow;
 		update();
 	}

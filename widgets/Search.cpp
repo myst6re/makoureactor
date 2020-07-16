@@ -40,7 +40,7 @@ Search::Search(Window *mainWindow) :
 	buttons.append(buttonAll = new QPushButton(tr("Find all"), this));
 
 	QMap<int, QPushButton *> buttonWidths;
-	foreach (QPushButton *button, buttons) {
+	for (QPushButton *button : buttons) {
 		button->setAutoDefault(false);
 		buttonWidths[button->sizeHint().width()] = button;
 	}
@@ -53,7 +53,7 @@ Search::Search(Window *mainWindow) :
 
 	// buttonNext.width == buttonPrev.width
 	QPushButton *largerButton = (buttonWidths.constEnd() - 1).value();
-	foreach (QPushButton *button, buttons) {
+	for (QPushButton *button : buttons) {
 		button->setFixedSize(largerButton->sizeHint());
 	}
 
@@ -130,7 +130,7 @@ QWidget *Search::scriptPageWidget()
 
 	QWidget *opc = new QWidget(ret);
 	opcode = new QComboBox(opc);
-	for(quint16 i=0 ; i<256 ; ++i)
+	for (quint16 i=0; i<256; ++i)
 		opcode->addItem(QString("%1 - %2").arg(i, 2, 16, QChar('0')).arg(Opcode::names[i]).toUpper());
 	opcode->addItem(QString("100 - %1").arg(Opcode::names[0x100]));
 	// set config values
@@ -157,7 +157,7 @@ QWidget *Search::scriptPageWidget()
 	variableLayout->setRowStretch(1, 1);
 	champBank->setRange(1,15);
 	champAddress->setRange(-1, 255); // -1 is an extra value to keep this field empty and search for every addresses
-	for(int i=0 ; i<256 ; ++i) {
+	for (int i=0; i<256; ++i) {
 		comboVarName->addItem(QString());
 	}
 	champValue->setPlaceholderText(tr("Value"));
@@ -178,7 +178,7 @@ QWidget *Search::scriptPageWidget()
 	comboVarName->setCurrentIndex(Config::value("SearchedVarAdress").toInt());
 	champOp->setCurrentIndex(Config::value("SearchedVarOperation").toInt());
 	int searchedVarValue = Config::value("SearchedVarValue", 65536).toInt();
-	if(searchedVarValue != 65536) {
+	if (searchedVarValue != 65536) {
 		champValue->setText(QString::number(searchedVarValue));
 	}
 	updateSearchVarPlaceholder(champOp->currentIndex());
@@ -357,9 +357,9 @@ void Search::setFieldArchive(FieldArchive *fieldArchive)
 	searchAllDialog->setFieldArchive(fieldArchive);
 	updateRunSearch();
 	setActionsEnabled(fieldArchive != nullptr);
-	if(mapJump->count() <= 0) {
+	if (mapJump->count() <= 0) {
 		int mapID=0;
-		foreach(const QString &fieldName, Data::maplist()) {
+		for (const QString &fieldName : Data::maplist()) {
 			mapJump->addItem(QString("%1 - %2").arg(mapID++, 3, 10, QChar('0')).arg(fieldName));
 		}
 		// set config values
@@ -369,7 +369,7 @@ void Search::setFieldArchive(FieldArchive *fieldArchive)
 
 void Search::setOpcode(int opcode, bool show)
 {
-	if(opcode >= 0 && opcode < this->opcode->count()) {
+	if (opcode >= 0 && opcode < this->opcode->count()) {
 		this->opcode->setCurrentIndex(opcode);
 	}
 
@@ -387,7 +387,7 @@ void Search::setText(const QString &text)
 
 void Search::setScriptExec(int groupID, int scriptID)
 {
-	if(groupID >= 0) {
+	if (groupID >= 0) {
 		executionGroup->setCurrentIndex(groupID);
 		executionScript->setValue(scriptID);
 	}
@@ -396,11 +396,11 @@ void Search::setScriptExec(int groupID, int scriptID)
 void Search::updateRunSearch()
 {
 	executionGroup->clear();
-	if(fieldArchive) {
+	if (fieldArchive) {
 		Field *f = fieldArchive->field(mainWindow()->fieldList()->currentMapId());
-		if(f) {
+		if (f) {
 			int i=0;
-			foreach(const GrpScript *grp, f->scriptsAndTexts()->grpScripts())
+			for (const GrpScript *grp : f->scriptsAndTexts()->grpScripts())
 				executionGroup->addItem(QString("%1 - %2").arg(i++).arg(grp->name()));
 		}
 	}
@@ -408,7 +408,7 @@ void Search::updateRunSearch()
 
 void Search::updateComboVarName()
 {
-	for(int i=0 ; i<256 ; ++i) {
+	for (int i=0; i<256; ++i) {
 		comboVarName->setItemText(i, QString("%1 - %2").arg(i, 3, 10, QChar('0')).arg(Var::name(champBank->value(), i)));
 	}
 }
@@ -435,17 +435,17 @@ void Search::updateOpcode2(int opIndex)
 	if (opIndex == Opcode::AKAO || opIndex == Opcode::AKAO2) {
 		opcode2->clear();
 		QList<quint8> unknownItems;
-		for(quint16 i=0 ; i<256; ++i) {
+		for (quint16 i=0; i<256; ++i) {
 			bool ok;
 			QString str = Opcode::akao(i, &ok);
-			if(ok) {
+			if (ok) {
 				opcode2->addItem(QString("%1 - %2").arg(i, 2, 16, QChar('0')).toUpper()
 				                     .arg(str.remove(QRegExp("\\[.*$"))), i);
 			} else {
 				unknownItems.append(i);
 			}
 		}
-		foreach (quint8 i, unknownItems) {
+		for (quint8 i : unknownItems) {
 			opcode2->addItem(QString("%1").arg(i, 2, 16, QChar('0')).toUpper(), i);
 		}
 		opcode2->show();
@@ -461,21 +461,21 @@ void Search::cancelSearching()
 
 FieldArchive::SearchScope Search::searchScope() const
 {
-	if(tabWidget->currentIndex() == 0) {
-		if(currentFieldCheckBox->isChecked() || liste->currentIndex() == 3) { // Search exec
+	if (tabWidget->currentIndex() == 0) {
+		if (currentFieldCheckBox->isChecked() || liste->currentIndex() == 3) { // Search exec
 			return FieldArchive::FieldScope;
 		}
-		if(currentGrpScriptCheckBox->isChecked()) {
+		if (currentGrpScriptCheckBox->isChecked()) {
 			return FieldArchive::GrpScriptScope;
 		}
-		if(currentScriptCheckBox->isChecked()) {
+		if (currentScriptCheckBox->isChecked()) {
 			return FieldArchive::ScriptScope;
 		}
 	} else {
-		if(currentFieldCheckBox2->isChecked()) {
+		if (currentFieldCheckBox2->isChecked()) {
 			return FieldArchive::FieldScope;
 		}
-		if(currentTextCheckBox->isChecked()) {
+		if (currentTextCheckBox->isChecked()) {
 			return FieldArchive::TextScope;
 		}
 	}
@@ -509,7 +509,7 @@ QString Search::firstMessage() const
 
 void Search::findNext()
 {
-	if(!fieldArchive) {
+	if (!fieldArchive) {
 		return;
 	}
 
@@ -530,7 +530,7 @@ void Search::findNext()
 
 	atTheBeginning = false;
 
-	if(atTheEnd) {
+	if (atTheEnd) {
 		mapID = scope == FieldArchive::FieldScope ? mainWindow()->fieldList()->currentMapId() : -1;
 		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->scriptWidget()->currentGrpScriptId() : -1;
 		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->scriptWidget()->currentScriptId() : -1;
@@ -551,7 +551,7 @@ void Search::findNext()
 
 	bool f = false;
 
-	if(tabWidget->currentIndex() == 0) { // scripts page
+	if (tabWidget->currentIndex() == 0) { // scripts page
 		if (findNextScript(sorting, scope,
 		                   mapID, grpScriptID, scriptID, opcodeID)) {
 			emit found(mapID, grpScriptID, scriptID, opcodeID);
@@ -624,7 +624,7 @@ bool Search::findNextText(FieldArchive::Sorting sorting, FieldArchive::SearchSco
 
 void Search::findPrev()
 {
-	if(!fieldArchive) {
+	if (!fieldArchive) {
 		return;
 	}
 
@@ -645,7 +645,7 @@ void Search::findPrev()
 
 	atTheEnd = false;
 
-	if(atTheBeginning) {
+	if (atTheBeginning) {
 		mapID = scope == FieldArchive::FieldScope ? mainWindow()->fieldList()->currentMapId() : 2147483647;
 		grpScriptID = scope == FieldArchive::GrpScriptScope ? mainWindow()->scriptWidget()->currentGrpScriptId() : 2147483647;
 		scriptID = scope == FieldArchive::ScriptScope ? mainWindow()->scriptWidget()->currentScriptId() : 2147483647;
@@ -662,22 +662,22 @@ void Search::findPrev()
 		from = mainWindow()->textWidget() ? qMin(mainWindow()->textWidget()->currentTextPosition(),
 		                                         mainWindow()->textWidget()->currentAnchorPosition())
 		                                  : -1;
-		if(from <= 0) {
+		if (from <= 0) {
 			textID--;
 		}
 	}
 
 	bool f = false;
 
-	if(tabWidget->currentIndex() == 0) { // scripts page
-		if(findPrevScript(sorting, scope, mapID, grpScriptID,
+	if (tabWidget->currentIndex() == 0) { // scripts page
+		if (findPrevScript(sorting, scope, mapID, grpScriptID,
 		                   scriptID, opcodeID)) {
 			emit found(mapID, grpScriptID, scriptID, opcodeID);
 			f = true;
 		}
 	} else { // texts page
 		int index, size;
-		if(findPrevText(sorting, scope, mapID, textID,
+		if (findPrevText(sorting, scope, mapID, textID,
 		                 from, index, size)) {
 			emit foundText(mapID, textID, index, size);
 			f = true;
@@ -750,17 +750,17 @@ void Search::findAll()
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
 	FieldArchive::SearchScope scope = searchScope();
 
-	if(scope == FieldArchive::FieldScope) {
+	if (scope == FieldArchive::FieldScope) {
 		mapID = mainWindow()->fieldList()->currentMapId();
 	}
 
-	if(tabWidget->currentIndex() == 0) { // scripts page
+	if (tabWidget->currentIndex() == 0) { // scripts page
 		int grpScriptID = -1, scriptID = -1, opcodeID = -1;
 
-		if(scope == FieldArchive::GrpScriptScope) {
+		if (scope == FieldArchive::GrpScriptScope) {
 			grpScriptID = mainWindow()->scriptWidget()->currentGrpScriptId();
 		}
-		if(scope == FieldArchive::ScriptScope) {
+		if (scope == FieldArchive::ScriptScope) {
 			scriptID = mainWindow()->scriptWidget()->currentScriptId();
 		}
 
@@ -777,7 +777,7 @@ void Search::findAll()
 	} else { // texts page
 		int textID = -1, from = -1;
 
-		if(scope == FieldArchive::TextScope && mainWindow()->textWidget()) {
+		if (scope == FieldArchive::TextScope && mainWindow()->textWidget()) {
 			textID = mainWindow()->textWidget()->currentTextId();
 		}
 
@@ -808,7 +808,7 @@ QRegExp Search::buildRegExp(const QString &lineEditText, bool caseSensitive, boo
 void Search::setSearchValues()
 {
 	bool ok;
-	if(tabWidget->currentIndex() == 0) { // scripts page
+	if (tabWidget->currentIndex() == 0) { // scripts page
 		switch(liste->currentIndex())
 		{
 		case 0:
@@ -817,14 +817,14 @@ void Search::setSearchValues()
 			text = buildRegExp(lineEditText, caseSens->isChecked(), useRegexp->isChecked());
 			QStringList recentSearch = Config::value("recentSearch").toStringList();
 			int index;
-			if((index = recentSearch.indexOf(lineEditText)) != -1) {
+			if ((index = recentSearch.indexOf(lineEditText)) != -1) {
 				recentSearch.removeAt(index);
 			}
 			recentSearch.prepend(lineEditText);
 			champ->clear();
 			champ->addItems(recentSearch);
 			champ->setCurrentIndex(0);
-			if(recentSearch.size() > 20) {
+			if (recentSearch.size() > 20) {
 				recentSearch.removeLast();
 			}
 			Config::setValue("recentSearch", recentSearch);
@@ -837,7 +837,7 @@ void Search::setSearchValues()
 			address = champAddress->value();
 			op = Opcode::Operation(champOp->currentIndex());
 			value = champValue->text().toInt(&ok);
-			if(!ok)	value = 0x10000;
+			if (!ok)	value = 0x10000;
 			Config::setValue("SearchedVarBank", bank);
 			Config::setValue("SearchedVarAdress", qint16(address));
 			Config::setValue("SearchedVarOperation", champOp->currentIndex());
@@ -867,14 +867,14 @@ void Search::setSearchValues()
 		text = buildRegExp(lineEditText, caseSens2->isChecked(), useRegexp2->isChecked());
 		QStringList recentSearch = Config::value("recentSearch").toStringList();
 		int index;
-		if((index = recentSearch.indexOf(lineEditText)) != -1) {
+		if ((index = recentSearch.indexOf(lineEditText)) != -1) {
 			recentSearch.removeAt(index);
 		}
 		recentSearch.prepend(lineEditText);
 		champ2->clear();
 		champ2->addItems(recentSearch);
 		champ2->setCurrentIndex(0);
-		if(recentSearch.size() > 20) {
+		if (recentSearch.size() > 20) {
 			recentSearch.removeLast();
 		}
 		Config::setValue("recentSearch", recentSearch);
@@ -886,13 +886,13 @@ void Search::setSearchValues()
 
 void Search::replaceCurrent()
 {
-	if(!fieldArchive || !mainWindow()->textWidget()) {
+	if (!fieldArchive || !mainWindow()->textWidget()) {
 		return;
 	}
 
 	setSearchValues();
 
-	if(fieldArchive->replaceText(text, replace2->lineEdit()->text(),
+	if (fieldArchive->replaceText(text, replace2->lineEdit()->text(),
 								 mainWindow()->fieldList()->currentMapId(),
 								 mainWindow()->textWidget()->currentTextId(),
 								 qMin(mainWindow()->textWidget()->currentTextPosition(),
@@ -905,7 +905,7 @@ void Search::replaceCurrent()
 
 void Search::replaceAll()
 {
-	if(!fieldArchive) {
+	if (!fieldArchive) {
 		return;
 	}
 
@@ -917,17 +917,17 @@ void Search::replaceAll()
 	QString after = replace2->lineEdit()->text();
 	int mapID = 0, textID = 0, from = 0, size;
 
-	if(scope == FieldArchive::FieldScope) {
+	if (scope == FieldArchive::FieldScope) {
 		mapID = mainWindow()->fieldList()->currentMapId();
-	} else if(scope == FieldArchive::TextScope) {
-		if(mainWindow()->textWidget()) {
+	} else if (scope == FieldArchive::TextScope) {
+		if (mainWindow()->textWidget()) {
 			textID = mainWindow()->textWidget()->currentTextId();
 		}
 	}
 
 	bool modified = false;
-	while(fieldArchive->searchText(text, mapID, textID, from, size, sorting, scope)) {
-		if(fieldArchive->replaceText(text, after, mapID, textID, from)) {
+	while (fieldArchive->searchText(text, mapID, textID, from, size, sorting, scope)) {
+		if (fieldArchive->replaceText(text, after, mapID, textID, from)) {
 			fieldArchive->field(mapID)->setModified(true);
 			modified = true;
 		}
@@ -936,10 +936,10 @@ void Search::replaceAll()
 
 	mainWindow()->setEnabled(true);
 
-	if(modified) {
+	if (modified) {
 
 		// Update view
-		if(mainWindow()->textWidget()) {
+		if (mainWindow()->textWidget()) {
 			mainWindow()->textWidget()->updateText();
 		}
 		mainWindow()->setModified();

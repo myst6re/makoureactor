@@ -230,7 +230,7 @@ public:
 	static inline QByteArray int2Header(quint32 id) {
 		quint8 h1, h2, h3;
 
-		if(id < 4350) {
+		if (id < 4350) {
 			h1 = 0;
 			h2 = dec2Hex(id/75 + 2);
 			h3 = dec2Hex(id - 75*(hex2Dec(h2) - 2));

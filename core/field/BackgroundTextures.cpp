@@ -45,7 +45,7 @@ QVector<uint> BackgroundTextures::tile(const Tile &tile) const
 	}
 	lastByte = qMin(origin + tile.size * texWidth, maxByte);
 
-	for(quint32 i=origin ; i<lastByte ; ++i) {
+	for (quint32 i=origin; i<lastByte; ++i) {
 		if(depth == 0) {
 			quint8 index = data().at(i);
 			indexOrRgbList.append(index & 0xF);
@@ -132,7 +132,7 @@ QList<uint> BackgroundTexturesPC::tex(quint8 texID) const
 	BackgroundTexturesPCInfos infos = texInfos(texID);
 	int size = infos.depth == 0 ? 32768 : infos.depth * 65536;
 
-	for(int i=0 ; i<size ; ++i) {
+	for (int i=0; i<size; ++i) {
 		if(infos.depth == 0) {
 			quint8 index = data().at(infos.pos + i);
 			indexOrRgbList.append(index & 0xF);
@@ -158,7 +158,7 @@ void BackgroundTexturesPC::setTex(quint8 texID, const QList<uint> &indexOrRgbLis
 	BackgroundTexturesPCInfos infos = _infos;
 	QByteArray texData;
 
-	foreach(uint indexOrRgb, indexOrRgbList) {
+	for (uint indexOrRgb : indexOrRgbList) {
 		if(infos.depth == 0 || infos.depth == 1) {
 			texData.append(char(indexOrRgb));
 		} else if(infos.depth == 2) {
@@ -175,7 +175,7 @@ void BackgroundTexturesPC::setTex(quint8 texID, const QList<uint> &indexOrRgbLis
 		setData(_data.replace(oldInfos.pos, oldDataSize, texData));
 		int diff = texData.size() - oldDataSize;
 		QHashIterator<quint8, BackgroundTexturesPCInfos> it(_texInfos);
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			it.next();
 
 			if(it.value().pos > oldInfos.pos) {
@@ -242,7 +242,7 @@ QImage BackgroundTexturesPC::toImage(quint8 texID) const
 	img.fill(Qt::black);
 	QRgb *bits = (QRgb *)img.bits();
 
-	foreach(uint indexOrRgb, indexOrRgbList) {
+	for (uint indexOrRgb : indexOrRgbList) {
 		if(infos.depth != 2) {
 			*bits = qRgb(indexOrRgb, indexOrRgb, indexOrRgb);
 		} else {
@@ -266,7 +266,7 @@ QImage BackgroundTexturesPC::toImage(quint8 texID, const BackgroundTiles &tiles,
 	img.fill(Qt::black);
 	QRgb *bits = (QRgb *)img.bits();
 
-	foreach(const Tile &tile, tiles) {
+	for (const Tile &tile : tiles) {
 		if(tile.textureID == texID) {
 			QVector<uint> indexOrRgbList = this->tile(tile);
 			Palette *palette = 0;
@@ -277,7 +277,7 @@ QImage BackgroundTexturesPC::toImage(quint8 texID, const BackgroundTiles &tiles,
 				palette = palettes.at(tile.paletteID);
 			}
 
-			foreach(uint indexOrRgb, indexOrRgbList) {
+			for (uint indexOrRgb : indexOrRgbList) {
 //				if(tile.depth == 0) {
 //					bits[pos + y * 256 + x] = qRgb(0, 255, 0);
 //				} else if(tile.depth == 1) {
@@ -353,8 +353,8 @@ QList<uint> BackgroundTexturesPS::tex(quint8 x, quint8 y, quint8 depth) const
 	int curPos;
 	quint16 pageTexW = pageTexWidth(y);
 
-	for(int texY=0 ; texY<256 ; ++texY) {
-		for(int texX=0 ; texX<256 ; ++texX) {
+	for (int texY=0; texY<256; ++texY) {
+		for (int texX=0; texX<256; ++texX) {
 			curPos = pos + texY * pageTexW + (depth == 0 ? texX/2 : texX * depth);
 
 			if(depth == 0) {
@@ -419,7 +419,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 {
 	QMap<quint16, QList<BackgroundConversionTexture> > groupedTextures;
 
-	foreach(const Tile &tile, psTiles.sortedTiles()) {
+	for (const Tile &tile : psTiles.sortedTiles()) {
 
 		if((tile.textureID2 == 0 && _headerImg.w <= 0)
 			 || (tile.textureID2 == 1 && _headerEffect.w <= 0)) {
@@ -454,7 +454,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 
 				// Detection of transparency PC flag: true if one of used indexes is transparent
 				const QList<bool> &areZero = palette->areZero();
-				foreach(uint index, tileData) {
+				for (uint index : tileData) {
 					if(areZero.at(index)) {
 						palette->setTransparency(true);
 						break;
@@ -477,7 +477,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 	BackgroundTiles pcTiles2;
 	BackgroundTexturesPC ret;
 
-	while(it.hasNext()) {
+	while (it.hasNext()) {
 		it.next();
 		QList<BackgroundConversionTexture> &texture = it.value();
 		BackgroundTexturesPCInfos info;
@@ -492,7 +492,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 			/* On PC version, only the first palette color can be transparent
 			 * So we need to change all indexes to a transparent color to 0
 			 * And relocate when index=0 */
-			for(int texConvId=0 ; texConvId < texture.size() ; ++texConvId) {
+			for (int texConvId=0; texConvId < texture.size(); ++texConvId) {
 				BackgroundConversionTexture &tileConversion = texture[texConvId];
 				if (tileConversion.tile.depth >= 2) {
 					continue; // No palette here
@@ -506,7 +506,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 					int indexOfFirstZero = areZero.indexOf(true, 1);
 					if(firstIsZero || indexOfFirstZero > -1) {
 						int i = 0;
-						foreach(uint index, tileConversion.data) {
+						for (uint index : tileConversion.data) {
 							if(index > 0 && areZero.at(index)) {
 								// When the index refer to a transparent color, change this index to 0
 
@@ -535,7 +535,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		QSet<quint8> usedTextures;
 		usedTextures.reserve(BACKGROUND_TEXTURE_PC_MAX_COUNT);
 
-		for(int i=0 ; i<textureCount ; ++i) {
+		for (int i=0; i<textureCount; ++i) {
 
 			if(representativeTile.depth == 2) {
 				texID = curTexID5++;
@@ -552,7 +552,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 				texID = curTexID++;
 			}
 			if(usedTextures.contains(texID)) {
-				for(int j=0 ; j<BACKGROUND_TEXTURE_PC_MAX_COUNT; ++j) {
+				for (int j=0; j<BACKGROUND_TEXTURE_PC_MAX_COUNT; ++j) {
 					int newTexID = (texID + j) % BACKGROUND_TEXTURE_PC_MAX_COUNT;
 					if(!usedTextures.contains(newTexID)) {
 						texID = newTexID;
@@ -568,10 +568,10 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 
 			QList<uint> flatten;
 
-			for(quint8 tileY=0 ; tileY<tileCount ; ++tileY) {
-				for(quint8 y=0 ; y<representativeTile.size ; ++y) {
-					for(quint8 tileX=0 ; tileX<tileCount ; ++tileX) {
-						for(quint8 x=0 ; x<representativeTile.size ; ++x) {
+			for (quint8 tileY=0; tileY<tileCount; ++tileY) {
+				for (quint8 y=0; y<representativeTile.size; ++y) {
+					for (quint8 tileX=0; tileX<tileCount; ++tileX) {
+						for (quint8 x=0; x<representativeTile.size; ++x) {
 							flatten.append(texture.value(i * tilesPerTexture +
 														 tileY * tileCount + tileX)
 										   .data.value(y * representativeTile.size + x));

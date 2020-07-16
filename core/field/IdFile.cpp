@@ -92,12 +92,12 @@ bool IdFile::open(const QByteArray &data)
 	quint32 nbSector;
 	int sizeId = data.size();
 
-	if(sizeof(Triangle) != 24 || sizeof(Access) != 6) {
+	if (sizeof(Triangle) != 24 || sizeof(Access) != 6) {
 		qWarning() << "Error id struct size" << sizeof(Triangle) << sizeof(Access);
 		Q_ASSERT(false);
 	}
 
-	if(sizeId < 4) {
+	if (sizeId < 4) {
 		qWarning() << "size id error" << sizeId;
 		return false;
 	}
@@ -107,7 +107,7 @@ bool IdFile::open(const QByteArray &data)
 	quint32 accessStart = 4 + nbSector*24, i;
 
 	// Padding possible
-	if((quint32)sizeId != accessStart + nbSector*6
+	if ((quint32)sizeId != accessStart + nbSector*6
 			&& (quint32)sizeId != accessStart + nbSector*6 + 2) {
 		qWarning() << "size id error" << sizeId << (accessStart + nbSector*6);
 		return false;
@@ -117,7 +117,7 @@ bool IdFile::open(const QByteArray &data)
 	Access acc;
 	_triangles.clear();
 	_access.clear();
-	for(i=0 ; i<nbSector ; ++i) {
+	for (i=0; i<nbSector; ++i) {
 		memcpy(&triangle, constData + 4 + i*24, 24);
 		_triangles.append(triangle);
 		memcpy(&acc, constData + accessStart + i*6, 6);
@@ -136,14 +136,14 @@ QByteArray IdFile::save() const
 
 	id.append((char *)&count, 4);
 
-	foreach(Triangle triangle, _triangles) {
+	for (Triangle triangle : _triangles) {
 		triangle.vertices[0].res = triangle.vertices[0].z;
 		triangle.vertices[1].res = triangle.vertices[0].z;
 		triangle.vertices[2].res = triangle.vertices[0].z;
 		id.append((char *)&triangle.vertices, sizeof(Triangle));
 	}
 
-	foreach(const Access &access, _access) {
+	for (const Access &access : _access) {
 		id.append((char *)&access, sizeof(Access));
 	}
 

@@ -38,7 +38,7 @@ bool FieldModelLoaderPS::open(const QByteArray &data)
 {
 	const char *constData = data.constData();
 
-	if(data.size() < 4) {
+	if (data.size() < 4) {
 		return false;
 	}
 
@@ -46,12 +46,12 @@ bool FieldModelLoaderPS::open(const QByteArray &data)
 	memcpy(&size, constData, 2);
 	memcpy(&modelCount, constData + 2, 2);
 
-	if(size != data.size() || (size-4) / 8 != modelCount || (size-4) % 8 != 0) {
+	if (size != data.size() || (size-4) / 8 != modelCount || (size-4) % 8 != 0) {
 		qWarning() << "invalid model loader size" << size << modelCount << data.size();
 		return false;
 	}
 
-	if(sizeof(FieldModelLoaderStruct) != 8) {
+	if (sizeof(FieldModelLoaderStruct) != 8) {
 		qWarning() << "invalid model loader struct size" << sizeof(FieldModelLoaderStruct);
 		Q_ASSERT(false);
 	}
@@ -60,7 +60,7 @@ bool FieldModelLoaderPS::open(const QByteArray &data)
 
 	FieldModelLoaderStruct modelLoader;
 
-	for(quint32 i=0 ; i<modelCount ; ++i) {
+	for (quint32 i=0; i<modelCount; ++i) {
 		memcpy(&modelLoader, constData + 4 + i*sizeof(FieldModelLoaderStruct), sizeof(FieldModelLoaderStruct));
 
 		_modelLoaders.append(modelLoader);
@@ -87,7 +87,7 @@ QByteArray FieldModelLoaderPS::save() const
 	ret.append((char *)&size, 2);
 	ret.append((char *)&modelCount, 2);
 
-	foreach(const FieldModelLoaderStruct &modelLoader, _modelLoaders) {
+	for (const FieldModelLoaderStruct &modelLoader : _modelLoaders) {
 		ret.append((char *)&modelLoader, sizeof(FieldModelLoaderStruct));
 	}
 
@@ -101,7 +101,7 @@ int FieldModelLoaderPS::modelCount() const
 
 int FieldModelLoaderPS::animCount(int modelID) const
 {
-	if(modelID >= 0 && modelID < _modelLoaders.size())
+	if (modelID >= 0 && modelID < _modelLoaders.size())
 		return _modelLoaders.at(modelID).animationCount;
 	return 0;
 }
@@ -109,7 +109,7 @@ int FieldModelLoaderPS::animCount(int modelID) const
 quint16 FieldModelLoaderPS::unknown(int modelID) const
 {
 	// TODO: returns a quint16 word? (unknown2 is quint8)
-	if(modelID >= 0 && modelID < _modelLoaders.size())
+	if (modelID >= 0 && modelID < _modelLoaders.size())
 		return _modelLoaders.at(modelID).unknown2/* | (_modelLoaders.at(modelID).unknown3 << 8)*/;
 	return 0;
 }
@@ -117,7 +117,7 @@ quint16 FieldModelLoaderPS::unknown(int modelID) const
 void FieldModelLoaderPS::setUnknown(int modelID, quint16 unknown)
 {
 	// TODO: sets a quint16 word?
-	if(modelID >= 0 && modelID < _modelLoaders.size()
+	if (modelID >= 0 && modelID < _modelLoaders.size()
 			&& _modelLoaders.at(modelID).unknown2 != unknown) {
 		_modelLoaders[modelID].unknown2 = unknown;
 		setModified(true);
@@ -131,7 +131,7 @@ const FieldModelLoaderStruct &FieldModelLoaderPS::model(int modelID) const
 
 void FieldModelLoaderPS::setModel(int modelID, const FieldModelLoaderStruct &modelLoader)
 {
-	if(modelID >= 0 && modelID < _modelLoaders.size()
+	if (modelID >= 0 && modelID < _modelLoaders.size()
 			&& memcmp(&modelLoader, &_modelLoaders.at(modelID), sizeof(FieldModelLoaderStruct)) != 0) {
 		_modelLoaders.replace(modelID, modelLoader);
 		setModified(true);
@@ -145,7 +145,7 @@ FieldModelLoaderPC FieldModelLoaderPS::toPC(BsxFile *bsx, bool *ok) const
 	int i = 0;
 	*ok = true;
 
-	foreach (const FieldModelLoaderStruct &psLoader, _modelLoaders) {
+	for (const FieldModelLoaderStruct &psLoader : _modelLoaders) {
 		FieldModelFilePS modelFile;
 
 		if (!bsx->seek(psLoader.modelID)) {

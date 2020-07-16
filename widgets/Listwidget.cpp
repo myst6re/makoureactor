@@ -37,7 +37,7 @@ ListWidget::ListWidget(QWidget *parent) :
 
 void ListWidget::addSeparator(bool invisible)
 {
-	if(!invisible) {
+	if (!invisible) {
 		_toolBar->addSeparator();
 	}
 	QAction *action = new QAction(_listWidget);
@@ -83,7 +83,7 @@ QAction *ListWidget::addAction(ActionType type, const QString &text,
 		break;
 	}
 
-	if(invisible) {
+	if (invisible) {
 		action = new QAction(icon, text, this);
 		connect(action, SIGNAL(triggered()), receiver, member);
 	} else {

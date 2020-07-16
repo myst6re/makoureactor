@@ -29,7 +29,7 @@ ScriptEditorView::~ScriptEditorView()
 
 void ScriptEditorView::showEvent(QShowEvent *e)
 {
-	if(!_builded) {
+	if (!_builded) {
 		build();
 		_builded = true;
 	}
@@ -43,7 +43,7 @@ void ScriptEditorView::clear()
 
 void ScriptEditorView::setOpcode(Opcode *opcode)
 {
-	if(!_builded) {
+	if (!_builded) {
 		build();
 		_builded = true;
 	}

@@ -26,7 +26,7 @@ void ApercuBGLabel::paintEvent(QPaintEvent *e)
 {
 	QLabel::paintEvent(e);
 
-	if(isEnabled() && _showSave) {
+	if (isEnabled() && _showSave) {
 		QPainter painter(this);
 		painter.drawPixmap(0, 0, QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton).pixmap(32));
 		painter.end();
@@ -53,7 +53,7 @@ void ApercuBGLabel::mousePressEvent(QMouseEvent *e)
 {
 	QLabel::mousePressEvent(e);
 
-	if(e->button() == Qt::LeftButton &&
+	if (e->button() == Qt::LeftButton &&
 	        e->x() >= 0 && e->x() < 32 &&
 	        e->y() >= 0 && e->y() < 32) {
 		emit saveRequested();

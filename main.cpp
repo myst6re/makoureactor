@@ -32,10 +32,10 @@ int main(int argc, char *argv[])
 	QString lang = QLocale::system().name().toLower();
 	lang = Config::value("lang", lang.left(lang.indexOf("_"))).toString();
 	QTranslator translator1;
-	if(translator1.load("qt_" % lang, app.applicationDirPath()) || translator1.load("qt_" % lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+	if (translator1.load("qt_" % lang, app.applicationDirPath()) || translator1.load("qt_" % lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
 		app.installTranslator(&translator1);
 	QTranslator translator2;
-	if(translator2.load("Makou_Reactor_" % lang, Config::programResourceDir())) {
+	if (translator2.load("Makou_Reactor_" % lang, Config::programResourceDir())) {
 		app.installTranslator(&translator2);
 		Config::setValue("lang", lang);
 	} else {
@@ -80,22 +80,22 @@ int main(int argc, char *argv[])
 		qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
 	}
 
-	if(!Var::load()) {
+	if (!Var::load()) {
 		QMessageBox::warning(0, QObject::tr("Error"), QObject::tr("The file 'var.cfg' could not be loaded.\nMake sure it is valid or delete it."));
 	}
 
-	if(!Data::load()) {
+	if (!Data::load()) {
 		qWarning() << "Error loading data!";
 	}
 
-	/* if(!FF7Font::listFonts()) {
+	/* if (!FF7Font::listFonts()) {
 		QMessageBox::critical(nullptr, QObject::tr("Data loading"), QObject::tr("Fonts couldn't be loaded!"));
 		return -1;
 	} */
 
 	Window *window = new Window;
 	window->show();
-	if(argc > 1) {
+	if (argc > 1) {
 		window->openFile(argv[1]);
 	}
 
