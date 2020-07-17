@@ -55,13 +55,22 @@ private slots:
 	void nextTextPreviewWin();
 	void changeTextPreviewWin();
 	void changePosition(const QPoint &point);
+	void changeSize(const QSize &size);
 	void changeXCoord(int);
 	void changeYCoord(int);
 	void changeWSize(int);
 	void changeHSize(int);
+	void resizeWindow();
+	inline void alignHorizontally() {
+		align(Qt::AlignHCenter);
+	}
+	inline void alignVertically() {
+		align(Qt::AlignVCenter);
+	}
 private:
 	void updateWindowCoord();
 	QList<FF7Window> getWindows(quint8 textID) const;
+	void align(Qt::Alignment alignment);
 
 	QCheckBox *dispUnusedText;
 	QListWidget *liste1;
@@ -74,6 +83,7 @@ private:
 	QLabel *textPage, *textWin;
 	QSpinBox *xCoord, *yCoord;
 	QSpinBox *wSize, *hSize;
+	QPushButton *hAlign, *vAlign, *autoSize;
 
 	Section1File *scriptsAndTexts;
 	QSet<quint8> usedTexts;

@@ -198,6 +198,17 @@ TextManager::TextManager(QWidget *parent) :
 	wSize->setRange(0, 65535);
 	hSize->setRange(0, 65535);
 
+	hAlign = new QPushButton(tr("Align horizontally"), groupTextPreview);
+	vAlign = new QPushButton(tr("Align vertically"), groupTextPreview);
+	autoSize = new QPushButton(tr("Autosize"), groupTextPreview);
+
+	QVBoxLayout *buttonLayout = new QVBoxLayout;
+	buttonLayout->addStretch(1);
+	buttonLayout->addWidget(hAlign);
+	buttonLayout->addWidget(vAlign);
+	buttonLayout->addWidget(autoSize);
+	buttonLayout->setContentsMargins(QMargins());
+
 	QGridLayout *layoutTextPreview = new QGridLayout(groupTextPreview);
 	layoutTextPreview->addWidget(textPreview, 0, 0, 8, 1, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(prevPage, 0, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
@@ -214,6 +225,7 @@ TextManager::TextManager(QWidget *parent) :
 	layoutTextPreview->addWidget(prevWin, 5, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
 	layoutTextPreview->addWidget(textWin, 6, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
 	layoutTextPreview->addWidget(nextWin, 7, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
+	layoutTextPreview->addLayout(buttonLayout, 5, 3, 3, 2, Qt::AlignLeft | Qt::AlignBottom);
 	layoutTextPreview->setColumnStretch(2, 1);
 	layoutTextPreview->setRowStretch(2, 1);
 	layoutTextPreview->setRowStretch(5, 1);
@@ -250,6 +262,9 @@ TextManager::TextManager(QWidget *parent) :
 	connect(yCoord, SIGNAL(valueChanged(int)), SLOT(changeYCoord(int)));
 	connect(wSize, SIGNAL(valueChanged(int)), SLOT(changeWSize(int)));
 	connect(hSize, SIGNAL(valueChanged(int)), SLOT(changeHSize(int)));
+	connect(hAlign, SIGNAL(clicked()), SLOT(alignHorizontally()));
+	connect(vAlign, SIGNAL(clicked()), SLOT(alignVertically()));
+	connect(autoSize, SIGNAL(clicked()), SLOT(resizeWindow()));
 }
 
 void TextManager::focusInEvent(QFocusEvent *)
@@ -512,6 +527,9 @@ void TextManager::changeTextPreviewWin()
 	yCoord->setEnabled(nbWin > 0);
 	wSize->setEnabled(nbWin > 0);
 	hSize->setEnabled(nbWin > 0);
+	hAlign->setEnabled(nbWin > 0);
+	vAlign->setEnabled(nbWin > 0);
+	autoSize->setEnabled(nbWin > 0);
 
 	updateWindowCoord();
 }
@@ -533,6 +551,29 @@ void TextManager::changePosition(const QPoint &point)
 	FF7Window ff7Window = textPreview->getWindow();
 	ff7Window.x = point.x();
 	ff7Window.y = point.y();
+	scriptsAndTexts->setWindow(ff7Window);
+	textPreview->setWindow(ff7Window);
+	emit modified();
+	emit opcodeModified(ff7Window.groupID, ff7Window.scriptID, ff7Window.opcodeID);
+}
+
+void TextManager::changeSize(const QSize &size)
+{
+	if (!scriptsAndTexts || textPreview->winCount() <= 0
+	    || liste1->currentItem() == nullptr) {
+		return;
+	}
+
+	wSize->blockSignals(true);
+	wSize->setValue(size.width());
+	wSize->blockSignals(false);
+	hSize->blockSignals(true);
+	hSize->setValue(size.height());
+	hSize->blockSignals(false);
+
+	FF7Window ff7Window = textPreview->getWindow();
+	ff7Window.w = size.width();
+	ff7Window.h = size.height();
 	scriptsAndTexts->setWindow(ff7Window);
 	textPreview->setWindow(ff7Window);
 	emit modified();
@@ -631,4 +672,26 @@ void TextManager::insertTag(QAction *action)
 	}
 	textEdit->insertPlainText(action->data().toString());
 	textEdit->setFocus();
+}
+
+void TextManager::align(Qt::Alignment alignment)
+{
+	if (xCoord->isEnabled()) {
+		QPoint point(xCoord->value(), yCoord->value());
+		if (alignment.testFlag(Qt::AlignHCenter)) {
+			point.setX((textPreview->width() - wSize->value()) / 2);
+		}
+		if (alignment.testFlag(Qt::AlignVCenter)) {
+			point.setY((textPreview->height() - hSize->value()) / 2);
+		}
+		changePosition(point);
+		textPreview->update();
+	}
+}
+
+void TextManager::resizeWindow()
+{
+	textPreview->calcSize();
+	changeSize(textPreview->getCalculatedSize());
+	textPreview->update();
 }
