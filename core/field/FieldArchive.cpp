@@ -1712,6 +1712,28 @@ void FieldArchive::cleanTexts()
 	}
 }
 
+void FieldArchive::autosizeTextWindows()
+{
+	FieldArchiveIterator it(*this);
+	int i = 0;
+
+	observer()->setObserverMaximum(fileList.size());
+
+	while (it.hasNext()) {
+		if (observer()->observerWasCanceled()) {
+			return;
+		}
+		Field *field = it.next();
+		if (field != nullptr && field->scriptsAndTexts()->isOpen()) {
+			field->scriptsAndTexts()->autosizeTextWindows();
+			if (field->scriptsAndTexts()->isModified() && !field->isModified()) {
+				field->setModified(true);
+			}
+		}
+		observer()->setObserverValue(i++);
+	}
+}
+
 bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &directory,
 							   bool overwrite, const QMap<ExportType, QString> &toExport,
                                PsfTags *tags)

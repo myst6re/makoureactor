@@ -210,6 +210,7 @@ public:
 	void removeBattles();
 	void removeTexts();
 	void cleanTexts();
+	void autosizeTextWindows();
 
 	bool exportation(const QList<int> &selectedFields, const QString &directory,
 					 bool overwrite, const QMap<ExportType, QString> &toExport,

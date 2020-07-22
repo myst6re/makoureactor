@@ -60,10 +60,9 @@ void TextPreview::fillNames()
 //	Config::setValue("jp_txt", false);
 
 	for (int i=0; i<12; ++i) {
-		QByteArray nameData = FF7Text(dataNames.at(i), false).data();
-		names.append(nameData);
-		namesWidth[i] = calcFF7TextWidth(nameData);
+		names.append(FF7Text(dataNames.at(i), false).data());
 	}
+	namesWidth = calcFF7TextWidth(FF7Text("WWWWWWWWW", false).data());
 //	Config::setValue("jp_txt", jp);
 }
 
@@ -230,6 +229,10 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text)
 
 QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 {
+	if (names.isEmpty()) {
+		fillNames();
+	}
+
 	const int baseWidth = 8 + Config::value("autoSizeMarginRight", 14).toInt();
 	int line=0, width=baseWidth - 3, height=25, size=ff7Text.size(), maxW=0, maxH=0;
 	pagesPos.clear();
@@ -315,7 +318,7 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[0]);
 				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[1]);
 			} else if (caract>=0xea && caract<=0xf5) {// Character names
-				width += spaced_characters ? spacedCharsW * names.at(caract-0xea).size() : namesWidth[caract-0xea];
+				width += spaced_characters ? spacedCharsW * 9 : namesWidth;
 			} else if (caract>=0xf6 && caract<=0xf9) {// Keys
 				width += 17;
 			} else {
@@ -708,6 +711,10 @@ void TextPreview::letter(int *x, int *y, int charId, QPainter *painter, quint8 t
 	if (*x + leftPadd + charWidth > maxW) {
 		*x = 8;
 		*y += 16;
+
+		if (*y > maxH - 16) {
+			return;
+		}
 	}
 
 	if (multicolor != -1) {
@@ -930,4 +937,4 @@ const char *TextPreview::optimisedDuo[3] =
 
 QList<QByteArray> TextPreview::names;
 
-int TextPreview::namesWidth[12];
+int TextPreview::namesWidth;

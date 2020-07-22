@@ -1592,6 +1592,9 @@ void Window::miscOperations()
 			fieldArchive->cleanTexts();
 		}
 		if (!observerWasCanceled()) {
+			if (operations.testFlag(OperationsManager::AutosizeTextWindows)) {
+				fieldArchive->autosizeTextWindows();
+			}
 			if (operations.testFlag(OperationsManager::RemoveTexts)) {
 				fieldArchive->removeTexts();
 			}

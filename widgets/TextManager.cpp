@@ -377,7 +377,11 @@ void TextManager::showList()
 void TextManager::updateText()
 {
 	selectText(liste1->currentItem());
-	textPreview->calcSize();
+	if (textPreview->winCount() == 0) {
+		textPreview->calcSize();
+	} else {
+		textPreview->update();
+	}
 }
 
 void TextManager::updateFromScripts()

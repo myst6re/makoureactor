@@ -60,6 +60,7 @@ public:
 	void calcSize();
 	static QSize calcSize(const QByteArray &ff7Text);
 	static QSize calcSize(const QByteArray &ff7Text, QList<int> &pagesPos);
+	static QPoint realPos(const FF7Window &ff7Window);
 	QSize getCalculatedSize() const;
 	static QPixmap getIconImage(int iconId);
 	void drawWindow(QPainter *painter, WindowType type=Normal) const;
@@ -72,7 +73,6 @@ signals:
 private:
 	static void fillNames();
 	bool drawTextArea(QPainter *painter);
-	static QPoint realPos(const FF7Window &ff7Window);
 	QList<FF7Window> ff7Windows;
 	QByteArray ff7Text;
 	int _currentPage;
@@ -103,7 +103,7 @@ private:
 	static quint8 charWidth[7][256];
 	static const char *optimisedDuo[3];
 	static QList<QByteArray> names;
-	static int namesWidth[12];
+	static int namesWidth;
 protected:
 	void paintEvent(QPaintEvent *event);
 	void mousePressEvent(QMouseEvent *event);

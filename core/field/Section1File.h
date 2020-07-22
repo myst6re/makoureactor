@@ -106,6 +106,7 @@ public:
 	bool compileScripts(int &groupID, int &scriptID, int &opcodeID, QString &errorStr);
 	void removeTexts();
 	void cleanTexts();
+	void autosizeTextWindows();
 
 	const QList<FF7Text> &texts() const;
 	int textCount() const;

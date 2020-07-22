@@ -23,6 +23,7 @@ OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 	setWindowTitle(tr("Batch processing"));
 
 	addOperation(CleanUnusedTexts, tr("Clean all unused texts"));
+	addOperation(AutosizeTextWindows, tr("Autosize all text windows in the game"));
 	addOperation(RemoveTexts, tr("Disable all texts in the game"));
 	addOperation(RemoveBattles, tr("Disable all battles in the game"));
 	if (isPC) {

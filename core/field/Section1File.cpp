@@ -926,6 +926,33 @@ void Section1File::cleanTexts()
 	}
 }
 
+void Section1File::autosizeTextWindows()
+{
+	for (quint8 textID : listUsedTexts()) {
+		if (textID < 0 || textID >= _texts.size()) {
+			continue;
+		}
+		QList<FF7Window> windows;
+		listWindows(textID, windows);
+		QSize size = TextPreview::calcSize(text(textID).data());
+		for (int i = 0; i < windows.size(); ++i) {
+			bool isModified;
+			FF7Window &win = windows[i];
+			isModified = win.w != size.width() || win.h != size.height();
+			win.w = size.width();
+			win.h = size.height();
+			QPoint pos = TextPreview::realPos(win);
+			isModified = isModified || win.x != pos.x() || win.y != pos.y();
+			win.x = pos.x();
+			win.y = pos.y();
+
+			if (isModified) {
+				setModified(true);
+			}
+		}
+	}
+}
+
 //void Section1File::searchWindows() const
 //{
 //	int groupID=0;
