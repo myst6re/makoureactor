@@ -293,7 +293,7 @@ void TextManager::setField(Field *field, bool reload)
 
 void TextManager::clear()
 {
-	scriptsAndTexts = 0;
+	scriptsAndTexts = nullptr;
 	usedTexts.clear();
 	liste1->clear();
 	textEdit->clear();
@@ -326,7 +326,7 @@ void TextManager::setTextChanged()
 	}
 }
 
-QList<FF7Window> TextManager::getWindows(quint8 textID) const
+QList<FF7Window> TextManager::getWindows(int textID) const
 {
 	QList<FF7Window> windows;
 	scriptsAndTexts->listWindows(textID, windows);
@@ -365,6 +365,7 @@ void TextManager::showList()
 		TextPreview::drawWindow(&p, pix.width(), pix.height(), TextPreview::WithoutFrame);
 		p.end();
 		winIcon = QIcon(pix);
+		noWinIcon = winIcon.pixmap(pix.width(), pix.height(), QIcon::Disabled);
 	}
 
 	for (int i=0; i<nbTexts; ++i) {
@@ -372,7 +373,8 @@ void TextManager::showList()
 			continue;
 		}
 
-		QListWidgetItem *item = new QListWidgetItem(winIcon, tr("Text %1").arg(i));
+		bool hasWin = !getWindows(i).isEmpty();
+		QListWidgetItem *item = new QListWidgetItem(hasWin ? winIcon : noWinIcon, tr("Text %1").arg(i));
 		item->setData(Qt::UserRole, i);
 		liste1->addItem(item);
 

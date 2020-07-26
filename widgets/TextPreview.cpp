@@ -489,16 +489,14 @@ bool TextPreview::drawTextArea(QPainter *painter)
 
 	/* Window Background */
 
-	if (ff7Window.type!=NOWIN) {
+	if (ff7Window.type != NOWIN) {
 		painter->translate(realPos(ff7Window));
 		maxW = ff7Window.w;
 		maxH = ff7Window.h;
-		mode = (WindowType)ff7Window.mode;
+		mode = WindowType(ff7Window.mode);
 	}
 
 	drawWindow(painter, mode);
-
-	return true;
 
 	/* Text */
 

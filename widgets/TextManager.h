@@ -69,7 +69,7 @@ private slots:
 	}
 private:
 	void updateWindowCoord();
-	QList<FF7Window> getWindows(quint8 textID) const;
+	QList<FF7Window> getWindows(int textID) const;
 	void align(Qt::Alignment alignment);
 
 	QCheckBox *dispUnusedText;
