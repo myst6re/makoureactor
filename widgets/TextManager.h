@@ -87,6 +87,7 @@ private:
 
 	Section1File *scriptsAndTexts;
 	QSet<quint8> usedTexts;
+	static QIcon winIcon, noWinIcon;
 protected:
 	virtual void focusInEvent(QFocusEvent *e);
 };

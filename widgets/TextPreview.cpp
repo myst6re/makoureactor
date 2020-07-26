@@ -376,6 +376,11 @@ void TextPreview::animate()
 
 void TextPreview::drawWindow(QPainter *painter, WindowType type) const
 {
+	drawWindow(painter, maxW, maxH, type);
+}
+
+void TextPreview::drawWindow(QPainter *painter, int maxW, int maxH, WindowType type)
+{
 	QRgb windowColorTopLeft = Config::value("windowColorTopLeft", qRgb(0,88,176)).toInt();
 	QRgb windowColorTopRight = Config::value("windowColorTopRight", qRgb(0,0,80)).toInt();
 	QRgb windowColorBottomLeft = Config::value("windowColorBottomLeft", qRgb(0,0,128)).toInt();
@@ -386,7 +391,7 @@ void TextPreview::drawWindow(QPainter *painter, WindowType type) const
 
 void TextPreview::drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTopLeft, QRgb colorTopRight, QRgb colorBottomLeft, QRgb colorBottomRight, WindowType type)
 {
-	if (type != WithoutFrame) {
+	if (type != WithoutFrameAndBg) {
 		if (type == Transparent) {
 			colorTopLeft = qRgba(qRed(colorTopLeft), qGreen(colorTopLeft), qBlue(colorTopLeft), 127);
 			colorTopRight = qRgba(qRed(colorTopRight), qGreen(colorTopRight), qBlue(colorTopRight), 127);
@@ -406,6 +411,12 @@ void TextPreview::drawWindow(QPainter *painter, int maxW, int maxH, QRgb colorTo
 		QPen pen;
 		pen.setStyle(Qt::NoPen);
 		painter->setPen(pen);
+
+		if (type == WithoutFrame) {
+			painter->drawRect(0, 0, maxW, maxH);
+			return;
+		}
+
 		painter->drawRect(3, 3, maxW-6, maxH-6);
 
 		// Vertical
@@ -486,6 +497,8 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	}
 
 	drawWindow(painter, mode);
+
+	return true;
 
 	/* Text */
 

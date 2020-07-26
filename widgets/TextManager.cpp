@@ -21,6 +21,9 @@
 #include "core/Config.h"
 #include "Data.h"
 
+QIcon TextManager::winIcon;
+QIcon TextManager::noWinIcon;
+
 TextManager::TextManager(QWidget *parent) :
 	QDialog(parent, Qt::Tool), scriptsAndTexts(0)
 {
@@ -356,12 +359,20 @@ void TextManager::showList()
 
 	Config::setValue("dispUnusedText", show);
 
+	if (winIcon.isNull()) {
+		QPixmap pix(16, 8);
+		QPainter p(&pix);
+		TextPreview::drawWindow(&p, pix.width(), pix.height(), TextPreview::WithoutFrame);
+		p.end();
+		winIcon = QIcon(pix);
+	}
+
 	for (int i=0; i<nbTexts; ++i) {
 		if (!show && !usedTexts.contains(i)) {
 			continue;
 		}
 
-		QListWidgetItem *item = new QListWidgetItem(tr("Text %1").arg(i));
+		QListWidgetItem *item = new QListWidgetItem(winIcon, tr("Text %1").arg(i));
 		item->setData(Qt::UserRole, i);
 		liste1->addItem(item);
 
