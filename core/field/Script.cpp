@@ -1272,21 +1272,31 @@ void Script::listWindows(int groupID, int scriptID, int textID, QList<FF7Window>
 	int opcodeID = 0;
 	QMap<int, FF7Window> lastWinPerWindowID;
 	for (Opcode *opcode : _opcodes) {
-		if (opcode->isJump() || opcode->id() <= Opcode::RETTO) {
+		if (opcode->isJump() || (opcode->id() <= Opcode::RETTO
+		                         && opcode->id() != Opcode::REQ
+		                         && opcode->id() != Opcode::PREQ)) {
 			lastWinPerWindowID.clear();
 		} else {
 			FF7Window win = FF7Window();
-			win.groupID = groupID;
-			win.scriptID = scriptID;
-			win.opcodeID = opcodeID;
+			win.groupID = quint16(groupID);
+			win.scriptID = quint16(scriptID);
+			win.opcodeID = quint16(opcodeID);
 			if (opcode->getWindow(win)) {
-				win.type = opcode->id();
+				win.type = quint8(opcode->id());
+				if (lastWinPerWindowID.contains(opcode->getWindowID())) {
+					win.mode = lastWinPerWindowID.value(opcode->getWindowID()).mode;
+				}
 				lastWinPerWindowID.insert(opcode->getWindowID(), win);
 			} else if (opcode->getTextID() == textID
 			           && lastWinPerWindowID.contains(opcode->getWindowID())) {
-				windows.append(
-				    lastWinPerWindowID.value(opcode->getWindowID())
-				);
+				win = lastWinPerWindowID.value(opcode->getWindowID());
+				if (win.type != 255) {
+					windows.append(win);
+				}
+			} else if (opcode->id() == Opcode::WMODE) {
+				win.type = 255;
+				win.mode = static_cast<OpcodeWMODE *>(opcode)->mode;
+				lastWinPerWindowID.insert(opcode->getWindowID(), win);
 			}
 		}
 
