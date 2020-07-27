@@ -1291,6 +1291,12 @@ void Script::listWindows(int groupID, int scriptID, int textID, QList<FF7Window>
 			           && lastWinPerWindowID.contains(opcode->getWindowID())) {
 				win = lastWinPerWindowID.value(opcode->getWindowID());
 				if (win.type != 255) {
+					if (opcode->id() == Opcode::ASK) {
+						OpcodeASK *opcodeAsk = static_cast<OpcodeASK *>(opcode);
+						win.ask_first = opcodeAsk->firstLine;
+						win.ask_last = opcodeAsk->lastLine;
+						win.type = Opcode::ASK;
+					}
 					windows.append(win);
 				}
 			} else if (opcode->id() == Opcode::WMODE) {

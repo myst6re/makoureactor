@@ -81,6 +81,7 @@ private:
 	QToolButton *prevPage, *prevWin;
 	QToolButton *nextPage, *nextWin;
 	QLabel *textPage, *textWin;
+	QLabel *xLabel, *yLabel, *wLabel, *hLabel;
 	QSpinBox *xCoord, *yCoord;
 	QSpinBox *wSize, *hSize;
 	QPushButton *hAlign, *vAlign, *autoSize;

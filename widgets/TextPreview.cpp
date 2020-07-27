@@ -593,9 +593,12 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	}
 
 	/* Ask */
-//	if (ff7Window.type==0x48 && ff7Window.ask_last >= ff7Window.ask_first) {
-//		painter->drawPixmap(10, 11+16*ff7Window.ask_first, QPixmap(":/images/cursor.png"));
-//	}
+	if (ff7Window.type == Opcode::ASK && _currentPage == pagesPos.size() - 1) {
+		QPixmap cursor(":/images/cursor.png");
+		for (int i = ff7Window.ask_first; i <= ff7Window.ask_last; ++i) {
+			painter->drawPixmap(10, 6 + 16 * i, cursor);
+		}
+	}
 
 	return useTimer;
 }

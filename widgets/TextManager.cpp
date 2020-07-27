@@ -212,18 +212,23 @@ TextManager::TextManager(QWidget *parent) :
 	buttonLayout->addWidget(autoSize);
 	buttonLayout->setContentsMargins(QMargins());
 
+	xLabel = new QLabel(tr("X"));
+	yLabel = new QLabel(tr("Y"));
+	wLabel = new QLabel(tr("W"));
+	hLabel = new QLabel(tr("H"));
+
 	QGridLayout *layoutTextPreview = new QGridLayout(groupTextPreview);
 	layoutTextPreview->addWidget(textPreview, 0, 0, 8, 1, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(prevPage, 0, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(textPage, 1, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
 	layoutTextPreview->addWidget(nextPage, 2, 1, 1, 2, Qt::AlignLeft | Qt::AlignTop);
-	layoutTextPreview->addWidget(new QLabel(tr("X")), 3, 1, Qt::AlignLeft | Qt::AlignHCenter);
+	layoutTextPreview->addWidget(xLabel, 3, 1, Qt::AlignLeft | Qt::AlignHCenter);
 	layoutTextPreview->addWidget(xCoord, 3, 2, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(new QLabel(tr("Y")), 4, 1, Qt::AlignLeft | Qt::AlignHCenter);
+	layoutTextPreview->addWidget(yLabel, 4, 1, Qt::AlignLeft | Qt::AlignHCenter);
 	layoutTextPreview->addWidget(yCoord, 4, 2, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(new QLabel(tr("W")), 3, 3, Qt::AlignLeft | Qt::AlignHCenter);
+	layoutTextPreview->addWidget(wLabel, 3, 3, Qt::AlignLeft | Qt::AlignHCenter);
 	layoutTextPreview->addWidget(wSize, 3, 4, Qt::AlignLeft | Qt::AlignHCenter);
-	layoutTextPreview->addWidget(new QLabel(tr("H")), 4, 3, Qt::AlignLeft | Qt::AlignHCenter);
+	layoutTextPreview->addWidget(hLabel, 4, 3, Qt::AlignLeft | Qt::AlignHCenter);
 	layoutTextPreview->addWidget(hSize, 4, 4, Qt::AlignLeft | Qt::AlignHCenter);
 	layoutTextPreview->addWidget(prevWin, 5, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
 	layoutTextPreview->addWidget(textWin, 6, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
@@ -541,9 +546,13 @@ void TextManager::changeTextPreviewWin()
 	nextWin->setEnabled(currentWin < nbWin);
 	textWin->setEnabled(nbWin > 0);
 	xCoord->setEnabled(nbWin > 0);
+	xLabel->setEnabled(nbWin > 0);
 	yCoord->setEnabled(nbWin > 0);
+	yLabel->setEnabled(nbWin > 0);
 	wSize->setEnabled(nbWin > 0);
+	wLabel->setEnabled(nbWin > 0);
 	hSize->setEnabled(nbWin > 0);
+	hLabel->setEnabled(nbWin > 0);
 	hAlign->setEnabled(nbWin > 0);
 	vAlign->setEnabled(nbWin > 0);
 	autoSize->setEnabled(nbWin > 0);
@@ -611,6 +620,7 @@ void TextManager::changeXCoord(int x)
 
 		scriptsAndTexts->setWindow(ff7Window);
 		textPreview->setWindow(ff7Window);
+		textPreview->update();
 		emit modified();
 		emit opcodeModified(ff7Window.groupID, ff7Window.scriptID, ff7Window.opcodeID);
 	}
@@ -630,6 +640,7 @@ void TextManager::changeYCoord(int y)
 
 		scriptsAndTexts->setWindow(ff7Window);
 		textPreview->setWindow(ff7Window);
+		textPreview->update();
 		emit modified();
 		emit opcodeModified(ff7Window.groupID, ff7Window.scriptID, ff7Window.opcodeID);
 	}
@@ -649,6 +660,7 @@ void TextManager::changeWSize(int w)
 
 		scriptsAndTexts->setWindow(ff7Window);
 		textPreview->setWindow(ff7Window);
+		textPreview->update();
 		emit modified();
 		emit opcodeModified(ff7Window.groupID, ff7Window.scriptID, ff7Window.opcodeID);
 	}
@@ -668,6 +680,7 @@ void TextManager::changeHSize(int h)
 
 		scriptsAndTexts->setWindow(ff7Window);
 		textPreview->setWindow(ff7Window);
+		textPreview->update();
 		emit modified();
 		emit opcodeModified(ff7Window.groupID, ff7Window.scriptID, ff7Window.opcodeID);
 	}

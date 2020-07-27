@@ -46,5 +46,6 @@
         <file>images/icon-char-8.png</file>
         <file>vars.cfg</file>
         <file>images/text-editor.png</file>
+        <file>images/cursor.png</file>
     </qresource>
 </RCC>
