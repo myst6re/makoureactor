@@ -92,8 +92,11 @@ QByteArray GZIP::decompressNoHeader(const char *data, int size)
 	forever {
 		Bytef *buffer = (Bytef *)ret.data();
 		uLongf destLen = ret.size();
+#if (ZLIB_VERNUM < 0x1290)
 		err = z_uncompress(buffer, &destLen, (const Bytef *)data, size);
-
+#else
+		err = uncompress(buffer, &destLen, (const Bytef *)data, size);
+#endif
 		if (Z_MEM_ERROR != err && Z_BUF_ERROR != err) {
 			break;
 		}
@@ -116,19 +119,29 @@ QByteArray GZIP::compressNoHeader(const char *data, int size, int level)
 	ret.resize(size * 2);
 	Bytef *buffer = (Bytef *)ret.data();
 	uLongf destLen = ret.size();
-
+#if (ZLIB_VERNUM < 0x1290)
 	if (Z_OK != z_compress2(buffer, &destLen, (const Bytef *)data, size, level)) {
 		ret.clear();
 	} else {
 		ret.resize(destLen);
 	}
-
+#else
+	if (Z_OK != compress2(buffer, &destLen, (const Bytef *)data, size, level)) {
+		ret.clear();
+	} else {
+		ret.resize(destLen);
+	}
+#endif
 	return ret;
 }
 
 ulong GZIP::crc(const char *data, int size)
 {
+#if (ZLIB_VERNUM < 0x1290)
 	return z_crc32(z_crc32(0L, nullptr, 0), (const Bytef *)data, size);
+#else
+	return crc32(crc32(0L, nullptr, 0), (const Bytef *)data, size);
+#endif
 }
 
 char GZIP::strategyToChar(Strategy strategy)
