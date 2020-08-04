@@ -356,7 +356,7 @@ void GrpScriptList::copy()
 	}
 
 	clearCopiedGroups();
-	for (const int &id : selectedIDs) {
+	for (const int &id : qAsConst(selectedIDs)) {
 		grpScriptCopied.append(new GrpScript(*scripts->grpScript(id)));
 	}
 
@@ -373,7 +373,7 @@ void GrpScriptList::paste()
 		grpScriptID = topLevelItemCount(); // Last position
 	}
 	int i = grpScriptID;
-	for (GrpScript *GScopied : grpScriptCopied) {
+	for (GrpScript *GScopied : qAsConst(grpScriptCopied)) {
 		scripts->insertGrpScript(i++, new GrpScript(*GScopied));
 	}
 

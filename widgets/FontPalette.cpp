@@ -109,7 +109,7 @@ void FontPalette::paintEvent(QPaintEvent *)
 
 	int id=0;
 
-	for (const QRgb &color : palette) {
+	for (const QRgb &color : qAsConst(palette)) {
 		if (!readOnly && id == _currentColor) {
 			p.fillRect(QRect(id * (CELL_SIZE + BORDER_SIZE), 0, CELL_SIZE + 2 * BORDER_SIZE, CELL_SIZE + 2 * BORDER_SIZE), Qt::red);
 		} else {

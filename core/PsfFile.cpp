@@ -20,7 +20,7 @@ bool PsfTags::open(const QString &config)
 	}
 
 	QStringList entries = config.mid(5).split('\n', QString::SkipEmptyParts);
-	for (const QString &entry : entries) {
+	for (const QString &entry : qAsConst(entries)) {
 		int index = entry.indexOf('=');
 
 		if (index >= 0) {
@@ -52,7 +52,7 @@ QString PsfTags::save() const
 
 		QStringList values = it.value().split('\n');
 
-		for (const QString &value : values) {
+		for (const QString &value : qAsConst(values)) {
 			config.append(QString("%1=%2\n").arg(it.key(), value));
 		}
 	}

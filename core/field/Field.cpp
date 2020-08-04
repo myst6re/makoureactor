@@ -37,7 +37,7 @@ Field::Field(const QString &name) :
 
 Field::~Field()
 {
-	for (FieldPart *part : _parts) {
+	for (FieldPart *part : qAsConst(_parts)) {
 		if (part)	delete part;
 	}
 }
@@ -302,7 +302,7 @@ void Field::setSaved()
 	if (_io != nullptr) {
 		_isOpen = false; // Force reopen to refresh positions automatically
 	}
-	for (FieldPart *part : _parts) {
+	for (FieldPart *part : qAsConst(_parts)) {
 		part->setModified(false);
 	}
 }

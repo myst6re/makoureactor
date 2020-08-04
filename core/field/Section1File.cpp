@@ -596,7 +596,7 @@ bool Section1File::insertGrpScript(int row, GrpScript *grpScript)
 {
 	if (grpScriptCount() < maxGrpScriptCount()) {
 		_grpScripts.insert(row, grpScript);
-		for (GrpScript *grpScript : _grpScripts)
+		for (GrpScript *grpScript : qAsConst(_grpScripts))
 			grpScript->shiftGroupIds(row-1, +1);
 		setModified(true);
 		return true;
@@ -608,7 +608,7 @@ void Section1File::deleteGrpScript(int row)
 {
 	if (row < _grpScripts.size()) {
 		delete _grpScripts.takeAt(row);
-		for (GrpScript *grpScript : _grpScripts)
+		for (GrpScript *grpScript : qAsConst(_grpScripts))
 			grpScript->shiftGroupIds(row, -1);
 		setModified(true);
 	}
@@ -618,7 +618,7 @@ void Section1File::removeGrpScript(int row)
 {
 	if (row < _grpScripts.size()) {
 		_grpScripts.removeAt(row);
-		for (GrpScript *grpScript : _grpScripts)
+		for (GrpScript *grpScript : qAsConst(_grpScripts))
 			grpScript->shiftGroupIds(row, -1);
 		setModified(true);
 	}
@@ -633,14 +633,14 @@ bool Section1File::moveGrpScript(int row, bool direction)
 			return false;
 		}
 		_grpScripts.swap(row, row+1);
-		for (GrpScript *grpScript : _grpScripts)
+		for (GrpScript *grpScript : qAsConst(_grpScripts))
 			grpScript->swapGroupIds(row, row+1);
 	} else { // up
 		if (row == 0) {
 			return false;
 		}
 		_grpScripts.swap(row, row-1);
-		for (GrpScript *grpScript : _grpScripts)
+		for (GrpScript *grpScript : qAsConst(_grpScripts))
 			grpScript->swapGroupIds(row, row-1);
 	}
 	setModified(true);
@@ -857,7 +857,7 @@ void Section1File::listModelPositions(QMultiMap<int, FF7Position> &positions) co
 			QList<FF7Position> pos;
 			group->listModelPositions(pos);
 			if (!pos.isEmpty()) {
-				for (const FF7Position &position : pos) {
+				for (const FF7Position &position : qAsConst(pos)) {
 					positions.insert(modelId, position);
 				}
 			}
@@ -895,7 +895,7 @@ void Section1File::linePosition(QMap<int, FF7Position *> &positions) const
 bool Section1File::compileScripts(int &groupID, int &scriptID, int &opcodeID, QString &errorStr)
 {
 	groupID=0;
-	for (GrpScript *group : _grpScripts) {
+	for (GrpScript *group : qAsConst(_grpScripts)) {
 		if (!group->compile(scriptID, opcodeID, errorStr)) {
 			return false;
 		}
@@ -907,7 +907,7 @@ bool Section1File::compileScripts(int &groupID, int &scriptID, int &opcodeID, QS
 
 void Section1File::removeTexts()
 {
-	for (GrpScript *group : _grpScripts) {
+	for (GrpScript *group : qAsConst(_grpScripts)) {
 		if (group->removeTexts()) {
 			setModified(true);
 		}
@@ -1024,7 +1024,7 @@ bool Section1File::insertText(int textID, const FF7Text &text)
 {
 	if (textCount() < maxTextCount()) {
 		_texts.insert(textID, text);
-		for (GrpScript *grpScript : _grpScripts)
+		for (GrpScript *grpScript : qAsConst(_grpScripts))
 			grpScript->shiftTextIds(textID-1, +1);
 		setModified(true);
 		return true;
@@ -1036,7 +1036,7 @@ void Section1File::deleteText(int textID)
 {
 	if (textID >=0 && textID < _texts.size()) {
 		_texts.removeAt(textID);
-		for (GrpScript *grpScript : _grpScripts)
+		for (GrpScript *grpScript : qAsConst(_grpScripts))
 			grpScript->shiftTextIds(textID, -1);
 		setModified(true);
 	}
@@ -1060,7 +1060,7 @@ QSet<quint8> Section1File::listUsedTexts() const
 
 void Section1File::shiftTutIds(int row, int shift)
 {
-	for (GrpScript *grpScript : _grpScripts)
+	for (GrpScript *grpScript : qAsConst(_grpScripts))
 		grpScript->shiftTutIds(row, shift);
 	setModified(true);
 }

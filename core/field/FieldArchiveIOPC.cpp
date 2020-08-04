@@ -108,7 +108,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(ArchiveObserver *observer)
 //	QTime t;t.start();
 
 	i = 0;
-	for (const QString &name : archiveList) {
+	for (const QString &name : qAsConst(archiveList)) {
 		if (i % freq == 0) {
 			if (observer) {
 				if (observer->observerWasCanceled()) {
@@ -341,7 +341,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::open2(ArchiveObserver *observer)
 	// QTime t;t.start();
 
 	int i=0;
-	for (const QString &name : list) {
+	for (const QString &name : qAsConst(list)) {
 		if (observer) {
 			if (observer->observerWasCanceled()) {
 				return Aborted;

@@ -145,7 +145,7 @@ void BGDialog::fillWidgets()
 
 		QList<quint8> usedParamsList = usedParams.keys();
 		std::sort(usedParamsList.begin(), usedParamsList.end());
-		for (const quint8 param : usedParamsList) {
+		for (const quint8 param : qAsConst(usedParamsList)) {
 			parametersWidget->addItem(tr("Parameter %1").arg(param), param);
 		}
 		parametersWidget->setEnabled(parametersWidget->count());
@@ -155,7 +155,7 @@ void BGDialog::fillWidgets()
 		QList<quint16> usedIDsList = usedIDs.toList();
 		std::sort(usedIDsList.begin(), usedIDsList.end());
 		int sectionID = 0;
-		for (const quint16 ID : usedIDsList) {
+		for (const quint16 ID : qAsConst(usedIDsList)) {
 			item = new QListWidgetItem(tr("Section %1").arg(sectionID++));
 			item->setData(Qt::UserRole, ID);
 			item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);

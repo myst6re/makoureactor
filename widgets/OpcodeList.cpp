@@ -449,7 +449,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 		addTopLevelItems(items);
 
 		opcodeID = 0;
-		for (QTreeWidgetItem *item : items) {
+		for (QTreeWidgetItem *item : qAsConst(items)) {
 			if (itemIsExpanded(script->opcode(opcodeID))) {
 				item->setExpanded(true);
 			}
@@ -856,7 +856,7 @@ void OpcodeList::paste()
 		QList<int> IDs;
 		int opcodeID = selectedID() + 1, i = opcodeID;
 
-		for (Opcode *opcode : pastedOpcodes) {
+		for (Opcode *opcode : qAsConst(pastedOpcodes)) {
 			IDs.append(i);
 			// TODO: label duplication case
 			script->insertOpcode(i, opcode);

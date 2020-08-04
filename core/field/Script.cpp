@@ -668,7 +668,7 @@ Script *Script::splitScriptAtReturn()
 	int gotoLabel = -1;
 	int opcodeID = 0;
 
-	for (Opcode *opcode : _opcodes) {
+	for (Opcode *opcode : qAsConst(_opcodes)) {
 		if (opcode->isLabel()) {
 			if (gotoLabel != -1 && static_cast<OpcodeLabel *>(opcode)->label() == (quint32)gotoLabel) {
 				gotoLabel = -1;
@@ -874,7 +874,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 
 	// Search labels
 	opcodeID = 0;
-	for (Opcode *opcode : _opcodes) {
+	for (Opcode *opcode : qAsConst(_opcodes)) {
 		if (opcode->isLabel()) {
 			if (!labelPositions.contains(static_cast<OpcodeLabel *>(opcode)->label())) {
 				labelPositions.insert(static_cast<OpcodeLabel *>(opcode)->label(), pos);
@@ -891,7 +891,7 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 
 	// Search jumps
 	opcodeID = pos = 0;
-	for (Opcode *opcode : _opcodes) {
+	for (Opcode *opcode : qAsConst(_opcodes)) {
 		if (opcode->isJump()) {
 			OpcodeJump *opcodeJump = static_cast<OpcodeJump *>(opcode);
 			if (opcodeJump->isBadJump()) {
@@ -1217,25 +1217,25 @@ void Script::listUsedTuts(QSet<quint8> &usedTuts) const
 
 void Script::shiftGroupIds(int groupId, int steps)
 {
-	for (Opcode *opcode : _opcodes)
+	for (Opcode *opcode : qAsConst(_opcodes))
 		opcode->shiftGroupIds(groupId, steps);
 }
 
 void Script::shiftTextIds(int textId, int steps)
 {
-	for (Opcode *opcode : _opcodes)
+	for (Opcode *opcode : qAsConst(_opcodes))
 		opcode->shiftTextIds(textId, steps);
 }
 
 void Script::shiftTutIds(int tutId, int steps)
 {
-	for (Opcode *opcode : _opcodes)
+	for (Opcode *opcode : qAsConst(_opcodes))
 		opcode->shiftTutIds(tutId, steps);
 }
 
 void Script::swapGroupIds(int groupId1, int groupId2)
 {
-	for (Opcode *opcode : _opcodes)
+	for (Opcode *opcode : qAsConst(_opcodes))
 		opcode->swapGroupIds(groupId1, groupId2);
 }
 
@@ -1249,7 +1249,7 @@ void Script::setWindow(const FF7Window &win)
 int Script::opcodePositionInBytes(quint16 opcodeID)
 {
 	int pos=0, i=0;
-	for (Opcode *op : _opcodes) {
+	for (Opcode *op : qAsConst(_opcodes)) {
 		if (i == opcodeID) {
 			return pos;
 		}
@@ -1351,7 +1351,7 @@ void Script::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 bool Script::removeTexts()
 {
 	bool modified = false;
-	for (Opcode *opcode : _opcodes) {
+	for (Opcode *opcode : qAsConst(_opcodes)) {
 		if (opcode->id() != Opcode::ASK
 				&& opcode->id() != Opcode::MPNAM
 				&& opcode->getTextID() != -1) {

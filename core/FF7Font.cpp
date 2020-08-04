@@ -120,7 +120,7 @@ void FF7Font::openTxt(const QString &data)
 		return;
 	}
 
-	for (const QString &line : lines) {
+	for (const QString &line : qAsConst(lines)) {
 		if (line.startsWith("#")) {
 			if (nameRegExp.indexIn(line) != -1) {
 				QStringList capturedTexts = nameRegExp.capturedTexts();
@@ -167,7 +167,7 @@ QString FF7Font::saveTxt()
 		data.append("#NAME\t").append(_name).append("\n");
 	}
 
-	for (const QStringList &t : _tables) {
+	for (const QStringList &t : qAsConst(_tables)) {
 		for (int j=0; j<14; ++j) {
 			for (int i=0; i<16; ++i) {
 				data.append(QString("\"%1\"").arg(t[j*16 + i]));
@@ -238,7 +238,7 @@ bool FF7Font::listFonts()
 	fonts.insert("00", latinFont);
 	fonts.insert("01", jpFont);
 
-	for (const QString &str : stringList) {
+	for (const QString &str : qAsConst(stringList)) {
 		int index = str.lastIndexOf('.');
 		fonts.insert(str.left(index), nullptr);
 	}
@@ -318,7 +318,7 @@ bool FF7Font::saveFonts()
 {
 	bool ok = true;
 
-	for (FF7Font *font : fonts) {
+	for (FF7Font *font : qAsConst(fonts)) {
 		if (font && !font->isReadOnly() && font->isModified()) {
 			QFile f1(font->txtPath());
 			if (f1.open(QIODevice::WriteOnly | QIODevice::Truncate)) {

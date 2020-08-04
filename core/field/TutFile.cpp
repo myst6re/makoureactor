@@ -217,7 +217,7 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 	ushort value;
 	bool jp = Config::value("jp_txt", false).toBool();
 
-	for (QString line : lines) {
+	for (QString line : qAsConst(lines)) {
 		QString rawLine = line;
 		line = line.trimmed();
 		if (multilineText) {

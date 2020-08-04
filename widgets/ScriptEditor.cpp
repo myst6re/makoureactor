@@ -361,7 +361,7 @@ void ScriptEditor::setCurrentMenu(int id)
 		int index = -1;
 		for (int j=0; j<comboBox->count() && index==-1; ++j) {
 			QList<QVariant> dataList = comboBox->itemData(j).toList();
-			for (const QVariant &v : dataList) {
+			for (const QVariant &v : qAsConst(dataList)) {
 				if (v.toInt() == id) {
 					index = j;
 					break;

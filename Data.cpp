@@ -343,7 +343,7 @@ QString Data::ff7KernelPath()
 			else {
 				QStringList langs;
 				langs << "de" << "en" << "es" << "fr" << "ja";
-				for (const QString &lang : langs) {
+				for (const QString &lang : qAsConst(langs)) {
 					if (QFile::exists(path + QString("/lang-%1/kernel").arg(lang))) {
 						path.append(QString("/lang-%1/kernel").arg(lang));
 						break;
@@ -633,7 +633,7 @@ bool Data::saveMaplist(QByteArray &data)
 	quint16 nbMap = field_names.size();
 	data.append((char *)&nbMap, 2);
 
-	for (const QString &fieldName : field_names) {
+	for (const QString &fieldName : qAsConst(field_names)) {
 		data.append(fieldName.toLatin1()
 		            .leftJustified(32, '\0', true));
 	}

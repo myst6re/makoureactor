@@ -735,7 +735,7 @@ bool IsoArchive::pack(IsoArchive *destination, ArchiveObserver *control, IsoDire
 	destinationIO->reset();
 	_io.reset();
 
-	for (const IsoFile *isoFile : writeToTheMain) {
+	for (const IsoFile *isoFile : qAsConst(writeToTheMain)) {
 		if (control && control->observerWasCanceled()) {
 			setError(Archive::AbortError);
 			return false;
@@ -782,7 +782,7 @@ bool IsoArchive::pack(IsoArchive *destination, ArchiveObserver *control, IsoDire
 #endif
 
 	// Fichiers trop gros mis à la fin de l'ISO
-	for (const IsoFile *isoFile : writeToTheEnd) {
+	for (const IsoFile *isoFile : qAsConst(writeToTheEnd)) {
 		if (control && control->observerWasCanceled()) {
 			setError(Archive::AbortError);
 			return false;

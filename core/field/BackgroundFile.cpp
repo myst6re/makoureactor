@@ -142,7 +142,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 		quint32 top = (minHeight + tile.dstY) * width;
 		quint16 baseX = minWidth + tile.dstX;
 
-		for (uint indexOrColor : indexOrColorList) {
+		for (uint indexOrColor : qAsConst(indexOrColorList)) {
 			if (!palette) {
 				if (indexOrColor != 0) {
 					pixels[baseX + right + top] = indexOrColor;
