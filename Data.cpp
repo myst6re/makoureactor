@@ -93,6 +93,8 @@ QString Data::regValue(const QString &regPath, const QString &regKey,
 #else
 	Q_UNUSED(regPath)
 	Q_UNUSED(regKey)
+	Q_UNUSED(target)
+	Q_UNUSED(loc)
 #endif
 
 	return QString();
