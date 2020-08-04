@@ -322,7 +322,7 @@ void GrpScriptList::del(bool totalDel)
 		return;
 	}
 
-	qSort(selectedIDs);
+	std::sort(selectedIDs.begin(), selectedIDs.end());
 	for (int i = selectedIDs.size()-1; i >= 0; --i) {
 		totalDel ? scripts->deleteGrpScript(selectedIDs.at(i)) : scripts->removeGrpScript(selectedIDs.at(i));
 	}

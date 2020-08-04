@@ -428,7 +428,7 @@ void TutWidget::cut(const QList<int> &rows)
 	Section1File *scriptsAndTexts = field->scriptsAndTexts();
 
 	QList<int> sortedRows = rows;
-	qSort(sortedRows);
+	std::sort(sortedRows.begin(), sortedRows.end());
 
 	for (int i=sortedRows.size()-1; i>=0; --i) {
 		int row = sortedRows.at(i);

@@ -769,7 +769,7 @@ void OpcodeList::del(bool totalDel)
 
 	saveExpandedItems();
 	
-	qSort(selectedIDs);
+	std::sort(selectedIDs.begin(), selectedIDs.end());
 	for (int i=selectedIDs.size()-1; i>=0; --i) {
 		oldVersions.prepend(Script::copyOpcode(script->opcode(selectedIDs.at(i))));
 		if (totalDel) {
@@ -931,7 +931,7 @@ QList<int> OpcodeList::selectedIDs()
 	for (QTreeWidgetItem *item : selectedItems()) {
 		list.append(item->data(0, Qt::UserRole).toInt());
 	}
-	qSort(list);
+	std::sort(list.begin(), list.end());
 	return list;
 }
 

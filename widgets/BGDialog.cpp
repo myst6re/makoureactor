@@ -144,7 +144,7 @@ void BGDialog::fillWidgets()
 	if (field->background()->usedParams(usedParams, layerExists, &usedIDs)) {
 
 		QList<quint8> usedParamsList = usedParams.keys();
-		qSort(usedParamsList);
+		std::sort(usedParamsList.begin(), usedParamsList.end());
 		for (const quint8 param : usedParamsList) {
 			parametersWidget->addItem(tr("Parameter %1").arg(param), param);
 		}
@@ -153,7 +153,7 @@ void BGDialog::fillWidgets()
 		QListWidgetItem *item;
 
 		QList<quint16> usedIDsList = usedIDs.toList();
-		qSort(usedIDsList);
+		std::sort(usedIDsList.begin(), usedIDsList.end());
 		int sectionID = 0;
 		for (const quint16 ID : usedIDsList) {
 			item = new QListWidgetItem(tr("Section %1").arg(sectionID++));

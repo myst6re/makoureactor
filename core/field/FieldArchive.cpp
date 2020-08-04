@@ -1066,7 +1066,7 @@ void FieldArchive::printBackgroundZ()
 	for (int ID : ids.uniqueKeys()) {
 		QList<quint32> zBigs = ids.values(ID);
 		QList<quint32> zBigsUnique = zBigs.toSet().toList();
-		qSort(zBigsUnique);
+		std::sort(zBigsUnique.begin(), zBigsUnique.end());
 		for (quint32 zBig : zBigsUnique) {
 			deb2.write(QString("%1,%2\n").arg(ID).arg(zBig).toLatin1());
 		}
