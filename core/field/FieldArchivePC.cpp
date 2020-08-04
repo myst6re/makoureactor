@@ -43,7 +43,7 @@ FieldArchivePC::FieldArchivePC(const QString &path, FieldArchiveIO::Type type) :
 
 FieldArchivePC::~FieldArchivePC()
 {
-	for (TutFile *tut : _tuts) {
+	for (TutFile *tut : qAsConst(_tuts)) {
 		if (tut != nullptr) {
 			delete tut;
 		}
@@ -52,7 +52,7 @@ FieldArchivePC::~FieldArchivePC()
 
 void FieldArchivePC::clear()
 {
-	for (TutFile *tut : _tuts) {
+	for (TutFile *tut : qAsConst(_tuts)) {
 		if (tut != nullptr) {
 			delete tut;
 		}
@@ -118,7 +118,7 @@ void FieldArchivePC::addTut(const QString &name)
 
 void FieldArchivePC::setSaved()
 {
-	for (TutFile *tut : _tuts) {
+	for (TutFile *tut : qAsConst(_tuts)) {
 		if (tut != nullptr) {
 			tut->setModified(false);
 		}

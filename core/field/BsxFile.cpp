@@ -159,7 +159,7 @@ bool BsxFile::readTextures(FieldModelTexturesPS *textures) const
 
 	QList<QRect> rects;
 
-	for (const BsxTextureHeader &h : headers) {
+	for (const BsxTextureHeader &h : qAsConst(headers)) {
 		rects.append(QRect(h.vramX, h.vramY,
 						   h.width, h.height));
 	}

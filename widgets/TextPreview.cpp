@@ -753,7 +753,7 @@ quint8 TextPreview::charW(int tableId, int charId)
 	return Data::windowBin.isValid() &&
 			(tableId != 0 || !Data::windowBin.isJp())
 			? Data::windowBin.charWidth(tableId == 0 ? 0 : tableId - 1, charId)
-			: CHAR_WIDTH(charWidth[tableId][charId]);
+			: CHARACTER_WIDTH(charWidth[tableId][charId]);
 }
 
 quint8 TextPreview::leftPadding(int tableId, int charId)

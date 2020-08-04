@@ -111,7 +111,7 @@ FieldArchiveIO::ErrorCode FieldArchive::open()
 	}
 
 	int fieldID=0;
-	for (Field *f : fileList) {
+	for (Field *f : qAsConst(fileList)) {
 		updateFieldLists(f, fieldID);
 		++fieldID;
 	}
@@ -269,7 +269,7 @@ QList<FF7Var> FieldArchive::searchAllVars(QMap<FF7Var, QSet<QString> > &fieldNam
 			QList<FF7Var> fieldVars;
 			field->scriptsAndTexts()->searchAllVars(fieldVars);
 
-			for (const FF7Var &fieldVar : fieldVars) {
+			for (const FF7Var &fieldVar : qAsConst(fieldVars)) {
 				QSet<QString> names = fieldNames.value(fieldVar);
 				names.insert(field->scriptsAndTexts()->author());
 				fieldNames.insert(fieldVar, names);
@@ -1066,7 +1066,7 @@ void FieldArchive::printBackgroundZ()
 	for (int ID : ids.uniqueKeys()) {
 		QList<quint32> zBigs = ids.values(ID);
 		QList<quint32> zBigsUnique = zBigs.toSet().toList();
-		qSort(zBigsUnique);
+		std::sort(zBigsUnique.begin(), zBigsUnique.end());
 		for (quint32 zBig : zBigsUnique) {
 			deb2.write(QString("%1,%2\n").arg(ID).arg(zBig).toLatin1());
 		}
@@ -1861,7 +1861,7 @@ bool FieldArchive::importation(const QList<int> &selectedFields, const QString &
 
 void FieldArchive::setSaved()
 {
-	for (Field *field : fileList) {
+	for (Field *field : qAsConst(fileList)) {
 		field->setSaved();
 	}
 }

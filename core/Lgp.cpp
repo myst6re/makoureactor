@@ -674,13 +674,13 @@ bool Lgp::pack(const QString &destination, ArchiveObserver *observer)
 		QList<LgpHeaderEntry *> headerEntries = _files->entries(i);
 
 		// Build list conflicts
-		for (const LgpHeaderEntry *headerEntry : headerEntries) {
+		for (const LgpHeaderEntry *headerEntry : qAsConst(headerEntries)) {
 			LgpTocEntry &tocEntry = tocEntries[headerEntry];
 
 			if (tocEntry.conflict == 0) {
 				QList<LgpConflictEntry> conflictEntries;
 
-				for (const LgpHeaderEntry *headerEntry2 : headerEntries) {
+				for (const LgpHeaderEntry *headerEntry2 : qAsConst(headerEntries)) {
 					if (headerEntry != headerEntry2 &&
 							headerEntry->fileName().compare(headerEntry2->fileName(),
 															Qt::CaseInsensitive) == 0) {

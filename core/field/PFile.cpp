@@ -148,10 +148,6 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 		normIndexTable.append(normIndex);
 	}
 
-	QByteArray dataAfter = device()->readAll();
-
-	//qDebug() << dataAfter.toHex();
-
 	PolyVertex polyVertex;
 	QRgb color;
 
