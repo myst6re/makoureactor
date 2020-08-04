@@ -105,7 +105,7 @@ void WindowBinFile::saveSection(const QByteArray &section, QByteArray &data, qui
 
 bool WindowBinFile::save(QByteArray &data) const
 {
-	QByteArray sectionData, compressedData;
+	QByteArray sectionData;
 	if (!_icons.save(sectionData)) {
 		return false;
 	}

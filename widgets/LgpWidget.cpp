@@ -758,7 +758,7 @@ void LgpWidget::generatePreview()
 		return;
 	}
 
-	QString fileName, fileType, filePath;
+	QString fileName, fileType;
 
 	fileName = item->path();
 	fileType = fileName.mid(fileName.lastIndexOf('.')+1).toLower();
