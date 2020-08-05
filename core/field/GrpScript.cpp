@@ -449,25 +449,25 @@ void GrpScript::listUsedTuts(QSet<quint8> &usedTuts) const
 
 void GrpScript::shiftGroupIds(int groupId, int steps)
 {
-	for (Script *script : _scripts)
+	for (Script *script : qAsConst(_scripts))
 		script->shiftGroupIds(groupId, steps);
 }
 
 void GrpScript::shiftTextIds(int textId, int steps)
 {
-	for (Script *script : _scripts)
+	for (Script *script : qAsConst(_scripts))
 		script->shiftTextIds(textId, steps);
 }
 
 void GrpScript::shiftTutIds(int tutId, int steps)
 {
-	for (Script *script : _scripts)
+	for (Script *script : qAsConst(_scripts))
 		script->shiftTutIds(tutId, steps);
 }
 
 void GrpScript::swapGroupIds(int groupId1, int groupId2)
 {
-	for (Script *script : _scripts)
+	for (Script *script : qAsConst(_scripts))
 		script->swapGroupIds(groupId1, groupId2);
 }
 
@@ -513,7 +513,7 @@ bool GrpScript::linePosition(FF7Position position[2]) const
 bool GrpScript::compile(int &scriptID, int &opcodeID, QString &errorStr)
 {
 	scriptID=0;
-	for (Script *script : _scripts) {
+	for (Script *script : qAsConst(_scripts)) {
 		if (!script->compile(opcodeID, errorStr)) {
 			return false;
 		}
@@ -526,7 +526,7 @@ bool GrpScript::compile(int &scriptID, int &opcodeID, QString &errorStr)
 bool GrpScript::removeTexts()
 {
 	bool modified = false;
-	for (Script *script : _scripts) {
+	for (Script *script : qAsConst(_scripts)) {
 		if (script->removeTexts()) {
 			modified = true;
 		}

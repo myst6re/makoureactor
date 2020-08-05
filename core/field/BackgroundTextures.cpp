@@ -242,7 +242,7 @@ QImage BackgroundTexturesPC::toImage(quint8 texID) const
 	img.fill(Qt::black);
 	QRgb *bits = (QRgb *)img.bits();
 
-	for (uint indexOrRgb : indexOrRgbList) {
+	for (uint indexOrRgb : qAsConst(indexOrRgbList)) {
 		if(infos.depth != 2) {
 			*bits = qRgb(indexOrRgb, indexOrRgb, indexOrRgb);
 		} else {
@@ -277,7 +277,7 @@ QImage BackgroundTexturesPC::toImage(quint8 texID, const BackgroundTiles &tiles,
 				palette = palettes.at(tile.paletteID);
 			}
 
-			for (uint indexOrRgb : indexOrRgbList) {
+			for (uint indexOrRgb : qAsConst(indexOrRgbList)) {
 //				if(tile.depth == 0) {
 //					bits[pos + y * 256 + x] = qRgb(0, 255, 0);
 //				} else if(tile.depth == 1) {
@@ -454,7 +454,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 
 				// Detection of transparency PC flag: true if one of used indexes is transparent
 				const QList<bool> &areZero = palette->areZero();
-				for (uint index : tileData) {
+				for (uint index : qAsConst(tileData)) {
 					if(areZero.at(index)) {
 						palette->setTransparency(true);
 						break;
@@ -506,7 +506,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 					int indexOfFirstZero = areZero.indexOf(true, 1);
 					if(firstIsZero || indexOfFirstZero > -1) {
 						int i = 0;
-						for (uint index : tileConversion.data) {
+						for (uint index : qAsConst(tileConversion.data)) {
 							if(index > 0 && areZero.at(index)) {
 								// When the index refer to a transparent color, change this index to 0
 

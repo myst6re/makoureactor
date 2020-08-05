@@ -291,7 +291,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 	device()->write((char *)&depth, 2);
 	device()->write("\0\0", 2);
 
-	for (const Tile &tile : tiles1) {
+	for (const Tile &tile : qAsConst(tiles1)) {
 		writeTile(tile);
 	}
 
@@ -314,7 +314,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 		device()->write(QByteArray(16, '\0')); // Unknown but unused
 		device()->write("\0\0", 2);
 
-		for (const Tile &tile : tiles2) {
+		for (const Tile &tile : qAsConst(tiles2)) {
 			writeTile(tile);
 		}
 
@@ -337,7 +337,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 		device()->write(QByteArray(10, '\0'));
 		device()->write("\0\0", 2);
 
-		for (const Tile &tile : tiles3) {
+		for (const Tile &tile : qAsConst(tiles3)) {
 			writeTile(tile);
 		}
 
@@ -360,7 +360,7 @@ bool BackgroundTilesIOPC::writeData(const BackgroundTiles &tiles) const
 		device()->write(QByteArray(10, '\0')); // Unknown but unused
 		device()->write("\0\0", 2);
 
-		for (const Tile &tile : tiles4) {
+		for (const Tile &tile : qAsConst(tiles4)) {
 			writeTile(tile);
 		}
 
@@ -795,7 +795,7 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 	if (!_demo) {
 		// Collect tiles2 for layers 2 and 3
 		firstTurn = true;
-		for (const Tile &tile : tilesLayers2And3) {
+		for (const Tile &tile : qAsConst(tilesLayers2And3)) {
 			if (firstTurn || tile.dstY != dstY) {
 				tiles2.append(tile);
 				dstY = tile.dstY;
@@ -822,7 +822,7 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 	if (!_demo) {
 		positions[3] = device()->pos();
 
-		for (const Tile &tile : tilesLayers2And3) {
+		for (const Tile &tile : qAsConst(tilesLayers2And3)) {
 			writeTileBase(tile);
 			writeTileParam(tile);
 		}
@@ -833,7 +833,7 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 		return false;
 	}
 
-	for (quint32 pos : positions) {
+	for (quint32 pos : qAsConst(positions)) {
 		device()->write((char *)&pos, 4);
 	}
 

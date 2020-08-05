@@ -148,7 +148,7 @@ void ModelManagerPC::addModel()
 		list.setEditable(true);
 		QStringList files = charLgp->hrcFiles();
 
-		qSort(files);
+		std::sort(files.begin(), files.end());
 		list.addItems(files);
 
 		QPushButton OKButton(tr("OK"), &dialog);
@@ -397,7 +397,7 @@ void ModelManagerPC::addAnim()
 
 		t.stop();
 
-		qSort(files);
+		std::sort(files.begin(), files.end());
 		list.addItems(files);
 
 		if (item!=nullptr) {
@@ -649,7 +649,7 @@ void ModelManagerPC::cutModels(const QList<int> &modelIDs)
 
 	copyModels(modelIDs);
 	QList<int> mIDs = modelIDs;
-	qSort(mIDs);
+	std::sort(mIDs.begin(), mIDs.end());
 	for (int i=mIDs.size() - 1; i>=0; --i) {
 		int modelID = mIDs.at(i);
 		modelLoader()->removeModel(modelID);

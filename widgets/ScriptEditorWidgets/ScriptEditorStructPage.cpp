@@ -853,7 +853,7 @@ void ScriptEditorIfKeyPage::build()
 
 	int row=1, column=0;
 
-	for (const QString &keyName : Data::key_names) {
+	for (const QString &keyName : qAsConst(Data::key_names)) {
 		QCheckBox *key = new QCheckBox(keyName, this);
 		keys.append(key);
 		connect(key, SIGNAL(toggled(bool)), SIGNAL(opcodeChanged()));

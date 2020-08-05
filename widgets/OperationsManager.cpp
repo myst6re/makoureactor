@@ -37,13 +37,13 @@ OperationsManager::OperationsManager(bool isPC, QWidget *parent) :
 	buttonBox->addButton(QDialogButtonBox::Cancel);
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
-	for (QCheckBox *operation : _operations) {
+	for (QCheckBox *operation : qAsConst(_operations)) {
 		layout->addWidget(operation);
 	}
 	layout->addStretch();
 	layout->addWidget(buttonBox);
 
-	for (QCheckBox *checkBox : _operations) {
+	for (QCheckBox *checkBox : qAsConst(_operations)) {
 		connect(checkBox, SIGNAL(toggled(bool)), SLOT(updateApplyButton()));
 	}
 
@@ -78,7 +78,7 @@ void OperationsManager::updateApplyButton()
 {
 	bool enabled = false;
 
-	for (QCheckBox *checkBox : _operations) {
+	for (QCheckBox *checkBox : qAsConst(_operations)) {
 		if (checkBox->isChecked()) {
 			enabled = true;
 			break;

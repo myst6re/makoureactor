@@ -21,8 +21,8 @@
 #include <QtCore>
 #include "TimFile.h"
 
-#define LEFT_PADD(w)	(w >> 5)
-#define CHAR_WIDTH(w)	(w & 0x1F)
+inline quint8 LEFT_PADD(quint8 w) {return (w >> 5);}
+inline quint8 CHARACTER_WIDTH(quint8 w) {return(w & 0x1F);}
 
 class WindowBinFile
 {

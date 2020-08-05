@@ -68,7 +68,7 @@ EncounterTableWidget::EncounterTableWidget(const QString &title, QWidget *parent
 	}
 
 	connect(mainRate, SIGNAL(valueChanged(int)), SLOT(changePercent()));
-	for (QSpinBox *battleProba : battleProbas)
+	for (QSpinBox *battleProba : qAsConst(battleProbas))
 		connect(battleProba, SIGNAL(valueChanged(int)), SLOT(changeProbaCount()));
 
 	changePercent();
@@ -78,7 +78,7 @@ EncounterTableWidget::EncounterTableWidget(const QString &title, QWidget *parent
 QList<int> EncounterTableWidget::battleIdsValues()
 {
 	QList<int> ids;
-	for (QSpinBox *battleId : battleIds) {
+	for (QSpinBox *battleId : qAsConst(battleIds)) {
 		ids.append(battleId->value());
 	}
 	return ids;
@@ -87,7 +87,7 @@ QList<int> EncounterTableWidget::battleIdsValues()
 QList<int> EncounterTableWidget::battleProbasValues()
 {
 	QList<int> probas;
-	for (QSpinBox *battleProba : battleProbas) {
+	for (QSpinBox *battleProba : qAsConst(battleProbas)) {
 		probas.append(battleProba->value());
 	}
 	return probas;

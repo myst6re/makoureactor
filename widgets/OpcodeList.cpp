@@ -449,7 +449,7 @@ void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
 		addTopLevelItems(items);
 
 		opcodeID = 0;
-		for (QTreeWidgetItem *item : items) {
+		for (QTreeWidgetItem *item : qAsConst(items)) {
 			if (itemIsExpanded(script->opcode(opcodeID))) {
 				item->setExpanded(true);
 			}
@@ -769,7 +769,7 @@ void OpcodeList::del(bool totalDel)
 
 	saveExpandedItems();
 	
-	qSort(selectedIDs);
+	std::sort(selectedIDs.begin(), selectedIDs.end());
 	for (int i=selectedIDs.size()-1; i>=0; --i) {
 		oldVersions.prepend(Script::copyOpcode(script->opcode(selectedIDs.at(i))));
 		if (totalDel) {
@@ -856,7 +856,7 @@ void OpcodeList::paste()
 		QList<int> IDs;
 		int opcodeID = selectedID() + 1, i = opcodeID;
 
-		for (Opcode *opcode : pastedOpcodes) {
+		for (Opcode *opcode : qAsConst(pastedOpcodes)) {
 			IDs.append(i);
 			// TODO: label duplication case
 			script->insertOpcode(i, opcode);
@@ -931,7 +931,7 @@ QList<int> OpcodeList::selectedIDs()
 	for (QTreeWidgetItem *item : selectedItems()) {
 		list.append(item->data(0, Qt::UserRole).toInt());
 	}
-	qSort(list);
+	std::sort(list.begin(), list.end());
 	return list;
 }
 

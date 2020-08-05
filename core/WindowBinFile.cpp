@@ -105,7 +105,7 @@ void WindowBinFile::saveSection(const QByteArray &section, QByteArray &data, qui
 
 bool WindowBinFile::save(QByteArray &data) const
 {
-	QByteArray sectionData, compressedData;
+	QByteArray sectionData;
 	if (!_icons.save(sectionData)) {
 		return false;
 	}
@@ -292,7 +292,7 @@ int WindowBinFile::absoluteId(quint8 table, quint8 id)
 
 quint8 WindowBinFile::charWidth(quint8 table, quint8 id) const
 {
-	return CHAR_WIDTH(charInfo(table, id));
+	return CHARACTER_WIDTH(charInfo(table, id));
 }
 
 quint8 WindowBinFile::charLeftPadding(quint8 table, quint8 id) const

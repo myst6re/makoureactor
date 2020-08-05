@@ -142,7 +142,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 			}
 		} else {
 			// Every write vars
-			for (const FF7Var &var : vars) {
+			for (const FF7Var &var : qAsConst(vars)) {
 				if (var.bank == bank && (noAddress || var.address == address)
 						&& var.write == true && var.size != FF7Var::Bit) {
 					return true;
@@ -179,7 +179,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 		}
 		return false;
 	default:
-		for (const FF7Var &var : vars) {
+		for (const FF7Var &var : qAsConst(vars)) {
 			if (var.bank == bank && (noAddress || var.address == address))
 				return true;
 		}

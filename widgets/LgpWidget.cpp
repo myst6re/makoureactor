@@ -758,7 +758,7 @@ void LgpWidget::generatePreview()
 		return;
 	}
 
-	QString fileName, fileType, filePath;
+	QString fileName, fileType;
 
 	fileName = item->path();
 	fileType = fileName.mid(fileName.lastIndexOf('.')+1).toLower();
@@ -1034,7 +1034,7 @@ void LgpWidget::add()
 	        directory = path.left(path.lastIndexOf('/'));
 	Config::setValue("lgpDialogOpenDirectory", directory);
 
-	for (const QString &path : paths) {
+	for (const QString &path : qAsConst(paths)) {
 		QString filePath = path.mid(path.lastIndexOf('/') + 1);
 
 		if (!dirName.isEmpty()) {
