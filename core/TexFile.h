@@ -91,13 +91,21 @@ struct TexStruct {
 class TexFile : public TextureFile
 {
 public:
+	enum Version {
+		None, FF7, FF8
+	};
+
 	TexFile() : TextureFile() {}
 	explicit TexFile(const QByteArray &data);
 	TexFile(const TextureFile &textureFile, const TexStruct &header,
 			const QVector<quint8> &colorKeyArray=QVector<quint8>());
 	virtual bool open(const QByteArray &data);
 	virtual bool save(QByteArray &data);
+	TexFile scaled(const QSize &size) const;
+	void setVersion(Version version);
+	void debug();
 private:
+	void updateHeader();
 	TexStruct header;
 	QVector<quint8> colorKeyArray;
 };
