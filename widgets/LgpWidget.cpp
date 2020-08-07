@@ -1078,7 +1078,7 @@ void LgpWidget::removeCurrent()
 {
 	QModelIndex index = treeView->currentIndex();
 	if (index.isValid()) {
-		QMessageBox::StandardButton button = QMessageBox::question(this, tr("Delete ?"),
+		QMessageBox::StandardButton button = QMessageBox::question(this, tr("Delete?"),
 							  tr("Are you sure you want to delete this file from the archive?"),
 							  QMessageBox::Yes | QMessageBox::Cancel);
 		if (button != QMessageBox::Yes) {

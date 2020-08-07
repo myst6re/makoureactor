@@ -378,7 +378,7 @@ void ConfigWindow::changeWindowPath()
 
 void ConfigWindow::changeCharPath()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Find char.lgp"), QDir::fromNativeSeparators(charPath->text()), tr("Lgp Archives (*.lgp);;All Files(*)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Find char.lgp"), QDir::fromNativeSeparators(charPath->text()), tr("Lgp Archives (*.lgp);;All Files (*)"));
 	if (!path.isNull())
 		charPath->setText(QDir::toNativeSeparators(path));
 }

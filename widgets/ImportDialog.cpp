@@ -145,7 +145,7 @@ QString ImportDialog::mimPath() const
 void ImportDialog::setBsxPathByUser()
 {
 	QString path = QFileDialog::getOpenFileName(this, tr("Select the associated BSX file"), pathEditBsx->text(),
-	                                            tr("BSX File (*.BSX);;All Files(*)"));
+	                                            tr("BSX File (*.BSX);;All Files (*)"));
 	if (path.isNull()) {
 		return;
 	}
@@ -156,7 +156,7 @@ void ImportDialog::setBsxPathByUser()
 void ImportDialog::setMimPathByUser()
 {
 	QString path = QFileDialog::getOpenFileName(this, tr("Select the associated MIM file"), pathEditMim->text(),
-	                                            tr("MIM File (*.MIM);;All Files(*)"));
+	                                            tr("MIM File (*.MIM);;All Files (*)"));
 	if (path.isNull()) {
 		return;
 	}

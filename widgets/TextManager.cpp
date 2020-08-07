@@ -541,7 +541,7 @@ void TextManager::changeTextPreviewWin()
 {
 	int currentWin = textPreview->currentWin(), nbWin = textPreview->winCount();
 
-	textWin->setText(tr("Fenêtre %1/%2").arg(currentWin).arg(nbWin));
+	textWin->setText(tr("Window %1/%2").arg(currentWin).arg(nbWin));
 	prevWin->setEnabled(currentWin > 1);
 	nextWin->setEnabled(currentWin < nbWin);
 	textWin->setEnabled(nbWin > 0);

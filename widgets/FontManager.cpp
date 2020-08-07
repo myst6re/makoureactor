@@ -52,7 +52,7 @@ void FontManager::fillList1()
 		QListWidgetItem *item;
 
 		if (fontName == "00" || fontName == "01") {
-			item = new QListWidgetItem(fontName == "00" ? tr("Latin") : tr("Japonais"));
+			item = new QListWidgetItem(fontName == "00" ? tr("Latin") : tr("Japanese"));
 			item->setData(Qt::UserRole, fontName);
 			list1->addItem(item);
 		} else {
@@ -112,8 +112,8 @@ bool FontManager::newNameDialog(QString &name, QString &nameId)
 	ok->setDefault(true);
 
 	QFormLayout *formLayout = new QFormLayout;
-	formLayout->addRow(tr("Nom &affiché :"), nameEdit);
-	formLayout->addRow(tr("Nom du &fichier :"), fileNameEdit);
+	formLayout->addRow(tr("&Displayed name:"), nameEdit);
+	formLayout->addRow(tr("&File name:"), fileNameEdit);
 
 	QVBoxLayout *layout = new QVBoxLayout(&dialog);
 	layout->addLayout(formLayout, 1);
@@ -129,7 +129,8 @@ bool FontManager::newNameDialog(QString &name, QString &nameId)
 		if (name1.isEmpty() || name2.isEmpty()
 		    || fontList.contains(name1)
 		    || QFile::exists(FF7Font::fontDirPath()+"/"+name2)) {
-			QMessageBox::warning(this, tr("Choisissez un autre nom"), tr("Ce nom existe déjà ou est invalide, veuillez en choisir un autre."));
+			QMessageBox::warning(this, tr("Choose another name"), tr("This name already exist or is invalid, "
+			                                                         "please choose another."));
 			return false;
 		}
 
@@ -145,7 +146,9 @@ void FontManager::removeFont()
 	QList<QListWidgetItem *> items = list1->selectedItems();
 	if (items.isEmpty())		return;
 
-	if (QMessageBox::Yes != QMessageBox::question(this, tr("Supprimer une police"), tr("Voulez-vous vraiment supprimer la police sélectionnée ?"), QMessageBox::Yes | QMessageBox::Cancel)) {
+	if (QMessageBox::Yes != QMessageBox::question(this, tr("Remove font"),
+	                                              tr("Do you want to remove the selected font?"),
+	                                              QMessageBox::Yes | QMessageBox::Cancel)) {
 		return;
 	}
 

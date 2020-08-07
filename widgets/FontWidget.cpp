@@ -213,10 +213,10 @@ void FontWidget::exportFont()
 				f.write(data);
 				f.close();
 			} else {
-				QMessageBox::warning(this, tr("Erreur"), tr("Erreur d'ouverture du fichier. (%1)").arg(f.errorString()));
+				QMessageBox::warning(this, tr("Error"), tr("Error opening file (%1)").arg(f.errorString()));
 			}
 		} else {
-			QMessageBox::warning(this, tr("Erreur"), tr("Erreur lors de l'enregistrement."));
+			QMessageBox::warning(this, tr("Error"), tr("Error saving file"));
 		}
 	} /* else if (selectedFilter == tdwF) {
 		// TODO: tdw
