@@ -12,6 +12,7 @@ HEADERS += \
     core/PsfFile.h \
     core/field/BackgroundTilesFile.h \
     core/field/MaplistFile.h \
+    widgets/AboutDialog.h \
     widgets/ArchivePreview.h \
     widgets/EmptyFieldWidget.h \
     widgets/HelpWidget.h \
@@ -159,6 +160,7 @@ SOURCES += \
     txt.cpp \
     main.cpp \
     Data.cpp \
+    widgets/AboutDialog.cpp \
     widgets/ArchivePreview.cpp \
     widgets/EmptyFieldWidget.cpp \
     widgets/HelpWidget.cpp \

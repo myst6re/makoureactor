@@ -24,7 +24,8 @@
 #include "widgets/ImportDialog.h"
 #include "widgets/MassExportDialog.h"
 #include "widgets/MassImportDialog.h"
-#include "widgets/PsfDialog.h"
+#include "widgets/PsfDialog.h""
+#include "widgets/AboutDialog.h"
 #include "core/Config.h"
 #include "Data.h"
 #include "core/field/FieldArchivePC.h"
@@ -1637,40 +1638,6 @@ void Window::config()
 
 void Window::about()
 {
-	QDialog about(this, Qt::Dialog | Qt::CustomizeWindowHint);
-	about.setFixedSize(200, 270);
-
-	QFont font;
-	font.setPointSize(12);
-
-	QLabel image(&about);
-	image.setScaledContents(true);
-	image.setPixmap(QPixmap(":/images/reactor.png"));
-	image.move(82, about.height() - 150);
-	
-	QLabel desc1(PROG_FULLNAME, &about);
-	desc1.setFont(font);
-	desc1.setFixedWidth(about.width());
-	desc1.setAlignment(Qt::AlignHCenter);
-
-	QLabel desc2(tr("By Jérôme &lt;myst6re&gt; Arzel <br/><a href=\"https://github.com/myst6re/makoureactor/\">"
-	                "github.com/myst6re/makoureactor</a><br/><br/>Thanks to:<ul style=\"margin:0\"><li>Squall78</li>"
-	                "<li>Synergy Blades</li><li>TrueOdin</li><li>Akari</li><li>Asa</li><li>Aali</li>"
-	                "<li>DLPB</li></ul>"), &about);
-	desc2.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
-	desc2.setTextFormat(Qt::RichText);
-	desc2.setOpenExternalLinks(true);
-	desc2.move(9, 40);
-
-	QPushButton button(tr("Close"), &about);
-	button.move(8, about.height()-8-button.sizeHint().height());
-	connect(&button, SIGNAL(released()), &about, SLOT(close()));
-
-	QLabel desc4(QString("Qt %1").arg(QT_VERSION_STR), &about);
-	QPalette pal = desc4.palette();
-	pal.setColor(QPalette::WindowText, Data::color(Data::ColorGreyForeground));
-	desc4.setPalette(pal);
-	desc4.move(9, about.height()-16-desc4.sizeHint().height()-button.sizeHint().height());
-
+	AboutDialog about(this);
 	about.exec();
 }
