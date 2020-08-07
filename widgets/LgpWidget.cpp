@@ -700,9 +700,6 @@ LgpWidget::LgpWidget(Lgp *lgp, QWidget *parent) :
 	addButton->setShortcut(QKeySequence::New);
 	removeButton = new QPushButton(QIcon(":/images/minus.png"), tr("Delete"), this);
 	removeButton->setShortcut(QKeySequence::Delete);
-	packButton = new QPushButton(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton),
-								 tr("Save"), this);
-	packButton->setEnabled(false);
 
 	preview = new ArchivePreview(this);
 
@@ -713,7 +710,6 @@ LgpWidget::LgpWidget(Lgp *lgp, QWidget *parent) :
 	barLayout->addWidget(extractAllButton);
 	barLayout->addWidget(addButton);
 	barLayout->addWidget(removeButton);
-	barLayout->addWidget(packButton);
 	barLayout->addStretch();
 
 	QGridLayout *layout = new QGridLayout(this);
@@ -727,7 +723,6 @@ LgpWidget::LgpWidget(Lgp *lgp, QWidget *parent) :
 	connect(extractAllButton, SIGNAL(released()), SLOT(extractAll()));
 	connect(addButton, SIGNAL(released()), SLOT(add()));
 	connect(removeButton, SIGNAL(released()), SLOT(removeCurrent()));
-	connect(packButton, SIGNAL(released()), SLOT(pack()));
 	connect(treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(setButtonsState()));
 	connect(treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(changePreview()));
 	connect(preview, SIGNAL(currentImageChanged(int)), SLOT(changeImageInPreview(int)));
@@ -856,8 +851,7 @@ void LgpWidget::renameCurrent()
 				QMessageBox::warning(this, tr("Error"), tr("Can not Rename the file"));
 			} else {
 				treeView->scrollTo(index);
-//				emit modified();
-				packButton->setEnabled(true);
+				emit modified();
 			}
 		}
 	}
@@ -893,8 +887,7 @@ void LgpWidget::replaceCurrent()
 			if (!static_cast<LgpFileItem *>(item)->setFile(new QFile(path))) {
 				QMessageBox::warning(this, tr("Error"), tr("Can not modify the archive!"));
 			} else {
-//				emit modified();
-				packButton->setEnabled(true);
+				emit modified();
 			}
 		}
 	}
@@ -1076,8 +1069,7 @@ void LgpWidget::add()
 			                      .arg(path));
 		} else {
 			treeView->scrollTo(_model->index(_model->rowCount() - 1, 0));
-	//		emit modified();
-			packButton->setEnabled(true);
+			emit modified();
 		}
 	}
 }
@@ -1094,47 +1086,10 @@ void LgpWidget::removeCurrent()
 		}
 
 		if (_model->removeRow(index)) {
-			// emit modified();
-			packButton->setEnabled(true);
+			emit modified();
 		} else {
 			QMessageBox::warning(this, tr("Error"), tr("Cannot delete the file!"));
 		}
-	}
-}
-
-void LgpWidget::pack()
-{
-	QString path = QFileDialog::getSaveFileName(this, tr("Save as"), lgp->fileName(), tr("Lgp File (*.lgp)"));
-	if (path.isNull()) {
-		return;
-	}
-
-//	QFileInfo info1(path), info2(lgp->fileName());
-//	if (info1 == info2) {
-//		QMessageBox::warning(this, tr("Action impossible"), tr("Merci de sélectionner un autre fichier que celui actuellement ouvert par le logiciel."));
-//		return;
-//	}
-
-	progressDialog = new QProgressDialog(tr("Saving..."), tr("Cancel"), 0, 0, this, Qt::Dialog | Qt::WindowCloseButtonHint);
-	progressDialog->setWindowModality(Qt::WindowModal);
-	progressDialog->setAutoClose(false);
-	progressDialog->show();
-
-	bool ok = lgp->pack(path, this);
-
-	progressDialog->hide();
-	progressDialog->deleteLater();
-	progressDialog = 0;
-
-	if (!ok) {
-		if (lgp->error() != Lgp::AbortError) {
-			QMessageBox::warning(this, tr("Error"), tr("Cannot create the archive (message: %1).")
-								 .arg(lgp->errorString()));
-		}
-	} else {
-		lgp->open();
-//		emit modified();
-		packButton->setEnabled(false);
 	}
 }
 

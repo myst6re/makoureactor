@@ -208,14 +208,13 @@ private slots:
 	void add();
 	void removeCurrent();
 	void setButtonsState();
-	void pack();
 private:
 	void generatePreview();
 	Lgp *lgp;
 	QTreeView *treeView;
 	QPushButton *extractButton, *extractAllButton, *renameButton,
 	            *replaceButton, *addButton,
-	            *removeButton, *packButton;
+	            *removeButton;
 	QProgressDialog *progressDialog;
 	LgpItemModel *_model;
 	ArchivePreview *preview;
