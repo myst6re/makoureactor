@@ -137,6 +137,8 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 						return binaryOp->value > value;
 					case AssignGreaterThanEqual:
 						return binaryOp->value >= value;
+					default:
+						return false;
 					}
 				}
 			}

@@ -87,10 +87,10 @@ public:
 	inline bool isEmpty() const {
 		return _bones.isEmpty();
 	}
-	inline const FieldModelBone &operator[](uint i) const {
+	inline const FieldModelBone &operator[](int i) const {
 		return _bones[i];
 	}
-	inline FieldModelBone &operator[](uint i) {
+	inline FieldModelBone &operator[](int i) {
 		return _bones[i];
 	}
 	QString toString() const;

@@ -40,7 +40,7 @@ public:
 		return _loadedTex.value(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id());
 	}
 	inline void *textureIdForGroup(FieldModelGroup *group) const {
-		return (void *)(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id());
+		return (void *)(ulong(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id()));
 	}
 	QHash<void *, QImage> loadedTextures();
 private:
@@ -52,7 +52,7 @@ private:
 	void openTextures(const QStringList &textureFiles);
 	QImage openTexture(const QString &texFileName);
 	CharArchive *_charLgp;
-	QHash<int, QImage> _loadedTex;
+	QHash<quint32, QImage> _loadedTex;
 };
 
 #endif // FIELDMODELFILEPC_H
