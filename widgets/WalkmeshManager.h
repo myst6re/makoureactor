@@ -127,7 +127,7 @@ private:
 	QCheckBox *arrowDisplay;
 	//ArrowPage
 	QListWidget *arrowList;
-	QDoubleSpinBox *arrowX, *arrowY, *arrowZ;
+	QSpinBox *arrowX, *arrowY, *arrowZ;
 	QComboBox *arrowType;
 	//DoorPage
 	QListWidget *doorList;

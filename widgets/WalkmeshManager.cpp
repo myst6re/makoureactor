@@ -330,17 +330,14 @@ QWidget *WalkmeshManager::buildArrowPage()
 	arrowList = new QListWidget(ret);
 	arrowList->setFixedWidth(125);
 
-	arrowX = new QDoubleSpinBox(ret);
-	arrowX->setDecimals(0);
-	arrowX->setRange(-pow(2, 31), pow(2, 31)-1);
+	arrowX = new QSpinBox(ret);
+	arrowX->setRange(-32767, 32767);
 
-	arrowY = new QDoubleSpinBox(ret);
-	arrowY->setDecimals(0);
-	arrowY->setRange(-pow(2, 31), pow(2, 31)-1);
+	arrowY = new QSpinBox(ret);
+	arrowY->setRange(-32767, 32767);
 
-	arrowZ = new QDoubleSpinBox(ret);
-	arrowZ->setDecimals(0);
-	arrowZ->setRange(-pow(2, 31), pow(2, 31)-1);
+	arrowZ = new QSpinBox(ret);
+	arrowZ->setRange(-32767, 32767);
 
 	arrowType = new QComboBox(ret);
 	arrowType->addItem(tr("Invisible"), 0);
@@ -1008,9 +1005,9 @@ void WalkmeshManager::setCurrentArrow(int id)
 
 	const Arrow &arrow = infFile->arrow(quint8(id));
 
-	arrowX->setValue(arrow.positionX);
-	arrowY->setValue(arrow.positionY);
-	arrowZ->setValue(arrow.positionZ);
+	arrowX->setValue(qint16(arrow.positionX));
+	arrowY->setValue(qint16(arrow.positionY));
+	arrowZ->setValue(qint16(arrow.positionZ));
 	int index = arrowType->findData(arrow.type);
 	if (index != -1) {
 		arrowType->setCurrentIndex(index);
