@@ -24,7 +24,7 @@
 #include "widgets/ImportDialog.h"
 #include "widgets/MassExportDialog.h"
 #include "widgets/MassImportDialog.h"
-#include "widgets/PsfDialog.h""
+#include "widgets/PsfDialog.h"
 #include "widgets/AboutDialog.h"
 #include "core/Config.h"
 #include "Data.h"
@@ -56,32 +56,32 @@ Window::Window() :
 
 	QMenu *menu;
 	QAction *actionOpen, *actionFind, *action;
-	QMenuBar *menuBar = new QMenuBar(0);
+	QMenuBar *menuBar = new QMenuBar(nullptr);
 
 	/* "File" Menu */
-	menu = menuBar->addMenu(tr("&File"));
+	QMenu *fileMenu = menuBar->addMenu(tr("&File"));
 
-	actionOpen = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Open..."), this, SLOT(openFile()), QKeySequence("Ctrl+O"));
-	menu->addAction(tr("Open &Directory..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
+	actionOpen = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("&Open..."), this, SLOT(openFile()), QKeySequence("Ctrl+O"));
+	fileMenu->addAction(tr("Open &Directory..."), this, SLOT(openDir()), QKeySequence("Shift+Ctrl+O"));
 	_recentMenu = new QMenu(tr("&Recent files"), this);
 	fillRecentMenu();
 	connect(_recentMenu, SIGNAL(triggered(QAction*)), SLOT(openRecentFile(QAction*)));
-	menu->addMenu(_recentMenu);
-	actionSave = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("&Save"), this, SLOT(save()), QKeySequence("Ctrl+S"));
-	actionSaveAs = menu->addAction(tr("Save &As..."), this, SLOT(saveAs()), QKeySequence("Shift+Ctrl+S"));
-	actionExport = menu->addAction(tr("&Export the current map..."), this, SLOT(exportCurrentMap()), QKeySequence("Ctrl+E"));
-	actionMassExport = menu->addAction(tr("&Mass Export..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
-	actionImport = menu->addAction(tr("&Import to current map..."), this, SLOT(importToCurrentMap()), QKeySequence("Ctrl+I"));
-//	actionMassImport = menu->addAction(tr("Mass &import..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
-	actionArchive = menu->addAction(tr("Archive Mana&ger..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
-	menu->addSeparator();
-	actionRun = menu->addAction(QIcon(":/images/ff7.png"), tr("R&un FF7"), this, SLOT(runFF7()));
+	fileMenu->addMenu(_recentMenu);
+	actionSave = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogSaveButton), tr("&Save"), this, SLOT(save()), QKeySequence("Ctrl+S"));
+	actionSaveAs = fileMenu->addAction(tr("Save &As..."), this, SLOT(saveAs()), QKeySequence("Shift+Ctrl+S"));
+	actionExport = fileMenu->addAction(tr("&Export the current map..."), this, SLOT(exportCurrentMap()), QKeySequence("Ctrl+E"));
+	actionMassExport = fileMenu->addAction(tr("&Mass Export..."), this, SLOT(massExport()), QKeySequence("Shift+Ctrl+E"));
+	actionImport = fileMenu->addAction(tr("&Import to current map..."), this, SLOT(importToCurrentMap()), QKeySequence("Ctrl+I"));
+//	actionMassImport = fileMenu->addAction(tr("Mass &import..."), this, SLOT(massImport()), QKeySequence("Shift+Ctrl+I"));
+	actionArchive = fileMenu->addAction(tr("Archive Mana&ger..."), this, SLOT(archiveManager()), QKeySequence("Ctrl+K"));
+	fileMenu->addSeparator();
+	actionRun = fileMenu->addAction(QIcon(":/images/ff7.png"), tr("R&un FF7"), this, SLOT(runFF7()));
 	actionRun->setShortcut(Qt::Key_F8);
 	actionRun->setShortcutContext(Qt::ApplicationShortcut);
 	actionRun->setEnabled(!Data::ff7AppPath().isEmpty());
-	menu->addSeparator();
-	actionClose = menu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("C&lose"), this, SLOT(closeFile()));
-	menu->addAction(tr("E&xit"), this, SLOT(close()), QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
+	fileMenu->addSeparator();
+	actionClose = fileMenu->addAction(QApplication::style()->standardIcon(QStyle::SP_DialogCloseButton), tr("C&lose"), this, SLOT(closeFile()));
+	fileMenu->addAction(tr("E&xit"), this, SLOT(close()), QKeySequence::Quit)->setMenuRole(QAction::QuitRole);
 
 	/* "Tools" Menu */
 	menu = menuBar->addMenu(tr("T&ools"));
@@ -159,7 +159,7 @@ Window::Window() :
 
 //		connect(modelThread, SIGNAL(modelLoaded(Field*,FieldModelFile*,int,int,bool)), SLOT(showModel(Field*,FieldModelFile*)));
 	} else {
-		fieldModel = 0;
+		fieldModel = nullptr;
 	}
 
 	zonePreview = new QStackedWidget(this);
@@ -211,7 +211,11 @@ Window::Window() :
 
 	searchDialog = new Search(this);
 	menuBar->addMenu(createPopupMenu());
-	menuBar->addAction("&?", this, SLOT(about()))->setMenuRole(QAction::AboutRole);
+#ifndef Q_OS_MAC
+	menuBar->addAction(tr("&?"), this, SLOT(about()))->setMenuRole(QAction::AboutRole);
+#else
+	fileMenu->addAction(tr("&?"), this, SLOT(about()))->setMenuRole(QAction::AboutRole);
+#endif
 
 	setMenuBar(menuBar);
 
@@ -425,7 +429,7 @@ int Window::closeFile(bool quit)
 		if (_modelManager) {
 			_modelManager->close();
 			_modelManager->deleteLater();
-			_modelManager = 0;
+			_modelManager = nullptr;
 		}
 		setWindowModified(false);
 		setWindowTitle();
@@ -557,8 +561,8 @@ bool Window::observerWasCanceled() const
 
 void Window::setObserverMaximum(unsigned int max)
 {
-	taskBarButton->setMaximum(max);
-	progressDialog()->setMaximum(max);
+	taskBarButton->setMaximum(int(max));
+	progressDialog()->setMaximum(int(max));
 }
 
 bool Window::observerRetry(const QString &message)
@@ -617,7 +621,7 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	hideProgression();
 
 	QString out;
-	switch(error)
+	switch (error)
 	{
 	case FieldArchiveIO::Ok:
 	case FieldArchiveIO::Aborted:
@@ -827,8 +831,8 @@ void Window::openField(bool reload)
 	_fieldList->scrollToItem(_fieldList->selectedItems().first());
 
 //	Data::currentCharNames.clear();
-	Data::currentHrcNames = 0;
-	Data::currentAnimNames = 0;
+	Data::currentHrcNames = nullptr;
+	Data::currentAnimNames = nullptr;
 
 	setWindowTitle();
 
@@ -848,7 +852,7 @@ void Window::openField(bool reload)
 	}
 
 	// Get and set field
-	field = fieldArchive->field(mapId, true, true);
+	field = fieldArchive->field(quint32(mapId), true, true);
 	if (!field) {
 		if (fieldArchive->isPC()) {
 			_fieldStackedWidget->setCurrentIndex(1);
@@ -916,7 +920,7 @@ void Window::openField(bool reload)
 void Window::showModel(int grpScriptID)
 {
 	if (grpScriptID >= 0) {
-		int modelID = field->scriptsAndTexts()->modelID(grpScriptID);
+		int modelID = field->scriptsAndTexts()->modelID(quint8(grpScriptID));
 		Data::currentModelID = modelID;
 		if (fieldModel && modelID > -1) {
 			// if (fieldArchive->io()->isPC()) {
@@ -954,7 +958,7 @@ void Window::setModified(bool enabled)
 		QTreeWidgetItem *item = _fieldList->topLevelItem(i);
 		int mapId = item->data(0, Qt::UserRole).toInt();
 		if (mapId >= 0) {
-			Field *curField = fieldArchive->field(mapId, false);
+			Field *curField = fieldArchive->field(quint32(mapId), false);
 			if (curField) {
 				if (enabled && curField->isModified()) {
 					item->setForeground(0, red);
@@ -979,7 +983,9 @@ void Window::save() { saveAs(true); }
 
 void Window::saveAs(bool currentPath)
 {
-	if (!fieldArchive) return;
+	if (!fieldArchive) {
+		return;
+	}
 
 	int mapID, groupID, scriptID, opcodeID;
 	QString errorStr;
@@ -990,23 +996,24 @@ void Window::saveAs(bool currentPath)
 
 	if (!compiled) {
 		QMessageBox::warning(this, tr("Compilation Error"), tr("Error Compiling Scripts:\n"
-																   "scene %1 (%2), group %3 (%4), script %5, line %6: %7")
-							 .arg(fieldArchive->field(mapID)->name())
-							 .arg(mapID)
-							 .arg(fieldArchive->field(mapID)->scriptsAndTexts()->grpScript(groupID)->name())
-							 .arg(groupID).arg(scriptID)
-							 .arg(opcodeID+1).arg(errorStr));
+		                                                       "scene %1 (%2), group %3 (%4), script %5, line %6: %7")
+		                     .arg(fieldArchive->field(quint32(mapID))->name())
+		                     .arg(mapID)
+		                     .arg(fieldArchive->field(quint32(mapID))->scriptsAndTexts()->grpScript(groupID)->name())
+		                     .arg(groupID).arg(scriptID)
+		                     .arg(opcodeID+1).arg(errorStr));
 		gotoOpcode(mapID, groupID, scriptID, opcodeID);
 		_scriptManager->opcodeList()->setErrorLine(opcodeID);
 		return;
 	}
 
 	QString path;
-	if (!currentPath)
-	{
+	if (!currentPath) {
 		if (fieldArchive->io()->type() == FieldArchiveIO::Dir) {
 			path = QFileDialog::getExistingDirectory(this, tr("Save Directory As"), fieldArchive->io()->path());
-			if (path.isNull())		return;
+			if (path.isNull()) {
+				return;
+			}
 		} else {
 			QString filter;
 			if (fieldArchive->io()->type() == FieldArchiveIO::Lgp) {
@@ -1019,7 +1026,9 @@ void Window::saveAs(bool currentPath)
 				return;
 			}
 			path = QFileDialog::getSaveFileName(this, tr("Save As"), fieldArchive->io()->path(), filter);
-			if (path.isNull())		return;
+			if (path.isNull()) {
+				return;
+			}
 		}
 	}
 
@@ -1032,8 +1041,7 @@ void Window::saveAs(bool currentPath)
 
 	hideProgression();
 	QString out;
-	switch(error)
-	{
+	switch (error) {
 	case FieldArchiveIO::Ok:
 		setModified(false);
 		setWindowTitle();
@@ -1065,7 +1073,9 @@ void Window::saveAs(bool currentPath)
 		out = tr("This feature is not complete");
 		break;
 	}
-	if (!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
+	if (!out.isEmpty()) {
+		QMessageBox::warning(this, tr("Error"), out);
+	}
 }
 
 bool Window::gotoField(int mapID)
@@ -1163,7 +1173,7 @@ void Window::exportCurrentMap()
 	QString path = Config::value("exportPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("exportPath").toString()+"/";
 	path = QFileDialog::getSaveFileName(this, tr("Export the current file"), path+name, types, &selectedFilter);
 	if (path.isNull())		return;
-	qint8 error=4;
+	int error = 4;
 	bool compressed = selectedFilter != fieldDec;
 	
 	if (field->isModified()) {
@@ -1179,8 +1189,7 @@ void Window::exportCurrentMap()
 	}
 	
 	QString out;
-	switch(error)
-	{
+	switch (error) {
 	case 0:
 		index = path.lastIndexOf('/');
 		Config::setValue("exportPath", index == -1 ? path : path.left(index));
@@ -1277,7 +1286,7 @@ void Window::importToCurrentMap()
 		return;
 	}
 
-	Field *field = fieldArchive->field(mapId, false);
+	Field *field = fieldArchive->field(quint32(mapId), false);
 	if (nullptr == field) {
 		return;
 	}
@@ -1323,7 +1332,7 @@ void Window::importToCurrentMap()
 	qint8 error = field->importer(path, isDat, isCompressed, parts, &bsxDevice, &mimDevice);
 
 	QString out;
-	switch(error)
+	switch (error)
 	{
 	case 0:
 		setModified();
@@ -1397,7 +1406,7 @@ void Window::createCurrentMap()
 		return;
 	}
 
-	Field *field = fieldArchive->field(mapId, false);
+	Field *field = fieldArchive->field(quint32(mapId), false);
 	if (field != nullptr) {
 		field->initEmpty();
 		openField(true);

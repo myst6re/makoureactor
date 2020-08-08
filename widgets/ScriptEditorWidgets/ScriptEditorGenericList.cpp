@@ -105,7 +105,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 	if (byte == 0x0F) { // SPECIAL
 		quint8 byte2 = ((OpcodeSPECIAL *)opcodePtr())->opcode->id();
 		newOpcode.append((char)byte2);
-		switch(byte2) {
+		switch (byte2) {
 		case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
 				length = 1;
 			break;
@@ -245,7 +245,7 @@ void ScriptEditorGenericList::fillModel()
 QList<int> ScriptEditorGenericList::paramTypes(int id)
 {
 	QList<int> paramTypes;
-	switch(id) {
+	switch (id) {
 	//case 0x00:break;
 	case 0x01:case 0x02:case 0x03:
 		paramTypes<<group_id<<priorite<<script_id;break;
@@ -555,7 +555,7 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 
 int ScriptEditorGenericList::paramSize(int type)
 {
-	switch(type) {
+	switch (type) {
 	case dword:
 	case label:				return 32;
 	case color:				return 24;
@@ -583,7 +583,7 @@ int ScriptEditorGenericList::paramSize(int type)
 
 bool ScriptEditorGenericList::paramIsSigned(int type)
 {
-	switch(type) {
+	switch (type) {
 	case sword:
 	case coord_x:
 	case coord_y:
@@ -594,7 +594,7 @@ bool ScriptEditorGenericList::paramIsSigned(int type)
 
 QString ScriptEditorGenericList::paramName(int type)
 {
-	switch(type) {
+	switch (type) {
 	case dword:				return tr("Double long");
 	case word:				return tr("Long");
 	case sword:				return tr("Signed long");

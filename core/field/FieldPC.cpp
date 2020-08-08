@@ -50,7 +50,7 @@ void FieldPC::openHeader(const QByteArray &fileData)
 
 int FieldPC::sectionId(FieldSection part) const
 {
-	switch(part) {
+	switch (part) {
 	case Scripts:
 	case Akaos:			return 0;
 	case Camera:		return 1;
@@ -72,7 +72,7 @@ quint32 FieldPC::sectionPosition(int idPart) const
 
 FieldPart *FieldPC::createPart(FieldSection part)
 {
-	switch(part) {
+	switch (part) {
 	case ModelLoader:	return new FieldModelLoaderPC(this);
 	case Background:	return new BackgroundFilePC(this);
 	default:			return Field::createPart(part);

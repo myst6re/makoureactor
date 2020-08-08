@@ -223,7 +223,7 @@ QWidget *Search::scriptPageWidget()
 	currentScriptCheckBox = new QRadioButton(tr("Current script"));
 
 	FieldArchive::SearchScope searchScope = FieldArchive::SearchScope(Config::value("searchScope").toInt());
-	switch(searchScope) {
+	switch (searchScope) {
 	case FieldArchive::FieldScope:		currentFieldCheckBox->setChecked(true);		break;
 //	case FieldArchive::GrpScriptScope:	currentGrpScriptCheckBox->setChecked(true);	break;
 //	case FieldArchive::ScriptScope:		currentScriptCheckBox->setChecked(true);	break;
@@ -291,7 +291,7 @@ QWidget *Search::textPageWidget()
 	currentTextCheckBox = new QRadioButton(tr("Current text"));
 
 	FieldArchive::SearchScope searchScope = FieldArchive::SearchScope(Config::value("searchScope").toInt());
-	switch(searchScope) {
+	switch (searchScope) {
 	case FieldArchive::FieldScope:		currentFieldCheckBox2->setChecked(true);		break;
 //	case FieldArchive::TextScope:		currentTextCheckBox->setChecked(true);	break;
 	default:							globalCheckBox->setChecked(true);			break;
@@ -485,7 +485,7 @@ FieldArchive::SearchScope Search::searchScope() const
 
 QString Search::lastMessage() const
 {
-	switch(searchScope()) {
+	switch (searchScope()) {
 	case FieldArchive::GlobalScope:		return tr("Last field");
 	case FieldArchive::FieldScope:		return tr("Last group");
 	case FieldArchive::GrpScriptScope:	return tr("Last script");
@@ -497,7 +497,7 @@ QString Search::lastMessage() const
 
 QString Search::firstMessage() const
 {
-	switch(searchScope()) {
+	switch (searchScope()) {
 	case FieldArchive::GlobalScope:		return tr("First field");
 	case FieldArchive::FieldScope:		return tr("First group");
 	case FieldArchive::GrpScriptScope:	return tr("First script");
@@ -588,7 +588,7 @@ bool Search::findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchS
 {
 	++opcodeID;
 
-	switch(liste->currentIndex()) {
+	switch (liste->currentIndex()) {
 	case 0:
 		return fieldArchive->searchTextInScripts(text, mapID, grpScriptID,
 		                                         scriptID, opcodeID,
@@ -701,7 +701,7 @@ bool Search::findPrevScript(FieldArchive::Sorting sorting, FieldArchive::SearchS
 {
 	--opcodeID;
 
-	switch(liste->currentIndex()) {
+	switch (liste->currentIndex()) {
 	case 0:
 		return fieldArchive->searchTextInScriptsP(text, mapID, grpScriptID,
 		                                          scriptID, opcodeID,
@@ -809,7 +809,7 @@ void Search::setSearchValues()
 {
 	bool ok;
 	if (tabWidget->currentIndex() == 0) { // scripts page
-		switch(liste->currentIndex())
+		switch (liste->currentIndex())
 		{
 		case 0:
 		{

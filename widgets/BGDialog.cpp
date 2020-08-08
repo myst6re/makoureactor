@@ -240,7 +240,7 @@ void BGDialog::layerChanged()
 	int layer = items.first()->data(Qt::UserRole).toInt();
 	int zValue = z[layer-2];
 	if (zValue == -1) {
-		switch(layer) {
+		switch (layer) {
 		case 2:
 			zValue = 4096;
 			break;

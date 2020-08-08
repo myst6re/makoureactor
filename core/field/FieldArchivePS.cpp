@@ -25,7 +25,7 @@ FieldArchivePS::FieldArchivePS() :
 FieldArchivePS::FieldArchivePS(const QString &path, FieldArchiveIO::Type type) :
 	FieldArchive()
 {
-	switch(type) {
+	switch (type) {
 	case FieldArchiveIO::Dir:
 		setIO(new FieldArchiveIOPSDir(path, this));
 		break;

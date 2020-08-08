@@ -134,7 +134,7 @@ void ScriptEditorExecPage::setOpcode(Opcode *opcode)
 		o->blockSignals(true);
 	}
 
-	switch((Opcode::Keys)opcode->id()) {
+	switch ((Opcode::Keys)opcode->id()) {
 	case Opcode::REQ:		execType->setCurrentIndex(0);	break;
 	case Opcode::REQSW:		execType->setCurrentIndex(1);	break;
 	case Opcode::REQEW:		execType->setCurrentIndex(2);	break;
@@ -181,7 +181,7 @@ void ScriptEditorExecPage::changeCurrentOpcode(int index)
 {
 	Opcode::Keys key;
 
-	switch(index) {
+	switch (index) {
 	case 0:		key = Opcode::REQ;		break;
 	case 1:		key = Opcode::REQSW;	break;
 	case 2:		key = Opcode::REQEW;	break;
@@ -201,7 +201,7 @@ Opcode *ScriptEditorExecPage::convertOpcode(Opcode::Keys key)
 
 	OpcodeExec *exec = (OpcodeExec *)opcodePtr();
 
-	switch(key) {
+	switch (key) {
 	case Opcode::REQ:		ScriptEditorView::setOpcode(new OpcodeREQ(*exec));		break;
 	case Opcode::REQSW:		ScriptEditorView::setOpcode(new OpcodeREQSW(*exec));	break;
 	case Opcode::REQEW:		ScriptEditorView::setOpcode(new OpcodeREQEW(*exec));	break;
@@ -271,7 +271,7 @@ void ScriptEditorExecCharPage::setOpcode(Opcode *opcode)
 		o->blockSignals(true);
 	}
 
-	switch((Opcode::Keys)opcode->id()) {
+	switch ((Opcode::Keys)opcode->id()) {
 	case Opcode::PREQ:		execType->setCurrentIndex(0);	break;
 	case Opcode::PRQSW:		execType->setCurrentIndex(1);	break;
 	case Opcode::PRQEW:		execType->setCurrentIndex(2);	break;
@@ -293,7 +293,7 @@ void ScriptEditorExecCharPage::changeCurrentOpcode(int index)
 {
 	Opcode::Keys key;
 
-	switch(index) {
+	switch (index) {
 	case 0:		key = Opcode::PREQ;		break;
 	case 1:		key = Opcode::PRQSW;	break;
 	case 2:		key = Opcode::PRQEW;	break;
@@ -313,7 +313,7 @@ Opcode *ScriptEditorExecCharPage::convertOpcode(Opcode::Keys key)
 
 	OpcodeExecChar *exec = (OpcodeExecChar *)opcodePtr();
 
-	switch(key) {
+	switch (key) {
 	case Opcode::PREQ:		ScriptEditorView::setOpcode(new OpcodePREQ(*exec));		break;
 	case Opcode::PRQSW:		ScriptEditorView::setOpcode(new OpcodePRQSW(*exec));	break;
 	case Opcode::PRQEW:		ScriptEditorView::setOpcode(new OpcodePRQEW(*exec));	break;
@@ -528,7 +528,7 @@ Opcode *ScriptEditorJumpPage::convertOpcode(Opcode::Keys key)
 
 	OpcodeJump *jump = (OpcodeJump *)opcodePtr();
 
-	switch(key) {
+	switch (key) {
 	case Opcode::JMPF:	ScriptEditorView::setOpcode(new OpcodeJMPF(*jump));		break;
 	case Opcode::JMPFL:	ScriptEditorView::setOpcode(new OpcodeJMPFL(*jump));	break;
 	case Opcode::JMPB:	ScriptEditorView::setOpcode(new OpcodeJMPB(*jump));		break;
@@ -647,13 +647,13 @@ Opcode *ScriptEditorIfPage::opcode()
 {
 //	qDebug() << "opcode" << _opcode->name();
 	if (rangeJump->currentIndex() == 0) { // short jump
-		switch(opcodePtr()->id()) {
+		switch (opcodePtr()->id()) {
 		case Opcode::IFUBL:		convertOpcode(Opcode::IFUB);	break;
 		case Opcode::IFSWL:		convertOpcode(Opcode::IFSW);	break;
 		case Opcode::IFUWL:		convertOpcode(Opcode::IFUW);	break;
 		}
 	} else { // long jump
-		switch(opcodePtr()->id()) {
+		switch (opcodePtr()->id()) {
 		case Opcode::IFUB:		convertOpcode(Opcode::IFUBL);	break;
 		case Opcode::IFSW:		convertOpcode(Opcode::IFSWL);	break;
 		case Opcode::IFUW:		convertOpcode(Opcode::IFUWL);	break;
@@ -661,21 +661,21 @@ Opcode *ScriptEditorIfPage::opcode()
 	}
 
 	if (rangeTest->currentIndex() == 0) { // byte test
-		switch(opcodePtr()->id()) {
+		switch (opcodePtr()->id()) {
 		case Opcode::IFSW:
 		case Opcode::IFUW:		convertOpcode(Opcode::IFUB);	break;
 		case Opcode::IFSWL:
 		case Opcode::IFUWL:		convertOpcode(Opcode::IFUBL);	break;
 		}
 	} else if (rangeTest->currentIndex() == 1) { // signed word test
-		switch(opcodePtr()->id()) {
+		switch (opcodePtr()->id()) {
 		case Opcode::IFUB:
 		case Opcode::IFUW:		convertOpcode(Opcode::IFSW);	break;
 		case Opcode::IFUBL:
 		case Opcode::IFUWL:		convertOpcode(Opcode::IFSWL);	break;
 		}
 	} else { // unsigned word test
-		switch(opcodePtr()->id()) {
+		switch (opcodePtr()->id()) {
 		case Opcode::IFUB:
 		case Opcode::IFSW:		convertOpcode(Opcode::IFUW);	break;
 		case Opcode::IFUBL:
@@ -826,7 +826,7 @@ Opcode *ScriptEditorIfPage::convertOpcode(Opcode::Keys key)
 
 	OpcodeIf *ifop = (OpcodeIf *)opcodePtr();
 
-	switch(key) {
+	switch (key) {
 	case Opcode::IFUB:	ScriptEditorView::setOpcode(new OpcodeIFUB(*ifop));		break;
 	case Opcode::IFUBL:	ScriptEditorView::setOpcode(new OpcodeIFUBL(*ifop));	break;
 	case Opcode::IFSW:	ScriptEditorView::setOpcode(new OpcodeIFSW(*ifop));		break;
@@ -927,7 +927,7 @@ void ScriptEditorIfKeyPage::setOpcode(Opcode *opcode)
 
 	OpcodeIfKey *opcodeIfKey = (OpcodeIfKey *)opcode;
 
-	switch(opcode->id()) {
+	switch (opcode->id()) {
 	case Opcode::IFKEY:
 		typeList->setCurrentIndex(0);
 		break;
@@ -961,7 +961,7 @@ Opcode *ScriptEditorIfKeyPage::convertOpcode(Opcode::Keys key)
 
 	OpcodeIfKey *ifkey = (OpcodeIfKey *)opcodePtr();
 
-	switch(key) {
+	switch (key) {
 	case Opcode::IFKEY:		ScriptEditorView::setOpcode(new OpcodeIFKEY(*ifkey));		break;
 	case Opcode::IFKEYON:	ScriptEditorView::setOpcode(new OpcodeIFKEYON(*ifkey));		break;
 	case Opcode::IFKEYOFF:	ScriptEditorView::setOpcode(new OpcodeIFKEYOFF(*ifkey));	break;

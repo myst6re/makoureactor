@@ -26,7 +26,7 @@ FieldArchivePC::FieldArchivePC() :
 FieldArchivePC::FieldArchivePC(const QString &path, FieldArchiveIO::Type type) :
 	FieldArchive()
 {
-	switch(type) {
+	switch (type) {
 	case FieldArchiveIO::Lgp:
 		setIO(new FieldArchiveIOPCLgp(path, this));
 		break;

@@ -24,7 +24,7 @@ int FieldPSDemo::sectionId(FieldSection part) const
 
 QString FieldPSDemo::sectionFile(FieldSection part) const
 {
-	switch(part) {
+	switch (part) {
 	case Scripts:		return "ATE";
 	case Akaos:			return "ATE";
 	case Walkmesh:		return "ID";
@@ -45,7 +45,7 @@ quint32 FieldPSDemo::sectionPosition(int idPart) const
 
 FieldPart *FieldPSDemo::createPart(FieldSection part)
 {
-	switch(part) {
+	switch (part) {
 	case ModelLoader:	return new FieldModelLoaderPS(this);
 	case Background:	return new BackgroundFilePS(this);
 	default:			return Field::createPart(part);

@@ -25,7 +25,7 @@ BackgroundTiles::BackgroundTiles() :
 BackgroundTiles::BackgroundTiles(const QList<Tile> &tiles)
 {
 	for (const Tile &tile : tiles) {
-		switch(tile.layerID) {
+		switch (tile.layerID) {
 		case 0:
 			insert(1, tile);
 			break;
@@ -53,7 +53,7 @@ BackgroundTiles BackgroundTiles::filter(const QHash<quint8, quint8> &paramActifs
 	BackgroundTiles ret;
 
 	for (const Tile &tile : *this) {
-		switch(tile.layerID) {
+		switch (tile.layerID) {
 		case 0:
 			if ((layers == nullptr || layers[0]) && (IDs == nullptr || IDs->contains(1))) {
 				ret.insert(1, tile);
@@ -135,7 +135,7 @@ QHash<quint8, quint8> BackgroundTiles::usedParams(bool *layerExists, QSet<quint1
 	layerExists[0] = layerExists[1] = layerExists[2] = false;
 
 	for (const Tile &tile : *this) {
-		switch(tile.layerID) {
+		switch (tile.layerID) {
 		case 0:
 			break;
 		case 1:

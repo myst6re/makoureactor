@@ -470,7 +470,7 @@ bool Section1File::exporter(QIODevice *device, ExportFormat format)
 {
 	bool jp = Config::value("jp_txt", false).toBool();
 
-	switch(format) {
+	switch (format) {
 	case TXTText: {
 		if (!device->open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
 			return false;

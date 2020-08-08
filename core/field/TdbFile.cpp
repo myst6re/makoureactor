@@ -127,7 +127,7 @@ int TdbFile::faceIdToImageId(quint8 faceID, TextureType type)
 		if (type == Empty)	return 126;
 		return faceID * 8 + (quint8)type;
 	} else {
-		switch(type) {
+		switch (type) {
 		case Eye:
 		case EyeOpened1:case EyeOpened2:
 			return 10 * 8 + (faceID - 10) * 2;

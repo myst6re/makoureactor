@@ -176,7 +176,7 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 
 FieldPart *Field::createPart(FieldSection section)
 {
-	switch(section) {
+	switch (section) {
 	case Scripts:		return new Section1File(this);
 	case Akaos:			return new TutFileStandard(this);
 	case Camera:		return new CaFile(this);

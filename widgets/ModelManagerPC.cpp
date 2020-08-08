@@ -295,7 +295,7 @@ void ModelManagerPC::modifyHRC(const QString &hrc)
 		modelPreview->setIsAnimated(false);
 		modelPreview->setFieldModelFile(field()->fieldModel(hrc, "aafe"));
 		QString a;
-		switch(modelPreview->boneCount()) {
+		switch (modelPreview->boneCount()) {
 		case 5:		a = "avhd";	break;
 		case 9:		a = "geaf";	break;
 		case 11:	a = "bdfe";	break;

@@ -433,7 +433,7 @@ QString Opcode::akao(quint8 akaoOp, bool *ok)
 		*ok = true;
 	}
 
-	switch(akaoOp) {
+	switch (akaoOp) {
 	case 0x10:
 	case 0x14:	return QObject::tr("Play music [param1: music ID, 0-based]");
 	case 0x18:
@@ -569,7 +569,7 @@ QString Opcode::_windowCorner(quint8 param, quint8 bank)
 		return _bank(param, bank);
 	}
 
-	switch(param) {
+	switch (param) {
 	case 0:		return QObject::tr("Top Left");
 	case 1:		return QObject::tr("Bottom Left");
 	case 2:		return QObject::tr("Top Right");
@@ -580,7 +580,7 @@ QString Opcode::_windowCorner(quint8 param, quint8 bank)
 
 QString Opcode::_sensRotation(quint8 param)
 {
-	switch(param) {
+	switch (param) {
 	case 1:		return QObject::tr("reverse");
 	case 2:		return QObject::tr("reverse");
 	default:	return QObject::tr("normal");
@@ -1282,7 +1282,7 @@ void OpcodeSPECIAL::setParams(const char *params, int size)
 {
 	if (opcode)		delete opcode;
 
-	switch((quint8)params[0])
+	switch ((quint8)params[0])
 	{
 	case 0xF5:	opcode = new OpcodeSPECIALARROW(params + 1, size - 1);
 		break;
@@ -1871,7 +1871,7 @@ QString Opcode1A::toString(Field *) const
 {
 	QStringList flags;
 
-	switch(flag & 0x7) {
+	switch (flag & 0x7) {
 	case 1:    flags.append(QObject::tr("8 bit"));     break;
 	case 2:    flags.append(QObject::tr("16 bit"));    break;
 	case 3:    flags.append(QObject::tr("24 bit"));    break;
@@ -1939,7 +1939,7 @@ void OpcodeMINIGAME::setParams(const char *params, int)
 QString OpcodeMINIGAME::toString(Field *) const
 {
 	QString miniGame;
-	switch(minigameID)
+	switch (minigameID)
 	{
 	case 0x00:		miniGame = QObject::tr("Bike (parameter %1)").arg(minigameParam);break;
 	case 0x01:		miniGame = QObject::tr("Chocobo Races (parameter %1)").arg(minigameParam);break;
@@ -2018,7 +2018,7 @@ QString OpcodeBTMD2::toString(Field *) const
 	{
 		if ((battleMode >> i) & 1)
 		{
-			switch(i)
+			switch (i)
 			{
 			case 1:		modes.append(QObject::tr("Countdown"));											break;
 			case 2:		modes.append(QObject::tr("Pre-emptive attack"));										break;
@@ -2432,7 +2432,7 @@ void OpcodeKAWAI::setParams(const char *params, int size)
 	if (opcode)		delete opcode;
 
 //	size = params[0];
-	switch((quint8)params[1])
+	switch ((quint8)params[1])
 	{
 	case 0x00:	opcode = new OpcodeKAWAIEYETX(params + 2, size - 2);
 		break;
@@ -2886,7 +2886,7 @@ void OpcodeWSPCL::setParams(const char *params, int)
 QString OpcodeWSPCL::toString(Field *) const
 {
 	QString windowNum;
-	switch(displayType)
+	switch (displayType)
 	{
 	case 0x00:		windowNum = QObject::tr("(none)");					break;
 	case 0x01:		windowNum = QObject::tr("Clock (00:00)");			break;
@@ -3453,7 +3453,7 @@ void OpcodeMENU::setParams(const char *params, int)
 
 QString OpcodeMENU::menu22(const QString &param)
 {
-	switch(param.toInt())
+	switch (param.toInt())
 	{
 	case 0: return QObject::tr("all magic materias are present and mastered");
 	case 1: return QObject::tr("all summon materias are present and mastered");
@@ -3465,7 +3465,7 @@ QString OpcodeMENU::menu22(const QString &param)
 
 QString OpcodeMENU::menu23(const QString &param)
 {
-	switch(param.toInt())
+	switch (param.toInt())
 	{
 	case 0: return QObject::tr("Remove mastered magic materias and add Master Magic");
 	case 1: return QObject::tr("Remove mastered summon materias and add Master Summon");
@@ -3477,7 +3477,7 @@ QString OpcodeMENU::menu23(const QString &param)
 
 QString OpcodeMENU::menu(const QString &param) const
 {
-	switch(menuID)
+	switch (menuID)
 	{
 	case 1:		return QObject::tr("Exit program (parameter %1)").arg(param);
 	case 2:		return QObject::tr("Encount Error (parameter %1)").arg(param);
@@ -3680,7 +3680,7 @@ void OpcodeWMODE::setParams(const char *params, int)
 QString OpcodeWMODE::toString(Field *) const
 {
 	QString typeStr;
-	switch(mode)
+	switch (mode)
 	{
 	case 0x00:		typeStr = QObject::tr("Normal");						break;
 	case 0x01:		typeStr = QObject::tr("No Background/Border");	break;
@@ -4702,7 +4702,7 @@ QString OpcodeBTLMD::toString(Field *) const
 	{
 		if ((battleMode >> i) & 1)
 		{
-			switch(i)
+			switch (i)
 			{
 			case 1:		modes.append(QObject::tr("Countdown"));									break;
 			case 2:		modes.append(QObject::tr("Pre-emptive attack"));						break;

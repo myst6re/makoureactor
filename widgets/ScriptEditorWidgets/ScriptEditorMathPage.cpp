@@ -105,7 +105,7 @@ void ScriptEditorBinaryOpPage::setOpcode(Opcode *opcode)
 	type1->setEnabled(true);
 	type2->setEnabled(true);
 
-	switch((Opcode::Keys)opcode->id()) {
+	switch ((Opcode::Keys)opcode->id()) {
 	case Opcode::SETBYTE:case Opcode::SETWORD:
 		operationList->setCurrentIndex(0);
 		break;
@@ -178,7 +178,7 @@ void ScriptEditorBinaryOpPage::updateValueRange()
 	Opcode::Keys key = (Opcode::Keys)opcodePtr()->id();
 
 	if (type1->isChecked()) {
-		switch(key) {
+		switch (key) {
 		case Opcode::SETWORD:	key = Opcode::SETBYTE;	break;
 		case Opcode::PLUS2:		key = Opcode::PLUS;		break;
 		case Opcode::PLUS2X:	key = Opcode::PLUSX;	break;
@@ -193,7 +193,7 @@ void ScriptEditorBinaryOpPage::updateValueRange()
 		default:	break;
 		}
 	} else {
-		switch(key) {
+		switch (key) {
 		case Opcode::SETBYTE:	key = Opcode::SETWORD;	break;
 		case Opcode::PLUS:		key = Opcode::PLUS2;	break;
 		case Opcode::PLUSX:		key = Opcode::PLUS2X;	break;
@@ -223,7 +223,7 @@ void ScriptEditorBinaryOpPage::changeCurrentOpcode(int index)
 	type1->setEnabled(true);
 	type2->setEnabled(true);
 
-	switch(index) {
+	switch (index) {
 	case 0:
 		key = type1->isChecked()
 				? Opcode::SETBYTE
@@ -319,7 +319,7 @@ Opcode *ScriptEditorBinaryOpPage::convertOpcode(Opcode::Keys key)
 
 	OpcodeBinaryOperation *binop = (OpcodeBinaryOperation *)opcodePtr();
 
-	switch(key) {
+	switch (key) {
 	case Opcode::SETBYTE:	ScriptEditorView::setOpcode(new OpcodeSETBYTE(*binop));		break;
 	case Opcode::SETWORD:	ScriptEditorView::setOpcode(new OpcodeSETWORD(*binop));		break;
 	case Opcode::PLUS:		ScriptEditorView::setOpcode(new OpcodePLUS(*binop));		break;
@@ -415,7 +415,7 @@ void ScriptEditorUnaryOpPage::setOpcode(Opcode *opcode)
 	type1->setEnabled(true);
 	type2->setEnabled(true);
 
-	switch((Opcode::Keys)opcode->id()) {
+	switch ((Opcode::Keys)opcode->id()) {
 	case Opcode::INC:case Opcode::INC2:
 		operationList->setCurrentIndex(0);
 		break;
@@ -454,7 +454,7 @@ void ScriptEditorUnaryOpPage::updateValueRange()
 	Opcode::Keys key = (Opcode::Keys)opcodePtr()->id();
 
 	if (type1->isChecked()) {
-		switch(key) {
+		switch (key) {
 		case Opcode::INC2X:	key = Opcode::INCX;	break;
 		case Opcode::INC2:	key = Opcode::INC;	break;
 		case Opcode::DEC2X:	key = Opcode::DECX;	break;
@@ -462,7 +462,7 @@ void ScriptEditorUnaryOpPage::updateValueRange()
 		default:	break;
 		}
 	} else {
-		switch(key) {
+		switch (key) {
 		case Opcode::INCX:	key = Opcode::INC2X;	break;
 		case Opcode::INC:	key = Opcode::INC2;		break;
 		case Opcode::DECX:	key = Opcode::DEC2X;	break;
@@ -485,7 +485,7 @@ void ScriptEditorUnaryOpPage::changeCurrentOpcode(int index)
 	type1->setEnabled(true);
 	type2->setEnabled(true);
 
-	switch(index) {
+	switch (index) {
 	case 0:
 		key = type1->isChecked()
 				? Opcode::INC
@@ -536,7 +536,7 @@ Opcode *ScriptEditorUnaryOpPage::convertOpcode(Opcode::Keys key)
 
 	OpcodeUnaryOperation *unop = (OpcodeUnaryOperation *)opcodePtr();
 
-	switch(key) {
+	switch (key) {
 	case Opcode::INC:		ScriptEditorView::setOpcode(new OpcodeINC(*unop));		break;
 	case Opcode::INC2:		ScriptEditorView::setOpcode(new OpcodeINC2(*unop));		break;
 	case Opcode::INCX:		ScriptEditorView::setOpcode(new OpcodeINCX(*unop));		break;
@@ -620,7 +620,7 @@ void ScriptEditorBitOpPage::setOpcode(Opcode *opcode)
 		o->blockSignals(true);
 	}
 
-	switch((Opcode::Keys)opcode->id()) {
+	switch ((Opcode::Keys)opcode->id()) {
 	case Opcode::BITON:
 		operationList->setCurrentIndex(0);
 		break;
@@ -655,7 +655,7 @@ void ScriptEditorBitOpPage::changeCurrentOpcode(int index)
 {
 	Opcode::Keys key;
 
-	switch(index) {
+	switch (index) {
 	case 0:	key = Opcode::BITON;	break;
 	case 1:	key = Opcode::BITOFF;	break;
 	case 2:	key = Opcode::BITXOR;	break;
@@ -675,7 +675,7 @@ Opcode *ScriptEditorBitOpPage::convertOpcode(Opcode::Keys key)
 
 	OpcodeBitOperation *bitop = (OpcodeBitOperation *)opcodePtr();
 
-	switch(key) {
+	switch (key) {
 	case Opcode::BITON:		ScriptEditorView::setOpcode(new OpcodeBITON(*bitop));	break;
 	case Opcode::BITOFF:	ScriptEditorView::setOpcode(new OpcodeBITOFF(*bitop));	break;
 	case Opcode::BITXOR:	ScriptEditorView::setOpcode(new OpcodeBITXOR(*bitop));	break;

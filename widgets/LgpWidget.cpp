@@ -229,9 +229,9 @@ void LgpDirectoryItem::addChild(const QString &name, LgpFileItem *item)
 
 void LgpDirectoryItem::sort(SortType type, Qt::SortOrder order)
 {
-	switch(type) {
+	switch (type) {
 	case ByName:
-		switch(order) {
+		switch (order) {
 		case Qt::AscendingOrder:
 			std::sort(_childItems.begin(), _childItems.end(), [](LgpItem *i1, LgpItem *i2) {
 				if (i1->isDirectory()) {
@@ -258,7 +258,7 @@ void LgpDirectoryItem::sort(SortType type, Qt::SortOrder order)
 
 		break;
 	case BySize:
-		switch(order) {
+		switch (order) {
 		case Qt::AscendingOrder:
 			std::sort(_childItems.begin(), _childItems.end(), [](LgpItem *i1, LgpItem *i2) {
 				if (i1->isDirectory() && i2->isDirectory()) {
@@ -500,10 +500,10 @@ QVariant LgpItemModel::data(const QModelIndex &index, int role) const
 		return QVariant();
 	}
 
-	switch(role) {
+	switch (role) {
 	case Qt::EditRole:
 	case Qt::DisplayRole:
-		switch(index.column()) {
+		switch (index.column()) {
 		case 0:		return lgpItem->name();
 		case 1:
 			if (lgpItem->isDirectory()) {
@@ -575,7 +575,7 @@ void LgpItemModel::update(const QModelIndex &index)
 
 QVariant LgpItemModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-	switch(role) {
+	switch (role) {
 	case Qt::TextAlignmentRole:
 		return Qt::AlignLeft;
 	}
@@ -584,7 +584,7 @@ QVariant LgpItemModel::headerData(int section, Qt::Orientation orientation, int 
 		return QAbstractItemModel::headerData(section, orientation, role);
 	}
 
-	switch(section) {
+	switch (section) {
 	case 0:		return tr("Name");
 	case 1:		return tr("Size");
 	default:	return QVariant();
@@ -596,7 +596,7 @@ void LgpItemModel::sort(int column, Qt::SortOrder order)
 	return QAbstractItemModel::sort(column, order);
 
 	// FIXME: TODO
-	/* switch(column) {
+	/* switch (column) {
 	case 0:
 		root->sort(LgpDirectoryItem::ByName, order);
 		break;

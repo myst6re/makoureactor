@@ -199,7 +199,7 @@ QString Data::searchFF7Exe(FF7Version version)
 {
 	QString ff7Path;
 
-	switch(version) {
+	switch (version) {
 	case Standard:
 		ff7Path = regValuePath(FF7_WIN_REGISTER_PATH, "AppPath");
 		if (!ff7Path.isEmpty() && QFile::exists(ff7Path + "/ff7.exe")) {
@@ -235,7 +235,7 @@ QString Data::searchFF7DataPath(FF7Version version)
 {
 	QString dataPath, ff7Path;
 
-	switch(version) {
+	switch (version) {
 	case Standard:
 		dataPath = regValuePath(FF7_WIN_REGISTER_PATH, "DataPath");
 		if (!dataPath.isEmpty() && QFile::exists(dataPath)) {

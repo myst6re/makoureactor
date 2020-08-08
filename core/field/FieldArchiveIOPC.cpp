@@ -201,7 +201,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 	if (!_lgp.pack(path, this)) {
 		this->observer = 0;
 
-		switch(_lgp.error()) {
+		switch (_lgp.error()) {
 		case Lgp::OpenError:
 			return ErrorOpening;
 		case Lgp::OpenTempError:

@@ -435,7 +435,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		 */
 
 		quint8 depthKey = 0;
-		switch(tile.depth & 3) {
+		switch (tile.depth & 3) {
 		case 0:		depthKey = 1;	break;
 		case 1:		depthKey = 0;	break;
 		default:	depthKey = 2;   break;

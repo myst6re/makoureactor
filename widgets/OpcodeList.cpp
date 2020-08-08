@@ -256,7 +256,7 @@ void OpcodeList::itemSelected()
 	}
 	Opcode *opcode = script->opcode(opcodeID);
 
-	switch(opcode->id()) {
+	switch (opcode->id()) {
 	case Opcode::ASK:
 	case Opcode::MESSAGE:
 	case Opcode::MPNAM:
@@ -510,7 +510,7 @@ void OpcodeList::add()
 	QStringList ret;
 	for (const Historic &h : hists) {
 		QString type;
-		switch(h.type) {
+		switch (h.type) {
 		case Add:	type = "Add";	break;
 		case Modify:	type = "Modify";	break;
 		case ModifyAndAddLabel:	type = "ModifyAndAddLabel";	break;
@@ -523,7 +523,7 @@ void OpcodeList::add()
 	QStringList ret2;
 	for (const Historic &h : restoreHists) {
 		QString type;
-		switch(h.type) {
+		switch (h.type) {
 		case Add:	type = "Add";	break;
 		case Modify:	type = "Modify";	break;
 		case ModifyAndAddLabel:	type = "ModifyAndAddLabel";	break;
@@ -594,7 +594,7 @@ void OpcodeList::undo()
 	int firstOpcode = hist.opcodeIDs.first();
 	Opcode *sav;
 
-	switch(hist.type) {
+	switch (hist.type) {
 	case Add:
 		// del opcodes
 		for (int i=hist.opcodeIDs.size()-1; i>=0; --i) {
@@ -657,7 +657,7 @@ void OpcodeList::redo()
 	int firstOpcode = hist.opcodeIDs.first();
 	Opcode *sav;
 
-	switch(hist.type) {
+	switch (hist.type) {
 	case Add:
 		for (int i=0; i<hist.opcodeIDs.size(); ++i)
 			script->insertOpcode(hist.opcodeIDs.at(i), hist.data.at(i));

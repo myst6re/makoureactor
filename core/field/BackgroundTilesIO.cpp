@@ -395,7 +395,7 @@ Tile BackgroundTilesIOPC::tilePC2Tile(const TilePC &tile, quint8 layerID, quint1
 	} else {
 		ret.param = ret.state = ret.blending = 0;
 	}
-	switch(layerID) {
+	switch (layerID) {
 	case 0:		ret.ID = 4095;		break;
 	case 2:		ret.ID = 4096;		break;
 	case 3:		ret.ID = 0;			break;

@@ -116,7 +116,7 @@ void VarManager::setFieldArchive(FieldArchive *fieldArchive)
 
 QPair<quint8, quint8> VarManager::banksFromRow(int row)
 {
-	switch(row) {
+	switch (row) {
 	case 0:
 		return qMakePair(quint8(1), quint8(2));
 	case 1:
@@ -136,7 +136,7 @@ QPair<quint8, quint8> VarManager::banksFromRow(int row)
 
 int VarManager::rowFromBank(quint8 bank)
 {
-	switch(bank) {
+	switch (bank) {
 	case 1:
 	case 2:
 		return 0;

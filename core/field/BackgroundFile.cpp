@@ -204,7 +204,7 @@ QRgb BackgroundFile::blendColor(quint8 type, QRgb color0, QRgb color1)
 {
 	int r, g, b;
 
-	switch(type) {
+	switch (type) {
 	case 1:
 		r = qRed(color0) + qRed(color1);
 		if (r>255)	r = 255;

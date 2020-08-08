@@ -40,7 +40,7 @@ void FieldPS::openHeader(const QByteArray &fileData)
 
 int FieldPS::sectionId(FieldSection part) const
 {
-	switch(part) {
+	switch (part) {
 	case Scripts:
 	case Akaos:			return 0;
 	case Walkmesh:		return 1;
@@ -66,7 +66,7 @@ FieldArchiveIOPS *FieldPS::io() const
 
 FieldPart *FieldPS::createPart(FieldSection part)
 {
-	switch(part) {
+	switch (part) {
 	case ModelLoader:	return new FieldModelLoaderPS(this);
 	case Background:	return new BackgroundFilePS(this);
 	default:			return Field::createPart(part);

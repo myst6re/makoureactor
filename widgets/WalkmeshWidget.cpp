@@ -562,7 +562,7 @@ void WalkmeshWidget::keyPressEvent(QKeyEvent *event)
 	}
 	lastKeyPressed = event->key();
 
-	switch(event->key())
+	switch (event->key())
 	{
 	case Qt::Key_Left:
 		xTrans += 1.0f/transStep;

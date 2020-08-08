@@ -88,7 +88,7 @@ Opcode *ScriptEditorWindowPage::opcode()
 {
 	OpcodeWROW *opcodeWROW;
 
-	switch((Opcode::Keys)opcodePtr()->id()) {
+	switch ((Opcode::Keys)opcodePtr()->id()) {
 	case Opcode::WINDOW:
 	case Opcode::WSIZW:
 		opcodePtr()->setWindowID(winID->value());

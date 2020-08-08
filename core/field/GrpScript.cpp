@@ -179,7 +179,7 @@ void GrpScript::setType()
 	Script *firstScript = _scripts.first();
 	
 	for (Opcode *opcode : firstScript->opcodes()) {
-		switch((Opcode::Keys)opcode->id()) {
+		switch ((Opcode::Keys)opcode->id()) {
 		case Opcode::PC://Definition du personnage
 			_character = static_cast<OpcodePC *>(opcode)->charID;
 			return;
@@ -249,7 +249,7 @@ GrpScript::Type GrpScript::typeID()
 
 QString GrpScript::type()
 {
-	switch(typeID())
+	switch (typeID())
 	{
 	case Model:
 		if (_character == 0xFF)	return QObject::tr("Field model");
@@ -263,7 +263,7 @@ QString GrpScript::type()
 
 QColor GrpScript::typeColor()
 {
-	switch(typeID())
+	switch (typeID())
 	{
 	case Model:		return Data::color(Data::ColorBlueForeground);
 	case Location:	return Data::color(Data::ColorGreenForeground);
@@ -277,7 +277,7 @@ QString GrpScript::scriptName(quint8 scriptID)
 {
 	Type type = typeID();
 	
-	switch(scriptID)
+	switch (scriptID)
 	{
 	case 0:	return QObject::tr("S0 - Init");
 	case 1:	return QObject::tr("S0 - Main");

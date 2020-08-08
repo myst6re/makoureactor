@@ -192,7 +192,7 @@ void GrpScriptList::fill(Section1File *scripts)
 		if (grpScript->character() >= 0 && grpScript->character() < 9) {
 			icon = QIcon(QString(":/images/icon-char-%1.png").arg(grpScript->character()));
 		} else {
-			switch(grpScript->typeID()) {
+			switch (grpScript->typeID()) {
 			case GrpScript::Director:
 				icon = QIcon(":/images/main.png");
 				break;

@@ -120,7 +120,7 @@ Opcode *Script::createOpcode(const QByteArray &script, int pos)
 		return new OpcodeUnknown(opcode, script.mid(pos + 1));
 	}
 
-	switch(opcode)
+	switch (opcode)
 	{
 	case 0x00:	return new OpcodeRET();
 	case 0x01:	return new OpcodeREQ(data, size);
@@ -136,7 +136,7 @@ Opcode *Script::createOpcode(const QByteArray &script, int pos)
 	case 0x0B:	return new OpcodeGTPYE(data, size);
 	case 0x0E:	return new OpcodeDSKCG(data, size);
 	case 0x0F://SPECIAL
-		switch((quint8)script.at(pos+1)) {
+		switch ((quint8)script.at(pos+1)) {
 		case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
 			size += 1;
 			break;
@@ -406,7 +406,7 @@ Opcode *Script::createOpcode(const QByteArray &script, int pos)
 
 Opcode *Script::copyOpcode(Opcode *opcode)
 {
-	switch(opcode->id())
+	switch (opcode->id())
 	{
 	case 0x00:	return new OpcodeRET(*static_cast<OpcodeRET *>(opcode));
 	case 0x01:	return new OpcodeREQ(*static_cast<OpcodeREQ *>(opcode));
@@ -806,7 +806,7 @@ bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) co
 	// if this is a long jump and opcode is a short jump
 	if (!opcodeJump->isLongJump() && jump > opcodeJump->maxJump()) {
 //		if (jump < 65535) {
-//			switch((Opcode::Keys)opcodeJump->id()) {
+//			switch ((Opcode::Keys)opcodeJump->id()) {
 //			case Opcode::JMPF:
 //				return opcodeJump;
 ////				qDebug() << "convert" << opcodeJump->name() << "to JMPFL because" << jump << "<=" << 65535;
@@ -843,7 +843,7 @@ bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) co
 
 	// Optimization: if this is a short jump and opcode is a long jump
 //	if (opcodeJump->isLongJump() && jump - opcodeJump->jumpPosData() <= 240) {
-//		switch((Opcode::Keys)opcodeJump->id()) {
+//		switch ((Opcode::Keys)opcodeJump->id()) {
 //		case Opcode::JMPFL:
 //			qDebug() << "convert" << opcodeJump->name() << "to JMPF because" << jump << "<=" << 240;
 //			return new OpcodeJMPF(*opcodeJump);

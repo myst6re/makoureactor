@@ -243,7 +243,7 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 	for (int i=0; i<size; ++i) {
 		quint8 caract = (quint8)ff7Text.at(i);
 		if (caract==0xff) break;
-		switch(caract) {
+		switch (caract) {
 		case 0xe8: // New Page
 		case 0xe9: // New Page 2
 			if (line == 0)	width += 3;
@@ -543,7 +543,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 			if (i >= size)	break;
 			int charId2 = (quint8)ff7Text.at(i);
 
-			switch(charId) {
+			switch (charId) {
 			case 0xfa:
 				if (jp)	letter(&x, &y, charId2, painter, 2);
 				else if (charId2 < 0xd2)		x += spaced_characters ? spacedCharsW : 1;

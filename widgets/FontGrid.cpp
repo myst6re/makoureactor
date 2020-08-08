@@ -139,7 +139,7 @@ void FontGrid::keyPressEvent(QKeyEvent *e)
 {
 	int letter;
 
-	switch(e->key()) {
+	switch (e->key()) {
 	case Qt::Key_Left:
 		letter = _letter - 1;
 		if (letter >= 0) {

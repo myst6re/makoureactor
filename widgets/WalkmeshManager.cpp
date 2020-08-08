@@ -1348,7 +1348,7 @@ void WalkmeshManager::editRange(int id, int v)
 		Range old = infFile->cameraRange();
 		qint16 oldv=0;
 
-		switch(id) {
+		switch (id) {
 		case 0:	oldv = old.top;		break;
 		case 1:	oldv = old.bottom;	break;
 		case 2:	oldv = old.right;	break;
@@ -1356,7 +1356,7 @@ void WalkmeshManager::editRange(int id, int v)
 		}
 
 		if (oldv != v) {
-			switch(id) {
+			switch (id) {
 			case 0: old.top = qint16(v);    break;
 			case 1: old.bottom = qint16(v); break;
 			case 2: old.right = qint16(v);  break;
@@ -1374,7 +1374,7 @@ void WalkmeshManager::editBgSize(int id, int v)
 	if (infFile->isOpen()) {
 		qint16 oldv=0;
 
-		switch(id) {
+		switch (id) {
 		case 0:	oldv = infFile->bgLayer3Width();	break;
 		case 1:	oldv = infFile->bgLayer3Height();	break;
 		case 2:	oldv = infFile->bgLayer4Width();	break;
@@ -1382,7 +1382,7 @@ void WalkmeshManager::editBgSize(int id, int v)
 		}
 
 		if (oldv != v) {
-			switch(id) {
+			switch (id) {
 			case 0: infFile->setBgLayer3Width(qint16(v));  break;
 			case 1: infFile->setBgLayer3Height(qint16(v)); break;
 			case 2: infFile->setBgLayer4Width(qint16(v));  break;
@@ -1399,7 +1399,7 @@ void WalkmeshManager::editBgFlag(int id, int v)
 	if (infFile->isOpen()) {
 		qint16 oldv=0;
 
-		switch(id) {
+		switch (id) {
 		case 0:	oldv = infFile->bgLayer1Flag();	break;
 		case 1:	oldv = infFile->bgLayer2Flag();	break;
 		case 2:	oldv = infFile->bgLayer3Flag();	break;
@@ -1407,7 +1407,7 @@ void WalkmeshManager::editBgFlag(int id, int v)
 		}
 
 		if (oldv != v) {
-			switch(id) {
+			switch (id) {
 			case 0:	infFile->setBgLayer1Flag(quint8(v));	break;
 			case 1:	infFile->setBgLayer2Flag(quint8(v));	break;
 			case 2:	infFile->setBgLayer3Flag(quint8(v));	break;

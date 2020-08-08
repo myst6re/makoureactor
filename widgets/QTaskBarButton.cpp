@@ -65,7 +65,7 @@ void QTaskBarButton::setState(State state)
 	if (!pITask)	return;
 
 	TBPFLAG flag;
-	switch(state) {
+	switch (state) {
 	case Invisible:		flag = TBPF_NOPROGRESS;
 		break;
 	case Indeterminate:	flag = TBPF_INDETERMINATE;
@@ -123,7 +123,7 @@ void QTaskBarButton::setState(State state)
 {
 	QWinTaskbarProgress *progress = _taskbarButton.progress();
 
-	switch(state) {
+	switch (state) {
 	case Invisible:
 		progress->hide();
 		break;

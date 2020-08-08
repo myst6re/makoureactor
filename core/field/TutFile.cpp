@@ -109,7 +109,7 @@ QString TutFile::parseScripts(int tutID, bool *warnings) const
 
 	while (i < size) {
 		quint8 key = tuto.at(i++);
-		switch(key) {
+		switch (key) {
 		case 0x00:
 			if (i + 2 > size) {
 				ret.append(parseScriptsUnknownString(key));

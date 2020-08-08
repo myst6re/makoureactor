@@ -159,7 +159,7 @@ void ScriptEditor::fillEditor()
 	editorWidget->clear();
 
 	// Change current editor widget
-	switch((Opcode::Keys)opcode->id()) {
+	switch ((Opcode::Keys)opcode->id()) {
 	case Opcode::RETTO:
 		index = 1;
 		break;
@@ -327,7 +327,7 @@ void ScriptEditor::changeCurrentOpcode(int index)
 		} else if (Opcode::SPECIAL == id) { //SPECIAL
 			quint8 byte2 = (itemData >> 8) & 0xFF;
 			newOpcode.append((char)byte2); // SPECIAL ID
-			switch(byte2)
+			switch (byte2)
 			{
 			case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:
 				newOpcode.append('\x00');
@@ -383,7 +383,7 @@ void ScriptEditor::setCurrentMenu(int id)
 void ScriptEditor::buildList(int id)
 {
 	comboBox->clear();
-	switch(id) {
+	switch (id) {
 	case 0:
 		comboBox->addItem(tr("Return"), QList<QVariant>() << 0x00);
 		comboBox->addItem(tr("Return to"), QList<QVariant>() << 0x07);

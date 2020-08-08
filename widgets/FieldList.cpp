@@ -147,7 +147,7 @@ int FieldList::currentMapId() const
 
 FieldArchive::Sorting FieldList::getFieldSorting()
 {
-	switch(sortColumn()) {
+	switch (sortColumn()) {
 	case 0:
 		return FieldArchive::SortByName;
 	default:

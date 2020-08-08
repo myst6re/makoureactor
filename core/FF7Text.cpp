@@ -44,7 +44,7 @@ QString FF7Text::text(bool jp, bool simplified) const
 		quint8 index = (quint8)_data.at(i);
 		if (index == 0xFF)	break;
 		QString character;
-		switch(index) {
+		switch (index) {
 		case 0xFA:
 			++i;
 			if (size<=i)	return trad.append(simplified ? "¶" : "{xfa}");
@@ -106,7 +106,7 @@ QString FF7Text::text(bool jp, bool simplified) const
 				if (!simplified) {
 					if (i+4 < size && (quint8)_data.at(i+4)==0 && (quint8)_data.at(i+2) <= 4) {
 						quint8 bank;
-						switch((quint8)_data.at(i+2)) {
+						switch ((quint8)_data.at(i+2)) {
 						case 0:     bank = 1;	break; // 1 & 2
 						case 1:     bank = 3;	break; // 3 & 4
 						case 2:     bank = 11;	break; // 11 & 12
@@ -239,7 +239,7 @@ void FF7Text::setText(const QString &string, bool jp)
 				if (rx.indexIn(rest) != -1) {
 					QStringList list = rx.capturedTexts();
 					quint8 bank;
-					switch(list.at(1).toInt()) {
+					switch (list.at(1).toInt()) {
 					case 1:case 2:
 						bank = 0;
 						break;
@@ -326,7 +326,7 @@ void FF7Text::setText(const QString &string, bool jp)
 				{
 					if (QString::compare(comp, getCaract(i, table))==0)
 					{
-						switch(table) {
+						switch (table) {
 						case 3:
 							_data.append('\xfa');
 							break;
@@ -356,7 +356,7 @@ void FF7Text::setText(const QString &string, bool jp)
 
 QString FF7Text::getCaract(quint8 ord, quint8 table)
 {
-	switch(table) {
+	switch (table) {
 	case 2:
 		return QString::fromUtf8(FF7Text::caract_jp[ord]);
 	case 3:
