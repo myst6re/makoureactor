@@ -363,9 +363,9 @@ QWidget *WalkmeshManager::buildArrowPage()
 	layout->setColumnStretch(2, 1);
 
 	connect(arrowList, SIGNAL(currentRowChanged(int)), SLOT(setCurrentArrow(int)));
-	connect(arrowX, SIGNAL(valueChanged(double)), SLOT(editArrowX(double)));
-	connect(arrowY, SIGNAL(valueChanged(double)), SLOT(editArrowY(double)));
-	connect(arrowZ, SIGNAL(valueChanged(double)), SLOT(editArrowZ(double)));
+	connect(arrowX, SIGNAL(valueChanged(int)), SLOT(editArrowX(int)));
+	connect(arrowY, SIGNAL(valueChanged(int)), SLOT(editArrowY(int)));
+	connect(arrowZ, SIGNAL(valueChanged(int)), SLOT(editArrowZ(int)));
 	connect(arrowType, SIGNAL(currentIndexChanged(int)), SLOT(editArrowType(int)));
 
 	return ret;
@@ -1255,7 +1255,7 @@ void WalkmeshManager::editSoundId(int v)
 	}
 }
 
-void WalkmeshManager::editArrowX(double value)
+void WalkmeshManager::editArrowX(int value)
 {
 	if (infFile->isOpen()) {
 		quint8 arrowId = quint8(arrowList->currentRow());
@@ -1269,7 +1269,7 @@ void WalkmeshManager::editArrowX(double value)
 	}
 }
 
-void WalkmeshManager::editArrowY(double value)
+void WalkmeshManager::editArrowY(int value)
 {
 	if (infFile->isOpen()) {
 		quint8 arrowId = quint8(arrowList->currentRow());
@@ -1283,7 +1283,7 @@ void WalkmeshManager::editArrowY(double value)
 	}
 }
 
-void WalkmeshManager::editArrowZ(double value)
+void WalkmeshManager::editArrowZ(int value)
 {
 	if (infFile->isOpen()) {
 		quint8 arrowId = quint8(arrowList->currentRow());

@@ -1,6 +1,6 @@
 language: cpp
 sudo: required
-dist: bionic
+dist: xenial
 osx_image: xcode12
 
 os:

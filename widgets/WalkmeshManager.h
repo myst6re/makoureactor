@@ -68,9 +68,9 @@ private slots:
 	void editStateId(int v);
 	void editBehavior(int v);
 	void editSoundId(int v);
-	void editArrowX(double value);
-	void editArrowY(double value);
-	void editArrowZ(double value);
+	void editArrowX(int value);
+	void editArrowY(int value);
+	void editArrowZ(int value);
 	void editArrowType(int index);
 	void editRange(int v);
 	void editExitDirection(int dir);
