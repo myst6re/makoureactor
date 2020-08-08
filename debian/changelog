@@ -1,3 +1,14 @@
+makoureactor (1.8.0) xenial; urgency=low
+
+  * Major version with lot of changes
+  * Improved text editor
+  * Open/Save fixes
+  * LGP Archive file preview
+  * Dark Mode
+  * Fixes for Android version
+
+ -- myst6re <myst6re@gmail.com>  Sat, 8 Aug 2020 15:17:52 +0200
+
 makoureactor (1.7.2) trusty; urgency=low
 
   * New editor to modify model light positions (preview not ready yet) (thanks to Kaldarasha)
