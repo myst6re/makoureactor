@@ -96,7 +96,9 @@ int main(int argc, char *argv[])
 	}
 
 	if (!Var::load()) {
-		QMessageBox::warning(0, QObject::QCoreApplication::translate("main", "Error"), QObject::QCoreApplication::translate("main", "The file 'var.cfg' could not be loaded.\nMake sure it is valid or delete it."));
+		QMessageBox::warning(nullptr, QApplication::translate("main", "Error"),
+		                     QApplication::translate("main", "The file 'var.cfg' could not be loaded.\n"
+		                                                     "Make sure it is valid or delete it."));
 	}
 
 	if (!Data::load()) {
@@ -104,7 +106,8 @@ int main(int argc, char *argv[])
 	}
 
 	/* if (!FF7Font::listFonts()) {
-		QMessageBox::critical(nullptr, QObject::QCoreApplication::translate("main", "Data loading"), QObject::QCoreApplication::translate("main", "Fonts couldn't be loaded!"));
+		QMessageBox::critical(nullptr, QObject::translate("main", "Data loading"),
+			QObject::translate("main", "Fonts couldn't be loaded!"));
 		return -1;
 	} */
 
