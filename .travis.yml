@@ -1,5 +1,4 @@
 language: cpp
-sudo: required
 dist: xenial
 osx_image: xcode12
 
@@ -7,6 +6,9 @@ os:
  - linux
  - osx
 matrix:
+ include:
+  - env: CONSOLE=1
+  - env: CONSOLE=0
  exclude:
 # Only do coverity or coverage build on Linux when the compiler is gcc
   - os: linux
@@ -41,7 +43,8 @@ before_script:
 script:
 - mkdir -p build
 - cd build
-- qmake -config release ..
+- if [ "$CONSOLE" = 1 ]; then QMAKE_ARGS="CONFIG+=console"; else QMAKE_ARGS="" fi
+- qmake -config release .. $QMAKE_ARGS
 - make -j2
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
     make INSTALL_ROOT=appdir install; find appdir/; 
