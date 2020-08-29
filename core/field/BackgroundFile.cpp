@@ -238,3 +238,38 @@ QRgb BackgroundFile::blendColor(quint8 type, QRgb color0, QRgb color1)
 
 	return qRgb(r, g, b);
 }
+
+bool BackgroundFile::exportTiles(const QString &fileName, const BackgroundTiles &tiles) const
+{
+	return drawBackground(tiles).save(fileName);
+}
+
+bool BackgroundFile::exportLayers(const QString &dirPath, const QString &extension) const
+{
+	QDir dir(dirPath);
+
+	if (!dir.exists()) {
+		dir.mkpath("./");
+	}
+
+	bool layerExists[3];
+	QSet<quint16> usedIDs;
+	QHash<quint8, quint8> usedParams = tiles().usedParams(layerExists, &usedIDs);
+
+	for (quint8 i = 0 ; i < 4; ++i) {
+		if (i == 0 || layerExists[i - 1]) {
+			QString fileName = QString("%1_%2_%3." % extension)
+			                       .arg(field()->name())
+			                       .arg(i == 0 ? 0 : i - 1);
+			if (i == 1) {
+				for (quint16 ID: usedIDs) {
+					exportTiles(dir.filePath(fileName.arg(ID)), tiles().tilesByID(ID));
+				}
+			} else {
+				exportTiles(dir.filePath(fileName.arg(42)), tiles().tiles(i));
+			}
+		}
+	}
+
+	return true;
+}

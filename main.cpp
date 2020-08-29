@@ -21,9 +21,24 @@
 #include "core/Config.h"
 #include "Data.h"
 #include "core/FF7Font.h"
+#include "Parameters.h"
+#include "CLI.h"
 
 int main(int argc, char *argv[])
 {
+#ifdef MR_CONSOLE
+	QCoreApplication app(argc, argv);
+	QCoreApplication::setApplicationName(PROG_NAME);
+	QCoreApplication::setApplicationVersion(PROG_VERSION);
+#ifdef Q_OS_WIN
+	QTextCodec::setCodecForLocale(QTextCodec::codecForName("IBM 850"));
+#endif
+	Config::set();
+	CLI::exec();
+
+	QTimer::singleShot(0, &app, SLOT(quit()));
+#else
+
 	QApplication app(argc, argv);
 	app.setWindowIcon(QIcon(":/images/logo-shinra.png"));
 
@@ -81,7 +96,7 @@ int main(int argc, char *argv[])
 	}
 
 	if (!Var::load()) {
-		QMessageBox::warning(0, QObject::tr("Error"), QObject::tr("The file 'var.cfg' could not be loaded.\nMake sure it is valid or delete it."));
+		QMessageBox::warning(0, QObject::QCoreApplication::translate("main", "Error"), QObject::QCoreApplication::translate("main", "The file 'var.cfg' could not be loaded.\nMake sure it is valid or delete it."));
 	}
 
 	if (!Data::load()) {
@@ -89,7 +104,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* if (!FF7Font::listFonts()) {
-		QMessageBox::critical(nullptr, QObject::tr("Data loading"), QObject::tr("Fonts couldn't be loaded!"));
+		QMessageBox::critical(nullptr, QObject::QCoreApplication::translate("main", "Data loading"), QObject::QCoreApplication::translate("main", "Fonts couldn't be loaded!"));
 		return -1;
 	} */
 
@@ -98,6 +113,7 @@ int main(int argc, char *argv[])
 	if (argc > 1) {
 		window->openFile(argv[1]);
 	}
+#endif
 
 	return app.exec();
 }

@@ -32,7 +32,7 @@ FieldArchivePC *FieldArchiveIOPC::fieldArchive()
 }
 
 FieldArchiveIOPCLgp::FieldArchiveIOPCLgp(const QString &path, FieldArchivePC *fieldArchive) :
-	FieldArchiveIOPC(fieldArchive), _lgp(path), observer(0)
+	FieldArchiveIOPC(fieldArchive), _lgp(path), observer(nullptr)
 {
 }
 
@@ -199,7 +199,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 	this->observer = observer;
 
 	if (!_lgp.pack(path, this)) {
-		this->observer = 0;
+		this->observer = nullptr;
 
 		switch (_lgp.error()) {
 		case Lgp::OpenError:
@@ -221,7 +221,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::save2(const QString &path, Archiv
 		}
 	}
 
-	this->observer = 0;
+	this->observer = nullptr;
 
 	return Ok;
 }
