@@ -5,10 +5,10 @@ osx_image: xcode12
 os:
  - linux
  - osx
+env:
+ - CONSOLE=1
+ - CONSOLE=0
 matrix:
- include:
-  - env: CONSOLE=1
-  - env: CONSOLE=0
  exclude:
 # Only do coverity or coverage build on Linux when the compiler is gcc
   - os: linux
