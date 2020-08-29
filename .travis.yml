@@ -3,13 +3,17 @@ dist: xenial
 osx_image: xcode12
 
 os:
- - linux
- - osx
+- linux
+- osx
 env:
- - CONSOLE=1
- - CONSOLE=0
-matrix:
- exclude:
+  global:
+    # COVERITY_SCAN_TOKEN
+    - secure: "lk7jEPh62LhXOWyT5UyGAKPxiskVyIBbHEtbnfKZZil2iJLec1f3+df1ADPajl1Ij2Yp4ZgWWcJsuN/+XkQJjXvgWyW2bi0K9ntrRCU4t3h8blodblaXvpssbz5fj4TzI8HnfBet4NXfLLdAUHBcLOLU01xb+LWaY/4rX2PlKBY="
+  jobs:
+  - CONSOLE=1
+  - CONSOLE=0
+jobs:
+  exclude:
 # Only do coverity or coverage build on Linux when the compiler is gcc
   - os: linux
     compiler: clang
@@ -71,27 +75,26 @@ after_success:
   fi
 
 before_deploy:
-  - DEPLOY_DIR="makoureactor-$(git describe --tags)-${TRAVIS_OS_NAME}64"
-  - export DEPLOY_ARCHIVE="$DEPLOY_DIR.tar.gz"
-  - mkdir -p "$DEPLOY_DIR"
-  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
-         DEPLOY_BINARY="makoureactor.app"
-      && cp -r "$DEPLOY_BINARY" "$DEPLOY_DIR"
-      && cp ../*.qm "$DEPLOY_DIR/$DEPLOY_BINARY/Contents/MacOS"
-      && "$QTDIR/bin/macdeployqt" "$DEPLOY_DIR/$DEPLOY_BINARY"
-      ;
-    else
-         cp makoureactor "$DEPLOY_DIR"
-      && cp ../*.qm "$DEPLOY_DIR"
-      ;
-    fi
-  - tar -czf "$DEPLOY_ARCHIVE" "$DEPLOY_DIR"
+- DEPLOY_DIR="makoureactor-$(git describe --tags)-${TRAVIS_OS_NAME}64"
+- export DEPLOY_ARCHIVE="$DEPLOY_DIR.tar.gz"
+- mkdir -p "$DEPLOY_DIR"
+- if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+       DEPLOY_BINARY="makoureactor.app"
+    && cp -r "$DEPLOY_BINARY" "$DEPLOY_DIR"
+    && cp ../*.qm "$DEPLOY_DIR/$DEPLOY_BINARY/Contents/MacOS"
+    && "$QTDIR/bin/macdeployqt" "$DEPLOY_DIR/$DEPLOY_BINARY"
+    ;
+  else
+       cp makoureactor "$DEPLOY_DIR"
+    && cp ../*.qm "$DEPLOY_DIR"
+    ;
+  fi
+- tar -czf "$DEPLOY_ARCHIVE" "$DEPLOY_DIR"
 
 deploy:
   provider: releases
-  api_key:
+  token:
     secure: "B4xjY+hcZOob6hGLx8b5Ykxk+8sN9M+XwfnuhRReR1YRFvXZdcUUiL/VusDM0iapUGhkuvbO0AQEeLPaC69uBNdxQsBJFGFMzrHZGEtuBFl44SJB+lZGRTVemj3AZ4f5aQvTkKFbt7M+/sjkWa6ZP6EHdrAN2XCp4emrwKBApO4="
-
   file: "$DEPLOY_ARCHIVE"
   skip_cleanup: true
   on:
@@ -100,13 +103,8 @@ deploy:
 
 branches:
   except:
-    - coverity_scan
-    - continuous
-
-env:
-  global:
-    # COVERITY_SCAN_TOKEN
-    - secure: "lk7jEPh62LhXOWyT5UyGAKPxiskVyIBbHEtbnfKZZil2iJLec1f3+df1ADPajl1Ij2Yp4ZgWWcJsuN/+XkQJjXvgWyW2bi0K9ntrRCU4t3h8blodblaXvpssbz5fj4TzI8HnfBet4NXfLLdAUHBcLOLU01xb+LWaY/4rX2PlKBY="
+  - coverity_scan
+  - continuous
 
 addons:
   coverity_scan:
