@@ -75,12 +75,12 @@ Field *FieldArchiveIterator::openField(Field *field, bool open, bool dontOptimiz
 }
 
 FieldArchive::FieldArchive() :
-	_io(0), _observer(0)
+	_io(nullptr), _observer(nullptr)
 {
 }
 
 FieldArchive::FieldArchive(FieldArchiveIO *io) :
-	_io(io), _observer(0)
+	_io(io), _observer(nullptr)
 {
 	//	fileWatcher.addPath(path);
 	//	connect(&fileWatcher, SIGNAL(fileChanged(QString)), this, SIGNAL(fileChanged(QString)));
@@ -90,7 +90,9 @@ FieldArchive::FieldArchive(FieldArchiveIO *io) :
 FieldArchive::~FieldArchive()
 {
 	qDeleteAll(fileList);
-	if (_io)		delete _io;
+	if (_io) {
+		delete _io;
+	}
 }
 
 FieldArchiveIO::ErrorCode FieldArchive::open()
@@ -1744,10 +1746,14 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 
 	QString path, extension;
 	int currentField=0;
-	observer()->setObserverMaximum(selectedFields.size()-1);
+	if (observer()) {
+		observer()->setObserverMaximum(selectedFields.size()-1);
+	}
 
 	for (const int &mapID : selectedFields) {
-		if (observer()->observerWasCanceled()) 	break;
+		if (observer() && observer()->observerWasCanceled()) {
+			break;
+		}
 		Field *f = field(mapID);
 		if (f) {
 			if (toExport.contains(Fields)) {
@@ -1770,12 +1776,26 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 			}
 			if (toExport.contains(Backgrounds)) {
 				extension = toExport.value(Backgrounds);
-				path = QDir::cleanPath(QString("%1/%2.%3").arg(directory, f->name(), extension));
+				bool exportLayers = extension.endsWith('_');
+				path = QDir::cleanPath(QString("%1/%2").arg(directory, f->name()));
+				if (exportLayers) {
+					extension.truncate(extension.size() - 1);
+				} else {
+					path.append(QString(".%3").arg(extension));
+				}
 
 				if (overwrite || !QFile::exists(path)) {
-					QImage background = f->background()->openBackground();
-					if (!background.isNull())
-						background.save(path);
+					BackgroundFile *bg = f->background();
+					if (bg->isOpen()) {
+						if (exportLayers) {
+							bg->exportLayers(path, extension);
+						} else {
+							QImage background = bg->openBackground();
+							if (!background.isNull()) {
+								background.save(path);
+							}
+						}
+					}
 				}
 			}
 			if (toExport.contains(Akaos)) {
@@ -1825,7 +1845,9 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 				}
 			}
 		}
-		observer()->setObserverValue(currentField++);
+		if (observer()) {
+			observer()->setObserverValue(currentField++);
+		}
 	}
 
 	return true;

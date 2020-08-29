@@ -6,6 +6,9 @@ CONFIG += c++11
 
 # Input
 HEADERS += \
+    Arguments.h \
+    ArgumentsExport.h \
+    CLI.h \
     Window.h \
     Parameters.h \
     Data.h \
@@ -153,6 +156,9 @@ HEADERS += \
     widgets/ModelColorsLayout.h
 
 SOURCES += \
+    Arguments.cpp \
+    ArgumentsExport.cpp \
+    CLI.cpp \
     Window.cpp \
     core/PsfFile.cpp \
     core/field/BackgroundTilesFile.cpp \
@@ -373,4 +379,8 @@ unix:!macx:!symbian {
     desktop.path = /usr/share/applications
 
     INSTALLS += target langfiles icon desktop
+}
+
+contains(CONFIG, "console") {
+    DEFINES += MR_CONSOLE
 }

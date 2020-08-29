@@ -46,6 +46,7 @@ private:
 	QLineEdit *dirPath;
 	QPushButton *changeDir;
 	QCheckBox *overwriteIfExists;
+	QPushButton *exportButton;
 
 	const FieldArchive *_fieldArchive;
 	int _currentMapId;

@@ -43,9 +43,12 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	exports.insert(Backgrounds,
 	               new FormatSelectionWidget(tr("Export backgrounds"),
 	                                         QStringList() <<
-	                                             tr("PNG image") + ";;png" <<
-	                                             tr("JPG image") + ";;jpg" <<
-	                                             tr("BMP image") + ";;bmp", this));
+	                                             tr("Flatten PNG image") + ";;png" <<
+	                                             tr("Flatten JPG image") + ";;jpg" <<
+	                                             tr("Flatten BMP image") + ";;bmp" <<
+	                                             tr("Multi-layers PNG images") + ";;png_" <<
+	                                             tr("Multi-layers JPG images") + ";;jpg_" <<
+	                                             tr("Multi-layers BMP images") + ";;bmp_", this));
 	exports.insert(Akaos,
 	               new FormatSelectionWidget(tr("Export musics"),
 	                                         QStringList() <<
@@ -67,8 +70,9 @@ MassExportDialog::MassExportDialog(QWidget *parent) :
 	overwriteIfExists->setChecked(Config::value("overwriteOnExport", true).toBool());
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal, this);
-	buttonBox->addButton(tr("Export"), QDialogButtonBox::AcceptRole);
+	exportButton = buttonBox->addButton(tr("Export"), QDialogButtonBox::AcceptRole);
 	buttonBox->addButton(QDialogButtonBox::Cancel);
+	exportButton->setDisabled(dirPath->text().isEmpty());
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addLayout(listLayout, 0, 0, 3 + exports.size(), 1);
@@ -121,6 +125,7 @@ void MassExportDialog::chooseExportDirectory()
 	if (dir.isNull())	return;
 
 	dirPath->setText(dir);
+	exportButton->setDisabled(dirPath->text().isEmpty());
 }
 
 void MassExportDialog::selectCurrentField()

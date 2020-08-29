@@ -1,5 +1,6 @@
 /****************************************************************************
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Makou Reactor Final Fantasy VII Field Script Editor
+ ** Copyright (C) 2009-2020 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -14,30 +15,17 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ARGUMENTS_H
-#define ARGUMENTS_H
+#ifndef CLI_H
+#define CLI_H
 
 #include <QtCore>
 
-class Arguments
+class CLI
 {
 public:
-	enum Command {
-		None,
-		Export
-	};
-	Arguments();
-	inline void showHelp(int exitCode = 0) {
-		_parser.showHelp(exitCode);
-	}
-	inline Command command() const {
-		return _command;
-	}
-	bool help() const;
+	static void exec();
 private:
-	void parse();
-	Command _command;
-	QCommandLineParser _parser;
+	static void commandExport();
 };
 
-#endif // ARGUMENTS_H
+#endif // CLI_H

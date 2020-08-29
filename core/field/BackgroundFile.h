@@ -46,6 +46,9 @@ public:
 	bool usedParams(QHash<quint8, quint8> &usedParams, bool *layerExists, QSet<quint16> *usedIDs);
 	bool layerExists(int num);
 
+	bool exportTiles(const QString &fileName, const BackgroundTiles &tiles) const;
+	bool exportLayers(const QString &dirPath, const QString &extension) const;
+
 	inline const BackgroundTiles &tiles() const {
 		return _tiles;
 	}
