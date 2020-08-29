@@ -42,8 +42,9 @@ before_script:
 
 script:
 - mkdir -p build
+- env
 - cd build
-- if [ "$CONSOLE" = 1 ]; then QMAKE_ARGS="CONFIG+=console"; else QMAKE_ARGS="" fi
+- if [ "$CONSOLE" = 1 ]; then QMAKE_ARGS="CONFIG+=console"; else QMAKE_ARGS=""; fi
 - qmake -config release .. $QMAKE_ARGS
 - make -j2
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
