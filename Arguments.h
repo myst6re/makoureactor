@@ -17,14 +17,49 @@
 #ifndef ARGUMENTS_H
 #define ARGUMENTS_H
 
+#define _ADD_ARGUMENT(names, description, valueName, defaultValue) \
+	_parser.addOption(QCommandLineOption(names, description, valueName, defaultValue));
+
+#define _ADD_FLAG(names, description) \
+	_parser.addOption(QCommandLineOption(names, description));
+
+#define _OPTION_NAMES(shortName, fullName) \
+	(QStringList() << shortName << fullName)
+
 #include <QtCore>
+
+class CommonArguments
+{
+public:
+	CommonArguments();
+	inline void showHelp(int exitCode = 0) {
+		_parser.showHelp(exitCode);
+	}
+	bool help() const;
+	inline QString path() const {
+		return _path;
+	}
+	QString inputFormat() const;
+	QStringList includes() const;
+	QStringList excludes() const;
+protected:
+	QStringList wilcardParse();
+	void mapNamesFromFiles();
+	static QStringList mapNamesFromFile(const QString &path);
+	static QStringList searchFiles(const QString &path);
+	QString _path;
+	QStringList _includesFromFile, _excludesFromFile;
+	QCommandLineParser _parser;
+};
 
 class Arguments
 {
 public:
 	enum Command {
 		None,
-		Export
+		Export,
+		//Import,
+		Patch
 	};
 	Arguments();
 	inline void showHelp(int exitCode = 0) {

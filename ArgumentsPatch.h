@@ -14,27 +14,19 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ARGUMENTS_EXPORT_H
-#define ARGUMENTS_EXPORT_H
+#ifndef ARGUMENTS_PATCH_H
+#define ARGUMENTS_PATCH_H
 
 #include <QtCore>
 #include "Arguments.h"
 
-class ArgumentsExport : public CommonArguments
+class ArgumentsPatch : public CommonArguments
 {
 public:
-	ArgumentsExport();
-	QString mapFileFormat() const;
-	QString backgroundFormat() const;
-	QString soundFormat() const;
-	QString textFormat() const;
-	bool force() const;
-	inline QString destination() const {
-		return _directory;
-	}
+	ArgumentsPatch();
 private:
 	void parse();
-	QString _directory;
+	QString _target_file;
 };
 
-#endif // ARGUMENTS_EXPORT_H
+#endif // ARGUMENTS_PATCH_H
