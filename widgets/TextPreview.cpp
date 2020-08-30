@@ -19,6 +19,7 @@
 #include "core/FF7Text.h"
 #include "Data.h"
 #include "core/Config.h"
+#include "core/FF7Font.h"
 
 QTimer TextPreview::timer;
 bool TextPreview::curFrame = true;
@@ -62,7 +63,6 @@ void TextPreview::fillNames()
 	for (int i=0; i<12; ++i) {
 		names.append(FF7Text(dataNames.at(i), false).data());
 	}
-	namesWidth = calcFF7TextWidth(FF7Text("WWWWWWWWW", false).data());
 //	Config::setValue("jp_txt", jp);
 }
 
@@ -75,19 +75,6 @@ void TextPreview::updateNames()
 QPixmap TextPreview::getIconImage(int iconId)
 {
 	return QPixmap(":/images/keys.png").copy(iconId*16, 0, 16, 16);
-}
-
-int TextPreview::calcFF7TextWidth(const QByteArray &ff7Text)
-{
-	int width = 0;
-
-	for (const quint8 &c : ff7Text) {
-		if (c<0xe0) {
-			width += charFullWidth(0, c);
-		}
-	}
-
-	return width;
 }
 
 void TextPreview::clear()
@@ -214,154 +201,16 @@ void TextPreview::calcSize()
 {
 //	qDebug() << "TextPreview::calcSize()";
 
-	QSize size = calcSize(ff7Text, pagesPos);
+	QSize size = FF7Font::calcSize(ff7Text, pagesPos);
 	maxW = size.width();
 	maxH = size.height();
 
 	update();
 }
 
-QSize TextPreview::calcSize(const QByteArray &ff7Text)
-{
-	QList<int> pagesPos;
-	return calcSize(ff7Text, pagesPos);
-}
-
-QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
-{
-	if (names.isEmpty()) {
-		fillNames();
-	}
-
-	const int baseWidth = 8 + Config::value("autoSizeMarginRight", 14).toInt();
-	int line=0, width=baseWidth - 3, height=25, size=ff7Text.size(), maxW=0, maxH=0;
-	pagesPos.clear();
-	pagesPos.append(0);
-	bool jp = Config::value("jp_txt", false).toBool(), spaced_characters=false;
-	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt();
-
-	for (int i=0; i<size; ++i) {
-		quint8 caract = (quint8)ff7Text.at(i);
-		if (caract==0xff) break;
-		switch (caract) {
-		case 0xe8: // New Page
-		case 0xe9: // New Page 2
-			if (line == 0)	width += 3;
-			if (height>maxH)	maxH = height;
-			if (width>maxW)	maxW = width;
-			++line;
-			width = baseWidth;
-			height = 25;
-			pagesPos.append(i+1);
-			break;
-		case 0xe7: // \n
-			if (line == 0)	width += 3;
-			if (width>maxW)	maxW = width;
-			++line;
-			width = baseWidth;
-			height += 16;
-			break;
-		case 0xfa: // Jap 1
-			++i;
-			caract = (quint8)ff7Text.at(i);
-			if (jp) {
-				width += spaced_characters ? spacedCharsW : charFullWidth(2, caract);
-			} else if (caract < 0xd2) {
-				width += spaced_characters ? spacedCharsW : 1;
-			}
-			break;
-		case 0xfb: // Jap 2
-			++i;
-			if (jp) {
-				caract = (quint8)ff7Text.at(i);
-				width += spaced_characters ? spacedCharsW : charFullWidth(3, caract);
-			}
-			break;
-		case 0xfc: // Jap 3
-			++i;
-			if (jp) {
-				caract = (quint8)ff7Text.at(i);
-				width += spaced_characters ? spacedCharsW : charFullWidth(4, caract);
-			}
-			break;
-		case 0xfd: // Jap 4
-			++i;
-			if (jp) {
-				caract = (quint8)ff7Text.at(i);
-				width += spaced_characters ? spacedCharsW : charFullWidth(5, caract);
-			}
-			break;
-		case 0xfe: // Jap 5 + add
-			++i;
-			if (i >= size)		break;
-			caract = (quint8)ff7Text.at(i);
-			if (caract == 0xdd)
-				++i;
-			else if (caract == 0xde || caract == 0xdf || caract == 0xe1) {
-				if (caract == 0xe1)		width += spaced_characters ? spacedCharsW * 4 : 12;
-				int zeroId = !jp ? 0x10 : 0x33;
-				width += spaced_characters ? spacedCharsW : charFullWidth(0, zeroId);
-			} else if (caract == 0xe2)
-				i += 4;
-			else if (caract == 0xe9)
-				spaced_characters = !spaced_characters;
-			else if (caract < 0xd2 && jp)
-				width += spaced_characters ? spacedCharsW : charFullWidth(6, caract);
-			break;
-		default:
-			if (!jp && caract==0xe0) {// {CHOICE}
-				width += spaced_characters ? spacedCharsW * 10 : 30;
-			} else if (!jp && caract==0xe1) {// \t
-				width += spaced_characters ? spacedCharsW * 4 : 12;
-			} else if (!jp && caract>=0xe2 && caract<=0xe4) {// duo
-				const char *duo = optimisedDuo[caract-0xe2];
-				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[0]);
-				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[1]);
-			} else if (caract>=0xea && caract<=0xf5) {// Character names
-				width += spaced_characters ? spacedCharsW * 9 : namesWidth;
-			} else if (caract>=0xf6 && caract<=0xf9) {// Keys
-				width += 17;
-			} else {
-				if (jp) {
-					width += spaced_characters ? spacedCharsW : charFullWidth(1, caract);
-				} else {
-					width += spaced_characters ? spacedCharsW : charFullWidth(0, caract);
-				}
-			}
-			break;
-		}
-	}
-
-	if (height>maxH)	maxH = height;
-	if (width>maxW)	maxW = width;
-	if (maxW>322)	maxW = 322;
-	if (maxH>226)	maxH = 226;
-
-	return QSize(maxW, maxH);
-}
-
 QSize TextPreview::getCalculatedSize() const
 {
 	return QSize(maxW, maxH);
-}
-
-QPoint TextPreview::realPos(const FF7Window &ff7Window)
-{
-//	qDebug() << "TextPreview::realPos()";
-	if (ff7Window.type == NOWIN)	return QPoint();
-
-	int windowX=ff7Window.x, windowY=ff7Window.y;
-	if (windowX+ff7Window.w>312) {
-		windowX = 312-ff7Window.w;
-	}
-	if (windowY+ff7Window.h>223) {
-		windowY = 223-ff7Window.h;
-	}
-
-	if (windowX<8)	windowX = 8;
-	if (windowY<8)	windowY = 8;
-
-	return QPoint(windowX, windowY);
 }
 
 void TextPreview::animate()
@@ -490,7 +339,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	/* Window Background */
 
 	if (ff7Window.type != NOWIN) {
-		painter->translate(realPos(ff7Window));
+		painter->translate(ff7Window.realPos());
 		maxW = ff7Window.w;
 		maxH = ff7Window.h;
 		mode = WindowType(ff7Window.mode);
@@ -524,7 +373,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 				else if (charId==0xe1)//\t
 					x += spaced_characters ? spacedCharsW * 4 : 12;
 				else if (charId>=0xe2 && charId<=0xe4) {
-					const quint8 *opti = (const quint8 *)optimisedDuo[charId-0xe2];
+					const quint8 *opti = (const quint8 *)FF7Font::optimisedDuo[charId-0xe2];
 					letter(&x, &y, opti[0], painter, 0);
 					letter(&x, &y, opti[1], painter, 0);
 				} else {
@@ -645,7 +494,7 @@ void TextPreview::mousePressEvent(QMouseEvent *event)
 	if (event->button() == Qt::LeftButton && !readOnly) {
 		FF7Window ff7Window = getWindow();
 		if (ff7Window.type!=NOWIN) {
-			QPoint real = realPos(ff7Window);
+			QPoint real = ff7Window.realPos();
 
 			acceptMove = event->x() >= real.x() && event->x() < real.x()+maxW
 						 && event->y() >= real.y() && event->y() < real.y()+maxH;
@@ -677,7 +526,7 @@ void TextPreview::mouseMoveEvent(QMouseEvent *event)
 
 	ff7Window.x = x;
 	ff7Window.y = y;
-	QPoint real = realPos(ff7Window);
+	QPoint real = ff7Window.realPos();
 	ff7Window.x = real.x();
 	ff7Window.y = real.y();
 
@@ -719,8 +568,8 @@ void TextPreview::wheelEvent(QWheelEvent *event)
 
 void TextPreview::letter(int *x, int *y, int charId, QPainter *painter, quint8 tableId)
 {
-	int charWidth = charW(tableId, charId);
-	int leftPadd = leftPadding(tableId, charId);
+	int charWidth = FF7Font::charW(tableId, charId);
+	int leftPadd = FF7Font::leftPadding(tableId, charId);
 
 	if (*x + leftPadd + charWidth > maxW) {
 		*x = 8;
@@ -746,27 +595,6 @@ void TextPreview::word(int *x, int *y, const QByteArray &charIds, QPainter *pain
 	for (char charId : charIds) {
 		letter(x, y, charId, painter, tableId);
 	}
-}
-
-quint8 TextPreview::charW(int tableId, int charId)
-{
-	return Data::windowBin.isValid() &&
-			(tableId != 0 || !Data::windowBin.isJp())
-			? Data::windowBin.charWidth(tableId == 0 ? 0 : tableId - 1, charId)
-			: CHARACTER_WIDTH(charWidth[tableId][charId]);
-}
-
-quint8 TextPreview::leftPadding(int tableId, int charId)
-{
-	return Data::windowBin.isValid() &&
-			(tableId != 0 || !Data::windowBin.isJp())
-			? Data::windowBin.charLeftPadding(tableId == 0 ? 0 : tableId - 1, charId)
-			: LEFT_PADD(charWidth[tableId][charId]);
-}
-
-quint8 TextPreview::charFullWidth(int tableId, int charId)
-{
-	return charW(tableId, charId) + leftPadding(tableId, charId);
 }
 
 QImage TextPreview::letterImage(int tableId, int charId)
@@ -818,137 +646,4 @@ quint16 TextPreview::posTable[7] =
 	1323/* (21*10) */
 };
 
-quint8 TextPreview::charWidth[7][256] =
-{
-	{ // International
-		3, 3, 72, 10, 7, 10, 9, 3, 72, 72, 7, 7, 39, 5, 38, 6,
-		8, 71, 8, 8, 8, 8, 8, 8, 8, 8, 69, 4, 7, 8, 7, 6,
-		10, 9, 7, 8, 8, 7, 7, 8, 8, 3, 6, 7, 7, 11, 8, 9,
-		7, 9, 7, 7, 7, 8, 9, 11, 8, 9, 7, 4, 6, 4, 7, 8,
-		4, 7, 7, 6, 7, 7, 6, 7, 7, 3, 4, 6, 3, 11, 7, 7,
-		7, 7, 5, 6, 6, 7, 7, 11, 7, 7, 6, 5, 3, 5, 8, 68,
-		73, 76, 72, 73, 73, 9, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-		7, 7, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-		11, 6, 7, 8, 11, 6, 7, 7, 9, 9, 11, 4, 5, 8, 12, 9,
-		11, 7, 7, 7, 9, 7, 7, 7, 9, 8, 4, 6, 6, 9, 11, 7,
-		6, 3, 8, 7, 8, 8, 9, 7, 7, 9, 1, 9, 9, 9, 12, 11,
-		8, 12, 6, 6, 4, 4, 7, 7, 7, 9, 7, 9, 5, 5, 7, 7,
-		8, 3, 4, 6, 13, 9, 7, 9, 7, 7, 3, 4, 4, 3, 9, 9,
-		8, 9, 8, 8, 8, 3, 6, 7, 5, 6, 3, 6, 5, 6, 5, 5,
-		1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	},{ // Jap - 0
-		13, 13, 11, 13, 12, 13, 12, 12, 12, 13, 12, 12, 11, 12, 12, 10,
-		12, 12, 12, 11, 13, 11, 12, 9, 12, 12, 12, 13, 10, 12, 12, 12,
-		12, 12, 12, 12, 12, 12, 8, 11, 12, 13, 12, 10, 12, 12, 12, 12,
-		12, 11, 13, 8, 70, 8, 8, 9, 8, 8, 7, 8, 8, 39, 41, 8,
-		12, 11, 9, 11, 10, 12, 12, 12, 11, 11, 10, 12, 10, 10, 10, 8,
-		11, 11, 10, 9, 11, 10, 11, 9, 10, 11, 11, 11, 9, 10, 10, 11,
-		11, 10, 10, 11, 11, 10, 6, 9, 10, 10, 11, 12, 10, 11, 11, 11,
-		11, 12, 10, 12, 11, 10, 9, 12, 11, 12, 9, 11, 10, 12, 9, 12,
-		11, 11, 10, 11, 11, 10, 10, 9, 8, 8, 11, 10, 8, 11, 9, 10,
-		11, 11, 11, 11, 9, 10, 10, 12, 10, 11, 9, 10, 9, 8, 9, 9,
-		9, 9, 7, 8, 8, 9, 8, 8, 7, 8, 9, 8, 9, 10, 69, 41,
-		73, 74, 4, 9, 10, 9, 9, 9, 9, 9, 9, 9, 69, 7, 8, 9,
-		11, 9, 9, 9, 10, 9, 9, 11, 9, 9, 11, 9, 11, 10, 70, 9,
-		9, 13, 12, 13, 13, 70, 10, 6, 6, 11, 13, 10, 9, 72, 72, 72,
-		72, 9, 9, 1, 1, 1, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	},{ // Jap - 1
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 10,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 13, 13, 13, 13, 13, 11,
-		13, 12, 10, 13, 13, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	},{ // Jap - 2
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 13, 13, 13, 13,
-		13, 13, 11, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 9, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 11, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 13, 12, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 11, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	},{ // Jap - 3
-		12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		10, 13, 13, 12, 13, 13, 13, 13, 13, 12, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	},{ // Jap - 4
-		13, 13, 13, 13, 13, 13, 13, 13, 11, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 11, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	},{ // Jap - 5
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 11, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 12, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 11, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-		13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-	}
-};
-
-const char *TextPreview::optimisedDuo[3] =
-{
-	"\x0c\x00",//', '
-	"\x0e\x02",//'."'
-	"\xa9\x02" //'..."'
-};
-
 QList<QByteArray> TextPreview::names;
-
-int TextPreview::namesWidth;

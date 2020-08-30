@@ -23,6 +23,7 @@
 #define B1(v)		((v>>4)&0xF)
 #define B2(v)		(v&0xF)
 #define OPERATORS_SIZE	11
+#define NOWIN		255
 
 struct FF7Window {
 	qint16 x, y;
@@ -30,6 +31,32 @@ struct FF7Window {
 	quint16 ask_first, ask_last;
 	quint8 type, mode, displayType;
 	quint16 groupID, scriptID, opcodeID;
+
+	QPoint realPos() {
+		if (this->type == NOWIN) {
+			return QPoint();
+		}
+
+		int windowX = this->x, windowY = this->y;
+
+		if (windowX + this->w > 312) {
+			windowX = 312 - this->w;
+		}
+
+		if (windowY + this->h > 223) {
+			windowY = 223 - this->h;
+		}
+
+		if (windowX < 8) {
+			windowX = 8;
+		}
+
+		if (windowY < 8) {
+			windowY = 8;
+		}
+
+		return QPoint(windowX, windowY);
+	}
 };
 
 struct FF7Position {
