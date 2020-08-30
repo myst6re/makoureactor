@@ -384,6 +384,7 @@ contains(CONFIG, "console") {
     HEADERS = \
         Arguments.h \
         ArgumentsExport.h \
+        ArgumentsPatch.h \
         CLI.h \
         Parameters.h \
         Data.h \
@@ -469,6 +470,7 @@ contains(CONFIG, "console") {
     SOURCES = \
         Arguments.cpp \
         ArgumentsExport.cpp \
+        ArgumentsPatch.cpp \
         CLI.cpp \
         main.cpp \
         txt.cpp \

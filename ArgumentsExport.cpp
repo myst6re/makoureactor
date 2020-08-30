@@ -16,17 +16,8 @@
  ****************************************************************************/
 #include "ArgumentsExport.h"
 
-ArgumentsExport::ArgumentsExport()
+ArgumentsExport::ArgumentsExport() : CommonArguments()
 {
-	_parser.addHelpOption();
-
-	_ADD_ARGUMENT("input-format", "Input format (lgp, fieldpc, iso, dat).", "input-format", "");
-	_ADD_ARGUMENT("include", "Include field map name. Repeat this argument to include multiple names. "
-	                         "If empty, all will be included by default.", "include", "");
-	_ADD_ARGUMENT("exclude", "Exclude field map name. Repeat this argument to exclude multiple names. "
-	                         "Exclude has the priority over the --include argument.", "exclude", "");
-	_ADD_ARGUMENT("include-from", "Include field map names from file. The file format is one name per line.", "include", "");
-	_ADD_ARGUMENT("exclude-from", "Exclude field map names from file. The file format is one name per line.", "exclude", "");
 	_ADD_ARGUMENT("map-file", "Export map files. Possible values: dec (decompressed), lzs (compressed)", "map-file", "");
 	_ADD_ARGUMENT("background", "Export flatten backgrounds. Possible values: png, jpg, bmp. "
 	              "Cannot be specified with bg-layer option.", "background", "");
@@ -37,23 +28,9 @@ ArgumentsExport::ArgumentsExport()
 	_ADD_FLAG(_OPTION_NAMES("f", "force"),
 	             "Overwrite destination file if exists.");
 
-	_parser.addPositionalArgument("file", QCoreApplication::translate("ArgumentsExport", "Input file or directory."));
 	_parser.addPositionalArgument("directory", QCoreApplication::translate("ArgumentsExport", "Output directory."));
 
 	parse();
-}
-
-QString ArgumentsExport::inputFormat() const
-{
-	QString inputFormat = _parser.value("input-format");
-	if(inputFormat.isEmpty() && !_path.isEmpty()) {
-		int index = _path.lastIndexOf('.');
-		if(index > -1) {
-			return _path.mid(index + 1);
-		}
-		return "fieldpc";
-	}
-	return inputFormat;
 }
 
 QString ArgumentsExport::mapFileFormat() const
@@ -82,21 +59,6 @@ QString ArgumentsExport::textFormat() const
 	return _parser.value("text");
 }
 
-QStringList ArgumentsExport::includes() const
-{
-	return _parser.values("include") + _includesFromFile;
-}
-
-QStringList ArgumentsExport::excludes() const
-{
-	return _parser.values("exclude") + _excludesFromFile;
-}
-
-bool ArgumentsExport::help() const
-{
-	return _parser.isSet("help");
-}
-
 bool ArgumentsExport::force() const
 {
 	return _parser.isSet("force");
@@ -119,45 +81,7 @@ void ArgumentsExport::parse()
 		exit(1);
 	}
 
-	wilcardParse();
-	mapNamesFromFiles();
-}
-
-QStringList ArgumentsExport::searchFiles(const QString &path)
-{
-	int index = path.lastIndexOf('/');
-	QString dirname, filename;
-
-	if (index > 0) {
-		dirname = path.left(index);
-		filename = path.mid(index + 1);
-	} else {
-		filename = path;
-	}
-
-	QDir dir(dirname);
-	QStringList entryList = dir.entryList(QStringList(filename), QDir::Files);
-	int i=0;
-	for (const QString &entry: entryList) {
-		entryList.replace(i++, dir.filePath(entry));
-	}
-	return entryList;
-}
-
-void ArgumentsExport::wilcardParse()
-{
-	QStringList paths, args = _parser.positionalArguments();
-
-	args.removeFirst();
-
-	for (const QString &path: args) {
-		if (path.contains('*') || path.contains('?')) {
-			paths << searchFiles(QDir::fromNativeSeparators(path));
-		} else {
-			paths << QDir::fromNativeSeparators(path);
-		}
-	}
-
+	QStringList paths = wilcardParse();
 	if (!paths.isEmpty()) {
 		// Output directory
 		if (QDir(paths.last()).exists()) {
@@ -173,38 +97,5 @@ void ArgumentsExport::wilcardParse()
 			_path = paths.first();
 		}
 	}
-}
-
-QStringList ArgumentsExport::mapNamesFromFile(const QString &path)
-{
-	QFile f(path);
-	if (!f.open(QIODevice::ReadOnly)) {
-		qWarning() << qPrintable(
-		    QCoreApplication::translate("Arguments", "Warning: cannot open file"))
-		           << qPrintable(path) << qPrintable(f.errorString());
-		exit(1);
-	}
-
-	QStringList ret;
-
-	while (f.canReadLine()) {
-		ret.append(QString::fromUtf8(f.readLine()));
-	}
-
-	return ret;
-}
-
-void ArgumentsExport::mapNamesFromFiles()
-{
-	QStringList pathsInclude = _parser.values("include-from");
-
-	for (const QString &path: pathsInclude) {
-		_includesFromFile.append(mapNamesFromFile(path));
-	}
-
-	QStringList pathsExclude = _parser.values("exclude-from");
-
-	for (const QString &path: pathsExclude) {
-		_excludesFromFile.append(mapNamesFromFile(path));
-	}
+	mapNamesFromFiles();
 }

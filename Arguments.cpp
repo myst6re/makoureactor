@@ -16,13 +16,128 @@
  ****************************************************************************/
 #include "Arguments.h"
 
+CommonArguments::CommonArguments()
+{
+	_parser.addHelpOption();
+
+	_ADD_ARGUMENT("input-format", "Input format (lgp, fieldpc, iso, dat).", "input-format", "");
+	_ADD_ARGUMENT("include", "Include field map name. Repeat this argument to include multiple names. "
+	                         "If empty, all will be included by default.", "include", "");
+	_ADD_ARGUMENT("exclude", "Exclude field map name. Repeat this argument to exclude multiple names. "
+	                         "Exclude has the priority over the --include argument.", "exclude", "");
+	_ADD_ARGUMENT("include-from", "Include field map names from file. The file format is one name per line.", "include", "");
+	_ADD_ARGUMENT("exclude-from", "Exclude field map names from file. The file format is one name per line.", "exclude", "");
+
+	_parser.addPositionalArgument("file", QCoreApplication::translate("Arguments", "Input file or directory."));
+}
+
+bool CommonArguments::help() const
+{
+	return _parser.isSet("help");
+}
+
+QString CommonArguments::inputFormat() const
+{
+	QString inputFormat = _parser.value("input-format");
+	if(inputFormat.isEmpty() && !_path.isEmpty()) {
+		int index = _path.lastIndexOf('.');
+		if(index > -1) {
+			return _path.mid(index + 1);
+		}
+		return "fieldpc";
+	}
+	return inputFormat;
+}
+
+QStringList CommonArguments::includes() const
+{
+	return _parser.values("include") + _includesFromFile;
+}
+
+QStringList CommonArguments::excludes() const
+{
+	return _parser.values("exclude") + _excludesFromFile;
+}
+
+QStringList CommonArguments::searchFiles(const QString &path)
+{
+	int index = path.lastIndexOf('/');
+	QString dirname, filename;
+
+	if (index > 0) {
+		dirname = path.left(index);
+		filename = path.mid(index + 1);
+	} else {
+		filename = path;
+	}
+
+	QDir dir(dirname);
+	QStringList entryList = dir.entryList(QStringList(filename), QDir::Files);
+	int i=0;
+	for (const QString &entry: entryList) {
+		entryList.replace(i++, dir.filePath(entry));
+	}
+	return entryList;
+}
+
+QStringList CommonArguments::wilcardParse()
+{
+	QStringList paths, args = _parser.positionalArguments();
+
+	args.removeFirst();
+
+	for (const QString &path: args) {
+		if (path.contains('*') || path.contains('?')) {
+			paths << searchFiles(QDir::fromNativeSeparators(path));
+		} else {
+			paths << QDir::fromNativeSeparators(path);
+		}
+	}
+
+	return paths;
+}
+
+QStringList CommonArguments::mapNamesFromFile(const QString &path)
+{
+	QFile f(path);
+	if (!f.open(QIODevice::ReadOnly)) {
+		qWarning() << qPrintable(
+		    QCoreApplication::translate("Arguments", "Warning: cannot open file"))
+		           << qPrintable(path) << qPrintable(f.errorString());
+		exit(1);
+	}
+
+	QStringList ret;
+
+	while (f.canReadLine()) {
+		ret.append(QString::fromUtf8(f.readLine()));
+	}
+
+	return ret;
+}
+
+void CommonArguments::mapNamesFromFiles()
+{
+	QStringList pathsInclude = _parser.values("include-from");
+
+	for (const QString &path: pathsInclude) {
+		_includesFromFile.append(mapNamesFromFile(path));
+	}
+
+	QStringList pathsExclude = _parser.values("exclude-from");
+
+	for (const QString &path: pathsExclude) {
+		_excludesFromFile.append(mapNamesFromFile(path));
+	}
+}
+
 Arguments::Arguments() :
       _command(None)
 {
 	_parser.addHelpOption();
 	_parser.addVersionOption();
 	_parser.addPositionalArgument(
-	    "command", QCoreApplication::translate("Arguments", "Available commands: export"), "<command>"
+	    "command", QCoreApplication::translate("Arguments", "Available commands: export, patch"), "<command>"
 	);
 	_parser.addPositionalArgument("args", "", "[<args>]");
 	_parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsPositionalArguments);
@@ -50,6 +165,8 @@ void Arguments::parse()
 
 	if (command == "export") {
 		_command = Export;
+	} else if (command == "patch") {
+		_command = Patch;
 	} else {
 		qWarning() << qPrintable(QCoreApplication::translate("Arguments", "Unknown command type:")) << qPrintable(command);
 		return;

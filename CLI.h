@@ -19,6 +19,30 @@
 #define CLI_H
 
 #include <QtCore>
+#include "core/Archive.h"
+
+class FieldArchive;
+
+struct CLIObserver : public ArchiveObserver
+{
+	CLIObserver() {}
+	inline void setFilename(const QString &filename) {
+		_filename = filename;
+	}
+	inline bool observerWasCanceled() const {
+		return false;
+	}
+	inline void setObserverMaximum(unsigned int max) {
+		_maximum = max;
+	}
+	virtual void setObserverValue(int value);
+	virtual bool observerRetry(const QString &message);
+private:
+	void setPercent(quint8 percent);
+	qint64 _maximum;
+	quint8 _lastPercent;
+	QString _filename;
+};
 
 class CLI
 {
@@ -26,6 +50,9 @@ public:
 	static void exec();
 private:
 	static void commandExport();
+	static void commandPatch();
+	static FieldArchive *openFieldArchive(const QString &ext, const QString &path);
+	static CLIObserver observer;
 };
 
 #endif // CLI_H
