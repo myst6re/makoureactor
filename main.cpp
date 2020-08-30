@@ -15,14 +15,19 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
+
+#ifdef MR_CONSOLE
+#include <QCoreApplication>
+#include "CLI.h"
+#include "Parameters.h"
+#else
 #include <QApplication>
 #include "Window.h"
 #include "core/Var.h"
-#include "core/Config.h"
 #include "Data.h"
-#include "core/FF7Font.h"
-#include "Parameters.h"
-#include "CLI.h"
+//#include "core/FF7Font.h"
+#endif
+#include "core/Config.h"
 
 int main(int argc, char *argv[])
 {

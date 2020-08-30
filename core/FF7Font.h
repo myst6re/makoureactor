@@ -19,6 +19,7 @@
 #define FF7FONT_H
 
 #include "WindowBinFile.h"
+#include "FF7Text.h"
 
 class FF7Font
 {
@@ -48,6 +49,15 @@ public:
 	static bool addFont(const QString &name, const QString &from, const QString &displayName);
 	static bool removeFont(const QString &name);
 	static const QString &fontDirPath();
+	static QSize calcSize(const QByteArray &ff7Text);
+	static QSize calcSize(const QByteArray &ff7Text, QList<int> &pagesPos);
+	static quint8 charW(int tableId, int charId);
+	static quint8 leftPadding(int tableId, int charId);
+	static quint8 charFullWidth(int tableId, int charId);
+	static int calcFF7TextWidth(const FF7Text &ff7Text);
+	static int namesWidth;
+	static quint8 charWidth[7][256];
+	static const char *optimisedDuo[3];
 private:
 	void openTxt(const QString &data);
 	// void print();

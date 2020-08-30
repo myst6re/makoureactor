@@ -18,7 +18,7 @@
 #include "Section1File.h"
 #include "Field.h"
 #include "core/Config.h"
-#include "widgets/TextPreview.h"
+#include "core/FF7Font.h"
 
 GrpScriptsIterator::GrpScriptsIterator(const GrpScriptsIterator &other) :
 	QListIterator<GrpScript *>(other), _scriptsIt(0)
@@ -164,7 +164,7 @@ void Section1File::initEmpty()
 	opcodes.append(new OpcodeRET());
 	scripts.append(new Script(opcodes));
 
-	QSize s = TextPreview::calcSize(_texts.at(1).data());
+	QSize s = FF7Font::calcSize(_texts.at(1).data());
 
 	opcodes.clear();
 	opcodes.append(new OpcodeWINDOW(0, 0, 0, s.width(), s.height()));
@@ -957,7 +957,7 @@ void Section1File::autosizeTextWindows()
 		QList<FF7Window> windows;
 		listWindows(textID, windows);
 		if (!windows.isEmpty()) {
-			QSize size = TextPreview::calcSize(text(textID).data());
+			QSize size = FF7Font::calcSize(text(textID).data());
 			for (FF7Window win : windows) {
 				if (win.displayType > 0) {
 					continue; // TODO: estimate size for countdown and numerical display
@@ -966,7 +966,7 @@ void Section1File::autosizeTextWindows()
 				isModified = win.w != size.width() || win.h != size.height();
 				win.w = size.width();
 				win.h = size.height();
-				QPoint pos = TextPreview::realPos(win);
+				QPoint pos = win.realPos();
 				isModified = isModified || win.x != pos.x() || win.y != pos.y();
 				win.x = pos.x();
 				win.y = pos.y();

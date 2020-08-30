@@ -289,7 +289,7 @@ QList<FF7Var> FieldArchive::searchAllVars(QMap<FF7Var, QSet<QString> > &fieldNam
 #include "BackgroundFilePC.h"
 #include "BackgroundFilePS.h"
 #include "FieldArchivePC.h"
-#include "widgets/TextPreview.h"
+#include "core/FF7Font.h"
 
 void FieldArchive::validateAsk()
 {
@@ -378,7 +378,6 @@ void FieldArchive::validateAsk()
 
 void FieldArchive::validateOneLineSize()
 {
-	TextPreview tp; // Init textpreview to use autodim algo
 	FieldArchiveIterator it(*this);
 
 	while (it.hasNext()) {
@@ -410,7 +409,7 @@ void FieldArchive::validateOneLineSize()
 							opcodeWindow->getWindow(window);
 							if (opcode->getTextID() < scriptsAndTexts->textCount()) {
 								FF7Text text = scriptsAndTexts->text(opcode->getTextID());
-								QSize optimSize = TextPreview::calcSize(text.data());
+								QSize optimSize = FF7Font::calcSize(text.data());
 								if (!text.data().isEmpty() && !text.contains(QRegExp("\n")) && (window.w != optimSize.width() || window.h != optimSize.height())) {
 									qWarning() << name << grpScriptID << grp->name() << grp->scriptName(scriptID) << opcodeID << "width=" << window.w << "height=" << window.h << "better size=" << optimSize.width() << optimSize.height();
 								}

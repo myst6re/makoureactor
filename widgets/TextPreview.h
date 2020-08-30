@@ -21,7 +21,6 @@
 #include <QtWidgets>
 #include "core/field/Opcode.h"
 
-#define NOWIN		255
 #define DARKGREY	0
 #define DARKBLUE	1
 #define RED			2
@@ -58,9 +57,6 @@ public:
 	void nextPage();
 	void prevPage();
 	void calcSize();
-	static QSize calcSize(const QByteArray &ff7Text);
-	static QSize calcSize(const QByteArray &ff7Text, QList<int> &pagesPos);
-	static QPoint realPos(const FF7Window &ff7Window);
 	QSize getCalculatedSize() const;
 	static QPixmap getIconImage(int iconId);
 	void drawWindow(QPainter *painter, WindowType type=Normal) const;
@@ -92,19 +88,12 @@ private:
 	static QImage fontImage;
 	void letter(int *x, int *y, int charId, QPainter *painter, quint8 tableId=0);
 	void word(int *x, int *y, const QByteArray &charIds, QPainter *painter, quint8 tableId=0);
-	static quint8 charW(int tableId, int charId);
-	static quint8 leftPadding(int tableId, int charId);
-	static quint8 charFullWidth(int tableId, int charId);
 	static QImage letterImage(int tableId, int charId);
 	static void setFontColor(int id, bool blink=false);
 	static QVector<QRgb> fontPalettes[8];
 	static QTimer timer;
-	static int calcFF7TextWidth(const QByteArray &ff7Text);
 	static quint16 posTable[7];
-	static quint8 charWidth[7][256];
-	static const char *optimisedDuo[3];
 	static QList<QByteArray> names;
-	static int namesWidth;
 protected:
 	void paintEvent(QPaintEvent *event);
 	void mousePressEvent(QMouseEvent *event);
