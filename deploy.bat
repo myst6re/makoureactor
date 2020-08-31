@@ -23,4 +23,3 @@ for %%l in (%LANGUAGES%) do (
 
 rem Deploy Exe
 xcopy /y %EXE_PATH% %OUTPUT_DIR%
-xcopy /y release\makoureactor.exe %OUTPUT_DIR%

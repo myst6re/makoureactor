@@ -19,6 +19,7 @@
 
 #include <QtCore>
 #include "Arguments.h"
+#include "core/PsfFile.h"
 
 class ArgumentsExport : public CommonArguments
 {
@@ -28,6 +29,7 @@ public:
 	QString backgroundFormat() const;
 	QString soundFormat() const;
 	QString textFormat() const;
+	PsfTags psfTags() const;
 	bool force() const;
 	inline QString destination() const {
 		return _directory;

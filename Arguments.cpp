@@ -16,10 +16,26 @@
  ****************************************************************************/
 #include "Arguments.h"
 
+HelpArguments::HelpArguments()
+{
+	_ADD_FLAG(_OPTION_NAMES("h", "help"), "Displays help.");
+}
+
+bool HelpArguments::help() const
+{
+	return _parser.isSet("help");
+}
+
+void HelpArguments::showHelp(int exitCode)
+{
+	QRegExp usage("Usage: .* \\[options\\]");
+	qInfo(qPrintable(_parser.helpText().replace(usage, "Usage: %1 [options]")
+	                     .arg(QFileInfo(qApp->arguments().first()).fileName())));
+	::exit(exitCode);
+}
+
 CommonArguments::CommonArguments()
 {
-	_parser.addHelpOption();
-
 	_ADD_ARGUMENT("input-format", "Input format (lgp, fieldpc, iso, dat).", "input-format", "");
 	_ADD_ARGUMENT("include", "Include field map name. Repeat this argument to include multiple names. "
 	                         "If empty, all will be included by default.", "include", "");
@@ -29,11 +45,6 @@ CommonArguments::CommonArguments()
 	_ADD_ARGUMENT("exclude-from", "Exclude field map names from file. The file format is one name per line.", "exclude", "");
 
 	_parser.addPositionalArgument("file", QCoreApplication::translate("Arguments", "Input file or directory."));
-}
-
-bool CommonArguments::help() const
-{
-	return _parser.isSet("help");
 }
 
 QString CommonArguments::inputFormat() const
@@ -134,20 +145,24 @@ void CommonArguments::mapNamesFromFiles()
 Arguments::Arguments() :
       _command(None)
 {
-	_parser.addHelpOption();
 	_parser.addVersionOption();
 	_parser.addPositionalArgument(
-	    "command", QCoreApplication::translate("Arguments", "Available commands: export, patch"), "<command>"
+	    "command", QCoreApplication::translate("Arguments", "Command to execute"), "<command>"
 	);
 	_parser.addPositionalArgument("args", "", "[<args>]");
 	_parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsPositionalArguments);
+	_parser.setApplicationDescription(
+	    QCoreApplication::translate(
+	        "Arguments",
+	        "\nList of available commands:\n"
+	        "  export  Export various assets from archive to files\n"
+	        "  patch   Patch archive\n"
+	        "\n"
+	        "\"%1 export --help\" to see help of the specific subcommand"
+	    ).arg(QFileInfo(qApp->arguments().first()).fileName())
+	);
 
 	parse();
-}
-
-bool Arguments::help() const
-{
-	return _parser.isSet("help");
 }
 
 void Arguments::parse()

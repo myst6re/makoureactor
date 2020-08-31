@@ -25,6 +25,7 @@ ArgumentsExport::ArgumentsExport() : CommonArguments()
 	                          "Cannot be specified with background option.", "bg-layer", "");
 	_ADD_ARGUMENT("music", "Export musics. Possible values: psf, akao, snd (alias of akao)", "music", "");
 	_ADD_ARGUMENT("text", "Export texts. Possible values: xml, txt", "text", "");
+	_ADD_ARGUMENT("psf-lib-path", "PSF lib path. Required only when --music psf is set.", "psf-lib-path", "");
 	_ADD_FLAG(_OPTION_NAMES("f", "force"),
 	             "Overwrite destination file if exists.");
 
@@ -59,6 +60,11 @@ QString ArgumentsExport::textFormat() const
 	return _parser.value("text");
 }
 
+PsfTags ArgumentsExport::psfTags() const
+{
+	return PsfTags(_parser.value("psf-lib-path"));
+}
+
 bool ArgumentsExport::force() const
 {
 	return _parser.isSet("force");
@@ -81,8 +87,14 @@ void ArgumentsExport::parse()
 		exit(1);
 	}
 
+	if (_parser.value("music") == "psf" && !_parser.isSet("psf-lib-path")) {
+		qWarning() << qPrintable(
+		    QCoreApplication::translate("Arguments", "Error: --psf-lib-path is required with --music psf"));
+		exit(1);
+	}
+
 	QStringList paths = wilcardParse();
-	if (!paths.isEmpty()) {
+	if (paths.size() == 2) {
 		// Output directory
 		if (QDir(paths.last()).exists()) {
 			_directory = paths.takeLast();
