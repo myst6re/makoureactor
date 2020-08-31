@@ -1658,7 +1658,7 @@ void FieldArchive::removeBattles()
 			return;
 		}
 		Field *field = it.next();
-		if (field != nullptr && field->scriptsAndTexts()->isOpen()) {
+		if (field != nullptr && field->encounter()->isOpen()) {
 			field->encounter()->setBattleEnabled(EncounterFile::Table1, false);
 			field->encounter()->setBattleEnabled(EncounterFile::Table2, false);
 			if (!field->isModified()) {

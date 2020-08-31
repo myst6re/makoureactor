@@ -24,6 +24,14 @@ class ArgumentsPatch : public CommonArguments
 {
 public:
 	ArgumentsPatch();
+	QString targetFile() const;
+	bool emptyUnusedTexts() const;
+	bool removeDialogs() const;
+	bool removeEncounters() const;
+	bool autosizeTextWindows() const;
+	bool cleanModelLoader() const;
+	bool removeTilesSections() const;
+	bool repairBackgrounds() const;
 private:
 	void parse();
 	QString _target_file;

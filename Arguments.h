@@ -28,14 +28,20 @@
 
 #include <QtCore>
 
-class CommonArguments
+class HelpArguments
+{
+public:
+	HelpArguments();
+	void showHelp(int exitCode = EXIT_SUCCESS);
+	bool help() const;
+protected:
+	QCommandLineParser _parser;
+};
+
+class CommonArguments : public HelpArguments
 {
 public:
 	CommonArguments();
-	inline void showHelp(int exitCode = 0) {
-		_parser.showHelp(exitCode);
-	}
-	bool help() const;
 	inline QString path() const {
 		return _path;
 	}
@@ -49,10 +55,9 @@ protected:
 	static QStringList searchFiles(const QString &path);
 	QString _path;
 	QStringList _includesFromFile, _excludesFromFile;
-	QCommandLineParser _parser;
 };
 
-class Arguments
+class Arguments : public HelpArguments
 {
 public:
 	enum Command {
@@ -62,17 +67,12 @@ public:
 		Patch
 	};
 	Arguments();
-	inline void showHelp(int exitCode = 0) {
-		_parser.showHelp(exitCode);
-	}
 	inline Command command() const {
 		return _command;
 	}
-	bool help() const;
 private:
 	void parse();
 	Command _command;
-	QCommandLineParser _parser;
 };
 
 #endif // ARGUMENTS_H

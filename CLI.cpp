@@ -21,6 +21,7 @@
 #include "ArgumentsPatch.h"
 #include "core/field/FieldArchivePS.h"
 #include "core/field/FieldArchivePC.h"
+#include "core/field/BackgroundFilePC.h"
 #include <iostream>
 
 void CLIObserver::setObserverValue(int value)
@@ -41,7 +42,7 @@ void CLIObserver::setPercent(quint8 percent)
 
 bool CLIObserver::observerRetry(const QString &message)
 {
-	std::cout << qPrintable(message) << std::endl;
+	qInfo() << qPrintable(message);
 	std::cout << qPrintable(QCoreApplication::translate("CLI", "Retry? [Yn] ")) << std::flush;
 	std::string line;
 	std::getline(std::cin, line);
@@ -51,7 +52,7 @@ bool CLIObserver::observerRetry(const QString &message)
 
 	QString qtLine = QString::fromStdString(line);
 
-	return qtLine.isEmpty() || qtLine.compare(QCoreApplication::translate("CLI", "y"), Qt::CaseInsensitive);
+	return qtLine.isEmpty() || qtLine.compare(QCoreApplication::translate("CLI", "y"), Qt::CaseInsensitive) == 0;
 }
 
 CLIObserver CLI::observer;
@@ -68,7 +69,7 @@ void CLI::commandExport()
 		return;
 	}
 
-	PsfTags tags; // TODO: set by CLI
+	PsfTags tags = argsExport.psfTags();
 	QList<int> selectedFields;
 	QList<QRegExp> includes, excludes;
 
@@ -171,6 +172,76 @@ void CLI::commandPatch()
 			}
 		}
 	}
+
+	observer.setObserverMaximum(selectedFields.size());
+
+	int i = 0;
+
+	for (const int &mapID : selectedFields) {
+		Field *field = fieldArchive->field(mapID);
+		if (field != nullptr) {
+			if (argsPatch.removeDialogs() && field->scriptsAndTexts()->isOpen()) {
+				field->scriptsAndTexts()->removeTexts();
+				if (field->scriptsAndTexts()->isModified() && !field->isModified()) {
+					field->setModified(true);
+				}
+			}
+
+			if (argsPatch.emptyUnusedTexts() && field->scriptsAndTexts()->isOpen()) {
+				field->scriptsAndTexts()->cleanTexts();
+				if (field->scriptsAndTexts()->isModified() && !field->isModified()) {
+					field->setModified(true);
+				}
+			}
+
+			if (argsPatch.removeEncounters() && field->encounter()->isOpen()) {
+				field->encounter()->setBattleEnabled(EncounterFile::Table1, false);
+				field->encounter()->setBattleEnabled(EncounterFile::Table2, false);
+				if (field->encounter()->isModified() && !field->isModified()) {
+					field->setModified(true);
+				}
+			}
+
+			if (argsPatch.autosizeTextWindows() && field->scriptsAndTexts()->isOpen()) {
+				field->scriptsAndTexts()->autosizeTextWindows();
+				if (field->scriptsAndTexts()->isModified() && !field->isModified()) {
+					field->setModified(true);
+				}
+			}
+
+			if (fieldArchive->isPC()) {
+				if (argsPatch.cleanModelLoader()) {
+					FieldPC *fieldPC = static_cast<FieldPC *>(field);
+					FieldModelLoaderPC *modelLoader = fieldPC->fieldModelLoader();
+					if (modelLoader->isOpen()) {
+						modelLoader->clean();
+						if (modelLoader->isModified() && !field->isModified()) {
+							field->setModified(true);
+						}
+					}
+				}
+
+				if (argsPatch.repairBackgrounds()
+				    && (field->name().toLower() == "lastmap"
+				        || field->name().toLower() == "fr_e")) {
+					BackgroundFilePC *bg = static_cast<BackgroundFilePC *>(field->background());
+					if (bg->isOpen() && bg->repair()) {
+						field->setModified(true);
+					}
+				}
+
+				if (argsPatch.removeTilesSections()) {
+					FieldPC *fieldPC = static_cast<FieldPC *>(field);
+					fieldPC->setRemoveUnusedSection(true);
+					field->setModified(true);
+				}
+			}
+		}
+
+		observer.setObserverValue(i++);
+	}
+
+	fieldArchive->save(argsPatch.targetFile());
 
 	delete fieldArchive;
 }

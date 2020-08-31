@@ -327,9 +327,7 @@ macx {
 
 win32 {
     RC_FILE = Makou_Reactor.rc
-    !contains(CONFIG, "console") {
-        TARGET = Makou_Reactor
-    }
+    TARGET = Makou_Reactor
     # Regedit features
     LIBS += -ladvapi32 -lshell32
     # OpenGL features

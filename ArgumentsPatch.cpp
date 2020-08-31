@@ -16,14 +16,14 @@
  ****************************************************************************/
 #include "ArgumentsPatch.h"
 
-ArgumentsPatch::ArgumentsPatch()
+ArgumentsPatch::ArgumentsPatch() : CommonArguments()
 {
 	_ADD_FLAG("empty-unused-texts", "Empty unused texts.");
 	_ADD_FLAG("remove-dialogs", "Remove in-game dialogs.");
 	_ADD_FLAG("remove-encounters", "Remove random encounters, but not scripted encounters.");
 	_ADD_FLAG("autosize-text-windows", "Autosize windows when the content can be guessed.");
 	_ADD_FLAG("clean-model-loader", "Clean model loader section format (PC format only)");
-	_ADD_FLAG("remove-tiles-section", "Remove the unused tiles section (PC format only)");
+	_ADD_FLAG("remove-tiles-sections", "Remove unused tiles sections (PC format only)");
 	_ADD_FLAG("repair-backgrounds", "Repair lastmap (completely) and fr_e (partially) backgrounds. "
 	                                "Use `--include lastmap` to repair only one background.");
 
@@ -32,6 +32,46 @@ ArgumentsPatch::ArgumentsPatch()
 	);
 
 	parse();
+}
+
+QString ArgumentsPatch::targetFile() const
+{
+	return _target_file.isEmpty() ? _path : _target_file;
+}
+
+bool ArgumentsPatch::emptyUnusedTexts() const
+{
+	return _parser.isSet("empty-unused-texts");
+}
+
+bool ArgumentsPatch::removeDialogs() const
+{
+	return _parser.isSet("remove-dialogs");
+}
+
+bool ArgumentsPatch::removeEncounters() const
+{
+	return _parser.isSet("remove-encounters");
+}
+
+bool ArgumentsPatch::autosizeTextWindows() const
+{
+	return _parser.isSet("autosize-text-windows");
+}
+
+bool ArgumentsPatch::cleanModelLoader() const
+{
+	return _parser.isSet("clean-model-loader");
+}
+
+bool ArgumentsPatch::removeTilesSections() const
+{
+	return _parser.isSet("remove-tiles-sections");
+}
+
+bool ArgumentsPatch::repairBackgrounds() const
+{
+	return _parser.isSet("repair-backgrounds");
 }
 
 void ArgumentsPatch::parse()
