@@ -122,7 +122,6 @@ void GrpScriptList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous
 {
 	if (current) {
 		QColor color = Data::color(Data::ColorEvidence);
-		qDebug() << color;
 		current->setBackground(0, color);
 		current->setBackground(1, color);
 		current->setBackground(2, color);
