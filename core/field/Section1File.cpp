@@ -935,9 +935,8 @@ void Section1File::autosizeTextWindows()
 		QList<FF7Window> windows;
 		listWindows(textID, windows);
 		QSize size = TextPreview::calcSize(text(textID).data());
-		for (int i = 0; i < windows.size(); ++i) {
+		for (FF7Window win : windows) {
 			bool isModified;
-			FF7Window &win = windows[i];
 			isModified = win.w != size.width() || win.h != size.height();
 			win.w = size.width();
 			win.h = size.height();
@@ -947,6 +946,7 @@ void Section1File::autosizeTextWindows()
 			win.y = pos.y();
 
 			if (isModified) {
+				_grpScripts.at(win.groupID)->setWindow(win);
 				setModified(true);
 			}
 		}
