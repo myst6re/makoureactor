@@ -224,7 +224,10 @@ bool Section1File::open(const QByteArray &data)
 	const char *constData = data.constData();
 	bool isDemo;
 
-	if (dataSize < 32)	return false;
+	if (dataSize < 32) {
+		qWarning() << "Section1File::open data too short" << dataSize;
+		return false;
+	}
 
 	memcpy(&version, constData, 2);
 
@@ -233,7 +236,10 @@ bool Section1File::open(const QByteArray &data)
 	isDemo = version == 0x0301; // Check version format
 
 	memcpy(&posTexts, constData + 4, 2); // posTexts (and end of scripts)
-	if ((quint32)dataSize < posTexts || posTexts < 32)	return false;
+	if ((quint32)dataSize < posTexts || posTexts < 32) {
+		qWarning() << "Section1File::open out of range posTexts" << posTexts << dataSize;
+		return false;
+	}
 
 	clear();
 
@@ -259,7 +265,10 @@ bool Section1File::open(const QByteArray &data)
 
 	posScripts = cur + 8*nbScripts + 4*nbAKAO;
 
-	if (posTexts < posScripts+64*nbScripts)	return false;
+	if (posTexts < posScripts+64*nbScripts) {
+		qWarning() << "Section1File::open out of range posScripts" << posTexts << posScripts << nbScripts << dataSize;
+		return false;
+	}
 
 	quint16 positions[33];
 	const int scriptCount = isDemo ? 16 : 32;
@@ -326,11 +335,13 @@ bool Section1File::open(const QByteArray &data)
 						Script *script0 = new Script(data, positions[j], positions[j+1]-positions[j]);
 						if (!script0->isValid()) {
 							delete script0;
+							qWarning() << "Section1File::open invalid script 1" << i << j;
 							return false;
 						}
 						grpScript->setScript(0, script0); // S0 - Init
 						grpScript->setScript(1, script0->splitScriptAtReturn()); // S0 - Main
 					} else if (!grpScript->setScript(scriptID + 1, data, positions[j], positions[j+1]-positions[j])) {
+						qWarning() << "Section1File::open invalid script 2" << i << j;
 						return false;
 					}
 					scriptID=j+1;
@@ -351,22 +362,33 @@ bool Section1File::open(const QByteArray &data)
 
 	if (sizeTextSection > 4) { //If there are texts
 		quint16 posDeb, posFin, nbTextes;
-		if (dataSize < posTexts+2)	return false;
-		memcpy(&posDeb, constData + posTexts + 2, 2);
-		nbTextes = posDeb/2 - 1;
-
-		for (quint32 i=1; i<nbTextes; ++i) {
-			memcpy(&posFin, constData + posTexts + 2 + i*2, 2);
-
-			if (dataSize < posTexts+posFin)	return false;
-
-			// FIXME: possible hidden data between 0xFF and posFin-posDeb
-			_texts.append(FF7Text(data.mid(posTexts+posDeb, posFin-posDeb)));
-			posDeb = posFin;
+		if (dataSize < posTexts+2) {
+			qWarning() << "Section1File::open invalid posTexts 2" << posTexts << dataSize;
+			return false;
 		}
-		if ((quint32)dataSize < sizeTextSection)	return false;
-		// FIXME: possible hidden data between 0xFF and posFin-posDeb
-		_texts.append(FF7Text(data.mid(posTexts+posDeb, sizeTextSection-posDeb)));
+		memcpy(&posDeb, constData + posTexts + 2, 2);
+		if (posDeb > 0) {
+			nbTextes = posDeb/2 - 1;
+
+			for (quint32 i=1; i<nbTextes; ++i) {
+				memcpy(&posFin, constData + posTexts + 2 + i*2, 2);
+
+				if (dataSize < posTexts+posFin) {
+					qWarning() << "Section1File::open invalid posFin" << posTexts << posFin << dataSize;
+					break;
+				}
+
+				// FIXME: possible hidden data between 0xFF and posFin-posDeb
+				_texts.append(FF7Text(data.mid(posTexts+posDeb, posFin-posDeb)));
+				posDeb = posFin;
+			}
+			if ((quint32)dataSize < sizeTextSection) {
+				qWarning() << "Section1File::open invalid sizeTextSection" << sizeTextSection << dataSize;
+				return false;
+			}
+			// FIXME: possible hidden data between 0xFF and posFin-posDeb
+			_texts.append(FF7Text(data.mid(posTexts+posDeb, sizeTextSection-posDeb)));
+		}
 	}
 
 	setOpen(true);
