@@ -91,29 +91,23 @@ bool Field::open(bool dontOptimize)
 
 	return true;
 }
-
-qint8 Field::open(const QString &path, bool isDat, bool compressed,
+/*
+bool Field::open(const QString &path, bool isDat, bool compressed,
                  QIODevice *device2)
 {
-	qint8 ret = importer(path, isDat, compressed,
+	_isOpen = importer(path, isDat, compressed,
 	                     Field::FieldSection(0xFFFF), // Everything
 	                     device2);
-	if (ret == 0) {
-		_isOpen = true;
-	}
-	return ret;
+	return _isOpen;
 }
 
-qint8 Field::open(const QByteArray &data, bool isPSField, QIODevice *device2)
+bool Field::open(const QByteArray &data, bool isPSField, QIODevice *device2)
 {
-	qint8 ret = importer(data, isPSField,
+	_isOpen = importer(data, isPSField,
 	                     Field::FieldSection(0xFFFF), // Everything
 	                     device2);
-	if (ret == 0) {
-		_isOpen = true;
-	}
-	return ret;
-}
+	return _isOpen;
+}*/
 
 int Field::sectionSize(FieldSection part) const
 {
@@ -399,19 +393,31 @@ qint8 Field::save(const QString &path, bool compress)
 	return 0;
 }
 
-qint8 Field::importer(const QString &path, bool isDat, bool compressed, FieldSections part, QIODevice *bsxDevice,
+bool Field::importer(const QString &path, bool isDat, bool compressed, FieldSections part, QIODevice *bsxDevice,
                       QIODevice *mimDevice)
 {
 	QFile fic(path);
-	if (!fic.open(QIODevice::ReadOnly))	return 1;
-	if (fic.size() > 10000000)	return 2;
+	if (!fic.open(QIODevice::ReadOnly)) {
+		_lastError = fic.errorString();
+		return false;
+	}
+	if (fic.size() > 10000000) {
+		_lastError = QObject::tr("File size greater than 10000000");
+		return false;
+	}
 
 	QByteArray data;
 
 	if (compressed) { // compressed field
 		quint32 fileSize=0;
-		if (fic.read((char *)&fileSize, 4) != 4)	return 2;
-		if (fileSize+4 != fic.size()) return 2;
+		if (fic.read((char *)&fileSize, 4) != 4) {
+			_lastError = fic.errorString();
+			return false;
+		}
+		if (fileSize+4 != fic.size()) {
+			_lastError = QObject::tr("Malformed LZS header");
+			return false;
+		}
 
 		data = LZS::decompressAll(fic.readAll());
 	} else { // uncompressed field
@@ -429,14 +435,17 @@ bool Field::importModelLoader(const QByteArray &sectionData, bool isPSField, QIO
 	return false;
 }
 
-qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *bsxDevice,
+bool Field::importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *bsxDevice,
                       QIODevice *mimDevice)
 {
 	if (isPSField) {
 		quint32 sectionPositions[7];
 		const int headerSize = 28;
 
-		if (data.size() < headerSize)	return 2;
+		if (data.size() < headerSize) {
+			_lastError = QObject::tr("Incorrect field file size");
+			return false;
+		}
 		memcpy(sectionPositions, data.constData(), headerSize); // header
 		qint32 vramDiff = sectionPositions[0] - headerSize;// vram section1 pos - real section 1 pos
 
@@ -446,47 +455,67 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 
 		if (part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
-			if (!section1->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))	return 2;
+			if (!section1->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0]))) {
+				_lastError = QObject::tr("Cannot open section 1 (texts, scripts and musics)");
+				return false;
+			}
 			section1->setModified(true);
 		}
 		if (part.testFlag(Akaos)) {
 			TutFile *_tut = tutosAndSounds(false);
-			if (!_tut->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0])))		return 2;
+			if (!_tut->open(data.mid(sectionPositions[0], sectionPositions[1]-sectionPositions[0]))) {
+				_lastError = QObject::tr("Cannot open tutos section");
+				return false;
+			}
 			_tut->setModified(true);
 		}
 		if (part.testFlag(Encounter)) {
 			EncounterFile *enc = encounter(false);
-			if (!enc->open(data.mid(sectionPositions[5], sectionPositions[6]-sectionPositions[5])))		return 2;
+			if (!enc->open(data.mid(sectionPositions[5], sectionPositions[6]-sectionPositions[5]))) {
+				_lastError = QObject::tr("Cannot open encounters section");
+				return false;
+			}
 			enc->setModified(true);
 		}
 		if (part.testFlag(Walkmesh)) {
 			IdFile *walk = walkmesh(false);
-			if (!walk->open(data.mid(sectionPositions[1], sectionPositions[2]-sectionPositions[1])))		return 2;
+			if (!walk->open(data.mid(sectionPositions[1], sectionPositions[2]-sectionPositions[1]))) {
+				_lastError = QObject::tr("Cannot open walkmesh section");
+				return false;
+			}
 			walk->setModified(true);
 		}
 		if (part.testFlag(Camera)) {
 			CaFile *ca = camera(false);
-			if (!ca->open(data.mid(sectionPositions[3], sectionPositions[4]-sectionPositions[3])))		return 2;
+			if (!ca->open(data.mid(sectionPositions[3], sectionPositions[4]-sectionPositions[3]))) {
+				_lastError = QObject::tr("Cannot open camera section");
+				return false;
+			}
 			ca->setModified(true);
 		}
 		if (part.testFlag(Inf)) {
 			InfFile *inf = this->inf(false);
-			if (!inf->open(data.mid(sectionPositions[4], sectionPositions[5]-sectionPositions[4])))	return 2;
+			if (!inf->open(data.mid(sectionPositions[4], sectionPositions[5]-sectionPositions[4]))) {
+				_lastError = QObject::tr("Cannot open info section");
+				return false;
+			}
 			inf->setMapName(name());
 			inf->setModified(true);
 		}
 		if (part.testFlag(ModelLoader)) {
 			if (!importModelLoader(data.mid(sectionPositions[6]), isPSField, bsxDevice)) {
-				return 2;
+				_lastError = QObject::tr("Cannot open model loader section");
+				return false;
 			}
 		}
 		if (part.testFlag(Background)) {
 			if (!mimDevice) {
 				qWarning() << "Field::importer Additional device need to be initialized";
-				return 2;
+				return false;
 			}
 			if (!mimDevice->open(QIODevice::ReadOnly)) {
-				return 1;
+				_lastError = mimDevice->errorString();
+				return false;
 			}
 
 			QByteArray mimData = LZS::decompressAllWithHeader(mimDevice->readAll()),
@@ -504,7 +533,8 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 				if (isPC()) {
 					delete bg;
 				}
-				return 2;
+				_lastError = QObject::tr("Cannot open background section");
+				return false;
 			}
 			if (isPC()) {
 				_parts.insert(Background, new BackgroundFilePC(bg->toPC(static_cast<FieldPC *>(this))));
@@ -516,43 +546,65 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 	} else {
 		quint32 sectionPositions[9];
 
-		if (data.size() < 6 + 9 * 4)	return 3;
+		if (data.size() < 6 + 9 * 4) {
+			_lastError = QObject::tr("Incorrect field file size");
+			return false;
+		}
 		memcpy(sectionPositions, data.constData() + 6, 9 * 4); // header
 
 		if (part.testFlag(Scripts)) {
 			Section1File *section1 = scriptsAndTexts(false);
-			if (!section1->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))	return 2;
+			if (!section1->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4))) {
+				_lastError = QObject::tr("Cannot open section 1 (texts, scripts and musics)");
+				return false;
+			}
 			section1->setModified(true);
 		}
 		if (part.testFlag(Akaos)) {
 			TutFile *_tut = tutosAndSounds(false);
-			if (!_tut->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4)))		return 2;
+			if (!_tut->open(data.mid(sectionPositions[0]+4, sectionPositions[1]-sectionPositions[0]-4))) {
+				_lastError = QObject::tr("Cannot open tutos section");
+				return false;
+			}
 			_tut->setModified(true);
 		}
 		if (part.testFlag(ModelLoader)) {
-			if (!importModelLoader(data.mid(sectionPositions[1]+4, sectionPositions[2]-sectionPositions[1]-4),
+			if (!importModelLoader(data.mid(sectionPositions[2]+4, sectionPositions[3]-sectionPositions[2]-4),
 			                       isPSField, bsxDevice)) {
-				return 2;
+				_lastError = QObject::tr("Cannot open model loader section");
+				return false;
 			}
 		}
 		if (part.testFlag(Encounter)) {
 			EncounterFile *enc = encounter(false);
-			if (!enc->open(data.mid(sectionPositions[6]+4, sectionPositions[7]-sectionPositions[6]-4)))		return 2;
+			if (!enc->open(data.mid(sectionPositions[6]+4, sectionPositions[7]-sectionPositions[6]-4))) {
+				_lastError = QObject::tr("Cannot open encounters section");
+				return false;
+			}
 			enc->setModified(true);
 		}
 		if (part.testFlag(Walkmesh)) {
 			IdFile *walk = walkmesh(false);
-			if (!walk->open(data.mid(sectionPositions[4]+4, sectionPositions[5]-sectionPositions[4]-4)))		return 2;
+			if (!walk->open(data.mid(sectionPositions[4]+4, sectionPositions[5]-sectionPositions[4]-4))) {
+				_lastError = QObject::tr("Cannot open walkmesh section");
+				return false;
+			}
 			walk->setModified(true);
 		}
 		if (part.testFlag(Camera)) {
 			CaFile *ca = camera(false);
-			if (!ca->open(data.mid(sectionPositions[1]+4, sectionPositions[2]-sectionPositions[1]-4)))		return 2;
+			if (!ca->open(data.mid(sectionPositions[1]+4, sectionPositions[2]-sectionPositions[1]-4))) {
+				_lastError = QObject::tr("Cannot open camera section");
+				return false;
+			}
 			ca->setModified(true);
 		}
 		if (part.testFlag(Inf)) {
 			InfFile *inf = this->inf(false);
-			if (!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4)))	return 2;
+			if (!inf->open(data.mid(sectionPositions[7]+4, sectionPositions[8]-sectionPositions[7]-4))) {
+				_lastError = QObject::tr("Cannot open info section");
+				return false;
+			}
 			inf->setMapName(name());
 			inf->setModified(true);
 		}
@@ -572,7 +624,8 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 				if (isPS()) {
 					delete bg;
 				}
-				return 2;
+				_lastError = QObject::tr("Cannot open background section");
+				return false;
 			}
 			if (isPS()) {
 				_parts.insert(Background, new BackgroundFilePS(bg->toPS(static_cast<FieldPS *>(this))));
@@ -583,5 +636,5 @@ qint8 Field::importer(const QByteArray &data, bool isPSField, FieldSections part
 		}
 	}
 
-	return 0;
+	return true;
 }

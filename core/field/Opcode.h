@@ -28,7 +28,7 @@ struct FF7Window {
 	qint16 x, y;
 	quint16 w, h;
 	quint16 ask_first, ask_last;
-	quint8 type, mode;
+	quint8 type, mode, displayType;
 	quint16 groupID, scriptID, opcodeID;
 };
 
