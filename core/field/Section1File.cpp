@@ -956,20 +956,25 @@ void Section1File::autosizeTextWindows()
 		}
 		QList<FF7Window> windows;
 		listWindows(textID, windows);
-		QSize size = TextPreview::calcSize(text(textID).data());
-		for (FF7Window win : windows) {
-			bool isModified;
-			isModified = win.w != size.width() || win.h != size.height();
-			win.w = size.width();
-			win.h = size.height();
-			QPoint pos = TextPreview::realPos(win);
-			isModified = isModified || win.x != pos.x() || win.y != pos.y();
-			win.x = pos.x();
-			win.y = pos.y();
+		if (!windows.isEmpty()) {
+			QSize size = TextPreview::calcSize(text(textID).data());
+			for (FF7Window win : windows) {
+				if (win.displayType > 0) {
+					continue; // TODO: estimate size for countdown and numerical display
+				}
+				bool isModified;
+				isModified = win.w != size.width() || win.h != size.height();
+				win.w = size.width();
+				win.h = size.height();
+				QPoint pos = TextPreview::realPos(win);
+				isModified = isModified || win.x != pos.x() || win.y != pos.y();
+				win.x = pos.x();
+				win.y = pos.y();
 
-			if (isModified) {
-				_grpScripts.at(win.groupID)->setWindow(win);
-				setModified(true);
+				if (isModified) {
+					_grpScripts.at(win.groupID)->setWindow(win);
+					setModified(true);
+				}
 			}
 		}
 	}

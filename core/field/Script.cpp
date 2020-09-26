@@ -1285,6 +1285,7 @@ void Script::listWindows(int groupID, int scriptID, int textID, QList<FF7Window>
 				win.type = quint8(opcode->id());
 				if (lastWinPerWindowID.contains(opcode->getWindowID())) {
 					win.mode = lastWinPerWindowID.value(opcode->getWindowID()).mode;
+					win.displayType = lastWinPerWindowID.value(opcode->getWindowID()).displayType;
 				}
 				lastWinPerWindowID.insert(opcode->getWindowID(), win);
 			} else if (opcode->getTextID() == textID
@@ -1300,8 +1301,20 @@ void Script::listWindows(int groupID, int scriptID, int textID, QList<FF7Window>
 					windows.append(win);
 				}
 			} else if (opcode->id() == Opcode::WMODE) {
-				win.type = 255;
+				if (lastWinPerWindowID.contains(opcode->getWindowID())) {
+					win = lastWinPerWindowID.value(opcode->getWindowID());
+				} else {
+					win.type = 255;
+				}
 				win.mode = static_cast<OpcodeWMODE *>(opcode)->mode;
+				lastWinPerWindowID.insert(opcode->getWindowID(), win);
+			} else if (opcode->id() == Opcode::WSPCL) {
+				if (lastWinPerWindowID.contains(opcode->getWindowID())) {
+					win = lastWinPerWindowID.value(opcode->getWindowID());
+				} else {
+					win.type = 255;
+				}
+				win.displayType = static_cast<OpcodeWSPCL *>(opcode)->displayType;
 				lastWinPerWindowID.insert(opcode->getWindowID(), win);
 			}
 		}
