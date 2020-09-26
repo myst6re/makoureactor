@@ -125,7 +125,10 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 {
 	const char *constData = data.constData();
 
-	if ((quint32)data.size() < 6)	return false;
+	if ((quint32)data.size() < 6) {
+		qWarning() << "FieldModelLoaderPC::open data size < 6" << data.size();
+		return false;
+	}
 
 	quint32 i, j;
 	quint16 nb;
@@ -142,6 +145,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 	for (i=0; i<nb; ++i) {
 		if ((quint32)data.size() < curPos+2) {
 			clear();
+			qWarning() << "FieldModelLoaderPC::open data size < curPos+2" << data.size() << curPos;
 			return false;
 		}
 
@@ -149,6 +153,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 		if ((quint32)data.size() < curPos+48+len) {
 			clear();
+			qWarning() << "FieldModelLoaderPC::open data size < curPos+48+len" << data.size() << curPos << len;
 			return false;
 		}
 		 // model name
@@ -191,6 +196,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 		for (j=0; j<nbAnim; ++j) {
 			if ((quint32)data.size() < curPos+2) {
 				clear();
+				qWarning() << "FieldModelLoaderPC::open data size < curPos+2 (2)" << data.size() << curPos;
 				return false;
 			}
 
@@ -198,6 +204,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 			if ((quint32)data.size() < curPos+4+len) {
 				clear();
+				qWarning() << "FieldModelLoaderPC::open data size < curPos+4+len" << data.size() << curPos << len;
 				return false;
 			}
 

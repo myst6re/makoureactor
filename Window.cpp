@@ -1329,21 +1329,15 @@ void Window::importToCurrentMap()
 
 	QFile bsxDevice(dialog.bsxPath()), mimDevice(dialog.mimPath());
 	
-	qint8 error = field->importer(path, isDat, isCompressed, parts, &bsxDevice, &mimDevice);
-
-	QString out;
-	switch (error)
-	{
-	case 0:
-		setModified();
-		index = path.lastIndexOf('/');
-		Config::setValue("importPath", index == -1 ? path : path.left(index));
-		openField(true);
-		break;
-	case 1:	out = tr("Error reopening file");	break;
-	case 2:	out = tr("Invalid file");				break;
+	if (!field->importer(path, isDat, isCompressed, parts, &bsxDevice, &mimDevice)) {
+		QMessageBox::warning(this, tr("Error"), field->errorString());
+		return;
 	}
-	if (!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
+
+	setModified();
+	index = path.lastIndexOf('/');
+	Config::setValue("importPath", index == -1 ? path : path.left(index));
+	openField(true);
 }
 
 void Window::varManager()

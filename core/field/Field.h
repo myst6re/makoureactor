@@ -66,17 +66,17 @@ public:
 
 	bool open(bool dontOptimize=false);
 
-	qint8 open(const QString &path, bool isDat, bool compressed, QIODevice *device2=0);
-	qint8 open(const QByteArray &data, bool isPSField, QIODevice *device2=0);
+	//bool open(const QString &path, bool isDat, bool compressed, QIODevice *device2=0);
+	//bool open(const QByteArray &data, bool isPSField, QIODevice *device2=0);
 
 	void initEmpty();
 
 	void setSaved();
 	bool save(QByteArray &newData, bool compress);
 	qint8 save(const QString &path, bool compress);
-	qint8 importer(const QString &path, bool isDat, bool compressed, FieldSections part, QIODevice *bsxDevice = nullptr,
+	bool importer(const QString &path, bool isDat, bool compressed, FieldSections part, QIODevice *bsxDevice = nullptr,
 	               QIODevice *mimDevice = nullptr);
-	qint8 importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *bsxDevice = nullptr,
+	bool importer(const QByteArray &data, bool isPSField, FieldSections part, QIODevice *bsxDevice = nullptr,
 	               QIODevice *mimDevice = nullptr);
 
 	Section1File *scriptsAndTexts(bool open=true);
@@ -104,6 +104,9 @@ public:
 	inline void setRemoveUnusedSection(bool remove) { // FIXME: only in PC version, ugly hack detected!
 		_removeUnusedSection = remove;
 	}
+	inline const QString &errorString() const {
+		return _lastError;
+	}
 protected:
 	virtual int headerSize() const=0;
 	virtual void openHeader(const QByteArray &fileData)=0;
@@ -127,7 +130,7 @@ private:
 	QHash<FieldSection, FieldPart *> _parts;
 	FieldArchiveIO *_io;
 	bool _isOpen, _isModified;
-	QString _name;
+	QString _name, _lastError;
 	bool _removeUnusedSection;
 };
 

@@ -81,6 +81,8 @@ bool EncounterFile::isBattleEnabled(Table tableID) const
 
 void EncounterFile::setBattleEnabled(Table tableID, bool enabled)
 {
-	tables[(int)tableID].enabled = enabled;
-	setModified(true);
+	if (tables[(int)tableID].enabled != quint8(enabled)) {
+		tables[(int)tableID].enabled = enabled;
+		setModified(true);
+	}
 }
