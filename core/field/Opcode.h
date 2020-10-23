@@ -3221,7 +3221,7 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
 	QByteArray params() const;
-	quint8 unknown;
+	quint8 musicID;
 };
 
 class OpcodeCMUSC : public Opcode {
@@ -3231,9 +3231,8 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
 	QByteArray params() const;
-	quint8 musicID, unknown2, unknown3;
-	quint8 unknown4, unknown5, unknown6;
-	quint8 unknown7;
+	quint8 musicID, banks, opcode;
+	quint16 param1, param2;
 };
 // same struct as unaryOperation
 class OpcodeCHMST : public Opcode {
