@@ -1,54 +1,77 @@
+# Build version
+version: '1.8.2.{build}'
+
+# Use the latest available toolchain
 image: Visual Studio 2019
 
+# fetch repository as zip archive
+shallow_clone: true
+
+# PRs do not increment the build number
+pull_requests:
+  do_not_increment_build_number: true
+
+# Build configurations
+configuration: Release
+
+# Default environment variables
 environment:
-  matrix:
-    - USE_MSVC: 1
-      QTDIR: C:\Qt\5.14\msvc2017
-      QTTOOLS: C:\Qt\Tools\QtCreator
-    - USE_MSVC: 1
-      CONSOLE: 1
-      QTDIR: C:\Qt\5.14\msvc2017
-      QTTOOLS: C:\Qt\Tools\QtCreator
-    - USE_MINGW: 1
-      QTDIR: C:\Qt\5.14\mingw73_32
-      QTTOOLS: C:\Qt\Tools\mingw730_32
+  _IS_BUILD_CONTINOUS: false
+  _RELEASE_NAME: Makou_Reactor
+  _RELEASE_VERSION: v0
+  # Qt related
+  _CMAKE_QT_DIR: C:\Qt\5.15\msvc2019
 
 install:
-  - DIR C:\Qt
-  - DIR C:\Qt\Tools
-  - DIR %QTDIR%\..
-  - DIR %QTTOOLS%
-  - set PATH=%QTDIR%\bin;%QTTOOLS%\bin;%PATH%
-  - '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"'
-
-before_build:
-  - if "%CONSOLE%" == "1" set QMAKE_ARGS="CONFIG+=console"
-  - qmake -config release Makou_Reactor.pro %QMAKE_ARGS%
+  - cmd: |
+      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"
+  - ps: |
+      if ($env:APPVEYOR_REPO_TAG -eq "true" -and $env:APPVEYOR_REPO_TAG_NAME) {
+        $env:APPVEYOR_BUILD_VERSION = $env:APPVEYOR_BUILD_VERSION.Substring(0,$env:APPVEYOR_BUILD_VERSION.LastIndexOf('.')) + ".0"
+        $env:_RELEASE_VERSION = "v" + $env:APPVEYOR_BUILD_VERSION
+      } else {
+        $env:_RELEASE_VERSION = "Continous"
+        $env:APPVEYOR_REPO_TAG_NAME = "continous"
+        $env:_IS_BUILD_CONTINOUS = "true"
+      }
 
 build_script:
-  - if "%USE_MSVC%"=="1" jom
-  - if "%USE_MINGW%"=="1" mingw32-make
+  - cmd: |
+      md .dist\build\x86-%CONFIGURATION%
+      cd .dist/build/x86-%CONFIGURATION%
+      cmake -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE="%CONFIGURATION%" -DCMAKE_BINARY_DIR=".dist/build/x86-%CONFIGURATION%" --config %CONFIGURATION% ../../..
+      cmake --build . --config %CONFIGURATION%
+      cd ../../..
 
-after_build:
-  - FOR /F %%i IN ('git describe --tags') DO SET GIT_TAG_OR_BRANCH=%%i
-  - if "%USE_MSVC%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32"
-  - if "%USE_MINGW%"=="1" set DEPLOY_DIR="makoureactor-%GIT_TAG_OR_BRANCH%-win32-xp"
-  - echo "%DEPLOY_DIR%"
-  - deploy.bat
-  - MOVE *.qm deploy
-  - DIR deploy
-  - MOVE deploy "%DEPLOY_DIR%"
-  - 7z a "%DEPLOY_DIR%.zip" "%DEPLOY_DIR%"
+# Do not run unit tests
+test: off
 
+# Package artifacts
 artifacts:
-  - path: makoureactor-*.zip
+  - path: .dist\build\x86-%CONFIGURATION%\bin
+    name: ${_RELEASE_NAME}-${_RELEASE_VERSION}
+    type: zip
 
 deploy:
-  description: Description # Mandatory
-  provider: GitHub
-  auth_token:
-    secure: Q8v2IrepAs+HGD3atYI/0cI52LrxaYzRZKDBaFMSjsz1NPoUrj+Q4lZaZzFaLa4v
-  artifact: /makoureactor-.*\.zip/
-  on:
-    branch: develop
-    appveyor_repo_tag: true # deploy on tag push only
+  # Deploy only when new tags are pushed
+  - provider: GitHub
+    tag: ${appveyor_repo_tag_name}
+    release: ${_RELEASE_NAME}-${_RELEASE_VERSION}
+    artifact: ${_RELEASE_NAME}-${_RELEASE_VERSION}
+    auth_token:
+      secure: Q8v2IrepAs+HGD3atYI/0cI52LrxaYzRZKDBaFMSjsz1NPoUrj+Q4lZaZzFaLa4v
+    on:
+      branch: master
+      _IS_BUILD_CANARY: false
+  # Deploy on each commit
+  - provider: GitHub
+    tag: ${appveyor_repo_tag_name}
+    release: ${_RELEASE_NAME}-v${appveyor_build_version}
+    artifact: ${_RELEASE_NAME}-${_RELEASE_VERSION}
+    prerelease: true
+    force_update: true
+    auth_token:
+      secure: Q8v2IrepAs+HGD3atYI/0cI52LrxaYzRZKDBaFMSjsz1NPoUrj+Q4lZaZzFaLa4v
+    on:
+      branch: master
+      _IS_BUILD_CANARY: true
