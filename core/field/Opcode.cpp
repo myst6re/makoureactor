@@ -8400,7 +8400,7 @@ void OpcodeMUSVT::setParams(const char *params, int)
 
 QString OpcodeMUSVT::toString(Field *) const
 {
-	return QObject::tr("MUSVT (music #%1)")
+	return QObject::tr("Play temporary music #%1")
 			.arg(musicID);
 }
 
@@ -8595,18 +8595,18 @@ OpcodeFMUSC::OpcodeFMUSC(const char *params, int size)
 
 void OpcodeFMUSC::setParams(const char *params, int)
 {
-	unknown = params[0];
+	musicID = params[0];
 }
 
 QString OpcodeFMUSC::toString(Field *) const
 {
-	return QObject::tr("FMUSC (?=%1)")
-			.arg(unknown);
+	return QObject::tr("Set next field music for when we will be back to the map: #%1")
+			.arg(musicID);
 }
 
 QByteArray OpcodeFMUSC::params() const
 {
-	return QByteArray().append((char)unknown);
+	return QByteArray().append((char)musicID);
 }
 
 OpcodeCMUSC::OpcodeCMUSC(const char *params, int size)
@@ -8617,36 +8617,29 @@ OpcodeCMUSC::OpcodeCMUSC(const char *params, int size)
 void OpcodeCMUSC::setParams(const char *params, int)
 {
 	musicID = params[0];
-	unknown2 = params[1];
-	unknown3 = params[2];
-	unknown4 = params[3];
-	unknown5 = params[4];
-	unknown6 = params[5];
-	unknown7 = params[6];
+	banks = params[1];
+	opcode = params[2];
+	memcpy(&param1, params + 3, 2); // bank 1
+	memcpy(&param2, params + 5, 2); // bank 2
 }
 
 QString OpcodeCMUSC::toString(Field *) const
 {
-	return QObject::tr("CMUSC (music #%1, unknown1=%2, unknown2=%3, unknown2=%4, unknown4=%5, unknown5=%6, unknown6=%7)")
+	return QObject::tr("CMUSC (music #%1, operation=%2, param1=%3, param2=%4)")
 			.arg(musicID)
-			.arg(unknown2)
-			.arg(unknown3)
-			.arg(unknown4)
-			.arg(unknown5)
-			.arg(unknown6)
-			.arg(unknown7);
+			.arg(akao(opcode))
+			.arg(_var(param1, B1(banks)))
+			.arg(_var(param2, B2(banks)));
 }
 
 QByteArray OpcodeCMUSC::params() const
 {
 	return QByteArray()
 			.append((char)musicID)
-			.append((char)unknown2)
-			.append((char)unknown3)
-			.append((char)unknown4)
-			.append((char)unknown5)
-			.append((char)unknown6)
-			.append((char)unknown7);
+			.append((char)banks)
+			.append((char)opcode)
+			.append((char *)&param1, 2)
+			.append((char *)&param2, 2);
 }
 
 OpcodeCHMST::OpcodeCHMST(const char *params, int size)

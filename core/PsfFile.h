@@ -73,10 +73,16 @@ public:
 	inline const QByteArray &data() const {
 		return _data;
 	}
+	inline QByteArray &data() {
+		return _data;
+	}
 	inline const QByteArray &special() const {
 		return _special;
 	}
 	inline const PsfTags &tags() const {
+		return _tags;
+	}
+	inline PsfTags &tags() {
 		return _tags;
 	}
 	QByteArray akao() const;
