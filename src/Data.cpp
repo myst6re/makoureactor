@@ -77,13 +77,13 @@ QString Data::regValue(const QString &regPath, const QString &regKey,
 	if (loc == LocationUser) {
 		hkey = HKEY_CURRENT_USER;
 	}
-	error = RegOpenKeyEx(hkey, (wchar_t *)QDir::toNativeSeparators("SOFTWARE/" % regPath).utf16(), 0, flags, &phkResult);
+	error = RegOpenKeyEx(hkey, QDir::toNativeSeparators("SOFTWARE/" % regPath).toStdString().c_str(), 0, flags, &phkResult);
 	if (ERROR_SUCCESS == error) {
 		BYTE value[MAX_PATH];
 		DWORD cValue = MAX_PATH, type;
 
 		// Open regKey which must is a string value (REG_SZ)
-		RegQueryValueEx(phkResult, (wchar_t *)regKey.utf16(), nullptr, &type, value, &cValue);
+		RegQueryValueEx(phkResult, regKey.toStdString().c_str(), nullptr, &type, value, &cValue);
 		if (ERROR_SUCCESS == error && type == REG_SZ) {
 			RegCloseKey(phkResult);
 			return QString::fromUtf16((ushort *)value);
@@ -141,12 +141,12 @@ const QString &Data::searchRereleasedFF7Path()
 
 		if (ERROR_SUCCESS == error) {
 			DWORD index = 0;
-			WCHAR subKeyName[MAX_PATH];
+			CHAR subKeyName[MAX_PATH];
 			DWORD subKeyCName = MAX_PATH;
 			while (ERROR_NO_MORE_ITEMS != (error = RegEnumKeyEx(phkResult, index, subKeyName, &subKeyCName, nullptr, nullptr, nullptr, nullptr))) {
 				QString subKeyNameStr = QString::fromUtf16((ushort *)subKeyName);
 				if (subKeyNameStr.endsWith("_is1")) {
-					error = RegOpenKeyEx(phkResult, (LPCWSTR)QString("%1\\").arg(subKeyNameStr).utf16(), 0, KEY_READ, &phkResult2);
+					error = RegOpenKeyEx(phkResult, QString("%1\\").arg(subKeyNameStr).toStdString().c_str(), 0, KEY_READ, &phkResult2);
 					if (ERROR_SUCCESS == error) {
 						BYTE value[MAX_PATH];
 						DWORD cValue = MAX_PATH, type;
