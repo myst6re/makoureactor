@@ -1174,7 +1174,7 @@ void Window::exportCurrentMap()
 	path = QFileDialog::getSaveFileName(this, tr("Export the current file"), path+name, types, &selectedFilter);
 	if (path.isNull())		return;
 	int error = 4;
-	bool compressed = selectedFilter != fieldDec;
+	bool compressed = selectedFilter == fieldLzs;
 	
 	if (field->isModified()) {
 		error = field->save(path, compressed);
@@ -1313,7 +1313,7 @@ void Window::importToCurrentMap()
 	if (path.isNull())		return;
 
 	bool isDat = selectedFilter == dat || selectedFilter == decDat;
-	bool isCompressed = selectedFilter == pc || selectedFilter == decPc;
+	bool isCompressed = !isDat && (selectedFilter == pc || selectedFilter == decPc);
 
 	ImportDialog dialog((isDat && fieldArchive->io()->isPS())
 						|| (!isDat && fieldArchive->io()->isPC()),
