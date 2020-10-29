@@ -1,13 +1,7 @@
 {
-  "cmake.buildDirectory": "${workspaceFolder}/.dist/build/x86-${buildType}",
+  "cmake.buildDirectory": "${workspaceFolder}/.dist/build",
   "cmake.configureSettings": {
-    "CMAKE_BUILD_TYPE": "Release"
+    "CMAKE_BUILD_TYPE": "${buildType}"
   },
-  "cmake.installPrefix": "${workspaceFolder}/.dist/install/x86-${buildType}",
-  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-  "files.associations": {
-    ".envrc": "shellscript",
-    "*.envrc": "shellscript",
-    "atomic": "cpp"
-  }
+  "cmake.installPrefix": "${workspaceFolder}/.dist/install"
 }

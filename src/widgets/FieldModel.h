@@ -19,11 +19,7 @@
 #define FIELDMODEL_H
 
 #include <QtWidgets>
-#ifdef Q_OS_MAC
-#include <OpenGL/glu.h>
-#else
-#include <GL/glu.h>
-#endif
+#include "core/Renderer.h"
 #include "core/field/FieldModelFile.h"
 #include "core/field/FieldPC.h"
 
@@ -38,18 +34,15 @@ public:
 	void clear();
 	int boneCount() const;
 	int frameCount() const;
-	static void paintModel(FieldModelFile *data, int animationID,
-	                       int currentFrame=0, float scale=1.0f);
+	static void paintModel(Renderer *gpuRenderer, FieldModelFile *data, int animationID, int currentFrame=0, float scale=1.0f, QMatrix4x4 initialModelMatrix = QMatrix4x4());
 public slots:
 	void setFieldModelFile(FieldModelFile *fieldModel, int animationID = 0);
 private slots:
 	void animate();
 private:
 	void updateTimer();
-	inline void paintModel() { paintModel(data, animationID, currentFrame); }
-	static void drawP(FieldModelFile *data, float scale, const FieldModelBone &bone,
-	                  const QHash<void *, QOpenGLTexture *> &textures,
-	                  float globalColor[3], QOpenGLTexture *&texture);
+	inline void paintModel() { paintModel(gpuRenderer, data, animationID, currentFrame); }
+	static void drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale, const FieldModelBone &bone, float globalColor[3]);
 	bool setXRotation(int angle);
 	bool setYRotation(int angle);
 	bool setZRotation(int angle);
@@ -68,7 +61,8 @@ private:
 	int yRot;
 	int zRot;
 	QPoint lastPos;
-	QOpenGLShaderProgram *program;
+	Renderer *gpuRenderer;
+
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);
