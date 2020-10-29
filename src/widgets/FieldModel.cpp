@@ -25,25 +25,11 @@ FieldModel::FieldModel(QWidget *parent) :
 	xRot(270*16), yRot(90*16), zRot(0)
 {
 	connect(&timer, SIGNAL(timeout()), SLOT(animate()));
-
-	QSurfaceFormat format;
-	format.setRenderableType(QSurfaceFormat::OpenGL);
-	// asks for a OpenGL 2.1 debug context using the Core profile
-	format.setVersion(2, 1);
-	format.setProfile(QSurfaceFormat::CoreProfile);
-#ifdef OPENGL_DEBUG
-	format.setOption(QSurfaceFormat::DebugContext);
-#endif
-
-	QOpenGLContext *context = new QOpenGLContext;
-	context->setFormat(format);
-	context->create();
-
-	setFormat(format);
 }
 
 FieldModel::~FieldModel()
 {
+	delete gpuRenderer;
 }
 
 void FieldModel::clear()
@@ -51,7 +37,6 @@ void FieldModel::clear()
 	currentFrame = 0;
 	data = nullptr;
 	timer.stop();
-//	glClearColor(0.0,0.0,0.0,0.0);
 	update();
 }
 
@@ -102,30 +87,7 @@ int FieldModel::frameCount() const
 			: 0;
 }
 
-void FieldModel::initializeGL()
-{
-	initializeOpenGLFunctions();
-	// GLfloat ambient[] = {0.8f, 0.8f, 0.8f, 1.0f};
-	// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-
-//	glMatrixMode(GL_PROJECTION);
-//	glLoadIdentity();
-
-	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_COLOR_MATERIAL);
-	glDepthFunc(GL_LEQUAL);
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_LIGHTING);
-	glEnable(GL_BLEND);
-	glEnable(GL_TEXTURE_2D);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//	gluPerspective(70, (double)width()/(double)height(), 0.001, 1000.0);
-}
-
-void FieldModel::drawP(FieldModelFile *data, float scale,
-                       const FieldModelBone &bone,
-                       const QHash<void *, QOpenGLTexture *> &textures,
-                       float globalColor[3], QOpenGLTexture *&texture)
+void FieldModel::drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale, const FieldModelBone &bone, float globalColor[3])
 {
 	if (scale == 0.0f) {
 		return;
@@ -136,69 +98,63 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 	for (FieldModelPart *part : bone.parts()) {
 		for (FieldModelGroup *g : part->groups()) {
 			if (g->hasTexture()) {
-				QOpenGLTexture *tex = textures.value(data->textureIdForGroup(g));
-
-				if (tex) {
-					if (texture && tex != texture) {
-						texture->release(0);
-					}
-					tex->bind(0);
-					texture = tex;
-				}
-			} else if (texture) {
-				texture->release(0);
-				texture = nullptr;
+				gpuRenderer->bindTexture(data->loadedTexture(g));
 			}
 
 			for (const Poly *p : g->polygons()) {
 				if (curPolyType != p->count()) {
 					if (curPolyType != 0) {
-						glEnd();
+						if (p->count() == 3) {
+							gpuRenderer->draw(RendererPrimitiveType::PT_TRIANGLES);
+						} else {
+							gpuRenderer->draw(RendererPrimitiveType::PT_QUADS);
+						}
 					}
 
-					if (p->count() == 3) {
-						glBegin(GL_TRIANGLES);
-					} else {
-						glBegin(GL_QUADS);
-					}
 					curPolyType = p->count();
 				}
 
+				QRgba64 color;
+
 				if (p->isMonochrome()) {
-					const QRgb &color = p->color();
-					glColor3ub(qRed(color) * globalColor[0],
-					           qGreen(color) * globalColor[1],
-					           qBlue(color) * globalColor[2]);
+					const QRgb &_color = p->color();
+					color = QRgba64::fromRgba(qRed(_color) * globalColor[0], qGreen(_color) * globalColor[1], qBlue(_color) * globalColor[2], UINT8_MAX);
 				}
 
 				for (int j=0; j<p->count(); ++j) {
 					const PolyVertex &vertex = p->vertex(j);
+					QVector3D position(vertex.x/scale, vertex.y/scale, vertex.z/scale);
+					QVector2D texcoord(0, 0);
 
 					if (!p->isMonochrome()) {
-						QRgb color = p->color(j);
+						QRgb _color = p->color(j);
 						// TODO: color projector effect
-						/* float spot = qMax(vertex.x * 0.0f + vertex.y * 0.0f + (1.0 - (vertex.z/scale)) * -1.0f, 0.0f);
-						if (spot >= qCos(180.0)) {
+						/*
+						float spot = qMax(vertex.x * 0.0f + vertex.y * 0.0f + (1.0 - (vertex.z/scale)) * -1.0f, 0.0f);
+						if (spot >= qCos(180.0))
 							spot = 1.0;
-						} else {
+						else
 							spot = qPow(spot, 0.0);
-						} */
-						glColor3ub(qRed(color) * globalColor[0],
-						           qGreen(color) * globalColor[1],
-						           qBlue(color) * globalColor[2]);
+						*/
+						color = QRgba64::fromRgba(qRed(_color) * globalColor[0], qGreen(_color) * globalColor[1], qBlue(_color) * globalColor[2], UINT8_MAX);
 					}
 
 					if (g->hasTexture() && p->hasTexture()) {
-						const TexCoord &coord = p->texCoord(j);
-						glTexCoord2d(coord.x, coord.y);
+						const TexCoord &_coord = p->texCoord(j);
+						texcoord = QVector2D(_coord.x, _coord.y);
 					}
 
-					glVertex3f(vertex.x/scale, vertex.y/scale, vertex.z/scale);
+					gpuRenderer->bufferVertex(position, color, texcoord);
 				}
 			}
 
 			if (curPolyType != 0) {
-				glEnd();
+				if (curPolyType == 3) {
+					gpuRenderer->draw(RendererPrimitiveType::PT_TRIANGLES);
+				} else {
+					gpuRenderer->draw(RendererPrimitiveType::PT_QUADS);
+				}
+
 				curPolyType = 0;
 			}
 		}
@@ -207,17 +163,16 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 
 void FieldModel::mouseMoveEvent(QMouseEvent *event)
 {
-	int dx = event->x() - lastPos.x();
-	    //dy = event->y() - lastPos.y();
+	int dx = event->x() - lastPos.x(); //, dy = event->y() - lastPos.y();
 
 	bool needsUpdate = false;
 
 	if (event->buttons() & Qt::LeftButton) {
 		needsUpdate |= setXRotation(xRot + 8 * dx);
-		//setYRotation(yRot + 8 * dx);
+		// setYRotation(yRot + 8 * dx);
 	}
 	if (event->buttons() & Qt::RightButton) {
-		//setXRotation(xRot + 8 * dy);
+		// setXRotation(xRot + 8 * dy);
 		needsUpdate |= setZRotation(zRot + 8 * dx);
 	}
 	if (event->buttons() & Qt::MidButton) {
@@ -281,20 +236,21 @@ void FieldModel::resetCamera()
 	update();
 }
 
-void FieldModel::resizeGL(int width, int height)
+void FieldModel::initializeGL()
 {
-	glViewport(0, 0, width, height);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	gluPerspective(70, (double)width/(double)height, 0.001, 1000.0);
-
-	glMatrixMode(GL_MODELVIEW);
+	gpuRenderer = new Renderer(this);
 }
 
-void FieldModel::paintModel(FieldModelFile *data, int animationID,
-                            int currentFrame, float scale)
+void FieldModel::resizeGL(int width, int height)
+{
+	gpuRenderer->setViewport(0, 0, width, height);
+
+	QMatrix4x4 mProjection;
+	mProjection.perspective(70.0f, (float)width / (float)height, 0.001f, 1000.0f);
+	gpuRenderer->bindProjectionMatrix(mProjection);
+}
+
+void FieldModel::paintModel(Renderer *gpuRenderer, FieldModelFile *data, int animationID, int currentFrame, float scale, QMatrix4x4 initialModelMatrix)
 {
 	if (!data || !data->isValid() || scale == 0.0f) {
 		return;
@@ -302,92 +258,69 @@ void FieldModel::paintModel(FieldModelFile *data, int animationID,
 
 	float globalColor[] = { 1.0f, 1.0f, 1.0f };
 
-	/* if (!data->translateAfter()) { // TODO: for PC too
+	// TODO: for PC too
+	/* if (!data->translateAfter()) {
 		FieldModelFilePS *filePS = static_cast<FieldModelFilePS *>(data);
 		globalColor[0] = qRed(filePS->globalColor()) / 255.0f;
 		globalColor[1] = qGreen(filePS->globalColor()) / 255.0f;
 		globalColor[2] = qBlue(filePS->globalColor()) / 255.0f;
 	} */
 
-	QStack<int> parent;
-	int i;
-	QHash<void *, QOpenGLTexture *> textures;
-	QHashIterator<void *, QImage> it(data->loadedTextures());
-
-	while (it.hasNext()) {
-		it.next();
-		QOpenGLTexture *tex = new QOpenGLTexture(it.value());
-		tex->setMinificationFilter(QOpenGLTexture::NearestMipMapLinear);
-		tex->setMagnificationFilter(QOpenGLTexture::Nearest);
-		textures.insert(it.key(), tex);
-	}
-
-	QOpenGLTexture *texture = nullptr;
-
 	if (data->boneCount() <= 1) {
-		drawP(data, scale, data->bone(0), textures, globalColor, texture);
-
-		qDeleteAll(textures);
+		drawP(gpuRenderer, data, scale, data->bone(0), globalColor);
 		return;
 	}
 
 	if (animationID >= data->animationCount()) {
-		qDeleteAll(textures);
 		return;
 	}
 
 	QList<PolyVertex> rot = data->animation(animationID).rotations(currentFrame);
-	parent.push(-1);
 
-	for (i = 0; i < data->boneCount(); ++i) {
+	QMatrix4x4 mModel = initialModelMatrix;
+	QStack<int> boneStack;
+	QStack<QMatrix4x4> matrixStack;
+	boneStack.push(-1);
+
+	for (int i = 0; i < data->boneCount(); ++i) {
 		const FieldModelBone &bone = data->bone(i);
 
-		while (!parent.isEmpty() && parent.top() != bone.parent()) {
-			parent.pop();
-			glPopMatrix();
+		while (!boneStack.isEmpty() && boneStack.top() != bone.parent()) {
+			boneStack.pop();
+			mModel = matrixStack.pop();
 		}
-		parent.push(i);
-		glPushMatrix();
+		boneStack.push(i);
+		matrixStack.push(mModel);
 
 		if (!data->translateAfter()) {
-			glTranslatef(0.0, 0.0, bone.size() / scale);
+			mModel.translate(0.0, 0.0, bone.size() / scale);
 		}
 
 		if (i < rot.size()) {
 			const PolyVertex &rotation = rot.at(i);
-			glRotatef(rotation.y, 0.0, 1.0, 0.0);
-			glRotatef(rotation.x, 1.0, 0.0, 0.0);
-			glRotatef(rotation.z, 0.0, 0.0, 1.0);
+			mModel.rotate(rotation.y, 0.0, 1.0, 0.0);
+			mModel.rotate(rotation.x, 1.0, 0.0, 0.0);
+			mModel.rotate(rotation.z, 0.0, 0.0, 1.0);
 		}
 
-		drawP(data, scale, bone, textures, globalColor, texture);
+		gpuRenderer->bindModelMatrix(mModel);
+
+		drawP(gpuRenderer, data, scale, bone, globalColor);
 
 		if (data->translateAfter()) {
-			glTranslatef(0.0, 0.0, bone.size() / scale);
+			mModel.translate(0.0, 0.0, bone.size() / scale);
 		}
 	}
 
-	while (!parent.isEmpty() && parent.top() != -1) {
-		parent.pop();
-		glPopMatrix();
+	while (!boneStack.isEmpty() && boneStack.top() != -1) {
+		boneStack.pop();
+		mModel = matrixStack.pop();
 	}
-
-	qDeleteAll(textures);
 }
 
 void FieldModel::paintGL()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
 	if (!data || !data->isValid())	return;
-
-#ifdef OPENGL_DEBUG
-	QOpenGLContext *ctx = QOpenGLContext::currentContext();
-	QOpenGLDebugLogger *logger = new QOpenGLDebugLogger(this);
-	logger->initialize();
-#endif
 
 	//scale the view port if the window manager is scaling
 	int scale = 1;
@@ -397,45 +330,18 @@ void FieldModel::paintGL()
 
 	resize(width() * scale, height() * scale); // hack (?)
 
-	gluLookAt(distance,0,0,0,0,0,0,0,1);
-//	glTranslatef(distance, 0.0f, 0.0f);
+	QMatrix4x4 mView;
 
-//	glRotatef(270.0, 1.0, 0.0, 0.0);
-//	glRotatef(90.0, 0.0, 1.0, 0.0);
-//	glRotatef(0.0, 0.0, 0.0, 1.0);
-	glRotatef(xRot / 16.0, 1.0, 0.0, 0.0);
-	glRotatef(yRot / 16.0, 0.0, 1.0, 0.0);
-	glRotatef(zRot / 16.0, 0.0, 0.0, 1.0);
+	QVector3D eye(distance, 0, 0), center(0, 0, 0), up(0, 0, 1);
+	mView.lookAt(eye, center, up);
 
-//	glBegin(GL_LINES);
-//	glColor3f(0.0, 0.0, 1.0);
-//	glVertex3f(0.0, 0.0, 0.0);
-//	glVertex3f(20.0, 0.0, 0.0);
-//	glColor3f(0.0, 0.0, 0.5);
-//	glVertex3f(0.0, 0.0, 0.0);
-//	glVertex3f(-20.0, 0.0, 0.0);
-//	glColor3f(0.0, 1.0, 0.0);
-//	glVertex3f(0.0, 0.0, 0.0);
-//	glVertex3f(0.0, 20.0, 0.0);
-//	glColor3f(0.0, 0.5, 0.0);
-//	glVertex3f(0.0, 0.0, 0.0);
-//	glVertex3f(0.0, -20.0, 0.0);
-//	glColor3f(1.0, 0.0, 0.0);
-//	glVertex3f(0.0, 0.0, 0.0);
-//	glVertex3f(0.0, 0.0, 20.0);
-//	glColor3f(0.5, 0.0, 0.0);
-//	glVertex3f(0.0, 0.0, 0.0);
-//	glVertex3f(0.0, 0.0, -20.0);
-//	glEnd();
+	mView.rotate(xRot / 16.0, 1.0, 0.0, 0.0);
+	mView.rotate(yRot / 16.0, 0.0, 1.0, 0.0);
+	mView.rotate(zRot / 16.0, 0.0, 0.0, 1.0);
+
+	gpuRenderer->bindViewMatrix(mView);
 
 	paintModel();
-
-#ifdef OPENGL_DEBUG
-	const QList<QOpenGLDebugMessage> messages = logger->loggedMessages();
-	for (const QOpenGLDebugMessage &message : messages) {
-		qDebug() << message;
-	}
-#endif
 }
 
 void FieldModel::wheelEvent(QWheelEvent *event)

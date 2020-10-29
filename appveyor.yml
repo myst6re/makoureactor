@@ -37,18 +37,18 @@ install:
 
 build_script:
   - cmd: |
-      md .dist\build\x86-%CONFIGURATION%
-      cd .dist/build/x86-%CONFIGURATION%
-      cmake -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE="%CONFIGURATION%" -DCMAKE_BINARY_DIR=".dist/build/x86-%CONFIGURATION%" --config %CONFIGURATION% ../../..
+      md .dist\build
+      cd .dist/build
+      cmake -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE="%CONFIGURATION%" -DCMAKE_BINARY_DIR=".dist/build" ../..
       cmake --build . --config %CONFIGURATION%
-      cd ../../..
+      cd ../..
 
 # Do not run unit tests
 test: off
 
 # Package artifacts
 artifacts:
-  - path: .dist\build\x86-%CONFIGURATION%\bin
+  - path: .dist\build\bin
     name: ${_RELEASE_NAME}-${_RELEASE_VERSION}
     type: zip
 

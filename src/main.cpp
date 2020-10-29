@@ -47,6 +47,13 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 	app.setWindowIcon(QIcon(":/images/logo-shinra.png"));
 
+	QSurfaceFormat format;
+	format.setOption(QSurfaceFormat::DebugContext);
+	format.setProfile(QSurfaceFormat::CoreProfile);
+	format.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
+	format.setVersion(2, 1);
+	QSurfaceFormat::setDefaultFormat(format);
+
 	Config::set();
 
 	QString lang = QLocale::system().name().toLower();

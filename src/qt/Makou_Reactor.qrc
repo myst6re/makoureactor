@@ -47,5 +47,7 @@
         <file>vars.cfg</file>
         <file>images/text-editor.png</file>
         <file>images/cursor.png</file>
+        <file>shaders/main.vert</file>
+        <file>shaders/main.frag</file>
     </qresource>
 </RCC>

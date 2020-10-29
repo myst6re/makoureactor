@@ -18,7 +18,7 @@
 
 # Autodetect the current Qt MSVC toolkit installed
 # Original source: https://stackoverflow.com/a/47723189 + custom patch to reflect current VS year based on the toolkit
-IF(DEFINED $ENV{_CMAKE_QT_DIR})
+IF(DEFINED ENV{_CMAKE_QT_DIR})
     SET(QT_MISSING False)
 ELSE()
     SET(QT_MISSING True)
@@ -73,8 +73,7 @@ if(CMAKE_VERSION VERSION_LESS "3.7.0")
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
 endif()
 
-find_package(OpenGL REQUIRED)
-find_package(Qt5 COMPONENTS Widgets Zlib LinguistTools REQUIRED)
+find_package(Qt5 COMPONENTS Widgets OpenGL Zlib LinguistTools REQUIRED)
 
 set(RELEASE_NAME "Makou_Reactor")
 set(GUI_TARGET "${RELEASE_NAME}")
@@ -99,8 +98,7 @@ target_compile_options(${GUI_TARGET}
     PRIVATE /Ox
 )
 target_link_libraries(${GUI_TARGET}
-    OpenGL::GL
-    OpenGL::GLU
+    Qt5::OpenGL
     Qt5::Widgets
     Qt5::Zlib
 )
@@ -121,8 +119,7 @@ target_compile_options(${CLI_TARGET}
     PRIVATE /Ox
 )
 target_link_libraries(${CLI_TARGET}
-    OpenGL::GL
-    OpenGL::GLU
+    Qt5::OpenGL
     Qt5::Widgets
     Qt5::Zlib
 )
