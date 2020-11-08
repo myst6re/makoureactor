@@ -77,6 +77,13 @@ void Renderer::show()
 	mWidget->update();
 }
 
+void Renderer::reset()
+{
+	mProjectionMatrix.setToIdentity();
+	mViewMatrix.setToIdentity();
+	mModelMatrix.setToIdentity();
+}
+
 void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 {
 	// --- Before Draw ---

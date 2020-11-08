@@ -87,6 +87,7 @@ public:
 
 	void clear();
 	void show();
+	void reset();
 
 	void draw(RendererPrimitiveType _type, float _pointSize = 1.0f);
 
