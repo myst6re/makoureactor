@@ -41,6 +41,8 @@ void WalkmeshWidget::clear()
 	//	if (thread)	thread->deleteLater();
 	fieldModels.clear();
 	update();
+
+	gpuRenderer->reset();
 }
 
 WalkmeshWidget::~WalkmeshWidget()
@@ -122,9 +124,6 @@ void WalkmeshWidget::initializeGL()
 void WalkmeshWidget::resizeGL(int width, int height)
 {
 	gpuRenderer->setViewport(0, 0, width, height);
-
-	mProjection.setToIdentity();
-	mProjection.perspective(fovy, (float)width / (float)height, 0.001f, 1000.0f);
 }
 
 void WalkmeshWidget::paintGL()
@@ -133,6 +132,10 @@ void WalkmeshWidget::paintGL()
 		return;
 
 	drawBackground();
+
+	mProjection.setToIdentity();
+	mProjection.perspective(fovy, (float)width() / (float)height(), 0.001f, 1000.0f);
+	gpuRenderer->bindProjectionMatrix(mProjection);
 
 	QMatrix4x4 mModel;
 	mModel.translate(xTrans, yTrans, distance);
@@ -170,7 +173,6 @@ void WalkmeshWidget::paintGL()
 		mView.lookAt(eye, center, up);
 	}
 
-	gpuRenderer->bindProjectionMatrix(mProjection);
 	gpuRenderer->bindModelMatrix(mModel);
 	gpuRenderer->bindViewMatrix(mView);
 
