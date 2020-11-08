@@ -50,6 +50,7 @@ private:
 	void computeFov();
 	void drawLine(const Vertex_sr &pointA, const Vertex_sr &pointB, uint32_t argbColor = 0xFFFFFFFF);
 	void drawTriangle(const Vertex_sr &pointA, const Vertex_sr &pointB, const Vertex_sr &pointC, uint32_t argbColor = 0xFFFFFFFF);
+	void drawBackground();
 	void openModels();
 	double distance;
 	float xRot, yRot, zRot;
@@ -73,6 +74,7 @@ private:
 //	QPixmap arrow;
 	bool modelsVisible;
 	Renderer *gpuRenderer;
+	QMatrix4x4 mProjection;
 
 protected:
 	virtual void initializeGL();
