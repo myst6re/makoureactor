@@ -19,19 +19,16 @@
 #define WALKMESHWIDGET_H
 
 #include <QtWidgets>
-#ifdef Q_OS_MAC
-#include <OpenGL/glu.h>
-#else
-#include <GL/glu.h>
-#endif
+#include "core/Renderer.h"
 #include "core/field/Field.h"
-//#include "FieldModelThread.h"
+#include "widgets/FieldModel.h"
 
-class WalkmeshWidget : public QOpenGLWidget, protected QOpenGLFunctions
+class WalkmeshWidget : public QOpenGLWidget
 {
 	Q_OBJECT
 public:
 	explicit WalkmeshWidget(QWidget *parent=nullptr);
+	~WalkmeshWidget();
 	void clear();
 	void fill(Field *field);
 	void updatePerspective();
@@ -51,7 +48,8 @@ private slots:
 	void addModel(Field *field, FieldModelFile *fieldModelFile, int modelId);
 private:
 	void computeFov();
-	void drawIdLine(int triangleID, const Vertex_sr &vertex1, const Vertex_sr &vertex2, qint16 access);
+	void drawLine(const Vertex_sr &pointA, const Vertex_sr &pointB, uint32_t argbColor = 0xFFFFFFFF);
+	void drawTriangle(const Vertex_sr &pointA, const Vertex_sr &pointB, const Vertex_sr &pointC, uint32_t argbColor = 0xFFFFFFFF);
 	void openModels();
 	double distance;
 	float xRot, yRot, zRot;
@@ -62,7 +60,7 @@ private:
 	int _selectedDoor;
 	int _selectedGate;
 	int _selectedArrow;
-	double fovy;
+	float fovy;
 	IdFile *walkmesh;
 	CaFile *camera;
 	InfFile *infFile;
@@ -70,10 +68,12 @@ private:
 	Section1File *scripts;
 	Field *field;
 	QMap<int, FieldModelFile *> fieldModels;
-//	FieldModelThread *thread;
+	//	FieldModelThread *thread;
 	QPoint moveStart;
 //	QPixmap arrow;
 	bool modelsVisible;
+	Renderer *gpuRenderer;
+
 protected:
 	virtual void initializeGL();
 	virtual void resizeGL(int w, int h);
