@@ -123,15 +123,16 @@ void WalkmeshWidget::resizeGL(int width, int height)
 {
 	gpuRenderer->setViewport(0, 0, width, height);
 
-	QMatrix4x4 mProjection;
+	mProjection.setToIdentity();
 	mProjection.perspective(fovy, (float)width / (float)height, 0.001f, 1000.0f);
-	gpuRenderer->bindProjectionMatrix(mProjection);
 }
 
 void WalkmeshWidget::paintGL()
 {
 	if (!walkmesh)
 		return;
+
+	drawBackground();
 
 	QMatrix4x4 mModel;
 	mModel.translate(xTrans, yTrans, distance);
@@ -169,6 +170,7 @@ void WalkmeshWidget::paintGL()
 		mView.lookAt(eye, center, up);
 	}
 
+	gpuRenderer->bindProjectionMatrix(mProjection);
 	gpuRenderer->bindModelMatrix(mModel);
 	gpuRenderer->bindViewMatrix(mView);
 
@@ -352,6 +354,51 @@ void WalkmeshWidget::drawLine(const Vertex_sr &pointA, const Vertex_sr &pointB, 
 	};
 
 	gpuRenderer->bindVertex(_vertex, 2);
+}
+
+void WalkmeshWidget::drawBackground()
+{
+	if (bgFile)
+	{
+    RendererVertex vertices[] = {
+        {
+					{-1.0f, -1.0f, 1.0f, 1.0f},
+					{1.0f, 1.0f, 1.0f, 1.0f},
+					{0.0f, 1.0f},
+				},
+				{
+					{-1.0f, 1.0f, 1.0f, 1.0f},
+					{1.0f, 1.0f, 1.0f, 1.0f},
+					{0.0f, 0.0f},
+				},
+				{
+					{1.0f, -1.0f, 1.0f, 1.0f},
+					{1.0f, 1.0f, 1.0f, 1.0f},
+					{1.0f, 1.0f},
+				},
+				{
+					{1.0f, 1.0f, 1.0f, 1.0f},
+					{1.0f, 1.0f, 1.0f, 1.0f},
+					{1.0f, 0.0f},
+				}
+    };
+
+    uint32_t indices[] = {
+        0, 1, 2,
+        1, 3, 2
+    };
+
+	QMatrix4x4 mBG;
+
+	gpuRenderer->bindProjectionMatrix(mBG);
+	gpuRenderer->bindViewMatrix(mBG);
+	gpuRenderer->bindModelMatrix(mBG);
+
+	gpuRenderer->bindVertex(vertices, 4);
+	gpuRenderer->bindIndex(indices, 6);
+	gpuRenderer->bindTexture(bgFile->openBackground());
+	gpuRenderer->draw(RendererPrimitiveType::PT_TRIANGLES);
+	}
 }
 
 void WalkmeshWidget::drawTriangle(const Vertex_sr &pointA, const Vertex_sr &pointB, const Vertex_sr &pointC, uint32_t argbColor)
