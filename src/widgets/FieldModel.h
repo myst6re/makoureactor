@@ -62,6 +62,7 @@ private:
 	int zRot;
 	QPoint lastPos;
 	Renderer *gpuRenderer;
+	QMatrix4x4 mProjection;
 
 protected:
 	void initializeGL();
