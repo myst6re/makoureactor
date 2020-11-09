@@ -48,8 +48,6 @@ private slots:
 	void addModel(Field *field, FieldModelFile *fieldModelFile, int modelId);
 private:
 	void computeFov();
-	void drawLine(const Vertex_sr &pointA, const Vertex_sr &pointB, uint32_t argbColor = 0xFFFFFFFF);
-	void drawTriangle(const Vertex_sr &pointA, const Vertex_sr &pointB, const Vertex_sr &pointC, uint32_t argbColor = 0xFFFFFFFF);
 	void drawBackground();
 	void openModels();
 	double distance;

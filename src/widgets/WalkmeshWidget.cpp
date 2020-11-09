@@ -182,9 +182,26 @@ void WalkmeshWidget::paintGL()
 		for (const Triangle &triangle : walkmesh->triangles()) {
 			const Access &access = walkmesh->access(i);
 
-			drawLine(triangle.vertices[0], triangle.vertices[1], (i == _selectedTriangle ? 0xFFFF9000 : (access.a[0] == -1 ? 0xFF6699CC : 0xFFFFFFFF)));
-			drawLine(triangle.vertices[1], triangle.vertices[2], (i == _selectedTriangle ? 0xFFFF9000 : (access.a[1] == -1 ? 0xFF6699CC : 0xFFFFFFFF)));
-			drawLine(triangle.vertices[2], triangle.vertices[0], (i == _selectedTriangle ? 0xFFFF9000 : (access.a[2] == -1 ? 0xFF6699CC : 0xFFFFFFFF)));
+			// Vertex info
+			QVector3D positionA(triangle.vertices[0].x, triangle.vertices[0].y, triangle.vertices[0].z),
+								positionB(triangle.vertices[1].x, triangle.vertices[1].y, triangle.vertices[1].z),
+								positionC(triangle.vertices[2].x, triangle.vertices[2].y, triangle.vertices[2].z);
+			QRgba64   color1 = QRgba64::fromArgb32((i == _selectedTriangle ? 0xFFFF9000 : (access.a[0] == -1 ? 0xFF6699CC : 0xFFFFFFFF))),
+								color2 = QRgba64::fromArgb32((i == _selectedTriangle ? 0xFFFF9000 : (access.a[1] == -1 ? 0xFF6699CC : 0xFFFFFFFF))),
+								color3 = QRgba64::fromArgb32((i == _selectedTriangle ? 0xFFFF9000 : (access.a[2] == -1 ? 0xFF6699CC : 0xFFFFFFFF)));
+			QVector2D texcoord;
+
+			// Line
+			gpuRenderer->bufferVertex(positionA, color1, texcoord);
+			gpuRenderer->bufferVertex(positionB, color1, texcoord);
+
+			// Line
+			gpuRenderer->bufferVertex(positionB, color2, texcoord);
+			gpuRenderer->bufferVertex(positionC, color2, texcoord);
+
+			// Line
+			gpuRenderer->bufferVertex(positionC, color3, texcoord);
+			gpuRenderer->bufferVertex(positionA, color3, texcoord);
 
 			++i;
 		}
@@ -193,24 +210,28 @@ void WalkmeshWidget::paintGL()
 			int gateID = 0;
 			for (const Exit &gate : infFile->exitLines()) {
 				if (gate.fieldID != 0x7FFF) {
-					Vertex_sr vertex[2]{
-						{ gate.exit_line[0].x, gate.exit_line[0].y, gate.exit_line[0].z, 1.0f },
-						{ gate.exit_line[1].x, gate.exit_line[1].y, gate.exit_line[1].z, 1.0f },
-					};
+					// Vertex info
+					QVector3D positionA(gate.exit_line[0].x, gate.exit_line[0].y, gate.exit_line[0].z),
+										positionB(gate.exit_line[1].x, gate.exit_line[1].y, gate.exit_line[1].z);
+					QRgba64   color = QRgba64::fromArgb32(0xFFFF0000);
+					QVector2D texcoord;
 
-					drawLine(vertex[0], vertex[1], (0xFFFF0000));
+					gpuRenderer->bufferVertex(positionA, color, texcoord);
+					gpuRenderer->bufferVertex(positionB, color, texcoord);
 				}
 				++gateID;
 			}
 
 			for (const Trigger &trigger : infFile->triggers()) {
 				if (trigger.background_parameter != 0xFF) {
-					Vertex_sr vertex[2]{
-						{ trigger.trigger_line[0].x, trigger.trigger_line[0].y, trigger.trigger_line[0].z, 1.0f },
-						{ trigger.trigger_line[1].x, trigger.trigger_line[1].y, trigger.trigger_line[1].z, 1.0f },
-					};
+					// Vertex info
+					QVector3D positionA(trigger.trigger_line[0].x, trigger.trigger_line[0].y, trigger.trigger_line[0].z),
+										positionB(trigger.trigger_line[1].x, trigger.trigger_line[1].y, trigger.trigger_line[1].z);
+					QRgba64   color = QRgba64::fromArgb32(0xFF00FF00);
+					QVector2D texcoord;
 
-					drawLine(vertex[0], vertex[1], (0xFF00FF00));
+					gpuRenderer->bufferVertex(positionA, color, texcoord);
+					gpuRenderer->bufferVertex(positionB, color, texcoord);
 				}
 			}
 		}
@@ -220,31 +241,45 @@ void WalkmeshWidget::paintGL()
 		if (_selectedTriangle >= 0 && _selectedTriangle < walkmesh->triangleCount()) {
 			const Triangle &triangle = walkmesh->triangle(_selectedTriangle);
 
-			drawTriangle(triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], (0xFFFF9000));
+			// Vertex info
+			QVector3D positionA(triangle.vertices[0].x, triangle.vertices[0].y, triangle.vertices[0].z),
+								positionB(triangle.vertices[1].x, triangle.vertices[1].y, triangle.vertices[1].z),
+								positionC(triangle.vertices[2].x, triangle.vertices[2].y, triangle.vertices[2].z);
+			QRgba64   color = QRgba64::fromArgb32(0xFFFF9000);
+			QVector2D texcoord;
+
+			// Line
+			gpuRenderer->bufferVertex(positionA, color, texcoord);
+			gpuRenderer->bufferVertex(positionB, color, texcoord);
+			gpuRenderer->bufferVertex(positionC, color, texcoord);
 		}
 
 		if (infFile && infFile->isOpen()) {
 			if (_selectedGate >= 0 && _selectedGate < 12) {
 				const Exit &gate = infFile->exitLine(_selectedGate);
 				if (gate.fieldID != 0x7FFF) {
-					Vertex_sr vertex[2]{
-						{ gate.exit_line[0].x, gate.exit_line[0].y, gate.exit_line[0].z, 1.0f },
-						{ gate.exit_line[1].x, gate.exit_line[1].y, gate.exit_line[1].z, 1.0f },
-					};
+					// Vertex info
+					QVector3D positionA(gate.exit_line[0].x, gate.exit_line[0].y, gate.exit_line[0].z),
+										positionB(gate.exit_line[1].x, gate.exit_line[1].y, gate.exit_line[1].z);
+					QRgba64   color = QRgba64::fromArgb32(0xFFFF0000);
+					QVector2D texcoord;
 
-					drawLine(vertex[0], vertex[1], (0xFFFF0000));
+					gpuRenderer->bufferVertex(positionA, color, texcoord);
+					gpuRenderer->bufferVertex(positionB, color, texcoord);
 				}
 			}
 
 			if (_selectedDoor >= 0 && _selectedDoor < 12) {
 				const Trigger &trigger = infFile->trigger(_selectedDoor);
 				if (trigger.background_parameter != 0xFF) {
-					Vertex_sr vertex[2]{
-						{ trigger.trigger_line[0].x, trigger.trigger_line[0].y, trigger.trigger_line[0].z, 1.0f },
-						{ trigger.trigger_line[1].x, trigger.trigger_line[1].y, trigger.trigger_line[1].z, 1.0f },
-					};
+					// Vertex info
+					QVector3D positionA(trigger.trigger_line[0].x, trigger.trigger_line[0].y, trigger.trigger_line[0].z),
+										positionB(trigger.trigger_line[1].x, trigger.trigger_line[1].y, trigger.trigger_line[1].z);
+					QRgba64   color = QRgba64::fromArgb32(0xFF00FF00);
+					QVector2D texcoord;
 
-					drawLine(vertex[0], vertex[1], (0xFF00FF00));
+					gpuRenderer->bufferVertex(positionA, color, texcoord);
+					gpuRenderer->bufferVertex(positionB, color, texcoord);
 				}
 			}
 		}
@@ -262,12 +297,14 @@ void WalkmeshWidget::paintGL()
 				i.next();
 				FF7Position *pos = i.value();
 
-				Vertex_sr vertex[2]{
-					{ pos[0].x, pos[0].y, pos[0].z, 1.0f },
-					{ pos[1].x, pos[1].y, pos[1].z, 1.0f },
-				};
+				// Vertex info
+				QVector3D positionA(pos[0].x, pos[0].y, pos[0].z),
+									positionB(pos[1].x, pos[1].y, pos[1].z);
+				QRgba64   color = QRgba64::fromArgb32(0xFF90FF00);
+				QVector2D texcoord;
 
-				drawLine(vertex[0], vertex[1], (0xFF90FF00));
+				gpuRenderer->bufferVertex(positionA, color, texcoord);
+				gpuRenderer->bufferVertex(positionB, color, texcoord);
 
 				delete[] pos;
 			}
@@ -338,26 +375,6 @@ void WalkmeshWidget::paintGL()
 	gpuRenderer->show();
 }
 
-void WalkmeshWidget::drawLine(const Vertex_sr &pointA, const Vertex_sr &pointB, uint32_t argbColor)
-{
-	QRgba64 color = QRgba64::fromArgb32(argbColor);
-
-	struct RendererVertex _vertex[]{
-		{
-			{pointA.x / 4096.0f, pointA.y / 4096.0f, pointA.z / 4096.0f, 1.0f},
-			{color.red8() / float(UINT8_MAX), color.green8() / float(UINT8_MAX), color.blue8() / float(UINT8_MAX), color.alpha8() / float(UINT8_MAX)},
-			{0, 0},
-		},
-		{
-			{pointB.x / 4096.0f, pointB.y / 4096.0f, pointB.z / 4096.0f, 1.0f},
-			{color.red8() / float(UINT8_MAX), color.green8() / float(UINT8_MAX), color.blue8() / float(UINT8_MAX), color.alpha8() / float(UINT8_MAX)},
-			{0, 0},
-		},
-	};
-
-	gpuRenderer->bindVertex(_vertex, 2);
-}
-
 void WalkmeshWidget::drawBackground()
 {
   if (bgFile)
@@ -398,34 +415,10 @@ void WalkmeshWidget::drawBackground()
 
     gpuRenderer->bindVertex(vertices, 4);
     gpuRenderer->bindIndex(indices, 6);
-    gpuRenderer->bindTexture(bgFile->openBackground());
+    QImage tex = bgFile->openBackground();
+    gpuRenderer->bindTexture(tex);
     gpuRenderer->draw(RendererPrimitiveType::PT_TRIANGLES);
-  }
-}
-
-void WalkmeshWidget::drawTriangle(const Vertex_sr &pointA, const Vertex_sr &pointB, const Vertex_sr &pointC, uint32_t argbColor)
-{
-	QRgba64 color = QRgba64::fromArgb32(argbColor);
-
-	struct RendererVertex _vertex[]{
-		{
-			{pointA.x / 4096.0f, pointA.y / 4096.0f, pointA.z / 4096.0f, 1.0f},
-			{color.red8() / float(UINT8_MAX), color.green8() / float(UINT8_MAX), color.blue8() / float(UINT8_MAX), color.alpha8() / float(UINT8_MAX)},
-			{0, 0},
-		},
-		{
-			{pointB.x / 4096.0f, pointB.y / 4096.0f, pointB.z / 4096.0f, 1.0f},
-			{color.red8() / float(UINT8_MAX), color.green8() / float(UINT8_MAX), color.blue8() / float(UINT8_MAX), color.alpha8() / float(UINT8_MAX)},
-			{0, 0},
-		},
-		{
-			{pointC.x / 4096.0f, pointC.y / 4096.0f, pointC.z / 4096.0f, 1.0f},
-			{color.red8() / float(UINT8_MAX), color.green8() / float(UINT8_MAX), color.blue8() / float(UINT8_MAX), color.alpha8() / float(UINT8_MAX)},
-			{0, 0},
-		},
-	};
-
-	gpuRenderer->bindVertex(_vertex, 3);
+	}
 }
 
 void WalkmeshWidget::wheelEvent(QWheelEvent *event)
