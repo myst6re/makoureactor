@@ -101,7 +101,8 @@ void FieldModel::drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale,
 	for (FieldModelPart *part : bone.parts()) {
 		for (FieldModelGroup *g : part->groups()) {
 			if (g->hasTexture()) {
-				gpuRenderer->bindTexture(data->loadedTexture(g));
+				QImage tex = data->loadedTexture(g);
+				gpuRenderer->bindTexture(tex);
 			}
 
 			for (const Poly *p : g->polygons()) {

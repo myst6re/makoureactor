@@ -1,2 +1,0 @@
-?package(makoureactor):needs="x11" section="Games/Toys"\
-  title="makoureactor" command="/usr/bin/makoureactor"
