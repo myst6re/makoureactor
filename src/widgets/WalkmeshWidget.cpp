@@ -360,47 +360,47 @@ void WalkmeshWidget::drawLine(const Vertex_sr &pointA, const Vertex_sr &pointB, 
 
 void WalkmeshWidget::drawBackground()
 {
-	if (bgFile)
-	{
+  if (bgFile)
+  {
     RendererVertex vertices[] = {
-        {
-					{-1.0f, -1.0f, 1.0f, 1.0f},
-					{1.0f, 1.0f, 1.0f, 1.0f},
-					{0.0f, 1.0f},
-				},
-				{
-					{-1.0f, 1.0f, 1.0f, 1.0f},
-					{1.0f, 1.0f, 1.0f, 1.0f},
-					{0.0f, 0.0f},
-				},
-				{
-					{1.0f, -1.0f, 1.0f, 1.0f},
-					{1.0f, 1.0f, 1.0f, 1.0f},
-					{1.0f, 1.0f},
-				},
-				{
-					{1.0f, 1.0f, 1.0f, 1.0f},
-					{1.0f, 1.0f, 1.0f, 1.0f},
-					{1.0f, 0.0f},
-				}
+      {
+        {-1.0f, -1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        {0.0f, 1.0f},
+      },
+      {
+        {-1.0f, 1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        {0.0f, 0.0f},
+      },
+      {
+        {1.0f, -1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f},
+      },
+      {
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        {1.0f, 0.0f},
+      }
     };
 
     uint32_t indices[] = {
-        0, 1, 2,
-        1, 3, 2
+      0, 1, 2,
+      1, 3, 2
     };
 
-	QMatrix4x4 mBG;
+    QMatrix4x4 mBG;
 
-	gpuRenderer->bindProjectionMatrix(mBG);
-	gpuRenderer->bindViewMatrix(mBG);
-	gpuRenderer->bindModelMatrix(mBG);
+    gpuRenderer->bindProjectionMatrix(mBG);
+    gpuRenderer->bindViewMatrix(mBG);
+    gpuRenderer->bindModelMatrix(mBG);
 
-	gpuRenderer->bindVertex(vertices, 4);
-	gpuRenderer->bindIndex(indices, 6);
-	gpuRenderer->bindTexture(bgFile->openBackground());
-	gpuRenderer->draw(RendererPrimitiveType::PT_TRIANGLES);
-	}
+    gpuRenderer->bindVertex(vertices, 4);
+    gpuRenderer->bindIndex(indices, 6);
+    gpuRenderer->bindTexture(bgFile->openBackground());
+    gpuRenderer->draw(RendererPrimitiveType::PT_TRIANGLES);
+  }
 }
 
 void WalkmeshWidget::drawTriangle(const Vertex_sr &pointA, const Vertex_sr &pointB, const Vertex_sr &pointC, uint32_t argbColor)
