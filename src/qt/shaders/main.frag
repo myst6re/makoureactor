@@ -12,7 +12,7 @@ void main()
   vec4 _color = v_color;
 
   // Integrate texture color with the current vertex color
-  if (v_texcoord.x > 0.0 && v_texcoord.y > 0.0)
+  if (v_texcoord.x > 0.0 || v_texcoord.y > 0.0)
   {
     vec4 _texColor = texture2D(tex, v_texcoord.xy);
 

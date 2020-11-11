@@ -22,7 +22,7 @@
 FieldModel::FieldModel(QWidget *parent) :
     QOpenGLWidget(parent), blockAll(false), distance(-0.25/*-35*/),
     animationID(0), currentFrame(0), animated(true), data(nullptr),
-	xRot(270*16), yRot(90*16), zRot(0)
+	xRot(270*16), yRot(90*16), zRot(0), gpuRenderer(nullptr)
 {
 	connect(&timer, SIGNAL(timeout()), SLOT(animate()));
 }
@@ -37,6 +37,9 @@ void FieldModel::clear()
 	currentFrame = 0;
 	data = nullptr;
 	timer.stop();
+
+	if (gpuRenderer) gpuRenderer->reset();
+
 	update();
 }
 
@@ -244,10 +247,6 @@ void FieldModel::initializeGL()
 void FieldModel::resizeGL(int width, int height)
 {
 	gpuRenderer->setViewport(0, 0, width, height);
-
-	QMatrix4x4 mProjection;
-	mProjection.perspective(70.0f, (float)width / (float)height, 0.001f, 1000.0f);
-	gpuRenderer->bindProjectionMatrix(mProjection);
 }
 
 void FieldModel::paintModel(Renderer *gpuRenderer, FieldModelFile *data, int animationID, int currentFrame, float scale, QMatrix4x4 initialModelMatrix)
@@ -328,7 +327,9 @@ void FieldModel::paintGL()
 		scale = 2;
 	}
 
-	resize(width() * scale, height() * scale); // hack (?)
+	mProjection.setToIdentity();
+	mProjection.perspective(70.0f, (float)width() / (float)height(), 0.001f, 1000.0f);
+	gpuRenderer->bindProjectionMatrix(mProjection);
 
 	QMatrix4x4 mView;
 
@@ -342,6 +343,8 @@ void FieldModel::paintGL()
 	gpuRenderer->bindViewMatrix(mView);
 
 	paintModel();
+
+	gpuRenderer->show();
 }
 
 void FieldModel::wheelEvent(QWheelEvent *event)
