@@ -95,7 +95,7 @@ if(APPLE)
     set(MACOSX_BUNDLE_ICON_FILE "${RELEASE_NAME}.icns")
 endif()
 
-find_package(Zlib REQUIRED)
+find_package(ZLIB REQUIRED)
 find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools REQUIRED)
 
 file(GLOB_RECURSE source_files "*.cpp")
@@ -111,7 +111,7 @@ target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${GUI_TARGET}
     Qt5::OpenGL
     Qt5::Widgets
-    Zlib::Zlib
+    ZLIB::ZLIB
 )
 if(MSVC)
     target_compile_options(${GUI_TARGET}
@@ -132,7 +132,7 @@ target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${CLI_TARGET}
     Qt5::OpenGL
     Qt5::Widgets
-    Zlib::Zlib
+    ZLIB::ZLIB
 )
 target_compile_definitions(${CLI_TARGET}
     PRIVATE MR_CONSOLE=1
@@ -175,6 +175,9 @@ install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES ${CMAKE_SOURCE_DIR}/COPYING.TXT DESTINATION ${CMAKE_INSTALL_BINDIR})
 # Deploy Qt dependencies on Windows
 if(WIN32)
+    # Zlib dll
+    install(FILES ${CMAKE_INSTALL_FULL_BINDIR}/../vendor/bin/zlib.dll DESTINATION ${CMAKE_INSTALL_BINDIR})
+
     # PDB ( Debug mode only )
     install(FILES $<TARGET_PDB_FILE:${GUI_TARGET}> DESTINATION ${CMAKE_INSTALL_BINDIR} OPTIONAL)
 
