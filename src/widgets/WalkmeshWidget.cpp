@@ -183,9 +183,9 @@ void WalkmeshWidget::paintGL()
 			const Access &access = walkmesh->access(i);
 
 			// Vertex info
-			QVector3D positionA(triangle.vertices[0].x, triangle.vertices[0].y, triangle.vertices[0].z),
-								positionB(triangle.vertices[1].x, triangle.vertices[1].y, triangle.vertices[1].z),
-								positionC(triangle.vertices[2].x, triangle.vertices[2].y, triangle.vertices[2].z);
+			QVector3D positionA(triangle.vertices[0].x / 4096.0f, triangle.vertices[0].y / 4096.0f, triangle.vertices[0].z / 4096.0f),
+								positionB(triangle.vertices[1].x / 4096.0f, triangle.vertices[1].y / 4096.0f, triangle.vertices[1].z / 4096.0f),
+								positionC(triangle.vertices[2].x / 4096.0f, triangle.vertices[2].y / 4096.0f, triangle.vertices[2].z / 4096.0f);
 			QRgba64   color1 = QRgba64::fromArgb32((i == _selectedTriangle ? 0xFFFF9000 : (access.a[0] == -1 ? 0xFF6699CC : 0xFFFFFFFF))),
 								color2 = QRgba64::fromArgb32((i == _selectedTriangle ? 0xFFFF9000 : (access.a[1] == -1 ? 0xFF6699CC : 0xFFFFFFFF))),
 								color3 = QRgba64::fromArgb32((i == _selectedTriangle ? 0xFFFF9000 : (access.a[2] == -1 ? 0xFF6699CC : 0xFFFFFFFF)));
@@ -211,8 +211,8 @@ void WalkmeshWidget::paintGL()
 			for (const Exit &gate : infFile->exitLines()) {
 				if (gate.fieldID != 0x7FFF) {
 					// Vertex info
-					QVector3D positionA(gate.exit_line[0].x, gate.exit_line[0].y, gate.exit_line[0].z),
-										positionB(gate.exit_line[1].x, gate.exit_line[1].y, gate.exit_line[1].z);
+					QVector3D positionA(gate.exit_line[0].x / 4096.0f, gate.exit_line[0].y / 4096.0f, gate.exit_line[0].z / 4096.0f),
+										positionB(gate.exit_line[1].x / 4096.0f, gate.exit_line[1].y / 4096.0f, gate.exit_line[1].z / 4096.0f);
 					QRgba64   color = QRgba64::fromArgb32(0xFFFF0000);
 					QVector2D texcoord;
 
@@ -225,8 +225,8 @@ void WalkmeshWidget::paintGL()
 			for (const Trigger &trigger : infFile->triggers()) {
 				if (trigger.background_parameter != 0xFF) {
 					// Vertex info
-					QVector3D positionA(trigger.trigger_line[0].x, trigger.trigger_line[0].y, trigger.trigger_line[0].z),
-										positionB(trigger.trigger_line[1].x, trigger.trigger_line[1].y, trigger.trigger_line[1].z);
+					QVector3D positionA(trigger.trigger_line[0].x / 4096.0f, trigger.trigger_line[0].y / 4096.0f, trigger.trigger_line[0].z / 4096.0f),
+										positionB(trigger.trigger_line[1].x / 4096.0f, trigger.trigger_line[1].y / 4096.0f, trigger.trigger_line[1].z / 4096.0f);
 					QRgba64   color = QRgba64::fromArgb32(0xFF00FF00);
 					QVector2D texcoord;
 
@@ -242,9 +242,9 @@ void WalkmeshWidget::paintGL()
 			const Triangle &triangle = walkmesh->triangle(_selectedTriangle);
 
 			// Vertex info
-			QVector3D positionA(triangle.vertices[0].x, triangle.vertices[0].y, triangle.vertices[0].z),
-								positionB(triangle.vertices[1].x, triangle.vertices[1].y, triangle.vertices[1].z),
-								positionC(triangle.vertices[2].x, triangle.vertices[2].y, triangle.vertices[2].z);
+			QVector3D positionA(triangle.vertices[0].x / 4096.0f, triangle.vertices[0].y / 4096.0f, triangle.vertices[0].z / 4096.0f),
+								positionB(triangle.vertices[1].x / 4096.0f, triangle.vertices[1].y / 4096.0f, triangle.vertices[1].z / 4096.0f),
+								positionC(triangle.vertices[2].x / 4096.0f, triangle.vertices[2].y / 4096.0f, triangle.vertices[2].z / 4096.0f);
 			QRgba64   color = QRgba64::fromArgb32(0xFFFF9000);
 			QVector2D texcoord;
 
@@ -259,8 +259,8 @@ void WalkmeshWidget::paintGL()
 				const Exit &gate = infFile->exitLine(_selectedGate);
 				if (gate.fieldID != 0x7FFF) {
 					// Vertex info
-					QVector3D positionA(gate.exit_line[0].x, gate.exit_line[0].y, gate.exit_line[0].z),
-										positionB(gate.exit_line[1].x, gate.exit_line[1].y, gate.exit_line[1].z);
+					QVector3D positionA(gate.exit_line[0].x / 4096.0f, gate.exit_line[0].y / 4096.0f, gate.exit_line[0].z / 4096.0f),
+										positionB(gate.exit_line[1].x / 4096.0f, gate.exit_line[1].y / 4096.0f, gate.exit_line[1].z / 4096.0f);
 					QRgba64   color = QRgba64::fromArgb32(0xFFFF0000);
 					QVector2D texcoord;
 
@@ -273,8 +273,8 @@ void WalkmeshWidget::paintGL()
 				const Trigger &trigger = infFile->trigger(_selectedDoor);
 				if (trigger.background_parameter != 0xFF) {
 					// Vertex info
-					QVector3D positionA(trigger.trigger_line[0].x, trigger.trigger_line[0].y, trigger.trigger_line[0].z),
-										positionB(trigger.trigger_line[1].x, trigger.trigger_line[1].y, trigger.trigger_line[1].z);
+					QVector3D positionA(trigger.trigger_line[0].x / 4096.0f, trigger.trigger_line[0].y / 4096.0f, trigger.trigger_line[0].z / 4096.0f),
+										positionB(trigger.trigger_line[1].x / 4096.0f, trigger.trigger_line[1].y / 4096.0f, trigger.trigger_line[1].z / 4096.0f);
 					QRgba64   color = QRgba64::fromArgb32(0xFF00FF00);
 					QVector2D texcoord;
 
@@ -298,8 +298,8 @@ void WalkmeshWidget::paintGL()
 				FF7Position *pos = i.value();
 
 				// Vertex info
-				QVector3D positionA(pos[0].x, pos[0].y, pos[0].z),
-									positionB(pos[1].x, pos[1].y, pos[1].z);
+				QVector3D positionA(pos[0].x / 4096.0f, pos[0].y / 4096.0f, pos[0].z / 4096.0f),
+									positionB(pos[1].x / 4096.0f, pos[1].y / 4096.0f, pos[1].z / 4096.0f);
 				QRgba64   color = QRgba64::fromArgb32(0xFF90FF00);
 				QVector2D texcoord;
 
