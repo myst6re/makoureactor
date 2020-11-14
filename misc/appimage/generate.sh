@@ -48,8 +48,11 @@ echo "CMake install directory is: ${CMAKE_INSTALL_DIR}"
 
 CURRENT_APPDIR=${BUILD_DIR}/${RELEASE_NAME}.AppDir
 mkdir -p ${CURRENT_APPDIR}/usr/bin
+mkdir -p ${CURRENT_APPDIR}/usr/lib
 mkdir -p ${CURRENT_APPDIR}/usr/share/license
 cp -av ${CMAKE_INSTALL_DIR}/${RELEASE_NAME} ${CURRENT_APPDIR}/usr/bin
+cp -av ${CMAKE_INSTALL_DIR}/../vendor/lib/*.so ${CURRENT_APPDIR}/usr/lib
+cp -av ${CMAKE_INSTALL_DIR}/../vendor/lib/*.so.* ${CURRENT_APPDIR}/usr/lib
 cp -av ${CMAKE_INSTALL_DIR}/*.qm ${CURRENT_APPDIR}/usr/bin
 cp -av ${CMAKE_INSTALL_DIR}/COPYING.TXT ${CURRENT_APPDIR}/usr/share/license/
 
