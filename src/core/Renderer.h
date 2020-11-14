@@ -29,8 +29,6 @@
 #include <QOpenGLTexture>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLWidget>
-#include "field/CaFile.h"
-#include "field/IdFile.h"
 
 struct RendererVertex {
 	GLfloat position[4]{0.0f, 0.0f, 0.0f, 1.0f};
