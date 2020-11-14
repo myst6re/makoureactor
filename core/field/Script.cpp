@@ -71,14 +71,14 @@ bool Script::openScript(const QByteArray &script, const int initPos, const int s
 
 	QList<int> indentsKeys = indents.uniqueKeys();
 
-	for (int i=indentsKeys.size()-1; i >= 0; --i) {
+	for (int i = indentsKeys.size() - 1; i >= 0; --i) {
 		int jump = indentsKeys.at(i);
 		int index = positions.indexOf(jump);
-		if (index != -1) {
-			_opcodes.insert(index, new OpcodeLabel(i+1));
+		if (index > -1) {
+			_opcodes.insert(index, new OpcodeLabel(quint32(i) + 1));
 //			qDebug() << (index+1) << "label" << (i+1);
 			for (OpcodeJump *opJump : indents.values(jump)) {
-				opJump->setLabel(i+1);
+				opJump->setLabel(quint32(i) + 1);
 			}
 		} else {
 			qWarning() << "Error" << jump << "label" << (i+1);
@@ -722,77 +722,73 @@ OpcodeJump *Script::convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok)
 {
 	// Warning: this not change the opcode size when converted, if short jump => keep short jump, if long jump => keep long jump
 	qint32 jump = opcodeJump->jump();
-	if (ok)	*ok = true;
+	if (ok != nullptr) {
+		*ok = true;
+	}
 
-//	qDebug() << "opcodeJump" << opcodeJump->name() << jump << "label" << opcodeJump->label();
+	OpcodeJump *ret = opcodeJump;
 
 	if (jump - opcodeJump->jumpPosData() < 0) {
 		if (opcodeJump->isBackJump()) {
 			// OK: jump back
-//			qDebug() << "OK -> jump back" << jump << opcodeJump->jumpPosData();
 		} else if (opcodeJump->id() == Opcode::JMPF) {
-//			qDebug() << "convert" << opcodeJump->name() << "to JMPB";
-			return new OpcodeJMPB(*opcodeJump);
+			ret = new OpcodeJMPB(*opcodeJump);
 		} else if (opcodeJump->id() == Opcode::JMPFL) {
-//			qDebug() << "convert" << opcodeJump->name() << "to JMPBL";
-			return new OpcodeJMPBL(*opcodeJump);
+			ret = new OpcodeJMPBL(*opcodeJump);
 		} else {
-			if (ok)	*ok = false;
-			qWarning() << "Le label doit se trouver après la commande.";
-//			lastError = QObject::tr("Le label doit se trouver après la commande.");
+			if (ok != nullptr) {
+				*ok = false;
+			}
+			qWarning() << "The label must be after the opcode.";
 		}
 	} else if (jump - opcodeJump->jumpPosData() > 0) {
 		if (opcodeJump->id() == Opcode::JMPB) {
-//			qDebug() << "convert" << opcodeJump->name() << "to JMPF";
-			return new OpcodeJMPF(*opcodeJump);
+			ret = new OpcodeJMPF(*opcodeJump);
 		} else if (opcodeJump->id() == Opcode::JMPBL) {
-//			qDebug() << "convert" << opcodeJump->name() << "to JMPFL";
-			return new OpcodeJMPFL(*opcodeJump);
+			ret = new OpcodeJMPFL(*opcodeJump);
 		} else {
-//			qDebug() << "OK -> jump forward";
+			// Ok jump forward
 		}
 	}
 
-	return opcodeJump;
-}
-
-bool Script::canConvertOpcodeJumpRangeToLong(OpcodeJump *opcodeJump) const
-{
-	bool ok = false;
-
-	OpcodeJump *op = convertOpcodeJumpRangeToLong(opcodeJump, &ok);
-	if (ok) {
-		delete op;
-
-		return true;
+	if (ret != opcodeJump) {
+		delete opcodeJump;
 	}
 
-	return false;
+	return ret;
 }
 
 OpcodeJump *Script::convertOpcodeJumpRangeToLong(OpcodeJump *opcodeJump, bool *ok) const
 {
-	if (ok)	*ok = true;
+	if (ok != nullptr) {
+		*ok = true;
+	}
 
 	if (opcodeJump->isLongJump()) {
 		return opcodeJump;
 	}
 
+	OpcodeJump* ret = opcodeJump;
+
 	if (opcodeJump->id() == Opcode::JMPF) {
-		return new OpcodeJMPFL(*opcodeJump);
+		ret = new OpcodeJMPFL(*opcodeJump);
 	} else if (opcodeJump->id() == Opcode::JMPB) {
-		return new OpcodeJMPBL(*opcodeJump);
+		ret = new OpcodeJMPBL(*opcodeJump);
 	} else if (opcodeJump->id() == Opcode::IFUB) {
-		return new OpcodeIFUBL(*(OpcodeIf *)opcodeJump);
+		ret = new OpcodeIFUBL(*static_cast<OpcodeIf *>(opcodeJump));
 	} else if (opcodeJump->id() == Opcode::IFSW) {
-		return new OpcodeIFSWL(*(OpcodeIf *)opcodeJump);
+		ret = new OpcodeIFSWL(*static_cast<OpcodeIf *>(opcodeJump));
 	} else if (opcodeJump->id() == Opcode::IFUW) {
-		return new OpcodeIFUWL(*(OpcodeIf *)opcodeJump);
+		ret = new OpcodeIFUWL(*static_cast<OpcodeIf *>(opcodeJump));
 	}
 
-	if (ok)	*ok = false;
+	if (ret != opcodeJump) {
+		delete opcodeJump;
+	} else if (ok != nullptr) {
+		*ok = false;
+	}
 
-	return opcodeJump;
+	return ret;
 }
 /*
 bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const
@@ -869,8 +865,8 @@ bool Script::verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) co
 
 bool Script::compile(int &opcodeID, QString &errorStr)
 {
-	quint32 pos=0;
-	QHash<quint32, quint32> labelPositions;// Each label is unique
+	qint32 pos = 0;
+	QHash<quint32, qint32> labelPositions;// Each label is unique
 
 	// Search labels
 	opcodeID = 0;
@@ -889,6 +885,32 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 		++opcodeID;
 	}
 
+	// Convert jump opcodes
+	bool wasConverted = false;
+	do {
+		wasConverted = false;
+		pos = 0;
+		for (int i = 0; i < _opcodes.size(); ++i) {
+			Opcode *opcode = _opcodes.at(i);
+			if (opcode->isLabel() && wasConverted) {
+				// Update position, in case we converted an opcode to long
+				labelPositions.insert(static_cast<OpcodeLabel *>(opcode)->label(), pos);
+			}
+			if (opcode->isJump()) {
+				OpcodeJump *opcodeJump = static_cast<OpcodeJump *>(opcode);
+				qint32 jump = labelPositions.value(opcodeJump->label()) - pos;
+				opcodeJump->setJump(jump);
+
+				if (!opcodeJump->isLongJump() && quint32(qAbs(jump)) > opcodeJump->maxJump()) {
+					opcode = convertOpcodeJumpRangeToLong(opcodeJump);
+					_opcodes[i] = opcode;
+					wasConverted = opcodeJump != opcode;
+				}
+			}
+			pos += opcode->size();
+		}
+	} while (wasConverted); // Retry to check if jump are well dimensioned until no changes happen
+
 	// Search jumps
 	opcodeID = pos = 0;
 	for (Opcode *opcode : qAsConst(_opcodes)) {
@@ -896,17 +918,13 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 			OpcodeJump *opcodeJump = static_cast<OpcodeJump *>(opcode);
 			if (opcodeJump->isBadJump()) {
 				qWarning() << "invalid jump" << opcodeID;
-				//errorStr = QObject::tr("Ce saut est invalide, veuillez mettre un label valide.");
-				//return false;
 			} else {
 				qint32 jump = labelPositions.value(opcodeJump->label()) - pos;
 				opcodeJump->setJump(jump);
 
 				if (!opcodeJump->isLongJump() && quint32(qAbs(jump)) > opcodeJump->maxJump()) {
-					if (!canConvertOpcodeJumpRangeToLong(opcodeJump)) {
-						errorStr = QObject::tr("Label %1 is unreachable, please bring this instruction closer.").arg(opcodeJump->label());
-						return false;
-					}
+					errorStr = QObject::tr("Label %1 is unreachable, please bring this instruction closer.").arg(opcodeJump->label());
+					return false;
 				}
 				if (opcodeJump->isLongJump() && quint32(qAbs(jump)) > opcodeJump->maxJump()) {
 					errorStr = QObject::tr("Label %1 is unreachable because your script exceeds 65535 bytes, please reduce the size of the script.").arg(opcodeJump->label());
@@ -936,8 +954,8 @@ bool Script::compile(int &opcodeID, QString &errorStr)
 
 QByteArray Script::toByteArray() const
 {
-	quint32 pos=0;
-	QHash<quint32, quint32> labelPositions;// Each label is unique
+	qint32 pos = 0;
+	QHash<quint32, qint32> labelPositions;// Each label is unique
 	QByteArray ret;
 
 	// Search labels
@@ -951,28 +969,13 @@ QByteArray Script::toByteArray() const
 
 	pos = 0;
 	for (Opcode *opcode : _opcodes) {
-		QList<Opcode *> delPlease;
 		if (opcode->isJump()) {
 			OpcodeJump *opcodeJump = static_cast<OpcodeJump *>(opcode);
 			opcodeJump->setJump(labelPositions.value(opcodeJump->label()) - pos);
-
-			if (!opcodeJump->isLongJump() && quint32(qAbs(opcodeJump->jump())) > opcodeJump->maxJump()) {
-				bool ok = false;
-				opcodeJump = convertOpcodeJumpRangeToLong(opcodeJump, &ok);
-
-				if (opcodeJump != opcode) {
-					delPlease.append(opcodeJump);
-				}
-			}
-
 			opcode = convertOpcodeJumpDirection(opcodeJump);
-			if (opcode != opcodeJump) {
-				delPlease.append(opcode);
-			}
 		}
 		ret.append(opcode->toByteArray());
 		pos += opcode->size();
-		qDeleteAll(delPlease);
 	}
 
 	return ret;
