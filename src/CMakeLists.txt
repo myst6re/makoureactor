@@ -176,7 +176,7 @@ install(FILES ${CMAKE_SOURCE_DIR}/COPYING.TXT DESTINATION ${CMAKE_INSTALL_BINDIR
 # Deploy Qt dependencies on Windows
 if(WIN32)
     # Zlib dll
-    install(FILES ${CMAKE_INSTALL_FULL_BINDIR}/../vendor/bin/zlib.dll DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(FILES ${CMAKE_INSTALL_PREFIX}/vendor/bin/zlib.dll DESTINATION ${CMAKE_INSTALL_BINDIR})
 
     # PDB ( Debug mode only )
     install(FILES $<TARGET_PDB_FILE:${GUI_TARGET}> DESTINATION ${CMAKE_INSTALL_BINDIR} OPTIONAL)
@@ -193,6 +193,7 @@ if(APPLE)
         COMMAND "${MACDEPLOYQT_EXECUTABLE}"
                 "$<TARGET_FILE_DIR:${GUI_TARGET}>/../.."
                 -always-overwrite
+                -libpath=${CMAKE_INSTALL_PREFIX}/vendor/lib
         COMMENT "Running macdeployqt..."
     )
 endif()
