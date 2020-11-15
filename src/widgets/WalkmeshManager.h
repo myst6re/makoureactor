@@ -30,9 +30,9 @@ class WalkmeshManager : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit WalkmeshManager(QWidget *parent=nullptr);
+	explicit WalkmeshManager(QWidget *parent = nullptr);
 	void saveConfig();
-	void fill(Field *field, bool reload=false);
+	void fill(Field *field, bool reload = false);
 	void clear();
 	int currentCamera() const;
 signals:

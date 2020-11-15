@@ -38,11 +38,11 @@ public:
 		Normal=0, WithoutFrameAndBg, Transparent, WithoutFrame
 	};
 
-	explicit TextPreview(QWidget *parent=0);
+	explicit TextPreview(QWidget *parent = nullptr);
 	static void updateNames();
 	void clear();
 	void setReadOnly(bool ro);
-	void setWins(const QList<FF7Window> &windows, bool update=true);
+	void setWins(const QList<FF7Window> &windows, bool update = true);
 	void resetCurrentWin();
 	int currentWin() const;
 	FF7Window getWindow() const;
@@ -51,7 +51,7 @@ public:
 	void nextWin();
 	void prevWin();
 	void clearWin();
-	void setText(const QByteArray &textData, bool reset=true);
+	void setText(const QByteArray &textData, bool reset = true);
 	int currentPage() const;
 	int pageCount() const;
 	void nextPage();
@@ -76,19 +76,19 @@ private:
 	int _currentWin;
 	QList<int> pagesPos;
 	int maxW, maxH;
+	QPoint moveStartPosition;
 	static bool curFrame;
 	bool acceptMove;
 	bool spaced_characters;
-	QPoint moveStartPosition;
 	bool readOnly;
 
 	static int startMulticolor;
 	static int multicolor;
 	static int fontColor;
 	static QImage fontImage;
-	void letter(int *x, int *y, int charId, QPainter *painter, quint8 tableId=0);
-	void word(int *x, int *y, const QByteArray &charIds, QPainter *painter, quint8 tableId=0);
-	static QImage letterImage(int tableId, int charId);
+	void letter(int *x, int *y, quint8 charId, QPainter *painter, quint8 tableId = 0);
+	void word(int *x, int *y, const QByteArray &charIds, QPainter *painter, quint8 tableId = 0);
+	static QImage letterImage(quint8 tableId, quint8 charId);
 	static void setFontColor(int id, bool blink=false);
 	static QVector<QRgb> fontPalettes[8];
 	static QTimer timer;

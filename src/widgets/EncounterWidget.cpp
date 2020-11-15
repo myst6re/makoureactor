@@ -73,16 +73,16 @@ void EncounterWidget::fillGroup(EncounterTableWidget *group, const EncounterTabl
 EncounterTable EncounterWidget::saveGroup(EncounterTableWidget *group, EncounterTable encounterTable)
 {
 	encounterTable.enabled = (encounterTable.enabled & 0xFE) | quint8(group->isChecked());
-	encounterTable.rate = group->rateValue();
+	encounterTable.rate = quint8(group->rateValue());
 
 	QList<int> battleProbas = group->battleProbasValues(), battleIds = group->battleIdsValues();
 
-	for (int i=0; i<6; ++i) {
-		encounterTable.enc_standard[i] = (battleProbas.at(i) << 10) | battleIds.at(i);
+	for (int i = 0; i < 6; ++i) {
+		encounterTable.enc_standard[i] = quint16((battleProbas.at(i) << 10) | battleIds.at(i));
 	}
 
-	for (int i=0; i<4; ++i) {
-		encounterTable.enc_special[i] = (battleProbas.at(6+i) << 10) | battleIds.at(6+i);
+	for (int i = 0; i < 4; ++i) {
+		encounterTable.enc_special[i] = quint16((battleProbas.at(6 + i) << 10) | battleIds.at(6 + i));
 	}
 
 	return encounterTable;

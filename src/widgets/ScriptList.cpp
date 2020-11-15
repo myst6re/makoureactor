@@ -45,8 +45,9 @@ Script *ScriptList::currentScript()
 	}
 
 	int scriptID = selectedID();
-	if (scriptID != -1)
-		return grpScript->script(scriptID);
+	if (scriptID != -1) {
+		return grpScript->script(quint8(scriptID));
+	}
 	return nullptr;
 }
 
@@ -58,7 +59,7 @@ void ScriptList::fill(GrpScript *_grpScript)
 		grpScript = _grpScript;
 	}
 
-	int i=0;
+	quint8 i = 0;
 
 	for (Script *script : grpScript->scripts()) {
 		QListWidgetItem *item = new QListWidgetItem(grpScript->scriptName(i), this);
@@ -79,7 +80,8 @@ void ScriptList::localeRefresh()
 
 	const QPalette &pal = palette();
 
-	int i = 0;
+	quint8 i = 0;
+
 	for (Script *script : grpScript->scripts()) {
 		QListWidgetItem *itm = item(i);
 		itm->setText(grpScript->scriptName(i));

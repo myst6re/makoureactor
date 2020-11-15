@@ -4,7 +4,7 @@
 #include "core/Config.h"
 
 SearchAll::SearchAll(Window *parent) :
-	QDialog(parent, Qt::Tool), _fieldArchive(0)
+    QDialog(parent, Qt::Tool), _fieldArchive(nullptr)
 {
 	setWindowTitle(tr("Find All"));
 
@@ -96,7 +96,7 @@ QTreeWidgetItem *SearchAll::createItemField(int mapID) const
 
 	item->setData(0, Qt::UserRole, mapID);
 	if(_fieldArchive) {
-		Field *f = _fieldArchive->field(mapID);
+		Field *f = _fieldArchive->field(quint32(mapID));
 		if(f) {
 			item->setText(0, QString("%1 : %2")
 			                     .arg(mapID, 3)
@@ -126,13 +126,13 @@ QTreeWidgetItem *SearchAll::createItemOpcode(int mapID, int grpScriptID, int scr
 	item->setData(3, Qt::UserRole, opcodeID);
 
 	if(_fieldArchive) {
-		Field *f = _fieldArchive->field(mapID);
+		Field *f = _fieldArchive->field(quint32(mapID));
 		if(f) {
 			GrpScript *grp = f->scriptsAndTexts()->grpScripts().value(grpScriptID);
 			if(grp) {
 				item->setText(0, QString("%1 : %2").arg(grpScriptID, 3).arg(grp->name()));
-				item->setText(1, grp->scriptName(scriptID));
-				item->setText(3, grp->script(scriptID)->opcode(opcodeID)->toString(f));
+				item->setText(1, grp->scriptName(quint8(scriptID)));
+				item->setText(3, grp->script(quint8(scriptID))->opcode(quint16(opcodeID))->toString(f));
 			}
 		}
 	}
@@ -153,7 +153,7 @@ QTreeWidgetItem *SearchAll::createItemText(int mapID, int textID, int index, int
 	item->setData(2, Qt::UserRole, index);
 
 	if(_fieldArchive) {
-		Field *f = _fieldArchive->field(mapID);
+		Field *f = _fieldArchive->field(quint32(mapID));
 		if(f) {
 			const FF7Text &text = f->scriptsAndTexts()->text(textID);
 			item->setText(1, text.text(Config::value("jp_txt", false).toBool(), true));

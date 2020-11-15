@@ -28,7 +28,7 @@ class ScriptEditor : public QDialog
 
 public:
 	ScriptEditor();
-	ScriptEditor(Field *field, GrpScript *grpScript, Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent=0);
+	ScriptEditor(Field *field, GrpScript *grpScript, Script *script, quint16 opcodeID, bool modify, bool isInit, QWidget *parent = nullptr);
 	virtual ~ScriptEditor();
 
 	bool needslabel() const;

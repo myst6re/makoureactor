@@ -34,9 +34,9 @@ private:
 	QTreeWidgetItem *createItemOpcode(int mapID, int grpScriptID, int scriptID, int opcodeID) const;
 	QTreeWidgetItem *createItemText(int mapID, int textID, int index, int size) const;
 	QTreeWidget *_resultList;
-	Mode _searchMode;
 	FieldArchive *_fieldArchive;
 	QMap<int, QTreeWidgetItem *> itemByMapID;
+	Mode _searchMode;
 };
 
 #endif // SEARCHALL_H

@@ -443,7 +443,7 @@ LgpItem *LgpItemModel::item(const QModelIndex &index) const
 			return item;
 		}
 	}
-	return 0;
+	return nullptr;
 }
 
 QModelIndex LgpItemModel::parent(const QModelIndex &index) const
@@ -962,7 +962,7 @@ void LgpWidget::extractAll()
 	QDir dir(path);
 	QString error;
 
-	setObserverMaximum(lgp->fileCount());
+	setObserverMaximum(static_cast<unsigned int>(lgp->fileCount()));
 	int i = 0;
 
 	for (const QString &fileName : lgp->fileList()) {
@@ -996,7 +996,7 @@ void LgpWidget::extractAll()
 
 	progressDialog->hide();
 	progressDialog->deleteLater();
-	progressDialog = 0;
+	progressDialog = nullptr;
 
 	if (!error.isEmpty()) {
 		QMessageBox::warning(this, tr("Error"), error);
@@ -1101,7 +1101,7 @@ bool LgpWidget::observerWasCanceled() const
 void LgpWidget::setObserverMaximum(unsigned int max)
 {
 	if (progressDialog) {
-		progressDialog->setMaximum(max);
+		progressDialog->setMaximum(int(max));
 	}
 }
 
@@ -1127,7 +1127,7 @@ void LgpWidget::setButtonsState()
 	if (!modelIndexList.isEmpty()) {
 		item = _model->item(modelIndexList.first());
 	} else {
-		item = 0;
+		item = nullptr;
 	}
 	bool enabled = !modelIndexList.isEmpty() &&
 	               item &&

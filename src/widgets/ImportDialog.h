@@ -25,7 +25,7 @@ class ImportDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QString &path, QWidget *parent=0);
+	explicit ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QString &path, QWidget *parent = nullptr);
 	Field::FieldSections parts() const;
 	QString bsxPath() const;
 	QString mimPath() const;

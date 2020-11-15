@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2015 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2015 Arzel JÃ©rÃ´me <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
@@ -40,8 +40,8 @@ void GrpScriptWizardPageType::fillTypeList()
 	_type->blockSignals(true);
 	_type->clear();
 	_type->addItems(QStringList() <<
-					tr("Modèle 3D") <<
-					tr("Autre"));
+	                tr("3D Model") <<
+	                tr("Other"));
 	_type->blockSignals(false);
 
 	_type->setCurrentRow(0);
@@ -55,14 +55,14 @@ void GrpScriptWizardPageType::fillSubTypeList(int type)
 
 	switch(type) {
 	case TypeModel: // 3D model
-		items << "Personnage principal" <<
-				 "Personnage non jouable" <<
-				 "Objet" <<
-				 "Point de sauvegarde";
+		items << "Main Character" <<
+		         "Non Playable Character" <<
+		         "Item" <<
+		         "Save Point";
 		break;
 	default:
-		items << "Vide" <<
-				 "Débogage de position";
+		items << "Empty" <<
+		         "Position debugging";
 		break;
 	}
 

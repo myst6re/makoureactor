@@ -111,7 +111,7 @@ VarManager::VarManager(FieldArchive *fieldArchive, QWidget *parent)
 void VarManager::setFieldArchive(FieldArchive *fieldArchive)
 {
 	this->fieldArchive = fieldArchive;
-	searchButton->setEnabled(fieldArchive != 0);
+	searchButton->setEnabled(fieldArchive != nullptr);
 }
 
 QPair<quint8, quint8> VarManager::banksFromRow(int row)
@@ -193,8 +193,8 @@ void VarManager::changeBank(int row)
 	while (*it) {
 		QTreeWidgetItem *item = *it;
 		quint16 addressID = itemAddress(item);
-		QString varName1 = local_var_names.value(addressID | (b << 8)),
-				varName2 = local_var_names.value(addressID | (b2 << 8)),
+		QString varName1 = local_var_names.value(quint16(addressID | (quint16(b) << 8))),
+		        varName2 = local_var_names.value(quint16(addressID | (quint16(b2) << 8))),
 				varName;
 
 		if (varName1.isEmpty()) {
@@ -206,7 +206,7 @@ void VarManager::changeBank(int row)
 		}
 
 		item->setText(1, varName);
-		colorizeItem(item, FF7Var(b, addressID));
+		colorizeItem(item, FF7Var(b, quint8(addressID)));
 		++it;
 	}
 	fillForm();
@@ -216,12 +216,12 @@ void VarManager::changeBank(int row)
 
 quint8 VarManager::itemAddress(QTreeWidgetItem *item)
 {
-	return item->text(0).toInt();
+	return quint8(item->text(0).toInt());
 }
 
 void VarManager::scrollToList1(int bankID)
 {
-	int row = rowFromBank(bankID);
+	int row = rowFromBank(quint8(bankID));
 	liste1->setCurrentRow(row);
 	liste1->scrollToItem(liste1->item(row));
 }
@@ -253,7 +253,7 @@ void VarManager::fillForm()
 void VarManager::renameVar()
 {
 	if (liste2->selectedItems().isEmpty())	return;
-	local_var_names.insert(address->value() | (bank->value() << 8), name->text());
+	local_var_names.insert(quint16(address->value() | (bank->value() << 8)), name->text());
 	liste2->selectedItems().first()->setText(1, name->text());
 	ok->setEnabled(true);
 }
@@ -278,10 +278,10 @@ void VarManager::search()
 	connect(&t, SIGNAL(timeout()), SLOT(processEvents()));
 	t.start(700);
 	allVars = fieldArchive->searchAllVars(_fieldNames);
-	int b = bank->value();
+	quint8 b = quint8(bank->value());
 
-	for (int address=0; address<256; ++address) {
-		colorizeItem(liste2->topLevelItem(address), FF7Var(b, address));
+	for (quint16 address=0; address<256; ++address) {
+		colorizeItem(liste2->topLevelItem(address), FF7Var(b, quint8(address)));
 	}
 
 	t.stop();

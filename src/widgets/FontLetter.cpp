@@ -58,7 +58,7 @@ void FontLetter::setWindowBinFile(WindowBinFile *windowBinFile)
 	FontDisplay::setWindowBinFile(windowBinFile);
 }
 
-void FontLetter::setLetter(int letter)
+void FontLetter::setLetter(quint8 letter)
 {
 	if (_windowBinFile) {
 		copyLetter = _windowBinFile->letter(_currentTable, letter, _color);
@@ -122,7 +122,7 @@ void FontLetter::mouseMoveEvent(QMouseEvent *e)
 	if (startDrag) {
 		int newLinePos = mousePos.x() / PIXEL_SIZE;
 		if (linePos / PIXEL_SIZE != newLinePos && newLinePos < 16) {
-			_windowBinFile->setCharWidth(_currentTable, _letter, newLinePos);
+			_windowBinFile->setCharWidth(_currentTable, _letter, quint8(newLinePos));
 			update();
 			emit widthEdited(newLinePos);
 		}

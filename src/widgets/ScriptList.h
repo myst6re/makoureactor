@@ -25,12 +25,12 @@ class ScriptList : public QListWidget
 {
 	Q_OBJECT
 public:
-	explicit ScriptList(QWidget *parent = 0);
+	explicit ScriptList(QWidget *parent = nullptr);
 
 	Script *currentScript();
 	int selectedID();
 
-	void fill(GrpScript *grpScript = 0);
+	void fill(GrpScript *grpScript = nullptr);
 	void localeRefresh();
 	void scroll(int, bool focus=true);
 

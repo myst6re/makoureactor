@@ -25,23 +25,23 @@ class FontDisplay : public QWidget
 {
 	Q_OBJECT
 public:
-	explicit FontDisplay(QWidget *parent=0);
+	explicit FontDisplay(QWidget *parent = nullptr);
 	virtual ~FontDisplay();
 	WindowBinFile *windowBinFile() const;
 	virtual void setWindowBinFile(WindowBinFile *windowBinFile);
 	void clear();
-	int currentTable() const;
-	int currentLetter() const;
+	quint8 currentTable() const;
+	quint8 currentLetter() const;
 public slots:
-	void setCurrentTable(int currentTable);
+	void setCurrentTable(quint8 currentTable);
 	void setColor(WindowBinFile::FontColor color);
-	virtual void setLetter(int letter);
+	virtual void setLetter(quint8 letter);
 protected:
 	static QPoint getCellPos(const QPoint &pos, const QSize &cellSize);
 	static int getCell(const QPoint &pos, const QSize &cellSize, int colCount);
 	WindowBinFile *_windowBinFile;
 	WindowBinFile::FontColor _color;
-	int _currentTable, _letter;
+	quint8 _currentTable, _letter;
 private:
 	static int getLetter(QPoint pos);
 	static QPoint getPos(int letter);

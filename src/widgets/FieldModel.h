@@ -27,7 +27,7 @@ class FieldModel : public QOpenGLWidget, protected QOpenGLFunctions
 {
 	Q_OBJECT
 public:
-	FieldModel(QWidget *parent=nullptr);
+	FieldModel(QWidget *parent = nullptr);
 	virtual ~FieldModel();
 	void setIsAnimated(bool animate);
 	void setAnimationID(int animID);

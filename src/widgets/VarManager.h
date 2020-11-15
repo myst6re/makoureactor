@@ -26,7 +26,7 @@ class VarManager : public QWidget
 {
 	Q_OBJECT
 public:
-	explicit VarManager(FieldArchive *fieldArchive, QWidget *parent=0);
+	explicit VarManager(FieldArchive *fieldArchive, QWidget *parent = nullptr);
 	void setFieldArchive(FieldArchive *fieldArchive);
 private slots:
 	void scrollToList1(int);

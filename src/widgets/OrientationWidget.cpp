@@ -35,7 +35,7 @@ quint8 OrientationWidget::value() const
 
 void OrientationWidget::setValue(int value)
 {
-	byte2degree(value);
+	byte2degree(quint8(value));
 	emit valueChanged(value);
 	update();
 }
@@ -47,7 +47,7 @@ void OrientationWidget::byte2degree(quint8 v)
 
 quint8 OrientationWidget::degree2byte() const
 {
-	return (360 - _value) * 256 / 360;
+	return quint8((360 - _value) * 256 / 360);
 }
 
 bool OrientationWidget::isReadOnly() const
@@ -138,29 +138,29 @@ bool OrientationWidget::isInCircle(const QPointF &pos)
 void OrientationWidget::moveCursor(const QPointF &pos)
 {
 	QPointF centerCircle = this->centerCircle();
-	qreal sizeX=pos.x() - centerCircle.x(), sizeY=pos.y() - centerCircle.y();
+	qreal sizeX = pos.x() - centerCircle.x(), sizeY = pos.y() - centerCircle.y();
 	double angle;
 
-	if (sizeX != 0) {
+	if (sizeX != 0.0) {
 		angle = atan2(qAbs(sizeY), qAbs(sizeX)) * 57.29577951;// rad2deg
 	} else {
 		angle = 0;
 	}
 
-	if (sizeX == 0 && sizeY == 0) {
+	if (sizeX == 0.0 && sizeY == 0.0) {
 		return;
 	} else if (sizeX < 0 && sizeY <= 0) {
-		_value = 0 + angle;
-	} else if (sizeX == 0 && sizeY < 0) {
+		_value = 0 + int(angle);
+	} else if (sizeX == 0.0 && sizeY < 0) {
 		_value = 90;
 	} else if (sizeX > 0 && sizeY < 0) {
-		_value = 180 - angle;
-	} else if (sizeX == 0 && sizeY > 0) {
+		_value = 180 - int(angle);
+	} else if (sizeX == 0.0 && sizeY > 0) {
 		_value = 270;
 	} else if (sizeX < 0 && sizeY > 0) {
-		_value = 360 - angle;
+		_value = 360 - int(angle);
 	} else if (sizeX > 0 && sizeY >= 0) {
-		_value = 180 + angle;
+		_value = 180 + int(angle);
 	}
 
 	quint8 value = degree2byte();

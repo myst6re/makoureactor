@@ -57,11 +57,11 @@ private:
 
 	QHash<quint8, quint8> allparams;
 	QHash<quint8, quint8> params;
-	bool layers[4];
 	QSet<quint16> sections;
-	qint16 x[3], y[3], z[3];
 	QScrollArea *imageBox;
 	float zoomFactor;
+	bool layers[4];
+	qint16 x[3], y[3], z[3];
 protected:
 	bool eventFilter(QObject *, QEvent *);
 	void resizeEvent(QResizeEvent*);

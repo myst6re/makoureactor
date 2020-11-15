@@ -42,7 +42,7 @@ void ListWidget::addSeparator(bool invisible)
 	}
 	QAction *action = new QAction(_listWidget);
 	action->setSeparator(true);
-	insertAction(0, action);
+	insertAction(nullptr, action);
 }
 
 QAction *ListWidget::addAction(ActionType type, const QString &text,
@@ -91,7 +91,7 @@ QAction *ListWidget::addAction(ActionType type, const QString &text,
 	}
 	action->setShortcut(shortcut);
 	action->setStatusTip(text);
-	insertAction(0, action);
+	insertAction(nullptr, action);
 
 	return action;
 }

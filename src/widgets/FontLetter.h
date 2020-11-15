@@ -28,12 +28,12 @@ class FontLetter : public FontDisplay
 {
 	Q_OBJECT
 public:
-	explicit FontLetter(QWidget *parent=0);
+	explicit FontLetter(QWidget *parent = nullptr);
 	virtual ~FontLetter();
 	void setReadOnly(bool ro);
 	virtual void setWindowBinFile(WindowBinFile *windowBinFile);
 public slots:
-	virtual void setLetter(int letter);
+	virtual void setLetter(quint8 letter);
 	void setPixelIndex(int index);
 	void reset();
 signals:

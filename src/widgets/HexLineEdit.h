@@ -24,8 +24,8 @@ class HexLineEdit : public QLineEdit
 {
 	Q_OBJECT
 public:
-	explicit HexLineEdit(QWidget *parent=0);
-	explicit HexLineEdit(const QByteArray &contents, QWidget *parent=0);
+	explicit HexLineEdit(QWidget *parent = nullptr);
+	explicit HexLineEdit(const QByteArray &contents, QWidget *parent = nullptr);
 	QByteArray data() const;
 public slots:
 	void setData(const QByteArray &contents);

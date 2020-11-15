@@ -21,11 +21,11 @@
 #include "Data.h"
 
 Search::Search(Window *mainWindow) :
-	QDialog(mainWindow, Qt::Tool),
-	atTheEnd(false), atTheBeginning(false),
-	fieldArchive(0),
-	clef(0), text(QString()),
-	bank(0), address(0), e_script(0), e_group(0)
+    QDialog(mainWindow, Qt::Tool),
+    fieldArchive(nullptr),
+    text(QString()), clef(0),
+    address(0), e_script(0), e_group(0), bank(0),
+    atTheEnd(false), atTheBeginning(false)
 {
 	setWindowTitle(tr("Find"));
 	
@@ -48,8 +48,8 @@ Search::Search(Window *mainWindow) :
 	buttonNext->setDefault(true);
 
 	// Button Shortcuts
-	new QShortcut(QKeySequence::FindNext, this, SLOT(findNext()), 0, Qt::ApplicationShortcut);
-	new QShortcut(QKeySequence::FindPrevious, this, SLOT(findPrev()), 0, Qt::ApplicationShortcut);
+	new QShortcut(QKeySequence::FindNext, this, SLOT(findNext()), nullptr, Qt::ApplicationShortcut);
+	new QShortcut(QKeySequence::FindPrevious, this, SLOT(findPrev()), nullptr, Qt::ApplicationShortcut);
 
 	// buttonNext.width == buttonPrev.width
 	QPushButton *largerButton = (buttonWidths.constEnd() - 1).value();
@@ -217,8 +217,8 @@ QWidget *Search::scriptPageWidget()
 	stack->addWidget(jump);
 
 	QGroupBox *contextGroupBox = new QGroupBox(tr("Scope"), this);
-	QRadioButton *globalCheckBox = new QRadioButton(tr("All fields"));
-	currentFieldCheckBox = new QRadioButton(tr("Current field"));
+	QRadioButton *globalCheckBox = new QRadioButton(tr("All maps"));
+	currentFieldCheckBox = new QRadioButton(tr("Current map"));
 	currentGrpScriptCheckBox = new QRadioButton(tr("Current group script"));
 	currentScriptCheckBox = new QRadioButton(tr("Current script"));
 
@@ -286,8 +286,8 @@ QWidget *Search::textPageWidget()
 	useRegexp2->setChecked(Config::value("findWithRegExp").toBool());
 
 	QGroupBox *contextGroupBox = new QGroupBox(tr("Scope"), this);
-	QRadioButton *globalCheckBox = new QRadioButton(tr("All fields"));
-	currentFieldCheckBox2 = new QRadioButton(tr("Current field"));
+	QRadioButton *globalCheckBox = new QRadioButton(tr("All maps"));
+	currentFieldCheckBox2 = new QRadioButton(tr("Current map"));
 	currentTextCheckBox = new QRadioButton(tr("Current text"));
 
 	FieldArchive::SearchScope searchScope = FieldArchive::SearchScope(Config::value("searchScope").toInt());
@@ -397,7 +397,7 @@ void Search::updateRunSearch()
 {
 	executionGroup->clear();
 	if (fieldArchive) {
-		Field *f = fieldArchive->field(mainWindow()->fieldList()->currentMapId());
+		Field *f = fieldArchive->field(quint32(mainWindow()->fieldList()->currentMapId()));
 		if (f) {
 			int i=0;
 			for (const GrpScript *grp : f->scriptsAndTexts()->grpScripts())
@@ -408,8 +408,8 @@ void Search::updateRunSearch()
 
 void Search::updateComboVarName()
 {
-	for (int i=0; i<256; ++i) {
-		comboVarName->setItemText(i, QString("%1 - %2").arg(i, 3, 10, QChar('0')).arg(Var::name(champBank->value(), i)));
+	for (quint16 i=0; i<256; ++i) {
+		comboVarName->setItemText(i, QString("%1 - %2").arg(i, 3, 10, QChar('0')).arg(Var::name(quint8(champBank->value()), quint8(i))));
 	}
 }
 
@@ -437,12 +437,12 @@ void Search::updateOpcode2(int opIndex)
 		QList<quint8> unknownItems;
 		for (quint16 i=0; i<256; ++i) {
 			bool ok;
-			QString str = Opcode::akao(i, &ok);
+			QString str = Opcode::akao(quint8(i), &ok);
 			if (ok) {
 				opcode2->addItem(QString("%1 - %2").arg(i, 2, 16, QChar('0')).toUpper()
 				                     .arg(str.remove(QRegExp("\\[.*$"))), i);
 			} else {
-				unknownItems.append(i);
+				unknownItems.append(quint8(i));
 			}
 		}
 		for (quint8 i : unknownItems) {
@@ -486,7 +486,7 @@ FieldArchive::SearchScope Search::searchScope() const
 QString Search::lastMessage() const
 {
 	switch (searchScope()) {
-	case FieldArchive::GlobalScope:		return tr("Last field");
+	case FieldArchive::GlobalScope:		return tr("Last map");
 	case FieldArchive::FieldScope:		return tr("Last group");
 	case FieldArchive::GrpScriptScope:	return tr("Last script");
 	case FieldArchive::ScriptScope:		return tr("Last opcode");
@@ -498,7 +498,7 @@ QString Search::lastMessage() const
 QString Search::firstMessage() const
 {
 	switch (searchScope()) {
-	case FieldArchive::GlobalScope:		return tr("First field");
+	case FieldArchive::GlobalScope:		return tr("First map");
 	case FieldArchive::FieldScope:		return tr("First group");
 	case FieldArchive::GrpScriptScope:	return tr("First script");
 	case FieldArchive::ScriptScope:		return tr("First opcode");
@@ -603,7 +603,7 @@ bool Search::findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchS
 		                                  scriptID, opcodeID,
 		                                  sorting, scope);
 	case 4:
-		return fieldArchive->searchMapJump(field, mapID, grpScriptID,
+		return fieldArchive->searchMapJump(map, mapID, grpScriptID,
 		                                   scriptID, opcodeID,
 		                                   sorting, scope);
 	case 3:
@@ -716,7 +716,7 @@ bool Search::findPrevScript(FieldArchive::Sorting sorting, FieldArchive::SearchS
 		                                   scriptID, opcodeID,
 		                                   sorting, scope);
 	case 4:
-		return fieldArchive->searchMapJumpP(field, mapID, grpScriptID,
+		return fieldArchive->searchMapJumpP(map, mapID, grpScriptID,
 		                                    scriptID, opcodeID,
 		                                    sorting, scope);
 	case 3:
@@ -833,8 +833,8 @@ void Search::setSearchValues()
 		}
 			break;
 		case 1:
-			bank = champBank->value();
-			address = champAddress->value();
+			bank = quint8(champBank->value());
+			address = quint8(champAddress->value());
 			op = Opcode::Operation(champOp->currentIndex());
 			value = champValue->text().toInt(&ok);
 			if (!ok)	value = 0x10000;
@@ -851,14 +851,14 @@ void Search::setSearchValues()
 			Config::setValue("SearchedOpcode", clef);
 			break;
 		case 3:
-			e_group = executionGroup->currentIndex();
-			e_script = executionScript->value();
+			e_group = quint8(executionGroup->currentIndex());
+			e_script = quint8(executionScript->value());
 			Config::setValue("SearchedGroupScript", e_group);
 			Config::setValue("SearchedScript", e_script);
 			break;
 		case 4:
-			field = mapJump->currentIndex();
-			Config::setValue("SearchedMapJump", field);
+			map = quint16(mapJump->currentIndex());
+			Config::setValue("SearchedMapJump", map);
 			break;
 		default:return;
 		}
@@ -928,7 +928,7 @@ void Search::replaceAll()
 	bool modified = false;
 	while (fieldArchive->searchText(text, mapID, textID, from, size, sorting, scope)) {
 		if (fieldArchive->replaceText(text, after, mapID, textID, from)) {
-			fieldArchive->field(mapID)->setModified(true);
+			fieldArchive->field(quint32(mapID))->setModified(true);
 			modified = true;
 		}
 		from += after.size();

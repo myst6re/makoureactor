@@ -31,7 +31,7 @@
 
 QList<Opcode::Keys> ScriptEditor::crashIfInit;
 
-ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, int opcodeID, bool modify, bool isInit, QWidget *parent) :
+ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, quint16 opcodeID, bool modify, bool isInit, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
 	field(field), script(script), opcodeID(opcodeID), isInit(isInit), modify(modify), change(false)
 {
@@ -75,7 +75,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 	textEdit->setReadOnly(true);
 	// 2 Lines
 	const int textEditHMargins = textEdit->contentsMargins().top() + textEdit->contentsMargins().bottom()
-	                             + textEdit->document()->documentMargin() * 2;
+	                             + int(textEdit->document()->documentMargin() * 2.0);
 	textEdit->setFixedHeight(2 * textEdit->fontMetrics().height() + textEditHMargins);
 	
 	editorLayout = new QStackedWidget;
@@ -121,9 +121,9 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, i
 		int id = opcode->id();
 
 		if (id == Opcode::SPECIAL)
-			id = (((OpcodeSPECIAL *)opcode)->opcode->id() << 8) | id;
+			id = (static_cast<OpcodeSPECIAL *>(opcode)->opcode->id() << 8) | id;
 		else if (id == Opcode::KAWAI)
-			id = (((OpcodeKAWAI *)opcode)->opcode->id() << 8) | id;
+			id = (static_cast<OpcodeKAWAI *>(opcode)->opcode->id() << 8) | id;
 
 		setCurrentMenu(id);
 		fillView();
@@ -159,7 +159,7 @@ void ScriptEditor::fillEditor()
 	editorWidget->clear();
 
 	// Change current editor widget
-	switch ((Opcode::Keys)opcode->id()) {
+	switch (Opcode::Keys(opcode->id())) {
 	case Opcode::RETTO:
 		index = 1;
 		break;
@@ -268,7 +268,7 @@ void ScriptEditor::accept()
 		return;
 	} */
 	if (needslabel()) {
-		script->insertOpcode(this->opcodeID, new OpcodeLabel(((OpcodeJump *)editorWidget->opcode())->label()));
+		script->insertOpcode(this->opcodeID, new OpcodeLabel(static_cast<OpcodeJump *>(editorWidget->opcode())->label()));
 	}
 
 	if (modify) {
@@ -309,7 +309,7 @@ void ScriptEditor::changeCurrentOpcode(int index)
 
 	if (Opcode::LABEL == itemData) { // LABEL exception
 		if (Opcode::LABEL == opcode->id()) {
-			((OpcodeLabel *)opcode)->setLabel(0);
+			static_cast<OpcodeLabel *>(opcode)->setLabel(0);
 		} else {
 			delete opcode;
 			opcode = new OpcodeLabel(0);
@@ -317,16 +317,16 @@ void ScriptEditor::changeCurrentOpcode(int index)
 	} else {
 		const quint8 id = itemData & 0xFF;
 		QByteArray newOpcode;
-		newOpcode.append((char)id);
+		newOpcode.append(char(id));
 
 		// Fill opcode with \x00
 
 		if (Opcode::KAWAI == id) { //KAWAI
 			newOpcode.append('\x03'); // size
-			newOpcode.append((char)((itemData >> 8) & 0xFF)); // KAWAI ID
+			newOpcode.append(char((itemData >> 8) & 0xFF)); // KAWAI ID
 		} else if (Opcode::SPECIAL == id) { //SPECIAL
 			quint8 byte2 = (itemData >> 8) & 0xFF;
-			newOpcode.append((char)byte2); // SPECIAL ID
+			newOpcode.append(char(byte2)); // SPECIAL ID
 			switch (byte2)
 			{
 			case 0xF5:case 0xF6:case 0xF7:case 0xFB:case 0xFC:

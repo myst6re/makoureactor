@@ -9,7 +9,7 @@ class ModelColorWidget : public QObject
 {
 	Q_OBJECT
 public:
-	explicit ModelColorWidget(QWidget *parent = 0);
+	explicit ModelColorWidget(QWidget *parent = nullptr);
 	void setModelColorDir(const FieldModelColorDir &dir);
 	void setReadOnly(bool ro);
 	inline ColorDisplay *colorWidget() const {

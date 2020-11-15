@@ -25,7 +25,7 @@ class ApercuBG : public QLabel
 {
 	Q_OBJECT
 public:
-	explicit ApercuBG(QWidget *parent = 0);
+	explicit ApercuBG(QWidget *parent = nullptr);
 	void fill(Field *field, bool reload = false);
 	void clear();
 	inline QSize minimumSizeHint() const {

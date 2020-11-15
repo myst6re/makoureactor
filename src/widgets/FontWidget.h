@@ -28,7 +28,7 @@ class FontWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	explicit FontWidget(QWidget *parent=0);
+	explicit FontWidget(QWidget *parent = nullptr);
 	void clear();
 	void setFF7Font(FF7Font *ff7Font);
 	void setWindowBinFile(WindowBinFile *windowBinFile);
@@ -37,10 +37,10 @@ signals:
 	void letterEdited();
 public slots:
 	void setColor(int i);
-	void setTable(int i);
-	void setLetter(int i);
+	void setTable(quint8 i);
+	void setLetter(quint8 i);
 	void editLetter(const QString &letter);
-	void editWidth(int w);
+	void editWidth(quint8 w);
 	void exportFont();
 	void importFont();
 	void reset();

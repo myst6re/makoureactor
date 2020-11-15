@@ -28,8 +28,8 @@ class TutWidget : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit TutWidget(QWidget *parent=0);
-	void fill(Field *field, TutFilePC *tutPC, bool reload=false);
+	explicit TutWidget(QWidget *parent = nullptr);
+	void fill(Field *field, TutFilePC *tutPC, bool reload = false);
 	void clear();
 signals:
 	void modified();
@@ -55,7 +55,7 @@ private:
 	QString listItemText(int id) const;
 	void updateAkaoID(quint16 akaoID);
 	void saveText(QListWidgetItem *item);
-	int currentRow(QListWidgetItem *item=0) const;
+	int currentRow(QListWidgetItem *item = nullptr) const;
 	QList<int> selectedRows() const;
 	void cut(const QList<int> &rows);
 	void copy(const QList<int> &rows);

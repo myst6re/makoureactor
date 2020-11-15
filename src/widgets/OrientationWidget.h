@@ -24,8 +24,8 @@ class OrientationWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	explicit OrientationWidget(QWidget *parent = 0);
-	explicit OrientationWidget(quint8 value, QWidget *parent = 0);
+	explicit OrientationWidget(QWidget *parent = nullptr);
+	explicit OrientationWidget(quint8 value, QWidget *parent = nullptr);
 	quint8 value() const;
 	bool isReadOnly() const;
 	void setReadOnly(bool ro);

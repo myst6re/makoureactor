@@ -41,8 +41,8 @@ void FontGrid::paintEvent(QPaintEvent *)
 {
 	const int lineCountV=_letterCountH + 1, lineCountH=_letterCountV + 1,
 			charaSize=12, padding=1, cellSize=charaSize+1+padding*2;
-	QLine *linesV = new QLine[lineCountV],
-	      *linesH = new QLine[lineCountH];
+	QLine *linesV = new QLine[static_cast<unsigned long>(lineCountV)],
+	      *linesH = new QLine[static_cast<unsigned long>(lineCountH)];
 
 	for (int i=0; i<lineCountV; ++i) {
 		linesV[i].setPoints(QPoint(i*cellSize, 0), QPoint(i*cellSize, height()));
@@ -72,7 +72,7 @@ void FontGrid::paintEvent(QPaintEvent *)
 
 		// Draw odd characters (optimization to reduce the number of palette change)
 		for (int i=0, x2=0, y2=0; i<charCount; i+=2) {
-			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, i, _color));
+			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, quint8(i), _color));
 			x2+=2;
 			if (x2 == _letterCountH) {
 				++y2;
@@ -82,7 +82,7 @@ void FontGrid::paintEvent(QPaintEvent *)
 
 		// Draw even characters
 		for (int i=1, x2=1, y2=0; i<charCount; i+=2) {
-			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, i, _color));
+			p.drawImage(QPoint(1+padding+x2*cellSize, 1+padding+y2*cellSize), _windowBinFile->letter(_currentTable, quint8(i), _color));
 			x2+=2;
 			if (x2 == _letterCountH + 1) {
 				++y2;
@@ -129,7 +129,7 @@ void FontGrid::mousePressEvent(QMouseEvent *e)
 {
 	int letter = getLetter(e->pos());
 	if (letter < _letterCountH*_letterCountV) {
-		setLetter(letter);
+		setLetter(quint8(letter));
 		emit letterClicked(letter);
 	}
 	setFocus();
@@ -143,28 +143,28 @@ void FontGrid::keyPressEvent(QKeyEvent *e)
 	case Qt::Key_Left:
 		letter = _letter - 1;
 		if (letter >= 0) {
-			setLetter(letter);
+			setLetter(quint8(letter));
 			emit letterClicked(letter);
 		}
 		break;
 	case Qt::Key_Right:
 		letter = _letter + 1;
 		if (letter < _letterCountH*_letterCountV) {
-			setLetter(letter);
+			setLetter(quint8(letter));
 			emit letterClicked(letter);
 		}
 		break;
 	case Qt::Key_Up:
 		letter = _letter - _letterCountH;
 		if (letter >= 0) {
-			setLetter(letter);
+			setLetter(quint8(letter));
 			emit letterClicked(letter);
 		}
 		break;
 	case Qt::Key_Down:
 		letter = _letter + _letterCountH;
 		if (letter < _letterCountH*_letterCountV) {
-			setLetter(letter);
+			setLetter(quint8(letter));
 			emit letterClicked(letter);
 		}
 		break;

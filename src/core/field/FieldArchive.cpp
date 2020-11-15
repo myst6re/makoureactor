@@ -171,12 +171,12 @@ int FieldArchive::indexOfField(const QString &name) const
 	return fieldsSortByName.value(name.toLower(), -1);
 }
 
-const Field *FieldArchive::field(quint32 mapId) const
+const Field *FieldArchive::field(int mapId) const
 {
 	return fileList.value(mapId, nullptr);
 }
 
-Field *FieldArchive::field(quint32 mapId, bool open, bool dontOptimize)
+Field *FieldArchive::field(int mapId, bool open, bool dontOptimize)
 {
 	Field *field = fileList.value(mapId, nullptr);
 	if (field != nullptr && open && !openField(field, dontOptimize)) {
@@ -1510,7 +1510,7 @@ bool FieldArchive::searchMapJump(int _field, int &mapID, int &groupID, int &scri
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchFieldQuery *query = static_cast<SearchFieldQuery *>(_query);
 		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
-		return f->scriptsAndTexts()->searchMapJump(query->mapID, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
+		return f->scriptsAndTexts()->searchMapJump(quint16(query->mapID), searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, mapID, &searchIn, sorting, scope);
 }
 
@@ -1583,7 +1583,7 @@ bool FieldArchive::searchMapJumpP(int _field, int &mapID, int &groupID, int &scr
 	return findLast([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
 		SearchFieldQuery *query = static_cast<SearchFieldQuery *>(_query);
 		SearchInScript *searchIn = static_cast<SearchInScript *>(_searchIn);
-		return f->scriptsAndTexts()->searchMapJumpP(query->mapID, searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
+		return f->scriptsAndTexts()->searchMapJumpP(quint16(query->mapID), searchIn->groupID, searchIn->scriptID, searchIn->opcodeID);
 	}, &query, mapID, &searchIn, sorting, scope);
 }
 
@@ -1651,7 +1651,7 @@ void FieldArchive::removeBattles()
 	FieldArchiveIterator it(*this);
 	int i = 0;
 
-	observer()->setObserverMaximum(fileList.size());
+	observer()->setObserverMaximum(quint32(fileList.size()));
 
 	while (it.hasNext()) {
 		if (observer()->observerWasCanceled()) {
@@ -1674,7 +1674,7 @@ void FieldArchive::removeTexts()
 	FieldArchiveIterator it(*this);
 	int i = 0;
 
-	observer()->setObserverMaximum(fileList.size());
+	observer()->setObserverMaximum(quint32(fileList.size()));
 
 	while (it.hasNext()) {
 		if (observer()->observerWasCanceled()) {
@@ -1696,7 +1696,7 @@ void FieldArchive::cleanTexts()
 	FieldArchiveIterator it(*this);
 	int i = 0;
 
-	observer()->setObserverMaximum(fileList.size());
+	observer()->setObserverMaximum(quint32(fileList.size()));
 
 	while (it.hasNext()) {
 		if (observer()->observerWasCanceled()) {
@@ -1718,7 +1718,7 @@ void FieldArchive::autosizeTextWindows()
 	FieldArchiveIterator it(*this);
 	int i = 0;
 
-	observer()->setObserverMaximum(fileList.size());
+	observer()->setObserverMaximum(quint32(fileList.size()));
 
 	while (it.hasNext()) {
 		if (observer()->observerWasCanceled()) {
@@ -1746,7 +1746,7 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 	QString path, extension;
 	int currentField=0;
 	if (observer()) {
-		observer()->setObserverMaximum(selectedFields.size()-1);
+		observer()->setObserverMaximum(quint32(selectedFields.size() - 1));
 	}
 
 	for (const int &mapID : selectedFields) {

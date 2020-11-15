@@ -8,8 +8,8 @@ class Splitter : public QSplitter
 {
 	Q_OBJECT
 public:
-	explicit Splitter(QWidget *parent = 0);
-	explicit Splitter(Qt::Orientation orientation, QWidget *parent = 0);
+	explicit Splitter(QWidget *parent = nullptr);
+	explicit Splitter(Qt::Orientation orientation, QWidget *parent = nullptr);
 	bool isCollapsed(int index);
 public slots:
 	void setCollapsed(int index, bool collapsed);

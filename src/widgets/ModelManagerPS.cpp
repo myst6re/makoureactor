@@ -77,12 +77,12 @@ FieldModelFile *ModelManagerPS::modelData(QTreeWidgetItem *item)
 
 FieldModelLoaderPS *ModelManagerPS::modelLoader() const
 {
-	return (FieldModelLoaderPS *)ModelManager::modelLoader();
+	return static_cast<FieldModelLoaderPS *>(ModelManager::modelLoader());
 }
 
 FieldPS *ModelManagerPS::field() const
 {
-	return (FieldPS *)ModelManager::field();
+	return static_cast<FieldPS *>(ModelManager::field());
 }
 
 const QList<FieldModelColorDir> &ModelManagerPS::lightColors(int modelID) const

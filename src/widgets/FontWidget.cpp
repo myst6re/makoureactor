@@ -21,7 +21,7 @@
 #include "Parameters.h"
 
 FontWidget::FontWidget(QWidget *parent) :
-	QWidget(parent), ff7Font(0)
+    QWidget(parent), ff7Font(nullptr)
 {
 	fontGrid = new FontGrid(16, 16, this);
 	fontLetter = new FontLetter(this);
@@ -122,19 +122,19 @@ void FontWidget::setReadOnly(bool ro)
 
 void FontWidget::setColor(int i)
 {
-	fontGrid->setColor((WindowBinFile::FontColor)i);
-	fontLetter->setColor((WindowBinFile::FontColor)i);
-	fontPalette->setCurrentPalette((WindowBinFile::FontColor)i);
+	fontGrid->setColor(WindowBinFile::FontColor(i));
+	fontLetter->setColor(WindowBinFile::FontColor(i));
+	fontPalette->setCurrentPalette(WindowBinFile::FontColor(i));
 }
 
-void FontWidget::setTable(int i)
+void FontWidget::setTable(quint8 i)
 {
 	fontGrid->setCurrentTable(i);
 	fontLetter->setCurrentTable(i);
 	setLetter(0);
 }
 
-void FontWidget::setLetter(int i)
+void FontWidget::setLetter(quint8 i)
 {
 	fontLetter->setLetter(i);
 	fontGrid->setLetter(i);
@@ -148,10 +148,10 @@ void FontWidget::setLetter(int i)
 	if (fontGrid->currentTable() <= 5) {
 		if (ff7Font) {
 			//TODO: ff7Font
-//			textLetter->setText(FF7Text(ba.append((char)i), ff7Font->tables()));
+//			textLetter->setText(FF7Text(ba.append(char(i)), ff7Font->tables()));
 		} else {
 			//TODO: jp
-			textLetter->setText(FF7Text(ba.append((char)i)).text(false));
+			textLetter->setText(FF7Text(ba.append(char(i))).text(false));
 		}
 		if (fontLetter->windowBinFile()) {
 			widthLetter->setValue(
@@ -173,7 +173,7 @@ void FontWidget::editLetter(const QString &letter)
 	}
 }
 
-void FontWidget::editWidth(int w)
+void FontWidget::editWidth(quint8 w)
 {
 	if (fontLetter->windowBinFile() && fontLetter->windowBinFile()->charWidth(fontGrid->currentTable(), fontGrid->currentLetter()) != w) {
 		fontLetter->windowBinFile()->setCharWidth(fontGrid->currentTable(), fontGrid->currentLetter(), w);
@@ -245,15 +245,15 @@ void FontWidget::exportFont()
 	          (selectedFilter == pngF ||
 	           selectedFilter == jpgF ||
 	           selectedFilter == bmpF)) {
-		char *format;
+		const char *format;
 		if (selectedFilter == pngF) {
-			format = (char *)"PNG";
+			format = "PNG";
 		} else if (selectedFilter == jpgF) {
-			format = (char *)"JPG";
+			format = "JPG";
 		} else {
-			format = (char *)"BMP";
+			format = "BMP";
 		}
-		windowBinFile->image((WindowBinFile::FontColor)selectPal->currentIndex()).save(path, format);
+		windowBinFile->image(WindowBinFile::FontColor(selectPal->currentIndex())).save(path, format);
 	}
 }
 

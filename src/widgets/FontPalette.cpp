@@ -19,7 +19,7 @@
 
 FontPalette::FontPalette(QWidget *parent) :
 	QWidget(parent), colorCount(16), _currentColor(0),
-	_currentPalette(WindowBinFile::White), readOnly(false), _windowBinFile(0)
+    _currentPalette(WindowBinFile::White), readOnly(false), _windowBinFile(nullptr)
 {
 }
 

@@ -25,7 +25,7 @@ QIcon TextManager::winIcon;
 QIcon TextManager::noWinIcon;
 
 TextManager::TextManager(QWidget *parent) :
-	QDialog(parent, Qt::Tool), scriptsAndTexts(0)
+    QDialog(parent, Qt::Tool), scriptsAndTexts(nullptr)
 {
 	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
 	setWindowTitle(tr("Texts"));
@@ -40,7 +40,7 @@ TextManager::TextManager(QWidget *parent) :
 
 	QAction *action;
 	toolBar = new QToolBar(this);
-	toolBar->setIconSize(QSize(16*scale, 16*scale));
+	toolBar->setIconSize(QSize(int(16.0 * scale), int(16.0 * scale)));
 	action = toolBar->addAction(QIcon(":/images/icon-char-0.png"), Data::char_names.at(0));
 	action->setData("{CLOUD}");
 	action = toolBar->addAction(QIcon(":/images/icon-char-1.png"), Data::char_names.at(1));
@@ -73,7 +73,7 @@ TextManager::TextManager(QWidget *parent) :
 	action->setData("\n{CHOICE}\n");
 
 	toolBar2 = new QToolBar(this);
-	toolBar2->setIconSize(QSize(16*scale, 16*scale));
+	toolBar2->setIconSize(QSize(int(16.0 * scale), int(16.0 * scale)));
 	action = toolBar2->addAction(QIcon(":/images/icon-grey.png"), tr("Grey"));
 	action->setData("{GREY}");
 	action = toolBar2->addAction(QIcon(":/images/icon-blue.png"), tr("Blue"));
@@ -373,8 +373,8 @@ void TextManager::showList()
 		noWinIcon = winIcon.pixmap(pix.width(), pix.height(), QIcon::Disabled);
 	}
 
-	for (int i=0; i<nbTexts; ++i) {
-		if (!show && !usedTexts.contains(i)) {
+	for (int i = 0; i < nbTexts; ++i) {
+		if (!show && !usedTexts.contains(quint8(i))) {
 			continue;
 		}
 
@@ -383,7 +383,7 @@ void TextManager::showList()
 		item->setData(Qt::UserRole, i);
 		liste1->addItem(item);
 
-		if (!usedTexts.contains(i)) {
+		if (!usedTexts.contains(quint8(i))) {
 			item->setForeground(Data::color(Data::ColorDisabledForeground));
 		}
 	}
@@ -409,7 +409,7 @@ void TextManager::updateFromScripts()
 	for (int row = 0; row < liste1->count(); ++row) {
 		QListWidgetItem *item = liste1->item(row);
 		int textID = item->data(Qt::UserRole).toInt();
-		if (!usedTexts.contains(textID)) {
+		if (!usedTexts.contains(quint8(textID))) {
 			item->setForeground(Data::color(Data::ColorDisabledForeground));
 		} else {
 			// Default foreground
@@ -486,8 +486,8 @@ void TextManager::delText()
 	if (!item) {
 		return;
 	}
-	int row=item->data(Qt::UserRole).toInt();
-	if (usedTexts.contains(row)) {
+	int row = item->data(Qt::UserRole).toInt();
+	if (usedTexts.contains(quint8(row))) {
 		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Text used in scripts"), tr("This text is used by one or more scripts on this field.\nRemoving this text may break scripts that reference it.\nAre you sure you want to continue?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if (rep == QMessageBox::Cancel) {
 			return;
@@ -575,8 +575,8 @@ void TextManager::changePosition(const QPoint &point)
 	yCoord->blockSignals(false);
 
 	FF7Window ff7Window = textPreview->getWindow();
-	ff7Window.x = point.x();
-	ff7Window.y = point.y();
+	ff7Window.x = qint16(point.x());
+	ff7Window.y = qint16(point.y());
 	scriptsAndTexts->setWindow(ff7Window);
 	textPreview->setWindow(ff7Window);
 	emit modified();
@@ -598,8 +598,8 @@ void TextManager::changeSize(const QSize &size)
 	hSize->blockSignals(false);
 
 	FF7Window ff7Window = textPreview->getWindow();
-	ff7Window.w = size.width();
-	ff7Window.h = size.height();
+	ff7Window.w = quint16(size.width());
+	ff7Window.h = quint16(size.height());
 	scriptsAndTexts->setWindow(ff7Window);
 	textPreview->setWindow(ff7Window);
 	emit modified();
@@ -616,7 +616,7 @@ void TextManager::changeXCoord(int x)
 	FF7Window ff7Window = textPreview->getWindow();
 
 	if (ff7Window.x != x) {
-		ff7Window.x = x;
+		ff7Window.x = qint16(x);
 
 		scriptsAndTexts->setWindow(ff7Window);
 		textPreview->setWindow(ff7Window);
@@ -636,7 +636,7 @@ void TextManager::changeYCoord(int y)
 	FF7Window ff7Window = textPreview->getWindow();
 
 	if (ff7Window.y != y) {
-		ff7Window.y = y;
+		ff7Window.y = qint16(y);
 
 		scriptsAndTexts->setWindow(ff7Window);
 		textPreview->setWindow(ff7Window);
@@ -656,7 +656,7 @@ void TextManager::changeWSize(int w)
 	FF7Window ff7Window = textPreview->getWindow();
 
 	if (ff7Window.w != w) {
-		ff7Window.w = w;
+		ff7Window.w = quint16(w);
 
 		scriptsAndTexts->setWindow(ff7Window);
 		textPreview->setWindow(ff7Window);
@@ -676,7 +676,7 @@ void TextManager::changeHSize(int h)
 	FF7Window ff7Window = textPreview->getWindow();
 
 	if (ff7Window.h != h) {
-		ff7Window.h = h;
+		ff7Window.h = quint16(h);
 
 		scriptsAndTexts->setWindow(ff7Window);
 		textPreview->setWindow(ff7Window);

@@ -30,7 +30,7 @@ public:
 		Fields, Akaos, Texts
 	};
 
-	explicit MassImportDialog(QWidget *parent = 0);
+	explicit MassImportDialog(QWidget *parent = nullptr);
 	void fill(const FieldArchive *fieldArchive, int currentMapId);
 	QList<int> selectedFields() const;
 	bool importModule(ImportType type) const;

@@ -24,7 +24,7 @@ class VarOrValueWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	explicit VarOrValueWidget(QWidget *parent = 0);
+	explicit VarOrValueWidget(QWidget *parent = nullptr);
 	int value() const;
 	void setValue(int value);
 	void var(quint8 &bank, quint8 &adress) const;
@@ -41,10 +41,10 @@ signals:
 	void changed();
 private:
 	void updateValueRange();
-	bool _longValueType, _signedValueType;
 	QStackedLayout *varOrValuelayout;
 	QComboBox *typeSelect;
 	QSpinBox *_value, *_bank, *_adress;
+	bool _longValueType, _signedValueType;
 };
 
 #endif // VARORVALUEWIDGET_H

@@ -144,14 +144,14 @@ int ColorDisplay::colorId(const QPoint &pos) const
 
 void ColorDisplay::enterEvent(QEvent *event)
 {
-	Q_UNUSED(event);
+	Q_UNUSED(event)
 	_hover = true;
 	update();
 }
 
 void ColorDisplay::leaveEvent(QEvent *event)
 {
-	Q_UNUSED(event);
+	Q_UNUSED(event)
 	_hover = false;
 	update();
 }

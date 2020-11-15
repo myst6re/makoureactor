@@ -176,18 +176,18 @@ QTaskBarButton::~QTaskBarButton()
 
 void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
 {
-	Q_UNUSED(pixmap);
-	Q_UNUSED(text);
+	Q_UNUSED(pixmap)
+	Q_UNUSED(text)
 }
 
 void QTaskBarButton::setState(State state)
 {
-	Q_UNUSED(state);
+	Q_UNUSED(state)
 }
 
 void QTaskBarButton::setValue(int value)
 {
-	Q_UNUSED(value);
+	Q_UNUSED(value)
 }
 
 #endif

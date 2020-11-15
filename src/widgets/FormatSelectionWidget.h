@@ -24,7 +24,7 @@ class FormatSelectionWidget : public QGroupBox
 {
 	Q_OBJECT
 public:
-	FormatSelectionWidget(const QString &text, const QStringList &formats, QWidget *parent = 0);
+	FormatSelectionWidget(const QString &text, const QStringList &formats, QWidget *parent = nullptr);
 	const QString &currentFormat() const;
 	void setCurrentFormat(const QString &extension);
 	void setFormats(const QStringList &formats);

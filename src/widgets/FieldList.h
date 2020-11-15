@@ -8,7 +8,7 @@ class FieldList : public QTreeWidget
 {
 	Q_OBJECT
 public:
-	explicit FieldList(QWidget *parent = 0);
+	explicit FieldList(QWidget *parent = nullptr);
 	int currentMapId() const;
 	inline QToolBar *toolBar() {
 		return _toolBar;

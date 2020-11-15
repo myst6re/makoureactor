@@ -36,7 +36,7 @@ public:
 		QList<Opcode *> data;
 	};
 
-	explicit OpcodeList(QWidget *parent=0);
+	explicit OpcodeList(QWidget *parent = nullptr);
 	virtual ~OpcodeList() {}
 
 	int selectedID();
@@ -49,7 +49,7 @@ public:
 	}
 	void clear();
 	void setEnabled(bool enabled);
-	void fill(Field *_field=0, GrpScript *_grpScript=0, Script *_script=0);
+	void fill(Field *_field = nullptr, GrpScript *_grpScript = nullptr, Script *_script = nullptr);
 	void scroll(int, bool focus=true);
 	void enableActions(bool);
 	void setErrorLine(int opcodeID);
@@ -98,13 +98,11 @@ private:
 	QList<int> selectedIDs();
 
 //	QString showHistoric();
-	void changeHist(HistoricType type, int opcodeID=0, Opcode *data=0);
+	void changeHist(HistoricType type, int opcodeID = 0, Opcode *data = nullptr);
 	void changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<Opcode *> &data);
 	void clearHist();
 
 	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);
-
-	bool hasCut, isInit, _treeEnabled;
 
 	QToolBar *_toolBar;
 	QLabel *_help;
@@ -115,7 +113,6 @@ private:
 	QHash<const Script *, QList<const Opcode *> > expandedItems;
 
 	QBrush previousBG, previousErrorBg;
-	int errorLine;
 
 	QAction *edit_A, *add_A, *del_A;
 	QAction *cut_A, *copy_A, *copyText_A, *paste_A;
@@ -126,6 +123,8 @@ private:
 	QStack<Historic> hists;
 	QStack<Historic> restoreHists;
 //	int currentHistPos;
+	int errorLine;
+	bool hasCut, isInit, _treeEnabled;
 };
 
 #endif // DEF_OPCODELIST

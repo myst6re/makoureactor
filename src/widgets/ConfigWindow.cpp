@@ -193,7 +193,7 @@ void ConfigWindow::fillConfig()
 	QMap<Data::FF7Version, QString> ff7PathList = Data::ff7AppPathList();
 
 	listFF7->clear();
-	QTreeWidgetItem *selectedItem = 0;
+	QTreeWidgetItem *selectedItem = nullptr;
 	QMapIterator<Data::FF7Version, QString> it(ff7PathList);
 
 	while (it.hasNext()) {
@@ -208,7 +208,9 @@ void ConfigWindow::fillConfig()
 		item->setData(0, Qt::UserRole, int(it.key()));
 		listFF7->addTopLevelItem(item);
 	}
-	if (selectedItem)	listFF7->setCurrentItem(selectedItem);
+	if (selectedItem != nullptr) {
+		listFF7->setCurrentItem(selectedItem);
+	}
 
 	if (kernel_path.isEmpty()) {
 		kernel_path = Data::ff7KernelPath() % "/kernel2.bin";
@@ -240,10 +242,10 @@ void ConfigWindow::fillConfig()
 
 	encodingEdit->setDisabled(window_path.isEmpty());
 
-	windowColorTopLeft = Config::value("windowColorTopLeft", qRgb(0,88,176)).toInt();
-	windowColorTopRight = Config::value("windowColorTopRight", qRgb(0,0,80)).toInt();
-	windowColorBottomLeft = Config::value("windowColorBottomLeft", qRgb(0,0,128)).toInt();
-	windowColorBottomRight = Config::value("windowColorBottomRight", qRgb(0,0,32)).toInt();
+	windowColorTopLeft = Config::value("windowColorTopLeft", qRgb(0,88,176)).toUInt();
+	windowColorTopRight = Config::value("windowColorTopRight", qRgb(0,0,80)).toUInt();
+	windowColorBottomLeft = Config::value("windowColorBottomLeft", qRgb(0,0,128)).toUInt();
+	windowColorBottomRight = Config::value("windowColorBottomRight", qRgb(0,0,32)).toUInt();
 
 	//optiText->setChecked(!Config::value("dontOptimizeTexts", false).toBool());
 	encodings->setCurrentIndex(Config::value("jp_txt", false).toBool() ? 1 : 0);

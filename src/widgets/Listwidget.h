@@ -27,10 +27,10 @@ public:
 		Add, Rem, Up, Down, Cut, Copy, Paste
     };
 
-    explicit ListWidget(QWidget *parent = 0);
-	void addSeparator(bool invisible=false);
+	explicit ListWidget(QWidget *parent = nullptr);
+	void addSeparator(bool invisible = false);
     QAction *addAction(ActionType type, const QString &text,
-					   const QObject *receiver, const char *member, bool invisible=false);
+	                   const QObject *receiver, const char *member, bool invisible = false);
 
     QToolBar *toolBar() const;
     QListWidget *listWidget() const;

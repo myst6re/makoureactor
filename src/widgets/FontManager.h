@@ -26,7 +26,7 @@ class FontManager : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit FontManager(QWidget *parent=0);
+	explicit FontManager(QWidget *parent = nullptr);
 private slots:
 	void setFont(int id);
 	void addFont();

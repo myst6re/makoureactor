@@ -27,7 +27,7 @@ class TextManager : public QDialog
 	Q_OBJECT
 
 public:
-	explicit TextManager(QWidget *parent=0);
+	explicit TextManager(QWidget *parent = nullptr);
 	void setField(Field *field, bool reload=false);
 	void clear();
 	void updateText();
@@ -42,7 +42,7 @@ signals:
 public slots:
 	void updateFromScripts();
 private slots:
-	void selectText(QListWidgetItem *, QListWidgetItem *previous=0);
+	void selectText(QListWidgetItem *item, QListWidgetItem *previous = nullptr);
 	void showList();
 	void setTextChanged();
 	void addText();

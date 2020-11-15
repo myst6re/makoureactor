@@ -25,7 +25,7 @@ class FontGrid : public FontDisplay
 {
 	Q_OBJECT
 public:
-	explicit FontGrid(int letterCountH, int letterCountV, QWidget *parent=0);
+	explicit FontGrid(int letterCountH, int letterCountV, QWidget *parent = nullptr);
 	virtual ~FontGrid();
 	QPoint getPos(int letter);
 signals:

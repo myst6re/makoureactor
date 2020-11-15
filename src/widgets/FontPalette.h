@@ -28,7 +28,7 @@ class FontPalette : public QWidget
 {
 	Q_OBJECT
 public:
-	explicit FontPalette(QWidget *parent=0);
+	explicit FontPalette(QWidget *parent = nullptr);
 	virtual ~FontPalette();
 	void setReadOnly(bool ro);
 	void setWindowBinFile(WindowBinFile *windowBinFile);

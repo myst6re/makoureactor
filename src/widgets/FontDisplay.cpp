@@ -18,7 +18,8 @@
 #include "FontDisplay.h"
 
 FontDisplay::FontDisplay(QWidget *parent) :
-	QWidget(parent), _windowBinFile(0), _color(WindowBinFile::White), _currentTable(0), _letter(0)
+    QWidget(parent), _windowBinFile(nullptr), _color(WindowBinFile::White),
+    _currentTable(0), _letter(0)
 {
 }
 
@@ -39,22 +40,22 @@ void FontDisplay::setWindowBinFile(WindowBinFile *windowBinFile)
 
 void FontDisplay::clear()
 {
-	_windowBinFile = 0;
+	_windowBinFile = nullptr;
 	update();
 }
 
-int FontDisplay::currentTable() const
+quint8 FontDisplay::currentTable() const
 {
 	return _currentTable;
 }
 
-void FontDisplay::setCurrentTable(int currentTable)
+void FontDisplay::setCurrentTable(quint8 currentTable)
 {
 	_currentTable = currentTable;
 	update();
 }
 
-int FontDisplay::currentLetter() const
+quint8 FontDisplay::currentLetter() const
 {
 	return _letter;
 }
@@ -65,7 +66,7 @@ void FontDisplay::setColor(WindowBinFile::FontColor color)
 	update();
 }
 
-void FontDisplay::setLetter(int letter)
+void FontDisplay::setLetter(quint8 letter)
 {
 	_letter = letter;
 	update();

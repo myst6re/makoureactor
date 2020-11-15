@@ -24,7 +24,7 @@ class ApercuBGLabel : public QLabel
 {
 	Q_OBJECT
 public:
-	explicit ApercuBGLabel(QWidget *parent = 0);
+	explicit ApercuBGLabel(QWidget *parent = nullptr);
 signals:
 	void saveRequested();
 private:

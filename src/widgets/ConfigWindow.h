@@ -24,7 +24,7 @@ class ConfigWindow : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit ConfigWindow(QWidget *parent=0);
+	explicit ConfigWindow(QWidget *parent = nullptr);
 private:
 	void fillConfig();
 	static void setWindowColorIcon(QAbstractButton *widget, QRgb color);

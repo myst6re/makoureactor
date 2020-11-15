@@ -22,9 +22,9 @@ ModelColorWidget::ModelColorWidget(QWidget *parent) :
 void ModelColorWidget::relayEdition()
 {
 	emit colorDirEdited(FieldModelColorDir(
-	                        _dirWidget[0]->value(),
-	                        _dirWidget[1]->value(),
-	                        _dirWidget[2]->value(),
+	                        qint16(_dirWidget[0]->value()),
+	                        qint16(_dirWidget[1]->value()),
+	                        qint16(_dirWidget[2]->value()),
 	                        _colorWidget->colors().first()));
 }
 

@@ -337,14 +337,14 @@ void ModelManagerPC::setModelScale(int scale)
 	int modelID = currentModelID();
 	if (modelID < 0)	return;
 
-	modelLoader()->setScale(modelID, scale);
+	modelLoader()->setScale(modelID, quint16(scale));
 
 	emit modified();
 }
 
 void ModelManagerPC::setModelGlobalColor(int id, QRgb color)
 {
-	Q_UNUSED(id);
+	Q_UNUSED(id)
 	int modelID = currentModelID();
 	if (modelID < 0)	return;
 
@@ -589,7 +589,7 @@ void ModelManagerPC::renameOKAnim(QTreeWidgetItem *item, int column)
 				value = 65535;
 				item->setText(2, QString::number(value));
 			}
-			modelLoader()->setAnimUnknown(modelID, animID, value);
+			modelLoader()->setAnimUnknown(modelID, animID, quint16(value));
 			emit modified();
 		} else {
 			// reset old value
@@ -605,12 +605,12 @@ FieldModelFile *ModelManagerPC::modelData(QTreeWidgetItem *item)
 
 FieldModelLoaderPC *ModelManagerPC::modelLoader() const
 {
-	return (FieldModelLoaderPC *)ModelManager::modelLoader();
+	return static_cast<FieldModelLoaderPC *>(ModelManager::modelLoader());
 }
 
 FieldPC *ModelManagerPC::field() const
 {
-	return (FieldPC *)ModelManager::field();
+	return static_cast<FieldPC *>(ModelManager::field());
 }
 
 const QList<FieldModelColorDir> &ModelManagerPC::lightColors(int modelID) const

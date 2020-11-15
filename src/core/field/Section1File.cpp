@@ -21,7 +21,7 @@
 #include "core/FF7Font.h"
 
 GrpScriptsIterator::GrpScriptsIterator(const GrpScriptsIterator &other) :
-	QListIterator<GrpScript *>(other), _scriptsIt(0)
+    QListIterator<GrpScript *>(other), _scriptsIt(nullptr)
 {
 	if (other._scriptsIt) {
 		_scriptsIt = new ScriptsIterator(*other._scriptsIt);
@@ -236,7 +236,7 @@ bool Section1File::open(const QByteArray &data)
 	isDemo = version == 0x0301; // Check version format
 
 	memcpy(&posTexts, constData + 4, 2); // posTexts (and end of scripts)
-	if ((quint32)dataSize < posTexts || posTexts < 32) {
+	if (quint32(dataSize) < posTexts || posTexts < 32) {
 		qWarning() << "Section1File::open out of range posTexts" << posTexts << dataSize;
 		return false;
 	}

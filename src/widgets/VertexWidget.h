@@ -29,7 +29,7 @@ public:
 	VertexWidget(const QString &xLabel=QString(),
 				 const QString &yLabel=QString(),
 				 const QString &zLabel=QString(),
-				 QWidget *parent=0);
+	             QWidget *parent = nullptr);
 	Vertex_s values() const;
 	void setValues(const Vertex_s &v);
 	bool isReadOnly() const;
@@ -39,9 +39,9 @@ private slots:
 signals:
 	void valuesChanged(const Vertex_s &v);
 private:
-	void build(const QString &xLabel=QString(),
-			   const QString &yLabel=QString(),
-			   const QString &zLabel=QString());
+	void build(const QString &xLabel = QString(),
+	           const QString &yLabel = QString(),
+	           const QString &zLabel = QString());
 	QSpinBox *x, *y, *z;
 	bool dontEmit;
 };

@@ -19,7 +19,7 @@
 #include "core/Config.h"
 
 BGDialog::BGDialog(QWidget *parent) :
-	QDialog(parent, Qt::Tool), field(0), zoomFactor(1.0f)
+    QDialog(parent, Qt::Tool), field(nullptr), zoomFactor(1.0f)
 {
 	setWindowTitle(tr("Background"));
 
@@ -108,7 +108,7 @@ void BGDialog::clear()
 	layersWidget->blockSignals(true);
 	zWidget->blockSignals(true);
 
-	field = 0;
+	field = nullptr;
 	allparams.clear();
 	params.clear();
 	image->clear();
@@ -212,7 +212,7 @@ void BGDialog::showLayersPage(int index)
 
 void BGDialog::parameterChanged(int index)
 {
-	int parameter = parametersWidget->itemData(index).toInt();
+	quint8 parameter = quint8(parametersWidget->itemData(index).toInt());
 	quint8 states = allparams.value(parameter);
 	QListWidgetItem *item;
 	statesWidget->clear();
@@ -270,12 +270,14 @@ void BGDialog::sectionChanged()
 void BGDialog::enableState(QListWidgetItem *item)
 {
 	bool enabled = item->data(Qt::CheckStateRole).toBool();
-	int parameter = parametersWidget->itemData(parametersWidget->currentIndex()).toInt(), state = item->data(Qt::UserRole).toInt();
+	quint8 parameter = quint8(parametersWidget->itemData(parametersWidget->currentIndex()).toInt()),
+	        state = quint8(item->data(Qt::UserRole).toInt());
 
-	if (enabled)
+	if (enabled) {
 		params.insert(parameter, params.value(parameter) | state);
-	else
+	} else {
 		params.insert(parameter, params.value(parameter) & ~state);
+	}
 
 	updateBG();
 }
@@ -293,7 +295,7 @@ void BGDialog::enableLayer(QListWidgetItem *item)
 void BGDialog::enableSection(QListWidgetItem *item)
 {
 	bool enabled = item->data(Qt::CheckStateRole).toBool();
-	int ID = item->data(Qt::UserRole).toInt();
+	quint8 ID = quint8(item->data(Qt::UserRole).toInt());
 
 	if (enabled) {
 		sections.insert(ID);
@@ -310,8 +312,11 @@ void BGDialog::changeZ(int value)
 		return;
 	}
 	QList<QListWidgetItem *> items = layersWidget->selectedItems();
-	if (items.isEmpty()) return;
-	z[items.first()->data(Qt::UserRole).toInt()-2] = value;// z[layer - 2]
+	if (items.isEmpty()) {
+		return;
+	}
+	int layer = items.first()->data(Qt::UserRole).toInt();
+	z[layer - 2] = qint16(value);
 
 	updateBG();
 }
@@ -373,7 +378,8 @@ void BGDialog::updateBG()
 		bgWarning = false;
 	} else {
 		image->setPixmap(QPixmap::fromImage(img)
-			.scaled(imageBox->contentsRect().width() * zoomFactor, imageBox->contentsRect().height() * zoomFactor,
+		    .scaled(int(float(imageBox->contentsRect().width()) * zoomFactor),
+		            int(float(imageBox->contentsRect().height()) * zoomFactor),
 			Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	}
 
@@ -392,9 +398,9 @@ bool BGDialog::eventFilter(QObject *obj, QEvent *event)
 	if (event->type() == QEvent::Wheel && obj == imageBox->viewport()) {
 		QWheelEvent *wheelEvent = static_cast<QWheelEvent *>(event);
 		if (wheelEvent->modifiers() == Qt::CTRL) {
-			const float step = 0.25;
-			if (zoomFactor == 0) {
-				zoomFactor = 0.25;
+			const float step = 0.25f;
+			if (zoomFactor == 0.0f) {
+				zoomFactor = 0.25f;
 			} else if (wheelEvent->angleDelta().y() > 0) {
 				if (zoomFactor >= 4){
 					return false; // cap zoom in at 400%
@@ -402,7 +408,7 @@ bool BGDialog::eventFilter(QObject *obj, QEvent *event)
 					zoomFactor += step;
 				}
 			} else if (wheelEvent->angleDelta().y() < 0) {
-				if (zoomFactor <= 0.25){
+				if (zoomFactor <= 0.25f){
 					return false; // cap zoom in at 25%
 				} else {
 					zoomFactor -= step;

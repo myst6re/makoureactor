@@ -28,9 +28,9 @@ class ModelManager : public QDialog
 {
 	Q_OBJECT
 public:
-	ModelManager(QWidget *parent=nullptr);
+	ModelManager(QWidget *parent = nullptr);
 	virtual void clear();
-	void fill(Field *field, bool reload=false);
+	void fill(Field *field, bool reload = false);
 signals:
 	void modified();
 protected:
@@ -46,9 +46,9 @@ protected:
 	virtual const QList<FieldModelColorDir> &lightColors(int modelID) const=0;
 	virtual QRgb globalColor(int modelID) const=0;
 	virtual quint16 modelScale(int modelID) const=0;
-	int currentModelID(QTreeWidgetItem *item=0) const;
+	int currentModelID(QTreeWidgetItem *item = nullptr) const;
 	QList<int> selectedModelIDs() const;
-	int currentAnimID(QTreeWidgetItem *item=0) const;
+	int currentAnimID(QTreeWidgetItem *item = nullptr) const;
 
 	QTreeWidget *models;
 	QFrame *modelFrame;
@@ -65,7 +65,7 @@ private:
 	Field *_field;
 	FieldModelLoader *fieldModelLoader;
 private slots:
-	void showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous = 0);
+	void showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous = nullptr);
 	void setModelUnknown(int unknown);
 	void showModel(QTreeWidgetItem *item);
 };

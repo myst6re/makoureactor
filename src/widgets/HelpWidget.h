@@ -29,10 +29,10 @@ public:
 		IconWarning
 	};
 
-	HelpWidget(int iconExtent, const QString &text, IconType icon, QWidget *parent=0);
-	HelpWidget(int iconExtent, const QString &text, QWidget *parent=0);
-	HelpWidget(int iconExtent, IconType icon, QWidget *parent=0);
-	explicit HelpWidget(int iconExtent, QWidget *parent=0);
+	HelpWidget(int iconExtent, const QString &text, IconType icon, QWidget *parent = nullptr);
+	HelpWidget(int iconExtent, const QString &text, QWidget *parent = nullptr);
+	HelpWidget(int iconExtent, IconType icon, QWidget *parent = nullptr);
+	explicit HelpWidget(int iconExtent, QWidget *parent = nullptr);
 	QString text() const;
 	void setText(const QString &text);
 private:

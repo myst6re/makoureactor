@@ -71,8 +71,8 @@ void VarOrValueWidget::setValue(int value)
 
 void VarOrValueWidget::var(quint8 &bank, quint8 &adress) const
 {
-	bank = _bank->value();
-	adress = _adress->value();
+	bank = quint8(_bank->value());
+	adress = quint8(_adress->value());
 }
 
 void VarOrValueWidget::setVar(quint8 bank, quint8 adress)

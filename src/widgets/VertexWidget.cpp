@@ -55,9 +55,9 @@ void VertexWidget::build(const QString &xLabel, const QString &yLabel, const QSt
 Vertex_s VertexWidget::values() const
 {
 	Vertex_s v;
-	v.x = x->value();
-	v.y = y->value();
-	v.z = z->value();
+	v.x = qint16(x->value());
+	v.y = qint16(y->value());
+	v.z = qint16(z->value());
 	return v;
 }
 

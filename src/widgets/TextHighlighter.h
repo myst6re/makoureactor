@@ -23,7 +23,7 @@
 class TextHighlighter : public QSyntaxHighlighter
 {
 public:
-	explicit TextHighlighter(QTextDocument *parent=0, bool tut=false);
+	explicit TextHighlighter(QTextDocument *parent = nullptr, bool tut = false);
 
 protected:
 	void highlightBlock(const QString &text);

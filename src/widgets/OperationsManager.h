@@ -36,7 +36,7 @@ public:
 	};
 	Q_DECLARE_FLAGS(Operations, Operation)
 
-	explicit OperationsManager(bool isPC, QWidget *parent = 0);
+	explicit OperationsManager(bool isPC, QWidget *parent = nullptr);
 	Operations selectedOperations() const;
 private slots:
 	void updateApplyButton();

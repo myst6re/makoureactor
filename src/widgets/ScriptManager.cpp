@@ -2,7 +2,7 @@
 #include "core/Config.h"
 
 ScriptManager::ScriptManager(QWidget *parent) :
-    QWidget(parent), _field(0)
+    QWidget(parent), _field(nullptr)
 {
 	_groupScriptList = new GrpScriptList(this);
 	_groupScriptList->setMinimumHeight(176);
@@ -95,7 +95,7 @@ void ScriptManager::clear()
 	_groupScriptList->enableActions(false);
 	_scriptList->clear();
 	_opcodeList->clear();
-	_field = 0;
+	_field = nullptr;
 
 	_groupScriptList->blockSignals(false);
 	_scriptList->blockSignals(false);
@@ -107,7 +107,7 @@ void ScriptManager::fill(Field *field)
 	clear();
 
 	_field = field;
-	if (!_field) {
+	if (_field == nullptr) {
 		return;
 	}
 
@@ -123,7 +123,7 @@ void ScriptManager::fill(Field *field)
 
 void ScriptManager::fillScripts()
 {
-	if (!_field) {
+	if (_field == nullptr) {
 		return;
 	}
 
@@ -140,7 +140,7 @@ void ScriptManager::fillScripts()
 
 void ScriptManager::refreshOpcode(int groupID, int scriptID, int opcodeID)
 {
-	if (!_field || groupID != _groupScriptList->selectedID()
+	if (_field == nullptr || groupID != _groupScriptList->selectedID()
 	    || scriptID != _scriptList->selectedID()) {
 		return;
 	}
@@ -153,7 +153,7 @@ void ScriptManager::refreshOpcode(int groupID, int scriptID, int opcodeID)
 
 void ScriptManager::fillOpcodes()
 {
-	if (!_field) {
+	if (_field == nullptr) {
 		return;
 	}
 

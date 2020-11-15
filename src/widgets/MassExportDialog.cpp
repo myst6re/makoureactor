@@ -19,8 +19,8 @@
 #include "core/Config.h"
 
 MassExportDialog::MassExportDialog(QWidget *parent) :
-	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-	_fieldArchive(0), _currentMapId(-1)
+    QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
+    _fieldArchive(nullptr), _currentMapId(-1)
 {
 	setWindowTitle(tr("Mass Export"));
 

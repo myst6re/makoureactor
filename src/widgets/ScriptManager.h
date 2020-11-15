@@ -10,7 +10,7 @@ class ScriptManager : public QWidget
 {
 	Q_OBJECT
 public:
-	explicit ScriptManager(QWidget *parent = 0);
+	explicit ScriptManager(QWidget *parent = nullptr);
 	void saveConfig();
 	void removeCopiedReferences();
 	void clear();

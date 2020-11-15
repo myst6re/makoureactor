@@ -31,7 +31,7 @@ public:
 	enum {
 		TypeModel, TypeOther
 	};
-	explicit GrpScriptWizardPageType(QWidget *parent = 0);
+	explicit GrpScriptWizardPageType(QWidget *parent = nullptr);
 	void initializePage();
 	bool isComplete() const;
 	int nextId() const;

@@ -20,7 +20,7 @@
 #include "Data.h"
 
 ModelManager::ModelManager(QWidget *parent) :
-	QDialog(parent, Qt::Tool), _field(0), fieldModelLoader(0)
+    QDialog(parent, Qt::Tool), _field(nullptr), fieldModelLoader(nullptr)
 {
 	setWindowTitle(tr("Field Models"));
 
@@ -59,7 +59,7 @@ ModelManager::ModelManager(QWidget *parent) :
 		modelWidget = modelPreview;
 		modelPreview->setFixedSize(304, 214);
 	} else {
-		modelPreview = 0;
+		modelPreview = nullptr;
 		modelWidget = new QWidget(this);
 	}
 
@@ -147,7 +147,7 @@ int ModelManager::currentAnimID(QTreeWidgetItem *item) const
 
 void ModelManager::showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous)
 {
-	Q_UNUSED(previous);
+	Q_UNUSED(previous)
 	if (item == nullptr) {
 		modelFrame->setEnabled(false);
 		return;
@@ -197,7 +197,7 @@ void ModelManager::setModelUnknown(int unknown)
 	int modelID = currentModelID();
 	if (modelID < 0)	return;
 
-	fieldModelLoader->setUnknown(modelID, unknown);
+	fieldModelLoader->setUnknown(modelID, quint16(unknown));
 
 	emit modified();
 }

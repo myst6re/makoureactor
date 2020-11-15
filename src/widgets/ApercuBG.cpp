@@ -98,7 +98,7 @@ void ApercuBG::clear()
 {
 	QLabel::clear();
 	setCursor(Qt::ArrowCursor);
-	_field = 0;
+	_field = nullptr;
 	_background = QPixmap();
 	_error = false;
 }
@@ -114,7 +114,7 @@ void ApercuBG::mouseReleaseEvent(QMouseEvent *e)
 
 void ApercuBG::resizeEvent(QResizeEvent *e)
 {
-	Q_UNUSED(e);
+	Q_UNUSED(e)
 
 	if (!_background.isNull() &&
 	        (!pixmap() || contentsRect().size() != pixmap()->size())) {

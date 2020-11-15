@@ -230,10 +230,10 @@ void TextPreview::drawWindow(QPainter *painter, WindowType type) const
 
 void TextPreview::drawWindow(QPainter *painter, int maxW, int maxH, WindowType type)
 {
-	QRgb windowColorTopLeft = Config::value("windowColorTopLeft", qRgb(0,88,176)).toInt();
-	QRgb windowColorTopRight = Config::value("windowColorTopRight", qRgb(0,0,80)).toInt();
-	QRgb windowColorBottomLeft = Config::value("windowColorBottomLeft", qRgb(0,0,128)).toInt();
-	QRgb windowColorBottomRight = Config::value("windowColorBottomRight", qRgb(0,0,32)).toInt();
+	QRgb windowColorTopLeft = Config::value("windowColorTopLeft", qRgb(0,88,176)).toUInt();
+	QRgb windowColorTopRight = Config::value("windowColorTopRight", qRgb(0,0,80)).toUInt();
+	QRgb windowColorBottomLeft = Config::value("windowColorBottomLeft", qRgb(0,0,128)).toUInt();
+	QRgb windowColorBottomRight = Config::value("windowColorBottomRight", qRgb(0,0,32)).toUInt();
 
 	drawWindow(painter, maxW, maxH, windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight, type);
 }
@@ -357,7 +357,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	int start = pagesPos.value(_currentPage, 0), size = ff7Text.size();
 
 	for (int i=start; i<size; ++i) {
-		int charId = (quint8)ff7Text.at(i);
+		quint8 charId = quint8(ff7Text.at(i));
 
 		if (charId==0xff || charId==0xe8 || charId==0xe9) { //end | NewPage | NewPage2
 			break;
@@ -373,9 +373,9 @@ bool TextPreview::drawTextArea(QPainter *painter)
 				else if (charId==0xe1)//\t
 					x += spaced_characters ? spacedCharsW * 4 : 12;
 				else if (charId>=0xe2 && charId<=0xe4) {
-					const quint8 *opti = (const quint8 *)FF7Font::optimisedDuo[charId-0xe2];
-					letter(&x, &y, opti[0], painter, 0);
-					letter(&x, &y, opti[1], painter, 0);
+					const char *opti = FF7Font::optimisedDuo[charId-0xe2];
+					letter(&x, &y, quint8(opti[0]), painter, 0);
+					letter(&x, &y, quint8(opti[1]), painter, 0);
 				} else {
 					letter(&x, &y, charId, painter, 0);
 				}
@@ -390,7 +390,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 		} else {
 			++i;
 			if (i >= size)	break;
-			int charId2 = (quint8)ff7Text.at(i);
+			quint8 charId2 = quint8(ff7Text.at(i));
 
 			switch (charId) {
 			case 0xfa:
@@ -454,7 +454,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 
 void TextPreview::paintEvent(QPaintEvent *event)
 {
-	Q_UNUSED(event);
+	Q_UNUSED(event)
 
 	QPixmap pix(width(), height());
 	QPainter painter(&pix);
@@ -524,11 +524,11 @@ void TextPreview::mouseMoveEvent(QMouseEvent *event)
 	if (x<0)	x = 0;
 	if (y<0)	y = 0;
 
-	ff7Window.x = x;
-	ff7Window.y = y;
+	ff7Window.x = qint16(x);
+	ff7Window.y = qint16(y);
 	QPoint real = ff7Window.realPos();
-	ff7Window.x = real.x();
-	ff7Window.y = real.y();
+	ff7Window.x = qint16(real.x());
+	ff7Window.y = qint16(real.y());
 
 	emit positionChanged(real);
 
@@ -548,10 +548,10 @@ void TextPreview::mouseReleaseEvent(QMouseEvent *)
 
 void TextPreview::wheelEvent(QWheelEvent *event)
 {
-	int numDegrees = event->delta() / 8,
+	int numDegrees = event->angleDelta().y() / 8,
 			numSteps = numDegrees / 15;
 
-	if (event->orientation() == Qt::Vertical) {
+	if (numDegrees > 0) {
 		int oldPage = _currentPage;
 
 		if (numSteps > 0) {
@@ -566,7 +566,7 @@ void TextPreview::wheelEvent(QWheelEvent *event)
 	}
 }
 
-void TextPreview::letter(int *x, int *y, int charId, QPainter *painter, quint8 tableId)
+void TextPreview::letter(int *x, int *y, quint8 charId, QPainter *painter, quint8 tableId)
 {
 	int charWidth = FF7Font::charW(tableId, charId);
 	int leftPadd = FF7Font::leftPadding(tableId, charId);
@@ -593,11 +593,11 @@ void TextPreview::letter(int *x, int *y, int charId, QPainter *painter, quint8 t
 void TextPreview::word(int *x, int *y, const QByteArray &charIds, QPainter *painter, quint8 tableId)
 {
 	for (char charId : charIds) {
-		letter(x, y, charId, painter, tableId);
+		letter(x, y, quint8(charId), painter, tableId);
 	}
 }
 
-QImage TextPreview::letterImage(int tableId, int charId)
+QImage TextPreview::letterImage(quint8 tableId, quint8 charId)
 {
 	if (Data::windowBin.isValid() &&
 			(tableId != 0 || !Data::windowBin.isJp())) {

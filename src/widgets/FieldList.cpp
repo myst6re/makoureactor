@@ -49,7 +49,7 @@ FieldList::FieldList(QWidget *parent) :
 	this->addAction(del_A);
 
 	_toolBar = new QToolBar(tr("&Field List Toolbar"));
-	_toolBar->setIconSize(QSize(14*scale,14*scale));
+	_toolBar->setIconSize(QSize(int(14.0 * scale), int(14.0 * scale)));
 	_toolBar->addAction(add_A);
 	add_A->setStatusTip(tr("Add a field"));
 	_toolBar->addAction(del_A);
@@ -198,12 +198,16 @@ void FieldList::renameOK(QTreeWidgetItem *item, int column)
 
 	item->setText(1, newName);
 
-	Field *f = _fieldArchive->field(currentMapId());
-	if (f) {
-		f->setName(newName);
-		InfFile *inf = f->inf();
-		if (inf != nullptr) {
-			inf->setMapName(newName);
+	int fieldID = currentMapId();
+
+	if (fieldID >= 0) {
+		Field *f = _fieldArchive->field(quint32(fieldID));
+		if (f != nullptr) {
+			f->setName(newName);
+			InfFile *inf = f->inf();
+			if (inf != nullptr) {
+				inf->setMapName(newName);
+			}
 		}
 	}
 

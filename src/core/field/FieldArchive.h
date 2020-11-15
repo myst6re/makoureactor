@@ -160,8 +160,8 @@ public:
 	inline int size() const {
 		return fileList.size();
 	}
-	const Field *field(quint32 mapId) const;
-	Field *field(quint32 mapId, bool open=true, bool dontOptimize=false);
+	const Field *field(int mapId) const;
+	Field *field(int mapId, bool open=true, bool dontOptimize=false);
 	const Field *field(const QString &name) const;
 	Field *field(const QString &name, bool open=true, bool dontOptimize=false);
 	int appendField(Field *field);

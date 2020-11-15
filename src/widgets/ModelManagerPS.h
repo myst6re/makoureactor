@@ -27,7 +27,7 @@ class ModelManagerPS : public ModelManager
 {
 	Q_OBJECT
 public:
-	ModelManagerPS(QWidget *parent=0);
+	ModelManagerPS(QWidget *parent = nullptr);
 protected:
 	QList<QStringList> modelNames() const;
 	QList<QTreeWidgetItem *> animItems(int modelID) const;

@@ -99,9 +99,9 @@ void TutWidget::fill(Field *field, TutFilePC *tutPC, bool reload)
 
 void TutWidget::clear()
 {
-	tut = 0;
-	tutPC = 0;
-	currentTut = 0;
+	tut = nullptr;
+	tutPC = nullptr;
+	currentTut = nullptr;
 	usedTuts.clear();
 	list->clear();
 	textEdit->clear();
@@ -281,7 +281,7 @@ void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 		stackedWidget->setCurrentIndex(1);
 		akaoDesc->setText(currentTut->parseScripts(id));
 		akaoIDList->setEnabled(true);
-		updateAkaoID(tut->akaoID(id));
+		updateAkaoID(quint16(tut->akaoID(id)));
 	}
 
 	textEdit->setReadOnly(!isTut);
@@ -306,7 +306,7 @@ void TutWidget::saveText(QListWidgetItem *item)
 		QRegExp regExp("\\d+");
 		if (regExp.indexIn(userText) != -1) {
 			userText = regExp.capturedTexts().first();
-			quint16 akaoID = userText.toInt();
+			quint16 akaoID = quint16(userText.toInt());
 
 			if (tut->akaoID(id) != akaoID) {
 				tut->setAkaoID(id, akaoID);
@@ -380,7 +380,7 @@ void TutWidget::del()
 		return;
 	}
 
-	if ((tutPC == nullptr || currentTut == tutPC) && usedTuts.contains(row)) {
+	if ((tutPC == nullptr || currentTut == tutPC) && usedTuts.contains(quint8(row))) {
 		QMessageBox::StandardButton rep = QMessageBox::warning(this, tr("Tutorial used in scripts"), currentTut == tutPC ? tr("This tutorial may be used by one or more scripts on this field.\nDelete can cause errors.\nAre you sure you want to continue?") : tr("This tutorial is used by one or more scripts on this field.\nRemove will replace calls to this tutorial with calls to the tutorial that follows.\nAre you sure you want to continue?"), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 		if (rep == QMessageBox::Cancel) 	return;
 	}
@@ -570,7 +570,7 @@ void TutWidget::importation()
 
 	// Must be called before setPlainText
 	if (!isTut) {
-		updateAkaoID(tut->akaoID(row));
+		updateAkaoID(quint16(tut->akaoID(row)));
 	}
 
 	textEdit->setPlainText(currentTut->parseScripts(row));

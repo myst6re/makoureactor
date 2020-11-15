@@ -26,7 +26,7 @@ class IconThread : public QThread
 {
 	Q_OBJECT
 public:
-	explicit IconThread(QObject *parent = 0);
+	explicit IconThread(QObject *parent = nullptr);
 	~IconThread();
 
 	void clear();
@@ -49,7 +49,7 @@ class LgpDirectoryItem;
 class LgpItem
 {
 public:
-	explicit LgpItem(const QString &name, LgpDirectoryItem *parent = 0) :
+	explicit LgpItem(const QString &name, LgpDirectoryItem *parent = nullptr) :
 		_name(name), _parent(parent) {
 	}
 	virtual ~LgpItem() {
@@ -89,7 +89,7 @@ private:
 class LgpFileItem : public LgpItem
 {
 public:
-	LgpFileItem(const QString &name, Lgp *lgp, LgpDirectoryItem *parent = 0) :
+	LgpFileItem(const QString &name, Lgp *lgp, LgpDirectoryItem *parent = nullptr) :
 		LgpItem(name, parent), _lgp(lgp) {
 	}
 	virtual ~LgpFileItem() {
@@ -120,7 +120,7 @@ public:
 		BySize
 	};
 
-	explicit LgpDirectoryItem(const QString &name, LgpDirectoryItem *parent = 0) :
+	explicit LgpDirectoryItem(const QString &name, LgpDirectoryItem *parent = nullptr) :
 		LgpItem(name, parent) {
 	}
 	virtual ~LgpDirectoryItem();
@@ -160,7 +160,7 @@ class LgpItemModel : public QAbstractItemModel
 {
 	Q_OBJECT
 public:
-	explicit LgpItemModel(Lgp *lgp, QObject *parent=0);
+	explicit LgpItemModel(Lgp *lgp, QObject *parent = nullptr);
 	~LgpItemModel();
 	QModelIndex index(int row, int column, const QModelIndex &parent=QModelIndex()) const;
 	QModelIndex parent(const QModelIndex &index) const;

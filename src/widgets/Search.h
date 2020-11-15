@@ -75,8 +75,6 @@ private:
 	bool findPrevText(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
 	                  int &mapID, int &textID, int &index, int &from, int &size);
 
-	bool atTheEnd, atTheBeginning;
-
 	SearchAll *searchAllDialog;
 	QTabWidget *tabWidget;
 	FieldArchive *fieldArchive;
@@ -102,15 +100,16 @@ private:
 	QPushButton *replaceCurrentButton,
 	*replaceAllButton;
 
-	int clef;
 	QRegExp text;
-	quint8 bank;
+	int clef;
 	quint16 address;
+	quint16 map;
 	Opcode::Operation op;
 	int value;
 	quint8 e_script, e_group;
-	quint16 field;
+	quint8 bank;
 	bool cancel;
+	bool atTheEnd, atTheBeginning;
 
 signals:
 	void found(int fieldID, int grpScriptID, int scriptID, int opcodeID);

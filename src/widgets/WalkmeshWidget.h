@@ -27,7 +27,7 @@ class WalkmeshWidget : public QOpenGLWidget
 {
 	Q_OBJECT
 public:
-	explicit WalkmeshWidget(QWidget *parent=nullptr);
+	explicit WalkmeshWidget(QWidget *parent = nullptr);
 	~WalkmeshWidget();
 	void clear();
 	void fill(Field *field);

@@ -30,7 +30,7 @@ public:
 		Fields, Backgrounds, Akaos, Texts
 	};
 
-	explicit MassExportDialog(QWidget *parent = 0);
+	explicit MassExportDialog(QWidget *parent = nullptr);
 	void fill(const FieldArchive *fieldArchive, int currentMapId);
 	QList<int> selectedFields() const;
 	bool exportModule(ExportType type) const;

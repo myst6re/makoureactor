@@ -27,7 +27,7 @@ class ColorDisplay : public QWidget
 {
 	Q_OBJECT
 public:
-	explicit ColorDisplay(QWidget *parent=0);
+	explicit ColorDisplay(QWidget *parent = nullptr);
 	void setColors(const QList<QRgb> &colors);
 	const QList<QRgb> &colors() const;
 	bool isReadOnly() const;

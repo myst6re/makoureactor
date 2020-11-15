@@ -26,7 +26,7 @@ class GrpScriptList : public QTreeWidget
 {
     Q_OBJECT
 public:
-	explicit GrpScriptList(QWidget *parent=0);
+	explicit GrpScriptList(QWidget *parent = nullptr);
 	virtual ~GrpScriptList();
 
 	GrpScript *currentGrpScript();
@@ -41,7 +41,7 @@ public:
 	void clearCopiedGroups();
 	void setEnabled(bool enabled);
 
-	void fill(Section1File *scripts=0);
+	void fill(Section1File *scripts = nullptr);
 	void localeRefresh();
 	void scroll(int, bool focus=true);
 	void enableActions(bool enabled);

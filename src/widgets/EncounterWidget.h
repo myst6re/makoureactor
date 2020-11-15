@@ -26,7 +26,7 @@ class EncounterWidget : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit EncounterWidget(EncounterFile *data, QWidget *parent=0);
+	explicit EncounterWidget(EncounterFile *data, QWidget *parent = nullptr);
 private:
 	void fillGroup(EncounterTableWidget *group, const EncounterTable &encounterTable);
 	EncounterTable saveGroup(EncounterTableWidget *group, EncounterTable encounterTable);

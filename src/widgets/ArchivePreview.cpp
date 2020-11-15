@@ -142,13 +142,13 @@ void ArchivePreview::saveImage()
 void ArchivePreview::textPreview(const QString &text)
 {
 	setCurrentIndex(TextPage);
-	((QPlainTextEdit *)currentWidget())->setPlainText(text);
+	static_cast<QPlainTextEdit *>(currentWidget())->setPlainText(text);
 }
 
 void ArchivePreview::modelPreview(FieldModelFile *fieldModel)
 {
 	if (Config::value("OpenGL", true).toBool()) {
 		setCurrentIndex(ModelPage);
-		((FieldModel *)currentWidget())->setFieldModelFile(fieldModel);
+		static_cast<FieldModel *>(currentWidget())->setFieldModelFile(fieldModel);
 	}
 }
