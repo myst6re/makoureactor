@@ -545,7 +545,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 				gateList->addItem(QString("%1 (%2)").arg(Data::mapName(gateway.fieldID)).arg(gateway.fieldID));
 			} else {
 				QListWidgetItem *item = new QListWidgetItem(tr("Unused"));
-				item->setForeground(Qt::darkGray);
+				item->setForeground(Data::color(Data::ColorDisabledForeground));
 				gateList->addItem(item);
 			}
 		}
@@ -559,7 +559,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 				doorList->addItem(tr("Door %1").arg(doorID));
 			} else {
 				QListWidgetItem *item = new QListWidgetItem(tr("Unused"));
-				item->setForeground(Qt::darkGray);
+				item->setForeground(Data::color(Data::ColorDisabledForeground));
 				doorList->addItem(item);
 			}
 			++doorID;
@@ -575,7 +575,7 @@ void WalkmeshManager::fill(Field *field, bool reload)
 					arrowList->addItem(tr("Arrow %1").arg(arrowID));
 				} else {
 					QListWidgetItem *item = new QListWidgetItem(tr("Unused"));
-					item->setForeground(Qt::darkGray);
+					item->setForeground(Data::color(Data::ColorDisabledForeground));
 					arrowList->addItem(item);
 				}
 				++arrowID;
@@ -1138,10 +1138,10 @@ void WalkmeshManager::editFieldId(int v)
 				                  .arg(Data::mapName(v))
 				              .arg(v));
 				// Default foreground
-				item->setForeground(QListWidgetItem().foreground());
+				item->setForeground(palette().brush(QPalette::WindowText));
 			} else {
 				item->setText(tr("Unused"));
-				item->setForeground(Qt::darkGray);
+				item->setForeground(Data::color(Data::ColorDisabledForeground));
 			}
 
 			emit modified();
@@ -1198,13 +1198,14 @@ void WalkmeshManager::editParamId(int v)
 			if (v != 0xFF) {
 				item->setText(tr("Door %1").arg(gateId));
 				// Default foreground
-				item->setForeground(QListWidgetItem().foreground());
+				item->setForeground(palette().brush(QPalette::WindowText));
 			} else {
 				item->setText(tr("Unused"));
-				item->setForeground(Qt::darkGray);
+				item->setForeground(Data::color(Data::ColorDisabledForeground));
 			}
 
 			if (walkmesh)	walkmesh->update();
+
 			emit modified();
 		}
 	}
@@ -1220,6 +1221,7 @@ void WalkmeshManager::editStateId(int v)
 			infFile->setTrigger(gateId, old);
 
 			if (walkmesh)	walkmesh->update();
+
 			emit modified();
 		}
 	}
@@ -1235,6 +1237,7 @@ void WalkmeshManager::editBehavior(int v)
 			infFile->setTrigger(gateId, old);
 
 			if (walkmesh)	walkmesh->update();
+
 			emit modified();
 		}
 	}
@@ -1250,6 +1253,7 @@ void WalkmeshManager::editSoundId(int v)
 			infFile->setTrigger(gateId, old);
 
 			if (walkmesh)	walkmesh->update();
+
 			emit modified();
 		}
 	}
@@ -1260,8 +1264,8 @@ void WalkmeshManager::editArrowX(int value)
 	if (infFile->isOpen()) {
 		quint8 arrowId = quint8(arrowList->currentRow());
 		Arrow old = infFile->arrow(arrowId);
-		if (old.positionX != qint32(value)) {
-			old.positionX = qint32(value);
+		if (qint16(old.positionX) != value) {
+			old.positionX = value;
 			infFile->setArrow(arrowId, old);
 
 			emit modified();
@@ -1274,8 +1278,8 @@ void WalkmeshManager::editArrowY(int value)
 	if (infFile->isOpen()) {
 		quint8 arrowId = quint8(arrowList->currentRow());
 		Arrow old = infFile->arrow(arrowId);
-		if (old.positionY != qint32(value)) {
-			old.positionY = qint32(value);
+		if (qint16(old.positionY) != value) {
+			old.positionY = value;
 			infFile->setArrow(arrowId, old);
 
 			emit modified();
@@ -1288,8 +1292,8 @@ void WalkmeshManager::editArrowZ(int value)
 	if (infFile->isOpen()) {
 		quint8 arrowId = quint8(arrowList->currentRow());
 		Arrow old = infFile->arrow(arrowId);
-		if (old.positionZ != qint32(value)) {
-			old.positionZ = qint32(value);
+		if (qint16(old.positionZ) != value) {
+			old.positionZ = value;
 			infFile->setArrow(arrowId, old);
 
 			emit modified();
@@ -1310,10 +1314,10 @@ void WalkmeshManager::editArrowType(int index)
 			if (index != 0) {
 				item->setText(tr("Arrow %1").arg(arrowId));
 				// Default foreground
-				item->setForeground(QListWidgetItem().foreground());
+				item->setForeground(palette().brush(QPalette::WindowText));
 			} else {
 				item->setText(tr("Unused"));
-				item->setForeground(Qt::darkGray);
+				item->setForeground(Data::color(Data::ColorDisabledForeground));
 			}
 
 			emit modified();
@@ -1435,6 +1439,7 @@ void WalkmeshManager::editCameraFocusHeight(int value)
 		int old = infFile->cameraFocusHeight();
 		if (old != value) {
 			infFile->setCameraFocusHeight(qint16(value));
+
 			emit modified();
 		}
 	}
@@ -1446,6 +1451,7 @@ void WalkmeshManager::editUnknown(const QByteArray &data)
 		QByteArray old = infFile->unknown();
 		if (old != data) {
 			infFile->setUnknown(data);
+
 			emit modified();
 		}
 	}
@@ -1457,6 +1463,7 @@ void WalkmeshManager::editMapScale(int scale)
 		int old = scriptsAndTexts->scale();
 		if (old != scale) {
 			scriptsAndTexts->setScale(quint16(scale));
+
 			emit modified();
 		}
 	}

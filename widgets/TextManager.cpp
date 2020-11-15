@@ -384,7 +384,7 @@ void TextManager::showList()
 		liste1->addItem(item);
 
 		if (!usedTexts.contains(i)) {
-			item->setForeground(Qt::darkGray);
+			item->setForeground(Data::color(Data::ColorDisabledForeground));
 		}
 	}
 
@@ -410,10 +410,10 @@ void TextManager::updateFromScripts()
 		QListWidgetItem *item = liste1->item(row);
 		int textID = item->data(Qt::UserRole).toInt();
 		if (!usedTexts.contains(textID)) {
-			item->setForeground(Qt::darkGray);
+			item->setForeground(Data::color(Data::ColorDisabledForeground));
 		} else {
 			// Default foreground
-			item->setForeground(QListWidgetItem().foreground());
+			item->setForeground(palette().brush(QPalette::WindowText));
 		}
 	}
 }

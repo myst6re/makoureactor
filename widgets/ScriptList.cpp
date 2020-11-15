@@ -19,7 +19,7 @@
 #include "Data.h"
 
 ScriptList::ScriptList(QWidget *parent) :
-    QListWidget(parent), grpScript(0)
+    QListWidget(parent), grpScript(nullptr)
 {
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -77,6 +77,8 @@ void ScriptList::localeRefresh()
 		return;
 	}
 
+	const QPalette &pal = palette();
+
 	int i = 0;
 	for (Script *script : grpScript->scripts()) {
 		QListWidgetItem *itm = item(i);
@@ -86,7 +88,7 @@ void ScriptList::localeRefresh()
 		} else if (script->isVoid()) {
 			itm->setForeground(Data::color(Data::ColorGreyForeground));
 		} else {
-			itm->setForeground(QBrush());
+			itm->setForeground(pal.brush(QPalette::WindowText));
 		}
 		++i;
 	}

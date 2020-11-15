@@ -100,8 +100,8 @@ QTreeWidgetItem *FieldList::createItem(Field *f, int mapID)
 	item->setData(0, Qt::UserRole, mapID);
 
 	if (!f->io() || index == -1) {
-		item->setForeground(0, Qt::darkGray);
-		item->setForeground(1, Qt::darkGray);
+		item->setForeground(0, Data::color(Data::ColorDisabledForeground));
+		item->setForeground(1, Data::color(Data::ColorDisabledForeground));
 	}
 
 	return item;
