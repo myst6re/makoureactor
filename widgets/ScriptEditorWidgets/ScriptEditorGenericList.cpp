@@ -379,7 +379,8 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<quantity;break;
 	case 0x5D:
 		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<inconnu<<adress;break;
-	//case 0x5E://TODO
+    case 0x5E:
+        paramTypes<<byte<<byte<<shakeType<<xAmplitude<<xFrames<<yAmplitude<<yFrames;break;
 	//case 0x5F:break;
 	case 0x60:
 		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<direction;break;
@@ -643,8 +644,13 @@ QString ScriptEditorGenericList::paramName(int type)
 	case music_id: 			return tr("Music");
 	case sound_id: 			return tr("Sound");
 	case movie_id: 			return tr("Video");
-	case label:				return tr("Label");
-	case akao:				return tr("Sound operation");
+    case label:				return tr("Label");
+    case akao:				return tr("Sound operation");
+    case shakeType:         return tr("Shake type");
+    case xAmplitude:        return tr("X Amplitude");
+    case xFrames:           return tr("X Frames");
+    case yAmplitude:        return tr("Y Amplitude");
+    case yFrames:           return tr("Y Frames");
 	}
 	return tr("???");
 }

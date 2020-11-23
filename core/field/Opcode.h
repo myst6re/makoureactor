@@ -229,8 +229,8 @@ public:
 protected:
 	static QString _script(quint8 param, Section1File *scriptsAndTexts);
 	static QString _text(quint8 textID, Section1File *scriptsAndTexts);
-	static QString _item(quint16 itemID, quint8 bank);
-	static QString _materia(quint8 materiaID, quint8 bank);
+    static QString _item(quint16 itemID, quint8 bank);
+    static QString _materia(quint8 materiaID, quint8 bank);
 	static QString _field(quint16 fieldID);
 	static QString _movie(quint8 movieID);
 	// static QString _objet3D(quint8 objet3D_ID);
@@ -1531,8 +1531,8 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
 	QByteArray params() const;
-	quint8 unknown1, unknown2, shakeCount, unknown3, unknown4;
-	quint8 amplitude, speed;
+    quint8 unknown1, unknown2, type, xAmplitude, xFrames;
+	quint8 yAmplitude, yFrames;
 };
 
 class OpcodeNOP : public Opcode {

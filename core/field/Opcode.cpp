@@ -396,11 +396,11 @@ QString Opcode::_materia(quint8 materiaID, quint8 bank)
 
 QString Opcode::_field(quint16 fieldID)
 {
-	if (fieldID < Data::maplist().size())
-		return QObject::tr("%1 (#%2)")
-				.arg(Data::maplist().at(fieldID))
-				.arg(fieldID);
-	return QObject::tr("No%1").arg(fieldID);
+    if (fieldID < Data::maplist().size())
+        return QObject::tr("%1 (#%2)")
+                .arg(Data::maplist().at(fieldID))
+                .arg(fieldID);
+    return QObject::tr("No%1").arg(fieldID);
 }
 
 QString Opcode::_movie(quint8 movieID)
@@ -4142,19 +4142,19 @@ void OpcodeSHAKE::setParams(const char *params, int)
 {
 	unknown1 = params[0];
 	unknown2 = params[1];
-	shakeCount = params[2];
-	unknown3 = params[3];
-	unknown4 = params[4];
-	amplitude = params[5];
-	speed = params[6];
+    type = params[2];
+    xAmplitude = params[3];
+    xFrames = params[4];
+    yAmplitude = params[5];
+    yFrames = params[6];
 }
 
 QString OpcodeSHAKE::toString(Field *) const
 {
-	return QObject::tr("Shake (nbSwings=%1, Amplitude=%2, speed=%3)")
-			.arg(shakeCount)
-			.arg(amplitude)
-			.arg(speed);
+    return QObject::tr("Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)")
+            .arg(type)
+            .arg(xAmplitude).arg(xFrames)
+            .arg(yAmplitude).arg(yFrames);
 }
 
 QByteArray OpcodeSHAKE::params() const
@@ -4162,11 +4162,11 @@ QByteArray OpcodeSHAKE::params() const
 	return QByteArray()
 			.append((char)unknown1)
 			.append((char)unknown2)
-			.append((char)shakeCount)
-			.append((char)unknown3)
-			.append((char)unknown4)
-			.append((char)amplitude)
-			.append((char)speed);
+            .append((char)type)
+            .append((char)xAmplitude)
+            .append((char)xFrames)
+            .append((char)yAmplitude)
+            .append((char)yFrames);
 }
 
 OpcodeNOP::OpcodeNOP()

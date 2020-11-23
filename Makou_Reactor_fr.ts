@@ -4057,9 +4057,9 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="4154"/>
-        <source>Shake (nbSwings=%1, Amplitude=%2, speed=%3)</source>
-        <oldsource>Secouer l&apos;écran (nbOscillations=%1, Amplitude=%2, vitesse=%3)</oldsource>
-        <translation>Secouer l&apos;écran (nbOscillations=%1, Amplitude=%2, vitesse=%3)</translation>
+        <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)</source>
+        <oldsource>Secouer l&apos;écran (type=%1, xAmplitude=%2, xImg=%3, yAmplitude=%2, xImg=%3)</oldsource>
+        <translation>Secouer l&apos;écran (type=%1, xAmplitude=%2, xImg=%3, yAmplitude=%2, xImg=%3)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="4197"/>
