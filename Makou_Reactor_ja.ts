@@ -2621,7 +2621,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="803"/>
-        <source>Return and execute script #%2 from the appellant group (Priority %1/6)</source>
+        <source>Return and execute script #%2 from the current entity (Priority %1/6)</source>
         <translation>リターンして呼び出したグループのスクリプト #%2 を実行 (優先度 %1/6)</translation>
     </message>
     <message>
@@ -3425,7 +3425,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="4154"/>
-        <source>Shake (nbSwings=%1, Amplitude=%2, speed=%3)</source>
+        <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)</source>
         <translation>揺らす (nb周期=%1, 拡がり=%2, 速度=%3)</translation>
     </message>
     <message>

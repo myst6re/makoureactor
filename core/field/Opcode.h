@@ -1002,8 +1002,8 @@ class OpcodeWindow : public Opcode {
 public:
 	explicit OpcodeWindow(const char *params, int size);
 	explicit OpcodeWindow(quint8 windowID, quint16 targetX,
-	                      quint16 targetY, quint16 width,
-	                      quint16 height);
+						  quint16 targetY, quint16 width,
+						  quint16 height);
 	void setParams(const char *params, int size);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -1350,8 +1350,8 @@ class OpcodeWINDOW : public OpcodeWindow {
 public:
 	explicit OpcodeWINDOW(const char *params, int size);
 	explicit OpcodeWINDOW(quint8 windowID, quint16 targetX,
-	                      quint16 targetY, quint16 width,
-	                      quint16 height);
+						  quint16 targetY, quint16 width,
+						  quint16 height);
 	explicit OpcodeWINDOW(const OpcodeWindow &op);
 	inline int id() const { return 0x50; }
 	QString toString(Field *field) const;
@@ -1531,8 +1531,8 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
 	QByteArray params() const;
-	quint8 unknown1, unknown2, shakeCount, unknown3, unknown4;
-	quint8 amplitude, speed;
+	quint8 unknown1, unknown2, type, xAmplitude, xFrames;
+	quint8 yAmplitude, yFrames;
 };
 
 class OpcodeNOP : public Opcode {

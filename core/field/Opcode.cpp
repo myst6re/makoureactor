@@ -61,8 +61,8 @@ Opcode *Opcode::unserialize(const QByteArray &data)
 
 	if (identifier <= 0xFF) {
 		Opcode *ret = Script::createOpcode(QByteArray()
-		                            .append(quint8(identifier))
-		                            .append(data.mid(2)));
+									.append(quint8(identifier))
+									.append(data.mid(2)));
 
 		quint8 size = 2 + Opcode::length[identifier] - 1;
 
@@ -123,7 +123,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 				const OpcodeBinaryOperation *binaryOp = static_cast<const OpcodeBinaryOperation *>(this);
 
 				if (B1(binaryOp->banks) == bank && (noAddress || binaryOp->var == address)
-				        && B2(binaryOp->banks) == 0) {
+						&& B2(binaryOp->banks) == 0) {
 					switch (op) {
 					case Assign:
 						return binaryOp->value == value;
@@ -398,8 +398,8 @@ QString Opcode::_field(quint16 fieldID)
 {
 	if (fieldID < Data::maplist().size())
 		return QObject::tr("%1 (#%2)")
-				.arg(Data::maplist().at(fieldID))
-				.arg(fieldID);
+			.arg(Data::maplist().at(fieldID))
+			.arg(fieldID);
 	return QObject::tr("No%1").arg(fieldID);
 }
 
@@ -440,20 +440,20 @@ QString Opcode::akao(quint8 akaoOp, bool *ok)
 	case 0x19:	return QObject::tr("Play music and resume from last position [param1: music ID, 0-based]");
 	case 0x24:
 	case 0x20:	return QObject::tr("Play a sound effect (will be terminated if "
-		                           "another effect is played on channel) "
-		                           "[param1: panning, param2: effect ID]");
+								   "another effect is played on channel) "
+								   "[param1: panning, param2: effect ID]");
 	case 0x25:
 	case 0x21:	return QObject::tr("Play a sound effect (will be terminated if "
-		                           "another effect is played on channel) "
-		                           "[param1: panning, param2: effect ID, param3: ?]");
+								   "another effect is played on channel) "
+								   "[param1: panning, param2: effect ID, param3: ?]");
 	case 0x26:
 	case 0x22:	return QObject::tr("Play a sound effect (will be terminated if "
-		                           "another effect is played on channel) "
-		                           "[param1: panning, param2: effect ID, param3: ?, param4: ?]");
+								   "another effect is played on channel) "
+								   "[param1: panning, param2: effect ID, param3: ?, param4: ?]");
 	case 0x27:
 	case 0x23:	return QObject::tr("Play a sound effect (will be terminated if "
-		                           "another effect is played on channel) "
-		                           "[param1: panning, param2: effect ID, param3: ?, param4: ?, param5: ?]");
+								   "another effect is played on channel) "
+								   "[param1: panning, param2: effect ID, param3: ?, param4: ?, param5: ?]");
 	case 0x28:	return QObject::tr("Play a sound effect on channel #1 [param1: panning, param2: effect ID]");
 	case 0x29:	return QObject::tr("Play a sound effect on channel #2 [param1: panning, param2: effect ID]");
 	case 0x2A:	return QObject::tr("Play a sound effect on channel #3 [param1: panning, param2: effect ID]");
@@ -800,7 +800,7 @@ void OpcodeRETTO::setParams(const char *params, int)
 
 QString OpcodeRETTO::toString(Field *) const
 {
-	return QObject::tr("Return and execute script #%2 from the appellant group (Priority %1/6)")
+	return QObject::tr("Return and execute script #%2 from the current entity (Priority %1/6)")
 			.arg(priority)
 			.arg(scriptID);
 }
@@ -1376,7 +1376,7 @@ quint32 OpcodeJump::maxJump() const
 QByteArray OpcodeJump::serialize() const
 {
 	return Opcode::serialize()
-	    .append((char *)&_label, 4).append(char(_badJump));
+		.append((char *)&_label, 4).append(char(_badJump));
 }
 
 OpcodeLabel::OpcodeLabel(quint32 label) :
@@ -1872,10 +1872,10 @@ QString Opcode1A::toString(Field *) const
 	QStringList flags;
 
 	switch (flag & 0x7) {
-	case 1:    flags.append(QObject::tr("8 bit"));     break;
-	case 2:    flags.append(QObject::tr("16 bit"));    break;
-	case 3:    flags.append(QObject::tr("24 bit"));    break;
-	case 4:    flags.append(QObject::tr("32 bit"));    break;
+	case 1:	flags.append(QObject::tr("8 bit"));	 break;
+	case 2:	flags.append(QObject::tr("16 bit"));	break;
+	case 3:	flags.append(QObject::tr("24 bit"));	break;
+	case 4:	flags.append(QObject::tr("32 bit"));	break;
 	default:   break;
 	}
 
@@ -1888,37 +1888,37 @@ QString Opcode1A::toString(Field *) const
 	}
 
 	return QObject::tr("Write/Read entire savemap (from=%1, to=%2, absValue=%3, flags={%4})")
-	        .arg(from)
-	        .arg(to)
-	        .arg(absValue)
-	        .arg(flags.join(", "));
+			.arg(from)
+			.arg(to)
+			.arg(absValue)
+			.arg(flags.join(", "));
 }
 
 QByteArray Opcode1A::params() const
 {
 	return QByteArray()
-	        .append((char *)&from, 2)
-	        .append((char *)&to, 2)
-	        .append((char *)&absValue, 4)
-	        .append(char(flag));
+			.append((char *)&from, 2)
+			.append((char *)&to, 2)
+			.append((char *)&absValue, 4)
+			.append(char(flag));
 }
 
 Opcode1B::Opcode1B(const char *params, int size) :
-    OpcodeJMPFL(params, size)
+	OpcodeJMPFL(params, size)
 {
 }
 
 Opcode1B::Opcode1B(const OpcodeJump &op) :
-    OpcodeJMPFL(op)
+	OpcodeJMPFL(op)
 {
 }
 
 QString Opcode1B::toString(Field *) const
 {
 	return QObject::tr("If Red XIII is named Nanaki (%2)")
-	        .arg(_badJump
-	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-	             : QObject::tr("else goto label %1").arg(_label));
+			.arg(_badJump
+				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+				 : QObject::tr("else goto label %1").arg(_label));
 }
 
 OpcodeMINIGAME::OpcodeMINIGAME(const char *params, int size)
@@ -2633,10 +2633,10 @@ OpcodeWindow::OpcodeWindow(const char *params, int size)
 }
 
 OpcodeWindow::OpcodeWindow(quint8 windowID, quint16 targetX,
-                      quint16 targetY, quint16 width,
-                      quint16 height) :
-      windowID(windowID), targetX(targetX), targetY(targetY),
-      width(width), height(height)
+					  quint16 targetY, quint16 width,
+					  quint16 height) :
+	  windowID(windowID), targetX(targetX), targetY(targetY),
+	  width(width), height(height)
 {
 }
 
@@ -3606,9 +3606,9 @@ OpcodeWINDOW::OpcodeWINDOW(const char *params, int size) :
 }
 
 OpcodeWINDOW::OpcodeWINDOW(quint8 windowID, quint16 targetX,
-                           quint16 targetY, quint16 width,
-                           quint16 height) :
-      OpcodeWindow(windowID, targetX, targetY, width, height)
+						   quint16 targetY, quint16 width,
+						   quint16 height) :
+	  OpcodeWindow(windowID, targetX, targetY, width, height)
 {
 }
 
@@ -4142,31 +4142,31 @@ void OpcodeSHAKE::setParams(const char *params, int)
 {
 	unknown1 = params[0];
 	unknown2 = params[1];
-	shakeCount = params[2];
-	unknown3 = params[3];
-	unknown4 = params[4];
-	amplitude = params[5];
-	speed = params[6];
+	type = params[2];
+	xAmplitude = params[3];
+	xFrames = params[4];
+	yAmplitude = params[5];
+	yFrames = params[6];
 }
 
 QString OpcodeSHAKE::toString(Field *) const
 {
-	return QObject::tr("Shake (nbSwings=%1, Amplitude=%2, speed=%3)")
-			.arg(shakeCount)
-			.arg(amplitude)
-			.arg(speed);
+	return QObject::tr("Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)")
+		.arg(type)
+		.arg(xAmplitude).arg(xFrames)
+		.arg(yAmplitude).arg(yFrames);
 }
 
 QByteArray OpcodeSHAKE::params() const
 {
 	return QByteArray()
-			.append((char)unknown1)
-			.append((char)unknown2)
-			.append((char)shakeCount)
-			.append((char)unknown3)
-			.append((char)unknown4)
-			.append((char)amplitude)
-			.append((char)speed);
+		.append((char)unknown1)
+		.append((char)unknown2)
+		.append((char)type)
+		.append((char)xAmplitude)
+		.append((char)xFrames)
+		.append((char)yAmplitude)
+		.append((char)yFrames);
 }
 
 OpcodeNOP::OpcodeNOP()
@@ -4840,7 +4840,7 @@ void OpcodePXYZI::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeBinaryOperation::OpcodeBinaryOperation() :
-    banks(0), var(0), value(0)
+	banks(0), var(0), value(0)
 {
 }
 
