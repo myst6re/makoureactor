@@ -3088,7 +3088,7 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="803"/>
-        <source>Return and execute script #%2 from the this entity (Priority %1/6)</source>
+        <source>Return and execute script #%2 from the current entity (Priority %1/6)</source>
         <oldsource>Retourner et exécuter le script n°%2 du groupe appelant (priorité %1/6)</oldsource>
         <translation>Retourner et exécuter le script n°%2 du groupe appelant (priorité %1/6)</translation>
     </message>

@@ -800,7 +800,7 @@ void OpcodeRETTO::setParams(const char *params, int)
 
 QString OpcodeRETTO::toString(Field *) const
 {
-	return QObject::tr("Return and execute script #%2 from this entity (Priority %1/6)")
+	return QObject::tr("Return and execute script #%2 from the current entity (Priority %1/6)")
 			.arg(priority)
 			.arg(scriptID);
 }

@@ -2621,7 +2621,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="803"/>
-        <source>Return and execute script #%2 from the this entity (Priority %1/6)</source>
+        <source>Return and execute script #%2 from the current entity (Priority %1/6)</source>
         <translation>リターンして呼び出したグループのスクリプト #%2 を実行 (優先度 %1/6)</translation>
     </message>
     <message>
