@@ -229,8 +229,8 @@ public:
 protected:
 	static QString _script(quint8 param, Section1File *scriptsAndTexts);
 	static QString _text(quint8 textID, Section1File *scriptsAndTexts);
-    static QString _item(quint16 itemID, quint8 bank);
-    static QString _materia(quint8 materiaID, quint8 bank);
+	static QString _item(quint16 itemID, quint8 bank);
+	static QString _materia(quint8 materiaID, quint8 bank);
 	static QString _field(quint16 fieldID);
 	static QString _movie(quint8 movieID);
 	// static QString _objet3D(quint8 objet3D_ID);
@@ -1002,8 +1002,8 @@ class OpcodeWindow : public Opcode {
 public:
 	explicit OpcodeWindow(const char *params, int size);
 	explicit OpcodeWindow(quint8 windowID, quint16 targetX,
-	                      quint16 targetY, quint16 width,
-	                      quint16 height);
+						  quint16 targetY, quint16 width,
+						  quint16 height);
 	void setParams(const char *params, int size);
 	QByteArray params() const;
 	int getWindowID() const;
@@ -1350,8 +1350,8 @@ class OpcodeWINDOW : public OpcodeWindow {
 public:
 	explicit OpcodeWINDOW(const char *params, int size);
 	explicit OpcodeWINDOW(quint8 windowID, quint16 targetX,
-	                      quint16 targetY, quint16 width,
-	                      quint16 height);
+						  quint16 targetY, quint16 width,
+						  quint16 height);
 	explicit OpcodeWINDOW(const OpcodeWindow &op);
 	inline int id() const { return 0x50; }
 	QString toString(Field *field) const;
@@ -1531,7 +1531,7 @@ public:
 	QString toString(Field *field) const;
 	void setParams(const char *params, int size);
 	QByteArray params() const;
-    quint8 unknown1, unknown2, type, xAmplitude, xFrames;
+	quint8 unknown1, unknown2, type, xAmplitude, xFrames;
 	quint8 yAmplitude, yFrames;
 };
 
