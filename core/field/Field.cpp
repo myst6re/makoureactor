@@ -74,10 +74,14 @@ bool Field::open(bool dontOptimize)
 			quint32 lzsSize;
 			memcpy(&lzsSize, lzsDataConst, 4);
 
-			if (!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
-				return false;
+			if ((quint32)lzsData.size() != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
+				fileData = lzsData;
+			} else {
+				if (!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
+					return false;
 
-			fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize());//partial decompression
+				fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize());//partial decompression
+			}
 		} else {
 			fileData = _io->fieldData(this, fileType);
 		}
@@ -152,11 +156,15 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 		quint32 lzsSize;
 		memcpy(&lzsSize, lzsDataConst, 4);
 
-		if (!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4) {
-			return QByteArray();
-		}
+		if ((quint32)lzsData.size() != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
+			data = lzsData;
+		} else {
+			if (!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4) {
+				return QByteArray();
+			}
 
-		data = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1));
+			data = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1));
+		}
 	}
 
 	if (size < 0) {
@@ -206,7 +214,8 @@ FieldPart *Field::part(FieldSection section, bool open)
 
 void Field::initEmpty()
 {
-	for (const FieldSection &section : orderOfSections() << Akaos) {
+	QList<Field::FieldSection> sections = orderOfSections();
+	for (const FieldSection &section : sections << Akaos) {
 		FieldPart *p = part(section);
 
 		if (!p) {
