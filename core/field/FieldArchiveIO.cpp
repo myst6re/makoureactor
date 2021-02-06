@@ -99,7 +99,9 @@ QByteArray FieldArchiveIO::fileData(const QString &fileName, bool unlzs, bool is
 		quint32 lzsSize;
 		memcpy(&lzsSize, lzsDataConst, 4);
 
-		if (checkLzsHeader && (quint32)data.size() != lzsSize + 4) {
+		if ((quint32)data.size() != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
+			unlzs = false;
+		} else if (checkLzsHeader && (quint32)data.size() != lzsSize + 4) {
 			return QByteArray();
 		}
 
