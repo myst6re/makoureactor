@@ -593,9 +593,9 @@ bool IsoArchive::open(QIODevice::OpenMode mode)
 //	qDebug() << volumeDescriptorToString(volume);
 	qint64 size = _io.size();
 	if (size%SECTOR_SIZE != 0 || volume.vd1.volume_space_size != _io.sectorCount() || volume.vd1.id[0] != 'C' || volume.vd1.id[1] != 'D' || volume.vd1.id[2] != '0' || volume.vd1.id[3] != '0' || volume.vd1.id[4] != '1') {
-		qWarning() << "IsoArchive::open error archive size" << (size%SECTOR_SIZE) << volume.vd1.volume_space_size << _io.sectorCount();
+		qWarning() << "IsoArchive::open error archive size" << (size%SECTOR_SIZE) << volume.vd1.volume_space_size << _io.sectorCount() << volume.vd1.id[0] << volume.vd1.id[1] << volume.vd1.id[2] << volume.vd1.id[3] << volume.vd1.id[4];
 		_io.setErrorString("Archive size error");
-		return false;
+		//return false;
 	}
 
 	if (!openRootDirectory(volume.dr.drh.location_extent, volume.dr.drh.data_length)) {
