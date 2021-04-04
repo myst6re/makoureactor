@@ -755,7 +755,10 @@ void OpcodeList::scriptEditor(bool modify)
 			expandedItems[script].append(script->opcode(opcodeID));
 		}
 		fill();
-		scroll(opcodeID);
+		QTreeWidgetItem *item = findItem(opcodeID);
+		if (item != nullptr) {
+			setCurrentItem(item);
+		}
 		if (modify) {
 			if (editor.needslabel()) {
 				changeHist(ModifyAndAddLabel, opcodeID, oldVersionCpy);
@@ -764,6 +767,9 @@ void OpcodeList::scriptEditor(bool modify)
 			}
 		}
 		else {
+			if (item != nullptr) {
+				scrollToItem(item, QAbstractItemView::EnsureVisible);
+			}
 			if (editor.needslabel()) {
 				changeHist(Add, QList<int>() << opcodeID << (opcodeID + 1), QList<Opcode *>());
 			} else {
