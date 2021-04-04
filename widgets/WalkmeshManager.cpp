@@ -487,7 +487,9 @@ void WalkmeshManager::saveConfig()
 
 void WalkmeshManager::fill(Field *field, bool reload)
 {
-	if (!field || (!reload && field->inf() == infFile))	return;
+	if (!field || (!reload && field->inf() == infFile)) {
+		return;
+	}
 
 	infFile = field->inf();
 	idFile = field->walkmesh();
@@ -495,10 +497,6 @@ void WalkmeshManager::fill(Field *field, bool reload)
 	scriptsAndTexts = field->scriptsAndTexts();
 
 	walkmesh->setModelsVisible(showModels->isChecked());
-
-	if (!idFile->isOpen() || !caFile->isOpen() || !infFile->isOpen()) {
-		QMessageBox::warning(this, tr("Opening error"), tr("Error opening walkmesh"));
-	}
 
 	int camCount = 0;
 
@@ -836,7 +834,7 @@ void WalkmeshManager::addTriangle()
 	if (idFile->isOpen()) {
 		Triangle tri;
 		Access acc;
-		if (row < idFile->triangleCount()) {
+		if (row >= 0 && row < idFile->triangleCount()) {
 			tri = idFile->triangle(row);
 			acc = idFile->access(row);
 		} else {
