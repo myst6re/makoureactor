@@ -993,7 +993,6 @@ void WalkmeshManager::setCurrentDoor(int id)
 
 	setDoorEnabled(doorEnabled->isChecked());
 
-
 	if (walkmesh)	walkmesh->setSelectedDoor(id);
 }
 
@@ -1066,17 +1065,21 @@ void WalkmeshManager::editDoorPoint(const Vertex_s &values)
 
 void WalkmeshManager::editDoorPoint(int id, const Vertex_s &values)
 {
-	if (infFile->isOpen()) {
-		quint8 gateId = quint8(gateList->currentRow());
-		Trigger old = infFile->trigger(gateId);
-		Vertex_s oldVertex = old.trigger_line[id];
-		if (oldVertex.x != values.x || oldVertex.y != values.y || oldVertex.z != values.z) {
-			old.trigger_line[id] = values;
-			infFile->setTrigger(gateId, old);
-			if (walkmesh)	walkmesh->update();
+	if (!infFile->isOpen()) {
+		return;
+	}
 
-			emit modified();
+	quint8 gateId = quint8(doorList->currentRow());
+	Trigger old = infFile->trigger(gateId);
+	const Vertex_s &oldVertex = old.trigger_line[id];
+	if (oldVertex.x != values.x || oldVertex.y != values.y || oldVertex.z != values.z) {
+		old.trigger_line[id] = values;
+		infFile->setTrigger(gateId, old);
+		if (walkmesh) {
+			walkmesh->update();
 		}
+
+		emit modified();
 	}
 }
 
