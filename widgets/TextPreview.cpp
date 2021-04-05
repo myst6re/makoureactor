@@ -62,7 +62,7 @@ void TextPreview::fillNames()
 	for (int i=0; i<12; ++i) {
 		names.append(FF7Text(dataNames.at(i), false).data());
 	}
-	namesWidth = calcFF7TextWidth(FF7Text("WWWWWWWWW", false).data());
+	biggestCharWidth = calcFF7TextWidth(FF7Text("W", false).data());
 //	Config::setValue("jp_txt", jp);
 }
 
@@ -297,13 +297,15 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 			caract = (quint8)ff7Text.at(i);
 			if (caract == 0xdd)
 				++i;
-			else if (caract == 0xde || caract == 0xdf || caract == 0xe1) {
-				if (caract == 0xe1)		width += spaced_characters ? spacedCharsW * 4 : 12;
+			else if (caract == 0xde || caract == 0xdf || caract == 0xe1) { // {VARHEX}, {VARDEC}, {VARDECR}
 				int zeroId = !jp ? 0x10 : 0x33;
-				width += spaced_characters ? spacedCharsW : charFullWidth(0, zeroId);
-			} else if (caract == 0xe2)
+				width += (spaced_characters ? spacedCharsW : charFullWidth(0, zeroId)) * 5;
+			} else if (caract == 0xe2) {// {MEMORY}
+				if (i + 3 >= size)		break;
+				const quint8 len = quint8(ff7Text.at(i + 3));
+				width += (spaced_characters ? spacedCharsW : biggestCharWidth) * len;
 				i += 4;
-			else if (caract == 0xe9)
+			} else if (caract == 0xe9) // {SPACED CHARACTERS}
 				spaced_characters = !spaced_characters;
 			else if (caract < 0xd2 && jp)
 				width += spaced_characters ? spacedCharsW : charFullWidth(6, caract);
@@ -318,7 +320,7 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[0]);
 				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[1]);
 			} else if (caract>=0xea && caract<=0xf5) {// Character names
-				width += spaced_characters ? spacedCharsW * 9 : namesWidth;
+				width += (spaced_characters ? spacedCharsW : biggestCharWidth) * 9;
 			} else if (caract>=0xf6 && caract<=0xf9) {// Keys
 				width += 17;
 			} else {
@@ -951,4 +953,4 @@ const char *TextPreview::optimisedDuo[3] =
 
 QList<QByteArray> TextPreview::names;
 
-int TextPreview::namesWidth;
+int TextPreview::biggestCharWidth;

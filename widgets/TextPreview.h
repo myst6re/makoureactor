@@ -104,7 +104,7 @@ private:
 	static quint8 charWidth[7][256];
 	static const char *optimisedDuo[3];
 	static QList<QByteArray> names;
-	static int namesWidth;
+	static int biggestCharWidth;
 protected:
 	void paintEvent(QPaintEvent *event);
 	void mousePressEvent(QMouseEvent *event);
