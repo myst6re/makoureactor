@@ -496,11 +496,10 @@ void WalkmeshManager::fill(Field *field, bool reload)
 	caFile = field->camera();
 	scriptsAndTexts = field->scriptsAndTexts();
 
-	walkmesh->setModelsVisible(showModels->isChecked());
-
 	int camCount = 0;
 
 	if (walkmesh) {
+		walkmesh->setModelsVisible(showModels->isChecked());
 		walkmesh->fill(field);
 	}
 
@@ -785,7 +784,7 @@ void WalkmeshManager::editCaPos(int id, double value)
 		if (cam.camera_position[id] != qint32(value)) {
 			cam.camera_position[id] = qint32(value);
 			caFile->setCamera(camID, cam);
-			walkmesh->update();
+			if (walkmesh)	walkmesh->update();
 
 			emit modified();
 		}
