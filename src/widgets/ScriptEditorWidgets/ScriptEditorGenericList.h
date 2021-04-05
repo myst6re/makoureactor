@@ -31,7 +31,7 @@ public:
 		/*10*/layer_id, parametre_id, state_id, window_id, text_id, /*15*/item_id, materia_id, animation_id, music_id, sound_id, /*20*/movie_id,
 		operateur, keys, color, coord_x, coord_y, coord_z, window_w, window_h, window_num, window_type, window_var, direction, vitesse, vitesse2,
 		priorite, menu, jump, jump_l, rotation, quantity,
-		bank, adress, byte, word, sword, bit, boolean, label, akao, dword
+		bank, adress, byte, word, sword, bit, boolean, label, akao, dword, shakeType, xAmplitude, xFrames, yAmplitude, yFrames
 	};
 
 	ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent=0);

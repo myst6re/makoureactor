@@ -55,7 +55,7 @@ public:
 	static quint8 leftPadding(int tableId, int charId);
 	static quint8 charFullWidth(int tableId, int charId);
 	static int calcFF7TextWidth(const FF7Text &ff7Text);
-	static int namesWidth;
+	static int biggestCharWidth;
 	static quint8 charWidth[7][256];
 	static const char *optimisedDuo[3];
 private:

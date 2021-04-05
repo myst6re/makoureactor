@@ -356,7 +356,7 @@
     <message>
         <location filename="widgets/ConfigWindow.cpp" line="381"/>
         <source>Lgp Archives (*.lgp);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Archives LGP (*.lgp);;Tous les fichiers (*)</translation>
     </message>
     <message>
         <location filename="widgets/ConfigWindow.cpp" line="514"/>
@@ -1912,7 +1912,7 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>Alt + clic pour aller au script</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="459"/>
+        <location filename="widgets/OpcodeList.cpp" line="484"/>
         <source>If this script is run,
  assume that the last non-empty script that runs</source>
         <translation>Si ce script est exécuté,
@@ -1920,22 +1920,22 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <location filename="widgets/OpcodeList.cpp" line="45"/>
-        <location filename="widgets/OpcodeList.cpp" line="760"/>
+        <location filename="widgets/OpcodeList.cpp" line="795"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="761"/>
+        <location filename="widgets/OpcodeList.cpp" line="796"/>
         <source>Are you sure you want to delete %1?</source>
         <translation>Voulez-vous vraiment supprimer %1 ?</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="763"/>
+        <location filename="widgets/OpcodeList.cpp" line="798"/>
         <source>the selected command</source>
         <translation>the selected command</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="764"/>
+        <location filename="widgets/OpcodeList.cpp" line="799"/>
         <source>the selected commands</source>
         <translation>les commandes sélectionnées</translation>
     </message>
@@ -3088,7 +3088,7 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="803"/>
-        <source>Return and execute script #%2 from the appellant group (Priority %1/6)</source>
+        <source>Return and execute script #%2 from the current entity (Priority %1/6)</source>
         <oldsource>Retourner et exécuter le script n°%2 du groupe appelant (priorité %1/6)</oldsource>
         <translation>Retourner et exécuter le script n°%2 du groupe appelant (priorité %1/6)</translation>
     </message>
@@ -4057,9 +4057,9 @@ Certains scripts peuvent y faire référence !</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="4154"/>
-        <source>Shake (nbSwings=%1, Amplitude=%2, speed=%3)</source>
-        <oldsource>Secouer l&apos;écran (nbOscillations=%1, Amplitude=%2, vitesse=%3)</oldsource>
-        <translation>Secouer l&apos;écran (nbOscillations=%1, Amplitude=%2, vitesse=%3)</translation>
+        <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)</source>
+        <oldsource>Secouer l&apos;écran (type=%1, xAmplitude=%2, xImg=%3, yAmplitude=%2, xImg=%3)</oldsource>
+        <translation>Secouer l&apos;écran (type=%1, xAmplitude=%2, xImg=%3, yAmplitude=%2, xImg=%3)</translation>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="4197"/>
@@ -4724,7 +4724,7 @@ Certains scripts peuvent y faire référence !</translation>
         <translation>Fin de partie</translation>
     </message>
     <message>
-        <location filename="core/field/Script.cpp" line="882"/>
+        <location filename="core/field/Script.cpp" line="878"/>
         <source>Label %1 is declared several times.</source>
         <oldsource>Le label %1 est déclaré plusieurs fois.</oldsource>
         <translation>Le label %1 est déclaré plusieurs fois.</translation>
@@ -4735,24 +4735,24 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Le label %1 est inaccessible, veuillez utiliser un saut long.</translation>
     </message>
     <message>
-        <location filename="core/field/Script.cpp" line="907"/>
+        <location filename="core/field/Script.cpp" line="926"/>
         <source>Label %1 is unreachable, please bring this instruction closer.</source>
         <translation>Le label %1 est inaccessible, rapprochez cette instruction du label.</translation>
     </message>
     <message>
-        <location filename="core/field/Script.cpp" line="912"/>
+        <location filename="core/field/Script.cpp" line="930"/>
         <source>Label %1 is unreachable because your script exceeds 65535 bytes, please reduce the size of the script.</source>
         <oldsource>Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.</oldsource>
         <translation>Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.</translation>
     </message>
     <message>
-        <location filename="core/field/Script.cpp" line="920"/>
+        <location filename="core/field/Script.cpp" line="938"/>
         <source>The label %1 is unreachable because it is located before the opcode.</source>
         <oldsource>Le label %1 est inaccessible car il se trouve avant la commande.</oldsource>
         <translation>Le label %1 est inaccessible car il se trouve avant la commande.</translation>
     </message>
     <message>
-        <location filename="core/field/Script.cpp" line="930"/>
+        <location filename="core/field/Script.cpp" line="948"/>
         <source>Script too big, it should not exceed 65535 bytes. Actual size: %1.</source>
         <oldsource>Script trop grand, il ne doit pas dépasser les 65535 octets. Taille actuelle : %1.</oldsource>
         <translation>Script too big, it should not exceed 65535 bytes. Actual size: %1.</translation>
@@ -4820,66 +4820,66 @@ id=%2
         <translation>Impossible de renommer les fichiers temporaires vers le chemin de destination</translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="405"/>
+        <location filename="core/field/Field.cpp" line="414"/>
         <source>File size greater than 10000000</source>
         <translation>Taille du fichier supérieure à 10000000</translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="418"/>
+        <location filename="core/field/Field.cpp" line="427"/>
         <source>Malformed LZS header</source>
         <translation>En-tête LZS mal formée</translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="446"/>
-        <location filename="core/field/Field.cpp" line="550"/>
+        <location filename="core/field/Field.cpp" line="455"/>
+        <location filename="core/field/Field.cpp" line="559"/>
         <source>Incorrect field file size</source>
         <translation>Taille du fichier d&apos;écran incorrecte</translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="459"/>
-        <location filename="core/field/Field.cpp" line="558"/>
+        <location filename="core/field/Field.cpp" line="468"/>
+        <location filename="core/field/Field.cpp" line="567"/>
         <source>Cannot open section 1 (texts, scripts and musics)</source>
         <translation>Impossible d&apos;ouvrir la section 1 (textes, scripts et musiques)</translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="467"/>
-        <location filename="core/field/Field.cpp" line="566"/>
+        <location filename="core/field/Field.cpp" line="476"/>
+        <location filename="core/field/Field.cpp" line="575"/>
         <source>Cannot open tutos section</source>
         <translation>Impossible d&apos;ouvrir la partie tutoriels</translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="475"/>
-        <location filename="core/field/Field.cpp" line="581"/>
+        <location filename="core/field/Field.cpp" line="484"/>
+        <location filename="core/field/Field.cpp" line="590"/>
         <source>Cannot open encounters section</source>
         <translation>Impossible d&apos;ouvrir la partie rencontres aléatoires</translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="483"/>
-        <location filename="core/field/Field.cpp" line="589"/>
+        <location filename="core/field/Field.cpp" line="492"/>
+        <location filename="core/field/Field.cpp" line="598"/>
         <source>Cannot open walkmesh section</source>
         <translation>Impossible d&apos;ouvrir la partie walkmesh</translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="491"/>
-        <location filename="core/field/Field.cpp" line="597"/>
+        <location filename="core/field/Field.cpp" line="500"/>
+        <location filename="core/field/Field.cpp" line="606"/>
         <source>Cannot open camera section</source>
         <translation>Impossible d&apos;ouvrir la partie caméra</translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="499"/>
-        <location filename="core/field/Field.cpp" line="605"/>
+        <location filename="core/field/Field.cpp" line="508"/>
+        <location filename="core/field/Field.cpp" line="614"/>
         <source>Cannot open info section</source>
         <translation>Impossible d&apos;ouvrir la partie infos</translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="507"/>
-        <location filename="core/field/Field.cpp" line="574"/>
+        <location filename="core/field/Field.cpp" line="516"/>
+        <location filename="core/field/Field.cpp" line="583"/>
         <source>Cannot open model loader section</source>
         <translation>Impossible d&apos;ouvrir la partie qui liste les modèles 3D</translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="536"/>
-        <location filename="core/field/Field.cpp" line="627"/>
+        <location filename="core/field/Field.cpp" line="545"/>
+        <location filename="core/field/Field.cpp" line="636"/>
         <source>Cannot open background section</source>
         <translation>Impossible d&apos;ouvrir la partie décors</translation>
     </message>
@@ -6454,151 +6454,151 @@ id=%2
 <context>
     <name>ScriptEditorGenericList</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="599"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="600"/>
         <source>Long</source>
         <oldsource>Entier long</oldsource>
         <translation>Entier long</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="600"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="601"/>
         <source>Signed long</source>
         <oldsource>Entier long signé</oldsource>
         <translation>Entier long signé</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="601"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="602"/>
         <source>X coordinate</source>
         <oldsource>Coordonnée X</oldsource>
         <translation>Coordonnée X</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="602"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="603"/>
         <source>Y coordinate</source>
         <oldsource>Coordonnée Y</oldsource>
         <translation>Coordonnée Y</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="603"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="604"/>
         <source>Z coordinate</source>
         <oldsource>Coordonnée Z</oldsource>
         <translation>Coordonnée Z</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="605"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="606"/>
         <source>Tutorial</source>
         <oldsource>Tutoriel</oldsource>
         <translation>Tutoriel</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="607"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="608"/>
         <source>Disc</source>
         <oldsource>Disque</oldsource>
         <translation>Disque</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="608"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="609"/>
         <source>Minigame</source>
         <oldsource>Mini-jeu</oldsource>
         <translation>Mini-jeu</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="611"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="612"/>
         <source>Speed (16-bit)</source>
         <oldsource>Vitesse (16 bits)</oldsource>
         <translation>Vitesse (16 bits)</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="612"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="613"/>
         <source>Direction</source>
         <translation>Direction</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="613"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="614"/>
         <source>Triangle</source>
         <translation>Triangle</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="614"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="615"/>
         <source>Group</source>
         <oldsource>Groupe</oldsource>
         <translation>Groupe</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="615"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="616"/>
         <source>Script</source>
         <translation>Script</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="617"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="618"/>
         <source>Bank</source>
         <translation>Bank</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="618"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="619"/>
         <source>Address</source>
         <oldsource>Adresse</oldsource>
         <translation>Adresse</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="619"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="620"/>
         <source>Priority</source>
         <oldsource>Priorité</oldsource>
         <translation>Priorité</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="620"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="621"/>
         <source>Flag</source>
         <translation>Flag</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="623"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="624"/>
         <source>Operator</source>
         <oldsource>Opérateur</oldsource>
         <translation>Opérateur</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="624"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="625"/>
         <source>Boolean</source>
         <oldsource>Booléen</oldsource>
         <translation>Booléen</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="626"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="627"/>
         <source>Parameter</source>
         <oldsource>Paramètre</oldsource>
         <translation>Paramètre</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="627"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="628"/>
         <source>State</source>
         <oldsource>État</oldsource>
         <translation>État</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="631"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="632"/>
         <source>Variable</source>
         <translation>Variable</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="633"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="634"/>
         <source>Rotation</source>
         <oldsource>Sens de rotation</oldsource>
         <translation>Sens de rotation</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="634"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="635"/>
         <source>Display Type</source>
         <oldsource>Type d&apos;affichage</oldsource>
         <translation>Type d&apos;affichage</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="635"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="636"/>
         <source>Text</source>
         <oldsource>Texte</oldsource>
         <translation>Texte</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="636"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="637"/>
         <source>Menu</source>
         <translation>Menu</translation>
     </message>
@@ -6618,134 +6618,159 @@ id=%2
         <translation>Paramètres :</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="598"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="599"/>
         <source>Double long</source>
         <translation>Entier double long</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="604"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="605"/>
         <source>Map</source>
         <translation>Écran</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="606"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="607"/>
         <source>Character</source>
         <translation>Personnage</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="609"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="610"/>
         <source>Short</source>
         <translation>Entier court</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="610"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="611"/>
         <source>Speed (8-bit)</source>
         <translation>Vitesse (8 bits)</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="616"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="617"/>
         <source>Team member</source>
         <translation>Équipier</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="621"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="622"/>
         <source>Jump (short)</source>
         <translation>Saut court</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="622"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="623"/>
         <source>Jump (long)</source>
         <oldsource>Jumb (long)</oldsource>
         <translation>Saut long</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="625"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="626"/>
         <source>Layer</source>
         <translation>Couche</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="628"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="629"/>
         <source>Window</source>
         <translation>Fenêtre</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="629"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="630"/>
         <source>Width</source>
         <translation>Largeur</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="630"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="631"/>
         <source>Height</source>
         <translation>Hauteur</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="632"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="633"/>
         <source>Key(s)</source>
         <translation>Touche(s)</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="637"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="638"/>
         <source>Window Type</source>
         <translation>Type de fenêtre</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="638"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="639"/>
         <source>Item</source>
         <translation>Objet</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="639"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="640"/>
         <source>Materia</source>
         <oldsource>Matéria</oldsource>
         <translation>Matéria</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="640"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="641"/>
         <source>Quantity</source>
         <oldsource>Quantité</oldsource>
         <translation>Quantité</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="641"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="642"/>
         <source>Color</source>
         <oldsource>Couleur</oldsource>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="642"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="643"/>
         <source>Animation</source>
         <translation>Animation</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="643"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="644"/>
         <source>Music</source>
         <oldsource>Musique</oldsource>
         <translation>Musique</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="644"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="645"/>
         <source>Sound</source>
         <oldsource>Son</oldsource>
         <translation>Son</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="645"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="646"/>
         <source>Video</source>
         <oldsource>Vidéo</oldsource>
         <translation>Vidéo</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="646"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="647"/>
         <source>Label</source>
         <translation>Label</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="647"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="648"/>
         <source>Sound operation</source>
         <translation>Opération sur le son</translation>
     </message>
     <message>
         <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="649"/>
+        <source>Shake type</source>
+        <translation>Type de mouvement</translation>
+    </message>
+    <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="650"/>
+        <source>X Amplitude</source>
+        <translation>Amplitude X</translation>
+    </message>
+    <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="651"/>
+        <source>X Frames</source>
+        <translation>Frames X</translation>
+    </message>
+    <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="652"/>
+        <source>Y Amplitude</source>
+        <translation>Amplitude Y</translation>
+    </message>
+    <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="653"/>
+        <source>Y Frames</source>
+        <translation>Frames Y</translation>
+    </message>
+    <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="655"/>
         <source>???</source>
         <translation>???</translation>
     </message>
@@ -8414,14 +8439,12 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation>Zoom écran :</translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="500"/>
         <source>Opening error</source>
-        <translation>Erreur d&apos;ouverture</translation>
+        <translation type="vanished">Erreur d&apos;ouverture</translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="500"/>
         <source>Error opening walkmesh</source>
-        <translation>Erreur d&apos;ouverture du walkmesh</translation>
+        <translation type="vanished">Erreur d&apos;ouverture du walkmesh</translation>
     </message>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="250"/>
@@ -8511,47 +8534,47 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation>Hauteur focus caméra sur le personnage :</translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="516"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="716"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="718"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="738"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="513"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="713"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="715"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="735"/>
         <source>Camera %1</source>
         <oldsource>Caméra %1</oldsource>
         <translation>Caméra %1</translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="532"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="847"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="849"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="867"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="529"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="844"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="846"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="864"/>
         <source>Triangle %1</source>
         <translation>Triangle %1</translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="559"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="556"/>
         <location filename="widgets/WalkmeshManager.cpp" line="1199"/>
         <source>Door %1</source>
         <oldsource>Porte %1</oldsource>
         <translation>Porte %1</translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="547"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="561"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="577"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="544"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="558"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="574"/>
         <location filename="widgets/WalkmeshManager.cpp" line="1143"/>
         <location filename="widgets/WalkmeshManager.cpp" line="1203"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1315"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1319"/>
         <source>Unused</source>
         <translation>Inutilisé</translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="575"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1311"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="572"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1315"/>
         <source>Arrow %1</source>
         <translation>Flèche %1</translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="1015"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1011"/>
         <source>?</source>
         <translation>?</translation>
     </message>
