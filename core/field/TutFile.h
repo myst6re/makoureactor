@@ -20,6 +20,7 @@
 
 #include <QtCore>
 #include "FieldPart.h"
+#include "core/AkaoIO.h"
 
 class TutFile : public FieldPart
 {
@@ -62,6 +63,7 @@ public:
 	}
 	virtual QString parseScripts(int tutID, bool *warnings = nullptr) const;
 	virtual bool parseText(int tutID, const QString &tuto);
+	QString channelToString(int tutID, quint8 channel) const;
 	static void testParsing();
 protected:
 	virtual QList<quint32> openPositions(const QByteArray &data) const=0;

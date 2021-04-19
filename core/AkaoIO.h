@@ -2,15 +2,17 @@
 #define AKAOIO_H
 
 #include "core/IO.h"
-#include "core/Akao.h"
+#include "core/AkaoFile.h"
 
 class AkaoIO : public IO
 {
 public:
 	explicit AkaoIO(QIODevice *device);
 	virtual ~AkaoIO() {}
-	bool read(Akao &akao) const;
-	bool write(const Akao &akao) const;
+	bool read(AkaoFile &akao);
+	bool write(const AkaoFile &akao);
+private:
+	static quint8 _opcodeParamsLen[0x60];
 };
 
 #endif // AKAOIO_H

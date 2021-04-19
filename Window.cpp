@@ -88,7 +88,7 @@ Window::Window() :
 	QAction *actionText = menu->addAction(QIcon(":/images/text-editor.png"), tr("&Texts..."), this, SLOT(textManager()), QKeySequence("Ctrl+T"));
 	actionModels = menu->addAction(QIcon(":/images/model.png"), tr("Map &Models..."), this, SLOT(modelManager()), QKeySequence("Ctrl+M"));
 	actionEncounter = menu->addAction(tr("Encounte&rs..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
-	menu->addAction(tr("Tutorials/&Sounds..."), this, SLOT(tutManager()), QKeySequence("Ctrl+K"));
+	menu->addAction(tr("Mu&sics/Tutorials..."), this, SLOT(tutManager()), QKeySequence("Ctrl+K"));
 	QAction *actionWalkmesh = menu->addAction(QIcon(":/images/location.png"), tr("&Walkmesh..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
 	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("M&iscellaneous..."), this, SLOT(miscManager()));

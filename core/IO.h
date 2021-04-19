@@ -19,8 +19,14 @@ public:
 
 	bool canRead() const;
 	bool canWrite() const;
+	QString errorString() const;
+protected:
+	inline void setError(const QString &error) {
+		_error = error;
+	}
 private:
 	QIODevice *_device;
+	QString _error;
 };
 
 #endif // IO_H

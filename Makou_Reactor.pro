@@ -9,6 +9,9 @@ HEADERS += \
     Window.h \
     Parameters.h \
     Data.h \
+    core/AkaoDrumInstr.h \
+    core/AkaoFile.h \
+    core/AkaoInstr.h \
     core/PsfFile.h \
     core/field/BackgroundTilesFile.h \
     core/field/MaplistFile.h \
@@ -148,12 +151,14 @@ HEADERS += \
     widgets/FieldList.h \
     widgets/Splitter.h \
     core/AkaoIO.h \
-    core/Akao.h \
     core/Clipboard.h \
     widgets/ModelColorsLayout.h
 
 SOURCES += \
     Window.cpp \
+    core/AkaoDrumInstr.cpp \
+    core/AkaoFile.cpp \
+    core/AkaoInstr.cpp \
     core/PsfFile.cpp \
     core/field/BackgroundTilesFile.cpp \
     core/field/MaplistFile.cpp \
@@ -296,7 +301,6 @@ SOURCES += \
     widgets/FieldList.cpp \
     widgets/Splitter.cpp \
     core/AkaoIO.cpp \
-    core/Akao.cpp \
     core/Clipboard.cpp \
     widgets/ModelColorsLayout.cpp
 

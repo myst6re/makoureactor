@@ -25,7 +25,7 @@
 TutWidget::TutWidget(QWidget *parent) :
 	QDialog(parent, Qt::Tool), copied(false)
 {
-	setWindowTitle(tr("Tutorials/Sounds"));
+	setWindowTitle(tr("Musics/Tutorials"));
 
 	ListWidget *_list = new ListWidget(this);
 	_list->addAction(ListWidget::Add, tr("Add"), this, SLOT(add()));
@@ -99,9 +99,9 @@ void TutWidget::fill(Field *field, TutFilePC *tutPC, bool reload)
 
 void TutWidget::clear()
 {
-	tut = 0;
-	tutPC = 0;
-	currentTut = 0;
+	tut = nullptr;
+	tutPC = nullptr;
+	currentTut = nullptr;
 	usedTuts.clear();
 	list->clear();
 	textEdit->clear();
@@ -125,14 +125,19 @@ QWidget *TutWidget::buildSoundPage()
 {
 	QWidget *ret = new QWidget(this);
 
+	akaoChannelList = new QListWidget(ret);
+
+	for (quint8 i = 0; i < 24; ++i) {
+		akaoChannelList->addItem(new QListWidgetItem(tr("Channel %1").arg(i)));
+	}
+
 	akaoIDList = new QComboBox(ret);
 	akaoIDList->setEditable(true);
 	int i=0;
 	for (const QString &musicName : qAsConst(Data::music_names)) {
 		akaoIDList->addItem(tr("%1 - %2 : %3")
-							.arg(i, 2, 10, QChar('0'))
-							.arg(musicName)
-							.arg(Data::music_desc.at(i)), i);
+		                    .arg(i, 2, 10, QChar('0'))
+		                    .arg(musicName, Data::music_desc.at(i)), i);
 		++i;
 	}
 
@@ -141,12 +146,19 @@ QWidget *TutWidget::buildSoundPage()
 	akaoDesc->setWordWrap(true);
 	akaoDesc->hide();
 
+	textEdit2 = new QPlainTextEdit(this);
+	textEdit2->setLineWrapMode(QPlainTextEdit::NoWrap);
+
 	QGridLayout *layout = new QGridLayout(ret);
-	layout->addWidget(new QLabel(tr("Music ID:")), 0, 0);
-	layout->addWidget(akaoIDList, 0, 1);
-	layout->addWidget(akaoDesc, 1, 0, 1, 2);
-	layout->setRowStretch(2, 1);
+	layout->addWidget(akaoChannelList, 0, 0, 4, 1);
+	layout->addWidget(new QLabel(tr("Music ID:")), 0, 1);
+	layout->addWidget(akaoIDList, 0, 2);
+	layout->addWidget(akaoDesc, 1, 1, 1, 2);
+	layout->addWidget(textEdit2, 2, 1, 1, 2);
+	layout->setRowStretch(3, 1);
 	layout->setContentsMargins(QMargins());
+
+	connect(akaoChannelList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), SLOT(showAkaoChannel(QListWidgetItem*,QListWidgetItem*)));
 
 	return ret;
 }
@@ -287,6 +299,19 @@ void TutWidget::showText(QListWidgetItem *item, QListWidgetItem *lastItem)
 	textEdit->setReadOnly(!isTut);
 	exportButton->setEnabled(true);
 	importButton->setEnabled(true);
+}
+
+void TutWidget::showAkaoChannel(QListWidgetItem *item, QListWidgetItem *lastItem)
+{
+	Q_UNUSED(lastItem);
+
+	if (item == nullptr) {
+		return;
+	}
+
+	int id = currentRow();
+	int channel = akaoChannelList->row(item);
+	textEdit2->setPlainText(currentTut->channelToString(id, quint8(channel)));
 }
 
 void TutWidget::saveText(QListWidgetItem *item)

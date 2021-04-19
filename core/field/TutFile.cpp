@@ -307,6 +307,28 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 	return true;
 }
 
+QString TutFile::channelToString(int tutID, quint8 channel) const
+{
+	AkaoFile akao;
+	QByteArray data = tutos.at(tutID);
+
+	QBuffer buffer(&data);
+	buffer.open(QIODevice::ReadOnly);
+	AkaoIO io(&buffer);
+	if (!io.read(akao)) {
+		return io.errorString();
+	}
+
+	QString ret;
+
+	for (const AkaoInstr &instrs: akao.instructions(channel)) {
+		ret.append(instrs.toString());
+		ret.append("\n");
+	}
+
+	return ret;
+}
+
 #include "TutFileStandard.h"
 
 void TutFile::testParsing()

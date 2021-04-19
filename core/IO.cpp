@@ -31,3 +31,8 @@ bool IO::canWrite() const
 	return false;
 }
 
+QString IO::errorString() const
+{
+	return _error.isEmpty() ? _device->errorString() : _error;
+}
+

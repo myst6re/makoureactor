@@ -36,6 +36,7 @@ signals:
 private slots:
 	void changeVersion(bool isPS);
 	void showText(QListWidgetItem *item, QListWidgetItem *lastItem);
+	void showAkaoChannel(QListWidgetItem *item, QListWidgetItem *lastItem);
 	void setTextChanged();
 	void add();
 	void del();
@@ -63,11 +64,11 @@ private:
 
 	QStackedWidget *stackedWidget;
 	QRadioButton *versionPS, *versionPC;
-	QListWidget *list;
+	QListWidget *list, *akaoChannelList;
 	QPushButton *exportButton, *importButton,
 	            *repairButton, *createNewAkaoButton,
 	            *createNewTutoButton;
-	QPlainTextEdit *textEdit;
+	QPlainTextEdit *textEdit, *textEdit2;
 	QLabel *akaoDesc;
 	QComboBox *akaoIDList;
 	Field *field;
