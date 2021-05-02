@@ -35,7 +35,7 @@ void ScriptEditorBinaryOpPage::build()
 	operationList->addItem(tr("Subtraction (capped)"));
 	operationList->addItem(tr("Multiplication"));
 	operationList->addItem(tr("Division"));
-	operationList->addItem(tr("Modulas"));
+	operationList->addItem(tr("Modulo"));
 	operationList->addItem(tr("And"));
 	operationList->addItem(tr("Or"));
 	operationList->addItem(tr("Exclusive or"));
@@ -54,11 +54,16 @@ void ScriptEditorBinaryOpPage::build()
 	varOrValue = new VarOrValueWidget(this);
 	varOrValue->setSignedValueType(false);
 
+	helpWidget = new HelpWidget(32, HelpWidget::IconInfo, this);
+	helpWidget->setText(tr("It is not possible to divide per 0 or use mod 0, or the game will crash."));
+	helpWidget->hide();
+
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(var, 0, 0);
 	layout->addWidget(operationList, 1, 0);
 	layout->addWidget(typeGroup, 1, 1);
 	layout->addWidget(varOrValue, 2, 0);
+	layout->addWidget(helpWidget, 4, 0, 1, 2, Qt::AlignBottom);
 	layout->setRowStretch(3, 1);
 	layout->setColumnStretch(1, 1);
 	layout->setContentsMargins(QMargins());
@@ -104,6 +109,7 @@ void ScriptEditorBinaryOpPage::setOpcode(Opcode *opcode)
 
 	type1->setEnabled(true);
 	type2->setEnabled(true);
+	helpWidget->hide();
 
 	switch ((Opcode::Keys)opcode->id()) {
 	case Opcode::SETBYTE:case Opcode::SETWORD:
@@ -126,9 +132,11 @@ void ScriptEditorBinaryOpPage::setOpcode(Opcode *opcode)
 		break;
 	case Opcode::DIV:case Opcode::DIV2:
 		operationList->setCurrentIndex(6);
+		helpWidget->show();
 		break;
 	case Opcode::MOD:case Opcode::MOD2:
 		operationList->setCurrentIndex(7);
+		helpWidget->show();
 		break;
 	case Opcode::AND:case Opcode::AND2:
 		operationList->setCurrentIndex(8);
@@ -222,6 +230,7 @@ void ScriptEditorBinaryOpPage::changeCurrentOpcode(int index)
 
 	type1->setEnabled(true);
 	type2->setEnabled(true);
+	helpWidget->hide();
 
 	switch (index) {
 	case 0:
@@ -258,11 +267,13 @@ void ScriptEditorBinaryOpPage::changeCurrentOpcode(int index)
 		key = type1->isChecked()
 				? Opcode::DIV
 				: Opcode::DIV2;
+		helpWidget->show();
 		break;
 	case 7:
 		key = type1->isChecked()
 				? Opcode::MOD
 				: Opcode::MOD2;
+		helpWidget->show();
 		break;
 	case 8:
 		key = type1->isChecked()
