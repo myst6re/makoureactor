@@ -65,7 +65,7 @@ GrpScriptList::GrpScriptList(QWidget *parent) :
 	down_A->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 	down_A->setEnabled(false);
 
-	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), SLOT(rename(QTreeWidgetItem *, int)));
+	connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(rename(QTreeWidgetItem*,int)));
 	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(evidence(QTreeWidgetItem*,QTreeWidgetItem*)));
 	connect(this, SIGNAL(itemSelectionChanged()), SLOT(upDownEnabled()));
 
@@ -94,7 +94,7 @@ GrpScriptList::GrpScriptList(QWidget *parent) :
 	this->addAction(down_A);
 
 	_toolBar = new QToolBar(tr("&Group Editor"));
-	_toolBar->setIconSize(QSize(14*scale,14*scale));
+	_toolBar->setIconSize(QSize(14 * int(scale), 14 * int(scale)));
 	_toolBar->addAction(add_A);
 	add_A->setStatusTip(tr("Add a group"));
 	_toolBar->addAction(del_A);
@@ -111,11 +111,6 @@ GrpScriptList::GrpScriptList(QWidget *parent) :
 	enableActions(false);
 
 	setMinimumWidth(_toolBar->sizeHint().width());
-}
-
-GrpScriptList::~GrpScriptList()
-{
-	qDeleteAll(grpScriptCopied);
 }
 
 void GrpScriptList::evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous)
@@ -272,7 +267,7 @@ void GrpScriptList::rename(QTreeWidgetItem *item, int column)
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 	editItem(item, 1);
 	item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-	connect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOK(QTreeWidgetItem *, int)));
+	connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(renameOK(QTreeWidgetItem*,int)));
 }
 
 void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
@@ -356,7 +351,7 @@ void GrpScriptList::copy()
 
 	clearCopiedGroups();
 	for (const int &id : qAsConst(selectedIDs)) {
-		grpScriptCopied.append(new GrpScript(*scripts->grpScript(id)));
+		grpScriptCopied.append(GrpScript(*scripts->grpScript(id)));
 	}
 
 	actions().at(PasteAction)->setEnabled(true);
@@ -372,8 +367,8 @@ void GrpScriptList::paste()
 		grpScriptID = topLevelItemCount(); // Last position
 	}
 	int i = grpScriptID;
-	for (GrpScript *GScopied : qAsConst(grpScriptCopied)) {
-		scripts->insertGrpScript(i++, new GrpScript(*GScopied));
+	for (const GrpScript &GScopied : qAsConst(grpScriptCopied)) {
+		scripts->insertGrpScript(i++, new GrpScript(GScopied));
 	}
 
 	fill();
@@ -384,7 +379,6 @@ void GrpScriptList::paste()
 void GrpScriptList::clearCopiedGroups()
 {
 	actions().at(PasteAction)->setEnabled(false);
-	qDeleteAll(grpScriptCopied);
 	grpScriptCopied.clear();
 }
 
@@ -439,8 +433,9 @@ int GrpScriptList::selectedID()
 QList<int> GrpScriptList::selectedIDs()
 {
 	QList<int> list;
+	QList<QTreeWidgetItem *> selItems = selectedItems();
 
-	for (QTreeWidgetItem *item : selectedItems()) {
+	for (const QTreeWidgetItem *item : selItems) {
 		list.append(item->text(0).toInt());
 	}
 
