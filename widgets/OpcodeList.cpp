@@ -25,6 +25,8 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	QTreeWidget(parent), isInit(false), _treeEnabled(true),
     field(nullptr), grpScript(nullptr), script(nullptr), errorLine(-1)
 {
+	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
+
 	setColumnCount(1);
 	setHeaderLabels(QStringList(tr("Action")));
 	setAutoScroll(false);
@@ -137,7 +139,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	helpLayout->setContentsMargins(QMargins());
 	
 	_toolBar = new QToolBar(tr("&Script editor"));
-	_toolBar->setIconSize(QSize(14,14));
+	_toolBar->setIconSize(QSize(int(14 * scale), int(14 * scale)));
 	_toolBar->setFloatable(false);
 	_toolBar->setAllowedAreas(Qt::NoToolBarArea);
 	_toolBar->setMovable(false);

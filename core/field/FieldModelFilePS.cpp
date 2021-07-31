@@ -63,8 +63,13 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 			case 9:    fileName = "VINCENT";    break;
 			}
 
+			QByteArray BCXData = currentField->io()->fileData(fileName + ".BCX");
+			if (BCXData.isEmpty()) {
+				qWarning() << "FieldModelFilePS::load cannot open bcx file";
+				return false;
+			}
 			QBuffer ioBcx;
-			ioBcx.setData(currentField->io()->fileData(fileName + ".BCX"));
+			ioBcx.setData(BCXData);
 			if (!ioBcx.open(QIODevice::ReadOnly)) {
 				qWarning() << "FieldModelFilePS::load cannot open bcx buffer" << ioBcx.errorString();
 				return false;
@@ -78,6 +83,10 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 	}
 
 	QByteArray BSXData = currentField->io()->modelData(currentField);
+	if (BSXData.isEmpty()) {
+		qWarning() << "FieldModelFilePS::load cannot open bsx file";
+		return false;
+	}
 	QBuffer ioBsx;
 	ioBsx.setData(BSXData);
 	if (!ioBsx.open(QIODevice::ReadOnly)) {

@@ -32,6 +32,8 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 	model = new QCheckBox(tr("Model loader"));
 	mim = new QCheckBox(tr("Background"));
 
+	notCompressed = new QCheckBox(tr("File is not compressed"));
+
 	model->setEnabled((isDat && !sourceSameTypeAsTarget) ||
 	                  (!isDat && sourceSameTypeAsTarget));
 	mim->setEnabled((isDat && !sourceSameTypeAsTarget) ||
@@ -105,6 +107,7 @@ ImportDialog::ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QStrin
 
 	layout = new QVBoxLayout(this);
 	layout->addWidget(group);
+	layout->addWidget(notCompressed);
 	layout->addWidget(buttonBox);
 	layout->addStretch();
 
@@ -130,6 +133,11 @@ Field::FieldSections ImportDialog::parts() const
 	if (mim->isChecked())		parts |= Field::Background;
 
 	return parts;
+}
+
+bool ImportDialog::isCompressed() const
+{
+	return ! notCompressed->isChecked();
 }
 
 QString ImportDialog::bsxPath() const

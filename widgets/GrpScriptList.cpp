@@ -94,7 +94,7 @@ GrpScriptList::GrpScriptList(QWidget *parent) :
 	this->addAction(down_A);
 
 	_toolBar = new QToolBar(tr("&Group Editor"));
-	_toolBar->setIconSize(QSize(14 * int(scale), 14 * int(scale)));
+	_toolBar->setIconSize(QSize(int(14 * scale), int(14 * scale)));
 	_toolBar->addAction(add_A);
 	add_A->setStatusTip(tr("Add a group"));
 	_toolBar->addAction(del_A);

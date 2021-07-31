@@ -33,7 +33,7 @@ void FieldPS::openHeader(const QByteArray &fileData)
 	memcpy(sectionPositions, fileData.constData(), headerSize()); // header
 	vramDiff = sectionPositions[0] - headerSize();// vram section1 pos - real section 1 pos
 
-	for (int i=0; i<7; ++i) {
+	for (quint8 i=0; i<7; ++i) {
 		sectionPositions[i] -= vramDiff;
 	}
 }

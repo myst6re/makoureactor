@@ -1298,11 +1298,9 @@ void Window::importToCurrentMap()
 	int index;
 	QString name, selectedFilter,
 	    pc = tr("PC Field Map (*)"),
-	    dat = tr("DAT File (*.DAT)"),
-	    decPc = tr("Uncompressed PC Field Map (*)"),
-	    decDat = tr("Uncompressed DAT File (*)");
+	    dat = tr("PS Field Map (*.DAT)");
 	QStringList filter;
-	filter << pc << dat << decPc << decDat;
+	filter << dat << pc;
 
 	name = _fieldList->selectedItems().first()->text(0);
 	if (fieldArchive->io()->isPS())
@@ -1312,8 +1310,7 @@ void Window::importToCurrentMap()
 	path = QFileDialog::getOpenFileName(this, tr("Import a file"), path+name, filter.join(";;"), &selectedFilter);
 	if (path.isNull())		return;
 
-	bool isDat = selectedFilter == dat || selectedFilter == decDat;
-	bool isCompressed = !isDat && (selectedFilter == pc || selectedFilter == decPc);
+	bool isDat = selectedFilter == dat;
 
 	ImportDialog dialog((isDat && fieldArchive->io()->isPS())
 						|| (!isDat && fieldArchive->io()->isPC()),
@@ -1328,8 +1325,8 @@ void Window::importToCurrentMap()
 	}
 
 	QFile bsxDevice(dialog.bsxPath()), mimDevice(dialog.mimPath());
-	
-	if (!field->importer(path, isDat, isCompressed, parts, &bsxDevice, &mimDevice)) {
+
+	if (!field->importer(path, isDat, dialog.isCompressed(), parts, &bsxDevice, &mimDevice)) {
 		QMessageBox::warning(this, tr("Error"), field->errorString());
 		return;
 	}
