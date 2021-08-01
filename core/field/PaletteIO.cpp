@@ -60,7 +60,7 @@ bool PaletteIO::write(const Palettes &palettes) const
 	}
 
 	const quint16 palW = 256, palH = palettes.size();
-	const quint32 size = 8 + 512 * palH;
+	const quint32 size = 12 + 512 * palH;
 	const quint16 palX = 0, palY = 480;
 
 	device()->write((char *)&size, 4);
@@ -161,7 +161,11 @@ bool PaletteIOPC::writeAfter(const Palettes &palettes) const
 		++palId;
 	}
 
-	if (deviceAlpha()->write(QByteArray(24 - palId, '\0')) != 24 - palId) {
+	if (palId < 16 && deviceAlpha()->write(QByteArray(16 - palId, '\x01')) != 16 - palId) {
+		return false;
+	}
+
+	if (deviceAlpha()->write(QByteArray(8, '\0')) != 8) {
 		return false;
 	}
 
