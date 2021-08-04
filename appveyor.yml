@@ -42,7 +42,7 @@ deploy:
   description: Description # Mandatory
   provider: GitHub
   auth_token:
-    secure: Q8v2IrepAs+HGD3atYI/0cI52LrxaYzRZKDBaFMSjsz1NPoUrj+Q4lZaZzFaLa4v
+    secure: FFSAXpL8H1r+SbvKgFx9JgXEYOI3BS7KcyJGK384TJVb+78rGQ8MAmSBEKTyzqm7
   artifact: /makoureactor-.*\.zip/
   on:
     branch: develop
