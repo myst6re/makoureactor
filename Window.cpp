@@ -1159,7 +1159,7 @@ void Window::exportCurrentMap()
 			fieldLzs = tr("PC Field Map (*)"),
 			dat = tr("Data DAT File (*.DAT)"),
 			mim = tr("Textures MIM File (*.MIM)"),
-			fieldDec = tr("Uncompressed PC Field Map (*)");
+			fieldDec = tr("Uncompressed PC Field Map (*.dec)");
 
 	name = _fieldList->selectedItems().first()->text(0);
 
