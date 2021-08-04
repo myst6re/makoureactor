@@ -44,8 +44,11 @@ protected:
 	virtual FieldModelLoader *modelLoader() const;
 	virtual Field *field() const;
 	virtual const QList<FieldModelColorDir> &lightColors(int modelID) const=0;
+	virtual void setLightColor(int modelID, int id, const FieldModelColorDir &color)=0;
 	virtual QRgb globalColor(int modelID) const=0;
+	virtual void setGlobalColor(int modelID, QRgb color)=0;
 	virtual quint16 modelScale(int modelID) const=0;
+	virtual void setModelScale(int modelID, quint16 scale)=0;
 	int currentModelID(QTreeWidgetItem *item=0) const;
 	QList<int> selectedModelIDs() const;
 	int currentAnimID(QTreeWidgetItem *item=0) const;
@@ -67,6 +70,9 @@ private:
 private slots:
 	void showModelInfos(QTreeWidgetItem *item, QTreeWidgetItem *previous = 0);
 	void setModelUnknown(int unknown);
+	void setModelScale(int scale);
+	void setModelGlobalColor(int id, QRgb color);
+	void setModelColor(int id, const FieldModelColorDir &color);
 	void showModel(QTreeWidgetItem *item);
 };
 

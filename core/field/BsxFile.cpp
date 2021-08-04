@@ -55,8 +55,6 @@ bool BsxFile::read(QList<FieldModelFilePS *> &models)
 		return false;
 	}
 
-
-
 	return true;
 }
 

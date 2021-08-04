@@ -35,20 +35,35 @@ public:
 	inline const QList<FieldModelColorDir> &lightColors() const {
 		return _colors;
 	}
+	inline void setLightColors(const QList<FieldModelColorDir> &colors) {
+		if (colors != _colors) {
+			_colors = colors;
+			_isModified = true;
+		}
+	}
+	inline void setLightColor(int id, const FieldModelColorDir &color) {
+		if (_colors.at(id) != color) {
+			_colors.replace(id, color);
+			_isModified = true;
+		}
+	}
 	inline QRgb globalColor() const {
 		return _globalColor;
 	}
-	inline void setLightColors(const QList<FieldModelColorDir> &colors) {
-		_colors = colors;
-	}
 	inline void setGlobalColor(QRgb color) {
-		_globalColor = color;
+		if (_globalColor != color) {
+			_globalColor = color;
+			_isModified = true;
+		}
 	}
 	inline quint16 scale() const {
 		return _scale;
 	}
 	inline void setScale(quint16 scale) {
-		_scale = scale;
+		if (_scale != scale) {
+			_scale = scale;
+			_isModified = true;
+		}
 	}
 	bool load(FieldPS *currentField, int modelID, int animationID, bool animate);
 	QImage loadedTexture(FieldModelGroup *group);
@@ -61,11 +76,12 @@ private:
 	Q_DISABLE_COPY(FieldModelFilePS)
 	QList<FieldModelColorDir> _colors;
 	QRgb _globalColor;
-	quint16 _scale;
 	FieldPS *_currentField;
 	int _currentModelID;
 	QHash<FieldModelGroup *, QImage> _loadedTex;
 	FieldModelTexturesPS _textures;
+	quint16 _scale;
+	bool _isModified;
 };
 
 #endif // FIELDMODELFILEPS_H

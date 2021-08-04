@@ -318,17 +318,51 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 		}
 		Field *field = it.next(false);
 		if (field && field->isOpen() && field->isModified()) {
-			IsoFile *isoField = isoFieldDirectory->file(field->name().toUpper() + ".DAT");
-			if (isoField == nullptr) {
-				continue;
+			FieldPS *fieldPS = static_cast<FieldPS *>(field);
+
+			if (fieldPS->isDatModified()) {
+				IsoFile *isoField = isoFieldDirectory->file(field->name().toUpper() + ".DAT");
+				if (isoField == nullptr) {
+					continue;
+				}
+
+				QByteArray newData;
+
+				if (field->save(newData, true)) {
+					return Invalid;
+				}
+
+				isoField->setModifiedFile(newData);
 			}
 
-			QByteArray newData;
+			if (fieldPS->isBsxModified()) {
+				IsoFile *isoFieldBsx = isoFieldDirectory->file(field->name().toUpper() + ".BSX");
+				if (isoFieldBsx == nullptr) {
+					continue;
+				}
 
-			if (field->save(newData, true)) {
-				isoField->setModifiedFile(newData);
-			} else {
-				return Invalid;
+				QByteArray newDataBsx;
+
+				if (fieldPS->saveModels(newDataBsx)) {
+					return Invalid;
+				}
+
+				isoFieldBsx->setModifiedFile(newDataBsx);
+			}
+
+			if (fieldPS->isMimModified()) {
+				IsoFile *isoFieldMim = isoFieldDirectory->file(field->name().toUpper() + ".MIM");
+				if (isoFieldMim == nullptr) {
+					continue;
+				}
+
+				QByteArray newDataMim;
+
+				if (fieldPS->saveBackground(newDataMim)) {
+					return Invalid;
+				}
+
+				isoFieldMim->setModifiedFile(newDataMim);
 			}
 		}
 	}

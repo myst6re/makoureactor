@@ -35,8 +35,11 @@ protected:
 	FieldModelLoaderPS *modelLoader() const;
 	FieldPS *field() const;
 	const QList<FieldModelColorDir> &lightColors(int modelID) const;
+	void setLightColor(int modelID, int id, const FieldModelColorDir &color);
 	QRgb globalColor(int modelID) const;
+	void setGlobalColor(int modelID, QRgb color);
 	quint16 modelScale(int modelID) const;
+	void setModelScale(int modelID, quint16 scale);
 private:
 };
 

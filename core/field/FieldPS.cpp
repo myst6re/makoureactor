@@ -103,3 +103,30 @@ QList<Field::FieldSection> FieldPS::orderOfSections() const
 {
 	return QList<FieldSection>() << Scripts << Walkmesh << Background << Camera << Inf << Encounter << ModelLoader;
 }
+
+
+bool FieldPS::saveModels(QByteArray &newData)
+{
+	newData = QByteArray();
+
+	if (!isOpen()) {
+		return false;
+	}
+
+	newData = io()->modelData(this);
+
+	return true;
+}
+
+bool FieldPS::saveBackground(QByteArray &newData)
+{
+	newData = QByteArray();
+
+	if (!isOpen()) {
+		return false;
+	}
+
+	newData = io()->mimData(this);
+
+	return true;
+}
