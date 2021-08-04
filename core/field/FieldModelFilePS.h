@@ -31,7 +31,15 @@ class FieldModelFilePS : public FieldModelFile
 public:
 	FieldModelFilePS();
 	void clear();
-	inline bool translateAfter() const { return false; }
+	inline bool isModified() const {
+		return _isModified;
+	}
+	void clearModified() {
+		_isModified = false;
+	}
+	inline bool translateAfter() const {
+		return false;
+	}
 	inline const QList<FieldModelColorDir> &lightColors() const {
 		return _colors;
 	}

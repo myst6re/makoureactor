@@ -19,13 +19,22 @@
 #include "BackgroundFilePS.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
-	Field(name, io), vramDiff(0)
+      Field(name, io), vramDiff(0)
 {
 }
 
 FieldPS::FieldPS(const Field &field) :
-	Field(field), vramDiff(0)
+      Field(field), vramDiff(0)
 {
+}
+
+FieldPS::~FieldPS()
+{
+	for (FieldModelFilePS *model: qAsConst(_models)) {
+		if (model) {
+			delete model;
+		}
+	}
 }
 
 void FieldPS::openHeader(const QByteArray &fileData)
@@ -80,11 +89,27 @@ FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 
 FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate, bool open)
 {
-	FieldModelFilePS *fieldModel = new FieldModelFilePS();
-	if (open) {
-		fieldModel->load(this, modelID, animationID, animate);
+	_models.resize(modelID + 1);
+
+	if (_models[modelID] == nullptr) {
+		_models[modelID] = new FieldModelFilePS();
 	}
-	return fieldModel;
+
+	if (open) {
+		int i = 0;
+		for (FieldModelFilePS *model: qAsConst(_models)) {
+			if (model != nullptr && !model->isModified()) {
+				if (i == modelID) {
+					model->load(this, modelID, animationID, animate);
+				} else {
+					model->clear();
+				}
+			}
+			++i;
+		}
+	}
+
+	return _models[modelID];
 }
 
 QByteArray FieldPS::saveHeader() const
@@ -104,6 +129,26 @@ QList<Field::FieldSection> FieldPS::orderOfSections() const
 	return QList<FieldSection>() << Scripts << Walkmesh << Background << Camera << Inf << Encounter << ModelLoader;
 }
 
+bool FieldPS::isDatModified() const
+{
+	return true;
+}
+
+bool FieldPS::isBsxModified() const
+{
+	for (FieldModelFilePS *model: qAsConst(_models)) {
+		if (model && model->isModified()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool FieldPS::isMimModified() const
+{
+	return false;
+}
 
 bool FieldPS::saveModels(QByteArray &newData)
 {
