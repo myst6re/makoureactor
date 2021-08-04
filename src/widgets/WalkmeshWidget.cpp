@@ -25,7 +25,7 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent)
       transStep(360.0f), lastKeyPressed(-1), _camID(0), _selectedTriangle(-1),
       _selectedDoor(-1), _selectedGate(-1), _selectedArrow(-1), fovy(70.0),
       walkmesh(nullptr), camera(nullptr), infFile(nullptr), bgFile(nullptr),
-      scripts(nullptr), field(nullptr), modelsVisible(true) /*, thread(0)*/
+      scripts(nullptr), field(nullptr), modelsVisible(true), backgroundVisible(true) /*, thread(0)*/
 {
 	setMinimumSize(320, 240);
 }
@@ -131,7 +131,9 @@ void WalkmeshWidget::paintGL()
 	if (!walkmesh)
 		return;
 
-	drawBackground();
+	if (backgroundVisible) {
+		drawBackground();
+	}
 
 	mProjection.setToIdentity();
 	mProjection.perspective(fovy, (float)width() / (float)height(), 0.001f, 1000.0f);
@@ -549,6 +551,14 @@ void WalkmeshWidget::setModelsVisible(bool show)
 		if (modelsVisible) {
 			openModels();
 		}
+		update();
+	}
+}
+
+void WalkmeshWidget::setBackgroundVisible(bool show)
+{
+	if (backgroundVisible != show) {
+		backgroundVisible = show;
 		update();
 	}
 }

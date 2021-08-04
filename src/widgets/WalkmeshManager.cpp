@@ -49,6 +49,9 @@ WalkmeshManager::WalkmeshManager(QWidget *parent) :
 	showModels = new QCheckBox(tr("Show 3D models"));
 	showModels->setChecked(Config::value("fieldModelsVisible", true).toBool());
 
+	showBackground = new QCheckBox(tr("Show Background"));
+	showBackground->setChecked(Config::value("fieldBackgroundVisible", true).toBool());
+
 	tabWidget = new QTabWidget(this);
 	tabWidget->addTab(buildCameraPage(), tr("Camera"));
 	tabWidget->addTab(buildWalkmeshPage(), tr("Walkmesh"));
@@ -59,21 +62,23 @@ WalkmeshManager::WalkmeshManager(QWidget *parent) :
 	tabWidget->addTab(buildMiscPage(), tr("Miscellaneous"));
 
 	QGridLayout *layout = new QGridLayout(this);
-	layout->addWidget(walkmeshWidget, 0, 0, 4, 1);
+	layout->addWidget(walkmeshWidget, 0, 0, 5, 1);
 	layout->addWidget(slider1, 0, 1);
 	layout->addWidget(slider2, 0, 2);
 	layout->addWidget(slider3, 0, 3);
 	layout->addWidget(keyInfos, 1, 1, 1, 3);
 	layout->addWidget(resetCamera, 2, 1, 1, 3);
 	layout->addWidget(showModels, 3, 1, 1, 3);
-	layout->addWidget(tabWidget, 4, 0, 1, 4);
+	layout->addWidget(showBackground, 4, 1, 1, 3);
+	layout->addWidget(tabWidget, 5, 0, 1, 4);
 
 	if (walkmesh) {
 		connect(slider1, SIGNAL(valueChanged(int)), walkmesh, SLOT(setXRotation(int)));
 		connect(slider2, SIGNAL(valueChanged(int)), walkmesh, SLOT(setYRotation(int)));
 		connect(slider3, SIGNAL(valueChanged(int)), walkmesh, SLOT(setZRotation(int)));
 		connect(resetCamera, SIGNAL(clicked()), SLOT(resetCamera()));
-		connect(showModels, SIGNAL(toggled(bool)), SLOT(setModelsVisible(bool)));
+		connect(showModels, SIGNAL(toggled(bool)), walkmesh, SLOT(setModelsVisible(bool)));
+		connect(showBackground, SIGNAL(toggled(bool)), walkmesh, SLOT(setBackgroundVisible(bool)));
 	}
 }
 
@@ -89,11 +94,6 @@ void WalkmeshManager::resetCamera()
 	slider2->blockSignals(false);
 	slider3->blockSignals(false);
 	walkmesh->resetCamera();
-}
-
-void WalkmeshManager::setModelsVisible(bool show)
-{
-	walkmesh->setModelsVisible(show);
 }
 
 QWidget *WalkmeshManager::buildCameraPage()

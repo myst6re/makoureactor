@@ -138,13 +138,6 @@ target_compile_definitions(${CLI_TARGET}
     PRIVATE MR_CONSOLE=1
 )
 if(MSVC)
-    target_compile_options(${CLI_TARGET}
-        PRIVATE /D_CRT_SECURE_NO_WARNINGS
-        PRIVATE /DNOMINMAX
-        PRIVATE /EHsc
-        PRIVATE /w
-        PRIVATE /Ox
-    )
     target_link_options(${CLI_TARGET}
         PRIVATE /PDBALTPATH:${RELEASE_NAME}.pdb
     )

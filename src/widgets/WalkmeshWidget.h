@@ -39,6 +39,7 @@ public slots:
 	void setZoom(int);
 	void resetCamera();
 	void setModelsVisible(bool show);
+	void setBackgroundVisible(bool show);
 	void setCurrentFieldCamera(int camID);
 	void setSelectedTriangle(int triangle);
 	void setSelectedDoor(int door);
@@ -70,7 +71,7 @@ private:
 	//	FieldModelThread *thread;
 	QPoint moveStart;
 //	QPixmap arrow;
-	bool modelsVisible;
+	bool modelsVisible, backgroundVisible;
 	Renderer *gpuRenderer;
 	QMatrix4x4 mProjection;
 
