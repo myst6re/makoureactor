@@ -24,7 +24,7 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:MSVCRT
 
 set(CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/vendor;${CMAKE_SOURCE_DIR}/cmake")
 
-option(SUPERBUILD "Build the project using a superbuild" OFF)
+option(SUPERBUILD "Build the project using a superbuild" ON)
 
 if (SUPERBUILD)
 	project(SUPERBUILD)

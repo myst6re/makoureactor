@@ -437,8 +437,8 @@ QSize FF7Font::calcSize(const QByteArray &ff7Text)
 
 QSize FF7Font::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 {
-	if (namesWidth <= 0) {
-		namesWidth = calcFF7TextWidth(FF7Text("WWWWWWWWW", false));
+	if (biggestCharWidth <= 0) {
+		biggestCharWidth = calcFF7TextWidth(FF7Text("W", false));
 	}
 
 	const int baseWidth = 8 + Config::value("autoSizeMarginRight", 14).toInt();
@@ -505,13 +505,15 @@ QSize FF7Font::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 			caract = (quint8)ff7Text.at(i);
 			if (caract == 0xdd)
 				++i;
-			else if (caract == 0xde || caract == 0xdf || caract == 0xe1) {
-				if (caract == 0xe1)		width += spaced_characters ? spacedCharsW * 4 : 12;
+			else if (caract == 0xde || caract == 0xdf || caract == 0xe1) { // {VARHEX}, {VARDEC}, {VARDECR}
 				int zeroId = !jp ? 0x10 : 0x33;
-				width += spaced_characters ? spacedCharsW : charFullWidth(0, zeroId);
-			} else if (caract == 0xe2)
+				width += (spaced_characters ? spacedCharsW : charFullWidth(0, zeroId)) * 5;
+			} else if (caract == 0xe2) {// {MEMORY}
+				if (i + 3 >= size)		break;
+				const quint8 len = quint8(ff7Text.at(i + 3));
+				width += (spaced_characters ? spacedCharsW : biggestCharWidth) * len;
 				i += 4;
-			else if (caract == 0xe9)
+			} else if (caract == 0xe9) // {SPACED CHARACTERS}
 				spaced_characters = !spaced_characters;
 			else if (caract < 0xd2 && jp)
 				width += spaced_characters ? spacedCharsW : charFullWidth(6, caract);
@@ -526,7 +528,7 @@ QSize FF7Font::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[0]);
 				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[1]);
 			} else if (caract>=0xea && caract<=0xf5) {// Character names
-				width += spaced_characters ? spacedCharsW * 9 : namesWidth;
+				width += (spaced_characters ? spacedCharsW : biggestCharWidth) * 9;
 			} else if (caract>=0xf6 && caract<=0xf9) {// Keys
 				width += 17;
 			} else {
@@ -582,7 +584,7 @@ int FF7Font::calcFF7TextWidth(const FF7Text &ff7Text)
 	return width;
 }
 
-int FF7Font::namesWidth;
+int FF7Font::biggestCharWidth;
 
 quint8 FF7Font::charWidth[7][256] =
 {

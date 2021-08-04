@@ -19,8 +19,8 @@
 #include "Delegate.h"
 
 ScriptEditorGenericList::ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-    ScriptEditorView(field, grpScript, script, opcodeID, parent),
-    addButton(0), delButton(0), tableView(0), model(0)
+	ScriptEditorView(field, grpScript, script, opcodeID, parent),
+	addButton(0), delButton(0), tableView(0), model(0)
 {
 }
 
@@ -133,7 +133,7 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 		int cur = 8;
 		for (quint8 i=0; i<paramTypes.size(); ++i) {
 			int paramType = paramTypes.at(i),
-			    value = model->data(model->index(i, 1), Qt::EditRole).toInt();
+				value = model->data(model->index(i, 1), Qt::EditRole).toInt();
 
 			int paramSize = this->paramSize(paramType);
 			int startBA = cur / 8, sizeBA;
@@ -379,7 +379,8 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<quantity;break;
 	case 0x5D:
 		paramTypes<<bank<<bank<<bank<<bank<<bank<<bank<<materia_id<<byte<<byte<<byte<<inconnu<<adress;break;
-	//case 0x5E://TODO
+	case 0x5E:
+		paramTypes<<byte<<byte<<shakeType<<xAmplitude<<xFrames<<yAmplitude<<yFrames;break;
 	//case 0x5F:break;
 	case 0x60:
 		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<direction;break;
@@ -617,34 +618,39 @@ QString ScriptEditorGenericList::paramName(int type)
 	case bank:				return tr("Bank");
 	case adress:			return tr("Address");
 	case priorite:			return tr("Priority");
-	case bit: 				return tr("Flag");
-	case jump: 				return tr("Jump (short)");
-	case jump_l: 			return tr("Jump (long)");
-	case operateur: 		return tr("Operator");
-	case boolean: 			return tr("Boolean");
-	case layer_id: 			return tr("Layer");
-	case parametre_id: 		return tr("Parameter");
-	case state_id: 			return tr("State");
-	case window_id: 		return tr("Window");
-	case window_w: 			return tr("Width");
-	case window_h: 			return tr("Height");
-	case window_var: 		return tr("Variable");
-	case keys: 				return tr("Key(s)");
-	case rotation: 			return tr("Rotation");
-	case window_num: 		return tr("Display Type");
-	case text_id: 			return tr("Text");
-	case menu: 				return tr("Menu");
-	case window_type: 		return tr("Window Type");
-	case item_id: 			return tr("Item");
-	case materia_id: 		return tr("Materia");
-	case quantity: 			return tr("Quantity");
-	case color: 			return tr("Color");
-	case animation_id: 		return tr("Animation");
-	case music_id: 			return tr("Music");
-	case sound_id: 			return tr("Sound");
-	case movie_id: 			return tr("Video");
+	case bit:				return tr("Flag");
+	case jump:				return tr("Jump (short)");
+	case jump_l:			return tr("Jump (long)");
+	case operateur:			return tr("Operator");
+	case boolean:			return tr("Boolean");
+	case layer_id:			return tr("Layer");
+	case parametre_id:		return tr("Parameter");
+	case state_id:			return tr("State");
+	case window_id:			return tr("Window");
+	case window_w:			return tr("Width");
+	case window_h:			return tr("Height");
+	case window_var:		return tr("Variable");
+	case keys:				return tr("Key(s)");
+	case rotation:			return tr("Rotation");
+	case window_num:		return tr("Display Type");
+	case text_id:			return tr("Text");
+	case menu:				return tr("Menu");
+	case window_type:		return tr("Window Type");
+	case item_id:			return tr("Item");
+	case materia_id:		return tr("Materia");
+	case quantity:			return tr("Quantity");
+	case color:				return tr("Color");
+	case animation_id:		return tr("Animation");
+	case music_id:			return tr("Music");
+	case sound_id:			return tr("Sound");
+	case movie_id:			return tr("Video");
 	case label:				return tr("Label");
 	case akao:				return tr("Sound operation");
+	case shakeType:			return tr("Shake type");
+	case xAmplitude:		return tr("X Amplitude");
+	case xFrames:			return tr("X Frames");
+	case yAmplitude:		return tr("Y Amplitude");
+	case yFrames:			return tr("Y Frames");
 	}
 	return tr("???");
 }

@@ -114,7 +114,9 @@ FieldArchiveIO::ErrorCode FieldArchive::open()
 
 	int fieldID=0;
 	for (Field *f : qAsConst(fileList)) {
-		updateFieldLists(f, fieldID);
+		if (f != nullptr) {
+			updateFieldLists(f, fieldID);
+		}
 		++fieldID;
 	}
 
@@ -240,7 +242,7 @@ int FieldArchive::appendField(Field *field)
 bool FieldArchive::isAllOpened() const
 {
 	for (Field *f : fileList) {
-		if (!f->isOpen()) {
+		if (f != nullptr && !f->isOpen()) {
 			return false;
 		}
 	}
@@ -251,7 +253,7 @@ bool FieldArchive::isAllOpened() const
 bool FieldArchive::isModified() const
 {
 	for (Field *f : fileList) {
-		if (f->isModified()) {
+		if (f != nullptr && f->isModified()) {
 			return true;
 		}
 	}
@@ -1883,6 +1885,8 @@ bool FieldArchive::importation(const QList<int> &selectedFields, const QString &
 void FieldArchive::setSaved()
 {
 	for (Field *field : qAsConst(fileList)) {
-		field->setSaved();
+		if (field != nullptr) {
+			field->setSaved();
+		}
 	}
 }

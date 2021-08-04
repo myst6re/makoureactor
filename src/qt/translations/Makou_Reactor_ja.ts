@@ -1686,7 +1686,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="widgets/OpcodeList.cpp" line="45"/>
-        <location filename="widgets/OpcodeList.cpp" line="760"/>
+        <location filename="widgets/OpcodeList.cpp" line="795"/>
         <source>Delete</source>
         <translation type="unfinished">削除</translation>
     </message>
@@ -1797,24 +1797,24 @@ Some scripts can refer to it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="459"/>
+        <location filename="widgets/OpcodeList.cpp" line="484"/>
         <source>If this script is run,
  assume that the last non-empty script that runs</source>
         <translation type="unfinished">このスクリプトを実行した場合
 空ではないスクリプトの最後のものが実行されます</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="761"/>
+        <location filename="widgets/OpcodeList.cpp" line="796"/>
         <source>Are you sure you want to delete %1?</source>
         <translation type="unfinished">%1 を削除しますか？</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="763"/>
+        <location filename="widgets/OpcodeList.cpp" line="798"/>
         <source>the selected command</source>
         <translation type="unfinished">選択コマンド</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="764"/>
+        <location filename="widgets/OpcodeList.cpp" line="799"/>
         <source>the selected commands</source>
         <translation type="unfinished">選択したコマンド</translation>
     </message>
@@ -2621,7 +2621,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="803"/>
-        <source>Return and execute script #%2 from the appellant group (Priority %1/6)</source>
+        <source>Return and execute script #%2 from the current entity (Priority %1/6)</source>
         <translation>リターンして呼び出したグループのスクリプト #%2 を実行 (優先度 %1/6)</translation>
     </message>
     <message>
@@ -3425,7 +3425,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="core/field/Opcode.cpp" line="4154"/>
-        <source>Shake (nbSwings=%1, Amplitude=%2, speed=%3)</source>
+        <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)</source>
         <translation>揺らす (nb周期=%1, 拡がり=%2, 速度=%3)</translation>
     </message>
     <message>
@@ -4355,30 +4355,30 @@ id=%2
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Script.cpp" line="882"/>
+        <location filename="core/field/Script.cpp" line="878"/>
         <source>Label %1 is declared several times.</source>
         <oldsource>Le label %1 est déclaré plusieurs fois.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Script.cpp" line="907"/>
+        <location filename="core/field/Script.cpp" line="926"/>
         <source>Label %1 is unreachable, please bring this instruction closer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Script.cpp" line="912"/>
+        <location filename="core/field/Script.cpp" line="930"/>
         <source>Label %1 is unreachable because your script exceeds 65535 bytes, please reduce the size of the script.</source>
         <oldsource>Le label %1 est inaccessible car votre script dépasse 65535 octets, veuillez réduire la taille du script.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Script.cpp" line="920"/>
+        <location filename="core/field/Script.cpp" line="938"/>
         <source>The label %1 is unreachable because it is located before the opcode.</source>
         <oldsource>Le label %1 est inaccessible car il se trouve avant la commande.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Script.cpp" line="930"/>
+        <location filename="core/field/Script.cpp" line="948"/>
         <source>Script too big, it should not exceed 65535 bytes. Actual size: %1.</source>
         <oldsource>Script trop grand, il ne doit pas dépasser les 65535 octets. Taille actuelle : %1.</oldsource>
         <translation type="unfinished"></translation>
@@ -4418,66 +4418,66 @@ Make sure it is valid or delete it.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="405"/>
+        <location filename="core/field/Field.cpp" line="414"/>
         <source>File size greater than 10000000</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="418"/>
+        <location filename="core/field/Field.cpp" line="427"/>
         <source>Malformed LZS header</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="446"/>
-        <location filename="core/field/Field.cpp" line="550"/>
+        <location filename="core/field/Field.cpp" line="455"/>
+        <location filename="core/field/Field.cpp" line="559"/>
         <source>Incorrect field file size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="459"/>
-        <location filename="core/field/Field.cpp" line="558"/>
+        <location filename="core/field/Field.cpp" line="468"/>
+        <location filename="core/field/Field.cpp" line="567"/>
         <source>Cannot open section 1 (texts, scripts and musics)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="467"/>
-        <location filename="core/field/Field.cpp" line="566"/>
+        <location filename="core/field/Field.cpp" line="476"/>
+        <location filename="core/field/Field.cpp" line="575"/>
         <source>Cannot open tutos section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="475"/>
-        <location filename="core/field/Field.cpp" line="581"/>
+        <location filename="core/field/Field.cpp" line="484"/>
+        <location filename="core/field/Field.cpp" line="590"/>
         <source>Cannot open encounters section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="483"/>
-        <location filename="core/field/Field.cpp" line="589"/>
+        <location filename="core/field/Field.cpp" line="492"/>
+        <location filename="core/field/Field.cpp" line="598"/>
         <source>Cannot open walkmesh section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="491"/>
-        <location filename="core/field/Field.cpp" line="597"/>
+        <location filename="core/field/Field.cpp" line="500"/>
+        <location filename="core/field/Field.cpp" line="606"/>
         <source>Cannot open camera section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="499"/>
-        <location filename="core/field/Field.cpp" line="605"/>
+        <location filename="core/field/Field.cpp" line="508"/>
+        <location filename="core/field/Field.cpp" line="614"/>
         <source>Cannot open info section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="507"/>
-        <location filename="core/field/Field.cpp" line="574"/>
+        <location filename="core/field/Field.cpp" line="516"/>
+        <location filename="core/field/Field.cpp" line="583"/>
         <source>Cannot open model loader section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="536"/>
-        <location filename="core/field/Field.cpp" line="627"/>
+        <location filename="core/field/Field.cpp" line="545"/>
+        <location filename="core/field/Field.cpp" line="636"/>
         <source>Cannot open background section</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6017,151 +6017,151 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorGenericList</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="599"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="600"/>
         <source>Long</source>
         <oldsource>Entier long</oldsource>
         <translation type="unfinished">Long</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="600"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="601"/>
         <source>Signed long</source>
         <oldsource>Entier long signé</oldsource>
         <translation type="unfinished">符号付き long</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="601"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="602"/>
         <source>X coordinate</source>
         <oldsource>Coordonnée X</oldsource>
         <translation type="unfinished">X 座標</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="602"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="603"/>
         <source>Y coordinate</source>
         <oldsource>Coordonnée Y</oldsource>
         <translation type="unfinished">Y 座標</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="603"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="604"/>
         <source>Z coordinate</source>
         <oldsource>Coordonnée Z</oldsource>
         <translation type="unfinished">Z 座標</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="605"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="606"/>
         <source>Tutorial</source>
         <oldsource>Tutoriel</oldsource>
         <translation type="unfinished">解説</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="607"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="608"/>
         <source>Disc</source>
         <oldsource>Disque</oldsource>
         <translation type="unfinished">ディスク</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="608"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="609"/>
         <source>Minigame</source>
         <oldsource>Mini-jeu</oldsource>
         <translation type="unfinished">ミニゲーム</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="611"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="612"/>
         <source>Speed (16-bit)</source>
         <oldsource>Vitesse (16 bits)</oldsource>
         <translation type="unfinished">速度 (16 ビット)</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="612"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="613"/>
         <source>Direction</source>
         <translation type="unfinished">方向</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="613"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="614"/>
         <source>Triangle</source>
         <translation type="unfinished">△</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="614"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="615"/>
         <source>Group</source>
         <oldsource>Groupe</oldsource>
         <translation type="unfinished">グループ</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="615"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="616"/>
         <source>Script</source>
         <translation type="unfinished">スクリプト</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="617"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="618"/>
         <source>Bank</source>
         <translation type="unfinished">バンク</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="618"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="619"/>
         <source>Address</source>
         <oldsource>Adresse</oldsource>
         <translation type="unfinished">アドレス</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="619"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="620"/>
         <source>Priority</source>
         <oldsource>Priorité</oldsource>
         <translation type="unfinished">優先度</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="620"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="621"/>
         <source>Flag</source>
         <translation type="unfinished">フラグ</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="623"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="624"/>
         <source>Operator</source>
         <oldsource>Opérateur</oldsource>
         <translation type="unfinished">演算子</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="624"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="625"/>
         <source>Boolean</source>
         <oldsource>Booléen</oldsource>
         <translation type="unfinished">ブーリアン</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="626"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="627"/>
         <source>Parameter</source>
         <oldsource>Paramètre</oldsource>
         <translation type="unfinished">パラメータ</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="627"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="628"/>
         <source>State</source>
         <oldsource>État</oldsource>
         <translation type="unfinished">ステート</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="631"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="632"/>
         <source>Variable</source>
         <translation type="unfinished">変数</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="633"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="634"/>
         <source>Rotation</source>
         <oldsource>Sens de rotation</oldsource>
         <translation type="unfinished">回転</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="634"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="635"/>
         <source>Display Type</source>
         <oldsource>Type d&apos;affichage</oldsource>
         <translation type="unfinished">表示タイプ</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="635"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="636"/>
         <source>Text</source>
         <oldsource>Texte</oldsource>
         <translation type="unfinished">テキスト</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="636"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="637"/>
         <source>Menu</source>
         <translation type="unfinished">メニュー</translation>
     </message>
@@ -6181,134 +6181,159 @@ Make sure it is valid or delete it.</source>
         <translation>パラメータ :</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="598"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="599"/>
         <source>Double long</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="604"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="605"/>
         <source>Map</source>
         <translation type="unfinished">マップ</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="606"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="607"/>
         <source>Character</source>
         <translation type="unfinished">キャラクター</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="609"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="610"/>
         <source>Short</source>
         <translation type="unfinished">Short</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="610"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="611"/>
         <source>Speed (8-bit)</source>
         <translation type="unfinished">速度 (8 ビット)</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="616"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="617"/>
         <source>Team member</source>
         <translation>チーム メンバー</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="621"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="622"/>
         <source>Jump (short)</source>
         <translation>ジャンプ (short)</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="622"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="623"/>
         <source>Jump (long)</source>
         <oldsource>Jumb (long)</oldsource>
         <translation>ジャンプ (long)</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="625"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="626"/>
         <source>Layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="628"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="629"/>
         <source>Window</source>
         <translation>ウィンドウ</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="629"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="630"/>
         <source>Width</source>
         <translation>幅</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="630"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="631"/>
         <source>Height</source>
         <translation>高さ</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="632"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="633"/>
         <source>Key(s)</source>
         <translation>キー</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="637"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="638"/>
         <source>Window Type</source>
         <translation>ウィンドウのタイプ</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="638"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="639"/>
         <source>Item</source>
         <translation>アイテム</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="639"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="640"/>
         <source>Materia</source>
         <oldsource>Matéria</oldsource>
         <translation type="unfinished">マテリア</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="640"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="641"/>
         <source>Quantity</source>
         <oldsource>Quantité</oldsource>
         <translation type="unfinished">所持数</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="641"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="642"/>
         <source>Color</source>
         <oldsource>Couleur</oldsource>
         <translation type="unfinished">カラー</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="642"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="643"/>
         <source>Animation</source>
         <translation type="unfinished">アニメーション</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="643"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="644"/>
         <source>Music</source>
         <oldsource>Musique</oldsource>
         <translation type="unfinished">BGM</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="644"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="645"/>
         <source>Sound</source>
         <oldsource>Son</oldsource>
         <translation type="unfinished">効果音</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="645"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="646"/>
         <source>Video</source>
         <oldsource>Vidéo</oldsource>
         <translation type="unfinished">ビデオ</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="646"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="647"/>
         <source>Label</source>
         <translation>レイヤー</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="647"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="648"/>
         <source>Sound operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="649"/>
+        <source>Shake type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="650"/>
+        <source>X Amplitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="651"/>
+        <source>X Frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="652"/>
+        <source>Y Amplitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="653"/>
+        <source>Y Frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorGenericList.cpp" line="655"/>
         <source>???</source>
         <translation>???</translation>
     </message>
@@ -7992,14 +8017,8 @@ Are you sure you want to continue?</source>
         <translation type="unfinished">フィールド スケール :</translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="500"/>
         <source>Opening error</source>
-        <translation type="unfinished">オープン エラー</translation>
-    </message>
-    <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="500"/>
-        <source>Error opening walkmesh</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">オープン エラー</translation>
     </message>
     <message>
         <location filename="widgets/WalkmeshManager.cpp" line="200"/>
@@ -8050,45 +8069,45 @@ Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="532"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="847"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="849"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="867"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="529"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="844"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="846"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="864"/>
         <source>Triangle %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="516"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="716"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="718"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="738"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="513"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="713"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="715"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="735"/>
         <source>Camera %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="547"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="561"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="577"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="544"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="558"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="574"/>
         <location filename="widgets/WalkmeshManager.cpp" line="1143"/>
         <location filename="widgets/WalkmeshManager.cpp" line="1203"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1315"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1319"/>
         <source>Unused</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="559"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="556"/>
         <location filename="widgets/WalkmeshManager.cpp" line="1199"/>
         <source>Door %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="575"/>
-        <location filename="widgets/WalkmeshManager.cpp" line="1311"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="572"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1315"/>
         <source>Arrow %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/WalkmeshManager.cpp" line="1015"/>
+        <location filename="widgets/WalkmeshManager.cpp" line="1011"/>
         <source>?</source>
         <translation>?</translation>
     </message>

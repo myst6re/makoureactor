@@ -487,22 +487,19 @@ void WalkmeshManager::saveConfig()
 
 void WalkmeshManager::fill(Field *field, bool reload)
 {
-	if (!field || (!reload && field->inf() == infFile))	return;
+	if (!field || (!reload && field->inf() == infFile)) {
+		return;
+	}
 
 	infFile = field->inf();
 	idFile = field->walkmesh();
 	caFile = field->camera();
 	scriptsAndTexts = field->scriptsAndTexts();
 
-	walkmesh->setModelsVisible(showModels->isChecked());
-
-	if (!idFile->isOpen() || !caFile->isOpen() || !infFile->isOpen()) {
-		QMessageBox::warning(this, tr("Opening error"), tr("Error opening walkmesh"));
-	}
-
 	int camCount = 0;
 
 	if (walkmesh) {
+		walkmesh->setModelsVisible(showModels->isChecked());
 		walkmesh->fill(field);
 	}
 
@@ -787,7 +784,7 @@ void WalkmeshManager::editCaPos(int id, double value)
 		if (cam.camera_position[id] != qint32(value)) {
 			cam.camera_position[id] = qint32(value);
 			caFile->setCamera(camID, cam);
-			walkmesh->update();
+			if (walkmesh)	walkmesh->update();
 
 			emit modified();
 		}
@@ -836,7 +833,7 @@ void WalkmeshManager::addTriangle()
 	if (idFile->isOpen()) {
 		Triangle tri;
 		Access acc;
-		if (row < idFile->triangleCount()) {
+		if (row >= 0 && row < idFile->triangleCount()) {
 			tri = idFile->triangle(row);
 			acc = idFile->access(row);
 		} else {
@@ -995,7 +992,6 @@ void WalkmeshManager::setCurrentDoor(int id)
 
 	setDoorEnabled(doorEnabled->isChecked());
 
-
 	if (walkmesh)	walkmesh->setSelectedDoor(id);
 }
 
@@ -1068,17 +1064,21 @@ void WalkmeshManager::editDoorPoint(const Vertex_s &values)
 
 void WalkmeshManager::editDoorPoint(int id, const Vertex_s &values)
 {
-	if (infFile->isOpen()) {
-		quint8 gateId = quint8(gateList->currentRow());
-		Trigger old = infFile->trigger(gateId);
-		Vertex_s oldVertex = old.trigger_line[id];
-		if (oldVertex.x != values.x || oldVertex.y != values.y || oldVertex.z != values.z) {
-			old.trigger_line[id] = values;
-			infFile->setTrigger(gateId, old);
-			if (walkmesh)	walkmesh->update();
+	if (!infFile->isOpen()) {
+		return;
+	}
 
-			emit modified();
+	quint8 gateId = quint8(doorList->currentRow());
+	Trigger old = infFile->trigger(gateId);
+	const Vertex_s &oldVertex = old.trigger_line[id];
+	if (oldVertex.x != values.x || oldVertex.y != values.y || oldVertex.z != values.z) {
+		old.trigger_line[id] = values;
+		infFile->setTrigger(gateId, old);
+		if (walkmesh) {
+			walkmesh->update();
 		}
+
+		emit modified();
 	}
 }
 

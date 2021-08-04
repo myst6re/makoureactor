@@ -49,7 +49,7 @@ public:
 	}
 	void clear();
 	void setEnabled(bool enabled);
-	void fill(Field *_field = nullptr, GrpScript *_grpScript = nullptr, Script *_script = nullptr);
+	void fill(Field *_field, GrpScript *_grpScript, Script *_script);
 	void scroll(int, bool focus=true);
 	void enableActions(bool);
 	void setErrorLine(int opcodeID);
@@ -92,6 +92,7 @@ signals:
 protected:
 	void mouseReleaseEvent(QMouseEvent *event);
 private:
+	void fill();
 	void upDownEnabled();
 	void move(Script::MoveDirection direction);
 	QTreeWidgetItem *findItem(int id);
