@@ -131,7 +131,7 @@ deploy:
     release: ${_RELEASE_NAME}-${_RELEASE_VERSION}
     artifact: ${_RELEASE_NAME}-${_RELEASE_VERSION}, ${_RELEASE_NAME}-${_RELEASE_VERSION}_ZSYNC
     auth_token:
-      secure: Q8v2IrepAs+HGD3atYI/0cI52LrxaYzRZKDBaFMSjsz1NPoUrj+Q4lZaZzFaLa4v
+      secure: FFSAXpL8H1r+SbvKgFx9JgXEYOI3BS7KcyJGK384TJVb+78rGQ8MAmSBEKTyzqm7
     on:
       branch: master
       _IS_BUILD_CANARY: false
@@ -143,7 +143,7 @@ deploy:
     prerelease: true
     force_update: true
     auth_token:
-      secure: Q8v2IrepAs+HGD3atYI/0cI52LrxaYzRZKDBaFMSjsz1NPoUrj+Q4lZaZzFaLa4v
+      secure: FFSAXpL8H1r+SbvKgFx9JgXEYOI3BS7KcyJGK384TJVb+78rGQ8MAmSBEKTyzqm7
     on:
       branch: master
       _IS_BUILD_CANARY: true
