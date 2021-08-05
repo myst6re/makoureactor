@@ -167,31 +167,6 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 	return true;
 }
 
-bool FieldModelFilePS::save(FieldPS *currentField, QByteArray &data, int modelID)
-{
-	data = currentField->io()->modelData(currentField);
-	if (data.isEmpty()) {
-		qWarning() << "FieldModelFilePS::load cannot open bsx file";
-		return false;
-	}
-	QBuffer ioBsx;
-	ioBsx.setData(data);
-	if (!ioBsx.open(QIODevice::ReadWrite)) {
-		qWarning() << "FieldModelFilePS::load cannot open bsx buffer" << ioBsx.errorString();
-		return false;
-	}
-
-	BsxFile bsx(&ioBsx);
-	if (!bsx.seek(modelID)) {
-		return false;
-	}
-	if (!bsx.writeModelHeader(*this)) {
-		return false;
-	}
-
-	return true;
-}
-
 QImage FieldModelFilePS::loadedTexture(FieldModelGroup *group)
 {
 	if (_loadedTex.contains(group)) {

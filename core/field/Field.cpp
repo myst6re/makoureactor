@@ -215,7 +215,8 @@ FieldPart *Field::part(FieldSection section, bool open)
 void Field::initEmpty()
 {
 	QList<Field::FieldSection> sections = orderOfSections();
-	for (const FieldSection &section : sections << Akaos) {
+	sections << Akaos;
+	for (const FieldSection &section : qAsConst(sections)) {
 		FieldPart *p = part(section);
 
 		if (!p) {
@@ -325,7 +326,8 @@ bool Field::save(QByteArray &newData, bool compress)
 
 	// Sections
 	int id=0;
-	for (const FieldSection &fieldSection : orderOfSections()) {
+	QList<Field::FieldSection> fieldSections = orderOfSections();
+	for (const FieldSection &fieldSection : qAsConst(fieldSections)) {
 		// Section position
 		quint32 pos = headerSize() + newData.size() + diffSectionPos();
 		toc.append((char *)&pos, 4);

@@ -36,8 +36,10 @@ public:
 	FieldModelLoaderPS *fieldModelLoader(bool open=true);
 	FieldModelFilePS *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
 	FieldArchiveIOPS *io() const;
-	bool saveModels(QByteArray &newData);
-	bool saveBackground(QByteArray &newData);
+	bool saveModels(QByteArray &newData, bool compress);
+	qint8 saveModels(const QString &path, bool compress);
+	bool saveBackground(QByteArray &newData, bool compress);
+	qint8 saveBackground(const QString &path, bool compress);
 	bool isDatModified() const;
 	bool isBsxModified() const;
 	bool isMimModified() const;

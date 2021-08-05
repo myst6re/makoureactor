@@ -74,7 +74,6 @@ public:
 		}
 	}
 	bool load(FieldPS *currentField, int modelID, int animationID, bool animate);
-	bool save(FieldPS *currentField, QByteArray &data, int modelID);
 	QImage loadedTexture(FieldModelGroup *group);
 	inline void *textureIdForGroup(FieldModelGroup *group) const {
 		return (void *)group;

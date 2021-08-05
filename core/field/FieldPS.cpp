@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "FieldPS.h"
 #include "BackgroundFilePS.h"
+#include "../LZS.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
       Field(name, io), vramDiff(0)
@@ -150,7 +151,7 @@ bool FieldPS::isMimModified() const
 	return false;
 }
 
-bool FieldPS::saveModels(QByteArray &newData)
+bool FieldPS::saveModels(QByteArray &newData, bool compress)
 {
 	newData = QByteArray();
 
@@ -159,18 +160,65 @@ bool FieldPS::saveModels(QByteArray &newData)
 		return false;
 	}
 
+	newData = io()->modelData(this);
+	if (newData.isEmpty()) {
+		qWarning() << "FieldPS::saveModels cannot open bsx file";
+		return false;
+	}
+	QBuffer ioBsx;
+	ioBsx.setData(newData);
+	if (!ioBsx.open(QIODevice::ReadWrite)) {
+		qWarning() << "FieldPS::saveModels cannot open bsx buffer" << ioBsx.errorString();
+		return false;
+	}
+
+	BsxFile bsx(&ioBsx);
+
 	int modelID = 0;
 	for (FieldModelFilePS *model: qAsConst(_models)) {
 		if (model && model->isModified()) {
-			model->save(this, newData, modelID);
+			if (!bsx.seek(modelID)) {
+				qWarning() << "FieldPS::saveModels cannot seek to model";
+				return false;
+			}
+			if (!bsx.writeModelHeader(*model)) {
+				qWarning() << "FieldPS::saveModels cannot write model header";
+				return false;
+			}
 		}
 		++modelID;
+	}
+
+	newData = ioBsx.data();
+
+	if (compress) {
+		const QByteArray &compresse = LZS::compress(newData);
+		quint32 lzsSize = compresse.size();
+		newData = QByteArray((char *)&lzsSize, 4).append(compresse);
 	}
 
 	return true;
 }
 
-bool FieldPS::saveBackground(QByteArray &newData)
+qint8 FieldPS::saveModels(const QString &path, bool compress)
+{
+	QByteArray newData;
+
+	if (saveModels(newData, compress)) {
+		QFile fic(path);
+		if (!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			return 2;
+		}
+		fic.write(newData);
+		fic.close();
+
+		return 0;
+	}
+
+	return 1;
+}
+
+bool FieldPS::saveBackground(QByteArray &newData, bool compress)
 {
 	newData = QByteArray();
 
@@ -179,7 +227,25 @@ bool FieldPS::saveBackground(QByteArray &newData)
 		return false;
 	}
 
-	newData = io()->mimData(this);
+	newData = io()->mimData(this, !compress);
 
 	return true;
+}
+
+qint8 FieldPS::saveBackground(const QString &path, bool compress)
+{
+	QByteArray newData;
+
+	if (saveBackground(newData, compress)) {
+		QFile fic(path);
+		if (!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			return 2;
+		}
+		fic.write(newData);
+		fic.close();
+
+		return 0;
+	}
+
+	return 1;
 }

@@ -22,10 +22,6 @@
 ModelManagerPS::ModelManagerPS(QWidget *parent) :
     ModelManager(parent)
 {
-	modelScaleWidget->setReadOnly(true);
-	modelGlobalColorWidget->setReadOnly(true);
-	modelColorsLayout->setReadOnly(true);
-
 	modelAnims->setColumnCount(1);
 	modelAnims->setHeaderLabels(QStringList() << tr("Animation"));
 
