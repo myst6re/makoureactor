@@ -155,10 +155,17 @@ bool FieldPS::saveModels(QByteArray &newData)
 	newData = QByteArray();
 
 	if (!isOpen()) {
+		qWarning() << "FieldPS::saveModels field is not open";
 		return false;
 	}
 
-	newData = io()->modelData(this);
+	int modelID = 0;
+	for (FieldModelFilePS *model: qAsConst(_models)) {
+		if (model && model->isModified()) {
+			model->save(this, newData, modelID);
+		}
+		++modelID;
+	}
 
 	return true;
 }
@@ -168,6 +175,7 @@ bool FieldPS::saveBackground(QByteArray &newData)
 	newData = QByteArray();
 
 	if (!isOpen()) {
+		qWarning() << "FieldPS::saveBackground field is not open";
 		return false;
 	}
 

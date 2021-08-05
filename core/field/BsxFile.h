@@ -26,6 +26,7 @@
 
 #define MODEL_SCALE_PS			4096.0f //31.0f
 #define COLORRGB_2_QRGB(c)		qRgb(c.red, c.green, c.blue)
+#define QRGB_2_COLORRGB(c, r)	r.red = qRed(c);r.green = qGreen(c);r.blue = qBlue(c)
 
 struct BsxModelsHeader {
 	quint32 psxMemory;
@@ -199,6 +200,7 @@ public:
 	virtual bool seekModels();
 	virtual bool seekTextures();
 	virtual bool write(const QList<FieldModelFilePS> &models) const;
+	virtual bool writeModelHeader(const FieldModelFilePS &model) const;
 protected:
 	bool readHeader();
 	bool readModelsHeader();

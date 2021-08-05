@@ -949,3 +949,36 @@ bool BsxFile::write(const QList<FieldModelFilePS> &models) const
 	Q_UNUSED(models)
 	return false;
 }
+
+bool BsxFile::writeModelHeader(const FieldModelFilePS &model) const
+{
+	BsxModelHeader modelHeader;
+
+	if (sizeof(BsxModelHeader) != device()->peek((char *)&modelHeader, sizeof(BsxModelHeader))) {
+		qWarning() << "BsxFile::writeModelHeader model read error 1";
+		return false;
+	}
+
+	const QList<FieldModelColorDir> &lightColors = model.lightColors();
+	modelHeader.colorADir1 = lightColors.at(0).dirA;
+	modelHeader.colorADir2 = lightColors.at(0).dirB;
+	modelHeader.colorADir3 = lightColors.at(0).dirC;
+	QRGB_2_COLORRGB(lightColors.at(0).color, modelHeader.colorA);
+	modelHeader.colorBDir1 = lightColors.at(1).dirA;
+	modelHeader.colorBDir2 = lightColors.at(1).dirB;
+	modelHeader.colorBDir3 = lightColors.at(1).dirC;
+	QRGB_2_COLORRGB(lightColors.at(1).color, modelHeader.colorB);
+	modelHeader.colorCDir1 = lightColors.at(2).dirA;
+	modelHeader.colorCDir2 = lightColors.at(2).dirB;
+	modelHeader.colorCDir3 = lightColors.at(2).dirC;
+	QRGB_2_COLORRGB(lightColors.at(2).color, modelHeader.colorC);
+	QRGB_2_COLORRGB(model.globalColor(), modelHeader.globalColor);
+	modelHeader.scale = model.scale();
+
+	if (sizeof(BsxModelHeader) != device()->write((char *)&modelHeader, sizeof(BsxModelHeader))) {
+		qWarning() << "BsxFile::writeModelHeader model write error 2";
+		return false;
+	}
+
+	return true;
+}
