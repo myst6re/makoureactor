@@ -54,7 +54,7 @@ bool WindowBinFile::open(const QByteArray &data)
 	const char *constData = data.constData();
 	int cur=0;
 	quint16 size;
-	QList<quint16> positions, sizes;
+	QList<int> positions, sizes;
 
 	while (cur + 2 < data.size()) {
 		positions.append(cur);
@@ -94,7 +94,9 @@ bool WindowBinFile::open(const QByteArray &data)
 
 void WindowBinFile::saveSection(const QByteArray &section, QByteArray &data, quint16 type)
 {
-	QByteArray compressedData = GZIP::compress(section, 9);
+	// With compression = 9 and compression = 0, a flag we don't want is set in the header
+	QByteArray compressedData = GZIP::compress(section, 8);
+	compressedData[9] = '\x03'; // Force OS = Unix
 	quint16 size = compressedData.size();
 	data.append((char *)&size, 2);
 	size = section.size();
