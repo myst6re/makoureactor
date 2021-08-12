@@ -1174,10 +1174,10 @@ void Window::exportCurrentMap()
 	path = QFileDialog::getSaveFileName(this, tr("Export the current file"), path+name, types, &selectedFilter);
 	if (path.isNull())		return;
 	int error = 4;
-	bool compressed = selectedFilter == fieldLzs;
+	bool decompressed = selectedFilter == fieldDec;
 	
 	if (field->isModified()) {
-		error = field->save(path, compressed);
+		error = field->save(path, !decompressed);
 	} else {
 		QString extension;
 		if (selectedFilter == dat) {
@@ -1185,7 +1185,7 @@ void Window::exportCurrentMap()
 		} else if (selectedFilter == mim) {
 			extension = "MIM";
 		}
-		error = fieldArchive->io()->exportFieldData(field, extension, path, !compressed);
+		error = fieldArchive->io()->exportFieldData(field, extension, path, decompressed);
 	}
 	
 	QString out;
