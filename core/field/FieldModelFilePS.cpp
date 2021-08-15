@@ -215,7 +215,10 @@ QHash<void *, QImage> FieldModelFilePS::loadedTextures()
 		for (FieldModelPart *part : bone.parts()) {
 			for (FieldModelGroup *group : part->groups()) {
 				if (group->hasTexture()) {
-					ret.insert((void *)group, loadedTexture(group));
+					QImage texture = loadedTexture(group);
+					if (!texture.isNull()) {
+						ret.insert((void *)group, texture);
+					}
 				}
 			}
 		}

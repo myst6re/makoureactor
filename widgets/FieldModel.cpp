@@ -135,6 +135,7 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 
 	for (FieldModelPart *part : bone.parts()) {
 		for (FieldModelGroup *g : part->groups()) {
+			bool groupTextureBinded = false;
 			if (g->hasTexture()) {
 				QOpenGLTexture *tex = textures.value(data->textureIdForGroup(g));
 
@@ -143,6 +144,7 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 						texture->release(0);
 					}
 					tex->bind(0);
+					groupTextureBinded = true;
 					texture = tex;
 				}
 			} else if (texture) {
@@ -188,7 +190,7 @@ void FieldModel::drawP(FieldModelFile *data, float scale,
 						           qBlue(color) * globalColor[2]);
 					}
 
-					if (g->hasTexture() && p->hasTexture()) {
+					if (groupTextureBinded && p->hasTexture()) {
 						const TexCoord &coord = p->texCoord(j);
 						glTexCoord2d(coord.x, coord.y);
 					}

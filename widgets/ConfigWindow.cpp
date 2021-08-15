@@ -142,14 +142,6 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	scriptEditorLayout->addWidget(expandedByDefault);
 	scriptEditorLayout->addStretch();
 
-	QGroupBox *misc = new QGroupBox(tr("Miscellaneous"), this);
-
-	lzsNotCheck = new QCheckBox(tr("Don't strictly verify the file format"), misc);
-
-	QVBoxLayout *miscLayout = new QVBoxLayout(misc);
-	miscLayout->addWidget(lzsNotCheck);
-	miscLayout->addStretch();
-
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 
 	QGridLayout *layout = new QGridLayout(this);
@@ -157,8 +149,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	layout->addWidget(theme, 1, 0);
 	layout->addWidget(openGL, 1, 1);
 	layout->addWidget(textEditor, 2, 0, 1, 2);
-	layout->addWidget(scriptEditor, 3, 0);
-	layout->addWidget(misc, 3, 1);
+	layout->addWidget(scriptEditor, 3, 0, 1, 2);
 	layout->addWidget(buttonBox, 4, 0, 1, 2);
 
 	connect(listFF7, SIGNAL(itemSelectionChanged()), SLOT(changeFF7ListButtonsState()));
@@ -248,7 +239,6 @@ void ConfigWindow::fillConfig()
 	//optiText->setChecked(!Config::value("dontOptimizeTexts", false).toBool());
 	encodings->setCurrentIndex(Config::value("jp_txt", false).toBool() ? 1 : 0);
 	expandedByDefault->setChecked(Config::value("scriptItemExpandedByDefault", false).toBool());
-	lzsNotCheck->setChecked(Config::value("lzsNotCheck", false).toBool());
 
 	setWindowColors();
 
@@ -496,7 +486,6 @@ void ConfigWindow::accept()
 	//Config::setValue("dontOptimizeTexts", !optiText->isChecked());
 	Config::setValue("jp_txt", encodings->currentIndex() == 1);
 	Config::setValue("scriptItemExpandedByDefault", expandedByDefault->isChecked());
-	Config::setValue("lzsNotCheck", lzsNotCheck->isChecked());
 
 	for (int charId=0; charId<9; ++charId) {
 		const QString &customName = customNames.at(charId);

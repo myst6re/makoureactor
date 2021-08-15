@@ -40,7 +40,7 @@ private:
 	QCheckBox *darkMode, *disableOGL;
 	QPushButton *windowColor1, *windowColor2, *windowColor3, *windowColor4, *windowColorReset;
 	QLabel *windowPreview;
-	QCheckBox *expandedByDefault, *lzsNotCheck;
+	QCheckBox *expandedByDefault;
 	QComboBox *encodings;
 	QRgb windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight;
 	QStringList customNames;

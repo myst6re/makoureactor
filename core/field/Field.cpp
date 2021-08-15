@@ -77,9 +77,6 @@ bool Field::open(bool dontOptimize)
 			if ((quint32)lzsData.size() != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
 				fileData = lzsData;
 			} else {
-				if (!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
-					return false;
-
 				fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize());//partial decompression
 			}
 		} else {
@@ -159,10 +156,6 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 		if ((quint32)lzsData.size() != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
 			data = lzsData;
 		} else {
-			if (!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4) {
-				return QByteArray();
-			}
-
 			data = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1));
 		}
 	}

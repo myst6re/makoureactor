@@ -174,6 +174,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::save2(const QString &path0, Arch
 {
 	Q_UNUSED(observer)
 	QString path = path0.isNull() ? fic.fileName() : path0;
+	bool saveAs = !path0.isNull() && QFileInfo(path0) != QFileInfo(fic);
 
 	FieldArchiveIterator it(*(fieldArchive()));
 
@@ -204,6 +205,18 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::save2(const QString &path0, Arch
 			if (err == 1)	return Invalid;
 			if (err != 0)	return NotImplemented;
 		}
+	} else if (saveAs) {
+		if (QFile::exists(path0) && !QFile::remove(path0)) {
+			return ErrorRemoving;
+		}
+		if (!fic.copy(path0)) {
+			return ErrorCopying;
+		}
+	}
+
+	if (saveAs) {
+		fic.close();
+		fic.setFileName(path0);
 	}
 
 	return Ok;

@@ -283,6 +283,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCFile::save2(const QString &path0, Arch
 {
 	Q_UNUSED(observer)
 	QString path = path0.isNull() ? fic.fileName() : path0;
+	bool saveAs = !path0.isNull() && QFileInfo(path0) != QFileInfo(fic);
 
 	FieldArchiveIterator it(*(fieldArchive()));
 	Field *field = it.next(false);
@@ -292,6 +293,18 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCFile::save2(const QString &path0, Arch
 		if (err == 2)	return ErrorOpening;
 		if (err == 1)	return Invalid;
 		if (err != 0)	return NotImplemented;
+	} else if (saveAs) {
+		if (QFile::exists(path0) && !QFile::remove(path0)) {
+			return ErrorRemoving;
+		}
+		if (!fic.copy(path0)) {
+			return ErrorCopying;
+		}
+	}
+
+	if (saveAs) {
+		fic.close();
+		fic.setFileName(path0);
 	}
 
 	return Ok;
@@ -422,6 +435,10 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, Archiv
 				return ErrorOpening;
 			}
 		}
+	}
+
+	if (saveAs) {
+		dir.setPath(path);
 	}
 
 	return Ok;
