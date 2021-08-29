@@ -676,7 +676,7 @@ void Search::findPrev()
 			f = true;
 		}
 	} else { // texts page
-		int index, size;
+		int index = 0, size = 0;
 		if (findPrevText(sorting, scope, mapID, textID,
 		                 from, index, size)) {
 			emit foundText(mapID, textID, index, size);
@@ -782,7 +782,7 @@ void Search::findAll()
 		}
 
 		searchAllDialog->setTextSearch();
-		int size;
+		int size = 0;
 		while (findNextText(sorting, scope,
 						 mapID, textID, ++from, size)) {
 			QCoreApplication::processEvents();
@@ -890,6 +890,8 @@ void Search::replaceCurrent()
 		return;
 	}
 
+	returnToBegin->hide();
+
 	setSearchValues();
 
 	if (fieldArchive->replaceText(text, replace2->lineEdit()->text(),
@@ -913,9 +915,10 @@ void Search::replaceAll()
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
 	FieldArchive::SearchScope scope = searchScope();
 	setSearchValues();
+	returnToBegin->hide();
 
 	QString after = replace2->lineEdit()->text();
-	int mapID = 0, textID = 0, from = 0, size;
+	int mapID = -1, textID = -1, from = -1, size = 0;
 
 	if (scope == FieldArchive::FieldScope) {
 		mapID = mainWindow()->fieldList()->currentMapId();
@@ -925,18 +928,23 @@ void Search::replaceAll()
 		}
 	}
 
-	bool modified = false;
+	int replacedCount = 0;
 	while (fieldArchive->searchText(text, mapID, textID, from, size, sorting, scope)) {
+		qDebug() << "replaceAll" << mapID << textID << from << size;
 		if (fieldArchive->replaceText(text, after, mapID, textID, from)) {
 			fieldArchive->field(mapID)->setModified(true);
-			modified = true;
+			replacedCount += 1;
 		}
 		from += after.size();
 	}
 
 	mainWindow()->setEnabled(true);
 
-	if (modified) {
+	returnToBegin->setText(tr("%1 occurrences replaced.")
+	                           .arg(replacedCount));
+	returnToBegin->show();
+
+	if (replacedCount > 0) {
 
 		// Update view
 		if (mainWindow()->textWidget()) {

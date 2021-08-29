@@ -242,61 +242,55 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="145"/>
         <source>Miscellaneous</source>
-        <translation>各種情報</translation>
+        <translation type="vanished">各種情報</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="147"/>
-        <source>Don&apos;t strictly verify the file format</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/ConfigWindow.cpp" line="283"/>
+        <location filename="widgets/ConfigWindow.cpp" line="273"/>
         <source>Edit</source>
         <translation>編集</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="286"/>
-        <location filename="widgets/ConfigWindow.cpp" line="290"/>
+        <location filename="widgets/ConfigWindow.cpp" line="276"/>
+        <location filename="widgets/ConfigWindow.cpp" line="280"/>
         <source>Add</source>
         <translation>追加</translation>
     </message>
     <message>
+        <location filename="widgets/ConfigWindow.cpp" line="300"/>
         <location filename="widgets/ConfigWindow.cpp" line="310"/>
-        <location filename="widgets/ConfigWindow.cpp" line="320"/>
         <source>Find ff7.exe</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="widgets/ConfigWindow.cpp" line="300"/>
         <location filename="widgets/ConfigWindow.cpp" line="310"/>
-        <location filename="widgets/ConfigWindow.cpp" line="320"/>
         <source>EXE files (*.exe)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="365"/>
+        <location filename="widgets/ConfigWindow.cpp" line="355"/>
         <source>Find kernel2.bin</source>
         <translation>kernel2.bin の選択</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="365"/>
-        <location filename="widgets/ConfigWindow.cpp" line="372"/>
+        <location filename="widgets/ConfigWindow.cpp" line="355"/>
+        <location filename="widgets/ConfigWindow.cpp" line="362"/>
         <source>Bin Files (*.bin);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="372"/>
+        <location filename="widgets/ConfigWindow.cpp" line="362"/>
         <source>Find window.bin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="381"/>
+        <location filename="widgets/ConfigWindow.cpp" line="371"/>
         <source>Find char.lgp</source>
         <translation>char.lgp の検出</translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="514"/>
+        <location filename="widgets/ConfigWindow.cpp" line="503"/>
         <source>You must restart Makou Reactor to apply all changes.</source>
         <translation>変更を適用するために Makou Reactor を再起動してください。</translation>
     </message>
@@ -342,12 +336,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="381"/>
+        <location filename="widgets/ConfigWindow.cpp" line="371"/>
         <source>Lgp Archives (*.lgp);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ConfigWindow.cpp" line="514"/>
+        <location filename="widgets/ConfigWindow.cpp" line="503"/>
         <source>Information</source>
         <translatorcomment>Information</translatorcomment>
         <translation>インフォメーション</translation>
@@ -878,22 +872,22 @@ Other maps can refer to it!</source>
         <translation type="unfinished">下に</translation>
     </message>
     <message>
-        <location filename="widgets/GrpScriptList.cpp" line="254"/>
+        <location filename="widgets/GrpScriptList.cpp" line="249"/>
         <source>You have more than 16 models in this field, the game may crash.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/GrpScriptList.cpp" line="260"/>
+        <location filename="widgets/GrpScriptList.cpp" line="255"/>
         <source>You have more than 48 groups in this field, the game may crash.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/GrpScriptList.cpp" line="315"/>
+        <location filename="widgets/GrpScriptList.cpp" line="310"/>
         <source>Delete</source>
         <translation type="unfinished">削除</translation>
     </message>
     <message>
-        <location filename="widgets/GrpScriptList.cpp" line="315"/>
+        <location filename="widgets/GrpScriptList.cpp" line="310"/>
         <source>Are you sure you want to remove %1?
 Some scripts can refer to it!</source>
         <translation type="unfinished"></translation>
@@ -912,14 +906,14 @@ Some scripts can refer to it!</source>
         <translation type="unfinished">グループの追加</translation>
     </message>
     <message>
-        <location filename="widgets/GrpScriptList.cpp" line="318"/>
+        <location filename="widgets/GrpScriptList.cpp" line="313"/>
         <source>the group selected</source>
         <oldsource>le groupe sélectionné</oldsource>
         <translatorcomment>the group selected</translatorcomment>
         <translation type="unfinished">選択グループ</translation>
     </message>
     <message>
-        <location filename="widgets/GrpScriptList.cpp" line="319"/>
+        <location filename="widgets/GrpScriptList.cpp" line="314"/>
         <source>the selected groups</source>
         <oldsource>les groupes sélectionnés</oldsource>
         <translatorcomment>the selected groups</translatorcomment>
@@ -979,33 +973,38 @@ Some scripts can refer to it!</source>
         <translation type="unfinished">モデル ローダー</translation>
     </message>
     <message>
-        <location filename="widgets/ImportDialog.cpp" line="53"/>
+        <location filename="widgets/ImportDialog.cpp" line="35"/>
+        <source>File is not compressed</source>
+        <translation type="unfinished">File is not compressed</translation>
+    </message>
+    <message>
+        <location filename="widgets/ImportDialog.cpp" line="55"/>
         <source> (partial: models and animations are not linked properly)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ImportDialog.cpp" line="54"/>
+        <location filename="widgets/ImportDialog.cpp" line="56"/>
         <source> (partial: Z-depth might be a little broken)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ImportDialog.cpp" line="73"/>
+        <location filename="widgets/ImportDialog.cpp" line="75"/>
         <source>BSX file:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ImportDialog.cpp" line="147"/>
+        <location filename="widgets/ImportDialog.cpp" line="155"/>
         <source>Select the associated BSX file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ImportDialog.cpp" line="148"/>
+        <location filename="widgets/ImportDialog.cpp" line="156"/>
         <source>BSX File (*.BSX);;All Files (*)</source>
         <oldsource>BSX File (*.BSX);;All Files(*)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ImportDialog.cpp" line="159"/>
+        <location filename="widgets/ImportDialog.cpp" line="167"/>
         <source>MIM File (*.MIM);;All Files (*)</source>
         <oldsource>MIM File (*.MIM);;All Files(*)</oldsource>
         <translation type="unfinished"></translation>
@@ -1016,20 +1015,20 @@ Some scripts can refer to it!</source>
         <translation type="unfinished">背景</translation>
     </message>
     <message>
-        <location filename="widgets/ImportDialog.cpp" line="59"/>
-        <location filename="widgets/ImportDialog.cpp" line="69"/>
+        <location filename="widgets/ImportDialog.cpp" line="61"/>
+        <location filename="widgets/ImportDialog.cpp" line="71"/>
         <source>Change</source>
         <oldsource>Changer</oldsource>
         <translation type="unfinished">変更</translation>
     </message>
     <message>
-        <location filename="widgets/ImportDialog.cpp" line="63"/>
+        <location filename="widgets/ImportDialog.cpp" line="65"/>
         <source>MIM file:</source>
         <oldsource>Fichier MIM :</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ImportDialog.cpp" line="158"/>
+        <location filename="widgets/ImportDialog.cpp" line="166"/>
         <source>Select the associated MIM file</source>
         <oldsource>Sélectionner le fichier MIM associé</oldsource>
         <translation type="unfinished"></translation>
@@ -1610,14 +1609,14 @@ Some scripts can refer to it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="144"/>
-        <location filename="widgets/ModelManagerPC.cpp" line="382"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="141"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="348"/>
         <source>Add a field model</source>
         <translation type="unfinished">3Dモデルの追加</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPC.cpp" line="154"/>
-        <location filename="widgets/ModelManagerPC.cpp" line="413"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="151"/>
+        <location filename="widgets/ModelManagerPC.cpp" line="379"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
     </message>
@@ -1625,28 +1624,28 @@ Some scripts can refer to it!</source>
 <context>
     <name>ModelManagerPS</name>
     <message>
-        <location filename="widgets/ModelManagerPS.cpp" line="30"/>
+        <location filename="widgets/ModelManagerPS.cpp" line="26"/>
         <source>Animation</source>
         <oldsource>Animations</oldsource>
         <translation type="unfinished">アニメーション</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPS.cpp" line="33"/>
+        <location filename="widgets/ModelManagerPS.cpp" line="29"/>
         <source>Unknown</source>
         <translation type="unfinished">不明</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPS.cpp" line="35"/>
+        <location filename="widgets/ModelManagerPS.cpp" line="31"/>
         <source>Model size</source>
         <translation type="unfinished">モデル サイズ</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPS.cpp" line="37"/>
+        <location filename="widgets/ModelManagerPS.cpp" line="33"/>
         <source>Global light</source>
         <translation type="unfinished">光源</translation>
     </message>
     <message>
-        <location filename="widgets/ModelManagerPS.cpp" line="39"/>
+        <location filename="widgets/ModelManagerPS.cpp" line="35"/>
         <source>Directional light</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1658,163 +1657,163 @@ Some scripts can refer to it!</source>
 <context>
     <name>OpcodeList</name>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="29"/>
+        <location filename="widgets/OpcodeList.cpp" line="31"/>
         <source>Action</source>
         <translation>アクション</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="53"/>
+        <location filename="widgets/OpcodeList.cpp" line="55"/>
         <source>Copy</source>
         <oldsource>Copier</oldsource>
         <translation type="unfinished">コピー</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="73"/>
+        <location filename="widgets/OpcodeList.cpp" line="75"/>
         <source>Expand the tree</source>
         <oldsource>Étendre l&apos;arbre</oldsource>
         <translation type="unfinished">ツリーを展く</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="38"/>
+        <location filename="widgets/OpcodeList.cpp" line="40"/>
         <source>Edit</source>
         <translation type="unfinished">編集</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="42"/>
+        <location filename="widgets/OpcodeList.cpp" line="44"/>
         <source>Add</source>
         <translation type="unfinished">追加</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="45"/>
-        <location filename="widgets/OpcodeList.cpp" line="795"/>
+        <location filename="widgets/OpcodeList.cpp" line="47"/>
+        <location filename="widgets/OpcodeList.cpp" line="797"/>
         <source>Delete</source>
         <translation type="unfinished">削除</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="49"/>
+        <location filename="widgets/OpcodeList.cpp" line="51"/>
         <source>Cut</source>
         <translation type="unfinished">切り取り</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="57"/>
+        <location filename="widgets/OpcodeList.cpp" line="59"/>
         <source>Copy text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="61"/>
+        <location filename="widgets/OpcodeList.cpp" line="63"/>
         <source>Paste</source>
         <translation type="unfinished">貼り付け</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="65"/>
+        <location filename="widgets/OpcodeList.cpp" line="67"/>
         <source>Up</source>
         <translation type="unfinished">上に</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="69"/>
+        <location filename="widgets/OpcodeList.cpp" line="71"/>
         <source>Down</source>
         <translation type="unfinished">下に</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="74"/>
+        <location filename="widgets/OpcodeList.cpp" line="76"/>
         <source>Undo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="78"/>
+        <location filename="widgets/OpcodeList.cpp" line="80"/>
         <source>Redo</source>
         <oldsource>Refaire</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="82"/>
+        <location filename="widgets/OpcodeList.cpp" line="84"/>
         <source>Edit text</source>
         <oldsource>Modifier texte</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="86"/>
-        <location filename="widgets/OpcodeList.cpp" line="242"/>
+        <location filename="widgets/OpcodeList.cpp" line="88"/>
+        <location filename="widgets/OpcodeList.cpp" line="245"/>
         <source>Disable tree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="87"/>
+        <location filename="widgets/OpcodeList.cpp" line="89"/>
         <source>Search opcode...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="244"/>
+        <location filename="widgets/OpcodeList.cpp" line="247"/>
         <source>Enable tree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="278"/>
+        <location filename="widgets/OpcodeList.cpp" line="281"/>
         <source>Goto label</source>
         <oldsource>Aller au label</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="279"/>
+        <location filename="widgets/OpcodeList.cpp" line="282"/>
         <source>Alt + Click to go to the label</source>
         <oldsource>Alt + clic pour aller au label</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="139"/>
+        <location filename="widgets/OpcodeList.cpp" line="141"/>
         <source>&amp;Script editor</source>
         <oldsource>Édition du &amp;script</oldsource>
         <translation type="unfinished">スクリプト エディター(&amp;S)</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="145"/>
+        <location filename="widgets/OpcodeList.cpp" line="147"/>
         <source>Add line</source>
         <translation type="unfinished">行の追加</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="147"/>
+        <location filename="widgets/OpcodeList.cpp" line="149"/>
         <source>Remove line</source>
         <translation type="unfinished">行の削除</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="150"/>
+        <location filename="widgets/OpcodeList.cpp" line="152"/>
         <source>Move up</source>
         <translation type="unfinished">上へ</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="152"/>
+        <location filename="widgets/OpcodeList.cpp" line="154"/>
         <source>Move down</source>
         <translation type="unfinished">下へ</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="281"/>
+        <location filename="widgets/OpcodeList.cpp" line="284"/>
         <source>Goto script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="282"/>
+        <location filename="widgets/OpcodeList.cpp" line="285"/>
         <source>Alt + Click to go to the script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="484"/>
+        <location filename="widgets/OpcodeList.cpp" line="487"/>
         <source>If this script is run,
  assume that the last non-empty script that runs</source>
         <translation type="unfinished">このスクリプトを実行した場合
 空ではないスクリプトの最後のものが実行されます</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="796"/>
+        <location filename="widgets/OpcodeList.cpp" line="798"/>
         <source>Are you sure you want to delete %1?</source>
         <translation type="unfinished">%1 を削除しますか？</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="798"/>
+        <location filename="widgets/OpcodeList.cpp" line="800"/>
         <source>the selected command</source>
         <translation type="unfinished">選択コマンド</translation>
     </message>
     <message>
-        <location filename="widgets/OpcodeList.cpp" line="799"/>
+        <location filename="widgets/OpcodeList.cpp" line="801"/>
         <source>the selected commands</source>
         <translation type="unfinished">選択したコマンド</translation>
     </message>
@@ -4407,77 +4406,77 @@ Make sure it is valid or delete it.</source>
     </message>
     <message>
         <location filename="core/Lgp.cpp" line="862"/>
-        <location filename="core/field/FieldArchiveIOPS.cpp" line="360"/>
+        <location filename="core/field/FieldArchiveIOPS.cpp" line="418"/>
         <source>Cannot remove destination archive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="core/Lgp.cpp" line="880"/>
-        <location filename="core/field/FieldArchiveIOPS.cpp" line="376"/>
+        <location filename="core/field/FieldArchiveIOPS.cpp" line="434"/>
         <source>Cannot rename temporary file to destination path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="414"/>
+        <location filename="core/field/Field.cpp" line="409"/>
         <source>File size greater than 10000000</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="427"/>
+        <location filename="core/field/Field.cpp" line="422"/>
         <source>Malformed LZS header</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="455"/>
-        <location filename="core/field/Field.cpp" line="559"/>
+        <location filename="core/field/Field.cpp" line="450"/>
+        <location filename="core/field/Field.cpp" line="554"/>
         <source>Incorrect field file size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="468"/>
-        <location filename="core/field/Field.cpp" line="567"/>
+        <location filename="core/field/Field.cpp" line="463"/>
+        <location filename="core/field/Field.cpp" line="562"/>
         <source>Cannot open section 1 (texts, scripts and musics)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="476"/>
-        <location filename="core/field/Field.cpp" line="575"/>
+        <location filename="core/field/Field.cpp" line="471"/>
+        <location filename="core/field/Field.cpp" line="570"/>
         <source>Cannot open tutos section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="484"/>
-        <location filename="core/field/Field.cpp" line="590"/>
+        <location filename="core/field/Field.cpp" line="479"/>
+        <location filename="core/field/Field.cpp" line="585"/>
         <source>Cannot open encounters section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="492"/>
-        <location filename="core/field/Field.cpp" line="598"/>
+        <location filename="core/field/Field.cpp" line="487"/>
+        <location filename="core/field/Field.cpp" line="593"/>
         <source>Cannot open walkmesh section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="500"/>
-        <location filename="core/field/Field.cpp" line="606"/>
+        <location filename="core/field/Field.cpp" line="495"/>
+        <location filename="core/field/Field.cpp" line="601"/>
         <source>Cannot open camera section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="508"/>
-        <location filename="core/field/Field.cpp" line="614"/>
+        <location filename="core/field/Field.cpp" line="503"/>
+        <location filename="core/field/Field.cpp" line="609"/>
         <source>Cannot open info section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="516"/>
-        <location filename="core/field/Field.cpp" line="583"/>
+        <location filename="core/field/Field.cpp" line="511"/>
+        <location filename="core/field/Field.cpp" line="578"/>
         <source>Cannot open model loader section</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="core/field/Field.cpp" line="545"/>
-        <location filename="core/field/Field.cpp" line="636"/>
+        <location filename="core/field/Field.cpp" line="540"/>
+        <location filename="core/field/Field.cpp" line="631"/>
         <source>Cannot open background section</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5795,6 +5794,11 @@ Make sure it is valid or delete it.</source>
         <translation type="unfinished">上位バイト</translation>
     </message>
     <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="58"/>
+        <source>It is not possible to divide per 0 or use mod 0, or the game will crash.</source>
+        <translation type="unfinished">It is not possible to divide per 0 or use mod 0, or the game will crash.</translation>
+    </message>
+    <message>
         <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="36"/>
         <source>Multiplication</source>
         <translation type="unfinished">乗算</translation>
@@ -5806,9 +5810,9 @@ Make sure it is valid or delete it.</source>
     </message>
     <message>
         <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="38"/>
-        <source>Modulas</source>
-        <oldsource>Modulo</oldsource>
-        <translation type="unfinished"></translation>
+        <source>Modulo</source>
+        <oldsource>Modulas</oldsource>
+        <translation type="unfinished">Modulo</translation>
     </message>
     <message>
         <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="40"/>
@@ -5838,34 +5842,34 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorBitOpPage</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="571"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="582"/>
         <source>Set a bit to 1</source>
         <oldsource>Mettre un bit à 1</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="572"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="583"/>
         <source>Set a bit to 0</source>
         <oldsource>Mettre un bit à 0</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="573"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="584"/>
         <source>Toggles a bit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="576"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="587"/>
         <source>Variable</source>
         <translation type="unfinished">変数</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="578"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="589"/>
         <source>Position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="580"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="591"/>
         <source>Operation</source>
         <oldsource>Opération</oldsource>
         <translation type="unfinished"></translation>
@@ -6550,38 +6554,38 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorUnaryOpPage</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="365"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="376"/>
         <source>Increment (wrapped)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="366"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="377"/>
         <source>Increment (capped)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="367"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="378"/>
         <source>Decrement (wrapped)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="368"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="379"/>
         <source>Decrement (capped)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="369"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="380"/>
         <source>Random</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="372"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="383"/>
         <source>8-bit</source>
         <oldsource>8 bits</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="373"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorMathPage.cpp" line="384"/>
         <source>16-bit</source>
         <oldsource>16 bits</oldsource>
         <translation type="unfinished"></translation>
@@ -6948,6 +6952,11 @@ continued from top.</source>
         <source>%1,
 chase at the end.</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/Search.cpp" line="943"/>
+        <source>%1 occurrences replaced.</source>
+        <translation type="unfinished">%1 occurrences replaced.</translation>
     </message>
     <message>
         <location filename="widgets/Search.cpp" line="122"/>
@@ -8175,7 +8184,7 @@ Are you sure you want to continue?</source>
     <message>
         <location filename="Window.cpp" line="76"/>
         <location filename="Window.cpp" line="410"/>
-        <location filename="Window.cpp" line="1570"/>
+        <location filename="Window.cpp" line="1567"/>
         <source>Archive Mana&amp;ger...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8347,7 +8356,6 @@ Edited files:</source>
     <message>
         <location filename="Window.cpp" line="478"/>
         <location filename="Window.cpp" line="1022"/>
-        <location filename="Window.cpp" line="1301"/>
         <source>DAT File (*.DAT)</source>
         <translation type="unfinished">DAT ファイル (*.DAT)</translation>
     </message>
@@ -8433,14 +8441,19 @@ Edited files:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="Window.cpp" line="1301"/>
+        <source>PS Field Map (*.DAT)</source>
+        <translation type="unfinished">PS Field Map (*.DAT)</translation>
+    </message>
+    <message>
         <location filename="Window.cpp" line="570"/>
         <location filename="Window.cpp" line="665"/>
         <location filename="Window.cpp" line="1077"/>
         <location filename="Window.cpp" line="1202"/>
         <location filename="Window.cpp" line="1246"/>
         <location filename="Window.cpp" line="1274"/>
-        <location filename="Window.cpp" line="1333"/>
-        <location filename="Window.cpp" line="1368"/>
+        <location filename="Window.cpp" line="1330"/>
+        <location filename="Window.cpp" line="1365"/>
         <source>Error</source>
         <translation type="unfinished">エラー</translation>
     </message>
@@ -8486,7 +8499,7 @@ Edited files:</source>
     </message>
     <message>
         <location filename="Window.cpp" line="906"/>
-        <location filename="Window.cpp" line="1558"/>
+        <location filename="Window.cpp" line="1555"/>
         <source>Author: %1</source>
         <translation type="unfinished">作者: %1</translation>
     </message>
@@ -8544,9 +8557,9 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
     </message>
     <message>
         <location filename="Window.cpp" line="1162"/>
-        <location filename="Window.cpp" line="1302"/>
-        <source>Uncompressed PC Field Map (*)</source>
-        <translation type="unfinished"></translation>
+        <source>Uncompressed PC Field Map (*.dec)</source>
+        <oldsource>Uncompressed PC Field Map (*)</oldsource>
+        <translation type="unfinished">Uncompressed PC Field Map (*.dec)</translation>
     </message>
     <message>
         <location filename="Window.cpp" line="1197"/>
@@ -8630,45 +8643,40 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1303"/>
-        <source>Uncompressed DAT File (*)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="Window.cpp" line="1312"/>
+        <location filename="Window.cpp" line="1310"/>
         <source>Import a file</source>
         <translation type="unfinished">ファイルのインポート</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1368"/>
+        <location filename="Window.cpp" line="1365"/>
         <source>Final Fantasy VII couldn&apos;t be launched
 %1</source>
         <translation>Final Fantasy VII を起動できません。
 %1</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1484"/>
-        <location filename="Window.cpp" line="1562"/>
+        <location filename="Window.cpp" line="1481"/>
+        <location filename="Window.cpp" line="1559"/>
         <source>Opening error</source>
         <translation type="unfinished">オープン エラー</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1484"/>
+        <location filename="Window.cpp" line="1481"/>
         <source>Can not open encounters!</source>
         <translation type="unfinished">エンカウントが開けません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1562"/>
+        <location filename="Window.cpp" line="1559"/>
         <source>Can not open miscellaneous informations!</source>
         <translation type="unfinished">各種情報が開けません！</translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1573"/>
+        <location filename="Window.cpp" line="1570"/>
         <source>Go back to field map editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="Window.cpp" line="1593"/>
+        <location filename="Window.cpp" line="1590"/>
         <source>Applying...</source>
         <translation type="unfinished"></translation>
     </message>
