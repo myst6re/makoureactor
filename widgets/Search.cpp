@@ -632,10 +632,6 @@ void Search::findPrev()
 	buttonPrev->setDefault(true);
 	returnToBegin->hide();
 
-	QTimer timer(this);
-	connect(&timer, SIGNAL(timeout()), SLOT(processEvents()));
-	timer.start(700);
-
 	int mapID, grpScriptID, scriptID, opcodeID,
 			textID, from;
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
@@ -669,6 +665,10 @@ void Search::findPrev()
 
 	bool f = false;
 
+	QTimer timer(this);
+	connect(&timer, SIGNAL(timeout()), SLOT(processEvents()));
+	timer.start(700);
+
 	if (tabWidget->currentIndex() == 0) { // scripts page
 		if (findPrevScript(sorting, scope, mapID, grpScriptID,
 		                   scriptID, opcodeID)) {
@@ -684,6 +684,8 @@ void Search::findPrev()
 		}
 	}
 
+	timer.stop();
+
 	if (!f) {
 		returnToBegin->setText(tr("%1,\nchase at the end.")
 		                           .arg(firstMessage()));
@@ -692,7 +694,6 @@ void Search::findPrev()
 		atTheBeginning = true;
 	}
 
-	timer.stop();
 	mainWindow()->setEnabled(true);
 }
 
@@ -928,9 +929,12 @@ void Search::replaceAll()
 		}
 	}
 
+	QTimer timer(this);
+	connect(&timer, SIGNAL(timeout()), SLOT(processEvents()));
+	timer.start(700);
+
 	int replacedCount = 0;
 	while (fieldArchive->searchText(text, mapID, textID, from, size, sorting, scope)) {
-		qDebug() << "replaceAll" << mapID << textID << from << size;
 		if (fieldArchive->replaceText(text, after, mapID, textID, from)) {
 			fieldArchive->field(mapID)->setModified(true);
 			replacedCount += 1;
@@ -938,6 +942,7 @@ void Search::replaceAll()
 		from += after.size();
 	}
 
+	timer.stop();
 	mainWindow()->setEnabled(true);
 
 	returnToBegin->setText(tr("%1 occurrences replaced.")
