@@ -20,8 +20,20 @@
 
 #include <QtWidgets>
 #include "ScriptEditorView.h"
+#include "../HelpWidget.h"
 
-class ScriptEditorReturnToPage : public ScriptEditorView
+class ScriptEditorWithPriorityPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorWithPriorityPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
+protected:
+	void build();
+	QSpinBox *priority;
+	HelpWidget *helpWidget;
+};
+
+class ScriptEditorReturnToPage : public ScriptEditorWithPriorityPage
 {
 	Q_OBJECT
 public:
@@ -31,10 +43,9 @@ public:
 private:
 	void build();
 	QComboBox *scriptList;
-	QSpinBox *priority;
 };
 
-class ScriptEditorExecPage : public ScriptEditorView
+class ScriptEditorExecPage : public ScriptEditorWithPriorityPage
 {
 	Q_OBJECT
 public:
@@ -48,11 +59,10 @@ private:
 	void build();
 	Opcode *convertOpcode(Opcode::Keys key);
 	QComboBox *groupList, *scriptList;
-	QSpinBox *priority;
 	QComboBox *execType;
 };
 
-class ScriptEditorExecCharPage : public ScriptEditorView
+class ScriptEditorExecCharPage : public ScriptEditorWithPriorityPage
 {
 	Q_OBJECT
 public:
@@ -65,7 +75,7 @@ private:
 	void build();
 	Opcode *convertOpcode(Opcode::Keys key);
 	QComboBox *scriptList;
-	QSpinBox *partyID, *priority;
+	QSpinBox *partyID;
 	QComboBox *execType;
 };
 

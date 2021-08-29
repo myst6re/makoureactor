@@ -18,31 +18,45 @@
 #include "ScriptEditorStructPage.h"
 #include "Data.h"
 
+ScriptEditorWithPriorityPage::ScriptEditorWithPriorityPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
+      ScriptEditorView(field, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorWithPriorityPage::build()
+{
+	priority = new QSpinBox(this);
+	priority->setRange(0, 6);
+
+	helpWidget = new HelpWidget(16, tr("Lower priority number is higher priority in the game"));
+
+	connect(priority, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
+}
+
 ScriptEditorReturnToPage::ScriptEditorReturnToPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+	ScriptEditorWithPriorityPage(field, grpScript, script, opcodeID, parent)
 {
 }
 
 void ScriptEditorReturnToPage::build()
 {
+	ScriptEditorWithPriorityPage::build();
+
 	scriptList = new QComboBox(this);
 	for (int i=0; i<32; ++i) {
 		scriptList->addItem(tr("Script %1").arg(i));
 	}
-
-	priority = new QSpinBox(this);
-	priority->setRange(0, 7);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(new QLabel(tr("Script")), 0, 0);
 	layout->addWidget(scriptList, 0, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Priority")), 1, 0);
 	layout->addWidget(priority, 1, 1, 1, 3);
-	layout->setRowStretch(2, 1);
+	layout->addWidget(helpWidget, 2, 0, 1, 4);
+	layout->setRowStretch(3, 1);
 	layout->setContentsMargins(QMargins());
 
 	connect(scriptList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(priority, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
 }
 
 Opcode *ScriptEditorReturnToPage::opcode()
@@ -72,12 +86,14 @@ void ScriptEditorReturnToPage::setOpcode(Opcode *opcode)
 }
 
 ScriptEditorExecPage::ScriptEditorExecPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+	ScriptEditorWithPriorityPage(field, grpScript, script, opcodeID, parent)
 {
 }
 
 void ScriptEditorExecPage::build()
 {
+	ScriptEditorWithPriorityPage::build();
+
 	groupList = new QComboBox(this);
 	int i=0;
 	for (const GrpScript *group : field()->scriptsAndTexts()->grpScripts()) {
@@ -88,9 +104,6 @@ void ScriptEditorExecPage::build()
 	for (int i=0; i<32; ++i) {
 		scriptList->addItem("");
 	}
-
-	priority = new QSpinBox(this);
-	priority->setRange(0, 7);
 
 	execType = new QComboBox(this);
 	execType->addItem(tr("Asynchronous, no wait"));
@@ -106,12 +119,12 @@ void ScriptEditorExecPage::build()
 	layout->addWidget(priority, 2, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Type")), 3, 0);
 	layout->addWidget(execType, 3, 1, 1, 3);
-	layout->setRowStretch(4, 1);
+	layout->addWidget(helpWidget, 4, 0, 1, 4);
+	layout->setRowStretch(5, 1);
 	layout->setContentsMargins(QMargins());
 
 	connect(groupList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
 	connect(scriptList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(priority, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
 	connect(groupList, SIGNAL(currentIndexChanged(int)), SLOT(updateScriptList(int)));
 	connect(execType, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
 }
@@ -213,21 +226,20 @@ Opcode *ScriptEditorExecPage::convertOpcode(Opcode::Keys key)
 }
 
 ScriptEditorExecCharPage::ScriptEditorExecCharPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+	ScriptEditorWithPriorityPage(field, grpScript, script, opcodeID, parent)
 {
 }
 
 void ScriptEditorExecCharPage::build()
 {
+	ScriptEditorWithPriorityPage::build();
+
 	partyID = new QSpinBox(this);
 	partyID->setRange(0, 255);
 	scriptList = new QComboBox(this);
 	for (int i=0; i<32; ++i) {
 		scriptList->addItem(tr("Script %1").arg(i));
 	}
-
-	priority = new QSpinBox(this);
-	priority->setRange(0, 7);
 
 	execType = new QComboBox(this);
 	execType->addItem(tr("Asynchronous, no wait"));
@@ -243,12 +255,12 @@ void ScriptEditorExecCharPage::build()
 	layout->addWidget(priority, 2, 1, 1, 3);
 	layout->addWidget(new QLabel(tr("Type")), 3, 0);
 	layout->addWidget(execType, 3, 1, 1, 3);
-	layout->setRowStretch(4, 1);
+	layout->addWidget(helpWidget, 4, 0, 1, 4);
+	layout->setRowStretch(5, 1);
 	layout->setContentsMargins(QMargins());
 
 	connect(partyID, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
 	connect(scriptList, SIGNAL(currentIndexChanged(int)), SIGNAL(opcodeChanged()));
-	connect(priority, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
 	connect(execType, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
 }
 

@@ -5931,46 +5931,46 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorExecCharPage</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="226"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="241"/>
         <source>Script %1</source>
         <translation type="unfinished">スクリプト %1</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="233"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="245"/>
         <source>Asynchronous, no wait</source>
         <oldsource>Asynchrone, n&apos;attend pas</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="234"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="246"/>
         <source>Asynchronous, wait</source>
         <oldsource>Asynchrone, attend</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="235"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="247"/>
         <source>Synchronous, wait</source>
         <oldsource>Synchrone, attend</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="238"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="250"/>
         <source>Team member</source>
         <translation>チーム メンバー</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="240"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="252"/>
         <source>Script</source>
         <translation type="unfinished">スクリプト</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="242"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="254"/>
         <source>Priority</source>
         <oldsource>Priorité</oldsource>
         <translation type="unfinished">優先度</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="244"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="256"/>
         <source>Type</source>
         <translation type="unfinished">タイプ</translation>
     </message>
@@ -5978,42 +5978,42 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorExecPage</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="96"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="109"/>
         <source>Asynchronous, no wait</source>
         <oldsource>Asynchrone, n&apos;attend pas</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="97"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="110"/>
         <source>Asynchronous, wait</source>
         <oldsource>Asynchrone, attend</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="98"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="111"/>
         <source>Synchronous, wait</source>
         <oldsource>Synchrone, attend</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="101"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="114"/>
         <source>Group</source>
         <oldsource>Groupe</oldsource>
         <translation type="unfinished">グループ</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="103"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="116"/>
         <source>Script</source>
         <translation type="unfinished">スクリプト</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="105"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="118"/>
         <source>Priority</source>
         <oldsource>Priorité</oldsource>
         <translation type="unfinished">優先度</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="107"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="120"/>
         <source>Type</source>
         <translation type="unfinished">タイプ</translation>
     </message>
@@ -6349,33 +6349,33 @@ Make sure it is valid or delete it.</source>
         <translation type="obsolete">キー</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="877"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="889"/>
         <source>Key pressed</source>
         <oldsource>Touche pressée</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="852"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="864"/>
         <source>Keys</source>
         <translation type="unfinished">キー</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="878"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="890"/>
         <source>Key pressed once</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="879"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="891"/>
         <source>Key released once</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="881"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="893"/>
         <source>Type</source>
         <translation type="unfinished">タイプ</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="883"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="895"/>
         <source>Label</source>
         <translation type="unfinished">レイヤー</translation>
     </message>
@@ -6383,51 +6383,51 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorIfPage</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="607"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="619"/>
         <source>16-bit signed</source>
         <oldsource>Sur 16 bits signés</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="613"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="625"/>
         <source>Short (8-bit)</source>
         <oldsource>Court (8 bits)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="614"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="626"/>
         <source>Long (16-bit)</source>
         <oldsource>Long (16 bits)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="606"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="618"/>
         <source>8-bit unsigned</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="608"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="620"/>
         <source>16-bit unsigned</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="617"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="629"/>
         <source>Test to be performed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="621"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="633"/>
         <source>Compare type</source>
         <oldsource>Type de comparaison</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="623"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="635"/>
         <source>Label</source>
         <translation type="unfinished">レイヤー</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="625"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="637"/>
         <source>Jump type (expert)</source>
         <oldsource>Jump type</oldsource>
         <translation type="unfinished"></translation>
@@ -6436,18 +6436,18 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorIfQPage</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="990"/>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="991"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="1002"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="1003"/>
         <source>(Empty)</source>
         <translation type="unfinished">(なし)</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="996"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="1008"/>
         <source>Character</source>
         <translation type="unfinished">キャラクター</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="998"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="1010"/>
         <source>Label</source>
         <translation type="unfinished">レイヤー</translation>
     </message>
@@ -6455,7 +6455,7 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorJumpNanakiPage</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="554"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="566"/>
         <source>Label</source>
         <translation type="unfinished">レイヤー</translation>
     </message>
@@ -6463,24 +6463,24 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorJumpPage</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="423"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="435"/>
         <source>Short (8-bit)</source>
         <oldsource>Court (8 bits)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="424"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="436"/>
         <source>Long (16-bit)</source>
         <oldsource>Long (16 bits)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="427"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="439"/>
         <source>Label</source>
         <translation type="unfinished">レイヤー</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="429"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="441"/>
         <source>Type (expert)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6492,12 +6492,12 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorJumpPageInterface</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="394"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="406"/>
         <source>Label %1</source>
         <translation type="unfinished">レイヤー %1</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="404"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="416"/>
         <source>New label</source>
         <oldsource>Nouveau label</oldsource>
         <translation type="unfinished"></translation>
@@ -6506,7 +6506,7 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorLabelPage</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="339"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="351"/>
         <source>Label</source>
         <translation type="unfinished">レイヤー</translation>
     </message>
@@ -6535,17 +6535,17 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorReturnToPage</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="30"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="47"/>
         <source>Script %1</source>
         <translation type="unfinished">スクリプト %1</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="37"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="51"/>
         <source>Script</source>
         <translation type="unfinished">スクリプト</translation>
     </message>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="39"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="53"/>
         <source>Priority</source>
         <oldsource>Priorité</oldsource>
         <translation type="unfinished">優先度</translation>
@@ -6594,7 +6594,7 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptEditorWaitPage</name>
     <message>
-        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="1052"/>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="1064"/>
         <source>Images</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6724,6 +6724,14 @@ Make sure it is valid or delete it.</source>
         <source>Text in preview:</source>
         <oldsource>Texte en aperçu :</oldsource>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ScriptEditorWithPriorityPage</name>
+    <message>
+        <location filename="widgets/ScriptEditorWidgets/ScriptEditorStructPage.cpp" line="31"/>
+        <source>Lower priority number is higher priority in the game</source>
+        <translation type="unfinished">Lower priority number is higher priority in the game</translation>
     </message>
 </context>
 <context>
@@ -6948,13 +6956,13 @@ continued from top.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="688"/>
+        <location filename="widgets/Search.cpp" line="690"/>
         <source>%1,
 chase at the end.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/Search.cpp" line="943"/>
+        <location filename="widgets/Search.cpp" line="948"/>
         <source>%1 occurrences replaced.</source>
         <translation type="unfinished">%1 occurrences replaced.</translation>
     </message>
