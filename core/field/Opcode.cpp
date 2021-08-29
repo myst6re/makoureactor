@@ -166,16 +166,19 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 	case Compare:
 	case BitCompare:
 		if (id() == IFUB
-				|| id() == IFUBL
-				|| id() == IFSW
-				|| id() == IFSWL
-				|| id() == IFUW
-				|| id() == IFUWL) {
+		    || id() == IFUBL
+		    || id() == IFSW
+		    || id() == IFSWL
+		    || id() == IFUW
+		    || id() == IFUWL) {
 			const OpcodeIf *opcodeIf = static_cast<const OpcodeIf *>(this);
-			if (((op == Compare && opcodeIf->oper < quint8(BitAnd))
-				|| (op == BitCompare && opcodeIf->oper >= quint8(BitAnd)))
-					&& B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
-					&& (noValue || (B2(opcodeIf->banks) == 0 && opcodeIf->value2 == value))) {
+			if ((opcodeIf->oper <= quint8(LowerThanEqual) || opcodeIf->oper >= quint8(BitOn))
+			    && B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
+			    && (noValue || (B2(opcodeIf->banks) == 0 && opcodeIf->value2 == value))) {
+				return true;
+			} else if (opcodeIf->oper >= quint8(BitAnd) && opcodeIf->oper <= quint8(BitOr)
+			           && B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
+			           && (noValue || (B2(opcodeIf->banks) == 0 && (opcodeIf->value2 >> value) & 1))) {
 				return true;
 			}
 		}
