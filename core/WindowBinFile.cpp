@@ -285,11 +285,25 @@ int WindowBinFile::palette(FontColor color, quint8 table) const
 
 int WindowBinFile::absoluteId(quint8 table, quint8 id)
 {
+	if (id >= tableSize(table)) {
+		return -1;
+	}
+
 	int absId = id;
 	for (int i=0; i<table; ++i) {
 		absId += tableSize(i);
 	}
 	return absId;
+}
+
+quint8 WindowBinFile::charInfo(quint8 table, quint8 id) const
+{
+	return _charWidth.value(absoluteId(table, id));
+}
+
+void WindowBinFile::setCharInfo(quint8 table, quint8 id, quint8 info)
+{
+	_charWidth.replace(absoluteId(table, id), info);
 }
 
 quint8 WindowBinFile::charWidth(quint8 table, quint8 id) const

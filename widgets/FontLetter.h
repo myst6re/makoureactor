@@ -32,6 +32,7 @@ public:
 	virtual ~FontLetter();
 	void setReadOnly(bool ro);
 	virtual void setWindowBinFile(WindowBinFile *windowBinFile);
+	bool isLetterSizeEditable() const;
 public slots:
 	virtual void setLetter(int letter);
 	void setPixelIndex(int index);

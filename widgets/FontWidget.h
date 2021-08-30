@@ -41,6 +41,7 @@ public slots:
 	void setLetter(int i);
 	void editLetter(const QString &letter);
 	void editWidth(int w);
+	void editLeftPadding(int padding);
 	void exportFont();
 	void importFont();
 	void reset();
@@ -55,7 +56,7 @@ private:
 	QComboBox *selectPal, *selectTable;
 	QPushButton *fromImage1, *fromImage2;
 	QLineEdit *textLetter;
-	QSpinBox *widthLetter;
+	QSpinBox *widthLetter, *leftPaddingLetter;
 	QPushButton *resetButton2;
 	FF7Font *ff7Font;
 protected:
