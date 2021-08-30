@@ -1924,6 +1924,40 @@ QString Opcode1B::toString(Field *) const
 				 : QObject::tr("else goto label %1").arg(_label));
 }
 
+Opcode1C::Opcode1C(const char *params, int size)
+{
+	setParams(params, size);
+}
+
+void Opcode1C::setParams(const char *params, int)
+{
+	memcpy(&address, params, 4);
+	quint8 subSize = params[4];
+	bytes = QByteArray(params + 5, qMin(quint8(128), subSize));
+}
+
+quint8 Opcode1C::size() const
+{
+	return Opcode::size() + qMin(128, bytes.size());
+}
+
+QString Opcode1C::toString(Field *) const
+{
+	return QObject::tr("Write bytes to address 0x%1 (length=%2)")
+	    .arg(address, 0, 16)
+	    .arg(bytes.size());
+}
+
+QByteArray Opcode1C::params() const
+{
+	QByteArray data = bytes.left(128);
+	char size = char(data.size());
+	return QByteArray()
+	    .append((char *)&address, 4)
+	    .append(size)
+	    .append(data);
+}
+
 OpcodeMINIGAME::OpcodeMINIGAME(const char *params, int size)
 {
 	setParams(params, size);
@@ -8722,7 +8756,7 @@ const quint8 Opcode::length[257] =
 /*19*//* IFUWL */		9,
 /*1a*//*  */			10,
 /*1b*//*  */			3,
-/*1c*//*  */			1,
+/*1c*//*  */			6,
 /*1d*//*  */			1,
 /*1e*//*  */			1,
 /*1f*//*  */			1,

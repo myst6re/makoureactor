@@ -283,6 +283,8 @@ QList<int> ScriptEditorGenericList::paramTypes(int id)
 		paramTypes<<word<<word<<dword<<byte;break;
 	case 0x1B:
 		paramTypes<<jump_l;break;
+	case 0x1C:
+		paramTypes<<dword<<byte;break;
 	//case 0x1C:case 0x1D:case 0x1E:case 0x1F:break;
 	case 0x20:
 		paramTypes<<field_id<<coord_x<<coord_y<<polygone_id<<byte<<minijeu_id;break;
