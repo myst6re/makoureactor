@@ -81,8 +81,8 @@ int TextPreview::calcFF7TextWidth(const QByteArray &ff7Text)
 {
 	int width = 0;
 
-	for (const quint8 &c : ff7Text) {
-		if (c<0xe0) {
+	for (const char &c : qAsConst(ff7Text)) {
+		if (quint8(c) < 0xe0) {
 			width += charFullWidth(0, c);
 		}
 	}
@@ -238,7 +238,9 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 	pagesPos.clear();
 	pagesPos.append(0);
 	bool jp = Config::value("jp_txt", false).toBool(), spaced_characters=false;
-	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt();
+	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt(),
+		choiceW = Config::value("choiceWidth", 10).toInt(),
+		tabW = Config::value("tabWidth", 4).toInt();
 
 	for (int i=0; i<size; ++i) {
 		quint8 caract = (quint8)ff7Text.at(i);
@@ -312,9 +314,9 @@ QSize TextPreview::calcSize(const QByteArray &ff7Text, QList<int> &pagesPos)
 			break;
 		default:
 			if (!jp && caract==0xe0) {// {CHOICE}
-				width += spaced_characters ? spacedCharsW * 10 : 30;
+				width += spaced_characters ? spacedCharsW * choiceW : 3 * choiceW;
 			} else if (!jp && caract==0xe1) {// \t
-				width += spaced_characters ? spacedCharsW * 4 : 12;
+				width += spaced_characters ? spacedCharsW * tabW : 3 * tabW;
 			} else if (!jp && caract>=0xe2 && caract<=0xe4) {// duo
 				const char *duo = optimisedDuo[caract-0xe2];
 				width += spaced_characters ? spacedCharsW : charFullWidth(1, (quint8)duo[0]);
@@ -487,7 +489,9 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	multicolor = -1;
 	int savFontColor = fontColor;
 	WindowType mode = Normal;
-	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt();
+	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt(),
+	    choiceW = Config::value("choiceWidth", 10).toInt(),
+	    tabW = Config::value("tabWidth", 4).toInt();
 
 	/* Window Background */
 
@@ -522,9 +526,9 @@ bool TextPreview::drawTextArea(QPainter *painter)
 		} else if (charId<0xe7) {
 			if (!jp) {
 				if (charId==0xe0)//{CHOICE}
-					x += spaced_characters ? spacedCharsW * 10 : 30;
+					x += spaced_characters ? spacedCharsW * choiceW : 3 * choiceW;
 				else if (charId==0xe1)//\t
-					x += spaced_characters ? spacedCharsW * 4 : 12;
+					x += spaced_characters ? spacedCharsW * tabW : 3 * tabW;
 				else if (charId>=0xe2 && charId<=0xe4) {
 					const quint8 *opti = (const quint8 *)optimisedDuo[charId-0xe2];
 					letter(&x, &y, opti[0], painter, 0);
@@ -580,7 +584,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 				} else if (charId2 == 0xde || charId2 == 0xdf) {
 					letter(&x, &y, !jp ? 0x10 : 0x33, painter, jp);// zero
 				} else if (charId2 == 0xe1) {
-					x += spaced_characters ? spacedCharsW * 4 : 12;// tab
+					x += spaced_characters ? spacedCharsW * tabW : 3 * tabW;// tab
 					letter(&x, &y, !jp ? 0x10 : 0x33, painter, jp);// zero
 				} else if (charId2 == 0xe2) {
 					i += 4;
