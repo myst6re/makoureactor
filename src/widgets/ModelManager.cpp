@@ -66,6 +66,9 @@ ModelManager::ModelManager(QWidget *parent) :
 	connect(models, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(showModelInfos(QTreeWidgetItem*,QTreeWidgetItem*)));
 	connect(modelAnims, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(showModel(QTreeWidgetItem*)));
 	connect(modelUnknown, SIGNAL(valueChanged(int)), SLOT(setModelUnknown(int)));
+	connect(modelScaleWidget, SIGNAL(valueChanged(int)), SLOT(setModelScale(int)));
+	connect(modelGlobalColorWidget, SIGNAL(colorEdited(int,QRgb)), SLOT(setModelGlobalColor(int,QRgb)));
+	connect(modelColorsLayout, SIGNAL(colorDirEdited(int,FieldModelColorDir)), SLOT(setModelColor(int,FieldModelColorDir)));
 }
 
 void ModelManager::clear()
@@ -198,6 +201,37 @@ void ModelManager::setModelUnknown(int unknown)
 	if (modelID < 0)	return;
 
 	fieldModelLoader->setUnknown(modelID, quint16(unknown));
+
+	emit modified();
+}
+
+void ModelManager::setModelScale(int scale)
+{
+	int modelID = currentModelID();
+	if (modelID < 0)	return;
+
+	setModelScale(modelID, scale);
+
+	emit modified();
+}
+
+void ModelManager::setModelGlobalColor(int id, QRgb color)
+{
+	Q_UNUSED(id);
+	int modelID = currentModelID();
+	if (modelID < 0)	return;
+
+	setGlobalColor(modelID, color);
+
+	emit modified();
+}
+
+void ModelManager::setModelColor(int id, const FieldModelColorDir &color)
+{
+	int modelID = currentModelID();
+	if (modelID < 0)	return;
+
+	setLightColor(modelID, id, color);
 
 	emit modified();
 }

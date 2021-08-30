@@ -100,9 +100,13 @@ void FieldModel::drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale,
 
 	for (FieldModelPart *part : bone.parts()) {
 		for (FieldModelGroup *g : part->groups()) {
+			bool groupTextureBinded = false;
 			if (g->hasTexture()) {
 				QImage tex = data->loadedTexture(g);
-				gpuRenderer->bindTexture(tex);
+				if !tex.isNull()) {
+					gpuRenderer->bindTexture(tex);
+					groupTextureBinded = true;
+				}
 			}
 
 			for (const Poly *p : g->polygons()) {
@@ -143,7 +147,7 @@ void FieldModel::drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale,
 						color = QRgba64::fromRgba(qRed(_color) * globalColor[0], qGreen(_color) * globalColor[1], qBlue(_color) * globalColor[2], UINT8_MAX);
 					}
 
-					if (g->hasTexture() && p->hasTexture()) {
+					if (groupTextureBinded && p->hasTexture()) {
 						const TexCoord &_coord = p->texCoord(j);
 						texcoord = QVector2D(_coord.x, _coord.y);
 					}

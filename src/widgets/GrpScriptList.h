@@ -27,7 +27,6 @@ class GrpScriptList : public QTreeWidget
     Q_OBJECT
 public:
 	explicit GrpScriptList(QWidget *parent = nullptr);
-	virtual ~GrpScriptList();
 
 	GrpScript *currentGrpScript();
 	int selectedID();
@@ -90,7 +89,7 @@ private:
 	HelpWidget *_helpWidget;
 
 	Section1File *scripts;
-	QList<GrpScript *> grpScriptCopied;
+	QList<GrpScript> grpScriptCopied;
 };
 
 #endif

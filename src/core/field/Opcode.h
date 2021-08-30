@@ -759,6 +759,18 @@ public:
 	QString toString(Field *field) const;
 };
 
+class Opcode1C : public Opcode {
+public:
+	explicit Opcode1C(const char *params, int size);
+	inline int id() const { return 0x1C; }
+	QString toString(Field *field) const;
+	quint8 size() const;
+	void setParams(const char *params, int size);
+	QByteArray params() const;
+	quint32 address;
+	QByteArray bytes;
+};
+
 class OpcodeMINIGAME : public Opcode {
 public:
 	explicit OpcodeMINIGAME(const char *params, int size);

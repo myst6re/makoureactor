@@ -27,6 +27,7 @@ class ImportDialog : public QDialog
 public:
 	explicit ImportDialog(bool sourceSameTypeAsTarget, bool isDat, const QString &path, QWidget *parent = nullptr);
 	Field::FieldSections parts() const;
+	bool isCompressed() const;
 	QString bsxPath() const;
 	QString mimPath() const;
 private slots:
@@ -43,6 +44,7 @@ private:
 	QCheckBox *mim;
 	QWidget *pathWidgetMim, *pathWidgetBsx;
 	QLineEdit *pathEditMim, *pathEditBsx;
+	QCheckBox *notCompressed;
 };
 
 #endif // IMPORTDIALOG_H

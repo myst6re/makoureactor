@@ -45,7 +45,7 @@ bool TimFile::open(const QByteArray &data)
 {
 	//	QTime t;t.start();
 
-	quint32 palSize=0, imgSize=0, color=0;
+	quint32 palSize=0, color=0;
 	quint16 w, h;
 	const char *constData = data.constData();
 	bool hasPal;
@@ -94,13 +94,16 @@ bool TimFile::open(const QByteArray &data)
 			for (int i=0; i<nbPal; ++i)
 			{
 				QVector<QRgb> pal;
+				QBitArray alphaBits(onePalSize);
 
 				for (quint16 j=0; j<onePalSize; ++j) {
 					memcpy(&color, &constData[20+pos*2+j*2], 2);
 					pal.append(PsColor::fromPsColor(color, true));
+					alphaBits.setBit(j, psColorAlphaBit(color));
 				}
 
 				_colorTables.append(pal);
+				_alphaBits.append(alphaBits);
 
 				pos += pos % palW == 0 ? onePalSize : palW - onePalSize;
 			}
@@ -125,7 +128,7 @@ bool TimFile::open(const QByteArray &data)
 	if ((quint32)dataSize < 20+palSize)
 		return false;
 
-	memcpy(&imgSize, &constData[8+palSize], 4);
+	memcpy(&sizeImgSection, &constData[8+palSize], 4);
 	memcpy(&imgX, &constData[12+palSize], 2);
 	memcpy(&imgY, &constData[14+palSize], 2);
 	memcpy(&w, &constData[16+palSize], 2);
@@ -134,8 +137,8 @@ bool TimFile::open(const QByteArray &data)
 	else if (bpp==1)	w*=2;
 
 //	qDebug() << QString("-Image-");
-//	qDebug() << QString("Size = %1, w = %2, h = %3").arg(imgSize).arg(w).arg(h);
-//	qDebug() << QString("TIM Size = %1").arg(8+palSize+imgSize);
+//	qDebug() << QString("Size = %1, w = %2, h = %3").arg(sizeImgSection).arg(w).arg(h);
+//	qDebug() << QString("TIM Size = %1").arg(8+palSize+sizeImgSection);
 
 	_image = QImage(w, h, hasPal ? QImage::Format_Indexed8 : QImage::Format_ARGB32);
 	if (hasPal) {
@@ -195,10 +198,13 @@ bool TimFile::open(const QByteArray &data)
 	}
 	else if (bpp==2)
 	{
+		QBitArray alphaBits;
+
 		while (i<size && y<h)
 		{
 			memcpy(&color, &constData[20+palSize+i], 2);
 			pixels[x + y*w] = PsColor::fromPsColor(color, true);
+			alphaBits.setBit(i / 2, psColorAlphaBit(color));
 
 			++x;
 			if (x==w)
@@ -208,6 +214,8 @@ bool TimFile::open(const QByteArray &data)
 			}
 			i+=2;
 		}
+
+		_alphaBits.append(alphaBits);
 	}
 	else if (bpp==3)
 	{
@@ -232,6 +240,8 @@ bool TimFile::open(const QByteArray &data)
 
 bool TimFile::save(QByteArray &data) const
 {
+	Q_ASSERT(_colorTables.size() == _alphaBits.size());
+
 	bool hasPal = bpp <= 1;
 	quint32 flag = (hasPal << 3) | (bpp & 3);
 
@@ -249,30 +259,37 @@ bool TimFile::save(QByteArray &data) const
 		data.append((char *)&palW, 2);
 		data.append((char *)&palH, 2);
 
+		int colorTableId = 0;
 		for (const QVector<QRgb> &colorTable : _colorTables) {
+			const QBitArray &alphaBit = _alphaBits.at(colorTableId);
 			int i;
+
+			Q_ASSERT(colorTable.size() == colorPerPal);
+			Q_ASSERT(alphaBit.size() == colorPerPal);
+
 			for (i=0; i<colorTable.size() && i<colorPerPal; ++i) {
 				quint16 psColor = PsColor::toPsColor(colorTable.at(i));
+				psColor = setPsColorAlphaBit(psColor, alphaBit.at(i));
 				data.append((char *)&psColor, 2);
 			}
 			if (i<colorPerPal) {
 				data.append(QByteArray(colorPerPal - i, '\0'));
 			}
+
+			++colorTableId;
 		}
 
 		quint16 width = _image.width(), height = _image.height();
-		quint32 sizeImgSection = 12;
 		if (bpp==0) {
 			width/=4;
-			sizeImgSection += _image.width()/2 * height;
 		}
 		else {
 			width/=2;
-			sizeImgSection += _image.width() * height;
 		}
 
 		data.append((char *)&sizeImgSection, 4);
-		data.append("\x00\x00\x00\x00", 4);
+		data.append((char *)&imgX, 2);
+		data.append((char *)&imgY, 2);
 		data.append((char *)&width, 2);
 		data.append((char *)&height, 2);
 
@@ -290,7 +307,7 @@ bool TimFile::save(QByteArray &data) const
 		}
 	} else {
 		quint16 width = _image.width(), height = _image.height();
-		quint32 sizeImgSection = 12 + width * bpp * height;
+		const QBitArray &alphaBit = _alphaBits.first();
 
 		data.append((char *)&sizeImgSection, 4);
 		data.append((char *)&imgX, 2);
@@ -302,6 +319,7 @@ bool TimFile::save(QByteArray &data) const
 			for (int x=0; x<width; ++x) {
 				if (bpp == 2) {
 					quint16 color = PsColor::toPsColor(_image.pixel(x, y));
+					setPsColorAlphaBit(color, alphaBit.at(y * width + x));
 					data.append((char *)&color, 2);
 				} else {
 					QRgb c = _image.pixel(x, y);

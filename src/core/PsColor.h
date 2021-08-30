@@ -21,6 +21,10 @@
 #include <QtCore>
 #include <QRgb>
 #define COEFF_COLOR	8.2258064516129032258064516129032 // 255/31
+#define psColorAlphaBit(color) \
+	((color >> 15) & 1)
+#define setPsColorAlphaBit(color, alpha) \
+	((color & 0x7FFF) | (alpha << 15))
 
 class PsColor
 {

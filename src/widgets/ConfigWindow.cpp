@@ -111,6 +111,12 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	spacedCharactersWidthEdit = new QSpinBox(textEditor);
 	spacedCharactersWidthEdit->setRange(0, 320);
 
+	choiceWidthEdit = new QSpinBox(textEditor);
+	choiceWidthEdit->setRange(0, 320);
+
+	tabWidthEdit = new QSpinBox(textEditor);
+	tabWidthEdit->setRange(0, 320);
+
 	QGridLayout *windowPreviewLayout = new QGridLayout;
 	windowPreviewLayout->addWidget(windowColor1, 0, 0, Qt::AlignRight | Qt::AlignTop);
 	windowPreviewLayout->addWidget(windowColor3, 1, 0, Qt::AlignRight | Qt::AlignBottom);
@@ -126,12 +132,16 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	//textEditorLayout->addWidget(encodingEdit, 0, 4, 1, 2);
 	// windowPreviewLayout->addWidget(optiText, 1, 0, 1, 2);
 	textEditorLayout->addLayout(windowPreviewLayout, 1, 0, 4, 6);
-	textEditorLayout->addWidget(listCharNames, 0, 6, 1, 6);
-	textEditorLayout->addWidget(charNameEdit, 1, 6, 1, 6);
-	textEditorLayout->addWidget(new QLabel(tr("Autosize: margin right")), 3, 6, 1, 3);
-	textEditorLayout->addWidget(autoSizeMarginEdit, 3, 9, 1, 3);
-	textEditorLayout->addWidget(new QLabel(tr("{SPACED CHARACTERS} width")), 4, 6, 1, 3);
-	textEditorLayout->addWidget(spacedCharactersWidthEdit, 4, 9, 1, 3);
+	textEditorLayout->addWidget(listCharNames, 0, 6, 1, 3);
+	textEditorLayout->addWidget(charNameEdit, 0, 9, 1, 3);
+	textEditorLayout->addWidget(new QLabel(tr("Autosize: margin right")), 1, 6, 1, 3);
+	textEditorLayout->addWidget(autoSizeMarginEdit, 1, 9, 1, 3);
+	textEditorLayout->addWidget(new QLabel(tr("{SPACED CHARACTERS} width")), 2, 6, 1, 3);
+	textEditorLayout->addWidget(spacedCharactersWidthEdit, 2, 9, 1, 3);
+	textEditorLayout->addWidget(new QLabel(tr("{CHOICE} width")), 3, 6, 1, 3);
+	textEditorLayout->addWidget(choiceWidthEdit, 3, 9, 1, 3);
+	textEditorLayout->addWidget(new QLabel(tr("Tabulation width")), 4, 6, 1, 3);
+	textEditorLayout->addWidget(tabWidthEdit, 4, 9, 1, 3);
 	textEditorLayout->setRowStretch(2, 1);
 
 	QGroupBox *scriptEditor = new QGroupBox(tr("Script Editor"), this);
@@ -142,14 +152,6 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	scriptEditorLayout->addWidget(expandedByDefault);
 	scriptEditorLayout->addStretch();
 
-	QGroupBox *misc = new QGroupBox(tr("Miscellaneous"), this);
-
-	lzsNotCheck = new QCheckBox(tr("Don't strictly verify the file format"), misc);
-
-	QVBoxLayout *miscLayout = new QVBoxLayout(misc);
-	miscLayout->addWidget(lzsNotCheck);
-	miscLayout->addStretch();
-
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 
 	QGridLayout *layout = new QGridLayout(this);
@@ -157,8 +159,7 @@ ConfigWindow::ConfigWindow(QWidget *parent)
 	layout->addWidget(theme, 1, 0);
 	layout->addWidget(openGL, 1, 1);
 	layout->addWidget(textEditor, 2, 0, 1, 2);
-	layout->addWidget(scriptEditor, 3, 0);
-	layout->addWidget(misc, 3, 1);
+	layout->addWidget(scriptEditor, 3, 0, 1, 2);
 	layout->addWidget(buttonBox, 4, 0, 1, 2);
 
 	connect(listFF7, SIGNAL(itemSelectionChanged()), SLOT(changeFF7ListButtonsState()));
@@ -250,7 +251,6 @@ void ConfigWindow::fillConfig()
 	//optiText->setChecked(!Config::value("dontOptimizeTexts", false).toBool());
 	encodings->setCurrentIndex(Config::value("jp_txt", false).toBool() ? 1 : 0);
 	expandedByDefault->setChecked(Config::value("scriptItemExpandedByDefault", false).toBool());
-	lzsNotCheck->setChecked(Config::value("lzsNotCheck", false).toBool());
 
 	setWindowColors();
 
@@ -262,6 +262,8 @@ void ConfigWindow::fillConfig()
 
 	autoSizeMarginEdit->setValue(Config::value("autoSizeMarginRight", 14).toInt());
 	spacedCharactersWidthEdit->setValue(Config::value("spacedCharactersWidth", 13).toInt());
+	choiceWidthEdit->setValue(Config::value("choiceWidth", 10).toInt());
+	tabWidthEdit->setValue(Config::value("tabWidth", 4).toInt());
 
 	QTimer::singleShot(0, this, SLOT(showIcons()));
 }
@@ -498,7 +500,6 @@ void ConfigWindow::accept()
 	//Config::setValue("dontOptimizeTexts", !optiText->isChecked());
 	Config::setValue("jp_txt", encodings->currentIndex() == 1);
 	Config::setValue("scriptItemExpandedByDefault", expandedByDefault->isChecked());
-	Config::setValue("lzsNotCheck", lzsNotCheck->isChecked());
 
 	for (int charId=0; charId<9; ++charId) {
 		const QString &customName = customNames.at(charId);
@@ -511,6 +512,8 @@ void ConfigWindow::accept()
 
 	Config::setValue("autoSizeMarginRight", autoSizeMarginEdit->value());
 	Config::setValue("spacedCharactersWidth", spacedCharactersWidthEdit->value());
+	Config::setValue("choiceWidth", choiceWidthEdit->value());
+	Config::setValue("tabWidth", tabWidthEdit->value());
 
 	if (needsRestart) {
 		QMessageBox::information(this, tr("Information"), tr("You must restart Makou Reactor to apply all changes."));

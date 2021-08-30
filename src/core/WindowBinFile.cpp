@@ -54,7 +54,7 @@ bool WindowBinFile::open(const QByteArray &data)
 	const char *constData = data.constData();
 	int cur=0;
 	quint16 size;
-	QList<quint16> positions, sizes;
+	QList<int> positions, sizes;
 
 	while (cur + 2 < data.size()) {
 		positions.append(cur);
@@ -94,7 +94,9 @@ bool WindowBinFile::open(const QByteArray &data)
 
 void WindowBinFile::saveSection(const QByteArray &section, QByteArray &data, quint16 type)
 {
-	QByteArray compressedData = GZIP::compress(section, 9);
+	// With compression = 9 and compression = 0, a flag we don't want is set in the header
+	QByteArray compressedData = GZIP::compress(section, 8);
+	compressedData[9] = '\x03'; // Force OS = Unix
 	quint16 size = compressedData.size();
 	data.append((char *)&size, 2);
 	size = section.size();
@@ -283,11 +285,25 @@ int WindowBinFile::palette(FontColor color, quint8 table) const
 
 int WindowBinFile::absoluteId(quint8 table, quint8 id)
 {
+	if (id >= tableSize(table)) {
+		return -1;
+	}
+
 	int absId = id;
 	for (int i=0; i<table; ++i) {
 		absId += tableSize(i);
 	}
 	return absId;
+}
+
+quint8 WindowBinFile::charInfo(quint8 table, quint8 id) const
+{
+	return _charWidth.value(absoluteId(table, id));
+}
+
+void WindowBinFile::setCharInfo(quint8 table, quint8 id, quint8 info)
+{
+	_charWidth.replace(absoluteId(table, id), info);
 }
 
 quint8 WindowBinFile::charWidth(quint8 table, quint8 id) const

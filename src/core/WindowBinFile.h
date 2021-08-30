@@ -83,12 +83,8 @@ private:
 	bool openFont2(const QByteArray &data);
 	bool openFontSize(const QByteArray &data);
 	static int absoluteId(quint8 table, quint8 id);
-	inline quint8 charInfo(quint8 table, quint8 id) const {
-		return _charWidth.value(absoluteId(table, id));
-	}
-	inline void setCharInfo(quint8 table, quint8 id, quint8 info) {
-		_charWidth.replace(absoluteId(table, id), info);
-	}
+	quint8 charInfo(quint8 table, quint8 id) const;
+	void setCharInfo(quint8 table, quint8 id, quint8 info);
 
 	QVector<quint8> _charWidth;
 	TimFile _icons, _font, _font2;

@@ -90,7 +90,7 @@ Window::Window() :
 	actionEncounter = menu->addAction(tr("Encounte&rs..."), this, SLOT(encounterManager()), QKeySequence("Ctrl+N"));
 	menu->addAction(tr("Tutorials/&Sounds..."), this, SLOT(tutManager()), QKeySequence("Ctrl+K"));
 	QAction *actionWalkmesh = menu->addAction(QIcon(":/images/location.png"), tr("&Walkmesh..."), this, SLOT(walkmeshManager()), QKeySequence("Ctrl+W"));
-	menu->addAction(tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
+	menu->addAction(QIcon(":/images/background.png"), tr("&Background..."), this, SLOT(backgroundManager()), QKeySequence("Ctrl+B"));
 	actionMisc = menu->addAction(tr("M&iscellaneous..."), this, SLOT(miscManager()));
 	menu->addSeparator();
 	menu->addAction(tr("Variable Mana&ger..."), this, SLOT(varManager()), QKeySequence("Ctrl+G"));
@@ -1159,7 +1159,7 @@ void Window::exportCurrentMap()
 			fieldLzs = tr("PC Field Map (*)"),
 			dat = tr("Data DAT File (*.DAT)"),
 			mim = tr("Textures MIM File (*.MIM)"),
-			fieldDec = tr("Uncompressed PC Field Map (*)");
+			fieldDec = tr("Uncompressed PC Field Map (*.dec)");
 
 	name = _fieldList->selectedItems().first()->text(0);
 
@@ -1174,10 +1174,10 @@ void Window::exportCurrentMap()
 	path = QFileDialog::getSaveFileName(this, tr("Export the current file"), path+name, types, &selectedFilter);
 	if (path.isNull())		return;
 	int error = 4;
-	bool compressed = selectedFilter == fieldLzs;
+	bool decompressed = selectedFilter == fieldDec;
 	
 	if (field->isModified()) {
-		error = field->save(path, compressed);
+		error = field->save(path, !decompressed);
 	} else {
 		QString extension;
 		if (selectedFilter == dat) {
@@ -1185,7 +1185,7 @@ void Window::exportCurrentMap()
 		} else if (selectedFilter == mim) {
 			extension = "MIM";
 		}
-		error = fieldArchive->io()->exportFieldData(field, extension, path, !compressed);
+		error = fieldArchive->io()->exportFieldData(field, extension, path, decompressed);
 	}
 	
 	QString out;
@@ -1298,11 +1298,9 @@ void Window::importToCurrentMap()
 	int index;
 	QString name, selectedFilter,
 	    pc = tr("PC Field Map (*)"),
-	    dat = tr("DAT File (*.DAT)"),
-	    decPc = tr("Uncompressed PC Field Map (*)"),
-	    decDat = tr("Uncompressed DAT File (*)");
+	    dat = tr("PS Field Map (*.DAT)");
 	QStringList filter;
-	filter << pc << dat << decPc << decDat;
+	filter << dat << pc;
 
 	name = _fieldList->selectedItems().first()->text(0);
 	if (fieldArchive->io()->isPS())
@@ -1312,8 +1310,7 @@ void Window::importToCurrentMap()
 	path = QFileDialog::getOpenFileName(this, tr("Import a file"), path+name, filter.join(";;"), &selectedFilter);
 	if (path.isNull())		return;
 
-	bool isDat = selectedFilter == dat || selectedFilter == decDat;
-	bool isCompressed = !isDat && (selectedFilter == pc || selectedFilter == decPc);
+	bool isDat = selectedFilter == dat;
 
 	ImportDialog dialog((isDat && fieldArchive->io()->isPS())
 						|| (!isDat && fieldArchive->io()->isPC()),
@@ -1328,8 +1325,8 @@ void Window::importToCurrentMap()
 	}
 
 	QFile bsxDevice(dialog.bsxPath()), mimDevice(dialog.mimPath());
-	
-	if (!field->importer(path, isDat, isCompressed, parts, &bsxDevice, &mimDevice)) {
+
+	if (!field->importer(path, isDat, dialog.isCompressed(), parts, &bsxDevice, &mimDevice)) {
 		QMessageBox::warning(this, tr("Error"), field->errorString());
 		return;
 	}

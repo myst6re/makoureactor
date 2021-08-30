@@ -94,3 +94,49 @@ void ScriptEditorDLPBSavemap::setOpcode(Opcode *opcode)
 	_fromIsPointer->setChecked(o->flag & 0x10);
 	_toIsPointer->setChecked(o->flag & 0x20);
 }
+
+ScriptEditorDLPBWriteToMemory::ScriptEditorDLPBWriteToMemory(Field *field, GrpScript *grpScript,
+                                                 Script *script, int opcodeID,
+                                                 QWidget *parent) :
+      ScriptEditorView(field, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorDLPBWriteToMemory::build()
+{
+	_address = new QDoubleSpinBox(this);
+	_address->setDecimals(0);
+	_address->setRange(0, pow(2, 32)-1);
+	_bytes = new QLineEdit(this);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(new QLabel(tr("Address")), 0, 0);
+	layout->addWidget(_address, 0, 1, 1, 3);
+	layout->addWidget(new QLabel(tr("Bytes")), 1, 0);
+	layout->addWidget(_bytes, 1, 1, 1, 3);
+	layout->setRowStretch(2, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(_address, SIGNAL(editingFinished()), SIGNAL(opcodeChanged()));
+	connect(_bytes, SIGNAL(editingFinished()), SIGNAL(opcodeChanged()));
+}
+
+Opcode *ScriptEditorDLPBWriteToMemory::opcode()
+{
+	Opcode1C *opcode = (Opcode1C *)opcodePtr();
+
+	opcode->address = quint32(_address->value());
+	opcode->bytes = QByteArray::fromHex(_bytes->text().toLatin1());
+
+	return opcodePtr();
+}
+
+void ScriptEditorDLPBWriteToMemory::setOpcode(Opcode *opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	Opcode1C *o = (Opcode1C *)opcode;
+
+	_address->setValue(o->address);
+	_bytes->setText(o->bytes.toHex());
+}

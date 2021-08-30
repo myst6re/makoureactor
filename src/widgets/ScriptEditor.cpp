@@ -98,6 +98,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, q
 	editorLayout->addWidget(new ScriptEditorMoviePage(field, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorJumpNanakiPage(field, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorDLPBSavemap(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorDLPBWriteToMemory(field, grpScript, script, opcodeID, this));
 
 	ok = new QPushButton(tr("OK"),this);
 	ok->setDefault(true);
@@ -236,6 +237,9 @@ void ScriptEditor::fillEditor()
 		break;
 	case Opcode::Unknown4:
 		index = JUMP_NANAKI_PAGE;
+		break;
+	case Opcode::Unknown5:
+		index = 19;
 		break;
 	default:
 		index = 0;
@@ -646,6 +650,7 @@ void ScriptEditor::buildList(int id)
 		comboBox->addItem(tr("PMJMP2"), QList<QVariant>() << 0xD9);
 		comboBox->addItem(tr("Game Over"), QList<QVariant>() << 0xFF);
 		comboBox->addItem(tr("[DLPB's custom opcode] Write/Read to entire Savemap"), QList<QVariant>() << 0x1A);
+		comboBox->addItem(tr("[DLPB's custom opcode] Write to any memory address via array"), QList<QVariant>() << 0x1C);
 		comboBox->addItem(tr("SPECIAL - Cursor On/Off"), QList<QVariant>() << 0xF50F);
 		comboBox->addItem(tr("SPECIAL - PNAME"), QList<QVariant>() << 0xF60F);
 		comboBox->addItem(tr("SPECIAL - Game Speed"), QList<QVariant>() << 0xF70F);

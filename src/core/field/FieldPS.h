@@ -29,12 +29,20 @@ class FieldPS : public Field
 public:
 	FieldPS(const QString &name, FieldArchiveIO *io);
 	explicit FieldPS(const Field &field);
+	virtual ~FieldPS();
 
 	inline bool isPC() const { return false; }
 
 	FieldModelLoaderPS *fieldModelLoader(bool open=true);
 	FieldModelFilePS *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
 	FieldArchiveIOPS *io() const;
+	bool saveModels(QByteArray &newData, bool compress);
+	qint8 saveModels(const QString &path, bool compress);
+	bool saveBackground(QByteArray &newData, bool compress);
+	qint8 saveBackground(const QString &path, bool compress);
+	bool isDatModified() const;
+	bool isBsxModified() const;
+	bool isMimModified() const;
 protected:
 	inline virtual int headerSize() const { return 28; }
 	virtual void openHeader(const QByteArray &fileData);
@@ -56,6 +64,7 @@ protected:
 private:
 	quint32 sectionPositions[7];
 	qint32 vramDiff;
+	QVector<FieldModelFilePS *> _models;
 };
 
 #endif // DEF_FIELDPS

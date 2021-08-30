@@ -77,9 +77,6 @@ bool Field::open(bool dontOptimize)
 			if ((quint32)lzsData.size() != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
 				fileData = lzsData;
 			} else {
-				if (!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4)
-					return false;
-
 				fileData = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), headerSize());//partial decompression
 			}
 		} else {
@@ -159,10 +156,6 @@ QByteArray Field::sectionData(FieldSection part, bool dontOptimize)
 		if ((quint32)lzsData.size() != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
 			data = lzsData;
 		} else {
-			if (!Config::value("lzsNotCheck").toBool() && (quint32)lzsData.size() != lzsSize + 4) {
-				return QByteArray();
-			}
-
 			data = LZS::decompress(lzsDataConst + 4, qMin(lzsSize, quint32(lzsData.size() - 4)), sectionPosition(idPart+1));
 		}
 	}
@@ -215,7 +208,8 @@ FieldPart *Field::part(FieldSection section, bool open)
 void Field::initEmpty()
 {
 	QList<Field::FieldSection> sections = orderOfSections();
-	for (const FieldSection &section : sections << Akaos) {
+	sections << Akaos;
+	for (const FieldSection &section : qAsConst(sections)) {
 		FieldPart *p = part(section);
 
 		if (!p) {
@@ -325,7 +319,8 @@ bool Field::save(QByteArray &newData, bool compress)
 
 	// Sections
 	int id=0;
-	for (const FieldSection &fieldSection : orderOfSections()) {
+	QList<Field::FieldSection> fieldSections = orderOfSections();
+	for (const FieldSection &fieldSection : qAsConst(fieldSections)) {
 		// Section position
 		quint32 pos = headerSize() + newData.size() + diffSectionPos();
 		toc.append((char *)&pos, 4);

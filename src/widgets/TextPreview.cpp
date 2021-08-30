@@ -334,7 +334,9 @@ bool TextPreview::drawTextArea(QPainter *painter)
 	multicolor = -1;
 	int savFontColor = fontColor;
 	WindowType mode = Normal;
-	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt();
+	int spacedCharsW = Config::value("spacedCharactersWidth", 13).toInt(),
+	    choiceW = Config::value("choiceWidth", 10).toInt(),
+	    tabW = Config::value("tabWidth", 4).toInt();
 
 	/* Window Background */
 
@@ -369,9 +371,9 @@ bool TextPreview::drawTextArea(QPainter *painter)
 		} else if (charId<0xe7) {
 			if (!jp) {
 				if (charId==0xe0)//{CHOICE}
-					x += spaced_characters ? spacedCharsW * 10 : 30;
+					x += spaced_characters ? spacedCharsW * choiceW : 3 * choiceW;
 				else if (charId==0xe1)//\t
-					x += spaced_characters ? spacedCharsW * 4 : 12;
+					x += spaced_characters ? spacedCharsW * tabW : 3 * tabW;
 				else if (charId>=0xe2 && charId<=0xe4) {
 					const char *opti = FF7Font::optimisedDuo[charId-0xe2];
 					letter(&x, &y, quint8(opti[0]), painter, 0);
@@ -427,7 +429,7 @@ bool TextPreview::drawTextArea(QPainter *painter)
 				} else if (charId2 == 0xde || charId2 == 0xdf) {
 					letter(&x, &y, !jp ? 0x10 : 0x33, painter, jp);// zero
 				} else if (charId2 == 0xe1) {
-					x += spaced_characters ? spacedCharsW * 4 : 12;// tab
+					x += spaced_characters ? spacedCharsW * tabW : 3 * tabW;// tab
 					letter(&x, &y, !jp ? 0x10 : 0x33, painter, jp);// zero
 				} else if (charId2 == 0xe2) {
 					i += 4;

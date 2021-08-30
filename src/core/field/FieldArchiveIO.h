@@ -44,7 +44,7 @@ public:
 	inline bool isPC() const { return !isPS(); }
 
 	QByteArray fieldData(Field *field, const QString &extension, bool unlzs=true);
-	QByteArray fileData(const QString &fileName, bool unlzs=true, bool isLzsFile=true);
+	QByteArray fileData(const QString &fileName, bool unlzs=true);
 	int exportFieldData(Field *field, const QString &extension, const QString &path, bool unlzs=true);
 
 	static bool fieldDataIsCached(Field *field, const QString &fileType);

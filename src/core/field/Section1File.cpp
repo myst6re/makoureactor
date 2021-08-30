@@ -454,7 +454,7 @@ QByteArray Section1File::save() const
 	}
 
 	// Word padding
-	int scriptsAndTextsSize = allScripts.size() + 2 + positionsTexts.size() + allTexts.size();
+	int scriptsAndTextsSize = positionsScripts.size() + allScripts.size() + 2 + positionsTexts.size() + allTexts.size();
 	if (scriptsAndTextsSize % 4 != 0 && tut->size() > 0) {
 		allTexts.append(QByteArray(4 - scriptsAndTextsSize % 4, '\0'));
 	}

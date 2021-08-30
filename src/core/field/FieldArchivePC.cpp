@@ -85,7 +85,7 @@ TutFilePC *FieldArchivePC::tut(const QString &name)
 		if (name.startsWith(tutName, Qt::CaseInsensitive)) {
 			TutFilePC *tutFile = it.value();
 			if (tutFile == nullptr) {
-				QByteArray data = io()->fileData(tutName + ".tut", false, false);
+				QByteArray data = io()->fileData(tutName + ".tut", false);
 				if (!data.isEmpty()) {
 					tutFile = new TutFilePC();
 					if (!static_cast<TutFile *>(tutFile)->open(data)) {

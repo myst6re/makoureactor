@@ -85,9 +85,6 @@ ModelManagerPC::ModelManagerPC(QWidget *parent) :
 	connect(modelAnims, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOKAnim(QTreeWidgetItem *, int)));
 
 	connect(modelName, SIGNAL(textEdited(QString)), SLOT(setModelName(QString)));
-	connect(modelScaleWidget, SIGNAL(valueChanged(int)), SLOT(setModelScale(int)));
-	connect(modelGlobalColorWidget, SIGNAL(colorEdited(int,QRgb)), SLOT(setModelGlobalColor(int,QRgb)));
-	connect(modelColorsLayout, SIGNAL(colorDirEdited(int,FieldModelColorDir)), SLOT(setModelColor(int,FieldModelColorDir)));
 
 	connect(cutModelAction, SIGNAL(triggered()), SLOT(cutCurrentModel()));
 	connect(copyModelAction, SIGNAL(triggered()), SLOT(copyCurrentModel()));
@@ -618,14 +615,29 @@ const QList<FieldModelColorDir> &ModelManagerPC::lightColors(int modelID) const
 	return modelLoader()->lightColors(modelID);
 }
 
+void ModelManagerPC::setLightColor(int modelID, int id, const FieldModelColorDir &color)
+{
+	modelLoader()->setLightColor(modelID, id, color);
+}
+
 QRgb ModelManagerPC::globalColor(int modelID) const
 {
 	return modelLoader()->globalColor(modelID);
 }
 
+void ModelManagerPC::setGlobalColor(int modelID, QRgb color)
+{
+	modelLoader()->setGlobalColor(modelID, color);
+}
+
 quint16 ModelManagerPC::modelScale(int modelID) const
 {
 	return modelLoader()->scale(modelID);
+}
+
+void ModelManagerPC::setModelScale(int modelID, quint16 scale)
+{
+	modelLoader()->setScale(modelID, scale);
 }
 
 void ModelManagerPC::copyModels(const QList<int> &modelIDs)

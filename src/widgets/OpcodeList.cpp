@@ -25,6 +25,8 @@ OpcodeList::OpcodeList(QWidget *parent) :
     QTreeWidget(parent), field(nullptr), grpScript(nullptr), script(nullptr), errorLine(-1),
     isInit(false), _treeEnabled(true)
 {
+	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
+
 	setColumnCount(1);
 	setHeaderLabels(QStringList(tr("Action")));
 	setAutoScroll(false);
@@ -137,7 +139,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	helpLayout->setContentsMargins(QMargins());
 	
 	_toolBar = new QToolBar(tr("&Script editor"));
-	_toolBar->setIconSize(QSize(14,14));
+	_toolBar->setIconSize(QSize(int(14 * scale), int(14 * scale)));
 	_toolBar->setFloatable(false);
 	_toolBar->setAllowedAreas(Qt::NoToolBarArea);
 	_toolBar->setMovable(false);
@@ -208,7 +210,8 @@ void OpcodeList::setEnabled(bool enabled)
 void OpcodeList::enableActions(bool enabled)
 {
 	_toolBar->setEnabled(enabled);
-	for (QAction *action : actions()) {
+	QList<QAction *> acts = actions();
+	for (QAction *action : qAsConst(acts)) {
 		if (action == undo_A || action == redo_A)
 			continue;
 		action->setEnabled(enabled);
@@ -254,7 +257,8 @@ void OpcodeList::itemSelected()
 	if (opcodeID <= -1 || opcodeID >= script->size()) {
 		return;
 	}
-	Opcode *opcode = script->opcode(quint16(opcodeID));
+
+	const Opcode *opcode = script->opcode(quint16(opcodeID));
 
 	switch (opcode->id()) {
 	case Opcode::ASK:
@@ -264,7 +268,7 @@ void OpcodeList::itemSelected()
 		break;
 	case Opcode::SPECIAL:
 	{
-		OpcodeSPECIAL *op = static_cast<OpcodeSPECIAL *>(opcode);
+		const OpcodeSPECIAL *op = static_cast<const OpcodeSPECIAL *>(opcode);
 		text_A->setVisible(op && op->opcode->id() == 0xFD);
 	}
 		break;
@@ -706,10 +710,10 @@ void OpcodeList::redo()
 		break;
 	case Up:
 		script->moveOpcode(--firstOpcode, Script::Down);
-	break;
+		break;
 	case Down:
 		script->moveOpcode(++firstOpcode, Script::Up);
-	break;
+		break;
 	}
 
 	hists.push(hist);
@@ -833,7 +837,8 @@ void OpcodeList::cut()
 void OpcodeList::copy()
 {
 	QList<Opcode *> opcodeCopied;
-	for (int id : selectedIDs()) {
+	QList<int> selIds = selectedIDs();
+	for (int id : qAsConst(selIds)) {
 		opcodeCopied.append(script->opcode(quint16(id)));
 	}
 
@@ -845,16 +850,17 @@ void OpcodeList::copy()
 
 void OpcodeList::copyText()
 {
-	QMap<int, QTreeWidgetItem *> listeitems;
-	for (QTreeWidgetItem *item : selectedItems()) {
+	QMap<int, const QTreeWidgetItem *> listeitems;
+	QList<QTreeWidgetItem *> selItems = selectedItems();
+	for (const QTreeWidgetItem *item : qAsConst(selItems)) {
 		listeitems.insert(item->data(0, Qt::UserRole).toInt(), item);
 	}
 
 	QString copiedText;
-	QTreeWidgetItem *lastitem=nullptr, *parentitem;
-	QStack<QTreeWidgetItem *> parentitems;
+	const QTreeWidgetItem *lastitem = nullptr, *parentitem;
+	QStack<const QTreeWidgetItem *> parentitems;
 	int indent = 0;
-	for (QTreeWidgetItem *item : listeitems) {
+	for (const QTreeWidgetItem *item : qAsConst(listeitems)) {
 		if (lastitem != nullptr) {
 			parentitem = item->parent();
 			if (parentitem == lastitem) {
@@ -962,7 +968,8 @@ int OpcodeList::selectedID()
 QList<int> OpcodeList::selectedIDs()
 {
 	QList<int> list;
-	for (QTreeWidgetItem *item : selectedItems()) {
+	QList<QTreeWidgetItem *> selItems = selectedItems();
+	for (const QTreeWidgetItem *item : qAsConst(selItems)) {
 		list.append(item->data(0, Qt::UserRole).toInt());
 	}
 	std::sort(list.begin(), list.end());
@@ -984,15 +991,15 @@ QPixmap &OpcodeList::posNumber(int num, const QPixmap &fontPixmap, QPixmap &word
 	QPainter painter(&wordPixmap);
 
 	if (strNum.at(0)!=' ')
-		painter.drawTiledPixmap(1, 1, 5, 9, fontPixmap, 5*strNum.mid(0,1).toInt(), 0);
+		painter.drawTiledPixmap(1, 1, 5, 9, fontPixmap, 5*strNum.midRef(0,1).toInt(), 0);
 	if (strNum.at(1)!=' ')
-		painter.drawTiledPixmap(7, 1, 5, 9, fontPixmap, 5*strNum.mid(1,1).toInt(), 0);
+		painter.drawTiledPixmap(7, 1, 5, 9, fontPixmap, 5*strNum.midRef(1,1).toInt(), 0);
 	if (strNum.at(2)!=' ')
-		painter.drawTiledPixmap(13, 1, 5, 9, fontPixmap, 5*strNum.mid(2,1).toInt(), 0);
+		painter.drawTiledPixmap(13, 1, 5, 9, fontPixmap, 5*strNum.midRef(2,1).toInt(), 0);
 	if (strNum.at(3)!=' ')
-		painter.drawTiledPixmap(19, 1, 5, 9, fontPixmap, 5*strNum.mid(3,1).toInt(), 0);
+		painter.drawTiledPixmap(19, 1, 5, 9, fontPixmap, 5*strNum.midRef(3,1).toInt(), 0);
 	if (strNum.at(4)!=' ')
-		painter.drawTiledPixmap(25, 1, 5, 9, fontPixmap, 5*strNum.mid(4,1).toInt(), 0);
+		painter.drawTiledPixmap(25, 1, 5, 9, fontPixmap, 5*strNum.midRef(4,1).toInt(), 0);
 
 	painter.end();
 	return wordPixmap;

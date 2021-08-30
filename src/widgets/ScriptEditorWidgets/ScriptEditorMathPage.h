@@ -20,6 +20,7 @@
 
 #include <QtWidgets>
 #include "ScriptEditorView.h"
+#include "widgets/HelpWidget.h"
 
 class ScriptEditorBinaryOpPage : public ScriptEditorView
 {
@@ -37,6 +38,7 @@ private:
 	VarOrValueWidget *var, *varOrValue;
 	QComboBox *operationList;
 	QRadioButton *type1, *type2;
+	HelpWidget *helpWidget;
 };
 
 class ScriptEditorUnaryOpPage : public ScriptEditorView

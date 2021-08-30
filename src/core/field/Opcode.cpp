@@ -166,16 +166,19 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 	case Compare:
 	case BitCompare:
 		if (id() == IFUB
-				|| id() == IFUBL
-				|| id() == IFSW
-				|| id() == IFSWL
-				|| id() == IFUW
-				|| id() == IFUWL) {
+		    || id() == IFUBL
+		    || id() == IFSW
+		    || id() == IFSWL
+		    || id() == IFUW
+		    || id() == IFUWL) {
 			const OpcodeIf *opcodeIf = static_cast<const OpcodeIf *>(this);
-			if (((op == Compare && opcodeIf->oper < quint8(BitAnd))
-				|| (op == BitCompare && opcodeIf->oper >= quint8(BitAnd)))
-					&& B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
-					&& (noValue || (B2(opcodeIf->banks) == 0 && opcodeIf->value2 == value))) {
+			if ((opcodeIf->oper <= quint8(LowerThanEqual) || opcodeIf->oper >= quint8(BitOn))
+			    && B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
+			    && (noValue || (B2(opcodeIf->banks) == 0 && opcodeIf->value2 == value))) {
+				return true;
+			} else if (opcodeIf->oper >= quint8(BitAnd) && opcodeIf->oper <= quint8(BitOr)
+			           && B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
+			           && (noValue || (B2(opcodeIf->banks) == 0 && (opcodeIf->value2 >> value) & 1))) {
 				return true;
 			}
 		}
@@ -1919,6 +1922,40 @@ QString Opcode1B::toString(Field *) const
 			.arg(_badJump
 				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
 				 : QObject::tr("else goto label %1").arg(_label));
+}
+
+Opcode1C::Opcode1C(const char *params, int size)
+{
+	setParams(params, size);
+}
+
+void Opcode1C::setParams(const char *params, int)
+{
+	memcpy(&address, params, 4);
+	quint8 subSize = params[4];
+	bytes = QByteArray(params + 5, qMin(quint8(128), subSize));
+}
+
+quint8 Opcode1C::size() const
+{
+	return Opcode::size() + qMin(128, bytes.size());
+}
+
+QString Opcode1C::toString(Field *) const
+{
+	return QObject::tr("Write bytes to address 0x%1 (length=%2)")
+	    .arg(address, 0, 16)
+	    .arg(bytes.size());
+}
+
+QByteArray Opcode1C::params() const
+{
+	QByteArray data = bytes.left(128);
+	char size = char(data.size());
+	return QByteArray()
+	    .append((char *)&address, 4)
+	    .append(size)
+	    .append(data);
 }
 
 OpcodeMINIGAME::OpcodeMINIGAME(const char *params, int size)
@@ -8712,7 +8749,7 @@ const quint8 Opcode::length[257] =
 /*19*//* IFUWL */		9,
 /*1a*//*  */			10,
 /*1b*//*  */			3,
-/*1c*//*  */			1,
+/*1c*//*  */			6,
 /*1d*//*  */			1,
 /*1e*//*  */			1,
 /*1f*//*  */			1,
