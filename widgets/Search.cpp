@@ -632,10 +632,6 @@ void Search::findPrev()
 	buttonPrev->setDefault(true);
 	returnToBegin->hide();
 
-	QTimer timer(this);
-	connect(&timer, SIGNAL(timeout()), SLOT(processEvents()));
-	timer.start(700);
-
 	int mapID, grpScriptID, scriptID, opcodeID,
 			textID, from;
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
@@ -669,6 +665,10 @@ void Search::findPrev()
 
 	bool f = false;
 
+	QTimer timer(this);
+	connect(&timer, SIGNAL(timeout()), SLOT(processEvents()));
+	timer.start(700);
+
 	if (tabWidget->currentIndex() == 0) { // scripts page
 		if (findPrevScript(sorting, scope, mapID, grpScriptID,
 		                   scriptID, opcodeID)) {
@@ -676,13 +676,15 @@ void Search::findPrev()
 			f = true;
 		}
 	} else { // texts page
-		int index, size;
+		int index = 0, size = 0;
 		if (findPrevText(sorting, scope, mapID, textID,
 		                 from, index, size)) {
 			emit foundText(mapID, textID, index, size);
 			f = true;
 		}
 	}
+
+	timer.stop();
 
 	if (!f) {
 		returnToBegin->setText(tr("%1,\nchase at the end.")
@@ -692,7 +694,6 @@ void Search::findPrev()
 		atTheBeginning = true;
 	}
 
-	timer.stop();
 	mainWindow()->setEnabled(true);
 }
 
@@ -782,7 +783,7 @@ void Search::findAll()
 		}
 
 		searchAllDialog->setTextSearch();
-		int size;
+		int size = 0;
 		while (findNextText(sorting, scope,
 						 mapID, textID, ++from, size)) {
 			QCoreApplication::processEvents();
@@ -890,6 +891,8 @@ void Search::replaceCurrent()
 		return;
 	}
 
+	returnToBegin->hide();
+
 	setSearchValues();
 
 	if (fieldArchive->replaceText(text, replace2->lineEdit()->text(),
@@ -913,9 +916,10 @@ void Search::replaceAll()
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
 	FieldArchive::SearchScope scope = searchScope();
 	setSearchValues();
+	returnToBegin->hide();
 
 	QString after = replace2->lineEdit()->text();
-	int mapID = 0, textID = 0, from = 0, size;
+	int mapID = -1, textID = -1, from = -1, size = 0;
 
 	if (scope == FieldArchive::FieldScope) {
 		mapID = mainWindow()->fieldList()->currentMapId();
@@ -925,18 +929,27 @@ void Search::replaceAll()
 		}
 	}
 
-	bool modified = false;
+	QTimer timer(this);
+	connect(&timer, SIGNAL(timeout()), SLOT(processEvents()));
+	timer.start(700);
+
+	int replacedCount = 0;
 	while (fieldArchive->searchText(text, mapID, textID, from, size, sorting, scope)) {
 		if (fieldArchive->replaceText(text, after, mapID, textID, from)) {
 			fieldArchive->field(mapID)->setModified(true);
-			modified = true;
+			replacedCount += 1;
 		}
 		from += after.size();
 	}
 
+	timer.stop();
 	mainWindow()->setEnabled(true);
 
-	if (modified) {
+	returnToBegin->setText(tr("%1 occurrences replaced.")
+	                           .arg(replacedCount));
+	returnToBegin->show();
+
+	if (replacedCount > 0) {
 
 		// Update view
 		if (mainWindow()->textWidget()) {

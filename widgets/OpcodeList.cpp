@@ -23,8 +23,10 @@
 
 OpcodeList::OpcodeList(QWidget *parent) :
 	QTreeWidget(parent), isInit(false), _treeEnabled(true),
-	field(0), grpScript(0), script(0), errorLine(-1)
+    field(nullptr), grpScript(nullptr), script(nullptr), errorLine(-1)
 {
+	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
+
 	setColumnCount(1);
 	setHeaderLabels(QStringList(tr("Action")));
 	setAutoScroll(false);
@@ -137,7 +139,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	helpLayout->setContentsMargins(QMargins());
 	
 	_toolBar = new QToolBar(tr("&Script editor"));
-	_toolBar->setIconSize(QSize(14,14));
+	_toolBar->setIconSize(QSize(int(14 * scale), int(14 * scale)));
 	_toolBar->setFloatable(false);
 	_toolBar->setAllowedAreas(Qt::NoToolBarArea);
 	_toolBar->setMovable(false);
@@ -186,7 +188,7 @@ void OpcodeList::searchOpcode()
 		return;
 	}
 
-	Opcode *opcode = script->opcode(opcodeID);
+	Opcode *opcode = script->opcode(quint16(opcodeID));
 
 	emit searchOpcode(opcode->id());
 }
@@ -208,7 +210,8 @@ void OpcodeList::setEnabled(bool enabled)
 void OpcodeList::enableActions(bool enabled)
 {
 	_toolBar->setEnabled(enabled);
-	for (QAction *action : actions()) {
+	QList<QAction *> acts = actions();
+	for (QAction *action : qAsConst(acts)) {
 		if (action == undo_A || action == redo_A)
 			continue;
 		action->setEnabled(enabled);
@@ -254,7 +257,7 @@ void OpcodeList::itemSelected()
 	if (opcodeID <= -1 || opcodeID >= script->size()) {
 		return;
 	}
-	Opcode *opcode = script->opcode(opcodeID);
+	const Opcode *opcode = script->opcode(quint16(opcodeID));
 
 	switch (opcode->id()) {
 	case Opcode::ASK:
@@ -264,7 +267,7 @@ void OpcodeList::itemSelected()
 		break;
 	case Opcode::SPECIAL:
 	{
-		OpcodeSPECIAL *op = (OpcodeSPECIAL *)opcode;
+		const OpcodeSPECIAL *op = (const OpcodeSPECIAL *)opcode;
 		text_A->setVisible(op && op->opcode->id() == 0xFD);
 	}
 		break;
@@ -317,7 +320,7 @@ void OpcodeList::editText()
 
 	int opcodeID = selectedID();
 	if (opcodeID >= 0 && opcodeID < script->size()) {
-		Opcode *op = script->opcode(opcodeID);
+		Opcode *op = script->opcode(quint16(opcodeID));
 		int textID = op->getTextID();
 		if (textID >= 0) {
 			emit editText(textID);
@@ -345,7 +348,7 @@ void OpcodeList::saveExpandedItems()
 		QTreeWidgetItem *item = items.dequeue();
 		const int opcodeID = item->data(0, Qt::UserRole).toInt();
 		if (opcodeID >= 0 && opcodeID < script->size()) {
-			expandedItems.append(script->opcode(opcodeID));
+			expandedItems.append(script->opcode(quint16(opcodeID)));
 		}
 
 		// Add children
@@ -390,7 +393,7 @@ void OpcodeList::refreshOpcode(int opcodeID)
 		return;
 	}
 
-	item->setText(0, script->opcode(opcodeID)->toString(field));
+	item->setText(0, script->opcode(quint16(opcodeID))->toString(field));
 }
 
 void OpcodeList::fill(Field *_field, GrpScript *_grpScript, Script *_script)
@@ -614,21 +617,21 @@ void OpcodeList::undo()
 	Historic hist = hists.pop();
 	undo_A->setEnabled(!hists.isEmpty());
 
-	int firstOpcode = hist.opcodeIDs.first();
+	quint16 firstOpcode = quint16(hist.opcodeIDs.first());
 	Opcode *sav;
 
 	switch (hist.type) {
 	case Add:
 		// del opcodes
 		for (int i=hist.opcodeIDs.size()-1; i>=0; --i) {
-			hist.data.prepend(Script::copyOpcode(script->opcode(hist.opcodeIDs.at(i))));
-			script->delOpcode(hist.opcodeIDs.at(i));
+			hist.data.prepend(Script::copyOpcode(script->opcode(quint16(hist.opcodeIDs.at(i)))));
+			script->delOpcode(quint16(hist.opcodeIDs.at(i)));
 		}
 		break;
 	case Remove:
 		// restore opcodes
 		for (int i=0; i<hist.opcodeIDs.size(); ++i)
-			script->insertOpcode(hist.opcodeIDs.at(i), hist.data.at(i));
+			script->insertOpcode(quint16(hist.opcodeIDs.at(i)), hist.data.at(i));
 		hist.data.clear();
 		break;
 	case Modify:
@@ -677,19 +680,19 @@ void OpcodeList::redo()
 	Historic hist = restoreHists.pop();
 	redo_A->setEnabled(!restoreHists.isEmpty());
 
-	int firstOpcode = hist.opcodeIDs.first();
+	quint16 firstOpcode = quint16(hist.opcodeIDs.first());
 	Opcode *sav;
 
 	switch (hist.type) {
 	case Add:
 		for (int i=0; i<hist.opcodeIDs.size(); ++i)
-			script->insertOpcode(hist.opcodeIDs.at(i), hist.data.at(i));
+			script->insertOpcode(quint16(hist.opcodeIDs.at(i)), hist.data.at(i));
 		hist.data.clear();
 		break;
 	case Remove:
 		for (int i=hist.opcodeIDs.size()-1; i>=0; --i) {
-			hist.data.prepend(Script::copyOpcode(script->opcode(hist.opcodeIDs.at(i))));
-			script->delOpcode(hist.opcodeIDs.at(i));
+			hist.data.prepend(Script::copyOpcode(script->opcode(quint16(hist.opcodeIDs.at(i)))));
+			script->delOpcode(quint16(hist.opcodeIDs.at(i)));
 		}
 		break;
 	case Modify:
@@ -701,15 +704,15 @@ void OpcodeList::redo()
 		sav = Script::copyOpcode(script->opcode(firstOpcode));
 		script->setOpcode(firstOpcode, hist.data.first());
 		hist.data.replace(0, sav);
-		script->insertOpcode(hist.opcodeIDs.at(1), hist.data.at(1));
+		script->insertOpcode(quint16(hist.opcodeIDs.at(1)), hist.data.at(1));
 		hist.data.removeAt(1);
 		break;
 	case Up:
 		script->moveOpcode(--firstOpcode, Script::Down);
-	break;
+		break;
 	case Down:
 		script->moveOpcode(++firstOpcode, Script::Up);
-	break;
+		break;
 	}
 
 	hists.push(hist);
@@ -738,10 +741,9 @@ void OpcodeList::scriptEditor(bool modify)
 	Opcode *oldVersionCpy = nullptr, *oldVersion = nullptr;
 
 	saveExpandedItems();
-	bool itemWasExpanded = false;
 
 	if (modify) {
-		oldVersion = script->opcode(opcodeID);
+		oldVersion = script->opcode(quint16(opcodeID));
 		oldVersionCpy = Script::copyOpcode(oldVersion);
 	} else {
 		++opcodeID;
@@ -752,7 +754,7 @@ void OpcodeList::scriptEditor(bool modify)
 	if (editor.exec() == QDialog::Accepted) {
 		if (itemIsExpanded(oldVersion) && expandedItems.contains(script)) {
 			expandedItems[script].removeOne(oldVersion);
-			expandedItems[script].append(script->opcode(opcodeID));
+			expandedItems[script].append(script->opcode(quint16(opcodeID)));
 		}
 		fill();
 		QTreeWidgetItem *item = findItem(opcodeID);
@@ -806,11 +808,11 @@ void OpcodeList::del(bool totalDel)
 	
 	std::sort(selectedIDs.begin(), selectedIDs.end());
 	for (int i=selectedIDs.size()-1; i>=0; --i) {
-		oldVersions.prepend(Script::copyOpcode(script->opcode(selectedIDs.at(i))));
+		oldVersions.prepend(Script::copyOpcode(script->opcode(quint16(selectedIDs.at(i)))));
 		if (totalDel) {
-			script->delOpcode(selectedIDs.at(i));
+			script->delOpcode(quint16(selectedIDs.at(i)));
 		} else {
-			script->removeOpcode(selectedIDs.at(i));
+			script->removeOpcode(quint16(selectedIDs.at(i)));
 		}
 	}
 
@@ -834,8 +836,9 @@ void OpcodeList::cut()
 void OpcodeList::copy()
 {
 	QList<Opcode *> opcodeCopied;
-	for (int id : selectedIDs()) {
-		opcodeCopied.append(script->opcode(id));
+	QList<int> selIds = selectedIDs();
+	for (int id : qAsConst(selIds)) {
+		opcodeCopied.append(script->opcode(quint16(id)));
 	}
 
 	if (!opcodeCopied.isEmpty()) {
@@ -846,16 +849,17 @@ void OpcodeList::copy()
 
 void OpcodeList::copyText()
 {
-	QMap<int, QTreeWidgetItem *> listeitems;
-	for (QTreeWidgetItem *item : selectedItems()) {
+	QMap<int, const QTreeWidgetItem *> listeitems;
+	QList<QTreeWidgetItem *> selItems = selectedItems();
+	for (const QTreeWidgetItem *item : qAsConst(selItems)) {
 		listeitems.insert(item->data(0, Qt::UserRole).toInt(), item);
 	}
 
 	QString copiedText;
-	QTreeWidgetItem *lastitem=nullptr, *parentitem;
-	QStack<QTreeWidgetItem *> parentitems;
+	const QTreeWidgetItem *lastitem = nullptr, *parentitem;
+	QStack<const QTreeWidgetItem *> parentitems;
 	int indent = 0;
-	for (QTreeWidgetItem *item : listeitems) {
+	for (const QTreeWidgetItem *item : qAsConst(listeitems)) {
 		if (lastitem != nullptr) {
 			parentitem = item->parent();
 			if (parentitem == lastitem) {
@@ -894,7 +898,7 @@ void OpcodeList::paste()
 		for (Opcode *opcode : qAsConst(pastedOpcodes)) {
 			IDs.append(i);
 			// TODO: label duplication case
-			script->insertOpcode(i, opcode);
+			script->insertOpcode(quint16(i), opcode);
 			++i;
 		}
 
@@ -912,7 +916,7 @@ void OpcodeList::move(Script::MoveDirection direction)
 		return;
 	}
 	saveExpandedItems();
-	if (script->moveOpcode(opcodeID, direction)) {
+	if (script->moveOpcode(quint16(opcodeID), direction)) {
 		fill();
 		scroll(direction == Script::Down ? opcodeID+1 : opcodeID-1);
 		emit changed();
@@ -963,7 +967,8 @@ int OpcodeList::selectedID()
 QList<int> OpcodeList::selectedIDs()
 {
 	QList<int> list;
-	for (QTreeWidgetItem *item : selectedItems()) {
+	QList<QTreeWidgetItem *> selItems = selectedItems();
+	for (const QTreeWidgetItem *item : qAsConst(selItems)) {
 		list.append(item->data(0, Qt::UserRole).toInt());
 	}
 	std::sort(list.begin(), list.end());
@@ -975,7 +980,7 @@ int OpcodeList::selectedOpcode()
 	int opcodeID = selectedID();
 	return opcodeID <= -1 || opcodeID >= script->size()
 			? -1
-			: script->opcode(opcodeID)->id();
+	        : script->opcode(quint16(opcodeID))->id();
 }
 
 QPixmap &OpcodeList::posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap)
@@ -985,15 +990,15 @@ QPixmap &OpcodeList::posNumber(int num, const QPixmap &fontPixmap, QPixmap &word
 	QPainter painter(&wordPixmap);
 
 	if (strNum.at(0)!=' ')
-		painter.drawTiledPixmap(1, 1, 5, 9, fontPixmap, 5*strNum.mid(0,1).toInt(), 0);
+		painter.drawTiledPixmap(1, 1, 5, 9, fontPixmap, 5*strNum.midRef(0,1).toInt(), 0);
 	if (strNum.at(1)!=' ')
-		painter.drawTiledPixmap(7, 1, 5, 9, fontPixmap, 5*strNum.mid(1,1).toInt(), 0);
+		painter.drawTiledPixmap(7, 1, 5, 9, fontPixmap, 5*strNum.midRef(1,1).toInt(), 0);
 	if (strNum.at(2)!=' ')
-		painter.drawTiledPixmap(13, 1, 5, 9, fontPixmap, 5*strNum.mid(2,1).toInt(), 0);
+		painter.drawTiledPixmap(13, 1, 5, 9, fontPixmap, 5*strNum.midRef(2,1).toInt(), 0);
 	if (strNum.at(3)!=' ')
-		painter.drawTiledPixmap(19, 1, 5, 9, fontPixmap, 5*strNum.mid(3,1).toInt(), 0);
+		painter.drawTiledPixmap(19, 1, 5, 9, fontPixmap, 5*strNum.midRef(3,1).toInt(), 0);
 	if (strNum.at(4)!=' ')
-		painter.drawTiledPixmap(25, 1, 5, 9, fontPixmap, 5*strNum.mid(4,1).toInt(), 0);
+		painter.drawTiledPixmap(25, 1, 5, 9, fontPixmap, 5*strNum.midRef(4,1).toInt(), 0);
 
 	painter.end();
 	return wordPixmap;
@@ -1005,7 +1010,7 @@ void OpcodeList::gotoLabel(QTreeWidgetItem *item)
 		item = currentItem();
 	}
 	int opcodeID = item->data(0, Qt::UserRole).toInt();
-	Opcode *op = script->opcode(opcodeID);
+	Opcode *op = script->opcode(quint16(opcodeID));
 
 	if (op->isJump()) {
 		OpcodeJump *opJ = static_cast<OpcodeJump *>(op);

@@ -42,27 +42,36 @@ FontWidget::FontWidget(QWidget *parent) :
 	textLetter = new QLineEdit(this);
 	widthLetter = new QSpinBox(this);
 	widthLetter->setRange(0, 15);
+	leftPaddingLetter = new QSpinBox(this);
+	leftPaddingLetter->setRange(0, 7);
 	exportButton = new QPushButton(tr("Export..."), this);
 	importButton = new QPushButton(tr("Import..."), this);
 	resetButton2 = new QPushButton(tr("Cancel Changes"), this);
 	resetButton2->setEnabled(false);
 
+	QHBoxLayout *buttonLayout = new QHBoxLayout;
+	buttonLayout->addWidget(exportButton);
+	buttonLayout->addWidget(importButton);
+	buttonLayout->addStretch(1);
+	buttonLayout->setContentsMargins(QMargins());
+
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(fontGrid, 0, 0, 1, 2, Qt::AlignRight);
-	layout->addWidget(fontLetter, 0, 2, 2, 4, Qt::AlignLeft);
+	layout->addWidget(fontLetter, 0, 2, 2, 6, Qt::AlignLeft);
 	//layout->addWidget(fromImage1, 1, 0, 1, 2, Qt::AlignLeft);
 	layout->addWidget(selectPal, 2, 0, Qt::AlignRight);
 	layout->addWidget(selectTable, 2, 1, Qt::AlignLeft);
-	layout->addWidget(fontPalette, 2, 2, 1, 4, Qt::AlignLeft);
+	layout->addWidget(fontPalette, 2, 2, 1, 6, Qt::AlignLeft);
 	layout->addWidget(new QLabel(tr("Text:")), 3, 2);
 	layout->addWidget(textLetter, 3, 3);
 	layout->addWidget(new QLabel(tr("Width:")), 3, 4);
 	layout->addWidget(widthLetter, 3, 5);
+	layout->addWidget(new QLabel(tr("Left padding:")), 3, 6);
+	layout->addWidget(leftPaddingLetter, 3, 7);
 	//layout->addWidget(fromImage2, 3, 3, Qt::AlignRight);
 //	layout->addWidget(resetButton1, 4, 0, 1, 2, Qt::AlignLeft);
-	layout->addWidget(exportButton, 4, 0, Qt::AlignLeft);
-	layout->addWidget(importButton, 4, 1, Qt::AlignLeft);
-	layout->addWidget(resetButton2, 4, 2, 1, 4, Qt::AlignRight);
+	layout->addLayout(buttonLayout, 4, 0, 1, 2, Qt::AlignLeft);
+	layout->addWidget(resetButton2, 4, 2, 1, 6, Qt::AlignRight);
 	layout->setRowStretch(5, 1);
 	layout->setContentsMargins(QMargins());
 
@@ -79,6 +88,7 @@ FontWidget::FontWidget(QWidget *parent) :
 	connect(textLetter, SIGNAL(textEdited(QString)), SLOT(editLetter(QString)));
 	connect(widthLetter, SIGNAL(valueChanged(int)), SLOT(editWidth(int)));
 	connect(fontLetter, SIGNAL(widthEdited(int)), widthLetter, SLOT(setValue(int)));
+	connect(leftPaddingLetter, SIGNAL(valueChanged(int)), SLOT(editLeftPadding(int)));
 }
 
 void FontWidget::clear()
@@ -153,12 +163,24 @@ void FontWidget::setLetter(int i)
 			//TODO: jp
 			textLetter->setText(FF7Text(ba.append((char)i)).text(false));
 		}
-		if (fontLetter->windowBinFile()) {
+		if (fontLetter->windowBinFile() && fontLetter->isLetterSizeEditable()) {
 			widthLetter->setValue(
 			    fontLetter->windowBinFile()->charWidth(
 			        fontLetter->currentTable(), i
 			    )
 			);
+			leftPaddingLetter->setValue(
+			    fontLetter->windowBinFile()->charLeftPadding(
+			        fontLetter->currentTable(), i
+			    )
+			);
+			widthLetter->setEnabled(true);
+			leftPaddingLetter->setEnabled(true);
+		} else {
+			widthLetter->setValue(0);
+			leftPaddingLetter->setValue(0);
+			widthLetter->setEnabled(false);
+			leftPaddingLetter->setEnabled(false);
 		}
 	}
 	resetButton2->setEnabled(false);
@@ -178,6 +200,13 @@ void FontWidget::editWidth(int w)
 	if (fontLetter->windowBinFile() && fontLetter->windowBinFile()->charWidth(fontGrid->currentTable(), fontGrid->currentLetter()) != w) {
 		fontLetter->windowBinFile()->setCharWidth(fontGrid->currentTable(), fontGrid->currentLetter(), w);
 		fontLetter->update();
+	}
+}
+
+void FontWidget::editLeftPadding(int padding)
+{
+	if (fontLetter->windowBinFile() && fontLetter->windowBinFile()->charLeftPadding(fontGrid->currentTable(), fontGrid->currentLetter()) != padding) {
+		fontLetter->windowBinFile()->setCharLeftPadding(fontGrid->currentTable(), fontGrid->currentLetter(), padding);
 	}
 }
 

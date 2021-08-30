@@ -85,9 +85,6 @@ ModelManagerPC::ModelManagerPC(QWidget *parent) :
 	connect(modelAnims, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOKAnim(QTreeWidgetItem *, int)));
 
 	connect(modelName, SIGNAL(textEdited(QString)), SLOT(setModelName(QString)));
-	connect(modelScaleWidget, SIGNAL(valueChanged(int)), SLOT(setModelScale(int)));
-	connect(modelGlobalColorWidget, SIGNAL(colorEdited(int,QRgb)), SLOT(setModelGlobalColor(int,QRgb)));
-	connect(modelColorsLayout, SIGNAL(colorDirEdited(int,FieldModelColorDir)), SLOT(setModelColor(int,FieldModelColorDir)));
 
 	connect(cutModelAction, SIGNAL(triggered()), SLOT(cutCurrentModel()));
 	connect(copyModelAction, SIGNAL(triggered()), SLOT(copyCurrentModel()));
@@ -328,37 +325,6 @@ void ModelManagerPC::setModelName(const QString &modelName)
 	if (modelID < 0)	return;
 
 	modelLoader()->setCharName(modelID, modelName);
-
-	emit modified();
-}
-
-void ModelManagerPC::setModelScale(int scale)
-{
-	int modelID = currentModelID();
-	if (modelID < 0)	return;
-
-	modelLoader()->setScale(modelID, scale);
-
-	emit modified();
-}
-
-void ModelManagerPC::setModelGlobalColor(int id, QRgb color)
-{
-	Q_UNUSED(id);
-	int modelID = currentModelID();
-	if (modelID < 0)	return;
-
-	modelLoader()->setGlobalColor(modelID, color);
-
-	emit modified();
-}
-
-void ModelManagerPC::setModelColor(int id, const FieldModelColorDir &color)
-{
-	int modelID = currentModelID();
-	if (modelID < 0)	return;
-
-	modelLoader()->setLightColor(modelID, id, color);
 
 	emit modified();
 }
@@ -618,14 +584,29 @@ const QList<FieldModelColorDir> &ModelManagerPC::lightColors(int modelID) const
 	return modelLoader()->lightColors(modelID);
 }
 
+void ModelManagerPC::setLightColor(int modelID, int id, const FieldModelColorDir &color)
+{
+	modelLoader()->setLightColor(modelID, id, color);
+}
+
 QRgb ModelManagerPC::globalColor(int modelID) const
 {
 	return modelLoader()->globalColor(modelID);
 }
 
+void ModelManagerPC::setGlobalColor(int modelID, QRgb color)
+{
+	modelLoader()->setGlobalColor(modelID, color);
+}
+
 quint16 ModelManagerPC::modelScale(int modelID) const
 {
 	return modelLoader()->scale(modelID);
+}
+
+void ModelManagerPC::setModelScale(int modelID, quint16 scale)
+{
+	modelLoader()->setScale(modelID, scale);
 }
 
 void ModelManagerPC::copyModels(const QList<int> &modelIDs)

@@ -24,8 +24,9 @@
 #include "BsxFile.h"
 
 FieldModelFilePS::FieldModelFilePS() :
-	FieldModelFile(), _scale(0),
-    _currentField(0), _currentModelID(-1)
+	FieldModelFile(),
+    _currentField(0), _currentModelID(-1),
+    _scale(0), _isModified(false)
 {
 }
 
@@ -34,6 +35,7 @@ void FieldModelFilePS::clear()
 	_loadedTex.clear();
 	_textures = FieldModelTexturesPS();
 	FieldModelFile::clear();
+	_isModified = false;
 }
 
 bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID, bool animate)
@@ -43,6 +45,7 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 	bool modelIdIsValid = currentField->fieldModelLoader()->isOpen() && modelID < currentField->fieldModelLoader()->modelCount();
 	FieldModelFilePS modelBcx;
 
+	_isModified = false;
 	_currentField = currentField;
 	_currentModelID = modelID;
 
@@ -63,8 +66,13 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 			case 9:    fileName = "VINCENT";    break;
 			}
 
+			QByteArray BCXData = currentField->io()->fileData(fileName + ".BCX");
+			if (BCXData.isEmpty()) {
+				qWarning() << "FieldModelFilePS::load cannot open bcx file";
+				return false;
+			}
 			QBuffer ioBcx;
-			ioBcx.setData(currentField->io()->fileData(fileName + ".BCX"));
+			ioBcx.setData(BCXData);
 			if (!ioBcx.open(QIODevice::ReadOnly)) {
 				qWarning() << "FieldModelFilePS::load cannot open bcx buffer" << ioBcx.errorString();
 				return false;
@@ -78,6 +86,10 @@ bool FieldModelFilePS::load(FieldPS *currentField, int modelID, int animationID,
 	}
 
 	QByteArray BSXData = currentField->io()->modelData(currentField);
+	if (BSXData.isEmpty()) {
+		qWarning() << "FieldModelFilePS::load cannot open bsx file";
+		return false;
+	}
 	QBuffer ioBsx;
 	ioBsx.setData(BSXData);
 	if (!ioBsx.open(QIODevice::ReadOnly)) {
@@ -203,7 +215,10 @@ QHash<void *, QImage> FieldModelFilePS::loadedTextures()
 		for (FieldModelPart *part : bone.parts()) {
 			for (FieldModelGroup *group : part->groups()) {
 				if (group->hasTexture()) {
-					ret.insert((void *)group, loadedTexture(group));
+					QImage texture = loadedTexture(group);
+					if (!texture.isNull()) {
+						ret.insert((void *)group, texture);
+					}
 				}
 			}
 		}

@@ -168,10 +168,6 @@ bool BackgroundIOPC::write(const BackgroundFile &background) const
 		return false;
 	}
 
-	if (device()->write("FINAL FANTASY7", 14) != 14) {
-		return false;
-	}
-
 	return true;
 }
 

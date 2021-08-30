@@ -33,14 +33,14 @@ private:
 	QTreeWidget *listFF7;
 	QComboBox *listCharNames;
 	QLineEdit *charNameEdit;
-	QSpinBox *autoSizeMarginEdit, *spacedCharactersWidthEdit;
+	QSpinBox *autoSizeMarginEdit, *spacedCharactersWidthEdit, *choiceWidthEdit, *tabWidthEdit;
 	QCheckBox *kernelAuto, *windowAuto, *charAuto;
 	QLabel *kernelPath, *windowPath, *charPath;
 	QPushButton *ff7ButtonMod, *ff7ButtonRem, *kernelButton, *windowButton, *charButton;
 	QCheckBox *darkMode, *disableOGL;
 	QPushButton *windowColor1, *windowColor2, *windowColor3, *windowColor4, *windowColorReset;
 	QLabel *windowPreview;
-	QCheckBox *expandedByDefault, *lzsNotCheck;
+	QCheckBox *expandedByDefault;
 	QComboBox *encodings;
 	QRgb windowColorTopLeft, windowColorTopRight, windowColorBottomLeft, windowColorBottomRight;
 	QStringList customNames;

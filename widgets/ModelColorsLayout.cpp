@@ -70,6 +70,10 @@ ModelColorsLayout::ModelColorsLayout(QWidget *parent) :
 
 void ModelColorsLayout::setModelColorDirs(const QList<FieldModelColorDir> &dirs)
 {
+	if (dirs.size() != 3) {
+		qWarning() << "ModelColorsLayout::setModelColorDirs Invalid dirs size";
+		return;
+	}
 	for (quint8 i = 0; i < 3; ++i) {
 		modelColorWidget[i]->setModelColorDir(dirs.at(i));
 	}

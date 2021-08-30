@@ -73,6 +73,11 @@ void FontLetter::reset()
 	update();
 }
 
+bool FontLetter::isLetterSizeEditable() const
+{
+	return _windowBinFile && _letter < _windowBinFile->tableSize(_currentTable);
+}
+
 void FontLetter::paintEvent(QPaintEvent *)
 {
 	QPainter p(this);
@@ -86,9 +91,11 @@ void FontLetter::paintEvent(QPaintEvent *)
 		QImage letter = _windowBinFile->letter(_currentTable, _letter, _color);
 		if (!letter.isNull()) {
 			p.drawImage(QPoint(0, 0), letter.scaled(QSize(12*PIXEL_SIZE, 12*PIXEL_SIZE), Qt::KeepAspectRatio));
-			int linePos = _windowBinFile->charWidth(_currentTable, _letter) * PIXEL_SIZE;
-			p.setPen(Qt::red);
-			p.drawLine(QPoint(linePos, 0), QPoint(linePos, height()));
+			if (isLetterSizeEditable()) {
+				int linePos = _windowBinFile->charWidth(_currentTable, _letter) * PIXEL_SIZE;
+				p.setPen(Qt::red);
+				p.drawLine(QPoint(linePos, 0), QPoint(linePos, height()));
+			}
 		}
 	}
 }
@@ -129,7 +136,7 @@ void FontLetter::mouseMoveEvent(QMouseEvent *e)
 	} else if (startDrag2) {
 		setPixel(getPixel(mousePos));
 	} else {
-		if (mousePos.x() >= linePos - 1 && mousePos.x() <= linePos + 1) {
+		if (isLetterSizeEditable() && mousePos.x() >= linePos - 1 && mousePos.x() <= linePos + 1) {
 			if (cursor().shape() != Qt::SplitHCursor) {
 				setCursor(Qt::SplitHCursor);
 			}
@@ -153,7 +160,7 @@ void FontLetter::mousePressEvent(QMouseEvent *e)
 
 	int linePos = _windowBinFile->charWidth(_currentTable, _letter) * PIXEL_SIZE;
 
-	if (e->pos().x() >= linePos - 1 && e->pos().x() <= linePos + 1) {
+	if (isLetterSizeEditable() && e->pos().x() >= linePos - 1 && e->pos().x() <= linePos + 1) {
 		startDrag = true;
 	} else if (setPixel(pixel)) {
 		startDrag2 = true;

@@ -22,10 +22,6 @@
 ModelManagerPS::ModelManagerPS(QWidget *parent) :
     ModelManager(parent)
 {
-	modelScaleWidget->setReadOnly(true);
-	modelGlobalColorWidget->setReadOnly(true);
-	modelColorsLayout->setReadOnly(true);
-
 	modelAnims->setColumnCount(1);
 	modelAnims->setHeaderLabels(QStringList() << tr("Animation"));
 
@@ -90,12 +86,27 @@ const QList<FieldModelColorDir> &ModelManagerPS::lightColors(int modelID) const
 	return field()->fieldModel(modelID, 0)->lightColors();
 }
 
+void ModelManagerPS::setLightColor(int modelID, int id, const FieldModelColorDir &color)
+{
+	field()->fieldModel(modelID, 0)->setLightColor(id, color);
+}
+
 QRgb ModelManagerPS::globalColor(int modelID) const
 {
 	return field()->fieldModel(modelID, 0)->globalColor();
 }
 
+void ModelManagerPS::setGlobalColor(int modelID, QRgb color)
+{
+	field()->fieldModel(modelID, 0)->setGlobalColor(color);
+}
+
 quint16 ModelManagerPS::modelScale(int modelID) const
 {
 	return field()->fieldModel(modelID, 0)->scale();
+}
+
+void ModelManagerPS::setModelScale(int modelID, quint16 scale)
+{
+	field()->fieldModel(modelID, 0)->setScale(scale);
 }

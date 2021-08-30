@@ -37,4 +37,18 @@ private:
 	QCheckBox *_fromIsPointer, *_toIsPointer;
 };
 
+class ScriptEditorDLPBWriteToMemory : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	ScriptEditorDLPBWriteToMemory(Field *field, GrpScript *grpScript, Script *script,
+	                              int opcodeID, QWidget *parent = nullptr);
+	Opcode *opcode();
+	void setOpcode(Opcode *opcode);
+private:
+	void build();
+	QDoubleSpinBox *_address;
+	QLineEdit *_bytes;
+};
+
 #endif // SCRIPTEDITORSPECIAL_H

@@ -17,15 +17,25 @@
  ****************************************************************************/
 #include "FieldPS.h"
 #include "BackgroundFilePS.h"
+#include "../LZS.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
-	Field(name, io), vramDiff(0)
+      Field(name, io), vramDiff(0)
 {
 }
 
 FieldPS::FieldPS(const Field &field) :
-	Field(field), vramDiff(0)
+      Field(field), vramDiff(0)
 {
+}
+
+FieldPS::~FieldPS()
+{
+	for (FieldModelFilePS *model: qAsConst(_models)) {
+		if (model) {
+			delete model;
+		}
+	}
 }
 
 void FieldPS::openHeader(const QByteArray &fileData)
@@ -33,7 +43,7 @@ void FieldPS::openHeader(const QByteArray &fileData)
 	memcpy(sectionPositions, fileData.constData(), headerSize()); // header
 	vramDiff = sectionPositions[0] - headerSize();// vram section1 pos - real section 1 pos
 
-	for (int i=0; i<7; ++i) {
+	for (quint8 i=0; i<7; ++i) {
 		sectionPositions[i] -= vramDiff;
 	}
 }
@@ -80,11 +90,27 @@ FieldModelLoaderPS *FieldPS::fieldModelLoader(bool open)
 
 FieldModelFilePS *FieldPS::fieldModel(int modelID, int animationID, bool animate, bool open)
 {
-	FieldModelFilePS *fieldModel = new FieldModelFilePS();
-	if (open) {
-		fieldModel->load(this, modelID, animationID, animate);
+	_models.resize(modelID + 1);
+
+	if (_models[modelID] == nullptr) {
+		_models[modelID] = new FieldModelFilePS();
 	}
-	return fieldModel;
+
+	if (open) {
+		int i = 0;
+		for (FieldModelFilePS *model: qAsConst(_models)) {
+			if (model != nullptr && !model->isModified()) {
+				if (i == modelID) {
+					model->load(this, modelID, animationID, animate);
+				} else {
+					model->clear();
+				}
+			}
+			++i;
+		}
+	}
+
+	return _models[modelID];
 }
 
 QByteArray FieldPS::saveHeader() const
@@ -102,4 +128,124 @@ QByteArray FieldPS::saveFooter() const
 QList<Field::FieldSection> FieldPS::orderOfSections() const
 {
 	return QList<FieldSection>() << Scripts << Walkmesh << Background << Camera << Inf << Encounter << ModelLoader;
+}
+
+bool FieldPS::isDatModified() const
+{
+	return true;
+}
+
+bool FieldPS::isBsxModified() const
+{
+	for (FieldModelFilePS *model: qAsConst(_models)) {
+		if (model && model->isModified()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool FieldPS::isMimModified() const
+{
+	return false;
+}
+
+bool FieldPS::saveModels(QByteArray &newData, bool compress)
+{
+	newData = QByteArray();
+
+	if (!isOpen()) {
+		qWarning() << "FieldPS::saveModels field is not open";
+		return false;
+	}
+
+	newData = io()->modelData(this);
+	if (newData.isEmpty()) {
+		qWarning() << "FieldPS::saveModels cannot open bsx file";
+		return false;
+	}
+	QBuffer ioBsx;
+	ioBsx.setData(newData);
+	if (!ioBsx.open(QIODevice::ReadWrite)) {
+		qWarning() << "FieldPS::saveModels cannot open bsx buffer" << ioBsx.errorString();
+		return false;
+	}
+
+	BsxFile bsx(&ioBsx);
+
+	int modelID = 0;
+	for (FieldModelFilePS *model: qAsConst(_models)) {
+		if (model && model->isModified()) {
+			if (!bsx.seek(modelID)) {
+				qWarning() << "FieldPS::saveModels cannot seek to model";
+				return false;
+			}
+			if (!bsx.writeModelHeader(*model)) {
+				qWarning() << "FieldPS::saveModels cannot write model header";
+				return false;
+			}
+		}
+		++modelID;
+	}
+
+	newData = ioBsx.data();
+
+	if (compress) {
+		const QByteArray &compresse = LZS::compress(newData);
+		quint32 lzsSize = compresse.size();
+		newData = QByteArray((char *)&lzsSize, 4).append(compresse);
+	}
+
+	return true;
+}
+
+qint8 FieldPS::saveModels(const QString &path, bool compress)
+{
+	QByteArray newData;
+
+	if (saveModels(newData, compress)) {
+		QFile fic(path);
+		if (!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			return 2;
+		}
+		fic.write(newData);
+		fic.close();
+
+		return 0;
+	}
+
+	return 1;
+}
+
+bool FieldPS::saveBackground(QByteArray &newData, bool compress)
+{
+	newData = QByteArray();
+
+	if (!isOpen()) {
+		qWarning() << "FieldPS::saveBackground field is not open";
+		return false;
+	}
+
+	newData = io()->mimData(this, !compress);
+
+	return true;
+}
+
+qint8 FieldPS::saveBackground(const QString &path, bool compress)
+{
+	QByteArray newData;
+
+	if (saveBackground(newData, compress)) {
+		QFile fic(path);
+		if (!fic.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+			return 2;
+		}
+		fic.write(newData);
+		fic.close();
+
+		return 0;
+	}
+
+	return 1;
 }

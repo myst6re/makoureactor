@@ -87,12 +87,11 @@ QByteArray FieldArchiveIO::fieldData(Field *field, const QString &extension, boo
 	return data;
 }
 
-QByteArray FieldArchiveIO::fileData(const QString &fileName, bool unlzs, bool isLzsFile)
+QByteArray FieldArchiveIO::fileData(const QString &fileName, bool unlzs)
 {
 	QByteArray data = fileData2(fileName);
-	bool checkLzsHeader = !Config::value("lzsNotCheck").toBool();
 
-	if (isLzsFile && (unlzs || checkLzsHeader)) {
+	if (unlzs) {
 		if (data.size() < 4)		return QByteArray();
 
 		const char *lzsDataConst = data.constData();
@@ -101,16 +100,13 @@ QByteArray FieldArchiveIO::fileData(const QString &fileName, bool unlzs, bool is
 
 		if ((quint32)data.size() != lzsSize + 4 && lzsSize == 0x90000) { // Maybe it is not compressed
 			unlzs = false;
-		} else if (checkLzsHeader && (quint32)data.size() != lzsSize + 4) {
-			return QByteArray();
 		}
 
 		return unlzs
 			? LZS::decompressAll(lzsDataConst + 4, qMin(lzsSize, quint32(data.size() - 4)))
 			: data;
-	} else {
-		return data;
 	}
+	return data;
 }
 
 int FieldArchiveIO::exportFieldData(Field *field, const QString &extension, const QString &path, bool unlzs)

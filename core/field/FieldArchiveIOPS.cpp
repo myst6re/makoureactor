@@ -174,6 +174,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::save2(const QString &path0, Arch
 {
 	Q_UNUSED(observer)
 	QString path = path0.isNull() ? fic.fileName() : path0;
+	bool saveAs = !path0.isNull() && QFileInfo(path0) != QFileInfo(fic);
 
 	FieldArchiveIterator it(*(fieldArchive()));
 
@@ -183,10 +184,39 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSFile::save2(const QString &path0, Arch
 
 	Field *field = it.next(false);
 	if (field && field->isOpen() && field->isModified()) {
-		qint8 err = field->save(path, true);
-		if (err == 2)	return ErrorOpening;
-		if (err == 1)	return Invalid;
-		if (err != 0)	return NotImplemented;
+		FieldPS *fieldPS = static_cast<FieldPS *>(field);
+		if (fieldPS->isDatModified()) {
+			qint8 err = fieldPS->save(path, true);
+			if (err == 2)	return ErrorOpening;
+			if (err == 1)	return Invalid;
+			if (err != 0)	return NotImplemented;
+		}
+		if (fieldPS->isBsxModified()) {
+			path = path.left(fic.fileName().lastIndexOf('.')) + ".BSX";
+			qint8 err = fieldPS->saveModels(path, true);
+			if (err == 2)	return ErrorOpening;
+			if (err == 1)	return Invalid;
+			if (err != 0)	return NotImplemented;
+		}
+		if (fieldPS->isMimModified()) {
+			path = path.left(fic.fileName().lastIndexOf('.')) + ".MIM";
+			qint8 err = fieldPS->saveBackground(path, true);
+			if (err == 2)	return ErrorOpening;
+			if (err == 1)	return Invalid;
+			if (err != 0)	return NotImplemented;
+		}
+	} else if (saveAs) {
+		if (QFile::exists(path0) && !QFile::remove(path0)) {
+			return ErrorRemoving;
+		}
+		if (!fic.copy(path0)) {
+			return ErrorCopying;
+		}
+	}
+
+	if (saveAs) {
+		fic.close();
+		fic.setFileName(path0);
 	}
 
 	return Ok;
@@ -318,17 +348,45 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::save2(const QString &path0, Archi
 		}
 		Field *field = it.next(false);
 		if (field && field->isOpen() && field->isModified()) {
-			IsoFile *isoField = isoFieldDirectory->file(field->name().toUpper() + ".DAT");
-			if (isoField == nullptr) {
-				continue;
+			FieldPS *fieldPS = static_cast<FieldPS *>(field);
+
+			if (fieldPS->isDatModified()) {
+				IsoFile *isoField = isoFieldDirectory->file(field->name().toUpper() + ".DAT");
+				if (isoField != nullptr) {
+					QByteArray newData;
+
+					if (!field->save(newData, true)) {
+						return Invalid;
+					}
+
+					isoField->setModifiedFile(newData);
+				}
 			}
 
-			QByteArray newData;
+			if (fieldPS->isBsxModified()) {
+				IsoFile *isoFieldBsx = isoFieldDirectory->file(field->name().toUpper() + ".BSX");
+				if (isoFieldBsx != nullptr) {
+					QByteArray newDataBsx;
 
-			if (field->save(newData, true)) {
-				isoField->setModifiedFile(newData);
-			} else {
-				return Invalid;
+					if (!fieldPS->saveModels(newDataBsx, true)) {
+						return Invalid;
+					}
+
+					isoFieldBsx->setModifiedFile(newDataBsx);
+				}
+			}
+
+			if (fieldPS->isMimModified()) {
+				IsoFile *isoFieldMim = isoFieldDirectory->file(field->name().toUpper() + ".MIM");
+				if (isoFieldMim != nullptr) {
+					QByteArray newDataMim;
+
+					if (!fieldPS->saveBackground(newDataMim, true)) {
+						return Invalid;
+					}
+
+					isoFieldMim->setModifiedFile(newDataMim);
+				}
 			}
 		}
 	}
@@ -490,17 +548,50 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::save2(const QString &path, Archiv
 		}
 		Field *field = it.next(false);
 		QString datName = field->name().toUpper() + ".DAT",
-		        datPath = dir.filePath(datName);
+		        datPath = dir.filePath(datName),
+		        bsxName = field->name().toUpper() + ".BSX",
+		        bsxPath = dir.filePath(bsxName),
+		        mimName = field->name().toUpper() + ".MIM",
+		        mimPath = dir.filePath(mimName);
 		if (field) {
 			if (field->isOpen() && field->isModified()) {
-				qint8 err = field->save(datPath, true);
-				if (err == 2)	return ErrorOpening;
-				if (err == 1)	return Invalid;
-				if (err != 0)	return NotImplemented;
+				FieldPS *fieldPS = static_cast<FieldPS *>(field);
+				if (fieldPS->isDatModified()) {
+					qint8 err = fieldPS->save(datPath, true);
+					if (err == 2)	return ErrorOpening;
+					if (err == 1)	return Invalid;
+					if (err != 0)	return NotImplemented;
+				}
+
+				if (fieldPS->isBsxModified()) {
+					qint8 err = fieldPS->saveModels(bsxPath, true);
+					if (err == 2)	return ErrorOpening;
+					if (err == 1)	return Invalid;
+					if (err != 0)	return NotImplemented;
+				}
+
+				if (fieldPS->isMimModified()) {
+					qint8 err = fieldPS->saveBackground(mimPath, true);
+					if (err == 2)	return ErrorOpening;
+					if (err == 1)	return Invalid;
+					if (err != 0)	return NotImplemented;
+				}
 			} else if (saveAs) {
-				QString dstPath = path + "/" + datName;
-				if (!QFile::copy(datPath, dstPath)) {
+				QString datDstPath = path + "/" + datName;
+				if (!QFile::copy(datPath, datDstPath)) {
 					return ErrorCopying;
+				}
+				if (QFile::exists(bsxPath)) {
+					QString bsxDstPath = path + "/" + bsxName;
+					if (!QFile::copy(bsxPath, bsxDstPath)) {
+						return ErrorCopying;
+					}
+				}
+				if (QFile::exists(mimPath)) {
+					QString mimDstPath = path + "/" + mimName;
+					if (!QFile::copy(mimPath, mimDstPath)) {
+						return ErrorCopying;
+					}
 				}
 			}
 		}
