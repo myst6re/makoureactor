@@ -78,7 +78,7 @@ void ScriptEditorReturnToPage::setOpcode(Opcode *opcode)
 
 	OpcodeRETTO *opcodeRETTO = (OpcodeRETTO *)opcode;
 	scriptList->setCurrentIndex(opcodeRETTO->scriptID);
-	priority->setValue(opcodeRETTO->priority);
+	priority->setValue(qMin(quint8(6), opcodeRETTO->priority));
 
 	for (QObject *o : children()) {
 		o->blockSignals(false);
@@ -171,7 +171,7 @@ void ScriptEditorExecPage::setOpcode(Opcode *opcode)
 	}
 	scriptList->setCurrentIndex(opcodeExec->scriptID);
 
-	priority->setValue(opcodeExec->priority);
+	priority->setValue(qMin(quint8(6), opcodeExec->priority));
 
 	for (QObject *o : children()) {
 		o->blockSignals(false);
@@ -293,7 +293,7 @@ void ScriptEditorExecCharPage::setOpcode(Opcode *opcode)
 	OpcodeExecChar *opcodeExecChar = (OpcodeExecChar *)opcode;
 	partyID->setValue(opcodeExecChar->partyID);
 	scriptList->setCurrentIndex(opcodeExecChar->scriptID);
-	priority->setValue(opcodeExecChar->priority);
+	priority->setValue(qMin(quint8(6), opcodeExecChar->priority));
 
 	for (QObject *o : children()) {
 		o->blockSignals(false);
