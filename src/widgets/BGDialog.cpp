@@ -152,7 +152,7 @@ void BGDialog::fillWidgets()
 
 		QListWidgetItem *item;
 
-		QList<quint16> usedIDsList = usedIDs.toList();
+		QList<quint16> usedIDsList = usedIDs.values();
 		std::sort(usedIDsList.begin(), usedIDsList.end());
 		int sectionID = 0;
 		for (const quint16 ID : qAsConst(usedIDsList)) {

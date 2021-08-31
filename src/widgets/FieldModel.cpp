@@ -103,7 +103,7 @@ void FieldModel::drawP(Renderer *gpuRenderer, FieldModelFile *data, float scale,
 			bool groupTextureBinded = false;
 			if (g->hasTexture()) {
 				QImage tex = data->loadedTexture(g);
-				if !tex.isNull()) {
+				if (!tex.isNull()) {
 					gpuRenderer->bindTexture(tex);
 					groupTextureBinded = true;
 				}

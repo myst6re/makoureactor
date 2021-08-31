@@ -329,37 +329,6 @@ void ModelManagerPC::setModelName(const QString &modelName)
 	emit modified();
 }
 
-void ModelManagerPC::setModelScale(int scale)
-{
-	int modelID = currentModelID();
-	if (modelID < 0)	return;
-
-	modelLoader()->setScale(modelID, quint16(scale));
-
-	emit modified();
-}
-
-void ModelManagerPC::setModelGlobalColor(int id, QRgb color)
-{
-	Q_UNUSED(id)
-	int modelID = currentModelID();
-	if (modelID < 0)	return;
-
-	modelLoader()->setGlobalColor(modelID, color);
-
-	emit modified();
-}
-
-void ModelManagerPC::setModelColor(int id, const FieldModelColorDir &color)
-{
-	int modelID = currentModelID();
-	if (modelID < 0)	return;
-
-	modelLoader()->setLightColor(modelID, id, color);
-
-	emit modified();
-}
-
 void ModelManagerPC::addAnim()
 {
 	int modelID = currentModelID();

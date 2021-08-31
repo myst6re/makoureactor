@@ -87,7 +87,7 @@ PsfFile PsfFile::fromAkao(const QByteArray &akaoData, const PsfTags &tags)
 {
 	QByteArray data;
 
-	data.append(QString("PS-X EXE"))
+	data.append(QString("PS-X EXE").toLatin1())
 	    .append(QByteArray(10, '\0'))
 	    .append("\x01\x80", 2)
 	    .append(QByteArray(6, '\0'))

@@ -234,8 +234,8 @@ QByteArray FieldModelLoaderPC::save() const
 		HRCs.append((char *)&nameSize, 2); //model name size
 		HRCs.append(modelName.toLocal8Bit()); //model Name (fieldnamename_of_char.char)
 		HRCs.append((char *)&this->model_unknown.at(i), 2); //Unknown
-		HRCs.append(this->model_nameHRC.at(i).leftJustified(8, '\x00', true)); //HRC name (AAAA.HRC)
-		HRCs.append(QString::number(this->model_typeHRC.at(i)).leftJustified(4, '\x00', true)); //scale (512 )
+		HRCs.append(this->model_nameHRC.at(i).toLatin1().leftJustified(8, '\x00', true)); //HRC name (AAAA.HRC)
+		HRCs.append(QString::number(this->model_typeHRC.at(i)).toLatin1().leftJustified(4, '\x00', true)); //scale (512 )
 		const quint16 &nbAnim = this->model_anims.at(i).size();
 		HRCs.append((char *)&nbAnim, 2); //Nb Anims
 
@@ -257,7 +257,7 @@ QByteArray FieldModelLoaderPC::save() const
 		for (int j=0; j<nbAnim; ++j) { //Animations
 			nameSize = this->model_anims.at(i).at(j).size();
 			HRCs.append((char *)&nameSize, 2); //Animation name size
-			HRCs.append(this->model_anims.at(i).at(j)); //Animation name
+			HRCs.append(this->model_anims.at(i).at(j).toLatin1()); //Animation name
 			HRCs.append((char *)&model_anims_unknown.at(i).at(j), 2); //Animation unknown
 		}
 	}
