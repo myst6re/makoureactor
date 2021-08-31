@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include "IsoArchiveFF7.h"
 #include "core/LZS.h"
-#include "core/GZIPPS.h"
+#include <utils/GZIPPS.h>
 
 IsoArchiveFF7::IsoArchiveFF7(const QString &name) :
 	IsoArchive(name), _exe(nullptr), _country(NoCountry)

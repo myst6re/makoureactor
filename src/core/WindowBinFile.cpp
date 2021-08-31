@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "WindowBinFile.h"
-#include "GZIP.h"
+#include <utils/GZIP.h>
 
 WindowBinFile::WindowBinFile() :
 	modified(false)
