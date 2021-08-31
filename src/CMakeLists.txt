@@ -98,12 +98,21 @@ endif()
 find_package(ZLIB REQUIRED)
 find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools REQUIRED)
 
+find_package(ff7tk REQUIRED NO_MODULE COMPONENTS ff7tk)
+
 file(GLOB_RECURSE source_files "*.cpp")
 
 # Translations
 file(GLOB_RECURSE translation_files "${RELEASE_NAME}_*.ts")
 set_source_files_properties(${translation_files} PROPERTIES OUTPUT_LOCATION "${CMAKE_INSTALL_FULL_BINDIR}")
 qt5_add_translation(QM_FILES ${translation_files})
+
+if(WIN32)
+    set (FF7TK_DEPENDS
+        ${ff7tk_DIR}/../../../bin/ff7tk.dll
+        ${ff7tk_DIR}/../../../bin/ff7tkWidgets.dll
+    )
+endif()
 
 # GUI
 add_executable(${GUI_TARGET} WIN32 ${source_files} ${QM_FILES} qt/${RELEASE_NAME}.qrc qt/${RELEASE_NAME}.rc)
@@ -112,6 +121,7 @@ target_link_libraries(${GUI_TARGET}
     Qt5::OpenGL
     Qt5::Widgets
     ZLIB::ZLIB
+    ff7tk::ff7tk
 )
 if(MSVC)
     target_compile_options(${GUI_TARGET}
