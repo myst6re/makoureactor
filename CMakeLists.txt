@@ -19,7 +19,11 @@
 cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0074 NEW)
 
-project(Makou_Reactor LANGUAGES CXX)
+set(RELEASE_NAME "Makou_Reactor")
+set(GUI_TARGET "${RELEASE_NAME}")
+#set(CLI_TARGET "makoureactor")
+
+project(${RELEASE_NAME} VERSION 1.8.5 LANGUAGES CXX)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -29,38 +33,54 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-if(CMAKE_VERSION VERSION_LESS "3.7.0")
-    set(CMAKE_INCLUDE_CURRENT_DIR ON)
-endif()
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(RELEASE_NAME "Makou_Reactor")
-set(RELEASE_VERSION "1.8.2")
-set(GUI_TARGET "${RELEASE_NAME}")
-
-find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools REQUIRED)
+find_package(QT NAMES Qt5 COMPONENTS Widgets OpenGL LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL LinguistTools REQUIRED)
 find_package(ff7tk REQUIRED NO_MODULE COMPONENTS ff7tk ff7tkUtils)
 find_package(ZLIB REQUIRED)
 
+file(GLOB_RECURSE TS_FILES "${RELEASE_NAME}_*.ts")
 file(GLOB_RECURSE PROJECT_SOURCES "*.cpp" "*.h")
+set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
 
-# Translations
-file(GLOB_RECURSE translation_files "${RELEASE_NAME}_*.ts")
-set_source_files_properties(${translation_files} PROPERTIES OUTPUT_LOCATION "${CMAKE_INSTALL_FULL_BINDIR}")
-qt5_add_translation(QM_FILES ${translation_files})
+# GUI
+add_executable(${GUI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} src/qt/${RELEASE_NAME}.rc)
+target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
+target_link_libraries(${GUI_TARGET}
+    Qt${QT_VERSION_MAJOR}::OpenGL
+    Qt${QT_VERSION_MAJOR}::Widgets
+    ff7tk::ff7tk
+    ff7tk::ff7tkUtils
+    ZLIB::ZLIB
+)
+
+# CLI
+#add_executable(${CLI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} src/qt/${RELEASE_NAME}.qrc src/qt/${RELEASE_NAME}.rc)
+#target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
+#target_link_libraries(${CLI_TARGET}
+#    Qt${QT_VERSION_MAJOR}::Widgets
+#    ff7tk::ff7tk
+#    ff7tk::ff7tkUtils
+#)
+#target_compile_definitions(${CLI_TARGET}
+#    PRIVATE MR_CONSOLE=1
+#)
+
+qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+
+if (APPLE)
+    set_target_properties(${RELEASE_NAME} PROPERTIES
+        MACOSX_BUNDLE_BUNDLE_NAME "Makou Reactor"
+        MACOSX_BUNDLE_GUI_IDENTIFIER org.myst6re.makoureactor
+        MACOSX_BUNDLE_ICON_FILE "${RELEASE_NAME}.icns"
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    )
+endif()
 
 if(WIN32)
     set (FF7TK_DEPENDS
         ${ff7tk_DIR}/../../../bin/ff7tk.dll
-        ${ff7tk_DIR}/../../../bin/ff7tkWidgets.dll
     )
 endif()
-
-# GUI
-add_executable(${GUI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} src/qt/${RELEASE_NAME}.qrc src/qt/${RELEASE_NAME}.rc)
-target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
-target_link_libraries(${GUI_TARGET}
-    Qt5::OpenGL
-    Qt5::Widgets
-    ff7tk::ff7tk
-    ff7tk::ff7tkUtils
-)
