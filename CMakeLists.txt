@@ -35,8 +35,8 @@ set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(QT NAMES Qt5 COMPONENTS Widgets OpenGL LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL LinguistTools REQUIRED)
+find_package(QT NAMES Qt5 COMPONENTS Widgets OpenGL REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
 find_package(ff7tk REQUIRED NO_MODULE COMPONENTS ff7tk ff7tkUtils)
 find_package(ZLIB REQUIRED)
 
@@ -67,8 +67,6 @@ target_link_libraries(${GUI_TARGET}
 #    PRIVATE MR_CONSOLE=1
 #)
 
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-
 if (APPLE)
     set_target_properties(${RELEASE_NAME} PROPERTIES
         MACOSX_BUNDLE_BUNDLE_NAME "Makou Reactor"
@@ -84,3 +82,5 @@ if(WIN32)
         ${ff7tk_DIR}/../../../bin/ff7tk.dll
     )
 endif()
+
+add_subdirectory(lang)
