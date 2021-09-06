@@ -25,6 +25,7 @@ jobs:
            , QT_INST_DIR: /opt
            , ff7tkPrefix: /usr
            , make_install_ff7tk: "sudo ninja install"
+           , rmdir: "rm -rf"
            , install_ninja: "sudo apt-get install -qq ninja-build"
            , build_makoureactor: "DESTDIR=appdir ninja install; find appdir/"
            , rename_package: "mv Makou_Reactor-*.tar.xz build_makoureactor-continuous-linux-x86_64.tar.xz"
@@ -35,6 +36,7 @@ jobs:
             , QT_INST_DIR: /Users/runner
             , ff7tkPrefix: /usr/local
             , make_install_ff7tk: "sudo ninja install"
+            , rmdir: "rm -rf"
             , install_ninja: "brew install ninja"
             , build_makoureactor: "ninja"
             , rename_package: "mv build_makoureactor-*.dmg build_makoureactor-continuous-macos.dmg"
@@ -46,6 +48,7 @@ jobs:
             , ff7tkPrefix: "C:/ff7tk"
             , extraCmakeConfig: "-DZLIB_ROOT=c:/zlib"
             , make_install_ff7tk: "ninja install"
+            , rmdir: "Remove-Item"
             , install_ninja: "choco install ninja"
             , build_makoureactor: "ninja install"
             , rename_package: "mv build_makoureactor-*.zip build_makoureactor-continuous-win64.zip && mv build_makoureactor-*.exe build_makoureactor-continuous-win64-installer.exe"
@@ -57,6 +60,7 @@ jobs:
             , ff7tkPrefix: "C:/ff7tk"
             , extraCmakeConfig: "-DZLIB_ROOT=c:/zlib"
             , make_install_ff7tk: "ninja install"
+            , rmdir: "Remove-Item"
             , install_ninja: "choco install ninja"
             , build_makoureactor: "ninja install"
             , rename_package: "mv build_makoureactor-*.zip build_makoureactor-continuous-win32.zip && mv build_makoureactor-*.exe build_makoureactor-continuous-win32-installer.exe"
@@ -96,6 +100,7 @@ jobs:
         cmake -G Ninja -S. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX=${{matrix.config.ff7tkPrefix}} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF ${{matrix.config.extraCmakeConfig}}
         ${{matrix.config.make_install_ff7tk}}
         cd ${{github.workspace}}
+        ${{matrix.config.rmdir}} ${{github.workspace}}/ff7tk-git
 
     - name: Build Makou_Reactor
       id: main_build
