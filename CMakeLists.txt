@@ -40,22 +40,39 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
 find_package(ff7tk REQUIRED NO_MODULE COMPONENTS ff7tk ff7tkUtils)
 find_package(ZLIB REQUIRED)
 
-file(GLOB_RECURSE PROJECT_SOURCES "*.cpp" "*.h")
-set(RESOURCES "src/qt/${RELEASE_NAME}.qrc" "src/qt/${RELEASE_NAME}.rc")
+file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp" "src/*.h")
+set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
+
+if (APPLE)
+    set(OS_BUNDLE MACOSX_BUNDLE)
+    set(ICON_FILE "src/qt/images/${RELEASE_NAME}.icns")
+    set(EXTRA_RESOURCES ${ICON_FILE})
+
+    set_source_files_properties(${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    set(MACOSX_BUNDLE_BUNDLE_NAME "Makou Reactor")
+    set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING ${PROJECT_VERSION})
+    set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER org.myst6re.makoureactor)
+    set(MACOSX_BUNDLE_ICON_FILE ${RELEASE_NAME}.icns)
+elseif (WIN32)
+    set(OS_BUNDLE WIN32)
+    set(ICON_FILE "src/qt/images/logo-shinra.ico")
+    set(EXTRA_RESOURCES "src/qt/${RELEASE_NAME}.rc")
+endif()
 
 # GUI
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(${GUI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES})
+    qt_add_executable(${GUI_TARGET} ${OS_BUNDLE} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
 else()
-    add_executable(${GUI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES})
+    add_executable(${GUI_TARGET} ${OS_BUNDLE} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
 endif()
 target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
-target_link_libraries(${GUI_TARGET}
+target_link_libraries(${GUI_TARGET} PRIVATE
     Qt${QT_VERSION_MAJOR}::OpenGL
     Qt${QT_VERSION_MAJOR}::Widgets
     ff7tk::ff7tk
     ff7tk::ff7tkUtils
-    ZLIB::ZLIB
 )
 
 # CLI
@@ -70,17 +87,17 @@ target_link_libraries(${GUI_TARGET}
 #    PRIVATE MR_CONSOLE=1
 #)
 
-if (APPLE)
-    set_target_properties(${RELEASE_NAME} PROPERTIES
-        MACOSX_BUNDLE_BUNDLE_NAME "Makou Reactor"
-        MACOSX_BUNDLE_GUI_IDENTIFIER org.myst6re.makoureactor
-        MACOSX_BUNDLE_ICON_FILE "${RELEASE_NAME}.icns"
-        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    )
-    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR})
+if(APPLE)
+    #get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
+    #get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+    #find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
+    #add_custom_command(TARGET ${GUI_TARGET} POST_BUILD
+    #    COMMAND "${MACDEPLOYQT_EXECUTABLE}"
+    #            "$<TARGET_FILE_DIR:${GUI_TARGET}>/../.."
+    #    COMMENT "Running macdeployqt..."
+    #)
 else()
-    install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(TARGETS ${GUI_TARGET} RUNTIME)
 endif()
 
 if(WIN32)
