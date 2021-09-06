@@ -82,7 +82,7 @@ jobs:
       run: |
         git clone https://github.com/sithlord48/ff7tk.git ${{github.workspace}}/ff7tk-git
         cd ${{github.workspace}}/ff7tk-git
-        cmake -G Ninja -S. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX=${{matrix.config.ff7tkPrefix}} -DFORMATS=OFF -DUTILS=OFF
+        cmake -G Ninja -S. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX=${{matrix.config.ff7tkPrefix}} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF
         ${{matrix.config.make_install_ff7tk}}
         cd ${{github.workspace}}
 
