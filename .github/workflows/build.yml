@@ -44,7 +44,7 @@ jobs:
             , os: windows-latest
             , QT_INST_DIR: "C:/", QTDIR: "C:/Qt/5.15.2/msvc2019_64", QT_ARCH: win64_msvc2019_64
             , ff7tkPrefix: "C:/ff7tk"
-            , extraFf7tkCmakeConfig: "-DZLIB_ROOT=c:/zlib"
+            , extraCmakeConfig: "-DZLIB_ROOT=c:/zlib"
             , make_install_ff7tk: "ninja install"
             , install_ninja: "choco install ninja"
             , build_makoureactor: "ninja install"
@@ -55,7 +55,7 @@ jobs:
             , os: windows-latest, WIN_ARCH: "amd64_x86"
             , QT_INST_DIR: "C:/", QTDIR: "C:/Qt/5.15.2/msvc2019", QT_ARCH: win32_msvc2019
             , ff7tkPrefix: "C:/ff7tk"
-            , extraFf7tkCmakeConfig: "-DZLIB_ROOT=c:/zlib"
+            , extraCmakeConfig: "-DZLIB_ROOT=c:/zlib"
             , make_install_ff7tk: "ninja install"
             , install_ninja: "choco install ninja"
             , build_makoureactor: "ninja install"
@@ -93,14 +93,14 @@ jobs:
       run: |
         git clone https://github.com/sithlord48/ff7tk.git ${{github.workspace}}/ff7tk-git
         cd ${{github.workspace}}/ff7tk-git
-        cmake -G Ninja -S. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX=${{matrix.config.ff7tkPrefix}} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF ${{matrix.config.extraFf7tkCmakeConfig}}
+        cmake -G Ninja -S. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX=${{matrix.config.ff7tkPrefix}} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF ${{matrix.config.extraCmakeConfig}}
         ${{matrix.config.make_install_ff7tk}}
         cd ${{github.workspace}}
 
     - name: Build Makou_Reactor
       id: main_build
       run: |
-        cmake -S. -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dff7tk_DIR=${{matrix.config.ff7tkPrefix}}/lib/cmake/ff7tk
+        cmake -S. -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dff7tk_DIR=${{matrix.config.ff7tkPrefix}}/lib/cmake/ff7tk ${{matrix.config.extraCmakeConfig}}
         ${{matrix.config.build_makoureactor}}
 
     - name: CPack
