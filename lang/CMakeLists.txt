@@ -21,10 +21,15 @@ set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 find_package(QT NAMES Qt5 Qt6 COMPONENTS LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR}LinguistTools)
 
-file(GLOB_RECURSE TS_FILES "${RELEASE_NAME}_*.ts")
+set(TS_FILES
+    "${RELEASE_NAME}_fr.ts"
+    "${RELEASE_NAME}_ja.ts"
+)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
+
+add_custom_target(translations ALL DEPENDS ${QM_FILES})
