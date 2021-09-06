@@ -27,7 +27,7 @@ project(${RELEASE_NAME} VERSION 1.8.5 LANGUAGES CXX)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -35,17 +35,21 @@ set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(QT NAMES Qt5 COMPONENTS Widgets OpenGL REQUIRED)
+find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
 find_package(ff7tk REQUIRED NO_MODULE COMPONENTS ff7tk ff7tkUtils)
 find_package(ZLIB REQUIRED)
 
 file(GLOB_RECURSE TS_FILES "${RELEASE_NAME}_*.ts")
 file(GLOB_RECURSE PROJECT_SOURCES "*.cpp" "*.h")
-set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
+set(RESOURCES "src/qt/${RELEASE_NAME}.qrc" "src/qt/${RELEASE_NAME}.rc")
 
 # GUI
-add_executable(${GUI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} src/qt/${RELEASE_NAME}.rc)
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_executable(${GUI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES})
+else()
+    add_executable(${GUI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES})
+endif()
 target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${GUI_TARGET}
     Qt${QT_VERSION_MAJOR}::OpenGL

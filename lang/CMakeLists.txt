@@ -16,9 +16,13 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
-find_package(QT NAMES Qt5 COMPONENTS LinguistTools)
+find_package(QT NAMES Qt5 Qt6 COMPONENTS LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR}LinguistTools)
 
 file(GLOB_RECURSE TS_FILES "${RELEASE_NAME}_*.ts")
 
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+else()
+    qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+endif()
