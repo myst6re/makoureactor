@@ -16,6 +16,8 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
+set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
+
 find_package(QT NAMES Qt5 Qt6 COMPONENTS LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR}LinguistTools)
 

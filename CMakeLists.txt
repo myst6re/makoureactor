@@ -40,7 +40,6 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
 find_package(ff7tk REQUIRED NO_MODULE COMPONENTS ff7tk ff7tkUtils)
 find_package(ZLIB REQUIRED)
 
-file(GLOB_RECURSE TS_FILES "${RELEASE_NAME}_*.ts")
 file(GLOB_RECURSE PROJECT_SOURCES "*.cpp" "*.h")
 set(RESOURCES "src/qt/${RELEASE_NAME}.qrc" "src/qt/${RELEASE_NAME}.rc")
 
@@ -79,6 +78,9 @@ if (APPLE)
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
         MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     )
+    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR})
+else()
+    install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
 if(WIN32)
@@ -88,3 +90,7 @@ if(WIN32)
 endif()
 
 add_subdirectory(lang)
+
+if(QT_VERSION_MAJOR EQUAL 6)
+    qt_finalize_executable(${GUI_TARGET})
+endif()
