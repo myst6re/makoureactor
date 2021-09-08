@@ -103,10 +103,17 @@ if(APPLE)
 elseif (WIN32)
     set(INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
     install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${INSTALL_DESTINATION}")
-    set(FF7TK_DEPENDS
-        ${ff7tk_DIR}/../../../bin/ff7tk.dll
-        ${ff7tk_DIR}/../../../bin/ff7tkUtils.dll
-    )
+    if(MINGW)
+        set(FF7TK_DEPENDS
+            ${ff7tk_DIR}/../../../bin/libff7tk.dll
+            ${ff7tk_DIR}/../../../bin/libff7tkUtils.dll
+        )
+    else()
+        set(FF7TK_DEPENDS
+            ${ff7tk_DIR}/../../../bin/ff7tk.dll
+            ${ff7tk_DIR}/../../../bin/ff7tkUtils.dll
+        )
+    endif()
     install(FILES ${FF7TK_DEPENDS} DESTINATION "${INSTALL_DESTINATION}")
 else()
     install(TARGETS ${GUI_TARGET} RUNTIME)

@@ -33,3 +33,5 @@ else()
 endif()
 
 add_custom_target(translations ALL DEPENDS ${QM_FILES})
+
+install(FILES ${QM_FILES} DESTINATION "${INSTALL_DESTINATION}")
