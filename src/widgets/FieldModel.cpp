@@ -183,7 +183,7 @@ void FieldModel::mouseMoveEvent(QMouseEvent *event)
 		// setXRotation(xRot + 8 * dy);
 		needsUpdate |= setZRotation(zRot + 8 * dx);
 	}
-	if (event->buttons() & Qt::MidButton) {
+	if (event->buttons() & Qt::MiddleButton) {
 		needsUpdate |= setYRotation(yRot + 8 * dx);
 	}
 
@@ -361,7 +361,7 @@ void FieldModel::wheelEvent(QWheelEvent *event)
 void FieldModel::mousePressEvent(QMouseEvent *event)
 {
 	lastPos = event->pos();
-	if (event->button() == Qt::MidButton) {
+	if (event->button() == Qt::MiddleButton) {
 		resetCamera();
 	}
 }

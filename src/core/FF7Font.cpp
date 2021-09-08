@@ -110,7 +110,7 @@ bool FF7Font::isReadOnly() const
 void FF7Font::openTxt(const QString &data)
 {
 	int tableCount = _windowBinFile->tableCount();
-	QStringList lines = data.split(QRegExp("\\s*(\\r\\n|\\r|\\n)\\s*"), QString::SkipEmptyParts);
+	QStringList lines = data.split(QRegExp("\\s*(\\r\\n|\\r|\\n)\\s*"), Qt::SkipEmptyParts);
 	QRegExp nameRegExp("#NAME\\s+(\\S.*)"), letterRegExp("\\s*\"([^\"]*|\\\"*)\"\\s*,?\\s*");
 	// nameRegExp:		#NAME blah blah blah
 	// letterRegExp:	"Foo", "Foo","Foo"

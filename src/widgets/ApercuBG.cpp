@@ -80,7 +80,7 @@ QPixmap ApercuBG::errorPixmap(const QSize &size)
 	QFont font;
 	font.setPixelSize(44);
 	QString text = tr("Error");
-	int textWidth = QFontMetrics(font).width(text),
+	int textWidth = QFontMetrics(font).horizontalAdvance(text),
 	    textHeight = QFontMetrics(font).height();
 
 	QPainter p(&errorPix);

@@ -24,6 +24,7 @@ class Field;
 
 class FieldSaveIO : public QIODevice
 {
+	Q_OBJECT
 public:
 	FieldSaveIO(Field *field, QObject *parent=0);
 	virtual bool open(OpenMode mode);

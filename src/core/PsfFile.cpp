@@ -19,7 +19,7 @@ bool PsfTags::open(const QString &config)
 		return false;
 	}
 
-	QStringList entries = config.mid(5).split('\n', QString::SkipEmptyParts);
+	QStringList entries = config.mid(5).split('\n', Qt::SkipEmptyParts);
 	for (const QString &entry : qAsConst(entries)) {
 		int index = entry.indexOf('=');
 
@@ -141,7 +141,7 @@ QByteArray PsfFile::save() const
 
 	data.append(_special);
 	data.append(compressedData);
-	data.append(_tags.save());
+	data.append(_tags.save().toLatin1());
 
 	return data;
 }

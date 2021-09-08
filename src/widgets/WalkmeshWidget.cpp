@@ -433,7 +433,7 @@ void WalkmeshWidget::wheelEvent(QWheelEvent *event)
 void WalkmeshWidget::mousePressEvent(QMouseEvent *event)
 {
 	setFocus();
-	if (event->button() == Qt::MidButton) {
+	if (event->button() == Qt::MiddleButton) {
 		resetCamera();
 	} else if (event->button() == Qt::LeftButton) {
 		moveStart = event->pos();
