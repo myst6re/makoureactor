@@ -22,8 +22,8 @@ find_package(QT NAMES Qt5 Qt6 COMPONENTS LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR}LinguistTools)
 
 set(TS_FILES
-    "${RELEASE_NAME}_fr.ts"
-    "${RELEASE_NAME}_ja.ts"
+    Makou_Reactor_fr.ts
+    Makou_Reactor_ja.ts
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

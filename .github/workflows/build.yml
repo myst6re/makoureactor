@@ -100,7 +100,7 @@ jobs:
     - name: Build Makou_Reactor
       id: main_build
       run: |
-        cmake -S. -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dff7tk_DIR=${{matrix.config.ff7tkPrefix}}/lib/cmake/ff7tk ${{matrix.config.extraCmakeConfig}}
+        cmake -S. -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -Dff7tk_DIR=${{matrix.config.ff7tkPrefix}}/lib/cmake/ff7tk
         ${{matrix.config.build_makoureactor}}
 
     - name: CPack

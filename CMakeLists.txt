@@ -35,10 +35,11 @@ set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
-find_package(ff7tk REQUIRED NO_MODULE COMPONENTS ff7tk ff7tkUtils)
-find_package(ZLIB REQUIRED)
+add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x050E00)
+
+find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL Zlib REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL Zlib REQUIRED)
+find_package(ff7tk COMPONENTS ff7tk ff7tkUtils REQUIRED)
 
 file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp" "src/*.h")
 set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
@@ -71,6 +72,7 @@ target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${GUI_TARGET} PRIVATE
     Qt${QT_VERSION_MAJOR}::OpenGL
     Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Zlib
     ff7tk::ff7tk
     ff7tk::ff7tkUtils
 )
@@ -91,23 +93,30 @@ endif()
 #    PRIVATE MR_CONSOLE=1
 #)
 
-get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
-get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
-install(CODE "set(TARGET_FILE_DIR \"$<TARGET_FILE_DIR:${GUI_TARGET}>/../..\")")
-install(CODE "set(_qt_bin_dir \"${_qt_bin_dir}\")")
-install(SCRIPT deploy.cmake)
+include(GNUInstallDirs)
+
+message("-- CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 
 if(APPLE)
-    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION /Applications)
+    set(INSTALL_DESTINATION "/Applications")
+    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION "${INSTALL_DESTINATION}")
+elseif (WIN32)
+    set(INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+    install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${INSTALL_DESTINATION}")
+    set(FF7TK_DEPENDS
+        ${ff7tk_DIR}/../../../bin/ff7tk.dll
+        ${ff7tk_DIR}/../../../bin/ff7tkUtils.dll
+    )
+    install(FILES ${FF7TK_DEPENDS} DESTINATION "${INSTALL_DESTINATION}")
 else()
     install(TARGETS ${GUI_TARGET} RUNTIME)
 endif()
 
-if(WIN32)
-    set (FF7TK_DEPENDS
-        ${ff7tk_DIR}/../../../bin/ff7tk.dll
-    )
-endif()
+get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
+get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+install(CODE "set(TARGET_FILE_DIR \"${INSTALL_DESTINATION}\")")
+install(CODE "set(_qt_bin_dir \"${_qt_bin_dir}\")")
+install(SCRIPT deploy.cmake)
 
 add_subdirectory(lang)
 
