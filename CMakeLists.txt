@@ -70,9 +70,9 @@ else()
 endif()
 target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${GUI_TARGET} PRIVATE
-    Qt${QT_VERSION_MAJOR}::OpenGL
-    Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Zlib
+    Qt::OpenGL
+    Qt::Widgets
+    Qt::Zlib
     ff7tk::ff7tk
     ff7tk::ff7tkUtils
 )
@@ -85,7 +85,7 @@ endif()
 #add_executable(${CLI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} src/qt/${RELEASE_NAME}.qrc src/qt/${RELEASE_NAME}.rc)
 #target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 #target_link_libraries(${CLI_TARGET}
-#    Qt${QT_VERSION_MAJOR}::Widgets
+#    Qt::Zlib
 #    ff7tk::ff7tk
 #    ff7tk::ff7tkUtils
 #)
