@@ -63,7 +63,7 @@ endif()
 
 # GUI
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(${GUI_TARGET} ${OS_BUNDLE} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
+    qt_add_executable(${GUI_TARGET} MANUAL_FINALIZATION ${OS_BUNDLE} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
 else()
     add_executable(${GUI_TARGET} ${OS_BUNDLE} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
 endif()
@@ -74,6 +74,10 @@ target_link_libraries(${GUI_TARGET} PRIVATE
     ff7tk::ff7tk
     ff7tk::ff7tkUtils
 )
+
+if (APPLE)
+    set_target_properties(${GUI_TARGET} PROPERTIES OUTPUT_NAME "Makou Reactor")
+endif()
 
 # CLI
 #add_executable(${CLI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} src/qt/${RELEASE_NAME}.qrc src/qt/${RELEASE_NAME}.rc)
@@ -87,15 +91,14 @@ target_link_libraries(${GUI_TARGET} PRIVATE
 #    PRIVATE MR_CONSOLE=1
 #)
 
+get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
+get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+install(CODE "set(TARGET_FILE_DIR \"$<TARGET_FILE_DIR:${GUI_TARGET}>/../..\")")
+install(CODE "set(_qt_bin_dir \"${_qt_bin_dir}\")")
+install(SCRIPT deploy.cmake)
+
 if(APPLE)
-    #get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
-    #get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
-    #find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
-    #add_custom_command(TARGET ${GUI_TARGET} POST_BUILD
-    #    COMMAND "${MACDEPLOYQT_EXECUTABLE}"
-    #            "$<TARGET_FILE_DIR:${GUI_TARGET}>/../.."
-    #    COMMENT "Running macdeployqt..."
-    #)
+    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION /Applications)
 else()
     install(TARGETS ${GUI_TARGET} RUNTIME)
 endif()
