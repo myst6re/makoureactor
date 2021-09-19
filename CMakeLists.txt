@@ -18,12 +18,16 @@
 
 cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0074 NEW)
+cmake_policy(SET CMP0091 NEW)
 
 set(RELEASE_NAME "Makou_Reactor")
 set(GUI_TARGET "${RELEASE_NAME}")
 #set(CLI_TARGET "makoureactor")
 
-project(${RELEASE_NAME} VERSION 1.8.5 LANGUAGES CXX)
+project(${RELEASE_NAME} VERSION 1.8.5 LANGUAGES CXX
+    DESCRIPTION "Final Fantasy VII field archive editor"
+    HOMEPAGE_URL "https://github.com/myst6re/makoureactor"
+)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -143,3 +147,18 @@ add_subdirectory(lang)
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(${GUI_TARGET})
 endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION "/Applications")
+    set(CPACK_GENERATOR "DragNDrop")
+elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+    set(CPACK_GENERATOR "ZIP")
+else()
+    set(CPACK_GENERATOR "TXZ")
+endif()
+
+set(CPACK_SOURCE_IGNORE_FILES .git/* *.user *.yml *.github/*)
+set(CPACK_SOURCE_GENERATOR "ZIP;TGZ")
+
+include(CPack)
