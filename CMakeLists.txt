@@ -37,9 +37,18 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x050E00)
 
-find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL Zlib REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL Zlib REQUIRED)
+find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL REQUIRED)
+find_package(QT NAMES Qt5 Qt6 COMPONENTS Zlib QUIET)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Zlib QUIET)
 find_package(ff7tk COMPONENTS ff7tk ff7tkUtils REQUIRED)
+
+if(NOT Qt${QT_VERSION_MAJOR}Zlib_FOUND)
+    find_package(ZLIB REQUIRED)
+    set(ZLIB_LIBRARY ZLIB::ZLIB)
+else()
+    set(ZLIB_LIBRARY Qt::Zlib)
+endif()
 
 file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp" "src/*.h")
 set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
@@ -72,14 +81,10 @@ target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${GUI_TARGET} PRIVATE
     Qt::OpenGL
     Qt::Widgets
-    Qt::Zlib
+    ${ZLIB_LIBRARY}
     ff7tk::ff7tk
     ff7tk::ff7tkUtils
 )
-
-if (APPLE)
-    set_target_properties(${GUI_TARGET} PROPERTIES OUTPUT_NAME "Makou Reactor")
-endif()
 
 # CLI
 #add_executable(${CLI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} src/qt/${RELEASE_NAME}.qrc src/qt/${RELEASE_NAME}.rc)
@@ -95,14 +100,13 @@ endif()
 
 include(GNUInstallDirs)
 
-message("-- CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
-
 if(APPLE)
-    set(INSTALL_DESTINATION "/Applications")
-    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION "${INSTALL_DESTINATION}")
+    set_target_properties(${GUI_TARGET} PROPERTIES OUTPUT_NAME "Makou Reactor")
+    set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/Makou Reactor.app")
 elseif (WIN32)
-    set(INSTALL_DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
-    install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${INSTALL_DESTINATION}")
+    set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/deploy")
+    install(DIRECTORY DESTINATION "${DEPLOY_TEMP}")
+    install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${DEPLOY_TEMP}")
     if(MINGW)
         set(FF7TK_DEPENDS
             ${ff7tk_DIR}/../../../bin/libff7tk.dll
@@ -114,16 +118,25 @@ elseif (WIN32)
             ${ff7tk_DIR}/../../../bin/ff7tkUtils.dll
         )
     endif()
-    install(FILES ${FF7TK_DEPENDS} DESTINATION "${INSTALL_DESTINATION}")
+    install(FILES ${FF7TK_DEPENDS} DESTINATION "${DEPLOY_TEMP}")
 else()
     install(TARGETS ${GUI_TARGET} RUNTIME)
 endif()
 
-get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
-get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
-install(CODE "set(TARGET_FILE_DIR \"${INSTALL_DESTINATION}\")")
+if (NOT DEFINED QT_QMAKE_EXECUTABLE)
+    get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
+endif()
+message("-- QT_QMAKE_EXECUTABLE: ${QT_QMAKE_EXECUTABLE}")
+get_filename_component(_qt_bin_dir "${QT_QMAKE_EXECUTABLE}" DIRECTORY)
+install(CODE "set(TARGET_FILE_DIR \"${DEPLOY_TEMP}\")")
 install(CODE "set(_qt_bin_dir \"${_qt_bin_dir}\")")
 install(SCRIPT deploy.cmake)
+
+if(APPLE)
+    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION "/Applications")
+elseif (WIN32)
+    install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+endif()
 
 add_subdirectory(lang)
 

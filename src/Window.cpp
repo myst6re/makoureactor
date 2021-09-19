@@ -108,9 +108,9 @@ Window::Window() :
 	QDir dir(Config::programResourceDir());
 	QStringList stringList = dir.entryList(QStringList("Makou_Reactor_*.qm"), QDir::Files, QDir::Name);
 	action = menuLang->addAction(tr("English (default)"));
-	action->setData("en");
+	action->setData(QVariant());
 	action->setCheckable(true);
-	action->setChecked(Config::value("lang").toString()=="en");
+	action->setChecked(Config::value("lang").toString() == "en" || ! Config::value("lang").isValid());
 
 	menuLang->addSeparator();
 	QTranslator translator;
@@ -341,8 +341,10 @@ void Window::jpText(bool enabled)
 void Window::changeLanguage(QAction *action)
 {
 	Config::setValue("lang", action->data());
-	for (QAction *act : menuLang->actions())
+	QList<QAction *> actions = menuLang->actions();
+	for (QAction *act : qAsConst(actions)) {
 		act->setChecked(false);
+	}
 
 	action->setChecked(true);
 	restartNow();
@@ -852,7 +854,7 @@ void Window::openField(bool reload)
 	}
 
 	// Get and set field
-	field = fieldArchive->field(quint32(mapId), true, true);
+	field = fieldArchive->field(mapId, true, true);
 	if (!field) {
 		if (fieldArchive->isPC()) {
 			_fieldStackedWidget->setCurrentIndex(1);
@@ -958,7 +960,7 @@ void Window::setModified(bool enabled)
 		QTreeWidgetItem *item = _fieldList->topLevelItem(i);
 		int mapId = item->data(0, Qt::UserRole).toInt();
 		if (mapId >= 0) {
-			Field *curField = fieldArchive->field(quint32(mapId), false);
+			Field *curField = fieldArchive->field(mapId, false);
 			if (curField) {
 				if (enabled && curField->isModified()) {
 					item->setForeground(0, red);
@@ -997,9 +999,9 @@ void Window::saveAs(bool currentPath)
 	if (!compiled) {
 		QMessageBox::warning(this, tr("Compilation Error"), tr("Error Compiling Scripts:\n"
 		                                                       "scene %1 (%2), group %3 (%4), script %5, line %6: %7")
-		                     .arg(fieldArchive->field(quint32(mapID))->name())
+		                     .arg(fieldArchive->field(mapID)->name())
 		                     .arg(mapID)
-		                     .arg(fieldArchive->field(quint32(mapID))->scriptsAndTexts()->grpScript(groupID)->name())
+		                     .arg(fieldArchive->field(mapID)->scriptsAndTexts()->grpScript(groupID)->name())
 		                     .arg(groupID).arg(scriptID)
 		                     .arg(opcodeID+1).arg(errorStr));
 		gotoOpcode(mapID, groupID, scriptID, opcodeID);
@@ -1286,7 +1288,7 @@ void Window::importToCurrentMap()
 		return;
 	}
 
-	Field *field = fieldArchive->field(quint32(mapId), false);
+	Field *field = fieldArchive->field(mapId, false);
 	if (nullptr == field) {
 		return;
 	}
@@ -1397,7 +1399,7 @@ void Window::createCurrentMap()
 		return;
 	}
 
-	Field *field = fieldArchive->field(quint32(mapId), false);
+	Field *field = fieldArchive->field(mapId, false);
 	if (field != nullptr) {
 		field->initEmpty();
 		openField(true);

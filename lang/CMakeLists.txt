@@ -30,4 +30,9 @@ qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
 add_custom_target(translations ALL DEPENDS ${QM_FILES})
 
-install(FILES ${QM_FILES} DESTINATION "${INSTALL_DESTINATION}")
+if(APPLE)
+    install(FILES ${QM_FILES} DESTINATION "$<TARGET_FILE_DIR:${GUI_TARGET}>/../Resources/")
+elseif(WIN32)
+    install(FILES ${QM_FILES} DESTINATION "${INSTALL_DESTINATION}")
+endif()
+

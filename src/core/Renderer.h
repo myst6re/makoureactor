@@ -60,17 +60,11 @@ private:
 
 	QOpenGLWidget *mWidget;
 
-	QOpenGLDebugLogger mLogger;
-
 	QOpenGLFunctions mGL;
 
 	QOpenGLShaderProgram mProgram;
 	QOpenGLShader mVertexShader;
 	QOpenGLShader mFragmentShader;
-
-	QMatrix4x4 mModelMatrix;
-	QMatrix4x4 mProjectionMatrix;
-	QMatrix4x4 mViewMatrix;
 
 	QOpenGLBuffer mVertex;
 	QOpenGLBuffer mIndex;
@@ -79,7 +73,13 @@ private:
 	std::vector<uint32_t> mIndexBuffer;
 
 	QOpenGLTexture mTexture;
+#ifdef QT_DEBUG
+	QOpenGLDebugLogger mLogger;
+#endif
 
+	QMatrix4x4 mModelMatrix;
+	QMatrix4x4 mProjectionMatrix;
+	QMatrix4x4 mViewMatrix;
 public:
 	Renderer(QOpenGLWidget *_widget);
 
@@ -89,7 +89,7 @@ public:
 
 	void draw(RendererPrimitiveType _type, float _pointSize = 1.0f);
 
-	void setViewport(uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height);
+	void setViewport(int32_t _x, int32_t _y, int32_t _width, int32_t _height);
 
 	void bindModelMatrix(QMatrix4x4 _matrix);
 	void bindProjectionMatrix(QMatrix4x4 _matrix);
@@ -101,9 +101,10 @@ public:
 	void bindTexture(QImage &_image, bool generateMipmaps = false);
 
 	void bufferVertex(QVector3D _position, QRgba64 _color, QVector2D _texcoord);
-
+#ifdef QT_DEBUG
 protected slots:
 	void messageLogged(const QOpenGLDebugMessage &msg);
+#endif
 };
 
 #endif

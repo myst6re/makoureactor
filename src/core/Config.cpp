@@ -17,11 +17,13 @@
  ****************************************************************************/
 #include "Config.h"
 
-QSettings *Config::settings = 0;
+QSettings *Config::settings = nullptr;
 
 QString Config::programResourceDir()
 {
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
+#if defined(Q_OS_MAC)
+	return qApp->applicationDirPath().append("/../Resources");
+#elif defined(Q_OS_UNIX)
 	return qApp->applicationDirPath().startsWith("/usr/bin")
 	       ? "/usr/share/makoureactor"
 	       : qApp->applicationDirPath();

@@ -27,30 +27,59 @@ size_t vectorSizeOf(const typename std::vector<T>& vec)
 }
 
 Renderer::Renderer(QOpenGLWidget *_widget) :
-	mTexture(QOpenGLTexture::Target2D), mLogger(_widget), mProgram(_widget),
-	mVertexShader(QOpenGLShader::Vertex, _widget), mFragmentShader(QOpenGLShader::Fragment, _widget),
-	mVertex(QOpenGLBuffer::VertexBuffer), mIndex(QOpenGLBuffer::IndexBuffer)
+    mProgram(_widget), mVertexShader(QOpenGLShader::Vertex, _widget), mFragmentShader(QOpenGLShader::Fragment, _widget),
+    mVertex(QOpenGLBuffer::VertexBuffer), mIndex(QOpenGLBuffer::IndexBuffer), mTexture(QOpenGLTexture::Target2D)
+#ifdef QT_DEBUG
+    , mLogger(_widget)
+#endif
 {
 	mWidget = _widget;
 
 	mGL.initializeOpenGLFunctions();
 
-	mLogger.initialize();
+#ifdef QT_DEBUG
 	connect(&mLogger, SIGNAL(messageLogged(QOpenGLDebugMessage)), this, SLOT(messageLogged(QOpenGLDebugMessage)));
-	mLogger.startLogging();
 
-	mVertexShader.compileSourceFile(":/shaders/main.vert");
-	mFragmentShader.compileSourceFile(":/shaders/main.frag");
+	if (mLogger.initialize()) {
+		mLogger.startLogging();
+	} else {
+		qWarning() << "Cannot initialize OpenGL Debug Logger";
+		if (!QOpenGLContext::currentContext()->hasExtension(QByteArrayLiteral("GL_KHR_debug"))) {
+			qWarning() << "GL_KHR_debug extension is not available in this context";
+		}
+	}
+#endif
 
-	mProgram.addShader(&mVertexShader);
-	mProgram.addShader(&mFragmentShader);
+	if (!mVertexShader.compileSourceFile(":/shaders/main.vert")) {
+		qWarning() << "Cannot compile main.vert" << mVertexShader.log();
+	}
+	if (!mVertexShader.log().isEmpty()) {
+		qWarning() << "Warning during main.vert compilation" << mVertexShader.log();
+	}
+	if (!mFragmentShader.compileSourceFile(":/shaders/main.frag")) {
+		qWarning() << "Cannot compile main.frag" << mFragmentShader.log();
+	}
+	if (!mFragmentShader.log().isEmpty()) {
+		qWarning() << "Warning during main.frag compilation" << mFragmentShader.log();
+	}
+
+	if (!mProgram.addShader(&mVertexShader)) {
+		qWarning() << "Cannot add the vertex shader";
+	}
+	if (!mProgram.addShader(&mFragmentShader)) {
+		qWarning() << "Cannot add the fragment shader";
+	}
 
 	mProgram.bindAttributeLocation("a_position", ShaderProgramAttributes::POSITION);
 	mProgram.bindAttributeLocation("a_color", ShaderProgramAttributes::COLOR);
 	mProgram.bindAttributeLocation("a_texcoord", ShaderProgramAttributes::TEXCOORD);
 
-	mProgram.link();
-	mProgram.bind();
+	if (!mProgram.link()) {
+		qWarning() << "Cannot link the program" << mProgram.log();
+	}
+	if (!mProgram.bind()) {
+		qWarning() << "Cannot bind the program";
+	}
 
 	mProgram.setUniformValue("tex", 0);
 
@@ -92,7 +121,7 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 	if (!mVertex.isCreated()) mVertex.create();
 
 	mVertex.bind();
-	mVertex.allocate(mVertexBuffer.data(), vectorSizeOf(mVertexBuffer));
+	mVertex.allocate(mVertexBuffer.data(), int(vectorSizeOf(mVertexBuffer)));
 
 	mProgram.enableAttributeArray(ShaderProgramAttributes::POSITION);
 	mProgram.enableAttributeArray(ShaderProgramAttributes::COLOR);
@@ -114,7 +143,7 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 	if (!mIndex.isCreated()) mIndex.create();
 
 	mIndex.bind();
-	mIndex.allocate(mIndexBuffer.data(), vectorSizeOf(mIndexBuffer));
+	mIndex.allocate(mIndexBuffer.data(), int(vectorSizeOf(mIndexBuffer)));
 
 	// Set Point Size
 	mProgram.setUniformValue("pointSize", _pointSize);
@@ -125,7 +154,13 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 	mProgram.setUniformValue("viewMatrix", mViewMatrix);
 
 	// --- Draw ---
-	mGL.glDrawElements(_type, mIndexBuffer.size(), GL_UNSIGNED_INT, NULL);
+	mGL.glDrawElements(_type, GLsizei(mIndexBuffer.size()), GL_UNSIGNED_INT, nullptr);
+#ifdef QT_DEBUG
+	GLenum lastError = mGL.glGetError();
+	if (lastError != GL_NO_ERROR) {
+		qDebug() << "mGL.glDrawElements(_type, mIndexBuffer.size(), GL_UNSIGNED_INT, nullptr) ERROR" << lastError << _type << mIndexBuffer.size();
+	}
+#endif
 
 	// --- After Draw ---
 	mVertex.release();
@@ -138,7 +173,7 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 	mGL.glDisable(GL_TEXTURE_2D);
 }
 
-void Renderer::setViewport(uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height)
+void Renderer::setViewport(int32_t _x, int32_t _y, int32_t _width, int32_t _height)
 {
 	mGL.glViewport(_x, _y, _width, _height);
 }
@@ -160,23 +195,17 @@ void Renderer::bindViewMatrix(QMatrix4x4 _matrix)
 
 void Renderer::bindVertex(const RendererVertex *_vertex, uint32_t _count)
 {
-	uint32_t currentOffset = mVertexBuffer.size();
-
 	for (uint32_t idx = 0; idx < _count; idx++)
 	{
-		mVertexBuffer.push_back(RendererVertex());
-
-		mVertexBuffer[currentOffset + idx] = _vertex[idx];
+		mVertexBuffer.push_back(_vertex[idx]);
 	}
 }
 
 void Renderer::bindIndex(uint32_t *_index, uint32_t _count)
 {
-	uint32_t currentOffset = mIndexBuffer.size();
-
 	for (uint32_t idx = 0; idx < _count; idx++)
 	{
-			mIndexBuffer.push_back(_index[idx]);
+		mIndexBuffer.push_back(_index[idx]);
 	}
 }
 
@@ -212,7 +241,7 @@ void Renderer::bufferVertex(QVector3D _position, QRgba64 _color, QVector2D _texc
 		}
 	);
 }
-
+#ifdef QT_DEBUG
 void Renderer::messageLogged(const QOpenGLDebugMessage &msg)
 {
   QString error;
@@ -232,6 +261,12 @@ void Renderer::messageLogged(const QOpenGLDebugMessage &msg)
   case QOpenGLDebugMessage::LowSeverity:
     error += "LOW";
     break;
+  case QOpenGLDebugMessage::InvalidSeverity:
+    error += "INVALID";
+    break;
+  case QOpenGLDebugMessage::AnySeverity:
+    error += "ANY";
+    break;
   }
 
   error += "[";
@@ -247,6 +282,7 @@ void Renderer::messageLogged(const QOpenGLDebugMessage &msg)
     CASE(ApplicationSource);
     CASE(OtherSource);
     CASE(InvalidSource);
+    CASE(AnySource);
   }
 #undef CASE
 
@@ -265,6 +301,8 @@ void Renderer::messageLogged(const QOpenGLDebugMessage &msg)
     CASE(MarkerType);
     CASE(GroupPushType);
     CASE(GroupPopType);
+    CASE(InvalidType);
+    CASE(AnyType);
   }
 #undef CASE
 
@@ -272,3 +310,4 @@ void Renderer::messageLogged(const QOpenGLDebugMessage &msg)
 
   qDebug() << qPrintable(error) << qPrintable(msg.message());
 }
+#endif
