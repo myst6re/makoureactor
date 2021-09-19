@@ -20,7 +20,7 @@
 #include "FieldModel.h"
 
 WalkmeshWidget::WalkmeshWidget(QWidget *parent)
-    : QOpenGLWidget(parent), distance(0.0f),
+    : QOpenGLWidget(parent), distance(0.0),
       xRot(0.0f), yRot(0.0f), zRot(0.0f), xTrans(0.0f), yTrans(0.0f),
       transStep(360.0f), lastKeyPressed(-1), _camID(0), _selectedTriangle(-1),
       _selectedDoor(-1), _selectedGate(-1), _selectedArrow(-1), fovy(70.0),
@@ -426,7 +426,7 @@ void WalkmeshWidget::drawBackground()
 void WalkmeshWidget::wheelEvent(QWheelEvent *event)
 {
 	setFocus();
-	distance += event->delta() / 4096.0f;
+	distance += event->angleDelta().y() / 4096.0;
 	update();
 }
 

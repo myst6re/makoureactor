@@ -52,7 +52,7 @@ private:
 	void openTextures(const QStringList &textureFiles);
 	QImage openTexture(const QString &texFileName);
 	CharArchive *_charLgp;
-	QHash<quint32, QImage> _loadedTex;
+	QHash<quint64, QImage> _loadedTex;
 };
 
 #endif // FIELDMODELFILEPC_H

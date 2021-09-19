@@ -31,7 +31,13 @@ qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 add_custom_target(translations ALL DEPENDS ${QM_FILES})
 
 if(APPLE)
+    set(QT_TRANSLATIONS_DIR "${CMAKE_PREFIX_PATH}/translations")
+    set(QT_QM_FILES
+        "${QT_TRANSLATIONS_DIR}/qt_fr.qm"
+        "${QT_TRANSLATIONS_DIR}/qt_ja.qm"
+    )
     install(FILES ${QM_FILES} DESTINATION "$<TARGET_FILE_DIR:${GUI_TARGET}>/../Resources/")
+    install(FILES ${QT_QM_FILES} DESTINATION "$<TARGET_FILE_DIR:${GUI_TARGET}>/../Resources/")
 elseif(WIN32)
     install(FILES ${QM_FILES} DESTINATION "${INSTALL_DESTINATION}")
 endif()

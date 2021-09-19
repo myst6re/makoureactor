@@ -18,10 +18,10 @@
 #define ARGUMENTS_H
 
 #define _ADD_ARGUMENT(names, description, valueName, defaultValue) \
-	_parser.addOption(QCommandLineOption(names, description, valueName, defaultValue));
+	_parser.addOption(QCommandLineOption(names, description, valueName, defaultValue))
 
 #define _ADD_FLAG(names, description) \
-	_parser.addOption(QCommandLineOption(names, description));
+	_parser.addOption(QCommandLineOption(names, description))
 
 #define _OPTION_NAMES(shortName, fullName) \
 	(QStringList() << shortName << fullName)

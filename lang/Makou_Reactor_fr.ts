@@ -5022,13 +5022,13 @@ id=%2
     </message>
     <message>
         <location filename="../src/core/field/FieldArchiveIOPS.cpp" line="418"/>
-        <location filename="../src/core/Lgp.cpp" line="862"/>
+        <location filename="../src/core/Lgp.cpp" line="844"/>
         <source>Cannot remove destination archive</source>
         <translation>Impossible de supprimer l&apos;archive de destination</translation>
     </message>
     <message>
         <location filename="../src/core/field/FieldArchiveIOPS.cpp" line="434"/>
-        <location filename="../src/core/Lgp.cpp" line="880"/>
+        <location filename="../src/core/Lgp.cpp" line="862"/>
         <source>Cannot rename temporary file to destination path</source>
         <translation>Impossible de renommer les fichiers temporaires vers le chemin de destination</translation>
     </message>
@@ -8905,8 +8905,8 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <location filename="../src/Window.cpp" line="76"/>
-        <location filename="../src/Window.cpp" line="410"/>
-        <location filename="../src/Window.cpp" line="1567"/>
+        <location filename="../src/Window.cpp" line="412"/>
+        <location filename="../src/Window.cpp" line="1569"/>
         <source>Archive Mana&amp;ger...</source>
         <oldsource>Ges&amp;tionnaire d&apos;archive...</oldsource>
         <translation>Ges&amp;tionnaire d&apos;archive...</translation>
@@ -8980,7 +8980,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation>&amp;Configuration...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="359"/>
+        <location filename="../src/Window.cpp" line="361"/>
         <source>Restart the program for the settings to take effect.</source>
         <oldsource>Relancez le programme pour que les paramètres prennent effet.</oldsource>
         <translation>Relancez le programme pour que les paramètres prennent effet.</translation>
@@ -9072,13 +9072,13 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
     </message>
     <message>
         <location filename="../src/Window.cpp" line="135"/>
-        <location filename="../src/Window.cpp" line="484"/>
+        <location filename="../src/Window.cpp" line="486"/>
         <source>Open a file</source>
         <translation>Ouvrir un fichier</translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="137"/>
-        <location filename="../src/Window.cpp" line="393"/>
+        <location filename="../src/Window.cpp" line="395"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
@@ -9114,7 +9114,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation>&amp;Affichage</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1301"/>
+        <location filename="../src/Window.cpp" line="1303"/>
         <source>PS Field Map (*.DAT)</source>
         <translation>Écran PS (*.DAT)</translation>
     </message>
@@ -9128,12 +9128,12 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation>Aperçu décor</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="358"/>
+        <location filename="../src/Window.cpp" line="360"/>
         <source>Settings changed</source>
         <translation>Paramètres modifiés</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="391"/>
+        <location filename="../src/Window.cpp" line="393"/>
         <source>
 
 Edited files:</source>
@@ -9142,25 +9142,25 @@ Edited files:</source>
 Fichiers modifiés :</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="393"/>
+        <location filename="../src/Window.cpp" line="395"/>
         <source>Would you like to save changes of %1?%2</source>
         <translation>Voulez-vous enregistrer les changements de %1 ?%2</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="476"/>
+        <location filename="../src/Window.cpp" line="478"/>
         <source>Compatible Files (*.lgp *.DAT *.bin *.iso *.img)</source>
         <oldsource>Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)</oldsource>
         <translation>Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="477"/>
+        <location filename="../src/Window.cpp" line="479"/>
         <source>Lgp Files (*.lgp)</source>
         <oldsource>Fichiers Lgp (*.lgp)</oldsource>
         <translation>Fichiers Lgp (*.lgp)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="478"/>
-        <location filename="../src/Window.cpp" line="1022"/>
+        <location filename="../src/Window.cpp" line="480"/>
+        <location filename="../src/Window.cpp" line="1024"/>
         <source>DAT File (*.DAT)</source>
         <oldsource>Fichier DAT (*.DAT)</oldsource>
         <translation>Fichier DAT (*.DAT)</translation>
@@ -9171,25 +9171,25 @@ Fichiers modifiés :</translation>
         <translation type="vanished">Fichier Field PC (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="480"/>
+        <location filename="../src/Window.cpp" line="482"/>
         <source>Disc Image (*.bin *.iso *.img)</source>
         <oldsource>Image disque (*.bin *.iso *.img)</oldsource>
         <translation>Image disque (*.bin *.iso *.img)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="532"/>
+        <location filename="../src/Window.cpp" line="534"/>
         <source>Select a folder containing the Final Fantasy VII field files</source>
         <oldsource>Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII</oldsource>
         <translation>Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="540"/>
+        <location filename="../src/Window.cpp" line="542"/>
         <source>File Type</source>
         <oldsource>Type de fichiers</oldsource>
         <translation>Type de fichiers</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="541"/>
+        <location filename="../src/Window.cpp" line="543"/>
         <source>What type of file to look for?
  - Playstation field files (&quot;EXAMPLE.DAT&quot;)
  - PC Field File (&quot;example&quot;)
@@ -9203,37 +9203,37 @@ Fichiers modifiés :</translation>
  - Les fichiers field PC (&quot;exemple&quot;)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="545"/>
+        <location filename="../src/Window.cpp" line="547"/>
         <source>PS</source>
         <translation>PS</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="546"/>
+        <location filename="../src/Window.cpp" line="548"/>
         <source>PC</source>
         <translation>PC</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="588"/>
+        <location filename="../src/Window.cpp" line="590"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="588"/>
+        <location filename="../src/Window.cpp" line="590"/>
         <source>Stop</source>
         <translation>Arrêter</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="617"/>
+        <location filename="../src/Window.cpp" line="619"/>
         <source>Opening...</source>
         <translation>Ouverture...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="636"/>
+        <location filename="../src/Window.cpp" line="638"/>
         <source>Nothing found!</source>
         <translation>Rien trouvé !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="640"/>
+        <location filename="../src/Window.cpp" line="642"/>
         <source>The file already exists</source>
         <translation>Le fichier existe déjà</translation>
     </message>
@@ -9250,40 +9250,40 @@ Fichiers modifiés :</translation>
         <translation type="vanished">Impossible de copier le fichier</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="661"/>
+        <location filename="../src/Window.cpp" line="663"/>
         <source>This error should not appear, thank you for reporting it</source>
         <translation>Cette erreur ne devrais pas s&apos;afficher, merci de le signaler</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="998"/>
+        <location filename="../src/Window.cpp" line="1000"/>
         <source>Error Compiling Scripts:
 scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation>Erreur de compilation des scripts :
 écran %1 (%2), groupe %3 (%4), script %5, ligne %6 : %7</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="998"/>
+        <location filename="../src/Window.cpp" line="1000"/>
         <source>Compilation Error</source>
         <translation>Erreur de compilation</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1013"/>
+        <location filename="../src/Window.cpp" line="1015"/>
         <source>Save Directory As</source>
         <translation>Enregistrer dossier sous</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1028"/>
+        <location filename="../src/Window.cpp" line="1030"/>
         <source>Save As</source>
         <translation>Enregistrer sous</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1035"/>
+        <location filename="../src/Window.cpp" line="1037"/>
         <source>Saving...</source>
         <translation>Sauvegarde...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="649"/>
-        <location filename="../src/Window.cpp" line="1061"/>
+        <location filename="../src/Window.cpp" line="651"/>
+        <location filename="../src/Window.cpp" line="1063"/>
         <source>Unable to remove the file, check write permissions.</source>
         <translation>Impossible de supprimer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
@@ -9293,84 +9293,84 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation>Liste des écrans</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="479"/>
+        <location filename="../src/Window.cpp" line="481"/>
         <source>PC field File (*)</source>
         <translation>Fichier Field PC (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="652"/>
+        <location filename="../src/Window.cpp" line="654"/>
         <source>Failed to rename the file, check write permissions.</source>
         <translation>Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="655"/>
+        <location filename="../src/Window.cpp" line="657"/>
         <source>Failed to copy the file, check write permissions.</source>
         <translation>Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1052"/>
+        <location filename="../src/Window.cpp" line="1054"/>
         <source>No maps found</source>
         <translation>Aucun écran trouvé</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1064"/>
+        <location filename="../src/Window.cpp" line="1066"/>
         <source>Unable to rename the file, check write permissions.</source>
         <translation>Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1067"/>
+        <location filename="../src/Window.cpp" line="1069"/>
         <source>Unable to copy the file, check write permissions.</source>
         <translation>Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1073"/>
+        <location filename="../src/Window.cpp" line="1075"/>
         <source>This feature is not complete</source>
         <translation>Cette fonctionnalité n&apos;est pas terminée</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1159"/>
-        <location filename="../src/Window.cpp" line="1300"/>
+        <location filename="../src/Window.cpp" line="1161"/>
+        <location filename="../src/Window.cpp" line="1302"/>
         <source>PC Field Map (*)</source>
         <translation>Fichier Field PC (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1160"/>
+        <location filename="../src/Window.cpp" line="1162"/>
         <source>Data DAT File (*.DAT)</source>
         <translation>Fichier DAT (*.DAT)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1161"/>
+        <location filename="../src/Window.cpp" line="1163"/>
         <source>Textures MIM File (*.MIM)</source>
         <translation>Fichier MIM (*.MIM)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1162"/>
+        <location filename="../src/Window.cpp" line="1164"/>
         <source>Uncompressed PC Field Map (*.dec)</source>
         <oldsource>Uncompressed PC Field Map (*)</oldsource>
         <translation>Écran PC décompressé (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1197"/>
+        <location filename="../src/Window.cpp" line="1199"/>
         <source>Archive is inaccessible</source>
         <translation>L&apos;archive est inaccessible</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1198"/>
+        <location filename="../src/Window.cpp" line="1200"/>
         <source>Error reopening file</source>
         <translation>Erreur lors de l&apos;ouverture du fichier</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1199"/>
+        <location filename="../src/Window.cpp" line="1201"/>
         <source>Unable to create the new file</source>
         <translation>Impossible de créer le nouveau fichier</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1246"/>
+        <location filename="../src/Window.cpp" line="1248"/>
         <source>An error occured when exporting</source>
         <translation>Une erreur s&apos;est produite lors de l&apos;exportation</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1274"/>
+        <location filename="../src/Window.cpp" line="1276"/>
         <source>An error occurred when importing</source>
         <translation>Une erreur s&apos;est produite lors de l&apos;importation</translation>
     </message>
@@ -9383,35 +9383,35 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">L&apos;algorithme d&apos;importation des décors donne de mauvais résultats en jeu, vous êtes prévenus !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1365"/>
+        <location filename="../src/Window.cpp" line="1367"/>
         <source>Final Fantasy VII couldn&apos;t be launched
 %1</source>
         <translation>Final Fantasy VII n&apos;a pas pu être lancé.
 %1</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1481"/>
-        <location filename="../src/Window.cpp" line="1559"/>
+        <location filename="../src/Window.cpp" line="1483"/>
+        <location filename="../src/Window.cpp" line="1561"/>
         <source>Opening error</source>
         <translation>Erreur d&apos;ouverture</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1481"/>
+        <location filename="../src/Window.cpp" line="1483"/>
         <source>Can not open encounters!</source>
         <translation>Impossible d&apos;ouvrir les combats aléatoires !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1559"/>
+        <location filename="../src/Window.cpp" line="1561"/>
         <source>Can not open miscellaneous informations!</source>
         <translation>Impossible d&apos;ouvrir les infos diverses !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1570"/>
+        <location filename="../src/Window.cpp" line="1572"/>
         <source>Go back to field map editor...</source>
         <translation>Revenir sur l&apos;éditeur d&apos;écrans de jeu...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1590"/>
+        <location filename="../src/Window.cpp" line="1592"/>
         <source>Applying...</source>
         <translation>Application en cours...</translation>
     </message>
@@ -9425,59 +9425,59 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">Fermer</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="643"/>
-        <location filename="../src/Window.cpp" line="1055"/>
+        <location filename="../src/Window.cpp" line="645"/>
+        <location filename="../src/Window.cpp" line="1057"/>
         <source>The file is inaccessible</source>
         <oldsource>Le fichier est inaccessible</oldsource>
         <translation>Le fichier est inaccessible</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="646"/>
-        <location filename="../src/Window.cpp" line="1058"/>
+        <location filename="../src/Window.cpp" line="648"/>
+        <location filename="../src/Window.cpp" line="1060"/>
         <source>Can not create temporary file</source>
         <oldsource>Impossible de créer un fichier temporaire</oldsource>
         <translation>Impossible de créer un fichier temporaire</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="658"/>
+        <location filename="../src/Window.cpp" line="660"/>
         <source>Invalid file</source>
         <oldsource>Le fichier est invalide</oldsource>
         <translation>Fichier invalide</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="570"/>
-        <location filename="../src/Window.cpp" line="665"/>
-        <location filename="../src/Window.cpp" line="1077"/>
-        <location filename="../src/Window.cpp" line="1202"/>
-        <location filename="../src/Window.cpp" line="1246"/>
-        <location filename="../src/Window.cpp" line="1274"/>
-        <location filename="../src/Window.cpp" line="1330"/>
-        <location filename="../src/Window.cpp" line="1365"/>
+        <location filename="../src/Window.cpp" line="572"/>
+        <location filename="../src/Window.cpp" line="667"/>
+        <location filename="../src/Window.cpp" line="1079"/>
+        <location filename="../src/Window.cpp" line="1204"/>
+        <location filename="../src/Window.cpp" line="1248"/>
+        <location filename="../src/Window.cpp" line="1276"/>
+        <location filename="../src/Window.cpp" line="1332"/>
+        <location filename="../src/Window.cpp" line="1367"/>
         <source>Error</source>
         <oldsource>Erreur</oldsource>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="906"/>
-        <location filename="../src/Window.cpp" line="1555"/>
+        <location filename="../src/Window.cpp" line="908"/>
+        <location filename="../src/Window.cpp" line="1557"/>
         <source>Author: %1</source>
         <oldsource>Auteur : %1</oldsource>
         <translation>Auteur : %1</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1020"/>
+        <location filename="../src/Window.cpp" line="1022"/>
         <source>Lgp File (*.lgp)</source>
         <oldsource>Fichier Lgp (*.lgp)</oldsource>
         <translation>Fichier Lgp (*.lgp)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1024"/>
+        <location filename="../src/Window.cpp" line="1026"/>
         <source>Iso File (*.iso *.bin *.img)</source>
         <oldsource>Fichier Iso (*.iso *.bin *.img)</oldsource>
         <translation>Fichier Iso (*.iso *.bin *.img)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1070"/>
+        <location filename="../src/Window.cpp" line="1072"/>
         <source>Invalid archive</source>
         <oldsource>L&apos;archive est invalide</oldsource>
         <translation>Invalid archive</translation>
@@ -9493,7 +9493,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">Écran PC décompressé (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1174"/>
+        <location filename="../src/Window.cpp" line="1176"/>
         <source>Export the current file</source>
         <oldsource>Exporter le fichier courant</oldsource>
         <translation>Exporter le fichier courant</translation>
@@ -9504,19 +9504,19 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">L&apos;archive Lgp est inaccessible</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1200"/>
+        <location filename="../src/Window.cpp" line="1202"/>
         <source>Not yet implemented!</source>
         <oldsource>Pas encore implémenté !</oldsource>
         <translation>Pas encore implémenté !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1216"/>
+        <location filename="../src/Window.cpp" line="1218"/>
         <source>Export...</source>
         <oldsource>Exportation...</oldsource>
         <translation>Exporter...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1265"/>
+        <location filename="../src/Window.cpp" line="1267"/>
         <source>Import...</source>
         <oldsource>Importation...</oldsource>
         <translation>Importer...</translation>
@@ -9527,7 +9527,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">Fichier DAT décompressé (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1310"/>
+        <location filename="../src/Window.cpp" line="1312"/>
         <source>Import a file</source>
         <oldsource>Importer un fichier</oldsource>
         <translation>Importer un fichier</translation>
@@ -9536,12 +9536,12 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="111"/>
+        <location filename="../src/main.cpp" line="115"/>
         <source>Error</source>
         <translation type="unfinished">Erreur</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="112"/>
+        <location filename="../src/main.cpp" line="116"/>
         <source>The file &apos;var.cfg&apos; could not be loaded.
 Make sure it is valid or delete it.</source>
         <translation type="unfinished">Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.

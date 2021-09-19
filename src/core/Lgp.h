@@ -36,9 +36,7 @@ class LgpIterator
 public:
 	explicit LgpIterator(const Lgp &lgp);
 	bool hasNext() const;
-	bool hasPrevious() const;
 	void next();
-	void previous();
 	void toBack();
 	void toFront();
 	QIODevice *file();

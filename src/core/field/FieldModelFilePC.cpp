@@ -37,7 +37,7 @@ void FieldModelFilePC::clear()
 void FieldModelFilePC::openTextures(const QStringList &textureFiles)
 {
 	// Open all loaded tex
-	quint32 texID = 0;
+	quint64 texID = 0;
 	for (const QString &texName : textureFiles) {
 		QImage tex = openTexture(texName % ".tex");
 		if (!tex.isNull()) {
@@ -118,11 +118,11 @@ quint8 FieldModelFilePC::load(const QString &hrc, const QString &a, bool animate
 QHash<void *, QImage> FieldModelFilePC::loadedTextures()
 {
 	QHash<void *, QImage> ret;
-	QHashIterator<quint32, QImage> it(_loadedTex);
+	QHashIterator<quint64, QImage> it(_loadedTex);
 
 	while (it.hasNext()) {
 		it.next();
-		ret.insert((void *)it.key(), it.value());
+		ret.insert(reinterpret_cast<void *>(it.key()), it.value());
 	}
 
 	return ret;
