@@ -59,7 +59,6 @@ file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp" "src/*.h")
 set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
 
 if (APPLE)
-    set(OS_BUNDLE MACOSX_BUNDLE)
     set(ICON_FILE "src/qt/images/${RELEASE_NAME}.icns")
     set(EXTRA_RESOURCES ${ICON_FILE})
 
@@ -71,16 +70,15 @@ if (APPLE)
     set(MACOSX_BUNDLE_GUI_IDENTIFIER org.myst6re.makoureactor)
     set(MACOSX_BUNDLE_ICON_FILE ${RELEASE_NAME}.icns)
 elseif (WIN32)
-    set(OS_BUNDLE WIN32)
     set(ICON_FILE "src/qt/images/logo-shinra.ico")
     set(EXTRA_RESOURCES "src/qt/${RELEASE_NAME}.rc")
 endif()
 
 # GUI
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(${GUI_TARGET} MANUAL_FINALIZATION ${OS_BUNDLE} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
+    qt_add_executable(${GUI_TARGET} MANUAL_FINALIZATION MACOSX_BUNDLE WIN32 ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
 else()
-    add_executable(${GUI_TARGET} ${OS_BUNDLE} ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
+    add_executable(${GUI_TARGET} MACOSX_BUNDLE WIN32 ${PROJECT_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
 endif()
 target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${GUI_TARGET} PRIVATE
