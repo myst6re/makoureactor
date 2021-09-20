@@ -9,7 +9,7 @@ on:
 env:
   QT_VERSION: 5.15.2
   BUILD_TYPE: Release
-  packageGlob: Makou_Reactor-continuous-*.*
+  packageGlob: makoureactor-continuous-*.*
 
 jobs:
   main_build:
@@ -37,7 +37,7 @@ jobs:
             , make_install_ff7tk: "sudo ninja install"
             , install_ninja: "brew install ninja"
             , build_makoureactor: "ninja"
-            , rename_package: "mv build_makoureactor-*.dmg build_makoureactor-continuous-macos.dmg"
+            , rename_package: "mv *.dmg makoureactor-continuous-macos64.dmg"
           }
         - {
             name: "Windows-x64", WIN_ARCH: "x64"
