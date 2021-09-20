@@ -44,7 +44,6 @@ jobs:
             , os: windows-latest
             , QT_INST_DIR: "C:/", QTDIR: "C:/Qt/5.15.2/msvc2019_64", QT_ARCH: win64_msvc2019_64
             , ff7tkPrefix: "C:/ff7tk"
-            , extraCmakeConfig: "-DZLIB_ROOT=c:/zlib"
             , make_install_ff7tk: "ninja install"
             , install_ninja: "choco install ninja"
             , build_makoureactor: "ninja install"
@@ -55,7 +54,6 @@ jobs:
             , os: windows-latest, WIN_ARCH: "amd64_x86"
             , QT_INST_DIR: "C:/", QTDIR: "C:/Qt/5.15.2/msvc2019", QT_ARCH: win32_msvc2019
             , ff7tkPrefix: "C:/ff7tk"
-            , extraCmakeConfig: "-DZLIB_ROOT=c:/zlib"
             , make_install_ff7tk: "ninja install"
             , install_ninja: "choco install ninja"
             , build_makoureactor: "ninja install"
@@ -80,20 +78,11 @@ jobs:
        arch: ${{matrix.config.QT_ARCH}}
        version: ${{env.QT_VERSION}}
 
-    - name: Install Zlib (Windows)
-      if: runner.os == 'Windows'
-      run: |
-          git clone -q --branch=v1.2.11 https://github.com/madler/zlib ${{github.workspace}}\zlib-git
-          cd ${{github.workspace}}\zlib-git
-          cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:\zlib" CMakeLists.txt
-          ninja install
-          cd ${{github.workspace}}
-
     - name: Build ff7tk
       run: |
-        git clone https://github.com/sithlord48/ff7tk.git ${{github.workspace}}/ff7tk-git
+        git clone https://github.com/myst6re/ff7tk.git ${{github.workspace}}/ff7tk-git
         cd ${{github.workspace}}/ff7tk-git
-        cmake -G Ninja -S. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX=${{matrix.config.ff7tkPrefix}} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF ${{matrix.config.extraCmakeConfig}}
+        cmake -G Ninja -S. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX=${{matrix.config.ff7tkPrefix}} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF
         ${{matrix.config.make_install_ff7tk}}
         cd ${{github.workspace}}
 
