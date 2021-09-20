@@ -24,7 +24,7 @@ jobs:
            , os: ubuntu-18.04
            , QT_INST_DIR: /opt
            , ff7tkPrefix: /usr
-           , make_install_ff7tk: "sudo ninja install"
+           , make_install_ff7tk: sudo
            , install_ninja: "sudo apt-get install -qq ninja-build"
            , build_makoureactor: "DESTDIR=appdir ninja install; find appdir/"
            , rename_package: "mv *.tar.xz makoureactor-continuous-linux64.tar.xz"
@@ -34,7 +34,7 @@ jobs:
             , os: macos-latest
             , QT_INST_DIR: /Users/runner
             , ff7tkPrefix: /usr/local
-            , make_install_ff7tk: "sudo ninja install"
+            , make_install_ff7tk: sudo
             , install_ninja: "brew install ninja"
             , build_makoureactor: "ninja"
             , rename_package: "mv *.dmg makoureactor-continuous-macos64.dmg"
@@ -44,7 +44,7 @@ jobs:
             , os: windows-latest
             , QT_INST_DIR: "C:/", QTDIR: "C:/Qt/5.15.2/msvc2019_64", QT_ARCH: win64_msvc2019_64
             , ff7tkPrefix: "C:/ff7tk"
-            , make_install_ff7tk: "ninja install"
+            , make_install_ff7tk: ""
             , install_ninja: "choco install ninja"
             , build_makoureactor: "ninja install"
             , rename_package: "mv *.zip makoureactor-continuous-win64.zip"
@@ -54,7 +54,7 @@ jobs:
             , os: windows-latest, WIN_ARCH: "amd64_x86"
             , QT_INST_DIR: "C:/", QTDIR: "C:/Qt/5.15.2/msvc2019", QT_ARCH: win32_msvc2019
             , ff7tkPrefix: "C:/ff7tk"
-            , make_install_ff7tk: "ninja install"
+            , make_install_ff7tk: ""
             , install_ninja: "choco install ninja"
             , build_makoureactor: "ninja install"
             , rename_package: "mv *.zip makoureactor-continuous-win32.zip"
@@ -62,12 +62,21 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Cache node modules
+    - name: Cache Qt
       id: cache-qt
       uses: actions/cache@v2
       with:
         path: ${{ matrix.config.QT_INST_DIR }}
         key: ${{ runner.os }}-build-qt-${{ env.QT_VERSION }}
+
+    - name: Clone ff7tk repo
+      run: git clone --depth 1 --single-branch --branch master https://github.com/myst6re/ff7tk.git ${{ github.workspace }}/ff7tk-git
+
+    - name: Cache ff7tk
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/build-ff7tk-git
+        key: ${{ runner.os }}-build-ff7tk-${{ hashFiles('ff7tk-git/.git/HEAD') }}
 
     - name: Env Script (Windows)
       uses: ilammy/msvc-dev-cmd@v1
@@ -88,10 +97,9 @@ jobs:
 
     - name: Build ff7tk
       run: |
-        git clone https://github.com/myst6re/ff7tk.git ${{ github.workspace }}/ff7tk-git
         cd ${{ github.workspace }}/ff7tk-git
-        cmake -G Ninja -S. -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ matrix.config.ff7tkPrefix }} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF
-        ${{ matrix.config.make_install_ff7tk }}
+        cmake -G Ninja -S. -B ${{ github.workspace }}/build-ff7tk-git -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ matrix.config.ff7tkPrefix }} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF
+        ${{ matrix.config.make_install_ff7tk }} cmake --build ${{ github.workspace }}/build-ff7tk-git --target install
         cd ${{ github.workspace }}
 
     - name: Build Makou_Reactor
