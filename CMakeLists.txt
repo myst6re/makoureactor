@@ -17,6 +17,7 @@
 ###############################################################################
 
 cmake_minimum_required(VERSION 3.15)
+cmake_policy(SET CMP0042 NEW)
 cmake_policy(SET CMP0074 NEW)
 cmake_policy(SET CMP0091 NEW)
 
@@ -137,23 +138,25 @@ install(CODE "set(TARGET_FILE_DIR \"${DEPLOY_TEMP}\")")
 install(CODE "set(_qt_bin_dir \"${_qt_bin_dir}\")")
 install(SCRIPT deploy.cmake)
 
-if(APPLE)
-    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION "/Applications")
-elseif (WIN32)
-    install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
-endif()
-
 add_subdirectory(lang)
+
+if(APPLE)
+    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        set(CMAKE_INSTALL_PREFIX "/Applications" CACHE PATH "..." FORCE)
+    endif()
+    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
+elseif (WIN32)
+    install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION "./bin")
+endif()
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(${GUI_TARGET})
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION "/Applications")
+    set(CPACK_SYSTEM_NAME "macos")
     set(CPACK_GENERATOR "DragNDrop")
 elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
     set(CPACK_GENERATOR "ZIP")
 else()
     set(CPACK_GENERATOR "TXZ")
