@@ -27,6 +27,7 @@ jobs:
            , make_install_ff7tk: sudo
            , install_ninja: "sudo apt-get install -qq ninja-build"
            , build_makoureactor: "DESTDIR=appdir ninja install; find appdir/"
+           , generator: Ninja
            , rename_package: "mv *.tar.xz makoureactor-continuous-linux64.tar.xz"
           }
         - {
@@ -37,6 +38,7 @@ jobs:
             , make_install_ff7tk: sudo
             , install_ninja: "brew install ninja"
             , build_makoureactor: "ninja"
+            , generator: Ninja
             , rename_package: "mv *.dmg makoureactor-continuous-macos64.dmg"
           }
         - {
@@ -47,6 +49,7 @@ jobs:
             , make_install_ff7tk: ""
             , install_ninja: "choco install ninja"
             , build_makoureactor: "ninja install"
+            , generator: "NMake Makefiles JOM"
             , rename_package: "mv *.zip makoureactor-continuous-win64.zip"
           }
         - {
@@ -57,6 +60,7 @@ jobs:
             , make_install_ff7tk: ""
             , install_ninja: "choco install ninja"
             , build_makoureactor: "ninja install"
+            , generator: "NMake Makefiles JOM"
             , rename_package: "mv *.zip makoureactor-continuous-win32.zip"
           }
     steps:
@@ -66,17 +70,17 @@ jobs:
       id: cache-qt
       uses: actions/cache@v2
       with:
-        path: ${{ matrix.config.QT_INST_DIR }}
+        path: "${{ matrix.config.QT_INST_DIR }}/Qt"
         key: ${{ runner.os }}-build-qt-${{ env.QT_VERSION }}
 
     - name: Clone ff7tk repo
-      run: git clone --depth 1 --single-branch --branch master https://github.com/myst6re/ff7tk.git ${{ github.workspace }}/ff7tk-git
+      run: git clone --depth 1 --single-branch --branch master https://github.com/myst6re/ff7tk.git ${{ github.workspace }}/../ff7tk-git
 
     - name: Cache ff7tk
       uses: actions/cache@v2
       with:
-        path: ${{ github.workspace }}/build-ff7tk-git
-        key: ${{ runner.os }}-build-ff7tk-${{ hashFiles('ff7tk-git/.git/HEAD') }}
+        path: ${{ github.workspace }}/../build-ff7tk-git
+        key: ${{ runner.os }}-build-ff7tk-${{ hashFiles('../ff7tk-git/.git/HEAD') }}
 
     - name: Env Script (Windows)
       uses: ilammy/msvc-dev-cmd@v1
@@ -97,16 +101,16 @@ jobs:
 
     - name: Build ff7tk
       run: |
-        cd ${{ github.workspace }}/ff7tk-git
-        cmake -G Ninja -S. -B ${{ github.workspace }}/build-ff7tk-git -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ matrix.config.ff7tkPrefix }} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF
-        ${{ matrix.config.make_install_ff7tk }} cmake --build ${{ github.workspace }}/build-ff7tk-git --target install
+        cd ${{ github.workspace }}/../ff7tk-git
+        cmake -G Ninja -S. -B ${{ github.workspace }}/../build-ff7tk-git -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ matrix.config.ff7tkPrefix }} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF
+        ${{ matrix.config.make_install_ff7tk }} cmake --build ${{ github.workspace }}/../build-ff7tk-git --target install
         cd ${{ github.workspace }}
 
     - name: Build Makou_Reactor
       id: main_build
       run: |
-        cmake -S. -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -Dff7tk_DIR=${{ matrix.config.ff7tkPrefix }}/lib/cmake/ff7tk
-        ${{ matrix.config.build_makoureactor }}
+        cmake -S. -G "${{ matrix.config.generator }}" -B ${{ github.workspace }}/../build-makoureactor -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -Dff7tk_DIR=${{ matrix.config.ff7tkPrefix }}/lib/cmake/ff7tk
+        ${{ matrix.config.make_install_ff7tk }} cmake --build ${{ github.workspace }}/../build-makoureactor --target install
 
     - name: CPack
       run: cpack
