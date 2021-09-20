@@ -146,7 +146,7 @@ if(APPLE)
     endif()
     install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
 elseif (WIN32)
-    install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION "./bin")
+    install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION ".")
 endif()
 
 if(QT_VERSION_MAJOR EQUAL 6)
