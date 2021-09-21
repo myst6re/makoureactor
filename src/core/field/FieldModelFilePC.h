@@ -40,7 +40,7 @@ public:
 		return _loadedTex.value(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id());
 	}
 	inline void *textureIdForGroup(FieldModelGroup *group) const {
-		return (void *)(ulong(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id()));
+		return reinterpret_cast<void *>(quint64(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id()));
 	}
 	QHash<void *, QImage> loadedTextures();
 private:
