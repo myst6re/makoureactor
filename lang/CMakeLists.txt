@@ -40,5 +40,7 @@ if(APPLE)
     install(FILES ${QT_QM_FILES} DESTINATION "$<TARGET_FILE_DIR:${GUI_TARGET}>/../Resources/")
 elseif(WIN32)
     install(FILES ${QM_FILES} DESTINATION "${DEPLOY_TEMP}")
+else()
+    install(FILE ${QM_FILES} DESTINATION "./share/makoureactor")
 endif()
 

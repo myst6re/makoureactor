@@ -112,21 +112,20 @@ jobs:
       shell: bash
       run: |
         ls -l ${{ env.makoureactor_installation_path }}
-        ls -l ${{ env.makoureactor_installation_path }}/Makou_Reactor
-        ls -l ${{ env.makoureactor_installation_path }}/Makou_Reactor_autogen
+        sudo apt update
+        sudo apt install tree
+        tree ${{ env.makoureactor_installation_path }}
 
     - name: Build AppImage (Linux)
       if: runner.os == 'Linux'
       run: |
-        wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        wget -qc "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
         export VERSION=continuous
         chmod a+x linuxdeployqt*.AppImage
         unset QTDIR; unset QT_PLUGIN_PATH; unset LD_LIBRARY_PATH
-        mkdir -p ./appdir/usr/share/ff7tk/lang
-        cp "${{ env.ff7tk_installation_path }}"/lang/*.qm ./appdir/usr/share/ff7tk/lang
-        mkdir -p ./appdir/usr/plugins/styles
-        ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -appimage -extra-plugins=iconengines,platformthemes/libqxdgdesktopportal.so
-        find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
+        mkdir -p ./plugins/styles
+        ./linuxdeployqt*.AppImage ./share/applications/*.desktop -appimage -extra-plugins=iconengines,platformthemes/libqxdgdesktopportal.so
+        find ./ -executable -type f -exec ldd {} \; | fgrep ' => /usr' | cut -d' ' -f 2-3 | sort | uniq
       working-directory: ${{ env.makoureactor_installation_path }}
 
     - name: Prepare Upload
