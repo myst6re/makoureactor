@@ -87,10 +87,9 @@ jobs:
 
     - name: Build ff7tk
       run: |
-        cd ${{ github.workspace }}/../ff7tk-git
         cmake -B ${{ env.ff7tk_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF
         cmake --build ${{ env.ff7tk_build_path }} --target install
-        cd ${{ github.workspace }}
+      working-directory: ${{ env.ff7tk_path }}
 
     - name: Build Makou_Reactor
       id: main_build
@@ -99,14 +98,12 @@ jobs:
         cmake --build ${{ env.makoureactor_build_path }} --target install
 
     - name: CPack
-      run: |
-        cd ${{ env.makoureactor_build_path }}
-        cpack
+      run: cpack
+      working-directory: ${{ env.makoureactor_build_path }}
 
     - name: Build AppImage (Linux)
       if: runner.os == 'Linux'
       run: |
-        cd ${{ env.makoureactor_build_path }}
         wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
         export VERSION=continuous
         chmod a+x linuxdeployqt*.AppImage
@@ -116,10 +113,12 @@ jobs:
         mkdir -p ./appdir/usr/plugins/styles
         ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -appimage -extra-plugins=iconengines,platformthemes/libqxdgdesktopportal.so
         find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
+      working-directory: ${{ env.makoureactor_build_path }}
 
     - name: Prepare Upload
       shell: bash
-      run: mv ${{ env.makoureactor_build_path }}/*.${{ matrix.config.package_extension }} ${{ env.makoureactor_build_path }}/makoureactor-continuous-${{ matrix.config.package_suffix }}.${{ matrix.config.package_extension }}
+      run: mv *.${{ matrix.config.package_extension }} makoureactor-continuous-${{ matrix.config.package_suffix }}.${{ matrix.config.package_extension }}
+      working-directory: ${{ env.makoureactor_build_path }}
 
     - name: Upload
       uses: actions/upload-artifact@v2
