@@ -18,6 +18,7 @@
 
 cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0042 NEW)
+cmake_policy(SET CMP0053 NEW)
 cmake_policy(SET CMP0074 NEW)
 cmake_policy(SET CMP0091 NEW)
 
@@ -112,13 +113,13 @@ elseif (WIN32)
     install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${DEPLOY_TEMP}")
     if(MINGW)
         set(FF7TK_DEPENDS
-            ${ff7tk_DIR}/../../../bin/libff7tk.dll
-            ${ff7tk_DIR}/../../../bin/libff7tkUtils.dll
+            "${ff7tk_DIR}/../../../bin/libff7tk.dll"
+            "${ff7tk_DIR}/../../../bin/libff7tkUtils.dll"
         )
     else()
         set(FF7TK_DEPENDS
-            ${ff7tk_DIR}/../../../bin/ff7tk.dll
-            ${ff7tk_DIR}/../../../bin/ff7tkUtils.dll
+            "${ff7tk_DIR}/../../../bin/ff7tk.dll"
+            "${ff7tk_DIR}/../../../bin/ff7tkUtils.dll"
         )
     endif()
     install(FILES ${FF7TK_DEPENDS} DESTINATION "${DEPLOY_TEMP}")

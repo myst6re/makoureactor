@@ -106,6 +106,7 @@ jobs:
     - name: Build AppImage (Linux)
       if: runner.os == 'Linux'
       run: |
+        cd ${{ env.makoureactor_build_path }}
         wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
         export VERSION=continuous
         chmod a+x linuxdeployqt*.AppImage
@@ -118,7 +119,7 @@ jobs:
 
     - name: Prepare Upload
       shell: bash
-      run: mv *.${{ matrix.config.package_extension }} makoureactor-continuous-${{ matrix.config.package_suffix }}.${{ matrix.config.package_extension }}
+      run: mv ${{ env.makoureactor_build_path }}/*.${{ matrix.config.package_extension }} ${{ env.makoureactor_build_path }}/makoureactor-continuous-${{ matrix.config.package_suffix }}.${{ matrix.config.package_extension }}
 
     - name: Upload
       uses: actions/upload-artifact@v2
