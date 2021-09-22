@@ -97,6 +97,15 @@ jobs:
         cmake --build ${{ env.ff7tk_build_path }} --target install -j3
       working-directory: ${{ env.ff7tk_path }}
 
+    - name: Download linuxdeployqt
+      if: runner.os == 'Linux'
+      run: |
+        wget -qc "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        export VERSION=continuous
+        chmod a+x linuxdeployqt*.AppImage
+        sudo mv linuxdeployqt*.AppImage $Qt5_DIR/bin/linuxdeployqt
+        find ${{ env.ff7tk_installation_path }} -name '*.so' -type f -exec ldd {} \;
+
     - name: Build Makou_Reactor
       id: main_build
       run: |
@@ -115,18 +124,9 @@ jobs:
         sudo apt update
         sudo apt install tree
         tree ${{ env.makoureactor_installation_path }}
-
-    - name: Build AppImage (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        wget -qc "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-        export VERSION=continuous
-        chmod a+x linuxdeployqt*.AppImage
-        unset QTDIR; unset QT_PLUGIN_PATH; unset LD_LIBRARY_PATH
-        mkdir -p ./plugins/styles
-        ./linuxdeployqt*.AppImage ./share/applications/*.desktop -appimage -extra-plugins=iconengines,platformthemes/libqxdgdesktopportal.so
-        find ./ -executable -type f -exec ldd {} \; | fgrep ' => /usr' | cut -d' ' -f 2-3 | sort | uniq
-      working-directory: ${{ env.makoureactor_installation_path }}
+        tree ${{ env.ff7tk_installation_path }}
+        ls -l ${{ env.makoureactor_build_path }}
+        find ${{ env.makoureactor_installation_path }} -executable -type f -exec ldd {} \;
 
     - name: Prepare Upload
       shell: bash
