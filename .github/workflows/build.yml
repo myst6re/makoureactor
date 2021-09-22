@@ -94,18 +94,26 @@ jobs:
       if: steps.cache-ff7tk.outputs.cache-hit != 'true'
       run: |
         cmake -B ${{ env.ff7tk_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DFORMATS=OFF -DUTILS=ON -DWIDGETS=OFF
-        cmake --build ${{ env.ff7tk_build_path }} --target install
+        cmake --build ${{ env.ff7tk_build_path }} --target install -j3
       working-directory: ${{ env.ff7tk_path }}
 
     - name: Build Makou_Reactor
       id: main_build
       run: |
         cmake -B ${{ env.makoureactor_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.makoureactor_installation_path }} -Dff7tk_DIR=${{ env.ff7tk_installation_path }}/lib/cmake/ff7tk
-        cmake --build ${{ env.makoureactor_build_path }} --target install
+        cmake --build ${{ env.makoureactor_build_path }} --target install -j3
 
     - name: CPack
       run: cpack
       working-directory: ${{ env.makoureactor_build_path }}
+
+    - name: Show install results
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        ls -l ${{ env.makoureactor_installation_path }}
+        ls -l ${{ env.makoureactor_installation_path }}/Makou_Reactor
+        ls -l ${{ env.makoureactor_installation_path }}/Makou_Reactor_autogen
 
     - name: Build AppImage (Linux)
       if: runner.os == 'Linux'
@@ -119,7 +127,7 @@ jobs:
         mkdir -p ./appdir/usr/plugins/styles
         ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -appimage -extra-plugins=iconengines,platformthemes/libqxdgdesktopportal.so
         find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
-      working-directory: ${{ env.makoureactor_build_path }}
+      working-directory: ${{ env.makoureactor_installation_path }}
 
     - name: Prepare Upload
       shell: bash
