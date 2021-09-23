@@ -103,7 +103,7 @@ jobs:
         wget -qc "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
         export VERSION=continuous
         chmod a+x linuxdeployqt*.AppImage
-        sudo mv linuxdeployqt*.AppImage $Qt5_DIR/bin/linuxdeployqt
+        mv linuxdeployqt*.AppImage $Qt5_DIR/bin/linuxdeployqt
         find ${{ env.ff7tk_installation_path }} -name '*.so' -type f -exec ldd {} \;
 
     - name: Build Makou_Reactor
@@ -115,6 +115,15 @@ jobs:
     - name: CPack
       run: cpack
       working-directory: ${{ env.makoureactor_build_path }}
+
+    - name: Build AppImage (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        export VERSION=continuous
+        unset QTDIR; unset QT_PLUGIN_PATH; unset LD_LIBRARY_PATH
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ env.ff7tk_installation_path }}/lib
+        linuxdeployqt ${{ env.makoureactor_installation_path }}/share/applications/*.desktop -appimage -extra-plugins=iconengines,platformthemes/libqxdgdesktopportal.so
+        find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
 
     - name: Show install results
       if: runner.os == 'Linux'
