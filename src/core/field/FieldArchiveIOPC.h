@@ -18,8 +18,8 @@
 #ifndef FIELDARCHIVEIOPC_H
 #define FIELDARCHIVEIOPC_H
 
+#include <utils/QLockedFile.h>
 #include "FieldArchiveIO.h"
-#include "../QLockedFile.h"
 #include "../Lgp.h"
 
 class FieldArchivePC;

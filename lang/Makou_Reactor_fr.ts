@@ -2262,18 +2262,18 @@ Certains scripts peuvent y faire référence !</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/Data.cpp" line="508"/>
+        <location filename="../src/Data.cpp" line="509"/>
         <source>Cloud</source>
         <oldsource>Clad</oldsource>
         <translation>Clad</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="508"/>
+        <location filename="../src/Data.cpp" line="509"/>
         <source>Barret</source>
         <translation>Barret</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="508"/>
+        <location filename="../src/Data.cpp" line="509"/>
         <source>Tifa</source>
         <translation>Tifa</translation>
     </message>
@@ -2282,119 +2282,119 @@ Certains scripts peuvent y faire référence !</translation>
         <translation type="vanished">Aeris</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="509"/>
+        <location filename="../src/Data.cpp" line="510"/>
         <source>Red XIII</source>
         <translation>Red XIII</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="509"/>
+        <location filename="../src/Data.cpp" line="510"/>
         <source>Yuffie</source>
         <translation>Youfie</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="509"/>
+        <location filename="../src/Data.cpp" line="510"/>
         <source>Aerith</source>
         <translation>Aerith</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="510"/>
+        <location filename="../src/Data.cpp" line="511"/>
         <source>Cait Sith</source>
         <translation>Cait Sith</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="510"/>
+        <location filename="../src/Data.cpp" line="511"/>
         <source>Vincent</source>
         <translation>Vincent</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="510"/>
+        <location filename="../src/Data.cpp" line="511"/>
         <source>Cid</source>
         <translation>Cid</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="511"/>
+        <location filename="../src/Data.cpp" line="512"/>
         <source>Yound Cloud</source>
         <oldsource>Jeune Clad</oldsource>
         <translation>Jeune Clad</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="511"/>
+        <location filename="../src/Data.cpp" line="512"/>
         <source>Sephiroth</source>
         <translation>Sephiroth</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="511"/>
+        <location filename="../src/Data.cpp" line="512"/>
         <source>Chocobo</source>
         <translation>Chocobo</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="516"/>
+        <location filename="../src/Data.cpp" line="517"/>
         <source>[CAMERA|L2]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="516"/>
+        <location filename="../src/Data.cpp" line="517"/>
         <source>[TARGET|R2]</source>
         <translation>[CIBLE|R2]</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="517"/>
+        <location filename="../src/Data.cpp" line="518"/>
         <source>[PAGE UP|L1]</source>
         <oldsource>[PAGE HAUT|L1]</oldsource>
         <translation>[PAGE HAUT|L1]</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="517"/>
+        <location filename="../src/Data.cpp" line="518"/>
         <source>[PAGE DOWN|R1]</source>
         <translation>[PAGE BAS|R1]</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="518"/>
+        <location filename="../src/Data.cpp" line="519"/>
         <source>[MENU|TRIANGLE]</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="518"/>
+        <location filename="../src/Data.cpp" line="519"/>
         <source>[OK|CIRCLE]</source>
         <translation>[OK|ROND]</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="519"/>
+        <location filename="../src/Data.cpp" line="520"/>
         <source>[CANCEL|CROSS]</source>
         <translation>[ANNULER|CROIX]</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="519"/>
+        <location filename="../src/Data.cpp" line="520"/>
         <source>[SWITCH|SQUARE]</source>
         <translation>[CHANGER|CARRE]</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="520"/>
+        <location filename="../src/Data.cpp" line="521"/>
         <source>[ASSIST|SELECT]</source>
         <translation>[ASSISTER|SELECT]</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="521"/>
+        <location filename="../src/Data.cpp" line="522"/>
         <source>[START]</source>
         <translation>[DEMARRER|START]</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="522"/>
+        <location filename="../src/Data.cpp" line="523"/>
         <source>[UP]</source>
         <translation>[HAUT]</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="522"/>
+        <location filename="../src/Data.cpp" line="523"/>
         <source>[RIGHT]</source>
         <translation>[DROITE]</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="523"/>
+        <location filename="../src/Data.cpp" line="524"/>
         <source>[DOWN]</source>
         <translation>[BAS]</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="523"/>
+        <location filename="../src/Data.cpp" line="524"/>
         <source>[LEFT]</source>
         <translation>[GAUCHE]</translation>
     </message>

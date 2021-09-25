@@ -15,8 +15,8 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
+#include <utils/LZS.h>
 #include "FieldArchiveIO.h"
-#include "../LZS.h"
 #include "../Config.h"
 #include "FieldArchive.h"
 #include "Field.h"

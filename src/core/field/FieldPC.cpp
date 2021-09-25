@@ -15,11 +15,11 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
+#include <utils/LZS.h>
 #include "FieldPC.h"
 #include "BackgroundFilePC.h"
 #include "BackgroundTiles.h"
 #include "FieldModelLoaderPS.h"
-#include "core/LZS.h"
 
 FieldPC::FieldPC(const QString &name, FieldArchiveIO *io) :
 	Field(name, io), _model(0)

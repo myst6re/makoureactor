@@ -1,6 +1,6 @@
 #include "PsfFile.h"
 
-//#include <utils/GZIP.h>
+#include <utils/GZIP.h>
 
 PsfTags::PsfTags()
 {
@@ -119,7 +119,7 @@ bool PsfFile::open(const QByteArray &data)
 	memcpy(sizes, data.constData() + 4, 3 * sizeof(quint32));
 
 	_special = data.mid(16, sizes[0]);
-	_data = QByteArray(); //GZIP::decompressNoHeader(data.constData() + 16 + sizes[0], sizes[1]);
+	_data = GZIP::decompressNoHeader(data.constData() + 16 + sizes[0], sizes[1]);
 
 	return _tags.open(QString(data.mid(16 + sizes[0] + sizes[1])));
 }
@@ -130,13 +130,13 @@ QByteArray PsfFile::save() const
 	quint8 version = 1;
 	data.append("PSF").append(char(version));
 
-	QByteArray compressedData; // = GZIP::compressNoHeader(_data.constData(), _data.size());
+	QByteArray compressedData = GZIP::compressNoHeader(_data.constData(), _data.size());
 
 	quint32 specialSize = _special.size();
 	data.append((char *)&specialSize, 4);
 	quint32 dataSize = compressedData.size();
 	data.append((char *)&dataSize, 4);
-	quint32 crc = 0; // GZIP::crc(compressedData.constData(), compressedData.size());
+	quint32 crc = GZIP::crc(compressedData.constData(), compressedData.size());
 	data.append((char *)&crc, 4);
 
 	data.append(_special);

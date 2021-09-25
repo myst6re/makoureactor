@@ -26,7 +26,7 @@ set(RELEASE_NAME "Makou_Reactor")
 set(GUI_TARGET "${RELEASE_NAME}")
 #set(CLI_TARGET "makoureactor")
 
-project(${RELEASE_NAME} VERSION 1.8.5 LANGUAGES CXX
+project("Makou Reactor" VERSION 1.8.5 LANGUAGES CXX
     DESCRIPTION "Final Fantasy VII field archive editor"
     HOMEPAGE_URL "https://github.com/myst6re/makoureactor"
 )
@@ -104,9 +104,12 @@ target_link_libraries(${GUI_TARGET} PRIVATE
 
 include(GNUInstallDirs)
 
+if(APPLE OR WIN32)
+    set_target_properties(${GUI_TARGET} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
+endif()
+
 if(APPLE)
-    set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/Makou Reactor.app")
-    set_target_properties(${GUI_TARGET} PROPERTIES OUTPUT_NAME "Makou Reactor")
+    set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app")
 elseif (WIN32)
     set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/win32-deploy")
     install(DIRECTORY DESTINATION "${DEPLOY_TEMP}")
@@ -148,6 +151,7 @@ if(APPLE)
     install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
 elseif (WIN32)
     install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION ".")
+    install(CODE "file(REMOVE_RECURSE \"${DEPLOY_TEMP}\")")
 endif()
 
 if(QT_VERSION_MAJOR EQUAL 6)

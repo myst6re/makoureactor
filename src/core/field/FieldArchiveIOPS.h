@@ -18,8 +18,8 @@
 #ifndef FIELDARCHIVEIOPS_H
 #define FIELDARCHIVEIOPS_H
 
+#include <utils/QLockedFile.h>
 #include "FieldArchiveIO.h"
-#include "../QLockedFile.h"
 #include "../IsoArchiveFF7.h"
 
 class FieldArchivePS;

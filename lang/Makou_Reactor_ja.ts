@@ -4375,19 +4375,19 @@ Some scripts can refer to it!</source>
         <translation type="unfinished">スクリプト %1 :</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="508"/>
+        <location filename="../src/Data.cpp" line="509"/>
         <source>Cloud</source>
         <oldsource>Clad</oldsource>
         <translatorcomment>Cloud</translatorcomment>
         <translation type="unfinished">クラウド</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="508"/>
+        <location filename="../src/Data.cpp" line="509"/>
         <source>Barret</source>
         <translation>バレット</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="508"/>
+        <location filename="../src/Data.cpp" line="509"/>
         <source>Tifa</source>
         <translation>ティファ</translation>
     </message>
@@ -4397,125 +4397,125 @@ Some scripts can refer to it!</source>
         <translation type="vanished">エアリス</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="509"/>
+        <location filename="../src/Data.cpp" line="510"/>
         <source>Red XIII</source>
         <translation>レッドXIII</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="509"/>
+        <location filename="../src/Data.cpp" line="510"/>
         <source>Yuffie</source>
         <translation>ユフィ</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="509"/>
+        <location filename="../src/Data.cpp" line="510"/>
         <source>Aerith</source>
         <translation>エアリス</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="510"/>
+        <location filename="../src/Data.cpp" line="511"/>
         <source>Cait Sith</source>
         <translation>ケット・シー</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="510"/>
+        <location filename="../src/Data.cpp" line="511"/>
         <source>Vincent</source>
         <translation>ヴィンセント</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="510"/>
+        <location filename="../src/Data.cpp" line="511"/>
         <source>Cid</source>
         <translation>シド</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="511"/>
+        <location filename="../src/Data.cpp" line="512"/>
         <source>Yound Cloud</source>
         <oldsource>Jeune Clad</oldsource>
         <translatorcomment>Young Cloud</translatorcomment>
         <translation type="unfinished">昔のクラウド</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="511"/>
+        <location filename="../src/Data.cpp" line="512"/>
         <source>Sephiroth</source>
         <translation>セフィロス</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="511"/>
+        <location filename="../src/Data.cpp" line="512"/>
         <source>Chocobo</source>
         <translation>チョコボ</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="516"/>
+        <location filename="../src/Data.cpp" line="517"/>
         <source>[CAMERA|L2]</source>
         <translation>[視点|L2]ボタン</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="516"/>
+        <location filename="../src/Data.cpp" line="517"/>
         <source>[TARGET|R2]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="517"/>
+        <location filename="../src/Data.cpp" line="518"/>
         <source>[PAGE UP|L1]</source>
         <oldsource>[PAGE HAUT|L1]</oldsource>
         <translatorcomment>[PAGE UP|L1]</translatorcomment>
         <translation type="unfinished">|ページ送り|L1}ボタン</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="517"/>
+        <location filename="../src/Data.cpp" line="518"/>
         <source>[PAGE DOWN|R1]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="518"/>
+        <location filename="../src/Data.cpp" line="519"/>
         <source>[MENU|TRIANGLE]</source>
         <translation>[メニュー|△]ボタン</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="518"/>
+        <location filename="../src/Data.cpp" line="519"/>
         <source>[OK|CIRCLE]</source>
         <translation type="unfinished">[決定|○]ボタン</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="522"/>
+        <location filename="../src/Data.cpp" line="523"/>
         <source>[UP]</source>
         <translation type="unfinished">[↑]ボタン</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="522"/>
+        <location filename="../src/Data.cpp" line="523"/>
         <source>[RIGHT]</source>
         <translation type="unfinished">[→]ボタン</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="523"/>
+        <location filename="../src/Data.cpp" line="524"/>
         <source>[DOWN]</source>
         <translation type="unfinished">[↓]ボタン</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="523"/>
+        <location filename="../src/Data.cpp" line="524"/>
         <source>[LEFT]</source>
         <translation type="unfinished">[←]ボタン</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="519"/>
+        <location filename="../src/Data.cpp" line="520"/>
         <source>[CANCEL|CROSS]</source>
         <oldsource>[ANNULER|CROIX]</oldsource>
         <translatorcomment>[CANCEL|CROSS]</translatorcomment>
         <translation type="unfinished">[キャンセル|×]ボタン</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="519"/>
+        <location filename="../src/Data.cpp" line="520"/>
         <source>[SWITCH|SQUARE]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="520"/>
+        <location filename="../src/Data.cpp" line="521"/>
         <source>[ASSIST|SELECT]</source>
         <oldsource>[ASSISTER|SELECT]</oldsource>
         <translatorcomment>[ヘルプ|ASSIST|SELECT]</translatorcomment>
         <translation type="unfinished">[SELECT]ボタン</translation>
     </message>
     <message>
-        <location filename="../src/Data.cpp" line="521"/>
+        <location filename="../src/Data.cpp" line="522"/>
         <source>[START]</source>
         <oldsource>[DEMARRER|START]</oldsource>
         <translatorcomment>[START]</translatorcomment>
