@@ -59,7 +59,7 @@ jobs:
         key: ${{ runner.os }}${{ matrix.config.WIN_ARCH }}-qt-${{ env.QT_VERSION }}-${{ env.NINJA_VERSION }}
 
     - name: Clone ff7tk repo
-      run: git clone --depth 1 --single-branch --branch master https://github.com/myst6re/ff7tk.git ${{ env.ff7tk_path }}
+      run: git clone --depth 1 --single-branch --branch feature/update-utils https://github.com/myst6re/ff7tk.git ${{ env.ff7tk_path }}
 
     - name: Get ff7tk HEAD
       run: git rev-parse HEAD > ${{ github.workspace }}/ff7tk-HEAD

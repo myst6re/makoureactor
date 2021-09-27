@@ -1,7 +1,6 @@
 # Makou Reactor
 
-[![Build Status Linux/OSX](https://travis-ci.org/myst6re/makoureactor.svg?branch=develop)](https://travis-ci.org/myst6re/makoureactor)
-[![Build status Win32](https://ci.appveyor.com/api/projects/status/lwiophf2d6cklg95/branch/develop?svg=true)](https://ci.appveyor.com/project/myst6re/makoureactor/branch/develop)
+[![CI/CD](https://github.com/myst6re/makoureactor/actions/workflows/build.yml/badge.svg)](https://github.com/myst6re/makoureactor/actions/workflows/build.yml)
 [![Coverity Scan Build Status](https://img.shields.io/coverity/scan/8102.svg)](https://scan.coverity.com/projects/myst6re-makoureactor)
 
 ![Makou Reactor](src/qt/images/logo-shinra.png)
@@ -33,17 +32,19 @@ instructions below.
 
 ### Requirements
 
+- ff7tk
 - CMake
-- Qt 5.5+
+- Qt 5.15+
 
 ### Windows
 
-#### Qt
+#### Qt + Qt Creator
 
-0. Download the online installer from https://www.qt.io/download-qt-installer ( remember to click the Download button )
-1. Install Qt with these items checked:
-   - **Packages categories:** `Latest release`
-   - **Components:** Uncheck everything and pick only `MSVC 2019 32-bit`
+0. Download the online installer from https://www.qt.io/download-qt-installer
+1. Install Qt 5 with these items checked:
+   - **Qt/Qt 5.XX.X (last version):** Check `MSVC 2019 64-bit`
+   - **Developer And Designer Tools:** Check `CMake` and `Ninja`
+2. Run Qt Creator and open an existing project, select the CMakeLists.txt in the source directory of Makou Reactor
 
 #### Visual Studio
 
@@ -65,7 +66,7 @@ instructions below.
    - https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools
    - https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools
 4. Open this repository as a folder in Visual Studio code
-5. Choose as build profile in the status bar `CMake: [Release]` ( or one of the aforementioned profiles )
+5. Choose as build profile in the status bar `CMake: [Release]` (or one of the aforementioned profiles)
 6. Click the button on the status bar `Build`
 
 ### macOS
@@ -115,4 +116,10 @@ $ pacman -S --needed base-devel cmake qt5
 $ mkdir -p .dist/build .dist/install
 $ cmake -S . -B .dist/build -DCMAKE_INSTALL_PREFIX=.dist/install -DCMAKE_BUILD_TYPE=Release
 $ cmake --build .dist/build --config Release
+```
+
+#### Install
+
+```sh
+$ cmake --build .dist/build --target install
 ```

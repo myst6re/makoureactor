@@ -31,19 +31,19 @@ project("Makou Reactor" VERSION 1.8.5 LANGUAGES CXX
     HOMEPAGE_URL "https://github.com/myst6re/makoureactor"
 )
 
+message("${Qt5_DIR} - $ENV{Qt5_DIR}")
+
+set(QT_AUTODETECT True)
+
 # Auto-Detect Qt installation
-if(NOT Qt5_DIR AND NOT Qt6_DIR)
-    if(NOT DEFINED QT_QMAKE_EXECUTABLE)
-        find_program(QT_QMAKE_EXECUTABLE "qmake")
-    endif()
+if(NOT DEFINED Qt5_DIR AND NOT DEFINED ENV{Qt5_DIR})
+    find_program(QT_QMAKE_EXECUTABLE "qmake")
 
     if(NOT QT_QMAKE_EXECUTABLE MATCHES "QT_QMAKE_EXECUTABLE-NOTFOUND")
         # ../../
         get_filename_component(QT_PATH "${QT_QMAKE_EXECUTABLE}" PATH)
         get_filename_component(QT_PATH "${QT_PATH}" PATH)
-    endif()
-
-    if(NOT DEFINED QT_PATH)
+    else()
         if(WIN32)
             # look for user-registry pointing to qtcreator
             get_filename_component(QT_INSTALLATION_PATH [HKEY_CURRENT_USER\\Software\\Classes\\Applications\\QtProject.QtCreator.cpp\\shell\\Open\\Command] PATH)
@@ -64,7 +64,7 @@ if(NOT Qt5_DIR AND NOT Qt6_DIR)
 
         list(GET QT_VERSIONS 0 QT_VERSION)
 
-        message("-- Last Qt version ${QT_VERSION} ${CMAKE_VS_PLATFORM_NAME}")
+        message("-- Last Qt version ${QT_VERSION}")
 
         if(MSVC)
             if(MSVC_TOOLSET_VERSION MATCHES 142)
@@ -81,14 +81,18 @@ if(NOT Qt5_DIR AND NOT Qt6_DIR)
             file(GLOB QT_COMPILERS "${QT_VERSION}/*")
             list(GET QT_COMPILERS 0 QT_PATH)
         endif()
+
+        set(QT_QMAKE_EXECUTABLE "${QT_PATH}/bin/qmake")
     endif()
 
-    set(QT_DIR "${QT_PATH}/lib/cmake/Qt5")
-    set(Qt5_DIR "${QT_DIR}")
+    set(Qt5_DIR "${QT_PATH}/lib/cmake/Qt5")
 
     message("-- Qt Auto-Detected at ${QT_PATH}")
-    message("-- QT_DIR: ${QT_DIR}")
     message("-- Qt5_DIR: ${Qt5_DIR}")
+endif()
+
+if(NOT DEFINED QT_DIR AND NOT DEFINED ENV{QT_DIR})
+    set(QT_DIR "${Qt5_DIR}")
 endif()
 
 # specify the C++ standard
