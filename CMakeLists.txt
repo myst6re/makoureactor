@@ -31,6 +31,66 @@ project("Makou Reactor" VERSION 1.8.5 LANGUAGES CXX
     HOMEPAGE_URL "https://github.com/myst6re/makoureactor"
 )
 
+# Auto-Detect Qt installation
+if(NOT Qt5_DIR AND NOT Qt6_DIR)
+    if(NOT DEFINED QT_QMAKE_EXECUTABLE)
+        find_program(QT_QMAKE_EXECUTABLE "qmake")
+    endif()
+
+    if(NOT QT_QMAKE_EXECUTABLE MATCHES "QT_QMAKE_EXECUTABLE-NOTFOUND")
+        # ../../
+        get_filename_component(QT_PATH "${QT_QMAKE_EXECUTABLE}" PATH)
+        get_filename_component(QT_PATH "${QT_PATH}" PATH)
+    endif()
+
+    if(NOT DEFINED QT_PATH)
+        if(WIN32)
+            # look for user-registry pointing to qtcreator
+            get_filename_component(QT_INSTALLATION_PATH [HKEY_CURRENT_USER\\Software\\Classes\\Applications\\QtProject.QtCreator.cpp\\shell\\Open\\Command] PATH)
+
+            message("-- QtCreator Auto-Detected at ${QT_INSTALLATION_PATH}")
+
+            # ../../../
+            get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" PATH)
+            get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" PATH)
+            get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" PATH)
+        endif()
+
+        file(GLOB QT_VERSIONS "${QT_INSTALLATION_PATH}/5.*")
+        list(SORT QT_VERSIONS)
+
+        # assume the latest version will be last alphabetically
+        list(REVERSE QT_VERSIONS)
+
+        list(GET QT_VERSIONS 0 QT_VERSION)
+
+        message("-- Last Qt version ${QT_VERSION} ${CMAKE_VS_PLATFORM_NAME}")
+
+        if(MSVC)
+            if(MSVC_TOOLSET_VERSION MATCHES 142)
+                set(QT_MSVC "2019")
+            elseif(MSVC_TOOLSET_VERSION MATCHES 141)
+                set(QT_MSVC "2017")
+            endif()
+
+            set(QT_PATH "${QT_VERSION}/msvc${QT_MSVC}_64")
+        elseif(MINGW)
+            file(GLOB QT_COMPILERS "${QT_VERSION}/mingw*")
+            list(GET QT_COMPILERS 0 QT_PATH)
+        else()
+            file(GLOB QT_COMPILERS "${QT_VERSION}/*")
+            list(GET QT_COMPILERS 0 QT_PATH)
+        endif()
+    endif()
+
+    set(QT_DIR "${QT_PATH}/lib/cmake/Qt5")
+    set(Qt5_DIR "${QT_DIR}")
+
+    message("-- Qt Auto-Detected at ${QT_PATH}")
+    message("-- QT_DIR: ${QT_DIR}")
+    message("-- Qt5_DIR: ${Qt5_DIR}")
+endif()
+
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -59,7 +119,7 @@ endif()
 file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp" "src/*.h")
 set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
 
-if (APPLE)
+if(APPLE)
     set(ICON_FILE "deploy/macosx/${RELEASE_NAME}.icns")
     set(EXTRA_RESOURCES ${ICON_FILE})
 
@@ -110,11 +170,13 @@ endif()
 
 if(APPLE)
     set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app")
-elseif (WIN32)
+elseif(WIN32)
     set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/win32-deploy")
     install(DIRECTORY DESTINATION "${DEPLOY_TEMP}")
     install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${DEPLOY_TEMP}")
-    cmake_path(SET FF7TK_BIN_DIR "${ff7tk_DIR}/../../../bin")
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.20.0")
+        cmake_path(SET FF7TK_BIN_DIR "${ff7tk_DIR}/../../../bin")
+    endif()
     if(MINGW)
         set(FF7TK_DEPENDS
             "${FF7TK_BIN_DIR}/libff7tk.dll"
@@ -134,7 +196,7 @@ else()
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/deploy/linux/Makou_Reactor.desktop DESTINATION share/applications)
 endif()
 
-if (NOT DEFINED QT_QMAKE_EXECUTABLE)
+if(NOT DEFINED QT_QMAKE_EXECUTABLE OR QT_QMAKE_EXECUTABLE MATCHES "QT_QMAKE_EXECUTABLE-NOTFOUND")
     get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
 endif()
 message("-- QT_QMAKE_EXECUTABLE: ${QT_QMAKE_EXECUTABLE}")
@@ -149,7 +211,7 @@ if(APPLE)
         set(CMAKE_INSTALL_PREFIX "/Applications" CACHE PATH "..." FORCE)
     endif()
     install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
-elseif (WIN32)
+elseif(WIN32)
     install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION ".")
     install(CODE "file(REMOVE_RECURSE \"${DEPLOY_TEMP}\")")
 endif()
@@ -161,7 +223,7 @@ endif()
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(CPACK_SYSTEM_NAME "macos")
     set(CPACK_GENERATOR "DragNDrop")
-elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CPACK_GENERATOR "ZIP")
 else()
     set(CPACK_GENERATOR "TXZ")
