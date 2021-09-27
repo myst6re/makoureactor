@@ -388,6 +388,11 @@ List of available commands:
         <translation>Japonais</translation>
     </message>
     <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="519"/>
+        <source>You must restart %1 to apply all changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="50"/>
         <source>Edit...</source>
         <translation>Modifier...</translation>
@@ -428,9 +433,8 @@ List of available commands:
         <translation type="vanished">Lgp Archives (*.lgp);;All Files(*)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="519"/>
         <source>You must restart Makou Reactor to apply all changes.</source>
-        <translation>Vous devez redémarrer Makou Reactor pour appliquer tous les changements.</translation>
+        <translation type="vanished">Vous devez redémarrer Makou Reactor pour appliquer tous les changements.</translation>
     </message>
     <message>
         <source>Japanese Characters</source>

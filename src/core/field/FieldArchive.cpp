@@ -20,7 +20,6 @@
 #include "FieldPC.h"
 #include "Data.h"
 #include "core/PsfFile.h"
-#include "Parameters.h"
 
 FieldArchiveIterator::FieldArchiveIterator(const FieldArchive &archive) :
     QMapIterator<int, Field *>(archive.fileList), mapList(archive.fileList)

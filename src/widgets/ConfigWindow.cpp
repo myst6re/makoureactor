@@ -516,7 +516,7 @@ void ConfigWindow::accept()
 	Config::setValue("tabWidth", tabWidthEdit->value());
 
 	if (needsRestart) {
-		QMessageBox::information(this, tr("Information"), tr("You must restart Makou Reactor to apply all changes."));
+		QMessageBox::information(this, tr("Information"), tr("You must restart %1 to apply all changes.").arg(MAKOU_REACTOR_NAME));
 	}
 
 	Data::loadKernel2Bin(); // Reload kernel2.bin data

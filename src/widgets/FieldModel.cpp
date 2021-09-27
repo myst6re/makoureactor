@@ -16,7 +16,6 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModel.h"
-#include "Parameters.h"
 #include "core/field/FieldModelFilePS.h"
 
 FieldModel::FieldModel(QWidget *parent) :

@@ -1,5 +1,4 @@
 #include "PsfDialog.h"
-#include "../Parameters.h"
 
 PsfDialog::PsfDialog(const QString &title, QWidget *parent, Qt::WindowFlags f) :
       QDialog(parent, f)
@@ -12,7 +11,7 @@ PsfDialog::PsfDialog(const QString &title, QWidget *parent, Qt::WindowFlags f) :
 	_genre = new QLineEdit(this);
 	_comment = new QTextEdit(this);
 	_copyright = new QLineEdit("1997 Square", this);
-	_author = new QLineEdit(PROG_NAME, this);
+	_author = new QLineEdit(MAKOU_REACTOR_NAME, this);
 
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(
 	        QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);

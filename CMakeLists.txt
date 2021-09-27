@@ -31,12 +31,12 @@ project("Makou Reactor" VERSION 1.8.5 LANGUAGES CXX
     HOMEPAGE_URL "https://github.com/myst6re/makoureactor"
 )
 
-message("${Qt5_DIR} - $ENV{Qt5_DIR}")
-
-set(QT_AUTODETECT True)
+if(NOT DEFINED QT_VERSION_TO_FIND)
+    SET(QT_VERSION_TO_FIND 5)
+endif()
 
 # Auto-Detect Qt installation
-if(NOT DEFINED Qt5_DIR AND NOT DEFINED ENV{Qt5_DIR})
+if(NOT DEFINED Qt${QT_VERSION_TO_FIND}_DIR AND NOT DEFINED ENV{Qt${QT_VERSION_TO_FIND}_DIR})
     find_program(QT_QMAKE_EXECUTABLE "qmake")
 
     if(NOT QT_QMAKE_EXECUTABLE MATCHES "QT_QMAKE_EXECUTABLE-NOTFOUND")
@@ -56,7 +56,7 @@ if(NOT DEFINED Qt5_DIR AND NOT DEFINED ENV{Qt5_DIR})
             get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" PATH)
         endif()
 
-        file(GLOB QT_VERSIONS "${QT_INSTALLATION_PATH}/5.*")
+        file(GLOB QT_VERSIONS "${QT_INSTALLATION_PATH}/${QT_VERSION_TO_FIND}.*")
         list(SORT QT_VERSIONS)
 
         # assume the latest version will be last alphabetically
@@ -85,19 +85,25 @@ if(NOT DEFINED Qt5_DIR AND NOT DEFINED ENV{Qt5_DIR})
         set(QT_QMAKE_EXECUTABLE "${QT_PATH}/bin/qmake")
     endif()
 
-    set(Qt5_DIR "${QT_PATH}/lib/cmake/Qt5")
+    set(Qt${QT_VERSION_TO_FIND}_DIR "${QT_PATH}/lib/cmake/Qt${QT_VERSION_TO_FIND}")
 
     message("-- Qt Auto-Detected at ${QT_PATH}")
-    message("-- Qt5_DIR: ${Qt5_DIR}")
+    message("-- Qt${QT_VERSION_TO_FIND}_DIR: ${Qt${QT_VERSION_TO_FIND}_DIR}")
 endif()
 
 if(NOT DEFINED QT_DIR AND NOT DEFINED ENV{QT_DIR})
-    set(QT_DIR "${Qt5_DIR}")
+    set(QT_DIR "${Qt${QT_VERSION_TO_FIND}_DIR}")
 endif()
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if (MSVC)
+    add_compile_options(/W3)
+else()
+    add_compile_options(-Wall -Wextra -pedantic)
+endif()
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -105,7 +111,17 @@ set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x050F00)
+add_compile_definitions(
+    QT_DISABLE_DEPRECATED_BEFORE=0x050F00
+    MAKOU_REACTOR_NAME="${PROJECT_NAME}"
+    MAKOU_REACTOR_DESCRIPTION="${PROJECT_DESCRIPTION}"
+    MAKOU_REACTOR_COMPANY="myst6re"
+    MAKOU_REACTOR_VERSION="${PROJECT_VERSION}"
+    MAKOU_REACTOR_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
+    MAKOU_REACTOR_VERSION_MINOR=${PROJECT_VERSION_MINOR}
+    MAKOU_REACTOR_VERSION_PATCH=${PROJECT_VERSION_PATCH}
+    MAKOU_REACTOR_VERSION_TWEAK=0
+)
 
 find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL REQUIRED)
 find_package(QT NAMES Qt5 Qt6 COMPONENTS Zlib QUIET)

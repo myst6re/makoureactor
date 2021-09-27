@@ -358,6 +358,11 @@ List of available commands:
         <translation>デフォルト</translation>
     </message>
     <message>
+        <location filename="../src/widgets/ConfigWindow.cpp" line="519"/>
+        <source>You must restart %1 to apply all changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Japanese Characters</source>
         <translation type="vanished">日本語版文字コード</translation>
     </message>
@@ -440,9 +445,8 @@ List of available commands:
         <translation>char.lgp の検出</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ConfigWindow.cpp" line="519"/>
         <source>You must restart Makou Reactor to apply all changes.</source>
-        <translation>変更を適用するために Makou Reactor を再起動してください。</translation>
+        <translation type="vanished">変更を適用するために Makou Reactor を再起動してください。</translation>
     </message>
     <message>
         <location filename="../src/widgets/ConfigWindow.cpp" line="40"/>

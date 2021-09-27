@@ -19,7 +19,6 @@
 #ifdef MR_CONSOLE
 #include <QCoreApplication>
 #include "CLI.h"
-#include "Parameters.h"
 #else
 #include <QApplication>
 #include "Window.h"
@@ -33,8 +32,8 @@ int main(int argc, char *argv[])
 {
 #ifdef MR_CONSOLE
 	QCoreApplication app(argc, argv);
-	QCoreApplication::setApplicationName(PROG_NAME);
-	QCoreApplication::setApplicationVersion(PROG_VERSION);
+	QCoreApplication::setApplicationName(MAKOU_REACTOR_NAME);
+	QCoreApplication::setApplicationVersion(MAKOU_REACTOR_VERSION);
 #ifdef Q_OS_WIN
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName("IBM 850"));
 #endif

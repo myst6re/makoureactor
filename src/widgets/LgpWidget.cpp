@@ -17,7 +17,6 @@
  ****************************************************************************/
 #include "LgpWidget.h"
 #include "core/Config.h"
-#include "Parameters.h"
 #include "core/TimFile.h"
 #include "core/TexFile.h"
 #include "core/field/CharArchive.h"
@@ -71,7 +70,7 @@ void IconThread::run()
 			if (cacheIcon.contains(type)) {
 				emit iconLoaded(path, cacheIcon.value(type));
 			} else {
-				QFile tmp(QDir::tempPath() % "/" % PROG_NAME % "." % type);
+				QFile tmp(QDir::tempPath() % "/" % MAKOU_REACTOR_NAME % "." % type);
 				if (tmp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 					QIcon icon = QFileIconProvider().icon(QFileInfo(tmp));
 					tmp.remove();

@@ -16,7 +16,6 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Window.h"
-#include "Parameters.h"
 #include "core/field/GrpScript.h"
 #include "widgets/ConfigWindow.h"
 #include "widgets/EncounterWidget.h"
@@ -753,13 +752,13 @@ void Window::setWindowTitle()
 			current = selectedItems.first()->text(0);
 		}
 
-		if (!fieldArchive->io()->hasName()) { // [*][current - ]PROG_NAME
+		if (!fieldArchive->io()->hasName()) { // [*][current - ]MAKOU_REACTOR_NAME
 			windowTitle = "[*]";
 
 			if (!current.isEmpty()) {
 				 windowTitle.append(current).append(" - ");
 			}
-		} else { // [current ](*archive) - PROG_NAME
+		} else { // [current ](*archive) - MAKOU_REACTOR_NAME
 			if (!current.isEmpty()) {
 				 windowTitle.append(current).append(" (");
 			}
@@ -774,7 +773,7 @@ void Window::setWindowTitle()
 		}
 	}
 
-	QWidget::setWindowTitle(windowTitle.append(PROG_FULLNAME));
+	QWidget::setWindowTitle(windowTitle.append(QString("%1 %2").arg(MAKOU_REACTOR_NAME, MAKOU_REACTOR_VERSION)));
 }
 
 void Window::disableEditors()
