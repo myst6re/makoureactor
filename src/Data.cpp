@@ -22,7 +22,7 @@
 // #include <winerror.h>
 #include <winreg.h>
 #endif
-#include <utils/LZS.h>
+#include <LZS.h>
 #include "Data.h"
 #include "core/Config.h"
 #include "core/FF7Text.h"

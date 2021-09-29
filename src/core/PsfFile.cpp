@@ -1,6 +1,6 @@
 #include "PsfFile.h"
 
-#include <utils/GZIP.h>
+#include <GZIP.h>
 
 PsfTags::PsfTags()
 {

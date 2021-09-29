@@ -35,17 +35,17 @@ public:
 	explicit BackgroundFilePC(FieldPC *field);
 	BackgroundFilePC(const BackgroundFilePC &other);
 
-	void initEmpty();
-	bool open();
+	void initEmpty() override;
+	bool open() override;
 	bool open(const QByteArray &data, const QByteArray &palData);
-	QByteArray save() const;
+	QByteArray save() const override;
 	QByteArray savePal() const;
-	virtual inline bool canSave() const { return true; }
-	inline virtual BackgroundTexturesPC *textures() const {
+	virtual inline bool canSave() const override { return true; }
+	inline virtual BackgroundTexturesPC *textures() const override {
 		return static_cast<BackgroundTexturesPC *>(BackgroundFile::textures());
 	}
 	BackgroundFilePS toPS(FieldPS *field) const;
-	bool repair();
+	bool repair() override;
 };
 
 #endif // BACKGROUNDFILEPC_H

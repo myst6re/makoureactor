@@ -30,13 +30,13 @@ class BackgroundFile : public FieldPart
 public:
 	explicit BackgroundFile(Field *field);
 	BackgroundFile(const BackgroundFile &other);
-	virtual ~BackgroundFile();
+	virtual ~BackgroundFile() override;
 
-	virtual void initEmpty();
+	virtual void initEmpty() override;
 	using FieldPart::open;
 	using FieldPart::save;
-	virtual inline bool canSave() const { return false; }
-	void clear();
+	virtual inline bool canSave() const override { return false; }
+	void clear() override;
 	QImage openBackground(bool *warning = nullptr);
 	QImage openBackground(const QHash<quint8, quint8> &paramActifs, const qint16 z[2],
 	                      const bool *layers = nullptr, const QSet<quint16> *IDs = nullptr,
@@ -86,8 +86,8 @@ protected:
 	}
 
 private:
-	bool open(const QByteArray &data) {
-		Q_UNUSED(data);
+	bool open(const QByteArray &data) override {
+		Q_UNUSED(data)
 		return false;
 	}
 	BackgroundTiles _tiles;

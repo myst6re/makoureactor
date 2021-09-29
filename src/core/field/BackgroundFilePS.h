@@ -35,11 +35,11 @@ public:
 	explicit BackgroundFilePS(FieldPS *field);
 	BackgroundFilePS(const BackgroundFilePS &other);
 
-	void initEmpty();
-	bool open();
+	void initEmpty() override;
+	bool open() override;
 	bool open(const QByteArray &mimData, const QByteArray &tilesData);
-	QByteArray save() const;
-	inline virtual BackgroundTexturesPS *textures() const {
+	QByteArray save() const override;
+	inline virtual BackgroundTexturesPS *textures() const override {
 		return static_cast<BackgroundTexturesPS *>(BackgroundFile::textures());
 	}
 	BackgroundFilePC toPC(FieldPC *field) const;

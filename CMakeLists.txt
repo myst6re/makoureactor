@@ -127,7 +127,7 @@ find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL REQUIRED)
 find_package(QT NAMES Qt5 Qt6 COMPONENTS Zlib QUIET)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Zlib QUIET)
-find_package(ff7tk COMPONENTS ff7tk ff7tkUtils REQUIRED)
+find_package(ff7tk COMPONENTS ff7tkUtils REQUIRED)
 
 if(NOT Qt${QT_VERSION_MAJOR}Zlib_FOUND)
     find_package(ZLIB REQUIRED)
@@ -166,7 +166,6 @@ target_link_libraries(${GUI_TARGET} PRIVATE
     Qt::OpenGL
     Qt::Widgets
     ${ZLIB_LIBRARY}
-    ff7tk::ff7tk
     ff7tk::ff7tkUtils
 )
 
@@ -175,7 +174,6 @@ target_link_libraries(${GUI_TARGET} PRIVATE
 #target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 #target_link_libraries(${CLI_TARGET}
 #    Qt::Zlib
-#    ff7tk::ff7tk
 #    ff7tk::ff7tkUtils
 #)
 #target_compile_definitions(${CLI_TARGET}
@@ -199,12 +197,10 @@ elseif(WIN32)
     endif()
     if(MINGW)
         set(FF7TK_DEPENDS
-            "${FF7TK_BIN_DIR}/libff7tk.dll"
             "${FF7TK_BIN_DIR}/libff7tkUtils.dll"
         )
     else()
         set(FF7TK_DEPENDS
-            "${FF7TK_BIN_DIR}/ff7tk.dll"
             "${FF7TK_BIN_DIR}/ff7tkUtils.dll"
         )
     endif()

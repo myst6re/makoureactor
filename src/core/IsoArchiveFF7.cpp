@@ -15,8 +15,8 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include <utils/LZS.h>
-#include <utils/GZIPPS.h>
+#include <LZS.h>
+#include <GZIPPS.h>
 #include "IsoArchiveFF7.h"
 
 IsoArchiveFF7::IsoArchiveFF7(const QString &name) :

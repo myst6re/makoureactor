@@ -20,7 +20,7 @@
  * inspired from LGP/UnLGP tool written by Aali.
  * http://forums.qhimm.com/index.php?topic=8641.0
  */
-#include <utils/QLockedFile.h>
+#include <QLockedFile.h>
 #include "Lgp.h"
 #include "Lgp_p.h"
 

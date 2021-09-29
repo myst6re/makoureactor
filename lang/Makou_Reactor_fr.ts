@@ -4,12 +4,12 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="../src/widgets/AboutDialog.cpp" line="11"/>
+        <location filename="../src/widgets/AboutDialog.cpp" line="10"/>
         <source>By Jérôme &amp;lt;myst6re&amp;gt; Arzel &lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;</source>
         <translation>Par Jérôme &amp;lt;myst6re&amp;gt; Arzel &lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../src/widgets/AboutDialog.cpp" line="17"/>
+        <location filename="../src/widgets/AboutDialog.cpp" line="16"/>
         <source>Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</source>
         <translation>Merci à&amp;nbsp;:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
@@ -826,55 +826,55 @@ D&apos;autres écrans peuvent y référer !</translation>
 <context>
     <name>FontWidget</name>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="31"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
         <source>Grey</source>
         <oldsource>Gris</oldsource>
         <translation>Gris</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="31"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
         <source>Violet</source>
         <translation>Violet</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="31"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
         <source>Cyan</source>
         <translation>Cyan</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="47"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="46"/>
         <source>Export...</source>
         <oldsource>Exporter...</oldsource>
         <translation>Exporter...</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="48"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="47"/>
         <source>Import...</source>
         <oldsource>Importer...</oldsource>
         <translation>Importer...</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="31"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
         <source>Blue</source>
         <translation>Bleu</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="31"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
         <source>Red</source>
         <translation>Rouge</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="31"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
         <source>Green</source>
         <translation>Vert</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="31"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
         <source>Yellow</source>
         <translation>Jaune</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="31"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="30"/>
         <source>White</source>
         <translation>Blanc</translation>
     </message>
@@ -883,33 +883,33 @@ D&apos;autres écrans peuvent y référer !</translation>
         <translation type="vanished">À partir d&apos;une image...</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="49"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="48"/>
         <source>Cancel Changes</source>
         <translation>Annuler les modifications</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="65"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="64"/>
         <source>Text:</source>
         <translation>Texte :</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="67"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="66"/>
         <source>Width:</source>
         <translation>Largeur :</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="69"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="68"/>
         <source>Left padding:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="118"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="117"/>
         <source>Table %1</source>
         <translation>Table %1</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="220"/>
-        <location filename="../src/widgets/FontWidget.cpp" line="296"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="219"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="295"/>
         <source>FF7 font file (*.bin)</source>
         <oldsource>Fichier police FF7 (*.bin)</oldsource>
         <translation>Fichier police FF7 (*.bin)</translation>
@@ -920,63 +920,63 @@ D&apos;autres écrans peuvent y référer !</translation>
         <translation type="vanished">Fichier police FF8 (*.tdw)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="222"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="221"/>
         <source>Image File (*.png)</source>
         <oldsource>Fichier image PNG (*.png)</oldsource>
         <translation>Fichier image PNG (*.png)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="223"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="222"/>
         <source>Image File (*.jpg)</source>
         <oldsource>Image File (*.jpg))</oldsource>
         <translation>Fichier image JPG (*.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="224"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="223"/>
         <source>Image File (*.bmp)</source>
         <oldsource>Fichier image BMP (*.bmp)</oldsource>
         <translation>Fichier image BMP (*.bmp)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="228"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="227"/>
         <source>Translation file %1 (*.txt)</source>
         <oldsource>Fichier traduction %1 (*.txt)</oldsource>
         <translation>Fichier traduction %1 (*.txt)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="232"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="231"/>
         <source>Export font</source>
         <translation>Exporter police de caractère</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="245"/>
-        <location filename="../src/widgets/FontWidget.cpp" line="248"/>
-        <location filename="../src/widgets/FontWidget.cpp" line="271"/>
-        <location filename="../src/widgets/FontWidget.cpp" line="314"/>
-        <location filename="../src/widgets/FontWidget.cpp" line="318"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="244"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="247"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="270"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="313"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="317"/>
         <source>Error</source>
         <oldsource>Erreur</oldsource>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="245"/>
-        <location filename="../src/widgets/FontWidget.cpp" line="271"/>
-        <location filename="../src/widgets/FontWidget.cpp" line="318"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="244"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="270"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="317"/>
         <source>Error opening file (%1)</source>
         <translation>Erreur d&apos;ouverture du fichier. (%1)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="248"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="247"/>
         <source>Error saving file</source>
         <translation>Erreur d&apos;enregistrement</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="300"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="299"/>
         <source>Import font</source>
         <translation>Importer police de caractère</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FontWidget.cpp" line="314"/>
+        <location filename="../src/widgets/FontWidget.cpp" line="313"/>
         <source>Invalid file</source>
         <translation>Fichier invalide</translation>
     </message>
@@ -1371,18 +1371,18 @@ Certains scripts peuvent y faire référence !</translation>
 <context>
     <name>LgpItemModel</name>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="513"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="512"/>
         <source>?</source>
         <translation>?</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="588"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="587"/>
         <source>Name</source>
         <oldsource>Nom</oldsource>
         <translation>Nom</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="589"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="588"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
@@ -1390,161 +1390,161 @@ Certains scripts peuvent y faire référence !</translation>
 <context>
     <name>LgpWidget</name>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="680"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="679"/>
         <source>LGP archive manager</source>
         <translation>Gestionnaire d&apos;archive LGP</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="691"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="838"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1056"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="690"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="837"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1055"/>
         <source>Rename</source>
         <translation>Renommer</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="693"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="692"/>
         <source>Replace</source>
         <translation>Remplacer</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="695"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="694"/>
         <source>Extract</source>
         <translation>Extraire</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="697"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="696"/>
         <source>Extract All</source>
         <translation>Extraire tout</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="699"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="698"/>
         <source>Add</source>
         <translation>Ajouter</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="701"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="700"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="838"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1057"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="837"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1056"/>
         <source>New Name:</source>
         <translation>Nouveau nom :</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="845"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="848"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="851"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="888"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1002"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1041"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1046"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1067"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1091"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1119"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="844"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="847"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="850"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="887"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1001"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1040"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1045"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1066"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1090"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1118"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="845"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1042"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="844"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1041"/>
         <source>The name &apos;%1&apos; is invalid, don&apos;t put special characters.</source>
         <translation>Le nom &apos;%1&apos; est invalide, ne mettez pas de caractères spéciaux.</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="848"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1047"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="847"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1046"/>
         <source>A file named &apos;%1&apos; already exists, please choose another name.</source>
         <translation>Un fichier nommé &apos;%1&apos; existe déjà, veuillez choisir un autre nom.</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="851"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="850"/>
         <source>Can not Rename the file</source>
         <translation>Impossible de renommer le fichier</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="871"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="907"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="870"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="906"/>
         <source>%1 file (*.%1)</source>
         <translation>Fichier %1 (*.%1)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="873"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="909"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1020"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="872"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="908"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1019"/>
         <source>All files (*)</source>
         <translation>Tous les fichiers (*)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="880"/>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1021"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="879"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1020"/>
         <source>New File</source>
         <translation>Nouveau fichier</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="888"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="887"/>
         <source>Can not modify the archive!</source>
         <translation>Impossible de modifier l&apos;archive !</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="916"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="915"/>
         <source>Extract file</source>
         <translation>Extraire un fichier</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="931"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="930"/>
         <source>Write error</source>
         <translation>Erreur d&apos;écriture</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="931"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="930"/>
         <source>Can not write to file (message: %1).</source>
         <translation>Impossible d&apos;écrire dans le fichier (message : %1).</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="936"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="935"/>
         <source>Opening error</source>
         <translation>Erreur d&apos;ouverture</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="936"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="935"/>
         <source>Can not open the file (message: %1).</source>
         <translation>Impossible d&apos;ouvrir le fichier (message : %1).</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="949"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="948"/>
         <source>Extract all</source>
         <translation>Extraire tout</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="956"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="955"/>
         <source>Extracting...</source>
         <translation>Extraction...</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="956"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="955"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1068"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1067"/>
         <source>Can not add the file &apos;%1&apos;</source>
         <translation>Impossible d&apos;ajouter le fichier &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1081"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1080"/>
         <source>Delete?</source>
         <oldsource>Delete ?</oldsource>
         <translation>Supprimer ?</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1082"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1081"/>
         <source>Are you sure you want to delete this file from the archive?</source>
         <translation>Êtes-vous sûr de vouloir supprimer ce fichier de l&apos;archive ?</translation>
     </message>
     <message>
-        <location filename="../src/widgets/LgpWidget.cpp" line="1091"/>
+        <location filename="../src/widgets/LgpWidget.cpp" line="1090"/>
         <source>Cannot delete the file!</source>
         <translation>Impossible de supprimer le fichier !</translation>
     </message>
@@ -2213,52 +2213,52 @@ Certains scripts peuvent y faire référence !</translation>
 <context>
     <name>PsfDialog</name>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="21"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="20"/>
         <source>psflib</source>
         <translation>psflib</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="23"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="22"/>
         <source>Title</source>
         <translation>Titre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="25"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="24"/>
         <source>Artist</source>
         <translation>Artiste</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="27"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="26"/>
         <source>Game</source>
         <translation>Jeu</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="29"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="28"/>
         <source>Year</source>
         <translation>Année</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="31"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="30"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="33"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="32"/>
         <source>Comment</source>
         <translation>Commentaire</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="35"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="34"/>
         <source>Copyright</source>
         <translation>Copyright</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="37"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="36"/>
         <source>Author</source>
         <translation>Auteur</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="62"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="61"/>
         <source>(auto)</source>
         <translation>(auto)</translation>
     </message>
@@ -8880,13 +8880,13 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
 <context>
     <name>Window</name>
     <message>
-        <location filename="../src/Window.cpp" line="62"/>
+        <location filename="../src/Window.cpp" line="61"/>
         <source>&amp;File</source>
         <oldsource>&amp;Fichier</oldsource>
         <translation>&amp;Fichier</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="64"/>
+        <location filename="../src/Window.cpp" line="63"/>
         <source>&amp;Open...</source>
         <oldsource>&amp;Ouvrir...</oldsource>
         <translation>&amp;Ouvrir...</translation>
@@ -8897,7 +8897,7 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation type="vanished">&amp;Exporter l&apos;écran courant...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="73"/>
+        <location filename="../src/Window.cpp" line="72"/>
         <source>&amp;Mass Export...</source>
         <oldsource>Exporter en &amp;masse...</oldsource>
         <translation>Exporter en &amp;masse...</translation>
@@ -8908,27 +8908,27 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation type="vanished">&amp;Importer dans l&apos;écran courant...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="76"/>
-        <location filename="../src/Window.cpp" line="412"/>
-        <location filename="../src/Window.cpp" line="1569"/>
+        <location filename="../src/Window.cpp" line="75"/>
+        <location filename="../src/Window.cpp" line="411"/>
+        <location filename="../src/Window.cpp" line="1568"/>
         <source>Archive Mana&amp;ger...</source>
         <oldsource>Ges&amp;tionnaire d&apos;archive...</oldsource>
         <translation>Ges&amp;tionnaire d&apos;archive...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="78"/>
+        <location filename="../src/Window.cpp" line="77"/>
         <source>R&amp;un FF7</source>
         <oldsource>Run FF7</oldsource>
         <translation>&amp;Lancer FF7</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="87"/>
+        <location filename="../src/Window.cpp" line="86"/>
         <source>T&amp;ools</source>
         <oldsource>&amp;Outils</oldsource>
         <translation>&amp;Outils</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="88"/>
+        <location filename="../src/Window.cpp" line="87"/>
         <source>&amp;Texts...</source>
         <oldsource>&amp;Textes...</oldsource>
         <translation>&amp;Textes...</translation>
@@ -8939,18 +8939,18 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation type="vanished">&amp;Modèles 3D...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="91"/>
+        <location filename="../src/Window.cpp" line="90"/>
         <source>Tutorials/&amp;Sounds...</source>
         <oldsource>T&amp;utoriels/Musiques...</oldsource>
         <translation>T&amp;utoriels/Musiques...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="93"/>
+        <location filename="../src/Window.cpp" line="92"/>
         <source>&amp;Background...</source>
         <translation>&amp;Background...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="96"/>
+        <location filename="../src/Window.cpp" line="95"/>
         <source>Variable Mana&amp;ger...</source>
         <oldsource>&amp;Gestionnaire de variables...</oldsource>
         <translation>&amp;Gestionnaire de variables...</translation>
@@ -8961,164 +8961,164 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation type="vanished">Opér&amp;ations diverses...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="103"/>
+        <location filename="../src/Window.cpp" line="102"/>
         <source>&amp;Japanese Characters</source>
         <oldsource>Caractères &amp;japonais</oldsource>
         <translation>Caractères &amp;japonais</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="107"/>
+        <location filename="../src/Window.cpp" line="106"/>
         <source>&amp;Language</source>
         <oldsource>&amp;Langues</oldsource>
         <translation>&amp;Langues</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="110"/>
+        <location filename="../src/Window.cpp" line="109"/>
         <source>English (default)</source>
         <oldsource>Français (défaut)</oldsource>
         <translation>English (défaut)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="127"/>
+        <location filename="../src/Window.cpp" line="126"/>
         <source>&amp;Configuration...</source>
         <translation>&amp;Configuration...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="361"/>
+        <location filename="../src/Window.cpp" line="360"/>
         <source>Restart the program for the settings to take effect.</source>
         <oldsource>Relancez le programme pour que les paramètres prennent effet.</oldsource>
         <translation>Relancez le programme pour que les paramètres prennent effet.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="65"/>
+        <location filename="../src/Window.cpp" line="64"/>
         <source>Open &amp;Directory...</source>
         <translation>Ouvrir un &amp;dossier...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="66"/>
+        <location filename="../src/Window.cpp" line="65"/>
         <source>&amp;Recent files</source>
         <translation>Fichiers ré&amp;cents</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="70"/>
+        <location filename="../src/Window.cpp" line="69"/>
         <source>&amp;Save</source>
         <translation>Enregi&amp;strer</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="71"/>
+        <location filename="../src/Window.cpp" line="70"/>
         <source>Save &amp;As...</source>
         <translation>Enre&amp;gistrer Sous...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="72"/>
+        <location filename="../src/Window.cpp" line="71"/>
         <source>&amp;Export the current map...</source>
         <translation>&amp;Exporter l&apos;écran courant...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="74"/>
+        <location filename="../src/Window.cpp" line="73"/>
         <source>&amp;Import to current map...</source>
         <translation>&amp;Importer dans l&apos;écran courant...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="83"/>
+        <location filename="../src/Window.cpp" line="82"/>
         <source>C&amp;lose</source>
         <translation>Fe&amp;rmer</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="84"/>
+        <location filename="../src/Window.cpp" line="83"/>
         <source>E&amp;xit</source>
         <translation>&amp;Quitter</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="89"/>
+        <location filename="../src/Window.cpp" line="88"/>
         <source>Map &amp;Models...</source>
         <translation>&amp;Modèles 3D...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="90"/>
+        <location filename="../src/Window.cpp" line="89"/>
         <source>Encounte&amp;rs...</source>
         <translation>&amp;Rencontres aléatoires...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="92"/>
+        <location filename="../src/Window.cpp" line="91"/>
         <source>&amp;Walkmesh...</source>
         <translation>&amp;Zones...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="94"/>
+        <location filename="../src/Window.cpp" line="93"/>
         <source>M&amp;iscellaneous...</source>
         <translation>&amp;Divers...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="97"/>
+        <location filename="../src/Window.cpp" line="96"/>
         <source>&amp;Find...</source>
         <translation>Rec&amp;hercher...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="98"/>
+        <location filename="../src/Window.cpp" line="97"/>
         <source>B&amp;atch processing...</source>
         <translation>Tr&amp;aitement par lot...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="101"/>
+        <location filename="../src/Window.cpp" line="100"/>
         <source>&amp;Settings</source>
         <translation>&amp;Paramètres</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="119"/>
+        <location filename="../src/Window.cpp" line="118"/>
         <source>English</source>
         <translation>Français</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="130"/>
+        <location filename="../src/Window.cpp" line="129"/>
         <source>Main &amp;toolbar</source>
         <translation>Barre d&apos;outils &amp;principale</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="135"/>
-        <location filename="../src/Window.cpp" line="486"/>
+        <location filename="../src/Window.cpp" line="134"/>
+        <location filename="../src/Window.cpp" line="485"/>
         <source>Open a file</source>
         <translation>Ouvrir un fichier</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="137"/>
-        <location filename="../src/Window.cpp" line="395"/>
+        <location filename="../src/Window.cpp" line="136"/>
+        <location filename="../src/Window.cpp" line="394"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="140"/>
+        <location filename="../src/Window.cpp" line="139"/>
         <source>Find</source>
         <translation>Rechercher</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="144"/>
+        <location filename="../src/Window.cpp" line="143"/>
         <source>Text editor</source>
         <translation>Editeur de texte</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="146"/>
+        <location filename="../src/Window.cpp" line="145"/>
         <source>Model loader editor</source>
         <translation>Liste des modèles 3D</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="150"/>
+        <location filename="../src/Window.cpp" line="149"/>
         <source>Walkmesh editor</source>
         <translation>Walkmesh</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="215"/>
-        <location filename="../src/Window.cpp" line="217"/>
+        <location filename="../src/Window.cpp" line="214"/>
+        <location filename="../src/Window.cpp" line="216"/>
         <source>&amp;?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="288"/>
+        <location filename="../src/Window.cpp" line="287"/>
         <source>&amp;View</source>
         <translation>&amp;Affichage</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1303"/>
+        <location filename="../src/Window.cpp" line="1302"/>
         <source>PS Field Map (*.DAT)</source>
         <translation>Écran PS (*.DAT)</translation>
     </message>
@@ -9127,17 +9127,17 @@ Le supprimer remplacera les appels à ce tutoriel par des appels au tutoriel qui
         <translation type="vanished">Liste des écrans</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="294"/>
+        <location filename="../src/Window.cpp" line="293"/>
         <source>Background Preview</source>
         <translation>Aperçu décor</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="360"/>
+        <location filename="../src/Window.cpp" line="359"/>
         <source>Settings changed</source>
         <translation>Paramètres modifiés</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="393"/>
+        <location filename="../src/Window.cpp" line="392"/>
         <source>
 
 Edited files:</source>
@@ -9146,25 +9146,25 @@ Edited files:</source>
 Fichiers modifiés :</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="395"/>
+        <location filename="../src/Window.cpp" line="394"/>
         <source>Would you like to save changes of %1?%2</source>
         <translation>Voulez-vous enregistrer les changements de %1 ?%2</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="478"/>
+        <location filename="../src/Window.cpp" line="477"/>
         <source>Compatible Files (*.lgp *.DAT *.bin *.iso *.img)</source>
         <oldsource>Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)</oldsource>
         <translation>Fichiers compatibles (*.lgp *.DAT *.bin *.iso *.img)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="479"/>
+        <location filename="../src/Window.cpp" line="478"/>
         <source>Lgp Files (*.lgp)</source>
         <oldsource>Fichiers Lgp (*.lgp)</oldsource>
         <translation>Fichiers Lgp (*.lgp)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="480"/>
-        <location filename="../src/Window.cpp" line="1024"/>
+        <location filename="../src/Window.cpp" line="479"/>
+        <location filename="../src/Window.cpp" line="1023"/>
         <source>DAT File (*.DAT)</source>
         <oldsource>Fichier DAT (*.DAT)</oldsource>
         <translation>Fichier DAT (*.DAT)</translation>
@@ -9175,25 +9175,25 @@ Fichiers modifiés :</translation>
         <translation type="vanished">Fichier Field PC (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="482"/>
+        <location filename="../src/Window.cpp" line="481"/>
         <source>Disc Image (*.bin *.iso *.img)</source>
         <oldsource>Image disque (*.bin *.iso *.img)</oldsource>
         <translation>Image disque (*.bin *.iso *.img)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="534"/>
+        <location filename="../src/Window.cpp" line="533"/>
         <source>Select a folder containing the Final Fantasy VII field files</source>
         <oldsource>Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII</oldsource>
         <translation>Sélectionnez un dossier contenant des fichiers field issus de Final Fantasy VII</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="542"/>
+        <location filename="../src/Window.cpp" line="541"/>
         <source>File Type</source>
         <oldsource>Type de fichiers</oldsource>
         <translation>Type de fichiers</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="543"/>
+        <location filename="../src/Window.cpp" line="542"/>
         <source>What type of file to look for?
  - Playstation field files (&quot;EXAMPLE.DAT&quot;)
  - PC Field File (&quot;example&quot;)
@@ -9207,37 +9207,37 @@ Fichiers modifiés :</translation>
  - Les fichiers field PC (&quot;exemple&quot;)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="547"/>
+        <location filename="../src/Window.cpp" line="546"/>
         <source>PS</source>
         <translation>PS</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="548"/>
+        <location filename="../src/Window.cpp" line="547"/>
         <source>PC</source>
         <translation>PC</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="590"/>
+        <location filename="../src/Window.cpp" line="589"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="590"/>
+        <location filename="../src/Window.cpp" line="589"/>
         <source>Stop</source>
         <translation>Arrêter</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="619"/>
+        <location filename="../src/Window.cpp" line="618"/>
         <source>Opening...</source>
         <translation>Ouverture...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="638"/>
+        <location filename="../src/Window.cpp" line="637"/>
         <source>Nothing found!</source>
         <translation>Rien trouvé !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="642"/>
+        <location filename="../src/Window.cpp" line="641"/>
         <source>The file already exists</source>
         <translation>Le fichier existe déjà</translation>
     </message>
@@ -9254,127 +9254,127 @@ Fichiers modifiés :</translation>
         <translation type="vanished">Impossible de copier le fichier</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="663"/>
+        <location filename="../src/Window.cpp" line="662"/>
         <source>This error should not appear, thank you for reporting it</source>
         <translation>Cette erreur ne devrais pas s&apos;afficher, merci de le signaler</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1000"/>
+        <location filename="../src/Window.cpp" line="999"/>
         <source>Error Compiling Scripts:
 scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation>Erreur de compilation des scripts :
 écran %1 (%2), groupe %3 (%4), script %5, ligne %6 : %7</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1000"/>
+        <location filename="../src/Window.cpp" line="999"/>
         <source>Compilation Error</source>
         <translation>Erreur de compilation</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1015"/>
+        <location filename="../src/Window.cpp" line="1014"/>
         <source>Save Directory As</source>
         <translation>Enregistrer dossier sous</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1030"/>
+        <location filename="../src/Window.cpp" line="1029"/>
         <source>Save As</source>
         <translation>Enregistrer sous</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1037"/>
+        <location filename="../src/Window.cpp" line="1036"/>
         <source>Saving...</source>
         <translation>Sauvegarde...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="651"/>
-        <location filename="../src/Window.cpp" line="1063"/>
+        <location filename="../src/Window.cpp" line="650"/>
+        <location filename="../src/Window.cpp" line="1062"/>
         <source>Unable to remove the file, check write permissions.</source>
         <translation>Impossible de supprimer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="291"/>
+        <location filename="../src/Window.cpp" line="290"/>
         <source>Map List</source>
         <translation>Liste des écrans</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="481"/>
+        <location filename="../src/Window.cpp" line="480"/>
         <source>PC field File (*)</source>
         <translation>Fichier Field PC (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="654"/>
+        <location filename="../src/Window.cpp" line="653"/>
         <source>Failed to rename the file, check write permissions.</source>
         <translation>Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="657"/>
+        <location filename="../src/Window.cpp" line="656"/>
         <source>Failed to copy the file, check write permissions.</source>
         <translation>Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1054"/>
+        <location filename="../src/Window.cpp" line="1053"/>
         <source>No maps found</source>
         <translation>Aucun écran trouvé</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1066"/>
+        <location filename="../src/Window.cpp" line="1065"/>
         <source>Unable to rename the file, check write permissions.</source>
         <translation>Impossible de renommer le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1069"/>
+        <location filename="../src/Window.cpp" line="1068"/>
         <source>Unable to copy the file, check write permissions.</source>
         <translation>Impossible de copier le fichier, vérifiez les droits d&apos;écriture.</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1075"/>
+        <location filename="../src/Window.cpp" line="1074"/>
         <source>This feature is not complete</source>
         <translation>Cette fonctionnalité n&apos;est pas terminée</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1161"/>
-        <location filename="../src/Window.cpp" line="1302"/>
+        <location filename="../src/Window.cpp" line="1160"/>
+        <location filename="../src/Window.cpp" line="1301"/>
         <source>PC Field Map (*)</source>
         <translation>Fichier Field PC (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1162"/>
+        <location filename="../src/Window.cpp" line="1161"/>
         <source>Data DAT File (*.DAT)</source>
         <translation>Fichier DAT (*.DAT)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1163"/>
+        <location filename="../src/Window.cpp" line="1162"/>
         <source>Textures MIM File (*.MIM)</source>
         <translation>Fichier MIM (*.MIM)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1164"/>
+        <location filename="../src/Window.cpp" line="1163"/>
         <source>Uncompressed PC Field Map (*.dec)</source>
         <oldsource>Uncompressed PC Field Map (*)</oldsource>
         <translation>Écran PC décompressé (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1199"/>
+        <location filename="../src/Window.cpp" line="1198"/>
         <source>Archive is inaccessible</source>
         <translation>L&apos;archive est inaccessible</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1200"/>
+        <location filename="../src/Window.cpp" line="1199"/>
         <source>Error reopening file</source>
         <translation>Erreur lors de l&apos;ouverture du fichier</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1201"/>
+        <location filename="../src/Window.cpp" line="1200"/>
         <source>Unable to create the new file</source>
         <translation>Impossible de créer le nouveau fichier</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1248"/>
+        <location filename="../src/Window.cpp" line="1247"/>
         <source>An error occured when exporting</source>
         <translation>Une erreur s&apos;est produite lors de l&apos;exportation</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1276"/>
+        <location filename="../src/Window.cpp" line="1275"/>
         <source>An error occurred when importing</source>
         <translation>Une erreur s&apos;est produite lors de l&apos;importation</translation>
     </message>
@@ -9387,35 +9387,35 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">L&apos;algorithme d&apos;importation des décors donne de mauvais résultats en jeu, vous êtes prévenus !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1367"/>
+        <location filename="../src/Window.cpp" line="1366"/>
         <source>Final Fantasy VII couldn&apos;t be launched
 %1</source>
         <translation>Final Fantasy VII n&apos;a pas pu être lancé.
 %1</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1483"/>
-        <location filename="../src/Window.cpp" line="1561"/>
+        <location filename="../src/Window.cpp" line="1482"/>
+        <location filename="../src/Window.cpp" line="1560"/>
         <source>Opening error</source>
         <translation>Erreur d&apos;ouverture</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1483"/>
+        <location filename="../src/Window.cpp" line="1482"/>
         <source>Can not open encounters!</source>
         <translation>Impossible d&apos;ouvrir les combats aléatoires !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1561"/>
+        <location filename="../src/Window.cpp" line="1560"/>
         <source>Can not open miscellaneous informations!</source>
         <translation>Impossible d&apos;ouvrir les infos diverses !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1572"/>
+        <location filename="../src/Window.cpp" line="1571"/>
         <source>Go back to field map editor...</source>
         <translation>Revenir sur l&apos;éditeur d&apos;écrans de jeu...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1592"/>
+        <location filename="../src/Window.cpp" line="1591"/>
         <source>Applying...</source>
         <translation>Application en cours...</translation>
     </message>
@@ -9429,59 +9429,59 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">Fermer</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="645"/>
-        <location filename="../src/Window.cpp" line="1057"/>
+        <location filename="../src/Window.cpp" line="644"/>
+        <location filename="../src/Window.cpp" line="1056"/>
         <source>The file is inaccessible</source>
         <oldsource>Le fichier est inaccessible</oldsource>
         <translation>Le fichier est inaccessible</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="648"/>
-        <location filename="../src/Window.cpp" line="1060"/>
+        <location filename="../src/Window.cpp" line="647"/>
+        <location filename="../src/Window.cpp" line="1059"/>
         <source>Can not create temporary file</source>
         <oldsource>Impossible de créer un fichier temporaire</oldsource>
         <translation>Impossible de créer un fichier temporaire</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="660"/>
+        <location filename="../src/Window.cpp" line="659"/>
         <source>Invalid file</source>
         <oldsource>Le fichier est invalide</oldsource>
         <translation>Fichier invalide</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="572"/>
-        <location filename="../src/Window.cpp" line="667"/>
-        <location filename="../src/Window.cpp" line="1079"/>
-        <location filename="../src/Window.cpp" line="1204"/>
-        <location filename="../src/Window.cpp" line="1248"/>
-        <location filename="../src/Window.cpp" line="1276"/>
-        <location filename="../src/Window.cpp" line="1332"/>
-        <location filename="../src/Window.cpp" line="1367"/>
+        <location filename="../src/Window.cpp" line="571"/>
+        <location filename="../src/Window.cpp" line="666"/>
+        <location filename="../src/Window.cpp" line="1078"/>
+        <location filename="../src/Window.cpp" line="1203"/>
+        <location filename="../src/Window.cpp" line="1247"/>
+        <location filename="../src/Window.cpp" line="1275"/>
+        <location filename="../src/Window.cpp" line="1331"/>
+        <location filename="../src/Window.cpp" line="1366"/>
         <source>Error</source>
         <oldsource>Erreur</oldsource>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="908"/>
-        <location filename="../src/Window.cpp" line="1557"/>
+        <location filename="../src/Window.cpp" line="907"/>
+        <location filename="../src/Window.cpp" line="1556"/>
         <source>Author: %1</source>
         <oldsource>Auteur : %1</oldsource>
         <translation>Auteur : %1</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1022"/>
+        <location filename="../src/Window.cpp" line="1021"/>
         <source>Lgp File (*.lgp)</source>
         <oldsource>Fichier Lgp (*.lgp)</oldsource>
         <translation>Fichier Lgp (*.lgp)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1026"/>
+        <location filename="../src/Window.cpp" line="1025"/>
         <source>Iso File (*.iso *.bin *.img)</source>
         <oldsource>Fichier Iso (*.iso *.bin *.img)</oldsource>
         <translation>Fichier Iso (*.iso *.bin *.img)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1072"/>
+        <location filename="../src/Window.cpp" line="1071"/>
         <source>Invalid archive</source>
         <oldsource>L&apos;archive est invalide</oldsource>
         <translation>Invalid archive</translation>
@@ -9497,7 +9497,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">Écran PC décompressé (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1176"/>
+        <location filename="../src/Window.cpp" line="1175"/>
         <source>Export the current file</source>
         <oldsource>Exporter le fichier courant</oldsource>
         <translation>Exporter le fichier courant</translation>
@@ -9508,19 +9508,19 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">L&apos;archive Lgp est inaccessible</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1202"/>
+        <location filename="../src/Window.cpp" line="1201"/>
         <source>Not yet implemented!</source>
         <oldsource>Pas encore implémenté !</oldsource>
         <translation>Pas encore implémenté !</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1218"/>
+        <location filename="../src/Window.cpp" line="1217"/>
         <source>Export...</source>
         <oldsource>Exportation...</oldsource>
         <translation>Exporter...</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1267"/>
+        <location filename="../src/Window.cpp" line="1266"/>
         <source>Import...</source>
         <oldsource>Importation...</oldsource>
         <translation>Importer...</translation>
@@ -9531,7 +9531,7 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="vanished">Fichier DAT décompressé (*)</translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1312"/>
+        <location filename="../src/Window.cpp" line="1311"/>
         <source>Import a file</source>
         <oldsource>Importer un fichier</oldsource>
         <translation>Importer un fichier</translation>
@@ -9540,12 +9540,12 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="115"/>
+        <location filename="../src/main.cpp" line="114"/>
         <source>Error</source>
         <translation type="unfinished">Erreur</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="116"/>
+        <location filename="../src/main.cpp" line="115"/>
         <source>The file &apos;var.cfg&apos; could not be loaded.
 Make sure it is valid or delete it.</source>
         <translation type="unfinished">Le fichier &apos;var.cfg&apos; n&apos;a pas pu être chargé.
