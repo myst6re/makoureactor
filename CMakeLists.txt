@@ -54,6 +54,8 @@ if(NOT DEFINED Qt${QT_VERSION_TO_FIND}_DIR AND NOT DEFINED ENV{Qt${QT_VERSION_TO
             get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" PATH)
             get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" PATH)
             get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" PATH)
+        elseif(NOT QT_INSTALLATION_PATH)
+            message(FATAL_ERROR "Please set QT_INSTALLATION_PATH or Qt5_DIR")
         endif()
 
         file(GLOB QT_VERSIONS "${QT_INSTALLATION_PATH}/${QT_VERSION_TO_FIND}.*")
@@ -76,10 +78,17 @@ if(NOT DEFINED Qt${QT_VERSION_TO_FIND}_DIR AND NOT DEFINED ENV{Qt${QT_VERSION_TO
             set(QT_PATH "${QT_VERSION}/msvc${QT_MSVC}_64")
         elseif(MINGW)
             file(GLOB QT_COMPILERS "${QT_VERSION}/mingw*")
+            list(SORT QT_COMPILERS)
+            list(REVERSE QT_COMPILERS)
             list(GET QT_COMPILERS 0 QT_PATH)
         else()
-            file(GLOB QT_COMPILERS "${QT_VERSION}/*")
+            # For some reason GLOB also list files on Mac OSX
+            file(GLOB QT_COMPILERS "${QT_VERSION}/*/lib")
+            list(SORT QT_COMPILERS)
+            list(REVERSE QT_COMPILERS)
             list(GET QT_COMPILERS 0 QT_PATH)
+            # ../
+            get_filename_component(QT_PATH "${QT_PATH}" PATH)
         endif()
 
         set(QT_QMAKE_EXECUTABLE "${QT_PATH}/bin/qmake")
