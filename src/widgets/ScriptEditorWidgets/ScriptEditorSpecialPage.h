@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef SCRIPTEDITORSPECIAL_H
-#define SCRIPTEDITORSPECIAL_H
+#pragma once
 
 #include <QtWidgets>
 #include "ScriptEditorView.h"
@@ -50,5 +49,3 @@ private:
 	QDoubleSpinBox *_address;
 	QLineEdit *_bytes;
 };
-
-#endif // SCRIPTEDITORSPECIAL_H

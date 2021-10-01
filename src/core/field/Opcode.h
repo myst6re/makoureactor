@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_OPCODE
-#define DEF_OPCODE
+#pragma once
 
 #include <QtCore>
 
@@ -3264,5 +3263,3 @@ public:
 	inline int id() const { return 0xFF; }
 	QString toString(Field *field) const;
 };
-
-#endif

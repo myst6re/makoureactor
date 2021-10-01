@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FONTDISPLAY_H
-#define FONTDISPLAY_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/WindowBinFile.h"
@@ -46,5 +45,3 @@ private:
 	static int getLetter(QPoint pos);
 	static QPoint getPos(int letter);
 };
-
-#endif // FONTDISPLAY_H

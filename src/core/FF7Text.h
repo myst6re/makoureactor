@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_FF7TEXT
-#define DEF_FF7TEXT
+#pragma once
 
 #include <QtCore>
 
@@ -49,5 +48,3 @@ private:
 	static const char *caract_jp_fe[256];
 	QByteArray _data;
 };
-
-#endif

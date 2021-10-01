@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef PFILE_H
-#define PFILE_H
+#pragma once
 
 #include <QtCore>
 #include "../IO.h"
@@ -123,5 +122,3 @@ public:
 	bool read(FieldModelPart *part, const QList<int> &texIds) const;
 	bool write(const FieldModelPart *part, const QList<int> &texIds) const;
 };
-
-#endif // PFILE_H

@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef MODELMANAGER_H
-#define MODELMANAGER_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/FieldPC.h"
@@ -75,5 +74,3 @@ private slots:
 	void setModelColor(int id, const FieldModelColorDir &color);
 	void showModel(QTreeWidgetItem *item);
 };
-
-#endif // MODELMANAGER_H

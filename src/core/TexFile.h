@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TEXFILE_H
-#define TEXFILE_H
+#pragma once
 
 #include <QtCore>
 #include <QImage>
@@ -109,5 +108,3 @@ private:
 	TexStruct header;
 	QVector<quint8> colorKeyArray;
 };
-
-#endif // TEXFILE_H

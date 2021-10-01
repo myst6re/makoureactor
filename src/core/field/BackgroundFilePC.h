@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef BACKGROUNDFILEPC_H
-#define BACKGROUNDFILEPC_H
+#pragma once
 
 #include "BackgroundFile.h"
 #include "BackgroundTiles.h"
@@ -47,5 +46,3 @@ public:
 	BackgroundFilePS toPS(FieldPS *field) const;
 	bool repair() override;
 };
-
-#endif // BACKGROUNDFILEPC_H

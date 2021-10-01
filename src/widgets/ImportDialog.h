@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef IMPORTDIALOG_H
-#define IMPORTDIALOG_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/Field.h"
@@ -46,5 +45,3 @@ private:
 	QLineEdit *pathEditMim, *pathEditBsx;
 	QCheckBox *notCompressed;
 };
-
-#endif // IMPORTDIALOG_H

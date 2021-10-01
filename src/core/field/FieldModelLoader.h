@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELLOADER_H
-#define FIELDMODELLOADER_H
+#pragma once
 
 #include <QtCore>
 #include <QRgb>
@@ -57,5 +56,3 @@ public:
 	inline static int maxModelCount() { return 256; }
 	inline static int maxAnimCount() { return 255; } // PS version can't store more than that
 };
-
-#endif // FIELDMODELLOADER_H

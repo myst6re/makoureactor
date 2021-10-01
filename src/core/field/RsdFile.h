@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef RSDFILE_H
-#define RSDFILE_H
+#pragma once
 
 #include <QtCore>
 #include "../IO.h"
@@ -43,5 +42,3 @@ public:
 	bool read(Rsd &rsd, QStringList &textureNames) const;
 	bool write(const Rsd &rsd, const QStringList &textureNames) const;
 };
-
-#endif // RSDFILE_H

@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ENCOUNTERWIDGET_H
-#define ENCOUNTERWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/EncounterFile.h"
@@ -35,5 +34,3 @@ private:
 protected:
 	void accept();
 };
-
-#endif // ENCOUNTERWIDGET_H

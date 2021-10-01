@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDARCHIVEIO_H
-#define FIELDARCHIVEIO_H
+#pragma once
 
 #include <QtCore>
 #include "core/Archive.h"
@@ -77,5 +76,3 @@ private:
 	static Field *fieldCache, *mimCache, *modelCache;
 	static QString fieldExtensionCache;
 };
-
-#endif // FIELDARCHIVEIO_H

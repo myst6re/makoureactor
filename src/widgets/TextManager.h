@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_TEXTMANAGER
-#define DEF_TEXTMANAGER
+#pragma once
 
 #include "core/field/Field.h"
 #include "TextPreview.h"
@@ -92,5 +91,3 @@ private:
 protected:
 	virtual void focusInEvent(QFocusEvent *e);
 };
-
-#endif

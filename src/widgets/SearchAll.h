@@ -1,5 +1,4 @@
-#ifndef SEARCHALL_H
-#define SEARCHALL_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -38,5 +37,3 @@ private:
 	QMap<int, QTreeWidgetItem *> itemByMapID;
 	Mode _searchMode;
 };
-
-#endif // SEARCHALL_H

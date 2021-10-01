@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_FIELDPC
-#define DEF_FIELDPC
+#pragma once
 
 #include <QtCore>
 #include "Field.h"
@@ -61,5 +60,3 @@ private:
 	FieldModelFilePC *_model;
 	QMap<QString, int> modelNameToId;
 };
-
-#endif // DEF_FIELDPC

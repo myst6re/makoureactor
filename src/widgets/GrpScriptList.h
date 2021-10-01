@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_GRPSCRIPTLIST
-#define DEF_GRPSCRIPTLIST
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/Section1File.h"
@@ -91,5 +90,3 @@ private:
 	Section1File *scripts;
 	QList<GrpScript> grpScriptCopied;
 };
-
-#endif

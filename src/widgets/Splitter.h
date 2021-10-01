@@ -1,5 +1,4 @@
-#ifndef SPLITTER_H
-#define SPLITTER_H
+#pragma once
 
 #include <QSplitter>
 #include <QMap>
@@ -19,5 +18,3 @@ public slots:
 private:
 	QMap<int, int> _lastSizes;
 };
-
-#endif // SPLITTER_H

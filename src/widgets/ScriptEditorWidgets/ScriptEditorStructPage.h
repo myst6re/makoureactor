@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SCRIPTEDITORSTRUCTPAGE
-#define DEF_SCRIPTEDITORSTRUCTPAGE
+#pragma once
 
 #include <QtWidgets>
 #include "ScriptEditorView.h"
@@ -189,5 +188,3 @@ private:
 	void build();
 	QSpinBox *frames;
 };
-
-#endif // DEF_SCRIPTEDITORSTRUCTPAGE

@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef SECTION1FILE_H
-#define SECTION1FILE_H
+#pragma once
 
 #include <QtCore>
 #include "FieldPart.h"
@@ -137,5 +136,3 @@ private:
 	QList<GrpScript *> _grpScripts;
 	QList<FF7Text> _texts;
 };
-
-#endif // SECTION1FILE_H

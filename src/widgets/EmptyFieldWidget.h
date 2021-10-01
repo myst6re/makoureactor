@@ -1,5 +1,4 @@
-#ifndef EMPTYFIELDWIDGET_H
-#define EMPTYFIELDWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -13,5 +12,3 @@ signals:
 	void createMapClicked();
 	void importMapClicked();
 };
-
-#endif // EMPTYFIELDWIDGET_H

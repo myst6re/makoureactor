@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef BACKGROUNDIO_H
-#define BACKGROUNDIO_H
+#pragma once
 
 #include <QtCore>
 #include "../IO.h"
@@ -86,5 +85,3 @@ private:
 	bool saveTextures(const BackgroundTexturesPS *textures) const;
 	QIODevice *_deviceTiles;
 };
-
-#endif // BACKGROUNDIO_H

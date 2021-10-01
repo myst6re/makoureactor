@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef MASSIMPORTDIALOG_H
-#define MASSIMPORTDIALOG_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/FieldArchive.h"
@@ -50,5 +49,3 @@ private:
 protected:
 	void accept();
 };
-
-#endif // MASSIMPORTDIALOG_H

@@ -1,5 +1,4 @@
-#ifndef FIELDPSDEMO_H
-#define FIELDPSDEMO_H
+#pragma once
 
 #include <QtCore>
 #include "FieldPS.h"
@@ -25,5 +24,3 @@ protected:
 	inline bool hasSectionHeader() const { return false; }
 private:
 };
-
-#endif // FIELDPSDEMO_H

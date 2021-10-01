@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef IDFILE_H
-#define IDFILE_H
+#pragma once
 
 #include <QtCore>
 #include "FieldPart.h"
@@ -58,5 +57,3 @@ private:
 	QList<Triangle> _triangles;
 	QList<Access> _access;
 };
-
-#endif // IDFILE_H

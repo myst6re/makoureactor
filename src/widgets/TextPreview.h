@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TEXTPREVIEW_H
-#define TEXTPREVIEW_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/Opcode.h"
@@ -101,5 +100,3 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *event);
 	void wheelEvent(QWheelEvent *event);
 };
-
-#endif // TEXTPREVIEW_H

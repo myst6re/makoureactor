@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_GRPSCRIPT
-#define DEF_GRPSCRIPT
+#pragma once
 
 #include <QtCore>
 #include <QColor>
@@ -139,5 +138,3 @@ QDataStream &operator<<(QDataStream &stream, const QList<GrpScript *> &scripts);
 QDataStream &operator>>(QDataStream &stream, QList<GrpScript *> &scripts);
 QDataStream &operator<<(QDataStream &stream, const QList<Script *> &scripts);
 QDataStream &operator>>(QDataStream &stream, QList<Script *> &scripts);
-
-#endif

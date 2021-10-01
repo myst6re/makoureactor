@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDARCHIVEIOPS_H
-#define FIELDARCHIVEIOPS_H
+#pragma once
 
 #include <QLockedFile.h>
 #include "FieldArchiveIO.h"
@@ -113,5 +112,3 @@ private:
 
 	QDir dir;
 };
-
-#endif // FIELDARCHIVEIOPS_H

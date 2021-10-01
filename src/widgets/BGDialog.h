@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef BGDIALOG_H
-#define BGDIALOG_H
+#pragma once
 
 #include <QtWidgets>
 #include "ApercuBGLabel.h"
@@ -66,5 +65,3 @@ protected:
 	bool eventFilter(QObject *, QEvent *);
 	void resizeEvent(QResizeEvent*);
 };
-
-#endif // BGDIALOG_H

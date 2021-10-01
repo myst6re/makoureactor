@@ -1,5 +1,4 @@
-#ifndef BACKGROUNDTILESFILE_H
-#define BACKGROUNDTILESFILE_H
+#pragma once
 
 #include <QtCore>
 #include "FieldPart.h"
@@ -24,5 +23,3 @@ public:
 private:
 	BackgroundTiles _tiles;
 };
-
-#endif // BACKGROUNDTILESFILE_H

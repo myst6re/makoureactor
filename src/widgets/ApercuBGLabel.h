@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef APERCUBGLABEL_H
-#define APERCUBGLABEL_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -35,5 +34,3 @@ protected:
 	void leaveEvent(QEvent *e);
 	void mousePressEvent(QMouseEvent *e);
 };
-
-#endif // APERCUBGDIALOG_H

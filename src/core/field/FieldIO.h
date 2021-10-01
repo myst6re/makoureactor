@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDIO_H
-#define FIELDIO_H
+#pragma once
 
 #include <QtCore>
 
@@ -38,5 +37,3 @@ private:
 	Field *_field;
 	QByteArray _cache;
 };
-
-#endif // FIELDIO_H

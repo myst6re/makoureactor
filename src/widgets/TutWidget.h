@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TUTWIDGET_H
-#define TUTWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 #include "widgets/Listwidget.h"
@@ -78,5 +77,3 @@ private:
 	QList<QByteArray> _copiedData;
 	bool copied;
 };
-
-#endif // TUTWIDGET_H

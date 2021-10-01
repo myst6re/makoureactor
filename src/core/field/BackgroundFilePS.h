@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef BACKGROUNDFILEPS_H
-#define BACKGROUNDFILEPS_H
+#pragma once
 
 #include "BackgroundFile.h"
 #include "BackgroundIO.h"
@@ -44,5 +43,3 @@ public:
 	}
 	BackgroundFilePC toPC(FieldPC *field) const;
 };
-
-#endif // BACKGROUNDFILEPS_H

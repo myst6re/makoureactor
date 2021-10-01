@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef VARORVALUEWIDGET_H
-#define VARORVALUEWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -46,5 +45,3 @@ private:
 	QSpinBox *_value, *_bank, *_adress;
 	bool _longValueType, _signedValueType;
 };
-
-#endif // VARORVALUEWIDGET_H

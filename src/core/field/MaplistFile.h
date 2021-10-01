@@ -1,6 +1,4 @@
-#ifndef MAPLISTFILE_H
-#define MAPLISTFILE_H
-
+#pragma once
 
 class MaplistFile
 {
@@ -9,5 +7,3 @@ public:
 private:
 
 };
-
-#endif // MAPLISTFILE_H

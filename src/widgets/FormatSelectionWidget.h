@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FORMATSELECTIONWIDGET_H
-#define FORMATSELECTIONWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -34,5 +33,3 @@ private:
 	QComboBox *format;
 	QStringList extensions;
 };
-
-#endif // FORMATSELECTIONWIDGET_H

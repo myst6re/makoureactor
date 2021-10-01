@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef WALKMESHMANAGER_H
-#define WALKMESHMANAGER_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/Field.h"
@@ -141,5 +140,3 @@ private:
 	HexLineEdit *unknown;
 	QSpinBox *mapScale;
 };
-
-#endif // WALKMESHMANAGER_H

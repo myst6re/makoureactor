@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SEARCH
-#define DEF_SEARCH
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/FieldArchive.h"
@@ -119,5 +118,3 @@ signals:
 protected:
 	void showEvent(QShowEvent *event);
 };
-
-#endif

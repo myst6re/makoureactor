@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FONTWIDGET_H
-#define FONTWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 #include "FontGrid.h"
@@ -63,5 +62,3 @@ protected:
 	void focusInEvent(QFocusEvent *);
 
 };
-
-#endif // FONTWIDGET_H

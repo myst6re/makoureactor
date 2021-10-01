@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef OPERATIONSMANAGER_H
-#define OPERATIONSMANAGER_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/FieldArchive.h"
@@ -47,5 +46,3 @@ private:
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(OperationsManager::Operations)
-
-#endif // OPERATIONSMANAGER_H

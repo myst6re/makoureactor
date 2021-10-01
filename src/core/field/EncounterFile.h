@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ENCOUNTERFILE_H
-#define ENCOUNTERFILE_H
+#pragma once
 
 #include <QtCore>
 #include "FieldPart.h"
@@ -52,5 +51,3 @@ public:
 private:
 	EncounterTable tables[2];
 };
-
-#endif // ENCOUNTERFILE_H

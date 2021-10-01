@@ -56,8 +56,7 @@
  **
  ****************************************************************************/
 
-#ifndef DELEGATE_H
-#define DELEGATE_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/Field.h"
@@ -86,5 +85,3 @@ public:
 private:
 	Field *_field;
 };
-
-#endif

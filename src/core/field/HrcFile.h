@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef HRCFILE_H
-#define HRCFILE_H
+#pragma once
 
 #include "../IO.h"
 #include "FieldModelSkeleton.h"
@@ -34,5 +33,3 @@ public:
 	bool read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rsdFiles) const;
 	bool write(const FieldModelSkeleton &skeleton) const;
 };
-
-#endif // HRCFILE_H

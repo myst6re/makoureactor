@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELFILEPC_H
-#define FIELDMODELFILEPC_H
+#pragma once
 
 #include <QtGui>
 #include "FieldModelFile.h"
@@ -54,5 +53,3 @@ private:
 	CharArchive *_charLgp;
 	QHash<quint64, QImage> _loadedTex;
 };
-
-#endif // FIELDMODELFILEPC_H

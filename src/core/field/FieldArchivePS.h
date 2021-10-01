@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDARCHIVEPS_H
-#define FIELDARCHIVEPS_H
+#pragma once
 
 #include "FieldArchive.h"
 #include "FieldArchiveIOPS.h"
@@ -30,5 +29,3 @@ public:
 
 	FieldArchiveIOPS *io() const;
 };
-
-#endif // FIELDARCHIVEPS_H

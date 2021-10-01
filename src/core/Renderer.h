@@ -17,8 +17,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 
-#ifndef RENDERER_H
-#define RENDERER_H
+#pragma once
 
 #include <QMatrix4x4>
 #include <QOpenGLBuffer>
@@ -106,5 +105,3 @@ protected slots:
 	void messageLogged(const QOpenGLDebugMessage &msg);
 #endif
 };
-
-#endif

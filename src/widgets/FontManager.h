@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FONTMANAGER_H
-#define FONTMANAGER_H
+#pragma once
 
 #include <QtWidgets>
 #include "FontWidget.h"
@@ -39,5 +38,3 @@ private:
 	QListWidget *list1;
 	FontWidget *fontWidget;
 };
-
-#endif // FONTMANAGER_H

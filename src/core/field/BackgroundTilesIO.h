@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef BACKGROUNDTILESIO_H
-#define BACKGROUNDTILESIO_H
+#pragma once
 
 #include <QtCore>
 #include "../IO.h"
@@ -115,5 +114,3 @@ private:
 	bool writeTileParam(const Tile &tile) const;
 	bool _demo;
 };
-
-#endif // BACKGROUNDTILESIO_H

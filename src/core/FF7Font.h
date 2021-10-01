@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FF7FONT_H
-#define FF7FONT_H
+#pragma once
 
 #include "WindowBinFile.h"
 #include "FF7Text.h"
@@ -71,5 +70,3 @@ private:
 	static QString font_dirPath;
 	static QMap<QString, FF7Font *> fonts;
 };
-
-#endif // FF7FONT_H

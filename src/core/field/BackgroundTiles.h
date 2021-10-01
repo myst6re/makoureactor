@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef BACKGROUNDTILES_H
-#define BACKGROUNDTILES_H
+#pragma once
 
 #include <QtCore>
 
@@ -56,5 +55,3 @@ public:
 };
 
 int operator==(const Tile &tile, const Tile &other);
-
-#endif // BACKGROUNDTILES_H

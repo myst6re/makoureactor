@@ -1,5 +1,4 @@
-#ifndef CLIPBOARD_H
-#define CLIPBOARD_H
+#pragma once
 
 #include <QList>
 
@@ -31,5 +30,3 @@ private:
 	static Clipboard *_instance;
 	
 };
-
-#endif // CLIPBOARD_H

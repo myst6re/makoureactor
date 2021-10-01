@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELLOADERPC_H
-#define FIELDMODELLOADERPC_H
+#pragma once
 
 #include <QtCore>
 #include <QRgb>
@@ -85,5 +84,3 @@ private:
 	QList< QList<FieldModelColorDir> > colors;
 	QList<QRgb> model_global_color;
 };
-
-#endif // FIELDMODELLOADERPC_H

@@ -14,8 +14,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ARGUMENTS_PATCH_H
-#define ARGUMENTS_PATCH_H
+#pragma once
 
 #include <QtCore>
 #include "Arguments.h"
@@ -36,5 +35,3 @@ private:
 	void parse();
 	QString _target_file;
 };
-
-#endif // ARGUMENTS_PATCH_H

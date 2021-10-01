@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef WINDOWBINFILE_H
-#define WINDOWBINFILE_H
+#pragma once
 
 #include <QtCore>
 #include "TimFile.h"
@@ -90,5 +89,3 @@ private:
 	TimFile _icons, _font, _font2;
 	bool modified;
 };
-
-#endif // WINDOWBINFILE_H

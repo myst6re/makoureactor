@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef BACKGROUNDTEXTURES_H
-#define BACKGROUNDTEXTURES_H
+#pragma once
 
 #include <QtCore>
 #include "../PsColor.h"
@@ -130,5 +129,3 @@ private:
 	quint32 texturePos(quint8 x, quint8 y) const;
 	MIM _headerImg, _headerEffect;
 };
-
-#endif // BACKGROUNDTEXTURES_H

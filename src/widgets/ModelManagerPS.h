@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef MODELMANAGERPS_H
-#define MODELMANAGERPS_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/FieldPS.h"
@@ -42,5 +41,3 @@ protected:
 	void setModelScale(int modelID, quint16 scale);
 private:
 };
-
-#endif // MODELMANAGERPS_H

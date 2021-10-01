@@ -1,5 +1,4 @@
-#ifndef PSFDIALOG_H
-#define PSFDIALOG_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/PsfFile.h"
@@ -18,5 +17,3 @@ private:
 	QLineEdit *_copyright, *_author;
 	QTextEdit *_comment;
 };
-
-#endif // PSFDIALOG_H

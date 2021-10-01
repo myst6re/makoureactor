@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELFILE_H
-#define FIELDMODELFILE_H
+#pragma once
 
 #include <QtGui>
 #include "FieldModelSkeleton.h"
@@ -66,5 +65,3 @@ protected:
 	FieldModelSkeleton _skeleton;
 	QList<FieldModelAnimation> _animations;
 };
-
-#endif // FIELDMODELFILE_H

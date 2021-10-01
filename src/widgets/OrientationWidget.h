@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ORIENTATIONWIDGET_H
-#define ORIENTATIONWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -55,5 +54,3 @@ protected:
 		mouseEvent(e);
 	}
 };
-
-#endif // ORIENTATIONWIDGET_H

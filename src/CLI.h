@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef CLI_H
-#define CLI_H
+#pragma once
 
 #include <QtCore>
 #include "core/Archive.h"
@@ -54,5 +53,3 @@ private:
 	static FieldArchive *openFieldArchive(const QString &ext, const QString &path);
 	static CLIObserver observer;
 };
-
-#endif // CLI_H

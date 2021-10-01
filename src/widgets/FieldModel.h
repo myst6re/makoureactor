@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODEL_H
-#define FIELDMODEL_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/Renderer.h"
@@ -72,5 +71,3 @@ protected:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 };
-
-#endif // FIELDMODEL_H
