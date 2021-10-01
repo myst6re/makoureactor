@@ -133,7 +133,7 @@ void ArchivePreview::saveImage()
 	                                    tr("PNG image (*.png);;JPG image (*.jpg);;BMP image (*.bmp);;Portable Pixmap (*.ppm)"));
 	if (path.isNull())	return;
 
-	_lbl->pixmap()->save(path);
+	_lbl->pixmap().save(path);
 
 	int index = path.lastIndexOf('/');
 	Config::setValue("saveBGPath", index == -1 ? path : path.left(index));

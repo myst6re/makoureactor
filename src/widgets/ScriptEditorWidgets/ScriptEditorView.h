@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SCRIPTEDITORVIEW
-#define DEF_SCRIPTEDITORVIEW
+#pragma once
 
 #include <QtWidgets>
 #include "../VarOrValueWidget.h"
@@ -57,5 +56,3 @@ private:
 	int _opcodeID;
 	bool _valid;
 };
-
-#endif // DEF_SCRIPTEDITORVIEW

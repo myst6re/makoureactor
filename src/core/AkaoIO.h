@@ -1,5 +1,4 @@
-#ifndef AKAOIO_H
-#define AKAOIO_H
+#pragma once
 
 #include "core/IO.h"
 #include "core/Akao.h"
@@ -12,5 +11,3 @@ public:
 	bool read(Akao &akao) const;
 	bool write(const Akao &akao) const;
 };
-
-#endif // AKAOIO_H

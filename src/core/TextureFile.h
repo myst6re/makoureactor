@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TEXTUREFILE_H
-#define TEXTUREFILE_H
+#pragma once
 
 #include <QImage>
 
@@ -43,5 +42,3 @@ protected:
 	QList< QVector<QRgb> > _colorTables;
 	int _currentColorTable;
 };
-
-#endif // TEXTUREFILE_H

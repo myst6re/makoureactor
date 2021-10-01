@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ISOARCHIVEFF7_H
-#define ISOARCHIVEFF7_H
+#pragma once
 
 #include "IsoArchive.h"
 
@@ -58,5 +57,3 @@ private:
 	IsoFile *_exe;
 	Country _country;
 };
-
-#endif // ISOARCHIVEFF7_H

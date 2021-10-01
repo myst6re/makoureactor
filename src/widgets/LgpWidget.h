@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef LGPDIALOG_H
-#define LGPDIALOG_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/Lgp.h"
@@ -221,5 +220,3 @@ private:
 	FieldModelFilePC fieldModelFile;
 	int currentImage, currentPal;
 };
-
-#endif // LGPDIALOG_H

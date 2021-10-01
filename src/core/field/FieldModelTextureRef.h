@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELTEXTUREREF_H
-#define FIELDMODELTEXTUREREF_H
+#pragma once
 
 #include <QtCore>
 
@@ -27,5 +26,3 @@ public:
 	virtual ~FieldModelTextureRef() {}
 	virtual quint64 textureIdentifier() const=0;
 };
-
-#endif // FIELDMODELTEXTUREREF_H

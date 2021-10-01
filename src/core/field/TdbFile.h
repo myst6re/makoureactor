@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TDBFILE_H
-#define TDBFILE_H
+#pragma once
 
 #include <QtCore>
 #include <QImage>
@@ -48,5 +47,3 @@ private:
 	TdbHeader header;
 	QByteArray data;
 };
-
-#endif // TDBFILE_H

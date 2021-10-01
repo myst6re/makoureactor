@@ -1026,12 +1026,12 @@ bool Script::moveOpcode(quint16 opcodeID, MoveDirection direction)
 	if (direction == Down)
 	{
 		if (opcodeID == _opcodes.size()-1)	return false;
-		_opcodes.swap(opcodeID, opcodeID+1);
+		_opcodes.swapItemsAt(opcodeID, opcodeID+1);
 	}
 	else
 	{
 		if (opcodeID == 0)	return false;
-		_opcodes.swap(opcodeID, opcodeID-1);
+		_opcodes.swapItemsAt(opcodeID, opcodeID-1);
 	}
 	return true;
 }

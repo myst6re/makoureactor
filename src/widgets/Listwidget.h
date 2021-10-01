@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef LISTWIDGET_H
-#define LISTWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -38,5 +37,3 @@ private:
     QToolBar *_toolBar;
     QListWidget *_listWidget;
 };
-
-#endif // LISTWIDGET_H

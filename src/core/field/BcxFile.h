@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef BCXFILE_H
-#define BCXFILE_H
+#pragma once
 
 #include <QtCore>
 #include "../IO.h"
@@ -47,5 +46,3 @@ private:
 	using BsxFile::read;
 	using BsxFile::write;
 };
-
-#endif // BCXFILE_H

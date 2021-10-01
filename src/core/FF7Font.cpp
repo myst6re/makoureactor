@@ -16,7 +16,6 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FF7Font.h"
-#include "Parameters.h"
 #include "Config.h"
 #include "Data.h"
 
@@ -110,7 +109,7 @@ bool FF7Font::isReadOnly() const
 void FF7Font::openTxt(const QString &data)
 {
 	int tableCount = _windowBinFile->tableCount();
-	QStringList lines = data.split(QRegExp("\\s*(\\r\\n|\\r|\\n)\\s*"), QString::SkipEmptyParts);
+	QStringList lines = data.split(QRegExp("\\s*(\\r\\n|\\r|\\n)\\s*"), Qt::SkipEmptyParts);
 	QRegExp nameRegExp("#NAME\\s+(\\S.*)"), letterRegExp("\\s*\"([^\"]*|\\\"*)\"\\s*,?\\s*");
 	// nameRegExp:		#NAME blah blah blah
 	// letterRegExp:	"Foo", "Foo","Foo"
@@ -213,10 +212,10 @@ bool FF7Font::listFonts()
 
 #ifdef Q_OS_WIN
 	font_dirPath = qApp->applicationDirPath();
-//	font_dirPath = QDir::cleanPath(QSettings(QSettings::IniFormat, QSettings::UserScope, PROG_NAME, PROG_NAME).fileName());
+//	font_dirPath = QDir::cleanPath(QSettings(QSettings::IniFormat, QSettings::UserScope, MAKOU_REACTOR_NAME, MAKOU_REACTOR_NAME).fileName());
 //	font_dirPath = font_dirPath.left(font_dirPath.lastIndexOf('/'));
 #else
-	font_dirPath = QDir::cleanPath(QSettings(PROG_NAME, PROG_NAME).fileName());
+	font_dirPath = QDir::cleanPath(QSettings(MAKOU_REACTOR_NAME, MAKOU_REACTOR_NAME).fileName());
 	font_dirPath = font_dirPath.left(font_dirPath.lastIndexOf('/'));
 #endif
 

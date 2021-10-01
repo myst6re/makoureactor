@@ -79,7 +79,7 @@ bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rs
 			skeleton.addBone(bone);
 			break;
 		case 3: // RSD list
-			rsdlist = line.split(' ', QString::SkipEmptyParts);
+			rsdlist = line.split(' ', Qt::SkipEmptyParts);
 			if (rsdlist.size() < 1) {
 				return false;
 			}

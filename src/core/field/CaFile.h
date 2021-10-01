@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef CAFILE_H
-#define CAFILE_H
+#pragma once
 
 #include <QtCore>
 #include "FieldPart.h"
@@ -52,5 +51,3 @@ public:
 private:
 	QList<Camera> cameras;
 };
-
-#endif // CAFILE_H

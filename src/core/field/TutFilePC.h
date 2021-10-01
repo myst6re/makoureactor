@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TUTFILEPC_H
-#define TUTFILEPC_H
+#pragma once
 
 #include <QtCore>
 #include "TutFile.h"
@@ -32,5 +31,3 @@ public:
 protected:
 	QList<quint32> openPositions(const QByteArray &data) const;
 };
-
-#endif // TUTFILEPC_H

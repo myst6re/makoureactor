@@ -88,14 +88,14 @@ QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QList<QRgb> &colors,
 {
 	// swapping the two last vertices for right OpenGL quad order
 
-	_vertices.swap(2, 3);
+	_vertices.swapItemsAt(2, 3);
 
 	if (colors.size() == 4) {
-		_colors.swap(2, 3);
+		_colors.swapItemsAt(2, 3);
 	}
 
 	if (!texCoords.isEmpty()) {
-		_texCoords.swap(2, 3);
+		_texCoords.swapItemsAt(2, 3);
 	}
 }
 
@@ -104,10 +104,10 @@ QuadPoly::QuadPoly(const QList<PolyVertex> &vertices, const QRgb &color, const Q
 {
 	// swapping the two last vertices for right OpenGL quad order
 
-	_vertices.swap(2, 3);
+	_vertices.swapItemsAt(2, 3);
 
 	if (!texCoords.isEmpty()) {
-		_texCoords.swap(2, 3);
+		_texCoords.swapItemsAt(2, 3);
 	}
 }
 

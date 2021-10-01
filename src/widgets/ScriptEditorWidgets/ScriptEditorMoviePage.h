@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef SCRIPTEDITORMOVIEPAGE_H
-#define SCRIPTEDITORMOVIEPAGE_H
+#pragma once
 
 #include <QtWidgets>
 #include "ScriptEditorView.h"
@@ -36,5 +35,3 @@ private:
 	void buildMovieList(int discID);
 	QComboBox *movieList, *discList;
 };
-
-#endif // SCRIPTEDITORMOVIEPAGE_H

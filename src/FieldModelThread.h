@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELTHREAD_H
-#define FIELDMODELTHREAD_H
+#pragma once
 
 #include <QtCore>
 #include "core/field/Field.h"
@@ -44,5 +43,3 @@ private:
 	int _animationId;
 	bool _animate;
 };
-
-#endif // FIELDMODELTHREAD_H

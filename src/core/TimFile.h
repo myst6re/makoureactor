@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TIMFILE_H
-#define TIMFILE_H
+#pragma once
 
 #include <QtCore>
 #include <QImage>
@@ -38,5 +37,3 @@ private:
 	quint16 imgX, imgY;
 	QList<QBitArray> _alphaBits;
 };
-
-#endif // TIMFILE_H

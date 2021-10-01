@@ -1,5 +1,4 @@
-#ifndef IO_H
-#define IO_H
+#pragma once
 
 #include <QtCore>
 
@@ -22,5 +21,3 @@ public:
 private:
 	QIODevice *_device;
 };
-
-#endif // IO_H

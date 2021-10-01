@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELANIMATION_H
-#define FIELDMODELANIMATION_H
+#pragma once
 
 #include <QtCore>
 #include "FieldModelPart.h"
@@ -53,5 +52,3 @@ public:
 private:
 	QHash<int, QList<PolyVertex> > _framesRot, _framesTrans;
 };
-
-#endif // FIELDMODELANIMATION_H

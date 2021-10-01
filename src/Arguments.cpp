@@ -29,7 +29,7 @@ bool HelpArguments::help() const
 void HelpArguments::showHelp(int exitCode)
 {
 	QRegExp usage("Usage: .* \\[options\\]");
-	qInfo(qPrintable(_parser.helpText().replace(usage, "Usage: %1 [options]")
+	qInfo("%s", qPrintable(_parser.helpText().replace(usage, "Usage: %1 [options]")
 	                     .arg(QFileInfo(qApp->arguments().first()).fileName())));
 	::exit(exitCode);
 }

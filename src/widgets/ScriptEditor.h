@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SE
-#define DEF_SE
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/GrpScript.h"
@@ -59,5 +58,3 @@ private:
 
 	bool modify, change;
 };
-
-#endif

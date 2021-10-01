@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef WALKMESHWIDGET_H
-#define WALKMESHWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/Renderer.h"
@@ -86,5 +85,3 @@ protected:
 	virtual void focusInEvent(QFocusEvent *event);
 	virtual void focusOutEvent(QFocusEvent *event);
 };
-
-#endif // WALKMESHWIDGET_H

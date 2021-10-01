@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ISOARCHIVE_H
-#define ISOARCHIVE_H
+#pragma once
 
 #include <QtCore>
 #include "Archive.h"
@@ -383,5 +382,3 @@ private:
 	static QString pathTableToString(const PathTable &pathTable, bool bigEndian=false);
 #endif
 };
-
-#endif // ISOARCHIVE_H

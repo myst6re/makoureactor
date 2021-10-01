@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FONTPALETTE_H
-#define FONTPALETTE_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/WindowBinFile.h"
@@ -56,5 +55,3 @@ private:
 	bool readOnly;
 	WindowBinFile *_windowBinFile;
 };
-
-#endif // FONTPALETTE_H

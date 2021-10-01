@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_VAR
-#define DEF_VAR
+#pragma once
 
 #include <QtCore>
 
@@ -36,5 +35,3 @@ public:
 private:
 	static QMap<quint16, QString> _varNames;
 };
-
-#endif

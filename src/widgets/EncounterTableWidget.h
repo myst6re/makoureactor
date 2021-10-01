@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ENCOUNTERTABLEWIDGET_H
-#define ENCOUNTERTABLEWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -42,5 +41,3 @@ private:
 	QList<QSpinBox *> battleIds;
 	QList<QSpinBox *> battleProbas;
 };
-
-#endif // ENCOUNTERTABLEWIDGET_H

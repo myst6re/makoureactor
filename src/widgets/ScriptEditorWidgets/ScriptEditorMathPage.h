@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SCRIPTEDITORMATHPAGE
-#define DEF_SCRIPTEDITORMATHPAGE
+#pragma once
 
 #include <QtWidgets>
 #include "ScriptEditorView.h"
@@ -74,5 +73,3 @@ private:
 	VarOrValueWidget *var, *position;
 	QComboBox *operationList;
 };
-
-#endif // DEF_SCRIPTEDITORMATHPAGE

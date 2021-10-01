@@ -80,7 +80,7 @@ QPixmap ApercuBG::errorPixmap(const QSize &size)
 	QFont font;
 	font.setPixelSize(44);
 	QString text = tr("Error");
-	int textWidth = QFontMetrics(font).width(text),
+	int textWidth = QFontMetrics(font).horizontalAdvance(text),
 	    textHeight = QFontMetrics(font).height();
 
 	QPainter p(&errorPix);
@@ -117,7 +117,7 @@ void ApercuBG::resizeEvent(QResizeEvent *e)
 	Q_UNUSED(e)
 
 	if (!_background.isNull() &&
-	        (!pixmap() || contentsRect().size() != pixmap()->size())) {
+	        (pixmap().isNull() || contentsRect().size() != pixmap().size())) {
 		setUpdatesEnabled(false);
 		drawBackground(); // Call setPixmap() -> update() which must be prevented
 		setUpdatesEnabled(true);

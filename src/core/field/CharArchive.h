@@ -1,5 +1,4 @@
-#ifndef CHARARCHIVE_H
-#define CHARARCHIVE_H
+#pragma once
 
 #include "core/Lgp.h"
 
@@ -37,5 +36,3 @@ private:
 	bool _delete;
 	static CharArchive *_instance;
 };
-
-#endif // CHARARCHIVE_H

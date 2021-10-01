@@ -1,5 +1,4 @@
-#ifndef MODELCOLORSLAYOUT_H
-#define MODELCOLORSLAYOUT_H
+#pragma once
 
 #include <QtWidgets>
 #include "ColorDisplay.h"
@@ -50,5 +49,3 @@ private slots:
 private:
 	ModelColorWidget *modelColorWidget[3];
 };
-
-#endif // MODELCOLORSLAYOUT_H

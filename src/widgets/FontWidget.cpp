@@ -18,7 +18,6 @@
 #include "FontWidget.h"
 #include "core/FF7Text.h"
 #include "core/TexFile.h"
-#include "Parameters.h"
 
 FontWidget::FontWidget(QWidget *parent) :
     QWidget(parent), ff7Font(nullptr)
@@ -225,7 +224,7 @@ void FontWidget::exportFont()
 	}
 
 	if (ff7Font) {
-		filter.append(txtF = tr("Translation file %1 (*.txt)").arg(PROG_NAME));
+		filter.append(txtF = tr("Translation file %1 (*.txt)").arg(MAKOU_REACTOR_NAME));
 	}
 	QString selectedFilter;
 

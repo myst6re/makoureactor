@@ -160,7 +160,7 @@ TextManager::TextManager(QWidget *parent) :
 	action->setMenu(menu2);
 
 	textEdit = new QPlainTextEdit(this);
-	textEdit->setTabStopWidth(40);
+	textEdit->setTabStopDistance(40);
 	textEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
 	new TextHighlighter(textEdit->document());
 

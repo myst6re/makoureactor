@@ -329,15 +329,15 @@ void FieldModelLoaderPC::swapModel(int oldModelID, int newModelID)
 	if (oldModelID != newModelID
 			&& oldModelID >= 0 && oldModelID < modelCount()
 			&& newModelID >= 0 && newModelID < modelCount()) {
-		model_unknown.swap(oldModelID, newModelID);
-		model_nameChar.swap(oldModelID, newModelID);
-		model_nameHRC.swap(oldModelID, newModelID);
-		model_typeHRC.swap(oldModelID, newModelID);
-		colors.swap(oldModelID, newModelID);
-		model_global_color.swap(oldModelID, newModelID);
+		model_unknown.swapItemsAt(oldModelID, newModelID);
+		model_nameChar.swapItemsAt(oldModelID, newModelID);
+		model_nameHRC.swapItemsAt(oldModelID, newModelID);
+		model_typeHRC.swapItemsAt(oldModelID, newModelID);
+		colors.swapItemsAt(oldModelID, newModelID);
+		model_global_color.swapItemsAt(oldModelID, newModelID);
 
-		model_anims.swap(oldModelID, newModelID);
-		model_anims_unknown.swap(oldModelID, newModelID);
+		model_anims.swapItemsAt(oldModelID, newModelID);
+		model_anims_unknown.swapItemsAt(oldModelID, newModelID);
 
 		setModified(true);
 	}
@@ -483,8 +483,8 @@ void FieldModelLoaderPC::swapAnim(int modelID, int oldNumA, int newNumA)
 			&& oldNumA != newNumA
 			&& oldNumA >= 0 && oldNumA < animCount(modelID)
 			&& newNumA >= 0 && newNumA < animCount(modelID)) {
-		model_anims[modelID].swap(oldNumA, newNumA);
-		model_anims_unknown[modelID].swap(oldNumA, newNumA);
+		model_anims[modelID].swapItemsAt(oldNumA, newNumA);
+		model_anims_unknown[modelID].swapItemsAt(oldNumA, newNumA);
 		setModified(true);
 	}
 }

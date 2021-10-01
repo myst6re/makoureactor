@@ -20,8 +20,7 @@
  * inspired from LGP/UnLGP tool written by Aali.
  * http://forums.qhimm.com/index.php?topic=8641.0
  */
-#ifndef LGP_H
-#define LGP_H
+#pragma once
 
 #include <QtCore>
 #include "Archive.h"
@@ -36,9 +35,7 @@ class LgpIterator
 public:
 	explicit LgpIterator(const Lgp &lgp);
 	bool hasNext() const;
-	bool hasPrevious() const;
 	void next();
-	void previous();
 	void toBack();
 	void toFront();
 	QIODevice *file();
@@ -111,5 +108,3 @@ private:
 	LgpError _error;
 
 };
-
-#endif // LGP_H

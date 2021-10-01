@@ -27,8 +27,8 @@ GrpScriptList::GrpScriptList(QWidget *parent) :
 	setIndentation(0);
 	setItemsExpandable(false);
 	setSortingEnabled(true);
-	setColumnWidth(0, fontMetrics().width("8888"));
-	setColumnWidth(1, fontMetrics().width("WWWWWWWW"));
+	setColumnWidth(0, fontMetrics().horizontalAdvance("8888"));
+	setColumnWidth(1, fontMetrics().horizontalAdvance("WWWWWWWW"));
 	setColumnWidth(2, 0);
 	setContextMenuPolicy(Qt::ActionsContextMenu);
 	setSelectionMode(QAbstractItemView::ExtendedSelection);

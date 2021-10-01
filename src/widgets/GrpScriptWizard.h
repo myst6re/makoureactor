@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef GRPSCRIPTWIZARD_H
-#define GRPSCRIPTWIZARD_H
+#pragma once
 
 #include <QtGui>
 #include <QWizardPage>
@@ -52,5 +51,3 @@ protected:
 		PageType
 	};
 };
-
-#endif // GRPSCRIPTWIZARD_H

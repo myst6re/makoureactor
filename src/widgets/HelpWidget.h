@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef HELPWIDGET_H
-#define HELPWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -39,5 +38,3 @@ private:
 	void createLayout(int iconExtent, const QString &text, IconType icon = IconInfo);
 	QLabel *textLabel;
 };
-
-#endif // HELPWIDGET_H

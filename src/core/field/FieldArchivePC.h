@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDARCHIVEPC_H
-#define FIELDARCHIVEPC_H
+#pragma once
 
 #include "FieldArchive.h"
 #include "TutFilePC.h"
@@ -50,5 +49,3 @@ public:
 private:
 	QMap<QString, TutFilePC *> _tuts;
 };
-
-#endif // FIELDARCHIVEPC_H

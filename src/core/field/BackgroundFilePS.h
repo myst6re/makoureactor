@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef BACKGROUNDFILEPS_H
-#define BACKGROUNDFILEPS_H
+#pragma once
 
 #include "BackgroundFile.h"
 #include "BackgroundIO.h"
@@ -35,14 +34,12 @@ public:
 	explicit BackgroundFilePS(FieldPS *field);
 	BackgroundFilePS(const BackgroundFilePS &other);
 
-	void initEmpty();
-	bool open();
+	void initEmpty() override;
+	bool open() override;
 	bool open(const QByteArray &mimData, const QByteArray &tilesData);
-	QByteArray save() const;
-	inline virtual BackgroundTexturesPS *textures() const {
+	QByteArray save() const override;
+	inline virtual BackgroundTexturesPS *textures() const override {
 		return static_cast<BackgroundTexturesPS *>(BackgroundFile::textures());
 	}
 	BackgroundFilePC toPC(FieldPC *field) const;
 };
-
-#endif // BACKGROUNDFILEPS_H

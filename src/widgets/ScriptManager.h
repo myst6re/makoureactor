@@ -1,5 +1,4 @@
-#ifndef SCRIPTMANAGER_H
-#define SCRIPTMANAGER_H
+#pragma once
 
 #include <QtWidgets>
 #include "widgets/GrpScriptList.h"
@@ -57,5 +56,3 @@ private:
 	QLabel *_compileScriptIcon, *_compileScriptLabel;
 	Field *_field;
 };
-
-#endif // SCRIPTMANAGER_H

@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SCRIPTEDITORGENERICLIST
-#define DEF_SCRIPTEDITORGENERICLIST
+#pragma once
 
 #include <QtWidgets>
 #include "ScriptEditorView.h"
@@ -58,5 +57,3 @@ private:
 	QTableView *tableView;
 	QStandardItemModel *model;
 };
-
-#endif // DEF_SCRIPTEDITORGENERICLIST

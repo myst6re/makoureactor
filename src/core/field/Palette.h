@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_PALETTE
-#define DEF_PALETTE
+#pragma once
 
 #include <QtCore>
 #include <QRgb>
@@ -87,5 +86,3 @@ public:
 	PalettesPC();
 	PalettesPS toPS() const;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef ABOUTDIALOG_H
-#define ABOUTDIALOG_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -12,5 +11,3 @@ public:
 signals:
 
 };
-
-#endif // ABOUTDIALOG_H

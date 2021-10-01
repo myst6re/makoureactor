@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDIO_H
-#define FIELDIO_H
+#pragma once
 
 #include <QtCore>
 
@@ -24,6 +23,7 @@ class Field;
 
 class FieldSaveIO : public QIODevice
 {
+	Q_OBJECT
 public:
 	FieldSaveIO(Field *field, QObject *parent=0);
 	virtual bool open(OpenMode mode);
@@ -37,5 +37,3 @@ private:
 	Field *_field;
 	QByteArray _cache;
 };
-
-#endif // FIELDIO_H

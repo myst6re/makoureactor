@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ANIMEDITORDIALOG_H
-#define ANIMEDITORDIALOG_H
+#pragma once
 
 #include <QtWidgets>
 #include "FieldModel.h"
@@ -33,5 +32,3 @@ private:
 	FieldModel *fieldModel;
 	QListWidget *aList;
 };
-
-#endif // ANIMEDITORDIALOG_H

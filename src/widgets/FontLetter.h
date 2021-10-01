@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FONTLETTER_H
-#define FONTLETTER_H
+#pragma once
 
 #include <QtWidgets>
 #include "FontDisplay.h"
@@ -54,5 +53,3 @@ private:
 	int _pixelIndex;
 	bool readOnly, startDrag, startDrag2;
 };
-
-#endif // FONTLETTER_H

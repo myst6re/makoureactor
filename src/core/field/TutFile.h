@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TUTFILE_H
-#define TUTFILE_H
+#pragma once
 
 #include <QtCore>
 #include "FieldPart.h"
@@ -75,5 +74,3 @@ private:
 
 	QList<QByteArray> tutos;
 };
-
-#endif // ENCOUNTERFILE_H

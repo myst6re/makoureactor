@@ -211,7 +211,7 @@ bool TutFile::parseText(int tutID, const QString &tuto)
 {
 	if (!isTut(tutID))	return false;
 
-	QStringList lines = tuto.split('\n', QString::SkipEmptyParts), params;
+	QStringList lines = tuto.split('\n', Qt::SkipEmptyParts), params;
 	QByteArray ret;
 	bool ok, multilineText = false;
 	ushort value;

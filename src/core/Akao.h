@@ -1,5 +1,4 @@
-#ifndef AKAO_H
-#define AKAO_H
+#pragma once
 
 #include <QtCore>
 
@@ -11,5 +10,3 @@ private:
 	quint16 _musicID, _length, _reverbMode;
 	QMap<quint8, QByteArray> _data;
 };
-
-#endif // AKAO_H

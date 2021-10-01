@@ -1,5 +1,4 @@
-#ifndef FIELDLIST_H
-#define FIELDLIST_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/FieldArchive.h"
@@ -45,5 +44,3 @@ private:
 	
 	FieldArchive *_fieldArchive;
 };
-
-#endif // FIELDLIST_H

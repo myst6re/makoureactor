@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SCRIPTLIST
-#define DEF_SCRIPTLIST
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/GrpScript.h"
@@ -40,5 +39,3 @@ private slots:
 private:
 	GrpScript *grpScript;
 };
-
-#endif

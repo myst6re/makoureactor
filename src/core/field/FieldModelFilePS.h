@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELFILEPS_H
-#define FIELDMODELFILEPS_H
+#pragma once
 
 #include <QtCore>
 #include <QImage>
@@ -91,5 +90,3 @@ private:
 	quint16 _scale;
 	bool _isModified;
 };
-
-#endif // FIELDMODELFILEPS_H

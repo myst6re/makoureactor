@@ -20,8 +20,7 @@
  * inspired from LGP/UnLGP tool written by Aali.
  * http://forums.qhimm.com/index.php?topic=8641.0
  */
-#ifndef LGP_P_H
-#define LGP_P_H
+#pragma once
 
 #include <QtCore>
 
@@ -140,5 +139,3 @@ private:
 	static quint8 lookupValue(const QChar &qc);
 	QMultiHash<quint16, LgpHeaderEntry *> _header;
 };
-
-#endif // LGP_P_H

@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef TBLFILE_H
-#define TBLFILE_H
+#pragma once
 
 #include <QtCore>
 
@@ -42,5 +41,3 @@ public:
 private:
 	QList<TblFileEntry> _entries;
 };
-
-#endif // TBLFILE_H

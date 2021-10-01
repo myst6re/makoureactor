@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELLOADERPS_H
-#define FIELDMODELLOADERPS_H
+#pragma once
 
 #include <QtCore>
 #include "FieldModelLoader.h"
@@ -46,5 +45,3 @@ public:
 private:
 	QList<FieldModelLoaderStruct> _modelLoaders;
 };
-
-#endif // FIELDMODELLOADERPS_H

@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef COLORDISPLAY_H
-#define COLORDISPLAY_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -57,5 +56,3 @@ protected:
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 };
-
-#endif // COLORDISPLAY_H

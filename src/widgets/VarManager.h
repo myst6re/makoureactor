@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_VARMANAGER
-#define DEF_VARMANAGER
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/FieldArchive.h"
@@ -65,5 +64,3 @@ private:
 	QList<FF7Var> allVars;
 	QMap<FF7Var, QSet<QString> > _fieldNames;
 };
-
-#endif

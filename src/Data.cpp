@@ -15,16 +15,17 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "Data.h"
-#include "core/Config.h"
-#include "core/LZS.h"
-#include "core/FF7Text.h"
+#include <QtGlobal>
 #ifdef Q_OS_WIN
 #include <windows.h>
 #include <winbase.h>
 // #include <winerror.h>
 #include <winreg.h>
 #endif
+#include <LZS.h>
+#include "Data.h"
+#include "core/Config.h"
+#include "core/FF7Text.h"
 
 QStringList Data::char_names;
 QStringList Data::item_names;

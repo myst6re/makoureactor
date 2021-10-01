@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ARCHIVE_H
-#define ARCHIVE_H
+#pragma once
 
 #include <QtCore>
 
@@ -91,5 +90,3 @@ private:
 	ArchiveError _error;
 	QFile *_archiveIO;
 };
-
-#endif // ARCHIVE_H

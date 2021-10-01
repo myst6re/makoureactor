@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_SCRIPT
-#define DEF_SCRIPT
+#pragma once
 
 #include <QtCore>
 #include "Opcode.h"
@@ -99,5 +98,3 @@ private:
 
 QDataStream &operator<<(QDataStream &stream, const QList<Opcode *> &script);
 QDataStream &operator>>(QDataStream &stream, QList<Opcode *> &script);
-
-#endif

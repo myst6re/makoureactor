@@ -16,8 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 /* Many thanks to Akari for his work. */
-#ifndef FIELDMODELTEXTUREREFPS_H
-#define FIELDMODELTEXTUREREFPS_H
+#pragma once
 
 #include <QImage>
 #include "FieldModelTextureRef.h"
@@ -163,5 +162,3 @@ private:
 	quint16 _imgX, _imgY;
 	quint16 _palX, _palY;
 };
-
-#endif // FIELDMODELTEXTUREREFPS_H

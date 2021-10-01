@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef QTASKBARBUTTON_H
-#define QTASKBARBUTTON_H
+#pragma once
 
 #include <QtWidgets>
 
@@ -64,4 +63,3 @@ private:
 	int _minimum, _maximum, _value;
 	State _state;
 };
-#endif // QTASKBARBUTTON_H

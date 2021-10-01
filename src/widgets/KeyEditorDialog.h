@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_KEYDIALOG
-#define DEF_KEYDIALOG
+#pragma once
 
 #include <QtWidgets>
 
@@ -27,5 +26,3 @@ public:
 	explicit KeyEditorDialog(quint16, QWidget *parent = nullptr);
 	int keys() const;
 };
-
-#endif

@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELTEXTUREREFPC_H
-#define FIELDMODELTEXTUREREFPC_H
+#pragma once
 
 #include <QImage>
 #include "FieldModelTextureRef.h"
@@ -41,5 +40,3 @@ public:
 private:
 	quint32 _id;
 };
-
-#endif // FIELDMODELTEXTUREREFPC_H

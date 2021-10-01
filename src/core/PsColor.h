@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_PSCOLOR
-#define DEF_PSCOLOR
+#pragma once
 
 #include <QtCore>
 #include <QRgb>
@@ -41,5 +40,3 @@ public:
 		return qRgba((r << 3) + (r >> 2), (g << 3) + (g >> 2), (b << 3) + (b >> 2), color == 0 && useAlpha ? 0 : 255);
 	}
 };
-
-#endif // DEF_PSCOLOR

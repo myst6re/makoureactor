@@ -19,7 +19,6 @@
 #ifdef MR_CONSOLE
 #include <QCoreApplication>
 #include "CLI.h"
-#include "Parameters.h"
 #else
 #include <QApplication>
 #include "Window.h"
@@ -33,8 +32,8 @@ int main(int argc, char *argv[])
 {
 #ifdef MR_CONSOLE
 	QCoreApplication app(argc, argv);
-	QCoreApplication::setApplicationName(PROG_NAME);
-	QCoreApplication::setApplicationVersion(PROG_VERSION);
+	QCoreApplication::setApplicationName(MAKOU_REACTOR_NAME);
+	QCoreApplication::setApplicationVersion(MAKOU_REACTOR_VERSION);
 #ifdef Q_OS_WIN
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName("IBM 850"));
 #endif
@@ -48,25 +47,29 @@ int main(int argc, char *argv[])
 	app.setWindowIcon(QIcon(":/images/logo-shinra.png"));
 
 	QSurfaceFormat format;
+#ifdef QT_DEBUG
+	format.setVersion(4, 3);
 	format.setOption(QSurfaceFormat::DebugContext);
+#else
+	format.setVersion(4, 3);
+#endif
 	format.setProfile(QSurfaceFormat::CoreProfile);
 	format.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
-	format.setVersion(2, 1);
 	QSurfaceFormat::setDefaultFormat(format);
 
 	Config::set();
 
-	QString lang = QLocale::system().name().toLower();
-	lang = Config::value("lang", lang.left(lang.indexOf("_"))).toString();
+	QString lang = QLocale::system().name();
+	lang = Config::value("lang", lang.left(lang.indexOf("_")).toLower()).toString();
 	QTranslator translator1;
-	if (translator1.load("qt_" % lang, app.applicationDirPath()) || translator1.load("qt_" % lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+	if (translator1.load("qt_" % lang, Config::programResourceDir()) || translator1.load("qt_" % lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
 		app.installTranslator(&translator1);
 	QTranslator translator2;
-	if (translator2.load("Makou_Reactor_" % lang, Config::programResourceDir())) {
+	if (translator2.load("Makou_Reactor_" % lang, Config::programResourceDir()) || translator2.load("Makou_Reactor_" % lang)) {
 		app.installTranslator(&translator2);
 		Config::setValue("lang", lang);
 	} else {
-		Config::setValue("lang", "en");
+		Config::setValue("lang", QVariant());
 	}
 
 	if (Config::value("dark_theme", false).toBool()) {

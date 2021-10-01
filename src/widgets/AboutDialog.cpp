@@ -1,5 +1,4 @@
 #include "AboutDialog.h"
-#include "../Parameters.h"
 #include "../Data.h"
 
 AboutDialog::AboutDialog(QWidget *parent)
@@ -8,7 +7,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 	QLabel *image = new QLabel(this);
 	image->setPixmap(QPixmap(":/images/reactor.png"));
 
-	QLabel *desc1 = new QLabel(QString("<h1 style=\"text-align:center\">%1</h1>").arg(PROG_FULLNAME) % tr("By Jérôme &lt;myst6re&gt; Arzel <br/><a href=\"https://github.com/myst6re/makoureactor/\">"
+	QLabel *desc1 = new QLabel(QString("<h1 style=\"text-align:center\">%1 %2</h1>").arg(MAKOU_REACTOR_NAME, MAKOU_REACTOR_VERSION) % tr("By Jérôme &lt;myst6re&gt; Arzel <br/><a href=\"https://github.com/myst6re/makoureactor/\">"
 	                "github.com/myst6re/makoureactor</a>"), this);
 	desc1->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
 	desc1->setTextFormat(Qt::RichText);

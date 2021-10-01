@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef VERTEXWIDGET_H
-#define VERTEXWIDGET_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/IdFile.h"
@@ -45,5 +44,3 @@ private:
 	QSpinBox *x, *y, *z;
 	bool dontEmit;
 };
-
-#endif // VERTEXWIDGET_H

@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_FIELDPS
-#define DEF_FIELDPS
+#pragma once
 
 #include <QtCore>
 #include "Field.h"
@@ -66,5 +65,3 @@ private:
 	qint32 vramDiff;
 	QVector<FieldModelFilePS *> _models;
 };
-
-#endif // DEF_FIELDPS

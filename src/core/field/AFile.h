@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef AFILE_H
-#define AFILE_H
+#pragma once
 
 #include "../IO.h"
 #include "PFile.h"
@@ -41,5 +40,3 @@ public:
 	bool read(FieldModelAnimation &animation, int maxFrames = -1) const;
 	bool write(const FieldModelAnimation &animation) const;
 };
-
-#endif // AFILE_H

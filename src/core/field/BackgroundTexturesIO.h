@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef BACKGROUNDTEXTURESIO_H
-#define BACKGROUNDTEXTURESIO_H
+#pragma once
 
 #include <QtCore>
 #include "../IO.h"
@@ -59,5 +58,3 @@ private:
 	using BackgroundTexturesIO::read; // Hide parent read()
 	using BackgroundTexturesIO::write; // Hide parent write()
 };
-
-#endif // BACKGROUNDTEXTURESIO_H

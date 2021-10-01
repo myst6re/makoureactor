@@ -1,5 +1,4 @@
-#ifndef PSFFILE_H
-#define PSFFILE_H
+#pragma once
 
 #include <QtCore>
 
@@ -90,5 +89,3 @@ private:
 	QByteArray _special, _data;
 	PsfTags _tags;
 };
-
-#endif // PSFFILE_H

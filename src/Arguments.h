@@ -14,14 +14,13 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef ARGUMENTS_H
-#define ARGUMENTS_H
+#pragma once
 
 #define _ADD_ARGUMENT(names, description, valueName, defaultValue) \
-	_parser.addOption(QCommandLineOption(names, description, valueName, defaultValue));
+	_parser.addOption(QCommandLineOption(names, description, valueName, defaultValue))
 
 #define _ADD_FLAG(names, description) \
-	_parser.addOption(QCommandLineOption(names, description));
+	_parser.addOption(QCommandLineOption(names, description))
 
 #define _OPTION_NAMES(shortName, fullName) \
 	(QStringList() << shortName << fullName)
@@ -74,5 +73,3 @@ private:
 	void parse();
 	Command _command;
 };
-
-#endif // ARGUMENTS_H

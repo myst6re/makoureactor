@@ -15,9 +15,9 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
+#include <LZS.h>
+#include <GZIPPS.h>
 #include "IsoArchiveFF7.h"
-#include "core/LZS.h"
-#include "core/GZIPPS.h"
 
 IsoArchiveFF7::IsoArchiveFF7(const QString &name) :
 	IsoArchive(name), _exe(nullptr), _country(NoCountry)

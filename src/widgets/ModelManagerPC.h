@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef MODELMANAGERPC_H
-#define MODELMANAGERPC_H
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/FieldPC.h"
@@ -72,5 +71,3 @@ private slots:
 	void updateActionsState();
 	void processEvents() const;
 };
-
-#endif // MODELMANAGERPC_H

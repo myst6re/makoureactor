@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELPART_H
-#define FIELDMODELPART_H
+#pragma once
 
 #include <QtCore>
 #include <QRgb>
@@ -116,5 +115,3 @@ public:
 protected:
 	QList<FieldModelGroup *> _groups;
 };
-
-#endif // FIELDMODELPART_H

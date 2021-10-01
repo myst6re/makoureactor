@@ -654,14 +654,14 @@ bool Section1File::moveGrpScript(int row, bool direction)
 		if (row == _grpScripts.size()-1) {
 			return false;
 		}
-		_grpScripts.swap(row, row+1);
+		_grpScripts.swapItemsAt(row, row+1);
 		for (GrpScript *grpScript : qAsConst(_grpScripts))
 			grpScript->swapGroupIds(row, row+1);
 	} else { // up
 		if (row == 0) {
 			return false;
 		}
-		_grpScripts.swap(row, row-1);
+		_grpScripts.swapItemsAt(row, row-1);
 		for (GrpScript *grpScript : qAsConst(_grpScripts))
 			grpScript->swapGroupIds(row, row-1);
 	}

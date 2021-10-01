@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef BSXFILE_H
-#define BSXFILE_H
+#pragma once
 
 #include <QtCore>
 #include "../IO.h"
@@ -219,5 +218,3 @@ private:
 	qint64 _offsetModels;
 	quint32 _numModels, _offsetTextures;
 };
-
-#endif // BSXFILE_H

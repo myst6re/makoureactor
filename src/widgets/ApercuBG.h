@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef DEF_APERCUBG
-#define DEF_APERCUBG
+#pragma once
 
 #include <QtWidgets>
 #include "core/field/Field.h"
@@ -48,5 +47,3 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *e);
 	void resizeEvent(QResizeEvent *e);
 };
-
-#endif

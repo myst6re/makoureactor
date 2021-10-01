@@ -15,8 +15,7 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef FIELDMODELFILEPC_H
-#define FIELDMODELFILEPC_H
+#pragma once
 
 #include <QtGui>
 #include "FieldModelFile.h"
@@ -40,7 +39,7 @@ public:
 		return _loadedTex.value(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id());
 	}
 	inline void *textureIdForGroup(FieldModelGroup *group) const {
-		return (void *)(ulong(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id()));
+		return reinterpret_cast<void *>(quint64(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id()));
 	}
 	QHash<void *, QImage> loadedTextures();
 private:
@@ -52,7 +51,5 @@ private:
 	void openTextures(const QStringList &textureFiles);
 	QImage openTexture(const QString &texFileName);
 	CharArchive *_charLgp;
-	QHash<quint32, QImage> _loadedTex;
+	QHash<quint64, QImage> _loadedTex;
 };
-
-#endif // FIELDMODELFILEPC_H

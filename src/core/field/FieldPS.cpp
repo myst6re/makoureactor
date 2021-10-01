@@ -15,9 +15,9 @@
  ** You should have received a copy of the GNU General Public License
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
+#include <LZS.h>
 #include "FieldPS.h"
 #include "BackgroundFilePS.h"
-#include "../LZS.h"
 
 FieldPS::FieldPS(const QString &name, FieldArchiveIO *io) :
       Field(name, io), vramDiff(0)
