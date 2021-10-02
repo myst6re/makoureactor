@@ -1,6 +1,6 @@
 /****************************************************************************
  ** Makou Reactor Final Fantasy VII Field Script Editor
- ** Copyright (C) 2009-2012 Arzel Jérôme <myst6re@gmail.com>
+ ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
  ** Copyright (C) 2020 Julian Xhokaxhiu <https://julianxhokaxhiu.com>
  **
  ** This program is free software: you can redistribute it and/or modify
