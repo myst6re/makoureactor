@@ -25,7 +25,7 @@ public:
 	explicit TextHighlighter(QTextDocument *parent = nullptr, bool tut = false);
 
 protected:
-	void highlightBlock(const QString &text);
+	void highlightBlock(const QString &text) override;
 
 private:
 	struct HighlightingRule {

@@ -28,8 +28,8 @@ public:
 	quint8 value() const;
 	bool isReadOnly() const;
 	void setReadOnly(bool ro);
-	virtual QSize minimumSizeHint() const;
-	virtual QSize sizeHint() const;
+	virtual QSize minimumSizeHint() const override;
+	virtual QSize sizeHint() const override;
 signals:
 	void valueChanged(int i);
 	void valueEdited(int i);
@@ -46,11 +46,11 @@ private:
 	int _value;
 	bool _readOnly;
 protected:
-	virtual void paintEvent(QPaintEvent *e);
-	virtual inline void mousePressEvent(QMouseEvent *e) {
+	virtual void paintEvent(QPaintEvent *e) override;
+	virtual inline void mousePressEvent(QMouseEvent *e) override {
 		mouseEvent(e);
 	}
-	virtual inline void mouseMoveEvent(QMouseEvent *e) {
+	virtual inline void mouseMoveEvent(QMouseEvent *e) override {
 		mouseEvent(e);
 	}
 };

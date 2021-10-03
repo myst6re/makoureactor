@@ -23,6 +23,10 @@ PFile::PFile(QIODevice *io) :
 {
 }
 
+PFile::~PFile()
+{
+}
+
 bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 {
 	if (!canRead()) {

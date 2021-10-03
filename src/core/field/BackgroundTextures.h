@@ -88,7 +88,7 @@ public:
 	quint8 texTileSize(quint8 texID) const;
 	BackgroundTexturesPCInfos texInfos(quint8 texID) const;
 	void addTexInfos(quint8 texID, const BackgroundTexturesPCInfos &infos);
-	void clear();
+	void clear() override;
 	void setTexInfos(const QHash<quint8, BackgroundTexturesPCInfos> &texInfos);
 	QList<uint> tex(quint8 texID) const;
 	void setTex(quint8 texID, const QList<uint> &indexOrRgbList, const BackgroundTexturesPCInfos &infos);
@@ -98,10 +98,10 @@ public:
 							  BackgroundTiles &psTiles,
 							  const PalettesPS &palettesPS) const;
 protected:
-	quint16 textureWidth(const Tile &tile) const;
-	quint8 depth(const Tile &tile) const;
-	int originInData(const Tile &tile) const;
-	QRgb directColor(quint16 color) const;
+	quint16 textureWidth(const Tile &tile) const override;
+	quint8 depth(const Tile &tile) const override;
+	int originInData(const Tile &tile) const override;
+	QRgb directColor(quint16 color) const override;
 private:
 	static quint16 toPcColor(const QRgb &color);
 	QHash<quint8, BackgroundTexturesPCInfos> _texInfos;
@@ -119,9 +119,9 @@ public:
 							  BackgroundTiles &pcTiles,
 							  const PalettesPC &palettesPC) const;
 protected:
-	quint16 textureWidth(const Tile &tile) const;
-	int originInData(const Tile &tile) const;
-	QRgb directColor(quint16 color) const;
+	quint16 textureWidth(const Tile &tile) const override;
+	int originInData(const Tile &tile) const override;
+	QRgb directColor(quint16 color) const override;
 private:
 	quint32 pageDataPos(quint8 pageID) const;
 	quint16 pageTexPos(quint8 pageID) const;

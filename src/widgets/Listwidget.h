@@ -22,18 +22,18 @@
 class ListWidget : public QWidget
 {
 public:
-    enum ActionType {
+	enum ActionType {
 		Add, Rem, Up, Down, Cut, Copy, Paste
-    };
-
+	};
+	
 	explicit ListWidget(QWidget *parent = nullptr);
 	void addSeparator(bool invisible = false);
-    QAction *addAction(ActionType type, const QString &text,
+	QAction *addAction(ActionType type, const QString &text,
 	                   const QObject *receiver, const char *member, bool invisible = false);
-
-    QToolBar *toolBar() const;
-    QListWidget *listWidget() const;
+	
+	QToolBar *toolBar() const;
+	QListWidget *listWidget() const;
 private:
-    QToolBar *_toolBar;
-    QListWidget *_listWidget;
+	QToolBar *_toolBar;
+	QListWidget *_listWidget;
 };

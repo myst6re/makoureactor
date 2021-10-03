@@ -28,24 +28,24 @@ class FontLetter : public FontDisplay
 	Q_OBJECT
 public:
 	explicit FontLetter(QWidget *parent = nullptr);
-	virtual ~FontLetter();
+	virtual ~FontLetter() override;
 	void setReadOnly(bool ro);
-	virtual void setWindowBinFile(WindowBinFile *windowBinFile);
+	virtual void setWindowBinFile(WindowBinFile *windowBinFile) override;
 	bool isLetterSizeEditable() const;
 public slots:
-	virtual void setLetter(quint8 letter);
+	virtual void setLetter(quint8 letter) override;
 	void setPixelIndex(int index);
 	void reset();
 signals:
 	void imageChanged(const QRect &rect);
 	void widthEdited(int width);
 protected:
-	virtual QSize sizeHint() const;
-	virtual QSize minimumSizeHint() const;
-	virtual void paintEvent(QPaintEvent *e);
-	virtual void mouseMoveEvent(QMouseEvent *e);
-	virtual void mousePressEvent(QMouseEvent *e);
-	virtual void mouseReleaseEvent(QMouseEvent *);
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
+	virtual void paintEvent(QPaintEvent *e) override;
+	virtual void mouseMoveEvent(QMouseEvent *e) override;
+	virtual void mousePressEvent(QMouseEvent *e) override;
+	virtual void mouseReleaseEvent(QMouseEvent *) override;
 private:
 	QPoint getPixel(const QPoint &pos);
 	bool setPixel(const QPoint &pixel);

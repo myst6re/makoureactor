@@ -99,13 +99,13 @@ private:
 class LgpIO : public QIODevice
 {
 public:
-	LgpIO(QIODevice *lgp, const LgpHeaderEntry *header, QObject *parent=0);
-	bool open(OpenMode mode);
-	qint64 size() const;
-	bool canReadLine() const;
+	LgpIO(QIODevice *lgp, const LgpHeaderEntry *header, QObject *parent = nullptr);
+	bool open(OpenMode mode) override;
+	qint64 size() const override;
+	bool canReadLine() const override;
 protected:
-	qint64 readData(char *data, qint64 maxSize);
-	qint64 writeData(const char *data, qint64 maxSize);
+	qint64 readData(char *data, qint64 maxSize) override;
+	qint64 writeData(const char *data, qint64 maxSize) override;
 private:
 	QIODevice *_lgp;
 	const LgpHeaderEntry *_header;

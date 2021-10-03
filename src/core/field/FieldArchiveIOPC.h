@@ -27,10 +27,10 @@ class FieldArchiveIOPC : public FieldArchiveIO
 {
 public:
 	explicit FieldArchiveIOPC(FieldArchivePC *fieldArchive);
-	inline bool isPS() const { return false; }
+	inline bool isPS() const override { return false; }
 
 	// Removing virtual
-	inline void clearCachedData() {
+	inline void clearCachedData() override {
 		return FieldArchiveIO::clearCachedData();
 	}
 protected:
@@ -41,33 +41,33 @@ class FieldArchiveIOPCLgp : public FieldArchiveIOPC, ArchiveObserver
 {
 public:
 	FieldArchiveIOPCLgp(const QString &path, FieldArchivePC *fieldArchive);
-	inline Type type() const { return Lgp; }
+	inline Type type() const override { return Lgp; }
 
-	void close();
-	ErrorCode addField(const QString &fileName, const QString &name);
+	void close() override;
+	ErrorCode addField(const QString &fileName, const QString &name) override;
 
-	QString path() const;
+	QString path() const override;
 
-	Archive *device();
+	Archive *device() override;
 
-	void setObserverValue(int value) {
+	void setObserverValue(int value) override {
 		if(observer)	observer->setObserverValue(value);
 	}
-	void setObserverMaximum(unsigned int max) {
+	void setObserverMaximum(unsigned int max) override {
 		if(observer)	observer->setObserverMaximum(max);
 	}
-	bool observerWasCanceled() const {
+	bool observerWasCanceled() const override {
 		return observer && observer->observerWasCanceled();
 	}
-	bool observerRetry(const QString &message) {
+	bool observerRetry(const QString &message) override {
 		return observer && observer->observerRetry(message);
 	}
 private:
-	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
-	QByteArray fileData2(const QString &fileName);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs) override;
+	QByteArray fileData2(const QString &fileName) override;
 
-	ErrorCode open2(ArchiveObserver *observer);
-	ErrorCode save2(const QString &path, ArchiveObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer) override;
+	ErrorCode save2(const QString &path, ArchiveObserver *observer) override;
 
 	::Lgp _lgp;
 	ArchiveObserver *observer;
@@ -77,19 +77,19 @@ class FieldArchiveIOPCFile : public FieldArchiveIOPC
 {
 public:
 	FieldArchiveIOPCFile(const QString &path, FieldArchivePC *fieldArchive);
-	inline Type type() const { return File; }
+	inline Type type() const override { return File; }
 
-	void close();
+	void close() override;
 
-	QString path() const;
+	QString path() const override;
 
-	Archive *device();
+	Archive *device() override;
 private:
-	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
-	QByteArray fileData2(const QString &fileName);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs) override;
+	QByteArray fileData2(const QString &fileName) override;
 
-	ErrorCode open2(ArchiveObserver *observer);
-	ErrorCode save2(const QString &path, ArchiveObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer) override;
+	ErrorCode save2(const QString &path, ArchiveObserver *observer) override;
 
 	QLockedFile fic;
 };
@@ -98,18 +98,18 @@ class FieldArchiveIOPCDir : public FieldArchiveIOPC
 {
 public:
 	FieldArchiveIOPCDir(const QString &path, FieldArchivePC *fieldArchive);
-	inline Type type() const { return Dir; }
+	inline Type type() const override { return Dir; }
 
-	QString path() const;
-	inline bool hasName() const { return false; }
+	QString path() const override;
+	inline bool hasName() const override { return false; }
 
-	Archive *device();
+	Archive *device() override;
 private:
-	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
-	QByteArray fileData2(const QString &fileName);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs) override;
+	QByteArray fileData2(const QString &fileName) override;
 
-	ErrorCode open2(ArchiveObserver *observer);
-	ErrorCode save2(const QString &path, ArchiveObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer) override;
+	ErrorCode save2(const QString &path, ArchiveObserver *observer) override;
 
 	QDir dir;
 };

@@ -28,7 +28,7 @@ class FontPalette : public QWidget
 	Q_OBJECT
 public:
 	explicit FontPalette(QWidget *parent = nullptr);
-	virtual ~FontPalette();
+	virtual ~FontPalette() override;
 	void setReadOnly(bool ro);
 	void setWindowBinFile(WindowBinFile *windowBinFile);
 	void setCurrentPalette(WindowBinFile::FontColor palette);
@@ -40,10 +40,10 @@ public slots:
 signals:
 	void colorChanged(int id);
 protected:
-	virtual QSize sizeHint() const;
-	virtual QSize minimumSizeHint() const;
-	virtual void paintEvent(QPaintEvent *e);
-	virtual void mousePressEvent(QMouseEvent *e);
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
+	virtual void paintEvent(QPaintEvent *e) override;
+	virtual void mousePressEvent(QMouseEvent *e) override;
 private:
 	void setColorCount(quint8 colorCount);
 	void setCurrentColor(int id);

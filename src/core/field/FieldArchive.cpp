@@ -21,6 +21,32 @@
 #include "Data.h"
 #include "core/PsfFile.h"
 
+SearchIn::~SearchIn()
+{
+}
+
+void SearchInScript::reset()
+{
+	groupID = scriptID = opcodeID = 0;
+}
+
+void SearchInScript::toEnd()
+{
+	groupID = scriptID = opcodeID = 2147483647;
+}
+
+void SearchInText::reset()
+{
+	textID = 0;
+	from = -1;
+}
+
+void SearchInText::toEnd()
+{
+	textID = 2147483647;
+	from = -1;
+}
+
 FieldArchiveIterator::FieldArchiveIterator(const FieldArchive &archive) :
     QMapIterator<int, Field *>(archive.fileList), mapList(archive.fileList)
 {

@@ -25,7 +25,7 @@ class ScriptsIterator : public QListIterator<Script *>
 {
 public:
 	inline explicit ScriptsIterator(const QList<Script *> &list)
-		: QListIterator<Script *>(list), _opcodesIt(0) {}
+		: QListIterator<Script *>(list), _opcodesIt(nullptr) {}
 	ScriptsIterator(const ScriptsIterator &other);
 	virtual ~ScriptsIterator();
 
@@ -82,7 +82,7 @@ public:
 	}
 	QByteArray toByteArray(quint8 scriptID) const;
 	void backgroundParams(QHash<quint8, quint8> &paramActifs) const;
-	void backgroundMove(qint16 z[2], qint16 *x=0, qint16 *y=0) const;
+	void backgroundMove(qint16 z[2], qint16 *x = nullptr, qint16 *y = nullptr) const;
 	Type typeID();
 	QString type();
 	inline qint16 character() const {

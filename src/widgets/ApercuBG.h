@@ -27,10 +27,10 @@ public:
 	explicit ApercuBG(QWidget *parent = nullptr);
 	void fill(Field *field, bool reload = false);
 	void clear();
-	inline QSize minimumSizeHint() const {
+	inline QSize minimumSizeHint() const override {
 		return QSize(100, 100);
 	}
-	inline QSize sizeHint() const {
+	inline QSize sizeHint() const override {
 		return QSize(300, 225);
 	}
 signals:
@@ -44,6 +44,6 @@ private:
 	QSize _backgroundSize;
 	bool _error;
 protected:
-	void mouseReleaseEvent(QMouseEvent *e);
-	void resizeEvent(QResizeEvent *e);
+	void mouseReleaseEvent(QMouseEvent *e) override;
+	void resizeEvent(QResizeEvent *e) override;
 };

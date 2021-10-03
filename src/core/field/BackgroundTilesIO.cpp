@@ -22,6 +22,10 @@ BackgroundTilesIO::BackgroundTilesIO(QIODevice *device) :
 {
 }
 
+BackgroundTilesIO::~BackgroundTilesIO()
+{
+}
+
 bool BackgroundTilesIO::read(BackgroundTiles &tiles) const
 {
 	if (!canRead()) {

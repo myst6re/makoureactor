@@ -41,15 +41,15 @@ class Window : public QMainWindow, ArchiveObserver
     Q_OBJECT
 public:
 	explicit Window();
-	virtual ~Window();
+	virtual ~Window() override;
 
 	void open(const QString &cheminFic, FieldArchiveIO::Type type, bool isPS);
 	FieldArchive::Sorting getFieldSorting();
 
-	bool observerWasCanceled() const;
-	void setObserverMaximum(unsigned int max);
-	void setObserverValue(int value);
-	bool observerRetry(const QString &message);
+	bool observerWasCanceled() const override;
+	void setObserverMaximum(unsigned int max) override;
+	void setObserverValue(int value) override;
+	bool observerRetry(const QString &message) override;
 
 	inline FieldList *fieldList() const {
 		return _fieldList;
@@ -159,6 +159,6 @@ private:
 
 //	FieldModelThread *modelThread;
 protected:
-	void closeEvent(QCloseEvent *event);
+	void closeEvent(QCloseEvent *event) override;
 	QMenu *createPopupMenu();
 };

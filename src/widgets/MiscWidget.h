@@ -32,5 +32,5 @@ private:
 	Field *field;
 	QLineEdit *mapName, *mapAuthor;
 protected:
-	void accept();
+	void accept() override;
 };

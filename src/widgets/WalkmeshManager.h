@@ -77,8 +77,8 @@ private slots:
 	void editUnknown(const QByteArray &data);
 	void editMapScale(int scale);
 protected:
-	virtual void focusInEvent(QFocusEvent *e);
-	virtual void focusOutEvent(QFocusEvent *e);
+	virtual void focusInEvent(QFocusEvent *e) override;
+	virtual void focusOutEvent(QFocusEvent *e) override;
 private:
 	QWidget *buildCameraPage();
 	QWidget *buildWalkmeshPage();

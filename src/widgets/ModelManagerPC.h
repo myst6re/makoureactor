@@ -28,18 +28,18 @@ class ModelManagerPC : public ModelManager
 public:
 	ModelManagerPC(QWidget *parent = nullptr);
 protected:
-	QList<QStringList> modelNames() const;
-	QList<QTreeWidgetItem *> animItems(int modelID) const;
-	void showModelInfos2(int row);
-	FieldModelFile *modelData(QTreeWidgetItem *item);
-	FieldModelLoaderPC *modelLoader() const;
-	FieldPC *field() const;
-	const QList<FieldModelColorDir> &lightColors(int modelID) const;
-	void setLightColor(int modelID, int id, const FieldModelColorDir &color);
-	QRgb globalColor(int modelID) const;
-	void setGlobalColor(int modelID, QRgb color);
-	quint16 modelScale(int modelID) const;
-	void setModelScale(int modelID, quint16 scale);
+	QList<QStringList> modelNames() const override;
+	QList<QTreeWidgetItem *> animItems(int modelID) const override;
+	void showModelInfos2(int row) override;
+	FieldModelFile *modelData(QTreeWidgetItem *item) override;
+	FieldModelLoaderPC *modelLoader() const override;
+	FieldPC *field() const override;
+	const QList<FieldModelColorDir> &lightColors(int modelID) const override;
+	void setLightColor(int modelID, int id, const FieldModelColorDir &color) override;
+	QRgb globalColor(int modelID) const override;
+	void setGlobalColor(int modelID, QRgb color) override;
+	quint16 modelScale(int modelID) const override;
+	void setModelScale(int modelID, quint16 scale) override;
 private:
 	void copyModels(const QList<int> &modelIDs);
 	void cutModels(const QList<int> &modelIDs);

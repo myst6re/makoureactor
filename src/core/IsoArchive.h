@@ -170,8 +170,8 @@ class IsoFile : public IsoFileOrDirectory
 {
 public:
 	IsoFile(const QString &name, quint32 location, quint32 size, qint64 structPosition, IsoArchiveIO *io);
-	virtual ~IsoFile();
-	bool isDirectory() const;
+	virtual ~IsoFile() override;
+	bool isDirectory() const override;
 	QByteArray data(quint32 maxSize=0) const;
 	QByteArray modifiedData(quint32 maxSize=0) const;
 	bool extract(const QString &destination, quint32 maxSize=0) const;
@@ -179,8 +179,8 @@ public:
 	QIODevice *modifiedFile() const;
 	bool setModifiedFile(QIODevice *io);
 	bool setModifiedFile(const QByteArray &data);
-	bool isModified() const;
-	void applyModifications();
+	bool isModified() const override;
+	void applyModifications() override;
 private:
 	Q_DISABLE_COPY(IsoFile)
 	void setFile(QIODevice *io);
@@ -193,8 +193,8 @@ class IsoDirectory : public IsoFileOrDirectory
 {
 public:
 	IsoDirectory(const QString &name, quint32 location, quint32 size, qint64 structPosition);
-	virtual ~IsoDirectory();
-	bool isDirectory() const;
+	virtual ~IsoDirectory() override;
+	bool isDirectory() const override;
 	const QMap<QString, IsoFileOrDirectory *> &filesAndDirectories() const;
 	QList<IsoFile *> files() const;
 	QList<IsoDirectory *> directories() const;
@@ -213,9 +213,9 @@ class IsoArchiveIO : public QFile
 public:
 	IsoArchiveIO();
 	explicit IsoArchiveIO(const QString &name);
-	virtual ~IsoArchiveIO();
+	virtual ~IsoArchiveIO() override;
 
-	bool open(QIODevice::OpenMode mode);
+	bool open(QIODevice::OpenMode mode) override;
 	qint64 posIso() const;
 	bool seekIso(qint64 off);
 	qint64 sizeIso() const;
@@ -231,21 +231,21 @@ public:
 
 		if (id < 4350) {
 			h1 = 0;
-			h2 = dec2Hex(id/75 + 2);
-			h3 = dec2Hex(id - 75*(hex2Dec(h2) - 2));
+			h2 = dec2Hex(quint8(id / 75 + 2));
+			h3 = dec2Hex(quint8(id - 75 * (hex2Dec(h2) - 2)));
 		} else {
-			h1 = dec2Hex((id + 150) / 4500);
-			h2 = dec2Hex((id + 150 - hex2Dec(h1)*4500) / 75);
-			h3 = dec2Hex(id + 150 - hex2Dec(h1)*4500 - hex2Dec(h2)*75);
+			h1 = dec2Hex(quint8((id + 150) / 4500));
+			h2 = dec2Hex(quint8((id + 150 - hex2Dec(h1)*4500) / 75));
+			h3 = dec2Hex(quint8(id + 150 - hex2Dec(h1)*4500 - hex2Dec(h2)*75));
 		}
 
-		return QByteArray().append((char)h1).append((char)h2).append((char)h3);
+		return QByteArray().append(char(h1)).append(char(h2)).append(char(h3));
 	}
 	static inline QByteArray buildHeader(quint32 sector, quint8 type, quint8 mode=2) {
 		return QByteArray("\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\x00", 12)
-				.append(int2Header(sector)).append((char)mode)
-				.append("\x00\x00", 2).append((char)type).append('\x00')
-				.append("\x00\x00", 2).append((char)type).append('\x00');
+				.append(int2Header(sector)).append(char(mode))
+				.append("\x00\x00", 2).append(char(type)).append('\x00')
+				.append("\x00\x00", 2).append(char(type)).append('\x00');
 	}
 	static inline QByteArray buildFooter(quint32 sector) {
 		Q_UNUSED(sector)
@@ -255,10 +255,10 @@ public:
 	static inline void headerInfos(const QByteArray &header, quint8 *type, quint8 *mode = nullptr) {
 		Q_ASSERT(header.size() != SECTOR_SIZE_HEADER);
 		if (type) {
-			*type = header.at(18);
+			*type = quint8(header.at(18));
 		}
 		if (mode) {
-			*mode = header.at(15);
+			*mode = quint8(header.at(15));
 		}
 	}
 
@@ -286,13 +286,13 @@ private:
 class IsoFileIO : public QIODevice
 {
 public:
-	IsoFileIO(IsoArchiveIO *io, const IsoFile *infos, QObject *parent=0);
-	bool open(OpenMode mode);
-	qint64 size() const;
-	bool canReadLine() const;
+	IsoFileIO(IsoArchiveIO *io, const IsoFile *infos, QObject *parent = nullptr);
+	bool open(OpenMode mode) override;
+	qint64 size() const override;
+	bool canReadLine() const override;
 protected:
-	qint64 readData(char *data, qint64 maxSize);
-	qint64 writeData(const char *data, qint64 maxSize);
+	qint64 readData(char *data, qint64 maxSize) override;
+	qint64 writeData(const char *data, qint64 maxSize) override;
 private:
 	Q_DISABLE_COPY(IsoFileIO)
 	IsoArchiveIO *_io;

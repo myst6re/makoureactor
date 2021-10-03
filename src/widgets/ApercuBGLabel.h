@@ -29,8 +29,8 @@ signals:
 private:
 	bool _showSave;
 protected:
-	void paintEvent(QPaintEvent *e);
-	void enterEvent(QEvent *e);
-	void leaveEvent(QEvent *e);
-	void mousePressEvent(QMouseEvent *e);
+	void paintEvent(QPaintEvent *e) override;
+	void enterEvent(QEvent *e) override;
+	void leaveEvent(QEvent *e) override;
+	void mousePressEvent(QMouseEvent *e) override;
 };

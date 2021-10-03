@@ -25,7 +25,7 @@ class BackgroundTexturesIO : public IO
 {
 public:
 	explicit BackgroundTexturesIO(QIODevice *device);
-	virtual ~BackgroundTexturesIO() {}
+	virtual ~BackgroundTexturesIO() override;
 
 	virtual bool read(BackgroundTextures *textures) const {
 		Q_UNUSED(textures)

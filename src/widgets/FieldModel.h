@@ -27,7 +27,7 @@ class FieldModel : public QOpenGLWidget, protected QOpenGLFunctions
 	Q_OBJECT
 public:
 	FieldModel(QWidget *parent = nullptr);
-	virtual ~FieldModel();
+	virtual ~FieldModel() override;
 	void setIsAnimated(bool animate);
 	void setAnimationID(int animID);
 	void clear();
@@ -64,10 +64,10 @@ private:
 	QMatrix4x4 mProjection;
 
 protected:
-	void initializeGL();
-	void resizeGL(int w, int h);
-	void paintGL();
-	void wheelEvent(QWheelEvent *event);
-	void mousePressEvent(QMouseEvent *event);
-	void mouseMoveEvent(QMouseEvent *event);
+	void initializeGL() override;
+	void resizeGL(int w, int h) override;
+	void paintGL() override;
+	void wheelEvent(QWheelEvent *event) override;
+	void mousePressEvent(QMouseEvent *event) override;
+	void mouseMoveEvent(QMouseEvent *event) override;
 };

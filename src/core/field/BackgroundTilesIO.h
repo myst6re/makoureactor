@@ -78,7 +78,7 @@ class BackgroundTilesIO : public IO
 {
 public:
 	explicit BackgroundTilesIO(QIODevice *device);
-	virtual ~BackgroundTilesIO() {}
+	virtual ~BackgroundTilesIO() override;
 
 	bool read(BackgroundTiles &tiles) const;
 	bool write(const BackgroundTiles &tiles) const;
@@ -92,8 +92,8 @@ class BackgroundTilesIOPC : public BackgroundTilesIO
 public:
 	explicit BackgroundTilesIOPC(QIODevice *device);
 protected:
-	bool readData(BackgroundTiles &tiles) const;
-	bool writeData(const BackgroundTiles &tiles) const;
+	bool readData(BackgroundTiles &tiles) const override;
+	bool writeData(const BackgroundTiles &tiles) const override;
 private:
 	bool writeTile(const Tile &tile) const;
 	static Tile tilePC2Tile(const TilePC &tile, quint8 layerID, quint16 tileID);
@@ -105,8 +105,8 @@ class BackgroundTilesIOPS : public BackgroundTilesIO
 public:
 	explicit BackgroundTilesIOPS(QIODevice *device, bool demo = false);
 protected:
-	bool readData(BackgroundTiles &tiles) const;
-	bool writeData(const BackgroundTiles &tiles) const;
+	bool readData(BackgroundTiles &tiles) const override;
+	bool writeData(const BackgroundTiles &tiles) const override;
 private:
 	bool writeTileBase(const Tile &tile) const;
 	bool writeTileTex(const Tile &tile) const;

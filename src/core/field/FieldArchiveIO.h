@@ -50,8 +50,8 @@ public:
 	virtual void clearCachedData();
 
 	virtual void close();
-	ErrorCode open(ArchiveObserver *observer=0);
-	ErrorCode save(const QString &path=QString(), ArchiveObserver *observer=0);
+	ErrorCode open(ArchiveObserver *observer = nullptr);
+	ErrorCode save(const QString &path=QString(), ArchiveObserver *observer = nullptr);
 
 	virtual ErrorCode addField(const QString &fileName, const QString &name);
 

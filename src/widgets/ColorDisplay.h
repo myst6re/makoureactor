@@ -31,8 +31,8 @@ public:
 	const QList<QRgb> &colors() const;
 	bool isReadOnly() const;
 	void setReadOnly(bool ro);
-	QSize sizeHint() const;
-	QSize minimumSizeHint() const;
+	QSize sizeHint() const override;
+	QSize minimumSizeHint() const override;
 	inline int cellWidth() const {
 		return cellWidth(width());
 	}
@@ -50,9 +50,9 @@ private:
 	QList<QRgb> _colors;
 	bool _ro, _hover;
 protected:
-	void paintEvent(QPaintEvent *event);
-	void enterEvent(QEvent *event);
-	void leaveEvent(QEvent *event);
-	void mouseMoveEvent(QMouseEvent *event);
-	void mouseReleaseEvent(QMouseEvent *event);
+	void paintEvent(QPaintEvent *event) override;
+	void enterEvent(QEvent *event) override;
+	void leaveEvent(QEvent *event) override;
+	void mouseMoveEvent(QMouseEvent *event) override;
+	void mouseReleaseEvent(QMouseEvent *event) override;
 };

@@ -23,6 +23,10 @@ AkaoIO::AkaoIO(QIODevice *device) :
 	
 }
 
+AkaoIO::~AkaoIO()
+{
+}
+
 bool AkaoIO::read(Akao &akao) const
 {
 	Q_UNUSED(akao)

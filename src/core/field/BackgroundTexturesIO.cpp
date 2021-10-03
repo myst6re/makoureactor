@@ -22,6 +22,10 @@ BackgroundTexturesIO::BackgroundTexturesIO(QIODevice *device) :
 {
 }
 
+BackgroundTexturesIO::~BackgroundTexturesIO()
+{
+}
+
 BackgroundTexturesIOPC::BackgroundTexturesIOPC(QIODevice *device) :
 	BackgroundTexturesIO(device)
 {

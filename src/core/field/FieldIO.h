@@ -25,14 +25,14 @@ class FieldSaveIO : public QIODevice
 {
 	Q_OBJECT
 public:
-	FieldSaveIO(Field *field, QObject *parent=0);
-	virtual bool open(OpenMode mode);
-	virtual void close();
-	virtual qint64 size() const;
+	FieldSaveIO(Field *field, QObject *parent = nullptr);
+	virtual bool open(OpenMode mode) override;
+	virtual void close() override;
+	virtual qint64 size() const override;
 protected:
-	virtual qint64 readData(char *data, qint64 maxSize);
+	virtual qint64 readData(char *data, qint64 maxSize) override;
 private:
-	qint64 writeData(const char *, qint64) { return -1; }
+	qint64 writeData(const char *, qint64) override { return -1; }
 	bool setCache();
 	Field *_field;
 	QByteArray _cache;

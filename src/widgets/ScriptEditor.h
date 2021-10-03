@@ -28,12 +28,12 @@ class ScriptEditor : public QDialog
 public:
 	ScriptEditor();
 	ScriptEditor(Field *field, GrpScript *grpScript, Script *script, quint16 opcodeID, bool modify, bool isInit, QWidget *parent = nullptr);
-	virtual ~ScriptEditor();
+	virtual ~ScriptEditor() override;
 
 	bool needslabel() const;
 
 private slots:
-	void accept();
+	void accept() override;
 	void refreshTextEdit();
 	void changeCurrentOpcode(int);
 	void buildList(int);

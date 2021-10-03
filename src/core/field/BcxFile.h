@@ -38,7 +38,7 @@ class BcxFile : public BsxFile
 {
 public:
 	explicit BcxFile(QIODevice *io);
-	virtual ~BcxFile() {}
+	virtual ~BcxFile() override;
 
 	bool read(FieldModelFilePS &model);
 	bool write(const FieldModelFilePS &model);

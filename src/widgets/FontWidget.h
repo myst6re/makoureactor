@@ -59,6 +59,6 @@ private:
 	QPushButton *resetButton2;
 	FF7Font *ff7Font;
 protected:
-	void focusInEvent(QFocusEvent *);
+	void focusInEvent(QFocusEvent *) override;
 
 };

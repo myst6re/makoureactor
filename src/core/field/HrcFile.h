@@ -24,7 +24,7 @@ class HrcFile : public IO
 {
 public:
 	explicit HrcFile(QIODevice *io);
-	virtual ~HrcFile() {}
+	virtual ~HrcFile() override;
 
 	bool read(FieldModelSkeleton &skeleton) const {
 		QMultiMap<int, QStringList> rsdFiles;

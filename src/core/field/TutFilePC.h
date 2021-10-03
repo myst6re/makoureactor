@@ -25,9 +25,9 @@ class TutFilePC : public TutFile
 public:
 	TutFilePC();
 	using TutFile::open; // open(QByteArray)
-	bool open();
-	QByteArray save() const;
-	inline int maxTutCount() const { return 9; }
+	bool open() override;
+	QByteArray save() const override;
+	inline int maxTutCount() const override { return 9; }
 protected:
-	QList<quint32> openPositions(const QByteArray &data) const;
+	QList<quint32> openPositions(const QByteArray &data) const override;
 };

@@ -28,13 +28,13 @@ class FieldPS : public Field
 public:
 	FieldPS(const QString &name, FieldArchiveIO *io);
 	explicit FieldPS(const Field &field);
-	virtual ~FieldPS();
+	virtual ~FieldPS() override;
 
-	inline bool isPC() const { return false; }
+	inline bool isPC() const override { return false; }
 
-	FieldModelLoaderPS *fieldModelLoader(bool open=true);
-	FieldModelFilePS *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
-	FieldArchiveIOPS *io() const;
+	FieldModelLoaderPS *fieldModelLoader(bool open = true) override;
+	FieldModelFilePS *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true) override;
+	FieldArchiveIOPS *io() const override;
 	bool saveModels(QByteArray &newData, bool compress);
 	qint8 saveModels(const QString &path, bool compress);
 	bool saveBackground(QByteArray &newData, bool compress);
@@ -43,23 +43,23 @@ public:
 	bool isBsxModified() const;
 	bool isMimModified() const;
 protected:
-	inline virtual int headerSize() const { return 28; }
-	virtual void openHeader(const QByteArray &fileData);
-	virtual QByteArray saveHeader() const;
-	virtual QByteArray saveFooter() const;
-	virtual FieldPart *createPart(FieldSection part);
-	virtual int sectionId(FieldSection part) const;
-	inline QString sectionFile(FieldSection part) const {
+	inline virtual int headerSize() const override { return 28; }
+	virtual void openHeader(const QByteArray &fileData) override;
+	virtual QByteArray saveHeader() const override;
+	virtual QByteArray saveFooter() const override;
+	virtual FieldPart *createPart(FieldSection part) override;
+	virtual int sectionId(FieldSection part) const override;
+	inline QString sectionFile(FieldSection part) const override {
 		Q_UNUSED(part)
 		return "DAT";
 	}
-	virtual quint32 sectionPosition(int idPart) const;
-	inline virtual int sectionCount() const {	return 7; }
-	inline virtual int paddingBetweenSections() const { return 0; }
-	inline virtual int alignment() const { return 4; } // Aligned
-	virtual QList<Field::FieldSection> orderOfSections() const;
-	inline virtual quint32 diffSectionPos() const { return vramDiff; }
-	inline virtual bool hasSectionHeader() const { return false; }
+	virtual quint32 sectionPosition(int idPart) const override;
+	inline virtual int sectionCount() const override {	return 7; }
+	inline virtual int paddingBetweenSections() const override { return 0; }
+	inline virtual int alignment() const override { return 4; } // Aligned
+	virtual QList<Field::FieldSection> orderOfSections() const override;
+	inline virtual qint32 diffSectionPos() const override { return vramDiff; }
+	inline virtual bool hasSectionHeader() const override { return false; }
 private:
 	quint32 sectionPositions[7];
 	qint32 vramDiff;

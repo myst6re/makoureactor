@@ -17,12 +17,12 @@
  ****************************************************************************/
 #pragma once
 
-#include <QtCore>
+#include <QtGlobal>
 
 class FieldModelTextureRef
 {
 public:
 	FieldModelTextureRef() {}
-	virtual ~FieldModelTextureRef() {}
+	virtual ~FieldModelTextureRef();
 	virtual quint64 textureIdentifier() const=0;
 };

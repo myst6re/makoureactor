@@ -89,5 +89,5 @@ private:
 	QSet<quint8> usedTexts;
 	static QIcon winIcon, noWinIcon;
 protected:
-	virtual void focusInEvent(QFocusEvent *e);
+	virtual void focusInEvent(QFocusEvent *e) override;
 };

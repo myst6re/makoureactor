@@ -32,5 +32,5 @@ private:
 	EncounterFile *data;
 	EncounterTableWidget *group1, *group2;
 protected:
-	void accept();
+	void accept() override;
 };

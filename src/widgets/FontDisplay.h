@@ -25,7 +25,7 @@ class FontDisplay : public QWidget
 	Q_OBJECT
 public:
 	explicit FontDisplay(QWidget *parent = nullptr);
-	virtual ~FontDisplay();
+	virtual ~FontDisplay() override;
 	WindowBinFile *windowBinFile() const;
 	virtual void setWindowBinFile(WindowBinFile *windowBinFile);
 	void clear();

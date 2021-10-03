@@ -54,7 +54,7 @@ public:
 	FieldModelTexturesPS() {}
 	FieldModelTexturesPS(const QList<QRect> &rects,
 						const QList<QByteArray> &data);
-	inline virtual ~FieldModelTexturesPS() {}
+	virtual ~FieldModelTexturesPS();
 
 	QImage toImage(const QPoint &imgPos, const QPoint &palPos, Bpp bpp) const;
 	QImage toImage(const QPoint &palPos, Bpp bpp) const;
@@ -94,7 +94,7 @@ public:
 	_type(type), _bpp(bpp),
 	_imgX(imgX), _imgY(imgY),
 	_palX(palX), _palY(palY) {}
-	virtual ~FieldModelTextureRefPS() {}
+	virtual ~FieldModelTextureRefPS() override;
 
 	inline quint8 type() const {
 		return _type;
@@ -148,13 +148,13 @@ public:
 		_palY = palY;
 	}
 
-	inline quint64 textureIdentifier() const {
-		return ((imgX() / 64) & 0x0F)
-				| (((imgY() / 256) & 0x01) << 4)
-				| (((palX() / 16) & 0x3F) << 5)
-				| ((palY() & 0x1FF) << 11)
-				| ((type() & 0x3F) << 20)
-				| ((bpp() & 0x3) << 26);
+	inline quint64 textureIdentifier() const override {
+		return quint16(((imgX() / 64) & 0x0F)
+		               | (((imgY() / 256) & 0x01) << 4)
+		               | (((palX() / 16) & 0x3F) << 5)
+		               | ((palY() & 0x1FF) << 11)
+		               | ((type() & 0x3F) << 20)
+		               | ((bpp() & 0x3) << 26));
 	}
 private:
 	quint8 _type; // 0: eye, 1: mouth, 2: normal

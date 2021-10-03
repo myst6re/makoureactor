@@ -25,6 +25,10 @@ BackgroundIO::BackgroundIO(QIODevice *device) :
 {
 }
 
+BackgroundIO::~BackgroundIO()
+{
+}
+
 BackgroundIOPC::BackgroundIOPC(QIODevice *device, QIODevice *devicePal) :
 	BackgroundIO(device), _devicePal(devicePal)
 {

@@ -47,7 +47,7 @@ class ModelColorsLayout : public QGridLayout
 {
 	Q_OBJECT
 public:
-	explicit ModelColorsLayout(QWidget *parent = 0);
+	explicit ModelColorsLayout(QWidget *parent = nullptr);
 	void setModelColorDirs(const QList<FieldModelColorDir> &dirs);
 	void setReadOnly(bool ro);
 signals:

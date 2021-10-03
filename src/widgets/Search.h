@@ -116,5 +116,5 @@ signals:
 	void textReplaced(int fieldID, int textID);
 
 protected:
-	void showEvent(QShowEvent *event);
+	void showEvent(QShowEvent *event) override;
 };

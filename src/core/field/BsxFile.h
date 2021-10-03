@@ -190,7 +190,7 @@ class BsxFile : public IO
 {
 public:
 	explicit BsxFile(QIODevice *io);
-	virtual ~BsxFile() {}
+	virtual ~BsxFile() override;
 
 	virtual bool read(QList<FieldModelFilePS *> &models);
 	virtual bool read(FieldModelFilePS *model) const;

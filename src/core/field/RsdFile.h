@@ -37,7 +37,7 @@ class RsdFile : public IO
 {
 public:
 	explicit RsdFile(QIODevice *io);
-	virtual ~RsdFile() {}
+	virtual ~RsdFile() override;
 
 	bool read(Rsd &rsd, QStringList &textureNames) const;
 	bool write(const Rsd &rsd, const QStringList &textureNames) const;

@@ -17,6 +17,10 @@
  ****************************************************************************/
 #include "Archive.h"
 
+ArchiveObserver::~ArchiveObserver()
+{
+}
+
 /*!
 	\class Archive
 

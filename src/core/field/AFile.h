@@ -34,7 +34,7 @@ class AFile : public IO
 {
 public:
 	explicit AFile(QIODevice *device);
-	virtual ~AFile() {}
+	virtual ~AFile() override;
 
 	bool readHeader(AHeader &header) const;
 	bool read(FieldModelAnimation &animation, int maxFrames = -1) const;

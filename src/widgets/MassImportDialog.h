@@ -47,5 +47,5 @@ private:
 	const FieldArchive *_fieldArchive;
 	int _currentMapId;
 protected:
-	void accept();
+	void accept() override;
 };

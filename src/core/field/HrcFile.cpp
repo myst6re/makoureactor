@@ -23,6 +23,10 @@ HrcFile::HrcFile(QIODevice *io) :
 {
 }
 
+HrcFile::~HrcFile()
+{
+}
+
 bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rsdFiles) const
 {
 	if (!canRead()) {

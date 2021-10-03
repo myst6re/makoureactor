@@ -33,10 +33,10 @@ public:
 		return setCustom("psfby", author);
 	}
 	PsfTags &setLengthS(quint32 seconds);
-	inline PsfTags &setFade(quint32 fade) {
+	inline PsfTags &setFade(int fade) {
 		return setCustom("fade", fade);
 	}
-	inline PsfTags &setVolume(quint32 volume) {
+	inline PsfTags &setVolume(int volume) {
 		return setCustom("volume", volume);
 	}
 	inline PsfTags &setTitle(const QString &title) {
@@ -54,16 +54,16 @@ public:
 	inline PsfTags &setComment(const QString &comment) {
 		return setCustom("comment", comment);
 	}
-	inline PsfTags &setYear(quint32 year) {
+	inline PsfTags &setYear(int year) {
 		return setCustom("year", year);
 	}
 	inline PsfTags &setCopyright(const QString &copyright) {
 		return setCustom("copyright", copyright);
 	}
-	inline PsfTags &setReplayGainTrack(float gain_db, float peak) {
+	inline PsfTags &setReplayGainTrack(double gain_db, double peak) {
 		return setReplayGain("track", gain_db, peak);
 	}
-	inline PsfTags &setReplayGainAlbum(float gain_db, float peak) {
+	inline PsfTags &setReplayGainAlbum(double gain_db, double peak) {
 		return setReplayGain("album", gain_db, peak);
 	}
 	inline PsfTags &setCustom(const QString &name, const QString &value) {
@@ -74,7 +74,7 @@ public:
 		return setCustom(name, QString::number(value));
 	}
 private:
-	PsfTags &setReplayGain(const QString &type, float gain_db, float peak);
+	PsfTags &setReplayGain(const QString &type, double gain_db, double peak);
 	QMap<QString, QString> _tags;
 };
 

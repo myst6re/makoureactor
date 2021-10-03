@@ -22,6 +22,10 @@ PaletteIO::PaletteIO(QIODevice *device) :
 {
 }
 
+PaletteIO::~PaletteIO()
+{
+}
+
 bool PaletteIO::read(Palettes &palettes) const
 {
 	if (!canRead()) {

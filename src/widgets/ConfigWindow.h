@@ -61,5 +61,5 @@ private slots:
 	void editEncoding();
 	void showIcons();
 protected:
-	void accept();
+	void accept() override;
 };

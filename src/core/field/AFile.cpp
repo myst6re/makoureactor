@@ -22,6 +22,10 @@ AFile::AFile(QIODevice *device) :
 {
 }
 
+AFile::~AFile()
+{
+}
+
 bool AFile::readHeader(AHeader &header) const
 {
 	if (!canRead()) {

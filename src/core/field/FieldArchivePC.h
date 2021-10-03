@@ -27,10 +27,10 @@ class FieldArchivePC : public FieldArchive
 public:
 	FieldArchivePC();
 	FieldArchivePC(const QString &path, FieldArchiveIO::Type type);
-	virtual ~FieldArchivePC();
-	inline bool isPC() const { return true; }
+	virtual ~FieldArchivePC() override;
+	inline bool isPC() const override { return true; }
 
-	void clear();
+	void clear() override;
 
 	const FieldPC *field(quint32 id) const;
 	FieldPC *field(quint32 id, bool open=true, bool dontOptimize=false);
@@ -39,9 +39,9 @@ public:
 	const QMap<QString, TutFilePC *> &tuts() const;
 	void addTut(const QString &name);
 
-	void setSaved();
+	void setSaved() override;
 
-	FieldArchiveIOPC *io() const;
+	FieldArchiveIOPC *io() const override;
 
 	void cleanModelLoader();
 	void removeUnusedSections();

@@ -29,32 +29,32 @@ public:
 	FieldPC(const QString &name, FieldArchiveIO *io);
 	FieldPC(const QString &name);
 	explicit FieldPC(const Field &field);
-	virtual ~FieldPC();
+	virtual ~FieldPC() override;
 
-	inline bool isPC() const { return true; }
+	inline bool isPC() const override { return true; }
 
-	FieldModelLoaderPC *fieldModelLoader(bool open=true);
-	FieldModelFilePC *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true);
-	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate = true);
+	FieldModelLoaderPC *fieldModelLoader(bool open = true) override;
+	FieldModelFilePC *fieldModel(int modelID, int animationID = 0, bool animate = true, bool open = true) override;
+	FieldModelFilePC *fieldModel(const QString &hrc, const QString &a, bool animate = true) override;
 protected:
-	inline int headerSize() const { return 42; }
-	void openHeader(const QByteArray &fileData);
-	QByteArray saveHeader() const;
-	QByteArray saveFooter() const;
-	FieldPart *createPart(FieldSection part);
-	int sectionId(FieldSection part) const;
-	inline QString sectionFile(FieldSection part) const {
+	inline int headerSize() const override { return 42; }
+	void openHeader(const QByteArray &fileData) override;
+	QByteArray saveHeader() const override;
+	QByteArray saveFooter() const override;
+	FieldPart *createPart(FieldSection part) override;
+	int sectionId(FieldSection part) const override;
+	inline QString sectionFile(FieldSection part) const override {
 		Q_UNUSED(part)
 		return QString();
 	}
-	quint32 sectionPosition(int idPart) const;
-	inline int sectionCount() const {	return 9; }
-	inline int paddingBetweenSections() const { return 4; }
-	inline int alignment() const { return 0; } // Not aligned
-	QList<Field::FieldSection> orderOfSections() const;
-	inline quint32 diffSectionPos() const { return 0; }
-	inline bool hasSectionHeader() const { return true; }
-	bool importModelLoader(const QByteArray &sectionData, bool isPSField, QIODevice *bsxDevice);
+	quint32 sectionPosition(int idPart) const override;
+	inline int sectionCount() const override {	return 9; }
+	inline int paddingBetweenSections() const override { return 4; }
+	inline int alignment() const override { return 0; } // Not aligned
+	QList<Field::FieldSection> orderOfSections() const override;
+	inline qint32 diffSectionPos() const override { return 0; }
+	inline bool hasSectionHeader() const override { return true; }
+	bool importModelLoader(const QByteArray &sectionData, bool isPSField, QIODevice *bsxDevice) override;
 private:
 	quint32 sectionPositions[9];
 	FieldModelFilePC *_model;

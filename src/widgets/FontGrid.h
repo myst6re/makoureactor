@@ -25,20 +25,20 @@ class FontGrid : public FontDisplay
 	Q_OBJECT
 public:
 	explicit FontGrid(int letterCountH, int letterCountV, QWidget *parent = nullptr);
-	virtual ~FontGrid();
+	virtual ~FontGrid() override;
 	QPoint getPos(int letter);
 signals:
 	void letterClicked(int letter);
 public slots:
 	void updateLetter(const QRect &rect);
 protected:
-	virtual QSize sizeHint() const;
-	virtual QSize minimumSizeHint() const;
-	virtual void mousePressEvent(QMouseEvent * e);
-	virtual void keyPressEvent(QKeyEvent *e);
-	virtual void paintEvent(QPaintEvent *e);
-	virtual void focusInEvent(QFocusEvent *);
-	virtual void focusOutEvent(QFocusEvent *);
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
+	virtual void mousePressEvent(QMouseEvent * e) override;
+	virtual void keyPressEvent(QKeyEvent *e) override;
+	virtual void paintEvent(QPaintEvent *e) override;
+	virtual void focusInEvent(QFocusEvent *) override;
+	virtual void focusOutEvent(QFocusEvent *) override;
 private:
 	int getLetter(const QPoint &pos);
 	//QPixmap copyGrid;

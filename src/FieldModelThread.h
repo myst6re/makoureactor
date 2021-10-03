@@ -24,8 +24,8 @@ class FieldModelThread : public QThread
 {
 	Q_OBJECT
 public:
-	explicit FieldModelThread(QObject *parent = 0);
-	virtual ~FieldModelThread();
+	explicit FieldModelThread(QObject *parent = nullptr);
+	virtual ~FieldModelThread() override;
 	void setField(Field *field);
 	void setModel(int modelId, int animationId=0, bool animate=true);
 	void setModels(const QList<int> &modelIds, bool animate=true);
@@ -33,7 +33,7 @@ public:
 signals:
 	void modelLoaded(Field *field, FieldModelFile *model, int modelId, int animationId, bool isAnimated);
 protected:
-	void run();
+	void run() override;
 private:
 	bool _canceled;
 	QMutex mutex;

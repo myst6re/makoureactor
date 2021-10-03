@@ -82,11 +82,11 @@ class InfFile : public FieldPart
 {
 public:
 	explicit InfFile(Field *field);
-	void initEmpty();
-	bool open();
-	bool open(const QByteArray &data);
-	QByteArray save() const;
-	void clear();
+	void initEmpty() override;
+	bool open() override;
+	bool open(const QByteArray &data) override;
+	QByteArray save() const override;
+	void clear() override;
 	bool isJap() const;
 	QString mapName();
 	void setMapName(const QString &name);

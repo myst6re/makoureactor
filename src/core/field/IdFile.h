@@ -37,11 +37,11 @@ class IdFile : public FieldPart
 {
 public:
 	explicit IdFile(Field *field);
-	void initEmpty();
-	bool open();
-	bool open(const QByteArray &data);
-	QByteArray save() const;
-	void clear();
+	void initEmpty() override;
+	bool open() override;
+	bool open(const QByteArray &data) override;
+	QByteArray save() const override;
+	void clear() override;
 	bool hasTriangle() const;
 	int triangleCount() const;
 	const QList<Triangle> &triangles() const;

@@ -26,6 +26,10 @@ FieldModelTexturesPS::FieldModelTexturesPS(const QList<QRect> &rects,
 {
 }
 
+FieldModelTexturesPS::~FieldModelTexturesPS()
+{
+}
+
 QImage FieldModelTexturesPS::toImage(const QPoint &imgPos, const QPoint &palPos, Bpp bpp) const
 {
 	QPair<int, int> ids = resolve(imgPos, palPos);
@@ -132,4 +136,8 @@ QImage FieldModelTexturesPS::toImage(int imgId, int palId, Bpp bpp) const
 	}
 
 	return image;
+}
+
+FieldModelTextureRefPS::~FieldModelTextureRefPS()
+{
 }

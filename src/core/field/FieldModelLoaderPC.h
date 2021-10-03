@@ -35,13 +35,13 @@ class FieldModelLoaderPC : public FieldModelLoader
 {
 public:
 	explicit FieldModelLoaderPC(Field *field);
-	void clear();
+	void clear() override;
 	void clean();
-	void initEmpty();
-	bool open();
-	bool open(const QByteArray &data);
-	QByteArray save() const;
-	int modelCount() const;
+	void initEmpty() override;
+	bool open() override;
+	bool open(const QByteArray &data) override;
+	QByteArray save() const override;
+	int modelCount() const override;
 	bool insertModel(int modelID, const QString &hrcName);
 	void removeModel(int modelID);
 	void swapModel(int oldModelID, int newModelID);
@@ -53,8 +53,8 @@ public:
 	void setCharName(int modelID, const QString &charName);
 	quint16 scale(int modelID) const;
 	void setScale(int modelID, quint16 scale);
-	quint16 unknown(int modelID) const;
-	void setUnknown(int modelID, quint16 unknown);
+	quint16 unknown(int modelID) const override;
+	void setUnknown(int modelID, quint16 unknown) override;
 	const QList<FieldModelColorDir> &lightColors(int modelID) const;
 	void setLightColors(int modelID,
 	                    const QList<FieldModelColorDir> &lightColors);
@@ -62,7 +62,7 @@ public:
 	                   const FieldModelColorDir &lightColor);
 	QRgb globalColor(int modelID) const;
 	void setGlobalColor(int modelID, QRgb globalColor);
-	int animCount(int modelID) const;
+	int animCount(int modelID) const override;
 	bool insertAnim(int modelID, int numA, const QString &name);
 	void removeAnim(int modelID, int numA);
 	void swapAnim(int modelID, int oldNumA, int newNumA);

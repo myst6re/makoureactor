@@ -26,12 +26,12 @@ class BackgroundTilesFile : public FieldPart
 {
 public:
 	explicit BackgroundTilesFile(Field *field);
-	virtual ~BackgroundTilesFile();
+	virtual ~BackgroundTilesFile() override;
 
-	bool open();
-	bool open(const QByteArray &data);
-	QByteArray save() const;
-	void clear();
+	bool open() override;
+	bool open(const QByteArray &data) override;
+	QByteArray save() const override;
+	void clear() override;
 
 	inline const BackgroundTiles &tiles() const {
 		return _tiles;

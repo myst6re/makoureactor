@@ -27,14 +27,14 @@ class FieldArchiveIOPS : public FieldArchiveIO
 {
 public:
 	explicit FieldArchiveIOPS(FieldArchivePS *fieldArchive);
-	inline bool isPS() const { return true; }
+	inline bool isPS() const override { return true; }
 
 	QByteArray mimData(Field *field, bool unlzs=true);
 	QByteArray modelData(Field *field, bool unlzs=true);
 
 	static bool mimDataIsCached(Field *field);
 	static bool modelDataIsCached(Field *field);
-	void clearCachedData();
+	void clearCachedData() override;
 protected:
 	virtual QByteArray mimData2(Field *field, bool unlzs)=0;
 	virtual QByteArray modelData2(Field *field, bool unlzs)=0;
@@ -49,21 +49,21 @@ class FieldArchiveIOPSFile : public FieldArchiveIOPS
 {
 public:
 	FieldArchiveIOPSFile(const QString &path, FieldArchivePS *fieldArchive);
-	inline Type type() const { return File; }
+	inline Type type() const override { return File; }
 
-	void close();
+	void close() override;
 
-	QString path() const;
+	QString path() const override;
 
-	Archive *device();
+	Archive *device() override;
 private:
-	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
-	QByteArray mimData2(Field *field, bool unlzs);
-	QByteArray modelData2(Field *field, bool unlzs);
-	QByteArray fileData2(const QString &fileName);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs) override;
+	QByteArray mimData2(Field *field, bool unlzs) override;
+	QByteArray modelData2(Field *field, bool unlzs) override;
+	QByteArray fileData2(const QString &fileName) override;
 
-	ErrorCode open2(ArchiveObserver *observer);
-	ErrorCode save2(const QString &path, ArchiveObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer) override;
+	ErrorCode save2(const QString &path, ArchiveObserver *observer) override;
 
 	QLockedFile fic;
 };
@@ -72,20 +72,20 @@ class FieldArchiveIOPSIso : public FieldArchiveIOPS
 {
 public:
 	FieldArchiveIOPSIso(const QString &path, FieldArchivePS *fieldArchive);
-	inline Type type() const { return Iso; }
+	inline Type type() const override { return Iso; }
 
-	QString path() const;
+	QString path() const override;
 
-	Archive *device();
+	Archive *device() override;
 private:
-	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
-	QByteArray mimData2(Field *field, bool unlzs);
-	QByteArray modelData2(Field *field, bool unlzs);
-	QByteArray fileData2(const QString &fileName);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs) override;
+	QByteArray mimData2(Field *field, bool unlzs) override;
+	QByteArray modelData2(Field *field, bool unlzs) override;
+	QByteArray fileData2(const QString &fileName) override;
 
 	ErrorCode openIso();
-	ErrorCode open2(ArchiveObserver *observer);
-	ErrorCode save2(const QString &path, ArchiveObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer) override;
+	ErrorCode save2(const QString &path, ArchiveObserver *observer) override;
 
 	IsoArchiveFF7 iso;
 	IsoDirectory *isoFieldDirectory;
@@ -95,20 +95,20 @@ class FieldArchiveIOPSDir : public FieldArchiveIOPS
 {
 public:
 	FieldArchiveIOPSDir(const QString &path, FieldArchivePS *fieldArchive);
-	inline Type type() const { return Dir; }
+	inline Type type() const override { return Dir; }
 
-	QString path() const;
-	inline bool hasName() const { return false; }
+	QString path() const override;
+	inline bool hasName() const override { return false; }
 
-	Archive *device();
+	Archive *device() override;
 private:
-	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs);
-	QByteArray mimData2(Field *field, bool unlzs);
-	QByteArray modelData2(Field *field, bool unlzs);
-	QByteArray fileData2(const QString &fileName);
+	QByteArray fieldData2(Field *field, const QString &extension, bool unlzs) override;
+	QByteArray mimData2(Field *field, bool unlzs) override;
+	QByteArray modelData2(Field *field, bool unlzs) override;
+	QByteArray fileData2(const QString &fileName) override;
 
-	ErrorCode open2(ArchiveObserver *observer);
-	ErrorCode save2(const QString &path, ArchiveObserver *observer);
+	ErrorCode open2(ArchiveObserver *observer) override;
+	ErrorCode save2(const QString &path, ArchiveObserver *observer) override;
 
 	QDir dir;
 };

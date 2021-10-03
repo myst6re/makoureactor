@@ -23,6 +23,10 @@ BcxFile::BcxFile(QIODevice *io) :
 {
 }
 
+BcxFile::~BcxFile()
+{
+}
+
 bool BcxFile::read(FieldModelFilePS &model)
 {
 	if (!readHeader()) {

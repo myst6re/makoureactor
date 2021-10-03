@@ -36,7 +36,7 @@ public:
 	};
 
 	explicit OpcodeList(QWidget *parent = nullptr);
-	virtual ~OpcodeList() {}
+	virtual ~OpcodeList() override {}
 
 	int selectedID();
 	int selectedOpcode();
@@ -89,7 +89,7 @@ signals:
 	void gotoField(int fieldID);
 	void searchOpcode(int opcodeID);
 protected:
-	void mouseReleaseEvent(QMouseEvent *event);
+	void mouseReleaseEvent(QMouseEvent *event) override;
 private:
 	void fill();
 	void upDownEnabled();

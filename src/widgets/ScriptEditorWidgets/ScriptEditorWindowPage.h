@@ -25,9 +25,9 @@ class ScriptEditorWindowPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorWindowPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
-	Opcode *opcode();
-	void setOpcode(Opcode *opcode);
+	explicit ScriptEditorWindowPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	Opcode *opcode() override;
+	void setOpcode(Opcode *opcode) override;
 private slots:
 	void updatePreview();
 	void updateText(int textID);
@@ -40,7 +40,7 @@ private slots:
 		align(Qt::AlignVCenter);
 	}
 private:
-	void build();
+	void build() override;
 	void align(Qt::Alignment alignment);
 	QLabel *xLabel, *yLabel, *wLabel, *hLabel;
 	TextPreview *textPreview;
@@ -53,13 +53,13 @@ class ScriptEditorWindowModePage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorWindowModePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
-	Opcode *opcode();
-	void setOpcode(Opcode *opcode);
+	explicit ScriptEditorWindowModePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	Opcode *opcode() override;
+	void setOpcode(Opcode *opcode) override;
 private slots:
 	void updatePreview();
 private:
-	void build();
+	void build() override;
 	TextPreview *textPreview;
 	QSpinBox *winID;
 	QComboBox *winType, *winClose;
@@ -69,10 +69,10 @@ class ScriptEditorWindowMovePage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorWindowMovePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
-	Opcode *opcode();
-	void setOpcode(Opcode *opcode);
+	explicit ScriptEditorWindowMovePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	Opcode *opcode() override;
+	void setOpcode(Opcode *opcode) override;
 private:
-	void build();
+	void build() override;
 	QSpinBox *winID, *x, *y;
 };

@@ -68,6 +68,7 @@ struct SearchTextQuery : public SearchQuery
 
 struct SearchIn
 {
+	virtual ~SearchIn();
 	virtual void reset()=0;
 	virtual void toEnd()=0;
 };
@@ -80,13 +81,8 @@ struct SearchInScript : public SearchIn
 		groupID(groupID), scriptID(scriptID), opcodeID(opcodeID)
 	{}
 
-	void reset() {
-		groupID = scriptID = opcodeID = 0;
-	}
-
-	void toEnd() {
-		groupID = scriptID = opcodeID = 2147483647;
-	}
+	void reset() override;
+	void toEnd() override;
 };
 
 struct SearchInText : public SearchIn
@@ -97,15 +93,8 @@ struct SearchInText : public SearchIn
 		textID(textID), from(from), size(size), index(index)
 	{}
 
-	void reset() {
-		textID = 0;
-		from = -1;
-	}
-
-	void toEnd() {
-		textID = 2147483647;
-		from = -1;
-	}
+	void reset() override;
+	void toEnd() override;
 };
 
 class FieldArchive;

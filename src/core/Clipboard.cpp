@@ -25,7 +25,7 @@
 #include "core/field/Script.h"
 #include "core/field/GrpScript.h"
 
-Clipboard *Clipboard::_instance = 0;
+Clipboard *Clipboard::_instance = nullptr;
 
 Clipboard *Clipboard::instance()
 {

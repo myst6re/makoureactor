@@ -23,10 +23,10 @@
 class TutFile : public FieldPart
 {
 public:
-	explicit TutFile(Field *field = 0);
+	explicit TutFile(Field *field = nullptr);
 	explicit TutFile(const QList<QByteArray> &tutos);
-	bool open(const QByteArray &data);
-	inline void clear() {
+	bool open(const QByteArray &data) override;
+	inline void clear() override {
 		tutos.clear();
 	}
 	inline int size() const {

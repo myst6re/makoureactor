@@ -29,14 +29,14 @@ class FieldModelFilePS : public FieldModelFile
 {
 public:
 	FieldModelFilePS();
-	void clear();
+	void clear() override;
 	inline bool isModified() const {
 		return _isModified;
 	}
 	void clearModified() {
 		_isModified = false;
 	}
-	inline bool translateAfter() const {
+	inline bool translateAfter() const override {
 		return false;
 	}
 	inline const QList<FieldModelColorDir> &lightColors() const {
@@ -73,11 +73,11 @@ public:
 		}
 	}
 	bool load(FieldPS *currentField, int modelID, int animationID, bool animate);
-	QImage loadedTexture(FieldModelGroup *group);
-	inline void *textureIdForGroup(FieldModelGroup *group) const {
-		return (void *)group;
+	QImage loadedTexture(FieldModelGroup *group) override;
+	inline void *textureIdForGroup(FieldModelGroup *group) const override {
+		return reinterpret_cast<void *>(group);
 	}
-	QHash<void *, QImage> loadedTextures();
+	QHash<void *, QImage> loadedTextures() override;
 	QImage vramImage() const;
 private:
 	Q_DISABLE_COPY(FieldModelFilePS)

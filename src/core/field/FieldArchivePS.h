@@ -25,7 +25,7 @@ class FieldArchivePS : public FieldArchive
 public:
 	FieldArchivePS();
 	FieldArchivePS(const QString &path, FieldArchiveIO::Type type);
-	inline bool isPC() const { return false; }
+	inline bool isPC() const override { return false; }
 
-	FieldArchiveIOPS *io() const;
+	FieldArchiveIOPS *io() const override;
 };

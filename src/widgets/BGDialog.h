@@ -26,7 +26,7 @@ class BGDialog : public QDialog
     Q_OBJECT
 public:
 	explicit BGDialog(QWidget *parent);
-	void fill(Field *field, bool reload=false);
+	void fill(Field *field, bool reload = false);
 	void clear();
 signals:
 	void modified();
@@ -62,6 +62,6 @@ private:
 	bool layers[4];
 	qint16 x[3], y[3], z[3];
 protected:
-	bool eventFilter(QObject *, QEvent *);
-	void resizeEvent(QResizeEvent*);
+	bool eventFilter(QObject *, QEvent *) override;
+	void resizeEvent(QResizeEvent*) override;
 };

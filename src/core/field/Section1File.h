@@ -27,7 +27,7 @@ class GrpScriptsIterator : public QListIterator<GrpScript *>
 {
 public:
 	inline explicit GrpScriptsIterator(const QList<GrpScript *> &list)
-		: QListIterator<GrpScript *>(list), _scriptsIt(0) {}
+		: QListIterator<GrpScript *>(list), _scriptsIt(nullptr) {}
 	GrpScriptsIterator(const GrpScriptsIterator &other);
 	virtual ~GrpScriptsIterator();
 
@@ -58,18 +58,18 @@ public:
 
 	explicit Section1File(Field *field);
 	Section1File(const Section1File &other);
-	virtual ~Section1File();
-	void clear();
-	void initEmpty();
-	bool open();
-	bool open(const QByteArray &data);
-	QByteArray save() const;
+	virtual ~Section1File() override;
+	void clear() override;
+	void initEmpty() override;
+	bool open() override;
+	bool open(const QByteArray &data) override;
+	QByteArray save() const override;
 	bool exporter(QIODevice *device, ExportFormat format);
 	bool importer(QIODevice *device, ExportFormat format);
-	bool isModified() const;
+	bool isModified() const override;
 
 	int modelID(quint8 grpScriptID) const;
-	void bgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z=0, qint16 *x=0, qint16 *y=0) const;
+	void bgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z = nullptr, qint16 *x = nullptr, qint16 *y = nullptr) const;
 
 	const QList<GrpScript *> &grpScripts() const;
 	GrpScript *grpScript(int groupID) const;

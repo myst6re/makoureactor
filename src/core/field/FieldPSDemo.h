@@ -27,17 +27,16 @@ public:
 	explicit FieldPSDemo(const Field &field);
 
 protected:
-	inline int headerSize() const { return 0; }
-	void openHeader(const QByteArray &fileData);
-	FieldPart *createPart(FieldSection part);
-	int sectionId(FieldSection part) const;
-	QString sectionFile(FieldSection part) const;
-	quint32 sectionPosition(int idPart) const;
-	inline int sectionCount() const {	return 0; }
-	inline int paddingBetweenSections() const { return 0; }
-	inline int alignment() const { return 0; }
-	QList<Field::FieldSection> orderOfSections() const;
-	inline quint32 diffSectionPos() const { return 0; }
-	inline bool hasSectionHeader() const { return false; }
-private:
+	inline int headerSize() const override { return 0; }
+	void openHeader(const QByteArray &fileData) override;
+	FieldPart *createPart(FieldSection part) override;
+	int sectionId(FieldSection part) const override;
+	QString sectionFile(FieldSection part) const override;
+	quint32 sectionPosition(int idPart) const override;
+	inline int sectionCount() const override {	return 0; }
+	inline int paddingBetweenSections() const override { return 0; }
+	inline int alignment() const override { return 0; }
+	QList<Field::FieldSection> orderOfSections() const override;
+	inline qint32 diffSectionPos() const override { return 0; }
+	inline bool hasSectionHeader() const override { return false; }
 };

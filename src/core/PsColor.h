@@ -29,8 +29,8 @@ class PsColor
 {
 public:
 	static inline quint16 toPsColor(const QRgb &color) {
-		return (qRound(qRed(color)/COEFF_COLOR) & 31) | ((qRound(qGreen(color)/COEFF_COLOR) & 31) << 5)
-		       | ((qRound(qBlue(color)/COEFF_COLOR) & 31) << 10) | ((qAlpha(color)==255) << 15);
+		return quint16((qRound(qRed(color)/COEFF_COLOR) & 31) | ((qRound(qGreen(color)/COEFF_COLOR) & 31) << 5)
+		       | ((qRound(qBlue(color)/COEFF_COLOR) & 31) << 10) | ((qAlpha(color)==255) << 15));
 	}
 	static inline QRgb fromPsColor(quint16 color, bool useAlpha=false) {
 		quint8 r = color & 31,

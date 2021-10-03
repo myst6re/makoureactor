@@ -31,14 +31,14 @@ class FieldModelLoaderPS : public FieldModelLoader
 {
 public:
 	explicit FieldModelLoaderPS(Field *field);
-	void clear();
-	bool open();
-	bool open(const QByteArray &data);
-	QByteArray save() const;
-	int modelCount() const;
-	int animCount(int modelID) const;
-	quint16 unknown(int modelID) const;
-	void setUnknown(int modelID, quint16 unknown);
+	void clear() override;
+	bool open() override;
+	bool open(const QByteArray &data) override;
+	QByteArray save() const override;
+	int modelCount() const override;
+	int animCount(int modelID) const override;
+	quint16 unknown(int modelID) const override;
+	void setUnknown(int modelID, quint16 unknown) override;
 	const FieldModelLoaderStruct &model(int modelID) const;
 	void setModel(int modelID, const FieldModelLoaderStruct &modelLoader);
 	FieldModelLoaderPC toPC(BsxFile *bsx, bool *ok) const;

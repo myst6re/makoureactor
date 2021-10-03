@@ -23,7 +23,7 @@ class EncounterTableWidget : public QGroupBox
 {
     Q_OBJECT
 public:
-	explicit EncounterTableWidget(const QString &title, QWidget *parent=0);
+	explicit EncounterTableWidget(const QString &title, QWidget *parent = nullptr);
 	QList<int> battleIdsValues();
 	QList<int> battleProbasValues();
 	int rateValue();

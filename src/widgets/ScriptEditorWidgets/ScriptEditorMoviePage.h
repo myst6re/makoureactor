@@ -24,13 +24,13 @@ class ScriptEditorMoviePage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	ScriptEditorMoviePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = 0);
-	Opcode *opcode();
-	void setOpcode(Opcode *opcode);
+	ScriptEditorMoviePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	Opcode *opcode() override;
+	void setOpcode(Opcode *opcode) override;
 private slots:
 	void setMovieListItemTexts(int discID);
 private:
-	void build();
+	void build() override;
 	void buildDiscList();
 	void buildMovieList(int discID);
 	QComboBox *movieList, *discList;

@@ -27,21 +27,21 @@ class FieldModelFilePC : public FieldModelFile
 {
 public:
 	FieldModelFilePC();
-	inline bool translateAfter() const { return true; }
-	void clear();
+	inline bool translateAfter() const override { return true; }
+	void clear() override;
 	quint8 load(CharArchive *charLgp, const QString &hrc, const QString &a, bool animate = true);
 	quint8 loadPart(CharArchive *charLgp, const QString &rsd);
 	quint8 load(const QString &hrc, const QString &a, bool animate = true);
 	inline int loadedTextureCount() const {
 		return _loadedTex.size();
 	}
-	inline QImage loadedTexture(FieldModelGroup *group) {
+	inline QImage loadedTexture(FieldModelGroup *group) override {
 		return _loadedTex.value(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id());
 	}
-	inline void *textureIdForGroup(FieldModelGroup *group) const {
+	inline void *textureIdForGroup(FieldModelGroup *group) const override {
 		return reinterpret_cast<void *>(quint64(static_cast<FieldModelTextureRefPC *>(group->textureRef())->id()));
 	}
-	QHash<void *, QImage> loadedTextures();
+	QHash<void *, QImage> loadedTextures() override;
 private:
 	Q_DISABLE_COPY(FieldModelFilePC)
 	bool openSkeleton(const QString &hrcFileName, QMultiMap<int, QStringList> &rsdFiles);

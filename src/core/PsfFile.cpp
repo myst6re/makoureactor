@@ -82,12 +82,12 @@ PsfTags &PsfTags::setLengthS(quint32 seconds)
 	return setCustom("length", QString("%1:%2").arg(seconds / 60).arg(seconds % 60));
 }
 
-PsfTags &PsfTags::setReplayGain(const QString &type, float gain_db, float peak)
+PsfTags &PsfTags::setReplayGain(const QString &type, double gain_db, double peak)
 {
 	return setCustom(QString("replaygain_%1_gain").arg(type), QString("%1%2")
 	                                                              .arg(gain_db < 0 ? "-" : "+")
 	                                                              .arg(gain_db))
-	    .setCustom(QString("replaygain_%1_peak").arg(type), peak);
+	    .setCustom(QString("replaygain_%1_peak").arg(type), QString::number(peak));
 }
 
 PsfFile::PsfFile()
@@ -124,7 +124,7 @@ bool PsfFile::open(const QByteArray &data)
 		return false;
 	}
 
-	quint8 version = data.at(3);
+	quint8 version = quint8(data.at(3));
 
 	if (version != 1) {
 		qWarning() << "PsfFile::open" << "unsupported version" << version;

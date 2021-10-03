@@ -24,7 +24,7 @@ class FieldModelTextureRefPC : public FieldModelTextureRef
 {
 public:
 	explicit FieldModelTextureRefPC(quint32 id) : _id(id) {}
-	virtual ~FieldModelTextureRefPC() {}
+	virtual ~FieldModelTextureRefPC() override;
 
 	inline quint32 id() const {
 		return _id;
@@ -34,7 +34,7 @@ public:
 		_id = id;
 	}
 
-	inline quint64 textureIdentifier() const {
+	inline quint64 textureIdentifier() const override {
 		return id();
 	}
 private:

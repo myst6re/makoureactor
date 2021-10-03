@@ -24,7 +24,7 @@ class AkaoIO : public IO
 {
 public:
 	explicit AkaoIO(QIODevice *device);
-	virtual ~AkaoIO() {}
+	virtual ~AkaoIO() override;
 	bool read(Akao &akao) const;
 	bool write(const Akao &akao) const;
 };

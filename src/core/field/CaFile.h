@@ -37,11 +37,11 @@ class CaFile : public FieldPart
 {
 public:
 	explicit CaFile(Field *field);
-	void initEmpty();
-	bool open();
-	bool open(const QByteArray &data);
-	QByteArray save() const;
-	void clear();
+	void initEmpty() override;
+	bool open() override;
+	bool open(const QByteArray &data) override;
+	QByteArray save() const override;
+	void clear() override;
 	bool hasCamera() const;
 	int cameraCount() const;
 	const Camera &camera(int camID) const;

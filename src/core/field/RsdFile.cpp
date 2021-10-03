@@ -22,6 +22,10 @@ RsdFile::RsdFile(QIODevice *io) :
 {
 }
 
+RsdFile::~RsdFile()
+{
+}
+
 bool RsdFile::read(Rsd &rsd, QStringList &textureNames) const
 {
 	if (!canRead()) {

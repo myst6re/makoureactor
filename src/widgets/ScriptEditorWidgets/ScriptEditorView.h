@@ -26,8 +26,8 @@ class ScriptEditorView : public QWidget
 	Q_OBJECT
 
 public:
-	ScriptEditorView(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent=0);
-	virtual ~ScriptEditorView();
+	ScriptEditorView(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	virtual ~ScriptEditorView() override;
 
 	virtual Opcode *opcode()=0;
 	virtual void setOpcode(Opcode *opcode);
@@ -38,7 +38,7 @@ signals:
 	
 protected:
 	virtual void build()=0;
-	virtual void showEvent(QShowEvent *e);
+	virtual void showEvent(QShowEvent *e) override;
 	inline Opcode *opcodePtr() const {
 		return _opcode;
 	}

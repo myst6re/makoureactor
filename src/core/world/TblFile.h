@@ -23,7 +23,7 @@ struct WorldToField
 {
 	qint16 x, y, z;
 	quint16 fieldId;
-	quint8 dir;
+	quint8 dir, _pad;
 };
 
 struct TblFileEntry

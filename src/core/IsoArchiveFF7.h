@@ -31,9 +31,9 @@ public:
 	};
 
 	explicit IsoArchiveFF7(const QString &name);
-	virtual ~IsoArchiveFF7();
+	virtual ~IsoArchiveFF7() override;
 
-	bool open(QIODevice::OpenMode mode);
+	bool open(QIODevice::OpenMode mode) override;
 	const QByteArray &fileLzs(const QString &path, quint32 maxSize=0) const;
 	const QByteArray &modifiedFileLzs(const QString &path, quint32 maxSize=0) const;
 	Country country() const;
@@ -50,7 +50,7 @@ private:
 	IsoFile *updateFieldBin();
 	IsoFile *updateWorldBin();
 	IsoFile *updateYamadaBin();
-	bool reorganizeModifiedFilesAfter(QMap<quint32, const IsoFile *> &writeToTheMain, QList<const IsoFile *> &writeToTheEnd);
+	bool reorganizeModifiedFilesAfter(QMap<quint32, const IsoFile *> &writeToTheMain, QList<const IsoFile *> &writeToTheEnd) override;
 	IsoFile *searchExe() const;
 	Country searchCountry() const;
 	QList<QIODevice *> _devicesToDelete;

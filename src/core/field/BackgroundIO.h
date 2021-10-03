@@ -27,7 +27,7 @@ class BackgroundIO : public IO
 {
 public:
 	explicit BackgroundIO(QIODevice *device);
-	virtual ~BackgroundIO() {}
+	virtual ~BackgroundIO() override;
 
 	virtual bool read(BackgroundFile &background) const=0;
 	virtual bool write(const BackgroundFile &background) const=0;
@@ -49,8 +49,8 @@ public:
 	bool canReadPal() const;
 	bool canWritePal() const;
 
-	bool read(BackgroundFile &background) const;
-	bool write(const BackgroundFile &background) const;
+	bool read(BackgroundFile &background) const override;
+	bool write(const BackgroundFile &background) const override;
 private:
 	bool openPalettes(PalettesPC &palettes) const;
 	bool openTiles(BackgroundTiles &tiles) const;
@@ -74,8 +74,8 @@ public:
 	bool canReadTiles() const;
 	bool canWriteTiles() const;
 
-	bool read(BackgroundFile &background) const;
-	bool write(const BackgroundFile &background) const;
+	bool read(BackgroundFile &background) const override;
+	bool write(const BackgroundFile &background) const override;
 private:
 	bool openPalettes(PalettesPS &palettes) const;
 	bool openTiles(BackgroundTiles &tiles) const;

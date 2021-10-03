@@ -25,7 +25,7 @@ class PaletteIO : public IO
 {
 public:
 	explicit PaletteIO(QIODevice *device);
-	virtual ~PaletteIO() {}
+	virtual ~PaletteIO() override;
 
 	bool read(Palettes &palettes) const;
 	bool write(const Palettes &palettes) const;
@@ -52,11 +52,11 @@ public:
 	bool canReadAlpha() const;
 	bool canWriteAlpha() const;
 protected:
-	inline Palette *createPalette(const char *data) const {
+	inline Palette *createPalette(const char *data) const override {
 		return new PalettePC(data);
 	}
-	bool readAfter(Palettes &palettes) const;
-	bool writeAfter(const Palettes &palettes) const;
+	bool readAfter(Palettes &palettes) const override;
+	bool writeAfter(const Palettes &palettes) const override;
 private:
 	QIODevice *_deviceAlpha;
 };
@@ -66,7 +66,7 @@ class PaletteIOPS : public PaletteIO
 public:
 	explicit PaletteIOPS(QIODevice *device);
 protected:
-	inline Palette *createPalette(const char *data) const {
+	inline Palette *createPalette(const char *data) const override {
 		return new PalettePS(data);
 	}
 };

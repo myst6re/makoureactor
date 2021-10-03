@@ -46,7 +46,7 @@ class FieldModelLoader : public FieldPart
 {
 public:
 	explicit FieldModelLoader(Field *field);
-	virtual ~FieldModelLoader();
+	virtual ~FieldModelLoader() override;
 	virtual int modelCount() const=0;
 	virtual int animCount(int modelID) const=0;
 	virtual quint16 unknown(int modelID) const=0;

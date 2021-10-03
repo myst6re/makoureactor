@@ -117,7 +117,7 @@ class PFile : public IO
 {
 public:
 	explicit PFile(QIODevice *io);
-	virtual ~PFile() {}
+	virtual ~PFile() override;
 
 	bool read(FieldModelPart *part, const QList<int> &texIds) const;
 	bool write(const FieldModelPart *part, const QList<int> &texIds) const;

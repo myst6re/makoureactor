@@ -120,7 +120,7 @@ protected:
 	virtual int paddingBetweenSections() const=0;
 	virtual int alignment() const=0;
 	virtual QList<Field::FieldSection> orderOfSections() const=0;
-	virtual quint32 diffSectionPos() const=0;
+	virtual qint32 diffSectionPos() const=0;
 	virtual bool hasSectionHeader() const=0;
 	virtual bool importModelLoader(const QByteArray &sectionData, bool isPSField, QIODevice *bsxDevice);
 private:

@@ -23,6 +23,10 @@ BsxFile::BsxFile(QIODevice *io) :
 {
 }
 
+BsxFile::~BsxFile()
+{
+}
+
 bool BsxFile::read(QList<FieldModelFilePS *> &models)
 {
 	// Implicit seek

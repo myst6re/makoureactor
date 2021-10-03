@@ -31,9 +31,9 @@ public:
 		TypeModel, TypeOther
 	};
 	explicit GrpScriptWizardPageType(QWidget *parent = nullptr);
-	void initializePage();
-	bool isComplete() const;
-	int nextId() const;
+	void initializePage() override;
+	bool isComplete() const override;
+	int nextId() const override;
 private slots:
 	void fillSubTypeList(int type);
 private:
@@ -44,7 +44,7 @@ private:
 class GrpScriptWizard : public QWizard
 {
 public:
-	explicit GrpScriptWizard(QWidget *parent = 0);
+	explicit GrpScriptWizard(QWidget *parent = nullptr);
 	GrpScript *selectedGroup() const;
 protected:
 	enum {

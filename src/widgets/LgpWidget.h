@@ -26,14 +26,14 @@ class IconThread : public QThread
 	Q_OBJECT
 public:
 	explicit IconThread(QObject *parent = nullptr);
-	~IconThread();
+	~IconThread() override;
 
 	void clear();
 	void addFile(const QString &filePath);
 signals:
 	void iconLoaded(const QString &filePath, const QIcon &icon) const;
 protected:
-	void run();
+	void run() override;
 private:
 	QMutex mutexFiles;
 	QWaitCondition hasFilesCondition;
@@ -91,10 +91,10 @@ public:
 	LgpFileItem(const QString &name, Lgp *lgp, LgpDirectoryItem *parent = nullptr) :
 		LgpItem(name, parent), _lgp(lgp) {
 	}
-	virtual ~LgpFileItem() {
+	virtual ~LgpFileItem() override {
 	}
 
-	inline bool isDirectory() const {
+	inline bool isDirectory() const override {
 		return false;
 	}
 
@@ -104,7 +104,7 @@ public:
 	void setIcon(const QIcon &icon);
 	const QIcon &icon() const;
 	bool move(const QString &destination);
-	void debug() const;
+	void debug() const override;
 
 private:
 	QIcon _icon;
@@ -122,9 +122,9 @@ public:
 	explicit LgpDirectoryItem(const QString &name, LgpDirectoryItem *parent = nullptr) :
 		LgpItem(name, parent) {
 	}
-	virtual ~LgpDirectoryItem();
+	virtual ~LgpDirectoryItem() override;
 
-	inline bool isDirectory() const {
+	inline bool isDirectory() const override {
 		return true;
 	}
 
@@ -147,8 +147,8 @@ public:
 	bool removeChildren(int position, int count);
 	void addChild(const QString &name, Lgp *lgp);
 	void addChild(const QString &name, LgpFileItem *item);
-	LgpItem *find(const QString &path);
-	void debug() const;
+	LgpItem *find(const QString &path) override;
+	void debug() const override;
 private:
 	QHash<QString, LgpFileItem *> _fileChilds;
 	QHash<QString, LgpDirectoryItem *> _dirChilds;
@@ -160,19 +160,19 @@ class LgpItemModel : public QAbstractItemModel
 	Q_OBJECT
 public:
 	explicit LgpItemModel(Lgp *lgp, QObject *parent = nullptr);
-	~LgpItemModel();
-	QModelIndex index(int row, int column, const QModelIndex &parent=QModelIndex()) const;
-	QModelIndex parent(const QModelIndex &index) const;
-	int rowCount(const QModelIndex &parent=QModelIndex()) const;
-	int columnCount(const QModelIndex &parent=QModelIndex()) const;
-	QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
-	bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
-	QVariant headerData(int section, Qt::Orientation orientation, int role=Qt::DisplayRole) const;
-	void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
-	bool insertRow(const QString &name, QIODevice *io, const QModelIndex &parent=QModelIndex());
-	bool insertRows(int row, int count, const QModelIndex &parent=QModelIndex());
+	~LgpItemModel() override;
+	QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+	QModelIndex parent(const QModelIndex &index) const override;
+	int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+	int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+	bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+	void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+	bool insertRow(const QString &name, QIODevice *io, const QModelIndex &parent = QModelIndex());
+	bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 	bool removeRow(const QModelIndex &index);
-	bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex());
+	bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 	void update(const QModelIndex &index);
 	LgpItem *item(const QModelIndex &index) const;
 private slots:
@@ -190,10 +190,10 @@ class LgpWidget : public QWidget, ArchiveObserver
 public:
 	explicit LgpWidget(Lgp *lgp, QWidget *parent = nullptr);
 
-	bool observerWasCanceled() const;
-	void setObserverMaximum(unsigned int max);
-	void setObserverValue(int value);
-	bool observerRetry(const QString &message);
+	bool observerWasCanceled() const override;
+	void setObserverMaximum(unsigned int max) override;
+	void setObserverValue(int value) override;
+	bool observerRetry(const QString &message) override;
 signals:
 	void modified();
 private slots:

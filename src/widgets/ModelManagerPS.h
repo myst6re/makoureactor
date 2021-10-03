@@ -28,16 +28,15 @@ class ModelManagerPS : public ModelManager
 public:
 	ModelManagerPS(QWidget *parent = nullptr);
 protected:
-	QList<QStringList> modelNames() const;
-	QList<QTreeWidgetItem *> animItems(int modelID) const;
-	FieldModelFile *modelData(QTreeWidgetItem *item);
-	FieldModelLoaderPS *modelLoader() const;
-	FieldPS *field() const;
-	const QList<FieldModelColorDir> &lightColors(int modelID) const;
-	void setLightColor(int modelID, int id, const FieldModelColorDir &color);
-	QRgb globalColor(int modelID) const;
-	void setGlobalColor(int modelID, QRgb color);
-	quint16 modelScale(int modelID) const;
-	void setModelScale(int modelID, quint16 scale);
-private:
+	QList<QStringList> modelNames() const override;
+	QList<QTreeWidgetItem *> animItems(int modelID) const override;
+	FieldModelFile *modelData(QTreeWidgetItem *item) override;
+	FieldModelLoaderPS *modelLoader() const override;
+	FieldPS *field() const override;
+	const QList<FieldModelColorDir> &lightColors(int modelID) const override;
+	void setLightColor(int modelID, int id, const FieldModelColorDir &color) override;
+	QRgb globalColor(int modelID) const override;
+	void setGlobalColor(int modelID, QRgb color) override;
+	quint16 modelScale(int modelID) const override;
+	void setModelScale(int modelID, quint16 scale) override;
 };

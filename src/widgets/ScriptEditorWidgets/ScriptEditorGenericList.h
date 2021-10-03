@@ -33,18 +33,18 @@ public:
 		bank, adress, byte, word, sword, bit, boolean, label, akao, dword, shakeType, xAmplitude, xFrames, yAmplitude, yFrames
 	};
 
-	ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent=0);
-	virtual ~ScriptEditorGenericList() {}
+	ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	virtual ~ScriptEditorGenericList() override {}
 
-	virtual Opcode *opcode();
+	virtual Opcode *opcode() override;
 public slots:
-	virtual void setOpcode(Opcode *opcode);
+	virtual void setOpcode(Opcode *opcode) override;
 private slots:
 	void addParam();
 	void delLastRow();
 
 private:
-	void build();
+	void build() override;
 	void addRow(int value, int minValue, int maxValue, int type);
 	void fillModel();
 	QByteArray parseModel(bool *isLabel);

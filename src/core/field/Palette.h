@@ -58,8 +58,8 @@ public:
 	PalettePC();
 	PalettePC(const Palette &palette, bool transparency=false);
 	explicit PalettePC(const char *data, bool transparency=false);
-	QRgb color(int index) const;
-	bool isZero(quint8 index) const;
+	QRgb color(int index) const override;
+	bool isZero(quint8 index) const override;
 	bool transparency() const;
 	void setTransparency(bool transparency);
 private:

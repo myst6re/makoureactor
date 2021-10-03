@@ -26,10 +26,10 @@ class ScriptEditorDLPBSavemap : public ScriptEditorView
 public:
 	ScriptEditorDLPBSavemap(Field *field, GrpScript *grpScript, Script *script,
 	                        int opcodeID, QWidget *parent = nullptr);
-	Opcode *opcode();
-	void setOpcode(Opcode *opcode);
+	Opcode *opcode() override;
+	void setOpcode(Opcode *opcode) override;
 private:
-	void build();
+	void build() override;
 	QSpinBox *_from, *_to;
 	QDoubleSpinBox *_absValue;
 	QComboBox *_flag;
@@ -42,10 +42,10 @@ class ScriptEditorDLPBWriteToMemory : public ScriptEditorView
 public:
 	ScriptEditorDLPBWriteToMemory(Field *field, GrpScript *grpScript, Script *script,
 	                              int opcodeID, QWidget *parent = nullptr);
-	Opcode *opcode();
-	void setOpcode(Opcode *opcode);
+	Opcode *opcode() override;
+	void setOpcode(Opcode *opcode) override;
 private:
-	void build();
+	void build() override;
 	QDoubleSpinBox *_address;
 	QLineEdit *_bytes;
 };

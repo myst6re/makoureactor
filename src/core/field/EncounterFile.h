@@ -39,11 +39,11 @@ public:
 	};
 
 	explicit EncounterFile(Field *field);
-	void initEmpty();
-	bool open();
-	bool open(const QByteArray &data);
-	QByteArray save() const;
-	void clear();
+	void initEmpty() override;
+	bool open() override;
+	bool open(const QByteArray &data) override;
+	QByteArray save() const override;
+	void clear() override;
 	const EncounterTable &encounterTable(Table tableID) const;
 	void setEncounterTable(Table tableID, const EncounterTable &table);
 	bool isBattleEnabled(Table tableID) const;
