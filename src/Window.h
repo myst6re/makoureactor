@@ -160,5 +160,5 @@ private:
 //	FieldModelThread *modelThread;
 protected:
 	void closeEvent(QCloseEvent *event) override;
-	QMenu *createPopupMenu();
+	QMenu *createPopupMenu() override;
 };
