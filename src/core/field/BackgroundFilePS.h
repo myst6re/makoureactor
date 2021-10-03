@@ -42,4 +42,6 @@ public:
 		return static_cast<BackgroundTexturesPS *>(BackgroundFile::textures());
 	}
 	BackgroundFilePC toPC(FieldPC *field) const;
+private:
+	using BackgroundFile::open;
 };

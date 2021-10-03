@@ -85,7 +85,7 @@ bool BackgroundFilePC::open()
 	}
 
 	return open(field()->sectionData(Field::Background),
-				field()->sectionData(Field::PalettePC));
+	            field()->sectionData(Field::PalettePC));
 }
 
 bool BackgroundFilePC::open(const QByteArray &data, const QByteArray &palData)

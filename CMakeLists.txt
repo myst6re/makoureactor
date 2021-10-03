@@ -599,6 +599,7 @@ set(PROJECT_CLI_SOURCES
     "src/main.cpp"
     "src/txt.cpp"
 )
+
 set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
 
 if(APPLE)

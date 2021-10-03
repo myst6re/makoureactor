@@ -45,4 +45,6 @@ public:
 	}
 	BackgroundFilePS toPS(FieldPS *field) const;
 	bool repair() override;
+private:
+	using BackgroundFile::open;
 };

@@ -83,12 +83,12 @@ protected:
 	inline BackgroundTiles &tilesRef() {
 		return _tiles;
 	}
-
-private:
 	bool open(const QByteArray &data) override {
 		Q_UNUSED(data)
 		return false;
 	}
+
+private:
 	BackgroundTiles _tiles;
 	Palettes _palettes;
 	BackgroundTextures *_textures;

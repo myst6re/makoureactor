@@ -52,7 +52,7 @@ bool BackgroundFilePS::open()
 	}
 
 	return open(static_cast<FieldPS *>(field())->io()->mimData(field()),
-				field()->sectionData(Field::Background));
+	            field()->sectionData(Field::Background));
 }
 
 bool BackgroundFilePS::open(const QByteArray &mimData, const QByteArray &tilesData)

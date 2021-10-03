@@ -530,7 +530,7 @@ bool Field::importer(const QByteArray &data, bool isPSField, FieldSections part,
 			if (isPS()) {
 				bg = static_cast<BackgroundFilePS *>(background(false));
 			} else {
-				bg = new BackgroundFilePS(0);
+				bg = new BackgroundFilePS(nullptr);
 			}
 
 			if (!bg->open(mimData, tilesData)) {
@@ -621,7 +621,7 @@ bool Field::importer(const QByteArray &data, bool isPSField, FieldSections part,
 			if (isPC()) {
 				bg = static_cast<BackgroundFilePC *>(background(false));
 			} else {
-				bg = new BackgroundFilePC(0);
+				bg = new BackgroundFilePC(nullptr);
 			}
 
 			if (!bg->open(mimData, palData)) {
