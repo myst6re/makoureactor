@@ -131,7 +131,7 @@ QByteArray BackgroundFilePC::savePal() const
 
 BackgroundFilePS BackgroundFilePC::toPS(FieldPS *field) const
 {
-	PalettesPS palettesPS = ((PalettesPC *)&palettes())->toPS();
+	PalettesPS palettesPS = static_cast<const PalettesPC *>(&palettes())->toPS();
 	BackgroundTiles tilesPS;
 	BackgroundTexturesPS texturesPS = textures()->toPS(tiles(), tilesPS, palettesPS);
 
@@ -149,7 +149,7 @@ bool BackgroundFilePC::repair()
 	// PC field file contains PS tiles format
 	// Altough it is unused by the game, we can use it to repair the PC format
 	BackgroundTilesFile *psTiles = field()->tiles();
-	QMap<quint16, Tile> &tiles = (QMap<quint16, Tile> &)tilesRef();
+	QMap<quint16, Tile> &tiles = reinterpret_cast<QMap<quint16, Tile> &>(tilesRef());
 	QMutableMapIterator<quint16, Tile> it(tiles);
 	bool modified = false;
 
@@ -174,8 +174,8 @@ bool BackgroundFilePC::repair()
 
 		// List unused palettes
 		for (int palID = 0; palID < paletteCount; ++palID) {
-			if (!usedPalettes.contains(palID)) {
-				unusedPalettes.append(palID);
+			if (!usedPalettes.contains(quint8(palID))) {
+				unusedPalettes.append(quint8(palID));
 			}
 		}
 

@@ -67,7 +67,7 @@ public:
 	}
 protected:
 	virtual quint16 textureWidth(const Tile &tile) const=0;
-	virtual quint32 originInData(const Tile &tile) const=0;
+	virtual int originInData(const Tile &tile) const=0;
 	virtual QRgb directColor(quint16 color) const=0;
 	QRgb pixel(quint32 pos) const;
 private:
@@ -100,7 +100,7 @@ public:
 protected:
 	quint16 textureWidth(const Tile &tile) const;
 	quint8 depth(const Tile &tile) const;
-	quint32 originInData(const Tile &tile) const;
+	int originInData(const Tile &tile) const;
 	QRgb directColor(quint16 color) const;
 private:
 	static quint16 toPcColor(const QRgb &color);
@@ -120,7 +120,7 @@ public:
 							  const PalettesPC &palettesPC) const;
 protected:
 	quint16 textureWidth(const Tile &tile) const;
-	quint32 originInData(const Tile &tile) const;
+	int originInData(const Tile &tile) const;
 	QRgb directColor(quint16 color) const;
 private:
 	quint32 pageDataPos(quint8 pageID) const;

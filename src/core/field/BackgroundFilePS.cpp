@@ -86,7 +86,7 @@ QByteArray BackgroundFilePS::save() const
 
 BackgroundFilePC BackgroundFilePS::toPC(FieldPC *field) const
 {
-	PalettesPC palettesPC = ((PalettesPS *)&palettes())->toPC();
+	PalettesPC palettesPC = static_cast<const PalettesPS *>(&palettes())->toPC();
 	BackgroundTiles tilesPC;
 	BackgroundTexturesPC texturesPC = textures()->toPC(tiles(), tilesPC, palettesPC);
 

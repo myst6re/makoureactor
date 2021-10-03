@@ -54,7 +54,7 @@ bool AFile::read(FieldModelAnimation &animation, int maxFrames) const
 		header.framesCount = qMin(header.framesCount, quint32(maxFrames));
 	}
 
-	for (quint32 i = 0; i < header.framesCount; ++i) {
+	for (qint64 i = 0; i < header.framesCount; ++i) {
 		if (!device()->seek(device()->pos() + 12)) {
 			return false;
 		}
@@ -74,7 +74,7 @@ bool AFile::read(FieldModelAnimation &animation, int maxFrames) const
 			}
 			rotationCoords.append(rot);
 		}
-		animation.insertFrame(i, rotationCoords, QList<PolyVertex>() << trans);
+		animation.insertFrame(int(i), rotationCoords, QList<PolyVertex>() << trans);
 	}
 
 	return true;

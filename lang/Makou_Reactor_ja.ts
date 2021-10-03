@@ -4,12 +4,12 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="../src/widgets/AboutDialog.cpp" line="10"/>
+        <location filename="../src/widgets/AboutDialog.cpp" line="27"/>
         <source>By Jérôme &amp;lt;myst6re&amp;gt; Arzel &lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/AboutDialog.cpp" line="16"/>
+        <location filename="../src/widgets/AboutDialog.cpp" line="33"/>
         <source>Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -605,22 +605,22 @@ List of available commands:
 <context>
     <name>FieldList</name>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="13"/>
+        <location filename="../src/widgets/FieldList.cpp" line="30"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="13"/>
+        <location filename="../src/widgets/FieldList.cpp" line="30"/>
         <source>Id</source>
         <translation type="unfinished">ID</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="24"/>
+        <location filename="../src/widgets/FieldList.cpp" line="41"/>
         <source>Quick search</source>
         <translation type="unfinished">クイック検索</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="25"/>
+        <location filename="../src/widgets/FieldList.cpp" line="42"/>
         <source>Search...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -629,99 +629,99 @@ List of available commands:
         <translation type="obsolete">DAT ファイル (*.DAT)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="30"/>
+        <location filename="../src/widgets/FieldList.cpp" line="47"/>
         <source>Rename field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="33"/>
+        <location filename="../src/widgets/FieldList.cpp" line="50"/>
         <source>Add field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="36"/>
+        <location filename="../src/widgets/FieldList.cpp" line="53"/>
         <source>Delete field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="51"/>
+        <location filename="../src/widgets/FieldList.cpp" line="68"/>
         <source>&amp;Field List Toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="54"/>
+        <location filename="../src/widgets/FieldList.cpp" line="71"/>
         <source>Add a field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="56"/>
+        <location filename="../src/widgets/FieldList.cpp" line="73"/>
         <source>Remove a field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="224"/>
-        <location filename="../src/widgets/FieldList.cpp" line="267"/>
+        <location filename="../src/widgets/FieldList.cpp" line="241"/>
+        <location filename="../src/widgets/FieldList.cpp" line="284"/>
         <source>Not implemented for PS.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="233"/>
+        <location filename="../src/widgets/FieldList.cpp" line="250"/>
         <source>Choose a name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="234"/>
+        <location filename="../src/widgets/FieldList.cpp" line="251"/>
         <source>Field name:</source>
         <translation type="unfinished">フィールド名 :</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="189"/>
-        <location filename="../src/widgets/FieldList.cpp" line="241"/>
+        <location filename="../src/widgets/FieldList.cpp" line="206"/>
+        <location filename="../src/widgets/FieldList.cpp" line="258"/>
         <source>Name not filled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="190"/>
-        <location filename="../src/widgets/FieldList.cpp" line="242"/>
+        <location filename="../src/widgets/FieldList.cpp" line="207"/>
+        <location filename="../src/widgets/FieldList.cpp" line="259"/>
         <source>Please set a new field name.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="194"/>
-        <location filename="../src/widgets/FieldList.cpp" line="245"/>
+        <location filename="../src/widgets/FieldList.cpp" line="211"/>
+        <location filename="../src/widgets/FieldList.cpp" line="262"/>
         <source>Name already present in archive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="195"/>
-        <location filename="../src/widgets/FieldList.cpp" line="246"/>
+        <location filename="../src/widgets/FieldList.cpp" line="212"/>
+        <location filename="../src/widgets/FieldList.cpp" line="263"/>
         <source>Please choose another name.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="281"/>
+        <location filename="../src/widgets/FieldList.cpp" line="298"/>
         <source>Are you sure you want to remove %1?
 Other maps can refer to it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="284"/>
+        <location filename="../src/widgets/FieldList.cpp" line="301"/>
         <source>the selected field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="285"/>
+        <location filename="../src/widgets/FieldList.cpp" line="302"/>
         <source>the selected fields</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="287"/>
+        <location filename="../src/widgets/FieldList.cpp" line="304"/>
         <source>Delete</source>
         <translation>削除</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="224"/>
-        <location filename="../src/widgets/FieldList.cpp" line="267"/>
+        <location filename="../src/widgets/FieldList.cpp" line="241"/>
+        <location filename="../src/widgets/FieldList.cpp" line="284"/>
         <source>Error</source>
         <translation>エラー</translation>
     </message>
@@ -1701,22 +1701,22 @@ Some scripts can refer to it!</source>
 <context>
     <name>ModelColorsLayout</name>
     <message>
-        <location filename="../src/widgets/ModelColorsLayout.cpp" line="50"/>
+        <location filename="../src/widgets/ModelColorsLayout.cpp" line="67"/>
         <source>Color</source>
         <translation type="unfinished">カラー</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelColorsLayout.cpp" line="51"/>
+        <location filename="../src/widgets/ModelColorsLayout.cpp" line="68"/>
         <source>X</source>
         <translation>X</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelColorsLayout.cpp" line="52"/>
+        <location filename="../src/widgets/ModelColorsLayout.cpp" line="69"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelColorsLayout.cpp" line="53"/>
+        <location filename="../src/widgets/ModelColorsLayout.cpp" line="70"/>
         <source>Z</source>
         <translation>Z</translation>
     </message>
@@ -2066,52 +2066,52 @@ Some scripts can refer to it!</source>
 <context>
     <name>PsfDialog</name>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="20"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="37"/>
         <source>psflib</source>
         <translation>psflib</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="22"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="39"/>
         <source>Title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="24"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="41"/>
         <source>Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="26"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="43"/>
         <source>Game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="28"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="45"/>
         <source>Year</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="30"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="47"/>
         <source>Genre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="32"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="49"/>
         <source>Comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="34"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="51"/>
         <source>Copyright</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="36"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="53"/>
         <source>Author</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="61"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="78"/>
         <source>(auto)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6952,7 +6952,7 @@ Make sure it is valid or delete it.</source>
 <context>
     <name>ScriptManager</name>
     <message>
-        <location filename="../src/widgets/ScriptManager.cpp" line="183"/>
+        <location filename="../src/widgets/ScriptManager.cpp" line="200"/>
         <source>Error on line %1 : %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7225,45 +7225,45 @@ chase at the end.</source>
 <context>
     <name>SearchAll</name>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="9"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="26"/>
         <source>Find All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="28"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="45"/>
         <source>Copy</source>
         <oldsource>Copier</oldsource>
         <translation type="unfinished">コピー</translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="48"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Group</source>
         <oldsource>Groupe</oldsource>
         <translation type="unfinished">グループ</translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="48"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Script</source>
         <translation type="unfinished">スクリプト</translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="48"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Lines</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="48"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Instruction</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="56"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="73"/>
         <source>Text #</source>
         <oldsource>Texte n°</oldsource>
         <translation type="unfinished">テキスト</translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="56"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="73"/>
         <source>Text</source>
         <translation type="unfinished">テキスト</translation>
     </message>

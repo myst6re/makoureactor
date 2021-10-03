@@ -30,31 +30,30 @@ QVector<uint> BackgroundTextures::tile(const Tile &tile) const
 	QVector<uint> indexOrRgbList;
 	quint8 depth = this->depth(tile),  x = 0;
 	quint8 multiplicator = depth == 0 ? 1 : depth * 2;
-	quint32 texWidth, origin, maxByte, lastByte;
 
-	origin = originInData(tile);
+	int origin = originInData(tile);
 
-	if(origin == quint32(-1)) {
+	if(origin == -1) {
 		return indexOrRgbList;
 	}
 
-	texWidth = textureWidth(tile);
-	maxByte = data().size();
+	int texWidth = textureWidth(tile);
+	int maxByte = data().size();
 	if(depth == 2) {
 		--maxByte;
 	}
-	lastByte = qMin(origin + tile.size * texWidth, maxByte);
+	int lastByte = qMin(origin + tile.size * texWidth, maxByte);
 
-	for (quint32 i=origin; i<lastByte; ++i) {
+	for (int i = origin; i < lastByte; ++i) {
 		if(depth == 0) {
-			quint8 index = data().at(i);
+			quint8 index = quint8(data().at(i));
 			indexOrRgbList.append(index & 0xF);
 			++x;
 			indexOrRgbList.append(index >> 4);
 		} else if(depth == 1) {
 			indexOrRgbList.append(quint8(data().at(i)));
 		} else if(depth == 2) {
-			indexOrRgbList.append(pixel(i));
+			indexOrRgbList.append(pixel(quint32(i)));
 			++i;
 		}
 
@@ -134,7 +133,7 @@ QList<uint> BackgroundTexturesPC::tex(quint8 texID) const
 
 	for (int i=0; i<size; ++i) {
 		if(infos.depth == 0) {
-			quint8 index = data().at(infos.pos + i);
+			quint8 index = quint8(data().at(infos.pos + i));
 			indexOrRgbList.append(index & 0xF);
 			indexOrRgbList.append(index >> 4);
 		} else if(infos.depth == 1) {
@@ -208,12 +207,12 @@ quint8 BackgroundTexturesPC::depth(const Tile &tile) const
 	return BackgroundTextures::depth(tile);
 }
 
-quint32 BackgroundTexturesPC::originInData(const Tile &tile) const
+int BackgroundTexturesPC::originInData(const Tile &tile) const
 {
 	if(hasTex(tile.textureID)) {
 		return texPos(tile.textureID) + (tile.srcY * 256 + tile.srcX) * depth(tile);
 	}
-	return quint32(-1);
+	return -1;
 }
 
 QRgb BackgroundTexturesPC::directColor(quint16 color) const
@@ -269,7 +268,7 @@ QImage BackgroundTexturesPC::toImage(quint8 texID, const BackgroundTiles &tiles,
 	for (const Tile &tile : tiles) {
 		if(tile.textureID == texID) {
 			QVector<uint> indexOrRgbList = this->tile(tile);
-			Palette *palette = 0;
+			Palette *palette = nullptr;
 			quint16 pos = tile.srcY * 256 + tile.srcX;
 			quint8 x = 0, y = 0;
 
@@ -382,12 +381,12 @@ TimFile BackgroundTexturesPS::tim(quint8 pageID, quint8 depth) const
 {
 	QByteArray header("\x10\x00\x00\x00"
 					  "\x00\x00\x00\x00", 8);
-	header[4] = depth < 2 ? (depth | 8) : 2;
+	header[4] = char(depth < 2 ? depth | 8 : 2);
 
 	return TimFile(header + (pageID ?
-					   data().left(pageDataPos(0) - 12) // Palettes
-					   + data().mid(pageDataPos(1) - 12) // Page 2
-					 : data().left(pageDataPos(1) - 12))); // Palettes + Page 1
+					   data().left(int(pageDataPos(0)) - 12) // Palettes
+					   + data().mid(int(pageDataPos(1)) - 12) // Page 2
+					 : data().left(int(pageDataPos(1)) - 12))); // Palettes + Page 1
 }
 
 quint16 BackgroundTexturesPS::textureWidth(const Tile &tile) const
@@ -401,11 +400,11 @@ quint32 BackgroundTexturesPS::texturePos(quint8 x, quint8 y) const
 	return pageDataPos(y) + texID * 128;
 }
 
-quint32 BackgroundTexturesPS::originInData(const Tile &tile) const
+int BackgroundTexturesPS::originInData(const Tile &tile) const
 {
 	quint32 textureStart = texturePos(tile.textureID, tile.textureID2);
-	quint32 tileStart = tile.srcY * textureWidth(tile) + tile.srcX * (tile.depth == 0 ? 0.5 : tile.depth);
-	return textureStart + tileStart;
+	quint32 tileStart = tile.srcY * textureWidth(tile) + (tile.depth == 0 ? tile.srcX / 2 : tile.srcX * tile.depth);
+	return int(textureStart + tileStart);
 }
 
 QRgb BackgroundTexturesPS::directColor(quint16 color) const
@@ -441,10 +440,10 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 		default:	depthKey = 2;   break;
 		}
 
-		quint16 key = (tile.typeTrans << 4) |
+		quint16 key = quint16((tile.typeTrans << 4) |
 		              (tile.blending << 3) |
 		              (depthKey << 1) |
-		              (tile.size == 32);
+		              (tile.size == 32));
 
 		QVector<uint> tileData = this->tile(tile); // Retrieve tile data
 
@@ -455,7 +454,7 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 				// Detection of transparency PC flag: true if one of used indexes is transparent
 				const QList<bool> &areZero = palette->areZero();
 				for (uint index : qAsConst(tileData)) {
-					if(areZero.at(index)) {
+					if(areZero.at(int(index))) {
 						palette->setTransparency(true);
 						break;
 					}
@@ -504,17 +503,17 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 					const QList<bool> &areZero = palette->areZero();
 					bool firstIsZero = areZero.first();
 					int indexOfFirstZero = areZero.indexOf(true, 1);
-					if(firstIsZero || indexOfFirstZero > -1) {
+					if(firstIsZero || indexOfFirstZero >= 0) {
 						int i = 0;
-						for (uint index : qAsConst(tileConversion.data)) {
-							if(index > 0 && areZero.at(index)) {
+						for (const uint index : qAsConst(tileConversion.data)) {
+							if(index > 0 && areZero.at(int(index))) {
 								// When the index refer to a transparent color, change this index to 0
 
 								tileConversion.data[i] = 0;
 							} else if(!firstIsZero && index == 0) {
 								// Reloc when index = 0 and not refer to a transparent color
 
-								tileConversion.data[i] = indexOfFirstZero;
+								tileConversion.data[i] = uint(indexOfFirstZero);
 							}
 							++i;
 						}
@@ -528,10 +527,10 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 
 		// Textures fill
 
-		quint8 tileCount = 256 / representativeTile.size;
-		quint16 tilesPerTexture = representativeTile.size == 16 ? 256 : 64;
-		quint8 textureCount = texture.size() / tilesPerTexture
-				+ (texture.size() % tilesPerTexture != 0);
+		const quint8 tileCount = quint8(256 / representativeTile.size);
+		const quint16 tilesPerTexture = representativeTile.size == 16 ? 256 : 64;
+		const quint8 textureCount = quint8(texture.size() / tilesPerTexture
+				+ (texture.size() % tilesPerTexture != 0));
 		QSet<quint8> usedTextures;
 		usedTextures.reserve(BACKGROUND_TEXTURE_PC_MAX_COUNT);
 
@@ -552,8 +551,8 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 				texID = curTexID++;
 			}
 			if(usedTextures.contains(texID)) {
-				for (int j=0; j<BACKGROUND_TEXTURE_PC_MAX_COUNT; ++j) {
-					int newTexID = (texID + j) % BACKGROUND_TEXTURE_PC_MAX_COUNT;
+				for (quint8 j = 0; j < BACKGROUND_TEXTURE_PC_MAX_COUNT; ++j) {
+					quint8 newTexID = (texID + j) % BACKGROUND_TEXTURE_PC_MAX_COUNT;
 					if(!usedTextures.contains(newTexID)) {
 						texID = newTexID;
 						break;
@@ -588,12 +587,12 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 				Tile tile = texture.at(i * tilesPerTexture + tileID).tile;
 
 				tile.srcX = (tileID % tileCount) * tile.size;
-				tile.srcY = (tileID / tileCount) * tile.size;
+				tile.srcY = quint8((tileID / tileCount) * tile.size);
 
 				tile.textureID = texID;
 				tile.textureID2 = tile.blending ? texID : 0;
 
-				pcTiles2.insert(4096 - tile.ID, tile);
+				pcTiles2.insert(qint16(4096 - tile.ID), tile);
 			}
 		}
 	}

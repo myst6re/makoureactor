@@ -19,12 +19,12 @@
 #include "Field.h"
 
 BackgroundFile::BackgroundFile(Field *field) :
-	FieldPart(field), _textures(0)
+	FieldPart(field), _textures(nullptr)
 {
 }
 
 BackgroundFile::BackgroundFile(const BackgroundFile &other) :
-	FieldPart(other.field()), _textures(0)
+	FieldPart(other.field()), _textures(nullptr)
 {
 	setTiles(other.tiles());
 }
@@ -43,7 +43,7 @@ void BackgroundFile::clear()
 	_palettes.clear();
 	if (_textures) {
 		delete _textures;
-		_textures = 0;
+		_textures = nullptr;
 	}
 	_tiles.clear();
 }
@@ -104,7 +104,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 	QImage image(width, height, QImage::Format_ARGB32);
 	image.fill(0xFF000000);
 
-	QRgb *pixels = (QRgb *)image.bits();
+	QRgb *pixels = reinterpret_cast<QRgb *>(image.bits());
 	bool warned = false; // To prevent verbosity of warnings
 
 	for (const Tile &tile : tiles) {
@@ -119,7 +119,7 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 		}
 
 		quint8 depth = _textures->depth(tile);
-		Palette *palette = 0;
+		Palette *palette = nullptr;
 
 		if (depth <= 1) {
 			if (tile.paletteID >= _palettes.size()) {
@@ -139,8 +139,8 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 		}
 
 		quint8 right = 0;
-		quint32 top = (minHeight + tile.dstY) * width;
-		quint16 baseX = minWidth + tile.dstX;
+		qint32 top = (minHeight + tile.dstY) * width;
+		qint32 baseX = minWidth + tile.dstX;
 
 		for (uint indexOrColor : qAsConst(indexOrColorList)) {
 			if (!palette) {
@@ -148,13 +148,13 @@ QImage BackgroundFile::drawBackground(const BackgroundTiles &tiles, bool *warnin
 					pixels[baseX + right + top] = indexOrColor;
 				}
 			} else {
-				if (palette->notZero(indexOrColor)) {
+				if (palette->notZero(quint8(indexOrColor))) {
 					if (tile.blending) {
 						pixels[baseX + right + top] = blendColor(tile.typeTrans,
 						                                         pixels[baseX + right + top],
-						                                         palette->color(indexOrColor));
+						                                         palette->color(quint8(indexOrColor)));
 					} else {
-						pixels[baseX + right + top] = palette->color(indexOrColor);
+						pixels[baseX + right + top] = palette->color(quint8(indexOrColor));
 					}
 				}
 			}
@@ -207,32 +207,32 @@ QRgb BackgroundFile::blendColor(quint8 type, QRgb color0, QRgb color1)
 	switch (type) {
 	case 1:
 		r = qRed(color0) + qRed(color1);
-		if (r>255)	r = 255;
+		if (r > 255)	r = 255;
 		g = qGreen(color0) + qGreen(color1);
-		if (g>255)	g = 255;
+		if (g > 255)	g = 255;
 		b = qBlue(color0) + qBlue(color1);
-		if (b>255)	b = 255;
+		if (b > 255)	b = 255;
 		break;
 	case 2:
 		r = qRed(color0) - qRed(color1);
-		if (r<0)	r = 0;
+		if (r < 0)	r = 0;
 		g = qGreen(color0) - qGreen(color1);
-		if (g<0)	g = 0;
+		if (g < 0)	g = 0;
 		b = qBlue(color0) - qBlue(color1);
-		if (b<0)	b = 0;
+		if (b < 0)	b = 0;
 		break;
 	case 3:
-		r = qRed(color0) + 0.25*qRed(color1);
-		if (r>255)	r = 255;
-		g = qGreen(color0) + 0.25*qGreen(color1);
-		if (g>255)	g = 255;
-		b = qBlue(color0) + 0.25*qBlue(color1);
-		if (b>255)	b = 255;
+		r = qRed(color0) + qRed(color1) / 4;
+		if (r > 255)	r = 255;
+		g = qGreen(color0) + qGreen(color1) / 4;
+		if (g > 255)	g = 255;
+		b = qBlue(color0) + qBlue(color1) / 4;
+		if (b > 255)	b = 255;
 		break;
 	default://0
-		r = (qRed(color0) + qRed(color1))/2;
-		g = (qGreen(color0) + qGreen(color1))/2;
-		b = (qBlue(color0) + qBlue(color1))/2;
+		r = (qRed(color0) + qRed(color1)) / 2;
+		g = (qGreen(color0) + qGreen(color1)) / 2;
+		b = (qBlue(color0) + qBlue(color1)) / 2;
 		break;
 	}
 
@@ -254,7 +254,7 @@ bool BackgroundFile::exportLayers(const QString &dirPath, const QString &extensi
 
 	bool layerExists[3];
 	QSet<quint16> usedIDs;
-	QHash<quint8, quint8> usedParams = tiles().usedParams(layerExists, &usedIDs);
+	tiles().usedParams(layerExists, &usedIDs);
 
 	for (quint8 i = 0 ; i < 4; ++i) {
 		if (i == 0 || layerExists[i - 1]) {
@@ -262,7 +262,7 @@ bool BackgroundFile::exportLayers(const QString &dirPath, const QString &extensi
 			                       .arg(field()->name())
 			                       .arg(i == 0 ? 0 : i - 1);
 			if (i == 1) {
-				for (quint16 ID: usedIDs) {
+				for (quint16 ID: qAsConst(usedIDs)) {
 					exportTiles(dir.filePath(fileName.arg(ID)), tiles().tilesByID(ID));
 				}
 			} else {

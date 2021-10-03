@@ -4,12 +4,12 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="../src/widgets/AboutDialog.cpp" line="10"/>
+        <location filename="../src/widgets/AboutDialog.cpp" line="27"/>
         <source>By Jérôme &amp;lt;myst6re&amp;gt; Arzel &lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;</source>
         <translation>Par Jérôme &amp;lt;myst6re&amp;gt; Arzel &lt;br/&gt;&lt;a href=&quot;https://github.com/myst6re/makoureactor/&quot;&gt;github.com/myst6re/makoureactor&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../src/widgets/AboutDialog.cpp" line="16"/>
+        <location filename="../src/widgets/AboutDialog.cpp" line="33"/>
         <source>Thanks to:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</source>
         <translation>Merci à&amp;nbsp;:&lt;ul style=&quot;margin:0&quot;&gt;&lt;li&gt;Squall78&lt;/li&gt;&lt;li&gt;Synergy Blades&lt;/li&gt;&lt;li&gt;TrueOdin&lt;/li&gt;&lt;li&gt;Akari&lt;/li&gt;&lt;li&gt;Asa&lt;/li&gt;&lt;li&gt;Aali&lt;/li&gt;&lt;li&gt;DLPB&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
@@ -609,23 +609,23 @@ List of available commands:
 <context>
     <name>FieldList</name>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="13"/>
+        <location filename="../src/widgets/FieldList.cpp" line="30"/>
         <source>File</source>
         <oldsource>Fichier</oldsource>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="13"/>
+        <location filename="../src/widgets/FieldList.cpp" line="30"/>
         <source>Id</source>
         <translation>Id</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="24"/>
+        <location filename="../src/widgets/FieldList.cpp" line="41"/>
         <source>Quick search</source>
         <translation>Recherche rapide</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="25"/>
+        <location filename="../src/widgets/FieldList.cpp" line="42"/>
         <source>Search...</source>
         <translation>Rechercher...</translation>
     </message>
@@ -638,100 +638,100 @@ List of available commands:
         <translation type="vanished">Fichier DAT (*.DAT)</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="30"/>
+        <location filename="../src/widgets/FieldList.cpp" line="47"/>
         <source>Rename field</source>
         <translation>Renommer écran</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="33"/>
+        <location filename="../src/widgets/FieldList.cpp" line="50"/>
         <source>Add field</source>
         <translation>Ajouter écran</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="36"/>
+        <location filename="../src/widgets/FieldList.cpp" line="53"/>
         <source>Delete field</source>
         <translation>Supprimer écran</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="51"/>
+        <location filename="../src/widgets/FieldList.cpp" line="68"/>
         <source>&amp;Field List Toolbar</source>
         <translation>Barre d&apos;o&amp;utils écrans</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="54"/>
+        <location filename="../src/widgets/FieldList.cpp" line="71"/>
         <source>Add a field</source>
         <translation>Ajouter un écran</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="56"/>
+        <location filename="../src/widgets/FieldList.cpp" line="73"/>
         <source>Remove a field</source>
         <translation>Supprimer un écran</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="224"/>
-        <location filename="../src/widgets/FieldList.cpp" line="267"/>
+        <location filename="../src/widgets/FieldList.cpp" line="241"/>
+        <location filename="../src/widgets/FieldList.cpp" line="284"/>
         <source>Not implemented for PS.</source>
         <translation>Pas implémenté pour la PS.</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="233"/>
+        <location filename="../src/widgets/FieldList.cpp" line="250"/>
         <source>Choose a name</source>
         <translation>Choisissez un nom</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="234"/>
+        <location filename="../src/widgets/FieldList.cpp" line="251"/>
         <source>Field name:</source>
         <translation>Nom écran :</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="189"/>
-        <location filename="../src/widgets/FieldList.cpp" line="241"/>
+        <location filename="../src/widgets/FieldList.cpp" line="206"/>
+        <location filename="../src/widgets/FieldList.cpp" line="258"/>
         <source>Name not filled</source>
         <translation>Nom vide</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="190"/>
-        <location filename="../src/widgets/FieldList.cpp" line="242"/>
+        <location filename="../src/widgets/FieldList.cpp" line="207"/>
+        <location filename="../src/widgets/FieldList.cpp" line="259"/>
         <source>Please set a new field name.</source>
         <translation>Veuillez écrire un nouveau nom d&apos;écran.</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="194"/>
-        <location filename="../src/widgets/FieldList.cpp" line="245"/>
+        <location filename="../src/widgets/FieldList.cpp" line="211"/>
+        <location filename="../src/widgets/FieldList.cpp" line="262"/>
         <source>Name already present in archive</source>
         <translation>Nom déjà présent dans l&apos;archive</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="195"/>
-        <location filename="../src/widgets/FieldList.cpp" line="246"/>
+        <location filename="../src/widgets/FieldList.cpp" line="212"/>
+        <location filename="../src/widgets/FieldList.cpp" line="263"/>
         <source>Please choose another name.</source>
         <translation>Veuillez choisir un autre nom.</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="281"/>
+        <location filename="../src/widgets/FieldList.cpp" line="298"/>
         <source>Are you sure you want to remove %1?
 Other maps can refer to it!</source>
         <translation>Êtes-vous sûr de vouloir supprimer %1 ?
 D&apos;autres écrans peuvent y référer !</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="284"/>
+        <location filename="../src/widgets/FieldList.cpp" line="301"/>
         <source>the selected field</source>
         <translation>l&apos;écran sélectionné</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="285"/>
+        <location filename="../src/widgets/FieldList.cpp" line="302"/>
         <source>the selected fields</source>
         <translation>les écrans sélectionnés</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="287"/>
+        <location filename="../src/widgets/FieldList.cpp" line="304"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="224"/>
-        <location filename="../src/widgets/FieldList.cpp" line="267"/>
+        <location filename="../src/widgets/FieldList.cpp" line="241"/>
+        <location filename="../src/widgets/FieldList.cpp" line="284"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
@@ -1844,22 +1844,22 @@ Certains scripts peuvent y faire référence !</translation>
 <context>
     <name>ModelColorsLayout</name>
     <message>
-        <location filename="../src/widgets/ModelColorsLayout.cpp" line="50"/>
+        <location filename="../src/widgets/ModelColorsLayout.cpp" line="67"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelColorsLayout.cpp" line="51"/>
+        <location filename="../src/widgets/ModelColorsLayout.cpp" line="68"/>
         <source>X</source>
         <translation>X</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelColorsLayout.cpp" line="52"/>
+        <location filename="../src/widgets/ModelColorsLayout.cpp" line="69"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelColorsLayout.cpp" line="53"/>
+        <location filename="../src/widgets/ModelColorsLayout.cpp" line="70"/>
         <source>Z</source>
         <translation>Z</translation>
     </message>
@@ -2213,52 +2213,52 @@ Certains scripts peuvent y faire référence !</translation>
 <context>
     <name>PsfDialog</name>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="20"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="37"/>
         <source>psflib</source>
         <translation>psflib</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="22"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="39"/>
         <source>Title</source>
         <translation>Titre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="24"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="41"/>
         <source>Artist</source>
         <translation>Artiste</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="26"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="43"/>
         <source>Game</source>
         <translation>Jeu</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="28"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="45"/>
         <source>Year</source>
         <translation>Année</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="30"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="47"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="32"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="49"/>
         <source>Comment</source>
         <translation>Commentaire</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="34"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="51"/>
         <source>Copyright</source>
         <translation>Copyright</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="36"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="53"/>
         <source>Author</source>
         <translation>Auteur</translation>
     </message>
     <message>
-        <location filename="../src/widgets/PsfDialog.cpp" line="61"/>
+        <location filename="../src/widgets/PsfDialog.cpp" line="78"/>
         <source>(auto)</source>
         <translation>(auto)</translation>
     </message>
@@ -7430,7 +7430,7 @@ id=%2
 <context>
     <name>ScriptManager</name>
     <message>
-        <location filename="../src/widgets/ScriptManager.cpp" line="183"/>
+        <location filename="../src/widgets/ScriptManager.cpp" line="200"/>
         <source>Error on line %1 : %2</source>
         <oldsource>Erreur ligne %1 : %2</oldsource>
         <translation>Erreur ligne %1 : %2</translation>
@@ -7732,45 +7732,45 @@ poursuite à la fin.</translation>
 <context>
     <name>SearchAll</name>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="9"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="26"/>
         <source>Find All</source>
         <translation>Rechercher tout</translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="28"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="45"/>
         <source>Copy</source>
         <oldsource>Copier</oldsource>
         <translation>Copier</translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="48"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Group</source>
         <oldsource>Groupe</oldsource>
         <translation>Groupe</translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="48"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Script</source>
         <translation>Script</translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="48"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Lines</source>
         <translation>Lignes</translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="48"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="65"/>
         <source>Instruction</source>
         <translation>Commande</translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="56"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="73"/>
         <source>Text #</source>
         <oldsource>Texte n°</oldsource>
         <translation>Texte n°</translation>
     </message>
     <message>
-        <location filename="../src/widgets/SearchAll.cpp" line="56"/>
+        <location filename="../src/widgets/SearchAll.cpp" line="73"/>
         <source>Text</source>
         <translation>Texte</translation>
     </message>
