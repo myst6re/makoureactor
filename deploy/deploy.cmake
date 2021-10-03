@@ -11,13 +11,13 @@ endif()
 
 find_program(DEPLOYQT_EXECUTABLE "${DEPLOYQT_NAME}deployqt" HINTS "${_qt_bin_dir}")
 if(UNIX)
-    set(ENV{QTDIR} "")
-    set(ENV{QT_PLUGIN_PATH} "")
-    set(ENV{LD_LIBRARY_PATH} "${ff7tk_DIR}/../..")
-    execute_process(
-        COMMAND "${DEPLOYQT_EXECUTABLE}"
-        "${TARGET_FILE_DIR}" ${DEPLOYQT_ARGS}
-    )
+    #set(ENV{QTDIR} "")
+    #set(ENV{QT_PLUGIN_PATH} "")
+    #set(ENV{LD_LIBRARY_PATH} "${ff7tk_DIR}/../..")
+    #execute_process(
+    #    COMMAND "${DEPLOYQT_EXECUTABLE}"
+    #    "${TARGET_FILE_DIR}" ${DEPLOYQT_ARGS}
+    #)
 else()
     execute_process(
         COMMAND "${DEPLOYQT_EXECUTABLE}"
