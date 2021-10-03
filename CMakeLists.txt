@@ -24,7 +24,7 @@ cmake_policy(SET CMP0091 NEW)
 
 set(RELEASE_NAME "Makou_Reactor")
 set(GUI_TARGET "${RELEASE_NAME}")
-#set(CLI_TARGET "makoureactor")
+set(CLI_TARGET "makoureactor")
 
 project("Makou Reactor" VERSION 1.8.5 LANGUAGES CXX
     DESCRIPTION "Final Fantasy VII field archive editor"
@@ -146,14 +146,6 @@ else()
 endif()
 
 set(PROJECT_SOURCES
-    "src/Arguments.cpp"
-    "src/Arguments.h"
-    "src/ArgumentsExport.cpp"
-    "src/ArgumentsExport.h"
-    "src/ArgumentsPatch.cpp"
-    "src/ArgumentsPatch.h"
-    "src/CLI.cpp"
-    "src/CLI.h"
     "src/Data.cpp"
     "src/Data.h"
     "src/FieldModelThread.cpp"
@@ -442,6 +434,171 @@ set(PROJECT_SOURCES
     "src/widgets/WalkmeshWidget.cpp"
     "src/widgets/WalkmeshWidget.h"
 )
+
+set(PROJECT_CLI_SOURCES
+    "src/Arguments.cpp"
+    "src/Arguments.h"
+    "src/ArgumentsExport.cpp"
+    "src/ArgumentsExport.h"
+    "src/ArgumentsPatch.cpp"
+    "src/ArgumentsPatch.h"
+    "src/CLI.cpp"
+    "src/CLI.h"
+    "src/Data.cpp"
+    "src/Data.h"
+    "src/FieldModelThread.cpp"
+    "src/FieldModelThread.h"
+    "src/core/Akao.cpp"
+    "src/core/Akao.h"
+    "src/core/AkaoIO.cpp"
+    "src/core/AkaoIO.h"
+    "src/core/Archive.cpp"
+    "src/core/Archive.h"
+    "src/core/Config.cpp"
+    "src/core/Config.h"
+    "src/core/FF7Font.cpp"
+    "src/core/FF7Font.h"
+    "src/core/FF7Text.cpp"
+    "src/core/FF7Text.h"
+    "src/core/IO.cpp"
+    "src/core/IO.h"
+    "src/core/IsoArchive.cpp"
+    "src/core/IsoArchive.h"
+    "src/core/IsoArchiveFF7.cpp"
+    "src/core/IsoArchiveFF7.h"
+    "src/core/Lgp.cpp"
+    "src/core/Lgp.h"
+    "src/core/Lgp_p.cpp"
+    "src/core/Lgp_p.h"
+    "src/core/PsColor.cpp"
+    "src/core/PsColor.h"
+    "src/core/PsfFile.cpp"
+    "src/core/PsfFile.h"
+    "src/core/TexFile.cpp"
+    "src/core/TexFile.h"
+    "src/core/TextureFile.cpp"
+    "src/core/TextureFile.h"
+    "src/core/TimFile.cpp"
+    "src/core/TimFile.h"
+    "src/core/Var.cpp"
+    "src/core/Var.h"
+    "src/core/WindowBinFile.cpp"
+    "src/core/WindowBinFile.h"
+    "src/core/field/AFile.cpp"
+    "src/core/field/AFile.h"
+    "src/core/field/BackgroundFile.cpp"
+    "src/core/field/BackgroundFile.h"
+    "src/core/field/BackgroundFilePC.cpp"
+    "src/core/field/BackgroundFilePC.h"
+    "src/core/field/BackgroundFilePS.cpp"
+    "src/core/field/BackgroundFilePS.h"
+    "src/core/field/BackgroundIO.cpp"
+    "src/core/field/BackgroundIO.h"
+    "src/core/field/BackgroundTextures.cpp"
+    "src/core/field/BackgroundTextures.h"
+    "src/core/field/BackgroundTexturesIO.cpp"
+    "src/core/field/BackgroundTexturesIO.h"
+    "src/core/field/BackgroundTiles.cpp"
+    "src/core/field/BackgroundTiles.h"
+    "src/core/field/BackgroundTilesFile.cpp"
+    "src/core/field/BackgroundTilesFile.h"
+    "src/core/field/BackgroundTilesIO.cpp"
+    "src/core/field/BackgroundTilesIO.h"
+    "src/core/field/BcxFile.cpp"
+    "src/core/field/BcxFile.h"
+    "src/core/field/BsxFile.cpp"
+    "src/core/field/BsxFile.h"
+    "src/core/field/CaFile.cpp"
+    "src/core/field/CaFile.h"
+    "src/core/field/CharArchive.cpp"
+    "src/core/field/CharArchive.h"
+    "src/core/field/EncounterFile.cpp"
+    "src/core/field/EncounterFile.h"
+    "src/core/field/Field.cpp"
+    "src/core/field/Field.h"
+    "src/core/field/FieldArchive.cpp"
+    "src/core/field/FieldArchive.h"
+    "src/core/field/FieldArchiveIO.cpp"
+    "src/core/field/FieldArchiveIO.h"
+    "src/core/field/FieldArchiveIOPC.cpp"
+    "src/core/field/FieldArchiveIOPC.h"
+    "src/core/field/FieldArchiveIOPS.cpp"
+    "src/core/field/FieldArchiveIOPS.h"
+    "src/core/field/FieldArchivePC.cpp"
+    "src/core/field/FieldArchivePC.h"
+    "src/core/field/FieldArchivePS.cpp"
+    "src/core/field/FieldArchivePS.h"
+    "src/core/field/FieldIO.cpp"
+    "src/core/field/FieldIO.h"
+    "src/core/field/FieldModelAnimation.cpp"
+    "src/core/field/FieldModelAnimation.h"
+    "src/core/field/FieldModelFile.cpp"
+    "src/core/field/FieldModelFile.h"
+    "src/core/field/FieldModelFilePC.cpp"
+    "src/core/field/FieldModelFilePC.h"
+    "src/core/field/FieldModelFilePS.cpp"
+    "src/core/field/FieldModelFilePS.h"
+    "src/core/field/FieldModelLoader.cpp"
+    "src/core/field/FieldModelLoader.h"
+    "src/core/field/FieldModelLoaderPC.cpp"
+    "src/core/field/FieldModelLoaderPC.h"
+    "src/core/field/FieldModelLoaderPS.cpp"
+    "src/core/field/FieldModelLoaderPS.h"
+    "src/core/field/FieldModelPart.cpp"
+    "src/core/field/FieldModelPart.h"
+    "src/core/field/FieldModelSkeleton.cpp"
+    "src/core/field/FieldModelSkeleton.h"
+    "src/core/field/FieldModelTextureRef.cpp"
+    "src/core/field/FieldModelTextureRef.h"
+    "src/core/field/FieldModelTextureRefPC.cpp"
+    "src/core/field/FieldModelTextureRefPC.h"
+    "src/core/field/FieldModelTextureRefPS.cpp"
+    "src/core/field/FieldModelTextureRefPS.h"
+    "src/core/field/FieldPC.cpp"
+    "src/core/field/FieldPC.h"
+    "src/core/field/FieldPS.cpp"
+    "src/core/field/FieldPS.h"
+    "src/core/field/FieldPSDemo.cpp"
+    "src/core/field/FieldPSDemo.h"
+    "src/core/field/FieldPart.cpp"
+    "src/core/field/FieldPart.h"
+    "src/core/field/GrpScript.cpp"
+    "src/core/field/GrpScript.h"
+    "src/core/field/HrcFile.cpp"
+    "src/core/field/HrcFile.h"
+    "src/core/field/IdFile.cpp"
+    "src/core/field/IdFile.h"
+    "src/core/field/InfFile.cpp"
+    "src/core/field/InfFile.h"
+    "src/core/field/MaplistFile.cpp"
+    "src/core/field/MaplistFile.h"
+    "src/core/field/Opcode.cpp"
+    "src/core/field/Opcode.h"
+    "src/core/field/PFile.cpp"
+    "src/core/field/PFile.h"
+    "src/core/field/Palette.cpp"
+    "src/core/field/Palette.h"
+    "src/core/field/PaletteIO.cpp"
+    "src/core/field/PaletteIO.h"
+    "src/core/field/RsdFile.cpp"
+    "src/core/field/RsdFile.h"
+    "src/core/field/Script.cpp"
+    "src/core/field/Script.h"
+    "src/core/field/Section1File.cpp"
+    "src/core/field/Section1File.h"
+    "src/core/field/TdbFile.cpp"
+    "src/core/field/TdbFile.h"
+    "src/core/field/TutFile.cpp"
+    "src/core/field/TutFile.h"
+    "src/core/field/TutFilePC.cpp"
+    "src/core/field/TutFilePC.h"
+    "src/core/field/TutFileStandard.cpp"
+    "src/core/field/TutFileStandard.h"
+    "src/core/world/TblFile.cpp"
+    "src/core/world/TblFile.h"
+    "src/main.cpp"
+    "src/txt.cpp"
+)
 set(RESOURCES "src/qt/${RELEASE_NAME}.qrc")
 
 if(APPLE)
@@ -475,15 +632,19 @@ target_link_libraries(${GUI_TARGET} PRIVATE
 )
 
 # CLI
-#add_executable(${CLI_TARGET} ${PROJECT_SOURCES} ${QM_FILES} src/qt/${RELEASE_NAME}.qrc src/qt/${RELEASE_NAME}.rc)
-#target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
-#target_link_libraries(${CLI_TARGET}
-#    Qt::Zlib
-#    ff7tk::ff7tkUtils
-#)
-#target_compile_definitions(${CLI_TARGET}
-#    PRIVATE MR_CONSOLE=1
-#)
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_executable(${CLI_TARGET} MANUAL_FINALIZATION ${PROJECT_CLI_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
+else()
+    add_executable(${CLI_TARGET} ${PROJECT_CLI_SOURCES} ${QM_FILES} ${RESOURCES} ${EXTRA_RESOURCES})
+endif()
+target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
+target_link_libraries(${CLI_TARGET} PRIVATE
+    ${ZLIB_LIBRARY}
+    ff7tk::ff7tkUtils
+)
+target_compile_definitions(${CLI_TARGET}
+    PRIVATE MR_CONSOLE=1
+)
 
 include(GNUInstallDirs)
 
