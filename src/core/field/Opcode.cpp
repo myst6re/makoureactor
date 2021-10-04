@@ -1529,12 +1529,12 @@ QByteArray OpcodeJMPBL::params() const
 }
 
 OpcodeIf::OpcodeIf() :
-	OpcodeJump(), banks(0), value1(0), value2(0), oper(0)
+	OpcodeJump(), banks(0), oper(0), value1(0), value2(0)
 {
 }
 
 OpcodeIf::OpcodeIf(const OpcodeJump &op) :
-	OpcodeJump(op), banks(0), value1(0), value2(0), oper(0)
+	OpcodeJump(op), banks(0), oper(0), value1(0), value2(0)
 {
 }
 
@@ -2670,10 +2670,11 @@ OpcodeWindow::OpcodeWindow(const char *params, int size)
 }
 
 OpcodeWindow::OpcodeWindow(quint8 windowID, quint16 targetX,
-					  quint16 targetY, quint16 width,
-					  quint16 height) :
-	  windowID(windowID), targetX(targetX), targetY(targetY),
-	  width(width), height(height)
+                           quint16 targetY, quint16 width,
+                           quint16 height) :
+    targetX(targetX), targetY(targetY),
+    width(width), height(height),
+    windowID(windowID)
 {
 }
 

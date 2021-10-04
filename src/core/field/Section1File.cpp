@@ -951,7 +951,7 @@ void Section1File::cleanTexts()
 void Section1File::autosizeTextWindows()
 {
 	for (quint8 textID : listUsedTexts()) {
-		if (textID < 0 || textID >= _texts.size()) {
+		if (textID >= _texts.size()) {
 			continue;
 		}
 		QList<FF7Window> windows;
