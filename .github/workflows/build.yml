@@ -45,6 +45,7 @@ jobs:
       ff7tk_installation_path: ${{ github.workspace }}/ff7tk
       makoureactor_build_path: ${{ github.workspace }}/../build-makoureactor
       makoureactor_installation_path: ${{ github.workspace }}/../installation-makoureactor
+      makoureactor_appbundle_path: ${{ github.workspace }}/../appbundle-makoureactor
       CMAKE_GENERATOR: Ninja
       CMAKE_BUILD_TYPE: Release
       packageGlob: makoureactor-continuous-*.*
@@ -59,7 +60,7 @@ jobs:
         key: ${{ runner.os }}${{ matrix.config.WIN_ARCH }}-qt-${{ env.QT_VERSION }}-${{ env.NINJA_VERSION }}
 
     - name: Clone ff7tk repo
-      run: git clone --depth 1 --single-branch --branch feature/update-utils https://github.com/myst6re/ff7tk.git ${{ env.ff7tk_path }}
+      run: git clone --depth 1 --single-branch --branch master https://github.com/myst6re/ff7tk.git ${{ env.ff7tk_path }}
 
     - name: Get ff7tk HEAD
       run: git rev-parse HEAD > ${{ github.workspace }}/ff7tk-HEAD
@@ -100,11 +101,12 @@ jobs:
     - name: Download linuxdeployqt
       if: runner.os == 'Linux'
       run: |
-        wget -qc "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        wget -qc "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+        wget -qc "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
         export VERSION=continuous
-        chmod a+x linuxdeployqt*.AppImage
-        mv linuxdeployqt*.AppImage $Qt5_DIR/bin/linuxdeployqt
-        find ${{ env.ff7tk_installation_path }} -name '*.so' -type f -exec ldd {} \;
+        chmod a+x linuxdeploy*.AppImage
+        mv linuxdeploy-plugin-qt-*.AppImage $Qt5_DIR/bin/linuxdeploy-plugin-qt
+        mv linuxdeploy-*.AppImage $Qt5_DIR/bin/linuxdeploy
 
     - name: Build Makou_Reactor
       id: main_build
@@ -120,22 +122,12 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         export VERSION=continuous
-        unset QTDIR; unset QT_PLUGIN_PATH; unset LD_LIBRARY_PATH
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${{ env.ff7tk_installation_path }}/lib
-        linuxdeployqt ${{ env.makoureactor_installation_path }}/share/applications/*.desktop -appimage -extra-plugins=iconengines,platformthemes/libqxdgdesktopportal.so
-        find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
-
-    - name: Show install results
-      if: runner.os == 'Linux'
-      shell: bash
-      run: |
-        ls -l ${{ env.makoureactor_installation_path }}
-        sudo apt update
-        sudo apt install tree
-        tree ${{ env.makoureactor_installation_path }}
-        tree ${{ env.ff7tk_installation_path }}
-        ls -l ${{ env.makoureactor_build_path }}
-        find ${{ env.makoureactor_installation_path }} -executable -type f -exec ldd {} \;
+        linuxdeploy --appdir="${{ env.makoureactor_appbundle_path }}" --plugin=qt --output appimage \
+          -e "${{ env.makoureactor_installation_path }}"/bin/Makou_Reactor \
+          -d "${{ env.makoureactor_installation_path }}"/share/applications/Makou_Reactor.desktop \
+          -i "${{ env.makoureactor_installation_path }}"/share/icons/hicolor/256x256/apps/Makou_Reactor.png
+        mv *.AppImage makoureactor-continuous-${{ matrix.config.package_suffix }}.AppImage
 
     - name: Prepare Upload
       shell: bash
