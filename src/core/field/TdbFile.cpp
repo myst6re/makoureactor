@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TdbFile.h"
-#include "../PsColor.h"
+#include <PsColor.h>
 #include <QImage>
 
 TdbFile::TdbFile()
@@ -34,7 +34,7 @@ bool TdbFile::open(const QByteArray &data)
 
 	memcpy(&header, constData, sizeof(TdbHeader));
 
-	if (header.size != (quint32)data.size()) {
+	if (header.size != quint32(data.size())) {
 		qWarning() << "invalid tdb size" << header.size << data.size();
 		return false;
 	}
@@ -96,7 +96,7 @@ QImage TdbFile::texture(quint8 faceID, TextureType type)
 
 	quint32 offsetImage = header.imageOffset + imgID * 512;
 
-	int pal = qMin((quint16)faceID, quint16(header.paletteCount-1));
+	int pal = qMin(quint16(faceID), quint16(header.paletteCount - 1));
 
 	quint32 offsetPalette = header.paletteOffset + pal * 32;
 
@@ -125,7 +125,7 @@ int TdbFile::faceIdToImageId(quint8 faceID, TextureType type)
 {
 	if (faceID <= 9) {
 		if (type == Empty)	return 126;
-		return faceID * 8 + (quint8)type;
+		return faceID * 8 + quint8(type);
 	} else {
 		switch (type) {
 		case Eye:

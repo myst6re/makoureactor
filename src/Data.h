@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtCore>
-#include "core/Lgp.h"
+#include <Lgp.h>
 #include "core/WindowBinFile.h"
 #include "core/field/CharArchive.h"
 

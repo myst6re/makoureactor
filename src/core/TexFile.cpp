@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TexFile.h"
-#include "PsColor.h"
+#include <PsColor.h>
 
 TexFile::TexFile(const QByteArray &data) :
       TextureFile()

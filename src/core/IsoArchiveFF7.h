@@ -17,7 +17,7 @@
  ****************************************************************************/
 #pragma once
 
-#include "IsoArchive.h"
+#include <IsoArchive.h>
 
 class IsoArchiveFF7 : public IsoArchive
 {

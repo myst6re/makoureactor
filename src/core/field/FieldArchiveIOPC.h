@@ -18,8 +18,8 @@
 #pragma once
 
 #include <QLockedFile.h>
+#include <Lgp.h>
 #include "FieldArchiveIO.h"
-#include "../Lgp.h"
 
 class FieldArchivePC;
 

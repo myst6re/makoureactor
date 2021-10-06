@@ -28,7 +28,7 @@ public:
 	explicit Palette(const char *data);
 	virtual ~Palette();
 	inline bool notZero(quint8 index) const { return !isZero(index); }
-	virtual inline bool isZero(quint8 index) const {
+	virtual inline bool isZero(int index) const {
 		return _isZero.at(index);
 	}
 	virtual inline QRgb color(int index) const { return _colors.at(index); }
@@ -59,7 +59,7 @@ public:
 	PalettePC(const Palette &palette, bool transparency=false);
 	explicit PalettePC(const char *data, bool transparency=false);
 	QRgb color(int index) const override;
-	bool isZero(quint8 index) const override;
+	bool isZero(int index) const override;
 	bool transparency() const;
 	void setTransparency(bool transparency);
 private:

@@ -145,7 +145,7 @@ find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL REQUIRED)
 find_package(QT NAMES Qt5 Qt6 COMPONENTS Zlib QUIET)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Zlib QUIET)
-find_package(ff7tk COMPONENTS ff7tkUtils REQUIRED)
+find_package(ff7tk COMPONENTS ff7tkFormats ff7tkUtils REQUIRED)
 
 if(NOT Qt${QT_VERSION_MAJOR}Zlib_FOUND)
     find_package(ZLIB REQUIRED)
@@ -165,8 +165,6 @@ set(PROJECT_SOURCES
     "src/core/Akao.h"
     "src/core/AkaoIO.cpp"
     "src/core/AkaoIO.h"
-    "src/core/Archive.cpp"
-    "src/core/Archive.h"
     "src/core/Clipboard.cpp"
     "src/core/Clipboard.h"
     "src/core/Config.cpp"
@@ -177,16 +175,8 @@ set(PROJECT_SOURCES
     "src/core/FF7Text.h"
     "src/core/IO.cpp"
     "src/core/IO.h"
-    "src/core/IsoArchive.cpp"
-    "src/core/IsoArchive.h"
     "src/core/IsoArchiveFF7.cpp"
     "src/core/IsoArchiveFF7.h"
-    "src/core/Lgp.cpp"
-    "src/core/Lgp.h"
-    "src/core/Lgp_p.cpp"
-    "src/core/Lgp_p.h"
-    "src/core/PsColor.cpp"
-    "src/core/PsColor.h"
     "src/core/PsfFile.cpp"
     "src/core/PsfFile.h"
     "src/core/Renderer.cpp"
@@ -461,8 +451,6 @@ set(PROJECT_CLI_SOURCES
     "src/core/Akao.h"
     "src/core/AkaoIO.cpp"
     "src/core/AkaoIO.h"
-    "src/core/Archive.cpp"
-    "src/core/Archive.h"
     "src/core/Config.cpp"
     "src/core/Config.h"
     "src/core/FF7Font.cpp"
@@ -471,16 +459,8 @@ set(PROJECT_CLI_SOURCES
     "src/core/FF7Text.h"
     "src/core/IO.cpp"
     "src/core/IO.h"
-    "src/core/IsoArchive.cpp"
-    "src/core/IsoArchive.h"
     "src/core/IsoArchiveFF7.cpp"
     "src/core/IsoArchiveFF7.h"
-    "src/core/Lgp.cpp"
-    "src/core/Lgp.h"
-    "src/core/Lgp_p.cpp"
-    "src/core/Lgp_p.h"
-    "src/core/PsColor.cpp"
-    "src/core/PsColor.h"
     "src/core/PsfFile.cpp"
     "src/core/PsfFile.h"
     "src/core/TexFile.cpp"
@@ -638,6 +618,7 @@ target_link_libraries(${GUI_TARGET} PRIVATE
     Qt::OpenGL
     Qt::Widgets
     ${ZLIB_LIBRARY}
+    ff7tk::ff7tkFormats
     ff7tk::ff7tkUtils
 )
 
@@ -650,6 +631,7 @@ endif()
 target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${CLI_TARGET} PRIVATE
     ${ZLIB_LIBRARY}
+    ff7tk::ff7tkFormats
     ff7tk::ff7tkUtils
 )
 target_compile_definitions(${CLI_TARGET}
@@ -663,7 +645,7 @@ if(APPLE OR WIN32)
 endif()
 
 if(APPLE)
-    set(DEPLOY_TEMP "$<TARGET_FILE_DIR:${GUI_TARGET}>")
+    set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app")
 elseif(WIN32)
     set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/win32-deploy")
     install(DIRECTORY DESTINATION "${DEPLOY_TEMP}")
@@ -673,10 +655,12 @@ elseif(WIN32)
     endif()
     if(MINGW)
         set(FF7TK_DEPENDS
+            "${FF7TK_BIN_DIR}/libff7tkFormats.dll"
             "${FF7TK_BIN_DIR}/libff7tkUtils.dll"
         )
     else()
         set(FF7TK_DEPENDS
+            "${FF7TK_BIN_DIR}/ff7tkFormats.dll"
             "${FF7TK_BIN_DIR}/ff7tkUtils.dll"
         )
     endif()
@@ -698,7 +682,7 @@ if(APPLE)
         set(CMAKE_INSTALL_PREFIX "/Applications" CACHE PATH "..." FORCE)
     endif()
     install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
-    install(TARGETS ${CLI_TARGET} RUNTIME)
+    install(TARGETS ${CLI_TARGET} RUNTIME EXCLUDE_FROM_ALL)
 elseif(WIN32)
     install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION ".")
     install(CODE "file(REMOVE_RECURSE \"${DEPLOY_TEMP}\")")

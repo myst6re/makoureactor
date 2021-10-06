@@ -17,7 +17,7 @@
  ****************************************************************************/
 #pragma once
 
-#include "core/Lgp.h"
+#include <Lgp.h>
 
 class CharArchive
 {

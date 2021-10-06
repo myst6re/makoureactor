@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "Palette.h"
-#include "../PsColor.h"
+#include <PsColor.h>
 
 Palette::Palette()
 {
@@ -96,7 +96,7 @@ QRgb PalettePC::color(int index) const
 	return Palette::color(index);
 }
 
-bool PalettePC::isZero(quint8 index) const
+bool PalettePC::isZero(int index) const
 {
 	return index == 0 && _transparency;
 }

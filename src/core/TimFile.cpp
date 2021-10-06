@@ -16,7 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "TimFile.h"
-#include "PsColor.h"
+#include <PsColor.h>
 
 TimFile::TimFile(const QByteArray &data) :
     TextureFile(),

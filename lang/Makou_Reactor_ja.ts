@@ -2148,7 +2148,7 @@ Some scripts can refer to it!</source>
         <translation type="unfinished">レイヤー %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3525"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3526"/>
         <source>main (parameter %1)</source>
         <oldsource>%1? (paramètre %2)</oldsource>
         <translatorcomment>%1? (parameter %2)</translatorcomment>
@@ -2290,71 +2290,71 @@ Some scripts can refer to it!</source>
         <translation type="unfinished">RESET</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3519"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3520"/>
         <source>Exit program (parameter %1)</source>
         <oldsource>? (paramètre %1)</oldsource>
         <translatorcomment>? (parameter %1)</translatorcomment>
         <translation>プログラムの終了 (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3520"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3521"/>
         <source>Encount Error (parameter %1)</source>
         <oldsource>HPs à 1 (paramètre %1)</oldsource>
         <translatorcomment>エンカウント エラー (パラメータ %1)</translatorcomment>
         <translation>エンカウント エラー (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3535"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3536"/>
         <source>Check if %1 and store the result in var[15][111]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7246"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7247"/>
         <source>Create line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7294"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7295"/>
         <source>%1 line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7295"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7296"/>
         <source>Enable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7295"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7296"/>
         <source>Disable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7342"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7343"/>
         <source>Set line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8251"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8252"/>
         <source>CPPAL2 %1</source>
         <translation type="unfinished">CPPAL2 %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8272"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8273"/>
         <source>RTPAL2 %1</source>
         <translation type="unfinished">RTPAL2 %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8293"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8294"/>
         <source>ADPAL2 %1</source>
         <translation type="unfinished">ADPAL2 %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8314"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8315"/>
         <source>Play music #%1</source>
         <translation>BGM #%1 を再生</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8337"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8338"/>
         <source>Play sound #%1 (position=%2/127)</source>
         <translation>効果音 #%1 を再生 (位置=%2/127)</translation>
     </message>
@@ -2363,53 +2363,53 @@ Some scripts can refer to it!</source>
         <translation type="vanished">MUSVT (BGM #%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8461"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8462"/>
         <source>MUSVM (music #%1)</source>
         <translation>MUSVM (BGM #%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8482"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8483"/>
         <source>%1 music</source>
         <translation>BGM を%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8483"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8484"/>
         <source>Unlock</source>
         <translation>アンロック</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8483"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8484"/>
         <source>Lock</source>
         <comment>test</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8503"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8504"/>
         <source>Set the music #%1 for next battle</source>
         <translation>次のバトル BGM に #%1 をセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8526"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8527"/>
         <source>CHMPH: Save (unknown) in %1 and (unknown) in %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8559"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8560"/>
         <source>Set next movie: %1</source>
         <translation>次のムービーをセット : %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8574"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8575"/>
         <source>Play movie</source>
         <translation>ムービーを再生</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8590"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8591"/>
         <source>Save Movie frame in %1</source>
         <translation>ムービー フレームを %1 に保存</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8619"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8620"/>
         <source>Camera Movie: %1</source>
         <translation>カメラ ムービー : %1</translation>
     </message>
@@ -2431,11 +2431,11 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="1779"/>
         <location filename="../src/core/field/Opcode.cpp" line="1835"/>
         <location filename="../src/core/field/Opcode.cpp" line="1924"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2799"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2818"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2837"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7145"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7159"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2800"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2819"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2838"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7146"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7160"/>
         <source>else goto label %1</source>
         <oldsource>aller au label %1 sinon</oldsource>
         <translation type="unfinished"></translation>
@@ -2450,7 +2450,7 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="2195"/>
         <location filename="../src/core/field/Opcode.cpp" line="2216"/>
         <location filename="../src/core/field/Opcode.cpp" line="2557"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7316"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7317"/>
         <source>ON</source>
         <translatorcomment>許可</translatorcomment>
         <translation>オン</translation>
@@ -2459,7 +2459,7 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="2195"/>
         <location filename="../src/core/field/Opcode.cpp" line="2216"/>
         <location filename="../src/core/field/Opcode.cpp" line="2557"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7316"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7317"/>
         <source>OFF</source>
         <translatorcomment>禁止</translatorcomment>
         <translation>オフ</translation>
@@ -2476,53 +2476,53 @@ Some scripts can refer to it!</source>
         <translation>SLIP: %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4477"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4478"/>
         <source>MPDSP : %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5158"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5159"/>
         <source>Seed Random Generator : %1</source>
         <translatorcomment>Seed Random Generator: %1</translatorcomment>
         <translation>乱数ジェネレータをシード: %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5646"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5647"/>
         <source>%1 = %2 &amp; 0xFF (low byte)</source>
         <translation>%1 = %2 &amp; 0xFF (下位バイト)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5663"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5664"/>
         <source>%1 = (%2 &gt;&gt; 8) &amp; 0xFF (high byte)</source>
         <translation>%1 = (%2 &gt;&gt; 8) &amp; 0xFF (上位バイト)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5684"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5685"/>
         <source>%1 = (%2 &amp; 0xFF) | ((%3 &amp; 0xFF) &lt;&lt; 8)</source>
         <translation>%1 = (%2 &amp; 0xFF) | ((%3 &amp; 0xFF) &lt;&lt; 8)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7395"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7396"/>
         <source>%4 = ((Sinus(%1) * %2) + %3) &gt;&gt; 12</source>
         <translation>%4 = ((サイン (%1) * %2) + %3) &gt;&gt; 12</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7440"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7441"/>
         <source>%4 = ((Cosinus(%1) * %2) + %3) &gt;&gt; 12</source>
         <translation>%4 = ((コサイン (%1) * %2) + %3) &gt;&gt; 12</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7541"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7542"/>
         <source>Preload the field map %1</source>
         <translation>フィールド マップ %1 の先読み</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7556"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7557"/>
         <source>PMJMP2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7641"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7642"/>
         <source>%1 rotation</source>
         <translation>回転を %1</translation>
     </message>
@@ -2839,13 +2839,13 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1016"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5915"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5916"/>
         <source>Display</source>
         <translation>表示</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1016"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5915"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5916"/>
         <source>Hide</source>
         <translation>隠す</translation>
     </message>
@@ -2883,12 +2883,12 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="1154"/>
         <location filename="../src/core/field/Opcode.cpp" line="1180"/>
         <location filename="../src/core/field/Opcode.cpp" line="2281"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2853"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4598"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4717"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5137"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7042"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7642"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2854"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4599"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4718"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5138"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7043"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7643"/>
         <source>Activate</source>
         <translation>有効化</translation>
     </message>
@@ -2896,12 +2896,12 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="1154"/>
         <location filename="../src/core/field/Opcode.cpp" line="1180"/>
         <location filename="../src/core/field/Opcode.cpp" line="2281"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2853"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4598"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4717"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5137"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7042"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7642"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2854"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4599"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4718"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5138"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7043"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7643"/>
         <source>Deactivate</source>
         <translation>無効化</translation>
     </message>
@@ -2969,11 +2969,11 @@ Some scripts can refer to it!</source>
         <location filename="../src/core/field/Opcode.cpp" line="1778"/>
         <location filename="../src/core/field/Opcode.cpp" line="1834"/>
         <location filename="../src/core/field/Opcode.cpp" line="1923"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2798"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2817"/>
-        <location filename="../src/core/field/Opcode.cpp" line="2836"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7144"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7158"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2799"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2818"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2837"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7145"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7159"/>
         <source>else forward %n byte(s)</source>
         <comment>With plural</comment>
         <translation type="unfinished">
@@ -3027,7 +3027,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1981"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3526"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3527"/>
         <source>Bike (parameter %1)</source>
         <translation>バイク (パラメータ %1)</translation>
     </message>
@@ -3063,7 +3063,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="1988"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3540"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3541"/>
         <source>%1? (parameter %2)</source>
         <translation>%1? (パラメータ %2)</translation>
     </message>
@@ -3079,37 +3079,37 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2060"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4744"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4745"/>
         <source>Countdown</source>
         <translation>カウントダウン</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2061"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4745"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4746"/>
         <source>Pre-emptive attack</source>
         <translation>先制攻撃</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2062"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4746"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4747"/>
         <source>The party cannot escape the battle</source>
         <translation>パーティはバトルから逃走不能</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2063"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4747"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4748"/>
         <source>Do not play the battle victory music</source>
         <translation>バトル勝利時の BGM を再生しない</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2064"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4748"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4749"/>
         <source>Activates the battle arena</source>
         <translation>バトル アリーナの有効化</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2065"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4749"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4750"/>
         <source>Do not show battle rewards</source>
         <translation>バトル後の AP/EXP/ギル/アイテム 精算画面を表示しない</translation>
     </message>
@@ -3120,19 +3120,19 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2067"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4750"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4751"/>
         <source>Disable game over</source>
         <translation>ゲーム オーバーを無効化</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2073"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4756"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4757"/>
         <source>Battle mode: %1</source>
         <translation>バトル モード : %1</translation>
     </message>
     <message>
         <location filename="../src/core/field/Opcode.cpp" line="2073"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4756"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4757"/>
         <source>None</source>
         <translation type="unfinished">なし</translation>
     </message>
@@ -3232,247 +3232,247 @@ Some scripts can refer to it!</source>
         <translation>ウィンドウを閉じる (ウィンドウ #%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2738"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2739"/>
         <source>Resizes/Repositions the window #%1 (X=%2, Y=%3, width=%4, height=%5)</source>
         <translation>ウィンドウ #%1 のリサイズと移動 (X=%2, Y=%3, 幅=%4, 高さ=%5)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2778"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2779"/>
         <source>(no key)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2780"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2781"/>
         <source> or </source>
         <translation>または</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2795"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2796"/>
         <source>If key %1 pressed (%2)</source>
         <translation type="unfinished">キー %1 が押された場合 (%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2814"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2815"/>
         <source>If key %1 pressed once (%2)</source>
         <translation type="unfinished">キー %1 が一度押された場合 (%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2833"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2834"/>
         <source>If key %1 released once (%2)</source>
         <translation type="unfinished">キー %1 が一度離された場合 (%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2852"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2853"/>
         <source>%1 the movability of the playable character</source>
         <translation>操作可能キャラクターの移動能力を %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2873"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2874"/>
         <source>Instantly turns the field model to face the party member #%1</source>
         <translation>3Dモデルの向きをパーティ メンバー #%1 の方へただちにターン</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2896"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2897"/>
         <source>Turns the field model to face the party member #%1 (Speed=%2, Rotation=%3)</source>
         <translation>3Dモデルの向きをパーティ メンバー #%1 の方へターン (速度=%2, 回転=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2928"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2929"/>
         <source>(none)</source>
         <translation>(なし)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2929"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2930"/>
         <source>Clock (00:00)</source>
         <translation>クロック (00:00)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2930"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2931"/>
         <source>Numeric (000000)</source>
         <translation>数値 (000000)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2934"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2935"/>
         <source>%2 in the window #%1 (left=%3, top=%4)</source>
         <translation>ウィンドウ #%1 内の %2 (左=%3, 上=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="2975"/>
+        <location filename="../src/core/field/Opcode.cpp" line="2976"/>
         <source>Sets %2 in window #%1 (show %3 digits)</source>
         <translation>%2 をウィンドウ #%1 にセット (%3 回表示)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3024"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3025"/>
         <source>Set Timer (H=%1, M=%2, S=%3)</source>
         <translation>タイマーをセット (H=%1, M=%2, S=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3087"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3088"/>
         <source>Add %1 gil to the party </source>
         <translation>パーティの所持ギルに %1 を加える</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3103"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3104"/>
         <source>Remove %1 gils from the party</source>
         <translation>パーティの所持ギルから %1 を減らす</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3121"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3122"/>
         <source>Copies the amount of gil in %1 and %2</source>
         <translation>%1 と %2 にギルの総額をコピー</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3148"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3157"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3175"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3149"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3158"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3176"/>
         <source>Restores full HP and MP of every party member</source>
         <translation>すべてのパーティメンバーの HP, MP を回復</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3166"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3167"/>
         <source>Restores full HP and MP of every available character and removing status effects</source>
         <translation>利用可能なすべてのキャラクターの HP, MP を回復してステータス異常も解消</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3196"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3197"/>
         <source>Displays the dialog %2 in the window #%1</source>
         <translation>ダイアログ %2 をウィンドウ #%1 に表示</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3243"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3289"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3244"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3290"/>
         <source>Set %3 to the variable #%2 in the window #%1</source>
         <translation>ウィンドウ #%1 の変数 #%2 に %3 をセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3337"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3338"/>
         <source>Display %1 in the main menu</source>
         <translation>%1 をメイン メニューに表示</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3395"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3396"/>
         <source>Add %2 MP to party member #%1</source>
         <translation>パーティ メンバー #%1 の MP を %2 増やす</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3412"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3413"/>
         <source>Remove %2 MP to party member #%1</source>
         <translation>パーティ メンバー #%1 の MP を %2 減らす</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3434"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3435"/>
         <source>Ask Question %2 in the window #%1 (and put selected answer in %5) first line=%3, last line=%4</source>
         <translation>ウィンドウ #%1 に選択肢 %2 を表示 (続いてプレーヤーの選択を %5 にセット) 最初の行=%3, 最後の行=%4</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3495"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3496"/>
         <source>all magic materias are present and mastered</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3496"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3497"/>
         <source>all summon materias are present and mastered</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3497"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3498"/>
         <source>necessary command materias are present and mastered</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3498"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3499"/>
         <source>Bahamut and Neo Bahamut materias are present</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3499"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3500"/>
         <source>22? (parameter %1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3507"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3508"/>
         <source>Remove mastered magic materias and add Master Magic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3508"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3509"/>
         <source>Remove mastered summon materias and add Master Summon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3509"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3510"/>
         <source>Remove mastered meaning command materias and add Master Command</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3510"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3511"/>
         <source>Add Bahamut Zero to the inventory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3511"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3512"/>
         <source>23? (parameter %1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3521"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3522"/>
         <source>ff7 credits (parameter %1)</source>
         <translation>FF7 クレジット (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3522"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3523"/>
         <source>Change name of %1</source>
         <translation>名前の変更: %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3523"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3524"/>
         <source>Change party (parameter %1)</source>
         <translation>パーティ変更 (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3524"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3525"/>
         <source>Shop No%1</source>
         <translation>ショップ No.%1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3527"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3528"/>
         <source>Save (parameter %1)</source>
         <translation>セーブ (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3528"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3529"/>
         <source>Remove all materias (parameter %1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3529"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3530"/>
         <source>Restore all materias (parameter %1)</source>
         <translation>すべてのマテリアを解除 (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3530"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3531"/>
         <source>Remove %1&apos;s Materia</source>
         <translation>%1 のマテリアを解除</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3531"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3532"/>
         <source>Clear Cloud&apos;s materias (parameter %1)</source>
         <translation>クラウドのマテリアを解除 (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3532"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3533"/>
         <source>Restore Cloud&apos;s materias (parameter %1)</source>
         <translation>クラウドのマテリアを戻す (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3533"/>
-        <location filename="../src/core/field/Opcode.cpp" line="3538"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3534"/>
         <location filename="../src/core/field/Opcode.cpp" line="3539"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3540"/>
         <source>? (parameter %1)</source>
         <translation>? (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3534"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3535"/>
         <source>HP to 1 (parameter %1)</source>
         <translatorcomment>エンカウント エラー (パラメータ %1)</translatorcomment>
         <translation>HP を 1 に (パラメータ %1)</translation>
@@ -3482,608 +3482,608 @@ Some scripts can refer to it!</source>
         <translation type="vanished">マスター ? (パラメータ %1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3546"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3547"/>
         <source>Show menu %1</source>
         <translation>メニュー %1 を表示</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3576"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3577"/>
         <source>%1 access to the main menu</source>
         <translation type="unfinished">メイン メニューへのアクセスを %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3577"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3578"/>
         <source>Enables</source>
         <translation>有効化</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3577"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3578"/>
         <source>Disables</source>
         <translation>無効化</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3597"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3598"/>
         <source>Set battle table: %1</source>
         <translation>バトル テーブル %1 をセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3618"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3619"/>
         <source>Add %2 HP to party member #%1</source>
         <translation>パーティ メンバー #%1 の HP を %2 増やす</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3635"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3636"/>
         <source>Remove %2 HP to party member #%1</source>
         <translation>パーティ メンバー  #%1 の HP を %2 減らす</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3659"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3660"/>
         <source>Create window #%1 (X=%2, Y=%3, Width=%4, Height=%5)</source>
         <translation>ウィンドウ #%1 の作成 (X=%2, Y=%3, 幅=%4, 高さ=%5)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3681"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3682"/>
         <source>Move the window #%1 (Move : X=%2, Y=%3)</source>
         <translation>ウィンドウ #%1 を移動 (X=%2, Y=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3722"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3723"/>
         <source>Normal</source>
         <translation>ノーマル</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3723"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3724"/>
         <source>No Background/Border</source>
         <translation>背景/ボーダーなし</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3724"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3725"/>
         <source>Transparent Background</source>
         <translation>背景の透過</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3728"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3729"/>
         <source>Set the window #%1 mode: %2 (%3 the closing of the window by the player)</source>
         <translation>ウィンドウ #%1 モード: %2 をセット (プレーヤーがウィンドウを閉じる操作を %3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3731"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3732"/>
         <source>Authorize</source>
         <translation>許可</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3731"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3732"/>
         <source>prevent</source>
         <translation>禁止</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3764"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3765"/>
         <source>Reset the window #%1</source>
         <translation>ウィンドウ #%1 をリセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3808"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3809"/>
         <source>Close the window #%1 (stronger)</source>
         <translation>ウィンドウを閉じる (ウィンドウ #%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3840"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3841"/>
         <source>Number of row in the window #%1 = %2</source>
         <translation>ウィンドウ #%1 の桁数 = %2</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3899"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3900"/>
         <source>Get windows %1 color to %2 (R), %3 (G) and %4 (B)</source>
         <translation>ウィンドウ %1 の色を  %2 (R), %3 (G), %4 (B) に変更</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3931"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3932"/>
         <source>Set windows %1 color: RGB(%2, %3, %4)</source>
         <translation>ウィンドウ %1 の色をセット: RGB(%2, %3, %4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="3991"/>
+        <location filename="../src/core/field/Opcode.cpp" line="3992"/>
         <source>Add %2 item(s) %1 to the inventory</source>
         <translation>アイテム %1 の所持数を %2 増やす</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4008"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4009"/>
         <source>Remove %2 item(s) %1 from the inventory</source>
         <translation>アイテム %1 の所持数を %2 減らす</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4025"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4026"/>
         <source>%2 = amount of item %1 in the inventory</source>
         <translation>%2 = アイテム %1 の所持数</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4054"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4055"/>
         <source>Add %1 materia to the inventory (AP=%2)</source>
         <translation>所持アイテムにマテリア %1 を追加 (AP=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4096"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4097"/>
         <source>Remove %3 materia(s) %1 from the inventory (AP=%2)</source>
         <translation>所持アイテムから%3 マテリア %1 を減らす (AP=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4142"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4143"/>
         <source>%4 = amount of materia %1 in the inventory (AP=%2, ?=%3)</source>
         <translation>%4 = 所持アイテム中のマテリア %1 の数 (AP=%2, ?=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4191"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4192"/>
         <source>Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)</source>
         <translation>揺らす (nb周期=%1, 拡がり=%2, 速度=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4215"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4216"/>
         <source>Perform no operation...</source>
         <translation>何もしない...</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4234"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4235"/>
         <source>Jump to map %1 (X=%2, Y=%3, triangle ID=%4, direction=%5)</source>
         <translation>マップ %1 にジャンプ (X=%2, Y=%3, ポリゴンID=%4, 方向=%5)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4309"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4310"/>
         <source>Scroll to group %2 (speed=%1, type=%3)</source>
         <translation>グループ %2 へスクロール (速度=%1, タイプ=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4344"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4345"/>
         <source>Scroll to location (X=%1, Y=%2)</source>
         <translation>エリアにスクロール (X=%1, Y=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4371"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4372"/>
         <source>Scroll to playable character</source>
         <translation>操作可能なキャラクターへスクロール</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4390"/>
-        <location filename="../src/core/field/Opcode.cpp" line="4440"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4391"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4441"/>
         <source>Scroll to location (X=%1, Y=%2, speed=%3)</source>
         <translation>エリアにスクロール (X=%1, Y=%2, 速度=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4421"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4422"/>
         <source>Wait for scroll</source>
         <translation>スクロール待ち</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4501"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4502"/>
         <source>Scroll to location (?=%1, ?=%2, ?=%3)</source>
         <translation>エリアにスクロール (?=%1, ?=%2, ?=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4543"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4544"/>
         <source>Fades the screen to the colour RGB(%1, %2, %3) (speed=%4, type=%5, adjust=%6)</source>
         <translation>画面の色を RGB(%1, %2, %3) にフェード (速度=%4, タイプ=%5, アジャスト=%6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4580"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4581"/>
         <source>Wait for fade</source>
         <translation>フェード待ち</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4596"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4597"/>
         <source>%2 the triangle #%1</source>
         <translation>ポリゴン #%1 を %2</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4621"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4622"/>
         <source>Retrieves the field ID number of the last field in %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4653"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4654"/>
         <source>Scroll to party member #%2 (speed=%1 frames, type=%3)</source>
         <translation>パーティ メンバー#%2 にスクロール (速度=%1 フレーム, タイプ=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4687"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4688"/>
         <source>Start battle #%1</source>
         <translation>バトル #%1 の開始</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4716"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4717"/>
         <source>%1 random battle</source>
         <translation>ランダム バトルを %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4778"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4779"/>
         <source>Get direction of the party member #%1 to %2</source>
         <translation>パーティ メンバー #%1 の向きを取得して %2 へ保存</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4811"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4812"/>
         <source>Get group ID of the party member #%1 to %2</source>
         <translation>パーティ メンバー #%1 のグループID を取得して %2 へ保存</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4848"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4849"/>
         <source>Get coordinates of the party member #%1 (store : X in %2, Y in %3, Z in %4 and triangle ID in %5)</source>
         <translation>パーティ メンバー #%1 の座標を取得して保存 (X → %2 , Y → %3, Z → %4, ポリゴンID → %5)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5003"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5294"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5004"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5295"/>
         <source>%1 = %1 + %2 (8 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5020"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5311"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5021"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5312"/>
         <source>%1 = %1 + %2 (16 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5037"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5328"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5038"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5329"/>
         <source>%1 = %1 - %2 (8 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5054"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5345"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5055"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5346"/>
         <source>%1 = %1 - %2 (16 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5072"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5566"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5073"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5567"/>
         <source>%1 = %1 + 1 (8 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5088"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5582"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5089"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5583"/>
         <source>%1 = %1 + 1 (16 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5104"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5598"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5105"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5599"/>
         <source>%1 = %1 - 1 (8 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5120"/>
-        <location filename="../src/core/field/Opcode.cpp" line="5614"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5121"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5615"/>
         <source>%1 = %1 - 1 (16 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5136"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5137"/>
         <source>%1 talk script for the current field model</source>
         <translation>3Dモデルのダイアログ スクリプトを %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5181"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5182"/>
         <source>%1 = %2 (8 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5198"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5199"/>
         <source>%1 = %2 (16 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5243"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5244"/>
         <source>Bit %2 ON in %1</source>
         <translation>%1 の %2 ビット目を 1 にセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5260"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5261"/>
         <source>Bit %2 OFF in %1</source>
         <translation>%1 の %2 ビット目を 0 にセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5277"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5278"/>
         <source>Toggle bit %2 in %1</source>
         <translation>%1 の %2 ビット目を切り替え</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5362"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5363"/>
         <source>%1 = %1 * %2 (8 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5379"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5380"/>
         <source>%1 = %1 * %2 (16 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5396"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5397"/>
         <source>%1 = %1 / %2 (8 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5413"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5414"/>
         <source>%1 = %1 / %2 (16 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5430"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5431"/>
         <source>%1 = %1 mod %2 (8 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5447"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5448"/>
         <source>%1 = %1 mod %2 (16 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5464"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5465"/>
         <source>%1 = %1 &amp; %2 (8 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5481"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5482"/>
         <source>%1 = %1 &amp; %2 (16 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5498"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5499"/>
         <source>%1 = %1 | %2 (8 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5515"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5516"/>
         <source>%1 = %1 | %2 (16 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5532"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5533"/>
         <source>%1 = %1 ^ %2 (8 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5549"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5550"/>
         <source>%1 = %1 ^ %2 (16 bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5630"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5631"/>
         <source>Set random value to %1 (8-bit)</source>
         <translation>%1 にランダムな値をセット (8-bit)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5768"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5769"/>
         <source>Search the value %5 in the memory (bank=%1, start=%2+%3, end=%2+%4) and put the position in %6</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5817"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5818"/>
         <source>Field model is playable and it is %1</source>
         <translation>操作可能な 3Dモデル %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5843"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5844"/>
         <source>This group is a field model (ID=%1)</source>
         <translation>この項は 3Dモデル (ID=%1) のグループ</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5865"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5866"/>
         <source>Play loop animation #%1 of the field model (speed=%2)</source>
         <oldsource>Play animation #%1 of the field model (speed=%2)</oldsource>
         <translation type="unfinished">3Dモデルのアニメーション #%1 を再生 (速度=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5890"/>
-        <location filename="../src/core/field/Opcode.cpp" line="6260"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5891"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6261"/>
         <source>Play animation #%1 of the field model and reset to previous state (speed=%2)</source>
         <translation>3Dモデルのアニメーション #%1 を再生して前のステートをリセット (速度=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5914"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5915"/>
         <source>%1 field model</source>
         <translation type="unfinished">3Dモデルを %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5940"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5941"/>
         <source>Place field Model (X=%1, Y=%2, Z=%3, triangle ID=%4)</source>
         <translation>3Dモデルを配置 (X=%1, Y=%2, Z=%3, ポリゴンID=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5996"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5997"/>
         <source>Place field Model (X=%1, Y=%2, triangle ID=%4)</source>
         <translation>3Dモデルを配置 (X=%1, Y=%2, ポリゴンID=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6047"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6048"/>
         <source>Place field Model (X=%1, Y=%2, Z=%3)</source>
         <translation>3Dモデルを配置 (X=%1, Y=%2, Z=%3)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6097"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6098"/>
         <source>Move field Model (X=%1, Y=%2)</source>
         <translation>3Dモデルを移動 (X=%1, Y=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6132"/>
-        <location filename="../src/core/field/Opcode.cpp" line="6226"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6133"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6227"/>
         <source>Place field Model without animation (X=%1, Y=%2)</source>
         <translation>3Dモデルをアニメーション抜きで移動 (X=%1, Y=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6165"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6166"/>
         <source>Move field Model to the group %1</source>
         <translation>3Dモデルをグループ %1 に移動</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6189"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6190"/>
         <source>Rotation of the field model to group %1 (Speed=%3, Rotation=%2)</source>
         <translation>3Dモデルをグループ %1 の方向へ回転 (速度=%3, 回転=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6209"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6210"/>
         <source>Wait for animation</source>
         <translation>アニメーション待ち</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6285"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6286"/>
         <source>Play animation #%1 of the field model (speed=%2, type=1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6312"/>
-        <location filename="../src/core/field/Opcode.cpp" line="6663"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6313"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6664"/>
         <source>Play partially the animation #%1 of the field model and reset to initial state (first frame=%2, last frame=%3, speed=%4)</source>
         <translation>3Dモデルのアニメーション #%1 の一部を再生して初期状態にリセット (最初のフレーム=%2, 最後のフレーム=%3, 速度=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6343"/>
-        <location filename="../src/core/field/Opcode.cpp" line="6694"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6344"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6695"/>
         <source>Play partially the animation #%1 of the field model (first frame=%2, last frame=%3, speed=%4)</source>
         <translation>3Dモデルのアニメーション #%1 の一部を再生 (最初のフレーム=%2, 最後のフレーム=%3, 速度=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6372"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6373"/>
         <source>Set the field model move speed: %1</source>
         <translation>3Dモデルの移動速度を %1 にセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6402"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6403"/>
         <source>Set field model direction: %1</source>
         <translation>3Dモデルの向きを %1 にセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6435"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6436"/>
         <source>Rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)</source>
         <translation>回転 (方向=%1, nb回転量=%2, 速度=%3, ?=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6474"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6475"/>
         <source>Inversed rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)</source>
         <translation>反回転 (方向=%1, nb回転量=%2, 速度=%3, ?=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6509"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6510"/>
         <source>Direct the field model towards the group %1</source>
         <translation>3Dモデルの向きグループ %1の方向へセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6533"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6534"/>
         <source>Store direction of the group %1 in %2</source>
         <translation>グループ %1 の向きを %2 に保存</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6567"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6568"/>
         <source>Store position of the group %1 in %2 (X) and %3 (Y)</source>
         <translation>グループ %1 の向きを %2 (X), %3 (Y) に保存</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6604"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6605"/>
         <source>Store triangle ID of the group %1 in %2</source>
         <translation>グループ %1 のポリゴンを %2 に保存</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6636"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6637"/>
         <source>Play animation #%1 of the field model (speed=%2, type=2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6723"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6724"/>
         <source>Set the field model animations speed: %1</source>
         <translation>3D アニメーションの速度を %1 にセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6752"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6753"/>
         <source>Control the group %1</source>
         <translation>グループ %1 のコントロール</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6778"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6779"/>
         <source>Field model jump (X=%1, Y=%2, triangle ID=%3, Steps=%4)</source>
         <translation>3Dモデルのジャンプ (X=%1, Y=%2, ポリゴンID=%3, 歩数=%4)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6824"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6825"/>
         <source>Store position of the group %1 in %2 (X), %3 (Y), %4 (Z) and %5 (triangle ID)</source>
         <translation>グループ %1 の位置を保存 %2(X), %3(Y), %4(Z), %5(ポリゴンID) </translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6875"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6876"/>
         <source>Climb a ladder with the animation #%6 (X=%1, Y=%2, Z=%3, triangle ID=%4, direction1=%5, direction2=%7, speed=%8)</source>
         <translation>匍匐アニメーション #%6 (X=%1, Y=%2, Z=%3, ポリゴンID=%4, 方向1=%5, 方向2=%7, 速度=%8)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6929"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6930"/>
         <source>Offset Object (movement=%1, X=%2, Y=%3, Z=%4, speed=%5)</source>
         <translation>オブジェの移動 (移動量=%1, X=%2, Y=%3, Z=%4, 速度=%5)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6966"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6967"/>
         <source>Wait for offset object</source>
         <translation>オブジェの移動待ち</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="6982"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7482"/>
+        <location filename="../src/core/field/Opcode.cpp" line="6983"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7483"/>
         <source>Set range of the talk circle for the field model: %1</source>
         <translation>3Dモデル %1 のダイアログ範囲の大きさをセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7012"/>
-        <location filename="../src/core/field/Opcode.cpp" line="7512"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7013"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7513"/>
         <source>Set range of the contact circle for the field model: %1</source>
         <translation>3Dモデル %1 のコンタクト範囲の大きさをセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7041"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7042"/>
         <source>%1 contact with field model</source>
         <translation type="unfinished">3Dモデルとのコンタクトを %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7062"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7063"/>
         <source>Add %1 to the current party</source>
         <translation>現在のパーティに %1 が加わる</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7083"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7084"/>
         <source>Remove %1 from the current party</source>
         <translation>現在のパーティから %1 が離脱</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7104"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7105"/>
         <source>New party: %1 | %2 | %3</source>
         <translation>新しいパーティ: %1 | %2 | %3</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7141"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7142"/>
         <source>If %1 is in the current party (%2)</source>
         <translation type="unfinished">%1 がパーティにいる場合 (%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7155"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7156"/>
         <source>If %1 exists (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7175"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7176"/>
         <source>%2 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7176"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7177"/>
         <source>not available</source>
         <translation>操作不能</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7176"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7177"/>
         <source>available</source>
         <translation>使用可能</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7199"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7200"/>
         <source>Locks %1 in PHS menu</source>
         <translation>PHS メニューの %1 をロック</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7220"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7221"/>
         <source>Unlock %1 in PHS menu</source>
         <translation>PHS メニューの %1 をアンロック</translation>
     </message>
@@ -4104,7 +4104,7 @@ Some scripts can refer to it!</source>
         <translation type="vanished">トレース</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7315"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7316"/>
         <source>Gateways %1</source>
         <translation type="unfinished">出入り口 %1</translation>
     </message>
@@ -4113,159 +4113,159 @@ Some scripts can refer to it!</source>
         <translation type="vanished">エリアのリサイズ (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7577"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7578"/>
         <source>%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</source>
         <oldsource>%1 (16-bit) (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7664"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7665"/>
         <source>Play animation #%1 for &apos;%3&apos; (speed=%2)</source>
         <translation>&apos;%3&apos; のアニメーション #%1 を再生 (速度=%2)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7667"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7668"/>
         <source>stay</source>
         <translation>止まる</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7668"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7669"/>
         <source>walk</source>
         <translation>歩く</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7669"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7670"/>
         <source>run</source>
         <translation>走る</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7686"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7687"/>
         <source>Break field model animation</source>
         <translation>3Dモデルのアニメーションを停止</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7695"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7696"/>
         <source>Wait for rotation</source>
         <translation>回転待ち</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7717"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7718"/>
         <source>Multiply RGB(%6, %5, %4) on the colors in a palette (sourcePal=%1, targetPal=%2, first color=%3, color count=%7+1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7768"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7769"/>
         <source>Show the state #%2 of the background parameter #%1</source>
         <translation>背景パラメータ #%1 のステート #%2 を表示</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7803"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7804"/>
         <source>Hide the state #%2 of the background parameter #%1</source>
         <translation>背景パラメータ #%1 のステート #%2 を隠す</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7837"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7838"/>
         <source>Show next state of the background parameter #%1</source>
         <translation>背景パラメータ #%1 の次のステートを表示</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7867"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7868"/>
         <source>Show previous state of the background parameter #%1</source>
         <translation>背景パラメータ #%1 の前のステートを表示</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7897"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7898"/>
         <source>Hide background parameter #%1</source>
         <translation>背景パラメータ #%1 を隠す</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7929"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7930"/>
         <source>Load the palette #%1 in the position %2 (color count=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="7967"/>
+        <location filename="../src/core/field/Opcode.cpp" line="7968"/>
         <source>Load the position %1 in the palette #%2 (color count=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8005"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8006"/>
         <source>Copy palette (sourcePal=%1, targetPal=%2, color count=%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8044"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8045"/>
         <source>Copy partially palette (sourcePal=%1, targetPal=%2, first color=%3, color count=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8089"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8090"/>
         <source>Add RGB(%5, %4, %3) on the colors in a palette (sourcePal=%1, targetPal=%2, color count=%6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8142"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8143"/>
         <source>Multiply RGB(%5, %4, %3) on the colors in a palette (sourcePal=%1, targetPal=%2, color count=%6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8192"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8193"/>
         <source>Load the palette #%1 in the position %2 (first color=%3, color count=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8223"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8224"/>
         <source>Load the position %1 in the palette #%2 (first color=%3, color count=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8376"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8377"/>
         <source>%1 (param1 (8-bit)=%2, param2=%3, param3=%4, param4=%5, param5=%6)</source>
         <oldsource>%1 (8-bit) (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8695"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8696"/>
         <source>If music is currently playing set %1 to 1</source>
         <translation type="unfinished">BGM が再生されたとき %1 に 1 をセット</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4264"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4265"/>
         <source>SCRLO (?=%1)</source>
         <translation type="unfinished">SCRLO (?=%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="4285"/>
+        <location filename="../src/core/field/Opcode.cpp" line="4286"/>
         <source>SCRLC (?=%1)</source>
         <translation type="unfinished">SCRLC (?=%1)</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5721"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5722"/>
         <source>SETX %1</source>
         <translation type="unfinished">SETX %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="5742"/>
+        <location filename="../src/core/field/Opcode.cpp" line="5743"/>
         <source>GETX %1</source>
         <translation type="unfinished">GETX %1</translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8440"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8441"/>
         <source>Play temporary music #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8640"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8641"/>
         <source>Set next field music for when we will be back to the map: #%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8665"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8666"/>
         <source>CMUSC (music #%1, operation=%2, param1=%3, param2=%4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/core/field/Opcode.cpp" line="8718"/>
+        <location filename="../src/core/field/Opcode.cpp" line="8719"/>
         <source>Game Over</source>
         <translation>ゲーム・オーバー</translation>
     </message>
@@ -4603,13 +4603,11 @@ Make sure it is valid or delete it.</source>
     </message>
     <message>
         <location filename="../src/core/field/FieldArchiveIOPS.cpp" line="418"/>
-        <location filename="../src/core/Lgp.cpp" line="844"/>
         <source>Cannot remove destination archive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/core/field/FieldArchiveIOPS.cpp" line="434"/>
-        <location filename="../src/core/Lgp.cpp" line="862"/>
         <source>Cannot rename temporary file to destination path</source>
         <translation type="unfinished"></translation>
     </message>

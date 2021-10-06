@@ -326,10 +326,10 @@ void FieldModel::paintGL()
 	if (!data || !data->isValid())	return;
 
 	//scale the view port if the window manager is scaling
-	int scale = 1;
+	/* int scale = 1;
 	if (qApp->desktop()->physicalDpiX() > 140) {
 		scale = 2;
-	}
+	} */ // TODO
 
 	mProjection.setToIdentity();
 	mProjection.perspective(70.0f, (float)width() / (float)height(), 0.001f, 1000.0f);

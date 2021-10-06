@@ -18,7 +18,7 @@
 #include "BackgroundFilePC.h"
 #include "Palette.h"
 #include "PaletteIO.h"
-#include "../PsColor.h"
+#include <PsColor.h>
 #include "FieldPC.h"
 #include <algorithm>
 

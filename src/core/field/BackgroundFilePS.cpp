@@ -18,7 +18,7 @@
 #include "BackgroundFilePS.h"
 #include "Palette.h"
 #include "PaletteIO.h"
-#include "../PsColor.h"
+#include <PsColor.h>
 #include "FieldPS.h"
 
 BackgroundFilePS::BackgroundFilePS(FieldPS *field) :

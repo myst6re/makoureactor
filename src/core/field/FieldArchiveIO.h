@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtCore>
-#include "core/Archive.h"
+#include <Archive.h>
 
 class FieldArchive;
 class Field;
