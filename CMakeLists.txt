@@ -41,19 +41,28 @@ if(NOT DEFINED Qt${QT_VERSION_TO_FIND}_DIR AND NOT DEFINED ENV{Qt${QT_VERSION_TO
 
     if(NOT QT_QMAKE_EXECUTABLE MATCHES "QT_QMAKE_EXECUTABLE-NOTFOUND")
         # ../../
-        get_filename_component(QT_PATH "${QT_QMAKE_EXECUTABLE}" PATH)
-        get_filename_component(QT_PATH "${QT_PATH}" PATH)
+        get_filename_component(QT_PATH "${QT_QMAKE_EXECUTABLE}" DIRECTORY)
+        get_filename_component(QT_PATH "${QT_PATH}" DIRECTORY)
     else()
         if(WIN32)
-            # look for user-registry pointing to qtcreator
-            get_filename_component(QT_INSTALLATION_PATH [HKEY_CURRENT_USER\\Software\\Classes\\Applications\\QtProject.QtCreator.cpp\\shell\\Open\\Command] PATH)
+            # look for user-registry pointing to Qt installation
+            get_filename_component(QT_INSTALLATION_PATH [HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{89c4e30e-3a1a-47c7-80d7-013ba3e25e57};InstallLocation] ABSOLUTE CACHE)
 
-            message("-- QtCreator Auto-Detected at ${QT_INSTALLATION_PATH}")
+            if(QT_INSTALLATION_PATH STREQUAL "/")
+                # look for user-registry pointing to qtcreator
+                get_filename_component(QT_INSTALLATION_PATH [HKEY_CURRENT_USER\\Software\\Classes\\Applications\\QtProject.QtCreator.cpp\\shell\\Open\\Command] DIRECTORY CACHE)
 
-            # ../../../
-            get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" PATH)
-            get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" PATH)
-            get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" PATH)
+                if(QT_INSTALLATION_PATH STREQUAL "/")
+                    message(FATAL_ERROR "Please set QT_INSTALLATION_PATH or Qt5_DIR")
+                endif()
+
+                message("-- QtCreator Auto-Detected at ${QT_INSTALLATION_PATH}")
+
+                # ../../../
+                get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" DIRECTORY)
+                get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" DIRECTORY)
+                get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" DIRECTORY)
+            endif()
         elseif(NOT QT_INSTALLATION_PATH)
             message(FATAL_ERROR "Please set QT_INSTALLATION_PATH or Qt5_DIR")
         endif()
@@ -88,7 +97,7 @@ if(NOT DEFINED Qt${QT_VERSION_TO_FIND}_DIR AND NOT DEFINED ENV{Qt${QT_VERSION_TO
             list(REVERSE QT_COMPILERS)
             list(GET QT_COMPILERS 0 QT_PATH)
             # ../
-            get_filename_component(QT_PATH "${QT_PATH}" PATH)
+            get_filename_component(QT_PATH "${QT_PATH}" DIRECTORY)
         endif()
 
         set(QT_QMAKE_EXECUTABLE "${QT_PATH}/bin/qmake")
@@ -654,7 +663,7 @@ if(APPLE OR WIN32)
 endif()
 
 if(APPLE)
-    set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app")
+    set(DEPLOY_TEMP "$<TARGET_FILE_DIR:${GUI_TARGET}>")
 elseif(WIN32)
     set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/win32-deploy")
     install(DIRECTORY DESTINATION "${DEPLOY_TEMP}")
@@ -674,17 +683,14 @@ elseif(WIN32)
     install(FILES ${FF7TK_DEPENDS} DESTINATION "${DEPLOY_TEMP}")
 endif()
 
-if(APPLE OR WIN32)
-    if(NOT DEFINED QT_QMAKE_EXECUTABLE OR QT_QMAKE_EXECUTABLE MATCHES "QT_QMAKE_EXECUTABLE-NOTFOUND")
-        get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-    endif()
-    message("-- QT_QMAKE_EXECUTABLE: ${QT_QMAKE_EXECUTABLE}")
-    get_filename_component(_qt_bin_dir "${QT_QMAKE_EXECUTABLE}" DIRECTORY)
-    get_filename_component(_qt_dir "${_qt_bin_dir}" DIRECTORY)
-
-    add_subdirectory(deploy)
+if(NOT DEFINED QT_QMAKE_EXECUTABLE OR QT_QMAKE_EXECUTABLE MATCHES "QT_QMAKE_EXECUTABLE-NOTFOUND")
+    get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
 endif()
+message("-- QT_QMAKE_EXECUTABLE: ${QT_QMAKE_EXECUTABLE}")
+get_filename_component(_qt_bin_dir "${QT_QMAKE_EXECUTABLE}" DIRECTORY)
+get_filename_component(_qt_dir "${_qt_bin_dir}" DIRECTORY)
 
+add_subdirectory(deploy)
 add_subdirectory(lang)
 
 if(APPLE)
@@ -706,6 +712,8 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(${GUI_TARGET})
     qt_finalize_executable(${CLI_TARGET})
 endif()
+
+set(CPACK_COMPONENTS_GROUPING IGNORE)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(CPACK_SYSTEM_NAME "macos")
