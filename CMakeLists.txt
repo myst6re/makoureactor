@@ -31,87 +31,9 @@ project("Makou Reactor" VERSION 1.8.5 LANGUAGES CXX
     HOMEPAGE_URL "https://github.com/myst6re/makoureactor"
 )
 
-if(NOT DEFINED QT_VERSION_TO_FIND)
-    SET(QT_VERSION_TO_FIND 5)
-endif()
+include(qt.cmake)
 
-# Auto-Detect Qt installation
-if(NOT DEFINED Qt${QT_VERSION_TO_FIND}_DIR AND NOT DEFINED ENV{Qt${QT_VERSION_TO_FIND}_DIR})
-    find_program(QT_QMAKE_EXECUTABLE "qmake")
-
-    if(NOT QT_QMAKE_EXECUTABLE MATCHES "QT_QMAKE_EXECUTABLE-NOTFOUND")
-        # ../../
-        get_filename_component(QT_PATH "${QT_QMAKE_EXECUTABLE}" DIRECTORY)
-        get_filename_component(QT_PATH "${QT_PATH}" DIRECTORY)
-    else()
-        if(WIN32)
-            # look for user-registry pointing to Qt installation
-            get_filename_component(QT_INSTALLATION_PATH [HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{89c4e30e-3a1a-47c7-80d7-013ba3e25e57};InstallLocation] ABSOLUTE CACHE)
-
-            if(QT_INSTALLATION_PATH STREQUAL "/")
-                # look for user-registry pointing to qtcreator
-                get_filename_component(QT_INSTALLATION_PATH [HKEY_CURRENT_USER\\Software\\Classes\\Applications\\QtProject.QtCreator.cpp\\shell\\Open\\Command] DIRECTORY CACHE)
-
-                if(QT_INSTALLATION_PATH STREQUAL "/")
-                    message(FATAL_ERROR "Please set QT_INSTALLATION_PATH or Qt5_DIR")
-                endif()
-
-                message("-- QtCreator Auto-Detected at ${QT_INSTALLATION_PATH}")
-
-                # ../../../
-                get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" DIRECTORY)
-                get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" DIRECTORY)
-                get_filename_component(QT_INSTALLATION_PATH "${QT_INSTALLATION_PATH}" DIRECTORY)
-            endif()
-        elseif(NOT QT_INSTALLATION_PATH)
-            message(FATAL_ERROR "Please set QT_INSTALLATION_PATH or Qt5_DIR")
-        endif()
-
-        file(GLOB QT_VERSIONS "${QT_INSTALLATION_PATH}/${QT_VERSION_TO_FIND}.*")
-        list(SORT QT_VERSIONS)
-
-        # assume the latest version will be last alphabetically
-        list(REVERSE QT_VERSIONS)
-
-        list(GET QT_VERSIONS 0 QT_VERSION)
-
-        message("-- Last Qt version ${QT_VERSION}")
-
-        if(MSVC)
-            if(MSVC_TOOLSET_VERSION MATCHES 142)
-                set(QT_MSVC "2019")
-            elseif(MSVC_TOOLSET_VERSION MATCHES 141)
-                set(QT_MSVC "2017")
-            endif()
-
-            set(QT_PATH "${QT_VERSION}/msvc${QT_MSVC}_64")
-        elseif(MINGW)
-            file(GLOB QT_COMPILERS "${QT_VERSION}/mingw*")
-            list(SORT QT_COMPILERS)
-            list(REVERSE QT_COMPILERS)
-            list(GET QT_COMPILERS 0 QT_PATH)
-        else()
-            # For some reason GLOB also list files on Mac OSX
-            file(GLOB QT_COMPILERS "${QT_VERSION}/*/lib")
-            list(SORT QT_COMPILERS)
-            list(REVERSE QT_COMPILERS)
-            list(GET QT_COMPILERS 0 QT_PATH)
-            # ../
-            get_filename_component(QT_PATH "${QT_PATH}" DIRECTORY)
-        endif()
-
-        set(QT_QMAKE_EXECUTABLE "${QT_PATH}/bin/qmake")
-    endif()
-
-    set(Qt${QT_VERSION_TO_FIND}_DIR "${QT_PATH}/lib/cmake/Qt${QT_VERSION_TO_FIND}")
-
-    message("-- Qt Auto-Detected at ${QT_PATH}")
-    message("-- Qt${QT_VERSION_TO_FIND}_DIR: ${Qt${QT_VERSION_TO_FIND}_DIR}")
-endif()
-
-if(NOT DEFINED QT_DIR AND NOT DEFINED ENV{QT_DIR})
-    set(QT_DIR "${Qt${QT_VERSION_TO_FIND}_DIR}")
-endif()
+autodetect_qt()
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
