@@ -112,7 +112,7 @@ jobs:
       id: main_build
       run: |
         cmake -B ${{ env.makoureactor_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.makoureactor_installation_path }} -Dff7tk_DIR=${{ env.ff7tk_installation_path }}/lib/cmake/ff7tk
-        cmake --build ${{ env.makoureactor_build_path }} --target all -j3
+        cmake --build ${{ env.makoureactor_build_path }} --target install -j3
 
     - name: CPack
       run: cpack
