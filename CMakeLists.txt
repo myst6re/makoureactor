@@ -31,6 +31,7 @@ project("Makou Reactor" VERSION 1.8.5 LANGUAGES CXX
     HOMEPAGE_URL "https://github.com/myst6re/makoureactor"
 )
 
+# Try to autodetect Qt path if not found
 include(qt.cmake)
 
 # specify the C++ standard
@@ -587,13 +588,6 @@ elseif(WIN32)
     install(FILES ${FF7TK_DEPENDS} DESTINATION "${DEPLOY_TEMP}")
 endif()
 
-if(NOT DEFINED QT_QMAKE_EXECUTABLE OR QT_QMAKE_EXECUTABLE MATCHES "QT_QMAKE_EXECUTABLE-NOTFOUND")
-    get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-endif()
-message("-- QT_QMAKE_EXECUTABLE: ${QT_QMAKE_EXECUTABLE}")
-get_filename_component(_qt_bin_dir "${QT_QMAKE_EXECUTABLE}" DIRECTORY)
-get_filename_component(_qt_dir "${_qt_bin_dir}" DIRECTORY)
-
 add_subdirectory(deploy)
 add_subdirectory(lang)
 
@@ -616,8 +610,6 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(${GUI_TARGET})
     qt_finalize_executable(${CLI_TARGET})
 endif()
-
-set(CPACK_COMPONENTS_GROUPING IGNORE)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(CPACK_SYSTEM_NAME "macos")
