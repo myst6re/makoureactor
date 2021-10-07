@@ -71,13 +71,14 @@ void CLI::commandExport()
 
 	PsfTags tags = argsExport.psfTags();
 	QList<int> selectedFields;
-	QList<QRegExp> includes, excludes;
+	QList<QRegularExpression> includes, excludes;
+	QStringList includePatterns = argsExport.includes(), excludePatterns = argsExport.excludes();
 
-	for (const QString &pattern: argsExport.includes()) {
-		includes.append(QRegExp(pattern, Qt::CaseSensitive, QRegExp::Wildcard));
+	for (const QString &pattern: includePatterns) {
+		includes.append(QRegularExpression(QRegularExpression::anchoredPattern(QRegularExpression::wildcardToRegularExpression(pattern))));
 	}
-	for (const QString &pattern: argsExport.excludes()) {
-		excludes.append(QRegExp(pattern, Qt::CaseSensitive, QRegExp::Wildcard));
+	for (const QString &pattern: excludePatterns) {
+		excludes.append(QRegularExpression(QRegularExpression::anchoredPattern(QRegularExpression::wildcardToRegularExpression(pattern))));
 	}
 
 	FieldArchiveIterator it(*fieldArchive);
@@ -85,14 +86,14 @@ void CLI::commandExport()
 		const Field *field = it.next(false);
 		if (field != nullptr) {
 			bool found = includes.isEmpty();
-			for (const QRegExp &regExp: includes) {
-				if (regExp.exactMatch(field->name())) {
+			for (const QRegularExpression &regExp: includes) {
+				if (regExp.match(field->name()).hasMatch()) {
 					found = true;
 					break;
 				}
 			}
-			for (const QRegExp &regExp: excludes) {
-				if (regExp.exactMatch(field->name())) {
+			for (const QRegularExpression &regExp: excludes) {
+				if (regExp.match(field->name()).hasMatch()) {
 					found = false;
 					break;
 				}
@@ -140,13 +141,14 @@ void CLI::commandPatch()
 	}
 
 	QList<int> selectedFields;
-	QList<QRegExp> includes, excludes;
+	QList<QRegularExpression> includes, excludes;
+	QStringList includePatterns = argsPatch.includes(), excludePatterns = argsPatch.excludes();
 
-	for (const QString &pattern: argsPatch.includes()) {
-		includes.append(QRegExp(pattern, Qt::CaseSensitive, QRegExp::Wildcard));
+	for (const QString &pattern: includePatterns) {
+		includes.append(QRegularExpression(QRegularExpression::anchoredPattern(QRegularExpression::wildcardToRegularExpression(pattern))));
 	}
-	for (const QString &pattern: argsPatch.excludes()) {
-		excludes.append(QRegExp(pattern, Qt::CaseSensitive, QRegExp::Wildcard));
+	for (const QString &pattern: excludePatterns) {
+		excludes.append(QRegularExpression(QRegularExpression::anchoredPattern(QRegularExpression::wildcardToRegularExpression(pattern))));
 	}
 
 	FieldArchiveIterator it(*fieldArchive);
@@ -154,14 +156,14 @@ void CLI::commandPatch()
 		const Field *field = it.next(false);
 		if (field != nullptr) {
 			bool found = includes.isEmpty();
-			for (const QRegExp &regExp: includes) {
-				if (regExp.exactMatch(field->name())) {
+			for (const QRegularExpression &regExp: includes) {
+				if (regExp.match(field->name()).hasMatch()) {
 					found = true;
 					break;
 				}
 			}
-			for (const QRegExp &regExp: excludes) {
-				if (regExp.exactMatch(field->name())) {
+			for (const QRegularExpression &regExp: excludes) {
+				if (regExp.match(field->name()).hasMatch()) {
 					found = false;
 					break;
 				}
@@ -173,7 +175,7 @@ void CLI::commandPatch()
 		}
 	}
 
-	observer.setObserverMaximum(selectedFields.size());
+	observer.setObserverMaximum(uint(selectedFields.size()));
 
 	int i = 0;
 
@@ -332,7 +334,6 @@ void CLI::exec()
 	switch (args.command()) {
 	case Arguments::None:
 		args.showHelp();
-		break;
 	case Arguments::Export:
 		commandExport();
 		break;

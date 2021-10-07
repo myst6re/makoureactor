@@ -84,8 +84,8 @@ void MassImportDialog::fill(const FieldArchive *fieldArchive, int currentMapId)
 
 	QString fieldType = _fieldArchive->isPC() ? tr("PC") : tr("PS");
 	QStringList formats;
-	formats.append(tr("FIELD File %1").arg(fieldType) + (_fieldArchive->isPC() ? "" : ";;dat"));
-	formats.append(tr("Uncompressed FIELD %1").arg(fieldType) + ";;dec");
+	formats.append(tr("FIELD File %1").arg(fieldType) + (_fieldArchive->isPC() ? QString() : QLatin1String(";;dat")));
+	formats.append(tr("Uncompressed FIELD %1").arg(fieldType) + QLatin1String(";;dec"));
 
 	imports.value(Fields)->setFormats(formats);
 

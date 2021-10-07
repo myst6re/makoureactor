@@ -179,7 +179,7 @@ void GrpScript::setType()
 	Script *firstScript = _scripts.first();
 	
 	for (Opcode *opcode : firstScript->opcodes()) {
-		switch ((Opcode::Keys)opcode->id()) {
+		switch (Opcode::Keys(opcode->id())) {
 		case Opcode::PC://Definition du personnage
 			_character = static_cast<OpcodePC *>(opcode)->charID;
 			return;
@@ -212,7 +212,7 @@ void GrpScript::backgroundParams(QHash<quint8, quint8> &paramActifs) const
 
 void GrpScript::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 {
-	if (_scripts.size()<2)	return;
+	if (_scripts.size() < 2)	return;
 
 	for (Script *script : _scripts) {
 		script->backgroundMove(z, x, y);
@@ -362,7 +362,7 @@ bool GrpScript::searchMapJump(quint16 field, int &scriptID, int &opcodeID) const
 	return searchMapJump(field, ++scriptID, opcodeID = 0);
 }
 
-bool GrpScript::searchTextInScripts(const QRegExp &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const
+bool GrpScript::searchTextInScripts(const QRegularExpression &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if (scriptID < 0)
 		opcodeID = scriptID = 0;
@@ -425,7 +425,7 @@ bool GrpScript::searchMapJumpP(quint16 field, int &scriptID, int &opcodeID) cons
 	return searchMapJumpP(field, --scriptID, opcodeID = 2147483647);
 }
 
-bool GrpScript::searchTextInScriptsP(const QRegExp &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const
+bool GrpScript::searchTextInScriptsP(const QRegularExpression &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if (!searchP(scriptID, opcodeID))
 		return false;
@@ -437,38 +437,44 @@ bool GrpScript::searchTextInScriptsP(const QRegExp &text, int &scriptID, int &op
 
 void GrpScript::listUsedTexts(QSet<quint8> &usedTexts) const
 {
-	for (Script *script : _scripts)
+	for (Script *script : _scripts) {
 		script->listUsedTexts(usedTexts);
+	}
 }
 
 void GrpScript::listUsedTuts(QSet<quint8> &usedTuts) const
 {
-	for (Script *script : _scripts)
+	for (Script *script : _scripts) {
 		script->listUsedTuts(usedTuts);
+	}
 }
 
 void GrpScript::shiftGroupIds(int groupId, int steps)
 {
-	for (Script *script : qAsConst(_scripts))
+	for (Script *script : qAsConst(_scripts)) {
 		script->shiftGroupIds(groupId, steps);
+	}
 }
 
 void GrpScript::shiftTextIds(int textId, int steps)
 {
-	for (Script *script : qAsConst(_scripts))
+	for (Script *script : qAsConst(_scripts)) {
 		script->shiftTextIds(textId, steps);
+	}
 }
 
 void GrpScript::shiftTutIds(int tutId, int steps)
 {
-	for (Script *script : qAsConst(_scripts))
+	for (Script *script : qAsConst(_scripts)) {
 		script->shiftTutIds(tutId, steps);
+	}
 }
 
 void GrpScript::swapGroupIds(int groupId1, int groupId2)
 {
-	for (Script *script : qAsConst(_scripts))
+	for (Script *script : qAsConst(_scripts)) {
 		script->swapGroupIds(groupId1, groupId2);
+	}
 }
 
 void GrpScript::setWindow(const FF7Window &win)

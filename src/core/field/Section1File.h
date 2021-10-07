@@ -86,14 +86,14 @@ public:
 	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchMapJump(quint16 field, int &groupID, int &scriptID, int &opcodeID) const;
-	bool searchTextInScripts(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const;
-	bool searchText(const QRegExp &text, int &textID, int &from, int &size) const;
+	bool searchTextInScripts(const QRegularExpression &text, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchText(const QRegularExpression &text, int &textID, qsizetype &from, qsizetype &size) const;
 	bool searchOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchMapJumpP(quint16 mapJump, int &groupID, int &scriptID, int &opcodeID) const;
-	bool searchTextInScriptsP(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const;
-	bool searchTextP(const QRegExp &text, int &textID, int &from, int &index, int &size) const;
+	bool searchTextInScriptsP(const QRegularExpression &text, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchTextP(const QRegularExpression &text, int &textID, qsizetype &from, qsizetype &index, qsizetype &size) const;
 	void setWindow(const FF7Window &win);
 	void listWindows(QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
 	void listWindows(int textID, QList<FF7Window> &windows) const;
@@ -113,7 +113,7 @@ public:
 	const FF7Text &text(int textID) const;
 	void setText(int textID, const FF7Text &text);
 	bool insertText(int textID, const FF7Text &text);
-	bool replaceText(const QRegExp &search, const QString &after, int textID, int from);
+	bool replaceText(const QRegularExpression &search, const QString &after, int textID, int from);
 	void deleteText(int textID);
 	void clearTexts();
 	QSet<quint8> listUsedTexts() const;

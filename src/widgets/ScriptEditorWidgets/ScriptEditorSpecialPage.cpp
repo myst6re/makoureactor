@@ -69,7 +69,7 @@ void ScriptEditorDLPBSavemap::build()
 
 Opcode *ScriptEditorDLPBSavemap::opcode()
 {
-	Opcode1A *opcode = (Opcode1A *)opcodePtr();
+	Opcode1A *opcode = static_cast<Opcode1A *>(opcodePtr());
 
 	opcode->from = quint16(_from->value());
 	opcode->to = quint16(_to->value());
@@ -85,7 +85,7 @@ void ScriptEditorDLPBSavemap::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	Opcode1A *o = (Opcode1A *)opcode;
+	Opcode1A *o = static_cast<Opcode1A *>(opcode);
 
 	_from->setValue(o->from);
 	_to->setValue(o->to);
@@ -123,7 +123,7 @@ void ScriptEditorDLPBWriteToMemory::build()
 
 Opcode *ScriptEditorDLPBWriteToMemory::opcode()
 {
-	Opcode1C *opcode = (Opcode1C *)opcodePtr();
+	Opcode1C *opcode = static_cast<Opcode1C *>(opcodePtr());
 
 	opcode->address = quint32(_address->value());
 	opcode->bytes = QByteArray::fromHex(_bytes->text().toLatin1());
@@ -135,8 +135,8 @@ void ScriptEditorDLPBWriteToMemory::setOpcode(Opcode *opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	Opcode1C *o = (Opcode1C *)opcode;
+	Opcode1C *o = static_cast<Opcode1C *>(opcode);
 
 	_address->setValue(o->address);
-	_bytes->setText(o->bytes.toHex());
+	_bytes->setText(QString::fromLatin1(o->bytes.toHex()));
 }

@@ -89,12 +89,15 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(ArchiveObserver *observer)
 		return Invalid;
 	}
 
-	if (observer)	observer->setObserverMaximum(archiveList.size());
+	if (observer) {
+		observer->setObserverMaximum(uint(archiveList.size()));
+	}
 
-	quint32 i, freq = archiveList.size()>50 ? archiveList.size()/50 : 1;
+	quint32 i, freq = archiveList.size() > 50 ? quint32(archiveList.size() / 50) : 1;
 	QString maplistName = "maplist";
 
 	if (!_lgp.fileExists(maplistName)) {
+		qWarning() << "cannot find" << maplistName << "file";
 		return FieldNotFound;
 	}
 
@@ -114,7 +117,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(ArchiveObserver *observer)
 				if (observer->observerWasCanceled()) {
 					return Aborted;
 				}
-				observer->setObserverValue(i);
+				observer->setObserverValue(int(i));
 			}
 		}
 
@@ -129,7 +132,8 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCLgp::open2(ArchiveObserver *observer)
 	}
 
 	// Adding missing fields
-	for (const QString &name : maplist.mid(65)) {
+	QStringList ml = maplist.mid(65);
+	for (const QString &name : ml) {
 		fieldArchive()->appendField(new FieldPC(name));
 	}
 
@@ -349,11 +353,13 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::open2(ArchiveObserver *observer)
 	list.append("*");
 	list = dir.entryList(list, QDir::Files | QDir::NoSymLinks);
 
-	if (observer)	observer->setObserverMaximum(list.size());
+	if (observer) {
+		observer->setObserverMaximum(uint(list.size()));
+	}
 
 	// QTime t;t.start();
 
-	int i=0;
+	int i = 0;
 	for (const QString &name : qAsConst(list)) {
 		if (observer) {
 			if (observer->observerWasCanceled()) {
@@ -392,7 +398,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPCDir::save2(const QString &path, Archiv
 	FieldArchiveIterator it(*(fieldArchive()));
 
 	if (observer) {
-		observer->setObserverMaximum(fieldArchive()->size());
+		observer->setObserverMaximum(uint(fieldArchive()->size()));
 	}
 
 	while (it.hasNext()) {

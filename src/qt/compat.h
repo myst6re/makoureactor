@@ -1,5 +1,5 @@
 /****************************************************************************
- ** Deling Final Fantasy VIII Field Editor
+ ** Makou Reactor Final Fantasy VII Field Script Editor
  ** Copyright (C) 2009-2021 Arzel Jérôme <myst6re@gmail.com>
  **
  ** This program is free software: you can redistribute it and/or modify
@@ -17,33 +17,10 @@
  ****************************************************************************/
 #pragma once
 
-#include <QtWidgets>
-#include "ApercuBGLabel.h"
-#include "3d/FieldModel.h"
+#include <QtGlobal>
 
-class ArchivePreview : public QStackedWidget
-{
-	Q_OBJECT
-public:
-	enum Pages { EmptyPage = 0, ImagePage, TextPage, ModelPage };
-	explicit ArchivePreview(QWidget *parent = nullptr);
-	void clearPreview();
-	void imagePreview(const QPixmap &image, const QString &name = QString(),
-	                  int palID = 0, int palCount = 0, int imageID = 0,
-	                  int imageCount = 0);
-	void textPreview(const QString &text);
-	void modelPreview(FieldModelFile *fieldModel);
-signals:
-	void currentImageChanged(int);
-	void currentPaletteChanged(int);
-public slots:
-	void saveImage();
-private:
-	QWidget *imageWidget();
-	QWidget *textWidget();
-	QWidget *modelWidget();
-	QScrollArea *scrollArea;
-	QComboBox *imageSelect, *palSelect;
-	ApercuBGLabel *_lbl;
-	QString _name;
-};
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+#define QMultiHashIterator QHashIterator
+#define QMultiMapIterator QMapIterator
+#define QEnterEvent QEvent
+#endif

@@ -101,9 +101,7 @@ int main(int argc, char *argv[])
 		darkPalette.setColor(QPalette::Mid, QColor(0x14, 0x14, 0x14));
 		darkPalette.setColor(QPalette::Shadow, Qt::black);
 
-#if (QT_VERSION > QT_VERSION_CHECK(5, 11, 0))
 		darkPalette.setColor(QPalette::PlaceholderText, QColor(0x53, 0x53, 0x53));
-#endif
 
 		qApp->setPalette(darkPalette);
 
@@ -129,7 +127,7 @@ int main(int argc, char *argv[])
 	Window *window = new Window;
 	window->show();
 	if (argc > 1) {
-		window->openFile(argv[1]);
+		window->openFile(app.arguments().at(1));
 	}
 #endif
 

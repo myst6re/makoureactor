@@ -26,7 +26,6 @@ class ScriptEditor : public QDialog
 	Q_OBJECT
 
 public:
-	ScriptEditor();
 	ScriptEditor(Field *field, GrpScript *grpScript, Script *script, quint16 opcodeID, bool modify, bool isInit, QWidget *parent = nullptr);
 	virtual ~ScriptEditor() override;
 

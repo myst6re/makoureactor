@@ -26,7 +26,7 @@
 #include "widgets/BGDialog.h"
 #include "widgets/ApercuBG.h"
 #include "widgets/Search.h"
-#include "widgets/FieldModel.h"
+#include "3d/FieldModel.h"
 #include "widgets/ModelManagerPC.h"
 #include "widgets/ModelManagerPS.h"
 #include "widgets/TutWidget.h"
@@ -73,7 +73,7 @@ public slots:
 
 	bool gotoField(int mapID);
 	void gotoOpcode(int mapID, int grpScriptID, int scriptID, int opcodeID);
-	void gotoText(int mapID, int textID, int from, int size);
+	void gotoText(int mapID, int textID, qsizetype from, qsizetype size);
 
 	void jpText(bool);
 

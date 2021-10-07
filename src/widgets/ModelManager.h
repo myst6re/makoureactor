@@ -20,7 +20,7 @@
 #include <QtWidgets>
 #include "core/field/FieldPC.h"
 #include "ColorDisplay.h"
-#include "FieldModel.h"
+#include "3d/FieldModel.h"
 #include "ModelColorsLayout.h"
 
 class ModelManager : public QDialog

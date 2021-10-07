@@ -24,12 +24,12 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 	HighlightingRule rule;
 
 	if (tut) {
-		rule.pattern = QRegExp("^TEXT\\(\"(.*)\"\\)$", Qt::CaseInsensitive);
+		rule.pattern = QRegularExpression("^TEXT\\(\"(.*)\"\\)$", QRegularExpression::CaseInsensitiveOption);
 		rule.color = Data::color(Data::ColorGreenForeground);
 		highlightingRules.append(rule);
 	}
 
-	rule.pattern = QRegExp("\\{x[\\da-fA-F]{2}\\}");
+	rule.pattern = QRegularExpression("\\{x[\\da-fA-F]{2}\\}");
 	rule.color = Data::color(Data::ColorRedForeground);
 	highlightingRules.append(rule);
 
@@ -38,7 +38,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 			"\\{CAIT SITH\\}" << "\\{VINCENT\\}" << "\\{CID\\}" << "\\{MEMBER 1\\}" << "\\{MEMBER 2\\}" << "\\{MEMBER 3\\}";
 
 	for (const QString &name : qAsConst(names)) {
-		rule.pattern = QRegExp(name, Qt::CaseInsensitive);
+		rule.pattern = QRegularExpression(name, QRegularExpression::CaseInsensitiveOption);
 		rule.color = Data::color(Data::ColorGreenForeground);
 		highlightingRules.append(rule);
 	}
@@ -50,7 +50,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 			"\\{CHOICE\\}" << "^\\{NEW PAGE\\}$" << "^\\{NEW PAGE 2\\}$" << "\\{CIRCLE\\}" << "\\{TRIANGLE\\}" << "\\{SQUARE\\}" << "\\{CROSS\\}";
 
 	for (const QString &s : qAsConst(syst)) {
-		rule.pattern = QRegExp(s, Qt::CaseInsensitive);
+		rule.pattern = QRegularExpression(s, QRegularExpression::CaseInsensitiveOption);
 		rule.color = Data::color(Data::ColorBlueForeground);
 		highlightingRules.append(rule);
 	}
@@ -59,7 +59,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 	dchar << "\\{, \\}" << "\\{\\.\"\\}" << QString::fromUtf8("\\{\xe2\x80\xa6\"\\}");//\xe2\x80\xa6 = "..."
 
 	for (const QString &s : qAsConst(dchar)) {
-		rule.pattern = QRegExp(s);
+		rule.pattern = QRegularExpression(s);
 		rule.color = Data::color(Data::ColorGreyForeground);
 		highlightingRules.append(rule);
 	}
@@ -70,7 +70,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 				"^\\[CHANGE\\]$" << "^\\[OK\\]$" << "^\\[R1\\]$" << "^\\[R2\\]$" << "^\\[L1\\]$" << "^\\[L2\\]$" << "^\\[START\\]$" << "^\\[SELECT\\]$";
 
 		for (const QString &s : qAsConst(keys)) {
-			rule.pattern = QRegExp(s, Qt::CaseInsensitive);
+			rule.pattern = QRegularExpression(s, QRegularExpression::CaseInsensitiveOption);
 			rule.color = Data::color(Data::ColorPurpleForeground);
 			highlightingRules.append(rule);
 		}
@@ -79,7 +79,7 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 		op << "^\\{FINISH\\}$" << "^\\{NOP\\}$" << "^MOVE\\((\\d+),(\\d+)\\)$" << "^PAUSE\\((\\d+)\\)$";
 
 		for (const QString &s : qAsConst(op)) {
-			rule.pattern = QRegExp(s, Qt::CaseInsensitive);
+			rule.pattern = QRegularExpression(s, QRegularExpression::CaseInsensitiveOption);
 			rule.color = Data::color(Data::ColorGreenForeground);
 			highlightingRules.append(rule);
 		}
@@ -89,33 +89,12 @@ TextHighlighter::TextHighlighter(QTextDocument *parent, bool tut)
 void TextHighlighter::highlightBlock(const QString &text)
 {
 	for (const HighlightingRule &rule : qAsConst(highlightingRules)) {
-		QRegExp expression(rule.pattern);
-		int index = 0;
-
-		do {
-			index = expression.indexIn(text, index);
-
-			if (index < 0) {
-				break;
+		QRegularExpressionMatchIterator it = rule.pattern.globalMatch(text);
+		while (it.hasNext()) {
+			QRegularExpressionMatch match = it.next();
+			for (int i = 1; i <= match.lastCapturedIndex(); ++i) {
+				setFormat(int(match.capturedStart(i)), int(match.capturedLength(i)), rule.color);
 			}
-
-			int length, lastIndex = index + expression.matchedLength();
-			int firstCapturePos, capNb = 1, capLength;
-
-			do {
-				firstCapturePos = expression.pos(capNb);
-				if (firstCapturePos == -1) {
-					length = lastIndex - index;
-					capLength = 0;
-				} else {
-					length = firstCapturePos - index;
-					capLength = expression.cap(capNb).size();
-				}
-				setFormat(index, length, rule.color);
-
-				index += length + capLength;
-				capNb++;
-			} while (firstCapturePos >= 0);
-		} while (index >= 0);
+		}
 	}
 }

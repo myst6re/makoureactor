@@ -340,9 +340,9 @@ void FieldModel::paintGL()
 	QVector3D eye(distance, 0, 0), center(0, 0, 0), up(0, 0, 1);
 	mView.lookAt(eye, center, up);
 
-	mView.rotate(xRot / 16.0, 1.0, 0.0, 0.0);
-	mView.rotate(yRot / 16.0, 0.0, 1.0, 0.0);
-	mView.rotate(zRot / 16.0, 0.0, 0.0, 1.0);
+	mView.rotate(xRot / 16.0f, 1.0, 0.0, 0.0);
+	mView.rotate(yRot / 16.0f, 0.0, 1.0, 0.0);
+	mView.rotate(zRot / 16.0f, 0.0, 0.0, 1.0);
 
 	gpuRenderer->bindViewMatrix(mView);
 

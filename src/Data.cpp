@@ -34,9 +34,9 @@ QStringList Data::armor_names;
 QStringList Data::accessory_names;
 QStringList Data::materia_names;
 //QStringList Data::currentCharNames;
-int Data::currentModelID=-1;
-QStringList *Data::currentHrcNames=0;
-QList<QStringList> *Data::currentAnimNames=0;
+int Data::currentModelID = -1;
+QStringList *Data::currentHrcNames = nullptr;
+QList<QStringList> *Data::currentAnimNames = nullptr;
 QStringList Data::field_names;
 QStringList Data::movie_names_cd1;
 QStringList Data::movie_names_cd2;
@@ -295,15 +295,11 @@ QString Data::ff7Path(const QMap<FF7Version, QString> &pathList)
 {
 	FF7Version version = FF7Version(Config::value("FF7ExePathToUse", 0).toInt());
 
-	if (!pathList.contains(version)) {
-		for (const QString &appPath : pathList) {
-			return appPath;
-		}
-	} else {
+	if (pathList.contains(version)) {
 		return pathList.value(version);
 	}
 
-	return QString();
+	return pathList.empty() ? QString() : pathList.first();
 }
 
 const QString &Data::ff7AppPath()
@@ -392,7 +388,8 @@ int Data::loadKernel2Bin()
 
 		const QByteArray &data = LZS::decompressAll(fic.read(fileSize));
 		const char *constData = data.constData();
-		int pos = 0, dataSize = data.size();
+		int pos = 0;
+		qsizetype dataSize = data.size();
 
 		fic.close();
 
@@ -412,7 +409,7 @@ int Data::loadKernel2Bin()
 		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
-		if (pos + (int)fileSize > dataSize) {
+		if (pos + int(fileSize) > dataSize) {
 			return 1;
 		}
 
@@ -442,7 +439,7 @@ int Data::loadKernel2Bin()
 		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
-		if (pos + (int)fileSize > dataSize) {
+		if (pos + int(fileSize) > dataSize) {
 			return 1;
 		}
 
@@ -457,7 +454,7 @@ int Data::loadKernel2Bin()
 		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
-		if (pos + (int)fileSize > dataSize) {
+		if (pos + int(fileSize) > dataSize) {
 			return 1;
 		}
 
@@ -472,7 +469,7 @@ int Data::loadKernel2Bin()
 		memcpy(&fileSize, constData + pos, 4);
 		pos += 4;
 
-		if (pos + (int)fileSize > dataSize) {
+		if (pos + int(fileSize) > dataSize) {
 			return 1;
 		}
 
@@ -527,27 +524,27 @@ bool Data::load()
 	if (movie_names_cd1.isEmpty()) {
 		QStringList movie_names_common;
 		for (int i=0; i<20; ++i) {
-			movie_names_common.append(movieList[i]);
+			movie_names_common.append(QString::fromUtf8(movieList[i]));
 		}
 
 		movie_names_cd1.append(movie_names_common);
 		movie_names_cd2.append(movie_names_common);
 		movie_names_cd3.append(movie_names_common);
 		for (int i=20; i<54; ++i) {
-			movie_names_cd1.append(movieList[i]);
+			movie_names_cd1.append(QString::fromUtf8(movieList[i]));
 		}
 		for (int i=54; i<96; ++i) {
-			movie_names_cd2.append(movieList[i]);
+			movie_names_cd2.append(QString::fromUtf8(movieList[i]));
 		}
 		for (int i=96; i<106; ++i) {
-			movie_names_cd3.append(movieList[i]);
+			movie_names_cd3.append(QString::fromUtf8(movieList[i]));
 		}
 	}
 
 	if (music_names.isEmpty()) {
 		for (int i=0; i<100; ++i) {
-			music_names.append(musicList[i]);
-			music_desc.append(musicList2[i]);
+			music_names.append(QString::fromUtf8(musicList[i]));
+			music_desc.append(QString::fromUtf8(musicList2[i]));
 		}
 	}
 
@@ -567,7 +564,7 @@ bool Data::load()
 void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &names)
 {
 	int i, count;
-	quint16 position, lastPosition=0;
+	quint16 position, lastPosition = 0;
 	const char *constData = data.constData();
 	QList<quint16> positions;
 
@@ -583,21 +580,23 @@ void Data::fill(const QByteArray &data, int pos, int dataSize, QStringList &name
 		return;
 	}
 
-	for (i=0; i<count; ++i) {
-		memcpy(&position, constData + pos + i*2, 2);
+	for (i = 0; i < count; ++i) {
+		memcpy(&position, constData + pos + i * 2, 2);
 		if (position >= dataSize || lastPosition > position) {
 			return;
 		}
 		positions.append(position);
 		lastPosition = position;
 	}
-	positions.append(dataSize);
+	positions.append(quint16(dataSize));
 
-	i=0;
+	i = 0;
 	for (quint16 position : positions) {
-		names.append(FF7Text(data.mid(pos + position, positions.at(i+1) - position)).text(false, true));
+		names.append(FF7Text(data.mid(pos + position, positions.at(i + 1) - position)).text(false, true));
 		++i;
-		if (i == count)	break;
+		if (i == count) {
+			break;
+		}
 	}
 }
 
@@ -613,10 +612,13 @@ bool Data::openMaplist(const QByteArray &data)
 	if (data.size() != 2+nbMap*32) {
 		return false;
 	}
+	const char *constData = data.constData();
 
 	field_names.clear();
 	for (int i=0; i<nbMap; ++i) {
-		field_names.append(QString(data.mid(2+i*32, 32)).simplified());
+		const char *fieldName = constData + 2 + i * 32;
+		// Trim \0 at the end
+		field_names.append(QString::fromLatin1(fieldName, qstrnlen(fieldName, 32)).simplified());
 	}
 	// Remove empty entries at the end
 	while (!field_names.isEmpty() && field_names.last().isEmpty()) {
@@ -631,7 +633,7 @@ bool Data::saveMaplist(QByteArray &data)
 	if (field_names.size() > 65535) {
 		return false;
 	}
-	quint16 nbMap = field_names.size();
+	quint16 nbMap = quint16(field_names.size());
 	data.append((char *)&nbMap, 2);
 
 	for (const QString &fieldName : qAsConst(field_names)) {
@@ -779,7 +781,7 @@ void Data::openMaplist(bool PC)
 {
 	field_names.clear();
 	for (int i=0; i<788; ++i) {
-		field_names.append(_mapList[i]);
+		field_names.append(QString::fromUtf8(_mapList[i]));
 	}
 
 	if (PC) {

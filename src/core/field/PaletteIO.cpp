@@ -150,7 +150,7 @@ bool PaletteIOPC::writeAfter(const Palettes &palettes) const
 		return false;
 	}
 
-	quint8 palId=0;
+	quint8 palId = 0;
 
 	for (const Palette *palette : palettes) {
 		if (palId >= 16) {

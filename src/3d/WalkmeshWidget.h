@@ -18,9 +18,9 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/Renderer.h"
+#include "Renderer.h"
 #include "core/field/Field.h"
-#include "widgets/FieldModel.h"
+#include "FieldModel.h"
 
 class WalkmeshWidget : public QOpenGLWidget
 {

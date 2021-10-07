@@ -775,7 +775,8 @@ void LgpWidget::generatePreview()
 	         || fileType == "fl" || fileType == "txt"
 	         || fileType == "hrc")
 	{
-		preview->textPreview(QString(lgp->fileData(fileName)));
+		QByteArray fileData = lgp->fileData(fileName);
+		preview->textPreview(QString::fromLatin1(fileData.constData(), strlen(fileData)));
 	}
 	else if (fileType == "png" || fileType == "jpg" || fileType == "jpeg")
 	{
@@ -899,7 +900,7 @@ void LgpWidget::extractCurrent()
 		LgpItem *item = _model->item(index);
 		if (item && !item->isDirectory()) {
 			QString filename = item->name();
-			int index = filename.lastIndexOf('.');
+			qsizetype index = filename.lastIndexOf('.');
 			QString extension = index==-1 ? QString() : filename.mid(index + 1);
 			QStringList filter;
 			if (!extension.isEmpty()) {

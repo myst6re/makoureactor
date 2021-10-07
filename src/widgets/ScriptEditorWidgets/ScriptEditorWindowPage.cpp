@@ -88,16 +88,16 @@ Opcode *ScriptEditorWindowPage::opcode()
 {
 	OpcodeWROW *opcodeWROW;
 
-	switch ((Opcode::Keys)opcodePtr()->id()) {
+	switch (Opcode::Keys(opcodePtr()->id())) {
 	case Opcode::WINDOW:
 	case Opcode::WSIZW:
-		opcodePtr()->setWindowID(winID->value());
+		opcodePtr()->setWindowID(quint8(winID->value()));
 		opcodePtr()->setWindow(textPreview->getWindow());
 		break;
 	case Opcode::WROW:
-		opcodeWROW = (OpcodeWROW *)opcodePtr();
-		opcodeWROW->windowID = winID->value();
-		opcodeWROW->rowCount = h->value();
+		opcodeWROW = static_cast<OpcodeWROW *>(opcodePtr());
+		opcodeWROW->windowID = quint8(winID->value());
+		opcodeWROW->rowCount = quint8(h->value());
 		break;
 	default:break;
 	}
@@ -121,7 +121,7 @@ void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 		w->hide();
 		hLabel->setText(tr("Lines"));
 		h->setRange(0, 255);
-		OpcodeWROW *opcodeWROW = (OpcodeWROW *)opcode;
+		OpcodeWROW *opcodeWROW = static_cast<OpcodeWROW *>(opcode);
 		FF7Window ff7Win = FF7Window();
 		ff7Win.w = 300;
 		ff7Win.h = 9 + opcodeWROW->rowCount * 16;
@@ -138,7 +138,7 @@ void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 		w->show();
 		hLabel->setText(tr("H"));
 		h->setRange(0, 65535);
-		OpcodeWindow *opcodeWindow = (OpcodeWindow *)opcode;
+		OpcodeWindow *opcodeWindow = static_cast<OpcodeWindow *>(opcode);
 		FF7Window ff7Win = FF7Window();
 		opcodeWindow->getWindow(ff7Win);
 		textPreview->setWins(QList<FF7Window>() << ff7Win);
@@ -154,14 +154,14 @@ void ScriptEditorWindowPage::setOpcode(Opcode *opcode)
 
 	// If the current opcode is followed by MESSAGE or ASK, we can put a text in the window preview
 	if (opcodeID() + 1 < script()->size()) {
-		Opcode *nextOpcode = script()->opcode(opcodeID() + 1);
+		Opcode *nextOpcode = script()->opcode(quint16(opcodeID()) + 1);
 		if (nextOpcode->id() == Opcode::MESSAGE) {
-			OpcodeMESSAGE *mess = (OpcodeMESSAGE *)nextOpcode;
+			OpcodeMESSAGE *mess = static_cast<OpcodeMESSAGE *>(nextOpcode);
 			if (mess->windowID == winID->value()) {
 				previewText->setCurrentIndex(mess->textID + 1);
 			}
 		} else if (nextOpcode->id() == Opcode::ASK) {
-			OpcodeASK *ask = (OpcodeASK *)nextOpcode;
+			OpcodeASK *ask = static_cast<OpcodeASK *>(nextOpcode);
 			if (ask->windowID == winID->value()) {
 				previewText->setCurrentIndex(ask->textID + 1);
 			}
@@ -173,12 +173,12 @@ void ScriptEditorWindowPage::updatePreview()
 {
 	FF7Window ff7Win = textPreview->getWindow();
 	if (x->isVisible()) {
-		ff7Win.x = x->value();
-		ff7Win.y = y->value();
-		ff7Win.w = w->value();
-		ff7Win.h = h->value();
+		ff7Win.x = qint16(x->value());
+		ff7Win.y = qint16(y->value());
+		ff7Win.w = quint16(w->value());
+		ff7Win.h = quint16(h->value());
 	} else {
-		ff7Win.h = 9 + h->value() * 16;
+		ff7Win.h = quint16(9 + h->value() * 16);
 	}
 	textPreview->setWins(QList<FF7Window>() << ff7Win);
 	emit opcodeChanged();
@@ -287,10 +287,10 @@ void ScriptEditorWindowModePage::build()
 
 Opcode *ScriptEditorWindowModePage::opcode()
 {
-	OpcodeWMODE *opcodeWMODE = (OpcodeWMODE *)opcodePtr();
-	opcodeWMODE->windowID = winID->value();
-	opcodeWMODE->mode = winType->currentIndex();
-	opcodeWMODE->preventClose = winClose->currentIndex();
+	OpcodeWMODE *opcodeWMODE = static_cast<OpcodeWMODE *>(opcodePtr());
+	opcodeWMODE->windowID = quint8(winID->value());
+	opcodeWMODE->mode = quint8(winType->currentIndex());
+	opcodeWMODE->preventClose = quint8(winClose->currentIndex());
 
 	return opcodePtr();
 }
@@ -302,7 +302,7 @@ void ScriptEditorWindowModePage::setOpcode(Opcode *opcode)
 		o->blockSignals(true);
 	}
 
-	OpcodeWMODE *opcodeWMODE = (OpcodeWMODE *)opcode;
+	OpcodeWMODE *opcodeWMODE = static_cast<OpcodeWMODE *>(opcode);
 	FF7Window ff7Win = FF7Window();
 	ff7Win.w = 300;
 	ff7Win.h = 9 + 5 * 16;
@@ -321,7 +321,7 @@ void ScriptEditorWindowModePage::setOpcode(Opcode *opcode)
 void ScriptEditorWindowModePage::updatePreview()
 {
 	FF7Window ff7Win = textPreview->getWindow();
-	ff7Win.mode = winType->currentIndex();
+	ff7Win.mode = quint8(winType->currentIndex());
 	textPreview->setWins(QList<FF7Window>() << ff7Win);
 	emit opcodeChanged();
 }
@@ -360,10 +360,10 @@ void ScriptEditorWindowMovePage::build()
 
 Opcode *ScriptEditorWindowMovePage::opcode()
 {
-	OpcodeWMOVE *opcodeWMOVE = (OpcodeWMOVE *)opcodePtr();
-	opcodeWMOVE->windowID = winID->value();
-	opcodeWMOVE->relativeX = x->value();
-	opcodeWMOVE->relativeY = y->value();
+	OpcodeWMOVE *opcodeWMOVE = static_cast<OpcodeWMOVE *>(opcodePtr());
+	opcodeWMOVE->windowID = quint8(winID->value());
+	opcodeWMOVE->relativeX = qint16(x->value());
+	opcodeWMOVE->relativeY = qint16(y->value());
 
 	return opcodePtr();
 }
@@ -376,7 +376,7 @@ void ScriptEditorWindowMovePage::setOpcode(Opcode *opcode)
 		o->blockSignals(true);
 	}
 
-	OpcodeWMOVE *opcodeWMOVE = (OpcodeWMOVE *)opcode;
+	OpcodeWMOVE *opcodeWMOVE = static_cast<OpcodeWMOVE *>(opcode);
 	winID->setValue(opcodeWMOVE->windowID);
 	x->setValue(opcodeWMOVE->relativeX);
 	y->setValue(opcodeWMOVE->relativeY);

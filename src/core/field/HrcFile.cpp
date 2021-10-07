@@ -38,7 +38,7 @@ bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rs
 	quint32 boneCount=0;
 
 	do {
-		line = QString(device()->readLine()).trimmed();
+		line = QString::fromLatin1(device()->readLine()).trimmed();
 		if (line.startsWith(":BONES ")) {
 			boneCount = line.mid(7).toUInt(&ok);
 			if (!ok) {
@@ -63,7 +63,7 @@ bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rs
 	nameToId.insert("root", -1);
 
 	while (device()->canReadLine() && boneID < boneCount) {
-		line = QString(device()->readLine()).trimmed();
+		line = QString::fromLatin1(device()->readLine()).trimmed();
 		if (line.isEmpty() || line.startsWith('#')) {
 			continue;
 		}

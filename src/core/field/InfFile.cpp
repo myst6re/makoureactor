@@ -96,7 +96,7 @@ bool InfFile::isJap() const
 
 QString InfFile::mapName()
 {
-	return QString(QByteArray(data.name, 9));
+	return QString::fromLatin1(data.name, qstrnlen(data.name, 9));
 }
 
 void InfFile::setMapName(const QString &name)

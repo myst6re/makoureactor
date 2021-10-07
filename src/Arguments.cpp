@@ -26,9 +26,9 @@ bool HelpArguments::help() const
 	return _parser.isSet("help");
 }
 
-void HelpArguments::showHelp(int exitCode)
+[[ noreturn ]] void HelpArguments::showHelp(int exitCode)
 {
-	QRegExp usage("Usage: .* \\[options\\]");
+	QRegularExpression usage("Usage: .* \\[options\\]");
 	qInfo("%s", qPrintable(_parser.helpText().replace(usage, "Usage: %1 [options]")
 	                     .arg(QFileInfo(qApp->arguments().first()).fileName())));
 	::exit(exitCode);
@@ -84,7 +84,7 @@ QStringList CommonArguments::searchFiles(const QString &path)
 
 	QDir dir(dirname);
 	QStringList entryList = dir.entryList(QStringList(filename), QDir::Files);
-	int i=0;
+	int i = 0;
 	for (const QString &entry: entryList) {
 		entryList.replace(i++, dir.filePath(entry));
 	}

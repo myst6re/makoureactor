@@ -21,7 +21,6 @@
 GrpScriptList::GrpScriptList(QWidget *parent) :
     QTreeWidget(parent)
 {
-	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
 	setColumnCount(3);
 	setHeaderLabels(QStringList() << tr("Id") << tr("Group") << tr("Type"));
 	setIndentation(0);
@@ -94,7 +93,7 @@ GrpScriptList::GrpScriptList(QWidget *parent) :
 	this->addAction(down_A);
 
 	_toolBar = new QToolBar(tr("&Group Editor"));
-	_toolBar->setIconSize(QSize(int(14 * scale), int(14 * scale)));
+	_toolBar->setIconSize(QSize(14, 14));
 	_toolBar->addAction(add_A);
 	add_A->setStatusTip(tr("Add a group"));
 	_toolBar->addAction(del_A);
@@ -175,7 +174,7 @@ void GrpScriptList::fill(Section1File *scripts)
 	}
 	clear();
 
-	int i=0;
+	int i = 0;
 	for (GrpScript *grpScript : this->scripts->grpScripts()) {
 		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->name() << grpScript->type());
 		item->setForeground(2, QBrush(grpScript->typeColor()));

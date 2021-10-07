@@ -154,7 +154,7 @@ void FieldModelGroup::removeSpriting(float texWidth, float texHeight) const
 
 	for (Poly *poly : polygons()) {
 		if (poly->hasTexture() && poly->count() > 0) {
-			for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
+			for (quint16 i = 0; i < quint8(poly->count()); ++i) {
 				const TexCoord &texCoord = poly->texCoord(i);
 				if (minX < 0) {
 					minX = texCoord.x;
@@ -164,12 +164,12 @@ void FieldModelGroup::removeSpriting(float texWidth, float texHeight) const
 				}
 				minX = qMin(texCoord.x, minX);
 				minY = qMin(texCoord.y, minY);
-				if (minX == 0 && minY == 0) {
+				if (minX == 0.0f && minY == 0.0f) {
 					break;
 				}
 			}
 
-			if (minX == 0 && minY == 0) {
+			if (minX == 0.0f && minY == 0.0f) {
 				break;
 			}
 		}
@@ -184,15 +184,15 @@ void FieldModelGroup::removeSpriting(float texWidth, float texHeight) const
 
 	for (Poly *poly : polygons()) {
 		if (poly->hasTexture()) {
-			for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
+			for (quint16 i = 0; i < quint8(poly->count()); ++i) {
 				TexCoord texCoord = poly->texCoord(i);
 
 				texCoord.x -= minX;
 				texCoord.y -= minY;
-				if (texWidth != 0) {
+				if (texWidth != 0.0f) {
 					texCoord.x /= texWidth;
 				}
-				if (texHeight != 0) {
+				if (texHeight != 0.0f) {
 					texCoord.y /= texHeight;
 				}
 
@@ -206,13 +206,13 @@ void FieldModelGroup::setFloatCoords(float texWidth, float texHeight) const
 {
 	for (Poly *poly : polygons()) {
 		if (poly->hasTexture()) {
-			for (quint16 i = 0; i < (quint8)poly->count(); ++i) {
+			for (quint16 i = 0; i < quint8(poly->count()); ++i) {
 				TexCoord texCoord = poly->texCoord(i);
 
-				if (texWidth != 0) {
+				if (texWidth != 0.0f) {
 					texCoord.x /= texWidth;
 				}
-				if (texHeight != 0) {
+				if (texHeight != 0.0f) {
 					texCoord.y /= texHeight;
 				}
 

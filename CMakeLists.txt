@@ -52,6 +52,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_compile_definitions(
     QT_DISABLE_DEPRECATED_BEFORE=0x050F00
+    QT_RESTRICTED_CAST_FROM_ASCII=1
     MAKOU_REACTOR_NAME="${PROJECT_NAME}"
     MAKOU_REACTOR_DESCRIPTION="${PROJECT_DESCRIPTION}"
     MAKOU_REACTOR_COMPANY="myst6re"
@@ -68,6 +69,11 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Zlib QUIET)
 find_package(ff7tk COMPONENTS ff7tkFormats ff7tkUtils REQUIRED)
 
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    find_package(QT NAMES Qt6 COMPONENTS OpenGLWidgets REQUIRED)
+    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS OpenGLWidgets REQUIRED)
+endif()
+
 if(NOT Qt${QT_VERSION_MAJOR}Zlib_FOUND)
     find_package(ZLIB REQUIRED)
     set(ZLIB_LIBRARY ZLIB::ZLIB)
@@ -76,6 +82,12 @@ else()
 endif()
 
 set(PROJECT_SOURCES
+    "src/3d/FieldModel.cpp"
+    "src/3d/FieldModel.h"
+    "src/3d/Renderer.cpp"
+    "src/3d/Renderer.h"
+    "src/3d/WalkmeshWidget.cpp"
+    "src/3d/WalkmeshWidget.h"
     "src/Data.cpp"
     "src/Data.h"
     "src/FieldModelThread.cpp"
@@ -100,8 +112,6 @@ set(PROJECT_SOURCES
     "src/core/IsoArchiveFF7.h"
     "src/core/PsfFile.cpp"
     "src/core/PsfFile.h"
-    "src/core/Renderer.cpp"
-    "src/core/Renderer.h"
     "src/core/TexFile.cpp"
     "src/core/TexFile.h"
     "src/core/TextureFile.cpp"
@@ -226,6 +236,7 @@ set(PROJECT_SOURCES
     "src/core/world/TblFile.h"
     "src/include/shobjidl.h"
     "src/main.cpp"
+    "src/qt/compat.h"
     "src/txt.cpp"
     "src/widgets/AboutDialog.cpp"
     "src/widgets/AboutDialog.h"
@@ -251,8 +262,6 @@ set(PROJECT_SOURCES
     "src/widgets/EncounterWidget.h"
     "src/widgets/FieldList.cpp"
     "src/widgets/FieldList.h"
-    "src/widgets/FieldModel.cpp"
-    "src/widgets/FieldModel.h"
     "src/widgets/FontDisplay.cpp"
     "src/widgets/FontDisplay.h"
     "src/widgets/FontGrid.cpp"
@@ -351,8 +360,6 @@ set(PROJECT_SOURCES
     "src/widgets/VertexWidget.h"
     "src/widgets/WalkmeshManager.cpp"
     "src/widgets/WalkmeshManager.h"
-    "src/widgets/WalkmeshWidget.cpp"
-    "src/widgets/WalkmeshWidget.h"
 )
 
 set(PROJECT_CLI_SOURCES
@@ -507,6 +514,7 @@ set(PROJECT_CLI_SOURCES
     "src/core/world/TblFile.cpp"
     "src/core/world/TblFile.h"
     "src/main.cpp"
+    "src/qt/compat.h"
     "src/txt.cpp"
 )
 
@@ -542,6 +550,14 @@ target_link_libraries(${GUI_TARGET} PRIVATE
     ff7tk::ff7tkFormats
     ff7tk::ff7tkUtils
 )
+
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    target_link_libraries(${GUI_TARGET} PRIVATE Qt::OpenGLWidgets)
+
+    target_compile_definitions(${GUI_TARGET}
+        PRIVATE TASKBAR_BUTTON=1
+    )
+endif()
 
 # CLI
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

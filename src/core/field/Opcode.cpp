@@ -185,8 +185,9 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 		return false;
 	default:
 		for (const FF7Var &var : qAsConst(vars)) {
-			if (var.bank == bank && (noAddress || var.address == address))
+			if (var.bank == bank && (noAddress || var.address == address)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -217,7 +218,7 @@ bool Opcode::searchMapJump(quint16 fieldID) const
 	return false;
 }
 
-bool Opcode::searchTextInScripts(const QRegExp &text, const Section1File *scriptsAndTexts) const
+bool Opcode::searchTextInScripts(const QRegularExpression &text, const Section1File *scriptsAndTexts) const
 {
 	qint16 textID = getTextID();
 	return textID != -1
@@ -592,9 +593,7 @@ QString Opcode::_sensRotation(quint8 param)
 
 QString Opcode::_operateur(quint8 param)
 {
-	if (param < OPERATORS_SIZE)
-		return operators[param];
-	return QString("%1?").arg(param);
+	return param < OPERATORS_SIZE ? QString::fromLatin1(operators[param]) : QString("%1?").arg(param);
 }
 
 OpcodeUnknown::OpcodeUnknown(quint8 id, const QByteArray &params)
@@ -5720,7 +5719,7 @@ void OpcodeSETX::setParams(const char *params, int)
 QString OpcodeSETX::toString(Field *) const
 {
 	return QObject::tr("SETX %1")
-			.arg(QString(QByteArray((char *)&unknown, 6).toHex()));
+			.arg(QString::fromLatin1(QByteArray((char *)&unknown, 6).toHex()));
 }
 
 QByteArray OpcodeSETX::params() const
@@ -5741,7 +5740,7 @@ void OpcodeGETX::setParams(const char *params, int)
 QString OpcodeGETX::toString(Field *) const
 {
 	return QObject::tr("GETX %1")
-			.arg(QString(QByteArray((char *)&unknown, 6).toHex()));
+			.arg(QString::fromLatin1(QByteArray((char *)&unknown, 6).toHex()));
 }
 
 QByteArray OpcodeGETX::params() const
@@ -8250,7 +8249,7 @@ void OpcodeCPPAL2::setParams(const char *params, int)
 QString OpcodeCPPAL2::toString(Field *) const
 {
 	return QObject::tr("CPPAL2 %1")
-			.arg(QString(QByteArray((char *)&unknown, 7).toHex()));
+			.arg(QString::fromLatin1(QByteArray((char *)&unknown, 7).toHex()));
 }
 
 QByteArray OpcodeCPPAL2::params() const
@@ -8271,7 +8270,7 @@ void OpcodeRTPAL2::setParams(const char *params, int)
 QString OpcodeRTPAL2::toString(Field *) const
 {
 	return QObject::tr("RTPAL2 %1")
-			.arg(QString(QByteArray((char *)&unknown, 7).toHex()));
+			.arg(QString::fromLatin1(QByteArray((char *)&unknown, 7).toHex()));
 }
 
 QByteArray OpcodeRTPAL2::params() const
@@ -8292,7 +8291,7 @@ void OpcodeADPAL2::setParams(const char *params, int)
 QString OpcodeADPAL2::toString(Field *) const
 {
 	return QObject::tr("ADPAL2 %1")
-			.arg(QString(QByteArray((char *)&unknown, 10).toHex()));
+			.arg(QString::fromLatin1(QByteArray((char *)&unknown, 10).toHex()));
 }
 
 QByteArray OpcodeADPAL2::params() const

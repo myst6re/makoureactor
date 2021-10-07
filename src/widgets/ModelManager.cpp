@@ -210,14 +210,14 @@ void ModelManager::setModelScale(int scale)
 	int modelID = currentModelID();
 	if (modelID < 0)	return;
 
-	setModelScale(modelID, scale);
+	setModelScale(modelID, quint16(scale));
 
 	emit modified();
 }
 
 void ModelManager::setModelGlobalColor(int id, QRgb color)
 {
-	Q_UNUSED(id);
+	Q_UNUSED(id)
 	int modelID = currentModelID();
 	if (modelID < 0)	return;
 

@@ -114,12 +114,13 @@ Window::Window() :
 	menuLang->addSeparator();
 	QTranslator translator;
 	for (const QString &str : qAsConst(stringList)) {
-		translator.load(dir.filePath(str));
-		action = menuLang->addAction(translator.translate("Window", "English"));
-		QString lang = str.mid(14, 2);
-		action->setData(lang);
-		action->setCheckable(true);
-		action->setChecked(Config::value("lang").toString()==lang);
+		if (translator.load(dir.filePath(str))) {
+			action = menuLang->addAction(translator.translate("Window", "English"));
+			QString lang = str.mid(14, 2);
+			action->setData(lang);
+			action->setCheckable(true);
+			action->setChecked(Config::value("lang").toString() == lang);
+		}
 	}
 	connect(menuLang, SIGNAL(triggered(QAction*)), this, SLOT(changeLanguage(QAction*)));
 
@@ -223,7 +224,7 @@ Window::Window() :
 	connect(_fieldList, SIGNAL(fieldDeleted()), SLOT(setFieldDeleted()));
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
 	connect(searchDialog, SIGNAL(found(int,int,int,int)), SLOT(gotoOpcode(int,int,int,int)));
-	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
+	connect(searchDialog, SIGNAL(foundText(int,int,qsizetype,qsizetype)), SLOT(gotoText(int,int,qsizetype,qsizetype)));
 	connect(_scriptManager, SIGNAL(groupScriptCurrentChanged(int)), SLOT(showModel(int)));
 	connect(_scriptManager, SIGNAL(editText(int)), SLOT(textManager(int)));
 	connect(_scriptManager, SIGNAL(changed()), SLOT(setModified()));
@@ -773,7 +774,7 @@ void Window::setWindowTitle()
 		}
 	}
 
-	QWidget::setWindowTitle(windowTitle.append(QString("%1 %2").arg(MAKOU_REACTOR_NAME, MAKOU_REACTOR_VERSION)));
+	QWidget::setWindowTitle(windowTitle.append(QString("%1 %2").arg(QLatin1String(MAKOU_REACTOR_NAME), QLatin1String(MAKOU_REACTOR_VERSION))));
 }
 
 void Window::disableEditors()
@@ -1108,7 +1109,7 @@ void Window::gotoOpcode(int mapID, int grpScriptID, int scriptID, int opcodeID)
 	}
 }
 
-void Window::gotoText(int mapID, int textID, int from, int size)
+void Window::gotoText(int mapID, int textID, qsizetype from, qsizetype size)
 {
 	if (_textDialog) {
 		_textDialog->blockSignals(true);

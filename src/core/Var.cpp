@@ -32,7 +32,7 @@ bool Var::load()
 		bool ok;
 		int address;
 		forever {
-			line = QString(fic.readLine());
+			line = QString::fromUtf8(fic.readLine());
 			if (line.isEmpty()) {
 				break;
 			}

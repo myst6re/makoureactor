@@ -52,10 +52,14 @@ void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
 	if (!pITask)	return;
 
 	if (pixmap.isNull()) {
-		pITask->SetOverlayIcon(_winId, nullptr, nullptr);
+		pITask->SetOverlayIcon(HWND(_winId), nullptr, nullptr);
 	} else {
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 		const HICON icon = pixmap.toWinHICON();
-		pITask->SetOverlayIcon(_winId, icon, (wchar_t *)text.utf16());
+#else
+		const HICON icon = pixmap.toImage().toHICON();
+#endif
+		pITask->SetOverlayIcon(HWND(_winId), icon, (wchar_t *)text.utf16());
 		DestroyIcon(icon);
 	}
 }
@@ -78,7 +82,7 @@ void QTaskBarButton::setState(State state)
 		break;
 	}
 
-	if (S_OK == pITask->SetProgressState(_winId, flag)) {
+	if (S_OK == pITask->SetProgressState(HWND(_winId), flag)) {
 		_state = state;
 	}
 }
@@ -92,7 +96,7 @@ void QTaskBarButton::setValue(int value)
 		return;
 	}
 
-	if (S_OK == pITask->SetProgressValue(_winId, completed, total)) {
+	if (S_OK == pITask->SetProgressValue(HWND(_winId), completed, total)) {
 		_value = value;
 		emit valueChanged(value);
 	}

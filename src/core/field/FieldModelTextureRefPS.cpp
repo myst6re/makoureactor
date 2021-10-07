@@ -57,8 +57,8 @@ QImage FieldModelTexturesPS::toImage(const QPoint &palPos, Bpp bpp) const
 QPair<int, int> FieldModelTexturesPS::resolve(const QPoint &imgPos, const QPoint &palPos) const
 {
 	int imgId = -1,
-			palId = -1,
-			i = 0;
+	        palId = -1,
+	        i = 0;
 
 	for (const QRect &rect : _rects) {
 		if (imgId < 0 && rect.topLeft() == imgPos) {

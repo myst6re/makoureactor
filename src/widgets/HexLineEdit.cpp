@@ -40,7 +40,7 @@ void HexLineEdit::setData(const QByteArray &contents)
 	setMaxLength(contents.size() * 2);
 	setInputMask(QString(contents.size() * 2, 'H'));
 	_noEmit = false;
-	setText(contents.toHex());
+	setText(QString::fromLatin1(contents.toHex()));
 	emit dataChanged(contents);
 }
 

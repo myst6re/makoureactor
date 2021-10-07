@@ -74,15 +74,16 @@ bool Script::openScript(const QByteArray &script, const int initPos, const int s
 	for (int i = indentsKeys.size() - 1; i >= 0; --i) {
 		int jump = indentsKeys.at(i);
 		int index = positions.indexOf(jump);
+		QList<OpcodeJump *> opJumps = indents.values(jump);
 		if (index > -1) {
 			_opcodes.insert(index, new OpcodeLabel(quint32(i) + 1));
 //			qDebug() << (index+1) << "label" << (i+1);
-			for (OpcodeJump *opJump : indents.values(jump)) {
+			for (OpcodeJump *opJump : opJumps) {
 				opJump->setLabel(quint32(i) + 1);
 			}
 		} else {
 			qWarning() << "Error" << jump << "label" << (i+1);
-			for (OpcodeJump *opJump : indents.values(jump)) {
+			for (OpcodeJump *opJump : opJumps) {
 				opJump->setBadJump(true);
 			}
 //			return false;
@@ -677,7 +678,7 @@ Script *Script::splitScriptAtReturn()
 
 	for (Opcode *opcode : qAsConst(_opcodes)) {
 		if (opcode->isLabel()) {
-			if (gotoLabel != -1 && static_cast<OpcodeLabel *>(opcode)->label() == (quint32)gotoLabel) {
+			if (gotoLabel != -1 && static_cast<OpcodeLabel *>(opcode)->label() == quint32(gotoLabel)) {
 				gotoLabel = -1;
 			}
 		} else if (gotoLabel == -1) {
@@ -1111,7 +1112,7 @@ bool Script::searchMapJump(quint16 field, int &opcodeID) const
 	return searchMapJump(field, ++opcodeID);
 }
 
-bool Script::searchTextInScripts(const QRegExp &text, int &opcodeID, const Section1File *scriptsAndTexts) const
+bool Script::searchTextInScripts(const QRegularExpression &text, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if (opcodeID < 0) {
 		opcodeID = 0;
@@ -1196,7 +1197,7 @@ bool Script::searchMapJumpP(quint16 field, int &opcodeID) const
 	return searchMapJumpP(field, --opcodeID);
 }
 
-bool Script::searchTextInScriptsP(const QRegExp &text, int &opcodeID, const Section1File *scriptsAndTexts) const
+bool Script::searchTextInScriptsP(const QRegularExpression &text, int &opcodeID, const Section1File *scriptsAndTexts) const
 {
 	if (opcodeID >= _opcodes.size()) {
 		opcodeID = _opcodes.size()-1;
@@ -1215,38 +1216,44 @@ bool Script::searchTextInScriptsP(const QRegExp &text, int &opcodeID, const Sect
 
 void Script::listUsedTexts(QSet<quint8> &usedTexts) const
 {
-	for (Opcode *opcode : _opcodes)
+	for (Opcode *opcode : _opcodes) {
 		opcode->listUsedTexts(usedTexts);
+	}
 }
 
 void Script::listUsedTuts(QSet<quint8> &usedTuts) const
 {
-	for (Opcode *opcode : _opcodes)
+	for (Opcode *opcode : _opcodes) {
 		opcode->listUsedTuts(usedTuts);
+	}
 }
 
 void Script::shiftGroupIds(int groupId, int steps)
 {
-	for (Opcode *opcode : qAsConst(_opcodes))
+	for (Opcode *opcode : qAsConst(_opcodes)) {
 		opcode->shiftGroupIds(groupId, steps);
+	}
 }
 
 void Script::shiftTextIds(int textId, int steps)
 {
-	for (Opcode *opcode : qAsConst(_opcodes))
+	for (Opcode *opcode : qAsConst(_opcodes)) {
 		opcode->shiftTextIds(textId, steps);
+	}
 }
 
 void Script::shiftTutIds(int tutId, int steps)
 {
-	for (Opcode *opcode : qAsConst(_opcodes))
+	for (Opcode *opcode : qAsConst(_opcodes)) {
 		opcode->shiftTutIds(tutId, steps);
+	}
 }
 
 void Script::swapGroupIds(int groupId1, int groupId2)
 {
-	for (Opcode *opcode : qAsConst(_opcodes))
+	for (Opcode *opcode : qAsConst(_opcodes)) {
 		opcode->swapGroupIds(groupId1, groupId2);
+	}
 }
 
 void Script::setWindow(const FF7Window &win)
@@ -1258,7 +1265,7 @@ void Script::setWindow(const FF7Window &win)
 
 int Script::opcodePositionInBytes(quint16 opcodeID)
 {
-	int pos=0, i=0;
+	int pos = 0, i = 0;
 	for (Opcode *op : qAsConst(_opcodes)) {
 		if (i == opcodeID) {
 			return pos;

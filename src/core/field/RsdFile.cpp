@@ -39,10 +39,10 @@ bool RsdFile::read(Rsd &rsd, QStringList &textureNames) const
 	bool ok;
 
 	while (device()->canReadLine()) {
-		QString line = QString(device()->readLine()).trimmed();
-		if (pname.isNull() && (line.startsWith(QString("PLY="))
-							  || line.startsWith(QString("MAT="))
-							  || line.startsWith(QString("GRP=")))) {
+		QString line = QString::fromLatin1(device()->readLine()).trimmed();
+		if (pname.isNull() && (line.startsWith(QLatin1String("PLY="))
+							  || line.startsWith(QLatin1String("MAT="))
+							  || line.startsWith(QLatin1String("GRP=")))) {
 			index = line.lastIndexOf('.');
 			if (index != -1) {
 				line.truncate(index);
@@ -56,7 +56,7 @@ bool RsdFile::read(Rsd &rsd, QStringList &textureNames) const
 			}
 
 			for (quint32 i = 0; i < nTex && device()->canReadLine(); ++i) {
-				line = QString(device()->readLine()).trimmed();
+				line = QString::fromLatin1(device()->readLine()).trimmed();
 				if (!line.startsWith(QString("TEX[%1]=").arg(i))) {
 					return false;
 				}

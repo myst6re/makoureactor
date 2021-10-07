@@ -55,7 +55,7 @@ private slots:
 private:
 	QWidget *scriptPageWidget();
 	QWidget *textPageWidget();
-	static QRegExp buildRegExp(const QString &lineEditText, bool caseSensitive, bool useRegexp);
+	static QRegularExpression buildRegExp(const QString &lineEditText, bool caseSensitive, bool useRegexp);
 	void setSearchValues();
 	FieldArchive::SearchScope searchScope() const;
 	QString lastMessage() const;
@@ -65,14 +65,14 @@ private:
 	}
 	void setActionsEnabled(bool enable);
 	bool findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
-				  int &mapID, int &grpScriptID,
-				  int &scriptID, int &opcodeID);
+	                    int &mapID, int &grpScriptID,
+	                    int &scriptID, int &opcodeID);
 	bool findNextText(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
-				  int &mapID, int &textID, int &from, int &size);
+	                  int &mapID, int &textID, qsizetype &from, qsizetype &size);
 	bool findPrevScript(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
 	                    int &mapID, int &grpScriptID, int &scriptID, int &opcodeID);
 	bool findPrevText(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
-	                  int &mapID, int &textID, int &index, int &from, int &size);
+	                  int &mapID, int &textID, qsizetype &index, qsizetype &from, qsizetype &size);
 
 	SearchAll *searchAllDialog;
 	QTabWidget *tabWidget;
@@ -99,7 +99,7 @@ private:
 	QPushButton *replaceCurrentButton,
 	*replaceAllButton;
 
-	QRegExp text;
+	QRegularExpression text;
 	int clef;
 	quint16 address;
 	quint16 map;
@@ -112,7 +112,7 @@ private:
 
 signals:
 	void found(int fieldID, int grpScriptID, int scriptID, int opcodeID);
-	void foundText(int fieldID, int textID, int index, int size);
+	void foundText(int fieldID, int textID, qsizetype index, qsizetype size);
 	void textReplaced(int fieldID, int textID);
 
 protected:

@@ -417,8 +417,9 @@ BackgroundTexturesPC BackgroundTexturesPS::toPC(const BackgroundTiles &psTiles,
 												const PalettesPC &palettesPC) const
 {
 	QMap<quint16, QList<BackgroundConversionTexture> > groupedTextures;
+	QMap<qint32, Tile> sortedTiles = psTiles.sortedTiles();
 
-	for (const Tile &tile : psTiles.sortedTiles()) {
+	for (const Tile &tile : sortedTiles) {
 
 		if((tile.textureID2 == 0 && _headerImg.w <= 0)
 			 || (tile.textureID2 == 1 && _headerEffect.w <= 0)) {

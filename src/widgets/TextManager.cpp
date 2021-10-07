@@ -27,7 +27,6 @@ QIcon TextManager::noWinIcon;
 TextManager::TextManager(QWidget *parent) :
     QDialog(parent, Qt::Tool), scriptsAndTexts(nullptr)
 {
-	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
 	setWindowTitle(tr("Texts"));
 
 	dispUnusedText = new QCheckBox(tr("Show unused texts"), this);
@@ -40,7 +39,7 @@ TextManager::TextManager(QWidget *parent) :
 
 	QAction *action;
 	toolBar = new QToolBar(this);
-	toolBar->setIconSize(QSize(int(16.0 * scale), int(16.0 * scale)));
+	toolBar->setIconSize(QSize(16, 16));
 	action = toolBar->addAction(QIcon(":/images/icon-char-0.png"), Data::char_names.at(0));
 	action->setData("{CLOUD}");
 	action = toolBar->addAction(QIcon(":/images/icon-char-1.png"), Data::char_names.at(1));
@@ -73,7 +72,7 @@ TextManager::TextManager(QWidget *parent) :
 	action->setData("\n{CHOICE}\n");
 
 	toolBar2 = new QToolBar(this);
-	toolBar2->setIconSize(QSize(int(16.0 * scale), int(16.0 * scale)));
+	toolBar2->setIconSize(QSize(16, 16));
 	action = toolBar2->addAction(QIcon(":/images/icon-grey.png"), tr("Grey"));
 	action->setData("{GREY}");
 	action = toolBar2->addAction(QIcon(":/images/icon-blue.png"), tr("Blue"));
@@ -418,7 +417,7 @@ void TextManager::updateFromScripts()
 	}
 }
 
-void TextManager::gotoText(int textID, int from, int size)
+void TextManager::gotoText(int textID, qsizetype from, qsizetype size)
 {
 	for (int i=0; i<liste1->count(); ++i) {
 		if (textID == liste1->item(i)->data(Qt::UserRole).toInt()) {
@@ -428,8 +427,8 @@ void TextManager::gotoText(int textID, int from, int size)
 			selectText(liste1->item(i));
 			liste1->scrollToItem(liste1->item(i));
 			QTextCursor t = textEdit->textCursor();
-			t.setPosition(from);
-			t.setPosition(from + size, QTextCursor::KeepAnchor);
+			t.setPosition(int(from));
+			t.setPosition(int(from + size), QTextCursor::KeepAnchor);
 			textEdit->setTextCursor(t);
 			textEdit->setFocus();
 			blockSignals(false);

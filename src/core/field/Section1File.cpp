@@ -247,7 +247,7 @@ bool Section1File::open(const QByteArray &data)
 
 	quint32 posAKAO = 0;
 	quint16 nbAKAO, posScripts, pos;
-	quint8 emptyGrps = 0, nbScripts = (quint8)data.at(2);
+	quint8 emptyGrps = 0, nbScripts = quint8(data.at(2));
 
 	//this->nbObjets3D = (quint8)data.at(3);
 	memcpy(&nbAKAO, constData + 6, 2); // nbAKAO
@@ -259,11 +259,12 @@ bool Section1File::open(const QByteArray &data)
 		memcpy(&_scale, constData + 8, 2);
 		cur = 16;
 	}
-	_author = data.mid(cur, 8);
+	const char *author = constData + cur;
+	_author = QString::fromLatin1(author, qstrnlen(author, 8));
 	//QString name2 = data.mid(cur + 8, 8);
 	cur += 16;
 
-	posScripts = cur + 8*nbScripts + 4*nbAKAO;
+	posScripts = cur + 8 * nbScripts + 4 * nbAKAO;
 
 	if (posTexts < posScripts+64*nbScripts) {
 		qWarning() << "Section1File::open out of range posScripts" << posTexts << posScripts << nbScripts << dataSize;
@@ -297,7 +298,8 @@ bool Section1File::open(const QByteArray &data)
 	quint32 posAfterScripts = qMin(posAKAO, quint32(posTexts));
 
 	for (quint8 i=0; i<nbScripts; ++i) {
-		GrpScript *grpScript = new GrpScript(QString(data.mid(cur + 8*i, 8)));
+		const char *grpName = constData + cur + 8 * i;
+		GrpScript *grpScript = new GrpScript(QString::fromLatin1(grpName, qstrnlen(grpName, 8)));
 
 		if (emptyGrps > 1) {
 			emptyGrps--;
@@ -334,6 +336,7 @@ bool Section1File::open(const QByteArray &data)
 					if (scriptID == 0) {
 						Script *script0 = new Script(data, positions[j], positions[j+1]-positions[j]);
 						if (!script0->isValid()) {
+							delete grpScript;
 							delete script0;
 							qWarning() << "Section1File::open invalid script 1" << i << j;
 							return false;
@@ -341,6 +344,7 @@ bool Section1File::open(const QByteArray &data)
 						grpScript->setScript(0, script0); // S0 - Init
 						grpScript->setScript(1, script0->splitScriptAtReturn()); // S0 - Main
 					} else if (!grpScript->setScript(scriptID + 1, data, positions[j], positions[j+1]-positions[j])) {
+						delete grpScript;
 						qWarning() << "Section1File::open invalid script 2" << i << j;
 						return false;
 					}
@@ -382,7 +386,7 @@ bool Section1File::open(const QByteArray &data)
 				_texts.append(FF7Text(data.mid(posTexts+posDeb, posFin-posDeb)));
 				posDeb = posFin;
 			}
-			if ((quint32)dataSize < sizeTextSection) {
+			if (quint32(dataSize) < sizeTextSection) {
 				qWarning() << "Section1File::open invalid sizeTextSection" << sizeTextSection << dataSize;
 				return false;
 			}
@@ -513,7 +517,6 @@ bool Section1File::exporter(QIODevice *device, ExportFormat format)
 		}
 		QXmlStreamWriter stream(device);
 		stream.setAutoFormatting(true);
-		stream.setCodec("UTF-8");
 		stream.writeStartDocument();
 		stream.writeStartElement("field");
 		stream.writeAttribute("name", field()->name());
@@ -552,13 +555,13 @@ bool Section1File::importer(QIODevice *device, ExportFormat format)
 		if (!start && type == QXmlStreamReader::StartDocument) {
 			start = true;
 		} else if (start && !field && type == QXmlStreamReader::StartElement
-				  && stream.name() == "field") {
+				  && stream.name() == QString("field")) {
 			field = true;
 		} else if (field && !texts && type == QXmlStreamReader::StartElement
-				  && stream.name() == "texts") {
+				  && stream.name() == QString("texts")) {
 			texts = true;
 		} else if (texts && type == QXmlStreamReader::StartElement
-				  && stream.name() == "text") {
+				  && stream.name() == QString("text")) {
 //			stream.attributes().value("id");
 		}
 	}
@@ -611,7 +614,12 @@ int Section1File::grpScriptCount() const
 
 bool Section1File::insertGrpScript(int row)
 {
-	return insertGrpScript(row, new GrpScript);
+	GrpScript *grp = new GrpScript;
+	bool ret = insertGrpScript(row, grp);
+	if (!ret) {
+		delete grp;
+	}
+	return ret;
 }
 
 bool Section1File::insertGrpScript(int row, GrpScript *grpScript)
@@ -724,7 +732,7 @@ bool Section1File::searchMapJump(quint16 field, int &groupID, int &scriptID, int
 	return searchMapJump(field, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
-bool Section1File::searchTextInScripts(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const
+bool Section1File::searchTextInScripts(const QRegularExpression &text, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if (groupID < 0)
 		groupID = scriptID = opcodeID = 0;
@@ -737,7 +745,7 @@ bool Section1File::searchTextInScripts(const QRegExp &text, int &groupID, int &s
 	return searchTextInScripts(text, ++groupID, scriptID = 0, opcodeID = 0);
 }
 
-bool Section1File::searchText(const QRegExp &text, int &textID, int &from, int &size) const
+bool Section1File::searchText(const QRegularExpression &text, int &textID, qsizetype &from, qsizetype &size) const
 {
 	if (textID < 0)
 		textID = 0;
@@ -805,7 +813,7 @@ bool Section1File::searchMapJumpP(quint16 field, int &groupID, int &scriptID, in
 	return searchMapJumpP(field, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
-bool Section1File::searchTextInScriptsP(const QRegExp &text, int &groupID, int &scriptID, int &opcodeID) const
+bool Section1File::searchTextInScriptsP(const QRegularExpression &text, int &groupID, int &scriptID, int &opcodeID) const
 {
 	if (groupID >= _grpScripts.size()) {
 		groupID = _grpScripts.size()-1;
@@ -819,7 +827,7 @@ bool Section1File::searchTextInScriptsP(const QRegExp &text, int &groupID, int &
 	return searchTextInScriptsP(text, --groupID, scriptID = 2147483647, opcodeID = 2147483647);
 }
 
-bool Section1File::searchTextP(const QRegExp &text, int &textID, int &from, int &index, int &size) const
+bool Section1File::searchTextP(const QRegularExpression &text, int &textID, qsizetype &from, qsizetype &index, qsizetype &size) const
 {
 	if (textID >= textCount()) {
 		textID = textCount()-1;
@@ -833,14 +841,15 @@ bool Section1File::searchTextP(const QRegExp &text, int &textID, int &from, int 
 	return searchTextP(text, --textID, from = -1, index, size);
 }
 
-bool Section1File::replaceText(const QRegExp &search, const QString &after, int textID, int from)
+bool Section1File::replaceText(const QRegularExpression &search, const QString &after, int textID, int from)
 {
 	bool jp = Config::value("jp_txt", false).toBool();
 	FF7Text beforeT = text(textID);
 	QString before = beforeT.text(jp);
+	QRegularExpressionMatch match = search.match(before, from);
 
-	if (search.indexIn(before, from) == from) {
-		before.replace(from, search.matchedLength(), after);
+	if (match.capturedStart() == from) {
+		before.replace(from, match.capturedLength(), after);
 		setText(textID, FF7Text(before, jp));
 		return true;
 	}
@@ -950,7 +959,8 @@ void Section1File::cleanTexts()
 
 void Section1File::autosizeTextWindows()
 {
-	for (quint8 textID : listUsedTexts()) {
+	QSet<quint8> textIDs = listUsedTexts();
+	for (quint8 textID : textIDs) {
 		if (textID >= _texts.size()) {
 			continue;
 		}
@@ -958,7 +968,7 @@ void Section1File::autosizeTextWindows()
 		listWindows(textID, windows);
 		if (!windows.isEmpty()) {
 			QSize size = FF7Font::calcSize(text(textID).data());
-			for (FF7Window win : windows) {
+			for (FF7Window win : qAsConst(windows)) {
 				if (win.displayType > 0) {
 					continue; // TODO: estimate size for countdown and numerical display
 				}

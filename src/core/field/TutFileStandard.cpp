@@ -179,9 +179,9 @@ QString TutFileStandard::parseScripts(int tutID, bool *warnings) const
 		memcpy(&firstPos, constTuto + 20, 2);
 
 		ret.append(QObject::tr("ChannelCount=%1\n").arg(firstPos/2 + 1));
-		ret.append(tuto.mid(8, 8).toHex());
+		ret.append(QString::fromLatin1(tuto.mid(8, 8).toHex()));
 		ret.append("\n");
-		ret.append(tuto.mid(16, 4).toHex());
+		ret.append(QString::fromLatin1(tuto.mid(16, 4).toHex()));
 		ret.append("\n");
 	} else {
 		ret = TutFile::parseScripts(tutID, warnings);

@@ -60,9 +60,10 @@ IsoFile *IsoArchiveFF7::searchExe() const
 		return nullptr;
 	}
 
-	QRegExp exeName("[A-Z]{4}_\\d{3}\\.\\d{2}");
-	for (IsoFile *isoFile : rootDirectory()->files()) {
-		if (exeName.exactMatch(isoFile->name())) {
+	QRegularExpression exeName(QRegularExpression::anchoredPattern("[A-Z]{4}_\\d{3}\\.\\d{2}"));
+	QList<IsoFile *> files = rootDirectory()->files();
+	for (IsoFile *isoFile : files) {
+		if (exeName.match(isoFile->name()).hasMatch()) {
 			return isoFile;
 		}
 	}
@@ -87,7 +88,9 @@ bool IsoArchiveFF7::isDisc(int num) const
 	}
 	file->reset();
 
-	QString line = file->readLine(16);
+	QByteArray l = file->readLine(16);
+	// Trim \0 at the end
+	QString line = QString::fromLatin1(l, qstrnlen(l, 16));
 	return line.startsWith(QString("DISK000%1").arg(num));
 }
 
@@ -240,8 +243,9 @@ QMap<int, QString> IsoArchiveFF7::maplist()
 
 	QMap<int, QString> orderedFields, ret;
 	int min = -1;
+	QList<IsoFile *> files = fieldDirectory->files();
 
-	for (IsoFile *field : fieldDirectory->files()) {
+	for (const IsoFile *field : files) {
 		if (!field->name().endsWith(".DAT")) {
 			continue;
 		}
@@ -389,7 +393,8 @@ IsoFile *IsoArchiveFF7::updateFieldBin()
 	}
 
 	QList<IsoFile *> files;
-	for (IsoFile *file : fieldDirectory->files()) {
+	QList<IsoFile *> f = fieldDirectory->files();
+	for (IsoFile *file : f) {
 		if (!file->name().endsWith(".X")
 				&& file->name() != "FIELD.BIN") {
 			files.append(file);
@@ -419,7 +424,8 @@ IsoFile *IsoArchiveFF7::updateWorldBin()
 	}
 
 	QList<IsoFile *> files;
-	for (IsoFile *file : worldDirectory->files()) {
+	QList<IsoFile *> f = worldDirectory->files();
+	for (IsoFile *file : f) {
 		if (file->name() != "WORLD.BIN") {
 			files.append(file);
 		}

@@ -25,7 +25,7 @@ KeyEditorDialog::KeyEditorDialog(quint16 value, QWidget *parent)
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
 	QVBoxLayout *layout = new QVBoxLayout(this);
 
-	for (int i=0; i<Data::key_names.size(); ++i) {
+	for (int i = 0; i < Data::key_names.size(); ++i) {
 		QCheckBox *checkBox = new QCheckBox(Data::key_names.at(i), this);
 		checkBox->setCheckState(((value >> i) & 1) ? Qt::Checked : Qt::Unchecked);
 		layout->addWidget(checkBox);
