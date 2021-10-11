@@ -52,7 +52,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_compile_definitions(
     QT_DISABLE_DEPRECATED_BEFORE=0x050F00
-    QT_RESTRICTED_CAST_FROM_ASCII=1
+    #QT_RESTRICTED_CAST_FROM_ASCII
     MAKOU_REACTOR_NAME="${PROJECT_NAME}"
     MAKOU_REACTOR_DESCRIPTION="${PROJECT_DESCRIPTION}"
     MAKOU_REACTOR_COMPANY="myst6re"
@@ -64,21 +64,13 @@ add_compile_definitions(
 )
 
 find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL REQUIRED)
-find_package(QT NAMES Qt5 Qt6 COMPONENTS Zlib QUIET)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Zlib QUIET)
 find_package(ff7tk COMPONENTS ff7tkFormats ff7tkUtils REQUIRED)
+find_package(ZLIB REQUIRED)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     find_package(QT NAMES Qt6 COMPONENTS OpenGLWidgets REQUIRED)
     find_package(Qt${QT_VERSION_MAJOR} COMPONENTS OpenGLWidgets REQUIRED)
-endif()
-
-if(NOT Qt${QT_VERSION_MAJOR}Zlib_FOUND)
-    find_package(ZLIB REQUIRED)
-    set(ZLIB_LIBRARY ZLIB::ZLIB)
-else()
-    set(ZLIB_LIBRARY Qt::Zlib)
 endif()
 
 set(PROJECT_SOURCES
@@ -546,7 +538,7 @@ target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${GUI_TARGET} PRIVATE
     Qt::OpenGL
     Qt::Widgets
-    ${ZLIB_LIBRARY}
+    ZLIB::ZLIB
     ff7tk::ff7tkFormats
     ff7tk::ff7tkUtils
 )
@@ -567,7 +559,7 @@ else()
 endif()
 target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${CLI_TARGET} PRIVATE
-    ${ZLIB_LIBRARY}
+    ZLIB::ZLIB
     ff7tk::ff7tkFormats
     ff7tk::ff7tkUtils
 )
@@ -622,7 +614,7 @@ else()
     install(TARGETS ${GUI_TARGET} ${CLI_TARGET} RUNTIME)
 endif()
 
-if(QT_VERSION_MAJOR EQUAL 6)
+if(QT_VERSION_MAJOR GREATER_EQUAL 6)
     qt_finalize_executable(${GUI_TARGET})
     qt_finalize_executable(${CLI_TARGET})
 endif()

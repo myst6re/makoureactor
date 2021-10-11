@@ -555,13 +555,13 @@ bool Section1File::importer(QIODevice *device, ExportFormat format)
 		if (!start && type == QXmlStreamReader::StartDocument) {
 			start = true;
 		} else if (start && !field && type == QXmlStreamReader::StartElement
-				  && stream.name() == QString("field")) {
+				  && stream.name() == QLatin1String("field")) {
 			field = true;
 		} else if (field && !texts && type == QXmlStreamReader::StartElement
-				  && stream.name() == QString("texts")) {
+				  && stream.name() == QLatin1String("texts")) {
 			texts = true;
 		} else if (texts && type == QXmlStreamReader::StartElement
-				  && stream.name() == QString("text")) {
+				  && stream.name() == QLatin1String("text")) {
 //			stream.attributes().value("id");
 		}
 	}
