@@ -78,13 +78,13 @@ QString Data::regValue(const QString &regPath, const QString &regKey,
 	if (loc == LocationUser) {
 		hkey = HKEY_CURRENT_USER;
 	}
-	error = RegOpenKeyEx(hkey, QDir::toNativeSeparators("SOFTWARE/" % regPath).toStdString().c_str(), 0, flags, &phkResult);
+	error = RegOpenKeyExW(hkey, QDir::toNativeSeparators("SOFTWARE/" % regPath).toStdWString().c_str(), 0, flags, &phkResult);
 	if (ERROR_SUCCESS == error) {
 		BYTE value[MAX_PATH];
 		DWORD cValue = MAX_PATH, type;
 
 		// Open regKey which must is a string value (REG_SZ)
-		RegQueryValueEx(phkResult, regKey.toStdString().c_str(), nullptr, &type, value, &cValue);
+		RegQueryValueExW(phkResult, regKey.toStdWString().c_str(), nullptr, &type, value, &cValue);
 		if (ERROR_SUCCESS == error && type == REG_SZ) {
 			RegCloseKey(phkResult);
 			return QString::fromUtf16((ushort *)value);
@@ -138,26 +138,26 @@ const QString &Data::searchRereleasedFF7Path()
 		}
 
 		// if another id
-		error = RegOpenKeyEx(HKEY_LOCAL_MACHINE, TEXT("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"), 0, flags, &phkResult);
+		error = RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\", 0, flags, &phkResult);
 
 		if (ERROR_SUCCESS == error) {
 			DWORD index = 0;
-			CHAR subKeyName[MAX_PATH];
+			WCHAR subKeyName[MAX_PATH];
 			DWORD subKeyCName = MAX_PATH;
-			while (ERROR_NO_MORE_ITEMS != (error = RegEnumKeyEx(phkResult, index, subKeyName, &subKeyCName, nullptr, nullptr, nullptr, nullptr))) {
+			while (ERROR_NO_MORE_ITEMS != (error = RegEnumKeyExW(phkResult, index, subKeyName, &subKeyCName, nullptr, nullptr, nullptr, nullptr))) {
 				QString subKeyNameStr = QString::fromUtf16((ushort *)subKeyName);
 				if (subKeyNameStr.endsWith("_is1")) {
-					error = RegOpenKeyEx(phkResult, QString("%1\\").arg(subKeyNameStr).toStdString().c_str(), 0, KEY_READ, &phkResult2);
+					error = RegOpenKeyExW(phkResult, QString("%1\\").arg(subKeyNameStr).toStdWString().c_str(), 0, KEY_READ, &phkResult2);
 					if (ERROR_SUCCESS == error) {
 						BYTE value[MAX_PATH];
 						DWORD cValue = MAX_PATH, type;
-						error = RegQueryValueEx(phkResult2, TEXT("DisplayName"), nullptr, &type, value, &cValue);
+						error = RegQueryValueExW(phkResult2, L"DisplayName", nullptr, &type, value, &cValue);
 						if (ERROR_SUCCESS == error) {
 							if (type == REG_SZ) {
 								QString softwareNameStr = QString::fromUtf16((ushort *)value);
 								if (softwareNameStr.compare("FINAL FANTASY VII", Qt::CaseInsensitive) == 0) {
 									cValue = MAX_PATH;
-									error = RegQueryValueEx(phkResult2, TEXT("InstallLocation"), nullptr, &type, value, &cValue);
+									error = RegQueryValueExW(phkResult2, L"InstallLocation", nullptr, &type, value, &cValue);
 									if (ERROR_SUCCESS == error) {
 										if (type == REG_SZ) {
 											RegCloseKey(phkResult2);

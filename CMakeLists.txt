@@ -226,7 +226,6 @@ set(PROJECT_SOURCES
     "src/core/field/TutFileStandard.h"
     "src/core/world/TblFile.cpp"
     "src/core/world/TblFile.h"
-    "src/include/shobjidl.h"
     "src/main.cpp"
     "src/qt/compat.h"
     "src/txt.cpp"

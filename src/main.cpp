@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	QCoreApplication::setApplicationName(MAKOU_REACTOR_NAME);
 	QCoreApplication::setApplicationVersion(MAKOU_REACTOR_VERSION);
 #ifdef Q_OS_WIN
-	QTextCodec::setCodecForLocale(QTextCodec::codecForName("IBM 850"));
+	// QTextCodec::setCodecForLocale(QTextCodec::codecForName("IBM 850"));
 #endif
 	Config::set();
 	CLI::exec();

@@ -27,6 +27,12 @@ QIcon TextManager::noWinIcon;
 TextManager::TextManager(QWidget *parent) :
     QDialog(parent, Qt::Tool), scriptsAndTexts(nullptr)
 {
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
+#else
+	qreal scale = 1.0;
+#endif
+
 	setWindowTitle(tr("Texts"));
 
 	dispUnusedText = new QCheckBox(tr("Show unused texts"), this);
@@ -39,7 +45,7 @@ TextManager::TextManager(QWidget *parent) :
 
 	QAction *action;
 	toolBar = new QToolBar(this);
-	toolBar->setIconSize(QSize(16, 16));
+	toolBar->setIconSize(QSize(int(scale * 16), int(scale * 16)));
 	action = toolBar->addAction(QIcon(":/images/icon-char-0.png"), Data::char_names.at(0));
 	action->setData("{CLOUD}");
 	action = toolBar->addAction(QIcon(":/images/icon-char-1.png"), Data::char_names.at(1));
@@ -72,7 +78,7 @@ TextManager::TextManager(QWidget *parent) :
 	action->setData("\n{CHOICE}\n");
 
 	toolBar2 = new QToolBar(this);
-	toolBar2->setIconSize(QSize(16, 16));
+	toolBar2->setIconSize(QSize(int(scale * 16), int(scale * 16)));
 	action = toolBar2->addAction(QIcon(":/images/icon-grey.png"), tr("Grey"));
 	action->setData("{GREY}");
 	action = toolBar2->addAction(QIcon(":/images/icon-blue.png"), tr("Blue"));

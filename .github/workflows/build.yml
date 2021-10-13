@@ -46,7 +46,7 @@ jobs:
           qt_arch: win32_mingw81
           qt_tools: 'desktop,tools_ninja,qt.tools.ninja tools_mingw,qt.tools.win32_mingw810'
     env:
-      qt_installation_path: ${{ github.workspace }}/Qt
+      qt_installation_path: ${{ github.workspace }}
       zlib_path: ${{ github.workspace }}/../zlib-git
       zlib_build_path: ${{ github.workspace }}/../build-zlib-git
       zlib_installation_path: C:/zlib

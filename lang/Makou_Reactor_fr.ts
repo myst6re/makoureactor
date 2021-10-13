@@ -583,84 +583,84 @@ List of available commands:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="67"/>
+        <location filename="../src/widgets/FieldList.cpp" line="73"/>
         <source>&amp;Field List Toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="70"/>
+        <location filename="../src/widgets/FieldList.cpp" line="76"/>
         <source>Add a field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="72"/>
+        <location filename="../src/widgets/FieldList.cpp" line="78"/>
         <source>Remove a field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="205"/>
-        <location filename="../src/widgets/FieldList.cpp" line="257"/>
+        <location filename="../src/widgets/FieldList.cpp" line="211"/>
+        <location filename="../src/widgets/FieldList.cpp" line="263"/>
         <source>Name not filled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="206"/>
-        <location filename="../src/widgets/FieldList.cpp" line="258"/>
+        <location filename="../src/widgets/FieldList.cpp" line="212"/>
+        <location filename="../src/widgets/FieldList.cpp" line="264"/>
         <source>Please set a new field name.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="210"/>
-        <location filename="../src/widgets/FieldList.cpp" line="261"/>
+        <location filename="../src/widgets/FieldList.cpp" line="216"/>
+        <location filename="../src/widgets/FieldList.cpp" line="267"/>
         <source>Name already present in archive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="211"/>
-        <location filename="../src/widgets/FieldList.cpp" line="262"/>
+        <location filename="../src/widgets/FieldList.cpp" line="217"/>
+        <location filename="../src/widgets/FieldList.cpp" line="268"/>
         <source>Please choose another name.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="240"/>
-        <location filename="../src/widgets/FieldList.cpp" line="283"/>
+        <location filename="../src/widgets/FieldList.cpp" line="246"/>
+        <location filename="../src/widgets/FieldList.cpp" line="289"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="240"/>
-        <location filename="../src/widgets/FieldList.cpp" line="283"/>
+        <location filename="../src/widgets/FieldList.cpp" line="246"/>
+        <location filename="../src/widgets/FieldList.cpp" line="289"/>
         <source>Not implemented for PS.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="249"/>
+        <location filename="../src/widgets/FieldList.cpp" line="255"/>
         <source>Choose a name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="250"/>
+        <location filename="../src/widgets/FieldList.cpp" line="256"/>
         <source>Field name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="297"/>
+        <location filename="../src/widgets/FieldList.cpp" line="303"/>
         <source>Are you sure you want to remove %1?
 Other maps can refer to it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="300"/>
+        <location filename="../src/widgets/FieldList.cpp" line="306"/>
         <source>the selected field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="301"/>
+        <location filename="../src/widgets/FieldList.cpp" line="307"/>
         <source>the selected fields</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/FieldList.cpp" line="303"/>
+        <location filename="../src/widgets/FieldList.cpp" line="309"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
@@ -924,58 +924,58 @@ Other maps can refer to it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="95"/>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="101"/>
         <source>&amp;Group Editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="98"/>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="104"/>
         <source>Add a group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="100"/>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="106"/>
         <source>Remove a group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="103"/>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="109"/>
         <source>Up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="105"/>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="111"/>
         <source>Down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="248"/>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="254"/>
         <source>You have more than 16 models in this field, the game may crash.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="254"/>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="260"/>
         <source>You have more than 48 groups in this field, the game may crash.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="309"/>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="315"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="309"/>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="315"/>
         <source>Are you sure you want to remove %1?
 Some scripts can refer to it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="312"/>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="318"/>
         <source>the group selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/GrpScriptList.cpp" line="313"/>
+        <location filename="../src/widgets/GrpScriptList.cpp" line="319"/>
         <source>the selected groups</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1564,69 +1564,69 @@ Some scripts can refer to it!</source>
 <context>
     <name>ModelManagerPC</name>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="34"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="40"/>
         <source>Cut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="35"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="41"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="36"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="42"/>
         <source>Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="55"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="61"/>
         <source>Id</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="55"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="61"/>
         <source>Animation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="55"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="61"/>
         <source>?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="58"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="64"/>
         <source>Name (unused)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="60"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="66"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="62"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="68"/>
         <source>Model size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="64"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="70"/>
         <source>Global light</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="66"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="72"/>
         <source>Directional light</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="141"/>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="348"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="147"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="354"/>
         <source>Add a field model</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="151"/>
-        <location filename="../src/widgets/ModelManagerPC.cpp" line="379"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="157"/>
+        <location filename="../src/widgets/ModelManagerPC.cpp" line="385"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1662,155 +1662,155 @@ Some scripts can refer to it!</source>
 <context>
     <name>OpcodeList</name>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="29"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="35"/>
         <source>Action</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="38"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="44"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="42"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="48"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="45"/>
-        <location filename="../src/widgets/OpcodeList.cpp" line="796"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="51"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="802"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="49"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="55"/>
         <source>Cut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="53"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="59"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="57"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="63"/>
         <source>Copy text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="61"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="67"/>
         <source>Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="65"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="71"/>
         <source>Up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="69"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="75"/>
         <source>Down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="73"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="79"/>
         <source>Expand the tree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="74"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="80"/>
         <source>Undo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="78"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="84"/>
         <source>Redo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="82"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="88"/>
         <source>Edit text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="86"/>
-        <location filename="../src/widgets/OpcodeList.cpp" line="243"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="92"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="249"/>
         <source>Disable tree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="87"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="93"/>
         <source>Search opcode...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="139"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="145"/>
         <source>&amp;Script editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="145"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="151"/>
         <source>Add line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="147"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="153"/>
         <source>Remove line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="150"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="156"/>
         <source>Move up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="152"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="158"/>
         <source>Move down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="245"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="251"/>
         <source>Enable tree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="280"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="286"/>
         <source>Goto label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="281"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="287"/>
         <source>Alt + Click to go to the label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="283"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="289"/>
         <source>Goto script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="284"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="290"/>
         <source>Alt + Click to go to the script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="486"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="492"/>
         <source>If this script is run,
  assume that the last non-empty script that runs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="797"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="803"/>
         <source>Are you sure you want to delete %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="799"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="805"/>
         <source>the selected command</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="800"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="806"/>
         <source>the selected commands</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6830,284 +6830,284 @@ chase at the end.</source>
 <context>
     <name>TextManager</name>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="30"/>
+        <location filename="../src/widgets/TextManager.cpp" line="36"/>
         <source>Texts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="32"/>
+        <location filename="../src/widgets/TextManager.cpp" line="38"/>
         <source>Show unused texts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="36"/>
+        <location filename="../src/widgets/TextManager.cpp" line="42"/>
         <source>Add text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="37"/>
+        <location filename="../src/widgets/TextManager.cpp" line="43"/>
         <source>Remove text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="62"/>
+        <location filename="../src/widgets/TextManager.cpp" line="68"/>
         <source>Member 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="64"/>
+        <location filename="../src/widgets/TextManager.cpp" line="70"/>
         <source>Member 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="66"/>
+        <location filename="../src/widgets/TextManager.cpp" line="72"/>
         <source>Member 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="69"/>
+        <location filename="../src/widgets/TextManager.cpp" line="75"/>
         <source>New Page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="71"/>
+        <location filename="../src/widgets/TextManager.cpp" line="77"/>
         <source>Choice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="76"/>
+        <location filename="../src/widgets/TextManager.cpp" line="82"/>
         <source>Grey</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="78"/>
+        <location filename="../src/widgets/TextManager.cpp" line="84"/>
         <source>Blue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="80"/>
+        <location filename="../src/widgets/TextManager.cpp" line="86"/>
         <source>Red</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="82"/>
+        <location filename="../src/widgets/TextManager.cpp" line="88"/>
         <source>Purple</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="84"/>
+        <location filename="../src/widgets/TextManager.cpp" line="90"/>
         <source>Green</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="86"/>
+        <location filename="../src/widgets/TextManager.cpp" line="92"/>
         <source>Cyan</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="88"/>
+        <location filename="../src/widgets/TextManager.cpp" line="94"/>
         <source>Yellow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="90"/>
+        <location filename="../src/widgets/TextManager.cpp" line="96"/>
         <source>White</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="92"/>
+        <location filename="../src/widgets/TextManager.cpp" line="98"/>
         <source>Blink</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="94"/>
+        <location filename="../src/widgets/TextManager.cpp" line="100"/>
         <source>Multicolor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="99"/>
+        <location filename="../src/widgets/TextManager.cpp" line="105"/>
         <source>Pause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="101"/>
+        <location filename="../src/widgets/TextManager.cpp" line="107"/>
         <source>Pause 0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="103"/>
+        <location filename="../src/widgets/TextManager.cpp" line="109"/>
         <source>Pause 5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="105"/>
+        <location filename="../src/widgets/TextManager.cpp" line="111"/>
         <source>Pause 10</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="107"/>
+        <location filename="../src/widgets/TextManager.cpp" line="113"/>
         <source>Pause 15</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="109"/>
+        <location filename="../src/widgets/TextManager.cpp" line="115"/>
         <source>Pause 20</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="111"/>
+        <location filename="../src/widgets/TextManager.cpp" line="117"/>
         <source>Pause 30</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="113"/>
+        <location filename="../src/widgets/TextManager.cpp" line="119"/>
         <source>Pause 40</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="115"/>
+        <location filename="../src/widgets/TextManager.cpp" line="121"/>
         <source>Pause 50</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="117"/>
+        <location filename="../src/widgets/TextManager.cpp" line="123"/>
         <source>Pause 60</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="119"/>
+        <location filename="../src/widgets/TextManager.cpp" line="125"/>
         <source>Pauses</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="125"/>
+        <location filename="../src/widgets/TextManager.cpp" line="131"/>
         <source>Var10</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="127"/>
+        <location filename="../src/widgets/TextManager.cpp" line="133"/>
         <source>Var16</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="129"/>
+        <location filename="../src/widgets/TextManager.cpp" line="135"/>
         <source>Var10r</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="131"/>
+        <location filename="../src/widgets/TextManager.cpp" line="137"/>
         <source>Vars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="137"/>
+        <location filename="../src/widgets/TextManager.cpp" line="143"/>
         <source>Circle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="139"/>
+        <location filename="../src/widgets/TextManager.cpp" line="145"/>
         <source>Triangle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="141"/>
+        <location filename="../src/widgets/TextManager.cpp" line="147"/>
         <source>Square</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="143"/>
+        <location filename="../src/widgets/TextManager.cpp" line="149"/>
         <source>Cross</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="145"/>
+        <location filename="../src/widgets/TextManager.cpp" line="151"/>
         <source>Keys</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="150"/>
+        <location filename="../src/widgets/TextManager.cpp" line="156"/>
         <source>Scrolling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="152"/>
+        <location filename="../src/widgets/TextManager.cpp" line="158"/>
         <source>Spaced characters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="154"/>
+        <location filename="../src/widgets/TextManager.cpp" line="160"/>
         <source>Memory access</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="156"/>
+        <location filename="../src/widgets/TextManager.cpp" line="162"/>
         <source>New Page²</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="158"/>
+        <location filename="../src/widgets/TextManager.cpp" line="164"/>
         <source>Others</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="203"/>
+        <location filename="../src/widgets/TextManager.cpp" line="209"/>
         <source>Align horizontally</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="204"/>
+        <location filename="../src/widgets/TextManager.cpp" line="210"/>
         <source>Align vertically</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="205"/>
+        <location filename="../src/widgets/TextManager.cpp" line="211"/>
         <source>Autosize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="214"/>
+        <location filename="../src/widgets/TextManager.cpp" line="220"/>
         <source>X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="215"/>
+        <location filename="../src/widgets/TextManager.cpp" line="221"/>
         <source>Y</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="216"/>
+        <location filename="../src/widgets/TextManager.cpp" line="222"/>
         <source>W</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="217"/>
+        <location filename="../src/widgets/TextManager.cpp" line="223"/>
         <source>H</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="381"/>
+        <location filename="../src/widgets/TextManager.cpp" line="387"/>
         <source>Text %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="490"/>
+        <location filename="../src/widgets/TextManager.cpp" line="496"/>
         <source>Text used in scripts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="490"/>
+        <location filename="../src/widgets/TextManager.cpp" line="496"/>
         <source>This text is used by one or more scripts on this field.
 Removing this text may break scripts that reference it.
 Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="521"/>
+        <location filename="../src/widgets/TextManager.cpp" line="527"/>
         <source>Page %1/%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/TextManager.cpp" line="543"/>
+        <location filename="../src/widgets/TextManager.cpp" line="549"/>
         <source>Window %1/%2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7862,8 +7862,8 @@ Are you sure you want to continue?</source>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="75"/>
-        <location filename="../src/Window.cpp" line="412"/>
-        <location filename="../src/Window.cpp" line="1569"/>
+        <location filename="../src/Window.cpp" line="418"/>
+        <location filename="../src/Window.cpp" line="1575"/>
         <source>Archive Mana&amp;ger...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7968,123 +7968,123 @@ Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="130"/>
+        <location filename="../src/Window.cpp" line="136"/>
         <source>Main &amp;toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="135"/>
-        <location filename="../src/Window.cpp" line="486"/>
+        <location filename="../src/Window.cpp" line="141"/>
+        <location filename="../src/Window.cpp" line="492"/>
         <source>Open a file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="137"/>
-        <location filename="../src/Window.cpp" line="395"/>
+        <location filename="../src/Window.cpp" line="143"/>
+        <location filename="../src/Window.cpp" line="401"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="140"/>
+        <location filename="../src/Window.cpp" line="146"/>
         <source>Find</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="144"/>
+        <location filename="../src/Window.cpp" line="150"/>
         <source>Text editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="146"/>
+        <location filename="../src/Window.cpp" line="152"/>
         <source>Model loader editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="150"/>
+        <location filename="../src/Window.cpp" line="156"/>
         <source>Walkmesh editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="215"/>
-        <location filename="../src/Window.cpp" line="217"/>
+        <location filename="../src/Window.cpp" line="221"/>
+        <location filename="../src/Window.cpp" line="223"/>
         <source>&amp;?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="288"/>
+        <location filename="../src/Window.cpp" line="294"/>
         <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="291"/>
+        <location filename="../src/Window.cpp" line="297"/>
         <source>Map List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="294"/>
+        <location filename="../src/Window.cpp" line="300"/>
         <source>Background Preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="360"/>
+        <location filename="../src/Window.cpp" line="366"/>
         <source>Settings changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="361"/>
+        <location filename="../src/Window.cpp" line="367"/>
         <source>Restart the program for the settings to take effect.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="393"/>
+        <location filename="../src/Window.cpp" line="399"/>
         <source>
 
 Edited files:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="395"/>
+        <location filename="../src/Window.cpp" line="401"/>
         <source>Would you like to save changes of %1?%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="478"/>
+        <location filename="../src/Window.cpp" line="484"/>
         <source>Compatible Files (*.lgp *.DAT *.bin *.iso *.img)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="479"/>
+        <location filename="../src/Window.cpp" line="485"/>
         <source>Lgp Files (*.lgp)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="480"/>
-        <location filename="../src/Window.cpp" line="1024"/>
+        <location filename="../src/Window.cpp" line="486"/>
+        <location filename="../src/Window.cpp" line="1030"/>
         <source>DAT File (*.DAT)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="481"/>
+        <location filename="../src/Window.cpp" line="487"/>
         <source>PC field File (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="482"/>
+        <location filename="../src/Window.cpp" line="488"/>
         <source>Disc Image (*.bin *.iso *.img)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="534"/>
+        <location filename="../src/Window.cpp" line="540"/>
         <source>Select a folder containing the Final Fantasy VII field files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="542"/>
+        <location filename="../src/Window.cpp" line="548"/>
         <source>File Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="543"/>
+        <location filename="../src/Window.cpp" line="549"/>
         <source>What type of file to look for?
  - Playstation field files (&quot;EXAMPLE.DAT&quot;)
  - PC Field File (&quot;example&quot;)
@@ -8092,262 +8092,262 @@ Edited files:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="547"/>
+        <location filename="../src/Window.cpp" line="553"/>
         <source>PS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="548"/>
+        <location filename="../src/Window.cpp" line="554"/>
         <source>PC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="572"/>
-        <location filename="../src/Window.cpp" line="667"/>
-        <location filename="../src/Window.cpp" line="1079"/>
-        <location filename="../src/Window.cpp" line="1204"/>
-        <location filename="../src/Window.cpp" line="1248"/>
-        <location filename="../src/Window.cpp" line="1276"/>
-        <location filename="../src/Window.cpp" line="1332"/>
-        <location filename="../src/Window.cpp" line="1367"/>
+        <location filename="../src/Window.cpp" line="578"/>
+        <location filename="../src/Window.cpp" line="673"/>
+        <location filename="../src/Window.cpp" line="1085"/>
+        <location filename="../src/Window.cpp" line="1210"/>
+        <location filename="../src/Window.cpp" line="1254"/>
+        <location filename="../src/Window.cpp" line="1282"/>
+        <location filename="../src/Window.cpp" line="1338"/>
+        <location filename="../src/Window.cpp" line="1373"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="590"/>
+        <location filename="../src/Window.cpp" line="596"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="590"/>
+        <location filename="../src/Window.cpp" line="596"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="619"/>
+        <location filename="../src/Window.cpp" line="625"/>
         <source>Opening...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="638"/>
+        <location filename="../src/Window.cpp" line="644"/>
         <source>Nothing found!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="642"/>
-        <source>The file already exists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Window.cpp" line="645"/>
-        <location filename="../src/Window.cpp" line="1057"/>
-        <source>The file is inaccessible</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/Window.cpp" line="648"/>
-        <location filename="../src/Window.cpp" line="1060"/>
-        <source>Can not create temporary file</source>
+        <source>The file already exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="651"/>
         <location filename="../src/Window.cpp" line="1063"/>
-        <source>Unable to remove the file, check write permissions.</source>
+        <source>The file is inaccessible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="654"/>
-        <source>Failed to rename the file, check write permissions.</source>
+        <location filename="../src/Window.cpp" line="1066"/>
+        <source>Can not create temporary file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="657"/>
-        <source>Failed to copy the file, check write permissions.</source>
+        <location filename="../src/Window.cpp" line="1069"/>
+        <source>Unable to remove the file, check write permissions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="660"/>
-        <source>Invalid file</source>
+        <source>Failed to rename the file, check write permissions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="663"/>
+        <source>Failed to copy the file, check write permissions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="666"/>
+        <source>Invalid file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Window.cpp" line="669"/>
         <source>This error should not appear, thank you for reporting it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="908"/>
-        <location filename="../src/Window.cpp" line="1557"/>
+        <location filename="../src/Window.cpp" line="914"/>
+        <location filename="../src/Window.cpp" line="1563"/>
         <source>Author: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1000"/>
+        <location filename="../src/Window.cpp" line="1006"/>
         <source>Compilation Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1000"/>
+        <location filename="../src/Window.cpp" line="1006"/>
         <source>Error Compiling Scripts:
 scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1015"/>
+        <location filename="../src/Window.cpp" line="1021"/>
         <source>Save Directory As</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1022"/>
+        <location filename="../src/Window.cpp" line="1028"/>
         <source>Lgp File (*.lgp)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1026"/>
+        <location filename="../src/Window.cpp" line="1032"/>
         <source>Iso File (*.iso *.bin *.img)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1030"/>
+        <location filename="../src/Window.cpp" line="1036"/>
         <source>Save As</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1037"/>
+        <location filename="../src/Window.cpp" line="1043"/>
         <source>Saving...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1054"/>
+        <location filename="../src/Window.cpp" line="1060"/>
         <source>No maps found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1066"/>
+        <location filename="../src/Window.cpp" line="1072"/>
         <source>Unable to rename the file, check write permissions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1069"/>
+        <location filename="../src/Window.cpp" line="1075"/>
         <source>Unable to copy the file, check write permissions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1072"/>
+        <location filename="../src/Window.cpp" line="1078"/>
         <source>Invalid archive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1075"/>
+        <location filename="../src/Window.cpp" line="1081"/>
         <source>This feature is not complete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1161"/>
-        <location filename="../src/Window.cpp" line="1302"/>
+        <location filename="../src/Window.cpp" line="1167"/>
+        <location filename="../src/Window.cpp" line="1308"/>
         <source>PC Field Map (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1162"/>
+        <location filename="../src/Window.cpp" line="1168"/>
         <source>Data DAT File (*.DAT)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1163"/>
+        <location filename="../src/Window.cpp" line="1169"/>
         <source>Textures MIM File (*.MIM)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1164"/>
+        <location filename="../src/Window.cpp" line="1170"/>
         <source>Uncompressed PC Field Map (*.dec)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1176"/>
+        <location filename="../src/Window.cpp" line="1182"/>
         <source>Export the current file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1199"/>
+        <location filename="../src/Window.cpp" line="1205"/>
         <source>Archive is inaccessible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1200"/>
+        <location filename="../src/Window.cpp" line="1206"/>
         <source>Error reopening file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1201"/>
+        <location filename="../src/Window.cpp" line="1207"/>
         <source>Unable to create the new file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1202"/>
+        <location filename="../src/Window.cpp" line="1208"/>
         <source>Not yet implemented!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1218"/>
+        <location filename="../src/Window.cpp" line="1224"/>
         <source>Export...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1248"/>
+        <location filename="../src/Window.cpp" line="1254"/>
         <source>An error occured when exporting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1267"/>
+        <location filename="../src/Window.cpp" line="1273"/>
         <source>Import...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1276"/>
+        <location filename="../src/Window.cpp" line="1282"/>
         <source>An error occurred when importing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1303"/>
+        <location filename="../src/Window.cpp" line="1309"/>
         <source>PS Field Map (*.DAT)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1312"/>
+        <location filename="../src/Window.cpp" line="1318"/>
         <source>Import a file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1367"/>
+        <location filename="../src/Window.cpp" line="1373"/>
         <source>Final Fantasy VII couldn&apos;t be launched
 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1483"/>
-        <location filename="../src/Window.cpp" line="1561"/>
+        <location filename="../src/Window.cpp" line="1489"/>
+        <location filename="../src/Window.cpp" line="1567"/>
         <source>Opening error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1483"/>
+        <location filename="../src/Window.cpp" line="1489"/>
         <source>Can not open encounters!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1561"/>
+        <location filename="../src/Window.cpp" line="1567"/>
         <source>Can not open miscellaneous informations!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1572"/>
+        <location filename="../src/Window.cpp" line="1578"/>
         <source>Go back to field map editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1592"/>
+        <location filename="../src/Window.cpp" line="1598"/>
         <source>Applying...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8355,12 +8355,12 @@ scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="114"/>
+        <location filename="../src/main.cpp" line="112"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="115"/>
+        <location filename="../src/main.cpp" line="113"/>
         <source>The file &apos;var.cfg&apos; could not be loaded.
 Make sure it is valid or delete it.</source>
         <translation type="unfinished"></translation>

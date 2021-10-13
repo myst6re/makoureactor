@@ -52,7 +52,7 @@ Search::Search(Window *mainWindow) :
 	new QShortcut(QKeySequence::FindPrevious, this, SLOT(findPrev()), nullptr, Qt::ApplicationShortcut);
 
 	// buttonNext.width == buttonPrev.width
-	QPushButton *largerButton = (buttonWidths.constEnd() - 1).value();
+	QPushButton *largerButton = buttonWidths.last();
 	for (QPushButton *button : buttons) {
 		button->setFixedSize(largerButton->sizeHint());
 	}

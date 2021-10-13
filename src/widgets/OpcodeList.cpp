@@ -25,10 +25,16 @@ OpcodeList::OpcodeList(QWidget *parent) :
     QTreeWidget(parent), field(nullptr), grpScript(nullptr), script(nullptr), errorLine(-1),
     isInit(false), _treeEnabled(true)
 {
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
+#else
+	qreal scale = 1.0;
+#endif
+	
 	setColumnCount(1);
 	setHeaderLabels(QStringList(tr("Action")));
 	setAutoScroll(false);
-	setIconSize(QSize(32,11));
+	setIconSize(QSize(int(scale * 32), int(scale * 11)));
 	setAlternatingRowColors(true);
 	setExpandsOnDoubleClick(false);
 	setContextMenuPolicy(Qt::CustomContextMenu);
@@ -137,7 +143,7 @@ OpcodeList::OpcodeList(QWidget *parent) :
 	helpLayout->setContentsMargins(QMargins());
 	
 	_toolBar = new QToolBar(tr("&Script editor"));
-	_toolBar->setIconSize(QSize(14, 14));
+	_toolBar->setIconSize(QSize(int(scale * 14), int(scale * 14)));
 	_toolBar->setFloatable(false);
 	_toolBar->setAllowedAreas(Qt::NoToolBarArea);
 	_toolBar->setMovable(false);
