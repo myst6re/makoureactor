@@ -39,14 +39,8 @@ jobs:
           win_arch: "x64"
           qt_arch: win64_msvc2019_64
           cmake_extra_args: '-DZLIB_ROOT=C:/zlib'
-        - os: windows-latest
-          qt: 5.15.2
-          package_suffix: 'win32'
-          win_arch: "amd64_x86"
-          qt_arch: win32_mingw81
-          qt_tools: 'desktop,tools_ninja,qt.tools.ninja tools_mingw,qt.tools.win32_mingw810'
     env:
-      qt_installation_path: ${{ github.workspace }}
+      qt_installation_path: ${{ github.workspace }}/Qt
       zlib_path: ${{ github.workspace }}/../zlib-git
       zlib_build_path: ${{ github.workspace }}/../build-zlib-git
       zlib_installation_path: C:/zlib
@@ -67,7 +61,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.qt_installation_path }}
-        key: ${{ runner.os }}${{ matrix.win_arch }}-qt-${{ matrix.qt }}-${{ env.NINJA_VERSION }}
+        key: ${{ runner.os }}${{ matrix.win_arch }}-qt-${{ matrix.qt }}
 
     - name: Env Script (Windows)
       uses: ilammy/msvc-dev-cmd@v1
@@ -79,20 +73,21 @@ jobs:
       uses: jurplel/install-qt-action@v2.14.0
       with:
        aqtversion: ${{ matrix.aqt_version }}
-       dir: ${{ env.qt_installation_path }}
+       dir: ${{ env.qt_installation_path }}/..
        arch: ${{ matrix.qt_arch }}
        version: ${{ matrix.qt }}
-       #cached: ${{ steps.cache-qt.outputs.cache-hit }}
+       cached: ${{ steps.cache-qt.outputs.cache-hit }}
        tools: ${{ matrix.qt_tools }}
        modules: ${{ matrix.qt_modules }}
 
     - name: Configure env
       shell: bash
       run: |
-        echo "$IQTA_TOOLS/Ninja" >> $GITHUB_PATH
         QT_MAJOR_VERSION=$(echo "${{ matrix.qt }}" | sed -E 's/^([0-9]+)\..*/\1/')
+        QT_DIR=$(eval 'echo $Qt'"$QT_MAJOR_VERSION"'_DIR')
+        echo "$IQTA_TOOLS/Ninja" >> $GITHUB_PATH
         echo "QT_MAJOR_VERSION=$QT_MAJOR_VERSION" >> $GITHUB_ENV
-        echo "QT_DIR=$(eval 'echo $Qt'"$QT_MAJOR_VERSION"'_DIR')" >> $GITHUB_ENV
+        echo "QT_DIR=$QT_DIR" >> $GITHUB_ENV
 
     - name: Cache Zlib
       id: cache-zlib
@@ -121,7 +116,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.ff7tk_installation_path }}
-        key: ${{ runner.os }}${{ matrix.win_arch }}-${{ matrix.qt }}-ff7tk-utils-formats-${{ hashFiles('ff7tk-HEAD') }}
+        key: ${{ runner.os }}${{ matrix.win_arch }}-${{ matrix.qt }}-${{ matrix.qt_arch }}-ff7tk-utils-formats-${{ hashFiles('ff7tk-HEAD') }}
 
     - name: Build ff7tk
       if: steps.cache-ff7tk.outputs.cache-hit != 'true'

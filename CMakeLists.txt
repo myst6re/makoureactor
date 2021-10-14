@@ -573,45 +573,25 @@ if(APPLE OR WIN32)
 endif()
 
 if(APPLE)
-    set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app")
-elseif(WIN32)
-    set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/win32-deploy")
-    install(DIRECTORY DESTINATION "${DEPLOY_TEMP}")
-    install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${DEPLOY_TEMP}")
-    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.20.0")
-        cmake_path(SET FF7TK_BIN_DIR "${ff7tk_DIR}/../../../bin")
-    endif()
-    if(MINGW)
-        set(FF7TK_DEPENDS
-            "${FF7TK_BIN_DIR}/libff7tkFormats.dll"
-            "${FF7TK_BIN_DIR}/libff7tkUtils.dll"
-        )
-    else()
-        set(FF7TK_DEPENDS
-            "${FF7TK_BIN_DIR}/ff7tkFormats.dll"
-            "${FF7TK_BIN_DIR}/ff7tkUtils.dll"
-        )
-    endif()
-    install(FILES ${FF7TK_DEPENDS} DESTINATION "${DEPLOY_TEMP}")
-endif()
-
-add_subdirectory(deploy)
-add_subdirectory(lang)
-
-if(APPLE)
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
         set(CMAKE_INSTALL_PREFIX "/Applications" CACHE PATH "..." FORCE)
     endif()
     install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
     install(TARGETS ${CLI_TARGET} RUNTIME EXCLUDE_FROM_ALL)
 elseif(WIN32)
-    install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION ".")
-    install(CODE "file(REMOVE_RECURSE \"${DEPLOY_TEMP}\")")
+    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        # Force Program Files for x64 programs (CMake uses x86 by default)
+        set(CMAKE_INSTALL_PREFIX "$ENV{CSIDL_PROGRAM_FILES}/${PROJECT_NAME}")
+    endif()
+    install(TARGETS ${GUI_TARGET} ${CLI_TARGET} RUNTIME DESTINATION ".")
 else()
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/qt/images/logo-shinra.png DESTINATION share/icons/hicolor/256x256/apps RENAME Makou_Reactor.png)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/deploy/linux/Makou_Reactor.desktop DESTINATION share/applications)
     install(TARGETS ${GUI_TARGET} ${CLI_TARGET} RUNTIME)
 endif()
+
+add_subdirectory(lang)
+add_subdirectory(deploy)
 
 if(QT_VERSION_MAJOR GREATER_EQUAL 6)
     qt_finalize_executable(${GUI_TARGET})
@@ -627,6 +607,7 @@ else()
     set(CPACK_GENERATOR "TXZ")
 endif()
 
+set(CPACK_PACKAGE_NAME makoureactor)
 set(CPACK_SOURCE_IGNORE_FILES .git/* *.user *.yml *.github/*)
 set(CPACK_SOURCE_GENERATOR "ZIP;TGZ")
 

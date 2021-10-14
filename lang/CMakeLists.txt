@@ -21,26 +21,22 @@ set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 find_package(QT NAMES Qt5 Qt6 COMPONENTS LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS LinguistTools)
 
-set(TS_FILES
-    Makou_Reactor_fr.ts
-    Makou_Reactor_ja.ts
-)
+set(LANGS
+    fr
+    ja
+CACHE INTERNAL "")
+list(TRANSFORM LANGS REPLACE ".+" "${RELEASE_NAME}_\\0.ts" OUTPUT_VARIABLE TS_FILES)
 
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
 add_custom_target(translations ALL DEPENDS ${QM_FILES})
 
 if(APPLE)
-    set(QT_TRANSLATIONS_DIR "${_qt_dir}/translations")
-    set(QT_QM_FILES
-        "${QT_TRANSLATIONS_DIR}/qt_fr.qm"
-        "${QT_TRANSLATIONS_DIR}/qt_ja.qm"
-    )
-    install(FILES ${QM_FILES} DESTINATION "$<TARGET_FILE_DIR:${GUI_TARGET}>/../Resources/")
-    install(FILES ${QT_QM_FILES} DESTINATION "$<TARGET_FILE_DIR:${GUI_TARGET}>/../Resources/")
+    set(TRANSLATIONS_PATH ${PROJECT_NAME}.app/Contents/Resources CACHE INTERNAL "")
 elseif(WIN32)
-    install(FILES ${QM_FILES} DESTINATION "${DEPLOY_TEMP}")
+    set(TRANSLATIONS_PATH translations CACHE INTERNAL "")
 else()
-    install(FILES ${QM_FILES} DESTINATION share/makoureactor)
+    set(TRANSLATIONS_PATH share/makoureactor/translations CACHE INTERNAL "")
 endif()
 
+install(FILES ${QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")

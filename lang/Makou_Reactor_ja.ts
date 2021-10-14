@@ -7859,8 +7859,8 @@ Are you sure you want to continue?</source>
     </message>
     <message>
         <location filename="../src/Window.cpp" line="75"/>
-        <location filename="../src/Window.cpp" line="418"/>
-        <location filename="../src/Window.cpp" line="1575"/>
+        <location filename="../src/Window.cpp" line="422"/>
+        <location filename="../src/Window.cpp" line="1579"/>
         <source>Archive Mana&amp;ger...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7960,128 +7960,128 @@ Are you sure you want to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="127"/>
+        <location filename="../src/Window.cpp" line="131"/>
         <source>&amp;Configuration...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="136"/>
+        <location filename="../src/Window.cpp" line="140"/>
         <source>Main &amp;toolbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="141"/>
-        <location filename="../src/Window.cpp" line="492"/>
+        <location filename="../src/Window.cpp" line="145"/>
+        <location filename="../src/Window.cpp" line="496"/>
         <source>Open a file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="143"/>
-        <location filename="../src/Window.cpp" line="401"/>
+        <location filename="../src/Window.cpp" line="147"/>
+        <location filename="../src/Window.cpp" line="405"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="146"/>
+        <location filename="../src/Window.cpp" line="150"/>
         <source>Find</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="150"/>
+        <location filename="../src/Window.cpp" line="154"/>
         <source>Text editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="152"/>
+        <location filename="../src/Window.cpp" line="156"/>
         <source>Model loader editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="156"/>
+        <location filename="../src/Window.cpp" line="160"/>
         <source>Walkmesh editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="221"/>
-        <location filename="../src/Window.cpp" line="223"/>
+        <location filename="../src/Window.cpp" line="225"/>
+        <location filename="../src/Window.cpp" line="227"/>
         <source>&amp;?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="294"/>
+        <location filename="../src/Window.cpp" line="298"/>
         <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="297"/>
+        <location filename="../src/Window.cpp" line="301"/>
         <source>Map List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="300"/>
+        <location filename="../src/Window.cpp" line="304"/>
         <source>Background Preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="366"/>
+        <location filename="../src/Window.cpp" line="370"/>
         <source>Settings changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="367"/>
+        <location filename="../src/Window.cpp" line="371"/>
         <source>Restart the program for the settings to take effect.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="399"/>
+        <location filename="../src/Window.cpp" line="403"/>
         <source>
 
 Edited files:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="401"/>
+        <location filename="../src/Window.cpp" line="405"/>
         <source>Would you like to save changes of %1?%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="484"/>
+        <location filename="../src/Window.cpp" line="488"/>
         <source>Compatible Files (*.lgp *.DAT *.bin *.iso *.img)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="485"/>
+        <location filename="../src/Window.cpp" line="489"/>
         <source>Lgp Files (*.lgp)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="486"/>
-        <location filename="../src/Window.cpp" line="1030"/>
+        <location filename="../src/Window.cpp" line="490"/>
+        <location filename="../src/Window.cpp" line="1034"/>
         <source>DAT File (*.DAT)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="487"/>
+        <location filename="../src/Window.cpp" line="491"/>
         <source>PC field File (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="488"/>
+        <location filename="../src/Window.cpp" line="492"/>
         <source>Disc Image (*.bin *.iso *.img)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="540"/>
+        <location filename="../src/Window.cpp" line="544"/>
         <source>Select a folder containing the Final Fantasy VII field files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="548"/>
+        <location filename="../src/Window.cpp" line="552"/>
         <source>File Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="549"/>
+        <location filename="../src/Window.cpp" line="553"/>
         <source>What type of file to look for?
  - Playstation field files (&quot;EXAMPLE.DAT&quot;)
  - PC Field File (&quot;example&quot;)
@@ -8089,262 +8089,262 @@ Edited files:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="553"/>
+        <location filename="../src/Window.cpp" line="557"/>
         <source>PS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="554"/>
+        <location filename="../src/Window.cpp" line="558"/>
         <source>PC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="578"/>
-        <location filename="../src/Window.cpp" line="673"/>
-        <location filename="../src/Window.cpp" line="1085"/>
-        <location filename="../src/Window.cpp" line="1210"/>
-        <location filename="../src/Window.cpp" line="1254"/>
-        <location filename="../src/Window.cpp" line="1282"/>
-        <location filename="../src/Window.cpp" line="1338"/>
-        <location filename="../src/Window.cpp" line="1373"/>
+        <location filename="../src/Window.cpp" line="582"/>
+        <location filename="../src/Window.cpp" line="677"/>
+        <location filename="../src/Window.cpp" line="1089"/>
+        <location filename="../src/Window.cpp" line="1214"/>
+        <location filename="../src/Window.cpp" line="1258"/>
+        <location filename="../src/Window.cpp" line="1286"/>
+        <location filename="../src/Window.cpp" line="1342"/>
+        <location filename="../src/Window.cpp" line="1377"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="596"/>
+        <location filename="../src/Window.cpp" line="600"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="596"/>
+        <location filename="../src/Window.cpp" line="600"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="625"/>
+        <location filename="../src/Window.cpp" line="629"/>
         <source>Opening...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="644"/>
+        <location filename="../src/Window.cpp" line="648"/>
         <source>Nothing found!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="648"/>
+        <location filename="../src/Window.cpp" line="652"/>
         <source>The file already exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="651"/>
-        <location filename="../src/Window.cpp" line="1063"/>
+        <location filename="../src/Window.cpp" line="655"/>
+        <location filename="../src/Window.cpp" line="1067"/>
         <source>The file is inaccessible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="654"/>
-        <location filename="../src/Window.cpp" line="1066"/>
+        <location filename="../src/Window.cpp" line="658"/>
+        <location filename="../src/Window.cpp" line="1070"/>
         <source>Can not create temporary file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="657"/>
-        <location filename="../src/Window.cpp" line="1069"/>
+        <location filename="../src/Window.cpp" line="661"/>
+        <location filename="../src/Window.cpp" line="1073"/>
         <source>Unable to remove the file, check write permissions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="660"/>
+        <location filename="../src/Window.cpp" line="664"/>
         <source>Failed to rename the file, check write permissions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="663"/>
+        <location filename="../src/Window.cpp" line="667"/>
         <source>Failed to copy the file, check write permissions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="666"/>
+        <location filename="../src/Window.cpp" line="670"/>
         <source>Invalid file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="669"/>
+        <location filename="../src/Window.cpp" line="673"/>
         <source>This error should not appear, thank you for reporting it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="914"/>
-        <location filename="../src/Window.cpp" line="1563"/>
+        <location filename="../src/Window.cpp" line="918"/>
+        <location filename="../src/Window.cpp" line="1567"/>
         <source>Author: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1006"/>
+        <location filename="../src/Window.cpp" line="1010"/>
         <source>Compilation Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1006"/>
+        <location filename="../src/Window.cpp" line="1010"/>
         <source>Error Compiling Scripts:
 scene %1 (%2), group %3 (%4), script %5, line %6: %7</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1021"/>
+        <location filename="../src/Window.cpp" line="1025"/>
         <source>Save Directory As</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1028"/>
+        <location filename="../src/Window.cpp" line="1032"/>
         <source>Lgp File (*.lgp)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1032"/>
+        <location filename="../src/Window.cpp" line="1036"/>
         <source>Iso File (*.iso *.bin *.img)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1036"/>
+        <location filename="../src/Window.cpp" line="1040"/>
         <source>Save As</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1043"/>
+        <location filename="../src/Window.cpp" line="1047"/>
         <source>Saving...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1060"/>
+        <location filename="../src/Window.cpp" line="1064"/>
         <source>No maps found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1072"/>
+        <location filename="../src/Window.cpp" line="1076"/>
         <source>Unable to rename the file, check write permissions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1075"/>
+        <location filename="../src/Window.cpp" line="1079"/>
         <source>Unable to copy the file, check write permissions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1078"/>
+        <location filename="../src/Window.cpp" line="1082"/>
         <source>Invalid archive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1081"/>
+        <location filename="../src/Window.cpp" line="1085"/>
         <source>This feature is not complete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1167"/>
-        <location filename="../src/Window.cpp" line="1308"/>
+        <location filename="../src/Window.cpp" line="1171"/>
+        <location filename="../src/Window.cpp" line="1312"/>
         <source>PC Field Map (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1168"/>
+        <location filename="../src/Window.cpp" line="1172"/>
         <source>Data DAT File (*.DAT)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1169"/>
+        <location filename="../src/Window.cpp" line="1173"/>
         <source>Textures MIM File (*.MIM)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1170"/>
+        <location filename="../src/Window.cpp" line="1174"/>
         <source>Uncompressed PC Field Map (*.dec)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1182"/>
+        <location filename="../src/Window.cpp" line="1186"/>
         <source>Export the current file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1205"/>
+        <location filename="../src/Window.cpp" line="1209"/>
         <source>Archive is inaccessible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1206"/>
+        <location filename="../src/Window.cpp" line="1210"/>
         <source>Error reopening file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1207"/>
+        <location filename="../src/Window.cpp" line="1211"/>
         <source>Unable to create the new file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1208"/>
+        <location filename="../src/Window.cpp" line="1212"/>
         <source>Not yet implemented!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1224"/>
+        <location filename="../src/Window.cpp" line="1228"/>
         <source>Export...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1254"/>
+        <location filename="../src/Window.cpp" line="1258"/>
         <source>An error occured when exporting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1273"/>
+        <location filename="../src/Window.cpp" line="1277"/>
         <source>Import...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1282"/>
+        <location filename="../src/Window.cpp" line="1286"/>
         <source>An error occurred when importing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1309"/>
+        <location filename="../src/Window.cpp" line="1313"/>
         <source>PS Field Map (*.DAT)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1318"/>
+        <location filename="../src/Window.cpp" line="1322"/>
         <source>Import a file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1373"/>
+        <location filename="../src/Window.cpp" line="1377"/>
         <source>Final Fantasy VII couldn&apos;t be launched
 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1489"/>
-        <location filename="../src/Window.cpp" line="1567"/>
+        <location filename="../src/Window.cpp" line="1493"/>
+        <location filename="../src/Window.cpp" line="1571"/>
         <source>Opening error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1489"/>
+        <location filename="../src/Window.cpp" line="1493"/>
         <source>Can not open encounters!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1567"/>
+        <location filename="../src/Window.cpp" line="1571"/>
         <source>Can not open miscellaneous informations!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1578"/>
+        <location filename="../src/Window.cpp" line="1582"/>
         <source>Go back to field map editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Window.cpp" line="1598"/>
+        <location filename="../src/Window.cpp" line="1602"/>
         <source>Applying...</source>
         <translation type="unfinished"></translation>
     </message>
