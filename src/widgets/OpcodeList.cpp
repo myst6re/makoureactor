@@ -427,7 +427,7 @@ void OpcodeList::fill()
 		QList<QTreeWidgetItem *> items;
 		QTreeWidgetItem *parentItem = nullptr;
 		quint16 opcodeID = 0;
-		QPixmap fontPixmap(":/images/chiffres.png");
+		QPixmap fontPixmap(":/images/numbers.png");
 		QColor blue = Data::color(Data::ColorBlueForeground),
 		       orange = Data::color(Data::ColorOrangeForeground),
 		       green = Data::color(Data::ColorGreenForeground),
