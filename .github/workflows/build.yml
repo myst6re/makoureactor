@@ -5,6 +5,7 @@ on:
     branches: [ master, develop ]
   pull_request:
     branches: [ master, develop ]
+  create: null
 
 jobs:
   main_build:
@@ -52,7 +53,6 @@ jobs:
       makoureactor_appbundle_path: ${{ github.workspace }}/../appbundle-makoureactor
       CMAKE_GENERATOR: Ninja
       CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
-      packageGlob: makoureactor-continuous-*.*
     steps:
     - uses: actions/checkout@v2
 
@@ -163,25 +163,41 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
-        path: ${{ github.workspace }}/${{ env.packageGlob }}
+        path: ${{ github.workspace }}/makoureactor-continuous-*.*
 
-  release_assets:
-    name: Release
+  pre_release_assets:
+    name: Pre-Release
     needs: main_Build
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/develop'
+    concurrency: pre-release-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
     - name: Download Files
       uses: actions/download-artifact@v2
 
-    - name: Move Files
-      run: mv artifact/* ${{ github.workspace }}
+    - name: Deploy Package
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+       repo_token: "${{ secrets.GITHUB_TOKEN }}"
+       automatic_release_tag: "continuous"
+       prerelease: true
+       title: "Continuous Build"
+       files: artifact/*
+
+  release_assets:
+    name: Release
+    needs: main_Build
+    if: github.event.ref_type == 'tag'
+    concurrency: release-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Files
+      uses: actions/download-artifact@v2
 
     - name: Deploy Package
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
-       repo_token: "${{ secrets.DEPLOYTOKEN }}"
-       automatic_release_tag: "continuous"
+       repo_token: "${{ secrets.GITHUB_TOKEN }}"
        prerelease: false
-       title: "Continuous Build"
-       files: ${{ env.packageGlob }}
+       title: ${{ github.event.ref }}
+       files: artifact/*
