@@ -22,7 +22,6 @@
 FieldList::FieldList(QWidget *parent) :
       QTreeWidget(parent), _fieldArchive(nullptr)
 {
-	qreal scale = qApp->desktop()->logicalDpiX() / 96.0;
 	QFont font;
 	font.setPointSize(8);
 
@@ -65,8 +64,14 @@ FieldList::FieldList(QWidget *parent) :
 	this->addAction(add_A);
 	this->addAction(del_A);
 
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
+#else
+	qreal scale = 1.0;
+#endif
+
 	_toolBar = new QToolBar(tr("&Field List Toolbar"));
-	_toolBar->setIconSize(QSize(int(14.0 * scale), int(14.0 * scale)));
+	_toolBar->setIconSize(QSize(int(scale * 14), int(scale * 14)));
 	_toolBar->addAction(add_A);
 	add_A->setStatusTip(tr("Add a field"));
 	_toolBar->addAction(del_A);
@@ -218,7 +223,7 @@ void FieldList::renameOK(QTreeWidgetItem *item, int column)
 	int fieldID = currentMapId();
 
 	if (fieldID >= 0) {
-		Field *f = _fieldArchive->field(quint32(fieldID));
+		Field *f = _fieldArchive->field(fieldID);
 		if (f != nullptr) {
 			f->setName(newName);
 			InfFile *inf = f->inf();

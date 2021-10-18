@@ -32,6 +32,15 @@ QString Config::programResourceDir()
 #endif
 }
 
+QString Config::programLanguagesDir()
+{
+#if defined(Q_OS_MAC) or defined(Q_OS_UNIX)
+	return Config::programResourceDir();
+#else
+	return qApp->applicationDirPath() + "/languages";
+#endif
+}
+
 void Config::set() {
 	if (!settings) {
 #ifdef Q_OS_WIN

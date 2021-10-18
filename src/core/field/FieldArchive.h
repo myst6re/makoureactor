@@ -61,8 +61,8 @@ struct SearchFieldQuery : public SearchQuery
 
 struct SearchTextQuery : public SearchQuery
 {
-	QRegExp text;
-	explicit SearchTextQuery(QRegExp text) :
+	QRegularExpression text;
+	explicit SearchTextQuery(QRegularExpression text) :
 		text(text) {}
 };
 
@@ -87,9 +87,10 @@ struct SearchInScript : public SearchIn
 
 struct SearchInText : public SearchIn
 {
-	int &textID, &from, &size, &index;
+	int &textID;
+	qsizetype &from, &size, &index;
 
-	SearchInText(int &textID, int &from, int &size, int &index) :
+	SearchInText(int &textID, qsizetype &from, qsizetype &size, qsizetype &index) :
 		textID(textID), from(from), size(size), index(index)
 	{}
 
@@ -184,15 +185,15 @@ public:
 	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchExec(quint8 group, quint8 script, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchMapJump(int _field, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchTextInScripts(const QRegExp &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchText(const QRegExp &text, int &mapID, int &textID, int &from, int &size, Sorting sorting, SearchScope scope);
+	bool searchTextInScripts(const QRegularExpression &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchText(const QRegularExpression &text, int &mapID, int &textID, qsizetype &from, qsizetype &size, Sorting sorting, SearchScope scope);
 	bool searchOpcodeP(int opcode, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchExecP(quint8 group, quint8 script, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchMapJumpP(int _field, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchTextInScriptsP(const QRegExp &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchTextP(const QRegExp &text, int &mapID, int &textID, int &from, int &index, int &size, Sorting sorting, SearchScope scope);
-	bool replaceText(const QRegExp &search, const QString &after, int mapID, int textID, int from);
+	bool searchTextInScriptsP(const QRegularExpression &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchTextP(const QRegularExpression &text, int &mapID, int &textID, qsizetype &from, qsizetype &index, qsizetype &size, Sorting sorting, SearchScope scope);
+	bool replaceText(const QRegularExpression &search, const QString &after, int mapID, int textID, int from);
 
 	bool compileScripts(int &mapID, int &groupID, int &scriptID, int &opcodeID, QString &errorStr);
 	void removeBattles();

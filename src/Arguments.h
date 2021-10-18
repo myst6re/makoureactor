@@ -31,7 +31,7 @@ class HelpArguments
 {
 public:
 	HelpArguments();
-	void showHelp(int exitCode = EXIT_SUCCESS);
+	[[ noreturn ]] void showHelp(int exitCode = EXIT_SUCCESS);
 	bool help() const;
 protected:
 	QCommandLineParser _parser;

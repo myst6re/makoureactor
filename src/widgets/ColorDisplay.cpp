@@ -29,11 +29,8 @@ QSize ColorDisplay::sizeHint() const
 
 QSize ColorDisplay::minimumSizeHint() const
 {
-#if (QT_VERSION < QT_VERSION_CHECK(5, 5, 0))
-	const int scale = 1;
-#else
-	const int scale = devicePixelRatio();
-#endif
+
+	const qreal scale = devicePixelRatio();
 	int colorCount = qMax(1, _colors.size());
 	return QSize((COLOR_DISPLAY_MIN_CELL_SIZE * scale
 	             + COLOR_DISPLAY_BORDER_WIDTH) * colorCount
@@ -142,7 +139,7 @@ int ColorDisplay::colorId(const QPoint &pos) const
 	            _colors.size() - 1);
 }
 
-void ColorDisplay::enterEvent(QEvent *event)
+void ColorDisplay::enterEvent(QEnterEvent *event)
 {
 	Q_UNUSED(event)
 	_hover = true;

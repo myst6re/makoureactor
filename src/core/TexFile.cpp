@@ -212,9 +212,9 @@ void TexFile::debug()
 	f.write(QString("unknown7= %1 | unknown8= %2 | unknown9= %3 | unknown10= %4 | unknown11= %5\n")
 	            .arg(h.unknown7).arg(h.unknown8).arg(h.unknown9).arg(h.unknown10).arg(h.unknown11).toLatin1());
 
-	for(int i=0 ; i<_colorTables.size() ; ++i) {
+	for (int i=0 ; i<_colorTables.size() ; ++i) {
 		f.write(QString("Pal %1 ").arg(i).toLatin1());
-		foreach(const QRgb &color, _colorTables.at(i)) {
+		for (const QRgb &color : _colorTables.at(i)) {
 			f.write(QString("(r=%1, g=%2, b=%3, a=%4) ")
 			            .arg(qRed(color)).arg(qGreen(color)).arg(qBlue(color)).arg(qAlpha(color))
 			            .toLatin1());
@@ -222,9 +222,9 @@ void TexFile::debug()
 		f.write("\n");
 	}
 
-	for(int i=0 ; i<colorKeyArray.size() ; ++i) {
+	for (int i=0 ; i<colorKeyArray.size() ; ++i) {
 		f.write(QString("%1, ")
-		            .arg((quint8)colorKeyArray.at(i)).toLatin1());
+		            .arg(quint8(colorKeyArray.at(i))).toLatin1());
 	}
 
 	f.close();

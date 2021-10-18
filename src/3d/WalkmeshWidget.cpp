@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "WalkmeshWidget.h"
 #include "FieldModel.h"
+#include "qt/compat.h"
 
 WalkmeshWidget::WalkmeshWidget(QWidget *parent)
     : QOpenGLWidget(parent), distance(0.0),
@@ -338,7 +339,7 @@ void WalkmeshWidget::paintGL()
 
 			if (!modelPositions.isEmpty()) {
 				int previousModelId = -1;
-				QMapIterator<int, FF7Position> i(modelPositions);
+				QMultiMapIterator<int, FF7Position> i(modelPositions);
 				while (i.hasNext()) {
 					i.next();
 					const int modelId = i.key();

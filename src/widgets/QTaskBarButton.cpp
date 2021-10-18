@@ -20,15 +20,15 @@
 #ifdef QTASKBAR_WIN
 
 QTaskBarButton::QTaskBarButton(QWidget *mainWindow) :
-	QObject(mainWindow), pITask(0), _minimum(0), _maximum(100),
-	_value(0), _state(Invisible)
+      QObject(mainWindow), pITask(0), _minimum(0), _maximum(100),
+      _value(0), _state(Invisible)
 {
 	_winId = mainWindow->window()->winId();
 
 	CoInitialize(nullptr);
 	HRESULT hRes = CoCreateInstance(CLSID_TaskbarList,
-									nullptr, CLSCTX_INPROC_SERVER,
-									IID_ITaskbarList3, (LPVOID*)&pITask);
+	                                nullptr, CLSCTX_INPROC_SERVER,
+	                                IID_ITaskbarList3, (LPVOID*)&pITask);
 	if (FAILED(hRes)) {
 		pITask = 0;
 		CoUninitialize();
@@ -49,13 +49,19 @@ QTaskBarButton::~QTaskBarButton()
 
 void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
 {
-	if (!pITask)	return;
+	if (!pITask) {
+		return;
+	}
 
 	if (pixmap.isNull()) {
-		pITask->SetOverlayIcon(_winId, nullptr, nullptr);
+		pITask->SetOverlayIcon(HWND(_winId), nullptr, nullptr);
 	} else {
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 		const HICON icon = pixmap.toWinHICON();
-		pITask->SetOverlayIcon(_winId, icon, (wchar_t *)text.utf16());
+#else
+		const HICON icon = pixmap.toImage().toHICON();
+#endif
+		pITask->SetOverlayIcon(HWND(_winId), icon, (wchar_t *)text.utf16());
 		DestroyIcon(icon);
 	}
 }
@@ -78,21 +84,23 @@ void QTaskBarButton::setState(State state)
 		break;
 	}
 
-	if (S_OK == pITask->SetProgressState(_winId, flag)) {
+	if (S_OK == pITask->SetProgressState(HWND(_winId), flag)) {
 		_state = state;
 	}
 }
 
 void QTaskBarButton::setValue(int value)
 {
-	if (!pITask)	return;
+	if (!pITask) {
+		return;
+	}
 
 	int completed = value - _minimum, total = _maximum - _minimum;
 	if (completed < 0 || total <= 0) {
 		return;
 	}
 
-	if (S_OK == pITask->SetProgressValue(_winId, completed, total)) {
+	if (S_OK == pITask->SetProgressValue(HWND(_winId), completed, total)) {
 		_value = value;
 		emit valueChanged(value);
 	}
@@ -101,8 +109,8 @@ void QTaskBarButton::setValue(int value)
 #elif defined(QTASKBAR_WIN_QT5)
 
 QTaskBarButton::QTaskBarButton(QWidget *mainWindow) :
-	_taskbarButton(mainWindow), _minimum(0), _maximum(100),
-    _value(0), _state(Invisible)
+      _taskbarButton(mainWindow), _minimum(0), _maximum(100),
+      _value(0), _state(Invisible)
 {
 	_taskbarButton.setWindow(mainWindow->windowHandle());
 	QWinTaskbarProgress *progress = _taskbarButton.progress();
@@ -165,8 +173,8 @@ void QTaskBarButton::setValue(int value)
 #else
 
 QTaskBarButton::QTaskBarButton(QWidget *parent) :
-	QObject(parent), _minimum(0), _maximum(100),
-    _value(0), _state(Invisible)
+      QObject(parent), _minimum(0), _maximum(100),
+      _value(0), _state(Invisible)
 {
 }
 

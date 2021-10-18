@@ -85,7 +85,7 @@ PsfTags &PsfTags::setLengthS(quint32 seconds)
 PsfTags &PsfTags::setReplayGain(const QString &type, double gain_db, double peak)
 {
 	return setCustom(QString("replaygain_%1_gain").arg(type), QString("%1%2")
-	                                                              .arg(gain_db < 0 ? "-" : "+")
+	                                                              .arg(gain_db < 0 ? QLatin1String("-") : QLatin1String("+"))
 	                                                              .arg(gain_db))
 	    .setCustom(QString("replaygain_%1_peak").arg(type), QString::number(peak));
 }
@@ -119,7 +119,7 @@ PsfFile PsfFile::fromAkao(const QByteArray &akaoData, const PsfTags &tags)
 
 bool PsfFile::open(const QByteArray &data)
 {
-	if (data.size() < 16 || data.left(3) != QString("PSF")) {
+	if (data.size() < 16 || QString::fromLatin1(data.constData(), 3) != QLatin1String("PSF")) {
 		qWarning() << "PsfFile::open" << "wrong header";
 		return false;
 	}
@@ -138,7 +138,7 @@ bool PsfFile::open(const QByteArray &data)
 	_special = data.mid(16, sizes[0]);
 	_data = GZIP::decompressNoHeader(data.constData() + 16 + sizes[0], sizes[1]);
 
-	return _tags.open(QString(data.mid(16 + sizes[0] + sizes[1])));
+	return _tags.open(QString::fromLatin1(data.constData() + 16 + sizes[0] + sizes[1]));
 }
 
 QByteArray PsfFile::save() const

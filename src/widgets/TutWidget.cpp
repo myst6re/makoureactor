@@ -303,9 +303,10 @@ void TutWidget::saveText(QListWidgetItem *item)
 		}
 	} else {
 		QString userText = akaoIDList->lineEdit()->text();
-		QRegExp regExp("\\d+");
-		if (regExp.indexIn(userText) != -1) {
-			userText = regExp.capturedTexts().first();
+		QRegularExpression regExp("\\d+");
+		QRegularExpressionMatch match = regExp.match(userText);
+		if (match.hasMatch()) {
+			userText = match.captured();
 			quint16 akaoID = quint16(userText.toInt());
 
 			if (tut->akaoID(id) != akaoID) {

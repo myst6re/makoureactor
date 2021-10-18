@@ -52,7 +52,7 @@ Search::Search(Window *mainWindow) :
 	new QShortcut(QKeySequence::FindPrevious, this, SLOT(findPrev()), nullptr, Qt::ApplicationShortcut);
 
 	// buttonNext.width == buttonPrev.width
-	QPushButton *largerButton = (buttonWidths.constEnd() - 1).value();
+	QPushButton *largerButton = buttonWidths.last();
 	for (QPushButton *button : buttons) {
 		button->setFixedSize(largerButton->sizeHint());
 	}
@@ -397,7 +397,7 @@ void Search::updateRunSearch()
 {
 	executionGroup->clear();
 	if (fieldArchive) {
-		Field *f = fieldArchive->field(quint32(mainWindow()->fieldList()->currentMapId()));
+		Field *f = fieldArchive->field(mainWindow()->fieldList()->currentMapId());
 		if (f) {
 			int i=0;
 			for (const GrpScript *grp : f->scriptsAndTexts()->grpScripts())
@@ -440,7 +440,7 @@ void Search::updateOpcode2(int opIndex)
 			QString str = Opcode::akao(quint8(i), &ok);
 			if (ok) {
 				opcode2->addItem(QString("%1 - %2").arg(i, 2, 16, QChar('0')).toUpper()
-				                     .arg(str.remove(QRegExp("\\[.*$"))), i);
+				                     .arg(str.remove(QRegularExpression("\\[.*$"))), i);
 			} else {
 				unknownItems.append(quint8(i));
 			}
@@ -523,8 +523,8 @@ void Search::findNext()
 
 	setSearchValues();
 
-	int mapID, grpScriptID, scriptID, opcodeID,
-	    textID, from;
+	int mapID, grpScriptID, scriptID, opcodeID, textID;
+	qsizetype from;
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
 	FieldArchive::SearchScope scope = searchScope();
 
@@ -558,7 +558,7 @@ void Search::findNext()
 			f = true;
 		}
 	} else { // texts page
-		int size;
+		qsizetype size;
 		if (findNextText(sorting, scope,
 		                 mapID, textID, from, size)) {
 			emit foundText(mapID, textID, from, size);
@@ -616,10 +616,10 @@ bool Search::findNextScript(FieldArchive::Sorting sorting, FieldArchive::SearchS
 }
 
 bool Search::findNextText(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
-					  int &mapID, int &textID, int &from, int &size)
+                          int &mapID, int &textID, qsizetype &from, qsizetype &size)
 {
 	return fieldArchive->searchText(text, mapID, textID, from,
-									size, sorting, scope);
+	                                size, sorting, scope);
 }
 
 void Search::findPrev()
@@ -632,8 +632,8 @@ void Search::findPrev()
 	buttonPrev->setDefault(true);
 	returnToBegin->hide();
 
-	int mapID, grpScriptID, scriptID, opcodeID,
-			textID, from;
+	int mapID, grpScriptID, scriptID, opcodeID, textID;
+	qsizetype from;
 	FieldArchive::Sorting sorting = mainWindow()->getFieldSorting();
 	FieldArchive::SearchScope scope = searchScope();
 
@@ -676,7 +676,7 @@ void Search::findPrev()
 			f = true;
 		}
 	} else { // texts page
-		int index = 0, size = 0;
+		qsizetype index = 0, size = 0;
 		if (findPrevText(sorting, scope, mapID, textID,
 		                 from, index, size)) {
 			emit foundText(mapID, textID, index, size);
@@ -730,7 +730,7 @@ bool Search::findPrevScript(FieldArchive::Sorting sorting, FieldArchive::SearchS
 }
 
 bool Search::findPrevText(FieldArchive::Sorting sorting, FieldArchive::SearchScope scope,
-                          int &mapID, int &textID, int &index, int &from, int &size)
+                          int &mapID, int &textID, qsizetype &index, qsizetype &from, qsizetype &size)
 {
 	--from;
 
@@ -776,14 +776,15 @@ void Search::findAll()
 			searchAllDialog->addResultOpcode(mapID, grpScriptID, scriptID, opcodeID);
 		}
 	} else { // texts page
-		int textID = -1, from = -1;
+		int textID = -1;
+		qsizetype from = -1;
 
 		if (scope == FieldArchive::TextScope && mainWindow()->textWidget()) {
 			textID = mainWindow()->textWidget()->currentTextId();
 		}
 
 		searchAllDialog->setTextSearch();
-		int size = 0;
+		qsizetype size = 0;
 		while (findNextText(sorting, scope,
 						 mapID, textID, ++from, size)) {
 			QCoreApplication::processEvents();
@@ -799,11 +800,10 @@ void Search::findAll()
 	setEnabled(true);
 }
 
-QRegExp Search::buildRegExp(const QString &lineEditText, bool caseSensitive, bool useRegexp)
+QRegularExpression Search::buildRegExp(const QString &lineEditText, bool caseSensitive, bool useRegexp)
 {
-	return QRegExp(lineEditText,
-				   caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive,
-				   useRegexp ? QRegExp::RegExp2 : QRegExp::FixedString);
+	return QRegularExpression(useRegexp ? lineEditText : QRegularExpression::escape(lineEditText),
+	                          caseSensitive ? QRegularExpression::PatternOptions() :QRegularExpression::CaseInsensitiveOption);
 }
 
 void Search::setSearchValues()
@@ -919,7 +919,8 @@ void Search::replaceAll()
 	returnToBegin->hide();
 
 	QString after = replace2->lineEdit()->text();
-	int mapID = -1, textID = -1, from = -1, size = 0;
+	int mapID = -1, textID = -1;
+	qsizetype from = -1, size = 0;
 
 	if (scope == FieldArchive::FieldScope) {
 		mapID = mainWindow()->fieldList()->currentMapId();

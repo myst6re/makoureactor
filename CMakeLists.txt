@@ -52,6 +52,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_compile_definitions(
     QT_DISABLE_DEPRECATED_BEFORE=0x050F00
+    #QT_RESTRICTED_CAST_FROM_ASCII
     MAKOU_REACTOR_NAME="${PROJECT_NAME}"
     MAKOU_REACTOR_DESCRIPTION="${PROJECT_DESCRIPTION}"
     MAKOU_REACTOR_COMPANY="myst6re"
@@ -63,19 +64,22 @@ add_compile_definitions(
 )
 
 find_package(QT NAMES Qt5 Qt6 COMPONENTS Widgets OpenGL REQUIRED)
-find_package(QT NAMES Qt5 Qt6 COMPONENTS Zlib QUIET)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets OpenGL REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Zlib QUIET)
 find_package(ff7tk COMPONENTS ff7tkFormats ff7tkUtils REQUIRED)
+find_package(ZLIB REQUIRED)
 
-if(NOT Qt${QT_VERSION_MAJOR}Zlib_FOUND)
-    find_package(ZLIB REQUIRED)
-    set(ZLIB_LIBRARY ZLIB::ZLIB)
-else()
-    set(ZLIB_LIBRARY Qt::Zlib)
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    find_package(QT NAMES Qt6 COMPONENTS OpenGLWidgets REQUIRED)
+    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS OpenGLWidgets REQUIRED)
 endif()
 
 set(PROJECT_SOURCES
+    "src/3d/FieldModel.cpp"
+    "src/3d/FieldModel.h"
+    "src/3d/Renderer.cpp"
+    "src/3d/Renderer.h"
+    "src/3d/WalkmeshWidget.cpp"
+    "src/3d/WalkmeshWidget.h"
     "src/Data.cpp"
     "src/Data.h"
     "src/FieldModelThread.cpp"
@@ -100,8 +104,6 @@ set(PROJECT_SOURCES
     "src/core/IsoArchiveFF7.h"
     "src/core/PsfFile.cpp"
     "src/core/PsfFile.h"
-    "src/core/Renderer.cpp"
-    "src/core/Renderer.h"
     "src/core/TexFile.cpp"
     "src/core/TexFile.h"
     "src/core/TextureFile.cpp"
@@ -224,8 +226,8 @@ set(PROJECT_SOURCES
     "src/core/field/TutFileStandard.h"
     "src/core/world/TblFile.cpp"
     "src/core/world/TblFile.h"
-    "src/include/shobjidl.h"
     "src/main.cpp"
+    "src/qt/compat.h"
     "src/txt.cpp"
     "src/widgets/AboutDialog.cpp"
     "src/widgets/AboutDialog.h"
@@ -251,8 +253,6 @@ set(PROJECT_SOURCES
     "src/widgets/EncounterWidget.h"
     "src/widgets/FieldList.cpp"
     "src/widgets/FieldList.h"
-    "src/widgets/FieldModel.cpp"
-    "src/widgets/FieldModel.h"
     "src/widgets/FontDisplay.cpp"
     "src/widgets/FontDisplay.h"
     "src/widgets/FontGrid.cpp"
@@ -351,8 +351,6 @@ set(PROJECT_SOURCES
     "src/widgets/VertexWidget.h"
     "src/widgets/WalkmeshManager.cpp"
     "src/widgets/WalkmeshManager.h"
-    "src/widgets/WalkmeshWidget.cpp"
-    "src/widgets/WalkmeshWidget.h"
 )
 
 set(PROJECT_CLI_SOURCES
@@ -507,6 +505,7 @@ set(PROJECT_CLI_SOURCES
     "src/core/world/TblFile.cpp"
     "src/core/world/TblFile.h"
     "src/main.cpp"
+    "src/qt/compat.h"
     "src/txt.cpp"
 )
 
@@ -538,10 +537,18 @@ target_include_directories(${GUI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${GUI_TARGET} PRIVATE
     Qt::OpenGL
     Qt::Widgets
-    ${ZLIB_LIBRARY}
+    ZLIB::ZLIB
     ff7tk::ff7tkFormats
     ff7tk::ff7tkUtils
 )
+
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    target_link_libraries(${GUI_TARGET} PRIVATE Qt::OpenGLWidgets)
+
+    target_compile_definitions(${GUI_TARGET}
+        PRIVATE TASKBAR_BUTTON=1
+    )
+endif()
 
 # CLI
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -551,7 +558,7 @@ else()
 endif()
 target_include_directories(${CLI_TARGET} PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_link_libraries(${CLI_TARGET} PRIVATE
-    ${ZLIB_LIBRARY}
+    ZLIB::ZLIB
     ff7tk::ff7tkFormats
     ff7tk::ff7tkUtils
 )
@@ -566,47 +573,27 @@ if(APPLE OR WIN32)
 endif()
 
 if(APPLE)
-    set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app")
-elseif(WIN32)
-    set(DEPLOY_TEMP "${CMAKE_BINARY_DIR}/win32-deploy")
-    install(DIRECTORY DESTINATION "${DEPLOY_TEMP}")
-    install(TARGETS ${GUI_TARGET} RUNTIME DESTINATION "${DEPLOY_TEMP}")
-    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.20.0")
-        cmake_path(SET FF7TK_BIN_DIR "${ff7tk_DIR}/../../../bin")
-    endif()
-    if(MINGW)
-        set(FF7TK_DEPENDS
-            "${FF7TK_BIN_DIR}/libff7tkFormats.dll"
-            "${FF7TK_BIN_DIR}/libff7tkUtils.dll"
-        )
-    else()
-        set(FF7TK_DEPENDS
-            "${FF7TK_BIN_DIR}/ff7tkFormats.dll"
-            "${FF7TK_BIN_DIR}/ff7tkUtils.dll"
-        )
-    endif()
-    install(FILES ${FF7TK_DEPENDS} DESTINATION "${DEPLOY_TEMP}")
-endif()
-
-add_subdirectory(deploy)
-add_subdirectory(lang)
-
-if(APPLE)
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
         set(CMAKE_INSTALL_PREFIX "/Applications" CACHE PATH "..." FORCE)
     endif()
     install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
     install(TARGETS ${CLI_TARGET} RUNTIME EXCLUDE_FROM_ALL)
 elseif(WIN32)
-    install(DIRECTORY "${DEPLOY_TEMP}/" DESTINATION ".")
-    install(CODE "file(REMOVE_RECURSE \"${DEPLOY_TEMP}\")")
+    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        # Force Program Files for x64 programs (CMake uses x86 by default)
+        set(CMAKE_INSTALL_PREFIX "$ENV{CSIDL_PROGRAM_FILES}/${PROJECT_NAME}")
+    endif()
+    install(TARGETS ${GUI_TARGET} ${CLI_TARGET} RUNTIME DESTINATION ".")
 else()
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/qt/images/logo-shinra.png DESTINATION share/icons/hicolor/256x256/apps RENAME Makou_Reactor.png)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/deploy/linux/Makou_Reactor.desktop DESTINATION share/applications)
     install(TARGETS ${GUI_TARGET} ${CLI_TARGET} RUNTIME)
 endif()
 
-if(QT_VERSION_MAJOR EQUAL 6)
+add_subdirectory(lang)
+add_subdirectory(deploy)
+
+if(QT_VERSION_MAJOR GREATER_EQUAL 6)
     qt_finalize_executable(${GUI_TARGET})
     qt_finalize_executable(${CLI_TARGET})
 endif()
@@ -620,6 +607,7 @@ else()
     set(CPACK_GENERATOR "TXZ")
 endif()
 
+set(CPACK_PACKAGE_NAME makoureactor)
 set(CPACK_SOURCE_IGNORE_FILES .git/* *.user *.yml *.github/*)
 set(CPACK_SOURCE_GENERATOR "ZIP;TGZ")
 

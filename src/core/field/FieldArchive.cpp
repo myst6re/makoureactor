@@ -137,7 +137,7 @@ FieldArchiveIO::ErrorCode FieldArchive::open()
 		Data::openMaplist(_io->isPC());
 	}
 
-	int fieldID=0;
+	int fieldID = 0;
 	for (Field *f : qAsConst(fileList)) {
 		if (f != nullptr) {
 			updateFieldLists(f, fieldID);
@@ -437,7 +437,7 @@ void FieldArchive::validateOneLineSize()
 							if (opcode->getTextID() < scriptsAndTexts->textCount()) {
 								FF7Text text = scriptsAndTexts->text(opcode->getTextID());
 								QSize optimSize = FF7Font::calcSize(text.data());
-								if (!text.data().isEmpty() && !text.contains(QRegExp("\n")) && (window.w != optimSize.width() || window.h != optimSize.height())) {
+								if (!text.data().isEmpty() && !text.contains(QRegularExpression("\n")) && (window.w != optimSize.width() || window.h != optimSize.height())) {
 									qWarning() << name << grpScriptID << grp->name() << grp->scriptName(scriptID) << opcodeID << "width=" << window.w << "height=" << window.h << "better size=" << optimSize.width() << optimSize.height();
 								}
 							} else {
@@ -1541,7 +1541,7 @@ bool FieldArchive::searchMapJump(int _field, int &mapID, int &groupID, int &scri
 	}, &query, mapID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchTextInScripts(const QRegExp &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchTextInScripts(const QRegularExpression &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	SearchTextQuery query(text);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
@@ -1553,10 +1553,10 @@ bool FieldArchive::searchTextInScripts(const QRegExp &text, int &mapID, int &gro
 	}, &query, mapID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchText(const QRegExp &text, int &mapID, int &textID, int &from, int &size, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchText(const QRegularExpression &text, int &mapID, int &textID, qsizetype &from, qsizetype &size, Sorting sorting, SearchScope scope)
 {
 	SearchTextQuery query(text);
-	int empty;
+	qsizetype empty;
 	SearchInText searchIn(textID, from, size, empty);
 
 	return find([](Field *f, SearchQuery *_query, SearchIn *_searchIn) {
@@ -1614,7 +1614,7 @@ bool FieldArchive::searchMapJumpP(int _field, int &mapID, int &groupID, int &scr
 	}, &query, mapID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchTextInScriptsP(const QRegularExpression &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope)
 {
 	SearchTextQuery query(text);
 	SearchInScript searchIn(groupID, scriptID, opcodeID);
@@ -1626,7 +1626,7 @@ bool FieldArchive::searchTextInScriptsP(const QRegExp &text, int &mapID, int &gr
 	}, &query, mapID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::searchTextP(const QRegExp &text, int &mapID, int &textID, int &from, int &index, int &size, Sorting sorting, SearchScope scope)
+bool FieldArchive::searchTextP(const QRegularExpression &text, int &mapID, int &textID, qsizetype &from, qsizetype &index, qsizetype &size, Sorting sorting, SearchScope scope)
 {
 	SearchTextQuery query(text);
 	SearchInText searchIn(textID, from, size, index);
@@ -1638,7 +1638,7 @@ bool FieldArchive::searchTextP(const QRegExp &text, int &mapID, int &textID, int
 	}, &query, mapID, &searchIn, sorting, scope);
 }
 
-bool FieldArchive::replaceText(const QRegExp &search, const QString &after, int mapID, int textID, int from)
+bool FieldArchive::replaceText(const QRegularExpression &search, const QString &after, int mapID, int textID, int from)
 {
 	if (textID > -1) {
 		Field *field = this->field(mapID);
@@ -1771,7 +1771,7 @@ bool FieldArchive::exportation(const QList<int> &selectedFields, const QString &
 	}
 
 	QString path, extension;
-	int currentField=0;
+	int currentField = 0;
 	if (observer()) {
 		observer()->setObserverMaximum(quint32(selectedFields.size() - 1));
 	}
@@ -1887,7 +1887,7 @@ bool FieldArchive::importation(const QList<int> &selectedFields, const QString &
 	if (selectedFields.isEmpty() || toImport.isEmpty()) {
 		return true;
 	}
-	int currentField=0;
+	int currentField = 0;
 
 	for (const int &mapID : selectedFields) {
 		if (observer()->observerWasCanceled()) 	break;

@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/Renderer.h"
+#include "Renderer.h"
 #include "core/field/FieldModelFile.h"
 #include "core/field/FieldPC.h"
 

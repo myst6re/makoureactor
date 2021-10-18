@@ -99,7 +99,7 @@ int TextureFile::colorTableCount() const
 
 void TextureFile::debug() const
 {
-	QImage img(4*16, 4*16*colorTableCount(), QImage::Format_RGB32);
+	QImage img(4 * 16, 4 * 16 * colorTableCount(), QImage::Format_RGB32);
 
 	int y = 0;
 	for (const QVector<QRgb> &colorTable : _colorTables) {

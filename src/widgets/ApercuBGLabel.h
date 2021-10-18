@@ -18,6 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
+#include "qt/compat.h"
 
 class ApercuBGLabel : public QLabel
 {
@@ -30,7 +31,7 @@ private:
 	bool _showSave;
 protected:
 	void paintEvent(QPaintEvent *e) override;
-	void enterEvent(QEvent *e) override;
+	void enterEvent(QEnterEvent *e) override;
 	void leaveEvent(QEvent *e) override;
 	void mousePressEvent(QMouseEvent *e) override;
 };

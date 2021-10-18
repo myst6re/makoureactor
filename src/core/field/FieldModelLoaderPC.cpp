@@ -125,7 +125,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 {
 	const char *constData = data.constData();
 
-	if ((quint32)data.size() < 6) {
+	if (quint32(data.size()) < 6) {
 		qWarning() << "FieldModelLoaderPC::open data size < 6" << data.size();
 		return false;
 	}
@@ -142,8 +142,8 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 	quint16 fieldScale = field()->scriptsAndTexts()->scale();
 
 	quint32 curPos = 6;
-	for (i=0; i<nb; ++i) {
-		if ((quint32)data.size() < curPos+2) {
+	for (i = 0; i < nb; ++i) {
+		if (quint32(data.size()) < curPos+2) {
 			clear();
 			qWarning() << "FieldModelLoaderPC::open data size < curPos+2" << data.size() << curPos;
 			return false;
@@ -151,19 +151,27 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 		memcpy(&len, constData + curPos, 2); // model name len
 
-		if ((quint32)data.size() < curPos+48+len) {
+		if (quint32(data.size()) < curPos+48+len) {
 			clear();
 			qWarning() << "FieldModelLoaderPC::open data size < curPos+48+len" << data.size() << curPos << len;
 			return false;
 		}
 		 // model name
-		model_nameChar.append(QString(data.mid(curPos+2, len)));
-		memcpy(&model_unknown, constData + curPos+2+len, 2);
+		const char *nameChar = constData + curPos + 2;
+		// Trim \0 at the end
+		model_nameChar.append(QString::fromLatin1(nameChar, qstrnlen(nameChar, len)));
+		memcpy(&model_unknown, constData + curPos + 2 + len, 2);
 		this->model_unknown.append(model_unknown);
-		model_nameHRC.append(QString(data.mid(curPos+4+len,8)));
+		const char *nameHRC = constData + curPos + 4 + len;
+		// Trim \0 at the end
+		model_nameHRC.append(QString::fromLatin1(nameHRC, qstrnlen(nameHRC, 8)));
 		bool ok;
-		int typeHRC_value = QString(data.mid(curPos+12+len,4)).toInt(&ok);
-		if (!ok)	typeHRC_value = fieldScale;
+		const char *typeValue = constData + curPos + 12 + len;
+		// Trim \0 at the end
+		int typeHRC_value = QString::fromLatin1(typeValue, qstrnlen(typeValue, 4)).toInt(&ok);
+		if (!ok) {
+			typeHRC_value = fieldScale;
+		}
 		model_typeHRC.append(typeHRC_value);
 
 		memcpy(&nbAnim, constData + curPos+16+len, 2);
@@ -194,7 +202,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 		QStringList anims;
 		QList<quint16> anims_unknown;
 		for (j=0; j<nbAnim; ++j) {
-			if ((quint32)data.size() < curPos+2) {
+			if (quint32(data.size()) < curPos+2) {
 				clear();
 				qWarning() << "FieldModelLoaderPC::open data size < curPos+2 (2)" << data.size() << curPos;
 				return false;
@@ -202,13 +210,15 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 			memcpy(&len, constData + curPos, 2); // animation name len
 
-			if ((quint32)data.size() < curPos+4+len) {
+			if (quint32(data.size()) < curPos+4+len) {
 				clear();
 				qWarning() << "FieldModelLoaderPC::open data size < curPos+4+len" << data.size() << curPos << len;
 				return false;
 			}
 
-			anims.append(QString(data.mid(curPos+2, len))); // animation name
+			const char *anim = constData + curPos + 2;
+			// Trim \0 at the end
+			anims.append(QString::fromLatin1(anim, qstrnlen(anim, len))); // animation name
 
 			memcpy(&model_unknown, constData + curPos+2+len, 2);
 			anims_unknown.append(model_unknown);

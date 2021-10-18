@@ -63,9 +63,9 @@ void CharArchive::close()
 
 QStringList CharArchive::hrcFiles() const
 {
-	QStringList files;
+	QStringList files, f = _io->fileList();
 
-	for (const QString &file : _io->fileList()) {
+	for (const QString &file : f) {
 		if (file.endsWith(".hrc", Qt::CaseInsensitive)) {
 			files.append(file.toUpper());
 		}
@@ -80,9 +80,9 @@ QStringList CharArchive::aFiles(int boneCount)
 		return _animBoneCount.values(boneCount);
 	}
 
-	QStringList files;
+	QStringList files, f = _io->fileList();
 
-	for (const QString &file : _io->fileList()) {
+	for (const QString &file : f) {
 		if (file.endsWith(".a", Qt::CaseInsensitive)) {
 			files.append(file.left(file.size()-2).toUpper());
 		}

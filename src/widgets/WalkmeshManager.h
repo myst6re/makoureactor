@@ -19,7 +19,7 @@
 
 #include <QtWidgets>
 #include "core/field/Field.h"
-#include "WalkmeshWidget.h"
+#include "3d/WalkmeshWidget.h"
 #include "VertexWidget.h"
 #include "HexLineEdit.h"
 #include "OrientationWidget.h"

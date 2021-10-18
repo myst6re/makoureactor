@@ -33,7 +33,7 @@ void ApercuBGLabel::paintEvent(QPaintEvent *e)
 	}
 }
 
-void ApercuBGLabel::enterEvent(QEvent *e)
+void ApercuBGLabel::enterEvent(QEnterEvent *e)
 {
 	QLabel::enterEvent(e);
 

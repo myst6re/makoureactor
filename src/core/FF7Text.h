@@ -27,9 +27,9 @@ public:
 	const QByteArray &data() const;
 	QString text(bool jp, bool simplified=false) const;
 	void setText(const QString &text, bool jp);
-	bool contains(const QRegExp &regExp) const;
-	int indexOf(const QRegExp &regExp, int from, int &size) const;
-	int lastIndexOf(const QRegExp &regExp, int &from, int &size) const;
+	bool contains(const QRegularExpression &regExp) const;
+	qsizetype indexOf(const QRegularExpression &regExp, qsizetype from, qsizetype &size) const;
+	qsizetype lastIndexOf(const QRegularExpression &regExp, qsizetype &from, qsizetype &size) const;
 	inline bool operator ==(const FF7Text &t2) const {
 		return data() == t2.data();
 	}

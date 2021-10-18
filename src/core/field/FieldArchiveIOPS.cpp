@@ -297,7 +297,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSIso::open2(ArchiveObserver *observer)
 
 	// QTime t;t.start();
 
-	int i=0;
+	int i = 0;
 	for (IsoFile *file : qAsConst(files)) {
 		if (observer) {
 			if (observer->observerWasCanceled()) {
@@ -506,7 +506,7 @@ FieldArchiveIO::ErrorCode FieldArchiveIOPSDir::open2(ArchiveObserver *observer)
 
 	// QTime t;t.start();
 
-	int i=0;
+	int i = 0;
 	for (const QString &name : qAsConst(list)) {
 		if (observer) {
 			if (observer->observerWasCanceled()) {

@@ -38,7 +38,9 @@ Field::Field(const QString &name) :
 Field::~Field()
 {
 	for (FieldPart *part : qAsConst(_parts)) {
-		if (part)	delete part;
+		if (part) {
+			delete part;
+		}
 	}
 }
 

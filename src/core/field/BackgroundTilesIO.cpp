@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "BackgroundTilesIO.h"
+#include "qt/compat.h"
 
 BackgroundTilesIO::BackgroundTilesIO(QIODevice *device) :
 	IO(device)
@@ -717,19 +718,20 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 
 	quint32 pos = 0;
 	qint16 currentLayer = -1;
-	QMapIterator<quint8, QMultiMap< qint16, QMultiMap<qint16, Tile> > > itLayer(tilesByDst);
+	QMultiMapIterator<quint8, QMultiMap< qint16, QMultiMap<qint16, Tile> > > itLayer(tilesByDst);
 	while (itLayer.hasNext()) {
 		itLayer.next();
 		quint8 layerID = itLayer.key();
 		const QMultiMap<qint16, QMultiMap<qint16, Tile> > &tilesByDstY = itLayer.value();
 		quint16 line = 0;
 
-		QMapIterator< qint16, QMultiMap<qint16, Tile> > itDstY(tilesByDstY);
+		QMultiMapIterator< qint16, QMultiMap<qint16, Tile> > itDstY(tilesByDstY);
 		while (itDstY.hasNext()) {
 			itDstY.next();
 			const QMultiMap<qint16, Tile> &tilesByDstX = itDstY.value();
+			QList<qint16> dstXs = tilesByDstX.keys();
 
-			for (qint16 dstX : tilesByDstX.keys()) {
+			for (qint16 dstX : dstXs) {
 				int count = tilesByDstX.count(dstX);
 
 				if (pos > 65535) {
@@ -782,11 +784,12 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 
 	QList<Tile> tilesLayers2And3 = tiles.tiles(2, true).values()
 	                             + tiles.tiles(3, true).values();
-	QList<Tile> tiles2;
-	qint16 dstY;
+	QVector<Tile> tiles2;
+	qint16 dstY = 0;
 	bool firstTurn = true;
+	BackgroundTiles tiles0 = tiles.tiles(0, true);
 
-	for (const Tile &tile : tiles.tiles(0, true)) {
+	for (const Tile &tile : tiles0) {
 		writeTileBase(tile);
 
 		if (firstTurn || tile.dstY != dstY) {
@@ -815,8 +818,9 @@ bool BackgroundTilesIOPS::writeData(const BackgroundTiles &tiles) const
 	}
 
 	positions[2] = device()->pos();
+	BackgroundTiles tiles1 = tiles.tiles(1, true);
 
-	for (const Tile &tile : tiles.tiles(1, true)) {
+	for (const Tile &tile : tiles1) {
 		writeTileBase(tile);
 		writeTileTex(tile);
 		writeTileID(tile);

@@ -234,7 +234,7 @@ public:
 	virtual bool searchOpcode(int opcode) const;
 	bool searchExec(quint8 group, quint8 script) const;
 	bool searchMapJump(quint16 fieldID) const;
-	bool searchTextInScripts(const QRegExp &text, const Section1File *scriptsAndTexts) const;
+	bool searchTextInScripts(const QRegularExpression &text, const Section1File *scriptsAndTexts) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
 	void shiftGroupIds(int groupId, int steps);

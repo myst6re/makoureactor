@@ -105,11 +105,7 @@ void OrientationWidget::mouseEvent(QMouseEvent *e)
 		return;
 	}
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-	const QPointF &relativePos = e->posF();
-#else
 	const QPointF &relativePos = e->localPos();
-#endif
 
 	if (isInCircle(relativePos)) {
 		moveCursor(relativePos);

@@ -48,7 +48,8 @@ void FontManager::fillList1()
 {
 	QString currentEncoding = Config::value("encoding", "00").toString();
 
-	for (const QString &fontName : FF7Font::fontList()) {
+	QStringList fontList = FF7Font::fontList();
+	for (const QString &fontName : fontList) {
 		QListWidgetItem *item;
 
 		if (fontName == "00" || fontName == "01") {
@@ -83,9 +84,8 @@ void FontManager::setFont(int id)
 	FF7Font *font = FF7Font::font(fontName);
 	if (font) {
 		fontWidget->setFF7Font(font);
+		minusAction->setEnabled(!font->isReadOnly());
 	}
-
-	minusAction->setEnabled(!font->isReadOnly());
 }
 
 void FontManager::addFont()

@@ -104,7 +104,7 @@ Window::Window() :
 	actionJp_txt->setChecked(Config::value("jp_txt", false).toBool());
 
 	menuLang = menu->addMenu(tr("&Language"));
-	QDir dir(Config::programResourceDir());
+	QDir dir(Config::programLanguagesDir());
 	QStringList stringList = dir.entryList(QStringList("Makou_Reactor_*.qm"), QDir::Files, QDir::Name);
 	action = menuLang->addAction(tr("English (default)"));
 	action->setData(QVariant());
@@ -114,21 +114,32 @@ Window::Window() :
 	menuLang->addSeparator();
 	QTranslator translator;
 	for (const QString &str : qAsConst(stringList)) {
-		translator.load(dir.filePath(str));
-		action = menuLang->addAction(translator.translate("Window", "English"));
-		QString lang = str.mid(14, 2);
-		action->setData(lang);
-		action->setCheckable(true);
-		action->setChecked(Config::value("lang").toString()==lang);
+		if (translator.load(dir.filePath(str))) {
+			action = menuLang->addAction(translator.translate("Window", "English"));
+			QString lang = str.mid(14, 2);
+			QString ff7tkTrPath = dir.filePath(QString("ff7tk_%1.qm").arg(lang));
+			if (!translator.load(ff7tkTrPath)) {
+				qWarning() << "No translations for ff7tk, file" << ff7tkTrPath << "not found";
+			}
+			action->setData(lang);
+			action->setCheckable(true);
+			action->setChecked(Config::value("lang").toString() == lang);
+		}
 	}
 	connect(menuLang, SIGNAL(triggered(QAction*)), this, SLOT(changeLanguage(QAction*)));
 
 	menu->addAction(tr("&Configuration..."), this, SLOT(config()))->setMenuRole(QAction::PreferencesRole);
+	
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+	qreal scale = qApp->desktop()->physicalDpiX() / qApp->desktop()->logicalDpiX();
+#else
+	qreal scale = 1.0;
+#endif
 
 	/* Toolbar */
 	toolBar = new QToolBar(tr("Main &toolbar"));
 	toolBar->setObjectName("toolbar");
-	toolBar->setIconSize(QSize(16, 16));
+	toolBar->setIconSize(QSize(int(scale * 16), int(scale * 16)));
 	addToolBar(toolBar);
 	toolBar->addAction(actionOpen);
 	actionOpen->setStatusTip(tr("Open a file"));
@@ -223,7 +234,7 @@ Window::Window() :
 	connect(_fieldList, SIGNAL(fieldDeleted()), SLOT(setFieldDeleted()));
 	connect(zoneImage, SIGNAL(clicked()), SLOT(backgroundManager()));
 	connect(searchDialog, SIGNAL(found(int,int,int,int)), SLOT(gotoOpcode(int,int,int,int)));
-	connect(searchDialog, SIGNAL(foundText(int,int,int,int)), SLOT(gotoText(int,int,int,int)));
+	connect(searchDialog, SIGNAL(foundText(int,int,qsizetype,qsizetype)), SLOT(gotoText(int,int,qsizetype,qsizetype)));
 	connect(_scriptManager, SIGNAL(groupScriptCurrentChanged(int)), SLOT(showModel(int)));
 	connect(_scriptManager, SIGNAL(editText(int)), SLOT(textManager(int)));
 	connect(_scriptManager, SIGNAL(changed()), SLOT(setModified()));
@@ -773,7 +784,7 @@ void Window::setWindowTitle()
 		}
 	}
 
-	QWidget::setWindowTitle(windowTitle.append(QString("%1 %2").arg(MAKOU_REACTOR_NAME, MAKOU_REACTOR_VERSION)));
+	QWidget::setWindowTitle(windowTitle.append(QString("%1 %2").arg(QLatin1String(MAKOU_REACTOR_NAME), QLatin1String(MAKOU_REACTOR_VERSION))));
 }
 
 void Window::disableEditors()
@@ -1108,7 +1119,7 @@ void Window::gotoOpcode(int mapID, int grpScriptID, int scriptID, int opcodeID)
 	}
 }
 
-void Window::gotoText(int mapID, int textID, int from, int size)
+void Window::gotoText(int mapID, int textID, qsizetype from, qsizetype size)
 {
 	if (_textDialog) {
 		_textDialog->blockSignals(true);

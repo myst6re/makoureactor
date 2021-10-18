@@ -70,7 +70,7 @@
 #include "../AnimEditorDialog.h"
 
 SpinBoxDelegate::SpinBoxDelegate(QObject *parent) :
-    QItemDelegate(parent), _field(0)
+    QItemDelegate(parent), _field(nullptr)
 {
 }
 
@@ -78,7 +78,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
                                        const QStyleOptionViewItem &option,
                                        const QModelIndex &index) const
 {
-	Q_UNUSED(option);
+	Q_UNUSED(option)
 	
 	int type = index.data(Qt::UserRole+2).toInt();
 	int value = index.data(Qt::EditRole).toInt();
@@ -177,7 +177,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	} else if (type == ScriptEditorGenericList::operateur) {
 		QComboBox *comboBox = new QComboBox(parent);
 		for (int i=0; i<OPERATORS_SIZE; ++i) {
-			comboBox->addItem(Opcode::operators[i], i);
+			comboBox->addItem(QString::fromUtf8(Opcode::operators[i]), i);
 		}
 		for (int i=OPERATORS_SIZE; i<256; ++i) {
 			comboBox->addItem(QString::number(i), i);
@@ -186,13 +186,13 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	} else if (type == ScriptEditorGenericList::akao) {
 		QComboBox *comboBox = new QComboBox(parent);
 		QList<quint8> unknownItems;
-		for (quint16 i=0; i<256; ++i) {
+		for (quint16 i = 0; i < 256; ++i) {
 			bool ok;
-			QString str = Opcode::akao(i, &ok);
+			QString str = Opcode::akao(quint8(i), &ok);
 			if (ok) {
 				comboBox->addItem(str, i);
 			} else {
-				unknownItems.append(i);
+				unknownItems.append(quint8(i));
 			}
 		}
 		for (quint8 i : unknownItems) {
@@ -202,7 +202,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::keys
 	          && !Data::key_names.isEmpty()) {
-		KeyEditorDialog dialog(value, parent);
+		KeyEditorDialog dialog(quint16(value), parent);
 		QSpinBox *editor = new QSpinBox(parent);
 		editor->setMinimum(index.data(Qt::UserRole).toInt());
 		editor->setMaximum(index.data(Qt::UserRole+1).toInt());

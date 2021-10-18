@@ -6,40 +6,44 @@ on:
   pull_request:
     branches: [ master, develop ]
 
-env:
-  QT_VERSION: 5.15.2
-  NINJA_VERSION: 1.10.2
-
 jobs:
   main_build:
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.package_suffix }} Qt ${{ matrix.qt }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        config:
-        - name: "Linux-amd64"
-          os: ubuntu-18.04
+        qt:
+          - 6.2.0
+          - 5.15.2
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+        build_type:
+          - Release
+        include:
+        - aqt_version: '==2.0.0'
+          qt_tools: desktop,tools_ninja,qt.tools.ninja
+        - qt: 6.2.0
+          qt_modules: qt5compat
+        - os: ubuntu-latest
           package_extension: 'tar.xz'
           package_suffix: 'linux64'
-        - name: "MacOS-amd64"
-          os: macos-latest
+        - os: macos-latest
           package_extension: 'dmg'
           package_suffix: 'macos64'
-        - name: "Windows-x64"
-          os: windows-latest
-          WIN_ARCH: "x64"
-          QT_ARCH: win64_msvc2019_64
+        - os: windows-latest
           package_extension: 'zip'
           package_suffix: 'win64'
-        - name: "Windows-x86"
-          os: windows-latest
-          WIN_ARCH: "amd64_x86"
-          QT_ARCH: win32_msvc2019
-          package_extension: 'zip'
-          package_suffix: 'win32'
+          win_arch: "x64"
+          qt_arch: win64_msvc2019_64
+          cmake_extra_args: '-DZLIB_ROOT=C:/zlib'
     env:
       qt_installation_path: ${{ github.workspace }}/Qt
+      zlib_path: ${{ github.workspace }}/../zlib-git
+      zlib_build_path: ${{ github.workspace }}/../build-zlib-git
+      zlib_installation_path: C:/zlib
       ff7tk_path: ${{ github.workspace }}/../ff7tk-git
       ff7tk_build_path: ${{ github.workspace }}/../build-ff7tk-git
       ff7tk_installation_path: ${{ github.workspace }}/ff7tk
@@ -47,7 +51,7 @@ jobs:
       makoureactor_installation_path: ${{ github.workspace }}/../installation-makoureactor
       makoureactor_appbundle_path: ${{ github.workspace }}/../appbundle-makoureactor
       CMAKE_GENERATOR: Ninja
-      CMAKE_BUILD_TYPE: Release
+      CMAKE_BUILD_TYPE: ${{ matrix.build_type }}
       packageGlob: makoureactor-continuous-*.*
     steps:
     - uses: actions/checkout@v2
@@ -57,10 +61,51 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.qt_installation_path }}
-        key: ${{ runner.os }}${{ matrix.config.WIN_ARCH }}-qt-${{ env.QT_VERSION }}-${{ env.NINJA_VERSION }}
+        key: ${{ runner.os }}${{ matrix.win_arch }}-qt-${{ matrix.qt }}
+
+    - name: Env Script (Windows)
+      uses: ilammy/msvc-dev-cmd@v1
+      if: runner.os == 'Windows'
+      with:
+        arch: ${{ matrix.win_arch }}
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2.14.0
+      with:
+       aqtversion: ${{ matrix.aqt_version }}
+       dir: ${{ env.qt_installation_path }}/..
+       arch: ${{ matrix.qt_arch }}
+       version: ${{ matrix.qt }}
+       cached: ${{ steps.cache-qt.outputs.cache-hit }}
+       tools: ${{ matrix.qt_tools }}
+       modules: ${{ matrix.qt_modules }}
+
+    - name: Configure env
+      shell: bash
+      run: |
+        QT_MAJOR_VERSION=$(echo "${{ matrix.qt }}" | sed -E 's/^([0-9]+)\..*/\1/')
+        QT_DIR=$(eval 'echo $Qt'"$QT_MAJOR_VERSION"'_DIR')
+        echo "$IQTA_TOOLS/Ninja" >> $GITHUB_PATH
+        echo "QT_MAJOR_VERSION=$QT_MAJOR_VERSION" >> $GITHUB_ENV
+        echo "QT_DIR=$QT_DIR" >> $GITHUB_ENV
+
+    - name: Cache Zlib
+      id: cache-zlib
+      if: runner.os == 'Windows'
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.zlib_installation_path }}
+        key: ${{ runner.os }}${{ matrix.win_arch }}-zlib
+
+    - name: Install Zlib
+      if: (runner.os == 'Windows') && (steps.cache-zlib.outputs.cache-hit != 'true')
+      run: |
+        git clone -q --depth 1 --single-branch --branch=v1.2.11 https://github.com/madler/zlib ${{ env.zlib_path }}
+        cmake -S${{ env.zlib_path }} -B${{ env.zlib_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.zlib_installation_path }}
+        cmake --build ${{ env.zlib_build_path }} --target install -j3
 
     - name: Clone ff7tk repo
-      run: git clone --depth 1 --single-branch --branch master https://github.com/myst6re/ff7tk.git ${{ env.ff7tk_path }}
+      run: git clone -q --depth 1 --single-branch --branch master https://github.com/myst6re/ff7tk.git ${{ env.ff7tk_path }}
 
     - name: Get ff7tk HEAD
       run: git rev-parse HEAD > ${{ github.workspace }}/ff7tk-HEAD
@@ -71,30 +116,12 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.ff7tk_installation_path }}
-        key: ${{ runner.os }}${{ matrix.config.WIN_ARCH }}-ff7tk-utils-formats-${{ hashFiles('ff7tk-HEAD') }}
-
-    - name: Env Script (Windows)
-      uses: ilammy/msvc-dev-cmd@v1
-      if: runner.os == 'Windows'
-      with:
-        arch: ${{ matrix.config.WIN_ARCH }}
-
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2.14.0
-      with:
-       dir: ${{ env.qt_installation_path }}
-       arch: ${{ matrix.config.QT_ARCH }}
-       version: ${{ env.QT_VERSION }}
-       cached: ${{ steps.cache-qt.outputs.cache-hit }}
-       tools: tools_ninja,${{ env.NINJA_VERSION }},qt.tools.ninja
-
-    - name: Add Ninja to path
-      run: echo "$IQTA_TOOLS/Ninja" >> $GITHUB_PATH
+        key: ${{ runner.os }}${{ matrix.win_arch }}-${{ matrix.qt }}-${{ matrix.qt_arch }}-ff7tk-utils-formats-${{ hashFiles('ff7tk-HEAD') }}
 
     - name: Build ff7tk
       if: steps.cache-ff7tk.outputs.cache-hit != 'true'
       run: |
-        cmake -B ${{ env.ff7tk_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DFORMATS=ON -DUTILS=ON -DWIDGETS=OFF
+        cmake -B ${{ env.ff7tk_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.ff7tk_installation_path }} -DQT_DEFAULT_MAJOR_VERSION=${{ env.QT_MAJOR_VERSION }} -DFORMATS=ON -DUTILS=ON -DWIDGETS=OFF ${{ matrix.cmake_extra_args }}
         cmake --build ${{ env.ff7tk_build_path }} --target install -j3
       working-directory: ${{ env.ff7tk_path }}
 
@@ -105,13 +132,13 @@ jobs:
         wget -qc "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
         export VERSION=continuous
         chmod a+x linuxdeploy*.AppImage
-        mv linuxdeploy-plugin-qt-*.AppImage $Qt5_DIR/bin/linuxdeploy-plugin-qt
-        mv linuxdeploy-*.AppImage $Qt5_DIR/bin/linuxdeploy
+        mv linuxdeploy-plugin-qt-*.AppImage $QT_DIR/bin/linuxdeploy-plugin-qt
+        mv linuxdeploy-*.AppImage $QT_DIR/bin/linuxdeploy
 
-    - name: Build Makou_Reactor
+    - name: Build Makou Reactor
       id: main_build
       run: |
-        cmake -B ${{ env.makoureactor_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.makoureactor_installation_path }} -Dff7tk_DIR=${{ env.ff7tk_installation_path }}/lib/cmake/ff7tk
+        cmake -B ${{ env.makoureactor_build_path }} -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -DCMAKE_INSTALL_PREFIX=${{ env.makoureactor_installation_path }} -Dff7tk_DIR=${{ env.ff7tk_installation_path }}/lib/cmake/ff7tk ${{ matrix.cmake_extra_args }}
         cmake --build ${{ env.makoureactor_build_path }} --target install -j3
 
     - name: CPack
@@ -127,11 +154,11 @@ jobs:
           -e "${{ env.makoureactor_installation_path }}"/bin/Makou_Reactor \
           -d "${{ env.makoureactor_installation_path }}"/share/applications/Makou_Reactor.desktop \
           -i "${{ env.makoureactor_installation_path }}"/share/icons/hicolor/256x256/apps/Makou_Reactor.png
-        mv *.AppImage makoureactor-continuous-${{ matrix.config.package_suffix }}.AppImage
+        mv *.AppImage makoureactor-continuous-${{ matrix.package_suffix }}.AppImage
 
     - name: Prepare Upload
       shell: bash
-      run: mv ../build-makoureactor/*.${{ matrix.config.package_extension }} makoureactor-continuous-${{ matrix.config.package_suffix }}.${{ matrix.config.package_extension }}
+      run: mv ../build-makoureactor/*.${{ matrix.package_extension }} makoureactor-continuous-${{ matrix.package_suffix }}.${{ matrix.package_extension }}
 
     - name: Upload
       uses: actions/upload-artifact@v2

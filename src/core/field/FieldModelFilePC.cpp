@@ -22,6 +22,7 @@
 #include "PFile.h"
 #include "AFile.h"
 #include "../TexFile.h"
+#include "qt/compat.h"
 
 FieldModelFilePC::FieldModelFilePC() :
     FieldModelFile(), _charLgp(nullptr)
@@ -148,7 +149,7 @@ bool FieldModelFilePC::openAnimation(const QString &aFileName, bool animate)
 bool FieldModelFilePC::openMesh(QMultiMap<int, QStringList> &rsdFiles, QStringList &textureFiles)
 {
 	bool onePartOpened = false;
-	QMapIterator<int, QStringList> itRsd(rsdFiles);
+	QMultiMapIterator<int, QStringList> itRsd(rsdFiles);
 	while (itRsd.hasNext()) {
 		itRsd.next();
 		int boneID = itRsd.key();

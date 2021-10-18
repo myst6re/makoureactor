@@ -30,7 +30,7 @@ BackgroundTiles::BackgroundTiles(const QList<Tile> &tiles)
 			insert(1, tile);
 			break;
 		case 1:
-			insert(4096 - tile.ID, tile);
+			insert(qint16(4096 - tile.ID), tile);
 			break;
 		case 2:
 			insert(0, tile);

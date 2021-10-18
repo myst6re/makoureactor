@@ -18,7 +18,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include "FieldModel.h"
+#include "3d/FieldModel.h"
 
 class AnimEditorDialog : public QDialog
 {

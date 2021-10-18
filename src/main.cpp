@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	QCoreApplication::setApplicationName(MAKOU_REACTOR_NAME);
 	QCoreApplication::setApplicationVersion(MAKOU_REACTOR_VERSION);
 #ifdef Q_OS_WIN
-	QTextCodec::setCodecForLocale(QTextCodec::codecForName("IBM 850"));
+	// QTextCodec::setCodecForLocale(QTextCodec::codecForName("IBM 850"));
 #endif
 	Config::set();
 	CLI::exec();
@@ -62,10 +62,10 @@ int main(int argc, char *argv[])
 	QString lang = QLocale::system().name();
 	lang = Config::value("lang", lang.left(lang.indexOf("_")).toLower()).toString();
 	QTranslator translator1;
-	if (translator1.load("qt_" % lang, Config::programResourceDir()) || translator1.load("qt_" % lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+	if (translator1.load("qt_" % lang, Config::programLanguagesDir()) || translator1.load("qt_" % lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
 		app.installTranslator(&translator1);
 	QTranslator translator2;
-	if (translator2.load("Makou_Reactor_" % lang, Config::programResourceDir()) || translator2.load("Makou_Reactor_" % lang)) {
+	if (translator2.load("Makou_Reactor_" % lang, Config::programLanguagesDir()) || translator2.load("Makou_Reactor_" % lang)) {
 		app.installTranslator(&translator2);
 		Config::setValue("lang", lang);
 	} else {
@@ -101,9 +101,7 @@ int main(int argc, char *argv[])
 		darkPalette.setColor(QPalette::Mid, QColor(0x14, 0x14, 0x14));
 		darkPalette.setColor(QPalette::Shadow, Qt::black);
 
-#if (QT_VERSION > QT_VERSION_CHECK(5, 11, 0))
 		darkPalette.setColor(QPalette::PlaceholderText, QColor(0x53, 0x53, 0x53));
-#endif
 
 		qApp->setPalette(darkPalette);
 
@@ -129,7 +127,7 @@ int main(int argc, char *argv[])
 	Window *window = new Window;
 	window->show();
 	if (argc > 1) {
-		window->openFile(argv[1]);
+		window->openFile(app.arguments().at(1));
 	}
 #endif
 

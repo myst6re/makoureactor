@@ -47,7 +47,7 @@ QString FF7Text::text(bool jp, bool simplified) const
 		switch (index) {
 		case 0xFA:
 			++i;
-			if (size<=i)	return trad.append(simplified ? "¶" : "{xfa}");
+			if (size<=i)	return trad.append(simplified ? QString("¶") : QString("{xfa}"));
 			if (jp) {
 				character = getCaract(_data.at(i), 3);
 				if (character.isEmpty()) {
@@ -60,7 +60,7 @@ QString FF7Text::text(bool jp, bool simplified) const
 		break;
 		case 0xFB:
 			++i;
-			if (size<=i)	return trad.append(simplified ? "¶" : "{xfb}");
+			if (size<=i)	return trad.append(simplified ? QString("¶") : QString("{xfb}"));
 			if (jp) {
 				character = getCaract(_data.at(i), 4);
 				if (character.isEmpty()) {
@@ -73,7 +73,7 @@ QString FF7Text::text(bool jp, bool simplified) const
 		break;
 		case 0xFC:
 			++i;
-			if (size<=i)	return trad.append(simplified ? "¶" : "{xfc}");
+			if (size<=i)	return trad.append(simplified ? QString("¶") : QString("{xfc}"));
 			if (jp) {
 				character = getCaract(_data.at(i), 5);
 				if (character.isEmpty()) {
@@ -86,7 +86,7 @@ QString FF7Text::text(bool jp, bool simplified) const
 		break;
 		case 0xFD:
 			++i;
-			if (size<=i)	return trad.append(simplified ? "¶" : "{xfd}");
+			if (size<=i)	return trad.append(simplified ? QString("¶") : QString("{xfd}"));
 			if (jp) {
 				character = getCaract(_data.at(i), 6);
 				if (character.isEmpty()) {
@@ -99,7 +99,7 @@ QString FF7Text::text(bool jp, bool simplified) const
 		break;
 		case 0xFE:
 			++i;
-			if (size<=i) 	return trad.append(simplified ? "¶" : "{xfe}");;
+			if (size<=i) 	return trad.append(simplified ? QString("¶") : QString("{xfe}"));;
 			index = (quint8)_data.at(i);
 
 			if (index == 0xE2) {
@@ -180,6 +180,7 @@ void FF7Text::setText(const QString &string, bool jp)
 	int stringSize = string.size(), i, table;
 	bool ok;
 	ushort value;
+	QRegularExpression rx("^\\{MEMORY:var\\[(\\d+)\\]\\[(\\d+)\\];size=(\\d+)\\}");
 //	bool jp = Config::value("jp_txt", false).toBool();
 
 	_data.clear();
@@ -235,9 +236,9 @@ void FF7Text::setText(const QString &string, bool jp)
 			}
 
 			if (rest.startsWith(QString("{MEMORY:var["))) {
-				QRegExp rx("^\\{MEMORY:var\\[(\\d+)\\]\\[(\\d+)\\];size=(\\d+)\\}");
-				if (rx.indexIn(rest) != -1) {
-					QStringList list = rx.capturedTexts();
+				QRegularExpressionMatch match = rx.match(rest);
+				if (match.hasMatch()) {
+					QStringList list = match.capturedTexts();
 					quint8 bank;
 					switch (list.at(1).toInt()) {
 					case 1:case 2:
@@ -260,7 +261,7 @@ void FF7Text::setText(const QString &string, bool jp)
 						break;
 					}
 					_data.append("\xfe\xe2", 2).append((char)list.at(2).toInt()).append(bank).append((char)list.at(3).toInt()).append('\x00');
-					c += rx.matchedLength()-1;
+					c += match.capturedLength() - 1;
 					goto end;
 				}
 			}
@@ -374,26 +375,41 @@ QString FF7Text::getCaract(quint8 ord, quint8 table)
 	}
 }
 
-bool FF7Text::contains(const QRegExp &regExp) const
+bool FF7Text::contains(const QRegularExpression &regExp) const
 {
 	return text(Config::value("jp_txt", false).toBool())
 			.contains(regExp);
 }
 
-int FF7Text::indexOf(const QRegExp &regExp, int from, int &size) const
-{
-	int index = regExp.indexIn(text(Config::value("jp_txt", false).toBool()), from);
-	if (index != -1)		size = regExp.matchedLength();
-	return index;
-}
-
-int FF7Text::lastIndexOf(const QRegExp &regExp, int &from, int &size) const
+qsizetype FF7Text::indexOf(const QRegularExpression &regExp, qsizetype from, qsizetype &size) const
 {
 	QString t = text(Config::value("jp_txt", false).toBool());
-	int index = regExp.lastIndexIn(t, from);
-	if (index != -1) {
-		from = index - t.size();
-		size = regExp.matchedLength();
+	qsizetype offset = from < 0 ? t.size() - from : from;
+	QRegularExpressionMatch match = regExp.match(t, offset);
+	if (match.hasMatch()) {
+		size = match.capturedLength();
 	}
-	return index;
+	return match.capturedStart();
+}
+
+qsizetype FF7Text::lastIndexOf(const QRegularExpression &regExp, qsizetype &from, qsizetype &size) const
+{
+	QString t = text(Config::value("jp_txt", false).toBool());
+	qsizetype offset = from < 0 ? t.size() - from : from;
+	qsizetype lastCapturedStart = -1;
+	QRegularExpressionMatchIterator it = regExp.globalMatch(t);
+	while (it.hasNext()) {
+		QRegularExpressionMatch match = it.next();
+		if (match.capturedEnd() >= offset) {
+			break;
+		}
+		qsizetype capturedStart = match.capturedStart();
+		if (capturedStart > lastCapturedStart) {
+			lastCapturedStart = capturedStart;
+			from = capturedStart - t.size();
+			size = match.capturedLength();
+		}
+	}
+
+	return lastCapturedStart;
 }
