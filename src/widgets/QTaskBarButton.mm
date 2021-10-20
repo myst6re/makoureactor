@@ -153,6 +153,7 @@ static ApplicationProgressView *sharedProgressView = nil;
 	[NSBezierPath fillRect:progressBoundary];
 	switch (type) {
 	case ProgressType::Normal:
+	case ProgressType::Indeterminate:
 		[[NSColor lightGrayColor] setFill];
 		break;
 	case ProgressType::Paused:

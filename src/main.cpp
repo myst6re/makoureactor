@@ -48,13 +48,8 @@ int main(int argc, char *argv[])
 
 	QSurfaceFormat format;
 #ifdef QT_DEBUG
-	format.setVersion(4, 3);
 	format.setOption(QSurfaceFormat::DebugContext);
-#else
-	format.setVersion(4, 3);
 #endif
-	format.setProfile(QSurfaceFormat::CoreProfile);
-	format.setRenderableType(QSurfaceFormat::RenderableType::OpenGL);
 	QSurfaceFormat::setDefaultFormat(format);
 
 	Config::set();

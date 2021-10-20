@@ -56,11 +56,7 @@ void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
 	if (pixmap.isNull()) {
 		pITask->SetOverlayIcon(HWND(_winId), nullptr, nullptr);
 	} else {
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-		const HICON icon = pixmap.toWinHICON();
-#else
 		const HICON icon = pixmap.toImage().toHICON();
-#endif
 		pITask->SetOverlayIcon(HWND(_winId), icon, (wchar_t *)text.utf16());
 		DestroyIcon(icon);
 	}

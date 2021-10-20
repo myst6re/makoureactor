@@ -545,9 +545,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     target_link_libraries(${GUI_TARGET} PRIVATE Qt::OpenGLWidgets)
 endif()
 
-target_compile_definitions(${GUI_TARGET}
-    PRIVATE TASKBAR_BUTTON=1
-)
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6 OR WIN32)
+    target_compile_definitions(${GUI_TARGET}
+        PRIVATE TASKBAR_BUTTON=1
+    )
+endif()
 set_target_properties(${GUI_TARGET} PROPERTIES
     MACOSX_BUNDLE_BUNDLE_NAME "Makou Reactor"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

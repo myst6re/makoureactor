@@ -132,6 +132,8 @@ bool WindowBinFile::save(QByteArray &data) const
 
 	saveSection(QByteArray((char *)_charWidth.data(), _charWidth.size()), data, 1);
 
+	data.append(QByteArray("\0\0", 2));
+
 	return true;
 }
 
