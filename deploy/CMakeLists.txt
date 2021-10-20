@@ -24,18 +24,15 @@ endif()
 list(TRANSFORM LANGS REPLACE ".+" "${_ff7tk_ROOT}/share/ff7tk/lang/ff7tk_\\0.qm" OUTPUT_VARIABLE FF7TK_QM_FILES)
 install(FILES ${FF7TK_QM_FILES} DESTINATION "${TRANSLATIONS_PATH}")
 
-set(_target_file_dir "${CMAKE_BINARY_DIR}/qt-deploy")
-
 # Deploy Qt using macdeployqt and windeployqt scripts
 if(APPLE OR WIN32)
-    install(CODE "set(_target_file_dir \"${_target_file_dir}\")")
+    install(CODE "set(_target_file_dir \"${QT_DEPLOY_TMP_DIR}\")")
+    install(CODE "set(_target_bundle_name \"${PROJECT_NAME}.app\")")
     install(CODE "set(_qt_translations_dir \"${_qt_translations_dir}\")")
     install(CODE "set(_qt_bin_dir \"${_qt_bin_dir}\")")
     install(CODE "set(LANGS \"${LANGS}\")")
     install(CODE "set(QT_VERSION_MAJOR \"${QT_VERSION_MAJOR}\")")
     install(SCRIPT deployqt.cmake)
-    # Install deployed files for CPack file detection
-    install(DIRECTORY "${_target_file_dir}/" DESTINATION ".")
 endif()
 
 # Deploy zlib

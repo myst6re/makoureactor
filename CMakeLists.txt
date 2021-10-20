@@ -353,6 +353,11 @@ set(PROJECT_SOURCES
     "src/widgets/WalkmeshManager.h"
 )
 
+if(APPLE)
+    list(APPEND PROJECT_SOURCES
+        "src/widgets/QTaskBarButton.mm")
+endif()
+
 set(PROJECT_CLI_SOURCES
     "src/Arguments.cpp"
     "src/Arguments.h"
@@ -516,12 +521,6 @@ if(APPLE)
     set(EXTRA_RESOURCES ${ICON_FILE})
 
     set_source_files_properties(${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-    set(MACOSX_BUNDLE_BUNDLE_NAME "Makou Reactor")
-    set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
-    set(MACOSX_BUNDLE_LONG_VERSION_STRING ${PROJECT_VERSION})
-    set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER org.myst6re.makoureactor)
-    set(MACOSX_BUNDLE_ICON_FILE ${RELEASE_NAME}.icns)
 elseif (WIN32)
     set(ICON_FILE "src/qt/images/logo-shinra.ico")
     set(EXTRA_RESOURCES "src/qt/${RELEASE_NAME}.rc")
@@ -544,11 +543,19 @@ target_link_libraries(${GUI_TARGET} PRIVATE
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     target_link_libraries(${GUI_TARGET} PRIVATE Qt::OpenGLWidgets)
-
-    target_compile_definitions(${GUI_TARGET}
-        PRIVATE TASKBAR_BUTTON=1
-    )
 endif()
+
+target_compile_definitions(${GUI_TARGET}
+    PRIVATE TASKBAR_BUTTON=1
+)
+set_target_properties(${GUI_TARGET} PROPERTIES
+    MACOSX_BUNDLE_BUNDLE_NAME "Makou Reactor"
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_LONG_VERSION_STRING ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
+    MACOSX_BUNDLE_GUI_IDENTIFIER org.myst6re.makoureactor
+    MACOSX_BUNDLE_ICON_FILE ${RELEASE_NAME}.icns
+)
 
 # CLI
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -576,22 +583,34 @@ if(APPLE)
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
         set(CMAKE_INSTALL_PREFIX "/Applications" CACHE PATH "..." FORCE)
     endif()
-    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
-    install(TARGETS ${CLI_TARGET} RUNTIME EXCLUDE_FROM_ALL)
+    if(NOT QT_DEPLOY_TMP_DIR)
+        set(QT_DEPLOY_TMP_DIR "${CMAKE_BINARY_DIR}" CACHE PATH "Directory to run deployqt scripts")
+    endif()
 elseif(WIN32)
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND ENV{ProgramFiles})
         # Force Program Files for x64 programs (CMake uses x86 by default)
         set(CMAKE_INSTALL_PREFIX "$ENV{ProgramFiles}/${PROJECT_NAME}" CACHE PATH "..." FORCE)
     endif()
-    install(TARGETS ${GUI_TARGET} ${CLI_TARGET} RUNTIME DESTINATION ".")
+    if(NOT QT_DEPLOY_TMP_DIR)
+        set(QT_DEPLOY_TMP_DIR "${CMAKE_BINARY_DIR}/win32-deploy" CACHE PATH "Directory to run deployqt scripts")
+    endif()
+    install(TARGETS ${GUI_TARGET} ${CLI_TARGET} RUNTIME DESTINATION "${QT_DEPLOY_TMP_DIR}")
+endif()
+
+add_subdirectory(lang)
+add_subdirectory(deploy)
+
+if(APPLE)
+    install(TARGETS ${GUI_TARGET} BUNDLE DESTINATION ".")
+    install(TARGETS ${CLI_TARGET} RUNTIME EXCLUDE_FROM_ALL)
+elseif(WIN32)
+    install(DIRECTORY "${QT_DEPLOY_TMP_DIR}/" DESTINATION ".")
+    install(CODE "file(REMOVE_RECURSE \"${QT_DEPLOY_TMP_DIR}\")")
 else()
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/qt/images/logo-shinra.png DESTINATION share/icons/hicolor/256x256/apps RENAME Makou_Reactor.png)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/deploy/linux/Makou_Reactor.desktop DESTINATION share/applications)
     install(TARGETS ${GUI_TARGET} ${CLI_TARGET} RUNTIME)
 endif()
-
-add_subdirectory(lang)
-add_subdirectory(deploy)
 
 if(QT_VERSION_MAJOR GREATER_EQUAL 6)
     qt_finalize_executable(${GUI_TARGET})

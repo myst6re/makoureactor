@@ -65,6 +65,7 @@ QTaskBarButton::~QTaskBarButton()
 
 typedef NS_ENUM(NSUInteger, ProgressType) {
 	Normal,
+	Indeterminate,
 	Paused,
 	Error
 };
@@ -135,8 +136,8 @@ static ApplicationProgressView *sharedProgressView = nil;
 	progressBoundary.origin.y = NSHeight(boundary) * 0.13;
 	
 	double range = max - min;
-	double percent = 0.50;
-	if (range != 0.0) {
+	double percent = 0.0;
+	if (type != ProgressType::Indeterminate && range != 0.0) {
 		percent = (value - min) / range;
 	}
 	if (percent > 1) {
@@ -187,7 +188,7 @@ void QTaskBarButton::setState(State state)
 
 	switch (state) {
 	case Indeterminate:
-		[[ApplicationProgressView sharedProgressView] setRangeMin:0 max:0];
+		[[ApplicationProgressView sharedProgressView] setProgressType:ProgressType::Indeterminate];
 		break;
 	case Paused:
 		[[ApplicationProgressView sharedProgressView] setProgressType:ProgressType::Paused];
