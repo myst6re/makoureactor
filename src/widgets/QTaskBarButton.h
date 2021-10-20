@@ -19,13 +19,12 @@
 
 #include <QtWidgets>
 
-#if defined(Q_OS_WIN) && defined(TASKBAR_BUTTON)
-#	ifdef QTASKBAR_WIN_QT5
-#		include <QWinTaskbarButton>
-#		include <QWinTaskbarProgress>
-#	else
+#ifdef TASKBAR_BUTTON
+#	if defined(Q_OS_WIN)
 #		include <shobjidl.h>
 #		define QTASKBAR_WIN
+#	elif defined(Q_OS_DARWIN)
+#		define QTASKBAR_APPLE
 #	endif
 #endif
 
@@ -57,8 +56,6 @@ private:
 #ifdef QTASKBAR_WIN
 	WId _winId;
 	ITaskbarList3 *pITask;
-#elif defined(QTASKBAR_WIN_QT5)
-	QWinTaskbarButton _taskbarButton;
 #endif // Q_OS_WIN
 	int _minimum, _maximum, _value;
 	State _state;
