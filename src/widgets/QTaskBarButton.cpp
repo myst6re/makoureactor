@@ -47,16 +47,16 @@ QTaskBarButton::~QTaskBarButton()
 	}
 }
 
-void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
+void QTaskBarButton::setOverlayIcon(const QImage &image, const QString &text)
 {
 	if (!pITask) {
 		return;
 	}
 
-	if (pixmap.isNull()) {
+	if (image.isNull()) {
 		pITask->SetOverlayIcon(HWND(_winId), nullptr, nullptr);
 	} else {
-		const HICON icon = pixmap.toImage().toHICON();
+		const HICON icon = image.toHICON();
 		pITask->SetOverlayIcon(HWND(_winId), icon, (wchar_t *)text.utf16());
 		DestroyIcon(icon);
 	}
@@ -102,7 +102,7 @@ void QTaskBarButton::setValue(int value)
 	}
 }
 
-#elif not defined(QTASKBAR_APPLE)
+#elif !defined(QTASKBAR_APPLE)
 
 QTaskBarButton::QTaskBarButton(QWidget *parent) :
       QObject(parent), _minimum(0), _maximum(100),
@@ -114,9 +114,9 @@ QTaskBarButton::~QTaskBarButton()
 {
 }
 
-void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
+void QTaskBarButton::setOverlayIcon(const QImage &image, const QString &text)
 {
-	Q_UNUSED(pixmap)
+	Q_UNUSED(image)
 	Q_UNUSED(text)
 }
 

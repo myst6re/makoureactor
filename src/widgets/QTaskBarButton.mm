@@ -170,9 +170,9 @@ static ApplicationProgressView *sharedProgressView = nil;
 
 @end
 
-void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
+void QTaskBarButton::setOverlayIcon(const QImage &image, const QString &text)
 {
-	Q_UNUSED(pixmap)
+	Q_UNUSED(image)
 	NSString *cocoaString = [[NSString alloc] initWithUTF8String:text.toUtf8().constData()];
 	[[NSApp dockTile] setBadgeLabel:cocoaString];
 	[cocoaString release];
@@ -213,9 +213,9 @@ void QTaskBarButton::setValue(int value)
 
 #else
 
-void QTaskBarButton::setOverlayIcon(const QPixmap &pixmap, const QString &text)
+void QTaskBarButton::setOverlayIcon(const QImage &image, const QString &text)
 {
-	Q_UNUSED(pixmap)
+	Q_UNUSED(image)
 	Q_UNUSED(text)
 }
 

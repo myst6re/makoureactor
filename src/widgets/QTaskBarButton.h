@@ -38,7 +38,7 @@ public:
 
 	explicit QTaskBarButton(QWidget *mainWindow);
 	virtual ~QTaskBarButton() override;
-	void setOverlayIcon(const QPixmap &pixmap, const QString &text = QString());
+	void setOverlayIcon(const QImage &image, const QString &text = QString());
 	void setState(State state);
 	int maximum() const;
 	int minimum() const;
