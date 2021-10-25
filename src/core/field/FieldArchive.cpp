@@ -341,7 +341,7 @@ void FieldArchive::validateAsk()
 				for (Script *script : grp->scripts()) {
 					int opcodeID = 0;
 					for (Opcode *opcode : script->opcodes()) {
-						if (opcode->id() == Opcode::ASK) {
+						if (opcode.id() == Opcode::ASK) {
 							OpcodeASK *opcodeASK = static_cast<OpcodeASK *>(opcode);
 							quint8 textID = opcodeASK->textID,
 									firstLine = opcodeASK->firstLine,
@@ -428,8 +428,8 @@ void FieldArchive::validateOneLineSize()
 					int opcodeID = 0;
 					OpcodeWindow *opcodeWindow = 0;
 					for (Opcode *opcode : script->opcodes()) {
-						if (opcode->id() == Opcode::WSIZW
-								|| opcode->id() == Opcode::WINDOW) {
+						if (opcode.id() == Opcode::WSIZW
+								|| opcode.id() == Opcode::WINDOW) {
 							opcodeWindow = static_cast<OpcodeWindow *>(opcode);
 						} else if (opcode->getTextID() >= 0 && opcodeWindow) {
 							FF7Window window;
@@ -1215,15 +1215,15 @@ void FieldArchive::searchAll()
 			if (section1->isOpen()) {
 				int groupID = 0;
 				for (GrpScript *grp : section1->grpScripts()) {
-					if (grp->typeID() == GrpScript::Model || grp->typeID() == GrpScript::Location) {
+					if (grp->type() == GrpScript::Model || grp->type() == GrpScript::Location) {
 						Script *talkScript = grp->script(2); // Talk
 						bool disableMovability = false,
 								disableMenus = false,
 								saySomething = false;
 						for (Opcode *op : talkScript->opcodes()) {
-							if (op->id() == Opcode::UC) {
+							if (op.id() == Opcode::UC) {
 								disableMovability = true;
-							} else if (op->id() == Opcode::MENU2) {
+							} else if (op.id() == Opcode::MENU2) {
 								disableMenus = true;
 							} else if (op->getTextID() >= 0) {
 								saySomething = true;

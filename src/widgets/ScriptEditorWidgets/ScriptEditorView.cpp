@@ -19,7 +19,7 @@
 
 ScriptEditorView::ScriptEditorView(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent)
 	: QWidget(parent), _builded(false), _field(field), _grpScript(grpScript), _script(script),
-	  _opcode(0), _opcodeID(opcodeID), _valid(true)
+	  _opcode(nullptr), _opcodeID(opcodeID), _valid(true)
 {
 }
 
@@ -41,7 +41,7 @@ void ScriptEditorView::clear()
 {
 }
 
-void ScriptEditorView::setOpcode(Opcode *opcode)
+void ScriptEditorView::setOpcode(const OpcodeBox &opcode)
 {
 	if (!_builded) {
 		build();

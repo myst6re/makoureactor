@@ -33,7 +33,7 @@ QList<Opcode::Keys> ScriptEditor::crashIfInit;
 
 ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, quint16 opcodeID, bool modify, bool isInit, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-	field(field), script(script), opcodeID(opcodeID), isInit(isInit), modify(modify), change(false)
+	field(field), script(script), opcodeID(opcodeID), opcode(nullptr), isInit(isInit), modify(modify), change(false)
 {
 	if (crashIfInit.isEmpty()) {
 		crashIfInit << Opcode::JOIN << Opcode::SPLIT
@@ -118,18 +118,19 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, q
 	layout->addLayout(buttonLayout);
 
 	if (modify) {
-		this->opcode = Script::copyOpcode(script->opcode(opcodeID));
+		this->opcode = script->opcode(opcodeID);
 		int id = opcode->id();
 
-		if (id == Opcode::SPECIAL)
-			id = (static_cast<OpcodeSPECIAL *>(opcode)->opcode->id() << 8) | id;
-		else if (id == Opcode::KAWAI)
-			id = (static_cast<OpcodeKAWAI *>(opcode)->opcode->id() << 8) | id;
+		if (id == Opcode::SPECIAL) {
+			id = (opcode.cast<OpcodeSPECIAL>().opcode->id() << 8) | id;
+		} else if (id == Opcode::KAWAI) {
+			id = (opcode.cast<OpcodeKAWAI>().opcode->id() << 8) | id;
+		}
 
 		setCurrentMenu(id);
 		fillView();
 	} else {
-		this->opcode = new OpcodeRET();
+		this->opcode = OpcodeBox(new OpcodeRET());
 		comboBox->setCurrentIndex(0);
 		changeCurrentOpcode(0);
 	}
@@ -143,16 +144,6 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, q
 	connect(comboBox, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
 }
 
-ScriptEditor::~ScriptEditor()
-{
-	Opcode *op = editorWidget->opcode();
-	if (op) {
-		delete op;
-	} else {
-		delete this->opcode;
-	}
-}
-
 void ScriptEditor::fillEditor()
 {
 	int index;
@@ -160,7 +151,7 @@ void ScriptEditor::fillEditor()
 	editorWidget->clear();
 
 	// Change current editor widget
-	switch (Opcode::Keys(opcode->id())) {
+	switch (opcode.id()) {
 	case Opcode::RETTO:
 		index = 1;
 		break;
@@ -258,7 +249,7 @@ void ScriptEditor::fillView()
 	fillEditor(); // editor part
 
 	// disable if necessary
-	bool disableEditor = (isInit && crashIfInit.contains(Opcode::Keys(opcode->id()))) || !editorWidget->isValid();
+	bool disableEditor = (isInit && crashIfInit.contains(opcode.id())) || !editorWidget->isValid();
 
 	textEdit->setDisabled(disableEditor);
 	editorWidget->setDisabled(disableEditor);
@@ -272,13 +263,13 @@ void ScriptEditor::accept()
 		return;
 	} */
 	if (needslabel()) {
-		script->insertOpcode(this->opcodeID, new OpcodeLabel(static_cast<OpcodeJump *>(editorWidget->opcode())->label()));
+		script->insertOpcode(this->opcodeID, OpcodeBox(new OpcodeLabel(editorWidget->buildOpcode().cast<OpcodeJump>().label())));
 	}
 
 	if (modify) {
-		script->setOpcode(this->opcodeID, Script::copyOpcode(editorWidget->opcode()));
+		script->setOpcode(this->opcodeID, editorWidget->buildOpcode());
 	} else {
-		script->insertOpcode(this->opcodeID, Script::copyOpcode(editorWidget->opcode()));
+		script->insertOpcode(this->opcodeID, editorWidget->buildOpcode());
 	}
 	QDialog::accept();
 }
@@ -297,7 +288,7 @@ void ScriptEditor::refreshTextEdit()
 {
 	this->change = true;
 
-	opcode = editorWidget->opcode();
+	opcode = editorWidget->buildOpcode();
 
 	textEdit->setPlainText(opcode->toString(field));
 }
@@ -312,11 +303,10 @@ void ScriptEditor::changeCurrentOpcode(int index)
 	// Create opcode
 
 	if (Opcode::LABEL == itemData) { // LABEL exception
-		if (Opcode::LABEL == opcode->id()) {
-			static_cast<OpcodeLabel *>(opcode)->setLabel(0);
+		if (Opcode::LABEL == opcode.id()) {
+			opcode.cast<OpcodeLabel>().setLabel(0);
 		} else {
-			delete opcode;
-			opcode = new OpcodeLabel(0);
+			opcode = OpcodeBox(new OpcodeLabel(0));
 		}
 	} else {
 		const quint8 id = itemData & 0xFF;
@@ -347,11 +337,10 @@ void ScriptEditor::changeCurrentOpcode(int index)
 			}
 		}
 
-		if (id == opcode->id()) {
+		if (id == opcode.id()) {
 			opcode->setParams(newOpcode.constData() + 1, newOpcode.size() - 1); // same opcode, just change params
 		} else { // change all
-			delete opcode;
-			opcode = Script::createOpcode(newOpcode);
+			opcode = newOpcode;
 		}
 	}
 

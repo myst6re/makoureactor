@@ -28,7 +28,7 @@ size_t vectorSizeOf(const typename std::vector<T>& vec)
 
 Renderer::Renderer(QOpenGLWidget *_widget) :
     mProgram(_widget), mVertexShader(QOpenGLShader::Vertex, _widget), mFragmentShader(QOpenGLShader::Fragment, _widget),
-    mVertex(QOpenGLBuffer::VertexBuffer), mIndex(QOpenGLBuffer::IndexBuffer), mTexture(QOpenGLTexture::Target2D)
+    mVertex(QOpenGLBuffer::VertexBuffer), mIndex(QOpenGLBuffer::IndexBuffer), mTexture(QOpenGLTexture::Target2D), _hasError(false)
 #ifdef QT_DEBUG
     , mLogger(_widget)
 #endif
@@ -52,12 +52,14 @@ Renderer::Renderer(QOpenGLWidget *_widget) :
 
 	if (!mVertexShader.compileSourceFile(":/shaders/main.vert")) {
 		qWarning() << "Cannot compile main.vert" << mVertexShader.log();
+		_hasError = true;
 	}
 	if (!mVertexShader.log().isEmpty()) {
 		qWarning() << "Warning during main.vert compilation" << mVertexShader.log();
 	}
 	if (!mFragmentShader.compileSourceFile(":/shaders/main.frag")) {
 		qWarning() << "Cannot compile main.frag" << mFragmentShader.log();
+		_hasError = true;
 	}
 	if (!mFragmentShader.log().isEmpty()) {
 		qWarning() << "Warning during main.frag compilation" << mFragmentShader.log();
@@ -65,9 +67,11 @@ Renderer::Renderer(QOpenGLWidget *_widget) :
 
 	if (!mProgram.addShader(&mVertexShader)) {
 		qWarning() << "Cannot add the vertex shader";
+		_hasError = true;
 	}
 	if (!mProgram.addShader(&mFragmentShader)) {
 		qWarning() << "Cannot add the fragment shader";
+		_hasError = true;
 	}
 
 	mProgram.bindAttributeLocation("a_position", ShaderProgramAttributes::POSITION);
@@ -76,9 +80,11 @@ Renderer::Renderer(QOpenGLWidget *_widget) :
 
 	if (!mProgram.link()) {
 		qWarning() << "Cannot link the program" << mProgram.log();
+		_hasError = true;
 	}
 	if (!mProgram.bind()) {
 		qWarning() << "Cannot bind the program";
+		_hasError = true;
 	}
 
 	mProgram.setUniformValue("tex", 0);

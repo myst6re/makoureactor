@@ -93,7 +93,7 @@ GrpScriptWizard::GrpScriptWizard(QWidget *parent) :
 	setPage(PageType, new GrpScriptWizardPageType);
 }
 
-GrpScript *GrpScriptWizard::selectedGroup() const
+GrpScript GrpScriptWizard::selectedGroup() const
 {
 	int type = field("type").toInt(),
 			subType = field("subType").toInt();
@@ -105,5 +105,5 @@ GrpScript *GrpScriptWizard::selectedGroup() const
 		break;
 	}
 
-	return new GrpScript(field("name").toString());
+	return GrpScript(field("name").toString());
 }

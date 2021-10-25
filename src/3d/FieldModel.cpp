@@ -28,7 +28,9 @@ FieldModel::FieldModel(QWidget *parent) :
 
 FieldModel::~FieldModel()
 {
-	delete gpuRenderer;
+	if (gpuRenderer) {
+		delete gpuRenderer;
+	}
 }
 
 void FieldModel::clear()
@@ -37,7 +39,9 @@ void FieldModel::clear()
 	data = nullptr;
 	timer.stop();
 
-	if (gpuRenderer) gpuRenderer->reset();
+	if (gpuRenderer) {
+		gpuRenderer->reset();
+	}
 
 	update();
 }

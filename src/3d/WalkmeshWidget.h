@@ -31,6 +31,9 @@ public:
 	void clear();
 	void fill(Field *field);
 	void updatePerspective();
+	inline bool hasError() const {
+		return gpuRenderer && gpuRenderer->hasError();
+	}
 public slots:
 	void setXRotation(int);
 	void setYRotation(int);

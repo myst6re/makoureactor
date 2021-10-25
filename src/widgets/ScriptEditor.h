@@ -27,7 +27,6 @@ class ScriptEditor : public QDialog
 
 public:
 	ScriptEditor(Field *field, GrpScript *grpScript, Script *script, quint16 opcodeID, bool modify, bool isInit, QWidget *parent = nullptr);
-	virtual ~ScriptEditor() override;
 
 	bool needslabel() const;
 
@@ -51,7 +50,7 @@ private:
 	Field *field;
 	Script *script;
 	quint16 opcodeID;
-	Opcode *opcode;
+	OpcodeBox opcode;
 	bool isInit;
 	static QList<Opcode::Keys> crashIfInit;
 

@@ -400,8 +400,9 @@ void Search::updateRunSearch()
 		Field *f = fieldArchive->field(mainWindow()->fieldList()->currentMapId());
 		if (f) {
 			int i=0;
-			for (const GrpScript *grp : f->scriptsAndTexts()->grpScripts())
-				executionGroup->addItem(QString("%1 - %2").arg(i++).arg(grp->name()));
+			for (const GrpScript &grp : f->scriptsAndTexts()->grpScripts()) {
+				executionGroup->addItem(QString("%1 - %2").arg(i++).arg(grp.name()));
+			}
 		}
 	}
 }

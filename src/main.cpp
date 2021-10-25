@@ -68,6 +68,7 @@ int main(int argc, char *argv[])
 	}
 
 	if (Config::value("dark_theme", false).toBool()) {
+#ifndef Q_OS_DARWIN
 		qApp->setStyle(QStyleFactory::create("Fusion"));
 		QPalette darkPalette;
 		QColor disabledColor = QColor(127, 127, 127);
@@ -101,6 +102,7 @@ int main(int argc, char *argv[])
 		qApp->setPalette(darkPalette);
 
 		qApp->setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
+#endif
 	}
 
 	if (!Var::load()) {

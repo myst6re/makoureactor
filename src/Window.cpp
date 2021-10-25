@@ -954,7 +954,7 @@ void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 	if (fieldModel && this->field == field) {
 		fieldModel->setFieldModelFile(fieldModelFile);
 	}
-	zonePreview->setCurrentIndex(int(fieldModel && fieldModelFile->isValid()));
+	zonePreview->setCurrentIndex(int(fieldModel && !fieldModel->hasError() && fieldModelFile->isValid()));
 }
 
 void Window::setModified(bool enabled)
@@ -1011,7 +1011,7 @@ void Window::saveAs(bool currentPath)
 		                                                       "scene %1 (%2), group %3 (%4), script %5, line %6: %7")
 		                     .arg(fieldArchive->field(mapID)->name())
 		                     .arg(mapID)
-		                     .arg(fieldArchive->field(mapID)->scriptsAndTexts()->grpScript(groupID)->name())
+		                     .arg(fieldArchive->field(mapID)->scriptsAndTexts()->grpScript(groupID).name())
 		                     .arg(groupID).arg(scriptID)
 		                     .arg(opcodeID+1).arg(errorStr));
 		gotoOpcode(mapID, groupID, scriptID, opcodeID);
@@ -1164,9 +1164,10 @@ void Window::notifyDirectoryChanged(const QString &path)
 
 void Window::exportCurrentMap()
 {
-	if (!field || !fieldArchive) return;
+	if (!field || !fieldArchive) {
+		return;
+	}
 
-	int index;
 	QString types, name, selectedFilter,
 			fieldLzs = tr("PC Field Map (*)"),
 			dat = tr("Data DAT File (*.DAT)"),
@@ -1184,7 +1185,9 @@ void Window::exportCurrentMap()
 
 	QString path = Config::value("exportPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("exportPath").toString()+"/";
 	path = QFileDialog::getSaveFileName(this, tr("Export the current file"), path+name, types, &selectedFilter);
-	if (path.isNull())		return;
+	if (path.isNull()) {
+		return;
+	}
 	int error = 4;
 	bool decompressed = selectedFilter == fieldDec;
 	
@@ -1202,16 +1205,26 @@ void Window::exportCurrentMap()
 	
 	QString out;
 	switch (error) {
-	case 0:
-		index = path.lastIndexOf('/');
-		Config::setValue("exportPath", index == -1 ? path : path.left(index));
+	case 0: {
+			qsizetype index = path.lastIndexOf('/');
+			Config::setValue("exportPath", index == -1 ? path : path.left(index));
+		} break;
+	case 1:
+		out = tr("Archive is inaccessible");
 		break;
-	case 1:	out = tr("Archive is inaccessible");break;
-	case 2:	out = tr("Error reopening file");break;
-	case 3:	out = tr("Unable to create the new file");break;
-	case 4:	out = tr("Not yet implemented!");break;
+	case 2:
+		out = tr("Error reopening file");
+		break;
+	case 3:
+		out = tr("Unable to create the new file");
+		break;
+	case 4:
+		out = tr("Not yet implemented!");
+		break;
 	}
-	if (!out.isEmpty())	QMessageBox::warning(this, tr("Error"), out);
+	if (!out.isEmpty()) {
+		QMessageBox::warning(this, tr("Error"), out);
+	}
 }
 
 void Window::massExport()

@@ -31,6 +31,9 @@ public:
 	void setIsAnimated(bool animate);
 	void setAnimationID(int animID);
 	void clear();
+	inline bool hasError() const {
+		return gpuRenderer && gpuRenderer->hasError();
+	}
 	int boneCount() const;
 	int frameCount() const;
 	static void paintModel(Renderer *gpuRenderer, FieldModelFile *data, int animationID, int currentFrame=0, float scale=1.0f, QMatrix4x4 initialModelMatrix = QMatrix4x4());

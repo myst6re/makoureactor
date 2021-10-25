@@ -23,32 +23,6 @@
 #include "../FF7Text.h"
 #include "TutFileStandard.h"
 
-class GrpScriptsIterator : public QListIterator<GrpScript *>
-{
-public:
-	inline explicit GrpScriptsIterator(const QList<GrpScript *> &list)
-		: QListIterator<GrpScript *>(list), _scriptsIt(nullptr) {}
-	GrpScriptsIterator(const GrpScriptsIterator &other);
-	virtual ~GrpScriptsIterator();
-
-	GrpScript * const &next();
-	GrpScript * const &previous();
-
-	/* There is no hasNextScript() function
-	 * nextScript() can return nullptr
-	 */
-	Script *nextScript();
-	Script *previousScript();
-
-	/* There is no hasNextOpcode() function
-	 * nextOpcode() can return nullptr
-	 */
-	Opcode *nextOpcode();
-	Opcode *previousOpcode();
-private:
-	ScriptsIterator *_scriptsIt;
-};
-
 class Section1File : public FieldPart
 {
 public:
@@ -57,8 +31,6 @@ public:
 	};
 
 	explicit Section1File(Field *field);
-	Section1File(const Section1File &other);
-	virtual ~Section1File() override;
 	void clear() override;
 	void initEmpty() override;
 	bool open() override;
@@ -71,13 +43,12 @@ public:
 	int modelID(quint8 grpScriptID) const;
 	void bgParamAndBgMove(QHash<quint8, quint8> &paramActifs, qint16 *z = nullptr, qint16 *x = nullptr, qint16 *y = nullptr) const;
 
-	const QList<GrpScript *> &grpScripts() const;
-	GrpScript *grpScript(int groupID) const;
-	int grpScriptCount() const;
+	const QList<GrpScript> &grpScripts() const;
+	const GrpScript &grpScript(int groupID) const;
+	GrpScript &grpScript(int groupID);
+	qsizetype grpScriptCount() const;
 	inline static int maxGrpScriptCount() { return 256; }
-	bool insertGrpScript(int row);
-	bool insertGrpScript(int row, GrpScript *grpScript);
-	void deleteGrpScript(int row);
+	bool insertGrpScript(int row, const GrpScript &grpScript = GrpScript());
 	void removeGrpScript(int row);
 	bool moveGrpScript(int row, bool direction);
 
@@ -99,7 +70,7 @@ public:
 	void listWindows(int textID, QList<FF7Window> &windows) const;
 	void listModelPositions(QMultiMap<int, FF7Position> &positions) const;
 	int modelCount() const;
-	void linePosition(QMap<int, FF7Position *> &positions) const;
+	void linePosition(QMap<int, std::pair<FF7Position, FF7Position>> &positions) const;
 
 	void shiftTutIds(int row, int shift);
 	bool compileScripts(int &groupID, int &scriptID, int &opcodeID, QString &errorStr);
@@ -108,7 +79,7 @@ public:
 	void autosizeTextWindows();
 
 	const QList<FF7Text> &texts() const;
-	int textCount() const;
+	qsizetype textCount() const;
 	inline static int maxTextCount() { return 256; }
 	const FF7Text &text(int textID) const;
 	void setText(int textID, const FF7Text &text);
@@ -125,14 +96,12 @@ public:
 	quint16 scale() const;
 	void setScale(quint16 scale);
 
-	int availableBytesForScripts() const;
+	qsizetype availableBytesForScripts() const;
 private:
 	QString _author;
-	quint16 _scale;
-	// quint8 nbObjets3D;
-	quint16 _version;
 	QByteArray _empty;
-
-	QList<GrpScript *> _grpScripts;
+	QList<GrpScript> _grpScripts;
 	QList<FF7Text> _texts;
+	quint16 _scale;
+	quint16 _version;
 };

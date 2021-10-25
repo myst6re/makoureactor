@@ -31,11 +31,11 @@ public:
 
 	void fill(GrpScript *grpScript = nullptr);
 	void localeRefresh();
-	void scroll(int, bool focus=true);
+	void scroll(int, bool focus = true);
 
 private slots:
 	void evidence(QListWidgetItem *current, QListWidgetItem *previous);
 
 private:
-	GrpScript *grpScript;
+	GrpScript *_grpScript;
 };

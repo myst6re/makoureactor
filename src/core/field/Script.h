@@ -20,7 +20,41 @@
 #include <QtCore>
 #include "Opcode.h"
 
-typedef QListIterator<Opcode *> OpcodesIterator;
+class OpcodeBox
+{
+	friend class QList<OpcodeBox>;
+public:
+	explicit OpcodeBox(Opcode *opcode);
+	OpcodeBox(const QByteArray &script, qsizetype pos = 0);
+	OpcodeBox(const OpcodeBox &other);
+	~OpcodeBox();
+	OpcodeBox &operator=(const OpcodeBox &other);
+	bool isNull() const {
+		return _opcode == nullptr;
+	}
+	template<typename T>
+	inline T &cast() {
+		return *static_cast<T*>(_opcode);
+	}
+	template<typename T>
+	inline const T &cast() const {
+		return *static_cast<T*>(_opcode);
+	}
+	inline const Opcode *operator->() const {
+		return _opcode;
+	}
+	inline Opcode *operator->() {
+		return _opcode;
+	}
+	inline Opcode::Keys id() const {
+		return Opcode::Keys(_opcode->id());
+	}
+private:
+	OpcodeBox();
+	static Opcode *createOpcode(const QByteArray &script, qsizetype pos = 0);
+	static Opcode *copyOpcode(Opcode *opcode);
+	Opcode *_opcode;
+};
 
 class Script
 {
@@ -30,35 +64,32 @@ public:
 	};
 
 	Script();
-	explicit Script(const QList<Opcode *> &opcodes);
+	explicit Script(const QList<OpcodeBox> &opcodes);
 	explicit Script(const QByteArray &script);
-	Script(const QByteArray &script, int pos, int size);
-	Script(const Script &other);
-	virtual ~Script();
+	Script(const QByteArray &script, qsizetype pos, qsizetype size);
 
-	bool openScript(const QByteArray &script, const int initPos, const int size);
-	int size() const;
+	bool openScript(const QByteArray &script, qsizetype initPos, qsizetype size);
+	qsizetype size() const;
 	bool isEmpty() const;
 	bool isValid() const;
-	Opcode *opcode(quint16 opcodeID) const;
-	const QList<Opcode *> &opcodes() const;
+	const OpcodeBox &opcode(quint16 opcodeID) const;
+	const QList<OpcodeBox> &opcodes() const;
 	bool isVoid() const;
 	bool compile(int &opcodeID, QString &errorStr);
 	QByteArray toByteArray() const;
 	inline QByteArray serialize() const {
 		return toByteArray();
 	}
-	void setOpcode(quint16 opcodeID, Opcode *opcode);
-	void delOpcode(quint16 opcodeID);
-	Opcode *removeOpcode(quint16 opcodeID);
-	void insertOpcode(quint16 opcodeID, Opcode *opcode);
+	void setOpcode(quint16 opcodeID, const OpcodeBox &opcode);
+	void removeOpcode(quint16 opcodeID);
+	void insertOpcode(quint16 opcodeID, const OpcodeBox &opcode);
 	bool moveOpcode(quint16 opcodeID, MoveDirection direction);
-	void shiftGroupIds(int groupId, int steps=1);
-	void shiftTextIds(int textId, int steps=1);
-	void shiftTutIds(int tutId, int steps=1);
+	void shiftGroupIds(int groupId, int steps = 1);
+	void shiftTextIds(int textId, int steps = 1);
+	void shiftTutIds(int tutId, int steps = 1);
 	void swapGroupIds(int groupId1, int groupId2);
 	void setWindow(const FF7Window &win);
-	int opcodePositionInBytes(quint16 opcodeID);
+	int opcodePositionInBytes(quint16 opcodeID) const;
 
 	bool searchOpcode(int opcode, int &opcodeID) const;
 	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &opcodeID) const;
@@ -81,20 +112,18 @@ public:
 	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
 	bool removeTexts();
 
-	Script *splitScriptAtReturn();
-	static Opcode *createOpcode(const QByteArray &script, int pos=0);
-	static Opcode *copyOpcode(Opcode *opcode);
+	Script splitScriptAtReturn();
 
 	QString toString(Field *field) const;
 private:
-	OpcodeJump *convertOpcodeJumpDirection(OpcodeJump *opcodeJump, bool *ok=nullptr) const;
-	OpcodeJump *convertOpcodeJumpRangeToLong(OpcodeJump *opcodeJump, bool *ok=nullptr) const;
+	OpcodeBox convertOpcodeJumpDirection(const OpcodeBox &opcode, bool *ok = nullptr) const;
+	OpcodeBox convertOpcodeJumpRangeToLong(const OpcodeBox &opcode, bool *wasConverted = nullptr) const;
 //	bool verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const;
-	QList<Opcode *> _opcodes;
+	QList<OpcodeBox> _opcodes;
 	QString lastError;
 
 	bool valid;
 };
 
-QDataStream &operator<<(QDataStream &stream, const QList<Opcode *> &script);
-QDataStream &operator>>(QDataStream &stream, QList<Opcode *> &script);
+QDataStream &operator<<(QDataStream &stream, const QList<OpcodeBox> &script);
+QDataStream &operator>>(QDataStream &stream, QList<OpcodeBox> &script);

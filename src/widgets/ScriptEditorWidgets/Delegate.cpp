@@ -90,8 +90,9 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	} else if (type == ScriptEditorGenericList::group_id
 	          && _field->scriptsAndTexts()->grpScriptCount() > 0) {
 		QComboBox *comboBox = new QComboBox(parent);
-		for (const GrpScript *grp : _field->scriptsAndTexts()->grpScripts())
-			comboBox->addItem(grp->name());
+		for (const GrpScript &grp : _field->scriptsAndTexts()->grpScripts()) {
+			comboBox->addItem(grp.name());
+		}
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::personnage_id) {
 		QComboBox *comboBox = new QComboBox(parent);

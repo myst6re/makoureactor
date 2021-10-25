@@ -162,8 +162,7 @@ void ScriptManager::refreshOpcode(int groupID, int scriptID, int opcodeID)
 		return;
 	}
 
-	Script *currentScript = _scriptList->currentScript();
-	if (currentScript) {
+	if (_scriptList->currentScript()) {
 		_opcodeList->refreshOpcode(opcodeID);
 	}
 }

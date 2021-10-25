@@ -26,8 +26,8 @@ class ScriptEditorWindowPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorWindowPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
-	Opcode *opcode() override;
-	void setOpcode(Opcode *opcode) override;
+	OpcodeBox buildOpcode() override;
+	void setOpcode(const OpcodeBox &opcode) override;
 private slots:
 	void updatePreview();
 	void updateText(int textID);
@@ -54,8 +54,8 @@ class ScriptEditorWindowModePage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorWindowModePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
-	Opcode *opcode() override;
-	void setOpcode(Opcode *opcode) override;
+	OpcodeBox buildOpcode() override;
+	void setOpcode(const OpcodeBox &opcode) override;
 private slots:
 	void updatePreview();
 private:
@@ -70,8 +70,8 @@ class ScriptEditorWindowMovePage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorWindowMovePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
-	Opcode *opcode() override;
-	void setOpcode(Opcode *opcode) override;
+	OpcodeBox buildOpcode() override;
+	void setOpcode(const OpcodeBox &opcode) override;
 private:
 	void build() override;
 	QSpinBox *winID, *x, *y;

@@ -36,9 +36,9 @@ public:
 	ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
 	virtual ~ScriptEditorGenericList() override {}
 
-	virtual Opcode *opcode() override;
+	virtual OpcodeBox buildOpcode() override;
 public slots:
-	virtual void setOpcode(Opcode *opcode) override;
+	virtual void setOpcode(const OpcodeBox &opcode) override;
 private slots:
 	void addParam();
 	void delLastRow();

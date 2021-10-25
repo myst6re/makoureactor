@@ -112,9 +112,9 @@ QTreeWidgetItem *SearchAll::createItemField(int mapID) const
 								<< QString("%1").arg(mapID, 3));
 
 	item->setData(0, Qt::UserRole, mapID);
-	if(_fieldArchive) {
-		Field *f = _fieldArchive->field(quint32(mapID));
-		if(f) {
+	if (_fieldArchive) {
+		Field *f = _fieldArchive->field(mapID);
+		if (f) {
 			item->setText(0, QString("%1 : %2")
 			                     .arg(mapID, 3)
 			                     .arg(f->name()));
@@ -142,14 +142,14 @@ QTreeWidgetItem *SearchAll::createItemOpcode(int mapID, int grpScriptID, int scr
 	item->setData(2, Qt::UserRole, scriptID);
 	item->setData(3, Qt::UserRole, opcodeID);
 
-	if(_fieldArchive) {
-		Field *f = _fieldArchive->field(quint32(mapID));
-		if(f) {
-			GrpScript *grp = f->scriptsAndTexts()->grpScripts().value(grpScriptID);
-			if(grp) {
-				item->setText(0, QString("%1 : %2").arg(grpScriptID, 3).arg(grp->name()));
-				item->setText(1, grp->scriptName(quint8(scriptID)));
-				item->setText(3, grp->script(quint8(scriptID))->opcode(quint16(opcodeID))->toString(f));
+	if (_fieldArchive) {
+		Field *f = _fieldArchive->field(mapID);
+		if (f) {
+			if (grpScriptID >= 0 && grpScriptID < f->scriptsAndTexts()->grpScriptCount()) {
+				const GrpScript &grp = f->scriptsAndTexts()->grpScript(grpScriptID);
+				item->setText(0, QString("%1 : %2").arg(grpScriptID, 3).arg(grp.name()));
+				item->setText(1, grp.scriptName(quint8(scriptID)));
+				item->setText(3, grp.script(quint8(scriptID)).opcode(quint16(opcodeID))->toString(f));
 			}
 		}
 	}
@@ -169,9 +169,9 @@ QTreeWidgetItem *SearchAll::createItemText(int mapID, int textID, int index, int
 	item->setData(1, Qt::UserRole, textID);
 	item->setData(2, Qt::UserRole, index);
 
-	if(_fieldArchive) {
-		Field *f = _fieldArchive->field(quint32(mapID));
-		if(f) {
+	if (_fieldArchive) {
+		Field *f = _fieldArchive->field(mapID);
+		if (f) {
 			const FF7Text &text = f->scriptsAndTexts()->text(textID);
 			item->setText(1, text.text(Config::value("jp_txt", false).toBool(), true));
 		}

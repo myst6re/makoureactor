@@ -67,32 +67,32 @@ void ScriptEditorDLPBSavemap::build()
 	connect(_toIsPointer, SIGNAL(toggled(bool)), SIGNAL(opcodeChanged()));
 }
 
-Opcode *ScriptEditorDLPBSavemap::opcode()
+OpcodeBox ScriptEditorDLPBSavemap::buildOpcode()
 {
-	Opcode1A *opcode = static_cast<Opcode1A *>(opcodePtr());
+	Opcode1A &op = opcode().cast<Opcode1A>();
 
-	opcode->from = quint16(_from->value());
-	opcode->to = quint16(_to->value());
-	opcode->absValue = quint32(_absValue->value());
-	opcode->flag = quint8((_toIsPointer->isChecked() << 5) |
-	                      (_fromIsPointer->isChecked() << 4) |
-	                      quint8(_flag->currentIndex()));
+	op.from = quint16(_from->value());
+	op.to = quint16(_to->value());
+	op.absValue = quint32(_absValue->value());
+	op.flag = quint8((_toIsPointer->isChecked() << 5) |
+	                 (_fromIsPointer->isChecked() << 4) |
+	                 quint8(_flag->currentIndex()));
 
-	return opcodePtr();
+	return opcode();
 }
 
-void ScriptEditorDLPBSavemap::setOpcode(Opcode *opcode)
+void ScriptEditorDLPBSavemap::setOpcode(const OpcodeBox &opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	Opcode1A *o = static_cast<Opcode1A *>(opcode);
+	const Opcode1A &o = opcode.cast<Opcode1A>();
 
-	_from->setValue(o->from);
-	_to->setValue(o->to);
-	_absValue->setValue(o->absValue);
-	_flag->setCurrentIndex(o->flag & 0x7);
-	_fromIsPointer->setChecked(o->flag & 0x10);
-	_toIsPointer->setChecked(o->flag & 0x20);
+	_from->setValue(o.from);
+	_to->setValue(o.to);
+	_absValue->setValue(o.absValue);
+	_flag->setCurrentIndex(o.flag & 0x7);
+	_fromIsPointer->setChecked(o.flag & 0x10);
+	_toIsPointer->setChecked(o.flag & 0x20);
 }
 
 ScriptEditorDLPBWriteToMemory::ScriptEditorDLPBWriteToMemory(Field *field, GrpScript *grpScript,
@@ -121,22 +121,22 @@ void ScriptEditorDLPBWriteToMemory::build()
 	connect(_bytes, SIGNAL(editingFinished()), SIGNAL(opcodeChanged()));
 }
 
-Opcode *ScriptEditorDLPBWriteToMemory::opcode()
+OpcodeBox ScriptEditorDLPBWriteToMemory::buildOpcode()
 {
-	Opcode1C *opcode = static_cast<Opcode1C *>(opcodePtr());
+	Opcode1C &op = opcode().cast<Opcode1C>();
 
-	opcode->address = quint32(_address->value());
-	opcode->bytes = QByteArray::fromHex(_bytes->text().toLatin1());
+	op.address = quint32(_address->value());
+	op.bytes = QByteArray::fromHex(_bytes->text().toLatin1());
 
-	return opcodePtr();
+	return opcode();
 }
 
-void ScriptEditorDLPBWriteToMemory::setOpcode(Opcode *opcode)
+void ScriptEditorDLPBWriteToMemory::setOpcode(const OpcodeBox &opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	Opcode1C *o = static_cast<Opcode1C *>(opcode);
+	const Opcode1C &op = opcode.cast<Opcode1C>();
 
-	_address->setValue(o->address);
-	_bytes->setText(QString::fromLatin1(o->bytes.toHex()));
+	_address->setValue(op.address);
+	_bytes->setText(QString::fromLatin1(op.bytes.toHex()));
 }

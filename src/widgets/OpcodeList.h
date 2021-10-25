@@ -32,7 +32,7 @@ public:
 	struct Historic {
 		HistoricType type;
 		QList<int> opcodeIDs;
-		QList<Opcode *> data;
+		QList<OpcodeBox> data;
 	};
 
 	explicit OpcodeList(QWidget *parent = nullptr);
@@ -56,8 +56,8 @@ public:
 		return _treeEnabled;
 	}
 
-	bool itemIsExpanded(const Opcode *opcode) const;
-	void setExpandedItems(const QList<const Opcode *> &expandedItems);
+	bool itemIsExpanded(int opcodeID) const;
+	void setExpandedItems(const QList<int> &expandedItems);
 public slots:
 	void refreshOpcode(int opcodeID);
 private slots:
@@ -98,8 +98,8 @@ private:
 	QList<int> selectedIDs();
 
 //	QString showHistoric();
-	void changeHist(HistoricType type, int opcodeID = 0, Opcode *data = nullptr);
-	void changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<Opcode *> &data);
+	void changeHist(HistoricType type, int opcodeID, const OpcodeBox &data = OpcodeBox(nullptr));
+	void changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<OpcodeBox> &data);
 	void clearHist();
 
 	static QPixmap &posNumber(int num, const QPixmap &fontPixmap, QPixmap &wordPixmap);
@@ -110,7 +110,7 @@ private:
 	Field *field;
 	GrpScript *grpScript;
 	Script *script;
-	QHash<const Script *, QList<const Opcode *> > expandedItems;
+	QHash<const Script *, QList<int> > expandedItems;
 
 	QBrush previousBG, previousErrorBg;
 

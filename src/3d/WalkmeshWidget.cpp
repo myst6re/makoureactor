@@ -136,7 +136,7 @@ void WalkmeshWidget::paintGL()
 	}
 
 	mProjection.setToIdentity();
-	mProjection.perspective(fovy, (float)width() / (float)height(), 0.001f, 1000.0f);
+	mProjection.perspective(fovy, float(width()) / float(height()), 0.001f, 1000.0f);
 	gpuRenderer->bindProjectionMatrix(mProjection);
 
 	QMatrix4x4 mModel;
@@ -290,25 +290,23 @@ void WalkmeshWidget::paintGL()
 	}
 
 	if (scripts && scripts->isOpen()) {
-		QMap<int, FF7Position *> positions;
+		QMap<int, std::pair<FF7Position, FF7Position>> positions;
 		scripts->linePosition(positions);
 
 		if (!positions.isEmpty()) {
-			QMapIterator<int, FF7Position *> i(positions);
+			QMapIterator<int, std::pair<FF7Position, FF7Position>> i(positions);
 			while (i.hasNext()) {
 				i.next();
-				FF7Position *pos = i.value();
+				const std::pair<FF7Position, FF7Position> &pos = i.value();
 
 				// Vertex info
-				QVector3D positionA(pos[0].x / 4096.0f, pos[0].y / 4096.0f, pos[0].z / 4096.0f),
-									positionB(pos[1].x / 4096.0f, pos[1].y / 4096.0f, pos[1].z / 4096.0f);
+				QVector3D positionA(pos.first.x / 4096.0f, pos.first.y / 4096.0f, pos.first.z / 4096.0f),
+									positionB(pos.second.x / 4096.0f, pos.second.y / 4096.0f, pos.second.z / 4096.0f);
 				QRgba64   color = QRgba64::fromArgb32(0xFF90FF00);
 				QVector2D texcoord;
 
 				gpuRenderer->bufferVertex(positionA, color, texcoord);
 				gpuRenderer->bufferVertex(positionB, color, texcoord);
-
-				delete[] pos;
 			}
 
 			gpuRenderer->draw(RendererPrimitiveType::PT_LINES);
@@ -320,16 +318,14 @@ void WalkmeshWidget::paintGL()
 
 			QMap<int, int> modelDirection;
 			int modelID = 0;
-			for (GrpScript *group : scripts->grpScripts()) {
-				if (group->typeID() == GrpScript::Model) {
-					if (!group->scripts().isEmpty()) {
-						for (Opcode *op : group->script(0)->opcodes()) {
-							if (op->id() == Opcode::DIR) {
-								OpcodeDIR *opDir = (OpcodeDIR *)op;
-								if (opDir->banks == 0) {
-									modelDirection.insert(modelID, opDir->direction);
-									break;
-								}
+			for (const GrpScript &group : scripts->grpScripts()) {
+				if (group.type() == GrpScript::Model) {
+					for (const OpcodeBox &op : group.script(0).opcodes()) {
+						if (op.id() == Opcode::DIR) {
+							const OpcodeDIR &opDir = op.cast<OpcodeDIR>();
+							if (opDir.banks == 0) {
+								modelDirection.insert(modelID, opDir.direction);
+								break;
 							}
 						}
 					}
@@ -358,16 +354,16 @@ void WalkmeshWidget::paintGL()
 					FieldModelFile *fieldModel = fieldModels.value(modelId);
 					if (fieldModel)
 					{
-					  QMatrix4x4 mModel;
-					  mModel.translate(position.x / 4096.0f, position.y / 4096.0f, position.z / 4096.0f);
-					  mModel.rotate(270.0f, 1.0, 0.0, 0.0);
-
-					  int direction = modelDirection.value(modelId, -1);
-					  if (direction != -1) {
-						  mModel.rotate(-360.0f * direction / 256.0f, 0.0, 1.0, 0.0);
-					  }
-
-					  FieldModel::paintModel(gpuRenderer, fieldModel, 0, 0, 8.0f, mModel);
+						QMatrix4x4 mModel;
+						mModel.translate(position.x / 4096.0f, position.y / 4096.0f, position.z / 4096.0f);
+						mModel.rotate(270.0f, 1.0, 0.0, 0.0);
+						
+						int direction = modelDirection.value(modelId, -1);
+						if (direction != -1) {
+							mModel.rotate(-360.0f * direction / 256.0f, 0.0, 1.0, 0.0);
+						}
+						
+						FieldModel::paintModel(gpuRenderer, fieldModel, 0, 0, 8.0f, mModel);
 					}
 				}
 			}

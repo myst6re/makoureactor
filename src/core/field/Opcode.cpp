@@ -38,31 +38,31 @@ Opcode::~Opcode()
 QByteArray Opcode::toByteArray() const
 {
 	return QByteArray()
-			.append((char)id())
+			.append(char(id()))
 			.append(params());
 }
 
 QByteArray Opcode::serialize() const
 {
-	quint16 identifier = id();
+	quint16 identifier = quint16(id());
 
 	return QByteArray((char *)&identifier, 2)
 			.append(params());
 }
 
-Opcode *Opcode::unserialize(const QByteArray &data)
+OpcodeBox Opcode::unserialize(const QByteArray &data)
 {
 	if (data.size() < 2) {
-		return nullptr;
+		return OpcodeBox(nullptr);
 	}
 
 	quint16 identifier;
 	memcpy(&identifier, data.constData(), 2);
 
 	if (identifier <= 0xFF) {
-		Opcode *ret = Script::createOpcode(QByteArray()
-									.append(quint8(identifier))
-									.append(data.mid(2)));
+		OpcodeBox ret = OpcodeBox(QByteArray()
+		                          .append(char(identifier))
+		                          .append(data.mid(2)));
 
 		quint8 size = 2 + Opcode::length[identifier] - 1;
 
@@ -70,21 +70,21 @@ Opcode *Opcode::unserialize(const QByteArray &data)
 			quint32 label;
 			memcpy(&label, data.constData() + size, 4);
 
-			OpcodeJump *jump = static_cast<OpcodeJump *>(ret);
-			jump->setLabel(label);
-			jump->setBadJump(bool(data.at(size + 4)));
+			OpcodeJump &jump = ret.cast<OpcodeJump>();
+			jump.setLabel(label);
+			jump.setBadJump(bool(data.at(size + 4)));
 		}
 
 		return ret;
 	}
 
 	if (data.size() < 6) {
-		return nullptr;
+		return OpcodeBox(nullptr);
 	}
 	quint32 label;
 	memcpy(&label, data.constData() + 2, 4);
 
-	return new OpcodeLabel(label);
+	return OpcodeBox(new OpcodeLabel(label));
 }
 
 int Opcode::subParam(int cur, int paramSize) const
@@ -349,8 +349,9 @@ void Opcode::backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const
 
 QString Opcode::_script(quint8 param, Section1File *scriptsAndTexts)
 {
-	if (param < scriptsAndTexts->grpScriptCount())
-		return scriptsAndTexts->grpScript(param)->name() + QObject::tr(" (No%1)").arg(param);
+	if (param < scriptsAndTexts->grpScriptCount()) {
+		return scriptsAndTexts->grpScript(param).name() + QObject::tr(" (No%1)").arg(param);
+	}
 	return QObject::tr("? (No%1)").arg(param);
 }
 
@@ -358,8 +359,9 @@ QString Opcode::_text(quint8 textID, Section1File *scriptsAndTexts)
 {
 	if (textID < scriptsAndTexts->textCount()) {
 		QString t = scriptsAndTexts->text(textID).text(Config::value("jp_txt", false).toBool(), true).simplified();
-		if (t.size() > 70)
+		if (t.size() > 70) {
 			t = t.left(35) % QString("...") % t.right(35);
+		}
 		return "\"" + t + "\"";
 	}
 	return QObject::tr("(no text)");
@@ -1259,7 +1261,7 @@ OpcodeSPECIAL::OpcodeSPECIAL(const char *params, int size) :
 }
 
 OpcodeSPECIAL::OpcodeSPECIAL(const OpcodeSPECIAL &other) :
-	Opcode(other), opcode(0)
+	Opcode(other), opcode(nullptr)
 {
 	// Realloc opcode attribute
 	setParams(other.params().constData(), other.params().size());
@@ -1284,7 +1286,7 @@ void OpcodeSPECIAL::setParams(const char *params, int size)
 {
 	if (opcode)		delete opcode;
 
-	switch ((quint8)params[0])
+	switch (quint8(params[0]))
 	{
 	case 0xF5:	opcode = new OpcodeSPECIALARROW(params + 1, size - 1);
 		break;
@@ -1309,7 +1311,7 @@ void OpcodeSPECIAL::setParams(const char *params, int size)
 	case 0xFF:	opcode = new OpcodeSPECIALCLITM();
 		break;
 	default:
-		qWarning() << "unknown opcode SPECIAL type" << (quint8)params[0];
+		qWarning() << "unknown opcode SPECIAL type" << quint8(params[0]);
 		opcode = new OpcodeUnknown(params[0]);
 		break;
 	}

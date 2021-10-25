@@ -26,14 +26,14 @@ class ScriptEditorBinaryOpPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorBinaryOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
-	Opcode *opcode();
-	void setOpcode(Opcode *opcode);
+	OpcodeBox buildOpcode();
+	void setOpcode(const OpcodeBox &opcode);
 private slots:
 	void updateValueRange();
 	void changeCurrentOpcode(int);
 private:
 	void build();
-	Opcode *convertOpcode(Opcode::Keys key);
+	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var, *varOrValue;
 	QComboBox *operationList;
 	QRadioButton *type1, *type2;
@@ -45,14 +45,14 @@ class ScriptEditorUnaryOpPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorUnaryOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
-	Opcode *opcode() override;
-	void setOpcode(Opcode *opcode) override;
+	OpcodeBox buildOpcode() override;
+	void setOpcode(const OpcodeBox &opcode) override;
 private slots:
 	void updateValueRange();
 	void changeCurrentOpcode(int);
 private:
 	void build() override;
-	Opcode *convertOpcode(Opcode::Keys key);
+	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var;
 	QComboBox *operationList;
 	QRadioButton *type1, *type2;
@@ -63,13 +63,13 @@ class ScriptEditorBitOpPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorBitOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
-	Opcode *opcode() override;
-	void setOpcode(Opcode *opcode) override;
+	OpcodeBox buildOpcode() override;
+	void setOpcode(const OpcodeBox &opcode) override;
 private slots:
 	void changeCurrentOpcode(int);
 private:
 	void build() override;
-	Opcode *convertOpcode(Opcode::Keys key);
+	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var, *position;
 	QComboBox *operationList;
 };

@@ -144,8 +144,8 @@ void GrpScriptList::setEnabled(bool enabled)
 GrpScript *GrpScriptList::currentGrpScript()
 {
 	int grpScriptID = selectedID();
-	if (grpScriptID != -1) {
-		return scripts->grpScript(grpScriptID);
+	if (grpScriptID >= 0 && grpScriptID < scripts->grpScriptCount()) {
+		return &scripts->grpScript(grpScriptID);
 	}
 	return nullptr;
 }
@@ -181,17 +181,17 @@ void GrpScriptList::fill(Section1File *scripts)
 	clear();
 
 	int i = 0;
-	for (GrpScript *grpScript : this->scripts->grpScripts()) {
-		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript->name() << grpScript->type());
-		item->setForeground(2, QBrush(grpScript->typeColor()));
+	for (const GrpScript &grpScript : this->scripts->grpScripts()) {
+		QTreeWidgetItem *item = new QTreeWidgetItem(this, QStringList() << QString("%1").arg(i++, 3) << grpScript.name() << grpScript.typeString());
+		item->setForeground(2, QBrush(grpScript.typeColor()));
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-		item->setToolTip(0, grpScript->type());
+		item->setToolTip(0, grpScript.typeString());
 		QIcon icon;
 
-		if (grpScript->character() >= 0 && grpScript->character() < 9) {
-			icon = QIcon(QString(":/images/icon-char-%1.png").arg(grpScript->character()));
+		if (grpScript.character() >= 0 && grpScript.character() < 9) {
+			icon = QIcon(QString(":/images/icon-char-%1.png").arg(grpScript.character()));
 		} else {
-			switch (grpScript->typeID()) {
+			switch (grpScript.type()) {
 			case GrpScript::Director:
 				icon = QIcon(":/images/main.png");
 				break;
@@ -235,10 +235,10 @@ void GrpScriptList::localeRefresh()
 {
 	int grpScriptID = selectedID();
 	QTreeWidgetItem *currentItem = this->currentItem();
-	if (grpScriptID != -1 && currentItem != nullptr) {
-		GrpScript *currentGrpScript = scripts->grpScript(grpScriptID);
-		currentItem->setText(2, currentGrpScript->type());
-		currentItem->setForeground(2, currentGrpScript->typeColor());
+	if (grpScriptID >= 0 && grpScriptID < scripts->grpScriptCount() && currentItem != nullptr) {
+		const GrpScript &currentGrpScript = scripts->grpScript(grpScriptID);
+		currentItem->setText(2, currentGrpScript.typeString());
+		currentItem->setForeground(2, currentGrpScript.typeColor());
 
 		updateHelpWidget();
 	}
@@ -283,7 +283,7 @@ void GrpScriptList::renameOK(QTreeWidgetItem *item, int column)
 	disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(renameOK(QTreeWidgetItem *, int)));
 	QString newName = item->text(1).left(8);
 	item->setText(1, newName);
-	scripts->grpScript(selectedID())->setName(newName);
+	scripts->grpScript(selectedID()).setName(newName);
 	emit changed();
 }
 
@@ -322,8 +322,8 @@ void GrpScriptList::del(bool totalDel)
 	}
 
 	std::sort(selectedIDs.begin(), selectedIDs.end());
-	for (int i = selectedIDs.size()-1; i >= 0; --i) {
-		totalDel ? scripts->deleteGrpScript(selectedIDs.at(i)) : scripts->removeGrpScript(selectedIDs.at(i));
+	for (int i = selectedIDs.size() - 1; i >= 0; --i) {
+		scripts->removeGrpScript(selectedIDs.at(i));
 	}
 
 	blockSignals(true);
@@ -355,8 +355,8 @@ void GrpScriptList::copy()
 	}
 
 	clearCopiedGroups();
-	for (const int &id : qAsConst(selectedIDs)) {
-		grpScriptCopied.append(GrpScript(*scripts->grpScript(id)));
+	for (const int id : selectedIDs) {
+		grpScriptCopied.append(scripts->grpScript(id));
 	}
 
 	actions().at(PasteAction)->setEnabled(true);
@@ -372,8 +372,8 @@ void GrpScriptList::paste()
 		grpScriptID = topLevelItemCount(); // Last position
 	}
 	int i = grpScriptID;
-	for (const GrpScript &GScopied : qAsConst(grpScriptCopied)) {
-		scripts->insertGrpScript(i++, new GrpScript(GScopied));
+	for (const GrpScript &GScopied : grpScriptCopied) {
+		scripts->insertGrpScript(i++, GScopied);
 	}
 
 	fill();

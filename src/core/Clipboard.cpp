@@ -63,9 +63,9 @@ bool Clipboard::hasFf7FieldScriptOpcodes() const
 	return hasData(MIME_FF7_FIELD_SCRIPT_OPCODES);
 }
 
-QList<Opcode *> Clipboard::ff7FieldScriptOpcodes() const
+QList<OpcodeBox> Clipboard::ff7FieldScriptOpcodes() const
 {
-	QList<Opcode *> opcodes;
+	QList<OpcodeBox> opcodes;
 
 	QByteArray data = Clipboard::data(MIME_FF7_FIELD_SCRIPT_OPCODES);
 	if (!data.isEmpty()) {
@@ -82,7 +82,7 @@ QList<Opcode *> Clipboard::ff7FieldScriptOpcodes() const
 	return opcodes;
 }
 
-void Clipboard::setFF7FieldScriptOpcodes(const QList<Opcode *> &opcodes)
+void Clipboard::setFF7FieldScriptOpcodes(const QList<OpcodeBox> &opcodes)
 {
 	QByteArray data;
 	QDataStream stream(&data, QIODevice::WriteOnly);
@@ -97,9 +97,9 @@ bool Clipboard::hasFf7FieldScriptGroups() const
 	return hasData(MIME_FF7_FIELD_SCRIPT_GROUPS);
 }
 
-QList<GrpScript *> Clipboard::ff7FieldScriptGroups() const
+QList<GrpScript> Clipboard::ff7FieldScriptGroups() const
 {
-	QList<GrpScript *> groups;
+	QList<GrpScript> groups;
 
 	QByteArray data = Clipboard::data(MIME_FF7_FIELD_SCRIPT_GROUPS);
 	if (!data.isEmpty()) {
@@ -116,7 +116,7 @@ QList<GrpScript *> Clipboard::ff7FieldScriptGroups() const
 	return groups;
 }
 
-void Clipboard::setFF7FieldScriptGroups(const QList<GrpScript *> &groups)
+void Clipboard::setFF7FieldScriptGroups(const QList<GrpScript> &groups)
 {
 	QByteArray data;
 	QDataStream stream(&data, QIODevice::WriteOnly);

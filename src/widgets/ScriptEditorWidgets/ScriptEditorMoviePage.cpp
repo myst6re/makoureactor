@@ -70,29 +70,29 @@ void ScriptEditorMoviePage::setMovieListItemTexts(int discID)
 		movieNames = &Data::movie_names_cd1;
 	}
 
-	int nbItems = movieNames->size();
+	qsizetype nbItems = movieNames->size();
 	for (int i = 0; i < nbItems; ++i) {
 		movieList->setItemText(i, movieNames->at(i));
 	}
-	for (int i = nbItems; i < 256; ++i) {
+	for (qint16 i = qint16(nbItems); i < 256; ++i) {
 		movieList->setItemText(i, QString::number(i));
 	}
 }
 
-Opcode *ScriptEditorMoviePage::opcode()
+OpcodeBox ScriptEditorMoviePage::buildOpcode()
 {
-	OpcodePMVIE *opcodePMVIE = (OpcodePMVIE *)opcodePtr();
+	OpcodePMVIE &opcodePMVIE = opcode().cast<OpcodePMVIE>();
 
-	opcodePMVIE->movieID = movieList->currentIndex();
+	opcodePMVIE.movieID = quint8(movieList->currentIndex());
 
-	return opcodePtr();
+	return opcode();
 }
 
-void ScriptEditorMoviePage::setOpcode(Opcode *opcode)
+void ScriptEditorMoviePage::setOpcode(const OpcodeBox &opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	OpcodePMVIE *opcodePMVIE = (OpcodePMVIE *)opcode;
+	const OpcodePMVIE &opcodePMVIE = opcode.cast<OpcodePMVIE>();
 
-	movieList->setCurrentIndex(opcodePMVIE->movieID);
+	movieList->setCurrentIndex(opcodePMVIE.movieID);
 }

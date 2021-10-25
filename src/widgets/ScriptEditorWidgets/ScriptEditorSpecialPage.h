@@ -26,8 +26,8 @@ class ScriptEditorDLPBSavemap : public ScriptEditorView
 public:
 	ScriptEditorDLPBSavemap(Field *field, GrpScript *grpScript, Script *script,
 	                        int opcodeID, QWidget *parent = nullptr);
-	Opcode *opcode() override;
-	void setOpcode(Opcode *opcode) override;
+	OpcodeBox buildOpcode() override;
+	void setOpcode(const OpcodeBox &opcode) override;
 private:
 	void build() override;
 	QSpinBox *_from, *_to;
@@ -42,8 +42,8 @@ class ScriptEditorDLPBWriteToMemory : public ScriptEditorView
 public:
 	ScriptEditorDLPBWriteToMemory(Field *field, GrpScript *grpScript, Script *script,
 	                              int opcodeID, QWidget *parent = nullptr);
-	Opcode *opcode() override;
-	void setOpcode(Opcode *opcode) override;
+	OpcodeBox buildOpcode() override;
+	void setOpcode(const OpcodeBox &opcode) override;
 private:
 	void build() override;
 	QDoubleSpinBox *_address;

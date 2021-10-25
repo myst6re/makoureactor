@@ -19,7 +19,7 @@
 #include "Data.h"
 
 ScriptList::ScriptList(QWidget *parent) :
-    QListWidget(parent), grpScript(nullptr)
+    QListWidget(parent), _grpScript(nullptr)
 {
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -40,59 +40,55 @@ void ScriptList::evidence(QListWidgetItem *current, QListWidgetItem *previous)
 
 Script *ScriptList::currentScript()
 {
-	if (!grpScript) {
+	if (!_grpScript) {
 		return nullptr;
 	}
 
 	int scriptID = selectedID();
-	if (scriptID != -1) {
-		return grpScript->script(quint8(scriptID));
+	if (scriptID >= 0 && scriptID < SCRIPTS_SIZE) {
+		return &_grpScript->script(quint8(scriptID));
 	}
 	return nullptr;
 }
 
-void ScriptList::fill(GrpScript *_grpScript)
+void ScriptList::fill(GrpScript *grpScript)
 {
 	clear();
 
-	if (_grpScript) {
-		grpScript = _grpScript;
+	if (grpScript) {
+		_grpScript = grpScript;
 	}
 
-	quint8 i = 0;
-
-	for (Script *script : grpScript->scripts()) {
-		QListWidgetItem *item = new QListWidgetItem(grpScript->scriptName(i), this);
-		if (script->isEmpty()) {
+	for (quint8 i = 0; i < SCRIPTS_SIZE; ++i) {
+		Script script = _grpScript->script(i);
+		QListWidgetItem *item = new QListWidgetItem(_grpScript->scriptName(i), this);
+		if (script.isEmpty()) {
 			item->setForeground(Data::color(Data::ColorDisabledForeground));
-		} else if (script->isVoid()) {
+		} else if (script.isVoid()) {
 			item->setForeground(Data::color(Data::ColorGreyForeground));
 		}
-		++i;
 	}
 }
 
 void ScriptList::localeRefresh()
 {
-	if (!grpScript) {
+	if (!_grpScript) {
 		return;
 	}
 
 	const QPalette &pal = palette();
 
-	quint8 i = 0;
-
-	for (Script *script : grpScript->scripts()) {
+	for (quint8 i = 0; i < SCRIPTS_SIZE; ++i) {
+		Script script = _grpScript->script(i);
 		QListWidgetItem *itm = item(i);
-		itm->setText(grpScript->scriptName(i));
-		if (script->isEmpty()) {
+		itm->setText(_grpScript->scriptName(i));
+		if (script.isEmpty()) {
 			itm->setForeground(Data::color(Data::ColorDisabledForeground));
-		} else if (script->isVoid()) {
+		} else if (script.isVoid()) {
 			itm->setForeground(Data::color(Data::ColorGreyForeground));
 		} else {
 			itm->setForeground(pal.brush(QPalette::WindowText));
 		}
-		++i;
 	}
 }
 

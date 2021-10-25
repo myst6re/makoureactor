@@ -19,6 +19,8 @@
 
 #include <QtCore>
 
+class OpcodeBox;
+
 #define B1(v)		((v>>4)&0xF)
 #define B2(v)		(v&0xF)
 #define OPERATORS_SIZE	11
@@ -209,7 +211,7 @@ public:
 	virtual QByteArray toByteArray() const;
 	// Unserializable byte array (include OpcodeLABEL case)
 	virtual QByteArray serialize() const;
-	static Opcode *unserialize(const QByteArray &data);
+	static OpcodeBox unserialize(const QByteArray &data);
 	inline virtual bool isExec() const { return false; }
 	inline virtual bool isJump() const { return false; }
 	inline virtual bool isIf() const { return false; }
@@ -273,7 +275,7 @@ protected:
 
 class OpcodeUnknown : public Opcode {
 public:
-	explicit OpcodeUnknown(quint8 id, const QByteArray &params=QByteArray());
+	explicit OpcodeUnknown(quint8 id, const QByteArray &params = QByteArray());
 	OpcodeUnknown(quint8 id, const char *params, int size);
 	int id() const override;
 	quint8 size() const override;

@@ -21,25 +21,7 @@
 #include <QColor>
 #include "Script.h"
 
-class ScriptsIterator : public QListIterator<Script *>
-{
-public:
-	inline explicit ScriptsIterator(const QList<Script *> &list)
-		: QListIterator<Script *>(list), _opcodesIt(nullptr) {}
-	ScriptsIterator(const ScriptsIterator &other);
-	virtual ~ScriptsIterator();
-
-	Script * const &next();
-	Script * const &previous();
-
-	/* There is no hasNextOpcode() function
-	 * nextOpcode() can return nullptr
-	 */
-	Opcode *nextOpcode();
-	Opcode *previousOpcode();
-private:
-	OpcodesIterator *_opcodesIt;
-};
+#define SCRIPTS_SIZE 33
 
 class GrpScript
 {	
@@ -49,20 +31,11 @@ public:
 	};
 
 	GrpScript();
-	explicit GrpScript(const QString &name);
-	GrpScript(const QString &name, QList<Script *> scripts);
-	GrpScript(const GrpScript &other);
-	virtual ~GrpScript();
+	explicit GrpScript(const QString &name, const QList<Script> &scripts = QList<Script>());
 
-	static GrpScript *createGroupModel(quint8 modelID, int charID = -1);
+	static GrpScript createGroupModel(quint8 modelID, qint16 charID = -1);
 
-	inline bool setScript(int row, const QByteArray &script) {
-		return setScript(row, script, 0, script.size());
-	}
-	bool setScript(int row, const QByteArray &script, int pos, int size);
-	inline void setScript(int row, Script *script) {
-		_scripts.replace(row, script);
-	}
+	void setScript(int row, const Script &script);
 
 	QString name() const;
 	inline const QString &realName() const {
@@ -71,25 +44,28 @@ public:
 	inline void setName(const QString &name) {
 		_name = name;
 	}
-	inline int size() const {
-		return _scripts.size();
+	inline const Script &script(quint8 scriptID) const {
+		return _scripts.at(scriptID);
 	}
-	inline Script *script(quint8 scriptID) const {
-		return _scripts.value(scriptID);
+	inline Script &script(quint8 scriptID) {
+		return _scripts[scriptID];
 	}
-	inline const QList<Script *> &scripts() const {
+	const QVarLengthArray<Script> &scripts() const {
 		return _scripts;
 	}
+	QList<Script> scriptToList() const;
 	QByteArray toByteArray(quint8 scriptID) const;
 	void backgroundParams(QHash<quint8, quint8> &paramActifs) const;
 	void backgroundMove(qint16 z[2], qint16 *x = nullptr, qint16 *y = nullptr) const;
-	Type typeID();
-	QString type();
+	inline GrpScript::Type type() const {
+		return _type;
+	}
+	QString typeString() const;
 	inline qint16 character() const {
 		return _character;
 	}
-	QColor typeColor();
-	QString scriptName(quint8 scriptID);
+	QColor typeColor() const;
+	QString scriptName(quint8 scriptID) const;
 
 	bool searchOpcode(int opcode, int &scriptID, int &opcodeID) const;
 	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &scriptID, int &opcodeID) const;
@@ -105,9 +81,9 @@ public:
 	bool searchTextInScriptsP(const QRegularExpression &text, int &scriptID, int &opcodeID, const Section1File *scriptsAndTexts) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
-	void shiftGroupIds(int groupId, int steps=1);
-	void shiftTextIds(int textId, int steps=1);
-	void shiftTutIds(int tutId, int steps=1);
+	void shiftGroupIds(int groupId, int steps = 1);
+	void shiftTextIds(int textId, int steps = 1);
+	void shiftTutIds(int tutId, int steps = 1);
 	void swapGroupIds(int groupId1, int groupId2);
 	void setWindow(const FF7Window &win);
 	void listWindows(int groupID, QMultiMap<quint64, FF7Window> &windows, QMultiMap<quint8, quint64> &text2win) const;
@@ -119,22 +95,17 @@ public:
 
 	QString toString(Field *field) const;
 private:
-	void addScript();
-	bool addScript(const QByteArray &script, bool explodeInit = true);
-	void setType();
+	void detectType();
 	bool search(int &scriptID, int &opcodeID) const;
 
 	QString _name;
-	QList<Script *> _scripts;
+	QVarLengthArray<Script> _scripts;
 
+	Type _type;
 	qint16 _character;
-	bool animation;
-	bool location;
-	bool director;
-	
 };
 
-QDataStream &operator<<(QDataStream &stream, const QList<GrpScript *> &scripts);
-QDataStream &operator>>(QDataStream &stream, QList<GrpScript *> &scripts);
-QDataStream &operator<<(QDataStream &stream, const QList<Script *> &scripts);
-QDataStream &operator>>(QDataStream &stream, QList<Script *> &scripts);
+QDataStream &operator<<(QDataStream &stream, const QList<GrpScript> &scripts);
+QDataStream &operator>>(QDataStream &stream, QList<GrpScript> &scripts);
+QDataStream &operator<<(QDataStream &stream, const QList<Script> &scripts);
+QDataStream &operator>>(QDataStream &stream, QList<Script> &scripts);

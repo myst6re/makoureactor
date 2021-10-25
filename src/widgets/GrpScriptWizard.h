@@ -45,7 +45,7 @@ class GrpScriptWizard : public QWizard
 {
 public:
 	explicit GrpScriptWizard(QWidget *parent = nullptr);
-	GrpScript *selectedGroup() const;
+	GrpScript selectedGroup() const;
 protected:
 	enum {
 		PageType

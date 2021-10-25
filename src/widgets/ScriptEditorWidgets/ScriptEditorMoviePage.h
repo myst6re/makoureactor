@@ -25,8 +25,8 @@ class ScriptEditorMoviePage : public ScriptEditorView
 	Q_OBJECT
 public:
 	ScriptEditorMoviePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
-	Opcode *opcode() override;
-	void setOpcode(Opcode *opcode) override;
+	OpcodeBox buildOpcode() override;
+	void setOpcode(const OpcodeBox &opcode) override;
 private slots:
 	void setMovieListItemTexts(int discID);
 private:

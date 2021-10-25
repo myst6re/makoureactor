@@ -72,6 +72,7 @@ private:
 	std::vector<uint32_t> mIndexBuffer;
 
 	QOpenGLTexture mTexture;
+	bool _hasError;
 #ifdef QT_DEBUG
 	QOpenGLDebugLogger mLogger;
 #endif
@@ -82,6 +83,9 @@ private:
 public:
 	Renderer(QOpenGLWidget *_widget);
 
+	inline bool hasError() const {
+		return _hasError;
+	}
 	void clear();
 	void show();
 	void reset();
