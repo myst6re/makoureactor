@@ -22,7 +22,7 @@
 #include "Data.h"
 
 OpcodeList::OpcodeList(QWidget *parent) :
-    QTreeWidget(parent), _scriptsAndTexts(nullptr), _grpScript(nullptr), _script(nullptr), errorLine(-1),
+    QTreeWidget(parent), _field(nullptr), _grpScript(nullptr), _script(nullptr), errorLine(-1),
     isInit(false), _treeEnabled(true)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
@@ -383,7 +383,7 @@ bool OpcodeList::itemIsExpanded(int opcodeID) const
 
 void OpcodeList::refreshOpcode(int opcodeID)
 {
-	if (_scriptsAndTexts == nullptr) {
+	if (_field == nullptr || _field->scriptsAndTexts() == nullptr) {
 		return;
 	}
 
@@ -393,14 +393,14 @@ void OpcodeList::refreshOpcode(int opcodeID)
 		return;
 	}
 
-	item->setText(0, _script->opcode(opcodeID)->toString(_scriptsAndTexts));
+	item->setText(0, _script->opcode(opcodeID)->toString(_field->scriptsAndTexts()));
 }
 
-void OpcodeList::fill(Section1File *scriptsAndTexts, GrpScript *grpScript, Script *script)
+void OpcodeList::fill(Field *field, const GrpScript *grpScript, Script *script)
 {
 	saveExpandedItems();
 	clearHist();
-	_scriptsAndTexts = scriptsAndTexts;
+	_field = field;
 	_grpScript = grpScript;
 	_script = script;
 
@@ -416,6 +416,7 @@ void OpcodeList::fill()
 	QTreeWidget::clear();
 	blockSignals(false);
 	header()->setMinimumSectionSize(0);
+	Section1File *scriptsAndTexts = _field->scriptsAndTexts();
 	
 	if (!_script->isEmpty()) {
 		QList<quint32> indent;
@@ -444,7 +445,7 @@ void OpcodeList::fill()
 
 			Opcode::Keys id = curOpcode.id();
 
-			QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList(curOpcode->toString(_scriptsAndTexts)));
+			QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList(curOpcode->toString(scriptsAndTexts)));
 			item->setData(0, Qt::UserRole, opcodeID);
 			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 			items.append(item);
@@ -742,7 +743,7 @@ void OpcodeList::scriptEditor(bool modify)
 		++opcodeID;
 	}
 
-	ScriptEditor editor(_scriptsAndTexts, *_grpScript, *_script, opcodeID, modify, isInit, this);
+	ScriptEditor editor(_field, _field->scriptsAndTexts(), *_grpScript, *_script, opcodeID, modify, isInit, this);
 
 	if (editor.exec() == QDialog::Accepted) {
 		OpcodeBox opcode = editor.buildOpcode();

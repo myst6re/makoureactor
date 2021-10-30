@@ -26,7 +26,7 @@ class ScriptEditor : public QDialog
 	Q_OBJECT
 
 public:
-	ScriptEditor(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, bool modify, bool isInit, QWidget *parent = nullptr);
+	ScriptEditor(Field *field, const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, bool modify, bool isInit, QWidget *parent = nullptr);
 
 	bool needslabel() const;
 	OpcodeBox buildOpcode() const;
@@ -37,6 +37,29 @@ private slots:
 	void buildList(int);
 	
 private:
+	enum PageType {
+		GenericList = 0,
+		ReturnTo,
+		Exec,
+		ExecChar,
+		Label,
+		Jump,
+		If,
+		IfKey,
+		IfQ,
+		Wait,
+		BinaryOp,
+		UnaryOp,
+		BitOp,
+		Window,
+		WindowMode,
+		WindowMove,
+		Movie,
+		Walkmesh,
+		JumpNanaki,
+		DLPBSavemap,
+		DLPBWriteToMemory
+	};
 	void fillEditor();
 	void fillView();
 	void setCurrentMenu(int id);
@@ -51,7 +74,7 @@ private:
 
 	const Section1File *scriptsAndTexts;
 	const Script &script;
-	int opcodeID;
 	OpcodeBox opcode;
+	int opcodeID;
 	bool isInit, modify, change;
 };

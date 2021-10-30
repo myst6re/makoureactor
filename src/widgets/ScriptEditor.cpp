@@ -22,18 +22,13 @@
 #include "ScriptEditorWidgets/ScriptEditorWindowPage.h"
 #include "ScriptEditorWidgets/ScriptEditorMoviePage.h"
 #include "ScriptEditorWidgets/ScriptEditorSpecialPage.h"
-
-#define JUMP_PAGE           5
-#define IF_PAGE             6
-#define IFKEY_PAGE          7
-#define IFQ_PAGE            8
-#define JUMP_NANAKI_PAGE    17
+#include "ScriptEditorWidgets/ScriptEditorWalkmeshPage.h"
 
 QList<Opcode::Keys> ScriptEditor::crashIfInit;
 
-ScriptEditor::ScriptEditor(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, bool modify, bool isInit, QWidget *parent) :
+ScriptEditor::ScriptEditor(Field *field, const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, bool modify, bool isInit, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-	scriptsAndTexts(scriptsAndTexts), script(script), opcodeID(opcodeID), opcode(nullptr), isInit(isInit), modify(modify), change(false)
+	scriptsAndTexts(scriptsAndTexts), script(script), opcode(nullptr), opcodeID(opcodeID), isInit(isInit), modify(modify), change(false)
 {
 	if (crashIfInit.isEmpty()) {
 		crashIfInit << Opcode::JOIN << Opcode::SPLIT
@@ -96,6 +91,7 @@ ScriptEditor::ScriptEditor(const Section1File *scriptsAndTexts, const GrpScript 
 	editorLayout->addWidget(new ScriptEditorWindowModePage(scriptsAndTexts, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorWindowMovePage(scriptsAndTexts, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorMoviePage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorWalkmeshPage(field, scriptsAndTexts, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorJumpNanakiPage(scriptsAndTexts, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorDLPBSavemap(scriptsAndTexts, grpScript, script, opcodeID, this));
 	editorLayout->addWidget(new ScriptEditorDLPBWriteToMemory(scriptsAndTexts, grpScript, script, opcodeID, this));
@@ -146,44 +142,44 @@ ScriptEditor::ScriptEditor(const Section1File *scriptsAndTexts, const GrpScript 
 
 void ScriptEditor::fillEditor()
 {
-	int index;
+	PageType index;
 
 	editorWidget->clear();
 
 	// Change current editor widget
 	switch (opcode.id()) {
 	case Opcode::RETTO:
-		index = 1;
+		index = ReturnTo;
 		break;
 	case Opcode::REQEW:case Opcode::REQ:
 	case Opcode::REQSW:
-		index = 2;
+		index = Exec;
 		break;
 	case Opcode::PRQEW:case Opcode::PREQ:
 	case Opcode::PRQSW:
-		index = 3;
+		index = ExecChar;
 		break;
 	case Opcode::LABEL:
-		index = 4;
+		index = Label;
 		break;
 	case Opcode::JMPF:case Opcode::JMPFL:
 	case Opcode::JMPB:case Opcode::JMPBL:
-		index = JUMP_PAGE;
+		index = Jump;
 		break;
 	case Opcode::IFUB:case Opcode::IFUBL:
 	case Opcode::IFSW:case Opcode::IFSWL:
 	case Opcode::IFUW:case Opcode::IFUWL:
-		index = IF_PAGE;
+		index = If;
 		break;
 	case Opcode::IFKEY:case Opcode::IFKEYON:
 	case Opcode::IFKEYOFF:
-		index = IFKEY_PAGE;
+		index = IfKey;
 		break;
 	case Opcode::IFMEMBQ:case Opcode::IFPRTYQ:
-		index = IFQ_PAGE;
+		index = IfQ;
 		break;
 	case Opcode::WAIT:
-		index = 9;
+		index = Wait;
 		break;
 	case Opcode::PLUSX:case Opcode::PLUS2X:
 	case Opcode::MINUSX:case Opcode::MINUS2X:
@@ -197,43 +193,46 @@ void ScriptEditor::fillEditor()
 	case Opcode::OR:case Opcode::OR2:
 	case Opcode::XOR:case Opcode::XOR2:
 	case Opcode::LBYTE:case Opcode::HBYTE:
-		index = 10;
+		index = BinaryOp;
 		break;
 	case Opcode::INCX:case Opcode::INC2X:
 	case Opcode::INC:case Opcode::INC2:
 	case Opcode::DECX:case Opcode::DEC2X:
 	case Opcode::DEC:case Opcode::DEC2:
 	case Opcode::RANDOM:
-		index = 11;
+		index = UnaryOp;
 		break;
 	case Opcode::BITOFF:case Opcode::BITON:
 	case Opcode::BITXOR:
-		index = 12;
+		index = BitOp;
 		break;
 	case Opcode::WINDOW:case Opcode::WSIZW:
 	case Opcode::WROW:
-		index = 13;
+		index = Window;
 		break;
 	case Opcode::WMODE:
-		index = 14;
+		index = WindowMode;
 		break;
 	case Opcode::WMOVE:
-		index = 15;
+		index = WindowMove;
 		break;
 	case Opcode::PMVIE:
-		index = 16;
+		index = Movie;
+		break;
+	case Opcode::LINE:
+		index = Walkmesh;
 		break;
 	case Opcode::Unknown3:
-		index = 18;
+		index = DLPBSavemap;
 		break;
 	case Opcode::Unknown4:
-		index = JUMP_NANAKI_PAGE;
+		index = JumpNanaki;
 		break;
 	case Opcode::Unknown5:
-		index = 19;
+		index = DLPBWriteToMemory;
 		break;
 	default:
-		index = 0;
+		index = GenericList;
 	}
 
 	editorWidget = static_cast<ScriptEditorView *>(editorLayout->widget(index));
@@ -258,11 +257,11 @@ void ScriptEditor::fillView()
 
 bool ScriptEditor::needslabel() const
 {
-	return (editorLayout->currentIndex() == JUMP_PAGE
-	        || editorLayout->currentIndex() == IF_PAGE
-	        || editorLayout->currentIndex() == IFKEY_PAGE
-	        || editorLayout->currentIndex() == IFQ_PAGE
-	        || editorLayout->currentIndex() == JUMP_NANAKI_PAGE)
+	return (editorLayout->currentIndex() == Jump
+	        || editorLayout->currentIndex() == If
+	        || editorLayout->currentIndex() == IfKey
+	        || editorLayout->currentIndex() == IfQ
+	        || editorLayout->currentIndex() == JumpNanaki)
 	        && static_cast<ScriptEditorJumpPageInterface *>(editorWidget)->needsLabel();
 }
 
@@ -336,10 +335,10 @@ void ScriptEditor::changeCurrentOpcode(int index)
 
 void ScriptEditor::setCurrentMenu(int id)
 {
-	for (int i=0; i<comboBox0->count(); ++i) {
+	for (int i = 0; i < comboBox0->count(); ++i) {
 		buildList(i);
 		int index = -1;
-		for (int j=0; j<comboBox->count() && index==-1; ++j) {
+		for (int j = 0; j < comboBox->count() && index == -1; ++j) {
 			QList<QVariant> dataList = comboBox->itemData(j).toList();
 			for (const QVariant &v : qAsConst(dataList)) {
 				if (v.toInt() == id) {

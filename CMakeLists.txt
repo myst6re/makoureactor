@@ -323,6 +323,8 @@ set(PROJECT_SOURCES
     "src/widgets/ScriptEditorWidgets/ScriptEditorStructPage.h"
     "src/widgets/ScriptEditorWidgets/ScriptEditorView.cpp"
     "src/widgets/ScriptEditorWidgets/ScriptEditorView.h"
+    "src/widgets/ScriptEditorWidgets/ScriptEditorWalkmeshPage.cpp"
+    "src/widgets/ScriptEditorWidgets/ScriptEditorWalkmeshPage.h"
     "src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.cpp"
     "src/widgets/ScriptEditorWidgets/ScriptEditorWindowPage.h"
     "src/widgets/ScriptList.cpp"

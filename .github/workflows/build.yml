@@ -40,6 +40,7 @@ jobs:
           win_arch: "x64"
           qt_arch: win64_msvc2019_64
           cmake_extra_args: '-DZLIB_ROOT=C:/zlib'
+          qt_tools: desktop,tools_ninja,qt.tools.ninja desktop,tools_cmake,qt.tools.cmake.win64
     env:
       qt_installation_path: ${{ github.workspace }}
       zlib_path: ${{ github.workspace }}/../zlib-git
@@ -61,7 +62,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.qt_installation_path }}/Qt
-        key: ${{ runner.os }}${{ matrix.win_arch }}-qt-${{ matrix.qt }}
+        key: ${{ runner.os }}${{ matrix.win_arch }}-qt-ninja-cmake-${{ matrix.qt }}
 
     - name: Env Script (Windows)
       uses: ilammy/msvc-dev-cmd@v1
@@ -86,6 +87,7 @@ jobs:
         QT_MAJOR_VERSION=$(echo "${{ matrix.qt }}" | sed -E 's/^([0-9]+)\..*/\1/')
         QT_DIR=$(eval 'echo $Qt'"$QT_MAJOR_VERSION"'_DIR')
         echo "$IQTA_TOOLS/Ninja" >> $GITHUB_PATH
+        echo "$IQTA_TOOLS/CMake_64/bin" >> $GITHUB_PATH
         echo "QT_MAJOR_VERSION=$QT_MAJOR_VERSION" >> $GITHUB_ENV
         echo "QT_DIR=$QT_DIR" >> $GITHUB_ENV
 

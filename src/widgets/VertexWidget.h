@@ -26,8 +26,8 @@ class VertexWidget : public QWidget
 public:
 	explicit VertexWidget(QWidget *parent);
 	VertexWidget(const QString &xLabel=QString(),
-				 const QString &yLabel=QString(),
-				 const QString &zLabel=QString(),
+	             const QString &yLabel=QString(),
+	             const QString &zLabel=QString(),
 	             QWidget *parent = nullptr);
 	Vertex_s values() const;
 	void setValues(const Vertex_s &v);

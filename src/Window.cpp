@@ -921,7 +921,7 @@ void Window::openField(bool reload)
 		authorAction->setVisible(true);
 
 		// Fill group script list
-		_scriptManager->fill(scriptsAndTexts);
+		_scriptManager->fill(field);
 		_scriptManager->setEnabled(true);
 	} else {
 		_scriptManager->clear();

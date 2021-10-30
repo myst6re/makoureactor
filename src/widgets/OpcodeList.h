@@ -48,7 +48,7 @@ public:
 	}
 	void clear();
 	void setEnabled(bool enabled);
-	void fill(Section1File *scriptsAndTexts, GrpScript *grpScript, Script *script);
+	void fill(Field *field, const GrpScript *grpScript, Script *script);
 	void scroll(int, bool focus = true);
 	void enableActions(bool);
 	void setErrorLine(int opcodeID);
@@ -110,7 +110,7 @@ private:
 	QToolBar *_toolBar;
 	QLabel *_help;
 
-	const Section1File *_scriptsAndTexts;
+	Field *_field;
 	const GrpScript *_grpScript;
 	Script *_script;
 

@@ -1719,7 +1719,7 @@ Some scripts can refer to it!</source>
     </message>
     <message>
         <location filename="../src/widgets/OpcodeList.cpp" line="51"/>
-        <location filename="../src/widgets/OpcodeList.cpp" line="798"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="799"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1835,23 +1835,23 @@ Some scripts can refer to it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="491"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="492"/>
         <source>If this script is run,
  assume that the last non-empty script that runs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="799"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="800"/>
         <source>Are you sure you want to delete %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="801"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="802"/>
         <source>the selected command</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/OpcodeList.cpp" line="802"/>
+        <location filename="../src/widgets/OpcodeList.cpp" line="803"/>
         <source>the selected commands</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4431,1193 +4431,1193 @@ id=%2
 <context>
     <name>ScriptEditor</name>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="53"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="48"/>
         <source>Script Editor%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="53"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="48"/>
         <source> (init mode)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="57"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="52"/>
         <source>Control Structures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="58"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="53"/>
         <source>Mathematics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="59"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="54"/>
         <source>Windowing and messages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="60"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="55"/>
         <source>Party and inventory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="61"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="56"/>
         <source>Field Models and animations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="62"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="57"/>
         <source>Walkmesh and locations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="63"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="58"/>
         <source>Background</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="64"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="59"/>
         <source>Fade and camera</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="65"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="60"/>
         <source>Audio and video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="66"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="61"/>
         <source>Modules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="67"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="62"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="103"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="99"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="105"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="101"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="368"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="367"/>
         <source>Return</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="369"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="368"/>
         <source>Return to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="371"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="370"/>
         <source>Execute a script</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="373"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="372"/>
         <source>Execute a script from a party member</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="376"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="375"/>
         <source>Label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="377"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="376"/>
         <source>Goto label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="379"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="378"/>
         <source>If...then</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="381"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="380"/>
         <source>If key pressed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="382"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="381"/>
         <source>If Party Member</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="383"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="382"/>
         <source>If character exsists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="384"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="383"/>
         <source>[DLPB&apos;s custom opcode] If Red XIII is named Nanaki</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="386"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="385"/>
         <source>Wait</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="387"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="386"/>
         <source>No Operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="390"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="389"/>
         <source>Binary operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="395"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="394"/>
         <source>Unary operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="398"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="397"/>
         <source>Bitwise operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="401"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="400"/>
         <source>Seed Random Generator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="402"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="401"/>
         <source>Two Byte from two one-byte</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="403"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="402"/>
         <source>Sinus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="404"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="403"/>
         <source>Cosinus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="407"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="406"/>
         <source>Window creation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="408"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="407"/>
         <source>Resizes/Repositions a window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="409"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="408"/>
         <source>Set line count in window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="410"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="409"/>
         <source>Move a window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="411"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="410"/>
         <source>Set window type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="412"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="411"/>
         <source>Reset a window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="413"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="412"/>
         <source>Close a window (1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="414"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="413"/>
         <source>Close a window (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="416"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="415"/>
         <source>Numerical Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="417"/>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="420"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="416"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="419"/>
         <source>Set window variable (16-bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="418"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="417"/>
         <source>Countdown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="419"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="418"/>
         <source>Set window variable (8-bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="422"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="421"/>
         <source>Set window Text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="423"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="422"/>
         <source>Ask Question</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="425"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="424"/>
         <source>Set map name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="426"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="425"/>
         <source>Enable/Disable menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="427"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="426"/>
         <source>Get window color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="428"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="427"/>
         <source>Set window color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="431"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="430"/>
         <source>HP/MP Maximum (1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="432"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="431"/>
         <source>HP/MP Maximum (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="433"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="432"/>
         <source>HP/MP Maximum with Status Clear</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="434"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="433"/>
         <source>HP/MP Maximum (3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="436"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="435"/>
         <source>Increase MP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="437"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="436"/>
         <source>Decrease MP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="438"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="437"/>
         <source>Increase HP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="439"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="438"/>
         <source>Decrease HP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="440"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="439"/>
         <source>Add gil</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="441"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="440"/>
         <source>Remove gil</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="442"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="441"/>
         <source>Amount of gil</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="443"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="442"/>
         <source>Add Item</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="444"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="443"/>
         <source>Remove item</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="445"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="444"/>
         <source>Amount of item</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="446"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="445"/>
         <source>Add Materia</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="447"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="446"/>
         <source>Remove Materia</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="448"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="447"/>
         <source>Amount of Materia</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="450"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="449"/>
         <source>Party Change</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="451"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="450"/>
         <source>Add Character to the party</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="452"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="451"/>
         <source>Remove Character from the party</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="453"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="452"/>
         <source>Save party</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="454"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="453"/>
         <source>Load party</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="455"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="454"/>
         <source>Create/Delete character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="456"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="455"/>
         <source>Lock character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="457"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="456"/>
         <source>Unlock character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="460"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="459"/>
         <source>Set Field Model</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="461"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="460"/>
         <source>Set character to Field Model</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="462"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="461"/>
         <source>Group control</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="464"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="463"/>
         <source>Get Group Direction (Dir)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="465"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="464"/>
         <source>Get Party Member Direction (Dir)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="466"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="465"/>
         <source>Get Group Triangle ID (I)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="467"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="466"/>
         <source>Get Party Member Triangle ID (I)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="468"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="467"/>
         <source>Get Group coordinates (X,Y)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="469"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="468"/>
         <source>Get Group coordinates (X,Y,Z,I)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="470"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="469"/>
         <source>Get Party coordinates (X,Y,Z,I)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="472"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="471"/>
         <source>Place (X,Y,Z)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="473"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="472"/>
         <source>Place (X,Y,I)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="474"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="473"/>
         <source>Place (X,Y,Z,I)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="475"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="474"/>
         <source>Place (Dir)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="477"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="476"/>
         <source>Move</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="478"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="477"/>
         <source>Move without animation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="479"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="478"/>
         <source>Move without animation or rotation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="480"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="479"/>
         <source>Move to Group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="481"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="480"/>
         <source>Move to Party Member</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="483"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="482"/>
         <source>Turn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="484"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="483"/>
         <source>Direction to Group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="485"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="484"/>
         <source>Direction to Party Member</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="486"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="485"/>
         <source>Inversed Turn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="487"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="486"/>
         <source>Direction (inversed) to Group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="488"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="487"/>
         <source>Direction (inversed) to Party Member</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="489"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="488"/>
         <source>Wait for Turn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="491"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="490"/>
         <source>Play animation (loop)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="492"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="491"/>
         <source>Play animation (1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="493"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="492"/>
         <source>Play animation (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="494"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="493"/>
         <source>Play animation and return (1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="495"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="494"/>
         <source>Play animation and return (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="496"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="495"/>
         <source>Play partial animation (1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="497"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="496"/>
         <source>Play partial animation (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="498"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="497"/>
         <source>Play partial animation and return (1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="499"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="498"/>
         <source>Play partial animation and return (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="500"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="499"/>
         <source>Play Stand/Walk/Run animation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="501"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="500"/>
         <source>Play jump animation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="502"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="501"/>
         <source>Play climb animation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="503"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="502"/>
         <source>Party field join</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="504"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="503"/>
         <source>Party field split</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="505"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="504"/>
         <source>Stop animation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="506"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="505"/>
         <source>Wait for animation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="508"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="507"/>
         <source>Character Graphics - Eye open/close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="509"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="508"/>
         <source>Character Graphics - Activate/Deactivate blending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="510"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="509"/>
         <source>Character Graphics - ??? - AMBNT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="511"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="510"/>
         <source>Character Graphics - ??? (1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="512"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="511"/>
         <source>Character Graphics - ??? (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="513"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="512"/>
         <source>Character Graphics - ??? (3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="514"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="513"/>
         <source>Character Graphics - LIGHT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="515"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="514"/>
         <source>Character Graphics - ??? (4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="516"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="515"/>
         <source>Character Graphics - ??? (5)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="517"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="516"/>
         <source>Character Graphics - ??? (6)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="518"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="517"/>
         <source>Character Graphics - SBOBJ</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="519"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="518"/>
         <source>Character Graphics - ??? (7)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="520"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="519"/>
         <source>Character Graphics - ??? (8)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="521"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="520"/>
         <source>Character Graphics - SHINE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="522"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="521"/>
         <source>Character Graphics - RESET</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="523"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="522"/>
         <source>Wait For Character Graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="525"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="524"/>
         <source>OFST</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="526"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="525"/>
         <source>OFSTW</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="528"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="527"/>
         <source>Movement Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="529"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="528"/>
         <source>Animation Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="530"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="529"/>
         <source>Hide/Display Field Model</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="531"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="530"/>
         <source>Enable/Disable rotation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="532"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="531"/>
         <source>Character Blink</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="533"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="532"/>
         <source>Talk On/Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="534"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="533"/>
         <source>Contact On/Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="535"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="534"/>
         <source>Talk Range (8-bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="536"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="535"/>
         <source>Contact range (8-bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="537"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="536"/>
         <source>Talk Range (16-bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="538"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="537"/>
         <source>Contact range (16-bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="541"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="540"/>
         <source>Create line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="542"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="541"/>
         <source>Set line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="543"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="542"/>
         <source>Line On/Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="544"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="543"/>
         <source>Triangle On/Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="546"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="545"/>
         <source>SLIP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="549"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="548"/>
         <source>Move background Z layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="550"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="549"/>
         <source>Animate background layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="551"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="550"/>
         <source>Show a background state</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="552"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="551"/>
         <source>Hide background state</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="553"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="552"/>
         <source>Show next background state</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="554"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="553"/>
         <source>Show previous background state</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="555"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="554"/>
         <source>Hide background parameters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="557"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="556"/>
         <source>Store Palette</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="558"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="557"/>
         <source>Store Palette (S)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="559"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="558"/>
         <source>Load Palette</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="560"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="559"/>
         <source>Load Palette (S)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="561"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="560"/>
         <source>Copy Palette</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="562"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="561"/>
         <source>Copy Palette (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="563"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="562"/>
         <source>Partial Copy Palette</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="564"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="563"/>
         <source>Partial Copy Palette (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="565"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="564"/>
         <source>Multiply Palette</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="566"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="565"/>
         <source>Multiply Palette (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="567"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="566"/>
         <source>Add Palette</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="568"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="567"/>
         <source>Add Palette (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="571"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="570"/>
         <source>Scroll to playable character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="572"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="571"/>
         <source>Scroll to party member</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="573"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="572"/>
         <source>Scroll to group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="575"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="574"/>
         <source>Scroll (X,Y)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="576"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="575"/>
         <source>Scroll (X,Y,Smooth)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="577"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="576"/>
         <source>Scroll (X,Y,Linear)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="578"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="577"/>
         <source>SCRLO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="579"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="578"/>
         <source>SCRLC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="581"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="580"/>
         <source>Shake</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="582"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="581"/>
         <source>Wait for scroll</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="584"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="583"/>
         <source>VWOFT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="585"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="584"/>
         <source>FADE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="586"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="585"/>
         <source>FADEW</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="587"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="586"/>
         <source>NFADE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="590"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="589"/>
         <source>Play sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="591"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="590"/>
         <source>Alter sound (8-bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="592"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="591"/>
         <source>Alter sound (16-bit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="594"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="593"/>
         <source>Play music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="595"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="594"/>
         <source>Play temporary music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="596"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="595"/>
         <source>MUSVM (unused)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="597"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="596"/>
         <source>Music Unlock/Lock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="598"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="597"/>
         <source>Battle music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="599"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="598"/>
         <source>CHMPH (unused)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="600"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="599"/>
         <source>Get music status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="601"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="600"/>
         <source>Field music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="602"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="601"/>
         <source>Play basic akao operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="604"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="603"/>
         <source>Set next movie</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="605"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="604"/>
         <source>Play movie</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="606"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="605"/>
         <source>MVIEF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="607"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="606"/>
         <source>MVCAM</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="608"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="607"/>
         <source>BGMOVIE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="611"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="610"/>
         <source>Play tutorial</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="612"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="611"/>
         <source>Display a menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="613"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="612"/>
         <source>Disc change screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="614"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="613"/>
         <source>Minigame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="615"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="614"/>
         <source>Battle result load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="616"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="615"/>
         <source>Battle Table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="617"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="616"/>
         <source>Change Map</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="618"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="617"/>
         <source>Last Map ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="619"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="618"/>
         <source>Start Battle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="620"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="619"/>
         <source>Battle On/Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="621"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="620"/>
         <source>Battle mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="622"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="621"/>
         <source>Battle mode (2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="623"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="622"/>
         <source>Map Jump On/Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="624"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="623"/>
         <source>Character movability On/Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="625"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="624"/>
         <source>Preload field Map</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="626"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="625"/>
         <source>PMJMP2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="627"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="626"/>
         <source>Game Over</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="628"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="627"/>
         <source>[DLPB&apos;s custom opcode] Write/Read to entire Savemap</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="629"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="628"/>
         <source>[DLPB&apos;s custom opcode] Write to any memory address via array</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="630"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="629"/>
         <source>SPECIAL - Cursor On/Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="631"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="630"/>
         <source>SPECIAL - PNAME</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="632"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="631"/>
         <source>SPECIAL - Game Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="633"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="632"/>
         <source>SPECIAL - Messages Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="634"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="633"/>
         <source>SPECIAL - Full Materia</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="635"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="634"/>
         <source>SPECIAL - Full Item</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="636"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="635"/>
         <source>SPECIAL - Battle On/Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="637"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="636"/>
         <source>SPECIAL - Character movability On/Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="638"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="637"/>
         <source>SPECIAL - Rename character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="639"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="638"/>
         <source>SPECIAL - Clear Game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="640"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="639"/>
         <source>SPECIAL - Clear Items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="643"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="642"/>
         <source>MPDSP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="644"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="643"/>
         <source>SETX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="645"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="644"/>
         <source>GETX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/ScriptEditor.cpp" line="646"/>
+        <location filename="../src/widgets/ScriptEditor.cpp" line="645"/>
         <source>SEARCHX</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7812,17 +7812,17 @@ Are you sure you want to continue?</source>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="513"/>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="713"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="715"/>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="735"/>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="717"/>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="737"/>
         <source>Camera %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="529"/>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="844"/>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="846"/>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="862"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="864"/>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="884"/>
         <source>Triangle %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7830,26 +7830,26 @@ Are you sure you want to continue?</source>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="544"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="558"/>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="574"/>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="1143"/>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="1203"/>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="1319"/>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="1188"/>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="1248"/>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="1372"/>
         <source>Unused</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="556"/>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="1199"/>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="1244"/>
         <source>Door %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/widgets/WalkmeshManager.cpp" line="572"/>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="1315"/>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="1368"/>
         <source>Arrow %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/WalkmeshManager.cpp" line="1011"/>
+        <location filename="../src/widgets/WalkmeshManager.cpp" line="1049"/>
         <source>?</source>
         <translation type="unfinished"></translation>
     </message>

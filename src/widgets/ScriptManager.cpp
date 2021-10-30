@@ -19,7 +19,7 @@
 #include "core/Config.h"
 
 ScriptManager::ScriptManager(QWidget *parent) :
-    QWidget(parent), _scriptsAndTexts(nullptr)
+    QWidget(parent), _field(nullptr)
 {
 	_groupScriptList = new GrpScriptList(this);
 	_groupScriptList->setMinimumHeight(176);
@@ -112,25 +112,25 @@ void ScriptManager::clear()
 	_groupScriptList->enableActions(false);
 	_scriptList->clear();
 	_opcodeList->clear();
-	_scriptsAndTexts = nullptr;
+	_field = nullptr;
 
 	_groupScriptList->blockSignals(false);
 	_scriptList->blockSignals(false);
 	_opcodeList->blockSignals(false);
 }
 
-void ScriptManager::fill(Section1File *scriptsAndTexts)
+void ScriptManager::fill(Field *field)
 {
 	clear();
 
-	_scriptsAndTexts = scriptsAndTexts;
-	if (_scriptsAndTexts == nullptr) {
+	_field = field;
+	if (_field == nullptr || _field->scriptsAndTexts() == nullptr) {
 		return;
 	}
 
-	if (scriptsAndTexts->isOpen()) {
+	if (_field->scriptsAndTexts()->isOpen()) {
 		_groupScriptList->blockSignals(true);
-		_groupScriptList->fill(scriptsAndTexts);
+		_groupScriptList->fill(_field->scriptsAndTexts());
 		_groupScriptList->blockSignals(false);
 		_groupScriptList->setEnabled(true);
 	}
@@ -138,7 +138,7 @@ void ScriptManager::fill(Section1File *scriptsAndTexts)
 
 void ScriptManager::fillScripts()
 {
-	if (_scriptsAndTexts == nullptr) {
+	if (_field == nullptr) {
 		return;
 	}
 
@@ -155,7 +155,7 @@ void ScriptManager::fillScripts()
 
 void ScriptManager::refreshOpcode(int groupID, int scriptID, int opcodeID)
 {
-	if (_scriptsAndTexts == nullptr || groupID != _groupScriptList->selectedID()
+	if (_field == nullptr || groupID != _groupScriptList->selectedID()
 	    || scriptID != _scriptList->selectedID()) {
 		return;
 	}
@@ -167,14 +167,14 @@ void ScriptManager::refreshOpcode(int groupID, int scriptID, int opcodeID)
 
 void ScriptManager::fillOpcodes()
 {
-	if (_scriptsAndTexts == nullptr) {
+	if (_field == nullptr) {
 		return;
 	}
 
 	Script *currentScript = _scriptList->currentScript();
 	if (currentScript) {
 		_opcodeList->blockSignals(true);
-		_opcodeList->fill(_scriptsAndTexts, _groupScriptList->currentGrpScript(),
+		_opcodeList->fill(_field, _groupScriptList->currentGrpScript(),
 		                 currentScript);
 		_opcodeList->blockSignals(false);
 		_opcodeList->setIsInit(_scriptList->selectedID() == 0);

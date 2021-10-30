@@ -59,7 +59,7 @@ signals:
 	void searchOpcode(int opcodeID);
 public slots:
 	void refreshOpcode(int groupID, int scriptID, int opcodeID);
-	void fill(Section1File *scriptsAndTexts);
+	void fill(Field *field);
 	void fillScripts();
 	void fillOpcodes();
 	void compile();
@@ -71,5 +71,5 @@ private:
 	ScriptList *_scriptList;
 	OpcodeList *_opcodeList;
 	QLabel *_compileScriptIcon, *_compileScriptLabel;
-	Section1File *_scriptsAndTexts;
+	Field *_field;
 };
