@@ -81,7 +81,7 @@ QByteArray FieldModelLoaderPS::save() const
 {
 	QByteArray ret;
 
-	quint16 modelCount = _modelLoaders.size(),
+	quint16 modelCount = quint16(_modelLoaders.size()),
 			size = 4 + modelCount * sizeof(FieldModelLoaderStruct);
 
 	ret.append((char *)&size, 2);
@@ -94,23 +94,25 @@ QByteArray FieldModelLoaderPS::save() const
 	return ret;
 }
 
-int FieldModelLoaderPS::modelCount() const
+qsizetype FieldModelLoaderPS::modelCount() const
 {
 	return _modelLoaders.size();
 }
 
-int FieldModelLoaderPS::animCount(int modelID) const
+qsizetype FieldModelLoaderPS::animCount(int modelID) const
 {
-	if (modelID >= 0 && modelID < _modelLoaders.size())
+	if (modelID >= 0 && modelID < _modelLoaders.size()) {
 		return _modelLoaders.at(modelID).animationCount;
+	}
 	return 0;
 }
 
 quint16 FieldModelLoaderPS::unknown(int modelID) const
 {
 	// TODO: returns a quint16 word? (unknown2 is quint8)
-	if (modelID >= 0 && modelID < _modelLoaders.size())
+	if (modelID >= 0 && modelID < _modelLoaders.size()) {
 		return _modelLoaders.at(modelID).unknown2/* | (_modelLoaders.at(modelID).unknown3 << 8)*/;
+	}
 	return 0;
 }
 
@@ -119,7 +121,7 @@ void FieldModelLoaderPS::setUnknown(int modelID, quint16 unknown)
 	// TODO: sets a quint16 word?
 	if (modelID >= 0 && modelID < _modelLoaders.size()
 			&& _modelLoaders.at(modelID).unknown2 != unknown) {
-		_modelLoaders[modelID].unknown2 = unknown;
+		_modelLoaders[modelID].unknown2 = quint8(unknown);
 		setModified(true);
 	}
 }

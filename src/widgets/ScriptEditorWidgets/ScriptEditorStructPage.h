@@ -25,7 +25,7 @@ class ScriptEditorWithPriorityPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorWithPriorityPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorWithPriorityPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 protected:
 	void build() override;
 	QSpinBox *priority;
@@ -36,7 +36,7 @@ class ScriptEditorReturnToPage : public ScriptEditorWithPriorityPage
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorReturnToPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorReturnToPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 private:
@@ -48,7 +48,7 @@ class ScriptEditorExecPage : public ScriptEditorWithPriorityPage
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorExecPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorExecPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 private slots:
@@ -65,7 +65,7 @@ class ScriptEditorExecCharPage : public ScriptEditorWithPriorityPage
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorExecCharPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorExecCharPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 private slots:
@@ -82,7 +82,7 @@ class ScriptEditorLabelPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorLabelPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorLabelPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 private:
@@ -94,8 +94,8 @@ class ScriptEditorJumpPageInterface : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	ScriptEditorJumpPageInterface(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr) :
-		ScriptEditorView(field, grpScript, script, opcodeID, parent), label(nullptr) {}
+	ScriptEditorJumpPageInterface(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr) :
+		ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent), label(nullptr) {}
 	virtual bool needsLabel() const=0;
 protected:
 	void fillLabelList(bool jumpBack=false);
@@ -106,7 +106,7 @@ class ScriptEditorJumpPage : public ScriptEditorJumpPageInterface
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorJumpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorJumpPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	void clear() override;
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
@@ -122,7 +122,7 @@ class ScriptEditorJumpNanakiPage : public ScriptEditorJumpPageInterface
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorJumpNanakiPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorJumpNanakiPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 	bool needsLabel() const override;
@@ -134,7 +134,7 @@ class ScriptEditorIfPage : public ScriptEditorJumpPageInterface
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorIfPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorIfPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	void clear() override;
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
@@ -153,7 +153,7 @@ class ScriptEditorIfKeyPage : public ScriptEditorJumpPageInterface
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorIfKeyPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorIfKeyPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 	bool needsLabel() const override;
@@ -168,7 +168,7 @@ class ScriptEditorIfQPage : public ScriptEditorJumpPageInterface
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorIfQPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorIfQPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 	bool needsLabel() const override;
@@ -181,7 +181,7 @@ class ScriptEditorWaitPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorWaitPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorWaitPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 private:

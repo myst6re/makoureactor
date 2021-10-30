@@ -19,8 +19,8 @@
 #include "core/Config.h"
 #include "Data.h"
 
-ScriptEditorWindowPage::ScriptEditorWindowPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+ScriptEditorWindowPage::ScriptEditorWindowPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -42,7 +42,7 @@ void ScriptEditorWindowPage::build()
 	previewText = new QComboBox(this);
 	previewText->addItem(tr("[Keep empty window]"));
 	bool jp = Config::value("jp_txt", false).toBool();
-	for (const FF7Text &t : field()->scriptsAndTexts()->texts())
+	for (const FF7Text &t : scriptsAndTexts()->texts())
 		previewText->addItem(t.text(jp, true).simplified());
 	previewText->setMaximumWidth(textPreview->width()/2);
 
@@ -151,8 +151,8 @@ void ScriptEditorWindowPage::setOpcode(const OpcodeBox &opcode)
 	}
 
 	// If the current opcode is followed by MESSAGE or ASK, we can put a text in the window preview
-	if (opcodeID() + 1 < script()->size()) {
-		const OpcodeBox &nextOpcode = script()->opcode(quint16(opcodeID()) + 1);
+	if (opcodeID() + 1 < script().size()) {
+		const OpcodeBox &nextOpcode = script().opcode(opcodeID() + 1);
 		if (nextOpcode.id() == Opcode::MESSAGE) {
 			const OpcodeMESSAGE &mess = nextOpcode.cast<OpcodeMESSAGE>();
 			if (mess.windowID == winID->value()) {
@@ -185,10 +185,10 @@ void ScriptEditorWindowPage::updatePreview()
 void ScriptEditorWindowPage::updateText(int textID)
 {
 	--textID;
-	bool hasText = textID >= 0 && textID < field()->scriptsAndTexts()->textCount();
+	bool hasText = textID >= 0 && textID < scriptsAndTexts()->textCount();
 
 	textPreview->setText(hasText
-						 ? field()->scriptsAndTexts()->text(textID).data()
+						 ? scriptsAndTexts()->text(textID).data()
 						 : QByteArray());
 
 	autoSize->setEnabled(hasText);
@@ -245,8 +245,8 @@ void ScriptEditorWindowPage::resizeWindow()
 	updatePreview();
 }
 
-ScriptEditorWindowModePage::ScriptEditorWindowModePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+ScriptEditorWindowModePage::ScriptEditorWindowModePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -324,8 +324,8 @@ void ScriptEditorWindowModePage::updatePreview()
 	emit opcodeChanged();
 }
 
-ScriptEditorWindowMovePage::ScriptEditorWindowMovePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+ScriptEditorWindowMovePage::ScriptEditorWindowMovePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 

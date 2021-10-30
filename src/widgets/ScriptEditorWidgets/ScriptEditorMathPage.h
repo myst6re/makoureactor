@@ -25,7 +25,7 @@ class ScriptEditorBinaryOpPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorBinaryOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorBinaryOpPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode();
 	void setOpcode(const OpcodeBox &opcode);
 private slots:
@@ -44,7 +44,7 @@ class ScriptEditorUnaryOpPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorUnaryOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorUnaryOpPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 private slots:
@@ -62,7 +62,7 @@ class ScriptEditorBitOpPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorBitOpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorBitOpPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 private slots:

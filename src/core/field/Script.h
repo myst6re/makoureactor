@@ -72,7 +72,9 @@ public:
 	qsizetype size() const;
 	bool isEmpty() const;
 	bool isValid() const;
-	const OpcodeBox &opcode(quint16 opcodeID) const;
+	OpcodeBox &opcode(qsizetype opcodeID);
+	const OpcodeBox &opcode(qsizetype opcodeID) const;
+	QList<OpcodeBox> &opcodes();
 	const QList<OpcodeBox> &opcodes() const;
 	bool isVoid() const;
 	bool compile(int &opcodeID, QString &errorStr);
@@ -80,16 +82,16 @@ public:
 	inline QByteArray serialize() const {
 		return toByteArray();
 	}
-	void setOpcode(quint16 opcodeID, const OpcodeBox &opcode);
-	void removeOpcode(quint16 opcodeID);
-	void insertOpcode(quint16 opcodeID, const OpcodeBox &opcode);
-	bool moveOpcode(quint16 opcodeID, MoveDirection direction);
+	void setOpcode(qsizetype opcodeID, const OpcodeBox &opcode);
+	void removeOpcode(qsizetype opcodeID);
+	void insertOpcode(qsizetype opcodeID, const OpcodeBox &opcode);
+	bool moveOpcode(qsizetype opcodeID, MoveDirection direction);
 	void shiftGroupIds(int groupId, int steps = 1);
 	void shiftTextIds(int textId, int steps = 1);
 	void shiftTutIds(int tutId, int steps = 1);
 	void swapGroupIds(int groupId1, int groupId2);
 	void setWindow(const FF7Window &win);
-	int opcodePositionInBytes(quint16 opcodeID) const;
+	quint32 opcodePositionInBytes(qsizetype opcodeID) const;
 
 	bool searchOpcode(int opcode, int &opcodeID) const;
 	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &opcodeID) const;
@@ -114,7 +116,7 @@ public:
 
 	Script splitScriptAtReturn();
 
-	QString toString(Field *field) const;
+	QString toString(const Section1File *scriptsAndTexts) const;
 private:
 	OpcodeBox convertOpcodeJumpDirection(const OpcodeBox &opcode, bool *ok = nullptr) const;
 	OpcodeBox convertOpcodeJumpRangeToLong(const OpcodeBox &opcode, bool *wasConverted = nullptr) const;

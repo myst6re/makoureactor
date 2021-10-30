@@ -25,7 +25,7 @@ class ScriptEditorWindowPage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorWindowPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorWindowPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 private slots:
@@ -53,7 +53,7 @@ class ScriptEditorWindowModePage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorWindowModePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorWindowModePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 private slots:
@@ -69,7 +69,7 @@ class ScriptEditorWindowMovePage : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	explicit ScriptEditorWindowMovePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	explicit ScriptEditorWindowMovePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
 private:

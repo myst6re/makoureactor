@@ -18,8 +18,8 @@
 #include "ScriptEditorStructPage.h"
 #include "Data.h"
 
-ScriptEditorWithPriorityPage::ScriptEditorWithPriorityPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-      ScriptEditorView(field, grpScript, script, opcodeID, parent)
+ScriptEditorWithPriorityPage::ScriptEditorWithPriorityPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+      ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -33,8 +33,8 @@ void ScriptEditorWithPriorityPage::build()
 	connect(priority, SIGNAL(valueChanged(int)), SIGNAL(opcodeChanged()));
 }
 
-ScriptEditorReturnToPage::ScriptEditorReturnToPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorWithPriorityPage(field, grpScript, script, opcodeID, parent)
+ScriptEditorReturnToPage::ScriptEditorReturnToPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorWithPriorityPage(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -85,8 +85,8 @@ void ScriptEditorReturnToPage::setOpcode(const OpcodeBox &opcode)
 	}
 }
 
-ScriptEditorExecPage::ScriptEditorExecPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorWithPriorityPage(field, grpScript, script, opcodeID, parent)
+ScriptEditorExecPage::ScriptEditorExecPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorWithPriorityPage(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -96,7 +96,7 @@ void ScriptEditorExecPage::build()
 
 	groupList = new QComboBox(this);
 	int i=0;
-	for (const GrpScript &group : field()->scriptsAndTexts()->grpScripts()) {
+	for (const GrpScript &group : scriptsAndTexts()->grpScripts()) {
 		groupList->addItem(QString("%1 - %2").arg(i++).arg(group.name()));
 	}
 
@@ -155,14 +155,13 @@ void ScriptEditorExecPage::setOpcode(const OpcodeBox &opcode)
 	}
 
 	const OpcodeExec &opcodeExec = opcode.cast<OpcodeExec>();
-	Section1File *scriptsAndTexts = field()->scriptsAndTexts();
-	if (opcodeExec.groupID >= scriptsAndTexts->grpScriptCount()) {
+	if (opcodeExec.groupID >= this->scriptsAndTexts()->grpScriptCount()) {
 		setValid(false);
 
 		return;
 	}
 
-	const GrpScript &grp = scriptsAndTexts->grpScript(opcodeExec.groupID);
+	const GrpScript &grp = this->scriptsAndTexts()->grpScript(opcodeExec.groupID);
 
 	setValid(true);
 
@@ -182,12 +181,11 @@ void ScriptEditorExecPage::setOpcode(const OpcodeBox &opcode)
 
 void ScriptEditorExecPage::updateScriptList(int groupID)
 {
-	Section1File *scriptsAndTexts = field()->scriptsAndTexts();
-	if (groupID < 0 || groupID >= scriptsAndTexts->grpScriptCount()) {
+	if (groupID < 0 || groupID >= scriptsAndTexts()->grpScriptCount()) {
 		return;
 	}
 
-	const GrpScript &grp = scriptsAndTexts->grpScript(groupID);
+	const GrpScript &grp = scriptsAndTexts()->grpScript(groupID);
 
 	for (quint8 i = 0; i < 32; ++i) {
 		scriptList->setItemText(i, grp.scriptName(i + 1));
@@ -228,8 +226,8 @@ void ScriptEditorExecPage::convertOpcode(Opcode::Keys key)
 	}
 }
 
-ScriptEditorExecCharPage::ScriptEditorExecCharPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorWithPriorityPage(field, grpScript, script, opcodeID, parent)
+ScriptEditorExecCharPage::ScriptEditorExecCharPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorWithPriorityPage(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -337,8 +335,8 @@ void ScriptEditorExecCharPage::convertOpcode(Opcode::Keys key)
 	}
 }
 
-ScriptEditorLabelPage::ScriptEditorLabelPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+ScriptEditorLabelPage::ScriptEditorLabelPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -372,7 +370,7 @@ void ScriptEditorLabelPage::setOpcode(const OpcodeBox &opcode)
 	const OpcodeLabel &opcodeLabel = opcode.cast<OpcodeLabel>();
 	if (opcodeLabel.label() == 0) {
 		quint32 greaterLabel = 1;
-		for (const OpcodeBox &op : script()->opcodes()) {
+		for (const OpcodeBox &op : script().opcodes()) {
 			if (op->isLabel()) {
 				quint32 lbl = op.cast<OpcodeLabel>().label();
 				if (lbl >= greaterLabel) {
@@ -399,7 +397,7 @@ void ScriptEditorJumpPageInterface::fillLabelList(bool jumpBack)
 	quint32 greaterLabel = 1;
 	int i = 0;
 
-	for (const OpcodeBox &op : script()->opcodes()) {
+	for (const OpcodeBox &op : script().opcodes()) {
 		if (op->isLabel()) {
 			quint32 lbl = op.cast<OpcodeLabel>().label();
 			if (jumpBack || i >= opcodeID()) {
@@ -424,8 +422,8 @@ void ScriptEditorJumpPageInterface::fillLabelList(bool jumpBack)
 	label->blockSignals(false);
 }
 
-ScriptEditorJumpPage::ScriptEditorJumpPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorJumpPageInterface(field, grpScript, script, opcodeID, parent), addJump(false)
+ScriptEditorJumpPage::ScriptEditorJumpPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorJumpPageInterface(scriptsAndTexts, grpScript, script, opcodeID, parent), addJump(false)
 {
 }
 
@@ -464,7 +462,7 @@ OpcodeBox ScriptEditorJumpPage::buildOpcode()
 	quint32 labelVal = label->itemData(label->currentIndex()).toUInt();
 
 	// Search opcode ID for label
-	for (const OpcodeBox &op : script()->opcodes()) {
+	for (const OpcodeBox &op : script().opcodes()) {
 		if (op->isLabel() && op.cast<OpcodeLabel>().label() == labelVal) {
 			break;
 		}
@@ -554,8 +552,8 @@ void ScriptEditorJumpPage::convertOpcode(Opcode::Keys key)
 }
 
 
-ScriptEditorJumpNanakiPage::ScriptEditorJumpNanakiPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-    ScriptEditorJumpPageInterface(field, grpScript, script, opcodeID, parent)
+ScriptEditorJumpNanakiPage::ScriptEditorJumpNanakiPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+    ScriptEditorJumpPageInterface(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -600,8 +598,8 @@ bool ScriptEditorJumpNanakiPage::needsLabel() const
 	return label->currentIndex() == label->count() - 1;
 }
 
-ScriptEditorIfPage::ScriptEditorIfPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorJumpPageInterface(field, grpScript, script, opcodeID, parent), addJump(false)
+ScriptEditorIfPage::ScriptEditorIfPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorJumpPageInterface(scriptsAndTexts, grpScript, script, opcodeID, parent), addJump(false)
 {
 }
 
@@ -852,8 +850,8 @@ void ScriptEditorIfPage::convertOpcode(Opcode::Keys key)
 	}
 }
 
-ScriptEditorIfKeyPage::ScriptEditorIfKeyPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorJumpPageInterface(field, grpScript, script, opcodeID, parent)
+ScriptEditorIfKeyPage::ScriptEditorIfKeyPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorJumpPageInterface(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -981,8 +979,8 @@ void ScriptEditorIfKeyPage::convertOpcode(Opcode::Keys key)
 	}
 }
 
-ScriptEditorIfQPage::ScriptEditorIfQPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorJumpPageInterface(field, grpScript, script, opcodeID, parent)
+ScriptEditorIfQPage::ScriptEditorIfQPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorJumpPageInterface(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -1045,8 +1043,8 @@ bool ScriptEditorIfQPage::needsLabel() const
 	return label->currentIndex() == label->count() - 1;
 }
 
-ScriptEditorWaitPage::ScriptEditorWaitPage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+ScriptEditorWaitPage::ScriptEditorWaitPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 

@@ -26,12 +26,12 @@ class ScriptEditor : public QDialog
 	Q_OBJECT
 
 public:
-	ScriptEditor(Field *field, GrpScript *grpScript, Script *script, quint16 opcodeID, bool modify, bool isInit, QWidget *parent = nullptr);
+	ScriptEditor(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, bool modify, bool isInit, QWidget *parent = nullptr);
 
 	bool needslabel() const;
+	OpcodeBox buildOpcode() const;
 
 private slots:
-	void accept() override;
 	void refreshTextEdit();
 	void changeCurrentOpcode(int);
 	void buildList(int);
@@ -41,18 +41,17 @@ private:
 	void fillView();
 	void setCurrentMenu(int id);
 
+	static QList<Opcode::Keys> crashIfInit;
+
 	QComboBox *comboBox0, *comboBox;
 	QPlainTextEdit *textEdit;
 	QStackedWidget *editorLayout;
 	QPushButton *ok;
 	ScriptEditorView *editorWidget;
 
-	Field *field;
-	Script *script;
-	quint16 opcodeID;
+	const Section1File *scriptsAndTexts;
+	const Script &script;
+	int opcodeID;
 	OpcodeBox opcode;
-	bool isInit;
-	static QList<Opcode::Keys> crashIfInit;
-
-	bool modify, change;
+	bool isInit, modify, change;
 };

@@ -23,31 +23,31 @@
 #include "ScriptEditorWidgets/ScriptEditorMoviePage.h"
 #include "ScriptEditorWidgets/ScriptEditorSpecialPage.h"
 
-#define JUMP_PAGE	5
-#define IF_PAGE		6
-#define IFKEY_PAGE	7
-#define IFQ_PAGE	8
-#define JUMP_NANAKI_PAGE	17
+#define JUMP_PAGE           5
+#define IF_PAGE             6
+#define IFKEY_PAGE          7
+#define IFQ_PAGE            8
+#define JUMP_NANAKI_PAGE    17
 
 QList<Opcode::Keys> ScriptEditor::crashIfInit;
 
-ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, quint16 opcodeID, bool modify, bool isInit, QWidget *parent) :
+ScriptEditor::ScriptEditor(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, bool modify, bool isInit, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint),
-	field(field), script(script), opcodeID(opcodeID), opcode(nullptr), isInit(isInit), modify(modify), change(false)
+	scriptsAndTexts(scriptsAndTexts), script(script), opcodeID(opcodeID), opcode(nullptr), isInit(isInit), modify(modify), change(false)
 {
 	if (crashIfInit.isEmpty()) {
 		crashIfInit << Opcode::JOIN << Opcode::SPLIT
-					<< Opcode::DSKCG
-					<< Opcode::MINIGAME << Opcode::TUTOR
-					<< Opcode::PMOVA
-					<< Opcode::PTURA
-					<< Opcode::MESSAGE << Opcode::ASK << Opcode::MENU
-					<< Opcode::WINDOW << Opcode::MAPJUMP
-					<< Opcode::DFANM << Opcode::ANIME1
-					<< Opcode::MOVE << Opcode::CMOVE << Opcode::FMOVE
-					<< Opcode::ANIME2 << Opcode::ANIMX1 << Opcode::CANIM1 << Opcode::CANMX1
-					<< Opcode::TURNGEN << Opcode::TURN << Opcode::ANIMX2 << Opcode::CANIM2
-					<< Opcode::CANMX2 << Opcode::JUMP << Opcode::LADER;
+		            << Opcode::DSKCG
+		            << Opcode::MINIGAME << Opcode::TUTOR
+		            << Opcode::PMOVA
+		            << Opcode::PTURA
+		            << Opcode::MESSAGE << Opcode::ASK << Opcode::MENU
+		            << Opcode::WINDOW << Opcode::MAPJUMP
+		            << Opcode::DFANM << Opcode::ANIME1
+		            << Opcode::MOVE << Opcode::CMOVE << Opcode::FMOVE
+		            << Opcode::ANIME2 << Opcode::ANIMX1 << Opcode::CANIM1 << Opcode::CANMX1
+		            << Opcode::TURNGEN << Opcode::TURN << Opcode::ANIMX2 << Opcode::CANIM2
+		            << Opcode::CANMX2 << Opcode::JUMP << Opcode::LADER;
 	}
 
 	setWindowTitle(tr("Script Editor%1").arg(isInit ? tr(" (init mode)") : ""));
@@ -55,16 +55,16 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, q
 	
 	QStringList liste0;
 	liste0 << tr("Control Structures") <<
-			  tr("Mathematics") <<
-			  tr("Windowing and messages") <<
-			  tr("Party and inventory") <<
-			  tr("Field Models and animations") <<
-			  tr("Walkmesh and locations") <<
-			  tr("Background") <<
-			  tr("Fade and camera") <<
-			  tr("Audio and video") <<
-			  tr("Modules") <<
-			  tr("Unknown");
+	          tr("Mathematics") <<
+	          tr("Windowing and messages") <<
+	          tr("Party and inventory") <<
+	          tr("Field Models and animations") <<
+	          tr("Walkmesh and locations") <<
+	          tr("Background") <<
+	          tr("Fade and camera") <<
+	          tr("Audio and video") <<
+	          tr("Modules") <<
+	          tr("Unknown");
 	
 	comboBox0 = new QComboBox(this);
 	comboBox0->addItems(liste0);
@@ -79,26 +79,26 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, q
 	textEdit->setFixedHeight(2 * textEdit->fontMetrics().height() + textEditHMargins);
 	
 	editorLayout = new QStackedWidget;
-	editorLayout->addWidget(editorWidget = new ScriptEditorGenericList(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorReturnToPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorExecPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorExecCharPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorLabelPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorJumpPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorIfPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorIfKeyPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorIfQPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorWaitPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorBinaryOpPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorUnaryOpPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorBitOpPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorWindowPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorWindowModePage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorWindowMovePage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorMoviePage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorJumpNanakiPage(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorDLPBSavemap(field, grpScript, script, opcodeID, this));
-	editorLayout->addWidget(new ScriptEditorDLPBWriteToMemory(field, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(editorWidget = new ScriptEditorGenericList(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorReturnToPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorExecPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorExecCharPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorLabelPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorJumpPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorIfPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorIfKeyPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorIfQPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorWaitPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorBinaryOpPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorUnaryOpPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorBitOpPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorWindowPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorWindowModePage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorWindowMovePage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorMoviePage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorJumpNanakiPage(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorDLPBSavemap(scriptsAndTexts, grpScript, script, opcodeID, this));
+	editorLayout->addWidget(new ScriptEditorDLPBWriteToMemory(scriptsAndTexts, grpScript, script, opcodeID, this));
 
 	ok = new QPushButton(tr("OK"),this);
 	ok->setDefault(true);
@@ -118,7 +118,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, q
 	layout->addLayout(buttonLayout);
 
 	if (modify) {
-		this->opcode = script->opcode(opcodeID);
+		this->opcode = script.opcode(opcodeID);
 		int id = opcode->id();
 
 		if (id == Opcode::SPECIAL) {
@@ -138,7 +138,7 @@ ScriptEditor::ScriptEditor(Field *field, GrpScript *grpScript, Script *script, q
 	connect(ok, SIGNAL(released()), SLOT(accept()));
 	connect(cancel, SIGNAL(released()), SLOT(close()));
 	connect(comboBox0, SIGNAL(currentIndexChanged(int)), SLOT(buildList(int)));
-	for (int i=0; i<editorLayout->count(); ++i) {
+	for (int i = 0; i < editorLayout->count(); ++i) {
 		connect(static_cast<ScriptEditorView *>(editorLayout->widget(i)), SIGNAL(opcodeChanged()), SLOT(refreshTextEdit()));
 	}
 	connect(comboBox, SIGNAL(currentIndexChanged(int)), SLOT(changeCurrentOpcode(int)));
@@ -245,7 +245,7 @@ void ScriptEditor::fillEditor()
 
 void ScriptEditor::fillView()
 {
-	textEdit->setPlainText(opcode->toString(field)); // text part
+	textEdit->setPlainText(opcode->toString(scriptsAndTexts)); // text part
 	fillEditor(); // editor part
 
 	// disable if necessary
@@ -256,32 +256,19 @@ void ScriptEditor::fillView()
 	ok->setDisabled(disableEditor);
 }
 
-void ScriptEditor::accept()
-{
-	/* if (!this->change) {
-		close();
-		return;
-	} */
-	if (needslabel()) {
-		script->insertOpcode(this->opcodeID, OpcodeBox(new OpcodeLabel(editorWidget->buildOpcode().cast<OpcodeJump>().label())));
-	}
-
-	if (modify) {
-		script->setOpcode(this->opcodeID, editorWidget->buildOpcode());
-	} else {
-		script->insertOpcode(this->opcodeID, editorWidget->buildOpcode());
-	}
-	QDialog::accept();
-}
-
 bool ScriptEditor::needslabel() const
 {
 	return (editorLayout->currentIndex() == JUMP_PAGE
-			|| editorLayout->currentIndex() == IF_PAGE
-			|| editorLayout->currentIndex() == IFKEY_PAGE
+	        || editorLayout->currentIndex() == IF_PAGE
+	        || editorLayout->currentIndex() == IFKEY_PAGE
 	        || editorLayout->currentIndex() == IFQ_PAGE
 	        || editorLayout->currentIndex() == JUMP_NANAKI_PAGE)
-			&& static_cast<ScriptEditorJumpPageInterface *>(editorWidget)->needsLabel();
+	        && static_cast<ScriptEditorJumpPageInterface *>(editorWidget)->needsLabel();
+}
+
+OpcodeBox ScriptEditor::buildOpcode() const
+{
+	return editorWidget->buildOpcode();
 }
 
 void ScriptEditor::refreshTextEdit()
@@ -290,7 +277,7 @@ void ScriptEditor::refreshTextEdit()
 
 	opcode = editorWidget->buildOpcode();
 
-	textEdit->setPlainText(opcode->toString(field));
+	textEdit->setPlainText(opcode->toString(scriptsAndTexts));
 }
 
 void ScriptEditor::changeCurrentOpcode(int index)
@@ -338,7 +325,7 @@ void ScriptEditor::changeCurrentOpcode(int index)
 		}
 
 		if (id == opcode.id()) {
-			opcode->setParams(newOpcode.constData() + 1, newOpcode.size() - 1); // same opcode, just change params
+			opcode->setParams(newOpcode.constData() + 1, int(newOpcode.size() - 1)); // same opcode, just change params
 		} else { // change all
 			opcode = newOpcode;
 		}

@@ -33,7 +33,7 @@ public:
 		bank, adress, byte, word, sword, bit, boolean, label, akao, dword, shakeType, xAmplitude, xFrames, yAmplitude, yFrames
 	};
 
-	ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	ScriptEditorGenericList(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	virtual ~ScriptEditorGenericList() override {}
 
 	virtual OpcodeBox buildOpcode() override;

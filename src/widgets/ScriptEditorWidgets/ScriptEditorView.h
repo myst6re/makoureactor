@@ -26,7 +26,7 @@ class ScriptEditorView : public QWidget
 	Q_OBJECT
 
 public:
-	ScriptEditorView(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent = nullptr);
+	ScriptEditorView(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
 	virtual ~ScriptEditorView() override;
 
 	virtual OpcodeBox buildOpcode()=0;
@@ -45,17 +45,16 @@ protected:
 	inline const OpcodeBox &opcode() const {
 		return _opcode;
 	}
-	Field *field() const;
-	GrpScript *grpScript() const;
-	Script *script() const;
+	const Section1File *scriptsAndTexts() const;
+	const GrpScript &grpScript() const;
+	const Script &script() const;
 	int opcodeID() const;
 	void setValid(bool valid);
 private:
-	bool _builded;
-	Field *_field;
-	GrpScript *_grpScript;
-	Script *_script;
+	const Section1File *_scriptsAndTexts;
+	const GrpScript &_grpScript;
+	const Script &_script;
 	OpcodeBox _opcode;
 	int _opcodeID;
-	bool _valid;
+	bool _builded, _valid;
 };

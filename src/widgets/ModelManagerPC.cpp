@@ -85,10 +85,10 @@ ModelManagerPC::ModelManagerPC(QWidget *parent) :
 	adjustSize();
 
 	connect(models, SIGNAL(doubleClicked(QModelIndex)), models, SLOT(edit(QModelIndex)));
-	connect(models, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOKModel(QTreeWidgetItem *)));
+	connect(models, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(renameOKModel(QTreeWidgetItem*)));
 
 	connect(modelAnims, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), SLOT(editAnim(QTreeWidgetItem*,int)));
-	connect(modelAnims, SIGNAL(itemChanged(QTreeWidgetItem *, int)), SLOT(renameOKAnim(QTreeWidgetItem *, int)));
+	connect(modelAnims, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(renameOKAnim(QTreeWidgetItem*,int)));
 
 	connect(modelName, SIGNAL(textEdited(QString)), SLOT(setModelName(QString)));
 

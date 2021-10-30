@@ -41,7 +41,7 @@ public:
 	bool open() override;
 	bool open(const QByteArray &data) override;
 	QByteArray save() const override;
-	int modelCount() const override;
+	qsizetype modelCount() const override;
 	bool insertModel(int modelID, const QString &hrcName);
 	void removeModel(int modelID);
 	void swapModel(int oldModelID, int newModelID);
@@ -62,12 +62,12 @@ public:
 	                   const FieldModelColorDir &lightColor);
 	QRgb globalColor(int modelID) const;
 	void setGlobalColor(int modelID, QRgb globalColor);
-	int animCount(int modelID) const override;
+	qsizetype animCount(int modelID) const override;
 	bool insertAnim(int modelID, int numA, const QString &name);
 	void removeAnim(int modelID, int numA);
 	void swapAnim(int modelID, int oldNumA, int newNumA);
 	const QStringList &ANames(int modelID) const;
-	QString AName(int modelID, int numA=0) const;
+	QString AName(int modelID, int numA = 0) const;
 	void setAName(int modelID, int numA, const QString &animName);
 	quint16 animUnknown(int modelID, int numA) const;
 	void setAnimUnknown(int modelID, int numA, quint16 unknown);

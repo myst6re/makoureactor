@@ -48,7 +48,7 @@ public:
 	GrpScript &grpScript(int groupID);
 	qsizetype grpScriptCount() const;
 	inline static int maxGrpScriptCount() { return 256; }
-	bool insertGrpScript(int row, const GrpScript &grpScript = GrpScript());
+	bool insertGrpScript(int row, const GrpScript &grpScript);
 	void removeGrpScript(int row);
 	bool moveGrpScript(int row, bool direction);
 

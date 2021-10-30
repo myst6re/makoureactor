@@ -30,7 +30,7 @@ public:
 		NoType, Model, Location, Animation, Director
 	};
 
-	GrpScript();
+	explicit GrpScript(const QList<Script> &scripts = QList<Script>());
 	explicit GrpScript(const QString &name, const QList<Script> &scripts = QList<Script>());
 
 	static GrpScript createGroupModel(quint8 modelID, qint16 charID = -1);
@@ -93,7 +93,7 @@ public:
 	bool compile(int &scriptID, int &opcodeID, QString &errorStr);
 	bool removeTexts();
 
-	QString toString(Field *field) const;
+	QString toString(Section1File *scriptsAndTexts) const;
 private:
 	void detectType();
 	bool search(int &scriptID, int &opcodeID) const;

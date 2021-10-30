@@ -46,7 +46,7 @@ void FieldModelLoaderPC::clean()
 		const QStringList &animNames = model_anims.at(modelID);
 		for (int animID=0; animID<animNames.size(); ++animID) {
 			const QString &animName = animNames.at(animID);
-			int index = animName.lastIndexOf('.');
+			qsizetype index = animName.lastIndexOf('.');
 			if (index != -1) {
 				model_anims[modelID][animID] = animName.left(index);
 				setModified(true);
@@ -159,16 +159,16 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 		 // model name
 		const char *nameChar = constData + curPos + 2;
 		// Trim \0 at the end
-		model_nameChar.append(QString::fromLatin1(nameChar, qstrnlen(nameChar, len)));
+		model_nameChar.append(QString::fromLatin1(nameChar, qsizetype(qstrnlen(nameChar, len))));
 		memcpy(&model_unknown, constData + curPos + 2 + len, 2);
 		this->model_unknown.append(model_unknown);
 		const char *nameHRC = constData + curPos + 4 + len;
 		// Trim \0 at the end
-		model_nameHRC.append(QString::fromLatin1(nameHRC, qstrnlen(nameHRC, 8)));
+		model_nameHRC.append(QString::fromLatin1(nameHRC, qsizetype(qstrnlen(nameHRC, 8))));
 		bool ok;
 		const char *typeValue = constData + curPos + 12 + len;
 		// Trim \0 at the end
-		int typeHRC_value = QString::fromLatin1(typeValue, qstrnlen(typeValue, 4)).toInt(&ok);
+		quint16 typeHRC_value = quint16(QString::fromLatin1(typeValue, qsizetype(qstrnlen(typeValue, 4))).toUInt(&ok));
 		if (!ok) {
 			typeHRC_value = fieldScale;
 		}
@@ -218,7 +218,7 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 			const char *anim = constData + curPos + 2;
 			// Trim \0 at the end
-			anims.append(QString::fromLatin1(anim, qstrnlen(anim, len))); // animation name
+			anims.append(QString::fromLatin1(anim, qsizetype(qstrnlen(anim, len)))); // animation name
 
 			memcpy(&model_unknown, constData + curPos+2+len, 2);
 			anims_unknown.append(model_unknown);
@@ -235,37 +235,37 @@ bool FieldModelLoaderPC::open(const QByteArray &data)
 
 QByteArray FieldModelLoaderPC::save() const
 {
-	quint16 nbHRC = this->model_nameHRC.size();
+	quint16 nbHRC = quint16(this->model_nameHRC.size());
 	QByteArray HRCs;
 
-	for (int i=0; i<nbHRC; ++i) {
+	for (int i = 0; i < nbHRC; ++i) {
 		const QString &modelName = this->model_nameChar.at(i);
-		quint16 nameSize = modelName.size();
+		quint16 nameSize = quint16(modelName.size());
 		HRCs.append((char *)&nameSize, 2); //model name size
 		HRCs.append(modelName.toLocal8Bit()); //model Name (fieldnamename_of_char.char)
 		HRCs.append((char *)&this->model_unknown.at(i), 2); //Unknown
 		HRCs.append(this->model_nameHRC.at(i).toLatin1().leftJustified(8, '\x00', true)); //HRC name (AAAA.HRC)
 		HRCs.append(QString::number(this->model_typeHRC.at(i)).toLatin1().leftJustified(4, '\x00', true)); //scale (512 )
-		const quint16 &nbAnim = this->model_anims.at(i).size();
+		const quint16 nbAnim = quint16(this->model_anims.at(i).size());
 		HRCs.append((char *)&nbAnim, 2); //Nb Anims
 
-		for (quint8 j=0; j<3; ++j) { //Colors
+		for (quint8 j = 0; j < 3; ++j) { //Colors
 			const FieldModelColorDir &colorDir = this->colors.at(i).at(j);
-			HRCs.append((char)qRed(colorDir.color));
-			HRCs.append((char)qGreen(colorDir.color));
-			HRCs.append((char)qBlue(colorDir.color));
+			HRCs.append(char(qRed(colorDir.color)));
+			HRCs.append(char(qGreen(colorDir.color)));
+			HRCs.append(char(qBlue(colorDir.color)));
 			HRCs.append((char *)&colorDir.dirA, 2);
 			HRCs.append((char *)&colorDir.dirB, 2);
 			HRCs.append((char *)&colorDir.dirC, 2);
 		}
 
 		const QRgb &globalColor = this->model_global_color.at(i);
-		HRCs.append((char)qRed(globalColor));
-		HRCs.append((char)qGreen(globalColor));
-		HRCs.append((char)qBlue(globalColor));
+		HRCs.append(char(qRed(globalColor)));
+		HRCs.append(char(qGreen(globalColor)));
+		HRCs.append(char(qBlue(globalColor)));
 
-		for (int j=0; j<nbAnim; ++j) { //Animations
-			nameSize = this->model_anims.at(i).at(j).size();
+		for (int j = 0; j < nbAnim; ++j) { //Animations
+			nameSize = quint16(this->model_anims.at(i).at(j).size());
 			HRCs.append((char *)&nameSize, 2); //Animation name size
 			HRCs.append(this->model_anims.at(i).at(j).toLatin1()); //Animation name
 			HRCs.append((char *)&model_anims_unknown.at(i).at(j), 2); //Animation unknown
@@ -280,7 +280,7 @@ QByteArray FieldModelLoaderPC::save() const
 			.append(HRCs);
 }
 
-int FieldModelLoaderPC::modelCount() const
+qsizetype FieldModelLoaderPC::modelCount() const
 {
 	return model_nameHRC.size();
 }
@@ -301,7 +301,7 @@ bool FieldModelLoaderPC::insertModel(int modelID, const QString &hrcName)
 			globalColor = Qt::black;
 		}
 
-		model_unknown.insert(modelID, (quint16)0);
+		model_unknown.insert(modelID, quint16(0));
 		model_nameChar.insert(modelID, QString());
 		model_nameHRC.insert(modelID, hrcName);
 		model_typeHRC.insert(modelID, field()->scriptsAndTexts()->scale());
@@ -459,10 +459,11 @@ void FieldModelLoaderPC::setGlobalColor(int modelID, QRgb globalColor)
 	}
 }
 
-int FieldModelLoaderPC::animCount(int modelID) const
+qsizetype FieldModelLoaderPC::animCount(int modelID) const
 {
-	if (modelID >= 0 && modelID < model_anims.size())
+	if (modelID >= 0 && modelID < model_anims.size()) {
 		return model_anims.at(modelID).size();
+	}
 	return 0;
 }
 
@@ -523,10 +524,10 @@ void FieldModelLoaderPC::setAName(int modelID, int numA, const QString &animName
 
 quint16 FieldModelLoaderPC::animUnknown(int modelID, int numA) const
 {
-	if (modelID < model_anims_unknown.size())
+	if (modelID < model_anims_unknown.size()) {
 		return model_anims_unknown.at(modelID).value(numA);
-	else
-		return 0;
+	}
+	return 0;
 }
 
 void FieldModelLoaderPC::setAnimUnknown(int modelID, int numA, quint16 unknown)

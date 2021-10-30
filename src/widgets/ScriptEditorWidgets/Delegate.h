@@ -59,7 +59,7 @@
 #pragma once
 
 #include <QtWidgets>
-#include "core/field/Field.h"
+#include "core/field/Section1File.h"
 #include "widgets/ScriptEditorWidgets/ScriptEditorGenericList.h"
 
 class SpinBoxDelegate : public QItemDelegate
@@ -78,10 +78,10 @@ public:
 	void updateEditorGeometry(QWidget *editor,
 	                          const QStyleOptionViewItem &option,
 	                          const QModelIndex &index) const override;
-	inline void setField(Field *field) {
-		_field = field;
+	inline void setScriptsAndTexts(const Section1File *scriptsAndTexts) {
+		_scriptsAndTexts = scriptsAndTexts;
 	}
 
 private:
-	Field *_field;
+	const Section1File *_scriptsAndTexts;
 };

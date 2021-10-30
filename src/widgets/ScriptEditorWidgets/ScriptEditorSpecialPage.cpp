@@ -17,10 +17,9 @@
  ****************************************************************************/
 #include "ScriptEditorSpecialPage.h"
 
-ScriptEditorDLPBSavemap::ScriptEditorDLPBSavemap(Field *field, GrpScript *grpScript,
-                                         Script *script, int opcodeID,
-                                         QWidget *parent) :
-    ScriptEditorView(field, grpScript, script, opcodeID, parent)
+ScriptEditorDLPBSavemap::ScriptEditorDLPBSavemap(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script,
+                                                 int opcodeID, QWidget *parent) :
+    ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 
@@ -95,10 +94,9 @@ void ScriptEditorDLPBSavemap::setOpcode(const OpcodeBox &opcode)
 	_toIsPointer->setChecked(o.flag & 0x20);
 }
 
-ScriptEditorDLPBWriteToMemory::ScriptEditorDLPBWriteToMemory(Field *field, GrpScript *grpScript,
-                                                 Script *script, int opcodeID,
-                                                 QWidget *parent) :
-      ScriptEditorView(field, grpScript, script, opcodeID, parent)
+ScriptEditorDLPBWriteToMemory::ScriptEditorDLPBWriteToMemory(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script,
+                                                             int opcodeID, QWidget *parent) :
+      ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 

@@ -19,11 +19,9 @@
 #include "../FF7Text.h"
 #include "../../Data.h"
 
-GrpScript::GrpScript() :
-    _scripts(SCRIPTS_SIZE), _type(NoType), _character(-1)
+GrpScript::GrpScript(const QList<Script> &scripts) :
+    GrpScript(QString(), scripts)
 {
-	_scripts[0] = Script(QList<OpcodeBox>() << OpcodeBox(new OpcodeRET()));
-	_scripts[1] = Script(QList<OpcodeBox>() << OpcodeBox(new OpcodeRET()));
 }
 
 GrpScript::GrpScript(const QString &name, const QList<Script> &scripts) :
@@ -485,7 +483,7 @@ bool GrpScript::removeTexts()
 	return modified;
 }
 
-QString GrpScript::toString(Field *field) const
+QString GrpScript::toString(Section1File *scriptsAndTexts) const
 {
 	QString ret(QObject::tr("Group '%1':").arg(name()));
 	int scriptID = 0;
@@ -497,7 +495,7 @@ QString GrpScript::toString(Field *field) const
 			ret.append("\t");
 			ret.append(QObject::tr("Script '%1' :").arg(scriptID));
 			ret.append("\n\t\t");
-			ret.append(script.toString(field).split("\n").join("\n\t\t"));
+			ret.append(script.toString(scriptsAndTexts).split("\n").join("\n\t\t"));
 			ret.append("\n");
 		}
 		scriptID++;

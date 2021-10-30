@@ -18,8 +18,8 @@
 #include "ScriptEditorGenericList.h"
 #include "Delegate.h"
 
-ScriptEditorGenericList::ScriptEditorGenericList(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent),
+ScriptEditorGenericList::ScriptEditorGenericList(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent),
 	addButton(nullptr), delButton(nullptr), tableView(nullptr), model(nullptr)
 {
 }
@@ -36,7 +36,7 @@ void ScriptEditorGenericList::build()
 	tableView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
 	SpinBoxDelegate *delegate = new SpinBoxDelegate(this);
-	delegate->setField(field());
+	delegate->setScriptsAndTexts(scriptsAndTexts());
 	tableView->setItemDelegate(delegate);
 	tableView->horizontalHeader()->setStretchLastSection(true);
 
@@ -58,7 +58,7 @@ void ScriptEditorGenericList::build()
 	layout->addLayout(buttonLayout);
 	layout->setContentsMargins(QMargins());
 
-	connect(model, SIGNAL(itemChanged(QStandardItem *)), SIGNAL(opcodeChanged()));
+	connect(model, SIGNAL(itemChanged(QStandardItem*)), SIGNAL(opcodeChanged()));
 	connect(addButton, SIGNAL(released()), SLOT(addParam()));
 	connect(delButton, SIGNAL(released()), SLOT(delLastRow()));
 }
@@ -116,11 +116,11 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 		start = 2;
 	} else if (byte == 0x28) { // KAWAI
 		quint8 byte3 = quint8(opcode().cast<OpcodeKAWAI>().opcode->id());
-		length = model->rowCount() + 3;
+		length = quint8(model->rowCount() + 3);
 		newOpcode.append(char(length));
 		newOpcode.append(char(byte3));
 		for (quint8 i = 0; i < length - 3; ++i) {
-			newOpcode.append(model->item(i, 1)->text().toUInt());
+			newOpcode.append(char(model->item(i, 1)->text().toUInt()));
 		}
 		return newOpcode;
 	}
@@ -157,8 +157,8 @@ QByteArray ScriptEditorGenericList::parseModel(bool *isLabel)
 			cur += paramSize;
 		}
 	} else {
-		for (quint8 i=start; i<length; ++i) {
-			newOpcode[i] = model->item(i-start, 1)->text().toUInt();
+		for (quint8 i = start; i < length; ++i) {
+			newOpcode[i] = char(model->item(i-start, 1)->text().toUInt());
 		}
 	}
 
@@ -205,7 +205,7 @@ void ScriptEditorGenericList::fillModel()
 	QList<int> paramTypes = this->paramTypes(opcode().id());
 	
 	if (opcode()->isLabel()) {
-		addRow(opcode().cast<OpcodeLabel>().label(), 0, int(pow(2, 31)) - 1, label);
+		addRow(int(opcode().cast<OpcodeLabel>().label()), 0, int(pow(2, 31)) - 1, label);
 	} else if (paramTypes.isEmpty()) {
 		int start = 0;
 		if (opcode().id() == Opcode::SPECIAL) {

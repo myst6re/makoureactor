@@ -48,8 +48,8 @@ public:
 	}
 	void clear();
 	void setEnabled(bool enabled);
-	void fill(Field *_field, GrpScript *_grpScript, Script *_script);
-	void scroll(int, bool focus=true);
+	void fill(Section1File *scriptsAndTexts, GrpScript *grpScript, Script *script);
+	void scroll(int, bool focus = true);
 	void enableActions(bool);
 	void setErrorLine(int opcodeID);
 	inline bool isTreeEnabled() const {
@@ -57,20 +57,23 @@ public:
 	}
 
 	bool itemIsExpanded(int opcodeID) const;
-	void setExpandedItems(const QList<int> &expandedItems);
 public slots:
 	void refreshOpcode(int opcodeID);
 private slots:
 	void adjustPasteAction();
 	void add();
-	void scriptEditor(bool modify=true);
-	void del(bool totalDel=true);
+	void scriptEditor(bool modify = true);
+	void del(bool totalDel = true);
 	void cut();
 	void copy();
 	void copyText();
 	void paste();
-	inline void up()   { move(Script::Up);   }
-	inline void down() { move(Script::Down); }
+	inline void up() {
+		move(Script::Up);
+	}
+	inline void down() {
+		move(Script::Down);
+	}
 	void itemSelected();
 	void evidence(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 	void undo();
@@ -107,10 +110,9 @@ private:
 	QToolBar *_toolBar;
 	QLabel *_help;
 
-	Field *field;
-	GrpScript *grpScript;
-	Script *script;
-	QHash<const Script *, QList<int> > expandedItems;
+	const Section1File *_scriptsAndTexts;
+	const GrpScript *_grpScript;
+	Script *_script;
 
 	QBrush previousBG, previousErrorBg;
 

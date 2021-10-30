@@ -17,6 +17,7 @@
  ****************************************************************************/
 #include "GrpScriptList.h"
 #include "Data.h"
+#include "GrpScriptWizard.h"
 
 GrpScriptList::GrpScriptList(QWidget *parent) :
     QTreeWidget(parent)
@@ -293,13 +294,16 @@ void GrpScriptList::add()
 		return;
 	}
 
-	int grpScriptID = selectedID()+1;
+	int grpScriptID = selectedID() + 1;
 
-	scripts->insertGrpScript(grpScriptID);
-	fill();
-	scroll(grpScriptID);
-	emit changed();
-	rename();
+	GrpScriptWizard wizard(this);
+	if (wizard.exec() == QDialog::Accepted) {
+		scripts->insertGrpScript(grpScriptID, wizard.selectedGroup());
+		fill();
+		scroll(grpScriptID);
+		emit changed();
+		rename();
+	}
 }
 
 void GrpScriptList::del(bool totalDel)

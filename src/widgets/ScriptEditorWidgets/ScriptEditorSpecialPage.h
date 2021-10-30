@@ -24,7 +24,7 @@ class ScriptEditorDLPBSavemap : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	ScriptEditorDLPBSavemap(Field *field, GrpScript *grpScript, Script *script,
+	ScriptEditorDLPBSavemap(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script,
 	                        int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;
@@ -40,7 +40,7 @@ class ScriptEditorDLPBWriteToMemory : public ScriptEditorView
 {
 	Q_OBJECT
 public:
-	ScriptEditorDLPBWriteToMemory(Field *field, GrpScript *grpScript, Script *script,
+	ScriptEditorDLPBWriteToMemory(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script,
 	                              int opcodeID, QWidget *parent = nullptr);
 	OpcodeBox buildOpcode() override;
 	void setOpcode(const OpcodeBox &opcode) override;

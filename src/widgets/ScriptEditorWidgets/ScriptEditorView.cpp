@@ -17,9 +17,9 @@
  ****************************************************************************/
 #include "ScriptEditorView.h"
 
-ScriptEditorView::ScriptEditorView(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent)
-	: QWidget(parent), _builded(false), _field(field), _grpScript(grpScript), _script(script),
-	  _opcode(nullptr), _opcodeID(opcodeID), _valid(true)
+ScriptEditorView::ScriptEditorView(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent)
+	: QWidget(parent), _scriptsAndTexts(scriptsAndTexts), _grpScript(grpScript), _script(script),
+	  _opcode(nullptr), _opcodeID(opcodeID), _builded(false), _valid(true)
 {
 }
 
@@ -60,17 +60,17 @@ void ScriptEditorView::setValid(bool valid)
 	_valid = valid;
 }
 
-Field *ScriptEditorView::field() const
+const Section1File *ScriptEditorView::scriptsAndTexts() const
 {
-	return _field;
+	return _scriptsAndTexts;
 }
 
-GrpScript *ScriptEditorView::grpScript() const
+const GrpScript &ScriptEditorView::grpScript() const
 {
 	return _grpScript;
 }
 
-Script *ScriptEditorView::script() const
+const Script &ScriptEditorView::script() const
 {
 	return _script;
 }

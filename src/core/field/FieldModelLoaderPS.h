@@ -35,8 +35,8 @@ public:
 	bool open() override;
 	bool open(const QByteArray &data) override;
 	QByteArray save() const override;
-	int modelCount() const override;
-	int animCount(int modelID) const override;
+	qsizetype modelCount() const override;
+	qsizetype animCount(int modelID) const override;
 	quint16 unknown(int modelID) const override;
 	void setUnknown(int modelID, quint16 unknown) override;
 	const FieldModelLoaderStruct &model(int modelID) const;

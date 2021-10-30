@@ -402,7 +402,7 @@ int Window::closeFile(bool quit)
 		if (!fileChangedList.isEmpty()) {
 			fileChangedList.prepend(tr("\n\nEdited files:"));
 		}
-		int reponse = QMessageBox::warning(this, tr("Save"), tr("Would you like to save changes of %1?%2").arg(fieldArchive->io()->name()).arg(fileChangedList), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+		int reponse = QMessageBox::warning(this, tr("Save"), tr("Would you like to save changes of %1?%2").arg(fieldArchive->io()->name(), fileChangedList), QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 		if (reponse == QMessageBox::Yes) {
 			save();
 		} else if (reponse == QMessageBox::Cancel) {
@@ -498,8 +498,10 @@ void Window::openFile(const QString &path)
 			return;
 		}
 
-		int index = filePath.lastIndexOf('/');
-		if (index == -1)	index = filePath.size();
+		qsizetype index = filePath.lastIndexOf('/');
+		if (index == -1) {
+			index = filePath.size();
+		}
 		Config::setValue("open_path", filePath.left(index));
 		Config::setValue("open_path_selected_filter", filter.indexOf(selectedFilter));
 		QStringList recentFiles = Config::value("recentFiles").toStringList();
@@ -919,7 +921,7 @@ void Window::openField(bool reload)
 		authorAction->setVisible(true);
 
 		// Fill group script list
-		_scriptManager->fill(field);
+		_scriptManager->fill(scriptsAndTexts);
 		_scriptManager->setEnabled(true);
 	} else {
 		_scriptManager->clear();
@@ -1013,7 +1015,7 @@ void Window::saveAs(bool currentPath)
 		                     .arg(mapID)
 		                     .arg(fieldArchive->field(mapID)->scriptsAndTexts()->grpScript(groupID).name())
 		                     .arg(groupID).arg(scriptID)
-		                     .arg(opcodeID+1).arg(errorStr));
+		                     .arg(opcodeID + 1).arg(errorStr));
 		gotoOpcode(mapID, groupID, scriptID, opcodeID);
 		_scriptManager->opcodeList()->setErrorLine(opcodeID);
 		return;
@@ -1320,7 +1322,7 @@ void Window::importToCurrentMap()
 		field->initEmpty();
 	}
 
-	int index;
+	qsizetype index;
 	QString name, selectedFilter,
 	    pc = tr("PC Field Map (*)"),
 	    dat = tr("PS Field Map (*.DAT)");
@@ -1328,12 +1330,15 @@ void Window::importToCurrentMap()
 	filter << dat << pc;
 
 	name = _fieldList->selectedItems().first()->text(0);
-	if (fieldArchive->io()->isPS())
+	if (fieldArchive->io()->isPS()) {
 		name = name.toUpper();
+	}
 
 	QString path = Config::value("importPath").toString().isEmpty() ? fieldArchive->io()->directory() : Config::value("importPath").toString()+"/";
 	path = QFileDialog::getOpenFileName(this, tr("Import a file"), path+name, filter.join(";;"), &selectedFilter);
-	if (path.isNull())		return;
+	if (path.isNull()) {
+		return;
+	}
 
 	bool isDat = selectedFilter == dat;
 

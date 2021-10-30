@@ -728,9 +728,19 @@ bool Script::isValid() const
 	return valid;
 }
 
-const OpcodeBox &Script::opcode(quint16 opcodeID) const
+OpcodeBox &Script::opcode(qsizetype opcodeID)
+{
+	return _opcodes[opcodeID];
+}
+
+const OpcodeBox &Script::opcode(qsizetype opcodeID) const
 {
 	return _opcodes.at(opcodeID);
+}
+
+QList<OpcodeBox> &Script::opcodes()
+{
+	return _opcodes;
 }
 
 const QList<OpcodeBox> &Script::opcodes() const
@@ -1012,22 +1022,22 @@ bool Script::isVoid() const
 	return true;
 }
 
-void Script::setOpcode(quint16 opcodeID, const OpcodeBox &opcode)
+void Script::setOpcode(qsizetype opcodeID, const OpcodeBox &opcode)
 {
 	_opcodes.replace(opcodeID, opcode);
 }
 
-void Script::removeOpcode(quint16 opcodeID)
+void Script::removeOpcode(qsizetype opcodeID)
 {
 	_opcodes.removeAt(opcodeID);
 }
 
-void Script::insertOpcode(quint16 opcodeID, const OpcodeBox &opcode)
+void Script::insertOpcode(qsizetype opcodeID, const OpcodeBox &opcode)
 {
 	_opcodes.insert(opcodeID, opcode);
 }
 
-bool Script::moveOpcode(quint16 opcodeID, MoveDirection direction)
+bool Script::moveOpcode(qsizetype opcodeID, MoveDirection direction)
 {
 	if (opcodeID >= _opcodes.size()) {
 		return false;
@@ -1273,9 +1283,10 @@ void Script::setWindow(const FF7Window &win)
 	}
 }
 
-int Script::opcodePositionInBytes(quint16 opcodeID) const
+quint32 Script::opcodePositionInBytes(qsizetype opcodeID) const
 {
-	int pos = 0, i = 0;
+	quint32 pos = 0;
+	qsizetype i = 0;
 	for (const OpcodeBox &op : _opcodes) {
 		if (i == opcodeID) {
 			return pos;
@@ -1405,12 +1416,12 @@ bool Script::removeTexts()
 	return modified;
 }
 
-QString Script::toString(Field *field) const
+QString Script::toString(const Section1File *scriptsAndTexts) const
 {
 	QString ret;
 
 	for (const OpcodeBox &opcode : _opcodes) {
-		ret.append(opcode->toString(field));
+		ret.append(opcode->toString(scriptsAndTexts));
 		ret.append("\n");
 	}
 

@@ -19,35 +19,54 @@
 
 #include <QtGui>
 #include <QWizardPage>
+#include <QLineEdit>
 #include <QListWidget>
 #include <QGridLayout>
+#include <QWidget>
 #include "core/field/GrpScript.h"
+#include "3d/FieldModel.h"
+
+#define FIELD_NAME "name"
+#define FIELD_TYPE "type"
+#define FIELD_SUB_TYPE "subType"
+
+class GrpScriptWizardPageModel : public QWizardPage
+{
+	Q_OBJECT
+public:
+	explicit GrpScriptWizardPageModel(QWidget *parent = nullptr);
+	void initializePage() override;
+	int nextId() const override;
+private:
+	FieldModel *_modelPreview;
+	QWidget *_modelWidget;
+	QListWidget *_model;
+};
 
 class GrpScriptWizardPageType : public QWizardPage
 {
 	Q_OBJECT
 public:
 	enum {
-		TypeModel, TypeOther
+		TypeEmpty, TypeModel, TypeLine, TypeAnimation, TypeOther
 	};
 	explicit GrpScriptWizardPageType(QWidget *parent = nullptr);
 	void initializePage() override;
-	bool isComplete() const override;
 	int nextId() const override;
 private slots:
 	void fillSubTypeList(int type);
+	void updateButtons();
 private:
-	void fillTypeList();
 	QListWidget *_type, *_subType;
 };
 
 class GrpScriptWizard : public QWizard
 {
 public:
+	enum {
+		PageType,
+		PageModelType
+	};
 	explicit GrpScriptWizard(QWidget *parent = nullptr);
 	GrpScript selectedGroup() const;
-protected:
-	enum {
-		PageType
-	};
 };

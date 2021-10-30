@@ -27,8 +27,8 @@ public:
 	explicit FieldModelThread(QObject *parent = nullptr);
 	virtual ~FieldModelThread() override;
 	void setField(Field *field);
-	void setModel(int modelId, int animationId=0, bool animate=true);
-	void setModels(const QList<int> &modelIds, bool animate=true);
+	void setModel(int modelId, int animationId = 0, bool animate = true);
+	void setModels(const QList<int> &modelIds, bool animate = true);
 	void cancel();
 signals:
 	void modelLoaded(Field *field, FieldModelFile *model, int modelId, int animationId, bool isAnimated);

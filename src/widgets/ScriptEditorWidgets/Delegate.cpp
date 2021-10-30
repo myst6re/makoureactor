@@ -70,7 +70,7 @@
 #include "../AnimEditorDialog.h"
 
 SpinBoxDelegate::SpinBoxDelegate(QObject *parent) :
-    QItemDelegate(parent), _field(nullptr)
+    QItemDelegate(parent), _scriptsAndTexts(nullptr)
 {
 }
 
@@ -88,9 +88,9 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		comboBox->addItems(Data::maplist());
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::group_id
-	          && _field->scriptsAndTexts()->grpScriptCount() > 0) {
+	          && _scriptsAndTexts->grpScriptCount() > 0) {
 		QComboBox *comboBox = new QComboBox(parent);
-		for (const GrpScript &grp : _field->scriptsAndTexts()->grpScripts()) {
+		for (const GrpScript &grp : _scriptsAndTexts->grpScripts()) {
 			comboBox->addItem(grp.name());
 		}
 		return comboBox;
@@ -107,10 +107,10 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		comboBox->addItem(tr("(Empty)"));
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::text_id
-	          && _field->scriptsAndTexts()->textCount() > 0) {
+	          && _scriptsAndTexts->textCount() > 0) {
 		QComboBox *comboBox = new QComboBox(parent);
 		bool jp = Config::value("jp_txt", false).toBool();
-		for (const FF7Text &t : _field->scriptsAndTexts()->texts())
+		for (const FF7Text &t : _scriptsAndTexts->texts())
 			comboBox->addItem(t.text(jp, true).simplified());
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::item_id
@@ -245,10 +245,10 @@ void SpinBoxDelegate::setEditorData(QWidget *editor,
 	} else if ((type == ScriptEditorGenericList::field_id
 	            && !Data::maplist().isEmpty())
 	           || (type == ScriptEditorGenericList::group_id
-	               && _field->scriptsAndTexts()->grpScriptCount() > 0)
+	               && _scriptsAndTexts->grpScriptCount() > 0)
 	           || type == ScriptEditorGenericList::personnage_id
 	           || (type == ScriptEditorGenericList::text_id
-	               && _field->scriptsAndTexts()->textCount() > 0)
+	               && _scriptsAndTexts->textCount() > 0)
 	           || (type == ScriptEditorGenericList::item_id
 	               && !Data::item_names.isEmpty())
 	           || (type == ScriptEditorGenericList::materia_id
@@ -283,10 +283,10 @@ void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	} else if ((type == ScriptEditorGenericList::field_id
 	            && !Data::maplist().isEmpty())
 	           || (type == ScriptEditorGenericList::group_id
-	               && _field->scriptsAndTexts()->grpScriptCount() > 0)
+	               && _scriptsAndTexts->grpScriptCount() > 0)
 	           || type == ScriptEditorGenericList::personnage_id
 	           || (type == ScriptEditorGenericList::text_id
-	               && _field->scriptsAndTexts()->textCount() > 0)
+	               && _scriptsAndTexts->textCount() > 0)
 	           || (type == ScriptEditorGenericList::item_id
 	               && !Data::item_names.isEmpty())
 	           || (type == ScriptEditorGenericList::materia_id

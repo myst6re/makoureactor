@@ -198,7 +198,9 @@ void ModelManager::showModelInfos2(int row)
 void ModelManager::setModelUnknown(int unknown)
 {
 	int modelID = currentModelID();
-	if (modelID < 0)	return;
+	if (modelID < 0) {
+		return;
+	}
 
 	fieldModelLoader->setUnknown(modelID, quint16(unknown));
 

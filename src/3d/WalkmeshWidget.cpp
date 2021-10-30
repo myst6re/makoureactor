@@ -25,7 +25,8 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent)
       transStep(360.0f), lastKeyPressed(-1), _camID(0), _selectedTriangle(-1),
       _selectedDoor(-1), _selectedGate(-1), _selectedArrow(-1), fovy(70.0),
       walkmesh(nullptr), camera(nullptr), infFile(nullptr), bgFile(nullptr),
-      scripts(nullptr), field(nullptr), modelsVisible(true), backgroundVisible(true) /*, thread(0)*/
+      scripts(nullptr), field(nullptr), modelsVisible(true), backgroundVisible(true),
+      gpuRenderer(nullptr) /*, thread(0)*/
 {
 	setMinimumSize(320, 240);
 }
@@ -47,7 +48,9 @@ void WalkmeshWidget::clear()
 
 WalkmeshWidget::~WalkmeshWidget()
 {
-	delete gpuRenderer;
+	if (gpuRenderer != nullptr) {
+		delete gpuRenderer;
+	}
 }
 
 void WalkmeshWidget::fill(Field *field)
@@ -128,8 +131,9 @@ void WalkmeshWidget::resizeGL(int width, int height)
 
 void WalkmeshWidget::paintGL()
 {
-	if (!walkmesh)
+	if (!walkmesh || gpuRenderer->hasError()) {
 		return;
+	}
 
 	if (backgroundVisible) {
 		drawBackground();
@@ -258,7 +262,7 @@ void WalkmeshWidget::paintGL()
 
 		if (infFile && infFile->isOpen()) {
 			if (_selectedGate >= 0 && _selectedGate < 12) {
-				const Exit &gate = infFile->exitLine(_selectedGate);
+				const Exit &gate = infFile->exitLine(quint8(_selectedGate));
 				if (gate.fieldID != 0x7FFF) {
 					// Vertex info
 					QVector3D positionA(gate.exit_line[0].x / 4096.0f, gate.exit_line[0].y / 4096.0f, gate.exit_line[0].z / 4096.0f),
@@ -272,7 +276,7 @@ void WalkmeshWidget::paintGL()
 			}
 
 			if (_selectedDoor >= 0 && _selectedDoor < 12) {
-				const Trigger &trigger = infFile->trigger(_selectedDoor);
+				const Trigger &trigger = infFile->trigger(quint8(_selectedDoor));
 				if (trigger.background_parameter != 0xFF) {
 					// Vertex info
 					QVector3D positionA(trigger.trigger_line[0].x / 4096.0f, trigger.trigger_line[0].y / 4096.0f, trigger.trigger_line[0].z / 4096.0f),
@@ -529,7 +533,7 @@ void WalkmeshWidget::setZRotation(int angle)
 
 void WalkmeshWidget::setZoom(int zoom)
 {
-	distance = zoom / 4096.0f;
+	distance = zoom / 4096.0;
 }
 
 void WalkmeshWidget::resetCamera()

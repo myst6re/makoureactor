@@ -18,8 +18,8 @@
 #include "ScriptEditorMoviePage.h"
 #include "Data.h"
 
-ScriptEditorMoviePage::ScriptEditorMoviePage(Field *field, GrpScript *grpScript, Script *script, int opcodeID, QWidget *parent) :
-	ScriptEditorView(field, grpScript, script, opcodeID, parent)
+ScriptEditorMoviePage::ScriptEditorMoviePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
 {
 }
 

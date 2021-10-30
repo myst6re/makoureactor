@@ -259,7 +259,7 @@ void FieldModel::resizeGL(int width, int height)
 
 void FieldModel::paintModel(Renderer *gpuRenderer, FieldModelFile *data, int animationID, int currentFrame, float scale, QMatrix4x4 initialModelMatrix)
 {
-	if (!data || !data->isValid() || scale == 0.0f) {
+	if (!data || !data->isValid() || scale == 0.0f || !gpuRenderer || gpuRenderer->hasError()) {
 		return;
 	}
 
@@ -327,7 +327,9 @@ void FieldModel::paintModel(Renderer *gpuRenderer, FieldModelFile *data, int ani
 
 void FieldModel::paintGL()
 {
-	if (!data || !data->isValid())	return;
+	if (!data || !data->isValid() || !gpuRenderer || gpuRenderer->hasError()) {
+		return;
+	}
 
 	//scale the view port if the window manager is scaling
 	/* int scale = 1;
