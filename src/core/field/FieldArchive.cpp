@@ -336,16 +336,16 @@ void FieldArchive::validateAsk()
 		if (scriptsAndTexts->isOpen()) {
 
 			int grpScriptID = 0;
-			for (GrpScript *grp : scriptsAndTexts->grpScripts()) {
+			for (const GrpScript &grp : scriptsAndTexts->grpScripts()) {
 				int scriptID = 0;
-				for (Script *script : grp->scripts()) {
+				for (const Script &script : grp.scripts()) {
 					int opcodeID = 0;
-					for (Opcode *opcode : script->opcodes()) {
+					for (const OpcodeBox &opcode : script.opcodes()) {
 						if (opcode.id() == Opcode::ASK) {
-							OpcodeASK *opcodeASK = static_cast<OpcodeASK *>(opcode);
-							quint8 textID = opcodeASK->textID,
-									firstLine = opcodeASK->firstLine,
-									lastLine = opcodeASK->lastLine;
+							const OpcodeASK &opcodeASK = opcode.cast<OpcodeASK>();
+							quint8 textID = opcodeASK.textID,
+									firstLine = opcodeASK.firstLine,
+									lastLine = opcodeASK.lastLine;
 							if (textID < scriptsAndTexts->textCount()) {
 								QString text = scriptsAndTexts->text(textID).text(false);
 								if (!text.isEmpty()) {
@@ -376,13 +376,13 @@ void FieldArchive::validateAsk()
 
 									if (autoFirstLine == -1) {
 										qWarning() << QString("%1 > %2 > %3 > %4: No {CHOICE} here (textID: %9)")
-													  .arg(name, grp->name(), grp->scriptName(scriptID))
+													  .arg(name, grp.name(), grp.scriptName(scriptID))
 													  .arg(opcodeID + 1)
 													  .arg(textID).toLatin1().data();
 									} else if (autoFirstLine != firstLine
 											|| autoLastLine != lastLine) {
 										qWarning() << QString("%1 > %2 > %3 > %4: %5 should be %6, %7 should be %8 (textID: %9)")
-													  .arg(name, grp->name(), grp->scriptName(scriptID))
+													  .arg(name, grp.name(), grp.scriptName(scriptID))
 													  .arg(opcodeID + 1)
 													  .arg(firstLine).arg(autoFirstLine)
 													  .arg(lastLine).arg(autoLastLine)
@@ -422,15 +422,15 @@ void FieldArchive::validateOneLineSize()
 			//qWarning() << f->name();
 
 			int grpScriptID = 0;
-			for (GrpScript *grp : scriptsAndTexts->grpScripts()) {
+			for (const GrpScript &grp : scriptsAndTexts->grpScripts()) {
 				int scriptID = 0;
-				for (Script *script : grp->scripts()) {
+				for (const Script &script : grp.scripts()) {
 					int opcodeID = 0;
-					OpcodeWindow *opcodeWindow = 0;
-					for (Opcode *opcode : script->opcodes()) {
+					const OpcodeWindow *opcodeWindow = nullptr;
+					for (const OpcodeBox &opcode : script.opcodes()) {
 						if (opcode.id() == Opcode::WSIZW
 								|| opcode.id() == Opcode::WINDOW) {
-							opcodeWindow = static_cast<OpcodeWindow *>(opcode);
+							opcodeWindow = opcode.cast<OpcodeWindow *>();
 						} else if (opcode->getTextID() >= 0 && opcodeWindow) {
 							FF7Window window;
 							opcodeWindow->getWindow(window);
@@ -438,10 +438,10 @@ void FieldArchive::validateOneLineSize()
 								FF7Text text = scriptsAndTexts->text(opcode->getTextID());
 								QSize optimSize = FF7Font::calcSize(text.data());
 								if (!text.data().isEmpty() && !text.contains(QRegularExpression("\n")) && (window.w != optimSize.width() || window.h != optimSize.height())) {
-									qWarning() << name << grpScriptID << grp->name() << grp->scriptName(scriptID) << opcodeID << "width=" << window.w << "height=" << window.h << "better size=" << optimSize.width() << optimSize.height();
+									qWarning() << name << grpScriptID << grp.name() << grp.scriptName(scriptID) << opcodeID << "width=" << window.w << "height=" << window.h << "better size=" << optimSize.width() << optimSize.height();
 								}
 							} else {
-								qWarning() << name << grpScriptID << grp->name() << grp->scriptName(scriptID) << opcodeID << "text not found";
+								qWarning() << name << grpScriptID << grp.name() << grp.scriptName(scriptID) << opcodeID << "text not found";
 							}
 						}
 						opcodeID++;
@@ -734,11 +734,11 @@ void FieldArchive::printScripts(const QString &filename)
 			qWarning() << f->inf()->mapName();
 
 			int grpScriptID = 0;
-			for (GrpScript *grp : scriptsAndTexts->grpScripts()) {
+			for (const GrpScript &grp : scriptsAndTexts->grpScripts()) {
 				int scriptID = 0;
-				for (Script *script : grp->scripts()) {
+				for (const Script &script : grp.scripts()) {
 					int opcodeID = 0;
-					for (Opcode *opcode : script->opcodes()) {
+					for (const OpcodeBox &opcode : script.opcodes()) {
 						FF7Window win;
 						/* if (opcode->getWindow(win)) {
 							deb.write(QString("%1 > %2 > %3: %4 %5\n")
@@ -747,9 +747,9 @@ void FieldArchive::printScripts(const QString &filename)
 									  .arg(win.x).arg(win.y).toLatin1());
 						} else if (opcode->getTextID() < 0) { */
 							deb.write(QString("%1 > %2 > %3: %4\n")
-									  .arg(f->inf()->mapName(), grp->name())
+									  .arg(f->inf()->mapName(), grp.name())
 									  .arg(scriptID)
-									  .arg(opcode->toString(f)).toUtf8());
+									  .arg(opcode->toString(scriptsAndTexts)).toUtf8());
 						// }
 						opcodeID++;
 					}
@@ -790,16 +790,16 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 			dir.cd(dirname);
 
 			int grpScriptID = 0;
-			for (GrpScript *grp : scriptsAndTexts->grpScripts()) {
+			for (const GrpScript &grp : scriptsAndTexts->grpScripts()) {
 
 				dirname = QString("%1-%2")
 				          .arg(grpScriptID, 2, 10, QChar('0'))
-				          .arg(grp->name());
+				          .arg(grp.name());
 				dir.mkdir(dirname);
 				dir.cd(dirname);
 
 				int scriptID = 0;
-				for (Script *script : grp->scripts()) {
+				for (const Script &script : grp.scripts()) {
 
 					QFile deb(dir.filePath(QString("%1-script").arg(scriptID, 2, 10, QChar('0'))));
 					if (!deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
@@ -808,7 +808,7 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 					}
 
 					int opcodeID = 0;
-					for (Opcode *opcode : script->opcodes()) {
+					for (const OpcodeBox &opcode : script.opcodes()) {
 						// FF7Window win;
 						/* if (opcode->getWindow(win)) {
 							deb.write(QString("%1 > %2 > %3: %4 %5\n")
@@ -816,7 +816,7 @@ void FieldArchive::printScriptsDirs(const QString &filename)
 									  .arg(scriptID)
 									  .arg(win.x).arg(win.y).toLatin1());
 						} else if (opcode->getTextID() < 0) { */
-							deb.write(opcode->toString(f).toUtf8());
+							deb.write(opcode->toString(scriptsAndTexts).toUtf8());
 							deb.write("\n");
 						// }
 						opcodeID++;
@@ -866,10 +866,10 @@ void FieldArchive::diffScripts()
 				deb.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 
 				int grpScriptID = 0, scriptID;
-				for (GrpScript *group2 : scriptsAndTextsOriginal->grpScripts()) {
-					GrpScript *grp = scriptsAndTexts->grpScript(grpScriptID);
+				for (const GrpScript &group2 : scriptsAndTextsOriginal->grpScripts()) {
+					GrpScript grp = scriptsAndTexts->grpScript(grpScriptID);
 
-					while (group2->name() != grp->name()) {
+					while (group2.name() != grp.name()) {
 						grpScriptID++;
 						if (grpScriptID >= scriptsAndTexts->grpScriptCount()) {
 							qWarning() << "ALERT end grpScript reached";
@@ -878,7 +878,7 @@ void FieldArchive::diffScripts()
 						grp = scriptsAndTexts->grpScript(grpScriptID);
 					}
 
-					if (grp->size() != group2->size()) {
+					if (grp.size() != group2.size()) {
 						qWarning() << "ALERT wrong group size" << grp->size() << group2->size();
 						break;
 					}

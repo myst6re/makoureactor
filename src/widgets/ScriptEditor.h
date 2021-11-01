@@ -39,6 +39,7 @@ private slots:
 private:
 	enum PageType {
 		GenericList = 0,
+		Boolean,
 		ReturnTo,
 		Exec,
 		ExecChar,
@@ -51,6 +52,7 @@ private:
 		BinaryOp,
 		UnaryOp,
 		BitOp,
+		Variable,
 		Window,
 		WindowMode,
 		WindowMove,
@@ -63,6 +65,7 @@ private:
 	void fillEditor();
 	void fillView();
 	void setCurrentMenu(int id);
+	ScriptEditorView *buildEditorPage(PageType id);
 
 	static QList<Opcode::Keys> crashIfInit;
 
@@ -70,9 +73,13 @@ private:
 	QPlainTextEdit *textEdit;
 	QStackedWidget *editorLayout;
 	QPushButton *ok;
-	ScriptEditorView *editorWidget;
+	QMap<PageType, int> _typeToIndex;
+	ScriptEditorView *_currentPageWidget;
+	PageType _currentPageType;
 
+	Field *field;
 	const Section1File *scriptsAndTexts;
+	const GrpScript &grpScript;
 	const Script &script;
 	OpcodeBox opcode;
 	int opcodeID;

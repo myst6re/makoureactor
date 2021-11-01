@@ -20,8 +20,8 @@
 
 FF7Text::FF7Text(const QByteArray &data)
 {
-	int index;
-	_data = (index = data.indexOf('\xFF')) != -1 ? data.left(index) : data;
+	qsizetype index = data.indexOf('\xFF');
+	_data = index != -1 ? data.left(index) : data;
 }
 
 FF7Text::FF7Text(const QString &text, bool jp)
@@ -38,105 +38,121 @@ QString FF7Text::text(bool jp, bool simplified) const
 {
 	QString trad;
 //	bool jp = Config::value("jp_txt", false).toBool();
-	int size = _data.size();
+	qsizetype size = _data.size();
 
-	for (quint16 i=0; i<size; ++i) {
-		quint8 index = (quint8)_data.at(i);
-		if (index == 0xFF)	break;
+	for (quint16 i = 0; i < size; ++i) {
+		quint8 index = quint8(_data.at(i));
+		if (index == 0xFF) {
+			break;
+		}
 		QString character;
 		switch (index) {
 		case 0xFA:
 			++i;
-			if (size<=i)	return trad.append(simplified ? QString("¶") : QString("{xfa}"));
+			if (size <= i) {
+				return trad.append(simplified ? QString("¶") : QString("{xfa}"));
+			}
 			if (jp) {
-				character = getCaract(_data.at(i), 3);
+				character = getCaract(quint8(_data.at(i)), 3);
 				if (character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfa}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
+					character = simplified ? "¶" : QString("{xfa}{x%1}").arg(quint8(_data.at(i)), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfa}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "¶" : QString("{xfa}{x%1}").arg(quint8(_data.at(i)), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFB:
 			++i;
-			if (size<=i)	return trad.append(simplified ? QString("¶") : QString("{xfb}"));
+			if (size <= i) {
+				return trad.append(simplified ? QString("¶") : QString("{xfb}"));
+			}
 			if (jp) {
-				character = getCaract(_data.at(i), 4);
+				character = getCaract(quint8(_data.at(i)), 4);
 				if (character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfb}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
+					character = simplified ? "¶" : QString("{xfb}{x%1}").arg(quint8(_data.at(i)), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfb}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "¶" : QString("{xfb}{x%1}").arg(quint8(_data.at(i)), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFC:
 			++i;
-			if (size<=i)	return trad.append(simplified ? QString("¶") : QString("{xfc}"));
+			if (size <= i) {
+				return trad.append(simplified ? QString("¶") : QString("{xfc}"));
+			}
 			if (jp) {
-				character = getCaract(_data.at(i), 5);
+				character = getCaract(quint8(_data.at(i)), 5);
 				if (character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfc}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
+					character = simplified ? "¶" : QString("{xfc}{x%1}").arg(quint8(_data.at(i)), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfc}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "¶" : QString("{xfc}{x%1}").arg(quint8(_data.at(i)), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFD:
 			++i;
-			if (size<=i)	return trad.append(simplified ? QString("¶") : QString("{xfd}"));
+			if (size <= i) {
+				return trad.append(simplified ? QString("¶") : QString("{xfd}"));
+			}
 			if (jp) {
-				character = getCaract(_data.at(i), 6);
+				character = getCaract(quint8(_data.at(i)), 6);
 				if (character.isEmpty()) {
-					character = simplified ? "¶" : QString("{xfd}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0'));
+					character = simplified ? "¶" : QString("{xfd}{x%1}").arg(quint8(_data.at(i)), 2, 16, QChar('0'));
 				}
 				trad.append(character);
 			} else {
-				trad.append(simplified ? "¶" : QString("{xfd}{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
+				trad.append(simplified ? "¶" : QString("{xfd}{x%1}").arg(quint8(_data.at(i)), 2, 16, QChar('0')));
 			}
 		break;
 		case 0xFE:
 			++i;
-			if (size<=i) 	return trad.append(simplified ? QString("¶") : QString("{xfe}"));;
-			index = (quint8)_data.at(i);
+			if (size <= i) {
+				return trad.append(simplified ? QString("¶") : QString("{xfe}"));
+			}
+			index = quint8(_data.at(i));
 
 			if (index == 0xE2) {
 				if (!simplified) {
-					if (i+4 < size && (quint8)_data.at(i+4)==0 && (quint8)_data.at(i+2) <= 4) {
+					if (i+4 < size && quint8(_data.at(i + 4)) == 0 && quint8(_data.at(i + 2)) <= 4) {
 						quint8 bank;
-						switch ((quint8)_data.at(i+2)) {
-						case 0:     bank = 1;	break; // 1 & 2
-						case 1:     bank = 3;	break; // 3 & 4
-						case 2:     bank = 11;	break; // 11 & 12
-						case 3:     bank = 13;	break; // 13 & 14
-						case 4:     bank = 15;	break; // 7 & 15
-						default:    bank = 0;	break; // Error
+						switch (quint8(_data.at(i + 2))) {
+						case 0:     bank = 1;     break; // 1 & 2
+						case 1:     bank = 3;     break; // 3 & 4
+						case 2:     bank = 11;    break; // 11 & 12
+						case 3:     bank = 13;    break; // 13 & 14
+						case 4:     bank = 15;    break; // 7 & 15
+						default:    bank = 0;     break; // Error
 						}
 
 						trad.append(QString("{MEMORY:var[%2][%1];size=%3}")
-						            .arg((quint8)_data.at(i+1))
+						            .arg(quint8(_data.at(i + 1)))
 						            .arg(bank)
-						            .arg((quint8)_data.at(i+3)));
-						i+=4;
+						            .arg(quint8(_data.at(i + 3))));
+						i += 4;
 					} else {
 						trad.append("{xfe}{xe2}");
 						++i;
-						for (int i2=i+4; i<i2; ++i) {
-							if (size<=i) 	return trad;
-							trad.append(QString("{x%1}").arg((quint8)_data.at(i), 2, 16, QChar('0')));
+						for (quint32 i2 = i + 4; i < i2; ++i) {
+							if (size <= i) {
+								return trad;
+							}
+							trad.append(QString("{x%1}").arg(quint8(_data.at(i)), 2, 16, QChar('0')));
 						}
 						--i;
 					}
 				} else {
-					i+=4;
+					i += 4;
 				}
 			} else if (index == 0xDD) {
 				++i;
 				if (!simplified) {
-					if (size<=i)	return trad.append("{xfe}{xdd}");
-					trad.append(QString("{PAUSE%1}").arg((quint8)_data.at(i), 3, 10, QChar('0')));
+					if (size <= i) {
+						return trad.append("{xfe}{xdd}");
+					}
+					trad.append(QString("{PAUSE%1}").arg(quint8(_data.at(i)), 3, 10, QChar('0')));
 				}
 			} else {
 				if (jp) {
@@ -177,23 +193,24 @@ QString FF7Text::text(bool jp, bool simplified) const
 void FF7Text::setText(const QString &string, bool jp)
 {
 	QChar comp;
-	int stringSize = string.size(), i, table;
+	qsizetype stringSize = string.size();
+	quint8 i, table;
 	bool ok;
 	ushort value;
 	QRegularExpression rx("^\\{MEMORY:var\\[(\\d+)\\]\\[(\\d+)\\];size=(\\d+)\\}");
+	QStringView stringView(string);
 //	bool jp = Config::value("jp_txt", false).toBool();
 
 	_data.clear();
 
-	for (int c=0; c<stringSize; ++c)
-	{
+	for (qsizetype c = 0; c < stringSize; ++c) {
 		comp = string.at(c);
-		if (comp=='\n') {//\n{New Page}\n,\n
-			if (string.mid(c+1, 11).compare("{New Page}\n", Qt::CaseInsensitive) == 0) {
+		if (comp == '\n') {//\n{New Page}\n,\n
+			if (stringView.mid(c + 1, 11).compare(QLatin1String("{New Page}\n"), Qt::CaseInsensitive) == 0) {
 				_data.append('\xe8');
 				c += 11;
 			}
-			else if (string.mid(c+1, 13).compare("{New Page 2}\n", Qt::CaseInsensitive) == 0) {
+			else if (stringView.mid(c + 1, 13).compare(QLatin1String("{New Page 2}\n"), Qt::CaseInsensitive) == 0) {
 				_data.append('\xe9');
 				c += 13;
 			}
@@ -203,39 +220,39 @@ void FF7Text::setText(const QString &string, bool jp)
 			continue;
 		}
 		else if (comp=='{') {
-			QString rest = string.mid(c);
-			for (i=0; i<16; ++i) {
-				if (rest.startsWith(getCaract(0xea + i), Qt::CaseInsensitive)) {//{Name},{Key}
-					_data.append((char)(0xea + i));
-					c += getCaract(0xea + i).size()-1;
+			QStringView rest = stringView.mid(c);
+			for (i = 0; i < 16; ++i) {
+				if (rest.startsWith(getCaract(0xea + i), Qt::CaseInsensitive)) { //{Name},{Key}
+					_data.append(char(0xea + i));
+					c += getCaract(0xea + i).size() - 1;
 					goto end;
 				}
 			}
 
 			// Keep the old typo for compatibility
-			if (rest.startsWith("{AERIS}", Qt::CaseInsensitive)) {
-				_data.append((char)(0xed));
-				c += getCaract(0xed).size()-1;
+			if (rest.startsWith(QLatin1String("{AERIS}"), Qt::CaseInsensitive)) {
+				_data.append(char(0xed));
+				c += getCaract(0xed).size() - 1;
 				goto end;
 			}
 
-			for (i=0; i<11; ++i) {
-				if (rest.startsWith(getCaract(0xd2 + i, 7), Qt::CaseInsensitive)) {//{Colors},{PAUSE}
-					_data.append('\xfe').append((char)(0xd2 + i));
-					c += getCaract(0xd2 + i, 7).size()-1;
+			for (i = 0; i < 11; ++i) {
+				if (rest.startsWith(getCaract(0xd2 + i, 7), Qt::CaseInsensitive)) { //{Colors},{PAUSE}
+					_data.append('\xfe').append(char(0xd2 + i));
+					c += getCaract(0xd2 + i, 7).size() - 1;
 					goto end;
 				}
 			}
 
-			for (i=0; i<4; ++i) {
+			for (i = 0; i < 4; ++i) {
 				if (rest.startsWith(getCaract(0xde + i, 7), Qt::CaseInsensitive)) {//{Vars}
-					_data.append('\xfe').append((char)(0xde + i));
-					c += getCaract(0xde + i, 7).size()-1;
+					_data.append('\xfe').append(char(0xde + i));
+					c += getCaract(0xde + i, 7).size() - 1;
 					goto end;
 				}
 			}
 
-			if (rest.startsWith(QString("{MEMORY:var["))) {
+			if (rest.startsWith(QLatin1String("{MEMORY:var["))) {
 				QRegularExpressionMatch match = rx.match(rest);
 				if (match.hasMatch()) {
 					QStringList list = match.capturedTexts();
@@ -260,7 +277,11 @@ void FF7Text::setText(const QString &string, bool jp)
 						bank = 0;
 						break;
 					}
-					_data.append("\xfe\xe2", 2).append((char)list.at(2).toInt()).append(bank).append((char)list.at(3).toInt()).append('\x00');
+					_data.append("\xfe\xe2", 2)
+					        .append(char(list.at(2).toInt()))
+					        .append(char(bank))
+					        .append(char(list.at(3).toInt()))
+					        .append('\x00');
 					c += match.capturedLength() - 1;
 					goto end;
 				}
@@ -272,35 +293,36 @@ void FF7Text::setText(const QString &string, bool jp)
 				goto end;
 			}
 
-			if (rest.startsWith("{PAUSE", Qt::CaseInsensitive) && 9<rest.size() && rest.at(9)=='}') {//{PAUSE000}
-				value = rest.mid(6,3).toUShort(&ok);
+			if (rest.startsWith(QLatin1String("{PAUSE"), Qt::CaseInsensitive)
+			        && 9 < rest.size() && rest.at(9) == '}') { //{PAUSE000}
+				value = rest.mid(6, 3).toUShort(&ok);
 				if (ok) {
-					_data.append("\xfe\xdd", 2).append((char)value);
+					_data.append("\xfe\xdd", 2).append(char(value));
 					c += 9;
 					goto end;
 				}
 			}
 
 			if (!jp) {
-				if (rest.startsWith(getCaract(0xe0), Qt::CaseInsensitive)) {//{CHOICE}
+				if (rest.startsWith(getCaract(0xe0), Qt::CaseInsensitive)) { //{CHOICE}
 					_data.append('\xe0');
 					c += 7;
 					goto end;
 				}
 
-				for (i=0; i<3; ++i) {
-					if (rest.startsWith(getCaract(0xe2 + i))) {//{, }{."}{?"}
-						_data.append((char)(0xe2 + i));
+				for (i = 0; i < 3; ++i) {
+					if (rest.startsWith(getCaract(0xe2 + i))) { //{, }{."}{?"}
+						_data.append(char(0xe2 + i));
 						c += 3;
 						goto end;
 					}
 				}
 			}
 
-			if (string.at(c+1)=='x' && string.at(c+4)=='}') {//{x00}
-				value = string.mid(c+2,2).toUShort(&ok,16);
+			if (string.at(c + 1)=='x' && string.at(c + 4)=='}') { //{x00}
+				value = stringView.mid(c + 2,2).toUShort(&ok, 16);
 				if (ok && value != 0xff) {
-					_data.append((char)value);
+					_data.append(char(value));
 					c += 4;
 					continue;
 				}
@@ -311,22 +333,17 @@ void FF7Text::setText(const QString &string, bool jp)
 			continue;
 		}
 
-		for (i=0x00; i<=0xfe; ++i)
-		{
-			if (QString::compare(comp, getCaract(i, jp ? 2 : 0))==0)
-			{
-				_data.append((char)i);
+		for (i = 0x00; i <= 0xfe; ++i) {
+			if (QString::compare(comp, getCaract(i, jp ? 2 : 0)) == 0) {
+				_data.append(char(i));
 				goto end;
 			}
 		}
 
 		if (jp) {
-			for (table=3; table<8; ++table)
-			{
-				for (i=0x00; i<=0xfe; ++i)
-				{
-					if (QString::compare(comp, getCaract(i, table))==0)
-					{
+			for (table = 3; table < 8; ++table) {
+				for (i = 0x00; i <= 0xfe; ++i) {
+					if (QString::compare(comp, getCaract(i, table)) == 0) {
 						switch (table) {
 						case 3:
 							_data.append('\xfa');
@@ -344,7 +361,7 @@ void FF7Text::setText(const QString &string, bool jp)
 							_data.append('\xfe');
 							break;
 						}
-						_data.append((char)i);
+						_data.append(char(i));
 						goto end;
 					}
 				}
@@ -378,7 +395,7 @@ QString FF7Text::getCaract(quint8 ord, quint8 table)
 bool FF7Text::contains(const QRegularExpression &regExp) const
 {
 	return text(Config::value("jp_txt", false).toBool())
-			.contains(regExp);
+	        .contains(regExp);
 }
 
 qsizetype FF7Text::indexOf(const QRegularExpression &regExp, qsizetype from, qsizetype &size) const

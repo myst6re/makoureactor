@@ -57,3 +57,17 @@ private:
 	QTableView *tableView;
 	QStandardItemModel *model;
 };
+
+class ScriptEditorBooleanPage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorBooleanPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
+	OpcodeBox buildOpcode() override;
+	void setOpcode(const OpcodeBox &opcode) override;
+	void setText(const QString &choice1, const QString &choice2);
+private:
+	void build() override;
+	QComboBox *_boolean;
+	QLabel *_label1, *_label2;
+};

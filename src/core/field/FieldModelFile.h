@@ -19,7 +19,6 @@
 
 #include <QtGui>
 #include "FieldModelSkeleton.h"
-#include "FieldModelPart.h"
 #include "FieldModelAnimation.h"
 
 class FieldModelFile
@@ -41,7 +40,7 @@ public:
 	inline const FieldModelBone &bone(int boneID) const {
 		return _skeleton.bone(boneID);
 	}
-	inline int boneCount() const {
+	inline qsizetype boneCount() const {
 		return _skeleton.boneCount();
 	}
 	inline const QList<FieldModelAnimation> &animations() const {
@@ -50,7 +49,7 @@ public:
 	inline void setAnimations(const QList<FieldModelAnimation> &animations) {
 		_animations = animations;
 	}
-	inline int animationCount() const {
+	inline qsizetype animationCount() const {
 		return _animations.size();
 	}
 	inline const FieldModelAnimation &animation(int animationID) const {

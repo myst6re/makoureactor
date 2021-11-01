@@ -24,7 +24,7 @@ class FieldModelBone
 {
 public:
 	FieldModelBone(float size, int parent,
-				   const QList<FieldModelPart *> &parts = QList<FieldModelPart *>());
+	               const QList<FieldModelPart *> &parts = QList<FieldModelPart *>());
 
 	inline float size() const {
 		return _size;
@@ -53,6 +53,8 @@ public:
 	inline void addPart(FieldModelPart *part) {
 		_parts.append(part);
 	}
+
+	QImage toImage(int width, int height) const;
 private:
 	float _size;
 	int _parent;
@@ -80,7 +82,7 @@ public:
 	inline void clear() {
 		_bones.clear();
 	}
-	inline int boneCount() const {
+	inline qsizetype boneCount() const {
 		return _bones.size();
 	}
 	inline bool isEmpty() const {
@@ -93,6 +95,7 @@ public:
 		return _bones[i];
 	}
 	QString toString() const;
+	QImage toImage(int width, int height) const;
 private:
 	QList<FieldModelBone> _bones;
 };

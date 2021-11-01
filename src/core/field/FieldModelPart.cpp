@@ -16,6 +16,7 @@
  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "FieldModelPart.h"
+#include <QPainter>
 
 Poly::Poly(int count, const QList<PolyVertex> &vertices, const QList<QRgb> &colors, const QList<TexCoord> &texCoords) :
 	_count(count)
@@ -122,7 +123,7 @@ TrianglePoly::TrianglePoly(const QList<PolyVertex> &vertices, const QRgb &color,
 }
 
 FieldModelGroup::FieldModelGroup() :
-	_textureRef(0), _blendMode(0)
+	_textureRef(nullptr), _blendMode(0)
 {
 }
 
@@ -222,6 +223,19 @@ void FieldModelGroup::setFloatCoords(float texWidth, float texHeight) const
 	}
 }
 
+QImage FieldModelGroup::toImage() const
+{
+	QImage image(1, int(_polys.size() * 3), QImage::Format_ARGB32_Premultiplied);
+
+	for (int i = 0; i < int(_polys.size()); ++i) {
+		for (quint8 j = 0; j < 3; j++) {
+			image.setPixel(0, i * 3 + j, _polys.at(i)->color(j));
+		}
+	}
+
+	return image;
+}
+
 FieldModelPart::FieldModelPart()
 {
 }
@@ -234,39 +248,58 @@ FieldModelPart::~FieldModelPart()
 QString FieldModelPart::toString() const
 {
 	QString ret;
-
+	
 	int groupID = 0;
 	for (FieldModelGroup *group : _groups) {
 		ret.append(QString("==== GROUP %1 ==== texNumber: %2\n")
 		           .arg(groupID)
 		           .arg(group->textureRef()->textureIdentifier()));
-
+		
 		int ID = 0;
 		for (Poly *poly : group->polygons()) {
 			ret.append(QString("==== poly %1 ====\n").arg(ID));
-
+			
 			for (int i=0; i<poly->count(); ++i) {
 				ret.append(QString("%1: vertex(%2, %3, %4) color(%5, %6, %7)")
-						   .arg(i)
-						   .arg(poly->vertex(i).x)
+				           .arg(i)
+				           .arg(poly->vertex(i).x)
 				           .arg(poly->vertex(i).y)
 				           .arg(poly->vertex(i).z)
-						   .arg(qRed(poly->color(i)))
+				           .arg(qRed(poly->color(i)))
 				           .arg(qGreen(poly->color(i)))
 				           .arg(qBlue(poly->color(i))));
 				if (poly->hasTexture()) {
 					ret.append(QString(" texCoord(%1, %2)")
-							   .arg(poly->texCoord(i).x)
+					           .arg(poly->texCoord(i).x)
 					           .arg(poly->texCoord(i).y));
 				}
 				ret.append("\n");
 			}
-
+			
 			++ID;
 		}
-
+		
 		++groupID;
 	}
-
+	
 	return ret;
+}
+
+QImage FieldModelPart::toImage(int width, int height) const
+{
+	if (_groups.isEmpty()) {
+		return QImage();
+	}
+
+	QImage image(width, height, QImage::Format_ARGB32_Premultiplied);
+	image.fill(Qt::black);
+
+	QPainter p(&image);
+	qreal tileW = width / _groups.size();
+
+	for (int i = 0; i < int(_groups.size()); ++i) {
+		p.drawImage(QRectF(i * tileW, 0.0, tileW, height), _groups.at(i)->toImage());
+	}
+
+	return image;
 }

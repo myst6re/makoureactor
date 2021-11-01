@@ -693,3 +693,59 @@ void ScriptEditorBitOpPage::convertOpcode(Opcode::Keys key)
 	default: break;
 	}
 }
+
+ScriptEditorVariablePage::ScriptEditorVariablePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent) :
+	ScriptEditorView(scriptsAndTexts, grpScript, script, opcodeID, parent)
+{
+}
+
+void ScriptEditorVariablePage::build()
+{
+	varOrValue = new VarOrValueWidget(this);
+	varOrValue->setSignedValueType(false);
+	varOrValue->setLongValueType(false);
+
+	QGridLayout *layout = new QGridLayout(this);
+	layout->addWidget(varOrValue, 0, 0);
+	layout->setRowStretch(1, 1);
+	layout->setColumnStretch(1, 1);
+	layout->setContentsMargins(QMargins());
+
+	connect(varOrValue, SIGNAL(changed()), SIGNAL(opcodeChanged()));
+}
+
+OpcodeBox ScriptEditorVariablePage::buildOpcode()
+{
+	OpcodeRDMSD &opcodeRDMSD = opcode().cast<OpcodeRDMSD>();
+
+	quint8 value, bank2;
+
+	if (varOrValue->isValue()) {
+		bank2 = 0;
+		value = quint8(varOrValue->value());
+	} else {
+		quint8 adress2;
+		varOrValue->var(bank2, adress2);
+		value = adress2;
+	}
+
+	opcodeRDMSD.banks = bank2;
+	opcodeRDMSD.value = value;
+
+	return opcode();
+}
+
+void ScriptEditorVariablePage::setOpcode(const OpcodeBox &opcode)
+{
+	ScriptEditorView::setOpcode(opcode);
+
+	const OpcodeRDMSD &opcodeRDMSD = opcode.cast<OpcodeRDMSD>();
+
+	if (B2(opcodeRDMSD.banks) != 0) {
+		varOrValue->setVar(B2(opcodeRDMSD.banks), opcodeRDMSD.value);
+		varOrValue->setIsValue(false);
+	} else {
+		varOrValue->setValue(opcodeRDMSD.value);
+		varOrValue->setIsValue(true);
+	}
+}

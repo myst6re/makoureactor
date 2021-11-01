@@ -35,7 +35,7 @@ bool RsdFile::read(Rsd &rsd, QStringList &textureNames) const
 	QString pname;
 	QList<int> texIds;
 	quint32 nTex = 0;
-	int index;
+	qsizetype index;
 	bool ok;
 
 	while (device()->canReadLine()) {
@@ -49,9 +49,10 @@ bool RsdFile::read(Rsd &rsd, QStringList &textureNames) const
 			}
 			pname = line.mid(4).toLower();
 		} else if (!pname.isNull() && nTex == 0
-				  && line.startsWith(QString("NTEX="))) {
-			nTex = line.mid(5).toUInt(&ok);
+				  && line.startsWith(QLatin1String("NTEX="))) {
+			nTex = QStringView(line).mid(5).toUInt(&ok);
 			if (!ok) {
+				qDebug() << "RsdFile::read not a number" << line;
 				return false;
 			}
 
@@ -69,9 +70,9 @@ bool RsdFile::read(Rsd &rsd, QStringList &textureNames) const
 
 				index = textureNames.indexOf(tex);
 				if (index > -1) {
-					texIds.append(index);
+					texIds.append(int(index));
 				} else {
-					texIds.append(textureNames.size());
+					texIds.append(int(textureNames.size()));
 					textureNames.append(tex);
 				}
 			}

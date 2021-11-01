@@ -997,7 +997,7 @@ public:
 	QString toString(const Section1File *scriptsAndTexts) const override;
 	void setParams(const char *params, int size) override;
 	QByteArray params() const override;
-	quint8 off;
+	quint8 disabled;
 };
 
 class OpcodeBGPDH : public Opcode {

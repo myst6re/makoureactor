@@ -165,7 +165,7 @@ bool PFile::read(FieldModelPart *part, const QList<int> &texIds) const
 			}
 		}
 
-		for (quint32 polyID = 0; polyID < g.numPolygons && g.polygonStartIndex + polyID < (quint32)polys.size(); ++polyID) {
+		for (quint32 polyID = 0; polyID < g.numPolygons && g.polygonStartIndex + polyID < quint32(polys.size()); ++polyID) {
 			const PolygonP &poly = polys.at(g.polygonStartIndex + polyID);
 			QList<PolyVertex> polyVertices;
 			QList<QRgb> polyColors;

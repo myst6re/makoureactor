@@ -73,3 +73,15 @@ private:
 	VarOrValueWidget *var, *position;
 	QComboBox *operationList;
 };
+
+class ScriptEditorVariablePage : public ScriptEditorView
+{
+	Q_OBJECT
+public:
+	explicit ScriptEditorVariablePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
+	OpcodeBox buildOpcode() override;
+	void setOpcode(const OpcodeBox &opcode) override;
+private:
+	void build() override;
+	VarOrValueWidget *varOrValue;
+};

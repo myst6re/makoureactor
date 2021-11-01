@@ -19,6 +19,7 @@
 
 #include <QtCore>
 #include <QRgb>
+#include <QImage>
 #include "FieldModelTextureRef.h"
 
 struct PolyVertex {
@@ -94,6 +95,7 @@ public:
 	}
 	void removeSpriting(float texWidth, float texHeight) const;
 	void setFloatCoords(float texWidth, float texHeight) const;
+	QImage toImage() const;
 private:
 	FieldModelTextureRef *_textureRef;
 	QList<Poly *> _polys;
@@ -112,6 +114,7 @@ public:
 		_groups = groups;
 	}
 	QString toString() const;
+	QImage toImage(int width, int height) const;
 protected:
 	QList<FieldModelGroup *> _groups;
 };

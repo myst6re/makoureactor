@@ -2192,8 +2192,8 @@ void OpcodeBLINK::setParams(const char *params, int)
 
 QString OpcodeBLINK::toString(const Section1File *) const
 {
-	return QObject::tr("Field Model blink : %1")
-			.arg(closed == 0 ? QObject::tr("ON") : QObject::tr("OFF"));
+	return QObject::tr("%1 Field Model blinking")
+			.arg(closed == 0 ? QObject::tr("Enable") : QObject::tr("Disable"));
 }
 
 QByteArray OpcodeBLINK::params() const
@@ -2549,18 +2549,18 @@ OpcodeSLIP::OpcodeSLIP(const char *params, int size)
 
 void OpcodeSLIP::setParams(const char *params, int)
 {
-	off = params[0]; // Boolean
+	disabled = params[0]; // Boolean
 }
 
 QString OpcodeSLIP::toString(const Section1File *) const
 {
 	return QObject::tr("SLIP : %1")
-			.arg(off == 0 ? QObject::tr("ON") : QObject::tr("OFF"));
+			.arg(disabled == 0 ? QObject::tr("ON") : QObject::tr("OFF"));
 }
 
 QByteArray OpcodeSLIP::params() const
 {
-	return QByteArray().append((char)off);
+	return QByteArray().append(char(disabled));
 }
 
 OpcodeBGPDH::OpcodeBGPDH(const char *params, int size)

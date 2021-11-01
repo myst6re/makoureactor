@@ -23,6 +23,25 @@ FieldModelBone::FieldModelBone(float size, int parent,
 {
 }
 
+QImage FieldModelBone::toImage(int width, int height) const
+{
+	if (_parts.isEmpty()) {
+		return QImage();
+	}
+
+	QImage image(width, height, QImage::Format_ARGB32_Premultiplied);
+	image.fill(Qt::black);
+
+	QPainter p(&image);
+	qreal tileH = height / _parts.size();
+
+	for (int i = 0; i < int(_parts.size()); ++i) {
+		p.drawImage(QRectF(0.0, i * tileH, width, tileH), _parts.at(i)->toImage(width * 2, qCeil(tileH) * 2));
+	}
+
+	return image;
+}
+
 FieldModelSkeleton::FieldModelSkeleton()
 {
 }
@@ -35,15 +54,35 @@ FieldModelSkeleton::FieldModelSkeleton(const QList<FieldModelBone> &bones) :
 QString FieldModelSkeleton::toString() const
 {
 	QString ret;
-	int boneID=0;
+	int boneID = 0;
 
 	for (const FieldModelBone &bone : _bones) {
 		ret.append(QString("Bone %1: parent= %2 size= %3\n")
 				   .arg(boneID)
 				   .arg(bone.parent())
-				   .arg(bone.size()));
+				   .arg(int(bone.size())));
 		++boneID;
 	}
 
 	return ret;
+}
+
+QImage FieldModelSkeleton::toImage(int width, int height) const
+{
+	if (_bones.isEmpty()) {
+		return QImage();
+	}
+
+	QImage image(width, height, QImage::Format_ARGB32_Premultiplied);
+	image.fill(Qt::black);
+
+	QPainter p(&image);
+	qreal tileW = width / _bones.size();
+
+	for (int i = 0; i < int(_bones.size()); ++i) {
+		p.drawImage(QRectF(i * tileW, 0.0, tileW, height),
+		            _bones.at(i).toImage(qCeil(tileW) * 2, height * 2));
+	}
+
+	return image;
 }

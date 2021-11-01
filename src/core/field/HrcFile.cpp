@@ -35,13 +35,14 @@ bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rs
 
 	bool ok;
 	QString line;
-	quint32 boneCount=0;
+	int boneCount = 0;
 
 	do {
 		line = QString::fromLatin1(device()->readLine()).trimmed();
 		if (line.startsWith(":BONES ")) {
-			boneCount = line.mid(7).toUInt(&ok);
-			if (!ok) {
+			boneCount = QStringView(line).mid(7).toInt(&ok);
+			if (!ok || boneCount < 0) {
+				qWarning() << "HrcFile::read :BONES not a number" << line;
 				return false;
 			}
 			if (boneCount == 0) {
@@ -56,7 +57,7 @@ bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rs
 	}
 
 	int nbP, lineType = 0;
-	quint32 boneID = 0;
+	int boneID = 0;
 	FieldModelBone bone(0, 0);
 	QMap<QString, int> nameToId;
 	QStringList rsdlist;
@@ -65,6 +66,9 @@ bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rs
 	while (device()->canReadLine() && boneID < boneCount) {
 		line = QString::fromLatin1(device()->readLine()).trimmed();
 		if (line.isEmpty() || line.startsWith('#')) {
+			if (!line.isEmpty()) {
+				qDebug() << "commented line" << line;
+			}
 			continue;
 		}
 
@@ -78,6 +82,7 @@ bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rs
 		case 2: // Length
 			bone.setSize(-line.toFloat(&ok) / MODEL_SCALE_PC);
 			if (!ok) {
+				qWarning() << "HrcFile::read not a number" << line;
 				return false;
 			}
 			skeleton.addBone(bone);
@@ -87,12 +92,14 @@ bool HrcFile::read(FieldModelSkeleton &skeleton, QMultiMap<int, QStringList> &rs
 			if (rsdlist.size() < 1) {
 				return false;
 			}
-			nbP = rsdlist.first().toUInt(&ok);
-			if (ok && nbP != 0) {
+			nbP = rsdlist.first().toInt(&ok);
+			if (ok && nbP > 0) {
 				rsdlist.removeFirst();
 				if (rsdlist.size() == nbP) {
 					rsdFiles.insert(boneID, rsdlist);
 				}
+			} else if (!ok) {
+				qWarning() << "HrcFile::read not a number" << rsdlist;
 			}
 			++boneID;
 			break;
