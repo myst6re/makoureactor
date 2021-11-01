@@ -26,7 +26,6 @@
 #include <QOpenGLShader>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
-#include <QOpenGLVertexArrayObject>
 #include <QOpenGLWidget>
 
 struct RendererVertex {
@@ -94,16 +93,16 @@ public:
 
 	void setViewport(int32_t _x, int32_t _y, int32_t _width, int32_t _height);
 
-	void bindModelMatrix(QMatrix4x4 _matrix);
-	void bindProjectionMatrix(QMatrix4x4 _matrix);
-	void bindViewMatrix(QMatrix4x4 _matrix);
+	void bindModelMatrix(const QMatrix4x4 &_matrix);
+	void bindProjectionMatrix(const QMatrix4x4 &_matrix);
+	void bindViewMatrix(const QMatrix4x4 &_matrix);
 
 	void bindVertex(const RendererVertex *_vertex, uint32_t _count = 1);
 	void bindIndex(uint32_t *_index, uint32_t _count = 1);
 
 	void bindTexture(QImage &_image, bool generateMipmaps = false);
 
-	void bufferVertex(QVector3D _position, QRgba64 _color, QVector2D _texcoord);
+	void bufferVertex(const QVector3D &_position, QRgba64 _color, const QVector2D &_texcoord);
 #ifdef QT_DEBUG
 protected slots:
 	void messageLogged(const QOpenGLDebugMessage &msg);

@@ -124,9 +124,19 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 	// --- Before Draw ---
 
 	// Vertex Buffer
-	if (!mVertex.isCreated()) mVertex.create();
+	if (!mVertex.isCreated() && !mVertex.create()) {
+#ifdef QT_DEBUG
+		qWarning() << "Cannot create the vertex buffer";
+#endif
+		return;
+	}
 
-	mVertex.bind();
+	if (!mVertex.bind()) {
+#ifdef QT_DEBUG
+		qWarning() << "Cannot bind the vertex buffer";
+#endif
+		return;
+	}
 	mVertex.allocate(mVertexBuffer.data(), int(vectorSizeOf(mVertexBuffer)));
 
 	mProgram.enableAttributeArray(ShaderProgramAttributes::POSITION);
@@ -140,13 +150,15 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 	mProgram.setAttributeBuffer(ShaderProgramAttributes::TEXCOORD, GL_FLOAT, (4 * sizeof(GLfloat)) + (4 * sizeof(GLfloat)), 2, vertexStride);
 
 	// Index Buffer
-	if (mIndexBuffer.empty())
-	{
-		for (uint32_t idx = 0; idx < mVertexBuffer.size(); idx++)
+	if (mIndexBuffer.empty()) {
+		for (uint32_t idx = 0; idx < mVertexBuffer.size(); idx++) {
 			mIndexBuffer.push_back(idx);
+		}
 	}
 
-	if (!mIndex.isCreated()) mIndex.create();
+	if (!mIndex.isCreated()) {
+		mIndex.create();
+	}
 
 	mIndex.bind();
 	mIndex.allocate(mIndexBuffer.data(), int(vectorSizeOf(mIndexBuffer)));
@@ -174,7 +186,9 @@ void Renderer::draw(RendererPrimitiveType _type, float _pointSize)
 	mVertexBuffer.clear();
 	mIndexBuffer.clear();
 
-	if (mTexture.isCreated() && mTexture.isBound()) mTexture.release();
+	if (mTexture.isCreated() && mTexture.isBound()) {
+		mTexture.release();
+	}
 	mGL.glDisable(GL_BLEND);
 	mGL.glDisable(GL_TEXTURE_2D);
 }
@@ -184,40 +198,40 @@ void Renderer::setViewport(int32_t _x, int32_t _y, int32_t _width, int32_t _heig
 	mGL.glViewport(_x, _y, _width, _height);
 }
 
-void Renderer::bindModelMatrix(QMatrix4x4 _matrix)
+void Renderer::bindModelMatrix(const QMatrix4x4 &_matrix)
 {
 	mModelMatrix = _matrix;
 }
 
-void Renderer::bindProjectionMatrix(QMatrix4x4 _matrix)
+void Renderer::bindProjectionMatrix(const QMatrix4x4 &_matrix)
 {
 	mProjectionMatrix = _matrix;
 }
 
-void Renderer::bindViewMatrix(QMatrix4x4 _matrix)
+void Renderer::bindViewMatrix(const QMatrix4x4 &_matrix)
 {
 	mViewMatrix = _matrix;
 }
 
 void Renderer::bindVertex(const RendererVertex *_vertex, uint32_t _count)
 {
-	for (uint32_t idx = 0; idx < _count; idx++)
-	{
+	for (uint32_t idx = 0; idx < _count; idx++) {
 		mVertexBuffer.push_back(_vertex[idx]);
 	}
 }
 
 void Renderer::bindIndex(uint32_t *_index, uint32_t _count)
 {
-	for (uint32_t idx = 0; idx < _count; idx++)
-	{
+	for (uint32_t idx = 0; idx < _count; idx++) {
 		mIndexBuffer.push_back(_index[idx]);
 	}
 }
 
 void Renderer::bindTexture(QImage &_image, bool generateMipmaps)
 {
-	if (mTexture.isCreated()) mTexture.destroy();
+	if (mTexture.isCreated()) {
+		mTexture.destroy();
+	}
 
 	mTexture.create();
 	mTexture.setMinificationFilter(QOpenGLTexture::NearestMipMapLinear);
@@ -237,7 +251,7 @@ void Renderer::bindTexture(QImage &_image, bool generateMipmaps)
 	mGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void Renderer::bufferVertex(QVector3D _position, QRgba64 _color, QVector2D _texcoord)
+void Renderer::bufferVertex(const QVector3D &_position, QRgba64 _color, const QVector2D &_texcoord)
 {
 	mVertexBuffer.push_back(
 		RendererVertex {
