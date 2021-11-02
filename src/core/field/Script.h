@@ -34,6 +34,7 @@ public:
 	}
 	template<typename T>
 	inline T &cast() {
+		detach();
 		return *static_cast<T*>(_opcode);
 	}
 	template<typename T>
@@ -44,11 +45,13 @@ public:
 		return _opcode;
 	}
 	inline Opcode *operator->() {
+		detach();
 		return _opcode;
 	}
 	inline Opcode::Keys id() const {
 		return Opcode::Keys(_opcode->id());
 	}
+	void detach();
 private:
 	OpcodeBox();
 	static Opcode *createOpcode(const QByteArray &script, qsizetype pos = 0);

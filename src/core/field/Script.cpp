@@ -33,21 +33,42 @@ OpcodeBox::OpcodeBox(const QByteArray &script, qsizetype pos) :
 }
 
 OpcodeBox::OpcodeBox(const OpcodeBox &other) :
-    _opcode(OpcodeBox::copyOpcode(other._opcode))
+    _opcode(other._opcode)
 {
+	if (_opcode != nullptr) {
+		_opcode->_refCount += 1;
+	}
 }
 
 OpcodeBox::~OpcodeBox()
 {
 	if (_opcode != nullptr) {
-		delete _opcode;
+		if (_opcode->_refCount == 1) {
+			delete _opcode;
+		} else if (_opcode->_refCount > 1) {
+			_opcode->_refCount -= 1;
+		}
 	}
 }
 
 OpcodeBox &OpcodeBox::operator=(const OpcodeBox &other)
 {
-	_opcode = OpcodeBox::copyOpcode(other._opcode);
+	_opcode = other._opcode;
+
+	if (_opcode != nullptr) {
+		_opcode->_refCount += 1;
+	}
+
 	return *this;
+}
+
+void OpcodeBox::detach()
+{
+	if (_opcode != nullptr && _opcode->_refCount > 1) {
+		_opcode->_refCount -= 1;
+		_opcode = copyOpcode(_opcode);
+		_opcode->_refCount = 1;
+	}
 }
 
 Script::Script() :
@@ -130,8 +151,7 @@ Opcode *OpcodeBox::createOpcode(const QByteArray &script, qsizetype pos)
 		return new OpcodeUnknown(opcode, script.mid(pos + 1));
 	}
 
-	switch (opcode)
-	{
+	switch (opcode) {
 	case 0x00:	return new OpcodeRET();
 	case 0x01:	return new OpcodeREQ(data, size);
 	case 0x02:	return new OpcodeREQSW(data, size);
@@ -425,8 +445,7 @@ Opcode *OpcodeBox::copyOpcode(Opcode *opcode)
 	if (opcode == nullptr) {
 		return nullptr;
 	}
-	switch (opcode->id())
-	{
+	switch (opcode->id()) {
 	case 0x00:	return new OpcodeRET(*static_cast<OpcodeRET *>(opcode));
 	case 0x01:	return new OpcodeREQ(*static_cast<OpcodeREQ *>(opcode));
 	case 0x02:	return new OpcodeREQSW(*static_cast<OpcodeREQSW *>(opcode));
@@ -781,7 +800,7 @@ OpcodeBox Script::convertOpcodeJumpDirection(const OpcodeBox &opcode, bool *ok) 
 		}
 	}
 
-	return opcode;
+	return OpcodeBox(nullptr);
 }
 
 OpcodeBox Script::convertOpcodeJumpRangeToLong(const OpcodeBox &opcode, bool *wasConverted) const
@@ -1002,7 +1021,12 @@ QByteArray Script::toByteArray() const
 			OpcodeBox opcodeCpy(opcode);
 			OpcodeJump &opcodeJump = opcodeCpy.cast<OpcodeJump>();
 			opcodeJump.setJump(labelPositions.value(opcodeJump.label()) - pos);
-			ret.append(convertOpcodeJumpDirection(opcodeCpy)->toByteArray());
+			OpcodeBox converted = convertOpcodeJumpDirection(opcodeCpy);
+			if (!converted.isNull()) {
+				ret.append(converted->toByteArray());
+			} else {
+				ret.append(opcodeCpy->toByteArray());
+			}
 		} else {
 			ret.append(opcode->toByteArray());
 		}

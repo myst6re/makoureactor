@@ -715,6 +715,29 @@ void Window::open(const QString &filePath, FieldArchiveIO::Type type, bool isPS)
 	}
 	actionSaveAs->setEnabled(true);
 	actionClose->setEnabled(true);
+	
+	/* QMap<qsizetype, QSet<QString> > aNamesByBoneCount;
+	FieldArchiveIterator it(*fieldArchive);
+	while (it.hasNext()) {
+		FieldPC *field = static_cast<FieldPC *>(it.next());
+		
+		if (field && field->isOpen()) {
+			FieldModelLoaderPC *loader = field->fieldModelLoader();
+			for (int model = 0; model < loader->modelCount(); ++model) {
+				if (loader->ANames(model).size() >= 3) {
+					FieldModelFilePC *fieldModel = field->fieldModel(model);
+					if (!aNamesByBoneCount.contains(fieldModel->boneCount())) {
+						aNamesByBoneCount.insert(fieldModel->boneCount(), QSet<QString>());
+					}
+					aNamesByBoneCount[fieldModel->boneCount()].insert(loader->AName(model, 0).left(4));
+				}
+			}
+		}
+	}
+	
+	for (const QSet<QString> aNames : aNamesByBoneCount) {
+		qDebug() << aNames;
+	} */
 
 #ifdef DEBUG_FUNCTIONS
 	//fieldArchive->printScriptsDirs("final_parody_scripts");
@@ -946,6 +969,8 @@ void Window::showModel(int grpScriptID)
 				showModel(field, field->fieldModel(modelID));
 			// }
 			return;
+		} else if (fieldModel && fieldModel->hasError()) {
+			zoneImage->fill(field, true);
 		}
 	}
 	zonePreview->setCurrentIndex(0);
@@ -957,6 +982,10 @@ void Window::showModel(Field *field, FieldModelFile *fieldModelFile)
 		fieldModel->setFieldModelFile(fieldModelFile);
 	}
 	zonePreview->setCurrentIndex(int(fieldModel && !fieldModel->hasError() && fieldModelFile->isValid()));
+	
+	if (fieldModel && fieldModel->hasError() && fieldModelFile->isValid()) {
+		zoneImage->setPixmap(QPixmap::fromImage(fieldModelFile->skeleton().toImage(zoneImage->width(), zoneImage->height())));
+	}
 }
 
 void Window::setModified(bool enabled)

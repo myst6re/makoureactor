@@ -94,6 +94,7 @@ class Section1File;
 
 class Opcode
 {
+	friend class OpcodeBox;
 public:
 	enum Keys {
 		RET=0, REQ, REQSW, REQEW,
@@ -270,6 +271,9 @@ protected:
 	static QString _operateur(quint8 param);
 	static QString _windowCorner(quint8 param, quint8 bank);
 	static QString _sensRotation(quint8 param);
+	Opcode(const Opcode &opcode) : _refCount(opcode._refCount) {}
+private:
+	int _refCount;
 };
 
 class OpcodeUnknown : public Opcode {

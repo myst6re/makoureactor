@@ -24,10 +24,11 @@
 #include "Script.h"
 
 const char *Opcode::operators[OPERATORS_SIZE] = {
-	"==", "!=", ">", "<", ">=", "<=", "&", "^", "|", "bitON", "bitOFF"
+    "==", "!=", ">", "<", ">=", "<=", "&", "^", "|", "bitON", "bitOFF"
 };
 
-Opcode::Opcode()
+Opcode::Opcode() :
+    _refCount(1)
 {
 }
 
@@ -38,16 +39,16 @@ Opcode::~Opcode()
 QByteArray Opcode::toByteArray() const
 {
 	return QByteArray()
-			.append(char(id()))
-			.append(params());
+	        .append(char(id()))
+	        .append(params());
 }
 
 QByteArray Opcode::serialize() const
 {
 	quint16 identifier = quint16(id());
-
-	return QByteArray((char *)&identifier, 2)
-			.append(params());
+	
+	return QByteArray(reinterpret_cast<const char *>(&identifier), 2)
+	        .append(params());
 }
 
 OpcodeBox Opcode::unserialize(const QByteArray &data)
@@ -55,35 +56,35 @@ OpcodeBox Opcode::unserialize(const QByteArray &data)
 	if (data.size() < 2) {
 		return OpcodeBox(nullptr);
 	}
-
+	
 	quint16 identifier;
 	memcpy(&identifier, data.constData(), 2);
-
+	
 	if (identifier <= 0xFF) {
 		OpcodeBox ret = OpcodeBox(QByteArray()
 		                          .append(char(identifier))
 		                          .append(data.mid(2)));
-
+		
 		quint8 size = 2 + Opcode::length[identifier] - 1;
-
+		
 		if (ret->isJump() && data.size() >= size + 5) {
 			quint32 label;
 			memcpy(&label, data.constData() + size, 4);
-
+			
 			OpcodeJump &jump = ret.cast<OpcodeJump>();
 			jump.setLabel(label);
 			jump.setBadJump(bool(data.at(size + 4)));
 		}
-
+		
 		return ret;
 	}
-
+	
 	if (data.size() < 6) {
 		return OpcodeBox(nullptr);
 	}
 	quint32 label;
 	memcpy(&label, data.constData() + 2, 4);
-
+	
 	return OpcodeBox(new OpcodeLabel(label));
 }
 
@@ -91,25 +92,25 @@ int Opcode::subParam(int cur, int paramSize) const
 {
 	QByteArray p = params();
 	int value, sizeBA;
-
+	
 	if (paramSize%8 !=0)
 		sizeBA = paramSize/8+1;
 	else
 		sizeBA = paramSize/8;
-
+	
 	memcpy(&value, p.constData() + cur/8, sizeBA);
-	return (value >> ((sizeBA*8-cur%8)-paramSize)) & ((int)pow(2, paramSize)-1);
+	return (value >> ((sizeBA*8-cur%8)-paramSize)) & (int(pow(2, paramSize)) - 1);
 }
 
 bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) const
 {
 	// TODO: compare var with var
 	const bool noValue = value > 0xFFFF,
-			noAddress = address > 0xFF;
+	        noAddress = address > 0xFF;
 	QList<FF7Var> vars;
-
+	
 	getVariables(vars);
-
+	
 	switch (op) {
 	case Assign:
 	case AssignNotEqual:
@@ -121,9 +122,9 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 		if (!noValue) {
 			if (id() == SETBYTE || id() == SETWORD) {
 				const OpcodeBinaryOperation *binaryOp = static_cast<const OpcodeBinaryOperation *>(this);
-
+				
 				if (B1(binaryOp->banks) == bank && (noAddress || binaryOp->var == address)
-						&& B2(binaryOp->banks) == 0) {
+				        && B2(binaryOp->banks) == 0) {
 					switch (op) {
 					case Assign:
 						return binaryOp->value == value;
@@ -146,7 +147,7 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 			// Every write vars
 			for (const FF7Var &var : qAsConst(vars)) {
 				if (var.bank == bank && (noAddress || var.address == address)
-						&& var.write == true && var.size != FF7Var::Bit) {
+				        && var.write == true && var.size != FF7Var::Bit) {
 					return true;
 				}
 			}
@@ -154,11 +155,11 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 		return false;
 	case BitAssign:
 		if (id() == BITON
-				|| id() == BITOFF
-				|| id() == BITXOR) {
+		        || id() == BITOFF
+		        || id() == BITXOR) {
 			const OpcodeBitOperation *bitOperation = static_cast<const OpcodeBitOperation *>(this);
 			if (B1(bitOperation->banks) == bank && (noAddress || bitOperation->var == address)
-					&& (noValue || (B2(bitOperation->banks) == 0 && bitOperation->position == value))) {
+			        && (noValue || (B2(bitOperation->banks) == 0 && bitOperation->position == value))) {
 				return true;
 			}
 		}
@@ -166,15 +167,15 @@ bool Opcode::searchVar(quint8 bank, quint16 address, Operation op, int value) co
 	case Compare:
 	case BitCompare:
 		if (id() == IFUB
-		    || id() == IFUBL
-		    || id() == IFSW
-		    || id() == IFSWL
-		    || id() == IFUW
-		    || id() == IFUWL) {
+		        || id() == IFUBL
+		        || id() == IFSW
+		        || id() == IFSWL
+		        || id() == IFUW
+		        || id() == IFUWL) {
 			const OpcodeIf *opcodeIf = static_cast<const OpcodeIf *>(this);
 			if ((opcodeIf->oper <= quint8(LowerThanEqual) || opcodeIf->oper >= quint8(BitOn))
-			    && B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
-			    && (noValue || (B2(opcodeIf->banks) == 0 && opcodeIf->value2 == value))) {
+			        && B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
+			        && (noValue || (B2(opcodeIf->banks) == 0 && opcodeIf->value2 == value))) {
 				return true;
 			} else if (opcodeIf->oper >= quint8(BitAnd) && opcodeIf->oper <= quint8(BitOr)
 			           && B1(opcodeIf->banks) == bank && (noAddress || opcodeIf->value1 == address)
@@ -222,8 +223,8 @@ bool Opcode::searchTextInScripts(const QRegularExpression &text, const Section1F
 {
 	qint16 textID = getTextID();
 	return textID != -1
-			&& textID < scriptsAndTexts->textCount()
-			&& scriptsAndTexts->text(textID).contains(text);
+	        && textID < scriptsAndTexts->textCount()
+	        && scriptsAndTexts->text(textID).contains(text);
 }
 
 void Opcode::listUsedTexts(QSet<quint8> &usedTexts) const
@@ -297,19 +298,19 @@ void Opcode::listWindows(int groupID, int scriptID, int opcodeID, QMultiMap<quin
 
 void Opcode::listModelPositions(QList<FF7Position> &positions) const
 {
-	Q_UNUSED(positions);
+	Q_UNUSED(positions)
 }
 
 bool Opcode::linePosition(FF7Position position[2]) const
 {
-	Q_UNUSED(position);
+	Q_UNUSED(position)
 	return false;
 }
 
 void Opcode::backgroundParams(QHash<quint8, quint8> &enabledParams) const
 {
 	quint8 param, state;
-
+	
 	if (id() == BGON) { //show bg parameter
 		const OpcodeBGON *bgon = static_cast<const OpcodeBGON *>(this);
 		if (bgon->banks == 0) {
@@ -372,7 +373,7 @@ QString Opcode::_item(quint16 itemID, quint8 bank)
 	if (bank > 0) {
 		return QObject::tr("No%1").arg(_bank(itemID & 0xFF, bank));
 	}
-
+	
 	if (itemID < 128) {
 		if (!Data::item_names.isEmpty() && itemID < Data::item_names.size())
 			return Data::item_names.at(itemID);
@@ -394,7 +395,7 @@ QString Opcode::_materia(quint8 materiaID, quint8 bank)
 	if (bank > 0) {
 		return QObject::tr("No%1").arg(_bank(materiaID, bank));
 	}
-
+	
 	if (materiaID < Data::materia_names.size())
 		return Data::materia_names.at(materiaID);
 	return QObject::tr("No%1").arg(materiaID);
@@ -404,8 +405,8 @@ QString Opcode::_field(quint16 fieldID)
 {
 	if (fieldID < Data::maplist().size())
 		return QObject::tr("%1 (#%2)")
-			.arg(Data::maplist().at(fieldID))
-			.arg(fieldID);
+		        .arg(Data::maplist().at(fieldID))
+		        .arg(fieldID);
 	return QObject::tr("No%1").arg(fieldID);
 }
 
@@ -415,14 +416,14 @@ QString Opcode::_movie(quint8 movieID)
 	QString dflt = QObject::tr("No%1").arg(movieID);
 	QStringList cds;
 	cds << Data::movie_names_cd1.value(movieID, dflt)
-		<< Data::movie_names_cd2.value(movieID, dflt)
-		<< Data::movie_names_cd3.value(movieID, dflt);
-
+	    << Data::movie_names_cd2.value(movieID, dflt)
+	    << Data::movie_names_cd3.value(movieID, dflt);
+	
 	QStringList out;
 	for (int discID = 0; discID < 3; ++discID) {
 		out.append(QObject::tr("%1 (disc %2)").arg(cds.at(discID)).arg(discID + 1));
 	}
-
+	
 	return out.join(", ");
 }
 
@@ -438,7 +439,7 @@ QString Opcode::akao(quint8 akaoOp, bool *ok)
 	if (ok) {
 		*ok = true;
 	}
-
+	
 	switch (akaoOp) {
 	case 0x10:
 	case 0x14:	return QObject::tr("Play music [param1: music ID, 0-based]");
@@ -446,20 +447,20 @@ QString Opcode::akao(quint8 akaoOp, bool *ok)
 	case 0x19:	return QObject::tr("Play music and resume from last position [param1: music ID, 0-based]");
 	case 0x24:
 	case 0x20:	return QObject::tr("Play a sound effect (will be terminated if "
-								   "another effect is played on channel) "
-								   "[param1: panning, param2: effect ID]");
+		                           "another effect is played on channel) "
+		                           "[param1: panning, param2: effect ID]");
 	case 0x25:
 	case 0x21:	return QObject::tr("Play a sound effect (will be terminated if "
-								   "another effect is played on channel) "
-								   "[param1: panning, param2: effect ID, param3: ?]");
+		                           "another effect is played on channel) "
+		                           "[param1: panning, param2: effect ID, param3: ?]");
 	case 0x26:
 	case 0x22:	return QObject::tr("Play a sound effect (will be terminated if "
-								   "another effect is played on channel) "
-								   "[param1: panning, param2: effect ID, param3: ?, param4: ?]");
+		                           "another effect is played on channel) "
+		                           "[param1: panning, param2: effect ID, param3: ?, param4: ?]");
 	case 0x27:
 	case 0x23:	return QObject::tr("Play a sound effect (will be terminated if "
-								   "another effect is played on channel) "
-								   "[param1: panning, param2: effect ID, param3: ?, param4: ?, param5: ?]");
+		                           "another effect is played on channel) "
+		                           "[param1: panning, param2: effect ID, param3: ?, param4: ?, param5: ?]");
 	case 0x28:	return QObject::tr("Play a sound effect on channel #1 [param1: panning, param2: effect ID]");
 	case 0x29:	return QObject::tr("Play a sound effect on channel #2 [param1: panning, param2: effect ID]");
 	case 0x2A:	return QObject::tr("Play a sound effect on channel #3 [param1: panning, param2: effect ID]");
@@ -555,9 +556,9 @@ QString Opcode::_var(int value, quint8 bank1, quint8 bank2, quint8 bank3)
 {
 	if (bank1 > 0 || bank2 > 0 || bank3 > 0)
 		return QObject::tr("%1 and %2 and %3")
-				.arg(_bank(value & 0xFF, bank1))
-				.arg(_bank((value >> 8) & 0xFF, bank2))
-				.arg(_bank((value >> 16) & 0xFF, bank3));
+		        .arg(_bank(value & 0xFF, bank1))
+		        .arg(_bank((value >> 8) & 0xFF, bank2))
+		        .arg(_bank((value >> 16) & 0xFF, bank3));
 	return QString::number(value);
 }
 
@@ -574,7 +575,7 @@ QString Opcode::_windowCorner(quint8 param, quint8 bank)
 	if (bank > 0) {
 		return _bank(param, bank);
 	}
-
+	
 	switch (param) {
 	case 0:		return QObject::tr("Top Left");
 	case 1:		return QObject::tr("Bottom Left");
@@ -623,7 +624,7 @@ quint8 OpcodeUnknown::size() const
 QString OpcodeUnknown::toString(const Section1File *) const
 {
 	return QObject::tr("? (ID=%1)")
-			.arg(_id);
+	        .arg(_id);
 }
 
 void OpcodeUnknown::setParams(const char *params, int size)
@@ -660,62 +661,62 @@ void OpcodeExec::setParams(const char *params, int)
 QByteArray OpcodeExec::params() const
 {
 	return QByteArray()
-			.append((char)groupID)
-			.append(char((scriptID & 0x1F) | ((priority & 7) << 5)));
+	        .append(char(groupID))
+	        .append(char((scriptID & 0x1F) | ((priority & 7) << 5)));
 }
 
 OpcodeREQ::OpcodeREQ(const char *params, int size) :
-	OpcodeExec(params, size)
+    OpcodeExec(params, size)
 {
 }
 
 OpcodeREQ::OpcodeREQ(const OpcodeExec &op) :
-	OpcodeExec(op)
+    OpcodeExec(op)
 {
 }
 
 QString OpcodeREQ::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Execute script #%3 in extern group %1 (priority %2/6) - Only if the script is not already running")
-			.arg(_script(groupID, scriptsAndTexts))
-			.arg(priority)
-			.arg(scriptID);
+	        .arg(_script(groupID, scriptsAndTexts))
+	        .arg(priority)
+	        .arg(scriptID);
 }
 
 OpcodeREQSW::OpcodeREQSW(const char *params, int size) :
-	OpcodeExec(params, size)
+    OpcodeExec(params, size)
 {
 }
 
 OpcodeREQSW::OpcodeREQSW(const OpcodeExec &op) :
-	OpcodeExec(op)
+    OpcodeExec(op)
 {
 }
 
 QString OpcodeREQSW::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Execute script #%3 in extern group %1 (priority %2/6)")
-			.arg(_script(groupID, scriptsAndTexts))
-			.arg(priority)
-			.arg(scriptID);
+	        .arg(_script(groupID, scriptsAndTexts))
+	        .arg(priority)
+	        .arg(scriptID);
 }
 
 OpcodeREQEW::OpcodeREQEW(const char *params, int size) :
-	OpcodeExec(params, size)
+    OpcodeExec(params, size)
 {
 }
 
 OpcodeREQEW::OpcodeREQEW(const OpcodeExec &op) :
-	OpcodeExec(op)
+    OpcodeExec(op)
 {
 }
 
 QString OpcodeREQEW::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Execute script #%3 in group %1 (priority %2/6) - Waiting for end of execution to continue")
-			.arg(_script(groupID, scriptsAndTexts))
-			.arg(priority)
-			.arg(scriptID);
+	        .arg(_script(groupID, scriptsAndTexts))
+	        .arg(priority)
+	        .arg(scriptID);
 }
 
 OpcodeExecChar::OpcodeExecChar(const char *params, int size)
@@ -733,62 +734,62 @@ void OpcodeExecChar::setParams(const char *params, int)
 QByteArray OpcodeExecChar::params() const
 {
 	return QByteArray()
-			.append((char)partyID)
-			.append(char((scriptID & 0x1F) | ((priority & 7) << 5)));
+	        .append(char(partyID))
+	        .append(char((scriptID & 0x1F) | ((priority & 7) << 5)));
 }
 
 OpcodePREQ::OpcodePREQ(const char *params, int size) :
-	OpcodeExecChar(params, size)
+    OpcodeExecChar(params, size)
 {
 }
 
 OpcodePREQ::OpcodePREQ(const OpcodeExecChar &op) :
-	OpcodeExecChar(op)
+    OpcodeExecChar(op)
 {
 }
 
 QString OpcodePREQ::toString(const Section1File *) const
 {
 	return QObject::tr("Execute script #%3 in extern group associated with the character #%1 in the current party (priority %2/6) - Only if the script is not already running")
-			.arg(partyID)
-			.arg(priority)
-			.arg(scriptID);
+	        .arg(partyID)
+	        .arg(priority)
+	        .arg(scriptID);
 }
 
 OpcodePRQSW::OpcodePRQSW(const char *params, int size) :
-	OpcodeExecChar(params, size)
+    OpcodeExecChar(params, size)
 {
 }
 
 OpcodePRQSW::OpcodePRQSW(const OpcodeExecChar &op) :
-	OpcodeExecChar(op)
+    OpcodeExecChar(op)
 {
 }
 
 QString OpcodePRQSW::toString(const Section1File *) const
 {
 	return QObject::tr("Execute script #%3 in extern group associated with the character #%1 in the current party (priority %2/6)")
-			.arg(partyID)
-			.arg(priority)
-			.arg(scriptID);
+	        .arg(partyID)
+	        .arg(priority)
+	        .arg(scriptID);
 }
 
 OpcodePRQEW::OpcodePRQEW(const char *params, int size) :
-	OpcodeExecChar(params, size)
+    OpcodeExecChar(params, size)
 {
 }
 
 OpcodePRQEW::OpcodePRQEW(const OpcodeExecChar &op) :
-	OpcodeExecChar(op)
+    OpcodeExecChar(op)
 {
 }
 
 QString OpcodePRQEW::toString(const Section1File *) const
 {
 	return QObject::tr("Execute script #%3 in group associated with the character #%1 in the current party (priority %2/6) - Waiting for end of execution to continue")
-			.arg(partyID)
-			.arg(priority)
-			.arg(scriptID);
+	        .arg(partyID)
+	        .arg(priority)
+	        .arg(scriptID);
 }
 
 OpcodeRETTO::OpcodeRETTO(const char *params, int size)
@@ -805,14 +806,14 @@ void OpcodeRETTO::setParams(const char *params, int)
 QString OpcodeRETTO::toString(const Section1File *) const
 {
 	return QObject::tr("Return and execute script #%2 from the current entity (Priority %1/6)")
-			.arg(priority)
-			.arg(scriptID);
+	        .arg(priority)
+	        .arg(scriptID);
 }
 
 QByteArray OpcodeRETTO::params() const
 {
 	return QByteArray()
-			.append(char((scriptID & 0x1F) | ((priority & 7) << 5)));
+	        .append(char((scriptID & 0x1F) | ((priority & 7) << 5)));
 }
 
 OpcodeJOIN::OpcodeJOIN(const char *params, int size)
@@ -828,13 +829,13 @@ void OpcodeJOIN::setParams(const char *params, int)
 QString OpcodeJOIN::toString(const Section1File *) const
 {
 	return QObject::tr("Join party field (speed=%1)")
-			.arg(speed);
+	        .arg(speed);
 }
 
 QByteArray OpcodeJOIN::params() const
 {
 	return QByteArray()
-			.append(speed);
+	        .append(speed);
 }
 
 OpcodeSPLIT::OpcodeSPLIT(const char *params, int size)
@@ -845,7 +846,7 @@ OpcodeSPLIT::OpcodeSPLIT(const char *params, int size)
 void OpcodeSPLIT::setParams(const char *params, int)
 {
 	memcpy(banks, params, 3);
-
+	
 	memcpy(&targetX1, params + 3, 2); // bank 1
 	memcpy(&targetY1, params + 5, 2); // bank 2
 	direction1 = params[7]; // bank 3
@@ -858,26 +859,26 @@ void OpcodeSPLIT::setParams(const char *params, int)
 QString OpcodeSPLIT::toString(const Section1File *) const
 {
 	return QObject::tr("Split party field (member 1: X=%1, Y=%2, dir=%3 ; member 2 : X=%4, Y=%5, dir=%6) (speed %7)")
-			.arg(_var(targetX1, B1(banks[0])))
-			.arg(_var(targetY1, B2(banks[0])))
-			.arg(_var(direction1, B1(banks[1])))
-			.arg(_var(targetX2, B2(banks[1])))
-			.arg(_var(targetY2, B1(banks[2])))
-			.arg(_var(direction2, B2(banks[2])))
-			.arg(speed);
+	        .arg(_var(targetX1, B1(banks[0])))
+	        .arg(_var(targetY1, B2(banks[0])))
+	        .arg(_var(direction1, B1(banks[1])))
+	        .arg(_var(targetX2, B2(banks[1])))
+	        .arg(_var(targetY2, B1(banks[2])))
+	        .arg(_var(direction2, B2(banks[2])))
+	        .arg(speed);
 }
 
 QByteArray OpcodeSPLIT::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 3)
-			.append((char *)&targetX1, 2)
-			.append((char *)&targetY1, 2)
-			.append((char)direction1)
-			.append((char *)&targetX2, 2)
-			.append((char *)&targetY2, 2)
-			.append((char)direction2)
-			.append((char)speed);
+	        .append(reinterpret_cast<const char *>(&banks), 3)
+	        .append(reinterpret_cast<const char *>(&targetX1), 2)
+	        .append(reinterpret_cast<const char *>(&targetY1), 2)
+	        .append(char(direction1))
+	        .append(reinterpret_cast<const char *>(&targetX2), 2)
+	        .append(reinterpret_cast<const char *>(&targetY2), 2)
+	        .append(char(direction2))
+	        .append(char(speed));
 }
 
 void OpcodeSPLIT::getVariables(QList<FF7Var> &vars) const
@@ -904,7 +905,7 @@ OpcodePartyE::OpcodePartyE(const char *params, int size)
 void OpcodePartyE::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
-
+	
 	party1 = params[2]; // bank 1
 	party2 = params[3]; // bank 2
 	party3 = params[4]; // bank 3 -checked-
@@ -913,10 +914,10 @@ void OpcodePartyE::setParams(const char *params, int)
 QByteArray OpcodePartyE::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)party1)
-			.append((char)party2)
-			.append((char)party3);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(party1))
+	        .append(char(party2))
+	        .append(char(party3));
 }
 
 void OpcodePartyE::getVariables(QList<FF7Var> &vars) const
@@ -930,39 +931,43 @@ void OpcodePartyE::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeSPTYE::OpcodeSPTYE(const char *params, int size) :
-	OpcodePartyE(params, size)
+    OpcodePartyE(params, size)
 {
 }
 
 OpcodeSPTYE::OpcodeSPTYE(const OpcodePartyE &op) :
-	OpcodePartyE(op)
+    OpcodePartyE(op)
 {
 }
 
 QString OpcodeSPTYE::toString(const Section1File *) const
 {
 	return QObject::tr("Set party from memory: %1 | %2 | %3")
-			.arg(_var(party1, B1(banks[0])))
-			.arg(_var(party2, B2(banks[0])))
-			.arg(_var(party3, B1(banks[1])));
+	        .arg(
+	            _var(party1, B1(banks[0])),
+	            _var(party2, B2(banks[0])),
+	            _var(party3, B1(banks[1]))
+	        );
 }
 
 OpcodeGTPYE::OpcodeGTPYE(const char *params, int size) :
-	OpcodePartyE(params, size)
+    OpcodePartyE(params, size)
 {
 }
 
 OpcodeGTPYE::OpcodeGTPYE(const OpcodePartyE &op) :
-	OpcodePartyE(op)
+    OpcodePartyE(op)
 {
 }
 
 QString OpcodeGTPYE::toString(const Section1File *) const
 {
 	return QObject::tr("Get party from memory: %1 | %2 | %3")
-			.arg(_var(party1, B1(banks[0])))
-			.arg(_var(party2, B2(banks[0])))
-			.arg(_var(party3, B1(banks[1])));
+	        .arg(
+	            _var(party1, B1(banks[0])),
+	            _var(party2, B2(banks[0])),
+	            _var(party3, B1(banks[1]))
+	        );
 }
 
 void OpcodeGTPYE::getVariables(QList<FF7Var> &vars) const
@@ -988,12 +993,12 @@ void OpcodeDSKCG::setParams(const char *params, int)
 QString OpcodeDSKCG::toString(const Section1File *) const
 {
 	return QObject::tr("Ask for disc %1")
-			.arg(diskID);
+	        .arg(diskID);
 }
 
 QByteArray OpcodeDSKCG::params() const
 {
-	return QByteArray().append((char)diskID);
+	return QByteArray().append(char(diskID));
 }
 
 OpcodeSPECIALARROW::OpcodeSPECIALARROW(const char *params, int size)
@@ -1014,12 +1019,12 @@ void OpcodeSPECIALARROW::setParams(const char *params, int)
 QString OpcodeSPECIALARROW::toString(const Section1File *) const
 {
 	return QObject::tr("%1 arrow")
-			.arg(hide == 0 ? QObject::tr("Display") : QObject::tr("Hide"));
+	        .arg(hide == 0 ? QObject::tr("Display") : QObject::tr("Hide"));
 }
 
 QByteArray OpcodeSPECIALARROW::params() const
 {
-	return QByteArray().append((char)hide);
+	return QByteArray().append(char(hide));
 }
 
 OpcodeSPECIALPNAME::OpcodeSPECIALPNAME(const char *params, int size)
@@ -1041,12 +1046,12 @@ void OpcodeSPECIALPNAME::setParams(const char *params, int size)
 QString OpcodeSPECIALPNAME::toString(const Section1File *) const
 {
 	return QObject::tr("PNAME - Disable right menu (%1)")
-			.arg(unknown);
+	        .arg(unknown);
 }
 
 QByteArray OpcodeSPECIALPNAME::params() const
 {
-	return QByteArray().append((char)unknown);
+	return QByteArray().append(char(unknown));
 }
 
 OpcodeSPECIALGMSPD::OpcodeSPECIALGMSPD(const char *params, int size)
@@ -1067,12 +1072,12 @@ void OpcodeSPECIALGMSPD::setParams(const char *params, int)
 QString OpcodeSPECIALGMSPD::toString(const Section1File *) const
 {
 	return QObject::tr("Set game speed (%1)")
-			.arg(speed);
+	        .arg(speed);
 }
 
 QByteArray OpcodeSPECIALGMSPD::params() const
 {
-	return QByteArray().append((char)speed);
+	return QByteArray().append(char(speed));
 }
 
 OpcodeSPECIALSMSPD::OpcodeSPECIALSMSPD(const char *params, int size)
@@ -1094,15 +1099,15 @@ void OpcodeSPECIALSMSPD::setParams(const char *params, int)
 QString OpcodeSPECIALSMSPD::toString(const Section1File *) const
 {
 	return QObject::tr("Set field message speed (%2) | %1 |")
-			.arg(unknown)
-			.arg(speed);
+	        .arg(unknown)
+	        .arg(speed);
 }
 
 QByteArray OpcodeSPECIALSMSPD::params() const
 {
 	return QByteArray()
-			.append((char)unknown)
-			.append((char)speed);
+	        .append(char(unknown))
+	        .append(char(speed));
 }
 
 OpcodeSPECIALFLMAT::OpcodeSPECIALFLMAT()
@@ -1152,12 +1157,12 @@ void OpcodeSPECIALBTLCK::setParams(const char *params, int)
 QString OpcodeSPECIALBTLCK::toString(const Section1File *) const
 {
 	return QObject::tr("%1 battles")
-			.arg(lock == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
+	        .arg(lock == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
 }
 
 QByteArray OpcodeSPECIALBTLCK::params() const
 {
-	return QByteArray().append((char)lock);
+	return QByteArray().append(char(lock));
 }
 
 OpcodeSPECIALMVLCK::OpcodeSPECIALMVLCK(const char *params, int size)
@@ -1178,12 +1183,12 @@ void OpcodeSPECIALMVLCK::setParams(const char *params, int)
 QString OpcodeSPECIALMVLCK::toString(const Section1File *) const
 {
 	return QObject::tr("%1 movies")
-			.arg(lock == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
+	        .arg(lock == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
 }
 
 QByteArray OpcodeSPECIALMVLCK::params() const
 {
-	return QByteArray().append((char)lock);
+	return QByteArray().append(char(lock));
 }
 
 OpcodeSPECIALSPCNM::OpcodeSPECIALSPCNM(const char *params, int size)
@@ -1205,15 +1210,17 @@ void OpcodeSPECIALSPCNM::setParams(const char *params, int)
 QString OpcodeSPECIALSPCNM::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Change name of %1 by text %2")
-			.arg(character(charID))
-			.arg(_text(textID, scriptsAndTexts));
+	        .arg(
+	            character(charID),
+	            _text(textID, scriptsAndTexts)
+	        );
 }
 
 QByteArray OpcodeSPECIALSPCNM::params() const
 {
 	return QByteArray()
-			.append((char)charID)
-			.append((char)textID);
+	        .append(char(charID))
+	        .append(char(textID));
 }
 
 int OpcodeSPECIALSPCNM::getTextID() const
@@ -1255,13 +1262,13 @@ QString OpcodeSPECIALCLITM::toString(const Section1File *) const
 }
 
 OpcodeSPECIAL::OpcodeSPECIAL(const char *params, int size) :
-	opcode(0)
+    opcode(nullptr)
 {
 	setParams(params, size);
 }
 
 OpcodeSPECIAL::OpcodeSPECIAL(const OpcodeSPECIAL &other) :
-	Opcode(other), opcode(nullptr)
+    Opcode(other), opcode(nullptr)
 {
 	// Realloc opcode attribute
 	setParams(other.params().constData(), other.params().size());
@@ -1285,7 +1292,7 @@ QString OpcodeSPECIAL::toString(const Section1File *scriptsAndTexts) const
 void OpcodeSPECIAL::setParams(const char *params, int size)
 {
 	if (opcode)		delete opcode;
-
+	
 	switch (quint8(params[0]))
 	{
 	case 0xF5:	opcode = new OpcodeSPECIALARROW(params + 1, size - 1);
@@ -1333,7 +1340,7 @@ void OpcodeSPECIAL::setTextID(quint8 textID)
 }
 
 OpcodeJump::OpcodeJump() :
-	_jump(0), _label(0), _badJump(false)
+    _jump(0), _label(0), _badJump(false)
 {
 }
 
@@ -1380,23 +1387,23 @@ quint32 OpcodeJump::maxJump() const
 QByteArray OpcodeJump::serialize() const
 {
 	return Opcode::serialize()
-		.append((char *)&_label, 4).append(char(_badJump));
+	        .append(reinterpret_cast<const char *>(&_label), 4).append(char(_badJump));
 }
 
 OpcodeLabel::OpcodeLabel(quint32 label) :
-	_label(label)
+    _label(label)
 {
 }
 
 QByteArray OpcodeLabel::serialize() const
 {
-	return Opcode::serialize().append((char *)&_label, 4);
+	return Opcode::serialize().append(reinterpret_cast<const char *>(&_label), 4);
 }
 
 QString OpcodeLabel::toString(const Section1File *) const
 {
 	return QObject::tr("Label %1")
-			.arg(_label);
+	        .arg(_label);
 }
 
 quint32 OpcodeLabel::label() const
@@ -1410,26 +1417,26 @@ void OpcodeLabel::setLabel(quint32 label)
 }
 
 OpcodeJMPF::OpcodeJMPF(const char *params, int size) :
-	OpcodeJump()
+    OpcodeJump()
 {
 	setParams(params, size);
 }
 
 OpcodeJMPF::OpcodeJMPF(const OpcodeJump &op) :
-	OpcodeJump(op)
+    OpcodeJump(op)
 {
 }
 
 void OpcodeJMPF::setParams(const char *params, int)
 {
-	_jump = (quint8)params[0] + jumpPosData();
+	_jump = quint8(params[0]) + jumpPosData();
 }
 
 QString OpcodeJMPF::toString(const Section1File *) const
 {
 	return _badJump ? QObject::tr("Forward %n byte(s)", "With plural", _jump)
-					: QObject::tr("Goto label %1")
-					  .arg(_label);
+	                : QObject::tr("Goto label %1")
+	                  .arg(_label);
 }
 
 QByteArray OpcodeJMPF::params() const
@@ -1438,13 +1445,13 @@ QByteArray OpcodeJMPF::params() const
 }
 
 OpcodeJMPFL::OpcodeJMPFL(const char *params, int size) :
-	OpcodeJump()
+    OpcodeJump()
 {
 	setParams(params, size);
 }
 
 OpcodeJMPFL::OpcodeJMPFL(const OpcodeJump &op) :
-	OpcodeJump(op)
+    OpcodeJump(op)
 {
 }
 
@@ -1452,44 +1459,44 @@ void OpcodeJMPFL::setParams(const char *params, int)
 {
 	quint16 jump;
 	memcpy(&jump, params, 2);
-
+	
 	_jump = jump + jumpPosData();
 }
 
 QString OpcodeJMPFL::toString(const Section1File *) const
 {
 	return _badJump ? QObject::tr("Forward %n byte(s)", "With plural", _jump)
-					: QObject::tr("Goto label %1")
-					  .arg(_label);
+	                : QObject::tr("Goto label %1")
+	                  .arg(_label);
 }
 
 QByteArray OpcodeJMPFL::params() const
 {
 	quint16 jump = _jump - jumpPosData();
-	return QByteArray().append((char *)&jump, 2);
+	return QByteArray().append(reinterpret_cast<const char *>(&jump), 2);
 }
 
 OpcodeJMPB::OpcodeJMPB(const char *params, int size) :
-	OpcodeJump()
+    OpcodeJump()
 {
 	setParams(params, size);
 }
 
 OpcodeJMPB::OpcodeJMPB(const OpcodeJump &op) :
-	OpcodeJump(op)
+    OpcodeJump(op)
 {
 }
 
 void OpcodeJMPB::setParams(const char *params, int)
 {
-	_jump = -(quint8)params[0];
+	_jump = -quint8(params[0]);
 }
 
 QString OpcodeJMPB::toString(const Section1File *) const
 {
 	return _badJump ? QObject::tr("Back %n byte(s)", "With plural", -_jump)
-					: QObject::tr("Goto label %1")
-					  .arg(_label);
+	                : QObject::tr("Goto label %1")
+	                  .arg(_label);
 }
 
 QByteArray OpcodeJMPB::params() const
@@ -1498,13 +1505,13 @@ QByteArray OpcodeJMPB::params() const
 }
 
 OpcodeJMPBL::OpcodeJMPBL(const char *params, int size) :
-	OpcodeJump()
+    OpcodeJump()
 {
 	setParams(params, size);
 }
 
 OpcodeJMPBL::OpcodeJMPBL(const OpcodeJump &op) :
-	OpcodeJump(op)
+    OpcodeJump(op)
 {
 }
 
@@ -1512,42 +1519,42 @@ void OpcodeJMPBL::setParams(const char *params, int)
 {
 	quint16 jump;
 	memcpy(&jump, params, 2);
-
+	
 	_jump = -jump;
 }
 
 QString OpcodeJMPBL::toString(const Section1File *) const
 {
 	return _badJump ? QObject::tr("Back %n byte(s)", "With plural", -_jump)
-					: QObject::tr("Goto label %1")
-					  .arg(_label);
+	                : QObject::tr("Goto label %1")
+	                  .arg(_label);
 }
 
 QByteArray OpcodeJMPBL::params() const
 {
 	quint16 jump = -_jump;
-	return QByteArray().append((char *)&jump, 2);
+	return QByteArray().append(reinterpret_cast<const char *>(&jump), 2);
 }
 
 OpcodeIf::OpcodeIf() :
-	OpcodeJump(), banks(0), oper(0), itemIsExpanded(false), value1(0), value2(0)
+    OpcodeJump(), banks(0), oper(0), itemIsExpanded(false), value1(0), value2(0)
 {
 }
 
 OpcodeIf::OpcodeIf(const OpcodeJump &op) :
-	OpcodeJump(op), banks(0), oper(0), itemIsExpanded(false), value1(0), value2(0)
+    OpcodeJump(op), banks(0), oper(0), itemIsExpanded(false), value1(0), value2(0)
 {
 }
 
 void OpcodeIf::getVariables(QList<FF7Var> &vars) const
 {
-
+	
 	if (B1(banks) != 0) {
 		Operator op = Operator(oper);
 		vars.append(FF7Var(B1(banks), value1 & 0xFF,
-						   op == BitAnd || op == BitXOr || op == BitOr
-						   || op == BitOn || op == BitOff
-						   ? FF7Var::Bit : FF7Var::Byte));
+		                   op == BitAnd || op == BitXOr || op == BitOr
+		                   || op == BitOn || op == BitOff
+		                   ? FF7Var::Bit : FF7Var::Byte));
 	}
 	if (B2(banks) != 0)
 		vars.append(FF7Var(B2(banks), value2 & 0xFF, FF7Var::Byte));
@@ -1559,38 +1566,40 @@ OpcodeIFUB::OpcodeIFUB(const char *params, int size)
 }
 
 OpcodeIFUB::OpcodeIFUB(const OpcodeIf &op) :
-	OpcodeIf(op)
+    OpcodeIf(op)
 {
 }
 
 void OpcodeIFUB::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
-	value1 = (quint8)params[1]; // bank 1
-	value2 = (quint8)params[2]; // bank 2
-	oper = (quint8)params[3];
-	_jump = (quint8)params[4] + jumpPosData();
+	banks = quint8(params[0]);
+	value1 = quint8(params[1]); // bank 1
+	value2 = quint8(params[2]); // bank 2
+	oper = quint8(params[3]);
+	_jump = quint8(params[4]) + jumpPosData();
 }
 
 QString OpcodeIFUB::toString(const Section1File *) const
 {
 	return QObject::tr("If %1 %3 %2 (%4)")
-			.arg(_var(value1, B1(banks)))
-			.arg(_var(value2, B2(banks)))
-			.arg(_operateur(oper))
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(
+	            _var(value1, B1(banks)),
+	            _var(value2, B2(banks)),
+	            _operateur(oper),
+	            _badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label)
+	        );
 }
 
 QByteArray OpcodeIFUB::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)value1)
-			.append((char)value2)
-			.append((char)oper)
-			.append(char(_jump - jumpPosData()));
+	        .append(char(banks))
+	        .append(char(value1))
+	        .append(char(value2))
+	        .append(char(oper))
+	        .append(char(_jump - jumpPosData()));
 }
 
 OpcodeIFUBL::OpcodeIFUBL(const char *params, int size)
@@ -1599,16 +1608,16 @@ OpcodeIFUBL::OpcodeIFUBL(const char *params, int size)
 }
 
 OpcodeIFUBL::OpcodeIFUBL(const OpcodeIf &op) :
-	OpcodeIf(op)
+    OpcodeIf(op)
 {
 }
 
 void OpcodeIFUBL::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
-	value1 = (quint8)params[1]; // bank 1
-	value2 = (quint8)params[2]; // bank 2
-	oper = (quint8)params[3];
+	banks = quint8(params[0]);
+	value1 = quint8(params[1]); // bank 1
+	value2 = quint8(params[2]); // bank 2
+	oper = quint8(params[3]);
 	quint16 jump;
 	memcpy(&jump, params + 4, 2);
 	_jump = jump + jumpPosData();
@@ -1617,23 +1626,23 @@ void OpcodeIFUBL::setParams(const char *params, int)
 QString OpcodeIFUBL::toString(const Section1File *) const
 {
 	return QObject::tr("If %1 %3 %2 (%4)")
-			.arg(_var(value1, B1(banks)))
-			.arg(_var(value2, B2(banks)))
-			.arg(_operateur(oper))
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(_var(value1, B1(banks)))
+	        .arg(_var(value2, B2(banks)))
+	        .arg(_operateur(oper))
+	        .arg(_badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label));
 }
 
 QByteArray OpcodeIFUBL::params() const
 {
 	quint16 jump = _jump - jumpPosData();
 	return QByteArray()
-			.append((char)banks)
-			.append((char)value1)
-			.append((char)value2)
-			.append((char)oper)
-			.append((char *)&jump, 2);
+	        .append(char(banks))
+	        .append(char(value1))
+	        .append(char(value2))
+	        .append(char(oper))
+	        .append(reinterpret_cast<const char *>(&jump), 2);
 }
 
 OpcodeIFSW::OpcodeIFSW(const char *params, int size)
@@ -1642,42 +1651,44 @@ OpcodeIFSW::OpcodeIFSW(const char *params, int size)
 }
 
 OpcodeIFSW::OpcodeIFSW(const OpcodeIf &op) :
-	OpcodeIf(op)
+    OpcodeIf(op)
 {
 }
 
 void OpcodeIFSW::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
+	banks = quint8(params[0]);
 	qint16 v1, v2;
 	memcpy(&v1, params + 1, 2);
 	memcpy(&v2, params + 3, 2);
 	value1 = v1;
 	value2 = v2;
-	oper = (quint8)params[5];
-	_jump = (quint8)params[6] + jumpPosData();
+	oper = quint8(params[5]);
+	_jump = quint8(params[6]) + jumpPosData();
 }
 
 QString OpcodeIFSW::toString(const Section1File *) const
 {
 	return QObject::tr("If %1 %3 %2 (%4)")
-			.arg(_var(value1, B1(banks)))
-			.arg(_var(value2, B2(banks)))
-			.arg(_operateur(oper))
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(
+	            _var(value1, B1(banks)),
+	            _var(value2, B2(banks)),
+	            _operateur(oper),
+	            _badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label)
+	        );
 }
 
 QByteArray OpcodeIFSW::params() const
 {
-	qint16 v1=value1, v2=value2;
+	qint16 v1 = value1, v2 = value2;
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&v1, 2)
-			.append((char *)&v2, 2)
-			.append((char)oper)
-			.append(char(_jump - jumpPosData()));
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&v1), 2)
+	        .append(reinterpret_cast<const char *>(&v2), 2)
+	        .append(char(oper))
+	        .append(char(_jump - jumpPosData()));
 }
 
 void OpcodeIFSW::getVariables(QList<FF7Var> &vars) const
@@ -1696,19 +1707,19 @@ OpcodeIFSWL::OpcodeIFSWL(const char *params, int size)
 }
 
 OpcodeIFSWL::OpcodeIFSWL(const OpcodeIf &op) :
-	OpcodeIf(op)
+    OpcodeIf(op)
 {
 }
 
 void OpcodeIFSWL::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
+	banks = quint8(params[0]);
 	qint16 v1, v2;
 	memcpy(&v1, params + 1, 2);
 	memcpy(&v2, params + 3, 2);
 	value1 = v1;
 	value2 = v2;
-	oper = (quint8)params[5];
+	oper = quint8(params[5]);
 	quint16 jump;
 	memcpy(&jump, params + 6, 2);
 	_jump = jump + jumpPosData();
@@ -1717,24 +1728,26 @@ void OpcodeIFSWL::setParams(const char *params, int)
 QString OpcodeIFSWL::toString(const Section1File *) const
 {
 	return QObject::tr("If %1 %3 %2 (%4)")
-			.arg(_var(value1, B1(banks)))
-			.arg(_var(value2, B2(banks)))
-			.arg(_operateur(oper))
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(
+	            _var(value1, B1(banks)),
+	            _var(value2, B2(banks)),
+	            _operateur(oper),
+	            _badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label)
+	        );
 }
 
 QByteArray OpcodeIFSWL::params() const
 {
-	qint16 v1=value1, v2=value2;
+	qint16 v1 = value1, v2 = value2;
 	quint16 jump = _jump - jumpPosData();
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&v1, 2)
-			.append((char *)&v2, 2)
-			.append((char)oper)
-			.append((char *)&jump, 2);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&v1), 2)
+	        .append(reinterpret_cast<const char *>(&v2), 2)
+	        .append(char(oper))
+	        .append(reinterpret_cast<const char *>(&jump), 2);
 }
 
 void OpcodeIFSWL::getVariables(QList<FF7Var> &vars) const
@@ -1753,42 +1766,42 @@ OpcodeIFUW::OpcodeIFUW(const char *params, int size)
 }
 
 OpcodeIFUW::OpcodeIFUW(const OpcodeIf &op) :
-	OpcodeIf(op)
+    OpcodeIf(op)
 {
 }
 
 void OpcodeIFUW::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
+	banks = quint8(params[0]);
 	quint16 v1, v2;
 	memcpy(&v1, params + 1, 2);
 	memcpy(&v2, params + 3, 2);
 	value1 = v1;
 	value2 = v2;
-	oper = (quint8)params[5];
-	_jump = (quint8)params[6] + jumpPosData();
+	oper = quint8(params[5]);
+	_jump = quint8(params[6]) + jumpPosData();
 }
 
 QString OpcodeIFUW::toString(const Section1File *) const
 {
 	return QObject::tr("If %1 %3 %2 (%4)")
-			.arg(_var(value1, B1(banks)))
-			.arg(_var(value2, B2(banks)))
-			.arg(_operateur(oper))
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(_var(value1, B1(banks)))
+	        .arg(_var(value2, B2(banks)))
+	        .arg(_operateur(oper))
+	        .arg(_badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label));
 }
 
 QByteArray OpcodeIFUW::params() const
 {
-	quint16 v1=value1, v2=value2;
+	quint16 v1 = value1, v2 = value2;
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&v1, 2)
-			.append((char *)&v2, 2)
-			.append((char)oper)
-			.append(char(_jump - jumpPosData()));
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&v1), 2)
+	        .append(reinterpret_cast<const char *>(&v2), 2)
+	        .append(char(oper))
+	        .append(char(_jump - jumpPosData()));
 }
 
 void OpcodeIFUW::getVariables(QList<FF7Var> &vars) const
@@ -1807,19 +1820,19 @@ OpcodeIFUWL::OpcodeIFUWL(const char *params, int size)
 }
 
 OpcodeIFUWL::OpcodeIFUWL(const OpcodeIf &op) :
-	OpcodeIf(op)
+    OpcodeIf(op)
 {
 }
 
 void OpcodeIFUWL::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
+	banks = quint8(params[0]);
 	quint16 v1, v2;
 	memcpy(&v1, params + 1, 2);
 	memcpy(&v2, params + 3, 2);
 	value1 = v1;
 	value2 = v2;
-	oper = (quint8)params[5];
+	oper = quint8(params[5]);
 	quint16 jump;
 	memcpy(&jump, params + 6, 2);
 	_jump = jump + jumpPosData();
@@ -1828,24 +1841,26 @@ void OpcodeIFUWL::setParams(const char *params, int)
 QString OpcodeIFUWL::toString(const Section1File *) const
 {
 	return QObject::tr("If %1 %3 %2 (%4)")
-			.arg(_var(value1, B1(banks)))
-			.arg(_var(value2, B2(banks)))
-			.arg(_operateur(oper))
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(
+	            _var(value1, B1(banks)),
+	            _var(value2, B2(banks)),
+	            _operateur(oper),
+	            _badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label)
+	        );
 }
 
 QByteArray OpcodeIFUWL::params() const
 {
-	quint16 v1=value1, v2=value2;
+	quint16 v1 = value1, v2 = value2;
 	quint16 jump = _jump - jumpPosData();
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&v1, 2)
-			.append((char *)&v2, 2)
-			.append((char)oper)
-			.append((char *)&jump, 2);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&v1), 2)
+	        .append(reinterpret_cast<const char *>(&v2), 2)
+	        .append(char(oper))
+	        .append(reinterpret_cast<const char *>(&jump), 2);
 }
 
 void OpcodeIFUWL::getVariables(QList<FF7Var> &vars) const
@@ -1868,13 +1883,13 @@ void Opcode1A::setParams(const char *params, int)
 	memcpy(&from, params, 2);
 	memcpy(&to, params + 2, 2);
 	memcpy(&absValue, params + 4, 4);
-	flag = (quint8)params[8];
+	flag = quint8(params[8]);
 }
 
 QString Opcode1A::toString(const Section1File *) const
 {
 	QStringList flags;
-
+	
 	switch (flag & 0x7) {
 	case 1:	flags.append(QObject::tr("8 bit"));	 break;
 	case 2:	flags.append(QObject::tr("16 bit"));	break;
@@ -1882,47 +1897,47 @@ QString Opcode1A::toString(const Section1File *) const
 	case 4:	flags.append(QObject::tr("32 bit"));	break;
 	default:   break;
 	}
-
+	
 	if (flag & 0x10) {
 		flags.append(QObject::tr("From is a pointer"));
 	}
-
+	
 	if (flag & 0x20) {
 		flags.append(QObject::tr("To is a pointer"));
 	}
-
+	
 	return QObject::tr("Write/Read entire savemap (from=%1, to=%2, absValue=%3, flags={%4})")
-			.arg(from)
-			.arg(to)
-			.arg(absValue)
-			.arg(flags.join(", "));
+	        .arg(from)
+	        .arg(to)
+	        .arg(absValue)
+	        .arg(flags.join(", "));
 }
 
 QByteArray Opcode1A::params() const
 {
 	return QByteArray()
-			.append((char *)&from, 2)
-			.append((char *)&to, 2)
-			.append((char *)&absValue, 4)
-			.append(char(flag));
+	        .append(reinterpret_cast<const char *>(&from), 2)
+	        .append(reinterpret_cast<const char *>(&to), 2)
+	        .append(reinterpret_cast<const char *>(&absValue), 4)
+	        .append(char(flag));
 }
 
 Opcode1B::Opcode1B(const char *params, int size) :
-	OpcodeJMPFL(params, size)
+    OpcodeJMPFL(params, size)
 {
 }
 
 Opcode1B::Opcode1B(const OpcodeJump &op) :
-	OpcodeJMPFL(op)
+    OpcodeJMPFL(op)
 {
 }
 
 QString Opcode1B::toString(const Section1File *) const
 {
 	return QObject::tr("If Red XIII is named Nanaki (%2)")
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(_badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label));
 }
 
 Opcode1C::Opcode1C(const char *params, int size)
@@ -1945,8 +1960,8 @@ quint8 Opcode1C::size() const
 QString Opcode1C::toString(const Section1File *) const
 {
 	return QObject::tr("Write bytes to address 0x%1 (length=%2)")
-	    .arg(address, 0, 16)
-	    .arg(bytes.size());
+	        .arg(address, 0, 16)
+	        .arg(bytes.size());
 }
 
 QByteArray Opcode1C::params() const
@@ -1954,9 +1969,9 @@ QByteArray Opcode1C::params() const
 	QByteArray data = bytes.left(128);
 	char size = char(data.size());
 	return QByteArray()
-	    .append((char *)&address, 4)
-	    .append(size)
-	    .append(data);
+	        .append(reinterpret_cast<const char *>(&address), 4)
+	        .append(size)
+	        .append(data);
 }
 
 OpcodeMINIGAME::OpcodeMINIGAME(const char *params, int size)
@@ -1970,8 +1985,8 @@ void OpcodeMINIGAME::setParams(const char *params, int)
 	memcpy(&targetX, params + 2, 2);
 	memcpy(&targetY, params + 4, 2);
 	memcpy(&targetI, params + 6, 2);
-	minigameParam = (quint8)params[8];
-	minigameID = (quint8)params[9];
+	minigameParam = quint8(params[8]);
+	minigameID = quint8(params[9]);
 }
 
 QString OpcodeMINIGAME::toString(const Section1File *) const
@@ -1988,24 +2003,24 @@ QString OpcodeMINIGAME::toString(const Section1File *) const
 	case 0x06:		miniGame = QObject::tr("Snowboard -Gold Saucer mode- (parameter %1)").arg(minigameParam);break;
 	default:		miniGame = QObject::tr("%1? (parameter %2)").arg(minigameID).arg(minigameParam);break;
 	}
-
+	
 	return QObject::tr("Mini-game: %5 (After the game goto field %1 (X=%2, Y=%3, triangle ID=%4))")
-			.arg(_field(fieldID))
-			.arg(targetX)
-			.arg(targetY)
-			.arg(targetI)
-			.arg(miniGame);
+	        .arg(_field(fieldID))
+	        .arg(targetX)
+	        .arg(targetY)
+	        .arg(targetI)
+	        .arg(miniGame);
 }
 
 QByteArray OpcodeMINIGAME::params() const
 {
 	return QByteArray()
-			.append((char *)&fieldID, 2)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&targetI, 2)
-			.append((char)minigameParam)
-			.append((char)minigameID);
+	        .append(reinterpret_cast<const char *>(&fieldID), 2)
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2)
+	        .append(reinterpret_cast<const char *>(&targetI), 2)
+	        .append(char(minigameParam))
+	        .append(char(minigameID));
 }
 
 OpcodeTUTOR::OpcodeTUTOR(const char *params, int size)
@@ -2015,18 +2030,18 @@ OpcodeTUTOR::OpcodeTUTOR(const char *params, int size)
 
 void OpcodeTUTOR::setParams(const char *params, int)
 {
-	tutoID = (quint8)params[0];
+	tutoID = quint8(params[0]);
 }
 
 QString OpcodeTUTOR::toString(const Section1File *) const
 {
 	return QObject::tr("Tutorial #%1")
-			.arg(tutoID);
+	        .arg(tutoID);
 }
 
 QByteArray OpcodeTUTOR::params() const
 {
-	return QByteArray().append((char)tutoID);
+	return QByteArray().append(char(tutoID));
 }
 
 int OpcodeTUTOR::getTutoID() const
@@ -2070,13 +2085,13 @@ QString OpcodeBTMD2::toString(const Section1File *) const
 			}
 		}
 	}
-
+	
 	return QObject::tr("Battle mode: %1").arg(modes.isEmpty() ? QObject::tr("None") : modes.join(", "));
 }
 
 QByteArray OpcodeBTMD2::params() const
 {
-	return QByteArray().append((char *)&battleMode, 4);
+	return QByteArray().append(reinterpret_cast<const char *>(&battleMode), 4);
 }
 
 OpcodeBTRLD::OpcodeBTRLD(const char *params, int size)
@@ -2086,21 +2101,21 @@ OpcodeBTRLD::OpcodeBTRLD(const char *params, int size)
 
 void OpcodeBTRLD::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
-	var = (quint8)params[1]; // bank 2
+	banks = quint8(params[0]);
+	var = quint8(params[1]); // bank 2
 }
 
 QString OpcodeBTRLD::toString(const Section1File *) const
 {
 	return QObject::tr("Stores the result of the last battle in %1")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 QByteArray OpcodeBTRLD::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)var);
+	        .append(char(banks))
+	        .append(char(var));
 }
 
 void OpcodeBTRLD::getVariables(QList<FF7Var> &vars) const
@@ -2122,12 +2137,12 @@ void OpcodeWAIT::setParams(const char *params, int)
 QString OpcodeWAIT::toString(const Section1File *) const
 {
 	return QObject::tr("Wait %1 frame")
-			.arg(frameCount);
+	        .arg(frameCount);
 }
 
 QByteArray OpcodeWAIT::params() const
 {
-	return QByteArray().append((char *)&frameCount, 2);
+	return QByteArray().append(reinterpret_cast<const char *>(&frameCount), 2);
 }
 
 OpcodeNFADE::OpcodeNFADE(const char *params, int size)
@@ -2149,23 +2164,23 @@ void OpcodeNFADE::setParams(const char *params, int)
 QString OpcodeNFADE::toString(const Section1File *) const
 {
 	return QObject::tr("Fades the screen to the colour RGB(%2, %3, %4) (speed=%5, type=%1)")
-			.arg(type)
-			.arg(_var(r, B1(banks[0])))
-			.arg(_var(g, B2(banks[0])))
-			.arg(_var(b, B1(banks[1])))
-			.arg(_var(speed, B2(banks[1])));
+	        .arg(type)
+	        .arg(_var(r, B1(banks[0])))
+	        .arg(_var(g, B2(banks[0])))
+	        .arg(_var(b, B1(banks[1])))
+	        .arg(_var(speed, B2(banks[1])));
 }
 
 QByteArray OpcodeNFADE::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)type)
-			.append((char)r)
-			.append((char)g)
-			.append((char)b)
-			.append((char)speed)
-			.append((char)unused);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(type))
+	        .append(char(r))
+	        .append(char(g))
+	        .append(char(b))
+	        .append(char(speed))
+	        .append(char(unused));
 }
 
 void OpcodeNFADE::getVariables(QList<FF7Var> &vars) const
@@ -2193,12 +2208,12 @@ void OpcodeBLINK::setParams(const char *params, int)
 QString OpcodeBLINK::toString(const Section1File *) const
 {
 	return QObject::tr("%1 Field Model blinking")
-			.arg(closed == 0 ? QObject::tr("Enable") : QObject::tr("Disable"));
+	        .arg(closed == 0 ? QObject::tr("Enable") : QObject::tr("Disable"));
 }
 
 QByteArray OpcodeBLINK::params() const
 {
-	return QByteArray().append((char)closed);
+	return QByteArray().append(char(closed));
 }
 
 OpcodeBGMOVIE::OpcodeBGMOVIE(const char *params, int size)
@@ -2214,12 +2229,12 @@ void OpcodeBGMOVIE::setParams(const char *params, int)
 QString OpcodeBGMOVIE::toString(const Section1File *) const
 {
 	return QObject::tr("BGMOVIE : %1")
-			.arg(disabled == 0 ? QObject::tr("ON") : QObject::tr("OFF"));
+	        .arg(disabled == 0 ? QObject::tr("ON") : QObject::tr("OFF"));
 }
 
 QByteArray OpcodeBGMOVIE::params() const
 {
-	return QByteArray().append((char)disabled);
+	return QByteArray().append(char(disabled));
 }
 
 OpcodeKAWAIEYETX::OpcodeKAWAIEYETX(const char *params, int size)
@@ -2234,30 +2249,30 @@ quint8 OpcodeKAWAIEYETX::size() const
 
 void OpcodeKAWAIEYETX::setParams(const char *params, int size)
 {
-	eyeID1 = (quint8)params[0];
-	eyeID2 = (quint8)params[1];
-	mouthID = (quint8)params[2];
-	objectID = (quint8)params[3];
+	eyeID1 = quint8(params[0]);
+	eyeID2 = quint8(params[1]);
+	mouthID = quint8(params[2]);
+	objectID = quint8(params[3]);
 	data = QByteArray(params + 4, size - 4);
 }
 
 QString OpcodeKAWAIEYETX::toString(const Section1File *) const
 {
 	return QObject::tr("Change the state of the eye/mouth texture (eye 1=%1, eye 2=%2, mouth=%3, 3D object ID=%4)")
-			.arg(eyeID1)
-			.arg(eyeID2)
-			.arg(mouthID)
-			.arg(objectID);
+	        .arg(eyeID1)
+	        .arg(eyeID2)
+	        .arg(mouthID)
+	        .arg(objectID);
 }
 
 QByteArray OpcodeKAWAIEYETX::params() const
 {
 	return QByteArray()
-			.append((char)eyeID1)
-			.append((char)eyeID2)
-			.append((char)mouthID)
-			.append((char)objectID)
-			.append(data);
+	        .append(char(eyeID1))
+	        .append(char(eyeID2))
+	        .append(char(mouthID))
+	        .append(char(objectID))
+	        .append(data);
 }
 
 OpcodeKAWAITRNSP::OpcodeKAWAITRNSP(const char *params, int size)
@@ -2272,21 +2287,21 @@ quint8 OpcodeKAWAITRNSP::size() const
 
 void OpcodeKAWAITRNSP::setParams(const char *params, int size)
 {
-	enableTransparency = (quint8)params[0];
+	enableTransparency = quint8(params[0]);
 	data = QByteArray(params + 1, size - 1);
 }
 
 QString OpcodeKAWAITRNSP::toString(const Section1File *) const
 {
 	return QObject::tr("%1 blending")
-			.arg(enableTransparency == 0 ? QObject::tr("Deactivate") : QObject::tr("Activate"));
+	        .arg(enableTransparency == 0 ? QObject::tr("Deactivate") : QObject::tr("Activate"));
 }
 
 QByteArray OpcodeKAWAITRNSP::params() const
 {
 	return QByteArray()
-			.append((char)enableTransparency)
-			.append(data);
+	        .append(char(enableTransparency))
+	        .append(data);
 }
 
 OpcodeKAWAIAMBNT::OpcodeKAWAIAMBNT(const char *params, int size)
@@ -2301,43 +2316,43 @@ quint8 OpcodeKAWAIAMBNT::size() const
 
 void OpcodeKAWAIAMBNT::setParams(const char *params, int size)
 {
-	r1 = (quint8)params[0];
-	r2 = (quint8)params[1];
-	g1 = (quint8)params[2];
-	g2 = (quint8)params[3];
-	b1 = (quint8)params[4];
-	b2 = (quint8)params[5];
-	flags = (quint8)params[6];
+	r1 = quint8(params[0]);
+	r2 = quint8(params[1]);
+	g1 = quint8(params[2]);
+	g2 = quint8(params[3]);
+	b1 = quint8(params[4]);
+	b2 = quint8(params[5]);
+	flags = quint8(params[6]);
 	data = QByteArray(params + 7, size - 7);
 }
 
 QString OpcodeKAWAIAMBNT::toString(const Section1File *) const
 {
 	return QObject::tr("Change the ambient color of the model: RGB(%1, %2, %3) RGB(%4, %5, %6) (flags=%7)")
-			.arg(r1)
-			.arg(g1)
-			.arg(b1)
-			.arg(r2)
-			.arg(g2)
-			.arg(b2)
-			.arg(flags);
+	        .arg(r1)
+	        .arg(g1)
+	        .arg(b1)
+	        .arg(r2)
+	        .arg(g2)
+	        .arg(b2)
+	        .arg(flags);
 }
 
 QByteArray OpcodeKAWAIAMBNT::params() const
 {
 	return QByteArray()
-			.append((char)r1)
-			.append((char)r2)
-			.append((char)g1)
-			.append((char)g2)
-			.append((char)b1)
-			.append((char)b2)
-			.append((char)flags)
-			.append(data);
+	        .append(char(r1))
+	        .append(char(r2))
+	        .append(char(g1))
+	        .append(char(g2))
+	        .append(char(b1))
+	        .append(char(b2))
+	        .append(char(flags))
+	        .append(data);
 }
 
 OpcodeKAWAIUNKNOWN4::OpcodeKAWAIUNKNOWN4(const char *params, int size) :
-	OpcodeUnknown(0x04, params, size)
+    OpcodeUnknown(0x04, params, size)
 {
 }
 
@@ -2347,7 +2362,7 @@ QString OpcodeKAWAIUNKNOWN4::toString(const Section1File *) const
 }
 
 OpcodeKAWAILIGHT::OpcodeKAWAILIGHT(const char *params, int size) :
-	OpcodeUnknown(0x06, params, size)
+    OpcodeUnknown(0x06, params, size)
 {
 }
 
@@ -2357,7 +2372,7 @@ QString OpcodeKAWAILIGHT::toString(const Section1File *) const
 }
 
 OpcodeKAWAIUNKNOWN7::OpcodeKAWAIUNKNOWN7(const char *params, int size) :
-	OpcodeUnknown(0x07, params, size)
+    OpcodeUnknown(0x07, params, size)
 {
 }
 
@@ -2367,7 +2382,7 @@ QString OpcodeKAWAIUNKNOWN7::toString(const Section1File *) const
 }
 
 OpcodeKAWAIUNKNOWN8::OpcodeKAWAIUNKNOWN8(const char *params, int size) :
-	OpcodeUnknown(0x08, params, size)
+    OpcodeUnknown(0x08, params, size)
 {
 }
 
@@ -2377,7 +2392,7 @@ QString OpcodeKAWAIUNKNOWN8::toString(const Section1File *) const
 }
 
 OpcodeKAWAIUNKNOWN9::OpcodeKAWAIUNKNOWN9(const char *params, int size) :
-	OpcodeUnknown(0x09, params, size)
+    OpcodeUnknown(0x09, params, size)
 {
 }
 
@@ -2387,7 +2402,7 @@ QString OpcodeKAWAIUNKNOWN9::toString(const Section1File *) const
 }
 
 OpcodeKAWAISBOBJ::OpcodeKAWAISBOBJ(const char *params, int size) :
-	OpcodeUnknown(0x0A, params, size)
+    OpcodeUnknown(0x0A, params, size)
 {
 }
 
@@ -2397,7 +2412,7 @@ QString OpcodeKAWAISBOBJ::toString(const Section1File *) const
 }
 
 OpcodeKAWAIUNKNOWNB::OpcodeKAWAIUNKNOWNB(const char *params, int size) :
-	OpcodeUnknown(0x0B, params, size)
+    OpcodeUnknown(0x0B, params, size)
 {
 }
 
@@ -2407,7 +2422,7 @@ QString OpcodeKAWAIUNKNOWNB::toString(const Section1File *) const
 }
 
 OpcodeKAWAIUNKNOWNC::OpcodeKAWAIUNKNOWNC(const char *params, int size) :
-	OpcodeUnknown(0x0C, params, size)
+    OpcodeUnknown(0x0C, params, size)
 {
 }
 
@@ -2417,7 +2432,7 @@ QString OpcodeKAWAIUNKNOWNC::toString(const Section1File *) const
 }
 
 OpcodeKAWAISHINE::OpcodeKAWAISHINE(const char *params, int size) :
-	OpcodeUnknown(0x0D, params, size)
+    OpcodeUnknown(0x0D, params, size)
 {
 }
 
@@ -2427,7 +2442,7 @@ QString OpcodeKAWAISHINE::toString(const Section1File *) const
 }
 
 OpcodeKAWAIRESET::OpcodeKAWAIRESET(const char *params, int size) :
-	OpcodeUnknown(0xFF, params, size)
+    OpcodeUnknown(0xFF, params, size)
 {
 }
 
@@ -2437,13 +2452,13 @@ QString OpcodeKAWAIRESET::toString(const Section1File *) const
 }
 
 OpcodeKAWAI::OpcodeKAWAI(const char *params, int size) :
-	opcode(0)
+    opcode(nullptr)
 {
 	setParams(params, size);
 }
 
 OpcodeKAWAI::OpcodeKAWAI(const OpcodeKAWAI &other) :
-	Opcode(other), opcode(0)
+    Opcode(other), opcode(nullptr)
 {
 	// Realloc opcode attribute
 	setParams(other.params().constData(), other.params().size());
@@ -2462,15 +2477,15 @@ quint8 OpcodeKAWAI::size() const
 QString OpcodeKAWAI::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Field Model graphic filter - %1")
-			.arg(opcode->toString(scriptsAndTexts));
+	        .arg(opcode->toString(scriptsAndTexts));
 }
 
 void OpcodeKAWAI::setParams(const char *params, int size)
 {
 	if (opcode)		delete opcode;
-
-//	size = params[0];
-	switch ((quint8)params[1])
+	
+	//	size = params[0];
+	switch (quint8(params[1]))
 	{
 	case 0x00:	opcode = new OpcodeKAWAIEYETX(params + 2, size - 2);
 		break;
@@ -2499,8 +2514,8 @@ void OpcodeKAWAI::setParams(const char *params, int size)
 	case 0xFF:	opcode = new OpcodeKAWAIRESET(params + 2, size - 2);
 		break;
 	default:
-		qWarning() << "unknown opcode KAWAI type" << (quint8)params[1];
-		opcode = new OpcodeUnknown((quint8)params[1], params + 2, size - 2);
+		qWarning() << "unknown opcode KAWAI type" << quint8(params[1]);
+		opcode = new OpcodeUnknown(quint8(params[1]), params + 2, size - 2);
 		break;
 	}
 }
@@ -2508,8 +2523,8 @@ void OpcodeKAWAI::setParams(const char *params, int size)
 QByteArray OpcodeKAWAI::params() const
 {
 	return QByteArray()
-			.append(size())
-			.append(opcode->toByteArray());
+	        .append(size())
+	        .append(opcode->toByteArray());
 }
 
 OpcodeKAWIW::OpcodeKAWIW()
@@ -2534,12 +2549,12 @@ void OpcodePMOVA::setParams(const char *params, int)
 QString OpcodePMOVA::toString(const Section1File *) const
 {
 	return QObject::tr("Move Field Model to Party Member #%1")
-			.arg(partyID);
+	        .arg(partyID);
 }
 
 QByteArray OpcodePMOVA::params() const
 {
-	return QByteArray().append((char)partyID);
+	return QByteArray().append(char(partyID));
 }
 
 OpcodeSLIP::OpcodeSLIP(const char *params, int size)
@@ -2555,7 +2570,7 @@ void OpcodeSLIP::setParams(const char *params, int)
 QString OpcodeSLIP::toString(const Section1File *) const
 {
 	return QObject::tr("SLIP : %1")
-			.arg(disabled == 0 ? QObject::tr("ON") : QObject::tr("OFF"));
+	        .arg(disabled == 0 ? QObject::tr("ON") : QObject::tr("OFF"));
 }
 
 QByteArray OpcodeSLIP::params() const
@@ -2578,16 +2593,16 @@ void OpcodeBGPDH::setParams(const char *params, int)
 QString OpcodeBGPDH::toString(const Section1File *) const
 {
 	return QObject::tr("Set Z-deph for the background layer #%1 (Z=%2)")
-			.arg(layerID)
-			.arg(_var(targetZ, B2(banks)));
+	        .arg(layerID)
+	        .arg(_var(targetZ, B2(banks)));
 }
 
 QByteArray OpcodeBGPDH::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)layerID)
-			.append((char *)&targetZ, 2);
+	        .append(char(banks))
+	        .append(char(layerID))
+	        .append(reinterpret_cast<const char *>(&targetZ), 2);
 }
 
 void OpcodeBGPDH::getVariables(QList<FF7Var> &vars) const
@@ -2612,18 +2627,18 @@ void OpcodeBGSCR::setParams(const char *params, int)
 QString OpcodeBGSCR::toString(const Section1File *) const
 {
 	return QObject::tr("Animate the background layer #%1 (Horizontally=%2, Vertically=%3)")
-			.arg(layerID)
-			.arg(_var(targetX, B1(banks)))
-			.arg(_var(targetY, B2(banks)));
+	        .arg(layerID)
+	        .arg(_var(targetX, B1(banks)))
+	        .arg(_var(targetY, B2(banks)));
 }
 
 QByteArray OpcodeBGSCR::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)layerID)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2);
+	        .append(char(banks))
+	        .append(char(layerID))
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2);
 }
 
 void OpcodeBGSCR::getVariables(QList<FF7Var> &vars) const
@@ -2647,12 +2662,12 @@ void OpcodeWCLS::setParams(const char *params, int)
 QString OpcodeWCLS::toString(const Section1File *) const
 {
 	return QObject::tr("Close the window #%1")
-			.arg(windowID);
+	        .arg(windowID);
 }
 
 QByteArray OpcodeWCLS::params() const
 {
-	return QByteArray().append((char)windowID);
+	return QByteArray().append(char(windowID));
 }
 
 int OpcodeWCLS::getWindowID() const
@@ -2691,11 +2706,11 @@ void OpcodeWindow::setParams(const char *params, int)
 QByteArray OpcodeWindow::params() const
 {
 	return QByteArray()
-			.append((char)windowID)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&width, 2)
-			.append((char *)&height, 2);
+	        .append(char(windowID))
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2)
+	        .append(reinterpret_cast<const char *>(&width), 2)
+	        .append(reinterpret_cast<const char *>(&height), 2);
 }
 
 int OpcodeWindow::getWindowID() const
@@ -2726,23 +2741,23 @@ void OpcodeWindow::setWindow(const FF7Window &window)
 }
 
 OpcodeWSIZW::OpcodeWSIZW(const char *params, int size) :
-	OpcodeWindow(params, size)
+    OpcodeWindow(params, size)
 {
 }
 
 OpcodeWSIZW::OpcodeWSIZW(const OpcodeWindow &op) :
-	OpcodeWindow(op)
+    OpcodeWindow(op)
 {
 }
 
 QString OpcodeWSIZW::toString(const Section1File *) const
 {
 	return QObject::tr("Resizes/Repositions the window #%1 (X=%2, Y=%3, width=%4, height=%5)")
-			.arg(windowID)
-			.arg(targetX)
-			.arg(targetY)
-			.arg(width)
-			.arg(height);
+	        .arg(windowID)
+	        .arg(targetX)
+	        .arg(targetY)
+	        .arg(width)
+	        .arg(height);
 }
 
 OpcodeIfKey::OpcodeIfKey(const char *params, int size)
@@ -2751,21 +2766,21 @@ OpcodeIfKey::OpcodeIfKey(const char *params, int size)
 }
 
 OpcodeIfKey::OpcodeIfKey(const OpcodeJump &op) :
-	OpcodeJump(op), keys(0)
+    OpcodeJump(op), keys(0)
 {
 }
 
 void OpcodeIfKey::setParams(const char *params, int)
 {
 	memcpy(&keys, params, 2);
-	_jump = (quint8)params[2] + jumpPosData();
+	_jump = quint8(params[2]) + jumpPosData();
 }
 
 QByteArray OpcodeIfKey::params() const
 {
 	return QByteArray()
-			.append((char *)&keys, 2)
-			.append(char(_jump - jumpPosData()));
+	        .append(reinterpret_cast<const char *>(&keys), 2)
+	        .append(char(_jump - jumpPosData()));
 }
 
 QString OpcodeIfKey::keyString() const
@@ -2783,60 +2798,60 @@ QString OpcodeIfKey::keyString() const
 }
 
 OpcodeIFKEY::OpcodeIFKEY(const char *params, int size) :
-	OpcodeIfKey(params, size)
+    OpcodeIfKey(params, size)
 {
 }
 
 OpcodeIFKEY::OpcodeIFKEY(const OpcodeIfKey &op) :
-	OpcodeIfKey(op)
+    OpcodeIfKey(op)
 {
 }
 
 QString OpcodeIFKEY::toString(const Section1File *) const
 {
 	return QObject::tr("If key %1 pressed (%2)")
-			.arg(keyString())
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(keyString())
+	        .arg(_badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label));
 }
 
 OpcodeIFKEYON::OpcodeIFKEYON(const char *params, int size) :
-	OpcodeIfKey(params, size)
+    OpcodeIfKey(params, size)
 {
 }
 
 OpcodeIFKEYON::OpcodeIFKEYON(const OpcodeIfKey &op) :
-	OpcodeIfKey(op)
+    OpcodeIfKey(op)
 {
 }
 
 QString OpcodeIFKEYON::toString(const Section1File *) const
 {
 	return QObject::tr("If key %1 pressed once (%2)")
-			.arg(keyString())
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(keyString())
+	        .arg(_badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label));
 }
 
 OpcodeIFKEYOFF::OpcodeIFKEYOFF(const char *params, int size) :
-	OpcodeIfKey(params, size)
+    OpcodeIfKey(params, size)
 {
 }
 
 OpcodeIFKEYOFF::OpcodeIFKEYOFF(const OpcodeIfKey &op) :
-	OpcodeIfKey(op)
+    OpcodeIfKey(op)
 {
 }
 
 QString OpcodeIFKEYOFF::toString(const Section1File *) const
 {
 	return QObject::tr("If key %1 released once (%2)")
-			.arg(keyString())
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(keyString())
+	        .arg(_badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label));
 }
 
 OpcodeUC::OpcodeUC(const char *params, int size)
@@ -2852,12 +2867,12 @@ void OpcodeUC::setParams(const char *params, int)
 QString OpcodeUC::toString(const Section1File *) const
 {
 	return QObject::tr("%1 the movability of the playable character")
-			.arg(disabled == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
+	        .arg(disabled == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
 }
 
 QByteArray OpcodeUC::params() const
 {
-	return QByteArray().append((char)disabled);
+	return QByteArray().append(char(disabled));
 }
 
 OpcodePDIRA::OpcodePDIRA(const char *params, int size)
@@ -2873,12 +2888,12 @@ void OpcodePDIRA::setParams(const char *params, int)
 QString OpcodePDIRA::toString(const Section1File *) const
 {
 	return QObject::tr("Instantly turns the field model to face the party member #%1")
-			.arg(partyID);
+	        .arg(partyID);
 }
 
 QByteArray OpcodePDIRA::params() const
 {
-	return QByteArray().append((char)partyID);
+	return QByteArray().append(char(partyID));
 }
 
 OpcodePTURA::OpcodePTURA(const char *params, int size)
@@ -2896,17 +2911,17 @@ void OpcodePTURA::setParams(const char *params, int)
 QString OpcodePTURA::toString(const Section1File *) const
 {
 	return QObject::tr("Turns the field model to face the party member #%1 (Speed=%2, Rotation=%3)")
-			.arg(partyID)
-			.arg(speed)
-			.arg(_sensRotation(directionRotation));
+	        .arg(partyID)
+	        .arg(speed)
+	        .arg(_sensRotation(directionRotation));
 }
 
 QByteArray OpcodePTURA::params() const
 {
 	return QByteArray()
-			.append((char)partyID)
-			.append((char)speed)
-			.append((char)directionRotation);
+	        .append(char(partyID))
+	        .append(char(speed))
+	        .append(char(directionRotation));
 }
 
 OpcodeWSPCL::OpcodeWSPCL(const char *params, int size)
@@ -2932,21 +2947,21 @@ QString OpcodeWSPCL::toString(const Section1File *) const
 	case 0x02:		windowNum = QObject::tr("Numeric (000000)");		break;
 	default:		windowNum = QString("%1?").arg(displayType);		break;
 	}
-
+	
 	return QObject::tr("%2 in the window #%1 (left=%3, top=%4)")
-			.arg(windowID)
-			.arg(windowNum)
-			.arg(marginLeft)
-			.arg(marginTop);
+	        .arg(windowID)
+	        .arg(windowNum)
+	        .arg(marginLeft)
+	        .arg(marginTop);
 }
 
 QByteArray OpcodeWSPCL::params() const
 {
 	return QByteArray()
-			.append((char)windowID)
-			.append((char)displayType)
-			.append((char)marginLeft)
-			.append((char)marginTop);
+	        .append(char(windowID))
+	        .append(char(displayType))
+	        .append(char(marginLeft))
+	        .append(char(marginTop));
 }
 
 int OpcodeWSPCL::getWindowID() const
@@ -2975,18 +2990,18 @@ void OpcodeWNUMB::setParams(const char *params, int)
 QString OpcodeWNUMB::toString(const Section1File *) const
 {
 	return QObject::tr("Sets %2 in window #%1 (show %3 digits)")
-			.arg(windowID)
-			.arg(_var(value, B1(banks), B2(banks)))
-			.arg(digitCount);
+	        .arg(windowID)
+	        .arg(_var(value, B1(banks), B2(banks)))
+	        .arg(digitCount);
 }
 
 QByteArray OpcodeWNUMB::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)windowID)
-			.append((char *)&value, 4)
-			.append((char)digitCount);
+	        .append(char(banks))
+	        .append(char(windowID))
+	        .append(reinterpret_cast<const char *>(&value), 4)
+	        .append(char(digitCount));
 }
 
 int OpcodeWNUMB::getWindowID() const
@@ -3024,18 +3039,18 @@ void OpcodeSTTIM::setParams(const char *params, int)
 QString OpcodeSTTIM::toString(const Section1File *) const
 {
 	return QObject::tr("Set Timer (H=%1, M=%2, S=%3)")
-			.arg(_var(h, B1(banks[0])))
-			.arg(_var(m, B2(banks[0])))
-			.arg(_var(s, B1(banks[1])));
+	        .arg(_var(h, B1(banks[0])))
+	        .arg(_var(m, B2(banks[0])))
+	        .arg(_var(s, B1(banks[1])));
 }
 
 QByteArray OpcodeSTTIM::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)h)
-			.append((char)m)
-			.append((char)s);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(h))
+	        .append(char(m))
+	        .append(char(s));
 }
 
 void OpcodeSTTIM::getVariables(QList<FF7Var> &vars) const
@@ -3062,8 +3077,8 @@ void OpcodeGOLD::setParams(const char *params, int)
 QByteArray OpcodeGOLD::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&value, 4);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&value), 4);
 }
 
 void OpcodeGOLD::getVariables(QList<FF7Var> &vars) const
@@ -3075,35 +3090,35 @@ void OpcodeGOLD::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeGOLDu::OpcodeGOLDu(const char *params, int size) :
-	OpcodeGOLD(params, size)
+    OpcodeGOLD(params, size)
 {
 }
 
 OpcodeGOLDu::OpcodeGOLDu(const OpcodeGOLD &op) :
-	OpcodeGOLD(op)
+    OpcodeGOLD(op)
 {
 }
 
 QString OpcodeGOLDu::toString(const Section1File *) const
 {
 	return QObject::tr("Add %1 gil to the party ")
-			.arg(_var(value, B1(banks), B2(banks)));
+	        .arg(_var(value, B1(banks), B2(banks)));
 }
 
 OpcodeGOLDd::OpcodeGOLDd(const char *params, int size) :
-	OpcodeGOLD(params, size)
+    OpcodeGOLD(params, size)
 {
 }
 
 OpcodeGOLDd::OpcodeGOLDd(const OpcodeGOLD &op) :
-	OpcodeGOLD(op)
+    OpcodeGOLD(op)
 {
 }
 
 QString OpcodeGOLDd::toString(const Section1File *) const
 {
 	return QObject::tr("Remove %1 gils from the party")
-			.arg(_var(value, B1(banks), B2(banks)));
+	        .arg(_var(value, B1(banks), B2(banks)));
 }
 
 OpcodeCHGLD::OpcodeCHGLD(const char *params, int size)
@@ -3121,16 +3136,16 @@ void OpcodeCHGLD::setParams(const char *params, int)
 QString OpcodeCHGLD::toString(const Section1File *) const
 {
 	return QObject::tr("Copies the amount of gil in %1 and %2")
-			.arg(_bank(var1, B1(banks)))
-			.arg(_bank(var2, B2(banks)));
+	        .arg(_bank(var1, B1(banks)))
+	        .arg(_bank(var2, B2(banks)));
 }
 
 QByteArray OpcodeCHGLD::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)var1)
-			.append((char)var2);
+	        .append(char(banks))
+	        .append(char(var1))
+	        .append(char(var2));
 }
 
 void OpcodeCHGLD::getVariables(QList<FF7Var> &vars) const
@@ -3183,7 +3198,7 @@ OpcodeMESSAGE::OpcodeMESSAGE(const char *params, int size)
 }
 
 OpcodeMESSAGE::OpcodeMESSAGE(quint8 windowID, quint8 textID) :
-	windowID(windowID), textID(textID)
+    windowID(windowID), textID(textID)
 {
 }
 
@@ -3196,15 +3211,15 @@ void OpcodeMESSAGE::setParams(const char *params, int)
 QString OpcodeMESSAGE::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Displays the dialog %2 in the window #%1")
-			.arg(windowID)
-			.arg(_text(textID, scriptsAndTexts));
+	        .arg(windowID)
+	        .arg(_text(textID, scriptsAndTexts));
 }
 
 QByteArray OpcodeMESSAGE::params() const
 {
 	return QByteArray()
-			.append((char)windowID)
-			.append((char)textID);
+	        .append(char(windowID))
+	        .append(char(textID));
 }
 
 int OpcodeMESSAGE::getWindowID() const
@@ -3243,18 +3258,18 @@ void OpcodeMPARA::setParams(const char *params, int)
 QString OpcodeMPARA::toString(const Section1File *) const
 {
 	return QObject::tr("Set %3 to the variable #%2 in the window #%1")
-			.arg(windowID)
-			.arg(windowVarID)
-			.arg(_var(value, B2(banks)));
+	        .arg(windowID)
+	        .arg(windowVarID)
+	        .arg(_var(value, B2(banks)));
 }
 
 QByteArray OpcodeMPARA::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)windowID)
-			.append((char)windowVarID)
-			.append((char)value);
+	        .append(char(banks))
+	        .append(char(windowID))
+	        .append(char(windowVarID))
+	        .append(char(value));
 }
 
 int OpcodeMPARA::getWindowID() const
@@ -3289,18 +3304,18 @@ void OpcodeMPRA2::setParams(const char *params, int)
 QString OpcodeMPRA2::toString(const Section1File *) const
 {
 	return QObject::tr("Set %3 to the variable #%2 in the window #%1")
-			.arg(windowID)
-			.arg(windowVarID)
-			.arg(_var(value, B2(banks)));
+	        .arg(windowID)
+	        .arg(windowVarID)
+	        .arg(_var(value, B2(banks)));
 }
 
 QByteArray OpcodeMPRA2::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)windowID)
-			.append((char)windowVarID)
-			.append((char *)&value, 2);
+	        .append(char(banks))
+	        .append(char(windowID))
+	        .append(char(windowVarID))
+	        .append(reinterpret_cast<const char *>(&value), 2);
 }
 
 int OpcodeMPRA2::getWindowID() const
@@ -3325,7 +3340,7 @@ OpcodeMPNAM::OpcodeMPNAM(const char *params, int size)
 }
 
 OpcodeMPNAM::OpcodeMPNAM(quint8 textID) :
-	textID(textID)
+    textID(textID)
 {
 }
 
@@ -3337,13 +3352,13 @@ void OpcodeMPNAM::setParams(const char *params, int)
 QString OpcodeMPNAM::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Display %1 in the main menu")
-			.arg(_text(textID, scriptsAndTexts));
+	        .arg(_text(textID, scriptsAndTexts));
 }
 
 QByteArray OpcodeMPNAM::params() const
 {
 	return QByteArray()
-			.append((char)textID);
+	        .append(char(textID));
 }
 
 int OpcodeMPNAM::getTextID() const
@@ -3371,9 +3386,9 @@ void OpcodeHPMP::setParams(const char *params, int)
 QByteArray OpcodeHPMP::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)partyID)
-			.append((char *)&value, 2);
+	        .append(char(banks))
+	        .append(char(partyID))
+	        .append(reinterpret_cast<const char *>(&value), 2);
 }
 
 void OpcodeHPMP::getVariables(QList<FF7Var> &vars) const
@@ -3383,37 +3398,37 @@ void OpcodeHPMP::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeMPu::OpcodeMPu(const char *params, int size) :
-	OpcodeHPMP(params, size)
+    OpcodeHPMP(params, size)
 {
 }
 
 OpcodeMPu::OpcodeMPu(const OpcodeHPMP &op) :
-	OpcodeHPMP(op)
+    OpcodeHPMP(op)
 {
 }
 
 QString OpcodeMPu::toString(const Section1File *) const
 {
 	return QObject::tr("Add %2 MP to party member #%1")
-			.arg(partyID)
-			.arg(_var(value, B2(banks)));
+	        .arg(partyID)
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeMPd::OpcodeMPd(const char *params, int size) :
-	OpcodeHPMP(params, size)
+    OpcodeHPMP(params, size)
 {
 }
 
 OpcodeMPd::OpcodeMPd(const OpcodeHPMP &op) :
-	OpcodeHPMP(op)
+    OpcodeHPMP(op)
 {
 }
 
 QString OpcodeMPd::toString(const Section1File *) const
 {
 	return QObject::tr("Remove %2 MP to party member #%1")
-			.arg(partyID)
-			.arg(_var(value, B2(banks)));
+	        .arg(partyID)
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeASK::OpcodeASK(const char *params, int size)
@@ -3434,22 +3449,22 @@ void OpcodeASK::setParams(const char *params, int)
 QString OpcodeASK::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Ask Question %2 in the window #%1 (and put selected answer in %5) first line=%3, last line=%4")
-			.arg(windowID)
-			.arg(_text(textID, scriptsAndTexts))
-			.arg(firstLine)
-			.arg(lastLine)
-			.arg(_bank(varAnswer, B2(banks)));
+	        .arg(windowID)
+	        .arg(_text(textID, scriptsAndTexts))
+	        .arg(firstLine)
+	        .arg(lastLine)
+	        .arg(_bank(varAnswer, B2(banks)));
 }
 
 QByteArray OpcodeASK::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)windowID)
-			.append((char)textID)
-			.append((char)firstLine)
-			.append((char)lastLine)
-			.append((char)varAnswer);
+	        .append(char(banks))
+	        .append(char(windowID))
+	        .append(char(textID))
+	        .append(char(firstLine))
+	        .append(char(lastLine))
+	        .append(char(varAnswer));
 }
 
 int OpcodeASK::getWindowID() const
@@ -3535,7 +3550,7 @@ QString OpcodeMENU::menu(const QString &param) const
 	case 20:	return QObject::tr("? (parameter %1)").arg(param);// TODO
 	case 21:	return QObject::tr("HP to 1 (parameter %1)").arg(param);
 	case 22:	return QObject::tr("Check if %1 and store the result in var[15][111]")
-						.arg(menu22(param));
+		        .arg(menu22(param));
 	case 23:	return menu23(param);
 	case 24:	return QObject::tr("? (parameter %1)").arg(param);
 	case 25:	return QObject::tr("? (parameter %1)").arg(param);
@@ -3546,15 +3561,15 @@ QString OpcodeMENU::menu(const QString &param) const
 QString OpcodeMENU::toString(const Section1File *) const
 {
 	return QObject::tr("Show menu %1")
-			.arg(menu(_var(param, B2(banks))));
+	        .arg(menu(_var(param, B2(banks))));
 }
 
 QByteArray OpcodeMENU::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)menuID)
-			.append((char)param);
+	        .append(char(banks))
+	        .append(char(menuID))
+	        .append(char(param));
 }
 
 void OpcodeMENU::getVariables(QList<FF7Var> &vars) const
@@ -3576,12 +3591,12 @@ void OpcodeMENU2::setParams(const char *params, int)
 QString OpcodeMENU2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 access to the main menu")
-			.arg(disabled == 0 ? QObject::tr("Enables") : QObject::tr("Disables"));
+	        .arg(disabled == 0 ? QObject::tr("Enables") : QObject::tr("Disables"));
 }
 
 QByteArray OpcodeMENU2::params() const
 {
-	return QByteArray().append((char)disabled);
+	return QByteArray().append(char(disabled));
 }
 
 OpcodeBTLTB::OpcodeBTLTB(const char *params, int size)
@@ -3597,73 +3612,73 @@ void OpcodeBTLTB::setParams(const char *params, int)
 QString OpcodeBTLTB::toString(const Section1File *) const
 {
 	return QObject::tr("Set battle table: %1")
-			.arg(battleTableID);
+	        .arg(battleTableID);
 }
 
 QByteArray OpcodeBTLTB::params() const
 {
-	return QByteArray().append((char)battleTableID);
+	return QByteArray().append(char(battleTableID));
 }
 
 OpcodeHPu::OpcodeHPu(const char *params, int size) :
-	OpcodeHPMP(params, size)
+    OpcodeHPMP(params, size)
 {
 }
 
 OpcodeHPu::OpcodeHPu(const OpcodeHPMP &op) :
-	OpcodeHPMP(op)
+    OpcodeHPMP(op)
 {
 }
 
 QString OpcodeHPu::toString(const Section1File *) const
 {
 	return QObject::tr("Add %2 HP to party member #%1")
-			.arg(partyID)
-			.arg(_var(value, B2(banks)));
+	        .arg(partyID)
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeHPd::OpcodeHPd(const char *params, int size) :
-	OpcodeHPMP(params, size)
+    OpcodeHPMP(params, size)
 {
 }
 
 OpcodeHPd::OpcodeHPd(const OpcodeHPMP &op) :
-	OpcodeHPMP(op)
+    OpcodeHPMP(op)
 {
 }
 
 QString OpcodeHPd::toString(const Section1File *) const
 {
 	return QObject::tr("Remove %2 HP to party member #%1")
-			.arg(partyID)
-			.arg(_var(value, B2(banks)));
+	        .arg(partyID)
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeWINDOW::OpcodeWINDOW(const char *params, int size) :
-	OpcodeWindow(params, size)
+    OpcodeWindow(params, size)
 {
 }
 
 OpcodeWINDOW::OpcodeWINDOW(quint8 windowID, quint16 targetX,
-						   quint16 targetY, quint16 width,
-						   quint16 height) :
-	  OpcodeWindow(windowID, targetX, targetY, width, height)
+                           quint16 targetY, quint16 width,
+                           quint16 height) :
+    OpcodeWindow(windowID, targetX, targetY, width, height)
 {
 }
 
 OpcodeWINDOW::OpcodeWINDOW(const OpcodeWindow &op) :
-	OpcodeWindow(op)
+    OpcodeWindow(op)
 {
 }
 
 QString OpcodeWINDOW::toString(const Section1File *) const
 {
 	return QObject::tr("Create window #%1 (X=%2, Y=%3, Width=%4, Height=%5)")
-			.arg(windowID)
-			.arg(targetX)
-			.arg(targetY)
-			.arg(width)
-			.arg(height);
+	        .arg(windowID)
+	        .arg(targetX)
+	        .arg(targetY)
+	        .arg(width)
+	        .arg(height);
 }
 
 OpcodeWMOVE::OpcodeWMOVE(const char *params, int size)
@@ -3681,17 +3696,17 @@ void OpcodeWMOVE::setParams(const char *params, int)
 QString OpcodeWMOVE::toString(const Section1File *) const
 {
 	return QObject::tr("Move the window #%1 (Move : X=%2, Y=%3)")
-			.arg(windowID)
-			.arg(relativeX)
-			.arg(relativeY);
+	        .arg(windowID)
+	        .arg(relativeX)
+	        .arg(relativeY);
 }
 
 QByteArray OpcodeWMOVE::params() const
 {
 	return QByteArray()
-			.append((char)windowID)
-			.append((char *)&relativeX, 2)
-			.append((char *)&relativeY, 2);
+	        .append(char(windowID))
+	        .append(reinterpret_cast<const char *>(&relativeX), 2)
+	        .append(reinterpret_cast<const char *>(&relativeY), 2);
 }
 
 int OpcodeWMOVE::getWindowID() const
@@ -3726,19 +3741,21 @@ QString OpcodeWMODE::toString(const Section1File *) const
 	case 0x02:		typeStr = QObject::tr("Transparent Background");		break;
 	default:		typeStr = QString("%1?").arg(mode);
 	}
-
+	
 	return QObject::tr("Set the window #%1 mode: %2 (%3 the closing of the window by the player)")
-			.arg(windowID)
-			.arg(typeStr)
-			.arg(preventClose == 0 ? QObject::tr("Authorize") : QObject::tr("prevent"));
+	        .arg(windowID)
+	        .arg(
+	            typeStr,
+	            preventClose == 0 ? QObject::tr("Authorize") : QObject::tr("prevent")
+	        );
 }
 
 QByteArray OpcodeWMODE::params() const
 {
 	return QByteArray()
-			.append((char)windowID)
-			.append((char)mode)
-			.append((char)preventClose);
+	        .append(char(windowID))
+	        .append(char(mode))
+	        .append(char(preventClose));
 }
 
 int OpcodeWMODE::getWindowID() const
@@ -3764,12 +3781,12 @@ void OpcodeWREST::setParams(const char *params, int)
 QString OpcodeWREST::toString(const Section1File *) const
 {
 	return QObject::tr("Reset the window #%1")
-			.arg(windowID);
+	        .arg(windowID);
 }
 
 QByteArray OpcodeWREST::params() const
 {
-	return QByteArray().append((char)windowID);
+	return QByteArray().append(char(windowID));
 }
 
 int OpcodeWREST::getWindowID() const
@@ -3808,12 +3825,12 @@ void OpcodeWCLSE::setParams(const char *params, int)
 QString OpcodeWCLSE::toString(const Section1File *) const
 {
 	return QObject::tr("Close the window #%1 (stronger)")
-			.arg(windowID);
+	        .arg(windowID);
 }
 
 QByteArray OpcodeWCLSE::params() const
 {
-	return QByteArray().append((char)windowID);
+	return QByteArray().append(char(windowID));
 }
 
 int OpcodeWCLSE::getWindowID() const
@@ -3840,15 +3857,15 @@ void OpcodeWROW::setParams(const char *params, int)
 QString OpcodeWROW::toString(const Section1File *) const
 {
 	return QObject::tr("Number of row in the window #%1 = %2")
-			.arg(windowID)
-			.arg(rowCount);
+	        .arg(windowID)
+	        .arg(rowCount);
 }
 
 QByteArray OpcodeWROW::params() const
 {
 	return QByteArray()
-			.append((char)windowID)
-			.append((char)rowCount);
+	        .append(char(windowID))
+	        .append(char(rowCount));
 }
 
 int OpcodeWROW::getWindowID() const
@@ -3879,30 +3896,30 @@ void OpcodeWCOL::setParams(const char *params, int)
 QByteArray OpcodeWCOL::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)corner)
-			.append((char)r)
-			.append((char)g)
-			.append((char)b);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(corner))
+	        .append(char(r))
+	        .append(char(g))
+	        .append(char(b));
 }
 
 OpcodeGWCOL::OpcodeGWCOL(const char *params, int size) :
-	OpcodeWCOL(params, size)
+    OpcodeWCOL(params, size)
 {
 }
 
 OpcodeGWCOL::OpcodeGWCOL(const OpcodeWCOL &op) :
-	OpcodeWCOL(op)
+    OpcodeWCOL(op)
 {
 }
 
 QString OpcodeGWCOL::toString(const Section1File *) const
 {
 	return QObject::tr("Get windows %1 color to %2 (R), %3 (G) and %4 (B)")
-			.arg(_windowCorner(corner, B1(banks[0])))
-			.arg(_bank(r, B2(banks[0])))
-			.arg(_bank(g, B1(banks[1])))
-			.arg(_bank(b, B2(banks[1])));
+	        .arg(_windowCorner(corner, B1(banks[0])))
+	        .arg(_bank(r, B2(banks[0])))
+	        .arg(_bank(g, B1(banks[1])))
+	        .arg(_bank(b, B2(banks[1])));
 }
 
 void OpcodeGWCOL::getVariables(QList<FF7Var> &vars) const
@@ -3918,23 +3935,24 @@ void OpcodeGWCOL::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeSWCOL::OpcodeSWCOL(const char *params, int size) :
-	OpcodeWCOL(params, size)
+    OpcodeWCOL(params, size)
 {
 	setParams(params, size);
 }
 
 OpcodeSWCOL::OpcodeSWCOL(const OpcodeWCOL &op) :
-	OpcodeWCOL(op)
+    OpcodeWCOL(op)
 {
 }
 
 QString OpcodeSWCOL::toString(const Section1File *) const
 {
 	return QObject::tr("Set windows %1 color: RGB(%2, %3, %4)")
-			.arg(_windowCorner(corner, B1(banks[0])))
-			.arg(_var(r, B2(banks[0])))
-			.arg(_var(g, B1(banks[1])))
-			.arg(_var(b, B2(banks[1])));
+	        .arg(_windowCorner(corner, B1(banks[0])))
+	        .arg(_var(r, B2(banks[0])),
+	             _var(g, B1(banks[1])),
+	             _var(b, B2(banks[1]))
+	        );
 }
 
 void OpcodeSWCOL::getVariables(QList<FF7Var> &vars) const
@@ -3964,9 +3982,9 @@ void OpcodeItem::setParams(const char *params, int)
 QByteArray OpcodeItem::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&itemID, 2)
-			.append((char)quantity);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&itemID), 2)
+	        .append(char(quantity));
 }
 
 void OpcodeItem::getVariables(QList<FF7Var> &vars) const
@@ -3978,55 +3996,58 @@ void OpcodeItem::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeSTITM::OpcodeSTITM(const char *params, int size) :
-	OpcodeItem(params, size)
+    OpcodeItem(params, size)
 {
 	setParams(params, size);
 }
 
 OpcodeSTITM::OpcodeSTITM(const OpcodeItem &op) :
-	OpcodeItem(op)
+    OpcodeItem(op)
 {
 }
 
 QString OpcodeSTITM::toString(const Section1File *) const
 {
 	return QObject::tr("Add %2 item(s) %1 to the inventory")
-			.arg(_item(itemID, B1(banks)))
-			.arg(_var(quantity, B2(banks)));
+	        .arg(_item(itemID, B1(banks)),
+	             _var(quantity, B2(banks))
+	        );
 }
 
 OpcodeDLITM::OpcodeDLITM(const char *params, int size) :
-	OpcodeItem(params, size)
+    OpcodeItem(params, size)
 {
 }
 
 OpcodeDLITM::OpcodeDLITM(const OpcodeItem &op) :
-	OpcodeItem(op)
+    OpcodeItem(op)
 {
 }
 
 QString OpcodeDLITM::toString(const Section1File *) const
 {
 	return QObject::tr("Remove %2 item(s) %1 from the inventory")
-			.arg(_item(itemID, B1(banks)))
-			.arg(_var(quantity, B2(banks)));
+	        .arg(_item(itemID, B1(banks)),
+	             _var(quantity, B2(banks))
+	        );
 }
 
 OpcodeCKITM::OpcodeCKITM(const char *params, int size) :
-	OpcodeItem(params, size)
+    OpcodeItem(params, size)
 {
 }
 
 OpcodeCKITM::OpcodeCKITM(const OpcodeItem &op) :
-	OpcodeItem(op)
+    OpcodeItem(op)
 {
 }
 
 QString OpcodeCKITM::toString(const Section1File *) const
 {
 	return QObject::tr("%2 = amount of item %1 in the inventory")
-			.arg(_item(itemID, B1(banks)))
-			.arg(_bank(quantity, B2(banks)));
+	        .arg(_item(itemID, B1(banks)),
+	             _bank(quantity, B2(banks))
+	        );
 }
 
 void OpcodeCKITM::getVariables(QList<FF7Var> &vars) const
@@ -4054,16 +4075,17 @@ void OpcodeSMTRA::setParams(const char *params, int)
 QString OpcodeSMTRA::toString(const Section1File *) const
 {
 	return QObject::tr("Add %1 materia to the inventory (AP=%2)")
-			.arg(_materia(materiaID, B1(banks[0])))
-			.arg(_var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])));
+	        .arg(_materia(materiaID, B1(banks[0])),
+	             _var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1]))
+	        );
 }
 
 QByteArray OpcodeSMTRA::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)materiaID)
-			.append((char *)&APCount, 3);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(materiaID))
+	        .append(reinterpret_cast<const char *>(&APCount), 3);
 }
 
 void OpcodeSMTRA::getVariables(QList<FF7Var> &vars) const
@@ -4096,18 +4118,18 @@ void OpcodeDMTRA::setParams(const char *params, int)
 QString OpcodeDMTRA::toString(const Section1File *) const
 {
 	return QObject::tr("Remove %3 materia(s) %1 from the inventory (AP=%2)")
-			.arg(_materia(materiaID, B1(banks[0])))
-			.arg(_var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])))
-			.arg(quantity);
+	        .arg(_materia(materiaID, B1(banks[0])),
+	             _var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])))
+	        .arg(quantity);
 }
 
 QByteArray OpcodeDMTRA::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)materiaID)
-			.append((char *)&APCount, 3)
-			.append((char)quantity);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(materiaID))
+	        .append(reinterpret_cast<const char *>(&APCount), 3)
+	        .append(char(quantity));
 }
 
 void OpcodeDMTRA::getVariables(QList<FF7Var> &vars) const
@@ -4142,20 +4164,20 @@ void OpcodeCMTRA::setParams(const char *params, int)
 QString OpcodeCMTRA::toString(const Section1File *) const
 {
 	return QObject::tr("%4 = amount of materia %1 in the inventory (AP=%2, ?=%3)")
-			.arg(_materia(materiaID, B1(banks[0])))
-			.arg(_var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])))
-			.arg(unknown)
-			.arg(_bank(varQuantity, B2(banks[2])));
+	        .arg(_materia(materiaID, B1(banks[0])))
+	        .arg(_var(APCount, B2(banks[0]), B1(banks[1]), B2(banks[1])))
+	        .arg(unknown)
+	        .arg(_bank(varQuantity, B2(banks[2])));
 }
 
 QByteArray OpcodeCMTRA::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 3)
-			.append((char)materiaID)
-			.append((char *)&APCount, 3)
-			.append((char)unknown)
-			.append((char)varQuantity);
+	        .append(reinterpret_cast<const char *>(&banks), 3)
+	        .append(char(materiaID))
+	        .append(reinterpret_cast<const char *>(&APCount), 3)
+	        .append(char(unknown))
+	        .append(char(varQuantity));
 }
 
 void OpcodeCMTRA::getVariables(QList<FF7Var> &vars) const
@@ -4191,21 +4213,21 @@ void OpcodeSHAKE::setParams(const char *params, int)
 QString OpcodeSHAKE::toString(const Section1File *) const
 {
 	return QObject::tr("Shake (type=%1, xAmplitude=%2, xFrames=%3, yAmplitude=%2, yFrames=%3)")
-		.arg(type)
-		.arg(xAmplitude).arg(xFrames)
-		.arg(yAmplitude).arg(yFrames);
+	        .arg(type)
+	        .arg(xAmplitude).arg(xFrames)
+	        .arg(yAmplitude).arg(yFrames);
 }
 
 QByteArray OpcodeSHAKE::params() const
 {
 	return QByteArray()
-		.append((char)unknown1)
-		.append((char)unknown2)
-		.append((char)type)
-		.append((char)xAmplitude)
-		.append((char)xFrames)
-		.append((char)yAmplitude)
-		.append((char)yFrames);
+	        .append(char(unknown1))
+	        .append(char(unknown2))
+	        .append(char(type))
+	        .append(char(xAmplitude))
+	        .append(char(xFrames))
+	        .append(char(yAmplitude))
+	        .append(char(yFrames));
 }
 
 OpcodeNOP::OpcodeNOP()
@@ -4234,21 +4256,21 @@ void OpcodeMAPJUMP::setParams(const char *params, int)
 QString OpcodeMAPJUMP::toString(const Section1File *) const
 {
 	return QObject::tr("Jump to map %1 (X=%2, Y=%3, triangle ID=%4, direction=%5)")
-			.arg(_field(fieldID))
-			.arg(targetX)
-			.arg(targetY)
-			.arg(targetI)
-			.arg(direction);
+	        .arg(_field(fieldID))
+	        .arg(targetX)
+	        .arg(targetY)
+	        .arg(targetI)
+	        .arg(direction);
 }
 
 QByteArray OpcodeMAPJUMP::params() const
 {
 	return QByteArray()
-			.append((char *)&fieldID, 2)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&targetI, 2)
-			.append((char)direction);
+	        .append(reinterpret_cast<const char *>(&fieldID), 2)
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2)
+	        .append(reinterpret_cast<const char *>(&targetI), 2)
+	        .append(char(direction));
 }
 
 OpcodeSCRLO::OpcodeSCRLO(const char *params, int size)
@@ -4264,12 +4286,12 @@ void OpcodeSCRLO::setParams(const char *params, int)
 QString OpcodeSCRLO::toString(const Section1File *) const
 {
 	return QObject::tr("SCRLO (?=%1)")
-			.arg(unknown);
+	        .arg(unknown);
 }
 
 QByteArray OpcodeSCRLO::params() const
 {
-	return QByteArray().append((char)unknown);
+	return QByteArray().append(char(unknown));
 }
 
 OpcodeSCRLC::OpcodeSCRLC(const char *params, int size)
@@ -4285,12 +4307,12 @@ void OpcodeSCRLC::setParams(const char *params, int)
 QString OpcodeSCRLC::toString(const Section1File *) const
 {
 	return QObject::tr("SCRLC (?=%1)")
-			.arg(unknown);
+	        .arg(unknown);
 }
 
 QByteArray OpcodeSCRLC::params() const
 {
-	return QByteArray().append((char *)&unknown, 4);
+	return QByteArray().append(reinterpret_cast<const char *>(&unknown), 4);
 }
 
 OpcodeSCRLA::OpcodeSCRLA(const char *params, int size)
@@ -4309,18 +4331,18 @@ void OpcodeSCRLA::setParams(const char *params, int)
 QString OpcodeSCRLA::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Scroll to group %2 (speed=%1, type=%3)")
-			.arg(_var(speed, B2(banks)))
-			.arg(_script(groupID, scriptsAndTexts))
-			.arg(scrollType);
+	        .arg(_var(speed, B2(banks)))
+	        .arg(_script(groupID, scriptsAndTexts))
+	        .arg(scrollType);
 }
 
 QByteArray OpcodeSCRLA::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&speed, 2)
-			.append((char)groupID)
-			.append((char)scrollType);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&speed), 2)
+	        .append(char(groupID))
+	        .append(char(scrollType));
 }
 
 void OpcodeSCRLA::getVariables(QList<FF7Var> &vars) const
@@ -4344,16 +4366,16 @@ void OpcodeSCR2D::setParams(const char *params, int)
 QString OpcodeSCR2D::toString(const Section1File *) const
 {
 	return QObject::tr("Scroll to location (X=%1, Y=%2)")
-			.arg(_var(targetX, B1(banks)))
-			.arg(_var(targetY, B2(banks)));
+	        .arg(_var(targetX, B1(banks)))
+	        .arg(_var(targetY, B2(banks)));
 }
 
 QByteArray OpcodeSCR2D::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2);
 }
 
 void OpcodeSCR2D::getVariables(QList<FF7Var> &vars) const
@@ -4390,18 +4412,18 @@ void OpcodeSCR2DC::setParams(const char *params, int)
 QString OpcodeSCR2DC::toString(const Section1File *) const
 {
 	return QObject::tr("Scroll to location (X=%1, Y=%2, speed=%3)")
-			.arg(_var(targetX, B1(banks[0])))
-			.arg(_var(targetY, B2(banks[0])))
-			.arg(_var(speed, B2(banks[1])));
+	        .arg(_var(targetX, B1(banks[0])))
+	        .arg(_var(targetY, B2(banks[0])))
+	        .arg(_var(speed, B2(banks[1])));
 }
 
 QByteArray OpcodeSCR2DC::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&speed, 2);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2)
+	        .append(reinterpret_cast<const char *>(&speed), 2);
 }
 
 void OpcodeSCR2DC::getVariables(QList<FF7Var> &vars) const
@@ -4440,18 +4462,18 @@ void OpcodeSCR2DL::setParams(const char *params, int)
 QString OpcodeSCR2DL::toString(const Section1File *) const
 {
 	return QObject::tr("Scroll to location (X=%1, Y=%2, speed=%3)")
-			.arg(_var(targetX, B1(banks[0])))
-			.arg(_var(targetY, B2(banks[0])))
-			.arg(_var(speed, B2(banks[1])));
+	        .arg(_var(targetX, B1(banks[0])))
+	        .arg(_var(targetY, B2(banks[0])))
+	        .arg(_var(speed, B2(banks[1])));
 }
 
 QByteArray OpcodeSCR2DL::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&speed, 2);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2)
+	        .append(reinterpret_cast<const char *>(&speed), 2);
 }
 
 void OpcodeSCR2DL::getVariables(QList<FF7Var> &vars) const
@@ -4477,12 +4499,12 @@ void OpcodeMPDSP::setParams(const char *params, int)
 QString OpcodeMPDSP::toString(const Section1File *) const
 {
 	return QObject::tr("MPDSP : %1")
-			.arg(unknown);
+	        .arg(unknown);
 }
 
 QByteArray OpcodeMPDSP::params() const
 {
-	return QByteArray().append((char)unknown);
+	return QByteArray().append(char(unknown));
 }
 
 OpcodeVWOFT::OpcodeVWOFT(const char *params, int size)
@@ -4501,18 +4523,18 @@ void OpcodeVWOFT::setParams(const char *params, int)
 QString OpcodeVWOFT::toString(const Section1File *) const
 {
 	return QObject::tr("Scroll to location (?=%1, ?=%2, ?=%3)")
-			.arg(_var(unknown1, B1(banks)))
-			.arg(_var(unknown2, B2(banks)))
-			.arg(unknown3);
+	        .arg(_var(unknown1, B1(banks)))
+	        .arg(_var(unknown2, B2(banks)))
+	        .arg(unknown3);
 }
 
 QByteArray OpcodeVWOFT::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&unknown1, 2)
-			.append((char *)&unknown2, 2)
-			.append((char)unknown3);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&unknown1), 2)
+	        .append(reinterpret_cast<const char *>(&unknown2), 2)
+	        .append(char(unknown3));
 }
 
 void OpcodeVWOFT::getVariables(QList<FF7Var> &vars) const
@@ -4543,24 +4565,24 @@ void OpcodeFADE::setParams(const char *params, int)
 QString OpcodeFADE::toString(const Section1File *) const
 {
 	return QObject::tr("Fades the screen to the colour RGB(%1, %2, %3) (speed=%4, type=%5, adjust=%6)")
-			.arg(_var(r, B1(banks[0])))
-			.arg(_var(g, B2(banks[0])))
-			.arg(_var(b, B2(banks[1])))
-			.arg(speed)
-			.arg(fadeType)
-			.arg(adjust);
+	        .arg(_var(r, B1(banks[0])))
+	        .arg(_var(g, B2(banks[0])))
+	        .arg(_var(b, B2(banks[1])))
+	        .arg(speed)
+	        .arg(fadeType)
+	        .arg(adjust);
 }
 
 QByteArray OpcodeFADE::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)r)
-			.append((char)g)
-			.append((char)b)
-			.append((char)speed)
-			.append((char)fadeType)
-			.append((char)adjust);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(r))
+	        .append(char(g))
+	        .append(char(b))
+	        .append(char(speed))
+	        .append(char(fadeType))
+	        .append(char(adjust));
 }
 
 void OpcodeFADE::getVariables(QList<FF7Var> &vars) const
@@ -4596,15 +4618,15 @@ void OpcodeIDLCK::setParams(const char *params, int)
 QString OpcodeIDLCK::toString(const Section1File *) const
 {
 	return QObject::tr("%2 the triangle #%1")
-			.arg(triangleID)
-			.arg(locked == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
+	        .arg(triangleID)
+	        .arg(locked == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
 }
 
 QByteArray OpcodeIDLCK::params() const
 {
 	return QByteArray()
-			.append((char *)&triangleID, 2)
-			.append((char)locked);
+	        .append(reinterpret_cast<const char *>(&triangleID), 2)
+	        .append(char(locked));
 }
 
 OpcodeLSTMP::OpcodeLSTMP(const char *params, int size)
@@ -4621,14 +4643,14 @@ void OpcodeLSTMP::setParams(const char *params, int)
 QString OpcodeLSTMP::toString(const Section1File *) const
 {
 	return QObject::tr("Retrieves the field ID number of the last field in %1")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 QByteArray OpcodeLSTMP::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)var);
+	        .append(char(banks))
+	        .append(char(var));
 }
 
 void OpcodeLSTMP::getVariables(QList<FF7Var> &vars) const
@@ -4653,18 +4675,18 @@ void OpcodeSCRLP::setParams(const char *params, int)
 QString OpcodeSCRLP::toString(const Section1File *) const
 {
 	return QObject::tr("Scroll to party member #%2 (speed=%1 frames, type=%3)")
-			.arg(_var(speed, B2(banks)))
-			.arg(partyID)
-			.arg(scrollType);
+	        .arg(_var(speed, B2(banks)))
+	        .arg(partyID)
+	        .arg(scrollType);
 }
 
 QByteArray OpcodeSCRLP::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&speed, 2)
-			.append((char)partyID)
-			.append((char)scrollType);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&speed), 2)
+	        .append(char(partyID))
+	        .append(char(scrollType));
 }
 
 void OpcodeSCRLP::getVariables(QList<FF7Var> &vars) const
@@ -4687,14 +4709,14 @@ void OpcodeBATTLE::setParams(const char *params, int)
 QString OpcodeBATTLE::toString(const Section1File *) const
 {
 	return QObject::tr("Start battle #%1")
-			.arg(_var(battleID, B2(banks)));
+	        .arg(_var(battleID, B2(banks)));
 }
 
 QByteArray OpcodeBATTLE::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&battleID, 2);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&battleID), 2);
 }
 
 void OpcodeBATTLE::getVariables(QList<FF7Var> &vars) const
@@ -4716,12 +4738,12 @@ void OpcodeBTLON::setParams(const char *params, int)
 QString OpcodeBTLON::toString(const Section1File *) const
 {
 	return QObject::tr("%1 random battle")
-			.arg(disabled == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
+	        .arg(disabled == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
 }
 
 QByteArray OpcodeBTLON::params() const
 {
-	return QByteArray().append((char)disabled);
+	return QByteArray().append(char(disabled));
 }
 
 OpcodeBTLMD::OpcodeBTLMD(const char *params, int size)
@@ -4754,13 +4776,13 @@ QString OpcodeBTLMD::toString(const Section1File *) const
 			}
 		}
 	}
-
+	
 	return QObject::tr("Battle mode: %1").arg(modes.isEmpty() ? QObject::tr("None") : modes.join(", "));
 }
 
 QByteArray OpcodeBTLMD::params() const
 {
-	return QByteArray().append((char *)&battleMode, 2);
+	return QByteArray().append(reinterpret_cast<const char *>(&battleMode), 2);
 }
 
 OpcodePGTDR::OpcodePGTDR(const char *params, int size)
@@ -4778,16 +4800,16 @@ void OpcodePGTDR::setParams(const char *params, int)
 QString OpcodePGTDR::toString(const Section1File *) const
 {
 	return QObject::tr("Get direction of the party member #%1 to %2")
-			.arg(partyID)
-			.arg(_bank(varDir, B2(banks)));
+	        .arg(partyID)
+	        .arg(_bank(varDir, B2(banks)));
 }
 
 QByteArray OpcodePGTDR::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)partyID)
-			.append((char)varDir);
+	        .append(char(banks))
+	        .append(char(partyID))
+	        .append(char(varDir));
 }
 
 void OpcodePGTDR::getVariables(QList<FF7Var> &vars) const
@@ -4811,16 +4833,16 @@ void OpcodeGETPC::setParams(const char *params, int)
 QString OpcodeGETPC::toString(const Section1File *) const
 {
 	return QObject::tr("Get group ID of the party member #%1 to %2")
-			.arg(partyID)
-			.arg(_bank(varPC, B2(banks)));
+	        .arg(partyID)
+	        .arg(_bank(varPC, B2(banks)));
 }
 
 QByteArray OpcodeGETPC::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)partyID)
-			.append((char)varPC);
+	        .append(char(banks))
+	        .append(char(partyID))
+	        .append(char(varPC));
 }
 
 void OpcodeGETPC::getVariables(QList<FF7Var> &vars) const
@@ -4848,22 +4870,22 @@ void OpcodePXYZI::setParams(const char *params, int)
 QString OpcodePXYZI::toString(const Section1File *) const
 {
 	return QObject::tr("Get coordinates of the party member #%1 (store : X in %2, Y in %3, Z in %4 and triangle ID in %5)")
-			.arg(partyID)
-			.arg(_bank(varX, B1(banks[0])))
-			.arg(_bank(varY, B2(banks[0])))
-			.arg(_bank(varZ, B1(banks[1])))
-			.arg(_bank(varI, B2(banks[1])));
+	        .arg(partyID)
+	        .arg(_bank(varX, B1(banks[0])))
+	        .arg(_bank(varY, B2(banks[0])))
+	        .arg(_bank(varZ, B1(banks[1])))
+	        .arg(_bank(varI, B2(banks[1])));
 }
 
 QByteArray OpcodePXYZI::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)partyID)
-			.append((char)varX)
-			.append((char)varY)
-			.append((char)varZ)
-			.append((char)varI);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(partyID))
+	        .append(char(varX))
+	        .append(char(varY))
+	        .append(char(varZ))
+	        .append(char(varI));
 }
 
 void OpcodePXYZI::getVariables(QList<FF7Var> &vars) const
@@ -4879,7 +4901,7 @@ void OpcodePXYZI::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeBinaryOperation::OpcodeBinaryOperation() :
-	banks(0), var(0), value(0)
+    banks(0), var(0), value(0)
 {
 }
 
@@ -4889,23 +4911,23 @@ OpcodeOperation::OpcodeOperation(const char *params, int size)
 }
 
 OpcodeOperation::OpcodeOperation(const OpcodeBinaryOperation &op) :
-	OpcodeBinaryOperation(op)
+    OpcodeBinaryOperation(op)
 {
 }
 
 void OpcodeOperation::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
-	var = (quint8)params[1]; // bank 1
-	value = (quint8)params[2]; // bank 2
+	banks = quint8(params[0]);
+	var = quint8(params[1]); // bank 1
+	value = quint8(params[2]); // bank 2
 }
 
 QByteArray OpcodeOperation::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)var)
-			.append((char)(value & 0xFF));
+	        .append(char(banks))
+	        .append(char(var))
+	        .append(char((value & 0xFF)));
 }
 
 void OpcodeOperation::getVariables(QList<FF7Var> &vars) const
@@ -4922,14 +4944,14 @@ OpcodeOperation2::OpcodeOperation2(const char *params, int size)
 }
 
 OpcodeOperation2::OpcodeOperation2(const OpcodeBinaryOperation &op) :
-	OpcodeBinaryOperation(op)
+    OpcodeBinaryOperation(op)
 {
 }
 
 void OpcodeOperation2::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
-	var = (quint8)params[1];
+	banks = quint8(params[0]);
+	var = quint8(params[1]);
 	value = 0;
 	memcpy(&value, params + 2, 2);
 }
@@ -4937,9 +4959,9 @@ void OpcodeOperation2::setParams(const char *params, int)
 QByteArray OpcodeOperation2::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)var)
-			.append((char *)&value, 2);
+	        .append(char(banks))
+	        .append(char(var))
+	        .append(reinterpret_cast<const char *>(&value), 2);
 }
 
 void OpcodeOperation2::getVariables(QList<FF7Var> &vars) const
@@ -4964,8 +4986,8 @@ void OpcodeUnaryOperation::setParams(const char *params, int)
 QByteArray OpcodeUnaryOperation::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)var);
+	        .append(char(banks))
+	        .append(char(var));
 }
 
 void OpcodeUnaryOperation::getVariables(QList<FF7Var> &vars) const
@@ -4975,12 +4997,12 @@ void OpcodeUnaryOperation::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeUnaryOperation2::OpcodeUnaryOperation2(const char *params, int size) :
-	OpcodeUnaryOperation(params, size)
+    OpcodeUnaryOperation(params, size)
 {
 }
 
 OpcodeUnaryOperation2::OpcodeUnaryOperation2(const OpcodeUnaryOperation &other) :
-	OpcodeUnaryOperation(other)
+    OpcodeUnaryOperation(other)
 {
 }
 
@@ -4991,136 +5013,136 @@ void OpcodeUnaryOperation2::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodePLUSX::OpcodePLUSX(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodePLUSX::OpcodePLUSX(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodePLUSX::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 + %2 (8 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodePLUS2X::OpcodePLUS2X(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodePLUS2X::OpcodePLUS2X(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodePLUS2X::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 + %2 (16 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeMINUSX::OpcodeMINUSX(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodeMINUSX::OpcodeMINUSX(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodeMINUSX::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 - %2 (8 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeMINUS2X::OpcodeMINUS2X(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodeMINUS2X::OpcodeMINUS2X(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodeMINUS2X::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 - %2 (16 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeINCX::OpcodeINCX(const char *params, int size) :
-	OpcodeUnaryOperation(params, size)
+    OpcodeUnaryOperation(params, size)
 {
 }
 
 
 OpcodeINCX::OpcodeINCX(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation(op)
+    OpcodeUnaryOperation(op)
 {
 }
 
 QString OpcodeINCX::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 + 1 (8 bit)")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 OpcodeINC2X::OpcodeINC2X(const char *params, int size) :
-	OpcodeUnaryOperation2(params, size)
+    OpcodeUnaryOperation2(params, size)
 {
 }
 
 OpcodeINC2X::OpcodeINC2X(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation2(op)
+    OpcodeUnaryOperation2(op)
 {
 }
 
 QString OpcodeINC2X::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 + 1 (16 bit)")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 OpcodeDECX::OpcodeDECX(const char *params, int size) :
-	OpcodeUnaryOperation(params, size)
+    OpcodeUnaryOperation(params, size)
 {
 }
 
 OpcodeDECX::OpcodeDECX(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation(op)
+    OpcodeUnaryOperation(op)
 {
 }
 
 QString OpcodeDECX::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 - 1 (8 bit)")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 OpcodeDEC2X::OpcodeDEC2X(const char *params, int size) :
-	OpcodeUnaryOperation2(params, size)
+    OpcodeUnaryOperation2(params, size)
 {
 }
 
 OpcodeDEC2X::OpcodeDEC2X(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation2(op)
+    OpcodeUnaryOperation2(op)
 {
 }
 
 QString OpcodeDEC2X::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 - 1 (16 bit)")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 OpcodeTLKON::OpcodeTLKON(const char *params, int size)
@@ -5136,12 +5158,12 @@ void OpcodeTLKON::setParams(const char *params, int)
 QString OpcodeTLKON::toString(const Section1File *) const
 {
 	return QObject::tr("%1 talk script for the current field model")
-			.arg(disabled == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
+	        .arg(disabled == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
 }
 
 QByteArray OpcodeTLKON::params() const
 {
-	return QByteArray().append((char)disabled);
+	return QByteArray().append(char(disabled));
 }
 
 OpcodeRDMSD::OpcodeRDMSD(const char *params, int size)
@@ -5158,48 +5180,48 @@ void OpcodeRDMSD::setParams(const char *params, int)
 QString OpcodeRDMSD::toString(const Section1File *) const
 {
 	return QObject::tr("Seed Random Generator : %1")
-			.arg(_var(value, B2(banks)));
+	        .arg(_var(value, B2(banks)));
 }
 
 QByteArray OpcodeRDMSD::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)value);
+	        .append(char(banks))
+	        .append(char(value));
 }
 
 OpcodeSETBYTE::OpcodeSETBYTE(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodeSETBYTE::OpcodeSETBYTE(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodeSETBYTE::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %2 (8 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeSETWORD::OpcodeSETWORD(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodeSETWORD::OpcodeSETWORD(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodeSETWORD::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %2 (16 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeBitOperation::OpcodeBitOperation(const char *params, int size)
@@ -5217,9 +5239,9 @@ void OpcodeBitOperation::setParams(const char *params, int)
 QByteArray OpcodeBitOperation::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)var)
-			.append((char)position);
+	        .append(char(banks))
+	        .append(char(var))
+	        .append(char(position));
 }
 
 void OpcodeBitOperation::getVariables(QList<FF7Var> &vars) const
@@ -5231,440 +5253,440 @@ void OpcodeBitOperation::getVariables(QList<FF7Var> &vars) const
 }
 
 OpcodeBITON::OpcodeBITON(const char *params, int size) :
-	OpcodeBitOperation(params, size)
+    OpcodeBitOperation(params, size)
 {
 }
 
 OpcodeBITON::OpcodeBITON(const OpcodeBitOperation &op) :
-	OpcodeBitOperation(op)
+    OpcodeBitOperation(op)
 {
 }
 
 QString OpcodeBITON::toString(const Section1File *) const
 {
 	return QObject::tr("Bit %2 ON in %1")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(position, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(position, B2(banks)));
 }
 
 OpcodeBITOFF::OpcodeBITOFF(const char *params, int size) :
-	OpcodeBitOperation(params, size)
+    OpcodeBitOperation(params, size)
 {
 }
 
 OpcodeBITOFF::OpcodeBITOFF(const OpcodeBitOperation &op) :
-	OpcodeBitOperation(op)
+    OpcodeBitOperation(op)
 {
 }
 
 QString OpcodeBITOFF::toString(const Section1File *) const
 {
 	return QObject::tr("Bit %2 OFF in %1")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(position, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(position, B2(banks)));
 }
 
 OpcodeBITXOR::OpcodeBITXOR(const char *params, int size) :
-	OpcodeBitOperation(params, size)
+    OpcodeBitOperation(params, size)
 {
 }
 
 OpcodeBITXOR::OpcodeBITXOR(const OpcodeBitOperation &op) :
-	OpcodeBitOperation(op)
+    OpcodeBitOperation(op)
 {
 }
 
 QString OpcodeBITXOR::toString(const Section1File *) const
 {
 	return QObject::tr("Toggle bit %2 in %1")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(position, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(position, B2(banks)));
 }
 
 OpcodePLUS::OpcodePLUS(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodePLUS::OpcodePLUS(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodePLUS::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 + %2 (8 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodePLUS2::OpcodePLUS2(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodePLUS2::OpcodePLUS2(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodePLUS2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 + %2 (16 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeMINUS::OpcodeMINUS(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodeMINUS::OpcodeMINUS(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodeMINUS::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 - %2 (8 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeMINUS2::OpcodeMINUS2(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodeMINUS2::OpcodeMINUS2(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodeMINUS2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 - %2 (16 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeMUL::OpcodeMUL(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodeMUL::OpcodeMUL(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodeMUL::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 * %2 (8 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeMUL2::OpcodeMUL2(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodeMUL2::OpcodeMUL2(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodeMUL2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 * %2 (16 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeDIV::OpcodeDIV(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodeDIV::OpcodeDIV(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodeDIV::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 / %2 (8 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeDIV2::OpcodeDIV2(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodeDIV2::OpcodeDIV2(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodeDIV2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 / %2 (16 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeMOD::OpcodeMOD(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodeMOD::OpcodeMOD(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodeMOD::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 mod %2 (8 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeMOD2::OpcodeMOD2(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodeMOD2::OpcodeMOD2(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodeMOD2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 mod %2 (16 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeAND::OpcodeAND(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodeAND::OpcodeAND(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodeAND::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 & %2 (8 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeAND2::OpcodeAND2(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodeAND2::OpcodeAND2(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodeAND2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 & %2 (16 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeOR::OpcodeOR(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodeOR::OpcodeOR(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodeOR::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 | %2 (8 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeOR2::OpcodeOR2(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodeOR2::OpcodeOR2(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodeOR2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 | %2 (16 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeXOR::OpcodeXOR(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodeXOR::OpcodeXOR(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodeXOR::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 ^ %2 (8 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeXOR2::OpcodeXOR2(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodeXOR2::OpcodeXOR2(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodeXOR2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 ^ %2 (16 bit)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeINC::OpcodeINC(const char *params, int size) :
-	OpcodeUnaryOperation(params, size)
+    OpcodeUnaryOperation(params, size)
 {
 }
 
 OpcodeINC::OpcodeINC(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation(op)
+    OpcodeUnaryOperation(op)
 {
 }
 
 QString OpcodeINC::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 + 1 (8 bit)")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 OpcodeINC2::OpcodeINC2(const char *params, int size) :
-	OpcodeUnaryOperation2(params, size)
+    OpcodeUnaryOperation2(params, size)
 {
 }
 
 OpcodeINC2::OpcodeINC2(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation2(op)
+    OpcodeUnaryOperation2(op)
 {
 }
 
 QString OpcodeINC2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 + 1 (16 bit)")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 OpcodeDEC::OpcodeDEC(const char *params, int size) :
-	OpcodeUnaryOperation(params, size)
+    OpcodeUnaryOperation(params, size)
 {
 }
 
 OpcodeDEC::OpcodeDEC(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation(op)
+    OpcodeUnaryOperation(op)
 {
 }
 
 QString OpcodeDEC::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 - 1 (8 bit)")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 OpcodeDEC2::OpcodeDEC2(const char *params, int size) :
-	OpcodeUnaryOperation2(params, size)
+    OpcodeUnaryOperation2(params, size)
 {
 }
 
 OpcodeDEC2::OpcodeDEC2(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation2(op)
+    OpcodeUnaryOperation2(op)
 {
 }
 
 QString OpcodeDEC2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %1 - 1 (16 bit)")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 OpcodeRANDOM::OpcodeRANDOM(const char *params, int size) :
-	OpcodeUnaryOperation(params, size)
+    OpcodeUnaryOperation(params, size)
 {
 }
 
 OpcodeRANDOM::OpcodeRANDOM(const OpcodeUnaryOperation &op) :
-	OpcodeUnaryOperation(op)
+    OpcodeUnaryOperation(op)
 {
 }
 
 QString OpcodeRANDOM::toString(const Section1File *) const
 {
 	return QObject::tr("Set random value to %1 (8-bit)")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 OpcodeLBYTE::OpcodeLBYTE(const char *params, int size) :
-	OpcodeOperation(params, size)
+    OpcodeOperation(params, size)
 {
 }
 
 OpcodeLBYTE::OpcodeLBYTE(const OpcodeBinaryOperation &op) :
-	OpcodeOperation(op)
+    OpcodeOperation(op)
 {
 }
 
 QString OpcodeLBYTE::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = %2 & 0xFF (low byte)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 OpcodeHBYTE::OpcodeHBYTE(const char *params, int size) :
-	OpcodeOperation2(params, size)
+    OpcodeOperation2(params, size)
 {
 }
 
 OpcodeHBYTE::OpcodeHBYTE(const OpcodeBinaryOperation &op) :
-	OpcodeOperation2(op)
+    OpcodeOperation2(op)
 {
 }
 
 QString OpcodeHBYTE::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = (%2 >> 8) & 0xFF (high byte)")
-			.arg(_bank(var, B1(banks)))
-			.arg(_var(value, B2(banks)));
+	        .arg(_bank(var, B1(banks)))
+	        .arg(_var(value, B2(banks)));
 }
 
 Opcode2BYTE::Opcode2BYTE(const char *params, int size)
@@ -5684,18 +5706,18 @@ void Opcode2BYTE::setParams(const char *params, int)
 QString Opcode2BYTE::toString(const Section1File *) const
 {
 	return QObject::tr("%1 = (%2 & 0xFF) | ((%3 & 0xFF) << 8)")
-			.arg(_bank(var, B1(banks[0])))
-			.arg(_var(value1, B2(banks[0])))
-			.arg(_var(value2, B2(banks[1])));
+	        .arg(_bank(var, B1(banks[0])))
+	        .arg(_var(value1, B2(banks[0])))
+	        .arg(_var(value2, B2(banks[1])));
 }
 
 QByteArray Opcode2BYTE::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)var)
-			.append((char)value1)
-			.append((char)value2);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(var))
+	        .append(char(value1))
+	        .append(char(value2));
 }
 
 void Opcode2BYTE::getVariables(QList<FF7Var> &vars) const
@@ -5721,12 +5743,12 @@ void OpcodeSETX::setParams(const char *params, int)
 QString OpcodeSETX::toString(const Section1File *) const
 {
 	return QObject::tr("SETX %1")
-			.arg(QString::fromLatin1(QByteArray((char *)&unknown, 6).toHex()));
+	        .arg(QString::fromLatin1(QByteArray(reinterpret_cast<const char *>(&unknown), 6).toHex()));
 }
 
 QByteArray OpcodeSETX::params() const
 {
-	return QByteArray().append((char *)&unknown, 6);
+	return QByteArray().append(reinterpret_cast<const char *>(&unknown), 6);
 }
 
 OpcodeGETX::OpcodeGETX(const char *params, int size)
@@ -5742,12 +5764,12 @@ void OpcodeGETX::setParams(const char *params, int)
 QString OpcodeGETX::toString(const Section1File *) const
 {
 	return QObject::tr("GETX %1")
-			.arg(QString::fromLatin1(QByteArray((char *)&unknown, 6).toHex()));
+	        .arg(QString::fromLatin1(QByteArray(reinterpret_cast<const char *>(&unknown), 6).toHex()));
 }
 
 QByteArray OpcodeGETX::params() const
 {
-	return QByteArray().append((char *)&unknown, 6);
+	return QByteArray().append(reinterpret_cast<const char *>(&unknown), 6);
 }
 
 OpcodeSEARCHX::OpcodeSEARCHX(const char *params, int size)
@@ -5758,33 +5780,33 @@ OpcodeSEARCHX::OpcodeSEARCHX(const char *params, int size)
 void OpcodeSEARCHX::setParams(const char *params, int)
 {
 	memcpy(banks, params, 3);
-	searchStart = (quint8)params[3];
+	searchStart = quint8(params[3]);
 	memcpy(&start, params + 4, 2); // bank 2
 	memcpy(&end, params + 6, 2); // bank 3
-	value = (quint8)params[8]; // bank 4
-	varResult = (quint8)params[9]; // bank 6
+	value = quint8(params[8]); // bank 4
+	varResult = quint8(params[9]); // bank 6
 }
 
 QString OpcodeSEARCHX::toString(const Section1File *) const
 {
 	return QObject::tr("Search the value %5 in the memory (bank=%1, start=%2+%3, end=%2+%4) and put the position in %6")
-			.arg(B1(banks[0]))
-			.arg(searchStart)
-			.arg(_var(start, B2(banks[0])))
-			.arg(_var(end, B1(banks[1])))
-			.arg(_var(value, B2(banks[1])))
-			.arg(_var(varResult, B2(banks[2])));
+	        .arg(B1(banks[0]))
+	        .arg(searchStart)
+	        .arg(_var(start, B2(banks[0])))
+	        .arg(_var(end, B1(banks[1])))
+	        .arg(_var(value, B2(banks[1])))
+	        .arg(_var(varResult, B2(banks[2])));
 }
 
 QByteArray OpcodeSEARCHX::params() const
 {
 	return QByteArray()
-			.append((char *)banks, 3)
-			.append((char)searchStart)
-			.append((char *)&start, 2)
-			.append((char *)&end, 2)
-			.append((char)value)
-			.append((char)varResult);
+	        .append(reinterpret_cast<const char *>(banks), 3)
+	        .append(char(searchStart))
+	        .append(reinterpret_cast<const char *>(&start), 2)
+	        .append(reinterpret_cast<const char *>(&end), 2)
+	        .append(char(value))
+	        .append(char(varResult));
 }
 
 void OpcodeSEARCHX::getVariables(QList<FF7Var> &vars) const
@@ -5805,7 +5827,7 @@ OpcodePC::OpcodePC(const char *params, int size)
 }
 
 OpcodePC::OpcodePC(quint8 charID) :
-	charID(charID)
+    charID(charID)
 {
 }
 
@@ -5817,12 +5839,12 @@ void OpcodePC::setParams(const char *params, int)
 QString OpcodePC::toString(const Section1File *) const
 {
 	return QObject::tr("Field model is playable and it is %1")
-			.arg(character(charID));
+	        .arg(character(charID));
 }
 
 QByteArray OpcodePC::params() const
 {
-	return QByteArray().append((char)charID);
+	return QByteArray().append(char(charID));
 }
 
 OpcodeCHAR::OpcodeCHAR(const char *params, int size)
@@ -5831,7 +5853,7 @@ OpcodeCHAR::OpcodeCHAR(const char *params, int size)
 }
 
 OpcodeCHAR::OpcodeCHAR(quint8 objectID) :
-	objectID(objectID)
+    objectID(objectID)
 {
 }
 
@@ -5843,12 +5865,12 @@ void OpcodeCHAR::setParams(const char *params, int)
 QString OpcodeCHAR::toString(const Section1File *) const
 {
 	return QObject::tr("This group is a field model (ID=%1)")
-			.arg(objectID);
+	        .arg(objectID);
 }
 
 QByteArray OpcodeCHAR::params() const
 {
-	return QByteArray().append((char)objectID);
+	return QByteArray().append(char(objectID));
 }
 
 OpcodeDFANM::OpcodeDFANM(const char *params, int size)
@@ -5865,15 +5887,15 @@ void OpcodeDFANM::setParams(const char *params, int)
 QString OpcodeDFANM::toString(const Section1File *) const
 {
 	return QObject::tr("Play loop animation #%1 of the field model (speed=%2)")
-			.arg(animID)
-			.arg(speed);
+	        .arg(animID)
+	        .arg(speed);
 }
 
 QByteArray OpcodeDFANM::params() const
 {
 	return QByteArray()
-			.append((char)animID)
-			.append((char)speed);
+	        .append(char(animID))
+	        .append(char(speed));
 }
 
 OpcodeANIME1::OpcodeANIME1(const char *params, int size)
@@ -5890,15 +5912,15 @@ void OpcodeANIME1::setParams(const char *params, int)
 QString OpcodeANIME1::toString(const Section1File *) const
 {
 	return QObject::tr("Play animation #%1 of the field model and reset to previous state (speed=%2)")
-			.arg(animID)
-			.arg(speed);
+	        .arg(animID)
+	        .arg(speed);
 }
 
 QByteArray OpcodeANIME1::params() const
 {
 	return QByteArray()
-			.append((char)animID)
-			.append((char)speed);
+	        .append(char(animID))
+	        .append(char(speed));
 }
 
 OpcodeVISI::OpcodeVISI(const char *params, int size)
@@ -5914,13 +5936,13 @@ void OpcodeVISI::setParams(const char *params, int)
 QString OpcodeVISI::toString(const Section1File *) const
 {
 	return QObject::tr("%1 field model")
-			.arg(show == 0 ? QObject::tr("Hide") : QObject::tr("Display"));
+	        .arg(show == 0 ? QObject::tr("Hide") : QObject::tr("Display"));
 }
 
 QByteArray OpcodeVISI::params() const
 {
 	return QByteArray()
-			.append((char)show);
+	        .append(char(show));
 }
 
 OpcodeXYZI::OpcodeXYZI(const char *params, int size)
@@ -5940,20 +5962,20 @@ void OpcodeXYZI::setParams(const char *params, int)
 QString OpcodeXYZI::toString(const Section1File *) const
 {
 	return QObject::tr("Place field Model (X=%1, Y=%2, Z=%3, triangle ID=%4)")
-			.arg(_var(targetX, B1(banks[0])))
-			.arg(_var(targetY, B2(banks[0])))
-			.arg(_var(targetZ, B1(banks[1])))
-			.arg(_var(targetI, B2(banks[1])));
+	        .arg(_var(targetX, B1(banks[0])))
+	        .arg(_var(targetY, B2(banks[0])))
+	        .arg(_var(targetZ, B1(banks[1])))
+	        .arg(_var(targetI, B2(banks[1])));
 }
 
 QByteArray OpcodeXYZI::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&targetZ, 2)
-			.append((char *)&targetI, 2);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2)
+	        .append(reinterpret_cast<const char *>(&targetZ), 2)
+	        .append(reinterpret_cast<const char *>(&targetI), 2);
 }
 
 void OpcodeXYZI::getVariables(QList<FF7Var> &vars) const
@@ -5996,18 +6018,18 @@ void OpcodeXYI::setParams(const char *params, int)
 QString OpcodeXYI::toString(const Section1File *) const
 {
 	return QObject::tr("Place field Model (X=%1, Y=%2, triangle ID=%4)")
-			.arg(_var(targetX, B1(banks[0])))
-			.arg(_var(targetY, B2(banks[0])))
-			.arg(_var(targetI, B1(banks[1])));
+	        .arg(_var(targetX, B1(banks[0])))
+	        .arg(_var(targetY, B2(banks[0])))
+	        .arg(_var(targetI, B1(banks[1])));
 }
 
 QByteArray OpcodeXYI::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&targetI, 2);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2)
+	        .append(reinterpret_cast<const char *>(&targetI), 2);
 }
 
 void OpcodeXYI::getVariables(QList<FF7Var> &vars) const
@@ -6047,18 +6069,18 @@ void OpcodeXYZ::setParams(const char *params, int)
 QString OpcodeXYZ::toString(const Section1File *) const
 {
 	return QObject::tr("Place field Model (X=%1, Y=%2, Z=%3)")
-			.arg(_var(targetX, B1(banks[0])))
-			.arg(_var(targetY, B2(banks[0])))
-			.arg(_var(targetZ, B1(banks[1])));
+	        .arg(_var(targetX, B1(banks[0])))
+	        .arg(_var(targetY, B2(banks[0])))
+	        .arg(_var(targetZ, B1(banks[1])));
 }
 
 QByteArray OpcodeXYZ::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&targetZ, 2);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2)
+	        .append(reinterpret_cast<const char *>(&targetZ), 2);
 }
 
 void OpcodeXYZ::getVariables(QList<FF7Var> &vars) const
@@ -6097,16 +6119,16 @@ void OpcodeMOVE::setParams(const char *params, int)
 QString OpcodeMOVE::toString(const Section1File *) const
 {
 	return QObject::tr("Move field Model (X=%1, Y=%2)")
-			.arg(_var(targetX, B1(banks)))
-			.arg(_var(targetY, B2(banks)));
+	        .arg(_var(targetX, B1(banks)))
+	        .arg(_var(targetY, B2(banks)));
 }
 
 QByteArray OpcodeMOVE::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2);
 }
 
 void OpcodeMOVE::getVariables(QList<FF7Var> &vars) const
@@ -6132,16 +6154,16 @@ void OpcodeCMOVE::setParams(const char *params, int)
 QString OpcodeCMOVE::toString(const Section1File *) const
 {
 	return QObject::tr("Place field Model without animation (X=%1, Y=%2)")
-			.arg(_var(targetX, B1(banks)))
-			.arg(_var(targetY, B2(banks)));
+	        .arg(_var(targetX, B1(banks)))
+	        .arg(_var(targetY, B2(banks)));
 }
 
 QByteArray OpcodeCMOVE::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2);
 }
 
 void OpcodeCMOVE::getVariables(QList<FF7Var> &vars) const
@@ -6165,13 +6187,13 @@ void OpcodeMOVA::setParams(const char *params, int)
 QString OpcodeMOVA::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Move field Model to the group %1")
-			.arg(_script(groupID, scriptsAndTexts));
+	        .arg(_script(groupID, scriptsAndTexts));
 }
 
 QByteArray OpcodeMOVA::params() const
 {
 	return QByteArray()
-			.append((char)groupID);
+	        .append(char(groupID));
 }
 
 OpcodeTURA::OpcodeTURA(const char *params, int size)
@@ -6189,17 +6211,17 @@ void OpcodeTURA::setParams(const char *params, int)
 QString OpcodeTURA::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Rotation of the field model to group %1 (Speed=%3, Rotation=%2)")
-			.arg(_script(groupID, scriptsAndTexts))
-			.arg(_sensRotation(directionRotation))
-			.arg(speed);
+	        .arg(_script(groupID, scriptsAndTexts))
+	        .arg(_sensRotation(directionRotation))
+	        .arg(speed);
 }
 
 QByteArray OpcodeTURA::params() const
 {
 	return QByteArray()
-			.append((char)groupID)
-			.append((char)directionRotation)
-			.append((char)speed);
+	        .append(char(groupID))
+	        .append(char(directionRotation))
+	        .append(char(speed));
 }
 
 OpcodeANIMW::OpcodeANIMW()
@@ -6226,16 +6248,16 @@ void OpcodeFMOVE::setParams(const char *params, int)
 QString OpcodeFMOVE::toString(const Section1File *) const
 {
 	return QObject::tr("Place field Model without animation (X=%1, Y=%2)")
-			.arg(_var(targetX, B1(banks)))
-			.arg(_var(targetY, B2(banks)));
+	        .arg(_var(targetX, B1(banks)))
+	        .arg(_var(targetY, B2(banks)));
 }
 
 QByteArray OpcodeFMOVE::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2);
 }
 
 void OpcodeFMOVE::getVariables(QList<FF7Var> &vars) const
@@ -6260,15 +6282,15 @@ void OpcodeANIME2::setParams(const char *params, int)
 QString OpcodeANIME2::toString(const Section1File *) const
 {
 	return QObject::tr("Play animation #%1 of the field model and reset to previous state (speed=%2)")
-			.arg(animID)
-			.arg(speed);
+	        .arg(animID)
+	        .arg(speed);
 }
 
 QByteArray OpcodeANIME2::params() const
 {
 	return QByteArray()
-			.append((char)animID)
-			.append((char)speed);
+	        .append(char(animID))
+	        .append(char(speed));
 }
 
 OpcodeANIMX1::OpcodeANIMX1(const char *params, int size)
@@ -6285,15 +6307,15 @@ void OpcodeANIMX1::setParams(const char *params, int)
 QString OpcodeANIMX1::toString(const Section1File *) const
 {
 	return QObject::tr("Play animation #%1 of the field model (speed=%2, type=1)")
-			.arg(animID)
-			.arg(speed);
+	        .arg(animID)
+	        .arg(speed);
 }
 
 QByteArray OpcodeANIMX1::params() const
 {
 	return QByteArray()
-			.append((char)animID)
-			.append((char)speed);
+	        .append(char(animID))
+	        .append(char(speed));
 }
 
 OpcodeCANIM1::OpcodeCANIM1(const char *params, int size)
@@ -6312,19 +6334,19 @@ void OpcodeCANIM1::setParams(const char *params, int)
 QString OpcodeCANIM1::toString(const Section1File *) const
 {
 	return QObject::tr("Play partially the animation #%1 of the field model and reset to initial state (first frame=%2, last frame=%3, speed=%4)")
-			.arg(animID)
-			.arg(firstFrame)
-			.arg(lastFrame)
-			.arg(speed);
+	        .arg(animID)
+	        .arg(firstFrame)
+	        .arg(lastFrame)
+	        .arg(speed);
 }
 
 QByteArray OpcodeCANIM1::params() const
 {
 	return QByteArray()
-			.append((char)animID)
-			.append((char)firstFrame)
-			.append((char)lastFrame)
-			.append((char)speed);
+	        .append(char(animID))
+	        .append(char(firstFrame))
+	        .append(char(lastFrame))
+	        .append(char(speed));
 }
 
 OpcodeCANMX1::OpcodeCANMX1(const char *params, int size)
@@ -6343,19 +6365,19 @@ void OpcodeCANMX1::setParams(const char *params, int)
 QString OpcodeCANMX1::toString(const Section1File *) const
 {
 	return QObject::tr("Play partially the animation #%1 of the field model (first frame=%2, last frame=%3, speed=%4)")
-			.arg(animID)
-			.arg(firstFrame)
-			.arg(lastFrame)
-			.arg(speed);
+	        .arg(animID)
+	        .arg(firstFrame)
+	        .arg(lastFrame)
+	        .arg(speed);
 }
 
 QByteArray OpcodeCANMX1::params() const
 {
 	return QByteArray()
-			.append((char)animID)
-			.append((char)firstFrame)
-			.append((char)lastFrame)
-			.append((char)speed);
+	        .append(char(animID))
+	        .append(char(firstFrame))
+	        .append(char(lastFrame))
+	        .append(char(speed));
 }
 
 OpcodeMSPED::OpcodeMSPED(const char *params, int size)
@@ -6372,14 +6394,14 @@ void OpcodeMSPED::setParams(const char *params, int)
 QString OpcodeMSPED::toString(const Section1File *) const
 {
 	return QObject::tr("Set the field model move speed: %1")
-			.arg(_var(speed, B2(banks)));
+	        .arg(_var(speed, B2(banks)));
 }
 
 QByteArray OpcodeMSPED::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&speed, 2);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&speed), 2);
 }
 
 void OpcodeMSPED::getVariables(QList<FF7Var> &vars) const
@@ -6402,14 +6424,14 @@ void OpcodeDIR::setParams(const char *params, int)
 QString OpcodeDIR::toString(const Section1File *) const
 {
 	return QObject::tr("Set field model direction: %1")
-			.arg(_var(direction, B2(banks)));
+	        .arg(_var(direction, B2(banks)));
 }
 
 QByteArray OpcodeDIR::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)direction);
+	        .append(char(banks))
+	        .append(char(direction));
 }
 
 void OpcodeDIR::getVariables(QList<FF7Var> &vars) const
@@ -6435,20 +6457,20 @@ void OpcodeTURNGEN::setParams(const char *params, int)
 QString OpcodeTURNGEN::toString(const Section1File *) const
 {
 	return QObject::tr("Rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)")
-			.arg(_var(direction, B2(banks)))
-			.arg(turnCount)
-			.arg(speed)
-			.arg(unknown);
+	        .arg(_var(direction, B2(banks)))
+	        .arg(turnCount)
+	        .arg(speed)
+	        .arg(unknown);
 }
 
 QByteArray OpcodeTURNGEN::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)direction)
-			.append((char)turnCount)
-			.append((char)speed)
-			.append((char)unknown);
+	        .append(char(banks))
+	        .append(char(direction))
+	        .append(char(turnCount))
+	        .append(char(speed))
+	        .append(char(unknown));
 }
 
 void OpcodeTURNGEN::getVariables(QList<FF7Var> &vars) const
@@ -6474,20 +6496,20 @@ void OpcodeTURN::setParams(const char *params, int)
 QString OpcodeTURN::toString(const Section1File *) const
 {
 	return QObject::tr("Inversed rotation (direction=%1, nbRevolution=%2, speed=%3, ?=%4)")
-			.arg(_var(direction, B2(banks)))
-			.arg(turnCount)
-			.arg(speed)
-			.arg(unknown);
+	        .arg(_var(direction, B2(banks)))
+	        .arg(turnCount)
+	        .arg(speed)
+	        .arg(unknown);
 }
 
 QByteArray OpcodeTURN::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)direction)
-			.append((char)turnCount)
-			.append((char)speed)
-			.append((char)unknown);
+	        .append(char(banks))
+	        .append(char(direction))
+	        .append(char(turnCount))
+	        .append(char(speed))
+	        .append(char(unknown));
 }
 
 void OpcodeTURN::getVariables(QList<FF7Var> &vars) const
@@ -6509,13 +6531,13 @@ void OpcodeDIRA::setParams(const char *params, int)
 QString OpcodeDIRA::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Direct the field model towards the group %1")
-			.arg(_script(groupID, scriptsAndTexts));
+	        .arg(_script(groupID, scriptsAndTexts));
 }
 
 QByteArray OpcodeDIRA::params() const
 {
 	return QByteArray()
-			.append((char)groupID);
+	        .append(char(groupID));
 }
 
 OpcodeGETDIR::OpcodeGETDIR(const char *params, int size)
@@ -6533,16 +6555,16 @@ void OpcodeGETDIR::setParams(const char *params, int)
 QString OpcodeGETDIR::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Store direction of the group %1 in %2")
-			.arg(_script(groupID, scriptsAndTexts))
-			.arg(_bank(varDir, B2(banks)));
+	        .arg(_script(groupID, scriptsAndTexts))
+	        .arg(_bank(varDir, B2(banks)));
 }
 
 QByteArray OpcodeGETDIR::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)groupID)
-			.append((char)varDir);
+	        .append(char(banks))
+	        .append(char(groupID))
+	        .append(char(varDir));
 }
 
 void OpcodeGETDIR::getVariables(QList<FF7Var> &vars) const
@@ -6567,18 +6589,18 @@ void OpcodeGETAXY::setParams(const char *params, int)
 QString OpcodeGETAXY::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Store position of the group %1 in %2 (X) and %3 (Y)")
-			.arg(_script(groupID, scriptsAndTexts))
-			.arg(_bank(varX, B1(banks)))
-			.arg(_bank(varY, B2(banks)));
+	        .arg(_script(groupID, scriptsAndTexts))
+	        .arg(_bank(varX, B1(banks)))
+	        .arg(_bank(varY, B2(banks)));
 }
 
 QByteArray OpcodeGETAXY::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)groupID)
-			.append((char)varX)
-			.append((char)varY);
+	        .append(char(banks))
+	        .append(char(groupID))
+	        .append(char(varX))
+	        .append(char(varY));
 }
 
 void OpcodeGETAXY::getVariables(QList<FF7Var> &vars) const
@@ -6604,16 +6626,16 @@ void OpcodeGETAI::setParams(const char *params, int)
 QString OpcodeGETAI::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Store triangle ID of the group %1 in %2")
-			.arg(_script(groupID, scriptsAndTexts))
-			.arg(_bank(varI, B2(banks)));
+	        .arg(_script(groupID, scriptsAndTexts))
+	        .arg(_bank(varI, B2(banks)));
 }
 
 QByteArray OpcodeGETAI::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)groupID)
-			.append((char)varI);
+	        .append(char(banks))
+	        .append(char(groupID))
+	        .append(char(varI));
 }
 
 void OpcodeGETAI::getVariables(QList<FF7Var> &vars) const
@@ -6636,15 +6658,15 @@ void OpcodeANIMX2::setParams(const char *params, int)
 QString OpcodeANIMX2::toString(const Section1File *) const
 {
 	return QObject::tr("Play animation #%1 of the field model (speed=%2, type=2)")
-			.arg(animID)
-			.arg(speed);
+	        .arg(animID)
+	        .arg(speed);
 }
 
 QByteArray OpcodeANIMX2::params() const
 {
 	return QByteArray()
-			.append((char)animID)
-			.append((char)speed);
+	        .append(char(animID))
+	        .append(char(speed));
 }
 
 OpcodeCANIM2::OpcodeCANIM2(const char *params, int size)
@@ -6663,19 +6685,19 @@ void OpcodeCANIM2::setParams(const char *params, int)
 QString OpcodeCANIM2::toString(const Section1File *) const
 {
 	return QObject::tr("Play partially the animation #%1 of the field model and reset to initial state (first frame=%2, last frame=%3, speed=%4)")
-			.arg(animID)
-			.arg(firstFrame)
-			.arg(lastFrame)
-			.arg(speed);
+	        .arg(animID)
+	        .arg(firstFrame)
+	        .arg(lastFrame)
+	        .arg(speed);
 }
 
 QByteArray OpcodeCANIM2::params() const
 {
 	return QByteArray()
-			.append((char)animID)
-			.append((char)firstFrame)
-			.append((char)lastFrame)
-			.append((char)speed);
+	        .append(char(animID))
+	        .append(char(firstFrame))
+	        .append(char(lastFrame))
+	        .append(char(speed));
 }
 
 OpcodeCANMX2::OpcodeCANMX2(const char *params, int size)
@@ -6694,19 +6716,19 @@ void OpcodeCANMX2::setParams(const char *params, int)
 QString OpcodeCANMX2::toString(const Section1File *) const
 {
 	return QObject::tr("Play partially the animation #%1 of the field model (first frame=%2, last frame=%3, speed=%4)")
-			.arg(animID)
-			.arg(firstFrame)
-			.arg(lastFrame)
-			.arg(speed);
+	        .arg(animID)
+	        .arg(firstFrame)
+	        .arg(lastFrame)
+	        .arg(speed);
 }
 
 QByteArray OpcodeCANMX2::params() const
 {
 	return QByteArray()
-			.append((char)animID)
-			.append((char)firstFrame)
-			.append((char)lastFrame)
-			.append((char)speed);
+	        .append(char(animID))
+	        .append(char(firstFrame))
+	        .append(char(lastFrame))
+	        .append(char(speed));
 }
 
 OpcodeASPED::OpcodeASPED(const char *params, int size)
@@ -6723,14 +6745,14 @@ void OpcodeASPED::setParams(const char *params, int)
 QString OpcodeASPED::toString(const Section1File *) const
 {
 	return QObject::tr("Set the field model animations speed: %1")
-			.arg(_var(speed, B2(banks)));
+	        .arg(_var(speed, B2(banks)));
 }
 
 QByteArray OpcodeASPED::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&speed, 2);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&speed), 2);
 }
 
 void OpcodeASPED::getVariables(QList<FF7Var> &vars) const
@@ -6752,13 +6774,13 @@ void OpcodeCC::setParams(const char *params, int)
 QString OpcodeCC::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Control the group %1")
-			.arg(_script(groupID, scriptsAndTexts));
+	        .arg(_script(groupID, scriptsAndTexts));
 }
 
 QByteArray OpcodeCC::params() const
 {
 	return QByteArray()
-			.append((char)groupID);
+	        .append(char(groupID));
 }
 
 OpcodeJUMP::OpcodeJUMP(const char *params, int size)
@@ -6778,20 +6800,20 @@ void OpcodeJUMP::setParams(const char *params, int)
 QString OpcodeJUMP::toString(const Section1File *) const
 {
 	return QObject::tr("Field model jump (X=%1, Y=%2, triangle ID=%3, Steps=%4)")
-			.arg(_var(targetX, B1(banks[0])))
-			.arg(_var(targetY, B2(banks[0])))
-			.arg(_var(targetI, B1(banks[1])))
-			.arg(_var(height, B2(banks[1])));
+	        .arg(_var(targetX, B1(banks[0])))
+	        .arg(_var(targetY, B2(banks[0])))
+	        .arg(_var(targetI, B1(banks[1])))
+	        .arg(_var(height, B2(banks[1])));
 }
 
 QByteArray OpcodeJUMP::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&targetI, 2)
-			.append((char *)&height, 2);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2)
+	        .append(reinterpret_cast<const char *>(&targetI), 2)
+	        .append(reinterpret_cast<const char *>(&height), 2);
 }
 
 void OpcodeJUMP::getVariables(QList<FF7Var> &vars) const
@@ -6824,22 +6846,22 @@ void OpcodeAXYZI::setParams(const char *params, int)
 QString OpcodeAXYZI::toString(const Section1File *scriptsAndTexts) const
 {
 	return QObject::tr("Store position of the group %1 in %2 (X), %3 (Y), %4 (Z) and %5 (triangle ID)")
-			.arg(_script(groupID, scriptsAndTexts))
-			.arg(_bank(varX, B1(banks[0])))
-			.arg(_bank(varY, B2(banks[0])))
-			.arg(_bank(varZ, B1(banks[1])))
-			.arg(_bank(varI, B2(banks[1])));
+	        .arg(_script(groupID, scriptsAndTexts))
+	        .arg(_bank(varX, B1(banks[0])))
+	        .arg(_bank(varY, B2(banks[0])))
+	        .arg(_bank(varZ, B1(banks[1])))
+	        .arg(_bank(varI, B2(banks[1])));
 }
 
 QByteArray OpcodeAXYZI::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)groupID)
-			.append((char)varX)
-			.append((char)varY)
-			.append((char)varZ)
-			.append((char)varI);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(groupID))
+	        .append(char(varX))
+	        .append(char(varY))
+	        .append(char(varZ))
+	        .append(char(varI));
 }
 
 void OpcodeAXYZI::getVariables(QList<FF7Var> &vars) const
@@ -6875,28 +6897,28 @@ void OpcodeLADER::setParams(const char *params, int)
 QString OpcodeLADER::toString(const Section1File *) const
 {
 	return QObject::tr("Climb a ladder with the animation #%6 (X=%1, Y=%2, Z=%3, triangle ID=%4, direction1=%5, direction2=%7, speed=%8)")
-			.arg(_var(targetX, B1(banks[0])))
-			.arg(_var(targetY, B2(banks[0])))
-			.arg(_var(targetZ, B1(banks[1])))
-			.arg(_var(targetI, B2(banks[1])))
-			.arg(way)
-			.arg(animID)
-			.arg(direction)
-			.arg(speed);
+	        .arg(_var(targetX, B1(banks[0])))
+	        .arg(_var(targetY, B2(banks[0])))
+	        .arg(_var(targetZ, B1(banks[1])))
+	        .arg(_var(targetI, B2(banks[1])))
+	        .arg(way)
+	        .arg(animID)
+	        .arg(direction)
+	        .arg(speed);
 }
 
 QByteArray OpcodeLADER::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&targetZ, 2)
-			.append((char *)&targetI, 2)
-			.append((char)way)
-			.append((char)animID)
-			.append((char)direction)
-			.append((char)speed);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2)
+	        .append(reinterpret_cast<const char *>(&targetZ), 2)
+	        .append(reinterpret_cast<const char *>(&targetI), 2)
+	        .append(char(way))
+	        .append(char(animID))
+	        .append(char(direction))
+	        .append(char(speed));
 }
 
 void OpcodeLADER::getVariables(QList<FF7Var> &vars) const
@@ -6929,22 +6951,22 @@ void OpcodeOFST::setParams(const char *params, int)
 QString OpcodeOFST::toString(const Section1File *) const
 {
 	return QObject::tr("Offset Object (movement=%1, X=%2, Y=%3, Z=%4, speed=%5)")
-			.arg(moveType)
-			.arg(_var(targetX, B1(banks[0])))
-			.arg(_var(targetY, B2(banks[0])))
-			.arg(_var(targetZ, B1(banks[1])))
-			.arg(_var(speed, B2(banks[1])));
+	        .arg(moveType)
+	        .arg(_var(targetX, B1(banks[0])))
+	        .arg(_var(targetY, B2(banks[0])))
+	        .arg(_var(targetZ, B1(banks[1])))
+	        .arg(_var(speed, B2(banks[1])));
 }
 
 QByteArray OpcodeOFST::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char)moveType)
-			.append((char *)&targetX, 2)
-			.append((char *)&targetY, 2)
-			.append((char *)&targetZ, 2)
-			.append((char *)&speed, 2);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(moveType))
+	        .append(reinterpret_cast<const char *>(&targetX), 2)
+	        .append(reinterpret_cast<const char *>(&targetY), 2)
+	        .append(reinterpret_cast<const char *>(&targetZ), 2)
+	        .append(reinterpret_cast<const char *>(&speed), 2);
 }
 
 void OpcodeOFST::getVariables(QList<FF7Var> &vars) const
@@ -6982,14 +7004,14 @@ void OpcodeTALKR::setParams(const char *params, int)
 QString OpcodeTALKR::toString(const Section1File *) const
 {
 	return QObject::tr("Set range of the talk circle for the field model: %1")
-			.arg(_var(distance, B2(banks)));
+	        .arg(_var(distance, B2(banks)));
 }
 
 QByteArray OpcodeTALKR::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)distance);
+	        .append(char(banks))
+	        .append(char(distance));
 }
 
 void OpcodeTALKR::getVariables(QList<FF7Var> &vars) const
@@ -7012,14 +7034,14 @@ void OpcodeSLIDR::setParams(const char *params, int)
 QString OpcodeSLIDR::toString(const Section1File *) const
 {
 	return QObject::tr("Set range of the contact circle for the field model: %1")
-			.arg(_var(distance, B2(banks)));
+	        .arg(_var(distance, B2(banks)));
 }
 
 QByteArray OpcodeSLIDR::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)distance);
+	        .append(char(banks))
+	        .append(char(distance));
 }
 
 void OpcodeSLIDR::getVariables(QList<FF7Var> &vars) const
@@ -7041,12 +7063,12 @@ void OpcodeSOLID::setParams(const char *params, int)
 QString OpcodeSOLID::toString(const Section1File *) const
 {
 	return QObject::tr("%1 contact with field model")
-			.arg(disabled == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
+	        .arg(disabled == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
 }
 
 QByteArray OpcodeSOLID::params() const
 {
-	return QByteArray().append((char)disabled);
+	return QByteArray().append(char(disabled));
 }
 
 OpcodePRTYP::OpcodePRTYP(const char *params, int size)
@@ -7062,12 +7084,12 @@ void OpcodePRTYP::setParams(const char *params, int)
 QString OpcodePRTYP::toString(const Section1File *) const
 {
 	return QObject::tr("Add %1 to the current party")
-			.arg(character(charID));
+	        .arg(character(charID));
 }
 
 QByteArray OpcodePRTYP::params() const
 {
-	return QByteArray().append((char)charID);
+	return QByteArray().append(char(charID));
 }
 
 OpcodePRTYM::OpcodePRTYM(const char *params, int size)
@@ -7083,12 +7105,12 @@ void OpcodePRTYM::setParams(const char *params, int)
 QString OpcodePRTYM::toString(const Section1File *) const
 {
 	return QObject::tr("Remove %1 from the current party")
-			.arg(character(charID));
+	        .arg(character(charID));
 }
 
 QByteArray OpcodePRTYM::params() const
 {
-	return QByteArray().append((char)charID);
+	return QByteArray().append(char(charID));
 }
 
 OpcodePRTYE::OpcodePRTYE(const char *params, int size)
@@ -7104,18 +7126,18 @@ void OpcodePRTYE::setParams(const char *params, int)
 QString OpcodePRTYE::toString(const Section1File *) const
 {
 	return QObject::tr("New party: %1 | %2 | %3")
-			.arg(character(charID[0]))
-			.arg(character(charID[1]))
-			.arg(character(charID[2]));
+	        .arg(character(charID[0]))
+	        .arg(character(charID[1]))
+	        .arg(character(charID[2]));
 }
 
 QByteArray OpcodePRTYE::params() const
 {
-	return QByteArray().append((char *)&charID, 3);
+	return QByteArray().append(reinterpret_cast<const char *>(&charID), 3);
 }
 
 OpcodeIfQ::OpcodeIfQ(const char *params, int size) :
-	OpcodeJump()
+    OpcodeJump()
 {
 	setParams(params, size);
 }
@@ -7123,42 +7145,42 @@ OpcodeIfQ::OpcodeIfQ(const char *params, int size) :
 void OpcodeIfQ::setParams(const char *params, int)
 {
 	charID = params[0];
-	_jump = (quint8)params[1] + jumpPosData();
+	_jump = quint8(params[1]) + jumpPosData();
 }
 
 QByteArray OpcodeIfQ::params() const
 {
 	return QByteArray()
-			.append((char)charID)
-			.append(char(_jump - jumpPosData()));
+	        .append(char(charID))
+	        .append(char(_jump - jumpPosData()));
 }
 
 OpcodeIFPRTYQ::OpcodeIFPRTYQ(const char *params, int size) :
-	OpcodeIfQ(params, size)
+    OpcodeIfQ(params, size)
 {
 }
 
 QString OpcodeIFPRTYQ::toString(const Section1File *) const
 {
 	return QObject::tr("If %1 is in the current party (%2)")
-			.arg(character(charID))
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(character(charID))
+	        .arg(_badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label));
 }
 
 OpcodeIFMEMBQ::OpcodeIFMEMBQ(const char *params, int size) :
-	OpcodeIfQ(params, size)
+    OpcodeIfQ(params, size)
 {
 }
 
 QString OpcodeIFMEMBQ::toString(const Section1File *) const
 {
 	return QObject::tr("If %1 exists (%2)")
-			.arg(character(charID))
-			.arg(_badJump
-				 ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
-				 : QObject::tr("else goto label %1").arg(_label));
+	        .arg(character(charID))
+	        .arg(_badJump
+	             ? QObject::tr("else forward %n byte(s)", "With plural", _jump)
+	             : QObject::tr("else goto label %1").arg(_label));
 }
 
 OpcodeMMBUD::OpcodeMMBUD(const char *params, int size)
@@ -7175,15 +7197,15 @@ void OpcodeMMBUD::setParams(const char *params, int)
 QString OpcodeMMBUD::toString(const Section1File *) const
 {
 	return QObject::tr("%2 %1")
-			.arg(exists == 0 ? QObject::tr("not available") : QObject::tr("available"))
-			.arg(character(charID));
+	        .arg(exists == 0 ? QObject::tr("not available") : QObject::tr("available"))
+	        .arg(character(charID));
 }
 
 QByteArray OpcodeMMBUD::params() const
 {
 	return QByteArray()
-			.append((char)exists)
-			.append((char)charID);
+	        .append(char(exists))
+	        .append(char(charID));
 }
 
 OpcodeMMBLK::OpcodeMMBLK(const char *params, int size)
@@ -7199,12 +7221,12 @@ void OpcodeMMBLK::setParams(const char *params, int)
 QString OpcodeMMBLK::toString(const Section1File *) const
 {
 	return QObject::tr("Locks %1 in PHS menu")
-			.arg(character(charID));
+	        .arg(character(charID));
 }
 
 QByteArray OpcodeMMBLK::params() const
 {
-	return QByteArray().append((char)charID);
+	return QByteArray().append(char(charID));
 }
 
 OpcodeMMBUK::OpcodeMMBUK(const char *params, int size)
@@ -7220,12 +7242,12 @@ void OpcodeMMBUK::setParams(const char *params, int)
 QString OpcodeMMBUK::toString(const Section1File *) const
 {
 	return QObject::tr("Unlock %1 in PHS menu")
-			.arg(character(charID));
+	        .arg(character(charID));
 }
 
 QByteArray OpcodeMMBUK::params() const
 {
-	return QByteArray().append((char)charID);
+	return QByteArray().append(char(charID));
 }
 
 OpcodeLINE::OpcodeLINE(const char *params, int size)
@@ -7246,23 +7268,23 @@ void OpcodeLINE::setParams(const char *params, int)
 QString OpcodeLINE::toString(const Section1File *) const
 {
 	return QObject::tr("Create line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
-			.arg(targetX1)
-			.arg(targetY1)
-			.arg(targetZ1)
-			.arg(targetX2)
-			.arg(targetY2)
-			.arg(targetZ2);
+	        .arg(targetX1)
+	        .arg(targetY1)
+	        .arg(targetZ1)
+	        .arg(targetX2)
+	        .arg(targetY2)
+	        .arg(targetZ2);
 }
 
 QByteArray OpcodeLINE::params() const
 {
 	return QByteArray()
-			.append((char *)&targetX1, 2)
-			.append((char *)&targetY1, 2)
-			.append((char *)&targetZ1, 2)
-			.append((char *)&targetX2, 2)
-			.append((char *)&targetY2, 2)
-			.append((char *)&targetZ2, 2);
+	        .append(reinterpret_cast<const char *>(&targetX1), 2)
+	        .append(reinterpret_cast<const char *>(&targetY1), 2)
+	        .append(reinterpret_cast<const char *>(&targetZ1), 2)
+	        .append(reinterpret_cast<const char *>(&targetX2), 2)
+	        .append(reinterpret_cast<const char *>(&targetY2), 2)
+	        .append(reinterpret_cast<const char *>(&targetZ2), 2);
 }
 
 bool OpcodeLINE::linePosition(FF7Position position[2]) const
@@ -7277,7 +7299,7 @@ bool OpcodeLINE::linePosition(FF7Position position[2]) const
 	position[0].hasId = false;
 	position[1].hasZ = true;
 	position[1].hasId = false;
-
+	
 	return true;
 }
 
@@ -7294,12 +7316,12 @@ void OpcodeLINON::setParams(const char *params, int)
 QString OpcodeLINON::toString(const Section1File *) const
 {
 	return QObject::tr("%1 line")
-			.arg(enabled != 0 ? QObject::tr("Enable") : QObject::tr("Disable"));
+	        .arg(enabled != 0 ? QObject::tr("Enable") : QObject::tr("Disable"));
 }
 
 QByteArray OpcodeLINON::params() const
 {
-	return QByteArray().append((char)enabled);
+	return QByteArray().append(char(enabled));
 }
 
 OpcodeMPJPO::OpcodeMPJPO(const char *params, int size)
@@ -7315,12 +7337,12 @@ void OpcodeMPJPO::setParams(const char *params, int)
 QString OpcodeMPJPO::toString(const Section1File *) const
 {
 	return QObject::tr("Gateways %1")
-			.arg(prevent == 0 ? QObject::tr("ON") : QObject::tr("OFF"));
+	        .arg(prevent == 0 ? QObject::tr("ON") : QObject::tr("OFF"));
 }
 
 QByteArray OpcodeMPJPO::params() const
 {
-	return QByteArray().append((char)prevent);
+	return QByteArray().append(char(prevent));
 }
 
 OpcodeSLINE::OpcodeSLINE(const char *params, int size)
@@ -7342,24 +7364,24 @@ void OpcodeSLINE::setParams(const char *params, int)
 QString OpcodeSLINE::toString(const Section1File *) const
 {
 	return QObject::tr("Set line (X1=%1, Y1=%2, Z1=%3, X2=%4, Y2=%5, Z2=%6)")
-			.arg(_var(targetX1, B1(banks[0])))
-			.arg(_var(targetY1, B2(banks[0])))
-			.arg(_var(targetZ1, B1(banks[1])))
-			.arg(_var(targetX2, B2(banks[1])))
-			.arg(_var(targetY2, B1(banks[2])))
-			.arg(_var(targetZ2, B2(banks[2])));
+	        .arg(_var(targetX1, B1(banks[0])))
+	        .arg(_var(targetY1, B2(banks[0])))
+	        .arg(_var(targetZ1, B1(banks[1])))
+	        .arg(_var(targetX2, B2(banks[1])))
+	        .arg(_var(targetY2, B1(banks[2])))
+	        .arg(_var(targetZ2, B2(banks[2])));
 }
 
 QByteArray OpcodeSLINE::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 3)
-			.append((char *)&targetX1, 2)
-			.append((char *)&targetY1, 2)
-			.append((char *)&targetZ1, 2)
-			.append((char *)&targetX2, 2)
-			.append((char *)&targetY2, 2)
-			.append((char *)&targetZ2, 2);
+	        .append(reinterpret_cast<const char *>(&banks), 3)
+	        .append(reinterpret_cast<const char *>(&targetX1), 2)
+	        .append(reinterpret_cast<const char *>(&targetY1), 2)
+	        .append(reinterpret_cast<const char *>(&targetZ1), 2)
+	        .append(reinterpret_cast<const char *>(&targetX2), 2)
+	        .append(reinterpret_cast<const char *>(&targetY2), 2)
+	        .append(reinterpret_cast<const char *>(&targetZ2), 2);
 }
 
 void OpcodeSLINE::getVariables(QList<FF7Var> &vars) const
@@ -7395,20 +7417,20 @@ void OpcodeSIN::setParams(const char *params, int)
 QString OpcodeSIN::toString(const Section1File *) const
 {
 	return QObject::tr("%4 = ((Sinus(%1) * %2) + %3) >> 12")
-			.arg(_var(value1, B1(banks[0])))
-			.arg(_var(value2, B2(banks[0])))
-			.arg(_var(value3, B1(banks[1])))
-			.arg(_bank(var, B2(banks[1])));
+	        .arg(_var(value1, B1(banks[0])))
+	        .arg(_var(value2, B2(banks[0])))
+	        .arg(_var(value3, B1(banks[1])))
+	        .arg(_bank(var, B2(banks[1])));
 }
 
 QByteArray OpcodeSIN::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char *)&value1, 2)
-			.append((char *)&value2, 2)
-			.append((char *)&value3, 2)
-			.append((char)var);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(reinterpret_cast<const char *>(&value1), 2)
+	        .append(reinterpret_cast<const char *>(&value2), 2)
+	        .append(reinterpret_cast<const char *>(&value3), 2)
+	        .append(char(var));
 }
 
 void OpcodeSIN::getVariables(QList<FF7Var> &vars) const
@@ -7440,20 +7462,20 @@ void OpcodeCOS::setParams(const char *params, int)
 QString OpcodeCOS::toString(const Section1File *) const
 {
 	return QObject::tr("%4 = ((Cosinus(%1) * %2) + %3) >> 12")
-			.arg(_var(value1, B1(banks[0])))
-			.arg(_var(value2, B2(banks[0])))
-			.arg(_var(value3, B1(banks[1])))
-			.arg(_bank(var, B2(banks[1])));
+	        .arg(_var(value1, B1(banks[0])))
+	        .arg(_var(value2, B2(banks[0])))
+	        .arg(_var(value3, B1(banks[1])))
+	        .arg(_bank(var, B2(banks[1])));
 }
 
 QByteArray OpcodeCOS::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append((char *)&value1, 2)
-			.append((char *)&value2, 2)
-			.append((char *)&value3, 2)
-			.append((char)var);
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(reinterpret_cast<const char *>(&value1), 2)
+	        .append(reinterpret_cast<const char *>(&value2), 2)
+	        .append(reinterpret_cast<const char *>(&value3), 2)
+	        .append(char(var));
 }
 
 void OpcodeCOS::getVariables(QList<FF7Var> &vars) const
@@ -7482,14 +7504,14 @@ void OpcodeTLKR2::setParams(const char *params, int)
 QString OpcodeTLKR2::toString(const Section1File *) const
 {
 	return QObject::tr("Set range of the talk circle for the field model: %1")
-			.arg(_var(distance, B2(banks)));
+	        .arg(_var(distance, B2(banks)));
 }
 
 QByteArray OpcodeTLKR2::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&distance, 2);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&distance), 2);
 }
 
 void OpcodeTLKR2::getVariables(QList<FF7Var> &vars) const
@@ -7512,14 +7534,14 @@ void OpcodeSLDR2::setParams(const char *params, int)
 QString OpcodeSLDR2::toString(const Section1File *) const
 {
 	return QObject::tr("Set range of the contact circle for the field model: %1")
-			.arg(_var(distance, B2(banks)));
+	        .arg(_var(distance, B2(banks)));
 }
 
 QByteArray OpcodeSLDR2::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&distance, 2);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&distance), 2);
 }
 
 void OpcodeSLDR2::getVariables(QList<FF7Var> &vars) const
@@ -7541,12 +7563,12 @@ void OpcodePMJMP::setParams(const char *params, int)
 QString OpcodePMJMP::toString(const Section1File *) const
 {
 	return QObject::tr("Preload the field map %1")
-			.arg(_field(fieldID));
+	        .arg(_field(fieldID));
 }
 
 QByteArray OpcodePMJMP::params() const
 {
-	return QByteArray().append((char *)&fieldID, 2);
+	return QByteArray().append(reinterpret_cast<const char *>(&fieldID), 2);
 }
 
 OpcodePMJMP2::OpcodePMJMP2()
@@ -7566,7 +7588,7 @@ OpcodeAKAO2::OpcodeAKAO2(const char *params, int size)
 void OpcodeAKAO2::setParams(const char *params, int)
 {
 	memcpy(banks, params, 3);
-	opcode = (quint8)params[3];
+	opcode = quint8(params[3]);
 	memcpy(&param1, params + 4, 2); // bank 1
 	memcpy(&param2, params + 6, 2); // bank 2
 	memcpy(&param3, params + 8, 2); // bank 3
@@ -7577,24 +7599,24 @@ void OpcodeAKAO2::setParams(const char *params, int)
 QString OpcodeAKAO2::toString(const Section1File *) const
 {
 	return QObject::tr("%1 (param1=%2, param2=%3, param3=%4, param4=%5, param5=%6)")
-			.arg(akao(opcode))
-			.arg(_var(param1, B1(banks[0])))
-			.arg(_var(param2, B2(banks[0])))
-			.arg(_var(param3, B1(banks[1])))
-			.arg(_var(param4, B2(banks[1])))
-			.arg(_var(param5, B2(banks[2])));
+	        .arg(akao(opcode))
+	        .arg(_var(param1, B1(banks[0])))
+	        .arg(_var(param2, B2(banks[0])))
+	        .arg(_var(param3, B1(banks[1])))
+	        .arg(_var(param4, B2(banks[1])))
+	        .arg(_var(param5, B2(banks[2])));
 }
 
 QByteArray OpcodeAKAO2::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 3)
-			.append((char)opcode)
-			.append((char *)&param1, 2)
-			.append((char *)&param2, 2)
-			.append((char *)&param3, 2)
-			.append((char *)&param4, 2)
-			.append((char *)&param5, 2);
+	        .append(reinterpret_cast<const char *>(&banks), 3)
+	        .append(char(opcode))
+	        .append(reinterpret_cast<const char *>(&param1), 2)
+	        .append(reinterpret_cast<const char *>(&param2), 2)
+	        .append(reinterpret_cast<const char *>(&param3), 2)
+	        .append(reinterpret_cast<const char *>(&param4), 2)
+	        .append(reinterpret_cast<const char *>(&param5), 2);
 }
 
 void OpcodeAKAO2::getVariables(QList<FF7Var> &vars) const
@@ -7614,7 +7636,7 @@ void OpcodeAKAO2::getVariables(QList<FF7Var> &vars) const
 bool OpcodeAKAO2::searchOpcode(int opcode) const
 {
 	int op = opcode & 0xFFFF, subOp = (opcode >> 16) - 1;
-
+	
 	if (op == id()) {
 		if (subOp >= 0) {
 			if (subOp == this->opcode) {
@@ -7624,7 +7646,7 @@ bool OpcodeAKAO2::searchOpcode(int opcode) const
 			return true;
 		}
 	}
-
+	
 	return false;
 }
 
@@ -7641,12 +7663,12 @@ void OpcodeFCFIX::setParams(const char *params, int)
 QString OpcodeFCFIX::toString(const Section1File *) const
 {
 	return QObject::tr("%1 rotation")
-			.arg(disabled == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
+	        .arg(disabled == 0 ? QObject::tr("Activate") : QObject::tr("Deactivate"));
 }
 
 QByteArray OpcodeFCFIX::params() const
 {
-	return QByteArray().append((char)disabled);
+	return QByteArray().append(char(disabled));
 }
 
 OpcodeCCANM::OpcodeCCANM(const char *params, int size)
@@ -7664,19 +7686,19 @@ void OpcodeCCANM::setParams(const char *params, int)
 QString OpcodeCCANM::toString(const Section1File *) const
 {
 	return QObject::tr("Play animation #%1 for '%3' (speed=%2)")
-			.arg(animID)
-			.arg(speed)
-			.arg(standWalkRun == 0 ? QObject::tr("stay")
-								   : (standWalkRun == 1 ? QObject::tr("walk")
-														: QObject::tr("run")));
+	        .arg(animID)
+	        .arg(speed)
+	        .arg(standWalkRun == 0 ? QObject::tr("stay")
+	                               : (standWalkRun == 1 ? QObject::tr("walk")
+	                                                    : QObject::tr("run")));
 }
 
 QByteArray OpcodeCCANM::params() const
 {
 	return QByteArray()
-			.append((char)animID)
-			.append((char)speed)
-			.append((char)standWalkRun);
+	        .append(char(animID))
+	        .append(char(speed))
+	        .append(char(standWalkRun));
 }
 
 OpcodeANIMB::OpcodeANIMB()
@@ -7705,38 +7727,38 @@ OpcodeMPPAL::OpcodeMPPAL(const char *params, int size)
 void OpcodeMPPAL::setParams(const char *params, int)
 {
 	memcpy(banks, params, 3);
-	posSrc = (quint8)params[3];
-	posDst = (quint8)params[4];
-	start = (quint8)params[5]; // bank 1
-	b = (quint8)params[6]; // bank 2
-	g = (quint8)params[7]; // bank 3
-	r = (quint8)params[8]; // bank 4
-	colorCount = (quint8)params[9]; // bank 6
+	posSrc = quint8(params[3]);
+	posDst = quint8(params[4]);
+	start = quint8(params[5]); // bank 1
+	b = quint8(params[6]); // bank 2
+	g = quint8(params[7]); // bank 3
+	r = quint8(params[8]); // bank 4
+	colorCount = quint8(params[9]); // bank 6
 }
 
 QString OpcodeMPPAL::toString(const Section1File *) const
 {
 	return QObject::tr("Multiply RGB(%6, %5, %4) on the colors in a palette (sourcePal=%1, targetPal=%2, first color=%3, color count=%7+1)")
-			.arg(posSrc)
-			.arg(posDst)
-			.arg(_var(start, B1(banks[0])))
-			.arg(_var(b, B2(banks[0])))
-			.arg(_var(g, B1(banks[1])))
-			.arg(_var(r, B2(banks[1])))
-			.arg(_var(colorCount, B2(banks[2])));
+	        .arg(posSrc)
+	        .arg(posDst)
+	        .arg(_var(start, B1(banks[0])))
+	        .arg(_var(b, B2(banks[0])))
+	        .arg(_var(g, B1(banks[1])))
+	        .arg(_var(r, B2(banks[1])))
+	        .arg(_var(colorCount, B2(banks[2])));
 }
 
 QByteArray OpcodeMPPAL::params() const
 {
 	return QByteArray()
-			.append((char *)banks, 3)
-			.append(char(posSrc))
-			.append(char(posDst))
-			.append(char(start))
-			.append(char(b))
-			.append(char(g))
-			.append(char(r))
-			.append(char(colorCount));
+	        .append(reinterpret_cast<const char *>(banks), 3)
+	        .append(char(posSrc))
+	        .append(char(posDst))
+	        .append(char(start))
+	        .append(char(b))
+	        .append(char(g))
+	        .append(char(r))
+	        .append(char(colorCount));
 }
 
 void OpcodeMPPAL::getVariables(QList<FF7Var> &vars) const
@@ -7768,16 +7790,16 @@ void OpcodeBGON::setParams(const char *params, int)
 QString OpcodeBGON::toString(const Section1File *) const
 {
 	return QObject::tr("Show the state #%2 of the background parameter #%1")
-			.arg(_var(paramID, B1(banks)))
-			.arg(_var(stateID, B2(banks)));
+	        .arg(_var(paramID, B1(banks)))
+	        .arg(_var(stateID, B2(banks)));
 }
 
 QByteArray OpcodeBGON::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)paramID)
-			.append((char)stateID);
+	        .append(char(banks))
+	        .append(char(paramID))
+	        .append(char(stateID));
 }
 
 void OpcodeBGON::getVariables(QList<FF7Var> &vars) const
@@ -7803,16 +7825,16 @@ void OpcodeBGOFF::setParams(const char *params, int)
 QString OpcodeBGOFF::toString(const Section1File *) const
 {
 	return QObject::tr("Hide the state #%2 of the background parameter #%1")
-			.arg(_var(paramID, B1(banks)))
-			.arg(_var(stateID, B2(banks)));
+	        .arg(_var(paramID, B1(banks)))
+	        .arg(_var(stateID, B2(banks)));
 }
 
 QByteArray OpcodeBGOFF::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)paramID)
-			.append((char)stateID);
+	        .append(char(banks))
+	        .append(char(paramID))
+	        .append(char(stateID));
 }
 
 void OpcodeBGOFF::getVariables(QList<FF7Var> &vars) const
@@ -7837,14 +7859,14 @@ void OpcodeBGROL::setParams(const char *params, int)
 QString OpcodeBGROL::toString(const Section1File *) const
 {
 	return QObject::tr("Show next state of the background parameter #%1")
-			.arg(_var(paramID, B2(banks)));
+	        .arg(_var(paramID, B2(banks)));
 }
 
 QByteArray OpcodeBGROL::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)paramID);
+	        .append(char(banks))
+	        .append(char(paramID));
 }
 
 void OpcodeBGROL::getVariables(QList<FF7Var> &vars) const
@@ -7867,14 +7889,14 @@ void OpcodeBGROL2::setParams(const char *params, int)
 QString OpcodeBGROL2::toString(const Section1File *) const
 {
 	return QObject::tr("Show previous state of the background parameter #%1")
-			.arg(_var(paramID, B2(banks)));
+	        .arg(_var(paramID, B2(banks)));
 }
 
 QByteArray OpcodeBGROL2::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)paramID);
+	        .append(char(banks))
+	        .append(char(paramID));
 }
 
 void OpcodeBGROL2::getVariables(QList<FF7Var> &vars) const
@@ -7897,14 +7919,14 @@ void OpcodeBGCLR::setParams(const char *params, int)
 QString OpcodeBGCLR::toString(const Section1File *) const
 {
 	return QObject::tr("Hide background parameter #%1")
-			.arg(_var(paramID, B2(banks)));
+	        .arg(_var(paramID, B2(banks)));
 }
 
 QByteArray OpcodeBGCLR::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)paramID);
+	        .append(char(banks))
+	        .append(char(paramID));
 }
 
 void OpcodeBGCLR::getVariables(QList<FF7Var> &vars) const
@@ -7920,27 +7942,27 @@ OpcodeSTPAL::OpcodeSTPAL(const char *params, int size)
 
 void OpcodeSTPAL::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
-	palID = (quint8)params[1]; // bank 1
-	position = (quint8)params[2]; // bank 2
-	colorCount = (quint8)params[3];
+	banks = quint8(params[0]);
+	palID = quint8(params[1]); // bank 1
+	position = quint8(params[2]); // bank 2
+	colorCount = quint8(params[3]);
 }
 
 QString OpcodeSTPAL::toString(const Section1File *) const
 {
 	return QObject::tr("Load the palette #%1 in the position %2 (color count=%3)")
-			.arg(_var(palID, B1(banks)))
-			.arg(_var(position, B2(banks)))
-			.arg(colorCount+1);
+	        .arg(_var(palID, B1(banks)))
+	        .arg(_var(position, B2(banks)))
+	        .arg(colorCount+1);
 }
 
 QByteArray OpcodeSTPAL::params() const
 {
 	return QByteArray()
-			.append(char(banks))
-			.append(char(palID))
-			.append(char(position))
-			.append(char(colorCount));
+	        .append(char(banks))
+	        .append(char(palID))
+	        .append(char(position))
+	        .append(char(colorCount));
 }
 
 void OpcodeSTPAL::getVariables(QList<FF7Var> &vars) const
@@ -7958,27 +7980,27 @@ OpcodeLDPAL::OpcodeLDPAL(const char *params, int size)
 
 void OpcodeLDPAL::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
-	position = (quint8)params[1]; // bank 1
-	palID = (quint8)params[2]; // bank 2
-	colorCount = (quint8)params[3];
+	banks = quint8(params[0]);
+	position = quint8(params[1]); // bank 1
+	palID = quint8(params[2]); // bank 2
+	colorCount = quint8(params[3]);
 }
 
 QString OpcodeLDPAL::toString(const Section1File *) const
 {
 	return QObject::tr("Load the position %1 in the palette #%2 (color count=%3)")
-			.arg(_var(position, B1(banks)))
-			.arg(_var(palID, B2(banks)))
-			.arg(colorCount+1);
+	        .arg(_var(position, B1(banks)))
+	        .arg(_var(palID, B2(banks)))
+	        .arg(colorCount+1);
 }
 
 QByteArray OpcodeLDPAL::params() const
 {
 	return QByteArray()
-			.append(char(banks))
-			.append(char(position))
-			.append(char(palID))
-			.append(char(colorCount));
+	        .append(char(banks))
+	        .append(char(position))
+	        .append(char(palID))
+	        .append(char(colorCount));
 }
 
 void OpcodeLDPAL::getVariables(QList<FF7Var> &vars) const
@@ -7996,27 +8018,27 @@ OpcodeCPPAL::OpcodeCPPAL(const char *params, int size)
 
 void OpcodeCPPAL::setParams(const char *params, int)
 {
-	banks = (quint8)params[0];
-	posSrc = (quint8)params[1]; // bank 1
-	posDst = (quint8)params[2]; // bank 2
-	colorCount = (quint8)params[3];
+	banks = quint8(params[0]);
+	posSrc = quint8(params[1]); // bank 1
+	posDst = quint8(params[2]); // bank 2
+	colorCount = quint8(params[3]);
 }
 
 QString OpcodeCPPAL::toString(const Section1File *) const
 {
 	return QObject::tr("Copy palette (sourcePal=%1, targetPal=%2, color count=%3)")
-			.arg(_var(posSrc, B1(banks)))
-			.arg(_var(posDst, B2(banks)))
-			.arg(colorCount+1);
+	        .arg(_var(posSrc, B1(banks)))
+	        .arg(_var(posDst, B2(banks)))
+	        .arg(colorCount+1);
 }
 
 QByteArray OpcodeCPPAL::params() const
 {
 	return QByteArray()
-			.append(char(banks))
-			.append(char(posSrc))
-			.append(char(posDst))
-			.append(char(colorCount));
+	        .append(char(banks))
+	        .append(char(posSrc))
+	        .append(char(posDst))
+	        .append(char(colorCount));
 }
 
 void OpcodeCPPAL::getVariables(QList<FF7Var> &vars) const
@@ -8035,29 +8057,29 @@ OpcodeRTPAL::OpcodeRTPAL(const char *params, int size)
 void OpcodeRTPAL::setParams(const char *params, int)
 {
 	memcpy(banks, params, 2);
-	posSrc = (quint8)params[2]; // bank 1
-	posDst = (quint8)params[3]; // bank 2
-	start = (quint8)params[4]; // bank 4
-	end = (quint8)params[5];
+	posSrc = quint8(params[2]); // bank 1
+	posDst = quint8(params[3]); // bank 2
+	start = quint8(params[4]); // bank 4
+	end = quint8(params[5]);
 }
 
 QString OpcodeRTPAL::toString(const Section1File *) const
 {
 	return QObject::tr("Copy partially palette (sourcePal=%1, targetPal=%2, first color=%3, color count=%4)")
-			.arg(_var(posSrc, B1(banks[0])))
-			.arg(_var(posDst, B2(banks[0])))
-			.arg(_var(start, B2(banks[1])))
-			.arg(end + 1);
+	        .arg(_var(posSrc, B1(banks[0])))
+	        .arg(_var(posDst, B2(banks[0])))
+	        .arg(_var(start, B2(banks[1])))
+	        .arg(end + 1);
 }
 
 QByteArray OpcodeRTPAL::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 2)
-			.append(char(posSrc))
-			.append(char(posDst))
-			.append(char(start))
-			.append(char(end));
+	        .append(reinterpret_cast<const char *>(&banks), 2)
+	        .append(char(posSrc))
+	        .append(char(posDst))
+	        .append(char(start))
+	        .append(char(end));
 }
 
 void OpcodeRTPAL::getVariables(QList<FF7Var> &vars) const
@@ -8078,35 +8100,35 @@ OpcodeADPAL::OpcodeADPAL(const char *params, int size)
 void OpcodeADPAL::setParams(const char *params, int)
 {
 	memcpy(&banks, params, 3);
-	posSrc = (quint8)params[3]; // bank 1
-	posDst = (quint8)params[4]; // bank 2
-	b = (qint8)params[5]; // bank 3
-	g = (qint8)params[6]; // bank 4
-	r = (qint8)params[7]; // bank 5
-	colorCount = (quint8)params[8];
+	posSrc = quint8(params[3]); // bank 1
+	posDst = quint8(params[4]); // bank 2
+	b = qint8(params[5]); // bank 3
+	g = qint8(params[6]); // bank 4
+	r = qint8(params[7]); // bank 5
+	colorCount = quint8(params[8]);
 }
 
 QString OpcodeADPAL::toString(const Section1File *) const
 {
 	return QObject::tr("Add RGB(%5, %4, %3) on the colors in a palette (sourcePal=%1, targetPal=%2, color count=%6)")
-			.arg(_var(posSrc, B1(banks[0])))
-			.arg(_var(posDst, B2(banks[0])))
-			.arg(_var(b, B1(banks[1])))
-			.arg(_var(g, B2(banks[1])))
-			.arg(_var(r, B1(banks[2])))
-			.arg(colorCount+1);
+	        .arg(_var(posSrc, B1(banks[0])))
+	        .arg(_var(posDst, B2(banks[0])))
+	        .arg(_var(b, B1(banks[1])))
+	        .arg(_var(g, B2(banks[1])))
+	        .arg(_var(r, B1(banks[2])))
+	        .arg(colorCount+1);
 }
 
 QByteArray OpcodeADPAL::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 3)
-			.append(char(posSrc))
-			.append(char(posDst))
-			.append(char(b))
-			.append(char(g))
-			.append(char(r))
-			.append(char(colorCount));
+	        .append(reinterpret_cast<const char *>(&banks), 3)
+	        .append(char(posSrc))
+	        .append(char(posDst))
+	        .append(char(b))
+	        .append(char(g))
+	        .append(char(r))
+	        .append(char(colorCount));
 }
 
 void OpcodeADPAL::getVariables(QList<FF7Var> &vars) const
@@ -8131,35 +8153,35 @@ OpcodeMPPAL2::OpcodeMPPAL2(const char *params, int size)
 void OpcodeMPPAL2::setParams(const char *params, int)
 {
 	memcpy(&banks, params, 3);
-	posSrc = (quint8)params[3]; // bank 1
-	posDst = (quint8)params[4]; // bank 2
-	b = (quint8)params[5]; // bank 3
-	g = (quint8)params[6]; // bank 4
-	r = (quint8)params[7]; // bank 5
-	colorCount = (quint8)params[8];
+	posSrc = quint8(params[3]); // bank 1
+	posDst = quint8(params[4]); // bank 2
+	b = quint8(params[5]); // bank 3
+	g = quint8(params[6]); // bank 4
+	r = quint8(params[7]); // bank 5
+	colorCount = quint8(params[8]);
 }
 
 QString OpcodeMPPAL2::toString(const Section1File *) const
 {
 	return QObject::tr("Multiply RGB(%5, %4, %3) on the colors in a palette (sourcePal=%1, targetPal=%2, color count=%6)")
-			.arg(_var(posSrc, B1(banks[0])))
-			.arg(_var(posDst, B2(banks[0])))
-			.arg(_var(b, B1(banks[1])))
-			.arg(_var(g, B2(banks[1])))
-			.arg(_var(r, B1(banks[2])))
-			.arg(colorCount+1);
+	        .arg(_var(posSrc, B1(banks[0])))
+	        .arg(_var(posDst, B2(banks[0])))
+	        .arg(_var(b, B1(banks[1])))
+	        .arg(_var(g, B2(banks[1])))
+	        .arg(_var(r, B1(banks[2])))
+	        .arg(colorCount+1);
 }
 
 QByteArray OpcodeMPPAL2::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 3)
-			.append(char(posSrc))
-			.append(char(posDst))
-			.append(char(b))
-			.append(char(g))
-			.append(char(r))
-			.append(char(colorCount));
+	        .append(reinterpret_cast<const char *>(&banks), 3)
+	        .append(char(posSrc))
+	        .append(char(posDst))
+	        .append(char(b))
+	        .append(char(g))
+	        .append(char(r))
+	        .append(char(colorCount));
 }
 
 void OpcodeMPPAL2::getVariables(QList<FF7Var> &vars) const
@@ -8183,28 +8205,28 @@ OpcodeSTPLS::OpcodeSTPLS(const char *params, int size)
 
 void OpcodeSTPLS::setParams(const char *params, int)
 {
-	palID = (quint8)params[0];
-	posSrc = (quint8)params[1];
-	start = (quint8)params[2];
-	colorCount = (quint8)params[3];
+	palID = quint8(params[0]);
+	posSrc = quint8(params[1]);
+	start = quint8(params[2]);
+	colorCount = quint8(params[3]);
 }
 
 QString OpcodeSTPLS::toString(const Section1File *) const
 {
 	return QObject::tr("Load the palette #%1 in the position %2 (first color=%3, color count=%4)")
-			.arg(palID)
-			.arg(posSrc)
-			.arg(start)
-			.arg(colorCount+1);
+	        .arg(palID)
+	        .arg(posSrc)
+	        .arg(start)
+	        .arg(colorCount+1);
 }
 
 QByteArray OpcodeSTPLS::params() const
 {
 	return QByteArray()
-			.append(char(palID))
-			.append(char(posSrc))
-			.append(char(start))
-			.append(char(colorCount));
+	        .append(char(palID))
+	        .append(char(posSrc))
+	        .append(char(start))
+	        .append(char(colorCount));
 }
 
 OpcodeLDPLS::OpcodeLDPLS(const char *params, int size)
@@ -8214,28 +8236,28 @@ OpcodeLDPLS::OpcodeLDPLS(const char *params, int size)
 
 void OpcodeLDPLS::setParams(const char *params, int)
 {
-	posSrc = (quint8)params[0];
-	palID = (quint8)params[1];
-	start = (quint8)params[2];
-	colorCount = (quint8)params[3];
+	posSrc = quint8(params[0]);
+	palID = quint8(params[1]);
+	start = quint8(params[2]);
+	colorCount = quint8(params[3]);
 }
 
 QString OpcodeLDPLS::toString(const Section1File *) const
 {
 	return QObject::tr("Load the position %1 in the palette #%2 (first color=%3, color count=%4)")
-			.arg(posSrc)
-			.arg(palID)
-			.arg(start)
-			.arg(colorCount+1);
+	        .arg(posSrc)
+	        .arg(palID)
+	        .arg(start)
+	        .arg(colorCount+1);
 }
 
 QByteArray OpcodeLDPLS::params() const
 {
 	return QByteArray()
-			.append(char(posSrc))
-			.append(char(palID))
-			.append(char(start))
-			.append(char(colorCount));
+	        .append(char(posSrc))
+	        .append(char(palID))
+	        .append(char(start))
+	        .append(char(colorCount));
 }
 
 OpcodeCPPAL2::OpcodeCPPAL2(const char *params, int size)
@@ -8251,12 +8273,12 @@ void OpcodeCPPAL2::setParams(const char *params, int)
 QString OpcodeCPPAL2::toString(const Section1File *) const
 {
 	return QObject::tr("CPPAL2 %1")
-			.arg(QString::fromLatin1(QByteArray((char *)&unknown, 7).toHex()));
+	        .arg(QString::fromLatin1(QByteArray(reinterpret_cast<const char *>(&unknown), 7).toHex()));
 }
 
 QByteArray OpcodeCPPAL2::params() const
 {
-	return QByteArray().append((char *)&unknown, 7);
+	return QByteArray().append(reinterpret_cast<const char *>(&unknown), 7);
 }
 
 OpcodeRTPAL2::OpcodeRTPAL2(const char *params, int size)
@@ -8272,12 +8294,12 @@ void OpcodeRTPAL2::setParams(const char *params, int)
 QString OpcodeRTPAL2::toString(const Section1File *) const
 {
 	return QObject::tr("RTPAL2 %1")
-			.arg(QString::fromLatin1(QByteArray((char *)&unknown, 7).toHex()));
+	        .arg(QString::fromLatin1(QByteArray(reinterpret_cast<const char *>(&unknown), 7).toHex()));
 }
 
 QByteArray OpcodeRTPAL2::params() const
 {
-	return QByteArray().append((char *)&unknown, 7);
+	return QByteArray().append(reinterpret_cast<const char *>(&unknown), 7);
 }
 
 OpcodeADPAL2::OpcodeADPAL2(const char *params, int size)
@@ -8293,12 +8315,12 @@ void OpcodeADPAL2::setParams(const char *params, int)
 QString OpcodeADPAL2::toString(const Section1File *) const
 {
 	return QObject::tr("ADPAL2 %1")
-			.arg(QString::fromLatin1(QByteArray((char *)&unknown, 10).toHex()));
+	        .arg(QString::fromLatin1(QByteArray(reinterpret_cast<const char *>(&unknown), 10).toHex()));
 }
 
 QByteArray OpcodeADPAL2::params() const
 {
-	return QByteArray().append((char *)&unknown, 10);
+	return QByteArray().append(reinterpret_cast<const char *>(&unknown), 10);
 }
 
 OpcodeMUSIC::OpcodeMUSIC(const char *params, int size)
@@ -8314,12 +8336,12 @@ void OpcodeMUSIC::setParams(const char *params, int)
 QString OpcodeMUSIC::toString(const Section1File *) const
 {
 	return QObject::tr("Play music #%1")
-			.arg(musicID);
+	        .arg(musicID);
 }
 
 QByteArray OpcodeMUSIC::params() const
 {
-	return QByteArray().append((char)musicID);
+	return QByteArray().append(char(musicID));
 }
 
 OpcodeSOUND::OpcodeSOUND(const char *params, int size)
@@ -8337,16 +8359,16 @@ void OpcodeSOUND::setParams(const char *params, int)
 QString OpcodeSOUND::toString(const Section1File *) const
 {
 	return QObject::tr("Play sound #%1 (position=%2/127)")
-			.arg(_var(soundID, B1(banks)))
-			.arg(_var(position, B2(banks)));
+	        .arg(_var(soundID, B1(banks)))
+	        .arg(_var(position, B2(banks)));
 }
 
 QByteArray OpcodeSOUND::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char *)&soundID, 2)
-			.append((char)position);
+	        .append(char(banks))
+	        .append(reinterpret_cast<const char *>(&soundID), 2)
+	        .append(char(position));
 }
 
 void OpcodeSOUND::getVariables(QList<FF7Var> &vars) const
@@ -8365,8 +8387,8 @@ OpcodeAKAO::OpcodeAKAO(const char *params, int size)
 void OpcodeAKAO::setParams(const char *params, int)
 {
 	memcpy(banks, params, 3);
-	opcode = (quint8)params[3];
-	param1 = (quint8)params[4]; // bank 1
+	opcode = quint8(params[3]);
+	param1 = quint8(params[4]); // bank 1
 	memcpy(&param2, params + 5, 2); // bank 2
 	memcpy(&param3, params + 7, 2); // bank 3
 	memcpy(&param4, params + 9, 2); // bank 4
@@ -8376,24 +8398,24 @@ void OpcodeAKAO::setParams(const char *params, int)
 QString OpcodeAKAO::toString(const Section1File *) const
 {
 	return QObject::tr("%1 (param1 (8-bit)=%2, param2=%3, param3=%4, param4=%5, param5=%6)")
-			.arg(akao(opcode))
-			.arg(_var(param1, B1(banks[0])))
-			.arg(_var(param2, B2(banks[0])))
-			.arg(_var(param3, B1(banks[1])))
-			.arg(_var(param4, B2(banks[1])))
-			.arg(_var(param5, B2(banks[2])));
+	        .arg(akao(opcode))
+	        .arg(_var(param1, B1(banks[0])))
+	        .arg(_var(param2, B2(banks[0])))
+	        .arg(_var(param3, B1(banks[1])))
+	        .arg(_var(param4, B2(banks[1])))
+	        .arg(_var(param5, B2(banks[2])));
 }
 
 QByteArray OpcodeAKAO::params() const
 {
 	return QByteArray()
-			.append((char *)&banks, 3)
-			.append((char)opcode)
-			.append((char)param1)
-			.append((char *)&param2, 2)
-			.append((char *)&param3, 2)
-			.append((char *)&param4, 2)
-			.append((char *)&param5, 2);
+	        .append(reinterpret_cast<const char *>(&banks), 3)
+	        .append(char(opcode))
+	        .append(char(param1))
+	        .append(reinterpret_cast<const char *>(&param2), 2)
+	        .append(reinterpret_cast<const char *>(&param3), 2)
+	        .append(reinterpret_cast<const char *>(&param4), 2)
+	        .append(reinterpret_cast<const char *>(&param5), 2);
 }
 
 void OpcodeAKAO::getVariables(QList<FF7Var> &vars) const
@@ -8413,7 +8435,7 @@ void OpcodeAKAO::getVariables(QList<FF7Var> &vars) const
 bool OpcodeAKAO::searchOpcode(int opcode) const
 {
 	int op = opcode & 0xFFFF, subOp = (opcode >> 16) - 1;
-
+	
 	if (op == id()) {
 		if (subOp >= 0) {
 			if (subOp == this->opcode) {
@@ -8423,7 +8445,7 @@ bool OpcodeAKAO::searchOpcode(int opcode) const
 			return true;
 		}
 	}
-
+	
 	return false;
 }
 
@@ -8440,12 +8462,12 @@ void OpcodeMUSVT::setParams(const char *params, int)
 QString OpcodeMUSVT::toString(const Section1File *) const
 {
 	return QObject::tr("Play temporary music #%1")
-			.arg(musicID);
+	        .arg(musicID);
 }
 
 QByteArray OpcodeMUSVT::params() const
 {
-	return QByteArray().append((char)musicID);
+	return QByteArray().append(char(musicID));
 }
 
 OpcodeMUSVM::OpcodeMUSVM(const char *params, int size)
@@ -8461,12 +8483,12 @@ void OpcodeMUSVM::setParams(const char *params, int)
 QString OpcodeMUSVM::toString(const Section1File *) const
 {
 	return QObject::tr("MUSVM (music #%1)")
-			.arg(musicID);
+	        .arg(musicID);
 }
 
 QByteArray OpcodeMUSVM::params() const
 {
-	return QByteArray().append((char)musicID);
+	return QByteArray().append(char(musicID));
 }
 
 OpcodeMULCK::OpcodeMULCK(const char *params, int size)
@@ -8482,12 +8504,12 @@ void OpcodeMULCK::setParams(const char *params, int)
 QString OpcodeMULCK::toString(const Section1File *) const
 {
 	return QObject::tr("%1 music")
-			.arg(locked == 0 ? QObject::tr("Unlock") : QObject::tr("Lock", "test"));
+	        .arg(locked == 0 ? QObject::tr("Unlock") : QObject::tr("Lock", "test"));
 }
 
 QByteArray OpcodeMULCK::params() const
 {
-	return QByteArray().append((char)locked);
+	return QByteArray().append(char(locked));
 }
 
 OpcodeBMUSC::OpcodeBMUSC(const char *params, int size)
@@ -8503,12 +8525,12 @@ void OpcodeBMUSC::setParams(const char *params, int)
 QString OpcodeBMUSC::toString(const Section1File *) const
 {
 	return QObject::tr("Set the music #%1 for next battle")
-			.arg(musicID);
+	        .arg(musicID);
 }
 
 QByteArray OpcodeBMUSC::params() const
 {
-	return QByteArray().append((char)musicID);
+	return QByteArray().append(char(musicID));
 }
 
 OpcodeCHMPH::OpcodeCHMPH(const char *params, int size)
@@ -8526,16 +8548,16 @@ void OpcodeCHMPH::setParams(const char *params, int)
 QString OpcodeCHMPH::toString(const Section1File *) const
 {
 	return QObject::tr("CHMPH: Save (unknown) in %1 and (unknown) in %2")
-			.arg(_bank(var1, B1(banks)))
-			.arg(_bank(var2, B2(banks)));
+	        .arg(_bank(var1, B1(banks)))
+	        .arg(_bank(var2, B2(banks)));
 }
 
 QByteArray OpcodeCHMPH::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)var1)
-			.append((char)var2);
+	        .append(char(banks))
+	        .append(char(var1))
+	        .append(char(var2));
 }
 
 void OpcodeCHMPH::getVariables(QList<FF7Var> &vars) const
@@ -8559,12 +8581,12 @@ void OpcodePMVIE::setParams(const char *params, int)
 QString OpcodePMVIE::toString(const Section1File *) const
 {
 	return QObject::tr("Set next movie: %1")
-			.arg(_movie(movieID));
+	        .arg(_movie(movieID));
 }
 
 QByteArray OpcodePMVIE::params() const
 {
-	return QByteArray().append((char)movieID);
+	return QByteArray().append(char(movieID));
 }
 
 OpcodeMOVIE::OpcodeMOVIE()
@@ -8590,14 +8612,14 @@ void OpcodeMVIEF::setParams(const char *params, int)
 QString OpcodeMVIEF::toString(const Section1File *) const
 {
 	return QObject::tr("Save Movie frame in %1")
-			.arg(_bank(varCurMovieFrame, B2(banks)));
+	        .arg(_bank(varCurMovieFrame, B2(banks)));
 }
 
 QByteArray OpcodeMVIEF::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)varCurMovieFrame);
+	        .append(char(banks))
+	        .append(char(varCurMovieFrame));
 }
 
 void OpcodeMVIEF::getVariables(QList<FF7Var> &vars) const
@@ -8619,12 +8641,12 @@ void OpcodeMVCAM::setParams(const char *params, int)
 QString OpcodeMVCAM::toString(const Section1File *) const
 {
 	return QObject::tr("Camera Movie: %1")
-			.arg(movieCamID);
+	        .arg(movieCamID);
 }
 
 QByteArray OpcodeMVCAM::params() const
 {
-	return QByteArray().append((char)movieCamID);
+	return QByteArray().append(char(movieCamID));
 }
 
 OpcodeFMUSC::OpcodeFMUSC(const char *params, int size)
@@ -8640,12 +8662,12 @@ void OpcodeFMUSC::setParams(const char *params, int)
 QString OpcodeFMUSC::toString(const Section1File *) const
 {
 	return QObject::tr("Set next field music for when we will be back to the map: #%1")
-			.arg(musicID);
+	        .arg(musicID);
 }
 
 QByteArray OpcodeFMUSC::params() const
 {
-	return QByteArray().append((char)musicID);
+	return QByteArray().append(char(musicID));
 }
 
 OpcodeCMUSC::OpcodeCMUSC(const char *params, int size)
@@ -8665,20 +8687,20 @@ void OpcodeCMUSC::setParams(const char *params, int)
 QString OpcodeCMUSC::toString(const Section1File *) const
 {
 	return QObject::tr("CMUSC (music #%1, operation=%2, param1=%3, param2=%4)")
-			.arg(musicID)
-			.arg(akao(opcode))
-			.arg(_var(param1, B1(banks)))
-			.arg(_var(param2, B2(banks)));
+	        .arg(musicID)
+	        .arg(akao(opcode))
+	        .arg(_var(param1, B1(banks)))
+	        .arg(_var(param2, B2(banks)));
 }
 
 QByteArray OpcodeCMUSC::params() const
 {
 	return QByteArray()
-			.append((char)musicID)
-			.append((char)banks)
-			.append((char)opcode)
-			.append((char *)&param1, 2)
-			.append((char *)&param2, 2);
+	        .append(char(musicID))
+	        .append(char(banks))
+	        .append(char(opcode))
+	        .append(reinterpret_cast<const char *>(&param1), 2)
+	        .append(reinterpret_cast<const char *>(&param2), 2);
 }
 
 OpcodeCHMST::OpcodeCHMST(const char *params, int size)
@@ -8695,14 +8717,14 @@ void OpcodeCHMST::setParams(const char *params, int)
 QString OpcodeCHMST::toString(const Section1File *) const
 {
 	return QObject::tr("If music is currently playing set %1 to 1")
-			.arg(_bank(var, B2(banks)));
+	        .arg(_bank(var, B2(banks)));
 }
 
 QByteArray OpcodeCHMST::params() const
 {
 	return QByteArray()
-			.append((char)banks)
-			.append((char)var);
+	        .append(char(banks))
+	        .append(char(var));
 }
 
 void OpcodeCHMST::getVariables(QList<FF7Var> &vars) const
@@ -8722,552 +8744,552 @@ QString OpcodeGAMEOVER::toString(const Section1File *) const
 
 const quint8 Opcode::length[257] =
 {
-/*00*//* RET */			1,
-/*01*//* REQ */			3,
-/*02*//* REQSW */		3,
-/*03*//* REQEW */		3,
-/*04*//* PREQ */		3,
-/*05*//* PRQSW */		3,
-/*06*//* PRQEW */		3,
-/*07*//* RETTO */		2,
-/*08*//* JOIN */		2,
-/*09*//* SPLIT */		15,
-/*0a*//* SPTYE */		6,
-/*0b*//* GTPYE */		6,
-/*0c*//*  */			1,
-/*0d*//*  */			1,
-/*0e*//* DSKCG */		2,
-/*0f*//* SPECIAL */		2,
-	
-/*10*//* JMPF */		2,
-/*11*//* JMPFL */		3,
-/*12*//* JMPB */		2,
-/*13*//* JMPBL */		3,
-/*14*//* IFUB */		6,
-/*15*//* IFUBL */		7,
-/*16*//* IFSW */		8,
-/*17*//* IFSWL */		9,
-/*18*//* IFUW */		8,
-/*19*//* IFUWL */		9,
-/*1a*//*  */			10,
-/*1b*//*  */			3,
-/*1c*//*  */			6,
-/*1d*//*  */			1,
-/*1e*//*  */			1,
-/*1f*//*  */			1,
-	
-/*20*//* MINIGAME */	11,
-/*21*//* TUTOR */		2,
-/*22*//* BTMD2 */		5,
-/*23*//* BTRLD */		3,
-/*24*//* WAIT */		3,
-/*25*//* NFADE */		9,
-/*26*//* BLINK */		2,
-/*27*//* BGMOVIE */		2,
-/*28*//* KAWAI */		2,
-/*29*//* KAWIW */		1,
-/*2a*//* PMOVA */		2,
-/*2b*//* SLIP */		2,
-/*2c*//* BGPDH */		5,
-/*2d*//* BGSCR */		7,
-/*2e*//* WCLS */		2,
-/*2f*//* WSIZW */		10,
-
-/*30*//* IFKEY */		4,
-/*31*//* IFKEYON */		4,
-/*32*//* IFKEYOFF */	4,
-/*33*//* UC */			2,
-/*34*//* PDIRA */		2,
-/*35*//* PTURA */		4,
-/*36*//* WSPCL */		5,
-/*37*//* WNUMB */		8,
-/*38*//* STTIM */		6,
-/*39*//* GOLDu */		6,
-/*3a*//* GOLDd */		6,
-/*3b*//* CHGLD */		4,
-/*3c*//* HMPMAX1 */		1,
-/*3d*//* HMPMAX2 */		1,
-/*3e*//* MHMMX */		1,
-/*3f*//* HMPMAX3 */		1,
-
-/*40*//* MESSAGE */		3,
-/*41*//* MPARA */		5,
-/*42*//* MPRA2 */		6,
-/*43*//* MPNAM */		2,
-/*44*//*  */			1,
-/*45*//* MPu */			5,
-/*46*//*  */			1,
-/*47*//* MPd */			5,
-/*48*//* ASK */			7,
-/*49*//* MENU */		4,
-/*4a*//* MENU2 */		2,
-/*4b*//* BTLTB */		2,
-/*4c*//*  */			1,
-/*4d*//* HPu */			5,
-/*4e*//*  */			1,
-/*4f*//* HPd */			5,
-
-/*50*//* WINDOW */		10,
-/*51*//* WMOVE */		6,
-/*52*//* WMODE */		4,
-/*53*//* WREST */		2,
-/*54*//* WCLSE */		2,
-/*55*//* WROW */		3,
-/*56*//* GWCOL */		7,
-/*57*//* SWCOL */		7,
-/*58*//* STITM */		5,
-/*59*//* DLITM */		5,
-/*5a*//* CKITM */		5,
-/*5b*//* SMTRA */		7,
-/*5c*//* DMTRA */		8,
-/*5d*//* CMTRA */		10,
-/*5e*//* SHAKE */		8,
-/*5f*//* NOP */			1,
-
-/*60*//* MAPJUMP */	10,
-/*61*//* SCRLO */	2,
-/*62*//* SCRLC */	5,
-/*63*//* SCRLA */	6,
-/*64*//* SCR2D */	6,
-/*65*//* SCRCC */	1,
-/*66*//* SCR2DC */	9,
-/*67*//* SCRLW */	1,
-/*68*//* SCR2DL */	9,
-/*69*//* MPDSP */	2,
-/*6a*//* VWOFT */	7,
-/*6b*//* FADE */		9,
-/*6c*//* FADEW */	1,
-/*6d*//* IDLCK */	4,
-/*6e*//* LSTMP */	3,
-/*6f*//* SCRLP */		6,
-
-/*70*//* BATTLE */	4,
-/*71*//* BTLON */	2,
-/*72*//* BTLMD */	3,
-/*73*//* PGTDR */	4,
-/*74*//* GETPC */	4,
-/*75*//* PXYZI */	8,
-/*76*//* PLUS! */		4,
-/*77*//* PLUS2! */	5,
-/*78*//* MINUS! */	4,
-/*79*//* MINUS2! */	5,
-/*7a*//* INC! */		3,
-/*7b*//* INC2! */		3,
-/*7c*//* DEC! */		3,
-/*7d*//* DEC2! */		3,
-/*7e*//* TLKON */	2,
-/*7f*//* RDMSD */	3,
-
-/*80*//* SETBYTE */	4,
-/*81*//* SETWORD */	5,
-/*82*//* BITON */	4,
-/*83*//* BITOFF */	4,
-/*84*//* BITXOR */	4,
-/*85*//* PLUS */		4,
-/*86*//* PLUS2 */	5,
-/*87*//* MINUS */	4,
-/*88*//* MINUS2 */	5,
-/*89*//* MUL */		4,
-/*8a*//* MUL2 */		5,
-/*8b*//* DIV */		4,
-/*8c*//* DIV2 */		5,
-/*8d*//* MOD */		4,
-/*8e*//* MOD2 */		5,
-/*8f*//* AND */		4,
-
-/*90*//* AND2 */		5,
-/*91*//* OR */		4,
-/*92*//* OR2 */		5,
-/*93*//* XOR */		4,
-/*94*//* XOR2 */		5,
-/*95*//* INC */		3,
-/*96*//* INC2 */		3,
-/*97*//* DEC */		3,
-/*98*//* DEC2 */		3,
-/*99*//* RANDOM */	3,
-/*9a*//* LBYTE */	4,
-/*9b*//* HBYTE */	5,
-/*9c*//* 2BYTE */	6,
-/*9d*//* SETX */		7,
-/*9e*//* GETX */		7,
-/*9f*//* SEARCHX */	11,
-
-/*a0*//* PC */		2,
-/*a1*//* CHAR */		2,
-/*a2*//* DFANM */	3,
-/*a3*//* ANIME1 */	3,
-/*a4*//* VISI */		2,
-/*a5*//* XYZI */		11,
-/*a6*//* XYI */		9,
-/*a7*//* XYZ */		9,
-/*a8*//* MOVE */		6,
-/*a9*//* CMOVE */	6,
-/*aa*//* MOVA */		2,
-/*ab*//* TURA */		4,
-/*ac*//* ANIMW */	1,
-/*ad*//* FMOVE */	6,
-/*ae*//* ANIME2 */	3,
-/*af*//* ANIM!1 */	3,
-
-/*b0*//* CANIM1 */	5,
-/*b1*//* CANM!1 */	5,
-/*b2*//* MSPED */	4,
-/*b3*//* DIR */		3,
-/*b4*//* TURNGEN */	6,
-/*b5*//* TURN */		6,
-/*b6*//* DIRA */		2,
-/*b7*//* GETDIR */	4,
-/*b8*//* GETAXY */	5,
-/*b9*//* GETAI */	4,
-/*ba*//* ANIM!2 */	3,
-/*bb*//* CANIM2 */	5,
-/*bc*//* CANM!2 */	5,
-/*bd*//* ASPED */	4,
-/*be*//*  */			1,
-/*bf*//* CC */		2,
-
-/*c0*//* JUMP */		11,
-/*c1*//* AXYZI */	8,
-/*c2*//* LADER */	15,
-/*c3*//* OFST */		12,
-/*c4*//* OFSTW */	1,
-/*c5*//* TALKR */	3,
-/*c6*//* SLIDR */	3,
-/*c7*//* SOLID */	2,
-/*c8*//* PRTYP */		2,
-/*c9*//* PRTYM */	2,
-/*ca*//* PRTYE */		4,
-/*cb*//* IFPRTYQ */	3,
-/*cc*//* IFMEMBQ */	3,
-/*cd*//* MMBud */	3,
-/*ce*//* MMBLK */	2,
-/*cf*//* MMBUK */	2,
-
-/*d0*//* LINE */		13,
-/*d1*//* LINON */	2,
-/*d2*//* MPJPO */	2,
-/*d3*//* SLINE */	16,
-/*d4*//* SIN */		10,
-/*d5*//* COS */		10,
-/*d6*//* TLKR2 */		4,
-/*d7*//* SLDR2 */	4,
-/*d8*//* PMJMP */	3,
-/*d9*//* PMJMP2 */	1,
-/*da*//* AKAO2 */	15,
-/*db*//* FCFIX */		2,
-/*dc*//* CCANM */	4,
-/*dd*//* ANIMB */	1,
-/*de*//* TURNW */	1,
-/*df*//* MPPAL */		11,
-
-/*e0*//* BGON */		4,
-/*e1*//* BGOFF */	4,
-/*e2*//* BGROL */	3,
-/*e3*//* BGROL2 */	3,
-/*e4*//* BGCLR */	3,
-/*e5*//* STPAL */	5,
-/*e6*//* LDPAL */	5,
-/*e7*//* CPPAL */		5,
-/*e8*//* RTPAL */		7,
-/*e9*//* ADPAL */	10,
-/*ea*//* MPPAL2 */	10,
-/*eb*//* STPLS */		5,
-/*ec*//* LDPLS */		5,
-/*ed*//* CPPAL2 */	8,
-/*ee*//* RTPAL2 */	8,
-/*ef*//* ADPAL2 */	11,
-
-/*f0*//* MUSIC */	2,
-/*f1*//* SOUND */	5,
-/*f2*//* AKAO */		14,
-/*f3*//* MUSVT */	2,
-/*f4*//* MUSVM */	2,
-/*f5*//* MULCK */	2,
-/*f6*//* BMUSC */	2,
-/*f7*//* CHMPH */	4,
-/*f8*//* PMVIE */	2,
-/*f9*//* MOVIE */	1,
-/*fa*//* MVIEF */	3,
-/*fb*//* MVCAM */	2,
-/*fc*//* FMUSC */	2,
-/*fd*//* CMUSC */	8,
-/*fe*//* CHMST */	3,
-/*ff*//* GAMEOVER */	1,
-/*100*//* LABEL */	0
+    /*00*//* RET */			1,
+    /*01*//* REQ */			3,
+    /*02*//* REQSW */		3,
+    /*03*//* REQEW */		3,
+    /*04*//* PREQ */		3,
+    /*05*//* PRQSW */		3,
+    /*06*//* PRQEW */		3,
+    /*07*//* RETTO */		2,
+    /*08*//* JOIN */		2,
+    /*09*//* SPLIT */		15,
+    /*0a*//* SPTYE */		6,
+    /*0b*//* GTPYE */		6,
+    /*0c*//*  */			1,
+    /*0d*//*  */			1,
+    /*0e*//* DSKCG */		2,
+    /*0f*//* SPECIAL */		2,
+    
+    /*10*//* JMPF */		2,
+    /*11*//* JMPFL */		3,
+    /*12*//* JMPB */		2,
+    /*13*//* JMPBL */		3,
+    /*14*//* IFUB */		6,
+    /*15*//* IFUBL */		7,
+    /*16*//* IFSW */		8,
+    /*17*//* IFSWL */		9,
+    /*18*//* IFUW */		8,
+    /*19*//* IFUWL */		9,
+    /*1a*//*  */			10,
+    /*1b*//*  */			3,
+    /*1c*//*  */			6,
+    /*1d*//*  */			1,
+    /*1e*//*  */			1,
+    /*1f*//*  */			1,
+    
+    /*20*//* MINIGAME */	11,
+    /*21*//* TUTOR */		2,
+    /*22*//* BTMD2 */		5,
+    /*23*//* BTRLD */		3,
+    /*24*//* WAIT */		3,
+    /*25*//* NFADE */		9,
+    /*26*//* BLINK */		2,
+    /*27*//* BGMOVIE */		2,
+    /*28*//* KAWAI */		2,
+    /*29*//* KAWIW */		1,
+    /*2a*//* PMOVA */		2,
+    /*2b*//* SLIP */		2,
+    /*2c*//* BGPDH */		5,
+    /*2d*//* BGSCR */		7,
+    /*2e*//* WCLS */		2,
+    /*2f*//* WSIZW */		10,
+    
+    /*30*//* IFKEY */		4,
+    /*31*//* IFKEYON */		4,
+    /*32*//* IFKEYOFF */	4,
+    /*33*//* UC */			2,
+    /*34*//* PDIRA */		2,
+    /*35*//* PTURA */		4,
+    /*36*//* WSPCL */		5,
+    /*37*//* WNUMB */		8,
+    /*38*//* STTIM */		6,
+    /*39*//* GOLDu */		6,
+    /*3a*//* GOLDd */		6,
+    /*3b*//* CHGLD */		4,
+    /*3c*//* HMPMAX1 */		1,
+    /*3d*//* HMPMAX2 */		1,
+    /*3e*//* MHMMX */		1,
+    /*3f*//* HMPMAX3 */		1,
+    
+    /*40*//* MESSAGE */		3,
+    /*41*//* MPARA */		5,
+    /*42*//* MPRA2 */		6,
+    /*43*//* MPNAM */		2,
+    /*44*//*  */			1,
+    /*45*//* MPu */			5,
+    /*46*//*  */			1,
+    /*47*//* MPd */			5,
+    /*48*//* ASK */			7,
+    /*49*//* MENU */		4,
+    /*4a*//* MENU2 */		2,
+    /*4b*//* BTLTB */		2,
+    /*4c*//*  */			1,
+    /*4d*//* HPu */			5,
+    /*4e*//*  */			1,
+    /*4f*//* HPd */			5,
+    
+    /*50*//* WINDOW */		10,
+    /*51*//* WMOVE */		6,
+    /*52*//* WMODE */		4,
+    /*53*//* WREST */		2,
+    /*54*//* WCLSE */		2,
+    /*55*//* WROW */		3,
+    /*56*//* GWCOL */		7,
+    /*57*//* SWCOL */		7,
+    /*58*//* STITM */		5,
+    /*59*//* DLITM */		5,
+    /*5a*//* CKITM */		5,
+    /*5b*//* SMTRA */		7,
+    /*5c*//* DMTRA */		8,
+    /*5d*//* CMTRA */		10,
+    /*5e*//* SHAKE */		8,
+    /*5f*//* NOP */			1,
+    
+    /*60*//* MAPJUMP */	10,
+    /*61*//* SCRLO */	2,
+    /*62*//* SCRLC */	5,
+    /*63*//* SCRLA */	6,
+    /*64*//* SCR2D */	6,
+    /*65*//* SCRCC */	1,
+    /*66*//* SCR2DC */	9,
+    /*67*//* SCRLW */	1,
+    /*68*//* SCR2DL */	9,
+    /*69*//* MPDSP */	2,
+    /*6a*//* VWOFT */	7,
+    /*6b*//* FADE */		9,
+    /*6c*//* FADEW */	1,
+    /*6d*//* IDLCK */	4,
+    /*6e*//* LSTMP */	3,
+    /*6f*//* SCRLP */		6,
+    
+    /*70*//* BATTLE */	4,
+    /*71*//* BTLON */	2,
+    /*72*//* BTLMD */	3,
+    /*73*//* PGTDR */	4,
+    /*74*//* GETPC */	4,
+    /*75*//* PXYZI */	8,
+    /*76*//* PLUS! */		4,
+    /*77*//* PLUS2! */	5,
+    /*78*//* MINUS! */	4,
+    /*79*//* MINUS2! */	5,
+    /*7a*//* INC! */		3,
+    /*7b*//* INC2! */		3,
+    /*7c*//* DEC! */		3,
+    /*7d*//* DEC2! */		3,
+    /*7e*//* TLKON */	2,
+    /*7f*//* RDMSD */	3,
+    
+    /*80*//* SETBYTE */	4,
+    /*81*//* SETWORD */	5,
+    /*82*//* BITON */	4,
+    /*83*//* BITOFF */	4,
+    /*84*//* BITXOR */	4,
+    /*85*//* PLUS */		4,
+    /*86*//* PLUS2 */	5,
+    /*87*//* MINUS */	4,
+    /*88*//* MINUS2 */	5,
+    /*89*//* MUL */		4,
+    /*8a*//* MUL2 */		5,
+    /*8b*//* DIV */		4,
+    /*8c*//* DIV2 */		5,
+    /*8d*//* MOD */		4,
+    /*8e*//* MOD2 */		5,
+    /*8f*//* AND */		4,
+    
+    /*90*//* AND2 */		5,
+    /*91*//* OR */		4,
+    /*92*//* OR2 */		5,
+    /*93*//* XOR */		4,
+    /*94*//* XOR2 */		5,
+    /*95*//* INC */		3,
+    /*96*//* INC2 */		3,
+    /*97*//* DEC */		3,
+    /*98*//* DEC2 */		3,
+    /*99*//* RANDOM */	3,
+    /*9a*//* LBYTE */	4,
+    /*9b*//* HBYTE */	5,
+    /*9c*//* 2BYTE */	6,
+    /*9d*//* SETX */		7,
+    /*9e*//* GETX */		7,
+    /*9f*//* SEARCHX */	11,
+    
+    /*a0*//* PC */		2,
+    /*a1*//* CHAR */		2,
+    /*a2*//* DFANM */	3,
+    /*a3*//* ANIME1 */	3,
+    /*a4*//* VISI */		2,
+    /*a5*//* XYZI */		11,
+    /*a6*//* XYI */		9,
+    /*a7*//* XYZ */		9,
+    /*a8*//* MOVE */		6,
+    /*a9*//* CMOVE */	6,
+    /*aa*//* MOVA */		2,
+    /*ab*//* TURA */		4,
+    /*ac*//* ANIMW */	1,
+    /*ad*//* FMOVE */	6,
+    /*ae*//* ANIME2 */	3,
+    /*af*//* ANIM!1 */	3,
+    
+    /*b0*//* CANIM1 */	5,
+    /*b1*//* CANM!1 */	5,
+    /*b2*//* MSPED */	4,
+    /*b3*//* DIR */		3,
+    /*b4*//* TURNGEN */	6,
+    /*b5*//* TURN */		6,
+    /*b6*//* DIRA */		2,
+    /*b7*//* GETDIR */	4,
+    /*b8*//* GETAXY */	5,
+    /*b9*//* GETAI */	4,
+    /*ba*//* ANIM!2 */	3,
+    /*bb*//* CANIM2 */	5,
+    /*bc*//* CANM!2 */	5,
+    /*bd*//* ASPED */	4,
+    /*be*//*  */			1,
+    /*bf*//* CC */		2,
+    
+    /*c0*//* JUMP */		11,
+    /*c1*//* AXYZI */	8,
+    /*c2*//* LADER */	15,
+    /*c3*//* OFST */		12,
+    /*c4*//* OFSTW */	1,
+    /*c5*//* TALKR */	3,
+    /*c6*//* SLIDR */	3,
+    /*c7*//* SOLID */	2,
+    /*c8*//* PRTYP */		2,
+    /*c9*//* PRTYM */	2,
+    /*ca*//* PRTYE */		4,
+    /*cb*//* IFPRTYQ */	3,
+    /*cc*//* IFMEMBQ */	3,
+    /*cd*//* MMBud */	3,
+    /*ce*//* MMBLK */	2,
+    /*cf*//* MMBUK */	2,
+    
+    /*d0*//* LINE */		13,
+    /*d1*//* LINON */	2,
+    /*d2*//* MPJPO */	2,
+    /*d3*//* SLINE */	16,
+    /*d4*//* SIN */		10,
+    /*d5*//* COS */		10,
+    /*d6*//* TLKR2 */		4,
+    /*d7*//* SLDR2 */	4,
+    /*d8*//* PMJMP */	3,
+    /*d9*//* PMJMP2 */	1,
+    /*da*//* AKAO2 */	15,
+    /*db*//* FCFIX */		2,
+    /*dc*//* CCANM */	4,
+    /*dd*//* ANIMB */	1,
+    /*de*//* TURNW */	1,
+    /*df*//* MPPAL */		11,
+    
+    /*e0*//* BGON */		4,
+    /*e1*//* BGOFF */	4,
+    /*e2*//* BGROL */	3,
+    /*e3*//* BGROL2 */	3,
+    /*e4*//* BGCLR */	3,
+    /*e5*//* STPAL */	5,
+    /*e6*//* LDPAL */	5,
+    /*e7*//* CPPAL */		5,
+    /*e8*//* RTPAL */		7,
+    /*e9*//* ADPAL */	10,
+    /*ea*//* MPPAL2 */	10,
+    /*eb*//* STPLS */		5,
+    /*ec*//* LDPLS */		5,
+    /*ed*//* CPPAL2 */	8,
+    /*ee*//* RTPAL2 */	8,
+    /*ef*//* ADPAL2 */	11,
+    
+    /*f0*//* MUSIC */	2,
+    /*f1*//* SOUND */	5,
+    /*f2*//* AKAO */		14,
+    /*f3*//* MUSVT */	2,
+    /*f4*//* MUSVM */	2,
+    /*f5*//* MULCK */	2,
+    /*f6*//* BMUSC */	2,
+    /*f7*//* CHMPH */	4,
+    /*f8*//* PMVIE */	2,
+    /*f9*//* MOVIE */	1,
+    /*fa*//* MVIEF */	3,
+    /*fb*//* MVCAM */	2,
+    /*fc*//* FMUSC */	2,
+    /*fd*//* CMUSC */	8,
+    /*fe*//* CHMST */	3,
+    /*ff*//* GAMEOVER */	1,
+    /*100*//* LABEL */	0
 };
 
 const QString Opcode::names[257] =
 {
-/*00*/	"RET",
-/*01*/	"REQ",
-/*02*/	"REQSW",
-/*03*/	"REQEW",
-/*04*/	"PREQ",
-/*05*/	"PRQSW",
-/*06*/	"PRQEW",
-/*07*/	"RETTO",
-/*08*/	"JOIN",
-/*09*/	"SPLIT",
-/*0a*/	"SPTYE",
-/*0b*/	"GTPYE",
-/*0c*/	"Unknown1",
-/*0d*/	"Unknown2",
-/*0e*/	"DSKCG",
-/*0f*/	"SPECIAL",
-	
-/*10*/	"JMPF",
-/*11*/	"JMPFL",
-/*12*/	"JMPB",
-/*13*/	"JMPBL",
-/*14*/	"IFUB",
-/*15*/	"IFUBL",
-/*16*/	"IFSW",
-/*17*/	"IFSWL",
-/*18*/	"IFUW",
-/*19*/	"IFUWL",
-/*1a*/	"Unknown3",
-/*1b*/	"Unknown4",
-/*1c*/	"Unknown5",
-/*1d*/	"Unknown6",
-/*1e*/	"Unknown7",
-/*1f*/	"Unknown8",
-	
-/*20*/	"MINIGAME",
-/*21*/	"TUTOR",
-/*22*/	"BTMD2",
-/*23*/	"BTRLD",
-/*24*/	"WAIT",
-/*25*/	"NFADE",
-/*26*/	"BLINK",
-/*27*/	"BGMOVIE",
-/*28*/	"KAWAI",
-/*29*/	"KAWIW",
-/*2a*/	"PMOVA",
-/*2b*/	"SLIP",
-/*2c*/	"BGPDH",
-/*2d*/	"BGSCR",
-/*2e*/	"WCLS",
-/*2f*/	"WSIZW",
-
-/*30*/	"IFKEY",
-/*31*/	"IFKEYON",
-/*32*/	"IFKEYOFF",
-/*33*/	"UC",
-/*34*/	"PDIRA",
-/*35*/	"PTURA",
-/*36*/	"WSPCL",
-/*37*/	"WNUMB",
-/*38*/	"STTIM",
-/*39*/	"GOLDu",
-/*3a*/	"GOLDd",
-/*3b*/	"CHGLD",
-/*3c*/	"HMPMAX1",
-/*3d*/	"HMPMAX2",
-/*3e*/	"MHMMX",
-/*3f*/	"HMPMAX3",
-
-/*40*/	"MESSAGE",
-/*41*/	"MPARA",
-/*42*/	"MPRA2",
-/*43*/	"MPNAM",
-/*44*/	"Unknown9",
-/*45*/	"MPu",
-/*46*/	"Unknown10",
-/*47*/	"MPd",
-/*48*/	"ASK",
-/*49*/	"MENU",
-/*4a*/	"MENU2",
-/*4b*/	"BTLTB",
-/*4c*/	"Unknown11",
-/*4d*/	"HPu",
-/*4e*/	"Unknown12",
-/*4f*/	"HPd",
-
-/*50*/	"WINDOW",
-/*51*/	"WMOVE",
-/*52*/	"WMODE",
-/*53*/	"WREST",
-/*54*/	"WCLSE",
-/*55*/	"WROW",
-/*56*/	"GWCOL",
-/*57*/	"SWCOL",
-/*58*/	"STITM",
-/*59*/	"DLITM",
-/*5a*/	"CKITM",
-/*5b*/	"SMTRA",
-/*5c*/	"DMTRA",
-/*5d*/	"CMTRA",
-/*5e*/	"SHAKE",
-/*5f*/	"NOP",
-
-/*60*/	"MAPJUMP",
-/*61*/	"SCRLO",
-/*62*/	"SCRLC",
-/*63*/	"SCRLA",
-/*64*/	"SCR2D",
-/*65*/	"SCRCC",
-/*66*/	"SCR2DC",
-/*67*/	"SCRLW",
-/*68*/	"SCR2DL",
-/*69*/	"MPDSP",
-/*6a*/	"VWOFT",
-/*6b*/	"FADE",
-/*6c*/	"FADEW",
-/*6d*/	"IDLCK",
-/*6e*/	"LSTMP",
-/*6f*/	"SCRLP",
-
-/*70*/	"BATTLE",
-/*71*/	"BTLON",
-/*72*/	"BTLMD",
-/*73*/	"PGTDR",
-/*74*/	"GETPC",
-/*75*/	"PXYZI",
-/*76*/	"PLUS!",
-/*77*/	"PLUS2!",
-/*78*/	"MINUS!",
-/*79*/	"MINUS2!",
-/*7a*/	"INC!",
-/*7b*/	"INC2!",
-/*7c*/	"DEC!",
-/*7d*/	"DEC2!",
-/*7e*/	"TLKON",
-/*7f*/	"RDMSD",
-
-/*80*/	"SETBYTE",
-/*81*/	"SETWORD",
-/*82*/	"BITON",
-/*83*/	"BITOFF",
-/*84*/	"BITXOR",
-/*85*/	"PLUS",
-/*86*/	"PLUS2",
-/*87*/	"MINUS",
-/*88*/	"MINUS2",
-/*89*/	"MUL",
-/*8a*/	"MUL2",
-/*8b*/	"DIV",
-/*8c*/	"DIV2",
-/*8d*/	"MOD",
-/*8e*/	"MOD2",
-/*8f*/	"AND",
-
-/*90*/	"AND2",
-/*91*/	"OR",
-/*92*/	"OR2",
-/*93*/	"XOR",
-/*94*/	"XOR2",
-/*95*/	"INC",
-/*96*/	"INC2",
-/*97*/	"DEC",
-/*98*/	"DEC2",
-/*99*/	"RANDOM",
-/*9a*/	"LBYTE",
-/*9b*/	"HBYTE",
-/*9c*/	"2BYTE",
-/*9d*/	"SETX",
-/*9e*/	"GETX",
-/*9f*/	"SEARCHX",
-
-/*a0*/	"PC",
-/*a1*/	"CHAR",
-/*a2*/	"DFANM",
-/*a3*/	"ANIME1",
-/*a4*/	"VISI",
-/*a5*/	"XYZI",
-/*a6*/	"XYI",
-/*a7*/	"XYZ",
-/*a8*/	"MOVE",
-/*a9*/	"CMOVE",
-/*aa*/	"MOVA",
-/*ab*/	"TURA",
-/*ac*/	"ANIMW",
-/*ad*/	"FMOVE",
-/*ae*/	"ANIME2",
-/*af*/	"ANIM!1",
-
-/*b0*/	"CANIM1",
-/*b1*/	"CANM!1",
-/*b2*/	"MSPED",
-/*b3*/	"DIR",
-/*b4*/	"TURNGEN",
-/*b5*/	"TURN",
-/*b6*/	"DIRA",
-/*b7*/	"GETDIR",
-/*b8*/	"GETAXY",
-/*b9*/	"GETAI",
-/*ba*/	"ANIM!2",
-/*bb*/	"CANIM2",
-/*bc*/	"CANM!2",
-/*bd*/	"ASPED",
-/*be*/	"Unknown13",
-/*bf*/	"CC",
-
-/*c0*/	"JUMP",
-/*c1*/	"AXYZI",
-/*c2*/	"LADER",
-/*c3*/	"OFST",
-/*c4*/	"OFSTW",
-/*c5*/	"TALKR",
-/*c6*/	"SLIDR",
-/*c7*/	"SOLID",
-/*c8*/	"PRTYP",
-/*c9*/	"PRTYM",
-/*ca*/	"PRTYE",
-/*cb*/	"IFPRTYQ",
-/*cc*/	"IFMEMBQ",
-/*cd*/	"MMBud",
-/*ce*/	"MMBLK",
-/*cf*/	"MMBUK",
-
-/*d0*/	"LINE",
-/*d1*/	"LINON",
-/*d2*/	"MPJPO",
-/*d3*/	"SLINE",
-/*d4*/	"SIN",
-/*d5*/	"COS",
-/*d6*/	"TLKR2",
-/*d7*/	"SLDR2",
-/*d8*/	"PMJMP",
-/*d9*/	"PMJMP2",
-/*da*/	"AKAO2",
-/*db*/	"FCFIX",
-/*dc*/	"CCANM",
-/*dd*/	"ANIMB",
-/*de*/	"TURNW",
-/*df*/	"MPPAL",
-
-/*e0*/	"BGON",
-/*e1*/	"BGOFF",
-/*e2*/	"BGROL",
-/*e3*/	"BGROL2",
-/*e4*/	"BGCLR",
-/*e5*/	"STPAL",
-/*e6*/	"LDPAL",
-/*e7*/	"CPPAL",
-/*e8*/	"RTPAL",
-/*e9*/	"ADPAL",
-/*ea*/	"MPPAL2",
-/*eb*/	"STPLS",
-/*ec*/	"LDPLS",
-/*ed*/	"CPPAL2",
-/*ee*/	"RTPAL2",
-/*ef*/	"ADPAL2",
-
-/*f0*/	"MUSIC",
-/*f1*/	"SOUND",
-/*f2*/	"AKAO",
-/*f3*/	"MUSVT",
-/*f4*/	"MUSVM",
-/*f5*/	"MULCK",
-/*f6*/	"BMUSC",
-/*f7*/	"CHMPH",
-/*f8*/	"PMVIE",
-/*f9*/	"MOVIE",
-/*fa*/	"MVIEF",
-/*fb*/	"MVCAM",
-/*fc*/	"FMUSC",
-/*fd*/	"CMUSC",
-/*fe*/	"CHMST",
-/*ff*/	"GAMEOVER",
-/*100*/	"LABEL"
+    /*00*/	"RET",
+    /*01*/	"REQ",
+    /*02*/	"REQSW",
+    /*03*/	"REQEW",
+    /*04*/	"PREQ",
+    /*05*/	"PRQSW",
+    /*06*/	"PRQEW",
+    /*07*/	"RETTO",
+    /*08*/	"JOIN",
+    /*09*/	"SPLIT",
+    /*0a*/	"SPTYE",
+    /*0b*/	"GTPYE",
+    /*0c*/	"Unknown1",
+    /*0d*/	"Unknown2",
+    /*0e*/	"DSKCG",
+    /*0f*/	"SPECIAL",
+    
+    /*10*/	"JMPF",
+    /*11*/	"JMPFL",
+    /*12*/	"JMPB",
+    /*13*/	"JMPBL",
+    /*14*/	"IFUB",
+    /*15*/	"IFUBL",
+    /*16*/	"IFSW",
+    /*17*/	"IFSWL",
+    /*18*/	"IFUW",
+    /*19*/	"IFUWL",
+    /*1a*/	"Unknown3",
+    /*1b*/	"Unknown4",
+    /*1c*/	"Unknown5",
+    /*1d*/	"Unknown6",
+    /*1e*/	"Unknown7",
+    /*1f*/	"Unknown8",
+    
+    /*20*/	"MINIGAME",
+    /*21*/	"TUTOR",
+    /*22*/	"BTMD2",
+    /*23*/	"BTRLD",
+    /*24*/	"WAIT",
+    /*25*/	"NFADE",
+    /*26*/	"BLINK",
+    /*27*/	"BGMOVIE",
+    /*28*/	"KAWAI",
+    /*29*/	"KAWIW",
+    /*2a*/	"PMOVA",
+    /*2b*/	"SLIP",
+    /*2c*/	"BGPDH",
+    /*2d*/	"BGSCR",
+    /*2e*/	"WCLS",
+    /*2f*/	"WSIZW",
+    
+    /*30*/	"IFKEY",
+    /*31*/	"IFKEYON",
+    /*32*/	"IFKEYOFF",
+    /*33*/	"UC",
+    /*34*/	"PDIRA",
+    /*35*/	"PTURA",
+    /*36*/	"WSPCL",
+    /*37*/	"WNUMB",
+    /*38*/	"STTIM",
+    /*39*/	"GOLDu",
+    /*3a*/	"GOLDd",
+    /*3b*/	"CHGLD",
+    /*3c*/	"HMPMAX1",
+    /*3d*/	"HMPMAX2",
+    /*3e*/	"MHMMX",
+    /*3f*/	"HMPMAX3",
+    
+    /*40*/	"MESSAGE",
+    /*41*/	"MPARA",
+    /*42*/	"MPRA2",
+    /*43*/	"MPNAM",
+    /*44*/	"Unknown9",
+    /*45*/	"MPu",
+    /*46*/	"Unknown10",
+    /*47*/	"MPd",
+    /*48*/	"ASK",
+    /*49*/	"MENU",
+    /*4a*/	"MENU2",
+    /*4b*/	"BTLTB",
+    /*4c*/	"Unknown11",
+    /*4d*/	"HPu",
+    /*4e*/	"Unknown12",
+    /*4f*/	"HPd",
+    
+    /*50*/	"WINDOW",
+    /*51*/	"WMOVE",
+    /*52*/	"WMODE",
+    /*53*/	"WREST",
+    /*54*/	"WCLSE",
+    /*55*/	"WROW",
+    /*56*/	"GWCOL",
+    /*57*/	"SWCOL",
+    /*58*/	"STITM",
+    /*59*/	"DLITM",
+    /*5a*/	"CKITM",
+    /*5b*/	"SMTRA",
+    /*5c*/	"DMTRA",
+    /*5d*/	"CMTRA",
+    /*5e*/	"SHAKE",
+    /*5f*/	"NOP",
+    
+    /*60*/	"MAPJUMP",
+    /*61*/	"SCRLO",
+    /*62*/	"SCRLC",
+    /*63*/	"SCRLA",
+    /*64*/	"SCR2D",
+    /*65*/	"SCRCC",
+    /*66*/	"SCR2DC",
+    /*67*/	"SCRLW",
+    /*68*/	"SCR2DL",
+    /*69*/	"MPDSP",
+    /*6a*/	"VWOFT",
+    /*6b*/	"FADE",
+    /*6c*/	"FADEW",
+    /*6d*/	"IDLCK",
+    /*6e*/	"LSTMP",
+    /*6f*/	"SCRLP",
+    
+    /*70*/	"BATTLE",
+    /*71*/	"BTLON",
+    /*72*/	"BTLMD",
+    /*73*/	"PGTDR",
+    /*74*/	"GETPC",
+    /*75*/	"PXYZI",
+    /*76*/	"PLUS!",
+    /*77*/	"PLUS2!",
+    /*78*/	"MINUS!",
+    /*79*/	"MINUS2!",
+    /*7a*/	"INC!",
+    /*7b*/	"INC2!",
+    /*7c*/	"DEC!",
+    /*7d*/	"DEC2!",
+    /*7e*/	"TLKON",
+    /*7f*/	"RDMSD",
+    
+    /*80*/	"SETBYTE",
+    /*81*/	"SETWORD",
+    /*82*/	"BITON",
+    /*83*/	"BITOFF",
+    /*84*/	"BITXOR",
+    /*85*/	"PLUS",
+    /*86*/	"PLUS2",
+    /*87*/	"MINUS",
+    /*88*/	"MINUS2",
+    /*89*/	"MUL",
+    /*8a*/	"MUL2",
+    /*8b*/	"DIV",
+    /*8c*/	"DIV2",
+    /*8d*/	"MOD",
+    /*8e*/	"MOD2",
+    /*8f*/	"AND",
+    
+    /*90*/	"AND2",
+    /*91*/	"OR",
+    /*92*/	"OR2",
+    /*93*/	"XOR",
+    /*94*/	"XOR2",
+    /*95*/	"INC",
+    /*96*/	"INC2",
+    /*97*/	"DEC",
+    /*98*/	"DEC2",
+    /*99*/	"RANDOM",
+    /*9a*/	"LBYTE",
+    /*9b*/	"HBYTE",
+    /*9c*/	"2BYTE",
+    /*9d*/	"SETX",
+    /*9e*/	"GETX",
+    /*9f*/	"SEARCHX",
+    
+    /*a0*/	"PC",
+    /*a1*/	"CHAR",
+    /*a2*/	"DFANM",
+    /*a3*/	"ANIME1",
+    /*a4*/	"VISI",
+    /*a5*/	"XYZI",
+    /*a6*/	"XYI",
+    /*a7*/	"XYZ",
+    /*a8*/	"MOVE",
+    /*a9*/	"CMOVE",
+    /*aa*/	"MOVA",
+    /*ab*/	"TURA",
+    /*ac*/	"ANIMW",
+    /*ad*/	"FMOVE",
+    /*ae*/	"ANIME2",
+    /*af*/	"ANIM!1",
+    
+    /*b0*/	"CANIM1",
+    /*b1*/	"CANM!1",
+    /*b2*/	"MSPED",
+    /*b3*/	"DIR",
+    /*b4*/	"TURNGEN",
+    /*b5*/	"TURN",
+    /*b6*/	"DIRA",
+    /*b7*/	"GETDIR",
+    /*b8*/	"GETAXY",
+    /*b9*/	"GETAI",
+    /*ba*/	"ANIM!2",
+    /*bb*/	"CANIM2",
+    /*bc*/	"CANM!2",
+    /*bd*/	"ASPED",
+    /*be*/	"Unknown13",
+    /*bf*/	"CC",
+    
+    /*c0*/	"JUMP",
+    /*c1*/	"AXYZI",
+    /*c2*/	"LADER",
+    /*c3*/	"OFST",
+    /*c4*/	"OFSTW",
+    /*c5*/	"TALKR",
+    /*c6*/	"SLIDR",
+    /*c7*/	"SOLID",
+    /*c8*/	"PRTYP",
+    /*c9*/	"PRTYM",
+    /*ca*/	"PRTYE",
+    /*cb*/	"IFPRTYQ",
+    /*cc*/	"IFMEMBQ",
+    /*cd*/	"MMBud",
+    /*ce*/	"MMBLK",
+    /*cf*/	"MMBUK",
+    
+    /*d0*/	"LINE",
+    /*d1*/	"LINON",
+    /*d2*/	"MPJPO",
+    /*d3*/	"SLINE",
+    /*d4*/	"SIN",
+    /*d5*/	"COS",
+    /*d6*/	"TLKR2",
+    /*d7*/	"SLDR2",
+    /*d8*/	"PMJMP",
+    /*d9*/	"PMJMP2",
+    /*da*/	"AKAO2",
+    /*db*/	"FCFIX",
+    /*dc*/	"CCANM",
+    /*dd*/	"ANIMB",
+    /*de*/	"TURNW",
+    /*df*/	"MPPAL",
+    
+    /*e0*/	"BGON",
+    /*e1*/	"BGOFF",
+    /*e2*/	"BGROL",
+    /*e3*/	"BGROL2",
+    /*e4*/	"BGCLR",
+    /*e5*/	"STPAL",
+    /*e6*/	"LDPAL",
+    /*e7*/	"CPPAL",
+    /*e8*/	"RTPAL",
+    /*e9*/	"ADPAL",
+    /*ea*/	"MPPAL2",
+    /*eb*/	"STPLS",
+    /*ec*/	"LDPLS",
+    /*ed*/	"CPPAL2",
+    /*ee*/	"RTPAL2",
+    /*ef*/	"ADPAL2",
+    
+    /*f0*/	"MUSIC",
+    /*f1*/	"SOUND",
+    /*f2*/	"AKAO",
+    /*f3*/	"MUSVT",
+    /*f4*/	"MUSVM",
+    /*f5*/	"MULCK",
+    /*f6*/	"BMUSC",
+    /*f7*/	"CHMPH",
+    /*f8*/	"PMVIE",
+    /*f9*/	"MOVIE",
+    /*fa*/	"MVIEF",
+    /*fb*/	"MVCAM",
+    /*fc*/	"FMUSC",
+    /*fd*/	"CMUSC",
+    /*fe*/	"CHMST",
+    /*ff*/	"GAMEOVER",
+    /*100*/	"LABEL"
 };
