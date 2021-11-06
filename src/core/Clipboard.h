@@ -24,7 +24,7 @@
 #define VERSION_FF7_FIELD_SCRIPT_GROUPS 1
 #define MIME_FF7_FIELD_SCRIPT_GROUPS "application/x-makoureactor-ff7-field-script-groups"
 
-class OpcodeBox;
+class Opcode;
 class GrpScript;
 class QClipboard;
 
@@ -33,8 +33,8 @@ class Clipboard
 public:
 	static Clipboard *instance();
 	bool hasFf7FieldScriptOpcodes() const;
-	QList<OpcodeBox> ff7FieldScriptOpcodes() const;
-	void setFF7FieldScriptOpcodes(const QList<OpcodeBox> &opcodes);
+	QList<Opcode> ff7FieldScriptOpcodes() const;
+	void setFF7FieldScriptOpcodes(const QList<Opcode> &opcodes);
 	bool hasFf7FieldScriptGroups() const;
 	QList<GrpScript> ff7FieldScriptGroups() const;
 	void setFF7FieldScriptGroups(const QList<GrpScript> &groups);

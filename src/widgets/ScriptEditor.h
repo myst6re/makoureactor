@@ -29,7 +29,7 @@ public:
 	ScriptEditor(Field *field, const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, bool modify, bool isInit, QWidget *parent = nullptr);
 
 	bool needslabel() const;
-	OpcodeBox buildOpcode() const;
+	Opcode buildOpcode() const;
 
 private slots:
 	void refreshTextEdit();
@@ -67,7 +67,7 @@ private:
 	void setCurrentMenu(int id);
 	ScriptEditorView *buildEditorPage(PageType id);
 
-	static QList<Opcode::Keys> crashIfInit;
+	static QList<OpcodeKey> crashIfInit;
 
 	QComboBox *comboBox0, *comboBox;
 	QPlainTextEdit *textEdit;
@@ -81,7 +81,7 @@ private:
 	const Section1File *scriptsAndTexts;
 	const GrpScript &grpScript;
 	const Script &script;
-	OpcodeBox opcode;
+	Opcode opcode;
 	int opcodeID;
 	bool isInit, modify, change;
 };

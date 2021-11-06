@@ -149,7 +149,7 @@ QTreeWidgetItem *SearchAll::createItemOpcode(int mapID, int grpScriptID, int scr
 				const GrpScript &grp = f->scriptsAndTexts()->grpScript(grpScriptID);
 				item->setText(0, QString("%1 : %2").arg(grpScriptID, 3).arg(grp.name()));
 				item->setText(1, grp.scriptName(quint8(scriptID)));
-				item->setText(3, grp.script(quint8(scriptID)).opcode(quint16(opcodeID))->toString(f->scriptsAndTexts()));
+				item->setText(3, grp.script(quint8(scriptID)).opcode(quint16(opcodeID)).toString(f->scriptsAndTexts()));
 			}
 		}
 	}

@@ -24,29 +24,29 @@
 #include "ScriptEditorWidgets/ScriptEditorSpecialPage.h"
 #include "ScriptEditorWidgets/ScriptEditorWalkmeshPage.h"
 
-QList<Opcode::Keys> ScriptEditor::crashIfInit;
+QList<OpcodeKey> ScriptEditor::crashIfInit;
 
 ScriptEditor::ScriptEditor(Field *field, const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, bool modify, bool isInit, QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowCloseButtonHint), _currentPageWidget(nullptr), _currentPageType(GenericList),
-	field(field), scriptsAndTexts(scriptsAndTexts), grpScript(grpScript), script(script), opcode(nullptr), opcodeID(opcodeID), isInit(isInit), modify(modify), change(false)
+	field(field), scriptsAndTexts(scriptsAndTexts), grpScript(grpScript), script(script), opcodeID(opcodeID), isInit(isInit), modify(modify), change(false)
 {
 	if (crashIfInit.isEmpty()) {
-		crashIfInit << Opcode::JOIN << Opcode::SPLIT
-		            << Opcode::DSKCG
-		            << Opcode::MINIGAME << Opcode::TUTOR
-		            << Opcode::PMOVA
-		            << Opcode::PTURA
-		            << Opcode::MESSAGE << Opcode::ASK << Opcode::MENU
-		            << Opcode::WINDOW << Opcode::MAPJUMP
-		            << Opcode::DFANM << Opcode::ANIME1
-		            << Opcode::MOVE << Opcode::CMOVE << Opcode::FMOVE
-		            << Opcode::ANIME2 << Opcode::ANIMX1 << Opcode::CANIM1 << Opcode::CANMX1
-		            << Opcode::TURNGEN << Opcode::TURN << Opcode::ANIMX2 << Opcode::CANIM2
-		            << Opcode::CANMX2 << Opcode::JUMP << Opcode::LADER;
+		crashIfInit << OpcodeKey::JOIN << OpcodeKey::SPLIT
+		            << OpcodeKey::DSKCG
+		            << OpcodeKey::MINIGAME << OpcodeKey::TUTOR
+		            << OpcodeKey::PMOVA
+		            << OpcodeKey::PTURA
+		            << OpcodeKey::MESSAGE << OpcodeKey::ASK << OpcodeKey::MENU
+		            << OpcodeKey::WINDOW << OpcodeKey::MAPJUMP
+		            << OpcodeKey::DFANM << OpcodeKey::ANIME1
+		            << OpcodeKey::MOVE << OpcodeKey::CMOVE << OpcodeKey::FMOVE
+		            << OpcodeKey::ANIME2 << OpcodeKey::ANIMX1 << OpcodeKey::CANIM1 << OpcodeKey::CANMX1
+		            << OpcodeKey::TURNGEN << OpcodeKey::TURN << OpcodeKey::ANIMX2 << OpcodeKey::CANIM2
+		            << OpcodeKey::CANMX2 << OpcodeKey::JUMP << OpcodeKey::LADER;
 	}
 
 	setWindowTitle(tr("Script Editor%1").arg(isInit ? tr(" (init mode)") : ""));
-	setMinimumSize(640, 400);
+	setMinimumSize(640, 480);
 	
 	QStringList liste0;
 	liste0 << tr("Control Structures") <<
@@ -94,18 +94,18 @@ ScriptEditor::ScriptEditor(Field *field, const Section1File *scriptsAndTexts, co
 
 	if (modify) {
 		this->opcode = script.opcode(opcodeID);
-		int id = opcode->id();
+		int id = opcode.id();
 
-		if (id == Opcode::SPECIAL) {
-			id = (opcode.cast<OpcodeSPECIAL>().opcode->id() << 8) | id;
-		} else if (id == Opcode::KAWAI) {
-			id = (opcode.cast<OpcodeKAWAI>().opcode->id() << 8) | id;
+		if (id == OpcodeKey::SPECIAL) {
+			id = (opcode.op().opcodeSPECIAL.subKey << 8) | id;
+		} else if (id == OpcodeKey::KAWAI) {
+			id = (opcode.op().opcodeKAWAI.subKey << 8) | id;
 		}
 
 		setCurrentMenu(id);
 		fillView();
 	} else {
-		this->opcode = OpcodeBox(new OpcodeRET());
+		this->opcode = OpcodeRET();
 		comboBox->setCurrentIndex(0);
 		changeCurrentOpcode(0);
 	}
@@ -177,113 +177,113 @@ void ScriptEditor::fillEditor()
 
 	// Change current editor widget
 	switch (opcode.id()) {
-	case Opcode::RETTO:
+	case OpcodeKey::RETTO:
 		_currentPageType = ReturnTo;
 		break;
-	case Opcode::REQEW:case Opcode::REQ:
-	case Opcode::REQSW:
+	case OpcodeKey::REQEW:case OpcodeKey::REQ:
+	case OpcodeKey::REQSW:
 		_currentPageType = Exec;
 		break;
-	case Opcode::PRQEW:case Opcode::PREQ:
-	case Opcode::PRQSW:
+	case OpcodeKey::PRQEW:case OpcodeKey::PREQ:
+	case OpcodeKey::PRQSW:
 		_currentPageType = ExecChar;
 		break;
-	case Opcode::LABEL:
+	case OpcodeKey::LABEL:
 		_currentPageType = Label;
 		break;
-	case Opcode::JMPF:case Opcode::JMPFL:
-	case Opcode::JMPB:case Opcode::JMPBL:
+	case OpcodeKey::JMPF:case OpcodeKey::JMPFL:
+	case OpcodeKey::JMPB:case OpcodeKey::JMPBL:
 		_currentPageType = Jump;
 		break;
-	case Opcode::IFUB:case Opcode::IFUBL:
-	case Opcode::IFSW:case Opcode::IFSWL:
-	case Opcode::IFUW:case Opcode::IFUWL:
+	case OpcodeKey::IFUB:case OpcodeKey::IFUBL:
+	case OpcodeKey::IFSW:case OpcodeKey::IFSWL:
+	case OpcodeKey::IFUW:case OpcodeKey::IFUWL:
 		_currentPageType = If;
 		break;
-	case Opcode::IFKEY:case Opcode::IFKEYON:
-	case Opcode::IFKEYOFF:
+	case OpcodeKey::IFKEY:case OpcodeKey::IFKEYON:
+	case OpcodeKey::IFKEYOFF:
 		_currentPageType = IfKey;
 		break;
-	case Opcode::IFMEMBQ:case Opcode::IFPRTYQ:
+	case OpcodeKey::IFMEMBQ:case OpcodeKey::IFPRTYQ:
 		_currentPageType = IfQ;
 		break;
-	case Opcode::WAIT:
+	case OpcodeKey::WAIT:
 		_currentPageType = Wait;
 		break;
-	case Opcode::PLUSX:case Opcode::PLUS2X:
-	case Opcode::MINUSX:case Opcode::MINUS2X:
-	case Opcode::SETBYTE:case Opcode::SETWORD:
-	case Opcode::PLUS:case Opcode::PLUS2:
-	case Opcode::MINUS:case Opcode::MINUS2:
-	case Opcode::MUL:case Opcode::MUL2:
-	case Opcode::DIV:case Opcode::DIV2:
-	case Opcode::MOD:case Opcode::MOD2:
-	case Opcode::AND:case Opcode::AND2:
-	case Opcode::OR:case Opcode::OR2:
-	case Opcode::XOR:case Opcode::XOR2:
-	case Opcode::LBYTE:case Opcode::HBYTE:
+	case OpcodeKey::PLUSX:case OpcodeKey::PLUS2X:
+	case OpcodeKey::MINUSX:case OpcodeKey::MINUS2X:
+	case OpcodeKey::SETBYTE:case OpcodeKey::SETWORD:
+	case OpcodeKey::PLUS:case OpcodeKey::PLUS2:
+	case OpcodeKey::MINUS:case OpcodeKey::MINUS2:
+	case OpcodeKey::MUL:case OpcodeKey::MUL2:
+	case OpcodeKey::DIV:case OpcodeKey::DIV2:
+	case OpcodeKey::MOD:case OpcodeKey::MOD2:
+	case OpcodeKey::AND:case OpcodeKey::AND2:
+	case OpcodeKey::OR:case OpcodeKey::OR2:
+	case OpcodeKey::XOR:case OpcodeKey::XOR2:
+	case OpcodeKey::LBYTE:case OpcodeKey::HBYTE:
 		_currentPageType = BinaryOp;
 		break;
-	case Opcode::INCX:case Opcode::INC2X:
-	case Opcode::INC:case Opcode::INC2:
-	case Opcode::DECX:case Opcode::DEC2X:
-	case Opcode::DEC:case Opcode::DEC2:
-	case Opcode::RANDOM:
+	case OpcodeKey::INCX:case OpcodeKey::INC2X:
+	case OpcodeKey::INC:case OpcodeKey::INC2:
+	case OpcodeKey::DECX:case OpcodeKey::DEC2X:
+	case OpcodeKey::DEC:case OpcodeKey::DEC2:
+	case OpcodeKey::RANDOM:
 		_currentPageType = UnaryOp;
 		break;
-	case Opcode::BITOFF:case Opcode::BITON:
-	case Opcode::BITXOR:
+	case OpcodeKey::BITOFF:case OpcodeKey::BITON:
+	case OpcodeKey::BITXOR:
 		_currentPageType = BitOp;
 		break;
-	case Opcode::RDMSD:
-	/* case Opcode::BTRLD:
-	case Opcode::TALKR:
-	case Opcode::SLIDR:
-	case Opcode::TLKR2:
-	case Opcode::SLDR2:
-	case Opcode::BATTLE:
-	case Opcode::LSTMP:
-	case Opcode::MVIEF:
-	case Opcode::CHMST: */
+	case OpcodeKey::RDMSD:
+	/* case OpcodeKey::BTRLD:
+	case OpcodeKey::TALKR:
+	case OpcodeKey::SLIDR:
+	case OpcodeKey::TLKR2:
+	case OpcodeKey::SLDR2:
+	case OpcodeKey::BATTLE:
+	case OpcodeKey::LSTMP:
+	case OpcodeKey::MVIEF:
+	case OpcodeKey::CHMST: */
 		_currentPageType = Variable;
 		break;
-	case Opcode::WINDOW:case Opcode::WSIZW:
-	case Opcode::WROW:
+	case OpcodeKey::WINDOW:case OpcodeKey::WSIZW:
+	case OpcodeKey::WROW:
 		_currentPageType = Window;
 		break;
-	case Opcode::WMODE:
+	case OpcodeKey::WMODE:
 		_currentPageType = WindowMode;
 		break;
-	case Opcode::WMOVE:
+	case OpcodeKey::WMOVE:
 		_currentPageType = WindowMove;
 		break;
-	case Opcode::PMVIE:
+	case OpcodeKey::PMVIE:
 		_currentPageType = Movie;
 		break;
-	case Opcode::LINE:
+	case OpcodeKey::LINE:
 		_currentPageType = Walkmesh;
 		break;
-	case Opcode::Unknown3:
+	case OpcodeKey::Unused1A:
 		_currentPageType = DLPBSavemap;
 		break;
-	case Opcode::Unknown4:
+	case OpcodeKey::Unused1B:
 		_currentPageType = JumpNanaki;
 		break;
-	case Opcode::Unknown5:
+	case OpcodeKey::Unused1C:
 		_currentPageType = DLPBWriteToMemory;
 		break;
-	case Opcode::LINON:
-	case Opcode::MENU2:
-	case Opcode::VISI:
-	case Opcode::FCFIX:
-	case Opcode::BLINK:
-	case Opcode::TLKON:
-	case Opcode::SOLID:
-	case Opcode::SLIP:
-	case Opcode::BGMOVIE:
-	case Opcode::BTLON:
-	case Opcode::MPJPO:
-	case Opcode::UC:
+	case OpcodeKey::LINON:
+	case OpcodeKey::MENU2:
+	case OpcodeKey::VISI:
+	case OpcodeKey::FCFIX:
+	case OpcodeKey::BLINK:
+	case OpcodeKey::TLKON:
+	case OpcodeKey::SOLID:
+	case OpcodeKey::SLIP:
+	case OpcodeKey::BGMOVIE:
+	case OpcodeKey::BTLON:
+	case OpcodeKey::MPJPO:
+	case OpcodeKey::UC:
 		_currentPageType = Boolean;
 		break;
 	default:
@@ -297,7 +297,7 @@ void ScriptEditor::fillEditor()
 	} else {
 		_currentPageWidget = static_cast<ScriptEditorView *>(editorLayout->widget(_typeToIndex.value(_currentPageType)));
 	}
-	bool hasParams = opcode->hasParams() || opcode->isLabel();
+	bool hasParams = opcode.size() > 1 || opcode.id() == OpcodeKey::LABEL;
 	editorLayout->setVisible(hasParams);
 	editorLayout->setCurrentWidget(_currentPageWidget);
 	_currentPageWidget->setOpcode(opcode);
@@ -305,7 +305,7 @@ void ScriptEditor::fillEditor()
 
 void ScriptEditor::fillView()
 {
-	textEdit->setPlainText(opcode->toString(scriptsAndTexts)); // text part
+	textEdit->setPlainText(opcode.toString(scriptsAndTexts)); // text part
 	fillEditor(); // editor part
 
 	// disable if necessary
@@ -326,7 +326,7 @@ bool ScriptEditor::needslabel() const
 	        && static_cast<ScriptEditorJumpPageInterface *>(_currentPageWidget)->needsLabel();
 }
 
-OpcodeBox ScriptEditor::buildOpcode() const
+Opcode ScriptEditor::buildOpcode() const
 {
 	return _currentPageWidget->buildOpcode();
 }
@@ -337,7 +337,7 @@ void ScriptEditor::refreshTextEdit()
 
 	opcode = _currentPageWidget->buildOpcode();
 
-	textEdit->setPlainText(opcode->toString(scriptsAndTexts));
+	textEdit->setPlainText(opcode.toString(scriptsAndTexts));
 }
 
 void ScriptEditor::changeCurrentOpcode(int index)
@@ -349,11 +349,13 @@ void ScriptEditor::changeCurrentOpcode(int index)
 
 	// Create opcode
 
-	if (Opcode::LABEL == itemData) { // LABEL exception
-		if (Opcode::LABEL == opcode.id()) {
-			opcode.cast<OpcodeLabel>().setLabel(0);
+	if (OpcodeKey::LABEL == itemData) { // LABEL exception
+		if (OpcodeKey::LABEL == opcode.id()) {
+			opcode.setLabel(0);
 		} else {
-			opcode = OpcodeBox(new OpcodeLabel(0));
+			OpcodeLABEL opcodeLabel;
+			opcodeLabel._label = 0;
+			opcode = opcodeLabel;
 		}
 	} else {
 		const quint8 id = itemData & 0xFF;
@@ -362,10 +364,10 @@ void ScriptEditor::changeCurrentOpcode(int index)
 
 		// Fill opcode with \x00
 
-		if (Opcode::KAWAI == id) { //KAWAI
+		if (OpcodeKey::KAWAI == id) { //KAWAI
 			newOpcode.append('\x03'); // size
 			newOpcode.append(char((itemData >> 8) & 0xFF)); // KAWAI ID
-		} else if (Opcode::SPECIAL == id) { //SPECIAL
+		} else if (OpcodeKey::SPECIAL == id) { //SPECIAL
 			quint8 byte2 = (itemData >> 8) & 0xFF;
 			newOpcode.append(char(byte2)); // SPECIAL ID
 			switch (byte2)
@@ -385,9 +387,9 @@ void ScriptEditor::changeCurrentOpcode(int index)
 		}
 
 		if (id == opcode.id()) {
-			opcode->setParams(newOpcode.constData() + 1, int(newOpcode.size() - 1)); // same opcode, just change params
+			opcode.setParams(newOpcode.constData() + 1, int(newOpcode.size() - 1)); // same opcode, just change params
 		} else { // change all
-			opcode = newOpcode;
+			opcode = Opcode(newOpcode.constData(), newOpcode.size());
 		}
 	}
 
@@ -440,7 +442,7 @@ void ScriptEditor::buildList(int id)
 						  << 0x14 << 0x15 << 0x16 << 0x17 << 0x18 << 0x19);
 		comboBox->addItem(tr("If key pressed"), QList<QVariant>() << 0x30 << 0x31 << 0x32);
 		comboBox->addItem(tr("If Party Member"), QList<QVariant>() << 0xCB);
-		comboBox->addItem(tr("If character exsists"), QList<QVariant>() << 0xCC);
+		comboBox->addItem(tr("If character exists"), QList<QVariant>() << 0xCC);
 		comboBox->addItem(tr("[DLPB's custom opcode] If Red XIII is named Nanaki"), QList<QVariant>() << 0x1B);
 		comboBox->insertSeparator(comboBox->count());
 		comboBox->addItem(tr("Wait"), QList<QVariant>() << 0x24);

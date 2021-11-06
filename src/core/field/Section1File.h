@@ -56,13 +56,13 @@ public:
 	bool searchOpcode(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchExec(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
-	bool searchMapJump(quint16 field, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchMapJump(quint16 map, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchTextInScripts(const QRegularExpression &text, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchText(const QRegularExpression &text, int &textID, qsizetype &from, qsizetype &size) const;
 	bool searchOpcodeP(int opcode, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchExecP(quint8 group, quint8 script, int &groupID, int &scriptID, int &opcodeID) const;
-	bool searchMapJumpP(quint16 mapJump, int &groupID, int &scriptID, int &opcodeID) const;
+	bool searchMapJumpP(quint16 map, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchTextInScriptsP(const QRegularExpression &text, int &groupID, int &scriptID, int &opcodeID) const;
 	bool searchTextP(const QRegularExpression &text, int &textID, qsizetype &from, qsizetype &index, qsizetype &size) const;
 	void setWindow(const FF7Window &win);

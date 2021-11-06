@@ -261,16 +261,16 @@ void OpcodeList::itemSelected()
 		return;
 	}
 
-	const OpcodeBox &opcode = _script->opcode(opcodeID);
+	const Opcode &opcode = _script->opcode(opcodeID);
 
 	switch (opcode.id()) {
-	case Opcode::ASK:
-	case Opcode::MESSAGE:
-	case Opcode::MPNAM:
+	case OpcodeKey::ASK:
+	case OpcodeKey::MESSAGE:
+	case OpcodeKey::MPNAM:
 		text_A->setVisible(true);
 		break;
-	case Opcode::SPECIAL:
-		text_A->setVisible(opcode.cast<OpcodeSPECIAL>().opcode->id() == 0xFD);
+	case OpcodeKey::SPECIAL:
+		text_A->setVisible(opcode.op().opcodeSPECIAL.subKey == OpcodeSpecialKey::SPCNM);
 		break;
 	default:
 		text_A->setVisible(false);
@@ -278,10 +278,10 @@ void OpcodeList::itemSelected()
 	}
 
 	bool visible = true;
-	if (opcode->isJump()) {
+	if (opcode.isJump()) {
 		goto_A->setText(tr("Goto label"));
 		_help->setText(tr("Alt + Click to go to the label"));
-	} else if (opcode->isExec()) {
+	} else if (opcode.isExec()) {
 		goto_A->setText(tr("Goto script"));
 		_help->setText(tr("Alt + Click to go to the script"));
 	} else {
@@ -320,7 +320,7 @@ void OpcodeList::editText()
 
 	int opcodeID = selectedID();
 	if (opcodeID >= 0 && opcodeID < _script->size()) {
-		int textID = _script->opcode(opcodeID)->getTextID();
+		int textID = _script->opcode(opcodeID).textID();
 		if (textID >= 0) {
 			emit editText(textID);
 		}
@@ -333,9 +333,9 @@ void OpcodeList::saveExpandedItems()
 		return;
 	}
 
-	for (OpcodeBox &opcode: _script->opcodes()) {
-		if (opcode->isIf()) {
-			opcode.cast<OpcodeIf>().itemIsExpanded = false;
+	for (Opcode &opcode: _script->opcodes()) {
+		if (opcode.isIf()) {
+			opcode.setItemIsExpanded(false);
 		}
 	}
 
@@ -351,10 +351,10 @@ void OpcodeList::saveExpandedItems()
 	while (!items.empty()) {
 		QTreeWidgetItem *item = items.dequeue();
 		const int opcodeID = item->data(0, Qt::UserRole).toInt();
-		OpcodeBox &opcode = _script->opcode(opcodeID);
+		Opcode &opcode = _script->opcode(opcodeID);
 		
-		if (opcode->isIf()) {
-			opcode.cast<OpcodeIf>().itemIsExpanded = item->isExpanded();
+		if (opcode.isIf()) {
+			opcode.setItemIsExpanded(item->isExpanded());
 		}
 
 		// Add children
@@ -378,7 +378,7 @@ bool OpcodeList::itemIsExpanded(int opcodeID) const
 		return true; // FIXME: not the correct behavior
 	}
 
-	return _script->opcode(opcodeID)->isIf() && _script->opcode(opcodeID).cast<OpcodeIf>().itemIsExpanded;
+	return _script->opcode(opcodeID).isIf() && _script->opcode(opcodeID).itemIsExpanded();
 }
 
 void OpcodeList::refreshOpcode(int opcodeID)
@@ -393,7 +393,7 @@ void OpcodeList::refreshOpcode(int opcodeID)
 		return;
 	}
 
-	item->setText(0, _script->opcode(opcodeID)->toString(_field->scriptsAndTexts()));
+	item->setText(0, _script->opcode(opcodeID).toString(_field->scriptsAndTexts()));
 }
 
 void OpcodeList::fill(Field *field, const GrpScript *grpScript, Script *script)
@@ -430,11 +430,12 @@ void OpcodeList::fill()
 		       grey = Data::color(Data::ColorGreyForeground),
 		       red = Data::color(Data::ColorRedForeground);
 
-		for (const OpcodeBox &curOpcode : _script->opcodes()) {
+		for (const Opcode &curOpcode : _script->opcodes()) {
+			OpcodeKey id = curOpcode.id();
 
-			if (curOpcode->isLabel()) {
+			if (id == OpcodeKey::LABEL) {
 				while (!indent.isEmpty() &&
-				      curOpcode.cast<OpcodeLabel>().label() == indent.last())
+				      curOpcode.op().opcodeLABEL._label == indent.last())
 				{
 					indent.removeLast();
 					if (parentItem != nullptr) {
@@ -443,32 +444,30 @@ void OpcodeList::fill()
 				}
 			}
 
-			Opcode::Keys id = curOpcode.id();
-
-			QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList(curOpcode->toString(scriptsAndTexts)));
+			QTreeWidgetItem *item = new QTreeWidgetItem(parentItem, QStringList(curOpcode.toString(scriptsAndTexts)));
 			item->setData(0, Qt::UserRole, opcodeID);
 			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 			items.append(item);
 
 			QPixmap wordPixmap(32,11);
 			item->setIcon(0, QIcon(posNumber(opcodeID + 1, fontPixmap, wordPixmap)));
-			item->setToolTip(0, curOpcode->name());
-			if (curOpcode->isIf()) {
+			item->setToolTip(0, curOpcode.name() + QString(" ") + QString::number(curOpcode.size()));
+			if (curOpcode.isIf()) {
 				item->setForeground(0, blue);
-				if (!curOpcode.cast<OpcodeJump>().isBadJump()) {
-					indent.append(curOpcode.cast<OpcodeJump>().label());
+				if (curOpcode.badJump() == BadJumpError::Ok) {
+					indent.append(quint16(curOpcode.label()));
 				}
 				if (_treeEnabled) {
 					parentItem = item;
 				}
 			}
-			else if (id >= Opcode::REQ && id <= Opcode::RETTO) {
+			else if (id >= OpcodeKey::REQ && id <= OpcodeKey::RETTO) {
 				item->setForeground(0, orange);
-			} else if (curOpcode->isJump()) {
+			} else if (curOpcode.isJump()) {
 				item->setForeground(0, green);
-			} else if (id == Opcode::RET) {
+			} else if (id == OpcodeKey::RET) {
 				item->setForeground(0, grey);
-			} else if (curOpcode->isLabel()) {
+			} else if (id == OpcodeKey::LABEL) {
 				item->setForeground(0, red);
 			}
 
@@ -481,10 +480,10 @@ void OpcodeList::fill()
 		for (QTreeWidgetItem *item : items) {
 			if (item->childCount() > 0) {
 				int opcodeID = item->data(0, Qt::UserRole).toInt();
-				const OpcodeBox &curOpcode = _script->opcode(opcodeID);
+				const Opcode &curOpcode = _script->opcode(opcodeID);
 
-				if (curOpcode->isIf()) {
-					item->setExpanded(curOpcode.cast<OpcodeIf>().itemIsExpanded);
+				if (curOpcode.isIf()) {
+					item->setExpanded(curOpcode.itemIsExpanded());
 				}
 			}
 		}
@@ -566,16 +565,12 @@ void OpcodeList::add()
 	return "(" + ret.join(", ") + ") (" + ret2.join(", ") + ")";
 }*/
 
-void OpcodeList::changeHist(HistoricType type, int opcodeID, const OpcodeBox &data)
+void OpcodeList::changeHist(HistoricType type, int opcodeID, const Opcode &data)
 {
 	Historic hist;
 	hist.type = type;
 	hist.opcodeIDs = QList<int>() << opcodeID;
-	if (data.isNull()) {
-		hist.data = QList<OpcodeBox>();
-	} else {
-		hist.data = QList<OpcodeBox>() << data;
-	}
+	hist.data = QList<Opcode>() << data;
 
 	undo_A->setEnabled(true);
 	redo_A->setEnabled(false);
@@ -584,7 +579,7 @@ void OpcodeList::changeHist(HistoricType type, int opcodeID, const OpcodeBox &da
 //	qDebug() << showHistoric();
 }
 
-void OpcodeList::changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<OpcodeBox> &data)
+void OpcodeList::changeHist(HistoricType type, const QList<int> &opcodeIDs, const QList<Opcode> &data)
 {
 	Historic hist;
 	hist.type = type;
@@ -634,7 +629,7 @@ void OpcodeList::undo()
 		break;
 	case Modify: {
 		// restore old version
-		const OpcodeBox &sav = _script->opcode(firstOpcode);
+		const Opcode &sav = _script->opcode(firstOpcode);
 		_script->setOpcode(firstOpcode, hist.data.first());
 		hist.data.replace(0, sav);
 		} break;
@@ -643,7 +638,7 @@ void OpcodeList::undo()
 		hist.data.prepend(_script->opcode(firstOpcode + 1));
 		_script->removeOpcode(firstOpcode + 1);
 		// restore old version
-		const OpcodeBox &sav = _script->opcode(firstOpcode);
+		const Opcode &sav = _script->opcode(firstOpcode);
 		_script->setOpcode(firstOpcode, hist.data.first());
 		hist.data.replace(0, sav);
 		} break;
@@ -692,12 +687,12 @@ void OpcodeList::redo()
 		}
 		break;
 	case Modify: {
-		const OpcodeBox &sav = _script->opcode(firstOpcode);
+		const Opcode &sav = _script->opcode(firstOpcode);
 		_script->setOpcode(firstOpcode, hist.data.first());
 		hist.data.replace(0, sav);
 		} break;
 	case ModifyAndAddLabel: {
-		const OpcodeBox &sav = _script->opcode(firstOpcode);
+		const Opcode &sav = _script->opcode(firstOpcode);
 		_script->setOpcode(firstOpcode, hist.data.first());
 		hist.data.replace(0, sav);
 
@@ -733,7 +728,7 @@ void OpcodeList::scriptEditor(bool modify)
 		modify = false;
 	}
 
-	OpcodeBox oldVersion(nullptr);
+	Opcode oldVersion;
 
 	saveExpandedItems();
 
@@ -746,10 +741,12 @@ void OpcodeList::scriptEditor(bool modify)
 	ScriptEditor editor(_field, _field->scriptsAndTexts(), *_grpScript, *_script, opcodeID, modify, isInit, this);
 
 	if (editor.exec() == QDialog::Accepted) {
-		OpcodeBox opcode = editor.buildOpcode();
+		Opcode opcode = editor.buildOpcode();
 		
 		if (editor.needslabel()) {
-			_script->insertOpcode(opcodeID, OpcodeBox(new OpcodeLabel(opcode.cast<OpcodeJump>().label())));
+			OpcodeLABEL label;
+			label._label = quint16(opcode.label());
+			_script->insertOpcode(opcodeID, label);
 		}
 	
 		if (modify) {
@@ -775,7 +772,7 @@ void OpcodeList::scriptEditor(bool modify)
 				scrollToItem(item, QAbstractItemView::EnsureVisible);
 			}
 			if (editor.needslabel()) {
-				changeHist(Add, QList<int>() << opcodeID << (opcodeID + 1), QList<OpcodeBox>());
+				changeHist(Add, QList<int>() << opcodeID << (opcodeID + 1), QList<Opcode>());
 			} else {
 				changeHist(Add, opcodeID);
 			}
@@ -793,7 +790,7 @@ void OpcodeList::del(bool totalDel)
 	if (selectedIDs.isEmpty()) {
 		return;
 	}
-	QList<OpcodeBox> oldVersions;
+	QList<Opcode> oldVersions;
 
 	if (totalDel &&
 	        QMessageBox::warning(this, tr("Delete"),
@@ -837,7 +834,7 @@ void OpcodeList::cut()
 
 void OpcodeList::copy()
 {
-	QList<OpcodeBox> opcodeCopied;
+	QList<Opcode> opcodeCopied;
 	QList<int> selIds = selectedIDs();
 	for (int id : qAsConst(selIds)) {
 		opcodeCopied.append(_script->opcode(id));
@@ -890,14 +887,14 @@ void OpcodeList::copyText()
 
 void OpcodeList::paste()
 {
-	QList<OpcodeBox> pastedOpcodes = Clipboard::instance()->ff7FieldScriptOpcodes();
+	QList<Opcode> pastedOpcodes = Clipboard::instance()->ff7FieldScriptOpcodes();
 	if (!pastedOpcodes.isEmpty()) {
 		saveExpandedItems();
 
 		QList<int> IDs;
 		int opcodeID = selectedID() + 1, i = opcodeID;
 
-		for (const OpcodeBox &opcode : qAsConst(pastedOpcodes)) {
+		for (const Opcode &opcode : qAsConst(pastedOpcodes)) {
 			IDs.append(i);
 			// TODO: label duplication case
 			_script->insertOpcode(i, opcode);
@@ -907,7 +904,7 @@ void OpcodeList::paste()
 		fill();
 		scroll(opcodeID);
 		emit changed();
-		changeHist(Add, IDs, QList<OpcodeBox>());
+		changeHist(Add, IDs, QList<Opcode>());
 	}
 }
 
@@ -1012,27 +1009,23 @@ void OpcodeList::gotoLabel(QTreeWidgetItem *item)
 		item = currentItem();
 	}
 	int opcodeID = item->data(0, Qt::UserRole).toInt();
-	const OpcodeBox &op = _script->opcode(opcodeID);
+	const Opcode &op = _script->opcode(opcodeID);
 
-	if (op->isJump()) {
-		const OpcodeJump &opJ = op.cast<OpcodeJump>();
-
-		if (!opJ.isBadJump()) {
+	if (op.isJump()) {
+		if (op.badJump() == BadJumpError::Ok) {
 			int opcodeID = 0;
 
-			for (const OpcodeBox &op : _script->opcodes()) {
-				if (op->isLabel() && op.cast<OpcodeJump>().label() == opJ.label()) {
+			for (const Opcode &op2 : _script->opcodes()) {
+				if (op2.id() == OpcodeKey::LABEL && op2.label() == op.label()) {
 					scroll(opcodeID);
 					break;
 				}
 				++opcodeID;
 			}
 		}
-	} else if (op->isExec()) {
-		const OpcodeExec &opE = op.cast<OpcodeExec>();
-
-		emit gotoScript(opE.groupID, opE.scriptID + 1);
-	} /* else if (op->id() == Opcode::MAPJUMP) {
+	} else if (op.isExec()) {
+		emit gotoScript(op.groupID(), op.scriptID() + 1);
+	} /* else if (op.id() == OpcodeKey::MAPJUMP) {
 		OpcodeMAPJUMP *opMJ = static_cast<OpcodeMAPJUMP *>(op);
 
 		emit gotoField(opMJ->fieldID); // FIXME: fieldID is not the same in the field list

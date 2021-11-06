@@ -63,9 +63,9 @@ bool Clipboard::hasFf7FieldScriptOpcodes() const
 	return hasData(MIME_FF7_FIELD_SCRIPT_OPCODES);
 }
 
-QList<OpcodeBox> Clipboard::ff7FieldScriptOpcodes() const
+QList<Opcode> Clipboard::ff7FieldScriptOpcodes() const
 {
-	QList<OpcodeBox> opcodes;
+	QList<Opcode> opcodes;
 
 	QByteArray data = Clipboard::data(MIME_FF7_FIELD_SCRIPT_OPCODES);
 	if (!data.isEmpty()) {
@@ -82,7 +82,7 @@ QList<OpcodeBox> Clipboard::ff7FieldScriptOpcodes() const
 	return opcodes;
 }
 
-void Clipboard::setFF7FieldScriptOpcodes(const QList<OpcodeBox> &opcodes)
+void Clipboard::setFF7FieldScriptOpcodes(const QList<Opcode> &opcodes)
 {
 	QByteArray data;
 	QDataStream stream(&data, QIODevice::WriteOnly);

@@ -184,13 +184,13 @@ public:
 	bool searchOpcode(int opcode, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchExec(quint8 group, quint8 script, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchMapJump(int _field, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchMapJump(int map, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchTextInScripts(const QRegularExpression &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchText(const QRegularExpression &text, int &mapID, int &textID, qsizetype &from, qsizetype &size, Sorting sorting, SearchScope scope);
 	bool searchOpcodeP(int opcode, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchExecP(quint8 group, quint8 script, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
-	bool searchMapJumpP(int _field, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
+	bool searchMapJumpP(int map, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchTextInScriptsP(const QRegularExpression &text, int &mapID, int &groupID, int &scriptID, int &opcodeID, Sorting sorting, SearchScope scope);
 	bool searchTextP(const QRegularExpression &text, int &mapID, int &textID, qsizetype &from, qsizetype &index, qsizetype &size, Sorting sorting, SearchScope scope);
 	bool replaceText(const QRegularExpression &search, const QString &after, int mapID, int textID, int from);

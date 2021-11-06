@@ -20,45 +20,6 @@
 #include <QtCore>
 #include "Opcode.h"
 
-class OpcodeBox
-{
-	friend class QList<OpcodeBox>;
-public:
-	explicit OpcodeBox(Opcode *opcode);
-	OpcodeBox(const QByteArray &script, qsizetype pos = 0);
-	OpcodeBox(const OpcodeBox &other);
-	~OpcodeBox();
-	OpcodeBox &operator=(const OpcodeBox &other);
-	bool isNull() const {
-		return _opcode == nullptr;
-	}
-	template<typename T>
-	inline T &cast() {
-		detach();
-		return *static_cast<T*>(_opcode);
-	}
-	template<typename T>
-	inline const T &cast() const {
-		return *static_cast<T*>(_opcode);
-	}
-	inline const Opcode *operator->() const {
-		return _opcode;
-	}
-	inline Opcode *operator->() {
-		detach();
-		return _opcode;
-	}
-	inline Opcode::Keys id() const {
-		return Opcode::Keys(_opcode->id());
-	}
-	void detach();
-private:
-	OpcodeBox();
-	static Opcode *createOpcode(const QByteArray &script, qsizetype pos = 0);
-	static Opcode *copyOpcode(Opcode *opcode);
-	Opcode *_opcode;
-};
-
 class Script
 {
 public:
@@ -67,32 +28,31 @@ public:
 	};
 
 	Script();
-	explicit Script(const QList<OpcodeBox> &opcodes);
-	explicit Script(const QByteArray &script);
-	Script(const QByteArray &script, qsizetype pos, qsizetype size);
+	explicit Script(const QList<Opcode> &opcodes);
+	Script(const char *script, qsizetype size);
 
-	bool openScript(const QByteArray &script, qsizetype initPos, qsizetype size);
+	bool openScript(const char *script, qsizetype size);
 	qsizetype size() const;
 	bool isEmpty() const;
 	bool isValid() const;
-	OpcodeBox &opcode(qsizetype opcodeID);
-	const OpcodeBox &opcode(qsizetype opcodeID) const;
-	QList<OpcodeBox> &opcodes();
-	const QList<OpcodeBox> &opcodes() const;
+	Opcode &opcode(qsizetype opcodeID);
+	const Opcode &opcode(qsizetype opcodeID) const;
+	QList<Opcode> &opcodes();
+	const QList<Opcode> &opcodes() const;
 	bool isVoid() const;
 	bool compile(int &opcodeID, QString &errorStr);
 	QByteArray toByteArray() const;
 	inline QByteArray serialize() const {
 		return toByteArray();
 	}
-	void setOpcode(qsizetype opcodeID, const OpcodeBox &opcode);
+	void setOpcode(qsizetype opcodeID, const Opcode &opcode);
 	void removeOpcode(qsizetype opcodeID);
-	void insertOpcode(qsizetype opcodeID, const OpcodeBox &opcode);
+	void insertOpcode(qsizetype opcodeID, const Opcode &opcode);
 	bool moveOpcode(qsizetype opcodeID, MoveDirection direction);
-	void shiftGroupIds(int groupId, int steps = 1);
-	void shiftTextIds(int textId, int steps = 1);
-	void shiftTutIds(int tutId, int steps = 1);
-	void swapGroupIds(int groupId1, int groupId2);
+	void shiftGroupIds(quint8 groupId, qint16 steps = 1);
+	void shiftTextIds(quint8 textId, qint16 steps = 1);
+	void shiftTutIds(quint8 tutId, qint16 steps = 1);
+	void swapGroupIds(quint8 groupId1, quint8 groupId2);
 	void setWindow(const FF7Window &win);
 	quint32 opcodePositionInBytes(qsizetype opcodeID) const;
 
@@ -100,12 +60,12 @@ public:
 	bool searchVar(quint8 bank, quint16 address, Opcode::Operation op, int value, int &opcodeID) const;
 	void searchAllVars(QList<FF7Var> &vars) const;
 	bool searchExec(quint8 group, quint8 script, int &opcodeID) const;
-	bool searchMapJump(quint16 field, int &opcodeID) const;
+	bool searchMapJump(quint16 map, int &opcodeID) const;
 	bool searchTextInScripts(const QRegularExpression &text, int &opcodeID, const Section1File *scriptsAndTexts) const;
 	bool searchOpcodeP(int opcode, int &opcodeID) const;
 	bool searchVarP(quint8 bank, quint16 address, Opcode::Operation op, int value, int &opcodeID) const;
 	bool searchExecP(quint8 group, quint8 script, int &opcodeID) const;
-	bool searchMapJumpP(quint16 field, int &opcodeID) const;
+	bool searchMapJumpP(quint16 map, int &opcodeID) const;
 	bool searchTextInScriptsP(const QRegularExpression &text, int &opcodeID, const Section1File *scriptsAndTexts) const;
 	void listUsedTexts(QSet<quint8> &usedTexts) const;
 	void listUsedTuts(QSet<quint8> &usedTuts) const;
@@ -113,7 +73,7 @@ public:
 	void listWindows(int groupID, int scriptID, int textID, QList<FF7Window> &windows) const;
 	void listModelPositions(QList<FF7Position> &positions) const;
 	bool linePosition(FF7Position position[2]) const;
-	void backgroundParams(QHash<quint8, quint8> &paramActifs) const;
+	void backgroundParams(QHash<quint8, quint8> &enabledParams) const;
 	void backgroundMove(qint16 z[2], qint16 *x, qint16 *y) const;
 	bool removeTexts();
 
@@ -121,14 +81,11 @@ public:
 
 	QString toString(const Section1File *scriptsAndTexts) const;
 private:
-	OpcodeBox convertOpcodeJumpDirection(const OpcodeBox &opcode, bool *ok = nullptr) const;
-	OpcodeBox convertOpcodeJumpRangeToLong(const OpcodeBox &opcode, bool *wasConverted = nullptr) const;
-//	bool verifyOpcodeJumpRange(OpcodeJump *opcodeJump, QString &errorStr) const;
-	QList<OpcodeBox> _opcodes;
+	QList<Opcode> _opcodes;
 	QString lastError;
 
 	bool valid;
 };
 
-QDataStream &operator<<(QDataStream &stream, const QList<OpcodeBox> &script);
-QDataStream &operator>>(QDataStream &stream, QList<OpcodeBox> &script);
+QDataStream &operator<<(QDataStream &stream, const QList<Opcode> &script);
+QDataStream &operator>>(QDataStream &stream, QList<Opcode> &script);

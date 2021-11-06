@@ -80,7 +80,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 {
 	Q_UNUSED(option)
 	
-	int type = index.data(Qt::UserRole+2).toInt();
+	int type = index.data(Qt::UserRole + 2).toInt();
 	int value = index.data(Qt::EditRole).toInt();
 	if (type == ScriptEditorGenericList::field_id
 	        && !Data::maplist().isEmpty()) {
@@ -110,8 +110,9 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 	          && _scriptsAndTexts->textCount() > 0) {
 		QComboBox *comboBox = new QComboBox(parent);
 		bool jp = Config::value("jp_txt", false).toBool();
-		for (const FF7Text &t : _scriptsAndTexts->texts())
-			comboBox->addItem(t.text(jp, true).simplified());
+		for (const FF7Text &t : _scriptsAndTexts->texts()) {
+			comboBox->addItem(comboBox->fontMetrics().elidedText(t.text(jp, true).simplified(), Qt::ElideRight, 640));
+		}
 		return comboBox;
 	} else if (type == ScriptEditorGenericList::item_id
 	          && !Data::item_names.isEmpty()) {
@@ -206,7 +207,7 @@ QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
 		KeyEditorDialog dialog(quint16(value), parent);
 		QSpinBox *editor = new QSpinBox(parent);
 		editor->setMinimum(index.data(Qt::UserRole).toInt());
-		editor->setMaximum(index.data(Qt::UserRole+1).toInt());
+		editor->setMaximum(index.data(Qt::UserRole + 1).toInt());
 		if (dialog.exec() == QDialog::Accepted) {
 			editor->setValue(dialog.keys());
 		} else {

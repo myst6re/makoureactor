@@ -26,14 +26,13 @@ class ScriptEditorBinaryOpPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorBinaryOpPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode();
-	void setOpcode(const OpcodeBox &opcode);
+	Opcode buildOpcode();
+	void setOpcode(const Opcode &opcode);
 private slots:
 	void updateValueRange();
 	void changeCurrentOpcode(int);
 private:
 	void build();
-	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var, *varOrValue;
 	QComboBox *operationList;
 	QRadioButton *type1, *type2;
@@ -45,14 +44,13 @@ class ScriptEditorUnaryOpPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorUnaryOpPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 private slots:
 	void updateValueRange();
 	void changeCurrentOpcode(int);
 private:
 	void build() override;
-	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var;
 	QComboBox *operationList;
 	QRadioButton *type1, *type2;
@@ -63,13 +61,12 @@ class ScriptEditorBitOpPage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorBitOpPage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 private slots:
 	void changeCurrentOpcode(int);
 private:
 	void build() override;
-	void convertOpcode(Opcode::Keys key);
 	VarOrValueWidget *var, *position;
 	QComboBox *operationList;
 };
@@ -79,8 +76,8 @@ class ScriptEditorVariablePage : public ScriptEditorView
 	Q_OBJECT
 public:
 	explicit ScriptEditorVariablePage(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent = nullptr);
-	OpcodeBox buildOpcode() override;
-	void setOpcode(const OpcodeBox &opcode) override;
+	Opcode buildOpcode() override;
+	void setOpcode(const Opcode &opcode) override;
 private:
 	void build() override;
 	VarOrValueWidget *varOrValue;

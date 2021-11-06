@@ -66,9 +66,9 @@ void ScriptEditorDLPBSavemap::build()
 	connect(_toIsPointer, SIGNAL(toggled(bool)), SIGNAL(opcodeChanged()));
 }
 
-OpcodeBox ScriptEditorDLPBSavemap::buildOpcode()
+Opcode ScriptEditorDLPBSavemap::buildOpcode()
 {
-	Opcode1A &op = opcode().cast<Opcode1A>();
+	OpcodeUnused1A &op = opcode().op().opcodeUnused1A;
 
 	op.from = quint16(_from->value());
 	op.to = quint16(_to->value());
@@ -80,11 +80,11 @@ OpcodeBox ScriptEditorDLPBSavemap::buildOpcode()
 	return opcode();
 }
 
-void ScriptEditorDLPBSavemap::setOpcode(const OpcodeBox &opcode)
+void ScriptEditorDLPBSavemap::setOpcode(const Opcode &opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	const Opcode1A &o = opcode.cast<Opcode1A>();
+	const OpcodeUnused1A &o = opcode.op().opcodeUnused1A;
 
 	_from->setValue(o.from);
 	_to->setValue(o.to);
@@ -119,22 +119,23 @@ void ScriptEditorDLPBWriteToMemory::build()
 	connect(_bytes, SIGNAL(editingFinished()), SIGNAL(opcodeChanged()));
 }
 
-OpcodeBox ScriptEditorDLPBWriteToMemory::buildOpcode()
+Opcode ScriptEditorDLPBWriteToMemory::buildOpcode()
 {
-	Opcode1C &op = opcode().cast<Opcode1C>();
+	OpcodeUnused1C &op = opcode().op().opcodeUnused1C;
+	QByteArray data = QByteArray::fromHex(_bytes->text().toLatin1()).left(128);
 
 	op.address = quint32(_address->value());
-	op.bytes = QByteArray::fromHex(_bytes->text().toLatin1());
+	opcode().setResizableData(data);
 
 	return opcode();
 }
 
-void ScriptEditorDLPBWriteToMemory::setOpcode(const OpcodeBox &opcode)
+void ScriptEditorDLPBWriteToMemory::setOpcode(const Opcode &opcode)
 {
 	ScriptEditorView::setOpcode(opcode);
 
-	const Opcode1C &op = opcode.cast<Opcode1C>();
+	const OpcodeUnused1C &op = opcode.op().opcodeUnused1C;
 
 	_address->setValue(op.address);
-	_bytes->setText(QString::fromLatin1(op.bytes.toHex()));
+	_bytes->setText(QString::fromLatin1(opcode.resizableData().toHex()));
 }

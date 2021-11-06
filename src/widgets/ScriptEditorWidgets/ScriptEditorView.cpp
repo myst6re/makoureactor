@@ -19,7 +19,7 @@
 
 ScriptEditorView::ScriptEditorView(const Section1File *scriptsAndTexts, const GrpScript &grpScript, const Script &script, int opcodeID, QWidget *parent)
 	: QWidget(parent), _scriptsAndTexts(scriptsAndTexts), _grpScript(grpScript), _script(script),
-	  _opcode(nullptr), _opcodeID(opcodeID), _builded(false), _valid(true)
+	  _opcodeID(opcodeID), _builded(false), _valid(true)
 {
 }
 
@@ -41,7 +41,7 @@ void ScriptEditorView::clear()
 {
 }
 
-void ScriptEditorView::setOpcode(const OpcodeBox &opcode)
+void ScriptEditorView::setOpcode(const Opcode &opcode)
 {
 	if (!_builded) {
 		build();

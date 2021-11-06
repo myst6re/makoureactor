@@ -206,7 +206,7 @@ void VarManager::changeBank(int row)
 		}
 
 		item->setText(1, varName);
-		colorizeItem(item, FF7Var(b, quint8(addressID)));
+		colorizeItem(item, FF7Var(qint8(b), quint8(addressID), FF7Var::VarSize()));
 		++it;
 	}
 	fillForm();
@@ -281,7 +281,7 @@ void VarManager::search()
 	quint8 b = quint8(bank->value());
 
 	for (quint16 address=0; address<256; ++address) {
-		colorizeItem(liste2->topLevelItem(address), FF7Var(b, quint8(address)));
+		colorizeItem(liste2->topLevelItem(address), FF7Var(qint8(b), quint8(address), FF7Var::VarSize()));
 	}
 
 	t.stop();
@@ -294,7 +294,7 @@ void VarManager::processEvents() const
 
 void VarManager::findVar(const FF7Var &var, bool &foundR, bool &foundW, QSet<FF7Var::VarSize> &varSize)
 {
-	int index = -1;
+	qsizetype index = -1;
 
 	forever {
 		index = allVars.indexOf(var, index + 1);
@@ -303,7 +303,7 @@ void VarManager::findVar(const FF7Var &var, bool &foundR, bool &foundW, QSet<FF7
 		}
 		FF7Var foundVar = allVars.at(index);
 		varSize.insert(foundVar.size);
-		if (foundVar.write) {
+		if (foundVar.flags.testFlag(FF7Var::Writable)) {
 			foundW = true;
 		} else {
 			foundR = true;
@@ -317,8 +317,8 @@ void VarManager::colorizeItem(QTreeWidgetItem *item, const FF7Var &var)
 	bool foundR = false, foundW = false;
 	QSet<FF7Var::VarSize> varSize;
 
-	findVar(FF7Var(banks.first,  var.address), foundR, foundW, varSize);
-	findVar(FF7Var(banks.second, var.address), foundR, foundW, varSize);
+	findVar(FF7Var(qint8(banks.first),  var.address, FF7Var::VarSize()), foundR, foundW, varSize);
+	findVar(FF7Var(qint8(banks.second), var.address, FF7Var::VarSize()), foundR, foundW, varSize);
 
 	QString rwText;
 	QStringList sizeText;

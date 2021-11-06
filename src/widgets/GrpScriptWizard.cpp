@@ -150,6 +150,6 @@ GrpScript GrpScriptWizard::selectedGroup() const
 		return GrpScript::createGroupModel(0);
 	}
 
-	return GrpScript(QList<Script>() << Script(QList<OpcodeBox>() << OpcodeBox(new OpcodeRET()))
-	                 << Script(QList<OpcodeBox>() << OpcodeBox(new OpcodeRET())));
+	return GrpScript(QList<Script>() << Script(QList<Opcode>() << OpcodeRET())
+	                 << Script(QList<Opcode>() << OpcodeRET()));
 }
