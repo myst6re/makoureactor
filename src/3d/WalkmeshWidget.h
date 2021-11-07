@@ -47,6 +47,8 @@ public slots:
 	void setSelectedDoor(int door);
 	void setSelectedGate(int gate);
 	void setSelectedArrow(int arrow);
+	void setCustomLine(const Vertex_s &customLinePoint1, const Vertex_s &customLinePoint2);
+	void setCustomLineVisible(bool show);
 private slots:
 	void addModel(Field *field, FieldModelFile *fieldModelFile, int modelId);
 private:
@@ -62,6 +64,8 @@ private:
 	int _selectedDoor;
 	int _selectedGate;
 	int _selectedArrow;
+	Vertex_s _customLinePoint1, _customLinePoint2;
+	bool _hasCustomLine;
 	float fovy;
 	IdFile *walkmesh;
 	CaFile *camera;

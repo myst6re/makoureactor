@@ -270,8 +270,7 @@ void Renderer::messageLogged(const QOpenGLDebugMessage &msg)
   switch (msg.severity())
   {
   case QOpenGLDebugMessage::NotificationSeverity:
-    error += "NOTIFICATION";
-    break;
+    return;
   case QOpenGLDebugMessage::HighSeverity:
     error += "HIGH";
     break;

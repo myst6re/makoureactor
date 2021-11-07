@@ -46,7 +46,7 @@ ScriptEditor::ScriptEditor(Field *field, const Section1File *scriptsAndTexts, co
 	}
 
 	setWindowTitle(tr("Script Editor%1").arg(isInit ? tr(" (init mode)") : ""));
-	setMinimumSize(500, 400);
+	setMinimumSize(640, 400);
 	
 	QStringList liste0;
 	liste0 << tr("Control Structures") <<
@@ -166,6 +166,7 @@ ScriptEditorView *ScriptEditor::buildEditorPage(PageType id)
 	case DLPBWriteToMemory:
 		return new ScriptEditorDLPBWriteToMemory(scriptsAndTexts, grpScript, script, opcodeID, this);
 	}
+	return nullptr;
 }
 
 void ScriptEditor::fillEditor()

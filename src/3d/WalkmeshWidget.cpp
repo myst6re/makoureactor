@@ -23,7 +23,7 @@ WalkmeshWidget::WalkmeshWidget(QWidget *parent)
     : QOpenGLWidget(parent), distance(0.0),
       xRot(0.0f), yRot(0.0f), zRot(0.0f), xTrans(0.0f), yTrans(0.0f),
       transStep(360.0f), lastKeyPressed(-1), _camID(0), _selectedTriangle(-1),
-      _selectedDoor(-1), _selectedGate(-1), _selectedArrow(-1), fovy(70.0),
+      _selectedDoor(-1), _selectedGate(-1), _selectedArrow(-1), _hasCustomLine(false), fovy(70.0),
       walkmesh(nullptr), camera(nullptr), infFile(nullptr), bgFile(nullptr),
       scripts(nullptr), field(nullptr), modelsVisible(true), backgroundVisible(true),
       gpuRenderer(nullptr) /*, thread(0)*/
@@ -374,6 +374,24 @@ void WalkmeshWidget::paintGL()
 		}
 	}
 
+	if (_hasCustomLine) {
+		QRgba64 color = QRgba64::fromArgb32(0xFFFF0000);
+		QVector2D texcoord;
+
+		QVector3D positionA(_customLinePoint1.x / 4096.0f, _customLinePoint1.y / 4096.0f, _customLinePoint1.z / 4096.0f),
+		    positionB(_customLinePoint2.x / 4096.0f, _customLinePoint2.y / 4096.0f, _customLinePoint2.z / 4096.0f);
+
+		gpuRenderer->bufferVertex(positionA, color, texcoord);
+		gpuRenderer->bufferVertex(positionB, color, texcoord);
+
+		gpuRenderer->draw(RendererPrimitiveType::PT_LINES);
+
+		gpuRenderer->bufferVertex(positionA, color, texcoord);
+		gpuRenderer->bufferVertex(positionB, color, texcoord);
+
+		gpuRenderer->draw(RendererPrimitiveType::PT_POINTS, 7.0f);
+	}
+
 	gpuRenderer->show();
 }
 
@@ -599,6 +617,21 @@ void WalkmeshWidget::setSelectedArrow(int arrow)
 {
 	if (_selectedArrow != arrow) {
 		_selectedArrow = arrow;
+		update();
+	}
+}
+
+void WalkmeshWidget::setCustomLine(const Vertex_s &customLinePoint1, const Vertex_s &customLinePoint2)
+{
+	_customLinePoint1 = customLinePoint1;
+	_customLinePoint2 = customLinePoint2;
+	update();
+}
+
+void WalkmeshWidget::setCustomLineVisible(bool show)
+{
+	if (_hasCustomLine != show) {
+		_hasCustomLine = show;
 		update();
 	}
 }

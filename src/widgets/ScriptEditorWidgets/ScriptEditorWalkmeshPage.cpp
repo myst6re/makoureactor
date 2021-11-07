@@ -28,6 +28,8 @@ void ScriptEditorWalkmeshPage::build()
 	_point2 = new VertexWidget(this);
 	_previewWalkmesh = new WalkmeshWidget(this);
 	_previewWalkmesh->fill(_field);
+	_previewWalkmesh->setModelsVisible(false);
+	_previewWalkmesh->setBackgroundVisible(true);
 
 	QGridLayout *layout = new QGridLayout(this);
 	layout->addWidget(_previewWalkmesh, 0, 0, 3, 1);
@@ -72,11 +74,15 @@ void ScriptEditorWalkmeshPage::setOpcode(const OpcodeBox &opcode)
 	vertex.z = opcodeLine.targetZ2;
 
 	_point2->setValues(vertex);
+
+	_previewWalkmesh->setCustomLine(_point1->values(), _point2->values());
+	_previewWalkmesh->setCustomLineVisible(true);
 }
 
 void ScriptEditorWalkmeshPage::updatePreview()
 {
-	_previewWalkmesh->update();
+	_previewWalkmesh->setCustomLine(_point1->values(), _point2->values());
+	_previewWalkmesh->setCustomLineVisible(true);
 
 	emit opcodeChanged();
 }
